@@ -51,7 +51,7 @@
 #define M_REAR_DIR  (-1)
 #define M_LEFT_DIR  ( 1)
 
-#define MIN_THRUST -1.0
+#define MIN_THRUST -0.9
 #define MAX_THRUST 1.0
 #define SERVO_SCALE 500
 
