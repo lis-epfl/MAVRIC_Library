@@ -31,6 +31,8 @@
 #include "uart_int.h"
 
 #include "ishtar_stream.h"
+#include "mavlink_bridge.h"
+#include "mavlink/include/common/mavlink.h" 
 
 Imu_Data_t imu1;
 

@@ -81,7 +81,10 @@ SUBDIRS :=  \
 ../src/asf/common/utils/stdio/ \
 ../src/asf/common/utils/stdio/stdio_serial/ \
 ../src/asf/common/utils/stdio/stdio_usb/ \
-../src/config/
+../src/config/ \
+../src/mavlink/ \
+../src/mavlink/include/ \
+../src/mavlink/include/common/
 
 
 # Add inputs and outputs from these tool invocations to the build variables 
