@@ -199,19 +199,17 @@ void main (void)
 	/**/	
 			putnum(STDOUT, imu1.dt*1000, 10);
 			
-			putstring(STDOUT, "\n");
-			putstring(STDOUT, "Controls :");
-			putstring(STDOUT, "\t");
-			putnum(STDOUT, 100*controls.rpy[ROLL], 10);
-			putstring(STDOUT, "\t");
-			putnum(STDOUT, controls.rpy[PITCH], 10);
-			putstring(STDOUT, "\t");
-			putnum(STDOUT, controls.rpy[YAW], 10);
-			putstring(STDOUT, "\t");
-			putnum(STDOUT, controls.thrust, 10);
-			putstring(STDOUT, "\t");
-			putnum(STDOUT, getChannel(S_ROLL), 10);
-			putstring(STDOUT, "\n");
+			//putstring(STDOUT, "\n");
+			//putstring(STDOUT, "Controls :");
+			//putstring(STDOUT, "\t");
+			//putnum(STDOUT, 100*controls.rpy[ROLL], 10);
+			//putstring(STDOUT, "\t");
+			//putnum(STDOUT, 100*controls.rpy[PITCH], 10);
+			//putstring(STDOUT, "\t");
+			//putnum(STDOUT, 100*controls.rpy[YAW], 10);
+			//putstring(STDOUT, "\t");
+			//putnum(STDOUT, 100*controls.thrust, 10);
+			//putstring(STDOUT, "\n");
 		}
 		LED_On(LED1);
 		delay_ms(1);

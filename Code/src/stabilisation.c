@@ -19,11 +19,11 @@ void init_rate_stabilisation(Stabiliser_t *stabiliser) {
 	int i=0;
 	// initialise roll and pitch controllers
 	for (i=0; i<2; i++) {
-		(stabiliser->rpy_controller[i]).p_gain=0.18;
+		(stabiliser->rpy_controller[i]).p_gain=0.1;
 		(stabiliser->rpy_controller[i]).last_update=get_time_ticks();	
 		(stabiliser->rpy_controller[i]).clip_min=-0.9;
 		(stabiliser->rpy_controller[i]).clip_max= 0.9;
-		initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.32, 0.5, 0.4);
+		initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.6, 0.5, 0.4);
 		initInt(&((stabiliser->rpy_controller)[i].integrator),0.7, 1.0, 0.65);
 		//initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.6);
 	}	
@@ -46,7 +46,7 @@ void init_angle_stabilisation(Stabiliser_t *stabiliser) {
 		(stabiliser->rpy_controller[i]).last_update=get_time_ticks();	
 		(stabiliser->rpy_controller[i]).clip_min=-1.2;
 		(stabiliser->rpy_controller[i]).clip_max= 1.2;
-		initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.05, 0.5, 0.05);
+		initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.05, 0.5, 0.05); // 0.05, 0.5, 0.05
 		initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.2);
 	}	
 	// initialise yaw controller
@@ -108,13 +108,13 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input, int cont
 		putstring(STDOUT, "\t");
 	}
 	putnum(STDOUT, rate_stabiliser.output.thrust*100, 10);/**/
-	//#ifdef CONF_DIAG
+	#ifdef CONF_DIAG
 	mix_to_servos_diag_quad(&rate_stabiliser.output);
-	//#else
-	//#ifdef CONF_CROSS
-	//mix_to_servos_cross_quad(&rate_stabiliser.output);
-	//#endif
-	//#endif
+	#else
+	#ifdef CONF_CROSS
+	mix_to_servos_cross_quad(&rate_stabiliser.output);
+	#endif
+	#endif
 	
 	
 }
@@ -149,9 +149,9 @@ void mix_to_servos_cross_quad(Control_Command_t *control){
 		set_servo(1, -SERVO_SCALE-100, -SERVO_SCALE-100);
 		return;
 	}
-	motor_command[M_FRONT]= control->thrust - control->rpy[PITCH] + M_FRONT_DIR * control->rpy[YAW];
+	motor_command[M_FRONT]= control->thrust + control->rpy[PITCH] + M_FRONT_DIR * control->rpy[YAW];
 	motor_command[M_RIGHT] = control->thrust - control->rpy[ROLL] + M_RIGHT_DIR * control->rpy[YAW];
-	motor_command[M_REAR] = control->thrust + control->rpy[PITCH] + M_REAR_DIR * control->rpy[YAW];
+	motor_command[M_REAR] = control->thrust - control->rpy[PITCH] + M_REAR_DIR * control->rpy[YAW];
 	motor_command[M_LEFT]  = control->thrust + control->rpy[ROLL] + M_LEFT_DIR * control->rpy[YAW];
 	for (i=0; i<4; i++) {
 		if (motor_command[i]<MIN_THRUST) motor_command[i]=MIN_THRUST;
