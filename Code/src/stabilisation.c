@@ -108,7 +108,15 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input, int cont
 		putstring(STDOUT, "\t");
 	}
 	putnum(STDOUT, rate_stabiliser.output.thrust*100, 10);/**/
+	//#ifdef CONF_DIAG
 	mix_to_servos_diag_quad(&rate_stabiliser.output);
+	//#else
+	//#ifdef CONF_CROSS
+	//mix_to_servos_cross_quad(&rate_stabiliser.output);
+	//#endif
+	//#endif
+	
+	
 }
 
 void mix_to_servos_diag_quad(Control_Command_t *control){
@@ -123,6 +131,28 @@ void mix_to_servos_diag_quad(Control_Command_t *control){
 	motor_command[M_FRONT_LEFT] = control->thrust + ( control->rpy[ROLL] - control->rpy[PITCH]) + M_FL_DIR * control->rpy[YAW];
 	motor_command[M_REAR_RIGHT] = control->thrust + (-control->rpy[ROLL] + control->rpy[PITCH]) + M_RR_DIR * control->rpy[YAW];
 	motor_command[M_REAR_LEFT]  = control->thrust + ( control->rpy[ROLL] + control->rpy[PITCH]) + M_RL_DIR * control->rpy[YAW];
+	for (i=0; i<4; i++) {
+		if (motor_command[i]<MIN_THRUST) motor_command[i]=MIN_THRUST;
+		if (motor_command[i]>MAX_THRUST) motor_command[i]=MAX_THRUST;
+	}
+	set_servo(0, (int)(SERVO_SCALE*motor_command[0]), (int)(SERVO_SCALE*motor_command[1]));
+	set_servo(1, (int)(SERVO_SCALE*motor_command[2]), (int)(SERVO_SCALE*motor_command[3]));
+	
+}
+
+
+void mix_to_servos_cross_quad(Control_Command_t *control){
+	int i;
+	float motor_command[4];
+	if (control->thrust<=-0.95) {
+		set_servo(0, -SERVO_SCALE-100, -SERVO_SCALE-100);
+		set_servo(1, -SERVO_SCALE-100, -SERVO_SCALE-100);
+		return;
+	}
+	motor_command[M_FRONT]= control->thrust - control->rpy[PITCH] + M_FRONT_DIR * control->rpy[YAW];
+	motor_command[M_RIGHT] = control->thrust - control->rpy[ROLL] + M_RIGHT_DIR * control->rpy[YAW];
+	motor_command[M_REAR] = control->thrust + control->rpy[PITCH] + M_REAR_DIR * control->rpy[YAW];
+	motor_command[M_LEFT]  = control->thrust + control->rpy[ROLL] + M_LEFT_DIR * control->rpy[YAW];
 	for (i=0; i<4; i++) {
 		if (motor_command[i]<MIN_THRUST) motor_command[i]=MIN_THRUST;
 		if (motor_command[i]>MAX_THRUST) motor_command[i]=MAX_THRUST;

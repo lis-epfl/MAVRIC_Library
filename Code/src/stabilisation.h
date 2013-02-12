@@ -38,5 +38,6 @@ void stabilise(Stabiliser_t *stabiliser, float *rpy_sensor_values, Control_Comma
 void quad_stabilise(Imu_Data_t *imu, Control_Command_t *control_input, int mode);
 
 void mix_to_servos_diag_quad(Control_Command_t *control);
+void mix_to_servos_cross_quad(Control_Command_t *control);
 
 #endif /* STABILISATION_H_ */
