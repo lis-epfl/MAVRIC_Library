@@ -33,6 +33,7 @@
 #include "ishtar_stream.h"
 #include "mavlink_bridge.h"
 #include "mavlink/include/common/mavlink.h" 
+#include "coord_conventions.h"
 
 Imu_Data_t imu1;
 
@@ -214,22 +215,33 @@ void main (void)
 		
 		if(counter%30==0) {
 			// ATTITUDE QUATERNION
-			//mavlink_msg_attitude_send(MAVLINK_COMM_0, attitude.time_boot_ms, attitude.roll, attitude.pitch, attitude.yaw, attitude.rollspeed, attitude.pitchspeed, attitude.yawspeed);
 			mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, 0, imu1.attitude.qe.s, imu1.attitude.qe.v[0], imu1.attitude.qe.v[1], imu1.attitude.qe.v[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
+		
+			// ATTITUDE
+			/*
+			Aero_Attitude_t aero_attitude;
+			aero_attitude=Quat_to_Aero(imu1.attitude.qe);
+			mavlink_msg_attitude_send(MAVLINK_COMM_0, 0, aero_attitude.rpy[0], aero_attitude.rpy[1], aero_attitude.rpy[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
+			*/
+			
+			Schill_Attitude_t schill_attitude;
+			schill_attitude=Quat_to_Schill(imu1.attitude.qe);
+			mavlink_msg_attitude_send(MAVLINK_COMM_0, 0, schill_attitude.rpy[0], schill_attitude.rpy[1], schill_attitude.rpy[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
+		
 		}
 
-		if(counter%10==0) {		
+		/*if(counter%10==0) {		
 			// VFR HUD
 			mavlink_vfr_hud_t hud;	
 			hud.airspeed = 25.2;
 			hud.groundspeed = 15.1;
 			hud.alt = 150;
-			hud.heading = ((30.0/M_PI)*180.0f+180.0f) % 360;
+			//hud.heading = ((30.0/M_PI)*180.0f+180.0f) % 360;
 			hud.climb = 5;
 			hud.throttle = 90;
 			//mavlink_msg_vfr_hud_send(systemid, MAV_COMP_ID_IMU, &msg, &hud);
 			mavlink_msg_vfr_hud_send(MAVLINK_COMM_0, hud.airspeed, hud.groundspeed, hud.heading, hud.throttle, hud.alt, hud.climb);
-		}
+		}*/
 		
 		LED_On(LED1);
 		delay_ms(1);

@@ -126,6 +126,7 @@ C_SRCS +=  \
 ../src/asf/common/utils/stdio/write.c \
 ../src/buffer.c \
 ../src/control.c \
+../src/coord_conventions.c \
 ../src/dac_dma.c \
 ../src/generator.c \
 ../src/i2c_driver.c \
@@ -196,6 +197,7 @@ src/asf/common/utils/stdio/stdio_usb/stdio_usb.o \
 src/asf/common/utils/stdio/write.o \
 src/buffer.o \
 src/control.o \
+src/coord_conventions.o \
 src/dac_dma.o \
 src/generator.o \
 src/i2c_driver.o \
@@ -257,6 +259,7 @@ src/asf/common/utils/stdio/stdio_usb/stdio_usb.o \
 src/asf/common/utils/stdio/write.o \
 src/buffer.o \
 src/control.o \
+src/coord_conventions.o \
 src/dac_dma.o \
 src/generator.o \
 src/i2c_driver.o \
@@ -315,6 +318,7 @@ src/asf/common/utils/stdio/stdio_usb/stdio_usb.d \
 src/asf/common/utils/stdio/write.d \
 src/buffer.d \
 src/control.d \
+src/coord_conventions.d \
 src/dac_dma.d \
 src/generator.d \
 src/i2c_driver.d \
@@ -373,6 +377,7 @@ src/asf/common/utils/stdio/stdio_usb/stdio_usb.d \
 src/asf/common/utils/stdio/write.d \
 src/buffer.d \
 src/control.d \
+src/coord_conventions.d \
 src/dac_dma.d \
 src/generator.d \
 src/i2c_driver.d \
@@ -402,6 +407,8 @@ ADDITIONAL_DEPENDENCIES:=
 OUTPUT_FILE_DEP:= ./makedep.mk
 
 # AVR32/GNU C Compiler
+
+
 
 
 

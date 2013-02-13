@@ -82,6 +82,8 @@ src\buffer.c
 
 src\control.c
 
+src\coord_conventions.c
+
 src\dac_dma.c
 
 src\generator.c
