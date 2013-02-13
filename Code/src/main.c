@@ -215,20 +215,18 @@ void main (void)
 		if(counter%30==0) {
 			// ATTITUDE QUATERNION
 			//mavlink_msg_attitude_send(MAVLINK_COMM_0, attitude.time_boot_ms, attitude.roll, attitude.pitch, attitude.yaw, attitude.rollspeed, attitude.pitchspeed, attitude.yawspeed);
-			mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, 0, imu1.attitude.qe.v[0], imu1.attitude.qe.v[1], imu1.attitude.qe.v[2], imu1.attitude.qe.s, imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
+			mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, 0, imu1.attitude.qe.s, imu1.attitude.qe.v[0], imu1.attitude.qe.v[1], imu1.attitude.qe.v[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
 		}
-		
-		if(counter%10==0) {
-			
-			
+
+		if(counter%10==0) {		
 			// VFR HUD
 			mavlink_vfr_hud_t hud;	
-			hud.airspeed = (float)25.2;
-			hud.groundspeed = (float)15.1;
-			hud.alt = (float)150;
-			hud.heading = (int16_t)((30.0/M_PI)*180.0f+180.0f) % 360;
-			hud.climb = (float)5;
-			hud.throttle = (uint16_t)90;
+			hud.airspeed = 25.2;
+			hud.groundspeed = 15.1;
+			hud.alt = 150;
+			hud.heading = ((30.0/M_PI)*180.0f+180.0f) % 360;
+			hud.climb = 5;
+			hud.throttle = 90;
 			//mavlink_msg_vfr_hud_send(systemid, MAV_COMP_ID_IMU, &msg, &hud);
 			mavlink_msg_vfr_hud_send(MAVLINK_COMM_0, hud.airspeed, hud.groundspeed, hud.heading, hud.throttle, hud.alt, hud.climb);
 		}

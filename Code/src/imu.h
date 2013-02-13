@@ -25,7 +25,6 @@ typedef struct {
 	int8_t ready;
 } Imu_Data_t;
 
-
 void init_imu(Imu_Data_t *imu1);
 
 void calibrate_Gyros(Imu_Data_t *imu1);

@@ -17,7 +17,6 @@ typedef struct UQuat {
 	float v[3];
 } UQuat_t;
 
-
 enum calibration_mode {OFF, LEVELING, LEVEL_PLUS_ACCEL};
 
 
