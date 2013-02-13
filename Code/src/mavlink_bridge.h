@@ -16,10 +16,18 @@
  
    Lines also in your main.c, e.g. by reading these parameter from EEPROM.
  */
-
 mavlink_system_t mavlink_system;
-mavlink_system.sysid = 100; // System ID, 1-255
-mavlink_system.compid = 50; // Component/Subsystem ID, 1-255
+byte_stream_t *mavlink_out_stream;
+//byte_stream_t *mavlink_in_stream;
+
+
+static inline void init_mavlink(byte_stream_t *transmit_stream)
+{
+	mavlink_system.sysid = 100; // System ID, 1-255
+	mavlink_system.compid = 50; // Component/Subsystem ID, 1-255
+	mavlink_out_stream = transmit_stream;	
+}
+
  
 /**
  * @brief Send one char (uint8_t) over a comm channel
@@ -31,11 +39,12 @@ static inline void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 {
     if (chan == MAVLINK_COMM_0)
     {
-        uart0_transmit(ch);
+        //uart0_transmit(ch);
+		mavlink_out_stream->put(mavlink_out_stream->data, ch);		
     }
     if (chan == MAVLINK_COMM_1)
     {
-    	uart1_transmit(ch);
+    	//uart1_transmit(ch);
     }
 }
  

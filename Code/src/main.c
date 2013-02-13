@@ -75,31 +75,24 @@ void main (void)
 	
 	init_UART_int(0);
 	register_write_stream(get_UART_handle(0), &xbee_stream);
-	
-	
+		
 	init_UART_int(4);
 	register_write_stream(get_UART_handle(4), &debug_stream);
+	
+	// init mavlink
+	//int system_type = MAV_FIXED_WING;
+	int system_type = 0;
+	init_mavlink(&debug_stream);
 	
 	Enable_global_interrupt();
 	//print_init();
 	//delay_ms(100);
 	
-	
-	putstring(&xbee_stream, "Initialised xbeestream\n");
+	//putstring(&xbee_stream, "Initialised xbeestream\n");
 	
 	print_init(XBEE_UART_ID);
 	dbg_print("Debug stream initialised\n");
-	// initialise ishtar
-	init_ishtar_streams(&debug_stream);
-	
-	register_read_stream(get_UART_handle(4), ishtar_get_inbound_stream());
-	//register_read_stream(get_UART_handle(4), &debug_stream);
-	//ishtar_Init((ishtar_ExternalSendFunc)&ishtar_send, (ishtar_ExternalFlushFunc)&ishtar_flush);
-	//	ishtar_Init(NULL, NULL);
-	
-	ishtar_Variable("looptime", &last_looptime, ULONG, 1, READ_ONLY);
-	
-	
+
 	LED_Off(LED1);
 	
 	init_Servos();
@@ -121,8 +114,8 @@ void main (void)
 	for (i=200; i>0; i--) {
 		imu_update(&imu1);
 		if (i%100 ==0) {
-			putnum(STDOUT, i/100, 10);
-			putstring(STDOUT, "...\n");		
+			//putnum(STDOUT, i/100, 10);
+			//putstring(STDOUT, "...\n");		
 		}
 				
 		delay_ms(5);
@@ -133,9 +126,6 @@ void main (void)
 	counter=0;
 	while (1==1) {
 		this_looptime=get_millis();
-				//
-	
-		//ishtar_Step();
 		
 		controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
 		controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
@@ -143,7 +133,6 @@ void main (void)
 		controls.thrust=getChannel(S_THROTTLE)/350.0;
 		
 		imu_update(&imu1);
-			//LED_On(LED0);
 			
 		if (getChannel(4)>0) {
 			quad_stabilise(&imu1, &controls, RATE_COMMAND_MODE);
@@ -152,6 +141,7 @@ void main (void)
 		}		
 		
 		if (counter%20==0) {
+			/*
 			if (checkReceivers()>=0) {
 				putstring(STDOUT, "R");
 			}
@@ -160,36 +150,36 @@ void main (void)
 			}else {
 				putstring(STDOUT, " ACM ");
 			}				
-			/*
+			
 			for (i=0; i<6; i++) {
 				putnum(STDOUT, imu1.raw_channels[i], 10);
 				//putnum(STDOUT, (int)(1*imu1.attitude.om[i]), 10);
 				putstring(STDOUT, "\t");
-			}/**/	
+			}	
 		
 			for (i=0; i<3; i++) {
 				putnum(STDOUT, (int)(1000.0*imu1.attitude.a[i]), 10);
 				putstring(STDOUT, "\t");
-			}/**/
-	/*		
+			}
+		
 			putstring(STDOUT, "S");
 			for (i=0; i<3; i++) {
 				putnum(STDOUT, stabiliser.output.rpy[i]*100, 10);
 				putstring(STDOUT, "\t");
 			}
 			putnum(STDOUT, stabiliser.output.thrust+*100, 10);
-	/**/
+	
 	
 			for (i=0; i<4; i++) {
 				putnum(STDOUT, getChannel(i), 10);
 				putstring(STDOUT, "\t");
 			}
-	/**/
+	
 		
 			for (i=0; i<3; i++) {
 				putnum(STDOUT, (int)(100.0*imu1.attitude.up_vec.v[i]), 10);
 				putstring(STDOUT, "\t");
-			}/**/	
+			}
 				
 			for (i=0; i<3; i++) {
 				putnum(STDOUT, (int)(100.0*get_rate_stabiliser()->output.rpy[i]), 10);
@@ -197,21 +187,26 @@ void main (void)
 				putnum(STDOUT, (int)(100.0*get_rate_stabiliser()->rpy_controller[i].integrator.accumulator), 10);
 
 				putstring(STDOUT, "\t");
-			}/**/	
-	/**/	
+			}	
+		
 			putnum(STDOUT, imu1.dt*1000, 10);
 			
-			//putstring(STDOUT, "\n");
-			//putstring(STDOUT, "Controls :");
-			//putstring(STDOUT, "\t");
-			//putnum(STDOUT, 100*controls.rpy[ROLL], 10);
-			//putstring(STDOUT, "\t");
-			//putnum(STDOUT, 100*controls.rpy[PITCH], 10);
-			//putstring(STDOUT, "\t");
-			//putnum(STDOUT, 100*controls.rpy[YAW], 10);
-			//putstring(STDOUT, "\t");
-			//putnum(STDOUT, 100*controls.thrust, 10);
-			//putstring(STDOUT, "\n");
+			putstring(STDOUT, "\n");
+			putstring(STDOUT, "Controls :");
+			putstring(STDOUT, "\t");
+			putnum(STDOUT, 100*controls.rpy[ROLL], 10);
+			putstring(STDOUT, "\t");
+			putnum(STDOUT, 100*controls.rpy[PITCH], 10);
+			putstring(STDOUT, "\t");
+			putnum(STDOUT, 100*controls.rpy[YAW], 10);
+			putstring(STDOUT, "\t");
+			putnum(STDOUT, 100*controls.thrust, 10);
+			putstring(STDOUT, "\n");
+			*/
+			
+			// Send a heartbeat over UART0 including the system type
+			mavlink_msg_heartbeat_send(MAVLINK_COMM_0, system_type, MAV_AUTOPILOT_GENERIC, MAV_MODE_MANUAL_DISARMED, 0, MAV_STATE_STANDBY);
+			
 		}
 		LED_On(LED1);
 		delay_ms(1);
