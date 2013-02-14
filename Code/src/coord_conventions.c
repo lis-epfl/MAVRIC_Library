@@ -25,7 +25,7 @@ Schill_Attitude_t Quat_to_Schill(UQuat_t qe) {
 	
 	schill.rpy[0]=aero.rpy[1];
 	schill.rpy[1]=aero.rpy[0];
-	schill.rpy[2]=-aero.rpy[2];
+	schill.rpy[2]=aero.rpy[2];
 
 	return schill;
 }
