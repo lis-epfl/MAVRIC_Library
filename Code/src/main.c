@@ -75,14 +75,13 @@ void main (void)
 	
 	init_UART_int(0);
 	register_write_stream(get_UART_handle(0), &xbee_stream);
-	//register_read_stream(get_UART_handle(0),  mavlink_get_in_stream());
-	//register_read_stream(get_UART_handle(0), mavlink_in_stream);
 	
 	init_UART_int(4);
 	register_write_stream(get_UART_handle(4), &debug_stream);
 
 	// init mavlink
-	init_mavlink(&debug_stream);
+	init_mavlink(&xbee_stream);
+	register_read_stream(get_UART_handle(0), mavlink_in_stream);	
 		
 	Enable_global_interrupt();
 	//print_init();
@@ -115,7 +114,7 @@ void main (void)
 		imu_update(&imu1);
 		if (i%100 ==0) {
 			// Send heartbeat message
-			mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_CALIBRATING);
+			// mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_CALIBRATING);
 		}
 				
 		delay_ms(5);
@@ -220,7 +219,7 @@ void main (void)
 		
 		if(counter%30==0) {
 			// ATTITUDE QUATERNION
-			mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, 0, imu1.attitude.qe.s, imu1.attitude.qe.v[0], imu1.attitude.qe.v[1], imu1.attitude.qe.v[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
+			//mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, 0, imu1.attitude.qe.s, imu1.attitude.qe.v[0], imu1.attitude.qe.v[1], imu1.attitude.qe.v[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
 		
 			// ATTITUDE
 			/*Aero_Attitude_t aero_attitude;
@@ -239,9 +238,12 @@ void main (void)
 
 			// NAMED VALUES
 			//mavlink_msg_named_value_float_send(mavlink_channel_t chan, uint32_t time_boot_ms, const char *name, float value)
-			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "User_val_1", 0.5f);
+			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "LoopTime", this_looptime-last_looptime);
 			//mavlink_msg_named_value_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, const char *name, int32_t value
-			mavlink_msg_named_value_int_send(MAVLINK_COMM_0, 0, "User_val_2", 201);
+			//mavlink_msg_named_value_int_send(MAVLINK_COMM_0, 0, "User_val_2", 201);
+			
+			// Test receive stream
+			putnum(&debug_stream,(long)buffer_bytes_available(mavlink_in_stream->data), 10);
 		}
 
 		
