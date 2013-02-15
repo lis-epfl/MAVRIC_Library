@@ -31,8 +31,7 @@
 #include "uart_int.h"
 
 #include "ishtar_stream.h"
-#include "mavlink_bridge.h"
-#include "mavlink/include/common/mavlink.h" 
+#include "mavlink_stream.h"
 #include "coord_conventions.h"
 
 Imu_Data_t imu1;
@@ -76,13 +75,15 @@ void main (void)
 	
 	init_UART_int(0);
 	register_write_stream(get_UART_handle(0), &xbee_stream);
-		
+	//register_read_stream(get_UART_handle(0),  mavlink_get_in_stream());
+	//register_read_stream(get_UART_handle(0), mavlink_in_stream);
+	
 	init_UART_int(4);
 	register_write_stream(get_UART_handle(4), &debug_stream);
-	
+
 	// init mavlink
-	init_mavlink(&xbee_stream);
-	
+	init_mavlink(&debug_stream);
+		
 	Enable_global_interrupt();
 	//print_init();
 	//delay_ms(100);
@@ -206,6 +207,11 @@ void main (void)
 			
 		}
 		
+		/*if(counter%300==0) {
+			putstring(STDOUT, "Toggle ! \n");
+			LED_Toggle(LED1);
+		}*/
+				
 		if(counter%300==0) {
 			// Send a heartbeat over UART0 including the system type
 			//mavlink_msg_heartbeat_send(mavlink_channel_t chan, uint8_t type, uint8_t autopilot, uint8_t base_mode, uint32_t custom_mode, uint8_t system_status)
@@ -231,21 +237,14 @@ void main (void)
 			//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
 			mavlink_msg_global_position_int_send(MAVLINK_COMM_0, 0, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, imu1.attitude.om[2]);
 
-		
+			// NAMED VALUES
+			//mavlink_msg_named_value_float_send(mavlink_channel_t chan, uint32_t time_boot_ms, const char *name, float value)
+			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "User_val_1", 0.5f);
+			//mavlink_msg_named_value_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, const char *name, int32_t value
+			mavlink_msg_named_value_int_send(MAVLINK_COMM_0, 0, "User_val_2", 201);
 		}
 
-		/*if(counter%10==0) {		
-			// VFR HUD
-			mavlink_vfr_hud_t hud;	
-			hud.airspeed = 25.2;
-			hud.groundspeed = 15.1;
-			hud.alt = 150;
-			//hud.heading = ((30.0/M_PI)*180.0f+180.0f) % 360;
-			hud.climb = 5;
-			hud.throttle = 90;
-			//mavlink_msg_vfr_hud_send(systemid, MAV_COMP_ID_IMU, &msg, &hud);
-			mavlink_msg_vfr_hud_send(MAVLINK_COMM_0, hud.airspeed, hud.groundspeed, hud.heading, hud.throttle, hud.alt, hud.climb);
-		}*/
+		
 		
 		LED_On(LED1);
 		delay_ms(1);

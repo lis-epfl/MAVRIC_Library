@@ -1254,6 +1254,12 @@
     <Compile Include="src\mavlink_bridge.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\mavlink_stream.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\mavlink_stream.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\print_util.c">
       <SubType>compile</SubType>
     </Compile>

@@ -102,6 +102,8 @@ src\led.c
 
 src\main.c
 
+src\mavlink_stream.c
+
 src\print_util.c
 
 src\qfilter.c
