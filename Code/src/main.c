@@ -243,6 +243,9 @@ void main (void)
 				putstring(&debug_stream, " from system");
 				putnum(&debug_stream, rec.msg.sysid, 10);
 				putstring(&debug_stream, "\n");
+				
+				global_data_reset_param_defaults();
+				handle_mavlink_message(&rec);
 			}
 		}
 		

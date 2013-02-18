@@ -47,6 +47,58 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 	return 0;
 }
 
+#define ONBOARD_PARAM_COUNT 3
+
+struct global_struct
+{
+	float param[ONBOARD_PARAM_COUNT];
+	char param_name[ONBOARD_PARAM_COUNT][MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN];
+};
+
+struct global_struct global_data;
+
+void global_data_reset_param_defaults(void)
+{
+	global_data.param[0] = 1;
+	strcpy(global_data.param_name[0], "PID_P_GAIN");
+
+	global_data.param[1] = 0.345;
+	strcpy(global_data.param_name[1], "PID_I_GAIN");
+	
+	global_data.param[2] = 1.5;
+	strcpy(global_data.param_name[2], "PID_D_GAIN");
+}
+
 void handle_mavlink_message(Mavlink_Received_t* rec) {
-	;
+	switch(rec->msg.msgid) {
+		case MAVLINK_MSG_ID_PARAM_REQUEST_LIST: {
+			// Send parameters
+			uint8_t param_i = 0;
+			while(param_i < ONBOARD_PARAM_COUNT) {
+				mavlink_msg_param_value_send(MAVLINK_COMM_0,
+												(int8_t*)global_data.param_name[param_i],
+												global_data.param[param_i],
+												MAVLINK_TYPE_FLOAT,
+												ONBOARD_PARAM_COUNT,
+												param_i);
+				param_i++;
+			}
+			/*
+			mavlink_msg_param_value_send(MAVLINK_COMM_0,
+								(int8_t*)"PID_D_GAIN",
+								123,
+								MAVLINK_TYPE_FLOAT,
+								ONBOARD_PARAM_COUNT,
+								param_i);*/
+		}
+		break;
+		case MAVLINK_MSG_ID_PARAM_SET: {
+			// Update parameters
+		}
+		break;
+		
+		/* 
+		TODO : add other cases
+		*/
+	}
 }
