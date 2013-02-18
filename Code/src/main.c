@@ -38,11 +38,12 @@ Imu_Data_t imu1;
 
 Control_Command_t controls;
 
-byte_stream_t xbee_stream;
+byte_stream_t xbee_out_stream;
+byte_stream_t xbee_in_stream;
 byte_stream_t debug_stream;
 
 #define STDOUT &debug_stream
-//#define STDOUT &xbee_stream
+//#define STDOUT &xbee_out_stream
 
 
 void main (void)
@@ -65,30 +66,26 @@ void main (void)
 	
 	INTC_init_interrupts();
 	if (init_i2c(0)!=STATUS_OK) {
-//		putstring(STDOUT, "Error initialising I2C\n");
+		putstring(STDOUT, "Error initialising I2C\n");
 		while (1==1);
 	} else {
-//		putstring(STDOUT, "initialised I2C.\n");
+		putstring(STDOUT, "initialised I2C.\n");
 	};
 
 	spektrum_init();
 	
 	init_UART_int(0);
-	register_write_stream(get_UART_handle(0), &xbee_stream);
+	register_write_stream(get_UART_handle(0), &xbee_out_stream);
 	
 	init_UART_int(4);
 	register_write_stream(get_UART_handle(4), &debug_stream);
 
 	// init mavlink
-	init_mavlink(&debug_stream);
-	register_read_stream(get_UART_handle(4), mavlink_in_stream);	
+	init_mavlink(&xbee_out_stream, &xbee_in_stream);
+	register_read_stream(get_UART_handle(0), &xbee_in_stream);	
 		
 	Enable_global_interrupt();
-	//print_init();
-	//delay_ms(100);
-	
-	//putstring(&xbee_stream, "Initialised xbeestream\n");
-	
+		
 	print_init(XBEE_UART_ID);
 	dbg_print("Debug stream initialised\n");
 
@@ -112,9 +109,9 @@ void main (void)
 	
 	for (i=200; i>0; i--) {
 		imu_update(&imu1);
-		if (i%100 ==0) {
+		if (i%50 ==0) {
 			// Send heartbeat message
-			// mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_CALIBRATING);
+			mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_CALIBRATING);
 		}
 				
 		delay_ms(5);
@@ -205,21 +202,16 @@ void main (void)
 			
 			
 		}
-		
-		/*if(counter%300==0) {
-			putstring(STDOUT, "Toggle ! \n");
-			LED_Toggle(LED1);
-		}*/
 				
 		if(counter%300==0) {
 			// Send a heartbeat over UART0 including the system type
 			//mavlink_msg_heartbeat_send(mavlink_channel_t chan, uint8_t type, uint8_t autopilot, uint8_t base_mode, uint32_t custom_mode, uint8_t system_status)
-			//mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_ACTIVE);
+			mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_ACTIVE);
 		}
 		
 		if(counter%30==0) {
 			// ATTITUDE QUATERNION
-			//mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, 0, imu1.attitude.qe.s, imu1.attitude.qe.v[0], imu1.attitude.qe.v[1], imu1.attitude.qe.v[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
+			mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, 0, imu1.attitude.qe.s, imu1.attitude.qe.v[0], imu1.attitude.qe.v[1], imu1.attitude.qe.v[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
 		
 			// ATTITUDE
 			Aero_Attitude_t aero_attitude;
@@ -230,60 +222,41 @@ void main (void)
 			Schill_Attitude_t schill_attitude;
 			schill_attitude=Quat_to_Schill(imu1.attitude.qe);
 			//mavlink_msg_attitude_send(mavlink_channel_t chan, uint32_t time_boot_ms, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed)
-			//mavlink_msg_attitude_send(MAVLINK_COMM_0, 0, schill_attitude.rpy[0], schill_attitude.rpy[1], schill_attitude.rpy[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
+			mavlink_msg_attitude_send(MAVLINK_COMM_0, 0, schill_attitude.rpy[0], schill_attitude.rpy[1], schill_attitude.rpy[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
 		
 			// GPS COORDINATES (TODO : Add GPS to the platform)
 			//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
-			//mavlink_msg_global_position_int_send(MAVLINK_COMM_0, 0, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, imu1.attitude.om[2]);
+			mavlink_msg_global_position_int_send(MAVLINK_COMM_0, 0, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, imu1.attitude.om[2]);
 
 			// NAMED VALUES
 			//mavlink_msg_named_value_float_send(mavlink_channel_t chan, uint32_t time_boot_ms, const char *name, float value)
-			//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "LoopTime", this_looptime-last_looptime);
+			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "LoopTime", this_looptime-last_looptime);
 			//mavlink_msg_named_value_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, const char *name, int32_t value
-			//mavlink_msg_named_value_int_send(MAVLINK_COMM_0, 0, "User_val_2", 201);
+			mavlink_msg_named_value_int_send(MAVLINK_COMM_0, 0, "User_val_2", 201);
 		}
 		
 		
-		if(counter%30==0) {			
-			// Test receive stream
-			// putnum(&debug_stream,(long)buffer_bytes_available(mavlink_in_stream->data), 10);
-			//putnum(&debug_stream,(long)buffer_bytes_available(mavlink_in_stream->data), 10);
-			putnum(&xbee_stream,(long)buffer_bytes_available(mavlink_in_stream->data), 10);
-			
-			
-			/*
+		if(counter%30==0) {						
 			mavlink_message_t msg;
 			mavlink_status_t status;
-			while(buffer_bytes_available(mavlink_in_stream->data) > 0) {
-				//putnum(&debug_stream, mavlink_in_stream->get(mavlink_in_stream->data), 10);
-				//putstring(&debug_stream, "\n");
-				uint8_t byte = mavlink_in_stream->get(mavlink_in_stream->data);
+			while(buffer_bytes_available(xbee_in_stream.data) > 0) {
+				// putnum(&debug_stream,(long)buffer_bytes_available(xbee_in_stream.data), 10);
+				uint8_t byte = xbee_in_stream.get(xbee_in_stream.data);
 				if (mavlink_parse_char(MAVLINK_COMM_0, byte, &msg, &status)) {
 					// printf("Received message with ID %d, sequence: %d from component %d of system %d", msg.msgid, msg.seq, msg.compid, msg.sysid);
-					byte_stream_t stream;
-					stream  = xbee_stream;
-					putstring(&stream, "Received message with ID");
-					putnum(&stream, msg.msgid, 10);
-					putstring(&stream, " from system");
-					putnum(&stream, msg.sysid, 10);
-					putstring(&stream, "\n");
+					putstring(&debug_stream, "\n Received message with ID");
+					putnum(&debug_stream, msg.msgid, 10);
+					putstring(&debug_stream, " from system");
+					putnum(&debug_stream, msg.sysid, 10);
+					putstring(&debug_stream, "\n");
 				}
 			}
-			*/
-			
-		}
-		
-
-		
-		
+		}	
 		LED_On(LED1);
 		delay_ms(1);
 		counter=(counter+1)%1000;
 		last_looptime=this_looptime;	
-
 	}		
-	
-	
 }
 
 

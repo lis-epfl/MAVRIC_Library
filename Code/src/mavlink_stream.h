@@ -20,7 +20,9 @@ typedef struct {
 	mavlink_status_t status;
 } Mavlink_Received_t;
 
-void init_mavlink(byte_stream_t *transmit_stream);
+
+void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream);
+byte_stream_t* mavlink_get_inbound_stream();
 void mavlink_receive(stream_data_t* data, uint8_t element);
 void handle_mavlink_message(mavlink_channel_t chan, mavlink_message_t* msg);
 

@@ -5,6 +5,8 @@
 #define MAVLINK_USE_CONVENIENCE_FUNCTIONS
  
 #include "mavlink/include/mavlink_types.h"
+
+mavlink_system_t mavlink_system;
   
 /* Struct that stores the communication settings of this system.
    you can also define / alter these settings elsewhere, as long
@@ -16,9 +18,6 @@
  
    Lines also in your main.c, e.g. by reading these parameter from EEPROM.
  */
-mavlink_system_t mavlink_system;
-byte_stream_t *mavlink_out_stream;
-byte_stream_t *mavlink_in_stream;
 
 /**
  * @brief Send one char (uint8_t) over a comm channel
@@ -26,17 +25,6 @@ byte_stream_t *mavlink_in_stream;
  * @param chan MAVLink channel to use, usually MAVLINK_COMM_0 = UART0
  * @param ch Character to send
  */
-static inline void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
-{
-    if (chan == MAVLINK_COMM_0)
-    {
-        //uart0_transmit(ch);
-		mavlink_out_stream->put(mavlink_out_stream->data, ch);		
-    }
-    if (chan == MAVLINK_COMM_1)
-    {
-    	//uart1_transmit(ch);
-    }
-}
+void comm_send_ch(mavlink_channel_t chan, uint8_t ch);
  
 #endif /* MAVLINK_BRIDGE_H */
