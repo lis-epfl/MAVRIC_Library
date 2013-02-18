@@ -66,10 +66,10 @@ void main (void)
 	
 	INTC_init_interrupts();
 	if (init_i2c(0)!=STATUS_OK) {
-		putstring(STDOUT, "Error initialising I2C\n");
+		//putstring(STDOUT, "Error initialising I2C\n");
 		while (1==1);
 	} else {
-		putstring(STDOUT, "initialised I2C.\n");
+		//putstring(STDOUT, "initialised I2C.\n");
 	};
 
 	spektrum_init();
@@ -235,23 +235,17 @@ void main (void)
 			mavlink_msg_named_value_int_send(MAVLINK_COMM_0, 0, "User_val_2", 201);
 		}
 		
-		
-		if(counter%30==0) {						
-			mavlink_message_t msg;
-			mavlink_status_t status;
-			while(buffer_bytes_available(xbee_in_stream.data) > 0) {
-				// putnum(&debug_stream,(long)buffer_bytes_available(xbee_in_stream.data), 10);
-				uint8_t byte = xbee_in_stream.get(xbee_in_stream.data);
-				if (mavlink_parse_char(MAVLINK_COMM_0, byte, &msg, &status)) {
-					// printf("Received message with ID %d, sequence: %d from component %d of system %d", msg.msgid, msg.seq, msg.compid, msg.sysid);
-					putstring(&debug_stream, "\n Received message with ID");
-					putnum(&debug_stream, msg.msgid, 10);
-					putstring(&debug_stream, " from system");
-					putnum(&debug_stream, msg.sysid, 10);
-					putstring(&debug_stream, "\n");
-				}
+		if(counter%30==0) {	
+			Mavlink_Received_t rec;					
+			if(mavlink_receive(&xbee_in_stream, &rec)) {
+				putstring(&debug_stream, "\n Received message with ID");
+				putnum(&debug_stream, rec.msg.msgid, 10);
+				putstring(&debug_stream, " from system");
+				putnum(&debug_stream, rec.msg.sysid, 10);
+				putstring(&debug_stream, "\n");
 			}
-		}	
+		}
+		
 		LED_On(LED1);
 		delay_ms(1);
 		counter=(counter+1)%1000;

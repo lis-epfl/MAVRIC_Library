@@ -36,17 +36,17 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream)
 	make_buffered_stream(&mavlink_in_buffer, mavlink_in_stream);
 }
 
-void mavlink_receive(stream_data_t* data, uint8_t element) {
-	Mavlink_Received_t rec;
-	if(mavlink_parse_char(MAVLINK_COMM_0, element, &rec.msg, &rec.status)) {
-		handle_mavlink_message(MAVLINK_COMM_0, &rec.msg);	
-	}
+uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
+	uint8_t byte;
+	while(buffer_bytes_available(stream->data) > 0) {
+		byte = stream->get(stream->data);
+		if(mavlink_parse_char(MAVLINK_COMM_0, byte, &rec->msg, &rec->status)) {
+			return 1;
+		}
+	}		
+	return 0;
 }
 
-byte_stream_t* mavlink_get_in_stream() {
-	return mavlink_in_stream;	
-}
-
-void handle_mavlink_message(mavlink_channel_t chan, mavlink_message_t* msg) {
-	mavlink_msg_named_value_int_send(MAVLINK_COMM_0, 0, "User_val_2", 321);
+void handle_mavlink_message(Mavlink_Received_t* rec) {
+	;
 }
