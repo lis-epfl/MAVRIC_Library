@@ -80,8 +80,8 @@ void main (void)
 	register_write_stream(get_UART_handle(4), &debug_stream);
 
 	// init mavlink
-	init_mavlink(&xbee_stream);
-	register_read_stream(get_UART_handle(0), mavlink_in_stream);	
+	init_mavlink(&debug_stream);
+	register_read_stream(get_UART_handle(4), mavlink_in_stream);	
 		
 	Enable_global_interrupt();
 	//print_init();
@@ -214,7 +214,7 @@ void main (void)
 		if(counter%300==0) {
 			// Send a heartbeat over UART0 including the system type
 			//mavlink_msg_heartbeat_send(mavlink_channel_t chan, uint8_t type, uint8_t autopilot, uint8_t base_mode, uint32_t custom_mode, uint8_t system_status)
-			mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_ACTIVE);
+			//mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_ACTIVE);
 		}
 		
 		if(counter%30==0) {
@@ -222,29 +222,57 @@ void main (void)
 			//mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, 0, imu1.attitude.qe.s, imu1.attitude.qe.v[0], imu1.attitude.qe.v[1], imu1.attitude.qe.v[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
 		
 			// ATTITUDE
-			/*Aero_Attitude_t aero_attitude;
+			Aero_Attitude_t aero_attitude;
 			aero_attitude=Quat_to_Aero(imu1.attitude.qe);
 			//mavlink_msg_attitude_send(mavlink_channel_t chan, uint32_t time_boot_ms, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed)
-			mavlink_msg_attitude_send(MAVLINK_COMM_0, 0, aero_attitude.rpy[0], aero_attitude.rpy[1], aero_attitude.rpy[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
-			*/
+			//mavlink_msg_attitude_send(MAVLINK_COMM_0, 0, aero_attitude.rpy[0], aero_attitude.rpy[1], aero_attitude.rpy[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
+			
 			Schill_Attitude_t schill_attitude;
 			schill_attitude=Quat_to_Schill(imu1.attitude.qe);
 			//mavlink_msg_attitude_send(mavlink_channel_t chan, uint32_t time_boot_ms, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed)
-			mavlink_msg_attitude_send(MAVLINK_COMM_0, 0, schill_attitude.rpy[0], schill_attitude.rpy[1], schill_attitude.rpy[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
+			//mavlink_msg_attitude_send(MAVLINK_COMM_0, 0, schill_attitude.rpy[0], schill_attitude.rpy[1], schill_attitude.rpy[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
 		
 			// GPS COORDINATES (TODO : Add GPS to the platform)
 			//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
-			mavlink_msg_global_position_int_send(MAVLINK_COMM_0, 0, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, imu1.attitude.om[2]);
+			//mavlink_msg_global_position_int_send(MAVLINK_COMM_0, 0, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, imu1.attitude.om[2]);
 
 			// NAMED VALUES
 			//mavlink_msg_named_value_float_send(mavlink_channel_t chan, uint32_t time_boot_ms, const char *name, float value)
-			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "LoopTime", this_looptime-last_looptime);
+			//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "LoopTime", this_looptime-last_looptime);
 			//mavlink_msg_named_value_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, const char *name, int32_t value
 			//mavlink_msg_named_value_int_send(MAVLINK_COMM_0, 0, "User_val_2", 201);
-			
-			// Test receive stream
-			putnum(&debug_stream,(long)buffer_bytes_available(mavlink_in_stream->data), 10);
 		}
+		
+		
+		if(counter%30==0) {			
+			// Test receive stream
+			// putnum(&debug_stream,(long)buffer_bytes_available(mavlink_in_stream->data), 10);
+			//putnum(&debug_stream,(long)buffer_bytes_available(mavlink_in_stream->data), 10);
+			putnum(&xbee_stream,(long)buffer_bytes_available(mavlink_in_stream->data), 10);
+			
+			
+			/*
+			mavlink_message_t msg;
+			mavlink_status_t status;
+			while(buffer_bytes_available(mavlink_in_stream->data) > 0) {
+				//putnum(&debug_stream, mavlink_in_stream->get(mavlink_in_stream->data), 10);
+				//putstring(&debug_stream, "\n");
+				uint8_t byte = mavlink_in_stream->get(mavlink_in_stream->data);
+				if (mavlink_parse_char(MAVLINK_COMM_0, byte, &msg, &status)) {
+					// printf("Received message with ID %d, sequence: %d from component %d of system %d", msg.msgid, msg.seq, msg.compid, msg.sysid);
+					byte_stream_t stream;
+					stream  = xbee_stream;
+					putstring(&stream, "Received message with ID");
+					putnum(&stream, msg.msgid, 10);
+					putstring(&stream, " from system");
+					putnum(&stream, msg.sysid, 10);
+					putstring(&stream, "\n");
+				}
+			}
+			*/
+			
+		}
+		
 
 		
 		
