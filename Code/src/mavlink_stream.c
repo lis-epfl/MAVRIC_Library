@@ -53,6 +53,7 @@ struct global_struct
 {
 	float param[ONBOARD_PARAM_COUNT];
 	char param_name[ONBOARD_PARAM_COUNT][MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN];
+	uint8_t max_param_name_length;
 };
 
 struct global_struct global_data;
@@ -67,36 +68,66 @@ void global_data_reset_param_defaults(void)
 	
 	global_data.param[2] = 1.5;
 	strcpy(global_data.param_name[2], "PID_D_GAIN");
+	
+	global_data.max_param_name_length = 10;
 }
 
 void handle_mavlink_message(Mavlink_Received_t* rec) {
 	switch(rec->msg.msgid) {
 		case MAVLINK_MSG_ID_PARAM_REQUEST_LIST: {
 			// Send parameters
-			uint8_t param_i = 0;
-			while(param_i < ONBOARD_PARAM_COUNT) {
+			/* 
+			TODO : if the number of parameters becomes large, 
+			it would be better to send the values at a lower rate to reduce bandwidth footprint
+			*/
+			for (uint16_t i = 0; i < ONBOARD_PARAM_COUNT; i++) {
 				mavlink_msg_param_value_send(MAVLINK_COMM_0,
-												(int8_t*)global_data.param_name[param_i],
-												global_data.param[param_i],
+												(int8_t*)global_data.param_name[i],
+												global_data.param[i],
 												MAVLINK_TYPE_FLOAT,
 												ONBOARD_PARAM_COUNT,
-												param_i);
-				param_i++;
+												i);
 			}
-			/*
-			mavlink_msg_param_value_send(MAVLINK_COMM_0,
-								(int8_t*)"PID_D_GAIN",
-								123,
-								MAVLINK_TYPE_FLOAT,
-								ONBOARD_PARAM_COUNT,
-								param_i);*/
 		}
 		break;
 		case MAVLINK_MSG_ID_PARAM_SET: {
-			// Update parameters
+			mavlink_param_set_t set;
+			mavlink_msg_param_set_decode(&rec->msg, &set);
+ 
+			// Check if this message is for this system
+			if ((uint8_t) set.target_system == (uint8_t) mavlink_system.sysid) {
+				char* key = (char*) set.param_id;
+				
+				for (uint16_t i = 0; i < ONBOARD_PARAM_COUNT; i++) {
+					bool match = true;
+					for (uint16_t j = 0; j < global_data.max_param_name_length; j++) {
+						// Compare
+						if ((char)global_data.param_name[i][j] != (char)key[j]) {
+							match = false;
+						}
+ 
+						// End matching if null termination is reached
+						if (((char) global_data.param_name[i][j]) == '\0') {
+							break;
+						}
+					}
+ 
+					// Check if matched
+					if (match) {
+						// Only write and emit changes if there is actually a difference
+						if (global_data.param[i] != set.param_value && set.param_type == MAVLINK_TYPE_FLOAT) {
+							global_data.param[i] = set.param_value;
+							// Report back new value
+							mavlink_msg_param_value_send(MAVLINK_COMM_0,
+														(int8_t*) global_data.param_name[i],
+														global_data.param[i], MAVLINK_TYPE_FLOAT, 
+														ONBOARD_PARAM_COUNT, i);
+						}
+					}
+				}
+			}
 		}
 		break;
-		
 		/* 
 		TODO : add other cases
 		*/
