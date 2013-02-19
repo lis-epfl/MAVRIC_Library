@@ -1260,6 +1260,12 @@
     <Compile Include="src\mavlink_stream.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\onboard_parameters.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\onboard_parameters.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\print_util.c">
       <SubType>compile</SubType>
     </Compile>

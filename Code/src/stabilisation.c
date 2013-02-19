@@ -25,7 +25,6 @@ void init_rate_stabilisation(Stabiliser_t *stabiliser) {
 		(stabiliser->rpy_controller[i]).clip_max= 0.9;
 		initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.6, 0.5, 0.4);
 		initInt(&((stabiliser->rpy_controller)[i].integrator),0.7, 1.0, 0.65);
-		//initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.6);
 	}	
 	// initialise yaw controller
 	i=2;

@@ -24,6 +24,4 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream)
 uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec);
 void handle_mavlink_message(Mavlink_Received_t* rec);
 
-void global_data_reset_param_defaults(void);
-
 #endif /* MAVLINK_STREAM_H */

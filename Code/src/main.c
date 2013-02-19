@@ -33,6 +33,7 @@
 #include "ishtar_stream.h"
 #include "mavlink_stream.h"
 #include "coord_conventions.h"
+#include "onboard_parameters.h"
 
 Imu_Data_t imu1;
 
@@ -102,6 +103,8 @@ void main (void)
 	imu1.attitude.calibration_level=LEVELING;
 	init_stabilisation();
 
+	init_onboard_parameters();
+	
 	controls.rpy[ROLL]=0;
 	controls.rpy[PITCH]=0;
 	controls.rpy[YAW]=0;
@@ -244,7 +247,6 @@ void main (void)
 				putnum(&debug_stream, rec.msg.sysid, 10);
 				putstring(&debug_stream, "\n");
 				
-				global_data_reset_param_defaults();
 				handle_mavlink_message(&rec);
 			}
 		}

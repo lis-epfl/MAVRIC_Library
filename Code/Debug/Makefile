@@ -137,6 +137,7 @@ C_SRCS +=  \
 ../src/led.c \
 ../src/main.c \
 ../src/mavlink_stream.c \
+../src/onboard_parameters.c \
 ../src/print_util.c \
 ../src/qfilter.c \
 ../src/servo_pwm.c \
@@ -209,6 +210,7 @@ src/itg3200_driver.o \
 src/led.o \
 src/main.o \
 src/mavlink_stream.o \
+src/onboard_parameters.o \
 src/print_util.o \
 src/qfilter.o \
 src/servo_pwm.o \
@@ -272,6 +274,7 @@ src/itg3200_driver.o \
 src/led.o \
 src/main.o \
 src/mavlink_stream.o \
+src/onboard_parameters.o \
 src/print_util.o \
 src/qfilter.o \
 src/servo_pwm.o \
@@ -332,6 +335,7 @@ src/itg3200_driver.d \
 src/led.d \
 src/main.d \
 src/mavlink_stream.d \
+src/onboard_parameters.d \
 src/print_util.d \
 src/qfilter.d \
 src/servo_pwm.d \
@@ -392,6 +396,7 @@ src/itg3200_driver.d \
 src/led.d \
 src/main.d \
 src/mavlink_stream.d \
+src/onboard_parameters.d \
 src/print_util.d \
 src/qfilter.d \
 src/servo_pwm.d \
@@ -412,6 +417,8 @@ ADDITIONAL_DEPENDENCIES:=
 OUTPUT_FILE_DEP:= ./makedep.mk
 
 # AVR32/GNU C Compiler
+
+
 
 
 

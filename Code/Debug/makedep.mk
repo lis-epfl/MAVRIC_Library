@@ -104,6 +104,8 @@ src\main.c
 
 src\mavlink_stream.c
 
+src\onboard_parameters.c
+
 src\print_util.c
 
 src\qfilter.c
