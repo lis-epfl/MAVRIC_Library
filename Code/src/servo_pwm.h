@@ -11,7 +11,7 @@
 
 #define SERVO_TIMER_FREQ 1000000
 #define SERVO_CENTER_DUTY_MICROSEC 1500
-#define SERVO_REPEAT_FREQ 400
+#define SERVO_REPEAT_FREQ 200
 
 void init_Servos(void);
 

@@ -19,7 +19,7 @@ void init_rate_stabilisation(Stabiliser_t *stabiliser) {
 	int i=0;
 	// initialise roll and pitch controllers
 	for (i=0; i<2; i++) {
-		(stabiliser->rpy_controller[i]).p_gain=0.1;
+		(stabiliser->rpy_controller[i]).p_gain=0.05;
 		(stabiliser->rpy_controller[i]).last_update=get_time_ticks();	
 		(stabiliser->rpy_controller[i]).clip_min=-0.9;
 		(stabiliser->rpy_controller[i]).clip_max= 0.9;
@@ -28,7 +28,7 @@ void init_rate_stabilisation(Stabiliser_t *stabiliser) {
 	}	
 	// initialise yaw controller
 	i=2;
-	(stabiliser->rpy_controller)[i].p_gain=0.2;
+	(stabiliser->rpy_controller)[i].p_gain=0.1;
 	(stabiliser->rpy_controller)[i].last_update=get_time_ticks();	
 	(stabiliser->rpy_controller)[i].clip_min=-0.9;
 	(stabiliser->rpy_controller)[i].clip_max= 0.9;
@@ -41,20 +41,20 @@ void init_angle_stabilisation(Stabiliser_t *stabiliser) {
 	int i=0;
 	// initialise roll and pitch controllers
 	for (i=0; i<2; i++) {
-		(stabiliser->rpy_controller[i]).p_gain=1.5;
+		(stabiliser->rpy_controller[i]).p_gain=2;
 		(stabiliser->rpy_controller[i]).last_update=get_time_ticks();	
 		(stabiliser->rpy_controller[i]).clip_min=-1.2;
 		(stabiliser->rpy_controller[i]).clip_max= 1.2;
-		initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.05, 0.5, 0.05); // 0.05, 0.5, 0.05
+		initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.7, 0.5, 0.05); // 0.05, 0.5, 0.05
 		initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.2);
 	}	
 	// initialise yaw controller
 	i=2;
-	(stabiliser->rpy_controller)[i].p_gain=1.8;
+	(stabiliser->rpy_controller)[i].p_gain=2;
 	(stabiliser->rpy_controller)[i].last_update=get_time_ticks();	
 	(stabiliser->rpy_controller)[i].clip_min=-1.0;
 	(stabiliser->rpy_controller)[i].clip_max= 1.0;
-	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.1, 0.5, 0.5);
+	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.3, 0.5, 0.5);
 	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.0);
 	
 }

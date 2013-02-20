@@ -9,8 +9,8 @@
 #ifndef CONF_PLATFORM_H_
 #define CONF_PLATFORM_H_
 
-//#define CONF_DIAG
-#define CONF_CROSS
+#define CONF_DIAG
+//#define CONF_CROSS
 
 #define IMU_X 0
 #define IMU_Y 1
@@ -31,10 +31,10 @@
 #define GYRO_OFFSET 0
 #define ACC_OFFSET 3
 
-#define M_FRONT_LEFT 0
+#define M_FRONT_LEFT 2
 #define M_FRONT_RIGHT 1
-#define M_REAR_LEFT 2
-#define M_REAR_RIGHT 3
+#define M_REAR_LEFT 3
+#define M_REAR_RIGHT 0
 
 #define M_FR_DIR ( 1)
 #define M_FL_DIR (-1)

@@ -93,10 +93,18 @@ void main (void)
 	LED_Off(LED1);
 	
 	init_Servos();
+/*
+	set_servo(0, -500, -500);
+	set_servo(1, -500, -500);
+	set_servo(2, -500, -500);
+	set_servo(3, -500, -500);
+*/
+	
 	set_servo(0, -600, -600);
 	set_servo(1, -600, -600);
 	set_servo(2, -600, -600);
 	set_servo(3, -600, -600);
+	
 	
 	//delay_ms(1000);
 	init_imu(&imu1);
@@ -226,7 +234,11 @@ void main (void)
 			schill_attitude=Quat_to_Schill(imu1.attitude.qe);
 			//mavlink_msg_attitude_send(mavlink_channel_t chan, uint32_t time_boot_ms, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed)
 			mavlink_msg_attitude_send(MAVLINK_COMM_0, 0, schill_attitude.rpy[0], schill_attitude.rpy[1], schill_attitude.rpy[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
-		
+			
+			// Controls output
+			//mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(mavlink_channel_t chan, uint32_t time_boot_ms, float roll, float pitch, float yaw, float thrust)
+			mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(MAVLINK_COMM_0, 0, controls.rpy[ROLL], controls.rpy[PITCH], controls.rpy[YAW], controls.thrust);
+			
 			// GPS COORDINATES (TODO : Add GPS to the platform)
 			//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
 			mavlink_msg_global_position_int_send(MAVLINK_COMM_0, 0, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, imu1.attitude.om[2]);
