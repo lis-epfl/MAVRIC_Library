@@ -2,14 +2,6 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
-src\adc_int.c
-
-src\ads1274.c
-
-src\adxl345_driver.c
-
-src\amplifiers.c
-
 src\asf\avr32\drivers\adcifa\adcifa.c
 
 src\asf\avr32\drivers\ast\ast.c
@@ -78,49 +70,57 @@ src\asf\common\utils\stdio\stdio_usb\stdio_usb.c
 
 src\asf\common\utils\stdio\write.c
 
-src\buffer.c
+src\communication\ishtar.c
 
-src\control.c
+src\communication\ishtar_stream.c
 
-src\coord_conventions.c
+src\communication\mavlink_stream.c
 
-src\dac_dma.c
+src\communication\onboard_parameters.c
 
-src\generator.c
+src\control\control.c
 
-src\i2c_driver.c
+src\control\stabilisation.c
 
-src\imu.c
+src\hal\adc_int.c
 
-src\ishtar.c
+src\hal\ads1274.c
 
-src\ishtar_stream.c
+src\hal\adxl345_driver.c
 
-src\itg3200_driver.c
+src\hal\amplifiers.c
 
-src\led.c
+src\hal\dac_dma.c
+
+src\hal\i2c_driver.c
+
+src\hal\itg3200_driver.c
+
+src\hal\led.c
+
+src\hal\servo_pwm.c
+
+src\hal\spektrum.c
+
+src\hal\spi_buffered.c
+
+src\hal\uart_int.c
 
 src\main.c
 
-src\mavlink_stream.c
+src\runtime\time_keeper.c
 
-src\onboard_parameters.c
+src\sensing\imu.c
 
-src\print_util.c
+src\sensing\qfilter.c
 
-src\qfilter.c
+src\util\buffer.c
 
-src\servo_pwm.c
+src\util\coord_conventions.c
 
-src\sinus.c
+src\util\generator.c
 
-src\spektrum.c
+src\util\print_util.c
 
-src\spi_buffered.c
-
-src\stabilisation.c
-
-src\time_keeper.c
-
-src\uart_int.c
+src\util\sinus.c
 
