@@ -90,6 +90,10 @@ src\hal\adxl345_driver.c
 
 src\hal\amplifiers.c
 
+src\hal\bmp085.c
+
+src\hal\compass_hmc5883l.c
+
 src\hal\dac_dma.c
 
 src\hal\i2c_driver.c
@@ -107,6 +111,8 @@ src\hal\spi_buffered.c
 src\hal\uart_int.c
 
 src\main.c
+
+src\runtime\scheduler.c
 
 src\runtime\time_keeper.c
 

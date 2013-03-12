@@ -30,10 +30,13 @@
 #include "streams.h"
 #include "uart_int.h"
 
+#include "bmp085.h"
+
 #include "ishtar_stream.h"
 #include "mavlink_stream.h"
 #include "coord_conventions.h"
 #include "onboard_parameters.h"
+#include "scheduler.h"
 
 Imu_Data_t imu1;
 
@@ -43,8 +46,26 @@ byte_stream_t xbee_out_stream;
 byte_stream_t xbee_in_stream;
 byte_stream_t debug_stream;
 
+pressure_data *pressure;
+
 #define STDOUT &debug_stream
 //#define STDOUT &xbee_out_stream
+
+NEW_TASK_SET(main_tasks, 10)
+
+void run_stabilisation() {
+	controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
+	controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
+	controls.rpy[YAW]=getChannel(S_YAW)/350.0;
+	controls.thrust=getChannel(S_THROTTLE)/350.0;
+
+	if (getChannel(4)>0) {
+		quad_stabilise(&imu1, &controls, RATE_COMMAND_MODE);
+	} else {
+		quad_stabilise(&imu1, &controls, ATTITUDE_COMMAND_MODE);
+	}
+
+}
 
 
 void main (void)
@@ -134,18 +155,10 @@ void main (void)
 	while (1==1) {
 		this_looptime=get_millis();
 		
-		controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
-		controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
-		controls.rpy[YAW]=getChannel(S_YAW)/350.0;
-		controls.thrust=getChannel(S_THROTTLE)/350.0;
+
 		
 		imu_update(&imu1);
-			
-		if (getChannel(4)>0) {
-			quad_stabilise(&imu1, &controls, RATE_COMMAND_MODE);
-		} else {
-			quad_stabilise(&imu1, &controls, ATTITUDE_COMMAND_MODE);
-		}		
+		run_stabilisation();
 		
 				
 		if(counter%300==0) {
@@ -177,11 +190,21 @@ void main (void)
 			//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
 			mavlink_msg_global_position_int_send(MAVLINK_COMM_0, 0, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, imu1.attitude.om[2]);
 
+			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Compass_X", imu1.raw_channels[COMPASS_OFFSET+IMU_X]);
+			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Compass_Y", imu1.raw_channels[COMPASS_OFFSET+IMU_Y]);
+			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Compass_Z", imu1.raw_channels[COMPASS_OFFSET+IMU_Z]);
+
 			// NAMED VALUES
 			//mavlink_msg_named_value_float_send(mavlink_channel_t chan, uint32_t time_boot_ms, const char *name, float value)
 			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "LoopTime", this_looptime-last_looptime);
 			//mavlink_msg_named_value_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, const char *name, int32_t value
 			mavlink_msg_named_value_int_send(MAVLINK_COMM_0, 0, "User_val_2", 201);
+			
+			pressure=get_pressure_data_slow();
+			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Pressure", pressure->pressure);
+			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Temperature", pressure->temperature);
+			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Altitude", pressure->altitude);
+			
 		}
 		
 		if(counter%30==0) {	

@@ -10,6 +10,7 @@
 #include "delay.h"
 #include "itg3200_driver.h"
 #include "adxl345_driver.h"
+#include "compass_hmc5883l.h"
 #include "time_keeper.h"
 
 
@@ -19,6 +20,8 @@ void init_imu (Imu_Data_t *imu1) {
 	init_itg3200_slow();
 	
 	init_adxl345_slow();
+
+	init_hmc5883_slow();
 
 	calibrate_Gyros(imu1);
 	imu1->raw_scale[0] =  -12600.0; ///823.6511   
@@ -49,6 +52,8 @@ void imu_get_raw_data(Imu_Data_t *imu1) {
 	gyro_data* gyros=get_gyro_data_slow();
 
 	acc_data* accs=get_acc_data_slow();
+	
+	compass_data* compass=get_compass_data_slow();
 
 	imu1->raw_channels[GYRO_OFFSET+IMU_X]=(float)gyros->axes[RAW_GYRO_X];
 	imu1->raw_channels[GYRO_OFFSET+IMU_Y]=(float)gyros->axes[RAW_GYRO_Y];
@@ -57,6 +62,10 @@ void imu_get_raw_data(Imu_Data_t *imu1) {
 	imu1->raw_channels[ACC_OFFSET+IMU_X]=(float)accs->axes[RAW_ACC_X];
 	imu1->raw_channels[ACC_OFFSET+IMU_Y]=(float)accs->axes[RAW_ACC_Y];
 	imu1->raw_channels[ACC_OFFSET+IMU_Z]=(float)accs->axes[RAW_ACC_Z];
+
+	imu1->raw_channels[COMPASS_OFFSET+IMU_X]=(float)compass->axes[RAW_COMPASS_X];
+	imu1->raw_channels[COMPASS_OFFSET+IMU_Y]=(float)compass->axes[RAW_COMPASS_Y];
+	imu1->raw_channels[COMPASS_OFFSET+IMU_Z]=(float)compass->axes[RAW_COMPASS_Z];
 		
 }
 

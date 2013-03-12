@@ -137,6 +137,8 @@ C_SRCS +=  \
 ../src/hal/ads1274.c \
 ../src/hal/adxl345_driver.c \
 ../src/hal/amplifiers.c \
+../src/hal/bmp085.c \
+../src/hal/compass_hmc5883l.c \
 ../src/hal/dac_dma.c \
 ../src/hal/i2c_driver.c \
 ../src/hal/itg3200_driver.c \
@@ -146,6 +148,7 @@ C_SRCS +=  \
 ../src/hal/spi_buffered.c \
 ../src/hal/uart_int.c \
 ../src/main.c \
+../src/runtime/scheduler.c \
 ../src/runtime/time_keeper.c \
 ../src/sensing/imu.c \
 ../src/sensing/qfilter.c \
@@ -210,6 +213,8 @@ src/hal/adc_int.o \
 src/hal/ads1274.o \
 src/hal/adxl345_driver.o \
 src/hal/amplifiers.o \
+src/hal/bmp085.o \
+src/hal/compass_hmc5883l.o \
 src/hal/dac_dma.o \
 src/hal/i2c_driver.o \
 src/hal/itg3200_driver.o \
@@ -219,6 +224,7 @@ src/hal/spektrum.o \
 src/hal/spi_buffered.o \
 src/hal/uart_int.o \
 src/main.o \
+src/runtime/scheduler.o \
 src/runtime/time_keeper.o \
 src/sensing/imu.o \
 src/sensing/qfilter.o \
@@ -274,6 +280,8 @@ src/hal/adc_int.o \
 src/hal/ads1274.o \
 src/hal/adxl345_driver.o \
 src/hal/amplifiers.o \
+src/hal/bmp085.o \
+src/hal/compass_hmc5883l.o \
 src/hal/dac_dma.o \
 src/hal/i2c_driver.o \
 src/hal/itg3200_driver.o \
@@ -283,6 +291,7 @@ src/hal/spektrum.o \
 src/hal/spi_buffered.o \
 src/hal/uart_int.o \
 src/main.o \
+src/runtime/scheduler.o \
 src/runtime/time_keeper.o \
 src/sensing/imu.o \
 src/sensing/qfilter.o \
@@ -335,6 +344,8 @@ src/hal/adc_int.d \
 src/hal/ads1274.d \
 src/hal/adxl345_driver.d \
 src/hal/amplifiers.d \
+src/hal/bmp085.d \
+src/hal/compass_hmc5883l.d \
 src/hal/dac_dma.d \
 src/hal/i2c_driver.d \
 src/hal/itg3200_driver.d \
@@ -344,6 +355,7 @@ src/hal/spektrum.d \
 src/hal/spi_buffered.d \
 src/hal/uart_int.d \
 src/main.d \
+src/runtime/scheduler.d \
 src/runtime/time_keeper.d \
 src/sensing/imu.d \
 src/sensing/qfilter.d \
@@ -396,6 +408,8 @@ src/hal/adc_int.d \
 src/hal/ads1274.d \
 src/hal/adxl345_driver.d \
 src/hal/amplifiers.d \
+src/hal/bmp085.d \
+src/hal/compass_hmc5883l.d \
 src/hal/dac_dma.d \
 src/hal/i2c_driver.d \
 src/hal/itg3200_driver.d \
@@ -405,6 +419,7 @@ src/hal/spektrum.d \
 src/hal/spi_buffered.d \
 src/hal/uart_int.d \
 src/main.d \
+src/runtime/scheduler.d \
 src/runtime/time_keeper.d \
 src/sensing/imu.d \
 src/sensing/qfilter.d \
@@ -424,6 +439,12 @@ ADDITIONAL_DEPENDENCIES:=
 OUTPUT_FILE_DEP:= ./makedep.mk
 
 # AVR32/GNU C Compiler
+
+
+
+
+
+
 
 
 

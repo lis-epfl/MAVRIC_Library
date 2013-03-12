@@ -30,6 +30,7 @@
 
 #define GYRO_OFFSET 0
 #define ACC_OFFSET 3
+#define COMPASS_OFFSET 6
 
 #define M_FRONT_LEFT 2
 #define M_FRONT_RIGHT 1

@@ -75,7 +75,6 @@ void stabilise(Stabiliser_t *stabiliser, float *rpy_sensor_values, Control_Comma
 	
 	stabiliser->output.rpy[0]=	pid_update(&(stabiliser->rpy_controller[0]),  rpy_sensor_values[0], control_input->rpy[0]);
 	stabiliser->output.rpy[1]= 	pid_update(&(stabiliser->rpy_controller[1]),  rpy_sensor_values[1], control_input->rpy[1]);
-	
 	stabiliser->output.rpy[2]=  pid_update(&(stabiliser->rpy_controller[2]),  rpy_sensor_values[2], control_input->rpy[2]);
 	stabiliser->output.thrust=control_input->thrust;
 }
@@ -101,12 +100,7 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input, int cont
 	rpy_rates[1]=-imu->attitude.om[0];
 	rpy_rates[2]=-imu->attitude.om[2];
 	stabilise(&rate_stabiliser, &rpy_rates, rate_input);
-	/*
-	for (i=0; i<3; i++) {
-		putnum(STDOUT, rate_stabiliser.output.rpy[i]*100, 10);
-		putstring(STDOUT, "\t");
-	}
-	putnum(STDOUT, rate_stabiliser.output.thrust*100, 10);/**/
+
 	#ifdef CONF_DIAG
 	mix_to_servos_diag_quad(&rate_stabiliser.output);
 	#else
