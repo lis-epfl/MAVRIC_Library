@@ -89,7 +89,7 @@ int uart_int_bytes_available(usart_config_t *usart_opt) {
 /************************************************************************/
 short uart_int_send_byte(usart_config_t *usart_opt, char data) {
 //	usart_write_line(usart_opt->uart_device.uart, "\ns");
-	buffer_put(&(usart_opt->uart_device.transmit_buffer), data);
+	while (buffer_put(&(usart_opt->uart_device.transmit_buffer), data)<0);
 	if ((buffer_bytes_available(&(usart_opt->uart_device.transmit_buffer)) >= 1))//&&
 //	  (usart_opt->uart_device.uart->csr & AVR32_USART_CSR_TXRDY_MASK)) 
 	{ // if there is exactly one byte in the buffer (this one...), and transmitter ready
@@ -115,7 +115,7 @@ usart_config_t *get_UART_handle(int UID) {
 void register_write_stream(usart_config_t *usart_opt, byte_stream_t *stream) {
 	stream->get=NULL;
 	stream->put=&uart_int_send_byte;
-	stream->notify=&uart_int_flush;
+	stream->flush=&uart_int_flush;
 	stream->data=usart_opt;
 }
 

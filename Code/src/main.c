@@ -161,7 +161,7 @@ void main (void)
 		run_stabilisation();
 		
 				
-		if(counter%300==0) {
+		if(counter%200==0) {
 			// Send a heartbeat over UART0 including the system type
 			//mavlink_msg_heartbeat_send(mavlink_channel_t chan, uint8_t type, uint8_t autopilot, uint8_t base_mode, uint32_t custom_mode, uint8_t system_status)
 			mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_ACTIVE);
@@ -201,8 +201,8 @@ void main (void)
 			mavlink_msg_named_value_int_send(MAVLINK_COMM_0, 0, "User_val_2", 201);
 			
 			pressure=get_pressure_data_slow();
-			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Pressure", pressure->pressure);
-			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Temperature", pressure->temperature);
+			//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Pressure", pressure->pressure);
+			//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Temperature", pressure->temperature);
 			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Altitude", pressure->altitude);
 			
 		}
