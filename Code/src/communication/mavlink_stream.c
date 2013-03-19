@@ -10,7 +10,7 @@
 #include "mavlink_stream.h"
 #include "buffer.h"
 #include "onboard_parameters.h"
-
+#include "print_util.h"
 
 byte_stream_t* mavlink_out_stream;
 byte_stream_t* mavlink_in_stream;
@@ -36,6 +36,21 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream)
 	mavlink_in_stream = receive_stream;
 	make_buffered_stream(&mavlink_in_buffer, mavlink_in_stream);
 }
+
+
+void mavlink_receive_handler() {
+	Mavlink_Received_t rec;
+	if(mavlink_receive(&xbee_in_stream, &rec)) {
+		putstring(&debug_stream, "\n Received message with ID");
+		putnum(&debug_stream, rec.msg.msgid, 10);
+		putstring(&debug_stream, " from system");
+		putnum(&debug_stream, rec.msg.sysid, 10);
+		putstring(&debug_stream, "\n");
+		
+		handle_mavlink_message(&rec);
+	}
+}
+
 
 uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 	uint8_t byte;

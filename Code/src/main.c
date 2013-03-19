@@ -66,13 +66,8 @@ void run_stabilisation() {
 
 }
 
-
-void main (void)
-{
-	int i=0;
-	int counter=0;
-	uint32_t last_looptime, this_looptime;
-	irq_initialize_vectors();
+void initialisation() {
+		irq_initialize_vectors();
 	cpu_irq_enable();
 	Disable_global_interrupt();
 	
@@ -125,7 +120,6 @@ void main (void)
 	set_servo(2, -600, -600);
 	set_servo(3, -600, -600);
 	
-	
 	//delay_ms(1000);
 	init_imu(&imu1);
 	imu1.attitude.calibration_level=LEVELING;
@@ -144,10 +138,22 @@ void main (void)
 			// Send heartbeat message
 			mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_CALIBRATING);
 		}
-				
+		
 		delay_ms(5);
 	}
 	imu1.attitude.calibration_level=OFF;
+	
+}
+
+void main (void)
+{
+	int i=0;
+	int counter=0;
+	uint32_t last_looptime, this_looptime;
+
+	initialisation();
+	
+	
 
 	// main loop
 	counter=0;
@@ -199,24 +205,15 @@ void main (void)
 			//mavlink_msg_named_value_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, const char *name, int32_t value
 			mavlink_msg_named_value_int_send(MAVLINK_COMM_0, 0, "User_val_2", 201);
 			
-			pressure=get_pressure_data_slow();
+			//pressure=get_pressure_data_slow();
 			//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Pressure", pressure->pressure);
 			//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Temperature", pressure->temperature);
-			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Altitude", pressure->altitude);
+			//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Altitude", pressure->altitude);
 			
 		}
 		
 		if(counter%30==0) {	
-			Mavlink_Received_t rec;					
-			if(mavlink_receive(&xbee_in_stream, &rec)) {
-				putstring(&debug_stream, "\n Received message with ID");
-				putnum(&debug_stream, rec.msg.msgid, 10);
-				putstring(&debug_stream, " from system");
-				putnum(&debug_stream, rec.msg.sysid, 10);
-				putstring(&debug_stream, "\n");
-				
-				handle_mavlink_message(&rec);
-			}
+
 		}
 		
 		LED_On(LED1);

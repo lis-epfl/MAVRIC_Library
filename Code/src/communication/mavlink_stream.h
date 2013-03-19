@@ -21,6 +21,9 @@ typedef struct {
 } Mavlink_Received_t;
 
 void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream);
+
+void mavlink_receive_handler();
+
 uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec);
 void handle_mavlink_message(Mavlink_Received_t* rec);
 

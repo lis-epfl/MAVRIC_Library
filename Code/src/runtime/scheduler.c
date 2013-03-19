@@ -16,11 +16,12 @@ void init_scheduler(task_set *ts) {
 	int i;
 	for (i=0; i<ts->number_of_tasks; i++) {
 		ts->tasks[i].call_function=NULL;
-		
+		ts->tasks[i].param_object=NULL;
+		ts->tasks[i].tasks=ts;
 	}
 }
 
-int register_task(task_set *ts, int task_slot, unsigned long repeat_period, function_pointer *call_function, void *param_object ) {
+task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_period, function_pointer *call_function, void *param_object ) {
 	if ((task_slot<0) || (task_slot>=ts->number_of_tasks)) {
 		return -1;
 	}
@@ -37,10 +38,6 @@ int register_task(task_set *ts, int task_slot, unsigned long repeat_period, func
 #endif
 }
 
-int register_task_after(task_set *ts, int task_slot, function_pointer *call_function, int after_task_slot) {
-	register_task(ts, task_slot, 0, call_function, 0);
-	
-}
 
 
 int run_scheduler_update(task_set *ts) {
