@@ -955,6 +955,12 @@
     <Compile Include="src\hal\bmp085.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\hal\boardsupport.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\hal\boardsupport.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\hal\compass_hmc5883l.c">
       <SubType>compile</SubType>
     </Compile>

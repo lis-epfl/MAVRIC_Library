@@ -4,13 +4,11 @@
 #include "usart.h"
 #include "streams.h"
 
-
-#define DBGOUT get_debug_stream()
 #define MAX_DIGITS 10
 //#define STDOUT 0
 
-void print_init(int debug_uart_ID);
-byte_stream_t* get_debug_stream();
+void dbg_print_init(byte_stream_t* debug_stream);
+
 
 void putstring(byte_stream_t *out_stream, const char* s);
 void putdigit(byte_stream_t *out_stream, unsigned c);

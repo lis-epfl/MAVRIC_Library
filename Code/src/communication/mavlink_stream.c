@@ -40,12 +40,12 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream)
 
 void mavlink_receive_handler() {
 	Mavlink_Received_t rec;
-	if(mavlink_receive(&xbee_in_stream, &rec)) {
-		putstring(&debug_stream, "\n Received message with ID");
-		putnum(&debug_stream, rec.msg.msgid, 10);
-		putstring(&debug_stream, " from system");
-		putnum(&debug_stream, rec.msg.sysid, 10);
-		putstring(&debug_stream, "\n");
+	if(mavlink_receive(&mavlink_in_stream, &rec)) {
+		dbg_print("\n Received message with ID");
+		dbg_print_num(rec.msg.msgid, 10);
+		dbg_print(" from system");
+		dbg_print_num(rec.msg.sysid, 10);
+		dbg_print( "\n");
 		
 		handle_mavlink_message(&rec);
 	}

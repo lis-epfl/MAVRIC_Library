@@ -72,10 +72,9 @@ void stabilise(Stabiliser_t *stabiliser, float *rpy_sensor_values, Control_Comma
 	//	pid_update(&(stabiliser->rpy_controller[0]), control_input->rpy[0], imu->attitude.up_vec.v[0]);
 	//stabiliser->output.rpy[1]= 0.05*imu->attitude.om[0] + 
 	//	pid_update(&(stabiliser->rpy_controller[1]), control_input->rpy[1], imu->attitude.up_vec.v[1]);
-	
-	stabiliser->output.rpy[0]=	pid_update(&(stabiliser->rpy_controller[0]),  rpy_sensor_values[0], control_input->rpy[0]);
-	stabiliser->output.rpy[1]= 	pid_update(&(stabiliser->rpy_controller[1]),  rpy_sensor_values[1], control_input->rpy[1]);
-	stabiliser->output.rpy[2]=  pid_update(&(stabiliser->rpy_controller[2]),  rpy_sensor_values[2], control_input->rpy[2]);
+	for (i=0; i<3; i++) {
+		stabiliser->output.rpy[i]=	pid_update(&(stabiliser->rpy_controller[i]),  rpy_sensor_values[i], control_input->rpy[i]);
+	}		
 	stabiliser->output.thrust=control_input->thrust;
 }
 

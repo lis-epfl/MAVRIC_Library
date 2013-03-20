@@ -6,21 +6,17 @@
 
 #include "delay.h"
 
-byte_stream_t deb_stream;
+byte_stream_t* deb_stream;
 
-byte_stream_t* get_debug_stream() {
-	return &deb_stream;
-}
 
 Bool blocking;
 
 /**
  * \brief some utilities for printing strings and numbers 
  */
-void print_init(int debug_uart_ID)
+void dbg_print_init(byte_stream_t* debug_stream)
 {
-
-	register_write_stream(get_UART_handle(debug_uart_ID), &deb_stream);
+	deb_stream=debug_stream;
 }
 
 void putstring(byte_stream_t *out_stream, const char* s) {
@@ -73,12 +69,12 @@ void putnum(byte_stream_t *out_stream, long c, char base){
 }
 
 void dbg_print(const char* s) {
-	putstring(&deb_stream, s);
+	putstring(deb_stream, s);
 
 }
 
 void dbg_print_num(long c, char base) {
-	putnum(&deb_stream, c, base);
+	putnum(deb_stream, c, base);
 
 }
 

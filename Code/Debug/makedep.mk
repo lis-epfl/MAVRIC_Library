@@ -92,6 +92,8 @@ src\hal\amplifiers.c
 
 src\hal\bmp085.c
 
+src\hal\boardsupport.c
+
 src\hal\compass_hmc5883l.c
 
 src\hal\dac_dma.c

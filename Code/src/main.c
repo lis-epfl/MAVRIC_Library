@@ -14,60 +14,45 @@
 #include "sleepmgr.h"
 #include "led.h"
 #include "delay.h"
-#include "spi_buffered.h"
 //#include "stdio_serial.h"
 #include "print_util.h"
 #include "generator.h"
-#include "servo_pwm.h"
 
 #include "time_keeper.h"
 #include "i2c_driver_int.h"
 #include "qfilter.h"
-#include "imu.h"
 #include "stabilisation.h"
-#include "spektrum.h"
-#include "control.h"
 #include "streams.h"
-#include "uart_int.h"
 
 #include "bmp085.h"
 
-#include "mavlink_stream.h"
-#include "coord_conventions.h"
-#include "onboard_parameters.h"
 #include "scheduler.h"
+#include "boardsupport.h"
 
-Imu_Data_t imu1;
-
-Control_Command_t controls;
-
-byte_stream_t xbee_out_stream;
-byte_stream_t xbee_in_stream;
-byte_stream_t debug_stream;
+board_hardware_t *board;
 
 pressure_data *pressure;
 
-#define STDOUT &debug_stream
-//#define STDOUT &xbee_out_stream
 
 NEW_TASK_SET(main_tasks, 10)
 
 void run_stabilisation() {
-	controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
-	controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
-	controls.rpy[YAW]=getChannel(S_YAW)/350.0;
-	controls.thrust=getChannel(S_THROTTLE)/350.0;
+	board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
+	board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
+	board->controls.rpy[YAW]=getChannel(S_YAW)/350.0;
+	board->controls.thrust=getChannel(S_THROTTLE)/350.0;
 
 	if (getChannel(4)>0) {
-		quad_stabilise(&imu1, &controls, RATE_COMMAND_MODE);
+		quad_stabilise(&(board->imu1), &(board->controls), RATE_COMMAND_MODE);
 	} else {
-		quad_stabilise(&imu1, &controls, ATTITUDE_COMMAND_MODE);
+		quad_stabilise(&(board->imu1), &(board->controls), ATTITUDE_COMMAND_MODE);
 	}
 
 }
 
 void initialisation() {
-		irq_initialize_vectors();
+	int i;
+	irq_initialize_vectors();
 	cpu_irq_enable();
 	Disable_global_interrupt();
 	
@@ -81,6 +66,9 @@ void initialisation() {
 
 	
 	INTC_init_interrupts();
+	
+	board=initialise_board();
+	
 	if (init_i2c(0)!=STATUS_OK) {
 		//putstring(STDOUT, "Error initialising I2C\n");
 		while (1==1);
@@ -88,26 +76,13 @@ void initialisation() {
 		//putstring(STDOUT, "initialised I2C.\n");
 	};
 
-	spektrum_init();
 	
-	init_UART_int(0);
-	register_write_stream(get_UART_handle(0), &xbee_out_stream);
-	
-	init_UART_int(4);
-	register_write_stream(get_UART_handle(4), &debug_stream);
-
-	// init mavlink
-	init_mavlink(&xbee_out_stream, &xbee_in_stream);
-	register_read_stream(get_UART_handle(0), &xbee_in_stream);	
-		
 	Enable_global_interrupt();
 		
-	print_init(XBEE_UART_ID);
 	dbg_print("Debug stream initialised\n");
 
 	LED_Off(LED1);
 	
-	init_Servos();
 /*
 	set_servo(0, -500, -500);
 	set_servo(1, -500, -500);
@@ -121,19 +96,13 @@ void initialisation() {
 	set_servo(3, -600, -600);
 	
 	//delay_ms(1000);
-	init_imu(&imu1);
-	imu1.attitude.calibration_level=LEVELING;
 	init_stabilisation();
 
 	init_onboard_parameters();
 	
-	controls.rpy[ROLL]=0;
-	controls.rpy[PITCH]=0;
-	controls.rpy[YAW]=0;
-	controls.thrust=-1.0;
-	
+	board->imu1.attitude.calibration_level=LEVELING;	
 	for (i=200; i>0; i--) {
-		imu_update(&imu1);
+		imu_update(&board->imu1);
 		if (i%50 ==0) {
 			// Send heartbeat message
 			mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_CALIBRATING);
@@ -141,7 +110,7 @@ void initialisation() {
 		
 		delay_ms(5);
 	}
-	imu1.attitude.calibration_level=OFF;
+	board->imu1.attitude.calibration_level=OFF;
 	
 }
 
@@ -162,7 +131,7 @@ void main (void)
 		
 
 		
-		imu_update(&imu1);
+		imu_update(&(board->imu1));
 		run_stabilisation();
 		
 				
@@ -174,30 +143,30 @@ void main (void)
 		
 		if(counter%30==0) {
 			// ATTITUDE QUATERNION
-			mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, 0, imu1.attitude.qe.s, imu1.attitude.qe.v[0], imu1.attitude.qe.v[1], imu1.attitude.qe.v[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
+			mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, 0, board->imu1.attitude.qe.s, board->imu1.attitude.qe.v[0], board->imu1.attitude.qe.v[1], board->imu1.attitude.qe.v[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
 		
 			// ATTITUDE
 			Aero_Attitude_t aero_attitude;
-			aero_attitude=Quat_to_Aero(imu1.attitude.qe);
+			aero_attitude=Quat_to_Aero(board->imu1.attitude.qe);
 			//mavlink_msg_attitude_send(mavlink_channel_t chan, uint32_t time_boot_ms, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed)
 			//mavlink_msg_attitude_send(MAVLINK_COMM_0, 0, aero_attitude.rpy[0], aero_attitude.rpy[1], aero_attitude.rpy[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
 			
 			Schill_Attitude_t schill_attitude;
-			schill_attitude=Quat_to_Schill(imu1.attitude.qe);
+			schill_attitude=Quat_to_Schill(board->imu1.attitude.qe);
 			//mavlink_msg_attitude_send(mavlink_channel_t chan, uint32_t time_boot_ms, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed)
-			mavlink_msg_attitude_send(MAVLINK_COMM_0, 0, schill_attitude.rpy[0], schill_attitude.rpy[1], schill_attitude.rpy[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
+			mavlink_msg_attitude_send(MAVLINK_COMM_0, 0, schill_attitude.rpy[0], schill_attitude.rpy[1], schill_attitude.rpy[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
 			
 			// Controls output
 			//mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(mavlink_channel_t chan, uint32_t time_boot_ms, float roll, float pitch, float yaw, float thrust)
-			mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(MAVLINK_COMM_0, 0, controls.rpy[ROLL], controls.rpy[PITCH], controls.rpy[YAW], controls.thrust);
+			mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(MAVLINK_COMM_0, 0, board->controls.rpy[ROLL], board->controls.rpy[PITCH], board->controls.rpy[YAW], board->controls.thrust);
 			
 			// GPS COORDINATES (TODO : Add GPS to the platform)
 			//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
-			mavlink_msg_global_position_int_send(MAVLINK_COMM_0, 0, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, imu1.attitude.om[2]);
+			mavlink_msg_global_position_int_send(MAVLINK_COMM_0, 0, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, board->imu1.attitude.om[2]);
 
-			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Compass_X", imu1.raw_channels[COMPASS_OFFSET+IMU_X]);
-			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Compass_Y", imu1.raw_channels[COMPASS_OFFSET+IMU_Y]);
-			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Compass_Z", imu1.raw_channels[COMPASS_OFFSET+IMU_Z]);
+			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Compass_X", board->imu1.raw_channels[COMPASS_OFFSET+IMU_X]);
+			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Compass_Y", board->imu1.raw_channels[COMPASS_OFFSET+IMU_Y]);
+			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Compass_Z", board->imu1.raw_channels[COMPASS_OFFSET+IMU_Z]);
 
 			// NAMED VALUES
 			//mavlink_msg_named_value_float_send(mavlink_channel_t chan, uint32_t time_boot_ms, const char *name, float value)
