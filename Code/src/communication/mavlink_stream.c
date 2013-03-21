@@ -16,6 +16,11 @@ byte_stream_t* mavlink_out_stream;
 byte_stream_t* mavlink_in_stream;
 Buffer_t mavlink_in_buffer;
 
+
+NEW_TASK_SET (mavlink_tasks, 10)
+
+
+
 void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 {
 	if (chan == MAVLINK_COMM_0)
@@ -35,6 +40,13 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream)
 	mavlink_out_stream = transmit_stream;
 	mavlink_in_stream = receive_stream;
 	make_buffered_stream(&mavlink_in_buffer, mavlink_in_stream);
+	init_scheduler(&mavlink_tasks);
+	register_task(&mavlink_tasks, 0, 10000, &mavlink_receive_handler);
+	
+}
+
+task_return_t mavlink_protocol_update() {
+	run_scheduler_update(&mavlink_tasks);
 }
 
 
@@ -82,3 +94,4 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		*/
 	}
 }
+

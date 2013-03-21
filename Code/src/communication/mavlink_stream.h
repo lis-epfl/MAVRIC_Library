@@ -14,13 +14,16 @@
 #include "streams.h"
 #include "mavlink_bridge.h"
 #include "mavlink/include/common/mavlink.h"
-
+#include "scheduler.h"
 typedef struct {
 	mavlink_message_t msg;
 	mavlink_status_t status;
 } Mavlink_Received_t;
 
 void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream);
+
+task_return_t mavlink_protocol_update();
+
 
 void mavlink_receive_handler();
 

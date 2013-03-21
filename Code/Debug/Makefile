@@ -129,6 +129,7 @@ C_SRCS +=  \
 ../src/asf/common/utils/stdio/write.c \
 ../src/communication/ishtar.c \
 ../src/communication/ishtar_stream.c \
+../src/communication/mavlink_actions.c \
 ../src/communication/mavlink_stream.c \
 ../src/communication/onboard_parameters.c \
 ../src/control/control.c \
@@ -206,6 +207,7 @@ src/asf/common/utils/stdio/stdio_usb/stdio_usb.o \
 src/asf/common/utils/stdio/write.o \
 src/communication/ishtar.o \
 src/communication/ishtar_stream.o \
+src/communication/mavlink_actions.o \
 src/communication/mavlink_stream.o \
 src/communication/onboard_parameters.o \
 src/control/control.o \
@@ -274,6 +276,7 @@ src/asf/common/utils/stdio/stdio_usb/stdio_usb.o \
 src/asf/common/utils/stdio/write.o \
 src/communication/ishtar.o \
 src/communication/ishtar_stream.o \
+src/communication/mavlink_actions.o \
 src/communication/mavlink_stream.o \
 src/communication/onboard_parameters.o \
 src/control/control.o \
@@ -339,6 +342,7 @@ src/asf/common/utils/stdio/stdio_usb/stdio_usb.d \
 src/asf/common/utils/stdio/write.d \
 src/communication/ishtar.d \
 src/communication/ishtar_stream.d \
+src/communication/mavlink_actions.d \
 src/communication/mavlink_stream.d \
 src/communication/onboard_parameters.d \
 src/control/control.d \
@@ -404,6 +408,7 @@ src/asf/common/utils/stdio/stdio_usb/stdio_usb.d \
 src/asf/common/utils/stdio/write.d \
 src/communication/ishtar.d \
 src/communication/ishtar_stream.d \
+src/communication/mavlink_actions.d \
 src/communication/mavlink_stream.d \
 src/communication/onboard_parameters.d \
 src/control/control.d \
@@ -444,6 +449,8 @@ ADDITIONAL_DEPENDENCIES:=
 OUTPUT_FILE_DEP:= ./makedep.mk
 
 # AVR32/GNU C Compiler
+
+
 
 
 

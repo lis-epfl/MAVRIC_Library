@@ -19,7 +19,7 @@ typedef enum task_return_t {
 	TASK_RUN_SUCCESS=1	
 }task_return_t;
 
-typedef task_return_t (function_pointer)(void *param_object);
+typedef task_return_t (function_pointer)();
 
 typedef uint8_t task_handle_t;
 
@@ -27,7 +27,7 @@ typedef uint8_t task_handle_t;
 typedef struct {
 	struct task_set *tasks;	
 	function_pointer *call_function;
-	void *param_object;
+	
 	unsigned int repeat_period;
 	unsigned long next_run;
 	unsigned int execution_time;
@@ -49,7 +49,7 @@ typedef struct  {
 
 void init_scheduler(task_set *ts);
 
-task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_period, function_pointer *call_function, void *param_object );
+task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_period, function_pointer *call_function);
 
 
 

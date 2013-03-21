@@ -24,7 +24,6 @@ void init_onboard_parameters(void);
 void add_parameter_uint32(uint32_t* val, const char* param_name);
 void add_parameter_int32(int32_t* val, const char* param_name);
 void add_parameter_float(float* val, const char* param_name);
-void add_PID_parameters(void);
 void send_all_parameters(Mavlink_Received_t* rec);
 void send_parameter(Mavlink_Received_t* rec);
 void receive_parameter(Mavlink_Received_t* rec);

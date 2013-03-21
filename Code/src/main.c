@@ -28,6 +28,7 @@
 
 #include "scheduler.h"
 #include "boardsupport.h"
+#include "mavlink_actions.h"
 
 board_hardware_t *board;
 
@@ -36,12 +37,13 @@ pressure_data *pressure;
 
 NEW_TASK_SET(main_tasks, 10)
 
-void run_stabilisation() {
+task_return_t run_stabilisation() {
 	board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
 	board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
 	board->controls.rpy[YAW]=getChannel(S_YAW)/350.0;
 	board->controls.thrust=getChannel(S_THROTTLE)/350.0;
 
+	imu_update(&(board->imu1));
 	if (getChannel(4)>0) {
 		quad_stabilise(&(board->imu1), &(board->controls), RATE_COMMAND_MODE);
 	} else {
@@ -99,6 +101,7 @@ void initialisation() {
 	init_stabilisation();
 
 	init_onboard_parameters();
+	init_mavlink_actions();
 	
 	board->imu1.attitude.calibration_level=LEVELING;	
 	for (i=200; i>0; i--) {
@@ -122,8 +125,10 @@ void main (void)
 
 	initialisation();
 	
+	init_scheduler(&main_tasks);
 	
-
+	register_task(&main_tasks, 0, 2000, &run_stabilisation );
+	register_task(&main_tasks, 1, 10000, &mavlink_protocol_update);
 	// main loop
 	counter=0;
 	while (1==1) {
@@ -131,59 +136,8 @@ void main (void)
 		
 
 		
-		imu_update(&(board->imu1));
-		run_stabilisation();
-		
-				
-		if(counter%200==0) {
-			// Send a heartbeat over UART0 including the system type
-			//mavlink_msg_heartbeat_send(mavlink_channel_t chan, uint8_t type, uint8_t autopilot, uint8_t base_mode, uint32_t custom_mode, uint8_t system_status)
-			mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_ACTIVE);
-		}
-		
-		if(counter%30==0) {
-			// ATTITUDE QUATERNION
-			mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, 0, board->imu1.attitude.qe.s, board->imu1.attitude.qe.v[0], board->imu1.attitude.qe.v[1], board->imu1.attitude.qe.v[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
-		
-			// ATTITUDE
-			Aero_Attitude_t aero_attitude;
-			aero_attitude=Quat_to_Aero(board->imu1.attitude.qe);
-			//mavlink_msg_attitude_send(mavlink_channel_t chan, uint32_t time_boot_ms, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed)
-			//mavlink_msg_attitude_send(MAVLINK_COMM_0, 0, aero_attitude.rpy[0], aero_attitude.rpy[1], aero_attitude.rpy[2], imu1.attitude.om[0], imu1.attitude.om[1], imu1.attitude.om[2]);
-			
-			Schill_Attitude_t schill_attitude;
-			schill_attitude=Quat_to_Schill(board->imu1.attitude.qe);
-			//mavlink_msg_attitude_send(mavlink_channel_t chan, uint32_t time_boot_ms, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed)
-			mavlink_msg_attitude_send(MAVLINK_COMM_0, 0, schill_attitude.rpy[0], schill_attitude.rpy[1], schill_attitude.rpy[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
-			
-			// Controls output
-			//mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(mavlink_channel_t chan, uint32_t time_boot_ms, float roll, float pitch, float yaw, float thrust)
-			mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(MAVLINK_COMM_0, 0, board->controls.rpy[ROLL], board->controls.rpy[PITCH], board->controls.rpy[YAW], board->controls.thrust);
-			
-			// GPS COORDINATES (TODO : Add GPS to the platform)
-			//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
-			mavlink_msg_global_position_int_send(MAVLINK_COMM_0, 0, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, board->imu1.attitude.om[2]);
+		run_scheduler_update(&main_tasks);
 
-			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Compass_X", board->imu1.raw_channels[COMPASS_OFFSET+IMU_X]);
-			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Compass_Y", board->imu1.raw_channels[COMPASS_OFFSET+IMU_Y]);
-			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Compass_Z", board->imu1.raw_channels[COMPASS_OFFSET+IMU_Z]);
-
-			// NAMED VALUES
-			//mavlink_msg_named_value_float_send(mavlink_channel_t chan, uint32_t time_boot_ms, const char *name, float value)
-			mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "LoopTime", this_looptime-last_looptime);
-			//mavlink_msg_named_value_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, const char *name, int32_t value
-			mavlink_msg_named_value_int_send(MAVLINK_COMM_0, 0, "User_val_2", 201);
-			
-			//pressure=get_pressure_data_slow();
-			//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Pressure", pressure->pressure);
-			//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Temperature", pressure->temperature);
-			//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Altitude", pressure->altitude);
-			
-		}
-		
-		if(counter%30==0) {	
-
-		}
 		
 		LED_On(LED1);
 		delay_ms(1);

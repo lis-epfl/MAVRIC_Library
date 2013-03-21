@@ -74,6 +74,8 @@ src\communication\ishtar.c
 
 src\communication\ishtar_stream.c
 
+src\communication\mavlink_actions.c
+
 src\communication\mavlink_stream.c
 
 src\communication\onboard_parameters.c

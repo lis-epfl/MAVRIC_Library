@@ -16,18 +16,17 @@ void init_scheduler(task_set *ts) {
 	int i;
 	for (i=0; i<ts->number_of_tasks; i++) {
 		ts->tasks[i].call_function=NULL;
-		ts->tasks[i].param_object=NULL;
 		ts->tasks[i].tasks=ts;
 	}
 }
 
-task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_period, function_pointer *call_function, void *param_object ) {
+task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_period, function_pointer *call_function) {
 	if ((task_slot<0) || (task_slot>=ts->number_of_tasks)) {
 		return -1;
 	}
 	
 	ts->tasks[task_slot].call_function=call_function;
-	ts->tasks[task_slot].param_object=param_object;
+	
 	ts->tasks[task_slot].repeat_period=repeat_period;
 	ts->tasks[task_slot].next_run=GET_TIME;
 	ts->tasks[task_slot].execution_time=0;
@@ -46,7 +45,7 @@ int run_scheduler_update(task_set *ts) {
 	for (i=0; i<ts->number_of_tasks; i++) {
 		if ((ts->tasks[i].call_function!=NULL) && (GET_TIME >= ts->tasks[i].next_run)) {
 			ts->tasks[i].next_run+=ts->tasks[i].repeat_period;
-			ts->tasks[i].call_function(ts->tasks[i].param_object);
+			ts->tasks[i].call_function();
 			if (ts->tasks[i].next_run<GET_TIME) realtime_violation=-i; //realtime violation!!
 		}
 	}
