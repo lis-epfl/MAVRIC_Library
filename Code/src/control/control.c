@@ -61,12 +61,12 @@ float differentiate(Differentiator_t *diff, float input, float dt) {
 }
 
 float pid_update(PID_Controller_t* controller, float input, float goal_state) {
-	float error=(goal_state-input);
 	uint32_t t= get_time_ticks();
+	controller->error=(goal_state-input);
 	controller->dt=ticks_to_seconds(t - controller->last_update);
 	controller->last_update=t;
 	
-	controller->output = controller->p_gain* (error +integrate(&controller->integrator, error, controller->dt) + differentiate(&controller->differentiator, error, controller->dt));
+	controller->output = controller->p_gain* (controller->error +integrate(&controller->integrator, controller->error, controller->dt) + differentiate(&controller->differentiator, controller->error, controller->dt));
 	if (controller->output<controller->clip_min) controller->output=controller->clip_min;
 	if (controller->output>controller->clip_max) controller->output=controller->clip_max;
 	return controller->output;	

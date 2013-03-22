@@ -70,13 +70,13 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	UQuat_t qed, qtmp1, up_bf, qtmp3;
 
 	for (i=0; i<3; i++){
-		attitude->om[i]  = (1.0-GYRO_LPF)*attitude->om[i]+GYRO_LPF*(((float)rates[i])*attitude->sf[i]-attitude->be[i]);
-		attitude->a[i] = (1.0-ACC_LPF)*attitude->a[i]+ACC_LPF*(((float)rates[i+3])*attitude->sf[i+3]-attitude->be[i+3]);
+		attitude->om[i]  = (1.0-GYRO_LPF)*attitude->om[i]+GYRO_LPF*(((float)rates[GYRO_OFFSET+i])*attitude->sf[i]-attitude->be[GYRO_OFFSET+i]);
+		attitude->a[i]   = (1.0-ACC_LPF)*attitude->a[i]+ACC_LPF*(((float)rates[i+ACC_OFFSET])*attitude->sf[i+3]-attitude->be[i+ACC_OFFSET]);
 	}
 
 	// up_bf = qe^-1 *(0,0,0,1) * qe
 	QI(attitude->qe, qtmp1);
-	up_bf.s=0; up_bf.v[0]=0; up_bf.v[1]=0; up_bf.v[2]=1;
+	up_bf.s=0; up_bf.v[0]=UPVECTOR_X; up_bf.v[1]=UPVECTOR_Y; up_bf.v[2]=UPVECTOR_Z;
 	QMUL(qtmp1, up_bf, qtmp3);
 	QMUL(qtmp3, attitude->qe, up_bf);
 

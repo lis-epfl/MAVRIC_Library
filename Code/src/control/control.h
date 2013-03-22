@@ -30,6 +30,7 @@ typedef struct {
 	Integrator_t integrator;
 	Differentiator_t differentiator;
 	float output;
+	float error;
 	uint32_t last_update; // last update time in timer tick
 	float dt;  // is updated from system time at each update.
 }PID_Controller_t;

@@ -13,10 +13,19 @@
 #define SERVO_CENTER_DUTY_MICROSEC 1500
 #define SERVO_REPEAT_FREQ 200
 
+#define NUMBER_OF_SERVO_OUTPUTS 8
+
+typedef struct {
+	int value;
+	int min, max, failsafe_position;
+} servo_output;
+
+
 void init_Servos(void);
 
-void set_servo(int channel, int val_a, int val_b);
+servo_output *get_servos();
 
+void set_servos(servo_output *servo_outputs);
 
 
 #endif /* SERVO_PWM_H_ */

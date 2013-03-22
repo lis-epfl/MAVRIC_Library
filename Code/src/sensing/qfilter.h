@@ -24,7 +24,7 @@ typedef struct {
 	UQuat_t up_vec;
 	
 	float be[6], sf[6];
-	float om[3], a[3];
+	float om[3], a[3], mag[3];
 	float kp;
 	float ki;
 	uint8_t calibration_level;

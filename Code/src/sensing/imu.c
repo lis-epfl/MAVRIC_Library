@@ -24,12 +24,15 @@ void init_imu (Imu_Data_t *imu1) {
 	init_hmc5883_slow();
 
 	calibrate_Gyros(imu1);
-	imu1->raw_scale[0] =  -12600.0; ///823.6511   
-	imu1->raw_scale[1] =  -12600.0;
-	imu1->raw_scale[2] =  12600.0;
-	imu1->raw_scale[3] =  -260.0;
-	imu1->raw_scale[4] =  260.0;
-	imu1->raw_scale[5] =  -260.0;
+	imu1->raw_scale[0] =  RAW_GYRO_X_SCALE;
+	imu1->raw_scale[1] =  RAW_GYRO_Y_SCALE;
+	imu1->raw_scale[2] =  RAW_GYRO_Z_SCALE;
+	imu1->raw_scale[3] =  RAW_ACC_X_SCALE;
+	imu1->raw_scale[4] =  RAW_ACC_Y_SCALE;
+	imu1->raw_scale[5] =  RAW_ACC_Z_SCALE;
+	imu1->raw_scale[6] =  RAW_MAG_X_SCALE;
+	imu1->raw_scale[7] =  RAW_MAG_Y_SCALE;
+	imu1->raw_scale[8] =  RAW_MAG_Z_SCALE;
 	
 	//myquad
 	imu1->raw_bias[3]=11.0;

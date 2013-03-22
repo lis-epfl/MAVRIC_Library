@@ -80,3 +80,4 @@ void make_buffered_stream(Buffer_t *buffer, byte_stream_t *stream) {
 	stream->flush=NULL;
 	stream->data=buffer;
 }
+

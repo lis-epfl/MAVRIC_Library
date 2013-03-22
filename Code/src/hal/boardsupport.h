@@ -27,10 +27,12 @@
 #include "onboard_parameters.h"
 #include "servo_pwm.h"
 
+static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
 
-typedef struct board_hardware_t {
+typedef struct  {
 	Imu_Data_t imu1;
 	Control_Command_t controls;
+	servo_output servos[NUMBER_OF_SERVO_OUTPUTS];
 	byte_stream_t xbee_out_stream;
 	byte_stream_t xbee_in_stream;
 	byte_stream_t debug_stream;	
@@ -38,6 +40,7 @@ typedef struct board_hardware_t {
 	// aliases
 	byte_stream_t *telemetry_down_stream, *telemetry_up_stream;
 } board_hardware_t;
+
 
 board_hardware_t* initialise_board();
 
@@ -49,6 +52,7 @@ byte_stream_t* get_debug_stream();
 
 Imu_Data_t* get_imu();
 Control_Command_t* get_control_inputs();
+
 
 #define STDOUT &get_debug_stream()
 //#define STDOUT &xbee_out_stream
