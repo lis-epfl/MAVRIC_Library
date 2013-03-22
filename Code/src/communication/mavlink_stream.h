@@ -24,6 +24,7 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream)
 
 task_return_t mavlink_protocol_update();
 
+task_set* get_mavlink_taskset();
 
 void mavlink_receive_handler();
 

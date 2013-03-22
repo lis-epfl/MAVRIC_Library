@@ -8,7 +8,7 @@
 #include "boardsupport.h"
 
 
-board_hardware_t board_hardware;
+static volatile board_hardware_t board_hardware;
 
 board_hardware_t* initialise_board() {
 		init_UART_int(0);

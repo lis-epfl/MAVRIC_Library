@@ -44,8 +44,7 @@ typedef struct  {
 	task_entry tasks[];
 } task_set;
 
-
-#define NEW_TASK_SET(NAME,NUMBER) task_entry NAME_entries[NUMBER]; task_set NAME={NUMBER, &NAME_entries}; 
+#define NEW_TASK_SET(NAME,NUMBER) struct task_set {const task_handle_t number_of_tasks; task_entry tasks[NUMBER];} NAME = {.number_of_tasks=NUMBER}; 
 
 void init_scheduler(task_set *ts);
 

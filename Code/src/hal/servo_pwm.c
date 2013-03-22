@@ -12,6 +12,9 @@
 
 #define SERVO_PERIOD (SERVO_TIMER_FREQ/SERVO_REPEAT_FREQ)
 #define SERVO_CENTER_DUTY_TICKS 1500//(SERVO_CENTER_DUTY_MICROSEC*SERVO_TIMER_FREQ/1000000)
+
+
+
 void init_Servos(){
       int i;
 	  // unlock registers
@@ -64,6 +67,7 @@ void init_Servos(){
 	// enable
 	AVR32_PWM.ena=0b1111;
 	
+	
 }
 
 void set_servo(int channel, int val_a, int val_b){
@@ -73,5 +77,14 @@ void set_servo(int channel, int val_a, int val_b){
 	AVR32_PWM.channel[channel &0b11].cprdupd=SERVO_PERIOD;
 	AVR32_PWM.channel[channel &0b11].cdtyupd=duty_a+deadtime;
 	AVR32_PWM.channel[channel &0b11].dtupd= deadtime<<16 | deadtime;	
+}
+
+
+void set_servos(servo_output *servo_outputs) {
+	set_servo(0, servo_outputs[0].value, servo_outputs[1].value);
+	set_servo(1, servo_outputs[2].value, servo_outputs[3].value);
+	set_servo(2, servo_outputs[4].value, servo_outputs[5].value);
+	set_servo(3, servo_outputs[6].value, servo_outputs[7].value);
+
 }
 

@@ -9,8 +9,6 @@
 #include "scheduler.h"
 #include "time_keeper.h"
 
-//task_entry tasks[MAX_NUMBER_OF_TASKS];
-
 
 void init_scheduler(task_set *ts) {
 	int i;
@@ -42,10 +40,12 @@ task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_pe
 int run_scheduler_update(task_set *ts) {
 	int i;
 	int realtime_violation=0;
+	static volatile function_pointer *call_task;
 	for (i=0; i<ts->number_of_tasks; i++) {
 		if ((ts->tasks[i].call_function!=NULL) && (GET_TIME >= ts->tasks[i].next_run)) {
 			ts->tasks[i].next_run+=ts->tasks[i].repeat_period;
-			ts->tasks[i].call_function();
+			call_task=ts->tasks[i].call_function;
+			call_task();
 			if (ts->tasks[i].next_run<GET_TIME) realtime_violation=-i; //realtime violation!!
 		}
 	}

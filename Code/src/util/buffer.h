@@ -37,7 +37,7 @@ int8_t buffer_full(Buffer_t * buffer);
 int8_t buffer_empty(Buffer_t * buffer);
 
 void make_buffered_stream(Buffer_t *buffer, byte_stream_t *stream);
-
+void make_buffered_stream_lossy(Buffer_t *buffer, byte_stream_t *stream);
 
 
 #endif /* BUFFER_H_ */
