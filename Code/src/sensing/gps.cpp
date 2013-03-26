@@ -1,0 +1,185 @@
+﻿// -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: t -*-
+
+
+
+// #include <AP_Common.h>
+// #include <AP_Math.h>
+// #include <AP_HAL.h>
+#include "GPS.h"
+#include "time_keeper.h"
+
+board_hardware_t *board;
+
+/*extern*/ //const AP_HAL::HAL& hal;
+
+// #define GPS_DEBUGGING 0
+// 
+// #if GPS_DEBUGGING
+//  # define Debug(fmt, args ...)  do {hal.console->printf("%s:%d: " fmt "\n", __FUNCTION__, __LINE__, ## args); hal.scheduler->delay(0); } while(0)
+// #else
+//  # define Debug(fmt, args ...)
+// #endif
+
+GPS::GPS(void) :
+	// ensure all the inherited fields are zeroed
+	num_sats(0),
+	new_data(false),
+	fix(false),
+	valid_read(false),
+	last_fix_time(0),
+	_have_raw_velocity(false),
+	_status(GPS::NO_FIX),
+	_last_ground_speed_cm(0),
+	_velocity_north(0),
+	_velocity_east(0),
+	_velocity_down(0)	
+{
+	board = get_board_hardware();
+}
+
+void GPS::update(void)
+{
+    bool result;
+    uint32_t tnow;
+
+    // call the GPS driver to process incoming data
+    result = read();
+
+    //tnow = hal.scheduler->millis();
+	tnow = get_millis();
+
+    // if we did not get a message, and the idle timer has expired, re-init
+    if (!result) {
+        if ((tnow - _idleTimer) > idleTimeout) {
+            //Debug("gps read timeout %lu %lu", (unsigned long)tnow, (unsigned long)_idleTimer);
+			board->debug_stream.put(board->debug_stream.data,"gps read timeout ");
+			board->debug_stream.put(board->debug_stream.data, tnow);
+			board->debug_stream.put(board->debug_stream.data, _idleTimer);
+			
+            _status = NO_GPS;
+
+            init(_nav_setting);
+            // reset the idle timer
+            _idleTimer = tnow;
+        }
+    } else {
+        // we got a message, update our status correspondingly
+        _status = fix ? GPS_OK : NO_FIX;
+
+        valid_read = true;
+        new_data = true;
+
+        // reset the idle timer
+        _idleTimer = tnow;
+
+        if (_status == GPS_OK) {
+            last_fix_time = _idleTimer;
+            _last_ground_speed_cm = ground_speed;
+
+            if (_have_raw_velocity) {
+                // the GPS is able to give us velocity numbers directly
+                _velocity_north = _vel_north * 0.01f;
+                _velocity_east  = _vel_east * 0.01f;
+                _velocity_down  = _vel_down * 0.01f;
+            } else {
+                float gps_heading = ToRad(ground_course * 0.01f);
+                float gps_speed   = ground_speed * 0.01f;
+                float sin_heading, cos_heading;
+
+                cos_heading = cosf(gps_heading);
+                sin_heading = sinf(gps_heading);
+
+                _velocity_north = gps_speed * cos_heading;
+                _velocity_east  = gps_speed * sin_heading;
+
+				// no good way to get descent rate
+				_velocity_down  = 0;
+            }
+        }
+    }
+}
+
+void GPS::setHIL(uint32_t _time, float _latitude, float _longitude, float _altitude,
+            float _ground_speed, float _ground_course, float _speed_3d, uint8_t _num_sats)
+{
+}
+
+// XXX this is probably the wrong way to do it, too
+// void GPS::_error(const char *msg)
+// {
+//     hal.console->println(msg);
+// }
+
+///
+/// write a block of configuration data to a GPS
+///
+void GPS::_write_progstr_block(board_hardware_t *board, const prog_char *pstr, uint8_t size)
+{
+    while (size--) {
+		board->gps_stream_out.put(board->gps_stream_out.data,pgm_read_byte(pstr++));
+        //_fs->write(pgm_read_byte(pstr++));
+    }
+}
+
+//ndousse from AP_Progmem_Identity.h
+static inline uint8_t GPS::pgm_read_byte(const void *s){
+	return *(const uint8_t *) s;
+}
+
+/*
+  a prog_char block queue, used to send out config commands to a GPS
+  in 16 byte chunks. This saves us having to have a 128 byte GPS send
+  buffer, while allowing us to avoid a long delay in sending GPS init
+  strings while waiting for the GPS auto detection to happen
+ */
+
+// maximum number of pending progstrings
+#define PROGSTR_QUEUE_SIZE 3
+
+struct progstr_queue {
+	const prog_char *pstr;
+	uint8_t ofs, size;
+};
+
+static struct {
+    board_hardware_t *board;
+	uint8_t queue_size;
+	uint8_t idx, next_idx;
+	struct progstr_queue queue[PROGSTR_QUEUE_SIZE];
+} progstr_state;
+
+void GPS::_send_progstr(board_hardware_t *_board, const prog_char *pstr, uint8_t size)
+{
+	progstr_state.board = _board;
+	struct progstr_queue *q = &progstr_state.queue[progstr_state.next_idx];
+	q->pstr = pstr;
+	q->size = size;
+	q->ofs = 0;
+	progstr_state.next_idx++;
+	if (progstr_state.next_idx == PROGSTR_QUEUE_SIZE) {
+		progstr_state.next_idx = 0;
+	}
+}
+
+void GPS::_update_progstr(void)
+{
+	struct progstr_queue *q = &progstr_state.queue[progstr_state.idx];
+	// quick return if nothing to do
+	//if (q->size == 0 || progstr_state.fs->tx_pending()) {
+	if (q->size == 0) {
+		return;
+	}
+	uint8_t nbytes = q->size - q->ofs;
+	if (nbytes > 16) {
+		nbytes = 16;
+	}
+	_write_progstr_block(progstr_state.board, q->pstr+q->ofs, nbytes);
+	q->ofs += nbytes;
+	if (q->ofs == q->size) {
+		q->size = 0;
+		progstr_state.idx++;
+		if (progstr_state.idx == PROGSTR_QUEUE_SIZE) {
+			progstr_state.idx = 0;
+		}
+	}
+}
