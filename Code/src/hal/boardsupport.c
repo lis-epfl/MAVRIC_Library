@@ -7,12 +7,16 @@
 
 #include "boardsupport.h"
 
-
 static volatile board_hardware_t board_hardware;
 
 board_hardware_t* initialise_board() {
 		init_UART_int(0);
 		register_write_stream(get_UART_handle(0), &board_hardware.xbee_out_stream);
+		
+		init_UART_int(3);
+		make_buffered_stream(&(board_hardware.gps_buffer), &board_hardware.gps_stream_in);
+		register_read_stream(get_UART_handle(3), &board_hardware.gps_stream_in);
+		register_write_stream(get_UART_handle(3), &board_hardware.gps_stream_out);
 		
 		init_UART_int(4);
 		register_write_stream(get_UART_handle(4), &board_hardware.debug_stream);

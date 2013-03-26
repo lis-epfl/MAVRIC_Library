@@ -73,6 +73,8 @@
 #define MAX_THRUST 1.0
 #define SERVO_SCALE 500
 
+// #define GPS_ENABLE_OFF //if no GPS onboard
+#define GPS_ENABLE_ON
 
-
-#endif /* CONF_PLATFORM_H_ */
+// define type of GPS
+#define GPS_TYPE_UBX

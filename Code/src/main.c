@@ -30,12 +30,16 @@
 #include "boardsupport.h"
 #include "mavlink_actions.h"
 
-board_hardware_t *board;
+#include "gps_ubx.h"
+
+Buffer_t gps_buffer;
+
+gps_Data GPS_data;
 
 pressure_data *pressure;
 
 
-
+board_hardware_t *board;
 
 NEW_TASK_SET(main_tasks, 10)
 	
@@ -64,6 +68,17 @@ task_return_t run_stabilisation() {
 		
 	quad_stabilise(&(board->imu1), &(board->controls));
 
+}
+
+task_return_t gps_task() {
+		while (buffer_bytes_available(&(board->gps_buffer))) {
+			//putnum(STDOUT, buffer_get(&gps_buffer), 10);
+			board->debug_stream.put(board->debug_stream.data, buffer_get(&board->gps_buffer));
+ 			//ubx_ReceiveDataByte(buffer_get(&gps_buffer));
+ 			//ubx_GetGPSData(&GPS_data);
+		}
+		//debug_stream.put(&debug_stream,"a");
+		//putstring(STDOUT,". \n");
 }
 
 void initialisation() {
@@ -141,6 +156,7 @@ void main (void)
 	
 	register_task(&main_tasks, 0, 2000, &run_stabilisation );
 	register_task(&main_tasks, 1, 10000, &mavlink_protocol_update);
+	register_task(&main_tasks, 2 ,1000, &gps_task);
 	// main loop
 	counter=0;
 	while (1==1) {
