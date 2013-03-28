@@ -1,217 +1,224 @@
-﻿// -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: t -*-
-//
-//  u-blox UBX GPS driver for ArduPilot and ArduPilotMega.
-//	Code by Michael Smith, Jordi Munoz and Jose Julio, DIYDrones.com
-//
-//	This library is free software; you can redistribute it and / or
-//	modify it under the terms of the GNU Lesser General Public
-//	License as published by the Free Software Foundation; either
-//	version 2.1 of the License, or (at your option) any later version.
-//
-#ifndef GPS_UBLOX_H_
-#define GPS_UBLOX_H_
 
-#include "gps.h"
+#ifndef GPS_UBLOX_H__
+#define GPS_UBLOX_H__
 
-/*
- *  try to put a UBlox into binary mode. This is in two parts. First we
- *  send a PUBX asking the UBlox to receive NMEA and UBX, and send UBX,
- *  with a baudrate of 38400. Then we send a UBX message setting rate 1
- *  for the NAV_SOL message. The setup of NAV_SOL is to cope with
- *  configurations where all UBX binary message types are disabled.
- */
+#include "gps_maveric.h"
 
 #define UBLOX_SET_BINARY "$PUBX,41,1,0003,0001,38400,0*26\n\265\142\006\001\003\000\001\006\001\022\117"
 
-class GPS_UBLOX : public GPS
-{
-public:
-	GPS_UBLOX() :
-		GPS(),
-		_step(0),
-		_msg_id(0),
-		_payload_length(0),
-		_payload_counter(0),
-		_fix_count(0),
-		_disable_counter(0),
-		next_fix(false)
-		{}
+#define UBX_PREAMBLE1 0xb5
+#define UBX_PREAMBLE2 0x62
 
-    // Methods
-    //virtual void                    init(AP_HAL::UARTDriver *s, enum GPS_Engine_Setting nav_setting = GPS_ENGINE_NONE);
-    virtual bool                    read();
-    static bool _detect(uint8_t );
-	
-	typedef char prog_char;
-	typedef char prog_char_t;
-	
-    static const prog_char          _ublox_set_binary[];
-    static const uint8_t            _ublox_set_binary_size;
+/*
+Name Class Description
+NAV 0x01 Navigation Results: Position, Speed, Time, Acc, Heading, DOP, SVs used
+RXM 0x02 Receiver Manager Messages: Satellite Status, RTC Status
+INF 0x04 Information Messages: Printf-Style Messages, with IDs such as Error, Warning, Notice
+ACK 0x05 Ack/Nack Messages: as replies to CFG Input Messages
+CFG 0x06 Configuration Input Messages: Set Dynamic Model, Set DOP Mask, Set Baud Rate, etc.
+MON 0x0A Monitoring Messages: Comunication Status, CPU Load, Stack Usage, Task Status
+AID 0x0B AssistNow Aiding Messages: Ephemeris, Almanac, other A-GPS data input
+TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
+*/
+#define UBX_CLASS_NAV 0x01
+#define UBX_CLASS_RXM 0x02
+#define UBX_CLASS_INF 0x04
+#define UBX_CLASS_ACK 0x05
+#define UBX_CLASS_CFG 0x06
+#define UBX_CLASS_MON 0x0A
+#define UBX_CLASS_AID 0x0B
+#define UBX_CLASS_TIM 0x0D
+#define UBX_CLASS_ESF 0x10
 
-    float       get_lag() { return 0.5; }   // ublox lag is lower than the default 1second
 
-private:
-    // u-blox UBX protocol essentials
-	#pragma pack(push,1)
-    struct ubx_header {
-        uint8_t preamble1;
-        uint8_t preamble2;
-        uint8_t msg_class;
-        uint8_t msg_id;
-        uint16_t length;
-    };
-    struct ubx_cfg_nav_rate {
-        uint16_t measure_rate_ms;
-        uint16_t nav_rate;
-        uint16_t timeref;
-    };
-    struct ubx_cfg_msg_rate {
-        uint8_t msg_class;
-        uint8_t msg_id;
-        uint8_t rate;
-    };
-    struct ubx_cfg_nav_settings {
-        uint16_t mask;
-        uint8_t dynModel;
-        uint8_t fixMode;
-        int32_t fixedAlt;
-        uint32_t fixedAltVar;
-        int8_t minElev;
-        uint8_t drLimit;
-        uint16_t pDop;
-        uint16_t tDop;
-        uint16_t pAcc;
-        uint16_t tAcc;
-        uint8_t staticHoldThresh;
-        uint8_t res1;
-        uint32_t res2;
-        uint32_t res3;
-        uint32_t res4;
-    };
+#define MSG_ACK_NACK 0x00
+#define MSG_ACK_ACK 0x01
 
-    struct ubx_nav_posllh {
-        uint32_t time;                                  // GPS msToW
-        int32_t longitude;
-        int32_t latitude;
-        int32_t altitude_ellipsoid;
-        int32_t altitude_msl;
-        uint32_t horizontal_accuracy;
-        uint32_t vertical_accuracy;
-    };
-    struct ubx_nav_status {
-        uint32_t time;                                  // GPS msToW
-        uint8_t fix_type;
-        uint8_t fix_status;
-        uint8_t differential_status;
-        uint8_t res;
-        uint32_t time_to_first_fix;
-        uint32_t uptime;                                // milliseconds
-    };
-    struct ubx_nav_solution {
-        uint32_t time;
-        int32_t time_nsec;
-        int16_t week;
-        uint8_t fix_type;
-        uint8_t fix_status;
-        int32_t ecef_x;
-        int32_t ecef_y;
-        int32_t ecef_z;
-        uint32_t position_accuracy_3d;
-        int32_t ecef_x_velocity;
-        int32_t ecef_y_velocity;
-        int32_t ecef_z_velocity;
-        uint32_t speed_accuracy;
-        uint16_t position_DOP;
-        uint8_t res;
-        uint8_t satellites;
-        uint32_t res2;
-    };
-    struct ubx_nav_velned {
-        uint32_t time;                                  // GPS msToW
-        int32_t ned_north;
-        int32_t ned_east;
-        int32_t ned_down;
-        uint32_t speed_3d;
-        uint32_t speed_2d;
-        int32_t heading_2d;
-        uint32_t speed_accuracy;
-        uint32_t heading_accuracy;
-    };
-    // Receive buffer
-    union {
-        ubx_nav_posllh posllh;
-        ubx_nav_status status;
-        ubx_nav_solution solution;
-        ubx_nav_velned velned;
-        ubx_cfg_nav_settings nav_settings;
-        uint8_t bytes[];
-    } _buffer;
-	#pragma pack(pop)
+#define MSG_INF_ERROR 0x00
+#define MSG_INF_WARNING 0x01
+#define MSG_INF_NOTICE 0x02
+#define MSG_INF_TEST 0x03
+#define MSG_INF_DEBUG 0x04
 
-    enum ubs_protocol_bytes {
-        PREAMBLE1 = 0xb5,
-        PREAMBLE2 = 0x62,
-        CLASS_NAV = 0x01,
-        CLASS_ACK = 0x05,
-        CLASS_CFG = 0x06,
-        MSG_ACK_NACK = 0x00,
-        MSG_ACK_ACK = 0x01,
-        MSG_POSLLH = 0x2,
-        MSG_STATUS = 0x3,
-        MSG_SOL = 0x6,
-        MSG_VELNED = 0x12,
-        MSG_CFG_PRT = 0x00,
-        MSG_CFG_RATE = 0x08,
-        MSG_CFG_SET_RATE = 0x01,
-        MSG_CFG_NAV_SETTINGS = 0x24
-    };
-    enum ubs_nav_fix_type {
-        FIX_NONE = 0,
-        FIX_DEAD_RECKONING = 1,
-        FIX_2D = 2,
-        FIX_3D = 3,
-        FIX_GPS_DEAD_RECKONING = 4,
-        FIX_TIME = 5
-    };
-    enum ubx_nav_status_bits {
-        NAV_STATUS_FIX_VALID = 1
-    };
+#define MSG_NAV_POSLLH 0x02
+#define MSG_NAV_STATUS 0x03
+#define MSG_NAV_AOPSTATUS 0x60
+#define MSG_NAV_CLOCK 0x22
+#define MSG_NAV_SOL 0x06
+#define MSG_NAV_VELNED 0x12
+#define MSG_NAV_VELCEF 0x11
+#define MSG_NAV_TIMEGPS 0x20
+#define MSG_NAV_TIMEUTC 0x21
 
-    // Packet checksum accumulators
-    uint8_t         _ck_a;
-    uint8_t         _ck_b;
+#define MSG_CFG_PRT 0x00
+#define MSG_CFG_RATE 0x08
+#define MSG_CFG_SET_RATE 0x01
+#define MSG_CFG_NAV_SETTINGS 0x24
+#define MSG_CFG_NMEA 0x17
 
-    // State machine state
-    uint8_t         _step;
-    uint8_t         _msg_id;
-    uint16_t        _payload_length;
-    uint16_t        _payload_counter;
+#define UBX_PLATFORM_PORTABLE 0x00
+#define UBX_PLATFORM_STATIONARY 0x02
+#define UBX_PLATFORM_PEDESTRIAN 0x03
+#define UBX_PLATFORM_AUTO   0x04
+#define UBX_PLATFORM_SEA    0x05
+#define UBX_PLATFORM_1GAIR  0x06
+#define UBX_PLATFORM_2GAIR  0x07
+#define UBX_PLATFORM_4GAIR  0x08
 
-	// 8 bit count of fix messages processed, used for periodic
-	// processing
-    uint8_t			_fix_count;
+#define GPS_FIX_TYPE_NOFIX 0x00
+#define GPS_FIX_TYPE_DEADRECK 0x01
+#define GPS_FIX_TYPE_2DFIX 0x02
+#define GPS_FIX_TYPE_3DFIX 0x03
+#define GPS_FIX_TYPE_GPSDEADRECK 0x04
+#define GPS_FIX_TYPE_TIMEONLY 0x05
 
-    uint8_t         _class;
+// Sizes
+#define UBX_SIZE_NAV_POSLLH 28
+#define UBX_SIZE_NAV_VELNED 36
+#define UBX_SIZE_NAV_STATUS 16
+#define UBS_SIZE_NAV_SOL 52
 
-    // do we have new position information?
-    bool            _new_position;
+#define NAV_STATUS_FIX_VALID 1
 
-    // do we have new speed information?
-    bool            _new_speed;
+#define TIME_OF_DAY 0 //<
+#define TIME_OF_WEEK 1 //< Ublox
+#define TIME_OF_YEAR 2 //< MTK, NMEA
+#define UNIX_EPOCH 3
 
-    uint8_t         _disable_counter;
+typedef struct {
+	uint8_t preamble1;
+	uint8_t preamble2;
+	uint8_t msg_class;
+	uint8_t msg_id;
+	uint16_t length;
+}ubx_header;
 
-    // Buffer parse & GPS state update
-    bool        _parse_gps();
+typedef struct {
+	uint16_t measure_rate_ms;
+	uint16_t nav_rate;
+	uint16_t timeref;
+}ubx_cfg_nav_rate;
 
-    // used to update fix between status and position packets
-    bool        next_fix;
+typedef struct {
+	uint8_t msg_class;
+	uint8_t msg_id;
+	uint8_t rate;
+}ubx_cfg_msg_rate;
 
-    void        _configure_message_rate(uint8_t msg_class, uint8_t msg_id, uint8_t rate);
-    void        _configure_gps(void);
-    void        _update_checksum(uint8_t *data, uint8_t len, uint8_t &ck_a, uint8_t &ck_b);
-    void        _send_message(uint8_t msg_class, uint8_t msg_id, void *msg, uint8_t size);
+typedef struct {
+	uint16_t mask;
+	uint8_t dynModel;
+	uint8_t fixMode;
+	int32_t fixedAlt;
+	uint32_t fixedAltVar;
+	int8_t minElev;
+	uint8_t drLimit;
+	uint16_t pDop;
+	uint16_t tDop;
+	uint16_t pAcc;
+	uint16_t tAcc;
+	uint8_t staticHoldThresh;
+	uint8_t res1;
+	uint32_t res2;
+	uint32_t res3;
+	uint32_t res4;
+}ubx_cfg_nav_settings;
 
-};
+typedef struct {
+	uint32_t time;                                  // GPS msToW
+	int32_t longitude;
+	int32_t latitude;
+	int32_t altitude_ellipsoid;
+	int32_t altitude_msl;
+	uint32_t horizontal_accuracy;
+	uint32_t vertical_accuracy;
+}ubx_nav_posllh;
 
-#endif // GPS_UBLOX_H_
+typedef struct {
+	uint32_t time;                                  // GPS msToW
+	uint8_t fix_type;
+	uint8_t fix_status;
+	uint8_t differential_status;
+	uint8_t res;
+	uint32_t time_to_first_fix;
+	uint32_t uptime;                                // milliseconds
+}ubx_nav_status;
+
+typedef struct {
+	uint32_t time;
+	int32_t time_nsec;
+	int16_t week;
+	uint8_t fix_type;
+	uint8_t fix_status;
+	int32_t ecef_x;
+	int32_t ecef_y;
+	int32_t ecef_z;
+	uint32_t position_accuracy_3d;
+	int32_t ecef_x_velocity;
+	int32_t ecef_y_velocity;
+	int32_t ecef_z_velocity;
+	uint32_t speed_accuracy;
+	uint16_t position_DOP;
+	uint8_t res;
+	uint8_t satellites;
+	uint32_t res2;
+}ubx_nav_solution;
+
+typedef struct {
+	uint32_t time;                                  // GPS msToW
+	int32_t ned_north;
+	int32_t ned_east;
+	int32_t ned_down;
+	uint32_t speed_3d;
+	uint32_t speed_2d;
+	int32_t heading_2d;
+	uint32_t speed_accuracy;
+	uint32_t heading_accuracy;
+}ubx_nav_velned;
+
+// Receive buffer
+union {
+	ubx_nav_posllh posllh;
+	ubx_nav_status status;
+	ubx_nav_solution solution;
+	ubx_nav_velned velned;
+	ubx_cfg_nav_settings nav_settings;
+	uint8_t bytes[];
+} buffergps;
+
+uint8_t cksum_a;
+uint8_t cksum_b;
+
+// State machine state
+uint8_t         step;
+uint8_t         msg_id;
+uint16_t        payload_length;
+uint16_t        payload_counter;
+
+// 8 bit count of fix messages processed, used for periodic
+// processing
+uint8_t			fix_count;
+
+uint8_t         ubxclass;
+
+// do we have new position and speed information?
+bool            new_position;
+bool            new_speed;
+
+uint8_t         disable_counter;
+
+bool next_fix;
+
+float get_lag() { return 0.5; };
+
+void init_gps_ubx(GPS_Engine_Setting _nav_setting);
+
+bool ubx_read(void);
+bool ubx_process_data(void);
+
+void update_checksum(uint8_t *data, uint8_t len, uint8_t &ck_a, uint8_t &ck_b);
+void ubx_send_message(uint8_t msg_class, uint8_t msg_id, void *msg, uint8_t size);
+void ubx_configure_message_rate(uint8_t msg_class, uint8_t msg_id, uint8_t rate);
+void configure_gps(void);
+
+#endif //GPS_UBLOX_H__
