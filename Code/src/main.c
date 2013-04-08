@@ -30,7 +30,7 @@
 #include "boardsupport.h"
 #include "mavlink_actions.h"
 
-#include "gps_aeropic.h"
+#include "gps_ublox.h"
 
 pressure_data *pressure;
 
@@ -65,13 +65,18 @@ task_return_t run_stabilisation() {
 	quad_stabilise(&(board->imu1), &(board->controls));
 
 }
-
 task_return_t gps_task() {
-		while (buffer_bytes_available(&(board->gps_buffer))) {
+	
+	
+	
+		/*while (buffer_bytes_available(&(board->gps_buffer))) {*/
 			//putnum(STDOUT, buffer_get(&gps_buffer), 10);
-			board->debug_stream.put(board->debug_stream.data, buffer_get(&board->gps_buffer));
- 			gps_ReceiveDataByte(buffer_get(&board->gps_buffer));
- 			gps_GetGPSData(&(board->GPS_data));
+			//board->debug_stream.put(board->debug_stream.data, buffer_get(&board->gps_buffer));
+			dbg_print_num(buffer_get(&(board->gps_buffer)),16);
+ 			//gps_ReceiveDataByte(buffer_get(&board->gps_buffer));
+ 			//gps_GetGPSData(&(board->GPS_data));
+			 
+			 
 // 			board->debug_stream.put(board->debug_stream.data, board->GPS_data.latitudeStatus);
 // 			board->debug_stream.put(board->debug_stream.data, board->GPS_data.latitude);
 // 			board->debug_stream.put(board->debug_stream.data, board->GPS_data.longitude);
@@ -85,7 +90,7 @@ task_return_t gps_task() {
 // 			putnum(&(board->debug_stream), board->GPS_data.itow, 10);
 // 			putnum(&(board->debug_stream), board->GPS_data.speed, 10);
 			//putstring(&(board->debug_stream),"\n");
-		}
+		//}
 		//debug_stream.put(&debug_stream,"a");
 		//putstring(STDOUT,". \n");
 }

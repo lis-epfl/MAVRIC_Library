@@ -120,6 +120,8 @@ src\runtime\scheduler.c
 
 src\runtime\time_keeper.c
 
+src\sensing\gps_ublox.c
+
 src\sensing\imu.c
 
 src\sensing\qfilter.c

@@ -76,14 +76,14 @@
 // #define GPS_ENABLE_OFF //if no GPS onboard
 #define GPS_ENABLE_ON
 
-#define GPS_AEROPIC
-//#define GPS_ARDUPILOT
+#define GPS_MAVERIC
+//#define GPS_AEROPIC
 
 #ifdef GPS_ENABLE_ON
-	#ifdef GPS_AEROPIC
-		#include "gps_aeropic.h"
+	#ifdef GPS_MAVERIC
+		#include "gps_ublox.h"
 	#else
-		#include "gps.h"
+		#include "gps_aeropic.h"
 	#endif
 	// define type of GPS
 	#define GPS_TYPE GPS_TYPE_UBX

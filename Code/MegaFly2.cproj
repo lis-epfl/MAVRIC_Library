@@ -1332,22 +1332,10 @@
     <Compile Include="src\runtime\time_keeper.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\sensing\gps.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\sensing\gps_aeropic.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\sensing\gps_aeropic.h">
+    <Compile Include="src\sensing\gps_ublox.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\sensing\gps_ublox.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\sensing\gps_ubx.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\sensing\gps_ubx.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\sensing\imu.c">
@@ -1395,12 +1383,6 @@
     <Compile Include="src\util\streams.h">
       <SubType>compile</SubType>
     </Compile>
-    <None Include="src\sensing\gps.cpp">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\sensing\gps_ublox.cpp">
-      <SubType>compile</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="src\" />

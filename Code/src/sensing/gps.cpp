@@ -36,7 +36,7 @@ GPS::GPS(void) :
 {
 	board = get_board_hardware();
 }
-
+	
 void GPS::update(void)
 {
     bool result;

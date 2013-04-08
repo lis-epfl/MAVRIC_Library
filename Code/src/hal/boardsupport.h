@@ -27,7 +27,7 @@
 #include "onboard_parameters.h"
 #include "servo_pwm.h"
 
-#include "gps_aeropic.h"
+#include "gps_ublox.h"
 
 static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
 
@@ -42,7 +42,7 @@ typedef struct  {
 	Buffer_t gps_buffer;
 	byte_stream_t gps_stream_in;
 	byte_stream_t gps_stream_out;
-	gps_Data GPS_data;
+	gps_Data_type GPS_data;
 	
 	
 	// aliases
