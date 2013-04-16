@@ -68,31 +68,16 @@ task_return_t run_stabilisation() {
 task_return_t gps_task() {
 	
 	
-	
-		/*while (buffer_bytes_available(&(board->gps_buffer))) {*/
-			//putnum(STDOUT, buffer_get(&gps_buffer), 10);
-			//board->debug_stream.put(board->debug_stream.data, buffer_get(&board->gps_buffer));
-			dbg_print_num(buffer_get(&(board->gps_buffer)),16);
- 			//gps_ReceiveDataByte(buffer_get(&board->gps_buffer));
- 			//gps_GetGPSData(&(board->GPS_data));
-			 
-			 
-// 			board->debug_stream.put(board->debug_stream.data, board->GPS_data.latitudeStatus);
-// 			board->debug_stream.put(board->debug_stream.data, board->GPS_data.latitude);
-// 			board->debug_stream.put(board->debug_stream.data, board->GPS_data.longitude);
-// 			board->debug_stream.put(board->debug_stream.data, board->GPS_data.altitude);
-// 			board->debug_stream.put(board->debug_stream.data, board->GPS_data.itow);
-// 			board->debug_stream.put(board->debug_stream.data, board->GPS_data.speed);
-// 			putnum(&(board->debug_stream), board->GPS_data.latitudeStatus, 10);
-// 			putnum(&(board->debug_stream), board->GPS_data.latitude, 10);
-// 			putnum(&(board->debug_stream), board->GPS_data.longitude, 10);
-// 			putnum(&(board->debug_stream), board->GPS_data.altitude, 10);
-// 			putnum(&(board->debug_stream), board->GPS_data.itow, 10);
-// 			putnum(&(board->debug_stream), board->GPS_data.speed, 10);
-			//putstring(&(board->debug_stream),"\n");
+			gps_update();
+//  			dbg_print_num(board->GPS_data.status,10);
+//  			dbg_print("\n");
+// 			dbg_print_num(board->GPS_data.latitude,10);
+// 			dbg_print("\n");
+// 			dbg_print_num(board->GPS_data.longitude,10);
+// 			dbg_print("\n");
+// 			dbg_print_num(board->GPS_data.altitude,10);
+// 			dbg_print("\n");
 		//}
-		//debug_stream.put(&debug_stream,"a");
-		//putstring(STDOUT,". \n");
 }
 
 void initialisation() {
@@ -100,6 +85,8 @@ void initialisation() {
 	irq_initialize_vectors();
 	cpu_irq_enable();
 	Disable_global_interrupt();
+	
+	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 	
 	// Initialize the sleep manager
 	sleepmgr_init();
@@ -121,6 +108,8 @@ void initialisation() {
 	};
 
 	board=initialise_board();
+
+	init_gps_ubx(engine_nav_settings);
 	
 	Enable_global_interrupt();
 		
@@ -163,14 +152,14 @@ void main (void)
 	int i=0;
 	int counter=0;
 	uint32_t last_looptime, this_looptime;
-
+	
 	initialisation();
 	
 	init_scheduler(&main_tasks);
 	
 	register_task(&main_tasks, 0, 2000, &run_stabilisation );
 	register_task(&main_tasks, 1, 10000, &mavlink_protocol_update);
-	register_task(&main_tasks, 2 ,1000, &gps_task);
+	register_task(&main_tasks, 2 ,400, &gps_task);
 	// main loop
 	counter=0;
 	while (1==1) {

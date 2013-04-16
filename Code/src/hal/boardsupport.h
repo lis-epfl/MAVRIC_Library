@@ -44,7 +44,6 @@ typedef struct  {
 	byte_stream_t gps_stream_out;
 	gps_Data_type GPS_data;
 	
-	
 	// aliases
 	byte_stream_t *telemetry_down_stream, *telemetry_up_stream;
 } board_hardware_t;

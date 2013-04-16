@@ -135,6 +135,7 @@ usart_config_t *get_UART_handle(int UID) {
 
 void register_write_stream(usart_config_t *usart_opt, byte_stream_t *stream) {
 	stream->get=NULL;
+	//stream->get=&uart_int_get_byte;
 	stream->put=&uart_int_send_byte;
 	stream->flush=&uart_int_flush;
 	stream->data=usart_opt;

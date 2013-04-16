@@ -15,7 +15,17 @@
 #include "stdint.h"
 #include "stdbool.h"
 
-#define UBLOX_SET_BINARY "$PUBX,41,1,0003,0001,38400,0*26\n\265\142\006\001\003\000\001\006\001\022\117"
+/*
+ *  try to put a UBlox into binary mode. This is in two parts. First we
+ *  send a PUBX asking the UBlox to receive NMEA and UBX, and send UBX,
+ *  with a baudrate of 38400. Then we send a UBX message setting rate 1
+ *  for the NAV_SOL message. The setup of NAV_SOL is to cope with
+ *  configurations where all UBX binary message types are disabled.
+ */
+//#define UBLOX_SET_BINARY "$PUBX,41,1,0003,0001,38400,0*26\n\265\142\006\001\003\000\001\006\001\022\117"
+
+// changed by ndousse
+#define UBLOX_SET_BINARY "$PUBX,41,1,0003,0001,38400,0*25\n"//\265\142\006\001\003\000\001\006\001\022\117"
 
 #define UBX_PREAMBLE1 0xb5
 #define UBX_PREAMBLE2 0x62
@@ -90,6 +100,9 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_NAV_SOL 52
 #define UBX_SIZE_NAV_VELNED 36
 #define UBX_SIZE_NAV_SVINFO 30 //8 + 12*numChannel
+#define UBX_SIZE_NAV_SETTINGS 36
+#define UBX_SIZE_CFG_RATE 6
+#define UBX_SIZE_CFG_GETSET_RATE 3
 
 #define NAV_STATUS_FIX_NVALID 0
 #define NAV_STATUS_FIX_VALID 1
@@ -125,18 +138,18 @@ typedef struct {
 
 typedef struct {
 	uint16_t mask;
-	uint8_t dynModel;
+	uint8_t dynModel;								// UBX_PLATFORM_... type
 	uint8_t fixMode;
-	int32_t fixedAlt;
-	uint32_t fixedAltVar;
-	int8_t minElev;
-	uint8_t drLimit;
+	int32_t fixedAlt;								// m
+	uint32_t fixedAltVar;							// m^2
+	int8_t minElev;									// deg
+	uint8_t drLimit;								// s
 	uint16_t pDop;
 	uint16_t tDop;
-	uint16_t pAcc;
-	uint16_t tAcc;
-	uint8_t staticHoldThresh;
-	uint8_t res1;
+	uint16_t pAcc;									// m
+	uint16_t tAcc;									// m
+	uint8_t staticHoldThresh;						// cm/s
+	uint8_t dgpsTimeOut;							// s
 	uint32_t res2;
 	uint32_t res3;
 	uint32_t res4;
@@ -222,65 +235,6 @@ ubx_nav_SVInfo;
 //ubx_nav_velned velned;
 ubx_cfg_nav_settings nav_settings;
 
-//! The pointer to the pointer to the structure of the current message to fill
-unsigned char **ubx_currentMessage = 0;
-//! The pointer to the pointer to the structure of the last message received of the same type than the current one being received (for exchange at the end)
-unsigned char ** ubx_lastMessage = 0;
-//! The pointer to the number to increment when a message of the type has been received
-unsigned short * ubx_validMessage = 0;
-
-// We are using two buffers for each message, one for the last message received, the other for the message being received (not complete)
-//! The Posllh message buffer
-ubx_nav_posllh ubx_posllhMessage[2];
-//! The Status message buffer
-ubx_nav_status ubx_statusMessage[2];
-//! The Solution message buffer
-ubx_nav_solution ubx_solutionMessage[2];
-//! The Velned message buffer
-ubx_nav_velned ubx_velnedMessage[2];
-//! The SVInfo message buffer
-ubx_nav_SVInfo ubx_svInfoMessage[2];
-
-// NAV-POSLLH
-//! The pointer to the Posllh message that is being filled (not usable)
-ubx_nav_posllh * ubx_currentPosllhMessage = &ubx_posllhMessage[0];
-//! The pointer to the last Posllh message that was completed
-ubx_nav_posllh * ubx_lastPosllhMessage = &ubx_posllhMessage[1];
-//! Number of valid Posllh message received
-unsigned short ubx_numberOfValidPosllhMessage = 0;
-
-// NAV-STATUS
-//! The pointer to the Status message that is being filled (not usable)
-ubx_nav_status *ubx_currentStatusMessage = &ubx_statusMessage[0];
-//! The pointer to the last Status message that was completed
-ubx_nav_status *ubx_lastStatusMessage = &ubx_statusMessage[1];
-//! Number of valid Status message received
-unsigned short ubx_numberOfValidStatusMessage = 0;
-
-// NAV-Sol
-//! The pointer to the Solution message that is being filled (not usable)
-ubx_nav_solution *ubx_currentSolutionMessage = &ubx_solutionMessage[0];
-//! The pointer to the last Status message that was completed
-ubx_nav_solution *ubx_lastSolutionMessage = &ubx_solutionMessage[1];
-//! Number of valid Status message received
-unsigned short ubx_numberOfValidSolutionMessage = 0;
-
-// NAV-VELNED
-//! The pointer to the Velned message that is being filled (not usable)
-ubx_nav_velned *ubx_currentVelnedMessage = &ubx_velnedMessage[0];
-//! The pointer to the last Velned message that was completed
-ubx_nav_velned *ubx_lastVelnedMessage = &ubx_velnedMessage[1];
-//! Number of valid Velned message received
-unsigned short ubx_numberOfValidVelnedMessage = 0;
-
-// NAV-SVINFO
-//! The pointer to the Status message that is being filled (not usable)
-ubx_nav_SVInfo *ubx_currentSVInfoMessage = &ubx_svInfoMessage[0];
-//! The pointer to the last Status message that was completed
-ubx_nav_SVInfo *ubx_lastSVInfoMessage = &ubx_svInfoMessage[1];
-//! Number of valid Status message received
-unsigned short ubx_numberOfValidSVInfoMessage = 0;
-
 
 
 
@@ -331,7 +285,7 @@ enum GPS_Engine_Setting{
 	GPS_ENGINE_AIRBORNE_4G = 8
 };
 
-enum GPS_Engine_Setting nav_setting;
+enum GPS_Engine_Setting engine_nav_setting;
 
 //! Number of times ubx_CheckTimeout() must be called without response from GPS before it is considered as timed out
 #define UBX_TIMEOUT_CYCLES 2
@@ -400,7 +354,7 @@ float velocity_down;
 
 //float get_lag() { return 0.5; };
 	
-void init_gps_ubx(enum GPS_Engine_Setting _nav_setting);
+void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting);
 
 bool ubx_read(void);
 bool ubx_process_data(void);
@@ -419,6 +373,8 @@ ubx_nav_status * ubx_GetStatus();
 ubx_nav_solution * ubx_GetSolution();
 ubx_nav_velned * ubx_GetVelned();
 ubx_nav_SVInfo * ubx_GetSVInfo();
+ubx_cfg_nav_settings * ubx_GetNavSettings();
+ubx_cfg_msg_rate * ubx_GetMsgRate();
 
 float ToRad(float numdeg);
 
