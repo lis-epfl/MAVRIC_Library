@@ -21,11 +21,23 @@
  *  with a baudrate of 38400. Then we send a UBX message setting rate 1
  *  for the NAV_SOL message. The setup of NAV_SOL is to cope with
  *  configurations where all UBX binary message types are disabled.
+ * 0001: UBX
+ * 0002: NMEA
+ * 0003: NMEA + UBX
  */
 //#define UBLOX_SET_BINARY "$PUBX,41,1,0003,0001,38400,0*26\n\265\142\006\001\003\000\001\006\001\022\117"
 
 // changed by ndousse
-#define UBLOX_SET_BINARY "$PUBX,41,1,0003,0001,38400,0*25\n"//\265\142\006\001\003\000\001\006\001\022\117"
+#define UBLOX_SET_BINARY "$PUBX,41,1,0003,0001,38400,0*25\r\n"//\265\142\006\001\003\000\001\006\001\022\117"
+
+/*
+Structure of an UBlox binary message
+
+PREAMBLE1		PREAMBLE2		CLASS		MSG_ID		LENGTH1			LENGTH2			MESSAGE			CHECKSUMA		CHECKSUMB
+1 byte			1 byte			1 byte		1 byte		Lowest byte		Highest byte	LENGTH size		1 byte			1 byte
+
+The information is received in the Little endian format (least significant byte first).
+*/
 
 #define UBX_PREAMBLE1 0xb5
 #define UBX_PREAMBLE2 0x62
@@ -51,7 +63,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_CLASS_TIM 0x0D
 #define UBX_CLASS_ESF 0x10
 
-
+// Type of Messages that can be received in each class
 #define MSG_ACK_NACK 0x00
 #define MSG_ACK_ACK 0x01
 
@@ -81,6 +93,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_MON_RXR 0x21
 
 #define MSG_TIM_TP 0x01
+#define MSG_TIM_VRFY 0x06
 
 #define UBX_PLATFORM_PORTABLE 0x00
 #define UBX_PLATFORM_STATIONARY 0x02
@@ -98,6 +111,10 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define GPS_FIX_TYPE_GPSDEADRECK 0x04
 #define GPS_FIX_TYPE_TIMEONLY 0x05
 
+// For binary message
+#define UBX_CFG_MSG 0xF1
+#define UBX_CFG_MSG_ID 0x41
+
 // Sizes
 #define UBX_SIZE_NAV_POSLLH 28
 #define UBX_SIZE_NAV_STATUS 16
@@ -112,6 +129,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_MON_RXR 1
 
 #define UBX_SIZE_TIM_TP 16
+#define UBX_SIZE_TIM_VRFY 20
 
 #define NAV_STATUS_FIX_NVALID 0
 #define NAV_STATUS_FIX_VALID 1
@@ -125,9 +143,11 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define PI 3.141592
 #define DEG2RAD PI/180
 
-#define LITTLE_ENDIAN
+// The UART bytes are sent in a little endian format from the GPS, if the processor is big endian, define BIG_ENDIAN
+// Otherwise comment the following line
+#define BIG_ENDIAN
 
-#ifdef LITTLE_ENDIAN
+#ifdef BIG_ENDIAN
 	typedef struct {
 		uint16_t length;
 		uint8_t msg_id_header;
@@ -182,12 +202,12 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	}ubx_cfg_nav_settings;
 
 	typedef struct {
-		uint32_t vertical_accuracy;
-		uint32_t horizontal_accuracy;
-		int32_t altitude_msl;
-		int32_t altitude_ellipsoid;
-		int32_t latitude;
-		int32_t longitude;
+		uint32_t vertical_accuracy;						// mm
+		uint32_t horizontal_accuracy;					// mm
+		int32_t altitude_msl;							// mm
+		int32_t altitude_ellipsoid;						// mm
+		int32_t latitude;								// deg 1e-7
+		int32_t longitude;								// deg 1e-7
 		uint32_t itow;                                  // GPS msToW
 	}ubx_nav_posllh;
 
@@ -266,6 +286,17 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint32_t towMS;					// ms
 	}ubx_tim_tp;
 
+	typedef struct
+	{
+		uint8_t res;
+		uint8_t flags;
+		uint16_t wno;					// week number
+		int32_t deltaNs;				// ns
+		int32_t deltaMs;				// ms
+		int32_t frac;					// ns
+		int32_t itow;					// ms
+	}ubx_tim_vrfy;
+
 #else
 
 	typedef struct {
@@ -309,12 +340,12 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 
 	typedef struct {
 		uint32_t itow;                                  // GPS msToW
-		int32_t longitude;
-		int32_t latitude;
-		int32_t altitude_ellipsoid;
-		int32_t altitude_msl;
-		uint32_t horizontal_accuracy;
-		uint32_t vertical_accuracy;
+		int32_t longitude;								// deg 1E-7
+		int32_t latitude;								// deg 1E-7
+		int32_t altitude_ellipsoid;						// mm
+		int32_t altitude_msl;							// mm
+		uint32_t horizontal_accuracy;					// mm
+		uint32_t vertical_accuracy;						// mm
 	}ubx_nav_posllh;
 
 	typedef struct {
@@ -392,6 +423,17 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t flags;
 		uint8_t res;
 	}ubx_tim_tp;
+	
+	typedef struct
+	{
+		int32_t itow;
+		int32_t frac;
+		int32_t deltaMs;
+		int32_t deltaNs;
+		uint16_t wno;
+		uint8_t flags;
+		uint8_t res;
+	}ubx_tim_vrfy;
 
 #endif
 
@@ -421,8 +463,8 @@ uint8_t         disable_counter;
 bool fix;
 bool next_fix;
 bool have_raw_velocity;
-bool valid_read;
-bool new_data;
+// bool valid_read;
+// bool new_data;
 
 uint32_t last_ground_speed_cm;
 
@@ -446,14 +488,14 @@ enum GPS_Engine_Setting engine_nav_setting;
 
 //! Number of times ubx_CheckTimeout() must be called without response from GPS before it is considered as timed out
 #define UBX_TIMEOUT_CYCLES 2
-//! The minimum precision to consider a position as correct (in mm)
-#define UBX_POSITION_PRECISION 20000
-//! The minimum precision to consider an altitude as correct (in mm)
-#define UBX_ALTITUDE_PRECISION 20000
-//! The minimum precision to consider a speed as correct (in cm/s)
-#define UBX_SPEED_PRECISION 500
+//! The minimum precision to consider a position as correct (in m)
+#define UBX_POSITION_PRECISION 20
+//! The minimum precision to consider an altitude as correct (in m)
+#define UBX_ALTITUDE_PRECISION 20
+//! The minimum precision to consider a speed as correct (in m/s)
+#define UBX_SPEED_PRECISION 5
 //! The minimum precision to consider a heading as correct (in deg*10^5)
-#define UBX_HEADING_PRECISION 3000000
+#define UBX_HEADING_PRECISION 5000000//3000000
 
 // Type definition for GPS data
 typedef struct
@@ -469,26 +511,32 @@ typedef struct
 	float verticalSpeed; //!< the vertical speed in m/s
 	float course; //!< heading in degree
 	
-	float speedAccuracy;
-	float headingAccuracy;
+	float horizontalAccuracy; //!< horizontal accuracy in m
+	float verticalAccuracy; //!< vertical accuracy in m
+	
+	float speedAccuracy; //!< speed accuracy in m
+	float headingAccuracy; //!< heading accuracy in m
 	
 	uint8_t num_sats;
 	uint16_t hdop;
 	
-	unsigned long timegps; //!< time reference in ms
-	unsigned long itow; //!< time reference in ms ???????
+	unsigned long timeLastMsg; //!< time reference in ms of microcontroller
+	unsigned long timegps; //!< time reference in ms of gps
 	
 	unsigned char status;
 	
+	unsigned char horizontalStatus;
+	
 // 	unsigned char latitudeStatus;
 // 	unsigned char longitudeStatus;
-// 	unsigned char altitudeStatus;
-// 	unsigned char speedStatus;
+ 	unsigned char altitudeStatus;
+ 	unsigned char speedStatus;
 // 	unsigned char groundSpeedStatus;
 // 	unsigned char northSpeedStatus;
 // 	unsigned char eastSpeedStatus;
 // 	unsigned char verticalSpeedStatus;
-// 	unsigned char courseStatus;
+ 	unsigned char courseStatus;
+	unsigned char accuracyStatus;
 } gps_Data_type;
 
 /// Last time that the GPS driver got a good packet from the GPS
@@ -515,8 +563,8 @@ bool ubx_read(void);
 bool ubx_process_data(void);
 
 void update_checksum(uint8_t *data, uint8_t len, uint8_t *ck_a, uint8_t *ck_b);
-uint8_t endian_lower_bytes_uint8(uint16_t bytes);
-uint8_t endian_higher_bytes_uint8(uint16_t bytes);
+uint8_t endian_lower_bytes_uint16(uint16_t bytes);
+uint8_t endian_higher_bytes_uint16(uint16_t bytes);
 void ubx_send_header(uint8_t msg_class, uint8_t _msg_id, uint8_t size);
 void ubx_send_cksum(uint8_t ck_sum_a, uint8_t ck_sum_b);
 
@@ -526,8 +574,6 @@ void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, enum GPS_
 void ubx_configure_message_rate(uint8_t msg_class, uint8_t msg_id, uint8_t rate);
 
 void configure_gps(void);
-
-bool ubx_detect(uint8_t data);
 
 void gps_update(void);
 
@@ -539,6 +585,8 @@ ubx_nav_SVInfo * ubx_GetSVInfo();
 ubx_cfg_nav_settings * ubx_GetNavSettings();
 ubx_cfg_msg_rate * ubx_GetMsgRate();
 ubx_mon_rxr_struct * ubx_GetMonRXR();
+ubx_tim_tp * ubx_GetTimTP();
+ubx_tim_vrfy * ubx_GetTimVRFY();
 
 float ToRad(float numdeg);
 

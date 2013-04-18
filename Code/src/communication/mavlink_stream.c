@@ -75,7 +75,7 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 	uint8_t byte;
 	//dbg_print(".");
 	while(buffer_bytes_available(stream->data) > 0) {
-		dbg_print("!");
+		//dbg_print("!");
 		byte = stream->get(stream->data);
 		if(mavlink_parse_char(MAVLINK_COMM_0, byte, &rec->msg, &rec->status)) {
 			return 1;
