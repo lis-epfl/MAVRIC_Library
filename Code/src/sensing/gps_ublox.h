@@ -576,6 +576,7 @@ void ubx_configure_message_rate(uint8_t msg_class, uint8_t msg_id, uint8_t rate)
 void configure_gps(void);
 
 void gps_update(void);
+bool newValidGpsMsg();
 
 ubx_nav_posllh * ubx_GetPosllh();
 ubx_nav_status * ubx_GetStatus();

@@ -83,7 +83,7 @@ task_return_t gps_task() {
  	//dbg_print_num(board->GPS_data.courseStatus,10);
  	//dbg_print("\n");
 	//
-	if((tnow == board->GPS_data.timeLastMsg)&&(board->GPS_data.status == GPS_OK)&&(board->GPS_data.accuracyStatus == 1))
+	if(newValidGpsMsg())
 	{
 		dbg_print("GPS status:");
 		dbg_print_num(board->GPS_data.status,10);

@@ -1331,6 +1331,22 @@ void gps_update(void)
 	}
 }
 
+/*
+* Returns true if there is a new valid GPS message that arrived at time tnow
+* false otherwise
+*/
+bool newValidGpsMsg()
+{
+	uint32_t tnow = get_millis();
+	if((tnow == board->GPS_data.timeLastMsg)&&(board->GPS_data.status == GPS_OK)&&(board->GPS_data.accuracyStatus == 1))
+	{
+		return true;
+	}else{
+		return false;
+	}
+	
+	
+}
 
 /*!
 *	This function returns a pointer to the last NAV-POSLLH message that was received
