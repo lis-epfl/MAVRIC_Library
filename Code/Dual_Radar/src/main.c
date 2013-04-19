@@ -29,6 +29,8 @@
 #include "scheduler.h"
 #include "boardsupport.h"
 #include "mavlink_actions.h"
+#include "doppler_radar.h"
+#include "radar_driver.h"
 
 board_hardware_t *board;
 
@@ -39,32 +41,6 @@ pressure_data *pressure;
 
 NEW_TASK_SET(main_tasks, 10)
 	
-task_return_t run_stabilisation() {
-	board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
-	board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
-	board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
-	board->controls.thrust=getChannel(S_THROTTLE)/350.0;
-
-	imu_update(&(board->imu1));
-	if (getChannel(4)>0) {
-		board->controls.control_mode=RATE_COMMAND_MODE;
-	} else {
-		board->controls.control_mode=ATTITUDE_COMMAND_MODE;
-	}
-	
-	// switch run_mode
-	if ((board->controls.thrust<-0.95) && (board->controls.rpy[YAW]< -0.9)) {
-		board->controls.run_mode=MOTORS_OFF;
-		LED_On(LED1);
-	}
-	if ((board->controls.thrust<-0.95) && (board->controls.rpy[YAW] >0.9)) {
-		board->controls.run_mode=MOTORS_ON;
-		LED_Off(LED1);
-	}
-		
-	quad_stabilise(&(board->imu1), &(board->controls));
-
-}
 
 void initialisation() {
 	int i;
@@ -79,7 +55,6 @@ void initialisation() {
 	board_init();
 	delay_init(sysclk_get_cpu_hz());
 	init_time_keeper();
-
 	
 	INTC_init_interrupts();
 	
@@ -93,13 +68,17 @@ void initialisation() {
 
 	board=initialise_board();
 	
+	Init_ADCI();
+
+	init_radar();
+
 	Enable_global_interrupt();
 		
 	dbg_print("Debug stream initialised\n");
 
 
 	init_onboard_parameters();
-	init_mavlink_actions();
+	//init_mavlink_actions();
 	
 	
 }
@@ -113,12 +92,20 @@ void main (void)
 	initialisation();
 	
 	init_scheduler(&main_tasks);
-	
-	register_task(&main_tasks, 1, 10000, &mavlink_protocol_update);
+//	register_task(&main_tasks, 1, 10000, &mavlink_protocol_update);
 	// main loop
 	counter=0;
+	// turn on radar power:
+	switch_power(1,0);
+
+	ADCI_Start_Oneshot(Sampling_frequency);
 	while (1==1) {
 		this_looptime=get_millis();
+		
+		if (ADCI_Sampling_Complete()) {
+			calculate_radar();
+			ADCI_Start_Oneshot(Sampling_frequency);
+		}			
 		
 		run_scheduler_update(&main_tasks);
 				

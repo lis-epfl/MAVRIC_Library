@@ -27,7 +27,6 @@
 #include "onboard_parameters.h"
 #include "servo_pwm.h"
 
-static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
 
 typedef struct  {
 	Imu_Data_t imu1;

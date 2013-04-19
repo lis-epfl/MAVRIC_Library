@@ -10,7 +10,7 @@
 #define ADCI_BUFFER_SIZE 1024
 #define ADCI_INPUT_CHANNELS 4
 #define ADC_FREQUENCY 1000000
-#define OVERSAMPLING 4				// maximum sampling frequency: 1000000 / 4ch /2(HW-OVRSMP) /4 (OVERSAMPLING) = 31250 Hz
+#define OVERSAMPLING 8				// maximum sampling frequency: 1000000 / 4ch /2(HW-OVRSMP) /4 (OVERSAMPLING) = 31250 Hz
 
 
 #define RADAR_0_I_INP         AVR32_ADCIFA_INP_ADCIN0
