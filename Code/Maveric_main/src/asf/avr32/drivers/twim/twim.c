@@ -127,6 +127,67 @@ ISR(twim_master_interrupt_handler,CONF_TWIM_IRQ_GROUP,CONF_TWIM_IRQ_LEVEL)
 	return;
 }
 
+/** 
+ * \internal  
+ * \brief TWI interrupt handler.
+ */
+ISR(twim_master_interrupt_handler2,AVR32_TWIM1_GROUP,CONF_TWIM_IRQ_LEVEL)
+{
+	// get masked status register value
+	uint32_t status = twim_inst->sr & twim_it_mask;
+	// this is a NACK
+	if (status & AVR32_TWIM_SR_STD_MASK) {
+		//if we get a nak, clear the valid bit in cmdr, 
+		//otherwise the command will be resent.
+		transfer_status =(status & AVR32_TWIM_IER_NAK_MASK) ? 
+							TWI_RECEIVE_NACK : TWI_ARBITRATION_LOST;
+		twim_inst->CMDR.valid = 0;
+		twim_inst->scr = ~0UL;
+		twim_inst->idr = ~0UL;
+		twim_next = false;
+	}
+	// this is a RXRDY
+	else if (status & AVR32_TWIM_SR_RXRDY_MASK) {
+		// get data from Receive Holding Register
+		*twim_rx_data = twim_inst->rhr;
+		twim_rx_data++;
+		// decrease recieved bytes number
+		twim_rx_nb_bytes--;
+		// receive complete
+		if (twim_rx_nb_bytes == 0) {
+			// finish the receive operation
+			twim_inst->idr = AVR32_TWIM_IDR_RXRDY_MASK;
+			// set busy to false
+			twim_next = false;
+		}
+	}
+	// this is a TXRDY
+	else if (status & AVR32_TWIM_SR_TXRDY_MASK) {
+		// no more bytes to transmit
+		if (twim_tx_nb_bytes == 0) {
+			// finish the receive operation
+			twim_inst->idr = AVR32_TWIM_IDR_TXRDY_MASK;
+			// set busy to false
+			twim_next = false;
+		} else {
+			// put the byte in the Transmit Holding Register
+			twim_inst->thr = *twim_tx_data++;
+			// decrease transmited bytes number
+			twim_tx_nb_bytes--;
+			if (twim_tx_nb_bytes == 0) {
+				// Check for next transfer
+				if(twim_next) {
+					twim_next = false;
+					twim_tx_nb_bytes = twim_package->length;
+					twim_tx_data = twim_package->buffer;
+				}
+			}
+		}
+	}
+	return;
+}
+
+
 /**
  * \brief Set the twim bus speed in cojunction with the clock frequency
  *
@@ -196,6 +257,8 @@ status_code_t twim_master_init (volatile avr32_twim_t *twim,
 	irqflags_t flags = cpu_irq_save();
 	irq_register_handler(twim_master_interrupt_handler,
 			CONF_TWIM_IRQ_LINE, CONF_TWIM_IRQ_LEVEL);
+	irq_register_handler(twim_master_interrupt_handler2,
+	AVR32_TWIM1_IRQ , CONF_TWIM_IRQ_LEVEL);
 	cpu_irq_restore(flags);
 	
 	if (opt->smbus) {

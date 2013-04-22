@@ -29,6 +29,7 @@
 #include "scheduler.h"
 #include "boardsupport.h"
 #include "mavlink_actions.h"
+#include "radar_module_driver.h"
 
 board_hardware_t *board;
 
@@ -90,6 +91,14 @@ void initialisation() {
 	} else {
 		//putstring(STDOUT, "initialised I2C.\n");
 	};
+	if (init_i2c(1)!=STATUS_OK) {
+		//putstring(STDOUT, "Error initialising I2C\n");
+		while (1==1);
+	} else {
+		//putstring(STDOUT, "initialised I2C.\n");
+	};
+
+	init_radar_modules();
 
 	board=initialise_board();
 	
@@ -141,6 +150,8 @@ void main (void)
 	
 	register_task(&main_tasks, 0, 2000, &run_stabilisation );
 	register_task(&main_tasks, 1, 10000, &mavlink_protocol_update);
+
+	register_task(&main_tasks, 2, 10, &read_radar);
 	// main loop
 	counter=0;
 	while (1==1) {

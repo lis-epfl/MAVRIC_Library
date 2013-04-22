@@ -31,6 +31,7 @@
 #include "mavlink_actions.h"
 #include "doppler_radar.h"
 #include "radar_driver.h"
+#include "i2c_slave_interface.h"
 
 board_hardware_t *board;
 
@@ -58,13 +59,13 @@ void initialisation() {
 	
 	INTC_init_interrupts();
 	
-	
-	if (init_i2c(0)!=STATUS_OK) {
+	if (init_i2c(1)!=STATUS_OK) {
 		//putstring(STDOUT, "Error initialising I2C\n");
 		while (1==1);
 	} else {
 		//putstring(STDOUT, "initialised I2C.\n");
 	};
+	init_i2c_slave_interface(1);
 
 	board=initialise_board();
 	

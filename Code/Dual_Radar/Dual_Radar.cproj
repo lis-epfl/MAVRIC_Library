@@ -613,6 +613,12 @@
     <None Include="src\asf.h">
       <SubType>compile</SubType>
     </None>
+    <Compile Include="Library\communication\i2c_slave_interface.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\i2c_slave_interface.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\communication\ishtar.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1189,6 +1195,12 @@
     <Compile Include="src\asf\avr32\drivers\twim\twim.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\asf\avr32\drivers\twis\twis.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\asf\avr32\drivers\twis\twis.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\asf\avr32\drivers\usart\usart.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1442,6 +1454,7 @@
     <Folder Include="src\asf\avr32\drivers\scif\" />
     <Folder Include="src\asf\avr32\drivers\spi\" />
     <Folder Include="src\asf\avr32\drivers\tc\" />
+    <Folder Include="src\asf\avr32\drivers\twis\" />
     <Folder Include="src\asf\avr32\drivers\usart\" />
     <Folder Include="src\asf\avr32\drivers\usbc\" />
     <Folder Include="src\asf\avr32\services\" />
