@@ -721,6 +721,12 @@
     <Compile Include="Library\hal\radar_driver.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\hal\radar_module_driver.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\radar_module_driver.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\hal\servo_pwm.c">
       <SubType>compile</SubType>
     </Compile>
