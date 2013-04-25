@@ -151,7 +151,7 @@ void main (void)
 	register_task(&main_tasks, 0, 2000, &run_stabilisation );
 	register_task(&main_tasks, 1, 10000, &mavlink_protocol_update);
 
-	register_task(&main_tasks, 2, 10, &read_radar);
+	//register_task(&main_tasks, 2, 10, &read_radar);
 	// main loop
 	counter=0;
 	while (1==1) {

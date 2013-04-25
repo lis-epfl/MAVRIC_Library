@@ -10,6 +10,7 @@
 #include "onboard_parameters.h"
 #include "mavlink_stream.h"
 #include "scheduler.h"
+#include "radar_module_driver.h"
 
 board_hardware_t *board;
 
@@ -25,7 +26,7 @@ mavlink_send_heartbeat() {
 
 
 void mavlink_send_raw_imu() {
-	mavlink_msg_raw_imu_send(MAVLINK_COMM_0, get_micros(), 
+	mavlink_msg_raw_imu_send(MAVLINK_COMM_0, get_millis(), 
 	board->imu1.raw_channels[ACC_OFFSET+IMU_X], 
 	board->imu1.raw_channels[ACC_OFFSET+IMU_Y], 
 	board->imu1.raw_channels[ACC_OFFSET+IMU_Z], 
@@ -39,7 +40,7 @@ void mavlink_send_raw_imu() {
 }
 
 void mavlink_send_scaled_imu() {
-	mavlink_msg_scaled_imu_send(MAVLINK_COMM_0, get_micros(),
+	mavlink_msg_scaled_imu_send(MAVLINK_COMM_0, get_millis(),
 	1000*board->imu1.attitude.a [IMU_X],
 	1000*board->imu1.attitude.a [IMU_Y], 
 	1000*board->imu1.attitude.a [IMU_Z], 
@@ -56,14 +57,14 @@ void mavlink_send_scaled_imu() {
 }
 void  mavlink_send_control_error() {
 	Stabiliser_t *rate_stab=get_rate_stabiliser();
-	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_send(MAVLINK_COMM_0, get_micros(), rate_stab->rpy_controller[0].error, rate_stab->rpy_controller[1].error,rate_stab->rpy_controller[2].error,0 );
-	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_send(MAVLINK_COMM_0, get_micros(), rate_stab->rpy_controller[0].output, rate_stab->rpy_controller[1].output,rate_stab->rpy_controller[2].output,0 );
+	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_send(MAVLINK_COMM_0, get_millis(), rate_stab->rpy_controller[0].error, rate_stab->rpy_controller[1].error,rate_stab->rpy_controller[2].error,0 );
+	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_send(MAVLINK_COMM_0, get_millis(), rate_stab->rpy_controller[0].output, rate_stab->rpy_controller[1].output,rate_stab->rpy_controller[2].output,0 );
 
 }
 
 void mavlink_send_servo_output() {
 	Stabiliser_t *rate_stab=get_rate_stabiliser();
-	mavlink_msg_servo_output_raw_send(MAVLINK_COMM_0, get_micros(), 0, 
+	mavlink_msg_servo_output_raw_send(MAVLINK_COMM_0, get_millis(), 0, 
 	(uint16_t)(board->servos[0].value+1500),
 	(uint16_t)(board->servos[1].value+1500),
 	(uint16_t)(board->servos[2].value+1500),
@@ -78,13 +79,13 @@ void mavlink_send_servo_output() {
 void mavlink_send_attitude() {
 	// ATTITUDE QUATERNION
 	
-	mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, 0, board->imu1.attitude.qe.s, board->imu1.attitude.qe.v[0], board->imu1.attitude.qe.v[1], board->imu1.attitude.qe.v[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
+	mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, get_millis, board->imu1.attitude.qe.s, board->imu1.attitude.qe.v[0], board->imu1.attitude.qe.v[1], board->imu1.attitude.qe.v[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
 				
 	// ATTITUDE
 	Aero_Attitude_t aero_attitude;
 	aero_attitude=Quat_to_Aero(board->imu1.attitude.qe);
 	//mavlink_msg_attitude_send(mavlink_channel_t chan, uint32_t time_boot_ms, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed)
-	mavlink_msg_attitude_send(MAVLINK_COMM_0, 0, aero_attitude.rpy[0], aero_attitude.rpy[1], aero_attitude.rpy[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
+	mavlink_msg_attitude_send(MAVLINK_COMM_0, get_millis, aero_attitude.rpy[0], aero_attitude.rpy[1], aero_attitude.rpy[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
 			
 	Schill_Attitude_t schill_attitude;
 	schill_attitude=Quat_to_Schill(board->imu1.attitude.qe);
@@ -93,11 +94,11 @@ void mavlink_send_attitude() {
 				
 	// Controls output
 	//mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(mavlink_channel_t chan, uint32_t time_boot_ms, float roll, float pitch, float yaw, float thrust)
-	mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(MAVLINK_COMM_0, 0, board->controls.rpy[ROLL], board->controls.rpy[PITCH], board->controls.rpy[YAW], board->controls.thrust);
+	mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(MAVLINK_COMM_0, get_millis, board->controls.rpy[ROLL], board->controls.rpy[PITCH], board->controls.rpy[YAW], board->controls.thrust);
 				
 	// GPS COORDINATES (TODO : Add GPS to the platform)
 	//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
-	mavlink_msg_global_position_int_send(MAVLINK_COMM_0, 0, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, board->imu1.attitude.om[2]);
+	mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, board->imu1.attitude.om[2]);
 
 
 }
@@ -105,9 +106,16 @@ void mavlink_send_attitude() {
 
 void mavlink_send_pressure() {			
 	pressure_data *pressure=get_pressure_data_slow();
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Pressure", pressure->pressure);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Temperature", pressure->temperature);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, 0, "Altitude", pressure->altitude);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Pressure", pressure->pressure);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Temperature", pressure->temperature);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Altitude", pressure->altitude);
+}
+
+void mavlink_send_radar() {
+	read_radar();
+	radar_target *target=get_radar_main_target();
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Radar_velocity", target->velocity);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Radar_amplitude", target->amplitude/1000.0);
 }
 
 void add_PID_parameters(void) {
@@ -192,5 +200,6 @@ void init_mavlink_actions() {
 	register_task(get_mavlink_taskset(), 4,  50000, &mavlink_send_scaled_imu);
 	register_task(get_mavlink_taskset(), 5, 100000, &mavlink_send_control_error);
 	register_task(get_mavlink_taskset(), 6, 200000, &mavlink_send_servo_output);
+	register_task(get_mavlink_taskset(), 7,  50000, &mavlink_send_radar);
 
 }
