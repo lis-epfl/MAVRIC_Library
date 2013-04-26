@@ -35,9 +35,6 @@
 
 board_hardware_t *board;
 
-pressure_data *pressure;
-
-
 
 
 NEW_TASK_SET(main_tasks, 10)
@@ -75,11 +72,11 @@ void initialisation() {
 
 	Enable_global_interrupt();
 		
-	dbg_print("Debug stream initialised\n");
+	//dbg_print("Debug stream initialised\n");
 
 
 	init_onboard_parameters();
-	//init_mavlink_actions();
+	init_mavlink_actions();
 	
 	
 }
@@ -93,7 +90,7 @@ void main (void)
 	initialisation();
 	
 	init_scheduler(&main_tasks);
-//	register_task(&main_tasks, 1, 10000, &mavlink_protocol_update);
+	register_task(&main_tasks, 1, 10000, &mavlink_protocol_update);
 	// main loop
 	counter=0;
 	// turn on radar power:
@@ -105,6 +102,7 @@ void main (void)
 		
 		if (ADCI_Sampling_Complete()) {
 			calculate_radar();
+			mavlink_send_radar();
 			ADCI_Start_Oneshot(Sampling_frequency);
 		}			
 		

@@ -3,7 +3,7 @@
 #define MAVLINK_BRIDGE_H
  
 #define MAVLINK_USE_CONVENIENCE_FUNCTIONS
- 
+#define NATIVE_BIG_ENDIAN
 #include "mavlink/include/mavlink_types.h"
 
 mavlink_system_t mavlink_system;

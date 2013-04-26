@@ -35,7 +35,10 @@ class MessageValueDisplay(BoxLayout):
 
    def updateValue(self, newValue):
        self.value=newValue;
-       self.msgValueLabel.text="%s"%(newValue)
+       if not isinstance(newValue, list):
+          self.msgValueLabel.text="%s"%(newValue)
+       else:
+          self.msgValueLabel.text="Array:"
        self.msgNameLabel.text_size=(self.msgNameLabel.width, None)
        self.msgValueLabel.text_size=(self.msgValueLabel.width, None)
 
@@ -103,7 +106,14 @@ class MavlinkTree(App):
           newDn=self.messageTree.add(msgName, "")
           
           for valueName in msg.get_fieldnames():
-             newDn.add(valueName, getattr(msg, valueName))
+             content=getattr(msg, valueName)
+             if not isinstance(content, list):
+                field=newDn.add(valueName, content) 
+             else:
+                field=newDn.add(valueName, content)
+                for i in range(0,len(content)):
+                   field.add(i, content[i])
+             
        self.messageTree.updateTreeView(self.tv)  
        self.tv.bind(minimum_height=self.tv.setter('height'))
 

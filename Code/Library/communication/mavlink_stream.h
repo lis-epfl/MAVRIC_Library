@@ -13,7 +13,7 @@
 
 #include "streams.h"
 #include "mavlink_bridge.h"
-#include "mavlink/include/common/mavlink.h"
+#include "mavlink/include/maveric/mavlink.h"
 #include "scheduler.h"
 typedef struct {
 	mavlink_message_t msg;

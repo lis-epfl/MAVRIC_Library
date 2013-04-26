@@ -13,8 +13,8 @@ from mavextra import *
 if os.getenv('MAVLINK09') or 'MAVLINK09' in os.environ:
     import mavlinkv09 as mavlink
 else:
-    import mavlinkv10 as mavlink
-
+    #import mavlinkv10 as mavlink
+   import pymavlink as mavlink
 def mavlink10():
     '''return True if using MAVLink 1.0'''
     return not 'MAVLINK09' in os.environ

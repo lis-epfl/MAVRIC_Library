@@ -251,7 +251,7 @@ void calculate_radar() {
 	main_target.velocity=direction*speed/100.0;
 	//main_target.velocity=speed/100.0;
 	main_target.amplitude=amplitude/32000.0;
-	
+	/*
 	dbg_print_num(direction*speed,10);
 			
 	dbg_print( "\t");
@@ -270,7 +270,7 @@ void calculate_radar() {
 	dbg_print("\n");
 			
 			
-			
+		*/	
 			
 	amplitude=0;
 	amplitude2=0;
@@ -286,4 +286,8 @@ void calculate_radar() {
 
 radar_target* get_tracked_target() {
 	return &main_target;
+}
+
+int16_t* get_raw_values() {
+	return &vect_inputI;
 }

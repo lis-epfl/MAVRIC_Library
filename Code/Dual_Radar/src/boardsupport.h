@@ -35,6 +35,7 @@ typedef struct  {
 	byte_stream_t xbee_out_stream;
 	byte_stream_t xbee_in_stream;
 	byte_stream_t debug_stream;	
+	byte_stream_t debug_in_stream;	
 	
 	// aliases
 	byte_stream_t *telemetry_down_stream, *telemetry_up_stream;
