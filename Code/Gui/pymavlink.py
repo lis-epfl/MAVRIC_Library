@@ -2407,7 +2407,6 @@ class MAVLink(object):
                 # decode the header
                 try:
                     magic, mlen, seq, srcSystem, srcComponent, msgId = struct.unpack('cBBBBB', msgbuf[:6])
-                    #print msgId
                 except struct.error as emsg:
                     raise MAVError('Unable to unpack MAVLink header: %s' % emsg)
                 if ord(magic) != 254:
@@ -2434,41 +2433,11 @@ class MAVLink(object):
 
                 try:
                     t = struct.unpack(fmt, msgbuf[6:-2])
-                    #print "payload decoded"
                 except struct.error as emsg:
-                    #print "error decoding payload"
                     raise MAVError('Unable to unpack MAVLink payload type=%s fmt=%s payloadLength=%u: %s' % (
                         type, fmt, len(msgbuf[6:-2]), emsg))
-                
+
                 tlist = list(t)
-                
-                tlist_output=[]
-                digits_started=False
-                repeat_number=0
-                parse_index=0
-                for el in fmt:
-                   #print el
-                   if el in ['0','1','2','3','4','5','6','7','8','9']:
-                     digits_started=True
-                     repeat_number=10*repeat_number+int(el)
-                   if el in ['c', 'b', 'B', '?', 'h', 'H', 'i', 'I', 'l', 'L', 'q', 'Q', 'f', 'd', 's', 'p', 'P']:
-                     if digits_started:
-                        if  el=='s':
-                           tlist_output.append(str(tlist[parse_index].split('\0')[0]))
-                           parse_index+=1
-                        else:
-                           #print "rep:",repeat_number
-                           #append a list 
-                           tlist_output.append(tlist[parse_index:parse_index+repeat_number])
-                           parse_index+=repeat_number
-                           digits_started=False
-                     else:
-                        tlist_output.append(tlist[parse_index])
-                        parse_index+=1
-                
-                #print tlist_output
-                tlist=tlist_output
-                
                 # handle sorted fields
                 if True:
                     t = tlist[:]
@@ -2484,7 +2453,6 @@ class MAVLink(object):
                 try:
                     m = type(*t)
                 except Exception as emsg:
-                    print 'Unable to instantiate MAVLink message of type %s : %s' % (type, emsg)
                     raise MAVError('Unable to instantiate MAVLink message of type %s : %s' % (type, emsg))
                 m._msgbuf = msgbuf
                 m._payload = msgbuf[6:-2]
