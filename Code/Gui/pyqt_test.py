@@ -6,6 +6,9 @@ import pyqtgraph as pg
 import sys
 import mavlink_receiver
 import threading
+import pickle
+import time
+
 
 class Node(object):   
     def __init__(self, name, parent=None, checked=False, content=None):
@@ -15,6 +18,8 @@ class Node(object):
         self._children = dict()
         self._parent = parent
         self._checked = checked
+        self.trace=[]
+        self.max_trace_length=100
 
         if parent is not None:
             parent.addChild(self)
@@ -23,6 +28,11 @@ class Node(object):
         self._children[child.name()]=child
 
     def updateContent(self, content):
+	#keep traces of scalar values
+	if isinstance(self._content, int) or isinstance(self._content, float):
+           self.trace.append(content)
+           if len(self.trace)>self.max_trace_length:
+              self.trace=self.trace[-self.max_trace_length:]
         self._content=content
 
     def updateChildContent(self, child_name, content):
@@ -78,6 +88,7 @@ class TreeModel(QtCore.QAbstractItemModel):
     def __init__(self, root, parent=None):
         super(TreeModel, self).__init__(parent)
         self._rootNode = root
+	self.lastDraggedNode=None
 
     def rowCount(self, parent):
         if not parent.isValid():
@@ -143,17 +154,21 @@ class TreeModel(QtCore.QAbstractItemModel):
         return QtCore.Qt.CopyAction 
 
     def mimeTypes(self):
-        return ['text/plain']
+        return ['application/x-mavplot']
 
     def mimeData(self, indexes):
+	print "start drag"
         mimedata = QtCore.QMimeData()
-        mimedata.setData('text/plain', 'mimeData')
-        print indexes[0].internalPointer().name(), indexes[0].internalPointer().displayContent() 
-        mimedata.setParent(indexes[0].internalPointer())
+	#data = QtCore.QByteArray()
+	#stream = QtCore.QDataStream(data, QtCore.QIODevice.WriteOnly)
+	#stream << indexes[0].internalPointer()
+        mimedata.setData('application/x-mavplot', str(indexes[0].internalPointer().displayContent()))
+	self.lastDraggedNode=indexes[0].internalPointer()
+        
         return mimedata
 
     def dropMimeData(self, data, action, row, column, parent):
-        print 'dropMimeData %s %s %s %s' % (data.data('text/plain'), action, row, parent.internalPointer()) 
+        print 'dropMimeData %s %s %s %s' % (data.data('application/x-mavplot'), action, row, parent.internalPointer()) 
         return True
 
     def parent(self, index):
@@ -206,13 +221,18 @@ class MessageTreeView:
       self.treeView.setDragDropMode(QtGui.QAbstractItemView.DragDrop)
 
 
-class Update_Thread(threading.Thread):
+class Update_Thread():
    def __init__(self, treeViewInstance):
       self._treeViewInstance= treeViewInstance
       self.mavlinkReceiver=mavlink_receiver.MAVlinkReceiver()
       self.running=True      
+      self.lastTreeUpdate=time.time()
+      self.treeUpdateFrequency=1.0
+      self.t = QtCore.QTimer()
+      self.t.timeout.connect(self.update)
+      self.t.start(5)
 
-      threading.Thread.__init__(self)
+
       
    def update(self):
        msg_key, msg=self.mavlinkReceiver.wait_message()
@@ -232,29 +252,14 @@ class Update_Thread(threading.Thread):
              for i in range(0,len(content)):
                 field.updateChildContent(i, content[i])
        #self._treeViewInstance.treeView.update()
-       self._treeViewInstance.model.layoutChanged.emit()
 
-   def run(self):
-      while self.running:
-         self.update()
+       if time.time()>self.lastTreeUpdate+1/self.treeUpdateFrequency:
+          self._treeViewInstance.model.layoutChanged.emit()
+          self.lastTreeUpdate=time.time()
+
+ 
    
    
-class DropPlot(pg.PlotWidget):
-   def __init__(self, name):
-      pg.PlotWidget.__init__( self, name=name)
-      self.setAcceptDrops(True)
-      
-   def dragEnterEvent(self, event):
-       if event.mimeData().hasFormat('text/plain'):
-             event.accept()
-             print event
-       else:
-             event.ignore() 
-
-
-   def dropEvent(self, event):
-        print event.mimedata().text()
-        
         
 class DropTarget(QtGui.QLabel):
     def __init__(self,text, parent):
@@ -263,13 +268,42 @@ class DropTarget(QtGui.QLabel):
         self.dataSource=None
 
     def dragEnterEvent(self, event):
-        if event.mimeData().hasFormat('text/plain'):
+        if event.mimeData().hasFormat('application/x-mavplot'):
             event.accept()
         else:
             event.ignore() 
 
     def dropEvent(self, event):
-       print event.mimeData().text(), event.mimeData().parent()
+       sourceNode= event.source().model().lastDraggedNode
+       print sourceNode.name(), sourceNode.trace
+       self.parent().updateSource(sourceNode)
+
+class DropPlot(QtGui.QWidget):
+   def __init__(self, parent=None):
+      QtGui.QWidget.__init__( self, parent=parent)
+      self.layout = QtGui.QVBoxLayout()
+      self.setLayout(self.layout)
+
+      self.plotwidget = pg.PlotWidget(name='Plot1')  ## giving the plots names allows us to link their axes together
+      self.layout.addWidget(self.plotwidget)
+      self.curve=self.plotwidget.plot()
+
+      self.source=None
+      target=DropTarget("X-data", self)
+      self.layout.addWidget(target)
+      self.t = QtCore.QTimer()
+      self.t.timeout.connect(self.updatePlot)
+      self.t.start(40)
+
+   def updateSource(self, source):
+      self.source=source
+
+   def updatePlot(self):
+      if self.source!=None:
+         self.curve.setData(y=self.source.trace, x=[i for i in range(0, len(self.source.trace))]) 
+              
+
+
 
 def main_simple():
    app = QtGui.QApplication(sys.argv)
@@ -278,7 +312,6 @@ def main_simple():
    messageTreeView=MessageTreeView()
 
    updater=Update_Thread(messageTreeView)
-   updater.start()
 
    mw = QtGui.QMainWindow()
    mw.setWindowTitle('pyqtgraph example: PlotWidget')
@@ -290,11 +323,10 @@ def main_simple():
 
    l.addWidget(messageTreeView.treeView)   
    
-   #pw = DropPlot(name='Plot1')  ## giving the plots names allows us to link their axes together
+   pw = DropPlot() 
    
-   #l.addWidget(pw)
-   target=DropTarget("test ------drop here -----", cw)
-   l.addWidget(target)
+   
+   l.addWidget(pw)
    
    mw.show()
 
