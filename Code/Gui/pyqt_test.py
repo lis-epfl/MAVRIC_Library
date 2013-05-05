@@ -29,7 +29,7 @@ class Node(object):
 
     def updateContent(self, content):
 	#keep traces of scalar values
-	if isinstance(self._content, int) or isinstance(self._content, float):
+        if isinstance(self._content, int) or isinstance(self._content, float):
            self.trace.append(content)
            if len(self.trace)>self.max_trace_length:
               self.trace=self.trace[-self.max_trace_length:]
@@ -81,7 +81,7 @@ class Node(object):
         if isinstance(self._content, str) or isinstance(self._content, int) or isinstance(self._content, float):
            return str(self._content)
         else:
-           return ""
+           return "..."
 
 class TreeModel(QtCore.QAbstractItemModel):
 
@@ -275,7 +275,7 @@ class DropTarget(QtGui.QLabel):
 
     def dropEvent(self, event):
        sourceNode= event.source().model().lastDraggedNode
-       print sourceNode.name(), sourceNode.trace
+       print sourceNode.name(), sourceNode.content()
        self.parent().updateSource(sourceNode)
 
 class DropPlot(QtGui.QWidget):
@@ -300,7 +300,10 @@ class DropPlot(QtGui.QWidget):
 
    def updatePlot(self):
       if self.source!=None:
-         self.curve.setData(y=self.source.trace, x=[i for i in range(0, len(self.source.trace))]) 
+         if isinstance(self.source.content(), list):
+            self.curve.setData(y=self.source.content(), x=[i for i in range(0, len(self.source.content()))]) 
+         else:
+            self.curve.setData(y=self.source.trace, x=[i for i in range(0, len(self.source.trace))]) 
               
 
 
