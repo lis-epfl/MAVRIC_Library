@@ -87,6 +87,8 @@ task_return_t gps_task() {
 	{
 		dbg_print("GPS status:");
 		dbg_print_num(board->GPS_data.status,10);
+		dbg_print(" time gps:");
+		dbg_print_num(board->GPS_data.timegps,10);
 		dbg_print(" latitude :");
 		dbg_print_num(board->GPS_data.latitude,10);
 		dbg_print(" longitude :");
@@ -176,7 +178,7 @@ void main (void)
 	
 	register_task(&main_tasks, 0, 2000, &run_stabilisation );
 	register_task(&main_tasks, 1, 10000, &mavlink_protocol_update);
-	register_task(&main_tasks, 2 ,400, &gps_task);
+	register_task(&main_tasks, 2 ,50000, &gps_task);
 	// main loop
 	counter=0;
 	while (1==1) {

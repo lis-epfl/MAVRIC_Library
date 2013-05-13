@@ -1327,6 +1327,8 @@ void gps_update(void)
 			board->GPS_data.altitudeStatus = 0;
 			board->GPS_data.speedStatus = 0;
 			board->GPS_data.courseStatus = 0;
+			
+			board->GPS_data.accuracyStatus = 0;
 		}
 	}
 }

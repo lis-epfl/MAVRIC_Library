@@ -52,7 +52,7 @@ void mavlink_receive_handler() {
 }
 
 void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream) {
-	mavlink_system.sysid = 100; // System ID, 1-255
+	mavlink_system.sysid = 154; // System ID, 1-255
 	mavlink_system.compid = 50; // Component/Subsystem ID, 1-255
 	mavlink_out_stream = transmit_stream;
 	mavlink_in_stream = receive_stream;
