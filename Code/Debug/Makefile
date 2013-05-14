@@ -134,6 +134,7 @@ C_SRCS +=  \
 ../src/communication/mavlink_stream.c \
 ../src/communication/onboard_parameters.c \
 ../src/control/control.c \
+../src/control/estimator.c \
 ../src/control/stabilisation.c \
 ../src/hal/adc_int.c \
 ../src/hal/ads1274.c \
@@ -213,6 +214,7 @@ src/communication/mavlink_actions.o \
 src/communication/mavlink_stream.o \
 src/communication/onboard_parameters.o \
 src/control/control.o \
+src/control/estimator.o \
 src/control/stabilisation.o \
 src/hal/adc_int.o \
 src/hal/ads1274.o \
@@ -283,6 +285,7 @@ src/communication/mavlink_actions.o \
 src/communication/mavlink_stream.o \
 src/communication/onboard_parameters.o \
 src/control/control.o \
+src/control/estimator.o \
 src/control/stabilisation.o \
 src/hal/adc_int.o \
 src/hal/ads1274.o \
@@ -353,6 +356,7 @@ src/communication/mavlink_actions.d \
 src/communication/mavlink_stream.d \
 src/communication/onboard_parameters.d \
 src/control/control.d \
+src/control/estimator.d \
 src/control/stabilisation.d \
 src/hal/adc_int.d \
 src/hal/ads1274.d \
@@ -423,6 +427,7 @@ src/communication/mavlink_actions.d \
 src/communication/mavlink_stream.d \
 src/communication/onboard_parameters.d \
 src/control/control.d \
+src/control/estimator.d \
 src/control/stabilisation.d \
 src/hal/adc_int.d \
 src/hal/ads1274.d \
@@ -463,6 +468,8 @@ OUTPUT_FILE_DEP:= ./makedep.mk
 LIB_DEP+= 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

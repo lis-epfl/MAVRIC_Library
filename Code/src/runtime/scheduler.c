@@ -9,7 +9,6 @@
 #include "scheduler.h"
 #include "time_keeper.h"
 
-
 void init_scheduler(task_set *ts) {
 	int i;
 	for (i=0; i<ts->number_of_tasks; i++) {

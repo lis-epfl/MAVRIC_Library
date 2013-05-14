@@ -19,8 +19,6 @@ Buffer_t mavlink_in_buffer;
 
 NEW_TASK_SET (mavlink_tasks, 10)
 
-
-
 void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 {
 	if (chan == MAVLINK_COMM_0)
@@ -34,18 +32,14 @@ void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 	}
 }
 
-task_set* get_mavlink_taskset() {
-	return &mavlink_tasks;
-}
-
 void mavlink_receive_handler() {
 	Mavlink_Received_t rec;
 	if(mavlink_receive(mavlink_in_stream, &rec)) {
-		dbg_print("\n Received message with ID");
-		dbg_print_num(rec.msg.msgid, 10);
-		dbg_print(" from system");
-		dbg_print_num(rec.msg.sysid, 10);
-		dbg_print( "\n");
+// 		dbg_print("\n Received message with ID");
+// 		dbg_print_num(rec.msg.msgid, 10);
+// 		dbg_print(" from system");
+// 		dbg_print_num(rec.msg.sysid, 10);
+// 		dbg_print( "\n");
 		
 		handle_mavlink_message(&rec);
 	}
@@ -58,6 +52,7 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream)
 	mavlink_in_stream = receive_stream;
 	make_buffered_stream(&mavlink_in_buffer, mavlink_in_stream);
 	init_scheduler(&mavlink_tasks);
+	
 	register_task(&mavlink_tasks, 0, 10000, &mavlink_receive_handler);
 	
 }
@@ -67,7 +62,9 @@ task_return_t mavlink_protocol_update() {
 //	mavlink_receive_handler();
 }
 
-
+task_set* get_mavlink_taskset() {
+	return &mavlink_tasks;
+}
 
 
 

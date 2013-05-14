@@ -82,6 +82,8 @@ src\communication\onboard_parameters.c
 
 src\control\control.c
 
+src\control\estimator.c
+
 src\control\stabilisation.c
 
 src\hal\adc_int.c

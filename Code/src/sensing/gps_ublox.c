@@ -148,7 +148,6 @@ void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting)
 {
 	board = get_board_hardware();
 	
-	//board->gps_stream_in.flush(board->gps_stream_in.data);
 	//board->gps_stream_out.flush(board->gps_stream_out.data);
 	
 	uint8_t epoch = TIME_OF_WEEK;
@@ -1088,7 +1087,7 @@ void ubx_send_message(uint8_t msg_class, uint8_t _msg_id, void *msg, uint8_t siz
  	putstring(&(board->gps_stream_out),&ck_a);
  	putstring(&(board->gps_stream_out),&ck_b);
 	
-	board->gps_stream_out.flush(&(board->gps_stream_out.data));
+	//board->gps_stream_out.flush(&(board->gps_stream_out.data));
 }
 
 /*
@@ -1119,7 +1118,7 @@ void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_n
 	board->gps_stream_out.put(board->gps_stream_out.data, endian_higher_bytes_uint16(msg.timeref));	
 	ubx_send_cksum(ck_a,ck_b);
 	
-	board->gps_stream_out.flush(&(board->gps_stream_out.data));
+	//board->gps_stream_out.flush(&(board->gps_stream_out.data));
 }
 
 /*
@@ -1150,7 +1149,7 @@ void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, enum GPS_
 	
 	ubx_send_cksum(ck_a,ck_b);
 	
-	board->gps_stream_out.flush(&(board->gps_stream_out.data));
+	//board->gps_stream_out.flush(&(board->gps_stream_out.data));
 }
 
 /*
@@ -1186,7 +1185,7 @@ void ubx_configure_message_rate(uint8_t msg_class, uint8_t _msg_id, uint8_t rate
 	ubx_send_cksum(ck_a,ck_b);
 	//ubx_send_message(UBX_CLASS_CFG, MSG_CFG_SET_RATE, &msg, sizeof(msg));
 	
-	board->gps_stream_out.flush(board->gps_stream_out.data);
+	//board->gps_stream_out.flush(board->gps_stream_out.data);
 }
 
 /*
@@ -1209,7 +1208,7 @@ void configure_gps(void)
 	dbg_print("Set to binary mode ");
 	dbg_print(set_binary);
 	putstring(&(board->gps_stream_out),set_binary);
-	board->gps_stream_out.flush(&(board->gps_stream_out.data));
+	//board->gps_stream_out.flush(&(board->gps_stream_out.data));
 	//}
 	
 	

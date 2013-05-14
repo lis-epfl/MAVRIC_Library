@@ -28,6 +28,7 @@
 #include "servo_pwm.h"
 
 #include "gps_ublox.h"
+#include "estimator.h"
 
 static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
 
@@ -43,6 +44,8 @@ typedef struct  {
 	byte_stream_t gps_stream_in;
 	byte_stream_t gps_stream_out;
 	gps_Data_type GPS_data;
+	
+	Estimator_Data_t estimation;
 	
 	// aliases
 	byte_stream_t *telemetry_down_stream, *telemetry_up_stream;

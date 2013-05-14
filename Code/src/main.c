@@ -31,6 +31,7 @@
 #include "mavlink_actions.h"
 
 #include "gps_ublox.h"
+#include "estimator.h"
 
 pressure_data *pressure;
 
@@ -99,6 +100,11 @@ task_return_t gps_task() {
 	}
 }
 
+task_return_t run_estimator()
+{
+	estimator_loop();
+	
+}
 void initialisation() {
 	int i;
 	irq_initialize_vectors();
@@ -164,6 +170,7 @@ void initialisation() {
 	}
 	board->imu1.attitude.calibration_level=OFF;
 	
+	e_init();
 }
 
 void main (void)
@@ -179,6 +186,7 @@ void main (void)
 	register_task(&main_tasks, 0, 2000, &run_stabilisation );
 	register_task(&main_tasks, 1, 10000, &mavlink_protocol_update);
 	register_task(&main_tasks, 2 ,50000, &gps_task);
+	register_task(&main_tasks, 3, 2000, &run_estimator);
 	// main loop
 	counter=0;
 	while (1==1) {
@@ -186,9 +194,8 @@ void main (void)
 		
 		run_scheduler_update(&main_tasks);
 		
-		
-		
 		LED_On(LED1);
+
 
 		counter=(counter+1)%1000;
 		last_looptime=this_looptime;	

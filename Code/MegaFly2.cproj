@@ -941,6 +941,12 @@
     <Compile Include="src\control\control.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\control\estimator.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\control\estimator.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\control\stabilisation.c">
       <SubType>compile</SubType>
     </Compile>
