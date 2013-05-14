@@ -800,6 +800,7 @@ bool ubx_process_data(void)
 		return false;
 	}
 	
+	// Class NAV:
 	switch (msg_id)
 	{
 	case MSG_NAV_POSLLH:
