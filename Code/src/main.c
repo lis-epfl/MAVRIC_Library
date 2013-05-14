@@ -186,9 +186,8 @@ void main (void)
 		
 		run_scheduler_update(&main_tasks);
 		
-		
-		
 		LED_On(LED1);
+
 
 		counter=(counter+1)%1000;
 		last_looptime=this_looptime;	
