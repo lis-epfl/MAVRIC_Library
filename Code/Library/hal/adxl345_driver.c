@@ -36,7 +36,7 @@ void init_adxl345() {
 	gyro_event.config.read_count=6;
 	gyro_event.config.write_data=&default_configuration;
 	gyro_event.config.write_count=2;
-	gyro_event.config.i2c_speed=100000;
+	gyro_event.config.i2c_speed=400000;
 	
 	i2c_add_request(0, &gyro_event);
 	i2c_trigger_request(0, gyro_event.schedule_slot);

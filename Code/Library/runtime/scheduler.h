@@ -19,23 +19,24 @@ typedef enum task_return_t {
 	TASK_RUN_SUCCESS=1	
 }task_return_t;
 
-typedef task_return_t (function_pointer)();
+typedef task_return_t (*function_pointer)();
 
 typedef uint8_t task_handle_t;
 
 
 typedef struct {
 	struct task_set *tasks;	
-	function_pointer *call_function;
+	function_pointer call_function;
 	
-	unsigned int repeat_period;
-	unsigned long next_run;
-	unsigned int execution_time;
+	uint32_t repeat_period;
+	uint32_t next_run;
+	uint32_t execution_time;
 	
 #ifdef SCHEDULER_PROFILING	
-	unsigned int delay_max;
-	unsigned int delay_avg;
-	unsigned int delay_var;
+	uint32_t delay_max;
+	uint32_t delay_avg;
+	uint32_t delay_var_squared;
+	uint32_t rt_violations;
 #endif
 } task_entry;
 
@@ -51,8 +52,9 @@ void init_scheduler(task_set *ts);
 task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_period, function_pointer *call_function);
 
 
+enum schedule_strategy_t {ROUND_ROBIN, FIXED_PRIORITY};
 
-int run_scheduler_update(task_set *ts);
+int run_scheduler_update(task_set *ts, uint8_t schedule_strategy);
 
 
 
