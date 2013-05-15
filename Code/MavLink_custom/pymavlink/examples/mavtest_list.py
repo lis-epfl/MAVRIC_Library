@@ -1,0 +1,46 @@
+#!/usr/bin/env python
+
+'''
+test mavlink messages
+'''
+
+import sys, struct, time, os
+from curses import ascii
+
+# allow import from the parent directory, where mavlink.py is
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), '..'))
+
+import mavtest, mavutil
+
+from optparse import OptionParser
+parser = OptionParser("mavtester.py [options]")
+
+parser.add_option("--baudrate", dest="baudrate", type='int',
+                  help="master port baud rate", default=115200)
+parser.add_option("--device", dest="device", default=None, help="serial device")
+parser.add_option("--source-system", dest='SOURCE_SYSTEM', type='int',
+                  default=255, help='MAVLink source system for this GCS')
+(opts, args) = parser.parse_args()
+
+if opts.device is None:
+    print("You must specify a serial device")
+    sys.exit(1)
+
+def wait_message(m):
+    '''wait for a heartbeat so we know the target system IDs'''
+    msg=None;
+    while msg==None:
+	msg = m.recv_msg()
+    print("message: %s (system %u component %u)" % (msg.__class__.__name__, m.target_system, m.target_system))
+    for I in vars(msg)['_fieldnames']:
+	print I, vars(msg)[I]
+    print "-----"
+
+# create a mavlink serial instance
+master = mavutil.mavlink_connection(opts.device, baud=opts.baudrate, source_system=opts.SOURCE_SYSTEM)
+
+# wait for the heartbeat msg to find the system ID
+while True:
+	wait_message(master)
+
+
