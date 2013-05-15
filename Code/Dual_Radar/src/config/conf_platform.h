@@ -53,7 +53,7 @@
 #define M_FRONT_RIGHT 1
 #define M_FRONT_LEFT 2
 #define M_REAR_LEFT 3
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
 #define M_FR_DIR ( 1)
 #define M_FL_DIR (-1)
 #define M_RR_DIR (-1)
@@ -73,6 +73,20 @@
 #define MAX_THRUST 1.0
 #define SERVO_SCALE 500
 
+// #define GPS_ENABLE_OFF //if no GPS onboard
+#define GPS_ENABLE_ON
 
+#define GPS_MAVERIC
+//#define GPS_AEROPIC
+
+#ifdef GPS_ENABLE_ON
+	#ifdef GPS_MAVERIC
+		#include "gps_ublox.h"
+	#else
+		#include "gps_aeropic.h"
+	#endif
+	// define type of GPS
+	#define GPS_TYPE GPS_TYPE_UBX
+#endif
 
 #endif /* CONF_PLATFORM_H_ */

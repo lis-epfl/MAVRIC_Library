@@ -129,15 +129,22 @@ short uart_int_flush(usart_config_t *usart_opt) {
 	while (!buffer_empty(&(usart_opt->uart_device.transmit_buffer)));
 }
 
+int uart_out_buffer_empty(usart_config_t *usart_opt) {
+	return buffer_empty(&(usart_opt->uart_device.transmit_buffer));
+}
+
 usart_config_t *get_UART_handle(int UID) {
 	return &usart_opt[UID];
 }
 
 void register_write_stream(usart_config_t *usart_opt, byte_stream_t *stream) {
 	stream->get=NULL;
+	//stream->get=&uart_int_get_byte;
 	stream->put=&uart_int_send_byte;
 	stream->flush=&uart_int_flush;
+	stream->buffer_empty=&uart_out_buffer_empty;
 	stream->data=usart_opt;
+
 }
 
 
