@@ -200,6 +200,6 @@ void init_mavlink_actions() {
 	register_task(get_mavlink_taskset(), 4,  50000, &mavlink_send_scaled_imu);
 	register_task(get_mavlink_taskset(), 5, 100000, &mavlink_send_control_error);
 	register_task(get_mavlink_taskset(), 6, 200000, &mavlink_send_servo_output);
-	register_task(get_mavlink_taskset(), 7,  50000, &mavlink_send_radar);
+	//register_task(get_mavlink_taskset(), 7,  50000, &mavlink_send_radar);
 
 }
