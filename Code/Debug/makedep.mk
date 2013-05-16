@@ -82,6 +82,8 @@ src\communication\onboard_parameters.c
 
 src\control\control.c
 
+src\control\estimator.c
+
 src\control\stabilisation.c
 
 src\hal\adc_int.c
@@ -120,9 +122,7 @@ src\runtime\scheduler.c
 
 src\runtime\time_keeper.c
 
-src\sensing\gps.c
-
-src\sensing\gps_ubx.c
+src\sensing\gps_ublox.c
 
 src\sensing\imu.c
 

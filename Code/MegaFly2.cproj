@@ -233,10 +233,10 @@
     <com_atmel_avrdbg_tool_jtagicemk3>
       <ToolType>com.atmel.avrdbg.tool.jtagicemk3</ToolType>
       <ToolName>JTAGICE3</ToolName>
-      <ToolNumber>J30200015895</ToolNumber>
+      <ToolNumber>J30200014870</ToolNumber>
       <Channel>
         <host>127.0.0.1</host>
-        <port>49536</port>
+        <port>49203</port>
         <ssl>False</ssl>
       </Channel>
       <ToolOptions>
@@ -425,7 +425,7 @@
     <OutputFileName>MegaFly2</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
     <ToolchainSettings>
-      <Avr32Gcc xmlns="">
+      <Avr32Gcc>
         <avr32gcc.common.outputfiles.hex>True</avr32gcc.common.outputfiles.hex>
         <avr32gcc.common.outputfiles.lss>True</avr32gcc.common.outputfiles.lss>
         <avr32gcc.common.outputfiles.eep>True</avr32gcc.common.outputfiles.eep>
@@ -487,7 +487,6 @@
             <Value>../src/util</Value>
           </ListValues>
         </avr32gcc.compiler.directories.IncludePaths>
-        <avr32gcc.compiler.optimization.level>Optimize (-O1)</avr32gcc.compiler.optimization.level>
         <avr32gcc.compiler.optimization.OtherFlags>-fdata-sections</avr32gcc.compiler.optimization.OtherFlags>
         <avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
         <avr32gcc.compiler.optimization.DebugLevel>Default (-g2)</avr32gcc.compiler.optimization.DebugLevel>
@@ -942,6 +941,12 @@
     <Compile Include="src\control\control.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\control\estimator.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\control\estimator.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\control\stabilisation.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1332,16 +1337,10 @@
     <Compile Include="src\runtime\time_keeper.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\sensing\gps.c">
+    <Compile Include="src\sensing\gps_ublox.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\sensing\gps.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\sensing\gps_ubx.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\sensing\gps_ubx.h">
+    <Compile Include="src\sensing\gps_ublox.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\sensing\imu.c">
