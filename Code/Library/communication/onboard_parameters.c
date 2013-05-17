@@ -51,7 +51,8 @@ void send_all_parameters(Mavlink_Received_t* rec) {
 	mavlink_param_request_list_t request;
 	mavlink_msg_param_request_list_decode(&rec->msg, &request);
 	// Check if this message is for this system
-	if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid) {
+	if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid
+		&& (uint8_t)request.target_component == (uint8_t)mavlink_system.compid) {
 		for (uint8_t i = 0; i < param_set.param_count; i++) {
 			mavlink_msg_param_value_send(MAVLINK_COMM_0,
 											(int8_t*)param_set.parameters[i].param_name,
