@@ -131,7 +131,9 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		break;
 		case MAVLINK_MSG_ID_MISSION_COUNT : { // 44
 			receive_count(rec,&board->number_of_waypoints);
-			dbg_print("receive count\n");
+			dbg_print("receive count, num of waypoints:");
+			dbg_print_num(board->number_of_waypoints,10);
+			dbg_print("\n");
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_CLEAR_ALL : { // 45

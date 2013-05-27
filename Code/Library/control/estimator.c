@@ -12,6 +12,7 @@
 #include "bmp085.h"
 #include "estimator.h"
 #include "qfilter.h"
+#include "coord_conventions.h"
 
 #define INIT_X_P	10.
 #define INIT_Y_P	10.
@@ -115,12 +116,13 @@ void e_predict (UQuat_t *qe, float *a, float dt)
 	x[0]=1;x[1]=0;x[2]=0; //definition of x,y,z in NED
 	y[0]=0;y[1]=1;y[2]=0;
 	z[0]=0;z[1]=0;z[2]=1;
+	
 	quat_rot(qe,x); // get the x vector of the quad in NED
 	quat_rot(qe,y);
 	quat_rot(qe,z);
-	MUL_V_SCA(x,a[0]) // get the right norm
-	MUL_V_SCA(y,a[1])
-	MUL_V_SCA(z,a[2])
+	MUL_V_SCA(x,a[1]) // get the right norm
+	MUL_V_SCA(y,a[0])
+	MUL_V_SCA(z,-a[2])
 
 	e_kalman_predict(X,(x[0]*x[0]+y[0]*y[0]+z[0]*z[0]),dt);//final x (in NED) acc 
 	e_kalman_predict(Y,(x[1]*x[1]+y[1]*y[1]+z[1]*z[1]),dt);
@@ -170,6 +172,8 @@ void e_kalman_predict (int axis,float accel_meas, float dt)
 	accel_corr = accel_meas - 1; // 1 for gravity
   else
 	accel_corr = accel_meas;
+	
+  accel_corr = accel_corr * 9.81;
 	
   board->estimation.state[axis][POSITION] = board->estimation.state[axis][POSITION] + dt * board->estimation.state[axis][SPEED]; // not exactly the function F defined above
   board->estimation.state[axis][SPEED] = board->estimation.state[axis][SPEED] + dt * ( accel_corr - board->estimation.state[axis][BIAIS]);
