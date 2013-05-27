@@ -331,7 +331,7 @@ void estimator_loop()
 		latitude_rad= ((double) (board->GPS_data.latitude-init_lat))*DEGREE_TO_RADIAN; //in rad E+7
 		pos_x= (float) (((double) (board->GPS_data.longitude-init_long)*EARTH_RADIUS)*DEGREE_TO_RADIAN*(COS_PI_4-COS_PI_4*(latitude_rad*0.0000001-PI_4)-COS_PI_4*0.5*(latitude_rad*0.0000001-PI_4)*(latitude_rad*0.0000001-PI_4)));//Taylor 2nd order cos() approx
 		pos_y= (float) (latitude_rad*EARTH_RADIUS); 
-		pos_z= board->GPS_data.altitude-init_alt;
+		pos_z= -board->GPS_data.altitude+init_alt;
 		//get delay of GPS measure
 		//do prediction up to the corresponding delay
 		e_kalman_update_position(X,pos_x,(uint32_t) board->GPS_data.timeLastMsg);

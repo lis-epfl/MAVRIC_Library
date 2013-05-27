@@ -77,21 +77,21 @@ task_return_t gps_task() {
 	
 	gps_update();
 	
- 	//dbg_print("time :");
- 	//dbg_print_num(tnow,10);
- 	//dbg_print_num(board->GPS_data.timeLastMsg,10);
- 	//dbg_print(" GPS status : 0x");
- 	//dbg_print_num(board->GPS_data.status,16);
- 	//dbg_print(" status:");
- 	//dbg_print_num(board->GPS_data.accuracyStatus,10);
- 	//dbg_print_num(board->GPS_data.horizontalStatus,10);
- 	//dbg_print_num(board->GPS_data.altitudeStatus,10);
- 	//dbg_print_num(board->GPS_data.speedStatus,10);
- 	//dbg_print_num(board->GPS_data.courseStatus,10);
- 	//dbg_print("\n");
-	//
+ 	dbg_print("time :");
+ 	dbg_print_num(tnow,10);
+ 	dbg_print_num(board->GPS_data.timeLastMsg,10);
+ 	dbg_print(" GPS status : 0x");
+ 	dbg_print_num(board->GPS_data.status,16);
+ 	dbg_print(" status:");
+ 	dbg_print_num(board->GPS_data.accuracyStatus,10);
+ 	dbg_print_num(board->GPS_data.horizontalStatus,10);
+ 	dbg_print_num(board->GPS_data.altitudeStatus,10);
+ 	dbg_print_num(board->GPS_data.speedStatus,10);
+ 	dbg_print_num(board->GPS_data.courseStatus,10);
+ 	dbg_print("\n");
+	
 	if(newValidGpsMsg())
-	{/*
+	{
 		dbg_print("GPS status:");
 		dbg_print_num(board->GPS_data.status,10);
 		dbg_print(" time gps:");
@@ -102,7 +102,7 @@ task_return_t gps_task() {
 		dbg_print_num(board->GPS_data.longitude,10);
 		dbg_print(" altitude");
 		dbg_print_num(board->GPS_data.altitude,10);
-		dbg_print("\n");*/
+		dbg_print("\n");
 	}
 }
 
