@@ -54,6 +54,9 @@ typedef struct  {
 	waypoint_struct waypoint_list[MAX_WAYPOINTS];
 	uint16_t number_of_waypoints;
 	
+	uint8_t mav_mode;
+	uint8_t mav_state;
+	
 } board_hardware_t;
 
 

@@ -65,8 +65,9 @@ void init_angle_stabilisation(Stabiliser_t *stabiliser) {
 
 void init_stabilisation() {
 	board=get_board_hardware();
-	board->controls.run_mode=MOTORS_OFF;
-	board->controls.control_mode=ATTITUDE_COMMAND_MODE;
+	board->controls.run_mode = MOTORS_OFF;
+	board->controls.control_mode = ATTITUDE_COMMAND_MODE;
+	board->mav_mode = MAV_MODE_PREFLIGHT;
 	init_rate_stabilisation(&rate_stabiliser);
 	init_angle_stabilisation(&attitude_stabiliser);
 }

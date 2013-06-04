@@ -33,6 +33,7 @@
 
 #include "gps_ublox.h"
 #include "estimator.h"
+#include "navigation.h"
 
 pressure_data *pressure;
 
@@ -45,33 +46,81 @@ NEW_TASK_SET(main_tasks, 10)
 task_return_t run_imu_update() {
 	imu_update(&(board->imu1));	
 }	
+
+void set_mav_mode_n_state()
+{
 	
+ 	switch (checkReceivers())
+ 	{
+ 		 case 1 : {
+ 			 // NICOLAS: changed remote model to aircraft to have 5 channels
+ 			 //if (getChannel(4)>0) {
+ 			 if (getChannel(5)>0) {
+	 			 board->controls.control_mode = RATE_COMMAND_MODE;
+	 			 } else {
+	 			 board->controls.control_mode = ATTITUDE_COMMAND_MODE;
+ 			 }
+ 			 
+ 			 if (board->controls.run_mode == MOTORS_ON)
+ 			 {
+	 			 if (getChannel(4)>0)
+	 			 {
+		 			 board->mav_mode = MAV_MODE_AUTO_ARMED;
+		 			 } else {
+		 			 board->mav_mode = MAV_MODE_STABILIZE_ARMED;
+	 			 }
+ 			 }
+ 			 
+ 			 
+ 			 // switch run_mode
+ 			 if ((board->controls.thrust<-0.95) && (board->controls.rpy[YAW]< -0.9)) {
+	 			 board->controls.run_mode = MOTORS_OFF;
+	 			 board->mav_state = MAV_STATE_STANDBY;
+	 			 board->mav_mode = MAV_MODE_STABILIZE_DISARMED;
+	 			 LED_On(LED1);
+ 			 }
+ 			 if ((board->controls.thrust<-0.95) && (board->controls.rpy[YAW] >0.9)) {
+	 			 board->controls.run_mode = MOTORS_ON;
+	 			 board->mav_state = MAV_STATE_ACTIVE;
+	 			 board->mav_mode = MAV_MODE_STABILIZE_ARMED;
+	 			 LED_Off(LED1);
+ 			 }
+ 			 break;
+ 		 }			 
+ 		case -1: {
+ 			board->mav_mode = MAV_MODE_STABILIZE_ARMED;
+ 			board->mav_state = MAV_STATE_CRITICAL;
+ 			break;
+ 		}
+ 		case -2 : {
+ 			board->mav_mode = MAV_MODE_STABILIZE_DISARMED;
+ 			board->mav_state = MAV_STATE_EMERGENCY;
+ 			break;
+ 		}
+ 			
+ 	}
+}
+
 task_return_t run_stabilisation() {
-	board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
-	board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
-	board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
-	board->controls.thrust=getChannel(S_THROTTLE)/350.0;
+	if (board->mav_mode == MAV_MODE_STABILIZE_ARMED || board->mav_mode == MAV_MODE_STABILIZE_DISARMED || board->mav_mode == MAV_MODE_PREFLIGHT)
+	{
+		board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
+		board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
+		board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
+		
+	}
+	//
+board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
+	board->controls.thrust = getChannel(S_THROTTLE);
 
 	imu_update(&(board->imu1));
-	if (getChannel(4)>0) {
-		board->controls.control_mode=RATE_COMMAND_MODE;
-	} else {
-		board->controls.control_mode=ATTITUDE_COMMAND_MODE;
-	}
 	
-	// switch run_mode
-	if ((board->controls.thrust<-0.95) && (board->controls.rpy[YAW]< -0.9)) {
-		board->controls.run_mode=MOTORS_OFF;
-		LED_On(LED1);
-	}
-	if ((board->controls.thrust<-0.95) && (board->controls.rpy[YAW] >0.9)) {
-		board->controls.run_mode=MOTORS_ON;
-		LED_Off(LED1);
-	}
-		
+	set_mav_mode_n_state();
+	
 	quad_stabilise(&(board->imu1), &(board->controls));
 
 }
+
 task_return_t gps_task() {
 	uint32_t tnow = get_millis();	
 	
@@ -111,6 +160,15 @@ task_return_t run_estimator()
 	estimator_loop();
 	
 }
+
+//task_return_t run_navigation_task()
+//{
+	//if (board->mav_mode == MAV_MODE_AUTO_ARMED)
+	//{
+		//run_navigation();
+	//}
+	//
+//}
 
 task_return_t send_rt_stats() {
 	
@@ -196,12 +254,14 @@ void initialisation() {
 		imu_update(&board->imu1);
 		if (i%50 ==0) {
 			// Send heartbeat message
-			mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_CALIBRATING);
+			board->mav_state = MAV_STATE_CALIBRATING;
+			mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, board->mav_mode, 0, MAV_STATE_CALIBRATING);
 		}
 		
 		delay_ms(5);
 	}
 	board->imu1.attitude.calibration_level=OFF;
+	board->mav_state = MAV_STATE_STANDBY;
 	
 	e_init();
 }
@@ -211,6 +271,8 @@ void main (void)
 	int i=0;
 	int counter=0;
 	uint32_t last_looptime, this_looptime;
+	
+	bool countled = true;
 	
 	initialisation();
 	
@@ -223,9 +285,11 @@ void main (void)
 	register_task(&main_tasks, 2 ,50000, &gps_task);
 	register_task(&main_tasks, 3, 10000, &run_estimator);
 	//register_task(&main_tasks, 4, 10, &read_radar);
+	
+	//register_task(&main_tasks, 5, 50000, &run_navigation_task);
 
 	register_task(&main_tasks, 8, 1000000, &send_rt_stats);
-	register_task(&main_tasks, 9, 10000, &mavlink_protocol_update);
+	register_task(&main_tasks, 9, 100000, &mavlink_protocol_update);
 
 	// main loop
 	counter=0;
@@ -234,7 +298,18 @@ void main (void)
 		
 		run_scheduler_update(&main_tasks, ROUND_ROBIN);
 		
-		LED_On(LED1);
+		if (counter % 250 == 0)
+		{
+			if (countled)
+			{
+				countled = false;
+				LED_On(LED1);
+			}else{
+				countled = true;
+				LED_Off(LED1);
+			}
+		}
+		
 
 
 		counter=(counter+1)%1000;

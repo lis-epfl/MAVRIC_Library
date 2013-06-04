@@ -144,9 +144,22 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 			receive_ack_msg(rec);
 		}
 		break;
+		case MAVLINK_MSG_ID_SET_MODE : { // 11
+			//set_mav_mode(rec);
+		}
+		break;
 		/* 
 		TODO : add other cases
 		*/
 	}
 }
 
+void receive_mav_mode(Mavlink_Received_t* rec) {
+	mavlink_set_mode_t packet;
+	mavlink_msg_set_mode_decode(&rec->msg, &packet);
+	//dbg_print_num(packet.base_mode,10);
+	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid)
+	{
+		board->mav_mode = packet.base_mode;
+	}
+}

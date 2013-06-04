@@ -16,14 +16,13 @@ board_hardware_t *board;
 
 mavlink_send_heartbeat() {
 	board_hardware_t *board=get_board_hardware();
-	if (board->controls.run_mode==MOTORS_OFF) {
-		mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_DISARMED, 0, MAV_STATE_STANDBY);
-	}else {
-		mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_ACTIVE);
-	}
-	
+	//if (board->controls.run_mode==MOTORS_OFF) {
+		//mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_DISARMED, 0, MAV_STATE_STANDBY);
+	//}else {
+		//mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_ACTIVE);
+	//}
+	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, board->mav_mode, 0, board->mav_state);
 }	
-
 
 void mavlink_send_raw_imu() {
 	mavlink_msg_raw_imu_send(MAVLINK_COMM_0, get_millis(), 
@@ -79,13 +78,13 @@ void mavlink_send_servo_output() {
 void mavlink_send_attitude() {
 	// ATTITUDE QUATERNION
 	
-	mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, get_millis, board->imu1.attitude.qe.s, board->imu1.attitude.qe.v[0], board->imu1.attitude.qe.v[1], board->imu1.attitude.qe.v[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
+	mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, get_millis(), board->imu1.attitude.qe.s, board->imu1.attitude.qe.v[0], board->imu1.attitude.qe.v[1], board->imu1.attitude.qe.v[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
 				
 	// ATTITUDE
 	Aero_Attitude_t aero_attitude;
 	aero_attitude=Quat_to_Aero(board->imu1.attitude.qe);
 	//mavlink_msg_attitude_send(mavlink_channel_t chan, uint32_t time_boot_ms, float roll, float pitch, float yaw, float rollspeed, float pitchspeed, float yawspeed)
-	mavlink_msg_attitude_send(MAVLINK_COMM_0, get_millis, aero_attitude.rpy[0], aero_attitude.rpy[1], aero_attitude.rpy[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
+	mavlink_msg_attitude_send(MAVLINK_COMM_0, get_millis(), aero_attitude.rpy[0], aero_attitude.rpy[1], aero_attitude.rpy[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
 			
 	Schill_Attitude_t schill_attitude;
 	schill_attitude=Quat_to_Schill(board->imu1.attitude.qe);
@@ -94,7 +93,7 @@ void mavlink_send_attitude() {
 				
 	// Controls output
 	//mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(mavlink_channel_t chan, uint32_t time_boot_ms, float roll, float pitch, float yaw, float thrust)
-	mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(MAVLINK_COMM_0, get_millis, board->controls.rpy[ROLL], board->controls.rpy[PITCH], board->controls.rpy[YAW], board->controls.thrust);
+	mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(MAVLINK_COMM_0, get_millis(), board->controls.rpy[ROLL], board->controls.rpy[PITCH], board->controls.rpy[YAW], board->controls.thrust);
 				
 	// GPS COORDINATES (TODO : Add GPS to the platform)
 	//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
@@ -104,13 +103,13 @@ void mavlink_send_attitude() {
 	if(board->GPS_data.status == GPS_OK)
 	{
 		//mavlink_msg_global_position_int_send(MAVLINK_COMM_0, 0, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, board->imu1.attitude.om[2]);
-		mavlink_msg_global_position_int_send(MAVLINK_COMM_0, board->GPS_data.timeLastMsg, board->GPS_data.latitude, board->GPS_data.longitude, board->GPS_data.altitude, 1, board->GPS_data.northSpeed, board->GPS_data.eastSpeed, board->GPS_data.verticalSpeed, board->GPS_data.course);
+		mavlink_msg_global_position_int_send(MAVLINK_COMM_0,get_millis(), board->GPS_data.latitude, board->GPS_data.longitude, board->GPS_data.altitude, 1, board->GPS_data.northSpeed, board->GPS_data.eastSpeed, board->GPS_data.verticalSpeed, board->GPS_data.course);
 		
 		// mavlink_msg_gps_raw_int_send(mavlink_channel_t chan, uint64_t time_usec, uint8_t fix_type, int32_t lat, int32_t lon, int32_t alt, uint16_t eph, uint16_t epv, uint16_t vel, uint16_t cog, uint8_t satellites_visible)
-		mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0,board->GPS_data.timeLastMsg, board->GPS_data.status, board->GPS_data.latitude, board->GPS_data.longitude, board->GPS_data.altitude, board->GPS_data.hdop, board->GPS_data.speedAccuracy ,board->GPS_data.groundSpeed, board->GPS_data.course, board->GPS_data.num_sats);
+		mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0,get_millis(), board->GPS_data.status, board->GPS_data.latitude, board->GPS_data.longitude, board->GPS_data.altitude, board->GPS_data.hdop, board->GPS_data.speedAccuracy ,board->GPS_data.groundSpeed, board->GPS_data.course, board->GPS_data.num_sats);
 	}else{
-		mavlink_msg_global_position_int_send(MAVLINK_COMM_0, 0, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, board->imu1.attitude.om[2]);
-		mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0, 0, board->GPS_data.status, 46.5193*10000000, 6.56507*10000000, 400, 0, 0 , 0, 0, board->GPS_data.num_sats);
+		mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, board->imu1.attitude.om[2]);
+		mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0,get_millis(), board->GPS_data.status, 46.5193*10000000, 6.56507*10000000, 400, 0, 0 , 0, 0, board->GPS_data.num_sats);
 	}
 }
 
@@ -132,7 +131,7 @@ void mavlink_send_radar() {
 void mavlink_send_estimator()
 {
 	//mavlink_msg_local_position_ned_send(mavlink_channel_t chan, uint32_t time_boot_ms, float x, float y, float z, float vx, float vy, float vz)
-	mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, 0, board->estimation.state[0][0], board->estimation.state[1][0], board->estimation.state[2][0], board->estimation.state[0][1], board->estimation.state[1][1], board->estimation.state[2][1]);
+	mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, get_millis(), board->estimation.state[0][0], board->estimation.state[1][0], board->estimation.state[2][0], board->estimation.state[0][1], board->estimation.state[1][1], board->estimation.state[2][1]);
 
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,0,"Estimation",0);
 

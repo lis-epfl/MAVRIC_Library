@@ -656,6 +656,12 @@
     <Compile Include="Library\control\estimator.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\control\navigation.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\control\navigation.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\control\stabilisation.c">
       <SubType>compile</SubType>
     </Compile>
