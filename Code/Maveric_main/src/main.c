@@ -53,38 +53,40 @@ void set_mav_mode_n_state()
  	switch (checkReceivers())
  	{
  		 case 1 : {
- 			 // NICOLAS: changed remote model to aircraft to have 5 channels
- 			 //if (getChannel(4)>0) {
- 			 if (getChannel(5)>0) {
-	 			 board->controls.control_mode = RATE_COMMAND_MODE;
-	 			 } else {
-	 			 board->controls.control_mode = ATTITUDE_COMMAND_MODE;
- 			 }
- 			 
- 			 if (board->controls.run_mode == MOTORS_ON)
- 			 {
-	 			 if (getChannel(4)>0)
-	 			 {
-		 			 board->mav_mode = MAV_MODE_AUTO_ARMED;
-		 			 } else {
-		 			 board->mav_mode = MAV_MODE_STABILIZE_ARMED;
-	 			 }
- 			 }
- 			 
- 			 
- 			 // switch run_mode
- 			 if ((board->controls.thrust<-0.95) && (board->controls.rpy[YAW]< -0.9)) {
-	 			 board->controls.run_mode = MOTORS_OFF;
-	 			 board->mav_state = MAV_STATE_STANDBY;
-	 			 board->mav_mode = MAV_MODE_STABILIZE_DISARMED;
-	 			 LED_On(LED1);
- 			 }
- 			 if ((board->controls.thrust<-0.95) && (board->controls.rpy[YAW] >0.9)) {
-	 			 board->controls.run_mode = MOTORS_ON;
-	 			 board->mav_state = MAV_STATE_ACTIVE;
-	 			 board->mav_mode = MAV_MODE_STABILIZE_ARMED;
-	 			 LED_Off(LED1);
- 			 }
+			  // switch run_mode
+			  if ((board->controls.thrust<-0.95) && (board->controls.rpy[YAW]< -0.9)) {
+				  board->controls.run_mode = MOTORS_OFF;
+				  board->mav_state = MAV_STATE_STANDBY;
+				  board->mav_mode = MAV_MODE_STABILIZE_DISARMED;
+				  LED_On(LED1);
+			  }
+			  if ((board->controls.thrust<-0.95) && (board->controls.rpy[YAW] >0.9)) {
+				  board->controls.run_mode = MOTORS_ON;
+				  board->mav_state = MAV_STATE_ACTIVE;
+				  board->mav_mode = MAV_MODE_STABILIZE_ARMED;
+				  LED_Off(LED1);
+			  }
+			  
+			  if (board->mav_state  == MAV_STATE_ACTIVE)
+			  {
+				  if (getChannel(4)>0)
+				  {
+					  board->mav_mode = MAV_MODE_AUTO_ARMED;
+				  }else{
+					  board->mav_mode = MAV_MODE_STABILIZE_ARMED;
+				  }
+				  
+				  if (board->mav_mode == MAV_MODE_STABILIZE_ARMED)
+				  {
+					  // NICOLAS: changed remote model to aircraft to have 5 channels
+					  //if (getChannel(4)>0) {
+					  if (getChannel(5)>0) {
+						  board->controls.control_mode = RATE_COMMAND_MODE;
+					  } else {
+						  board->controls.control_mode = ATTITUDE_COMMAND_MODE;
+					  }
+				  }
+			  }		  
  			 break;
  		 }			 
  		case -1: {
@@ -102,16 +104,21 @@ void set_mav_mode_n_state()
 }
 
 task_return_t run_stabilisation() {
-	if (board->mav_mode == MAV_MODE_STABILIZE_ARMED || board->mav_mode == MAV_MODE_STABILIZE_DISARMED || board->mav_mode == MAV_MODE_PREFLIGHT)
+	switch(board->mav_mode)
 	{
-		board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
-		board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
-		board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
+		case MAV_MODE_PREFLIGHT:
+		case MAV_MODE_STABILIZE_ARMED: 
+		case MAV_MODE_STABILIZE_DISARMED: {
+			board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
+			board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
+			board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
+			break;
+		}
 		
 	}
-	//
-board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-	board->controls.thrust = getChannel(S_THROTTLE);
+
+	board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
+	//board->controls.thrust = getChannel(S_THROTTLE);
 
 	imu_update(&(board->imu1));
 	
@@ -161,14 +168,14 @@ task_return_t run_estimator()
 	
 }
 
-//task_return_t run_navigation_task()
-//{
-	//if (board->mav_mode == MAV_MODE_AUTO_ARMED)
-	//{
-		//run_navigation();
-	//}
-	//
-//}
+task_return_t run_navigation_task()
+{
+	if (board->mav_mode == MAV_MODE_AUTO_ARMED)
+	{
+		run_navigation();
+	}
+	
+}
 
 task_return_t send_rt_stats() {
 	
@@ -286,10 +293,10 @@ void main (void)
 	register_task(&main_tasks, 3, 10000, &run_estimator);
 	//register_task(&main_tasks, 4, 10, &read_radar);
 	
-	//register_task(&main_tasks, 5, 50000, &run_navigation_task);
+	register_task(&main_tasks, 5, 50000, &run_navigation_task);
 
 	register_task(&main_tasks, 8, 1000000, &send_rt_stats);
-	register_task(&main_tasks, 9, 100000, &mavlink_protocol_update);
+	register_task(&main_tasks, 9, 10000, &mavlink_protocol_update);
 
 	// main loop
 	counter=0;
