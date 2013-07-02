@@ -24,6 +24,6 @@
 void calculate_radar();
 
 radar_target* get_tracked_target();
-int16_t* get_raw_values();
+int16_t* get_raw_FFT();
 
 #endif /* DOPPLER_RADAR_H_ */

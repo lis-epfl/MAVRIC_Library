@@ -46,6 +46,9 @@ class MAVlinkReceiver:
          if msg.__class__.__name__.startswith("MAVLink_named_value"):
             msg_key="%s:%s"%(msg.__class__.__name__, msg.name)
             self.messages["%s:%s"%(msg.__class__.__name__, msg.name)]=msg
+         elif msg.__class__.__name__.startswith("MAVLink_radar"):
+            msg_key="%s:%s"%(msg.__class__.__name__, msg.sensor_id)
+            self.messages[msg_key]=msg
          else:
             msg_key=msg.__class__.__name__
             self.messages[msg.__class__.__name__]=msg

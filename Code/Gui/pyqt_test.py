@@ -265,7 +265,8 @@ class DropTarget(QtGui.QLabel):
     def __init__(self,text, parent):
         QtGui.QLabel.__init__(self, text, parent)
         self.setAcceptDrops(True)
-        self.dataSource=None
+        self.source=None
+        self.curve=None
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasFormat('application/x-mavplot'):
@@ -275,8 +276,7 @@ class DropTarget(QtGui.QLabel):
 
     def dropEvent(self, event):
        sourceNode= event.source().model().lastDraggedNode
-       print sourceNode.name(), sourceNode.content()
-       self.parent().updateSource(sourceNode)
+       self.source=sourceNode
 
 class DropPlot(QtGui.QWidget):
    def __init__(self, parent=None):
@@ -286,11 +286,18 @@ class DropPlot(QtGui.QWidget):
 
       self.plotwidget = pg.PlotWidget(name='Plot1')  ## giving the plots names allows us to link their axes together
       self.layout.addWidget(self.plotwidget)
-      self.curve=self.plotwidget.plot()
+      
 
-      self.source=None
-      target=DropTarget("X-data", self)
-      self.layout.addWidget(target)
+      self.targets_area=QtGui.QWidget()
+      self.targets_layout=QtGui.QHBoxLayout()
+      self.targets_area.setLayout(self.targets_layout)
+      self.targets=[]
+      self.targets.append(DropTarget("data1", self))
+      self.targets.append(DropTarget("data2", self))
+      self.targets.append(DropTarget("data3", self))
+      for t in self.targets:
+          self.targets_layout.addWidget(t)
+      self.layout.addWidget(self.targets_area)
       self.t = QtCore.QTimer()
       self.t.timeout.connect(self.updatePlot)
       self.t.start(40)
@@ -299,11 +306,15 @@ class DropPlot(QtGui.QWidget):
       self.source=source
 
    def updatePlot(self):
-      if self.source!=None:
-         if isinstance(self.source.content(), list):
-            self.curve.setData(y=self.source.content(), x=[i for i in range(0, len(self.source.content()))]) 
-         else:
-            self.curve.setData(y=self.source.trace, x=[i for i in range(0, len(self.source.trace))]) 
+      for t in self.targets:
+         source=t.source
+         if source!=None:
+            if t.curve==None:
+               t.curve=self.plotwidget.plot()
+            if isinstance(source.content(), list):
+               t.curve.setData(y=source.content(), x=[i for i in range(0, len(source.content()))]) 
+            else:
+               t.curve.setData(y=source.trace, x=[i for i in range(0, len(source.trace))]) 
               
 
 
@@ -322,14 +333,23 @@ def main_simple():
    cw = QtGui.QWidget()
    mw.setCentralWidget(cw)
    l = QtGui.QHBoxLayout()
+
    cw.setLayout(l)
 
    l.addWidget(messageTreeView.treeView)   
+
+   plot_area=QtGui.QWidget()
+   plot_area_layout=QtGui.QVBoxLayout()
+   plot_area.setLayout(plot_area_layout)
+   l.addWidget(plot_area)
    
-   pw = DropPlot() 
-   
-   
-   l.addWidget(pw)
+
+
+   pw1 = DropPlot() 
+   plot_area_layout.addWidget(pw1)
+
+   pw2 = DropPlot() 
+   plot_area_layout.addWidget(pw2)
    
    mw.show()
 

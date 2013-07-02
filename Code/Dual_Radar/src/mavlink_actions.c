@@ -25,11 +25,15 @@ mavlink_send_heartbeat() {
 }	
 
 
-
+int even_odd;
 void mavlink_send_radar() {
 	radar_target *target=get_tracked_target();
 	mavlink_msg_radar_tracked_target_send(MAVLINK_COMM_0, get_millis(), 0, 0, target->velocity, target->amplitude, 0.0);
-	mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 0, get_raw_values());
+	mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 0, get_raw_FFT());
+	mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 1, ADCI_get_buffer(0, 0));
+	mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 2, ADCI_get_buffer(0, 1));
+	
+
 	
 //	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Radar_velocity", target->velocity);
 //	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Radar_amplitude", target->amplitude/1000.0);

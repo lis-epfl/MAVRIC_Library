@@ -10,7 +10,7 @@
 #define ADCI_BUFFER_SIZE 512
 #define ADCI_INPUT_CHANNELS 4
 #define ADC_FREQUENCY 1000000
-#define OVERSAMPLING 16				// maximum sampling frequency: 1000000 / 4ch /2(HW-OVRSMP) /4 (OVERSAMPLING) = 31250 Hz
+#define OVERSAMPLING 8				// maximum sampling frequency: 1000000 / 4ch /2(HW-OVRSMP) /4 (OVERSAMPLING) = 31250 Hz
 #define OVERSAMPLING_DIVIDER 2
 
 #define RADAR_0_I_INP         AVR32_ADCIFA_INP_ADCIN0
@@ -48,7 +48,9 @@ void ADCI_Stop_Sampling();
 // Returns true if one-shot sampling has finished
 Bool ADCI_Sampling_Complete();
 
-int32_t ADCI_get_sample(int channel, int sample);
+int16_t ADCI_get_sample(int channel,int even_odd, int sample);
+
+int16_t* ADCI_get_buffer(int channel,int even_odd);
 
 int ADCI_get_sampling_status();
 
