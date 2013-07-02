@@ -167,7 +167,7 @@ void initialisation() {
 
 	board=initialise_board();
 
-	init_gps_ubx(engine_nav_settings);
+	//init_gps_ubx(engine_nav_settings);
 	
 	Enable_global_interrupt();
 		
@@ -222,7 +222,7 @@ void main (void)
 	
 	register_task(&main_tasks, 2 ,50000, &gps_task);
 	register_task(&main_tasks, 3, 10000, &run_estimator);
-	//register_task(&main_tasks, 4, 10, &read_radar);
+	register_task(&main_tasks, 4, 10, &read_radar);
 
 	register_task(&main_tasks, 8, 1000000, &send_rt_stats);
 	register_task(&main_tasks, 9, 10000, &mavlink_protocol_update);

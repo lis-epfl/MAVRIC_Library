@@ -33,6 +33,8 @@
 #include "radar_driver.h"
 #include "i2c_slave_interface.h"
 
+
+
 board_hardware_t *board;
 
 
@@ -66,7 +68,6 @@ void initialisation() {
 
 	board=initialise_board();
 	
-	Init_ADCI();
 
 	init_radar();
 
@@ -101,12 +102,14 @@ void main (void)
 		this_looptime=get_millis();
 		
 		if (ADCI_Sampling_Complete()) {
+			DAC_set_value(0);
+
 			calculate_radar();
 			mavlink_send_radar();
 			ADCI_Start_Oneshot(Sampling_frequency);
 		}			
 		
-		run_scheduler_update(&main_tasks);
+		run_scheduler_update(&main_tasks, FIXED_PRIORITY);
 				
 		LED_On(LED1);
 

@@ -15,7 +15,7 @@
 #include "dsp.h"
 
 
-#define THRESHOLD 3000
+#define THRESHOLD 100
 //#define Sampling_frequency 23437
 #define Sampling_frequency 15625
 #define filter_conversion 100

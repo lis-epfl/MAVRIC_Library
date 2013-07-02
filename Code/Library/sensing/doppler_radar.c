@@ -110,7 +110,8 @@ void calculate_radar() {
 	for (i=0;i< ADCI_BUFFER_SIZE;i++)
 	{
 		//16bits version
-		vect_inputQ[i]=dsp16_op_sqrt(vect_inputI[i]);	 //Here we re-use vect_inputQ as the module
+		//vect_inputQ[i]=dsp16_op_sqrt(vect_inputI[i]);	 //Here we re-use vect_inputQ as the module
+		vect_inputQ[i]=vect_inputI[i];	 //Here we re-use vect_inputQ as the module
 		//putnum(STDOUT,vect_inputQ[i],10);		//print the raw FFT buffer
 		//putstring(STDOUT,";");
 //
@@ -153,7 +154,7 @@ void calculate_radar() {
 			
 	if(index>1)
 	{
-		mean_amp=(vect_inputQ[index]+vect_inputQ[index+1]+vect_inputQ[index-1])/3; //Average on the three peaks in Fourier domain
+		mean_amp=(2*vect_inputQ[index]+vect_inputQ[index+1]+vect_inputQ[index-1])/4; //Average on the three peaks in Fourier domain
 	}
 			
 	else
