@@ -33,15 +33,9 @@
 #define RAW_ACC_Z_SCALE  260.0
 
 
-<<<<<<< HEAD:Code/src/config/conf_platform.h
-#define RAW_COMPASS_X 0
-#define RAW_COMPASS_Y 1
-#define RAW_COMPASS_Z 2
-=======
 #define RAW_COMPASS_X 2
 #define RAW_COMPASS_Y 1
 #define RAW_COMPASS_Z 0
->>>>>>> f54a137d589e6d9336066f72caf2be6c2dded4f9:Code/Maveric_main/src/config/conf_platform.h
 
 #define RAW_MAG_X_SCALE 1
 #define RAW_MAG_Y_SCALE 1
@@ -80,10 +74,7 @@
 #define SERVO_SCALE 500
 
 
-<<<<<<< HEAD:Code/src/config/conf_platform.h
 // define type of GPS
 #define GPS_TYPE_UBX
-=======
 
 #endif /* CONF_PLATFORM_H_ */
->>>>>>> f54a137d589e6d9336066f72caf2be6c2dded4f9:Code/Maveric_main/src/config/conf_platform.h
