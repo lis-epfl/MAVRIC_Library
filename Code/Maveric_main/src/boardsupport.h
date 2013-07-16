@@ -39,6 +39,7 @@ typedef struct  {
 	byte_stream_t xbee_out_stream;
 	byte_stream_t xbee_in_stream;
 	byte_stream_t debug_stream;	
+	byte_stream_t debug_in_stream;
 	
 	Buffer_t gps_buffer;
 	byte_stream_t gps_stream_in;

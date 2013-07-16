@@ -19,11 +19,19 @@ board_hardware_t* initialise_board() {
 		register_write_stream(get_UART_handle(3), &board_hardware.gps_stream_out);
 		
 		init_UART_int(4);
+		
 		register_write_stream(get_UART_handle(4), &board_hardware.debug_stream);
 
-		// init mavlink
-		init_mavlink(&board_hardware.xbee_out_stream, &board_hardware.xbee_in_stream);
+		register_read_stream(get_UART_handle(4), &board_hardware.debug_in_stream);
 		register_read_stream(get_UART_handle(0), &board_hardware.xbee_in_stream);
+		
+		//board_hardware.telemetry_down_stream=&board_hardware.debug_stream;
+		//board_hardware.telemetry_up_stream=&board_hardware.debug_in_stream;
+		board_hardware.telemetry_down_stream=&board_hardware.xbee_out_stream;
+		board_hardware.telemetry_up_stream=&board_hardware.xbee_in_stream;
+		// init mavlink
+		init_mavlink(board_hardware.telemetry_down_stream, board_hardware.telemetry_up_stream);
+		
 		
 		
 		dbg_print_init(&board_hardware.debug_stream);

@@ -53,11 +53,13 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream)
 	make_buffered_stream(&mavlink_in_buffer, mavlink_in_stream);
 	init_scheduler(&mavlink_tasks);
 	
-	register_task(&mavlink_tasks, 0, 10000, &mavlink_receive_handler);
+//	register_task(&mavlink_tasks, 0, 10000, &mavlink_receive_handler);
+	register_task(&mavlink_tasks, 9,500000, &send_scheduled_parameters);
 	
 }
 
 task_return_t mavlink_protocol_update() {
+	mavlink_receive_handler();
 	if (mavlink_out_stream->buffer_empty(mavlink_out_stream->data)) {
 		run_scheduler_update(&mavlink_tasks, FIXED_PRIORITY);
 	}	
@@ -86,11 +88,23 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 void handle_mavlink_message(Mavlink_Received_t* rec) {
 	switch(rec->msg.msgid) {
 		case MAVLINK_MSG_ID_PARAM_REQUEST_LIST: {
-			send_all_parameters(rec);
+			mavlink_param_request_list_t request;
+			mavlink_msg_param_request_list_decode(&rec->msg, &request);
+			// Check if this message is for this system
+			if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid) {
+				send_all_parameters();
+			}				
 		}
 		break;
 		case MAVLINK_MSG_ID_PARAM_REQUEST_READ: {
-			send_parameter(rec);
+			mavlink_param_request_read_t request;
+			mavlink_msg_param_request_read_decode(&rec->msg, &request);
+			// Check if this message is for this system and subsystem
+			if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid
+			&& (uint8_t)request.target_component == (uint8_t)mavlink_system.compid) {
+
+				send_parameter(&request);
+			}				
 		}
 		break;
 		case MAVLINK_MSG_ID_PARAM_SET: {

@@ -218,14 +218,14 @@ void main (void)
 	
 //	register_task(&main_tasks, 0, 4000, &run_imu_update );
 	register_task(&main_tasks, 1, 4000, &run_stabilisation );
+	register_task(&main_tasks, 2, 1000, &mavlink_protocol_update);
 	
-	
-	register_task(&main_tasks, 2 ,50000, &gps_task);
-	register_task(&main_tasks, 3, 10000, &run_estimator);
+	//register_task(&main_tasks, 3 ,100000, &gps_task);
+	//register_task(&main_tasks, 4, 10000, &run_estimator);
 	//register_task(&main_tasks, 4, 10, &read_radar);
 
 	register_task(&main_tasks, 8, 1000000, &send_rt_stats);
-	register_task(&main_tasks, 9, 10000, &mavlink_protocol_update);
+	
 
 	// main loop
 	counter=0;
