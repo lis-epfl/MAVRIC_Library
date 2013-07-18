@@ -20,7 +20,7 @@ class MAVlinkReceiver:
 
       parser.add_option("--baudrate", dest="baudrate", type='int',
                   help="master port baud rate", default=57600)
-      parser.add_option("--device", dest="device", default="/dev/ttyUSB0", help="serial device")
+      parser.add_option("--device", dest="device", default="/dev/ttyUSB1", help="serial device")
       parser.add_option("--source-system", dest='SOURCE_SYSTEM', type='int',
                   default=255, help='MAVLink source system for this GCS')
       (opts, args) = parser.parse_args()
@@ -46,6 +46,9 @@ class MAVlinkReceiver:
          if msg.__class__.__name__.startswith("MAVLink_named_value"):
             msg_key="%s:%s"%(msg.__class__.__name__, msg.name)
             self.messages["%s:%s"%(msg.__class__.__name__, msg.name)]=msg
+         elif msg.__class__.__name__.startswith("MAVLink_radar"):
+            msg_key="%s:%s"%(msg.__class__.__name__, msg.sensor_id)
+            self.messages[msg_key]=msg
          else:
             msg_key=msg.__class__.__name__
             self.messages[msg.__class__.__name__]=msg
