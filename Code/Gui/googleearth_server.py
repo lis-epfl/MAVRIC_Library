@@ -8,21 +8,31 @@ import math
 KmlHeader = """<?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">"""
 
+def radianToPosDegree(alpha):
+    while alpha<0.0: alpha+=2.0*math.pi
+    while alpha>2.0*math.pi: alpha-=2.0*math.pi
+    return alpha*180.0/math.pi
+
+def radianToSymDegree(alpha):
+    while alpha<-math.pi: alpha+=2.0*math.pi
+    while alpha>math.pi: alpha-=2.0*math.pi
+    return alpha*180.0/math.pi
 
 class Plane:
-    def __init__(self,  longitude=6.565534280104696,  latitude=46.52193228330997,  altitude=600,  heading=0.0,  tilt=0.0,  roll=0.0):
-       self.heading=heading
-       self.tilt=tilt
-       self.roll=roll
+    def __init__(self,  longitude=6.566044801857777,  latitude=46.51852236174565,  altitude=440,  heading=0.0,  tilt=0.0,  roll=0.0):
+       self.heading=radianToPosDegree(heading)
+       self.tilt=radianToPosDegree(90+tilt)
+       self.roll=radianToSymDegree(-roll)
        self.altitude=altitude
        self.longitude=longitude
        self.latitude=latitude
 
+
     def update(self,  longitude=None,  latitude=None,  altitude=None,  heading=None,  tilt=None,  roll=None):
 
-        if heading!=None: self.heading=heading
-        if tilt!=None: self.tilt=tilt
-        if roll!=None: self.roll=roll
+        if heading!=None: self.heading=radianToPosDegree(heading)
+        if tilt!=None: self.tilt=radianToPosDegree(math.pi/2.0+tilt)
+        if roll!=None: self.roll=radianToSymDegree(-roll)
         if altitude!=None: self.altitude=altitude
         if longitude!=None: self.longitude=longitude
         if latitude!=None: self.latitude=latitude
@@ -30,8 +40,6 @@ class Plane:
 #Create custom HTTPRequestHandler class
 class KmlHTTPRequestHandler(BaseHTTPRequestHandler):
 
-    def setPlane(self,  p):
-        self.p=p
         
     def makeView(self, longitude, latitude, altitude, heading, tilt, roll):
        return "<Camera> <longitude> %f</longitude> \
@@ -59,7 +67,7 @@ class KmlHTTPRequestHandler(BaseHTTPRequestHandler):
     
     #handle GET command
     def do_GET(self):
-        p=self.p
+        p=GoogleEarthServer.plane
         try:
             #print self.path
             self.send_response(200)
@@ -83,10 +91,8 @@ class KmlHTTPRequestHandler(BaseHTTPRequestHandler):
 
 
 class GoogleEarthServer:
+    plane=Plane()
     
-    def __init__(self):
-        self.p=Plane()
-
     def run(self):
 
         print('http server is starting...')
@@ -95,9 +101,9 @@ class GoogleEarthServer:
         #by default http server port is 80
         server_address = ('127.0.0.1', 8000)
         self.httpd = HTTPServer(server_address, KmlHTTPRequestHandler)
-        self.httpd.setPlane(self.p)
+       
         print('http server is running...')
         start_new_thread(self.httpd.serve_forever, ())
 
     def update(self,  **kwargs):
-        self.p.update(**kwargs)
+        GoogleEarthServer.plane.update(**kwargs)
