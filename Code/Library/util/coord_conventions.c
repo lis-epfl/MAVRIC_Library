@@ -10,9 +10,9 @@
 Aero_Attitude_t Quat_to_Aero(UQuat_t qe) {
 	Aero_Attitude_t aero;
 
-	aero.rpy[0]= atan(2*(qe.s*qe.v[0] + qe.v[1]*qe.v[2]) / (qe.s*qe.s - qe.v[0]*qe.v[0] - qe.v[1]*qe.v[1] + qe.v[2]*qe.v[2])); 
+	aero.rpy[0]= atan2(2*(qe.s*qe.v[0] + qe.v[1]*qe.v[2]) , (qe.s*qe.s - qe.v[0]*qe.v[0] - qe.v[1]*qe.v[1] + qe.v[2]*qe.v[2])); 
 	aero.rpy[1]=-asin(2*(qe.v[0]*qe.v[2] - qe.s*qe.v[1]));
-	aero.rpy[2]= atan(2*(qe.s*qe.v[2] + qe.v[0]*qe.v[1]) / (qe.s*qe.s + qe.v[0]*qe.v[0] - qe.v[1]*qe.v[1] - qe.v[2]*qe.v[2]));
+	aero.rpy[2]= atan2(2*(qe.s*qe.v[2] + qe.v[0]*qe.v[1]) , (qe.s*qe.s + qe.v[0]*qe.v[0] - qe.v[1]*qe.v[1] - qe.v[2]*qe.v[2]));
 
 	return aero;
 }

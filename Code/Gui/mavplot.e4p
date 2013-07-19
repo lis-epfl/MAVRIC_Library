@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-4.6.dtd">
 <!-- eric4 project file for project mavplot -->
-<!-- Saved: 2013-07-16, 17:11:37 -->
+<!-- Saved: 2013-07-19, 14:39:06 -->
 <!-- Copyright (C) 2013 ,  -->
 <Project version="4.6">
   <Language>en</Language>
@@ -30,6 +30,7 @@
     <Source>kivygui.py</Source>
     <Source>decoratedwidget.py</Source>
     <Source>__init__.py</Source>
+    <Source>googleearth_server.py</Source>
   </Sources>
   <Forms>
   </Forms>
