@@ -216,15 +216,15 @@ void main (void)
 	
 	init_scheduler(&main_tasks);
 	
-//	register_task(&main_tasks, 0, 4000, &run_imu_update );
-	register_task(&main_tasks, 1, 4000, &run_stabilisation );
-	register_task(&main_tasks, 2, 1000, &mavlink_protocol_update);
+//	register_task(&main_tasks, 0, 4000, RUN_REGULAR, &run_imu_update );
+	register_task(&main_tasks, 1, 4000, RUN_REGULAR, &run_stabilisation );
+	register_task(&main_tasks, 2, 1000, RUN_REGULAR, &mavlink_protocol_update);
 	
-	//register_task(&main_tasks, 3 ,100000, &gps_task);
-	//register_task(&main_tasks, 4, 10000, &run_estimator);
-	//register_task(&main_tasks, 4, 10, &read_radar);
+	//register_task(&main_tasks, 3 ,100000, RUN_REGULAR, &gps_task);
+	//register_task(&main_tasks, 4, 10000, RUN_REGULAR, &run_estimator);
+	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &read_radar);
 
-	register_task(&main_tasks, 8, 1000000, &send_rt_stats);
+	add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
 
 	// main loop

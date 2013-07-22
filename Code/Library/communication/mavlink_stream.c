@@ -17,7 +17,7 @@ byte_stream_t* mavlink_in_stream;
 Buffer_t mavlink_in_buffer;
 
 
-NEW_TASK_SET (mavlink_tasks, 10)
+NEW_TASK_SET (mavlink_tasks, 20)
 
 void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 {
@@ -53,8 +53,7 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream)
 	make_buffered_stream(&mavlink_in_buffer, mavlink_in_stream);
 	init_scheduler(&mavlink_tasks);
 	
-//	register_task(&mavlink_tasks, 0, 10000, &mavlink_receive_handler);
-	add_task(&mavlink_tasks, 500000, &send_scheduled_parameters);
+	add_task(&mavlink_tasks, 500000, RUN_REGULAR, &send_scheduled_parameters, MAVLINK_MSG_ID_PARAM_VALUE);
 	
 }
 
