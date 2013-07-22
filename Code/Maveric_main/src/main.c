@@ -167,7 +167,7 @@ void initialisation() {
 
 	board=initialise_board();
 
-	init_gps_ubx(engine_nav_settings);
+	//init_gps_ubx(engine_nav_settings);
 	
 	Enable_global_interrupt();
 		
