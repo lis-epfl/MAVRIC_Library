@@ -54,7 +54,7 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream)
 	init_scheduler(&mavlink_tasks);
 	
 //	register_task(&mavlink_tasks, 0, 10000, &mavlink_receive_handler);
-	register_task(&mavlink_tasks, 9,500000, &send_scheduled_parameters);
+	add_task(&mavlink_tasks, 500000, &send_scheduled_parameters);
 	
 }
 

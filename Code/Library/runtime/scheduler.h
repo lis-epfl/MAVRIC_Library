@@ -51,6 +51,8 @@ void init_scheduler(task_set *ts);
 
 task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_period, function_pointer *call_function);
 
+bool add_task(task_set *ts, unsigned long repeat_period, function_pointer *call_function);
+void sort_taskset_by_period(task_set *ts);
 
 enum schedule_strategy_t {ROUND_ROBIN, FIXED_PRIORITY};
 

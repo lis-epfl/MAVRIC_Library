@@ -208,14 +208,15 @@ void add_PID_parameters(void) {
 void init_mavlink_actions() {
 	board=get_board_hardware();
 	add_PID_parameters();
-	register_task(get_mavlink_taskset(), 2, 1000000, &mavlink_send_heartbeat);
-	register_task(get_mavlink_taskset(), 3, 100000, &mavlink_send_attitude);
-	//register_task(get_mavlink_taskset(), 3, 250000, &mavlink_send_pressure);
-	register_task(get_mavlink_taskset(), 4, 200000, &mavlink_send_raw_imu);
-	register_task(get_mavlink_taskset(), 5, 200000, &mavlink_send_scaled_imu);
-	register_task(get_mavlink_taskset(), 6, 100000, &mavlink_send_control_error);
-	register_task(get_mavlink_taskset(), 7, 200000, &mavlink_send_servo_output);
-	//register_task(get_mavlink_taskset(), 7,  50000, &mavlink_send_radar);
+	add_task(get_mavlink_taskset(), 1000000, &mavlink_send_heartbeat);
+	add_task(get_mavlink_taskset(), 100000, &mavlink_send_attitude);
+	//add_task(get_mavlink_taskset(), 250000, &mavlink_send_pressure);
+	add_task(get_mavlink_taskset(), 200000, &mavlink_send_raw_imu);
+	add_task(get_mavlink_taskset(), 200000, &mavlink_send_scaled_imu);
+	add_task(get_mavlink_taskset(), 100000, &mavlink_send_control_error);
+	add_task(get_mavlink_taskset(), 200000, &mavlink_send_servo_output);
+	//add_task(get_mavlink_taskset(),  50000, &mavlink_send_radar);
 
-	register_task(get_mavlink_taskset(), 8, 100000, &mavlink_send_estimator);
+	add_task(get_mavlink_taskset(), 100000, &mavlink_send_estimator);
+	sort_taskset_by_period(get_mavlink_taskset());
 }

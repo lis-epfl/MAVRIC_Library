@@ -36,7 +36,33 @@ task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_pe
 	return task_slot;
 }
 
+bool add_task(task_set *ts, unsigned long repeat_period, function_pointer *call_function) {
+	int task_slot=0;
+	while ((task_slot < ts->number_of_tasks) && (ts->tasks[task_slot].call_function!=NULL)) task_slot++;
+	if (task_slot < ts->number_of_tasks) return -1;
+	register_task(ts,  task_slot,   repeat_period, call_function);
+}
 
+
+void sort_taskset_by_period(task_set *ts){
+	int i, sorted_above;
+	bool sorted=false;
+	task_entry tmp;
+	if (ts->number_of_tasks<2) return;
+	sorted_above=ts->number_of_tasks-1;
+	while (!sorted) {
+		sorted=true;
+		for (i=0; i<sorted_above; i++) {
+			if ( ((ts->tasks[i].call_function==NULL)&&(ts->tasks[i+1].call_function!=NULL)) ||(ts->tasks[i].repeat_period>ts->tasks[i+1].repeat_period)) {
+				tmp=ts->tasks[i];
+				ts->tasks[i]=ts->tasks[i+1];
+				ts->tasks[i+1]=tmp;		
+				sorted_above=i;
+				sorted=false;
+			}
+		}
+	}		
+}
 
 int run_scheduler_update(task_set *ts, uint8_t schedule_strategy) {
 	int i;
