@@ -33,6 +33,7 @@ task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_pe
 	ts->tasks[task_slot].delay_var_squared=0;
 	ts->tasks[task_slot].rt_violations=0;
 #endif
+	return task_slot;
 }
 
 

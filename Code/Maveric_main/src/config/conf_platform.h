@@ -74,5 +74,7 @@
 #define SERVO_SCALE 500
 
 
+// define type of GPS
+#define GPS_TYPE_UBX
 
 #endif /* CONF_PLATFORM_H_ */

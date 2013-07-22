@@ -6,6 +6,7 @@ test mavlink messages
 
 import sys, struct, time, os
 from curses import ascii
+from googleearth_server import *
 
 # allow import from the parent directory, where mavlink.py is
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pymavlink'))
@@ -33,6 +34,8 @@ class MAVlinkReceiver:
       self.master = mavutil.mavlink_connection(opts.device, baud=opts.baudrate, source_system=opts.SOURCE_SYSTEM)
       self.msg=None;
       self.messages=dict();
+      self.earthserver=GoogleEarthServer()
+      self.earthserver.run()
 
 
    def wait_message(self):
@@ -53,6 +56,14 @@ class MAVlinkReceiver:
             msg_key=msg.__class__.__name__
             self.messages[msg.__class__.__name__]=msg
          self.msg=msg
+         
+         #update google earth server:
+         if msg.__class__.__name__=="MAVLink_attitude_message":
+            pitch=getattr(msg, "pitch")
+            roll=getattr(msg, "roll")
+            yaw=getattr(msg, "yaw")
+            self.earthserver.update(tilt=pitch,  roll=roll,  heading=yaw)
+         
          return msg_key,  msg;
       return "", None;
 

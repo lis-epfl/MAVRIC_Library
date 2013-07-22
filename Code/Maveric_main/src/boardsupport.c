@@ -12,10 +12,7 @@ static volatile board_hardware_t board_hardware;
 board_hardware_t* initialise_board() {
 		init_UART_int(0);
 		register_write_stream(get_UART_handle(0), &board_hardware.xbee_out_stream);
-		
-//		board_hardware.telemetry_down_stream=&board_hardware.xbee_out_stream;
-//		board_hardware.telemetry_up_stream=&board_hardware.xbee_in_stream;
-		
+				
 		
 		init_UART_int(3);
 		make_buffered_stream(&(board_hardware.gps_buffer), &board_hardware.gps_stream_in);
@@ -23,6 +20,7 @@ board_hardware_t* initialise_board() {
 		register_write_stream(get_UART_handle(3), &board_hardware.gps_stream_out);
 		
 		init_UART_int(4);
+
 		register_write_stream(get_UART_handle(4), &board_hardware.wired_out_stream);
 		
 		// connect abstracted aliases to hardware ports
@@ -39,13 +37,14 @@ board_hardware_t* initialise_board() {
 		board_hardware.debug_in_stream      =&board_hardware.xbee_in_stream;
 
 
+		register_read_stream(get_UART_handle(4), &board_hardware.debug_in_stream);
+		register_read_stream(get_UART_handle(0), &board_hardware.xbee_in_stream);
+
+		
 		// init mavlink
 		init_mavlink(board_hardware.telemetry_down_stream, board_hardware.telemetry_up_stream);
 		
 		
-		//register_read_stream(get_UART_handle(0), &board_hardware.xbee_in_stream);
-		register_read_stream(get_UART_handle(4), &board_hardware.wired_in_stream);
-
 
 		// init debug output
 		dbg_print_init(board_hardware.debug_out_stream);

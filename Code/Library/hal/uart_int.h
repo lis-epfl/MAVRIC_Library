@@ -41,7 +41,22 @@ short uart_int_send_byte(usart_config_t *usart_opt, char data);
  */
 short uart_int_flush(usart_config_t *usart_opt );
 
+/************************************************************************/
+/* Registers a stream interface with the UART transmitter (data put     */
+/* into the stream will be sent). This function will create a blocking  */
+/* interface - if the output buffer is full, the function will block    */
+/* until there is space.                                                */
+/************************************************************************/
 void register_write_stream(usart_config_t *usart_opt, byte_stream_t *stream);
+
+/************************************************************************/
+/* Registers a stream interface with the UART transmitter (data put     */
+/* into the stream will be sent). This function will create a non-      */
+/* blocking interface. If the output buffer is full, the function will  */
+/* overwrite the oldest data in the buffer.                             */
+/************************************************************************/
+void register_write_stream_nonblocking(usart_config_t *usart_opt, byte_stream_t *stream);
+
 void register_read_stream(usart_config_t *usart_opt,  byte_stream_t *stream);
 
 #endif /* UART_INT_H_ */

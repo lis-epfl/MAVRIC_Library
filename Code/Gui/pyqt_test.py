@@ -9,6 +9,8 @@ import threading
 import pickle
 import time
 
+colors=[[1.0, 0.0, 0.0],  [0.0,  1.0,  0.0],  [0.0,  0.0,  1.0],  [1.0, 1.0, 0.0],  [0.0,  1.0,  1.0],  [1.0,  0.0,  1.0]]
+        
 
 class Node(object):   
     def __init__(self, name, parent=None, checked=False, content=None):
@@ -28,7 +30,7 @@ class Node(object):
         self._children[child.name()]=child
 
     def updateContent(self, content):
-	#keep traces of scalar values
+    #keep traces of scalar values
         if isinstance(self._content, int) or isinstance(self._content, float):
            self.trace.append(content)
            if len(self.trace)>self.max_trace_length:
@@ -88,7 +90,7 @@ class TreeModel(QtCore.QAbstractItemModel):
     def __init__(self, root, parent=None):
         super(TreeModel, self).__init__(parent)
         self._rootNode = root
-	self.lastDraggedNode=None
+        self.lastDraggedNode=None
 
     def rowCount(self, parent):
         if not parent.isValid():
@@ -157,13 +159,13 @@ class TreeModel(QtCore.QAbstractItemModel):
         return ['application/x-mavplot']
 
     def mimeData(self, indexes):
-	print "start drag"
+        print "start drag"
         mimedata = QtCore.QMimeData()
-	#data = QtCore.QByteArray()
-	#stream = QtCore.QDataStream(data, QtCore.QIODevice.WriteOnly)
-	#stream << indexes[0].internalPointer()
+        #data = QtCore.QByteArray()
+        #stream = QtCore.QDataStream(data, QtCore.QIODevice.WriteOnly)
+        #stream << indexes[0].internalPointer()
         mimedata.setData('application/x-mavplot', str(indexes[0].internalPointer().displayContent()))
-	self.lastDraggedNode=indexes[0].internalPointer()
+        self.lastDraggedNode=indexes[0].internalPointer()
         
         return mimedata
 
@@ -211,30 +213,32 @@ class TreeModel(QtCore.QAbstractItemModel):
 
 
 class MessageTreeView:
-   def __init__(self):
-      self.rootNode   = Node("Root")
-      self.model = TreeModel(self.rootNode)
-      self.treeView = QtGui.QTreeView()
+    def __init__(self):
+        self.rootNode   = Node("Root")
+        self.model = TreeModel(self.rootNode)
+        self.treeView = QtGui.QTreeView()
+        self.treeView.setMinimumWidth(400)
 
-      self.treeView.show()
-      self.treeView.setModel(self.model)
-      self.treeView.setDragDropMode(QtGui.QAbstractItemView.DragDrop)
+        self.treeView.show()
+        self.treeView.setModel(self.model)
+        self.treeView.setColumnWidth(0, 300)
+        self.treeView.setDragDropMode(QtGui.QAbstractItemView.DragDrop)
 
 
 class Update_Thread():
-   def __init__(self, treeViewInstance):
-      self._treeViewInstance= treeViewInstance
-      self.mavlinkReceiver=mavlink_receiver.MAVlinkReceiver()
-      self.running=True      
-      self.lastTreeUpdate=time.time()
-      self.treeUpdateFrequency=1.0
-      self.t = QtCore.QTimer()
-      self.t.timeout.connect(self.update)
-      self.t.start(5)
+    def __init__(self, treeViewInstance):
+        self._treeViewInstance= treeViewInstance
+        self.mavlinkReceiver=mavlink_receiver.MAVlinkReceiver()
+        self.running=True      
+        self.lastTreeUpdate=time.time()
+        self.treeUpdateFrequency=1.0
+        self.t = QtCore.QTimer()
+        self.t.timeout.connect(self.update)
+        self.t.start(5)
 
 
       
-   def update(self):
+    def update(self):
        msg_key, msg=self.mavlinkReceiver.wait_message()
 
        if msg_key=='':
@@ -261,12 +265,27 @@ class Update_Thread():
    
    
         
-class DropTarget(QtGui.QLabel):
-    def __init__(self,text, parent):
-        QtGui.QLabel.__init__(self, text, parent)
+class DropTarget(QtGui.QWidget):
+    def __init__(self,text, parent ,  color=QtGui.QColor(0, 0, 0)):
+        QtGui.QWidget.__init__( self, parent=parent)
+        self.myParent=parent
+        self.color=color
+        self.label=QtGui.QLabel("text", self)
+        self.removeButton=QtGui.QPushButton("-")
+        #self.removeButton.setAutoFillBackground(True)
+        #self.removeButton.setStyleSheet("background-color: rgba(%i, %i, %i, %i); "%(color.red(),  color.green(),  color.blue(),  255))
+
+        self.removeButton.setFixedSize(15, 15)
+        self.connect(self.removeButton,  QtCore.SIGNAL("clicked()"),  self.remove)
+        self.layout = QtGui.QHBoxLayout()
+        self.setLayout(self.layout)
+        self.layout.addWidget(self.label)
+        self.layout.addWidget(self.removeButton)
+        self.layout.addStretch()
         self.setAcceptDrops(True)
         self.source=None
         self.curve=None
+        
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasFormat('application/x-mavplot'):
@@ -274,88 +293,122 @@ class DropTarget(QtGui.QLabel):
         else:
             event.ignore() 
 
+    def remove(self):
+        self.myParent.removeTarget(self)
+    
+
+    def updateSource(self,  source):
+        self.source=source
+        self.label.setAutoFillBackground(True)
+        self.label.setStyleSheet("background-color: rgba(%i, %i, %i, %i); "%(self.color.red(),  self.color.green(),  self.color.blue(),  255))
+        self.label.setText(source.name())
+                     
     def dropEvent(self, event):
-       sourceNode= event.source().model().lastDraggedNode
-       self.source=sourceNode
+        self.updateSource( event.source().model().lastDraggedNode)
 
 class DropPlot(QtGui.QWidget):
-   def __init__(self, parent=None):
-      QtGui.QWidget.__init__( self, parent=parent)
-      self.layout = QtGui.QVBoxLayout()
-      self.setLayout(self.layout)
+    def __init__(self, parent=None):
+        QtGui.QWidget.__init__( self, parent=parent)
+        self.setAcceptDrops(True)
+        self.layout = QtGui.QVBoxLayout()
+        self.setLayout(self.layout)
 
-      self.plotwidget = pg.PlotWidget(name='Plot1')  ## giving the plots names allows us to link their axes together
-      self.layout.addWidget(self.plotwidget)
-      
+        self.plotwidget = pg.PlotWidget(name='Plot1')  
+        self.layout.addWidget(self.plotwidget)
 
-      self.targets_area=QtGui.QWidget()
-      self.targets_layout=QtGui.QHBoxLayout()
-      self.targets_area.setLayout(self.targets_layout)
-      self.targets=[]
-      self.targets.append(DropTarget("data1", self))
-      self.targets.append(DropTarget("data2", self))
-      self.targets.append(DropTarget("data3", self))
-      for t in self.targets:
-          self.targets_layout.addWidget(t)
-      self.layout.addWidget(self.targets_area)
-      self.t = QtCore.QTimer()
-      self.t.timeout.connect(self.updatePlot)
-      self.t.start(40)
 
-   def updateSource(self, source):
+        self.targets_area=QtGui.QWidget()
+        self.targets_layout=QtGui.QHBoxLayout()
+        
+        self.targets_area.setLayout(self.targets_layout)
+
+        self.targets=[]
+        self.layout.addWidget(self.targets_area)
+        self.t = QtCore.QTimer()
+        self.t.timeout.connect(self.updatePlot)
+        self.t.start(40)
+    
+    def sizeHint(self):
+        return QtCore.QSize(500, 500)
+        
+    def removeTarget(self,  target):
+        self.plotwidget.removeItem(target.curve)
+        self.targets_layout.removeWidget(target)
+        target.deleteLater()
+        self.targets.remove(target)
+        
+    def updateSource(self, source):
       self.source=source
 
-   def updatePlot(self):
+    def updatePlot(self):
       for t in self.targets:
          source=t.source
          if source!=None:
             if t.curve==None:
-               t.curve=self.plotwidget.plot()
+               t.curve=self.plotwidget.plot(pen=pg.mkPen(t.color))
             if isinstance(source.content(), list):
                t.curve.setData(y=source.content(), x=[i for i in range(0, len(source.content()))]) 
             else:
                t.curve.setData(y=source.trace, x=[i for i in range(0, len(source.trace))]) 
               
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasFormat('application/x-mavplot'):
+            event.accept()
+        else:
+            event.ignore() 
+
+    def dropEvent(self, event):
+        sourceTarget=DropTarget("data", self,  color=pg.intColor(len(self.targets)))
+        sourceTarget.updateSource(event.source().model().lastDraggedNode)
+        self.targets.append(sourceTarget)
+        self.targets_layout.addWidget(sourceTarget)
+        print "dropped on plot!"
 
 
+class MainWindow(QtGui.QMainWindow):
+    def __init__(self):
+        QtGui.QMainWindow.__init__(self)
+        
+        messageTreeView=MessageTreeView()
+        self.updater=Update_Thread(messageTreeView)
 
-def main_simple():
-   app = QtGui.QApplication(sys.argv)
+        self.setWindowTitle('MavLink viewer')
+        self.resize(500,900)
+        cw = QtGui.QWidget()
+        self.setCentralWidget(cw)
+        self.l = QtGui.QGridLayout()
+        self.setCentralWidget(cw)
+        cw.setLayout(self.l)
+        
+
+        
+        self.l.addWidget(messageTreeView.treeView,  0,  0)   
+        self.addButton=QtGui.QPushButton("add plot")
+        self.connect(self.addButton,  QtCore.SIGNAL("clicked()"),  self.addPlot)
+        
+        self.l.addWidget(self.addButton)
+        #self.addPlot()
+        #self.addPlot()
+        
+        self.show()
+        
+    def addPlot(self):
+        print "clicked"
+        pw1 = DropPlot() 
+        #self.l.addWidget(pw1,  0,  1)
+        dock1=QtGui.QDockWidget("plot",  self)
+        dock1.setWidget(pw1)
+        dock1.setFloating(True)
+        dock1.setAllowedAreas(QtCore.Qt.NoDockWidgetArea)
+        self.addDockWidget(QtCore.Qt.NoDockWidgetArea,  dock1)
+        dock1.show()
+        
 
 
-   messageTreeView=MessageTreeView()
-
-   updater=Update_Thread(messageTreeView)
-
-   mw = QtGui.QMainWindow()
-   mw.setWindowTitle('pyqtgraph example: PlotWidget')
-   mw.resize(800,800)
-   cw = QtGui.QWidget()
-   mw.setCentralWidget(cw)
-   l = QtGui.QHBoxLayout()
-
-   cw.setLayout(l)
-
-   l.addWidget(messageTreeView.treeView)   
-
-   plot_area=QtGui.QWidget()
-   plot_area_layout=QtGui.QVBoxLayout()
-   plot_area.setLayout(plot_area_layout)
-   l.addWidget(plot_area)
-   
-
-
-   pw1 = DropPlot() 
-   plot_area_layout.addWidget(pw1)
-
-   pw2 = DropPlot() 
-   plot_area_layout.addWidget(pw2)
-   
-   mw.show()
-
-   app.exec_()
-   updater.running=False
-   sys.exit()
     
 if __name__ == '__main__':
-    main_simple()
+    app = QtGui.QApplication(sys.argv)
+    mw = MainWindow()
+    app.exec_()
+    mw.updater.running=False
+    sys.exit()
