@@ -110,6 +110,25 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 			receive_parameter(rec);
 		}
 		break;
+		case MAVLINK_MSG_ID_REQUEST_DATA_STREAM: {
+			mavlink_request_data_stream_t request;
+			mavlink_msg_request_data_stream_decode(&rec->msg, &request);
+			if (request.req_stream_id==255) {
+				// send full list of streams
+				int i;
+				for (i=0; i<mavlink_tasks.number_of_tasks; i++) {
+					run_task_now(&mavlink_tasks.tasks[i]);
+				}					
+			} else {
+				task_entry *task=get_task_by_id(&mavlink_tasks, request.req_stream_id);
+				if (request.start_stop) {
+					change_run_mode(task, RUN_REGULAR);
+				}else {
+					change_run_mode(task, RUN_NEVER);
+				}			
+			}			
+			break;
+		}
 		/* 
 		TODO : add other cases
 		*/

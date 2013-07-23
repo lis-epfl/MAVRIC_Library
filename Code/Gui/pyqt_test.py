@@ -22,6 +22,8 @@ class Node(object):
         self._checked = checked
         self.trace=[]
         self.max_trace_length=100
+        self.last_update=None
+        self.update_period=0
 
         if parent is not None:
             parent.addChild(self)
@@ -36,6 +38,13 @@ class Node(object):
            if len(self.trace)>self.max_trace_length:
               self.trace=self.trace[-self.max_trace_length:]
         self._content=content
+        update_time=time.time()
+        if self.last_update!=None:
+            if self.update_period==0:
+                self.update_period=(update_time-self.last_update)
+            else:
+                self.update_period=0.7*self.update_period+0.3*(update_time-self.last_update)
+        self.last_update=update_time
 
     def updateChildContent(self, child_name, content):
         if child_name in self._children.keys():
@@ -55,10 +64,8 @@ class Node(object):
         return self._checked
 
     def setChecked(self, state):
+        self.content().mavlinkReceiver.requestStream(self.content(),  state)
         self._checked = state
-
-        for c in self._children.items():
-            c[1].setChecked(state)
 
     def child(self, row):
         return self._children[sorted(self._children.keys())[row]]
@@ -79,11 +86,26 @@ class Node(object):
     def content(self):
         return self._content
 
+    def isMavlinkMessage(self):
+        return 'MAVLink_message' in [b.__name__  for b in self.content().__class__.__bases__]
+
     def displayContent(self):
+        if self.last_update!=None and (time.time()-self.last_update)>self.update_period+1.0:
+            self.update_period=0
+        
         if isinstance(self._content, str) or isinstance(self._content, int) or isinstance(self._content, float):
            return str(self._content)
-        else:
-           return "..."
+        if self.isMavlinkMessage():
+            if self.update_period==0:
+                self._checked=False
+                return "inactive"
+            else:
+                self._checked=True
+                return "{:4.1f} Hz".format(1.0/self.update_period)
+
+        return "?"
+
+
 
 class TreeModel(QtCore.QAbstractItemModel):
 
@@ -118,7 +140,7 @@ class TreeModel(QtCore.QAbstractItemModel):
             if index.column() == 1:
                 return node.displayContent()
                 
-        if role == QtCore.Qt.CheckStateRole and index.column()==0:
+        if role == QtCore.Qt.CheckStateRole and self.isMavlinkMessage(index) and index.column()==0:
             if node.checked():
                 return QtCore.Qt.Checked
             else:
@@ -146,9 +168,16 @@ class TreeModel(QtCore.QAbstractItemModel):
         if role == QtCore.Qt.DisplayRole:
             return "Nodes"
 
+    def isMavlinkMessage(self,  index):
+        return 'MAVLink_message' in [b.__name__  for b in index.internalPointer().content().__class__.__bases__]
+
     def flags(self, index):
-        if index.column()==0:
-           return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable
+        if  index.isValid() and index.column()==0:
+            if self.isMavlinkMessage(index):
+                return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable
+            else:
+                return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsDragEnabled 
+
         else:
            return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsDragEnabled |  QtCore.Qt.ItemIsDropEnabled
 

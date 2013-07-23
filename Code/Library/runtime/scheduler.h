@@ -65,4 +65,6 @@ task_entry* get_task_by_id(task_set *ts, uint16_t task_id);
 
 void change_run_mode(task_entry *te, task_run_mode_t new_run_mode);
 
+void run_task_now(task_entry *te);
+
 #endif /* SCHEDULER_H_ */
