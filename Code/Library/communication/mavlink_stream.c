@@ -75,11 +75,15 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 	uint8_t byte;
 	//dbg_print(".");
 	while(buffer_bytes_available(stream->data) > 0) {
-		//dbg_print("!");
 		byte = stream->get(stream->data);
+		dbg_print_num(byte, 16);
+		dbg_print("\t");
 		if(mavlink_parse_char(MAVLINK_COMM_0, byte, &rec->msg, &rec->status)) {
+			dbg_print("\n");
 			return 1;
 		}
+		dbg_print_num(rec->status.parse_state, 16);
+		dbg_print("\n");
 	}		
 	return 0;
 }
@@ -112,20 +116,29 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		break;
 		case MAVLINK_MSG_ID_REQUEST_DATA_STREAM: {
 			mavlink_request_data_stream_t request;
+			dbg_print("stream request:");
 			mavlink_msg_request_data_stream_decode(&rec->msg, &request);
 			if (request.req_stream_id==255) {
-				// send full list of streams
 				int i;
+				dbg_print("send all\n");
+				// send full list of streams
 				for (i=0; i<mavlink_tasks.number_of_tasks; i++) {
 					run_task_now(&mavlink_tasks.tasks[i]);
 				}					
 			} else {
 				task_entry *task=get_task_by_id(&mavlink_tasks, request.req_stream_id);
+				dbg_print(" stream="); dbg_print_num(request.req_stream_id, 10);
+				dbg_print(" start_stop=");dbg_print_num(request.start_stop, 10);
+				dbg_print(" rate=");dbg_print_num(request.req_message_rate,10);
+				dbg_print("\n");
 				if (request.start_stop) {
 					change_run_mode(task, RUN_REGULAR);
 				}else {
 					change_run_mode(task, RUN_NEVER);
-				}			
+				}
+				if (request.req_message_rate>0) {
+					change_task_period(task, SCHEDULER_TIMEBASE/(uint32_t)request.req_message_rate);
+				}
 			}			
 			break;
 		}

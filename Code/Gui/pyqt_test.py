@@ -90,7 +90,7 @@ class Node(object):
         return 'MAVLink_message' in [b.__name__  for b in self.content().__class__.__bases__]
 
     def displayContent(self):
-        if self.last_update!=None and (time.time()-self.last_update)>self.update_period+1.0:
+        if self.last_update!=None and (time.time()-self.last_update)>2.0*self.update_period+0.3:
             self.update_period=0
         
         if isinstance(self._content, str) or isinstance(self._content, int) or isinstance(self._content, float):
@@ -155,6 +155,11 @@ class TreeModel(QtCore.QAbstractItemModel):
                 self.dataChanged.emit(index, index)               
                 self.emitDataChangedForChildren(index)
                 return True
+            if role == QtCore.Qt.EditRole:
+                stream=index.internalPointer().content()
+                mav=stream.mavlinkReceiver
+                mav.requestStream(stream,  True,  int(value.toString()))
+                print "edit",  value.toString()
         return False
         
     def emitDataChangedForChildren(self, index):
@@ -166,20 +171,28 @@ class TreeModel(QtCore.QAbstractItemModel):
                 
     def headerData(self, section, orientation, role):
         if role == QtCore.Qt.DisplayRole:
-            return "Nodes"
+            if  section==0:
+                return "Nodes"
+            else:
+                return "Values"
 
     def isMavlinkMessage(self,  index):
         return 'MAVLink_message' in [b.__name__  for b in index.internalPointer().content().__class__.__bases__]
 
     def flags(self, index):
-        if  index.isValid() and index.column()==0:
-            if self.isMavlinkMessage(index):
-                return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable
+        if not index.isValid(): return 0
+        if self.isMavlinkMessage(index):
+            if  index.column()==0:
+                return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsUserCheckable
+            elif index.column()==1: # frequency display
+                return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsUserCheckable |QtCore.Qt.ItemIsEditable
             else:
                 return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsDragEnabled 
-
         else:
-           return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsDragEnabled |  QtCore.Qt.ItemIsDropEnabled
+            if  index.column()==0:
+                return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsDragEnabled | QtCore.Qt.ItemIsUserCheckable
+            else:
+                return QtCore.Qt.ItemIsEnabled | QtCore.Qt.ItemIsSelectable |  QtCore.Qt.ItemIsDragEnabled |  QtCore.Qt.ItemIsDropEnabled
 
     def supportedDropActions(self): 
         return QtCore.Qt.CopyAction 
@@ -238,8 +251,7 @@ class TreeModel(QtCore.QAbstractItemModel):
         self.endRemoveRows()
 
         return success
-
-
+        
 
 class MessageTreeView:
     def __init__(self):
@@ -409,9 +421,11 @@ class MainWindow(QtGui.QMainWindow):
         self.setCentralWidget(cw)
         cw.setLayout(self.l)
         
-
+        self.refreshButton=QtGui.QPushButton("refresh streams")
         
-        self.l.addWidget(messageTreeView.treeView,  0,  0)   
+        self.l.addWidget(self.refreshButton, 0, 0)
+        self.connect(self.refreshButton,  QtCore.SIGNAL("clicked()"),  self.updater.mavlinkReceiver.requestAllStreams)
+        self.l.addWidget(messageTreeView.treeView,  1,  0)   
         self.addButton=QtGui.QPushButton("add plot")
         self.connect(self.addButton,  QtCore.SIGNAL("clicked()"),  self.addPlot)
         

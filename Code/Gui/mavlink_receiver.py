@@ -21,7 +21,7 @@ class MAVlinkReceiver:
 
         parser.add_option("--baudrate", dest="baudrate", type='int',
                   help="master port baud rate", default=57600)
-        parser.add_option("--device", dest="device", default="/dev/ttyUSB0", help="serial device")
+        parser.add_option("--device", dest="device", default="/dev/ttyUSB2", help="serial device")
         parser.add_option("--source-system", dest='SOURCE_SYSTEM', type='int',
                   default=255, help='MAVLink source system for this GCS')
         (opts, args) = parser.parse_args()
@@ -39,9 +39,9 @@ class MAVlinkReceiver:
         self.requestAllStreams()
 
 
-    def requestStream(self,  stream,  active):
-        
-        reqMsg=pymavlink.MAVLink_request_data_stream_message(target_system=self.master.target_system, target_component=self.master.target_component, req_stream_id=stream.get_msgId(), req_message_rate=10, start_stop=active)
+    def requestStream(self,  stream,  active,  frequency=0):
+        # request activation/deactivation of stream. If frequency is 0, it won't be changed.
+        reqMsg=pymavlink.MAVLink_request_data_stream_message(target_system=self.master.target_system, target_component=self.master.target_component, req_stream_id=stream.get_msgId(), req_message_rate=frequency, start_stop=active)
         self.master.write(reqMsg.pack(pymavlink.MAVLink(self.master.target_system,  self.master.target_component)))
         if active:
             print "activating stream",   stream.get_msgId()
@@ -50,7 +50,7 @@ class MAVlinkReceiver:
     
     def requestAllStreams(self):
         
-        reqMsg=pymavlink.MAVLink_request_data_stream_message(target_system=self.master.target_system, target_component=self.master.target_component, req_stream_id=255, req_message_rate=1, start_stop=0)
+        reqMsg=pymavlink.MAVLink_request_data_stream_message(target_system=self.master.target_system, target_component=self.master.target_component, req_stream_id=255, req_message_rate=0, start_stop=0)
         self.master.write(reqMsg.pack(pymavlink.MAVLink(self.master.target_system,  self.master.target_component)))
 
     def wait_message(self):

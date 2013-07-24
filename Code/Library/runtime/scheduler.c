@@ -118,6 +118,12 @@ void change_run_mode(task_entry *te, task_run_mode_t new_run_mode) {
 	te->run_mode=new_run_mode;
 }
 
+void change_task_period(task_entry *te, unsigned long repeat_period) {
+	te->repeat_period=repeat_period;
+	change_run_mode(te, RUN_REGULAR);
+	run_task_now(te);
+}
+
 void run_task_now(task_entry *te) {
 	if (te->run_mode==RUN_NEVER) te->run_mode=RUN_ONCE;
 	te->next_run=GET_TIME;

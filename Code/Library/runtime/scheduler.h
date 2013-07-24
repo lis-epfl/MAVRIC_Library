@@ -10,6 +10,7 @@
 #define SCHEDULER_H_
 #include <asf.h>
 #define GET_TIME get_micros()
+#define SCHEDULER_TIMEBASE 1000000
 
 #define SCHEDULER_PROFILING
 
@@ -64,6 +65,7 @@ int run_scheduler_update(task_set *ts, uint8_t schedule_strategy);
 task_entry* get_task_by_id(task_set *ts, uint16_t task_id);
 
 void change_run_mode(task_entry *te, task_run_mode_t new_run_mode);
+void change_task_period(task_entry *te, unsigned long repeat_period);
 
 void run_task_now(task_entry *te);
 
