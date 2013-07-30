@@ -70,6 +70,7 @@ void init_stabilisation() {
 	board->mav_mode = MAV_MODE_PREFLIGHT;
 	init_rate_stabilisation(&rate_stabiliser);
 	init_angle_stabilisation(&attitude_stabiliser);
+	board->controls.thrust = MIN_THRUST;
 }
 
 void stabilise(Stabiliser_t *stabiliser, float *rpy_sensor_values, Control_Command_t *control_input) {
