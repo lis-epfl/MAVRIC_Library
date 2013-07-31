@@ -16,12 +16,12 @@ board_hardware_t *board;
 
 mavlink_send_heartbeat() {
 	board_hardware_t *board=get_board_hardware();
-	if (board->controls.run_mode==MOTORS_OFF) {
-		mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_DISARMED, 0, MAV_STATE_STANDBY);
-	}else {
-		mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_ACTIVE);
-	}
-	
+	//if (board->controls.run_mode==MOTORS_OFF) {
+		//mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_DISARMED, 0, MAV_STATE_STANDBY);
+	//}else {
+		//mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_ACTIVE);
+	//}
+	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, board->mav_mode, 0, board->mav_state);
 }	
 
 
@@ -101,14 +101,25 @@ void mavlink_send_global_position() {
 
 //	mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, board->imu1.attitude.om[2]);
 
-	
-	//mavlink_msg_global_position_int_send(MAVLINK_COMM_0, 0, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, board->imu1.attitude.om[2]);
-	mavlink_msg_global_position_int_send(MAVLINK_COMM_0, board->GPS_data.timeLastMsg, board->GPS_data.latitude, board->GPS_data.longitude, board->GPS_data.altitude, 1, board->GPS_data.northSpeed, board->GPS_data.eastSpeed, board->GPS_data.verticalSpeed, board->GPS_data.course);
+   if (board->GPS_data.status == GPS_OK)
+   {
+	   // board->GPS_data.timeLastMsg
+	   mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis() , board->GPS_data.latitude, board->GPS_data.longitude, board->GPS_data.altitude, 1, board->GPS_data.northSpeed, board->GPS_data.eastSpeed, board->GPS_data.verticalSpeed, board->GPS_data.course);
+   }else{
+	   mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, board->imu1.attitude.om[2]);
+   }   
 }
 
 void mavlink_send_gps_raw() {	
 	// mavlink_msg_gps_raw_int_send(mavlink_channel_t chan, uint64_t time_usec, uint8_t fix_type, int32_t lat, int32_t lon, int32_t alt, uint16_t eph, uint16_t epv, uint16_t vel, uint16_t cog, uint8_t satellites_visible)
-	mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0,board->GPS_data.timeLastMsg, board->GPS_data.status, board->GPS_data.latitude, board->GPS_data.longitude, board->GPS_data.altitude, board->GPS_data.hdop, board->GPS_data.speedAccuracy ,board->GPS_data.groundSpeed, board->GPS_data.course, board->GPS_data.num_sats);	
+	if (board->GPS_data.status == GPS_OK)
+	{
+		mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0,get_millis(), board->GPS_data.status, board->GPS_data.latitude, board->GPS_data.longitude, board->GPS_data.altitude, board->GPS_data.hdop, board->GPS_data.speedAccuracy ,board->GPS_data.groundSpeed, board->GPS_data.course, board->GPS_data.num_sats);	
+	}else{
+		mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0,get_millis(), board->GPS_data.status, 46.5193*10000000, 6.56507*10000000, 400, 0, 0 , 0, 0, board->GPS_data.num_sats);
+	}
+	
+	
 }
 
 

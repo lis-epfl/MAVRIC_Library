@@ -11,11 +11,14 @@
 #include "buffer.h"
 #include "onboard_parameters.h"
 #include "print_util.h"
+#include "boardsupport.h"
+#include "waypoint_navigation.h"
 
 byte_stream_t* mavlink_out_stream;
 byte_stream_t* mavlink_in_stream;
 Buffer_t mavlink_in_buffer;
 
+board_hardware_t* board;
 
 NEW_TASK_SET (mavlink_tasks, 20)
 
@@ -48,13 +51,19 @@ void mavlink_receive_handler() {
 void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream) {
 	mavlink_system.sysid = 154; // System ID, 1-255
 	mavlink_system.compid = 50; // Component/Subsystem ID, 1-255
+	mavlink_system.type = MAV_TYPE_QUADROTOR;
+	
+	mavlink_mission_planner.sysid = mavlink_system.sysid;
+	mavlink_mission_planner.compid = MAV_COMP_ID_MISSIONPLANNER;
+	mavlink_mission_planner.type = MAV_TYPE_QUADROTOR;
+	
 	mavlink_out_stream = transmit_stream;
 	mavlink_in_stream = receive_stream;
 	make_buffered_stream(&mavlink_in_buffer, mavlink_in_stream);
 	init_scheduler(&mavlink_tasks);
 	
 	add_task(&mavlink_tasks, 500000, RUN_REGULAR, &send_scheduled_parameters, MAVLINK_MSG_ID_PARAM_VALUE);
-	
+	board = get_board_hardware();
 }
 
 task_return_t mavlink_protocol_update() {
@@ -90,7 +99,7 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 
 void handle_mavlink_message(Mavlink_Received_t* rec) {
 	switch(rec->msg.msgid) {
-		case MAVLINK_MSG_ID_PARAM_REQUEST_LIST: {
+		case MAVLINK_MSG_ID_PARAM_REQUEST_LIST: { // 21
 			mavlink_param_request_list_t request;
 			mavlink_msg_param_request_list_decode(&rec->msg, &request);
 			// Check if this message is for this system
@@ -99,7 +108,7 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 			}				
 		}
 		break;
-		case MAVLINK_MSG_ID_PARAM_REQUEST_READ: {
+		case MAVLINK_MSG_ID_PARAM_REQUEST_READ: { //20
 			mavlink_param_request_read_t request;
 			mavlink_msg_param_request_read_decode(&rec->msg, &request);
 			// Check if this message is for this system and subsystem
@@ -110,11 +119,50 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 			}				
 		}
 		break;
-		case MAVLINK_MSG_ID_PARAM_SET: {
+		case MAVLINK_MSG_ID_PARAM_SET: { //23
 			receive_parameter(rec);
 		}
 		break;
-		case MAVLINK_MSG_ID_REQUEST_DATA_STREAM: {
+		case MAVLINK_MSG_ID_MISSION_ITEM: { // 39
+			receive_waypoint(rec,&board->waypoint_list,board->number_of_waypoints);
+			dbg_print("receive waypoint \n");
+		}
+		break;
+		case MAVLINK_MSG_ID_MISSION_REQUEST : { // 40
+			send_waypoint(rec,board->waypoint_list);
+			dbg_print("send waypoint\n");
+		}
+		break;
+		case MAVLINK_MSG_ID_MISSION_SET_CURRENT : { // 41
+			set_current_wp(rec,&board->waypoint_list);
+			dbg_print("set current waypoint\n");
+		}
+		break;
+		case MAVLINK_MSG_ID_MISSION_REQUEST_LIST: { // 43
+			send_count(rec,board->number_of_waypoints);
+			dbg_print("send count waypoint\n");
+		}
+		break;
+		case MAVLINK_MSG_ID_MISSION_COUNT : { // 44
+			receive_count(rec,&board->number_of_waypoints);
+			dbg_print("receive count, num of waypoints:");
+			dbg_print_num(board->number_of_waypoints,10);
+			dbg_print("\n");
+		}
+		break;
+		case MAVLINK_MSG_ID_MISSION_CLEAR_ALL : { // 45
+			clear_waypoint_list(rec,&board->waypoint_list);
+		}
+		break;
+		case MAVLINK_MSG_ID_MISSION_ACK : { // 47
+			receive_ack_msg(rec);
+		}
+		break;
+		case MAVLINK_MSG_ID_SET_MODE : { // 11
+			//set_mav_mode(rec);
+		}
+		break;
+		case MAVLINK_MSG_ID_REQUEST_DATA_STREAM: { // 66
 			mavlink_request_data_stream_t request;
 			dbg_print("stream request:");
 			mavlink_msg_request_data_stream_decode(&rec->msg, &request);

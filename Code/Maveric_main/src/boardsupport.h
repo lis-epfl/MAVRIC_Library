@@ -28,6 +28,7 @@
 #include "servo_pwm.h"
 
 #include "gps_ublox.h"
+#include "waypoint_navigation.h"
 #include "estimator.h"
 
 static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
@@ -51,6 +52,11 @@ typedef struct  {
 	byte_stream_t *telemetry_down_stream, *telemetry_up_stream;
 	byte_stream_t *debug_out_stream, *debug_in_stream;	
 	
+	waypoint_struct waypoint_list[MAX_WAYPOINTS];
+	uint16_t number_of_waypoints;
+	
+	uint8_t mav_mode;
+	uint8_t mav_state;
 	
 } board_hardware_t;
 
