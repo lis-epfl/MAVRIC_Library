@@ -21,7 +21,7 @@ class MAVlinkReceiver:
 
         parser.add_option("--baudrate", dest="baudrate", type='int',
                   help="master port baud rate", default=57600)
-        parser.add_option("--device", dest="device", default="/dev/ttyUSB2", help="serial device")
+        parser.add_option("--device", dest="device", default="/dev/ttyUSB1", help="serial device")
         parser.add_option("--source-system", dest='SOURCE_SYSTEM', type='int',
                   default=255, help='MAVLink source system for this GCS')
         (opts, args) = parser.parse_args()
@@ -35,7 +35,7 @@ class MAVlinkReceiver:
         self.msg=None;
         self.messages=dict();
         self.earthserver=GoogleEarthServer()
-        self.earthserver.run()
+        #self.earthserver.run()
         self.requestAllStreams()
 
 

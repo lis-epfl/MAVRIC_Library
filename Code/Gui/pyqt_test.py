@@ -90,7 +90,7 @@ class Node(object):
         return 'MAVLink_message' in [b.__name__  for b in self.content().__class__.__bases__]
 
     def displayContent(self):
-        if self.last_update!=None and (time.time()-self.last_update)>2.0*self.update_period+0.3:
+        if self.last_update!=None and (time.time()-self.last_update)>min(1.5,  2.0*self.update_period+0.3):
             self.update_period=0
         
         if isinstance(self._content, str) or isinstance(self._content, int) or isinstance(self._content, float):
@@ -298,7 +298,7 @@ class Update_Thread():
                 field.updateChildContent(i, content[i])
        #self._treeViewInstance.treeView.update()
 
-       if time.time()>self.lastTreeUpdate+1/self.treeUpdateFrequency:
+       if time.time()>self.lastTreeUpdate+1/(self.treeUpdateFrequency):
           self._treeViewInstance.model.layoutChanged.emit()
           self.lastTreeUpdate=time.time()
 
