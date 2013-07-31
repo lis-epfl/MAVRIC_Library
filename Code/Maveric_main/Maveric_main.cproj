@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectVersion>6.1</ProjectVersion>
+    <ProjectVersion>6.0</ProjectVersion>
     <ProjectGuid>{5c41308d-f714-42b2-8fea-988a47ee06ad}</ProjectGuid>
     <avrdevice>AT32UC3C1512C</avrdevice>
     <avrdeviceseries>uc3c</avrdeviceseries>
@@ -68,7 +68,7 @@
         </InterfaceProperties>
       </ToolOptions>
     </com_atmel_avrdbg_tool_avrdragon>
-    <ToolchainName>com.Atmel.AVRGCC32.C</ToolchainName>
+    <ToolchainName>com.Atmel.AVRGCC32</ToolchainName>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <AsfFrameworkConfig>
       <framework-data>
@@ -219,29 +219,30 @@
           <file path="src/asf/avr32/drivers/ast/ast.h" framework="com.atmel.avr32.sf.uc3c" version="2.2.2" source="avr32/drivers/ast/ast.h" changed="False" content-id="Atmel.ASF" />
         </files>
         <documentation help="http://asf.atmel.com/docs/2.5.1/common/applications/user_application/user_board/doxygen/html/" />
-        <dependencies>
-          <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.3.0" />
-        </dependencies>
       </framework-data>
     </AsfFrameworkConfig>
     <AsfVersion>2.11.1</AsfVersion>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
-    <OverrideVtorValue>exception_table</OverrideVtorValue>
+    <OverrideVtorValue />
     <eraseonlaunchrule>0</eraseonlaunchrule>
     <com_atmel_avrdbg_tool_jtagicemk3>
       <ToolType>com.atmel.avrdbg.tool.jtagicemk3</ToolType>
       <ToolName>JTAGICE3</ToolName>
-      <ToolNumber>J30200015895</ToolNumber>
+      <ToolNumber>J30200014870</ToolNumber>
+      <KeepTimersRunning>true</KeepTimersRunning>
+      <OverrideVtor>false</OverrideVtor>
+      <OverrideVtorValue>
+      </OverrideVtorValue>
       <Channel>
         <host>127.0.0.1</host>
-        <port>53082</port>
+        <port>1087</port>
         <ssl>False</ssl>
       </Channel>
       <ToolOptions>
         <InterfaceName>JTAG</InterfaceName>
         <InterfaceProperties>
-          <JtagDbgClock>250000</JtagDbgClock>
+          <JtagDbgClock>7500000</JtagDbgClock>
           <JtagProgClock>1000000</JtagProgClock>
           <IspClock>150000</IspClock>
           <JtagInChain>false</JtagInChain>
@@ -253,21 +254,15 @@
         </InterfaceProperties>
       </ToolOptions>
     </com_atmel_avrdbg_tool_jtagicemk3>
-    <ProgFlashFromRam>true</ProgFlashFromRam>
-    <RamSnippetAddress>0x20000000</RamSnippetAddress>
-    <CacheFlash>true</CacheFlash>
-    <UncachedRange />
-    <BootSegment>0</BootSegment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputFileName>MegaFly2</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
     <ToolchainSettings>
-      <Avr32Gcc xmlns="">
+      <Avr32Gcc>
         <avr32gcc.common.outputfiles.hex>True</avr32gcc.common.outputfiles.hex>
         <avr32gcc.common.outputfiles.lss>True</avr32gcc.common.outputfiles.lss>
         <avr32gcc.common.outputfiles.eep>True</avr32gcc.common.outputfiles.eep>
-        <avr32gcc.common.outputfiles.srec>True</avr32gcc.common.outputfiles.srec>
         <avr32gcc.compiler.symbols.DefSymbols>
           <ListValues>
             <Value>BOARD=USER_BOARD</Value>
@@ -331,11 +326,11 @@
         <avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
         <avr32gcc.compiler.optimization.GeneratePositionIndependentCode>True</avr32gcc.compiler.optimization.GeneratePositionIndependentCode>
         <avr32gcc.compiler.warnings.AllWarnings>True</avr32gcc.compiler.warnings.AllWarnings>
-        <avr32gcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax</avr32gcc.compiler.miscellaneous.OtherFlags>
+        <avr32gcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax </avr32gcc.compiler.miscellaneous.OtherFlags>
         <avr32gcc.linker.general.DoNotUseStandardStartFiles>True</avr32gcc.linker.general.DoNotUseStandardStartFiles>
         <avr32gcc.linker.libraries.Libraries>
           <ListValues>
-            <Value>libm</Value>
+            <Value>m</Value>
           </ListValues>
         </avr32gcc.linker.libraries.Libraries>
         <avr32gcc.linker.optimization.GarbageCollectUnusedSections>True</avr32gcc.linker.optimization.GarbageCollectUnusedSections>
@@ -432,7 +427,7 @@
     <OutputFileName>MegaFly2</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
     <ToolchainSettings>
-      <Avr32Gcc xmlns="">
+      <Avr32Gcc>
         <avr32gcc.common.outputfiles.hex>True</avr32gcc.common.outputfiles.hex>
         <avr32gcc.common.outputfiles.lss>True</avr32gcc.common.outputfiles.lss>
         <avr32gcc.common.outputfiles.eep>True</avr32gcc.common.outputfiles.eep>
@@ -507,7 +502,7 @@
         <avr32gcc.linker.general.DoNotUseStandardStartFiles>True</avr32gcc.linker.general.DoNotUseStandardStartFiles>
         <avr32gcc.linker.libraries.Libraries>
           <ListValues>
-            <Value>libm</Value>
+            <Value>m</Value>
           </ListValues>
         </avr32gcc.linker.libraries.Libraries>
         <avr32gcc.linker.optimization.GarbageCollectUnusedSections>True</avr32gcc.linker.optimization.GarbageCollectUnusedSections>
@@ -1049,9 +1044,6 @@
     <Compile Include="Library\runtime\time_keeper.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\sensing\waypoint_navigation.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\sensing\gps_ublox.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1068,6 +1060,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\sensing\qfilter.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\sensing\waypoint_navigation.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\sensing\waypoint_navigation.h">

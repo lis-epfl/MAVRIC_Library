@@ -91,13 +91,15 @@ dacifb_opt_t dacifb_opt = {
                             .channel_selection          = DAC_AUDIO_CHANNEL,     // Selection Channels A&B
                             .low_power                  = false,                          // Low Power Mode     
                             .dual                       = false,                          // Dual Mode
-                            .prescaler_clock_hz         = DAC_PRESCALER_CLOCK             // Prescaler Clock (Should be 500Khz)                              
+                            .prescaler_clock_hz         = DAC_PRESCALER_CLOCK,             // Prescaler Clock (Should be 500Khz)             
+							.offset_calibration_value   = 0,
+							.gain_calibration_value     = 1                 
 };
 
 // DACIFB Channel Configuration
 dacifb_channel_opt_t dacifb_channel_opt = {
-                                                .auto_refresh_mode    = false,                      // Auto Refresh Mode 
-                                                .trigger_mode         = trigger_mode, // Trigger selection
+                                                .auto_refresh_mode    = true,                       // Auto Refresh Mode 
+                                                .trigger_mode         = trigger_mode,               // Trigger selection
                                                 .left_adjustment      = false,                      // Right Adjustment
                                                 .data_shift           = 0,                          // Number of Data Shift 
                                                 .data_round_enable    = false                       // Data Rouding Mode                                              };
@@ -107,9 +109,7 @@ dacifb_channel_opt_t dacifb_channel_opt = {
   gpio_enable_module(DACIFB_GPIO_MAP, sizeof(DACIFB_GPIO_MAP) / sizeof(DACIFB_GPIO_MAP[0]));
 
   // Get DACIFB Factory Configuration
- // dacifb_get_calibration_data(dacifb, 
- //                             &dacifb_opt,
- //                             DAC_AUDIO_INSTANCE);
+  //dacifb_get_calibration_data(dacifb, &dacifb_opt, DAC_AUDIO_INSTANCE);
                               
   // configure DACIFB
   if (dacifb_configure(dacifb,

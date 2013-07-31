@@ -22,7 +22,7 @@ void init_rate_stabilisation(Stabiliser_t *stabiliser) {
 	int i=0;
 	// initialise roll and pitch controllers
 	for (i=0; i<2; i++) {
-		(stabiliser->rpy_controller[i]).p_gain=0.065;
+		(stabiliser->rpy_controller[i]).p_gain=0.165;
 		(stabiliser->rpy_controller[i]).last_update=get_time_ticks();	
 		(stabiliser->rpy_controller[i]).clip_min=-0.9;
 		(stabiliser->rpy_controller[i]).clip_max= 0.9;
@@ -65,12 +65,10 @@ void init_angle_stabilisation(Stabiliser_t *stabiliser) {
 
 void init_stabilisation() {
 	board=get_board_hardware();
-	board->controls.run_mode = MOTORS_OFF;
-	board->controls.control_mode = ATTITUDE_COMMAND_MODE;
-	board->mav_mode = MAV_MODE_PREFLIGHT;
+	board->controls.run_mode=MOTORS_OFF;
+	board->controls.control_mode=ATTITUDE_COMMAND_MODE;
 	init_rate_stabilisation(&rate_stabiliser);
 	init_angle_stabilisation(&attitude_stabiliser);
-	board->controls.thrust = MIN_THRUST;
 }
 
 void stabilise(Stabiliser_t *stabiliser, float *rpy_sensor_values, Control_Command_t *control_input) {

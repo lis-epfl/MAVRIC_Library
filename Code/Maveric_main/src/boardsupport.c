@@ -12,6 +12,7 @@ static volatile board_hardware_t board_hardware;
 board_hardware_t* initialise_board() {
 		init_UART_int(0);
 		register_write_stream(get_UART_handle(0), &board_hardware.xbee_out_stream);
+				
 		
 		init_UART_int(3);
 		make_buffered_stream(&(board_hardware.gps_buffer), &board_hardware.gps_stream_in);
@@ -19,21 +20,39 @@ board_hardware_t* initialise_board() {
 		register_write_stream(get_UART_handle(3), &board_hardware.gps_stream_out);
 		
 		init_UART_int(4);
-		register_write_stream(get_UART_handle(4), &board_hardware.debug_stream);
 
+		register_write_stream(get_UART_handle(4), &board_hardware.wired_out_stream);
+		
+		// connect abstracted aliases to hardware ports
+
+
+		board_hardware.telemetry_down_stream=&board_hardware.xbee_out_stream;
+		board_hardware.telemetry_up_stream=&board_hardware.xbee_in_stream;
+		board_hardware.debug_out_stream=&board_hardware.wired_out_stream;
+		board_hardware.debug_in_stream=&board_hardware.wired_in_stream;
+/*
+		board_hardware.telemetry_down_stream=&board_hardware.wired_out_stream;
+		board_hardware.telemetry_up_stream  =&board_hardware.wired_in_stream;		
+		board_hardware.debug_out_stream     =&board_hardware.xbee_out_stream;
+		board_hardware.debug_in_stream      =&board_hardware.xbee_in_stream;
+*/
+
+
+		
 		// init mavlink
-		init_mavlink(&board_hardware.xbee_out_stream, &board_hardware.xbee_in_stream);
+		init_mavlink(board_hardware.telemetry_down_stream, board_hardware.telemetry_up_stream);
+		
+		register_read_stream(get_UART_handle(4), &board_hardware.wired_in_stream);
 		register_read_stream(get_UART_handle(0), &board_hardware.xbee_in_stream);
 		
-		
-		dbg_print_init(&board_hardware.debug_stream);
+
+		// init debug output
+		dbg_print_init(board_hardware.debug_out_stream);
 		
 		init_imu(&board_hardware.imu1);
 
 		spektrum_init();
 		init_Servos();
-		board_hardware.telemetry_down_stream= &board_hardware.xbee_out_stream;
-		board_hardware.telemetry_up_stream= &board_hardware.xbee_in_stream;
 		
 		
 		board_hardware.controls.rpy[ROLL]=0;
@@ -56,7 +75,7 @@ byte_stream_t* get_telemetry_downstream() {
 	return board_hardware.telemetry_down_stream;
 }
 byte_stream_t* get_debug_stream() {
-	return &board_hardware.debug_stream;
+	return board_hardware.debug_out_stream;
 }
 
 Imu_Data_t* get_imu() {
