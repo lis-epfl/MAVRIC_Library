@@ -25,7 +25,7 @@ All rights reserved (2011).
 #  define DAC_AUDIO_FUNCTION            AVR32_DAC0A_PIN
 #  define PDCA_CHANNEL_DAC              4
 #  define AVR32_PDCA_PID_DAC_TX         AVR32_PDCA_PID_DACIFB0_CHA_TX
-#  define DAC_PRESCALER_CLOCK           5000000
+#  define DAC_PRESCALER_CLOCK           2000000
 
 
 

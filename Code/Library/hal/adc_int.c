@@ -6,8 +6,6 @@
 
 #include "adcifa.h"
 
-#include "dac_dma.h"
-
 #define ADC_INT_SEOS0 1
 #define ADC_INT_SEOS1 16
 #define ADC_INT_SEOC0 2
@@ -33,8 +31,7 @@
 	//32bits version
 	//int32_t adci_buffer[ADCI_INPUT_CHANNELS][ADCI_BUFFER_SIZE];
 	//16bits version
-	int16_t adci_buffer[ADCI_INPUT_CHANNELS][2][ADCI_BUFFER_SIZE];
-	uint8_t even_odd;
+	int16_t adci_buffer[ADCI_INPUT_CHANNELS][ADCI_BUFFER_SIZE];
 	
 
 			// ADC Configuration
@@ -64,23 +61,23 @@
 				{
 					.channel_p = RADAR_0_I_INP,   // Positive Channel
 					.channel_n = RADAR_0_I_INN,   // Negative Channel
-					.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+					.gain      = ADCIFA_SHG_4                     // Gain of the conversion
 				},
 				{
 					.channel_p = RADAR_0_Q_INP,             // Positive Channel
 					.channel_n = RADAR_0_Q_INN,             // Negative Channel
-					.gain      = ADCIFA_SHG_1               // Gain of the conversion
+					.gain      = ADCIFA_SHG_4               // Gain of the conversion
 				},
 
 				{
 					.channel_p = RADAR_1_I_INP,   // Positive Channel
 					.channel_n = RADAR_1_I_INN,   // Negative Channel
-					.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+					.gain      = ADCIFA_SHG_4                     // Gain of the conversion
 				},
 				{
 					.channel_p = RADAR_1_Q_INP,             // Positive Channel
 					.channel_n = RADAR_1_Q_INN,             // Negative Channel
-					.gain      = ADCIFA_SHG_1                     // Gain of the conversion
+					.gain      = ADCIFA_SHG_4                     // Gain of the conversion
 				}
 
 			};
@@ -105,46 +102,36 @@ __attribute__((__interrupt__))
 static void processData() {
 	int ch;
 	int16_t value;
-
 	if (sample_counter>=ADCI_BUFFER_SIZE)  {
 		adcifa_disable_interrupt(adcifa, ADC_INT_SEOS0);
 		//adcifa_disable_interrupt(adcifa, ADC_INT_SEOS1);
 		adcifa_stop_itimer(adcifa);
 		return;
 	}
-	
-
 	if (((adcifa->sr&ADC_INT_SEOS0) ==0) 
 	//|| ((adcifa->sr&ADC_INT_SEOS1) ==0) 
 	) {return;};
 		
-	if (sample_counter>=0) {
-
-		for (ch=0; ch<4; ch++) {
-			value=adcifa->resx[ch];
-			if (oversampling_counter<=2) {
-				//adci_buffer[ch][sample_counter] = (int32_t)value ;
-				adci_buffer[ch][even_odd][sample_counter]=value;
-			}else {			
-				//adci_buffer[ch][sample_counter] += (int32_t)value ;
-				adci_buffer[ch][even_odd][sample_counter]+=value;
-			}			
+	for (ch=0; ch<4; ch++) {
+		value=adcifa->resx[ch];
+		if (oversampling_counter==0) {
+			//adci_buffer[ch][sample_counter] = (int32_t)value ;
+			adci_buffer[ch][sample_counter]=value;
+		}else {			
+			//adci_buffer[ch][sample_counter] += (int32_t)value ;
+			adci_buffer[ch][sample_counter]+=value;
+		}			
 		
-		}
-	}	
+	}
+	
 	//if (function_generator!=NULL) {
 	//	DAC_set_value((*function_generator)(sampleCounter));
 	//}
 	oversampling_counter++;
 	if (oversampling_counter>= OVERSAMPLING) {
 		oversampling_counter=0;
-		even_odd=(even_odd+1)%2;
-		if (even_odd==0) {
-			sample_counter++;
-		}		
-	
+		sample_counter++;
 	}		
-	DAC_set_value(even_odd*400);
 	// acknowledge processing finished
 	//adcifa->scr=ADC_INT_SEOS0 | ADC_INT_SEOS1;
 }
@@ -187,8 +174,7 @@ void ADCI_Start_Oneshot(int samplingrate){
 	
 	int period_us=ADC_FREQUENCY/(samplingrate*OVERSAMPLING);	
 	oversampling_counter=0;
-	sample_counter=-10;
-	even_odd=0;
+	sample_counter=0;
 	
 	adcifa_enable_interrupt(adcifa, ADC_INT_SEOS0);
 	//adcifa_enable_interrupt(adcifa, ADC_INT_SEOS1);
@@ -214,14 +200,10 @@ Bool ADCI_Sampling_Complete(){
 	
 //}
 
-int16_t ADCI_get_sample(int channel, int even_odd, int sample) {
-	return adci_buffer[channel][even_odd][sample]/OVERSAMPLING_DIVIDER;
+float ADCI_get_sample(int channel, int sample) {
+	return adci_buffer[channel][sample];
 }
 
-int16_t* ADCI_get_buffer(int channel,int even_odd) {
-	return adci_buffer[channel][even_odd];
-}
-	
 int ADCI_get_sampling_status() {
 	return sample_counter;
 }

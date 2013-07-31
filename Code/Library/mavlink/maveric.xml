@@ -1356,7 +1356,7 @@
                <field type="uint8_t" name="target_system">The target requested to send the message stream.</field>
                <field type="uint8_t" name="target_component">The target requested to send the message stream.</field>
                <field type="uint8_t" name="req_stream_id">The ID of the requested data stream</field>
-               <field type="uint16_t" name="req_message_rate">The requested interval between two messages of this type in ms</field>
+               <field type="uint16_t" name="req_message_rate">The requested interval between two messages of this type</field>
                <field type="uint8_t" name="start_stop">1 to start sending, 0 to stop sending.</field>
           </message>
           <message id="67" name="DATA_STREAM">
@@ -1618,7 +1618,7 @@
           </message>
           
           <message id="150" name="RADAR_TRACKED_TARGET">
-               <description>Simple single-target output of a doppler radar</description>
+               <description>Simple single-targed output of a doppler radar</description>
                <field type="uint32_t" name="time_boot_ms">Timestamp (milliseconds since system boot)</field>
                <field type="uint8_t" name="sensor_id">Sensor ID</field>
                <field type="uint8_t" name="target_id">Temporary enumeration of target</field>
@@ -1628,7 +1628,7 @@
           </message>
           
           <message id="151" name="RADAR_VELOCITY_HIST">
-               <description>Full output histogram of doppler radar velocities. Lower half are negative velocities, zero at index 32. </description>
+               <description>Full output histogram of doppler radar velocities. Lower half are negative velocities, zero at index 64. </description>
                <field type="uint32_t" name="time_boot_ms">Timestamp (milliseconds since system boot)</field>
                <field type="uint8_t" name="sensor_id">Sensor ID</field>
                <field type="uint8_t[64]" name="velocity">Velocity field</field>

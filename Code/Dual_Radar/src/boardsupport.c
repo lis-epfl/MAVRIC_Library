@@ -27,9 +27,6 @@ board_hardware_t* initialise_board() {
 		// init mavlink
 		init_mavlink(board_hardware.telemetry_down_stream, board_hardware.telemetry_up_stream);
 		
-		Init_ADCI();
-		Init_DAC(0);
-		DAC_set_value(0);
 
 		return &board_hardware;
 }

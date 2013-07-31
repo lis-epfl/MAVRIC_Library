@@ -27,9 +27,6 @@
 #include "onboard_parameters.h"
 #include "servo_pwm.h"
 
-#include "adc_int.h"
-#include "dac_dma.h"
-
 
 typedef struct  {
 	Imu_Data_t imu1;

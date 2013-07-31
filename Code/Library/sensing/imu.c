@@ -35,9 +35,9 @@ void init_imu (Imu_Data_t *imu1) {
 	imu1->raw_scale[8] =  RAW_MAG_Z_SCALE;
 	
 	//myquad
-	imu1->raw_bias[3]=19.6;
-	imu1->raw_bias[4]=1.0;
-	imu1->raw_bias[5]=-20.0;
+	imu1->raw_bias[3]=11.0;
+	imu1->raw_bias[4]=10.0;
+	imu1->raw_bias[5]=-19.0;
 	
 	//Geraud
 //	imu1->raw_bias[3]=6.0;

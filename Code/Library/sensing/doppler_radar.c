@@ -11,7 +11,6 @@
 
 #include "time_keeper.h"
 
-static volatile uint32_t even_odd2;
 
 dsp16_complex_t vect_outputI[ ADCI_BUFFER_SIZE];	// Variable pour le DSP
 dsp16_complex_t vect_outputQ[ ADCI_BUFFER_SIZE];
@@ -48,7 +47,7 @@ radar_target main_target;
 
 	uint32_t time1, time2,time_result; //time1-time2=time_result for measure
 
-	
+
 void calculate_radar() {
 	int i=0;
 	int j=0;
@@ -59,14 +58,11 @@ void calculate_radar() {
 	int32_t index=0;
 
 
-	//even_odd2++;
-	//if (even_odd2>1) even_odd2=0;
-	even_odd2=1;
+
 	////////////FFT 16 bits version
 	for(j=0;j< ADCI_BUFFER_SIZE;j++)
 	{
-		vect_inputI[j]=ADCI_get_sample(0,even_odd2,j);
-		
+		vect_inputI[j]=ADCI_get_sample(0,j);
 	}
 
 	dsp16_trans_realcomplexfft(vect_outputI,vect_inputI,10);  //WARNING !! If you change the buffer size you need to change the base 2 power size
@@ -84,8 +80,7 @@ void calculate_radar() {
 																	
 	for(j=0;j< ADCI_BUFFER_SIZE;j++)
 	{
-		vect_inputI[j]=ADCI_get_sample(1,even_odd2,j);
-
+		vect_inputI[j]=ADCI_get_sample(1,j);
 	}
 	dsp16_trans_realcomplexfft(vect_outputQ,vect_inputI,10);
 		
@@ -111,16 +106,15 @@ void calculate_radar() {
 		
 	//16bits version
 			
-	dsp16_vect_add(vect_inputQ,vect_realpow,vect_imagpow,ADCI_BUFFER_SIZE);
-	//for (i=0;i< ADCI_BUFFER_SIZE;i++)
-	//{
+	dsp16_vect_add(vect_inputI,vect_realpow,vect_imagpow,ADCI_BUFFER_SIZE);
+	for (i=0;i< ADCI_BUFFER_SIZE;i++)
+	{
 		//16bits version
-		//vect_inputQ[i]=dsp16_op_sqrt(vect_inputI[i]);	 //Here we re-use vect_inputQ as the module
-		//vect_inputQ[i]=vect_inputI[i];	 //Here we re-use vect_inputQ as the module
+		vect_inputQ[i]=dsp16_op_sqrt(vect_inputI[i]);	 //Here we re-use vect_inputQ as the module
 		//putnum(STDOUT,vect_inputQ[i],10);		//print the raw FFT buffer
 		//putstring(STDOUT,";");
 //
-	//}
+	}
 	//putstring(STDOUT,"\n");
 	//putstring(STDOUT,"\n");
 			
@@ -159,7 +153,7 @@ void calculate_radar() {
 			
 	if(index>1)
 	{
-		mean_amp=(2*vect_inputQ[index]+vect_inputQ[index+1]+vect_inputQ[index-1])/4; //Average on the three peaks in Fourier domain
+		mean_amp=(vect_inputQ[index]+vect_inputQ[index+1]+vect_inputQ[index-1])/3; //Average on the three peaks in Fourier domain
 	}
 			
 	else
@@ -294,6 +288,6 @@ radar_target* get_tracked_target() {
 	return &main_target;
 }
 
-int16_t* get_raw_FFT() {
-	return &vect_inputQ;
+int16_t* get_raw_values() {
+	return &vect_inputI;
 }

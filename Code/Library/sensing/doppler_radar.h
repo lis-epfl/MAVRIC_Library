@@ -15,7 +15,7 @@
 #include "dsp.h"
 
 
-#define THRESHOLD 100
+#define THRESHOLD 3000
 //#define Sampling_frequency 23437
 #define Sampling_frequency 15625
 #define filter_conversion 100
@@ -24,6 +24,6 @@
 void calculate_radar();
 
 radar_target* get_tracked_target();
-int16_t* get_raw_FFT();
+int16_t* get_raw_values();
 
 #endif /* DOPPLER_RADAR_H_ */
