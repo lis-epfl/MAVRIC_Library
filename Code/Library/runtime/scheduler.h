@@ -10,6 +10,7 @@
 #define SCHEDULER_H_
 #include <asf.h>
 #define GET_TIME get_micros()
+#define SCHEDULER_TIMEBASE 1000000
 
 #define SCHEDULER_PROFILING
 
@@ -19,16 +20,19 @@ typedef enum task_return_t {
 	TASK_RUN_SUCCESS=1	
 }task_return_t;
 
+typedef enum task_run_mode_t {RUN_NEVER, RUN_ONCE, RUN_REGULAR} task_run_mode_t;
+
 typedef task_return_t (*function_pointer)();
 
 typedef uint8_t task_handle_t;
 
 
-typedef struct {
+typedef struct {	
 	struct task_set *tasks;	
 	function_pointer call_function;
-	
-	uint32_t repeat_period;
+	uint16_t task_id;
+	task_run_mode_t  run_mode;		
+	uint32_t repeat_period;   
 	uint32_t next_run;
 	uint32_t execution_time;
 	
@@ -49,13 +53,20 @@ typedef struct  {
 
 void init_scheduler(task_set *ts);
 
-task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_period, function_pointer *call_function);
+task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_period, task_run_mode_t run_mode, function_pointer *call_function);
 
+bool add_task(task_set *ts, unsigned long repeat_period, task_run_mode_t run_mode, function_pointer *call_function, uint32_t task_id);
+void sort_taskset_by_period(task_set *ts);
 
 enum schedule_strategy_t {ROUND_ROBIN, FIXED_PRIORITY};
 
 int run_scheduler_update(task_set *ts, uint8_t schedule_strategy);
 
+task_entry* get_task_by_id(task_set *ts, uint16_t task_id);
 
+void change_run_mode(task_entry *te, task_run_mode_t new_run_mode);
+void change_task_period(task_entry *te, unsigned long repeat_period);
+
+void run_task_now(task_entry *te);
 
 #endif /* SCHEDULER_H_ */
