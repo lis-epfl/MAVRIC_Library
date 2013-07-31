@@ -20,7 +20,7 @@ Buffer_t mavlink_in_buffer;
 
 board_hardware_t* board;
 
-NEW_TASK_SET (mavlink_tasks, 10)
+NEW_TASK_SET (mavlink_tasks, 20)
 
 void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 {
@@ -38,13 +38,11 @@ void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 void mavlink_receive_handler() {
 	Mavlink_Received_t rec;
 	if(mavlink_receive(mavlink_in_stream, &rec)) {
- 		dbg_print("\n received message with id");
- 		dbg_print_num(rec.msg.msgid, 10);
- 		dbg_print(" from system");
- 		dbg_print_num(rec.msg.sysid, 10);
-		dbg_print(" with comp id");
-		dbg_print_num(rec.msg.compid, 10);
- 		dbg_print( "\n");
+// 		dbg_print("\n Received message with ID");
+// 		dbg_print_num(rec.msg.msgid, 10);
+// 		dbg_print(" from system");
+// 		dbg_print_num(rec.msg.sysid, 10);
+// 		dbg_print( "\n");
 		
 		handle_mavlink_message(&rec);
 	}
@@ -64,15 +62,16 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream)
 	make_buffered_stream(&mavlink_in_buffer, mavlink_in_stream);
 	init_scheduler(&mavlink_tasks);
 	
-	register_task(&mavlink_tasks, 0, 10000, &mavlink_receive_handler);
+	add_task(&mavlink_tasks, 500000, RUN_REGULAR, &send_scheduled_parameters, MAVLINK_MSG_ID_PARAM_VALUE);
 	board = get_board_hardware();
 }
 
 task_return_t mavlink_protocol_update() {
+	mavlink_receive_handler();
 	if (mavlink_out_stream->buffer_empty(mavlink_out_stream->data)) {
 		run_scheduler_update(&mavlink_tasks, FIXED_PRIORITY);
-	}
-	
+	}	
+
 }
 
 task_set* get_mavlink_taskset() {
@@ -85,27 +84,42 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 	uint8_t byte;
 	//dbg_print(".");
 	while(buffer_bytes_available(stream->data) > 0) {
-		//dbg_print("!");
 		byte = stream->get(stream->data);
+		dbg_print_num(byte, 16);
+		dbg_print("\t");
 		if(mavlink_parse_char(MAVLINK_COMM_0, byte, &rec->msg, &rec->status)) {
+			dbg_print("\n");
 			return 1;
 		}
+		dbg_print_num(rec->status.parse_state, 16);
+		dbg_print("\n");
 	}		
 	return 0;
 }
 
 void handle_mavlink_message(Mavlink_Received_t* rec) {
-	
 	switch(rec->msg.msgid) {
 		case MAVLINK_MSG_ID_PARAM_REQUEST_LIST: { // 21
-			send_all_parameters(rec);
+			mavlink_param_request_list_t request;
+			mavlink_msg_param_request_list_decode(&rec->msg, &request);
+			// Check if this message is for this system
+			if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid) {
+				send_all_parameters();
+			}				
 		}
 		break;
-		case MAVLINK_MSG_ID_PARAM_REQUEST_READ: { // 20
-			send_parameter(rec);
+		case MAVLINK_MSG_ID_PARAM_REQUEST_READ: { //20
+			mavlink_param_request_read_t request;
+			mavlink_msg_param_request_read_decode(&rec->msg, &request);
+			// Check if this message is for this system and subsystem
+			if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid
+			&& (uint8_t)request.target_component == (uint8_t)mavlink_system.compid) {
+
+				send_parameter(&request);
+			}				
 		}
 		break;
-		case MAVLINK_MSG_ID_PARAM_SET: { // 23
+		case MAVLINK_MSG_ID_PARAM_SET: { //23
 			receive_parameter(rec);
 		}
 		break;
@@ -148,18 +162,37 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 			//set_mav_mode(rec);
 		}
 		break;
+		case MAVLINK_MSG_ID_REQUEST_DATA_STREAM: { // 66
+			mavlink_request_data_stream_t request;
+			dbg_print("stream request:");
+			mavlink_msg_request_data_stream_decode(&rec->msg, &request);
+			if (request.req_stream_id==255) {
+				int i;
+				dbg_print("send all\n");
+				// send full list of streams
+				for (i=0; i<mavlink_tasks.number_of_tasks; i++) {
+					run_task_now(&mavlink_tasks.tasks[i]);
+				}					
+			} else {
+				task_entry *task=get_task_by_id(&mavlink_tasks, request.req_stream_id);
+				dbg_print(" stream="); dbg_print_num(request.req_stream_id, 10);
+				dbg_print(" start_stop=");dbg_print_num(request.start_stop, 10);
+				dbg_print(" rate=");dbg_print_num(request.req_message_rate,10);
+				dbg_print("\n");
+				if (request.start_stop) {
+					change_run_mode(task, RUN_REGULAR);
+				}else {
+					change_run_mode(task, RUN_NEVER);
+				}
+				if (request.req_message_rate>0) {
+					change_task_period(task, SCHEDULER_TIMEBASE/(uint32_t)request.req_message_rate);
+				}
+			}			
+			break;
+		}
 		/* 
 		TODO : add other cases
 		*/
 	}
 }
 
-void receive_mav_mode(Mavlink_Received_t* rec) {
-	mavlink_set_mode_t packet;
-	mavlink_msg_set_mode_decode(&rec->msg, &packet);
-	//dbg_print_num(packet.base_mode,10);
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid)
-	{
-		board->mav_mode = packet.base_mode;
-	}
-}

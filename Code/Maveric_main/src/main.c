@@ -52,11 +52,11 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, bool *motorbool)
 	if (getChannel(4)>0 && getChannel(5)>0)
 	{
 		*chanSwitch |= 0x00;
-	}else if(getChannel(4)<0 && getChannel(5)>0){
+		}else if(getChannel(4)<0 && getChannel(5)>0){
 		*chanSwitch |= 0x01;
-	}else if (getChannel(4)<0 && getChannel(5)<0){
+		}else if (getChannel(4)<0 && getChannel(5)<0){
 		*chanSwitch |= 0x02;
-	}else{
+		}else{
 		*chanSwitch |= 0x03;
 	}
 	
@@ -74,7 +74,7 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, bool *motorbool)
 	{
 		dbg_print("motor off");
 		*motorbool = -1;
-	}else{
+		}else{
 		dbg_print("motor nothing");
 		*motorbool = 0;
 	}
@@ -82,14 +82,14 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, bool *motorbool)
 	switch (checkReceivers())
 	{
 		case 1:
-			rc_check = 1;
-			break;
+		rc_check = 1;
+		break;
 		case -1:
-			rc_check = -1;
-			break;
+		rc_check = -1;
+		break;
 		case -2:
-			rc_check = -2;
-			break;
+		rc_check = -2;
+		break;
 	}
 }
 
@@ -104,151 +104,177 @@ task_return_t set_mav_mode_n_state()
 	switch(board->mav_state)
 	{
 		case MAV_STATE_CALIBRATING:
-			break;
+		break;
 		case MAV_STATE_STANDBY:
-			if (motor_switch == 1)
+		if (motor_switch == 1)
+		{
+			switch(channelSwitches)
 			{
-				switch(channelSwitches)
-				{
-					case 0:
-						board->controls.run_mode = MOTORS_ON;
-						board->mav_state = MAV_STATE_ACTIVE;
-						board->mav_mode =MAV_MODE_MANUAL_ARMED;
-						break;
-					case 1:
-						board->controls.run_mode = MOTORS_ON;
-						board->mav_state = MAV_STATE_ACTIVE;
-						board->mav_mode = MAV_MODE_STABILIZE_ARMED;
-						break;
-					case 2:
-						break;
-					case 3:
-						break;
-				}
-			}			
-			break;
+				case 0:
+				board->controls.run_mode = MOTORS_ON;
+				board->mav_state = MAV_STATE_ACTIVE;
+				board->mav_mode =MAV_MODE_MANUAL_ARMED;
+				break;
+				case 1:
+				board->controls.run_mode = MOTORS_ON;
+				board->mav_state = MAV_STATE_ACTIVE;
+				board->mav_mode = MAV_MODE_STABILIZE_ARMED;
+				break;
+				case 2:
+				break;
+				case 3:
+				break;
+			}
+		}
+		break;
 		case MAV_STATE_ACTIVE:
-			switch(channelSwitches)
-			{
-				case 0:
-					break;
-				case 1:
-					board->mav_mode= MAV_MODE_STABILIZE_ARMED;
-					break;
-				case 2:
-					board->mav_mode = MAV_MODE_GUIDED_ARMED;
-					break;
-				case 3:
-					board->mav_mode = MAV_MODE_AUTO_ARMED;
-					break;
-			}
-			if (motor_switch == -1)
-			{
-				board->controls.run_mode = MOTORS_OFF;
-				board->mav_state = MAV_STATE_STANDBY;
-				board->mav_mode = MAV_MODE_MANUAL_DISARMED;
-			}
-			
-			switch (RC_check)
-			{
-				case 1:
-					break;
-				case -1:
-					board->mav_state = MAV_STATE_CRITICAL;
-					break;
-				case -2:
-					board->mav_state = MAV_STATE_EMERGENCY;
-					break;
-			}
+		switch(channelSwitches)
+		{
+			case 0:
 			break;
+			case 1:
+			board->mav_mode= MAV_MODE_STABILIZE_ARMED;
+			break;
+			case 2:
+			board->mav_mode = MAV_MODE_GUIDED_ARMED;
+			break;
+			case 3:
+			board->mav_mode = MAV_MODE_AUTO_ARMED;
+			break;
+		}
+		if (motor_switch == -1)
+		{
+			board->controls.run_mode = MOTORS_OFF;
+			board->mav_state = MAV_STATE_STANDBY;
+			board->mav_mode = MAV_MODE_MANUAL_DISARMED;
+		}
+		
+		switch (RC_check)
+		{
+			case 1:
+			break;
+			case -1:
+			board->mav_state = MAV_STATE_CRITICAL;
+			break;
+			case -2:
+			board->mav_state = MAV_STATE_EMERGENCY;
+			break;
+		}
+		break;
 		case MAV_STATE_CRITICAL:
-			switch(channelSwitches)
-			{
-				case 0:
-					break;
-				case 1:
-					board->mav_mode= MAV_MODE_STABILIZE_ARMED;
-					break;
-				case 2:
-					board->mav_mode = MAV_MODE_GUIDED_ARMED;
-					break;
-				case 3:
-					break;
-			}
-			if (motor_switch == -1)
-			{
-				board->controls.run_mode = MOTORS_OFF;
-				board->mav_state = MAV_STATE_STANDBY;
-				board->mav_mode = MAV_MODE_MANUAL_DISARMED;
-			}
-			switch (RC_check)
-			{
-				case 1:
-					board->mav_state = MAV_STATE_ACTIVE;
-					break;
-				case -1:
-					break;
-				case -2:
-					board->mav_state = MAV_STATE_EMERGENCY;
-					break;
-			}
+		switch(channelSwitches)
+		{
+			case 0:
 			break;
+			case 1:
+			board->mav_mode= MAV_MODE_STABILIZE_ARMED;
+			break;
+			case 2:
+			board->mav_mode = MAV_MODE_GUIDED_ARMED;
+			break;
+			case 3:
+			break;
+		}
+		if (motor_switch == -1)
+		{
+			board->controls.run_mode = MOTORS_OFF;
+			board->mav_state = MAV_STATE_STANDBY;
+			board->mav_mode = MAV_MODE_MANUAL_DISARMED;
+		}
+		switch (RC_check)
+		{
+			case 1:
+			board->mav_state = MAV_STATE_ACTIVE;
+			break;
+			case -1:
+			break;
+			case -2:
+			board->mav_state = MAV_STATE_EMERGENCY;
+			break;
+		}
+		break;
 		case MAV_STATE_EMERGENCY:
-			 board->mav_mode = MAV_MODE_MANUAL_DISARMED;
-			break;
+		board->mav_mode = MAV_MODE_MANUAL_DISARMED;
+		break;
 	}
 
 	// NICOLAS: changed remote model to aircraft to have 5 channels
 	////if (getChannel(4)>0) {
 	//if (getChannel(5)>0) {
-		//board->controls.control_mode = RATE_COMMAND_MODE;
-		//} else {
-		//board->controls.control_mode = ATTITUDE_COMMAND_MODE;
+	//board->controls.control_mode = RATE_COMMAND_MODE;
+	//} else {
+	//board->controls.control_mode = ATTITUDE_COMMAND_MODE;
 	//}
-				 
+	
 }
+
+//task_return_t run_stabilisation() {
+	//
+	//imu_update(&(board->imu1));
+	//
+	//switch(board->mav_mode)
+	//{
+		//case MAV_MODE_PREFLIGHT:
+		//case MAV_MODE_MANUAL_ARMED:
+		//board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
+		//board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
+		//board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
+		//board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
+		////board->controls.thrust = getChannel(S_THROTTLE);
+		//break;
+		//case MAV_MODE_STABILIZE_ARMED:
+		//board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
+		//board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
+		//board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
+		//board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
+		////board->controls.thrust = getChannel(S_THROTTLE);
+		//quad_stabilise(&(board->imu1), &(board->controls));
+		//break;
+		//case MAV_MODE_GUIDED_ARMED:
+		//board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
+		////board->controls.thrust = getChannel(S_THROTTLE);
+		//quad_stabilise(&(board->imu1), &(board->controls));
+		//break;
+		//case MAV_MODE_AUTO_ARMED:
+		//board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
+		////board->controls.thrust = getChannel(S_THROTTLE);
+		//quad_stabilise(&(board->imu1), &(board->controls));
+		//break;
+		//case MAV_MODE_MANUAL_DISARMED:
+		//case MAV_MODE_STABILIZE_DISARMED:
+		//case MAV_MODE_GUIDED_DISARMED:
+		//case MAV_MODE_AUTO_DISARMED:
+		//break;
+		//
+	//}
+//}
 
 task_return_t run_stabilisation() {
-	
-	imu_update(&(board->imu1));
-	
-	switch(board->mav_mode)
-	{
-		case MAV_MODE_PREFLIGHT:
-		case MAV_MODE_MANUAL_ARMED:
-			board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
-			board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
-			board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
-			board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-			//board->controls.thrust = getChannel(S_THROTTLE);
-			break;
-		case MAV_MODE_STABILIZE_ARMED:
-			board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
-			board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
-			board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
-			board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-			//board->controls.thrust = getChannel(S_THROTTLE);
-			quad_stabilise(&(board->imu1), &(board->controls));
-			break;
-		case MAV_MODE_GUIDED_ARMED:
-			board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-			//board->controls.thrust = getChannel(S_THROTTLE);
-			quad_stabilise(&(board->imu1), &(board->controls));
-			break;
-		case MAV_MODE_AUTO_ARMED:
-			board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-			//board->controls.thrust = getChannel(S_THROTTLE);
-			quad_stabilise(&(board->imu1), &(board->controls));
-			break;
-		case MAV_MODE_MANUAL_DISARMED:
-		case MAV_MODE_STABILIZE_DISARMED:
-		case MAV_MODE_GUIDED_DISARMED:
-		case MAV_MODE_AUTO_DISARMED:
-		break;
-		
-	}
-}
+	board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
+	board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
+	board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
+	board->controls.thrust=getChannel(S_THROTTLE)/350.0;
 
+	imu_update(&(board->imu1));
+	if (getChannel(4)>0) {
+		board->controls.control_mode=RATE_COMMAND_MODE;
+	} else {
+		board->controls.control_mode=ATTITUDE_COMMAND_MODE;
+	}
+	
+	// switch run_mode
+	if ((board->controls.thrust<-0.95) && (board->controls.rpy[YAW]< -0.9)) {
+		board->controls.run_mode=MOTORS_OFF;
+		LED_On(LED1);
+	}
+	if ((board->controls.thrust<-0.95) && (board->controls.rpy[YAW] >0.9)) {
+		board->controls.run_mode=MOTORS_ON;
+		LED_Off(LED1);
+	}
+		
+	quad_stabilise(&(board->imu1), &(board->controls));
+
+}
 task_return_t gps_task() {
 	uint32_t tnow = get_millis();	
 	
@@ -266,9 +292,9 @@ task_return_t gps_task() {
  	//dbg_print_num(board->GPS_data.speedStatus,10);
  	//dbg_print_num(board->GPS_data.courseStatus,10);
  	//dbg_print("\n");
-	
+	//
 	if(newValidGpsMsg())
-	{
+	{/*
 		dbg_print("GPS status:");
 		dbg_print_num(board->GPS_data.status,10);
 		dbg_print(" time gps:");
@@ -279,7 +305,7 @@ task_return_t gps_task() {
 		dbg_print_num(board->GPS_data.longitude,10);
 		dbg_print(" altitude");
 		dbg_print_num(board->GPS_data.altitude,10);
-		dbg_print("\n");
+		dbg_print("\n");*/
 	}
 }
 
@@ -353,7 +379,7 @@ void initialisation() {
 
 	board=initialise_board();
 
-	init_gps_ubx(engine_nav_settings);
+	//init_gps_ubx(engine_nav_settings);
 	
 	Enable_global_interrupt();
 		
@@ -383,7 +409,7 @@ void initialisation() {
 		if (i%50 ==0) {
 			// Send heartbeat message
 			board->mav_state = MAV_STATE_CALIBRATING;
-			mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, board->mav_mode, 0, MAV_STATE_CALIBRATING);
+			mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_CALIBRATING);
 		}
 		
 		delay_ms(5);
@@ -400,26 +426,24 @@ void main (void)
 	int counter=0;
 	uint32_t last_looptime, this_looptime;
 	
-	bool countled = true;
-	
 	initialisation();
 	
 	init_scheduler(&main_tasks);
 	
-//	register_task(&main_tasks, 0, 4000, &run_imu_update );
-	register_task(&main_tasks, 1, 4000, &run_stabilisation );
+//	register_task(&main_tasks, 0, 4000, RUN_REGULAR, &run_imu_update );
+	register_task(&main_tasks, 1, 4000, RUN_REGULAR, &run_stabilisation );
+	register_task(&main_tasks, 2, 1000, RUN_REGULAR, &mavlink_protocol_update);
 	
-	
-	register_task(&main_tasks, 2 ,50000, &gps_task);
-	register_task(&main_tasks, 3, 10000, &run_estimator);
-	//register_task(&main_tasks, 4, 10, &read_radar);
-	
-	register_task(&main_tasks, 5, 50000, &run_navigation_task);
+	//register_task(&main_tasks, 3 ,100000, RUN_REGULAR, &gps_task);
+	//register_task(&main_tasks, 4, 10000, RUN_REGULAR, &run_estimator);
+	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &read_radar);
 
-	register_task(&main_tasks, 6, 250000, &set_mav_mode_n_state);
+	//register_task(&main_tasks, 5, 50000, RUN_REGULAR, &run_navigation_task);
 
-	register_task(&main_tasks, 8, 1000000, &send_rt_stats);
-	register_task(&main_tasks, 9, 10000, &mavlink_protocol_update);
+	//register_task(&main_tasks, 6, 1000000, RUN_REGULAR, &set_mav_mode_n_state);
+
+	add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	
 
 	// main loop
 	counter=0;
@@ -428,18 +452,7 @@ void main (void)
 		
 		run_scheduler_update(&main_tasks, ROUND_ROBIN);
 		
-		if (counter % 250 == 0)
-		{
-			if (countled)
-			{
-				countled = false;
-				LED_On(LED1);
-			}else{
-				countled = true;
-				LED_Off(LED1);
-			}
-		}
-		
+		LED_On(LED1);
 
 
 		counter=(counter+1)%1000;

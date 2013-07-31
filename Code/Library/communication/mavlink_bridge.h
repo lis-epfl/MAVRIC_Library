@@ -8,11 +8,11 @@
 
 mavlink_system_t mavlink_system;
 mavlink_system_t mavlink_mission_planner;
-  
+
 /* Struct that stores the communication settings of this system.
    you can also define / alter these settings elsewhere, as long
    as they're included BEFORE mavlink.h.
-   So you can set the 
+   So you can set the
  
    mavlink_system.sysid = 100; // System ID, 1-255
    mavlink_system.compid = 50; // Component/Subsystem ID, 1-255
