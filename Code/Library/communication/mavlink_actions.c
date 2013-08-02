@@ -229,5 +229,6 @@ void init_mavlink_actions() {
 	add_task(get_mavlink_taskset(), 200000, RUN_ONCE, &mavlink_send_servo_output, MAVLINK_MSG_ID_SERVO_OUTPUT_RAW);
 	//add_task(get_mavlink_taskset(),  50000, &mavlink_send_radar);
 	add_task(get_mavlink_taskset(), 100000, RUN_ONCE, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
+	add_task(get_mavlink_taskset(), 200000, RUN_ONCE, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
 	sort_taskset_by_period(get_mavlink_taskset());
 }

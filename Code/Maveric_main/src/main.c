@@ -74,7 +74,7 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, bool *motorbool)
 	{
 		dbg_print("motor off");
 		*motorbool = -1;
-		}else{
+	}else{
 		dbg_print("motor nothing");
 		*motorbool = 0;
 	}
@@ -273,6 +273,14 @@ task_return_t run_stabilisation() {
 	}
 		
 	quad_stabilise(&(board->imu1), &(board->controls));
+	
+	if (control_input->run_mode==MOTORS_ON) {
+		// send values to servo outputs
+		set_servos(&(board->servos));
+	} else {	
+		set_servos(&(servo_failsafe));
+	}
+	
 
 }
 task_return_t gps_task() {
@@ -385,7 +393,7 @@ void initialisation() {
 		
 	dbg_print("Debug stream initialised\n");
 
-	LED_Off(LED1);
+	
 	
 /*
 	set_servo(0, -500, -500);
@@ -402,6 +410,8 @@ void initialisation() {
 
 	init_onboard_parameters();
 	init_mavlink_actions();
+	
+	LED_Off(LED1);
 	
 	board->imu1.attitude.calibration_level=LEVELING;	
 	for (i=200; i>0; i--) {

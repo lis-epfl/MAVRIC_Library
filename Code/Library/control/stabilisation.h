@@ -18,7 +18,7 @@
 #define YAW 2
  
 typedef enum control_mode_t {ATTITUDE_COMMAND_MODE, RATE_COMMAND_MODE} control_mode_t;
-typedef enum run_mode_t {MOTORS_OFF, MOTORS_ON} run_mode_t;
+typedef enum run_mode_t {MOTORS_OFF, MOTORS_ON, SIMULATE} run_mode_t;
 
 typedef struct {
 	float rpy[3];

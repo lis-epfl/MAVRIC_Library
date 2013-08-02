@@ -35,7 +35,7 @@ class MAVlinkReceiver:
         self.msg=None;
         self.messages=dict();
         self.earthserver=GoogleEarthServer()
-        #self.earthserver.run()
+        self.earthserver.run()
         self.requestAllStreams()
 
 

@@ -92,12 +92,7 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input) {
 	float rpy_rates[3];
 	Control_Command_t *rate_input;
 	int i;
-	
-	if (control_input->run_mode==MOTORS_OFF) {
-		
-		set_servos(&(servo_failsafe));
-		return;
-	}
+
 	
 	if (control_input->control_mode==ATTITUDE_COMMAND_MODE) {
 		rpy_angles[0]=-imu->attitude.up_vec.v[1];
@@ -123,8 +118,6 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input) {
 	mix_to_servos_cross_quad(&rate_stabiliser.output);
 	#endif
 	#endif
-	// send values to servo outputs
-	set_servos(&(board->servos));
 	
 }
 
