@@ -43,8 +43,8 @@ void ishtar_flush() {
 void ishtar_receive(stream_data_t* data, uint8_t element);
 void ishtar_receive(stream_data_t* data, uint8_t element) {
 	ishtar_ReceiveDataByte(element);
-	dbg_print_num(element, 16);
-	dbg_print(".");
+	//dbg_print_num(element, 16);
+	//dbg_print(".");
 
 }
 

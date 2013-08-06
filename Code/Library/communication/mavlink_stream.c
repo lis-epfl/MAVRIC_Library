@@ -98,6 +98,7 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 }
 
 void handle_mavlink_message(Mavlink_Received_t* rec) {
+	
 	switch(rec->msg.msgid) {
 		case MAVLINK_MSG_ID_PARAM_REQUEST_LIST: { // 21
 			mavlink_param_request_list_t request;
@@ -125,7 +126,7 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		break;
 		case MAVLINK_MSG_ID_MISSION_ITEM: { // 39
 			receive_waypoint(rec,&board->waypoint_list,board->number_of_waypoints);
-			dbg_print("receive waypoint \n");
+			dbg_print("end received waypoint \n");
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_REQUEST : { // 40
@@ -170,6 +171,7 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 			mavlink_request_data_stream_t request;
 			dbg_print("stream request:");
 			mavlink_msg_request_data_stream_decode(&rec->msg, &request);
+			dbg_print_num(request.target_component,10);
 			if (request.req_stream_id==255) {
 				int i;
 				dbg_print("send all\n");

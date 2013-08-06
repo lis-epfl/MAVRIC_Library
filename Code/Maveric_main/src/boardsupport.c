@@ -59,6 +59,8 @@ board_hardware_t* initialise_board() {
 		board_hardware.controls.rpy[PITCH]=0;
 		board_hardware.controls.rpy[YAW]=0;
 		board_hardware.controls.thrust=-1.0;
+		
+		board_hardware.number_of_waypoints = 0;
 
 		return &board_hardware;
 }

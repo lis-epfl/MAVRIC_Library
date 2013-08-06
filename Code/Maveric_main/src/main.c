@@ -119,7 +119,7 @@ task_return_t set_mav_mode_n_state()
 					//dbg_print("Switching on the motors!");
 					board->controls.run_mode = MOTORS_ON;
 					board->mav_state = MAV_STATE_ACTIVE;
-					board->mav_mode =MAV_MODE_MANUAL_ARMED;
+					board->mav_mode = MAV_MODE_MANUAL_ARMED;
 					break;
 				case 1:
 					//board->controls.run_mode = MOTORS_ON;
@@ -226,6 +226,7 @@ task_return_t set_mav_mode_n_state()
 }
 
 task_return_t run_stabilisation() {
+	int i;
 	
 	imu_update(&(board->imu1));
 	
@@ -236,35 +237,40 @@ task_return_t run_stabilisation() {
 			board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
 			board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
 			board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
-			board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-			//board->controls.thrust = getChannel(S_THROTTLE);
+			//board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
+			board->controls.thrust = getChannel(S_THROTTLE)/350.0;
+			for (i=0; i<4; i++) {
+				board->servos[i].value=SERVO_SCALE*board->controls.thrust;
+			}
+			set_servos(&(board->servos));
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
 			board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
 			board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
 			board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
-			board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-			//board->controls.thrust = getChannel(S_THROTTLE);
+			//board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
+			board->controls.thrust = getChannel(S_THROTTLE)/350.0;
 			quad_stabilise(&(board->imu1), &(board->controls));
+			set_servos(&(board->servos));
 			break;
 		case MAV_MODE_GUIDED_ARMED:
 			board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-			//board->controls.thrust = getChannel(S_THROTTLE);
+			//board->controls.thrust = getChannel(S_THROTTLE)/350.0;
 			quad_stabilise(&(board->imu1), &(board->controls));
+			set_servos(&(board->servos));
 			break;
 		case MAV_MODE_AUTO_ARMED:
 			board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-			//board->controls.thrust = getChannel(S_THROTTLE);
+			//board->controls.thrust = getChannel(S_THROTTLE)/350.0;
 			quad_stabilise(&(board->imu1), &(board->controls));
+			set_servos(&(board->servos));
 			break;
 		case MAV_MODE_MANUAL_DISARMED:
-		break;
 		case MAV_MODE_STABILIZE_DISARMED:
-		break;
 		case MAV_MODE_GUIDED_DISARMED:
-		break;
 		case MAV_MODE_AUTO_DISARMED:
-		break;
+			set_servos(&(servo_failsafe));
+			break;
 		
 	}
 }
@@ -346,9 +352,29 @@ task_return_t run_estimator()
 
 task_return_t run_navigation_task()
 {
+	int8_t i;
+	
 	if (((board->mav_state == MAV_STATE_ACTIVE)||(board->mav_state == MAV_STATE_CRITICAL))&&((board->mav_mode == MAV_MODE_AUTO_ARMED)||(board->mav_mode == MAV_MODE_GUIDED_ARMED)))
 	{
 		run_navigation();
+	}
+	
+	if ((board->number_of_waypoints > 0)&& waypoint_receiving == 0 )
+	{
+		dbg_print("List of Waypoint:");
+		for (i=0; i<board->number_of_waypoints; i++)
+		{
+			dbg_print_num(board->waypoint_list[i].wp_id,10);
+			dbg_print_num(board->waypoint_list[i].autocontinue,10);
+			dbg_print_num(board->waypoint_list[i].current,10);
+			dbg_print_num(board->waypoint_list[i].frame,10);
+			dbg_print_num(board->waypoint_list[i].x,10);
+			dbg_print_num(board->waypoint_list[i].y,10);
+			dbg_print_num(board->waypoint_list[i].z,10);
+			dbg_print(";");
+		}
+		dbg_print("\n");
+		board->number_of_waypoints = 0;
 	}
 	
 }
@@ -471,7 +497,7 @@ void main (void)
 	//register_task(&main_tasks, 4, 10000, RUN_REGULAR, &run_estimator);
 	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &read_radar);
 
-	//register_task(&main_tasks, 5, 50000, RUN_REGULAR, &run_navigation_task);
+	register_task(&main_tasks, 5, 1000000, RUN_REGULAR, &run_navigation_task);
 
 	register_task(&main_tasks, 6, 1000000, RUN_REGULAR, &set_mav_mode_n_state);
 

@@ -22,8 +22,7 @@ mavlink_send_heartbeat() {
 		//mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_ACTIVE);
 	//}
 	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, board->mav_mode, 0, board->mav_state);
-}	
-
+}
 
 void mavlink_send_raw_imu() {
 	mavlink_msg_raw_imu_send(MAVLINK_COMM_0, get_millis(), 
@@ -144,6 +143,40 @@ void mavlink_send_estimator()
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,0,"Estimation",0);
 }
 
+void mavlink_send_raw_rc_channels()
+{
+	if (checkReceivers()>0)
+	{
+		mavlink_msg_rc_channels_raw_send(MAVLINK_COMM_0,get_millis(),1,
+		getChannel(S_THROTTLE)+347,
+		getChannel(S_ROLL)+347,
+		getChannel(S_PITCH)+347,
+		getChannel(S_YAW)+433,
+		getChannel(4)+500,
+		getChannel(5)+500,
+		65535,65535,255);
+	}else{
+		mavlink_msg_rc_channels_raw_send(MAVLINK_COMM_0,get_millis(),1,0,0,0,0,0,0,65535,65535,0);
+	}
+}
+
+void mavlink_send_scaled_rc_channels()
+{
+	if (checkReceivers()>0)
+	{
+		mavlink_msg_rc_channels_scaled_send(MAVLINK_COMM_0,get_millis(),1,
+		(getChannel(S_THROTTLE)+347) * 10000 / 716,
+		(getChannel(S_ROLL)) * 10000 / 359,
+		(getChannel(S_PITCH) - 11) * 10000 / 359,
+		(getChannel(S_YAW) - 4) * 10000 / 456,
+		getChannel(4)+500,
+		getChannel(5)+500,
+		32767,32767,255);
+	}else{
+		mavlink_msg_rc_channels_scaled_send(MAVLINK_COMM_0,get_millis(),1,0,0,0,0,0,0,32767,32767,0);
+	}
+}
+
 void add_PID_parameters(void) {
 	Stabiliser_t* rate_stabiliser = get_rate_stabiliser();
 	Stabiliser_t* attitude_stabiliser = get_attitude_stabiliser();
@@ -230,5 +263,7 @@ void init_mavlink_actions() {
 	//add_task(get_mavlink_taskset(),  50000, &mavlink_send_radar);
 	add_task(get_mavlink_taskset(), 100000, RUN_ONCE, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
 	add_task(get_mavlink_taskset(), 200000, RUN_ONCE, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
+	add_task(get_mavlink_taskset(), 100000, RUN_ONCE, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
+	add_task(get_mavlink_taskset(), 100000, RUN_ONCE, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
 	sort_taskset_by_period(get_mavlink_taskset());
 }

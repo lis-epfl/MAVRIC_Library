@@ -12,7 +12,6 @@
 #ifndef MAVLINK_ACTIONS_H_
 #define MAVLINK_ACTIONS_H_
 
-
 void add_PID_parameters(void);
 
 void init_mavlink_actions();

@@ -108,27 +108,30 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[]
 		new_waypoint->autocontinue = packet.autocontinue;
 		new_waypoint->frame = packet.frame;
 		
-		dbg_print("New waypoint received (");
-// 		dbg_print_num(new_waypoint->x,10);
-// 		dbg_print(", ");
-// 		dbg_print_num(new_waypoint->y,10);
-// 		dbg_print(", ");
-// 		dbg_print_num(new_waypoint->z,10);
-// 		dbg_print(") Autocontinue:");
-// 		dbg_print_num(new_waypoint->autocontinue,10);
-// 		dbg_print(" Frame:");
-// 		dbg_print_num(new_waypoint->frame,10);
-// 		dbg_print(" Current :");
-// 		dbg_print_num(packet.current,10);
-// 		dbg_print(" Seq :");
-// 		dbg_print_num(packet.seq,10);
+		dbg_print("New waypoint received ");
+		dbg_print("(");
+ 		dbg_print_num(new_waypoint->x,10);
+ 		dbg_print(", ");
+ 		dbg_print_num(new_waypoint->y,10);
+ 		dbg_print(", ");
+ 		dbg_print_num(new_waypoint->z,10);
+ 		dbg_print(") Autocontinue:");
+ 		dbg_print_num(new_waypoint->autocontinue,10);
+ 		dbg_print(" Frame:");
+ 		dbg_print_num(new_waypoint->frame,10);
+ 		dbg_print(" Current :");
+ 		dbg_print_num(packet.current,10);
+ 		dbg_print(" Seq :");
+ 		dbg_print_num(packet.seq,10);
+		dbg_print(" command id :");
+		dbg_print_num(packet.command,10);
 		dbg_print(" request num :");
 		dbg_print_num(waypoint_request_number,10);
-		dbg_print(" receiving :");
-		dbg_print_num(waypoint_receiving,10);
+		dbg_print(" is it receiving :");
+		dbg_print_num(waypoint_receiving,10); // boolean value
 		dbg_print("\n");
 		
-		//switch(new_waypoint->wp_id)
+		//switch(packet.command)
 		//{
 			//case MAV_CMD_NAV_LOITER_TURNS:
 			//case MAV_CMD_DO_SET_HOME:
@@ -223,28 +226,34 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[]
 				// check if this is the requested waypoint
 				if (packet.seq == waypoint_request_number)
 				{
-					dbg_print("Receiving good waypoint \n");
+					dbg_print("Receiving good waypoint, number ");
+					dbg_print_num(waypoint_request_number,10);
+					dbg_print(" of ");
 					dbg_print_num(number_of_waypoints,10);
+					dbg_print(" \n");
 					//if(packet.seq != 0)
 					//set_cmd_with_index(tell_command, packet.seq);
 
 					// update waypoint receiving state machine
 					//waypoint_timelast_receive = millis();
 					//waypoint_timelast_request = 0;
+					
 					waypoint_request_number++;
-
+					
 					if (waypoint_request_number == number_of_waypoints) 
 					{
+						
 						uint8_t type = 0;                         // ok (0), error(1)
 						mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,mavlink_mission_planner.compid,type);
 						mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,type);
 						mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,0,type);
+						mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,mavlink_system.compid,type);
 
-						dbg_print("flight plan received");
+						dbg_print("flight plan received!\n");
 						waypoint_receiving = false;
 					}else{
 						mavlink_msg_mission_request_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,waypoint_request_number);
-					}						
+					}
 				}
 			}else{
 				uint8_t type = 1;                         // ok (0), error(1)
