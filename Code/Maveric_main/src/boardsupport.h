@@ -30,12 +30,14 @@
 #include "gps_ublox.h"
 #include "waypoint_navigation.h"
 #include "estimator.h"
+#include "simulation.h"
 
 static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
 
 typedef struct  {
 	Imu_Data_t imu1;
 	Control_Command_t controls;
+	simulation_model_t uav_model;
 	servo_output servos[NUMBER_OF_SERVO_OUTPUTS];
 	byte_stream_t xbee_out_stream;
 	byte_stream_t xbee_in_stream;

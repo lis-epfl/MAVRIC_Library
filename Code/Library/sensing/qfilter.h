@@ -28,6 +28,8 @@ typedef struct {
 	float kp;
 	float ki;
 	uint8_t calibration_level;
+	
+	float acc[3], vel[3], pos[3];
 
 } Quat_Attitude_t;	
 

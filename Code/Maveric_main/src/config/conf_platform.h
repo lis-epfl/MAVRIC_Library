@@ -49,6 +49,11 @@
 #define UPVECTOR_Y  0
 #define UPVECTOR_Z -1
 
+
+// Definitions of Platform configuration
+
+#define ROTORCOUNT 4
+
 #define M_REAR_RIGHT 0
 #define M_FRONT_RIGHT 1
 #define M_FRONT_LEFT 2
