@@ -38,11 +38,11 @@ void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 void mavlink_receive_handler() {
 	Mavlink_Received_t rec;
 	if(mavlink_receive(mavlink_in_stream, &rec)) {
-// 		dbg_print("\n Received message with ID");
-// 		dbg_print_num(rec.msg.msgid, 10);
-// 		dbg_print(" from system");
-// 		dbg_print_num(rec.msg.sysid, 10);
-// 		dbg_print( "\n");
+ 		dbg_print("\n Received message with ID");
+ 		dbg_print_num(rec.msg.msgid, 10);
+ 		dbg_print(" from system");
+ 		dbg_print_num(rec.msg.sysid, 10);
+ 		dbg_print( "\n");
 		
 		handle_mavlink_message(&rec);
 	}
@@ -159,9 +159,13 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		}
 		break;
 		case MAVLINK_MSG_ID_SET_MODE : { // 11
-			//set_mav_mode(rec);
+			set_mav_mode(rec,&board->mav_mode,&board->mav_state);
 		}
 		break;
+		case MAVLINK_MSG_ID_COMMAND_LONG : { // 76
+			receive_message_long(rec);
+		}
+		break;			
 		case MAVLINK_MSG_ID_REQUEST_DATA_STREAM: { // 66
 			mavlink_request_data_stream_t request;
 			dbg_print("stream request:");

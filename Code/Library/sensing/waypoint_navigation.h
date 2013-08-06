@@ -47,4 +47,7 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[]
 void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[]);
 void clear_waypoint_list(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[]);
 
+void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* board_mav_state);
+void receive_message_long(Mavlink_Received_t* rec);
+
 #endif // WAYPOINT_NAVIGATION__

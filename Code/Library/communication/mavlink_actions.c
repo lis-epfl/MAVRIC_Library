@@ -106,7 +106,7 @@ void mavlink_send_global_position() {
 	   // board->GPS_data.timeLastMsg
 	   mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis() , board->GPS_data.latitude, board->GPS_data.longitude, board->GPS_data.altitude, 1, board->GPS_data.northSpeed, board->GPS_data.eastSpeed, board->GPS_data.verticalSpeed, board->GPS_data.course);
    }else{
-	   mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, board->imu1.attitude.om[2]);
+	   mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), 46.5193*10000000, 6.56507*10000000, 400*1000, 1, 0, 0, 0, board->imu1.attitude.om[2]);
    }   
 }
 
@@ -116,7 +116,7 @@ void mavlink_send_gps_raw() {
 	{
 		mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0,get_millis(), board->GPS_data.status, board->GPS_data.latitude, board->GPS_data.longitude, board->GPS_data.altitude, board->GPS_data.hdop, board->GPS_data.speedAccuracy ,board->GPS_data.groundSpeed, board->GPS_data.course, board->GPS_data.num_sats);	
 	}else{
-		mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0,get_millis(), board->GPS_data.status, 46.5193*10000000, 6.56507*10000000, 400, 0, 0 , 0, 0, board->GPS_data.num_sats);
+		mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0,get_millis(), board->GPS_data.status, 46.5193*10000000, 6.56507*10000000, 400 * 1000, 0, 0 , 0, 0, board->GPS_data.num_sats);
 	}
 	
 	

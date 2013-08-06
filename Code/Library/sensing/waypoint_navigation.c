@@ -7,6 +7,7 @@
 
 #include "waypoint_navigation.h"
 #include "print_util.h"
+#include "spektrum.h"
 
 void send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint_)
 {
@@ -283,4 +284,65 @@ void clear_waypoint_list(Mavlink_Received_t* rec,  waypoint_struct* waypoint_lis
 		// TODO: clear array
 		mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,0);
 	}		
+}
+
+void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* board_mav_state)
+{
+	mavlink_set_mode_t packet;
+	mavlink_msg_set_mode_decode(&rec->msg,&packet);
+	// Check if this message is for this system and subsystem
+	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid)
+	{
+		//dbg_print("base_mode:");
+		//dbg_print_num(packet.base_mode,10);
+		//dbg_print(", custom mode:");
+		//dbg_print_num(packet.custom_mode,10);
+		//dbg_print("\n");
+		
+		switch(packet.base_mode)
+		{
+			case MAV_MODE_STABILIZE_DISARMED:
+			case MAV_MODE_GUIDED_DISARMED:
+			case MAV_MODE_AUTO_DISARMED:
+				*board_mav_state = MAV_STATE_STANDBY;
+				*board_mav_mode = MAV_MODE_MANUAL_DISARMED;
+				break;
+			case MAV_MODE_MANUAL_ARMED:
+				if ((getChannel(S_THROTTLE)/350.0)<-0.95)
+				{
+					*board_mav_state = MAV_STATE_ACTIVE;
+					*board_mav_mode = MAV_MODE_STABILIZE_ARMED;
+				}
+				break;
+		}
+		
+		
+		
+	}
+}
+
+void receive_message_long(Mavlink_Received_t* rec)
+{
+	mavlink_command_long_t packet;
+	mavlink_msg_command_long_decode(&rec->msg,&packet);
+	// Check if this message is for this system and subsystem
+	dbg_print("target_comp:");
+	dbg_print_num(packet.target_component,10);
+	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
+	&& (uint8_t)packet.target_component == (uint8_t)0)
+	{
+		dbg_print("parameters:");
+		dbg_print_num(packet.param1,10);
+		dbg_print_num(packet.param2,10);
+		dbg_print_num(packet.param3,10);
+		dbg_print_num(packet.param4,10);
+		dbg_print_num(packet.param5,10);
+		dbg_print_num(packet.param6,10);
+		dbg_print_num(packet.param7,10);
+		dbg_print(", command id:");
+		dbg_print_num(packet.command,10);
+		dbg_print(", confirmation:");
+		dbg_print_num(packet.confirmation,10);
+		dbg_print("\n");
+	}
 }
