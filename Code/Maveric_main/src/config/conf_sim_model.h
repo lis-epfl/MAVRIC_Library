@@ -10,14 +10,19 @@
 #define CONF_SIM_MODEL_H_
 #include "simulation.h"
 
+
+#define AIR_DENSITY 1.2
+
 static simulation_model_t vehicle_model_parameters= {
 	.rotor_lpf			=  0.1, 		// low pass filter constant (adjusted for time) to express rotor inertia/lag. 1.0=no inertia, 0.0=infinite inertia
-	.rotor_rpm_gain		=  3000.0, 
+	.rotor_rpm_gain		=  5000.0, 
 	.rotor_rpm_offset	=	 -1.0,		// offset to convert servo commands to rpm (servo command that corresponds to zero rpm)
 	
-	.rpm_to_lift		= 0.45/6000.0,	// constants to estimate lift force from estimated rotor speed (kg/rpm)
-	.rpm_to_yaw_torque	= 0.1/6000,		// constants to estimate yaw torque from estimated rotor speed (Nm/rpm)
-	
+	.rotor_cd			=  0.1,			// coefficient of lift of rotor blade
+	.rotor_cl			=  1.0,			// coefficient of drag of rotor blade
+	.rotor_diameter     =  0.07,         // mean "effective" rotor diameter
+	.rotor_foil_area	=  0.001,       // area of the propeller blades in m^2
+	.rotor_pitch        =  0.1,         // rotor pitch in m/revolution (7x4" roughly 0.1m)
 	.total_mass			=  0.3, 		// vehicle mass in kg
 	.roll_pitch_momentum=  0.1, 		// angular momentum constants (assumed to be independent) (in kg/m^2)
 	.yaw_momentum		=  0.2,

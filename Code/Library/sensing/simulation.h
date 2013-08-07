@@ -18,14 +18,15 @@
 
 
 typedef struct {
-	float torques_bf[3], rates_bf[3], lin_forces_bf[3];
+	float torques_bf[3], rates_bf[3], lin_forces_bf[3], vel_bf[3], pos[3];
 	float rotorspeeds[ROTORCOUNT];                              // estimated rotor speeds
 	float rotor_lpf, rotor_rpm_gain, rotor_rpm_offset;          // low pass filter to simulate rotor inertia and lag, gain/offset to convert servo commands to rpm
-	float rpm_to_lift, rpm_to_yaw_torque;						// constants to estimate torque from estimated rotor speed
+	float rotor_cd, rotor_cl, rotor_diameter, rotor_foil_area;	// rotor lift and drag coefficients, mean rotor diameter (used to calculate rotor lift, torque and drag)
+	float rotor_pitch;
 	float total_mass;											// vehicle mass in kg
 	float roll_pitch_momentum,  yaw_momentum;                   // angular momentum constants (assumed to be independent)
 	float rotor_arm_length;							 			// distance between CoG and motor (in meter)
-	double last_update;										// last update in system ticks
+	double last_update;											// last update in system ticks
 	float dt;													// time base of current update
 } simulation_model_t;
 
@@ -33,7 +34,7 @@ typedef struct {
 void init_simulation(simulation_model_t *sim);
 
 // computes artificial gyro and accelerometer values based on motor commands
-void simu_update(Imu_Data_t *imu1);
+void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu);
 
 
 #endif /* SIMULATION_H_ */

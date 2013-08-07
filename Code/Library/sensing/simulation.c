@@ -8,6 +8,7 @@
 #include "conf_sim_model.h"
 #include "time_keeper.h"
 
+#define PI 3.141592
 
 void init_simulation(simulation_model_t *sim) {
 	int i;
@@ -16,6 +17,8 @@ void init_simulation(simulation_model_t *sim) {
 		sim->rates_bf[i]=0;
 		sim->torques_bf[i]=0;
 		sim->lin_forces_bf[i]=0;
+		sim->vel_bf[i]=0.0;
+		sim->pos[i]=0.0;
 		
 	}
 	for (i=0; i<ROTORCOUNT; i++) {
@@ -29,35 +32,58 @@ void init_simulation(simulation_model_t *sim) {
 
 // inverse function of mix_to_servos in stabilisation to recover torques and forces
 
-void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos){
-	int i;
-	float motor_command[4];
-	double t=get_time();
-	sim->dt=(t - sim->last_update);
-	sim->last_update=t;
-
-	for (i=0; i<4; i++) {
-		motor_command[i]=servos[i].value/SERVO_SCALE;
-		sim->rotorspeeds[i]=(1.0-sim->dt*sim->rotor_lpf) * sim->rotorspeeds[i] + (sim->dt*sim->rotor_lpf) * (motor_command[i]-sim->rotor_rpm_offset) * sim->rotor_rpm_gain;
-	}
-/*
-	motor_command[M_FRONT_RIGHT]= control->thrust + (-control->rpy[ROLL] + control->rpy[PITCH]) + M_FR_DIR * control->rpy[YAW];
-	motor_command[M_FRONT_LEFT] = control->thrust + ( control->rpy[ROLL] + control->rpy[PITCH]) + M_FL_DIR * control->rpy[YAW];
-	motor_command[M_REAR_RIGHT] = control->thrust + (-control->rpy[ROLL] - control->rpy[PITCH]) + M_RR_DIR * control->rpy[YAW];
-	motor_command[M_REAR_LEFT]  = control->thrust + ( control->rpy[ROLL] - control->rpy[PITCH]) + M_RL_DIR * control->rpy[YAW];
-	for (i=0; i<4; i++) {
-		if (motor_command[i]<MIN_THRUST) motor_command[i]=MIN_THRUST;
-		if (motor_command[i]>MAX_THRUST) motor_command[i]=MAX_THRUST;
-	}
-
-	for (i=0; i<4; i++) {
-		board->servos[i].value=SERVO_SCALE*motor_command[i];
-	}
-*/
+static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr_lat_airspeed, float axial_airspeed) {
+	if (rpm < 0.01) return 0.0;
+	float mean_vel=sim->rotor_diameter *PI * rpm/60.0;
+	float exit_vel=rpm/60.0 *sim -> rotor_pitch;           
+	return (0.5*AIR_DENSITY*(mean_vel*mean_vel +sqr_lat_airspeed) * sim->rotor_foil_area  * (1.0-axial_airspeed/exit_vel));
 }
 
 
-void rates_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos){
+
+void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos){
+	int i;
+	float motor_command[4];
+	float rotor_lifts[4], rotor_drags[4];
+	float ldb;
+	float lateral_drag_coefficient;
+	float sqr_lateral_airspeed=sim->vel_bf[0]*sim->vel_bf[0] + sim->vel_bf[1]*sim->vel_bf[1];
+	
+	for (i=0; i<4; i++) {
+		motor_command[i]=servos[i].value/SERVO_SCALE;
+		// estimate rotor speeds by low-pass filtering
+		sim->rotorspeeds[i]=(1.0-sim->rotor_lpf) * sim->rotorspeeds[i] + (sim->rotor_lpf) * (motor_command[i]-sim->rotor_rpm_offset) * sim->rotor_rpm_gain;
+		
+		ldb=lift_drag_base(sim, sim->rotorspeeds[i], sqr_lateral_airspeed, sim->vel_bf[Z]);
+		
+		rotor_lifts[i]=ldb * sim->rotor_cl;
+		rotor_drags[i]=ldb * sim->rotor_cd;
+	}
+	
+	float mpos_x=sim->rotor_arm_length / 1.4142;
+	float mpos_y=sim->rotor_arm_length / 1.4142;
+	
+	// torque around x axis (roll)
+	sim->torques_bf[ROLL]  = ((rotor_lifts[M_FRONT_LEFT]  + rotor_lifts[M_REAR_LEFT]  ) 
+						    - (rotor_lifts[M_FRONT_RIGHT] + rotor_lifts[M_REAR_RIGHT] )) * mpos_y/sim->roll_pitch_momentum;
+
+	// torque around y axis (pitch)
+	sim->torques_bf[PITCH] = ((rotor_lifts[M_FRONT_LEFT]  + rotor_lifts[M_FRONT_RIGHT] )
+							- (rotor_lifts[M_REAR_LEFT]   + rotor_lifts[M_REAR_RIGHT] ))*  mpos_x/sim->roll_pitch_momentum;
+
+	sim->torques_bf[YAW]   = (M_FL_DIR*rotor_drags[M_FRONT_LEFT]  + M_FR_DIR*rotor_drags[M_FRONT_RIGHT] 
+							+ M_RL_DIR*rotor_drags[M_REAR_LEFT]   + M_RR_DIR*rotor_drags[M_REAR_RIGHT] )* 0.5 * sim->rotor_diameter / sim->yaw_momentum;
+	
+
+	lateral_drag_coefficient=(rotor_drags[0]+rotor_drags[1]+rotor_drags[2]+rotor_drags[3]);
+	sim->lin_forces_bf[X] = sim->vel_bf[X]*lateral_drag_coefficient;
+	sim->lin_forces_bf[Y] = sim->vel_bf[Y]*lateral_drag_coefficient;
+	sim->lin_forces_bf[Z] = (rotor_lifts[M_FRONT_LEFT]+ rotor_lifts[M_FRONT_RIGHT] +rotor_lifts[M_REAR_LEFT] +rotor_lifts[M_REAR_RIGHT]);
+
+}
+
+
+void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos){
 	int i;
 	float motor_command[4];
 	
@@ -74,4 +100,40 @@ void rates_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos)
 		board->servos[i].value=SERVO_SCALE*motor_command[i];
 	}
 	*/
+}
+
+void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu) {
+	int i;
+	double t=get_time();
+	sim->dt=(t - sim->last_update);
+	sim->last_update=t;
+	
+	// compute torques and forces based on servo commands
+	#ifdef CONF_DIAG
+	forces_from_servos_diag_quad(sim, servo_commands);
+	#endif
+	#ifdef CONF_CROSS
+	forces_from_servos_cross_quad(sim, servo_commands);
+	#endif
+	
+	// integrate torques to get simulated gyro rates
+	for (i=0; i<3; i++) {
+		sim->rates_bf[i] += sim->dt * sim->torques_bf[i];
+	}
+	
+	imu->raw_channels[GYRO_OFFSET+IMU_X]=sim->rates_bf[0]*imu->raw_scale[GYRO_OFFSET+IMU_X]+imu->raw_bias[GYRO_OFFSET+IMU_X];
+	imu->raw_channels[GYRO_OFFSET+IMU_Y]=sim->rates_bf[1]*imu->raw_scale[GYRO_OFFSET+IMU_Y]+imu->raw_bias[GYRO_OFFSET+IMU_Y];
+	imu->raw_channels[GYRO_OFFSET+IMU_Z]=sim->rates_bf[2]*imu->raw_scale[GYRO_OFFSET+IMU_Z]+imu->raw_bias[GYRO_OFFSET+IMU_Z];
+
+	imu->raw_channels[ACC_OFFSET+IMU_X]=(sim->lin_forces_bf[0] / sim->total_mass);
+	imu->raw_channels[ACC_OFFSET+IMU_Y]=(sim->lin_forces_bf[1] / sim->total_mass);
+	imu->raw_channels[ACC_OFFSET+IMU_Z]=(sim->lin_forces_bf[2] / sim->total_mass);
+	imu->dt=sim->dt;
+	qfilter(&imu->attitude, &imu->raw_channels, imu->dt);
+	for (i=0; i<3; i++){
+		sim->vel_bf[i]=imu->attitude.vel_bf[i];
+		sim->pos[i]=imu->attitude.pos[i];
+		
+	}
+
 }

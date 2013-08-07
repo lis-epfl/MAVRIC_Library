@@ -67,7 +67,7 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	uint8_t i;
 	float  omc[3], rvc[3], tmp[3], snorm, norm, s_acc_norm, acc_norm;
-	UQuat_t qed, qtmp1, up_bf, qtmp3;
+	UQuat_t qed, qtmp1, up_bf, qtmp2, qtmp3;
 
 	for (i=0; i<3; i++){
 		attitude->om[i]  = (1.0-GYRO_LPF)*attitude->om[i]+GYRO_LPF*(((float)rates[GYRO_OFFSET+i])*attitude->sf[i]-attitude->be[GYRO_OFFSET+i]);
@@ -159,6 +159,24 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	attitude->up_vec.v[2]=up_bf.v[2];
 		//QMUL(qtmp1, qtmp3, up_vec);
 
+	for (i=0; i<3; i++) {
+		// clean acceleration estimate without gravity:
+		attitude->acc_bf[i]=(attitude->a[i] - up_bf.v[i]) * GRAVITY;
+		attitude->vel_bf[i]=attitude->vel_bf[i]*(1.0-(VEL_DECAY*dt)) + attitude->acc_bf[i] * dt;
+	}
+	// calculate velocity in global frame
+	// vel = qe *vel_bf * qe-1
+	qtmp1.s= 0.0; qtmp1.v[0]=attitude->vel_bf[0]; qtmp1.v[1]=attitude->vel_bf[1]; qtmp1.v[2]=attitude->vel_bf[2];
+	QMUL(attitude->qe, qtmp1, qtmp2);
+	QI(attitude->qe, qtmp1);
+	QMUL(qtmp2, qtmp1, qtmp3);
+	attitude->vel[0]=qtmp3.v[0]; attitude->vel[0]=qtmp3.v[1]; attitude->vel[0]=qtmp3.v[2];
+
+	for (i=0; i<3; i++) {
+		// clean acceleration estimate without gravity:
+		attitude->pos[i] +=attitude->vel[i] *dt;
+	}
+	
 }
 
 
