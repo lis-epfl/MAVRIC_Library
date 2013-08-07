@@ -359,23 +359,36 @@ task_return_t run_navigation_task()
 		run_navigation();
 	}
 	
-	if ((board->number_of_waypoints > 0)&& waypoint_receiving == 0 )
-	{
-		dbg_print("List of Waypoint:");
-		for (i=0; i<board->number_of_waypoints; i++)
-		{
-			dbg_print_num(board->waypoint_list[i].wp_id,10);
-			dbg_print_num(board->waypoint_list[i].autocontinue,10);
-			dbg_print_num(board->waypoint_list[i].current,10);
-			dbg_print_num(board->waypoint_list[i].frame,10);
-			dbg_print_num(board->waypoint_list[i].x,10);
-			dbg_print_num(board->waypoint_list[i].y,10);
-			dbg_print_num(board->waypoint_list[i].z,10);
-			dbg_print(";");
-		}
-		dbg_print("\n");
-		board->number_of_waypoints = 0;
-	}
+	
+	//if ((board->number_of_waypoints > 0)&& waypoint_receiving == 0 )
+	//{
+		//dbg_print("List of Waypoint:");
+		//for (i=0; i<board->number_of_waypoints; i++)
+		//{
+			//dbg_print("wp_id:");
+			//dbg_print_num(board->waypoint_list[i].wp_id,10);
+			//dbg_print(" autocontinue:");
+			//dbg_print_num(board->waypoint_list[i].autocontinue,10);
+			//dbg_print(" current:");
+			//dbg_print_num(board->waypoint_list[i].current,10);
+			//dbg_print(" frame:");
+			//dbg_print_num(board->waypoint_list[i].frame,10);
+			//dbg_print(" x:");
+			//dbg_print_num(board->waypoint_list[i].x,10);
+			//dbg_print(" y:");
+			//dbg_print_num(board->waypoint_list[i].y,10);
+			//dbg_print(" z:");
+			//dbg_print_num(board->waypoint_list[i].z,10);
+			//dbg_print(" params:");
+			//dbg_print_num(board->waypoint_list[i].param1,10);
+			//dbg_print_num(board->waypoint_list[i].param2,10);
+			//dbg_print_num(board->waypoint_list[i].param3,10);
+			//dbg_print_num(board->waypoint_list[i].param4,10);
+			//dbg_print(";");
+		//}
+		//dbg_print("\n");
+		//board->number_of_waypoints = 0;
+	//}
 	
 }
 
@@ -436,6 +449,7 @@ void initialisation() {
 
 	//init_gps_ubx(engine_nav_settings);
 	
+	
 	Enable_global_interrupt();
 		
 	dbg_print("Debug stream initialised\n");
@@ -494,7 +508,7 @@ void main (void)
 	register_task(&main_tasks, 2, 1000, RUN_REGULAR, &mavlink_protocol_update);
 	
 	//register_task(&main_tasks, 3 ,100000, RUN_REGULAR, &gps_task);
-	//register_task(&main_tasks, 4, 10000, RUN_REGULAR, &run_estimator);
+	register_task(&main_tasks, 4, 10000, RUN_REGULAR, &run_estimator);
 	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &read_radar);
 
 	register_task(&main_tasks, 5, 1000000, RUN_REGULAR, &run_navigation_task);
