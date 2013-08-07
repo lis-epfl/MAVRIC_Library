@@ -49,6 +49,13 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 		attitude->be[i]=bias[i]*attitude->sf[i];
 		
 	}
+	for (i=0; i<3; i++){
+		attitude->acc_bf[i]=0.0;
+		attitude->vel_bf[i]=0.0;
+		attitude->vel[i]=0.0;
+		attitude->pos[i]=0.0;
+	}
+
 //	attitude->be[3]=-0.03;
 //	attitude->be[4]=0.08;
 //	attitude->be[5]=0.15;

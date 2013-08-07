@@ -121,6 +121,22 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 		sim->rates_bf[i] += sim->dt * sim->torques_bf[i];
 	}
 	
+
+	// check altitude - if it is lower than 0, clamp everything (this is in NED, assuming negative altitude)
+	if (imu->attitude.pos[Z] >0) {
+		imu->attitude.vel[Z]=0.0;
+		imu->attitude.pos[Z]=0.0;
+
+		// simulate "acceleration" caused by contact force with ground, compensating gravity
+		for (i=0; i<3; i++) {
+			sim->lin_forces_bf[i]+=imu->attitude.up_vec.v[i];
+		}
+				
+		// slow down... (will make velocity slightly inconsistent until next update cycle, but shouldn't matter much)
+		for (i=0; i<3; i++) {
+			imu->attitude.vel_bf[i]=0.9*imu->attitude.vel_bf[i];
+		}
+	}
 	imu->raw_channels[GYRO_OFFSET+IMU_X]=sim->rates_bf[0]*imu->raw_scale[GYRO_OFFSET+IMU_X]+imu->raw_bias[GYRO_OFFSET+IMU_X];
 	imu->raw_channels[GYRO_OFFSET+IMU_Y]=sim->rates_bf[1]*imu->raw_scale[GYRO_OFFSET+IMU_Y]+imu->raw_bias[GYRO_OFFSET+IMU_Y];
 	imu->raw_channels[GYRO_OFFSET+IMU_Z]=sim->rates_bf[2]*imu->raw_scale[GYRO_OFFSET+IMU_Z]+imu->raw_bias[GYRO_OFFSET+IMU_Z];
@@ -128,8 +144,12 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	imu->raw_channels[ACC_OFFSET+IMU_X]=(sim->lin_forces_bf[0] / sim->total_mass);
 	imu->raw_channels[ACC_OFFSET+IMU_Y]=(sim->lin_forces_bf[1] / sim->total_mass);
 	imu->raw_channels[ACC_OFFSET+IMU_Z]=(sim->lin_forces_bf[2] / sim->total_mass);
+
 	imu->dt=sim->dt;
 	qfilter(&imu->attitude, &imu->raw_channels, imu->dt);
+	
+	
+	
 	for (i=0; i<3; i++){
 		sim->vel_bf[i]=imu->attitude.vel_bf[i];
 		sim->pos[i]=imu->attitude.pos[i];
