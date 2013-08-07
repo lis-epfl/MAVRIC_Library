@@ -16,6 +16,14 @@
 #define IMU_Y 1
 #define IMU_Z 2
 
+#define ROLL 0
+#define PITCH 1
+#define YAW 2
+
+#define X			0
+#define Y			1
+#define Z			2
+
 #define RAW_GYRO_X 1
 #define RAW_GYRO_Y 0
 #define RAW_GYRO_Z 2

@@ -12,9 +12,7 @@
 #define SPEED		1
 #define BIAIS		2
 
-#define X			0
-#define Y			1
-#define Z			2
+
 
 typedef struct {
 	float state[3][3]; // [z z_speed z_biais] in NED

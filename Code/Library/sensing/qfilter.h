@@ -12,6 +12,11 @@
 #define GYRO_LPF 0.1
 #define ACC_LPF 0.05
 
+// leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
+#define VEL_DECAY 0.1
+
+#define GRAVITY 9.81
+
 typedef struct UQuat {
 	float s;
 	float v[3];
@@ -29,7 +34,7 @@ typedef struct {
 	float ki;
 	uint8_t calibration_level;
 	
-	float acc[3], vel[3], pos[3];
+	float acc_bf[3], vel_bf[3], vel[3], pos[3];
 
 } Quat_Attitude_t;	
 
