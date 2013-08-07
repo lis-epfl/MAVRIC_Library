@@ -15,8 +15,7 @@ void send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint_)
 	mavlink_msg_mission_request_list_decode(&rec->msg,&packet);
 	
 	// Check if this message is for this system and subsystem
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
-	&& (uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
+	if ((uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
 	{	
 		num_of_waypoint = num_of_waypoint_;
 		mavlink_msg_mission_count_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,num_of_waypoint);
@@ -32,8 +31,7 @@ void send_waypoint(Mavlink_Received_t* rec, waypoint_struct waypoint[])
 		mavlink_mission_request_t packet;
 		mavlink_msg_mission_request_decode(&rec->msg,&packet);
 		// Check if this message is for this system and subsystem
-		if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
-		&& (uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid) 
+		if ((uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid) 
 		{
 			if (sending_wp_num <= num_of_waypoint)
 			{
@@ -55,8 +53,7 @@ void receive_ack_msg(Mavlink_Received_t* rec)
 	mavlink_mission_ack_t packet;
 	mavlink_msg_mission_ack_decode(&rec->msg, &packet);
 	// Check if this message is for this system and subsystem
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
-	&& (uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
+	if ((uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
 	{
 		waypoint_sending = false;
 		sending_wp_num = 0;
@@ -68,14 +65,13 @@ void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints)
 	mavlink_mission_count_t packet;
 	mavlink_msg_mission_count_decode(&rec->msg, &packet);
 	// Check if this message is for this system and subsystem
-	dbg_print("check msg");
-	dbg_print_num(packet.target_system,10);
-	dbg_print_num(mavlink_mission_planner.sysid,10);
-	dbg_print_num(packet.target_component,10);
-	dbg_print_num(mavlink_mission_planner.compid,10);
-	dbg_print("\n");
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
-	&& (uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
+	//dbg_print("check msg");
+	//dbg_print_num(packet.target_system,10);
+	//dbg_print_num(mavlink_mission_planner.sysid,10);
+	//dbg_print_num(packet.target_component,10);
+	//dbg_print_num(mavlink_mission_planner.compid,10);
+	//dbg_print("\n");
+	if ((uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
 	{
 		if (packet.count > MAX_WAYPOINTS)
 		{
@@ -95,30 +91,29 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[]
 	mavlink_mission_item_t packet;
 	mavlink_msg_mission_item_decode(&rec->msg,&packet);
 	// Check if this message is for this system and subsystem
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
-	&& (uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
+	if ((uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
 	{
-		waypoint_struct* new_waypoint = waypoint_list[waypoint_request_number];
-		new_waypoint->wp_id = packet.command;
+		waypoint_struct new_waypoint;
+		new_waypoint.wp_id = packet.command;
 		
-		new_waypoint->x = 1.0e7f * packet.x; // longitude converted to e7
-		new_waypoint->y = 1.0e7f * packet.y; // latitude converted to e7
-		new_waypoint->z = 1.0e2f * packet.z; // altitude converted to cm
+		new_waypoint.x = 1.0e7f * packet.x; // longitude converted to e7
+		new_waypoint.y = 1.0e7f * packet.y; // latitude converted to e7
+		new_waypoint.z = 1.0e2f * packet.z; // altitude converted to cm
 		
-		new_waypoint->autocontinue = packet.autocontinue;
-		new_waypoint->frame = packet.frame;
+		new_waypoint.autocontinue = packet.autocontinue;
+		new_waypoint.frame = packet.frame;
 		
 		dbg_print("New waypoint received ");
 		dbg_print("(");
- 		dbg_print_num(new_waypoint->x,10);
+ 		dbg_print_num(new_waypoint.x,10);
  		dbg_print(", ");
- 		dbg_print_num(new_waypoint->y,10);
+ 		dbg_print_num(new_waypoint.y,10);
  		dbg_print(", ");
- 		dbg_print_num(new_waypoint->z,10);
+ 		dbg_print_num(new_waypoint.z,10);
  		dbg_print(") Autocontinue:");
- 		dbg_print_num(new_waypoint->autocontinue,10);
+ 		dbg_print_num(new_waypoint.autocontinue,10);
  		dbg_print(" Frame:");
- 		dbg_print_num(new_waypoint->frame,10);
+ 		dbg_print_num(new_waypoint.frame,10);
  		dbg_print(" Current :");
  		dbg_print_num(packet.current,10);
  		dbg_print(" Seq :");
@@ -135,60 +130,60 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[]
 		//{
 			//case MAV_CMD_NAV_LOITER_TURNS:
 			//case MAV_CMD_DO_SET_HOME:
-			//new_waypoint->param1 = packet.param1;
+			//new_waypoint.param1 = packet.param1;
 			//break;
 //
 			//case MAV_CMD_NAV_ROI:
-			//new_waypoint->param1 = packet.param1;                                    // MAV_ROI (aka roi mode) is held in wp's parameter but we actually do nothing with it because we only support pointing at a specific location provided by x,y and z parameters
+			//new_waypoint.param1 = packet.param1;                                    // MAV_ROI (aka roi mode) is held in wp's parameter but we actually do nothing with it because we only support pointing at a specific location provided by x,y and z parameters
 			//break;
 //
 			//case MAV_CMD_CONDITION_YAW:
-			//new_waypoint->param1 = packet.param3;
-			//new_waypoint->alt = packet.param1;
-			//new_waypoint->lat = packet.param2;
-			//new_waypoint->lon = packet.param4;
+			//new_waypoint.param1 = packet.param3;
+			//new_waypoint.alt = packet.param1;
+			//new_waypoint.lat = packet.param2;
+			//new_waypoint.lon = packet.param4;
 			//break;
 //
 			//case MAV_CMD_NAV_TAKEOFF:
-			//new_waypoint->param1 = 0;
+			//new_waypoint.param1 = 0;
 			//break;
 //
 			//case MAV_CMD_CONDITION_CHANGE_ALT:
-			//new_waypoint->param1 = packet.param1 * 100;
+			//new_waypoint.param1 = packet.param1 * 100;
 			//break;
 //
 			//case MAV_CMD_NAV_LOITER_TIME:
-			//new_waypoint->param1 = packet.param1;                                    // APM loiter time is in ten second increments
+			//new_waypoint.param1 = packet.param1;                                    // APM loiter time is in ten second increments
 			//break;
 //
 			//case MAV_CMD_CONDITION_DELAY:
 			//case MAV_CMD_CONDITION_DISTANCE:
-			//new_waypoint->lat = packet.param1;
+			//new_waypoint.lat = packet.param1;
 			//break;
 //
 			//case MAV_CMD_DO_JUMP:
-			//new_waypoint->lat = packet.param2;
-			//new_waypoint->param1  = packet.param1;
+			//new_waypoint.lat = packet.param2;
+			//new_waypoint.param1  = packet.param1;
 			//break;
 //
 			//case MAV_CMD_DO_REPEAT_SERVO:
-			//new_waypoint->lon = packet.param4;
+			//new_waypoint.lon = packet.param4;
 			//case MAV_CMD_DO_REPEAT_RELAY:
 			//case MAV_CMD_DO_CHANGE_SPEED:
-			//new_waypoint->lat = packet.param3;
-			//new_waypoint->alt = packet.param2;
-			//new_waypoint->param1 = packet.param1;
+			//new_waypoint.lat = packet.param3;
+			//new_waypoint.alt = packet.param2;
+			//new_waypoint.param1 = packet.param1;
 			//break;
 //
 			//case MAV_CMD_NAV_WAYPOINT:
-			//new_waypoint->param1 = packet.param1;
+			//new_waypoint.param1 = packet.param1;
 			//break;
 //
 			//case MAV_CMD_DO_SET_PARAMETER:
 			//case MAV_CMD_DO_SET_RELAY:
 			//case MAV_CMD_DO_SET_SERVO:
-			//new_waypoint->alt = packet.param2;
-			//new_waypoint->param1 = packet.param1;
+			//new_waypoint.alt = packet.param2;
+			//new_waypoint.param1 = packet.param1;
 			//break;
 		//}
 		
@@ -205,14 +200,14 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[]
 		} else if(packet.current == 3){                                    //current = 3 is a flag to tell us this is a alt change only
 
 			// add home alt if needed
-			//if (new_waypoint->options & MASK_OPTIONS_RELATIVE_ALT) 
+			//if (new_waypoint.options & MASK_OPTIONS_RELATIVE_ALT) 
 			//{
-			//	new_waypoint->alt += home.alt;
+			//	new_waypoint.alt += home.alt;
 			//}
 
 			// To-Do: update target altitude for loiter or waypoint controller depending upon nav mode
 			// similar to how do_change_alt works
-			//wp_nav.set_desired_alt(new_waypoint->alt);
+			//wp_nav.set_desired_alt(new_waypoint.alt);
 
 			// verify we received the command
 			mavlink_msg_mission_ack_send(MAVLINK_COMM_0, rec->msg.sysid,rec->msg.compid, 0);
@@ -238,6 +233,7 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[]
 					//waypoint_timelast_receive = millis();
 					//waypoint_timelast_request = 0;
 					
+				    *waypoint_list[waypoint_request_number] = new_waypoint;
 					waypoint_request_number++;
 					
 					if (waypoint_request_number == number_of_waypoints) 
@@ -269,8 +265,7 @@ void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[])
 	mavlink_mission_set_current_t packet;
 	mavlink_msg_mission_set_current_decode(&rec->msg,&packet);
 	// Check if this message is for this system and subsystem
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
-	&& (uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
+	if ((uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
 	{
 		int i;
 		for (i=0;i<MAX_WAYPOINTS;i++)
@@ -287,8 +282,7 @@ void clear_waypoint_list(Mavlink_Received_t* rec,  waypoint_struct* waypoint_lis
 	mavlink_mission_clear_all_t packet;
 	mavlink_msg_mission_clear_all_decode(&rec->msg,&packet);
 	// Check if this message is for this system and subsystem
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
-	&& (uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
+	if ((uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
 	{
 		// TODO: clear array
 		mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,0);
@@ -337,8 +331,7 @@ void receive_message_long(Mavlink_Received_t* rec)
 	// Check if this message is for this system and subsystem
 	dbg_print("target_comp:");
 	dbg_print_num(packet.target_component,10);
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
-	&& (uint8_t)packet.target_component == (uint8_t)0)
+	if ((uint8_t)packet.target_component == (uint8_t)0)
 	{
 		dbg_print("parameters:");
 		dbg_print_num(packet.param1,10);

@@ -129,8 +129,7 @@ void receive_parameter(Mavlink_Received_t* rec) {
 	mavlink_msg_param_set_decode(&rec->msg, &set);
  
 	// Check if this message is for this system and subsystem
-	if ((uint8_t)set.target_system == (uint8_t)mavlink_system.sysid
-		&& (uint8_t)set.target_component == (uint8_t)mavlink_system.compid) {
+	if ((uint8_t)set.target_component == (uint8_t)mavlink_system.compid) {
 		char* key = (char*) set.param_id;
 				
 		for (uint16_t i = 0; i < param_set.param_count; i++) {
