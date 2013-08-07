@@ -46,10 +46,8 @@ void mavlink_receive_handler() {
 		dbg_print_num(rec.msg.compid,10);
 		dbg_print( "\n");
 		
-		if (rec.msg.sysid == mavlink_system.sysid)
-		{
-			handle_mavlink_message(&rec);
-		}
+		handle_mavlink_message(&rec);
+		
 	}
 }
 
@@ -90,14 +88,14 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 	//dbg_print(".");
 	while(buffer_bytes_available(stream->data) > 0) {
 		byte = stream->get(stream->data);
-		dbg_print_num(byte, 16);
-		dbg_print("\t");
+		//dbg_print_num(byte, 16);
+		//dbg_print("\t");
 		if(mavlink_parse_char(MAVLINK_COMM_0, byte, &rec->msg, &rec->status)) {
-			dbg_print("\n");
+			//dbg_print("\n");
 			return 1;
 		}
-		dbg_print_num(rec->status.parse_state, 16);
-		dbg_print("\n");
+		//dbg_print_num(rec->status.parse_state, 16);
+		//dbg_print("\n");
 	}		
 	return 0;
 }
@@ -130,8 +128,8 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_ITEM: { // 39
-			receive_waypoint(rec,(board->waypoint_list),board->number_of_waypoints);
-			dbg_print("End received waypoint \n");
+			receive_waypoint(rec,board->waypoint_list,board->number_of_waypoints);
+			//dbg_print("End received waypoint \n");
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_REQUEST : { // 40

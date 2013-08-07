@@ -38,12 +38,14 @@ int num_of_waypoint;
 int sending_wp_num;
 int waypoint_request_number;
 
+void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints);
+
 void send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint);
 void send_waypoint(Mavlink_Received_t* rec, waypoint_struct waypoint[]);
 void receive_ack_msg(Mavlink_Received_t* rec);
 
 void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints);
-void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[], uint16_t number_of_waypoints);
+void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t number_of_waypoints);
 void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[]);
 void clear_waypoint_list(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[]);
 
