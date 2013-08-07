@@ -7,8 +7,7 @@
 
 #include "conf_sim_model.h"
 #include "time_keeper.h"
-
-#define PI 3.141592
+#include "coord_conventions.h"
 
 void init_simulation(simulation_model_t *sim) {
 	int i;
@@ -81,9 +80,10 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 	
 
 	lateral_drag_coefficient=(rotor_drags[0]+rotor_drags[1]+rotor_drags[2]+rotor_drags[3]);
-	sim->lin_forces_bf[X] = -sim->vel_bf[X]*lateral_drag_coefficient;
-	sim->lin_forces_bf[Y] = -sim->vel_bf[Y]*lateral_drag_coefficient;
-	sim->lin_forces_bf[Z] = -(rotor_lifts[M_FRONT_LEFT]+ rotor_lifts[M_FRONT_RIGHT] +rotor_lifts[M_REAR_LEFT] +rotor_lifts[M_REAR_RIGHT]);
+	
+	sim->lin_forces_bf[X] = -sim->vel_bf[X]*lateral_drag_coefficient  * GRAVITY;  // convert from kg to Newton
+	sim->lin_forces_bf[Y] = -sim->vel_bf[Y]*lateral_drag_coefficient  * GRAVITY;
+	sim->lin_forces_bf[Z] = -(rotor_lifts[M_FRONT_LEFT]+ rotor_lifts[M_FRONT_RIGHT] +rotor_lifts[M_REAR_LEFT] +rotor_lifts[M_REAR_RIGHT])* GRAVITY;
 
 }
 

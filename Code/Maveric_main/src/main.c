@@ -233,6 +233,9 @@ task_return_t run_stabilisation() {
 	} else {
 		imu_update(&(board->imu1));
 	}
+	board->local_position.pos[0] = board->imu1.attitude.pos[0];
+	board->local_position.pos[1] = board->imu1.attitude.pos[1];
+	board->local_position.pos[2] = board->imu1.attitude.pos[2];
 	
 	switch(board->mav_mode)
 	{

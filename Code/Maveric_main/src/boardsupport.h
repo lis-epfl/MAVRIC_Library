@@ -54,6 +54,8 @@ typedef struct  {
 	Estimator_Data_t estimation;
 	simulation_model_t sim_model;
 	
+	local_coordinates_t local_position;
+	
 	// aliases
 	byte_stream_t *telemetry_down_stream, *telemetry_up_stream;
 	byte_stream_t *debug_out_stream, *debug_in_stream;	
