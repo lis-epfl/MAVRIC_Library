@@ -18,14 +18,14 @@ static simulation_model_t vehicle_model_parameters= {
 	.rotor_rpm_gain		=  5000.0, 
 	.rotor_rpm_offset	=	 -1.0,		// offset to convert servo commands to rpm (servo command that corresponds to zero rpm)
 	
-	.rotor_cd			=  0.1,			// coefficient of lift of rotor blade
+	.rotor_cd			=  0.05,			// coefficient of lift of rotor blade
 	.rotor_cl			=  1.0,			// coefficient of drag of rotor blade
-	.rotor_diameter     =  0.07,         // mean "effective" rotor diameter
-	.rotor_foil_area	=  0.001,       // area of the propeller blades in m^2
+	.rotor_diameter     =  0.08,         // mean "effective" rotor diameter
+	.rotor_foil_area	=  0.002,       // area of the propeller blades in m^2
 	.rotor_pitch        =  0.1,         // rotor pitch in m/revolution (7x4" roughly 0.1m)
-	.total_mass			=  0.3, 		// vehicle mass in kg
-	.roll_pitch_momentum=  0.1, 		// angular momentum constants (assumed to be independent) (in kg/m^2)
-	.yaw_momentum		=  0.2,
+	.total_mass			=  0.35, 		// vehicle mass in kg
+	.roll_pitch_momentum=  0.05, 		// angular momentum constants (assumed to be independent) (in kg/m^2)
+	.yaw_momentum		=  0.1,
 	
 	.rotor_arm_length	= 0.17  			// distance between CoG and motor (in meter)
 	

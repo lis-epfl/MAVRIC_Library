@@ -54,7 +54,7 @@ board_hardware_t* initialise_board() {
 
 		spektrum_init();
 		init_Servos();
-		
+		init_simulation(&board_hardware.sim_model);
 		
 		board_hardware.controls.rpy[ROLL]=0;
 		board_hardware.controls.rpy[PITCH]=0;
@@ -63,6 +63,7 @@ board_hardware_t* initialise_board() {
 		
 		board_hardware.number_of_waypoints = 0;
 
+		board_hardware.simulation_mode=0;
 		init_waypoint_list(board_hardware.waypoint_list,&board_hardware.number_of_waypoints);
 
 		return &board_hardware;

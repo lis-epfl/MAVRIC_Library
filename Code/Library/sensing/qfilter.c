@@ -144,13 +144,23 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	case LEVELING:
 		attitude->kp=0.3;
 		attitude->ki=attitude->kp/10.0;
+		for (i=0; i<3; i++) {
+			// reset velocity estimate to zero 
+			attitude->vel_bf[i]=0.0;
+			attitude->vel[i]=0.0;
+		}
 		break;
 	case LEVEL_PLUS_ACCEL:
-		attitude->kp=0.05;
-		attitude->ki=attitude->kp/15.0;
-		attitude->be[3]+=   dt * attitude->ki * (attitude->a[0]-up_bf.v[0]);
-		attitude->be[4]+=   dt * attitude->ki * (attitude->a[1]-up_bf.v[1]);
-		attitude->be[5]+=   dt * attitude->ki * (attitude->a[2]-up_bf.v[2]);
+		attitude->kp=0.3;
+		attitude->ki=attitude->kp/10.0;
+		attitude->be[3]+=   dt * attitude->kp * (attitude->a[0]-up_bf.v[0]);
+		attitude->be[4]+=   dt * attitude->kp * (attitude->a[1]-up_bf.v[1]);
+		attitude->be[5]+=   dt * attitude->kp * (attitude->a[2]-up_bf.v[2]);
+		for (i=0; i<3; i++) {
+			// reset velocity estimate to zero
+			attitude->vel_bf[i]=0.0;
+			attitude->vel[i]=0.0;
+		}
 		break;
 	default:
 		attitude->kp=0.02;
@@ -177,11 +187,11 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	QMUL(attitude->qe, qtmp1, qtmp2);
 	QI(attitude->qe, qtmp1);
 	QMUL(qtmp2, qtmp1, qtmp3);
-	attitude->vel[0]=qtmp3.v[0]; attitude->vel[0]=qtmp3.v[1]; attitude->vel[0]=qtmp3.v[2];
+	attitude->vel[0]=qtmp3.v[0]; attitude->vel[1]=qtmp3.v[1]; attitude->vel[2]=qtmp3.v[2];
 
 	for (i=0; i<3; i++) {
 		// clean acceleration estimate without gravity:
-		attitude->pos[i] +=attitude->vel[i] *dt;
+		attitude->pos[i] =attitude->pos[i]*(1.0-(POS_DECAY*dt)) + attitude->vel[i] *dt;
 	}
 	
 }

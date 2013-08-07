@@ -79,7 +79,7 @@ void mavlink_send_servo_output(void) {
 	1000*rate_stab->output.rpy[0]+1000, 
 	1000*rate_stab->output.rpy[1]+1000,
 	1000*rate_stab->output.rpy[2]+1000,
-	1000*rate_stab->output.thrust
+	1000*rate_stab->output.thrust+1000
 	);
 }
 
@@ -139,7 +139,8 @@ void mavlink_send_radar(void) {
 void mavlink_send_estimator(void)
 {
 	//mavlink_msg_local_position_ned_send(mavlink_channel_t chan, uint32_t time_boot_ms, float x, float y, float z, float vx, float vy, float vz)
-	mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, get_millis(), board->estimation.state[0][0], board->estimation.state[1][0], board->estimation.state[2][0], board->estimation.state[0][1], board->estimation.state[1][1], board->estimation.state[2][1]);
+	//mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, get_millis(), board->estimation.state[0][0], board->estimation.state[1][0], board->estimation.state[2][0], board->estimation.state[0][1], board->estimation.state[1][1], board->estimation.state[2][1]);
+	mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, get_millis(), board->imu1.attitude.pos[0], board->imu1.attitude.pos[1], board->imu1.attitude.pos[2], board->imu1.attitude.vel[0], board->imu1.attitude.vel[1], board->imu1.attitude.vel[2]);
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,0,"Estimation",0);
 }
 
@@ -172,9 +173,22 @@ void mavlink_send_scaled_rc_channels(void)
 		getChannel(4)+500,
 		getChannel(5)+500,
 		32767,32767,255);
-	}else{
+	}else{	
 		mavlink_msg_rc_channels_scaled_send(MAVLINK_COMM_0,get_millis(),1,0,0,0,0,0,0,32767,32767,0);
 	}
+}
+
+void mavlink_send_simulation(void) {
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rolltorque", board->sim_model.torques_bf[0]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "pitchtorque", board->sim_model.torques_bf[1]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "yawtorque", board->sim_model.torques_bf[2]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "thrust", board->sim_model.lin_forces_bf[2]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm1", board->sim_model.rotorspeeds[0]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm2", board->sim_model.rotorspeeds[1]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm3", board->sim_model.rotorspeeds[2]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm4", board->sim_model.rotorspeeds[3]);
+
+	
 }
 
 void add_PID_parameters(void) {
@@ -265,5 +279,6 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(), 200000, RUN_ONCE, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
 	add_task(get_mavlink_taskset(), 100000, RUN_ONCE, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
 	add_task(get_mavlink_taskset(), 100000, RUN_ONCE, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
+	add_task(get_mavlink_taskset(), 200000, RUN_REGULAR, mavlink_send_simulation, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	sort_taskset_by_period(get_mavlink_taskset());
 }

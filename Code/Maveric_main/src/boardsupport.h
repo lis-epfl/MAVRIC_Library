@@ -52,6 +52,7 @@ typedef struct  {
 	gps_Data_type GPS_data;
 	
 	Estimator_Data_t estimation;
+	simulation_model_t sim_model;
 	
 	// aliases
 	byte_stream_t *telemetry_down_stream, *telemetry_up_stream;
@@ -62,6 +63,7 @@ typedef struct  {
 	
 	uint8_t mav_mode;
 	uint8_t mav_state;
+	uint8_t simulation_mode;
 	
 } board_hardware_t;
 
