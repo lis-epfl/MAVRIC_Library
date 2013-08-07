@@ -27,7 +27,6 @@ typedef struct {
 
 void init_Servos(void);
 
-servo_output *get_servos();
 
 void set_servos(servo_output *servo_outputs);
 

@@ -25,13 +25,13 @@ typedef struct{
 
 
 
-void init_adxl345();
+void init_adxl345(void);
 
-acc_data* get_acc_data();
+acc_data* get_acc_data(void);
 
-void init_adxl345_slow();
+void init_adxl345_slow(void);
 
-acc_data* get_acc_data_slow();
+acc_data* get_acc_data_slow(void);
 
 
 

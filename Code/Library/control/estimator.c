@@ -134,9 +134,9 @@ void e_kalman_init (int axis,float init_p) // axis = Z, X or Y
 void e_predict (UQuat_t *qe, float *a, float dt)
 {
 	
-	UQuat_t inv_qe,q_temp;
+	//UQuat_t inv_qe;
 	float x[3],y[3],z[3];
-	float temp1[3], temp2[3];
+	//float temp1[3], temp2[3];
 	// Calculation of acceleration on x,y,z in NED 
 	x[0]=1;x[1]=0;x[2]=0; //definition of x,y,z in NED
 	y[0]=0;y[1]=1;y[2]=0;

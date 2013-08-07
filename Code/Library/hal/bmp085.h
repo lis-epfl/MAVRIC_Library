@@ -48,12 +48,12 @@ typedef struct{
 } pressure_data;
 
 
-void init_bmp085();
+void init_bmp085(void);
 
-void init_bmp085_slow();
+void init_bmp085_slow(void);
 
-void start_pressure_measurement();
+void start_pressure_measurement(void);
 
-pressure_data* get_pressure_data_slow();
+pressure_data* get_pressure_data_slow(void);
 
 #endif /* BMP085_H_ */

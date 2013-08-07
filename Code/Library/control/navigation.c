@@ -62,7 +62,7 @@ int8_t current_waypoint=-1;
 
 
 
-void init_navigation()
+void init_navigation(void)
 {
 	board = get_board_hardware();
 	// X speed PID init
@@ -201,7 +201,7 @@ void nav_function(int nav_type, int current_waypoint)
 
 
 
-void run_navigation() //navigation type
+void run_navigation(void) //navigation type
 {
 	float global_speed_square; //square of the global speed
 	int i=0;
@@ -237,7 +237,7 @@ void run_navigation() //navigation type
 
 
 
-void speed_control_pid() // Take speed in NED and sends speed in quad ref frame to PID
+void speed_control_pid(void) // Take speed in NED and sends speed in quad ref frame to PID
 {
 	float x_vec[3],y_vec[3],z_vec[3];
 	float x_speed_setpoint,y_speed_setpoint,z_speed_setpoint;
@@ -320,7 +320,7 @@ float get_angle_with_XNED(float v1_x,float v1_y,float v1_z) //gives the angle be
 
 
 
-void circular_fly()
+void circular_fly(void)
 {
 	float dist_vec[3],normalized_speed[3],delta_speed[3];
 	float scalar,radius,speed_norm_square,inv_speed_norm,delta_speed_norm;

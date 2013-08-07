@@ -32,7 +32,7 @@ static void pdca_int_handler_dac(void)
 
 	}	else {	
        // Set PDCA channel reload values with address where data to load are stored, and size of the data block to load.
-       pdca_reload_channel(PDCA_CHANNEL_DAC, (void *)buffer+2*from, to-from);
+       pdca_reload_channel(PDCA_CHANNEL_DAC, (char *)buffer+2*from, to-from);
 	}	   
 		
 }
@@ -115,7 +115,7 @@ dacifb_channel_opt_t dacifb_channel_opt = {
   if (dacifb_configure(dacifb,
                    &dacifb_opt,
                    FOSC0) ==0) {
-				putstring(&AVR32_USART0,"error configuring DAC");
+				dbg_print("error configuring DAC");
 				while (1);
   }
   
@@ -126,7 +126,7 @@ dacifb_channel_opt_t dacifb_channel_opt = {
                            dac_channel_audio,
                            &dacifb_channel_opt,
                            DAC_PRESCALER_CLOCK) ==0) {
-				putstring(&AVR32_USART0,"error configuring DAC channel");
+				dbg_print("error configuring DAC channel");
 				while (1);
   }
   
@@ -151,7 +151,7 @@ void DAC_load_buffer(uint16_t* samples, int from_sample, int to_sample, int repe
     .r_size = 0,                                   // next transfer counter
     .transfer_size = PDCA_TRANSFER_SIZE_HALF_WORD  // select size of the transfer      
   };
-  PDCA_OPTIONS.addr=(void *)samples + 2*from;
+  PDCA_OPTIONS.addr=(char *)samples + 2*from;
   PDCA_OPTIONS.size=to-from;
 
   // Initialize Event Controller
@@ -181,16 +181,16 @@ void DAC_play() {
   
 }
 
-void DAC_pause() {
+void DAC_pause(void) {
 
 }
 
-void DAC_resume() {
+void DAC_resume(void) {
 
 }
 
-int  DAC_is_finished() {
-	
+int  DAC_is_finished(void) {
+	return 0;
 }
 
 void DAC_set_value(int32_t output) {

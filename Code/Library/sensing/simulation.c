@@ -6,6 +6,8 @@
  */ 
 
 #include "conf_sim_model.h"
+#include "time_keeper.h"
+
 
 void init_simulation(simulation_model_t *sim) {
 	int i;
@@ -19,7 +21,7 @@ void init_simulation(simulation_model_t *sim) {
 	for (i=0; i<ROTORCOUNT; i++) {
 		sim->rotorspeeds[i]=0.0;			
 	}
-	sim->last_update=GET_TIME;
+	sim->last_update=get_time();
 	sim->dt=0.01;
 }
 
@@ -30,8 +32,8 @@ void init_simulation(simulation_model_t *sim) {
 void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos){
 	int i;
 	float motor_command[4];
-	uint32_t t=GET_TIME;
-	sim->dt=ticks_to_seconds(t - sim->last_update);
+	double t=get_time();
+	sim->dt=(t - sim->last_update);
 	sim->last_update=t;
 
 	for (i=0; i<4; i++) {
@@ -55,7 +57,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 }
 
 
-void rates_from_servos_cross_quad(Control_Command_t *control){
+void rates_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos){
 	int i;
 	float motor_command[4];
 	

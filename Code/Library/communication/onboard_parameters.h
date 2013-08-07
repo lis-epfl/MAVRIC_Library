@@ -33,9 +33,9 @@ void init_onboard_parameters(void);
 void add_parameter_uint32(uint32_t* val, const char* param_name);
 void add_parameter_int32(int32_t* val, const char* param_name);
 void add_parameter_float(float* val, const char* param_name);
-void send_all_parameters_now();
-void send_all_parameters();
-void send_scheduled_parameters();
+void send_all_parameters_now(void);
+void send_all_parameters(void);
+void send_scheduled_parameters(void);
 void send_parameter(mavlink_param_request_read_t* request);
 void receive_parameter(Mavlink_Received_t* rec);
 

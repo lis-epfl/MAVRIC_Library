@@ -23,7 +23,7 @@ static  i2c_schedule_event gyro_event;
 uint8_t default_configuration[2] ={
 CONFIG_POWER_ADDRESS, 8};
 
-void init_adxl345() {
+void init_adxl345(void) {
 	
 
 	gyro_event.callback=0;
@@ -51,7 +51,7 @@ void init_adxl345() {
 	/**/
 }
 
-void init_adxl345_slow() {
+void init_adxl345_slow(void) {
 	static twim_options_t twi_opt= {
 		.pba_hz=64000000, 
 		.speed = 100000,
@@ -63,12 +63,12 @@ void init_adxl345_slow() {
 	twim_write(&AVR32_TWIM0, (uint8_t*)&default_configuration, 2, ADXL_ALT_SLAVE_ADDRESS, false);
 }
 
-acc_data* get_acc_data() {
+acc_data* get_acc_data(void) {
 	i2c_trigger_request(0, gyro_event.schedule_slot);
 	return &acc_outputs;
 }
 
-acc_data* get_acc_data_slow() {
+acc_data* get_acc_data_slow(void) {
 	int i;
 	gyro_event.config.write_then_read_preamble=SENSOR_REG_ADDRESS;
 	twim_write(&AVR32_TWIM0, (uint8_t*) &gyro_event.config.write_then_read_preamble, 1, ADXL_ALT_SLAVE_ADDRESS, false);

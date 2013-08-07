@@ -576,18 +576,18 @@ void ubx_configure_message_rate(uint8_t msg_class, uint8_t msg_id, uint8_t rate)
 void configure_gps(void);
 
 void gps_update(void);
-bool newValidGpsMsg();
+bool newValidGpsMsg(void);
 
-ubx_nav_posllh * ubx_GetPosllh();
-ubx_nav_status * ubx_GetStatus();
-ubx_nav_solution * ubx_GetSolution();
-ubx_nav_velned * ubx_GetVelned();
-ubx_nav_SVInfo * ubx_GetSVInfo();
-ubx_cfg_nav_settings * ubx_GetNavSettings();
-ubx_cfg_msg_rate * ubx_GetMsgRate();
-ubx_mon_rxr_struct * ubx_GetMonRXR();
-ubx_tim_tp * ubx_GetTimTP();
-ubx_tim_vrfy * ubx_GetTimVRFY();
+ubx_nav_posllh * ubx_GetPosllh(void);
+ubx_nav_status * ubx_GetStatus(void);
+ubx_nav_solution * ubx_GetSolution(void);
+ubx_nav_velned * ubx_GetVelned(void);
+ubx_nav_SVInfo * ubx_GetSVInfo(void);
+ubx_cfg_nav_settings * ubx_GetNavSettings(void);
+ubx_cfg_msg_rate * ubx_GetMsgRate(void);
+ubx_mon_rxr_struct * ubx_GetMonRXR(void);
+ubx_tim_tp * ubx_GetTimTP(void);
+ubx_tim_vrfy * ubx_GetTimVRFY(void);
 
 float ToRad(float numdeg);
 

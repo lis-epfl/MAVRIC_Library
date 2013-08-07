@@ -132,7 +132,7 @@ static  usart_config_t usart_opt[UART_COUNT] =
 			.tx_pin_map= {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION}
 	},
 	{   .mode=UART_IN_OUT,
-		.uart_device=&AVR32_USART4,
+		.uart_device.uart=&AVR32_USART4,
 		.uart_device.IRQ=AVR32_USART4_IRQ,
 		.uart_device.receive_stream=NULL,
 		.options={

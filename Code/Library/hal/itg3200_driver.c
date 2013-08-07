@@ -39,7 +39,7 @@ typedef struct {
 gyro_config default_configuration;
 uint8_t read_preamble=SENSOR_REG_ADDRESS;
 
-char init_itg3200() {
+void init_itg3200(void) {
 	default_configuration.conf_start_reg_address=CONFIG_REG_ADDRESS;
 
 	default_configuration.sample_div=4; //output frequency after filtering: 1khz/8khz /(sample_div +1)
@@ -74,11 +74,11 @@ char init_itg3200() {
 	/**/
 }
 
-void reconfigure_gyro() {
+void reconfigure_gyro(void) {
 	i2c_trigger_request(0, gyro_event.schedule_slot);
 }
 
-char init_itg3200_slow() {
+void init_itg3200_slow(void) {
 	static twim_options_t twi_opt= {
 		.pba_hz=64000000, 
 		.speed = 400000,
@@ -90,12 +90,12 @@ char init_itg3200_slow() {
 	twim_write(&AVR32_TWIM0, (uint8_t*)&default_configuration, 4, ITG3200_SLAVE_ADDRESS, false);
 }
 
-gyro_data* get_gyro_data() {
+gyro_data* get_gyro_data(void) {
 	i2c_trigger_request(0, gyro_event.schedule_slot);
 	return &gyro_outputs;
 }
 
-gyro_data* get_gyro_data_slow() {
+gyro_data* get_gyro_data_slow(void) {
 	gyro_event.config.write_then_read_preamble=SENSOR_REG_ADDRESS;
 	twim_write(&AVR32_TWIM0, (uint8_t*) &gyro_event.config.write_then_read_preamble, 1, ITG3200_SLAVE_ADDRESS, false);
 	twim_read(&AVR32_TWIM0, (uint8_t*)&gyro_outputs, 8, ITG3200_SLAVE_ADDRESS, false);

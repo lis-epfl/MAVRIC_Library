@@ -22,7 +22,7 @@ typedef enum task_return_t {
 
 typedef enum task_run_mode_t {RUN_NEVER, RUN_ONCE, RUN_REGULAR} task_run_mode_t;
 
-typedef task_return_t (*function_pointer)();
+typedef task_return_t (*function_pointer)(void);
 
 typedef uint8_t task_handle_t;
 

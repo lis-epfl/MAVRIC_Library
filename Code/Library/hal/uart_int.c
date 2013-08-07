@@ -33,7 +33,7 @@
 				usart_opt[UID].uart_device.uart->idr=AVR32_USART_IDR_TXRDY_MASK;\
 		}\
 	}\
-}\			
+}			
 
 ISR(uart_handler_0, usart_opt[0].uart_device.IRQ, AVR32_INTC_INTLEV_INT1) {\
 	uint8_t c1;\
@@ -55,7 +55,7 @@ ISR(uart_handler_0, usart_opt[0].uart_device.IRQ, AVR32_INTC_INTLEV_INT1) {\
 				usart_opt[0].uart_device.uart->idr=AVR32_USART_IDR_TXRDY_MASK;\
 		}\
 	}\
-}\			
+}			
 
 // define interrupt handlers using above macro
 //UART_HANDLER(0);
@@ -77,9 +77,9 @@ void register_UART_handler(int UID) {
 	
 }
 
-usart_config_t *init_UART_int(UID) {
-	if (usart_opt[UID].mode&UART_IN >0)  gpio_enable_module_pin(usart_opt[UID].rx_pin_map.pin, usart_opt[UID].rx_pin_map.function); 
-	if (usart_opt[UID].mode&UART_OUT>0) gpio_enable_module_pin(usart_opt[UID].tx_pin_map.pin, usart_opt[UID].tx_pin_map.function); 
+usart_config_t *init_UART_int(int UID) {
+	if ((usart_opt[UID].mode&UART_IN) >0)  gpio_enable_module_pin(usart_opt[UID].rx_pin_map.pin, usart_opt[UID].rx_pin_map.function); 
+	if ((usart_opt[UID].mode&UART_OUT)>0)  gpio_enable_module_pin(usart_opt[UID].tx_pin_map.pin, usart_opt[UID].tx_pin_map.function); 
 
 	usart_init_rs232( usart_opt[UID].uart_device.uart, &(usart_opt[UID].options), sysclk_get_cpu_hz()); 
 	//usart_write_line(usart_opt[UID].uart_device.uart, "UART initialised");
@@ -124,7 +124,7 @@ short uart_int_send_byte(usart_config_t *usart_opt, char data) {
 /** 
  * blocking operation to flush the uart buffer. Returns once the last byte has been passed to hardware for transmission.
  */
-short uart_int_flush(usart_config_t *usart_opt) {
+void uart_int_flush(usart_config_t *usart_opt) {
 	usart_opt->uart_device.uart->ier=AVR32_USART_IER_TXRDY_MASK;
 	while (!buffer_empty(&(usart_opt->uart_device.transmit_buffer)));
 }

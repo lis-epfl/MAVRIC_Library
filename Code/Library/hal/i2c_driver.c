@@ -30,7 +30,7 @@ static void pdca_int_handler_i2c0(void)
    schedule[0][current_schedule_slot[0]].transfer_in_progress=0;
    
    if (schedule[0][current_schedule_slot[0]].callback) schedule[0][current_schedule_slot[0]].callback;
-   putstring(&AVR32_USART4, "!");
+   dbg_print( "!");
 }
 
 
@@ -222,7 +222,7 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
 						| (0 << AVR32_TWIM_CMDR_READ_OFFSET);
 			break;	
 		case I2C_WRITE1_THEN_READ:
-			putstring(&AVR32_USART4, "wr");
+			dbg_print( "wr");
 			
 			// set up next command register for the burst read transfer
 			// set up command register to initiate the write transfer. The DMA will take care of the reading once this is done.
@@ -247,7 +247,7 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
 			
 			break;	
 		case I2C_WRITE:
-			putstring(&AVR32_USART4, "w");
+			dbg_print( "w");
 			twim->cmdr = (conf->slave_address << AVR32_TWIM_CMDR_SADR_OFFSET)
 						| ((conf->write_count) << AVR32_TWIM_CMDR_NBYTES_OFFSET)
 						| (AVR32_TWIM_CMDR_VALID_MASK)
@@ -270,6 +270,7 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
 	schedule[i2c_device][schedule_slot].transfer_in_progress=1;
 	twim->cr = AVR32_TWIM_CR_MEN_MASK;
 	pdca_enable(TWI0_DMA_CH);
+	return 0;
 }
 
 char i2c_pause_request(unsigned char i2c_device, unsigned char schedule_slot){
@@ -280,11 +281,11 @@ char i2c_pause_request(unsigned char i2c_device, unsigned char schedule_slot){
 }
 
 char i2c_enable_request(unsigned char i2c_device, unsigned char schedule_slot){
-	
+	return 0;
 }
 
 char i2c_remove_request(unsigned char i2c_device, unsigned char schedule_slot){
-	
+	return 0;
 }
 
 

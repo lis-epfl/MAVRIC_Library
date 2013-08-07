@@ -336,7 +336,7 @@ extern int pwm_write_protect_sw_unlock(int group);
 /*! \brief Write Protect Status Function. This function uses the WPSR register
  *  \return PWM_NO_WRITE_PROTECT_VIOLATION or Write Protection Violation Source
  */
-extern U32 pwm_write_protect_status();
+extern U32 pwm_write_protect_status(void);
 
 /*! \brief Define Update Period Value For Update Of Synchronous Channel
  *  \param value  Update Period Value

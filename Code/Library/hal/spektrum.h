@@ -34,8 +34,8 @@ void spektrum_init (void);
 int16_t getChannel(uint8_t index);
 void centerChannel(uint8_t index);
 int16_t getChannelNeutral(uint8_t index);
-int8_t checkReceiver1();
-int8_t checkReceiver2();
-int8_t checkReceivers();
+int8_t checkReceiver1(void);
+int8_t checkReceiver2(void);
+int8_t checkReceivers(void);
 
 #endif /* SPEKTRUM_H_ */

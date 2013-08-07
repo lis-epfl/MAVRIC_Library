@@ -182,19 +182,19 @@ ishtar_ExternalFlushFunc ishtar_externalFlushFunc;
 //! The intermediate function to send data and calculate the checksum of the sent data
 void ishtar_SendData(unsigned char * data, unsigned long len);
 //! The function to send the message header
-void ishtar_SendHeader();
+void ishtar_SendHeader(void);
 //! The function to reset the checksums
-void ishtar_InitCk();
+void ishtar_InitCk(void);
 //! The function to send the current checksum of the message
-void ishtar_SendCk();
+void ishtar_SendCk(void);
 
 //! An empty function
-void ishtar_DoNothing() { }
+void ishtar_DoNothing(void) { }
 
 //! This function inits the pointers to the reception buffer
-void ishtar_InitBuffer();
+void ishtar_InitBuffer(void);
 //! This function is used for debug, to register statistics variables into Ishtar
-void ishtar_RegisterDebugVars();
+void ishtar_RegisterDebugVars(void);
 
 // utils
 //! This function is used to calculate the checksum of a size
@@ -394,7 +394,7 @@ void ishtar_SendData(unsigned char * data, unsigned long len)
 /*!
 *	This function sends the Ishtar headers
 */
-void ishtar_SendHeader()
+void ishtar_SendHeader(void)
 {
 	// unsigned long header;
 	unsigned char h1, h2, h3, h4;
@@ -413,7 +413,7 @@ void ishtar_SendHeader()
 /*!
 *	This function resets the current checksum
 */
-void ishtar_InitCk()
+void ishtar_InitCk(void)
 {
 	// initialise checksums to 0
 	ishtar_ckA = 0;
@@ -423,7 +423,7 @@ void ishtar_InitCk()
 /*!
 *	This function sends the current checksum
 */
-void ishtar_SendCk()
+void ishtar_SendCk(void)
 {
 	// compile actual checksums
 	unsigned short checksum;
@@ -1491,7 +1491,7 @@ void ishtar_InitWithBlock(ishtar_ExternalSendFunc externalSendFunc, ishtar_Exter
 /*!
 *	This function inits the receive buffers and pointers.
 */
-void ishtar_InitBuffer()
+void ishtar_InitBuffer(void)
 {
 	ishtar_bufBegin = ishtar_buffer;
 	ishtar_bufEnd = ishtar_buffer + ISHTAR_BUFFER_SIZE;
@@ -1505,7 +1505,7 @@ void ishtar_InitBuffer()
 /*!
 *	This function directly registers several variables to monitor Ishtar itself
 */
-void ishtar_RegisterDebugVars()
+void ishtar_RegisterDebugVars(void)
 {
 	ishtar_Variable("ishtar.overflows", (unsigned char*)(&ishtar_numberOfOverflows), UINT, 1, 0);
 	ishtar_Variable("ishtar.variables", (unsigned char*)(&ishtar_numberOfVariables), USHORT, 1, 0);

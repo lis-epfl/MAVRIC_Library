@@ -29,14 +29,14 @@ typedef struct { //in quadrotor reference frame
 } SpeedContr_Data_t;
 
 
-void init_navigation();
-void nav_function();
-void run_navigation();
-void speed_control_pid();
+void init_navigation(void);
+void nav_function(int nav_type, int current_waypoint);
+void run_navigation(void);
+void speed_control_pid(void);
 float acos_func(float x);
 float Q_rsqrt(float number);
 float get_angle_with_XNED(float v1_x,float v1_y,float v1_z);
 float get_angle(float v1_x,float v1_y,float v1_z,float v2_x,float v2_y,float v2_z);
-void circular_fly();
+void circular_fly(void);
 
 #endif /* NAVIGATION_H_ */

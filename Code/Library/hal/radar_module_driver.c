@@ -24,8 +24,7 @@ void init_radar_modules() {
 
 void read_radar() {
 	uint8_t output = 0;
-	uint8_t input [8];
-	uint8_t i=0;
+//	uint8_t input [8];
 	twim_write(&AVR32_TWIM1, (uint8_t*) &output, 1, 1, false);
 	twim_read(&AVR32_TWIM1, (uint8_t*)&main_target, sizeof(main_target), 1, false);
 	

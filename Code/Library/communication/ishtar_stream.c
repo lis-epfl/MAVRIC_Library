@@ -33,7 +33,7 @@ void ishtar_stream_send(unsigned char *data, unsigned long size) {
 
 }
 
-void ishtar_flush() {
+void ishtar_flush(void) {
 	dbg_print("flush!\n");
 	uart_int_flush(get_UART_handle(4));
 }

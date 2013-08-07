@@ -14,7 +14,7 @@
 #include "streams.h"
 
 
-usart_config_t *init_UART_int(UID);
+usart_config_t *init_UART_int(int UID);
 
 usart_config_t *get_UART_handle(int UID);
 
@@ -39,7 +39,7 @@ short uart_int_send_byte(usart_config_t *usart_opt, char data);
 /** 
  * blocking operation to flush the uart buffer. Returns once the last byte has been passed to hardware for transmission.
  */
-short uart_int_flush(usart_config_t *usart_opt );
+void uart_int_flush(usart_config_t *usart_opt );
 
 /************************************************************************/
 /* Registers a stream interface with the UART transmitter (data put     */

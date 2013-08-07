@@ -34,8 +34,8 @@ typedef struct {
 
 void init_stabilisation(void);
 
-Stabiliser_t* get_rate_stabiliser();
-Stabiliser_t* get_attitude_stabiliser();
+Stabiliser_t* get_rate_stabiliser(void);
+Stabiliser_t* get_attitude_stabiliser(void);
 
 void stabilise(Stabiliser_t *stabiliser, float *rpy_sensor_values, Control_Command_t *control_input);
 void quad_stabilise(Imu_Data_t *imu, Control_Command_t *control_input);

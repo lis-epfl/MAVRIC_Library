@@ -15,7 +15,7 @@
 
 
 
-void init_Servos(){
+void init_Servos(void){
       int i;
 	  // unlock registers
 	  AVR32_PWM.wpcr = (AVR32_PWM_WPCR_WPKEY_KEY   << AVR32_PWM_WPCR_WPKEY) |

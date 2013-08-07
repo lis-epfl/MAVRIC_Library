@@ -115,7 +115,7 @@ typedef struct ishtar_ServiceDescriptionTag* ishtar_ServiceDescriptionPtr;
 //! Type definition for the external function used to send data through communication
 typedef void (*ishtar_ExternalSendFunc)(unsigned char *, unsigned long);
 //! Type definition for the external function used to flush the data output buffer at the end of each message that is sent
-typedef void (*ishtar_ExternalFlushFunc)();
+typedef void (*ishtar_ExternalFlushFunc)(void);
 //! Type definition for the external function used to write data in non-volatile memory
 typedef unsigned short (*ishtar_MemoryWriteFunc)(unsigned short address, void* data, unsigned short length);
 //! Type definition for the external function used to read data from non-volatile memory
@@ -152,25 +152,25 @@ ishtar_ServiceId ishtar_Variable(const char* name, void* var, ishtar_ValueVector
 //! This function registers a local variable in the Ishtar library to make it accessible to external clients connected to the server
 ishtar_ServiceId ishtar_VariableFeedback(const char* name, void* var, ishtar_ValueVectorType type, ishtar_ValueVectorSize length, ishtar_ServiceFlags flags, ishtar_VariableModifiedFunc feedbackFunc);
 //! This function checks treats every packet that arrived since the last call
-void ishtar_Step();
+void ishtar_Step(void);
 
 //! This function should be called each time data bytes are received through communication
 void ishtar_ReceiveData(unsigned char * data, unsigned long len);
 //! This function should be called each time a data byte is received through communication
 void ishtar_ReceiveDataByte(unsigned char c);
 //! This function sends the active snapshot if any, otherwise it does nothing
-void ishtar_Snapshot();
+void ishtar_Snapshot(void);
 
 //! This function reads the values from the memory and assign them to the Ishtar variables
-void ishtar_LoadFromMemory();
+void ishtar_LoadFromMemory(void);
 //! This function writes the values of the Ishtar variables to the memory
-void ishtar_SaveToMemory();
+void ishtar_SaveToMemory(void);
 
 //! This function returns true if the server already received a Hello message from a client
-unsigned char ishtar_IsConnected();
+unsigned char ishtar_IsConnected(void);
 
 //! This funtion returns the number of currently registered variable.
-unsigned short ishtar_ServiceCount();
+unsigned short ishtar_ServiceCount(void);
 
 #ifdef __cplusplus
 }

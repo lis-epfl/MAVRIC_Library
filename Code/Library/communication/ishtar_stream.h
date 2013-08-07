@@ -28,7 +28,7 @@ void init_ishtar_streams(byte_stream_t *transmit_stream);
  * returns the internal receive stream, which maps received bytes to the ishtar receive function.
  * This stream has to be registered with a receiving hardware interface. 
  */
-byte_stream_t* ishtar_get_inbound_stream();
+byte_stream_t* ishtar_get_inbound_stream(void);
 
 
 #endif /* ISHTAR_STREAM_H_ */

@@ -16,10 +16,6 @@
 #include "imu.h"
 #include "servo_pwm.h"
 
-void init_simulation();
-
-// computes artificial gyro and accelerometer values based on motor commands
-void simu_update(Imu_Data_t *imu1);
 
 typedef struct {
 	float torques_bf[3], rates_bf[3], lin_forces_bf[3];
@@ -29,9 +25,15 @@ typedef struct {
 	float total_mass;											// vehicle mass in kg
 	float roll_pitch_momentum,  yaw_momentum;                   // angular momentum constants (assumed to be independent)
 	float rotor_arm_length;							 			// distance between CoG and motor (in meter)
-	uint32_t last_update;										// last update in system ticks
+	double last_update;										// last update in system ticks
 	float dt;													// time base of current update
 } simulation_model_t;
+
+
+void init_simulation(simulation_model_t *sim);
+
+// computes artificial gyro and accelerometer values based on motor commands
+void simu_update(Imu_Data_t *imu1);
 
 
 #endif /* SIMULATION_H_ */

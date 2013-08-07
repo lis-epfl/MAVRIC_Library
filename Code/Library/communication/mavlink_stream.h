@@ -22,11 +22,11 @@ typedef struct {
 
 void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream);
 
-task_return_t mavlink_protocol_update();
+task_return_t mavlink_protocol_update(void);
 
-task_set* get_mavlink_taskset();
+task_set* get_mavlink_taskset(void);
 
-void mavlink_receive_handler();
+void mavlink_receive_handler(void);
 
 uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec);
 void handle_mavlink_message(Mavlink_Received_t* rec);

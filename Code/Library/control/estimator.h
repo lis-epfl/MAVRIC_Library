@@ -26,7 +26,7 @@ void e_predict (UQuat_t *qe, float *a, float dt);
 void e_kalman_predict (int axis,float accel_meas, float dt);
 void e_kalman_update_position (int axis,float position_meas, uint32_t dt);
 void e_kalman_update_speed(int axis,float speed_meas, uint32_t dt);
-void estimator_loop();
+void estimator_loop(void);
 void quat_rot(UQuat_t *quat,float *vect);
 
 #endif

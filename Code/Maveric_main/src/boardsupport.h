@@ -3,6 +3,9 @@
  *
  * Created: 20/03/2013 12:14:04
  *  Author: sfx
+ * 
+ * A place for all central data structures, system-specific initialisation and access methods. 
+ * To do: Maybe should be renamed - system_support.h ?
  */ 
 
 
@@ -63,16 +66,16 @@ typedef struct  {
 } board_hardware_t;
 
 
-board_hardware_t* initialise_board();
+board_hardware_t* initialise_board(void);
 
-board_hardware_t* get_board_hardware();
+board_hardware_t* get_board_hardware(void);
 
-byte_stream_t* get_telemetry_upstream();
-byte_stream_t* get_telemetry_downstream();
-byte_stream_t* get_debug_stream();
+byte_stream_t* get_telemetry_upstream(void);
+byte_stream_t* get_telemetry_downstream(void);
+byte_stream_t* get_debug_stream(void);
 
-Imu_Data_t* get_imu();
-Control_Command_t* get_control_inputs();
+Imu_Data_t* get_imu(void);
+Control_Command_t* get_control_inputs(void);
 
 
 #define STDOUT &get_debug_stream()
