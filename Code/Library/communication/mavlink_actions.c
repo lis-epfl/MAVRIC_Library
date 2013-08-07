@@ -97,16 +97,19 @@ void mavlink_send_attitude(void) {
 void mavlink_send_global_position(void) {				
 	// GPS COORDINATES (TODO : Add GPS to the platform)
 	//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
-
-//	mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis, 46.5193*10000000, 6.56507*10000000, 400, 1, 0, 0, 0, board->imu1.attitude.om[2]);
-
+	
    if (board->GPS_data.status == GPS_OK)
    {
 	   // board->GPS_data.timeLastMsg
 	   mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis() , board->GPS_data.latitude, board->GPS_data.longitude, board->GPS_data.altitude, 1, board->GPS_data.northSpeed, board->GPS_data.eastSpeed, board->GPS_data.verticalSpeed, board->GPS_data.course);
    }else{
-	   mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), 46.5193*10000000, 6.56507*10000000, 400*1000, 1, 0, 0, 0, board->imu1.attitude.om[2]);
-   }   
+	   //mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), 46.5193*10000000, 6.56507*10000000, 400*1000, 1, 0, 0, 0, board->imu1.attitude.om[2]);
+	   	// send integrated position (for now there is no GPS error correction...!!!)
+		global_position_t gpos=local_to_global_position(board->local_position);
+		mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude, 1, board->imu1.attitude.vel[0], board->imu1.attitude.vel[1], board->imu1.attitude.vel[2], board->imu1.attitude.om[2]);
+
+   } 
+   
 }
 
 void mavlink_send_gps_raw(void) {	

@@ -7,8 +7,7 @@
 
 #include "conf_sim_model.h"
 #include "time_keeper.h"
-
-#define PI 3.141592
+#include "coord_conventions.h"
 
 void init_simulation(simulation_model_t *sim) {
 	int i;
