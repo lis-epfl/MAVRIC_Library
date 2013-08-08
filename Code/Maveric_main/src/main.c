@@ -241,22 +241,22 @@ task_return_t run_stabilisation() {
 	{
 		case MAV_MODE_PREFLIGHT:
 		case MAV_MODE_MANUAL_ARMED:
-			board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
-			board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
-			board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
+			board->controls.rpy[ROLL]=-getChannelNeutral(S_ROLL)/350.0;
+			board->controls.rpy[PITCH]=-getChannelNeutral(S_PITCH)/350.0;
+			board->controls.rpy[YAW]=-getChannelNeutral(S_YAW)/350.0;
 			//board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-			board->controls.thrust = getChannel(S_THROTTLE)/350.0;
+			board->controls.thrust = getChannelNeutral(S_THROTTLE)/350.0;
 			for (i=0; i<4; i++) {
 				board->servos[i].value=SERVO_SCALE*board->controls.thrust;
 			}
 			
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
-			board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
-			board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
-			board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
+			board->controls.rpy[ROLL]=-getChannelNeutral(S_ROLL)/350.0;
+			board->controls.rpy[PITCH]=-getChannelNeutral(S_PITCH)/350.0;
+			board->controls.rpy[YAW]=-getChannelNeutral(S_YAW)/350.0;
 			//board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-			board->controls.thrust = getChannel(S_THROTTLE)/350.0;
+			board->controls.thrust = getChannelNeutral(S_THROTTLE)/350.0;
 			quad_stabilise(&(board->imu1), &(board->controls));
 			
 			break;
@@ -552,7 +552,7 @@ void main (void)
 
 	register_task(&main_tasks, 6, 1000000, RUN_REGULAR, &set_mav_mode_n_state);
 
-	//add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
 	
 	// turn on simulation mode

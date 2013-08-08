@@ -39,23 +39,28 @@ static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr
 }
 
 
-
 void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos){
 	int i;
 	float motor_command[4];
-	float rotor_lifts[4], rotor_drags[4];
+	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4], rotor_lateral_drag[4];
 	float ldb;
-	float lateral_drag_coefficient;
+	
 	float sqr_lateral_airspeed=sim->vel_bf[0]*sim->vel_bf[0] + sim->vel_bf[1]*sim->vel_bf[1];
-	//float sqr_lateral_airspeed=0.0;
+	float lateral_airspeed=sqrt(sqr_lateral_airspeed);
 	
 	for (i=0; i<4; i++) {
+		float old_rotor_speed;
 		motor_command[i]=(float)servos[i].value/SERVO_SCALE - sim->rotor_rpm_offset;
 		if (motor_command[i]<0.0) motor_command[i]=0;
 		
+		// temporarily save old rotor speeds
+		old_rotor_speed=sim->rotorspeeds[i];
 		// estimate rotor speeds by low-pass filtering
 		//sim->rotorspeeds[i]=(1.0-sim->rotor_lpf) * sim->rotorspeeds[i] + (sim->rotor_lpf) * (motor_command[i] * sim->rotor_rpm_gain);
 		sim->rotorspeeds[i]=(motor_command[i] * sim->rotor_rpm_gain);
+		
+		// calculate torque created by rotor inertia
+		rotor_inertia[i]=(sim->rotorspeeds[i] - old_rotor_speed)/sim->dt * sim->rotor_momentum;
 		
 		ldb=lift_drag_base(sim, sim->rotorspeeds[i], sqr_lateral_airspeed, -sim->vel_bf[Z]);
 		//ldb=lift_drag_base(sim, sim->rotorspeeds[i], sqr_lateral_airspeed, 0.0);
@@ -69,21 +74,20 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 	
 	// torque around x axis (roll)
 	sim->torques_bf[ROLL]  = ((rotor_lifts[M_FRONT_LEFT]  + rotor_lifts[M_REAR_LEFT]  ) 
-						    - (rotor_lifts[M_FRONT_RIGHT] + rotor_lifts[M_REAR_RIGHT] )) * mpos_y / sim->roll_pitch_momentum;
+						    - (rotor_lifts[M_FRONT_RIGHT] + rotor_lifts[M_REAR_RIGHT] )) * mpos_y;;
 
 	// torque around y axis (pitch)
 	sim->torques_bf[PITCH] = ((rotor_lifts[M_FRONT_LEFT]  + rotor_lifts[M_FRONT_RIGHT] )
-							- (rotor_lifts[M_REAR_LEFT]   + rotor_lifts[M_REAR_RIGHT] ))*  mpos_x / sim->roll_pitch_momentum;
+							- (rotor_lifts[M_REAR_LEFT]   + rotor_lifts[M_REAR_RIGHT] ))*  mpos_x;
 
-	sim->torques_bf[YAW]   = (M_FL_DIR*rotor_drags[M_FRONT_LEFT]  + M_FR_DIR*rotor_drags[M_FRONT_RIGHT] 
-							+ M_RL_DIR*rotor_drags[M_REAR_LEFT]   + M_RR_DIR*rotor_drags[M_REAR_RIGHT] )* 0.5 * sim->rotor_diameter / sim->yaw_momentum;
+	sim->torques_bf[YAW]   = (M_FL_DIR*(rotor_drags[M_FRONT_LEFT]+rotor_inertia[M_FRONT_LEFT])  + M_FR_DIR*(rotor_drags[M_FRONT_RIGHT]+rotor_inertia[M_FRONT_RIGHT])
+							+ M_RL_DIR*(rotor_drags[M_REAR_LEFT] +rotor_inertia[M_REAR_LEFT])   + M_RR_DIR*(rotor_drags[M_REAR_RIGHT] +rotor_inertia[M_REAR_RIGHT] ))*  sim->rotor_diameter;
 	
 
-	lateral_drag_coefficient=(rotor_drags[0]+rotor_drags[1]+rotor_drags[2]+rotor_drags[3]);
 	
-	sim->lin_forces_bf[X] = -sim->vel_bf[X]*lateral_drag_coefficient  * GRAVITY;  // convert from kg to Newton
-	sim->lin_forces_bf[Y] = -sim->vel_bf[Y]*lateral_drag_coefficient  * GRAVITY;
-	sim->lin_forces_bf[Z] = -(rotor_lifts[M_FRONT_LEFT]+ rotor_lifts[M_FRONT_RIGHT] +rotor_lifts[M_REAR_LEFT] +rotor_lifts[M_REAR_RIGHT])* GRAVITY;
+	sim->lin_forces_bf[X] = -sim->vel_bf[X]*lateral_airspeed* sim->vehicle_drag;  // convert from kg to Newton
+	sim->lin_forces_bf[Y] = -sim->vel_bf[Y]*lateral_airspeed* sim->vehicle_drag;
+	sim->lin_forces_bf[Z] = -(rotor_lifts[M_FRONT_LEFT]+ rotor_lifts[M_FRONT_RIGHT] +rotor_lifts[M_REAR_LEFT] +rotor_lifts[M_REAR_RIGHT]);
 
 }
 
@@ -122,9 +126,11 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	#endif
 	
 	// integrate torques to get simulated gyro rates (with some damping)
-	for (i=0; i<3; i++) {
-		sim->rates_bf[i] = 0.999*sim->rates_bf[i] + sim->dt * sim->torques_bf[i];
-	}
+	//for (i=0; i<3; i++) {
+	sim->rates_bf[0] = (1.0-0.01*sim->dt)*sim->rates_bf[0] + sim->dt * sim->torques_bf[0] /sim->roll_pitch_momentum;
+	sim->rates_bf[1] = (1.0-0.01*sim->dt)*sim->rates_bf[1] + sim->dt * sim->torques_bf[1] /sim->roll_pitch_momentum;
+	sim->rates_bf[2] = (1.0-0.01*sim->dt)*sim->rates_bf[2] + sim->dt * sim->torques_bf[2] /sim->yaw_momentum;
+	//}
 	
 
 	// check altitude - if it is lower than 0, clamp everything (this is in NED, assuming negative altitude)
