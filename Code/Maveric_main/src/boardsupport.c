@@ -7,6 +7,7 @@
 
 #include "boardsupport.h"
 #include "waypoint_navigation.h"
+#include "conf_sim_model.h"
 
 static volatile board_hardware_t board_hardware;
 
@@ -54,7 +55,7 @@ board_hardware_t* initialise_board() {
 
 		spektrum_init();
 		init_Servos();
-		
+		init_simulation(&board_hardware.sim_model);
 		
 		board_hardware.controls.rpy[ROLL]=0;
 		board_hardware.controls.rpy[PITCH]=0;
@@ -63,6 +64,14 @@ board_hardware_t* initialise_board() {
 		
 		board_hardware.number_of_waypoints = 0;
 
+		board_hardware.simulation_mode=0;
+		
+		// default GPS home position
+		board_hardware.local_position.origin.longitude=   HOME_LONGITUDE;
+		board_hardware.local_position.origin.latitude =   HOME_LATITUDE;
+		board_hardware.local_position.origin.altitude =   HOME_ALTITUDE;
+		board_hardware.local_position.pos[0]=0;	board_hardware.local_position.pos[1]=0; board_hardware.local_position.pos[2]=0;
+		
 		init_waypoint_list(board_hardware.waypoint_list,&board_hardware.number_of_waypoints);
 
 		return &board_hardware;

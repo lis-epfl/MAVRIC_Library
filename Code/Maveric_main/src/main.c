@@ -228,7 +228,14 @@ task_return_t set_mav_mode_n_state()
 task_return_t run_stabilisation() {
 	int i;
 	
-	imu_update(&(board->imu1));
+	if (board->simulation_mode==1) {
+		simu_update(&(board->sim_model), &(board->servos), &(board->imu1));
+	} else {
+		imu_update(&(board->imu1));
+	}
+	board->local_position.pos[0] = board->imu1.attitude.pos[0];
+	board->local_position.pos[1] = board->imu1.attitude.pos[1];
+	board->local_position.pos[2] = board->imu1.attitude.pos[2];
 	
 	switch(board->mav_mode)
 	{
@@ -242,7 +249,7 @@ task_return_t run_stabilisation() {
 			for (i=0; i<4; i++) {
 				board->servos[i].value=SERVO_SCALE*board->controls.thrust;
 			}
-			set_servos(&(board->servos));
+			
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
 			board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
@@ -251,28 +258,38 @@ task_return_t run_stabilisation() {
 			//board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
 			board->controls.thrust = getChannel(S_THROTTLE)/350.0;
 			quad_stabilise(&(board->imu1), &(board->controls));
-			set_servos(&(board->servos));
+			
 			break;
 		case MAV_MODE_GUIDED_ARMED:
 			board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
 			//board->controls.thrust = getChannel(S_THROTTLE)/350.0;
 			quad_stabilise(&(board->imu1), &(board->controls));
-			set_servos(&(board->servos));
+			
 			break;
 		case MAV_MODE_AUTO_ARMED:
 			board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
 			//board->controls.thrust = getChannel(S_THROTTLE)/350.0;
 			quad_stabilise(&(board->imu1), &(board->controls));
-			set_servos(&(board->servos));
+			
 			break;
 		case MAV_MODE_MANUAL_DISARMED:
 		case MAV_MODE_STABILIZE_DISARMED:
 		case MAV_MODE_GUIDED_DISARMED:
 		case MAV_MODE_AUTO_DISARMED:
-			set_servos(&(servo_failsafe));
+			//set_servos(&(servo_failsafe));
+			for (i=0; i<NUMBER_OF_SERVO_OUTPUTS; i++) {
+				board->servos[i]=servo_failsafe[i];
+			}
 			break;
 		
 	}
+	
+	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
+	if (board->simulation_mode!=1) {
+		set_servos(&(board->servos));
+	}
+		
+
 }
 
 //task_return_t run_stabilisation() {
@@ -475,7 +492,7 @@ void initialisation() {
 	LED_Off(LED1);
 	
 	board->imu1.attitude.calibration_level=LEVELING;	
-	for (i=200; i>0; i--) {
+	for (i=400; i>0; i--) {
 		imu_update(&board->imu1);
 		if (i%50 ==0) {
 			// Send heartbeat message
@@ -486,7 +503,27 @@ void initialisation() {
 		
 		delay_ms(5);
 	}
+	// after initial leveling, initialise accelerometer biases
+	board->imu1.attitude.calibration_level=LEVEL_PLUS_ACCEL;
+	for (i=200; i>0; i--) {
+		imu_update(&board->imu1);
+		if (i%50 ==0) {
+			// Send heartbeat message
+			board->mav_state = MAV_STATE_CALIBRATING;
+			board->mav_mode = MAV_MODE_PREFLIGHT;
+			mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_PREFLIGHT, 0, MAV_STATE_CALIBRATING);
+		}
+			
+		delay_ms(5);
+	}
 	board->imu1.attitude.calibration_level=OFF;
+	//reset position estimate
+	for (i=0; i<3; i++) {
+		// clean acceleration estimate without gravity:
+		board->imu1.attitude.vel_bf[i]=0.0;
+		board->imu1.attitude.vel[i]=0.0;
+		board->imu1.attitude.pos[i]=0.0;
+	}
 	board->mav_state = MAV_STATE_STANDBY;
 	board->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	
@@ -508,16 +545,18 @@ void main (void)
 	register_task(&main_tasks, 2, 1000, RUN_REGULAR, &mavlink_protocol_update);
 	
 	//register_task(&main_tasks, 3 ,100000, RUN_REGULAR, &gps_task);
-	register_task(&main_tasks, 4, 10000, RUN_REGULAR, &run_estimator);
+	//register_task(&main_tasks, 4, 10000, RUN_REGULAR, &run_estimator);
 	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &read_radar);
 
 	register_task(&main_tasks, 5, 1000000, RUN_REGULAR, &run_navigation_task);
 
 	register_task(&main_tasks, 6, 1000000, RUN_REGULAR, &set_mav_mode_n_state);
 
-	add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	//add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
-
+	
+	// turn on simulation mode
+	board->simulation_mode=1;
 	// main loop
 	counter=0;
 	while (1==1) {

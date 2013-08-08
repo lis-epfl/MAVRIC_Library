@@ -36,9 +36,9 @@
 #define RAW_ACC_Y 1
 #define RAW_ACC_Z 2
 
-#define RAW_ACC_X_SCALE  260.0
-#define RAW_ACC_Y_SCALE  260.0
-#define RAW_ACC_Z_SCALE  260.0
+#define RAW_ACC_X_SCALE  261.5
+#define RAW_ACC_Y_SCALE  262.5
+#define RAW_ACC_Z_SCALE  255.0
 
 
 #define RAW_COMPASS_X 2
