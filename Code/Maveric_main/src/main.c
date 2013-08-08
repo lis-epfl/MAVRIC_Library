@@ -82,13 +82,13 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 	switch (checkReceivers())
 	{
 		case 1:
-		rc_check = 1;
+		*rc_check = 1;
 		break;
 		case -1:
-		rc_check = -1;
+		*rc_check = -1;
 		break;
 		case -2:
-		rc_check = -2;
+		*rc_check = -2;
 		break;
 	}
 	//dbg_print("rc_check: ");
