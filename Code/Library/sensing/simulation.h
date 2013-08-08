@@ -24,7 +24,9 @@ typedef struct {
 	float rotor_cd, rotor_cl, rotor_diameter, rotor_foil_area;	// rotor lift and drag coefficients, mean rotor diameter (used to calculate rotor lift, torque and drag)
 	float rotor_pitch;
 	float total_mass;											// vehicle mass in kg
+	float vehicle_drag;                                           // coefficient of drag of whole vehicle
 	float roll_pitch_momentum,  yaw_momentum;                   // angular momentum constants (assumed to be independent)
+	float rotor_momentum;										// angular momentum of rotor (for rotor inertia)
 	float rotor_arm_length;							 			// distance between CoG and motor (in meter)
 	double last_update;											// last update in system ticks
 	float dt;													// time base of current update

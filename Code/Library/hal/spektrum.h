@@ -18,7 +18,7 @@
 #define S_PITCH    2
 #define S_YAW      3
 
-#define DEADZONE 6
+#define DEADZONE 7
 
 typedef struct Spektrum_Receiver {
 	Buffer_t receiver;
