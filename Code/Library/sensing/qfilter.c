@@ -7,7 +7,8 @@
 
 #include "qfilter.h"
 #include "imu.h"
-
+#include "coord_conventions.h"
+#include <math.h>
 
 #define CROSS(u,v,out) \
 	out[0] = u[1] * v[2] - u[2]*v[1];\
@@ -42,9 +43,11 @@
 
 void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 	uint8_t i;
+	int8_t init_angle;
+	
 	attitude->qe.s=1.0;
 
-	for (i=0; i<6; i++){
+	for (i=0; i<9; i++){
 		attitude->sf[i]=1.0/(float)scalefactor[i];
 		attitude->be[i]=bias[i]*attitude->sf[i];
 		
@@ -61,11 +64,27 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 //	attitude->be[5]=0.15;
 
 	attitude->qe.v[0]=0.0;
-	attitude->qe.v[0]=0.0;
-	attitude->qe.v[0]=0.0;
+	attitude->qe.v[1]=0.0;
+	attitude->qe.v[2]=0.0;
 
+	for(i=0; i<3; i++)
+	{
+		attitude->mag[i]=((float)attitude->raw_mag_mean[i])*attitude->sf[i+COMPASS_OFFSET]-attitude->be[i+COMPASS_OFFSET];
+	}
+	
+	init_angle = atan2(attitude->mag[1],attitude->mag[0]);
+
+	attitude->qe.s = cos(init_angle/2.0);
+	attitude->qe.v[0]=0.0;
+	attitude->qe.v[1]=0.0;
+	attitude->qe.v[2]=sin((PI + init_angle)/2.0);
+	
 	attitude->kp=0.05;
 	attitude->ki=attitude->kp/15.0;
+	
+	attitude->kp_mag = 0.05;
+	attitude->ki_mag = attitude->kp_mag/15.0;
+	
 	attitude->calibration_level=LEVELING;
 	//dt=1.0/samplingrate;
 }
@@ -73,15 +92,18 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 
 void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	uint8_t i;
-	float  omc[3], rvc[3], tmp[3], snorm, norm, s_acc_norm, acc_norm;
+	float  omc[3], rvc[3], tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
 	UQuat_t qed, qtmp1, up_bf, qtmp2, qtmp3;
+	
+	UQuat_t qed2, qtmp4, front_bf,qtmp5;
 
 	for (i=0; i<3; i++){
 		attitude->om[i]  = (1.0-GYRO_LPF)*attitude->om[i]+GYRO_LPF*(((float)rates[GYRO_OFFSET+i])*attitude->sf[i]-attitude->be[GYRO_OFFSET+i]);
-		attitude->a[i]   = (1.0-ACC_LPF)*attitude->a[i]+ACC_LPF*(((float)rates[i+ACC_OFFSET])*attitude->sf[i+3]-attitude->be[i+ACC_OFFSET]);
+		attitude->a[i]   = (1.0-ACC_LPF)*attitude->a[i]+ACC_LPF*(((float)rates[i+ACC_OFFSET])*attitude->sf[i+ACC_OFFSET]-attitude->be[i+ACC_OFFSET]);
+		attitude->mag[i] = (1.0-MAG_LPF)*attitude->mag[i]+MAG_LPF*(((float)rates[i+COMPASS_OFFSET])*attitude->sf[i+COMPASS_OFFSET]-attitude->be[i+COMPASS_OFFSET]);
 	}
 
-	// up_bf = qe^-1 *(0,0,0,1) * qe
+	// up_bf = qe^-1 *(0,0,0,-1) * qe
 	QI(attitude->qe, qtmp1);
 	up_bf.s=0; up_bf.v[0]=UPVECTOR_X; up_bf.v[1]=UPVECTOR_Y; up_bf.v[2]=UPVECTOR_Z;
 	QMUL(qtmp1, up_bf, qtmp3);
@@ -136,6 +158,82 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	attitude->be[1]+= - dt * attitude->ki * omc[1];
 	attitude->be[2]+= - dt * attitude->ki * omc[2];
 
+
+
+
+
+
+
+
+
+
+
+	// Heading computation
+	QI(attitude->qe,qtmp4);
+	front_bf.s = 0;front_bf.v[0] = FRONTVECTOR_X;front_bf.v[1] = FRONTVECTOR_Y;front_bf.v[2] = FRONTVECTOR_Z;
+	
+	QMUL(qtmp4, front_bf, qtmp5);
+	QMUL(qtmp5, attitude->qe, front_bf);
+	
+	// calculate norm of acceleration vector
+	s_mag_norm=attitude->mag[0]*attitude->mag[0]+attitude->mag[1]*attitude->mag[1]+attitude->mag[2]*attitude->mag[2];
+	if ((s_mag_norm>0.7*0.7)&&(s_mag_norm<1.3*1.3)) {
+		// approximate square root by running 2 iterations of newton method
+		mag_norm=1.0;
+		mag_norm=0.5*(mag_norm+(s_acc_norm/mag_norm));
+		mag_norm=0.5*(mag_norm+(s_acc_norm/mag_norm));
+
+		tmp[0]=attitude->mag[0]/mag_norm;
+		tmp[1]=attitude->mag[1]/mag_norm;
+		tmp[2]=attitude->mag[2]/mag_norm;
+		// omc = a x up_bf.v
+		CROSS(tmp, front_bf.v, omc);
+		} else {
+		omc[0]=0;		omc[1]=0; 		omc[2]=0;
+	}
+	
+	for (i=0; i<3; i++){
+		qtmp4.v[i] = attitude->om[i] +attitude->kp_mag*omc[i];
+	}
+	qtmp4.s=0;
+	
+	QMUL(attitude->qe, qtmp4, qed2);
+
+	attitude->qe.s=attitude->qe.s+qed2.s*dt;
+	attitude->qe.v[0]+=qed2.v[0]*dt;
+	attitude->qe.v[1]+=qed2.v[1]*dt;
+	attitude->qe.v[2]+=qed2.v[2]*dt;
+	
+	snorm=attitude->qe.s*attitude->qe.s+attitude->qe.v[0]*attitude->qe.v[0] + attitude->qe.v[1] * attitude->qe.v[1] + attitude->qe.v[2] * attitude->qe.v[2];
+	if (snorm<0.0001) norm=0; else {
+		
+		// approximate square root by running 2 iterations of newton method
+		norm=1.0;
+		norm=0.5*(norm+(snorm/norm));
+		norm=0.5*(norm+(snorm/norm));
+		norm=0.5*(norm+(snorm/norm));
+		//norm=0.5*(norm+(snorm/norm));
+	}
+	attitude->qe.s/= norm;
+	attitude->qe.v[0] /= norm;
+	attitude->qe.v[1] /= norm;
+	attitude->qe.v[2] /= norm;
+
+	// bias estimate update
+	attitude->be[6]+= - dt * attitude->ki_mag * omc[0];
+	attitude->be[7]+= - dt * attitude->ki_mag * omc[1];
+	attitude->be[8]+= - dt * attitude->ki_mag * omc[2];
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
 	switch (attitude->calibration_level) {
 	case OFF:
 		attitude->kp=0.08;//*(0.1/(0.1+s_acc_norm-1.0));
@@ -181,7 +279,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 		attitude->acc_bf[i]=(attitude->a[i] - up_bf.v[i]) * GRAVITY;
 		attitude->vel_bf[i]=attitude->vel_bf[i]*(1.0-(VEL_DECAY*dt)) + attitude->acc_bf[i] * dt;
 	}
-	// calculate velocity in global frame
+	// calculate veloc in global frame
 	// vel = qe *vel_bf * qe-1
 	qtmp1.s= 0.0; qtmp1.v[0]=attitude->vel_bf[0]; qtmp1.v[1]=attitude->vel_bf[1]; qtmp1.v[2]=attitude->vel_bf[2];
 	QMUL(attitude->qe, qtmp1, qtmp2);

@@ -545,10 +545,10 @@ void main (void)
 	register_task(&main_tasks, 2, 1000, RUN_REGULAR, &mavlink_protocol_update);
 	
 	//register_task(&main_tasks, 3 ,100000, RUN_REGULAR, &gps_task);
-	//register_task(&main_tasks, 4, 10000, RUN_REGULAR, &run_estimator);
+	register_task(&main_tasks, 4, 100000, RUN_REGULAR, &run_estimator);
 	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &read_radar);
 
-	register_task(&main_tasks, 5, 1000000, RUN_REGULAR, &run_navigation_task);
+	// register_task(&main_tasks, 5, 1000000, RUN_REGULAR, &run_navigation_task);
 
 	register_task(&main_tasks, 6, 1000000, RUN_REGULAR, &set_mav_mode_n_state);
 
@@ -556,7 +556,8 @@ void main (void)
 	
 	
 	// turn on simulation mode
-	board->simulation_mode=1;
+	board->simulation_mode=0;
+	
 	// main loop
 	counter=0;
 	while (1==1) {

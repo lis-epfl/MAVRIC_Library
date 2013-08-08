@@ -42,12 +42,12 @@
 
 
 #define RAW_COMPASS_X 2
-#define RAW_COMPASS_Y 1
-#define RAW_COMPASS_Z 0
+#define RAW_COMPASS_Y 0
+#define RAW_COMPASS_Z 1
 
-#define RAW_MAG_X_SCALE 1
-#define RAW_MAG_Y_SCALE 1
-#define RAW_MAG_Z_SCALE 1
+#define RAW_MAG_X_SCALE 290
+#define RAW_MAG_Y_SCALE 237.5
+#define RAW_MAG_Z_SCALE 488.5
 
 #define GYRO_OFFSET 0
 #define ACC_OFFSET 3
@@ -56,6 +56,10 @@
 #define UPVECTOR_X  0
 #define UPVECTOR_Y  0
 #define UPVECTOR_Z -1
+
+#define FRONTVECTOR_X 1
+#define FRONTVECTOR_Y 0
+#define FRONTVECTOR_Z -0.8558
 
 
 // Definitions of Platform configuration

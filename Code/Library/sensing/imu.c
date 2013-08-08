@@ -39,6 +39,10 @@ void init_imu (Imu_Data_t *imu1) {
 	imu1->raw_bias[4]=9.0;
 	imu1->raw_bias[5]=-19.0;
 	
+	imu1->raw_bias[6]=66.5;
+	imu1->raw_bias[7]=35.5;
+	imu1->raw_bias[8]=100.5;
+	
 	//Geraud
 //	imu1->raw_bias[3]=6.0;
 //	imu1->raw_bias[4]=16.0;
@@ -83,6 +87,7 @@ void calibrate_Gyros(Imu_Data_t *imu1) {
 		imu_get_raw_data(imu1);
 		for (j=0; j<3; j++) {
 			imu1->raw_bias[j]=(0.9*imu1->raw_bias[j]+0.1*(float)imu1->raw_channels[j]);
+			imu1->attitude.raw_mag_mean[i] = (1.0-MAG_LPF)*imu1->attitude.raw_mag_mean[i]+MAG_LPF*((float)imu1->raw_channels[i+COMPASS_OFFSET]);
 		}
 		delay_ms(10);
 	}

@@ -11,6 +11,7 @@
 
 #define GYRO_LPF 0.1
 #define ACC_LPF 0.05
+#define MAG_LPF 0.1
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
 #define VEL_DECAY 0.1
@@ -29,10 +30,13 @@ typedef struct {
 	UQuat_t qe;
 	UQuat_t up_vec;
 	
-	float be[6], sf[6];
+	float be[9], sf[9];
 	float om[3], a[3], mag[3];
 	float kp;
 	float ki;
+	float kp_mag;
+	float ki_mag;
+	float raw_mag_mean[3];
 	uint8_t calibration_level;
 	
 	float acc_bf[3], vel_bf[3], vel[3], pos[3];
