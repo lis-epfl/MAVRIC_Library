@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-4.6.dtd">
 <!-- eric4 project file for project mavplot -->
-<!-- Saved: 2013-07-19, 14:39:06 -->
+<!-- Saved: 2013-08-09, 03:25:20 -->
 <!-- Copyright (C) 2013 ,  -->
 <Project version="4.6">
   <Language>en</Language>
@@ -24,12 +24,8 @@
     <Source>pymavlink/mavparm.py</Source>
     <Source>pymavlink.py</Source>
     <Source>mavlink_receiver.py</Source>
-    <Source>treeview/treegridview.py</Source>
-    <Source>treeview/simpleTest.py</Source>
-    <Source>treeview/mylabel.py</Source>
     <Source>kivygui.py</Source>
     <Source>decoratedwidget.py</Source>
-    <Source>__init__.py</Source>
     <Source>googleearth_server.py</Source>
   </Sources>
   <Forms>
