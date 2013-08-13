@@ -19,7 +19,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	// Set home waypoint
 	waypoint.autocontinue = 1;
 	waypoint.current = 1;
-	waypoint.frame = 0; // 0:Global, 1:local NED, 2:mission, 3:global rel alt, 4: local ENU
+	waypoint.frame = MAV_FRAME_GLOBAL; // 0:Global, 1:local NED, 2:mission, 3:global rel alt, 4: local ENU
 	waypoint.wp_id = MAV_CMD_DO_SET_HOME;
 
 	
@@ -33,7 +33,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	// Set nav waypoint
 	waypoint.autocontinue = 1;
 	waypoint.current = 0;
-	waypoint.frame = 0;
+	waypoint.frame = MAV_FRAME_GLOBAL;
 	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
 	
 	waypoint.x = 465185536 / 1.0e7f; // convert to deg
@@ -50,7 +50,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	// Set nav waypoint
 	waypoint.autocontinue = 1;
 	waypoint.current = 0;
-	waypoint.frame = 0;
+	waypoint.frame = MAV_FRAME_GLOBAL;
 	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
 	
 	waypoint.x = 465186816 / 1.0e7f; // convert to deg
@@ -67,7 +67,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	// Set nav waypoint
 	waypoint.autocontinue = 1;
 	waypoint.current = 0;
-	waypoint.frame = 0;
+	waypoint.frame = MAV_FRAME_GLOBAL;
 	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
 
 	waypoint.x = 465186816 / 1.0e7f; // convert to deg
@@ -316,7 +316,7 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 					if (waypoint_request_number == number_of_waypoints) 
 					{
 						
-						uint8_t type = 0;                         // ok (0), error(1)
+						uint8_t type = 0; //MAV_CMD_ACK_OK ??;                         // ok (0), error(1)
 						mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,mavlink_mission_planner.compid,type);
 						mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,type);
 						mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,0,type);

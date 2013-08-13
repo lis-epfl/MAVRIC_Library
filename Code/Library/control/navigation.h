@@ -1,42 +1,31 @@
 /*
  * navigation.h
  *
- * Created: 15.05.2013 10:57:32
- *  Author: Philippe
+ * Created: 13.08.2013 11:56:46
+ *  Author: ndousse
  */ 
 
-#include "control.h"
 
 #ifndef NAVIGATION_H_
 #define NAVIGATION_H_
 
-#define PID_X	0	//For beta
-#define PID_Y	1	//For phi
-#define PID_Z	2	//For thrust
+#include "qfilter.h"
+#include "waypoint_navigation.h"
 
-typedef struct {
-	long latitude;
-	long longitude;
-	int on;
-} Navigation_Data_t;
+void init_nav();
+void set_waypoint_from_frame(waypoint_struct current_wp);
 
-typedef struct { //in quadrotor reference frame
-	float x_speed;
-	float y_speed;
-	float z_speed;
-	float yaw;
-	PID_Controller_t pid_data[3]; //x,y,z
-} SpeedContr_Data_t;
+void run_navigation();
 
+void set_speed_command(float rel_pos[]);
 
-void init_navigation(void);
-void nav_function(int nav_type, int current_waypoint);
-void run_navigation(void);
-void speed_control_pid(void);
-float acos_func(float x);
-float Q_rsqrt(float number);
-float get_angle_with_XNED(float v1_x,float v1_y,float v1_z);
-float get_angle(float v1_x,float v1_y,float v1_z,float v2_x,float v2_y,float v2_z);
-void circular_fly(void);
+void low_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude);
+void high_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude);
 
-#endif /* NAVIGATION_H_ */
+float set_roll(float direction_bf_y, float vel_bf_y);
+float set_pitch(float direction_bf_x, float vel_bf_x);
+float set_yaw(float value_x, float value_y);
+
+float min_max_bound(float value, float min, float max);
+
+#endif NAVIGATION_H_

@@ -66,8 +66,6 @@ float previous_state[3][3];//for delayed GPS measure (so we can get a max 200ms 
 float previous_acc[3][10];// We must stock the acc, dt and quaternion so that we can do the predictions until actual time
 float previous_dt[3][10];
 
-bool init_gps_position = false;
-
 UQuat_t quat_heading;
 
 //----------------------------INITIALISATION------------------------
@@ -90,10 +88,20 @@ void e_init()
 	R[1]=R_Y_POS;
 	R[2]=R_Z_POS;
 	
+	init_pos_gps();
+}
+
+void init_pos_gps()
+{
 	if (newValidGpsMsg())
 	{
-		if (!init_gps_position)
+		if (!(board->init_gps_position))
 		{
+			board->local_position.origin.longitude = board->GPS_data.longitude;
+			board->local_position.origin.latitude = board->GPS_data.latitude;
+			board->local_position.origin.altitude = board->GPS_data.altitude;
+			
+			
 			init_long=board->GPS_data.longitude;
 			init_lat=board->GPS_data.latitude;
 			init_alt=board->GPS_data.altitude;
@@ -104,9 +112,9 @@ void e_init()
 			quat_heading.v[1] = 0;
 			quat_heading.v[2] = sin(init_heading*DEGREE_TO_RADIAN/2);
 			
-			init_gps_position = true;
+			board->init_gps_position = true;
 		}
-	}		
+	}
 }
 
 void e_kalman_init (int axis,float init_p) // axis = Z, X or Y
@@ -122,7 +130,7 @@ void e_kalman_init (int axis,float init_p) // axis = Z, X or Y
 		board->estimation.state[axis][BIAIS] = board->imu1.raw_bias[4];
 	else if (axis==Z)
 		board->estimation.state[axis][BIAIS] = board->imu1.raw_bias[5];
-		
+	
 	for (i=0; i<3; i++) {
 		for (j=0; j<3; j++)
 		P[axis][i][j] = 0.;
@@ -346,13 +354,13 @@ void estimator_loop()
 	
 	//static uint32_t dt_baro,time_before_baro;
 	
-// 	if (!init_gps_position)
-// 	{
-// 		e_init();
-// 		
-// 	}else{
+ 	if (!board->init_gps_position)
+ 	{
+ 		init_pos_gps();
+	} 	
 
 	e_predict(&(board->imu1.attitude.qe),board->imu1.attitude.a,board->imu1.dt);
+	
 	
 	//Check new values from GPS/Baro, if yes, update
 	if (newValidGpsMsg())

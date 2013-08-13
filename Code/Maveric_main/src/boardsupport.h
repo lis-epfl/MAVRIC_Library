@@ -12,6 +12,7 @@
 #ifndef BOARDSUPPORT_H_
 #define BOARDSUPPORT_H_
 
+#include "stdbool.h"
 
 #include "time_keeper.h"
 #include "i2c_driver_int.h"
@@ -55,6 +56,7 @@ typedef struct  {
 	simulation_model_t sim_model;
 	
 	local_coordinates_t local_position;
+	bool init_gps_position;
 	
 	// aliases
 	byte_stream_t *telemetry_down_stream, *telemetry_up_stream;
@@ -62,6 +64,7 @@ typedef struct  {
 	
 	waypoint_struct waypoint_list[MAX_WAYPOINTS];
 	uint16_t number_of_waypoints;
+	int8_t current_wp;
 	
 	uint8_t mav_mode;
 	uint8_t mav_state;

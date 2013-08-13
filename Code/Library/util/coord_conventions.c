@@ -25,7 +25,7 @@ local_coordinates_t global_to_local_position(global_position_t position, global_
 	output.pos[0]=  sin(deg_to_rad(position.latitude-origin.latitude))*EARTH_RADIUS;
 	output.pos[1]=  sin(deg_to_rad(position.longitude-origin.longitude))*small_radius;
 	output.pos[2]= -(position.altitude - origin.altitude);
-
+	return output;
 }
 
 

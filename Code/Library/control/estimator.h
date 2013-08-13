@@ -18,7 +18,8 @@ typedef struct {
 	float state[3][3]; // [z z_speed z_biais] in NED
 } Estimator_Data_t;
 
-void e_init (void);
+void e_init(void);
+void init_pos_gps(void);
 void e_kalman_init (int axis,float init_p);
 void e_predict (UQuat_t *qe, float *a, float dt);
 void e_kalman_predict (int axis,float accel_meas, float dt);
