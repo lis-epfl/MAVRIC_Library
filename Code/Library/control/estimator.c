@@ -51,22 +51,35 @@
 	u[0]=u[0]*a;\
 	u[1]=u[1]*a;\
 	u[2]=u[2]*a;
-	
+
+#define SCP(u,v) \
+(u[0]*v[0]+u[1]*v[1]+u[2]*v[2]);
+
+#define QI(q, out) \
+out.s = q.s;\
+out.v[0] = -q.v[0];\
+out.v[1] = -q.v[1];\
+out.v[2] = -q.v[2];
+
+#define QMUL(q1,q2,out) \
+tmp[0] = q1.v[1] * q2.v[2] - q1.v[2]*q2.v[1];\
+tmp[1] = q1.v[2] * q2.v[0] - q1.v[0]*q2.v[2];\
+tmp[2] = q1.v[0] * q2.v[1] - q1.v[1]*q2.v[0];\
+out.v[0] = q2.s*q1.v[0] + q1.s *q2.v[0] +tmp[0];\
+out.v[1] = q2.s*q1.v[1] + q1.s *q2.v[1] +tmp[1];\
+out.v[2] = q2.s*q1.v[2] + q1.s *q2.v[2] +tmp[2];\
+out.s= q1.s*q2.s - SCP(q1.v, q2.v);
 
 pressure_data *baro;
 board_hardware_t *board;
 float P[3][3][3]; // Covariance matrice for Z,X and Y
 float Q[3][3];
 float R[3];
-long init_lat,init_long;
-float init_alt;
-float init_heading;
+
 float previous_P[3][3][3]; //Remember the state and covariance 200ms ago (so 10 predictions ago) to apply propagation
 float previous_state[3][3];//for delayed GPS measure (so we can get a max 200ms delay)
 float previous_acc[3][10];// We must stock the acc, dt and quaternion so that we can do the predictions until actual time
 float previous_dt[3][10];
-
-UQuat_t quat_heading;
 
 //----------------------------INITIALISATION------------------------
 void e_init()
@@ -88,32 +101,20 @@ void e_init()
 	R[1]=R_Y_POS;
 	R[2]=R_Z_POS;
 	
+	filter_init_delta_t = false;
+	
 	init_pos_gps();
 }
 
 void init_pos_gps()
 {
-	if (newValidGpsMsg())
+	if (newValidGpsMsg() && (!(board->init_gps_position)))
 	{
-		if (!(board->init_gps_position))
-		{
-			board->local_position.origin.longitude = board->GPS_data.longitude;
-			board->local_position.origin.latitude = board->GPS_data.latitude;
-			board->local_position.origin.altitude = board->GPS_data.altitude;
-			
-			
-			init_long=board->GPS_data.longitude;
-			init_lat=board->GPS_data.latitude;
-			init_alt=board->GPS_data.altitude;
-			init_heading = board->GPS_data.course;
-			
-			quat_heading.s = cos(init_heading*DEGREE_TO_RADIAN/2);
-			quat_heading.v[0] = 0;
-			quat_heading.v[1] = 0;
-			quat_heading.v[2] = sin(init_heading*DEGREE_TO_RADIAN/2);
-			
-			board->init_gps_position = true;
-		}
+		board->init_gps_position = true;
+		
+		board->local_position.origin.longitude = board->GPS_data.longitude;
+		board->local_position.origin.latitude = board->GPS_data.latitude;
+		board->local_position.origin.altitude = board->GPS_data.altitude;
 	}
 }
 
@@ -131,39 +132,60 @@ void e_kalman_init (int axis,float init_p) // axis = Z, X or Y
 	else if (axis==Z)
 		board->estimation.state[axis][BIAIS] = board->imu1.raw_bias[5];
 	
-	for (i=0; i<3; i++) {
+	for (i=0; i<3; i++) 
+	{
 		for (j=0; j<3; j++)
-		P[axis][i][j] = 0.;
+		{
+			P[axis][i][j] = 0.0;
+		}
 		P[axis][i][i] = init_p;
 	}
 }
 
 //------------------------------PREDICTION--------------------------
-void e_predict (UQuat_t *qe, float *a, float dt)
+void e_predict (UQuat_t *qe, float a[], float dt)
 {
 	
+	UQuat_t qtmp1,qtmp2,qtmp3,qe_tmp;
+	float tmp[3];
 	//UQuat_t inv_qe;
-	float x[3],y[3],z[3];
-	//float temp1[3], temp2[3];
-	// Calculation of acceleration on x,y,z in NED 
-	x[0]=1;x[1]=0;x[2]=0; //definition of x,y,z in NED
-	y[0]=0;y[1]=1;y[2]=0;
-	z[0]=0;z[1]=0;z[2]=1;
+	float acc_glo[3];
 	
-// 	quat_rot(&quat_heading,x);
-// 	quat_rot(&quat_heading,y);
-// 	quat_rot(&quat_heading,z);
+	//quat_rot(qe,x); // get the x vector of the quad in NED
+	//quat_rot(qe,y);
+	//quat_rot(qe,z);
 	
-	quat_rot(qe,x); // get the x vector of the quad in NED
-	quat_rot(qe,y);
-	quat_rot(qe,z);
-	MUL_V_SCA(x,a[1]) // get the right norm
-	MUL_V_SCA(y,a[0])
-	MUL_V_SCA(z,-a[2])
+	//MUL_V_SCA(x,a[1]) // get the right norm
+	//MUL_V_SCA(y,a[0])
+	//MUL_V_SCA(z,-a[2])
+	//e_kalman_predict(X,(x[0]*x[0]+y[0]*y[0]+z[0]*z[0]),dt);//final x (in NED) acc
+	//e_kalman_predict(Y,(x[1]*x[1]+y[1]*y[1]+z[1]*z[1]),dt);
+	//e_kalman_predict(Z,(x[2]*x[2]+y[2]*y[2]+z[2]*z[2]),dt);
+	
+	qe_tmp = *qe;
+	
+	// compute acceleration in global frame
+	// acc_glo = qe * acc_bf * qe-1
+	qtmp1.s=0.0; qtmp1.v[0]=a[0]; qtmp1.v[1]=a[1];qtmp1.v[2]=a[2];
+	QMUL(qe_tmp,qtmp1,qtmp2);
+	QI(qe_tmp,qtmp1);
+	QMUL(qtmp2,qtmp1,qtmp3);
+	acc_glo[0]=qtmp3.v[0];acc_glo[1]=qtmp3.v[1];acc_glo[2]=qtmp3.v[2];
 
-	e_kalman_predict(X,(x[0]*x[0]+y[0]*y[0]+z[0]*z[0]),dt);//final x (in NED) acc 
-	e_kalman_predict(Y,(x[1]*x[1]+y[1]*y[1]+z[1]*z[1]),dt);
-	e_kalman_predict(Z,(x[2]*x[2]+y[2]*y[2]+z[2]*z[2]),dt);
+	//dbg_print("Acceleration:");
+	//dbg_print_num(a[0]*1000,10);
+	//dbg_print_num(a[1]*1000,10);
+	//dbg_print_num(a[2]*1000,10);
+	//dbg_print("\n");
+	//dbg_print("Acceleration2:");
+	//dbg_print_num(board->imu1.attitude.a[0]*1000,10);
+	//dbg_print_num(board->imu1.attitude.a[1]*1000,10);
+	//dbg_print_num(board->imu1.attitude.a[2]*1000,10);
+	//dbg_print("\n");
+
+	e_kalman_predict(X,acc_glo[0],dt);//final x (in NED) acc
+	e_kalman_predict(Y,acc_glo[1],dt);
+	e_kalman_predict(Z,acc_glo[2],dt);
 }
 
 //Rotation of vector vect with the quaternion quat
@@ -182,7 +204,7 @@ void quat_rot(UQuat_t *quat,float *vect)
 
 /*
 
- state vector : X = [ x x_speed x_biais ]; 
+ state vector : X = [ x x_speed x_biais ]'; 
 
  F = [ 1 dt -dt^2/2
        0  1 -dt
@@ -203,17 +225,18 @@ void e_kalman_predict (int axis,float accel_meas, float dt)
 {
   float accel_corr;
   float FPF00,FPF01,FPF02,FPF10,FPF11,FPF12,FPF20,FPF21,FPF22;
-  /* update state */
+		
   
-  if (axis == Z)
-	accel_corr = accel_meas - 1000; // 1000 for gravity
-  else
-	accel_corr = accel_meas;
+  /* update state */
+  //accel_corr = accel_corr * 0.01; // from cm to m
 	
-  accel_corr = accel_corr * 0.01;
-	
-  board->estimation.state[axis][POSITION] = board->estimation.state[axis][POSITION] + dt * board->estimation.state[axis][SPEED]; // not exactly the function F defined above
-  board->estimation.state[axis][SPEED] = board->estimation.state[axis][SPEED] + dt * ( accel_corr - board->estimation.state[axis][BIAIS]);
+  //board->estimation.state[axis][POSITION] = board->estimation.state[axis][POSITION] + dt * board->estimation.state[axis][SPEED]; // not exactly the function F defined above
+  //board->estimation.state[axis][SPEED] = board->estimation.state[axis][SPEED] + dt * ( accel_meas - board->estimation.state[axis][BIAIS]);
+  
+  board->estimation.state[axis][SPEED] = board->estimation.state[axis][SPEED]*(1.0-(VEL_DECAY*dt)) + dt * accel_meas;
+  board->estimation.state[axis][POSITION] = board->estimation.state[axis][POSITION]*(1.0-(POS_DECAY*dt)) + dt * board->estimation.state[axis][SPEED];
+  
+  
   /* update covariance */
   // F*P*F' calculation
   FPF00 = P[axis][0][0] + dt * ( P[axis][1][0] + P[axis][0][1] + dt * P[axis][1][1] );
@@ -254,7 +277,7 @@ void e_kalman_predict (int axis,float accel_meas, float dt)
   // update covariance
   Pp = Pm - K*H*Pm;
 */
-void e_kalman_update_position (int axis,float position_meas, uint32_t dt) 
+void e_kalman_update_position (int axis,float position_meas) 
 {
 	  float y,S,K1,K2,K3; 
 	  float P11,P12,P13,P21,P22,P23,P31,P32,P33;
@@ -265,7 +288,7 @@ void e_kalman_update_position (int axis,float position_meas, uint32_t dt)
 	  K2 = P[axis][1][0] * 1/S;
 	  K3 = P[axis][2][0] * 1/S;
 
-	  board->estimation.state[axis][POSITION]    = board->estimation.state[axis][POSITION]    + K1 * y;
+	  board->estimation.state[axis][POSITION] = board->estimation.state[axis][POSITION] + K1 * y;
 	  board->estimation.state[axis][SPEED] = board->estimation.state[axis][SPEED] + K2 * y;
 	  board->estimation.state[axis][BIAIS] = board->estimation.state[axis][BIAIS] + K3 * y;
 
@@ -305,7 +328,7 @@ void e_kalman_update_position (int axis,float position_meas, uint32_t dt)
   // update covariance
   Pp = Pm - K*H*Pm;
 */
-void e_kalman_update_speed(int axis,float speed_meas, uint32_t dt)
+void e_kalman_update_speed(int axis,float speed_meas)
 {
   
 	float yd,S,K1,K2,K3;
@@ -352,45 +375,53 @@ void estimator_loop()
 	double	latitude_rad;
 	float time_before_baro;
 	
+	global_position_t global_gps_position;
+	local_coordinates_t local_coordinates;
 	//static uint32_t dt_baro,time_before_baro;
 	
  	if (!board->init_gps_position)
  	{
  		init_pos_gps();
-	} 	
+	}
 
-	e_predict(&(board->imu1.attitude.qe),board->imu1.attitude.a,board->imu1.dt);
-	
-	
-	//Check new values from GPS/Baro, if yes, update
-	if (newValidGpsMsg())
+	if(!filter_init_delta_t)
 	{
-// 		if (!init_gps_position)
-// 		{
-// 			init_long=board->GPS_data.longitude;
-// 			init_lat=board->GPS_data.latitude;
-// 			init_alt=board->GPS_data.altitude;
-// 			init_heading = board->GPS_data.course;
-// 			init_gps_position = 1;
-// 		}
+		filter_init_delta_t = true;
+		prev_time = get_micros();
+	}else{
+		board->estimation.delta_t_filter = get_micros()-prev_time;
+		prev_time = board->estimation.delta_t_filter;
+		board->estimation.delta_t_filter /= 1000000.0;
 		
+		e_predict(&(board->imu1.attitude.qe),board->imu1.attitude.acc_bf,board->estimation.delta_t_filter);
 		
-		
-		//longitude latitude to x,y position
-		latitude_rad= ((double) (board->GPS_data.latitude-init_lat))*DEGREE_TO_RADIAN; //in rad E+7
-		pos_y= (float) (((double) (board->GPS_data.longitude-init_long)*EARTH_RADIUS)*DEGREE_TO_RADIAN*(COS_PI_4-COS_PI_4*(board->GPS_data.latitude*DEGREE_TO_RADIAN*0.0000001-PI_4)-COS_PI_4*0.5*(board->GPS_data.latitude*DEGREE_TO_RADIAN*0.0000001-PI_4)*(board->GPS_data.latitude*DEGREE_TO_RADIAN*0.0000001-PI_4)));//Taylor 2nd order cos() approx
-		pos_x= (float) (latitude_rad*EARTH_RADIUS); 
-		pos_z= -board->GPS_data.altitude+init_alt;
-		//get delay of GPS measure
-		//do prediction up to the corresponding delay
-		e_kalman_update_position(X,pos_x,(uint32_t) board->GPS_data.timeLastMsg);
-		e_kalman_update_position(Y,pos_y,(uint32_t) board->GPS_data.timeLastMsg);
-		e_kalman_update_position(Z,pos_z,(uint32_t) board->GPS_data.timeLastMsg);
-		e_kalman_update_speed(X,board->GPS_data.northSpeed,(uint32_t) board->GPS_data.timeLastMsg); 
-		e_kalman_update_speed(Y,board->GPS_data.eastSpeed,(uint32_t) board->GPS_data.timeLastMsg);
-		e_kalman_update_speed(Z,board->GPS_data.verticalSpeed,(uint32_t) board->GPS_data.timeLastMsg); 
-		//Continue the prediction until actual time
-	}	
+		//Check new values from GPS/Baro, if yes, update
+		if (newValidGpsMsg() && board->init_gps_position)
+		{
+			
+			//longitude latitude to x,y position
+			//latitude_rad= ((double) (board->GPS_data.latitude-init_lat))*DEGREE_TO_RADIAN; //in rad E+7
+			//pos_y= (float) (((double) (board->GPS_data.longitude-init_long)*EARTH_RADIUS)*DEGREE_TO_RADIAN*(COS_PI_4-COS_PI_4*(board->GPS_data.latitude*DEGREE_TO_RADIAN*0.0000001-PI_4)-COS_PI_4*0.5*(board->GPS_data.latitude*DEGREE_TO_RADIAN*0.0000001-PI_4)*(board->GPS_data.latitude*DEGREE_TO_RADIAN*0.0000001-PI_4)));//Taylor 2nd order cos() approx
+			//pos_x= (float) (latitude_rad*EARTH_RADIUS);
+			//pos_z= -board->GPS_data.altitude+init_alt;
+			
+			global_gps_position.longitude = board->GPS_data.longitude;
+			global_gps_position.latitude = board->GPS_data.latitude;
+			global_gps_position.altitude = board->GPS_data.altitude;
+			
+			local_coordinates = global_to_local_position(global_gps_position,board->local_position.origin);
+			
+			//get delay of GPS measure
+			//do prediction up to the corresponding delay
+			e_kalman_update_position(X,local_coordinates.pos[X]);
+			e_kalman_update_position(Y,local_coordinates.pos[Y]);
+			e_kalman_update_position(Z,local_coordinates.pos[Z]);
+			e_kalman_update_speed(X,board->GPS_data.northSpeed);
+			e_kalman_update_speed(Y,board->GPS_data.eastSpeed);
+			e_kalman_update_speed(Z,board->GPS_data.verticalSpeed);
+			//Continue the prediction until actual time
+		}
+	
 /*	if (newBaroValue())
 	{
 		dt_baro=get_millis()-time_before_baro;
@@ -399,4 +430,5 @@ void estimator_loop()
 		time_before_baro=get_millis();
 	}	*/
 	//}
+	}
 }

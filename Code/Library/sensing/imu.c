@@ -12,6 +12,7 @@
 #include "adxl345_driver.h"
 #include "compass_hmc5883l.h"
 #include "time_keeper.h"
+#include "print_util.h"
 
 
 int ic;
@@ -73,7 +74,13 @@ void imu_get_raw_data(Imu_Data_t *imu1) {
 	imu1->raw_channels[COMPASS_OFFSET+IMU_X]=(float)compass->axes[RAW_COMPASS_X];
 	imu1->raw_channels[COMPASS_OFFSET+IMU_Y]=(float)compass->axes[RAW_COMPASS_Y];
 	imu1->raw_channels[COMPASS_OFFSET+IMU_Z]=(float)compass->axes[RAW_COMPASS_Z];
-		
+	
+	//dbg_print("Magn:");
+	//dbg_print_num(imu1->raw_channels[COMPASS_OFFSET+IMU_X],10);
+	//dbg_print_num(imu1->raw_channels[COMPASS_OFFSET+IMU_Y],10);
+	//dbg_print_num(imu1->raw_channels[COMPASS_OFFSET+IMU_Z],10);
+	//dbg_print("\n");
+	
 }
 
 void calibrate_Gyros(Imu_Data_t *imu1) {

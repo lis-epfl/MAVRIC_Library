@@ -1334,7 +1334,7 @@ void gps_update(void)
 }
 
 /*
-* Returns true if there is a new valid GPS message that arrived at time tnow
+* This function returns true if there is a new valid GPS message that arrived at time tnow
 * false otherwise
 */
 bool newValidGpsMsg()
@@ -1476,7 +1476,12 @@ ubx_tim_tp * ubx_GetTimTP()
 	return 0;
 }
 
-
+/*!
+*	This function returns a pointer to the last TIM VRFY message that was received
+*	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
+*
+*	@return A pointer to the last valid status message, or 0.
+*/
 ubx_tim_vrfy * ubx_GetTimVRFY()
 {
 	if(ubx_numberOfValidTimVRFYMessage)
