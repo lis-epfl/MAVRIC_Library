@@ -714,7 +714,8 @@ class mavlogfile(mavfile):
         return self.f.read(n)
 
     def write(self, buf):
-        self.f.write(buf)
+        if self.writeable:
+            self.f.write(buf)
 
     def pre_message(self):
         '''read timestamp if needed'''
@@ -750,10 +751,10 @@ class mavlogfile(mavfile):
 
 class mavchildexec(mavfile):
     '''a MAVLink child processes reader/writer'''
-    def __init__(self, filename, source_system=255):
+    def __init__(self, filename, source_system=255,  write=False):
         from subprocess import Popen, PIPE
         import fcntl
-        
+        self.writeable = write
         self.filename = filename
         self.child = Popen(filename, shell=True, stdout=PIPE, stdin=PIPE)
         self.fd = self.child.stdout.fileno()
@@ -769,21 +770,43 @@ class mavchildexec(mavfile):
     def close(self):
         self.child.close()
 
-    def recv(self,n=None):
+    def recv(self,n=1):
         try:
-            x = self.child.stdout.read(1)
+            x = self.child.stdout.read(n)
         except Exception:
             return ''
         return x
 
     def write(self, buf):
-        self.child.stdin.write(buf)
+        if self.writeable:
+            self.child.stdin.write(buf)
+
+class mavstdin(mavfile):
+    '''a MAVLink child processes reader/writer'''
+    def __init__(self, source_system=255,  write=False):
+        
+        self.writeable = write
+
+        mavfile.__init__(self, sys.stdin, "STDIN",  source_system=source_system)
 
 
+    def recv(self,n=1):
+        try:
+            x = sys.stdin.read(n)
+        except Exception:
+            return ''
+        return x
+
+    def write(self, buf):
+        None
+        
 def mavlink_connection(device, baud=115200, source_system=255,
                        planner_format=None, write=False, append=False,
                        robust_parsing=True, notimestamps=False, input=True):
     '''make a serial or UDP mavlink connection'''
+    if device.startswith('stdin:'):
+        return mavstdin( source_system=source_system)
+
     if device.startswith('tcp:'):
         return mavtcp(device[4:], source_system=source_system)
     if device.startswith('udp:'):
@@ -796,7 +819,7 @@ def mavlink_connection(device, baud=115200, source_system=255,
         return mavudp(device, source_system=source_system, input=input)
     if os.path.isfile(device):
         if device.endswith(".elf"):
-            return mavchildexec(device, source_system=source_system)
+            return mavchildexec(device, source_system=source_system,  write=write)
         else:
             return mavlogfile(device, planner_format=planner_format, write=write,
                               append=append, robust_parsing=robust_parsing, notimestamps=notimestamps,

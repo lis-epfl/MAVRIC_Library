@@ -31,7 +31,7 @@ class MAVlinkReceiver:
         #         sys.exit(1)
 
         # create a mavlink serial instance
-        self.master = mavutil.mavlink_connection(opts.device, baud=opts.baudrate, source_system=opts.SOURCE_SYSTEM)
+        self.master = mavutil.mavlink_connection(opts.device, baud=opts.baudrate, source_system=opts.SOURCE_SYSTEM,  write=True)
         self.msg=None;
         self.messages=dict();
         self.earthserver=GoogleEarthServer()
@@ -44,7 +44,7 @@ class MAVlinkReceiver:
         reqMsg=pymavlink.MAVLink_request_data_stream_message(target_system=self.master.target_system, target_component=self.master.target_component, req_stream_id=stream.get_msgId(), req_message_rate=frequency, start_stop=active)
         self.master.write(reqMsg.pack(pymavlink.MAVLink(self.master.target_system,  self.master.target_component)))
         if active:
-            print "activating stream",   stream.get_msgId()
+            print "activating stream",   stream.get_msgId(),  frequency
         else:
             print "deactivating stream",  stream.get_msgId()
     
@@ -55,7 +55,8 @@ class MAVlinkReceiver:
 
     def wait_message(self):
         '''wait for a heartbeat so we know the target system IDs'''
-
+        
+        
         msg = self.master.recv_msg()
         
         # tag message with this instance of the receiver:
@@ -81,10 +82,10 @@ class MAVlinkReceiver:
                 pitch=getattr(msg, "pitch")
                 roll=getattr(msg, "roll")
                 yaw=getattr(msg, "yaw")
-                self.earthserver.update(tilt=pitch,  roll=roll,  heading=yaw)
+                #self.earthserver.update(tilt=pitch,  roll=roll,  heading=yaw)
 
-            if msg.__class__.__name__=="MAVLink_global_position_int_message":
-                self.earthserver.update(longitude=getattr(msg,  "lon")/10000000.0,  latitude=getattr(msg,  "lat")/10000000.0,  altitude=getattr(msg,  "alt")/1000.0)
+            #if msg.__class__.__name__=="MAVLink_global_position_int_message":
+                #self.earthserver.update(longitude=getattr(msg,  "lon")/10000000.0,  latitude=getattr(msg,  "lat")/10000000.0,  altitude=getattr(msg,  "alt")/1000.0)
 
             return msg_key,  msg;
         return "", None;

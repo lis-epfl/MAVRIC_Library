@@ -90,7 +90,7 @@ board_hardware_t* initialise_board() {
 		board_hardware.telemetry_down_stream=&board_hardware.xbee_out_stream;
 		board_hardware.telemetry_up_stream=&board_hardware.xbee_in_stream;
 		board_hardware.debug_out_stream=&board_hardware.xbee_out_stream;
-//		board_hardware.debug_out_stream=NULL;
+		//board_hardware.debug_out_stream=NULL;
 		//board_hardware.debug_in_stream=&board_hardware.wired_in_stream;
 /*
 		board_hardware.telemetry_down_stream=&board_hardware.wired_out_stream;
