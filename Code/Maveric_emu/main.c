@@ -520,7 +520,7 @@ void main (void)
 	
 	
 	// turn on simulation mode
-	board->simulation_mode=0;
+	board->simulation_mode=1;
 	
 	// main loop
 	counter=0;
@@ -530,7 +530,7 @@ void main (void)
 		run_scheduler_update(&main_tasks, ROUND_ROBIN);
 		
 
-
+		usleep(5);
 		counter=(counter+1)%1000;
 		last_looptime=this_looptime;	
 	}		

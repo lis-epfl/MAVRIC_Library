@@ -31,7 +31,7 @@ static simulation_model_t vehicle_model_parameters= {
 	.total_mass			=  0.35, 		// vehicle mass in kg
 	.roll_pitch_momentum=  0.1 * 0.17 / 1.4142, 	// angular momentum constants (assumed to be independent) (in kg/m^2)
 	.yaw_momentum		=  0.1 * 0.17 ,  // approximate motor arm mass * rotor arm length
-	.rotor_momentum     =  0.005*0.03,  // rotor inertia  (5g off center mass * rotor radius)
+	.rotor_momentum     =  0.003*0.03,  // rotor inertia  (5g off center mass * rotor radius)
 	.rotor_arm_length	=  0.17  	    // distance between CoG and motor (in meter)
 	
 };

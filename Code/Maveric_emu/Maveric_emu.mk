@@ -50,7 +50,7 @@ LibPath                := "$(LibraryPathSwitch)." "$(LibraryPathSwitch)./Debug"
 CodeLiteDir:=/usr/share/codelite
 Objects=$(IntermediateDirectory)/boardsupport$(ObjectSuffix) $(IntermediateDirectory)/main$(ObjectSuffix) $(IntermediateDirectory)/mavlink_actions$(ObjectSuffix) $(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) $(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) $(IntermediateDirectory)/util_sinus$(ObjectSuffix) $(IntermediateDirectory)/util_print_util$(ObjectSuffix) $(IntermediateDirectory)/util_buffer$(ObjectSuffix) $(IntermediateDirectory)/sensing_imu$(ObjectSuffix) $(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix) \
 	$(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix) $(IntermediateDirectory)/sensing_waypoint_navigation$(ObjectSuffix) $(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) $(IntermediateDirectory)/control_estimator$(ObjectSuffix) $(IntermediateDirectory)/control_navigation$(ObjectSuffix) $(IntermediateDirectory)/control_stabilisation$(ObjectSuffix) $(IntermediateDirectory)/control_control$(ObjectSuffix) $(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix) $(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_adxl345_driver$(ObjectSuffix) \
-	$(IntermediateDirectory)/hal_emu_compass_hmc5883l$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_bmp085$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_spektrum$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_radar_module_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_servo_pwm$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_led$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix) 
+	$(IntermediateDirectory)/hal_emu_compass_hmc5883l$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_bmp085$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_spektrum$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_radar_module_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_servo_pwm$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_led$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_joystick$(ObjectSuffix) 
 
 ##
 ## Main Build Targets 
@@ -294,6 +294,14 @@ $(IntermediateDirectory)/hal_emu_time_keeper$(DependSuffix): ../Library/hal_emu/
 $(IntermediateDirectory)/hal_emu_time_keeper$(PreprocessSuffix): ../Library/hal_emu/time_keeper.c
 	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_time_keeper$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/hal_emu/time_keeper.c"
 
+$(IntermediateDirectory)/hal_emu_joystick$(ObjectSuffix): ../Library/hal_emu/joystick.c $(IntermediateDirectory)/hal_emu_joystick$(DependSuffix)
+	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/joystick.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_joystick$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/hal_emu_joystick$(DependSuffix): ../Library/hal_emu/joystick.c
+	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/hal_emu_joystick$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_joystick$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/hal_emu/joystick.c"
+
+$(IntermediateDirectory)/hal_emu_joystick$(PreprocessSuffix): ../Library/hal_emu/joystick.c
+	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_joystick$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/hal_emu/joystick.c"
+
 
 -include $(IntermediateDirectory)/*$(DependSuffix)
 ##
@@ -384,6 +392,9 @@ clean:
 	$(RM) $(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/hal_emu_time_keeper$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/hal_emu_time_keeper$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/hal_emu_joystick$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/hal_emu_joystick$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/hal_emu_joystick$(PreprocessSuffix)
 	$(RM) $(OutputFile)
 
 

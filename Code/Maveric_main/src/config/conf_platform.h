@@ -9,6 +9,9 @@
 #ifndef CONF_PLATFORM_H_
 #define CONF_PLATFORM_H_
 
+
+#define NATIVE_BIG_ENDIAN  
+
 #define CONF_DIAG
 //#define CONF_CROSS
 

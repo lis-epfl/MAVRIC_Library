@@ -277,6 +277,8 @@
       <File Name="../Library/hal_emu/time_keeper.c"/>
       <File Name="../Library/hal_emu/time_keeper.h"/>
       <File Name="../Library/hal_emu/delay.h"/>
+      <File Name="../Library/hal_emu/joystick.c"/>
+      <File Name="../Library/hal_emu/joystick.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="config">

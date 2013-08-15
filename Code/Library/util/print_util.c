@@ -44,7 +44,7 @@ if (c > 35)
 void putnum(byte_stream_t *out_stream, long c, char base){
   char storage[MAX_DIGITS];
   long i = MAX_DIGITS;
-  if (out_stream->put==NULL) return;
+  if ((out_stream==NULL) || (out_stream->put==NULL)) return;
   /* Take Care of the sign */
   if(c < 0){
     out_stream->put(out_stream->data,   '-');

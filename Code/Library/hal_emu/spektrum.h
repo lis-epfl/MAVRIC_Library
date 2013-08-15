@@ -1,6 +1,8 @@
 /*
  * spektrum.h
  *
+ * ----- This is the emulated version using linux joystick instead of spektrum receiver, for offline mode -----
+ * 
  *  Created on: Mar 2, 2010
  *      Author: felix
  */
@@ -10,15 +12,21 @@
 #include "compiler.h"
 #include "buffer.h"
 
-#define BAUD_SPEKTRUM  115200
-#define SPECTRUM_UART AVR32_USART1
+#define JOYSTICK_DEVICE "/dev/input/js0"
+
 
 #define S_THROTTLE 0
 #define S_ROLL     1
 #define S_PITCH    2
 #define S_YAW      3
 
-#define DEADZONE 7
+#define JOY_THROTTLE 2
+#define JOY_ROLL     0
+#define JOY_PITCH    1
+#define JOY_YAW      5
+
+
+#define DEADZONE 5
 
 typedef struct Spektrum_Receiver {
 	Buffer_t receiver;

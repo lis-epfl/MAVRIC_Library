@@ -160,36 +160,26 @@ void mavlink_send_kalman_estimator(void)
 }
 void mavlink_send_raw_rc_channels(void)
 {
-	if (checkReceivers()>0)
-	{
 		mavlink_msg_rc_channels_raw_send(MAVLINK_COMM_0,get_millis(),1,
-		getChannel(S_THROTTLE)+347,
-		getChannel(S_ROLL)+347,
-		getChannel(S_PITCH)+347,
-		getChannel(S_YAW)+433,
+		getChannel(S_THROTTLE)+500,
+		getChannel(S_ROLL)+500,
+		getChannel(S_PITCH)+500,
+		getChannel(S_YAW)+500,
 		getChannel(4)+500,
 		getChannel(5)+500,
-		65535,65535,255);
-	}else{
-		mavlink_msg_rc_channels_raw_send(MAVLINK_COMM_0,get_millis(),1,0,0,0,0,0,0,65535,65535,0);
-	}
+		0,0,checkReceivers());
 }
 
 void mavlink_send_scaled_rc_channels(void)
 {
-	if (checkReceivers()>0)
-	{
 		mavlink_msg_rc_channels_scaled_send(MAVLINK_COMM_0,get_millis(),1,
-		(getChannel(S_THROTTLE)+347) * 10000 / 716,
-		(getChannel(S_ROLL)) * 10000 / 359,
-		(getChannel(S_PITCH) - 11) * 10000 / 359,
-		(getChannel(S_YAW) - 4) * 10000 / 456,
-		getChannel(4)+500,
-		getChannel(5)+500,
-		32767,32767,255);
-	}else{	
-		mavlink_msg_rc_channels_scaled_send(MAVLINK_COMM_0,get_millis(),1,0,0,0,0,0,0,32767,32767,0);
-	}
+		getChannelNeutral(S_THROTTLE),
+		getChannelNeutral(S_ROLL),
+		getChannelNeutral(S_PITCH),
+		getChannelNeutral(S_YAW),
+		getChannelNeutral(4),
+		getChannelNeutral(5),
+		0,0,checkReceivers());
 }
 
 void mavlink_send_simulation(void) {

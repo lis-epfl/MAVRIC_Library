@@ -1,75 +1,68 @@
 /*
  * spektrum.c
  *
- *  Created on: Mar 2, 2010
+ * ----- This is the emulated version using linux joystick instead of spektrum receiver, for offline mode -----
+ * *
+ *  Created on: August, 2013
  *      Author: felix
  */
 #include "spektrum.h"
-//#include "usart.h"
 #include "time_keeper.h"
-//#include "gpio.h"
-//#include "sysclk.h"
 #include "print_util.h"
+#include "joystick.h"
 
-static volatile uint8_t packet_byte_counter=0;
+int joystick_filedescriptor;
 
 Spektrum_Receiver_t spRec1;
-Spektrum_Receiver_t spRec2;
+
+
+int joystick_axes[16];
+int joystick_buttons[16];
 
 int16_t channelCenter[16];
+int joyMax[16], joyMin[16];
+uint32_t last_update;
 
-/*
-ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) {
-	uint8_t c1, c2, i;
-	uint16_t sw;
-	uint32_t now =get_time_ticks() ;
-	if (SPECTRUM_UART.csr & AVR32_USART_CSR_RXRDY_MASK) {
-		spRec1.duration=now-spRec1.last_time;
-		spRec1.last_time=now;
-//		putstring(STDOUT, "!");
-		//receiveInterruptHandler(&spRec1.receiver);
-		if ((spRec1.duration>2500)) {
-			buffer_clear(&spRec1.receiver);
-		}
-		c1=(uint8_t)SPECTRUM_UART.rhr;
-		buffer_put(&spRec1.receiver, c1);
-		
-
-		if (buffer_bytes_available(&spRec1.receiver)==16) {
-			//PORTC.OUT = _BV(5);
-			//putstring(STDOUT, "!");
-			for (i=0; i<8; i++) {
-				c1=buffer_get(&spRec1.receiver);
-				c2=buffer_get(&spRec1.receiver);
-				sw=((uint16_t)c1)*256 +((uint16_t)c2);
-				//if (c1 & 0x80==0)
-				spRec1.channels[(c1 & 0x3c)>>2]=sw&0x3ff;
-				//spRec1.channels[i]=sw&0x3ff;
-				spRec1.valid=1;
-				spRec1.last_update=now;
-			}
-		}
-	}		
-}
-*/
 void spektrum_init (void) {
 	
 	int i;
 	for (i=0; i<16; i++) {
 		spRec1.channels[i]=500;
-		spRec2.channels[i]=500;
 		channelCenter[i]=0;
+		joystick_axes[i]=0;
+		joystick_buttons[i]=0;
+		joyMax[i]=33000;
+		joyMin[i]=-33000;
 	}
 	spRec1.channels[S_THROTTLE]=0;
-	spRec2.channels[S_THROTTLE]=0;
+	channelCenter[S_YAW]=8;
+	joystick_filedescriptor=open_joystick(JOYSTICK_DEVICE);
+	last_update=get_millis();
 }
 /**/
+
+
 int16_t getChannel(uint8_t index) {
-	//if (checkReceiver1()<checkReceiver2()) {
-		return spRec1.channels[index]-500;
-	//} else {
-	//	return spRec2.channels[index]-500;
-	//}
+	int i;
+	if (get_millis()-last_update>100) 
+	{
+		
+		get_joystick_status(joystick_filedescriptor, &joystick_axes, &joystick_buttons, 16, 16);
+		for (i=0; i<16; i++) {
+			if (joystick_axes[i]>joyMax[i]) joyMax[i]=joystick_axes[i];
+			if (joystick_axes[i]<joyMin[i]) joyMin[i]=joystick_axes[i];
+			
+		}
+		
+		spRec1.channels[S_ROLL] = -joystick_axes[JOY_ROLL]*700/ (joyMax[JOY_ROLL]-joyMin[JOY_ROLL]);
+		spRec1.channels[S_PITCH] = -joystick_axes[JOY_PITCH]*700/ (joyMax[JOY_PITCH]-joyMin[JOY_PITCH]);
+		spRec1.channels[S_YAW] = -joystick_axes[JOY_YAW]*700/ (joyMax[JOY_YAW]-joyMin[JOY_YAW]);
+		spRec1.channels[S_THROTTLE] = -joystick_axes[JOY_THROTTLE]*700/ (joyMax[JOY_THROTTLE]-joyMin[JOY_THROTTLE]);
+		spRec1.channels[4] = 400;
+		spRec1.channels[5] = 400;
+		last_update=get_millis();
+	}	
+	return spRec1.channels[index];
 }
 
 int16_t getChannelNeutral(uint8_t index) {
@@ -84,50 +77,12 @@ void centerChannel(uint8_t index){
 }
 
 int8_t checkReceiver1() {
-	int8_t i;
-	uint32_t now = get_time_ticks();
-	uint32_t duration=now-spRec1.last_update;
-	if (spRec1.valid==0) return -2;
-	if (duration<100000) {
-		return 1;
-	} else
-	if (duration<1500000) {
-		spRec1.channels[S_ROLL]=500;	
-		spRec1.channels[S_PITCH]=500;	
-		spRec1.channels[S_YAW]=500;	
-		return -1; // brief drop out - hold pattern
-		
-	} else {
-		spRec1.valid = 0;
-		for (i=1; i<8; i++) {
-			spRec1.channels[i]=500;			
-		}
-		spRec1.channels[S_THROTTLE]=0;
-		return -2; // fade - fail safe
-
-	}
+	return (joystick_filedescriptor>0);
 
 }
 
 int8_t checkReceiver2(){
-	int8_t i;
-	uint32_t now = 0; //TCC0.CNT;
-	uint32_t duration = now - spRec2.last_update;
-	if (spRec2.valid==0) return -2;
-	if (duration < 200000) {
-		return 1;
-	} else if (duration < 500000) {
-		return -1; // brief drop out - hold pattern
-	} else {
-		spRec2.valid = 0;
-		for (i=1; i<8; i++) {
-			spRec2.channels[i]=500;
-		}
-		spRec2.channels[S_THROTTLE]=0;
-		return -2; // fade - fail safe
-
-	}
-
+	return checkReceiver1();
 }
 
 int8_t checkReceivers() {
@@ -135,32 +90,3 @@ int8_t checkReceivers() {
 }
 
 
-
-/*
-ISR(USARTD0_RXC_vect) {
-	uint8_t c1, c2, i;
-	uint16_t sw;
-	uint16_t now =TCC0.CNT ;
-	spRec2.duration=now-spRec2.last_time;
-	spRec2.last_time=now;
-	receiveInterruptHandler(&spRec2.receiver);
-
-	if ((spRec2.duration>600)&& (spRec2.duration<660)) {
-		while (UARTBytesAvailable(&spRec2.receiver)>1) readUARTNonblock(&spRec2.receiver);
-	}
-
-	if (UARTBytesAvailable(&spRec2.receiver)==16) {
-		//PORTC.OUT = _BV(5);
-		for (i=0; i<8; i++) {
-			c1=readUARTNonblock(&spRec2.receiver);
-			c2=readUARTNonblock(&spRec2.receiver);
-			sw=((uint16_t)c1)*256 +((uint16_t)c2);
-			//if (c1 & 0x80==0)
-			spRec2.channels[(c1 & 0x3c)>>2]=sw&0x3ff;
-			//spRec1.channels[i]=sw&0x3ff;
-			spRec2.valid=1;
-			spRec2.last_update=now;
-		}
-	}
-}
-*/
