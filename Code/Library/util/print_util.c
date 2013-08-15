@@ -1,10 +1,10 @@
 #include "print_util.h"
-#include "sysclk.h"
-#include "gpio.h"
-#include "conf_usart_serial.h"
-#include "uart_int.h"
+//#include "sysclk.h"
+//#include "gpio.h"
+//#include "conf_usart_serial.h"
+//#include "uart_int.h"
 
-#include "delay.h"
+//#include "delay.h"
 
 byte_stream_t* deb_stream;
 

@@ -1,7 +1,7 @@
 #ifndef PRINT_UTIL_H
 #define PRINT_UTIL_H
 
-#include "usart.h"
+//#include "usart.h"
 #include "streams.h"
 
 #define MAX_DIGITS 10

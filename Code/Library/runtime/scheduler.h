@@ -8,7 +8,9 @@
 
 #ifndef SCHEDULER_H_
 #define SCHEDULER_H_
-#include <asf.h>
+//#include <asf.h>
+#include "compiler.h"
+
 #define GET_TIME get_micros()
 #define SCHEDULER_TIMEBASE 1000000
 

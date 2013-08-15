@@ -18,6 +18,7 @@ typedef struct {
 	int8_t  (*put)(stream_data_t *data, uint8_t element);
 	void    (*flush)(uint8_t element);
 	int     (*buffer_empty)(stream_data_t *data);
+	int     (*bytes_available)(stream_data_t *data);
 	volatile stream_data_t data;
 } byte_stream_t;
 

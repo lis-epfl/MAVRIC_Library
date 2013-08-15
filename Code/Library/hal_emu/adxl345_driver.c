@@ -1,0 +1,44 @@
+/*
+ * adxl345_driver.c
+ *
+ * Created: 19/05/2012 00:29:28
+ *  Author: sfx
+ */ 
+
+#include "adxl345_driver.h"
+//#include "i2c_driver_int.h"
+#include "print_util.h"
+//#include "twim.h"
+
+static volatile acc_data acc_outputs;
+
+//static  i2c_schedule_event gyro_event;
+
+#define CONFIG_POWER_ADDRESS 0x2D
+
+#define SENSOR_REG_ADDRESS 0x32
+
+
+
+uint8_t default_configuration[2] ={
+CONFIG_POWER_ADDRESS, 8};
+
+void init_adxl345(void) {
+	
+
+
+}
+
+void init_adxl345_slow(void) {
+
+}
+
+acc_data* get_acc_data(void) {
+	
+	return &acc_outputs;
+}
+
+acc_data* get_acc_data_slow(void) {
+	
+	return &acc_outputs;
+}
