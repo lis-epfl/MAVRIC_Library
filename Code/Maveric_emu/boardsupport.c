@@ -22,8 +22,9 @@ void stdout_send_byte(void* options, char data) {
 }
 
 void stdout_flush(void* options) {
+	fflush(stdout);
 }
-void stdout_buffer_empty(void* options){
+bool stdout_buffer_empty(void* options){
 	return true;
 }
 
@@ -81,15 +82,15 @@ board_hardware_t* initialise_board() {
 //		init_UART_int(4);
 
 //		register_write_stream(get_UART_handle(4), &board_hardware.wired_out_stream);
-		register_write_stream_stdout( &board_hardware.wired_out_stream);
+		//register_write_stream_stdout( &board_hardware.wired_out_stream);
 		
 		// connect abstracted aliases to hardware ports
 
 
 		board_hardware.telemetry_down_stream=&board_hardware.xbee_out_stream;
 		board_hardware.telemetry_up_stream=&board_hardware.xbee_in_stream;
-		//board_hardware.debug_out_stream=&board_hardware.xbee_out_stream;
-		board_hardware.debug_out_stream=NULL;
+		board_hardware.debug_out_stream=&board_hardware.xbee_out_stream;
+//		board_hardware.debug_out_stream=NULL;
 		//board_hardware.debug_in_stream=&board_hardware.wired_in_stream;
 /*
 		board_hardware.telemetry_down_stream=&board_hardware.wired_out_stream;

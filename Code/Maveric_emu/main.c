@@ -13,7 +13,7 @@
 //#include "sysclk.h"
 //#include "sleepmgr.h"
 //#include "led.h"
-//#include "delay.h"
+#include "delay.h"
 //#include "stdio_serial.h"
 #include "print_util.h"
 //#include "generator.h"

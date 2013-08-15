@@ -53,20 +53,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) {
 }
 */
 void spektrum_init (void) {
-	/*
-   static const usart_options_t usart_opt =
-   {
-     .baudrate     = BAUD_SPEKTRUM,
-     .charlength   = 8,
-     .paritytype   = USART_NO_PARITY,
-     .stopbits     = USART_1_STOPBIT,
-     .channelmode  = USART_NORMAL_CHMODE
-   };
-   static const gpio_map_t USART_GPIO_MAP =
-   {
-    {AVR32_USART1_RXD_0_1_PIN, AVR32_USART1_RXD_0_1_FUNCTION}
-   ,{AVR32_USART1_TXD_0_1_PIN, AVR32_USART1_TXD_0_1_FUNCTION}
-   };
+	
 	int i;
 	for (i=0; i<16; i++) {
 		spRec1.channels[i]=500;
@@ -75,19 +62,6 @@ void spektrum_init (void) {
 	}
 	spRec1.channels[S_THROTTLE]=0;
 	spRec2.channels[S_THROTTLE]=0;
-	 // USART options.
-	 
-    // Assign GPIO pins to USART_0.
-    gpio_enable_module(USART_GPIO_MAP,
-                     sizeof(USART_GPIO_MAP) / sizeof(USART_GPIO_MAP[0]));
-	
-    // Initialize the USART in RS232 mode.
-    usart_init_rs232( (&SPECTRUM_UART), &usart_opt, sysclk_get_cpu_hz());
-	INTC_register_interrupt( (__int_handler) &spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INT1);
-	SPECTRUM_UART.ier=AVR32_USART_IER_RXRDY_MASK;
-	//initUART_RX(&spRec1.receiver,  &USARTC1, USART_RXCINTLVL_LO_gc, BSEL_SPEKTRUM);
-	//initUART_RX(&spRec2.receiver,  &USARTD0, USART_RXCINTLVL_LO_gc, BSEL_SPEKTRUM);
-*/
 }
 /**/
 int16_t getChannel(uint8_t index) {

@@ -275,7 +275,7 @@ class Update_Thread():
         self.treeUpdateFrequency=1.0
         self.t = QtCore.QTimer()
         self.t.timeout.connect(self.update)
-        self.t.start(5)
+        self.t.start(1)
 
 
       

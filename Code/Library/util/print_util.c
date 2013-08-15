@@ -20,7 +20,7 @@ void dbg_print_init(byte_stream_t* debug_stream)
 }
 
 void putstring(byte_stream_t *out_stream, const char* s) {
-	if (out_stream->put==NULL) return;
+	if ((out_stream==NULL) || (out_stream->put==NULL)) return;
 	while (*s != 0) {
 		out_stream->put(out_stream->data, *s);
 		s++;
@@ -30,8 +30,9 @@ void putstring(byte_stream_t *out_stream, const char* s) {
 static const char alphabet[36] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 void putdigit(byte_stream_t *out_stream, unsigned c){
-  if (out_stream->put==NULL) return;	
-  if (c > 35)
+if ((out_stream==NULL) || (out_stream->put==NULL)) return;
+	
+if (c > 35)
     return;
   out_stream->put(out_stream->data,  alphabet[c]);
 }

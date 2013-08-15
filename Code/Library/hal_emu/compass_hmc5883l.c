@@ -18,6 +18,6 @@ void init_hmc5883_slow() {
 
 
 compass_data* get_compass_data_slow() {
-	dbg_print("not implemented\n");
+	return &compass_outputs;
 
 }

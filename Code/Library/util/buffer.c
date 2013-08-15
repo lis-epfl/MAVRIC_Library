@@ -79,5 +79,6 @@ void make_buffered_stream(Buffer_t *buffer, byte_stream_t *stream) {
 	stream->put=&buffer_put;
 	stream->flush=NULL;
 	stream->data=buffer;
+	stream->bytes_available=&buffer_bytes_available;
 }
 
