@@ -31,8 +31,8 @@ void spektrum_init (void) {
 		channelCenter[i]=0;
 		joystick_axes[i]=0;
 		joystick_buttons[i]=0;
-		joyMax[i]=33000;
-		joyMin[i]=-33000;
+		joyMax[i]=3000;
+		joyMin[i]=-3000;
 	}
 	spRec1.channels[S_THROTTLE]=0;
 	channelCenter[S_YAW]=8;

@@ -20,10 +20,10 @@
 #define S_PITCH    2
 #define S_YAW      3
 
-#define JOY_THROTTLE 2
+#define JOY_THROTTLE 3
 #define JOY_ROLL     0
 #define JOY_PITCH    1
-#define JOY_YAW      5
+#define JOY_YAW      2
 
 
 #define DEADZONE 5
