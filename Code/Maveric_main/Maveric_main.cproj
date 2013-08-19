@@ -604,6 +604,18 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Library\hal\time_keeper.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\time_keeper.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\mavlink_actions.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\mavlink_actions.h">
+      <SubType>compile</SubType>
+    </Compile>
     <None Include="Library\mavlink\include\mavlink_protobuf_manager.hpp">
       <SubType>compile</SubType>
     </None>
@@ -623,12 +635,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\communication\ishtar_stream.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\communication\mavlink_actions.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\communication\mavlink_actions.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\communication\mavlink_bridge.h">
@@ -662,12 +668,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\control\navigation.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\control\navigation_phil.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\control\navigation_phil.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\control\stabilisation.c">
@@ -1049,12 +1049,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\runtime\scheduler.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\runtime\time_keeper.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\runtime\time_keeper.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\sensing\gps_ublox.c">

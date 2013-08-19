@@ -36,13 +36,18 @@ void init_imu (Imu_Data_t *imu1) {
 	imu1->raw_scale[8] =  RAW_MAG_Z_SCALE;
 	
 	//myquad
-	imu1->raw_bias[3]=21.0;
-	imu1->raw_bias[4]=9.0;
-	imu1->raw_bias[5]=-19.0;
+	// acceleration biais
+	//imu1->raw_bias[3]=21.0;
+	//imu1->raw_bias[4]=9.0;
+	//imu1->raw_bias[5]=-19.0;
+	imu1->raw_bias[3]=5.92;
+	imu1->raw_bias[4]=4.47;
+	imu1->raw_bias[5]=-23.13;
 	
-	imu1->raw_bias[6]=66.5;
-	imu1->raw_bias[7]=35.5;
-	imu1->raw_bias[8]=100.5;
+	// magneto biais
+	imu1->raw_bias[6]=34.20;
+	imu1->raw_bias[7]=-47.07;
+	imu1->raw_bias[8]=-76.93;
 	
 	//Geraud
 //	imu1->raw_bias[3]=6.0;
@@ -71,8 +76,8 @@ void imu_get_raw_data(Imu_Data_t *imu1) {
 	imu1->raw_channels[ACC_OFFSET+IMU_Y]=(float)accs->axes[RAW_ACC_Y];
 	imu1->raw_channels[ACC_OFFSET+IMU_Z]=(float)accs->axes[RAW_ACC_Z];
 
-	imu1->raw_channels[COMPASS_OFFSET+IMU_X]=(float)compass->axes[RAW_COMPASS_X];
-	imu1->raw_channels[COMPASS_OFFSET+IMU_Y]=(float)compass->axes[RAW_COMPASS_Y];
+	imu1->raw_channels[COMPASS_OFFSET+IMU_X]=(float)-compass->axes[RAW_COMPASS_X];
+	imu1->raw_channels[COMPASS_OFFSET+IMU_Y]=(float)-compass->axes[RAW_COMPASS_Y];
 	imu1->raw_channels[COMPASS_OFFSET+IMU_Z]=(float)compass->axes[RAW_COMPASS_Z];
 	
 	//dbg_print("Magn:");
