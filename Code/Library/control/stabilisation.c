@@ -82,7 +82,7 @@ void stabilise(Stabiliser_t *stabiliser, float *rpy_sensor_values, Control_Comma
 		stabiliser->output.rpy[i]=	pid_update(&(stabiliser->rpy_controller[i]),  rpy_sensor_values[i], control_input->rpy[i]);
 	}		
 	stabiliser->output.thrust=control_input->thrust;
-	dbg_print_num(control_input->thrust,10);
+	
 }
 
 
