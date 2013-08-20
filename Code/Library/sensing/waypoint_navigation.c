@@ -25,8 +25,8 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	
 	waypoint.param1 = 0;
 	waypoint.param2 = 520; // altitude
-	waypoint.param3 = 465185536 / 1.0e7f; // lat converted to deg
-	waypoint.param4 = 65670560 / 1.0e7f; // long converted to deg
+	waypoint.param3 = 465186806 / 1.0e7f; // lat converted to deg
+	waypoint.param4 = 65659084 / 1.0e7f; // long converted to deg
 	
 	waypoint_list[0] = waypoint;
 	
@@ -70,8 +70,8 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	waypoint.frame = MAV_FRAME_GLOBAL;
 	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
 
-	waypoint.x = 465186816 / 1.0e7f; // convert to deg
-	waypoint.y = 65659084 / 1.0e7f; // convert to deg
+	waypoint.x = 465184447 / 1.0e7f; // convert to deg
+	waypoint.y = 65670562 / 1.0e7f; // convert to deg
 	waypoint.z = 520; //m
 
 	waypoint.param1 = 10; // Hold time in decimal seconds

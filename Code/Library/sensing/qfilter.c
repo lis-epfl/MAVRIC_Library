@@ -44,7 +44,7 @@
 
 void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 	uint8_t i;
-	int8_t init_angle;
+	float init_angle;
 	
 	attitude->qe.s=1.0;
 
@@ -73,10 +73,15 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 		attitude->mag[i]=((float)attitude->raw_mag_mean[i])*attitude->sf[i+COMPASS_OFFSET]-attitude->be[i+COMPASS_OFFSET];
 	}
 	
-	init_angle = atan2(attitude->mag[1],attitude->mag[0]);
+	init_angle = atan2(-attitude->mag[1],attitude->mag[0]);
 
 	dbg_print("Initial yaw:");
-	dbg_print_num(init_angle*1000,10);
+	dbg_print_num(init_angle*100.0,10);
+	dbg_print(" = atan2(mag_y,mag_x) =");
+	dbg_print_num(attitude->mag[1]*100.0,10);
+	dbg_print(" ,");
+	dbg_print_num(attitude->mag[0]*100.0,10);
+	dbg_print("\n");
 
 	attitude->qe.s = cos(init_angle/2.0);
 	attitude->qe.v[0]=0.0;

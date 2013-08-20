@@ -50,9 +50,32 @@
 #define RAW_COMPASS_Y 0
 #define RAW_COMPASS_Z 1
 
-#define RAW_MAG_X_SCALE 579.41
-#define RAW_MAG_Y_SCALE 540.3
-#define RAW_MAG_Z_SCALE 525.59
+// Inside values
+//#define RAW_MAG_X_SCALE 579.41
+//#define RAW_MAG_Y_SCALE 540.3
+//#define RAW_MAG_Z_SCALE 525.59
+
+// Outside values
+#define RAW_MAG_X_SCALE 496.38
+#define RAW_MAG_Y_SCALE 504.85
+#define RAW_MAG_Z_SCALE 448.42
+
+// #define ACC_BIAIS_X 21.0;
+// #define ACC_BIAIS_Y 9.0;
+// #define ACC_BIAIS_Z -19.0;
+#define ACC_BIAIS_X 5.92
+#define ACC_BIAIS_Y 4.47
+#define ACC_BIAIS_Z -23.13
+
+// Inside values
+//#define MAG_BIAIS_X 34.20
+//#define MAG_BIAIS_Y -47.07
+//#define MAG_BIAIS_Z -76.93
+
+// Outside values
+#define MAG_BIAIS_X 45.67
+#define MAG_BIAIS_Y -58.41
+#define MAG_BIAIS_Z -77.71
 
 #define GYRO_OFFSET 0
 #define ACC_OFFSET 3
@@ -64,7 +87,10 @@
 
 #define FRONTVECTOR_X 1
 #define FRONTVECTOR_Y 0
-#define FRONTVECTOR_Z -1.3846
+// Inside value
+//#define FRONTVECTOR_Z -1.3846
+// Outside value
+#define FRONTVECTOR_Z -0.9067
 
 
 // Definitions of Platform configuration
