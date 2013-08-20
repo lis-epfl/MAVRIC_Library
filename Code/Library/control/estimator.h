@@ -13,7 +13,7 @@
 #define BIAIS		2
 
 bool filter_init_delta_t;
-float prev_time;
+uint32_t prev_time;
 
 typedef struct {
 	float state[3][3]; // [z z_speed z_biais] in NED

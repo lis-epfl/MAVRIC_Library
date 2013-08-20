@@ -39,7 +39,7 @@ typedef struct {
 	float raw_mag_mean[3];
 	uint8_t calibration_level;
 	
-	float acc_bf[3], vel_bf[3], vel[3], pos[3];
+	float acc_bf[3], vel_bf[3], vel[3], pos[3], biaisKalman[3];
 
 } Quat_Attitude_t;	
 

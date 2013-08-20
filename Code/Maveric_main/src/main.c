@@ -35,6 +35,8 @@
 #include "estimator.h"
 #include "navigation.h"
 
+//#include "flashvault.h"
+
 pressure_data *pressure;
 
 
@@ -364,7 +366,6 @@ task_return_t gps_task() {
 task_return_t run_estimator()
 {
 	estimator_loop();
-	
 }
 
 task_return_t run_navigation_task()
@@ -491,6 +492,8 @@ void initialisation() {
 	
 	LED_Off(LED1);
 	
+	e_init();
+	
 	board->imu1.attitude.calibration_level=LEVELING;	
 	for (i=400; i>0; i--) {
 		imu_update(&board->imu1);
@@ -527,7 +530,6 @@ void initialisation() {
 	board->mav_state = MAV_STATE_STANDBY;
 	board->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	
-	e_init();
 }
 
 void main (void)
@@ -545,7 +547,7 @@ void main (void)
 	register_task(&main_tasks, 2, 1000, RUN_REGULAR, &mavlink_protocol_update);
 	
 	//register_task(&main_tasks, 3 ,100000, RUN_REGULAR, &gps_task);
-	register_task(&main_tasks, 4, 100000, RUN_REGULAR, &run_estimator);
+	register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
 	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &read_radar);
 
 	// register_task(&main_tasks, 5, 1000000, RUN_REGULAR, &run_navigation_task);

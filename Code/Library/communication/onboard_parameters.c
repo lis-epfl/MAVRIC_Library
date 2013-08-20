@@ -85,13 +85,14 @@ void send_scheduled_parameters() {
 
 void send_parameter(mavlink_param_request_read_t* request) {
 	if(request->param_index!=-1) {
+		/*
 		mavlink_msg_param_value_send(MAVLINK_COMM_0,
 									(int8_t*)param_set.parameters[request->param_index].param_name,
 									*param_set.parameters[request->param_index].param,
 									param_set.parameters[request->param_index].data_type,
 									param_set.param_count,
-									request->param_index);
-		param_set.parameters[request->param_index].schedule_for_transmission=false;
+									request->param_index);*/
+		param_set.parameters[request->param_index].schedule_for_transmission=true;
 
 	}
 	else {
@@ -112,11 +113,12 @@ void send_parameter(mavlink_param_request_read_t* request) {
  
 			// Check if matched
 			if (match) {
+				/*
 				mavlink_msg_param_value_send(MAVLINK_COMM_0,
 											(int8_t*)param_set.parameters[i].param_name,
 											*param_set.parameters[i].param, param_set.parameters[i].data_type, 
-											param_set.param_count, i);
-				param_set.parameters[i].schedule_for_transmission=false;
+											param_set.param_count, i);*/
+				param_set.parameters[i].schedule_for_transmission=true;
 
 				break;
 			}					

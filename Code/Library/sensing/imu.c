@@ -37,26 +37,24 @@ void init_imu (Imu_Data_t *imu1) {
 	
 	//myquad
 	// acceleration biais
-	//imu1->raw_bias[3]=21.0;
-	//imu1->raw_bias[4]=9.0;
-	//imu1->raw_bias[5]=-19.0;
-	imu1->raw_bias[3]=5.92;
-	imu1->raw_bias[4]=4.47;
-	imu1->raw_bias[5]=-23.13;
+	imu1->raw_bias[3]= ACC_BIAIS_X;
+	imu1->raw_bias[4]= ACC_BIAIS_Y;
+	imu1->raw_bias[5]= ACC_BIAIS_Z;
 	
 	// magneto biais
-	imu1->raw_bias[6]=34.20;
-	imu1->raw_bias[7]=-47.07;
-	imu1->raw_bias[8]=-76.93;
+	imu1->raw_bias[6]= MAG_BIAIS_X;
+	imu1->raw_bias[7]= MAG_BIAIS_Y;
+	imu1->raw_bias[8]= MAG_BIAIS_Z;
 	
 	//Geraud
 //	imu1->raw_bias[3]=6.0;
 //	imu1->raw_bias[4]=16.0;
 //	imu1->raw_bias[5]=-34.0;
 	
+	imu_last_update_init = false;
+	
 	qfInit(&imu1->attitude, imu1->raw_scale, imu1->raw_bias);
 	imu1->attitude.calibration_level=OFF;
-	
 }
 
 
@@ -110,10 +108,16 @@ void calibrate_Gyros(Imu_Data_t *imu1) {
 void imu_update(Imu_Data_t *imu1){
 	uint32_t t=get_time_ticks();
 	
-	imu_get_raw_data(imu1);
-	imu1->dt=ticks_to_seconds(t - imu1->last_update);
-	imu1->last_update=t;
-	qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt);
+	if (!imu_last_update_init)
+	{
+		imu1->last_update = t;
+		imu_last_update_init = true;
+	}else{
+		imu_get_raw_data(imu1);
+		imu1->dt=ticks_to_seconds(t - imu1->last_update);
+		imu1->last_update=t;
+		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt);
+	}
 }
 
 

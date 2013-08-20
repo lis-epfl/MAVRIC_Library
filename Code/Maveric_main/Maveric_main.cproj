@@ -87,7 +87,7 @@
           <option id="avr32.drivers.spi" value="Add" config="" content-id="Atmel.ASF" />
           <option id="avr32.drivers.tc" value="Add" config="" content-id="Atmel.ASF" />
           <option id="avr32.drivers.twim" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="avr32.services.basic.delay" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="avr32.utils.libs.avr32gcc.libm" value="Add" config="yes" content-id="Atmel.ASF" />
           <option id="common.boards" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.services.basic.clock" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.services.basic.serial" value="Add" config="" content-id="Atmel.ASF" />
@@ -96,9 +96,10 @@
           <option id="common.services.basic.twi" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.utils.interrupt" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.utils.stdio" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="avr32.drivers.flashc" value="Add" config="" content-id="Atmel.ASF" />
+          <option id="avr32.services.basic.delay" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.utils.stdio.stdio_serial" value="Add" config="" content-id="Atmel.ASF" />
           <option id="common.utils.stdio.stdio_usb" value="Add" config="" content-id="Atmel.ASF" />
-          <option id="avr32.utils.libs.avr32gcc.libm" value="Add" config="yes" content-id="Atmel.ASF" />
         </options>
         <configurations>
           <configuration key="config.utils.interrupt.intc" value="yes" default="yes" content-id="Atmel.ASF" />
@@ -218,7 +219,8 @@
           <file path="src/asf/avr32/drivers/ast/ast.c" framework="com.atmel.avr32.sf.uc3c" version="2.2.2" source="avr32/drivers/ast/ast.c" changed="False" content-id="Atmel.ASF" />
           <file path="src/asf/avr32/drivers/ast/ast.h" framework="com.atmel.avr32.sf.uc3c" version="2.2.2" source="avr32/drivers/ast/ast.h" changed="False" content-id="Atmel.ASF" />
         </files>
-        <documentation help="http://asf.atmel.com/docs/2.5.1/common/applications/user_application/user_board/doxygen/html/" />
+        <documentation help="" />
+        <offline-documentation help="" />
         <dependencies>
           <content-extension eid="atmel.asf" uuidref="Atmel.ASF" version="3.3.0" />
         </dependencies>
@@ -227,13 +229,12 @@
     <AsfVersion>2.11.1</AsfVersion>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
-    <OverrideVtorValue>
-    </OverrideVtorValue>
+    <OverrideVtorValue>exception_table</OverrideVtorValue>
     <eraseonlaunchrule>0</eraseonlaunchrule>
     <com_atmel_avrdbg_tool_jtagicemk3>
       <ToolType>com.atmel.avrdbg.tool.jtagicemk3</ToolType>
       <ToolName>JTAGICE3</ToolName>
-      <ToolNumber>J30200015895</ToolNumber>
+      <ToolNumber>J30200014870</ToolNumber>
       <Channel>
         <host>127.0.0.1</host>
         <port>49377</port>
@@ -242,11 +243,11 @@
       <ToolOptions>
         <InterfaceName>JTAG</InterfaceName>
         <InterfaceProperties>
-          <JtagDbgClock>250000</JtagDbgClock>
+          <JtagDbgClock>7500000</JtagDbgClock>
           <JtagProgClock>1000000</JtagProgClock>
           <IspClock>150000</IspClock>
           <JtagInChain>false</JtagInChain>
-          <JtagEnableExtResetOnStartSession>false</JtagEnableExtResetOnStartSession>
+          <JtagEnableExtResetOnStartSession>true</JtagEnableExtResetOnStartSession>
           <JtagDevicesBefore>0</JtagDevicesBefore>
           <JtagDevicesAfter>0</JtagDevicesAfter>
           <JtagInstrBitsBefore>0</JtagInstrBitsBefore>
