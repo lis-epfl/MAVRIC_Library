@@ -62,7 +62,7 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream)
 	
 	mavlink_out_stream = transmit_stream;
 	mavlink_in_stream = receive_stream;
-	make_buffered_stream(&mavlink_in_buffer, mavlink_in_stream);
+	
 	init_scheduler(&mavlink_tasks);
 	
 	add_task(&mavlink_tasks, 100000, RUN_REGULAR, &send_scheduled_parameters, MAVLINK_MSG_ID_PARAM_VALUE);
@@ -130,7 +130,7 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		break;
 		case MAVLINK_MSG_ID_MISSION_ITEM: { // 39
 			receive_waypoint(rec,board->waypoint_list,board->number_of_waypoints);
-			//dbg_print("End received waypoint \n");
+			dbg_print(" received waypoint \n");
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_REQUEST : { // 40

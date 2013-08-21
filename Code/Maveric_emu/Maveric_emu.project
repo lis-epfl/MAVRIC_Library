@@ -279,6 +279,8 @@
       <File Name="../Library/hal_emu/delay.h"/>
       <File Name="../Library/hal_emu/joystick.c"/>
       <File Name="../Library/hal_emu/joystick.h"/>
+      <File Name="../Library/hal_emu/udp_stream.h"/>
+      <File Name="../Library/hal_emu/udp_stream.c"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="config">

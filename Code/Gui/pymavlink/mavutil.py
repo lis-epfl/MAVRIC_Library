@@ -598,8 +598,8 @@ class mavudp(mavfile):
         if input:
             self.port.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.port.bind((a[0], int(a[1])))
-        else:
-            self.destination_addr = (a[0], int(a[1]))
+        #else:
+        self.destination_addr = (a[0], int(a[1])+1)
         set_close_on_exec(self.port.fileno())
         self.port.setblocking(0)
         self.last_address = None
@@ -621,6 +621,7 @@ class mavudp(mavfile):
         try:
             if self.udp_server:
                 if self.last_address:
+                    #print self.last_address
                     self.port.sendto(buf, self.last_address)
             else:
                 self.port.sendto(buf, self.destination_addr)

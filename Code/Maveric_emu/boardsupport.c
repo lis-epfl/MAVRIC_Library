@@ -12,19 +12,23 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#include "udp_stream.h"
+
+udp_connection_t udp_out, udp_in;
+
 static volatile board_hardware_t board_hardware;
 
-void stdout_send_byte(void* options, char data) {
+static inline void stdout_send_byte(void* options, char data) {
 	//printf("%c", data);
 	char temp = data;
 	fwrite(&temp, 1, 1, stdout);
 	fflush(stdout);
 }
 
-void stdout_flush(void* options) {
+static inline void stdout_flush(void* options) {
 	fflush(stdout);
 }
-bool stdout_buffer_empty(void* options){
+static inline bool stdout_buffer_empty(void* options){
 	return true;
 }
 
@@ -38,6 +42,7 @@ void register_write_stream_stdout(byte_stream_t *stream) {
 	stream->data=NULL;
 
 }
+
 
 bool inputAvailable()  
 {
@@ -71,8 +76,16 @@ void register_read_stream_stdin( byte_stream_t *stream) {
 
 board_hardware_t* initialise_board() {
 //		init_UART_int(0);
+
+		make_buffered_stream(&board_hardware.xbee_in_buffer, &board_hardware.xbee_in_stream);
+
+		//register_read_stream_stdin( &board_hardware.xbee_in_stream);
+		register_read_stream_udp( &board_hardware.xbee_in_stream, &udp_in, 14551);
+		udp_out.sock=udp_in.sock;
+
 //		register_write_stream(get_UART_handle(0), &board_hardware.xbee_out_stream);
-		register_write_stream_stdout( &board_hardware.xbee_out_stream);		
+		//register_write_stream_stdout( &board_hardware.xbee_out_stream);		
+		register_write_stream_udp(&board_hardware.xbee_out_stream, &udp_out, "127.0.0.1",14550);
 		
 //		init_UART_int(3);
 		make_buffered_stream(&(board_hardware.gps_buffer), &board_hardware.gps_stream_in);
@@ -82,15 +95,15 @@ board_hardware_t* initialise_board() {
 //		init_UART_int(4);
 
 //		register_write_stream(get_UART_handle(4), &board_hardware.wired_out_stream);
-		//register_write_stream_stdout( &board_hardware.wired_out_stream);
+		register_write_stream_stdout( &board_hardware.wired_out_stream);
 		
 		// connect abstracted aliases to hardware ports
 
 
 		board_hardware.telemetry_down_stream=&board_hardware.xbee_out_stream;
 		board_hardware.telemetry_up_stream=&board_hardware.xbee_in_stream;
-		//board_hardware.debug_out_stream=&board_hardware.xbee_out_stream;
-		board_hardware.debug_out_stream=NULL;
+		board_hardware.debug_out_stream=&board_hardware.wired_out_stream;
+		//board_hardware.debug_out_stream=NULL;
 		//board_hardware.debug_in_stream=&board_hardware.wired_in_stream;
 /*
 		board_hardware.telemetry_down_stream=&board_hardware.wired_out_stream;
@@ -98,15 +111,11 @@ board_hardware_t* initialise_board() {
 		board_hardware.debug_out_stream     =&board_hardware.xbee_out_stream;
 		board_hardware.debug_in_stream      =&board_hardware.xbee_in_stream;
 */
-
-
-		
 		// init mavlink
 		init_mavlink(board_hardware.telemetry_down_stream, board_hardware.telemetry_up_stream);
 		
 //		register_read_stream(get_UART_handle(4), &board_hardware.wired_in_stream);
 //		register_read_stream(get_UART_handle(0), &board_hardware.xbee_in_stream);
-		register_read_stream_stdin( &board_hardware.xbee_in_stream);
 		
 		
 

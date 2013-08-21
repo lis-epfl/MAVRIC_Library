@@ -43,6 +43,8 @@ typedef struct  {
 	Control_Command_t controls;
 	simulation_model_t uav_model;
 	servo_output servos[NUMBER_OF_SERVO_OUTPUTS];
+	Buffer_t xbee_in_buffer, wired_in_buffer;
+
 	byte_stream_t xbee_out_stream;
 	byte_stream_t xbee_in_stream;
 	byte_stream_t wired_out_stream, wired_in_stream;	

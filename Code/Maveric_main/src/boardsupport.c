@@ -22,8 +22,14 @@ board_hardware_t* initialise_board() {
 		register_write_stream(get_UART_handle(3), &board_hardware.gps_stream_out);
 		
 		init_UART_int(4);
-
 		register_write_stream(get_UART_handle(4), &board_hardware.wired_out_stream);
+
+
+		make_buffered_stream_lossy(&board_hardware.xbee_in_buffer, &board_hardware.xbee_in_stream);
+		make_buffered_stream_lossy(&board_hardware.wired_in_buffer, &board_hardware.wired_in_stream);
+		register_read_stream(get_UART_handle(4), &board_hardware.wired_in_stream);
+		register_read_stream(get_UART_handle(0), &board_hardware.xbee_in_stream);
+
 		
 		// connect abstracted aliases to hardware ports
 
@@ -44,8 +50,6 @@ board_hardware_t* initialise_board() {
 		// init mavlink
 		init_mavlink(board_hardware.telemetry_down_stream, board_hardware.telemetry_up_stream);
 		
-		register_read_stream(get_UART_handle(4), &board_hardware.wired_in_stream);
-		register_read_stream(get_UART_handle(0), &board_hardware.xbee_in_stream);
 		
 
 		// init debug output
