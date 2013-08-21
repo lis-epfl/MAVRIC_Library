@@ -235,9 +235,9 @@ task_return_t run_stabilisation() {
 	} else {
 		imu_update(&(board->imu1));
 	}
-	board->local_position.pos[0] = board->imu1.attitude.pos[0];
-	board->local_position.pos[1] = board->imu1.attitude.pos[1];
-	board->local_position.pos[2] = board->imu1.attitude.pos[2];
+	//board->local_position.pos[0] = board->imu1.attitude.pos[0];
+	//board->local_position.pos[1] = board->imu1.attitude.pos[1];
+	//board->local_position.pos[2] = board->imu1.attitude.pos[2];
 	
 	switch(board->mav_mode)
 	{
@@ -515,7 +515,7 @@ void initialisation() {
 		// clean acceleration estimate without gravity:
 		board->imu1.attitude.vel_bf[i]=0.0;
 		board->imu1.attitude.vel[i]=0.0;
-		board->imu1.attitude.pos[i]=0.0;
+		board->imu1.attitude.localPosition.pos[i]=0.0;
 	}
 	board->mav_state = MAV_STATE_STANDBY;
 	board->mav_mode = MAV_MODE_MANUAL_DISARMED;
@@ -528,6 +528,9 @@ void main (void)
 	int counter=0;
 	uint32_t last_looptime, this_looptime;
 	
+	global_position_t actualPos, originPos;
+	local_coordinates_t localPos;
+	
 	initialisation();
 	
 	init_scheduler(&main_tasks);
@@ -536,7 +539,7 @@ void main (void)
 	register_task(&main_tasks, 1, 4000, RUN_REGULAR, &run_stabilisation );
 	register_task(&main_tasks, 2, 1000, RUN_REGULAR, &mavlink_protocol_update);
 	
-	//register_task(&main_tasks, 3 ,100000, RUN_REGULAR, &gps_task);
+	register_task(&main_tasks, 3, 100000, RUN_REGULAR, &gps_task);
 	register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
 	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &read_radar);
 
@@ -546,6 +549,24 @@ void main (void)
 
 	add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
+	// Control global to local position function
+	//actualPos.latitude = 6.5659132;
+	//actualPos.longitude = 46.5192579;
+	//actualPos.altitude = 403.397;
+	//
+	//originPos.latitude = 6.5659148;
+	//originPos.longitude = 46.5193048;
+	//originPos.altitude = 391.424;
+	//
+	//localPos = global_to_local_position(actualPos,originPos);
+	//
+	//dbg_print("localPos(1e2):");
+	//dbg_print_num(localPos.pos[0]*100.0,10);
+	//dbg_print(", ");
+	//dbg_print_num(localPos.pos[1]*100.0,10);
+	//dbg_print(", ");
+	//dbg_print_num(localPos.pos[2]*100.0,10);
+	//dbg_print("\n");
 	
 	// turn on simulation mode
 	board->simulation_mode=0;
