@@ -461,6 +461,8 @@ void initialisation() {
 		//putstring(STDOUT, "initialised I2C.\n");
 	};
 
+	LED_Off(LED1);
+
 	init_radar_modules();
 
 	board=initialise_board();
@@ -472,7 +474,6 @@ void initialisation() {
 		
 	dbg_print("Debug stream initialised\n");
 
-	
 	
 /*
 	set_servo(0, -500, -500);
@@ -489,34 +490,23 @@ void initialisation() {
 
 	init_onboard_parameters();
 	init_mavlink_actions();
-	
-	LED_Off(LED1);
-	
+		
 	e_init();
 	
 	board->imu1.attitude.calibration_level=LEVELING;	
+	board->mav_state = MAV_STATE_CALIBRATING;
+	board->mav_mode = MAV_MODE_PREFLIGHT;
+
 	for (i=400; i>0; i--) {
 		imu_update(&board->imu1);
-		if (i%50 ==0) {
-			// Send heartbeat message
-			board->mav_state = MAV_STATE_CALIBRATING;
-			board->mav_mode = MAV_MODE_PREFLIGHT;
-			mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_PREFLIGHT, 0, MAV_STATE_CALIBRATING);
-		}
-		
+		mavlink_protocol_update();			
 		delay_ms(5);
 	}
 	// after initial leveling, initialise accelerometer biases
 	board->imu1.attitude.calibration_level=LEVEL_PLUS_ACCEL;
 	for (i=200; i>0; i--) {
 		imu_update(&board->imu1);
-		if (i%50 ==0) {
-			// Send heartbeat message
-			board->mav_state = MAV_STATE_CALIBRATING;
-			board->mav_mode = MAV_MODE_PREFLIGHT;
-			mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_PREFLIGHT, 0, MAV_STATE_CALIBRATING);
-		}
-			
+		mavlink_protocol_update();			
 		delay_ms(5);
 	}
 	board->imu1.attitude.calibration_level=OFF;

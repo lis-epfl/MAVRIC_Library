@@ -137,14 +137,14 @@ void mavlink_send_gps_raw(void) {
 	
 }
 
-/*
+
 void mavlink_send_pressure(void) {			
 	pressure_data *pressure=get_pressure_data_slow();
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Pressure", pressure->pressure);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Temperature", pressure->temperature);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Altitude", pressure->altitude);
 }
-*/
+
 /*
 void mavlink_send_radar(void) {
 	read_radar();
@@ -285,7 +285,7 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(), 1000000,RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_attitude, MAVLINK_MSG_ID_ATTITUDE);
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_attitude_quaternion, MAVLINK_MSG_ID_ATTITUDE_QUATERNION);
-	//add_task(get_mavlink_taskset(), 250000, RUN_REGULAR, &mavlink_send_pressure);
+	
 	add_task(get_mavlink_taskset(), 200000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
 	add_task(get_mavlink_taskset(), 100000, RUN_ONCE, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(), 100000, RUN_ONCE, &mavlink_send_rpy_speed_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT);

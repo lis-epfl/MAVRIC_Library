@@ -45,17 +45,14 @@ board_hardware_t* initialise_board() {
 		board_hardware.debug_in_stream      =&board_hardware.xbee_in_stream;
 */
 
-
-		
 		// init mavlink
-		init_mavlink(board_hardware.telemetry_down_stream, board_hardware.telemetry_up_stream);
+		init_mavlink(board_hardware.telemetry_down_stream, board_hardware.telemetry_up_stream, 55);
 		
-		
-
 		// init debug output
 		dbg_print_init(board_hardware.debug_out_stream);
 		
 		init_imu(&board_hardware.imu1);
+		init_bmp085();
 
 		spektrum_init();
 		init_Servos();

@@ -23,9 +23,9 @@ void mavlink_send_heartbeat(void) {
 	//}
 	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, board->mav_mode, 0, board->mav_state);
 		mavlink_msg_sys_status_send(MAVLINK_COMM_0, 
-								0b1111110000101111, // sensors present
-								0b1111110000101111, // sensors enabled
-								0b1111110000101111, // sensors health
+								0b1111110000100111, // sensors present
+								0b1111110000100111, // sensors enabled
+								0b1111110000100111, // sensors health
 								0,                  // load
 								12000,              // bat voltage (mV)
 								100,                // current (mA)
@@ -122,6 +122,16 @@ void mavlink_send_global_position(void) {
    
 }
 
+void mavlink_send_hud(void) {
+	float groundspeed=sqrt(board->imu1.attitude.vel[0]*board->imu1.attitude.vel[0] +board->imu1.attitude.vel[1]*board->imu1.attitude.vel[1]);
+	float airspeed=groundspeed;
+	Aero_Attitude_t aero_attitude;
+	aero_attitude=Quat_to_Aero(board->imu1.attitude.qe);
+	mavlink_msg_vfr_hud_send(MAVLINK_COMM_0, airspeed, groundspeed, 180.0*aero_attitude.rpy[2]/PI, (int)((board->controls.thrust+1.0)*50), -board->imu1.attitude.pos[2], -board->imu1.attitude.vel[2]);
+
+	
+}
+
 void mavlink_send_gps_raw(void) {	
 	// mavlink_msg_gps_raw_int_send(mavlink_channel_t chan, uint64_t time_usec, uint8_t fix_type, int32_t lat, int32_t lon, int32_t alt, uint16_t eph, uint16_t epv, uint16_t vel, uint16_t cog, uint8_t satellites_visible)
 	if (board->GPS_data.status == GPS_OK)
@@ -137,7 +147,7 @@ void mavlink_send_gps_raw(void) {
 
 void mavlink_send_pressure(void) {			
 	pressure_data *pressure=get_pressure_data_slow();
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Pressure", pressure->pressure);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Pressure", pressure->pressure/100.0);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Temperature", pressure->temperature);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Altitude", pressure->altitude);
 }
@@ -298,7 +308,8 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(), 1000000,RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_attitude, MAVLINK_MSG_ID_ATTITUDE);
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_attitude_quaternion, MAVLINK_MSG_ID_ATTITUDE_QUATERNION);
-	//add_task(get_mavlink_taskset(), 250000, RUN_REGULAR, &mavlink_send_pressure);
+	add_task(get_mavlink_taskset(), 250000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
+	add_task(get_mavlink_taskset(), 150000, RUN_REGULAR, &mavlink_send_pressure, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	add_task(get_mavlink_taskset(), 200000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
 	add_task(get_mavlink_taskset(), 50000, RUN_REGULAR, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
 	add_task(get_mavlink_taskset(), 100000, RUN_NEVER, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
@@ -311,5 +322,6 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(), 100000, RUN_NEVER, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
 	add_task(get_mavlink_taskset(), 200000, RUN_NEVER, &mavlink_send_simulation, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	
 	sort_taskset_by_period(get_mavlink_taskset());
 }

@@ -112,7 +112,7 @@ board_hardware_t* initialise_board() {
 		board_hardware.debug_in_stream      =&board_hardware.xbee_in_stream;
 */
 		// init mavlink
-		init_mavlink(board_hardware.telemetry_down_stream, board_hardware.telemetry_up_stream);
+		init_mavlink(board_hardware.telemetry_down_stream, board_hardware.telemetry_up_stream, 42);
 		
 //		register_read_stream(get_UART_handle(4), &board_hardware.wired_in_stream);
 //		register_read_stream(get_UART_handle(0), &board_hardware.xbee_in_stream);
