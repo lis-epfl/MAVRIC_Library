@@ -82,3 +82,10 @@ void make_buffered_stream(Buffer_t *buffer, byte_stream_t *stream) {
 	stream->bytes_available=&buffer_bytes_available;
 }
 
+void make_buffered_stream_lossy(Buffer_t *buffer, byte_stream_t *stream) {
+	stream->get=&buffer_get;
+	stream->put=&buffer_put_lossy;
+	stream->flush=NULL;
+	stream->data=buffer;
+	stream->bytes_available=&buffer_bytes_available;
+}
