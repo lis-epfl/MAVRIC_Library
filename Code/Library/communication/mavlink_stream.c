@@ -52,8 +52,8 @@ void mavlink_receive_handler() {
 	}
 }
 
-void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream) {
-	mavlink_system.sysid = 54; // System ID, 1-255
+void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream, int sysid) {
+	mavlink_system.sysid = sysid; // System ID, 1-255
 	mavlink_system.compid = 50; // Component/Subsystem ID, 1-255
 	mavlink_system.type = MAV_TYPE_QUADROTOR;
 	

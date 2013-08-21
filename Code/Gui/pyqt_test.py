@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 #from PyQt4 import QtCore, QtGui
 from pyqtgraph.Qt import QtGui, QtCore
 import numpy as np
