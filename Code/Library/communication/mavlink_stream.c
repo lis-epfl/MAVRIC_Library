@@ -37,6 +37,7 @@ void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 
 void mavlink_receive_handler() {
 	Mavlink_Received_t rec;
+	
 	if(mavlink_receive(mavlink_in_stream, &rec)) {
 		dbg_print("\n Received message with ID");
 		dbg_print_num(rec.msg.msgid, 10);
@@ -89,6 +90,7 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 	//dbg_print(".");
 	while(stream->bytes_available(stream->data) > 0) {
 		byte = stream->get(stream->data);
+		dbg_print(".");
 		//dbg_print_num(byte, 16);
 		//dbg_print("\t");
 		if(mavlink_parse_char(MAVLINK_COMM_0, byte, &rec->msg, &rec->status)) {

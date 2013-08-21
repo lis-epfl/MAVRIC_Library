@@ -1,5 +1,5 @@
 /** @file
- *	@brief MAVLink comm protocol built from maveric.xml
+ *	@brief MAVLink comm protocol built from maveric2.xml
  *	@see http://pixhawk.ethz.ch/software/mavlink
  */
 #ifndef MAVLINK_H
@@ -22,6 +22,6 @@
 #endif
 
 #include "version.h"
-#include "maveric.h"
+#include "maveric2.h"
 
 #endif // MAVLINK_H

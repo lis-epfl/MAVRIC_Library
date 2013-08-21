@@ -22,6 +22,19 @@ void mavlink_send_heartbeat(void) {
 		//mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_ACTIVE);
 	//}
 	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, board->mav_mode, 0, board->mav_state);
+	
+	mavlink_msg_sys_status_send(MAVLINK_COMM_0, 
+								0b1111110000101111, // sensors present
+								0b1111110000101111, // sensors enabled
+								0b1111110000101111, // sensors health
+								0,                  // load
+								12000,              // bat voltage (mV)
+								100,                // current (mA)
+								0, 0,  				// comms drop, comms errors
+								0, 0, 0, 0,         // autopilot specific errors
+								99);                // battery remaining
+								
+								
 }
 
 void mavlink_send_raw_imu(void) {

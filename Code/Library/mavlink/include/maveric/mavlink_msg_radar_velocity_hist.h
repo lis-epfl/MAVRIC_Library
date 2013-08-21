@@ -12,6 +12,9 @@ typedef struct __mavlink_radar_velocity_hist_t
 #define MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN 69
 #define MAVLINK_MSG_ID_151_LEN 69
 
+#define MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_CRC 37
+#define MAVLINK_MSG_ID_151_CRC 37
+
 #define MAVLINK_MSG_RADAR_VELOCITY_HIST_FIELD_VELOCITY_LEN 64
 
 #define MAVLINK_MESSAGE_INFO_RADAR_VELOCITY_HIST { \
@@ -39,28 +42,32 @@ static inline uint16_t mavlink_msg_radar_velocity_hist_pack(uint8_t system_id, u
 						       uint32_t time_boot_ms, uint8_t sensor_id, const uint8_t *velocity)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[69];
+	char buf[MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN];
 	_mav_put_uint32_t(buf, 0, time_boot_ms);
 	_mav_put_uint8_t(buf, 4, sensor_id);
 	_mav_put_uint8_t_array(buf, 5, velocity, 64);
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 69);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN);
 #else
 	mavlink_radar_velocity_hist_t packet;
 	packet.time_boot_ms = time_boot_ms;
 	packet.sensor_id = sensor_id;
 	mav_array_memcpy(packet.velocity, velocity, sizeof(uint8_t)*64);
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 69);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN);
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_RADAR_VELOCITY_HIST;
-	return mavlink_finalize_message(msg, system_id, component_id, 69, 37);
+#if MAVLINK_CRC_EXTRA
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_CRC);
+#else
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN);
+#endif
 }
 
 /**
  * @brief Pack a radar_velocity_hist message on a channel
  * @param system_id ID of this system
  * @param component_id ID of this component (e.g. 200 for IMU)
- * @param chan The MAVLink channel this message was sent over
+ * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
  * @param time_boot_ms Timestamp (milliseconds since system boot)
  * @param sensor_id Sensor ID
@@ -72,25 +79,29 @@ static inline uint16_t mavlink_msg_radar_velocity_hist_pack_chan(uint8_t system_
 						           uint32_t time_boot_ms,uint8_t sensor_id,const uint8_t *velocity)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[69];
+	char buf[MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN];
 	_mav_put_uint32_t(buf, 0, time_boot_ms);
 	_mav_put_uint8_t(buf, 4, sensor_id);
 	_mav_put_uint8_t_array(buf, 5, velocity, 64);
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 69);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN);
 #else
 	mavlink_radar_velocity_hist_t packet;
 	packet.time_boot_ms = time_boot_ms;
 	packet.sensor_id = sensor_id;
 	mav_array_memcpy(packet.velocity, velocity, sizeof(uint8_t)*64);
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 69);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN);
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_RADAR_VELOCITY_HIST;
-	return mavlink_finalize_message_chan(msg, system_id, component_id, chan, 69, 37);
+#if MAVLINK_CRC_EXTRA
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_CRC);
+#else
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN);
+#endif
 }
 
 /**
- * @brief Encode a radar_velocity_hist struct into a message
+ * @brief Encode a radar_velocity_hist struct
  *
  * @param system_id ID of this system
  * @param component_id ID of this component (e.g. 200 for IMU)
@@ -100,6 +111,20 @@ static inline uint16_t mavlink_msg_radar_velocity_hist_pack_chan(uint8_t system_
 static inline uint16_t mavlink_msg_radar_velocity_hist_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_radar_velocity_hist_t* radar_velocity_hist)
 {
 	return mavlink_msg_radar_velocity_hist_pack(system_id, component_id, msg, radar_velocity_hist->time_boot_ms, radar_velocity_hist->sensor_id, radar_velocity_hist->velocity);
+}
+
+/**
+ * @brief Encode a radar_velocity_hist struct on a channel
+ *
+ * @param system_id ID of this system
+ * @param component_id ID of this component (e.g. 200 for IMU)
+ * @param chan The MAVLink channel this message will be sent over
+ * @param msg The MAVLink message to compress the data into
+ * @param radar_velocity_hist C-struct to read the message contents from
+ */
+static inline uint16_t mavlink_msg_radar_velocity_hist_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_radar_velocity_hist_t* radar_velocity_hist)
+{
+	return mavlink_msg_radar_velocity_hist_pack_chan(system_id, component_id, chan, msg, radar_velocity_hist->time_boot_ms, radar_velocity_hist->sensor_id, radar_velocity_hist->velocity);
 }
 
 /**
@@ -115,17 +140,25 @@ static inline uint16_t mavlink_msg_radar_velocity_hist_encode(uint8_t system_id,
 static inline void mavlink_msg_radar_velocity_hist_send(mavlink_channel_t chan, uint32_t time_boot_ms, uint8_t sensor_id, const uint8_t *velocity)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[69];
+	char buf[MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN];
 	_mav_put_uint32_t(buf, 0, time_boot_ms);
 	_mav_put_uint8_t(buf, 4, sensor_id);
 	_mav_put_uint8_t_array(buf, 5, velocity, 64);
-	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST, buf, 69, 37);
+#if MAVLINK_CRC_EXTRA
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST, buf, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_CRC);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST, buf, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN);
+#endif
 #else
 	mavlink_radar_velocity_hist_t packet;
 	packet.time_boot_ms = time_boot_ms;
 	packet.sensor_id = sensor_id;
 	mav_array_memcpy(packet.velocity, velocity, sizeof(uint8_t)*64);
-	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST, (const char *)&packet, 69, 37);
+#if MAVLINK_CRC_EXTRA
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST, (const char *)&packet, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_CRC);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST, (const char *)&packet, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN);
+#endif
 #endif
 }
 
@@ -177,6 +210,6 @@ static inline void mavlink_msg_radar_velocity_hist_decode(const mavlink_message_
 	radar_velocity_hist->sensor_id = mavlink_msg_radar_velocity_hist_get_sensor_id(msg);
 	mavlink_msg_radar_velocity_hist_get_velocity(msg, radar_velocity_hist->velocity);
 #else
-	memcpy(radar_velocity_hist, _MAV_PAYLOAD(msg), 69);
+	memcpy(radar_velocity_hist, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_RADAR_VELOCITY_HIST_LEN);
 #endif
 }

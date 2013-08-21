@@ -15,6 +15,9 @@ typedef struct __mavlink_radar_tracked_target_t
 #define MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN 18
 #define MAVLINK_MSG_ID_150_LEN 18
 
+#define MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_CRC 117
+#define MAVLINK_MSG_ID_150_CRC 117
+
 
 
 #define MAVLINK_MESSAGE_INFO_RADAR_TRACKED_TARGET { \
@@ -48,7 +51,7 @@ static inline uint16_t mavlink_msg_radar_tracked_target_pack(uint8_t system_id, 
 						       uint32_t time_boot_ms, uint8_t sensor_id, uint8_t target_id, float velocity, float amplitude, float distance)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[18];
+	char buf[MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN];
 	_mav_put_uint32_t(buf, 0, time_boot_ms);
 	_mav_put_float(buf, 4, velocity);
 	_mav_put_float(buf, 8, amplitude);
@@ -56,7 +59,7 @@ static inline uint16_t mavlink_msg_radar_tracked_target_pack(uint8_t system_id, 
 	_mav_put_uint8_t(buf, 16, sensor_id);
 	_mav_put_uint8_t(buf, 17, target_id);
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 18);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN);
 #else
 	mavlink_radar_tracked_target_t packet;
 	packet.time_boot_ms = time_boot_ms;
@@ -66,18 +69,22 @@ static inline uint16_t mavlink_msg_radar_tracked_target_pack(uint8_t system_id, 
 	packet.sensor_id = sensor_id;
 	packet.target_id = target_id;
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 18);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN);
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_RADAR_TRACKED_TARGET;
-	return mavlink_finalize_message(msg, system_id, component_id, 18, 117);
+#if MAVLINK_CRC_EXTRA
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_CRC);
+#else
+    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN);
+#endif
 }
 
 /**
  * @brief Pack a radar_tracked_target message on a channel
  * @param system_id ID of this system
  * @param component_id ID of this component (e.g. 200 for IMU)
- * @param chan The MAVLink channel this message was sent over
+ * @param chan The MAVLink channel this message will be sent over
  * @param msg The MAVLink message to compress the data into
  * @param time_boot_ms Timestamp (milliseconds since system boot)
  * @param sensor_id Sensor ID
@@ -92,7 +99,7 @@ static inline uint16_t mavlink_msg_radar_tracked_target_pack_chan(uint8_t system
 						           uint32_t time_boot_ms,uint8_t sensor_id,uint8_t target_id,float velocity,float amplitude,float distance)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[18];
+	char buf[MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN];
 	_mav_put_uint32_t(buf, 0, time_boot_ms);
 	_mav_put_float(buf, 4, velocity);
 	_mav_put_float(buf, 8, amplitude);
@@ -100,7 +107,7 @@ static inline uint16_t mavlink_msg_radar_tracked_target_pack_chan(uint8_t system
 	_mav_put_uint8_t(buf, 16, sensor_id);
 	_mav_put_uint8_t(buf, 17, target_id);
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 18);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN);
 #else
 	mavlink_radar_tracked_target_t packet;
 	packet.time_boot_ms = time_boot_ms;
@@ -110,15 +117,19 @@ static inline uint16_t mavlink_msg_radar_tracked_target_pack_chan(uint8_t system
 	packet.sensor_id = sensor_id;
 	packet.target_id = target_id;
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 18);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN);
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_RADAR_TRACKED_TARGET;
-	return mavlink_finalize_message_chan(msg, system_id, component_id, chan, 18, 117);
+#if MAVLINK_CRC_EXTRA
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_CRC);
+#else
+    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN);
+#endif
 }
 
 /**
- * @brief Encode a radar_tracked_target struct into a message
+ * @brief Encode a radar_tracked_target struct
  *
  * @param system_id ID of this system
  * @param component_id ID of this component (e.g. 200 for IMU)
@@ -128,6 +139,20 @@ static inline uint16_t mavlink_msg_radar_tracked_target_pack_chan(uint8_t system
 static inline uint16_t mavlink_msg_radar_tracked_target_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_radar_tracked_target_t* radar_tracked_target)
 {
 	return mavlink_msg_radar_tracked_target_pack(system_id, component_id, msg, radar_tracked_target->time_boot_ms, radar_tracked_target->sensor_id, radar_tracked_target->target_id, radar_tracked_target->velocity, radar_tracked_target->amplitude, radar_tracked_target->distance);
+}
+
+/**
+ * @brief Encode a radar_tracked_target struct on a channel
+ *
+ * @param system_id ID of this system
+ * @param component_id ID of this component (e.g. 200 for IMU)
+ * @param chan The MAVLink channel this message will be sent over
+ * @param msg The MAVLink message to compress the data into
+ * @param radar_tracked_target C-struct to read the message contents from
+ */
+static inline uint16_t mavlink_msg_radar_tracked_target_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_radar_tracked_target_t* radar_tracked_target)
+{
+	return mavlink_msg_radar_tracked_target_pack_chan(system_id, component_id, chan, msg, radar_tracked_target->time_boot_ms, radar_tracked_target->sensor_id, radar_tracked_target->target_id, radar_tracked_target->velocity, radar_tracked_target->amplitude, radar_tracked_target->distance);
 }
 
 /**
@@ -146,7 +171,7 @@ static inline uint16_t mavlink_msg_radar_tracked_target_encode(uint8_t system_id
 static inline void mavlink_msg_radar_tracked_target_send(mavlink_channel_t chan, uint32_t time_boot_ms, uint8_t sensor_id, uint8_t target_id, float velocity, float amplitude, float distance)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[18];
+	char buf[MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN];
 	_mav_put_uint32_t(buf, 0, time_boot_ms);
 	_mav_put_float(buf, 4, velocity);
 	_mav_put_float(buf, 8, amplitude);
@@ -154,7 +179,11 @@ static inline void mavlink_msg_radar_tracked_target_send(mavlink_channel_t chan,
 	_mav_put_uint8_t(buf, 16, sensor_id);
 	_mav_put_uint8_t(buf, 17, target_id);
 
-	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET, buf, 18, 117);
+#if MAVLINK_CRC_EXTRA
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET, buf, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_CRC);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET, buf, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN);
+#endif
 #else
 	mavlink_radar_tracked_target_t packet;
 	packet.time_boot_ms = time_boot_ms;
@@ -164,7 +193,11 @@ static inline void mavlink_msg_radar_tracked_target_send(mavlink_channel_t chan,
 	packet.sensor_id = sensor_id;
 	packet.target_id = target_id;
 
-	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET, (const char *)&packet, 18, 117);
+#if MAVLINK_CRC_EXTRA
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET, (const char *)&packet, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_CRC);
+#else
+    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET, (const char *)&packet, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN);
+#endif
 #endif
 }
 
@@ -249,6 +282,6 @@ static inline void mavlink_msg_radar_tracked_target_decode(const mavlink_message
 	radar_tracked_target->sensor_id = mavlink_msg_radar_tracked_target_get_sensor_id(msg);
 	radar_tracked_target->target_id = mavlink_msg_radar_tracked_target_get_target_id(msg);
 #else
-	memcpy(radar_tracked_target, _MAV_PAYLOAD(msg), 18);
+	memcpy(radar_tracked_target, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_RADAR_TRACKED_TARGET_LEN);
 #endif
 }
