@@ -240,33 +240,33 @@ task_return_t run_stabilisation() {
 	{
 		case MAV_MODE_PREFLIGHT:
 		case MAV_MODE_MANUAL_ARMED:
-			board->controls.rpy[ROLL]=-getChannelNeutral(S_ROLL)/350.0;
-			board->controls.rpy[PITCH]=-getChannelNeutral(S_PITCH)/350.0;
-			board->controls.rpy[YAW]=-getChannelNeutral(S_YAW)/350.0;
+			board->controls.rpy[ROLL]=-getChannelNeutral(S_ROLL)*RC_INPUT_SCALE;
+			board->controls.rpy[PITCH]=-getChannelNeutral(S_PITCH)*RC_INPUT_SCALE;
+			board->controls.rpy[YAW]=-getChannelNeutral(S_YAW)*RC_INPUT_SCALE;
 			//board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-			board->controls.thrust = getChannelNeutral(S_THROTTLE)/350.0;
+			board->controls.thrust = getChannelNeutral(S_THROTTLE)*RC_INPUT_SCALE;
 			for (i=0; i<4; i++) {
 				board->servos[i].value=SERVO_SCALE*board->controls.thrust;
 			}
 			
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
-			board->controls.rpy[ROLL]=-getChannelNeutral(S_ROLL)/350.0;
-			board->controls.rpy[PITCH]=-getChannelNeutral(S_PITCH)/350.0;
-			board->controls.rpy[YAW]=-getChannelNeutral(S_YAW)/350.0;
+			board->controls.rpy[ROLL]=-getChannelNeutral(S_ROLL)*RC_INPUT_SCALE;
+			board->controls.rpy[PITCH]=-getChannelNeutral(S_PITCH)*RC_INPUT_SCALE;
+			board->controls.rpy[YAW]=-getChannelNeutral(S_YAW)*RC_INPUT_SCALE;
 			//board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-			board->controls.thrust = getChannelNeutral(S_THROTTLE)/350.0;
+			board->controls.thrust = getChannelNeutral(S_THROTTLE)*RC_INPUT_SCALE;
 			quad_stabilise(&(board->imu1), &(board->controls));
 			
 			break;
 		case MAV_MODE_GUIDED_ARMED:
-			board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
+			board->controls.thrust = min(getChannel(S_THROTTLE)/RC_INPUT_SCALE,board->controls.thrust);
 			//board->controls.thrust = getChannel(S_THROTTLE)/350.0;
 			quad_stabilise(&(board->imu1), &(board->controls));
 			
 			break;
 		case MAV_MODE_AUTO_ARMED:
-			board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
+			board->controls.thrust = min(getChannel(S_THROTTLE)/RC_INPUT_SCALE,board->controls.thrust);
 			//board->controls.thrust = getChannel(S_THROTTLE)/350.0;
 			quad_stabilise(&(board->imu1), &(board->controls));
 			

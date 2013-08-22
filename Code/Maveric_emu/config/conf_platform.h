@@ -23,6 +23,8 @@
 #define CONF_DIAG
 //#define CONF_CROSS
 
+#define RC_INPUT_SCALE (1.0/500.0)
+
 #define IMU_X 0
 #define IMU_Y 1
 #define IMU_Z 2
