@@ -232,10 +232,7 @@ task_return_t run_stabilisation() {
 	} else {
 		imu_update(&(board->imu1));
 	}
-	board->local_position.pos[0] = board->imu1.attitude.pos[0];
-	board->local_position.pos[1] = board->imu1.attitude.pos[1];
-	board->local_position.pos[2] = board->imu1.attitude.pos[2];
-	
+
 	switch(board->mav_mode)
 	{
 		case MAV_MODE_PREFLIGHT:
@@ -486,7 +483,7 @@ void initialisation() {
 		// clean acceleration estimate without gravity:
 		board->imu1.attitude.vel_bf[i]=0.0;
 		board->imu1.attitude.vel[i]=0.0;
-		board->imu1.attitude.pos[i]=0.0;
+		board->imu1.attitude.localPosition.pos[i]=0.0;
 	}
 	board->mav_state = MAV_STATE_STANDBY;
 	board->mav_mode = MAV_MODE_MANUAL_DISARMED;
@@ -509,7 +506,7 @@ void main (void)
 	register_task(&main_tasks, 2, 1000, RUN_REGULAR, &mavlink_protocol_update);
 	
 	//register_task(&main_tasks, 3 ,100000, RUN_REGULAR, &gps_task);
-	register_task(&main_tasks, 4, 100000, RUN_REGULAR, &run_estimator);
+	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &run_estimator);
 	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &read_radar);
 
 	// register_task(&main_tasks, 5, 1000000, RUN_REGULAR, &run_navigation_task);

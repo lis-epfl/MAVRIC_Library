@@ -14,6 +14,7 @@ global_position_t local_to_global_position(local_coordinates_t input){
 	global_position_t output;
 	output.latitude = input.origin.latitude  + rad_to_deg( input.pos[0] *2.0 / (PI * EARTH_RADIUS));
 	output.longitude= input.origin.longitude + rad_to_deg( input.pos[1] *2.0 / (PI * EARTH_RADIUS*cos(deg_to_rad(output.latitude))));
+	output.altitude = -input.pos[2] + input.origin.altitude;
 	return output;
 }
 
