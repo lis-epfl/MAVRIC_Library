@@ -140,7 +140,10 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define TIME_OF_YEAR 2 //< MTK, NMEA
 #define UNIX_EPOCH 3
 
+#ifndef PI
 #define PI 3.141592
+#endif
+
 #define DEG2RAD PI/180
 
 // The UART bytes are sent in a little endian format from the GPS, if the processor is big endian, define BIG_ENDIAN
@@ -500,8 +503,8 @@ enum GPS_Engine_Setting engine_nav_setting;
 // Type definition for GPS data
 typedef struct
 {
-	long latitude; //!< latitude in degree E+7
-	long longitude; //!< longitude in degree E+7
+	double latitude; //!< latitude in degrees
+	double longitude; //!< longitude in degrees
 	float altitude; //!< altitude in m
 	float alt_elips; //!< altitude above ellipsoid in m
 	float speed; //!< 3D speed in m/s
@@ -509,7 +512,7 @@ typedef struct
 	float northSpeed; //!< the speed to the north in m/s
 	float eastSpeed; //!< the speed to the east in m/s
 	float verticalSpeed; //!< the vertical speed in m/s
-	float course; //!< heading in degree
+	float course; //!< heading in degree * 100
 	
 	float horizontalAccuracy; //!< horizontal accuracy in m
 	float verticalAccuracy; //!< vertical accuracy in m

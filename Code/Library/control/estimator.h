@@ -25,8 +25,12 @@ void init_pos_gps(void);
 void e_kalman_init (int axis,float init_p);
 void e_predict (UQuat_t *qe, float a[], float dt);
 void e_kalman_predict (int axis,float accel_meas, float dt);
+void e_kalman_predict_hf(int axis,float accel_meas, float dt);
 void e_kalman_update_position (int axis,float position_meas);
+void e_kalman_update_position_hf(int axis,float position_meas);
 void e_kalman_update_speed(int axis,float speed_meas);
+void e_kalman_update_speed_hf(int axis,float speed_meas);
+
 void estimator_loop(void);
 void quat_rot(UQuat_t *quat,float *vect);
 

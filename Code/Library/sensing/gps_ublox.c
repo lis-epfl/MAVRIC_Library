@@ -135,7 +135,7 @@ ubx_tim_vrfy *ubx_lastTimVRFYMessage = &ubx_TimVRFYMessage[1];
 unsigned short ubx_numberOfValidTimVRFYMessage = 0;
 
 // Set to true to print all data
-bool printNavOnDebug = true;
+bool printNavOnDebug = false;
 
 uint8_t loopPosllh = 0, loopVelned = 0, loopStatus = 0, loopSolution = 0, loopTimTp = 0, loopTimVrfy = 0;
 uint8_t numSkippedMsg = 10;
@@ -828,8 +828,8 @@ bool ubx_process_data(void)
 			}
 			
 			board->GPS_data.timegps = gpsPosllh->itow;
-			board->GPS_data.longitude = gpsPosllh->longitude;
-			board->GPS_data.latitude = gpsPosllh->latitude;
+			board->GPS_data.longitude = gpsPosllh->longitude / 10000000.0;
+			board->GPS_data.latitude = gpsPosllh->latitude / 10000000.0;
 			board->GPS_data.alt_elips = ((float)gpsPosllh->altitude_ellipsoid) / 1000.;
 			board->GPS_data.altitude = ((float)gpsPosllh->altitude_msl) / 1000.;
 			board->GPS_data.horizontalAccuracy = ((float)gpsPosllh->horizontal_accuracy) / 1000.;

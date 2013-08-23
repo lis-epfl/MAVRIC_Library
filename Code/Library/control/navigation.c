@@ -94,7 +94,7 @@ void set_waypoint_from_frame(waypoint_struct current_wp)
 		waypoint_coordinates.origin.latitude =current_wp.x;
 		waypoint_coordinates.origin.longitude =current_wp.y;
 		waypoint_coordinates.origin.altitude =current_wp.z;
-		waypoint_coordinates = global_to_local_position(waypoint_coordinates.origin,board->local_position.origin);
+		waypoint_coordinates = global_to_local_position(waypoint_coordinates.origin,board->imu1.attitude.localPosition.origin);
 		break;
 		case MAV_FRAME_LOCAL_NED:
 		waypoint_coordinates.pos[X] = current_wp.x;
@@ -121,9 +121,9 @@ void run_navigation()
 	if (waypoint_set)
 	{
 		
-		rel_pos[0] = waypoint_coordinates.pos[0] - board->local_position.pos[0];
-		rel_pos[1] = waypoint_coordinates.pos[1] - board->local_position.pos[1];
-		rel_pos[2] = waypoint_coordinates.pos[2] - board->local_position.pos[2];
+		rel_pos[0] = waypoint_coordinates.pos[0] - board->imu1.attitude.localPosition.pos[0];
+		rel_pos[1] = waypoint_coordinates.pos[1] - board->imu1.attitude.localPosition.pos[1];
+		rel_pos[2] = waypoint_coordinates.pos[2] - board->imu1.attitude.localPosition.pos[2];
 		
 		dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
 		

@@ -9,24 +9,12 @@
 #define COORD_CONVENTIONS_H_
 
 #include "compiler.h"
-#include "imu.h"
+#include "qfilter.h"
 #include <math.h>
 
 #define EARTH_RADIUS 6378137.0   // radius of the earth in meters
 
 #define PI 3.141592653589793
-
-
-typedef struct {
-	double longitude;
-	double latitude;
-	float altitude;
-} global_position_t;
-
-typedef struct {
-	float pos[3];
-	global_position_t origin;
-} local_coordinates_t;
 
 #define rad_to_deg(input) (input*180.0/PI)
 #define deg_to_rad(input) (input*PI/180.0)

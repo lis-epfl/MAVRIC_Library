@@ -490,8 +490,6 @@ void initialisation() {
 
 	init_onboard_parameters();
 	init_mavlink_actions();
-		
-	e_init();
 	
 	board->imu1.attitude.calibration_level=LEVELING;	
 	board->mav_state = MAV_STATE_CALIBRATING;
@@ -519,6 +517,8 @@ void initialisation() {
 	}
 	board->mav_state = MAV_STATE_STANDBY;
 	board->mav_mode = MAV_MODE_MANUAL_DISARMED;
+	
+	e_init();
 	
 }
 

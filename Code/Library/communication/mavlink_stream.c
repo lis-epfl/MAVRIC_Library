@@ -158,7 +158,7 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_CLEAR_ALL : { // 45
-			clear_waypoint_list(rec,&board->waypoint_list);
+			clear_waypoint_list(rec,&(board->waypoint_list));
 			dbg_print("Clear Waypoint list");
 		}
 		break;

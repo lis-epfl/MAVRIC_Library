@@ -19,6 +19,17 @@
 
 #define GRAVITY 9.81
 
+typedef struct {
+	double longitude;
+	double latitude;
+	float altitude;
+} global_position_t;
+
+typedef struct {
+	float pos[3];
+	global_position_t origin;
+} local_coordinates_t;
+
 typedef struct UQuat {
 	float s;
 	float v[3];
@@ -39,7 +50,9 @@ typedef struct {
 	float raw_mag_mean[3];
 	uint8_t calibration_level;
 	
-	float acc_bf[3], vel_bf[3], vel[3], pos[3], biaisKalman[3];
+	float acc_bf[3], vel_bf[3], vel[3];//, pos[3];
+
+	local_coordinates_t localPosition;
 
 } Quat_Attitude_t;	
 

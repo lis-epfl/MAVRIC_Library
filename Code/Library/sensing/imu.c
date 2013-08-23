@@ -28,23 +28,23 @@ void init_imu (Imu_Data_t *imu1) {
 	imu1->raw_scale[0] =  RAW_GYRO_X_SCALE;
 	imu1->raw_scale[1] =  RAW_GYRO_Y_SCALE;
 	imu1->raw_scale[2] =  RAW_GYRO_Z_SCALE;
-	imu1->raw_scale[3] =  RAW_ACC_X_SCALE;
-	imu1->raw_scale[4] =  RAW_ACC_Y_SCALE;
-	imu1->raw_scale[5] =  RAW_ACC_Z_SCALE;
-	imu1->raw_scale[6] =  RAW_MAG_X_SCALE;
-	imu1->raw_scale[7] =  RAW_MAG_Y_SCALE;
-	imu1->raw_scale[8] =  RAW_MAG_Z_SCALE;
+	imu1->raw_scale[0+ACC_OFFSET] =  RAW_ACC_X_SCALE;
+	imu1->raw_scale[1+ACC_OFFSET] =  RAW_ACC_Y_SCALE;
+	imu1->raw_scale[2+ACC_OFFSET] =  RAW_ACC_Z_SCALE;
+	imu1->raw_scale[0+COMPASS_OFFSET] =  RAW_MAG_X_SCALE;
+	imu1->raw_scale[1+COMPASS_OFFSET] =  RAW_MAG_Y_SCALE;
+	imu1->raw_scale[2+COMPASS_OFFSET] =  RAW_MAG_Z_SCALE;
 	
 	//myquad
 	// acceleration biais
-	imu1->raw_bias[3]= ACC_BIAIS_X;
-	imu1->raw_bias[4]= ACC_BIAIS_Y;
-	imu1->raw_bias[5]= ACC_BIAIS_Z;
+	imu1->raw_bias[0+ACC_OFFSET]= ACC_BIAIS_X;
+	imu1->raw_bias[1+ACC_OFFSET]= ACC_BIAIS_Y;
+	imu1->raw_bias[2+ACC_OFFSET]= ACC_BIAIS_Z;
 	
 	// magneto biais
-	imu1->raw_bias[6]= MAG_BIAIS_X;
-	imu1->raw_bias[7]= MAG_BIAIS_Y;
-	imu1->raw_bias[8]= MAG_BIAIS_Z;
+	imu1->raw_bias[0+COMPASS_OFFSET]= MAG_BIAIS_X;
+	imu1->raw_bias[1+COMPASS_OFFSET]= MAG_BIAIS_Y;
+	imu1->raw_bias[2+COMPASS_OFFSET]= MAG_BIAIS_Z;
 	
 	//Geraud
 //	imu1->raw_bias[3]=6.0;
