@@ -40,7 +40,7 @@
 #define SQR(in) \
 		(in)*(in)
 
-
+float front_mag_vect_z;
 
 void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 	uint8_t i;
@@ -57,7 +57,7 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 		attitude->acc_bf[i]=0.0;
 		attitude->vel_bf[i]=0.0;
 		attitude->vel[i]=0.0;
-		attitude->pos[i]=0.0;
+		attitude->localPosition.pos[i]=0.0;
 	}
 
 //	attitude->be[3]=-0.03;
@@ -83,6 +83,11 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 	dbg_print_num(attitude->mag[0]*100.0,10);
 	dbg_print("\n");
 
+	front_mag_vect_z = attitude->mag[2];
+	dbg_print("Front mag(z) (*100):");
+	dbg_print_num(front_mag_vect_z*100.0,10);
+	dbg_print("\n");
+
 	attitude->qe.s = cos(init_angle/2.0);
 	attitude->qe.v[0]=0.0;
 	attitude->qe.v[1]=0.0;
@@ -92,7 +97,7 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 	attitude->kp=0.05;
 	attitude->ki=attitude->kp/15.0;
 	
-	attitude->kp_mag = 0.05;
+	attitude->kp_mag = 0.025;
 	attitude->ki_mag = attitude->kp_mag/15.0;
 	
 	attitude->calibration_level=LEVELING;
@@ -138,7 +143,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 
 	// Heading computation
 	QI(attitude->qe,qtmp4);
-	front_bf.s = 0;front_bf.v[0] = FRONTVECTOR_X;front_bf.v[1] = FRONTVECTOR_Y;front_bf.v[2] = FRONTVECTOR_Z;
+	front_bf.s = 0;front_bf.v[0] = FRONTVECTOR_X;front_bf.v[1] = FRONTVECTOR_Y;front_bf.v[2] = front_mag_vect_z;
 	
 	QMUL(qtmp4, front_bf, qtmp5);
 	QMUL(qtmp5, attitude->qe, front_bf);
@@ -252,7 +257,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 
 	for (i=0; i<3; i++) {
 		// clean position estimate without gravity:
-		attitude->pos[i] =attitude->pos[i]*(1.0-(POS_DECAY*dt)) + attitude->vel[i] *dt;
+		attitude->localPosition.pos[i] =attitude->localPosition.pos[i]*(1.0-(POS_DECAY*dt)) + attitude->vel[i] *dt;
 	}
 	
 }

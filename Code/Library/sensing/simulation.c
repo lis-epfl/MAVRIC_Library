@@ -134,9 +134,9 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	
 
 	// check altitude - if it is lower than 0, clamp everything (this is in NED, assuming negative altitude)
-	if (imu->attitude.pos[Z] >0) {
+	if (imu->attitude.localPosition.pos[Z] >0) {
 		imu->attitude.vel[Z]=0.0;
-		imu->attitude.pos[Z]=0.0;
+		imu->attitude.localPosition.pos[Z]=0.0;
 
 		// simulate "acceleration" caused by contact force with ground, compensating gravity
 		for (i=0; i<3; i++) {
@@ -163,7 +163,7 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	
 	for (i=0; i<3; i++){
 		sim->vel_bf[i]=imu->attitude.vel_bf[i];
-		sim->pos[i]=imu->attitude.pos[i];
+		sim->pos[i]=imu->attitude.localPosition.pos[i];
 		
 	}
 
