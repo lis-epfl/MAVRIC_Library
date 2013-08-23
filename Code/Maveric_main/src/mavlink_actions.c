@@ -146,10 +146,10 @@ void mavlink_send_gps_raw(void) {
 
 
 void mavlink_send_pressure(void) {			
-	pressure_data *pressure=get_pressure_data_slow();
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Pressure", pressure->pressure/100.0);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Temperature", pressure->temperature);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Altitude", pressure->altitude);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Pressure", board->pressure.pressure/100.0);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "PressureFiltered", board->pressure_filtered/100.0);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Temperature", board->pressure.temperature);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Altitude", board->pressure.altitude);
 }
 
 void mavlink_send_radar(void) {
@@ -189,6 +189,10 @@ void mavlink_send_kalman_estimator(void)
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfX", board->imu1.attitude.acc_bf[X]);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfY", board->imu1.attitude.acc_bf[Y]);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", board->imu1.attitude.acc_bf[Z]);
+	
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", board->imu1.attitude.vel_bf[X]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", board->imu1.attitude.vel_bf[Y]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", board->imu1.attitude.vel_bf[Z]);
 	
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiDeltaT", board->estimation.delta_t_filter);
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "imuDeltaT", board->imu1.dt);

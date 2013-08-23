@@ -35,6 +35,7 @@
 #include "waypoint_navigation.h"
 #include "estimator.h"
 #include "simulation.h"
+#include "bmp085.h"
 
 static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
 
@@ -70,6 +71,9 @@ typedef struct  {
 	uint8_t mav_mode;
 	uint8_t mav_state;
 	uint8_t simulation_mode;
+	
+	pressure_data pressure;
+	float pressure_filtered;
 	
 } board_hardware_t;
 

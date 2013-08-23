@@ -37,13 +37,11 @@
 
 //#include "flashvault.h"
 
-pressure_data *pressure;
-
-
 board_hardware_t *board;
 
 NEW_TASK_SET(main_tasks, 10)
-	
+
+#define PRESSURE_LPF 0.2
 	
 task_return_t run_imu_update() {
 	imu_update(&(board->imu1));	
@@ -410,6 +408,32 @@ task_return_t run_navigation_task()
 	
 }
 
+task_return_t run_barometer()
+{
+	uint32_t tnow = get_micros();
+
+	pressure_data *pressure = get_pressure_data_slow();
+	board->pressure =  *pressure;
+	
+	board->pressure_filtered = (1.0-PRESSURE_LPF)*board->pressure_filtered + PRESSURE_LPF * board->pressure.pressure;
+	
+	//if (newValidBarometer())
+	//{
+		//dbg_print("New barometer measure:");
+		//dbg_print(" Pressure:");
+		//dbg_print_num(board->pressure.pressure,10);
+		//dbg_print(" Temperature:");
+		//dbg_print_num(board->pressure.temperature,10);
+		//dbg_print(" Altitude:");
+		//dbg_print_num(board->pressure.altitude,10);
+		//dbg_print(" last update:");
+		//dbg_print_num(board->pressure.last_update,10);
+		//dbg_print(" tnow:");
+		//dbg_print_num(tnow,10);
+		//dbg_print("\n");
+	//}
+}
+
 task_return_t send_rt_stats() {
 	
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "stabAvgDelay", main_tasks.tasks[1].delay_avg);
@@ -546,6 +570,8 @@ void main (void)
 	// register_task(&main_tasks, 5, 1000000, RUN_REGULAR, &run_navigation_task);
 
 	register_task(&main_tasks, 6, 1000000, RUN_REGULAR, &set_mav_mode_n_state);
+	
+	register_task(&main_tasks, 7, 150000, RUN_REGULAR, &run_barometer);
 
 	add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	

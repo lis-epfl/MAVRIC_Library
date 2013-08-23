@@ -254,7 +254,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	QI(attitude->qe, qtmp1);
 	QMUL(qtmp2, qtmp1, qtmp3);
 	attitude->vel[0]=qtmp3.v[0]; attitude->vel[1]=qtmp3.v[1]; attitude->vel[2]=qtmp3.v[2];
-
+	
 	for (i=0; i<3; i++) {
 		// clean position estimate without gravity:
 		attitude->localPosition.pos[i] =attitude->localPosition.pos[i]*(1.0-(POS_DECAY*dt)) + attitude->vel[i] *dt;

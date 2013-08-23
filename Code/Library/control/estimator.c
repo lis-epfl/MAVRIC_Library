@@ -317,7 +317,7 @@ void e_kalman_predict_hf(int axis,float accel_meas, float dt)
 	P[axis][0][0] = FPF00 + Q[axis][POSITION];
 	P[axis][0][1] = FPF01;
 	P[axis][1][0] = FPF10;
-	P[axis][1][1] = FPF11 + Q[axis][BIAIS];
+	P[axis][1][1] = FPF11 + Q[axis][SPEED];
 	
 	/*************************************************************************************/
 	FPF00 = P2[axis][0][0] + dt * (P2[axis][1][0] + P2[axis][0][1] + dt * P2[axis][1][1]);
@@ -328,7 +328,7 @@ void e_kalman_predict_hf(int axis,float accel_meas, float dt)
 	P2[axis][0][0] = FPF00 + Q2[axis][POSITION];
 	P2[axis][0][1] = FPF01;
 	P2[axis][1][0] = FPF10;
-	P2[axis][1][1] = FPF11 + Q2[axis][BIAIS];
+	P2[axis][1][1] = FPF11 + Q2[axis][SPEED];
 }
 
 //--------------------------------UPDATE----------------------------

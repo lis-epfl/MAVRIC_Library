@@ -11,6 +11,7 @@
 
 #include "math.h"
 #include "time_keeper.h"
+#include <stdbool.h>
 
 pressure_data pressure_outputs;
 
@@ -141,4 +142,16 @@ pressure_data* get_pressure_data_slow() {
 		}
 		pressure_outputs.last_state_update=get_micros();
 		return &pressure_outputs;
+}
+
+bool newValidBarometer()
+{
+	uint32_t tnow = get_micros();
+	if ((tnow - pressure_outputs.last_update) < 1000) // 1 millisecond
+	{
+		return true;
+	}else{
+		return false;
+	}
+	
 }
