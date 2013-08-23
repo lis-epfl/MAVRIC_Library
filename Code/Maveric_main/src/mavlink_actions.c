@@ -170,25 +170,25 @@ void mavlink_send_estimator(void)
 
 void mavlink_send_kalman_estimator(void)
 {
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiX", board->estimation.state[0][0]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiY", board->estimation.state[1][0]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiZ", board->estimation.state[2][0]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiX", board->estimation.state[X][POSITION]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiY", board->estimation.state[Y][POSITION]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiZ", board->estimation.state[Z][POSITION]);
 	
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiVx", board->estimation.state[0][1]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiVy", board->estimation.state[1][1]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiVz", board->estimation.state[2][1]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiVx", board->estimation.state[X][SPEED]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiVy", board->estimation.state[Y][SPEED]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiVz", board->estimation.state[Z][SPEED]);
 	
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisX", board->estimation.state[0][2]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisY", board->estimation.state[1][2]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisZ", board->estimation.state[2][2]);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estibiaisX", board->estimation.state[X][BIAIS]);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estibiaisY", board->estimation.state[Y][BIAIS]);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estibiaisZ", board->estimation.state[Z][BIAIS]);
 	
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfX", board->imu1.attitude.acc_bf[0]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfY", board->imu1.attitude.acc_bf[1]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", board->imu1.attitude.acc_bf[2]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisX", board->imu1.attitude.be[X+ACC_OFFSET]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisY", board->imu1.attitude.be[Y+ACC_OFFSET]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisZ", board->imu1.attitude.be[Z+ACC_OFFSET]);
 	
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisX", board->imu1.attitude.be[0+ACC_OFFSET]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisY", board->imu1.attitude.be[1+ACC_OFFSET]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisZ", board->imu1.attitude.be[2+ACC_OFFSET]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfX", board->imu1.attitude.acc_bf[X]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfY", board->imu1.attitude.acc_bf[Y]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", board->imu1.attitude.acc_bf[Z]);
 	
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiDeltaT", board->estimation.delta_t_filter);
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "imuDeltaT", board->imu1.dt);

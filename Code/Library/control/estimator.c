@@ -188,21 +188,21 @@ void e_predict (UQuat_t *qe, float a[], float dt)
 	acc_glo[0]=qtmp3.v[0];acc_glo[1]=qtmp3.v[1];acc_glo[2]=qtmp3.v[2];
 
 	//dbg_print("Acceleration:");
-	//dbg_print_num(a[0]*1000,10);
-	//dbg_print_num(a[1]*1000,10);
-	//dbg_print_num(a[2]*1000,10);
+	//dbg_print_num(a[X]*1000,10);
+	//dbg_print_num(a[Y]*1000,10);
+	//dbg_print_num(a[Z]*1000,10);
 	//dbg_print("\n");
 	//dbg_print("Acceleration2:");
-	//dbg_print_num(board->imu1.attitude.a[0]*1000,10);
-	//dbg_print_num(board->imu1.attitude.a[1]*1000,10);
-	//dbg_print_num(board->imu1.attitude.a[2]*1000,10);
+	//dbg_print_num(board->imu1.attitude.a[X]*1000,10);
+	//dbg_print_num(board->imu1.attitude.a[Y]*1000,10);
+	//dbg_print_num(board->imu1.attitude.a[Z]*1000,10);
 	//dbg_print("\n");
 
-	//e_kalman_predict(X,acc_glo[0],dt);//final x (in NED) acc
-	//e_kalman_predict(Y,acc_glo[1],dt);
-	e_kalman_predict_hf(X,acc_glo[0],dt);//final x (in NED) acc
-	e_kalman_predict_hf(Y,acc_glo[1],dt);
-	e_kalman_predict(Z,acc_glo[2],dt);
+	e_kalman_predict(X,acc_glo[X],dt);//final x (in NED) acc
+	e_kalman_predict(Y,acc_glo[Y],dt);
+	//e_kalman_predict_hf(X,acc_glo[X],dt);//final x (in NED) acc
+	//e_kalman_predict_hf(Y,acc_glo[Y],dt);
+	e_kalman_predict(Z,acc_glo[Z],dt);
 }
 
 //Rotation of vector vect with the quaternion quat
@@ -249,8 +249,8 @@ void e_kalman_predict (int axis,float accel_meas, float dt)
 	//board->estimation.state[axis][SPEED] = board->estimation.state[axis][SPEED]*(1.0-(VEL_DECAY*dt)) + dt * accel_meas;
 	//board->estimation.state[axis][POSITION] = board->estimation.state[axis][POSITION]*(1.0-(POS_DECAY*dt)) + dt * board->estimation.state[axis][SPEED];
 	
-	board->estimation.state[axis][POSITION] = board->estimation.state[axis][POSITION] + dt * board->estimation.state[axis][SPEED];
 	board->estimation.state[axis][SPEED] = board->estimation.state[axis][SPEED] + dt * accel_meas;
+	board->estimation.state[axis][POSITION] = board->estimation.state[axis][POSITION] + dt * board->estimation.state[axis][SPEED];
 	
 	//board->estimation.state[axis][POSITION] = board->imu1.attitude.localPosition.pos[axis];
 	//board->estimation.state[axis][SPEED] = board->imu1.attitude.vel[axis];
@@ -691,16 +691,16 @@ void estimator_loop()
 			//get delay of GPS measure
 			//do prediction up to the corresponding delay
 			
-			//e_kalman_update_position(X,local_coordinates.pos[X]);
-			//e_kalman_update_position(Y,local_coordinates.pos[Y]);
-			e_kalman_update_position_hf(X,local_coordinates.pos[X]);
-			e_kalman_update_position_hf(Y,local_coordinates.pos[Y]);
+			e_kalman_update_position(X,local_coordinates.pos[X]);
+			e_kalman_update_position(Y,local_coordinates.pos[Y]);
+			//e_kalman_update_position_hf(X,local_coordinates.pos[X]);
+			//e_kalman_update_position_hf(Y,local_coordinates.pos[Y]);
 			e_kalman_update_position(Z,local_coordinates.pos[Z]);
 			
-			//e_kalman_update_speed(X,board->GPS_data.northSpeed);
-			//e_kalman_update_speed(Y,board->GPS_data.eastSpeed);
-			e_kalman_update_speed_hf(X,board->GPS_data.northSpeed);
-			e_kalman_update_speed_hf(Y,board->GPS_data.eastSpeed);
+			e_kalman_update_speed(X,board->GPS_data.northSpeed);
+			e_kalman_update_speed(Y,board->GPS_data.eastSpeed);
+			//e_kalman_update_speed_hf(X,board->GPS_data.northSpeed);
+			//e_kalman_update_speed_hf(Y,board->GPS_data.eastSpeed);
 			e_kalman_update_speed(Z,board->GPS_data.verticalSpeed);
 			
 			//Continue the prediction until actual time
