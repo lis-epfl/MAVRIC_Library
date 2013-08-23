@@ -34,22 +34,29 @@ typedef struct {
 bool waypoint_sending;
 bool waypoint_receiving;
 
-int num_of_waypoint;
+//int num_of_waypoint;
 int sending_wp_num;
 int waypoint_request_number;
+
+uint16_t num_waypoint_onboard;
+
+uint32_t start_timeout;
+uint32_t timeout_max_wp;
 
 void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints);
 
 void send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint);
-void send_waypoint(Mavlink_Received_t* rec, waypoint_struct waypoint[]);
+void send_waypoint(Mavlink_Received_t* rec, waypoint_struct waypoint[], uint16_t num_of_waypoint);
 void receive_ack_msg(Mavlink_Received_t* rec);
 
 void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints);
 void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t number_of_waypoints);
-void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[]);
-void clear_waypoint_list(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[]);
+void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[], uint16_t num_of_waypoint);
+void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints);
 
 void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* board_mav_state);
 void receive_message_long(Mavlink_Received_t* rec);
+
+void control_time_out_waypoint_msg(uint16_t* num_of_waypoint);
 
 #endif // WAYPOINT_NAVIGATION__

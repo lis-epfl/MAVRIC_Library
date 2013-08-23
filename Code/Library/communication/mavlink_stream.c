@@ -75,7 +75,11 @@ task_return_t mavlink_protocol_update() {
 	if ((mavlink_out_stream->buffer_empty(mavlink_out_stream->data))==true) {
 		return run_scheduler_update(&mavlink_tasks, FIXED_PRIORITY);
 		if (mavlink_out_stream->flush!=NULL) mavlink_out_stream->flush;
-	}	
+	}
+	
+	control_time_out_waypoint_msg(&(board->number_of_waypoints));
+	
+	
 	return 0;
 }
 
@@ -90,7 +94,7 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 	//dbg_print(".");
 	while(stream->bytes_available(stream->data) > 0) {
 		byte = stream->get(stream->data);
-		dbg_print(".");
+		//dbg_print(".");
 		//dbg_print_num(byte, 16);
 		//dbg_print("\t");
 		if(mavlink_parse_char(MAVLINK_COMM_0, byte, &rec->msg, &rec->status)) {
@@ -131,35 +135,27 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_ITEM: { // 39
-			receive_waypoint(rec,board->waypoint_list,board->number_of_waypoints);
-			dbg_print(" received waypoint \n");
+			receive_waypoint(rec, board->waypoint_list, board->number_of_waypoints);
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_REQUEST : { // 40
-			send_waypoint(rec,board->waypoint_list);
-			dbg_print("Send waypoint\n");
+			send_waypoint(rec, board->waypoint_list, board->number_of_waypoints);
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_SET_CURRENT : { // 41
-			set_current_wp(rec,&(board->waypoint_list));
-			dbg_print("Set current waypoint\n");
+			set_current_wp(rec, &(board->waypoint_list), board->number_of_waypoints);
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_REQUEST_LIST: { // 43
-			send_count(rec,board->number_of_waypoints);
-			dbg_print("Send count waypoint\n");
+			send_count(rec, board->number_of_waypoints);
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_COUNT : { // 44
-			receive_count(rec,&(board->number_of_waypoints));
-			dbg_print("Receive count, num of waypoints:");
-			dbg_print_num(board->number_of_waypoints,10);
-			dbg_print("\n");
+			receive_count(rec, &(board->number_of_waypoints));
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_CLEAR_ALL : { // 45
-			clear_waypoint_list(rec,&(board->waypoint_list));
-			dbg_print("Clear Waypoint list");
+			clear_waypoint_list(rec, &(board->number_of_waypoints));
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_ACK : { // 47
@@ -167,7 +163,7 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		}
 		break;
 		case MAVLINK_MSG_ID_SET_MODE : { // 11
-			set_mav_mode(rec,&board->mav_mode,&(board->mav_state));
+			set_mav_mode(rec, &board->mav_mode, &(board->mav_state));
 		}
 		break;
 		case MAVLINK_MSG_ID_COMMAND_LONG : { // 76
@@ -179,6 +175,7 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 			dbg_print("stream request:");
 			mavlink_msg_request_data_stream_decode(&rec->msg, &request);
 			dbg_print_num(request.target_component,10);
+			// TODO: add a control to see whether the messsage is for this sys_id!
 			if (request.req_stream_id==255) {
 				int i;
 				dbg_print("send all\n");

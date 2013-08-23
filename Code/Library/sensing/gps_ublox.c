@@ -1222,7 +1222,7 @@ void configure_gps(void)
 	ubx_send_message_CFG_nav_rate(UBX_CLASS_CFG, MSG_CFG_RATE, msg, sizeof(msg));
 
 	// ask for the messages we parse to be sent on every navigation solution
-	dbg_print("Set navigation messages\n");
+	//dbg_print("Set navigation messages\n");
 	ubx_configure_message_rate(UBX_CLASS_NAV, MSG_NAV_POSLLH, 1);
 	ubx_configure_message_rate(UBX_CLASS_NAV, MSG_NAV_STATUS, 1);
 	ubx_configure_message_rate(UBX_CLASS_NAV, MSG_NAV_SOL, 1);

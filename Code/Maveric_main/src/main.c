@@ -487,16 +487,17 @@ void initialisation() {
 
 	LED_Off(LED1);
 
+	
+
 	init_radar_modules();
 
 	board=initialise_board();
 
-	//init_gps_ubx(engine_nav_settings);
-	
-	
 	Enable_global_interrupt();
-		
+	
 	dbg_print("Debug stream initialised\n");
+
+	//init_gps_ubx(engine_nav_settings);
 
 	
 /*
