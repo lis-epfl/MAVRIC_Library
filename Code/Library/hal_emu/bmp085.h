@@ -39,12 +39,17 @@
 
 #define oversampling BMP085_HIGHRES
 
+typedef enum  pressure_sensor_state{IDLE, GET_TEMP, GET_PRESSURE} pressure_sensor_state;
+
 typedef struct{
 	uint8_t raw_pressure[3];
 	uint8_t raw_temperature[2];
 	float pressure;
 	float temperature;
 	float altitude;
+	uint32_t last_update;
+	uint32_t last_state_update;
+	pressure_sensor_state state;
 } pressure_data;
 
 

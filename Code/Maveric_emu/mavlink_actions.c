@@ -11,6 +11,7 @@
 #include "mavlink_stream.h"
 #include "scheduler.h"
 #include "radar_module_driver.h"
+#include "bmp085.h"
 
 board_hardware_t *board;
 
@@ -135,6 +136,15 @@ void mavlink_send_gps_raw(void) {
 	}
 	
 	
+}
+
+
+void mavlink_send_hud(void) {
+	float groundspeed=sqrt(board->imu1.attitude.vel[0]*board->imu1.attitude.vel[0] +board->imu1.attitude.vel[1]*board->imu1.attitude.vel[1]);
+	float airspeed=groundspeed;
+	Aero_Attitude_t aero_attitude;
+	aero_attitude=Quat_to_Aero(board->imu1.attitude.qe);
+	mavlink_msg_vfr_hud_send(MAVLINK_COMM_0, airspeed, groundspeed, 180.0*aero_attitude.rpy[2]/PI, (int)((board->controls.thrust+1.0)*50), -board->imu1.attitude.pos[2], -board->imu1.attitude.vel[2]);	
 }
 
 
@@ -285,7 +295,8 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(), 1000000,RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_attitude, MAVLINK_MSG_ID_ATTITUDE);
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_attitude_quaternion, MAVLINK_MSG_ID_ATTITUDE_QUATERNION);
-	
+	add_task(get_mavlink_taskset(), 250000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
+
 	add_task(get_mavlink_taskset(), 200000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
 	add_task(get_mavlink_taskset(), 100000, RUN_ONCE, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(), 100000, RUN_ONCE, &mavlink_send_rpy_speed_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT);
