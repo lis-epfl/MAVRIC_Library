@@ -232,41 +232,38 @@ task_return_t run_stabilisation() {
 	} else {
 		imu_update(&(board->imu1));
 	}
-	board->local_position.pos[0] = board->imu1.attitude.pos[0];
-	board->local_position.pos[1] = board->imu1.attitude.pos[1];
-	board->local_position.pos[2] = board->imu1.attitude.pos[2];
-	
+
 	switch(board->mav_mode)
 	{
 		case MAV_MODE_PREFLIGHT:
 		case MAV_MODE_MANUAL_ARMED:
-			board->controls.rpy[ROLL]=-getChannelNeutral(S_ROLL)/350.0;
-			board->controls.rpy[PITCH]=-getChannelNeutral(S_PITCH)/350.0;
-			board->controls.rpy[YAW]=-getChannelNeutral(S_YAW)/350.0;
+			board->controls.rpy[ROLL]=-getChannelNeutral(S_ROLL)*RC_INPUT_SCALE;
+			board->controls.rpy[PITCH]=-getChannelNeutral(S_PITCH)*RC_INPUT_SCALE;
+			board->controls.rpy[YAW]=-getChannelNeutral(S_YAW)*RC_INPUT_SCALE;
 			//board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-			board->controls.thrust = getChannelNeutral(S_THROTTLE)/350.0;
+			board->controls.thrust = getChannelNeutral(S_THROTTLE)*RC_INPUT_SCALE;
 			for (i=0; i<4; i++) {
 				board->servos[i].value=SERVO_SCALE*board->controls.thrust;
 			}
 			
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
-			board->controls.rpy[ROLL]=-getChannelNeutral(S_ROLL)/350.0;
-			board->controls.rpy[PITCH]=-getChannelNeutral(S_PITCH)/350.0;
-			board->controls.rpy[YAW]=-getChannelNeutral(S_YAW)/350.0;
+			board->controls.rpy[ROLL]=-getChannelNeutral(S_ROLL)*RC_INPUT_SCALE;
+			board->controls.rpy[PITCH]=-getChannelNeutral(S_PITCH)*RC_INPUT_SCALE;
+			board->controls.rpy[YAW]=-getChannelNeutral(S_YAW)*RC_INPUT_SCALE;
 			//board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-			board->controls.thrust = getChannelNeutral(S_THROTTLE)/350.0;
+			board->controls.thrust = getChannelNeutral(S_THROTTLE)*RC_INPUT_SCALE;
 			quad_stabilise(&(board->imu1), &(board->controls));
 			
 			break;
 		case MAV_MODE_GUIDED_ARMED:
-			board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
+			board->controls.thrust = min(getChannel(S_THROTTLE)/RC_INPUT_SCALE,board->controls.thrust);
 			//board->controls.thrust = getChannel(S_THROTTLE)/350.0;
 			quad_stabilise(&(board->imu1), &(board->controls));
 			
 			break;
 		case MAV_MODE_AUTO_ARMED:
-			board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
+			board->controls.thrust = min(getChannel(S_THROTTLE)/RC_INPUT_SCALE,board->controls.thrust);
 			//board->controls.thrust = getChannel(S_THROTTLE)/350.0;
 			quad_stabilise(&(board->imu1), &(board->controls));
 			
@@ -486,7 +483,7 @@ void initialisation() {
 		// clean acceleration estimate without gravity:
 		board->imu1.attitude.vel_bf[i]=0.0;
 		board->imu1.attitude.vel[i]=0.0;
-		board->imu1.attitude.pos[i]=0.0;
+		board->imu1.attitude.localPosition.pos[i]=0.0;
 	}
 	board->mav_state = MAV_STATE_STANDBY;
 	board->mav_mode = MAV_MODE_MANUAL_DISARMED;
@@ -509,7 +506,7 @@ void main (void)
 	register_task(&main_tasks, 2, 1000, RUN_REGULAR, &mavlink_protocol_update);
 	
 	//register_task(&main_tasks, 3 ,100000, RUN_REGULAR, &gps_task);
-	register_task(&main_tasks, 4, 100000, RUN_REGULAR, &run_estimator);
+	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &run_estimator);
 	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &read_radar);
 
 	// register_task(&main_tasks, 5, 1000000, RUN_REGULAR, &run_navigation_task);

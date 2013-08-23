@@ -31,11 +31,11 @@ void spektrum_init (void) {
 		channelCenter[i]=0;
 		joystick_axes[i]=0;
 		joystick_buttons[i]=0;
-		joyMax[i]=3000;
-		joyMin[i]=-3000;
+		joyMax[i]=32700;
+		joyMin[i]=-32700;
 	}
 	spRec1.channels[S_THROTTLE]=0;
-	channelCenter[S_YAW]=8;
+	channelCenter[S_YAW]=0;
 	joystick_filedescriptor=open_joystick(JOYSTICK_DEVICE);
 	last_update=get_millis();
 }
@@ -54,10 +54,10 @@ int16_t getChannel(uint8_t index) {
 			
 		}
 		
-		spRec1.channels[S_ROLL] = -joystick_axes[JOY_ROLL]*700/ (joyMax[JOY_ROLL]-joyMin[JOY_ROLL]);
-		spRec1.channels[S_PITCH] = -joystick_axes[JOY_PITCH]*700/ (joyMax[JOY_PITCH]-joyMin[JOY_PITCH]);
-		spRec1.channels[S_YAW] = -joystick_axes[JOY_YAW]*700/ (joyMax[JOY_YAW]-joyMin[JOY_YAW]);
-		spRec1.channels[S_THROTTLE] = -joystick_axes[JOY_THROTTLE]*700/ (joyMax[JOY_THROTTLE]-joyMin[JOY_THROTTLE]);
+		spRec1.channels[S_ROLL] = -joystick_axes[JOY_ROLL]*J_GAIN/ (joyMax[JOY_ROLL]-joyMin[JOY_ROLL]);
+		spRec1.channels[S_PITCH] = -joystick_axes[JOY_PITCH]*J_GAIN/ (joyMax[JOY_PITCH]-joyMin[JOY_PITCH]);
+		spRec1.channels[S_YAW] = -joystick_axes[JOY_YAW]*J_GAIN/ (joyMax[JOY_YAW]-joyMin[JOY_YAW]);
+		spRec1.channels[S_THROTTLE] = -joystick_axes[JOY_THROTTLE]*J_GAIN/ (joyMax[JOY_THROTTLE]-joyMin[JOY_THROTTLE]);
 		spRec1.channels[4] = 400;
 		spRec1.channels[5] = 400;
 		last_update=get_millis();

@@ -191,12 +191,12 @@
       <File Name="../Library/hal_emu/udp_stream.h"/>
       <File Name="../Library/hal_emu/udp_stream.c"/>
     </VirtualDirectory>
+    <File Name="config/conf_sim_model.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="config">
     <File Name="config/conf_twis.h"/>
     <File Name="config/conf_usb.h"/>
     <File Name="config/dma_channel_config.h"/>
-    <File Name="config/conf_sim_model.h"/>
     <File Name="config/conf_spi_master.h"/>
     <File Name="config/conf_clock.h"/>
     <File Name="config/conf_board.h"/>

@@ -57,7 +57,6 @@ typedef struct  {
 	Estimator_Data_t estimation;
 	simulation_model_t sim_model;
 	
-	local_coordinates_t local_position;
 	bool init_gps_position;
 	
 	// aliases

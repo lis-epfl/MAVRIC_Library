@@ -20,8 +20,16 @@
 #define S_PITCH    2
 #define S_YAW      3
 
-//Saitek
+//Gamepad
+#define J_GAIN 700
+#define JOY_THROTTLE 1
+#define JOY_ROLL     3
+#define JOY_PITCH    4
+#define JOY_YAW      0
 
+
+//Saitek
+/*
 #define JOY_THROTTLE 2
 #define JOY_ROLL     0
 #define JOY_PITCH    1

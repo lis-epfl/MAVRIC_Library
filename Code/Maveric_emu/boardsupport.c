@@ -138,10 +138,10 @@ board_hardware_t* initialise_board() {
 		board_hardware.simulation_mode=0;
 		
 		// default GPS home position
-		board_hardware.local_position.origin.longitude=   HOME_LONGITUDE;
-		board_hardware.local_position.origin.latitude =   HOME_LATITUDE;
-		board_hardware.local_position.origin.altitude =   HOME_ALTITUDE;
-		board_hardware.local_position.pos[0]=0;	board_hardware.local_position.pos[1]=0; board_hardware.local_position.pos[2]=0;
+		board_hardware.imu1.attitude.localPosition.origin.longitude=   HOME_LONGITUDE;
+		board_hardware.imu1.attitude.localPosition.origin.latitude =   HOME_LATITUDE;
+		board_hardware.imu1.attitude.localPosition.origin.altitude =   HOME_ALTITUDE;
+		board_hardware.imu1.attitude.localPosition.pos[0]=0;	board_hardware.imu1.attitude.localPosition.pos[1]=0; board_hardware.imu1.attitude.localPosition.pos[2]=0;
 		
 		init_waypoint_list(board_hardware.waypoint_list,&board_hardware.number_of_waypoints);
 
