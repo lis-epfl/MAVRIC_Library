@@ -54,7 +54,7 @@ board_hardware_t* initialise_board() {
 		init_imu(&board_hardware.imu1);
 		init_bmp085();
 
-		spektrum_init();
+		remote_ctrl_init();
 		init_Servos();
 		init_simulation(&board_hardware.sim_model);
 		

@@ -89,7 +89,7 @@ void spektrum_init (void) {
 
 }
 /**/
-int16_t getChannel(uint8_t index) {
+int16_t getChannel_spektrum(uint8_t index) {
 	//if (checkReceiver1()<checkReceiver2()) {
 		return spRec1.channels[index]-500;
 	//} else {
@@ -97,18 +97,18 @@ int16_t getChannel(uint8_t index) {
 	//}
 }
 
-int16_t getChannelNeutral(uint8_t index) {
-	int16_t value=getChannel(index)-channelCenter[index];
+int16_t getChannelNeutral_spektrum(uint8_t index) {
+	int16_t value=getChannel_spektrum(index)-channelCenter[index];
 	// clamp to dead zone
 	if ((value>-DEADZONE)&&(value<DEADZONE)) value=0;
 	return value;
 }
 
-void centerChannel(uint8_t index){
-	channelCenter[index]=getChannel(index);
+void centerChannel_spektrum(uint8_t index){
+	channelCenter[index]=getChannel_spektrum(index);
 }
 
-int8_t checkReceiver1() {
+int8_t checkReceiver1_spektrum() {
 	int8_t i;
 	uint32_t now = get_time_ticks();
 	uint32_t duration=now-spRec1.last_update;
@@ -134,7 +134,7 @@ int8_t checkReceiver1() {
 
 }
 
-int8_t checkReceiver2(){
+int8_t checkReceiver2_spektrum(){
 	int8_t i;
 	uint32_t now = 0; //TCC0.CNT;
 	uint32_t duration = now - spRec2.last_update;
@@ -155,8 +155,8 @@ int8_t checkReceiver2(){
 
 }
 
-int8_t checkReceivers() {
-	return checkReceiver1();// + checkReceiver2();
+int8_t checkReceivers_spektrum() {
+	return checkReceiver1_spektrum();// + checkReceiver2();
 }
 
 
@@ -203,21 +203,35 @@ Control_Command_t get_command_from_spektrum()
 
 float get_roll_from_spektrum()
 {
-	return -getChannelNeutral(S_ROLL)/350.0;
+	return -getChannelNeutral_spektrum(S_ROLL)/350.0;
 }
 
 float get_pitch_from_spektrum()
 {
-	return -getChannelNeutral(S_PITCH)/350.0;
+	return -getChannelNeutral_spektrum(S_PITCH)/350.0;
 }
 
 float get_yaw_from_spektrum()
 {
-	return -getChannelNeutral(S_YAW)/350.0;
+	return -getChannelNeutral_spektrum(S_YAW)/350.0;
 }
 
 float get_thrust_from_spektrum()
 {
 	//return min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-	return getChannelNeutral(S_THROTTLE)/350.0;
+	return getChannelNeutral_spektrum(S_THROTTLE)/350.0;
+}
+
+void get_channel_mode_spektrum(uint8_t *chanSwitch)
+{
+	if (getChannel_spektrum(4)>0 && getChannel_spektrum(5)>0)
+	{
+		*chanSwitch |= 0x00;
+		}else if(getChannel_spektrum(4)<0 && getChannel_spektrum(5)>0){
+		*chanSwitch |= 0x01;
+		}else if (getChannel_spektrum(4)<0 && getChannel_spektrum(5)<0){
+		*chanSwitch |= 0x02;
+		}else{
+		*chanSwitch |= 0x03;
+	}
 }

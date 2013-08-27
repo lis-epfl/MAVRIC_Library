@@ -127,4 +127,8 @@
 // define type of GPS
 #define GPS_TYPE_UBX
 
+// define type of remote controller
+//#define SPEKTUM_REMOTE
+#define TURNIGY_REMOTE
+
 #endif /* CONF_PLATFORM_H_ */

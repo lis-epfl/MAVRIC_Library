@@ -32,17 +32,19 @@ typedef struct Spektrum_Receiver {
 
 
 void spektrum_init (void);
-int16_t getChannel(uint8_t index);
-void centerChannel(uint8_t index);
-int16_t getChannelNeutral(uint8_t index);
-int8_t checkReceiver1(void);
-int8_t checkReceiver2(void);
-int8_t checkReceivers(void);
+int16_t getChannel_spektrum(uint8_t index);
+void centerChannel_spektrum(uint8_t index);
+int16_t getChannelNeutral_spektrum(uint8_t index);
+int8_t checkReceiver1_spektrum(void);
+int8_t checkReceiver2_spektrum(void);
+int8_t checkReceivers_spektrum(void);
 
 Control_Command_t get_command_from_spektrum();
 float get_roll_from_spektrum();
 float get_pitch_from_spektrum();
 float get_yaw_from_spektrum();
 float get_thrust_from_spektrum();
+
+void get_channel_mode_spektrum(uint8_t *chanSwitch);
 
 #endif /* SPEKTRUM_H_ */

@@ -606,10 +606,19 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Library\hal\remote_controller.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\hal\time_keeper.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\time_keeper.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\turnigy.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\turnigy.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\mavlink\include\maveric\maveric2.h">

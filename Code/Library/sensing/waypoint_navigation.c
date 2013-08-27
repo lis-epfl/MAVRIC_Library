@@ -7,7 +7,7 @@
 
 #include "waypoint_navigation.h"
 #include "print_util.h"
-#include "spektrum.h"
+#include "remote_controller.h"
 #include "time_keeper.h"
 
 void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints)
@@ -460,7 +460,7 @@ void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* boa
 				*board_mav_mode = MAV_MODE_MANUAL_DISARMED;
 				break;
 			case MAV_MODE_MANUAL_ARMED:
-				if ((getChannel(S_THROTTLE)/350.0)<-0.95)
+				if (get_thrust_from_remote()<-0.95)
 				{
 					*board_mav_state = MAV_STATE_ACTIVE;
 					*board_mav_mode = MAV_MODE_STABILIZE_ARMED;

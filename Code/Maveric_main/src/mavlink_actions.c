@@ -11,6 +11,7 @@
 #include "mavlink_stream.h"
 #include "scheduler.h"
 #include "radar_module_driver.h"
+#include "remote_controller.h"
 
 board_hardware_t *board;
 
@@ -207,16 +208,18 @@ void mavlink_send_kalman_estimator(void)
 }
 void mavlink_send_raw_rc_channels(void)
 {
-	if (checkReceivers()>0)
+	if (checkReceivers_remote()>0)
 	{
 		mavlink_msg_rc_channels_raw_send(MAVLINK_COMM_0,get_millis(),1,
-		getChannelNeutral(S_THROTTLE) + 347,
-		getChannelNeutral(S_ROLL) + 347,
-		getChannelNeutral(S_PITCH) + 347,
-		getChannelNeutral(S_YAW) + 433,
-		getChannelNeutral(4)+500,
-		getChannelNeutral(5)+500,
-		65535,65535,255);
+		getChannel_remote(0)+1000,
+		getChannel_remote(1)+1000,
+		getChannel_remote(2)+1000,
+		getChannel_remote(3)+1000,
+		getChannel_remote(4)+1000,
+		getChannel_remote(5)+1000,
+		getChannel_remote(6)+1000,
+		getChannel_remote(7)+1000,
+		255);
 	}else{
 		mavlink_msg_rc_channels_raw_send(MAVLINK_COMM_0,get_millis(),1,0,0,0,0,0,0,65535,65535,0);
 	}
@@ -224,16 +227,18 @@ void mavlink_send_raw_rc_channels(void)
 
 void mavlink_send_scaled_rc_channels(void)
 {
-	if (checkReceivers()>0)
+	if (checkReceivers_remote()>0)
 	{
 		mavlink_msg_rc_channels_scaled_send(MAVLINK_COMM_0,get_millis(),1,
-		(getChannel(S_THROTTLE)+347) * 10000 / 716,
-		(getChannel(S_ROLL)) * 10000 / 359,
-		(getChannel(S_PITCH) - 11) * 10000 / 359,
-		(getChannel(S_YAW) - 4) * 10000 / 456,
-		getChannel(4)+500,
-		getChannel(5)+500,
-		32767,32767,255);
+		getChannel_remote(0) * 10000 / 438.0,
+		getChannel_remote(1) * 10000 / 438.0,
+		getChannel_remote(2) * 10000 / 438.0,
+		getChannel_remote(3) * 10000 / 438.0,
+		getChannel_remote(4) * 10000 / 438.0,
+		getChannel_remote(5) * 10000 / 438.0,
+		getChannel_remote(6) * 10000 / 438.0,
+		getChannel_remote(7) * 10000 / 438.0,
+		255);
 	}else{	
 		mavlink_msg_rc_channels_scaled_send(MAVLINK_COMM_0,get_millis(),1,0,0,0,0,0,0,32767,32767,0);
 	}
@@ -340,8 +345,8 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
 	add_task(get_mavlink_taskset(), 250000, RUN_REGULAR, &mavlink_send_gps_raw, MAVLINK_MSG_ID_GPS_RAW_INT);
-	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
-	add_task(get_mavlink_taskset(), 200000, RUN_NEVER, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
+	add_task(get_mavlink_taskset(), 500000, RUN_REGULAR, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
+	add_task(get_mavlink_taskset(), 500000, RUN_REGULAR, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
 	add_task(get_mavlink_taskset(), 200000, RUN_REGULAR, &mavlink_send_simulation, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	add_task(get_mavlink_taskset(), 500000, RUN_NEVER, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	

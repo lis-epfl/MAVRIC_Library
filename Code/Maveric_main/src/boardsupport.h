@@ -19,7 +19,7 @@
 #include "qfilter.h"
 #include "imu.h"
 #include "stabilisation.h"
-#include "spektrum.h"
+#include "remote_controller.h"
 #include "control.h"
 #include "streams.h"
 #include "uart_int.h"

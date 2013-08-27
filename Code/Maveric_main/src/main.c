@@ -49,16 +49,8 @@ task_return_t run_imu_update() {
 
 void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 {
-	if (getChannel(4)>0 && getChannel(5)>0)
-	{
-		*chanSwitch |= 0x00;
-	}else if(getChannel(4)<0 && getChannel(5)>0){
-		*chanSwitch |= 0x01;
-	}else if (getChannel(4)<0 && getChannel(5)<0){
-		*chanSwitch |= 0x02;
-	}else{
-		*chanSwitch |= 0x03;
-	}
+	
+	get_channel_mode(chanSwitch);
 	
 	//dbg_print("chanSwitch ");
 	//dbg_print_num(*chanSwitch,10);
@@ -66,11 +58,11 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 	//dbg_print_num(getChannel(5),10);
 	//dbg_print("\n");
 	
-	if(((getChannel(S_THROTTLE)/350.0)<-0.95) && ((-getChannel(S_YAW)/350.0) > 0.9))
+	if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() > 0.9))
 	{
 		//dbg_print("motor on\n");
 		*motorbool = 1;
-	}else if(((getChannel(S_THROTTLE)/350.0)<-0.95) && ((-getChannel(S_YAW)/350.0) <-0.9))
+	}else if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() <-0.9))
 	{
 		//dbg_print("motor off\n");
 		*motorbool = -1;
@@ -79,7 +71,7 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 		*motorbool = 0;
 	}
 	
-	switch (checkReceivers())
+	switch (checkReceivers_remote())
 	{
 		case 1:
 		*rc_check = 1;
@@ -237,25 +229,25 @@ task_return_t run_stabilisation() {
 	{
 		case MAV_MODE_PREFLIGHT:
 		case MAV_MODE_MANUAL_ARMED:
-			board->controls = get_command_from_spektrum();
+			board->controls = get_command_from_remote();
 			for (i=0; i<4; i++) {
 				board->servos[i].value=SERVO_SCALE*board->controls.thrust;
 			}
 			
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
-			board->controls = get_command_from_spektrum();
+			board->controls = get_command_from_remote();
 			quad_stabilise(&(board->imu1), &(board->controls));
 			break;
 		case MAV_MODE_GUIDED_ARMED:
 			board->controls = board->controls_nav;
-			board->controls.thrust = min(get_thrust_from_spektrum(),board->controls_nav.thrust);
+			board->controls.thrust = min(get_thrust_from_remote(),board->controls_nav.thrust);
 			quad_stabilise(&(board->imu1), &(board->controls));
 			
 			break;
 		case MAV_MODE_AUTO_ARMED:
 			board->controls = board->controls_nav;
-			board->controls.thrust = min(get_thrust_from_spektrum(),board->controls_nav.thrust);
+			board->controls.thrust = min(get_thrust_from_remote(),board->controls_nav.thrust);
 			quad_stabilise(&(board->imu1), &(board->controls));
 			break;
 		case MAV_MODE_MANUAL_DISARMED:
