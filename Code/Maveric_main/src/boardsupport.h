@@ -42,6 +42,7 @@ static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}
 typedef struct  {
 	Imu_Data_t imu1;
 	Control_Command_t controls;
+	Control_Command_t controls_nav;
 	simulation_model_t uav_model;
 	servo_output servos[NUMBER_OF_SERVO_OUTPUTS];
 	Buffer_t xbee_in_buffer, wired_in_buffer;
@@ -67,6 +68,7 @@ typedef struct  {
 	waypoint_struct waypoint_list[MAX_WAYPOINTS];
 	uint16_t number_of_waypoints;
 	int8_t current_wp;
+	bool waypoint_set;
 	
 	uint8_t mav_mode;
 	uint8_t mav_state;

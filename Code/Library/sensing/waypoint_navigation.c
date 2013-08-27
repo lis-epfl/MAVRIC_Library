@@ -21,29 +21,32 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	
 	num_waypoint_onboard = *number_of_waypoints;
 	
-	// Set home waypoint
+	// Set nav waypoint
 	waypoint.autocontinue = 1;
 	waypoint.current = 1;
-	waypoint.frame = MAV_FRAME_GLOBAL; // 0:Global, 1:local NED, 2:mission, 3:global rel alt, 4: local ENU
-	waypoint.wp_id = MAV_CMD_DO_SET_HOME;
-
+	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
+	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
 	
-	waypoint.param1 = 0;
-	waypoint.param2 = 520; // altitude
-	waypoint.param3 = 465186806 / 1.0e7f; // lat converted to deg
-	waypoint.param4 = 65659084 / 1.0e7f; // long converted to deg
+	waypoint.x = 465185536 / 1.0e7f; // convert to deg
+	waypoint.y = 65670560 / 1.0e7f; // convert to deg
+	waypoint.z = 20; //m
+	
+	waypoint.param1 = 10; // Hold time in decimal seconds
+	waypoint.param2 = 15; // Acceptance radius in meters
+	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
 	
 	waypoint_list[0] = waypoint;
 	
 	// Set nav waypoint
 	waypoint.autocontinue = 1;
 	waypoint.current = 0;
-	waypoint.frame = MAV_FRAME_GLOBAL;
+	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
 	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
 	
-	waypoint.x = 465185536 / 1.0e7f; // convert to deg
-	waypoint.y = 65670560 / 1.0e7f; // convert to deg
-	waypoint.z = 520; //m
+	waypoint.x = 465186816 / 1.0e7f; // convert to deg
+	waypoint.y = 65659084 / 1.0e7f; // convert to deg
+	waypoint.z = 20; //m
 	
 	waypoint.param1 = 10; // Hold time in decimal seconds
 	waypoint.param2 = 15; // Acceptance radius in meters
@@ -55,35 +58,32 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	// Set nav waypoint
 	waypoint.autocontinue = 1;
 	waypoint.current = 0;
-	waypoint.frame = MAV_FRAME_GLOBAL;
-	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
-	
-	waypoint.x = 465186816 / 1.0e7f; // convert to deg
-	waypoint.y = 65659084 / 1.0e7f; // convert to deg
-	waypoint.z = 520; //m
-	
-	waypoint.param1 = 10; // Hold time in decimal seconds
-	waypoint.param2 = 15; // Acceptance radius in meters
-	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
-	
-	waypoint_list[2] = waypoint;
-	
-	// Set nav waypoint
-	waypoint.autocontinue = 1;
-	waypoint.current = 0;
-	waypoint.frame = MAV_FRAME_GLOBAL;
+	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
 	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
 
 	waypoint.x = 465184447 / 1.0e7f; // convert to deg
 	waypoint.y = 65670562 / 1.0e7f; // convert to deg
-	waypoint.z = 520; //m
+	waypoint.z = 20; //m
 
 	waypoint.param1 = 10; // Hold time in decimal seconds
 	waypoint.param2 = 15; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
 	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
 
+	waypoint_list[2] = waypoint;
+	
+	// Set home waypoint
+	waypoint.autocontinue = 1;
+	waypoint.current = 0;
+	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT; // 0:Global, 1:local NED, 2:mission, 3:global rel alt, 4: local ENU
+	waypoint.wp_id = MAV_CMD_DO_SET_HOME;
+
+	
+	waypoint.param1 = 0;
+	waypoint.param2 = 20; // altitude
+	waypoint.param3 = 465186806 / 1.0e7f; // lat converted to deg
+	waypoint.param4 = 65659084 / 1.0e7f; // long converted to deg
+	
 	waypoint_list[3] = waypoint;
 	
 	dbg_print("Number of Waypoint onboard:");

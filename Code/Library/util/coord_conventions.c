@@ -53,7 +53,6 @@ local_coordinates_t global_to_local_position(global_position_t position, global_
 	return output;
 }
 
-
 Aero_Attitude_t Quat_to_Aero(UQuat_t qe) {
 	Aero_Attitude_t aero;
 

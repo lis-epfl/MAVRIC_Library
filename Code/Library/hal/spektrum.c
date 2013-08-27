@@ -189,3 +189,35 @@ ISR(USARTD0_RXC_vect) {
 	}
 }
 */
+
+Control_Command_t get_command_from_spektrum()
+{
+	Control_Command_t controls;
+	controls.rpy[ROLL]= get_roll_from_spektrum();
+	controls.rpy[PITCH]= get_pitch_from_spektrum();
+	controls.rpy[YAW]= get_yaw_from_spektrum();
+	controls.thrust = get_thrust_from_spektrum();
+	
+	return controls;
+}
+
+float get_roll_from_spektrum()
+{
+	return -getChannelNeutral(S_ROLL)/350.0;
+}
+
+float get_pitch_from_spektrum()
+{
+	return -getChannelNeutral(S_PITCH)/350.0;
+}
+
+float get_yaw_from_spektrum()
+{
+	return -getChannelNeutral(S_YAW)/350.0;
+}
+
+float get_thrust_from_spektrum()
+{
+	//return min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
+	return getChannelNeutral(S_THROTTLE)/350.0;
+}

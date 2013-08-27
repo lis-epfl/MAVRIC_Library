@@ -127,6 +127,7 @@ void mavlink_send_hud(void) {
 	float airspeed=groundspeed;
 	Aero_Attitude_t aero_attitude;
 	aero_attitude=Quat_to_Aero(board->imu1.attitude.qe);
+	// mavlink_msg_vfr_hud_send(mavlink_channel_t chan, float airspeed, float groundspeed, int16_t heading, uint16_t throttle, float alt, float climb)
 	mavlink_msg_vfr_hud_send(MAVLINK_COMM_0, airspeed, groundspeed, 180.0*aero_attitude.rpy[2]/PI, (int)((board->controls.thrust+1.0)*50), -board->imu1.attitude.localPosition.pos[2], -board->imu1.attitude.vel[2]);
 
 	
@@ -166,6 +167,13 @@ void mavlink_send_estimator(void)
 	mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, get_millis(), board->imu1.attitude.localPosition.pos[0], board->imu1.attitude.localPosition.pos[1], board->imu1.attitude.localPosition.pos[2], board->imu1.attitude.vel[0], board->imu1.attitude.vel[1], board->imu1.attitude.vel[2]);
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,0,"Estimation",0);
 	
+	//dbg_print("Local position: (");
+	//dbg_print_num(board->imu1.attitude.localPosition.pos[X],10);
+	//dbg_print(", ");
+	//dbg_print_num(board->imu1.attitude.localPosition.pos[Y],10);
+	//dbg_print(", ");
+	//dbg_print_num(board->imu1.attitude.localPosition.pos[Z],10);
+	//dbg_print(")\n");
 }
 
 void mavlink_send_kalman_estimator(void)
@@ -202,12 +210,12 @@ void mavlink_send_raw_rc_channels(void)
 	if (checkReceivers()>0)
 	{
 		mavlink_msg_rc_channels_raw_send(MAVLINK_COMM_0,get_millis(),1,
-		getChannel(S_THROTTLE)+347,
-		getChannel(S_ROLL)+347,
-		getChannel(S_PITCH)+347,
-		getChannel(S_YAW)+433,
-		getChannel(4)+500,
-		getChannel(5)+500,
+		getChannelNeutral(S_THROTTLE) + 347,
+		getChannelNeutral(S_ROLL) + 347,
+		getChannelNeutral(S_PITCH) + 347,
+		getChannelNeutral(S_YAW) + 433,
+		getChannelNeutral(4)+500,
+		getChannelNeutral(5)+500,
 		65535,65535,255);
 	}else{
 		mavlink_msg_rc_channels_raw_send(MAVLINK_COMM_0,get_millis(),1,0,0,0,0,0,0,65535,65535,0);
@@ -324,7 +332,7 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(), 250000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
 	add_task(get_mavlink_taskset(), 300000, RUN_REGULAR, &mavlink_send_pressure, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	add_task(get_mavlink_taskset(), 200000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
-	add_task(get_mavlink_taskset(), 200000, RUN_REGULAR, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
+	add_task(get_mavlink_taskset(), 200000, RUN_NEVER, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
 	add_task(get_mavlink_taskset(), 100000, RUN_NEVER, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(), 100000, RUN_NEVER, &mavlink_send_rpy_speed_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(), 200000, RUN_NEVER, &mavlink_send_servo_output, MAVLINK_MSG_ID_SERVO_OUTPUT_RAW);
@@ -332,9 +340,9 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
 	add_task(get_mavlink_taskset(), 250000, RUN_REGULAR, &mavlink_send_gps_raw, MAVLINK_MSG_ID_GPS_RAW_INT);
-	add_task(get_mavlink_taskset(), 100000, RUN_NEVER, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
-	add_task(get_mavlink_taskset(), 100000, RUN_NEVER, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
-	add_task(get_mavlink_taskset(), 200000, RUN_NEVER, &mavlink_send_simulation, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
+	add_task(get_mavlink_taskset(), 200000, RUN_NEVER, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
+	add_task(get_mavlink_taskset(), 200000, RUN_REGULAR, &mavlink_send_simulation, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	add_task(get_mavlink_taskset(), 500000, RUN_NEVER, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
 	sort_taskset_by_period(get_mavlink_taskset());

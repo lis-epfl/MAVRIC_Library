@@ -60,7 +60,7 @@ typedef struct {
 
 void qfInit(Quat_Attitude_t *attitude, float *scalefactor, float *bias);
 
-void qfilter(Quat_Attitude_t *attitude, float *rates, float dt);
+void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode);
 
 
 #endif /* QFILTER_H_ */

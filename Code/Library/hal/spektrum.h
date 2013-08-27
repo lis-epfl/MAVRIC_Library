@@ -9,6 +9,7 @@
 #define SPEKTRUM_H_
 #include "compiler.h"
 #include "buffer.h"
+#include "stabilisation.h"
 
 #define BAUD_SPEKTRUM  115200
 #define SPECTRUM_UART AVR32_USART1
@@ -37,5 +38,11 @@ int16_t getChannelNeutral(uint8_t index);
 int8_t checkReceiver1(void);
 int8_t checkReceiver2(void);
 int8_t checkReceivers(void);
+
+Control_Command_t get_command_from_spektrum();
+float get_roll_from_spektrum();
+float get_pitch_from_spektrum();
+float get_yaw_from_spektrum();
+float get_thrust_from_spektrum();
 
 #endif /* SPEKTRUM_H_ */

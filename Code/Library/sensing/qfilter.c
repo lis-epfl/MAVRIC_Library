@@ -105,7 +105,7 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 }
 
 
-void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
+void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	uint8_t i;
 	float  omc[3], omc_mag[3], rvc[3], tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
 	UQuat_t qed, qtmp1, up_bf, qtmp2, qtmp3;
@@ -166,7 +166,12 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	}
 
 	for (i=0; i<3; i++){
-		qtmp1.v[i] = attitude->om[i] +attitude->kp*omc[i] +attitude->kp_mag*omc_mag[i];;
+		if (simu_mode)
+		{
+			qtmp1.v[i] = attitude->om[i] +attitude->kp*omc[i];
+		}else{
+			qtmp1.v[i] = attitude->om[i] +attitude->kp*omc[i] +attitude->kp_mag*omc_mag[i];
+		}
 	}
 	qtmp1.s=0;
 

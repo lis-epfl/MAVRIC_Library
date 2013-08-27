@@ -116,7 +116,7 @@ void imu_update(Imu_Data_t *imu1){
 		imu_get_raw_data(imu1);
 		imu1->dt=ticks_to_seconds(t - imu1->last_update);
 		imu1->last_update=t;
-		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt);
+		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt, false);
 	}
 }
 

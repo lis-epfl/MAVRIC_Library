@@ -157,7 +157,7 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	imu->raw_channels[ACC_OFFSET+IMU_Z]=(sim->lin_forces_bf[2] / sim->total_mass / GRAVITY)*imu->raw_scale[ACC_OFFSET+IMU_Z]+imu->raw_bias[ACC_OFFSET+IMU_Z];
 
 	imu->dt=sim->dt;
-	qfilter(&imu->attitude, &imu->raw_channels, imu->dt);
+	qfilter(&imu->attitude, &imu->raw_channels, imu->dt, true);
 	
 	
 	
