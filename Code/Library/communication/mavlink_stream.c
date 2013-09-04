@@ -77,7 +77,7 @@ task_return_t mavlink_protocol_update() {
 		if (mavlink_out_stream->flush!=NULL) mavlink_out_stream->flush;
 	}
 	
-	control_time_out_waypoint_msg(&(board->number_of_waypoints));
+	control_time_out_waypoint_msg(&(board->number_of_waypoints),&board->waypoint_receiving,&board->waypoint_sending);
 	
 	
 	return 0;
@@ -135,11 +135,11 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_ITEM: { // 39
-			receive_waypoint(rec, board->waypoint_list, board->number_of_waypoints);
+			receive_waypoint(rec, board->waypoint_list, board->number_of_waypoints,&board->waypoint_receiving);
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_REQUEST : { // 40
-			send_waypoint(rec, board->waypoint_list, board->number_of_waypoints);
+			send_waypoint(rec, board->waypoint_list, board->number_of_waypoints,&board->waypoint_sending);
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_SET_CURRENT : { // 41
@@ -147,11 +147,11 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_REQUEST_LIST: { // 43
-			send_count(rec, board->number_of_waypoints);
+			send_count(rec, board->number_of_waypoints,&board->waypoint_receiving,&board->waypoint_sending);
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_COUNT : { // 44
-			receive_count(rec, &(board->number_of_waypoints));
+			receive_count(rec, &(board->number_of_waypoints),&board->waypoint_receiving,&board->waypoint_sending);
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_CLEAR_ALL : { // 45
@@ -159,7 +159,7 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_ACK : { // 47
-			receive_ack_msg(rec);
+			receive_ack_msg(rec,&board->waypoint_sending);
 		}
 		break;
 		case MAVLINK_MSG_ID_SET_MODE : { // 11
