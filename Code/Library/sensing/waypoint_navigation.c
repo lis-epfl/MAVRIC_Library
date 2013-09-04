@@ -13,13 +13,30 @@
 void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints)
 {
 	start_timeout = get_millis();
-	timeout_max_wp = 3000;
+	timeout_max_wp = 10000;
 	
 	// Visit https://code.google.com/p/ardupilot-mega/wiki/MAVLink to have a description of all messages (or common.h)
 	waypoint_struct waypoint;
-	*number_of_waypoints = 3;
+	*number_of_waypoints = 4;
 	
 	num_waypoint_onboard = *number_of_waypoints;
+	
+	// Set nav waypoint
+	waypoint.autocontinue = 1;
+	waypoint.current = 1;
+	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
+	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
+	
+	waypoint.x =  465185223.6174 / 1.0e7f; // convert to deg
+	waypoint.y = 65670560 / 1.0e7f; // convert to deg
+	waypoint.z = 20; //m
+	
+	waypoint.param1 = 10; // Hold time in decimal seconds
+	waypoint.param2 = 2; // Acceptance radius in meters
+	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
+	
+	waypoint_list[0] = waypoint;
 	
 	// Set nav waypoint
 	waypoint.autocontinue = 1;
@@ -32,11 +49,11 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	waypoint.z = 20; //m
 	
 	waypoint.param1 = 10; // Hold time in decimal seconds
-	waypoint.param2 = 8; // Acceptance radius in meters
+	waypoint.param2 = 4; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
 	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
 	
-	waypoint_list[0] = waypoint;
+	waypoint_list[1] = waypoint;
 	
 	// Set nav waypoint
 	waypoint.autocontinue = 1;
@@ -46,14 +63,14 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	
 	waypoint.x = 465186816 / 1.0e7f; // convert to deg
 	waypoint.y = 65659084 / 1.0e7f; // convert to deg
-	waypoint.z = 20; //m
+	waypoint.z = 40; //m
 	
 	waypoint.param1 = 10; // Hold time in decimal seconds
 	waypoint.param2 = 15; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
 	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
 	
-	waypoint_list[1] = waypoint;
+	waypoint_list[2] = waypoint;
 	
 	// Set nav waypoint
 	waypoint.autocontinue = 0;
@@ -70,7 +87,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
 	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
 
-	waypoint_list[2] = waypoint;
+	waypoint_list[3] = waypoint;
 	
 	// Set home waypoint
 	//waypoint.autocontinue = 1;
@@ -84,7 +101,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	//waypoint.param3 = 465186806 / 1.0e7f; // lat converted to deg
 	//waypoint.param4 = 65659084 / 1.0e7f; // long converted to deg
 	
-	//waypoint_list[3] = waypoint;
+	//waypoint_list[4] = waypoint;
 	
 	dbg_print("Number of Waypoint onboard:");
 	dbg_print_num(num_waypoint_onboard,10);
@@ -92,7 +109,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	
 }
 
-void send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint)
+void send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint, bool* waypoint_receiving, bool * waypoint_sending)
 {
 	mavlink_mission_request_list_t packet;
 	mavlink_msg_mission_request_list_decode(&rec->msg,&packet);
@@ -105,8 +122,8 @@ void send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint)
 		
 		if (num_of_waypoint != 0)
 		{
-			waypoint_sending = true;
-			waypoint_receiving = false;
+			*waypoint_sending = true;
+			*waypoint_receiving = false;
 			start_timeout = get_millis();
 		}
 		
@@ -117,9 +134,9 @@ void send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint)
 	}
 }
 
-void send_waypoint(Mavlink_Received_t* rec, waypoint_struct waypoint[], uint16_t num_of_waypoint)
+void send_waypoint(Mavlink_Received_t* rec, waypoint_struct waypoint[], uint16_t num_of_waypoint, bool* waypoint_sending)
 {
-	if (waypoint_sending)
+	if (*waypoint_sending)
 	{
 		mavlink_mission_request_t packet;
 		mavlink_msg_mission_request_decode(&rec->msg,&packet);
@@ -154,7 +171,7 @@ void send_waypoint(Mavlink_Received_t* rec, waypoint_struct waypoint[], uint16_t
 	}	
 }
 
-void receive_ack_msg(Mavlink_Received_t* rec)
+void receive_ack_msg(Mavlink_Received_t* rec, bool* waypoint_sending)
 {
 	mavlink_mission_ack_t packet;
 	mavlink_msg_mission_ack_decode(&rec->msg, &packet);
@@ -162,13 +179,13 @@ void receive_ack_msg(Mavlink_Received_t* rec)
 	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
 	&& (uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
 	{
-		waypoint_sending = false;
+		*waypoint_sending = false;
 		sending_wp_num = 0;
 		dbg_print("Acknowledgment received, end of waypoint sending.\n");
 	}
 }
 
-void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints)
+void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool* waypoint_receiving, bool* waypoint_sending)
 {
 	mavlink_mission_count_t packet;
 	mavlink_msg_mission_count_decode(&rec->msg, &packet);
@@ -182,7 +199,7 @@ void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints)
 	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
 	&& (uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
 	{
-		if (waypoint_receiving == false)
+		if (*waypoint_receiving == false)
 		{
 			
 			if ((packet.count + *number_of_waypoints) > MAX_WAYPOINTS)
@@ -197,8 +214,8 @@ void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints)
 			dbg_print_num(*number_of_waypoints,10);
 			dbg_print("\n");
 			
-			waypoint_receiving   = true;
-			waypoint_sending     = false;
+			*waypoint_receiving   = true;
+			*waypoint_sending     = false;
 			waypoint_request_number = 0;
 			
 			start_timeout = get_millis();
@@ -213,7 +230,7 @@ void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints)
 	
 }
 
-void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t number_of_waypoints)
+void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t number_of_waypoints, bool* waypoint_receiving)
 {
 	mavlink_mission_item_t packet;
 	mavlink_msg_mission_item_decode(&rec->msg,&packet);
@@ -354,7 +371,7 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 
 		} else {
 			// Check if receiving waypoints
-			if (waypoint_receiving){
+			if (*waypoint_receiving){
 
 				// check if this is the requested waypoint
 				if (packet.seq == waypoint_request_number)
@@ -380,7 +397,7 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 						//mavlink_msg_mission_ack_send(MAVLINK_COMM_0, packet.target_system, packet.target_component,type);
 
 						dbg_print("flight plan received!\n");
-						waypoint_receiving = false;
+						*waypoint_receiving = false;
 						num_waypoint_onboard = number_of_waypoints;
 					}else{
 						mavlink_msg_mission_request_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,waypoint_request_number);
@@ -504,25 +521,27 @@ void receive_message_long(Mavlink_Received_t* rec)
 	}
 }
 
-void control_time_out_waypoint_msg(uint16_t* num_of_waypoint)
+void control_time_out_waypoint_msg(uint16_t* num_of_waypoint, bool* waypoint_receiving, bool* waypoint_sending)
 {
-	if (waypoint_sending || waypoint_receiving)
+	if (*waypoint_sending || *waypoint_receiving)
 	{
 		uint32_t tnow = get_millis();
 		
 		if ((tnow - start_timeout) > timeout_max_wp)
 		{
 			start_timeout = tnow;
-			if (waypoint_sending)
+			if (*waypoint_sending)
 			{
-				waypoint_sending = false;
+				*waypoint_sending = false;
 				dbg_print("Sending waypoint timeout");
 			}
-			if (waypoint_receiving)
+			if (*waypoint_receiving)
 			{
-				waypoint_receiving = false;
+				*waypoint_receiving = false;
+				
 				dbg_print("Receiving waypoint timeout");
-				*num_of_waypoint = num_waypoint_onboard + waypoint_request_number - 1;
+				*num_of_waypoint = 0;
+				num_waypoint_onboard = 0;
 				
 			}
 		}

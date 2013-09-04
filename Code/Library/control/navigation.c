@@ -17,10 +17,10 @@
 #define KP_ROLL 0.6
 #define KP_PITCH -0.6
 #define KP_YAW 0.05
-#define KP_ALT -0.05
+#define KP_ALT -0.005
 
 #define KD_ALT 0.025
-#define KI_ALT -0.001
+#define KI_ALT -0.025
 
 #define MIN_ROLL_RATE -2.0
 #define MAX_ROLL_RATE 2.0
@@ -58,20 +58,28 @@ out.v[1] = q2.s*q1.v[1] + q1.s *q2.v[1] +tmp[1];\
 out.v[2] = q2.s*q1.v[2] + q1.s *q2.v[2] +tmp[2];\
 out.s= q1.s*q2.s - SCP(q1.v, q2.v);
 
-local_coordinates_t waypoint_coordinates;
+local_coordinates_t waypoint_coordinates, waypoint_hold_coordinates;
 global_position_t waypoint_global;
 waypoint_struct current_waypoint;
 bool waypoint_reached;
+
+bool waypoint_hold_init = false;
 
 board_hardware_t *board;
 
 float alt_integrator;
 
+int int_loop_count = 0;
+
 void init_nav()
 {
 	int8_t i;
 	
-	dbg_print("Nav init\n");
+	if (int_loop_count==0)
+	{
+		dbg_print("Nav init\n");
+	}
+	int_loop_count=(int_loop_count+1)%1000;
 	
 	board = get_board_hardware();
 	
@@ -79,7 +87,7 @@ void init_nav()
 	waypoint_reached = false;
 	
 	
-	if (board->number_of_waypoints > 0 && (board->init_gps_position || board->simulation_mode))
+	if ((board->number_of_waypoints > 0) && (board->init_gps_position || board->simulation_mode) && board->waypoint_receiving == false)
 	{
 		for (i=0;i<board->number_of_waypoints;i++)
 		{
@@ -118,18 +126,24 @@ void set_waypoint_from_frame(waypoint_struct current_wp)
 			waypoint_global.altitude = current_wp.z;
 			waypoint_coordinates = global_to_local_position(waypoint_global,board->imu1.attitude.localPosition.origin);
 			
-			dbg_print("wp_global: lat (1e7):");
+			dbg_print("wp_global: lat (x1e7):");
 			dbg_print_num(waypoint_global.latitude*10000000,10);
-			dbg_print(" long (1e7):");
+			dbg_print(" long (x1e7):");
 			dbg_print_num(waypoint_global.longitude*10000000,10);
-			dbg_print(" alt (1000):");
+			dbg_print(" alt (x1000):");
 			dbg_print_num(waypoint_global.altitude*1000,10);
-			dbg_print(" wp_coor: x (100):");
+			dbg_print(" wp_coor: x (x100):");
 			dbg_print_num(waypoint_coordinates.pos[X]*100,10);
-			dbg_print(", y (100):");
+			dbg_print(", y (x100):");
 			dbg_print_num(waypoint_coordinates.pos[Y]*100,10);
-			dbg_print(", z (100):");
+			dbg_print(", z (x100):");
 			dbg_print_num(waypoint_coordinates.pos[Z]*100,10);
+			dbg_print(" localOrigin lat (x1e7):");
+			dbg_print_num(board->imu1.attitude.localPosition.origin.latitude*10000000,10);
+			dbg_print(" long (x1e7):");
+			dbg_print_num(board->imu1.attitude.localPosition.origin.longitude*10000000,10);
+			dbg_print(" alt (x1000):");
+			dbg_print_num(board->imu1.attitude.localPosition.origin.altitude*1000,10);
 			dbg_print("\n");
 			
 			break;
@@ -151,17 +165,17 @@ void set_waypoint_from_frame(waypoint_struct current_wp)
 			origin_relative_alt.altitude = 0.0;
 			waypoint_coordinates = global_to_local_position(waypoint_global,origin_relative_alt);
 			
-			dbg_print("LocalOrigin: lat (1e7):");
+			dbg_print("LocalOrigin: lat (x1e7):");
 			dbg_print_num(origin_relative_alt.latitude * 10000000,10);
-			dbg_print(" long (1e7):");
+			dbg_print(" long (x1e7):");
 			dbg_print_num(origin_relative_alt.longitude * 10000000,10);
-			dbg_print(" global alt (1e3):");
+			dbg_print(" global alt (x1000):");
 			dbg_print_num(board->imu1.attitude.localPosition.origin.altitude*1000,10);
-			dbg_print(" wp_coor: x (100):");
+			dbg_print(" wp_coor: x (x100):");
 			dbg_print_num(waypoint_coordinates.pos[X]*100,10);
-			dbg_print(", y (100):");
+			dbg_print(", y (x100):");
 			dbg_print_num(waypoint_coordinates.pos[Y]*100,10);
-			dbg_print(", z (100):");
+			dbg_print(", z (x100):");
 			dbg_print_num(waypoint_coordinates.pos[Z]*100,10);
 			dbg_print("\n");
 			
@@ -180,6 +194,8 @@ void run_navigation()
 	// Control in translational speed of the platform
 	if (board->mission_started && board->waypoint_set)
 	{
+		waypoint_hold_init = false;
+		
 		rel_pos[X] = waypoint_coordinates.pos[X] - board->imu1.attitude.localPosition.pos[X];
 		rel_pos[Y] = waypoint_coordinates.pos[Y] - board->imu1.attitude.localPosition.pos[Y];
 		rel_pos[Z] = waypoint_coordinates.pos[Z] - board->imu1.attitude.localPosition.pos[Z];
@@ -206,10 +222,14 @@ void run_navigation()
 		{
 			dbg_print("Waypoint Nr");
 			dbg_print_num(board->current_wp,10);
-			dbg_print(" reached, distance:");
-			dbg_print_num(sqrt(dist2wp_sqr),10);
-			dbg_print(" less than :");
-			dbg_print_num(current_waypoint.param2,10);
+			//dbg_print(" reached, distance:");
+			//dbg_print_num(sqrt(dist2wp_sqr),10);
+			//dbg_print(" less than :");
+			//dbg_print_num(current_waypoint.param2,10);
+			dbg_print(" reached, distance sqr:");
+			dbg_print_num(dist2wp_sqr,10);
+			dbg_print(" less than sqr:");
+			dbg_print_num(current_waypoint.param2*current_waypoint.param2,10);
 			dbg_print("\n");
 			mavlink_msg_mission_item_reached_send(MAVLINK_COMM_0,board->current_wp);
 			
@@ -218,7 +238,7 @@ void run_navigation()
 			{
 				dbg_print("Autocontinue towards waypoint Nr");
 				
-				if (board->current_wp == board->number_of_waypoints)
+				if (board->current_wp == board->number_of_waypoints-1)
 				{
 					board->current_wp = 0;
 				}else{
@@ -235,11 +255,23 @@ void run_navigation()
 				board->waypoint_set = false;
 				dbg_print("Stop\n");
 				
-				// set speeds to zero
-				for (i=0;i<3;i++)
+				if (waypoint_hold_init == 0)
 				{
-					rel_pos[i] = 0.0;
+					waypoint_hold_init = true;
+					waypoint_hold_coordinates.pos[X] = board->imu1.attitude.localPosition.pos[X];
+					waypoint_hold_coordinates.pos[Y] = board->imu1.attitude.localPosition.pos[Y];
+					waypoint_hold_coordinates.pos[Z] = board->imu1.attitude.localPosition.pos[Z];
 				}
+				
+				rel_pos[X] = waypoint_hold_coordinates.pos[X] - board->imu1.attitude.localPosition.pos[X];
+				rel_pos[Y] = waypoint_hold_coordinates.pos[Y] - board->imu1.attitude.localPosition.pos[Y];
+				rel_pos[Z] = waypoint_hold_coordinates.pos[Z] - board->imu1.attitude.localPosition.pos[Z];
+				
+				// set speeds to zero
+				//for (i=0;i<3;i++)
+				//{
+					//rel_pos[i] = 0.0;
+				//}
 			}
 		}
 	}else{
@@ -247,10 +279,19 @@ void run_navigation()
 		{
 			init_nav();
 		}
-		for (i=0;i<3;i++)
+		
+		if (waypoint_hold_init == 0)
 		{
-			rel_pos[i] = 0.0;
+			waypoint_hold_init = 1;
+			waypoint_hold_coordinates.pos[X] = board->imu1.attitude.localPosition.pos[X];
+			waypoint_hold_coordinates.pos[Y] = board->imu1.attitude.localPosition.pos[Y];
+			waypoint_hold_coordinates.pos[Z] = board->imu1.attitude.localPosition.pos[Z];
 		}
+		
+		rel_pos[X] = waypoint_hold_coordinates.pos[X] - board->imu1.attitude.localPosition.pos[X];
+		rel_pos[Y] = waypoint_hold_coordinates.pos[Y] - board->imu1.attitude.localPosition.pos[Y];
+		rel_pos[Z] = waypoint_hold_coordinates.pos[Z] - board->imu1.attitude.localPosition.pos[Z];
+		
 	}
 	set_speed_command(rel_pos);
 }
@@ -259,14 +300,15 @@ void run_navigation()
 void set_speed_command(float rel_pos[])
 {
 	int8_t i;
-	float h_vel_sqr_norm, norm_rel_dist, v_desired;
+	float h_vel_sqr_norm, norm_rel_dist, v_desired, z_pos;
 	UQuat_t qtmp1, qtmp2, qtmp3, qtmp4;
 	
 	float dir_desired_bf[3], dir_desired[3], tmp[3];
 
 	v_desired = min(V_CRUISE,sqrt(rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2]));
 	
-	rel_pos[2] = 0;
+	z_pos = rel_pos[Z];
+	rel_pos[Z] = 0;
 	norm_rel_dist = sqrt(rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2])+0.0001;
 	
 	dir_desired[0] = v_desired * rel_pos[0] / norm_rel_dist;
@@ -282,7 +324,7 @@ void set_speed_command(float rel_pos[])
 	QMUL(qtmp3, board->imu1.attitude.qe, qtmp4);
 	dir_desired_bf[0] = qtmp4.v[0]; dir_desired_bf[1] = qtmp4.v[1]; dir_desired_bf[2] = qtmp4.v[2];
 	
-	dir_desired_bf[2] = rel_pos[Z];
+	dir_desired_bf[Z] = z_pos;
 	
 	h_vel_sqr_norm = board->imu1.attitude.vel_bf[0]*board->imu1.attitude.vel_bf[0] + board->imu1.attitude.vel_bf[1]*board->imu1.attitude.vel_bf[1];
 	
@@ -331,24 +373,24 @@ void altitude_nav(float dir_desired_bf_z)
 	
 	float err;
 	
-	err = dir_desired_bf_z - board->imu1.attitude.localPosition.pos[Z];
+	err = dir_desired_bf_z; // - board->imu1.attitude.localPosition.pos[Z];
 	
-	board->controls_nav.thrust = KP_ALT * err + KD_ALT * board->imu1.attitude.vel[Z] + KI_ALT * alt_integrator; // 
+	board->controls_nav.thrust = - 0.35 * 9.81 / 16.0 + KP_ALT * err  + KI_ALT * alt_integrator; // //+ KD_ALT * board->imu1.attitude.vel[Z]
 	
 	alt_integrator += err; 
 	
-	alt_integrator = min_max_bound(alt_integrator,-20.0,20.0);
+	alt_integrator = min_max_bound(alt_integrator,-1.0,1.0);
 	
-	//dbg_print("Thrust:");
+	//dbg_print("Thrust (x10000):");
 	//dbg_print_num(board->controls_nav.thrust*10000,10);
-	//dbg_print(" = ");
-	//dbg_print_num(err*100,10);
-	//dbg_print(" = ");
-	//dbg_print_num(dir_desired_bf_z*100,10);
-	//dbg_print(", ");
-	//dbg_print_num(board->imu1.attitude.localPosition.pos[Z]*100,10);
-	//dbg_print(", ");
-	//dbg_print_num(alt_integrator*100,10);
+	//dbg_print(" , err (x1000):");
+	//dbg_print_num(KP_ALT *err*1000,10);
+	//dbg_print(", alt_int (x1000):");
+	//dbg_print_num(KI_ALT * alt_integrator*1000,10);
+	//dbg_print("; dir_bf (x1000):");
+	//dbg_print_num(dir_desired_bf_z*1000,10);
+	//dbg_print(", localPosZ (x1000):");
+	//dbg_print_num(board->imu1.attitude.localPosition.pos[Z]*1000,10);
 	//dbg_print("\n");
 }
 
@@ -376,9 +418,17 @@ float set_yaw(float value_x, float value_y)
 {
 	float yaw_set;
 	
-	if (value_x == 0.0 && value_y == 0.0)
+	if (abs(value_x) < 0.001 && abs(value_y) < 0.001 || waypoint_hold_init)
 	{
+		//dbg_print("wp_hold_init:");
+		//dbg_print_num(waypoint_hold_init,10);
+		//dbg_print(", value_x-y:");
+		//dbg_print_num(value_x,10);
+		//dbg_print(", ");
+		//dbg_print_num(value_y,10);
+		//dbg_print("\n");
 		yaw_set = 0.0;
+		//dbg_print("set yaw to zero\n");
 	}else{
 		yaw_set = KP_YAW * atan2(value_y, value_x);
 	}
