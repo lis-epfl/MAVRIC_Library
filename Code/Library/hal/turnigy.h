@@ -15,10 +15,17 @@
 #define BAUD_TURNIGY  115200
 #define TURNIGY_UART AVR32_USART1
 
-#define RC_THROTTLE 0
-#define RC_ROLL     1
-#define RC_PITCH    2
-#define RC_YAW      3
+#define RC_THROTTLE		0
+#define RC_THROTTLE_DIR 1
+#define RC_ROLL			1
+#define RC_ROLL_DIR     1
+
+#define RC_PITCH		2
+#define RC_PITCH_DIR    -1
+
+#define RC_YAW			3
+#define RC_YAW_DIR		3
+
 #define RC_SAFETY   4
 #define RC_ID_MODE  5
 #define RC_TRIM_P3  6
