@@ -164,6 +164,7 @@ void receive_ack_msg(Mavlink_Received_t* rec)
 	{
 		waypoint_sending = false;
 		sending_wp_num = 0;
+		dbg_print("Acknowledgment received, end of waypoint sending.\n");
 	}
 }
 
@@ -426,7 +427,7 @@ void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[], 
 	}
 }
 
-void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints)
+void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints, bool* waypoint_set)
 {
 	mavlink_mission_clear_all_t packet;
 	mavlink_msg_mission_clear_all_decode(&rec->msg,&packet);
@@ -436,6 +437,7 @@ void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints
 	{
 		*number_of_waypoints = 0;
 		num_waypoint_onboard = 0;
+		*waypoint_set = 0;
 		mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_OK);
 		dbg_print("Clear Waypoint list");
 	}		

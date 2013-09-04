@@ -19,6 +19,8 @@
 #define S_PITCH    2
 #define S_YAW      3
 
+#define S_SCALEFACTOR 1.0/350.0
+
 #define DEADZONE 7
 
 typedef struct Spektrum_Receiver {

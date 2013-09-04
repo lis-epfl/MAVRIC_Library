@@ -203,23 +203,23 @@ Control_Command_t get_command_from_spektrum()
 
 float get_roll_from_spektrum()
 {
-	return -getChannelNeutral_spektrum(S_ROLL)/350.0;
+	return -getChannelNeutral_spektrum(S_ROLL) * S_SCALEFACTOR;
 }
 
 float get_pitch_from_spektrum()
 {
-	return -getChannelNeutral_spektrum(S_PITCH)/350.0;
+	return -getChannelNeutral_spektrum(S_PITCH) * S_SCALEFACTOR;
 }
 
 float get_yaw_from_spektrum()
 {
-	return -getChannelNeutral_spektrum(S_YAW)/350.0;
+	return -getChannelNeutral_spektrum(S_YAW) * S_SCALEFACTOR;
 }
 
 float get_thrust_from_spektrum()
 {
 	//return min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-	return getChannelNeutral_spektrum(S_THROTTLE)/350.0;
+	return getChannelNeutral_spektrum(S_THROTTLE) * S_SCALEFACTOR;
 }
 
 void get_channel_mode_spektrum(uint8_t *chanSwitch)

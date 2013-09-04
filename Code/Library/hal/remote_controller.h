@@ -36,6 +36,8 @@
 	#define REM_4						4
 	#define REM_5						5
 
+	#define REM_SCALEFACTOR				S_SCALEFACTOR
+
 #endif
 
 #ifdef TURNIGY_REMOTE
@@ -65,6 +67,8 @@
 	#define REM_6						T_TRIM_P3
 	#define REM_7						T_TRIM_P1
 	#define REM_8						T_TRIM_P2
+
+	#define REM_SCALEFACTOR				T_SCALEFACTOR
 
 #endif
 

@@ -67,6 +67,9 @@ board_hardware_t* initialise_board() {
 
 		board_hardware.simulation_mode=0;
 		
+		board_hardware.waypoint_set = false;
+		board_hardware.mission_started = false;
+		
 		// default GPS home position
 		board_hardware.imu1.attitude.localPosition.origin.longitude=   HOME_LONGITUDE;
 		board_hardware.imu1.attitude.localPosition.origin.latitude =   HOME_LATITUDE;

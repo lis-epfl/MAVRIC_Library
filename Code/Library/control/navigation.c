@@ -17,10 +17,10 @@
 #define KP_ROLL 0.6
 #define KP_PITCH -0.6
 #define KP_YAW 0.05
-#define KP_ALT 0.05
+#define KP_ALT -0.05
 
 #define KD_ALT 0.025
-#define KI_ALT 0.0001
+#define KI_ALT -0.001
 
 #define MIN_ROLL_RATE -2.0
 #define MAX_ROLL_RATE 2.0
@@ -75,8 +75,9 @@ void init_nav()
 	
 	board = get_board_hardware();
 	
-	board->waypoint_set = false;
+	//board->waypoint_set = false;
 	waypoint_reached = false;
+	
 	
 	if (board->number_of_waypoints > 0 && (board->init_gps_position || board->simulation_mode))
 	{
@@ -116,6 +117,21 @@ void set_waypoint_from_frame(waypoint_struct current_wp)
 			waypoint_global.longitude = current_wp.y;
 			waypoint_global.altitude = current_wp.z;
 			waypoint_coordinates = global_to_local_position(waypoint_global,board->imu1.attitude.localPosition.origin);
+			
+			dbg_print("wp_global: lat (1e7):");
+			dbg_print_num(waypoint_global.latitude*10000000,10);
+			dbg_print(" long (1e7):");
+			dbg_print_num(waypoint_global.longitude*10000000,10);
+			dbg_print(" alt (1000):");
+			dbg_print_num(waypoint_global.altitude*1000,10);
+			dbg_print(" wp_coor: x (100):");
+			dbg_print_num(waypoint_coordinates.pos[X]*100,10);
+			dbg_print(", y (100):");
+			dbg_print_num(waypoint_coordinates.pos[Y]*100,10);
+			dbg_print(", z (100):");
+			dbg_print_num(waypoint_coordinates.pos[Z]*100,10);
+			dbg_print("\n");
+			
 			break;
 		case MAV_FRAME_LOCAL_NED:
 			waypoint_coordinates.pos[X] = current_wp.x;
@@ -134,6 +150,21 @@ void set_waypoint_from_frame(waypoint_struct current_wp)
 			global_position_t origin_relative_alt = board->imu1.attitude.localPosition.origin;
 			origin_relative_alt.altitude = 0.0;
 			waypoint_coordinates = global_to_local_position(waypoint_global,origin_relative_alt);
+			
+			dbg_print("LocalOrigin: lat (1e7):");
+			dbg_print_num(origin_relative_alt.latitude * 10000000,10);
+			dbg_print(" long (1e7):");
+			dbg_print_num(origin_relative_alt.longitude * 10000000,10);
+			dbg_print(" global alt (1e3):");
+			dbg_print_num(board->imu1.attitude.localPosition.origin.altitude*1000,10);
+			dbg_print(" wp_coor: x (100):");
+			dbg_print_num(waypoint_coordinates.pos[X]*100,10);
+			dbg_print(", y (100):");
+			dbg_print_num(waypoint_coordinates.pos[Y]*100,10);
+			dbg_print(", z (100):");
+			dbg_print_num(waypoint_coordinates.pos[Z]*100,10);
+			dbg_print("\n");
+			
 			break;
 		case MAV_FRAME_LOCAL_ENU:
 			//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_RESULT_UNSUPPORTED);
@@ -146,8 +177,8 @@ void run_navigation()
 	int8_t i;
 	
 	float rel_pos[3], command[3], dist2wp_sqr;
-	// Control in speed of the platform
-	if (board->waypoint_set)// && board->mission_started)
+	// Control in translational speed of the platform
+	if (board->mission_started && board->waypoint_set)
 	{
 		rel_pos[X] = waypoint_coordinates.pos[X] - board->imu1.attitude.localPosition.pos[X];
 		rel_pos[Y] = waypoint_coordinates.pos[Y] - board->imu1.attitude.localPosition.pos[Y];
@@ -201,10 +232,10 @@ void run_navigation()
 				
 				mavlink_msg_mission_current_send(MAVLINK_COMM_0,board->current_wp);
 			}else{
-				dbg_print("Stop\n");
-				//board->mission_started = False;
-				// set speeds to zero
 				board->waypoint_set = false;
+				dbg_print("Stop\n");
+				
+				// set speeds to zero
 				for (i=0;i<3;i++)
 				{
 					rel_pos[i] = 0.0;
@@ -212,7 +243,10 @@ void run_navigation()
 			}
 		}
 	}else{
-		init_nav();
+		if (board->waypoint_set == false)
+		{
+			init_nav();
+		}
 		for (i=0;i<3;i++)
 		{
 			rel_pos[i] = 0.0;
@@ -259,9 +293,9 @@ void set_speed_command(float rel_pos[])
 		//high_speed_nav(dir_desired_bf,board->imu1.attitude);
 	//}
 	
-	
 	low_speed_nav(dir_desired_bf,board->imu1.attitude);
 	altitude_nav(dir_desired_bf[Z]);
+	//altitude_nav(waypoint_coordinates.pos[Z]);
 }
 
 void low_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude)
@@ -297,18 +331,18 @@ void altitude_nav(float dir_desired_bf_z)
 	
 	float err;
 	
-	err = dir_desired_bf_z + board->imu1.attitude.localPosition.pos[Z];
+	err = dir_desired_bf_z - board->imu1.attitude.localPosition.pos[Z];
 	
-	board->controls_nav.thrust = KP_ALT * err + KD_ALT * board->imu1.attitude.vel[Z] + KI_ALT * alt_integrator;
+	board->controls_nav.thrust = KP_ALT * err + KD_ALT * board->imu1.attitude.vel[Z] + KI_ALT * alt_integrator; // 
 	
 	alt_integrator += err; 
 	
-	alt_integrator = min_max_bound(alt_integrator,-10.0,10.0);
+	alt_integrator = min_max_bound(alt_integrator,-20.0,20.0);
 	
 	//dbg_print("Thrust:");
-	//dbg_print_num(board->controls.thrust*100,10);
+	//dbg_print_num(board->controls_nav.thrust*10000,10);
 	//dbg_print(" = ");
-	//dbg_print_num(err,10);
+	//dbg_print_num(err*100,10);
 	//dbg_print(" = ");
 	//dbg_print_num(dir_desired_bf_z*100,10);
 	//dbg_print(", ");

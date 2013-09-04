@@ -114,16 +114,16 @@ task_return_t set_mav_mode_n_state()
 						board->mav_mode = MAV_MODE_MANUAL_ARMED;
 						break;
 					case 1:
-						dbg_print("Switches not ready, both should be pulled!\n");
+						dbg_print("Switches not ready, both should be pushed!\n");
 						//board->controls.run_mode = MOTORS_ON;
 						//board->mav_state = MAV_STATE_ACTIVE;
 						//board->mav_mode = MAV_MODE_STABILIZE_ARMED;
 						break;
 					case 2:
-						dbg_print("Switches not ready, both should be pulled!\n");
+						dbg_print("Switches not ready, both should be pushed!\n");
 						break;
 					case 3:
-						dbg_print("Switches not ready, both should be pulled!\n");
+						dbg_print("Switches not ready, both should be pushed!\n");
 						break;
 				}
 			}
@@ -202,6 +202,10 @@ task_return_t set_mav_mode_n_state()
 			break;
 		case MAV_STATE_EMERGENCY:
 			board->mav_mode = MAV_MODE_MANUAL_DISARMED;
+			if (board->imu1.attitude.localPosition.pos[Z] < 0.5)
+			{
+				board->mav_state = MAV_STATE_STANDBY;
+			}
 			break;
 	}
 
@@ -237,17 +241,30 @@ task_return_t run_stabilisation() {
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
 			board->controls = get_command_from_remote();
+			//dbg_print("Thrust:");
+			//dbg_print_num(board->controls.thrust*10000,10);
+			//dbg_print("\n");
 			quad_stabilise(&(board->imu1), &(board->controls));
 			break;
 		case MAV_MODE_GUIDED_ARMED:
+			board->mission_started = 0;
 			board->controls = board->controls_nav;
 			board->controls.thrust = min(get_thrust_from_remote(),board->controls_nav.thrust);
+			//board->controls.thrust = board->controls_nav.thrust;
+			//dbg_print("Thrust main:");
+			//dbg_print_num(board->controls.thrust*10000,10);
+			//dbg_print("\n");
 			quad_stabilise(&(board->imu1), &(board->controls));
 			
 			break;
 		case MAV_MODE_AUTO_ARMED:
+			board->mission_started = 1;
 			board->controls = board->controls_nav;
 			board->controls.thrust = min(get_thrust_from_remote(),board->controls_nav.thrust);
+			//board->controls.thrust = board->controls_nav.thrust;
+			//dbg_print("Thrust main:");
+			//dbg_print_num(board->controls.thrust*10000,10);
+			//dbg_print("\n");
 			quad_stabilise(&(board->imu1), &(board->controls));
 			break;
 		case MAV_MODE_MANUAL_DISARMED:

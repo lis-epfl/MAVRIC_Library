@@ -684,7 +684,7 @@ bool ubx_process_data(void)
  		ubx_mon_rxr_struct *gpsRXR = ubx_GetMonRXR();
  		if (gpsRXR)
  		{
- 			dbg_print("GPS awake");
+ 			dbg_print("MSG_MON GPS awake\n");
  		}
 		 return false;
  	}

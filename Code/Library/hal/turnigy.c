@@ -222,9 +222,9 @@ void get_channel_mode_turnigy(uint8_t* chanSwitch)
 		*chanSwitch |= 0x00;
 	}else if(getChannel_turnigy(T_GEAR)>0 && getChannel_turnigy(T_ID_MODE)<0){
 		*chanSwitch |= 0x01;
-	}else if (getChannel_turnigy(T_GEAR)>0 && getChannel_turnigy(T_ID_MODE)>0){
-		*chanSwitch |= 0x02;
-	}else{
+	}else if (getChannel_turnigy(T_GEAR)>0 && getChannel_turnigy(T_ID_MODE)>20){
 		*chanSwitch |= 0x03;
+	}else{
+		*chanSwitch |= 0x02;
 	}
 }

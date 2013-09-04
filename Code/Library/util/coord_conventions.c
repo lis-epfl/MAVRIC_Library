@@ -8,6 +8,7 @@
 #include "coord_conventions.h"
 #include <math.h>
 #include "print_util.h"
+#include "conf_platform.h"
 
 // convert local NED coordinates to global GPS coordinates (relative to origin given in local coordinate frame)
 global_position_t local_to_global_position(local_coordinates_t input){
@@ -23,9 +24,9 @@ local_coordinates_t global_to_local_position(global_position_t position, global_
 	local_coordinates_t output;
 	output.origin=origin;
 	double small_radius=cos(deg_to_rad(position.latitude))*EARTH_RADIUS;
-	output.pos[0]=  sin(deg_to_rad((position.latitude-origin.latitude)))*EARTH_RADIUS;
-	output.pos[1]=  sin(deg_to_rad((position.longitude-origin.longitude)))*small_radius;
-	output.pos[2]= -(position.altitude - origin.altitude);
+	output.pos[X]=  sin(deg_to_rad((position.latitude-origin.latitude)))*EARTH_RADIUS;
+	output.pos[Y]=  sin(deg_to_rad((position.longitude-origin.longitude)))*small_radius;
+	output.pos[Z]= -(position.altitude - origin.altitude);
 	
 	//dbg_print("global2local: (x1e7): ");
 	//dbg_print("lat:(");
