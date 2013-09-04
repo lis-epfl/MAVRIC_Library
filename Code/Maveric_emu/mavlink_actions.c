@@ -183,28 +183,31 @@ void mavlink_send_kalman_estimator(void)
 }
 void mavlink_send_raw_rc_channels(void)
 {
-		mavlink_msg_rc_channels_raw_send(MAVLINK_COMM_0,get_millis(),1,
-		getChannel(S_THROTTLE)+500,
-		getChannel(S_ROLL)+500,
-		getChannel(S_PITCH)+500,
-		getChannel(S_YAW)+500,
-		getChannel(4)+500,
-		getChannel(5)+500,
-		0,0,checkReceivers());
+	mavlink_msg_rc_channels_raw_send(MAVLINK_COMM_0,get_millis(),1,
+	rc_get_channel(0)+1000,
+	rc_get_channel(1)+1000,
+	rc_get_channel(2)+1000,
+	rc_get_channel(3)+1000,
+	rc_get_channel(4)+1000,
+	rc_get_channel(5)+1000,
+	rc_get_channel(6)+1000,
+	rc_get_channel(7)+1000,
+	rc_check_receivers());
 }
 
 void mavlink_send_scaled_rc_channels(void)
 {
-		mavlink_msg_rc_channels_scaled_send(MAVLINK_COMM_0,get_millis(),1,
-		getChannelNeutral(S_THROTTLE),
-		getChannelNeutral(S_ROLL),
-		getChannelNeutral(S_PITCH),
-		getChannelNeutral(S_YAW),
-		getChannelNeutral(4),
-		getChannelNeutral(5),
-		0,0,checkReceivers());
+	mavlink_msg_rc_channels_scaled_send(MAVLINK_COMM_0,get_millis(),1,
+	rc_get_channel(0) * 1000.0 * RC_SCALEFACTOR ,
+	rc_get_channel(1) * 1000.0 * RC_SCALEFACTOR,
+	rc_get_channel(2) * 1000.0 * RC_SCALEFACTOR,
+	rc_get_channel(3) * 1000.0 * RC_SCALEFACTOR,
+	rc_get_channel(4) * 1000.0 * RC_SCALEFACTOR,
+	rc_get_channel(5) * 1000.0 * RC_SCALEFACTOR,
+	rc_get_channel(6) * 1000.0 * RC_SCALEFACTOR,
+	rc_get_channel(7) * 1000.0 * RC_SCALEFACTOR,
+	rc_check_receivers());
 }
-
 void mavlink_send_simulation(void) {
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rolltorque", board->sim_model.torques_bf[0]);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "pitchtorque", board->sim_model.torques_bf[1]);

@@ -18,7 +18,7 @@
 #include "qfilter.h"
 #include "imu.h"
 #include "stabilisation.h"
-#include "spektrum.h"
+#include "remote_controller.h"
 #include "control.h"
 #include "streams.h"
 //#include "uart_int.h"
@@ -34,17 +34,17 @@
 #include "waypoint_navigation.h"
 #include "estimator.h"
 #include "simulation.h"
-
+#include "bmp085.h"
 
 static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
 
 typedef struct  {
 	Imu_Data_t imu1;
 	Control_Command_t controls;
+	Control_Command_t controls_nav;
 	simulation_model_t uav_model;
 	servo_output servos[NUMBER_OF_SERVO_OUTPUTS];
 	Buffer_t xbee_in_buffer, wired_in_buffer;
-
 	byte_stream_t xbee_out_stream;
 	byte_stream_t xbee_in_stream;
 	byte_stream_t wired_out_stream, wired_in_stream;	
@@ -57,6 +57,7 @@ typedef struct  {
 	Estimator_Data_t estimation;
 	simulation_model_t sim_model;
 	
+	//local_coordinates_t local_position;
 	bool init_gps_position;
 	
 	// aliases
@@ -66,11 +67,16 @@ typedef struct  {
 	waypoint_struct waypoint_list[MAX_WAYPOINTS];
 	uint16_t number_of_waypoints;
 	int8_t current_wp;
-
+	
+	bool waypoint_set;
+	bool mission_started;
 	
 	uint8_t mav_mode;
 	uint8_t mav_state;
 	uint8_t simulation_mode;
+	
+	pressure_data pressure;
+	float pressure_filtered;
 	
 } board_hardware_t;
 

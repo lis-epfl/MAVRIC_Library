@@ -7,18 +7,14 @@
  *      Author: felix
  */
 
-#ifndef SPEKTRUM_H_
-#define SPEKTRUM_H_
+#ifndef JOYSTICK_RC_H_
+#define JOYSTICK_RC_H_
 #include "compiler.h"
 #include "buffer.h"
 
 #define JOYSTICK_DEVICE "/dev/input/js0"
 
 
-#define S_THROTTLE 0
-#define S_ROLL     1
-#define S_PITCH    2
-#define S_YAW      3
 
 //Gamepad
 #define J_GAIN 700
@@ -47,7 +43,7 @@
 
 typedef struct Spektrum_Receiver {
 	Buffer_t receiver;
-	uint16_t channels[16];
+	uint32_t channels[16];
 	uint32_t last_update;
 	uint8_t valid;
 	uint32_t last_time;
@@ -55,12 +51,10 @@ typedef struct Spektrum_Receiver {
 } Spektrum_Receiver_t;
 
 
-void spektrum_init (void);
-int16_t getChannel(uint8_t index);
-void centerChannel(uint8_t index);
-int16_t getChannelNeutral(uint8_t index);
-int8_t checkReceiver1(void);
-int8_t checkReceiver2(void);
-int8_t checkReceivers(void);
+void rc_init (void);
+int16_t rc_get_channel(uint8_t index);
+void rc_center_channel(uint8_t index);
+int16_t rc_get_channel_neutral(uint8_t index);
+int8_t rc_check_receivers(void);
 
-#endif /* SPEKTRUM_H_ */
+#endif 

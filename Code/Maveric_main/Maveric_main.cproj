@@ -229,13 +229,12 @@
     <AsfVersion>2.11.1</AsfVersion>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
-    <OverrideVtorValue>
-    </OverrideVtorValue>
+    <OverrideVtorValue>exception_table</OverrideVtorValue>
     <eraseonlaunchrule>0</eraseonlaunchrule>
     <com_atmel_avrdbg_tool_jtagicemk3>
       <ToolType>com.atmel.avrdbg.tool.jtagicemk3</ToolType>
       <ToolName>JTAGICE3</ToolName>
-      <ToolNumber>J30200015895</ToolNumber>
+      <ToolNumber>J30200014870</ToolNumber>
       <Channel>
         <host>127.0.0.1</host>
         <port>52631</port>
@@ -244,7 +243,7 @@
       <ToolOptions>
         <InterfaceName>JTAG</InterfaceName>
         <InterfaceProperties>
-          <JtagDbgClock>250000</JtagDbgClock>
+          <JtagDbgClock>7500000</JtagDbgClock>
           <JtagProgClock>1000000</JtagProgClock>
           <IspClock>150000</IspClock>
           <JtagInChain>false</JtagInChain>
@@ -613,9 +612,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\time_keeper.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\turnigy.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\turnigy.h">
@@ -1057,10 +1053,10 @@
     <Compile Include="Library\hal\servo_pwm.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\spektrum.c">
+    <Compile Include="Library\hal\remote_dsm2.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\spektrum.h">
+    <Compile Include="Library\hal\remote_dsm2.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\spi_buffered.c">

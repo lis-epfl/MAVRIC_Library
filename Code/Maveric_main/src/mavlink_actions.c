@@ -208,40 +208,30 @@ void mavlink_send_kalman_estimator(void)
 }
 void mavlink_send_raw_rc_channels(void)
 {
-	if (checkReceivers_remote()>0)
-	{
-		mavlink_msg_rc_channels_raw_send(MAVLINK_COMM_0,get_millis(),1,
-		getChannel_remote(0)+1000,
-		getChannel_remote(1)+1000,
-		getChannel_remote(2)+1000,
-		getChannel_remote(3)+1000,
-		getChannel_remote(4)+1000,
-		getChannel_remote(5)+1000,
-		getChannel_remote(6)+1000,
-		getChannel_remote(7)+1000,
-		255);
-	}else{
-		mavlink_msg_rc_channels_raw_send(MAVLINK_COMM_0,get_millis(),1,0,0,0,0,0,0,65535,65535,0);
-	}
+	mavlink_msg_rc_channels_raw_send(MAVLINK_COMM_0,get_millis(),1,
+	rc_get_channel(0)+1000,
+	rc_get_channel(1)+1000,
+	rc_get_channel(2)+1000,
+	rc_get_channel(3)+1000,
+	rc_get_channel(4)+1000,
+	rc_get_channel(5)+1000,
+	rc_get_channel(6)+1000,
+	rc_get_channel(7)+1000,
+	rc_check_receivers());
 }
 
 void mavlink_send_scaled_rc_channels(void)
 {
-	if (checkReceivers_remote()>0)
-	{
-		mavlink_msg_rc_channels_scaled_send(MAVLINK_COMM_0,get_millis(),1,
-		getChannel_remote(0) * 10000 * REM_SCALEFACTOR ,
-		getChannel_remote(1) * 10000 * REM_SCALEFACTOR,
-		getChannel_remote(2) * 10000 * REM_SCALEFACTOR,
-		getChannel_remote(3) * 10000 * REM_SCALEFACTOR,
-		getChannel_remote(4) * 10000 * REM_SCALEFACTOR,
-		getChannel_remote(5) * 10000 * REM_SCALEFACTOR,
-		getChannel_remote(6) * 10000 * REM_SCALEFACTOR,
-		getChannel_remote(7) * 10000 * REM_SCALEFACTOR,
-		255);
-	}else{	
-		mavlink_msg_rc_channels_scaled_send(MAVLINK_COMM_0,get_millis(),1,0,0,0,0,0,0,32767,32767,0);
-	}
+	mavlink_msg_rc_channels_scaled_send(MAVLINK_COMM_0,get_millis(),1,
+	rc_get_channel(0) * 1000.0 * RC_SCALEFACTOR ,
+	rc_get_channel(1) * 1000.0 * RC_SCALEFACTOR,
+	rc_get_channel(2) * 1000.0 * RC_SCALEFACTOR,
+	rc_get_channel(3) * 1000.0 * RC_SCALEFACTOR,
+	rc_get_channel(4) * 1000.0 * RC_SCALEFACTOR,
+	rc_get_channel(5) * 1000.0 * RC_SCALEFACTOR,
+	rc_get_channel(6) * 1000.0 * RC_SCALEFACTOR,
+	rc_get_channel(7) * 1000.0 * RC_SCALEFACTOR,
+	rc_check_receivers());
 }
 
 void mavlink_send_simulation(void) {

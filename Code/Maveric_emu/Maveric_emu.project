@@ -167,13 +167,11 @@
     <VirtualDirectory Name="hal_emu">
       <File Name="../Library/hal_emu/compass_hmc5883l.h"/>
       <File Name="../Library/hal_emu/itg3200_driver.h"/>
-      <File Name="../Library/hal_emu/spektrum.h"/>
       <File Name="../Library/hal_emu/adxl345_driver.c"/>
       <File Name="../Library/hal_emu/adxl345_driver.h"/>
       <File Name="../Library/hal_emu/compass_hmc5883l.c"/>
       <File Name="../Library/hal_emu/bmp085.c"/>
       <File Name="../Library/hal_emu/servo_pwm.h"/>
-      <File Name="../Library/hal_emu/spektrum.c"/>
       <File Name="../Library/hal_emu/radar_module_driver.h"/>
       <File Name="../Library/hal_emu/radar_module_driver.c"/>
       <File Name="../Library/hal_emu/servo_pwm.c"/>
@@ -186,12 +184,13 @@
       <File Name="../Library/hal_emu/time_keeper.c"/>
       <File Name="../Library/hal_emu/time_keeper.h"/>
       <File Name="../Library/hal_emu/delay.h"/>
-      <File Name="../Library/hal_emu/joystick.c"/>
       <File Name="../Library/hal_emu/joystick.h"/>
       <File Name="../Library/hal_emu/udp_stream.h"/>
       <File Name="../Library/hal_emu/udp_stream.c"/>
+      <File Name="../Library/hal_emu/remote_controller.h"/>
+      <File Name="../Library/hal_emu/joystick_rc.h"/>
+      <File Name="../Library/hal_emu/joystick_rc.c"/>
     </VirtualDirectory>
-    <File Name="config/conf_sim_model.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="config">
     <File Name="config/conf_twis.h"/>
@@ -203,6 +202,7 @@
     <File Name="config/conf_sleepmgr.h"/>
     <File Name="config/conf_platform.h"/>
     <File Name="config/conf_twim.h"/>
+    <File Name="config/conf_sim_model.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <Configuration Name="Debug" CompilerType="gnu gcc" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">

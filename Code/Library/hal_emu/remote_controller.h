@@ -13,32 +13,33 @@
 
 #ifdef SPEKTRUM_REMOTE
 	#include "spektrum.h"
+	#include "remote_dsm2.h"
 #endif
 
 #ifdef TURNIGY_REMOTE
 	#include "turnigy.h"
+	#include "remote_dsm2.h"
 #endif
 
 #ifdef JOYSTICK_REMOTE
 	#include "joystick.h"
+	#include "joystick_rc.h"
 #endif
 
 
-#include "remote_dsm2.h"
 
-
-static int16_t inline get_roll_from_remote()	{return rc_get_channel(RC_ROLL); };
-static int16_t inline get_pitch_from_remote()	{return rc_get_channel(RC_PITCH); };
-static int16_t inline get_yaw_from_remote()	{return rc_get_channel(RC_YAW); };
-static int16_t inline get_thrust_from_remote()	{return rc_get_channel(RC_THROTTLE); };
+static float inline get_roll_from_remote()	{return rc_get_channel(RC_ROLL)*RC_SCALEFACTOR; };
+static float inline get_pitch_from_remote()	{return rc_get_channel(RC_PITCH)*RC_SCALEFACTOR; };
+static float inline get_yaw_from_remote()	{return rc_get_channel(RC_YAW)*RC_SCALEFACTOR; };
+static float inline get_thrust_from_remote()	{return rc_get_channel(RC_THROTTLE)*RC_SCALEFACTOR; };
 
 
 static inline Control_Command_t get_command_from_remote()
 {
 	Control_Command_t controls;
-	controls.rpy[ROLL]= get_roll_from_remote();
-	controls.rpy[PITCH]= get_pitch_from_remote();
-	controls.rpy[YAW]= get_yaw_from_remote();
+	controls.rpy[ROLL]= get_roll_from_remote()*RC_INPUT_SCALE;
+	controls.rpy[PITCH]= get_pitch_from_remote()*RC_INPUT_SCALE;
+	controls.rpy[YAW]= get_yaw_from_remote()*RC_INPUT_SCALE;
 	controls.thrust = get_thrust_from_remote();
 	
 	return controls;

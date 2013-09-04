@@ -71,7 +71,7 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 		*motorbool = 0;
 	}
 	
-	switch (checkReceivers_remote())
+	switch (rc_check_receivers())
 	{
 		case 1:
 		*rc_check = 1;
@@ -233,10 +233,10 @@ task_return_t run_stabilisation() {
 	{
 		case MAV_MODE_PREFLIGHT:
 		case MAV_MODE_MANUAL_ARMED:
-			board->controls = get_command_from_remote();
-			for (i=0; i<4; i++) {
-				board->servos[i].value=SERVO_SCALE*board->controls.thrust;
-			}
+			//board->controls = get_command_from_remote();
+			//for (i=0; i<4; i++) {
+			//	board->servos[i].value=SERVO_SCALE*board->controls.thrust;
+			//}
 			
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
@@ -244,6 +244,7 @@ task_return_t run_stabilisation() {
 			//dbg_print("Thrust:");
 			//dbg_print_num(board->controls.thrust*10000,10);
 			//dbg_print("\n");
+			board->controls.control_mode=ATTITUDE_COMMAND_MODE;
 			quad_stabilise(&(board->imu1), &(board->controls));
 			break;
 		case MAV_MODE_GUIDED_ARMED:

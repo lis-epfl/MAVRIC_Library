@@ -15,20 +15,22 @@
 #define BAUD_TURNIGY  115200
 #define TURNIGY_UART AVR32_USART1
 
-#define T_THROTTLE 0
-#define T_ROLL     1
-#define T_PITCH    2
-#define T_YAW      3
-#define T_GEAR	   4
-#define T_ID_MODE  5
-#define T_TRIM_P3  6
-#define T_TRIM_P1  7
-#define T_TRIM_P2  8
+#define RC_THROTTLE 0
+#define RC_ROLL     1
+#define RC_PITCH    2
+#define RC_YAW      3
+#define RC_SAFETY   4
+#define RC_ID_MODE  5
+#define RC_TRIM_P3  6
+#define RC_TRIM_P1  7
+#define RC_TRIM_P2  8
 
 #define DEADZONE 0.5
 
-#define T_SCALEFACTOR 1.0/438.0
+#define RC_SCALEFACTOR 1.0/438.0
 
+
+/*
 typedef struct Turnigy_Receiver {
 	Buffer_t receiver;
 	uint16_t channels[16];
@@ -53,5 +55,5 @@ float get_yaw_from_turnigy();
 float get_thrust_from_turnigy();
 
 void get_channel_mode_turnigy(uint8_t* chanSwitch);
-
+*/
 #endif //TURNIGY_H_

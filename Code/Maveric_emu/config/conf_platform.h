@@ -23,7 +23,9 @@
 #define CONF_DIAG
 //#define CONF_CROSS
 
-#define RC_INPUT_SCALE (1.0/550.0)
+#define RC_INPUT_SCALE 0.8
+
+#define JOYSTICK_REMOTE
 
 #define IMU_X 0
 #define IMU_Y 1

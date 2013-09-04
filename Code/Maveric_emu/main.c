@@ -48,16 +48,8 @@ task_return_t run_imu_update() {
 
 void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 {
-	if (getChannel(4)>0 && getChannel(5)>0)
-	{
-		*chanSwitch |= 0x00;
-	}else if(getChannel(4)<0 && getChannel(5)>0){
-		*chanSwitch |= 0x01;
-	}else if (getChannel(4)<0 && getChannel(5)<0){
-		*chanSwitch |= 0x02;
-	}else{
-		*chanSwitch |= 0x03;
-	}
+	
+	get_channel_mode(chanSwitch);
 	
 	//dbg_print("chanSwitch ");
 	//dbg_print_num(*chanSwitch,10);
@@ -65,11 +57,11 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 	//dbg_print_num(getChannel(5),10);
 	//dbg_print("\n");
 	
-	if(((getChannel(S_THROTTLE)/350.0)<-0.95) && ((-getChannel(S_YAW)/350.0) > 0.9))
+	if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() > 0.9))
 	{
 		dbg_print("motor on\n");
 		*motorbool = 1;
-	}else if(((getChannel(S_THROTTLE)/350.0)<-0.95) && ((-getChannel(S_YAW)/350.0) <-0.9))
+	}else if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() <-0.9))
 	{
 		dbg_print("motor off\n");
 		*motorbool = -1;
@@ -78,7 +70,7 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 		*motorbool = 0;
 	}
 	
-	switch (checkReceivers())
+	switch (rc_check_receivers())
 	{
 		case 1:
 		*rc_check = 1;
@@ -108,103 +100,111 @@ task_return_t set_mav_mode_n_state()
 	switch(board->mav_state)
 	{
 		case MAV_STATE_CALIBRATING:
-		break;
+			break;
 		case MAV_STATE_STANDBY:
-		if (motor_switch == 1)
-		{
+			if (motor_switch == 1)
+			{
+				switch(channelSwitches)
+				{
+					case 0:
+						dbg_print("Switching on the motors!\n");
+						board->controls.run_mode = MOTORS_ON;
+						board->mav_state = MAV_STATE_ACTIVE;
+						board->mav_mode = MAV_MODE_MANUAL_ARMED;
+						break;
+					case 1:
+						dbg_print("Switches not ready, both should be pushed!\n");
+						//board->controls.run_mode = MOTORS_ON;
+						//board->mav_state = MAV_STATE_ACTIVE;
+						//board->mav_mode = MAV_MODE_STABILIZE_ARMED;
+						break;
+					case 2:
+						dbg_print("Switches not ready, both should be pushed!\n");
+						break;
+					case 3:
+						dbg_print("Switches not ready, both should be pushed!\n");
+						break;
+				}
+			}
+			break;
+		case MAV_STATE_ACTIVE:
 			switch(channelSwitches)
 			{
 				case 0:
-					//dbg_print("Switching on the motors!");
-					board->controls.run_mode = MOTORS_ON;
-					board->mav_state = MAV_STATE_ACTIVE;
-					board->mav_mode = MAV_MODE_MANUAL_ARMED;
+					board->mav_mode= MAV_MODE_STABILIZE_ARMED;
 					break;
 				case 1:
-					//board->controls.run_mode = MOTORS_ON;
-					//board->mav_state = MAV_STATE_ACTIVE;
-					//board->mav_mode = MAV_MODE_STABILIZE_ARMED;
+					board->mav_mode= MAV_MODE_STABILIZE_ARMED;
 					break;
 				case 2:
+					board->mav_mode = MAV_MODE_GUIDED_ARMED;
 					break;
 				case 3:
+					board->mav_mode = MAV_MODE_AUTO_ARMED;
 					break;
 			}
-		}
-		break;
-		case MAV_STATE_ACTIVE:
-		switch(channelSwitches)
-		{
-			case 0:
-				board->mav_mode= MAV_MODE_STABILIZE_ARMED;
-				break;
-			case 1:
-				board->mav_mode= MAV_MODE_STABILIZE_ARMED;
-				break;
-			case 2:
-				board->mav_mode = MAV_MODE_GUIDED_ARMED;
-				break;
-			case 3:
-				board->mav_mode = MAV_MODE_AUTO_ARMED;
-				break;
-		}
-		//dbg_print("motor_switch: ");
-		//dbg_print_num(motor_switch,10);
-		if (motor_switch == -1)
-		{
-			//dbg_print("Switch off motors!\n");
-			board->controls.run_mode = MOTORS_OFF;
-			board->mav_state = MAV_STATE_STANDBY;
-			board->mav_mode = MAV_MODE_MANUAL_DISARMED;
-		}
+			//dbg_print("motor_switch: ");
+			//dbg_print_num(motor_switch,10);
+			if (motor_switch == -1)
+			{
+				dbg_print("Switching off motors!\n");
+				board->controls.run_mode = MOTORS_OFF;
+				board->mav_state = MAV_STATE_STANDBY;
+				board->mav_mode = MAV_MODE_MANUAL_DISARMED;
+			}
 		
-		switch (RC_check)
-		{
-			case 1:
-				break;
-			case -1:
-				board->mav_state = MAV_STATE_CRITICAL;
-				break;
-			case -2:
-				board->mav_state = MAV_STATE_EMERGENCY;
-				break;
-		}
-		break;
+			switch (RC_check)
+			{
+				case 1:
+					break;
+				case -1:
+					board->mav_state = MAV_STATE_CRITICAL;
+					break;
+				case -2:
+					board->mav_state = MAV_STATE_EMERGENCY;
+					break;
+			}
+			break;
 		case MAV_STATE_CRITICAL:
-		switch(channelSwitches)
-		{
-			case 0:
+			switch(channelSwitches)
+			{
+				case 0:
 				board->mav_mode= MAV_MODE_STABILIZE_ARMED;
 				break;
-			case 1:
+				case 1:
 				board->mav_mode= MAV_MODE_STABILIZE_ARMED;
 				break;
-			case 2:
+				case 2:
 				board->mav_mode = MAV_MODE_GUIDED_ARMED;
 				break;
-			case 3:
+				case 3:
 				break;
-		}
-		if (motor_switch == -1)
-		{
-			board->controls.run_mode = MOTORS_OFF;
-			board->mav_state = MAV_STATE_STANDBY;
-			board->mav_mode = MAV_MODE_MANUAL_DISARMED;
-		}
-		switch (RC_check)
-		{
-			case 1:
+			}
+			if (motor_switch == -1)
+			{
+				dbg_print("Switching off motors!\n");
+				board->controls.run_mode = MOTORS_OFF;
+				board->mav_state = MAV_STATE_STANDBY;
+				board->mav_mode = MAV_MODE_MANUAL_DISARMED;
+			}
+			switch (RC_check)
+			{
+				case 1:
 				board->mav_state = MAV_STATE_ACTIVE;
 				break;
-			case -1:
+				case -1:
 				break;
-			case -2:
+				case -2:
 				board->mav_state = MAV_STATE_EMERGENCY;
 				break;
-		}
-		break;
+			}
+			break;
 		case MAV_STATE_EMERGENCY:
 			board->mav_mode = MAV_MODE_MANUAL_DISARMED;
+			if (board->imu1.attitude.localPosition.pos[Z] < 0.5)
+			{
+				board->mav_state = MAV_STATE_STANDBY;
+			}
 			break;
 	}
 
@@ -213,14 +213,6 @@ task_return_t set_mav_mode_n_state()
 	//dbg_print(", MAV mode :");
 	//dbg_print_num(board->mav_mode,10);
 	//dbg_print("\n");
-
-	// NICOLAS: changed remote model to aircraft to have 5 channels
-	////if (getChannel(4)>0) {
-	//if (getChannel(5)>0) {
-	//board->controls.control_mode = RATE_COMMAND_MODE;
-	//} else {
-	//board->controls.control_mode = ATTITUDE_COMMAND_MODE;
-	//}
 	
 }
 
@@ -232,41 +224,48 @@ task_return_t run_stabilisation() {
 	} else {
 		imu_update(&(board->imu1));
 	}
-
+	//board->local_position.pos[0] = board->imu1.attitude.pos[0];
+	//board->local_position.pos[1] = board->imu1.attitude.pos[1];
+	//board->local_position.pos[2] = board->imu1.attitude.pos[2];
+	
 	switch(board->mav_mode)
 	{
 		case MAV_MODE_PREFLIGHT:
 		case MAV_MODE_MANUAL_ARMED:
-			board->controls.rpy[ROLL]=-getChannelNeutral(S_ROLL)*RC_INPUT_SCALE;
-			board->controls.rpy[PITCH]=-getChannelNeutral(S_PITCH)*RC_INPUT_SCALE;
-			board->controls.rpy[YAW]=-getChannelNeutral(S_YAW)*RC_INPUT_SCALE;
-			//board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-			board->controls.thrust = getChannelNeutral(S_THROTTLE)*RC_INPUT_SCALE;
-			for (i=0; i<4; i++) {
-				board->servos[i].value=SERVO_SCALE*board->controls.thrust;
-			}
+			board->controls = get_command_from_remote();
+			//for (i=0; i<4; i++) {
+			//	board->servos[i].value=SERVO_SCALE*board->controls.thrust;
+			//}
 			
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
-			board->controls.rpy[ROLL]=-getChannelNeutral(S_ROLL)*RC_INPUT_SCALE;
-			board->controls.rpy[PITCH]=-getChannelNeutral(S_PITCH)*RC_INPUT_SCALE;
-			board->controls.rpy[YAW]=-getChannelNeutral(S_YAW)*RC_INPUT_SCALE;
-			//board->controls.thrust = min(getChannel(S_THROTTLE)/350.0,board->controls.thrust);
-			board->controls.thrust = getChannelNeutral(S_THROTTLE)*RC_INPUT_SCALE;
+			board->controls = get_command_from_remote();
+			//dbg_print("Thrust:");
+			//dbg_print_num(board->controls.thrust*10000,10);
+			//dbg_print("\n");
+			board->controls.control_mode==ATTITUDE_COMMAND_MODE;
 			quad_stabilise(&(board->imu1), &(board->controls));
-			
 			break;
 		case MAV_MODE_GUIDED_ARMED:
-			board->controls.thrust = min(getChannel(S_THROTTLE)/RC_INPUT_SCALE,board->controls.thrust);
-			//board->controls.thrust = getChannel(S_THROTTLE)/350.0;
+			board->mission_started = 0;
+			board->controls = board->controls_nav;
+			board->controls.thrust = min(get_thrust_from_remote(),board->controls_nav.thrust);
+			//board->controls.thrust = board->controls_nav.thrust;
+			//dbg_print("Thrust main:");
+			//dbg_print_num(board->controls.thrust*10000,10);
+			//dbg_print("\n");
 			quad_stabilise(&(board->imu1), &(board->controls));
 			
 			break;
 		case MAV_MODE_AUTO_ARMED:
-			board->controls.thrust = min(getChannel(S_THROTTLE)/RC_INPUT_SCALE,board->controls.thrust);
-			//board->controls.thrust = getChannel(S_THROTTLE)/350.0;
+			board->mission_started = 1;
+			board->controls = board->controls_nav;
+			board->controls.thrust = min(get_thrust_from_remote(),board->controls_nav.thrust);
+			//board->controls.thrust = board->controls_nav.thrust;
+			//dbg_print("Thrust main:");
+			//dbg_print_num(board->controls.thrust*10000,10);
+			//dbg_print("\n");
 			quad_stabilise(&(board->imu1), &(board->controls));
-			
 			break;
 		case MAV_MODE_MANUAL_DISARMED:
 		case MAV_MODE_STABILIZE_DISARMED:
@@ -288,74 +287,6 @@ task_return_t run_stabilisation() {
 
 }
 
-//task_return_t run_stabilisation() {
-	//board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
-	//board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
-	//board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
-	//board->controls.thrust=getChannel(S_THROTTLE)/350.0;
-//
-	//imu_update(&(board->imu1));
-	//if (getChannel(4)>0) {
-		//board->controls.control_mode=RATE_COMMAND_MODE;
-	//} else {
-		//board->controls.control_mode=ATTITUDE_COMMAND_MODE;
-	//}
-	//
-	//// switch run_mode
-	//if ((board->controls.thrust<-0.95) && (board->controls.rpy[YAW]< -0.9)) {
-		//board->controls.run_mode=MOTORS_OFF;
-		//LED_On(LED1);
-	//}
-	//if ((board->controls.thrust<-0.95) && (board->controls.rpy[YAW] >0.9)) {
-		//board->controls.run_mode=MOTORS_ON;
-		//LED_Off(LED1);
-	//}
-		//
-	//quad_stabilise(&(board->imu1), &(board->controls));
-	//
-	//if (control_input->run_mode==MOTORS_ON) {
-		//// send values to servo outputs
-		//set_servos(&(board->servos));
-	//} else {	
-		//set_servos(&(servo_failsafe));
-	//}
-	//
-//
-//}
-
-task_return_t gps_task() {
-	uint32_t tnow = get_millis();	
-	
-	gps_update();
-	
- 	//dbg_print("time :");
- 	//dbg_print_num(tnow,10);
- 	//dbg_print_num(board->GPS_data.timeLastMsg,10);
- 	//dbg_print(" GPS status : 0x");
- 	//dbg_print_num(board->GPS_data.status,16);
- 	//dbg_print(" status:");
- 	//dbg_print_num(board->GPS_data.accuracyStatus,10);
- 	//dbg_print_num(board->GPS_data.horizontalStatus,10);
- 	//dbg_print_num(board->GPS_data.altitudeStatus,10);
- 	//dbg_print_num(board->GPS_data.speedStatus,10);
- 	//dbg_print_num(board->GPS_data.courseStatus,10);
- 	//dbg_print("\n");
-	//
-	if(newValidGpsMsg())
-	{/*
-		dbg_print("GPS status:");
-		dbg_print_num(board->GPS_data.status,10);
-		dbg_print(" time gps:");
-		dbg_print_num(board->GPS_data.timegps,10);
-		dbg_print(" latitude :");
-		dbg_print_num(board->GPS_data.latitude,10);
-		dbg_print(" longitude :");
-		dbg_print_num(board->GPS_data.longitude,10);
-		dbg_print(" altitude");
-		dbg_print_num(board->GPS_data.altitude,10);
-		dbg_print("\n");*/
-	}
-}
 
 task_return_t run_estimator()
 {
