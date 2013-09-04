@@ -26,9 +26,9 @@ typedef struct {
 	float param2;
 	float param3;
 	float param4;
-	float x;
-	float y;
-	float z;
+	double x;
+	double y;
+	double z;
 }waypoint_struct;
 
 bool waypoint_sending;

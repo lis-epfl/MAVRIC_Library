@@ -68,7 +68,9 @@ typedef struct  {
 	waypoint_struct waypoint_list[MAX_WAYPOINTS];
 	uint16_t number_of_waypoints;
 	int8_t current_wp;
+	
 	bool waypoint_set;
+	bool mission_started;
 	
 	uint8_t mav_mode;
 	uint8_t mav_state;

@@ -585,6 +585,7 @@ void main (void)
 		
 		LED_On(LED1);
 
+		//if (counter==0) LED_Toggle(LED1);
 
 		counter=(counter+1)%1000;
 		last_looptime=this_looptime;	

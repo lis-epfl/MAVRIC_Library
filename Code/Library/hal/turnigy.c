@@ -92,12 +92,26 @@ void turnigy_init (void) {
 }
 /**/
 int16_t getChannel_turnigy(uint8_t index) {
+	int16_t result;
 	//if (checkReceiver1()<checkReceiver2()) {
-		if (index == T_YAW)
+		switch(index)
 		{
-			return spRec1.channels[index]-529;
+			case T_ROLL:
+				result = spRec1.channels[index]-509;
+				break;
+			case T_PITCH:
+				result = spRec1.channels[index]-511;
+				break;
+			case T_YAW:
+				result = spRec1.channels[index]-530;
+				break;
+			default:
+				result = spRec1.channels[index]-500;
+				break;
 		}
-		return spRec1.channels[index]-513;
+		return result;
+		//return spRec1.channels[index];
+		
 	//} else {
 	//	return spRec2.channels[index]-500;
 	//}

@@ -17,7 +17,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	
 	// Visit https://code.google.com/p/ardupilot-mega/wiki/MAVLink to have a description of all messages (or common.h)
 	waypoint_struct waypoint;
-	*number_of_waypoints = 4;
+	*number_of_waypoints = 3;
 	
 	num_waypoint_onboard = *number_of_waypoints;
 	
@@ -27,12 +27,12 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
 	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
 	
-	waypoint.x = 465185536 / 1.0e7f; // convert to deg
+	waypoint.x = 465186816 / 1.0e7f; // convert to deg
 	waypoint.y = 65670560 / 1.0e7f; // convert to deg
 	waypoint.z = 20; //m
 	
 	waypoint.param1 = 10; // Hold time in decimal seconds
-	waypoint.param2 = 15; // Acceptance radius in meters
+	waypoint.param2 = 8; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
 	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
 	
@@ -56,35 +56,35 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	waypoint_list[1] = waypoint;
 	
 	// Set nav waypoint
-	waypoint.autocontinue = 1;
+	waypoint.autocontinue = 0;
 	waypoint.current = 0;
 	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
 	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
 
-	waypoint.x = 465184447 / 1.0e7f; // convert to deg
-	waypoint.y = 65670562 / 1.0e7f; // convert to deg
+	waypoint.x = 465182186 / 1.0e7f; // convert to deg
+	waypoint.y = 65659084 / 1.0e7f; // convert to deg
 	waypoint.z = 20; //m
 
 	waypoint.param1 = 10; // Hold time in decimal seconds
-	waypoint.param2 = 15; // Acceptance radius in meters
+	waypoint.param2 = 12; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
 	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
 
 	waypoint_list[2] = waypoint;
 	
 	// Set home waypoint
-	waypoint.autocontinue = 1;
-	waypoint.current = 0;
-	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT; // 0:Global, 1:local NED, 2:mission, 3:global rel alt, 4: local ENU
-	waypoint.wp_id = MAV_CMD_DO_SET_HOME;
-
+	//waypoint.autocontinue = 1;
+	//waypoint.current = 0;
+	//waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT; // 0:Global, 1:local NED, 2:mission, 3:global rel alt, 4: local ENU
+	//waypoint.wp_id = MAV_CMD_DO_SET_HOME;
+//
+	//
+	//waypoint.param1 = 0;
+	//waypoint.param2 = 20; // altitude
+	//waypoint.param3 = 465186806 / 1.0e7f; // lat converted to deg
+	//waypoint.param4 = 65659084 / 1.0e7f; // long converted to deg
 	
-	waypoint.param1 = 0;
-	waypoint.param2 = 20; // altitude
-	waypoint.param3 = 465186806 / 1.0e7f; // lat converted to deg
-	waypoint.param4 = 65659084 / 1.0e7f; // long converted to deg
-	
-	waypoint_list[3] = waypoint;
+	//waypoint_list[3] = waypoint;
 	
 	dbg_print("Number of Waypoint onboard:");
 	dbg_print_num(num_waypoint_onboard,10);
@@ -184,7 +184,7 @@ void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints)
 		if (waypoint_receiving == false)
 		{
 			
-			if ((packet.count+*number_of_waypoints) > MAX_WAYPOINTS)
+			if ((packet.count + *number_of_waypoints) > MAX_WAYPOINTS)
 			{
 				packet.count = MAX_WAYPOINTS - *number_of_waypoints;
 			}
@@ -226,12 +226,14 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 		
 		new_waypoint.wp_id = packet.command;
 		
-		new_waypoint.x = 1.0e7f * packet.x; // longitude converted to e7
-		new_waypoint.y = 1.0e7f * packet.y; // latitude converted to e7
-		new_waypoint.z = 1.0e2f * packet.z; // altitude converted to cm
+		new_waypoint.x = packet.x; // longitude
+		new_waypoint.y = packet.y; // latitude 
+		new_waypoint.z = packet.z; // altitude
 		
 		new_waypoint.autocontinue = packet.autocontinue;
 		new_waypoint.frame = packet.frame;
+		
+		new_waypoint.current = packet.current;
 		
 		new_waypoint.param1 = packet.param1;
 		new_waypoint.param2 = packet.param2;
@@ -389,7 +391,7 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 				}
 			}else{
 				uint8_t type = MAV_CMD_ACK_OK; //MAV_CMD_ACK_ERR_FAIL;                         // ok (0), error(1)
-				dbg_print("Ack error!");
+				dbg_print("Ack not received!");
 				mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,type);
 			}				
 		}		
@@ -433,6 +435,7 @@ void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints
 	&& (uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
 	{
 		*number_of_waypoints = 0;
+		num_waypoint_onboard = 0;
 		mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_OK);
 		dbg_print("Clear Waypoint list");
 	}		

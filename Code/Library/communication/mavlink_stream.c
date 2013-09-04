@@ -103,7 +103,7 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 		}
 		//dbg_print_num(rec->status.parse_state, 16);
 		//dbg_print("\n");
-	}		
+	}
 	return 0;
 }
 

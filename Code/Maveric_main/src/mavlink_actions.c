@@ -230,14 +230,14 @@ void mavlink_send_scaled_rc_channels(void)
 	if (checkReceivers_remote()>0)
 	{
 		mavlink_msg_rc_channels_scaled_send(MAVLINK_COMM_0,get_millis(),1,
-		getChannel_remote(0) * 10000 / 438.0,
-		getChannel_remote(1) * 10000 / 438.0,
-		getChannel_remote(2) * 10000 / 438.0,
-		getChannel_remote(3) * 10000 / 438.0,
-		getChannel_remote(4) * 10000 / 438.0,
-		getChannel_remote(5) * 10000 / 438.0,
-		getChannel_remote(6) * 10000 / 438.0,
-		getChannel_remote(7) * 10000 / 438.0,
+		getChannel_remote(0) * 10000 / 350.0,
+		getChannel_remote(1) * 10000 / 350.0,
+		getChannel_remote(2) * 10000 / 350.0,
+		getChannel_remote(3) * 10000 / 350.0,
+		getChannel_remote(4) * 10000 / 350.0,
+		getChannel_remote(5) * 10000 / 350.0,
+		getChannel_remote(6) * 10000 / 350.0,
+		getChannel_remote(7) * 10000 / 350.0,
 		255);
 	}else{	
 		mavlink_msg_rc_channels_scaled_send(MAVLINK_COMM_0,get_millis(),1,0,0,0,0,0,0,32767,32767,0);
@@ -345,8 +345,8 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
 	add_task(get_mavlink_taskset(), 250000, RUN_REGULAR, &mavlink_send_gps_raw, MAVLINK_MSG_ID_GPS_RAW_INT);
-	add_task(get_mavlink_taskset(), 500000, RUN_REGULAR, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
-	add_task(get_mavlink_taskset(), 500000, RUN_REGULAR, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
+	add_task(get_mavlink_taskset(), 500000, RUN_NEVER, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
+	add_task(get_mavlink_taskset(), 1000000, RUN_REGULAR, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
 	add_task(get_mavlink_taskset(), 200000, RUN_REGULAR, &mavlink_send_simulation, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	add_task(get_mavlink_taskset(), 500000, RUN_NEVER, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
