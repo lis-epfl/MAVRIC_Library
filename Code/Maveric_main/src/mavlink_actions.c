@@ -255,6 +255,8 @@ void mavlink_send_simulation(void) {
 void add_PID_parameters(void) {
 	Stabiliser_t* rate_stabiliser = get_rate_stabiliser();
 	Stabiliser_t* attitude_stabiliser = get_attitude_stabiliser();
+	
+	add_parameter_int32(&board->simulation_mode, "Sim_mode");
 	// Roll rate PID
 	add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].p_gain, "RollRPid_P_G");
 	//add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].clip_max, "RollRPid_P_CLmx");

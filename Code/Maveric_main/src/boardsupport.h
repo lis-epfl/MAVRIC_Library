@@ -76,7 +76,7 @@ typedef struct  {
 	
 	uint8_t mav_mode;
 	uint8_t mav_state;
-	uint8_t simulation_mode;
+	uint32_t simulation_mode;
 	
 	pressure_data pressure;
 	float pressure_filtered;
