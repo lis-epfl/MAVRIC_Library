@@ -70,6 +70,8 @@ typedef struct  {
 	
 	bool waypoint_set;
 	bool mission_started;
+	bool waypoint_sending;
+	bool waypoint_receiving;
 	
 	uint8_t mav_mode;
 	uint8_t mav_state;
