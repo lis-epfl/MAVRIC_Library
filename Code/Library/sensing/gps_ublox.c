@@ -1043,13 +1043,22 @@ void ubx_send_header(uint8_t msg_class, uint8_t _msg_id, uint8_t size)
 	header.msg_id_header    = _msg_id;
 	header.length			= size;
 	
-	board->gps_stream_out.put(board->gps_stream_out.data,header.preamble1);
-	board->gps_stream_out.put(board->gps_stream_out.data,header.preamble2);
-	board->gps_stream_out.put(board->gps_stream_out.data,header.msg_class);
-	board->gps_stream_out.put(board->gps_stream_out.data,header.msg_id_header);
+	//board->gps_stream_out.put(board->gps_stream_out.data,header.preamble1);
+	//board->gps_stream_out.put(board->gps_stream_out.data,header.preamble2);
+	//board->gps_stream_out.put(board->gps_stream_out.data,header.msg_class);
+	//board->gps_stream_out.put(board->gps_stream_out.data,header.msg_id_header);
+	//
+	//board->gps_stream_out.put(board->gps_stream_out.data,(uint8_t) (header.length & 0x0F));
+	//board->gps_stream_out.put(board->gps_stream_out.data,(uint8_t) (header.length & 0xF0)>>8);
 	
-	board->gps_stream_out.put(board->gps_stream_out.data,(uint8_t) (header.length & 0x0F));
-	board->gps_stream_out.put(board->gps_stream_out.data,(uint8_t) (header.length & 0xF0)>>8);
+	putnum(&board->gps_stream_out,header.preamble1,16);
+	putnum(&board->gps_stream_out,header.preamble2,16);
+	putnum(&board->gps_stream_out,header.msg_class,10);
+	putnum(&board->gps_stream_out,header.msg_id_header,16);
+	
+	putnum(&board->gps_stream_out,(uint8_t) (header.length & 0x0F),16);
+	putnum(&board->gps_stream_out,(uint8_t) (header.length & 0xF0)>>8,16);
+	
 }
 
 /*
@@ -1059,8 +1068,11 @@ To send the checksum of every message
 */
 void ubx_send_cksum(uint8_t ck_sum_a, uint8_t ck_sum_b)
 {
-	board->gps_stream_out.put(board->gps_stream_out.data,ck_sum_a);
-	board->gps_stream_out.put(board->gps_stream_out.data,ck_sum_b);
+	//board->gps_stream_out.put(board->gps_stream_out.data,ck_sum_a);
+	//board->gps_stream_out.put(board->gps_stream_out.data,ck_sum_b);
+	
+	putnum(&board->gps_stream_out,ck_sum_a,16);
+	putnum(&board->gps_stream_out,ck_sum_b,16);
 }
 
 /*
@@ -1110,12 +1122,20 @@ void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_n
 	
 	ubx_send_header(msg_class,_msg_id,size);
 	
-	board->gps_stream_out.put(board->gps_stream_out.data, endian_lower_bytes_uint16(msg.measure_rate_ms));
-	board->gps_stream_out.put(board->gps_stream_out.data, endian_higher_bytes_uint16(msg.measure_rate_ms));
-	board->gps_stream_out.put(board->gps_stream_out.data, endian_lower_bytes_uint16(msg.nav_rate));
-	board->gps_stream_out.put(board->gps_stream_out.data, endian_higher_bytes_uint16(msg.nav_rate));
-	board->gps_stream_out.put(board->gps_stream_out.data, endian_lower_bytes_uint16(msg.timeref));
-	board->gps_stream_out.put(board->gps_stream_out.data, endian_higher_bytes_uint16(msg.timeref));	
+	//board->gps_stream_out.put(board->gps_stream_out.data, endian_lower_bytes_uint16(msg.measure_rate_ms));
+	//board->gps_stream_out.put(board->gps_stream_out.data, endian_higher_bytes_uint16(msg.measure_rate_ms));
+	//board->gps_stream_out.put(board->gps_stream_out.data, endian_lower_bytes_uint16(msg.nav_rate));
+	//board->gps_stream_out.put(board->gps_stream_out.data, endian_higher_bytes_uint16(msg.nav_rate));
+	//board->gps_stream_out.put(board->gps_stream_out.data, endian_lower_bytes_uint16(msg.timeref));
+	//board->gps_stream_out.put(board->gps_stream_out.data, endian_higher_bytes_uint16(msg.timeref));	
+	
+	putnum(&board->gps_stream_out, endian_lower_bytes_uint16(msg.measure_rate_ms),16);
+	putnum(&board->gps_stream_out, endian_higher_bytes_uint16(msg.measure_rate_ms),16);
+	putnum(&board->gps_stream_out, endian_lower_bytes_uint16(msg.nav_rate),16);
+	putnum(&board->gps_stream_out, endian_higher_bytes_uint16(msg.nav_rate),16);
+	putnum(&board->gps_stream_out, endian_lower_bytes_uint16(msg.timeref),16);
+	putnum(&board->gps_stream_out, endian_higher_bytes_uint16(msg.timeref),16);
+	
 	ubx_send_cksum(ck_a,ck_b);
 	
 	//board->gps_stream_out.flush(&(board->gps_stream_out.data));
@@ -1144,7 +1164,8 @@ void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, enum GPS_
 	if (engine_settings != NULL)
 	{
 		update_checksum((uint8_t *)engine_settings, size, &ck_a, &ck_b);
-		board->gps_stream_out.put(board->gps_stream_out.data, (uint8_t) *engine_settings);
+		//board->gps_stream_out.put(board->gps_stream_out.data, (uint8_t) *engine_settings);
+		putnum(&board->gps_stream_out, (uint8_t) *engine_settings,10);
 	}
 	
 	ubx_send_cksum(ck_a,ck_b);
@@ -1178,9 +1199,13 @@ void ubx_configure_message_rate(uint8_t msg_class, uint8_t _msg_id, uint8_t rate
 	
 	ubx_send_header(UBX_CLASS_CFG,MSG_CFG_SET_RATE,sizeof(msg));
 	
-	board->gps_stream_out.put(board->gps_stream_out.data,msg.msg_class);
-	board->gps_stream_out.put(board->gps_stream_out.data,msg.msg_id_rate);
-	board->gps_stream_out.put(board->gps_stream_out.data,msg.rate);
+	//board->gps_stream_out.put(board->gps_stream_out.data,msg.msg_class);
+	//board->gps_stream_out.put(board->gps_stream_out.data,msg.msg_id_rate);
+	//board->gps_stream_out.put(board->gps_stream_out.data,msg.rate);
+	
+	putnum(&board->gps_stream_out,msg.msg_class,16);
+	putnum(&board->gps_stream_out,msg.msg_id_rate,16);
+	putnum(&board->gps_stream_out,msg.rate,16);
 	
 	ubx_send_cksum(ck_a,ck_b);
 	//ubx_send_message(UBX_CLASS_CFG, MSG_CFG_SET_RATE, &msg, sizeof(msg));
@@ -1208,6 +1233,7 @@ void configure_gps(void)
 	//dbg_print("Set to binary mode ");
 	//dbg_print(set_binary);
 	putstring(&(board->gps_stream_out),set_binary);
+	//board->gps_stream_out.put(board->gps_stream_out.data,set_binary);
 	//board->gps_stream_out.flush(&(board->gps_stream_out.data));
 	//}
 	

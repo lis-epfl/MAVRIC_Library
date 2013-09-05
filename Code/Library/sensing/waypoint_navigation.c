@@ -73,7 +73,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	waypoint_list[2] = waypoint;
 	
 	// Set nav waypoint
-	waypoint.autocontinue = 0;
+	waypoint.autocontinue = 1;
 	waypoint.current = 0;
 	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
 	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;

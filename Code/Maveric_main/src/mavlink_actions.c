@@ -118,7 +118,6 @@ void mavlink_send_global_position(void) {
 	   	// send integrated position (for now there is no GPS error correction...!!!)
 		global_position_t gpos=local_to_global_position(board->imu1.attitude.localPosition);
 		mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, board->imu1.attitude.vel[0]*100.0, board->imu1.attitude.vel[1]*100.0, board->imu1.attitude.vel[2]*100.0, board->imu1.attitude.om[2]);
-
    } 
    
 }
@@ -148,10 +147,16 @@ void mavlink_send_gps_raw(void) {
 
 
 void mavlink_send_pressure(void) {			
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Pressure", board->pressure.pressure/100.0);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "PressureFiltered", board->pressure_filtered/100.0);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Temperature", board->pressure.temperature);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Altitude", board->pressure.altitude);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Pressure", board->pressure.pressure/100.0);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "PressureFiltered", board->pressure_filtered/100.0);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Temperature", board->pressure.temperature);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Altitude", board->pressure.altitude);
+	
+	
+	//mavlink_msg_scaled_pressure_send(mavlink_channel_t chan, uint32_t time_boot_ms, float press_abs, float press_diff, int16_t temperature)
+	
+	mavlink_msg_scaled_pressure_send(MAVLINK_COMM_0, get_millis(), board->pressure.pressure/100.0, board->pressure_filtered/100.0, board->pressure.temperature*100.0);
+	
 }
 
 void mavlink_send_radar(void) {
@@ -187,9 +192,9 @@ void mavlink_send_kalman_estimator(void)
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiVy", board->estimation.state[Y][SPEED]);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiVz", board->estimation.state[Z][SPEED]);
 	
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estibiaisX", board->estimation.state[X][BIAIS]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estibiaisY", board->estimation.state[Y][BIAIS]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estibiaisZ", board->estimation.state[Z][BIAIS]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estibiaisX", board->estimation.state[X][BIAIS]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estibiaisY", board->estimation.state[Y][BIAIS]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estibiaisZ", board->estimation.state[Z][BIAIS]);
 	
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisX", board->imu1.attitude.be[X+ACC_OFFSET]);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisY", board->imu1.attitude.be[Y+ACC_OFFSET]);
@@ -325,7 +330,7 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_attitude, MAVLINK_MSG_ID_ATTITUDE);
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_attitude_quaternion, MAVLINK_MSG_ID_ATTITUDE_QUATERNION);
 	add_task(get_mavlink_taskset(), 250000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
-	add_task(get_mavlink_taskset(), 300000, RUN_REGULAR, &mavlink_send_pressure, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	add_task(get_mavlink_taskset(), 300000, RUN_REGULAR, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
 	add_task(get_mavlink_taskset(), 200000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
 	add_task(get_mavlink_taskset(), 200000, RUN_NEVER, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
 	add_task(get_mavlink_taskset(), 100000, RUN_NEVER, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
@@ -335,10 +340,10 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
 	add_task(get_mavlink_taskset(), 100000, RUN_REGULAR, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
 	add_task(get_mavlink_taskset(), 250000, RUN_REGULAR, &mavlink_send_gps_raw, MAVLINK_MSG_ID_GPS_RAW_INT);
-	add_task(get_mavlink_taskset(), 1000000, RUN_REGULAR, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
-	add_task(get_mavlink_taskset(), 1000000, RUN_REGULAR, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
-	add_task(get_mavlink_taskset(), 500000, RUN_REGULAR, &mavlink_send_simulation, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
-	add_task(get_mavlink_taskset(), 500000, RUN_NEVER, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
+	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
+	add_task(get_mavlink_taskset(), 500000, RUN_NEVER, &mavlink_send_simulation, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	add_task(get_mavlink_taskset(), 250000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
 	sort_taskset_by_period(get_mavlink_taskset());
 }

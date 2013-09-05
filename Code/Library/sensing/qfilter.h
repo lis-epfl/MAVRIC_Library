@@ -26,7 +26,7 @@ typedef struct {
 } global_position_t;
 
 typedef struct {
-	float pos[3];
+	double pos[3];
 	global_position_t origin;
 } local_coordinates_t;
 

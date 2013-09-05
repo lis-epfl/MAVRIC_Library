@@ -76,13 +76,13 @@ out.s= q1.s*q2.s - SCP(q1.v, q2.v);
 
 pressure_data *baro;
 board_hardware_t *board;
-float P[3][3][3]; // Covariance matrice for Z,X and Y
-float Q[3][3];
-float R[3];
+double P[3][3][3]; // Covariance matrice for Z,X and Y
+double Q[3][3];
+double R[3];
 
-float P2[3][3][3]; // Covariance matrice for Z,X and Y
-float Q2[3][3];
-float R2[3];
+double P2[3][3][3]; // Covariance matrice for Z,X and Y
+double Q2[3][3];
+double R2[3];
 
 //----------------------------INITIALISATION------------------------
 void e_init()
@@ -132,7 +132,7 @@ void init_pos_gps()
 		board->imu1.attitude.localPosition.origin.latitude = board->GPS_data.latitude;
 		board->imu1.attitude.localPosition.origin.altitude = board->GPS_data.altitude;
 		
-		dbg_print("GPS initialized!\n");
+		dbg_print("GPS position initialized!\n");
 	}
 }
 
@@ -238,10 +238,10 @@ Xk1 = F * Xk0 + B * accel;
 Pk1 = F * Pk0 * F' + Q;
 
 */
-void e_kalman_predict (int axis,float accel_meas, float dt)
+void e_kalman_predict (int axis, float accel_meas, float dt)
 {
-	float accel_corr;
-	float FPF00,FPF01,FPF02,FPF10,FPF11,FPF12,FPF20,FPF21,FPF22;
+	double accel_corr;
+	double FPF00,FPF01,FPF02,FPF10,FPF11,FPF12,FPF20,FPF21,FPF22;
 	
 	
 	/* update state */
@@ -297,14 +297,14 @@ void e_kalman_predict (int axis,float accel_meas, float dt)
 	P2[axis][1][1] = FPF11 + Q2[axis][SPEED];
 	P2[axis][1][2] = FPF12;
 	P2[axis][2][0] = FPF20;
-	P[axis][2][1] = FPF21;
-	P[axis][2][2] = FPF22 + Q2[axis][BIAIS];
+	P2[axis][2][1] = FPF21;
+	P2[axis][2][2] = FPF22 + Q2[axis][BIAIS];
 }
 
 
-void e_kalman_predict_hf(int axis,float accel_meas, float dt)
+void e_kalman_predict_hf(int axis, float accel_meas, float dt)
 {
-	float FPF00,FPF01,FPF10,FPF11;
+	double FPF00,FPF01,FPF10,FPF11;
 	
 	board->estimation.state[axis][POSITION] = board->estimation.state[axis][POSITION] + dt * board->estimation.state[axis][SPEED] + dt*dt*accel_meas;
 	board->estimation.state[axis][POSITION] = board->estimation.state[axis][POSITION] + dt * board->estimation.state[axis][SPEED];
@@ -352,10 +352,10 @@ Xp = Xm + K*y;
 // update covariance
 Pp = Pm - K*H*Pm;
 */
-void e_kalman_update_position (int axis,float position_meas)
+void e_kalman_update_position (int axis, double position_meas)
 {
-	float y,y2,S,K1,K2,K3;
-	float P11,P12,P13,P21,P22,P23,P31,P32,P33;
+	double y,y2,S,K1,K2,K3;
+	double P11,P12,P13,P21,P22,P23,P31,P32,P33;
 
 	y = position_meas - board->estimation.state[axis][POSITION];
 	
@@ -442,11 +442,11 @@ Xp = Xm + K*yd;
 // update covariance
 Pp = Pm - K*H*Pm;
 */
-void e_kalman_update_speed(int axis,float speed_meas)
+void e_kalman_update_speed(int axis, float speed_meas)
 {
 	
-	float yd,S,K1,K2,K3;
-	float P11,P12,P13,P21,P22,P23,P31,P32,P33;
+	double yd,S,K1,K2,K3;
+	double P11,P12,P13,P21,P22,P23,P31,P32,P33;
 	
 	yd = speed_meas - board->estimation.state[axis][SPEED];
 	
@@ -529,10 +529,10 @@ void e_kalman_update_speed(int axis,float speed_meas)
   // update covariance
   Pp = Pm - K*H*Pm;
 */
-void e_kalman_update_position_hf(int axis,float position_meas)
+void e_kalman_update_position_hf(int axis, double position_meas)
 {
-	float posxy,S,K1,K2;
-	float P11,P12,P21,P22;
+	double posxy,S,K1,K2;
+	double P11,P12,P21,P22;
 	
 	posxy = position_meas - board->estimation.state[axis][POSITION];
 	
@@ -596,10 +596,10 @@ void e_kalman_update_position_hf(int axis,float position_meas)
   // update covariance
   Pp = Pm - K*H*Pm;
 */
-void e_kalman_update_speed_hf(int axis,float speed_meas)
+void e_kalman_update_speed_hf(int axis, float speed_meas)
 {
-		float velxy,S,K1,K2;
-		float P11,P12,P21,P22;
+		double velxy,S,K1,K2;
+		double P11,P12,P21,P22;
 		
 		velxy = speed_meas - board->estimation.state[axis][SPEED];
 		
@@ -644,7 +644,7 @@ void e_kalman_update_speed_hf(int axis,float speed_meas)
 //--------------------------------GLOBAL--------------------------
 void estimator_loop()
 {
-	float pos_x,pos_y,pos_z;
+	double pos_x,pos_y,pos_z;
 	double	latitude_rad;
 	float time_before_baro;
 	uint32_t actual_time;

@@ -190,7 +190,7 @@ void run_navigation()
 {
 	int8_t i;
 	
-	float rel_pos[3], command[3], dist2wp_sqr;
+	double rel_pos[3], command[3], dist2wp_sqr;
 	// Control in translational speed of the platform
 	if (board->mission_started && board->waypoint_set)
 	{
@@ -222,14 +222,14 @@ void run_navigation()
 		{
 			dbg_print("Waypoint Nr");
 			dbg_print_num(board->current_wp,10);
-			//dbg_print(" reached, distance:");
-			//dbg_print_num(sqrt(dist2wp_sqr),10);
-			//dbg_print(" less than :");
-			//dbg_print_num(current_waypoint.param2,10);
-			dbg_print(" reached, distance sqr:");
-			dbg_print_num(dist2wp_sqr,10);
-			dbg_print(" less than sqr:");
-			dbg_print_num(current_waypoint.param2*current_waypoint.param2,10);
+			dbg_print(" reached, distance:");
+			dbg_print_num(sqrt(dist2wp_sqr),10);
+			dbg_print(" less than :");
+			dbg_print_num(current_waypoint.param2,10);
+			//dbg_print(" reached, distance sqr:");
+			//dbg_print_num(dist2wp_sqr,10);
+			//dbg_print(" less than sqr:");
+			//dbg_print_num(current_waypoint.param2*current_waypoint.param2,10);
 			dbg_print("\n");
 			mavlink_msg_mission_item_reached_send(MAVLINK_COMM_0,board->current_wp);
 			
@@ -297,13 +297,13 @@ void run_navigation()
 }
 
 
-void set_speed_command(float rel_pos[])
+void set_speed_command(double rel_pos[])
 {
 	int8_t i;
-	float h_vel_sqr_norm, norm_rel_dist, v_desired, z_pos;
+	double h_vel_sqr_norm, norm_rel_dist, v_desired, z_pos;
 	UQuat_t qtmp1, qtmp2, qtmp3, qtmp4;
 	
-	float dir_desired_bf[3], dir_desired[3], tmp[3];
+	double dir_desired_bf[3], dir_desired[3], tmp[3];
 
 	v_desired = min(V_CRUISE,sqrt(rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2]));
 	
@@ -340,7 +340,7 @@ void set_speed_command(float rel_pos[])
 	//altitude_nav(waypoint_coordinates.pos[Z]);
 }
 
-void low_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude)
+void low_speed_nav(double dir_desired_bf[], Quat_Attitude_t attitude)
 {
 	// dbg_print("Low speed nav\n");
 	if (atan2(dir_desired_bf[Y],dir_desired_bf[X])>=(PI/10.0))
@@ -358,7 +358,7 @@ void low_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude)
 	// board->controls_nav.rpy[YAW] = set_yaw(0.0, 0.0);
 }
 
-void high_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude)
+void high_speed_nav(double dir_desired_bf[], Quat_Attitude_t attitude)
 {
 	dbg_print("High speed nav\n");
 	board->controls_nav.rpy[ROLL] = set_roll(dir_desired_bf[Y], attitude.vel_bf[Y]);
@@ -367,7 +367,7 @@ void high_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude)
 	
 }
 
-void altitude_nav(float dir_desired_bf_z)
+void altitude_nav(double dir_desired_bf_z)
 {
 	int i;
 	
@@ -394,7 +394,7 @@ void altitude_nav(float dir_desired_bf_z)
 	//dbg_print("\n");
 }
 
-float set_roll(float direction_bf_y, float vel_bf_y)
+float set_roll(double direction_bf_y, double vel_bf_y)
 {
 	float roll_set;
 	
@@ -404,7 +404,7 @@ float set_roll(float direction_bf_y, float vel_bf_y)
 	return roll_set;
 }
 
-float set_pitch(float direction_bf_x, float vel_bf_x)
+float set_pitch(double direction_bf_x, double vel_bf_x)
 {
 	float pitch_set;
 	
@@ -414,7 +414,7 @@ float set_pitch(float direction_bf_x, float vel_bf_x)
 	return pitch_set;
 }
 
-float set_yaw(float value_x, float value_y)
+float set_yaw(double value_x, double value_y)
 {
 	float yaw_set;
 	
@@ -447,7 +447,7 @@ float set_yaw(float value_x, float value_y)
 	return yaw_set;
 }
 
-float min_max_bound(float value, float min, float max)
+float min_max_bound(double value, double min, double max)
 {
 	if (value >= max)
 	{

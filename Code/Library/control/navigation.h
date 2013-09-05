@@ -17,17 +17,17 @@ void set_waypoint_from_frame(waypoint_struct current_wp);
 
 void run_navigation();
 
-void set_speed_command(float rel_pos[]);
+void set_speed_command(double rel_pos[]);
 
-void low_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude);
-void high_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude);
+void low_speed_nav(double dir_desired_bf[], Quat_Attitude_t attitude);
+void high_speed_nav(double dir_desired_bf[], Quat_Attitude_t attitude);
 
-void altitude_nav(float dir_desired_bf_z);
+void altitude_nav(double dir_desired_bf_z);
 
-float set_roll(float direction_bf_y, float vel_bf_y);
-float set_pitch(float direction_bf_x, float vel_bf_x);
-float set_yaw(float value_x, float value_y);
+float set_roll(double direction_bf_y, double vel_bf_y);
+float set_pitch(double direction_bf_x, double vel_bf_x);
+float set_yaw(double value_x, double value_y);
 
-float min_max_bound(float value, float min, float max);
+float min_max_bound(double value, double min, double max);
 
 #endif NAVIGATION_H_

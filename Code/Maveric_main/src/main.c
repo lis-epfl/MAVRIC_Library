@@ -598,8 +598,8 @@ void main (void)
 	//dbg_print_num(localPos.pos[2]*100.0,10);
 	//dbg_print("\n");
 	
-	// turn on simulation mode
-	board->simulation_mode=1;
+	// turn on simulation mode: 1: simulation mode, 0: reality
+	board->simulation_mode=0;
 	
 	// main loop
 	counter=0;
