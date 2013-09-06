@@ -42,11 +42,65 @@
 
 float front_mag_vect_z;
 
+float static inline scalar_product(float u[], float v[])
+{
+	float scp = (u[0]*v[0]+u[1]*v[1]+u[2]*v[2]);
+	return scp;
+}
+
+UQuat_t static inline quat_multi(UQuat_t q1, UQuat_t q2)
+{
+	float tmp[3];
+	UQuat_t out;
+	tmp[0] = q1.v[1] * q2.v[2] - q1.v[2]*q2.v[1];
+	tmp[1] = q1.v[2] * q2.v[0] - q1.v[0]*q2.v[2];
+	tmp[2] = q1.v[0] * q2.v[1] - q1.v[1]*q2.v[0];
+	out.v[0] = q2.s*q1.v[0] + q1.s *q2.v[0] +tmp[0];
+	out.v[1] = q2.s*q1.v[1] + q1.s *q2.v[1] +tmp[1];
+	out.v[2] = q2.s*q1.v[2] + q1.s *q2.v[2] +tmp[2];
+	out.s= q1.s*q2.s - scalar_product(q1.v, q2.v);
+	
+	return out;
+}
+
+UQuat_t static inline quat_inv(UQuat_t q)
+{
+	int i;
+	
+	UQuat_t qinv;
+	qinv.s = q.s;
+	for (i=0;i<3;i++)
+	{
+		qinv.v[i] = -q.v[i];
+	}
+	return qinv;
+}
+
+UQuat_t static inline quat_global_to_local(UQuat_t qe, UQuat_t qvect)
+{
+	UQuat_t qinv, qtmp;
+	
+	qinv = quat_inv(qe);
+	qtmp = quat_multi(qinv,qvect);
+	qtmp = quat_multi(qtmp,qe);
+
+	return qtmp;
+}
+
+UQuat_t quat_local_to_global(UQuat_t qe, UQuat_t qvect)
+{
+	UQuat_t qinv, qtmp;
+	
+	qtmp = quat_multi(qe, qvect);
+	qinv = quat_inv(qe);
+	qtmp = quat_multi(qtmp, qinv);
+	
+	return qtmp;
+}
+
 void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 	uint8_t i;
 	float init_angle;
-	
-	attitude->qe.s=1.0;
 
 	for (i=0; i<9; i++){
 		attitude->sf[i]=1.0/(float)scalefactor[i];
@@ -64,6 +118,7 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 //	attitude->be[4]=0.08;
 //	attitude->be[5]=0.15;
 
+	attitude->qe.s=1.0;
 	attitude->qe.v[0]=0.0;
 	attitude->qe.v[1]=0.0;
 	attitude->qe.v[2]=0.0;
@@ -108,9 +163,9 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	uint8_t i;
 	float  omc[3], omc_mag[3], rvc[3], tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
-	UQuat_t qed, qtmp1, up_bf, qtmp2, qtmp3;
+	UQuat_t qed, qtmp1, up, up_bf, qtmp2, qtmp3;
 	
-	UQuat_t qed2, qtmp4, front_bf,qtmp5;
+	UQuat_t qed2, qtmp4, front, front_bf,qtmp5;
 
 	for (i=0; i<3; i++){
 		attitude->om[i]  = (1.0-GYRO_LPF)*attitude->om[i]+GYRO_LPF*(((float)rates[GYRO_OFFSET+i])*attitude->sf[i]-attitude->be[GYRO_OFFSET+i]);
@@ -119,10 +174,13 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	}
 
 	// up_bf = qe^-1 *(0,0,0,-1) * qe
-	QI(attitude->qe, qtmp1);
-	up_bf.s=0; up_bf.v[0]=UPVECTOR_X; up_bf.v[1]=UPVECTOR_Y; up_bf.v[2]=UPVECTOR_Z;
-	QMUL(qtmp1, up_bf, qtmp3);
-	QMUL(qtmp3, attitude->qe, up_bf);
+	up.s=0; up.v[0]=UPVECTOR_X; up.v[1]=UPVECTOR_Y; up.v[2]=UPVECTOR_Z;
+	up_bf = quat_global_to_local(attitude->qe, up);
+	
+	//up_bf.s=0; up_bf.v[0]=UPVECTOR_X; up_bf.v[1]=UPVECTOR_Y; up_bf.v[2]=UPVECTOR_Z;
+	//QI(attitude->qe, qtmp1);
+	//QMUL(qtmp1, up_bf, qtmp3);
+	//QMUL(qtmp3, attitude->qe, up_bf);
 
 	// calculate norm of acceleration vector
 	s_acc_norm=attitude->a[0]*attitude->a[0]+attitude->a[1]*attitude->a[1]+attitude->a[2]*attitude->a[2];
@@ -142,11 +200,13 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	}
 
 	// Heading computation
-	QI(attitude->qe,qtmp4);
-	front_bf.s = 0;front_bf.v[0] = FRONTVECTOR_X;front_bf.v[1] = FRONTVECTOR_Y;front_bf.v[2] = front_mag_vect_z;
+	front.s = 0;front.v[0] = FRONTVECTOR_X;front.v[1] = FRONTVECTOR_Y;front.v[2] = front_mag_vect_z;
+	front_bf = quat_global_to_local(attitude->qe,front);
 	
-	QMUL(qtmp4, front_bf, qtmp5);
-	QMUL(qtmp5, attitude->qe, front_bf);
+	//front_bf.s = 0;front_bf.v[0] = FRONTVECTOR_X;front_bf.v[1] = FRONTVECTOR_Y;front_bf.v[2] = front_mag_vect_z;
+	//QI(attitude->qe,qtmp4);
+	//QMUL(qtmp4, front_bf, qtmp5);
+	//QMUL(qtmp5, attitude->qe, front_bf);
 	
 	// calculate norm of acceleration vector
 	s_mag_norm=attitude->mag[0]*attitude->mag[0]+attitude->mag[1]*attitude->mag[1]+attitude->mag[2]*attitude->mag[2];
@@ -175,7 +235,9 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	}
 	qtmp1.s=0;
 
-	QMUL(attitude->qe, qtmp1, qed);
+	qed = quat_multi(attitude->qe,qtmp1);
+
+	//QMUL(attitude->qe, qtmp1, qed);
 
 	attitude->qe.s=attitude->qe.s+qed.s*dt;
 	attitude->qe.v[0]+=qed.v[0]*dt;
@@ -246,28 +308,8 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	attitude->up_vec.v[1]=up_bf.v[1];
 	attitude->up_vec.v[2]=up_bf.v[2];
 		//QMUL(qtmp1, qtmp3, up_vec);
-
-	for (i=0; i<3; i++) {
-		// clean acceleration estimate without gravity:
-		attitude->acc_bf[i]=(attitude->a[i] - up_bf.v[i]) * GRAVITY;
-		attitude->vel_bf[i]=attitude->vel_bf[i]*(1.0-(VEL_DECAY*dt)) + attitude->acc_bf[i] * dt;
-	}
-	// calculate velocity in global frame
-	// vel = qe *vel_bf * qe-1
-	qtmp1.s= 0.0; qtmp1.v[0]=attitude->vel_bf[0]; qtmp1.v[1]=attitude->vel_bf[1]; qtmp1.v[2]=attitude->vel_bf[2];
-	QMUL(attitude->qe, qtmp1, qtmp2);
-	QI(attitude->qe, qtmp1);
-	QMUL(qtmp2, qtmp1, qtmp3);
-	attitude->vel[0]=qtmp3.v[0]; attitude->vel[1]=qtmp3.v[1]; attitude->vel[2]=qtmp3.v[2];
-	
-	for (i=0; i<3; i++) {
-		// clean position estimate without gravity:
-		attitude->localPosition.pos[i] =attitude->localPosition.pos[i]*(1.0-(POS_DECAY*dt)) + attitude->vel[i] *dt;
-	}
 	
 }
-
-
 
 
 

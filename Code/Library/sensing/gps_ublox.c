@@ -830,10 +830,10 @@ bool ubx_process_data(void)
 			board->GPS_data.timegps = gpsPosllh->itow;
 			board->GPS_data.longitude = gpsPosllh->longitude / 10000000.0;
 			board->GPS_data.latitude = gpsPosllh->latitude / 10000000.0;
-			board->GPS_data.alt_elips = ((float)gpsPosllh->altitude_ellipsoid) / 1000.;
-			board->GPS_data.altitude = ((float)gpsPosllh->altitude_msl) / 1000.;
-			board->GPS_data.horizontalAccuracy = ((float)gpsPosllh->horizontal_accuracy) / 1000.;
-			board->GPS_data.verticalAccuracy = ((float)gpsPosllh->vertical_accuracy) / 1000.;
+			board->GPS_data.alt_elips = ((float)gpsPosllh->altitude_ellipsoid) / 1000.0;
+			board->GPS_data.altitude = ((float)gpsPosllh->altitude_msl) / 1000.0;
+			board->GPS_data.horizontalAccuracy = ((float)gpsPosllh->horizontal_accuracy) / 1000.0;
+			board->GPS_data.verticalAccuracy = ((float)gpsPosllh->vertical_accuracy) / 1000.0;
 			//board->GPS_data.status = next_fix;
 			
 			new_position = true;

@@ -13,7 +13,7 @@
 #include "compass_hmc5883l.h"
 #include "time_keeper.h"
 #include "print_util.h"
-
+#include "position_estimation.h"
 
 int ic;
 void init_imu (Imu_Data_t *imu1) {
@@ -54,6 +54,7 @@ void init_imu (Imu_Data_t *imu1) {
 	imu_last_update_init = false;
 	
 	qfInit(&imu1->attitude, imu1->raw_scale, imu1->raw_bias);
+	init_pos_integration();
 	imu1->attitude.calibration_level=OFF;
 }
 
@@ -117,6 +118,8 @@ void imu_update(Imu_Data_t *imu1){
 		imu1->dt=ticks_to_seconds(t - imu1->last_update);
 		imu1->last_update=t;
 		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt, false);
+		position_integration(&imu1->attitude,imu1->dt);
+		position_correction();
 	}
 }
 

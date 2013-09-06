@@ -119,10 +119,10 @@ void e_init()
 	
 	filter_init_delta_t = false;
 	
-	init_pos_gps();
+	init_pos_gps_estimator();
 }
 
-void init_pos_gps()
+void init_pos_gps_estimator()
 {
 	if (newValidGpsMsg() && (!(board->init_gps_position)))
 	{
@@ -561,8 +561,8 @@ void e_kalman_update_position_hf(int axis, double position_meas)
 	K1 = P2[axis][0][0] * 1/S;
 	K2 = P2[axis][1][0] * 1/S;
 	
-	board->imu1.attitude.localPosition.pos[axis] = board->imu1.attitude.localPosition.pos[axis] + K1 * posxy;
-	board->imu1.attitude.vel[axis] = board->imu1.attitude.vel[axis] + K2 * posxy;
+	//board->imu1.attitude.localPosition.pos[axis] = board->imu1.attitude.localPosition.pos[axis] + K1 * posxy;
+	//board->imu1.attitude.vel[axis] = board->imu1.attitude.vel[axis] + K2 * posxy;
 	
 	P11 = (1. - K1) * P2[axis][0][0];
 	P12 = (1. - K1) * P2[axis][0][1];
@@ -627,8 +627,8 @@ void e_kalman_update_speed_hf(int axis, float speed_meas)
 		K1 = P2[axis][0][1] * 1/S;
 		K2 = P2[axis][1][1] * 1/S;
 		
-		board->imu1.attitude.localPosition.pos[axis] = board->imu1.attitude.localPosition.pos[axis] + K1 * velxy;
-		board->imu1.attitude.vel[axis] = board->imu1.attitude.vel[axis] + K2 * velxy;
+		//board->imu1.attitude.localPosition.pos[axis] = board->imu1.attitude.localPosition.pos[axis] + K1 * velxy;
+		//board->imu1.attitude.vel[axis] = board->imu1.attitude.vel[axis] + K2 * velxy;
 		
 		P11 = -K1 * P2[axis][1][0] + P2[axis][0][0];
 		P12 = -K1 * P2[axis][1][1] + P2[axis][0][1];
@@ -655,7 +655,7 @@ void estimator_loop()
 	
 	if (!board->init_gps_position)
 	{
-		init_pos_gps();
+		init_pos_gps_estimator();
 	}
 
 	if(!filter_init_delta_t)

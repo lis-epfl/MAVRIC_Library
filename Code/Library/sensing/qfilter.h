@@ -58,9 +58,10 @@ typedef struct {
 
 //float dt;
 
+UQuat_t quat_local_to_global(UQuat_t qe, UQuat_t qvect);
+
 void qfInit(Quat_Attitude_t *attitude, float *scalefactor, float *bias);
 
 void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode);
-
 
 #endif /* QFILTER_H_ */

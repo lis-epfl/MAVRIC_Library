@@ -546,7 +546,8 @@ void initialisation() {
 	board->mav_state = MAV_STATE_STANDBY;
 	board->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	
-	e_init();
+	//e_init();
+	
 	
 }
 
@@ -568,7 +569,7 @@ void main (void)
 	register_task(&main_tasks, 2, 1000, RUN_REGULAR, &mavlink_protocol_update);
 	
 	register_task(&main_tasks, 3, 100000, RUN_REGULAR, &gps_task);
-	register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
+	//register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
 	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &read_radar);
 
 	register_task(&main_tasks, 5, 10000, RUN_REGULAR, &run_navigation_task);
@@ -579,27 +580,8 @@ void main (void)
 
 	add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
-	// Control global to local position function
-	//actualPos.latitude = 6.5659132;
-	//actualPos.longitude = 46.5192579;
-	//actualPos.altitude = 403.397;
-	//
-	//originPos.latitude = 6.5659148;
-	//originPos.longitude = 46.5193048;
-	//originPos.altitude = 391.424;
-	//
-	//localPos = global_to_local_position(actualPos,originPos);
-	//
-	//dbg_print("localPos(1e2):");
-	//dbg_print_num(localPos.pos[0]*100.0,10);
-	//dbg_print(", ");
-	//dbg_print_num(localPos.pos[1]*100.0,10);
-	//dbg_print(", ");
-	//dbg_print_num(localPos.pos[2]*100.0,10);
-	//dbg_print("\n");
-	
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	board->simulation_mode=0;
+	board->simulation_mode = 0;
 	
 	// main loop
 	counter=0;
