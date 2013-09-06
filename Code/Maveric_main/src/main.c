@@ -348,8 +348,8 @@ task_return_t gps_task() {
  	//dbg_print_num(board->GPS_data.courseStatus,10);
  	//dbg_print("\n");
 	//
-	if(newValidGpsMsg())
-	{/*
+	/*if(newValidGpsMsg())
+	{
 		dbg_print("GPS status:");
 		dbg_print_num(board->GPS_data.status,10);
 		dbg_print(" time gps:");
@@ -360,8 +360,8 @@ task_return_t gps_task() {
 		dbg_print_num(board->GPS_data.longitude,10);
 		dbg_print(" altitude");
 		dbg_print_num(board->GPS_data.altitude,10);
-		dbg_print("\n");*/
-	}
+		dbg_print("\n");
+	}*/
 }
 
 task_return_t run_estimator()

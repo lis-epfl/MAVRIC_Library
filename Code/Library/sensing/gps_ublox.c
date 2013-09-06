@@ -168,7 +168,8 @@ void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting)
 	
 	last_fix_time = 0;
 	
-	
+	new_position = false;
+	new_speed = false;
 	
 	step = 0;
 	}
@@ -1363,11 +1364,13 @@ void gps_update(void)
 * This function returns true if there is a new valid GPS message that arrived at time tnow
 * false otherwise
 */
-bool newValidGpsMsg()
+bool newValidGpsMsg(uint32_t *prevGpsMsgTime)
 {
-	uint32_t tnow = get_millis();
-	if((tnow == board->GPS_data.timeLastMsg)&&(board->GPS_data.status == GPS_OK)&&(board->GPS_data.accuracyStatus == 1))
+	
+	
+	if((*prevGpsMsgTime != board->GPS_data.timeLastMsg)&&(board->GPS_data.status == GPS_OK)&&(board->GPS_data.accuracyStatus == 1))
 	{
+		*prevGpsMsgTime = board->GPS_data.timeLastMsg;
 		return true;
 	}else{
 		return false;

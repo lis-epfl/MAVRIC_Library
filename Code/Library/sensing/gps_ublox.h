@@ -579,7 +579,7 @@ void ubx_configure_message_rate(uint8_t msg_class, uint8_t msg_id, uint8_t rate)
 void configure_gps(void);
 
 void gps_update(void);
-bool newValidGpsMsg(void);
+bool newValidGpsMsg(uint32_t *prevGpsMsgTime);
 
 ubx_nav_posllh * ubx_GetPosllh(void);
 ubx_nav_status * ubx_GetStatus(void);

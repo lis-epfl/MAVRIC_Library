@@ -84,6 +84,8 @@ double P2[3][3][3]; // Covariance matrice for Z,X and Y
 double Q2[3][3];
 double R2[3];
 
+uint32_t timeLastGpsMsgEstimator;
+
 //----------------------------INITIALISATION------------------------
 void e_init()
 {
@@ -117,6 +119,10 @@ void e_init()
 	R2[1]=R_Y_POS;
 	R2[2]=R_Z_POS;
 	
+	board->init_gps_position = false;
+	
+	timeLastGpsMsgEstimator = 0;
+	
 	filter_init_delta_t = false;
 	
 	init_pos_gps_estimator();
@@ -124,7 +130,7 @@ void e_init()
 
 void init_pos_gps_estimator()
 {
-	if (newValidGpsMsg() && (!(board->init_gps_position)))
+	if (newValidGpsMsg(&timeLastGpsMsgEstimator) && (!(board->init_gps_position)))
 	{
 		board->init_gps_position = true;
 		
@@ -671,7 +677,7 @@ void estimator_loop()
 		e_predict(&(board->imu1.attitude.qe),board->imu1.attitude.acc_bf,board->estimation.delta_t_filter);
 		
 		//Check new values from GPS/Baro, if yes, update
-		if (newValidGpsMsg() && board->init_gps_position && (board->simulation_mode == 0))
+		if (newValidGpsMsg(&timeLastGpsMsgEstimator) && board->init_gps_position && (board->simulation_mode == 0))
 		{
 			
 			//dbg_print("Update step\n");
