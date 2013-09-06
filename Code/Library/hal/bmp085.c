@@ -23,6 +23,8 @@ int16_t bmp085_read_int(unsigned char address) {
 }
 
 void init_bmp085(){
+	pressure_outputs.altitude_offset=0.0;
+	pressure_outputs.vario_vz=0.0;
 	init_bmp085_slow();
 }
 
@@ -64,7 +66,7 @@ void init_bmp085_slow(){
 
 
 pressure_data* get_pressure_data_slow() {
-		
+		float vertical_speed;
 		int32_t UT, UP, B3, B5, B6, X1, X2, X3, p;
 		uint32_t B4, B7;
 			
@@ -134,7 +136,10 @@ pressure_data* get_pressure_data_slow() {
 
 			pressure_outputs.pressure=p;
 		
+			vertical_speed=pressure_outputs.altitude;
 			pressure_outputs.altitude = 44330 * (1.0 - pow(pressure_outputs.pressure /sealevelPressure,0.190295));
+			vertical_speed=pressure_outputs.altitude-vertical_speed;
+			pressure_outputs.vario_vz=(1.0-VARIO_LPF)*pressure_outputs.vario_vz + VARIO_LPF * (-vertical_speed);
 			pressure_outputs.last_update=get_micros();
 			pressure_outputs.state=IDLE;
 			break;

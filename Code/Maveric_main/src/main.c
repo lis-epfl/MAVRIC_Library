@@ -525,7 +525,8 @@ void initialisation() {
 
 	for (i=400; i>0; i--) {
 		imu_update(&board->imu1);
-		mavlink_protocol_update();			
+		mavlink_protocol_update();	
+		run_barometer();		
 		delay_ms(5);
 	}
 	// after initial leveling, initialise accelerometer biases

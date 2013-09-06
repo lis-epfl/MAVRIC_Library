@@ -18,14 +18,15 @@ board_hardware_t *board;
 global_position_t global_gps_position;
 local_coordinates_t local_coordinates;
 
-float kp_pos[3],kp_vel[3];
+float kp_pos[3],kp_vel[3], kp_alt, kp_alt_v;
 
 uint32_t timeLastGpsMsg;
 
 void init_pos_integration()
 {
 	board = get_board_hardware();
-	
+	kp_alt=0.005;
+	kp_alt_v=0.001;
 	board->init_gps_position = false;
 	
 	timeLastGpsMsg = 0;
@@ -104,11 +105,28 @@ void position_integration(Quat_Attitude_t *attitude, float dt)
 
 void position_correction()
 {
+	UQuat_t bias_correction ={.s=0, .v={0.0, 0.0, 1.0}};
 	float pos_error[3];
+	float vel_error[3];
 	uint32_t tinter;
 	int i;
 	
-	if (!(board->init_gps_position))
+	// altimeter correction
+	tinter=get_micros()-board->pressure.last_update;
+	pos_error[2] = -(board->pressure.altitude + board->pressure.altitude_offset) - board->imu1.attitude.localPosition.pos[2]+board->imu1.attitude.localPosition.origin.altitude;
+	board->imu1.attitude.localPosition.pos[2] += kp_alt * pos_error[2];
+	
+	//vel_error[2]=board->pressure.vario_vz-board->imu1.attitude.vel[2];
+	//board->imu1.attitude.vel[2] += kp_alt_v * vel_error[2];
+	
+	// correct velocity and accelerometer biases
+	bias_correction.v[2]=pos_error[2];
+	bias_correction=quat_global_to_local(board->imu1.attitude.qe, bias_correction);
+	for (i=0; i<3; i++) {
+		board->imu1.attitude.vel_bf[i] += kp_alt_v*bias_correction.v[i];
+		board->imu1.attitude.be[ACC_OFFSET+i] -= 0.005*kp_alt_v*bias_correction.v[i];
+	}
+	if (!board->init_gps_position)
 	{
 		init_pos_gps();
 	}
