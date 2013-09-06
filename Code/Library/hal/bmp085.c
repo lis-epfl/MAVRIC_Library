@@ -149,11 +149,11 @@ pressure_data* get_pressure_data_slow() {
 		return &pressure_outputs;
 }
 
-bool newValidBarometer()
+bool newValidBarometer(uint32_t *timePrevBarometer)
 {
-	uint32_t tnow = get_micros();
-	if ((tnow - pressure_outputs.last_update) < 1000) // 1 millisecond
+	if (timePrevBarometer != pressure_outputs.last_update) 
 	{
+		*timePrevBarometer = pressure_outputs.last_update;
 		return true;
 	}else{
 		return false;

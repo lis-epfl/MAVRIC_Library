@@ -12,15 +12,18 @@
 #include "coord_conventions.h"
 #include "gps_ublox.h"
 #include "print_util.h"
+#include "bmp085.h"
 
 board_hardware_t *board;
 
 global_position_t global_gps_position;
 local_coordinates_t local_coordinates;
+float alt_error;
 
 float kp_pos[3],kp_vel[3], kp_alt, kp_alt_v;
 
 uint32_t timeLastGpsMsg;
+uint32_t timeLastBarometerMsg;
 
 void init_pos_integration()
 {
@@ -70,6 +73,17 @@ void init_pos_gps()
 	}
 }
 
+void init_barometer_offset()
+{
+	if (board->init_gps_position)
+	{
+		board->pressure.altitude_offset = board->pressure_filtered - board->imu1.attitude.localPosition.pos[2];
+		board->init_barometer = true;
+		
+		dbg_print("Offset of the barometer set to the GPS altitude.\n");
+	}
+}
+
 void position_integration(Quat_Attitude_t *attitude, float dt)
 {
 	int i;
@@ -106,52 +120,74 @@ void position_integration(Quat_Attitude_t *attitude, float dt)
 void position_correction()
 {
 	UQuat_t bias_correction ={.s=0, .v={0.0, 0.0, 1.0}};
+	UQuat_t vel_correction ={.s=0, .v={0.0, 0.0, 1.0}};
 	float pos_error[3];
+	
 	float vel_error[3];
 	uint32_t tinter;
 	int i;
-	
-	// altimeter correction
-	tinter=get_micros()-board->pressure.last_update;
-	pos_error[2] = -(board->pressure.altitude + board->pressure.altitude_offset) - board->imu1.attitude.localPosition.pos[2]+board->imu1.attitude.localPosition.origin.altitude;
-	board->imu1.attitude.localPosition.pos[2] += kp_alt * pos_error[2];
-	
-	//vel_error[2]=board->pressure.vario_vz-board->imu1.attitude.vel[2];
-	//board->imu1.attitude.vel[2] += kp_alt_v * vel_error[2];
-	
-	// correct velocity and accelerometer biases
-	bias_correction.v[2]=pos_error[2];
-	bias_correction=quat_global_to_local(board->imu1.attitude.qe, bias_correction);
-	for (i=0; i<3; i++) {
-		board->imu1.attitude.vel_bf[i] += kp_alt_v*bias_correction.v[i];
-		board->imu1.attitude.be[ACC_OFFSET+i] -= 0.005*kp_alt_v*bias_correction.v[i];
-	}
-	if (!board->init_gps_position)
+	if ((board->simulation_mode == 0))
 	{
-		init_pos_gps();
-	}
-	
-	if (board->init_gps_position && (board->simulation_mode == 0))
-	{
-		if (newValidGpsMsg(&timeLastGpsMsg))
+		if (board->init_barometer)
 		{
-			//dbg_print("New valid message\n");
-			global_gps_position.longitude = board->GPS_data.longitude;
-			global_gps_position.latitude = board->GPS_data.latitude;
-			global_gps_position.altitude = board->GPS_data.altitude;
-			
-			local_coordinates = global_to_local_position(global_gps_position,board->imu1.attitude.localPosition.origin);
-		}
-		tinter = get_millis() - board->GPS_data.timeLastMsg;
-		if (tinter <= 1000)
-		{
-			for (i=0;i<3;i++)
+			// altimeter correction
+			if (newValidBarometer(&timeLastBarometerMsg))
 			{
-				pos_error[i] = local_coordinates.pos[i] - board->imu1.attitude.localPosition.pos[i];
-				board->imu1.attitude.localPosition.pos[i] += kp_pos[i]/((float)(tinter/2.5 + 1.0)) * pos_error[i];
-				board->imu1.attitude.vel[i] += kp_vel[i]/((float)(tinter/2.5 + 1.0)) * pos_error[i];
-				//board->imu1.attitude.be[i+ACC_OFFSET] += 0.001 /((float)(tinter/2.5 + 1.0))  * pos_error[i]; FIX: convert to bf
+				//alt_error = -(board->pressure.altitude + board->pressure.altitude_offset) - board->imu1.attitude.localPosition.pos[2]+board->imu1.attitude.localPosition.origin.altitude;
+				alt_error = -(board->pressure.altitude + board->pressure.altitude_offset) - board->imu1.attitude.localPosition.pos[2]+board->imu1.attitude.localPosition.origin.altitude;
 			}
+			
+			board->imu1.attitude.localPosition.pos[2] += kp_alt * alt_error;
+			
+			//vel_error[2]=board->pressure.vario_vz-board->imu1.attitude.vel[2];
+			//board->imu1.attitude.vel[2] += kp_alt_v * vel_error[2];
+	
+			// correct velocity and accelerometer biases
+	
+			bias_correction.v[2]=alt_error;
+			bias_correction=quat_global_to_local(board->imu1.attitude.qe, bias_correction);
+			for (i=0; i<3; i++) 
+			{
+				board->imu1.attitude.vel_bf[i] += kp_alt_v*bias_correction.v[i];
+				board->imu1.attitude.be[ACC_OFFSET+i] -= 0.005*kp_alt_v*bias_correction.v[i];
+			}
+						
+		}else{
+			init_barometer_offset();
+		}
+	
+		if (board->init_gps_position)
+		{
+			if (newValidGpsMsg(&timeLastGpsMsg))
+			{
+				//dbg_print("New valid message\n");
+				global_gps_position.longitude = board->GPS_data.longitude;
+				global_gps_position.latitude = board->GPS_data.latitude;
+				global_gps_position.altitude = board->GPS_data.altitude;
+			
+				local_coordinates = global_to_local_position(global_gps_position,board->imu1.attitude.localPosition.origin);
+			}
+			tinter = get_millis() - board->GPS_data.timeLastMsg;
+			if (tinter <= 1000)
+			{
+				for (i=0;i<3;i++)
+				{
+					pos_error[i] = local_coordinates.pos[i] - board->imu1.attitude.localPosition.pos[i];
+					
+					board->imu1.attitude.localPosition.pos[i] += kp_pos[i]/((float)(tinter/2.5 + 1.0)) * pos_error[i];
+					vel_correction.v[i] = pos_error[i];
+				}
+				vel_correction = quat_global_to_local(board->imu1.attitude.qe, vel_correction);
+				
+				for (i=0;i<3;i++)
+				{
+					board->imu1.attitude.vel_bf[i] += kp_vel[i]/((float)(tinter/2.5 + 1.0)) * vel_correction.v[i];
+					board->imu1.attitude.be[i+ACC_OFFSET] -= 0.001 /((float)(tinter/2.5 + 1.0))  *  vel_correction.v[i];
+				}
+				
+			}
+		}else{
+			init_pos_gps();
 		}
 	}
 }

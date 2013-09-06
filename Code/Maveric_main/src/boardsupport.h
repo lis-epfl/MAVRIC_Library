@@ -60,6 +60,7 @@ typedef struct  {
 	
 	//local_coordinates_t local_position;
 	bool init_gps_position;
+	bool init_barometer;
 	
 	// aliases
 	byte_stream_t *telemetry_down_stream, *telemetry_up_stream;

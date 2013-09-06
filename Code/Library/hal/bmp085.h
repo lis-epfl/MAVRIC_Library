@@ -65,6 +65,6 @@ void start_pressure_measurement(void);
 
 pressure_data* get_pressure_data_slow(void);
 
-bool newValidBarometer();
+bool newValidBarometer(uint32_t *timePrevBarometer);
 
 #endif /* BMP085_H_ */
