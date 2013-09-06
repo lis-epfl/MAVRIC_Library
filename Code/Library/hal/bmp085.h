@@ -13,6 +13,8 @@
 #include "compiler.h"
 
 
+#define VARIO_LPF 0.05
+
 #define BMP085_SLAVE_ADDRESS 0x77  //
 
 #define BMP085_ULTRALOWPOWER 0
@@ -47,6 +49,8 @@ typedef struct{
 	float pressure;
 	float temperature;
 	float altitude;
+	float altitude_offset;
+	float vario_vz;
 	uint32_t last_update;
 	uint32_t last_state_update;
 	pressure_sensor_state state;

@@ -76,7 +76,7 @@ UQuat_t static inline quat_inv(UQuat_t q)
 	return qinv;
 }
 
-UQuat_t static inline quat_global_to_local(UQuat_t qe, UQuat_t qvect)
+UQuat_t quat_global_to_local(UQuat_t qe, UQuat_t qvect)
 {
 	UQuat_t qinv, qtmp;
 	
