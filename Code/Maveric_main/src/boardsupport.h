@@ -81,6 +81,7 @@ typedef struct  {
 	
 	pressure_data pressure;
 	float pressure_filtered;
+	float altitude_filtered;
 	
 } board_hardware_t;
 

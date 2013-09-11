@@ -59,4 +59,6 @@ void receive_message_long(Mavlink_Received_t* rec);
 
 void control_time_out_waypoint_msg(uint16_t* num_of_waypoint, bool* waypoint_receiving, bool* waypoint_sending);
 
+void read_msg_from_neighbors(Mavlink_Received_t* rec);
+
 #endif // WAYPOINT_NAVIGATION__

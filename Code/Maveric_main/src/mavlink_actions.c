@@ -108,7 +108,6 @@ void mavlink_send_attitude(void) {
 }
 
 void mavlink_send_global_position(void) {				
-	// GPS COORDINATES (TODO : Add GPS to the platform)
 	//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
 	
    //if (board->GPS_data.status == GPS_OK)
@@ -119,6 +118,7 @@ void mavlink_send_global_position(void) {
 	   	// send integrated position (for now there is no GPS error correction...!!!)
 		global_position_t gpos=local_to_global_position(board->imu1.attitude.localPosition);
 		mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, board->imu1.attitude.vel[0]*100.0, board->imu1.attitude.vel[1]*100.0, board->imu1.attitude.vel[2]*100.0, board->imu1.attitude.om[2]);
+		mavlink_msg_global_position_int_send(MAVLINK_COMM_1, get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, board->imu1.attitude.vel[0]*100.0, board->imu1.attitude.vel[1]*100.0, board->imu1.attitude.vel[2]*100.0, board->imu1.attitude.om[2]);
    //} 
 }
 
@@ -154,7 +154,8 @@ void mavlink_send_pressure(void) {
 	//mavlink_msg_scaled_pressure_send(mavlink_channel_t chan, uint32_t time_boot_ms, float press_abs, float press_diff, int16_t temperature)
 	
 	mavlink_msg_scaled_pressure_send(MAVLINK_COMM_0, get_millis(), board->pressure.pressure/100.0, board->pressure_filtered/100.0, board->pressure.temperature*100.0);
-	
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressAlt", board->pressure.altitude);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressFilt", board->altitude_filtered);
 }
 
 void mavlink_send_radar(void) {

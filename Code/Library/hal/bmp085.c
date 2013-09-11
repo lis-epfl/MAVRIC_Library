@@ -65,7 +65,7 @@ void init_bmp085_slow(){
  
 
 
-pressure_data* get_pressure_data_slow() {
+pressure_data* get_pressure_data_slow(float offset) {
 		float vertical_speed;
 		int32_t UT, UP, B3, B5, B6, X1, X2, X3, p;
 		uint32_t B4, B7;
@@ -146,12 +146,14 @@ pressure_data* get_pressure_data_slow() {
 			
 		}
 		pressure_outputs.last_state_update=get_micros();
+		pressure_outputs.altitude_offset = offset;
+		
 		return &pressure_outputs;
 }
 
 bool newValidBarometer(uint32_t *timePrevBarometer)
 {
-	if (timePrevBarometer != pressure_outputs.last_update) 
+	if (*timePrevBarometer != pressure_outputs.last_update) 
 	{
 		*timePrevBarometer = pressure_outputs.last_update;
 		return true;

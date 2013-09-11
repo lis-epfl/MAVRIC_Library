@@ -63,7 +63,7 @@ void init_bmp085_slow(void);
 
 void start_pressure_measurement(void);
 
-pressure_data* get_pressure_data_slow(void);
+pressure_data* get_pressure_data_slow(float offset);
 
 bool newValidBarometer(uint32_t *timePrevBarometer);
 

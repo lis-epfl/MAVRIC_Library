@@ -547,3 +547,11 @@ void control_time_out_waypoint_msg(uint16_t* num_of_waypoint, bool* waypoint_rec
 		}
 	}
 }
+
+void read_msg_from_neighbors(Mavlink_Received_t* rec)
+{
+	mavlink_global_position_int_t packet;
+	mavlink_msg_global_position_int_decode(&rec->msg,&packet);
+	//Check if coming from a neighbor
+	
+}

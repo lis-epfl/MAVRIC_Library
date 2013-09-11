@@ -41,7 +41,7 @@ board_hardware_t *board;
 
 NEW_TASK_SET(main_tasks, 10)
 
-#define PRESSURE_LPF 0.2
+#define PRESSURE_LPF 0.1
 	
 task_return_t run_imu_update() {
 	imu_update(&(board->imu1));	
@@ -415,10 +415,11 @@ task_return_t run_barometer()
 {
 	uint32_t tnow = get_micros();
 
-	pressure_data *pressure = get_pressure_data_slow();
+	pressure_data *pressure = get_pressure_data_slow(board->pressure.altitude_offset);
 	board->pressure =  *pressure;
 	
 	board->pressure_filtered = (1.0-PRESSURE_LPF)*board->pressure_filtered + PRESSURE_LPF * board->pressure.pressure;
+	board->altitude_filtered = (1.0-PRESSURE_LPF)*board->altitude_filtered + PRESSURE_LPF * board->pressure.altitude;
 	
 	//if (newValidBarometer())
 	//{
