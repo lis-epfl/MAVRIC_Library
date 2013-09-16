@@ -77,9 +77,6 @@ void init_pos_gps()
 void init_barometer_offset()
 {
 	bool boolNewBaro = newValidBarometer(&timeLastBarometerMsg);
-	dbg_print("boolNewBaro:");
-	dbg_print_num(boolNewBaro,10);
-	dbg_print("\n");
 
 		
 	//if ((board->init_gps_position)&&(boolNewBaro))

@@ -23,8 +23,12 @@ void init_bmp085_slow(){
 
 
 
-pressure_data* get_pressure_data_slow() {
+pressure_data* get_pressure_data_slow(float offset){
 		
 
-		return 0;
+		return &pressure_outputs;
+}
+
+bool newValidBarometer(uint32_t *timePrevBarometer) {
+	return false;
 }

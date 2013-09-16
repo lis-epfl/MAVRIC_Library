@@ -13,6 +13,8 @@
     <File Name="main.c"/>
     <File Name="mavlink_actions.c"/>
     <File Name="mavlink_actions.h"/>
+    <File Name="tasks.c"/>
+    <File Name="tasks.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Library">
     <VirtualDirectory Name="mavlink">
@@ -146,14 +148,16 @@
       <File Name="../Library/sensing/waypoint_navigation.c"/>
       <File Name="../Library/sensing/imu.h"/>
       <File Name="../Library/sensing/simulation.c"/>
+      <File Name="../Library/sensing/estimator.c"/>
+      <File Name="../Library/sensing/estimator.h"/>
+      <File Name="../Library/sensing/position_estimation.c"/>
+      <File Name="../Library/sensing/position_estimation.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="control">
       <File Name="../Library/control/stabilisation.h"/>
-      <File Name="../Library/control/estimator.c"/>
       <File Name="../Library/control/navigation.h"/>
       <File Name="../Library/control/navigation.c"/>
       <File Name="../Library/control/control.h"/>
-      <File Name="../Library/control/estimator.h"/>
       <File Name="../Library/control/stabilisation.c"/>
       <File Name="../Library/control/control.c"/>
     </VirtualDirectory>
