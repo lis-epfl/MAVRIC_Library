@@ -12,19 +12,18 @@
 #ifndef BOARDSUPPORT_H_
 #define BOARDSUPPORT_H_
 
+#include "stdbool.h"
 
 #include "time_keeper.h"
-//#include "i2c_driver_int.h"
 #include "qfilter.h"
 #include "imu.h"
 #include "stabilisation.h"
 #include "remote_controller.h"
 #include "control.h"
 #include "streams.h"
-//#include "uart_int.h"
 #include "print_util.h"
 
-//#include "bmp085.h"
+#include "bmp085.h"
 #include "mavlink_stream.h"
 #include "coord_conventions.h"
 #include "onboard_parameters.h"
@@ -59,6 +58,7 @@ typedef struct  {
 	
 	//local_coordinates_t local_position;
 	bool init_gps_position;
+	bool init_barometer;
 	
 	// aliases
 	byte_stream_t *telemetry_down_stream, *telemetry_up_stream;
@@ -75,10 +75,11 @@ typedef struct  {
 	
 	uint8_t mav_mode;
 	uint8_t mav_state;
-	uint8_t simulation_mode;
+	uint32_t simulation_mode;
 	
 	pressure_data pressure;
-	float pressure_filtered;
+	//float pressure_filtered;
+	//float altitude_filtered;
 	
 } board_hardware_t;
 

@@ -13,6 +13,8 @@
 #include "compiler.h"
 
 
+#define VARIO_LPF 0.2
+
 #define BMP085_SLAVE_ADDRESS 0x77  //
 
 #define BMP085_ULTRALOWPOWER 0
@@ -47,6 +49,8 @@ typedef struct{
 	float pressure;
 	float temperature;
 	float altitude;
+	float altitude_offset;
+	float vario_vz;
 	uint32_t last_update;
 	uint32_t last_state_update;
 	pressure_sensor_state state;
@@ -59,6 +63,8 @@ void init_bmp085_slow(void);
 
 void start_pressure_measurement(void);
 
-pressure_data* get_pressure_data_slow(void);
+pressure_data* get_pressure_data_slow(float offset);
+
+bool newValidBarometer(uint32_t *timePrevBarometer);
 
 #endif /* BMP085_H_ */
