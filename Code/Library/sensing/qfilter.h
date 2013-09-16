@@ -23,11 +23,13 @@ typedef struct {
 	double longitude;
 	double latitude;
 	float altitude;
+	uint32_t timestamp_ms;
 } global_position_t;
 
 typedef struct {
 	double pos[3];
 	global_position_t origin;
+	uint32_t timestamp_ms;
 } local_coordinates_t;
 
 typedef struct UQuat {
@@ -52,7 +54,11 @@ typedef struct {
 	
 	float acc_bf[3], vel_bf[3], vel[3];//, pos[3];
 
+	float pos_correction[3];
+	float last_alt, last_vel[3];
+	float baro_alt_error;
 	local_coordinates_t localPosition;
+	local_coordinates_t lastGpsPos;
 
 } Quat_Attitude_t;	
 

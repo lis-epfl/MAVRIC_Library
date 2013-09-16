@@ -229,13 +229,12 @@
     <AsfVersion>2.11.1</AsfVersion>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
-    <OverrideVtorValue>
-    </OverrideVtorValue>
+    <OverrideVtorValue>exception_table</OverrideVtorValue>
     <eraseonlaunchrule>0</eraseonlaunchrule>
     <com_atmel_avrdbg_tool_jtagicemk3>
       <ToolType>com.atmel.avrdbg.tool.jtagicemk3</ToolType>
       <ToolName>JTAGICE3</ToolName>
-      <ToolNumber>J30200015895</ToolNumber>
+      <ToolNumber>J30200014870</ToolNumber>
       <Channel>
         <host>127.0.0.1</host>
         <port>49481</port>
@@ -244,7 +243,7 @@
       <ToolOptions>
         <InterfaceName>JTAG</InterfaceName>
         <InterfaceProperties>
-          <JtagDbgClock>250000</JtagDbgClock>
+          <JtagDbgClock>7500000</JtagDbgClock>
           <JtagProgClock>1000000</JtagProgClock>
           <IspClock>150000</IspClock>
           <JtagInChain>false</JtagInChain>
@@ -606,12 +605,6 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Library\control\position_estimation.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\control\position_estimation.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\hal\remote_controller.h">
       <SubType>compile</SubType>
     </Compile>
@@ -919,13 +912,40 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\mavlink\include\maveric\version.h" />
+    <Compile Include="Library\sensing\estimator.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\sensing\estimator.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\sensing\position_estimation.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\sensing\position_estimation.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\sensing\qfilter.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\util\math_util.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\central_data.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\central_data.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\mavlink_actions.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\mavlink_actions.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\tasks.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\tasks.h">
       <SubType>compile</SubType>
     </Compile>
     <None Include="Library\mavlink\include\mavlink_protobuf_manager.hpp">
@@ -968,12 +988,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\control\control.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\control\estimator.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\control\estimator.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\control\navigation.c">

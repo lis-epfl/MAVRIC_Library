@@ -138,7 +138,9 @@ pressure_data* get_pressure_data_slow(float offset) {
 		
 			vertical_speed=pressure_outputs.altitude;
 			pressure_outputs.altitude = 44330 * (1.0 - pow(pressure_outputs.pressure /sealevelPressure,0.190295));
+			
 			vertical_speed=pressure_outputs.altitude-vertical_speed;
+			if (abs(vertical_speed)>20) vertical_speed=0.0;
 			pressure_outputs.vario_vz=(1.0-VARIO_LPF)*pressure_outputs.vario_vz + VARIO_LPF * (-vertical_speed);
 			pressure_outputs.last_update=get_micros();
 			pressure_outputs.state=IDLE;
@@ -153,7 +155,7 @@ pressure_data* get_pressure_data_slow(float offset) {
 
 bool newValidBarometer(uint32_t *timePrevBarometer)
 {
-	if (*timePrevBarometer != pressure_outputs.last_update) 
+	if (*timePrevBarometer < pressure_outputs.last_update) 
 	{
 		*timePrevBarometer = pressure_outputs.last_update;
 		return true;

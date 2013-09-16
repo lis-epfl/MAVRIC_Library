@@ -137,7 +137,7 @@ void mavlink_send_gps_raw(void) {
 	// mavlink_msg_gps_raw_int_send(mavlink_channel_t chan, uint64_t time_usec, uint8_t fix_type, int32_t lat, int32_t lon, int32_t alt, uint16_t eph, uint16_t epv, uint16_t vel, uint16_t cog, uint8_t satellites_visible)
 	if (board->GPS_data.status == GPS_OK)
 	{
-		mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0,get_micros(), board->GPS_data.status, board->GPS_data.latitude*10000000.0, board->GPS_data.longitude*10000000.0, board->GPS_data.altitude*1000.0, board->GPS_data.hdop*100.0, board->GPS_data.speedAccuracy*100.0 ,board->GPS_data.groundSpeed*100.0, board->GPS_data.course, board->GPS_data.num_sats);	
+		mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0,1000*board->GPS_data.timeLastMsg, board->GPS_data.status, board->GPS_data.latitude*10000000.0, board->GPS_data.longitude*10000000.0, board->GPS_data.altitude*1000.0, board->GPS_data.hdop*100.0, board->GPS_data.speedAccuracy*100.0 ,board->GPS_data.groundSpeed*100.0, board->GPS_data.course, board->GPS_data.num_sats);	
 	}else{
 		mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0,get_micros(), board->GPS_data.status, 46.5193*10000000, 6.56507*10000000, 400 * 1000, 0, 0 , 0, 0, board->GPS_data.num_sats);
 	}
@@ -153,9 +153,9 @@ void mavlink_send_pressure(void) {
 	
 	//mavlink_msg_scaled_pressure_send(mavlink_channel_t chan, uint32_t time_boot_ms, float press_abs, float press_diff, int16_t temperature)
 	
-	mavlink_msg_scaled_pressure_send(MAVLINK_COMM_0, get_millis(), board->pressure.pressure/100.0, board->pressure_filtered/100.0, board->pressure.temperature*100.0);
+	mavlink_msg_scaled_pressure_send(MAVLINK_COMM_0, get_millis(), board->pressure.pressure/100.0, board->pressure.vario_vz, board->pressure.temperature*100.0);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressAlt", board->pressure.altitude);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressFilt", board->altitude_filtered);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressFilt", board->altitude_filtered);
 }
 
 void mavlink_send_radar(void) {
@@ -344,7 +344,7 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
 	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_simulation, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
-	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	//add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
 	sort_taskset_by_period(get_mavlink_taskset());
 }

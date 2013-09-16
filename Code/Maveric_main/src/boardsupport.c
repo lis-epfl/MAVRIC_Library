@@ -8,10 +8,52 @@
 #include "boardsupport.h"
 #include "waypoint_navigation.h"
 #include "conf_sim_model.h"
+#include "sysclk.h"
+#include "sleepmgr.h"
+#include "led.h"
+#include "delay.h"
 
 static volatile board_hardware_t board_hardware;
 
 board_hardware_t* initialise_board() {
+		int i;
+		enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
+
+		irq_initialize_vectors();
+		cpu_irq_enable();
+		Disable_global_interrupt();
+		
+		// Initialize the sleep manager
+		sleepmgr_init();
+		sysclk_init();
+		//board_init();
+		delay_init(sysclk_get_cpu_hz());
+		init_time_keeper();
+		//board=initialise_board();
+		
+		INTC_init_interrupts();
+		
+		
+		if (init_i2c(0)!=STATUS_OK) {
+			//putstring(STDOUT, "Error initialising I2C\n");
+			while (1==1);
+			} else {
+			//putstring(STDOUT, "initialised I2C.\n");
+		};
+		if (init_i2c(1)!=STATUS_OK) {
+			//putstring(STDOUT, "Error initialising I2C\n");
+			while (1==1);
+			} else {
+			//putstring(STDOUT, "initialised I2C.\n");
+		};
+
+		LED_Off(LED1);
+		// Configure the pins connected to LEDs as output and set their default
+		// initial state to high (LEDs off).
+		gpio_configure_pin(LED0_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+		gpio_configure_pin(LED1_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+	
+		
 		init_UART_int(0);
 		register_write_stream(get_UART_handle(0), &board_hardware.xbee_out_stream);
 				
@@ -81,6 +123,8 @@ board_hardware_t* initialise_board() {
 		board_hardware.imu1.attitude.localPosition.pos[2]=0;
 		
 		init_waypoint_list(board_hardware.waypoint_list,&board_hardware.number_of_waypoints);
+
+		Enable_global_interrupt();
 
 		return &board_hardware;
 }
