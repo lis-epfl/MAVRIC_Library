@@ -27,20 +27,20 @@ uint32_t timeLastBarometerMsg;
 void init_pos_integration()
 {
 	board = get_board_hardware();
-	kp_alt=1.0;
-	kp_alt_v=0.1;
+	kp_alt=0.5;
+	kp_alt_v=0.5;
 	board->init_gps_position = false;
 	board->init_barometer=false;
 	timeLastGpsMsg = 0;
 	timeLastBarometerMsg=get_micros();
 	
-	kp_pos[0] = 1.5;
-	kp_pos[1] = 1.5;
+	kp_pos[0] = 1.0;
+	kp_pos[1] = 1.0;
 	kp_pos[2] = 1.0;
 	
 	kp_vel[0] = 0.5;
 	kp_vel[1] = 0.5;
-	kp_vel[2] = 0.4;
+	kp_vel[2] = 1.5;
 	
 	init_pos_gps();
 }
@@ -229,7 +229,7 @@ void position_correction()
 				
 		for (i=0;i<3;i++) {
 			board->imu1.attitude.vel_bf[i] += kp_vel[i]*gps_gain * vel_correction.v[i]* board->imu1.dt;
-			//board->imu1.attitude.be[i+ACC_OFFSET] -=  0.01* kp_vel[i]*gps_gain *  vel_correction.v[i]* board->imu1.dt;
+			board->imu1.attitude.be[i+ACC_OFFSET] -=  0.01* kp_vel[i]*gps_gain *  vel_correction.v[i]* board->imu1.dt;
 		}
 
 	}

@@ -13,7 +13,7 @@
 #include "compiler.h"
 
 
-#define VARIO_LPF 0.2
+#define VARIO_LPF 0.4
 
 #define BMP085_SLAVE_ADDRESS 0x77  //
 
