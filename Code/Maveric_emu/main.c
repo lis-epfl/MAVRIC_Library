@@ -54,11 +54,7 @@ void initialisation() {
 	board->mav_state = MAV_STATE_CALIBRATING;
 	board->mav_mode = MAV_MODE_PREFLIGHT;
 
-<<<<<<< HEAD
 	//calibrate_Gyros(&board->imu1);
-=======
-	calibrate_Gyros(&board->imu1);
->>>>>>> 7c351d6bbd1cfebafb26a2bdc0f537f42f5eca23
 	for (i=400; i>0; i--) {
 		imu_update(&board->imu1);
 		mavlink_protocol_update();	
