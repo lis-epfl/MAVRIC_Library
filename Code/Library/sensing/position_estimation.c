@@ -229,7 +229,7 @@ void position_correction()
 				
 		for (i=0;i<3;i++) {
 			board->imu1.attitude.vel_bf[i] += kp_vel[i]*gps_gain * vel_correction.v[i]* board->imu1.dt;
-			board->imu1.attitude.be[i+ACC_OFFSET] -=  0.01* kp_vel[i]*gps_gain *  vel_correction.v[i]* board->imu1.dt;
+			//board->imu1.attitude.be[i+ACC_OFFSET] -=  0.01* kp_vel[i]*gps_gain *  vel_correction.v[i]* board->imu1.dt;
 		}
 
 	}

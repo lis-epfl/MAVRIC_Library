@@ -102,7 +102,7 @@ void calibrate_Gyros(Imu_Data_t *imu1) {
 		//imu1->raw_bias[2+ACC_OFFSET]  = (0.9*imu1->raw_bias[2+ACC_OFFSET]+0.1*((float)imu1->raw_channels[2+ACC_OFFSET]-imu1->raw_scale[2+ACC_OFFSET]));
 		for (j=0; j<3; j++) {
 			imu1->raw_bias[j]=(0.9*imu1->raw_bias[j]+0.1*(float)imu1->raw_channels[j]);
-			//imu1->attitude.raw_mag_mean[j] = (1.0-MAG_LPF)*imu1->attitude.raw_mag_mean[j]+MAG_LPF*((float)imu1->raw_channels[j+COMPASS_OFFSET]);
+			imu1->attitude.raw_mag_mean[j] = (1.0-MAG_LPF)*imu1->attitude.raw_mag_mean[j]+MAG_LPF*((float)imu1->raw_channels[j+COMPASS_OFFSET]);
 		}
 		delay_ms(10);
 	}
@@ -121,7 +121,7 @@ void imu_update(Imu_Data_t *imu1){
 		imu_get_raw_data(imu1);
 		imu1->dt=ticks_to_seconds(t - imu1->last_update);
 		imu1->last_update=t;
-		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt, false);
+		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt, true);
 		if (imu1->attitude.calibration_level==OFF) {
 			position_integration(&imu1->attitude,imu1->dt);
 			position_correction();
