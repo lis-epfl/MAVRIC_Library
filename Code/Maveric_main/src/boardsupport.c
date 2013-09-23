@@ -26,7 +26,7 @@ board_hardware_t* initialise_board() {
 		// Initialize the sleep manager
 		sleepmgr_init();
 		sysclk_init();
-		//board_init();
+		board_init();
 		delay_init(sysclk_get_cpu_hz());
 		init_time_keeper();
 		//board=initialise_board();
@@ -50,8 +50,11 @@ board_hardware_t* initialise_board() {
 		LED_Off(LED1);
 		// Configure the pins connected to LEDs as output and set their default
 		// initial state to high (LEDs off).
-		gpio_configure_pin(LED0_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
-		gpio_configure_pin(LED1_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+		//gpio_configure_pin(LED0_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+		//gpio_configure_pin(LED1_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+
+		init_Servos();
+		set_servos(&servo_failsafe);
 	
 		
 		init_UART_int(0);
@@ -97,7 +100,7 @@ board_hardware_t* initialise_board() {
 		init_bmp085();
 
 		rc_init();
-		init_Servos();
+
 		init_simulation(&board_hardware.sim_model);
 		
 		board_hardware.controls.rpy[ROLL]=0;
@@ -125,6 +128,7 @@ board_hardware_t* initialise_board() {
 		init_waypoint_list(board_hardware.waypoint_list,&board_hardware.number_of_waypoints);
 
 		Enable_global_interrupt();
+		dbg_print("Board initialised.\n");
 
 		return &board_hardware;
 }
