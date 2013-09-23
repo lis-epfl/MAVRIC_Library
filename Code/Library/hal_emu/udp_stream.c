@@ -13,7 +13,7 @@
 #include <sys/time.h>
 #include <time.h>
 #include <arpa/inet.h>
-
+#include "print_util.h"
 
 static inline void udp_put_byte(udp_connection_t *udpconn, char data) {
 	buffer_put(&udpconn->udp_buffer,data);
@@ -33,10 +33,11 @@ static inline bool udp_buffer_empty(udp_connection_t *udpconn) {
 }
 
 static inline int udp_bytes_available(udp_connection_t *udpconn) {
-	char buf[32];
+	char buf[BUFFER_SIZE];
 	socklen_t fromlen;
 	int i;
-	int recsize = recvfrom(udpconn->sock, (void *)buf, 32, 0, (struct sockaddr *)&(udpconn->Addr), &fromlen);
+
+	int recsize = recvfrom(udpconn->sock, (void *)buf, BUFFER_SIZE, 0, (struct sockaddr *)&(udpconn->Addr), &fromlen);
 	for (i=0; i<recsize; i++) {
 		buffer_put(&udpconn->udp_buffer, buf[i]);
 	}
@@ -45,6 +46,7 @@ static inline int udp_bytes_available(udp_connection_t *udpconn) {
 }
 
 static inline char udp_get_byte(udp_connection_t *udpconn) {
+	
 	return buffer_get(&udpconn->udp_buffer);
 }
 

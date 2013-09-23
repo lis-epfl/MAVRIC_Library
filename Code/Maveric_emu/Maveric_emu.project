@@ -135,6 +135,7 @@
       <File Name="../Library/util/sinus.h"/>
       <File Name="../Library/util/buffer.c"/>
       <File Name="../Library/util/compiler.h"/>
+      <File Name="../Library/util/maths.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="sensing">
       <File Name="../Library/sensing/qfilter.h"/>

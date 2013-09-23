@@ -9,6 +9,8 @@
 #define QFILTER_H_
 #include "compiler.h"
 
+#include "maths.h"
+
 #define GYRO_LPF 0.1
 #define ACC_LPF 0.05
 #define MAG_LPF 0.1
@@ -19,23 +21,7 @@
 
 #define GRAVITY 9.81
 
-typedef struct {
-	double longitude;
-	double latitude;
-	float altitude;
-	uint32_t timestamp_ms;
-} global_position_t;
 
-typedef struct {
-	double pos[3];
-	global_position_t origin;
-	uint32_t timestamp_ms;
-} local_coordinates_t;
-
-typedef struct UQuat {
-	float s;
-	float v[3];
-} UQuat_t;
 
 enum calibration_mode {OFF, LEVELING, LEVEL_PLUS_ACCEL};
 
