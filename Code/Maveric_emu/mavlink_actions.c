@@ -24,9 +24,9 @@ void mavlink_send_heartbeat(void) {
 	//}
 	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, board->mav_mode, 0, board->mav_state);
 	mavlink_msg_sys_status_send(MAVLINK_COMM_0, 
-								0b1111110000100111, // sensors present
-								0b1111110000100111, // sensors enabled
-								0b1111110000100111, // sensors health
+								0xFC27, // sensors present
+								0xFC27, // sensors enabled
+								0xFC27, // sensors health
 								0,                  // load
 								12000,              // bat voltage (mV)
 								100,                // current (mA)

@@ -11,6 +11,8 @@
 #ifndef MAVLINK_STREAM_H_
 #define MAVLINK_STREAM_H_
 
+#include <stdint.h>
+
 #include "streams.h"
 #include "mavlink_bridge.h"
 #include "mavlink/include/maveric/mavlink.h"
