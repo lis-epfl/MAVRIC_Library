@@ -81,8 +81,8 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 	sim->torques_bf[PITCH] = ((rotor_lifts[M_FRONT_LEFT]  + rotor_lifts[M_FRONT_RIGHT] )
 							- (rotor_lifts[M_REAR_LEFT]   + rotor_lifts[M_REAR_RIGHT] ))*  mpos_x;
 
-	sim->torques_bf[YAW]   = (M_FL_DIR*(rotor_drags[M_FRONT_LEFT]+rotor_inertia[M_FRONT_LEFT])  + M_FR_DIR*(rotor_drags[M_FRONT_RIGHT]+rotor_inertia[M_FRONT_RIGHT])
-							+ M_RL_DIR*(rotor_drags[M_REAR_LEFT] +rotor_inertia[M_REAR_LEFT])   + M_RR_DIR*(rotor_drags[M_REAR_RIGHT] +rotor_inertia[M_REAR_RIGHT] ))*  sim->rotor_diameter;
+	sim->torques_bf[YAW]   = (M_FL_DIR*(10.0*rotor_drags[M_FRONT_LEFT]+rotor_inertia[M_FRONT_LEFT])  + M_FR_DIR*(10.0*rotor_drags[M_FRONT_RIGHT]+rotor_inertia[M_FRONT_RIGHT])
+							+ M_RL_DIR*(10.0*rotor_drags[M_REAR_LEFT] +rotor_inertia[M_REAR_LEFT])   + M_RR_DIR*(10.0*rotor_drags[M_REAR_RIGHT] +rotor_inertia[M_REAR_RIGHT] ))*  sim->rotor_diameter;
 	
 
 	

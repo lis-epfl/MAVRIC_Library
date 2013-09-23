@@ -101,7 +101,7 @@ task_set* get_mavlink_taskset() {
 
 uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 	uint8_t byte;
-	//dbg_print(".");
+//	dbg_print("?");
 	while(stream->bytes_available(stream->data) > 0) {
 		byte = stream->get(stream->data);
 		//dbg_print(".");

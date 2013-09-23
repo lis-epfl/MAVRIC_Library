@@ -114,7 +114,8 @@ void main (void)
 		//if (counter==0) LED_Toggle(LED1);
 
 		counter=(counter+1)%1000;
-		last_looptime=this_looptime;	
+		last_looptime=this_looptime;
+		usleep(100);
 	}		
 }
 

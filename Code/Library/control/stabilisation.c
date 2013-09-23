@@ -31,12 +31,12 @@ void init_rate_stabilisation(Stabiliser_t *stabiliser) {
 	}	
 	// initialise yaw controller
 	i=2;
-	(stabiliser->rpy_controller)[i].p_gain=0.2;
+	(stabiliser->rpy_controller)[i].p_gain=0.5;
 	(stabiliser->rpy_controller)[i].last_update=get_time_ticks();	
 	(stabiliser->rpy_controller)[i].clip_min=-0.9;
 	(stabiliser->rpy_controller)[i].clip_max= 0.9;
 	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.02, 0.4, 0.5);
-	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.1);
+	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.0);
 	
 }
 
@@ -99,7 +99,7 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input) {
 	if (control_input->control_mode==ATTITUDE_COMMAND_MODE) {
 		rpy_angles[0]=-imu->attitude.up_vec.v[1];
 		rpy_angles[1]= imu->attitude.up_vec.v[0];
-		rpy_angles[2]= 0;
+		rpy_angles[2]= 0.0;
 		stabilise(&attitude_stabiliser, &rpy_angles, control_input);
 		rate_input=&attitude_stabiliser.output;
 	} else {
@@ -111,6 +111,7 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input) {
 	rpy_rates[0]= imu->attitude.om[0];
 	rpy_rates[1]= imu->attitude.om[1];
 	rpy_rates[2]= imu->attitude.om[2];
+
 	stabilise(&rate_stabiliser, &rpy_rates, rate_input);
 
 	#ifdef CONF_DIAG
