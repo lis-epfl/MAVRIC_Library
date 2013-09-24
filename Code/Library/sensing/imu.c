@@ -121,7 +121,7 @@ void imu_update(Imu_Data_t *imu1){
 		imu_get_raw_data(imu1);
 		imu1->dt=ticks_to_seconds(t - imu1->last_update);
 		imu1->last_update=t;
-		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt, true);
+		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt, false);
 		if (imu1->attitude.calibration_level==OFF) {
 			position_integration(&imu1->attitude,imu1->dt);
 			position_correction();

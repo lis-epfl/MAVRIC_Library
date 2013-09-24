@@ -48,9 +48,10 @@
 //#define RAW_ACC_Y_SCALE  261.324
 //#define RAW_ACC_Z_SCALE  256.724
 // Felix outside
-#define RAW_ACC_X_SCALE  264.9173
+//#define RAW_ACC_X_SCALE  264.9173
+#define RAW_ACC_X_SCALE  258.9173
 #define RAW_ACC_Y_SCALE  258.9853
-#define RAW_ACC_Z_SCALE  256.0829
+#define RAW_ACC_Z_SCALE  258.0829
 
 #define RAW_COMPASS_X 2
 #define RAW_COMPASS_Y 0
@@ -71,17 +72,17 @@
 #define RAW_MAG_Y_SCALE 525.2934
 #define RAW_MAG_Z_SCALE 498.4476
 
-// #define ACC_BIAIS_X 19.0;
-// #define ACC_BIAIS_Y 4.0;
-// #define ACC_BIAIS_Z -16.0;
+ #define ACC_BIAIS_X 15.0;
+ #define ACC_BIAIS_Y 4.0;
+ #define ACC_BIAIS_Z -16.0;
 //#define ACC_BIAIS_X 4.685
 //#define ACC_BIAIS_Y 4.376
 //#define ACC_BIAIS_Z -16.26
 
 // Felix Outside values
- #define ACC_BIAIS_X  21.5871
- #define ACC_BIAIS_Y  10.0884
- #define ACC_BIAIS_Z  -14.9891
+// #define ACC_BIAIS_X  21.5871
+// #define ACC_BIAIS_Y  10.0884
+// #define ACC_BIAIS_Z  -14.9891
 
 
 // Inside values
@@ -111,10 +112,11 @@
 
 #define FRONTVECTOR_X 1
 #define FRONTVECTOR_Y 0
+#define FRONTVECTOR_Z 0
 // Inside value
 //#define FRONTVECTOR_Z -1.3846
 // Outside value
-#define FRONTVECTOR_Z -0.8985
+//#define FRONTVECTOR_Z -0.8985
 
 
 // Definitions of Platform configuration

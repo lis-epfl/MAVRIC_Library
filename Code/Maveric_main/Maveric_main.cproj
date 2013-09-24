@@ -927,6 +927,9 @@
     <Compile Include="Library\sensing\qfilter.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\util\maths.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\util\math_util.h">
       <SubType>compile</SubType>
     </Compile>

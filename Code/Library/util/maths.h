@@ -34,6 +34,14 @@ typedef struct UQuat {
 #define QUAT(q, s, v0, v1, v2) \
 	q.s=s; q.v[0]=v0; q.v[1]=v1; q.v[2]=v2;
 
+UQuat_t static inline quat_from_vector(float *v) {
+	UQuat_t q;	
+	q.s=0; 
+	q.v[0]=v[0]; 
+	q.v[1]=v[1]; 
+	q.v[2]=v[2];
+}
+
 #define QMUL(q1,q2,out) \
 	tmp[0] = q1.v[1] * q2.v[2] - q1.v[2]*q2.v[1];\
 	tmp[1] = q1.v[2] * q2.v[0] - q1.v[0]*q2.v[2];\

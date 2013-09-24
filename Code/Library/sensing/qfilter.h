@@ -27,7 +27,7 @@ enum calibration_mode {OFF, LEVELING, LEVEL_PLUS_ACCEL};
 
 typedef struct {
 	UQuat_t qe;
-	UQuat_t up_vec;
+	UQuat_t up_vec, north_vec;
 	
 	float be[9], sf[9];
 	float om[3], a[3], mag[3];
