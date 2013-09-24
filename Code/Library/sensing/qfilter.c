@@ -105,9 +105,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	s_acc_norm=attitude->a[0]*attitude->a[0]+attitude->a[1]*attitude->a[1]+attitude->a[2]*attitude->a[2];
 	if ((s_acc_norm>0.7*0.7)&&(s_acc_norm<1.3*1.3)) {
 		// approximate square root by running 2 iterations of newton method
-		acc_norm=1.0;
-		acc_norm=0.5*(acc_norm+(s_acc_norm/acc_norm));
-		acc_norm=0.5*(acc_norm+(s_acc_norm/acc_norm));
+		acc_norm=fast_sqrt(s_acc_norm);
 
 		tmp[0]=attitude->a[0]/acc_norm;
 		tmp[1]=attitude->a[1]/acc_norm;
@@ -130,10 +128,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	// calculate norm of acceleration vector
 	s_mag_norm=attitude->mag[0]*attitude->mag[0]+attitude->mag[1]*attitude->mag[1]+attitude->mag[2]*attitude->mag[2];
 	if ((s_mag_norm>0.7*0.7)&&(s_mag_norm<1.3*1.3)) {
-		// approximate square root by running 2 iterations of newton method
-		mag_norm=1.0;
-		mag_norm=0.5*(mag_norm+(s_acc_norm/mag_norm));
-		mag_norm=0.5*(mag_norm+(s_acc_norm/mag_norm));
+		mag_norm=fast_sqrt(s_mag_norm);
 
 		tmp[0]=attitude->mag[0]/mag_norm;
 		tmp[1]=attitude->mag[1]/mag_norm;
@@ -164,13 +159,10 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	attitude->qe.v[2]+=qed.v[2]*dt;
 
 	snorm=attitude->qe.s*attitude->qe.s+attitude->qe.v[0]*attitude->qe.v[0] + attitude->qe.v[1] * attitude->qe.v[1] + attitude->qe.v[2] * attitude->qe.v[2];
-	if (snorm<0.0001) norm=0; else {
+	if (snorm<0.0001) norm=0.01; else {
 		
 		// approximate square root by running 2 iterations of newton method
-		norm=1.0;
-		norm=0.5*(norm+(snorm/norm));
-		norm=0.5*(norm+(snorm/norm));
-		norm=0.5*(norm+(snorm/norm));
+		norm=fast_sqrt(snorm);
 		//norm=0.5*(norm+(snorm/norm));
 	}	
 	attitude->qe.s/= norm;

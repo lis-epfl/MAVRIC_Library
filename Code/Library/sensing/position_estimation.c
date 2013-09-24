@@ -105,8 +105,10 @@ void position_integration(Quat_Attitude_t *attitude, float dt)
 	
 	UQuat_t qvel_bf,qvel, qtmp1, qtmp2, qtmp3;
 	float tmp[3];
-	
+	for (i=0; i<3; i++) qvel.v[i]=attitude->vel[i];
+	qvel_bf=quat_global_to_local(attitude->qe, qvel);
 	for (i=0; i<3; i++) {
+		attitude->vel_bf[i]=qvel_bf.v[i];
 		// clean acceleration estimate without gravity:
 		attitude->acc_bf[i]=(attitude->a[i] - attitude->up_vec.v[i]) * GRAVITY;
 		attitude->vel_bf[i]=attitude->vel_bf[i]*(1.0-(VEL_DECAY*dt)) + attitude->acc_bf[i] * dt;
@@ -225,11 +227,13 @@ void position_correction()
 		board->imu1.attitude.localPosition.pos[2] += kp_alt * baro_gain * pos_error[2]* board->imu1.dt;
 		
 		for (i=0; i<3; i++) vel_correction.v[i] = vel_error[i];
-		vel_correction = quat_global_to_local(board->imu1.attitude.qe, vel_correction);
+		//vel_correction = quat_global_to_local(board->imu1.attitude.qe, vel_correction);
 				
 		for (i=0;i<3;i++) {
-			board->imu1.attitude.vel_bf[i] += kp_vel[i]*gps_gain * vel_correction.v[i]* board->imu1.dt;
+			//board->imu1.attitude.vel_bf[i] += kp_vel[i]*gps_gain * vel_correction.v[i]* board->imu1.dt;
 			//board->imu1.attitude.be[i+ACC_OFFSET] -=  0.01* kp_vel[i]*gps_gain *  vel_correction.v[i]* board->imu1.dt;
+			
+			board->imu1.attitude.vel[i] += kp_vel[i]*gps_gain * vel_correction.v[i]* board->imu1.dt;
 		}
 
 	}
