@@ -68,7 +68,7 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 	//attitude->qe.v[2]=sin((PI + init_angle)/2.0);
 	attitude->qe.v[2]=sin(init_angle/2.0);
 	
-	attitude->kp=0.05;
+	attitude->kp=0.09;
 	attitude->ki=attitude->kp/15.0;
 	
 	attitude->kp_mag = 0.1;
@@ -81,9 +81,11 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 
 void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	uint8_t i;
-	float  omc[3], omc_mag[3], rvc[3], tmp[3], front_vec_global[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
+	float  omc[3], omc_mag[3], rvc[3], tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
 	UQuat_t qed, qtmp1, up, up_bf, qtmp2, qtmp3;
-	UQuat_t mag_global;
+	UQuat_t mag_global, mag_corrected_local;
+	UQuat_t front_vec_global = {.s=0.0, .v={FRONTVECTOR_X, FRONTVECTOR_Y, FRONTVECTOR_Z}};
+	float kp, kp_mag;
 	
 	for (i=0; i<3; i++){
 		attitude->om[i]  = (1.0-GYRO_LPF)*attitude->om[i]+GYRO_LPF*(((float)rates[GYRO_OFFSET+i])*attitude->sf[i]-attitude->be[GYRO_OFFSET+i]);
@@ -115,7 +117,6 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	qtmp1=quat_from_vector(attitude->mag); 
 	mag_global = quat_local_to_global(attitude->qe, qtmp1);
 	
-	front_vec_global[0] = FRONTVECTOR_X; front_vec_global[1] = FRONTVECTOR_Y; front_vec_global[2] = FRONTVECTOR_Z;
 	//QI(attitude->qe,qtmp4);
 	//QMUL(qtmp4, front_bf, qtmp5);
 	//QMUL(qtmp5, attitude->qe, front_bf);
@@ -131,10 +132,10 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 		mag_global.v[2]=0.0;   // set z component in global frame to 0
 
 		// transfer magneto vector back to body frame 
-		attitude->north_vec=quat_global_to_local(attitude->qe, mag_global);		
-
+		attitude->north_vec=quat_global_to_local(attitude->qe, front_vec_global);		
+		mag_corrected_local=quat_global_to_local(attitude->qe, mag_global);		
 		// omc = a x up_bf.v
-		CROSS(front_vec_global, attitude->north_vec.v, omc_mag);
+		CROSS(mag_corrected_local.v, attitude->north_vec.v,  omc_mag);
 		
 	} else {
 		omc_mag[0]=0;		omc_mag[1]=0; 		omc_mag[2]=0;
@@ -182,11 +183,11 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 
 	switch (attitude->calibration_level) {
 		case OFF:
-			attitude->kp=0.04;//*(0.1/(0.1+s_acc_norm-1.0));
+			kp=attitude->kp;//*(0.1/(0.1+s_acc_norm-1.0));
 			attitude->ki=attitude->kp/15.0;
 			break;
 		case LEVELING:
-			attitude->kp=0.3;
+			kp=0.3;
 			attitude->ki=attitude->kp/10.0;
 			for (i=0; i<3; i++) {
 				// reset velocity estimate to zero 
@@ -195,7 +196,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 			}
 			break;
 		case LEVEL_PLUS_ACCEL:
-			attitude->kp=0.3;
+			kp=0.3;
 			attitude->ki=attitude->kp/10.0;
 			attitude->be[3]+=   dt * attitude->kp * (attitude->a[0]-up_bf.v[0]);
 			attitude->be[4]+=   dt * attitude->kp * (attitude->a[1]-up_bf.v[1]);
@@ -207,7 +208,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 			}
 			break;
 		default:
-			attitude->kp=0.02;
+			kp=attitude->kp;
 			attitude->ki=attitude->kp/15.0;
 			break;
 	}

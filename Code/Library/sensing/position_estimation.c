@@ -105,6 +105,7 @@ void position_integration(Quat_Attitude_t *attitude, float dt)
 	
 	UQuat_t qvel_bf,qvel, qtmp1, qtmp2, qtmp3;
 	float tmp[3];
+	qvel.s=0;
 	for (i=0; i<3; i++) qvel.v[i]=attitude->vel[i];
 	qvel_bf=quat_global_to_local(attitude->qe, qvel);
 	for (i=0; i<3; i++) {

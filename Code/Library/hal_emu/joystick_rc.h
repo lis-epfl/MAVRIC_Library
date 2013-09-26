@@ -22,7 +22,14 @@
 #define JOY_ROLL     3
 #define JOY_PITCH    4
 #define JOY_YAW      0
+#define JOY_SAFETY   5
+#define JOY_ID_MODE  6
 
+#define JOY_SAFETY_OFF_BUTTON 7
+#define JOY_SAFETY_ON_BUTTON 5
+#define JOY_MODE_1_BUTTON 0
+#define JOY_MODE_2_BUTTON 1
+#define JOY_MODE_3_BUTTON 2
 
 //Saitek
 /*

@@ -200,21 +200,21 @@ void run_navigation()
 		rel_pos[Y] = waypoint_coordinates.pos[Y] - board->imu1.attitude.localPosition.pos[Y];
 		rel_pos[Z] = waypoint_coordinates.pos[Z] - board->imu1.attitude.localPosition.pos[Z];
 		
-		//dbg_print("rel_pos:(");
-		//dbg_print_num(rel_pos[X],10);
-		//dbg_print_num(rel_pos[Y],10);
-		//dbg_print_num(rel_pos[Z],10);
-		//dbg_print(")");
-		//dbg_print(", wp_coor:(");
-		//dbg_print_num(waypoint_coordinates.pos[X],10);
-		//dbg_print_num(waypoint_coordinates.pos[Y],10);
-		//dbg_print_num(waypoint_coordinates.pos[Z],10);
-		//dbg_print(")");
-		//dbg_print(", localPos:(");
-		//dbg_print_num(board->imu1.attitude.localPosition.pos[X],10);
-		//dbg_print_num(board->imu1.attitude.localPosition.pos[Y],10);
-		//dbg_print_num(board->imu1.attitude.localPosition.pos[Z],10);
-		//dbg_print(")\n");
+		dbg_print("rel_pos:(");
+		dbg_print_num(rel_pos[X],10);
+		dbg_print_num(rel_pos[Y],10);
+		dbg_print_num(rel_pos[Z],10);
+		dbg_print(")");
+		dbg_print(", wp_coor:(");
+		dbg_print_num(waypoint_coordinates.pos[X],10);
+		dbg_print_num(waypoint_coordinates.pos[Y],10);
+		dbg_print_num(waypoint_coordinates.pos[Z],10);
+		dbg_print(")");
+		dbg_print(", localPos:(");
+		dbg_print_num(board->imu1.attitude.localPosition.pos[X],10);
+		dbg_print_num(board->imu1.attitude.localPosition.pos[Y],10);
+		dbg_print_num(board->imu1.attitude.localPosition.pos[Z],10);
+		dbg_print(")\n");
 		
 		dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
 		

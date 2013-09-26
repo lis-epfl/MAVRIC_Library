@@ -30,6 +30,17 @@ struct joystick_event {
 #define JS_AXIS 0x02   // axis event
 #define JS_INIT 0x80
 
+int joystick_filedescriptor;
+
+Spektrum_Receiver_t spRec1;
+
+
+int joystick_axes[16];
+int joystick_buttons[16];
+
+int16_t channelCenter[16];
+int joyMax[16], joyMin[16];
+uint32_t last_update;
 
 int open_joystick(char* device_name)
 {
@@ -77,38 +88,39 @@ int get_joystick_status(int joystick_file_descriptor, int *axes, int *buttons, i
     event.type &= ~JS_INIT;
     if ((event.type == JS_AXIS) && (event.number>=0) &&(event.number<axes_size)) {
       axes[event.number] = event.value;
+	  
     } else if (event.type == JS_BUTTON) {
       if ((event.number < buttons_size)&& (event.number>=0)) {
-	switch (event.value) {
-	  case 0:
-	  case 1: buttons[event.number] = event.value;
-	    break;
-	  default:
-	    break;
-	}
+		  
+		switch (event.value) {
+		  case 0:buttons[event.number] = event.value; break;
+		  
+		  case 1: 
+		    dbg_print_num(event.number, 10);dbg_print(": ");dbg_print_num(event.value, 10);dbg_print("\n");
+			buttons[event.number] = event.value;
+			switch (event.number) {
+			 case JOY_SAFETY_OFF_BUTTON: axes[RC_SAFETY]=-32000; break;
+			 case JOY_SAFETY_ON_BUTTON: axes[RC_SAFETY]=  32000; break;
+			 case JOY_MODE_1_BUTTON: axes[RC_ID_MODE]=-32000; break;
+			 case JOY_MODE_2_BUTTON: axes[RC_ID_MODE]= 0; break;
+			 case JOY_MODE_3_BUTTON: axes[RC_ID_MODE]= 32000; break;
+			}
+			break;
+		  default:
+			break;
+		}
       }
     }
   }
   return 0;
 }
 
-int joystick_filedescriptor;
-
-Spektrum_Receiver_t spRec1;
-
-
-int joystick_axes[16];
-int joystick_buttons[16];
-
-int16_t channelCenter[16];
-int joyMax[16], joyMin[16];
-uint32_t last_update;
 
 void rc_init (void) {
 	
 	int i;
 	for (i=0; i<16; i++) {
-		spRec1.channels[i]=500;
+		spRec1.channels[i]=-500;
 		channelCenter[i]=0;
 		joystick_axes[i]=0;
 		joystick_buttons[i]=0;
@@ -139,8 +151,8 @@ int16_t rc_get_channel(uint8_t index) {
 		spRec1.channels[RC_PITCH] = joystick_axes[JOY_PITCH]*J_GAIN/ (joyMax[JOY_PITCH]-joyMin[JOY_PITCH]);
 		spRec1.channels[RC_YAW] = joystick_axes[JOY_YAW]*J_GAIN/ (joyMax[JOY_YAW]-joyMin[JOY_YAW]);
 		spRec1.channels[RC_THROTTLE] = -joystick_axes[JOY_THROTTLE]*J_GAIN/ (joyMax[JOY_THROTTLE]-joyMin[JOY_THROTTLE]);
-		spRec1.channels[RC_SAFETY] = -100;
-		spRec1.channels[RC_ID_MODE] = -100;
+		spRec1.channels[RC_SAFETY] = joystick_axes[JOY_SAFETY] *J_GAIN/ (joyMax[JOY_SAFETY]-joyMin[JOY_SAFETY]);
+		spRec1.channels[RC_ID_MODE] =joystick_axes[JOY_ID_MODE]*J_GAIN/ (joyMax[JOY_ID_MODE]-joyMin[JOY_ID_MODE]);
 		last_update=get_millis();
 	}	
 	return spRec1.channels[index];

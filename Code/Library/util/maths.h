@@ -40,6 +40,7 @@ UQuat_t static inline quat_from_vector(float *v) {
 	q.v[0]=v[0]; 
 	q.v[1]=v[1]; 
 	q.v[2]=v[2];
+	return q;
 }
 
 #define QMUL(q1,q2,out) \

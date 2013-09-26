@@ -33,7 +33,7 @@
 #define RC_TRIM_P1  7
 #define RC_TRIM_P2  8
 
-#define DEADZONE 0.5
+#define DEADZONE 30.0
 
 #define RC_SCALEFACTOR 1.0/438.0
 

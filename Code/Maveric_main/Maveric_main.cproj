@@ -605,6 +605,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Library\hal\lsm330dlc_driver.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\lsm330dlc_driver.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\hal\remote_controller.h">
       <SubType>compile</SubType>
     </Compile>

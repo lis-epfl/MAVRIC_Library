@@ -72,8 +72,8 @@
 #define RAW_MAG_Y_SCALE 525.2934
 #define RAW_MAG_Z_SCALE 498.4476
 
- #define ACC_BIAIS_X 15.0;
- #define ACC_BIAIS_Y 4.0;
+ #define ACC_BIAIS_X 18.0;
+ #define ACC_BIAIS_Y 9.0;
  #define ACC_BIAIS_Z -16.0;
 //#define ACC_BIAIS_X 4.685
 //#define ACC_BIAIS_Y 4.376
