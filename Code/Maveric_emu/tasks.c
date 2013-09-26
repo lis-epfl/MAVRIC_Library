@@ -232,7 +232,7 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_GUIDED_ARMED:
 			board->mission_started = 0;
 			board->controls = board->controls_nav;
-			board->controls.thrust = min(get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0;
+			board->controls.thrust = (float)min(get_thrust_from_remote()*1000,board->controls_nav.thrust*1000)/1000.0;
 			//board->controls.thrust = board->controls_nav.thrust;
 			
 			//dbg_print("Thrust (x10000):");
@@ -248,7 +248,7 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_AUTO_ARMED:
 			board->mission_started = 1;
 			board->controls = board->controls_nav;
-			board->controls.thrust = min(get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0;
+			board->controls.thrust = (float)min(get_thrust_from_remote()*1000,board->controls_nav.thrust*1000)/1000.0;
 			//board->controls.thrust = board->controls_nav.thrust;
 			
 			//dbg_print("Thrust main:");
