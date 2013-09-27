@@ -1,8 +1,11 @@
 /*
  * simulation.c
  *
+ * Onboard Hardware-in-the-loop simulation 
+ * Simulates quad-copter dynamics based on simple aerodynamics/physics model and generates simulated raw IMU measurements
+ * 
  * Created: 06/08/2013 17:02:56
- *  Author: sfx
+ *  Author: Felix Schill
  */ 
 
 #include "conf_sim_model.h"

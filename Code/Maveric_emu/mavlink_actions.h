@@ -5,7 +5,7 @@
  * Put all commands here that collect data and can be scheduled for transmission
  *
  * Created: 21/03/2013 01:00:46
- *  Author: sfx
+ *  Author: Felix Schill
  */ 
 
 

@@ -1,8 +1,10 @@
 /*
  * time_keeper.h
  *
+ * Provides precise time measurements (emulation version)
+ * 
  * Created: 08/06/2012 17:25:26
- *  Author: sfx
+ *  Author: Felix Schill
  */ 
 
 

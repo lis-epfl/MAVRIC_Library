@@ -2,7 +2,7 @@
  * boardsupport.c
  *
  * Created: 20/03/2013 12:14:18
- *  Author: sfx
+ *  Author: Felix Schill
  */ 
 
 #include "boardsupport.h"

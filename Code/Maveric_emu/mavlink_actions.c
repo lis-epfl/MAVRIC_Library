@@ -1,9 +1,13 @@
 /*
- * mavlink_actions.c
+ * mavlink_actions.h
  *
- * Created: 21/03/2013 01:00:56
- *  Author: sfx
+ * This file interfaces between the various parts of the system and the MAVlink downstream
+ * Put all commands here that collect data and can be scheduled for transmission
+ *
+ * Created: 21/03/2013 01:00:46
+ *  Author: Felix Schill
  */ 
+
 #include "mavlink_actions.h"
 
 #include "boardsupport.h"

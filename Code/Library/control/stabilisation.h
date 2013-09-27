@@ -1,8 +1,10 @@
 /*
  * stabilisation.h
  *
- * Created: 07/06/2012 21:07:26
- *  Author: sfx
+ * 3-axis attitude and rate stabilisation for VTOLs
+ * 
+ * Created: 07/06/2012 21:08:01
+ *  Author: Felix Schill
  */ 
 
 

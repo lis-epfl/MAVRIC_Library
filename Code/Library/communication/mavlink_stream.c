@@ -4,7 +4,7 @@
  * a wrapper for mavlink to use the stream interface
  *
  * Created: 14/02/2013 17:10:05
- *  Author: julien
+ *  Author: Felix, Julien, Nicolas
  */ 
 
 #include "mavlink_stream.h"

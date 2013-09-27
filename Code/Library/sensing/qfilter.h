@@ -1,8 +1,9 @@
 /*
- * qfilter.h
- *
+ * qfilter.c
+ * Quaternion complementary attitude filter
+ * 
  *  Created on: Apr 13, 2010
- *      Author: felix
+ *      Author: Felix Schill
  */
 
 #ifndef QFILTER_H_

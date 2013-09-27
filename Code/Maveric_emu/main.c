@@ -1,14 +1,10 @@
 /**
- * \file
+ * Maveric emulator main file
  *
- * \brief Empty user application template
+ * 
  *
  */
 
-/*
- * Include header files for all drivers that have been imported from
- * AVR Software Framework (ASF).
- */
 //#include <asf.h>
 #include "led.h"
 #include "delay.h"
@@ -25,7 +21,6 @@
 #include "boardsupport.h"
 
 #include "tasks.h"
-//#include "flashvault.h"
 
 board_hardware_t *board;
 

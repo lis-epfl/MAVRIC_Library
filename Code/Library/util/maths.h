@@ -1,3 +1,6 @@
+#ifndef MATHS_H
+#define MATHS_H
+
 typedef struct {
 	double longitude;
 	double latitude;
@@ -123,3 +126,4 @@ float static inline fast_sqrt(float input) {
 	result=0.5*(result+(input/result));
 	return result;
 }
+#endif

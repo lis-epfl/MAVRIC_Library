@@ -10,6 +10,7 @@
 #include "print_util.h"
 
 #include <math.h>
+#include "maths.h"
 
 #define V_TRANSITION 5
 #define V_TRANSITION_SQR V_TRANSITION*V_TRANSITION
@@ -17,10 +18,10 @@
 #define KP_ROLL 0.6
 #define KP_PITCH -0.6
 #define KP_YAW 0.05
-#define KP_ALT -0.005
+#define KP_ALT -0.02
 
 #define KD_ALT 0.025
-#define KI_ALT -0.025
+#define KI_ALT -0.15
 
 #define MIN_ROLL_RATE -2.0
 #define MAX_ROLL_RATE 2.0
@@ -37,26 +38,6 @@
 #define NAV_LOW_VELOCITY   1
 #define NAV_HIGH_VELOCITY  2
 
-#define SCP(u,v) \
-(u[0]*v[0]+u[1]*v[1]+u[2]*v[2]);
-
-#define QI(q, out) \
-out.s = q.s;\
-out.v[0] = -q.v[0];\
-out.v[1] = -q.v[1];\
-out.v[2] = -q.v[2];
-
-#define QUAT(q, s, v0, v1, v2) \
-q.s=s; q.v[0]=v0; q.v[1]=v1; q.v[2]=v2;
-
-#define QMUL(q1,q2,out) \
-tmp[0] = q1.v[1] * q2.v[2] - q1.v[2]*q2.v[1];\
-tmp[1] = q1.v[2] * q2.v[0] - q1.v[0]*q2.v[2];\
-tmp[2] = q1.v[0] * q2.v[1] - q1.v[1]*q2.v[0];\
-out.v[0] = q2.s*q1.v[0] + q1.s *q2.v[0] +tmp[0];\
-out.v[1] = q2.s*q1.v[1] + q1.s *q2.v[1] +tmp[1];\
-out.v[2] = q2.s*q1.v[2] + q1.s *q2.v[2] +tmp[2];\
-out.s= q1.s*q2.s - SCP(q1.v, q2.v);
 
 local_coordinates_t waypoint_coordinates, waypoint_hold_coordinates;
 global_position_t waypoint_global;

@@ -2,7 +2,7 @@
  * time_keeper.c
  *
  * Created: 08/06/2012 17:48:13
- *  Author: sfx
+ *  Author: Felix Schill
  */ 
 
 #include <sys/time.h>

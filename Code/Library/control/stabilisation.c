@@ -2,7 +2,7 @@
  * stabilisation.c
  *
  * Created: 07/06/2012 21:08:01
- *  Author: sfx
+ *  Author: Felix Schill
  */ 
 
 #include "stabilisation.h"
@@ -73,11 +73,7 @@ void init_stabilisation() {
 
 void stabilise(Stabiliser_t *stabiliser, float *rpy_sensor_values, Control_Command_t *control_input) {
 	int i;
-	// run the pid controllers
-	//stabiliser->output.rpy[0]=-0.05*imu->attitude.om[1] + 
-	//	pid_update(&(stabiliser->rpy_controller[0]), control_input->rpy[0], imu->attitude.up_vec.v[0]);
-	//stabiliser->output.rpy[1]= 0.05*imu->attitude.om[0] + 
-	//	pid_update(&(stabiliser->rpy_controller[1]), control_input->rpy[1], imu->attitude.up_vec.v[1]);
+
 	for (i=0; i<3; i++) {
 		stabiliser->output.rpy[i]=	pid_update(&(stabiliser->rpy_controller[i]),  rpy_sensor_values[i], control_input->rpy[i]);
 	}		
@@ -97,23 +93,30 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input) {
 
 	
 	if (control_input->control_mode==ATTITUDE_COMMAND_MODE) {
+		// run absolute attitude controller
 		rpy_angles[0]=-imu->attitude.up_vec.v[1];
 		rpy_angles[1]= imu->attitude.up_vec.v[0];
 		rpy_angles[2]= 0.0;
+		
 		stabilise(&attitude_stabiliser, &rpy_angles, control_input);
+		// use output of attitude controller to set rate setpoints for rate controller 
 		rate_input=&attitude_stabiliser.output;
-	} else {
+	} else { // rate control mode
+		// set rate inputs from RC control inputs
 		rate_input=control_input;
 		for (i=0; i<3; i++) {
 			rate_input->rpy[i]=control_input->rpy[i] * 1.5;
 		}		
 	}
+	// get rate measurements from IMU (filtered angular rates)
 	rpy_rates[0]= imu->attitude.om[0];
 	rpy_rates[1]= imu->attitude.om[1];
 	rpy_rates[2]= imu->attitude.om[2];
 
+	// run rate stabiliser
 	stabilise(&rate_stabiliser, &rpy_rates, rate_input);
 
+	// mix to servo outputs depending on configuration
 	#ifdef CONF_DIAG
 	mix_to_servos_diag_quad(&rate_stabiliser.output);
 	#else
