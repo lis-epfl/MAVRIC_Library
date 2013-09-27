@@ -230,12 +230,10 @@ void position_correction()
 		for (i=0; i<3; i++) vel_correction.v[i] = vel_error[i];
 		//vel_correction = quat_global_to_local(board->imu1.attitude.qe, vel_correction);
 				
-		for (i=0;i<3;i++) {
-			//board->imu1.attitude.vel_bf[i] += kp_vel[i]*gps_gain * vel_correction.v[i]* board->imu1.dt;
-			//board->imu1.attitude.be[i+ACC_OFFSET] -=  0.01* kp_vel[i]*gps_gain *  vel_correction.v[i]* board->imu1.dt;
-			
+		for (i=0;i<2;i++) {			
 			board->imu1.attitude.vel[i] += kp_vel[i]*gps_gain * vel_correction.v[i]* board->imu1.dt;
 		}
+		board->imu1.attitude.vel[2] += kp_vel[2]*baro_gain * vel_correction.v[2]* board->imu1.dt;
 
 	}
 }
