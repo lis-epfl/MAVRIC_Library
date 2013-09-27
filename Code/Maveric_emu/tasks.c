@@ -2,7 +2,7 @@
  * tasks.c
  *
  * Created: 16/09/2013 13:28:11
- *  Author: Felix Schill
+ *  Author: sfx
  */ 
 
 
@@ -222,6 +222,8 @@ task_return_t run_stabilisation() {
 			
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
+			board->waypoint_hold_init = false;
+			board->mission_started = false;
 			board->controls = get_command_from_remote();
 			//dbg_print("Thrust:");
 			//dbg_print_num(board->controls.thrust*10000,10);
@@ -230,9 +232,9 @@ task_return_t run_stabilisation() {
 			quad_stabilise(&(board->imu1), &(board->controls));
 			break;
 		case MAV_MODE_GUIDED_ARMED:
-			board->mission_started = 0;
+			board->mission_started = false;
 			board->controls = board->controls_nav;
-			board->controls.thrust = (float)min(get_thrust_from_remote()*1000,board->controls_nav.thrust*1000)/1000.0;
+			board->controls.thrust = min(get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0;
 			//board->controls.thrust = board->controls_nav.thrust;
 			
 			//dbg_print("Thrust (x10000):");
@@ -246,9 +248,10 @@ task_return_t run_stabilisation() {
 			quad_stabilise(&(board->imu1), &(board->controls));
 			break;
 		case MAV_MODE_AUTO_ARMED:
-			board->mission_started = 1;
+			board->mission_started = true;
+			board->waypoint_hold_init = false;
 			board->controls = board->controls_nav;
-			board->controls.thrust = (float)min(get_thrust_from_remote()*1000,board->controls_nav.thrust*1000)/1000.0;
+			board->controls.thrust = min(get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0;
 			//board->controls.thrust = board->controls_nav.thrust;
 			
 			//dbg_print("Thrust main:");
@@ -436,7 +439,7 @@ void create_tasks() {
 
 	register_task(&main_tasks, 5, 10000, RUN_REGULAR, &run_navigation_task);
 
-	register_task(&main_tasks, 6, 250000, RUN_REGULAR, &set_mav_mode_n_state);
+	register_task(&main_tasks, 6, 1000000, RUN_REGULAR, &set_mav_mode_n_state);
 	
 	register_task(&main_tasks, 7, 150000, RUN_REGULAR, &run_barometer);
 
