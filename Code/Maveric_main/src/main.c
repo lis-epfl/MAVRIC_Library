@@ -23,19 +23,19 @@
 
 #include "scheduler.h"
 #include "boardsupport.h"
+#include "central_data.h"
 
 #include "tasks.h"
 //#include "flashvault.h"
 
 board_hardware_t *board;
-
+central_data_t *centralData;
 
 void initialisation() {
 	int i;
 	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 
 	board=initialise_board();
-	
 	
 	init_radar_modules();
 	dbg_print("Debug stream initialised\n");
