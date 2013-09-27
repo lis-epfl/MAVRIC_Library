@@ -44,8 +44,6 @@ global_position_t waypoint_global;
 waypoint_struct current_waypoint;
 bool waypoint_reached;
 
-bool waypoint_hold_init = false;
-
 board_hardware_t *board;
 
 float alt_integrator;
@@ -175,8 +173,6 @@ void run_navigation()
 	// Control in translational speed of the platform
 	if (board->mission_started && board->waypoint_set)
 	{
-		waypoint_hold_init = false;
-		
 		rel_pos[X] = waypoint_coordinates.pos[X] - board->imu1.attitude.localPosition.pos[X];
 		rel_pos[Y] = waypoint_coordinates.pos[Y] - board->imu1.attitude.localPosition.pos[Y];
 		rel_pos[Z] = waypoint_coordinates.pos[Z] - board->imu1.attitude.localPosition.pos[Z];
@@ -236,9 +232,9 @@ void run_navigation()
 				board->waypoint_set = false;
 				dbg_print("Stop\n");
 				
-				if (waypoint_hold_init == 0)
+				if (board->waypoint_hold_init == 0)
 				{
-					waypoint_hold_init = true;
+					board->waypoint_hold_init = true;
 					waypoint_hold_coordinates.pos[X] = board->imu1.attitude.localPosition.pos[X];
 					waypoint_hold_coordinates.pos[Y] = board->imu1.attitude.localPosition.pos[Y];
 					waypoint_hold_coordinates.pos[Z] = board->imu1.attitude.localPosition.pos[Z];
@@ -261,9 +257,9 @@ void run_navigation()
 			init_nav();
 		}
 		
-		if (waypoint_hold_init == 0)
+		if (board->waypoint_hold_init == 0)
 		{
-			waypoint_hold_init = 1;
+			board->waypoint_hold_init = 1;
 			waypoint_hold_coordinates.pos[X] = board->imu1.attitude.localPosition.pos[X];
 			waypoint_hold_coordinates.pos[Y] = board->imu1.attitude.localPosition.pos[Y];
 			waypoint_hold_coordinates.pos[Z] = board->imu1.attitude.localPosition.pos[Z];
@@ -399,7 +395,7 @@ float set_yaw(double value_x, double value_y)
 {
 	float yaw_set;
 	
-	if (abs(value_x) < 0.001 && abs(value_y) < 0.001 || waypoint_hold_init)
+	if (abs(value_x) < 0.001 && abs(value_y) < 0.001 || board->waypoint_hold_init)
 	{
 		//dbg_print("wp_hold_init:");
 		//dbg_print_num(waypoint_hold_init,10);
