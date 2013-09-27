@@ -134,7 +134,7 @@ board_hardware_t* initialise_board() {
 		board_hardware.controls.thrust=-1.0;
 		
 		board_hardware.number_of_waypoints = 0;
-
+		board_hardware.waypoint_hold_init=false;
 		board_hardware.simulation_mode=0;
 		
 		// default GPS home position

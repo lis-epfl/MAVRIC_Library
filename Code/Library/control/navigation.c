@@ -15,19 +15,19 @@
 #define V_TRANSITION 5
 #define V_TRANSITION_SQR V_TRANSITION*V_TRANSITION
 
-#define KP_ROLL 0.6
-#define KP_PITCH -0.6
+#define KP_ROLL 1.0
+#define KP_PITCH -1.0
 #define KP_YAW 0.05
 #define KP_ALT -0.02
 
 #define KD_ALT 0.025
 #define KI_ALT -0.15
 
-#define MIN_ROLL_RATE -2.0
-#define MAX_ROLL_RATE 2.0
+#define MIN_ROLL_RATE -0.5
+#define MAX_ROLL_RATE 0.5
 
-#define MIN_PITCH_RATE -2.0
-#define MAX_PITCH_RATE 2.0
+#define MIN_PITCH_RATE -0.5
+#define MAX_PITCH_RATE 0.5
 
 #define MIN_YAW_RATE -2.0
 #define MAX_YAW_RATE 2.0
@@ -259,6 +259,12 @@ void run_navigation()
 		
 		if (board->waypoint_hold_init == 0)
 		{
+			dbg_print("position hold at: ");
+			dbg_print_num(board->imu1.attitude.localPosition.pos[X],10);
+			dbg_print_num(board->imu1.attitude.localPosition.pos[Y],10);
+			dbg_print_num(board->imu1.attitude.localPosition.pos[Z],10);
+			dbg_print(")\n");
+			
 			board->waypoint_hold_init = 1;
 			waypoint_hold_coordinates.pos[X] = board->imu1.attitude.localPosition.pos[X];
 			waypoint_hold_coordinates.pos[Y] = board->imu1.attitude.localPosition.pos[Y];

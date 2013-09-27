@@ -15,12 +15,14 @@
 #include "stdbool.h"
 
 #include "time_keeper.h"
+//#include "i2c_driver_int.h"
 #include "qfilter.h"
 #include "imu.h"
 #include "stabilisation.h"
 #include "remote_controller.h"
 #include "control.h"
 #include "streams.h"
+//#include "uart_int.h"
 #include "print_util.h"
 
 #include "bmp085.h"
@@ -72,6 +74,7 @@ typedef struct  {
 	bool mission_started;
 	bool waypoint_sending;
 	bool waypoint_receiving;
+	bool waypoint_hold_init;
 	
 	uint8_t mav_mode;
 	uint8_t mav_state;
