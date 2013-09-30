@@ -71,7 +71,7 @@ void register_read_stream_udp(byte_stream_t *stream, udp_connection_t *udpconn, 
 
 	memset(&udpconn->Addr, 0, sizeof(udpconn->Addr));
 	udpconn->Addr.sin_family = AF_INET;
-	udpconn->Addr.sin_addr.s_addr = INADDR_ANY;
+	udpconn->Addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	udpconn->Addr.sin_port = htons(port);
  
 	/* Bind the socket to port 14551 - necessary to receive packets from qgroundcontrol */ 

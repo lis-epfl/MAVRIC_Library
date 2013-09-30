@@ -439,7 +439,7 @@ void create_tasks() {
 
 	register_task(&main_tasks, 5, 10000, RUN_REGULAR, &run_navigation_task);
 
-	register_task(&main_tasks, 6, 1000000, RUN_REGULAR, &set_mav_mode_n_state);
+	register_task(&main_tasks, 6, 250000, RUN_REGULAR, &set_mav_mode_n_state);
 	
 	register_task(&main_tasks, 7, 150000, RUN_REGULAR, &run_barometer);
 

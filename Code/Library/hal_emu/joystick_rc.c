@@ -14,10 +14,12 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/select.h>
 #include <fcntl.h>
 #include <unistd.h>
 //#include <stdlib.h>
 #include <string.h>
+#include <termios.h>
 
 struct joystick_event {
   unsigned int timestamp;
@@ -77,12 +79,60 @@ void close_joystick(int joystick_file_descriptor)
 	close(joystick_file_descriptor);
 }
 
+struct termios orig_termios;
+
+void reset_terminal_mode()
+{
+    tcsetattr(0, TCSANOW, &orig_termios);
+}
+
+void set_conio_terminal_mode()
+{
+    struct termios new_termios;
+
+    /* take two copies - one for now, one for later */
+    tcgetattr(0, &orig_termios);
+    memcpy(&new_termios, &orig_termios, sizeof(new_termios));
+
+    /* register cleanup handler, and set the new terminal mode */
+    atexit(reset_terminal_mode);
+    cfmakeraw(&new_termios);
+    tcsetattr(0, TCSANOW, &new_termios);
+}
+
+int kbhit()
+{
+    struct timeval tv;
+    fd_set fds;
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+    FD_ZERO(&fds);
+    FD_SET(STDIN_FILENO, &fds); //STDIN_FILENO is 0
+    select(STDIN_FILENO+1, &fds, NULL, NULL, &tv);
+    return FD_ISSET(STDIN_FILENO, &fds);
+}
+
+int getch()
+{
+    int r;
+    unsigned char c;
+    if ((r = read(0, &c, sizeof(c))) < 0) {
+        return r;
+    } else {
+        return c;
+    }
+}
+
+
 int get_joystick_status(int joystick_file_descriptor, int *axes, int *buttons, int axes_size, int buttons_size)
 {
   int rc;
   struct joystick_event event;
+
+
   if (joystick_file_descriptor < 0)
     return -1;
+
 
   while ((rc = read_joystick_event(joystick_file_descriptor, &event) == 1)) {
     event.type &= ~JS_INIT;
@@ -131,15 +181,68 @@ void rc_init (void) {
 	channelCenter[RC_YAW]=0;
 	joystick_filedescriptor=open_joystick(JOYSTICK_DEVICE);
 	last_update=get_millis();
+	
+	set_conio_terminal_mode();
 }
 /**/
+uint32_t last_keypress;
+void get_keyboard_input(int *joystick_axes) {
+	if (!kbhit()) {
+		if (get_millis()-last_keypress<1000) {
+			
+			if (get_millis()-last_keypress<500) {
+				joystick_axes[JOY_PITCH]/=2;
+				joystick_axes[JOY_ROLL]/=2;
+				joystick_axes[JOY_YAW]/=2;
+				joystick_axes[JOY_THROTTLE]/=2;
+			} else {
+				joystick_axes[JOY_PITCH]=0;
+				joystick_axes[JOY_ROLL]=0;
+				joystick_axes[JOY_YAW]=0;
+				joystick_axes[JOY_THROTTLE]=0;
+			}
+		}
+	} else
+	while (kbhit()) {
+		last_keypress=get_millis();
+		char c=getch();
+		if (c==3) exit(0);
+		//wdbg_print(c);
+		switch (c) {
+			case 'i': joystick_axes[JOY_PITCH]=-20000; break;
+			case 'k': joystick_axes[JOY_PITCH]= 20000; break;
+			case 'j': joystick_axes[JOY_ROLL]=-20000; break;
+			case 'l': joystick_axes[JOY_ROLL]= 20000; break;
+			case 'a': joystick_axes[JOY_YAW]=-20000; break;
+			case 'd': joystick_axes[JOY_YAW]= 20000; break;
+			case 'w': joystick_axes[JOY_THROTTLE]=-10000; break;
+			case 's': joystick_axes[JOY_THROTTLE]= 10000; break;
+			
+			case 'x': joystick_axes[JOY_SAFETY]=-20000; break;
+			case 'c': joystick_axes[JOY_SAFETY]= 20000; break;
+
+			case 'm': joystick_axes[JOY_THROTTLE]= 32000; 
+			          joystick_axes[JOY_YAW]= 32000; 
+			          break;
+
+			case 'o': joystick_axes[JOY_THROTTLE]= 32000; 
+			          joystick_axes[JOY_YAW]= -32000; 
+			          break;
+
+			case '1': joystick_axes[JOY_ID_MODE]=-20000; break;
+			case '2': joystick_axes[JOY_ID_MODE]= 0; break;
+			case '3': joystick_axes[JOY_ID_MODE]= 20000; break;
+		}
+	}
+}
 
 
 int16_t rc_get_channel(uint8_t index) {
 	int i;
-	if (get_millis()-last_update>100) 
+	if (get_millis()-last_update>20) 
 	{
-		
+
+		get_keyboard_input(&joystick_axes);
 		get_joystick_status(joystick_filedescriptor, &joystick_axes, &joystick_buttons, 16, 16);
 		for (i=0; i<16; i++) {
 			if (joystick_axes[i]>joyMax[i]) joyMax[i]=joystick_axes[i];
