@@ -1,6 +1,8 @@
 #ifndef MATHS_H
 #define MATHS_H
 
+#include "compiler.h"
+
 typedef struct {
 	double longitude;
 	double latitude;
@@ -111,8 +113,8 @@ UQuat_t static inline quat_local_to_global(UQuat_t qe, UQuat_t qvect)
 {
 	UQuat_t qinv, qtmp;
 	
-	qtmp = quat_multi(qe, qvect);
 	qinv = quat_inv(qe);
+	qtmp = quat_multi(qe, qvect);
 	qtmp = quat_multi(qtmp, qinv);
 	
 	return qtmp;
@@ -120,10 +122,29 @@ UQuat_t static inline quat_local_to_global(UQuat_t qe, UQuat_t qvect)
 
 // fast newton iteration for approximate square root
 float static inline fast_sqrt(float input) {
+	if (input<0) {
+		dbg_print("negative root");
+		return 0.0;
+	}
 	float result=1.0;
+	result=0.5*(result+(input/result));
 	result=0.5*(result+(input/result));
 	result=0.5*(result+(input/result));
 	result=0.5*(result+(input/result));
 	return result;
 }
+
+static inline UQuat_t quat_normalise(UQuat_t q) {
+	UQuat_t result={.s=1.0, .v={0.0, 0.0, 0.0} };
+	float snorm= SQR(q.s) + SQR(q.v[0]) + SQR(q.v[1]) + SQR(q.v[2]);
+	if (snorm >0.000000001) {
+		float norm=fast_sqrt(SQR(q.v[0]) + SQR(q.v[1]) + SQR(q.v[2]) );
+		result.s=q.s/norm;
+		result.v[0]=q.v[0]/norm;		result.v[1]=q.v[1]/norm;		result.v[2]=q.v[2]/norm;
+
+	}
+	return result;
+}
+
+
 #endif

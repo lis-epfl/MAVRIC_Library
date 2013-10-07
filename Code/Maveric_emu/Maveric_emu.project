@@ -194,6 +194,11 @@
       <File Name="../Library/hal_emu/joystick_rc.h"/>
       <File Name="../Library/hal_emu/joystick_rc.c"/>
     </VirtualDirectory>
+    <VirtualDirectory Name="tests">
+      <File Name="../Library/tests/test_maths.h"/>
+      <File Name="../Library/tests/test_maths.c"/>
+      <File Name="../Library/tests/all_tests.h"/>
+    </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="config">
     <File Name="config/conf_twis.h"/>
@@ -220,6 +225,7 @@
         <IncludePath Value="../Library/runtime"/>
         <IncludePath Value="../Library/sensing"/>
         <IncludePath Value="../Library/util"/>
+        <IncludePath Value="../Library/tests"/>
         <IncludePath Value="./config"/>
       </Compiler>
       <Linker Options="">
@@ -240,6 +246,7 @@
         <![CDATA[]]>
       </Environment>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <DebuggerSearchPaths/>
         <PostConnectCommands/>
         <StartupCommands/>
       </Debugger>
@@ -277,6 +284,7 @@
         <![CDATA[]]>
       </Environment>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <DebuggerSearchPaths/>
         <PostConnectCommands/>
         <StartupCommands/>
       </Debugger>

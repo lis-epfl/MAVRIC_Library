@@ -3,6 +3,7 @@
 
 //#include "usart.h"
 #include "streams.h"
+#include "maths.h"
 
 #define MAX_DIGITS 10
 //#define STDOUT 0
@@ -13,9 +14,16 @@ void dbg_print_init(byte_stream_t* debug_stream);
 void putstring(byte_stream_t *out_stream, const char* s);
 void putdigit(byte_stream_t *out_stream, unsigned c);
 void putnum(byte_stream_t *out_stream, long c, char base);
+void putfloat(byte_stream_t *out_stream, float c, int after_digits);
+void print_vector(byte_stream_t *out_stream, float v[], int after_digits); 
+void print_quaternion(byte_stream_t *out_stream, UQuat_t *quat, int after_digits); 
 
 void dbg_print(const char* s);
 void dbg_print_num(long c, char base);
 void dbg_log_value(const char* msg, long value, char base);
+void dbg_putfloat(float c, int after_digits);
+
+void dbg_print_vector(float v[], int after_digits); 
+void dbg_print_quaternion(UQuat_t *quat, int after_digits); 
 
 #endif
