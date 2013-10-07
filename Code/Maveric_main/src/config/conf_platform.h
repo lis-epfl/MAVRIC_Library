@@ -12,6 +12,8 @@
 
 #define NATIVE_BIG_ENDIAN  
 
+#define MAVLINK_SYS_ID 55
+
 #define CONF_DIAG
 //#define CONF_CROSS
 

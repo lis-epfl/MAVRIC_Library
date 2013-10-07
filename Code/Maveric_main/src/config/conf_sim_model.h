@@ -14,7 +14,10 @@
 // default home location (EFPL Esplanade)
 #define HOME_LONGITUDE 6.566044801857777
 #define HOME_LATITUDE 46.51852236174565
+//#define HOME_LATITUDE 46.5184
 #define HOME_ALTITUDE 400.0
+
+
 
 #define AIR_DENSITY 1.2
 

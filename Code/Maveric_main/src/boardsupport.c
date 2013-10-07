@@ -91,7 +91,7 @@ board_hardware_t* initialise_board() {
 */
 
 		// init mavlink
-		init_mavlink(board_hardware.telemetry_down_stream, board_hardware.telemetry_up_stream, 55);
+		init_mavlink(board_hardware.telemetry_down_stream, board_hardware.telemetry_up_stream, MAVLINK_SYS_ID);
 		
 		// init debug output
 		dbg_print_init(board_hardware.debug_out_stream);
