@@ -3,18 +3,6 @@
 
 #include "compiler.h"
 
-typedef struct {
-	double longitude;
-	double latitude;
-	float altitude;
-	uint32_t timestamp_ms;
-} global_position_t;
-
-typedef struct {
-	double pos[3];
-	global_position_t origin;
-	uint32_t timestamp_ms;
-} local_coordinates_t;
 
 typedef struct UQuat {
 	float s;

@@ -11,6 +11,7 @@
 #include "compiler.h"
 
 #include "maths.h"
+#include "coord_conventions.h"
 
 #define GYRO_LPF 0.1
 #define ACC_LPF 0.05
@@ -44,6 +45,7 @@ typedef struct {
 	float pos_correction[3];
 	float last_alt, last_vel[3];
 	float baro_alt_error;
+
 	local_coordinates_t localPosition;
 	local_coordinates_t lastGpsPos;
 

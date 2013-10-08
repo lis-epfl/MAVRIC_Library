@@ -10,6 +10,17 @@
 #include "control.h"
 
 
+PID_Controller_t passthroughController() {
+	PID_Controller_t out;
+	out.p_gain=1.0;
+	out.last_update=get_time_ticks();	
+	out.clip_min=-1.0;
+	out.clip_max= 1.0;
+	out.output=0.0;
+	initDiff(&(out.differentiator), 0.0, 0.0, 0.0);
+	initInt(&(out.integrator), 0.0, 0.0, 0.0);
+	return out;
+}
 
 
 float clip(float input_value, float clip_value);
@@ -60,14 +71,14 @@ float differentiate(Differentiator_t *diff, float input, float dt) {
 	return output;
 }
 
-float pid_update(PID_Controller_t* controller, float input, float goal_state) {
+float pid_update(PID_Controller_t* controller, float error) {
 	uint32_t t= get_time_ticks();
-	controller->error=(goal_state-input);
+	controller->error=error;
 	controller->dt=ticks_to_seconds(t - controller->last_update);
 	controller->last_update=t;
 	
 	controller->output = controller->p_gain* (controller->error +integrate(&controller->integrator, controller->error, controller->dt) + differentiate(&controller->differentiator, controller->error, controller->dt));
-	if (controller->output<controller->clip_min) controller->output=controller->clip_min;
-	if (controller->output>controller->clip_max) controller->output=controller->clip_max;
+	if (controller->output < controller->clip_min) controller->output=controller->clip_min;
+	if (controller->output > controller->clip_max) controller->output=controller->clip_max;
 	return controller->output;	
 }

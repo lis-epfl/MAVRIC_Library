@@ -182,7 +182,9 @@ void rc_init (void) {
 	joystick_filedescriptor=open_joystick(JOYSTICK_DEVICE);
 	last_update=get_millis();
 	
+	#ifdef KEYBOARD_ACTIVE
 	set_conio_terminal_mode();
+	#endif
 }
 /**/
 uint32_t last_keypress;
@@ -242,7 +244,10 @@ int16_t rc_get_channel(uint8_t index) {
 	if (get_millis()-last_update>20) 
 	{
 
+		#ifdef KEYBOARD_ACTIVE
 		get_keyboard_input(&joystick_axes);
+		#endif
+		
 		get_joystick_status(joystick_filedescriptor, &joystick_axes, &joystick_buttons, 16, 16);
 		for (i=0; i<16; i++) {
 			if (joystick_axes[i]>joyMax[i]) joyMax[i]=joystick_axes[i];

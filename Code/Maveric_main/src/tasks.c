@@ -228,7 +228,7 @@ task_return_t run_stabilisation() {
 			//dbg_print("Thrust:");
 			//dbg_print_num(board->controls.thrust*10000,10);
 			//dbg_print("\n");
-			board->controls.control_mode=ATTITUDE_COMMAND_MODE;
+			board->controls.control_mode=ATTITUDE_COMMAND_MODE_REL_YAW;
 			quad_stabilise(&(board->imu1), &(board->controls));
 			break;
 		case MAV_MODE_GUIDED_ARMED:

@@ -13,7 +13,7 @@
 #include "buffer.h"
 
 #define JOYSTICK_DEVICE "/dev/input/js0"
-
+//#define KEYBOARD_ACTIVE
 
 
 //Gamepad

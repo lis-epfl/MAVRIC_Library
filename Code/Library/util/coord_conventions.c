@@ -18,6 +18,8 @@ global_position_t local_to_global_position(local_coordinates_t input){
 	output.latitude = input.origin.latitude  + rad_to_deg( input.pos[0] / EARTH_RADIUS);
 	output.longitude= input.origin.longitude + rad_to_deg( input.pos[1] / ( EARTH_RADIUS*cos(deg_to_rad(output.latitude))));
 	output.altitude = -input.pos[2] + input.origin.altitude;
+	output.heading=input.heading;
+
 	return output;
 }
 
@@ -29,6 +31,7 @@ local_coordinates_t global_to_local_position(global_position_t position, global_
 	output.pos[X]=  sin(deg_to_rad((position.latitude-origin.latitude)))*EARTH_RADIUS;
 	output.pos[Y]=  sin(deg_to_rad((position.longitude-origin.longitude)))*small_radius;
 	output.pos[Z]= -(position.altitude - origin.altitude);
+	output.heading=position.heading;
 	
 	//dbg_print("global2local: (x1e7): ");
 	//dbg_print("lat:(");
@@ -66,15 +69,7 @@ Aero_Attitude_t Quat_to_Aero(UQuat_t qe) {
 	return aero;
 }
 
-Schill_Attitude_t Quat_to_Schill(UQuat_t qe) {
-	Schill_Attitude_t schill;
-	Aero_Attitude_t aero;
-	
-	aero=Quat_to_Aero(qe);
-	
-	schill.rpy[0]=aero.rpy[1];
-	schill.rpy[1]=aero.rpy[0];
-	schill.rpy[2]=aero.rpy[2];
-
-	return schill;
+float get_yaw(UQuat_t qe) {
+	return  atan2(2*(qe.s*qe.v[2] + qe.v[0]*qe.v[1]) , (qe.s*qe.s + qe.v[0]*qe.v[0] - qe.v[1]*qe.v[1] - qe.v[2]*qe.v[2]));
 }
+

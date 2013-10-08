@@ -35,17 +35,19 @@ typedef struct {
 	float dt;  // is updated from system time at each update.
 }PID_Controller_t;
 
-float integrate(Integrator_t *integrator, float input, float dt);
+PID_Controller_t passthroughController();
 
 void initInt(Integrator_t *integrator, float pregain, float postgain, float clip);
+
 void resetInt(Integrator_t *integrator);
 
 void initDiff(Differentiator_t *diff, float gain, float LPF, float clip);
 
+float integrate(Integrator_t *integrator, float input, float dt);
+
 float differentiate(Differentiator_t *diff, float input,  float dt);
 
-
-float pid_update(PID_Controller_t* controller, float input, float goal_state);
+float pid_update(PID_Controller_t* controller, float error);
 
 
 #endif /* CONTROL_H_ */

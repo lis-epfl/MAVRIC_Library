@@ -132,6 +132,7 @@ void position_integration(Quat_Attitude_t *attitude, float dt)
 	for (i=0; i<3; i++) {
 		// clean position estimate without gravity:
 		attitude->localPosition.pos[i] =attitude->localPosition.pos[i]*(1.0-(POS_DECAY*dt)) + attitude->vel[i] *dt;
+		attitude->localPosition.heading=get_yaw(attitude->qe);
 	}
 }
 
