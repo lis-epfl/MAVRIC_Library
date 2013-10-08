@@ -123,7 +123,7 @@ UQuat_t static inline quat_local_to_global(UQuat_t qe, UQuat_t qvect)
 // fast newton iteration for approximate square root
 float static inline fast_sqrt(float input) {
 	if (input<0) {
-		dbg_print("negative root");
+		//dbg_print("negative root");
 		return 0.0;
 	}
 	float result=1.0;

@@ -12,20 +12,18 @@
 #include "qfilter.h"
 #include "waypoint_navigation.h"
 
-#define MAX_CLIMB_RATE 2.5
-
 void init_nav();
 void set_waypoint_from_frame(waypoint_struct current_wp);
 
 void run_navigation();
 
-void set_speed_command(double rel_pos[]);
+void set_speed_command(double rel_pos[], double dist2wpSqr);
 
-void low_speed_nav(double dir_desired_bf[], Quat_Attitude_t attitude);
+void low_speed_nav(double dir_desired_bf[], Quat_Attitude_t attitude, double rel_distance);
 void high_speed_nav(double dir_desired_bf[], Quat_Attitude_t attitude);
 
 void altitude_nav(double dir_desired_bf_z);
-void heave_velocity_control(double dir_desired_bf_z);
+void heave_velocity_control(double dir_desired_bf_z, Quat_Attitude_t attitude);
 
 float set_roll(double direction_bf_y, double vel_bf_y);
 float set_pitch(double direction_bf_x, double vel_bf_x);

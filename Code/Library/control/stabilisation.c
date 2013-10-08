@@ -11,7 +11,7 @@
 #include "print_util.h"
 #include "boardsupport.h"
 
-Stabiliser_t rate_stabiliser, attitude_stabiliser;
+Stabiliser_t rate_stabiliser, attitude_stabiliser, velocity_stabiliser;
 
 board_hardware_t *board;
 
@@ -62,6 +62,34 @@ void init_angle_stabilisation(Stabiliser_t *stabiliser) {
 	
 }
 
+void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
+	int i = 0;
+	// initialise x velocity
+	(stabiliser->rpy_controller[i]).p_gain=1.5;
+	(stabiliser->rpy_controller[i]).last_update=get_time_ticks();
+	(stabiliser->rpy_controller[i]).clip_min=-1.2;
+	(stabiliser->rpy_controller[i]).clip_max= 1.2;
+	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.00, 0.5, 0.1); // 0.05, 0.5, 0.05
+	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.0);
+	
+	// initialise y velocity
+	i = 1;
+	(stabiliser->rpy_controller[i]).p_gain=1.5;
+	(stabiliser->rpy_controller[i]).last_update=get_time_ticks();
+	(stabiliser->rpy_controller[i]).clip_min=-1.2;
+	(stabiliser->rpy_controller[i]).clip_max= 1.2;
+	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.00, 0.5, 0.1); // 0.05, 0.5, 0.05
+	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.0);
+	
+	// initialise z velocity
+	i = 2;
+	(stabiliser->rpy_controller[i]).p_gain=1.5;
+	(stabiliser->rpy_controller[i]).last_update=get_time_ticks();
+	(stabiliser->rpy_controller[i]).clip_min=-1.2;
+	(stabiliser->rpy_controller[i]).clip_max= 1.2;
+	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.00, 0.5, 0.1); // 0.05, 0.5, 0.05
+	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.0);
+}
 
 void init_stabilisation() {
 	board=get_board_hardware();
@@ -69,6 +97,7 @@ void init_stabilisation() {
 	board->controls.control_mode=ATTITUDE_COMMAND_MODE;
 	init_rate_stabilisation(&rate_stabiliser);
 	init_angle_stabilisation(&attitude_stabiliser);
+	init_velocity_stabilisation(&velocity_stabiliser);
 }
 
 void stabilise(Stabiliser_t *stabiliser, float *rpy_sensor_values, Control_Command_t *control_input) {

@@ -23,14 +23,18 @@
 #define KD_ALT 0.025
 #define KI_ALT -0.15
 
+#define ALT_INT_SATURATION_MAX 2.0
+#define ALT_INT_SATURATION_MIN -2.0
+#define MAX_CLIMB_RATE 5.0
+
 #define MIN_ROLL_RATE -0.5
 #define MAX_ROLL_RATE 0.5
 
 #define MIN_PITCH_RATE -0.5
 #define MAX_PITCH_RATE 0.5
 
-#define MIN_YAW_RATE -2.0
-#define MAX_YAW_RATE 2.0
+#define MIN_YAW_RATE -4.0
+#define MAX_YAW_RATE 4.0
 
 #define V_CRUISE 2.5
 
@@ -177,23 +181,23 @@ void run_navigation()
 		rel_pos[Y] = waypoint_coordinates.pos[Y] - board->imu1.attitude.localPosition.pos[Y];
 		rel_pos[Z] = waypoint_coordinates.pos[Z] - board->imu1.attitude.localPosition.pos[Z];
 		
-		dbg_print("rel_pos:(");
-		dbg_print_num(rel_pos[X],10);
-		dbg_print_num(rel_pos[Y],10);
-		dbg_print_num(rel_pos[Z],10);
-		dbg_print(")");
-		dbg_print(", wp_coor:(");
-		dbg_print_num(waypoint_coordinates.pos[X],10);
-		dbg_print_num(waypoint_coordinates.pos[Y],10);
-		dbg_print_num(waypoint_coordinates.pos[Z],10);
-		dbg_print(")");
-		dbg_print(", localPos:(");
-		dbg_print_num(board->imu1.attitude.localPosition.pos[X],10);
-		dbg_print_num(board->imu1.attitude.localPosition.pos[Y],10);
-		dbg_print_num(board->imu1.attitude.localPosition.pos[Z],10);
-		dbg_print(")\n");
-		
 		dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
+		
+		//dbg_print("rel_pos:(");
+		//dbg_print_num(rel_pos[X],10);
+		//dbg_print_num(rel_pos[Y],10);
+		//dbg_print_num(rel_pos[Z],10);
+		//dbg_print(")");
+		//dbg_print(", wp_coor:(");
+		//dbg_print_num(waypoint_coordinates.pos[X],10);
+		//dbg_print_num(waypoint_coordinates.pos[Y],10);
+		//dbg_print_num(waypoint_coordinates.pos[Z],10);
+		//dbg_print(")");
+		//dbg_print(", localPos:(");
+		//dbg_print_num(board->imu1.attitude.localPosition.pos[X],10);
+		//dbg_print_num(board->imu1.attitude.localPosition.pos[Y],10);
+		//dbg_print_num(board->imu1.attitude.localPosition.pos[Z],10);
+		//dbg_print(")\n");
 		
 		if (dist2wp_sqr <= (current_waypoint.param2*current_waypoint.param2))
 		{
@@ -244,6 +248,8 @@ void run_navigation()
 				rel_pos[Y] = waypoint_hold_coordinates.pos[Y] - board->imu1.attitude.localPosition.pos[Y];
 				rel_pos[Z] = waypoint_hold_coordinates.pos[Z] - board->imu1.attitude.localPosition.pos[Z];
 				
+				dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
+				
 				// set speeds to zero
 				//for (i=0;i<3;i++)
 				//{
@@ -275,12 +281,14 @@ void run_navigation()
 		rel_pos[Y] = waypoint_hold_coordinates.pos[Y] - board->imu1.attitude.localPosition.pos[Y];
 		rel_pos[Z] = waypoint_hold_coordinates.pos[Z] - board->imu1.attitude.localPosition.pos[Z];
 		
+		dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
+		
 	}
-	set_speed_command(rel_pos);
+	set_speed_command(rel_pos,dist2wp_sqr);
 }
 
 
-void set_speed_command(double rel_pos[])
+void set_speed_command(double rel_pos[], double dist2wpSqr)
 {
 	int8_t i;
 	double h_vel_sqr_norm, norm_rel_dist, v_desired, z_pos;
@@ -288,20 +296,26 @@ void set_speed_command(double rel_pos[])
 	
 	double dir_desired_bf[3], dir_desired[3], tmp[3];
 
-	v_desired = min(V_CRUISE,sqrt(rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2]));
+	v_desired = min(V_CRUISE,sqrt(dist2wpSqr));
 	
 	z_pos = rel_pos[Z];
-	rel_pos[Z] = 0;
+	//rel_pos[Z] = 0;
+	
 	norm_rel_dist = sqrt(rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2])+0.0001;
+	//norm_rel_dist = sqrt(rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2]);
+	//if (norm_rel_dist < 0.0005)
+	//{
+		//norm_rel_dist += 0.0005;
+	//}
 	
 	dir_desired[0] = v_desired * rel_pos[0] / norm_rel_dist;
 	dir_desired[1] = v_desired * rel_pos[1] / norm_rel_dist;
 	dir_desired[2] = v_desired * rel_pos[2] / norm_rel_dist;
 
 	//qtmp1 = quat_from_vector(dir_desired);
-	qtmp1.s= 0.0; qtmp1.v[0]=dir_desired[0]; qtmp1.v[1]=dir_desired[1]; qtmp1.v[2]=dir_desired[2];
-	qtmp2 = quat_global_to_local(board->imu1.attitude.qe,qtmp1);
-	dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
+	//qtmp1.s= 0.0; qtmp1.v[0]=dir_desired[0]; qtmp1.v[1]=dir_desired[1]; qtmp1.v[2]=dir_desired[2];
+	//qtmp2 = quat_global_to_local(board->imu1.attitude.qe,qtmp1);
+	//dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
 
 	//dbg_print("quatfromvect:");
 	//dbg_print_num(dir_desired_bf[0],10);
@@ -310,27 +324,17 @@ void set_speed_command(double rel_pos[])
 
 	// calculate dir_desired in local frame
 	// vel = qe-1 * rel_pos * qe
-	//qtmp1.s= 0.0; qtmp1.v[0]=dir_desired[0]; qtmp1.v[1]=dir_desired[1]; qtmp1.v[2]=dir_desired[2];
-	//QI(board->imu1.attitude.qe, qtmp2);
-	//QMUL(qtmp2, qtmp1, qtmp3);
-	//QMUL(qtmp3, board->imu1.attitude.qe, qtmp4);
-	//dir_desired_bf[0] = qtmp4.v[0]; dir_desired_bf[1] = qtmp4.v[1]; dir_desired_bf[2] = qtmp4.v[2];
+	qtmp1.s= 0.0; qtmp1.v[0]=dir_desired[0]; qtmp1.v[1]=dir_desired[1]; qtmp1.v[2]=dir_desired[2];
+	QI(board->imu1.attitude.qe, qtmp2);
+	QMUL(qtmp2, qtmp1, qtmp3);
+	QMUL(qtmp3, board->imu1.attitude.qe, qtmp4);
+	dir_desired_bf[0] = qtmp4.v[0]; dir_desired_bf[1] = qtmp4.v[1]; dir_desired_bf[2] = qtmp4.v[2];
 	
 	//dbg_print("quat:");
 	//dbg_print_num(dir_desired_bf[0],10);
 	//dbg_print_num(dir_desired_bf[1],10);
 	//dbg_print_num(dir_desired_bf[2],10);
 	//dbg_print("\n");
-	
-	norm_rel_dist = sqrt(rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2]);
-	if (norm_rel_dist < 0.0005)
-	{
-		norm_rel_dist += 0.0005;
-	}
-	
-	dir_desired[X] = v_desired * rel_pos[X] / norm_rel_dist;
-	dir_desired[Y] = v_desired * rel_pos[Y] / norm_rel_dist;
-	dir_desired[Z] = v_desired * rel_pos[Z] / norm_rel_dist;
 	
 	if (abs(dir_desired[Z]) > MAX_CLIMB_RATE)
 	{
@@ -348,17 +352,26 @@ void set_speed_command(double rel_pos[])
 	//}
 	
 	
-	low_speed_nav(dir_desired_bf,board->imu1.attitude);
-	//heave_velocity_control(dir_desired_bf[Z]);
+	low_speed_nav(dir_desired_bf,board->imu1.attitude,norm_rel_dist);
+	heave_velocity_control(dir_desired_bf[Z],board->imu1.attitude);
 	
-	dir_desired_bf[Z] = z_pos;
-	altitude_nav(dir_desired_bf[Z]);
+	//dir_desired_bf[Z] = z_pos;
+	//altitude_nav(dir_desired_bf[Z]);
 }
 
-void low_speed_nav(double dir_desired_bf[], Quat_Attitude_t attitude)
+void low_speed_nav(double dir_desired_bf[], Quat_Attitude_t attitude, double rel_distance)
 {
 	// dbg_print("Low speed nav\n");
-	if (atan2(dir_desired_bf[Y],dir_desired_bf[X])>=(PI/10.0))
+	
+	double yaw_angle_tolerance;
+	if (rel_distance <= 5.0)
+	{
+		yaw_angle_tolerance = PI/20.0;
+	}else{
+		yaw_angle_tolerance = PI/10.0;
+	}
+	
+	if (atan2(dir_desired_bf[Y],dir_desired_bf[X])>=yaw_angle_tolerance)
 	{
 		board->controls_nav.rpy[ROLL] = set_roll(0.0, attitude.vel_bf[Y]);
 		board->controls_nav.rpy[PITCH] = set_pitch(0.0, attitude.vel_bf[X]);
@@ -391,38 +404,49 @@ void altitude_nav(double dir_desired_bf_z)
 	err = dir_desired_bf_z; // - board->imu1.attitude.localPosition.pos[Z];
 	
 	board->controls_nav.thrust = - 0.35 * 9.81 / 16.0 + KP_ALT * err  + KI_ALT * alt_integrator; // //+ KD_ALT * board->imu1.attitude.vel[Z]
+	board->controls_nav.thrust = - board->sim_model.total_mass * GRAVITY / 16.0 + KP_ALT * err - KI_ALT * alt_integrator; // //+ KD_ALT * board->imu1.attitude.vel[Z]
 	
 	alt_integrator += err; 
 	
-	alt_integrator = min_max_bound(alt_integrator,-1.0,1.0);
+	alt_integrator = min_max_bound(alt_integrator,ALT_INT_SATURATION_MIN,ALT_INT_SATURATION_MAX);
 	
-	dbg_print("Thrust (x10000):");
-	dbg_print_num(board->controls_nav.thrust*10000,10);
+	//dbg_print("Thrust (x10000):");
+	//dbg_print_num(board->controls_nav.thrust*10000,10);
 	//dbg_print(" , err (x1000):");
 	//dbg_print_num(KP_ALT *err*1000,10);
 	//dbg_print(", alt_int (x1000):");
 	//dbg_print_num(KI_ALT * alt_integrator*1000,10);
-	dbg_print("; dir_bf (x1000):");
-	dbg_print_num(dir_desired_bf_z*1000,10);
+	//dbg_print("; dir_bf (x1000):");
+	//dbg_print_num(dir_desired_bf_z*1000,10);
 	//dbg_print(", localPosZ (x1000):");
 	//dbg_print_num(board->imu1.attitude.localPosition.pos[Z]*1000,10);
-	dbg_print("\n");
+	//dbg_print("\n");
 }
 
-void heave_velocity_control(double dir_desired_bf_z)
+void heave_velocity_control(double dir_desired_bf_z, Quat_Attitude_t attitude)
 {
-	double gravity_compensation = -board->sim_model.total_mass * GRAVITY / 16.0;
+	double gravity_compensation = -board->sim_model.total_mass * GRAVITY / 4.0;
 	//double gravity_compensation = -0.35 * 9.81 / 16.0;
 	
-	board->controls_nav.thrust = gravity_compensation + 0.5 * dir_desired_bf_z; // - 5.0 * board->imu1.attitude.vel_bf[Z];
+	float err = dir_desired_bf_z - attitude.vel_bf[Z];
 	
-	dbg_print("heave velocity (x10000):");
+	board->controls_nav.thrust = gravity_compensation - 0.5 * err - 0.05 * alt_integrator; // - 0.1 * board->imu1.attitude.vel_bf[Z];
+	
+	alt_integrator += err;
+	
+	alt_integrator = min_max_bound(alt_integrator,ALT_INT_SATURATION_MIN,ALT_INT_SATURATION_MAX);
+	
+	dbg_print("thrust2 (x10000):");
 	dbg_print_num(board->controls_nav.thrust*10000,10);
 	dbg_print(" = ");
-	dbg_print_num(gravity_compensation*100,10);
-	dbg_print("dir_bf_z (x1000):");
+	dbg_print(", err:(x1000)");
+	dbg_print_num(err*1000, 10);
+	dbg_print(", dir_bf_z (x1000):");
 	dbg_print_num(dir_desired_bf_z*1000,10);
-	dbg_print_num(board->imu1.attitude.vel_bf[Z]*100,10);
+	dbg_print(", alt_int (x1000):");
+	dbg_print_num(alt_integrator*1000,10);
+	//dbg_print(", vel_bf_z (x100):");
+	//dbg_print_num(board->imu1.attitude.vel_bf[Z]*100,10);
 	dbg_print("\n");
 	
 }
