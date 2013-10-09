@@ -17,7 +17,7 @@
 
 #define KP_ROLL 1.0
 #define KP_PITCH -1.0
-#define KP_YAW 0.05
+#define KP_YAW 0.2
 #define KP_ALT -0.02
 
 #define KD_ALT 0.025
@@ -25,7 +25,7 @@
 
 #define ALT_INT_SATURATION_MAX 2.0
 #define ALT_INT_SATURATION_MIN -2.0
-#define MAX_CLIMB_RATE 5.0
+#define MAX_CLIMB_RATE 3.0
 
 #define MIN_ROLL_RATE -0.5
 #define MAX_ROLL_RATE 0.5
@@ -36,13 +36,13 @@
 #define MIN_YAW_RATE -4.0
 #define MAX_YAW_RATE 4.0
 
-#define V_CRUISE 2.5
+#define V_CRUISE 15
 
 #define NAV_HOLD_POS       0
 #define NAV_LOW_VELOCITY   1
 #define NAV_HIGH_VELOCITY  2
 
-#define DIST_2_VEL_GAIN 0.05
+#define DIST_2_VEL_GAIN 0.4
 
 local_coordinates_t waypoint_coordinates, waypoint_hold_coordinates;
 global_position_t waypoint_global;
@@ -329,6 +329,9 @@ void set_speed_command(double rel_pos[], double dist2wpSqr)
 	QMUL(qtmp2, qtmp1, qtmp3);
 	QMUL(qtmp3, centralData->imu1.attitude.qe, qtmp4);
 	dir_desired_bf[0] = qtmp4.v[0]; dir_desired_bf[1] = qtmp4.v[1]; dir_desired_bf[2] = qtmp4.v[2];
+	
+	// experimental: Z-axis in velocity mode is in global frame...
+	dir_desired_bf[2] = dir_desired[2];
 	
 	//dbg_print("quat:");
 	//dbg_print_num(dir_desired_bf[0],10);

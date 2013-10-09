@@ -73,8 +73,8 @@ void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	// initialise roll velocity
 	(stabiliser->rpy_controller[i]).p_gain=0.1; //0.1
 	(stabiliser->rpy_controller[i]).last_update=get_time_ticks();
-	(stabiliser->rpy_controller[i]).clip_min=-0.6; //-0.6
-	(stabiliser->rpy_controller[i]).clip_max= 0.6; //0.6
+	(stabiliser->rpy_controller[i]).clip_min=-0.5; //-0.6
+	(stabiliser->rpy_controller[i]).clip_max= 0.5; //0.6
 	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.5, 0.5); // 0.1 0.5 0.5
 	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.3); // 1.0 0.3 0.3
 	
@@ -82,8 +82,8 @@ void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	i = 1;
 	(stabiliser->rpy_controller[i]).p_gain=0.1; //0.1
 	(stabiliser->rpy_controller[i]).last_update=get_time_ticks();
-	(stabiliser->rpy_controller[i]).clip_min=-0.6; //-0.6
-	(stabiliser->rpy_controller[i]).clip_max= 0.6; //0.6
+	(stabiliser->rpy_controller[i]).clip_min=-0.5; //-0.6
+	(stabiliser->rpy_controller[i]).clip_max= 0.5; //0.6
 	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.5, 0.5); // 0.1 0.5 0.5
 	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.3); // 1.0 0.3 0.3
 	

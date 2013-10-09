@@ -16,7 +16,7 @@
 
 udp_connection_t udp_out, udp_in;
 
-static volatile board_hardware_t board_hardware;
+static volatile central_data_t centralData;
 
 static inline void stdout_send_byte(void* options, char data) {
 	//printf("%c", data);
@@ -74,98 +74,78 @@ void register_read_stream_stdin( byte_stream_t *stream) {
 
 
 
-board_hardware_t* initialise_board() {
+void initialise_board(central_data_t *centralData) {
 //		init_UART_int(0);
 
-		make_buffered_stream(&board_hardware.xbee_in_buffer, &board_hardware.xbee_in_stream);
+		make_buffered_stream(&centralData->xbee_in_buffer, &centralData->xbee_in_stream);
 
-		//register_read_stream_stdin( &board_hardware.xbee_in_stream);
-		register_read_stream_udp( &board_hardware.xbee_in_stream, &udp_in, 14551);
+		//register_read_stream_stdin( &centralData->xbee_in_stream);
+		register_read_stream_udp( &centralData->xbee_in_stream, &udp_in, 14551);
 		udp_out.sock=udp_in.sock;
 
-//		register_write_stream(get_UART_handle(0), &board_hardware.xbee_out_stream);
-		//register_write_stream_stdout( &board_hardware.xbee_out_stream);		
-		register_write_stream_udp(&board_hardware.xbee_out_stream, &udp_out, "127.0.0.1",14550);
+//		register_write_stream(get_UART_handle(0), &centralData->xbee_out_stream);
+		//register_write_stream_stdout( &centralData->xbee_out_stream);		
+		register_write_stream_udp(&centralData->xbee_out_stream, &udp_out, "127.0.0.1",14550);
 		
 //		init_UART_int(3);
-		make_buffered_stream(&(board_hardware.gps_buffer), &board_hardware.gps_stream_in);
-//		register_read_stream(get_UART_handle(3), &board_hardware.gps_stream_in);
-//		register_write_stream(get_UART_handle(3), &board_hardware.gps_stream_out);
+		make_buffered_stream(&(centralData->gps_buffer), &centralData->gps_stream_in);
+//		register_read_stream(get_UART_handle(3), &centralData->gps_stream_in);
+//		register_write_stream(get_UART_handle(3), &centralData->gps_stream_out);
 		
 //		init_UART_int(4);
 
-//		register_write_stream(get_UART_handle(4), &board_hardware.wired_out_stream);
-		register_write_stream_stdout( &board_hardware.wired_out_stream);
+//		register_write_stream(get_UART_handle(4), &centralData->wired_out_stream);
+		register_write_stream_stdout( &centralData->wired_out_stream);
 		
 		// connect abstracted aliases to hardware ports
 
 
-		board_hardware.telemetry_down_stream=&board_hardware.xbee_out_stream;
-		board_hardware.telemetry_up_stream=&board_hardware.xbee_in_stream;
-		board_hardware.debug_out_stream=&board_hardware.wired_out_stream;
-		//board_hardware.debug_out_stream=NULL;
-		//board_hardware.debug_in_stream=&board_hardware.wired_in_stream;
+		centralData->telemetry_down_stream=&centralData->xbee_out_stream;
+		centralData->telemetry_up_stream=&centralData->xbee_in_stream;
+		centralData->debug_out_stream=&centralData->wired_out_stream;
+		//centralData->debug_out_stream=NULL;
+		//centralData->debug_in_stream=&centralData->wired_in_stream;
 /*
-		board_hardware.telemetry_down_stream=&board_hardware.wired_out_stream;
-		board_hardware.telemetry_up_stream  =&board_hardware.wired_in_stream;		
-		board_hardware.debug_out_stream     =&board_hardware.xbee_out_stream;
-		board_hardware.debug_in_stream      =&board_hardware.xbee_in_stream;
+		centralData->telemetry_down_stream=&centralData->wired_out_stream;
+		centralData->telemetry_up_stream  =&centralData->wired_in_stream;		
+		centralData->debug_out_stream     =&centralData->xbee_out_stream;
+		centralData->debug_in_stream      =&centralData->xbee_in_stream;
 */
 		// init mavlink
-		init_mavlink(board_hardware.telemetry_down_stream, board_hardware.telemetry_up_stream, 42);
+		init_mavlink(centralData->telemetry_down_stream, centralData->telemetry_up_stream, 42);
 		
-//		register_read_stream(get_UART_handle(4), &board_hardware.wired_in_stream);
-//		register_read_stream(get_UART_handle(0), &board_hardware.xbee_in_stream);
+//		register_read_stream(get_UART_handle(4), &centralData->wired_in_stream);
+//		register_read_stream(get_UART_handle(0), &centralData->xbee_in_stream);
 		
 		
 
 		// init debug output
-		dbg_print_init(board_hardware.debug_out_stream);
+		dbg_print_init(centralData->debug_out_stream);
 		
-		init_imu(&board_hardware.imu1);
+		init_imu(&centralData->imu1);
 
 		rc_init();
 		init_Servos();
-		init_simulation(&board_hardware.sim_model);
+		init_simulation(&centralData->sim_model);
 		
-		board_hardware.controls.rpy[ROLL]=0;
-		board_hardware.controls.rpy[PITCH]=0;
-		board_hardware.controls.rpy[YAW]=0;
-		board_hardware.controls.thrust=-1.0;
+		centralData->controls.rpy[ROLL]=0;
+		centralData->controls.rpy[PITCH]=0;
+		centralData->controls.rpy[YAW]=0;
+		centralData->controls.thrust=-1.0;
 		
-		board_hardware.number_of_waypoints = 0;
-		board_hardware.waypoint_hold_init=false;
-		board_hardware.simulation_mode=0;
+		centralData->number_of_waypoints = 0;
+		centralData->waypoint_hold_init=false;
+		centralData->simulation_mode=0;
 		
 		// default GPS home position
-		board_hardware.imu1.attitude.localPosition.origin.longitude=   HOME_LONGITUDE;
-		board_hardware.imu1.attitude.localPosition.origin.latitude =   HOME_LATITUDE;
-		board_hardware.imu1.attitude.localPosition.origin.altitude =   HOME_ALTITUDE;
-		board_hardware.imu1.attitude.localPosition.pos[0]=0;	board_hardware.imu1.attitude.localPosition.pos[1]=0; board_hardware.imu1.attitude.localPosition.pos[2]=0;
+		centralData->imu1.attitude.localPosition.origin.longitude=   HOME_LONGITUDE;
+		centralData->imu1.attitude.localPosition.origin.latitude =   HOME_LATITUDE;
+		centralData->imu1.attitude.localPosition.origin.altitude =   HOME_ALTITUDE;
+		centralData->imu1.attitude.localPosition.pos[0]=0;	centralData->imu1.attitude.localPosition.pos[1]=0; centralData->imu1.attitude.localPosition.pos[2]=0;
 		
-		init_waypoint_list(board_hardware.waypoint_list,&board_hardware.number_of_waypoints);
+		init_waypoint_list(centralData->waypoint_list,&centralData->number_of_waypoints);
 
-		return &board_hardware;
-}
-
-board_hardware_t* get_board_hardware() {
-	return &board_hardware;
+		return &centralData;
 }
 
 
-byte_stream_t* get_telemetry_upstream() {
-	return board_hardware.telemetry_up_stream;
-}
-byte_stream_t* get_telemetry_downstream() {
-	return board_hardware.telemetry_down_stream;
-}
-byte_stream_t* get_debug_stream() {
-	return board_hardware.debug_out_stream;
-}
-
-Imu_Data_t* get_imu() {
-	return &board_hardware.imu1;
-}
-Control_Command_t* get_control_inputs() {
-	return &board_hardware.controls;
-}

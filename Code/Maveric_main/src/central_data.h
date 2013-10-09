@@ -15,14 +15,14 @@
 #include "stdbool.h"
 
 #include "time_keeper.h"
-#include "i2c_driver_int.h"
+//#include "i2c_driver_int.h"
 #include "qfilter.h"
 #include "imu.h"
 #include "stabilisation.h"
 #include "remote_controller.h"
 #include "control.h"
 #include "streams.h"
-#include "uart_int.h"
+//#include "uart_int.h"
 #include "print_util.h"
 
 #include "bmp085.h"
