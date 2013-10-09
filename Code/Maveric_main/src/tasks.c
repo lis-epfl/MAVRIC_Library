@@ -7,26 +7,27 @@
 
 
 #include "tasks.h"
-#include "boardsupport.h"
+#include "central_data.h"
 #include "print_util.h"
 #include "stabilisation.h"
 #include "gps_ublox.h"
 #include "estimator.h"
 #include "navigation.h"
 
+
 NEW_TASK_SET(main_tasks, 10)
 
 #define PRESSURE_LPF 0.1
 
-board_hardware_t *board;
-
+//board_hardware_t *board;
+central_data_t *centralData;
 
 task_set* get_main_taskset() {
 	return &main_tasks;
 }
 
 task_return_t run_imu_update() {
-	imu_update(&(board->imu1));	
+	imu_update(&(centralData->imu1));	
 }	
 
 void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
@@ -80,7 +81,7 @@ task_return_t set_mav_mode_n_state()
 	
 	rc_user_channels(&channelSwitches,&RC_check, &motor_switch);
 	
-	switch(board->mav_state)
+	switch(centralData->mav_state)
 	{
 		case MAV_STATE_CALIBRATING:
 			break;
@@ -91,15 +92,15 @@ task_return_t set_mav_mode_n_state()
 				{
 					case 0:
 						dbg_print("Switching on the motors!\n");
-						board->controls.run_mode = MOTORS_ON;
-						board->mav_state = MAV_STATE_ACTIVE;
-						board->mav_mode = MAV_MODE_MANUAL_ARMED;
+						centralData->controls.run_mode = MOTORS_ON;
+						centralData->mav_state = MAV_STATE_ACTIVE;
+						centralData->mav_mode = MAV_MODE_MANUAL_ARMED;
 						break;
 					case 1:
 						dbg_print("Switches not ready, both should be pushed!\n");
-						//board->controls.run_mode = MOTORS_ON;
-						//board->mav_state = MAV_STATE_ACTIVE;
-						//board->mav_mode = MAV_MODE_STABILIZE_ARMED;
+						//centralData->controls.run_mode = MOTORS_ON;
+						//centralData->mav_state = MAV_STATE_ACTIVE;
+						//centralData->mav_mode = MAV_MODE_STABILIZE_ARMED;
 						break;
 					case 2:
 						dbg_print("Switches not ready, both should be pushed!\n");
@@ -114,16 +115,16 @@ task_return_t set_mav_mode_n_state()
 			switch(channelSwitches)
 			{
 				case 0:
-					board->mav_mode= MAV_MODE_STABILIZE_ARMED;
+					centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
 					break;
 				case 1:
-					board->mav_mode= MAV_MODE_STABILIZE_ARMED;
+					centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
 					break;
 				case 2:
-					board->mav_mode = MAV_MODE_GUIDED_ARMED;
+					centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
 					break;
 				case 3:
-					board->mav_mode = MAV_MODE_AUTO_ARMED;
+					centralData->mav_mode = MAV_MODE_AUTO_ARMED;
 					break;
 			}
 			//dbg_print("motor_switch: ");
@@ -131,9 +132,9 @@ task_return_t set_mav_mode_n_state()
 			if (motor_switch == -1)
 			{
 				dbg_print("Switching off motors!\n");
-				board->controls.run_mode = MOTORS_OFF;
-				board->mav_state = MAV_STATE_STANDBY;
-				board->mav_mode = MAV_MODE_MANUAL_DISARMED;
+				centralData->controls.run_mode = MOTORS_OFF;
+				centralData->mav_state = MAV_STATE_STANDBY;
+				centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 			}
 		
 			switch (RC_check)
@@ -141,10 +142,10 @@ task_return_t set_mav_mode_n_state()
 				case 1:
 					break;
 				case -1:
-					board->mav_state = MAV_STATE_CRITICAL;
+					centralData->mav_state = MAV_STATE_CRITICAL;
 					break;
 				case -2:
-					board->mav_state = MAV_STATE_EMERGENCY;
+					centralData->mav_state = MAV_STATE_EMERGENCY;
 					break;
 			}
 			break;
@@ -152,13 +153,13 @@ task_return_t set_mav_mode_n_state()
 			switch(channelSwitches)
 			{
 				case 0:
-				board->mav_mode= MAV_MODE_STABILIZE_ARMED;
+				centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
 				break;
 				case 1:
-				board->mav_mode= MAV_MODE_STABILIZE_ARMED;
+				centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
 				break;
 				case 2:
-				board->mav_mode = MAV_MODE_GUIDED_ARMED;
+				centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
 				break;
 				case 3:
 				break;
@@ -166,35 +167,35 @@ task_return_t set_mav_mode_n_state()
 			if (motor_switch == -1)
 			{
 				dbg_print("Switching off motors!\n");
-				board->controls.run_mode = MOTORS_OFF;
-				board->mav_state = MAV_STATE_STANDBY;
-				board->mav_mode = MAV_MODE_MANUAL_DISARMED;
+				centralData->controls.run_mode = MOTORS_OFF;
+				centralData->mav_state = MAV_STATE_STANDBY;
+				centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 			}
 			switch (RC_check)
 			{
 				case 1:
-				board->mav_state = MAV_STATE_ACTIVE;
+				centralData->mav_state = MAV_STATE_ACTIVE;
 				break;
 				case -1:
 				break;
 				case -2:
-				board->mav_state = MAV_STATE_EMERGENCY;
+				centralData->mav_state = MAV_STATE_EMERGENCY;
 				break;
 			}
 			break;
 		case MAV_STATE_EMERGENCY:
-			board->mav_mode = MAV_MODE_MANUAL_DISARMED;
-			if (board->imu1.attitude.localPosition.pos[Z] < 0.5)
+			centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
+			if (centralData->imu1.attitude.localPosition.pos[Z] < 0.5)
 			{
-				board->mav_state = MAV_STATE_STANDBY;
+				centralData->mav_state = MAV_STATE_STANDBY;
 			}
 			break;
 	}
 
 	//dbg_print("MAV state :");
-	//dbg_print_num(board->mav_state,10);
+	//dbg_print_num(centralData->mav_state,10);
 	//dbg_print(", MAV mode :");
-	//dbg_print_num(board->mav_mode,10);
+	//dbg_print_num(centralData->mav_mode,10);
 	//dbg_print("\n");
 	
 }
@@ -202,63 +203,63 @@ task_return_t set_mav_mode_n_state()
 task_return_t run_stabilisation() {
 	int i;
 	
-	if (board->simulation_mode==1) {
-		simu_update(&(board->sim_model), &(board->servos), &(board->imu1));
+	if (centralData->simulation_mode==1) {
+		simu_update(&(centralData->sim_model), &(centralData->servos), &(centralData->imu1));
 	} else {
-		imu_update(&(board->imu1));
+		imu_update(&(centralData->imu1));
 	}
-	//board->local_position.pos[0] = board->imu1.attitude.pos[0];
-	//board->local_position.pos[1] = board->imu1.attitude.pos[1];
-	//board->local_position.pos[2] = board->imu1.attitude.pos[2];
+	//centralData->local_position.pos[0] = centralData->imu1.attitude.pos[0];
+	//centralData->local_position.pos[1] = centralData->imu1.attitude.pos[1];
+	//centralData->local_position.pos[2] = centralData->imu1.attitude.pos[2];
 	
-	switch(board->mav_mode)
+	switch(centralData->mav_mode)
 	{
 		case MAV_MODE_PREFLIGHT:
 		case MAV_MODE_MANUAL_ARMED:
-			//board->controls = get_command_from_remote();
+			//centralData->controls = get_command_from_remote();
 			//for (i=0; i<4; i++) {
-			//	board->servos[i].value=SERVO_SCALE*board->controls.thrust;
+			//	centralData->servos[i].value=SERVO_SCALE*centralData->controls.thrust;
 			//}
 			
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
-			board->waypoint_hold_init = false;
-			board->mission_started = false;
-			board->controls = get_command_from_remote();
+			centralData->waypoint_hold_init = false;
+			centralData->mission_started = false;
+			centralData->controls = get_command_from_remote();
 			//dbg_print("Thrust:");
-			//dbg_print_num(board->controls.thrust*10000,10);
+			//dbg_print_num(centralData->controls.thrust*10000,10);
 			//dbg_print("\n");
-			board->controls.control_mode=ATTITUDE_COMMAND_MODE_REL_YAW;
-			quad_stabilise(&(board->imu1), &(board->controls));
+			centralData->controls.control_mode=ATTITUDE_COMMAND_MODE_REL_YAW;
+			quad_stabilise(&(centralData->imu1), &(centralData->controls));
 			break;
 		case MAV_MODE_GUIDED_ARMED:
-			board->mission_started = false;
-			board->controls = board->controls_nav;
-			board->controls.thrust = min(get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0;
-			//board->controls.thrust = board->controls_nav.thrust;
+			centralData->mission_started = false;
+			centralData->controls = centralData->controls_nav;
+			centralData->controls.thrust = min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0;
+			//centralData->controls.thrust = centralData->controls_nav.thrust;
 			
 			//dbg_print("Thrust (x10000):");
-			//dbg_print_num(board->controls.thrust*10000.0,10);
+			//dbg_print_num(centralData->controls.thrust*10000.0,10);
 			//dbg_print(", remote (x10000):");
 			//dbg_print_num(get_thrust_from_remote()*10000.0,10);
 			//dbg_print(" => min (x10000):");
-			//dbg_print_num(min(get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0 *10000.0,10);
+			//dbg_print_num(min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0 *10000.0,10);
 			//dbg_print("\n");
 			
-			quad_stabilise(&(board->imu1), &(board->controls));
+			quad_stabilise(&(centralData->imu1), &(centralData->controls));
 			break;
 		case MAV_MODE_AUTO_ARMED:
-			board->mission_started = true;
-			board->waypoint_hold_init = false;
-			board->controls = board->controls_nav;
-			board->controls.thrust = min(get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0;
-			//board->controls.thrust = board->controls_nav.thrust;
+			centralData->mission_started = true;
+			centralData->waypoint_hold_init = false;
+			centralData->controls = centralData->controls_nav;
+			centralData->controls.thrust = min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0;
+			//centralData->controls.thrust = centralData->controls_nav.thrust;
 			
 			//dbg_print("Thrust main:");
-			//dbg_print_num(board->controls.thrust*10000,10);
+			//dbg_print_num(centralData->controls.thrust*10000,10);
 			//dbg_print("\n");
 			
-			quad_stabilise(&(board->imu1), &(board->controls));
+			quad_stabilise(&(centralData->imu1), &(centralData->controls));
 			break;
 		case MAV_MODE_MANUAL_DISARMED:
 		case MAV_MODE_STABILIZE_DISARMED:
@@ -266,48 +267,48 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_AUTO_DISARMED:
 			//set_servos(&(servo_failsafe));
 			for (i=0; i<NUMBER_OF_SERVO_OUTPUTS; i++) {
-				board->servos[i]=servo_failsafe[i];
+				centralData->servos[i]=servo_failsafe[i];
 			}
 			break;
 		
 	}
 	
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
-	if (board->simulation_mode!=1) {
-		set_servos(&(board->servos));
+	if (centralData->simulation_mode!=1) {
+		set_servos(&(centralData->servos));
 	}
 		
 
 }
 
 //task_return_t run_stabilisation() {
-	//board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
-	//board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
-	//board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
-	//board->controls.thrust=getChannel(S_THROTTLE)/350.0;
+	//centralData->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
+	//centralData->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
+	//centralData->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
+	//centralData->controls.thrust=getChannel(S_THROTTLE)/350.0;
 //
-	//imu_update(&(board->imu1));
+	//imu_update(&(centralData->imu1));
 	//if (getChannel(4)>0) {
-		//board->controls.control_mode=RATE_COMMAND_MODE;
+		//centralData->controls.control_mode=RATE_COMMAND_MODE;
 	//} else {
-		//board->controls.control_mode=ATTITUDE_COMMAND_MODE;
+		//centralData->controls.control_mode=ATTITUDE_COMMAND_MODE;
 	//}
 	//
 	//// switch run_mode
-	//if ((board->controls.thrust<-0.95) && (board->controls.rpy[YAW]< -0.9)) {
-		//board->controls.run_mode=MOTORS_OFF;
+	//if ((centralData->controls.thrust<-0.95) && (centralData->controls.rpy[YAW]< -0.9)) {
+		//centralData->controls.run_mode=MOTORS_OFF;
 		//LED_On(LED1);
 	//}
-	//if ((board->controls.thrust<-0.95) && (board->controls.rpy[YAW] >0.9)) {
-		//board->controls.run_mode=MOTORS_ON;
+	//if ((centralData->controls.thrust<-0.95) && (centralData->controls.rpy[YAW] >0.9)) {
+		//centralData->controls.run_mode=MOTORS_ON;
 		//LED_Off(LED1);
 	//}
 		//
-	//quad_stabilise(&(board->imu1), &(board->controls));
+	//quad_stabilise(&(centralData->imu1), &(centralData->controls));
 	//
 	//if (control_input->run_mode==MOTORS_ON) {
 		//// send values to servo outputs
-		//set_servos(&(board->servos));
+		//set_servos(&(centralData->servos));
 	//} else {	
 		//set_servos(&(servo_failsafe));
 	//}
@@ -322,29 +323,29 @@ task_return_t gps_task() {
 	
  	//dbg_print("time :");
  	//dbg_print_num(tnow,10);
- 	//dbg_print_num(board->GPS_data.timeLastMsg,10);
+ 	//dbg_print_num(centralData->GPS_data.timeLastMsg,10);
  	//dbg_print(" GPS status : 0x");
- 	//dbg_print_num(board->GPS_data.status,16);
+ 	//dbg_print_num(centralData->GPS_data.status,16);
  	//dbg_print(" status:");
- 	//dbg_print_num(board->GPS_data.accuracyStatus,10);
- 	//dbg_print_num(board->GPS_data.horizontalStatus,10);
- 	//dbg_print_num(board->GPS_data.altitudeStatus,10);
- 	//dbg_print_num(board->GPS_data.speedStatus,10);
- 	//dbg_print_num(board->GPS_data.courseStatus,10);
+ 	//dbg_print_num(centralData->GPS_data.accuracyStatus,10);
+ 	//dbg_print_num(centralData->GPS_data.horizontalStatus,10);
+ 	//dbg_print_num(centralData->GPS_data.altitudeStatus,10);
+ 	//dbg_print_num(centralData->GPS_data.speedStatus,10);
+ 	//dbg_print_num(centralData->GPS_data.courseStatus,10);
  	//dbg_print("\n");
 	//
 	/*if(newValidGpsMsg())
 	{
 		dbg_print("GPS status:");
-		dbg_print_num(board->GPS_data.status,10);
+		dbg_print_num(centralData->GPS_data.status,10);
 		dbg_print(" time gps:");
-		dbg_print_num(board->GPS_data.timegps,10);
+		dbg_print_num(centralData->GPS_data.timegps,10);
 		dbg_print(" latitude :");
-		dbg_print_num(board->GPS_data.latitude,10);
+		dbg_print_num(centralData->GPS_data.latitude,10);
 		dbg_print(" longitude :");
-		dbg_print_num(board->GPS_data.longitude,10);
+		dbg_print_num(centralData->GPS_data.longitude,10);
 		dbg_print(" altitude");
-		dbg_print_num(board->GPS_data.altitude,10);
+		dbg_print_num(centralData->GPS_data.altitude,10);
 		dbg_print("\n");
 	}*/
 }
@@ -358,40 +359,40 @@ task_return_t run_navigation_task()
 {
 	int8_t i;
 	
-	if (((board->mav_state == MAV_STATE_ACTIVE)||(board->mav_state == MAV_STATE_CRITICAL))&&((board->mav_mode == MAV_MODE_AUTO_ARMED)||(board->mav_mode == MAV_MODE_GUIDED_ARMED)))
+	if (((centralData->mav_state == MAV_STATE_ACTIVE)||(centralData->mav_state == MAV_STATE_CRITICAL))&&((centralData->mav_mode == MAV_MODE_AUTO_ARMED)||(centralData->mav_mode == MAV_MODE_GUIDED_ARMED)))
 	{
 		run_navigation();
 	}
 	
 	
-	//if ((board->number_of_waypoints > 0)&& waypoint_receiving == 0 )
+	//if ((centralData->number_of_waypoints > 0)&& waypoint_receiving == 0 )
 	//{
 		//dbg_print("List of Waypoint:");
-		//for (i=0; i<board->number_of_waypoints; i++)
+		//for (i=0; i<centralData->number_of_waypoints; i++)
 		//{
 			//dbg_print("wp_id:");
-			//dbg_print_num(board->waypoint_list[i].wp_id,10);
+			//dbg_print_num(centralData->waypoint_list[i].wp_id,10);
 			//dbg_print(" autocontinue:");
-			//dbg_print_num(board->waypoint_list[i].autocontinue,10);
+			//dbg_print_num(centralData->waypoint_list[i].autocontinue,10);
 			//dbg_print(" current:");
-			//dbg_print_num(board->waypoint_list[i].current,10);
+			//dbg_print_num(centralData->waypoint_list[i].current,10);
 			//dbg_print(" frame:");
-			//dbg_print_num(board->waypoint_list[i].frame,10);
+			//dbg_print_num(centralData->waypoint_list[i].frame,10);
 			//dbg_print(" x:");
-			//dbg_print_num(board->waypoint_list[i].x,10);
+			//dbg_print_num(centralData->waypoint_list[i].x,10);
 			//dbg_print(" y:");
-			//dbg_print_num(board->waypoint_list[i].y,10);
+			//dbg_print_num(centralData->waypoint_list[i].y,10);
 			//dbg_print(" z:");
-			//dbg_print_num(board->waypoint_list[i].z,10);
+			//dbg_print_num(centralData->waypoint_list[i].z,10);
 			//dbg_print(" params:");
-			//dbg_print_num(board->waypoint_list[i].param1,10);
-			//dbg_print_num(board->waypoint_list[i].param2,10);
-			//dbg_print_num(board->waypoint_list[i].param3,10);
-			//dbg_print_num(board->waypoint_list[i].param4,10);
+			//dbg_print_num(centralData->waypoint_list[i].param1,10);
+			//dbg_print_num(centralData->waypoint_list[i].param2,10);
+			//dbg_print_num(centralData->waypoint_list[i].param3,10);
+			//dbg_print_num(centralData->waypoint_list[i].param4,10);
 			//dbg_print(";");
 		//}
 		//dbg_print("\n");
-		//board->number_of_waypoints = 0;
+		//centralData->number_of_waypoints = 0;
 	//}
 	
 }
@@ -400,8 +401,8 @@ task_return_t run_barometer()
 {
 	uint32_t tnow = get_micros();
 
-	pressure_data *pressure = get_pressure_data_slow(board->pressure.altitude_offset);
-	board->pressure =  *pressure;
+	pressure_data *pressure = get_pressure_data_slow(centralData->pressure.altitude_offset);
+	centralData->pressure =  *pressure;
 	
 	
 }
@@ -427,7 +428,8 @@ task_return_t send_rt_stats() {
 
 void create_tasks() {
 	init_scheduler(&main_tasks);
-	board=get_board_hardware();
+	//board=get_board_hardware();
+	centralData = get_central_data();
 	
 	//	register_task(&main_tasks, 0, 4000, RUN_REGULAR, &run_imu_update );
 	register_task(&main_tasks, 1, 4000, RUN_REGULAR, &run_stabilisation );

@@ -22,20 +22,22 @@
 #include "bmp085.h"
 
 #include "scheduler.h"
-#include "boardsupport.h"
 #include "central_data.h"
+#include "boardsupport.h"
 
 #include "tasks.h"
 //#include "flashvault.h"
 
-board_hardware_t *board;
+//board_hardware_t *board;
 central_data_t *centralData;
 
 void initialisation() {
 	int i;
 	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 
-	board=initialise_board();
+	//board=initialise_board();
+	centralData = get_central_data();
+	initialise_board(centralData);
 	
 	init_radar_modules();
 	dbg_print("Debug stream initialised\n");
@@ -50,34 +52,34 @@ void initialisation() {
 	init_onboard_parameters();
 	init_mavlink_actions();
 	
-	board->imu1.attitude.calibration_level=LEVELING;	
-	board->mav_state = MAV_STATE_CALIBRATING;
-	board->mav_mode = MAV_MODE_PREFLIGHT;
+	centralData->imu1.attitude.calibration_level=LEVELING;	
+	centralData->mav_state = MAV_STATE_CALIBRATING;
+	centralData->mav_mode = MAV_MODE_PREFLIGHT;
 
-	calibrate_Gyros(&board->imu1);
+	calibrate_Gyros(&centralData->imu1);
 	for (i=400; i>0; i--) {
-		imu_update(&board->imu1);
+		imu_update(&centralData->imu1);
 		mavlink_protocol_update();	
 		delay_ms(5);
 	}
 	// after initial leveling, initialise accelerometer biases
 	/*
-	board->imu1.attitude.calibration_level=LEVEL_PLUS_ACCEL;
+	centralData->imu1.attitude.calibration_level=LEVEL_PLUS_ACCEL;
 	for (i=200; i>0; i--) {
-		imu_update(&board->imu1);
+		imu_update(&centralData->imu1);
 		mavlink_protocol_update();			
 		delay_ms(5);
 	}*/
-	board->imu1.attitude.calibration_level=OFF;
+	centralData->imu1.attitude.calibration_level=OFF;
 	//reset position estimate
 	for (i=0; i<3; i++) {
 		// clean acceleration estimate without gravity:
-		board->imu1.attitude.vel_bf[i]=0.0;
-		board->imu1.attitude.vel[i]=0.0;
-		board->imu1.attitude.localPosition.pos[i]=0.0;
+		centralData->imu1.attitude.vel_bf[i]=0.0;
+		centralData->imu1.attitude.vel[i]=0.0;
+		centralData->imu1.attitude.localPosition.pos[i]=0.0;
 	}
-	board->mav_state = MAV_STATE_STANDBY;
-	board->mav_mode = MAV_MODE_MANUAL_DISARMED;
+	centralData->mav_state = MAV_STATE_STANDBY;
+	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	
 	//e_init();
 	
@@ -100,7 +102,7 @@ void main (void)
 	create_tasks();
 	
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	board->simulation_mode = 1;
+	centralData->simulation_mode = 1;
 	
 	// main loop
 	counter=0;

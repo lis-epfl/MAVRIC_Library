@@ -7,12 +7,13 @@
 
 #include "gps_ublox.h"
 
-#include "boardsupport.h"
+#include "central_data.h"
 #include "print_util.h"
 
 
 
-board_hardware_t *board;
+//board_hardware_t *board;
+central_data_t *centralData;
 
 //! The pointer to the pointer to the structure of the current message to fill
 unsigned char **ubx_currentMessage = 0;
@@ -146,9 +147,10 @@ Initialization of the GPS with the type of platform
 */
 void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting)
 {
-	board = get_board_hardware();
+	//board = get_board_hardware();
+	centralData = get_central_data();
 	
-	//board->gps_stream_out.flush(board->gps_stream_out.data);
+	//centralData->gps_stream_out.flush(centralData->gps_stream_out.data);
 	
 	uint8_t epoch = TIME_OF_WEEK;
 	idleTimeout = 1200;
@@ -157,8 +159,8 @@ void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting)
 	
 	engine_nav_setting = _engine_nav_setting;
 	
-	board->GPS_data.status = NO_FIX;
-	board->GPS_data.num_sats = 0;
+	centralData->GPS_data.status = NO_FIX;
+	centralData->GPS_data.num_sats = 0;
 	
 	next_fix = false;
 // 	new_data = false;
@@ -195,9 +197,9 @@ bool ubx_read(void)
 	
 	unsigned char * temporaryMessageForSwaping;
 	
-	while(buffer_bytes_available(&(board->gps_buffer)))
+	while(buffer_bytes_available(&(centralData->gps_buffer)))
 	{
-		data = buffer_get(&(board->gps_buffer));
+		data = buffer_get(&(centralData->gps_buffer));
 		reset:
 		
 		
@@ -828,14 +830,14 @@ bool ubx_process_data(void)
 				dbg_print("\n");
 			}
 			
-			board->GPS_data.timegps = gpsPosllh->itow;
-			board->GPS_data.longitude = gpsPosllh->longitude / 10000000.0;
-			board->GPS_data.latitude = gpsPosllh->latitude / 10000000.0;
-			board->GPS_data.alt_elips = ((float)gpsPosllh->altitude_ellipsoid) / 1000.0;
-			board->GPS_data.altitude = ((float)gpsPosllh->altitude_msl) / 1000.0;
-			board->GPS_data.horizontalAccuracy = ((float)gpsPosllh->horizontal_accuracy) / 1000.0;
-			board->GPS_data.verticalAccuracy = ((float)gpsPosllh->vertical_accuracy) / 1000.0;
-			//board->GPS_data.status = next_fix;
+			centralData->GPS_data.timegps = gpsPosllh->itow;
+			centralData->GPS_data.longitude = gpsPosllh->longitude / 10000000.0;
+			centralData->GPS_data.latitude = gpsPosllh->latitude / 10000000.0;
+			centralData->GPS_data.alt_elips = ((float)gpsPosllh->altitude_ellipsoid) / 1000.0;
+			centralData->GPS_data.altitude = ((float)gpsPosllh->altitude_msl) / 1000.0;
+			centralData->GPS_data.horizontalAccuracy = ((float)gpsPosllh->horizontal_accuracy) / 1000.0;
+			centralData->GPS_data.verticalAccuracy = ((float)gpsPosllh->vertical_accuracy) / 1000.0;
+			//centralData->GPS_data.status = next_fix;
 			
 			new_position = true;
 		}
@@ -861,9 +863,9 @@ bool ubx_process_data(void)
 			next_fix = (gpsStatus->fix_type == GPS_FIX_TYPE_3DFIX);
 			if (!next_fix)
 			{
-				board->GPS_data.status = NO_FIX;
+				centralData->GPS_data.status = NO_FIX;
 			}else{
-				board->GPS_data.status = GPS_OK;
+				centralData->GPS_data.status = GPS_OK;
 			}
 		}
 		break;
@@ -900,13 +902,13 @@ bool ubx_process_data(void)
 			next_fix = (gpsSolution->fix_type == GPS_FIX_TYPE_3DFIX);
 			if (!next_fix)
 			{
-				board->GPS_data.status = NO_FIX;
+				centralData->GPS_data.status = NO_FIX;
 			}else{
-				board->GPS_data.status = GPS_OK;
+				centralData->GPS_data.status = GPS_OK;
 			}
 		
-			board->GPS_data.num_sats = gpsSolution->satellites;
-			board->GPS_data.hdop = gpsSolution->position_DOP;
+			centralData->GPS_data.num_sats = gpsSolution->satellites;
+			centralData->GPS_data.hdop = gpsSolution->position_DOP;
 		}
 		break;
 	case MSG_NAV_VELNED:
@@ -938,16 +940,16 @@ bool ubx_process_data(void)
 				dbg_print_num(gpsVelned->heading_accuracy,10);
 				dbg_print("\n");
 			}
-			board->GPS_data.timegps = gpsVelned->itow;
-			board->GPS_data.speed        = ((float)gpsVelned->speed_3d)/100.; // m/s
-			board->GPS_data.groundSpeed = ((float)gpsVelned->groundSpeed_2d) / 100.; // m/s
-			board->GPS_data.course = ((float)gpsVelned->heading_2d) / 100000.; // Heading 2D deg * 100000 rescaled to deg * 100
+			centralData->GPS_data.timegps = gpsVelned->itow;
+			centralData->GPS_data.speed        = ((float)gpsVelned->speed_3d)/100.; // m/s
+			centralData->GPS_data.groundSpeed = ((float)gpsVelned->groundSpeed_2d) / 100.; // m/s
+			centralData->GPS_data.course = ((float)gpsVelned->heading_2d) / 100000.; // Heading 2D deg * 100000 rescaled to deg * 100
 			have_raw_velocity = true;
-			board->GPS_data.northSpeed  = ((float)gpsVelned->ned_north) / 100.0;
-			board->GPS_data.eastSpeed   = ((float)gpsVelned->ned_east) / 100.;
-			board->GPS_data.verticalSpeed   = ((float)gpsVelned->ned_down) / 100.;
-			board->GPS_data.speedAccuracy = ((float)gpsVelned->speed_accuracy)/100.;
-			board->GPS_data.headingAccuracy = gpsVelned->heading_accuracy;
+			centralData->GPS_data.northSpeed  = ((float)gpsVelned->ned_north) / 100.0;
+			centralData->GPS_data.eastSpeed   = ((float)gpsVelned->ned_east) / 100.;
+			centralData->GPS_data.verticalSpeed   = ((float)gpsVelned->ned_down) / 100.;
+			centralData->GPS_data.speedAccuracy = ((float)gpsVelned->speed_accuracy)/100.;
+			centralData->GPS_data.headingAccuracy = gpsVelned->heading_accuracy;
 			new_speed = true;
 		}
 		break;
@@ -1044,21 +1046,21 @@ void ubx_send_header(uint8_t msg_class, uint8_t _msg_id, uint8_t size)
 	header.msg_id_header    = _msg_id;
 	header.length			= size;
 	
-	//board->gps_stream_out.put(board->gps_stream_out.data,header.preamble1);
-	//board->gps_stream_out.put(board->gps_stream_out.data,header.preamble2);
-	//board->gps_stream_out.put(board->gps_stream_out.data,header.msg_class);
-	//board->gps_stream_out.put(board->gps_stream_out.data,header.msg_id_header);
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,header.preamble1);
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,header.preamble2);
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,header.msg_class);
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,header.msg_id_header);
 	//
-	//board->gps_stream_out.put(board->gps_stream_out.data,(uint8_t) (header.length & 0x0F));
-	//board->gps_stream_out.put(board->gps_stream_out.data,(uint8_t) (header.length & 0xF0)>>8);
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,(uint8_t) (header.length & 0x0F));
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,(uint8_t) (header.length & 0xF0)>>8);
 	
-	putnum(&board->gps_stream_out,header.preamble1,16);
-	putnum(&board->gps_stream_out,header.preamble2,16);
-	putnum(&board->gps_stream_out,header.msg_class,10);
-	putnum(&board->gps_stream_out,header.msg_id_header,16);
+	putnum(&centralData->gps_stream_out,header.preamble1,16);
+	putnum(&centralData->gps_stream_out,header.preamble2,16);
+	putnum(&centralData->gps_stream_out,header.msg_class,10);
+	putnum(&centralData->gps_stream_out,header.msg_id_header,16);
 	
-	putnum(&board->gps_stream_out,(uint8_t) (header.length & 0x0F),16);
-	putnum(&board->gps_stream_out,(uint8_t) (header.length & 0xF0)>>8,16);
+	putnum(&centralData->gps_stream_out,(uint8_t) (header.length & 0x0F),16);
+	putnum(&centralData->gps_stream_out,(uint8_t) (header.length & 0xF0)>>8,16);
 	
 }
 
@@ -1069,11 +1071,11 @@ To send the checksum of every message
 */
 void ubx_send_cksum(uint8_t ck_sum_a, uint8_t ck_sum_b)
 {
-	//board->gps_stream_out.put(board->gps_stream_out.data,ck_sum_a);
-	//board->gps_stream_out.put(board->gps_stream_out.data,ck_sum_b);
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,ck_sum_a);
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,ck_sum_b);
 	
-	putnum(&board->gps_stream_out,ck_sum_a,16);
-	putnum(&board->gps_stream_out,ck_sum_b,16);
+	putnum(&centralData->gps_stream_out,ck_sum_a,16);
+	putnum(&centralData->gps_stream_out,ck_sum_b,16);
 }
 
 /*
@@ -1095,12 +1097,12 @@ void ubx_send_message(uint8_t msg_class, uint8_t _msg_id, void *msg, uint8_t siz
 	update_checksum((uint8_t *)&header.msg_class, sizeof(header)-2, &ck_a, &ck_b);
 	update_checksum((uint8_t *)msg, size, &ck_a, &ck_b);
 	
- 	putstring(&(board->gps_stream_out),&header);
- 	putstring(&(board->gps_stream_out),(uint8_t *)msg);
- 	putstring(&(board->gps_stream_out),&ck_a);
- 	putstring(&(board->gps_stream_out),&ck_b);
+ 	putstring(&(centralData->gps_stream_out),&header);
+ 	putstring(&(centralData->gps_stream_out),(uint8_t *)msg);
+ 	putstring(&(centralData->gps_stream_out),&ck_a);
+ 	putstring(&(centralData->gps_stream_out),&ck_b);
 	
-	//board->gps_stream_out.flush(&(board->gps_stream_out.data));
+	//centralData->gps_stream_out.flush(&(centralData->gps_stream_out.data));
 }
 
 /*
@@ -1123,23 +1125,23 @@ void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_n
 	
 	ubx_send_header(msg_class,_msg_id,size);
 	
-	//board->gps_stream_out.put(board->gps_stream_out.data, endian_lower_bytes_uint16(msg.measure_rate_ms));
-	//board->gps_stream_out.put(board->gps_stream_out.data, endian_higher_bytes_uint16(msg.measure_rate_ms));
-	//board->gps_stream_out.put(board->gps_stream_out.data, endian_lower_bytes_uint16(msg.nav_rate));
-	//board->gps_stream_out.put(board->gps_stream_out.data, endian_higher_bytes_uint16(msg.nav_rate));
-	//board->gps_stream_out.put(board->gps_stream_out.data, endian_lower_bytes_uint16(msg.timeref));
-	//board->gps_stream_out.put(board->gps_stream_out.data, endian_higher_bytes_uint16(msg.timeref));	
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data, endian_lower_bytes_uint16(msg.measure_rate_ms));
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data, endian_higher_bytes_uint16(msg.measure_rate_ms));
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data, endian_lower_bytes_uint16(msg.nav_rate));
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data, endian_higher_bytes_uint16(msg.nav_rate));
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data, endian_lower_bytes_uint16(msg.timeref));
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data, endian_higher_bytes_uint16(msg.timeref));	
 	
-	putnum(&board->gps_stream_out, endian_lower_bytes_uint16(msg.measure_rate_ms),16);
-	putnum(&board->gps_stream_out, endian_higher_bytes_uint16(msg.measure_rate_ms),16);
-	putnum(&board->gps_stream_out, endian_lower_bytes_uint16(msg.nav_rate),16);
-	putnum(&board->gps_stream_out, endian_higher_bytes_uint16(msg.nav_rate),16);
-	putnum(&board->gps_stream_out, endian_lower_bytes_uint16(msg.timeref),16);
-	putnum(&board->gps_stream_out, endian_higher_bytes_uint16(msg.timeref),16);
+	putnum(&centralData->gps_stream_out, endian_lower_bytes_uint16(msg.measure_rate_ms),16);
+	putnum(&centralData->gps_stream_out, endian_higher_bytes_uint16(msg.measure_rate_ms),16);
+	putnum(&centralData->gps_stream_out, endian_lower_bytes_uint16(msg.nav_rate),16);
+	putnum(&centralData->gps_stream_out, endian_higher_bytes_uint16(msg.nav_rate),16);
+	putnum(&centralData->gps_stream_out, endian_lower_bytes_uint16(msg.timeref),16);
+	putnum(&centralData->gps_stream_out, endian_higher_bytes_uint16(msg.timeref),16);
 	
 	ubx_send_cksum(ck_a,ck_b);
 	
-	//board->gps_stream_out.flush(&(board->gps_stream_out.data));
+	//centralData->gps_stream_out.flush(&(centralData->gps_stream_out.data));
 }
 
 /*
@@ -1165,13 +1167,13 @@ void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, enum GPS_
 	if (engine_settings != NULL)
 	{
 		update_checksum((uint8_t *)engine_settings, size, &ck_a, &ck_b);
-		//board->gps_stream_out.put(board->gps_stream_out.data, (uint8_t) *engine_settings);
-		putnum(&board->gps_stream_out, (uint8_t) *engine_settings,10);
+		//centralData->gps_stream_out.put(centralData->gps_stream_out.data, (uint8_t) *engine_settings);
+		putnum(&centralData->gps_stream_out, (uint8_t) *engine_settings,10);
 	}
 	
 	ubx_send_cksum(ck_a,ck_b);
 	
-	//board->gps_stream_out.flush(&(board->gps_stream_out.data));
+	//centralData->gps_stream_out.flush(&(centralData->gps_stream_out.data));
 }
 
 /*
@@ -1200,18 +1202,18 @@ void ubx_configure_message_rate(uint8_t msg_class, uint8_t _msg_id, uint8_t rate
 	
 	ubx_send_header(UBX_CLASS_CFG,MSG_CFG_SET_RATE,sizeof(msg));
 	
-	//board->gps_stream_out.put(board->gps_stream_out.data,msg.msg_class);
-	//board->gps_stream_out.put(board->gps_stream_out.data,msg.msg_id_rate);
-	//board->gps_stream_out.put(board->gps_stream_out.data,msg.rate);
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,msg.msg_class);
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,msg.msg_id_rate);
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,msg.rate);
 	
-	putnum(&board->gps_stream_out,msg.msg_class,16);
-	putnum(&board->gps_stream_out,msg.msg_id_rate,16);
-	putnum(&board->gps_stream_out,msg.rate,16);
+	putnum(&centralData->gps_stream_out,msg.msg_class,16);
+	putnum(&centralData->gps_stream_out,msg.msg_id_rate,16);
+	putnum(&centralData->gps_stream_out,msg.rate,16);
 	
 	ubx_send_cksum(ck_a,ck_b);
 	//ubx_send_message(UBX_CLASS_CFG, MSG_CFG_SET_RATE, &msg, sizeof(msg));
 	
-	//board->gps_stream_out.flush(board->gps_stream_out.data);
+	//centralData->gps_stream_out.flush(centralData->gps_stream_out.data);
 }
 
 /*
@@ -1233,9 +1235,9 @@ void configure_gps(void)
 	
 	//dbg_print("Set to binary mode ");
 	//dbg_print(set_binary);
-	putstring(&(board->gps_stream_out),set_binary);
-	//board->gps_stream_out.put(board->gps_stream_out.data,set_binary);
-	//board->gps_stream_out.flush(&(board->gps_stream_out.data));
+	putstring(&(centralData->gps_stream_out),set_binary);
+	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,set_binary);
+	//centralData->gps_stream_out.flush(&(centralData->gps_stream_out.data));
 	//}
 	
 	
@@ -1284,14 +1286,14 @@ void gps_update(void)
 			dbg_print_num(tnow,10);
 			dbg_print("\n");
 			*/
-			board->GPS_data.status = NO_GPS;
+			centralData->GPS_data.status = NO_GPS;
 			
 			init_gps_ubx(engine_nav_setting);
 			idleTimer = tnow;
 		}
 		
 	} else {
-		// board->GPS_data.status = board->GPS_data.status ? GPS_OK : NO_FIX;
+		// centralData->GPS_data.status = centralData->GPS_data.status ? GPS_OK : NO_FIX;
 		
 // 		valid_read = true;
 // 		new_data = true;
@@ -1299,63 +1301,63 @@ void gps_update(void)
 		// reset the idle timer
 		idleTimer = tnow;
 		
-		board->GPS_data.timeLastMsg = tnow;
+		centralData->GPS_data.timeLastMsg = tnow;
 		
-		if(board->GPS_data.status == GPS_OK)
+		if(centralData->GPS_data.status == GPS_OK)
 		{
 			// Check for horizontal accuracy
-			if (board->GPS_data.horizontalAccuracy < UBX_POSITION_PRECISION)
+			if (centralData->GPS_data.horizontalAccuracy < UBX_POSITION_PRECISION)
 			{
-				board->GPS_data.horizontalStatus = 1;
+				centralData->GPS_data.horizontalStatus = 1;
 			}else{  
-				board->GPS_data.horizontalStatus = 0;
+				centralData->GPS_data.horizontalStatus = 0;
 			}
 			// Check for vertical accuracy
-			if (board->GPS_data.verticalAccuracy < UBX_ALTITUDE_PRECISION)
+			if (centralData->GPS_data.verticalAccuracy < UBX_ALTITUDE_PRECISION)
 			{
-				board->GPS_data.altitudeStatus = 1;
+				centralData->GPS_data.altitudeStatus = 1;
 			}else{
-				board->GPS_data.altitudeStatus = 0;
+				centralData->GPS_data.altitudeStatus = 0;
 			}
 			// Check for speed accuracy
-			if (board->GPS_data.speedAccuracy < UBX_SPEED_PRECISION)
+			if (centralData->GPS_data.speedAccuracy < UBX_SPEED_PRECISION)
 			{
-				board->GPS_data.speedStatus = 1;
+				centralData->GPS_data.speedStatus = 1;
 			}else{
-				board->GPS_data.speedStatus = 0;
+				centralData->GPS_data.speedStatus = 0;
 			}
 			// Check for heading accuracy
-			if (board->GPS_data.headingAccuracy < UBX_HEADING_PRECISION)
+			if (centralData->GPS_data.headingAccuracy < UBX_HEADING_PRECISION)
 			{
-				board->GPS_data.courseStatus = 1;
+				centralData->GPS_data.courseStatus = 1;
 				}else{
-				board->GPS_data.courseStatus = 0;
+				centralData->GPS_data.courseStatus = 0;
 			}
 			
-			board->GPS_data.accuracyStatus = board->GPS_data.horizontalStatus & board->GPS_data.altitudeStatus & board->GPS_data.speedStatus & board->GPS_data.courseStatus;
+			centralData->GPS_data.accuracyStatus = centralData->GPS_data.horizontalStatus & centralData->GPS_data.altitudeStatus & centralData->GPS_data.speedStatus & centralData->GPS_data.courseStatus;
 			
 			// speed approximation with the 
 // 			if (!have_raw_velocity)
 // 			{
-// 				float gps_heading = ToRad(board->GPS_data.course);
+// 				float gps_heading = ToRad(centralData->GPS_data.course);
 // 				float cos_heading,sin_heading;
 // 				
 // 				cos_heading = cosf(gps_heading);
 // 				sin_heading = sinf(gps_heading);
 // 				
-// 				board->GPS_data.northspeed = board->GPS_data.groundSpeed * cos_heading;
-// 				board->GPS_data.eastspeed = board->GPS_data.groundSpeed * sin_heading;
+// 				centralData->GPS_data.northspeed = centralData->GPS_data.groundSpeed * cos_heading;
+// 				centralData->GPS_data.eastspeed = centralData->GPS_data.groundSpeed * sin_heading;
 // 				
 // 				// no good way to get descent rate
-// 				board->GPS_data.verticalSpeed = 0;
+// 				centralData->GPS_data.verticalSpeed = 0;
 // 			}
 		}else{
-			board->GPS_data.horizontalStatus = 0;
-			board->GPS_data.altitudeStatus = 0;
-			board->GPS_data.speedStatus = 0;
-			board->GPS_data.courseStatus = 0;
+			centralData->GPS_data.horizontalStatus = 0;
+			centralData->GPS_data.altitudeStatus = 0;
+			centralData->GPS_data.speedStatus = 0;
+			centralData->GPS_data.courseStatus = 0;
 			
-			board->GPS_data.accuracyStatus = 0;
+			centralData->GPS_data.accuracyStatus = 0;
 		}
 	}
 }
@@ -1368,9 +1370,9 @@ bool newValidGpsMsg(uint32_t *prevGpsMsgTime)
 {
 	
 	
-	if((*prevGpsMsgTime != board->GPS_data.timeLastMsg)&&(board->GPS_data.status == GPS_OK)&&(board->GPS_data.accuracyStatus == 1))
+	if((*prevGpsMsgTime != centralData->GPS_data.timeLastMsg)&&(centralData->GPS_data.status == GPS_OK)&&(centralData->GPS_data.accuracyStatus == 1))
 	{
-		*prevGpsMsgTime = board->GPS_data.timeLastMsg;
+		*prevGpsMsgTime = centralData->GPS_data.timeLastMsg;
 		return true;
 	}else{
 		return false;

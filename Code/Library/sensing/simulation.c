@@ -110,7 +110,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos
 	}
 
 	for (i=0; i<4; i++) {
-		board->servos[i].value=SERVO_SCALE*motor_command[i];
+		centralData->servos[i].value=SERVO_SCALE*motor_command[i];
 	}
 	*/
 }

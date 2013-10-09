@@ -11,7 +11,7 @@
 #include "print_util.h"
 #include "uart_int.h"
 #include "delay.h"
-#include "boardsupport.h"
+#include "central_data.h"
 byte_stream_t inbound_stream;
 byte_stream_t *outbound_stream;
 
