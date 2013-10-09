@@ -74,8 +74,8 @@ void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	(stabiliser->rpy_controller[i]).last_update=get_time_ticks();
 	(stabiliser->rpy_controller[i]).clip_min=-0.6; //-0.6
 	(stabiliser->rpy_controller[i]).clip_max= 0.6; //0.6
-	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.1, 0.5, 0.5); // 0.1 0.5 0.5
-	initInt(&((stabiliser->rpy_controller)[i].integrator),1.0, 0.3, 0.3); // 1.0 0.3 0.3
+	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.5, 0.5); // 0.1 0.5 0.5
+	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.3, 0.3); // 1.0 0.3 0.3
 	
 	// initialise y velocity
 	i = 1;
@@ -83,8 +83,8 @@ void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	(stabiliser->rpy_controller[i]).last_update=get_time_ticks();
 	(stabiliser->rpy_controller[i]).clip_min=-0.6; //-0.6
 	(stabiliser->rpy_controller[i]).clip_max= 0.6; //0.6
-	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.1, 0.5, 0.5); // 0.1 0.5 0.5
-	initInt(&((stabiliser->rpy_controller)[i].integrator),1.0, 0.3, 0.3); // 1.0 0.3 0.3
+	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.5, 0.5); // 0.1 0.5 0.5
+	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.3, 0.3); // 1.0 0.3 0.3
 	
 	// initialise yaw controller
 	stabiliser->rpy_controller[2]=passthroughController();
@@ -137,6 +137,7 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input) {
 		
 		rpyt_errors[2]= input.rpy[2];
 		stabilise(&velocity_stabiliser, &rpyt_errors);
+		velocity_stabiliser.output.thrust = min(velocity_stabiliser.output.thrust, control_input->thrust);
 		input=velocity_stabiliser.output;
 	
 		

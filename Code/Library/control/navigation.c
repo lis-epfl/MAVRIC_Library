@@ -17,7 +17,8 @@
 
 #define KP_ROLL 1.0
 #define KP_PITCH -1.0
-#define KP_YAW 0.05
+//#define KP_YAW 0.05
+#define KP_YAW 0.2
 #define KP_ALT -0.02
 
 #define KD_ALT 0.025
@@ -42,7 +43,7 @@
 #define NAV_LOW_VELOCITY   1
 #define NAV_HIGH_VELOCITY  2
 
-#define DIST_2_VEL_GAIN 0.05
+#define DIST_2_VEL_GAIN 0.2
 
 local_coordinates_t waypoint_coordinates, waypoint_hold_coordinates;
 global_position_t waypoint_global;
@@ -298,6 +299,9 @@ void set_speed_command(double rel_pos[], double dist2wpSqr)
 
 	v_desired = min(V_CRUISE,DIST_2_VEL_GAIN * sqrt(dist2wpSqr));
 	
+	dbg_print("v_desired (x100):");
+	dbg_print_num(v_desired*100,10);
+	
 	z_pos = rel_pos[Z];
 	//rel_pos[Z] = 0;
 	
@@ -365,6 +369,7 @@ void low_speed_nav(double dir_desired_bf[], Quat_Attitude_t attitude, double rel
 	// dbg_print("Low speed nav\n");
 	
 	double yaw_angle_tolerance;
+	double rel_heading = atan2(dir_desired_bf[Y],dir_desired_bf[X]);
 	if (rel_distance <= 5.0)
 	{
 		yaw_angle_tolerance = PI/20.0;
@@ -372,7 +377,7 @@ void low_speed_nav(double dir_desired_bf[], Quat_Attitude_t attitude, double rel
 		yaw_angle_tolerance = PI/10.0;
 	}
 	
-	if (atan2(dir_desired_bf[Y],dir_desired_bf[X])>=yaw_angle_tolerance)
+	if (rel_heading >= yaw_angle_tolerance)
 	{
 		centralData->controls_nav.tvel[X] = 0.0;
 		centralData->controls_nav.tvel[Y] = 0.0;
@@ -385,7 +390,7 @@ void low_speed_nav(double dir_desired_bf[], Quat_Attitude_t attitude, double rel
 	{
 		centralData->controls_nav.rpy[YAW] = 0.0;
 	}else{
-		centralData->controls_nav.rpy[YAW] = KP_YAW * atan2(dir_desired_bf[Y], dir_desired_bf[X]);
+		centralData->controls_nav.rpy[YAW] = KP_YAW * rel_heading;
 	}
 	centralData->controls_nav.tvel[Z] = dir_desired_bf[Z];
 }

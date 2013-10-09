@@ -232,6 +232,7 @@ task_return_t run_stabilisation() {
 			centralData->controls.tvel[X]=-10.0*centralData->controls.rpy[PITCH];
 			centralData->controls.tvel[Y]= 10.0*centralData->controls.rpy[ROLL];
 			centralData->controls.tvel[Z]=- 3.0*centralData->controls.thrust;
+			centralData->controls.thrust = 1.0; // limitations on the thrust
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			//centralData->controls.control_mode = ATTITUDE_COMMAND_MODE_REL_YAW;
 			quad_stabilise(&(centralData->imu1), &(centralData->controls));
@@ -240,8 +241,8 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_GUIDED_ARMED:
 			centralData->mission_started = false;
 			centralData->controls = centralData->controls_nav;
-			centralData->controls.thrust = min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0;
-			//centralData->controls.thrust = centralData->controls_nav.thrust;
+			//centralData->controls.thrust = min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0;
+			centralData->controls.thrust = get_thrust_from_remote();
 			
 			//dbg_print("Thrust (x10000):");
 			//dbg_print_num(centralData->controls.thrust*10000.0,10);
@@ -257,8 +258,8 @@ task_return_t run_stabilisation() {
 			centralData->mission_started = true;
 			centralData->waypoint_hold_init = false;
 			centralData->controls = centralData->controls_nav;
-			centralData->controls.thrust = min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0;
-			//centralData->controls.thrust = centralData->controls_nav.thrust;
+			//centralData->controls.thrust = min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0;
+			centralData->controls.thrust = get_thrust_from_remote();
 			
 			//dbg_print("Thrust main:");
 			//dbg_print_num(centralData->controls.thrust*10000,10);
