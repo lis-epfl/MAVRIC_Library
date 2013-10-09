@@ -37,11 +37,11 @@ typedef struct {
 
 PID_Controller_t passthroughController();
 
-void initInt(Integrator_t *integrator, float pregain, float postgain, float clip);
+void initInt(Integrator_t *integrator, float pregain, float postgain, float clip_val);
 
 void resetInt(Integrator_t *integrator);
 
-void initDiff(Differentiator_t *diff, float gain, float LPF, float clip);
+void initDiff(Differentiator_t *diff, float gain, float LPF, float clip_val);
 
 float integrate(Integrator_t *integrator, float input, float dt);
 

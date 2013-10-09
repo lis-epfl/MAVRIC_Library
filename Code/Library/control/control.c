@@ -43,10 +43,10 @@ float integrate(Integrator_t *integrator, float input, float dt) {
 
 
 
-void initInt(Integrator_t *integrator, float pregain, float postgain, float clip) {
+void initInt(Integrator_t *integrator, float pregain, float postgain, float clip_val) {
 	integrator->pregain=pregain;
 	integrator->postgain=postgain;
-	integrator->clip=clip;
+	integrator->clip=clip_val;
 	integrator->accumulator=0.0;
 
 }
@@ -54,10 +54,10 @@ void resetInt(Integrator_t *integrator) {
 	integrator->accumulator=0.0;
 }
 
-void initDiff(Differentiator_t *diff, float gain, float LPF, float clip) {
+void initDiff(Differentiator_t *diff, float gain, float LPF, float clip_val) {
 	diff->gain=gain;
 	diff->LPF=LPF;
-	diff->clip=clip;
+	diff->clip=clip_val;
 }
 
 float differentiate(Differentiator_t *diff, float input, float dt) {
