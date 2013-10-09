@@ -2,7 +2,8 @@
 #define MATHS_H
 
 #include "compiler.h"
-
+#include <math.h>
+#define PI 3.141592653589793
 
 typedef struct UQuat {
 	float s;
@@ -50,6 +51,12 @@ UQuat_t static inline quat_from_vector(float *v) {
 
 
 
+float static inline calc_smaller_angle(float angle) {
+	float out=angle;
+	while (out<-PI) out+=2.0*PI;
+	while (out>=PI) out-=2.0*PI;
+	return out;
+}
 
 
 float static inline scalar_product(float u[], float v[])
@@ -58,7 +65,7 @@ float static inline scalar_product(float u[], float v[])
 	return scp;
 }
 
-UQuat_t static inline quat_multi(UQuat_t q1, UQuat_t q2)
+UQuat_t static inline quat_multi(const UQuat_t q1, const UQuat_t q2)
 {
 	float tmp[3];
 	UQuat_t out;
@@ -73,7 +80,7 @@ UQuat_t static inline quat_multi(UQuat_t q1, UQuat_t q2)
 	return out;
 }
 
-UQuat_t static inline quat_inv(UQuat_t q)
+UQuat_t static inline quat_inv(const UQuat_t q)
 {
 	int i;
 	
@@ -86,7 +93,7 @@ UQuat_t static inline quat_inv(UQuat_t q)
 	return qinv;
 }
 
-UQuat_t static inline quat_global_to_local(UQuat_t qe, UQuat_t qvect)
+UQuat_t static inline quat_global_to_local(const UQuat_t qe, const UQuat_t qvect)
 {
 	UQuat_t qinv, qtmp;
 	
@@ -97,7 +104,7 @@ UQuat_t static inline quat_global_to_local(UQuat_t qe, UQuat_t qvect)
 	return qtmp;
 }
 
-UQuat_t static inline quat_local_to_global(UQuat_t qe, UQuat_t qvect)
+UQuat_t static inline quat_local_to_global(const UQuat_t qe, const UQuat_t qvect)
 {
 	UQuat_t qinv, qtmp;
 	
@@ -122,7 +129,7 @@ float static inline fast_sqrt(float input) {
 	return result;
 }
 
-static inline UQuat_t quat_normalise(UQuat_t q) {
+static inline UQuat_t quat_normalise(const UQuat_t q) {
 	UQuat_t result={.s=1.0, .v={0.0, 0.0, 0.0} };
 	float snorm= SQR(q.s) + SQR(q.v[0]) + SQR(q.v[1]) + SQR(q.v[2]);
 	if (snorm >0.000000001) {

@@ -20,8 +20,11 @@ typedef enum control_mode_t {VELOCITY_COMMAND_MODE, ATTITUDE_COMMAND_MODE_REL_YA
 typedef enum run_mode_t {MOTORS_OFF, MOTORS_ON, SIMULATE} run_mode_t;
 
 typedef struct {
-	float rpy[3];
+	float rpy[3];  // roll pitch yaw rates/angles
 	float thrust;
+
+	float tvel[3]; // target velocity in m/s
+	float theading;// absolute target heading
 	control_mode_t control_mode;
 	run_mode_t run_mode;
 } Control_Command_t;
