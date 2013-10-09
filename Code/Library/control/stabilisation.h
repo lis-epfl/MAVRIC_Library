@@ -41,6 +41,7 @@ void init_stabilisation(void);
 
 Stabiliser_t* get_rate_stabiliser(void);
 Stabiliser_t* get_attitude_stabiliser(void);
+Stabiliser_t* get_velocity_stabiliser(void);
 
 void stabilise(Stabiliser_t *stabiliser, float *errors);
 void quad_stabilise(Imu_Data_t *imu, Control_Command_t *control_input);

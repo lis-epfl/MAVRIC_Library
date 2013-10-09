@@ -17,6 +17,7 @@ board_hardware_t *board;
 
 Stabiliser_t* get_rate_stabiliser() { return &rate_stabiliser;}
 Stabiliser_t* get_attitude_stabiliser() { return &attitude_stabiliser;}
+Stabiliser_t* get_velocity_stabiliser() { return &velocity_stabiliser;}
 
 void init_rate_stabilisation(Stabiliser_t *stabiliser) {
 	int i=0;

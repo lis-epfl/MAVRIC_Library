@@ -258,7 +258,8 @@ void mavlink_send_simulation(void) {
 void add_PID_parameters(void) {
 	Stabiliser_t* rate_stabiliser = get_rate_stabiliser();
 	Stabiliser_t* attitude_stabiliser = get_attitude_stabiliser();
-	
+	Stabiliser_t* velocity_stabiliser= get_velocity_stabiliser();
+
 	add_parameter_int32(&board->simulation_mode, "Sim_mode");
 	// Roll rate PID
 	add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].p_gain, "RollRPid_P_G");
@@ -326,6 +327,23 @@ void add_PID_parameters(void) {
 	add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain, "YawAPid_D_Gain");
 	//add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.LPF, "YawAPid_D_LPF");
 
+	// Roll velocity PID
+	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].p_gain, "RollVPid_P_G");
+	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollVPid_I_PstG");
+	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollVPid_I_PreG");
+	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollVPid_D_Gain");
+
+	// Pitch velocity PID
+	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].p_gain, "PitchVPid_P_G");
+	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchVPid_I_PstG");
+	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchVPid_I_PreG");
+	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchVPid_D_Gain");
+
+	// Thrust velocity PID
+	add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain, "ThrustVPid_P_G");
+	add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.postgain, "ThrustVPid_I_PstG");
+	add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.pregain, "ThrustVPid_I_PreG");
+	add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain, "ThrustVPid_D_Gain");
 }
 
 void init_mavlink_actions(void) {
