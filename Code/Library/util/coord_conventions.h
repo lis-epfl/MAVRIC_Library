@@ -14,7 +14,6 @@
 
 #define EARTH_RADIUS 6378137.0   // radius of the earth in meters
 
-#define PI 3.141592653589793
 
 #define rad_to_deg(input) (input*180.0/PI)
 #define deg_to_rad(input) (input*PI/180.0)
