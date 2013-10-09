@@ -9,11 +9,11 @@
 #include "time_keeper.h"
 #include "servo_pwm.h"
 #include "print_util.h"
-#include "boardsupport.h"
+#include "central_data.h"
 
 Stabiliser_t rate_stabiliser, attitude_stabiliser, velocity_stabiliser;
 
-board_hardware_t *board;
+central_data_t *centralData;
 
 Stabiliser_t* get_rate_stabiliser() { return &rate_stabiliser;}
 Stabiliser_t* get_attitude_stabiliser() { return &attitude_stabiliser;}
@@ -39,6 +39,7 @@ void init_rate_stabilisation(Stabiliser_t *stabiliser) {
 	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.02, 0.4, 0.5);
 	initInt(&((stabiliser->rpy_controller)[i].integrator),0.5, 0.2, 0.1);
 	
+	// initialise thrust controller
 	stabiliser->thrust_controller=passthroughController();
 }
 
@@ -62,6 +63,7 @@ void init_angle_stabilisation(Stabiliser_t *stabiliser) {
 	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.5, 0.5);
 	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.0);
 
+	//initialise thrust controller
 	stabiliser->thrust_controller=passthroughController();
 	
 }
@@ -69,37 +71,39 @@ void init_angle_stabilisation(Stabiliser_t *stabiliser) {
 void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	int i = 0;
 	// initialise x velocity
-	(stabiliser->rpy_controller[i]).p_gain=0.1;
+	(stabiliser->rpy_controller[i]).p_gain=0.1; //0.1
 	(stabiliser->rpy_controller[i]).last_update=get_time_ticks();
-	(stabiliser->rpy_controller[i]).clip_min=-0.6;
-	(stabiliser->rpy_controller[i]).clip_max= 0.6;
-	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.1, 0.5, 0.5); // 0.05, 0.5, 0.05
-	initInt(&((stabiliser->rpy_controller)[i].integrator),1.0, 0.3, 0.3);
+	(stabiliser->rpy_controller[i]).clip_min=-0.6; //-0.6
+	(stabiliser->rpy_controller[i]).clip_max= 0.6; //0.6
+	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.1, 0.5, 0.5); // 0.1 0.5 0.5
+	initInt(&((stabiliser->rpy_controller)[i].integrator),1.0, 0.3, 0.3); // 1.0 0.3 0.3
 	
 	// initialise y velocity
 	i = 1;
-	(stabiliser->rpy_controller[i]).p_gain=0.1;
+	(stabiliser->rpy_controller[i]).p_gain=0.1; //0.1
 	(stabiliser->rpy_controller[i]).last_update=get_time_ticks();
-	(stabiliser->rpy_controller[i]).clip_min=-0.6;
-	(stabiliser->rpy_controller[i]).clip_max= 0.6;
-	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.1, 0.5, 0.5); // 0.05, 0.5, 0.05
-	initInt(&((stabiliser->rpy_controller)[i].integrator),1.0, 0.3, 0.3);
+	(stabiliser->rpy_controller[i]).clip_min=-0.6; //-0.6
+	(stabiliser->rpy_controller[i]).clip_max= 0.6; //0.6
+	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.1, 0.5, 0.5); // 0.1 0.5 0.5
+	initInt(&((stabiliser->rpy_controller)[i].integrator),1.0, 0.3, 0.3); // 1.0 0.3 0.3
 	
-	// initialise z velocity
+	// initialise yaw controller
 	stabiliser->rpy_controller[2]=passthroughController();
 
-	(stabiliser->thrust_controller).p_gain=0.3;
+	// initialise z velocity
+	(stabiliser->thrust_controller).p_gain=0.3; //0.3
 	(stabiliser->thrust_controller).last_update=get_time_ticks();
-	(stabiliser->thrust_controller).clip_min=-0.9;
-	(stabiliser->thrust_controller).clip_max= 0.9;
-	initDiff(&((stabiliser->thrust_controller).differentiator), 0.1, 0.5, 0.2); // 0.05, 0.5, 0.05
-	initInt(&((stabiliser->thrust_controller).integrator),1.0, 1.0, 0.5);
+	(stabiliser->thrust_controller).clip_min=-0.9; //-0.9
+	(stabiliser->thrust_controller).clip_max= 0.9; // 0.9
+	initDiff(&((stabiliser->thrust_controller).differentiator), 0.1, 0.5, 0.2); // 0.1 0.5 0.2
+	initInt(&((stabiliser->thrust_controller).integrator),1.0, 1.0, 0.5); // 1.0 1.0 0.5
 }
 
 void init_stabilisation() {
-	board=get_board_hardware();
-	board->controls.run_mode=MOTORS_OFF;
-	board->controls.control_mode=ATTITUDE_COMMAND_MODE_REL_YAW;
+	//board=get_board_hardware();
+	centralData = get_central_data();
+	centralData->controls.run_mode=MOTORS_OFF;
+	centralData->controls.control_mode=ATTITUDE_COMMAND_MODE_REL_YAW;
 	init_rate_stabilisation(&rate_stabiliser);
 	init_angle_stabilisation(&attitude_stabiliser);
 	init_velocity_stabilisation(&velocity_stabiliser);
@@ -190,7 +194,7 @@ void mix_to_servos_diag_quad(Control_Command_t *control){
 	}
 
 	for (i=0; i<4; i++) {
-		board->servos[i].value=SERVO_SCALE*motor_command[i];
+		centralData->servos[i].value=SERVO_SCALE*motor_command[i];
 	}
 }
 
@@ -209,7 +213,7 @@ void mix_to_servos_cross_quad(Control_Command_t *control){
 	}
 
 	for (i=0; i<4; i++) {
-		board->servos[i].value=SERVO_SCALE*motor_command[i];
+		centralData->servos[i].value=SERVO_SCALE*motor_command[i];
 	}
 	
 }
