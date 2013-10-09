@@ -19,7 +19,6 @@ NEW_TASK_SET(main_tasks, 10)
 
 #define PRESSURE_LPF 0.1
 
-//board_hardware_t *board;
 central_data_t *centralData;
 
 task_set* get_main_taskset() {
@@ -230,11 +229,11 @@ task_return_t run_stabilisation() {
 			//dbg_print_num(centralData->controls.thrust*10000,10);
 			//dbg_print("\n");
 			
-			centralData->controls.tvel[X]=-20.0*board->controls.rpy[PITCH];
-			centralData->controls.tvel[Y]= 20.0*board->controls.rpy[ROLL];
-			centralData->controls.tvel[Z]=- 5.0*board->controls.thrust;
-			centralData->controls.control_mode=VELOCITY_COMMAND_MODE;
-			//centralData->controls.control_mode=ATTITUDE_COMMAND_MODE_REL_YAW;
+			centralData->controls.tvel[X]=-10.0*centralData->controls.rpy[PITCH];
+			centralData->controls.tvel[Y]= 10.0*centralData->controls.rpy[ROLL];
+			centralData->controls.tvel[Z]=- 3.0*centralData->controls.thrust;
+			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
+			//centralData->controls.control_mode = ATTITUDE_COMMAND_MODE_REL_YAW;
 			quad_stabilise(&(centralData->imu1), &(centralData->controls));
 			
 			break;

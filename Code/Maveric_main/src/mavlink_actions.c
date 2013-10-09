@@ -13,7 +13,6 @@
 #include "radar_module_driver.h"
 #include "remote_controller.h"
 
-//board_hardware_t *board;
 central_data_t *centralData;
 
 void mavlink_send_heartbeat(void) {

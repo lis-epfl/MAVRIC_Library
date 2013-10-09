@@ -44,7 +44,6 @@ void initialise_board(central_data_t *centralData) {
 	board_init();
 	delay_init(sysclk_get_cpu_hz());
 	init_time_keeper();
-	//board=initialise_board();
 		
 	INTC_init_interrupts();
 		
@@ -73,36 +72,36 @@ void initialise_board(central_data_t *centralData) {
 	
 		
 	init_UART_int(0);
-	register_write_stream(get_UART_handle(0), &centralData->xbee_out_stream);
+	register_write_stream(get_UART_handle(0), &(centralData->xbee_out_stream));
 				
 		
 	init_UART_int(3);
-	make_buffered_stream(&(centralData->gps_buffer), &centralData->gps_stream_in);
-	register_read_stream(get_UART_handle(3), &centralData->gps_stream_in);
-	register_write_stream(get_UART_handle(3), &centralData->gps_stream_out);
+	make_buffered_stream(&(centralData->gps_buffer), &(centralData->gps_stream_in));
+	register_read_stream(get_UART_handle(3), &(centralData->gps_stream_in));
+	register_write_stream(get_UART_handle(3), &(centralData->gps_stream_out));
 		
 	init_UART_int(4);
-	register_write_stream(get_UART_handle(4), &centralData->wired_out_stream);
+	register_write_stream(get_UART_handle(4), &(centralData->wired_out_stream));
 
 
-	make_buffered_stream_lossy(&centralData->xbee_in_buffer, &centralData->xbee_in_stream);
-	make_buffered_stream_lossy(&centralData->wired_in_buffer, &centralData->wired_in_stream);
-	register_read_stream(get_UART_handle(4), &centralData->wired_in_stream);
-	register_read_stream(get_UART_handle(0), &centralData->xbee_in_stream);
+	make_buffered_stream_lossy(&(centralData->xbee_in_buffer), &(centralData->xbee_in_stream));
+	make_buffered_stream_lossy(&(centralData->wired_in_buffer), &(centralData->wired_in_stream));
+	register_read_stream(get_UART_handle(4), &(centralData->wired_in_stream));
+	register_read_stream(get_UART_handle(0), &(centralData->xbee_in_stream));
 
 		
 	// connect abstracted aliases to hardware ports
 
 
-	centralData->telemetry_down_stream=&centralData->xbee_out_stream;
-	centralData->telemetry_up_stream=&centralData->xbee_in_stream;
-	centralData->debug_out_stream=&centralData->wired_out_stream;
-	centralData->debug_in_stream=&centralData->wired_in_stream;
+	centralData->telemetry_down_stream=&(centralData->xbee_out_stream);
+	centralData->telemetry_up_stream=&(centralData->xbee_in_stream);
+	centralData->debug_out_stream=&(centralData->wired_out_stream);
+	centralData->debug_in_stream=&(centralData->wired_in_stream);
 /*
-	centralData->telemetry_down_stream=&centralData->wired_out_stream;
-	centralData->telemetry_up_stream  =&centralData->wired_in_stream;		
-	centralData->debug_out_stream     =&centralData->xbee_out_stream;
-	centralData->debug_in_stream      =&centralData->xbee_in_stream;
+	centralData->telemetry_down_stream=&(centralData->wired_out_stream);
+	centralData->telemetry_up_stream  =&(centralData->wired_in_stream);		
+	centralData->debug_out_stream     =&(centralData->xbee_out_stream);
+	centralData->debug_in_stream      =&(centralData->xbee_in_stream);
 */
 
 	// init mavlink
@@ -111,12 +110,12 @@ void initialise_board(central_data_t *centralData) {
 	// init debug output
 	dbg_print_init(centralData->debug_out_stream);
 		
-	init_imu(&centralData->imu1);
+	init_imu(&(centralData->imu1));
 	init_bmp085();
 
 	rc_init();
 
-	init_simulation(&centralData->sim_model);
+	init_simulation(&(centralData->sim_model));
 		
 	centralData->controls.rpy[ROLL]=0;
 	centralData->controls.rpy[PITCH]=0;
@@ -141,7 +140,7 @@ void initialise_board(central_data_t *centralData) {
 	centralData->imu1.attitude.localPosition.pos[1]=0; 
 	centralData->imu1.attitude.localPosition.pos[2]=0;
 		
-	init_waypoint_list(centralData->waypoint_list,&centralData->number_of_waypoints);
+	init_waypoint_list(centralData->waypoint_list,&(centralData->number_of_waypoints));
 
 	Enable_global_interrupt();
 	dbg_print("Board initialised.\n");

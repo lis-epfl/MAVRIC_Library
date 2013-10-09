@@ -238,7 +238,7 @@
       <ToolNumber>J30200015895</ToolNumber>
       <Channel>
         <host>127.0.0.1</host>
-        <port>49289</port>
+        <port>50248</port>
         <ssl>False</ssl>
       </Channel>
       <ToolOptions>

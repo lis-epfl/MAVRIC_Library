@@ -16,7 +16,6 @@
 #include "math_util.h"
 #include "time_keeper.h"
 
-//board_hardware_t *board;
 central_data_t *centralData;
 
 
@@ -27,7 +26,6 @@ uint32_t timeLastBarometerMsg;
 
 void init_pos_integration()
 {
-	//board = get_board_hardware();
 	centralData = get_central_data();
 	kp_alt=0.5;
 	kp_alt_v=0.5;

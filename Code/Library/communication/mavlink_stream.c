@@ -18,7 +18,6 @@ byte_stream_t* mavlink_out_stream;
 byte_stream_t* mavlink_in_stream;
 Buffer_t mavlink_in_buffer;
 
-//board_hardware_t *board;
 central_data_t *centralData;
 
 NEW_TASK_SET (mavlink_tasks, 20)
@@ -78,7 +77,7 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream,
 	init_scheduler(&mavlink_tasks);
 	
 	add_task(&mavlink_tasks, 100000, RUN_REGULAR, &send_scheduled_parameters, MAVLINK_MSG_ID_PARAM_VALUE);
-	//board = get_board_hardware();
+
 	centralData = get_central_data();
 }
 

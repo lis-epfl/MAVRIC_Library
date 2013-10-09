@@ -28,14 +28,12 @@
 #include "tasks.h"
 //#include "flashvault.h"
 
-//board_hardware_t *board;
 central_data_t *centralData;
 
 void initialisation() {
 	int i;
 	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 
-	//board=initialise_board();
 	centralData = get_central_data();
 	initialise_board(centralData);
 	

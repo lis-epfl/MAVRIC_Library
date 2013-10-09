@@ -77,7 +77,7 @@ out.v[2] = q2.s*q1.v[2] + q1.s *q2.v[2] +tmp[2];\
 out.s= q1.s*q2.s - SCP(q1.v, q2.v);
 
 pressure_data *baro;
-//board_hardware_t *board;
+
 central_data_t *centralData;
 double P[3][3][3]; // Covariance matrice for Z,X and Y
 double Q[3][3];

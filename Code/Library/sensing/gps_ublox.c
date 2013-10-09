@@ -10,9 +10,6 @@
 #include "central_data.h"
 #include "print_util.h"
 
-
-
-//board_hardware_t *board;
 central_data_t *centralData;
 
 //! The pointer to the pointer to the structure of the current message to fill
@@ -147,7 +144,6 @@ Initialization of the GPS with the type of platform
 */
 void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting)
 {
-	//board = get_board_hardware();
 	centralData = get_central_data();
 	
 	//centralData->gps_stream_out.flush(centralData->gps_stream_out.data);
