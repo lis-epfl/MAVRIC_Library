@@ -36,7 +36,7 @@
 #define MIN_YAW_RATE -4.0
 #define MAX_YAW_RATE 4.0
 
-#define V_CRUISE 15
+#define V_CRUISE 5
 
 #define NAV_HOLD_POS       0
 #define NAV_LOW_VELOCITY   1
@@ -337,7 +337,7 @@ void low_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude, float rel_d
 {
 	// dbg_print("Low speed nav\n");
 	
-	float yaw_angle_tolerance;
+	float yaw_angle_tolerance=PI/10.0;
 	
 	if ((f_abs(dir_desired_bf[X]) < 0.001 && f_abs(dir_desired_bf[Y]) < 0.001) || centralData->waypoint_hold_init || (rel_distance<=5.0))
 	{
