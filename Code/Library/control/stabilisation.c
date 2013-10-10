@@ -138,6 +138,7 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input) {
 		
 		rpyt_errors[YAW]= input.rpy[YAW];
 		stabilise(&velocity_stabiliser, &rpyt_errors);
+		//velocity_stabiliser.output.thrust = min(velocity_stabiliser.output.thrust*10000, control_input->thrust*10000)/10000;
 		input=velocity_stabiliser.output;
 	
 		

@@ -111,13 +111,14 @@ task_return_t set_mav_mode_n_state()
 			}
 			break;
 		case MAV_STATE_ACTIVE:
+			
 			switch(channelSwitches)
 			{
 				case 0:
-					centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
+					centralData->mav_mode = MAV_MODE_MANUAL_ARMED;
 					break;
 				case 1:
-					centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
+					centralData->mav_mode = MAV_MODE_STABILIZE_ARMED;
 					break;
 				case 2:
 					centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
@@ -126,6 +127,13 @@ task_return_t set_mav_mode_n_state()
 					centralData->mav_mode = MAV_MODE_AUTO_ARMED;
 					break;
 			}
+			if (centralData->mav_mode == MAV_MODE_MANUAL_ARMED)
+			{
+				centralData->controls.control_mode = ATTITUDE_COMMAND_MODE_REL_YAW;
+			}else{
+				centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
+			}
+
 			//dbg_print("motor_switch: ");
 			//dbg_print_num(motor_switch,10);
 			if (motor_switch == -1)
@@ -152,16 +160,16 @@ task_return_t set_mav_mode_n_state()
 			switch(channelSwitches)
 			{
 				case 0:
-				centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
-				break;
+					centralData->mav_mode= MAV_MODE_MANUAL_ARMED;
+					break;
 				case 1:
-				centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
-				break;
+					centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
+					break;
 				case 2:
-				centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
-				break;
+					centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
+					break;
 				case 3:
-				break;
+					break;
 			}
 			if (motor_switch == -1)
 			{
@@ -173,16 +181,17 @@ task_return_t set_mav_mode_n_state()
 			switch (RC_check)
 			{
 				case 1:
-				centralData->mav_state = MAV_STATE_ACTIVE;
-				break;
+					centralData->mav_state = MAV_STATE_ACTIVE;
+					break;
 				case -1:
-				break;
+					break;
 				case -2:
-				centralData->mav_state = MAV_STATE_EMERGENCY;
-				break;
+					centralData->mav_state = MAV_STATE_EMERGENCY;
+					break;
 			}
 			break;
 		case MAV_STATE_EMERGENCY:
+			centralData->controls.run_mode = MOTORS_OFF;
 			centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 			if (centralData->imu1.attitude.localPosition.pos[Z] < 0.5)
 			{
@@ -198,6 +207,133 @@ task_return_t set_mav_mode_n_state()
 	//dbg_print("\n");
 	
 }
+
+//task_return_t set_mav_mode_n_state()
+//{
+	//uint8_t channelSwitches = 0;
+	//int8_t RC_check = 0;
+	//int8_t motor_switch = 0;
+	//
+	//rc_user_channels(&channelSwitches,&RC_check, &motor_switch);
+	//
+	//switch(centralData->mav_state)
+	//{
+		//case MAV_STATE_CALIBRATING:
+			//break;
+		//case MAV_STATE_STANDBY:
+			//if (motor_switch == 1)
+			//{
+				//switch(channelSwitches)
+				//{
+					//case 0:
+						//dbg_print("Switching on the motors!\n");
+						//centralData->controls.run_mode = MOTORS_ON;
+						//centralData->mav_state = MAV_STATE_ACTIVE;
+						//centralData->mav_mode = MAV_MODE_MANUAL_ARMED;
+						//break;
+					//case 1:
+						//dbg_print("Switches not ready, both should be pushed!\n");
+						////centralData->controls.run_mode = MOTORS_ON;
+						////centralData->mav_state = MAV_STATE_ACTIVE;
+						////centralData->mav_mode = MAV_MODE_STABILIZE_ARMED;
+						//break;
+					//case 2:
+						//dbg_print("Switches not ready, both should be pushed!\n");
+						//break;
+					//case 3:
+						//dbg_print("Switches not ready, both should be pushed!\n");
+						//break;
+				//}
+			//}
+			//break;
+		//case MAV_STATE_ACTIVE:
+			//switch(channelSwitches)
+			//{
+				//case 0:
+					//centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
+					//break;
+				//case 1:
+					//centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
+					//break;
+				//case 2:
+					//centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
+					//break;
+				//case 3:
+					//centralData->mav_mode = MAV_MODE_AUTO_ARMED;
+					//break;
+			//}
+			////dbg_print("motor_switch: ");
+			////dbg_print_num(motor_switch,10);
+			//if (motor_switch == -1)
+			//{
+				//dbg_print("Switching off motors!\n");
+				//centralData->controls.run_mode = MOTORS_OFF;
+				//centralData->mav_state = MAV_STATE_STANDBY;
+				//centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
+			//}
+		//
+			//switch (RC_check)
+			//{
+				//case 1:
+					//break;
+				//case -1:
+					//centralData->mav_state = MAV_STATE_CRITICAL;
+					//break;
+				//case -2:
+					//centralData->mav_state = MAV_STATE_EMERGENCY;
+					//break;
+			//}
+			//break;
+		//case MAV_STATE_CRITICAL:
+			//switch(channelSwitches)
+			//{
+				//case 0:
+					//centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
+					//break;
+				//case 1:
+					//centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
+					//break;
+				//case 2:
+					//centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
+					//break;
+				//case 3:
+					//break;
+			//}
+			//if (motor_switch == -1)
+			//{
+				//dbg_print("Switching off motors!\n");
+				//centralData->controls.run_mode = MOTORS_OFF;
+				//centralData->mav_state = MAV_STATE_STANDBY;
+				//centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
+			//}
+			//switch (RC_check)
+			//{
+				//case 1:
+					//centralData->mav_state = MAV_STATE_ACTIVE;
+					//break;
+				//case -1:
+					//break;
+				//case -2:
+					//centralData->mav_state = MAV_STATE_EMERGENCY;
+					//break;
+			//}
+			//break;
+		//case MAV_STATE_EMERGENCY:
+			//centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
+			//if (centralData->imu1.attitude.localPosition.pos[Z] < 0.5)
+			//{
+				//centralData->mav_state = MAV_STATE_STANDBY;
+			//}
+			//break;
+	//}
+//
+	////dbg_print("MAV state :");
+	////dbg_print_num(centralData->mav_state,10);
+	////dbg_print(", MAV mode :");
+	////dbg_print_num(centralData->mav_mode,10);
+	////dbg_print("\n");
+	//
+//}
 
 task_return_t run_stabilisation() {
 	int i;
@@ -215,11 +351,11 @@ task_return_t run_stabilisation() {
 	{
 		case MAV_MODE_PREFLIGHT:
 		case MAV_MODE_MANUAL_ARMED:
-			//centralData->controls = get_command_from_remote();
-			//for (i=0; i<4; i++) {
-			//	centralData->servos[i].value=SERVO_SCALE*centralData->controls.thrust;
-			//}
-			
+			centralData->waypoint_hold_init = false;
+			centralData->mission_started = false;
+			centralData->controls = get_command_from_remote();
+			//centralData->controls.thrust = 1.0; // limitations on the thrust
+			quad_stabilise(&(centralData->imu1), &(centralData->controls));
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
 			centralData->waypoint_hold_init = false;
@@ -232,9 +368,7 @@ task_return_t run_stabilisation() {
 			centralData->controls.tvel[X]=-10.0*centralData->controls.rpy[PITCH];
 			centralData->controls.tvel[Y]= 10.0*centralData->controls.rpy[ROLL];
 			centralData->controls.tvel[Z]=- 3.0*centralData->controls.thrust;
-			centralData->controls.thrust = 1.0; // limitations on the thrust
-			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
-			//centralData->controls.control_mode = ATTITUDE_COMMAND_MODE_REL_YAW;
+			//centralData->controls.thrust = 1.0; // limitations on the thrust
 			quad_stabilise(&(centralData->imu1), &(centralData->controls));
 			
 			break;

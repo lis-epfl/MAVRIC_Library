@@ -50,11 +50,11 @@ static inline void get_channel_mode(uint8_t* chanSwitch)
 	if (rc_get_channel(RC_SAFETY)<0)
 	{
 		*chanSwitch |= 0x00;
-		}else if(rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)<0){
+	}else if(rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)<0){
 		*chanSwitch |= 0x01;
-		}else if (rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)>20){
+	}else if (rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)>20){
 		*chanSwitch |= 0x03;
-		}else{
+	}else{
 		*chanSwitch |= 0x02;
 	}
 }
