@@ -138,10 +138,12 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input) {
 		
 		rpyt_errors[YAW]= input.rpy[YAW];
 		stabilise(&velocity_stabiliser, &rpyt_errors);
-		//velocity_stabiliser.output.thrust = min(velocity_stabiliser.output.thrust*10000, control_input->thrust*10000)/10000;
+		
+		//velocity_stabiliser.output.thrust = f_min(velocity_stabiliser.output.thrust,control_input->thrust);
+		
 		input=velocity_stabiliser.output;
 	
-		
+	// -- no break here  - we want to run the lower level modes as well! -- 
 	case ATTITUDE_COMMAND_MODE_ABS_YAW:
 	case ATTITUDE_COMMAND_MODE_REL_YAW:
 		// run absolute attitude controller
@@ -160,7 +162,6 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input) {
 		input=attitude_stabiliser.output;
 	
 	// -- no break here  - we want to run the lower level modes as well! -- 
-	
 	case RATE_COMMAND_MODE:
 		// get rate measurements from IMU (filtered angular rates)
 		for (i=0; i<3; i++) {

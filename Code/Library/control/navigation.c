@@ -17,7 +17,6 @@
 
 #define KP_ROLL 1.0
 #define KP_PITCH -1.0
-//#define KP_YAW 0.05
 #define KP_YAW 0.2
 #define KP_ALT -0.02
 
@@ -250,12 +249,6 @@ void run_navigation()
 				rel_pos[Z] = (float)(waypoint_hold_coordinates.pos[Z] - centralData->imu1.attitude.localPosition.pos[Z]);
 				
 				dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
-				
-				// set speeds to zero
-				//for (i=0;i<3;i++)
-				//{
-					//rel_pos[i] = 0.0;
-				//}
 			}
 		}
 	}else{
@@ -292,62 +285,39 @@ void run_navigation()
 void set_speed_command(float rel_pos[], float dist2wpSqr)
 {
 	int8_t i;
-	float h_vel_sqr_norm, norm_rel_dist, v_desired, z_pos;
+	float h_vel_sqr_norm, norm_rel_dist, v_desired;
 	UQuat_t qtmp1, qtmp2, qtmp3, qtmp4;
 	
 	float dir_desired_bf[3], dir_desired[3], tmp[3];
 
-	v_desired = min(V_CRUISE*1000,DIST_2_VEL_GAIN * sqrt(dist2wpSqr)*1000)/1000;
+	norm_rel_dist = sqrt(dist2wpSqr);
+
+	v_desired = f_min(V_CRUISE,(DIST_2_VEL_GAIN * norm_rel_dist));
 	
-	dbg_print("v_desired (x1000):");
-	dbg_print_num(v_desired*1000,10);
-	
-	z_pos = rel_pos[Z];
-	//rel_pos[Z] = 0;
-	
-	norm_rel_dist = sqrt(rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2])+0.0001;
-	//norm_rel_dist = sqrt(rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2]);
-	//if (norm_rel_dist < 0.0005)
-	//{
-		//norm_rel_dist += 0.0005;
-	//}
+	if (norm_rel_dist < 0.0005)
+	{
+		norm_rel_dist += 0.0005;
+	}
 	
 	dir_desired[X] = v_desired * rel_pos[X] / norm_rel_dist;
 	dir_desired[Y] = v_desired * rel_pos[Y] / norm_rel_dist;
 	dir_desired[Z] = v_desired * rel_pos[Z] / norm_rel_dist;
-
-	//qtmp1 = quat_from_vector(dir_desired);
-	//qtmp1.s= 0.0; qtmp1.v[0]=dir_desired[0]; qtmp1.v[1]=dir_desired[1]; qtmp1.v[2]=dir_desired[2];
-	//qtmp2 = quat_global_to_local(centralData->imu1.attitude.qe,qtmp1);
-	//dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
-
-	//dbg_print("quatfromvect:");
-	//dbg_print_num(dir_desired_bf[0],10);
-	//dbg_print_num(dir_desired_bf[1],10);
-	//dbg_print_num(dir_desired_bf[2],10);
-
+	
 	// calculate dir_desired in local frame
 	// vel = qe-1 * rel_pos * qe
+	qtmp1 = quat_from_vector(dir_desired);
 	qtmp1.s= 0.0; qtmp1.v[0]=dir_desired[0]; qtmp1.v[1]=dir_desired[1]; qtmp1.v[2]=dir_desired[2];
-	QI(centralData->imu1.attitude.qe, qtmp2);
-	QMUL(qtmp2, qtmp1, qtmp3);
-	QMUL(qtmp3, centralData->imu1.attitude.qe, qtmp4);
-	dir_desired_bf[0] = qtmp4.v[0]; dir_desired_bf[1] = qtmp4.v[1]; dir_desired_bf[2] = qtmp4.v[2];
+	qtmp2 = quat_global_to_local(centralData->imu1.attitude.qe,qtmp1);
+	dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
 	
 	// experimental: Z-axis in velocity mode is in global frame...
 	dir_desired_bf[2] = dir_desired[2];
 	
-	//dbg_print("quat:");
-	//dbg_print_num(dir_desired_bf[0],10);
-	//dbg_print_num(dir_desired_bf[1],10);
-	//dbg_print_num(dir_desired_bf[2],10);
-	//dbg_print("\n");
-	
-	if (abs(dir_desired[Z]) > MAX_CLIMB_RATE)
+	if (f_abs(dir_desired[Z]) > MAX_CLIMB_RATE)
 	{
-		dir_desired[X] = dir_desired[X] / abs(dir_desired[Z]) * MAX_CLIMB_RATE;
-		dir_desired[Y] = dir_desired[Y] / abs(dir_desired[Z]) * MAX_CLIMB_RATE;
-		dir_desired[Z] = dir_desired[Z] / abs(dir_desired[Z]) * MAX_CLIMB_RATE;
+		dir_desired[X] = dir_desired[X] / f_abs(dir_desired[Z]) * MAX_CLIMB_RATE;
+		dir_desired[Y] = dir_desired[Y] / f_abs(dir_desired[Z]) * MAX_CLIMB_RATE;
+		dir_desired[Z] = dir_desired[Z] / f_abs(dir_desired[Z]) * MAX_CLIMB_RATE;
 	}
 	
 	//h_vel_sqr_norm = centralData->imu1.attitude.vel_bf[0]*centralData->imu1.attitude.vel_bf[0] + centralData->imu1.attitude.vel_bf[1]*centralData->imu1.attitude.vel_bf[1];
@@ -360,11 +330,7 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	
 	
 	low_speed_nav(dir_desired_bf,centralData->imu1.attitude,norm_rel_dist);
-	
-	//heave_velocity_control(dir_desired_bf[Z],centralData->imu1.attitude);
-	
-	//dir_desired_bf[Z] = z_pos;
-	//altitude_nav(dir_desired_bf[Z]);
+
 }
 
 void low_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude, float rel_distance)
@@ -372,29 +338,27 @@ void low_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude, float rel_d
 	// dbg_print("Low speed nav\n");
 	
 	float yaw_angle_tolerance;
-	float rel_heading = atan2(dir_desired_bf[Y],dir_desired_bf[X]);
-	if (rel_distance <= 5.0)
-	{
-		yaw_angle_tolerance = PI/20.0;
-	}else{
-		yaw_angle_tolerance = PI/10.0;
-	}
 	
-	if (rel_heading >= yaw_angle_tolerance)
-	{
-		centralData->controls_nav.tvel[X] = 0.0;
-		centralData->controls_nav.tvel[Y] = 0.0;
-	}else{
-		centralData->controls_nav.tvel[X] = dir_desired_bf[X];
-		centralData->controls_nav.tvel[Y] = dir_desired_bf[Y];
-	}
-	
-	if (abs(dir_desired_bf[X]) < 0.001 && abs(dir_desired_bf[Y]) < 0.001 || centralData->waypoint_hold_init)
+	if ((f_abs(dir_desired_bf[X]) < 0.001 && f_abs(dir_desired_bf[Y]) < 0.001) || centralData->waypoint_hold_init || (rel_distance<=5.0))
 	{
 		centralData->controls_nav.rpy[YAW] = 0.0;
+		centralData->controls_nav.tvel[X] = dir_desired_bf[X];
+		centralData->controls_nav.tvel[Y] = dir_desired_bf[Y];
 	}else{
+		float rel_heading = atan2(dir_desired_bf[Y],dir_desired_bf[X]);
+		
+		if (rel_heading >= yaw_angle_tolerance)
+		{
+			centralData->controls_nav.tvel[X] = 0.0;
+			centralData->controls_nav.tvel[Y] = 0.0;
+		}else{
+			centralData->controls_nav.tvel[X] = dir_desired_bf[X];
+			centralData->controls_nav.tvel[Y] = dir_desired_bf[Y];
+		}
+		
 		centralData->controls_nav.rpy[YAW] = KP_YAW * rel_heading;
 	}
+
 	centralData->controls_nav.tvel[Z] = dir_desired_bf[Z];
 }
 
@@ -406,220 +370,4 @@ void high_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude)
 	centralData->controls_nav.tvel[Y] = dir_desired_bf[Y];
 	centralData->controls_nav.tvel[Z] = dir_desired_bf[Z];
 	centralData->controls_nav.rpy[YAW] = KP_YAW * atan2(attitude.vel_bf[Y], attitude.vel_bf[X]);
-}
-
-
-void altitude_nav(float dir_desired_bf_z)
-{
-	int i;
-	
-	float err;
-	
-	err = dir_desired_bf_z; // - centralData->imu1.attitude.localPosition.pos[Z];
-	
-	centralData->controls_nav.thrust = - 0.35 * 9.81 / 16.0 + KP_ALT * err  + KI_ALT * alt_integrator; // //+ KD_ALT * centralData->imu1.attitude.vel[Z]
-	centralData->controls_nav.thrust = - centralData->sim_model.total_mass * GRAVITY / 16.0 + KP_ALT * err - KI_ALT * alt_integrator; // //+ KD_ALT * centralData->imu1.attitude.vel[Z]
-	
-	alt_integrator += err;
-	
-	alt_integrator = min_max_bound(alt_integrator,ALT_INT_SATURATION_MIN,ALT_INT_SATURATION_MAX);
-	
-	//dbg_print("Thrust (x10000):");
-	//dbg_print_num(centralData->controls_nav.thrust*10000,10);
-	//dbg_print(" , err (x1000):");
-	//dbg_print_num(KP_ALT *err*1000,10);
-	//dbg_print(", alt_int (x1000):");
-	//dbg_print_num(KI_ALT * alt_integrator*1000,10);
-	//dbg_print("; dir_bf (x1000):");
-	//dbg_print_num(dir_desired_bf_z*1000,10);
-	//dbg_print(", localPosZ (x1000):");
-	//dbg_print_num(centralData->imu1.attitude.localPosition.pos[Z]*1000,10);
-	//dbg_print("\n");
-}
-
-void heave_velocity_control(float dir_desired_bf_z, Quat_Attitude_t attitude)
-{
-	float gravity_compensation = -centralData->sim_model.total_mass * GRAVITY / 4.0;
-	//double gravity_compensation = -0.35 * 9.81 / 16.0;
-	
-	float err = dir_desired_bf_z - attitude.vel_bf[Z];
-	
-	centralData->controls_nav.thrust = gravity_compensation - 0.5 * err - 0.05 * alt_integrator; // - 0.1 * centralData->imu1.attitude.vel_bf[Z];
-	
-	alt_integrator += err;
-	
-	alt_integrator = min_max_bound(alt_integrator,ALT_INT_SATURATION_MIN,ALT_INT_SATURATION_MAX);
-	
-	dbg_print("thrust2 (x10000):");
-	dbg_print_num(centralData->controls_nav.thrust*10000,10);
-	dbg_print(" = ");
-	dbg_print(", err:(x1000)");
-	dbg_print_num(err*1000, 10);
-	dbg_print(", dir_bf_z (x1000):");
-	dbg_print_num(dir_desired_bf_z*1000,10);
-	dbg_print(", alt_int (x1000):");
-	dbg_print_num(alt_integrator*1000,10);
-	//dbg_print(", vel_bf_z (x100):");
-	//dbg_print_num(centralData->imu1.attitude.vel_bf[Z]*100,10);
-	dbg_print("\n");
-	
-}
-
-//void low_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude, float rel_distance)
-//{
-	//// dbg_print("Low speed nav\n");
-	//
-	//float yaw_angle_tolerance;
-	//if (rel_distance <= 5.0)
-	//{
-		//yaw_angle_tolerance = PI/20.0;
-	//}else{
-		//yaw_angle_tolerance = PI/10.0;
-	//}
-	//
-	//if (atan2(dir_desired_bf[Y],dir_desired_bf[X])>=yaw_angle_tolerance)
-	//{
-		//centralData->controls_nav.rpy[ROLL] = set_roll(0.0, attitude.vel_bf[Y]);
-		//centralData->controls_nav.rpy[PITCH] = set_pitch(0.0, attitude.vel_bf[X]);
-	//}else{
-		//centralData->controls_nav.rpy[ROLL] = set_roll(dir_desired_bf[Y], attitude.vel_bf[Y]);
-		//centralData->controls_nav.rpy[PITCH] = set_pitch(dir_desired_bf[X], attitude.vel_bf[X]);
-	//}
-	//centralData->controls_nav.rpy[YAW] = set_yaw(dir_desired_bf[X], dir_desired_bf[Y]);
-	//
-	////centralData->controls_nav.rpy[ROLL] = set_roll(0.0, attitude.vel_bf[Y]);
-	////centralData->controls_nav.rpy[PITCH] = set_pitch(0.0, attitude.vel_bf[X]);
-	////centralData->controls_nav.rpy[YAW] = set_yaw(0.0, 0.0);
-	//
-	//
-//}
-
-//void high_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude)
-//{
-	////dbg_print("High speed nav\n");
-	//centralData->controls_nav.rpy[ROLL] = set_roll(dir_desired_bf[Y], attitude.vel_bf[Y]);
-	//centralData->controls_nav.rpy[PITCH] = set_pitch(dir_desired_bf[X], attitude.vel_bf[X]);
-	//centralData->controls_nav.rpy[YAW] = set_yaw(attitude.vel_bf[X], attitude.vel_bf[Y]);
-	//
-//}
-//
-//void altitude_nav(float dir_desired_bf_z)
-//{
-	//int i;
-	//
-	//float err;
-	//
-	//err = dir_desired_bf_z; // - centralData->imu1.attitude.localPosition.pos[Z];
-	//
-	//centralData->controls_nav.thrust = - 0.35 * 9.81 / 16.0 + KP_ALT * err  + KI_ALT * alt_integrator; // //+ KD_ALT * centralData->imu1.attitude.vel[Z]
-	//centralData->controls_nav.thrust = - centralData->sim_model.total_mass * GRAVITY / 16.0 + KP_ALT * err - KI_ALT * alt_integrator; // //+ KD_ALT * centralData->imu1.attitude.vel[Z]
-	//
-	//alt_integrator += err; 
-	//
-	//alt_integrator = min_max_bound(alt_integrator,ALT_INT_SATURATION_MIN,ALT_INT_SATURATION_MAX);
-	//
-	////dbg_print("Thrust (x10000):");
-	////dbg_print_num(centralData->controls_nav.thrust*10000,10);
-	////dbg_print(" , err (x1000):");
-	////dbg_print_num(KP_ALT *err*1000,10);
-	////dbg_print(", alt_int (x1000):");
-	////dbg_print_num(KI_ALT * alt_integrator*1000,10);
-	////dbg_print("; dir_bf (x1000):");
-	////dbg_print_num(dir_desired_bf_z*1000,10);
-	////dbg_print(", localPosZ (x1000):");
-	////dbg_print_num(centralData->imu1.attitude.localPosition.pos[Z]*1000,10);
-	////dbg_print("\n");
-//}
-//
-//void heave_velocity_control(float dir_desired_bf_z, Quat_Attitude_t attitude)
-//{
-	//float gravity_compensation = -centralData->sim_model.total_mass * GRAVITY / 4.0;
-	////float gravity_compensation = -0.35 * 9.81 / 16.0;
-	//
-	//float err = dir_desired_bf_z - attitude.vel_bf[Z];
-	//
-	//centralData->controls_nav.thrust = gravity_compensation - 0.5 * err - 0.05 * alt_integrator; // - 0.1 * centralData->imu1.attitude.vel_bf[Z];
-	//
-	//alt_integrator += err;
-	//
-	//alt_integrator = min_max_bound(alt_integrator,ALT_INT_SATURATION_MIN,ALT_INT_SATURATION_MAX);
-	//
-	//dbg_print("thrust2 (x10000):");
-	//dbg_print_num(centralData->controls_nav.thrust*10000,10);
-	//dbg_print(" = ");
-	//dbg_print(", err:(x1000)");
-	//dbg_print_num(err*1000, 10);
-	//dbg_print(", dir_bf_z (x1000):");
-	//dbg_print_num(dir_desired_bf_z*1000,10);
-	//dbg_print(", alt_int (x1000):");
-	//dbg_print_num(alt_integrator*1000,10);
-	////dbg_print(", vel_bf_z (x100):");
-	////dbg_print_num(centralData->imu1.attitude.vel_bf[Z]*100,10);
-	//dbg_print("\n");
-	//
-//}
-
-float set_roll(float direction_bf_y, float vel_bf_y)
-{
-	float roll_set;
-	
-	roll_set = KP_ROLL * tanh(0.05 * (direction_bf_y - vel_bf_y));
-	roll_set = min_max_bound(roll_set,MIN_ROLL_RATE,MAX_ROLL_RATE);
-	
-	return roll_set;
-}
-
-float set_pitch(float direction_bf_x, float vel_bf_x)
-{
-	float pitch_set;
-	
-	pitch_set = KP_PITCH * tanh(0.05 * (direction_bf_x - vel_bf_x));
-	pitch_set = min_max_bound(pitch_set,MIN_PITCH_RATE,MAX_PITCH_RATE);
-	
-	return pitch_set;
-}
-
-float set_yaw(float value_x, float value_y)
-{
-	float yaw_set;
-	
-	if (abs(value_x) < 0.001 && abs(value_y) < 0.001 || centralData->waypoint_hold_init)
-	{
-		//dbg_print("wp_hold_init:");
-		//dbg_print_num(waypoint_hold_init,10);
-		//dbg_print(", value_x-y:");
-		//dbg_print_num(value_x,10);
-		//dbg_print(", ");
-		//dbg_print_num(value_y,10);
-		//dbg_print("\n");
-		yaw_set = 0.0;
-		//dbg_print("set yaw to zero\n");
-	}else{
-		yaw_set = KP_YAW * atan2(value_y, value_x);
-	}
-	//yaw_set = turn_force - 0.95 * rate;
-	
-	yaw_set = min_max_bound(yaw_set,MIN_YAW_RATE,MAX_YAW_RATE);
-	
-	//dbg_print("Yaw:");
-	//dbg_print_num(yaw_set*100000, 10);
-	//dbg_print(" = atan(");
-	//dbg_print_num(value_y*100000, 10);
-	//dbg_print(", ");
-	//dbg_print_num(value_x*100000, 10);
-	//dbg_print(")\n");
-	
-	return yaw_set;
-}
-
-float min_max_bound(float value, float min, float max)
-{
-	if (value >= max)
-	{
-		return max;
-	}else if (value <= min)
-	{
-		return min;
-	}
-	return value;
 }

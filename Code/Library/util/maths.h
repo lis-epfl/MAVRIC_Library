@@ -141,5 +141,31 @@ static inline UQuat_t quat_normalise(const UQuat_t q) {
 	return result;
 }
 
+static inline float f_abs(const float a){
+	if (a >= 0.0)
+	{
+		return a;
+	}else{
+		return -a;
+	}
+}
+
+static inline float f_min(const float a, const float b){
+	if (a <= b)
+	{
+		return a;
+	}else{
+		return b;
+	}
+}
+
+static inline float f_max(const float a, const float b){
+	if (a >= b)
+	{
+		return a;
+	}else{
+		return b;
+	}
+}
 
 #endif
