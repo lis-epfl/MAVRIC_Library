@@ -114,7 +114,7 @@ task_return_t set_mav_mode_n_state()
 			switch(channelSwitches)
 			{
 				case 0:
-					centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
+					centralData->mav_mode= MAV_MODE_MANUAL_ARMED;
 					break;
 				case 1:
 					centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
@@ -126,12 +126,6 @@ task_return_t set_mav_mode_n_state()
 					centralData->mav_mode = MAV_MODE_AUTO_ARMED;
 					break;
 			}
-			//if (centralData->mav_mode == MAV_MODE_MANUAL_ARMED)
-			//{
-				//centralData->controls.control_mode = ATTITUDE_COMMAND_MODE_REL_YAW;
-			//}else{
-				//centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
-			//}
 			
 			
 			//dbg_print("motor_switch: ");
@@ -160,16 +154,16 @@ task_return_t set_mav_mode_n_state()
 			switch(channelSwitches)
 			{
 				case 0:
-				centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
-				break;
+					centralData->mav_mode= MAV_MODE_MANUAL_ARMED;
+					break;
 				case 1:
-				centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
-				break;
+					centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
+					break;
 				case 2:
-				centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
-				break;
+					centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
+					break;
 				case 3:
-				break;
+					break;
 			}
 			if (motor_switch == -1)
 			{
@@ -181,13 +175,13 @@ task_return_t set_mav_mode_n_state()
 			switch (RC_check)
 			{
 				case 1:
-				centralData->mav_state = MAV_STATE_ACTIVE;
-				break;
+					centralData->mav_state = MAV_STATE_ACTIVE;
+					break;
 				case -1:
-				break;
+					break;
 				case -2:
-				centralData->mav_state = MAV_STATE_EMERGENCY;
-				break;
+					centralData->mav_state = MAV_STATE_EMERGENCY;
+					break;
 			}
 			break;
 		case MAV_STATE_EMERGENCY:
@@ -423,5 +417,5 @@ void create_tasks() {
 	
 	register_task(&main_tasks, 7, 150000, RUN_REGULAR, &run_barometer);
 
-	add_task(get_mavlink_taskset(),  1000000, RUN_REGULAR, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 }

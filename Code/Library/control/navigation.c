@@ -259,7 +259,7 @@ void run_navigation()
 		
 		if (centralData->waypoint_hold_init == 0)
 		{
-			dbg_print("position hold at: ");
+			dbg_print("Position hold at: ");
 			dbg_print_num(centralData->imu1.attitude.localPosition.pos[X],10);
 			dbg_print_num(centralData->imu1.attitude.localPosition.pos[Y],10);
 			dbg_print_num(centralData->imu1.attitude.localPosition.pos[Z],10);
@@ -337,7 +337,7 @@ void low_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude, float rel_d
 {
 	// dbg_print("Low speed nav\n");
 	
-	float yaw_angle_tolerance;
+	float yaw_angle_tolerance = PI/10.0;
 	
 	if ((f_abs(dir_desired_bf[X]) < 0.001 && f_abs(dir_desired_bf[Y]) < 0.001) || centralData->waypoint_hold_init || (rel_distance<=5.0))
 	{
