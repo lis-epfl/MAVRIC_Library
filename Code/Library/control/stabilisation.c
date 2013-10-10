@@ -70,22 +70,22 @@ void init_angle_stabilisation(Stabiliser_t *stabiliser) {
 
 void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	int i = 0;
-	// initialise x velocity
+	// initialise roll velocity
 	(stabiliser->rpy_controller[i]).p_gain=0.1; //0.1
 	(stabiliser->rpy_controller[i]).last_update=get_time_ticks();
-	(stabiliser->rpy_controller[i]).clip_min=-0.6; //-0.6
-	(stabiliser->rpy_controller[i]).clip_max= 0.6; //0.6
+	(stabiliser->rpy_controller[i]).clip_min=-0.5; //-0.6
+	(stabiliser->rpy_controller[i]).clip_max= 0.5; //0.6
 	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.5, 0.5); // 0.1 0.5 0.5
-	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.3, 0.3); // 1.0 0.3 0.3
+	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.3); // 1.0 0.3 0.3
 	
-	// initialise y velocity
+	// initialise pitch velocity
 	i = 1;
 	(stabiliser->rpy_controller[i]).p_gain=0.1; //0.1
 	(stabiliser->rpy_controller[i]).last_update=get_time_ticks();
-	(stabiliser->rpy_controller[i]).clip_min=-0.6; //-0.6
-	(stabiliser->rpy_controller[i]).clip_max= 0.6; //0.6
+	(stabiliser->rpy_controller[i]).clip_min=-0.5; //-0.6
+	(stabiliser->rpy_controller[i]).clip_max= 0.5; //0.6
 	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.5, 0.5); // 0.1 0.5 0.5
-	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.3, 0.3); // 1.0 0.3 0.3
+	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.3); // 1.0 0.3 0.3
 	
 	// initialise yaw controller
 	stabiliser->rpy_controller[2]=passthroughController();
@@ -132,13 +132,12 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input) {
 
 	switch (control_input->control_mode) {
 	case VELOCITY_COMMAND_MODE:
-		rpyt_errors[1]=-(input.tvel[0] - imu->attitude.vel_bf[0]); 
-		rpyt_errors[0]= input.tvel[1] - imu->attitude.vel_bf[1];
-		rpyt_errors[3]=-(input.tvel[2] - imu->attitude.vel[2]);
+		rpyt_errors[ROLL] = input.tvel[1] - imu->attitude.vel_bf[1];
+		rpyt_errors[PITCH]=-(input.tvel[0] - imu->attitude.vel_bf[0]); 
+		rpyt_errors[3]    =  -(input.tvel[2] - imu->attitude.vel[2]);
 		
-		rpyt_errors[2]= input.rpy[2];
+		rpyt_errors[YAW]= input.rpy[YAW];
 		stabilise(&velocity_stabiliser, &rpyt_errors);
-		//velocity_stabiliser.output.thrust = min(velocity_stabiliser.output.thrust*10000, control_input->thrust*10000)/10000;
 		input=velocity_stabiliser.output;
 	
 		

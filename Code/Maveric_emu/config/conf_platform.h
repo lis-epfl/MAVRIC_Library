@@ -23,7 +23,7 @@
 #define CONF_DIAG
 //#define CONF_CROSS
 
-#define RC_INPUT_SCALE 0.5
+#define RC_INPUT_SCALE 0.9
 
 #define JOYSTICK_REMOTE
 
