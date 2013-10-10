@@ -17,6 +17,7 @@ central_data_t *centralData;
 
 Stabiliser_t* get_rate_stabiliser() { return &rate_stabiliser;}
 Stabiliser_t* get_attitude_stabiliser() { return &attitude_stabiliser;}
+Stabiliser_t* get_velocity_stabiliser() { return &velocity_stabiliser;}
 
 void init_rate_stabilisation(Stabiliser_t *stabiliser) {
 	int i=0;
@@ -94,7 +95,7 @@ void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	(stabiliser->thrust_controller).last_update=get_time_ticks();
 	(stabiliser->thrust_controller).clip_min=-0.9; //-0.9
 	(stabiliser->thrust_controller).clip_max= 0.9; // 0.9
-	initDiff(&((stabiliser->thrust_controller).differentiator), 0.1, 0.5, 0.2); // 0.1 0.5 0.2
+	initDiff(&((stabiliser->thrust_controller).differentiator), 0.0, 0.5, 0.2); // 0.1 0.5 0.2
 	initInt(&((stabiliser->thrust_controller).integrator),1.0, 1.0, 0.5); // 1.0 1.0 0.5
 }
 
@@ -137,7 +138,7 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input) {
 		
 		rpyt_errors[2]= input.rpy[2];
 		stabilise(&velocity_stabiliser, &rpyt_errors);
-		velocity_stabiliser.output.thrust = min(velocity_stabiliser.output.thrust, control_input->thrust);
+		//velocity_stabiliser.output.thrust = min(velocity_stabiliser.output.thrust*10000, control_input->thrust*10000)/10000;
 		input=velocity_stabiliser.output;
 	
 		

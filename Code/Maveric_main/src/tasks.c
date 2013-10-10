@@ -422,8 +422,8 @@ task_return_t send_rt_stats() {
 
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "imuExTime", main_tasks.tasks[0].execution_time);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "stabExTime", main_tasks.tasks[1].execution_time);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estExTime", main_tasks.tasks[3].execution_time);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "MVLExTime", main_tasks.tasks[9].execution_time);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "navExTime", main_tasks.tasks[3].execution_time);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "imu_dt", get_central_data()->imu1.dt);
 
 	
 	main_tasks.tasks[1].rt_violations=0;
@@ -451,5 +451,5 @@ void create_tasks() {
 	
 	register_task(&main_tasks, 7, 150000, RUN_REGULAR, &run_barometer);
 
-	add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	add_task(get_mavlink_taskset(),  1000000, RUN_REGULAR, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 }

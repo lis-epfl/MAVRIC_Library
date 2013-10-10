@@ -229,9 +229,9 @@ task_return_t run_stabilisation() {
 			//dbg_print_num(board->controls.thrust*10000,10);
 			//dbg_print("\n");
 			//board->controls.control_mode=ATTITUDE_COMMAND_MODE_REL_YAW;
-			board->controls.tvel[X]=-20.0*board->controls.rpy[PITCH];
-			board->controls.tvel[Y]= 20.0*board->controls.rpy[ROLL];
-			board->controls.tvel[Z]=- 5.0*board->controls.thrust;
+			board->controls.tvel[X]=-10.0*board->controls.rpy[PITCH];
+			board->controls.tvel[Y]= 10.0*board->controls.rpy[ROLL];
+			board->controls.tvel[Z]=- 3.0*board->controls.thrust;
 			board->controls.control_mode=VELOCITY_COMMAND_MODE;
 			quad_stabilise(&(board->imu1), &(board->controls));
 			break;
