@@ -12,6 +12,7 @@
 #include "scheduler.h"
 #include "radar_module_driver.h"
 #include "remote_controller.h"
+#include "analog_monitor.h"
 
 central_data_t *centralData;
 
@@ -29,12 +30,19 @@ void mavlink_send_heartbeat(void) {
 								0b1111110000100111, // sensors enabled
 								0b1111110000100111, // sensors health
 								0,                  // load
-								12000,              // bat voltage (mV)
+								(int)(1000.0*get_battery_rail()), // bat voltage (mV)
 								100,                // current (mA)
 								99,					// battery remaining
 								0, 0,  				// comms drop, comms errors
 								0, 0, 0, 0);        // autopilot specific errors
-								
+	mavlink_msg_battery_status_send(MAVLINK_COMM_0, 0, (int)(1000.0*get_battery_rail()), 
+														(int)(1000.0*get_internal_rail()), 
+														(int)(1000.0*get_6V_analog_rail()), 
+														(int)(1000.0*get_5V_analog_rail()),
+														0.0, 0.0, 0.0, 0.0);
+														
+	trigger_analog_monitor();
+	
 	//dbg_print("Send hearbeat.\n");
 }
 
@@ -357,7 +365,7 @@ void init_mavlink_actions(void) {
 	//board=get_board_hardware();
 	centralData=get_central_data();
 	add_PID_parameters();
-	add_task(get_mavlink_taskset(), 1000000,RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
+	add_task(get_mavlink_taskset(), 100000,RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
 	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_attitude, MAVLINK_MSG_ID_ATTITUDE);
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_attitude_quaternion, MAVLINK_MSG_ID_ATTITUDE_QUATERNION);
 	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);

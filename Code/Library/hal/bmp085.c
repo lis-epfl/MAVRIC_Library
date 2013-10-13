@@ -73,7 +73,7 @@ pressure_data* get_pressure_data_slow(float offset) {
 		uint8_t start_address;
 		
 		uint8_t start_command_temp []={BMP085_CONTROL, BMP085_READTEMPCMD};
-		uint8_t start_command_pressure []={BMP085_CONTROL, BMP085_READPRESSURECMD+ (oversampling << 6)};
+		uint8_t start_command_pressure []={BMP085_CONTROL, BMP085_READPRESSURECMD+ (BMP085_OVERSAMPLING_MODE << 6)};
 		int32_t sealevelPressure=101325;
 		
 		// calibration: use datasheet numbers!
@@ -98,7 +98,7 @@ pressure_data* get_pressure_data_slow(float offset) {
 			twim_write(&AVR32_TWIM0, (uint8_t*) &start_address, 1, BMP085_SLAVE_ADDRESS, false);
 			twim_read(&AVR32_TWIM0, (uint8_t*)&(pressure_outputs.raw_pressure), 3, BMP085_SLAVE_ADDRESS, false);
 		
-			UP= ((uint32_t)pressure_outputs.raw_pressure[0]<<16 |(uint32_t)pressure_outputs.raw_pressure[1]<<8 | (uint32_t)pressure_outputs.raw_pressure[2]) >> (8-oversampling);
+			UP= ((uint32_t)pressure_outputs.raw_pressure[0]<<16 |(uint32_t)pressure_outputs.raw_pressure[1]<<8 | (uint32_t)pressure_outputs.raw_pressure[2]) >> (8-BMP085_OVERSAMPLING_MODE);
  
 			UT=pressure_outputs.raw_temperature[0]<<8 |pressure_outputs.raw_temperature[1];
 			// step 1
@@ -113,14 +113,14 @@ pressure_data* get_pressure_data_slow(float offset) {
 			X1 = ((int32_t)b2 * ( (B6 * B6)>>12 )) >> 11;
 			X2 = ((int32_t)ac2 * B6) >> 11;
 			X3 = X1 + X2;
-			B3 = ((((int32_t)ac1*4 + X3) << oversampling) + 2) / 4;
+			B3 = ((((int32_t)ac1*4 + X3) << BMP085_OVERSAMPLING_MODE) + 2) / 4;
 
 
 			X1 = ((int32_t)ac3 * B6) >> 13;
 			X2 = ((int32_t)b1 * ((B6 * B6) >> 12)) >> 16;
 			X3 = ((X1 + X2) + 2) >> 2;
 			B4 = ((uint32_t)ac4 * (uint32_t)(X3 + 32768)) >> 15;
-			B7 = ((uint32_t)UP - B3) * (uint32_t)( 50000UL >> oversampling );
+			B7 = ((uint32_t)UP - B3) * (uint32_t)( 50000UL >> BMP085_OVERSAMPLING_MODE );
 
 
 			if (B7 < 0x80000000) {

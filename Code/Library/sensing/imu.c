@@ -18,13 +18,13 @@
 int ic;
 void init_imu (Imu_Data_t *imu1) {
 	
-	init_itg3200_slow();
+//	init_itg3200_slow();
 	
-	init_adxl345_slow();
+//	init_adxl345_slow();
 
-	init_hmc5883_slow();
+//	init_hmc5883_slow();
 
-	calibrate_Gyros(imu1);
+//	calibrate_Gyros(imu1);
 	imu1->raw_scale[0] =  RAW_GYRO_X_SCALE;
 	imu1->raw_scale[1] =  RAW_GYRO_Y_SCALE;
 	imu1->raw_scale[2] =  RAW_GYRO_Z_SCALE;
@@ -61,11 +61,11 @@ void init_imu (Imu_Data_t *imu1) {
 
 void imu_get_raw_data(Imu_Data_t *imu1) {
 	int i=0;
-	gyro_data* gyros=get_gyro_data_slow();
+	gyro_data* gyros;//=get_gyro_data_slow();
 
-	acc_data* accs=get_acc_data_slow();
+	acc_data* accs;//=get_acc_data_slow();
 	
-	compass_data* compass=get_compass_data_slow();
+	compass_data* compass;//=get_compass_data_slow();
 
 	imu1->raw_channels[GYRO_OFFSET+IMU_X]=(float)gyros->axes[RAW_GYRO_X];
 	imu1->raw_channels[GYRO_OFFSET+IMU_Y]=(float)gyros->axes[RAW_GYRO_Y];

@@ -210,7 +210,7 @@ void ADC_Switch_Channel(int channel, Bool on_off){
 void ADC_Set_Mode(int mode){};
 
 // enables continuous sampling  -- not implemented yet
-void ADC_Start_Sampling(void){}
+//void ADC_Start_Sampling(void){}
 
 // starts sampling, captures one buffer length and then stops
 void ADC_Start_Oneshot(void){
