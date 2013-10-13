@@ -423,7 +423,7 @@ void create_tasks() {
 
 	register_task(&main_tasks, 6, 1000000, RUN_REGULAR, &set_mav_mode_n_state);
 	
-	register_task(&main_tasks, 7, 150000, RUN_REGULAR, &run_barometer);
+	//register_task(&main_tasks, 7, 150000, RUN_REGULAR, &run_barometer);
 
 	add_task(get_mavlink_taskset(),  1000000, RUN_REGULAR, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 }

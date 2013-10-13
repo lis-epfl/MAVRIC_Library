@@ -53,7 +53,7 @@ void initialisation() {
 	centralData->imu1.attitude.calibration_level=LEVELING;	
 	centralData->mav_state = MAV_STATE_CALIBRATING;
 	centralData->mav_mode = MAV_MODE_PREFLIGHT;
-
+/*
 	calibrate_Gyros(&centralData->imu1);
 	for (i=400; i>0; i--) {
 		imu_update(&centralData->imu1);
