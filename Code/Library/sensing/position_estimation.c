@@ -179,7 +179,7 @@ void position_correction()
 			
 			//centralData->imu1.attitude.localPosition.pos[2] += kp_alt/((float)(tinterBaro/2.5 + 1.0)) * alt_error;
 			pos_error[2]=centralData->imu1.attitude.last_alt  - centralData->imu1.attitude.localPosition.pos[2];
-			vel_error[2]=-centralData->pressure.vario_vz - centralData->imu1.attitude.vel[2];
+			vel_error[2]=centralData->pressure.vario_vz - centralData->imu1.attitude.vel[2];
 			//centralData->imu1.attitude.vel[2] += kp_alt_v * vel_error[2];
 				
 		}else{
