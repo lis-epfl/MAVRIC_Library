@@ -240,7 +240,7 @@ task_return_t run_stabilisation() {
 			
 			centralData->controls.tvel[X]=-10.0*centralData->controls.rpy[PITCH];
 			centralData->controls.tvel[Y]= 10.0*centralData->controls.rpy[ROLL];
-			centralData->controls.tvel[Z]=- 3.0*centralData->controls.thrust;
+			centralData->controls.tvel[Z]=- 1.5*centralData->controls.thrust;
 			
 			quad_stabilise(&(centralData->imu1), &(centralData->controls));
 			
@@ -258,7 +258,7 @@ task_return_t run_stabilisation() {
 			//dbg_print(" => min (x10000):");
 			//dbg_print_num(f_min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0 *10000.0,10);
 			//dbg_print("\n");
-			
+			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			quad_stabilise(&(centralData->imu1), &(centralData->controls));
 			break;
 		case MAV_MODE_AUTO_ARMED:
@@ -272,6 +272,7 @@ task_return_t run_stabilisation() {
 			//dbg_print_num(centralData->controls.thrust*10000,10);
 			//dbg_print("\n");
 			
+			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;			
 			quad_stabilise(&(centralData->imu1), &(centralData->controls));
 			break;
 		
@@ -421,9 +422,9 @@ void create_tasks() {
 
 	register_task(&main_tasks, 5, 10000, RUN_REGULAR, &run_navigation_task);
 
-	register_task(&main_tasks, 6, 1000000, RUN_REGULAR, &set_mav_mode_n_state);
+	register_task(&main_tasks, 6, 200000, RUN_REGULAR, &set_mav_mode_n_state);
 	
-	//register_task(&main_tasks, 7, 150000, RUN_REGULAR, &run_barometer);
+	register_task(&main_tasks, 7, 15000, RUN_REGULAR, &run_barometer);
 
-	add_task(get_mavlink_taskset(),  1000000, RUN_REGULAR, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 }

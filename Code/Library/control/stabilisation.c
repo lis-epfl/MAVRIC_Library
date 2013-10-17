@@ -96,7 +96,7 @@ void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	(stabiliser->thrust_controller).clip_min=-0.9; //-0.9
 	(stabiliser->thrust_controller).clip_max= 0.9; // 0.9
 	initDiff(&((stabiliser->thrust_controller).differentiator), 0.0, 0.5, 0.2); // 0.1 0.5 0.2
-	initInt(&((stabiliser->thrust_controller).integrator),1.0, 1.0, 0.5); // 1.0 1.0 0.5
+	initInt(&((stabiliser->thrust_controller).integrator),1.0, 1.5, 1.0); // 1.0 1.0 0.5
 }
 
 void init_stabilisation() {
@@ -113,9 +113,11 @@ void stabilise(Stabiliser_t *stabiliser, float *errors) {
 	int i;
 
 	for (i=0; i<3; i++) {
-		stabiliser->output.rpy[i]=	pid_update(&(stabiliser->rpy_controller[i]),  errors[i]);
+		// 
+		
+		stabiliser->output.rpy[i]=	pid_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], centralData->imu1.dt);
 	}		
-	stabiliser->output.thrust= pid_update(&(stabiliser->thrust_controller),  errors[3]);
+	stabiliser->output.thrust= pid_update_dt(&(stabiliser->thrust_controller),  errors[3], centralData->imu1.dt);
 
 	//dbg_putfloat(stabiliser->output.thrust, 3); dbg_print("\n");
 }
@@ -141,6 +143,7 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input) {
 		
 		//velocity_stabiliser.output.thrust = f_min(velocity_stabiliser.output.thrust,control_input->thrust);
 		
+		velocity_stabiliser.output.thrust += THRUST_HOVER_POINT;
 		input=velocity_stabiliser.output;
 	
 	// -- no break here  - we want to run the lower level modes as well! -- 

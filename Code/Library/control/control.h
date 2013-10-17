@@ -49,5 +49,6 @@ float differentiate(Differentiator_t *diff, float input,  float dt);
 
 float pid_update(PID_Controller_t* controller, float error);
 
+float pid_update_dt(PID_Controller_t* controller, float error, float dt);
 
 #endif /* CONTROL_H_ */

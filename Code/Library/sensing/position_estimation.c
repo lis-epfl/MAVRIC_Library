@@ -27,8 +27,8 @@ uint32_t timeLastBarometerMsg;
 void init_pos_integration()
 {
 	centralData = get_central_data();
-	kp_alt=0.5;
-	kp_alt_v=0.5;
+	kp_alt=0.4;
+	kp_alt_v=0.3;
 	centralData->init_gps_position = false;
 	centralData->init_barometer=false;
 	timeLastGpsMsg = 0;

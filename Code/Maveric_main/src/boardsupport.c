@@ -6,7 +6,6 @@
  */ 
 
 #include "boardsupport.h"
-#include "waypoint_navigation.h"
 #include "conf_sim_model.h"
 #include "sysclk.h"
 #include "sleepmgr.h"
@@ -112,8 +111,8 @@ void initialise_board(central_data_t *centralData) {
 	// init debug output
 	dbg_print_init(centralData->debug_out_stream);
 		
-	//init_imu(&(centralData->imu1));
-	//init_bmp085();
+	init_imu(&(centralData->imu1));
+	init_bmp085();
 
 	rc_init();
 

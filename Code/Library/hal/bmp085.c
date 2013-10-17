@@ -10,6 +10,7 @@
 #include "delay.h"
 
 #include "math.h"
+#include "maths.h"
 #include "time_keeper.h"
 #include <stdbool.h>
 
@@ -66,7 +67,7 @@ void init_bmp085_slow(){
 
 
 pressure_data* get_pressure_data_slow(float offset) {
-		float vertical_speed;
+		float altitude, vertical_speed;
 		int32_t UT, UP, B3, B5, B6, X1, X2, X3, p;
 		uint32_t B4, B7;
 			
@@ -137,7 +138,12 @@ pressure_data* get_pressure_data_slow(float offset) {
 			pressure_outputs.pressure=p;
 		
 			vertical_speed=pressure_outputs.altitude;
-			pressure_outputs.altitude = 44330 * (1.0 - pow(pressure_outputs.pressure /sealevelPressure,0.190295));
+			altitude=44330 * (1.0 - pow(pressure_outputs.pressure /sealevelPressure,0.190295));
+			if (f_abs(altitude-pressure_outputs.altitude)<15.0) {
+				pressure_outputs.altitude = (BARO_ALT_LPF*pressure_outputs.altitude) + (1.0-BARO_ALT_LPF)*altitude;
+			}else {
+				pressure_outputs.altitude = altitude;
+			}
 			
 			vertical_speed=pressure_outputs.altitude-vertical_speed;
 			if (abs(vertical_speed)>20) vertical_speed=0.0;

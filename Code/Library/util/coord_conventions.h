@@ -27,7 +27,7 @@ typedef struct {
 } global_position_t;
 
 typedef struct {
-	double pos[3];
+	float pos[3];
 	float heading;
 	global_position_t origin;
 	uint32_t timestamp_ms;

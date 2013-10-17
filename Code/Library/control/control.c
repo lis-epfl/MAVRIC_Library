@@ -83,3 +83,14 @@ float pid_update(PID_Controller_t* controller, float error) {
 	if (controller->output > controller->clip_max) controller->output=controller->clip_max;
 	return controller->output;	
 }
+
+float pid_update_dt(PID_Controller_t* controller, float error, float dt) {
+	controller->error=error;
+	controller->dt=dt;
+	controller->last_update=get_time_ticks();
+	
+	controller->output = controller->p_gain* (controller->error +integrate(&controller->integrator, controller->error, controller->dt) + differentiate(&controller->differentiator, controller->error, controller->dt));
+	if (controller->output < controller->clip_min) controller->output=controller->clip_min;
+	if (controller->output > controller->clip_max) controller->output=controller->clip_max;
+	return controller->output;	
+}
