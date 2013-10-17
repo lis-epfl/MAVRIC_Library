@@ -151,7 +151,7 @@ void position_correction()
 	uint32_t tinterGps, tinterBaro;
 	int i;
 	float dt;
-	if ((centralData->simulation_mode == 0))
+	//if ((centralData->simulation_mode == 0))
 	{
 		if (centralData->init_barometer)
 		{
@@ -179,7 +179,7 @@ void position_correction()
 			
 			//centralData->imu1.attitude.localPosition.pos[2] += kp_alt/((float)(tinterBaro/2.5 + 1.0)) * alt_error;
 			pos_error[2]=centralData->imu1.attitude.last_alt  - centralData->imu1.attitude.localPosition.pos[2];
-			vel_error[2]=centralData->pressure.vario_vz - centralData->imu1.attitude.vel[2];
+			vel_error[2]=-centralData->pressure.vario_vz - centralData->imu1.attitude.vel[2];
 			//centralData->imu1.attitude.vel[2] += kp_alt_v * vel_error[2];
 				
 		}else{
@@ -216,7 +216,8 @@ void position_correction()
 		}else{
 			init_pos_gps();
 			for (i=0;i<2;i++){
-				pos_error[i] = centralData->imu1.attitude.lastGpsPos.pos[i] - centralData->imu1.attitude.localPosition.pos[i];
+				//pos_error[i] = centralData->imu1.attitude.lastGpsPos.pos[i] - centralData->imu1.attitude.localPosition.pos[i];
+				pos_error[i] = 0.0;
 				vel_error[i] = 0.0;
 			}
 			gps_gain=0.1;

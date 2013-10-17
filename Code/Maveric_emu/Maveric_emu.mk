@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=felix
-Date                   :=10/10/13
+Date                   :=18/10/13
 CodeLitePath           :="/home/felix/.codelite"
 LinkerName             :=gcc
 SharedObjectLinkerName :=gcc -shared -fPIC
@@ -61,7 +61,7 @@ CodeLiteDir:=/usr/share/codelite
 Objects0=$(IntermediateDirectory)/boardsupport$(ObjectSuffix) $(IntermediateDirectory)/main$(ObjectSuffix) $(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IntermediateDirectory)/src_tasks$(ObjectSuffix) $(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) $(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) $(IntermediateDirectory)/util_sinus$(ObjectSuffix) $(IntermediateDirectory)/util_print_util$(ObjectSuffix) $(IntermediateDirectory)/util_buffer$(ObjectSuffix) \
 	$(IntermediateDirectory)/sensing_imu$(ObjectSuffix) $(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix) $(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix) $(IntermediateDirectory)/sensing_waypoint_navigation$(ObjectSuffix) $(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) $(IntermediateDirectory)/sensing_estimator$(ObjectSuffix) $(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix) $(IntermediateDirectory)/control_navigation$(ObjectSuffix) $(IntermediateDirectory)/control_stabilisation$(ObjectSuffix) $(IntermediateDirectory)/control_control$(ObjectSuffix) \
 	$(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix) $(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_adxl345_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_bmp085$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_radar_module_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_servo_pwm$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_led$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix) \
-	$(IntermediateDirectory)/hal_emu_udp_stream$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_joystick_rc$(ObjectSuffix) $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) 
+	$(IntermediateDirectory)/hal_emu_udp_stream$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_joystick_rc$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix) $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) 
 
 
 
@@ -344,6 +344,14 @@ $(IntermediateDirectory)/hal_emu_joystick_rc$(DependSuffix): ../Library/hal_emu/
 $(IntermediateDirectory)/hal_emu_joystick_rc$(PreprocessSuffix): ../Library/hal_emu/joystick_rc.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_joystick_rc$(PreprocessSuffix) "../Library/hal_emu/joystick_rc.c"
 
+$(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix): ../Library/hal_emu/analog_monitor.c $(IntermediateDirectory)/hal_emu_analog_monitor$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/analog_monitor.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/hal_emu_analog_monitor$(DependSuffix): ../Library/hal_emu/analog_monitor.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_analog_monitor$(DependSuffix) -MM "../Library/hal_emu/analog_monitor.c"
+
+$(IntermediateDirectory)/hal_emu_analog_monitor$(PreprocessSuffix): ../Library/hal_emu/analog_monitor.c
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_analog_monitor$(PreprocessSuffix) "../Library/hal_emu/analog_monitor.c"
+
 $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix): ../Library/tests/test_maths.c $(IntermediateDirectory)/tests_test_maths$(DependSuffix)
 	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/tests/test_maths.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/tests_test_maths$(DependSuffix): ../Library/tests/test_maths.c
@@ -454,6 +462,9 @@ clean:
 	$(RM) $(IntermediateDirectory)/hal_emu_joystick_rc$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/hal_emu_joystick_rc$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/hal_emu_joystick_rc$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/hal_emu_analog_monitor$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/hal_emu_analog_monitor$(PreprocessSuffix)
 	$(RM) $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/tests_test_maths$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/tests_test_maths$(PreprocessSuffix)

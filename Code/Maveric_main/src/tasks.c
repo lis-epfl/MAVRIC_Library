@@ -381,10 +381,16 @@ task_return_t run_navigation_task()
 task_return_t run_barometer()
 {
 	uint32_t tnow = get_micros();
-
+	central_data_t *central_data=get_central_data();
 	pressure_data *pressure = get_pressure_data_slow(centralData->pressure.altitude_offset);
+	if (central_data->simulation_mode==1) {
+		//update barometer
+		pressure->altitude=-central_data->imu1.attitude.localPosition.pos[Z]+central_data->imu1.attitude.localPosition.origin.altitude;
+		pressure->vario_vz=-central_data->imu1.attitude.vel[Z];
+		pressure->last_update=get_micros();
+		pressure->state=IDLE;
+	}
 	centralData->pressure =  *pressure;
-	
 	
 }
 

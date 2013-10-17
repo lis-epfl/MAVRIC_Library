@@ -167,6 +167,7 @@ void mavlink_send_pressure(void) {
 	
 	mavlink_msg_scaled_pressure_send(MAVLINK_COMM_0, get_millis(), centralData->pressure.pressure/100.0, centralData->pressure.vario_vz, centralData->pressure.temperature*100.0);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressAlt", centralData->pressure.altitude);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"lastAlt", centralData->imu1.attitude.last_alt);
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressFilt", centralData->altitude_filtered);
 }
 
