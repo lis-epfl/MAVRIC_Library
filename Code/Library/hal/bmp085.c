@@ -13,6 +13,7 @@
 #include "maths.h"
 #include "time_keeper.h"
 #include <stdbool.h>
+#include "print_util.h"
 
 pressure_data pressure_outputs;
 
@@ -76,7 +77,7 @@ pressure_data* get_pressure_data_slow(float offset) {
 		uint8_t start_command_temp []={BMP085_CONTROL, BMP085_READTEMPCMD};
 		uint8_t start_command_pressure []={BMP085_CONTROL, BMP085_READPRESSURECMD+ (BMP085_OVERSAMPLING_MODE << 6)};
 		int32_t sealevelPressure=101325;
-		
+		float dt;
 		// calibration: use datasheet numbers!
 
 		switch (pressure_outputs.state) {
@@ -138,16 +139,20 @@ pressure_data* get_pressure_data_slow(float offset) {
 			pressure_outputs.pressure=p;
 		
 			vertical_speed=pressure_outputs.altitude;
-			altitude=44330 * (1.0 - pow(pressure_outputs.pressure /sealevelPressure,0.190295));
+			altitude=44330.0 * (1.0 - pow(pressure_outputs.pressure /sealevelPressure,0.190295));
 			if (f_abs(altitude-pressure_outputs.altitude)<15.0) {
 				pressure_outputs.altitude = (BARO_ALT_LPF*pressure_outputs.altitude) + (1.0-BARO_ALT_LPF)*altitude;
 			}else {
 				pressure_outputs.altitude = altitude;
 			}
 			
-			vertical_speed=pressure_outputs.altitude-vertical_speed;
+			dt = (get_micros()-pressure_outputs.last_update)/1000000.0;
+			
+			vertical_speed=-(pressure_outputs.altitude-vertical_speed)/dt;
+			
 			if (abs(vertical_speed)>20) vertical_speed=0.0;
-			pressure_outputs.vario_vz=(1.0-VARIO_LPF)*pressure_outputs.vario_vz + VARIO_LPF * (-vertical_speed);
+			pressure_outputs.vario_vz=(VARIO_LPF)*pressure_outputs.vario_vz + (1.0-VARIO_LPF) * (vertical_speed);
+			
 			pressure_outputs.last_update=get_micros();
 			pressure_outputs.state=IDLE;
 			break;

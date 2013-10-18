@@ -100,10 +100,14 @@ void putnum_tight(byte_stream_t *out_stream, long c, char base){
 
 void putfloat(byte_stream_t *out_stream, float c, int after_digits){
 	int i;
-	int whole=abs((int)c);
-	float after=(abs(c)-(float)whole);
-	if (c<0) putstring(out_stream, "-");
-	
+	float num=c;
+	if (c<0) {
+		putstring(out_stream, "-");
+		num=-c;
+	}
+	int whole=abs((int)num);
+	float after=(num-(float)whole);
+
 	putnum_tight(out_stream, whole, 10);
 	putstring(out_stream, "."); 
 	
