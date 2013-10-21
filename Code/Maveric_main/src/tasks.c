@@ -213,7 +213,7 @@ task_return_t run_stabilisation() {
 
 	switch(centralData->mav_mode)
 	{
-		case MAV_MODE_PREFLIGHT:
+		
 		case MAV_MODE_MANUAL_ARMED:
 			centralData->waypoint_hold_init = false;
 			centralData->mission_started = false;
@@ -268,6 +268,8 @@ task_return_t run_stabilisation() {
 			
 			quad_stabilise(&(centralData->imu1), &(centralData->controls));
 			break;
+		
+		case MAV_MODE_PREFLIGHT:
 		case MAV_MODE_MANUAL_DISARMED:
 		case MAV_MODE_STABILIZE_DISARMED:
 		case MAV_MODE_GUIDED_DISARMED:

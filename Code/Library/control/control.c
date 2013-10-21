@@ -61,13 +61,14 @@ void initDiff(Differentiator_t *diff, float gain, float LPF, float clip_val) {
 }
 
 float differentiate(Differentiator_t *diff, float input, float dt) {
-	float output=0;
+	float output=0.0;
 	if (dt<0.000001) {
-		output=0; 
+		output=0.0; 
 	} else {
 		output=clip(diff->gain*(input - diff->previous)/dt, diff->clip);
 	}	
-	diff->previous=(1.0-(diff->LPF))*input + (diff->LPF) * (diff->previous);
+	//diff->previous=(1.0-(diff->LPF))*input + (diff->LPF) * (diff->previous);
+	diff->previous=input;
 	return output;
 }
 

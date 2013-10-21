@@ -36,7 +36,7 @@
 #define MIN_YAW_RATE -4.0
 #define MAX_YAW_RATE 4.0
 
-#define V_CRUISE 15
+#define V_CRUISE 5
 
 #define NAV_HOLD_POS       0
 #define NAV_LOW_VELOCITY   1
