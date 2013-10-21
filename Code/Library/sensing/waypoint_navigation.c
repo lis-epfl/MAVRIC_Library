@@ -218,6 +218,9 @@ void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool*
 			*waypoint_sending     = false;
 			waypoint_request_number = 0;
 			
+			// comment this line if you want to add new waypoints to the list instead of overwritting them
+			num_waypoint_onboard = 0;
+			
 			start_timeout = get_millis();
 		}
 		
