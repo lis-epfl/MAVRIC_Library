@@ -27,6 +27,8 @@
 
 #define JOYSTICK_REMOTE
 
+#define THRUST_HOVER_POINT (-0.3)
+
 #define IMU_X 0
 #define IMU_Y 1
 #define IMU_Z 2

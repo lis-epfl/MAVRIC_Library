@@ -195,6 +195,8 @@
       <File Name="../Library/hal_emu/remote_controller.h"/>
       <File Name="../Library/hal_emu/joystick_rc.h"/>
       <File Name="../Library/hal_emu/joystick_rc.c"/>
+      <File Name="../Library/hal_emu/analog_monitor.h"/>
+      <File Name="../Library/hal_emu/analog_monitor.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="tests">
       <File Name="../Library/tests/test_maths.h"/>

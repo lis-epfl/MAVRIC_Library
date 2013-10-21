@@ -12,6 +12,7 @@
 #include "scheduler.h"
 #include "radar_module_driver.h"
 #include "remote_controller.h"
+#include "analog_monitor.h"
 
 central_data_t *centralData;
 
@@ -29,12 +30,19 @@ void mavlink_send_heartbeat(void) {
 								0b1111110000100111, // sensors enabled
 								0b1111110000100111, // sensors health
 								0,                  // load
-								12000,              // bat voltage (mV)
+								(int)(1000.0*get_battery_rail()), // bat voltage (mV)
 								100,                // current (mA)
 								99,					// battery remaining
 								0, 0,  				// comms drop, comms errors
 								0, 0, 0, 0);        // autopilot specific errors
-								
+	mavlink_msg_battery_status_send(MAVLINK_COMM_0, 0, (int)(1000.0*get_battery_rail()), 
+														(int)(1000.0*get_internal_rail()), 
+														(int)(1000.0*get_6V_analog_rail()), 
+														(int)(1000.0*get_5V_analog_rail()),
+														0.0, 0.0, 0.0, 0.0);
+														
+	trigger_analog_monitor();
+	
 	//dbg_print("Send hearbeat.\n");
 }
 
@@ -159,6 +167,7 @@ void mavlink_send_pressure(void) {
 	
 	mavlink_msg_scaled_pressure_send(MAVLINK_COMM_0, get_millis(), centralData->pressure.pressure/100.0, centralData->pressure.vario_vz, centralData->pressure.temperature*100.0);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressAlt", centralData->pressure.altitude);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"lastAlt", centralData->imu1.attitude.last_alt);
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressFilt", centralData->altitude_filtered);
 }
 
@@ -357,13 +366,13 @@ void init_mavlink_actions(void) {
 	//board=get_board_hardware();
 	centralData=get_central_data();
 	add_PID_parameters();
-	add_task(get_mavlink_taskset(), 1000000,RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
+	add_task(get_mavlink_taskset(), 100000,RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
 	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_attitude, MAVLINK_MSG_ID_ATTITUDE);
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_attitude_quaternion, MAVLINK_MSG_ID_ATTITUDE_QUATERNION);
 	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
-	add_task(get_mavlink_taskset(),  300000, RUN_NEVER, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
-	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
-	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
+	add_task(get_mavlink_taskset(),  50000, RUN_REGULAR, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
+	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
+	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_speed_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT);
@@ -373,7 +382,7 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
 	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &mavlink_send_gps_raw, MAVLINK_MSG_ID_GPS_RAW_INT);
-	add_task(get_mavlink_taskset(), 200000, RUN_REGULAR, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
+	add_task(get_mavlink_taskset(), 200000, RUN_NEVER, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
 	add_task(get_mavlink_taskset(), 250000, RUN_REGULAR, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
 	//add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_simulation, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	//add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);

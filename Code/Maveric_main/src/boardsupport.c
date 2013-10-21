@@ -6,7 +6,6 @@
  */ 
 
 #include "boardsupport.h"
-#include "waypoint_navigation.h"
 #include "conf_sim_model.h"
 #include "sysclk.h"
 #include "sleepmgr.h"
@@ -27,6 +26,7 @@
 
 #include "simulation.h"
 #include "bmp085.h"
+#include "analog_monitor.h"
 
 //static volatile board_hardware_t board_hardware;
 
@@ -104,6 +104,7 @@ void initialise_board(central_data_t *centralData) {
 	centralData->debug_in_stream      =&(centralData->xbee_in_stream);
 */
 
+	init_analog_monitor();
 	// init mavlink
 	init_mavlink(centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID);
 		
@@ -140,7 +141,7 @@ void initialise_board(central_data_t *centralData) {
 	centralData->imu1.attitude.localPosition.pos[1]=0; 
 	centralData->imu1.attitude.localPosition.pos[2]=0;
 		
-	init_waypoint_list(centralData->waypoint_list,&(centralData->number_of_waypoints));
+	//init_waypoint_list(centralData->waypoint_list,&(centralData->number_of_waypoints));
 
 	Enable_global_interrupt();
 	dbg_print("Board initialised.\n");

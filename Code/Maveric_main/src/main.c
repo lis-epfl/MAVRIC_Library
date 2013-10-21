@@ -24,7 +24,8 @@
 #include "scheduler.h"
 #include "central_data.h"
 #include "boardsupport.h"
-
+#include "waypoint_navigation.h"
+#include "navigation.h"
 #include "tasks.h"
 //#include "flashvault.h"
 
@@ -54,7 +55,7 @@ void initialisation() {
 	centralData->mav_state = MAV_STATE_CALIBRATING;
 	centralData->mav_mode = MAV_MODE_PREFLIGHT;
 
-	calibrate_Gyros(&centralData->imu1);
+//	calibrate_Gyros(&centralData->imu1);
 	for (i=400; i>0; i--) {
 		imu_update(&centralData->imu1);
 		mavlink_protocol_update();	
@@ -78,7 +79,8 @@ void initialisation() {
 	}
 	centralData->mav_state = MAV_STATE_STANDBY;
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
-	
+	init_nav();
+	init_waypoint_list(centralData->waypoint_list,&centralData->number_of_waypoints);
 	//e_init();
 	
 	
@@ -88,33 +90,23 @@ void initialisation() {
 
 void main (void)
 {
-	int i=0;
-	int counter=0;
-	uint32_t last_looptime, this_looptime;
-	
-	global_position_t actualPos, originPos;
-	local_coordinates_t localPos;
 	
 	initialisation();
 	
 	create_tasks();
 	
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	centralData->simulation_mode = 1;
+	centralData->simulation_mode = 0;
 	
 	// main loop
-	counter=0;
+	
 	while (1==1) {
-		this_looptime=get_millis();
 		
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
 		
 		LED_On(LED1);
 
-		//if (counter==0) LED_Toggle(LED1);
-
-		counter=(counter+1)%1000;
-		last_looptime=this_looptime;	
+		
 	}		
 }
 

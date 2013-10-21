@@ -18,6 +18,9 @@
 //#define CONF_CROSS
 
 #define RC_INPUT_SCALE 0.8
+// Thrust compensation for hover (relative to center position)
+#define THRUST_HOVER_POINT (-0.3)
+
 
 #define IMU_X 0
 #define IMU_Y 1

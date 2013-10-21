@@ -30,5 +30,11 @@ pressure_data* get_pressure_data_slow(float offset){
 }
 
 bool newValidBarometer(uint32_t *timePrevBarometer) {
-	return false;
+		if (*timePrevBarometer < pressure_outputs.last_update) 
+	{
+		*timePrevBarometer = pressure_outputs.last_update;
+		return true;
+	}else{
+		return false;
+	}
 }

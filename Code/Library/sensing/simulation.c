@@ -12,7 +12,7 @@
 #include "time_keeper.h"
 #include "coord_conventions.h"
 #include "position_estimation.h"
-
+#include "central_data.h"
 void init_simulation(simulation_model_t *sim) {
 	int i;
 	(*sim)=vehicle_model_parameters;
@@ -117,10 +117,11 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos
 
 void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu) {
 	int i;
+	central_data_t *central_data;
 	double t=get_time();
 	sim->dt=(t - sim->last_update);
 	sim->last_update=t;
-	
+	central_data=get_central_data();
 	// compute torques and forces based on servo commands
 	#ifdef CONF_DIAG
 	forces_from_servos_diag_quad(sim, servo_commands);
@@ -162,14 +163,19 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 
 	imu->dt=sim->dt;
 	qfilter(&imu->attitude, &imu->raw_channels, imu->dt, true);
+	
+	
+	
 	position_integration(&imu->attitude,imu->dt);
+
+
 	position_correction();
 	
 	
 	for (i=0; i<3; i++){
 		sim->vel_bf[i]=imu->attitude.vel_bf[i];
-		sim->pos[i]=imu->attitude.localPosition.pos[i];
-		
+		sim->pos[i]=imu->attitude.localPosition.pos[i];		
 	}
+	
 
 }
