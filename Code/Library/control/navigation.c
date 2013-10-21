@@ -182,6 +182,7 @@ void run_navigation()
 		rel_pos[Z] = (float)(waypoint_coordinates.pos[Z] - centralData->imu1.attitude.localPosition.pos[Z]);
 		
 		dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
+		//set_rel_pos_n_dist2wp(rel_pos,&dist2wp_sqr);
 		
 		//dbg_print("rel_pos:(");
 		//dbg_print_num(rel_pos[X],10);
@@ -232,24 +233,26 @@ void run_navigation()
 				set_waypoint_from_frame(current_waypoint);
 				
 				mavlink_msg_mission_current_send(MAVLINK_COMM_0,centralData->current_wp);
+				
 			}else{
 				centralData->waypoint_set = false;
 				dbg_print("Stop\n");
 				
-				if (centralData->waypoint_hold_init == 0)
-				{
-					centralData->waypoint_hold_init = true;
-					waypoint_hold_coordinates.pos[X] = centralData->imu1.attitude.localPosition.pos[X];
-					waypoint_hold_coordinates.pos[Y] = centralData->imu1.attitude.localPosition.pos[Y];
-					waypoint_hold_coordinates.pos[Z] = centralData->imu1.attitude.localPosition.pos[Z];
-				}
-				
-				rel_pos[X] = (float)(waypoint_hold_coordinates.pos[X] - centralData->imu1.attitude.localPosition.pos[X]);
-				rel_pos[Y] = (float)(waypoint_hold_coordinates.pos[Y] - centralData->imu1.attitude.localPosition.pos[Y]);
-				rel_pos[Z] = (float)(waypoint_hold_coordinates.pos[Z] - centralData->imu1.attitude.localPosition.pos[Z]);
-				
-				dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
+				//if (centralData->waypoint_hold_init == 0)
+				//{
+					//centralData->waypoint_hold_init = true;
+					//waypoint_hold_coordinates.pos[X] = centralData->imu1.attitude.localPosition.pos[X];
+					//waypoint_hold_coordinates.pos[Y] = centralData->imu1.attitude.localPosition.pos[Y];
+					//waypoint_hold_coordinates.pos[Z] = centralData->imu1.attitude.localPosition.pos[Z];
+				//}
+				wp_hold_init();
 			}
+			rel_pos[X] = (float)(waypoint_coordinates.pos[X] - centralData->imu1.attitude.localPosition.pos[X]);
+			rel_pos[Y] = (float)(waypoint_coordinates.pos[Y] - centralData->imu1.attitude.localPosition.pos[Y]);
+			rel_pos[Z] = (float)(waypoint_coordinates.pos[Z] - centralData->imu1.attitude.localPosition.pos[Z]);
+			
+			dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
+			//set_rel_pos_n_dist2wp(rel_pos,&dist2wp_sqr);
 		}
 	}else{
 		if (centralData->waypoint_set == false)
@@ -257,30 +260,56 @@ void run_navigation()
 			init_nav();
 		}
 		
-		if (centralData->waypoint_hold_init == 0)
-		{
-			dbg_print("position hold at: ");
-			dbg_print_num(centralData->imu1.attitude.localPosition.pos[X],10);
-			dbg_print_num(centralData->imu1.attitude.localPosition.pos[Y],10);
-			dbg_print_num(centralData->imu1.attitude.localPosition.pos[Z],10);
-			dbg_print(")\n");
-			
-			centralData->waypoint_hold_init = 1;
-			waypoint_hold_coordinates.pos[X] = centralData->imu1.attitude.localPosition.pos[X];
-			waypoint_hold_coordinates.pos[Y] = centralData->imu1.attitude.localPosition.pos[Y];
-			waypoint_hold_coordinates.pos[Z] = centralData->imu1.attitude.localPosition.pos[Z];
-		}
+		//if (centralData->waypoint_hold_init == 0)
+		//{
+			//dbg_print("Position hold at: ");
+			//dbg_print_num(centralData->imu1.attitude.localPosition.pos[X],10);
+			//dbg_print_num(centralData->imu1.attitude.localPosition.pos[Y],10);
+			//dbg_print_num(centralData->imu1.attitude.localPosition.pos[Z],10);
+			//dbg_print(")\n");
+			//
+			//centralData->waypoint_hold_init = 1;
+			//waypoint_hold_coordinates.pos[X] = centralData->imu1.attitude.localPosition.pos[X];
+			//waypoint_hold_coordinates.pos[Y] = centralData->imu1.attitude.localPosition.pos[Y];
+			//waypoint_hold_coordinates.pos[Z] = centralData->imu1.attitude.localPosition.pos[Z];
+		//}
+		wp_hold_init();
 		
 		rel_pos[X] = (float)(waypoint_hold_coordinates.pos[X] - centralData->imu1.attitude.localPosition.pos[X]);
 		rel_pos[Y] = (float)(waypoint_hold_coordinates.pos[Y] - centralData->imu1.attitude.localPosition.pos[Y]);
 		rel_pos[Z] = (float)(waypoint_hold_coordinates.pos[Z] - centralData->imu1.attitude.localPosition.pos[Z]);
 		
 		dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
-		
+		//set_rel_pos_n_dist2wp(rel_pos,&dist2wp_sqr);
 	}
 	set_speed_command(rel_pos,dist2wp_sqr);
 }
 
+void wp_hold_init()
+{
+	if (centralData->waypoint_hold_init == 0)
+	{
+		dbg_print("Position hold at: ");
+		dbg_print_num(centralData->imu1.attitude.localPosition.pos[X],10);
+		dbg_print_num(centralData->imu1.attitude.localPosition.pos[Y],10);
+		dbg_print_num(centralData->imu1.attitude.localPosition.pos[Z],10);
+		dbg_print(")\n");
+		
+		centralData->waypoint_hold_init = 1;
+		waypoint_hold_coordinates.pos[X] = centralData->imu1.attitude.localPosition.pos[X];
+		waypoint_hold_coordinates.pos[Y] = centralData->imu1.attitude.localPosition.pos[Y];
+		waypoint_hold_coordinates.pos[Z] = centralData->imu1.attitude.localPosition.pos[Z];
+	}
+}
+
+void set_rel_pos_n_dist2wp(float rel_pos[], float *dist2wp_sqr)
+{
+	rel_pos[X] = (float)(waypoint_hold_coordinates.pos[X] - centralData->imu1.attitude.localPosition.pos[X]);
+	rel_pos[Y] = (float)(waypoint_hold_coordinates.pos[Y] - centralData->imu1.attitude.localPosition.pos[Y]);
+	rel_pos[Z] = (float)(waypoint_hold_coordinates.pos[Z] - centralData->imu1.attitude.localPosition.pos[Z]);
+	
+	*dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
+}
 
 void set_speed_command(float rel_pos[], float dist2wpSqr)
 {
@@ -337,7 +366,7 @@ void low_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude, float rel_d
 {
 	// dbg_print("Low speed nav\n");
 	
-	float yaw_angle_tolerance=PI/10.0;
+	float yaw_angle_tolerance = PI/10.0;
 	
 	if ((f_abs(dir_desired_bf[X]) < 0.001 && f_abs(dir_desired_bf[Y]) < 0.001) || centralData->waypoint_hold_init || (rel_distance<=5.0))
 	{
