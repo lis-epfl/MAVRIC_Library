@@ -94,7 +94,7 @@ void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	(stabiliser->thrust_controller).p_gain=0.3; //0.3
 	(stabiliser->thrust_controller).last_update=get_time_ticks();
 	(stabiliser->thrust_controller).clip_min=-0.9; //-0.9
-	(stabiliser->thrust_controller).clip_max= 0.9; // 0.9
+	(stabiliser->thrust_controller).clip_max= 0.65; // 0.9
 	initDiff(&((stabiliser->thrust_controller).differentiator), 0.0, 0.5, 0.2); // 0.1 0.5 0.2
 	initInt(&((stabiliser->thrust_controller).integrator),1.0, 1.5, 1.0); // 1.0 1.0 0.5
 }
