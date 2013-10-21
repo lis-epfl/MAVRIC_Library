@@ -124,6 +124,10 @@ void change_task_period(task_entry *te, unsigned long repeat_period) {
 	run_task_now(te);
 }
 
+void suspend_task(task_entry *te, unsigned long delay) {
+	te->next_run=GET_TIME + delay;
+}
+
 void run_task_now(task_entry *te) {
 	if (te->run_mode==RUN_NEVER) te->run_mode=RUN_ONCE;
 	te->next_run=GET_TIME;

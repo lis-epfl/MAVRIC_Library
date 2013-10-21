@@ -28,9 +28,9 @@ local_coordinates_t global_to_local_position(global_position_t position, global_
 	local_coordinates_t output;
 	output.origin=origin;
 	double small_radius=cos(deg_to_rad(position.latitude))*EARTH_RADIUS;
-	output.pos[X]=  sin(deg_to_rad((position.latitude-origin.latitude)))*EARTH_RADIUS;
-	output.pos[Y]=  sin(deg_to_rad((position.longitude-origin.longitude)))*small_radius;
-	output.pos[Z]= -(position.altitude - origin.altitude);
+	output.pos[X]=  (float)(sin(deg_to_rad((position.latitude-origin.latitude)))*EARTH_RADIUS);
+	output.pos[Y]=  (float)(sin(deg_to_rad((position.longitude-origin.longitude)))*small_radius);
+	output.pos[Z]=  (float)(-(position.altitude - origin.altitude));
 	output.heading=position.heading;
 	
 	//dbg_print("global2local: (x1e7): ");

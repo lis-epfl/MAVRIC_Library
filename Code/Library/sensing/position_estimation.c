@@ -19,7 +19,8 @@
 central_data_t *centralData;
 
 
-float kp_pos[3],kp_vel[3], kp_alt;
+float kp_vel[3], kp_pos[3], kp_alt;
+float prev_pos[3];
 
 uint32_t timeLastGpsMsg;
 uint32_t timeLastBarometerMsg;
@@ -33,12 +34,12 @@ void init_pos_integration()
 	timeLastGpsMsg = 0;
 	timeLastBarometerMsg=get_micros();
 	
-	kp_pos[0] = 1.0;
-	kp_pos[1] = 1.0;
+	kp_pos[0] = 0.8;
+	kp_pos[1] = 0.8;
 	kp_pos[2] = 1.0;
 	
-	kp_vel[0] = 0.5;
-	kp_vel[1] = 0.5;
+	kp_vel[0] = 0.3;
+	kp_vel[1] = 0.3;
 	kp_vel[2] = 0.5;
 	
 	init_pos_gps();
@@ -97,7 +98,6 @@ void init_barometer_offset()
 		dbg_print("\n");
 	}
 }
-float prev_pos[];
 
 void position_integration(Quat_Attitude_t *attitude, float dt)
 {
@@ -135,6 +135,7 @@ void position_integration(Quat_Attitude_t *attitude, float dt)
 		attitude->localPosition.pos[i] =attitude->localPosition.pos[i]*(1.0-(POS_DECAY*dt)) + attitude->vel[i] *dt;
 		attitude->localPosition.heading=get_yaw(attitude->qe);
 	}
+
 }
 	
 void position_correction()
@@ -197,13 +198,15 @@ void position_correction()
 				global_gps_position.longitude = centralData->GPS_data.longitude;
 				global_gps_position.latitude = centralData->GPS_data.latitude;
 				global_gps_position.altitude = centralData->GPS_data.altitude;
-			
+				global_gps_position.heading=0.0;
 				local_coordinates = global_to_local_position(global_gps_position,centralData->imu1.attitude.localPosition.origin);
 				local_coordinates.timestamp_ms=centralData->GPS_data.timeLastMsg;
 				// compute GPS velocity estimate
 				dt=(local_coordinates.timestamp_ms - centralData->imu1.attitude.lastGpsPos.timestamp_ms)/1000.0;
-				for (i=0; i<2; i++) centralData->imu1.attitude.last_vel[i] = (local_coordinates.pos[i]-centralData->imu1.attitude.lastGpsPos.pos[i])/dt;
-				centralData->imu1.attitude.lastGpsPos=local_coordinates;
+				if (dt>0.001) {
+					for (i=0; i<2; i++) centralData->imu1.attitude.last_vel[i] = (local_coordinates.pos[i]-centralData->imu1.attitude.lastGpsPos.pos[i])/dt;
+					centralData->imu1.attitude.lastGpsPos=local_coordinates;
+				} else dbg_print("GPS dt is too small!");
 			}
 			tinterGps = get_millis() - centralData->GPS_data.timeLastMsg;
 			
@@ -214,8 +217,6 @@ void position_correction()
 				pos_error[i] = centralData->imu1.attitude.lastGpsPos.pos[i] - centralData->imu1.attitude.localPosition.pos[i];
 				vel_error[i] = centralData->imu1.attitude.last_vel[i]       - centralData->imu1.attitude.vel[i]; 
 			}
-				
-		
 		}else{
 			init_pos_gps();
 			for (i=0;i<2;i++){
@@ -231,7 +232,8 @@ void position_correction()
 			centralData->imu1.attitude.localPosition.pos[i] += kp_pos[i] * gps_gain * pos_error[i]* centralData->imu1.dt;
 		}
 		centralData->imu1.attitude.localPosition.pos[2] += kp_alt * baro_gain * pos_error[2]* centralData->imu1.dt;
-		
+
+
 		//for (i=0; i<3; i++) vel_correction.v[i] = vel_error[i];
 		for (i=0; i<3; i++) vel_correction.v[i] = pos_error[i];
 		//vel_correction = quat_global_to_local(centralData->imu1.attitude.qe, vel_correction);

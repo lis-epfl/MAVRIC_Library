@@ -201,12 +201,16 @@ void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool*
 	{
 		if (*waypoint_receiving == false)
 		{
+			// comment these lines if you want to add new waypoints to the list instead of overwriting them
+			num_waypoint_onboard = 0;
+			*number_of_waypoints =0;
+			//---//
 			
 			if ((packet.count + *number_of_waypoints) > MAX_WAYPOINTS)
 			{
 				packet.count = MAX_WAYPOINTS - *number_of_waypoints;
 			}
-			*number_of_waypoints = *number_of_waypoints + packet.count;
+			*number_of_waypoints =  packet.count+ *number_of_waypoints;
 			dbg_print("Receiving ");
 			dbg_print_num(packet.count,10);
 			dbg_print(" new waypoints. ");
@@ -218,8 +222,6 @@ void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool*
 			*waypoint_sending     = false;
 			waypoint_request_number = 0;
 			
-			// comment this line if you want to add new waypoints to the list instead of overwritting them
-			num_waypoint_onboard = 0;
 			
 			start_timeout = get_millis();
 		}

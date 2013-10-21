@@ -523,8 +523,8 @@ typedef struct
 	uint8_t num_sats;
 	uint16_t hdop;
 	
-	unsigned long timeLastMsg; //!< time reference in ms of microcontroller
-	unsigned long timegps; //!< time reference in ms of gps
+	uint32_t timeLastMsg; //!< time reference in ms of microcontroller
+	uint32_t timegps; //!< time reference in ms of gps
 	
 	unsigned char status;
 	

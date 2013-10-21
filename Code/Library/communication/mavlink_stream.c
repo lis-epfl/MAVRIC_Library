@@ -98,7 +98,12 @@ task_set* get_mavlink_taskset() {
 	return &mavlink_tasks;
 }
 
-
+void suspend_downstream(uint32_t delay) {
+	int i;
+	for (i=0; i<mavlink_tasks.number_of_tasks; i++) {
+		suspend_task(&mavlink_tasks.tasks[i], delay);
+	}	
+}
 
 uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 	uint8_t byte;
@@ -142,14 +147,17 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		}
 		break;
 		case MAVLINK_MSG_ID_PARAM_SET: { //23
+			suspend_downstream(100000);
 			receive_parameter(rec);
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_ITEM: { // 39
+			suspend_downstream(500000);
 			receive_waypoint(rec, centralData->waypoint_list, centralData->number_of_waypoints,&centralData->waypoint_receiving);
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_REQUEST : { // 40
+			suspend_downstream(500000);
 			send_waypoint(rec, centralData->waypoint_list, centralData->number_of_waypoints,&centralData->waypoint_sending);
 		}
 		break;
@@ -158,10 +166,16 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_REQUEST_LIST: { // 43
+			// this initiates all waypoints being sent to the base-station - therefore, we pause the downstream telemetry to free the channel
+			// (at least until we have a radio system with guaranteed bandwidth)
+			suspend_downstream(500000);
 			send_count(rec, centralData->number_of_waypoints,&centralData->waypoint_receiving,&centralData->waypoint_sending);
 		}
 		break;
 		case MAVLINK_MSG_ID_MISSION_COUNT : { // 44
+			// this initiates all waypoints being sent from base-station - therefore, we pause the downstream telemetry to free the channel
+			// (at least until we have a radio system with guaranteed bandwidth)
+			suspend_downstream(500000);
 			receive_count(rec, &(centralData->number_of_waypoints),&centralData->waypoint_receiving,&centralData->waypoint_sending);
 		}
 		break;

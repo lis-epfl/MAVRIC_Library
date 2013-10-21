@@ -1366,7 +1366,8 @@ bool newValidGpsMsg(uint32_t *prevGpsMsgTime)
 {
 	
 	
-	if((*prevGpsMsgTime != centralData->GPS_data.timeLastMsg)&&(centralData->GPS_data.status == GPS_OK)&&(centralData->GPS_data.accuracyStatus == 1))
+	if((*prevGpsMsgTime != centralData->GPS_data.timeLastMsg)&&(centralData->GPS_data.status == GPS_OK)//&&(centralData->GPS_data.accuracyStatus == 1)
+	)
 	{
 		*prevGpsMsgTime = centralData->GPS_data.timeLastMsg;
 		return true;
