@@ -27,6 +27,7 @@
 #include "waypoint_navigation.h"
 #include "navigation.h"
 #include "tasks.h"
+//#include "orca.h"
 //#include "flashvault.h"
 
 central_data_t *centralData;
@@ -83,7 +84,7 @@ void initialisation() {
 	init_waypoint_list(centralData->waypoint_list,&centralData->number_of_waypoints);
 	//e_init();
 	
-	
+	//init_orca();
 }
 
 
@@ -96,7 +97,7 @@ void main (void)
 	create_tasks();
 	
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	centralData->simulation_mode = 0;
+	centralData->simulation_mode = 1;
 	
 	// main loop
 	
@@ -104,7 +105,7 @@ void main (void)
 		
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
 		
-		LED_On(LED1);
+		//LED_On(LED1);
 
 		
 	}		

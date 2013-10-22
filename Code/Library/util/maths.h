@@ -129,6 +129,17 @@ float static inline fast_sqrt(float input) {
 	return result;
 }
 
+float static inline vector_norm_sqr(float u[])
+{
+	float norm = scalar_product(u,u);
+	return norm;
+}
+
+float static inline vector_norm(float u[])
+{
+	return fast_sqrt(vector_norm_sqr(u));
+}
+
 static inline UQuat_t quat_normalise(const UQuat_t q) {
 	UQuat_t result={.s=1.0, .v={0.0, 0.0, 0.0} };
 	float snorm= SQR(q.s) + SQR(q.v[0]) + SQR(q.v[1]) + SQR(q.v[2]);

@@ -1,13 +1,14 @@
 /*
 * navigation.c
 *
-* Created: 13.08.2013 11:57:38
+*  Created: 13.08.2013 11:57:38
 *  Author: ndousse
 */
 
 #include "navigation.h"
 #include "central_data.h"
 #include "print_util.h"
+//#include "orca.h"
 
 #include <math.h>
 #include "maths.h"
@@ -172,6 +173,7 @@ void set_waypoint_from_frame(waypoint_struct current_wp)
 void run_navigation()
 {
 	int8_t i;
+	float newVelocity[3];
 	
 	float rel_pos[3], command[3], dist2wp_sqr;
 	// Control in translational speed of the platform
@@ -283,6 +285,9 @@ void run_navigation()
 		//set_rel_pos_n_dist2wp(rel_pos,&dist2wp_sqr);
 	}
 	set_speed_command(rel_pos,dist2wp_sqr);
+	
+	//computeNewVelocity(centralData->controls_nav.tvel,newVelocity);
+	
 }
 
 void wp_hold_init()

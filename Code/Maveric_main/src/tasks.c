@@ -13,7 +13,7 @@
 #include "gps_ublox.h"
 #include "estimator.h"
 #include "navigation.h"
-
+#include "led.h"
 
 NEW_TASK_SET(main_tasks, 10)
 
@@ -77,6 +77,8 @@ task_return_t set_mav_mode_n_state()
 	uint8_t channelSwitches = 0;
 	int8_t RC_check = 0;
 	int8_t motor_switch = 0;
+	
+	LED_Toggle(LED1);
 	
 	rc_user_channels(&channelSwitches,&RC_check, &motor_switch);
 	
@@ -258,6 +260,7 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_AUTO_ARMED:
 			centralData->mission_started = true;
 			centralData->waypoint_hold_init = false;
+			
 			centralData->controls = centralData->controls_nav;
 			//centralData->controls.thrust = f_min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0;
 			//centralData->controls.thrust = get_thrust_from_remote();

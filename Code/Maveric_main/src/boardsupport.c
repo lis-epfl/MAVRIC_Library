@@ -132,7 +132,7 @@ void initialise_board(central_data_t *centralData) {
 	centralData->waypoint_sending = false;
 	centralData->waypoint_receiving = false;
 	centralData->waypoint_hold_init = false;
-		
+	
 	// default GPS home position
 	centralData->imu1.attitude.localPosition.origin.longitude=   HOME_LONGITUDE;
 	centralData->imu1.attitude.localPosition.origin.latitude =   HOME_LATITUDE;

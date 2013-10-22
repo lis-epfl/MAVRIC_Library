@@ -169,7 +169,7 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	position_integration(&imu->attitude,imu->dt);
 
 
-	position_correction();
+	//position_correction();
 	
 	
 	for (i=0; i<3; i++){
