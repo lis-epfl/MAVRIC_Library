@@ -28,8 +28,15 @@ typedef struct {
 	int transmit_parameter_index;
 	
 }Parameter_Set_t;
-	
+
+typedef struct{
+	float values[MAX_ONBOARD_PARAM_COUNT];
+} nvram_data_ttt;	
+
+nvram_data_ttt *nvram_array;
+
 void init_onboard_parameters(void);
+void add_parameter_uint8(uint8_t* val, const char* param_name);
 void add_parameter_uint32(uint32_t* val, const char* param_name);
 void add_parameter_int32(int32_t* val, const char* param_name);
 void add_parameter_float(float* val, const char* param_name);
@@ -38,5 +45,8 @@ void send_all_parameters(void);
 void send_scheduled_parameters(void);
 void send_parameter(mavlink_param_request_read_t* request);
 void receive_parameter(Mavlink_Received_t* rec);
+
+void read_parameters_from_ram();
+void write_parameters_to_ram();
 
 #endif /* ONBOARD_PARAMETERS_H */

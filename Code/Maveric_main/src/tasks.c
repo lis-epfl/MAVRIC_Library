@@ -15,6 +15,8 @@
 #include "navigation.h"
 #include "led.h"
 
+#include <flashc.h>
+
 NEW_TASK_SET(main_tasks, 10)
 
 #define PRESSURE_LPF 0.1
@@ -409,8 +411,40 @@ task_return_t send_rt_stats() {
 
 }
 
+task_return_t flashc_write_read()
+{
+	
+	ptr_nvram = AVR32_FLASHC_USER_PAGE_ADDRESS;
+	
+	dbg_print("nvram:");
+	dbg_print_num(ptr_nvram->var8,16);
+	dbg_print_num(ptr_nvram->var16,16);
+	dbg_print_num(ptr_nvram->var32,16);
+	dbg_print("\n");
+	
+	// Errase the struct pointed by ptr_nvram
+	flashc_memset((void *) ptr_nvram, 0x00, 8, sizeof(*ptr_nvram), true);
+	
+	dbg_print("nvram2:");
+	dbg_print_num(ptr_nvram->var8,16);
+	dbg_print_num(ptr_nvram->var16,16);
+	dbg_print_num(ptr_nvram->var32,16);
+	dbg_print("\n");
+	
+	flashc_memcpy((void *)&ptr_nvram->var8,   &write_data, sizeof(ptr_nvram->var8),   true);
+	flashc_memcpy((void *)&ptr_nvram->var16,  &write_data, sizeof(ptr_nvram->var16),  true);
+	flashc_memcpy((void *)&ptr_nvram->var32,  &write_data, sizeof(ptr_nvram->var32),  true);
+	
+	dbg_print("nvram3:");
+	dbg_print_num(ptr_nvram->var8,16);
+	dbg_print_num(ptr_nvram->var16,16);
+	dbg_print_num(ptr_nvram->var32,16);
+	dbg_print("\n");
+}
+
 
 void create_tasks() {
+	
 	init_scheduler(&main_tasks);
 	//board=get_board_hardware();
 	centralData = get_central_data();
@@ -422,6 +456,8 @@ void create_tasks() {
 	register_task(&main_tasks, 3, 100000, RUN_REGULAR, &gps_task);
 	//register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
 	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &read_radar);
+
+	//register_task(&main_tasks, 4, 1000000, RUN_REGULAR, &flashc_write_read);
 
 	register_task(&main_tasks, 5, 10000, RUN_REGULAR, &run_navigation_task);
 

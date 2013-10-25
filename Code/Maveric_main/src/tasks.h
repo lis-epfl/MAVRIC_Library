@@ -13,6 +13,16 @@
 #include "mavlink_actions.h"
 #include "radar_module_driver.h"
 
+typedef const struct {
+	U8 var8;
+	U16 var16;
+	U32 var32;
+} nvram_datas_t;
+
+nvram_datas_t *ptr_nvram;
+
+static const U8 write_data[8] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
+	
 void create_tasks();
 task_set* get_main_taskset();
 
@@ -25,7 +35,7 @@ task_return_t run_navigation_task();
 task_return_t run_barometer();
 task_return_t send_rt_stats();
 
-
+task_return_t flashc_write_read();
 
 
 

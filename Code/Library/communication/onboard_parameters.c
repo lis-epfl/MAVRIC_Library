@@ -7,6 +7,7 @@
 
 #include "onboard_parameters.h"
 #include "stabilisation.h"
+#include "flashc.h"
 
 Parameter_Set_t param_set;
 
@@ -15,6 +16,15 @@ void init_onboard_parameters(void) {
 	param_set.enumerate=false;
 	param_set.transmit_parameter_index=0;
 	
+}
+
+void add_parameter_uint8(uint8_t* val, const char* param_name) {
+	param_set.parameters[param_set.param_count].param = val;
+	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
+	param_set.parameters[param_set.param_count].data_type= MAVLINK_TYPE_UINT8_T;
+	param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
+	param_set.parameters[param_set.param_count].schedule_for_transmission=true;
+	param_set.param_count++;
 }
 
 void add_parameter_uint32(uint32_t* val, const char* param_name) {
@@ -166,4 +176,28 @@ void receive_parameter(Mavlink_Received_t* rec) {
 			}
 		}
 	}
+}
+
+void read_parameters_from_ram()
+{
+	uint8_t i;
+	nvram_array = AVR32_FLASHC_USER_PAGE_ADDRESS;
+	
+	for (i=0;i<param_set.param_count;i++)
+	{
+		*param_set.parameters[i].param = nvram_array->values[i];
+	}
+	
+}
+
+void write_parameters_to_ram()
+{
+	uint8_t i;
+	nvram_array = AVR32_FLASHC_USER_PAGE_ADDRESS;
+	
+	for (i=0;i<param_set.param_count;i++)
+	{
+		flashc_memcpy((void *)&(nvram_array->values[i]),   param_set.parameters[i].param, sizeof((nvram_array->values[i])),   true);
+	}
+	
 }

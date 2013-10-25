@@ -240,7 +240,7 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 	mavlink_mission_item_t packet;
 	mavlink_msg_mission_item_decode(&rec->msg,&packet);
 	// Check if this message is for this system and subsystem
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
+	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid
 	&& (uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
 	{
 		start_timeout = get_millis();
@@ -426,7 +426,7 @@ void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[], 
 	mavlink_mission_set_current_t packet;
 	mavlink_msg_mission_set_current_decode(&rec->msg,&packet);
 	// Check if this message is for this system and subsystem
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
+	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid
 	&& (uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
 	{
 		dbg_print("setting current wp");
@@ -454,7 +454,7 @@ void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints
 	mavlink_mission_clear_all_t packet;
 	mavlink_msg_mission_clear_all_decode(&rec->msg,&packet);
 	// Check if this message is for this system and subsystem
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
+	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid
 	&& (uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
 	{
 		*number_of_waypoints = 0;
@@ -470,7 +470,7 @@ void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* boa
 	mavlink_set_mode_t packet;
 	mavlink_msg_set_mode_decode(&rec->msg,&packet);
 	// Check if this message is for this system and subsystem
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid)
+	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
 	{
 		//dbg_print("base_mode:");
 		//dbg_print_num(packet.base_mode,10);
@@ -507,7 +507,7 @@ void receive_message_long(Mavlink_Received_t* rec)
 	// Check if this message is for this system and subsystem
 	dbg_print("target_comp:");
 	dbg_print_num(packet.target_component,10);
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
+	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid
 	&&(uint8_t)packet.target_component == (uint8_t)0)
 	{
 		dbg_print("parameters:");

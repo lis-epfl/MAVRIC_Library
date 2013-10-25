@@ -67,6 +67,8 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream,
 	mavlink_system.compid = 50; // Component/Subsystem ID, 1-255
 	mavlink_system.type = MAV_TYPE_QUADROTOR;
 	
+	add_parameter_uint8(&mavlink_system.sysid,"System_ID");
+	
 	mavlink_mission_planner.sysid = mavlink_system.sysid;
 	mavlink_mission_planner.compid = MAV_COMP_ID_MISSIONPLANNER;
 	mavlink_mission_planner.type = MAV_TYPE_QUADROTOR;
@@ -129,6 +131,11 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		case MAVLINK_MSG_ID_PARAM_REQUEST_LIST: { // 21
 			mavlink_param_request_list_t request;
 			mavlink_msg_param_request_list_decode(&rec->msg, &request);
+			
+			dbg_print("msg comp id:");
+			dbg_print_num(request.target_component,10);
+			dbg_print("\n");
+			
 			// Check if this message is for this system
 			if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid) {
 				send_all_parameters();
