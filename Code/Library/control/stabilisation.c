@@ -71,7 +71,7 @@ void init_angle_stabilisation(Stabiliser_t *stabiliser) {
 void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	int i = 0;
 	// initialise roll velocity
-	(stabiliser->rpy_controller[i]).p_gain=0.1; //0.1
+	(stabiliser->rpy_controller[i]).p_gain=0.2; //0.1
 	(stabiliser->rpy_controller[i]).last_update=get_time_ticks();
 	(stabiliser->rpy_controller[i]).clip_min=-0.5; //-0.6
 	(stabiliser->rpy_controller[i]).clip_max= 0.5; //0.6
@@ -80,7 +80,7 @@ void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	
 	// initialise pitch velocity
 	i = 1;
-	(stabiliser->rpy_controller[i]).p_gain=0.1; //0.1
+	(stabiliser->rpy_controller[i]).p_gain=0.2; //0.1
 	(stabiliser->rpy_controller[i]).last_update=get_time_ticks();
 	(stabiliser->rpy_controller[i]).clip_min=-0.5; //-0.6
 	(stabiliser->rpy_controller[i]).clip_max= 0.5; //0.6
@@ -91,12 +91,12 @@ void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	stabiliser->rpy_controller[2]=passthroughController();
 
 	// initialise z velocity
-	(stabiliser->thrust_controller).p_gain=0.3; //0.3
+	(stabiliser->thrust_controller).p_gain=0.5; //0.3
 	(stabiliser->thrust_controller).last_update=get_time_ticks();
 	(stabiliser->thrust_controller).clip_min=-0.9; //-0.9
 	(stabiliser->thrust_controller).clip_max= 0.65; // 0.9
 	initDiff(&((stabiliser->thrust_controller).differentiator), 0.0, 0.5, 0.2); // 0.1 0.5 0.2
-	initInt(&((stabiliser->thrust_controller).integrator),1.0, 1.5, 1.0); // 1.0 1.0 0.5
+	initInt(&((stabiliser->thrust_controller).integrator),3.0, 1.0, 1.0); // 1.0 1.0 0.5
 }
 
 void init_stabilisation() {
