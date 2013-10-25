@@ -715,8 +715,9 @@ class mavlogfile(mavfile):
         return self.f.read(n)
 
     def write(self, buf):
-        if self.writeable:
-            self.f.write(buf)
+        None
+        #if self.writeable:
+        #    self.f.write(buf)
 
     def pre_message(self):
         '''read timestamp if needed'''
@@ -734,7 +735,15 @@ class mavlogfile(mavfile):
             t -= 719163 * 24 * 60 * 60 # convert to 1970 base
             self._link = 0
         else:
-            tbuf = self.f.read(8)
+            b=self.f.read(1)
+            if len(b)==0:
+               return
+            while ord(b)==0:
+               b=self.f.read(1)
+               if len(b)==0:
+                 return
+               
+            tbuf = b+self.f.read(7)
             if len(tbuf) != 8:
                 return
             (tusec,) = struct.unpack('>Q', tbuf)
@@ -814,7 +823,7 @@ def mavlink_connection(device, baud=115200, source_system=255,
         return mavudp(device[4:], input=input, source_system=source_system)
 
     # list of suffixes to prevent setting DOS paths as UDP sockets
-    logsuffixes = [ 'log', 'raw', 'tlog' ]
+    logsuffixes = [ 'log', 'raw', 'tlog',  'mavlink' ]
     suffix = device.split('.')[-1].lower()
     if device.find(':') != -1 and not suffix in logsuffixes:
         return mavudp(device, source_system=source_system, input=input)
@@ -822,7 +831,7 @@ def mavlink_connection(device, baud=115200, source_system=255,
         if device.endswith(".elf"):
             return mavchildexec(device, source_system=source_system,  write=write)
         else:
-            return mavlogfile(device, planner_format=planner_format, write=write,
+            return mavlogfile(device, planner_format=planner_format, write=False,
                               append=append, robust_parsing=robust_parsing, notimestamps=notimestamps,
                               source_system=source_system)
     return mavserial(device, baud=baud, source_system=source_system)
