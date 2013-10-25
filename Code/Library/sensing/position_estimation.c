@@ -35,8 +35,8 @@ void init_pos_integration(position_estimator_t *pos_est, pressure_data *baromete
 	pos_est->kp_vel[0] = 0.3;
 	pos_est->kp_vel[1] = 0.3;
 	pos_est->kp_vel[2] = 0.5;
-	pos_est->kp_alt=1.0;
-	pos_est->kp_vel_baro=0.5;
+	pos_est->kp_alt=2.0;
+	pos_est->kp_vel_baro=1.0;
 	
 	init_pos_gps(pos_est, gps);
 }
@@ -230,8 +230,8 @@ void position_correction(position_estimator_t *pos_est, pressure_data *barometer
 		pos_est->localPosition.pos[2] += pos_est->kp_alt * baro_gain * baro_alt_error* dt;
 
 
-		//for (i=0; i<3; i++) vel_correction.v[i] = vel_error[i];
-		for (i=0; i<3; i++) vel_correction.v[i] = pos_error[i];
+		for (i=0; i<3; i++) vel_correction.v[i] = vel_error[i];
+		//for (i=0; i<3; i++) vel_correction.v[i] = pos_error[i];
 		//vel_correction = quat_global_to_local(pos_est->qe, vel_correction);
 				
 		for (i=0;i<3;i++) {			

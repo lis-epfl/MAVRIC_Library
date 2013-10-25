@@ -362,17 +362,17 @@ void add_PID_parameters(void) {
 	add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain, "YawAPid_D_Gain");
 	
 	// Biaises
-	add_parameter_float(&centralData->imu1.raw_bias[GYRO_OFFSET+X],"Biais_Gyro_X");
-	add_parameter_float(&centralData->imu1.raw_bias[GYRO_OFFSET+Y],"Biais_Gyro_Y");
-	add_parameter_float(&centralData->imu1.raw_bias[GYRO_OFFSET+Z],"Biais_Gyro_Z");
+	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET+X],"Bias_Gyro_X");
+	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET+Y],"Bias_Gyro_Y");
+	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET+Z],"Bias_Gyro_Z");
 	
-	add_parameter_float(&centralData->imu1.raw_bias[ACC_OFFSET+X],"Biais_Acc_X");
-	add_parameter_float(&centralData->imu1.raw_bias[ACC_OFFSET+Y],"Biais_Acc_Y");
-	add_parameter_float(&centralData->imu1.raw_bias[ACC_OFFSET+Z],"Biais_Acc_Z");
+	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET+X],"Bias_Acc_X");
+	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET+Y],"Bias_Acc_Y");
+	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET+Z],"Bias_Acc_Z");
 	
-	add_parameter_float(&centralData->imu1.raw_bias[COMPASS_OFFSET+X],"Biais_Mag_X");
-	add_parameter_float(&centralData->imu1.raw_bias[COMPASS_OFFSET+Y],"Biais_Mag_Y");
-	add_parameter_float(&centralData->imu1.raw_bias[COMPASS_OFFSET+Z],"Biais_Mag_Z");
+	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET+X],"Bias_Mag_X");
+	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET+Y],"Bias_Mag_Y");
+	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET+Z],"Bias_Mag_Z");
 	
 	// Scale factor
 	add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+X],"Scale_Gyro_X");
@@ -387,6 +387,12 @@ void add_PID_parameters(void) {
 	add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Y],"Scale_Mag_Y");
 	add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Z],"Scale_Mag_Z");
 	
+	add_parameter_float(&centralData->position_estimator.kp_alt,"Pos_kp_alt");
+	add_parameter_float(&centralData->position_estimator.kp_vel_baro,"Pos_kp_velb");
+	add_parameter_float(&centralData->position_estimator.kp_pos[0],"Pos_kp_pos0");
+	add_parameter_float(&centralData->position_estimator.kp_pos[1],"Pos_kp_pos1");
+	add_parameter_float(&centralData->position_estimator.kp_pos[2],"Pos_kp_pos2");
+	
 }
 
 void init_mavlink_actions(void) {
@@ -394,9 +400,9 @@ void init_mavlink_actions(void) {
 	centralData=get_central_data();
 	add_PID_parameters();
 	
-	write_parameters_to_ram();
+	//write_parameters_to_ram();
 	
-	read_parameters_from_ram();
+	//read_parameters_from_ram();
 	
 	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
 	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_attitude, MAVLINK_MSG_ID_ATTITUDE);
