@@ -123,7 +123,7 @@ void e_init()
 	R2[1]=R_Y_POS;
 	R2[2]=R_Z_POS;
 	
-	centralData->init_gps_position = false;
+	centralData->position_estimator.init_gps_position = false;
 	
 	timeLastGpsMsgEstimator = 0;
 	
@@ -134,13 +134,13 @@ void e_init()
 
 void init_pos_gps_estimator()
 {
-	if (newValidGpsMsg(&timeLastGpsMsgEstimator) && (!(centralData->init_gps_position)))
+	if (newValidGpsMsg(&timeLastGpsMsgEstimator) && (!(centralData->position_estimator.init_gps_position)))
 	{
-		centralData->init_gps_position = true;
+		centralData->position_estimator.init_gps_position = true;
 		
-		centralData->imu1.attitude.localPosition.origin.longitude = centralData->GPS_data.longitude;
-		centralData->imu1.attitude.localPosition.origin.latitude = centralData->GPS_data.latitude;
-		centralData->imu1.attitude.localPosition.origin.altitude = centralData->GPS_data.altitude;
+		centralData->position_estimator.localPosition.origin.longitude = centralData->GPS_data.longitude;
+		centralData->position_estimator.localPosition.origin.latitude = centralData->GPS_data.latitude;
+		centralData->position_estimator.localPosition.origin.altitude = centralData->GPS_data.altitude;
 		
 		dbg_print("GPS position initialized!\n");
 	}
@@ -262,8 +262,8 @@ void e_kalman_predict (int axis, float accel_meas, float dt)
 	centralData->estimation.state[axis][SPEED] = centralData->estimation.state[axis][SPEED] + dt * accel_meas;
 	centralData->estimation.state[axis][POSITION] = centralData->estimation.state[axis][POSITION] + dt * centralData->estimation.state[axis][SPEED];
 	
-	//centralData->estimation.state[axis][POSITION] = centralData->imu1.attitude.localPosition.pos[axis];
-	//centralData->estimation.state[axis][SPEED] = centralData->imu1.attitude.vel[axis];
+	//centralData->estimation.state[axis][POSITION] = centralData->position_estimator.localPosition.pos[axis];
+	//centralData->estimation.state[axis][SPEED] = centralData->position_estimator.vel[axis];
 	
 	
 	/* update covariance */
@@ -400,15 +400,15 @@ void e_kalman_update_position (int axis, double position_meas)
 	P[axis][2][2] = P33;
 	
 	/*************************************************************************************/
-	y = position_meas - centralData->imu1.attitude.localPosition.pos[axis];
+	y = position_meas - centralData->position_estimator.localPosition.pos[axis];
 	
 	S = P2[axis][0][0] + R2[axis];
 	K1 = P2[axis][0][0] * 1/S;
 	K2 = P2[axis][1][0] * 1/S;
 	K3 = P2[axis][2][0] * 1/S;
 	
-	centralData->imu1.attitude.localPosition.pos[axis] = centralData->imu1.attitude.localPosition.pos[axis] + K1 * y;
-	centralData->imu1.attitude.vel[axis] = centralData->imu1.attitude.vel[axis] + K2 * y;
+	centralData->position_estimator.localPosition.pos[axis] = centralData->position_estimator.localPosition.pos[axis] + K1 * y;
+	centralData->position_estimator.vel[axis] = centralData->position_estimator.vel[axis] + K2 * y;
 	centralData->imu1.attitude.be[axis+ACC_OFFSET] = centralData->imu1.attitude.be[axis+ACC_OFFSET] + K3 * y;
 	
 	P11 = (1. - K1) * P2[axis][0][0];
@@ -491,15 +491,15 @@ void e_kalman_update_speed(int axis, float speed_meas)
 	P[axis][2][2] = P33;
 	
 	/*************************************************************************************/
-	yd = speed_meas - centralData->imu1.attitude.vel[axis];
+	yd = speed_meas - centralData->position_estimator.vel[axis];
 	
 	S = P2[axis][1][1] + R2[axis];
 	K1 = P2[axis][0][1] * 1/S;
 	K2 = P2[axis][1][1] * 1/S;
 	K3 = P2[axis][2][1] * 1/S;
 	
-	centralData->imu1.attitude.localPosition.pos[axis] = centralData->imu1.attitude.localPosition.pos[axis] + K1 * yd;
-	centralData->imu1.attitude.vel[axis] = centralData->imu1.attitude.vel[axis] + K2 * yd;
+	centralData->position_estimator.localPosition.pos[axis] = centralData->position_estimator.localPosition.pos[axis] + K1 * yd;
+	centralData->position_estimator.vel[axis] = centralData->position_estimator.vel[axis] + K2 * yd;
 	centralData->imu1.attitude.be[axis+ACC_OFFSET] = centralData->imu1.attitude.be[axis+ACC_OFFSET] + K3 * yd;
 	
 	P11 = -K1 * P2[axis][1][0] + P2[axis][0][0];
@@ -565,14 +565,14 @@ void e_kalman_update_position_hf(int axis, double position_meas)
 	P[axis][1][1] = P22;
 	
 	/*************************************************************************************/
-	posxy = position_meas - centralData->imu1.attitude.localPosition.pos[axis];
+	posxy = position_meas - centralData->position_estimator.localPosition.pos[axis];
 	
 	S = P2[axis][0][0] + R2[axis];
 	K1 = P2[axis][0][0] * 1/S;
 	K2 = P2[axis][1][0] * 1/S;
 	
-	//centralData->imu1.attitude.localPosition.pos[axis] = centralData->imu1.attitude.localPosition.pos[axis] + K1 * posxy;
-	//centralData->imu1.attitude.vel[axis] = centralData->imu1.attitude.vel[axis] + K2 * posxy;
+	//centralData->position_estimator.localPosition.pos[axis] = centralData->position_estimator.localPosition.pos[axis] + K1 * posxy;
+	//centralData->position_estimator.vel[axis] = centralData->position_estimator.vel[axis] + K2 * posxy;
 	
 	P11 = (1. - K1) * P2[axis][0][0];
 	P12 = (1. - K1) * P2[axis][0][1];
@@ -631,14 +631,14 @@ void e_kalman_update_speed_hf(int axis, float speed_meas)
 		P[axis][1][1] = P22;
 		
 		/*************************************************************************************/
-		velxy = speed_meas - centralData->imu1.attitude.vel[axis];
+		velxy = speed_meas - centralData->position_estimator.vel[axis];
 		
 		S = P2[axis][1][1] + R2[axis];
 		K1 = P2[axis][0][1] * 1/S;
 		K2 = P2[axis][1][1] * 1/S;
 		
-		//centralData->imu1.attitude.localPosition.pos[axis] = centralData->imu1.attitude.localPosition.pos[axis] + K1 * velxy;
-		//centralData->imu1.attitude.vel[axis] = centralData->imu1.attitude.vel[axis] + K2 * velxy;
+		//centralData->position_estimator.localPosition.pos[axis] = centralData->position_estimator.localPosition.pos[axis] + K1 * velxy;
+		//centralData->position_estimator.vel[axis] = centralData->position_estimator.vel[axis] + K2 * velxy;
 		
 		P11 = -K1 * P2[axis][1][0] + P2[axis][0][0];
 		P12 = -K1 * P2[axis][1][1] + P2[axis][0][1];
@@ -663,7 +663,7 @@ void estimator_loop()
 	local_coordinates_t local_coordinates;
 	//static uint32_t dt_baro,time_before_baro;
 	
-	if (!centralData->init_gps_position)
+	if (!centralData->position_estimator.init_gps_position)
 	{
 		init_pos_gps_estimator();
 	}
@@ -681,7 +681,7 @@ void estimator_loop()
 		e_predict(&(centralData->imu1.attitude.qe),centralData->imu1.attitude.acc_bf,centralData->estimation.delta_t_filter);
 		
 		//Check new values from GPS/Baro, if yes, update
-		if (newValidGpsMsg(&timeLastGpsMsgEstimator) && centralData->init_gps_position && (centralData->simulation_mode == 0))
+		if (newValidGpsMsg(&timeLastGpsMsgEstimator) && centralData->position_estimator.init_gps_position && (centralData->simulation_mode == 0))
 		{
 			
 			//dbg_print("Update step\n");
@@ -696,7 +696,7 @@ void estimator_loop()
 			global_gps_position.latitude = centralData->GPS_data.latitude;
 			global_gps_position.altitude = centralData->GPS_data.altitude;
 			
-			local_coordinates = global_to_local_position(global_gps_position,centralData->imu1.attitude.localPosition.origin);
+			local_coordinates = global_to_local_position(global_gps_position,centralData->position_estimator.localPosition.origin);
 			
 			//get delay of GPS measure
 			//do prediction up to the corresponding delay

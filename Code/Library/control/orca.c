@@ -42,8 +42,8 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 	{
 		for (i=0;i<3;i++)
 		{
-			relativePosition[i] = centralData->imu1.attitude.localPosition.pos[i] - centralData->neighbors[ind].position[i];
-			relativeVelocity[i] = centralData->imu1.attitude.vel_bf[i] - centralData->neighbors[ind].velocity[i];
+			relativePosition[i] = centralData->position_estimator.localPosition.pos[i] - centralData->neighbors[ind].position[i];
+			relativeVelocity[i] = centralData->position_estimator.vel_bf[i] - centralData->neighbors[ind].velocity[i];
 		}
 		distSq = vector_norm_sqr(relativePosition);
 		combinedRadius = centralData->safe_size - centralData->neighbors[ind].size;
@@ -108,7 +108,7 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		
 		for (i=0;i<3;i++)
 		{
-			planes[ind].point[i] = centralData->imu1.attitude.vel_bf[i] + 0.5 * u[i];
+			planes[ind].point[i] = centralData->position_estimator.vel_bf[i] + 0.5 * u[i];
 		}
 		
 	}

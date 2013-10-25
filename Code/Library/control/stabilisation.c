@@ -125,7 +125,7 @@ void stabilise(Stabiliser_t *stabiliser, float *errors) {
 
 
 
-void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input) {
+void quad_stabilise(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input) {
 	float rpyt_errors[4];
 	Control_Command_t input;
 	int i;
@@ -134,9 +134,9 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input) {
 
 	switch (control_input->control_mode) {
 	case VELOCITY_COMMAND_MODE:
-		rpyt_errors[ROLL] = input.tvel[1] - imu->attitude.vel_bf[1];
-		rpyt_errors[PITCH]=-(input.tvel[0] - imu->attitude.vel_bf[0]); 
-		rpyt_errors[3]    =  -(input.tvel[2] - imu->attitude.vel[2]);
+		rpyt_errors[ROLL] = input.tvel[1] - pos_est->vel_bf[1];
+		rpyt_errors[PITCH]=-(input.tvel[0] - pos_est->vel_bf[0]); 
+		rpyt_errors[3]    =  -(input.tvel[2] - pos_est->vel[2]);
 		
 		rpyt_errors[YAW]= input.rpy[YAW];
 		stabilise(&velocity_stabiliser, &rpyt_errors);
@@ -155,7 +155,7 @@ void quad_stabilise(Imu_Data_t *imu , Control_Command_t *control_input) {
 		
 		rpyt_errors[2]= input.rpy[2];
 		if ((control_input->control_mode == ATTITUDE_COMMAND_MODE_ABS_YAW )) {
-			rpyt_errors[2] =calc_smaller_angle(rpyt_errors[2]- imu->attitude.localPosition.heading);
+			rpyt_errors[2] =calc_smaller_angle(rpyt_errors[2]- pos_est->localPosition.heading);
 			
 		}
 		rpyt_errors[3]= input.thrust;       // no feedback for thrust at this level

@@ -23,16 +23,17 @@
 #include "tasks.h"
 #include "all_tests.h"
 
-central_data_t *centralData;
+central_data_t *central_data;
 
 
 void initialisation() {
 	int i;
 	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 
-	centralData = get_central_data();
-	initialise_board(centralData);
+	central_data = get_central_data();
+	initialise_board(central_data);
 
+	init_pos_integration(&central_data->position_estimator, &central_data->pressure, &central_data->GPS_data);
 	
 	
 	init_radar_modules();
@@ -48,34 +49,34 @@ void initialisation() {
 	init_onboard_parameters();
 	init_mavlink_actions();
 	
-	centralData->imu1.attitude.calibration_level=LEVELING;	
-	centralData->mav_state = MAV_STATE_CALIBRATING;
-	centralData->mav_mode = MAV_MODE_PREFLIGHT;
+	central_data->imu1.attitude.calibration_level=LEVELING;	
+	central_data->mav_state = MAV_STATE_CALIBRATING;
+	central_data->mav_mode = MAV_MODE_PREFLIGHT;
 
 	//calibrate_Gyros(&centralData->imu1);
 	for (i=400; i>0; i--) {
-		imu_update(&centralData->imu1);
+		imu_update(&(central_data->imu1), &central_data->position_estimator, &central_data->pressure, &central_data->GPS_data);	
 		mavlink_protocol_update();	
 		delay_ms(5);
 	}
 	// after initial leveling, initialise accelerometer biases
 	/*
-	centralData->imu1.attitude.calibration_level=LEVEL_PLUS_ACCEL;
+	central_data->imu1.attitude.calibration_level=LEVEL_PLUS_ACCEL;
 	for (i=200; i>0; i--) {
-		imu_update(&centralData->imu1);
+		imu_update(&central_data->imu1);
 		mavlink_protocol_update();			
 		delay_ms(5);
 	}*/
-	centralData->imu1.attitude.calibration_level=OFF;
+	central_data->imu1.attitude.calibration_level=OFF;
 	//reset position estimate
 	for (i=0; i<3; i++) {
 		// clean acceleration estimate without gravity:
-		centralData->imu1.attitude.vel_bf[i]=0.0;
-		centralData->imu1.attitude.vel[i]=0.0;
-		centralData->imu1.attitude.localPosition.pos[i]=0.0;
+		central_data->position_estimator.vel_bf[i]=0.0;
+		central_data->position_estimator.vel[i]=0.0;
+		central_data->position_estimator.localPosition.pos[i]=0.0;
 	}
-	centralData->mav_state = MAV_STATE_STANDBY;
-	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
+	central_data->mav_state = MAV_STATE_STANDBY;
+	central_data->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	
 	//e_init();
 	
@@ -98,7 +99,7 @@ void main (void)
 	create_tasks();
 	
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	centralData->simulation_mode = 1;
+	central_data->simulation_mode = 1;
 	
 	// main loop
 	counter=0;

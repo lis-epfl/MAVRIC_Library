@@ -7,7 +7,6 @@
 
 
 #include "position_estimation.h"
-#include "central_data.h"
 #include "qfilter.h"
 #include "coord_conventions.h"
 #include "gps_ublox.h"
@@ -16,110 +15,107 @@
 #include "math_util.h"
 #include "time_keeper.h"
 
-central_data_t *centralData;
+//central_data_t *centralData;
+
+//float prev_pos[3];
 
 
-float kp_vel[3], kp_pos[3], kp_alt;
-float prev_pos[3];
-
-uint32_t timeLastGpsMsg;
-uint32_t timeLastBarometerMsg;
-
-void init_pos_integration()
+void init_pos_integration(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps)
 {
-	centralData = get_central_data();
-	kp_alt=0.4;
-	centralData->init_gps_position = false;
-	centralData->init_barometer=false;
-	timeLastGpsMsg = 0;
-	timeLastBarometerMsg=get_micros();
+	//centralData = get_central_data();
+	pos_est->init_gps_position = false;
+	pos_est->init_barometer=false;
+	pos_est->timeLastGpsMsg = 0;
+	pos_est->timeLastBarometerMsg=get_micros();
 	
-	kp_pos[0] = 0.8;
-	kp_pos[1] = 0.8;
-	kp_pos[2] = 1.0;
+	pos_est->kp_pos[0] = 0.8;
+	pos_est->kp_pos[1] = 0.8;
+	pos_est->kp_pos[2] = 1.0;
 	
-	kp_vel[0] = 0.3;
-	kp_vel[1] = 0.3;
-	kp_vel[2] = 0.5;
+	pos_est->kp_vel[0] = 0.3;
+	pos_est->kp_vel[1] = 0.3;
+	pos_est->kp_vel[2] = 0.5;
+	pos_est->kp_alt=1.0;
+	pos_est->kp_vel_baro=0.5;
 	
-	init_pos_gps();
+	init_pos_gps(pos_est, gps);
 }
 
-void init_pos_gps()
+void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps)
 {
 	int i;
 	
-	if (newValidGpsMsg(&timeLastGpsMsg) && (!(centralData->init_gps_position)))
+	if (newValidGpsMsg(&pos_est->timeLastGpsMsg) && (!(pos_est->init_gps_position)))
 	{
-		centralData->init_gps_position = true;
+		pos_est->init_gps_position = true;
 		
-		centralData->imu1.attitude.localPosition.origin.longitude = centralData->GPS_data.longitude;
-		centralData->imu1.attitude.localPosition.origin.latitude = centralData->GPS_data.latitude;
-		centralData->imu1.attitude.localPosition.origin.altitude = centralData->GPS_data.altitude;
-		centralData->imu1.attitude.localPosition.timestamp_ms=centralData->GPS_data.timeLastMsg;
+		pos_est->localPosition.origin.longitude = gps->longitude;
+		pos_est->localPosition.origin.latitude = gps->latitude;
+		pos_est->localPosition.origin.altitude = gps->altitude;
+		pos_est->localPosition.timestamp_ms=gps->timeLastMsg;
 
-		centralData->imu1.attitude.lastGpsPos=centralData->imu1.attitude.localPosition;
+		pos_est->lastGpsPos=pos_est->localPosition;
 		
-		centralData->imu1.attitude.baro_alt_error=0.0;
-		centralData->imu1.attitude.last_alt=0;
+		
+		pos_est->last_alt=0;
 		for(i=0;i<3;i++)
 		{
-			centralData->imu1.attitude.pos_correction[i]=0.0;
-			centralData->imu1.attitude.last_vel[i]=0.0;
-			centralData->imu1.attitude.localPosition.pos[i] = 0.0;
-			centralData->imu1.attitude.vel[i]=0.0;
+			pos_est->pos_correction[i]=0.0;
+			pos_est->last_vel[i]=0.0;
+			pos_est->localPosition.pos[i] = 0.0;
+			pos_est->vel[i]=0.0;
 		}
 		
 		dbg_print("GPS position initialized!\n");
 	}
 }
 
-void init_barometer_offset()
+void init_barometer_offset(position_estimator_t *pos_est, pressure_data *barometer)
 {
-	bool boolNewBaro = newValidBarometer(&timeLastBarometerMsg);
+	bool boolNewBaro = newValidBarometer(&pos_est->timeLastBarometerMsg);
 
 		
 	//if ((centralData->init_gps_position)&&(boolNewBaro))
 	if ((boolNewBaro))
 	{
 		
-		centralData->pressure.altitude_offset = -(centralData->pressure.altitude - centralData->imu1.attitude.localPosition.origin.altitude);
-		//centralData->pressure.altitude_offset = -centralData->pressure.altitude - centralData->imu1.attitude.localPosition.pos[2] + centralData->imu1.attitude.localPosition.origin.altitude;
-		centralData->init_barometer = true;
+		barometer->altitude_offset = -(barometer->altitude - pos_est->localPosition.origin.altitude);
+		//barometer->altitude_offset = -barometer->altitude - pos_est->localPosition.pos[2] + pos_est->localPosition.origin.altitude;
+		pos_est->init_barometer = true;
 		
 		dbg_print("Offset of the barometer set to the GPS altitude, offset value of:");
-		dbg_print_num(centralData->pressure.altitude_offset,10);
+		dbg_print_num(barometer->altitude_offset,10);
 		dbg_print(" = -");
-		dbg_print_num(centralData->pressure.altitude,10);
+		dbg_print_num(barometer->altitude,10);
 		dbg_print(" - ");
-		dbg_print_num(centralData->imu1.attitude.localPosition.pos[2],10);
+		dbg_print_num(pos_est->localPosition.pos[2],10);
 		dbg_print(" + ");
-		dbg_print_num(centralData->imu1.attitude.localPosition.origin.altitude,10);
+		dbg_print_num(pos_est->localPosition.origin.altitude,10);
 		dbg_print("\n");
 	}
 }
 
-void position_integration(Quat_Attitude_t *attitude, float dt)
+void position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitude, float dt)
 {
 	int i;
 	
 	UQuat_t qvel_bf,qvel, qtmp1, qtmp2, qtmp3;
 	float tmp[3];
 	qvel.s=0;
-	for (i=0; i<3; i++) qvel.v[i]=attitude->vel[i];
+	for (i=0; i<3; i++) qvel.v[i]=pos_est->vel[i];
 	qvel_bf=quat_global_to_local(attitude->qe, qvel);
 	for (i=0; i<3; i++) {
-		attitude->vel_bf[i]=qvel_bf.v[i];
+		pos_est->vel_bf[i]=qvel_bf.v[i];
 		// clean acceleration estimate without gravity:
 		attitude->acc_bf[i]=(attitude->a[i] - attitude->up_vec.v[i]) * GRAVITY;
-		attitude->vel_bf[i]=attitude->vel_bf[i]*(1.0-(VEL_DECAY*dt)) + attitude->acc_bf[i] * dt;
+		pos_est->vel_bf[i]=pos_est->vel_bf[i]*(1.0-(VEL_DECAY*dt)) + attitude->acc_bf[i] * dt;
 	}
 	
 	// calculate velocity in global frame
 	// vel = qe *vel_bf * qe-1
-	qvel_bf.s= 0.0; qvel_bf.v[0]=attitude->vel_bf[0]; qvel_bf.v[1]=attitude->vel_bf[1]; qvel_bf.v[2]=attitude->vel_bf[2];
+	qvel_bf.s= 0.0; qvel_bf.v[0]=pos_est->vel_bf[0]; qvel_bf.v[1]=pos_est->vel_bf[1]; qvel_bf.v[2]=pos_est->vel_bf[2];
 	qvel = quat_local_to_global(attitude->qe, qvel_bf);
-	attitude->vel[0]=qvel.v[0]; attitude->vel[1]=qvel.v[1]; attitude->vel[2]=qvel.v[2];
+	pos_est->vel[0]=qvel.v[0]; pos_est->vel[1]=qvel.v[1]; pos_est->vel[2]=qvel.v[2];
 	
 	// calculate velocity in global frame
 	// vel = qe *vel_bf * qe-1
@@ -131,14 +127,14 @@ void position_integration(Quat_Attitude_t *attitude, float dt)
 	
 	for (i=0; i<3; i++) {
 		// clean position estimate without gravity:
-		prev_pos[i]=attitude->localPosition.pos[i];
-		attitude->localPosition.pos[i] =attitude->localPosition.pos[i]*(1.0-(POS_DECAY*dt)) + attitude->vel[i] *dt;
-		attitude->localPosition.heading=get_yaw(attitude->qe);
+		//prev_pos[i]=attitude->localPosition.pos[i];
+		pos_est->localPosition.pos[i] =pos_est->localPosition.pos[i]*(1.0-(POS_DECAY*dt)) + pos_est->vel[i] *dt;
+		pos_est->localPosition.heading=get_yaw(attitude->qe);
 	}
 
 }
 	
-void position_correction()
+void position_correction(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, float dt)
 {
 	global_position_t global_gps_position;
 	local_coordinates_t local_coordinates;
@@ -146,81 +142,81 @@ void position_correction()
 	UQuat_t bias_correction ={.s=0, .v={0.0, 0.0, 1.0}};
 	UQuat_t vel_correction ={.s=0, .v={0.0, 0.0, 1.0}};
 	float pos_error[3]= {0.0,0.0,0.0};
-	
+	float baro_alt_error=0.0;
+	float baro_vel_error=0.0;
 	float baro_gain=0.0;
 	float gps_gain=0.0;
-	
+	float gps_dt=0.0;
 	float vel_error[3]={0.0,0.0,0.0};
 	uint32_t tinterGps, tinterBaro;
 	int i;
-	float dt;
 	//if ((centralData->simulation_mode == 0))
 	{
-		if (centralData->init_barometer)
+		if (pos_est->init_barometer)
 		{
 			// altimeter correction
-			if (newValidBarometer(&timeLastBarometerMsg))
+			if (newValidBarometer(&pos_est->timeLastBarometerMsg))
 			{
-				//alt_error = -(centralData->pressure.altitude + centralData->pressure.altitude_offset) - centralData->imu1.attitude.localPosition.pos[2]+centralData->imu1.attitude.localPosition.origin.altitude;
-				centralData->imu1.attitude.last_alt= -(centralData->pressure.altitude + centralData->pressure.altitude_offset) + centralData->imu1.attitude.localPosition.origin.altitude;
-				centralData->imu1.attitude.baro_alt_error = -(centralData->pressure.altitude + centralData->pressure.altitude_offset) - centralData->imu1.attitude.localPosition.pos[2]+centralData->imu1.attitude.localPosition.origin.altitude;
+				//alt_error = -(barometer->altitude + barometer->altitude_offset) - pos_est->localPosition.pos[2]+pos_est->localPosition.origin.altitude;
+				pos_est->last_alt= -(barometer->altitude + barometer->altitude_offset) + pos_est->localPosition.origin.altitude;
+				baro_alt_error = -(barometer->altitude + barometer->altitude_offset) - pos_est->localPosition.pos[2]+pos_est->localPosition.origin.altitude;
 				/*dbg_print("alt_error:");
-				dbg_print_num(centralData->imu1.attitude.baro_alt_error,10);
+				dbg_print_num(pos_est->baro_alt_error,10);
 				dbg_print(" = -(");
-				dbg_print_num(centralData->pressure.altitude,10);
+				dbg_print_num(barometer->altitude,10);
 				dbg_print(" + ");
-				dbg_print_num(centralData->pressure.altitude_offset,10);
+				dbg_print_num(barometer->altitude_offset,10);
 				dbg_print(") - ");
-				dbg_print_num(centralData->imu1.attitude.localPosition.pos[2],10);
+				dbg_print_num(pos_est->localPosition.pos[2],10);
 				dbg_print(" + ");
-				dbg_print_num(centralData->imu1.attitude.localPosition.origin.altitude,10);
+				dbg_print_num(pos_est->localPosition.origin.altitude,10);
 				dbg_print("\n");*/
-				timeLastBarometerMsg=centralData->pressure.last_update;
+				pos_est->timeLastBarometerMsg=barometer->last_update;
 			}
-			tinterBaro = (get_micros()-centralData->pressure.last_update)/1000.0;
-			baro_gain=fmax(1.0-tinterBaro/1000.0, 0.0);
+			tinterBaro = (get_micros()-barometer->last_update)/1000.0;
+			baro_gain=1.0;//fmax(1.0-tinterBaro/1000.0, 0.0);
 			
-			//centralData->imu1.attitude.localPosition.pos[2] += kp_alt/((float)(tinterBaro/2.5 + 1.0)) * alt_error;
-			pos_error[2]=centralData->imu1.attitude.last_alt  - centralData->imu1.attitude.localPosition.pos[2];
-			vel_error[2]=centralData->pressure.vario_vz - centralData->imu1.attitude.vel[2];
+			//pos_est->localPosition.pos[2] += kp_alt/((float)(tinterBaro/2.5 + 1.0)) * alt_error;
+			baro_alt_error=pos_est->last_alt  - pos_est->localPosition.pos[2];
+			baro_vel_error=barometer->vario_vz - pos_est->vel[2];
 			//vel_error[2]=0.1*pos_error[2];
-			//centralData->imu1.attitude.vel[2] += kp_alt_v * vel_error[2];
+			//pos_est->vel[2] += kp_alt_v * vel_error[2];
 				
 		}else{
-			init_barometer_offset();
+			init_barometer_offset(pos_est, barometer);
 		}
 	
-		if (centralData->init_gps_position)
+		if (pos_est->init_gps_position)
 		{
-			if (newValidGpsMsg(&timeLastGpsMsg))
+			if (newValidGpsMsg(&pos_est->timeLastGpsMsg))
 			{
 				//dbg_print("New valid message\n");
-				global_gps_position.longitude = centralData->GPS_data.longitude;
-				global_gps_position.latitude = centralData->GPS_data.latitude;
-				global_gps_position.altitude = centralData->GPS_data.altitude;
+				global_gps_position.longitude = gps->longitude;
+				global_gps_position.latitude = gps->latitude;
+				global_gps_position.altitude = gps->altitude;
 				global_gps_position.heading=0.0;
-				local_coordinates = global_to_local_position(global_gps_position,centralData->imu1.attitude.localPosition.origin);
-				local_coordinates.timestamp_ms=centralData->GPS_data.timeLastMsg;
+				local_coordinates = global_to_local_position(global_gps_position,pos_est->localPosition.origin);
+				local_coordinates.timestamp_ms=gps->timeLastMsg;
 				// compute GPS velocity estimate
-				dt=(local_coordinates.timestamp_ms - centralData->imu1.attitude.lastGpsPos.timestamp_ms)/1000.0;
-				if (dt>0.001) {
-					for (i=0; i<2; i++) centralData->imu1.attitude.last_vel[i] = (local_coordinates.pos[i]-centralData->imu1.attitude.lastGpsPos.pos[i])/dt;
-					centralData->imu1.attitude.lastGpsPos=local_coordinates;
+				gps_dt=(local_coordinates.timestamp_ms - pos_est->lastGpsPos.timestamp_ms)/1000.0;
+				if (gps_dt>0.001) {
+					for (i=0; i<2; i++) pos_est->last_vel[i] = (local_coordinates.pos[i]-pos_est->lastGpsPos.pos[i])/gps_dt;
+					pos_est->lastGpsPos=local_coordinates;
 				} else dbg_print("GPS dt is too small!");
 			}
-			tinterGps = get_millis() - centralData->GPS_data.timeLastMsg;
+			tinterGps = get_millis() - gps->timeLastMsg;
 			
 			gps_gain=fmax(1.0-tinterGps/1000.0, 0.0);
 			gps_gain=1.0;
 			
-			for (i=0;i<2;i++){
-				pos_error[i] = centralData->imu1.attitude.lastGpsPos.pos[i] - centralData->imu1.attitude.localPosition.pos[i];
-				vel_error[i] = centralData->imu1.attitude.last_vel[i]       - centralData->imu1.attitude.vel[i]; 
+			for (i=0;i<3;i++){
+				pos_error[i] = pos_est->lastGpsPos.pos[i] - pos_est->localPosition.pos[i];
+				vel_error[i] = pos_est->last_vel[i]       - pos_est->vel[i]; 
 			}
 		}else{
-			init_pos_gps();
+			init_pos_gps(pos_est, gps);
 			for (i=0;i<2;i++){
-				//pos_error[i] = centralData->imu1.attitude.lastGpsPos.pos[i] - centralData->imu1.attitude.localPosition.pos[i];
+				//pos_error[i] = pos_est->lastGpsPos.pos[i] - pos_est->localPosition.pos[i];
 				pos_error[i] = 0.0;
 				vel_error[i] = 0.0;
 			}
@@ -228,20 +224,20 @@ void position_correction()
 		}
 		
 		// Apply error correction to velocity and position estimates
-		for (i=0;i<2;i++) {
-			centralData->imu1.attitude.localPosition.pos[i] += kp_pos[i] * gps_gain * pos_error[i]* centralData->imu1.dt;
+		for (i=0;i<3;i++) {
+			pos_est->localPosition.pos[i] += pos_est->kp_pos[i] * gps_gain * pos_error[i]* dt;
 		}
-		centralData->imu1.attitude.localPosition.pos[2] += kp_alt * baro_gain * pos_error[2]* centralData->imu1.dt;
+		pos_est->localPosition.pos[2] += pos_est->kp_alt * baro_gain * baro_alt_error* dt;
 
 
 		//for (i=0; i<3; i++) vel_correction.v[i] = vel_error[i];
 		for (i=0; i<3; i++) vel_correction.v[i] = pos_error[i];
-		//vel_correction = quat_global_to_local(centralData->imu1.attitude.qe, vel_correction);
+		//vel_correction = quat_global_to_local(pos_est->qe, vel_correction);
 				
-		for (i=0;i<2;i++) {			
-			centralData->imu1.attitude.vel[i] += kp_vel[i]*gps_gain * vel_correction.v[i]* centralData->imu1.dt;
+		for (i=0;i<3;i++) {			
+			pos_est->vel[i] += pos_est->kp_vel[i]*gps_gain * vel_correction.v[i]* dt;
 		}
-		centralData->imu1.attitude.vel[2] += kp_vel[2]*baro_gain * vel_correction.v[2]* centralData->imu1.dt;
+		pos_est->vel[2] += pos_est->kp_vel_baro * baro_gain * baro_vel_error* dt;
 
 	}
 }

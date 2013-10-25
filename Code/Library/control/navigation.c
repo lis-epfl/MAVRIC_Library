@@ -71,7 +71,7 @@ void init_nav()
 	waypoint_reached = false;
 	
 	
-	if ((centralData->number_of_waypoints > 0) && (centralData->init_gps_position || centralData->simulation_mode) && centralData->waypoint_receiving == false)
+	if ((centralData->number_of_waypoints > 0) && (centralData->position_estimator.init_gps_position || centralData->simulation_mode) && centralData->waypoint_receiving == false)
 	{
 		for (i=0;i<centralData->number_of_waypoints;i++)
 		{
@@ -108,7 +108,7 @@ void set_waypoint_from_frame(waypoint_struct current_wp)
 			waypoint_global.latitude = current_wp.x;
 			waypoint_global.longitude = current_wp.y;
 			waypoint_global.altitude = current_wp.z;
-			waypoint_coordinates = global_to_local_position(waypoint_global,centralData->imu1.attitude.localPosition.origin);
+			waypoint_coordinates = global_to_local_position(waypoint_global,centralData->position_estimator.localPosition.origin);
 			
 			dbg_print("wp_global: lat (x1e7):");
 			dbg_print_num(waypoint_global.latitude*10000000,10);
@@ -123,11 +123,11 @@ void set_waypoint_from_frame(waypoint_struct current_wp)
 			dbg_print(", z (x100):");
 			dbg_print_num(waypoint_coordinates.pos[Z]*100,10);
 			dbg_print(" localOrigin lat (x1e7):");
-			dbg_print_num(centralData->imu1.attitude.localPosition.origin.latitude*10000000,10);
+			dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000,10);
 			dbg_print(" long (x1e7):");
-			dbg_print_num(centralData->imu1.attitude.localPosition.origin.longitude*10000000,10);
+			dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000,10);
 			dbg_print(" alt (x1000):");
-			dbg_print_num(centralData->imu1.attitude.localPosition.origin.altitude*1000,10);
+			dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000,10);
 			dbg_print("\n");
 			
 			break;
@@ -145,7 +145,7 @@ void set_waypoint_from_frame(waypoint_struct current_wp)
 			waypoint_global.longitude = current_wp.y;
 			waypoint_global.altitude = current_wp.z;
 			
-			global_position_t origin_relative_alt = centralData->imu1.attitude.localPosition.origin;
+			global_position_t origin_relative_alt = centralData->position_estimator.localPosition.origin;
 			origin_relative_alt.altitude = 0.0;
 			waypoint_coordinates = global_to_local_position(waypoint_global,origin_relative_alt);
 			
@@ -154,7 +154,7 @@ void set_waypoint_from_frame(waypoint_struct current_wp)
 			dbg_print(" long (x1e7):");
 			dbg_print_num(origin_relative_alt.longitude * 10000000,10);
 			dbg_print(" global alt (x1000):");
-			dbg_print_num(centralData->imu1.attitude.localPosition.origin.altitude*1000,10);
+			dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000,10);
 			dbg_print(" wp_coor: x (x100):");
 			dbg_print_num(waypoint_coordinates.pos[X]*100,10);
 			dbg_print(", y (x100):");
@@ -179,9 +179,9 @@ void run_navigation()
 	// Control in translational speed of the platform
 	if (centralData->mission_started && centralData->waypoint_set)
 	{
-		rel_pos[X] = (float)(waypoint_coordinates.pos[X] - centralData->imu1.attitude.localPosition.pos[X]);
-		rel_pos[Y] = (float)(waypoint_coordinates.pos[Y] - centralData->imu1.attitude.localPosition.pos[Y]);
-		rel_pos[Z] = (float)(waypoint_coordinates.pos[Z] - centralData->imu1.attitude.localPosition.pos[Z]);
+		rel_pos[X] = (float)(waypoint_coordinates.pos[X] - centralData->position_estimator.localPosition.pos[X]);
+		rel_pos[Y] = (float)(waypoint_coordinates.pos[Y] - centralData->position_estimator.localPosition.pos[Y]);
+		rel_pos[Z] = (float)(waypoint_coordinates.pos[Z] - centralData->position_estimator.localPosition.pos[Z]);
 		
 		dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
 		//set_rel_pos_n_dist2wp(rel_pos,&dist2wp_sqr);
@@ -197,9 +197,9 @@ void run_navigation()
 		//dbg_print_num(waypoint_coordinates.pos[Z],10);
 		//dbg_print(")");
 		//dbg_print(", localPos:(");
-		//dbg_print_num(centralData->imu1.attitude.localPosition.pos[X],10);
-		//dbg_print_num(centralData->imu1.attitude.localPosition.pos[Y],10);
-		//dbg_print_num(centralData->imu1.attitude.localPosition.pos[Z],10);
+		//dbg_print_num(centralData->position_estimator.localPosition.pos[X],10);
+		//dbg_print_num(centralData->position_estimator.localPosition.pos[Y],10);
+		//dbg_print_num(centralData->position_estimator.localPosition.pos[Z],10);
 		//dbg_print(")\n");
 		
 		if (dist2wp_sqr <= (current_waypoint.param2*current_waypoint.param2))
@@ -243,15 +243,15 @@ void run_navigation()
 				//if (centralData->waypoint_hold_init == 0)
 				//{
 					//centralData->waypoint_hold_init = true;
-					//waypoint_hold_coordinates.pos[X] = centralData->imu1.attitude.localPosition.pos[X];
-					//waypoint_hold_coordinates.pos[Y] = centralData->imu1.attitude.localPosition.pos[Y];
-					//waypoint_hold_coordinates.pos[Z] = centralData->imu1.attitude.localPosition.pos[Z];
+					//waypoint_hold_coordinates.pos[X] = centralData->position_estimator.localPosition.pos[X];
+					//waypoint_hold_coordinates.pos[Y] = centralData->position_estimator.localPosition.pos[Y];
+					//waypoint_hold_coordinates.pos[Z] = centralData->position_estimator.localPosition.pos[Z];
 				//}
 				wp_hold_init();
 			}
-			rel_pos[X] = (float)(waypoint_coordinates.pos[X] - centralData->imu1.attitude.localPosition.pos[X]);
-			rel_pos[Y] = (float)(waypoint_coordinates.pos[Y] - centralData->imu1.attitude.localPosition.pos[Y]);
-			rel_pos[Z] = (float)(waypoint_coordinates.pos[Z] - centralData->imu1.attitude.localPosition.pos[Z]);
+			rel_pos[X] = (float)(waypoint_coordinates.pos[X] - centralData->position_estimator.localPosition.pos[X]);
+			rel_pos[Y] = (float)(waypoint_coordinates.pos[Y] - centralData->position_estimator.localPosition.pos[Y]);
+			rel_pos[Z] = (float)(waypoint_coordinates.pos[Z] - centralData->position_estimator.localPosition.pos[Z]);
 			
 			dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
 			//set_rel_pos_n_dist2wp(rel_pos,&dist2wp_sqr);
@@ -265,21 +265,21 @@ void run_navigation()
 		//if (centralData->waypoint_hold_init == 0)
 		//{
 			//dbg_print("Position hold at: ");
-			//dbg_print_num(centralData->imu1.attitude.localPosition.pos[X],10);
-			//dbg_print_num(centralData->imu1.attitude.localPosition.pos[Y],10);
-			//dbg_print_num(centralData->imu1.attitude.localPosition.pos[Z],10);
+			//dbg_print_num(centralData->position_estimator.localPosition.pos[X],10);
+			//dbg_print_num(centralData->position_estimator.localPosition.pos[Y],10);
+			//dbg_print_num(centralData->position_estimator.localPosition.pos[Z],10);
 			//dbg_print(")\n");
 			//
 			//centralData->waypoint_hold_init = 1;
-			//waypoint_hold_coordinates.pos[X] = centralData->imu1.attitude.localPosition.pos[X];
-			//waypoint_hold_coordinates.pos[Y] = centralData->imu1.attitude.localPosition.pos[Y];
-			//waypoint_hold_coordinates.pos[Z] = centralData->imu1.attitude.localPosition.pos[Z];
+			//waypoint_hold_coordinates.pos[X] = centralData->position_estimator.localPosition.pos[X];
+			//waypoint_hold_coordinates.pos[Y] = centralData->position_estimator.localPosition.pos[Y];
+			//waypoint_hold_coordinates.pos[Z] = centralData->position_estimator.localPosition.pos[Z];
 		//}
 		wp_hold_init();
 		
-		rel_pos[X] = (float)(waypoint_hold_coordinates.pos[X] - centralData->imu1.attitude.localPosition.pos[X]);
-		rel_pos[Y] = (float)(waypoint_hold_coordinates.pos[Y] - centralData->imu1.attitude.localPosition.pos[Y]);
-		rel_pos[Z] = (float)(waypoint_hold_coordinates.pos[Z] - centralData->imu1.attitude.localPosition.pos[Z]);
+		rel_pos[X] = (float)(waypoint_hold_coordinates.pos[X] - centralData->position_estimator.localPosition.pos[X]);
+		rel_pos[Y] = (float)(waypoint_hold_coordinates.pos[Y] - centralData->position_estimator.localPosition.pos[Y]);
+		rel_pos[Z] = (float)(waypoint_hold_coordinates.pos[Z] - centralData->position_estimator.localPosition.pos[Z]);
 		
 		dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
 		//set_rel_pos_n_dist2wp(rel_pos,&dist2wp_sqr);
@@ -295,23 +295,23 @@ void wp_hold_init()
 	if (centralData->waypoint_hold_init == 0)
 	{
 		dbg_print("Position hold at: ");
-		dbg_print_num(centralData->imu1.attitude.localPosition.pos[X],10);
-		dbg_print_num(centralData->imu1.attitude.localPosition.pos[Y],10);
-		dbg_print_num(centralData->imu1.attitude.localPosition.pos[Z],10);
+		dbg_print_num(centralData->position_estimator.localPosition.pos[X],10);
+		dbg_print_num(centralData->position_estimator.localPosition.pos[Y],10);
+		dbg_print_num(centralData->position_estimator.localPosition.pos[Z],10);
 		dbg_print(")\n");
 		
 		centralData->waypoint_hold_init = 1;
-		waypoint_hold_coordinates.pos[X] = centralData->imu1.attitude.localPosition.pos[X];
-		waypoint_hold_coordinates.pos[Y] = centralData->imu1.attitude.localPosition.pos[Y];
-		waypoint_hold_coordinates.pos[Z] = centralData->imu1.attitude.localPosition.pos[Z];
+		waypoint_hold_coordinates.pos[X] = centralData->position_estimator.localPosition.pos[X];
+		waypoint_hold_coordinates.pos[Y] = centralData->position_estimator.localPosition.pos[Y];
+		waypoint_hold_coordinates.pos[Z] = centralData->position_estimator.localPosition.pos[Z];
 	}
 }
 
 void set_rel_pos_n_dist2wp(float rel_pos[], float *dist2wp_sqr)
 {
-	rel_pos[X] = (float)(waypoint_hold_coordinates.pos[X] - centralData->imu1.attitude.localPosition.pos[X]);
-	rel_pos[Y] = (float)(waypoint_hold_coordinates.pos[Y] - centralData->imu1.attitude.localPosition.pos[Y]);
-	rel_pos[Z] = (float)(waypoint_hold_coordinates.pos[Z] - centralData->imu1.attitude.localPosition.pos[Z]);
+	rel_pos[X] = (float)(waypoint_hold_coordinates.pos[X] - centralData->position_estimator.localPosition.pos[X]);
+	rel_pos[Y] = (float)(waypoint_hold_coordinates.pos[Y] - centralData->position_estimator.localPosition.pos[Y]);
+	rel_pos[Z] = (float)(waypoint_hold_coordinates.pos[Z] - centralData->position_estimator.localPosition.pos[Z]);
 	
 	*dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
 }
@@ -403,5 +403,5 @@ void high_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude)
 	centralData->controls_nav.tvel[X] = dir_desired_bf[X];
 	centralData->controls_nav.tvel[Y] = dir_desired_bf[Y];
 	centralData->controls_nav.tvel[Z] = dir_desired_bf[Z];
-	centralData->controls_nav.rpy[YAW] = KP_YAW * atan2(attitude.vel_bf[Y], attitude.vel_bf[X]);
+	centralData->controls_nav.rpy[YAW] = KP_YAW * atan2(centralData->position_estimator.vel_bf[Y], centralData->position_estimator.vel_bf[X]);
 }

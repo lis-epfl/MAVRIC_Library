@@ -128,19 +128,19 @@ void mavlink_send_global_position(void) {
    //}else{
 	   //mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), 46.5193*10000000, 6.56507*10000000, 400*1000, 1, 0, 0, 0, centralData->imu1.attitude.om[2]);
 	   	// send integrated position (for now there is no GPS error correction...!!!)
-		global_position_t gpos=local_to_global_position(centralData->imu1.attitude.localPosition);
-		mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, centralData->imu1.attitude.vel[0]*100.0, centralData->imu1.attitude.vel[1]*100.0, centralData->imu1.attitude.vel[2]*100.0, centralData->imu1.attitude.om[2]);
-		mavlink_msg_global_position_int_send(MAVLINK_COMM_1, get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, centralData->imu1.attitude.vel[0]*100.0, centralData->imu1.attitude.vel[1]*100.0, centralData->imu1.attitude.vel[2]*100.0, centralData->imu1.attitude.om[2]);
+		global_position_t gpos=local_to_global_position(centralData->position_estimator.localPosition);
+		mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, centralData->position_estimator.vel[0]*100.0, centralData->position_estimator.vel[1]*100.0, centralData->position_estimator.vel[2]*100.0, centralData->imu1.attitude.om[2]);
+		mavlink_msg_global_position_int_send(MAVLINK_COMM_1, get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, centralData->position_estimator.vel[0]*100.0, centralData->position_estimator.vel[1]*100.0, centralData->position_estimator.vel[2]*100.0, centralData->imu1.attitude.om[2]);
    //} 
 }
 
 void mavlink_send_hud(void) {
-	float groundspeed=sqrt(centralData->imu1.attitude.vel[0]*centralData->imu1.attitude.vel[0] +centralData->imu1.attitude.vel[1]*centralData->imu1.attitude.vel[1]);
+	float groundspeed=sqrt(centralData->position_estimator.vel[0]*centralData->position_estimator.vel[0] +centralData->position_estimator.vel[1]*centralData->position_estimator.vel[1]);
 	float airspeed=groundspeed;
 	Aero_Attitude_t aero_attitude;
 	aero_attitude=Quat_to_Aero(centralData->imu1.attitude.qe);
 	// mavlink_msg_vfr_hud_send(mavlink_channel_t chan, float airspeed, float groundspeed, int16_t heading, uint16_t throttle, float alt, float climb)
-	mavlink_msg_vfr_hud_send(MAVLINK_COMM_0, airspeed, groundspeed, 180.0*aero_attitude.rpy[2]/PI, (int)((centralData->controls.thrust+1.0)*50), -centralData->imu1.attitude.localPosition.pos[2], -centralData->imu1.attitude.vel[2]);
+	mavlink_msg_vfr_hud_send(MAVLINK_COMM_0, airspeed, groundspeed, 180.0*aero_attitude.rpy[2]/PI, (int)((centralData->controls.thrust+1.0)*50), -centralData->position_estimator.localPosition.pos[2], -centralData->position_estimator.vel[2]);
 
 	
 }
@@ -167,7 +167,7 @@ void mavlink_send_pressure(void) {
 	
 	mavlink_msg_scaled_pressure_send(MAVLINK_COMM_0, get_millis(), centralData->pressure.pressure/100.0, centralData->pressure.vario_vz, centralData->pressure.temperature*100.0);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressAlt", centralData->pressure.altitude);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"lastAlt", centralData->imu1.attitude.last_alt);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"lastAlt", centralData->position_estimator.last_alt);
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressFilt", centralData->altitude_filtered);
 }
 
@@ -182,15 +182,15 @@ void mavlink_send_estimator(void)
 {
 	//mavlink_msg_local_position_ned_send(mavlink_channel_t chan, uint32_t time_boot_ms, float x, float y, float z, float vx, float vy, float vz)
 	//mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, get_millis(), centralData->estimation.state[0][0], centralData->estimation.state[1][0], centralData->estimation.state[2][0], centralData->estimation.state[0][1], centralData->estimation.state[1][1], centralData->estimation.state[2][1]);
-	mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, get_millis(), centralData->imu1.attitude.localPosition.pos[0], centralData->imu1.attitude.localPosition.pos[1], centralData->imu1.attitude.localPosition.pos[2], centralData->imu1.attitude.vel[0], centralData->imu1.attitude.vel[1], centralData->imu1.attitude.vel[2]);
+	mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, get_millis(), centralData->position_estimator.localPosition.pos[0], centralData->position_estimator.localPosition.pos[1], centralData->position_estimator.localPosition.pos[2], centralData->position_estimator.vel[0], centralData->position_estimator.vel[1], centralData->position_estimator.vel[2]);
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,0,"Estimation",0);
 	
 	//dbg_print("Local position: (");
-	//dbg_print_num(centralData->imu1.attitude.localPosition.pos[X],10);
+	//dbg_print_num(centralData->position_estimator.localPosition.pos[X],10);
 	//dbg_print(", ");
-	//dbg_print_num(centralData->imu1.attitude.localPosition.pos[Y],10);
+	//dbg_print_num(centralData->position_estimator.localPosition.pos[Y],10);
 	//dbg_print(", ");
-	//dbg_print_num(centralData->imu1.attitude.localPosition.pos[Z],10);
+	//dbg_print_num(centralData->position_estimator.localPosition.pos[Z],10);
 	//dbg_print(")\n");
 }
 
@@ -216,9 +216,9 @@ void mavlink_send_kalman_estimator(void)
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfY", centralData->imu1.attitude.acc_bf[Y]);
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", centralData->imu1.attitude.acc_bf[Z]);
 	
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", centralData->imu1.attitude.vel_bf[X]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", centralData->imu1.attitude.vel_bf[Y]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", centralData->imu1.attitude.vel_bf[Z]);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", centralData->position_estimator.vel_bf[X]);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", centralData->position_estimator.vel_bf[Y]);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", centralData->position_estimator.vel_bf[Z]);
 	
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiDeltaT", centralData->estimation.delta_t_filter);
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "imuDeltaT", centralData->imu1.dt);

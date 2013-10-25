@@ -7,7 +7,8 @@
  */
 
 #include "qfilter.h"
-#include "imu.h"
+//#include "imu.h"
+#include "conf_platform.h"
 #include "coord_conventions.h"
 #include "print_util.h"
 #include <math.h>
@@ -29,9 +30,6 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 	}
 	for (i=0; i<3; i++){
 		attitude->acc_bf[i]=0.0;
-		attitude->vel_bf[i]=0.0;
-		attitude->vel[i]=0.0;
-		attitude->localPosition.pos[i]=0.0;
 	}
 
 //	attitude->be[3]=-0.03;
@@ -190,11 +188,6 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 		case LEVELING:
 			kp=0.3;
 			attitude->ki=attitude->kp/10.0;
-			for (i=0; i<3; i++) {
-				// reset velocity estimate to zero 
-				attitude->vel_bf[i]=0.0;
-				attitude->vel[i]=0.0;
-			}
 			break;
 		case LEVEL_PLUS_ACCEL:
 			kp=0.3;
@@ -202,11 +195,6 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 			attitude->be[3]+=   dt * attitude->kp * (attitude->a[0]-up_bf.v[0]);
 			attitude->be[4]+=   dt * attitude->kp * (attitude->a[1]-up_bf.v[1]);
 			attitude->be[5]+=   dt * attitude->kp * (attitude->a[2]-up_bf.v[2]);
-			for (i=0; i<3; i++) {
-				// reset velocity estimate to zero
-				attitude->vel_bf[i]=0.0;
-				attitude->vel[i]=0.0;
-			}
 			break;
 		default:
 			kp=attitude->kp;

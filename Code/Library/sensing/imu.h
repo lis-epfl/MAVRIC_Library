@@ -9,6 +9,9 @@
 #define IMU_H_
 #include "compiler.h"
 #include "qfilter.h"
+#include "bmp085.h"
+#include "position_estimation.h"
+#include "gps_ublox.h"
 
 #define IMU_AXES 6
 
@@ -31,6 +34,6 @@ void init_imu(Imu_Data_t *imu1);
 
 void calibrate_Gyros(Imu_Data_t *imu1);
 
-void imu_update(Imu_Data_t *imu1);
+void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps);
 
 #endif /* IMU_H_ */
