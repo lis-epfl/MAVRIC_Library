@@ -38,6 +38,7 @@
 #include "bmp085.h"
 #include "conf_sim_model.h"
 #include "orca.h"
+#include "position_estimation.h"
 
 static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
 
@@ -60,9 +61,7 @@ typedef struct  {
 	Estimator_Data_t estimation;
 	simulation_model_t sim_model;
 	
-	//local_coordinates_t local_position;
-	bool init_gps_position;
-	bool init_barometer;
+	position_estimator_t position_estimator;
 	
 	// aliases
 	byte_stream_t *telemetry_down_stream, *telemetry_up_stream;

@@ -134,12 +134,12 @@ void initialise_board(central_data_t *centralData) {
 	centralData->waypoint_hold_init = false;
 	
 	// default GPS home position
-	centralData->imu1.attitude.localPosition.origin.longitude=   HOME_LONGITUDE;
-	centralData->imu1.attitude.localPosition.origin.latitude =   HOME_LATITUDE;
-	centralData->imu1.attitude.localPosition.origin.altitude =   HOME_ALTITUDE;
-	centralData->imu1.attitude.localPosition.pos[0]=0;
-	centralData->imu1.attitude.localPosition.pos[1]=0; 
-	centralData->imu1.attitude.localPosition.pos[2]=0;
+	centralData->position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;
+	centralData->position_estimator.localPosition.origin.latitude =   HOME_LATITUDE;
+	centralData->position_estimator.localPosition.origin.altitude =   HOME_ALTITUDE;
+	centralData->position_estimator.localPosition.pos[0]=0;
+	centralData->position_estimator.localPosition.pos[1]=0; 
+	centralData->position_estimator.localPosition.pos[2]=0;
 		
 	//init_waypoint_list(centralData->waypoint_list,&(centralData->number_of_waypoints));
 

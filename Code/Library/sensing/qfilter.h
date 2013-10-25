@@ -14,7 +14,7 @@
 #include "coord_conventions.h"
 
 #define GYRO_LPF 0.1
-#define ACC_LPF 0.05
+#define ACC_LPF 0.02
 #define MAG_LPF 0.1
 
 
@@ -36,16 +36,8 @@ typedef struct {
 	float ki_mag;
 	float raw_mag_mean[3];
 	uint8_t calibration_level;
-	
-	float acc_bf[3], vel_bf[3], vel[3];//, pos[3];
-
-	float pos_correction[3];
-	float last_alt, last_vel[3];
-	float baro_alt_error;
-
-	local_coordinates_t localPosition;
-	local_coordinates_t lastGpsPos;
-
+	float heading;
+	float acc_bf[3];
 } Quat_Attitude_t;	
 
 //float dt;

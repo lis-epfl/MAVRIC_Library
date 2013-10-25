@@ -54,7 +54,6 @@ void init_imu (Imu_Data_t *imu1) {
 	imu_last_update_init = false;
 	
 	qfInit(&imu1->attitude, imu1->raw_scale, imu1->raw_bias);
-	init_pos_integration();
 	imu1->attitude.calibration_level=OFF;
 }
 
@@ -94,7 +93,7 @@ void calibrate_Gyros(Imu_Data_t *imu1) {
 		imu1->raw_bias[j]=(float)imu1->raw_channels[j];
 	}
 	
-	for (i=0; i<400; i++) {
+	for (i=0; i<100; i++) {
 		imu_get_raw_data(imu1);
 
 		//imu1->raw_bias[0+ACC_OFFSET]  = (0.9*imu1->raw_bias[0+ACC_OFFSET]+0.1*(float)imu1->raw_channels[0+ACC_OFFSET]);
@@ -104,13 +103,13 @@ void calibrate_Gyros(Imu_Data_t *imu1) {
 			imu1->raw_bias[j]=(0.9*imu1->raw_bias[j]+0.1*(float)imu1->raw_channels[j]);
 			imu1->attitude.raw_mag_mean[j] = (1.0-MAG_LPF)*imu1->attitude.raw_mag_mean[j]+MAG_LPF*((float)imu1->raw_channels[j+COMPASS_OFFSET]);
 		}
-		delay_ms(10);
+		delay_ms(4);
 	}
 
 
 }
 
-void imu_update(Imu_Data_t *imu1){
+void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps){
 	uint32_t t=get_time_ticks();
 	
 	if (!imu_last_update_init)
@@ -123,8 +122,8 @@ void imu_update(Imu_Data_t *imu1){
 		imu1->last_update=t;
 		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt, false);
 		if (imu1->attitude.calibration_level==OFF) {
-			position_integration(&imu1->attitude,imu1->dt);
-			position_correction();
+			position_integration(pos_est, &imu1->attitude, imu1->dt);
+			position_correction(pos_est, barometer, gps, imu1->dt);
 		}
 	}
 }

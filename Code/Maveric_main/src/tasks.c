@@ -26,7 +26,7 @@ task_set* get_main_taskset() {
 }
 
 task_return_t run_imu_update() {
-	imu_update(&(centralData->imu1));	
+	imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);	
 }	
 
 void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
@@ -189,7 +189,7 @@ task_return_t set_mav_mode_n_state()
 		case MAV_STATE_EMERGENCY:
 			centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE_REL_YAW;
-			if (centralData->imu1.attitude.localPosition.pos[Z] < 0.5)
+			if (centralData->position_estimator.localPosition.pos[Z] < 0.5)
 			{
 				centralData->mav_state = MAV_STATE_STANDBY;
 			}
@@ -208,9 +208,9 @@ task_return_t run_stabilisation() {
 	int i;
 	
 	if (centralData->simulation_mode==1) {
-		simu_update(&(centralData->sim_model), &(centralData->servos), &(centralData->imu1));
+		simu_update(&centralData->sim_model, &centralData->servos, &(centralData->imu1), &centralData->position_estimator);
 	} else {
-		imu_update(&(centralData->imu1));
+		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 	}
 
 	switch(centralData->mav_mode)
@@ -223,7 +223,7 @@ task_return_t run_stabilisation() {
 			
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE_REL_YAW;
 			
-			quad_stabilise(&(centralData->imu1), &(centralData->controls));
+			quad_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
 			centralData->waypoint_hold_init = false;
@@ -238,7 +238,7 @@ task_return_t run_stabilisation() {
 			centralData->controls.tvel[Y]= 10.0*centralData->controls.rpy[ROLL];
 			centralData->controls.tvel[Z]=- 1.5*centralData->controls.thrust;
 			
-			quad_stabilise(&(centralData->imu1), &(centralData->controls));
+			quad_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			
 			break;
 		case MAV_MODE_GUIDED_ARMED:
@@ -255,7 +255,7 @@ task_return_t run_stabilisation() {
 			//dbg_print_num(f_min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0 *10000.0,10);
 			//dbg_print("\n");
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
-			quad_stabilise(&(centralData->imu1), &(centralData->controls));
+			quad_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		case MAV_MODE_AUTO_ARMED:
 			centralData->mission_started = true;
@@ -270,7 +270,7 @@ task_return_t run_stabilisation() {
 			//dbg_print("\n");
 			
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;			
-			quad_stabilise(&(centralData->imu1), &(centralData->controls));
+			quad_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		
 		case MAV_MODE_PREFLIGHT:
@@ -382,8 +382,8 @@ task_return_t run_barometer()
 	pressure_data *pressure = get_pressure_data_slow(centralData->pressure.altitude_offset);
 	if (central_data->simulation_mode==1) {
 		//update barometer
-		pressure->altitude=-central_data->imu1.attitude.localPosition.pos[Z]+central_data->imu1.attitude.localPosition.origin.altitude;
-		pressure->vario_vz= central_data->imu1.attitude.vel[Z];
+		pressure->altitude=-central_data->position_estimator.localPosition.pos[Z]+central_data->position_estimator.localPosition.origin.altitude;
+		pressure->vario_vz= central_data->position_estimator.vel[Z];
 		pressure->last_update=get_micros();
 		pressure->state=IDLE;
 	}

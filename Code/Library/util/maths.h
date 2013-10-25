@@ -59,7 +59,7 @@ float static inline calc_smaller_angle(float angle) {
 }
 
 
-float static inline scalar_product(float u[], float v[])
+float static inline scalar_product(const float u[], const float v[])
 {
 	float scp = (u[0]*v[0]+u[1]*v[1]+u[2]*v[2]);
 	return scp;

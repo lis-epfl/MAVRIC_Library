@@ -44,7 +44,7 @@ Stabiliser_t* get_attitude_stabiliser(void);
 Stabiliser_t* get_velocity_stabiliser(void);
 
 void stabilise(Stabiliser_t *stabiliser, float *errors);
-void quad_stabilise(Imu_Data_t *imu, Control_Command_t *control_input);
+void quad_stabilise(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input);
 
 void mix_to_servos_diag_quad(Control_Command_t *control);
 void mix_to_servos_cross_quad(Control_Command_t *control);

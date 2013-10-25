@@ -38,7 +38,7 @@ typedef struct {
 void init_simulation(simulation_model_t *sim);
 
 // computes artificial gyro and accelerometer values based on motor commands
-void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu);
+void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est);
 
 
 #endif /* SIMULATION_H_ */
