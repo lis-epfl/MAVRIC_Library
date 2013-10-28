@@ -27,6 +27,7 @@ void init_rate_stabilisation(Stabiliser_t *stabiliser) {
 		(stabiliser->rpy_controller[i]).last_update=get_time_ticks();	
 		(stabiliser->rpy_controller[i]).clip_min=-0.9;
 		(stabiliser->rpy_controller[i]).clip_max= 0.9;
+		(stabiliser->rpy_controller[i]).soft_zone_width=0.0;
 		initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.2, 0.4, 0.5);
 		initInt(&((stabiliser->rpy_controller)[i].integrator),0.5, 1.0, 0.65);
 	}	
@@ -36,6 +37,7 @@ void init_rate_stabilisation(Stabiliser_t *stabiliser) {
 	(stabiliser->rpy_controller)[i].last_update=get_time_ticks();	
 	(stabiliser->rpy_controller)[i].clip_min=-0.9;
 	(stabiliser->rpy_controller)[i].clip_max= 0.9;
+	(stabiliser->rpy_controller[i]).soft_zone_width=0.0;
 	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.4, 0.5);
 	initInt(&((stabiliser->rpy_controller)[i].integrator),0.5, 0.2, 0.1);
 	
@@ -51,6 +53,7 @@ void init_angle_stabilisation(Stabiliser_t *stabiliser) {
 		(stabiliser->rpy_controller[i]).last_update=get_time_ticks();	
 		(stabiliser->rpy_controller[i]).clip_min=-1.2;
 		(stabiliser->rpy_controller[i]).clip_max= 1.2;
+		(stabiliser->rpy_controller[i]).soft_zone_width=0.0;
 		initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.00, 0.5, 0.1); // 0.05, 0.5, 0.05
 		initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.0);
 	}	
@@ -60,6 +63,8 @@ void init_angle_stabilisation(Stabiliser_t *stabiliser) {
 	(stabiliser->rpy_controller)[i].last_update=get_time_ticks();	
 	(stabiliser->rpy_controller)[i].clip_min=-1.0;
 	(stabiliser->rpy_controller)[i].clip_max= 1.0;
+	(stabiliser->rpy_controller[i]).soft_zone_width=0.0;
+
 	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.5, 0.5);
 	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.0);
 
@@ -75,6 +80,9 @@ void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	(stabiliser->rpy_controller[i]).last_update=get_time_ticks();
 	(stabiliser->rpy_controller[i]).clip_min=-0.5; //-0.6
 	(stabiliser->rpy_controller[i]).clip_max= 0.5; //0.6
+	
+	(stabiliser->rpy_controller[i]).soft_zone_width=0.3; //region of lowered error input gain to ignore noise close to target point
+
 	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.5, 0.5); // 0.1 0.5 0.5
 	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.3); // 1.0 0.3 0.3
 	
@@ -84,6 +92,8 @@ void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	(stabiliser->rpy_controller[i]).last_update=get_time_ticks();
 	(stabiliser->rpy_controller[i]).clip_min=-0.5; //-0.6
 	(stabiliser->rpy_controller[i]).clip_max= 0.5; //0.6
+	(stabiliser->rpy_controller[i]).soft_zone_width=0.3; //region of lowered error input gain to ignore noise close to target point
+
 	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.5, 0.5); // 0.1 0.5 0.5
 	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.3); // 1.0 0.3 0.3
 	
@@ -91,12 +101,13 @@ void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	stabiliser->rpy_controller[2]=passthroughController();
 
 	// initialise z velocity
-	(stabiliser->thrust_controller).p_gain=0.5; //0.3
+	(stabiliser->thrust_controller).p_gain=0.4; //0.3
 	(stabiliser->thrust_controller).last_update=get_time_ticks();
 	(stabiliser->thrust_controller).clip_min=-0.9; //-0.9
 	(stabiliser->thrust_controller).clip_max= 0.65; // 0.9
-	initDiff(&((stabiliser->thrust_controller).differentiator), 0.0, 0.5, 0.2); // 0.1 0.5 0.2
-	initInt(&((stabiliser->thrust_controller).integrator),3.0, 1.0, 1.0); // 1.0 1.0 0.5
+	(stabiliser->thrust_controller).soft_zone_width= 0.2; // region of lowered error input gain to ignore noise close to target point
+	initDiff(&((stabiliser->thrust_controller).differentiator), 0.5, 0.95, 1.0); // 0.1 0.5 0.2
+	initInt(&((stabiliser->thrust_controller).integrator),1.5, 1.0, 1.0); // 1.0 1.0 0.5
 }
 
 void init_stabilisation() {
@@ -136,7 +147,7 @@ void quad_stabilise(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Comm
 	case VELOCITY_COMMAND_MODE:
 		rpyt_errors[ROLL] = input.tvel[1] - pos_est->vel_bf[1];
 		rpyt_errors[PITCH]=-(input.tvel[0] - pos_est->vel_bf[0]); 
-		rpyt_errors[3]    =  -(input.tvel[2] - pos_est->vel[2]);
+		rpyt_errors[3]    =-(input.tvel[2] - pos_est->vel[2]);
 		
 		rpyt_errors[YAW]= input.rpy[YAW];
 		stabilise(&velocity_stabiliser, &rpyt_errors);

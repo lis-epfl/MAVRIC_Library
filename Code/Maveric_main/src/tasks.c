@@ -95,6 +95,7 @@ task_return_t set_mav_mode_n_state()
 				{
 					case 0:
 						dbg_print("Switching on the motors!\n");
+						position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 						centralData->controls.run_mode = MOTORS_ON;
 						centralData->mav_state = MAV_STATE_ACTIVE;
 						centralData->mav_mode = MAV_MODE_MANUAL_ARMED;

@@ -41,7 +41,7 @@ void init_imu (Imu_Data_t *imu1) {
 	imu1->raw_bias[1+ACC_OFFSET]= ACC_BIAIS_Y;
 	imu1->raw_bias[2+ACC_OFFSET]= ACC_BIAIS_Z;
 	
-	// magneto biais
+	// magneto bias
 	imu1->raw_bias[0+COMPASS_OFFSET]= MAG_BIAIS_X;
 	imu1->raw_bias[1+COMPASS_OFFSET]= MAG_BIAIS_Y;
 	imu1->raw_bias[2+COMPASS_OFFSET]= MAG_BIAIS_Z;

@@ -8,7 +8,7 @@
 #include "time_keeper.h"
 
 #include "control.h"
-
+#include "maths.h"
 
 PID_Controller_t passthroughController() {
 	PID_Controller_t out;
@@ -17,6 +17,7 @@ PID_Controller_t passthroughController() {
 	out.clip_min=-1.0;
 	out.clip_max= 1.0;
 	out.output=0.0;
+	out.soft_zone_width=0.0;
 	initDiff(&(out.differentiator), 0.0, 0.0, 0.0);
 	initInt(&(out.integrator), 0.0, 0.0, 0.0);
 	return out;
@@ -74,7 +75,7 @@ float differentiate(Differentiator_t *diff, float input, float dt) {
 
 float pid_update(PID_Controller_t* controller, float error) {
 	uint32_t t= get_time_ticks();
-	controller->error=error;
+	controller->error=soft_zone(error, controller->soft_zone_width);
 	controller->dt=ticks_to_seconds(t - controller->last_update);
 	controller->last_update=t;
 	
@@ -94,3 +95,4 @@ float pid_update_dt(PID_Controller_t* controller, float error, float dt) {
 	if (controller->output > controller->clip_max) controller->output=controller->clip_max;
 	return controller->output;	
 }
+

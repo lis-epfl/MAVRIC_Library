@@ -37,7 +37,8 @@ typedef struct position_estimator_t {
 } position_estimator_t;
 
 void init_pos_integration(position_estimator_t *pos_est, pressure_data *barometer,gps_Data_type *gps );
-void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps);
+
+void position_reset_home_altitude(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps);
 
 void position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitude, float dt);
 void position_correction(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, float dt);

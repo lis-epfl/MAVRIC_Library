@@ -351,10 +351,12 @@ void add_PID_parameters(void) {
 	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchVPid_D_Gain");
 
 	// Thrust velocity PID
-	add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain, "ThrustVPid_P_G");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.postgain, "ThrustVPid_I_PstG");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.pregain, "ThrustVPid_I_PreG");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain, "ThrustVPid_D_Gain");
+	add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain, "ThrVPid_P_G");
+	add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.postgain, "ThrVPid_I_PstG");
+	add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.pregain, "ThrVPid_I_PreG");
+	add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain, "ThrVPid_D_Gain");
+	add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.LPF, "ThrVPid_D_LPF");
+	add_parameter_float(&velocity_stabiliser->thrust_controller.soft_zone_width, "ThrVPid_soft");
 
 	// qfilter
 	add_parameter_float(&centralData->imu1.attitude.kp, "QF_kp_acc");
@@ -410,7 +412,7 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
 	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
 	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
-	add_task(get_mavlink_taskset(),  100000, RUN_NEVER, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
+	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_speed_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT);

@@ -19,6 +19,9 @@
 
 //float prev_pos[3];
 
+void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps);
+void init_barometer_offset(position_estimator_t *pos_est, pressure_data *barometer);
+
 
 void init_pos_integration(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps)
 {
@@ -95,6 +98,45 @@ void init_barometer_offset(position_estimator_t *pos_est, pressure_data *baromet
 	}
 }
 
+void position_reset_home_altitude(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps) {
+		int i;
+		// reset origin to position where quad is armed if we have GPS
+		if (pos_est->init_gps_position) {
+			pos_est->localPosition.origin.longitude = gps->longitude;
+			pos_est->localPosition.origin.latitude = gps->latitude;
+			pos_est->localPosition.origin.altitude = gps->altitude;
+			pos_est->localPosition.timestamp_ms=gps->timeLastMsg;
+
+			pos_est->lastGpsPos=pos_est->localPosition;
+		}
+		// reset barometer offset
+		barometer->altitude_offset = -(barometer->altitude - barometer->altitude_offset - pos_est->localPosition.origin.altitude);
+		//barometer->altitude_offset = -barometer->altitude - pos_est->localPosition.pos[2] + pos_est->localPosition.origin.altitude;
+		pos_est->init_barometer = true;
+		
+		dbg_print("Offset of the barometer set to the GPS altitude, offset value of:");
+		dbg_print_num(barometer->altitude_offset,10);
+		dbg_print(" = -");
+		dbg_print_num(barometer->altitude,10);
+		dbg_print(" - ");
+		dbg_print_num(pos_est->localPosition.pos[2],10);
+		dbg_print(" + ");
+		dbg_print_num(pos_est->localPosition.origin.altitude,10);
+		dbg_print("\n");
+
+		// reset position estimator
+		pos_est->last_alt=0;
+		for(i=0;i<3;i++)
+		{
+			pos_est->pos_correction[i]=0.0;
+			pos_est->last_vel[i]=0.0;
+			pos_est->localPosition.pos[i] = 0.0;
+			pos_est->vel[i]=0.0;
+		}
+
+	
+}
+
 void position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitude, float dt)
 {
 	int i;
@@ -158,8 +200,8 @@ void position_correction(position_estimator_t *pos_est, pressure_data *barometer
 			if (newValidBarometer(&pos_est->timeLastBarometerMsg))
 			{
 				//alt_error = -(barometer->altitude + barometer->altitude_offset) - pos_est->localPosition.pos[2]+pos_est->localPosition.origin.altitude;
-				pos_est->last_alt= -(barometer->altitude + barometer->altitude_offset) + pos_est->localPosition.origin.altitude;
-				baro_alt_error = -(barometer->altitude + barometer->altitude_offset) - pos_est->localPosition.pos[2]+pos_est->localPosition.origin.altitude;
+				pos_est->last_alt= -(barometer->altitude ) + pos_est->localPosition.origin.altitude;
+				baro_alt_error = -(barometer->altitude ) - pos_est->localPosition.pos[2]+pos_est->localPosition.origin.altitude;
 				/*dbg_print("alt_error:");
 				dbg_print_num(pos_est->baro_alt_error,10);
 				dbg_print(" = -(");

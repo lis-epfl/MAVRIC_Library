@@ -12,7 +12,7 @@
 
 #include "compiler.h"
 
-#define BARO_ALT_LPF 0.9
+#define BARO_ALT_LPF 0.95
 #define VARIO_LPF 0.95
 
 #define BMP085_SLAVE_ADDRESS 0x77  //
