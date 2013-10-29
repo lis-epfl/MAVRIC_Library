@@ -5,18 +5,17 @@
 ## Debug
 ProjectName            :=Maveric_emu
 ConfigurationName      :=Debug
-IntermediateDirectory  :=./Debug
-OutDir                 := $(IntermediateDirectory)
 WorkspacePath          := "/home/felix/Projects/maveric/Code/Maveric_emu"
 ProjectPath            := "/home/felix/Projects/maveric/Code/Maveric_emu"
+IntermediateDirectory  :=./Debug
+OutDir                 := $(IntermediateDirectory)
 CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=felix
-Date                   :=10/25/2013
+Date                   :=10/29/13
 CodeLitePath           :="/home/felix/.codelite"
 LinkerName             :=gcc
-ArchiveTool            :=ar rcus
 SharedObjectLinkerName :=gcc -shared -fPIC
 ObjectSuffix           :=.o
 DependSuffix           :=.o.d
@@ -28,41 +27,61 @@ OutputSwitch           :=-o
 LibraryPathSwitch      :=-L
 PreprocessorSwitch     :=-D
 SourceSwitch           :=-c 
-CompilerName           :=gcc
-C_CompilerName         :=gcc
 OutputFile             :=maveric
 Preprocessors          :=
 ObjectSwitch           :=-o 
 ArchiveOutputSwitch    := 
 PreprocessOnlySwitch   :=-E 
+ObjectsFileList        :="Maveric_emu.txt"
+PCHCompileFlags        :=
 MakeDirCommand         :=mkdir -p
-CmpOptions             := -g -O0 -Wall -std=gnu99 $(Preprocessors)
 LinkOptions            :=  -lm
-IncludePath            :=  "$(IncludeSwitch)." "$(IncludeSwitch)../Library" "$(IncludeSwitch)../Library/communication" "$(IncludeSwitch)../Library/control" "$(IncludeSwitch)../Library/hal_emu" "$(IncludeSwitch)../Library/mavlink" "$(IncludeSwitch)../Library/mavlink/include/" "$(IncludeSwitch)../Library/runtime" "$(IncludeSwitch)../Library/sensing" "$(IncludeSwitch)../Library/util" "$(IncludeSwitch)../Library/tests" "$(IncludeSwitch)./config" "$(IncludeSwitch)../Maveric_main/src" "$(IncludeSwitch)./Debug" 
-RcIncludePath          :=
-Libs                   :=
-LibPath                := "$(LibraryPathSwitch)." "$(LibraryPathSwitch)./Debug" 
+IncludePath            :=  $(IncludeSwitch). $(IncludeSwitch)../Library $(IncludeSwitch)../Library/communication $(IncludeSwitch)../Library/control $(IncludeSwitch)../Library/hal_emu $(IncludeSwitch)../Library/mavlink $(IncludeSwitch)../Library/mavlink/include/ $(IncludeSwitch)../Library/runtime $(IncludeSwitch)../Library/sensing $(IncludeSwitch)../Library/util $(IncludeSwitch)../Library/tests $(IncludeSwitch)./config $(IncludeSwitch)../Maveric_main/src $(IncludeSwitch)./Debug 
+IncludePCH             := 
+RcIncludePath          := 
+Libs                   := 
+ArLibs                 :=  
+LibPath                := $(LibraryPathSwitch). $(LibraryPathSwitch)./Debug 
+
+##
+## Common variables
+## AR, CXX, CC, AS, CXXFLAGS and CFLAGS can be overriden using an environment variables
+##
+AR       := ar rcus
+CXX      := gcc
+CC       := gcc
+CXXFLAGS :=  -g -O0 -Wall -std=gnu99 $(Preprocessors)
+CFLAGS   :=  -g -O0 -Wall -std=gnu99 $(Preprocessors)
+ASFLAGS  := 
+AS       := as
 
 
 ##
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects=$(IntermediateDirectory)/boardsupport$(ObjectSuffix) $(IntermediateDirectory)/main$(ObjectSuffix) $(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IntermediateDirectory)/src_tasks$(ObjectSuffix) $(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) $(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) $(IntermediateDirectory)/util_sinus$(ObjectSuffix) $(IntermediateDirectory)/util_print_util$(ObjectSuffix) $(IntermediateDirectory)/util_buffer$(ObjectSuffix) \
+Objects0=$(IntermediateDirectory)/boardsupport$(ObjectSuffix) $(IntermediateDirectory)/main$(ObjectSuffix) $(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IntermediateDirectory)/src_tasks$(ObjectSuffix) $(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) $(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) $(IntermediateDirectory)/util_sinus$(ObjectSuffix) $(IntermediateDirectory)/util_print_util$(ObjectSuffix) $(IntermediateDirectory)/util_buffer$(ObjectSuffix) \
 	$(IntermediateDirectory)/sensing_imu$(ObjectSuffix) $(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix) $(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix) $(IntermediateDirectory)/sensing_waypoint_navigation$(ObjectSuffix) $(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) $(IntermediateDirectory)/sensing_estimator$(ObjectSuffix) $(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix) $(IntermediateDirectory)/control_navigation$(ObjectSuffix) $(IntermediateDirectory)/control_stabilisation$(ObjectSuffix) $(IntermediateDirectory)/control_control$(ObjectSuffix) \
 	$(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix) $(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_adxl345_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_bmp085$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_radar_module_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_servo_pwm$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_led$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix) \
 	$(IntermediateDirectory)/hal_emu_udp_stream$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_joystick_rc$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix) $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) 
 
+
+
+Objects=$(Objects0) 
+
 ##
 ## Main Build Targets 
 ##
+.PHONY: all clean PreBuild PrePreBuild PostBuild
 all: $(OutputFile)
 
-$(OutputFile): makeDirStep $(Objects)
+$(OutputFile): $(IntermediateDirectory)/.d $(Objects) 
 	@$(MakeDirCommand) $(@D)
-	$(LinkerName) $(OutputSwitch)$(OutputFile) $(Objects) $(LibPath) $(Libs) $(LinkOptions)
+	@echo "" > $(IntermediateDirectory)/.d
+	@echo $(Objects0)  > $(ObjectsFileList)
+	$(LinkerName) $(OutputSwitch)$(OutputFile) @$(ObjectsFileList) $(LibPath) $(Libs) $(LinkOptions)
 
-makeDirStep:
+$(IntermediateDirectory)/.d:
 	@test -d ./Debug || $(MakeDirCommand) ./Debug
 
 PreBuild:
@@ -72,276 +91,276 @@ PreBuild:
 ## Objects
 ##
 $(IntermediateDirectory)/boardsupport$(ObjectSuffix): boardsupport.c $(IntermediateDirectory)/boardsupport$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_emu/boardsupport.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/boardsupport$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_emu/boardsupport.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/boardsupport$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/boardsupport$(DependSuffix): boardsupport.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/boardsupport$(ObjectSuffix) -MF$(IntermediateDirectory)/boardsupport$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Maveric_emu/boardsupport.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/boardsupport$(ObjectSuffix) -MF$(IntermediateDirectory)/boardsupport$(DependSuffix) -MM "boardsupport.c"
 
 $(IntermediateDirectory)/boardsupport$(PreprocessSuffix): boardsupport.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/boardsupport$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Maveric_emu/boardsupport.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/boardsupport$(PreprocessSuffix) "boardsupport.c"
 
 $(IntermediateDirectory)/main$(ObjectSuffix): main.c $(IntermediateDirectory)/main$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_emu/main.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/main$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_emu/main.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/main$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/main$(DependSuffix): main.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/main$(ObjectSuffix) -MF$(IntermediateDirectory)/main$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Maveric_emu/main.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/main$(ObjectSuffix) -MF$(IntermediateDirectory)/main$(DependSuffix) -MM "main.c"
 
 $(IntermediateDirectory)/main$(PreprocessSuffix): main.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/main$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Maveric_emu/main.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/main$(PreprocessSuffix) "main.c"
 
 $(IntermediateDirectory)/src_central_data$(ObjectSuffix): ../Maveric_main/src/central_data.c $(IntermediateDirectory)/src_central_data$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_main/src/central_data.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_main/src/central_data.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_central_data$(DependSuffix): ../Maveric_main/src/central_data.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/src_central_data$(ObjectSuffix) -MF$(IntermediateDirectory)/src_central_data$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Maveric_main/src/central_data.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_central_data$(ObjectSuffix) -MF$(IntermediateDirectory)/src_central_data$(DependSuffix) -MM "../Maveric_main/src/central_data.c"
 
 $(IntermediateDirectory)/src_central_data$(PreprocessSuffix): ../Maveric_main/src/central_data.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_central_data$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Maveric_main/src/central_data.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_central_data$(PreprocessSuffix) "../Maveric_main/src/central_data.c"
 
 $(IntermediateDirectory)/src_tasks$(ObjectSuffix): ../Maveric_main/src/tasks.c $(IntermediateDirectory)/src_tasks$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_main/src/tasks.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_tasks$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_main/src/tasks.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_tasks$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_tasks$(DependSuffix): ../Maveric_main/src/tasks.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/src_tasks$(ObjectSuffix) -MF$(IntermediateDirectory)/src_tasks$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Maveric_main/src/tasks.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_tasks$(ObjectSuffix) -MF$(IntermediateDirectory)/src_tasks$(DependSuffix) -MM "../Maveric_main/src/tasks.c"
 
 $(IntermediateDirectory)/src_tasks$(PreprocessSuffix): ../Maveric_main/src/tasks.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_tasks$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Maveric_main/src/tasks.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_tasks$(PreprocessSuffix) "../Maveric_main/src/tasks.c"
 
 $(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix): ../Maveric_main/src/mavlink_actions.c $(IntermediateDirectory)/src_mavlink_actions$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_main/src/mavlink_actions.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_main/src/mavlink_actions.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_mavlink_actions$(DependSuffix): ../Maveric_main/src/mavlink_actions.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) -MF$(IntermediateDirectory)/src_mavlink_actions$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Maveric_main/src/mavlink_actions.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) -MF$(IntermediateDirectory)/src_mavlink_actions$(DependSuffix) -MM "../Maveric_main/src/mavlink_actions.c"
 
 $(IntermediateDirectory)/src_mavlink_actions$(PreprocessSuffix): ../Maveric_main/src/mavlink_actions.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_mavlink_actions$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Maveric_main/src/mavlink_actions.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_mavlink_actions$(PreprocessSuffix) "../Maveric_main/src/mavlink_actions.c"
 
 $(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix): ../Library/runtime/scheduler.c $(IntermediateDirectory)/runtime_scheduler$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/runtime/scheduler.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/runtime/scheduler.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/runtime_scheduler$(DependSuffix): ../Library/runtime/scheduler.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) -MF$(IntermediateDirectory)/runtime_scheduler$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/runtime/scheduler.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) -MF$(IntermediateDirectory)/runtime_scheduler$(DependSuffix) -MM "../Library/runtime/scheduler.c"
 
 $(IntermediateDirectory)/runtime_scheduler$(PreprocessSuffix): ../Library/runtime/scheduler.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/runtime_scheduler$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/runtime/scheduler.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/runtime_scheduler$(PreprocessSuffix) "../Library/runtime/scheduler.c"
 
 $(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix): ../Library/util/coord_conventions.c $(IntermediateDirectory)/util_coord_conventions$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/util/coord_conventions.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/util/coord_conventions.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/util_coord_conventions$(DependSuffix): ../Library/util/coord_conventions.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) -MF$(IntermediateDirectory)/util_coord_conventions$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/util/coord_conventions.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) -MF$(IntermediateDirectory)/util_coord_conventions$(DependSuffix) -MM "../Library/util/coord_conventions.c"
 
 $(IntermediateDirectory)/util_coord_conventions$(PreprocessSuffix): ../Library/util/coord_conventions.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_coord_conventions$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/util/coord_conventions.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_coord_conventions$(PreprocessSuffix) "../Library/util/coord_conventions.c"
 
 $(IntermediateDirectory)/util_sinus$(ObjectSuffix): ../Library/util/sinus.c $(IntermediateDirectory)/util_sinus$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/util/sinus.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/util_sinus$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/util/sinus.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_sinus$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/util_sinus$(DependSuffix): ../Library/util/sinus.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/util_sinus$(ObjectSuffix) -MF$(IntermediateDirectory)/util_sinus$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/util/sinus.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/util_sinus$(ObjectSuffix) -MF$(IntermediateDirectory)/util_sinus$(DependSuffix) -MM "../Library/util/sinus.c"
 
 $(IntermediateDirectory)/util_sinus$(PreprocessSuffix): ../Library/util/sinus.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_sinus$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/util/sinus.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_sinus$(PreprocessSuffix) "../Library/util/sinus.c"
 
 $(IntermediateDirectory)/util_print_util$(ObjectSuffix): ../Library/util/print_util.c $(IntermediateDirectory)/util_print_util$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/util/print_util.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/util_print_util$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/util/print_util.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_print_util$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/util_print_util$(DependSuffix): ../Library/util/print_util.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/util_print_util$(ObjectSuffix) -MF$(IntermediateDirectory)/util_print_util$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/util/print_util.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/util_print_util$(ObjectSuffix) -MF$(IntermediateDirectory)/util_print_util$(DependSuffix) -MM "../Library/util/print_util.c"
 
 $(IntermediateDirectory)/util_print_util$(PreprocessSuffix): ../Library/util/print_util.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_print_util$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/util/print_util.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_print_util$(PreprocessSuffix) "../Library/util/print_util.c"
 
 $(IntermediateDirectory)/util_buffer$(ObjectSuffix): ../Library/util/buffer.c $(IntermediateDirectory)/util_buffer$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/util/buffer.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/util_buffer$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/util/buffer.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_buffer$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/util_buffer$(DependSuffix): ../Library/util/buffer.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/util_buffer$(ObjectSuffix) -MF$(IntermediateDirectory)/util_buffer$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/util/buffer.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/util_buffer$(ObjectSuffix) -MF$(IntermediateDirectory)/util_buffer$(DependSuffix) -MM "../Library/util/buffer.c"
 
 $(IntermediateDirectory)/util_buffer$(PreprocessSuffix): ../Library/util/buffer.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_buffer$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/util/buffer.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_buffer$(PreprocessSuffix) "../Library/util/buffer.c"
 
 $(IntermediateDirectory)/sensing_imu$(ObjectSuffix): ../Library/sensing/imu.c $(IntermediateDirectory)/sensing_imu$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/imu.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/sensing_imu$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/imu.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_imu$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sensing_imu$(DependSuffix): ../Library/sensing/imu.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/sensing_imu$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_imu$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/sensing/imu.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/sensing_imu$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_imu$(DependSuffix) -MM "../Library/sensing/imu.c"
 
 $(IntermediateDirectory)/sensing_imu$(PreprocessSuffix): ../Library/sensing/imu.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_imu$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/sensing/imu.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_imu$(PreprocessSuffix) "../Library/sensing/imu.c"
 
 $(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix): ../Library/sensing/qfilter.c $(IntermediateDirectory)/sensing_qfilter$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/qfilter.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/qfilter.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sensing_qfilter$(DependSuffix): ../Library/sensing/qfilter.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_qfilter$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/sensing/qfilter.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_qfilter$(DependSuffix) -MM "../Library/sensing/qfilter.c"
 
 $(IntermediateDirectory)/sensing_qfilter$(PreprocessSuffix): ../Library/sensing/qfilter.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_qfilter$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/sensing/qfilter.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_qfilter$(PreprocessSuffix) "../Library/sensing/qfilter.c"
 
 $(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix): ../Library/sensing/gps_ublox.c $(IntermediateDirectory)/sensing_gps_ublox$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/gps_ublox.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/gps_ublox.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sensing_gps_ublox$(DependSuffix): ../Library/sensing/gps_ublox.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_gps_ublox$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/sensing/gps_ublox.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_gps_ublox$(DependSuffix) -MM "../Library/sensing/gps_ublox.c"
 
 $(IntermediateDirectory)/sensing_gps_ublox$(PreprocessSuffix): ../Library/sensing/gps_ublox.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_gps_ublox$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/sensing/gps_ublox.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_gps_ublox$(PreprocessSuffix) "../Library/sensing/gps_ublox.c"
 
 $(IntermediateDirectory)/sensing_waypoint_navigation$(ObjectSuffix): ../Library/sensing/waypoint_navigation.c $(IntermediateDirectory)/sensing_waypoint_navigation$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/waypoint_navigation.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/sensing_waypoint_navigation$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/waypoint_navigation.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_waypoint_navigation$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sensing_waypoint_navigation$(DependSuffix): ../Library/sensing/waypoint_navigation.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/sensing_waypoint_navigation$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_waypoint_navigation$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/sensing/waypoint_navigation.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/sensing_waypoint_navigation$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_waypoint_navigation$(DependSuffix) -MM "../Library/sensing/waypoint_navigation.c"
 
 $(IntermediateDirectory)/sensing_waypoint_navigation$(PreprocessSuffix): ../Library/sensing/waypoint_navigation.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_waypoint_navigation$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/sensing/waypoint_navigation.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_waypoint_navigation$(PreprocessSuffix) "../Library/sensing/waypoint_navigation.c"
 
 $(IntermediateDirectory)/sensing_simulation$(ObjectSuffix): ../Library/sensing/simulation.c $(IntermediateDirectory)/sensing_simulation$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/simulation.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/simulation.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sensing_simulation$(DependSuffix): ../Library/sensing/simulation.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_simulation$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/sensing/simulation.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_simulation$(DependSuffix) -MM "../Library/sensing/simulation.c"
 
 $(IntermediateDirectory)/sensing_simulation$(PreprocessSuffix): ../Library/sensing/simulation.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_simulation$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/sensing/simulation.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_simulation$(PreprocessSuffix) "../Library/sensing/simulation.c"
 
 $(IntermediateDirectory)/sensing_estimator$(ObjectSuffix): ../Library/sensing/estimator.c $(IntermediateDirectory)/sensing_estimator$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/estimator.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/sensing_estimator$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/estimator.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_estimator$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sensing_estimator$(DependSuffix): ../Library/sensing/estimator.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/sensing_estimator$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_estimator$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/sensing/estimator.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/sensing_estimator$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_estimator$(DependSuffix) -MM "../Library/sensing/estimator.c"
 
 $(IntermediateDirectory)/sensing_estimator$(PreprocessSuffix): ../Library/sensing/estimator.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_estimator$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/sensing/estimator.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_estimator$(PreprocessSuffix) "../Library/sensing/estimator.c"
 
 $(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix): ../Library/sensing/position_estimation.c $(IntermediateDirectory)/sensing_position_estimation$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/position_estimation.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/position_estimation.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sensing_position_estimation$(DependSuffix): ../Library/sensing/position_estimation.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_position_estimation$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/sensing/position_estimation.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_position_estimation$(DependSuffix) -MM "../Library/sensing/position_estimation.c"
 
 $(IntermediateDirectory)/sensing_position_estimation$(PreprocessSuffix): ../Library/sensing/position_estimation.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_position_estimation$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/sensing/position_estimation.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_position_estimation$(PreprocessSuffix) "../Library/sensing/position_estimation.c"
 
 $(IntermediateDirectory)/control_navigation$(ObjectSuffix): ../Library/control/navigation.c $(IntermediateDirectory)/control_navigation$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/control/navigation.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/control_navigation$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/control/navigation.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_navigation$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/control_navigation$(DependSuffix): ../Library/control/navigation.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/control_navigation$(ObjectSuffix) -MF$(IntermediateDirectory)/control_navigation$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/control/navigation.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/control_navigation$(ObjectSuffix) -MF$(IntermediateDirectory)/control_navigation$(DependSuffix) -MM "../Library/control/navigation.c"
 
 $(IntermediateDirectory)/control_navigation$(PreprocessSuffix): ../Library/control/navigation.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/control_navigation$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/control/navigation.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/control_navigation$(PreprocessSuffix) "../Library/control/navigation.c"
 
 $(IntermediateDirectory)/control_stabilisation$(ObjectSuffix): ../Library/control/stabilisation.c $(IntermediateDirectory)/control_stabilisation$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/control/stabilisation.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/control_stabilisation$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/control/stabilisation.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_stabilisation$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/control_stabilisation$(DependSuffix): ../Library/control/stabilisation.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/control_stabilisation$(ObjectSuffix) -MF$(IntermediateDirectory)/control_stabilisation$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/control/stabilisation.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/control_stabilisation$(ObjectSuffix) -MF$(IntermediateDirectory)/control_stabilisation$(DependSuffix) -MM "../Library/control/stabilisation.c"
 
 $(IntermediateDirectory)/control_stabilisation$(PreprocessSuffix): ../Library/control/stabilisation.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/control_stabilisation$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/control/stabilisation.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/control_stabilisation$(PreprocessSuffix) "../Library/control/stabilisation.c"
 
 $(IntermediateDirectory)/control_control$(ObjectSuffix): ../Library/control/control.c $(IntermediateDirectory)/control_control$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/control/control.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/control_control$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/control/control.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_control$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/control_control$(DependSuffix): ../Library/control/control.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/control_control$(ObjectSuffix) -MF$(IntermediateDirectory)/control_control$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/control/control.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/control_control$(ObjectSuffix) -MF$(IntermediateDirectory)/control_control$(DependSuffix) -MM "../Library/control/control.c"
 
 $(IntermediateDirectory)/control_control$(PreprocessSuffix): ../Library/control/control.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/control_control$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/control/control.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/control_control$(PreprocessSuffix) "../Library/control/control.c"
 
 $(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix): ../Library/communication/mavlink_stream.c $(IntermediateDirectory)/communication_mavlink_stream$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/communication/mavlink_stream.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/communication/mavlink_stream.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/communication_mavlink_stream$(DependSuffix): ../Library/communication/mavlink_stream.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix) -MF$(IntermediateDirectory)/communication_mavlink_stream$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/communication/mavlink_stream.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix) -MF$(IntermediateDirectory)/communication_mavlink_stream$(DependSuffix) -MM "../Library/communication/mavlink_stream.c"
 
 $(IntermediateDirectory)/communication_mavlink_stream$(PreprocessSuffix): ../Library/communication/mavlink_stream.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/communication_mavlink_stream$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/communication/mavlink_stream.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/communication_mavlink_stream$(PreprocessSuffix) "../Library/communication/mavlink_stream.c"
 
 $(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix): ../Library/communication/onboard_parameters.c $(IntermediateDirectory)/communication_onboard_parameters$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/communication/onboard_parameters.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/communication/onboard_parameters.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/communication_onboard_parameters$(DependSuffix): ../Library/communication/onboard_parameters.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix) -MF$(IntermediateDirectory)/communication_onboard_parameters$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/communication/onboard_parameters.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix) -MF$(IntermediateDirectory)/communication_onboard_parameters$(DependSuffix) -MM "../Library/communication/onboard_parameters.c"
 
 $(IntermediateDirectory)/communication_onboard_parameters$(PreprocessSuffix): ../Library/communication/onboard_parameters.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/communication_onboard_parameters$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/communication/onboard_parameters.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/communication_onboard_parameters$(PreprocessSuffix) "../Library/communication/onboard_parameters.c"
 
 $(IntermediateDirectory)/hal_emu_adxl345_driver$(ObjectSuffix): ../Library/hal_emu/adxl345_driver.c $(IntermediateDirectory)/hal_emu_adxl345_driver$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/adxl345_driver.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_adxl345_driver$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/adxl345_driver.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_adxl345_driver$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_emu_adxl345_driver$(DependSuffix): ../Library/hal_emu/adxl345_driver.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/hal_emu_adxl345_driver$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_adxl345_driver$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/hal_emu/adxl345_driver.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/hal_emu_adxl345_driver$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_adxl345_driver$(DependSuffix) -MM "../Library/hal_emu/adxl345_driver.c"
 
 $(IntermediateDirectory)/hal_emu_adxl345_driver$(PreprocessSuffix): ../Library/hal_emu/adxl345_driver.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_adxl345_driver$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/hal_emu/adxl345_driver.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_adxl345_driver$(PreprocessSuffix) "../Library/hal_emu/adxl345_driver.c"
 
 $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(ObjectSuffix): ../Library/hal_emu/compass_hmc5883l.c $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/compass_hmc5883l.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_compass_hmc5883l$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/compass_hmc5883l.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_compass_hmc5883l$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(DependSuffix): ../Library/hal_emu/compass_hmc5883l.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/hal_emu_compass_hmc5883l$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_compass_hmc5883l$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/hal_emu/compass_hmc5883l.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/hal_emu_compass_hmc5883l$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_compass_hmc5883l$(DependSuffix) -MM "../Library/hal_emu/compass_hmc5883l.c"
 
 $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(PreprocessSuffix): ../Library/hal_emu/compass_hmc5883l.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/hal_emu/compass_hmc5883l.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(PreprocessSuffix) "../Library/hal_emu/compass_hmc5883l.c"
 
 $(IntermediateDirectory)/hal_emu_bmp085$(ObjectSuffix): ../Library/hal_emu/bmp085.c $(IntermediateDirectory)/hal_emu_bmp085$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/bmp085.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_bmp085$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/bmp085.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_bmp085$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_emu_bmp085$(DependSuffix): ../Library/hal_emu/bmp085.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/hal_emu_bmp085$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_bmp085$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/hal_emu/bmp085.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/hal_emu_bmp085$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_bmp085$(DependSuffix) -MM "../Library/hal_emu/bmp085.c"
 
 $(IntermediateDirectory)/hal_emu_bmp085$(PreprocessSuffix): ../Library/hal_emu/bmp085.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_bmp085$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/hal_emu/bmp085.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_bmp085$(PreprocessSuffix) "../Library/hal_emu/bmp085.c"
 
 $(IntermediateDirectory)/hal_emu_radar_module_driver$(ObjectSuffix): ../Library/hal_emu/radar_module_driver.c $(IntermediateDirectory)/hal_emu_radar_module_driver$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/radar_module_driver.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_radar_module_driver$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/radar_module_driver.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_radar_module_driver$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_emu_radar_module_driver$(DependSuffix): ../Library/hal_emu/radar_module_driver.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/hal_emu_radar_module_driver$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_radar_module_driver$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/hal_emu/radar_module_driver.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/hal_emu_radar_module_driver$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_radar_module_driver$(DependSuffix) -MM "../Library/hal_emu/radar_module_driver.c"
 
 $(IntermediateDirectory)/hal_emu_radar_module_driver$(PreprocessSuffix): ../Library/hal_emu/radar_module_driver.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_radar_module_driver$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/hal_emu/radar_module_driver.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_radar_module_driver$(PreprocessSuffix) "../Library/hal_emu/radar_module_driver.c"
 
 $(IntermediateDirectory)/hal_emu_servo_pwm$(ObjectSuffix): ../Library/hal_emu/servo_pwm.c $(IntermediateDirectory)/hal_emu_servo_pwm$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/servo_pwm.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_servo_pwm$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/servo_pwm.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_servo_pwm$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_emu_servo_pwm$(DependSuffix): ../Library/hal_emu/servo_pwm.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/hal_emu_servo_pwm$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_servo_pwm$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/hal_emu/servo_pwm.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/hal_emu_servo_pwm$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_servo_pwm$(DependSuffix) -MM "../Library/hal_emu/servo_pwm.c"
 
 $(IntermediateDirectory)/hal_emu_servo_pwm$(PreprocessSuffix): ../Library/hal_emu/servo_pwm.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_servo_pwm$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/hal_emu/servo_pwm.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_servo_pwm$(PreprocessSuffix) "../Library/hal_emu/servo_pwm.c"
 
 $(IntermediateDirectory)/hal_emu_led$(ObjectSuffix): ../Library/hal_emu/led.c $(IntermediateDirectory)/hal_emu_led$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/led.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_led$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/led.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_led$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_emu_led$(DependSuffix): ../Library/hal_emu/led.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/hal_emu_led$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_led$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/hal_emu/led.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/hal_emu_led$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_led$(DependSuffix) -MM "../Library/hal_emu/led.c"
 
 $(IntermediateDirectory)/hal_emu_led$(PreprocessSuffix): ../Library/hal_emu/led.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_led$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/hal_emu/led.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_led$(PreprocessSuffix) "../Library/hal_emu/led.c"
 
 $(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix): ../Library/hal_emu/itg3200_driver.c $(IntermediateDirectory)/hal_emu_itg3200_driver$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/itg3200_driver.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/itg3200_driver.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_emu_itg3200_driver$(DependSuffix): ../Library/hal_emu/itg3200_driver.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_itg3200_driver$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/hal_emu/itg3200_driver.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_itg3200_driver$(DependSuffix) -MM "../Library/hal_emu/itg3200_driver.c"
 
 $(IntermediateDirectory)/hal_emu_itg3200_driver$(PreprocessSuffix): ../Library/hal_emu/itg3200_driver.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_itg3200_driver$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/hal_emu/itg3200_driver.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_itg3200_driver$(PreprocessSuffix) "../Library/hal_emu/itg3200_driver.c"
 
 $(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix): ../Library/hal_emu/time_keeper.c $(IntermediateDirectory)/hal_emu_time_keeper$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/time_keeper.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/time_keeper.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_emu_time_keeper$(DependSuffix): ../Library/hal_emu/time_keeper.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_time_keeper$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/hal_emu/time_keeper.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_time_keeper$(DependSuffix) -MM "../Library/hal_emu/time_keeper.c"
 
 $(IntermediateDirectory)/hal_emu_time_keeper$(PreprocessSuffix): ../Library/hal_emu/time_keeper.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_time_keeper$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/hal_emu/time_keeper.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_time_keeper$(PreprocessSuffix) "../Library/hal_emu/time_keeper.c"
 
 $(IntermediateDirectory)/hal_emu_udp_stream$(ObjectSuffix): ../Library/hal_emu/udp_stream.c $(IntermediateDirectory)/hal_emu_udp_stream$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/udp_stream.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_udp_stream$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/udp_stream.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_udp_stream$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_emu_udp_stream$(DependSuffix): ../Library/hal_emu/udp_stream.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/hal_emu_udp_stream$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_udp_stream$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/hal_emu/udp_stream.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/hal_emu_udp_stream$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_udp_stream$(DependSuffix) -MM "../Library/hal_emu/udp_stream.c"
 
 $(IntermediateDirectory)/hal_emu_udp_stream$(PreprocessSuffix): ../Library/hal_emu/udp_stream.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_udp_stream$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/hal_emu/udp_stream.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_udp_stream$(PreprocessSuffix) "../Library/hal_emu/udp_stream.c"
 
 $(IntermediateDirectory)/hal_emu_joystick_rc$(ObjectSuffix): ../Library/hal_emu/joystick_rc.c $(IntermediateDirectory)/hal_emu_joystick_rc$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/joystick_rc.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_joystick_rc$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/joystick_rc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_joystick_rc$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_emu_joystick_rc$(DependSuffix): ../Library/hal_emu/joystick_rc.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/hal_emu_joystick_rc$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_joystick_rc$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/hal_emu/joystick_rc.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/hal_emu_joystick_rc$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_joystick_rc$(DependSuffix) -MM "../Library/hal_emu/joystick_rc.c"
 
 $(IntermediateDirectory)/hal_emu_joystick_rc$(PreprocessSuffix): ../Library/hal_emu/joystick_rc.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_joystick_rc$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/hal_emu/joystick_rc.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_joystick_rc$(PreprocessSuffix) "../Library/hal_emu/joystick_rc.c"
 
 $(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix): ../Library/hal_emu/analog_monitor.c $(IntermediateDirectory)/hal_emu_analog_monitor$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/analog_monitor.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/analog_monitor.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_emu_analog_monitor$(DependSuffix): ../Library/hal_emu/analog_monitor.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_analog_monitor$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/hal_emu/analog_monitor.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_analog_monitor$(DependSuffix) -MM "../Library/hal_emu/analog_monitor.c"
 
 $(IntermediateDirectory)/hal_emu_analog_monitor$(PreprocessSuffix): ../Library/hal_emu/analog_monitor.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_analog_monitor$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/hal_emu/analog_monitor.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_analog_monitor$(PreprocessSuffix) "../Library/hal_emu/analog_monitor.c"
 
 $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix): ../Library/tests/test_maths.c $(IntermediateDirectory)/tests_test_maths$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/tests/test_maths.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/tests/test_maths.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/tests_test_maths$(DependSuffix): ../Library/tests/test_maths.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) -MF$(IntermediateDirectory)/tests_test_maths$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/tests/test_maths.c"
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) -MF$(IntermediateDirectory)/tests_test_maths$(DependSuffix) -MM "../Library/tests/test_maths.c"
 
 $(IntermediateDirectory)/tests_test_maths$(PreprocessSuffix): ../Library/tests/test_maths.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/tests_test_maths$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/tests/test_maths.c"
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/tests_test_maths$(PreprocessSuffix) "../Library/tests/test_maths.c"
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)
@@ -452,5 +471,6 @@ clean:
 	$(RM) $(IntermediateDirectory)/tests_test_maths$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/tests_test_maths$(PreprocessSuffix)
 	$(RM) $(OutputFile)
+	$(RM) ".build-debug/Maveric_emu"
 
 

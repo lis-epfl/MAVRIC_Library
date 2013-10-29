@@ -191,4 +191,12 @@ static float inline sigmoid(float x) {
 	return (x/fast_sqrt(1+SQR(x)));
 };
 
+static float inline center_window_2(float x) {
+	return 1.0/(1+SQR(x));
+}
+
+static float inline center_window_4(float x) {
+	return 1.0/(1+SQR(SQR(x)));
+}
+
 #endif

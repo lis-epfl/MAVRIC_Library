@@ -22,13 +22,14 @@ typedef struct {
 	uint16_t wp_id;
 	uint8_t current;
 	uint8_t autocontinue;
-	float param1;
-	float param2;
-	float param3;
-	float param4;
+	float param1;   // hold time in seconds
+	float param2;   // acceptance radius
+	float param3;   // loiter radius
+	float param4;   // desired heading at waypoint
 	double x;
 	double y;
 	double z;
+	
 }waypoint_struct;
 
 // bool waypoint_sending;

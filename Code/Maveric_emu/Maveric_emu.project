@@ -197,6 +197,7 @@
       <File Name="../Library/hal_emu/joystick_rc.c"/>
       <File Name="../Library/hal_emu/analog_monitor.h"/>
       <File Name="../Library/hal_emu/analog_monitor.c"/>
+      <File Name="../Library/hal_emu/flashc.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="tests">
       <File Name="../Library/tests/test_maths.h"/>

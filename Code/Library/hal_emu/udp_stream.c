@@ -33,13 +33,25 @@ static inline bool udp_buffer_empty(udp_connection_t *udpconn) {
 }
 
 static inline int udp_bytes_available(udp_connection_t *udpconn) {
+	int i;
+	int recsize;
 	char buf[BUFFER_SIZE];
 	socklen_t fromlen;
-	int i;
+	fd_set rset;
+	struct timeval tv;
+	FD_ZERO(&rset);
+	FD_SET(udpconn->sock, &rset);
+	tv.tv_sec = 0;
+	tv.tv_usec = 100;
 
-	int recsize = recvfrom(udpconn->sock, (void *)buf, BUFFER_SIZE, 0, (struct sockaddr *)&(udpconn->Addr), &fromlen);
-	for (i=0; i<recsize; i++) {
-		buffer_put(&udpconn->udp_buffer, buf[i]);
+	if (select(udpconn->sock+1, &rset, NULL, NULL, &tv)) {
+		recsize= recvfrom(udpconn->sock, (void *)buf, BUFFER_SIZE, 0, (struct sockaddr *)&(udpconn->Addr), &fromlen);
+		if (recsize!=-1) printf("rec: %i\n", recsize);
+		for (i=0; i<recsize; i++) {
+			buffer_put(&udpconn->udp_buffer, buf[i]);
+			dbg_print(".");
+		}
+		
 	}
 	return buffer_bytes_available(&udpconn->udp_buffer);
 	
@@ -83,12 +95,13 @@ void register_read_stream_udp(byte_stream_t *stream, udp_connection_t *udpconn, 
     } 
  
 	/* Attempt to make it non blocking */
-	if (fcntl(udpconn->sock, F_SETFL, O_NONBLOCK | FASYNC) < 0)
+	if (fcntl(udpconn->sock, F_SETFL, O_NONBLOCK ) < 0)
     {
 		fprintf(stderr, "error setting nonblocking: %s\n", strerror(errno));
 		close(udpconn->sock);
 		exit(-1);
-    }
+    }/**/
+	printf("success binding to port %i: %i\n", port, udpconn->sock);
 	
 	buffer_init(&udpconn->udp_buffer);
 	

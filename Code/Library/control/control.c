@@ -14,8 +14,8 @@ PID_Controller_t passthroughController() {
 	PID_Controller_t out;
 	out.p_gain=1.0;
 	out.last_update=get_time_ticks();	
-	out.clip_min=-1.0;
-	out.clip_max= 1.0;
+	out.clip_min=-10000.0;
+	out.clip_max= 10000.0;
 	out.output=0.0;
 	out.soft_zone_width=0.0;
 	initDiff(&(out.differentiator), 0.0, 0.0, 0.0);

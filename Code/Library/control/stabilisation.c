@@ -12,6 +12,7 @@
 #include "central_data.h"
 
 Stabiliser_t rate_stabiliser, attitude_stabiliser, velocity_stabiliser;
+float yaw_coordination_velocity;
 
 central_data_t *centralData;
 
@@ -99,7 +100,7 @@ void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	
 	// initialise yaw controller
 	stabiliser->rpy_controller[2]=passthroughController();
-
+	
 	// initialise z velocity
 	(stabiliser->thrust_controller).p_gain=0.4; //0.3
 	(stabiliser->thrust_controller).last_update=get_time_ticks();
@@ -108,24 +109,28 @@ void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
 	(stabiliser->thrust_controller).soft_zone_width= 0.2; // region of lowered error input gain to ignore noise close to target point
 	initDiff(&((stabiliser->thrust_controller).differentiator), 0.5, 0.95, 1.0); // 0.1 0.5 0.2
 	initInt(&((stabiliser->thrust_controller).integrator),1.5, 1.0, 1.0); // 1.0 1.0 0.5
+	
+	
 }
 
 void init_stabilisation() {
 	//board=get_board_hardware();
 	centralData = get_central_data();
 	centralData->controls.run_mode=MOTORS_OFF;
-	centralData->controls.control_mode=ATTITUDE_COMMAND_MODE_REL_YAW;
+	centralData->controls.control_mode=ATTITUDE_COMMAND_MODE;
+	centralData->controls.yaw_mode=YAW_RELATIVE;
+
+	yaw_coordination_velocity=1.5;
+
 	init_rate_stabilisation(&rate_stabiliser);
 	init_angle_stabilisation(&attitude_stabiliser);
 	init_velocity_stabilisation(&velocity_stabiliser);
 }
 
-void stabilise(Stabiliser_t *stabiliser, float *errors) {
+void stabilise(Stabiliser_t *stabiliser, float errors[]) {
 	int i;
 
 	for (i=0; i<3; i++) {
-		// 
-		
 		stabiliser->output.rpy[i]=	pid_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], centralData->imu1.dt);
 	}		
 	stabiliser->output.thrust= pid_update_dt(&(stabiliser->thrust_controller),  errors[3], centralData->imu1.dt);
@@ -141,50 +146,72 @@ void quad_stabilise(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Comm
 	Control_Command_t input;
 	int i;
 	
+	// set the controller input
 	input=*control_input;
 
 	switch (control_input->control_mode) {
 	case VELOCITY_COMMAND_MODE:
-		rpyt_errors[ROLL] = input.tvel[1] - pos_est->vel_bf[1];
-		rpyt_errors[PITCH]=-(input.tvel[0] - pos_est->vel_bf[0]); 
-		rpyt_errors[3]    =-(input.tvel[2] - pos_est->vel[2]);
+		rpyt_errors[ROLL] = input.tvel[Y] - pos_est->vel_bf[Y];     // map y-axis error to roll axis
+		rpyt_errors[PITCH]=-(input.tvel[X] - pos_est->vel_bf[X]);   // map x axis error to pitch axis
+		rpyt_errors[3]    =-(input.tvel[Z] - pos_est->vel[Z]);      // attention - input z-axis maps to thrust input!
 		
+
+		if (control_input->yaw_mode == YAW_COORDINATED)  {
+			float rel_heading = atan2(pos_est->vel_bf[Y], pos_est->vel_bf[X]);
+			float current_velocity_sqr=SQR(pos_est->vel_bf[X])+SQR(pos_est->vel_bf[Y]);
+			//float blend_func=0.5*(sigmoid(4.0*(current_velocity_sqr - yaw_coordination_velocity))+1.0);
+			//blend_func=1.0;
+			if (current_velocity_sqr > SQR(yaw_coordination_velocity)) {
+				input.rpy[YAW]+=sigmoid(3.0*rel_heading);
+			} else {
+				//input.rpy[YAW]=input.theading;
+			}
+		}
+
 		rpyt_errors[YAW]= input.rpy[YAW];
-		stabilise(&velocity_stabiliser, &rpyt_errors);
+		
+		// run PID update on all velocity controllers
+		stabilise(&velocity_stabiliser, rpyt_errors);
 		
 		//velocity_stabiliser.output.thrust = f_min(velocity_stabiliser.output.thrust,control_input->thrust);
 		
 		velocity_stabiliser.output.thrust += THRUST_HOVER_POINT;
+		velocity_stabiliser.output.theading=input.theading;
 		input=velocity_stabiliser.output;
 	
 	// -- no break here  - we want to run the lower level modes as well! -- 
-	case ATTITUDE_COMMAND_MODE_ABS_YAW:
-	case ATTITUDE_COMMAND_MODE_REL_YAW:
+	
+	case ATTITUDE_COMMAND_MODE:
 		// run absolute attitude controller
 		rpyt_errors[0]= input.rpy[0] - (-imu->attitude.up_vec.v[1] ); 
 		rpyt_errors[1]= input.rpy[1] - imu->attitude.up_vec.v[0];
 		
 		rpyt_errors[2]= input.rpy[2];
-		if ((control_input->control_mode == ATTITUDE_COMMAND_MODE_ABS_YAW )) {
-			rpyt_errors[2] =calc_smaller_angle(rpyt_errors[2]- pos_est->localPosition.heading);
-			
+		
+		if ((control_input->yaw_mode == YAW_ABSOLUTE) ) {
+			rpyt_errors[2] +=calc_smaller_angle(input.theading- pos_est->localPosition.heading);
 		}
 		rpyt_errors[3]= input.thrust;       // no feedback for thrust at this level
 		
+		// run PID update on all attitude controllers
 		stabilise(&attitude_stabiliser, &rpyt_errors);
+		
 		// use output of attitude controller to set rate setpoints for rate controller 
 		input=attitude_stabiliser.output;
 	
 	// -- no break here  - we want to run the lower level modes as well! -- 
-	case RATE_COMMAND_MODE:
+	
+	case RATE_COMMAND_MODE: // this level is always run
 		// get rate measurements from IMU (filtered angular rates)
 		for (i=0; i<3; i++) {
 			rpyt_errors[i]= input.rpy[i]- imu->attitude.om[i];
 		}
 		rpyt_errors[3] = input.thrust ;  // no feedback for thrust at this level
-		// run rate stabiliser
+		
+		// run PID update on all rate controllers
 		stabilise(&rate_stabiliser, &rpyt_errors );
 	}
+	
 	// mix to servo outputs depending on configuration
 	#ifdef CONF_DIAG
 	mix_to_servos_diag_quad(&rate_stabiliser.output);
