@@ -29,15 +29,16 @@ void init_pos_integration(position_estimator_t *pos_est, pressure_data *baromete
 	pos_est->init_gps_position = false;
 	pos_est->init_barometer=false;
 	pos_est->timeLastGpsMsg = 0;
-	pos_est->timeLastBarometerMsg=get_micros();
+	pos_est->timeLastBarometerMsg=0;
 	
 	pos_est->kp_pos[0] = 2.0;
 	pos_est->kp_pos[1] = 2.0;
-	pos_est->kp_pos[2] = 2.0;
+	pos_est->kp_pos[2] = 1.0;
 	
-	pos_est->kp_vel[0] = 1.5;
-	pos_est->kp_vel[1] = 1.5;
-	pos_est->kp_vel[2] = 1.5;
+	pos_est->kp_vel[0] = 1.0;
+	pos_est->kp_vel[1] = 1.0;
+	pos_est->kp_vel[2] = 0.5;
+	
 	pos_est->kp_alt=2.0;
 	pos_est->kp_vel_baro=1.0;
 	
@@ -149,8 +150,8 @@ void position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitu
 	for (i=0; i<3; i++) {
 		pos_est->vel_bf[i]=qvel_bf.v[i];
 		// clean acceleration estimate without gravity:
-		attitude->acc_bf[i]=(attitude->a[i] - attitude->up_vec.v[i]) ;
-		pos_est->vel_bf[i]=pos_est->vel_bf[i]*(1.0-(VEL_DECAY*dt)) + attitude->acc_bf[i] * GRAVITY * dt;
+		attitude->acc_bf[i]=GRAVITY * (attitude->a[i] - attitude->up_vec.v[i]) ;
+		pos_est->vel_bf[i]=pos_est->vel_bf[i]*(1.0-(VEL_DECAY*dt)) + attitude->acc_bf[i]  * dt;
 	}
 	
 	// calculate velocity in global frame
@@ -242,7 +243,7 @@ void position_correction(position_estimator_t *pos_est, pressure_data *barometer
 				// compute GPS velocity estimate
 				gps_dt=(local_coordinates.timestamp_ms - pos_est->lastGpsPos.timestamp_ms)/1000.0;
 				if (gps_dt>0.001) {
-					for (i=0; i<2; i++) pos_est->last_vel[i] = (local_coordinates.pos[i]-pos_est->lastGpsPos.pos[i])/gps_dt;
+					for (i=0; i<3; i++) pos_est->last_vel[i] = (local_coordinates.pos[i]-pos_est->lastGpsPos.pos[i])/gps_dt;
 					pos_est->lastGpsPos=local_coordinates;
 				} else dbg_print("GPS dt is too small!");
 			}

@@ -33,11 +33,9 @@ typedef struct {
 	float roll_pitch_momentum,  yaw_momentum;                   // angular momentum constants (assumed to be independent)
 	float rotor_momentum;										// angular momentum of rotor (for rotor inertia)
 	float rotor_arm_length;							 			// distance between CoG and motor (in meter)
-	double last_update;											// last update in system ticks
+	uint32_t last_update;											// last update in system ticks
 	float dt;													// time base of current update
 	
-	pressure_data pressure;
-	gps_Data_type gps;
 } simulation_model_t;
 
 
@@ -45,6 +43,7 @@ void init_simulation(simulation_model_t *sim, Quat_Attitude_t *start_attitude);
 
 // computes artificial gyro and accelerometer values based on motor commands
 void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est);
-void simulate_sensors(simulation_model_t *sim);
+void simulate_barometer(simulation_model_t *sim, pressure_data *pressure);
+void simulate_gps(simulation_model_t *sim, gps_Data_type *gps);
 
 #endif /* SIMULATION_H_ */

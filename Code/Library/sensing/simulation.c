@@ -128,9 +128,9 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	const UQuat_t up = {.s=0.0, .v={UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}};
 	
 	central_data_t *central_data;
-	double t=get_time();
-	sim->dt=(t - sim->last_update);
-	sim->last_update=t;
+	uint32_t now=get_micros();
+	sim->dt=(now - sim->last_update)/1000000.0;
+	sim->last_update=now;
 	central_data=get_central_data();
 	// compute torques and forces based on servo commands
 	#ifdef CONF_DIAG
@@ -219,42 +219,40 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	imu->raw_channels[GYRO_OFFSET+IMU_Y]=sim->rates_bf[1] * imu->raw_scale[GYRO_OFFSET+IMU_Y]+imu->raw_bias[GYRO_OFFSET+IMU_Y];
 	imu->raw_channels[GYRO_OFFSET+IMU_Z]=sim->rates_bf[2] * imu->raw_scale[GYRO_OFFSET+IMU_Z]+imu->raw_bias[GYRO_OFFSET+IMU_Z];
 
-	//imu->raw_channels[ACC_OFFSET+IMU_X]=(sim->lin_forces_bf[0] / sim->total_mass / GRAVITY)*imu->raw_scale[ACC_OFFSET+IMU_X]+imu->raw_bias[ACC_OFFSET+IMU_X];
-	//imu->raw_channels[ACC_OFFSET+IMU_Y]=(sim->lin_forces_bf[1] / sim->total_mass / GRAVITY)*imu->raw_scale[ACC_OFFSET+IMU_Y]+imu->raw_bias[ACC_OFFSET+IMU_Y];
-	//imu->raw_channels[ACC_OFFSET+IMU_Z]=(sim->lin_forces_bf[2] / sim->total_mass / GRAVITY)*imu->raw_scale[ACC_OFFSET+IMU_Z]+imu->raw_bias[ACC_OFFSET+IMU_Z];
+	imu->raw_channels[ACC_OFFSET+IMU_X]=(sim->lin_forces_bf[0] / sim->total_mass / GRAVITY)*imu->raw_scale[ACC_OFFSET+IMU_X]+imu->raw_bias[ACC_OFFSET+IMU_X];
+	imu->raw_channels[ACC_OFFSET+IMU_Y]=(sim->lin_forces_bf[1] / sim->total_mass / GRAVITY)*imu->raw_scale[ACC_OFFSET+IMU_Y]+imu->raw_bias[ACC_OFFSET+IMU_Y];
+	imu->raw_channels[ACC_OFFSET+IMU_Z]=(sim->lin_forces_bf[2] / sim->total_mass / GRAVITY)*imu->raw_scale[ACC_OFFSET+IMU_Z]+imu->raw_bias[ACC_OFFSET+IMU_Z];
 	// cheating... provide true upvector instead of simulated forces
-	imu->raw_channels[ACC_OFFSET+IMU_X]=sim->attitude.up_vec.v[0] *imu->raw_scale[ACC_OFFSET+IMU_X]+imu->raw_bias[ACC_OFFSET+IMU_X];
-	imu->raw_channels[ACC_OFFSET+IMU_Y]=sim->attitude.up_vec.v[1] *imu->raw_scale[ACC_OFFSET+IMU_Y]+imu->raw_bias[ACC_OFFSET+IMU_Y];
-	imu->raw_channels[ACC_OFFSET+IMU_Z]=sim->attitude.up_vec.v[2] *imu->raw_scale[ACC_OFFSET+IMU_Z]+imu->raw_bias[ACC_OFFSET+IMU_Z];
+	//imu->raw_channels[ACC_OFFSET+IMU_X]=sim->attitude.up_vec.v[0] *imu->raw_scale[ACC_OFFSET+IMU_X]+imu->raw_bias[ACC_OFFSET+IMU_X];
+	//imu->raw_channels[ACC_OFFSET+IMU_Y]=sim->attitude.up_vec.v[1] *imu->raw_scale[ACC_OFFSET+IMU_Y]+imu->raw_bias[ACC_OFFSET+IMU_Y];
+	//imu->raw_channels[ACC_OFFSET+IMU_Z]=sim->attitude.up_vec.v[2] *imu->raw_scale[ACC_OFFSET+IMU_Z]+imu->raw_bias[ACC_OFFSET+IMU_Z];
 	
 	imu->raw_channels[COMPASS_OFFSET+IMU_X]=(sim->attitude.north_vec.v[0] )*imu->raw_scale[COMPASS_OFFSET+IMU_X]+imu->raw_bias[COMPASS_OFFSET+IMU_X];
 	imu->raw_channels[COMPASS_OFFSET+IMU_Y]=(sim->attitude.north_vec.v[1] )*imu->raw_scale[COMPASS_OFFSET+IMU_Y]+imu->raw_bias[COMPASS_OFFSET+IMU_Y];
 	imu->raw_channels[COMPASS_OFFSET+IMU_Z]=(sim->attitude.north_vec.v[2] )*imu->raw_scale[COMPASS_OFFSET+IMU_Z]+imu->raw_bias[COMPASS_OFFSET+IMU_Z];
 	
 	
-	imu->dt=sim->dt;
+	//imu->dt=sim->dt;
 
 	sim->localPosition.heading=get_yaw(sim->attitude.qe);
 	//pos_est->localPosition=sim->localPosition;
-	simulate_sensors(sim);
 }
 
-void simulate_sensors(simulation_model_t *sim) {
-	global_position_t gpos=local_to_global_position(sim->localPosition);
-	uint32_t tnow=get_millis();
-	
-	if (tnow>sim->pressure.last_update + 15) {
-		sim->pressure.altitude=sim->localPosition.origin.altitude - sim->localPosition.pos[Z];
-		sim->pressure.vario_vz=sim->vel[Z];
-		sim->pressure.last_update=tnow;
+void simulate_barometer(simulation_model_t *sim, pressure_data *pressure) {
+
+		pressure->altitude=sim->localPosition.origin.altitude - sim->localPosition.pos[Z];
+		pressure->vario_vz=sim->vel[Z];
+		pressure->last_update=get_millis();
 	}
 	
-	if (tnow > sim->gps.timeLastMsg + 200) {
-		sim->gps.altitude=gpos.altitude;
-		sim->gps.latitude=gpos.latitude;
-		sim->gps.longitude=gpos.longitude;
-		sim->gps.timeLastMsg=tnow;
-		sim->gps.status=GPS_OK;
-	}
+void simulate_gps(simulation_model_t *sim, gps_Data_type *gps) {
+		global_position_t gpos=local_to_global_position(sim->localPosition);
+	
+		gps->altitude=gpos.altitude;
+		gps->latitude=gpos.latitude;
+		gps->longitude=gpos.longitude;
+		gps->timeLastMsg=get_millis();
+		gps->status=GPS_OK;
+	
 
 }
