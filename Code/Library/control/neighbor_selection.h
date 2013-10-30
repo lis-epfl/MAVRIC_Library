@@ -20,6 +20,8 @@ typedef struct  {
 	float size;
 }track_neighbor_t;
 
+void init_neighbors();
+
 void read_msg_from_neighbors(Mavlink_Received_t* rec);
 
 #endif // NEIGHBOR_SEL_H__
