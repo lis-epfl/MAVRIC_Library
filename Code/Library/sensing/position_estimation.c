@@ -31,13 +31,13 @@ void init_pos_integration(position_estimator_t *pos_est, pressure_data *baromete
 	pos_est->timeLastGpsMsg = 0;
 	pos_est->timeLastBarometerMsg=get_micros();
 	
-	pos_est->kp_pos[0] = 1.8;
-	pos_est->kp_pos[1] = 1.8;
-	pos_est->kp_pos[2] = 1.0;
+	pos_est->kp_pos[0] = 2.0;
+	pos_est->kp_pos[1] = 2.0;
+	pos_est->kp_pos[2] = 2.0;
 	
-	pos_est->kp_vel[0] = 1.8;
-	pos_est->kp_vel[1] = 1.8;
-	pos_est->kp_vel[2] = 0.5;
+	pos_est->kp_vel[0] = 1.5;
+	pos_est->kp_vel[1] = 1.5;
+	pos_est->kp_vel[2] = 1.5;
 	pos_est->kp_alt=2.0;
 	pos_est->kp_vel_baro=1.0;
 	
@@ -149,8 +149,8 @@ void position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitu
 	for (i=0; i<3; i++) {
 		pos_est->vel_bf[i]=qvel_bf.v[i];
 		// clean acceleration estimate without gravity:
-		attitude->acc_bf[i]=(attitude->a[i] - attitude->up_vec.v[i]) * GRAVITY;
-		pos_est->vel_bf[i]=pos_est->vel_bf[i]*(1.0-(VEL_DECAY*dt)) + attitude->acc_bf[i] * dt;
+		attitude->acc_bf[i]=(attitude->a[i] - attitude->up_vec.v[i]) ;
+		pos_est->vel_bf[i]=pos_est->vel_bf[i]*(1.0-(VEL_DECAY*dt)) + attitude->acc_bf[i] * GRAVITY * dt;
 	}
 	
 	// calculate velocity in global frame
