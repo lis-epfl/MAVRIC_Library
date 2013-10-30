@@ -127,7 +127,7 @@ void initialise_board(central_data_t *centralData) {
 
 		rc_init();
 		init_Servos();
-		init_simulation(&centralData->sim_model);
+		
 		
 		centralData->controls.rpy[ROLL]=0;
 		centralData->controls.rpy[PITCH]=0;
@@ -144,6 +144,9 @@ void initialise_board(central_data_t *centralData) {
 		centralData->position_estimator.localPosition.origin.altitude =   HOME_ALTITUDE;
 		centralData->position_estimator.localPosition.pos[0]=0;	centralData->position_estimator.localPosition.pos[1]=0; centralData->position_estimator.localPosition.pos[2]=0;
 		
+		init_simulation(&centralData->sim_model, &centralData->imu1.attitude);
+		centralData->sim_model.localPosition=centralData->position_estimator.localPosition;
+
 		init_waypoint_list(centralData->waypoint_list,&centralData->number_of_waypoints);
 
 		return &centralData;

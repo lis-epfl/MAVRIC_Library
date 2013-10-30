@@ -14,7 +14,7 @@
 #include "gps_ublox.h"
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
-#define VEL_DECAY 0.05
+#define VEL_DECAY 0.0
 #define POS_DECAY 0.0
 
 
@@ -26,7 +26,7 @@ typedef struct position_estimator_t {
 	bool init_gps_position;
 	bool init_barometer;
 	
-	float vel_bf[3], vel[3];;
+	float vel_bf[3], vel[3];
 
 	float pos_correction[3];
 	float last_alt, last_vel[3];

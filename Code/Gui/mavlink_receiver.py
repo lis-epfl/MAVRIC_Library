@@ -65,9 +65,10 @@ class MAVlinkReceiver:
         if msg!=None and msg.__class__.__name__!="MAVLink_bad_data":
             msg.mavlinkReceiver=self
             #print("message: %s (system %u component %u)" % (msg.get_msgId(), self.master.target_system, self.master.target_component))
-
+            #print msg.__class__.__name__
             if msg.__class__.__name__.startswith("MAVLink_named_value"):
                 msg_key="%s:%s"%(msg.__class__.__name__, msg.name)
+                print msg_key
                 self.messages["%s:%s"%(msg.__class__.__name__, msg.name)]=msg
             elif msg.__class__.__name__.startswith("MAVLink_radar"):
                 msg_key="%s:%s"%(msg.__class__.__name__, msg.sensor_id)

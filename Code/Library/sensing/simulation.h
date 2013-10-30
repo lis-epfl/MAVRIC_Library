@@ -17,10 +17,13 @@
 #include "conf_platform.h"
 #include "imu.h"
 #include "servo_pwm.h"
-
+#include "bmp085.h"
 
 typedef struct {
-	float torques_bf[3], rates_bf[3], lin_forces_bf[3], vel_bf[3], pos[3];
+	float torques_bf[3], rates_bf[3], lin_forces_bf[3], vel_bf[3], vel[3], pos[3];
+	Quat_Attitude_t attitude;
+	local_coordinates_t localPosition;
+	
 	float rotorspeeds[ROTORCOUNT];                              // estimated rotor speeds
 	float rotor_lpf, rotor_rpm_gain, rotor_rpm_offset;          // low pass filter to simulate rotor inertia and lag, gain/offset to convert servo commands to rpm
 	float rotor_cd, rotor_cl, rotor_diameter, rotor_foil_area;	// rotor lift and drag coefficients, mean rotor diameter (used to calculate rotor lift, torque and drag)
@@ -32,13 +35,16 @@ typedef struct {
 	float rotor_arm_length;							 			// distance between CoG and motor (in meter)
 	double last_update;											// last update in system ticks
 	float dt;													// time base of current update
+	
+	pressure_data pressure;
+	gps_Data_type gps;
 } simulation_model_t;
 
 
-void init_simulation(simulation_model_t *sim);
+void init_simulation(simulation_model_t *sim, Quat_Attitude_t *start_attitude);
 
 // computes artificial gyro and accelerometer values based on motor commands
 void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est);
-
+void simulate_sensors(simulation_model_t *sim);
 
 #endif /* SIMULATION_H_ */

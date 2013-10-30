@@ -31,12 +31,12 @@ void init_pos_integration(position_estimator_t *pos_est, pressure_data *baromete
 	pos_est->timeLastGpsMsg = 0;
 	pos_est->timeLastBarometerMsg=get_micros();
 	
-	pos_est->kp_pos[0] = 0.8;
-	pos_est->kp_pos[1] = 0.8;
+	pos_est->kp_pos[0] = 1.8;
+	pos_est->kp_pos[1] = 1.8;
 	pos_est->kp_pos[2] = 1.0;
 	
-	pos_est->kp_vel[0] = 0.3;
-	pos_est->kp_vel[1] = 0.3;
+	pos_est->kp_vel[0] = 1.8;
+	pos_est->kp_vel[1] = 1.8;
 	pos_est->kp_vel[2] = 0.5;
 	pos_est->kp_alt=2.0;
 	pos_est->kp_vel_baro=1.0;

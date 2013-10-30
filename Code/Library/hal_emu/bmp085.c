@@ -25,7 +25,6 @@ void init_bmp085_slow(){
 
 pressure_data* get_pressure_data_slow(float offset){
 		
-
 		return &pressure_outputs;
 }
 

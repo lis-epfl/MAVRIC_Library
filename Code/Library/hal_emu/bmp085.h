@@ -12,8 +12,8 @@
 
 #include "compiler.h"
 
-
-#define VARIO_LPF 0.2
+#define BARO_ALT_LPF 0.95
+#define VARIO_LPF 0.95
 
 #define BMP085_SLAVE_ADDRESS 0x77  //
 
@@ -39,7 +39,7 @@
 #define BMP085_READTEMPCMD 0x2E
 #define BMP085_READPRESSURECMD 0x34
 
-#define oversampling BMP085_HIGHRES
+#define BMP085_OVERSAMPLING_MODE BMP085_HIGHRES
 
 typedef enum  pressure_sensor_state{IDLE, GET_TEMP, GET_PRESSURE} pressure_sensor_state;
 

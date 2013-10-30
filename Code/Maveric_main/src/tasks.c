@@ -212,7 +212,14 @@ task_return_t run_stabilisation() {
 	
 	if (centralData->simulation_mode==1) {
 		simu_update(&centralData->sim_model, &centralData->servos, &(centralData->imu1), &centralData->position_estimator);
+		centralData->GPS_data=centralData->sim_model.gps;
+		centralData->pressure=centralData->sim_model.pressure;
+		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
+		
+		//for (i=0; i<3; i++) centralData->position_estimator.vel[i]=centralData->sim_model.vel[i];
+		//centralData->position_estimator.localPosition=centralData->sim_model.localPosition;
 	} else {
+		imu_get_raw_data(&(centralData->imu1));
 		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 	}
 
@@ -237,7 +244,7 @@ task_return_t run_stabilisation() {
 			//dbg_print_num(centralData->controls.thrust*10000,10);
 			//dbg_print("\n");
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
-			centralData->controls.yaw_mode=YAW_COORDINATED;
+			centralData->controls.yaw_mode=YAW_RELATIVE;
 			
 			centralData->controls.tvel[X]=-10.0*centralData->controls.rpy[PITCH];
 			centralData->controls.tvel[Y]= 10.0*centralData->controls.rpy[ROLL];
@@ -470,5 +477,5 @@ void create_tasks() {
 	
 	register_task(&main_tasks, 7, 15000, RUN_REGULAR, &run_barometer);
 
-	add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	//add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 }

@@ -26,7 +26,7 @@
 
 #define ALT_INT_SATURATION_MAX 2.0
 #define ALT_INT_SATURATION_MIN -2.0
-#define MAX_CLIMB_RATE 3.0
+#define MAX_CLIMB_RATE 1.0
 
 #define MIN_ROLL_RATE -0.5
 #define MAX_ROLL_RATE 0.5
@@ -37,13 +37,13 @@
 #define MIN_YAW_RATE -4.0
 #define MAX_YAW_RATE 4.0
 
-#define V_CRUISE 5
+#define V_CRUISE 5.0
 
 #define NAV_HOLD_POS       0
 #define NAV_LOW_VELOCITY   1
 #define NAV_HIGH_VELOCITY  2
 
-#define DIST_2_VEL_GAIN 0.4
+#define DIST_2_VEL_GAIN 0.3
 
 local_coordinates_t waypoint_coordinates, waypoint_hold_coordinates;
 global_position_t waypoint_global;

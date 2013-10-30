@@ -20,7 +20,7 @@ Buffer_t mavlink_in_buffer;
 
 central_data_t *centralData;
 
-NEW_TASK_SET (mavlink_tasks, 20)
+NEW_TASK_SET (mavlink_tasks, 30)
 
 void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 {
