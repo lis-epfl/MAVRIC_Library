@@ -35,9 +35,5 @@ task_return_t run_navigation_task();
 task_return_t run_barometer();
 task_return_t send_rt_stats();
 
-task_return_t flashc_write_read();
-
-
-
 
 #endif /* TASKS_H_ */

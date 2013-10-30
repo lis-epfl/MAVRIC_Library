@@ -67,8 +67,6 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream,
 	mavlink_system.compid = 50; // Component/Subsystem ID, 1-255
 	mavlink_system.type = MAV_TYPE_QUADROTOR;
 	
-	add_parameter_uint8(&mavlink_system.sysid,"System_ID");
-	
 	mavlink_mission_planner.sysid = mavlink_system.sysid;
 	mavlink_mission_planner.compid = MAV_COMP_ID_MISSIONPLANNER;
 	mavlink_mission_planner.type = MAV_TYPE_QUADROTOR;

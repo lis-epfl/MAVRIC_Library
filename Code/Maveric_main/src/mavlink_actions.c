@@ -387,6 +387,7 @@ void add_PID_parameters(void) {
 	add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Y],"Scale_Mag_Y");
 	add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Z],"Scale_Mag_Z");
 	
+	add_parameter_uint8(&mavlink_system.sysid,"System_ID");
 }
 
 void init_mavlink_actions(void) {
@@ -394,9 +395,9 @@ void init_mavlink_actions(void) {
 	centralData=get_central_data();
 	add_PID_parameters();
 	
-	write_parameters_to_ram();
+	//write_parameters_to_ram();
 	
-	read_parameters_from_ram();
+	//read_parameters_from_ram();
 	
 	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
 	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_attitude, MAVLINK_MSG_ID_ATTITUDE);
