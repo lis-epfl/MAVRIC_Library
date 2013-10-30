@@ -116,34 +116,6 @@ void initialise_board(central_data_t *centralData) {
 
 	rc_init();
 
-	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude));
-		
-	centralData->controls.rpy[ROLL]=0;
-	centralData->controls.rpy[PITCH]=0;
-	centralData->controls.rpy[YAW]=0;
-	centralData->controls.thrust=-1.0;
-		
-	centralData->number_of_waypoints = 0;
-
-	centralData->simulation_mode=0;
-		
-	centralData->waypoint_set = false;
-	centralData->mission_started = false;
-	centralData->waypoint_sending = false;
-	centralData->waypoint_receiving = false;
-	centralData->waypoint_hold_init = false;
-	centralData->home_wp_reached = false;
-	
-	// default GPS home position
-	centralData->position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;
-	centralData->position_estimator.localPosition.origin.latitude =   HOME_LATITUDE;
-	centralData->position_estimator.localPosition.origin.altitude =   HOME_ALTITUDE;
-	centralData->position_estimator.localPosition.pos[0]=0;
-	centralData->position_estimator.localPosition.pos[1]=0; 
-	centralData->position_estimator.localPosition.pos[2]=0;
-		
-	//init_waypoint_list(centralData->waypoint_list,&(centralData->number_of_waypoints));
-
 
 	Enable_global_interrupt();
 	dbg_print("Board initialised.\n");

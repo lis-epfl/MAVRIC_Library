@@ -27,6 +27,7 @@
 #include "waypoint_navigation.h"
 #include "navigation.h"
 #include "tasks.h"
+#include "neighbor_selection.h"
 //#include "orca.h"
 //#include "flashvault.h"
 
@@ -38,9 +39,8 @@ void initialisation() {
 
 	centralData = get_central_data();
 	initialise_board(centralData);
+	initialise_central_data();
 	
-	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude));
-	centralData->sim_model.localPosition = centralData->position_estimator.localPosition;
 
 	init_radar_modules();
 	dbg_print("Debug stream initialised\n");
@@ -89,6 +89,7 @@ void initialisation() {
 	init_waypoint_list(centralData->waypoint_list,&centralData->number_of_waypoints);
 	//e_init();
 	
+	init_neighbors();
 	//init_orca();
 }
 
@@ -102,7 +103,7 @@ void main (void)
 	create_tasks();
 	
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	centralData->simulation_mode = 1;
+	centralData->simulation_mode = 0;
 	
 	// main loop
 	

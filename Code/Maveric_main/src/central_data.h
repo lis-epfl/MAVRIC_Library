@@ -93,7 +93,7 @@ typedef struct  {
 } central_data_t;
 
 
-central_data_t* initialise_central_data(void);
+void initialise_central_data(void);
 
 central_data_t* get_central_data(void);
 

@@ -60,7 +60,7 @@ void init_angle_stabilisation(Stabiliser_t *stabiliser) {
 	}	
 	// initialise yaw controller
 	i=2;
-	(stabiliser->rpy_controller)[i].p_gain=2.5;
+	(stabiliser->rpy_controller)[i].p_gain=1.5;
 	(stabiliser->rpy_controller)[i].last_update=get_time_ticks();	
 	(stabiliser->rpy_controller)[i].clip_min=-1.0;
 	(stabiliser->rpy_controller)[i].clip_max= 1.0;
