@@ -116,7 +116,7 @@ void initialise_board(central_data_t *centralData) {
 
 	rc_init();
 
-	init_simulation(&(centralData->sim_model));
+	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude));
 		
 	centralData->controls.rpy[ROLL]=0;
 	centralData->controls.rpy[PITCH]=0;

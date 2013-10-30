@@ -32,6 +32,8 @@ bool imu_last_update_init;
 
 void init_imu(Imu_Data_t *imu1);
 
+void imu_get_raw_data(Imu_Data_t *imu1);
+
 void calibrate_Gyros(Imu_Data_t *imu1);
 
 void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps);

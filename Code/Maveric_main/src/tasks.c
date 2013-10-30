@@ -14,6 +14,7 @@
 #include "estimator.h"
 #include "navigation.h"
 #include "led.h"
+#include "imu.h"
 
 #include <flashc.h>
 
