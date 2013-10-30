@@ -135,6 +135,7 @@ void set_waypoint_from_frame(waypoint_struct current_wp)
 			waypoint_coordinates.pos[X] = current_wp.x;
 			waypoint_coordinates.pos[Y] = current_wp.y;
 			waypoint_coordinates.pos[Z] = current_wp.z;
+			waypoint_coordinates.heading= deg_to_rad(current_wp.param4);
 			waypoint_coordinates.origin = local_to_global_position(waypoint_coordinates);
 			break;
 		case MAV_FRAME_MISSION:
@@ -285,7 +286,7 @@ void run_navigation()
 		//set_rel_pos_n_dist2wp(rel_pos,&dist2wp_sqr);
 	}
 	set_speed_command(rel_pos,dist2wp_sqr);
-	
+	centralData->controls_nav.theading=waypoint_hold_coordinates.heading;
 	//computeNewVelocity(centralData->controls_nav.tvel,newVelocity);
 	
 }
@@ -298,12 +299,11 @@ void wp_hold_init()
 		dbg_print_num(centralData->position_estimator.localPosition.pos[X],10);
 		dbg_print_num(centralData->position_estimator.localPosition.pos[Y],10);
 		dbg_print_num(centralData->position_estimator.localPosition.pos[Z],10);
+		dbg_print_num((int)(centralData->position_estimator.localPosition.heading*180.0/3.14),10);
 		dbg_print(")\n");
 		
 		centralData->waypoint_hold_init = 1;
-		waypoint_hold_coordinates.pos[X] = centralData->position_estimator.localPosition.pos[X];
-		waypoint_hold_coordinates.pos[Y] = centralData->position_estimator.localPosition.pos[Y];
-		waypoint_hold_coordinates.pos[Z] = centralData->position_estimator.localPosition.pos[Z];
+		waypoint_hold_coordinates = centralData->position_estimator.localPosition;
 	}
 }
 
@@ -319,40 +319,43 @@ void set_rel_pos_n_dist2wp(float rel_pos[], float *dist2wp_sqr)
 void set_speed_command(float rel_pos[], float dist2wpSqr)
 {
 	int8_t i;
-	float h_vel_sqr_norm, norm_rel_dist, v_desired;
-	UQuat_t qtmp1, qtmp2, qtmp3, qtmp4;
+	float  norm_rel_dist, v_desired;
+	UQuat_t qtmp1, qtmp2;
 	
-	float dir_desired_bf[3], dir_desired[3], tmp[3];
-
+	float dir_desired_bf[3], dir_desired[3];
+	
+	float rel_heading;
+	
 	norm_rel_dist = sqrt(dist2wpSqr);
-
-	v_desired = f_min(V_CRUISE,(DIST_2_VEL_GAIN * norm_rel_dist));
 	
 	if (norm_rel_dist < 0.0005)
 	{
 		norm_rel_dist += 0.0005;
 	}
 	
-	dir_desired[X] = v_desired * rel_pos[X] / norm_rel_dist;
-	dir_desired[Y] = v_desired * rel_pos[Y] / norm_rel_dist;
-	dir_desired[Z] = v_desired * rel_pos[Z] / norm_rel_dist;
+
 	
 	// calculate dir_desired in local frame
 	// vel = qe-1 * rel_pos * qe
-	qtmp1 = quat_from_vector(dir_desired);
-	qtmp1.s= 0.0; qtmp1.v[0]=dir_desired[0]; qtmp1.v[1]=dir_desired[1]; qtmp1.v[2]=dir_desired[2];
+	qtmp1 = quat_from_vector(rel_pos);
+	//qtmp1.s= 0.0; qtmp1.v[0]=dir_desired[0]; qtmp1.v[1]=dir_desired[1]; qtmp1.v[2]=dir_desired[2];
 	qtmp2 = quat_global_to_local(centralData->imu1.attitude.qe,qtmp1);
 	dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
 	
 	// experimental: Z-axis in velocity mode is in global frame...
-	dir_desired_bf[2] = dir_desired[2];
+	dir_desired_bf[2] = rel_pos[2];
 	
-	if (f_abs(dir_desired[Z]) > MAX_CLIMB_RATE)
-	{
-		dir_desired[X] = dir_desired[X] / f_abs(dir_desired[Z]) * MAX_CLIMB_RATE;
-		dir_desired[Y] = dir_desired[Y] / f_abs(dir_desired[Z]) * MAX_CLIMB_RATE;
-		dir_desired[Z] = dir_desired[Z] / f_abs(dir_desired[Z]) * MAX_CLIMB_RATE;
+	rel_heading= atan2(dir_desired_bf[Y],dir_desired_bf[X]);
+	v_desired = f_min(V_CRUISE,(center_window_2(rel_heading) * DIST_2_VEL_GAIN * norm_rel_dist));
+	
+	if (v_desired *  f_abs(dir_desired_bf[Z]) > MAX_CLIMB_RATE * norm_rel_dist ) {
+		v_desired = MAX_CLIMB_RATE * norm_rel_dist /f_abs(dir_desired_bf[Z]);
 	}
+	
+	dir_desired_bf[X] = v_desired * dir_desired_bf[X] / norm_rel_dist;
+	dir_desired_bf[Y] = v_desired * dir_desired_bf[Y] / norm_rel_dist;
+	dir_desired_bf[Z] = v_desired * dir_desired_bf[Z] / norm_rel_dist;
+	
 	
 	//h_vel_sqr_norm = centralData->imu1.attitude.vel_bf[0]*centralData->imu1.attitude.vel_bf[0] + centralData->imu1.attitude.vel_bf[1]*centralData->imu1.attitude.vel_bf[1];
 	//if (h_vel_sqr_norm <= V_TRANSITION_SQR)
@@ -362,8 +365,14 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 		//high_speed_nav(dir_desired_bf,centralData->imu1.attitude);
 	//}
 	
-	
-	low_speed_nav(dir_desired_bf,centralData->imu1.attitude,norm_rel_dist);
+		
+
+	centralData->controls_nav.tvel[X] = dir_desired_bf[X];
+	centralData->controls_nav.tvel[Y] = dir_desired_bf[Y];
+	centralData->controls_nav.tvel[Z] = dir_desired_bf[Z];		
+	centralData->controls_nav.rpy[YAW] = KP_YAW * rel_heading;
+
+	//low_speed_nav(dir_desired_bf,centralData->imu1.attitude,norm_rel_dist);
 
 }
 

@@ -22,13 +22,14 @@ typedef struct {
 	uint16_t wp_id;
 	uint8_t current;
 	uint8_t autocontinue;
-	float param1;
-	float param2;
-	float param3;
-	float param4;
+	float param1;   // hold time in seconds
+	float param2;   // acceptance radius
+	float param3;   // loiter radius
+	float param4;   // desired heading at waypoint
 	double x;
 	double y;
 	double z;
+	
 }waypoint_struct;
 
 // bool waypoint_sending;
@@ -58,7 +59,5 @@ void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* boa
 void receive_message_long(Mavlink_Received_t* rec);
 
 void control_time_out_waypoint_msg(uint16_t* num_of_waypoint, bool* waypoint_receiving, bool* waypoint_sending);
-
-void read_msg_from_neighbors(Mavlink_Received_t* rec);
 
 #endif // WAYPOINT_NAVIGATION__

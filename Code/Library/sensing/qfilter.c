@@ -25,7 +25,7 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 
 	for (i=0; i<9; i++){
 		attitude->sf[i]=1.0/(float)scalefactor[i];
-		attitude->be[i]=bias[i]*attitude->sf[i];
+		attitude->be[i]=bias[i];
 		
 	}
 	for (i=0; i<3; i++){
@@ -86,10 +86,11 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	UQuat_t front_vec_global = {.s=0.0, .v={FRONTVECTOR_X, FRONTVECTOR_Y, FRONTVECTOR_Z}};
 	float kp, kp_mag;
 	
+	
 	for (i=0; i<3; i++){
-		attitude->om[i]  = (1.0-GYRO_LPF)*attitude->om[i]+GYRO_LPF*(((float)rates[GYRO_OFFSET+i])*attitude->sf[i]-attitude->be[GYRO_OFFSET+i]);
-		attitude->a[i]   = (1.0-ACC_LPF)*attitude->a[i]+ACC_LPF*(((float)rates[i+ACC_OFFSET])*attitude->sf[i+ACC_OFFSET]-attitude->be[i+ACC_OFFSET]);
-		attitude->mag[i] = (1.0-MAG_LPF)*attitude->mag[i]+MAG_LPF*(((float)rates[i+COMPASS_OFFSET])*attitude->sf[i+COMPASS_OFFSET]-attitude->be[i+COMPASS_OFFSET]);
+		attitude->om[i]  = (1.0-GYRO_LPF)*attitude->om[i]+GYRO_LPF*(((float)rates[GYRO_OFFSET+i]-attitude->be[GYRO_OFFSET+i])*attitude->sf[i]);
+		attitude->a[i]   = (1.0-ACC_LPF)*attitude->a[i]+ACC_LPF*(((float)rates[i+ACC_OFFSET]-attitude->be[i+ACC_OFFSET])*attitude->sf[i+ACC_OFFSET]);
+		attitude->mag[i] = (1.0-MAG_LPF)*attitude->mag[i]+MAG_LPF*(((float)rates[i+COMPASS_OFFSET]-attitude->be[i+COMPASS_OFFSET])*attitude->sf[i+COMPASS_OFFSET]);
 	}
 
 	// up_bf = qe^-1 *(0,0,0,-1) * qe
@@ -171,14 +172,14 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	attitude->qe.v[2] /= norm;
 
 	// bias estimate update
-	attitude->be[0]+= - dt * attitude->ki * omc[0];
-	attitude->be[1]+= - dt * attitude->ki * omc[1];
-	attitude->be[2]+= - dt * attitude->ki * omc[2];
+	attitude->be[0]+= - dt * attitude->ki * omc[0] / attitude->sf[0];
+	attitude->be[1]+= - dt * attitude->ki * omc[1] / attitude->sf[1];
+	attitude->be[2]+= - dt * attitude->ki * omc[2] / attitude->sf[2];
 
 	// bias estimate update
-	attitude->be[6]+= - dt * attitude->ki_mag * omc[0];
-	attitude->be[7]+= - dt * attitude->ki_mag * omc[1];
-	attitude->be[8]+= - dt * attitude->ki_mag * omc[2];
+	//attitude->be[6]+= - dt * attitude->ki_mag * omc[0];
+	//attitude->be[7]+= - dt * attitude->ki_mag * omc[1];
+	//attitude->be[8]+= - dt * attitude->ki_mag * omc[2];
 
 	switch (attitude->calibration_level) {
 		case OFF:

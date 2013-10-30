@@ -139,7 +139,7 @@ pressure_data* get_pressure_data_slow(float offset) {
 			pressure_outputs.pressure=p;
 		
 			vertical_speed=pressure_outputs.altitude;
-			altitude=44330.0 * (1.0 - pow(pressure_outputs.pressure /sealevelPressure,0.190295));
+			altitude=44330.0 * (1.0 - pow(pressure_outputs.pressure /sealevelPressure,0.190295)) + pressure_outputs.altitude_offset;
 			if (f_abs(altitude-pressure_outputs.altitude)<15.0) {
 				pressure_outputs.altitude = (BARO_ALT_LPF*pressure_outputs.altitude) + (1.0-BARO_ALT_LPF)*altitude;
 			}else {

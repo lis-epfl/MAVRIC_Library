@@ -37,7 +37,7 @@
 #include "simulation.h"
 #include "bmp085.h"
 #include "conf_sim_model.h"
-#include "orca.h"
+#include "neighbor_selection.h"
 #include "position_estimation.h"
 
 static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
@@ -85,9 +85,9 @@ typedef struct  {
 	//float pressure_filtered;
 	//float altitude_filtered;
 	
-	int8_t number_of_neighbors;
+	uint8_t number_of_neighbors;
 	float safe_size;
-	track_neighbor_t neighbors[MAX_NUM_NEIGHBORS];
+	track_neighbor_t listNeighbors[MAX_NUM_NEIGHBORS];
 	
 } central_data_t;
 

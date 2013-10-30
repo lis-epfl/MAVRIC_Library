@@ -10,7 +10,7 @@
 
 #include "mavlink_stream.h"
 
-#define MAX_ONBOARD_PARAM_COUNT 60
+#define MAX_ONBOARD_PARAM_COUNT 80
 
 typedef struct {
 	float* param;

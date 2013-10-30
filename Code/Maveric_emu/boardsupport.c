@@ -80,6 +80,7 @@ void initialise_board(central_data_t *centralData) {
 		make_buffered_stream(&centralData->xbee_in_buffer, &centralData->xbee_in_stream);
 
 		//register_read_stream_stdin( &centralData->xbee_in_stream);
+		
 		register_read_stream_udp( &centralData->xbee_in_stream, &udp_in, 14551);
 		udp_out.sock=udp_in.sock;
 

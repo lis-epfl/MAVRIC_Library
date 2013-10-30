@@ -33,6 +33,7 @@ typedef struct {
 	float error;
 	uint32_t last_update; // last update time in timer tick
 	float dt;  // is updated from system time at each update.
+	float soft_zone_width;  // approximate width of a "soft zone" on the error input, i.e. a region of low gain around the target point. Value 0 -> switched off
 }PID_Controller_t;
 
 PID_Controller_t passthroughController();
@@ -50,5 +51,6 @@ float differentiate(Differentiator_t *diff, float input,  float dt);
 float pid_update(PID_Controller_t* controller, float error);
 
 float pid_update_dt(PID_Controller_t* controller, float error, float dt);
+
 
 #endif /* CONTROL_H_ */

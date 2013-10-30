@@ -351,10 +351,12 @@ void add_PID_parameters(void) {
 	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchVPid_D_Gain");
 
 	// Thrust velocity PID
-	add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain, "ThrustVPid_P_G");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.postgain, "ThrustVPid_I_PstG");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.pregain, "ThrustVPid_I_PreG");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain, "ThrustVPid_D_Gain");
+	add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain, "ThrVPid_P_G");
+	add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.postgain, "ThrVPid_I_PstG");
+	add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.pregain, "ThrVPid_I_PreG");
+	add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain, "ThrVPid_D_Gain");
+	add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.LPF, "ThrVPid_D_LPF");
+	add_parameter_float(&velocity_stabiliser->thrust_controller.soft_zone_width, "ThrVPid_soft");
 
 	// qfilter
 	add_parameter_float(&centralData->imu1.attitude.kp, "QF_kp_acc");
@@ -362,17 +364,17 @@ void add_PID_parameters(void) {
 	add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain, "YawAPid_D_Gain");
 	
 	// Biaises
-	add_parameter_float(&centralData->imu1.raw_bias[GYRO_OFFSET+X],"Biais_Gyro_X");
-	add_parameter_float(&centralData->imu1.raw_bias[GYRO_OFFSET+Y],"Biais_Gyro_Y");
-	add_parameter_float(&centralData->imu1.raw_bias[GYRO_OFFSET+Z],"Biais_Gyro_Z");
+	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET+X],"Bias_Gyro_X");
+	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET+Y],"Bias_Gyro_Y");
+	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET+Z],"Bias_Gyro_Z");
 	
-	add_parameter_float(&centralData->imu1.raw_bias[ACC_OFFSET+X],"Biais_Acc_X");
-	add_parameter_float(&centralData->imu1.raw_bias[ACC_OFFSET+Y],"Biais_Acc_Y");
-	add_parameter_float(&centralData->imu1.raw_bias[ACC_OFFSET+Z],"Biais_Acc_Z");
+	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET+X],"Bias_Acc_X");
+	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET+Y],"Bias_Acc_Y");
+	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET+Z],"Bias_Acc_Z");
 	
-	add_parameter_float(&centralData->imu1.raw_bias[COMPASS_OFFSET+X],"Biais_Mag_X");
-	add_parameter_float(&centralData->imu1.raw_bias[COMPASS_OFFSET+Y],"Biais_Mag_Y");
-	add_parameter_float(&centralData->imu1.raw_bias[COMPASS_OFFSET+Z],"Biais_Mag_Z");
+	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET+X],"Bias_Mag_X");
+	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET+Y],"Bias_Mag_Y");
+	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET+Z],"Bias_Mag_Z");
 	
 	// Scale factor
 	add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+X],"Scale_Gyro_X");
@@ -388,6 +390,13 @@ void add_PID_parameters(void) {
 	add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Z],"Scale_Mag_Z");
 	
 	add_parameter_uint8(&mavlink_system.sysid,"System_ID");
+
+	add_parameter_float(&centralData->position_estimator.kp_alt,"Pos_kp_alt");
+	add_parameter_float(&centralData->position_estimator.kp_vel_baro,"Pos_kp_velb");
+	add_parameter_float(&centralData->position_estimator.kp_pos[0],"Pos_kp_pos0");
+	add_parameter_float(&centralData->position_estimator.kp_pos[1],"Pos_kp_pos1");
+	add_parameter_float(&centralData->position_estimator.kp_pos[2],"Pos_kp_pos2");
+
 }
 
 void init_mavlink_actions(void) {
@@ -405,12 +414,12 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
 	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
 	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
-	add_task(get_mavlink_taskset(),  100000, RUN_NEVER, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
+	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_speed_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT);
 
-	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_servo_output, MAVLINK_MSG_ID_SERVO_OUTPUT_RAW);
+	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_servo_output, MAVLINK_MSG_ID_SERVO_OUTPUT_RAW);
 	//add_task(get_mavlink_taskset(),  50000, &mavlink_send_radar);
 	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
 	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);

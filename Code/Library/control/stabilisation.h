@@ -16,7 +16,9 @@
 #include "control.h"
 
  
-typedef enum control_mode_t {VELOCITY_COMMAND_MODE, ATTITUDE_COMMAND_MODE_REL_YAW, ATTITUDE_COMMAND_MODE_ABS_YAW, RATE_COMMAND_MODE} control_mode_t;
+typedef enum control_mode_t {VELOCITY_COMMAND_MODE, ATTITUDE_COMMAND_MODE, RATE_COMMAND_MODE} control_mode_t;
+typedef enum yaw_mode_t     {YAW_RELATIVE, YAW_ABSOLUTE, YAW_COORDINATED} yaw_mode_t;
+
 typedef enum run_mode_t {MOTORS_OFF, MOTORS_ON, SIMULATE} run_mode_t;
 
 typedef struct {
@@ -25,8 +27,11 @@ typedef struct {
 
 	float tvel[3]; // target velocity in m/s
 	float theading;// absolute target heading
+	
 	control_mode_t control_mode;
-	run_mode_t run_mode;
+	yaw_mode_t     yaw_mode;
+	run_mode_t     run_mode;
+	
 } Control_Command_t;
 
 typedef struct {
@@ -43,7 +48,7 @@ Stabiliser_t* get_rate_stabiliser(void);
 Stabiliser_t* get_attitude_stabiliser(void);
 Stabiliser_t* get_velocity_stabiliser(void);
 
-void stabilise(Stabiliser_t *stabiliser, float *errors);
+void stabilise(Stabiliser_t *stabiliser, float errors[]);
 void quad_stabilise(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input);
 
 void mix_to_servos_diag_quad(Control_Command_t *control);

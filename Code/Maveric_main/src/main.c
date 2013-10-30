@@ -64,10 +64,11 @@ void initialisation() {
 		delay_ms(5);
 	}
 	// after initial leveling, initialise accelerometer biases
+	
 	/*
 	centralData->imu1.attitude.calibration_level=LEVEL_PLUS_ACCEL;
-	for (i=200; i>0; i--) {
-		imu_update(&centralData->imu1);
+	for (i=100; i>0; i--) {
+		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);	
 		mavlink_protocol_update();			
 		delay_ms(5);
 	}*/
@@ -98,7 +99,7 @@ void main (void)
 	create_tasks();
 	
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	centralData->simulation_mode = 0;
+	centralData->simulation_mode = 1;
 	
 	// main loop
 	

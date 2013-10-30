@@ -95,6 +95,7 @@ task_return_t set_mav_mode_n_state()
 				{
 					case 0:
 						dbg_print("Switching on the motors!\n");
+						position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 						centralData->controls.run_mode = MOTORS_ON;
 						centralData->mav_state = MAV_STATE_ACTIVE;
 						centralData->mav_mode = MAV_MODE_MANUAL_ARMED;
@@ -190,7 +191,7 @@ task_return_t set_mav_mode_n_state()
 			break;
 		case MAV_STATE_EMERGENCY:
 			centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
-			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE_REL_YAW;
+			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			if (centralData->position_estimator.localPosition.pos[Z] < 0.5)
 			{
 				centralData->mav_state = MAV_STATE_STANDBY;
@@ -223,7 +224,8 @@ task_return_t run_stabilisation() {
 			centralData->mission_started = false;
 			centralData->controls = get_command_from_remote();
 			
-			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE_REL_YAW;
+			centralData->controls.yaw_mode=YAW_RELATIVE;
+			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			
 			quad_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
@@ -235,6 +237,7 @@ task_return_t run_stabilisation() {
 			//dbg_print_num(centralData->controls.thrust*10000,10);
 			//dbg_print("\n");
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
+			centralData->controls.yaw_mode=YAW_COORDINATED;
 			
 			centralData->controls.tvel[X]=-10.0*centralData->controls.rpy[PITCH];
 			centralData->controls.tvel[Y]= 10.0*centralData->controls.rpy[ROLL];
@@ -257,6 +260,7 @@ task_return_t run_stabilisation() {
 			//dbg_print_num(f_min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0 *10000.0,10);
 			//dbg_print("\n");
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
+			centralData->controls.yaw_mode = YAW_ABSOLUTE;
 			quad_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		case MAV_MODE_AUTO_ARMED:
@@ -271,7 +275,8 @@ task_return_t run_stabilisation() {
 			//dbg_print_num(centralData->controls.thrust*10000,10);
 			//dbg_print("\n");
 			
-			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;			
+			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;	
+			centralData->controls.yaw_mode = YAW_COORDINATED;
 			quad_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		

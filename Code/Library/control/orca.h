@@ -9,20 +9,14 @@
 #ifndef ORCA_H__
 #define ORCA_H__
 
+#include "neighbor_selection.h"
+
 #include <stdbool.h>
 #include <stdint.h>
 
 #define MAXSPEED 7.5
 
-#define MAX_NUM_NEIGHBORS 15
-
 #define RVO_EPSILON 0.0001
-
-typedef struct  {
-	float position[3];
-	float velocity[3];
-	float size;
-}track_neighbor_t;
 
 typedef struct{
 	float normal[3];

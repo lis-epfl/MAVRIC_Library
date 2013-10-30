@@ -19,8 +19,7 @@ int8_t loop_count_orca = 0;
 void init_orca()
 {
 	centralData = get_central_data();
-	centralData->number_of_neighbors = 0;
-	centralData->safe_size = 0.5;
+	centralData->safe_size = 1.0;
 		
 	timeHorizon = 8.0;
 	invTimeHorizon = 1.0/timeHorizon;
@@ -42,11 +41,11 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 	{
 		for (i=0;i<3;i++)
 		{
-			relativePosition[i] = centralData->position_estimator.localPosition.pos[i] - centralData->neighbors[ind].position[i];
-			relativeVelocity[i] = centralData->position_estimator.vel_bf[i] - centralData->neighbors[ind].velocity[i];
+			relativePosition[i] = centralData->position_estimator.localPosition.pos[i] - centralData->listNeighbors[ind].position[i];
+			relativeVelocity[i] = centralData->position_estimator.vel_bf[i] - centralData->listNeighbors[ind].velocity[i];
 		}
 		distSq = vector_norm_sqr(relativePosition);
-		combinedRadius = centralData->safe_size - centralData->neighbors[ind].size;
+		combinedRadius = centralData->safe_size + centralData->listNeighbors[ind].size;
 		combinedRadiusSq = SQR(combinedRadius);
 		
 		

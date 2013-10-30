@@ -15,7 +15,7 @@
     <OutputType>Executable</OutputType>
     <Language>C</Language>
     <avrtool>com.atmel.avrdbg.tool.jtagicemk3</avrtool>
-    <avrtoolinterface>aWire</avrtoolinterface>
+    <avrtoolinterface>JTAG</avrtoolinterface>
     <com_atmel_avrdbg_tool_jtagicemkii>
       <ToolType>com.atmel.avrdbg.tool.jtagicemkii</ToolType>
       <ToolName>JTAGICE mkII</ToolName>
@@ -241,9 +241,9 @@
         <ssl>False</ssl>
       </Channel>
       <ToolOptions>
-        <InterfaceName>aWire</InterfaceName>
+        <InterfaceName>JTAG</InterfaceName>
         <InterfaceProperties>
-          <JtagDbgClock>7500000</JtagDbgClock>
+          <JtagDbgClock>250000</JtagDbgClock>
           <JtagProgClock>1000000</JtagProgClock>
           <IspClock>150000</IspClock>
           <JtagInChain>false</JtagInChain>
@@ -605,6 +605,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Library\control\neighbor_selection.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\control\neighbor_selection.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\control\orca.c">
       <SubType>compile</SubType>
     </Compile>
