@@ -24,7 +24,7 @@ void init_imu (Imu_Data_t *imu1) {
 
 	init_hmc5883_slow();
 
-	calibrate_Gyros(imu1);
+	//calibrate_Gyros(imu1);
 	imu1->raw_scale[0] =  RAW_GYRO_X_SCALE;
 	imu1->raw_scale[1] =  RAW_GYRO_Y_SCALE;
 	imu1->raw_scale[2] =  RAW_GYRO_Z_SCALE;
@@ -35,6 +35,9 @@ void init_imu (Imu_Data_t *imu1) {
 	imu1->raw_scale[1+COMPASS_OFFSET] =  RAW_MAG_Y_SCALE;
 	imu1->raw_scale[2+COMPASS_OFFSET] =  RAW_MAG_Z_SCALE;
 	
+	imu1->raw_bias[0+GYRO_OFFSET]= 0.0;
+	imu1->raw_bias[1+GYRO_OFFSET]= 0.0;
+	imu1->raw_bias[2+GYRO_OFFSET]= 0.0;
 	//myquad
 	// acceleration biais
 	imu1->raw_bias[0+ACC_OFFSET]= ACC_BIAIS_X;
@@ -117,7 +120,7 @@ void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *
 		imu1->last_update = t;
 		imu_last_update_init = true;
 	}else{
-		imu_get_raw_data(imu1);
+		//imu_get_raw_data(imu1);
 		imu1->dt=ticks_to_seconds(t - imu1->last_update);
 		imu1->last_update=t;
 		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt, false);

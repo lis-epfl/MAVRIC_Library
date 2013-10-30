@@ -24,14 +24,6 @@ PID_Controller_t passthroughController() {
 }
 
 
-float clip(float input_value, float clip_value);
-
-float clip(float input_value, float clip_value) {
-	
-	if (input_value>clip_value)  return clip_value;     
-	if (input_value<-clip_value) return -clip_value; 
-	return input_value;
-}
 
 
 float integrate(Integrator_t *integrator, float input, float dt) {

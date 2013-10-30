@@ -97,6 +97,7 @@ void mavlink_send_servo_output(void) {
 	1000*rate_stab->output.rpy[1]+1000,
 	1000*rate_stab->output.rpy[2]+1000,
 	1000*rate_stab->output.thrust+1000
+
 	);
 }
 

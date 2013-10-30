@@ -54,7 +54,7 @@ void initialisation() {
 	central_data->mav_mode = MAV_MODE_PREFLIGHT;
 
 	//calibrate_Gyros(&centralData->imu1);
-	for (i=400; i>0; i--) {
+	/*for (i=400; i>0; i--) {
 		imu_update(&(central_data->imu1), &central_data->position_estimator, &central_data->pressure, &central_data->GPS_data);	
 		mavlink_protocol_update();	
 		delay_ms(5);

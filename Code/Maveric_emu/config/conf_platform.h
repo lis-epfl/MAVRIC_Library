@@ -194,8 +194,8 @@
 #define UPVECTOR_Y  0
 #define UPVECTOR_Z -1
 
-#define FRONTVECTOR_X 1
-#define FRONTVECTOR_Y 0
+#define FRONTVECTOR_X 1.0
+#define FRONTVECTOR_Y 0.0
 #define FRONTVECTOR_Z -0.8558
 
 

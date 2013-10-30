@@ -143,8 +143,8 @@ float static inline vector_norm(float u[])
 static inline UQuat_t quat_normalise(const UQuat_t q) {
 	UQuat_t result={.s=1.0, .v={0.0, 0.0, 0.0} };
 	float snorm= SQR(q.s) + SQR(q.v[0]) + SQR(q.v[1]) + SQR(q.v[2]);
-	if (snorm >0.000000001) {
-		float norm=fast_sqrt(SQR(q.v[0]) + SQR(q.v[1]) + SQR(q.v[2]) );
+	if (snorm >0.0000001) {
+		float norm=fast_sqrt(snorm);
 		result.s=q.s/norm;
 		result.v[0]=q.v[0]/norm;		result.v[1]=q.v[1]/norm;		result.v[2]=q.v[2]/norm;
 
@@ -177,6 +177,14 @@ static inline float f_max(const float a, const float b){
 	}else{
 		return b;
 	}
+}
+
+
+static float inline clip(float input_value, float clip_value) {
+	
+	if (input_value>clip_value)  return clip_value;     
+	if (input_value<-clip_value) return -clip_value; 
+	return input_value;
 }
 
 

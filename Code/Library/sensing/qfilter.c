@@ -83,7 +83,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	float  omc[3], omc_mag[3], rvc[3], tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
 	UQuat_t qed, qtmp1, up, up_bf, qtmp2, qtmp3;
 	UQuat_t mag_global, mag_corrected_local;
-	UQuat_t front_vec_global = {.s=0.0, .v={FRONTVECTOR_X, FRONTVECTOR_Y, FRONTVECTOR_Z}};
+	UQuat_t front_vec_global = {.s=0.0, .v={1.0, 0.0, 0.0}};
 	float kp, kp_mag;
 	
 	
@@ -142,12 +142,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	}
 
 	for (i=0; i<3; i++){
-		if (simu_mode)
-		{
-			qtmp1.v[i] = attitude->om[i] +attitude->kp*omc[i];
-		}else{
-			qtmp1.v[i] = attitude->om[i] +attitude->kp*omc[i] +attitude->kp_mag*omc_mag[i];
-		}
+		qtmp1.v[i] = attitude->om[i] +attitude->kp*omc[i] +attitude->kp_mag*omc_mag[i];
 	}
 	qtmp1.s=0;
 
@@ -161,7 +156,6 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 
 	snorm=attitude->qe.s*attitude->qe.s+attitude->qe.v[0]*attitude->qe.v[0] + attitude->qe.v[1] * attitude->qe.v[1] + attitude->qe.v[2] * attitude->qe.v[2];
 	if (snorm<0.0001) norm=0.01; else {
-		
 		// approximate square root by running 2 iterations of newton method
 		norm=fast_sqrt(snorm);
 		//norm=0.5*(norm+(snorm/norm));

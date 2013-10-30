@@ -225,7 +225,14 @@ task_return_t run_stabilisation() {
 	
 	if (centralData->simulation_mode==1) {
 		simu_update(&centralData->sim_model, &centralData->servos, &(centralData->imu1), &centralData->position_estimator);
+		
+		
+		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
+		
+		//for (i=0; i<3; i++) centralData->position_estimator.vel[i]=centralData->sim_model.vel[i];
+		//centralData->position_estimator.localPosition=centralData->sim_model.localPosition;
 	} else {
+		imu_get_raw_data(&(centralData->imu1));
 		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 	}
 
@@ -317,9 +324,11 @@ task_return_t run_stabilisation() {
 
 task_return_t gps_task() {
 	uint32_t tnow = get_millis();	
-	
-	gps_update();
-	
+	if (centralData->simulation_mode==1) {
+		simulate_gps(&centralData->sim_model, &centralData->GPS_data);
+	} else {
+		gps_update();
+	}
  	//dbg_print("time :");
  	//dbg_print_num(tnow,10);
  	//dbg_print_num(centralData->GPS_data.timeLastMsg,10);
@@ -400,15 +409,12 @@ task_return_t run_barometer()
 {
 	uint32_t tnow = get_micros();
 	central_data_t *central_data=get_central_data();
-	pressure_data *pressure = get_pressure_data_slow(centralData->pressure.altitude_offset);
+	
+	pressure_data *pressure= get_pressure_data_slow(centralData->pressure.altitude_offset);
 	if (central_data->simulation_mode==1) {
-		//update barometer
-		pressure->altitude=-central_data->position_estimator.localPosition.pos[Z]+central_data->position_estimator.localPosition.origin.altitude;
-		pressure->vario_vz= central_data->position_estimator.vel[Z];
-		pressure->last_update=get_micros();
-		pressure->state=IDLE;
-	}
-	centralData->pressure =  *pressure;
+		simulate_barometer(&centralData->sim_model, pressure);
+	} 
+	centralData->pressure=*pressure;
 	
 }
 
@@ -450,5 +456,5 @@ void create_tasks() {
 	
 	register_task(&main_tasks, 7, 15000, RUN_REGULAR, &run_barometer);
 
-	add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	//add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 }
