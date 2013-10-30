@@ -130,7 +130,6 @@ void mavlink_send_global_position(void) {
 	   	// send integrated position (for now there is no GPS error correction...!!!)
 		global_position_t gpos=local_to_global_position(centralData->position_estimator.localPosition);
 		mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, centralData->position_estimator.vel[0]*100.0, centralData->position_estimator.vel[1]*100.0, centralData->position_estimator.vel[2]*100.0, centralData->imu1.attitude.om[2]);
-		mavlink_msg_global_position_int_send(MAVLINK_COMM_1, get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, centralData->position_estimator.vel[0]*100.0, centralData->position_estimator.vel[1]*100.0, centralData->position_estimator.vel[2]*100.0, centralData->imu1.attitude.om[2]);
    //} 
 }
 

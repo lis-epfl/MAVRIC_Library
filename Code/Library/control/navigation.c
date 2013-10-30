@@ -45,7 +45,7 @@
 
 #define DIST_2_VEL_GAIN 0.4
 
-local_coordinates_t waypoint_coordinates, waypoint_hold_coordinates;
+local_coordinates_t waypoint_coordinates, waypoint_hold_coordinates, waypoint_critical_coordinates;
 global_position_t waypoint_global;
 waypoint_struct current_waypoint;
 bool waypoint_reached;
@@ -70,6 +70,7 @@ void init_nav()
 	//centralData->waypoint_set = false;
 	waypoint_reached = false;
 	
+	critical_behavior = CLIMB_TO_SAVE_ALT;
 	
 	if ((centralData->number_of_waypoints > 0) && (centralData->position_estimator.init_gps_position || centralData->simulation_mode) && centralData->waypoint_receiving == false)
 	{
@@ -185,7 +186,7 @@ void run_navigation()
 		rel_pos[Z] = (float)(waypoint_coordinates.pos[Z] - centralData->position_estimator.localPosition.pos[Z]);
 		
 		dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
-		//set_rel_pos_n_dist2wp(rel_pos,&dist2wp_sqr);
+		//set_rel_pos_n_dist2wp(waypoint_coordinates.pos,rel_pos,&dist2wp_sqr);
 		
 		//dbg_print("rel_pos:(");
 		//dbg_print_num(rel_pos[X],10);
@@ -255,7 +256,7 @@ void run_navigation()
 			rel_pos[Z] = (float)(waypoint_coordinates.pos[Z] - centralData->position_estimator.localPosition.pos[Z]);
 			
 			dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
-			//set_rel_pos_n_dist2wp(rel_pos,&dist2wp_sqr);
+			//set_rel_pos_n_dist2wp(waypoint_coordinates.pos,rel_pos,&dist2wp_sqr);
 		}
 	}else{
 		if (centralData->waypoint_set == false)
@@ -283,8 +284,53 @@ void run_navigation()
 		rel_pos[Z] = (float)(waypoint_hold_coordinates.pos[Z] - centralData->position_estimator.localPosition.pos[Z]);
 		
 		dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
-		//set_rel_pos_n_dist2wp(rel_pos,&dist2wp_sqr);
+		//set_rel_pos_n_dist2wp(waypoint_hold_coordinates.pos,rel_pos,&dist2wp_sqr);
 	}
+	
+	if (centralData->mav_state == MAV_STATE_CRITICAL)
+	{
+		switch (critical_behavior)
+		{
+			case CLIMB_TO_SAVE_ALT:
+				waypoint_critical_coordinates.pos[X] = centralData->position_estimator.localPosition.pos[X];
+				waypoint_critical_coordinates.pos[Y] = centralData->position_estimator.localPosition.pos[Y];
+				waypoint_critical_coordinates.pos[Z] = -30.0;
+				break;
+			case FLY_TO_HOME_WP:
+				waypoint_critical_coordinates.pos[X] = 0.0;
+				waypoint_critical_coordinates.pos[Y] = 0.0;
+				waypoint_critical_coordinates.pos[Z] = -30.0;
+				break;
+			case CRITICAL_LAND:
+				waypoint_critical_coordinates.pos[X] = 0.0;
+				waypoint_critical_coordinates.pos[Y] = 0.0;
+				waypoint_critical_coordinates.pos[Z] = 0.0;
+				break;
+		}
+		
+		rel_pos[X] = (float)(waypoint_critical_coordinates.pos[X] - centralData->position_estimator.localPosition.pos[X]);
+		rel_pos[Y] = (float)(waypoint_critical_coordinates.pos[Y] - centralData->position_estimator.localPosition.pos[Y]);
+		rel_pos[Z] = (float)(waypoint_critical_coordinates.pos[Z] - centralData->position_estimator.localPosition.pos[Z]);
+		
+		dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
+		
+		if (dist2wp_sqr < 3.0)
+		{
+			switch (critical_behavior)
+			{
+				case CLIMB_TO_SAVE_ALT:
+					critical_behavior = FLY_TO_HOME_WP;
+					break;
+				case FLY_TO_HOME_WP:
+					critical_behavior = CRITICAL_LAND;
+					break;
+				case CRITICAL_LAND:
+					centralData->home_wp_reached = true;
+					break;
+			}
+		}
+	}
+	
 	set_speed_command(rel_pos,dist2wp_sqr);
 	centralData->controls_nav.theading=waypoint_hold_coordinates.heading;
 	//computeNewVelocity(centralData->controls_nav.tvel,newVelocity);
@@ -307,11 +353,11 @@ void wp_hold_init()
 	}
 }
 
-void set_rel_pos_n_dist2wp(float rel_pos[], float *dist2wp_sqr)
+void set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[], float *dist2wp_sqr)
 {
-	rel_pos[X] = (float)(waypoint_hold_coordinates.pos[X] - centralData->position_estimator.localPosition.pos[X]);
-	rel_pos[Y] = (float)(waypoint_hold_coordinates.pos[Y] - centralData->position_estimator.localPosition.pos[Y]);
-	rel_pos[Z] = (float)(waypoint_hold_coordinates.pos[Z] - centralData->position_estimator.localPosition.pos[Z]);
+	rel_pos[X] = (float)(waypointPos[X] - centralData->position_estimator.localPosition.pos[X]);
+	rel_pos[Y] = (float)(waypointPos[Y] - centralData->position_estimator.localPosition.pos[Y]);
+	rel_pos[Z] = (float)(waypointPos[Z] - centralData->position_estimator.localPosition.pos[Z]);
 	
 	*dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
 }

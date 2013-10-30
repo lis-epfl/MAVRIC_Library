@@ -76,6 +76,7 @@ typedef struct  {
 	bool waypoint_sending;
 	bool waypoint_receiving;
 	bool waypoint_hold_init;
+	bool home_wp_reached;
 	
 	uint8_t mav_mode;
 	uint8_t mav_state;

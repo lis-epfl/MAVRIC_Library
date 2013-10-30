@@ -168,6 +168,7 @@ task_return_t set_mav_mode_n_state()
 					centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
 					break;
 				case 3:
+					centralData->mav_mode = MAV_MODE_AUTO_ARMED;
 					break;
 			}
 			if (motor_switch == -1)
@@ -185,16 +186,28 @@ task_return_t set_mav_mode_n_state()
 				case -1:
 					break;
 				case -2:
-					centralData->mav_state = MAV_STATE_EMERGENCY;
+					if (centralData->home_wp_reached)
+					{
+						centralData->mav_state = MAV_STATE_EMERGENCY;
+					}
 					break;
 			}
 			break;
 		case MAV_STATE_EMERGENCY:
-			centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
-			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
-			if (centralData->position_estimator.localPosition.pos[Z] < 0.5)
+			if (centralData->position_estimator.localPosition.pos[Z] < 1.0)
 			{
-				centralData->mav_state = MAV_STATE_STANDBY;
+				centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
+				centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
+				switch (RC_check)
+				{
+					case 1:
+						centralData->mav_state = MAV_STATE_STANDBY;
+						break;
+					case -1:
+						break;
+					case -2:
+						break;
+				}
 			}
 			break;
 	}
@@ -237,7 +250,7 @@ task_return_t run_stabilisation() {
 			//dbg_print_num(centralData->controls.thrust*10000,10);
 			//dbg_print("\n");
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
-			centralData->controls.yaw_mode=YAW_COORDINATED;
+			centralData->controls.yaw_mode=YAW_RELATIVE;
 			
 			centralData->controls.tvel[X]=-10.0*centralData->controls.rpy[PITCH];
 			centralData->controls.tvel[Y]= 10.0*centralData->controls.rpy[ROLL];
@@ -286,6 +299,7 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_GUIDED_DISARMED:
 		case MAV_MODE_AUTO_DISARMED:
 			//set_servos(&(servo_failsafe));
+			centralData->controls.run_mode = MOTORS_OFF;
 			for (i=0; i<NUMBER_OF_SERVO_OUTPUTS; i++) {
 				centralData->servos[i]=servo_failsafe[i];
 			}

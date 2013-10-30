@@ -132,6 +132,7 @@ void initialise_board(central_data_t *centralData) {
 	centralData->waypoint_sending = false;
 	centralData->waypoint_receiving = false;
 	centralData->waypoint_hold_init = false;
+	centralData->home_wp_reached = false;
 	
 	// default GPS home position
 	centralData->position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;
