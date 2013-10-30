@@ -144,6 +144,7 @@ void initialise_board(central_data_t *centralData) {
 		
 	//init_waypoint_list(centralData->waypoint_list,&(centralData->number_of_waypoints));
 
+
 	Enable_global_interrupt();
 	dbg_print("Board initialised.\n");
 }

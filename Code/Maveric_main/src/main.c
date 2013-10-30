@@ -39,6 +39,9 @@ void initialisation() {
 	centralData = get_central_data();
 	initialise_board(centralData);
 	
+	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude));
+	centralData->sim_model.localPosition = centralData->position_estimator.localPosition;
+
 	init_radar_modules();
 	dbg_print("Debug stream initialised\n");
 

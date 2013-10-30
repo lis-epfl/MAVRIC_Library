@@ -104,7 +104,7 @@ void main (void)
 	// main loop
 	counter=0;
 	
-	run_all_tests();
+	//run_all_tests();
 	while (1==1) {
 		this_looptime=get_millis();
 		

@@ -162,6 +162,10 @@
       <File Name="../Library/control/control.h"/>
       <File Name="../Library/control/stabilisation.c"/>
       <File Name="../Library/control/control.c"/>
+      <File Name="../Library/control/neighbor_selection.c"/>
+      <File Name="../Library/control/neighbor_selection.h"/>
+      <File Name="../Library/control/orca.c"/>
+      <File Name="../Library/control/orca.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="communication">
       <File Name="../Library/communication/mavlink_stream.c"/>
@@ -249,7 +253,8 @@
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="maveric" IntermediateDirectory="./Debug" Command="./maveric" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="." PauseExecWhenProcTerminates="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
-        <![CDATA[]]>
+        <![CDATA[
+      ]]>
       </Environment>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <DebuggerSearchPaths/>
@@ -287,7 +292,8 @@
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
-        <![CDATA[]]>
+        <![CDATA[
+      ]]>
       </Environment>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <DebuggerSearchPaths/>
