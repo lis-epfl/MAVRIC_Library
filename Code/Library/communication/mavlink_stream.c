@@ -39,15 +39,31 @@ void mavlink_receive_handler() {
 	Mavlink_Received_t rec;
 	
 	if(mavlink_receive(mavlink_in_stream, &rec)) {
-		dbg_print("\n Received message with ID");
-		dbg_print_num(rec.msg.msgid, 10);
-		dbg_print(" from system");
-		dbg_print_num(rec.msg.sysid, 10);
-		dbg_print(" for component");
-		dbg_print_num(rec.msg.compid,10);
-		dbg_print( "\n");
 		
-		handle_mavlink_message(&rec);
+		if (rec.msg.sysid == MAVLINK_BASE_STATION_ID)
+		{
+			dbg_print("\n Received message with ID");
+			dbg_print_num(rec.msg.msgid, 10);
+			dbg_print(" from system");
+			dbg_print_num(rec.msg.sysid, 10);
+			dbg_print(" for component");
+			dbg_print_num(rec.msg.compid,10);
+			dbg_print( "\n");
+			
+			handle_mavlink_message(&rec);
+		}else if (rec.msg.msgid == MAVLINK_MSG_ID_GLOBAL_POSITION_INT)
+		{
+			dbg_print("\n Received message with ID");
+			dbg_print_num(rec.msg.msgid, 10);
+			dbg_print(" from system");
+			dbg_print_num(rec.msg.sysid, 10);
+			dbg_print(" for component");
+			dbg_print_num(rec.msg.compid,10);
+			dbg_print( "\n");
+			
+			read_msg_from_neighbors(&rec);
+		}
+		
 	}
 }
 
@@ -99,7 +115,7 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 	//dbg_print(" ");
 	while(stream->bytes_available(stream->data) > 0) {
 		byte = stream->get(stream->data);
-		dbg_print(".");
+		//dbg_print(".");
 		//dbg_print_num(byte, 16);
 		//dbg_print("\t");
 		if(mavlink_parse_char(MAVLINK_COMM_0, byte, &rec->msg, &rec->status)) {
@@ -222,10 +238,10 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 				}
 		}	
 		break;
-		case MAVLINK_MSG_ID_GLOBAL_POSITION_INT: { // 33
-			read_msg_from_neighbors(rec);
-			}			
-		break;
+		//case MAVLINK_MSG_ID_GLOBAL_POSITION_INT: { // 33
+			//read_msg_from_neighbors(rec);
+			//}			
+		//break;
 		}		
 		/* 
 		TODO : add other cases

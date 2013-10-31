@@ -12,6 +12,8 @@
 
 #define MAX_ONBOARD_PARAM_COUNT 80
 
+#define USER_PAGE_FIRST_FREE_WORD 0x8080020C
+
 typedef struct {
 	float* param;
 	char param_name[MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN];
