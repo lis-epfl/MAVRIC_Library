@@ -178,7 +178,7 @@ void receive_parameter(Mavlink_Received_t* rec) {
 	}
 }
 
-void read_parameters_from_ram()
+void read_parameters_from_flashc()
 {
 	uint8_t i;
 	nvram_array = AVR32_FLASHC_USER_PAGE_ADDRESS;
@@ -190,7 +190,7 @@ void read_parameters_from_ram()
 	
 }
 
-void write_parameters_to_ram()
+void write_parameters_to_flashc()
 {
 	uint8_t i;
 	nvram_array = AVR32_FLASHC_USER_PAGE_ADDRESS;

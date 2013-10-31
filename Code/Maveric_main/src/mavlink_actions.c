@@ -414,9 +414,9 @@ void init_mavlink_actions(void) {
 	centralData=get_central_data();
 	add_PID_parameters();
 	
-	//write_parameters_to_ram();
+	//write_parameters_to_flashc();
 	
-	//read_parameters_from_ram();
+	read_parameters_from_flashc();
 	
 	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_attitude_quaternion, MAVLINK_MSG_ID_ATTITUDE_QUATERNION);
