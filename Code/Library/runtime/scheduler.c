@@ -9,12 +9,16 @@
 #include "scheduler.h"
 #include "time_keeper.h"
 
+
+
 void init_scheduler(task_set *ts) {
 	int i;
 	for (i=0; i<ts->number_of_tasks; i++) {
 		ts->tasks[i].call_function=NULL;
 		ts->tasks[i].tasks=ts;
 	}
+	ts->running_task=-1;
+	ts->current_schedule_slot=0;
 }
 
 task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_period, task_run_mode_t run_mode, function_pointer *call_function) {
@@ -27,6 +31,7 @@ task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_pe
 	ts->tasks[task_slot].repeat_period=repeat_period;
 	ts->tasks[task_slot].next_run=GET_TIME;
 	ts->tasks[task_slot].execution_time=0;
+	ts->tasks[task_slot].timing_mode=PERIODIC_ABSOLUTE;
 #ifdef SCHEDULER_PROFILING	
 	ts->tasks[task_slot].delay_max=0;
 	ts->tasks[task_slot].delay_avg=0;
@@ -72,17 +77,27 @@ int run_scheduler_update(task_set *ts, uint8_t schedule_strategy) {
 	int realtime_violation=0;
 	function_pointer call_task;
 	task_return_t treturn;
-	for (i=0; i<ts->number_of_tasks; i++) {
+	for (i=ts->current_schedule_slot; i<ts->number_of_tasks; i++) {
 		uint32_t current_time=GET_TIME;
 		if ((ts->tasks[i].call_function!=NULL)  && (ts->tasks[i].run_mode!=RUN_NEVER) &&(current_time >= ts->tasks[i].next_run)) {
 			uint32_t delay=current_time - (ts->tasks[i].next_run);
 			uint32_t task_start_time;
-			ts->tasks[i].delay_avg= (15*ts->tasks[i].delay_avg + delay)/16;
-			if (delay>ts->tasks[i].delay_max) ts->tasks[i].delay_max=delay;
+
+		    task_start_time=GET_TIME;
+		    call_task=ts->tasks[i].call_function;
+		    
+		    treturn = call_task();
+
+
 			
-			ts->tasks[i].delay_var_squared=(15*ts->tasks[i].delay_var_squared+(delay - ts->tasks[i].delay_avg)*(delay - ts->tasks[i].delay_avg))/16;
-			
-			ts->tasks[i].next_run += ts->tasks[i].repeat_period;
+			switch (ts->tasks[i].timing_mode) {
+				case PERIODIC_ABSOLUTE:
+					ts->tasks[i].next_run += ts->tasks[i].repeat_period;
+				break;
+				case PERIODIC_RELATIVE:
+					ts->tasks[i].next_run = GET_TIME + ts->tasks[i].repeat_period;
+				break;
+			}
 			if (ts->tasks[i].run_mode==RUN_ONCE) ts->tasks[i].run_mode=RUN_NEVER;
 			if (ts->tasks[i].next_run < current_time) {
 				realtime_violation=-i; //realtime violation!!
@@ -91,15 +106,25 @@ int run_scheduler_update(task_set *ts, uint8_t schedule_strategy) {
 			}
 			
 			
-		    task_start_time=GET_TIME;
-			call_task=ts->tasks[i].call_function;
+			ts->tasks[i].delay_avg= (7*ts->tasks[i].delay_avg + delay)/8;
+			if (delay>ts->tasks[i].delay_max) ts->tasks[i].delay_max=delay;
 			
-			treturn = call_task();
+			ts->tasks[i].delay_var_squared=(15*ts->tasks[i].delay_var_squared+(delay - ts->tasks[i].delay_avg)*(delay - ts->tasks[i].delay_avg))/16;
 			
 			ts->tasks[i].execution_time= (7*ts->tasks[i].execution_time + (GET_TIME-task_start_time))/8;
+						
+			switch (schedule_strategy) {
+			case FIXED_PRIORITY: 
+				ts->current_schedule_slot=0;
+				return realtime_violation;
+				
+			default:
+			case ROUND_ROBIN:
+				// round robin scheme - scheduler will pick up where it left.
+				if (i==ts->number_of_tasks) ts->current_schedule_slot=0;
+				return realtime_violation;
+			}
 			
-			
-			if (schedule_strategy==FIXED_PRIORITY) return realtime_violation;					
 		}
 	}
 	return realtime_violation;;

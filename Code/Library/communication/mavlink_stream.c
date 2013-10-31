@@ -73,7 +73,7 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream,
 task_return_t mavlink_protocol_update() {
 	mavlink_receive_handler();
 	if ((mavlink_out_stream->buffer_empty(mavlink_out_stream->data))==true) {
-		return run_scheduler_update(&mavlink_tasks, FIXED_PRIORITY);
+		return run_scheduler_update(&mavlink_tasks, ROUND_ROBIN);
 		if (mavlink_out_stream->flush!=NULL) mavlink_out_stream->flush;
 	}
 	

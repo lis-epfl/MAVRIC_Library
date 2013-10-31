@@ -13,6 +13,7 @@
 #include "radar_module_driver.h"
 #include "remote_controller.h"
 #include "analog_monitor.h"
+#include "tasks.h"
 
 central_data_t *centralData;
 
@@ -167,6 +168,7 @@ void mavlink_send_pressure(void) {
 	mavlink_msg_scaled_pressure_send(MAVLINK_COMM_0, get_millis(), centralData->pressure.pressure/100.0, centralData->pressure.vario_vz, centralData->pressure.temperature*100.0);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressAlt", centralData->pressure.altitude);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"lastAlt", centralData->position_estimator.last_alt);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"baro_dt", centralData->pressure.dt);
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressFilt", centralData->altitude_filtered);
 }
 
@@ -274,6 +276,28 @@ void mavlink_send_simulation(void) {
 
 	
 }
+
+task_return_t send_rt_stats() {
+	task_set *main_tasks=get_main_taskset();
+	
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "stabAvgDelay", main_tasks->tasks[0].delay_avg);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "stabDelayVar", sqrt(main_tasks->tasks[0].delay_var_squared));
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "stabMaxDelay", main_tasks->tasks[0].delay_max);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "stabRTvio", main_tasks->tasks[0].rt_violations);
+
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "baroAvgDelay", main_tasks->tasks[1].delay_avg);
+
+
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "imuExTime", main_tasks->tasks[0].execution_time);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "navExTime", main_tasks->tasks[3].execution_time);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "imu_dt", get_central_data()->imu1.dt);
+
+	
+	main_tasks->tasks[1].rt_violations=0;
+	main_tasks->tasks[1].delay_max=0;
+
+}
+
 
 void add_PID_parameters(void) {
 	Stabiliser_t* rate_stabiliser = get_rate_stabiliser();
@@ -418,13 +442,13 @@ void init_mavlink_actions(void) {
 	
 	//read_parameters_from_ram();
 	
-	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
+	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_attitude_quaternion, MAVLINK_MSG_ID_ATTITUDE_QUATERNION);
 	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_attitude, MAVLINK_MSG_ID_ATTITUDE);
 	
 	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
-	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
-	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
+	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
+	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
 	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_speed_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT);
@@ -433,12 +457,13 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_servo_output, MAVLINK_MSG_ID_SERVO_OUTPUT_RAW);
 	//add_task(get_mavlink_taskset(),  50000, &mavlink_send_radar);
 	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
-	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
+	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
 	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_gps_raw, MAVLINK_MSG_ID_GPS_RAW_INT);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
 	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
-	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_simulation, MAVLINK_MSG_ID_HIL_STATE);
+	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_simulation, MAVLINK_MSG_ID_HIL_STATE);
 	//add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
 	sort_taskset_by_period(get_mavlink_taskset());
 }

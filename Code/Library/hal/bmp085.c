@@ -25,7 +25,9 @@ int16_t bmp085_read_int(unsigned char address) {
 }
 
 void init_bmp085(){
+	int i;
 	pressure_outputs.altitude_offset=0.0;
+	for (i=0; i<3; i++) pressure_outputs.last_altitudes[i]=0.0;
 	pressure_outputs.vario_vz=0.0;
 	init_bmp085_slow();
 }
@@ -68,6 +70,7 @@ void init_bmp085_slow(){
 
 
 pressure_data* get_pressure_data_slow(float offset) {
+		int i;
 		float altitude, vertical_speed;
 		int32_t UT, UP, B3, B5, B6, X1, X2, X3, p;
 		uint32_t B4, B7;
@@ -140,6 +143,13 @@ pressure_data* get_pressure_data_slow(float offset) {
 		
 			vertical_speed=pressure_outputs.altitude;
 			altitude=44330.0 * (1.0 - pow(pressure_outputs.pressure /sealevelPressure,0.190295)) + pressure_outputs.altitude_offset;
+			
+			for (i=0; i<2; i++) {
+				pressure_outputs.last_altitudes[i]=pressure_outputs.last_altitudes[i+1];
+			}
+			pressure_outputs.last_altitudes[2]=altitude;
+			altitude=median_filter_3x(pressure_outputs.last_altitudes[0], pressure_outputs.last_altitudes[1], pressure_outputs.last_altitudes[2]);
+			
 			if (f_abs(altitude-pressure_outputs.altitude)<15.0) {
 				pressure_outputs.altitude = (BARO_ALT_LPF*pressure_outputs.altitude) + (1.0-BARO_ALT_LPF)*altitude;
 			}else {
@@ -147,7 +157,7 @@ pressure_data* get_pressure_data_slow(float offset) {
 			}
 			
 			dt = (get_micros()-pressure_outputs.last_update)/1000000.0;
-			
+			pressure_outputs.dt=dt;
 			vertical_speed=-(pressure_outputs.altitude-vertical_speed)/dt;
 			
 			if (abs(vertical_speed)>20) vertical_speed=0.0;

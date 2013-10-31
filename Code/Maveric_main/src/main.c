@@ -109,7 +109,7 @@ void main (void)
 	
 	while (1==1) {
 		
-		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
+		run_scheduler_update(get_main_taskset(), FIXED_PRIORITY);
 		
 		//LED_On(LED1);
 

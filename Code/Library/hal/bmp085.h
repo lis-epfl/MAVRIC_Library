@@ -48,12 +48,14 @@ typedef struct{
 	uint8_t raw_temperature[2];
 	float pressure;
 	float temperature;
+	float last_altitudes[3];
 	float altitude;
 	float altitude_offset;
 	float vario_vz;
 	uint32_t last_update;
 	uint32_t last_state_update;
 	pressure_sensor_state state;
+	float dt;
 } pressure_data;
 
 

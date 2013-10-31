@@ -23,6 +23,8 @@ typedef enum task_return_t {
 }task_return_t;
 
 typedef enum task_run_mode_t {RUN_NEVER, RUN_ONCE, RUN_REGULAR} task_run_mode_t;
+typedef enum task_timing_mode_t {PERIODIC_ABSOLUTE, PERIODIC_RELATIVE} task_timing_mode_t;
+enum schedule_strategy_t {ROUND_ROBIN, FIXED_PRIORITY};
 
 typedef task_return_t (*function_pointer)(void);
 
@@ -34,6 +36,7 @@ typedef struct {
 	function_pointer call_function;
 	uint16_t task_id;
 	task_run_mode_t  run_mode;		
+	task_timing_mode_t timing_mode;
 	uint32_t repeat_period;   
 	uint32_t next_run;
 	uint32_t execution_time;
@@ -48,6 +51,8 @@ typedef struct {
 
 typedef struct  {
 	task_handle_t number_of_tasks;
+	int running_task;
+	int current_schedule_slot;
 	task_entry tasks[];
 } task_set;
 
@@ -60,7 +65,6 @@ task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_pe
 bool add_task(task_set *ts, unsigned long repeat_period, task_run_mode_t run_mode, function_pointer *call_function, uint32_t task_id);
 void sort_taskset_by_period(task_set *ts);
 
-enum schedule_strategy_t {ROUND_ROBIN, FIXED_PRIORITY};
 
 int run_scheduler_update(task_set *ts, uint8_t schedule_strategy);
 

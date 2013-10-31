@@ -207,4 +207,20 @@ static float inline center_window_4(float x) {
 	return 1.0/(1+SQR(SQR(x)));
 }
 
+
+static float inline median_filter_3x(float a, float b, float c) {
+	float middle;
+	if ((a <= b) && (a <= c)) {
+		middle = (b <= c) ? b : c;
+	}
+	else if ((b <= a) && (b <= c))
+	{
+		middle = (a <= c) ? a : c;
+	} else {
+	   middle = (a <= b) ? a : b;
+	}
+	return middle;
+
+}
+
 #endif

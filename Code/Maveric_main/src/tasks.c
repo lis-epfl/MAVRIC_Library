@@ -405,7 +405,7 @@ task_return_t run_navigation_task()
 	//}
 	
 }
-
+uint32_t last_baro_update;
 task_return_t run_barometer()
 {
 	uint32_t tnow = get_micros();
@@ -419,23 +419,6 @@ task_return_t run_barometer()
 	
 }
 
-task_return_t send_rt_stats() {
-	
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "stabAvgDelay", main_tasks.tasks[1].delay_avg);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "stabDelayVar", sqrt(main_tasks.tasks[1].delay_var_squared));
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "stabMaxDelay", main_tasks.tasks[1].delay_max);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "stabRTvio", main_tasks.tasks[0].rt_violations);
-
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "imuExTime", main_tasks.tasks[0].execution_time);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "stabExTime", main_tasks.tasks[1].execution_time);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "navExTime", main_tasks.tasks[3].execution_time);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "imu_dt", get_central_data()->imu1.dt);
-
-	
-	main_tasks.tasks[1].rt_violations=0;
-	main_tasks.tasks[1].delay_max=0;
-
-}
 
 void create_tasks() {
 	
@@ -443,19 +426,20 @@ void create_tasks() {
 	//board=get_board_hardware();
 	centralData = get_central_data();
 	
-	//	register_task(&main_tasks, 0, 4000, RUN_REGULAR, &run_imu_update );
-	register_task(&main_tasks, 1, 4000, RUN_REGULAR, &run_stabilisation );
-	register_task(&main_tasks, 2, 1000, RUN_REGULAR, &mavlink_protocol_update);
+	register_task(&main_tasks, 0, 4000, RUN_REGULAR, &run_stabilisation );
 	
-	register_task(&main_tasks, 3, 100000, RUN_REGULAR, &gps_task);
+	register_task(&main_tasks, 1, 26000, RUN_REGULAR, &run_barometer);
+	main_tasks.tasks[1].timing_mode=PERIODIC_RELATIVE;
+
+	register_task(&main_tasks, 2, 100000, RUN_REGULAR, &gps_task);
 	//register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
-	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &read_radar);
+	//register_task(&main_tasks, , 100000, RUN_REGULAR, &read_radar);
 
-	register_task(&main_tasks, 5, 10000, RUN_REGULAR, &run_navigation_task);
+	register_task(&main_tasks, 3, 10000, RUN_REGULAR, &run_navigation_task);
 
-	register_task(&main_tasks, 6, 200000, RUN_REGULAR, &set_mav_mode_n_state);
+	register_task(&main_tasks, 4, 200000, RUN_REGULAR, &set_mav_mode_n_state);
 	
-	register_task(&main_tasks, 7, 15000, RUN_REGULAR, &run_barometer);
 
-	//add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	register_task(&main_tasks, 5, 4000, RUN_REGULAR, &mavlink_protocol_update);
+
 }
