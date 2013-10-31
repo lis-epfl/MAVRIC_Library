@@ -32,8 +32,7 @@ void initialisation() {
 
 	central_data = get_central_data();
 	initialise_board(central_data);
-
-	init_pos_integration(&central_data->position_estimator, &central_data->pressure, &central_data->GPS_data);
+	initialise_central_data();
 	
 	
 	init_radar_modules();
@@ -48,6 +47,7 @@ void initialisation() {
 
 	init_onboard_parameters();
 	init_mavlink_actions();
+	init_pos_integration(&central_data->position_estimator, &central_data->pressure, &central_data->GPS_data);
 	
 	central_data->imu1.attitude.calibration_level=LEVELING;	
 	central_data->mav_state = MAV_STATE_CALIBRATING;
@@ -104,7 +104,7 @@ void main (void)
 	// main loop
 	counter=0;
 	
-	run_all_tests();
+	//run_all_tests();
 	while (1==1) {
 		this_looptime=get_millis();
 		

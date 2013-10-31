@@ -16,7 +16,7 @@
 #include "led.h"
 #include "imu.h"
 
-#include <flashc.h>
+//#include <flashc.h>
 
 NEW_TASK_SET(main_tasks, 10)
 
@@ -228,7 +228,7 @@ task_return_t run_stabilisation() {
 		simu_update(&centralData->sim_model, &centralData->servos, &(centralData->imu1), &centralData->position_estimator);
 		
 		
-		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
+		imu_update(&(centralData->imu1), &(centralData->position_estimator), &centralData->pressure, &centralData->GPS_data);
 		
 		//for (i=0; i<3; i++) centralData->position_estimator.vel[i]=centralData->sim_model.vel[i];
 		//centralData->position_estimator.localPosition=centralData->sim_model.localPosition;

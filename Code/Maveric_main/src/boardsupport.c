@@ -116,6 +116,7 @@ void initialise_board(central_data_t *centralData) {
 
 	rc_init();
 
+
 	Enable_global_interrupt();
 	dbg_print("Board initialised.\n");
 }

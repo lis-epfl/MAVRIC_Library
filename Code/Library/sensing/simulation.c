@@ -243,6 +243,8 @@ void simulate_barometer(simulation_model_t *sim, pressure_data *pressure) {
 		pressure->altitude=sim->localPosition.origin.altitude - sim->localPosition.pos[Z];
 		pressure->vario_vz=sim->vel[Z];
 		pressure->last_update=get_millis();
+		pressure->altitude_offset=0;
+		
 	}
 	
 void simulate_gps(simulation_model_t *sim, gps_Data_type *gps) {
