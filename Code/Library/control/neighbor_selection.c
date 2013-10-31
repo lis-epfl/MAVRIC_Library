@@ -35,9 +35,9 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 		local_coordinates_t localPosNeighbor;
 		uint8_t actualNeighbor;
 		
-		globalPosNeighbor.longitude = packet.lon;
-		globalPosNeighbor.latitude = packet.lat;
-		globalPosNeighbor.altitude = packet.alt;
+		globalPosNeighbor.longitude = packet.lon / 10000000.0;
+		globalPosNeighbor.latitude = packet.lat / 10000000.0;
+		globalPosNeighbor.altitude = packet.alt / 1000.0;
 		globalPosNeighbor.heading = packet.hdg;
 		
 		localPosNeighbor = global_to_local_position(globalPosNeighbor,centralData->position_estimator.localPosition.origin);
@@ -82,10 +82,20 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 		{
 			centralData->listNeighbors[actualNeighbor].position[i] = localPosNeighbor.pos[i];
 		}
-		centralData->listNeighbors[actualNeighbor].velocity[X] = packet.vx;
-		centralData->listNeighbors[actualNeighbor].velocity[Y] = packet.vy;
-		centralData->listNeighbors[actualNeighbor].velocity[Z] = packet.vz;
+		centralData->listNeighbors[actualNeighbor].velocity[X] = packet.vx / 100.0;
+		centralData->listNeighbors[actualNeighbor].velocity[Y] = packet.vy / 100.0;
+		centralData->listNeighbors[actualNeighbor].velocity[Z] = packet.vz / 100.0;
 		
 		centralData->listNeighbors[actualNeighbor].size = 1.0;
+		
+		
+		//dbg_print("Neighbor with ID ");
+		//dbg_print_num(centralData->listNeighbors[actualNeighbor].neighborID,10);
+		//dbg_print(" at position ");
+		//dbg_print_vector(centralData->listNeighbors[actualNeighbor].position,2);
+		//dbg_print(" with velocity ");
+		//dbg_print_vector(centralData->listNeighbors[actualNeighbor].velocity,2);
+		//dbg_print("\n");
+		
 	}
 }

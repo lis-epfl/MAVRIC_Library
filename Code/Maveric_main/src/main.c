@@ -51,7 +51,7 @@ void initialisation() {
 	
 	//delay_ms(1000);
 	init_stabilisation();
-
+	
 	init_onboard_parameters();
 	init_mavlink_actions();
 	init_pos_integration(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);

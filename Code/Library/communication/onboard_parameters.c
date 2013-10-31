@@ -7,7 +7,7 @@
 
 #include "onboard_parameters.h"
 #include "stabilisation.h"
-//#include "flashc.h"
+#include "flashc.h"
 
 Parameter_Set_t param_set;
 
@@ -178,27 +178,30 @@ void receive_parameter(Mavlink_Received_t* rec) {
 	}
 }
 
-void read_parameters_from_ram()
+void read_parameters_from_flashc()
 {
-/*	uint8_t i;
-	nvram_array = AVR32_FLASHC_USER_PAGE_ADDRESS;
+	uint8_t i;
+	nvram_array = AVR32_FLASHC_USER_PAGE_ADDRESS + 0x04;
 	
 	for (i=0;i<param_set.param_count;i++)
 	{
 		*param_set.parameters[i].param = nvram_array->values[i];
 	}
-*/
+
 }
 
-void write_parameters_to_ram()
+void write_parameters_to_flashc()
 {
-/*
+
 	uint8_t i;
-	nvram_array = AVR32_FLASHC_USER_PAGE_ADDRESS;
+	nvram_array = AVR32_FLASHC_USER_PAGE_ADDRESS + 0x04;
+	
+	nvram_data_ttt local_array;
 	
 	for (i=0;i<param_set.param_count;i++)
 	{
-		flashc_memcpy((void *)&(nvram_array->values[i]),   param_set.parameters[i].param, sizeof((nvram_array->values[i])),   true);
+		//flashc_memcpy((void *)&(nvram_array->values[i]),   param_set.parameters[i].param, sizeof((nvram_array->values[i])),   true);
+		local_array.values[i] = *param_set.parameters[i].param;
 	}
-	*/
+	flashc_memcpy((void *)nvram_array, &local_array, sizeof(*nvram_array) ,   true);
 }

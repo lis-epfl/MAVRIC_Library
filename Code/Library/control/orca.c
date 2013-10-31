@@ -9,6 +9,7 @@
 #include "central_data.h"
 #include "maths.h"
 #include "print_util.h"
+#include "maths.h"
 
 central_data_t *centralData;
 
@@ -31,18 +32,30 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 	
 	plane_t planes[MAX_NUM_NEIGHBORS];
 	
+	UQuat_t q_vel_neighbor, qvel_neighbor_bf;
+	
 	float relativePosition[3], relativeVelocity[3];
 	float combinedRadius, distSq, combinedRadiusSq, dotProduct, wLength, wLenghtSq;
 	
-	float w[3], unitW[3], u[3];
+	float w[3], unitW[3], u[3], vel_neighor_bf[3];
 	
 	/* Create agent ORCA planes. */
 	for (ind=0; ind<centralData->number_of_neighbors; ind++)
 	{
+		q_vel_neighbor.s = 0.0; 
+		q_vel_neighbor.v[0] = centralData->listNeighbors[ind].velocity[0];
+		q_vel_neighbor.v[1] = centralData->listNeighbors[ind].velocity[1];
+		q_vel_neighbor.v[2] = centralData->listNeighbors[ind].velocity[2];
+		qvel_neighbor_bf = quat_global_to_local(centralData->imu1.attitude.qe,q_vel_neighbor);
+		
+		vel_neighor_bf[0] = qvel_neighbor_bf.v[0];
+		vel_neighor_bf[1] = qvel_neighbor_bf.v[1];
+		vel_neighor_bf[2] = qvel_neighbor_bf.v[2];
+		
 		for (i=0;i<3;i++)
 		{
-			relativePosition[i] = centralData->position_estimator.localPosition.pos[i] - centralData->listNeighbors[ind].position[i];
-			relativeVelocity[i] = centralData->position_estimator.vel_bf[i] - centralData->listNeighbors[ind].velocity[i];
+			relativePosition[i] = centralData->listNeighbors[ind].position[i] - centralData->position_estimator.localPosition.pos[i];
+			relativeVelocity[i] = centralData->position_estimator.vel_bf[i] - vel_neighor_bf[i];
 		}
 		distSq = vector_norm_sqr(relativePosition);
 		combinedRadius = centralData->safe_size + centralData->listNeighbors[ind].size;
