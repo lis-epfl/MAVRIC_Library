@@ -32,7 +32,7 @@ typedef struct {
 }Parameter_Set_t;
 
 typedef struct{
-	float values[MAX_ONBOARD_PARAM_COUNT];
+	float values[MAX_ONBOARD_PARAM_COUNT+3]; // for number of parameters and two checksums
 } nvram_data_ttt;	
 
 nvram_data_ttt *nvram_array;
