@@ -24,7 +24,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) {
 	uint8_t c1, c2, i;
 	uint16_t sw;
 	uint32_t now =get_time_ticks() ;
-	if (SPECTRUM_UART.csr & AVR32_USART_CSR_RXRDY_MASK) {
+	if (REMOTE_UART.csr & AVR32_USART_CSR_RXRDY_MASK) {
 		spRec1.duration=now-spRec1.last_time;
 		spRec1.last_time=now;
 //		putstring(STDOUT, "!");
@@ -32,7 +32,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) {
 		if ((spRec1.duration>2500)) {
 			buffer_clear(&spRec1.receiver);
 		}
-		c1=(uint8_t)SPECTRUM_UART.rhr;
+		c1=(uint8_t)REMOTE_UART.rhr;
 		buffer_put(&spRec1.receiver, c1);
 		
 
@@ -56,7 +56,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) {
 void rc_init (void) {
    static const usart_options_t usart_opt =
    {
-     .baudrate     = BAUD_SPEKTRUM,
+     .baudrate     = BAUD_REMOTE,
      .charlength   = 8,
      .paritytype   = USART_NO_PARITY,
      .stopbits     = USART_1_STOPBIT,
@@ -82,9 +82,9 @@ void rc_init (void) {
                      sizeof(USART_GPIO_MAP) / sizeof(USART_GPIO_MAP[0]));
 	
     // Initialize the USART in RS232 mode.
-    usart_init_rs232( (&SPECTRUM_UART), &usart_opt, sysclk_get_cpu_hz());
+    usart_init_rs232( (&REMOTE_UART), &usart_opt, sysclk_get_cpu_hz());
 	INTC_register_interrupt( (__int_handler) &spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INT1);
-	SPECTRUM_UART.ier=AVR32_USART_IER_RXRDY_MASK;
+	REMOTE_UART.ier=AVR32_USART_IER_RXRDY_MASK;
 	//initUART_RX(&spRec1.receiver,  &USARTC1, USART_RXCINTLVL_LO_gc, BSEL_SPEKTRUM);
 	//initUART_RX(&spRec2.receiver,  &USARTD0, USART_RXCINTLVL_LO_gc, BSEL_SPEKTRUM);
 

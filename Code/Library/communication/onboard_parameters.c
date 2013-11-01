@@ -8,6 +8,7 @@
 #include "onboard_parameters.h"
 #include "stabilisation.h"
 #include "flashc.h"
+#include "print_util.h"
 
 Parameter_Set_t param_set;
 
@@ -183,25 +184,55 @@ void read_parameters_from_flashc()
 	uint8_t i;
 	nvram_array = AVR32_FLASHC_USER_PAGE_ADDRESS + 0x04;
 	
-	for (i=0;i<param_set.param_count;i++)
+	nvram_data_ttt local_array;
+	
+	float cksum1, cksum2;
+	cksum1 = 0;
+	cksum2 = 0;
+	
+	for (i=0;i<(param_set.param_count+1);i++)
 	{
-		*param_set.parameters[i].param = nvram_array->values[i];
+		local_array.values[i] = nvram_array->values[i];
+		cksum1 += local_array.values[i];
+		cksum2 += cksum1;
 	}
-
+	
+	if ((param_set.param_count==local_array.values[0])&&(cksum1 == nvram_array->values[param_set.param_count+1])&&(cksum2 == nvram_array->values[param_set.param_count+2]))
+	{
+		dbg_print("Flash read successful! New Parameters inserted");
+		for (i=1;i<(param_set.param_count+1);i++)
+		{
+			*param_set.parameters[i-1].param = local_array.values[i];
+		}
+	}else{
+		dbg_print("Flash memory corrupted! Hardcoded values taken.\n");
+	}
 }
 
 void write_parameters_to_flashc()
 {
+	float cksum1, cksum2;
+	cksum1 = 0;
+	cksum2 = 0;
 
 	uint8_t i;
 	nvram_array = AVR32_FLASHC_USER_PAGE_ADDRESS + 0x04;
 	
 	nvram_data_ttt local_array;
 	
-	for (i=0;i<param_set.param_count;i++)
+	local_array.values[0] = param_set.param_count;
+	cksum1 += local_array.values[0];
+	cksum2 += cksum1;
+	
+	for (i=1;i<(param_set.param_count+1);i++)
 	{
 		//flashc_memcpy((void *)&(nvram_array->values[i]),   param_set.parameters[i].param, sizeof((nvram_array->values[i])),   true);
-		local_array.values[i] = *param_set.parameters[i].param;
+		local_array.values[i] = *param_set.parameters[i-1].param;
+		cksum1 += local_array.values[i];
+		cksum2 += cksum1;
 	}
+	local_array.values[param_set.param_count+1] = cksum1;
+	local_array.values[param_set.param_count+2] = cksum2;
+	
 	flashc_memcpy((void *)nvram_array, &local_array, sizeof(*nvram_array) ,   true);
 }

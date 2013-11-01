@@ -198,7 +198,7 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		}
 		break;
 		case MAVLINK_MSG_ID_SET_MODE : { // 11
-			set_mav_mode(rec, &centralData->mav_mode, &(centralData->mav_state));
+			set_mav_mode(rec, &centralData->mav_mode, &(centralData->mav_state),centralData->simulation_mode);
 		}
 		break;
 		case MAVLINK_MSG_ID_COMMAND_LONG : { // 76

@@ -64,19 +64,12 @@ void init_imu (Imu_Data_t *imu1) {
 void imu_get_raw_data(Imu_Data_t *imu1) {
 	int i=0;
 	gyro_data* gyros=get_gyro_data_slow();
-	//gyros->axes[RAW_GYRO_X] = 0.0;
-	//gyros->axes[RAW_GYRO_Y] = 0.0;
-	//gyros->axes[RAW_GYRO_Z] = 0.0;
 
 	acc_data* accs=get_acc_data_slow();
-	//accs->axes[RAW_ACC_X] = 0.0;
-	//accs->axes[RAW_ACC_Y] = 0.0;
-	//accs->axes[RAW_ACC_Z] = 0.0;
+
 	
 	compass_data* compass=get_compass_data_slow();
-	//compass->axes[RAW_COMPASS_X] = 0.0;
-	//compass->axes[RAW_COMPASS_Y] = 0.0;
-	//compass->axes[RAW_COMPASS_Z] = 0.0;
+
 
 	imu1->raw_channels[GYRO_OFFSET+IMU_X]=(float)gyros->axes[RAW_GYRO_X];
 	imu1->raw_channels[GYRO_OFFSET+IMU_Y]=(float)gyros->axes[RAW_GYRO_Y];
@@ -89,12 +82,6 @@ void imu_get_raw_data(Imu_Data_t *imu1) {
 	imu1->raw_channels[COMPASS_OFFSET+IMU_X]=(float)-compass->axes[RAW_COMPASS_X];
 	imu1->raw_channels[COMPASS_OFFSET+IMU_Y]=(float)-compass->axes[RAW_COMPASS_Y];
 	imu1->raw_channels[COMPASS_OFFSET+IMU_Z]=(float)compass->axes[RAW_COMPASS_Z];
-	
-	//dbg_print("Magn:");
-	//dbg_print_num(imu1->raw_channels[COMPASS_OFFSET+IMU_X],10);
-	//dbg_print_num(imu1->raw_channels[COMPASS_OFFSET+IMU_Y],10);
-	//dbg_print_num(imu1->raw_channels[COMPASS_OFFSET+IMU_Z],10);
-	//dbg_print("\n");
 	
 }
 
