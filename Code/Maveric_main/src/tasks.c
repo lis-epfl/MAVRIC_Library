@@ -46,6 +46,7 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 	if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() > 0.9))
 	{
 		//dbg_print("motor on\n");
+		dbg_print("motor on: yaw=\n"); dbg_putfloat(get_yaw_from_remote(),2);
 		*motorbool = 1;
 	}else if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() <-0.9))
 	{
@@ -152,7 +153,7 @@ task_return_t set_mav_mode_n_state()
 					centralData->mav_state = MAV_STATE_CRITICAL;
 					break;
 				case -2:
-					centralData->mav_state = MAV_STATE_EMERGENCY;
+					centralData->mav_state = MAV_STATE_CRITICAL;
 					break;
 			}
 			break;
@@ -187,10 +188,11 @@ task_return_t set_mav_mode_n_state()
 				case -1:
 					break;
 				case -2:
-					if (centralData->home_wp_reached)
-					{
-						centralData->mav_state = MAV_STATE_EMERGENCY;
-					}
+					//if (centralData->home_wp_reached)
+					//{
+						//centralData->mav_state = MAV_STATE_EMERGENCY;
+					//}
+					centralData->mav_state = MAV_STATE_EMERGENCY;
 					break;
 			}
 			break;

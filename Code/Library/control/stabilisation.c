@@ -24,7 +24,7 @@ void init_rate_stabilisation(Stabiliser_t *stabiliser) {
 	int i=0;
 	// initialise roll and pitch controllers
 	for (i=0; i<2; i++) {
-		(stabiliser->rpy_controller[i]).p_gain=0.07;
+		(stabiliser->rpy_controller[i]).p_gain=0.15;
 		(stabiliser->rpy_controller[i]).last_update=get_time_ticks();	
 		(stabiliser->rpy_controller[i]).clip_min=-0.9;
 		(stabiliser->rpy_controller[i]).clip_max= 0.9;

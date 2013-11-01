@@ -288,49 +288,49 @@ void run_navigation()
 		//set_rel_pos_n_dist2wp(waypoint_hold_coordinates.pos,rel_pos,&dist2wp_sqr);
 	}
 	
-	if (centralData->mav_state == MAV_STATE_CRITICAL)
-	{
-		switch (critical_behavior)
-		{
-			case CLIMB_TO_SAVE_ALT:
-				waypoint_critical_coordinates.pos[X] = centralData->position_estimator.localPosition.pos[X];
-				waypoint_critical_coordinates.pos[Y] = centralData->position_estimator.localPosition.pos[Y];
-				waypoint_critical_coordinates.pos[Z] = -30.0;
-				break;
-			case FLY_TO_HOME_WP:
-				waypoint_critical_coordinates.pos[X] = 0.0;
-				waypoint_critical_coordinates.pos[Y] = 0.0;
-				waypoint_critical_coordinates.pos[Z] = -30.0;
-				break;
-			case CRITICAL_LAND:
-				waypoint_critical_coordinates.pos[X] = 0.0;
-				waypoint_critical_coordinates.pos[Y] = 0.0;
-				waypoint_critical_coordinates.pos[Z] = 0.0;
-				break;
-		}
-		
-		rel_pos[X] = (float)(waypoint_critical_coordinates.pos[X] - centralData->position_estimator.localPosition.pos[X]);
-		rel_pos[Y] = (float)(waypoint_critical_coordinates.pos[Y] - centralData->position_estimator.localPosition.pos[Y]);
-		rel_pos[Z] = (float)(waypoint_critical_coordinates.pos[Z] - centralData->position_estimator.localPosition.pos[Z]);
-		
-		dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
-		
-		if (dist2wp_sqr < 3.0)
-		{
-			switch (critical_behavior)
-			{
-				case CLIMB_TO_SAVE_ALT:
-					critical_behavior = FLY_TO_HOME_WP;
-					break;
-				case FLY_TO_HOME_WP:
-					critical_behavior = CRITICAL_LAND;
-					break;
-				case CRITICAL_LAND:
-					centralData->home_wp_reached = true;
-					break;
-			}
-		}
-	}
+	//if (centralData->mav_state == MAV_STATE_CRITICAL)
+	//{
+		//switch (critical_behavior)
+		//{
+			//case CLIMB_TO_SAVE_ALT:
+				//waypoint_critical_coordinates.pos[X] = centralData->position_estimator.localPosition.pos[X];
+				//waypoint_critical_coordinates.pos[Y] = centralData->position_estimator.localPosition.pos[Y];
+				//waypoint_critical_coordinates.pos[Z] = -30.0;
+				//break;
+			//case FLY_TO_HOME_WP:
+				//waypoint_critical_coordinates.pos[X] = 0.0;
+				//waypoint_critical_coordinates.pos[Y] = 0.0;
+				//waypoint_critical_coordinates.pos[Z] = -30.0;
+				//break;
+			//case CRITICAL_LAND:
+				//waypoint_critical_coordinates.pos[X] = 0.0;
+				//waypoint_critical_coordinates.pos[Y] = 0.0;
+				//waypoint_critical_coordinates.pos[Z] = 0.0;
+				//break;
+		//}
+		//
+		//rel_pos[X] = (float)(waypoint_critical_coordinates.pos[X] - centralData->position_estimator.localPosition.pos[X]);
+		//rel_pos[Y] = (float)(waypoint_critical_coordinates.pos[Y] - centralData->position_estimator.localPosition.pos[Y]);
+		//rel_pos[Z] = (float)(waypoint_critical_coordinates.pos[Z] - centralData->position_estimator.localPosition.pos[Z]);
+		//
+		//dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
+		//
+		//if (dist2wp_sqr < 3.0)
+		//{
+			//switch (critical_behavior)
+			//{
+				//case CLIMB_TO_SAVE_ALT:
+					//critical_behavior = FLY_TO_HOME_WP;
+					//break;
+				//case FLY_TO_HOME_WP:
+					//critical_behavior = CRITICAL_LAND;
+					//break;
+				//case CRITICAL_LAND:
+					//centralData->home_wp_reached = true;
+					//break;
+			//}
+		//}
+	//}
 	
 	set_speed_command(rel_pos,dist2wp_sqr);
 	centralData->controls_nav.theading=waypoint_hold_coordinates.heading;

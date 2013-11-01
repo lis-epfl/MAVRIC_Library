@@ -25,7 +25,7 @@
 #define RC_PITCH_DIR    -1
 
 #define RC_YAW			3
-#define RC_YAW_DIR		3
+#define RC_YAW_DIR		1
 
 #define RC_SAFETY   4
 #define RC_ID_MODE  5

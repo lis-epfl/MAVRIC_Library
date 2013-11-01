@@ -440,7 +440,7 @@ void init_mavlink_actions(void) {
 	
 	//write_parameters_to_flashc();
 	
-	read_parameters_from_flashc();
+	//read_parameters_from_flashc();
 	
 	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_attitude_quaternion, MAVLINK_MSG_ID_ATTITUDE_QUATERNION);
@@ -459,9 +459,9 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
 	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
 	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_gps_raw, MAVLINK_MSG_ID_GPS_RAW_INT);
-	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
+	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
 	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
-	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_simulation, MAVLINK_MSG_ID_HIL_STATE);
+	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &mavlink_send_simulation, MAVLINK_MSG_ID_HIL_STATE);
 	//add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
