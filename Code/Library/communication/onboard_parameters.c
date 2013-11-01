@@ -199,6 +199,7 @@ void read_parameters_from_flashc()
 	
 	if ((param_set.param_count==local_array.values[0])&&(cksum1 == nvram_array->values[param_set.param_count+1])&&(cksum2 == nvram_array->values[param_set.param_count+2]))
 	{
+		dbg_print("Flash read successful! New Parameters inserted");
 		for (i=1;i<(param_set.param_count+1);i++)
 		{
 			*param_set.parameters[i-1].param = local_array.values[i];

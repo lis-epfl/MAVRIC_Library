@@ -465,37 +465,64 @@ void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints
 	}		
 }
 
-void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* board_mav_state)
+void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* board_mav_state, uint8_t sim_mode)
 {
 	mavlink_set_mode_t packet;
 	mavlink_msg_set_mode_decode(&rec->msg,&packet);
 	// Check if this message is for this system and subsystem
 	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
 	{
-		//dbg_print("base_mode:");
-		//dbg_print_num(packet.base_mode,10);
-		//dbg_print(", custom mode:");
-		//dbg_print_num(packet.custom_mode,10);
-		//dbg_print("\n");
-		
-		switch(packet.base_mode)
+		dbg_print("base_mode:");
+		dbg_print_num(packet.base_mode,10);
+		dbg_print(", custom mode:");
+		dbg_print_num(packet.custom_mode,10);
+		dbg_print("\n");
+
+		if (sim_mode == 0)
 		{
-			case MAV_MODE_STABILIZE_DISARMED:
-			case MAV_MODE_GUIDED_DISARMED:
-			case MAV_MODE_AUTO_DISARMED:
-				*board_mav_state = MAV_STATE_STANDBY;
-				*board_mav_mode = MAV_MODE_MANUAL_DISARMED;
+			switch(packet.base_mode)
+			{
+				case MAV_MODE_STABILIZE_DISARMED:
+				case MAV_MODE_GUIDED_DISARMED:
+				case MAV_MODE_AUTO_DISARMED:
+					*board_mav_state = MAV_STATE_STANDBY;
+					*board_mav_mode = MAV_MODE_MANUAL_DISARMED;
 				break;
-			case MAV_MODE_MANUAL_ARMED:
-				if (get_thrust_from_remote()<-0.95)
-				{
+				case MAV_MODE_MANUAL_ARMED:
+					if (get_thrust_from_remote()<-0.95)
+					{
+						*board_mav_state = MAV_STATE_ACTIVE;
+						*board_mav_mode = MAV_MODE_MANUAL_ARMED;
+					}
+				break;
+			}
+		}else{
+			switch(packet.base_mode)
+			{
+				case MAV_MODE_STABILIZE_DISARMED:
+				case MAV_MODE_GUIDED_DISARMED:
+				case MAV_MODE_AUTO_DISARMED:
+					*board_mav_state = MAV_STATE_STANDBY;
+					*board_mav_mode = MAV_MODE_MANUAL_DISARMED;
+				break;
+				case MAV_MODE_MANUAL_ARMED:
+					*board_mav_state = MAV_STATE_ACTIVE;
+					*board_mav_mode = MAV_MODE_MANUAL_ARMED;
+				break;
+				case MAV_MODE_STABILIZE_ARMED:
 					*board_mav_state = MAV_STATE_ACTIVE;
 					*board_mav_mode = MAV_MODE_STABILIZE_ARMED;
-				}
 				break;
+				case MAV_MODE_GUIDED_ARMED:
+					*board_mav_state = MAV_STATE_ACTIVE;
+					*board_mav_mode = MAV_MODE_GUIDED_ARMED;
+				break;
+				case MAV_MODE_AUTO_ARMED:
+					*board_mav_state = MAV_STATE_ACTIVE;
+					*board_mav_mode = MAV_MODE_AUTO_ARMED;
+				break;
+			}
 		}
-		
-		
 		
 	}
 }

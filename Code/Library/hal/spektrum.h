@@ -1,12 +1,12 @@
 /*
- * turnigy.h
+ * spektrum.h
  *
- *  Created on: Aug 27, 2013
+ *  Created on: Nov 01, 2013
  *      Author: ndousse
  */
 
-#ifndef TURNIGY_H_
-#define TURNIGY_H_
+#ifndef SPEKTRUM_H_
+#define SPEKTRUM_H_
 
 #include "compiler.h"
 #include "buffer.h"
@@ -15,26 +15,25 @@
 #define BAUD_REMOTE  115200
 
 #define RC_THROTTLE		0
-#define RC_THROTTLE_DIR 1
+#define RC_THROTTLE_DIR -1
 
 #define RC_ROLL			1
-#define RC_ROLL_DIR     1
+#define RC_ROLL_DIR     -1
 
 #define RC_PITCH		2
-#define RC_PITCH_DIR    -1
+#define RC_PITCH_DIR    1
 
 #define RC_YAW			3
-#define RC_YAW_DIR		1
+#define RC_YAW_DIR		3
 
 #define RC_SAFETY   4
 #define RC_ID_MODE  5
 #define RC_TRIM_P3  6
-#define RC_TRIM_P1  7
-#define RC_TRIM_P2  8
+
 
 #define DEADZONE 30.0
 
-#define RC_SCALEFACTOR 1.0/438.0
+#define RC_SCALEFACTOR 1.0/350.0
 
 /*
 typedef struct Turnigy_Receiver {
@@ -62,4 +61,4 @@ float get_thrust_from_turnigy();
 
 void get_channel_mode_turnigy(uint8_t* chanSwitch);
 */
-#endif //TURNIGY_H_
+#endif //SPEKTRUM_H_

@@ -1,5 +1,5 @@
 /*
- * spektrum.h
+ * remote_dsm2.h
  *
  *  Created on: Mar 2, 2010
  *      Author: felix
@@ -11,8 +11,7 @@
 #include "buffer.h"
 #include "stabilisation.h"
 
-#define BAUD_SPEKTRUM  115200
-#define SPECTRUM_UART AVR32_USART1
+#define REMOTE_UART AVR32_USART1
 
 
 typedef struct Spektrum_Receiver {
@@ -41,4 +40,4 @@ float get_thrust_from_spektrum();
 void get_channel_mode_spektrum(uint8_t *chanSwitch);
 */
 
-#endif /* SPEKTRUM_H_ */
+#endif /* REMOTE_DSM2_ */
