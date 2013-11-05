@@ -42,7 +42,7 @@ class MAVlinkReceiver:
     def requestStream(self,  stream,  active,  frequency=0):
         # request activation/deactivation of stream. If frequency is 0, it won't be changed.
         reqMsg=pymavlink.MAVLink_request_data_stream_message(target_system=self.master.target_system, target_component=self.master.target_component, req_stream_id=stream.get_msgId(), req_message_rate=frequency, start_stop=active)
-        self.master.write(reqMsg.pack(pymavlink.MAVLink(self.master.target_system,  self.master.target_component)))
+        self.master.write(reqMsg.pack(pymavlink.MAVLink(self.master.source_system,  255)))
         if active:
             print "activating stream",   stream.get_msgId(),  frequency
         else:
@@ -51,7 +51,7 @@ class MAVlinkReceiver:
     def requestAllStreams(self):
         
         reqMsg=pymavlink.MAVLink_request_data_stream_message(target_system=self.master.target_system, target_component=self.master.target_component, req_stream_id=255, req_message_rate=0, start_stop=0)
-        self.master.write(reqMsg.pack(pymavlink.MAVLink(self.master.target_system,  self.master.target_component)))
+        self.master.write(reqMsg.pack(pymavlink.MAVLink(self.master.source_system,  255)))
 
     def wait_message(self):
         '''wait for a heartbeat so we know the target system IDs'''

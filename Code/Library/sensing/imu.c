@@ -10,6 +10,8 @@
 #include "delay.h"
 #include "itg3200_driver.h"
 #include "adxl345_driver.h"
+//#include "lsm330dlc_driver.h"
+
 #include "compass_hmc5883l.h"
 #include "time_keeper.h"
 #include "print_util.h"
@@ -18,10 +20,11 @@
 int ic;
 void init_imu (Imu_Data_t *imu1) {
 	
-	init_itg3200_slow();
 	
+	init_itg3200_slow();	
 	init_adxl345_slow();
-
+	//init_lsm330();
+	
 	init_hmc5883_slow();
 
 	//calibrate_Gyros(imu1);
@@ -49,10 +52,6 @@ void init_imu (Imu_Data_t *imu1) {
 	imu1->raw_bias[1+COMPASS_OFFSET]= MAG_BIAIS_Y;
 	imu1->raw_bias[2+COMPASS_OFFSET]= MAG_BIAIS_Z;
 	
-	//Geraud
-//	imu1->raw_bias[3]=6.0;
-//	imu1->raw_bias[4]=16.0;
-//	imu1->raw_bias[5]=-34.0;
 	
 	imu_last_update_init = false;
 	
@@ -63,9 +62,12 @@ void init_imu (Imu_Data_t *imu1) {
 
 void imu_get_raw_data(Imu_Data_t *imu1) {
 	int i=0;
+	
 	gyro_data* gyros=get_gyro_data_slow();
-
 	acc_data* accs=get_acc_data_slow();
+	
+//	lsm_gyro_data_t* gyros=lsm330_get_gyro_data();
+//	lsm_acc_data_t* accs=lsm330_get_acc_data();
 
 	
 	compass_data* compass=get_compass_data_slow();
@@ -116,7 +118,7 @@ void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *
 		imu1->last_update = t;
 		imu_last_update_init = true;
 	}else{
-		//imu_get_raw_data(imu1);
+		imu_get_raw_data(imu1);
 		imu1->dt=ticks_to_seconds(t - imu1->last_update);
 		imu1->last_update=t;
 		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt, false);

@@ -7,95 +7,120 @@
 
 
 #include "lsm330dlc_driver.h"
-
+#include "gpio.h"
 #include "i2c_driver_int.h"
 #include "print_util.h"
 //#include "twim.h"
 
-static volatile gyro_data gyro_outputs;
+static volatile lsm_gyro_data_t lsm_gyro_outputs;
+static volatile lsm_acc_data_t  lsm_acc_outputs;
 
-static  i2c_schedule_event gyro_event;
 
-#define CONFIG_REG_ADDRESS 21
-#define SENSOR_REG_ADDRESS 27
-
-#define FULL_SCALE_MASK (_BV(3)|_BV(4))
-#define DLPF_256HZ 0
-#define DLPF_188HZ 1
-#define DLPF_98HZ 2
-#define DLPF_42HZ 3
-#define DLPF_20HZ 4
-#define DLPF_10HZ 5
-#define DLPF_5HZ 6
-
-typedef struct {
-	uint8_t conf_start_reg_address;
-	uint8_t sample_div;
-	uint8_t DLPF;
-	uint8_t interrupts;
-	
-} gyro_config;
-
-gyro_config default_configuration;
-uint8_t read_preamble_lsm330=SENSOR_REG_ADDRESS;
-
-void init_lsm330(void) {
-	default_configuration.conf_start_reg_address=CONFIG_REG_ADDRESS;
-
-	default_configuration.sample_div=4; //output frequency after filtering: 1khz/8khz /(sample_div +1)
-	default_configuration.DLPF=DLPF_42HZ;
-	default_configuration.interrupts=0;
-
-	gyro_event.callback=0;
-	gyro_event.repetition_rate_ms=5;
-	gyro_event.trigger_next_event=-1;
-
-	gyro_event.config.slave_address=LSM330_GYRO_SLAVE_ADDRESS;
-	gyro_event.config.direction=I2C_WRITE;
-	gyro_event.config.read_data=&gyro_outputs;
-	gyro_event.config.read_count=8;
-	gyro_event.config.write_data=&default_configuration;
-	gyro_event.config.write_count=4;
-	gyro_event.config.i2c_speed=100000;
-	
-	i2c_add_request(0, &gyro_event);
-	i2c_trigger_request(0, gyro_event.schedule_slot);
-	
-	
-	gyro_event.config.direction=I2C_WRITE1_THEN_READ;
-	gyro_event.config.write_then_read_preamble=SENSOR_REG_ADDRESS;
-	gyro_event.config.write_data=&read_preamble_lsm330;
-	gyro_event.config.write_count=1;
-	
-	gyro_event.config.read_data=&gyro_outputs;
-	gyro_event.config.read_count=8;
-	i2c_change_request(0, &gyro_event);
-	i2c_trigger_request(0, gyro_event.schedule_slot);
-	/**/
-}
-
-void reconfigure_gyro_lsm330(void) {
-	i2c_trigger_request(0, gyro_event.schedule_slot);
-}
 
 void init_lsm330_acc(void) {
+	
+	
+	twim_write(&AVR32_TWIM0, (uint8_t*)&lsm_acc_default_config, sizeof(lsm_acc_default_config), LSM330_ACC_SLAVE_ADDRESS, false);
+		
+	twim_write(&AVR32_TWIM0, (uint8_t*) &fifo_config, 2, LSM330_ACC_SLAVE_ADDRESS, false);
+
+}
+
+void init_lsm330_gyro(void) {
+	gpio_configure_pin(LSM_GYRO_DEN_PIN, GPIO_DIR_OUTPUT);	
+	gpio_set_pin_high(LSM_GYRO_DEN_PIN);
+	twim_write(&AVR32_TWIM0, (uint8_t*)&lsm_gyro_default_config, sizeof(lsm_gyro_default_config), LSM330_GYRO_SLAVE_ADDRESS, false);
+	
+	twim_write(&AVR32_TWIM0, (uint8_t*) &fifo_config, 2, LSM330_GYRO_SLAVE_ADDRESS, false);
+
+}
+
+lsm_get_acc_config() {
+	int i;
+	uint8_t data_register_address=lsm_acc_default_config.start_address | LSM_AUTO_INCREMENT;
+	uint8_t readbuffer[5];
+	twim_transfer_t preamble;
+	twim_transfer_t result;
+	preamble.buffer=&data_register_address;
+	preamble.chip=LSM330_ACC_SLAVE_ADDRESS;
+	preamble.length=1;
+	preamble.read=0;
+	result.chip=LSM330_ACC_SLAVE_ADDRESS;
+	result.buffer=&readbuffer;
+	result.length=sizeof(readbuffer);
+	result.read=1;
+	
+	twim_write(&AVR32_TWIM0, (uint8_t*) &data_register_address, 1, LSM330_ACC_SLAVE_ADDRESS, false);
+	twim_read(&AVR32_TWIM0, (uint8_t*)&readbuffer, sizeof(readbuffer), LSM330_ACC_SLAVE_ADDRESS, false);
+	
+	dbg_print("lsm acc config:\n");
+	for (i=0; i<sizeof(readbuffer); i++) {
+		dbg_print_num(readbuffer[i], 16); dbg_print(" ( ");
+		dbg_print_num(lsm_acc_default_config.ctrl_reg_a[i], 16); dbg_print(")\n");
+	}
+}
+lsm_get_gyro_config() {
+	int i;
+	uint8_t data_register_address=lsm_acc_default_config.start_address | LSM_AUTO_INCREMENT;
+	uint8_t readbuffer[5];
+	twim_transfer_t preamble;
+	twim_transfer_t result;
+	preamble.buffer=&data_register_address;
+	preamble.chip=LSM330_GYRO_SLAVE_ADDRESS;
+	preamble.length=1;
+	preamble.read=0;
+	result.chip=LSM330_GYRO_SLAVE_ADDRESS;
+	result.buffer=&readbuffer;
+	result.length=sizeof(readbuffer);
+	result.read=1;
+	
+	twim_write(&AVR32_TWIM0, (uint8_t*) &data_register_address, 1, LSM330_GYRO_SLAVE_ADDRESS, false);
+	twim_read(&AVR32_TWIM0, (uint8_t*)&readbuffer, sizeof(readbuffer), LSM330_GYRO_SLAVE_ADDRESS, false);
+	
+	dbg_print("lsm gyro config:\n");
+	for (i=0; i<sizeof(readbuffer); i++) {
+		dbg_print_num(readbuffer[i], 16); dbg_print(" ( ");
+		dbg_print_num(lsm_gyro_default_config.ctrl_reg_g[i], 16); dbg_print(")\n");
+	}
+}
+
+
+void init_lsm330(void) {
 	static twim_options_t twi_opt= {
-		.pba_hz=64000000, 
+		.pba_hz=64000000,
 		.speed = 400000,
-		.chip = LSM330_GYRO_SLAVE_ADDRESS, 
+		.chip = LSM330_ACC_SLAVE_ADDRESS,
 		.smbus=false
 	};
 
 	twim_master_init(&AVR32_TWIM0, &twi_opt);
-	twim_write(&AVR32_TWIM0, (uint8_t*)&default_configuration, 4, LSM330_GYRO_SLAVE_ADDRESS, false);
+	init_lsm330_acc();
+	init_lsm330_gyro();
+	lsm_get_acc_config();
+	lsm_get_gyro_config();
+
 }
 
 
-gyro_data* get_lsm330_gyro_data(void) {
-	gyro_event.config.write_then_read_preamble=SENSOR_REG_ADDRESS;
-	twim_write(&AVR32_TWIM0, (uint8_t*) &gyro_event.config.write_then_read_preamble, 1, LSM330_GYRO_SLAVE_ADDRESS, false);
-	twim_read(&AVR32_TWIM0, (uint8_t*)&gyro_outputs, 8, LSM330_GYRO_SLAVE_ADDRESS, false);
+
+
+
+lsm_acc_data_t* lsm330_get_acc_data(void) {
+	uint8_t data_register_address=LSM_ACC_OUT_ADDRESS| LSM_AUTO_INCREMENT;
+
+	int twim_return;
 	
+	twim_return=twim_write(&AVR32_TWIM0, (uint8_t*) &data_register_address, 1, LSM330_ACC_SLAVE_ADDRESS, false);
+	twim_return=twim_read(&AVR32_TWIM0, (uint8_t*)&lsm_acc_outputs, sizeof(lsm_acc_outputs), LSM330_ACC_SLAVE_ADDRESS, false);
 	
-	return &gyro_outputs;
+	return &lsm_acc_outputs;
+}
+
+
+lsm_gyro_data_t* lsm330_get_gyro_data(void) {
+	uint8_t data_register_address=LSM_GYRO_OUT_ADDRESS| LSM_AUTO_INCREMENT;
+	int twim_return;
+	twim_return=twim_write(&AVR32_TWIM0, (uint8_t*)&data_register_address, 1, LSM330_GYRO_SLAVE_ADDRESS, false);
+	twim_return=twim_read(&AVR32_TWIM0, (uint8_t*)&lsm_gyro_outputs, sizeof(lsm_gyro_outputs), LSM330_GYRO_SLAVE_ADDRESS, false);
+	return &lsm_gyro_outputs;
 }

@@ -17,7 +17,7 @@
 #ifndef CONF_PLATFORM_H_
 #define CONF_PLATFORM_H_
 
-
+#define MAVLINK_BASE_STATION_ID 255
 //#define NATIVE_BIG_ENDIAN  
 
 #define CONF_DIAG
