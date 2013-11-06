@@ -184,11 +184,12 @@ task_return_t set_mav_mode_n_state()
 			{
 				case 1:
 					centralData->mav_state = MAV_STATE_ACTIVE;
+					centralData->critical_init = false;
 					break;
 				case -1:
 					break;
 				case -2:
-					//if (centralData->home_wp_reached)
+					//if (centralData->critical_landing)
 					//{
 						//centralData->mav_state = MAV_STATE_EMERGENCY;
 					//}
@@ -244,7 +245,6 @@ task_return_t run_stabilisation() {
 		
 		case MAV_MODE_MANUAL_ARMED:
 			centralData->waypoint_hold_init = false;
-			centralData->mission_started = false;
 			centralData->controls = get_command_from_remote();
 			
 			centralData->controls.yaw_mode=YAW_RELATIVE;
@@ -254,7 +254,6 @@ task_return_t run_stabilisation() {
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
 			centralData->waypoint_hold_init = false;
-			centralData->mission_started = false;
 			centralData->controls = get_command_from_remote();
 			//dbg_print("Thrust:");
 			//dbg_print_num(centralData->controls.thrust*10000,10);
@@ -270,7 +269,7 @@ task_return_t run_stabilisation() {
 			
 			break;
 		case MAV_MODE_GUIDED_ARMED:
-			centralData->mission_started = false;
+			waypoint_hold_position_handler();
 			centralData->controls = centralData->controls_nav;
 			//centralData->controls.thrust = f_min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0;
 			//centralData->controls.thrust = get_thrust_from_remote();
@@ -287,9 +286,8 @@ task_return_t run_stabilisation() {
 			quad_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		case MAV_MODE_AUTO_ARMED:
-			centralData->mission_started = true;
 			centralData->waypoint_hold_init = false;
-			
+			waypoint_navigation_handler();
 			centralData->controls = centralData->controls_nav;
 			//centralData->controls.thrust = f_min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0;
 			//centralData->controls.thrust = get_thrust_from_remote();
@@ -370,11 +368,10 @@ task_return_t run_navigation_task()
 {
 	int8_t i;
 	
-	if (((centralData->mav_state == MAV_STATE_ACTIVE)||(centralData->mav_state == MAV_STATE_CRITICAL))&&((centralData->mav_mode == MAV_MODE_AUTO_ARMED)||(centralData->mav_mode == MAV_MODE_GUIDED_ARMED)))
-	{
+	//if (((centralData->mav_state == MAV_STATE_ACTIVE)||(centralData->mav_state == MAV_STATE_CRITICAL))&&((centralData->mav_mode == MAV_MODE_AUTO_ARMED)||(centralData->mav_mode == MAV_MODE_GUIDED_ARMED)))
+	//{
 		run_navigation();
-	}
-	
+	//}
 	
 	//if ((centralData->number_of_waypoints > 0)&& waypoint_receiving == 0 )
 	//{

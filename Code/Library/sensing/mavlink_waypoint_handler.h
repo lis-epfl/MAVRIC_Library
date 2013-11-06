@@ -1,5 +1,5 @@
 /*
- * waypoint_navigation.h
+ * mavlink_waypoint_handler.h
  *
  * Created: May 16 2013 17:54:34
  *  Author: Nicolas
@@ -10,6 +10,7 @@
 
 #include "mavlink_stream.h"
 #include "stdbool.h"
+#include "coord_conventions.h"
 
 #define MAX_WAYPOINTS 10
 
@@ -44,6 +45,8 @@ uint16_t num_waypoint_onboard;
 uint32_t start_timeout;
 uint32_t timeout_max_wp;
 
+void init_waypoint_handler();
+void init_wp();
 void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints);
 
 void send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint, bool* waypoint_receiving, bool * waypoint_sending);
@@ -56,8 +59,14 @@ void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[], 
 void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints, bool* waypoint_set);
 
 void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* board_mav_state, uint8_t sim_mode);
-void receive_message_long(Mavlink_Received_t* rec);
 
 void control_time_out_waypoint_msg(uint16_t* num_of_waypoint, bool* waypoint_receiving, bool* waypoint_sending);
+
+local_coordinates_t set_waypoint_from_frame(waypoint_struct current_wp, global_position_t origin);
+void wp_hold_init();
+
+void waypoint_hold_position_handler();
+void waypoint_navigation_handler();
+void critical_waypoint_handler();
 
 #endif // WAYPOINT_NAVIGATION__
