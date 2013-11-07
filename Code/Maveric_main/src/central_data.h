@@ -32,7 +32,7 @@
 #include "servo_pwm.h"
 
 #include "gps_ublox.h"
-#include "waypoint_navigation.h"
+#include "mavlink_waypoint_handler.h"
 #include "estimator.h"
 #include "simulation.h"
 #include "bmp085.h"
@@ -41,6 +41,12 @@
 #include "position_estimation.h"
 
 static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
+
+enum CRITICAL_BEHAVIOR_ENUM{
+	CLIMB_TO_SAFE_ALT = 1,
+	FLY_TO_HOME_WP = 2,
+	CRITICAL_LAND = 3,
+};
 
 typedef struct  {
 	Imu_Data_t imu1;
@@ -68,15 +74,20 @@ typedef struct  {
 	byte_stream_t *debug_out_stream, *debug_in_stream;
 	
 	waypoint_struct waypoint_list[MAX_WAYPOINTS];
+	waypoint_struct current_waypoint;
 	uint16_t number_of_waypoints;
-	int8_t current_wp;
+	int8_t current_wp_count;
+	
+	local_coordinates_t waypoint_coordinates, waypoint_hold_coordinates, waypoint_critical_coordinates;
+	float dist2wp_sqr;
 	
 	bool waypoint_set;
-	bool mission_started;
 	bool waypoint_sending;
 	bool waypoint_receiving;
 	bool waypoint_hold_init;
-	bool home_wp_reached;
+	bool critical_landing;
+	bool critical_init;
+	bool critical_next_state;
 	
 	uint8_t mav_mode;
 	uint8_t mav_state;
@@ -89,6 +100,8 @@ typedef struct  {
 	uint8_t number_of_neighbors;
 	float safe_size;
 	track_neighbor_t listNeighbors[MAX_NUM_NEIGHBORS];
+	
+	enum CRITICAL_BEHAVIOR_ENUM critical_behavior;
 	
 } central_data_t;
 

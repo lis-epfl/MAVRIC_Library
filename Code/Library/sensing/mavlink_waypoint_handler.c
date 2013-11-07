@@ -1,19 +1,77 @@
 /*
- * waypoint_navigation.c
+ * mavlink_waypoint_handler.c
  *
  * Created: May 16 2013 17:54:34
  *  Author: Nicolas
  */ 
 
-#include "waypoint_navigation.h"
+#include "mavlink_waypoint_handler.h"
 #include "print_util.h"
 #include "remote_controller.h"
 #include "time_keeper.h"
+#include "central_data.h"
+#include "maths.h"
 
-void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints)
+central_data_t *centralData;
+
+int int_loop_count = 0;
+
+void init_waypoint_handler()
 {
 	start_timeout = get_millis();
 	timeout_max_wp = 10000;
+	centralData = get_central_data();
+	
+	centralData->critical_behavior = CLIMB_TO_SAFE_ALT;
+	centralData->critical_init = false;
+	centralData->critical_next_state = false;
+	
+	init_waypoint_list(centralData->waypoint_list, &centralData->number_of_waypoints);
+	init_wp();
+}
+
+void init_wp()
+{
+	uint8_t i,j;
+	float rel_pos[3];
+	
+	if (int_loop_count==0)
+	{
+		dbg_print("Nav init\n");
+	}
+	int_loop_count=(int_loop_count+1)%1000;
+	
+	if ((centralData->number_of_waypoints > 0) && (centralData->position_estimator.init_gps_position || centralData->simulation_mode) && centralData->waypoint_receiving == false)
+	{
+		for (i=0;i<centralData->number_of_waypoints;i++)
+		{
+			if ((centralData->waypoint_list[i].current == 1)&&(!centralData->waypoint_set))
+			{
+				centralData->current_wp_count = i;
+				centralData->current_waypoint = centralData->waypoint_list[centralData->current_wp_count];
+				centralData->waypoint_coordinates = set_waypoint_from_frame(centralData->current_waypoint,centralData->position_estimator.localPosition.origin);
+				
+				dbg_print("Waypoint Nr");
+				dbg_print_num(i,10);
+				dbg_print(" set,\n");
+			
+				centralData->waypoint_set = true;
+				//waypoint_reached = false;
+				
+				for (j=0;j<3;j++)
+				{
+					rel_pos[j] = centralData->waypoint_coordinates.pos[j]-centralData->position_estimator.localPosition.pos[j];
+				}
+				centralData->dist2wp_sqr = vector_norm_sqr(rel_pos);
+			}
+		}
+	}
+}
+
+
+void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints)
+{
+	
 	
 	// Visit https://code.google.com/p/ardupilot-mega/wiki/MAVLink to have a description of all messages (or common.h)
 	waypoint_struct waypoint;
@@ -40,7 +98,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	
 	// Set nav waypoint
 	waypoint.autocontinue = 1;
-	waypoint.current = 1;
+	waypoint.current = 0;
 	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
 	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
 	
@@ -527,32 +585,6 @@ void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* boa
 	}
 }
 
-void receive_message_long(Mavlink_Received_t* rec)
-{
-	mavlink_command_long_t packet;
-	mavlink_msg_command_long_decode(&rec->msg,&packet);
-	// Check if this message is for this system and subsystem
-	dbg_print("target_comp:");
-	dbg_print_num(packet.target_component,10);
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid
-	&&(uint8_t)packet.target_component == (uint8_t)0)
-	{
-		dbg_print("parameters:");
-		dbg_print_num(packet.param1,10);
-		dbg_print_num(packet.param2,10);
-		dbg_print_num(packet.param3,10);
-		dbg_print_num(packet.param4,10);
-		dbg_print_num(packet.param5,10);
-		dbg_print_num(packet.param6,10);
-		dbg_print_num(packet.param7,10);
-		dbg_print(", command id:");
-		dbg_print_num(packet.command,10);
-		dbg_print(", confirmation:");
-		dbg_print_num(packet.confirmation,10);
-		dbg_print("\n");
-	}
-}
-
 void control_time_out_waypoint_msg(uint16_t* num_of_waypoint, bool* waypoint_receiving, bool* waypoint_sending)
 {
 	if (*waypoint_sending || *waypoint_receiving)
@@ -576,6 +608,242 @@ void control_time_out_waypoint_msg(uint16_t* num_of_waypoint, bool* waypoint_rec
 				num_waypoint_onboard = 0;
 				
 			}
+		}
+	}
+}
+
+local_coordinates_t set_waypoint_from_frame(waypoint_struct current_wp, global_position_t origin)
+{
+	uint8_t i;
+	
+	global_position_t waypoint_global;
+	local_coordinates_t waypoint_coor;
+	
+	float rel_pos[3];
+	
+	for (i=0;i<3;i++)
+	{
+		waypoint_coor.pos[i] = 0.0;
+	}
+
+	switch(current_wp.frame)
+	{
+		case MAV_FRAME_GLOBAL:
+			waypoint_global.latitude = current_wp.x;
+			waypoint_global.longitude = current_wp.y;
+			waypoint_global.altitude = current_wp.z;
+			waypoint_coor = global_to_local_position(waypoint_global,origin);
+			
+			dbg_print("wp_global: lat (x1e7):");
+			dbg_print_num(waypoint_global.latitude*10000000,10);
+			dbg_print(" long (x1e7):");
+			dbg_print_num(waypoint_global.longitude*10000000,10);
+			dbg_print(" alt (x1000):");
+			dbg_print_num(waypoint_global.altitude*1000,10);
+			dbg_print(" wp_coor: x (x100):");
+			dbg_print_num(waypoint_coor.pos[X]*100,10);
+			dbg_print(", y (x100):");
+			dbg_print_num(waypoint_coor.pos[Y]*100,10);
+			dbg_print(", z (x100):");
+			dbg_print_num(waypoint_coor.pos[Z]*100,10);
+			dbg_print(" localOrigin lat (x1e7):");
+			dbg_print_num(origin.latitude*10000000,10);
+			dbg_print(" long (x1e7):");
+			dbg_print_num(origin.longitude*10000000,10);
+			dbg_print(" alt (x1000):");
+			dbg_print_num(origin.altitude*1000,10);
+			dbg_print("\n");
+		
+		break;
+		case MAV_FRAME_LOCAL_NED:
+			waypoint_coor.pos[X] = current_wp.x;
+			waypoint_coor.pos[Y] = current_wp.y;
+			waypoint_coor.pos[Z] = current_wp.z;
+			waypoint_coor.heading= deg_to_rad(current_wp.param4);
+			waypoint_coor.origin = local_to_global_position(waypoint_coor);
+		break;
+		case MAV_FRAME_MISSION:
+			//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_RESULT_UNSUPPORTED);
+		break;
+		case MAV_FRAME_GLOBAL_RELATIVE_ALT:
+			waypoint_global.latitude = current_wp.x;
+			waypoint_global.longitude = current_wp.y;
+			waypoint_global.altitude = current_wp.z;
+		
+			global_position_t origin_relative_alt = origin;
+			origin_relative_alt.altitude = 0.0;
+			waypoint_coor = global_to_local_position(waypoint_global,origin_relative_alt);
+		
+			dbg_print("LocalOrigin: lat (x1e7):");
+			dbg_print_num(origin_relative_alt.latitude * 10000000,10);
+			dbg_print(" long (x1e7):");
+			dbg_print_num(origin_relative_alt.longitude * 10000000,10);
+			dbg_print(" global alt (x1000):");
+			dbg_print_num(origin.altitude*1000,10);
+			dbg_print(" wp_coor: x (x100):");
+			dbg_print_num(waypoint_coor.pos[X]*100,10);
+			dbg_print(", y (x100):");
+			dbg_print_num(waypoint_coor.pos[Y]*100,10);
+			dbg_print(", z (x100):");
+			dbg_print_num(waypoint_coor.pos[Z]*100,10);
+			dbg_print("\n");
+		
+		break;
+		case MAV_FRAME_LOCAL_ENU:
+			//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_RESULT_UNSUPPORTED);
+		break;
+	}
+	
+	return waypoint_coor;
+}
+
+void wp_hold_init()
+{
+	if (centralData->waypoint_hold_init == 0)
+	{
+		dbg_print("Position hold at: ");
+		dbg_print_num(centralData->position_estimator.localPosition.pos[X],10);
+		dbg_print_num(centralData->position_estimator.localPosition.pos[Y],10);
+		dbg_print_num(centralData->position_estimator.localPosition.pos[Z],10);
+		dbg_print_num((int)(centralData->position_estimator.localPosition.heading*180.0/3.14),10);
+		dbg_print(")\n");
+		
+		centralData->waypoint_hold_init = true;
+		centralData->waypoint_hold_coordinates = centralData->position_estimator.localPosition;
+		
+		Aero_Attitude_t aero_attitude;
+		aero_attitude=Quat_to_Aero(centralData->imu1.attitude.qe);
+		centralData->waypoint_hold_coordinates.heading = aero_attitude.rpy[2];
+	}
+}
+
+void waypoint_hold_position_handler()
+{
+	if (!centralData->waypoint_set)
+	{
+		init_wp();
+	}
+	wp_hold_init();
+}
+
+void waypoint_navigation_handler()
+{
+
+	if (centralData->waypoint_set)
+	{
+		uint8_t i;
+		float rel_pos[3];
+		for (i=0;i<3;i++)
+		{
+			rel_pos[i] = centralData->waypoint_coordinates.pos[i]-centralData->position_estimator.localPosition.pos[i];
+		}
+		centralData->dist2wp_sqr = vector_norm_sqr(rel_pos);
+		
+		if (centralData->dist2wp_sqr < (centralData->current_waypoint.param2*centralData->current_waypoint.param2))
+		{
+			dbg_print("Waypoint Nr");
+			dbg_print_num(centralData->current_wp_count,10);
+			dbg_print(" reached, distance:");
+			dbg_print_num(sqrt(centralData->dist2wp_sqr),10);
+			dbg_print(" less than :");
+			dbg_print_num(centralData->current_waypoint.param2,10);
+			dbg_print(".\n");
+			mavlink_msg_mission_item_reached_send(MAVLINK_COMM_0,centralData->current_wp_count);
+			
+			centralData->waypoint_list[centralData->current_wp_count].current = 0;
+			if (centralData->current_waypoint.autocontinue == 1)
+			{
+				dbg_print("Autocontinue towards waypoint Nr");
+				
+				if (centralData->current_wp_count == (centralData->number_of_waypoints-1))
+				{
+					centralData->current_wp_count = 0;
+					}else{
+					centralData->current_wp_count++;
+				}
+				dbg_print_num(centralData->current_wp_count,10);
+				dbg_print("\n");
+				centralData->waypoint_list[centralData->current_wp_count].current = 1;
+				centralData->current_waypoint = centralData->waypoint_list[centralData->current_wp_count];
+				centralData->waypoint_coordinates = set_waypoint_from_frame(centralData->current_waypoint,centralData->position_estimator.localPosition.origin);
+				
+				mavlink_msg_mission_current_send(MAVLINK_COMM_0,centralData->current_wp_count);
+				
+				}else{
+				centralData->waypoint_set = false;
+				dbg_print("Stop\n");
+				
+				wp_hold_init();
+			}
+		}
+	}else{
+		init_wp();
+		wp_hold_init();
+	}
+}
+
+void waypoint_critical_handler()
+{
+	if (!(centralData->critical_init))
+	{
+		centralData->critical_init = true;
+		dbg_print("Critical State! Climbing to safe altitude.\n");
+		centralData->critical_behavior = CLIMB_TO_SAFE_ALT;
+	}
+	
+	if (!(centralData->critical_next_state))
+	{
+		centralData->critical_next_state = true;
+		
+		Aero_Attitude_t aero_attitude;
+		aero_attitude=Quat_to_Aero(centralData->imu1.attitude.qe);
+		centralData->waypoint_critical_coordinates.heading = aero_attitude.rpy[2];
+		
+		switch (centralData->critical_behavior)
+		{
+			case CLIMB_TO_SAFE_ALT:
+			centralData->waypoint_critical_coordinates.pos[X] = centralData->position_estimator.localPosition.pos[X];
+			centralData->waypoint_critical_coordinates.pos[Y] = centralData->position_estimator.localPosition.pos[Y];
+			centralData->waypoint_critical_coordinates.pos[Z] = -30.0;
+			
+			break;
+			case FLY_TO_HOME_WP:
+			centralData->waypoint_critical_coordinates.pos[X] = 0.0;
+			centralData->waypoint_critical_coordinates.pos[Y] = 0.0;
+			centralData->waypoint_critical_coordinates.pos[Z] = -30.0;
+			break;
+			case CRITICAL_LAND:
+			centralData->waypoint_critical_coordinates.pos[X] = 0.0;
+			centralData->waypoint_critical_coordinates.pos[Y] = 0.0;
+			centralData->waypoint_critical_coordinates.pos[Z] = 0.0;
+			break;
+		}
+		float rel_pos[3];
+		uint8_t i;
+		for (i=0;i<3;i++)
+		{
+			rel_pos[i] = centralData->waypoint_critical_coordinates.pos[i] - centralData->position_estimator.localPosition.pos[i];
+		}
+		centralData->dist2wp_sqr = vector_norm_sqr(rel_pos);
+	}
+	
+	if (centralData->dist2wp_sqr < 3.0)
+	{
+		centralData->critical_next_state = false;
+		switch (centralData->critical_behavior)
+		{
+			case CLIMB_TO_SAFE_ALT:
+			dbg_print("Critical State! Flying to home waypoint.\n");
+			centralData->critical_behavior = FLY_TO_HOME_WP;
+			break;
+			case FLY_TO_HOME_WP:
+			dbg_print("Critical State! Performing critical landing.\n");
+			centralData->critical_behavior = CRITICAL_LAND;
+			break;
+			case CRITICAL_LAND:
+			dbg_print("Critical State! Landed, switching off motors, Emergency mode.\n");
+			centralData->critical_landing = true;
+			break;
 		}
 	}
 }

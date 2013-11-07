@@ -237,7 +237,7 @@
       <ToolNumber>J30200014870</ToolNumber>
       <Channel>
         <host>127.0.0.1</host>
-        <port>50835</port>
+        <port>49291</port>
         <ssl>False</ssl>
       </Channel>
       <ToolOptions>
@@ -630,6 +630,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\remote_controller.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\spektrum.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\time_keeper.c">
@@ -1158,10 +1161,10 @@
     <Compile Include="Library\sensing\simulation.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\sensing\waypoint_navigation.c">
+    <Compile Include="Library\sensing\mavlink_waypoint_handler.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\sensing\waypoint_navigation.h">
+    <Compile Include="Library\sensing\mavlink_waypoint_handler.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\util\buffer.c">

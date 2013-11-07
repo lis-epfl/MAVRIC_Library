@@ -24,7 +24,7 @@
 #include "scheduler.h"
 #include "central_data.h"
 #include "boardsupport.h"
-#include "waypoint_navigation.h"
+#include "mavlink_waypoint_handler.h"
 #include "navigation.h"
 #include "tasks.h"
 #include "neighbor_selection.h"
@@ -87,7 +87,7 @@ void initialisation() {
 	centralData->mav_state = MAV_STATE_STANDBY;
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	init_nav();
-	init_waypoint_list(centralData->waypoint_list,&centralData->number_of_waypoints);
+	init_waypoint_handler();
 	//e_init();
 	
 	init_neighbors();

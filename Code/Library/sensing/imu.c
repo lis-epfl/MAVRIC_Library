@@ -21,9 +21,9 @@ int ic;
 void init_imu (Imu_Data_t *imu1) {
 	
 	
-	//init_itg3200_slow();	
-	//init_adxl345_slow();
-	init_lsm330();
+	init_itg3200_slow();	
+	init_adxl345_slow();
+	//init_lsm330();
 	
 	init_hmc5883_slow();
 
@@ -63,13 +63,11 @@ void init_imu (Imu_Data_t *imu1) {
 void imu_get_raw_data(Imu_Data_t *imu1) {
 	int i=0;
 	
-//	gyro_data* gyros=get_gyro_data_slow();
-//	acc_data* accs=get_acc_data_slow();
+	gyro_data* gyros=get_gyro_data_slow();
+	acc_data* accs=get_acc_data_slow();
 	
-	lsm_gyro_data_t* gyros=lsm330_get_gyro_data();
-	lsm_acc_data_t* accs=lsm330_get_acc_data();
-
-	
+//	lsm_gyro_data_t* gyros=lsm330_get_gyro_data();
+//	lsm_acc_data_t* accs=lsm330_get_acc_data();
 	compass_data* compass=get_compass_data_slow();
 
 
@@ -118,7 +116,6 @@ void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *
 		imu1->last_update = t;
 		imu_last_update_init = true;
 	}else{
-
 		imu1->dt=ticks_to_seconds(t - imu1->last_update);
 		imu1->last_update=t;
 		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt, false);
