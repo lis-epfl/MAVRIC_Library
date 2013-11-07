@@ -63,172 +63,19 @@ void init_nav()
 	alt_integrator = 0.0;
 }
 
-//void run_navigation()
-//{
-	//int8_t i;
-	//float newVelocity[3];
-	//
-	//float rel_pos[3], command[3], dist2wp_sqr;
-	//// Control in translational speed of the platform
-	//if (centralData->mission_started && centralData->waypoint_set)
-	//{
-		//rel_pos[X] = (float)(waypoint_coordinates.pos[X] - centralData->position_estimator.localPosition.pos[X]);
-		//rel_pos[Y] = (float)(waypoint_coordinates.pos[Y] - centralData->position_estimator.localPosition.pos[Y]);
-		//rel_pos[Z] = (float)(waypoint_coordinates.pos[Z] - centralData->position_estimator.localPosition.pos[Z]);
-		//
-		//dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
-		////set_rel_pos_n_dist2wp(waypoint_coordinates.pos,rel_pos,&dist2wp_sqr);
-		//
-		////dbg_print("rel_pos:(");
-		////dbg_print_num(rel_pos[X],10);
-		////dbg_print_num(rel_pos[Y],10);
-		////dbg_print_num(rel_pos[Z],10);
-		////dbg_print(")");
-		////dbg_print(", wp_coor:(");
-		////dbg_print_num(waypoint_coordinates.pos[X],10);
-		////dbg_print_num(waypoint_coordinates.pos[Y],10);
-		////dbg_print_num(waypoint_coordinates.pos[Z],10);
-		////dbg_print(")");
-		////dbg_print(", localPos:(");
-		////dbg_print_num(centralData->position_estimator.localPosition.pos[X],10);
-		////dbg_print_num(centralData->position_estimator.localPosition.pos[Y],10);
-		////dbg_print_num(centralData->position_estimator.localPosition.pos[Z],10);
-		////dbg_print(")\n");
-		//
-		//if (dist2wp_sqr <= (current_waypoint.param2*current_waypoint.param2))
-		//{
-			//dbg_print("Waypoint Nr");
-			//dbg_print_num(centralData->current_wp,10);
-			//dbg_print(" reached, distance:");
-			//dbg_print_num(sqrt(dist2wp_sqr),10);
-			//dbg_print(" less than :");
-			//dbg_print_num(current_waypoint.param2,10);
-			////dbg_print(" reached, distance sqr:");
-			////dbg_print_num(dist2wp_sqr,10);
-			////dbg_print(" less than sqr:");
-			////dbg_print_num(current_waypoint.param2*current_waypoint.param2,10);
-			//dbg_print("\n");
-			//mavlink_msg_mission_item_reached_send(MAVLINK_COMM_0,centralData->current_wp);
-			//
-			//centralData->waypoint_list[centralData->current_wp].current = 0;
-			//if (current_waypoint.autocontinue == 1)
-			//{
-				//dbg_print("Autocontinue towards waypoint Nr");
-				//
-				//if (centralData->current_wp == centralData->number_of_waypoints-1)
-				//{
-					//centralData->current_wp = 0;
-				//}else{
-					//centralData->current_wp++;
-				//}
-				//dbg_print_num(centralData->current_wp,10);
-				//dbg_print("\n");
-				//centralData->waypoint_list[centralData->current_wp].current = 1;
-				//current_waypoint = centralData->waypoint_list[centralData->current_wp];
-				//waypoint_coordinates = set_waypoint_from_frame(current_waypoint,centralData->position_estimator.localPosition.origin);
-				//
-				//mavlink_msg_mission_current_send(MAVLINK_COMM_0,centralData->current_wp);
-				//
-			//}else{
-				//centralData->waypoint_set = false;
-				//dbg_print("Stop\n");
-				//
-				//wp_hold_init(&centralData->waypoint_hold_init,&waypoint_hold_coordinates, centralData->position_estimator.localPosition);
-			//}
-			//rel_pos[X] = (float)(waypoint_coordinates.pos[X] - centralData->position_estimator.localPosition.pos[X]);
-			//rel_pos[Y] = (float)(waypoint_coordinates.pos[Y] - centralData->position_estimator.localPosition.pos[Y]);
-			//rel_pos[Z] = (float)(waypoint_coordinates.pos[Z] - centralData->position_estimator.localPosition.pos[Z]);
-			//
-			//dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
-			////set_rel_pos_n_dist2wp(waypoint_coordinates.pos,rel_pos,&dist2wp_sqr);
-		//}
-	//}else{
-		//if (centralData->waypoint_set == false)
-		//{
-			//init_nav();
-		//}
-		//
-		//wp_hold_init(&centralData->waypoint_hold_init,&waypoint_hold_coordinates, centralData->position_estimator.localPosition);
-		//
-		//rel_pos[X] = (float)(waypoint_hold_coordinates.pos[X] - centralData->position_estimator.localPosition.pos[X]);
-		//rel_pos[Y] = (float)(waypoint_hold_coordinates.pos[Y] - centralData->position_estimator.localPosition.pos[Y]);
-		//rel_pos[Z] = (float)(waypoint_hold_coordinates.pos[Z] - centralData->position_estimator.localPosition.pos[Z]);
-		//
-		//dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
-		////set_rel_pos_n_dist2wp(waypoint_hold_coordinates.pos,rel_pos,&dist2wp_sqr);
-	//}
-	//
-	////if (centralData->mav_state == MAV_STATE_CRITICAL)
-	////{
-		////switch (critical_behavior)
-		////{
-			////case CLIMB_TO_SAVE_ALT:
-				////waypoint_critical_coordinates.pos[X] = centralData->position_estimator.localPosition.pos[X];
-				////waypoint_critical_coordinates.pos[Y] = centralData->position_estimator.localPosition.pos[Y];
-				////waypoint_critical_coordinates.pos[Z] = -30.0;
-				////break;
-			////case FLY_TO_HOME_WP:
-				////waypoint_critical_coordinates.pos[X] = 0.0;
-				////waypoint_critical_coordinates.pos[Y] = 0.0;
-				////waypoint_critical_coordinates.pos[Z] = -30.0;
-				////break;
-			////case CRITICAL_LAND:
-				////waypoint_critical_coordinates.pos[X] = 0.0;
-				////waypoint_critical_coordinates.pos[Y] = 0.0;
-				////waypoint_critical_coordinates.pos[Z] = 0.0;
-				////break;
-		////}
-		////
-		////rel_pos[X] = (float)(waypoint_critical_coordinates.pos[X] - centralData->position_estimator.localPosition.pos[X]);
-		////rel_pos[Y] = (float)(waypoint_critical_coordinates.pos[Y] - centralData->position_estimator.localPosition.pos[Y]);
-		////rel_pos[Z] = (float)(waypoint_critical_coordinates.pos[Z] - centralData->position_estimator.localPosition.pos[Z]);
-		////
-		////dist2wp_sqr = rel_pos[0]*rel_pos[0] + rel_pos[1]*rel_pos[1] + rel_pos[2]*rel_pos[2];
-		////
-		//// //set_rel_pos_n_dist2wp(waypoint_critical_coordinates.pos,rel_pos,&dist2wp_sqr);
-		////
-		////if (dist2wp_sqr < 3.0)
-		////{
-			////switch (critical_behavior)
-			////{
-				////case CLIMB_TO_SAVE_ALT:
-					////critical_behavior = FLY_TO_HOME_WP;
-					////break;
-				////case FLY_TO_HOME_WP:
-					////critical_behavior = CRITICAL_LAND;
-					////break;
-				////case CRITICAL_LAND:
-					////centralData->critical_landing = true;
-					////break;
-			////}
-		////}
-	////}
-	//
-	//set_speed_command(rel_pos,dist2wp_sqr);
-	//centralData->controls_nav.theading=waypoint_hold_coordinates.heading;
-	////computeNewVelocity(centralData->controls_nav.tvel,newVelocity);
-	//
-//}
 
-
-
-void run_navigation()
+void run_navigation(local_coordinates_t waypoint_input)
 {
 	int8_t i;
 	float newVelocity[3];
 	
 	float rel_pos[3], dist2wp_sqr;
+	
 	// Control in translational speed of the platform
-	if (((centralData->mav_state == MAV_STATE_ACTIVE)||(centralData->mav_state == MAV_STATE_CRITICAL))&&((centralData->mav_mode == MAV_MODE_AUTO_ARMED)||(centralData->mav_mode == MAV_MODE_GUIDED_ARMED)))
-	{
-		if (centralData->waypoint_set)
-		{
-			centralData->dist2wp_sqr = set_rel_pos_n_dist2wp(centralData->waypoint_coordinates.pos, rel_pos);
-			set_speed_command(rel_pos,centralData->dist2wp_sqr);
-			centralData->controls_nav.theading=centralData->waypoint_coordinates.heading;
-			//computeNewVelocity(centralData->controls_nav.tvel,newVelocity);
-		}
-	}
+	centralData->dist2wp_sqr = set_rel_pos_n_dist2wp(waypoint_input.pos, rel_pos);
+	set_speed_command(rel_pos,centralData->dist2wp_sqr);
+	
+	centralData->controls_nav.theading=waypoint_input.heading;
 }
 
 float set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[])

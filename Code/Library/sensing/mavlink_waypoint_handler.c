@@ -45,12 +45,12 @@ void init_wp()
 	{
 		for (i=0;i<centralData->number_of_waypoints;i++)
 		{
-			if (centralData->waypoint_list[i].current == 1)
+			if ((centralData->waypoint_list[i].current == 1)&&(!centralData->waypoint_set))
 			{
 				centralData->current_wp_count = i;
 				centralData->current_waypoint = centralData->waypoint_list[centralData->current_wp_count];
 				centralData->waypoint_coordinates = set_waypoint_from_frame(centralData->current_waypoint,centralData->position_estimator.localPosition.origin);
-			
+				
 				dbg_print("Waypoint Nr");
 				dbg_print_num(i,10);
 				dbg_print(" set,\n");
@@ -98,7 +98,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	
 	// Set nav waypoint
 	waypoint.autocontinue = 1;
-	waypoint.current = 1;
+	waypoint.current = 0;
 	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
 	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
 	
@@ -619,6 +619,8 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_wp, global_p
 	global_position_t waypoint_global;
 	local_coordinates_t waypoint_coor;
 	
+	float rel_pos[3];
+	
 	for (i=0;i<3;i++)
 	{
 		waypoint_coor.pos[i] = 0.0;
@@ -691,6 +693,7 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_wp, global_p
 			//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_RESULT_UNSUPPORTED);
 		break;
 	}
+	
 	return waypoint_coor;
 }
 
@@ -706,105 +709,122 @@ void wp_hold_init()
 		dbg_print(")\n");
 		
 		centralData->waypoint_hold_init = true;
-		centralData->waypoint_coordinates = centralData->position_estimator.localPosition;
+		centralData->waypoint_hold_coordinates = centralData->position_estimator.localPosition;
+		
+		Aero_Attitude_t aero_attitude;
+		aero_attitude=Quat_to_Aero(centralData->imu1.attitude.qe);
+		centralData->waypoint_hold_coordinates.heading = aero_attitude.rpy[2];
 	}
 }
 
 void waypoint_hold_position_handler()
 {
-	if (centralData->mav_state == MAV_STATE_CRITICAL)
+	if (!centralData->waypoint_set)
 	{
-		critical_waypoint_handler();
-	}else{
-		if (!centralData->waypoint_set)
-		{
-			init_wp();
-		}
-		wp_hold_init();
+		init_wp();
 	}
+	wp_hold_init();
 }
 
 void waypoint_navigation_handler()
 {
-	if (centralData->mav_state == MAV_STATE_CRITICAL)
+
+	if (centralData->waypoint_set)
 	{
-		critical_waypoint_handler();
-	}else{
-		if (centralData->waypoint_set)
+		uint8_t i;
+		float rel_pos[3];
+		for (i=0;i<3;i++)
 		{
-			if (centralData->dist2wp_sqr < (centralData->current_waypoint.param2*centralData->current_waypoint.param2))
-			{
-				dbg_print("Waypoint Nr");
-				dbg_print_num(centralData->current_wp_count,10);
-				dbg_print(" reached, distance:");
-				dbg_print_num(sqrt(centralData->dist2wp_sqr),10);
-				dbg_print(" less than :");
-				dbg_print_num(centralData->current_waypoint.param2,10);
-				dbg_print(".\n");
-				mavlink_msg_mission_item_reached_send(MAVLINK_COMM_0,centralData->current_wp_count);
+			rel_pos[i] = centralData->waypoint_coordinates.pos[i]-centralData->position_estimator.localPosition.pos[i];
+		}
+		centralData->dist2wp_sqr = vector_norm_sqr(rel_pos);
+		
+		if (centralData->dist2wp_sqr < (centralData->current_waypoint.param2*centralData->current_waypoint.param2))
+		{
+			dbg_print("Waypoint Nr");
+			dbg_print_num(centralData->current_wp_count,10);
+			dbg_print(" reached, distance:");
+			dbg_print_num(sqrt(centralData->dist2wp_sqr),10);
+			dbg_print(" less than :");
+			dbg_print_num(centralData->current_waypoint.param2,10);
+			dbg_print(".\n");
+			mavlink_msg_mission_item_reached_send(MAVLINK_COMM_0,centralData->current_wp_count);
 			
-				centralData->waypoint_list[centralData->current_wp_count].current = 0;
-				if (centralData->current_waypoint.autocontinue == 1)
+			centralData->waypoint_list[centralData->current_wp_count].current = 0;
+			if (centralData->current_waypoint.autocontinue == 1)
+			{
+				dbg_print("Autocontinue towards waypoint Nr");
+				
+				if (centralData->current_wp_count == (centralData->number_of_waypoints-1))
 				{
-					dbg_print("Autocontinue towards waypoint Nr");
-				
-					if (centralData->current_wp_count == centralData->number_of_waypoints-1)
-					{
-						centralData->current_wp_count = 0;
+					centralData->current_wp_count = 0;
 					}else{
-						centralData->current_wp_count++;
-					}
-					dbg_print_num(centralData->current_wp_count,10);
-					dbg_print("\n");
-					centralData->waypoint_list[centralData->current_wp_count].current = 1;
-					centralData->current_waypoint = centralData->waypoint_list[centralData->current_wp_count];
-					centralData->waypoint_coordinates = set_waypoint_from_frame(centralData->current_waypoint,centralData->position_estimator.localPosition.origin);
+					centralData->current_wp_count++;
+				}
+				dbg_print_num(centralData->current_wp_count,10);
+				dbg_print("\n");
+				centralData->waypoint_list[centralData->current_wp_count].current = 1;
+				centralData->current_waypoint = centralData->waypoint_list[centralData->current_wp_count];
+				centralData->waypoint_coordinates = set_waypoint_from_frame(centralData->current_waypoint,centralData->position_estimator.localPosition.origin);
 				
-					mavlink_msg_mission_current_send(MAVLINK_COMM_0,centralData->current_wp_count);
+				mavlink_msg_mission_current_send(MAVLINK_COMM_0,centralData->current_wp_count);
 				
 				}else{
-					centralData->waypoint_set = false;
-					dbg_print("Stop\n");
+				centralData->waypoint_set = false;
+				dbg_print("Stop\n");
 				
-					wp_hold_init();
-				}
+				wp_hold_init();
 			}
-		}else{
-			init_wp();
-			wp_hold_init();
 		}
+	}else{
+		init_wp();
+		wp_hold_init();
 	}
 }
 
-void critical_waypoint_handler()
+void waypoint_critical_handler()
 {
 	if (!(centralData->critical_init))
 	{
-		centralData->critical_init = false;
+		centralData->critical_init = true;
+		dbg_print("Critical State! Climbing to safe altitude.\n");
 		centralData->critical_behavior = CLIMB_TO_SAFE_ALT;
 	}
 	
 	if (!(centralData->critical_next_state))
 	{
 		centralData->critical_next_state = true;
+		
+		Aero_Attitude_t aero_attitude;
+		aero_attitude=Quat_to_Aero(centralData->imu1.attitude.qe);
+		centralData->waypoint_critical_coordinates.heading = aero_attitude.rpy[2];
+		
 		switch (centralData->critical_behavior)
 		{
 			case CLIMB_TO_SAFE_ALT:
-			centralData->waypoint_coordinates.pos[X] = centralData->position_estimator.localPosition.pos[X];
-			centralData->waypoint_coordinates.pos[Y] = centralData->position_estimator.localPosition.pos[Y];
-			centralData->waypoint_coordinates.pos[Z] = -30.0;
+			centralData->waypoint_critical_coordinates.pos[X] = centralData->position_estimator.localPosition.pos[X];
+			centralData->waypoint_critical_coordinates.pos[Y] = centralData->position_estimator.localPosition.pos[Y];
+			centralData->waypoint_critical_coordinates.pos[Z] = -30.0;
+			
 			break;
 			case FLY_TO_HOME_WP:
-			centralData->waypoint_coordinates.pos[X] = 0.0;
-			centralData->waypoint_coordinates.pos[Y] = 0.0;
-			centralData->waypoint_coordinates.pos[Z] = -30.0;
+			centralData->waypoint_critical_coordinates.pos[X] = 0.0;
+			centralData->waypoint_critical_coordinates.pos[Y] = 0.0;
+			centralData->waypoint_critical_coordinates.pos[Z] = -30.0;
 			break;
 			case CRITICAL_LAND:
-			centralData->waypoint_coordinates.pos[X] = 0.0;
-			centralData->waypoint_coordinates.pos[Y] = 0.0;
-			centralData->waypoint_coordinates.pos[Z] = 0.0;
+			centralData->waypoint_critical_coordinates.pos[X] = 0.0;
+			centralData->waypoint_critical_coordinates.pos[Y] = 0.0;
+			centralData->waypoint_critical_coordinates.pos[Z] = 0.0;
 			break;
 		}
+		float rel_pos[3];
+		uint8_t i;
+		for (i=0;i<3;i++)
+		{
+			rel_pos[i] = centralData->waypoint_critical_coordinates.pos[i] - centralData->position_estimator.localPosition.pos[i];
+		}
+		centralData->dist2wp_sqr = vector_norm_sqr(rel_pos);
 	}
 	
 	if (centralData->dist2wp_sqr < 3.0)
@@ -813,12 +833,15 @@ void critical_waypoint_handler()
 		switch (centralData->critical_behavior)
 		{
 			case CLIMB_TO_SAFE_ALT:
+			dbg_print("Critical State! Flying to home waypoint.\n");
 			centralData->critical_behavior = FLY_TO_HOME_WP;
 			break;
 			case FLY_TO_HOME_WP:
+			dbg_print("Critical State! Performing critical landing.\n");
 			centralData->critical_behavior = CRITICAL_LAND;
 			break;
 			case CRITICAL_LAND:
+			dbg_print("Critical State! Landed, switching off motors, Emergency mode.\n");
 			centralData->critical_landing = true;
 			break;
 		}

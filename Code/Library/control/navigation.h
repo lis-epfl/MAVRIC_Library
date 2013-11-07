@@ -17,7 +17,7 @@
 
 void init_nav();
 
-void run_navigation();
+void run_navigation(local_coordinates_t waypoint_input);
 
 float set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[]);
 

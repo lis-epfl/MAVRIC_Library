@@ -121,19 +121,40 @@ task_return_t set_mav_mode_n_state()
 			switch(channelSwitches)
 			{
 				case 0:
+					centralData->waypoint_hold_init = false;
 					centralData->mav_mode= MAV_MODE_MANUAL_ARMED;
 					break;
 				case 1:
+					centralData->waypoint_hold_init = false;
 					centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
 					break;
 				case 2:
 					centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
 					break;
 				case 3:
+					
 					centralData->mav_mode = MAV_MODE_AUTO_ARMED;
 					break;
 			}
 			
+			switch (centralData->mav_mode)
+			{
+				case MAV_MODE_MANUAL_ARMED:
+					centralData->waypoint_hold_init = false;
+					break;
+				case MAV_MODE_STABILIZE_ARMED:
+					centralData->waypoint_hold_init = false;
+				case MAV_MODE_GUIDED_ARMED:
+					waypoint_hold_position_handler();
+					break;
+				case MAV_MODE_AUTO_ARMED:
+					if (centralData->waypoint_set)
+					{
+						centralData->waypoint_hold_init = false;
+					}
+					waypoint_navigation_handler();
+					break;
+			}
 			
 			//dbg_print("motor_switch: ");
 			//dbg_print_num(motor_switch,10);
@@ -180,6 +201,15 @@ task_return_t set_mav_mode_n_state()
 				centralData->mav_state = MAV_STATE_STANDBY;
 				centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 			}
+			
+			switch (centralData->mav_mode)
+			{
+				case MAV_MODE_GUIDED_ARMED:
+				case MAV_MODE_AUTO_ARMED:
+					waypoint_critical_handler();
+					break;
+			}
+			
 			switch (RC_check)
 			{
 				case 1:
@@ -189,11 +219,11 @@ task_return_t set_mav_mode_n_state()
 				case -1:
 					break;
 				case -2:
-					//if (centralData->critical_landing)
-					//{
-						//centralData->mav_state = MAV_STATE_EMERGENCY;
-					//}
-					centralData->mav_state = MAV_STATE_EMERGENCY;
+					if (centralData->critical_landing)
+					{
+						centralData->mav_state = MAV_STATE_EMERGENCY;
+					}
+					//centralData->mav_state = MAV_STATE_EMERGENCY;
 					break;
 			}
 			break;
@@ -244,7 +274,6 @@ task_return_t run_stabilisation() {
 	{
 		
 		case MAV_MODE_MANUAL_ARMED:
-			centralData->waypoint_hold_init = false;
 			centralData->controls = get_command_from_remote();
 			
 			centralData->controls.yaw_mode=YAW_RELATIVE;
@@ -253,11 +282,7 @@ task_return_t run_stabilisation() {
 			quad_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
-			centralData->waypoint_hold_init = false;
 			centralData->controls = get_command_from_remote();
-			//dbg_print("Thrust:");
-			//dbg_print_num(centralData->controls.thrust*10000,10);
-			//dbg_print("\n");
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			centralData->controls.yaw_mode=YAW_RELATIVE;
 			
@@ -269,32 +294,18 @@ task_return_t run_stabilisation() {
 			
 			break;
 		case MAV_MODE_GUIDED_ARMED:
-			waypoint_hold_position_handler();
 			centralData->controls = centralData->controls_nav;
 			//centralData->controls.thrust = f_min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0;
 			//centralData->controls.thrust = get_thrust_from_remote();
 			
-			//dbg_print("Thrust (x10000):");
-			//dbg_print_num(centralData->controls.thrust*10000.0,10);
-			//dbg_print(", remote (x10000):");
-			//dbg_print_num(get_thrust_from_remote()*10000.0,10);
-			//dbg_print(" => min (x10000):");
-			//dbg_print_num(f_min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0 *10000.0,10);
-			//dbg_print("\n");
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			centralData->controls.yaw_mode = YAW_ABSOLUTE;
 			quad_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		case MAV_MODE_AUTO_ARMED:
-			centralData->waypoint_hold_init = false;
-			waypoint_navigation_handler();
 			centralData->controls = centralData->controls_nav;
 			//centralData->controls.thrust = f_min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0;
 			//centralData->controls.thrust = get_thrust_from_remote();
-			
-			//dbg_print("Thrust main:");
-			//dbg_print_num(centralData->controls.thrust*10000,10);
-			//dbg_print("\n");
 			
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;	
 			centralData->controls.yaw_mode = YAW_COORDINATED;
@@ -306,7 +317,6 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_STABILIZE_DISARMED:
 		case MAV_MODE_GUIDED_DISARMED:
 		case MAV_MODE_AUTO_DISARMED:
-			//set_servos(&(servo_failsafe));
 			centralData->controls.run_mode = MOTORS_OFF;
 			for (i=0; i<NUMBER_OF_SERVO_OUTPUTS; i++) {
 				centralData->servos[i]=servo_failsafe[i];
@@ -330,33 +340,6 @@ task_return_t gps_task() {
 	} else {
 		gps_update();
 	}
- 	//dbg_print("time :");
- 	//dbg_print_num(tnow,10);
- 	//dbg_print_num(centralData->GPS_data.timeLastMsg,10);
- 	//dbg_print(" GPS status : 0x");
- 	//dbg_print_num(centralData->GPS_data.status,16);
- 	//dbg_print(" status:");
- 	//dbg_print_num(centralData->GPS_data.accuracyStatus,10);
- 	//dbg_print_num(centralData->GPS_data.horizontalStatus,10);
- 	//dbg_print_num(centralData->GPS_data.altitudeStatus,10);
- 	//dbg_print_num(centralData->GPS_data.speedStatus,10);
- 	//dbg_print_num(centralData->GPS_data.courseStatus,10);
- 	//dbg_print("\n");
-	//
-	/*if(newValidGpsMsg())
-	{
-		dbg_print("GPS status:");
-		dbg_print_num(centralData->GPS_data.status,10);
-		dbg_print(" time gps:");
-		dbg_print_num(centralData->GPS_data.timegps,10);
-		dbg_print(" latitude :");
-		dbg_print_num(centralData->GPS_data.latitude,10);
-		dbg_print(" longitude :");
-		dbg_print_num(centralData->GPS_data.longitude,10);
-		dbg_print(" altitude");
-		dbg_print_num(centralData->GPS_data.altitude,10);
-		dbg_print("\n");
-	}*/
 }
 
 task_return_t run_estimator()
@@ -368,40 +351,40 @@ task_return_t run_navigation_task()
 {
 	int8_t i;
 	
-	//if (((centralData->mav_state == MAV_STATE_ACTIVE)||(centralData->mav_state == MAV_STATE_CRITICAL))&&((centralData->mav_mode == MAV_MODE_AUTO_ARMED)||(centralData->mav_mode == MAV_MODE_GUIDED_ARMED)))
-	//{
-		run_navigation();
-	//}
-	
-	//if ((centralData->number_of_waypoints > 0)&& waypoint_receiving == 0 )
-	//{
-		//dbg_print("List of Waypoint:");
-		//for (i=0; i<centralData->number_of_waypoints; i++)
-		//{
-			//dbg_print("wp_id:");
-			//dbg_print_num(centralData->waypoint_list[i].wp_id,10);
-			//dbg_print(" autocontinue:");
-			//dbg_print_num(centralData->waypoint_list[i].autocontinue,10);
-			//dbg_print(" current:");
-			//dbg_print_num(centralData->waypoint_list[i].current,10);
-			//dbg_print(" frame:");
-			//dbg_print_num(centralData->waypoint_list[i].frame,10);
-			//dbg_print(" x:");
-			//dbg_print_num(centralData->waypoint_list[i].x,10);
-			//dbg_print(" y:");
-			//dbg_print_num(centralData->waypoint_list[i].y,10);
-			//dbg_print(" z:");
-			//dbg_print_num(centralData->waypoint_list[i].z,10);
-			//dbg_print(" params:");
-			//dbg_print_num(centralData->waypoint_list[i].param1,10);
-			//dbg_print_num(centralData->waypoint_list[i].param2,10);
-			//dbg_print_num(centralData->waypoint_list[i].param3,10);
-			//dbg_print_num(centralData->waypoint_list[i].param4,10);
-			//dbg_print(";");
-		//}
-		//dbg_print("\n");
-		//centralData->number_of_waypoints = 0;
-	//}
+		switch (centralData->mav_state)
+		{
+			case MAV_STATE_ACTIVE:
+				switch (centralData->mav_mode)
+				{
+					case MAV_MODE_AUTO_ARMED:
+						if (centralData->waypoint_set)
+						{
+							run_navigation(centralData->waypoint_coordinates);
+					
+							//computeNewVelocity(centralData->controls_nav.tvel,newVelocity);
+						}else if(centralData->waypoint_hold_init)
+						{
+							run_navigation(centralData->waypoint_hold_coordinates);
+						}
+						break;
+					case MAV_MODE_GUIDED_ARMED:
+						if(centralData->waypoint_hold_init)
+						{
+							run_navigation(centralData->waypoint_hold_coordinates);
+						}
+						break;
+				}
+				break;
+			case MAV_STATE_CRITICAL:
+				if ((centralData->mav_mode == MAV_MODE_GUIDED_ARMED)||(centralData->mav_mode == MAV_MODE_AUTO_ARMED))
+				{
+					if(centralData->critical_init)
+					{
+						run_navigation(centralData->waypoint_critical_coordinates);
+					}
+				}
+				break;
+		}
 	
 }
 uint32_t last_baro_update;
@@ -422,7 +405,7 @@ task_return_t run_barometer()
 void create_tasks() {
 	
 	init_scheduler(&main_tasks);
-	//board=get_board_hardware();
+	
 	centralData = get_central_data();
 	
 	register_task(&main_tasks, 0, 4000, RUN_REGULAR, &run_stabilisation );

@@ -5,8 +5,8 @@
  *  Author: Nicolas
  */ 
 
-#ifndef WAYPOINT_NAVIGATION__
-#define WAYPOINT_NAVIGATION__
+#ifndef MAVLINK_WAYPOINT_HANDLER__
+#define MAVLINK_WAYPOINT_HANDLER__
 
 #include "mavlink_stream.h"
 #include "stdbool.h"
@@ -33,10 +33,6 @@ typedef struct {
 	
 }waypoint_struct;
 
-// bool waypoint_sending;
-//bool waypoint_receiving;
-
-//int num_of_waypoint;
 int sending_wp_num;
 int waypoint_request_number;
 
@@ -67,6 +63,6 @@ void wp_hold_init();
 
 void waypoint_hold_position_handler();
 void waypoint_navigation_handler();
-void critical_waypoint_handler();
+void waypoint_critical_handler();
 
-#endif // WAYPOINT_NAVIGATION__
+#endif // MAVLINK_WAYPOINT_HANDLER__

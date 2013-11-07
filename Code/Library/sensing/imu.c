@@ -118,7 +118,7 @@ void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *
 		imu1->last_update = t;
 		imu_last_update_init = true;
 	}else{
-		imu_get_raw_data(imu1);
+		//imu_get_raw_data(imu1);
 		imu1->dt=ticks_to_seconds(t - imu1->last_update);
 		imu1->last_update=t;
 		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt, false);
