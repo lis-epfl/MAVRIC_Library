@@ -112,7 +112,7 @@ void initialise_board(central_data_t *centralData) {
 	dbg_print_init(centralData->debug_out_stream);
 		
 	init_imu(&(centralData->imu1));
-	//init_bmp085();
+	init_bmp085();
 
 	rc_init();
 

@@ -15,20 +15,31 @@
 static volatile lsm_gyro_data_t lsm_gyro_outputs;
 static volatile lsm_acc_data_t  lsm_acc_outputs;
 
+uint8_t lsm_read_register(uint8_t device, unsigned char address) {
+	int16_t result;
+	twim_write(&AVR32_TWIM0, (uint8_t*) &address, 1, device, false);
+	twim_read(&AVR32_TWIM0, (uint8_t*)&(result), 1, device, false);
+	return result;
+}
+
+uint8_t lsm_write_register(uint8_t device, unsigned char address, uint8_t value) {
+	int16_t result;
+	twim_write(&AVR32_TWIM0, (uint8_t*) &address, 1, device, false);
+	twim_write(&AVR32_TWIM0, (uint8_t*) &value, 1, device, false);
+}
+
 
 
 void init_lsm330_acc(void) {
 	
-	
 	twim_write(&AVR32_TWIM0, (uint8_t*)&lsm_acc_default_config, sizeof(lsm_acc_default_config), LSM330_ACC_SLAVE_ADDRESS, false);
-		
 	twim_write(&AVR32_TWIM0, (uint8_t*) &fifo_config, 2, LSM330_ACC_SLAVE_ADDRESS, false);
 
 }
 
 void init_lsm330_gyro(void) {
-	gpio_configure_pin(LSM_GYRO_DEN_PIN, GPIO_DIR_OUTPUT);	
-	gpio_set_pin_high(LSM_GYRO_DEN_PIN);
+	//gpio_configure_pin(LSM_GYRO_DEN_PIN, GPIO_DIR_OUTPUT);	
+	//gpio_set_pin_high(LSM_GYRO_DEN_PIN);
 	twim_write(&AVR32_TWIM0, (uint8_t*)&lsm_gyro_default_config, sizeof(lsm_gyro_default_config), LSM330_GYRO_SLAVE_ADDRESS, false);
 	
 	twim_write(&AVR32_TWIM0, (uint8_t*) &fifo_config, 2, LSM330_GYRO_SLAVE_ADDRESS, false);
@@ -109,9 +120,26 @@ lsm_acc_data_t* lsm330_get_acc_data(void) {
 	uint8_t data_register_address=LSM_ACC_OUT_ADDRESS| LSM_AUTO_INCREMENT;
 
 	int twim_return;
-	
+	lsm_acc_fifo_t fifo_values;
+	int32_t axes[3]={0,0,0};
+	int i;
+	int8_t fifo_fill;
+	// read number of bytes in fifo
+//	uint8_t fifo_fill=lsm_read_register(LSM330_ACC_SLAVE_ADDRESS, LSM_ACC_FIFO_SRC_ADDRESS) & 0x0f;
+//	if (fifo_fill==0) return &lsm_acc_outputs;
+	//fifo_fill=1;
+	if (fifo_fill>6) fifo_fill=6;
 	twim_return=twim_write(&AVR32_TWIM0, (uint8_t*) &data_register_address, 1, LSM330_ACC_SLAVE_ADDRESS, false);
-	twim_return=twim_read(&AVR32_TWIM0, (uint8_t*)&lsm_acc_outputs, sizeof(lsm_acc_outputs), LSM330_ACC_SLAVE_ADDRESS, false);
+	twim_return=twim_read(&AVR32_TWIM0, (uint8_t*)&fifo_values, 1+6*fifo_fill, LSM330_ACC_SLAVE_ADDRESS, false);
+
+	for (i=0; i<fifo_fill; i++) {
+		axes[0]+=fifo_values.axes[3*i];
+		axes[1]+=fifo_values.axes[3*i+1];
+		axes[2]+=fifo_values.axes[3*i+2];
+	}
+	lsm_acc_outputs.axes[0]=(int16_t)(axes[0]/fifo_fill);
+	lsm_acc_outputs.axes[1]=(int16_t)(axes[1]/fifo_fill);
+	lsm_acc_outputs.axes[2]=(int16_t)(axes[2]/fifo_fill);
 	
 	return &lsm_acc_outputs;
 }
@@ -120,7 +148,24 @@ lsm_acc_data_t* lsm330_get_acc_data(void) {
 lsm_gyro_data_t* lsm330_get_gyro_data(void) {
 	uint8_t data_register_address=LSM_GYRO_OUT_ADDRESS| LSM_AUTO_INCREMENT;
 	int twim_return;
+	lsm_gyro_fifo_t fifo_values;
+	int32_t axes[3]={0,0,0};
+	int i;
+	// read number of bytes in fifo
+	int8_t fifo_fill=(int8_t)(lsm_read_register(LSM330_GYRO_SLAVE_ADDRESS, LSM_ACC_FIFO_SRC_ADDRESS) & 0x0f);
+	if (fifo_fill<=0) return &lsm_gyro_outputs;
+	if (fifo_fill>6) fifo_fill=6;
 	twim_return=twim_write(&AVR32_TWIM0, (uint8_t*)&data_register_address, 1, LSM330_GYRO_SLAVE_ADDRESS, false);
-	twim_return=twim_read(&AVR32_TWIM0, (uint8_t*)&lsm_gyro_outputs, sizeof(lsm_gyro_outputs), LSM330_GYRO_SLAVE_ADDRESS, false);
+	twim_return=twim_read(&AVR32_TWIM0, (uint8_t*)&fifo_values, 2+6*fifo_fill, LSM330_GYRO_SLAVE_ADDRESS, false);
+	
+	for (i=0; i<fifo_fill; i++) {
+		axes[0]+=fifo_values.axes[3*i];
+		axes[1]+=fifo_values.axes[3*i+1];
+		axes[2]+=fifo_values.axes[3*i+2];
+	}
+	lsm_gyro_outputs.temperature=fifo_values.temperature;
+	lsm_gyro_outputs.axes[0]=(int16_t)(axes[0]/fifo_fill);
+	lsm_gyro_outputs.axes[1]=(int16_t)(axes[1]/fifo_fill);
+	lsm_gyro_outputs.axes[2]=(int16_t)(axes[2]/fifo_fill);
 	return &lsm_gyro_outputs;
 }
