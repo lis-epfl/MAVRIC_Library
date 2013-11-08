@@ -410,7 +410,7 @@ void create_tasks() {
 	
 	register_task(&main_tasks, 0, 4000, RUN_REGULAR, &run_stabilisation );
 	
-	register_task(&main_tasks, 1, 26000, RUN_NEVER, &run_barometer);
+	register_task(&main_tasks, 1, 15000, RUN_REGULAR, &run_barometer);
 	main_tasks.tasks[1].timing_mode=PERIODIC_RELATIVE;
 
 	register_task(&main_tasks, 2, 100000, RUN_REGULAR, &gps_task);

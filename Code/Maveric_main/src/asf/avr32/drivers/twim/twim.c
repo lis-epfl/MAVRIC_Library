@@ -99,6 +99,8 @@ ISR(twim_master_interrupt_handler,CONF_TWIM_IRQ_GROUP,CONF_TWIM_IRQ_LEVEL)
 			twim_inst->idr = AVR32_TWIM_IDR_RXRDY_MASK;
 			// set busy to false
 			twim_next = false;
+			transfer_status=true;
+			
 		}
 	}
 	// this is a TXRDY

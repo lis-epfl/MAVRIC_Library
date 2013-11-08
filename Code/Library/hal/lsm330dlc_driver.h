@@ -158,7 +158,7 @@ typedef struct lsm330dlc_gyro_conf_t{
 static const lms330dlc_acc_conf_t lsm_acc_default_config=
 {.start_address=0x20 | LSM_AUTO_INCREMENT,
 	.ctrl_reg_a=
-	{	LSM_ACC_DATARATE_400Hz | LSM_ACC_ALL_EN ,	//CTRL_REG_G_1
+	{	LSM_ACC_DATARATE_1620Hz | LSM_ACC_ALL_EN ,	//CTRL_REG_G_1
 		0,											//CTRL_REG_G_2
 		0,											//CTRL_REG_G_3
 		LSM_ACC_HIGH_RES | LSM_ACC_FULL_SCALE_8G,  //|LSM_ACC_BIG_ENDIAN,					//CTRL_REG_G_4
@@ -169,7 +169,7 @@ static const lms330dlc_acc_conf_t lsm_acc_default_config=
 static const lsm330dlc_gyro_conf_t lsm_gyro_default_config=
 {.start_address=0x20| LSM_AUTO_INCREMENT,
 	.ctrl_reg_g=
-	{	LSM_GYRO_POWER_ON | LSM_GYRO_DATARATE_380Hz | LSM_GYRO_BANDWIDTH_50Hz | LSM_GYRO_ALL_EN,	//CTRL_REG_A_1
+	{	LSM_GYRO_POWER_ON | LSM_GYRO_DATARATE_760Hz | LSM_GYRO_BANDWIDTH_50Hz | LSM_GYRO_ALL_EN,	//CTRL_REG_A_1
 		0,											//CTRL_REG_A_2
 		0,											//CTRL_REG_A_3
 		LSM_GYRO_FULL_SCALE_2000|LSM_GYRO_BIG_ENDIAN,	//CTRL_REG_A_4
@@ -186,10 +186,21 @@ typedef struct{
 } lsm_gyro_data_t;
 
 typedef struct{
+	int8_t temperature;
+	uint8_t status_register;
+	int16_t axes[32*3];
+} lsm_gyro_fifo_t;
+
+
+typedef struct{
 	uint8_t status_register;
 	int16_t axes[3];
 } lsm_acc_data_t;
 
+typedef struct{
+	uint8_t status_register;
+	int16_t axes[32*3];
+} lsm_acc_fifo_t;
 
 void init_lsm330(void);
 
