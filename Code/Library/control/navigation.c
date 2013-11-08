@@ -8,7 +8,7 @@
 #include "navigation.h"
 #include "central_data.h"
 #include "print_util.h"
-//#include "orca.h"
+#include "orca.h"
 
 #include <math.h>
 #include "maths.h"
@@ -93,11 +93,11 @@ float set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[])
 
 void set_speed_command(float rel_pos[], float dist2wpSqr)
 {
-	int8_t i;
+	uint8_t i;
 	float  norm_rel_dist, v_desired;
 	UQuat_t qtmp1, qtmp2;
 	
-	float dir_desired_bf[3], dir_desired[3];
+	float dir_desired_bf[3], dir_desired[3], new_velocity[3];
 	
 	float rel_heading;
 	
@@ -120,7 +120,6 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	// experimental: Z-axis in velocity mode is in global frame...
 	dir_desired_bf[2] = rel_pos[2];
 	
-	rel_heading= atan2(dir_desired_bf[Y],dir_desired_bf[X]);
 	v_desired = f_min(V_CRUISE,(center_window_2(rel_heading) * DIST_2_VEL_GAIN * norm_rel_dist));
 	
 	if (v_desired *  f_abs(dir_desired_bf[Z]) > MAX_CLIMB_RATE * norm_rel_dist ) {
@@ -140,11 +139,18 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 		//high_speed_nav(dir_desired_bf,centralData->imu1.attitude);
 	//}
 	
-		
+	
+	for (i=0;i<3;i++)
+	{
+		new_velocity[i] = dir_desired_bf[i];
+	}
+	computeNewVelocity(dir_desired_bf,new_velocity);
 
-	centralData->controls_nav.tvel[X] = dir_desired_bf[X];
-	centralData->controls_nav.tvel[Y] = dir_desired_bf[Y];
-	centralData->controls_nav.tvel[Z] = dir_desired_bf[Z];		
+	rel_heading= atan2(new_velocity[Y],new_velocity[X]);
+
+	centralData->controls_nav.tvel[X] = new_velocity[X];
+	centralData->controls_nav.tvel[Y] = new_velocity[Y];
+	centralData->controls_nav.tvel[Z] = new_velocity[Z];		
 	centralData->controls_nav.rpy[YAW] = KP_YAW * rel_heading;
 
 	//low_speed_nav(dir_desired_bf,centralData->imu1.attitude,norm_rel_dist);

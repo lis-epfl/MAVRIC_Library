@@ -20,7 +20,7 @@ int8_t loop_count_orca = 0;
 void init_orca()
 {
 	centralData = get_central_data();
-	centralData->safe_size = 1.0;
+	centralData->safe_size = 5.0;
 		
 	timeHorizon = 8.0;
 	invTimeHorizon = 1.0/timeHorizon;
@@ -38,6 +38,11 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 	float combinedRadius, distSq, combinedRadiusSq, dotProduct, wLength, wLenghtSq;
 	
 	float w[3], unitW[3], u[3], vel_neighor_bf[3];
+	
+	for (i=0;i<3;i++)
+	{
+		NewVelocity[i] = OptimalVelocity[i];
+	}
 	
 	/* Create agent ORCA planes. */
 	for (ind=0; ind<centralData->number_of_neighbors; ind++)
@@ -104,6 +109,8 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 			}
 		}else{
 			/* Collisions */
+			dbg_print("Collision!\n");
+			
 			float invTimeStep = 1.0 / centralData->imu1.dt; //PROBLEM wrong time step
 			for (i=0;i<3;i++)
 			{

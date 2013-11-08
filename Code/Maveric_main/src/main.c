@@ -28,7 +28,7 @@
 #include "navigation.h"
 #include "tasks.h"
 #include "neighbor_selection.h"
-//#include "orca.h"
+#include "orca.h"
 //#include "flashvault.h"
 
 central_data_t *centralData;
@@ -90,7 +90,7 @@ void initialisation() {
 	//e_init();
 	
 	init_neighbors();
-	//init_orca();
+	init_orca();
 	
 	LED_On(LED1);
 }

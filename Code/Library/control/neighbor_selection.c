@@ -43,8 +43,8 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 		localPosNeighbor = global_to_local_position(globalPosNeighbor,centralData->position_estimator.localPosition.origin);
 		
 		bool ID_found = false;
-		i = 1;
-		while (!ID_found)
+		i = 0;
+		while ((!ID_found)&&(i<centralData->number_of_neighbors))
 		{
 			if (rec->msg.sysid == centralData->listNeighbors[i].neighborID)
 			{
@@ -53,22 +53,22 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 				i++;
 			}
 			
-			if (i>centralData->number_of_neighbors)
-			{
-				ID_found = true;
-			}
+			//if (i>centralData->number_of_neighbors)
+			//{
+				//ID_found = true;
+			//}
 		}
 		
-		if (i>centralData->number_of_neighbors)
+		if (i>=centralData->number_of_neighbors)
 		{
 			if (centralData->number_of_neighbors < MAX_NUM_NEIGHBORS)
 			{
-				centralData->number_of_neighbors++;
 				actualNeighbor = centralData->number_of_neighbors;
+				centralData->number_of_neighbors++;
 			}else{
 				// This case shouldn't happen
 				dbg_print("There is more neighbors than planned!\n");
-				actualNeighbor = centralData->number_of_neighbors;
+				actualNeighbor = centralData->number_of_neighbors-1;
 			}
 		}else{
 			actualNeighbor = i;

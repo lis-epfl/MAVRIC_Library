@@ -13,6 +13,7 @@
 #include "print_util.h"
 #include "central_data.h"
 #include "mavlink_waypoint_handler.h"
+#include "neighbor_selection.h"
 
 byte_stream_t* mavlink_out_stream;
 byte_stream_t* mavlink_in_stream;
@@ -53,13 +54,13 @@ void mavlink_receive_handler() {
 			handle_mavlink_message(&rec);
 		}else if (rec.msg.msgid == MAVLINK_MSG_ID_GLOBAL_POSITION_INT)
 		{
-			dbg_print("\n Received message with ID");
-			dbg_print_num(rec.msg.msgid, 10);
-			dbg_print(" from system");
-			dbg_print_num(rec.msg.sysid, 10);
-			dbg_print(" for component");
-			dbg_print_num(rec.msg.compid,10);
-			dbg_print( "\n");
+			//dbg_print("\n Received message with ID");
+			//dbg_print_num(rec.msg.msgid, 10);
+			//dbg_print(" from system");
+			//dbg_print_num(rec.msg.sysid, 10);
+			//dbg_print(" for component");
+			//dbg_print_num(rec.msg.compid,10);
+			//dbg_print( "\n");
 			
 			read_msg_from_neighbors(&rec);
 		}
@@ -393,10 +394,12 @@ void receive_message_long(Mavlink_Received_t* rec)
 				// Onboard parameters storage
 				if (packet.param1 == 0) {
 					// read parameters from flash
+					dbg_print("Reading from flashc...\n");
 					read_parameters_from_flashc();
 				}
 				else if (packet.param1 == 1) {
 					// write parameters to flash
+					dbg_print("Writting to flashc\n");
 					write_parameters_to_flashc();
 				}
 				

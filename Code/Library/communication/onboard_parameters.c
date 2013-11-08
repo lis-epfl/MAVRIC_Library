@@ -199,7 +199,7 @@ void read_parameters_from_flashc()
 	
 	if ((param_set.param_count==local_array.values[0])&&(cksum1 == nvram_array->values[param_set.param_count+1])&&(cksum2 == nvram_array->values[param_set.param_count+2]))
 	{
-		dbg_print("Flash read successful! New Parameters inserted");
+		dbg_print("Flash read successful! New Parameters inserted. \n");
 		for (i=1;i<(param_set.param_count+1);i++)
 		{
 			*param_set.parameters[i-1].param = local_array.values[i];
@@ -235,4 +235,5 @@ void write_parameters_to_flashc()
 	local_array.values[param_set.param_count+2] = cksum2;
 	
 	flashc_memcpy((void *)nvram_array, &local_array, sizeof(*nvram_array) ,   true);
+	dbg_print("Write to falshc completed.\n");
 }
