@@ -89,6 +89,8 @@ typedef struct  {
 	bool critical_init;
 	bool critical_next_state;
 	
+	bool collision_avoidance;
+	
 	uint8_t mav_mode;
 	uint8_t mav_state;
 	uint32_t simulation_mode;

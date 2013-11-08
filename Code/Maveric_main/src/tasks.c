@@ -15,8 +15,8 @@
 #include "navigation.h"
 #include "led.h"
 #include "imu.h"
+#include "orca.h"
 
-//#include <flashc.h>
 
 NEW_TASK_SET(main_tasks, 10)
 
@@ -36,6 +36,13 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 {
 	
 	get_channel_mode(chanSwitch);
+	
+	if ((rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR)>0.0)
+	{
+		centralData->collision_avoidance = true;
+	}else{
+		centralData->collision_avoidance = false;
+	}
 	
 	//dbg_print("chanSwitch ");
 	//dbg_print_num(*chanSwitch,10);
@@ -144,6 +151,7 @@ task_return_t set_mav_mode_n_state()
 					break;
 				case MAV_MODE_STABILIZE_ARMED:
 					centralData->waypoint_hold_init = false;
+					break;
 				case MAV_MODE_GUIDED_ARMED:
 					waypoint_hold_position_handler();
 					break;
@@ -417,7 +425,7 @@ void create_tasks() {
 	//register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
 	//register_task(&main_tasks, , 100000, RUN_REGULAR, &read_radar);
 
-	register_task(&main_tasks, 3, 10000, RUN_REGULAR, &run_navigation_task);
+	register_task(&main_tasks, 3, ORCA_TIME_STEP_MILLIS * 1000.0, RUN_REGULAR, &run_navigation_task);
 
 	register_task(&main_tasks, 4, 200000, RUN_REGULAR, &set_mav_mode_n_state);
 	

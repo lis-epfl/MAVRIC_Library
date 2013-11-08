@@ -32,6 +32,8 @@ void initialise_central_data(){
 		centralData.critical_landing = false;
 		centralData.critical_init = false;
 		
+		centralData.collision_avoidance = false;
+		
 		// default GPS home position
 		centralData.position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;
 		centralData.position_estimator.localPosition.origin.latitude =   HOME_LATITUDE;

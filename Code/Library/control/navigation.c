@@ -144,7 +144,10 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	{
 		new_velocity[i] = dir_desired_bf[i];
 	}
-	computeNewVelocity(dir_desired_bf,new_velocity);
+	if (centralData->collision_avoidance)
+	{
+		computeNewVelocity(dir_desired_bf,new_velocity);
+	}
 
 	rel_heading= atan2(new_velocity[Y],new_velocity[X]);
 

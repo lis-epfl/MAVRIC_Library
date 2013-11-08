@@ -224,6 +224,8 @@ void write_parameters_to_flashc()
 	cksum1 += local_array.values[0];
 	cksum2 += cksum1;
 	
+	dbg_print("Begin write to flashc...\n");
+	
 	for (i=1;i<(param_set.param_count+1);i++)
 	{
 		//flashc_memcpy((void *)&(nvram_array->values[i]),   param_set.parameters[i].param, sizeof((nvram_array->values[i])),   true);

@@ -18,29 +18,25 @@
 central_data_t *centralData;
 
 void mavlink_send_heartbeat(void) {
-	//board_hardware_t *board=get_board_hardware();
+
 	central_data_t *centralData=get_central_data();
-	//if (centralData->controls.run_mode==MOTORS_OFF) {
-		//mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_DISARMED, 0, MAV_STATE_STANDBY);
-	//}else {
-		//mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_ACTIVE);
-	//}
+
 	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, centralData->mav_mode, 0, centralData->mav_state);
-	mavlink_msg_sys_status_send(MAVLINK_COMM_0, 
-								0b1111110000100111, // sensors present
-								0b1111110000100111, // sensors enabled
-								0b1111110000100111, // sensors health
-								0,                  // load
-								(int)(1000.0*get_battery_rail()), // bat voltage (mV)
-								100,                // current (mA)
-								99,					// battery remaining
-								0, 0,  				// comms drop, comms errors
-								0, 0, 0, 0);        // autopilot specific errors
-	mavlink_msg_battery_status_send(MAVLINK_COMM_0, 0, (int)(1000.0*get_battery_rail()), 
-														(int)(1000.0*get_internal_rail()), 
-														(int)(1000.0*get_6V_analog_rail()), 
-														(int)(1000.0*get_5V_analog_rail()),
-														0.0, 0.0, 0.0, 0.0);
+	//mavlink_msg_sys_status_send(MAVLINK_COMM_0, 
+								//0b1111110000100111, // sensors present
+								//0b1111110000100111, // sensors enabled
+								//0b1111110000100111, // sensors health
+								//0,                  // load
+								//(int)(1000.0*get_battery_rail()), // bat voltage (mV)
+								//100,                // current (mA)
+								//99,					// battery remaining
+								//0, 0,  				// comms drop, comms errors
+								//0, 0, 0, 0);        // autopilot specific errors
+	//mavlink_msg_battery_status_send(MAVLINK_COMM_0, 0, (int)(1000.0*get_battery_rail()), 
+														//(int)(1000.0*get_internal_rail()), 
+														//(int)(1000.0*get_6V_analog_rail()), 
+														//(int)(1000.0*get_5V_analog_rail()),
+														//0.0, 0.0, 0.0, 0.0);
 														
 	trigger_analog_monitor();
 	
@@ -250,6 +246,8 @@ void mavlink_send_scaled_rc_channels(void)
 	rc_get_channel(6) * 1000.0 * RC_SCALEFACTOR,
 	rc_get_channel(7) * 1000.0 * RC_SCALEFACTOR,
 	rc_check_receivers());
+	
+	mavlink_msg_named_value_int_send(MAVLINK_COMM_0,get_millis(),"Coll_Avoidance",centralData->collision_avoidance);
 }
 
 void mavlink_send_simulation(void) {
@@ -424,7 +422,8 @@ void add_PID_parameters(void) {
 	add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Y],"Scale_Mag_Y");
 	add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Z],"Scale_Mag_Z");
 	
-	add_parameter_uint8(&(mavlink_system.sysid),"System_ID");
+	add_parameter_uint8(&(mavlink_system.sysid),"ID_System");
+	add_parameter_uint8(&(mavlink_mission_planner.sysid),"ID_Planner");
 
 	add_parameter_float(&centralData->position_estimator.kp_alt,"Pos_kp_alt");
 	add_parameter_float(&centralData->position_estimator.kp_vel_baro,"Pos_kp_velb");
@@ -462,7 +461,7 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &mavlink_send_simulation, MAVLINK_MSG_ID_HIL_STATE);
 	//add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
-	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
 	sort_taskset_by_period(get_mavlink_taskset());
 }

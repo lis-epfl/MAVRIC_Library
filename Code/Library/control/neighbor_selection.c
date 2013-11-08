@@ -86,7 +86,7 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 		centralData->listNeighbors[actualNeighbor].velocity[Y] = packet.vy / 100.0;
 		centralData->listNeighbors[actualNeighbor].velocity[Z] = packet.vz / 100.0;
 		
-		centralData->listNeighbors[actualNeighbor].size = 1.0;
+		centralData->listNeighbors[actualNeighbor].size = SIZE_VHC_ORCA;
 		
 		
 		//dbg_print("Neighbor with ID ");

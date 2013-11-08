@@ -462,6 +462,7 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 						dbg_print("flight plan received!\n");
 						*waypoint_receiving = false;
 						num_waypoint_onboard = number_of_waypoints;
+						init_wp();
 					}else{
 						mavlink_msg_mission_request_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,waypoint_request_number);
 						
