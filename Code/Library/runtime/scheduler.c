@@ -16,6 +16,7 @@ void init_scheduler(task_set *ts) {
 	for (i=0; i<ts->number_of_tasks; i++) {
 		ts->tasks[i].call_function=NULL;
 		ts->tasks[i].tasks=ts;
+		//ts->tasks[i].run_mode=UNINITIALISED;
 	}
 	ts->running_task=-1;
 	ts->current_schedule_slot=0;
@@ -85,7 +86,7 @@ int run_scheduler_update(task_set *ts, uint8_t schedule_strategy) {
 
 		    task_start_time=GET_TIME;
 		    call_task=ts->tasks[i].call_function;
-		    
+		    //dbg_print_num(i, 16); dbg_print(" ");dbg_print_num(call_task, 16); dbg_print("\n");
 		    treturn = call_task();
 
 
@@ -139,6 +140,13 @@ task_entry* get_task_by_id(task_set *ts, uint16_t task_id){
 	return NULL;
 }
 
+task_entry* get_task_by_index(task_set *ts, uint16_t task_index) {
+	if (task_index<ts->number_of_tasks) {
+		return &ts->tasks[task_index];
+	}
+	return NULL;
+}
+
 void change_run_mode(task_entry *te, task_run_mode_t new_run_mode) {
 	te->run_mode=new_run_mode;
 }
@@ -154,7 +162,9 @@ void suspend_task(task_entry *te, unsigned long delay) {
 }
 
 void run_task_now(task_entry *te) {
-	if (te->run_mode==RUN_NEVER) te->run_mode=RUN_ONCE;
-	te->next_run=GET_TIME;
+	if ((te->run_mode==RUN_NEVER)){
+		te->run_mode=RUN_ONCE;
+		//te->next_run=GET_TIME;
+	} 
 }
 

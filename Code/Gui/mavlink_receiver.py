@@ -10,8 +10,10 @@ from googleearth_server import *
 
 # allow import from the parent directory, where mavlink.py is
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), 'pymavlink'))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.realpath(__file__)), '.'))
 
-import  mavutil,  pymavlink
+import  mavutil
+from pymavlink import pymavlink
 
 from optparse import OptionParser
 
@@ -31,6 +33,7 @@ class MAVlinkReceiver:
         #         sys.exit(1)
 
         # create a mavlink serial instance
+        print "Initialising as system ",   opts.SOURCE_SYSTEM,  "on device",  opts.device
         self.master = mavutil.mavlink_connection(opts.device, baud=opts.baudrate, source_system=opts.SOURCE_SYSTEM,  write=True)
         self.msg=None;
         self.messages=dict();
@@ -42,16 +45,16 @@ class MAVlinkReceiver:
     def requestStream(self,  stream,  active,  frequency=0):
         # request activation/deactivation of stream. If frequency is 0, it won't be changed.
         reqMsg=pymavlink.MAVLink_request_data_stream_message(target_system=self.master.target_system, target_component=self.master.target_component, req_stream_id=stream.get_msgId(), req_message_rate=frequency, start_stop=active)
-        self.master.write(reqMsg.pack(pymavlink.MAVLink(self.master.target_system,  self.master.target_component)))
+        self.master.write(reqMsg.pack(pymavlink.MAVLink(file=0,  srcSystem=self.master.source_system)))
         if active:
-            print "activating stream",   stream.get_msgId(),  frequency
+            print "System ", self.master.target_system, ": activating stream",   stream.get_msgId(),  frequency
         else:
-            print "deactivating stream",  stream.get_msgId()
+            print "System ", self.master.target_system, ": deactivating stream",  stream.get_msgId()
     
     def requestAllStreams(self):
-        
+        print "Requesting all streams from ",  self.master.target_system
         reqMsg=pymavlink.MAVLink_request_data_stream_message(target_system=self.master.target_system, target_component=self.master.target_component, req_stream_id=255, req_message_rate=0, start_stop=0)
-        self.master.write(reqMsg.pack(pymavlink.MAVLink(self.master.target_system,  self.master.target_component)))
+        self.master.write(reqMsg.pack(pymavlink.MAVLink(file=0,  srcSystem=self.master.source_system)))
 
     def wait_message(self):
         '''wait for a heartbeat so we know the target system IDs'''
@@ -64,8 +67,9 @@ class MAVlinkReceiver:
         msg_key=""
         if msg!=None and msg.__class__.__name__!="MAVLink_bad_data":
             msg.mavlinkReceiver=self
-            #print("message: %s (system %u component %u)" % (msg.get_msgId(), self.master.target_system, self.master.target_component))
             #print msg.__class__.__name__
+            #print("message: %s (system %u component %u)" % (msg.get_msgId(), self.master.target_system, self.master.target_component))
+            
             if msg.__class__.__name__.startswith("MAVLink_named_value"):
                 msg_key="%s:%s"%(msg.__class__.__name__, msg.name)
                 #print msg_key

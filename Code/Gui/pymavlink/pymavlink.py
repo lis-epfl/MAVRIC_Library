@@ -6,7 +6,8 @@ Generated from: maveric.xml
 Note: this file has been auto-generated. DO NOT EDIT
 '''
 
-import struct, array, mavutil, time, json
+import struct, array, time, json
+from .generator.mavcrc import x25crc
 
 WIRE_PROTOCOL_VERSION = "1.0"
 
@@ -103,7 +104,7 @@ class MAVLink_message(object):
         self._header  = MAVLink_header(self._header.msgId, len(payload), mav.seq,
                                        mav.srcSystem, mav.srcComponent)
         self._msgbuf = self._header.pack() + payload
-        crc = mavutil.x25crc(self._msgbuf[1:])
+        crc = x25crc(self._msgbuf[1:])
         if True: # using CRC extra
             crc.accumulate(chr(crc_extra))
         self._crc = crc.crc
@@ -2037,7 +2038,7 @@ class MAVLink_setpoint_6dof_message(MAVLink_message):
 
 class MAVLink_radar_tracked_target_message(MAVLink_message):
         '''
-        Simple single-targed output of a doppler radar
+        Simple single-target output of a doppler radar
         '''
         def __init__(self, time_boot_ms, sensor_id, target_id, velocity, amplitude, distance):
                 MAVLink_message.__init__(self, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET, 'RADAR_TRACKED_TARGET')
@@ -2055,7 +2056,7 @@ class MAVLink_radar_tracked_target_message(MAVLink_message):
 class MAVLink_radar_velocity_hist_message(MAVLink_message):
         '''
         Full output histogram of doppler radar velocities. Lower half
-        are negative velocities, zero at index 64.
+        are negative velocities, zero at index 32.
         '''
         def __init__(self, time_boot_ms, sensor_id, velocity):
                 MAVLink_message.__init__(self, MAVLINK_MSG_ID_RADAR_VELOCITY_HIST, 'RADAR_VELOCITY_HIST')
@@ -2298,6 +2299,10 @@ class MAVLink_bad_data(MAVLink_message):
                 self.data = data
                 self.reason = reason
                 self._msgbuf = data
+
+        def __str__(self):
+            '''Override the __str__ function from MAVLink_messages because non-printable characters are common in to be the reason for this message to exist.'''
+            return '%s {%s, data:%s}' % (self._type, self.reason, [('%x' % ord(i) if isinstance(i, str) else '%x' % i) for i in self.data])  
             
 class MAVLink(object):
         '''MAVLink protocol handling class'''
@@ -2309,6 +2314,9 @@ class MAVLink(object):
                 self.callback = None
                 self.callback_args = None
                 self.callback_kwargs = None
+                self.send_callback = None
+                self.send_callback_args = None
+                self.send_callback_kwargs = None
                 self.buf = array.array('B')
                 self.expected_length = 6
                 self.have_prefix_error = False
@@ -2328,6 +2336,11 @@ class MAVLink(object):
             self.callback = callback
             self.callback_args = args
             self.callback_kwargs = kwargs
+
+        def set_send_callback(self, callback, *args, **kwargs):
+            self.send_callback = callback
+            self.send_callback_args = args
+            self.send_callback_kwargs = kwargs
             
         def send(self, mavmsg):
                 '''send a MAVLink message'''
@@ -2336,6 +2349,8 @@ class MAVLink(object):
                 self.seq = (self.seq + 1) % 255
                 self.total_packets_sent += 1
                 self.total_bytes_sent += len(buf)
+                if self.send_callback:
+                    self.send_callback(mavmsg, *self.send_callback_args, **self.send_callback_kwargs)
 
         def bytes_needed(self):
             '''return number of bytes needed for next parsing stage'''
@@ -2407,7 +2422,6 @@ class MAVLink(object):
                 # decode the header
                 try:
                     magic, mlen, seq, srcSystem, srcComponent, msgId = struct.unpack('cBBBBB', msgbuf[:6])
-                    #print msgId
                 except struct.error as emsg:
                     raise MAVError('Unable to unpack MAVLink header: %s' % emsg)
                 if ord(magic) != 254:
@@ -2426,7 +2440,7 @@ class MAVLink(object):
                     crc, = struct.unpack('<H', msgbuf[-2:])
                 except struct.error as emsg:
                     raise MAVError('Unable to unpack MAVLink CRC: %s' % emsg)
-                crc2 = mavutil.x25crc(msgbuf[1:-2])
+                crc2 = x25crc(msgbuf[1:-2])
                 if True: # using CRC extra 
                     crc2.accumulate(chr(crc_extra))
                 if crc != crc2.crc:
@@ -2434,41 +2448,11 @@ class MAVLink(object):
 
                 try:
                     t = struct.unpack(fmt, msgbuf[6:-2])
-                    #print "payload decoded"
                 except struct.error as emsg:
-                    #print "error decoding payload"
                     raise MAVError('Unable to unpack MAVLink payload type=%s fmt=%s payloadLength=%u: %s' % (
                         type, fmt, len(msgbuf[6:-2]), emsg))
-                
+
                 tlist = list(t)
-                
-                tlist_output=[]
-                digits_started=False
-                repeat_number=0
-                parse_index=0
-                for el in fmt:
-                   #print el
-                   if el in ['0','1','2','3','4','5','6','7','8','9']:
-                     digits_started=True
-                     repeat_number=10*repeat_number+int(el)
-                   if el in ['c', 'b', 'B', '?', 'h', 'H', 'i', 'I', 'l', 'L', 'q', 'Q', 'f', 'd', 's', 'p', 'P']:
-                     if digits_started:
-                        if  el=='s':
-                           tlist_output.append(str(tlist[parse_index].split('\0')[0]))
-                           parse_index+=1
-                        else:
-                           #print "rep:",repeat_number
-                           #append a list 
-                           tlist_output.append(tlist[parse_index:parse_index+repeat_number])
-                           parse_index+=repeat_number
-                           digits_started=False
-                     else:
-                        tlist_output.append(tlist[parse_index])
-                        parse_index+=1
-                
-                #print tlist_output
-                tlist=tlist_output
-                
                 # handle sorted fields
                 if True:
                     t = tlist[:]
@@ -2484,7 +2468,6 @@ class MAVLink(object):
                 try:
                     m = type(*t)
                 except Exception as emsg:
-                    print 'Unable to instantiate MAVLink message of type %s : %s' % (type, emsg)
                     raise MAVError('Unable to instantiate MAVLink message of type %s : %s' % (type, emsg))
                 m._msgbuf = msgbuf
                 m._payload = msgbuf[6:-2]
@@ -4330,7 +4313,7 @@ class MAVLink(object):
                 target_system             : The target requested to send the message stream. (uint8_t)
                 target_component          : The target requested to send the message stream. (uint8_t)
                 req_stream_id             : The ID of the requested data stream (uint8_t)
-                req_message_rate          : The requested interval between two messages of this type (uint16_t)
+                req_message_rate          : The requested interval between two messages of this type in ms (uint16_t)
                 start_stop                : 1 to start sending, 0 to stop sending. (uint8_t)
 
                 '''
@@ -4345,7 +4328,7 @@ class MAVLink(object):
                 target_system             : The target requested to send the message stream. (uint8_t)
                 target_component          : The target requested to send the message stream. (uint8_t)
                 req_stream_id             : The ID of the requested data stream (uint8_t)
-                req_message_rate          : The requested interval between two messages of this type (uint16_t)
+                req_message_rate          : The requested interval between two messages of this type in ms (uint16_t)
                 start_stop                : 1 to start sending, 0 to stop sending. (uint8_t)
 
                 '''
@@ -5227,7 +5210,7 @@ class MAVLink(object):
             
         def radar_tracked_target_encode(self, time_boot_ms, sensor_id, target_id, velocity, amplitude, distance):
                 '''
-                Simple single-targed output of a doppler radar
+                Simple single-target output of a doppler radar
 
                 time_boot_ms              : Timestamp (milliseconds since system boot) (uint32_t)
                 sensor_id                 : Sensor ID (uint8_t)
@@ -5243,7 +5226,7 @@ class MAVLink(object):
             
         def radar_tracked_target_send(self, time_boot_ms, sensor_id, target_id, velocity, amplitude, distance):
                 '''
-                Simple single-targed output of a doppler radar
+                Simple single-target output of a doppler radar
 
                 time_boot_ms              : Timestamp (milliseconds since system boot) (uint32_t)
                 sensor_id                 : Sensor ID (uint8_t)
@@ -5258,7 +5241,7 @@ class MAVLink(object):
         def radar_velocity_hist_encode(self, time_boot_ms, sensor_id, velocity):
                 '''
                 Full output histogram of doppler radar velocities. Lower half are
-                negative velocities, zero at index 64.
+                negative velocities, zero at index 32.
 
                 time_boot_ms              : Timestamp (milliseconds since system boot) (uint32_t)
                 sensor_id                 : Sensor ID (uint8_t)
@@ -5272,7 +5255,7 @@ class MAVLink(object):
         def radar_velocity_hist_send(self, time_boot_ms, sensor_id, velocity):
                 '''
                 Full output histogram of doppler radar velocities. Lower half are
-                negative velocities, zero at index 64.
+                negative velocities, zero at index 32.
 
                 time_boot_ms              : Timestamp (milliseconds since system boot) (uint32_t)
                 sensor_id                 : Sensor ID (uint8_t)

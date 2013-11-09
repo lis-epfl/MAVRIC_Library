@@ -21,8 +21,16 @@ static inline void udp_put_byte(udp_connection_t *udpconn, char data) {
 }
 
 static inline void udp_transmit(udp_connection_t *udpconn) {
-	int bytes_sent = sendto(udpconn->sock, &udpconn->udp_buffer, buffer_bytes_available(&udpconn->udp_buffer), 0, (struct sockaddr*)&(udpconn->Addr), sizeof(struct sockaddr_in));
-	buffer_clear(&udpconn->udp_buffer);
+	int i;
+	int bytes_sent = sendto(udpconn->sock, &udpconn->udp_buffer, buffer_bytes_available(&(udpconn->udp_buffer)), 0, (struct sockaddr*)&(udpconn->Addr), sizeof(struct sockaddr_in));
+	if (bytes_sent==buffer_bytes_available(&(udpconn->udp_buffer))) {
+		buffer_clear(&udpconn->udp_buffer);
+	}else {
+		for (i=0; i<bytes_sent; i++) {
+			buffer_get(&udpconn->udp_buffer);
+		}
+	}
+	
 }
 
 static inline bool udp_buffer_empty(udp_connection_t *udpconn) {
@@ -49,8 +57,8 @@ static inline int udp_bytes_available(udp_connection_t *udpconn) {
 		if (recsize!=-1) printf("rec: %i\n", recsize);
 		for (i=0; i<recsize; i++) {
 			buffer_put(&udpconn->udp_buffer, buf[i]);
-			dbg_print(".");
-		}
+			dbg_print(" ");dbg_print_num((uint8_t)buf[i], 16);
+		}dbg_print("--\n");
 		
 	}
 	return buffer_bytes_available(&udpconn->udp_buffer);
@@ -70,7 +78,7 @@ void register_write_stream_udp(byte_stream_t *stream, udp_connection_t *udpconn,
 	udpconn->Addr.sin_addr.s_addr = inet_addr(target_ip);
 	udpconn->Addr.sin_port = htons(port);
 	
-	buffer_init(&udpconn->udp_buffer);
+	buffer_init(&(udpconn->udp_buffer));
 	stream->data=udpconn;
 	stream->put=&udp_put_byte;
 	stream->flush=&udp_transmit;

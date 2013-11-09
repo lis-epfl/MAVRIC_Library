@@ -14,9 +14,9 @@
 #include "central_data.h"
 #include "waypoint_navigation.h"
 
-byte_stream_t* mavlink_out_stream;
-byte_stream_t* mavlink_in_stream;
-Buffer_t mavlink_in_buffer;
+static volatile byte_stream_t* mavlink_out_stream;
+static volatile byte_stream_t* mavlink_in_stream;
+static volatile Buffer_t mavlink_in_buffer;
 
 central_data_t *centralData;
 
@@ -39,28 +39,18 @@ void mavlink_receive_handler() {
 	Mavlink_Received_t rec;
 	
 	if(mavlink_receive(mavlink_in_stream, &rec)) {
-		
-		if (rec.msg.sysid == MAVLINK_BASE_STATION_ID)
-		{
-			dbg_print("\n Received message with ID");
+		dbg_print("\n Received message with ID");
 			dbg_print_num(rec.msg.msgid, 10);
 			dbg_print(" from system");
 			dbg_print_num(rec.msg.sysid, 10);
 			dbg_print(" for component");
 			dbg_print_num(rec.msg.compid,10);
 			dbg_print( "\n");
-			
+		if (rec.msg.sysid == MAVLINK_BASE_STATION_ID)
+		{
 			handle_mavlink_message(&rec);
 		}else if (rec.msg.msgid == MAVLINK_MSG_ID_GLOBAL_POSITION_INT)
 		{
-			dbg_print("\n Received message with ID");
-			dbg_print_num(rec.msg.msgid, 10);
-			dbg_print(" from system");
-			dbg_print_num(rec.msg.sysid, 10);
-			dbg_print(" for component");
-			dbg_print_num(rec.msg.compid,10);
-			dbg_print( "\n");
-			
 			read_msg_from_neighbors(&rec);
 		}
 		
@@ -86,17 +76,26 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream,
 	centralData = get_central_data();
 }
 
+void flush_mavlink() {
+	if (mavlink_out_stream->flush!=NULL) {
+		//mavlink_out_stream->buffer_empty(mavlink_out_stream->data);
+		mavlink_out_stream->flush(mavlink_out_stream->data);	
+	
+	}
+}
+
 task_return_t mavlink_protocol_update() {
+	task_return_t result=0;
 	mavlink_receive_handler();
 	if ((mavlink_out_stream->buffer_empty(mavlink_out_stream->data))==true) {
-		return run_scheduler_update(&mavlink_tasks, ROUND_ROBIN);
-		if (mavlink_out_stream->flush!=NULL) mavlink_out_stream->flush;
+		result = run_scheduler_update(&mavlink_tasks, ROUND_ROBIN);
+		flush_mavlink();
 	}
 	
 	control_time_out_waypoint_msg(&(centralData->number_of_waypoints),&centralData->waypoint_receiving,&centralData->waypoint_sending);
 	
 	
-	return 0;
+	return result;
 }
 
 task_set* get_mavlink_taskset() {
@@ -116,14 +115,14 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 	while(stream->bytes_available(stream->data) > 0) {
 		byte = stream->get(stream->data);
 		//dbg_print(".");
-		//dbg_print_num(byte, 16);
-		//dbg_print("\t");
+		dbg_print_num(byte, 16);
+		dbg_print(" ");
 		if(mavlink_parse_char(MAVLINK_COMM_0, byte, &rec->msg, &rec->status)) {
-			//dbg_print("\n");
+			dbg_print("\n");
 			return 1;
 		}
-		//dbg_print_num(rec->status.parse_state, 16);
-		//dbg_print("\n");
+		dbg_print_num(rec->status.parse_state, 16);
+		dbg_print("\n");
 	}
 	return 0;
 }
@@ -219,13 +218,16 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 					dbg_print("send all\n");
 					// send full list of streams
 					for (i=0; i<mavlink_tasks.number_of_tasks; i++) {
-						run_task_now(&mavlink_tasks.tasks[i]);
+						task_entry *task=get_task_by_index(&mavlink_tasks, i);
+						run_task_now(task);
 					}					
 				} else {
+					int i;
 					task_entry *task=get_task_by_id(&mavlink_tasks, request.req_stream_id);
 					dbg_print(" stream="); dbg_print_num(request.req_stream_id, 10);
 					dbg_print(" start_stop=");dbg_print_num(request.start_stop, 10);
 					dbg_print(" rate=");dbg_print_num(request.req_message_rate,10);
+					dbg_print("\n");
 					dbg_print("\n");
 					if (request.start_stop) {
 						change_run_mode(task, RUN_REGULAR);

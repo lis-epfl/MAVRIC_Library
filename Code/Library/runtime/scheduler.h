@@ -69,6 +69,7 @@ void sort_taskset_by_period(task_set *ts);
 int run_scheduler_update(task_set *ts, uint8_t schedule_strategy);
 
 task_entry* get_task_by_id(task_set *ts, uint16_t task_id);
+task_entry* get_task_by_index(task_set *ts, uint16_t task_index);
 
 void change_run_mode(task_entry *te, task_run_mode_t new_run_mode);
 void change_task_period(task_entry *te, unsigned long repeat_period);

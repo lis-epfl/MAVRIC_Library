@@ -437,7 +437,7 @@ void create_tasks() {
 	//register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
 	//register_task(&main_tasks, , 100000, RUN_REGULAR, &read_radar);
 
-	register_task(&main_tasks, 3, 10000, RUN_REGULAR, &run_navigation_task);
+	//register_task(&main_tasks, 3, 10000, RUN_REGULAR, &run_navigation_task);
 
 	register_task(&main_tasks, 4, 200000, RUN_REGULAR, &set_mav_mode_n_state);
 	
