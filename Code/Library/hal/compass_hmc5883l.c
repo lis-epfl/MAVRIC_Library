@@ -15,7 +15,7 @@ static volatile compass_data compass_outputs;
 void init_hmc5883_slow() {
 	static twim_options_t twi_opt= {
 		.pba_hz=64000000,
-		.speed = 100000,
+		.speed = 400000,
 		.chip = HMC5883_SLAVE_ADDRESS,
 		.smbus=false
 	};

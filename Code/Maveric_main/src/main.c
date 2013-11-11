@@ -24,11 +24,11 @@
 #include "scheduler.h"
 #include "central_data.h"
 #include "boardsupport.h"
-#include "waypoint_navigation.h"
+#include "mavlink_waypoint_handler.h"
 #include "navigation.h"
 #include "tasks.h"
 #include "neighbor_selection.h"
-//#include "orca.h"
+#include "orca.h"
 //#include "flashvault.h"
 
 central_data_t *centralData;
@@ -62,6 +62,7 @@ void initialisation() {
 
 //	calibrate_Gyros(&centralData->imu1);
 	for (i=400; i>0; i--) {
+		imu_get_raw_data(&(centralData->imu1));
 		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);	
 		mavlink_protocol_update();	
 		delay_ms(5);
@@ -86,11 +87,11 @@ void initialisation() {
 	centralData->mav_state = MAV_STATE_STANDBY;
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	init_nav();
-	init_waypoint_list(centralData->waypoint_list,&centralData->number_of_waypoints);
+	init_waypoint_handler();
 	//e_init();
 	
 	init_neighbors();
-	//init_orca();
+	init_orca();
 	
 	LED_On(LED1);
 }
@@ -111,7 +112,8 @@ void main (void)
 	
 	while (1==1) {
 		
-		run_scheduler_update(get_main_taskset(), FIXED_PRIORITY);
+		//run_scheduler_update(get_main_taskset(), FIXED_PRIORITY);
+		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
 		
 		//LED_On(LED1);
 

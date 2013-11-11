@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=felix
-Date                   :=11/02/13
+Date                   :=11/09/13
 CodeLitePath           :="/home/felix/.codelite"
 LinkerName             :=gcc
 SharedObjectLinkerName :=gcc -shared -fPIC
@@ -61,9 +61,9 @@ AS       := as
 ##
 CodeLiteDir:=/usr/share/codelite
 Objects0=$(IntermediateDirectory)/boardsupport$(ObjectSuffix) $(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IntermediateDirectory)/src_tasks$(ObjectSuffix) $(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IntermediateDirectory)/main$(ObjectSuffix) $(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) $(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) $(IntermediateDirectory)/util_sinus$(ObjectSuffix) $(IntermediateDirectory)/util_print_util$(ObjectSuffix) $(IntermediateDirectory)/util_buffer$(ObjectSuffix) \
-	$(IntermediateDirectory)/sensing_imu$(ObjectSuffix) $(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix) $(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix) $(IntermediateDirectory)/sensing_waypoint_navigation$(ObjectSuffix) $(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) $(IntermediateDirectory)/sensing_estimator$(ObjectSuffix) $(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix) $(IntermediateDirectory)/control_navigation$(ObjectSuffix) $(IntermediateDirectory)/control_stabilisation$(ObjectSuffix) $(IntermediateDirectory)/control_control$(ObjectSuffix) \
+	$(IntermediateDirectory)/sensing_imu$(ObjectSuffix) $(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix) $(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix) $(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) $(IntermediateDirectory)/sensing_estimator$(ObjectSuffix) $(IntermediateDirectory)/sensing_mavlink_waypoint_handler$(ObjectSuffix) $(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix) $(IntermediateDirectory)/control_navigation$(ObjectSuffix) $(IntermediateDirectory)/control_stabilisation$(ObjectSuffix) $(IntermediateDirectory)/control_control$(ObjectSuffix) \
 	$(IntermediateDirectory)/control_neighbor_selection$(ObjectSuffix) $(IntermediateDirectory)/control_orca$(ObjectSuffix) $(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix) $(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_adxl345_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_bmp085$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_radar_module_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_servo_pwm$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_led$(ObjectSuffix) \
-	$(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_udp_stream$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_joystick_rc$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix) $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) 
+	$(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_udp_stream$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_joystick_rc$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(ObjectSuffix) $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) 
 
 
 
@@ -194,14 +194,6 @@ $(IntermediateDirectory)/sensing_gps_ublox$(DependSuffix): ../Library/sensing/gp
 $(IntermediateDirectory)/sensing_gps_ublox$(PreprocessSuffix): ../Library/sensing/gps_ublox.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_gps_ublox$(PreprocessSuffix) "../Library/sensing/gps_ublox.c"
 
-$(IntermediateDirectory)/sensing_waypoint_navigation$(ObjectSuffix): ../Library/sensing/waypoint_navigation.c $(IntermediateDirectory)/sensing_waypoint_navigation$(DependSuffix)
-	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/waypoint_navigation.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_waypoint_navigation$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/sensing_waypoint_navigation$(DependSuffix): ../Library/sensing/waypoint_navigation.c
-	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/sensing_waypoint_navigation$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_waypoint_navigation$(DependSuffix) -MM "../Library/sensing/waypoint_navigation.c"
-
-$(IntermediateDirectory)/sensing_waypoint_navigation$(PreprocessSuffix): ../Library/sensing/waypoint_navigation.c
-	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_waypoint_navigation$(PreprocessSuffix) "../Library/sensing/waypoint_navigation.c"
-
 $(IntermediateDirectory)/sensing_simulation$(ObjectSuffix): ../Library/sensing/simulation.c $(IntermediateDirectory)/sensing_simulation$(DependSuffix)
 	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/simulation.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sensing_simulation$(DependSuffix): ../Library/sensing/simulation.c
@@ -217,6 +209,14 @@ $(IntermediateDirectory)/sensing_estimator$(DependSuffix): ../Library/sensing/es
 
 $(IntermediateDirectory)/sensing_estimator$(PreprocessSuffix): ../Library/sensing/estimator.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_estimator$(PreprocessSuffix) "../Library/sensing/estimator.c"
+
+$(IntermediateDirectory)/sensing_mavlink_waypoint_handler$(ObjectSuffix): ../Library/sensing/mavlink_waypoint_handler.c $(IntermediateDirectory)/sensing_mavlink_waypoint_handler$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/mavlink_waypoint_handler.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_mavlink_waypoint_handler$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/sensing_mavlink_waypoint_handler$(DependSuffix): ../Library/sensing/mavlink_waypoint_handler.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/sensing_mavlink_waypoint_handler$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_mavlink_waypoint_handler$(DependSuffix) -MM "../Library/sensing/mavlink_waypoint_handler.c"
+
+$(IntermediateDirectory)/sensing_mavlink_waypoint_handler$(PreprocessSuffix): ../Library/sensing/mavlink_waypoint_handler.c
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_mavlink_waypoint_handler$(PreprocessSuffix) "../Library/sensing/mavlink_waypoint_handler.c"
 
 $(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix): ../Library/sensing/position_estimation.c $(IntermediateDirectory)/sensing_position_estimation$(DependSuffix)
 	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/position_estimation.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix) $(IncludePath)
@@ -370,6 +370,14 @@ $(IntermediateDirectory)/hal_emu_analog_monitor$(DependSuffix): ../Library/hal_e
 $(IntermediateDirectory)/hal_emu_analog_monitor$(PreprocessSuffix): ../Library/hal_emu/analog_monitor.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_analog_monitor$(PreprocessSuffix) "../Library/hal_emu/analog_monitor.c"
 
+$(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(ObjectSuffix): ../Library/hal_emu/lsm330dlc_driver.c $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/lsm330dlc_driver.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(DependSuffix): ../Library/hal_emu/lsm330dlc_driver.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(DependSuffix) -MM "../Library/hal_emu/lsm330dlc_driver.c"
+
+$(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(PreprocessSuffix): ../Library/hal_emu/lsm330dlc_driver.c
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(PreprocessSuffix) "../Library/hal_emu/lsm330dlc_driver.c"
+
 $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix): ../Library/tests/test_maths.c $(IntermediateDirectory)/tests_test_maths$(DependSuffix)
 	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/tests/test_maths.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/tests_test_maths$(DependSuffix): ../Library/tests/test_maths.c
@@ -423,15 +431,15 @@ clean:
 	$(RM) $(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/sensing_gps_ublox$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/sensing_gps_ublox$(PreprocessSuffix)
-	$(RM) $(IntermediateDirectory)/sensing_waypoint_navigation$(ObjectSuffix)
-	$(RM) $(IntermediateDirectory)/sensing_waypoint_navigation$(DependSuffix)
-	$(RM) $(IntermediateDirectory)/sensing_waypoint_navigation$(PreprocessSuffix)
 	$(RM) $(IntermediateDirectory)/sensing_simulation$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/sensing_simulation$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/sensing_simulation$(PreprocessSuffix)
 	$(RM) $(IntermediateDirectory)/sensing_estimator$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/sensing_estimator$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/sensing_estimator$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/sensing_mavlink_waypoint_handler$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/sensing_mavlink_waypoint_handler$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/sensing_mavlink_waypoint_handler$(PreprocessSuffix)
 	$(RM) $(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/sensing_position_estimation$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/sensing_position_estimation$(PreprocessSuffix)
@@ -489,6 +497,9 @@ clean:
 	$(RM) $(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/hal_emu_analog_monitor$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/hal_emu_analog_monitor$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(PreprocessSuffix)
 	$(RM) $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/tests_test_maths$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/tests_test_maths$(PreprocessSuffix)

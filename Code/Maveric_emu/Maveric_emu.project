@@ -143,16 +143,16 @@
     <VirtualDirectory Name="sensing">
       <File Name="../Library/sensing/qfilter.h"/>
       <File Name="../Library/sensing/imu.c"/>
-      <File Name="../Library/sensing/waypoint_navigation.h"/>
       <File Name="../Library/sensing/qfilter.c"/>
       <File Name="../Library/sensing/simulation.h"/>
       <File Name="../Library/sensing/gps_ublox.h"/>
       <File Name="../Library/sensing/gps_ublox.c"/>
-      <File Name="../Library/sensing/waypoint_navigation.c"/>
       <File Name="../Library/sensing/imu.h"/>
       <File Name="../Library/sensing/simulation.c"/>
       <File Name="../Library/sensing/estimator.c"/>
       <File Name="../Library/sensing/estimator.h"/>
+      <File Name="../Library/sensing/mavlink_waypoint_handler.c"/>
+      <File Name="../Library/sensing/mavlink_waypoint_handler.h"/>
       <File Name="../Library/sensing/position_estimation.c"/>
       <File Name="../Library/sensing/position_estimation.h"/>
     </VirtualDirectory>
@@ -203,6 +203,8 @@
       <File Name="../Library/hal_emu/analog_monitor.h"/>
       <File Name="../Library/hal_emu/analog_monitor.c"/>
       <File Name="../Library/hal_emu/flashc.h"/>
+      <File Name="../Library/hal_emu/lsm330dlc_driver.c"/>
+      <File Name="../Library/hal_emu/lsm330dlc_driver.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="tests">
       <File Name="../Library/tests/test_maths.h"/>
@@ -255,6 +257,7 @@
       <General OutputFile="maveric" IntermediateDirectory="./Debug" Command="./maveric" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="." PauseExecWhenProcTerminates="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[
+      
       ]]>
       </Environment>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
@@ -294,6 +297,7 @@
       <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[
+      
       ]]>
       </Environment>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">

@@ -26,11 +26,13 @@ void initialise_central_data(){
 		centralData.simulation_mode=0;
 		
 		centralData.waypoint_set = false;
-		centralData.mission_started = false;
 		centralData.waypoint_sending = false;
 		centralData.waypoint_receiving = false;
 		centralData.waypoint_hold_init = false;
-		centralData.home_wp_reached = false;
+		centralData.critical_landing = false;
+		centralData.critical_init = false;
+		
+		centralData.collision_avoidance = false;
 		
 		// default GPS home position
 		centralData.position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;

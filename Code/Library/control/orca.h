@@ -14,7 +14,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define MAXSPEED 7.5
+#define ORCA_TIME_STEP_MILLIS 10.0
+
+#define MAXSPEED 4.5
 
 #define RVO_EPSILON 0.0001
 

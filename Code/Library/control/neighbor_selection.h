@@ -13,6 +13,8 @@
 
 #define MAX_NUM_NEIGHBORS 15
 
+#define SIZE_VHC_ORCA 5.0
+
 typedef struct  {
 	uint8_t neighborID;
 	float position[3];

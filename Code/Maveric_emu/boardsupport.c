@@ -6,7 +6,7 @@
  */ 
 
 #include "boardsupport.h"
-#include "waypoint_navigation.h"
+#include "mavlink_waypoint_handler.h"
 #include "conf_sim_model.h"
 #include <stdio.h>
 #include <sys/time.h>
