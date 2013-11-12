@@ -6,18 +6,18 @@
  */ 
 #include "mavlink_actions.h"
 
-#include "boardsupport.h"
+#include "central_data.h"
 #include "onboard_parameters.h"
 #include "mavlink_stream.h"
 #include "scheduler.h"
 #include "doppler_radar.h"
 
-board_hardware_t *board;
+central_data_t *central_data;
 
 
 mavlink_send_heartbeat() {
-	board_hardware_t *board=get_board_hardware();
-	if (board->controls.run_mode==MOTORS_OFF) {
+	central_data_t *central_data=get_central_data();
+	if (central_data->controls.run_mode==MOTORS_OFF) {
 		mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_DISARMED, 0, MAV_STATE_STANDBY);
 	}else {
 		mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, MAV_MODE_STABILIZE_ARMED, 0, MAV_STATE_ACTIVE);
@@ -41,10 +41,13 @@ void mavlink_send_radar() {
 
 
 
+void handle_specific_messages (Mavlink_Received_t* rec) {
+	
+}
 
 void init_mavlink_actions() {
-	board=get_board_hardware();
-	register_task(get_mavlink_taskset(), 1, 500000, &mavlink_send_heartbeat);
+	central_data=get_central_data();
+	register_task(get_mavlink_taskset(), 1, 500000, RUN_REGULAR, &mavlink_send_heartbeat);
 	//register_task(get_mavlink_taskset(), 7,  50000, &mavlink_send_radar);
 
 }

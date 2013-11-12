@@ -49,7 +49,7 @@ radar_target main_target;
 	uint32_t time1, time2,time_result; //time1-time2=time_result for measure
 
 	
-void calculate_radar() {
+void calculate_radar(int16_t input_buffer[]) {
 	int i=0;
 	int j=0;
 	int counter=0;
@@ -65,7 +65,7 @@ void calculate_radar() {
 	////////////FFT 16 bits version
 	for(j=0;j< ADCI_BUFFER_SIZE;j++)
 	{
-		vect_inputI[j]=ADCI_get_sample(0,even_odd2,j);
+		vect_inputI[j]=ADCI_get_sample(0,j);
 		
 	}
 
@@ -84,7 +84,7 @@ void calculate_radar() {
 																	
 	for(j=0;j< ADCI_BUFFER_SIZE;j++)
 	{
-		vect_inputI[j]=ADCI_get_sample(1,even_odd2,j);
+		vect_inputI[j]=ADCI_get_sample(1,j);
 
 	}
 	dsp16_trans_realcomplexfft(vect_outputQ,vect_inputI,10);

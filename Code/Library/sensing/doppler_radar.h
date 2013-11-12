@@ -19,7 +19,7 @@
 //#define Sampling_frequency 23437
 #define Sampling_frequency 15625
 #define filter_conversion 100
-
+#define ADCI_BUFFER_SIZE 512
 
 void calculate_radar();
 

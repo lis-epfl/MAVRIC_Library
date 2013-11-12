@@ -35,8 +35,9 @@
 
 
 
-board_hardware_t *board;
+central_data_t *central_data;
 
+int16_t input_buffer[ADCI_BUFFER_SIZE*4];
 
 
 NEW_TASK_SET(main_tasks, 10)
@@ -66,7 +67,7 @@ void initialisation() {
 	};
 	init_i2c_slave_interface(1);
 
-	board=initialise_board();
+	initialise_board(central_data);
 	
 
 	init_radar();
@@ -91,13 +92,13 @@ void main (void)
 	initialisation();
 	
 	init_scheduler(&main_tasks);
-	register_task(&main_tasks, 1, 10000, &mavlink_protocol_update);
+	register_task(&main_tasks, 1, 10000, RUN_REGULAR, &mavlink_protocol_update);
 	// main loop
 	counter=0;
 	// turn on radar power:
 	switch_power(1,0);
 
-	ADCI_Start_Oneshot(Sampling_frequency);
+	ADCI_Start_Sampling(&input_buffer, 4, ADCI_BUFFER_SIZE, Sampling_frequency, false);
 	while (1==1) {
 		this_looptime=get_millis();
 		
@@ -106,7 +107,7 @@ void main (void)
 
 			calculate_radar();
 			mavlink_send_radar();
-			ADCI_Start_Oneshot(Sampling_frequency);
+			ADCI_Start_Sampling(&input_buffer, 4, ADCI_BUFFER_SIZE, Sampling_frequency, false);
 		}			
 		
 		run_scheduler_update(&main_tasks, FIXED_PRIORITY);

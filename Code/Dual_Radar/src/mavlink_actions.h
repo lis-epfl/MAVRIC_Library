@@ -12,8 +12,14 @@
 #ifndef MAVLINK_ACTIONS_H_
 #define MAVLINK_ACTIONS_H_
 
+#include "mavlink_stream.h"
+
 
 void init_mavlink_actions();
 
 void mavlink_send_radar() ;
+
+
+void handle_specific_messages (Mavlink_Received_t* rec);
+
 #endif /* MAVLINK_ACTIONS_H_ */

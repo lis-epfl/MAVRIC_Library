@@ -34,6 +34,7 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec);
 void handle_mavlink_message(Mavlink_Received_t* rec);
 void flush_mavlink();
 
-void receive_message_long(Mavlink_Received_t* rec);
+void suspend_downstream(uint32_t delay);
+
 
 #endif /* MAVLINK_STREAM_H */

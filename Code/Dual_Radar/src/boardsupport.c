@@ -8,44 +8,29 @@
 #include "boardsupport.h"
 
 
-static volatile board_hardware_t board_hardware;
-
-board_hardware_t* initialise_board() {
+initialise_board(central_data_t *central_data){
 		
 		init_UART_int(4);
 
 		
-		board_hardware.xbee_out_stream.put=NULL;
-		dbg_print_init(&board_hardware.xbee_out_stream);
+		central_data->xbee_out_stream.put=NULL;
+		dbg_print_init(&central_data->xbee_out_stream);
 		
 		
-		register_write_stream(get_UART_handle(4), &board_hardware.debug_stream);
+		register_write_stream(get_UART_handle(4), &central_data->debug_stream);
 
-		register_read_stream(get_UART_handle(4), &board_hardware.debug_in_stream);
-		board_hardware.telemetry_down_stream=&board_hardware.debug_stream;
-		board_hardware.telemetry_up_stream=&board_hardware.debug_in_stream;
+		register_read_stream(get_UART_handle(4), &central_data->debug_in_stream);
+		central_data->telemetry_down_stream=&central_data->debug_stream;
+		central_data->telemetry_up_stream=&central_data->debug_in_stream;
 		// init mavlink
-		init_mavlink(board_hardware.telemetry_down_stream, board_hardware.telemetry_up_stream);
+		init_mavlink(central_data->telemetry_down_stream, central_data->telemetry_up_stream, 100);
 		
-		Init_ADCI();
+		Init_ADCI(100000, ADCIFA_REF06VDD, 16, 4);
 		Init_DAC(0);
 		DAC_set_value(0);
 
-		return &board_hardware;
-}
-
-board_hardware_t* get_board_hardware() {
-	return &board_hardware;
 }
 
 
-byte_stream_t* get_telemetry_upstream() {
-	return board_hardware.telemetry_up_stream;
-}
-byte_stream_t* get_telemetry_downstream() {
-	return board_hardware.telemetry_down_stream;
-}
-byte_stream_t* get_debug_stream() {
-	return &board_hardware.debug_stream;
-}
+
 
