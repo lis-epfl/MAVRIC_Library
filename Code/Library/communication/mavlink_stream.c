@@ -87,9 +87,7 @@ task_return_t mavlink_protocol_update() {
 		result = run_scheduler_update(&mavlink_tasks, ROUND_ROBIN);
 		flush_mavlink();
 	}
-	
-	control_time_out_waypoint_msg(&(centralData->number_of_waypoints),&centralData->waypoint_receiving,&centralData->waypoint_sending);
-	
+		
 	
 	return result;
 }

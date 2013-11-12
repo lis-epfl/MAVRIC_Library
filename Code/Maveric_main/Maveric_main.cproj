@@ -961,6 +961,12 @@
     <Compile Include="Library\util\math_util.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\util\quick_trig.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\util\quick_trig.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\central_data.c">
       <SubType>compile</SubType>
     </Compile>

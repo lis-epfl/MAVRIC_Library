@@ -440,6 +440,10 @@ void add_PID_parameters(void) {
 }
 
 
+task_return_t control_waypoint_timeout () {
+	control_time_out_waypoint_msg(&(centralData->number_of_waypoints),&centralData->waypoint_receiving,&centralData->waypoint_sending);
+}
+
 void handle_specific_messages (Mavlink_Received_t* rec) {
 	if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) {
 		switch(rec->msg.msgid) {
@@ -701,7 +705,7 @@ void init_mavlink_actions(void) {
 	//write_parameters_to_flashc();
 	
 	read_parameters_from_flashc();
-	
+	add_task(get_mavlink_taskset(),   10000, RUN_REGULAR, &control_waypoint_timeout, 0);
 	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_attitude_quaternion, MAVLINK_MSG_ID_ATTITUDE_QUATERNION);
 	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_attitude, MAVLINK_MSG_ID_ATTITUDE);

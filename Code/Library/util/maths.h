@@ -65,6 +65,15 @@ float static inline scalar_product(const float u[], const float v[])
 	return scp;
 }
 
+
+void static inline cross_product(const float u[], const float v[], float out[])
+{
+	out[0] = u[1] * v[2] - u[2] * v[1];
+	out[1] = u[2] * v[0] - u[0] * v[2];
+	out[2] = u[0] * v[1] - u[1] * v[0];
+}
+
+
 UQuat_t static inline quat_multi(const UQuat_t q1, const UQuat_t q2)
 {
 	float tmp[3];
@@ -138,6 +147,16 @@ float static inline vector_norm_sqr(float u[])
 float static inline vector_norm(float u[])
 {
 	return fast_sqrt(vector_norm_sqr(u));
+}
+
+void static inline vector_normalize(float v[], float u[])
+{
+	int i;
+	float norm = vector_norm(v);
+	for (i = 0; i < 3; ++i)
+	{
+		u[i] = v[i] / norm;
+	}
 }
 
 static inline UQuat_t quat_normalise(const UQuat_t q) {
@@ -221,6 +240,20 @@ static float inline median_filter_3x(float a, float b, float c) {
 	}
 	return middle;
 
+}
+
+
+static float interpolate(float x, float x1, float x2, float y1, float y2)
+{
+	if (x1 == x2)
+	{
+		return y1;
+	}
+	else
+	{
+		float y = y1 + (y2 - y1) * (x - x1) / (x2 - x1); 
+		return y;
+	}
 }
 
 #endif
