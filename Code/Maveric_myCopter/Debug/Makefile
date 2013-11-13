@@ -99,6 +99,7 @@ SUBDIRS :=  \
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
+../Library/control/adaptive_parameter.c \
 ../Library/control/neighbor_selection.c \
 ../Library/control/orca.c \
 ../Library/control/pid_control.c \
@@ -189,6 +190,7 @@ ASM_SRCS +=
 
 
 OBJS +=  \
+Library/control/adaptive_parameter.o \
 Library/control/neighbor_selection.o \
 Library/control/orca.o \
 Library/control/pid_control.o \
@@ -272,6 +274,7 @@ src/boardsupport.o \
 src/main.o
 
 OBJS_AS_ARGS +=  \
+Library/control/adaptive_parameter.o \
 Library/control/neighbor_selection.o \
 Library/control/orca.o \
 Library/control/pid_control.o \
@@ -355,6 +358,7 @@ src/boardsupport.o \
 src/main.o
 
 C_DEPS +=  \
+Library/control/adaptive_parameter.d \
 Library/control/neighbor_selection.d \
 Library/control/orca.d \
 Library/control/pid_control.d \
@@ -438,6 +442,7 @@ src/boardsupport.d \
 src/main.d
 
 C_DEPS_AS_ARGS +=  \
+Library/control/adaptive_parameter.d \
 Library/control/neighbor_selection.d \
 Library/control/orca.d \
 Library/control/pid_control.d \
@@ -531,6 +536,8 @@ OUTPUT_FILE_DEP:= ./makedep.mk
 LIB_DEP+= 
 
 # AVR32/GNU C Compiler
+
+
 
 
 

@@ -6,7 +6,7 @@
  */ 
 
 #include "stabilisation_copter.h"
-#include "conf_stabilisation.h"
+#include "conf_stabilisation_copter.h"
 #include "time_keeper.h"
 #include "servo_pwm.h"
 #include "print_util.h"
@@ -113,7 +113,7 @@ void init_stabilisation_copter(Stabiliser_Stack_copter_t* stabiliser_stack)
 	centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 	centralData->controls.yaw_mode = YAW_RELATIVE;
 
-	*stabiliser_stack = stabiliser_defaults;
+	*stabiliser_stack = stabiliser_defaults_copter;
 }
 
 

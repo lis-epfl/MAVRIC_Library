@@ -2,6 +2,8 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
+Library\control\adaptive_parameter.c
+
 Library\control\neighbor_selection.c
 
 Library\control\orca.c
