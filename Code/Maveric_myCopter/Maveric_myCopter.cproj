@@ -985,6 +985,9 @@
     <Compile Include="src\central_data.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\conf_stabilisation.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\mavlink_actions.c">
       <SubType>compile</SubType>
     </Compile>

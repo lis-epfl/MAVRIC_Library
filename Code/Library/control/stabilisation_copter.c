@@ -6,6 +6,7 @@
  */ 
 
 #include "stabilisation_copter.h"
+#include "conf_stabilisation.h"
 #include "time_keeper.h"
 #include "servo_pwm.h"
 #include "print_util.h"
@@ -13,98 +14,97 @@
 
 central_data_t *centralData;
 
-void init_rate_stabilisation(Stabiliser_t *stabiliser) {
-	int i=0;
-	// initialise roll and pitch controllers
-	for (i=0; i<2; i++) {
-		(stabiliser->rpy_controller[i]).p_gain = 0.15;
-		(stabiliser->rpy_controller[i]).last_update = get_time_ticks();	
-		(stabiliser->rpy_controller[i]).clip_min = -0.9;
-		(stabiliser->rpy_controller[i]).clip_max = 0.9;
-		(stabiliser->rpy_controller[i]).soft_zone_width = 0.0;
-		initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.2, 0.4, 0.5);
-		initInt(&((stabiliser->rpy_controller)[i].integrator),0.5, 1.0, 0.65);
-	}	
-	// initialise yaw controller
-	i = 2;
-	(stabiliser->rpy_controller)[i].p_gain = 0.4;
-	(stabiliser->rpy_controller)[i].last_update = get_time_ticks();	
-	(stabiliser->rpy_controller)[i].clip_min = -0.9;
-	(stabiliser->rpy_controller)[i].clip_max = 0.9;
-	(stabiliser->rpy_controller[i]).soft_zone_width = 0.0;
-	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.4, 0.5);
-	initInt(&((stabiliser->rpy_controller)[i].integrator),0.5, 0.2, 0.1);
+// void init_rate_stabilisation(Stabiliser_t *stabiliser) {
+// 	int i=0;
+// 	// initialise roll and pitch controllers
+// 	for (i=0; i<2; i++) {
+// 		(stabiliser->rpy_controller[i]).p_gain = 0.15;
+// 		(stabiliser->rpy_controller[i]).last_update = get_time_ticks();	
+// 		(stabiliser->rpy_controller[i]).clip_min = -0.9;
+// 		(stabiliser->rpy_controller[i]).clip_max = 0.9;
+// 		(stabiliser->rpy_controller[i]).soft_zone_width = 0.0;
+// 		initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.2, 0.4, 0.5);
+// 		initInt(&((stabiliser->rpy_controller)[i].integrator),0.5, 1.0, 0.65);
+// 	}	
+// 	// initialise yaw controller
+// 	i = 2;
+// 	(stabiliser->rpy_controller)[i].p_gain = 0.4;
+// 	(stabiliser->rpy_controller)[i].last_update = get_time_ticks();	
+// 	(stabiliser->rpy_controller)[i].clip_min = -0.9;
+// 	(stabiliser->rpy_controller)[i].clip_max = 0.9;
+// 	(stabiliser->rpy_controller[i]).soft_zone_width = 0.0;
+// 	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.4, 0.5);
+// 	initInt(&((stabiliser->rpy_controller)[i].integrator),0.5, 0.2, 0.1);
 	
-	// initialise thrust controller
-	stabiliser->thrust_controller = passthroughController();
-}
+// 	// initialise thrust controller
+// 	stabiliser->thrust_controller = passthroughController();
+// }
 
-void init_angle_stabilisation(Stabiliser_t *stabiliser) {
-	int i = 0;
-	// initialise roll and pitch controllers
-	for (i=0; i<2; i++) {
-		(stabiliser->rpy_controller[i]).p_gain = 1.5;
-		(stabiliser->rpy_controller[i]).last_update = get_time_ticks();	
-		(stabiliser->rpy_controller[i]).clip_min = -1.2;
-		(stabiliser->rpy_controller[i]).clip_max = 1.2;
-		(stabiliser->rpy_controller[i]).soft_zone_width = 0.0;
-		initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.00, 0.5, 0.1); // 0.05, 0.5, 0.05
-		initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.0);
-	}	
-	// initialise yaw controller
-	i = 2;
-	(stabiliser->rpy_controller)[i].p_gain = 1.5;
-	(stabiliser->rpy_controller)[i].last_update = get_time_ticks();	
-	(stabiliser->rpy_controller)[i].clip_min = -1.0;
-	(stabiliser->rpy_controller)[i].clip_max = 1.0;
-	(stabiliser->rpy_controller[i]).soft_zone_width = 0.0;
+// void init_angle_stabilisation(Stabiliser_t *stabiliser) {
+// 	int i = 0;
+// 	// initialise roll and pitch controllers
+// 	for (i=0; i<2; i++) {
+// 		(stabiliser->rpy_controller[i]).p_gain = 1.5;
+// 		(stabiliser->rpy_controller[i]).last_update = get_time_ticks();	
+// 		(stabiliser->rpy_controller[i]).clip_min = -1.2;
+// 		(stabiliser->rpy_controller[i]).clip_max = 1.2;
+// 		(stabiliser->rpy_controller[i]).soft_zone_width = 0.0;
+// 		initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.00, 0.5, 0.1); // 0.05, 0.5, 0.05
+// 		initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.0);
+// 	}	
+// 	// initialise yaw controller
+// 	i = 2;
+// 	(stabiliser->rpy_controller)[i].p_gain = 1.5;
+// 	(stabiliser->rpy_controller)[i].last_update = get_time_ticks();	
+// 	(stabiliser->rpy_controller)[i].clip_min = -1.0;
+// 	(stabiliser->rpy_controller)[i].clip_max = 1.0;
+// 	(stabiliser->rpy_controller[i]).soft_zone_width = 0.0;
 
-	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.5, 0.5);
-	initInt(&((stabiliser->rpy_controller)[i].integrator), 0.0, 0.0, 0.0);
+// 	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.5, 0.5);
+// 	initInt(&((stabiliser->rpy_controller)[i].integrator), 0.0, 0.0, 0.0);
 
-	//initialise thrust controller
-	stabiliser->thrust_controller = passthroughController();
+// 	//initialise thrust controller
+// 	stabiliser->thrust_controller = passthroughController();
 	
-}
+// }
 
-void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
-	int i = 0;
-	// initialise roll velocity
-	(stabiliser->rpy_controller[i]).p_gain = 0.2; //0.1
-	(stabiliser->rpy_controller[i]).last_update = get_time_ticks();
-	(stabiliser->rpy_controller[i]).clip_min = -0.5; //-0.6
-	(stabiliser->rpy_controller[i]).clip_max = 0.5; //0.6
+// void init_velocity_stabilisation(Stabiliser_t * stabiliser) {
+// 	int i = 0;
+// 	// initialise roll velocity
+// 	(stabiliser->rpy_controller[i]).p_gain = 0.2; //0.1
+// 	(stabiliser->rpy_controller[i]).last_update = get_time_ticks();
+// 	(stabiliser->rpy_controller[i]).clip_min = -0.5; //-0.6
+// 	(stabiliser->rpy_controller[i]).clip_max = 0.5; //0.6
 	
-	(stabiliser->rpy_controller[i]).soft_zone_width = 0.3; //region of lowered error input gain to ignore noise close to target point
+// 	(stabiliser->rpy_controller[i]).soft_zone_width = 0.3; //region of lowered error input gain to ignore noise close to target point
 
-	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.5, 0.5); // 0.1 0.5 0.5
-	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.3); // 1.0 0.3 0.3
+// 	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.5, 0.5); // 0.1 0.5 0.5
+// 	initInt(&((stabiliser->rpy_controller)[i].integrator),0.0, 0.0, 0.3); // 1.0 0.3 0.3
 	
-	// initialise pitch velocity
-	i = 1;
-	(stabiliser->rpy_controller[i]).p_gain = 0.2; //0.1
-	(stabiliser->rpy_controller[i]).last_update = get_time_ticks();
-	(stabiliser->rpy_controller[i]).clip_min = -0.5; //-0.6
-	(stabiliser->rpy_controller[i]).clip_max = 0.5; //0.6
-	(stabiliser->rpy_controller[i]).soft_zone_width = 0.3; //region of lowered error input gain to ignore noise close to target point
+// 	// initialise pitch velocity
+// 	i = 1;
+// 	(stabiliser->rpy_controller[i]).p_gain = 0.2; //0.1
+// 	(stabiliser->rpy_controller[i]).last_update = get_time_ticks();
+// 	(stabiliser->rpy_controller[i]).clip_min = -0.5; //-0.6
+// 	(stabiliser->rpy_controller[i]).clip_max = 0.5; //0.6
+// 	(stabiliser->rpy_controller[i]).soft_zone_width = 0.3; //region of lowered error input gain to ignore noise close to target point
 
-	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.5, 0.5); // 0.1 0.5 0.5
-	initInt(&((stabiliser->rpy_controller)[i].integrator), 0.0, 0.0, 0.3); // 1.0 0.3 0.3
+// 	initDiff(&((stabiliser->rpy_controller)[i].differentiator), 0.0, 0.5, 0.5); // 0.1 0.5 0.5
+// 	initInt(&((stabiliser->rpy_controller)[i].integrator), 0.0, 0.0, 0.3); // 1.0 0.3 0.3
 	
-	// initialise yaw controller
-	stabiliser->rpy_controller[2] = passthroughController();
+// 	// initialise yaw controller
+// 	stabiliser->rpy_controller[2] = passthroughController();
 	
-	// initialise z velocity
-	(stabiliser->thrust_controller).p_gain = 0.4; //0.3
-	(stabiliser->thrust_controller).last_update = get_time_ticks();
-	(stabiliser->thrust_controller).clip_min = -0.9; //-0.9
-	(stabiliser->thrust_controller).clip_max = 0.65; // 0.9
-	(stabiliser->thrust_controller).soft_zone_width = 0.2; // region of lowered error input gain to ignore noise close to target point
-	initDiff(&((stabiliser->thrust_controller).differentiator), 0.5, 0.95, 1.0); // 0.1 0.5 0.2
-	initInt(&((stabiliser->thrust_controller).integrator), 1.5, 1.0, 1.0); // 1.0 1.0 0.5
-	
-	
-}
+// 	// initialise z velocity
+// 	(stabiliser->thrust_controller).p_gain = 0.4; //0.3
+// 	(stabiliser->thrust_controller).last_update = get_time_ticks();
+// 	(stabiliser->thrust_controller).clip_min = -0.9; //-0.9
+// 	(stabiliser->thrust_controller).clip_max = 0.65; // 0.9
+// 	(stabiliser->thrust_controller).soft_zone_width = 0.2; // region of lowered error input gain to ignore noise close to target point
+// 	initDiff(&((stabiliser->thrust_controller).differentiator), 0.5, 0.95, 1.0); // 0.1 0.5 0.2
+// 	initInt(&((stabiliser->thrust_controller).integrator), 1.5, 1.0, 1.0); // 1.0 1.0 0.5
+		
+// }
 
 void init_stabilisation_copter(Stabiliser_Stack_copter_t* stabiliser_stack)
 {
@@ -113,11 +113,7 @@ void init_stabilisation_copter(Stabiliser_Stack_copter_t* stabiliser_stack)
 	centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 	centralData->controls.yaw_mode = YAW_RELATIVE;
 
-	stabiliser_stack->yaw_coordination_velocity = 1.5;
-
-	init_rate_stabilisation(&stabiliser_stack->rate_stabiliser);
-	init_angle_stabilisation(&stabiliser_stack->attitude_stabiliser);
-	init_velocity_stabilisation(&stabiliser_stack->velocity_stabiliser);
+	*stabiliser_stack = stabiliser_defaults;
 }
 
 
