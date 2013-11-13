@@ -1,12 +1,12 @@
 /*
- * control.h
+ * pid_control.h
  *
  *  Created on: Mar 7, 2010
  *      Author: felix
  */
 
-#ifndef CONTROL_H_
-#define CONTROL_H_
+#ifndef PID_CONTROL_H_
+#define PID_CONTROL_H_
 #include "compiler.h"
 #include <math.h>
 
@@ -53,4 +53,4 @@ float pid_update(PID_Controller_t* controller, float error);
 float pid_update_dt(PID_Controller_t* controller, float error, float dt);
 
 
-#endif /* CONTROL_H_ */
+#endif /* PID_CONTROL_H_ */

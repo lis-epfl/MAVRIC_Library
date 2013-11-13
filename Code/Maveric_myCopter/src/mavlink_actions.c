@@ -77,11 +77,11 @@ void mavlink_send_scaled_imu(void) {
 	);
 }
 void  mavlink_send_rpy_rates_error(void) {
-	Stabiliser_t *rate_stab=get_rate_stabiliser();
+	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
 	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_send(MAVLINK_COMM_0, get_millis(), rate_stab->rpy_controller[0].error, rate_stab->rpy_controller[1].error,rate_stab->rpy_controller[2].error,0 );
 }
 void  mavlink_send_rpy_speed_thrust_setpoint(void) {
-	Stabiliser_t *rate_stab=get_rate_stabiliser();
+	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
 	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_send(MAVLINK_COMM_0, get_millis(), rate_stab->rpy_controller[0].output, rate_stab->rpy_controller[1].output,rate_stab->rpy_controller[2].output,0 );
 }
 void mavlink_send_rpy_thrust_setpoint(void) {
@@ -92,7 +92,7 @@ void mavlink_send_rpy_thrust_setpoint(void) {
 }
 
 void mavlink_send_servo_output(void) {
-	Stabiliser_t *rate_stab=get_rate_stabiliser();
+	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
 	mavlink_msg_servo_output_raw_send(MAVLINK_COMM_0, get_micros(), 0, 
 	(uint16_t)(centralData->servos[0].value+1500),
 	(uint16_t)(centralData->servos[1].value+1500),
@@ -302,9 +302,9 @@ task_return_t send_rt_stats() {
 
 
 void add_PID_parameters(void) {
-	Stabiliser_t* rate_stabiliser = get_rate_stabiliser();
-	Stabiliser_t* attitude_stabiliser = get_attitude_stabiliser();
-	Stabiliser_t* velocity_stabiliser= get_velocity_stabiliser();
+	Stabiliser_t* rate_stabiliser = &centralData->stabiliser_stack.rate_stabiliser;
+	Stabiliser_t* attitude_stabiliser = &centralData->stabiliser_stack.attitude_stabiliser;
+	Stabiliser_t* velocity_stabiliser= &centralData->stabiliser_stack.velocity_stabiliser;
 
 	
 	add_parameter_int32(&centralData->simulation_mode, "Sim_mode");

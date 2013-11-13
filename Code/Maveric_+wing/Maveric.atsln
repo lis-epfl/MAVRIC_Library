@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Atmel Studio Solution File, Format Version 11.00
-Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Maveric_main", "Maveric_main.cproj", "{5C41308D-F714-42B2-8FEA-988A47EE06AD}"
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Maveric_+wing", "Maveric_+wing.cproj", "{5C41308D-F714-42B2-8FEA-988A47EE06AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -124,14 +124,14 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 	while(stream->bytes_available(stream->data) > 0) {
 		byte = stream->get(stream->data);
 		//dbg_print(".");
-		dbg_print_num(byte, 16);
-		dbg_print(" ");
+		// dbg_print_num(byte, 16);
+		// dbg_print(" ");
 		if(mavlink_parse_char(MAVLINK_COMM_0, byte, &rec->msg, &rec->status)) {
-			dbg_print("\n");
+			// dbg_print("\n");
 			return 1;
 		}
-		dbg_print_num(rec->status.parse_state, 16);
-		dbg_print("\n");
+		// dbg_print_num(rec->status.parse_state, 16);
+		// dbg_print("\n");
 	}
 	return 0;
 }

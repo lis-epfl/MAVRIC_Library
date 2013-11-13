@@ -1,5 +1,5 @@
 /*
- * control.c
+ * pid_control.c
  *
  *  Created on: Mar 7, 2010
  *      Author: felix
@@ -7,7 +7,7 @@
 
 #include "time_keeper.h"
 
-#include "control.h"
+#include "pid_control.h"
 #include "maths.h"
 
 PID_Controller_t passthroughController() {

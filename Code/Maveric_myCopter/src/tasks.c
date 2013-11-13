@@ -287,7 +287,7 @@ task_return_t run_stabilisation() {
 			centralData->controls.yaw_mode=YAW_RELATIVE;
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			
-			quad_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
 			centralData->controls = get_command_from_remote();
@@ -298,7 +298,7 @@ task_return_t run_stabilisation() {
 			centralData->controls.tvel[Y]= 10.0*centralData->controls.rpy[ROLL];
 			centralData->controls.tvel[Z]=- 1.5*centralData->controls.thrust;
 			
-			quad_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			
 			break;
 		case MAV_MODE_GUIDED_ARMED:
@@ -308,7 +308,7 @@ task_return_t run_stabilisation() {
 			
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			centralData->controls.yaw_mode = YAW_ABSOLUTE;
-			quad_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		case MAV_MODE_AUTO_ARMED:
 			centralData->controls = centralData->controls_nav;
@@ -317,7 +317,7 @@ task_return_t run_stabilisation() {
 			
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;	
 			centralData->controls.yaw_mode = YAW_COORDINATED;
-			quad_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		
 		case MAV_MODE_PREFLIGHT:

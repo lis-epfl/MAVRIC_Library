@@ -18,9 +18,13 @@
 //#include "i2c_driver_int.h"
 #include "qfilter.h"
 #include "imu.h"
+
 #include "stabilisation.h"
+#include "stabilisation_copter.h"
+#include "stabilisation_hybrid.h"
+
 #include "remote_controller.h"
-#include "control.h"
+#include "pid_control.h"
 #include "streams.h"
 //#include "uart_int.h"
 #include "print_util.h"
@@ -52,6 +56,9 @@ typedef struct  {
 	Imu_Data_t imu1;
 	Control_Command_t controls;
 	Control_Command_t controls_nav;
+
+	Stabiliser_Stack_copter_t stabiliser_stack;
+
 	simulation_model_t uav_model;
 	servo_output servos[NUMBER_OF_SERVO_OUTPUTS];
 	Buffer_t xbee_in_buffer, wired_in_buffer;
