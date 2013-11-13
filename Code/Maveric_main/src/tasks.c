@@ -37,12 +37,12 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 	
 	get_channel_mode(chanSwitch);
 	
-/*	if ((rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR)>0.0)
+	if ((rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR)>0.0)
 	{
 		centralData->collision_avoidance = true;
 	}else{
 		centralData->collision_avoidance = false;
-	}*/
+	}
 	
 	//dbg_print("chanSwitch ");
 	//dbg_print_num(*chanSwitch,10);

@@ -165,13 +165,13 @@ void mavlink_send_pressure(void) {
 	//mavlink_msg_scaled_pressure_send(mavlink_channel_t chan, uint32_t time_boot_ms, float press_abs, float press_diff, int16_t temperature)
 	
 	mavlink_msg_scaled_pressure_send(MAVLINK_COMM_0, get_millis(), centralData->pressure.pressure/100.0, centralData->pressure.vario_vz, centralData->pressure.temperature*100.0);
-	flush_mavlink();
+	//flush_mavlink();
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressAlt", centralData->pressure.altitude);
-	flush_mavlink();
+	//flush_mavlink();
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"lastAlt", centralData->position_estimator.last_alt);
-	flush_mavlink();
+	//flush_mavlink();
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"baro_dt", centralData->pressure.dt);
-	flush_mavlink();
+	//flush_mavlink();
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressFilt", centralData->altitude_filtered);
 }
 
@@ -269,14 +269,14 @@ void mavlink_send_simulation(void) {
 	100*centralData->sim_model.vel[X], 100*centralData->sim_model.vel[Y], 100*centralData->sim_model.vel[Z],
 	1000*centralData->sim_model.lin_forces_bf[0], 1000*centralData->sim_model.lin_forces_bf[1], 1000*centralData->sim_model.lin_forces_bf[2]
 	);
-	flush_mavlink();
-	mavlink_msg_named_value_int_send(MAVLINK_COMM_0, get_millis(), "rolltorque", centralData->sim_model.torques_bf[0]);flush_mavlink();
-	mavlink_msg_named_value_int_send(MAVLINK_COMM_0, get_millis(), "pitchtorque", centralData->sim_model.torques_bf[1]);flush_mavlink();
-	mavlink_msg_named_value_int_send(MAVLINK_COMM_0, get_millis(), "yawtorque", centralData->sim_model.torques_bf[2]);flush_mavlink();
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "thrust", centralData->sim_model.lin_forces_bf[2]);flush_mavlink();
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm1", centralData->sim_model.rotorspeeds[0]);flush_mavlink();
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm2", centralData->sim_model.rotorspeeds[1]);flush_mavlink();
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm3", centralData->sim_model.rotorspeeds[2]);flush_mavlink();
+	//flush_mavlink();
+	mavlink_msg_named_value_int_send(MAVLINK_COMM_0, get_millis(), "rolltorque", centralData->sim_model.torques_bf[0]);//flush_mavlink();
+	mavlink_msg_named_value_int_send(MAVLINK_COMM_0, get_millis(), "pitchtorque", centralData->sim_model.torques_bf[1]);//flush_mavlink();
+	mavlink_msg_named_value_int_send(MAVLINK_COMM_0, get_millis(), "yawtorque", centralData->sim_model.torques_bf[2]);//flush_mavlink();
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "thrust", centralData->sim_model.lin_forces_bf[2]);//flush_mavlink();
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm1", centralData->sim_model.rotorspeeds[0]);//flush_mavlink();
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm2", centralData->sim_model.rotorspeeds[1]);//flush_mavlink();
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm3", centralData->sim_model.rotorspeeds[2]);//flush_mavlink();
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm4", centralData->sim_model.rotorspeeds[3]);
 
 	
@@ -446,21 +446,30 @@ task_return_t control_waypoint_timeout () {
 
 void handle_specific_messages (Mavlink_Received_t* rec) {
 	if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) {
+		
+		dbg_print("\n Received message with ID");
+		dbg_print_num(rec->msg.msgid, 10);
+		dbg_print(" from system");
+		dbg_print_num(rec->msg.sysid, 10);
+		dbg_print(" for component");
+		dbg_print_num(rec->msg.compid,10);
+		dbg_print( "\n");
+		
 		switch(rec->msg.msgid) {
 				case MAVLINK_MSG_ID_MISSION_ITEM: { // 39
 					suspend_downstream(500000);
 					receive_waypoint(rec, centralData->waypoint_list, centralData->number_of_waypoints,&centralData->waypoint_receiving);
-					flush_mavlink();
+					//flush_mavlink();
 				}
 				break;
 				case MAVLINK_MSG_ID_MISSION_REQUEST : { // 40
 					suspend_downstream(500000);
 					send_waypoint(rec, centralData->waypoint_list, centralData->number_of_waypoints,&centralData->waypoint_sending);
-					flush_mavlink();
+					//flush_mavlink();
 				}
 				break;
 				case MAVLINK_MSG_ID_MISSION_SET_CURRENT : { // 41
-					set_current_wp(rec, &(centralData->waypoint_list), centralData->number_of_waypoints);
+					set_current_wp(rec, centralData->waypoint_list, centralData->number_of_waypoints);
 				}
 				break;
 				case MAVLINK_MSG_ID_MISSION_REQUEST_LIST: { // 43
@@ -468,7 +477,7 @@ void handle_specific_messages (Mavlink_Received_t* rec) {
 					// (at least until we have a radio system with guaranteed bandwidth)
 					suspend_downstream(500000);
 					send_count(rec, centralData->number_of_waypoints,&centralData->waypoint_receiving,&centralData->waypoint_sending);
-					flush_mavlink();
+					//flush_mavlink();
 				}
 				break;
 				case MAVLINK_MSG_ID_MISSION_COUNT : { // 44
@@ -495,18 +504,17 @@ void handle_specific_messages (Mavlink_Received_t* rec) {
 				}
 				break;
 		}
-	} else
-	if (rec->msg.msgid == MAVLINK_MSG_ID_GLOBAL_POSITION_INT)
+	} else if (rec->msg.msgid == MAVLINK_MSG_ID_GLOBAL_POSITION_INT)
 	{
 		//dbg_print("\n Received message with ID");
-		//dbg_print_num(rec.msg.msgid, 10);
+		//dbg_print_num(rec->msg.msgid, 10);
 		//dbg_print(" from system");
-		//dbg_print_num(rec.msg.sysid, 10);
+		//dbg_print_num(rec->msg.sysid, 10);
 		//dbg_print(" for component");
-		//dbg_print_num(rec.msg.compid,10);
+		//dbg_print_num(rec->msg.compid,10);
 		//dbg_print( "\n");
 		
-		read_msg_from_neighbors(&rec);
+		read_msg_from_neighbors(rec);
 	}
 }
 
@@ -705,29 +713,31 @@ void init_mavlink_actions(void) {
 	//write_parameters_to_flashc();
 	
 	read_parameters_from_flashc();
+	
 	add_task(get_mavlink_taskset(),   10000, RUN_REGULAR, &control_waypoint_timeout, 0);
+	
 	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_attitude_quaternion, MAVLINK_MSG_ID_ATTITUDE_QUATERNION);
 	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_attitude, MAVLINK_MSG_ID_ATTITUDE);
 	
 	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
-	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
+	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
 	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
-	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
+	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
 
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_speed_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT);
 
 
-	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_servo_output, MAVLINK_MSG_ID_SERVO_OUTPUT_RAW);
+	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &mavlink_send_servo_output, MAVLINK_MSG_ID_SERVO_OUTPUT_RAW);
 //	add_task(get_mavlink_taskset(),  50000, &mavlink_send_radar);
 	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
 	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
-	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_gps_raw, MAVLINK_MSG_ID_GPS_RAW_INT);
-	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
+	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &mavlink_send_gps_raw, MAVLINK_MSG_ID_GPS_RAW_INT);
+	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
 	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
-	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_simulation, MAVLINK_MSG_ID_HIL_STATE);
+	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_simulation, MAVLINK_MSG_ID_HIL_STATE);
 	//add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	

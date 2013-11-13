@@ -462,6 +462,7 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 						dbg_print("flight plan received!\n");
 						*waypoint_receiving = false;
 						num_waypoint_onboard = number_of_waypoints;
+						centralData->waypoint_set = false;
 						init_wp();
 					}else{
 						mavlink_msg_mission_request_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,waypoint_request_number);
@@ -480,7 +481,7 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 	}			
 }		
 
-void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[], uint16_t num_of_waypoint)
+void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t num_of_waypoint)
 {
 	mavlink_mission_set_current_t packet;
 	mavlink_msg_mission_set_current_decode(&rec->msg,&packet);
@@ -488,20 +489,24 @@ void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[], 
 	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid
 	&& (uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
 	{
-		dbg_print("setting current wp");
-		int i;
-		for (i=0;i<num_of_waypoint;i++)
-		{
-			waypoint_list[i]->current = 0;
-		}
 		if (packet.seq < num_of_waypoint)
 		{
-			waypoint_list[packet.seq]->current = 1;
-			mavlink_msg_mission_current_send(MAVLINK_COMM_0,waypoint_list[packet.seq]->current);
+			//dbg_print("setting current wp\n");
+			int i;
+			for (i=0;i<num_of_waypoint;i++)
+			{
+				waypoint_list[i].current = 0;
+			}
+			
+			waypoint_list[packet.seq].current = 1;
+			mavlink_msg_mission_current_send(MAVLINK_COMM_0,waypoint_list[packet.seq].current);
 			
 			dbg_print("Set current waypoint to number");
 			dbg_print_num(packet.seq,10);
 			dbg_print("\n");
+			
+			centralData->waypoint_set = false;
+			init_wp();
 		}else{
 			mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_ACCESS_DENIED);
 		}

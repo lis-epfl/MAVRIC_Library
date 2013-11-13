@@ -16,6 +16,8 @@
 
 #define ORCA_TIME_STEP_MILLIS 10.0
 
+#define TIME_HORIZON 12.0
+
 #define MAXSPEED 4.5
 
 #define RVO_EPSILON 0.0001
@@ -34,9 +36,9 @@ void init_orca();
 
 void computeNewVelocity();
 
-bool linearProgram1(plane_t planes[], int8_t index, line_t line, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt);
-bool linearProgram2(plane_t planes[], int8_t ind, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt);
-float linearProgram3(plane_t planes[], float OptimalVelocity[], float maxSpeed, float NewVelocity[], bool directionOpt);
-void linearProgram4(plane_t planes[], int8_t ind, float maxSpeed, float NewVelocity[]);
+bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt);
+bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt);
+float linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelocity[], float maxSpeed, float NewVelocity[], bool directionOpt);
+void linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float maxSpeed, float NewVelocity[]);
 
 #endif ORCA_H__

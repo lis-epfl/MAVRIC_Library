@@ -35,10 +35,10 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 		local_coordinates_t localPosNeighbor;
 		uint8_t actualNeighbor;
 		
-		globalPosNeighbor.longitude = packet.lon / 10000000.0;
-		globalPosNeighbor.latitude = packet.lat / 10000000.0;
-		globalPosNeighbor.altitude = packet.alt / 1000.0;
-		globalPosNeighbor.heading = packet.hdg;
+		globalPosNeighbor.longitude = (double)packet.lon / 10000000.0;
+		globalPosNeighbor.latitude = (double)packet.lat / 10000000.0;
+		globalPosNeighbor.altitude = (float)packet.alt / 1000.0;
+		globalPosNeighbor.heading = (float)packet.hdg;
 		
 		localPosNeighbor = global_to_local_position(globalPosNeighbor,centralData->position_estimator.localPosition.origin);
 		
@@ -67,7 +67,7 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 				centralData->number_of_neighbors++;
 			}else{
 				// This case shouldn't happen
-				dbg_print("There is more neighbors than planned!\n");
+				dbg_print("Error! There is more neighbors than planned!\n");
 				actualNeighbor = centralData->number_of_neighbors-1;
 			}
 		}else{
@@ -92,9 +92,17 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 		//dbg_print("Neighbor with ID ");
 		//dbg_print_num(centralData->listNeighbors[actualNeighbor].neighborID,10);
 		//dbg_print(" at position ");
-		//dbg_print_vector(centralData->listNeighbors[actualNeighbor].position,2);
+		//dbg_print_vector(centralData->listNeighbors[actualNeighbor].position,3);
 		//dbg_print(" with velocity ");
-		//dbg_print_vector(centralData->listNeighbors[actualNeighbor].velocity,2);
+		//dbg_print_vector(centralData->listNeighbors[actualNeighbor].velocity,3);
+		//dbg_print(" with relative position ");
+		//float rel_pos[3];
+		//uint8_t i;
+		//for (i=0;i<3;i++)
+		//{
+			//rel_pos[i] = centralData->listNeighbors[actualNeighbor].position[i] - centralData->position_estimator.localPosition.pos[i];
+		//}
+		//dbg_print_vector(rel_pos,3);
 		//dbg_print("\n");
 		
 	}

@@ -210,6 +210,7 @@ void quad_stabilise(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Comm
 		
 		// run PID update on all rate controllers
 		stabilise(&rate_stabiliser, &rpyt_errors );
+		break;
 	}
 	
 	// mix to servo outputs depending on configuration
