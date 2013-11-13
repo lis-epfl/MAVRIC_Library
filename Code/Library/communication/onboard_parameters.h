@@ -10,7 +10,7 @@
 
 #include "mavlink_stream.h"
 
-#define MAX_ONBOARD_PARAM_COUNT 80
+#define MAX_ONBOARD_PARAM_COUNT 120
 
 #define USER_PAGE_FIRST_FREE_WORD 0x8080020C
 
