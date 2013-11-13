@@ -12,9 +12,13 @@
 #ifndef MAVLINK_ACTIONS_H_
 #define MAVLINK_ACTIONS_H_
 
+#include "mavlink_stream.h"
+
 void add_PID_parameters(void);
 
 void init_mavlink_actions(void);
 
+void handle_specific_messages (Mavlink_Received_t* rec);
+void receive_message_long(Mavlink_Received_t* rec);
 
 #endif /* MAVLINK_ACTIONS_H_ */
