@@ -18,6 +18,6 @@ typedef struct {
 void init_stabilisation_hybrid(Stabiliser_Stack_hybrid_t* stabiliser_stack);
 
 void cascade_stabilise_hybrid(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input);
-void mix_to_servos_plus_wing(Control_Command_t *control);
+void mix_to_servos_xwing(Control_Command_t *control);
 
 #endif /* STABILISATION_HYBRID_H_ */

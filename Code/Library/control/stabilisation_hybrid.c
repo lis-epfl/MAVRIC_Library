@@ -96,10 +96,10 @@ void cascade_stabilise_hybrid(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 	}
 
 	// mix to servos 
-	mix_to_servos_plus_wing(&centralData->stabiliser_stack.rate_stabiliser.output);
+	mix_to_servos_xwing(&centralData->stabiliser_stack.rate_stabiliser.output);
 }
 
-void mix_to_servos_plus_wing(Control_Command_t *control)
+void mix_to_servos_xwing(Control_Command_t *control)
 {
 	int i;
 	float motor_command;
