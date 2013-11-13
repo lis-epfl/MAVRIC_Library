@@ -606,6 +606,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Library\control\adaptive_parameter.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\control\adaptive_parameter.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\control\neighbor_selection.c">
       <SubType>compile</SubType>
     </Compile>
@@ -622,12 +628,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\control\pid_control.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\control\stabilisation_copter.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\control\stabilisation_copter.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\control\stabilisation_hybrid.c">
@@ -989,6 +989,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\central_data.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\conf_stabilisation_copter.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\conf_stabilisation_hybrid.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\mavlink_actions.c">

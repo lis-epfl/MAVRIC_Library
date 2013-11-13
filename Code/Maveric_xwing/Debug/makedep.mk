@@ -2,13 +2,13 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
+Library\control\adaptive_parameter.c
+
 Library\control\neighbor_selection.c
 
 Library\control\orca.c
 
 Library\control\pid_control.c
-
-Library\control\stabilisation_copter.c
 
 Library\control\stabilisation_hybrid.c
 
@@ -23,6 +23,8 @@ Library\sensing\estimator.c
 Library\sensing\position_estimation.c
 
 Library\sensing\qfilter.c
+
+Library\util\quick_trig.c
 
 src\central_data.c
 

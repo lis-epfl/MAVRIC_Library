@@ -17,7 +17,6 @@
 #include "mavlink_waypoint_handler.h"
 #include "neighbor_selection.h"
 
-
 central_data_t *centralData;
 
 void mavlink_send_heartbeat(void) {
@@ -80,11 +79,11 @@ void mavlink_send_scaled_imu(void) {
 	);
 }
 void  mavlink_send_rpy_rates_error(void) {
-	Stabiliser_t *rate_stab=get_rate_stabiliser();
+	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
 	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_send(MAVLINK_COMM_0, get_millis(), rate_stab->rpy_controller[0].error, rate_stab->rpy_controller[1].error,rate_stab->rpy_controller[2].error,0 );
 }
 void  mavlink_send_rpy_speed_thrust_setpoint(void) {
-	Stabiliser_t *rate_stab=get_rate_stabiliser();
+	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
 	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_send(MAVLINK_COMM_0, get_millis(), rate_stab->rpy_controller[0].output, rate_stab->rpy_controller[1].output,rate_stab->rpy_controller[2].output,0 );
 }
 void mavlink_send_rpy_thrust_setpoint(void) {
@@ -95,7 +94,7 @@ void mavlink_send_rpy_thrust_setpoint(void) {
 }
 
 void mavlink_send_servo_output(void) {
-	Stabiliser_t *rate_stab=get_rate_stabiliser();
+	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
 	mavlink_msg_servo_output_raw_send(MAVLINK_COMM_0, get_micros(), 0, 
 	(uint16_t)(centralData->servos[0].value+1500),
 	(uint16_t)(centralData->servos[1].value+1500),
@@ -305,9 +304,9 @@ task_return_t send_rt_stats() {
 
 
 void add_PID_parameters(void) {
-	Stabiliser_t* rate_stabiliser = get_rate_stabiliser();
-	Stabiliser_t* attitude_stabiliser = get_attitude_stabiliser();
-	Stabiliser_t* velocity_stabiliser= get_velocity_stabiliser();
+	Stabiliser_t* rate_stabiliser = &centralData->stabiliser_stack.rate_stabiliser;
+	Stabiliser_t* attitude_stabiliser = &centralData->stabiliser_stack.attitude_stabiliser;
+//	Stabiliser_t* velocity_stabiliser= &centralData->stabiliser_stack.velocity_stabiliser;
 
 	
 	add_parameter_int32(&centralData->simulation_mode, "Sim_mode");
@@ -379,24 +378,24 @@ void add_PID_parameters(void) {
 
 
 	// Roll velocity PID
-	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].p_gain, "RollVPid_P_G");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollVPid_I_PstG");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollVPid_I_PreG");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollVPid_D_Gain");
+	// add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].p_gain, "RollVPid_P_G");
+	// add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollVPid_I_PstG");
+	// add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollVPid_I_PreG");
+	// add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollVPid_D_Gain");
 
-	// Pitch velocity PID
-	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].p_gain, "PitchVPid_P_G");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchVPid_I_PstG");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchVPid_I_PreG");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchVPid_D_Gain");
+	// // Pitch velocity PID
+	// add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].p_gain, "PitchVPid_P_G");
+	// add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchVPid_I_PstG");
+	// add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchVPid_I_PreG");
+	// add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchVPid_D_Gain");
 
-	// Thrust velocity PID
-	add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain, "ThrVPid_P_G");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.postgain, "ThrVPid_I_PstG");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.pregain, "ThrVPid_I_PreG");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain, "ThrVPid_D_Gain");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.LPF, "ThrVPid_D_LPF");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.soft_zone_width, "ThrVPid_soft");
+	// // Thrust velocity PID
+	// add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain, "ThrVPid_P_G");
+	// add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.postgain, "ThrVPid_I_PstG");
+	// add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.pregain, "ThrVPid_I_PreG");
+	// add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain, "ThrVPid_D_Gain");
+	// add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.LPF, "ThrVPid_D_LPF");
+	// add_parameter_float(&velocity_stabiliser->thrust_controller.soft_zone_width, "ThrVPid_soft");
 
 	// qfilter
 	add_parameter_float(&centralData->imu1.attitude.kp, "QF_kp_acc");
@@ -705,6 +704,7 @@ void init_mavlink_actions(void) {
 	//write_parameters_to_flashc();
 	
 	read_parameters_from_flashc();
+	
 	add_task(get_mavlink_taskset(),   10000, RUN_REGULAR, &control_waypoint_timeout, 0);
 	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_attitude_quaternion, MAVLINK_MSG_ID_ATTITUDE_QUATERNION);

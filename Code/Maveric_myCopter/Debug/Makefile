@@ -104,7 +104,6 @@ C_SRCS +=  \
 ../Library/control/orca.c \
 ../Library/control/pid_control.c \
 ../Library/control/stabilisation_copter.c \
-../Library/control/stabilisation_hybrid.c \
 ../Library/hal/analog_monitor.c \
 ../Library/hal/lsm330dlc_driver.c \
 ../Library/hal/time_keeper.c \
@@ -195,7 +194,6 @@ Library/control/neighbor_selection.o \
 Library/control/orca.o \
 Library/control/pid_control.o \
 Library/control/stabilisation_copter.o \
-Library/control/stabilisation_hybrid.o \
 Library/hal/analog_monitor.o \
 Library/hal/lsm330dlc_driver.o \
 Library/hal/time_keeper.o \
@@ -279,7 +277,6 @@ Library/control/neighbor_selection.o \
 Library/control/orca.o \
 Library/control/pid_control.o \
 Library/control/stabilisation_copter.o \
-Library/control/stabilisation_hybrid.o \
 Library/hal/analog_monitor.o \
 Library/hal/lsm330dlc_driver.o \
 Library/hal/time_keeper.o \
@@ -363,7 +360,6 @@ Library/control/neighbor_selection.d \
 Library/control/orca.d \
 Library/control/pid_control.d \
 Library/control/stabilisation_copter.d \
-Library/control/stabilisation_hybrid.d \
 Library/hal/analog_monitor.d \
 Library/hal/lsm330dlc_driver.d \
 Library/hal/time_keeper.d \
@@ -447,7 +443,6 @@ Library/control/neighbor_selection.d \
 Library/control/orca.d \
 Library/control/pid_control.d \
 Library/control/stabilisation_copter.d \
-Library/control/stabilisation_hybrid.d \
 Library/hal/analog_monitor.d \
 Library/hal/lsm330dlc_driver.d \
 Library/hal/time_keeper.d \
@@ -536,8 +531,6 @@ OUTPUT_FILE_DEP:= ./makedep.mk
 LIB_DEP+= 
 
 # AVR32/GNU C Compiler
-
-
 
 
 
