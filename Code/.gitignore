@@ -4,3 +4,9 @@
 *.session
 *~
 *.elf
+*.atsuo
+*.eep
+*.hex
+*.lss
+*.map
+*.srec

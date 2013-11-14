@@ -198,9 +198,9 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ YAW PID --------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.15,
-				.clip_min = -1.0, 
-				.clip_max = 1.0,
+				.p_gain = 1.5,
+				.clip_min = -1.5, 
+				.clip_max = 1.5,
 				.integrator={
 					.pregain = 0.0, 
 					.postgain = 0.0,
@@ -225,9 +225,9 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 		// ------ THRUST PID ---------------------------------------------------
 		// ---------------------------------------------------------------------
 		.thrust_controller={
-				.p_gain = 0.0,
-				.clip_min = -1000, 
-				.clip_max = 1000,
+				.p_gain = 1.0,
+				.clip_min = -1, 
+				.clip_max = 1,
 				.integrator={
 					.pregain = 0.0, 
 					.postgain = 0.0,
@@ -322,8 +322,8 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// -----------------------------------------------------------------
 			{
 				.p_gain = 1.0,
-				.clip_min = -1000, 
-				.clip_max = 1000,
+				.clip_min = -1, 
+				.clip_max = 1,
 				.integrator={
 					.pregain = 0.0, 
 					.postgain = 0.0,

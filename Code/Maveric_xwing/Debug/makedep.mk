@@ -2,9 +2,9 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
-Library\control\adaptive_parameter.c
+Library\communication\mavlink_waypoint_handler.c
 
-Library\control\neighbor_selection.c
+Library\control\adaptive_parameter.c
 
 Library\control\orca.c
 
@@ -19,6 +19,8 @@ Library\hal\lsm330dlc_driver.c
 Library\hal\time_keeper.c
 
 Library\sensing\estimator.c
+
+Library\sensing\neighbor_selection.c
 
 Library\sensing\position_estimation.c
 
@@ -81,8 +83,6 @@ Library\sensing\gps_ublox.c
 Library\sensing\imu.c
 
 Library\sensing\simulation.c
-
-Library\sensing\mavlink_waypoint_handler.c
 
 Library\util\buffer.c
 

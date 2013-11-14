@@ -103,18 +103,14 @@ void main (void)
 	create_tasks();
 	
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	centralData->simulation_mode = 1;
-	
-	// main loop
-	
+	centralData->simulation_mode = 0;
+
 	while (1==1) {
 		
 		//run_scheduler_update(get_main_taskset(), FIXED_PRIORITY);
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
 		
 		//LED_On(LED1);
-
-		
 	}		
 }
 
