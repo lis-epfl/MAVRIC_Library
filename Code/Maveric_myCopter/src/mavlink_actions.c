@@ -21,24 +21,25 @@ central_data_t *centralData;
 
 void mavlink_send_heartbeat(void) {
 
+	float battery_lvl = get_battery_rail();
 	central_data_t *centralData=get_central_data();
 
 	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, centralData->mav_mode, 0, centralData->mav_state);
-	//mavlink_msg_sys_status_send(MAVLINK_COMM_0, 
-								//0b1111110000100111, // sensors present
-								//0b1111110000100111, // sensors enabled
-								//0b1111110000100111, // sensors health
-								//0,                  // load
-								//(int)(1000.0*get_battery_rail()), // bat voltage (mV)
-								//100,                // current (mA)
-								//99,					// battery remaining
-								//0, 0,  				// comms drop, comms errors
-								//0, 0, 0, 0);        // autopilot specific errors
-	mavlink_msg_battery_status_send(MAVLINK_COMM_0, 0, (int)(1000.0*get_battery_rail()), 
-														(int)(1000.0*get_internal_rail()), 
-														(int)(1000.0*get_6V_analog_rail()), 
-														(int)(1000.0*get_5V_analog_rail()),
-														0.0, 0.0, 0.0, 0.0);
+	mavlink_msg_sys_status_send(MAVLINK_COMM_0, 
+								0b1111110000100111,			// sensors present
+								0b1111110000100111,			// sensors enabled
+								0b1111110000100111,			// sensors health
+								0,							// load
+								(int)(1000.0*battery_lvl),  // bat voltage (mV)
+								100,						// current (mA)
+								battery_lvl/12.4*100.0,		// battery remaining
+								0, 0,  						// comms drop, comms errors
+								0, 0, 0, 0);				// autopilot specific errors
+	//mavlink_msg_battery_status_send(MAVLINK_COMM_0, 0, (int)(1000.0*get_battery_rail()), 
+														//(int)(1000.0*get_internal_rail()), 
+														//(int)(1000.0*get_6V_analog_rail()), 
+														//(int)(1000.0*get_5V_analog_rail()),
+														//0.0, 0.0, 0.0, 0.0);
 														
 	trigger_analog_monitor();
 	
