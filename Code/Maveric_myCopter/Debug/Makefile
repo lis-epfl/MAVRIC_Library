@@ -106,6 +106,7 @@ C_SRCS +=  \
 ../Library/control/stabilisation_copter.c \
 ../Library/control/stabilisation_hybrid.c \
 ../Library/hal/analog_monitor.c \
+../Library/hal/i2c_driver_int.c \
 ../Library/hal/lsm330dlc_driver.c \
 ../Library/hal/time_keeper.c \
 ../Library/sensing/estimator.c \
@@ -127,7 +128,6 @@ C_SRCS +=  \
 ../Library/hal/bmp085.c \
 ../Library/hal/compass_hmc5883l.c \
 ../Library/hal/dac_dma.c \
-../Library/hal/i2c_driver.c \
 ../Library/hal/itg3200_driver.c \
 ../Library/hal/led.c \
 ../Library/hal/radar_module_driver.c \
@@ -197,6 +197,7 @@ Library/control/pid_control.o \
 Library/control/stabilisation_copter.o \
 Library/control/stabilisation_hybrid.o \
 Library/hal/analog_monitor.o \
+Library/hal/i2c_driver_int.o \
 Library/hal/lsm330dlc_driver.o \
 Library/hal/time_keeper.o \
 Library/sensing/estimator.o \
@@ -218,7 +219,6 @@ Library/hal/amplifiers.o \
 Library/hal/bmp085.o \
 Library/hal/compass_hmc5883l.o \
 Library/hal/dac_dma.o \
-Library/hal/i2c_driver.o \
 Library/hal/itg3200_driver.o \
 Library/hal/led.o \
 Library/hal/radar_module_driver.o \
@@ -281,6 +281,7 @@ Library/control/pid_control.o \
 Library/control/stabilisation_copter.o \
 Library/control/stabilisation_hybrid.o \
 Library/hal/analog_monitor.o \
+Library/hal/i2c_driver_int.o \
 Library/hal/lsm330dlc_driver.o \
 Library/hal/time_keeper.o \
 Library/sensing/estimator.o \
@@ -302,7 +303,6 @@ Library/hal/amplifiers.o \
 Library/hal/bmp085.o \
 Library/hal/compass_hmc5883l.o \
 Library/hal/dac_dma.o \
-Library/hal/i2c_driver.o \
 Library/hal/itg3200_driver.o \
 Library/hal/led.o \
 Library/hal/radar_module_driver.o \
@@ -365,6 +365,7 @@ Library/control/pid_control.d \
 Library/control/stabilisation_copter.d \
 Library/control/stabilisation_hybrid.d \
 Library/hal/analog_monitor.d \
+Library/hal/i2c_driver_int.d \
 Library/hal/lsm330dlc_driver.d \
 Library/hal/time_keeper.d \
 Library/sensing/estimator.d \
@@ -386,7 +387,6 @@ Library/hal/amplifiers.d \
 Library/hal/bmp085.d \
 Library/hal/compass_hmc5883l.d \
 Library/hal/dac_dma.d \
-Library/hal/i2c_driver.d \
 Library/hal/itg3200_driver.d \
 Library/hal/led.d \
 Library/hal/radar_module_driver.d \
@@ -449,6 +449,7 @@ Library/control/pid_control.d \
 Library/control/stabilisation_copter.d \
 Library/control/stabilisation_hybrid.d \
 Library/hal/analog_monitor.d \
+Library/hal/i2c_driver_int.d \
 Library/hal/lsm330dlc_driver.d \
 Library/hal/time_keeper.d \
 Library/sensing/estimator.d \
@@ -470,7 +471,6 @@ Library/hal/amplifiers.d \
 Library/hal/bmp085.d \
 Library/hal/compass_hmc5883l.d \
 Library/hal/dac_dma.d \
-Library/hal/i2c_driver.d \
 Library/hal/itg3200_driver.d \
 Library/hal/led.d \
 Library/hal/radar_module_driver.d \

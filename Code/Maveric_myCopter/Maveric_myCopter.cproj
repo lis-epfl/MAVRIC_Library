@@ -648,6 +648,12 @@
     <Compile Include="Library\hal\analog_monitor.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\hal\i2c_driver_int.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\i2c_driver_int.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\hal\lsm330dlc_driver.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1097,12 +1103,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\dac_dma.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\i2c_driver.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\i2c_driver.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\itg3200_driver.c">

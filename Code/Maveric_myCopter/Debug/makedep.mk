@@ -16,6 +16,8 @@ Library\control\stabilisation_hybrid.c
 
 Library\hal\analog_monitor.c
 
+Library\hal\i2c_driver_int.c
+
 Library\hal\lsm330dlc_driver.c
 
 Library\hal\time_keeper.c
@@ -57,8 +59,6 @@ Library\hal\bmp085.c
 Library\hal\compass_hmc5883l.c
 
 Library\hal\dac_dma.c
-
-Library\hal\i2c_driver.c
 
 Library\hal\itg3200_driver.c
 
