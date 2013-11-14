@@ -19,8 +19,6 @@
 #include "qfilter.h"
 #include "imu.h"
 
-#include "stabilisation.h"
-#include "stabilisation_copter.h"
 #include "stabilisation_hybrid.h"
 
 #include "remote_controller.h"

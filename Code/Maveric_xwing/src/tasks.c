@@ -297,21 +297,18 @@ task_return_t run_stabilisation() {
 			
 			break;
 		case MAV_MODE_GUIDED_ARMED:
-			centralData->controls = centralData->controls_nav;
-			//centralData->controls.thrust = f_min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0;
-			//centralData->controls.thrust = get_thrust_from_remote();
+			// centralData->controls = centralData->controls_nav;
+			centralData->controls = get_command_from_remote();
 			
-			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
-			centralData->controls.yaw_mode = YAW_ABSOLUTE;
+			
+			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			cascade_stabilise_hybrid(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		case MAV_MODE_AUTO_ARMED:
-			centralData->controls = centralData->controls_nav;
-			//centralData->controls.thrust = f_min(get_thrust_from_remote()*100000.0,centralData->controls_nav.thrust*100000.0)/100000.0;
-			//centralData->controls.thrust = get_thrust_from_remote();
+			// centralData->controls = centralData->controls_nav;
+			centralData->controls = get_command_from_remote();
 			
-			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;	
-			centralData->controls.yaw_mode = YAW_COORDINATED;
+			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;	
 			cascade_stabilise_hybrid(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		

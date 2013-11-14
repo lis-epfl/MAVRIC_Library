@@ -2,15 +2,17 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
-Library\control\adaptive_parameter.c
+Library\communication\mavlink_waypoint_handler.c
 
-Library\control\neighbor_selection.c
+Library\control\adaptive_parameter.c
 
 Library\control\orca.c
 
 Library\control\pid_control.c
 
 Library\control\stabilisation_copter.c
+
+Library\control\stabilisation_hybrid.c
 
 Library\hal\analog_monitor.c
 
@@ -22,9 +24,13 @@ Library\hal\time_keeper.c
 
 Library\sensing\estimator.c
 
+Library\sensing\neighbor_selection.c
+
 Library\sensing\position_estimation.c
 
 Library\sensing\qfilter.c
+
+Library\util\quick_trig.c
 
 src\central_data.c
 
@@ -79,8 +85,6 @@ Library\sensing\gps_ublox.c
 Library\sensing\imu.c
 
 Library\sensing\simulation.c
-
-Library\sensing\mavlink_waypoint_handler.c
 
 Library\util\buffer.c
 

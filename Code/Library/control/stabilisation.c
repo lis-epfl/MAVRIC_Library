@@ -15,4 +15,6 @@ void stabilise(Stabiliser_t *stabiliser, float dt, float errors[])
 		stabiliser->output.rpy[i]=	pid_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
 	}		
 	stabiliser->output.thrust= pid_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
+
+	//dbg_putfloat(stabiliser->output.thrust, 3); dbg_print("\n");
 }

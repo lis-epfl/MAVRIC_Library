@@ -99,8 +99,8 @@ SUBDIRS :=  \
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS +=  \
+../Library/communication/mavlink_waypoint_handler.c \
 ../Library/control/adaptive_parameter.c \
-../Library/control/neighbor_selection.c \
 ../Library/control/orca.c \
 ../Library/control/pid_control.c \
 ../Library/control/stabilisation_hybrid.c \
@@ -108,6 +108,7 @@ C_SRCS +=  \
 ../Library/hal/lsm330dlc_driver.c \
 ../Library/hal/time_keeper.c \
 ../Library/sensing/estimator.c \
+../Library/sensing/neighbor_selection.c \
 ../Library/sensing/position_estimation.c \
 ../Library/sensing/qfilter.c \
 ../Library/util/quick_trig.c \
@@ -139,7 +140,6 @@ C_SRCS +=  \
 ../Library/sensing/gps_ublox.c \
 ../Library/sensing/imu.c \
 ../Library/sensing/simulation.c \
-../Library/sensing/mavlink_waypoint_handler.c \
 ../Library/util/buffer.c \
 ../Library/util/coord_conventions.c \
 ../Library/util/generator.c \
@@ -190,8 +190,8 @@ ASM_SRCS +=
 
 
 OBJS +=  \
+Library/communication/mavlink_waypoint_handler.o \
 Library/control/adaptive_parameter.o \
-Library/control/neighbor_selection.o \
 Library/control/orca.o \
 Library/control/pid_control.o \
 Library/control/stabilisation_hybrid.o \
@@ -199,6 +199,7 @@ Library/hal/analog_monitor.o \
 Library/hal/lsm330dlc_driver.o \
 Library/hal/time_keeper.o \
 Library/sensing/estimator.o \
+Library/sensing/neighbor_selection.o \
 Library/sensing/position_estimation.o \
 Library/sensing/qfilter.o \
 Library/util/quick_trig.o \
@@ -230,7 +231,6 @@ Library/runtime/scheduler.o \
 Library/sensing/gps_ublox.o \
 Library/sensing/imu.o \
 Library/sensing/simulation.o \
-Library/sensing/mavlink_waypoint_handler.o \
 Library/util/buffer.o \
 Library/util/coord_conventions.o \
 Library/util/generator.o \
@@ -274,8 +274,8 @@ src/boardsupport.o \
 src/main.o
 
 OBJS_AS_ARGS +=  \
+Library/communication/mavlink_waypoint_handler.o \
 Library/control/adaptive_parameter.o \
-Library/control/neighbor_selection.o \
 Library/control/orca.o \
 Library/control/pid_control.o \
 Library/control/stabilisation_hybrid.o \
@@ -283,6 +283,7 @@ Library/hal/analog_monitor.o \
 Library/hal/lsm330dlc_driver.o \
 Library/hal/time_keeper.o \
 Library/sensing/estimator.o \
+Library/sensing/neighbor_selection.o \
 Library/sensing/position_estimation.o \
 Library/sensing/qfilter.o \
 Library/util/quick_trig.o \
@@ -314,7 +315,6 @@ Library/runtime/scheduler.o \
 Library/sensing/gps_ublox.o \
 Library/sensing/imu.o \
 Library/sensing/simulation.o \
-Library/sensing/mavlink_waypoint_handler.o \
 Library/util/buffer.o \
 Library/util/coord_conventions.o \
 Library/util/generator.o \
@@ -358,8 +358,8 @@ src/boardsupport.o \
 src/main.o
 
 C_DEPS +=  \
+Library/communication/mavlink_waypoint_handler.d \
 Library/control/adaptive_parameter.d \
-Library/control/neighbor_selection.d \
 Library/control/orca.d \
 Library/control/pid_control.d \
 Library/control/stabilisation_hybrid.d \
@@ -367,6 +367,7 @@ Library/hal/analog_monitor.d \
 Library/hal/lsm330dlc_driver.d \
 Library/hal/time_keeper.d \
 Library/sensing/estimator.d \
+Library/sensing/neighbor_selection.d \
 Library/sensing/position_estimation.d \
 Library/sensing/qfilter.d \
 Library/util/quick_trig.d \
@@ -398,7 +399,6 @@ Library/runtime/scheduler.d \
 Library/sensing/gps_ublox.d \
 Library/sensing/imu.d \
 Library/sensing/simulation.d \
-Library/sensing/mavlink_waypoint_handler.d \
 Library/util/buffer.d \
 Library/util/coord_conventions.d \
 Library/util/generator.d \
@@ -442,8 +442,8 @@ src/boardsupport.d \
 src/main.d
 
 C_DEPS_AS_ARGS +=  \
+Library/communication/mavlink_waypoint_handler.d \
 Library/control/adaptive_parameter.d \
-Library/control/neighbor_selection.d \
 Library/control/orca.d \
 Library/control/pid_control.d \
 Library/control/stabilisation_hybrid.d \
@@ -451,6 +451,7 @@ Library/hal/analog_monitor.d \
 Library/hal/lsm330dlc_driver.d \
 Library/hal/time_keeper.d \
 Library/sensing/estimator.d \
+Library/sensing/neighbor_selection.d \
 Library/sensing/position_estimation.d \
 Library/sensing/qfilter.d \
 Library/util/quick_trig.d \
@@ -482,7 +483,6 @@ Library/runtime/scheduler.d \
 Library/sensing/gps_ublox.d \
 Library/sensing/imu.d \
 Library/sensing/simulation.d \
-Library/sensing/mavlink_waypoint_handler.d \
 Library/util/buffer.d \
 Library/util/coord_conventions.d \
 Library/util/generator.d \
@@ -695,6 +695,13 @@ LIB_DEP+=
 
 
 
+Library/communication/%.o: ../Library/communication/%.c
+	@echo Building file: $<
+	@echo Invoking: AVR32/GNU C Compiler : 3.4.2
+	$(QUOTE)C:\Program Files\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.2.1002\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -DBOARD=USER_BOARD  -I"../src" -I"../src/asf/avr32/drivers/intc" -I"../src/asf/avr32/utils" -I"../src/asf/avr32/utils/preprocessor" -I"../src/asf/common/applications/user_application/user_board" -I"../src/asf/common/boards" -I"../src/asf/common/boards/user_board" -I"../src/asf/common/utils" -I"../src/config" -I"../src/asf/avr32/drivers/gpio" -I"../src/asf/avr32/drivers/scif" -I"../src/asf/avr32/drivers/pm" -I"../src/asf/avr32/drivers/flashc" -I"../src/asf/common/services/sleepmgr" -I"../src/asf/common/services/clock" -I"../src/asf/avr32/drivers/cpu/cycle_counter" -I"../src/asf/avr32/services/delay" -I"../src/asf/avr32/drivers/usbc" -I"../src/asf/common/utils/stdio/stdio_usb" -I"../src/asf/common/services/usb/class/cdc/device" -I"../src/asf/common/services/usb/class/cdc" -I"../src/asf/common/services/usb/udc" -I"../src/asf/common/services/usb" -I"../src/asf/avr32/drivers/usart" -I"../src/asf/common/services/serial" -I"../src/asf/avr32/drivers/adcifa" -I"../src/asf/avr32/drivers/dacifb" -I"../src/asf/avr32/drivers/pevc" -I"../src/asf/avr32/drivers/spi" -I"../src/asf/avr32/drivers/tc" -I"../src/asf/avr32/drivers/eic" -I"../src/asf/common/services/spi" -I"../src/asf/common/services/spi/uc3_spi" -I"../src/asf/avr32/drivers/pdca" -I"../src/asf/common/utils/stdio/stdio_serial" -I"../src/asf/avr32/drivers/pwm" -I"../src/asf/avr32/drivers/twim" -I"../src/asf/avr32/drivers/ast" -I"../src/asf/avr32/drivers/twis" -I"../src/asf/common/services/twi" -I"../src/asf/common/services/twi/uc3_twim" -I"../Library/communication" -I"../Library/actuation" -I"../Library/control" -I"../Library/hal" -I"../Library/runtime" -I"../Library/sensing" -I"../Library/util" -I"../Library"  -O0 -mhard-float -ffunction-sections -fdata-sections -fpic -g2 -pg -p -Wall -mpart=uc3c1512c -c -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -march=ucr3fp -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<"
+	@echo Finished building: $<
+	
+
 Library/control/%.o: ../Library/control/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR32/GNU C Compiler : 3.4.2
@@ -724,13 +731,6 @@ Library/util/%.o: ../Library/util/%.c
 	
 
 src/%.o: ../src/%.c
-	@echo Building file: $<
-	@echo Invoking: AVR32/GNU C Compiler : 3.4.2
-	$(QUOTE)C:\Program Files\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.2.1002\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -DBOARD=USER_BOARD  -I"../src" -I"../src/asf/avr32/drivers/intc" -I"../src/asf/avr32/utils" -I"../src/asf/avr32/utils/preprocessor" -I"../src/asf/common/applications/user_application/user_board" -I"../src/asf/common/boards" -I"../src/asf/common/boards/user_board" -I"../src/asf/common/utils" -I"../src/config" -I"../src/asf/avr32/drivers/gpio" -I"../src/asf/avr32/drivers/scif" -I"../src/asf/avr32/drivers/pm" -I"../src/asf/avr32/drivers/flashc" -I"../src/asf/common/services/sleepmgr" -I"../src/asf/common/services/clock" -I"../src/asf/avr32/drivers/cpu/cycle_counter" -I"../src/asf/avr32/services/delay" -I"../src/asf/avr32/drivers/usbc" -I"../src/asf/common/utils/stdio/stdio_usb" -I"../src/asf/common/services/usb/class/cdc/device" -I"../src/asf/common/services/usb/class/cdc" -I"../src/asf/common/services/usb/udc" -I"../src/asf/common/services/usb" -I"../src/asf/avr32/drivers/usart" -I"../src/asf/common/services/serial" -I"../src/asf/avr32/drivers/adcifa" -I"../src/asf/avr32/drivers/dacifb" -I"../src/asf/avr32/drivers/pevc" -I"../src/asf/avr32/drivers/spi" -I"../src/asf/avr32/drivers/tc" -I"../src/asf/avr32/drivers/eic" -I"../src/asf/common/services/spi" -I"../src/asf/common/services/spi/uc3_spi" -I"../src/asf/avr32/drivers/pdca" -I"../src/asf/common/utils/stdio/stdio_serial" -I"../src/asf/avr32/drivers/pwm" -I"../src/asf/avr32/drivers/twim" -I"../src/asf/avr32/drivers/ast" -I"../src/asf/avr32/drivers/twis" -I"../src/asf/common/services/twi" -I"../src/asf/common/services/twi/uc3_twim" -I"../Library/communication" -I"../Library/actuation" -I"../Library/control" -I"../Library/hal" -I"../Library/runtime" -I"../Library/sensing" -I"../Library/util" -I"../Library"  -O0 -mhard-float -ffunction-sections -fdata-sections -fpic -g2 -pg -p -Wall -mpart=uc3c1512c -c -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -march=ucr3fp -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<"
-	@echo Finished building: $<
-	
-
-Library/communication/%.o: ../Library/communication/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR32/GNU C Compiler : 3.4.2
 	$(QUOTE)C:\Program Files\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.2.1002\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -DBOARD=USER_BOARD  -I"../src" -I"../src/asf/avr32/drivers/intc" -I"../src/asf/avr32/utils" -I"../src/asf/avr32/utils/preprocessor" -I"../src/asf/common/applications/user_application/user_board" -I"../src/asf/common/boards" -I"../src/asf/common/boards/user_board" -I"../src/asf/common/utils" -I"../src/config" -I"../src/asf/avr32/drivers/gpio" -I"../src/asf/avr32/drivers/scif" -I"../src/asf/avr32/drivers/pm" -I"../src/asf/avr32/drivers/flashc" -I"../src/asf/common/services/sleepmgr" -I"../src/asf/common/services/clock" -I"../src/asf/avr32/drivers/cpu/cycle_counter" -I"../src/asf/avr32/services/delay" -I"../src/asf/avr32/drivers/usbc" -I"../src/asf/common/utils/stdio/stdio_usb" -I"../src/asf/common/services/usb/class/cdc/device" -I"../src/asf/common/services/usb/class/cdc" -I"../src/asf/common/services/usb/udc" -I"../src/asf/common/services/usb" -I"../src/asf/avr32/drivers/usart" -I"../src/asf/common/services/serial" -I"../src/asf/avr32/drivers/adcifa" -I"../src/asf/avr32/drivers/dacifb" -I"../src/asf/avr32/drivers/pevc" -I"../src/asf/avr32/drivers/spi" -I"../src/asf/avr32/drivers/tc" -I"../src/asf/avr32/drivers/eic" -I"../src/asf/common/services/spi" -I"../src/asf/common/services/spi/uc3_spi" -I"../src/asf/avr32/drivers/pdca" -I"../src/asf/common/utils/stdio/stdio_serial" -I"../src/asf/avr32/drivers/pwm" -I"../src/asf/avr32/drivers/twim" -I"../src/asf/avr32/drivers/ast" -I"../src/asf/avr32/drivers/twis" -I"../src/asf/common/services/twi" -I"../src/asf/common/services/twi/uc3_twim" -I"../Library/communication" -I"../Library/actuation" -I"../Library/control" -I"../Library/hal" -I"../Library/runtime" -I"../Library/sensing" -I"../Library/util" -I"../Library"  -O0 -mhard-float -ffunction-sections -fdata-sections -fpic -g2 -pg -p -Wall -mpart=uc3c1512c -c -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -march=ucr3fp -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<"

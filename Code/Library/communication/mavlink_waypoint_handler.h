@@ -51,7 +51,7 @@ void receive_ack_msg(Mavlink_Received_t* rec, bool* waypoint_sending);
 
 void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool* waypoint_receiving, bool* waypoint_sending);
 void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t number_of_waypoints, bool* waypoint_receiving);
-void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct* waypoint_list[], uint16_t num_of_waypoint);
+void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t num_of_waypoint);
 void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints, bool* waypoint_set);
 
 void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* board_mav_state, uint8_t sim_mode);

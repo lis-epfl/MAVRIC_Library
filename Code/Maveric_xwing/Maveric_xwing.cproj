@@ -606,16 +606,16 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Library\communication\mavlink_waypoint_handler.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\mavlink_waypoint_handler.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\control\adaptive_parameter.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\control\adaptive_parameter.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\control\neighbor_selection.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\control\neighbor_selection.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\control\orca.c">
@@ -964,6 +964,12 @@
     <Compile Include="Library\sensing\estimator.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\sensing\neighbor_selection.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\sensing\neighbor_selection.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\sensing\position_estimation.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1184,12 +1190,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\sensing\simulation.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\mavlink_waypoint_handler.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\mavlink_waypoint_handler.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\util\buffer.c">
