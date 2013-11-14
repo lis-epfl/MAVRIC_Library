@@ -34,9 +34,9 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 					.leakiness = 0.0
 				},
 				.differentiator={
-					.gain = 0.5,
+					.gain = 0.2,
 					.previous = 0.0,
-					.LPF = 1.0,
+					.LPF = 0.4,
 					.clip = 0.65
 				},
 				.output = 0.0,
@@ -60,9 +60,9 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 					.leakiness = 0.0
 				},
 				.differentiator={
-					.gain = 0.5,
+					.gain = 0.2,
 					.previous = 0.0,
-					.LPF = 1.0,
+					.LPF = 0.4,
 					.clip = 0.65
 				},
 				.output = 0.0,
@@ -75,21 +75,21 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ YAW PID --------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.15,
+				.p_gain = 0.4,
 				.clip_min = -0.9, 
 				.clip_max = 0.9,
 				.integrator={
 					.pregain = 0.5, 
-					.postgain = 1.0,
+					.postgain = 0.2,
 					.accumulator = 0.0,
-					.clip = 0.65,
+					.clip = 0.1,
 					.leakiness = 0.0
 				},
 				.differentiator={
-					.gain = 0.5,
+					.gain = 0.0,
 					.previous = 0.0,
-					.LPF = 1.0,
-					.clip = 0.65
+					.LPF = 0.4,
+					.clip = 0.5
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -102,21 +102,21 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 		// ------ THRUST PID ---------------------------------------------------
 		// ---------------------------------------------------------------------
 		.thrust_controller={
-				.p_gain = 0.15,
-				.clip_min = -0.9, 
-				.clip_max = 0.9,
+				.p_gain = 1.0,
+				.clip_min = -1000, 
+				.clip_max = 1000,
 				.integrator={
-					.pregain = 0.5, 
-					.postgain = 1.0,
+					.pregain = 0.0, 
+					.postgain = 0.0,
 					.accumulator = 0.0,
-					.clip = 0.65,
+					.clip = 0.0,
 					.leakiness = 0.0
 				},
 				.differentiator={
-					.gain = 0.5,
+					.gain = 0.0,
 					.previous = 0.0,
-					.LPF = 1.0,
-					.clip = 0.65
+					.LPF = 0.0,
+					.clip = 0.0
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -146,21 +146,21 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ ROLL PID -------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.15,
-				.clip_min = -0.9, 
-				.clip_max = 0.9,
+				.p_gain = 1.5,
+				.clip_min = -1.2, 
+				.clip_max = 1.2,
 				.integrator={
-					.pregain = 0.5, 
-					.postgain = 1.0,
+					.pregain = 0.0, 
+					.postgain = 0.0,
 					.accumulator = 0.0,
-					.clip = 0.65,
+					.clip = 0.0,
 					.leakiness = 0.0
 				},
 				.differentiator={
-					.gain = 0.5,
+					.gain = 0.0,
 					.previous = 0.0,
-					.LPF = 1.0,
-					.clip = 0.65
+					.LPF = 0.5,
+					.clip = 0.1
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -172,21 +172,21 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ PITCH PID ------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.15,
-				.clip_min = -0.9, 
-				.clip_max = 0.9,
+				.p_gain = 1.5,
+				.clip_min = -1.2, 
+				.clip_max = 1.2,
 				.integrator={
-					.pregain = 0.5, 
-					.postgain = 1.0,
+					.pregain = 0.0, 
+					.postgain = 0.0,
 					.accumulator = 0.0,
-					.clip = 0.65,
+					.clip = 0.0,
 					.leakiness = 0.0
 				},
 				.differentiator={
-					.gain = 0.5,
+					.gain = 0.0,
 					.previous = 0.0,
-					.LPF = 1.0,
-					.clip = 0.65
+					.LPF = 0.5,
+					.clip = 0.1
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -199,20 +199,20 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// -----------------------------------------------------------------
 			{
 				.p_gain = 0.15,
-				.clip_min = -0.9, 
-				.clip_max = 0.9,
+				.clip_min = -1.0, 
+				.clip_max = 1.0,
 				.integrator={
-					.pregain = 0.5, 
-					.postgain = 1.0,
+					.pregain = 0.0, 
+					.postgain = 0.0,
 					.accumulator = 0.0,
-					.clip = 0.65,
+					.clip = 0.0,
 					.leakiness = 0.0
 				},
 				.differentiator={
-					.gain = 0.5,
+					.gain = 0.0,
 					.previous = 0.0,
-					.LPF = 1.0,
-					.clip = 0.65
+					.LPF = 0.5,
+					.clip = 0.5
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -225,21 +225,21 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 		// ------ THRUST PID ---------------------------------------------------
 		// ---------------------------------------------------------------------
 		.thrust_controller={
-				.p_gain = 0.15,
-				.clip_min = -0.9, 
-				.clip_max = 0.9,
+				.p_gain = 0.0,
+				.clip_min = -1000, 
+				.clip_max = 1000,
 				.integrator={
-					.pregain = 0.5, 
-					.postgain = 1.0,
+					.pregain = 0.0, 
+					.postgain = 0.0,
 					.accumulator = 0.0,
-					.clip = 0.65,
+					.clip = 0.0,
 					.leakiness = 0.0
 				},
 				.differentiator={
-					.gain = 0.5,
+					.gain = 0.0,
 					.previous = 0.0,
-					.LPF = 1.0,
-					.clip = 0.65
+					.LPF = 0.0,
+					.clip = 0.0
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -269,73 +269,73 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ ROLL PID -------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.15,
-				.clip_min = -0.9, 
-				.clip_max = 0.9,
+				.p_gain = 0.2,
+				.clip_min = -0.5, 
+				.clip_max = 0.5,
 				.integrator={
-					.pregain = 0.5, 
-					.postgain = 1.0,
+					.pregain = 0.0, 
+					.postgain = 0.0,
 					.accumulator = 0.0,
-					.clip = 0.65,
+					.clip = 0.3,
 					.leakiness = 0.0
 				},
 				.differentiator={
-					.gain = 0.5,
+					.gain = 0.0,
 					.previous = 0.0,
-					.LPF = 1.0,
-					.clip = 0.65
+					.LPF = 0.5,
+					.clip = 0.5
 				},
 				.output = 0.0,
 				.error = 0.0,
 				.last_update = 0.0, 
 				.dt = 1,
-				.soft_zone_width = 0.0
+				.soft_zone_width = 0.3
 			},
 			// -----------------------------------------------------------------
 			// ------ PITCH PID ------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.15,
-				.clip_min = -0.9, 
-				.clip_max = 0.9,
+				.p_gain = 0.2,
+				.clip_min = -0.5, 
+				.clip_max = 0.5,
 				.integrator={
-					.pregain = 0.5, 
-					.postgain = 1.0,
+					.pregain = 0.0, 
+					.postgain = 0.0,
 					.accumulator = 0.0,
-					.clip = 0.65,
+					.clip = 0.3,
 					.leakiness = 0.0
 				},
 				.differentiator={
-					.gain = 0.5,
+					.gain = 0.0,
 					.previous = 0.0,
-					.LPF = 1.0,
-					.clip = 0.65
+					.LPF = 0.5,
+					.clip = 0.5
 				},
 				.output = 0.0,
 				.error = 0.0,
 				.last_update = 0.0, 
 				.dt = 1,
-				.soft_zone_width = 0.0
+				.soft_zone_width = 0.3
 			},
 			// -----------------------------------------------------------------
 			// ------ YAW PID --------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.15,
-				.clip_min = -0.9, 
-				.clip_max = 0.9,
+				.p_gain = 1.0,
+				.clip_min = -1000, 
+				.clip_max = 1000,
 				.integrator={
-					.pregain = 0.5, 
-					.postgain = 1.0,
+					.pregain = 0.0, 
+					.postgain = 0.0,
 					.accumulator = 0.0,
-					.clip = 0.65,
+					.clip = 0.0,
 					.leakiness = 0.0
 				},
 				.differentiator={
-					.gain = 0.5,
+					.gain = 0.0,
 					.previous = 0.0,
-					.LPF = 1.0,
-					.clip = 0.65
+					.LPF = 0.0,
+					.clip = 0.0
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -348,27 +348,27 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 		// ------ THRUST PID ---------------------------------------------------
 		// ---------------------------------------------------------------------
 		.thrust_controller={
-				.p_gain = 0.15,
+				.p_gain = 0.4,
 				.clip_min = -0.9, 
-				.clip_max = 0.9,
+				.clip_max = 0.65,
 				.integrator={
-					.pregain = 0.5, 
+					.pregain = 1.5, 
 					.postgain = 1.0,
 					.accumulator = 0.0,
-					.clip = 0.65,
+					.clip = 1.0,
 					.leakiness = 0.0
 				},
 				.differentiator={
 					.gain = 0.5,
 					.previous = 0.0,
-					.LPF = 1.0,
-					.clip = 0.65
+					.LPF = 0.95,
+					.clip = 1.0
 				},
 				.output = 0.0,
 				.error = 0.0,
 				.last_update = 0.0, 
 				.dt = 1,
-				.soft_zone_width = 0.0
+				.soft_zone_width = 0.2
 		},
 		// ---------------------------------------------------------------------
 		// ------ OUTPUT -------------------------------------------------------
