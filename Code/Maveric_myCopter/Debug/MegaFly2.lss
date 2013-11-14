@@ -35107,9 +35107,9 @@ static float interpolate(float x, float x1, float x2, float y1, float y2)
 8001560a:	54 16       	stdsp	sp[0x104],r6
 
 8001560c <stabilise>:
+ */ 
+
 #include "stabilisation.h"
-#include "stabilisation_copter.h"
-#include "stabilisation_hybrid.h"
 
 void stabilise(Stabiliser_t *stabiliser, float dt, float errors[]) 
 {
@@ -35148,7 +35148,7 @@ void stabilise(Stabiliser_t *stabiliser, float dt, float errors[])
 80015660:	ee f8 ff f8 	ld.w	r8,r7[-8]
 80015664:	ea c9 ff bc 	sub	r9,r5,-68
 80015668:	f0 09 09 2a 	st.w	r8[r9<<0x2],r10
-#include "stabilisation_hybrid.h"
+#include "stabilisation.h"
 
 void stabilise(Stabiliser_t *stabiliser, float dt, float errors[]) 
 {

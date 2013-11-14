@@ -12,8 +12,6 @@ c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-too
                               Library/hal/bmp085.o (pow)
 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-w_sqrt.o)
                               Library/control/orca.o (sqrt)
-c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o)
-                              Library/control/stabilisation_hybrid.o (acosf)
 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-e_asin.o)
                               c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-w_asin.o) (__ieee754_asin)
 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-e_atan2.o)
@@ -24,10 +22,6 @@ c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-too
                               c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-s_cos.o) (__ieee754_rem_pio2)
 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-e_sqrt.o)
                               c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-w_sqrt.o) (__ieee754_sqrt)
-c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o)
-                              c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o) (__ieee754_acosf)
-c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_sqrt.o)
-                              c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o) (__ieee754_sqrtf)
 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-k_cos.o)
                               c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-s_cos.o) (__kernel_cos)
 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-k_rem_pio2.o)
@@ -54,10 +48,6 @@ c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-too
                               c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-w_pow.o) (rint)
 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-s_scalbn.o)
                               c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-e_pow.o) (scalbn)
-c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_fabs.o)
-                              c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o) (fabsf)
-c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_isnan.o)
-                              c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o) (isnanf)
 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-s_copysign.o)
                               c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-s_scalbn.o) (copysign)
 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f64_mul.o)
@@ -74,16 +64,10 @@ c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-too
                               Library/control/orca.o (__avr32_f64_cmp_ge)
 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f64_cmp_lt.o)
                               Library/control/pid_control.o (__avr32_f64_cmp_lt)
-c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_cmp_lt.o)
-                              c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o) (__avr32_f32_cmp_lt)
 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f64_div.o)
                               Library/control/neighbor_selection.o (__avr32_f64_div)
 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_div.o)
                               Library/control/adaptive_parameter.o (__avr32_f32_div)
-c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_addsub.o)
-                              c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o) (__avr32_f32_sub)
-c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_mul.o)
-                              c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o) (__avr32_f32_mul)
 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_to_f64.o)
                               Library/control/orca.o (__avr32_f32_to_f64)
 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f64_to_f32.o)
@@ -304,26 +288,6 @@ Discarded input sections
                 0x00000000      0x194 Library/control/stabilisation_copter.o
  .rodata.servo_failsafe
                 0x00000000       0x80 Library/control/stabilisation_copter.o
- .text          0x00000000      0xb30 Library/control/stabilisation_hybrid.o
- .data          0x00000000       0x3c Library/control/stabilisation_hybrid.o
- .bss           0x00000000        0x0 Library/control/stabilisation_hybrid.o
- .debug_abbrev  0x00000000      0x1e2 Library/control/stabilisation_hybrid.o
- .debug_info    0x00000000     0x1aa3 Library/control/stabilisation_hybrid.o
- .debug_line    0x00000000      0x4d3 Library/control/stabilisation_hybrid.o
- .data.vehicle_model_parameters
-                0x00000000      0x194 Library/control/stabilisation_hybrid.o
- .rodata.servo_failsafe
-                0x00000000       0x80 Library/control/stabilisation_hybrid.o
- .data.stabiliser_defaults_hybrid
-                0x00000000      0x278 Library/control/stabilisation_hybrid.o
- .debug_frame   0x00000000      0x204 Library/control/stabilisation_hybrid.o
- .debug_loc     0x00000000      0x285 Library/control/stabilisation_hybrid.o
- .debug_pubnames
-                0x00000000      0x2d4 Library/control/stabilisation_hybrid.o
- .debug_aranges
-                0x00000000       0x20 Library/control/stabilisation_hybrid.o
- .debug_str     0x00000000     0x11e0 Library/control/stabilisation_hybrid.o
- .comment       0x00000000       0x31 Library/control/stabilisation_hybrid.o
  .data          0x00000000       0x1c Library/hal/analog_monitor.o
  .bss           0x00000000        0x0 Library/hal/analog_monitor.o
  .data          0x00000000       0x24 Library/hal/i2c_driver_int.o
@@ -935,24 +899,6 @@ Discarded input sections
  .text          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-w_sqrt.o)
  .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-w_sqrt.o)
  .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-w_sqrt.o)
- .text          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o)
- .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o)
- .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o)
- .debug_abbrev  0x00000000       0xc9 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o)
- .debug_info    0x00000000      0x172 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o)
- .debug_line    0x00000000      0x18f c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o)
- .text.acosf    0x00000000       0xb8 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o)
- .rodata.str1.4
-                0x00000000        0xc c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o)
- .debug_frame   0x00000000       0x38 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o)
- .debug_loc     0x00000000       0x49 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o)
- .debug_pubnames
-                0x00000000       0x1c c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o)
- .debug_aranges
-                0x00000000       0x20 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o)
- .debug_ranges  0x00000000       0x18 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o)
- .debug_str     0x00000000      0x19d c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o)
- .comment       0x00000000       0x31 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-wf_acos.o)
  .text          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-e_asin.o)
  .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-e_asin.o)
  .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-e_asin.o)
@@ -968,40 +914,6 @@ Discarded input sections
  .text          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-e_sqrt.o)
  .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-e_sqrt.o)
  .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-e_sqrt.o)
- .text          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o)
- .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o)
- .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o)
- .debug_abbrev  0x00000000       0xb2 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o)
- .debug_info    0x00000000      0x223 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o)
- .debug_line    0x00000000      0x1c5 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o)
- .text.__ieee754_acosf
-                0x00000000      0x3c0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o)
- .debug_frame   0x00000000       0x34 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o)
- .debug_loc     0x00000000      0x105 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o)
- .debug_pubnames
-                0x00000000       0x26 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o)
- .debug_aranges
-                0x00000000       0x20 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o)
- .debug_ranges  0x00000000       0x18 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o)
- .debug_str     0x00000000      0x141 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o)
- .comment       0x00000000       0x31 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_acos.o)
- .text          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_sqrt.o)
- .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_sqrt.o)
- .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_sqrt.o)
- .debug_abbrev  0x00000000       0xc5 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_sqrt.o)
- .debug_info    0x00000000      0x169 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_sqrt.o)
- .debug_line    0x00000000      0x1d1 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_sqrt.o)
- .text.__ieee754_sqrtf
-                0x00000000       0xd4 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_sqrt.o)
- .debug_frame   0x00000000       0x34 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_sqrt.o)
- .debug_loc     0x00000000      0x133 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_sqrt.o)
- .debug_pubnames
-                0x00000000       0x26 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_sqrt.o)
- .debug_aranges
-                0x00000000       0x20 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_sqrt.o)
- .debug_ranges  0x00000000       0x18 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_sqrt.o)
- .debug_str     0x00000000      0x146 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_sqrt.o)
- .comment       0x00000000       0x31 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-ef_sqrt.o)
  .text          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-k_cos.o)
  .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-k_cos.o)
  .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-k_cos.o)
@@ -1041,38 +953,6 @@ Discarded input sections
  .text          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-s_scalbn.o)
  .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-s_scalbn.o)
  .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-s_scalbn.o)
- .text          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_fabs.o)
- .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_fabs.o)
- .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_fabs.o)
- .debug_abbrev  0x00000000       0x73 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_fabs.o)
- .debug_info    0x00000000       0xc6 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_fabs.o)
- .debug_line    0x00000000      0x18f c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_fabs.o)
- .text.fabsf    0x00000000        0x6 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_fabs.o)
- .debug_frame   0x00000000       0x20 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_fabs.o)
- .debug_loc     0x00000000       0x13 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_fabs.o)
- .debug_pubnames
-                0x00000000       0x1c c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_fabs.o)
- .debug_aranges
-                0x00000000       0x20 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_fabs.o)
- .debug_ranges  0x00000000       0x18 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_fabs.o)
- .debug_str     0x00000000      0x128 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_fabs.o)
- .comment       0x00000000       0x31 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_fabs.o)
- .text          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_isnan.o)
- .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_isnan.o)
- .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_isnan.o)
- .debug_abbrev  0x00000000       0xb0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_isnan.o)
- .debug_info    0x00000000      0x114 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_isnan.o)
- .debug_line    0x00000000      0x19e c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_isnan.o)
- .text.isnanf   0x00000000        0xe c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_isnan.o)
- .debug_frame   0x00000000       0x20 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_isnan.o)
- .debug_loc     0x00000000       0x13 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_isnan.o)
- .debug_pubnames
-                0x00000000       0x1d c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_isnan.o)
- .debug_aranges
-                0x00000000       0x20 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_isnan.o)
- .debug_ranges  0x00000000       0x18 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_isnan.o)
- .debug_str     0x00000000      0x15c c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_isnan.o)
- .comment       0x00000000       0x31 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-sf_isnan.o)
  .text          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-s_copysign.o)
  .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-s_copysign.o)
  .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/../../../../avr32/lib/ucr3fp\libm.a(lib_a-s_copysign.o)
@@ -1090,19 +970,10 @@ Discarded input sections
  .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f64_cmp_ge.o)
  .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f64_cmp_lt.o)
  .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f64_cmp_lt.o)
- .text          0x00000000       0x34 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_cmp_lt.o)
- .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_cmp_lt.o)
- .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_cmp_lt.o)
  .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f64_div.o)
  .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f64_div.o)
  .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_div.o)
  .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_div.o)
- .text          0x00000000      0x180 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_addsub.o)
- .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_addsub.o)
- .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_addsub.o)
- .text          0x00000000       0xe2 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_mul.o)
- .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_mul.o)
- .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_mul.o)
  .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_to_f64.o)
  .bss           0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f32_to_f64.o)
  .data          0x00000000        0x0 c:/program files/atmel/atmel toolchain/avr32 gcc/native/3.4.2.1002/avr32-gnu-toolchain/bin/../lib/gcc/avr32/4.4.7/ucr3fp\libgcc.a(_avr32_f64_to_f32.o)
@@ -1475,7 +1346,6 @@ LOAD Library/control/neighbor_selection.o
 LOAD Library/control/orca.o
 LOAD Library/control/pid_control.o
 LOAD Library/control/stabilisation_copter.o
-LOAD Library/control/stabilisation_hybrid.o
 LOAD Library/hal/analog_monitor.o
 LOAD Library/hal/i2c_driver_int.o
 LOAD Library/hal/lsm330dlc_driver.o

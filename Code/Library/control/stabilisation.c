@@ -6,8 +6,6 @@
  */ 
 
 #include "stabilisation.h"
-#include "stabilisation_copter.h"
-#include "stabilisation_hybrid.h"
 
 void stabilise(Stabiliser_t *stabiliser, float dt, float errors[]) 
 {

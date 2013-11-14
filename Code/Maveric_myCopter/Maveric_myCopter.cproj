@@ -636,12 +636,6 @@
     <Compile Include="Library\control\stabilisation_copter.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\control\stabilisation_hybrid.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\control\stabilisation_hybrid.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\hal\analog_monitor.h">
       <SubType>compile</SubType>
     </Compile>

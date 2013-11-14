@@ -16,24 +16,28 @@ static volatile central_data_t centralData;
 
 void initialise_central_data(){
 		
+		// init controls
 		centralData.controls.rpy[ROLL]=0;
 		centralData.controls.rpy[PITCH]=0;
 		centralData.controls.rpy[YAW]=0;
 		centralData.controls.thrust=-1.0;
 		
-		centralData.number_of_waypoints = 0;
+		// init stabilisers
+		init_stabilisation_hybrid(&centralData.stabiliser_stack);
+		// centralData.stabilisers_stack = 
 
 		centralData.simulation_mode=0;
-		
+
+		// init waypoint navigation
+		centralData.number_of_waypoints = 0;		
 		centralData.waypoint_set = false;
 		centralData.waypoint_sending = false;
 		centralData.waypoint_receiving = false;
 		centralData.waypoint_hold_init = false;
 		centralData.critical_landing = false;
 		centralData.critical_init = false;
-		
 		centralData.collision_avoidance = false;
-		
+
 		// default GPS home position
 		centralData.position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;
 		centralData.position_estimator.localPosition.origin.latitude =   HOME_LATITUDE;
@@ -42,6 +46,7 @@ void initialise_central_data(){
 		centralData.position_estimator.localPosition.pos[1]=0;
 		centralData.position_estimator.localPosition.pos[2]=0;
 
+		// init simulation
 		init_simulation(&(centralData.sim_model),&(centralData.imu1.attitude));
 		centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
 		

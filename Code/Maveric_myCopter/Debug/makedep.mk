@@ -12,8 +12,6 @@ Library\control\pid_control.c
 
 Library\control\stabilisation_copter.c
 
-Library\control\stabilisation_hybrid.c
-
 Library\hal\analog_monitor.c
 
 Library\hal\i2c_driver_int.c

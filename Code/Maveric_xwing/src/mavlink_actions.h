@@ -11,6 +11,7 @@
 
 #ifndef MAVLINK_ACTIONS_H_
 #define MAVLINK_ACTIONS_H_
+
 #include "mavlink_stream.h"
 
 void add_PID_parameters(void);
