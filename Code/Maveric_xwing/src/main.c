@@ -104,17 +104,13 @@ void main (void)
 	
 	// turn on simulation mode: 1: simulation mode, 0: reality
 	centralData->simulation_mode = 0;
-	
-	// main loop
-	
+
 	while (1==1) {
 		
 		//run_scheduler_update(get_main_taskset(), FIXED_PRIORITY);
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
 		
 		//LED_On(LED1);
-
-		
 	}		
 }
 
