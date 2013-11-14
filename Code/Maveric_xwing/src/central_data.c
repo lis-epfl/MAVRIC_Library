@@ -24,7 +24,6 @@ void initialise_central_data(){
 		
 		// init stabilisers
 		init_stabilisation_hybrid(&centralData.stabiliser_stack);
-		// centralData.stabilisers_stack = 
 
 		centralData.simulation_mode=0;
 
