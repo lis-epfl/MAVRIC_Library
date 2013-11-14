@@ -29,21 +29,21 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  12 .debug_pubnames 00007a1c  00000000  00000000  00035468  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_info   0005e4ce  00000000  00000000  0003ce84  2**0
+ 13 .debug_info   0005e4c8  00000000  00000000  0003ce84  2**0
                   CONTENTS, READONLY, DEBUGGING
- 14 .debug_abbrev 00009320  00000000  00000000  0009b352  2**0
+ 14 .debug_abbrev 00009320  00000000  00000000  0009b34c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 15 .debug_line   00011719  00000000  00000000  000a4672  2**0
+ 15 .debug_line   00011719  00000000  00000000  000a466c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_frame  00008898  00000000  00000000  000b5d8c  2**2
+ 16 .debug_frame  00008898  00000000  00000000  000b5d88  2**2
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_str    0000ec0c  00000000  00000000  000be624  2**0
+ 17 .debug_str    0000ec0a  00000000  00000000  000be620  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_loc    0000da02  00000000  00000000  000cd230  2**0
+ 18 .debug_loc    0000da02  00000000  00000000  000cd22a  2**0
                   CONTENTS, READONLY, DEBUGGING
  19 .stack        00001000  0000f000  0000f000  00000400  2**0
                   ALLOC
- 20 .debug_ranges 000005f0  00000000  00000000  000dac38  2**3
+ 20 .debug_ranges 000005f0  00000000  00000000  000dac30  2**3
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .reset:
