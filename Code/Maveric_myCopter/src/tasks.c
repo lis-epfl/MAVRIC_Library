@@ -28,9 +28,6 @@ task_set* get_main_taskset() {
 	return &main_tasks;
 }
 
-task_return_t run_imu_update() {
-	imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);	
-}	
 
 void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 {
@@ -262,9 +259,7 @@ task_return_t set_mav_mode_n_state()
 	
 }
 
-task_return_t run_stabilisation() {
-	int i;
-	
+void run_imu_update() {
 	if (centralData->simulation_mode==1) {
 		simu_update(&centralData->sim_model, &centralData->servos, &(centralData->imu1), &centralData->position_estimator);
 		
@@ -277,6 +272,13 @@ task_return_t run_stabilisation() {
 		imu_get_raw_data(&(centralData->imu1));
 		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 	}
+}	
+
+
+task_return_t run_stabilisation() {
+	int i;
+	
+	run_imu_update();
 
 	switch(centralData->mav_mode)
 	{
