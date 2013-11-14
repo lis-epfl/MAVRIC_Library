@@ -12,7 +12,6 @@
 
 static volatile acc_data acc_outputs;
 
-static  i2c_schedule_event gyro_event;
 
 #define CONFIG_POWER_ADDRESS 0x2D
 
@@ -30,33 +29,6 @@ uint8_t data_configuration[2] ={
 DATA_SETTING_ADDRESS, FULL_RES | RANGE_16G};
 
 
-void init_adxl345(void) {
-	
-
-	gyro_event.callback=0;
-	gyro_event.repetition_rate_ms=5;
-	gyro_event.trigger_next_event=-1;
-
-	gyro_event.config.slave_address=ADXL_ALT_SLAVE_ADDRESS;
-	gyro_event.config.direction=I2C_WRITE;
-	gyro_event.config.read_data=&acc_outputs.raw_data;
-	gyro_event.config.read_count=6;
-	gyro_event.config.write_data=&default_configuration;
-	gyro_event.config.write_count=2;
-	gyro_event.config.i2c_speed=400000;
-	
-	i2c_add_request(0, &gyro_event);
-	i2c_trigger_request(0, gyro_event.schedule_slot);
-	
-	
-	gyro_event.config.direction=I2C_WRITE1_THEN_READ;
-	gyro_event.config.write_then_read_preamble=SENSOR_REG_ADDRESS;
-	gyro_event.config.read_data=&acc_outputs;
-	gyro_event.config.read_count=6;
-	i2c_change_request(0, &gyro_event);
-	i2c_trigger_request(0, gyro_event.schedule_slot);
-	/**/
-}
 
 void init_adxl345_slow(void) {
 	static twim_options_t twi_opt= {
@@ -71,15 +43,11 @@ void init_adxl345_slow(void) {
 	twim_write(&AVR32_TWIM0, (uint8_t*)&data_configuration, 2, ADXL_ALT_SLAVE_ADDRESS, false);
 }
 
-acc_data* get_acc_data(void) {
-	i2c_trigger_request(0, gyro_event.schedule_slot);
-	return &acc_outputs;
-}
 
 acc_data* get_acc_data_slow(void) {
 	int i;
-	gyro_event.config.write_then_read_preamble=SENSOR_REG_ADDRESS;
-	twim_write(&AVR32_TWIM0, (uint8_t*) &gyro_event.config.write_then_read_preamble, 1, ADXL_ALT_SLAVE_ADDRESS, false);
+	uint8_t write_then_read_preamble=SENSOR_REG_ADDRESS;
+	twim_write(&AVR32_TWIM0, (uint8_t*) &write_then_read_preamble, 1, ADXL_ALT_SLAVE_ADDRESS, false);
 	twim_read(&AVR32_TWIM0, (uint8_t*)&acc_outputs, 6, ADXL_ALT_SLAVE_ADDRESS, false);
 	
 	for (i=0; i<3; i++) {

@@ -22,13 +22,13 @@ void init_orca()
 	centralData = get_central_data();
 	centralData->safe_size = SIZE_VHC_ORCA;
 		
-	timeHorizon = 8.0;
+	timeHorizon = TIME_HORIZON;
 	invTimeHorizon = 1.0/timeHorizon;
 }
 
 void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 {
-	int8_t ind, i;
+	uint8_t ind, i;
 	
 	plane_t planes[MAX_NUM_NEIGHBORS];
 	
@@ -37,7 +37,7 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 	float relativePosition[3], relativeVelocity[3];
 	float combinedRadius, distSq, combinedRadiusSq, dotProduct, wLength, wLenghtSq;
 	
-	float w[3], unitW[3], u[3], neighor_bf[3];
+	float w[3], unitW[3], u[3];
 	
 	for (i=0;i<3;i++)
 	{
@@ -75,13 +75,9 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		q_neighbor.v[2] = relativeVelocity[2];
 		q_neighbor_bf = quat_global_to_local(centralData->imu1.attitude.qe,q_neighbor);
 		
-		neighor_bf[0] = q_neighbor_bf.v[0];
-		neighor_bf[1] = q_neighbor_bf.v[1];
-		neighor_bf[2] = q_neighbor_bf.v[2];
-		
 		for (i=0;i<3;i++)
 		{
-			relativeVelocity[i] = neighor_bf[i];
+			relativeVelocity[i] = q_neighbor_bf.v[i];
 		}
 		
 		q_neighbor.s = 0.0;
@@ -90,13 +86,9 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		q_neighbor.v[2] = relativePosition[2];
 		q_neighbor_bf = quat_global_to_local(centralData->imu1.attitude.qe,q_neighbor);
 		
-		neighor_bf[0] = q_neighbor_bf.v[0];
-		neighor_bf[1] = q_neighbor_bf.v[1];
-		neighor_bf[2] = q_neighbor_bf.v[2];
-		
 		for (i=0;i<3;i++)
 		{
-			relativePosition[i] = neighor_bf[i];
+			relativePosition[i] = q_neighbor_bf.v[i];
 		}
 		
 		distSq = vector_norm_sqr(relativePosition);
@@ -106,6 +98,7 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		
 		if (distSq > combinedRadiusSq)
 		{
+			/* No collisions */
 			for (i=0;i<3;i++)
 			{
 				w[i] = relativeVelocity[i] - invTimeHorizon * relativePosition[i];
@@ -173,20 +166,18 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		}
 		
 	}
-	float planeFail = linearProgram3(planes, OptimalVelocity, MAXSPEED, NewVelocity, false);
+	float planeFail = linearProgram3(planes,centralData->number_of_neighbors, OptimalVelocity, MAXSPEED, NewVelocity, false);
 	if (planeFail < centralData->number_of_neighbors)
 	{
-		linearProgram4(planes,planeFail,MAXSPEED,NewVelocity);
+		linearProgram4(planes,centralData->number_of_neighbors,planeFail,MAXSPEED,NewVelocity);
 	}
 	
 	loop_count_orca = loop_count_orca++ % 100;
-	
 	float orca_diff[3];
 	for (i=0;i<3;i++)
 	{
 		orca_diff[i] = OptimalVelocity[i] - NewVelocity[i];
 	}
-	
 	if (loop_count_orca == 0)
 	{
 		dbg_print("Orca diffvel:");
@@ -211,9 +202,9 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 
 }
 
-bool linearProgram1(plane_t planes[], int8_t index, line_t line, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt)
+bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt)
 {
-	int8_t i;
+	uint8_t i;
 	
 	float dotProduct = scalar_product(line.point,line.direction);
 	float discriminant = SQR(dotProduct) + SQR(maxSpeed) - vector_norm_sqr(line.point);
@@ -228,7 +219,7 @@ bool linearProgram1(plane_t planes[], int8_t index, line_t line, float maxSpeed,
 	float tLeft = -dotProduct - sqrtDiscriminant;
 	float tRight = -dotProduct + sqrtDiscriminant;
 	
-	int8_t index2;
+	uint8_t index2;
 	for (index2=0;index2<index;index2++)
 	{
 		float diffPoints[3];
@@ -314,9 +305,9 @@ bool linearProgram1(plane_t planes[], int8_t index, line_t line, float maxSpeed,
 	return true;
 }
 
-bool linearProgram2(plane_t planes[], int8_t ind, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt)
+bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt)
 {
-	int8_t i;
+	uint8_t i;
 	
 	float planeDist = scalar_product(planes[ind].point,planes[ind].normal);
 	float planeDistSq = SQR(planeDist);
@@ -389,7 +380,7 @@ bool linearProgram2(plane_t planes[], int8_t ind, float maxSpeed, float OptimalV
 		}
 	}
 	
-	int8_t index;
+	uint8_t index;
 	for (index=0;index<ind;index++)
 	{
 		float diffPtsNewVel[3];
@@ -440,9 +431,9 @@ bool linearProgram2(plane_t planes[], int8_t ind, float maxSpeed, float OptimalV
 	return true;
 }
 
-float linearProgram3(plane_t planes[], float OptimalVelocity[], float maxSpeed, float NewVelocity[], bool directionOpt)
+float linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelocity[], float maxSpeed, float NewVelocity[], bool directionOpt)
 {
-	int8_t i;
+	uint8_t i;
 	
 	if (directionOpt)
 	{
@@ -466,9 +457,9 @@ float linearProgram3(plane_t planes[], float OptimalVelocity[], float maxSpeed, 
 		}
 	}
 	
-	int8_t ind;
+	uint8_t ind;
 	
-	for (ind=0;ind<centralData->number_of_neighbors;ind++)
+	for (ind=0;ind<planeSize;ind++)
 	{
 		float diffPointVel[3];
 		for (i=0;i<3;i++)
@@ -494,20 +485,20 @@ float linearProgram3(plane_t planes[], float OptimalVelocity[], float maxSpeed, 
 			}
 		}
 	}
-	return centralData->number_of_neighbors;
+	return planeSize;
 }
 
-void linearProgram4(plane_t planes[], int8_t ind, float maxSpeed, float NewVelocity[])
+void linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float maxSpeed, float NewVelocity[])
 {
-	int8_t i;
+	uint8_t i;
 	
-	int8_t index,index2;
+	uint8_t index,index2;
 	
 	plane_t projPlanes[MAX_NUM_NEIGHBORS];
 	
 	float distance = 0.0;
 	
-	for (index = ind;index<centralData->number_of_neighbors;index++)
+	for (index = ind;index < planeSize;index++)
 	{
 		float diffPointVel[3];
 		for (i=0;i<3;i++)
@@ -552,15 +543,19 @@ void linearProgram4(plane_t planes[], int8_t ind, float maxSpeed, float NewVeloc
 					for (i=0;i<3;i++)
 					{
 						plane.point[i] = planes[index].point[i] + (scalarProdPtsNormal / scalarProdNormals) * lineNormal[i];
-						plane.normal[i] = planes[index2].normal[i] - planes[index].normal[i];
-					}
-					
-					float normNormal = vector_norm(plane.normal);
-					for(i=0;i<3;i++)
-					{
-						plane.normal[i] = plane.normal[i] / normNormal;
 					}
 				}
+				
+				for (i=0;i<3;i++)
+				{
+					plane.normal[i] = planes[index2].normal[i] - planes[index].normal[i];
+				}
+				float normNormal = vector_norm(plane.normal);
+				for(i=0;i<3;i++)
+				{
+					plane.normal[i] = plane.normal[i] / normNormal;
+				}
+				
 				projPlanes[index2] = plane;
 			}
 			
@@ -569,7 +564,7 @@ void linearProgram4(plane_t planes[], int8_t ind, float maxSpeed, float NewVeloc
 			{
 				tempResult[i] = NewVelocity[i];
 			}
-			if (linearProgram3(projPlanes,planes[index].normal,maxSpeed,NewVelocity,true)<index)
+			if (linearProgram3(projPlanes,index2,planes[index].normal,maxSpeed,NewVelocity,true)<index2)
 			{
 				for (i=0;i<3;i++)
 				{

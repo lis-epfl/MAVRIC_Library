@@ -10,13 +10,13 @@
   <VirtualDirectory Name="Maveric_emu">
     <File Name="boardsupport.h"/>
     <File Name="boardsupport.c"/>
-    <File Name="../Maveric_main/src/central_data.h"/>
-    <File Name="../Maveric_main/src/central_data.c"/>
-    <File Name="../Maveric_main/src/tasks.c"/>
-    <File Name="../Maveric_main/src/tasks.h"/>
-    <File Name="../Maveric_main/src/mavlink_actions.c"/>
-    <File Name="../Maveric_main/src/mavlink_actions.h"/>
     <File Name="main.c"/>
+    <File Name="../Maveric_myCopter/src/central_data.c"/>
+    <File Name="../Maveric_myCopter/src/central_data.h"/>
+    <File Name="../Maveric_myCopter/src/mavlink_actions.c"/>
+    <File Name="../Maveric_myCopter/src/mavlink_actions.h"/>
+    <File Name="../Maveric_myCopter/src/tasks.c"/>
+    <File Name="../Maveric_myCopter/src/tasks.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Library">
     <VirtualDirectory Name="mavlink">
@@ -226,7 +226,7 @@
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
-      <Compiler Options="" C_Options="">
+      <Compiler Options="" C_Options="" Assembler="">
         <IncludePath Value="."/>
         <IncludePath Value="../Library"/>
         <IncludePath Value="../Library/communication"/>
@@ -239,7 +239,7 @@
         <IncludePath Value="../Library/util"/>
         <IncludePath Value="../Library/tests"/>
         <IncludePath Value="./config"/>
-        <IncludePath Value="../Maveric_main/src"/>
+        <IncludePath Value="../Maveric_myCopter/src"/>
       </Compiler>
       <Linker Options="">
         <LibraryPath Value="."/>
@@ -247,7 +247,7 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="gnu gcc" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-g;-O0;-Wall;-std=gnu99" C_Options="-g;-O0;-Wall;-std=gnu99" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
+      <Compiler Options="-g;-O0;-Wall;-std=gnu99" C_Options="-g;-O0;-Wall;-std=gnu99" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
         <IncludePath Value="./Debug"/>
       </Compiler>
       <Linker Options="-lm" Required="yes">
@@ -256,9 +256,7 @@
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="maveric" IntermediateDirectory="./Debug" Command="./maveric" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="." PauseExecWhenProcTerminates="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
-        <![CDATA[
-      
-      ]]>
+        <![CDATA[]]>
       </Environment>
       <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
         <DebuggerSearchPaths/>
@@ -289,7 +287,7 @@
       </Completion>
     </Configuration>
     <Configuration Name="Release" CompilerType="gnu gcc" DebuggerType="GNU gdb debugger" Type="" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-O2;-Wall" C_Options="-O2;-Wall" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
+      <Compiler Options="-O2;-Wall" C_Options="-O2;-Wall" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
         <IncludePath Value="."/>
       </Compiler>
       <Linker Options="" Required="yes"/>

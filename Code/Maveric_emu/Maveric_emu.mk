@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=felix
-Date                   :=11/12/13
+Date                   :=11/13/13
 CodeLitePath           :="/home/felix/.codelite"
 LinkerName             :=gcc
 SharedObjectLinkerName :=gcc -shared -fPIC
@@ -36,7 +36,7 @@ ObjectsFileList        :="Maveric_emu.txt"
 PCHCompileFlags        :=
 MakeDirCommand         :=mkdir -p
 LinkOptions            :=  -lm
-IncludePath            :=  $(IncludeSwitch). $(IncludeSwitch)../Library $(IncludeSwitch)../Library/communication $(IncludeSwitch)../Library/control $(IncludeSwitch)../Library/hal_emu $(IncludeSwitch)../Library/mavlink $(IncludeSwitch)../Library/mavlink/include/ $(IncludeSwitch)../Library/runtime $(IncludeSwitch)../Library/sensing $(IncludeSwitch)../Library/util $(IncludeSwitch)../Library/tests $(IncludeSwitch)./config $(IncludeSwitch)../Maveric_main/src $(IncludeSwitch)./Debug 
+IncludePath            :=  $(IncludeSwitch). $(IncludeSwitch)../Library $(IncludeSwitch)../Library/communication $(IncludeSwitch)../Library/control $(IncludeSwitch)../Library/hal_emu $(IncludeSwitch)../Library/mavlink $(IncludeSwitch)../Library/mavlink/include/ $(IncludeSwitch)../Library/runtime $(IncludeSwitch)../Library/sensing $(IncludeSwitch)../Library/util $(IncludeSwitch)../Library/tests $(IncludeSwitch)./config $(IncludeSwitch)../Maveric_myCopter/src $(IncludeSwitch)./Debug 
 IncludePCH             := 
 RcIncludePath          := 
 Libs                   := 
@@ -60,7 +60,7 @@ AS       := as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/boardsupport$(ObjectSuffix) $(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IntermediateDirectory)/src_tasks$(ObjectSuffix) $(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IntermediateDirectory)/main$(ObjectSuffix) $(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) $(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) $(IntermediateDirectory)/util_sinus$(ObjectSuffix) $(IntermediateDirectory)/util_print_util$(ObjectSuffix) $(IntermediateDirectory)/util_buffer$(ObjectSuffix) \
+Objects0=$(IntermediateDirectory)/boardsupport$(ObjectSuffix) $(IntermediateDirectory)/main$(ObjectSuffix) $(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IntermediateDirectory)/src_tasks$(ObjectSuffix) $(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) $(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) $(IntermediateDirectory)/util_sinus$(ObjectSuffix) $(IntermediateDirectory)/util_print_util$(ObjectSuffix) $(IntermediateDirectory)/util_buffer$(ObjectSuffix) \
 	$(IntermediateDirectory)/sensing_imu$(ObjectSuffix) $(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix) $(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix) $(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) $(IntermediateDirectory)/sensing_estimator$(ObjectSuffix) $(IntermediateDirectory)/sensing_mavlink_waypoint_handler$(ObjectSuffix) $(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix) $(IntermediateDirectory)/control_navigation$(ObjectSuffix) $(IntermediateDirectory)/control_stabilisation$(ObjectSuffix) $(IntermediateDirectory)/control_control$(ObjectSuffix) \
 	$(IntermediateDirectory)/control_neighbor_selection$(ObjectSuffix) $(IntermediateDirectory)/control_orca$(ObjectSuffix) $(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix) $(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_adxl345_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_bmp085$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_radar_module_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_servo_pwm$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_led$(ObjectSuffix) \
 	$(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_udp_stream$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_joystick_rc$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(ObjectSuffix) $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) 
@@ -98,30 +98,6 @@ $(IntermediateDirectory)/boardsupport$(DependSuffix): boardsupport.c
 $(IntermediateDirectory)/boardsupport$(PreprocessSuffix): boardsupport.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/boardsupport$(PreprocessSuffix) "boardsupport.c"
 
-$(IntermediateDirectory)/src_central_data$(ObjectSuffix): ../Maveric_main/src/central_data.c $(IntermediateDirectory)/src_central_data$(DependSuffix)
-	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_main/src/central_data.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/src_central_data$(DependSuffix): ../Maveric_main/src/central_data.c
-	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_central_data$(ObjectSuffix) -MF$(IntermediateDirectory)/src_central_data$(DependSuffix) -MM "../Maveric_main/src/central_data.c"
-
-$(IntermediateDirectory)/src_central_data$(PreprocessSuffix): ../Maveric_main/src/central_data.c
-	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_central_data$(PreprocessSuffix) "../Maveric_main/src/central_data.c"
-
-$(IntermediateDirectory)/src_tasks$(ObjectSuffix): ../Maveric_main/src/tasks.c $(IntermediateDirectory)/src_tasks$(DependSuffix)
-	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_main/src/tasks.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_tasks$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/src_tasks$(DependSuffix): ../Maveric_main/src/tasks.c
-	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_tasks$(ObjectSuffix) -MF$(IntermediateDirectory)/src_tasks$(DependSuffix) -MM "../Maveric_main/src/tasks.c"
-
-$(IntermediateDirectory)/src_tasks$(PreprocessSuffix): ../Maveric_main/src/tasks.c
-	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_tasks$(PreprocessSuffix) "../Maveric_main/src/tasks.c"
-
-$(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix): ../Maveric_main/src/mavlink_actions.c $(IntermediateDirectory)/src_mavlink_actions$(DependSuffix)
-	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_main/src/mavlink_actions.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/src_mavlink_actions$(DependSuffix): ../Maveric_main/src/mavlink_actions.c
-	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) -MF$(IntermediateDirectory)/src_mavlink_actions$(DependSuffix) -MM "../Maveric_main/src/mavlink_actions.c"
-
-$(IntermediateDirectory)/src_mavlink_actions$(PreprocessSuffix): ../Maveric_main/src/mavlink_actions.c
-	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_mavlink_actions$(PreprocessSuffix) "../Maveric_main/src/mavlink_actions.c"
-
 $(IntermediateDirectory)/main$(ObjectSuffix): main.c $(IntermediateDirectory)/main$(DependSuffix)
 	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_emu/main.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/main$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/main$(DependSuffix): main.c
@@ -129,6 +105,30 @@ $(IntermediateDirectory)/main$(DependSuffix): main.c
 
 $(IntermediateDirectory)/main$(PreprocessSuffix): main.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/main$(PreprocessSuffix) "main.c"
+
+$(IntermediateDirectory)/src_central_data$(ObjectSuffix): ../Maveric_myCopter/src/central_data.c $(IntermediateDirectory)/src_central_data$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_myCopter/src/central_data.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/src_central_data$(DependSuffix): ../Maveric_myCopter/src/central_data.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_central_data$(ObjectSuffix) -MF$(IntermediateDirectory)/src_central_data$(DependSuffix) -MM "../Maveric_myCopter/src/central_data.c"
+
+$(IntermediateDirectory)/src_central_data$(PreprocessSuffix): ../Maveric_myCopter/src/central_data.c
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_central_data$(PreprocessSuffix) "../Maveric_myCopter/src/central_data.c"
+
+$(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix): ../Maveric_myCopter/src/mavlink_actions.c $(IntermediateDirectory)/src_mavlink_actions$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_myCopter/src/mavlink_actions.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/src_mavlink_actions$(DependSuffix): ../Maveric_myCopter/src/mavlink_actions.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) -MF$(IntermediateDirectory)/src_mavlink_actions$(DependSuffix) -MM "../Maveric_myCopter/src/mavlink_actions.c"
+
+$(IntermediateDirectory)/src_mavlink_actions$(PreprocessSuffix): ../Maveric_myCopter/src/mavlink_actions.c
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_mavlink_actions$(PreprocessSuffix) "../Maveric_myCopter/src/mavlink_actions.c"
+
+$(IntermediateDirectory)/src_tasks$(ObjectSuffix): ../Maveric_myCopter/src/tasks.c $(IntermediateDirectory)/src_tasks$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_myCopter/src/tasks.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_tasks$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/src_tasks$(DependSuffix): ../Maveric_myCopter/src/tasks.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_tasks$(ObjectSuffix) -MF$(IntermediateDirectory)/src_tasks$(DependSuffix) -MM "../Maveric_myCopter/src/tasks.c"
+
+$(IntermediateDirectory)/src_tasks$(PreprocessSuffix): ../Maveric_myCopter/src/tasks.c
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_tasks$(PreprocessSuffix) "../Maveric_myCopter/src/tasks.c"
 
 $(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix): ../Library/runtime/scheduler.c $(IntermediateDirectory)/runtime_scheduler$(DependSuffix)
 	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/runtime/scheduler.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) $(IncludePath)
@@ -395,18 +395,18 @@ clean:
 	$(RM) $(IntermediateDirectory)/boardsupport$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/boardsupport$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/boardsupport$(PreprocessSuffix)
-	$(RM) $(IntermediateDirectory)/src_central_data$(ObjectSuffix)
-	$(RM) $(IntermediateDirectory)/src_central_data$(DependSuffix)
-	$(RM) $(IntermediateDirectory)/src_central_data$(PreprocessSuffix)
-	$(RM) $(IntermediateDirectory)/src_tasks$(ObjectSuffix)
-	$(RM) $(IntermediateDirectory)/src_tasks$(DependSuffix)
-	$(RM) $(IntermediateDirectory)/src_tasks$(PreprocessSuffix)
-	$(RM) $(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix)
-	$(RM) $(IntermediateDirectory)/src_mavlink_actions$(DependSuffix)
-	$(RM) $(IntermediateDirectory)/src_mavlink_actions$(PreprocessSuffix)
 	$(RM) $(IntermediateDirectory)/main$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/main$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/main$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/src_central_data$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/src_central_data$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/src_central_data$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/src_mavlink_actions$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/src_mavlink_actions$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/src_tasks$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/src_tasks$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/src_tasks$(PreprocessSuffix)
 	$(RM) $(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/runtime_scheduler$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/runtime_scheduler$(PreprocessSuffix)
