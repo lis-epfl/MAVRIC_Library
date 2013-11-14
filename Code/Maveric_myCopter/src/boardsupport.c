@@ -33,6 +33,7 @@
 void initialise_board(central_data_t *centralData) {
 	int i;
 	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
+	
 
 	irq_initialize_vectors();
 	cpu_irq_enable();
@@ -41,12 +42,15 @@ void initialise_board(central_data_t *centralData) {
 	// Initialize the sleep manager
 	sleepmgr_init();
 	sysclk_init();
+
 	board_init();
 	delay_init(sysclk_get_cpu_hz());
 	init_time_keeper();
 		
 	INTC_init_interrupts();
 		
+	
+
 		
 	if (init_i2c(0)!=STATUS_OK) {
 		//putstring(STDOUT, "Error initialising I2C\n");
@@ -104,6 +108,10 @@ void initialise_board(central_data_t *centralData) {
 	centralData->debug_in_stream      =&(centralData->xbee_in_stream);
 */
 
+	//rc_activate_bind_mode();
+
+	rc_init();
+
 	init_analog_monitor();
 	// init mavlink
 	init_mavlink(centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID);
@@ -114,7 +122,6 @@ void initialise_board(central_data_t *centralData) {
 	init_imu(&(centralData->imu1));
 	init_bmp085();
 
-	rc_init();
 
 
 	Enable_global_interrupt();

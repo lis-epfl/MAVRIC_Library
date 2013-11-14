@@ -33,7 +33,7 @@
 
 #define DEADZONE 30.0
 
-#define RC_SCALEFACTOR 1.0/350.0
+#define RC_SCALEFACTOR 1.0/700.0
 
 /*
 typedef struct Turnigy_Receiver {

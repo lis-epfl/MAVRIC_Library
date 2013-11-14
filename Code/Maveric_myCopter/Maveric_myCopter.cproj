@@ -1008,6 +1008,9 @@
     <Compile Include="src\central_data.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\conf_platform.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\conf_stabilisation_copter.h">
       <SubType>compile</SubType>
     </Compile>
@@ -1522,9 +1525,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\conf_clock.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\config\conf_platform.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\conf_sim_model.h">
