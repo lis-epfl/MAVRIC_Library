@@ -188,4 +188,3 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 	// handle all platform-specific messages in mavlink-actions:
 	handle_specific_messages(rec);
 }	
-

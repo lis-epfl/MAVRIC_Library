@@ -103,6 +103,7 @@ void send_parameter(mavlink_param_request_read_t* request) {
 									param_set.parameters[request->param_index].data_type,
 									param_set.param_count,
 									request->param_index);*/
+		if (request->param_index>param_set.param_count) return;
 		param_set.parameters[request->param_index].schedule_for_transmission=true;
 
 	}

@@ -1,19 +1,16 @@
 /*
  * stabilisation.h
  *
- * 3-axis attitude and rate stabilisation for VTOLs
- * 
- * Created: 07/06/2012 21:08:01
- *  Author: Felix Schill
+ * Created: 13/11/2013 15:46:00
+ *  Author: Felix Schill, Julien
  */ 
-
 
 #ifndef STABILISATION_H_
 #define STABILISATION_H_
 
 #include "compiler.h"
 #include "imu.h"
-#include "control.h"
+#include "pid_control.h"
 
  
 typedef enum control_mode_t {VELOCITY_COMMAND_MODE, ATTITUDE_COMMAND_MODE, RATE_COMMAND_MODE} control_mode_t;
@@ -40,18 +37,6 @@ typedef struct {
 	Control_Command_t output;
 } Stabiliser_t;
 
-
-
-void init_stabilisation(void);
-
-Stabiliser_t* get_rate_stabiliser(void);
-Stabiliser_t* get_attitude_stabiliser(void);
-Stabiliser_t* get_velocity_stabiliser(void);
-
-void stabilise(Stabiliser_t *stabiliser, float errors[]);
-void quad_stabilise(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input);
-
-void mix_to_servos_diag_quad(Control_Command_t *control);
-void mix_to_servos_cross_quad(Control_Command_t *control);
+void stabilise(Stabiliser_t *stabiliser, float dt, float errors[]);
 
 #endif /* STABILISATION_H_ */
