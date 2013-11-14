@@ -59,8 +59,7 @@ void initialisation() {
 
 //	calibrate_Gyros(&centralData->imu1);
 	for (i=400; i>0; i--) {
-		imu_get_raw_data(&(centralData->imu1));
-		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);	
+		run_imu_update();
 		mavlink_protocol_update();	
 		delay_ms(5);
 	}
