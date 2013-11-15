@@ -177,7 +177,7 @@
 #define GPS_TYPE_UBX
 
 // define type of remote controller
-#define SPEKTRUM_REMOTE
-//#define TURNIGY_REMOTE
+//#define SPEKTRUM_REMOTE
+#define TURNIGY_REMOTE
 
 #endif /* CONF_PLATFORM_H_ */
