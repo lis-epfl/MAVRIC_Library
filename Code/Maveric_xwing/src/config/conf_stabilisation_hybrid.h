@@ -49,7 +49,7 @@ static Stabiliser_Stack_hybrid_t stabiliser_defaults_hybrid =
 			// ------ PITCH PID ------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 3.0,
+				.p_gain = 1.0,
 				.clip_min = -1.0, 
 				.clip_max = 1.0,
 				.integrator={
@@ -75,7 +75,7 @@ static Stabiliser_Stack_hybrid_t stabiliser_defaults_hybrid =
 			// ------ YAW PID --------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 3.0,
+				.p_gain = 1.0,
 				.clip_min = -1.0, 
 				.clip_max = 1.0,
 				.integrator={
@@ -172,7 +172,7 @@ static Stabiliser_Stack_hybrid_t stabiliser_defaults_hybrid =
 			// ------ PITCH PID ------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 1.5,
+				.p_gain = 1.0,
 				.clip_min = -1.0, 
 				.clip_max = 1.0,
 				.integrator={
@@ -198,7 +198,7 @@ static Stabiliser_Stack_hybrid_t stabiliser_defaults_hybrid =
 			// ------ YAW PID --------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 1.5,
+				.p_gain = 1.0,
 				.clip_min = -1.0, 
 				.clip_max = 1.0,
 				.integrator={

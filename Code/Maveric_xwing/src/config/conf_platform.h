@@ -155,17 +155,17 @@
 #define SERVO_SCALE 500
 
 
-// Definitions of Hybrid platform
-#define MAIN_ENGINE 4 
-#define FLAP_FRONT 1 
-#define FLAP_RIGHT 2 
-#define FLAP_REAR 3 
-#define FLAP_LEFT 0
+// Definitions of Hybrid platform 
+#define FLAP_FRONT 0 
+#define FLAP_RIGHT 1 
+#define FLAP_REAR 2 
+#define FLAP_LEFT 3
+#define MAIN_ENGINE 4
 
-#define FLAP_FRONT_DIR (1) // 1 if positive value gives positive roll, -1 else
-#define FLAP_RIGHT_DIR (1) 
-#define FLAP_REAR_DIR (1) 
-#define FLAP_LEFT_DIR (1)
+#define FLAP_FRONT_DIR (-1) // 1 if positive value gives positive roll, -1 else
+#define FLAP_RIGHT_DIR (-1) 
+#define FLAP_REAR_DIR (-1) 
+#define FLAP_LEFT_DIR (-1)
 
 #define MIN_DEFLECTION -1.0
 #define MAX_DEFLECTION 1.0
