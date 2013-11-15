@@ -37,6 +37,7 @@ void initialisation() {
 	int i;
 	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 
+	
 	centralData = get_central_data();
 	initialise_board(centralData);
 	initialise_central_data();

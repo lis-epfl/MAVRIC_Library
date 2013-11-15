@@ -11,7 +11,7 @@
 #include "gpio.h"
 #include "sysclk.h"
 #include "print_util.h"
-
+#include "delay.h"
 static volatile uint8_t packet_byte_counter=0;
 
 Spektrum_Receiver_t spRec1;
@@ -22,7 +22,9 @@ int16_t channelCenter[16];
 
 ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) {
 	uint8_t c1, c2, i;
+	uint8_t channel_encoding, frame_number;
 	uint16_t sw;
+	uint8_t channel;
 	uint32_t now =get_time_ticks() ;
 	if (REMOTE_UART.csr & AVR32_USART_CSR_RXRDY_MASK) {
 		spRec1.duration=now-spRec1.last_time;
@@ -37,20 +39,63 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) {
 		
 
 		if (buffer_bytes_available(&spRec1.receiver)==16) {
+			// first two bytes are status info
+			c1=buffer_get(&spRec1.receiver);
+			c2=buffer_get(&spRec1.receiver);
+			
+			channel_encoding =(c2 & 0x10)>>4; /* 0 = 11bit, 1 = 10 bit */
+			frame_number     = c2 & 0x03; /* 1 = 1 frame contains all channels */
 			//PORTC.OUT = _BV(5);
 			//putstring(STDOUT, "!");
-			for (i=0; i<8; i++) {
+			for (i=1; i<8; i++) {
 				c1=buffer_get(&spRec1.receiver);
 				c2=buffer_get(&spRec1.receiver);
-				sw=((uint16_t)c1)*256 +((uint16_t)c2);
+				sw=(uint16_t)c1<<8 | ((uint16_t)c2);
 				//if (c1 & 0x80==0)
-				spRec1.channels[(c1 & 0x3c)>>2]=sw&0x3ff;
+				if (channel_encoding==1) {
+					// highest bit is frame 0/1, bits 2-6 are channel number
+					channel=((c1&0x80)*8+(c1>>2))&0x0f;
+					// 10 bits per channel
+					spRec1.channels[channel]=((int16_t)(sw&0x3ff) - 512)*2;
+				} else if (channel_encoding==0) {
+					// highest bit is frame 0/1, bits 3-7 are channel number
+					channel=((c1&0x80)*8+(c1>>3))&0x0f;
+					// 11 bits per channel
+					spRec1.channels[channel]=((int16_t)(sw&0x7ff) -1024);
+				} else {
+					// shouldn't happen!
+				}
 				//spRec1.channels[i]=sw&0x3ff;
 				spRec1.valid=1;
 				spRec1.last_update=now;
 			}
 		}
 	}		
+}
+
+void rc_activate_bind_mode() {
+	int i=0;
+	unsigned long cpu_freq=sysclk_get_cpu_hz();
+	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_DOWN);	
+	delay_ms(1);
+	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT| GPIO_INIT_LOW);
+	//delay_ms(10);
+	//wait 10 seconds for spektrum to be plugged in
+	while ((gpio_get_pin_value(DSM_RECEIVER_PIN) == 0) && (i<10000)) {
+		i++;
+		delay_ms(1);
+
+	}
+	// wait 100ms after receiver startup
+	delay_ms(100);
+	// create 4 pulses with 126us to set receiver to bind mode
+	for (i=0; i<3; i++) {
+		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+		cpu_delay_us(113, cpu_freq); 
+		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_UP);	
+		cpu_delay_us(118, cpu_freq);
+	}
+
 }
 
 void rc_init (void) {
@@ -69,8 +114,8 @@ void rc_init (void) {
    };
 	int i;
 	for (i=0; i<16; i++) {
-		spRec1.channels[i]=500;
-		spRec2.channels[i]=500;
+		spRec1.channels[i]=0;
+		spRec2.channels[i]=0;
 		channelCenter[i]=0;
 	}
 	spRec1.channels[RC_THROTTLE]=0;
@@ -92,7 +137,7 @@ void rc_init (void) {
 /**/
 int16_t rc_get_channel(uint8_t index) {
 	//if (checkReceiver1()<checkReceiver2()) {
-		return spRec1.channels[index]-500;
+		return spRec1.channels[index];
 	//} else {
 	//	return spRec2.channels[index]-500;
 	//}
@@ -118,17 +163,17 @@ int8_t checkReceiver1() {
 		return 1;
 	} else
 	if (duration<1500000) {
-		spRec1.channels[RC_ROLL]=500;	
-		spRec1.channels[RC_PITCH]=500;	
-		spRec1.channels[RC_YAW]=500;	
+		spRec1.channels[RC_ROLL]=0;	
+		spRec1.channels[RC_PITCH]=0;	
+		spRec1.channels[RC_YAW]=0;	
 		return -1; // brief drop out - hold pattern
 		
 	} else {
 		spRec1.valid = 0;
 		for (i=1; i<8; i++) {
-			spRec1.channels[i]=500;			
+			spRec1.channels[i]=0;			
 		}
-		spRec1.channels[RC_THROTTLE]=0;
+		spRec1.channels[RC_THROTTLE]=-1000;
 		return -2; // fade - fail safe
 
 	}
@@ -147,9 +192,9 @@ int8_t checkReceiver2(){
 	} else {
 		spRec2.valid = 0;
 		for (i=1; i<8; i++) {
-			spRec2.channels[i]=500;
+			spRec2.channels[i]=0;
 		}
-		spRec2.channels[RC_THROTTLE]=0;
+		spRec2.channels[RC_THROTTLE]=-1000;
 		return -2; // fade - fail safe
 
 	}

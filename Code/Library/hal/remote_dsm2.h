@@ -13,10 +13,12 @@
 
 #define REMOTE_UART AVR32_USART1
 
+#define DSM_RECEIVER_PIN AVR32_PIN_PD12
+//#define SPEKTRUM_10BIT
 
 typedef struct Spektrum_Receiver {
 	Buffer_t receiver;
-	uint16_t channels[16];
+	 int16_t channels[16];
 	uint32_t last_update;
 	uint8_t valid;
 	uint32_t last_time;
@@ -24,7 +26,12 @@ typedef struct Spektrum_Receiver {
 } Spektrum_Receiver_t;
 
 
+// function to set slave receiver into bind mode. has to be called 100ms after power-up
+void rc_activate_bind_mode();
+
+// initialise UART receiver for Spektrum/DSM2 slave receivers
 void    rc_init (void);
+
 int16_t rc_get_channel(uint8_t index);
 void    rc_center_channel(uint8_t index);
 int16_t rc_get_channel_neutral(uint8_t index);
