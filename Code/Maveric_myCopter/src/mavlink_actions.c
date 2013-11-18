@@ -502,6 +502,9 @@ void handle_specific_messages (Mavlink_Received_t* rec) {
 				case MAVLINK_MSG_ID_COMMAND_LONG : { // 76
 					receive_message_long(rec);
 				}
+				case MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN: { // 48
+					set_home(rec);
+				}
 				break;
 		}
 	} else if (rec->msg.msgid == MAVLINK_MSG_ID_GLOBAL_POSITION_INT)
@@ -618,6 +621,36 @@ void receive_message_long(Mavlink_Received_t* rec)
 			break;
 			case MAV_CMD_DO_SET_HOME: {
 				/* Changes the home location either to the current location or a specified location. |Use current (1=use current location, 0=use specified location)| Empty| Empty| Empty| Latitude| Longitude| Altitude|  */
+				if (packet.param1 == 1)
+				{
+					// Set new home position to actual position
+					dbg_print("Set new home location to actual position.\n");
+					centralData->position_estimator.localPosition.origin = local_to_global_position(centralData->position_estimator.localPosition);
+					
+					dbg_print("New Home location: (");
+					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0,10);
+					dbg_print(", ");
+					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0,10);
+					dbg_print(", ");
+					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0,10);
+					dbg_print(")\n");
+				}else{
+					// Set new home position from msg
+					dbg_print("Set new home location. \n");
+					
+					centralData->position_estimator.localPosition.origin.latitude = packet.param5;
+					centralData->position_estimator.localPosition.origin.longitude = packet.param6;
+					centralData->position_estimator.localPosition.origin.altitude = packet.param7;
+					
+					dbg_print("New Home location: (");
+					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0,10);
+					dbg_print(", ");
+					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0,10);
+					dbg_print(", ");
+					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0,10);
+					dbg_print(")\n");
+				}
+				
 			}
 			break;
 			case MAV_CMD_DO_SET_PARAMETER: {
@@ -729,7 +762,7 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_speed_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT);
 
-	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_servo_output, MAVLINK_MSG_ID_SERVO_OUTPUT_RAW);
+	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &mavlink_send_servo_output, MAVLINK_MSG_ID_SERVO_OUTPUT_RAW);
 
 //	add_task(get_mavlink_taskset(),  50000, &mavlink_send_radar);
 	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
@@ -738,7 +771,7 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
 	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
 
-	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_simulation, MAVLINK_MSG_ID_HIL_STATE);
+	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_simulation, MAVLINK_MSG_ID_HIL_STATE);
 
 	//add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);

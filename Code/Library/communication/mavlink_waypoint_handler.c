@@ -529,6 +529,33 @@ void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints
 	}		
 }
 
+void set_home(Mavlink_Received_t* rec)
+{
+	mavlink_set_gps_global_origin_t packet;
+	mavlink_msg_set_gps_global_origin_decode(&rec->msg,&packet);
+	// Check if this message is for this system and subsystem
+	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
+	{
+		dbg_print("Set new home location.\n");
+		centralData->position_estimator.localPosition.origin.latitude = (double) packet.latitude / 10000000.0;
+		centralData->position_estimator.localPosition.origin.longitude = (double) packet.longitude / 10000000.0;
+		centralData->position_estimator.localPosition.origin.altitude = (float) packet.altitude / 1000.0;
+		
+		dbg_print("New Home location: (");
+		dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0,10);
+		dbg_print(", ");
+		dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0,10);
+		dbg_print(", ");
+		dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0,10);
+		dbg_print(")\n");
+		
+		mavlink_msg_gps_global_origin_send(MAVLINK_COMM_0,
+		centralData->position_estimator.localPosition.origin.latitude*10000000.0,
+		centralData->position_estimator.localPosition.origin.longitude*10000000.0,
+		centralData->position_estimator.localPosition.origin.altitude*1000.0);
+	}
+}
+
 void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* board_mav_state, uint8_t sim_mode)
 {
 	mavlink_set_mode_t packet;
@@ -720,6 +747,28 @@ void wp_hold_init()
 	Aero_Attitude_t aero_attitude;
 	aero_attitude=Quat_to_Aero(centralData->imu1.attitude.qe);
 	centralData->waypoint_hold_coordinates.heading = aero_attitude.rpy[2];
+}
+
+void wp_take_off()
+{
+	dbg_print("Automatic take-off. Position hold at: (");
+	dbg_print_num(centralData->position_estimator.localPosition.pos[X],10);
+	dbg_print(", ");
+	dbg_print_num(centralData->position_estimator.localPosition.pos[Y],10);
+	dbg_print(", ");
+	dbg_print_num(-10.0,10);
+	dbg_print(", ");
+	dbg_print_num((int)(centralData->position_estimator.localPosition.heading*180.0/3.14),10);
+	dbg_print(")\n");
+
+	centralData->waypoint_hold_coordinates = centralData->position_estimator.localPosition;
+	centralData->waypoint_hold_coordinates.pos[Z] = -10.0;
+	
+	Aero_Attitude_t aero_attitude;
+	aero_attitude=Quat_to_Aero(centralData->imu1.attitude.qe);
+	centralData->waypoint_hold_coordinates.heading = aero_attitude.rpy[2];
+	
+	centralData->dist2wp_sqr = 100.0; // same position, 10m above => distSqr = 100.0
 }
 
 void waypoint_hold_position_handler()

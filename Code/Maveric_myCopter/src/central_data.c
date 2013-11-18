@@ -22,6 +22,8 @@ void initialise_central_data(){
 		centralData.controls.rpy[YAW]=0;
 		centralData.controls.thrust=-1.0;
 		
+		centralData.controls.run_mode = MOTORS_OFF;
+		
 		// init stabilisers
 		init_stabilisation_copter(&centralData.stabiliser_stack);
 		// centralData.stabilisers_stack = 
@@ -37,7 +39,8 @@ void initialise_central_data(){
 		centralData.critical_landing = false;
 		
 		centralData.collision_avoidance = false;
-
+		centralData.automatic_take_off = false;
+		
 		// default GPS home position
 		centralData.position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;
 		centralData.position_estimator.localPosition.origin.latitude =   HOME_LATITUDE;

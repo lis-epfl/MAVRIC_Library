@@ -95,6 +95,7 @@ typedef struct  {
 	bool critical_next_state;
 	
 	bool collision_avoidance;
+	bool automatic_take_off;
 	
 	uint8_t mav_mode;
 	uint8_t mav_state;
