@@ -22,6 +22,6 @@
 #define RC_SAFETY 5
 #define RC_ID_MODE 6
 
-
+#define RC_TRIM_P3 7
 
 #endif

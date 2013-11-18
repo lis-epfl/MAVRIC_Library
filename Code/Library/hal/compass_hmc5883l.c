@@ -33,8 +33,8 @@ void init_hmc5883_slow() {
 compass_data* get_compass_data_slow() {
 	int i;
 	uint8_t start_address=DataRegBegin;
-	//twim_write(&AVR32_TWIM0, (uint8_t*) &start_address, 1, HMC5883_SLAVE_ADDRESS, false);
-	//twim_read(&AVR32_TWIM0, (uint8_t*)&(compass_outputs.raw_data), 6, HMC5883_SLAVE_ADDRESS, false);
+	twim_write(&AVR32_TWIM0, (uint8_t*) &start_address, 1, HMC5883_SLAVE_ADDRESS, false);
+	twim_read(&AVR32_TWIM0, (uint8_t*)&(compass_outputs.raw_data), 6, HMC5883_SLAVE_ADDRESS, false);
 	
 	for (i=0; i<3; i++) {
 		compass_outputs.axes[i]=(int16_t)(compass_outputs.raw_data[2*i]<<8)+(int16_t)(compass_outputs.raw_data[2*i+1]);
