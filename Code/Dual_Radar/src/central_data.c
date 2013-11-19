@@ -21,5 +21,5 @@ byte_stream_t* get_telemetry_downstream() {
 	return central_data.telemetry_down_stream;
 }
 byte_stream_t* get_debug_stream() {
-	return &central_data.debug_stream;
+	return central_data.debug_out_stream;
 }

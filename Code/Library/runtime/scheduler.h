@@ -50,19 +50,19 @@ typedef struct {
 } task_entry;
 
 typedef struct  {
-	task_handle_t number_of_tasks;
+	uint8_t number_of_tasks;
 	int running_task;
 	int current_schedule_slot;
 	task_entry tasks[];
 } task_set;
 
-#define NEW_TASK_SET(NAME,NUMBER) struct task_set {const task_handle_t number_of_tasks; task_entry tasks[NUMBER];} NAME = {.number_of_tasks=NUMBER}; 
+#define NEW_TASK_SET(NAME,NUMBER) struct task_set {const task_handle_t number_of_tasks; int running_task; int current_schedule_slot; task_entry tasks[NUMBER];} NAME = {.number_of_tasks=NUMBER}; 
 
 void init_scheduler(task_set *ts);
 
-task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_period, task_run_mode_t run_mode, function_pointer *call_function);
+task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_period, task_run_mode_t run_mode, function_pointer call_function);
 
-bool add_task(task_set *ts, unsigned long repeat_period, task_run_mode_t run_mode, function_pointer *call_function, uint32_t task_id);
+bool add_task(task_set *ts, unsigned long repeat_period, task_run_mode_t run_mode, function_pointer call_function, uint32_t task_id);
 void sort_taskset_by_period(task_set *ts);
 
 

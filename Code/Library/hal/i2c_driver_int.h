@@ -26,7 +26,7 @@ typedef struct {
 	uint32_t		i2c_speed;     // speed of i2c bus clock in kHz/kbps. Normally 100-400
 	char			direction;
 	char			write_then_read_preamble;
-	uint8_t			data;
+	uint8_t			*data;
 	uint16_t        data_size;
 	uint16_t		data_index;
 	bool			transfer_in_progress;

@@ -22,7 +22,7 @@ void init_scheduler(task_set *ts) {
 	ts->current_schedule_slot=0;
 }
 
-task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_period, task_run_mode_t run_mode, function_pointer *call_function) {
+task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_period, task_run_mode_t run_mode, function_pointer call_function) {
 	if ((task_slot<0) || (task_slot>=ts->number_of_tasks)) {
 		return -1;
 	}
@@ -42,7 +42,7 @@ task_handle_t register_task(task_set *ts, int task_slot, unsigned long repeat_pe
 	return task_slot;
 }
 
-bool add_task(task_set *ts, unsigned long repeat_period, task_run_mode_t run_mode, function_pointer *call_function, uint32_t task_id) {
+bool add_task(task_set *ts, unsigned long repeat_period, task_run_mode_t run_mode, function_pointer call_function, uint32_t task_id) {
 	int task_slot=0;
 	while ((task_slot < ts->number_of_tasks) && (ts->tasks[task_slot].call_function!=NULL)) task_slot++;
 	if (task_slot >= ts->number_of_tasks) return false;
@@ -76,7 +76,7 @@ void sort_taskset_by_period(task_set *ts){
 int run_scheduler_update(task_set *ts, uint8_t schedule_strategy) {
 	int i;
 	int realtime_violation=0;
-	function_pointer call_task;
+	volatile function_pointer call_task;
 	task_return_t treturn;
 	for (i=ts->current_schedule_slot; i<ts->number_of_tasks; i++) {
 		uint32_t current_time=GET_TIME;
@@ -164,7 +164,8 @@ void suspend_task(task_entry *te, unsigned long delay) {
 void run_task_now(task_entry *te) {
 	if ((te->run_mode==RUN_NEVER)){
 		te->run_mode=RUN_ONCE;
-		//te->next_run=GET_TIME;
+		//
 	} 
+	te->next_run=GET_TIME;
 }
 

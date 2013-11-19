@@ -69,7 +69,7 @@ void calculate_radar(int16_t input_buffer[]) {
 		
 	}
 
-	dsp16_trans_realcomplexfft(vect_outputI,vect_inputI,10);  //WARNING !! If you change the buffer size you need to change the base 2 power size
+	dsp16_trans_realcomplexfft(vect_outputI,vect_inputI,FFT_POWER);  //WARNING !! If you change the buffer size you need to change the base 2 power size
 																//ex: Buffer=1024-->n=10 / Buffer=512-->n=9
 	for(i=0;i<ADCI_BUFFER_SIZE;i++)
 	{
@@ -87,7 +87,7 @@ void calculate_radar(int16_t input_buffer[]) {
 		vect_inputI[j]=ADCI_get_sample(1,j);
 
 	}
-	dsp16_trans_realcomplexfft(vect_outputQ,vect_inputI,10);
+	dsp16_trans_realcomplexfft(vect_outputQ,vect_inputI,FFT_POWER);
 		
 			
 	//Calcul du module

@@ -11,6 +11,7 @@
 
 i2c_packet_t transfer_queue[I2C_SCHEDULE_SLOTS];
 int current_slot, last_slot;
+i2c_packet_t *current_transfer;
 
 /*!  The I2C interrupt handler.
  */

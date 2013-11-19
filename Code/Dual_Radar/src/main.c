@@ -37,10 +37,12 @@
 
 central_data_t *central_data;
 
+NEW_TASK_SET(main_tasks, 10)
+
+
 int16_t input_buffer[ADCI_BUFFER_SIZE*4];
 
 
-NEW_TASK_SET(main_tasks, 10)
 	
 
 void initialisation() {
@@ -92,27 +94,37 @@ void main (void)
 	initialisation();
 	
 	init_scheduler(&main_tasks);
-	register_task(&main_tasks, 1, 10000, RUN_REGULAR, &mavlink_protocol_update);
+	register_task(&main_tasks, 0, 20000, RUN_REGULAR, &mavlink_protocol_update);
 	// main loop
 	counter=0;
 	// turn on radar power:
 	switch_power(1,0);
 
-	ADCI_Start_Sampling(&input_buffer, 4, ADCI_BUFFER_SIZE, Sampling_frequency, false);
+/*
+	Init_ADCI(1000000, ADCIFA_REF06VDD, 1, 1);
+	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN0, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_1);  
+	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN1, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_1);  
+	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN2, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_1);  
+	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN3, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_1); 
+*/
+
+	//ADCI_Start_Sampling(&input_buffer, 4, ADCI_BUFFER_SIZE, Sampling_frequency, false);
 	while (1==1) {
 		this_looptime=get_millis();
 		
 		if (ADCI_Sampling_Complete()) {
-			DAC_set_value(0);
-
-			calculate_radar();
-			mavlink_send_radar();
-			ADCI_Start_Sampling(&input_buffer, 4, ADCI_BUFFER_SIZE, Sampling_frequency, false);
+			//DAC_set_value(0);
+			LED_On(LED1);
+			//calculate_radar();
+			//mavlink_send_radar();
+			//dbg_putfloat(get_tracked_target()->velocity,2);
+			//dbg_print(".\n");
+			//ADCI_Start_Sampling(&input_buffer, 4, ADCI_BUFFER_SIZE, Sampling_frequency, false);
 		}			
 		
 		run_scheduler_update(&main_tasks, FIXED_PRIORITY);
 				
-		LED_On(LED1);
+		LED_Off(LED1);
 
 		counter=(counter+1)%1000;
 		last_looptime=this_looptime;	

@@ -17,7 +17,6 @@
 #include "imu.h"
 #include "stabilisation.h"
 #include "spektrum.h"
-#include "control.h"
 #include "streams.h"
 #include "uart_int.h"
 #include "print_util.h"
