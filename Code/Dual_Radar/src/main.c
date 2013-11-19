@@ -10,15 +10,12 @@
  * AVR Software Framework (ASF).
  */
 #include <asf.h>
-#include "sysclk.h"
-#include "sleepmgr.h"
 #include "led.h"
 #include "delay.h"
 //#include "stdio_serial.h"
 #include "print_util.h"
 #include "generator.h"
 
-#include "time_keeper.h"
 #include "i2c_driver_int.h"
 #include "qfilter.h"
 #include "stabilisation.h"
@@ -47,27 +44,7 @@ int16_t input_buffer[ADCI_BUFFER_SIZE*4];
 
 void initialisation() {
 	int i;
-	irq_initialize_vectors();
-	cpu_irq_enable();
-	Disable_global_interrupt();
 	
-	// Initialize the sleep manager
-	sleepmgr_init();
-
-	sysclk_init();
-	board_init();
-	delay_init(sysclk_get_cpu_hz());
-	init_time_keeper();
-	
-	INTC_init_interrupts();
-	
-	if (init_i2c(1)!=STATUS_OK) {
-		//putstring(STDOUT, "Error initialising I2C\n");
-		while (1==1);
-	} else {
-		//putstring(STDOUT, "initialised I2C.\n");
-	};
-	init_i2c_slave_interface(1);
 
 	initialise_board(central_data);
 	
@@ -94,35 +71,36 @@ void main (void)
 	initialisation();
 	
 	init_scheduler(&main_tasks);
-	register_task(&main_tasks, 0, 20000, RUN_REGULAR, &mavlink_protocol_update);
+	register_task(&main_tasks, 0, 1000, RUN_REGULAR, &mavlink_protocol_update);
 	// main loop
 	counter=0;
 	// turn on radar power:
 	switch_power(1,0);
 
-/*
-	Init_ADCI(1000000, ADCIFA_REF06VDD, 1, 1);
-	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN0, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_1);  
-	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN1, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_1);  
-	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN2, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_1);  
-	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN3, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_1); 
-*/
 
-	//ADCI_Start_Sampling(&input_buffer, 4, ADCI_BUFFER_SIZE, Sampling_frequency, false);
+	Init_ADCI(1000000, ADCIFA_REF06VDD, 1, 1);
+	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN0, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16);  
+	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN2, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16);  
+	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN3, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16);  
+	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN4, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16); 
+
+
+	ADCI_Start_Sampling(&input_buffer, 4, ADCI_BUFFER_SIZE, Sampling_frequency, false);
 	while (1==1) {
 		this_looptime=get_millis();
 		
 		if (ADCI_Sampling_Complete()) {
 			//DAC_set_value(0);
 			LED_On(LED1);
-			//calculate_radar();
-			//mavlink_send_radar();
+			calculate_radar();
+			mavlink_send_radar();
+			mavlink_send_radar_raw();
 			//dbg_putfloat(get_tracked_target()->velocity,2);
 			//dbg_print(".\n");
-			//ADCI_Start_Sampling(&input_buffer, 4, ADCI_BUFFER_SIZE, Sampling_frequency, false);
+			ADCI_Start_Sampling(&input_buffer, 4, ADCI_BUFFER_SIZE, Sampling_frequency, false);
 		}			
 		
-		run_scheduler_update(&main_tasks, FIXED_PRIORITY);
+		//run_scheduler_update(&main_tasks, FIXED_PRIORITY);
 				
 		LED_Off(LED1);
 

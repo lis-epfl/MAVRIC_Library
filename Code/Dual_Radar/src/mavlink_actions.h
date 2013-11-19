@@ -18,7 +18,7 @@
 void init_mavlink_actions();
 
 void mavlink_send_radar() ;
-
+void mavlink_send_radar_raw();
 
 void handle_specific_messages (Mavlink_Received_t* rec);
 

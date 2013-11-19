@@ -61,6 +61,7 @@ def set_dialect(dialect):
         wire_protocol = mavparse.PROTOCOL_0_9
         modname = "pymavlink.dialects.v09." + dialect
     
+    print "trying to import dialect",  dialect
     try:
         mod = __import__(modname)
 	#mod=__import__("dialects.v10.common")

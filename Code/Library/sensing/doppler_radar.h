@@ -17,10 +17,10 @@
 
 #define THRESHOLD 100
 //#define Sampling_frequency 23437
-#define Sampling_frequency 1000 //15625
+#define Sampling_frequency 15625
 #define filter_conversion 100
-#define ADCI_BUFFER_SIZE 64
-#define FFT_POWER 6  //2^9 =512
+#define ADCI_BUFFER_SIZE 256
+#define FFT_POWER 8  //2^9 =512
 
 void calculate_radar();
 

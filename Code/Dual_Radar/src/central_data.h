@@ -30,13 +30,8 @@
 
 
 typedef struct  {
-	Imu_Data_t imu1;
-	Control_Command_t controls;
-	servo_output servos[NUMBER_OF_SERVO_OUTPUTS];
 
-	Buffer_t xbee_in_buffer, wired_in_buffer;
-	byte_stream_t xbee_out_stream;
-	byte_stream_t xbee_in_stream;
+	Buffer_t  wired_in_buffer;
 	byte_stream_t wired_out_stream, wired_in_stream;
 	
 		

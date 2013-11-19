@@ -34,7 +34,7 @@ class MAVlinkReceiver:
 
         # create a mavlink serial instance
         print "Initialising as system ",   opts.SOURCE_SYSTEM,  "on device",  opts.device
-        self.master = mavutil.mavlink_connection(opts.device, baud=opts.baudrate, source_system=opts.SOURCE_SYSTEM,  write=True)
+        self.master = mavutil.mavlink_connection(opts.device, baud=opts.baudrate, source_system=opts.SOURCE_SYSTEM,  write=True,  dialect="maveric2")
         self.msg=None;
         self.messages=dict();
         self.earthserver=GoogleEarthServer()
