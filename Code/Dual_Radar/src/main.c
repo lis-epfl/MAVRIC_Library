@@ -83,8 +83,14 @@ void main (void)
 	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN2, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16);  
 	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN3, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16);  
 	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN4, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16); 
+	
+	LED_On(LED0);
+	delay_ms(1000);
+	LED_Off(LED0);
+	delay_ms(1000);
 
-
+	
+	
 	ADCI_Start_Sampling(&input_buffer, 4, ADCI_BUFFER_SIZE, Sampling_frequency, false);
 	while (1==1) {
 		this_looptime=get_millis();

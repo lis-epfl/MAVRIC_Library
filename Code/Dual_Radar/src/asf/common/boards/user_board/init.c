@@ -37,7 +37,7 @@ void board_init(void)
 	// Configure the pins connected to LEDs as output and set their default
 	// initial state to high (LEDs off).        
 	gpio_configure_pin(LED0_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
-	gpio_configure_pin(LED1_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+//	gpio_configure_pin(LED1_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
 
 	// Configure the pin connected to the button 0 and 1 button as input.
 	//gpio_configure_pin(GPIO_PUSH_BUTTON_0,GPIO_DIR_INPUT);
