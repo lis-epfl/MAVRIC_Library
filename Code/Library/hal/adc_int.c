@@ -41,9 +41,9 @@
 
 	volatile avr32_adcifa_t *adcifa = &AVR32_ADCIFA; // ADCIFA IP registers address
 
-	static volatile int8_t sequencer_item_count, channel_count;
+	static volatile int sequencer_item_count, channel_count;
 	
-	static volatile int32_t sample_counter, oversampling_counter, channel_index;
+	static volatile int32_t sample_counter, oversampling_counter;
 	
 	static volatile int number_of_samples, oversampling, oversampling_divider;
 	bool continuous_mode;
@@ -51,7 +51,7 @@
 	//32bits version
 	//int32_t adci_buffer[ADCI_INPUT_CHANNELS][ADCI_BUFFER_SIZE];
 	//16bits version
-	int32_t internal_buffer[MAX_CHANNELS];
+	static volatile int32_t internal_buffer[MAX_CHANNELS];
 	int16_t *adci_buffer;
 	uint8_t even_odd;
 	
@@ -87,13 +87,12 @@ adcifa_sequencer_conversion_opt_t adcifa_sequencer0_conversion_opt[SLOTS_PER_SEQ
 __attribute__((__interrupt__))
 static void processData() {
 	int ch;
-	int16_t value;
+	volatile int16_t value;
 
 	if (sample_counter>=number_of_samples)  {
 		if (continuous_mode) {
 			sample_counter=0;
 			oversampling_counter=0;
-			channel_index=0;
 		} else {
 			adcifa_disable_interrupt(adcifa, ADC_INT_SEOS0);
 			//adcifa_disable_interrupt(adcifa, ADC_INT_SEOS1);
@@ -108,28 +107,28 @@ static void processData() {
 	) {return;}
 		
 	if (sample_counter>=0) {
-		for (ch=0; ch<sequencer_item_count; ch++) {
-			value=adcifa->resx[ch];
-			if (oversampling_counter<=0) {
-				internal_buffer[channel_index]=  value ;
-			}else {			
-				internal_buffer[channel_index]+= value ;
+		if (oversampling_counter<=0) {
+			for (ch=0; ch<sequencer_item_count; ch++) {
+				value=adcifa->resx[ch];
+				internal_buffer[ch]=  value ;
+			}
+		}else {			
+			for (ch=0; ch<sequencer_item_count; ch++) {		
+				value=adcifa->resx[ch];
+				internal_buffer[ch]+= value ;
 				//adci_buffer[ch][even_odd][sample_counter]+=value;
 			}			
-			channel_index++;
-		
 		}
-	}	else {sample_counter++; return;}
+	}	else {
+		sample_counter++; return;
+	}
 	//if (function_generator!=NULL) {
 	//	DAC_set_value((*function_generator)(sampleCounter));
 	//}
-	if (channel_index>=channel_count) {
-		oversampling_counter++;
-		channel_index=0;
-	}
+	oversampling_counter++;
+	
 	if (oversampling_counter>= oversampling) {
 		oversampling_counter=0;
-		channel_index=0;
 		for (ch=0; ch<channel_count; ch++) {
 			adci_buffer[ch + sample_counter*channel_count]=internal_buffer[ch] / oversampling_divider;
 		}
@@ -200,6 +199,7 @@ int8_t adc_sequencer_add(uint8_t input_p, uint8_t input_n, uint8_t gain) {
 void ADCI_Start_Sampling(int16_t *buffer, int8_t channels, int length, int samplingrate, bool continuous){
 
 	// Configure ADCIFA sequencer 0
+	adcifa_sequence_opt.convnb=sequencer_item_count;
 	adcifa_configure_sequencer(adcifa, 0, &adcifa_sequence_opt, adcifa_sequencer0_conversion_opt);
 	adci_buffer=buffer;
 	
@@ -209,8 +209,7 @@ void ADCI_Start_Sampling(int16_t *buffer, int8_t channels, int length, int sampl
 	number_of_samples=length;
 	continuous_mode=continuous;
 	channel_count=channels;
-	channel_index=0;
-	
+
 	adcifa_enable_interrupt(adcifa, ADC_INT_SEOS0);
 	//adcifa_enable_interrupt(adcifa, ADC_INT_SEOS1);
 	adcifa_start_itimer(adcifa, period_us);

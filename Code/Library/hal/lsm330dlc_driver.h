@@ -173,7 +173,7 @@ static const lsm330dlc_gyro_conf_t lsm_gyro_default_config=
 		0,											//CTRL_REG_A_2
 		0,											//CTRL_REG_A_3
 		LSM_GYRO_FULL_SCALE_2000|LSM_GYRO_BIG_ENDIAN,	//CTRL_REG_A_4
-		LSM_GYRO_FIFO_EN
+		0//LSM_GYRO_FIFO_EN
 	}
 };
 

@@ -78,11 +78,11 @@ void main (void)
 	switch_power(1,0);
 
 
-	Init_ADCI(1000000, ADCIFA_REF1V, 8, 8);
-	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN0, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_1);  
-	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN2, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_1);  
-	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN3, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_1);  
-	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN4, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_1); 
+	Init_ADCI(1000000, ADCIFA_REF1V, 1, 1);
+	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN0, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_8);  
+	//adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN2, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_8);  
+	//adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN3, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_8);  
+	//adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN4, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_8); 
 	
 	LED_On(LED0);
 	delay_ms(1000);
@@ -91,7 +91,7 @@ void main (void)
 
 	
 	
-	ADCI_Start_Sampling(&input_buffer, 4, ADCI_BUFFER_SIZE, Sampling_frequency, false);
+	ADCI_Start_Sampling(&input_buffer, 1, ADCI_BUFFER_SIZE, Sampling_frequency, false);
 	while (1==1) {
 		this_looptime=get_millis();
 		
@@ -103,7 +103,7 @@ void main (void)
 			mavlink_send_radar_raw();
 			//dbg_putfloat(get_tracked_target()->velocity,2);
 			//dbg_print(".\n");
-			ADCI_Start_Sampling(&input_buffer, 4, ADCI_BUFFER_SIZE, Sampling_frequency, false);
+			ADCI_Start_Sampling(&input_buffer, 2, ADCI_BUFFER_SIZE, Sampling_frequency, false);
 		}			
 		
 		//run_scheduler_update(&main_tasks, FIXED_PRIORITY);

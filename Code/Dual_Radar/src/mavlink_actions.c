@@ -39,10 +39,10 @@ void mavlink_send_radar_raw() {
 	int16_t values[64];
 	int i;
 	mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 0, get_raw_FFT());
-	for (i=0; i<64; i++) values[i]=ADCI_get_sample(0, i);
+	for (i=0; i<64; i++) values[i]=(ADCI_get_sample(0, 2*i)+ADCI_get_sample(0, 2*i+1) )/2;
 	mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 1, values);
 
-	for (i=0; i<64; i++) values[i]=ADCI_get_sample(1, i);
+	for (i=0; i<64; i++) values[i]=(ADCI_get_sample(1, 2*i)+ADCI_get_sample(1, 2*i+1) )/2;
 	mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 2, values);
 	
 
