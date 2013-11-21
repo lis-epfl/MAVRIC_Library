@@ -23,7 +23,7 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ ROLL PID -------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.15,
+				.p_gain = 0.08,
 				.clip_min = -0.9, 
 				.clip_max = 0.9,
 				.integrator={
@@ -49,7 +49,7 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ PITCH PID ------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.15,
+				.p_gain = 0.08,
 				.clip_min = -0.9, 
 				.clip_max = 0.9,
 				.integrator={
