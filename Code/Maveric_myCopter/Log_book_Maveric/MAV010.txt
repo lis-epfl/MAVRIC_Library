@@ -1,0 +1,11 @@
+*************************************************************
+***************** MAV010 Log book ***************************
+*************************************************************
+status: not fly ready
+
+
+13-11-21: frame with foam build
+13-11-21: need calibration
+13-11-21: no speed controller mounted
+13-11-21: no motors mounted
+13-11-21: no autopilot mounted
