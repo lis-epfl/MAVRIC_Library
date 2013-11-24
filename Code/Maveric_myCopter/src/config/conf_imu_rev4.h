@@ -25,9 +25,9 @@
 #define RAW_ACC_Z 2
 
 
-#define RAW_ACC_X_SCALE   4000.0
-#define RAW_ACC_Y_SCALE  -4000.0
-#define RAW_ACC_Z_SCALE  -4000.0
+#define RAW_ACC_X_SCALE   4096.0
+#define RAW_ACC_Y_SCALE  -4096.0
+#define RAW_ACC_Z_SCALE  -4096.0
 
 #define RAW_COMPASS_X 2
 #define RAW_COMPASS_Y 0
@@ -38,9 +38,9 @@
 #define RAW_MAG_Y_SCALE 525.2934
 #define RAW_MAG_Z_SCALE 498.4476
 
-#define ACC_BIAIS_X 0;
-#define ACC_BIAIS_Y 0;
-#define ACC_BIAIS_Z 0;
+#define ACC_BIAIS_X 170;
+#define ACC_BIAIS_Y 16;
+#define ACC_BIAIS_Z -350;
 
 
 #define MAG_BIAIS_X  131.7582

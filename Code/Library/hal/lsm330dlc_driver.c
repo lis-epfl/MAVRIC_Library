@@ -121,21 +121,22 @@ lsm_acc_data_t* lsm330_get_acc_data(void) {
 
 	int twim_return;
 	lsm_acc_fifo_t fifo_values;
+	//int16_t fifo_values[32];
 	int32_t axes[3]={0,0,0};
 	int i;
-	int8_t fifo_fill;
+	uint8_t fifo_fill=1;
 	// read number of bytes in fifo
-//	uint8_t fifo_fill=lsm_read_register(LSM330_ACC_SLAVE_ADDRESS, LSM_ACC_FIFO_SRC_ADDRESS) & 0x0f;
-	if (fifo_fill==0) return &lsm_acc_outputs;
-	//fifo_fill=1;
+	//fifo_fill=lsm_read_register(LSM330_ACC_SLAVE_ADDRESS, LSM_ACC_FIFO_SRC_ADDRESS) & 0x0f - 1;
+	
+	if (fifo_fill==0) fifo_fill=1; //return &lsm_acc_outputs;
 	if (fifo_fill>6) fifo_fill=6;
 	twim_return=twim_write(&AVR32_TWIM0, (uint8_t*) &data_register_address, 1, LSM330_ACC_SLAVE_ADDRESS, false);
-	twim_return=twim_read(&AVR32_TWIM0, (uint8_t*)&fifo_values, 1+6*fifo_fill, LSM330_ACC_SLAVE_ADDRESS, false);
+	twim_return=twim_read(&AVR32_TWIM0, (uint8_t*)&fifo_values.axes, 6*fifo_fill, LSM330_ACC_SLAVE_ADDRESS, false);
 
 	for (i=0; i<fifo_fill; i++) {
-		axes[0]+=(int32_t)fifo_values.axes[3*i];
-		axes[1]+=(int32_t)fifo_values.axes[3*i+1];
-		axes[2]+=(int32_t)fifo_values.axes[3*i+2];
+		axes[0]+=(int32_t)fifo_values.axes[6*i+1]*256 + fifo_values.axes[6*i];
+		axes[1]+=(int32_t)fifo_values.axes[6*i+3]*256 + fifo_values.axes[6*i+2];
+		axes[2]+=(int32_t)fifo_values.axes[6*i+5]*256 + fifo_values.axes[6*i+4];
 	}
 	lsm_acc_outputs.axes[0]=(int16_t)(axes[0]/fifo_fill);
 	lsm_acc_outputs.axes[1]=(int16_t)(axes[1]/fifo_fill);

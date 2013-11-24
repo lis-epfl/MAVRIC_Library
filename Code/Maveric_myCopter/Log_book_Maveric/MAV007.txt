@@ -6,3 +6,9 @@ status: not fly ready
 
 13-11-21: ID flashed
 13-11-21: need calibration
+
+2013-11-24: manual accelerometer biases:
+x  -20
+y  -80
+z -100 
+
