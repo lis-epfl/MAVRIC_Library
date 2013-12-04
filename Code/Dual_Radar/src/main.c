@@ -37,7 +37,7 @@ central_data_t *central_data;
 NEW_TASK_SET(main_tasks, 10)
 
 
-int16_t input_buffer[ADCI_BUFFER_SIZE*4];
+int16_t input_buffer[4][ADCI_BUFFER_SIZE];
 
 
 	
@@ -78,11 +78,11 @@ void main (void)
 	switch_power(1,0);
 
 
-	Init_ADCI(1000000, ADCIFA_REF1V, 1, 1);
-	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN0, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_8);  
-	//adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN2, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_8);  
-	//adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN3, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_8);  
-	//adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN4, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_8); 
+	Init_ADCI(1500000, ADCIFA_REF1V);
+	adc_sequencer_add(&input_buffer[0], AVR32_ADCIFA_INP_ADCIN0, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16);  
+	adc_sequencer_add(&input_buffer[1], AVR32_ADCIFA_INP_ADCIN1, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16);  
+	adc_sequencer_add(&input_buffer[2], AVR32_ADCIFA_INP_ADCIN3, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16);  
+	adc_sequencer_add(&input_buffer[3], AVR32_ADCIFA_INP_ADCIN4, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16); 
 	
 	LED_On(LED0);
 	delay_ms(1000);
@@ -91,23 +91,26 @@ void main (void)
 
 	
 	
-	ADCI_Start_Sampling(&input_buffer, 1, ADCI_BUFFER_SIZE, Sampling_frequency, false);
+	ADCI_Start_Sampling(ADCI_BUFFER_SIZE, Sampling_frequency, 16, 1, false);
 	while (1==1) {
 		this_looptime=get_millis();
 		
 		if (ADCI_Sampling_Complete()) {
 			//DAC_set_value(0);
 			LED_On(LED1);
-			calculate_radar();
+			calculate_radar(&input_buffer[0], &input_buffer[1]);
 			mavlink_send_radar();
 			mavlink_send_radar_raw();
+			
 			//dbg_putfloat(get_tracked_target()->velocity,2);
 			//dbg_print(".\n");
-			ADCI_Start_Sampling(&input_buffer, 2, ADCI_BUFFER_SIZE, Sampling_frequency, false);
+			ADCI_Start_Sampling(ADCI_BUFFER_SIZE, Sampling_frequency, 16, 1, false);
+
 		}			
 		
 		//run_scheduler_update(&main_tasks, FIXED_PRIORITY);
-				
+		mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "ADC_period", get_adc_int_period());
+
 		LED_Off(LED1);
 
 		counter=(counter+1)%1000;

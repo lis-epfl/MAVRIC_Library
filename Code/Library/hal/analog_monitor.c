@@ -12,26 +12,26 @@
 #define MONITOR_CHANNELS 4
 #define MONITOR_SAMPLES 10
 
-int16_t monitor_buffer[MONITOR_CHANNELS *MONITOR_SAMPLES];
+int16_t monitor_buffer[MONITOR_CHANNELS][MONITOR_SAMPLES];
 
 void init_analog_monitor() {
-	Init_ADCI(100000, ADCIFA_REF06VDD, 16, 4);
-	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN6, AVR32_ADCIFA_INN_GNDANA, ADCIFA_SHG_1);  // 6V
-	adc_sequencer_add(AVR32_ADCIFA_INP_ADCIN7, AVR32_ADCIFA_INN_GNDANA, ADCIFA_SHG_1);  // 5V_ANALOG
-	adc_sequencer_add(AVR32_ADCIFA_INP_GNDANA, AVR32_ADCIFA_INN_ADCIN10,ADCIFA_SHG_1);  // BAT_FILTERED
-	adc_sequencer_add(AVR32_ADCIFA_INP_GNDANA, AVR32_ADCIFA_INN_ADCIN11, ADCIFA_SHG_1); //INPUT
+	Init_ADCI(100000, ADCIFA_REF06VDD);
+	adc_sequencer_add(monitor_buffer[0], AVR32_ADCIFA_INP_ADCIN6, AVR32_ADCIFA_INN_GNDANA, ADCIFA_SHG_1);  // 6V
+	adc_sequencer_add(monitor_buffer[1], AVR32_ADCIFA_INP_ADCIN7, AVR32_ADCIFA_INN_GNDANA, ADCIFA_SHG_1);  // 5V_ANALOG
+	adc_sequencer_add(monitor_buffer[2], AVR32_ADCIFA_INP_GNDANA, AVR32_ADCIFA_INN_ADCIN10,ADCIFA_SHG_1);  // BAT_FILTERED
+	adc_sequencer_add(monitor_buffer[3], AVR32_ADCIFA_INP_GNDANA, AVR32_ADCIFA_INN_ADCIN11, ADCIFA_SHG_1); //INPUT
 	//ADCI_Start_Sampling(&monitor_buffer, MONITOR_CHANNELS, MONITOR_SAMPLES, 100, false);
 }
 
 void trigger_analog_monitor() {
-	ADCI_Start_Sampling(&monitor_buffer, MONITOR_CHANNELS, MONITOR_SAMPLES, 100, false);
+	ADCI_Start_Sampling(MONITOR_SAMPLES, 100,16, 4, false);
 }
 
 float get_monitored_avg(int channel) {
 	float out=0.0;
 	int i;
 	for (i=0; i<MONITOR_SAMPLES; i++) {
-		out+=(float)monitor_buffer[channel + i*MONITOR_CHANNELS];
+		out+=(float)monitor_buffer[channel][i];
 	}
 	out=out / MONITOR_SAMPLES;
 	return out;

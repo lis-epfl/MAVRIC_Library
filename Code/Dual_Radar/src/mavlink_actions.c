@@ -30,21 +30,27 @@ void mavlink_send_radar() {
 	
 
 	
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Radar_velocity", target->velocity);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Radar_amplitude", target->amplitude/1000.0);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Rad_vel", target->velocity);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "R_ampl", target->amplitude/1000.0);
+
+
 }
 
 void mavlink_send_radar_raw() {
 	radar_target *target=get_tracked_target();
 	int16_t values[64];
+	int32_t *fft =get_raw_FFT();
 	int i;
-	mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 0, get_raw_FFT());
-	for (i=0; i<64; i++) values[i]=(ADCI_get_sample(0, 2*i)+ADCI_get_sample(0, 2*i+1) )/2;
+	for (i=0; i<64; i++) values[i]=fft[i]/256;
+	mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 0, values);
+	for (i=0; i<64; i++) values[i]=ADCI_get_sample(0, i);
 	mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 1, values);
 
-	for (i=0; i<64; i++) values[i]=(ADCI_get_sample(1, 2*i)+ADCI_get_sample(1, 2*i+1) )/2;
+	for (i=0; i<64; i++) values[i]=ADCI_get_sample(1, i);
 	mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 2, values);
 	
+	for (i=0; i<64; i++) values[i]=ADCI_get_sample(2, i);
+	mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 3, values);
 
 	
 //	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Radar_velocity", target->velocity);
