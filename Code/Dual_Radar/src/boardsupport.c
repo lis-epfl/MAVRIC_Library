@@ -45,7 +45,7 @@ initialise_board(central_data_t *central_data){
 		
 		register_write_stream(get_UART_handle(4), &central_data->wired_out_stream);
 
-		make_buffered_stream_lossy(&(central_data->wired_in_buffer), &(central_data->wired_in_stream));
+		make_buffered_stream(&(central_data->wired_in_buffer), &(central_data->wired_in_stream));
 		register_read_stream(get_UART_handle(4), &(central_data->wired_in_stream));
 
 		central_data->telemetry_down_stream=&(central_data->wired_out_stream);

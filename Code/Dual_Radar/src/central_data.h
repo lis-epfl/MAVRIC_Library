@@ -31,6 +31,7 @@
 
 typedef struct  {
 
+	int dummy[10];
 	Buffer_t  wired_in_buffer;
 	byte_stream_t wired_out_stream, wired_in_stream;
 	

@@ -34,8 +34,8 @@
 
 central_data_t *central_data;
 
-NEW_TASK_SET(main_tasks, 10)
-
+//NEW_TASK_SET(main_tasks, 10)
+task_set main_tasks;
 
 int16_t input_buffer[4][ADCI_BUFFER_SIZE];
 
@@ -45,7 +45,7 @@ int16_t input_buffer[4][ADCI_BUFFER_SIZE];
 void initialisation() {
 	int i;
 	
-
+	main_tasks.number_of_tasks=30;
 	initialise_board(central_data);
 	
 
@@ -100,7 +100,7 @@ void main (void)
 			LED_On(LED1);
 			calculate_radar(&input_buffer[0], &input_buffer[1]);
 			mavlink_send_radar();
-			mavlink_send_radar_raw();
+			//mavlink_send_radar_raw();
 			
 			//dbg_putfloat(get_tracked_target()->velocity,2);
 			//dbg_print(".\n");
@@ -109,7 +109,8 @@ void main (void)
 		}			
 		
 		//run_scheduler_update(&main_tasks, FIXED_PRIORITY);
-		mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "ADC_period", get_adc_int_period());
+		mavlink_protocol_update();
+		//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "ADC_period", get_adc_int_period());
 
 		LED_Off(LED1);
 

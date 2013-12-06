@@ -38,20 +38,20 @@ class MAVlinkReceiver:
         self.msg=None;
         self.messages=dict();
         self.earthserver=GoogleEarthServer()
-        self.earthserver.run()
+        #self.earthserver.run()
         self.requestAllStreams()
 
 
     def requestStream(self,  stream,  active,  frequency=0):
         # request activation/deactivation of stream. If frequency is 0, it won't be changed.
-        reqMsg=pymavlink.MAVLink_request_data_stream_message(target_system=self.master.target_system, target_component=self.master.target_component, req_stream_id=stream.get_msgId(), req_message_rate=frequency, start_stop=active)
+        reqMsg=pymavlink.MAVLink_request_data_stream_message(target_system=stream.get_srcSystem(), target_component=stream.get_srcComponent(), req_stream_id=stream.get_msgId(), req_message_rate=frequency, start_stop=active)
 
         self.master.write(reqMsg.pack(pymavlink.MAVLink(file=0,  srcSystem=self.master.source_system)))
 
         if active:
-            print "System ", self.master.target_system, ": activating stream",   stream.get_msgId(),  frequency
+            print "System ", stream.get_srcSystem(), stream.get_srcComponent(),": activating stream",   stream.get_msgId(),  frequency
         else:
-            print "System ", self.master.target_system, ": deactivating stream",  stream.get_msgId()
+            print "System ", stream.get_srcSystem(), stream.get_srcComponent(),": deactivating stream",  stream.get_msgId()
     
     def requestAllStreams(self):
         print "Requesting all streams from ",  self.master.target_system
@@ -75,14 +75,14 @@ class MAVlinkReceiver:
             #print("message: %s (system %u component %u)" % (msg.get_msgId(), self.master.target_system, self.master.target_component))
             
             if msg.__class__.__name__.startswith("MAVLink_named_value"):
-                msg_key="%s:%s"%(msg.__class__.__name__, msg.name)
+                msg_key="%s:%s:%s"%(msg.get_srcSystem(),  msg.__class__.__name__, msg.name)
                 #print msg_key
-                self.messages["%s:%s"%(msg.__class__.__name__, msg.name)]=msg
+                self.messages[msg_key]=msg
             elif msg.__class__.__name__.startswith("MAVLink_radar"):
-                msg_key="%s:%s"%(msg.__class__.__name__, msg.sensor_id)
+                msg_key="%s:%s:%s"%(msg.get_srcSystem(),  msg.__class__.__name__, msg.sensor_id)
                 self.messages[msg_key]=msg
             else:
-                msg_key=msg.__class__.__name__
+                msg_key="%s:%s"%(msg.get_srcSystem(),  msg.__class__.__name__)
                 self.messages[msg.__class__.__name__]=msg
                 self.msg=msg
 

@@ -77,7 +77,7 @@ typedef struct {
 	} usart_config_t;
 
 // USART options.
-static  usart_config_t usart_opt[UART_COUNT] =
+static volatile usart_config_t usart_opt[UART_COUNT] =
 {	
 	{   .mode=UART_IN_OUT,
 		.uart_device.uart=&AVR32_USART0, 
@@ -118,7 +118,7 @@ static  usart_config_t usart_opt[UART_COUNT] =
 			.rx_pin_map= {AVR32_USART2_RXD_0_0_PIN, AVR32_USART2_RXD_0_0_FUNCTION},
 			.tx_pin_map= {AVR32_USART2_TXD_0_0_PIN, AVR32_USART2_TXD_0_0_FUNCTION}
 	},
-	{   .mode=UART_IN_OUT,
+	{   .mode=UART_OFF,
 		.uart_device.uart=&AVR32_USART3,
 		.uart_device.IRQ=AVR32_USART3_IRQ,
 		.uart_device.receive_stream=NULL,

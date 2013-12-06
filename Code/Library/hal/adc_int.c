@@ -104,47 +104,47 @@ static void processData() {
 	} else {
 	
 
-	if (((adcifa->sr&ADC_INT_SEOS0) ==0) 
-	//|| ((adcifa->sr&ADC_INT_SEOS1) ==0) 
-	) {} else {
-	adc_int_period=(get_time_ticks()-last_adc_int_time);
-	last_adc_int_time=get_time_ticks();
+		if (((adcifa->sr&ADC_INT_SEOS0) ==0) 
+		//|| ((adcifa->sr&ADC_INT_SEOS1) ==0) 
+		) {} else {
+			adc_int_period=(get_time_ticks()-last_adc_int_time);
+			last_adc_int_time=get_time_ticks();
 		
-	if (sample_counter>=0) {
-		if (oversampling_counter<=0) {
-			for (ch=0; ch<sequencer_item_count; ch++) {
-				value=adcifa->resx[ch];
-				internal_buffer[ch]=  value ;
+			if (sample_counter>=0) {
+				if (oversampling_counter<=0) {
+					for (ch=0; ch<sequencer_item_count; ch++) {
+						value=adcifa->resx[ch];
+						internal_buffer[ch]=  value ;
+					}
+				}else {			
+					for (ch=0; ch<sequencer_item_count; ch++) {		
+						value=adcifa->resx[ch];
+						internal_buffer[ch]+= value ;
+						//adci_buffer[ch][even_odd][sample_counter]+=value;
+					}			
+				}
+			}	else {
+				sample_counter++; return;
 			}
-		}else {			
-			for (ch=0; ch<sequencer_item_count; ch++) {		
-				value=adcifa->resx[ch];
-				internal_buffer[ch]+= value ;
-				//adci_buffer[ch][even_odd][sample_counter]+=value;
-			}			
-		}
-	}	else {
-		sample_counter++; return;
-	}
-	//if (function_generator!=NULL) {
-	//	DAC_set_value((*function_generator)(sampleCounter));
-	//}
-	oversampling_counter++;
+			//if (function_generator!=NULL) {
+			//	DAC_set_value((*function_generator)(sampleCounter));
+			//}
+			oversampling_counter++;
 	
-	if (oversampling_counter>= oversampling) {
+			if (oversampling_counter>= oversampling) {
 		
-		oversampling_counter=0;
-		for (ch=0; ch<channel_count; ch++) {
-			int16_t *buffer=adci_buffer[ch];
-			buffer[sample_counter]=internal_buffer[ch] / oversampling_divider;
-		}
-		sample_counter++;
+				oversampling_counter=0;
+				for (ch=0; ch<channel_count; ch++) {
+					int16_t *buffer=adci_buffer[ch];
+					buffer[sample_counter]=internal_buffer[ch] / oversampling_divider;
+				}
+				sample_counter++;
 	
-	}		
-	//DAC_set_value(even_odd*400);
-	// acknowledge processing finished
-	adcifa->scr=ADC_INT_SEOS0 | ADC_INT_SEOS1;
-	}
+			}		
+		//DAC_set_value(even_odd*400);
+		// acknowledge processing finished
+		adcifa->scr=ADC_INT_SEOS0 | ADC_INT_SEOS1;
+		}
 	}
 }
 

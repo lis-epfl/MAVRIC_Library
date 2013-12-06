@@ -7,7 +7,7 @@
 
 #include "central_data.h"
 
-central_data_t central_data;
+static volatile central_data_t central_data;
 
 
 central_data_t* get_central_data() {
