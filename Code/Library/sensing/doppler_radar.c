@@ -13,8 +13,8 @@
 
 static volatile uint32_t even_odd2;
 
-dsp16_complex_t vect_outputI[ 2*ADCI_BUFFER_SIZE];	// Variable pour le DSP
-dsp16_complex_t vect_outputQ[ 2*ADCI_BUFFER_SIZE];
+A_ALIGNED dsp16_complex_t vect_outputI[ ADCI_BUFFER_SIZE];	// Variable pour le DSP
+A_ALIGNED dsp16_complex_t vect_outputQ[ ADCI_BUFFER_SIZE];
 dsp16_t vect_inputI[ ADCI_BUFFER_SIZE];
 //dsp16_t vect_inputQ[ ADCI_BUFFER_SIZE];
 //dsp16_t vect_realI[ ADCI_BUFFER_SIZE];
@@ -67,15 +67,8 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 						
 	for (i=0;i< ADCI_BUFFER_SIZE;i++)
 	{				
-		fft_amp[i]=(SQR(vect_outputI[i].real) + SQR(vect_outputI[i].imag));
+		fft_amp[i]=fast_sqrt(SQR(vect_outputI[i].real) + SQR(vect_outputI[i].imag));
 	}
-			
-		
-	//16bits version
-			
-	//dsp16_vect_add(vect_inputQ,vect_realpow,vect_imagpow,ADCI_BUFFER_SIZE);
-
-			
 
 			
 	//Find maximum of FFT and corresponding frequency
@@ -196,6 +189,12 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 	}
 	else
 		direction=1;
+
+	for (i=0; i<ADCI_BUFFER_SIZE; i++) {
+		if(vect_outputI[index].real*vect_outputQ[index].imag - vect_outputI[index].imag*vect_outputQ[index].real<0){
+			fft_amp[i]=-fft_amp[i];
+		}
+	}
 	
 	time2=get_micros();
 	time_result=time2-time1;
@@ -204,7 +203,7 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 
 	main_target.velocity=direction*speed/100.0;
 	//main_target.velocity=speed/100.0;
-	main_target.amplitude=amplitude/32000;
+	main_target.amplitude=amplitude;
 
 	amplitude=0;
 	amplitude2=0;

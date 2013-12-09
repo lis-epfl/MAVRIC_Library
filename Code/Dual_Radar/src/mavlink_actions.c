@@ -31,7 +31,7 @@ void mavlink_send_radar() {
 
 	
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Rad_vel", target->velocity);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "R_ampl", target->amplitude/1000.0);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "R_ampl", target->amplitude);
 
 
 }
