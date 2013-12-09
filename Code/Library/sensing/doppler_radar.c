@@ -13,9 +13,9 @@
 
 static volatile uint32_t even_odd2;
 
-A_ALIGNED dsp16_complex_t vect_outputI[ ADCI_BUFFER_SIZE];	// Variable pour le DSP
-A_ALIGNED dsp16_complex_t vect_outputQ[ ADCI_BUFFER_SIZE];
-dsp16_t vect_inputI[ ADCI_BUFFER_SIZE];
+A_ALIGNED dsp16_complex_t vect_outputI[ RADAR_BUFFER_SIZE*2];	// Variable pour le DSP
+A_ALIGNED dsp16_complex_t vect_outputQ[ RADAR_BUFFER_SIZE*2];
+dsp16_t vect_inputI[ RADAR_BUFFER_SIZE];
 //dsp16_t vect_inputQ[ ADCI_BUFFER_SIZE];
 //dsp16_t vect_realI[ ADCI_BUFFER_SIZE];
 //dsp16_t vect_imagI[ ADCI_BUFFER_SIZE];
@@ -25,7 +25,7 @@ dsp16_t vect_inputI[ ADCI_BUFFER_SIZE];
 //dsp16_t vect_realpow[ADCI_BUFFER_SIZE];
 //dsp16_t vect_imagpow[ADCI_BUFFER_SIZE];
 
-int32_t fft_amp[ADCI_BUFFER_SIZE];
+int32_t fft_amp[RADAR_BUFFER_SIZE];
 
 radar_target main_target;
 
@@ -46,7 +46,7 @@ radar_target main_target;
 	int32_t amp_in=0;
 	int32_t taille=0;
 	int32_t direction=0;
-	int32_t f_v_factor=Sampling_frequency/ADCI_BUFFER_SIZE;		//Conversion factor to compute speed
+	int32_t f_v_factor=Sampling_frequency/RADAR_BUFFER_SIZE;		//Conversion factor to compute speed
 
 	uint32_t time1, time2,time_result; //time1-time2=time_result for measure
 
@@ -65,7 +65,7 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 	dsp16_trans_realcomplexfft(vect_outputQ, q_buffer, FFT_POWER);  //WARNING !! If you change the buffer size you need to change the base 2 power size
 			
 						
-	for (i=0;i< ADCI_BUFFER_SIZE;i++)
+	for (i=0;i< RADAR_BUFFER_SIZE;i++)
 	{				
 		fft_amp[i]=fast_sqrt(SQR(vect_outputI[i].real) + SQR(vect_outputI[i].imag));
 	}
@@ -190,7 +190,7 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 	else
 		direction=1;
 
-	for (i=0; i<ADCI_BUFFER_SIZE; i++) {
+	for (i=0; i<RADAR_BUFFER_SIZE; i++) {
 		if(vect_outputI[index].real*vect_outputQ[index].imag - vect_outputI[index].imag*vect_outputQ[index].real<0){
 			fft_amp[i]=-fft_amp[i];
 		}
