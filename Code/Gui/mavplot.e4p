@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-4.6.dtd">
 <!-- eric4 project file for project mavplot -->
-<!-- Saved: 2013-11-19, 23:17:03 -->
+<!-- Saved: 2013-12-19, 23:41:47 -->
 <!-- Copyright (C) 2013 ,  -->
 <Project version="4.6">
   <Language>en</Language>
@@ -12,7 +12,6 @@
   <Author></Author>
   <Email></Email>
   <Sources>
-    <Source>pyqt_test.py</Source>
     <Source>pymavlink/fgFDM.py</Source>
     <Source>pymavlink/mavextra.py</Source>
     <Source>pymavlink/scanwin32.py</Source>
@@ -24,6 +23,9 @@
     <Source>kivygui.py</Source>
     <Source>decoratedwidget.py</Source>
     <Source>googleearth_server.py</Source>
+    <Source>maview.py</Source>
+    <Source>message_viewer.py</Source>
+    <Source>plot_widget.py</Source>
   </Sources>
   <Forms>
   </Forms>
