@@ -54,7 +54,7 @@ void init_Servos(void){
 	}		
 	static const gpio_map_t PWM_GPIO_MAP =
   {
-	#ifdef GPS_ENABLE_OFF
+	#ifndef GPS_ON_SERVO_1_2
 		{AVR32_PWM_PWML_0_0_PIN, AVR32_PWM_PWML_0_0_FUNCTION},
 		{AVR32_PWM_PWMH_0_0_PIN, AVR32_PWM_PWMH_0_0_FUNCTION},
 	#endif
@@ -83,15 +83,17 @@ void set_servo(int channel, int val_a, int val_b){
 
 
 void set_servos(servo_output *servo_outputs) {
-	#ifdef GPS_ENABLE_OFF
+	#ifdef GPS_ON_SERVO_1_2
+		set_servo(1, servo_outputs[0].value, servo_outputs[1].value);
+		set_servo(2, servo_outputs[2].value, servo_outputs[3].value);
+		set_servo(3, servo_outputs[4].value, servo_outputs[5].value);
+
+	#else
 		set_servo(0, servo_outputs[0].value, servo_outputs[1].value);
 		set_servo(1, servo_outputs[2].value, servo_outputs[3].value);
 		set_servo(2, servo_outputs[4].value, servo_outputs[5].value);
 		set_servo(3, servo_outputs[6].value, servo_outputs[7].value);
-	#else
-		set_servo(1, servo_outputs[0].value, servo_outputs[1].value);
-		set_servo(2, servo_outputs[2].value, servo_outputs[3].value);
-		set_servo(3, servo_outputs[4].value, servo_outputs[5].value);
+
 	#endif
 	
 }

@@ -15,7 +15,6 @@
 #include "imu.h"
 #include "stabilisation.h"
 #include "spektrum.h"
-#include "control.h"
 #include "streams.h"
 #include "uart_int.h"
 #include "print_util.h"
@@ -31,16 +30,16 @@
 
 
 typedef struct  {
-	Imu_Data_t imu1;
-	Control_Command_t controls;
-	servo_output servos[NUMBER_OF_SERVO_OUTPUTS];
-	byte_stream_t xbee_out_stream;
-	byte_stream_t xbee_in_stream;
-	byte_stream_t debug_stream;
-	byte_stream_t debug_in_stream;
+
+	int dummy[10];
+	Buffer_t  wired_in_buffer;
+	byte_stream_t wired_out_stream, wired_in_stream;
 	
+		
 	// aliases
 	byte_stream_t *telemetry_down_stream, *telemetry_up_stream;
+	byte_stream_t *debug_out_stream, *debug_in_stream;
+
 } central_data_t;
 
 central_data_t* get_central_data();

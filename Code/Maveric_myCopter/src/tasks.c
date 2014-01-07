@@ -24,8 +24,6 @@ NEW_TASK_SET(main_tasks, 10)
 
 central_data_t *centralData;
 
-bool has_started_engines;
-
 task_set* get_main_taskset() {
 	return &main_tasks;
 }
@@ -52,7 +50,7 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 	if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() > 0.9))
 	{
 		//dbg_print("motor on\n");
-		//dbg_print("motor on: yaw=\n"); dbg_putfloat(get_yaw_from_remote(),2);
+		dbg_print("motor on: yaw=\n"); dbg_putfloat(get_yaw_from_remote(),2);
 		*motorbool = 1;
 	}else if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() <-0.9))
 	{
@@ -82,22 +80,11 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 	//dbg_print("\n");
 }
 
-void switch_off_motors()
-{
-	dbg_print("Switching off motors!\n");
-	centralData->controls.run_mode = MOTORS_OFF;
-	has_started_engines = false;
-	centralData->mav_state = MAV_STATE_STANDBY;
-	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
-}
-
 task_return_t set_mav_mode_n_state()
 {
 	uint8_t channelSwitches = 0;
 	int8_t RC_check = 0;
 	int8_t motor_switch = 0;
-	
-	float distFromHomeSqr;
 	
 	LED_Toggle(LED1);
 	
@@ -105,8 +92,6 @@ task_return_t set_mav_mode_n_state()
 	
 	switch(centralData->mav_state)
 	{
-		case MAV_STATE_BOOT:
-			break;
 		case MAV_STATE_CALIBRATING:
 			break;
 		case MAV_STATE_STANDBY:
@@ -118,144 +103,64 @@ task_return_t set_mav_mode_n_state()
 						dbg_print("Switching on the motors!\n");
 						position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 						centralData->controls.run_mode = MOTORS_ON;
-						has_started_engines = true;
-						//centralData->mav_state = MAV_STATE_ACTIVE;
-						centralData->mav_mode = MAV_MODE_MANUAL_ARMED;
-						break;
-					case 1:
-						dbg_print("Switches not ready, both should be pushed!\n");
-						break;
-					case 2:
-						dbg_print("Switches not ready, both should be pushed!\n");
-						break;
-					case 3:
-						dbg_print("Switches not ready, both should be pushed!\n");
-						break;
-				}
-			}
-			//if (centralData->controls.run_mode == MOTORS_ON)
-			if (has_started_engines)
-			{
-				switch (channelSwitches)
-				{
-					case 0:
-						centralData->mav_mode = MAV_MODE_MANUAL_ARMED;
-						break;
-					case 1:
-						centralData->mav_mode = MAV_MODE_STABILIZE_ARMED;
-						break;
-					case 2:
-						centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
-						// Automatic take-off mode
-						if (centralData->mav_mode_previous != MAV_MODE_GUIDED_ARMED)
-						{
-							centralData->automatic_take_off = true;
-						}
-						break;
-					case 3:
 						centralData->mav_state = MAV_STATE_ACTIVE;
-						centralData->mav_mode = MAV_MODE_AUTO_ARMED;
+						centralData->mav_mode = MAV_MODE_MANUAL_ARMED;
 						break;
-				}
-					
-				switch (centralData->mav_mode)
-				{
-					case MAV_MODE_MANUAL_ARMED:
-						distFromHomeSqr = centralData->position_estimator.localPosition.pos[X]*centralData->position_estimator.localPosition.pos[X] + centralData->position_estimator.localPosition.pos[Y]*centralData->position_estimator.localPosition.pos[Y];
-						// if further than 8m from home waypoint in the xy plane => active mode
-						if (distFromHomeSqr >= 64.0)
-						{
-							centralData->mav_state = MAV_STATE_ACTIVE;
-						}
-						break;
-					case MAV_MODE_STABILIZE_ARMED:
-						distFromHomeSqr = centralData->position_estimator.localPosition.pos[X]*centralData->position_estimator.localPosition.pos[X] + centralData->position_estimator.localPosition.pos[Y]*centralData->position_estimator.localPosition.pos[Y];
-						// if further than 8m from home waypoint in the xy plane => active mode
-						if (distFromHomeSqr >= 64.0)
-						{
-							centralData->mav_state = MAV_STATE_ACTIVE;
-						}
-						break;
-					case MAV_MODE_GUIDED_ARMED:
-						// Automatic take-off mode
-						if ((get_thrust_from_remote()>-0.7)&&(centralData->automatic_take_off))
-						{
-							centralData->automatic_take_off = false;
-							wp_take_off();
-						}
-							
-						if ((centralData->dist2wp_sqr <= 25.0)&&(!centralData->automatic_take_off))
-						{
-							centralData->mav_state = MAV_STATE_ACTIVE;
-						}
-						break;
-					case MAV_MODE_AUTO_ARMED:
-						if (centralData->mav_mode_previous != MAV_MODE_AUTO_ARMED)
-						{
-							wp_hold_init();
-						}
-						if (!centralData->waypoint_set)
-						{
-							init_wp();
-						}
-						break;
-				}
-				switch (RC_check)
-				{
 					case 1:
-					break;
-					case -1:
-					centralData->mav_state = MAV_STATE_CRITICAL;
-					break;
-					case -2:
-					centralData->mav_state = MAV_STATE_CRITICAL;
-					break;
+						dbg_print("Switches not ready, both should be pushed!\n");
+						//centralData->controls.run_mode = MOTORS_ON;
+						//centralData->mav_state = MAV_STATE_ACTIVE;
+						//centralData->mav_mode = MAV_MODE_STABILIZE_ARMED;
+						break;
+					case 2:
+						dbg_print("Switches not ready, both should be pushed!\n");
+						break;
+					case 3:
+						dbg_print("Switches not ready, both should be pushed!\n");
+						break;
 				}
 			}
-			if (motor_switch == -1)
-			{
-				switch_off_motors();
-			}
-			
 			break;
 		case MAV_STATE_ACTIVE:
 			switch(channelSwitches)
 			{
 				case 0:
+					centralData->waypoint_hold_init = false;
 					centralData->mav_mode= MAV_MODE_MANUAL_ARMED;
 					break;
 				case 1:
-					centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
+					centralData->waypoint_hold_init = false;
+					if (centralData->position_estimator.init_gps_position) {
+						centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
+					}
 					break;
 				case 2:
-					centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
+					if (centralData->position_estimator.init_gps_position) {
+						centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
+					}
 					break;
 				case 3:
-					
-					centralData->mav_mode = MAV_MODE_AUTO_ARMED;
+					if (centralData->position_estimator.init_gps_position) {
+						centralData->mav_mode = MAV_MODE_AUTO_ARMED;
+					}
 					break;
 			}
 			
 			switch (centralData->mav_mode)
 			{
 				case MAV_MODE_MANUAL_ARMED:
+					centralData->waypoint_hold_init = false;
 					break;
 				case MAV_MODE_STABILIZE_ARMED:
+					centralData->waypoint_hold_init = false;
 					break;
 				case MAV_MODE_GUIDED_ARMED:
-					if (centralData->mav_mode_previous != MAV_MODE_GUIDED_ARMED)
-					{
-						wp_hold_init();
-					}
+					waypoint_hold_position_handler();
 					break;
 				case MAV_MODE_AUTO_ARMED:
-					if (centralData->mav_mode_previous != MAV_MODE_AUTO_ARMED)
+					if (centralData->waypoint_set)
 					{
-						wp_hold_init();
-					}
-					if (!centralData->waypoint_set)
-					{
-						init_wp();
+						centralData->waypoint_hold_init = false;
 					}
 					waypoint_navigation_handler();
 					break;
@@ -265,7 +170,10 @@ task_return_t set_mav_mode_n_state()
 			//dbg_print_num(motor_switch,10);
 			if (motor_switch == -1)
 			{
-				switch_off_motors();
+				dbg_print("Switching off motors!\n");
+				centralData->controls.run_mode = MOTORS_OFF;
+				centralData->mav_state = MAV_STATE_STANDBY;
+				centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 			}
 		
 			switch (RC_check)
@@ -281,59 +189,59 @@ task_return_t set_mav_mode_n_state()
 			}
 			break;
 		case MAV_STATE_CRITICAL:
-			switch(channelSwitches)
-			{
-				case 0:
-					centralData->mav_mode= MAV_MODE_MANUAL_ARMED;
-					break;
-				case 1:
-					centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
-					break;
-				case 2:
-					centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
-					break;
-				case 3:
-					centralData->mav_mode = MAV_MODE_AUTO_ARMED;
-					break;
-			}
-			if (motor_switch == -1)
-			{
-				switch_off_motors();
-			}
 			
 			switch (centralData->mav_mode)
 			{
 				case MAV_MODE_GUIDED_ARMED:
 				case MAV_MODE_AUTO_ARMED:
-					if (centralData->mav_state_previous != MAV_STATE_CRITICAL)
-					{
-						centralData->critical_behavior = CLIMB_TO_SAFE_ALT;
-						centralData->critical_next_state = false;
-					}
 					waypoint_critical_handler();
 					break;
 			}
 			
 			switch (RC_check)
 			{
-				case 1:
+				case 1: // !! only if receivers are back, switch into appropriate mode
 					centralData->mav_state = MAV_STATE_ACTIVE;
-					centralData->critical_behavior = CLIMB_TO_SAFE_ALT;
-					centralData->critical_next_state = false;
+					centralData->critical_init = false;
+
+					switch(channelSwitches) 
+					{
+						case 0:
+							centralData->mav_mode= MAV_MODE_MANUAL_ARMED;
+							break;
+						case 1:
+							centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
+							break;
+						case 2:
+							centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
+							break;
+						case 3:
+							centralData->mav_mode = MAV_MODE_AUTO_ARMED;
+							break;
+					}
+					if (motor_switch == -1)
+					{
+						dbg_print("Switching off motors!\n");
+						centralData->controls.run_mode = MOTORS_OFF;
+						centralData->mav_state = MAV_STATE_STANDBY;
+						centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
+					}
+
+
 					break;
 				case -1:
 					break;
 				case -2:
-					if (centralData->critical_landing)
-					{
+					//if (centralData->critical_landing)
+					//{
 						centralData->mav_state = MAV_STATE_EMERGENCY;
-					}
+					//}
 					//centralData->mav_state = MAV_STATE_EMERGENCY;
 					break;
 			}
 			break;
 		case MAV_STATE_EMERGENCY:
-			if (centralData->position_estimator.localPosition.pos[Z] > -1.0)
+			//if (centralData->position_estimator.localPosition.pos[Z] < 1.0)
 			{
 				centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 				centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
@@ -357,8 +265,6 @@ task_return_t set_mav_mode_n_state()
 	//dbg_print_num(centralData->mav_mode,10);
 	//dbg_print("\n");
 	
-	centralData->mav_mode_previous = centralData->mav_mode;
-	centralData->mav_state_previous = centralData->mav_state;
 }
 
 void run_imu_update() {
@@ -465,12 +371,6 @@ task_return_t run_navigation_task()
 	
 		switch (centralData->mav_state)
 		{
-			case MAV_STATE_STANDBY:
-				if ((centralData->mav_mode == MAV_MODE_GUIDED_ARMED) && !centralData->automatic_take_off)
-				{
-					run_navigation(centralData->waypoint_hold_coordinates);
-				}
-				break;
 			case MAV_STATE_ACTIVE:
 				switch (centralData->mav_mode)
 				{
@@ -479,19 +379,27 @@ task_return_t run_navigation_task()
 						{
 							run_navigation(centralData->waypoint_coordinates);
 					
-						}else{
+							//computeNewVelocity(centralData->controls_nav.tvel,newVelocity);
+						}else if(centralData->waypoint_hold_init)
+						{
 							run_navigation(centralData->waypoint_hold_coordinates);
 						}
 						break;
 					case MAV_MODE_GUIDED_ARMED:
-						run_navigation(centralData->waypoint_hold_coordinates);
+						if(centralData->waypoint_hold_init)
+						{
+							run_navigation(centralData->waypoint_hold_coordinates);
+						}
 						break;
 				}
 				break;
 			case MAV_STATE_CRITICAL:
 				if ((centralData->mav_mode == MAV_MODE_GUIDED_ARMED)||(centralData->mav_mode == MAV_MODE_AUTO_ARMED))
 				{
-					run_navigation(centralData->waypoint_critical_coordinates);
+					if(centralData->critical_init)
+					{
+						run_navigation(centralData->waypoint_critical_coordinates);
+					}
 				}
 				break;
 		}
@@ -513,8 +421,6 @@ task_return_t run_barometer()
 
 
 void create_tasks() {
-	
-	has_started_engines = false;
 	
 	init_scheduler(&main_tasks);
 	

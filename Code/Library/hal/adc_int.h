@@ -16,14 +16,14 @@
 #define MAX_CHANNELS 16
 
 // Initializes ADC (configures Pins, starts Clock, sets defaults)
-void Init_ADCI(uint32_t adc_frequency, uint8_t reference_source, int set_oversampling, int set_oversampling_divider);
+void Init_ADCI(uint32_t adc_frequency, uint8_t reference_source);
 
 void clear_adc_sequencer();
 
-int8_t adc_sequencer_add(uint8_t input_p, uint8_t input_n, uint8_t gain);
+int8_t adc_sequencer_add(int16_t *buffer, uint8_t input_p, uint8_t input_n, uint8_t gain);
 
 // starts sampling, captures one buffer length and then stops
-void ADCI_Start_Sampling(int16_t *buffer, int8_t channels, int length, int samplingrate, bool continuous);
+void ADCI_Start_Sampling(int length, int samplingrate, int set_oversampling, int set_oversampling_divider, bool continuous);
 
 // stops sampling immediately
 void ADCI_Stop_Sampling();
@@ -36,5 +36,7 @@ int16_t ADCI_get_sample(int channel, int sample);
 int16_t* ADCI_get_buffer();
 
 int ADCI_get_sampling_status();
+
+uint32_t get_adc_int_period();
 
 #endif

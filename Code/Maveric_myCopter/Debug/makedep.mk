@@ -52,8 +52,6 @@ Library\control\stabilisation.c
 
 Library\hal\adc_int.c
 
-Library\hal\ads1274.c
-
 Library\hal\adxl345_driver.c
 
 Library\hal\amplifiers.c

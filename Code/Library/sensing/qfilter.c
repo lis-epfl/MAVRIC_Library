@@ -181,7 +181,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 			attitude->ki=attitude->kp/15.0;
 			break;
 		case LEVELING:
-			kp=0.3;
+			kp=1.0;
 			attitude->ki=attitude->kp/10.0;
 			break;
 		case LEVEL_PLUS_ACCEL:

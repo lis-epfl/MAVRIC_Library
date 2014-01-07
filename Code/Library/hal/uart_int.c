@@ -19,7 +19,7 @@
 	if (csr & AVR32_USART_CSR_RXRDY_MASK) {\
 		c1=(uint8_t)usart_opt[UID].uart_device.uart->rhr;\
 		if (usart_opt[UID].uart_device.receive_stream==NULL) {\
-			buffer_put(&(usart_opt[UID].uart_device.receive_buffer), c1);\
+			buffer_put_lossy(&(usart_opt[UID].uart_device.receive_buffer), c1);\
 		} else {\
 			usart_opt[UID].uart_device.receive_stream->put(usart_opt[UID].uart_device.receive_stream->data, c1);\
 		}\
@@ -34,31 +34,31 @@
 		}\
 	}\
 }			
-
-ISR(uart_handler_0, usart_opt[0].uart_device.IRQ, AVR32_INTC_INTLEV_INT1) {\
+/*
+ISR(uart_handler_4, usart_opt[4].uart_device.IRQ, AVR32_INTC_INTLEV_INT1) {\
 	uint8_t c1;\
-	int csr=usart_opt[0].uart_device.uart->csr;\
+	int csr=usart_opt[4].uart_device.uart->csr;\
 	if (csr & AVR32_USART_CSR_RXRDY_MASK) {\
-		c1=(uint8_t)usart_opt[0].uart_device.uart->rhr;\
-		if (usart_opt[0].uart_device.receive_stream==NULL) {\
-			buffer_put(&(usart_opt[0].uart_device.receive_buffer), c1);\
+		c1=(uint8_t)usart_opt[4].uart_device.uart->rhr;\
+		if (usart_opt[4].uart_device.receive_stream==NULL) {\
+			buffer_put_lossy(&(usart_opt[4].uart_device.receive_buffer), c1);\
 		} else {\
-			usart_opt[0].uart_device.receive_stream->put(usart_opt[0].uart_device.receive_stream->data, c1);\
+			usart_opt[4].uart_device.receive_stream->put(usart_opt[4].uart_device.receive_stream->data, c1);\
 		}\
 	}\
 	if (csr & AVR32_USART_CSR_TXRDY_MASK) {\
-		if (buffer_bytes_available(&(usart_opt[0].uart_device.transmit_buffer))>0) {\
-			c1=buffer_get(&(usart_opt[0].uart_device.transmit_buffer));\
-			usart_opt[0].uart_device.uart->thr=c1;\
+		if (buffer_bytes_available(&(usart_opt[4].uart_device.transmit_buffer))>0) {\
+			c1=buffer_get(&(usart_opt[4].uart_device.transmit_buffer));\
+			usart_opt[4].uart_device.uart->thr=c1;\
 		}\
-		if (buffer_bytes_available(&(usart_opt[0].uart_device.transmit_buffer))==0) {\
-				usart_opt[0].uart_device.uart->idr=AVR32_USART_IDR_TXRDY_MASK;\
+		if (buffer_bytes_available(&(usart_opt[4].uart_device.transmit_buffer))==0) {\
+				usart_opt[4].uart_device.uart->idr=AVR32_USART_IDR_TXRDY_MASK;\
 		}\
 	}\
-}			
+}*/			
 
 // define interrupt handlers using above macro
-//UART_HANDLER(0);
+UART_HANDLER(0);
 UART_HANDLER(1);
 UART_HANDLER(2);
 UART_HANDLER(3);

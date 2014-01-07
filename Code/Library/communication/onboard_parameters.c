@@ -238,5 +238,5 @@ void write_parameters_to_flashc()
 	local_array.values[param_set.param_count+2] = cksum2;
 	
 	flashc_memcpy((void *)nvram_array, &local_array, sizeof(*nvram_array) ,   true);
-	dbg_print("Write to falshc completed.\n");
+	dbg_print("Write to flashc completed.\n");
 }

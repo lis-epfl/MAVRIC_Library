@@ -128,10 +128,10 @@ static  usart_config_t usart_opt[UART_COUNT] =
 			.paritytype   = USART_NO_PARITY,
 			.stopbits     = USART_1_STOPBIT,
 			.channelmode  = USART_NORMAL_CHMODE },
-			.rx_pin_map= {AVR32_USART3_RXD_2_PIN, AVR32_USART3_RXD_2_FUNCTION},
-			.tx_pin_map= {AVR32_USART3_TXD_2_PIN, AVR32_USART3_TXD_2_FUNCTION}
-			//.rx_pin_map= {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION},
-			//.tx_pin_map= {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION}
+			//.rx_pin_map= {AVR32_USART3_RXD_2_PIN, AVR32_USART3_RXD_2_FUNCTION},
+			//.tx_pin_map= {AVR32_USART3_TXD_2_PIN, AVR32_USART3_TXD_2_FUNCTION}
+			.rx_pin_map= {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION},
+			.tx_pin_map= {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION}
 	},
 	{   .mode=UART_IN_OUT,
 		.uart_device.uart=&AVR32_USART4,

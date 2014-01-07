@@ -15,15 +15,16 @@
 #include "dsp.h"
 
 
-#define THRESHOLD 100
+#define THRESHOLD 500
 //#define Sampling_frequency 23437
-#define Sampling_frequency 15625
+#define Sampling_frequency 3000//15625
 #define filter_conversion 100
-#define ADCI_BUFFER_SIZE 512
+#define RADAR_BUFFER_SIZE 512
+#define FFT_POWER 9  //2^9 =512
 
-void calculate_radar();
+void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]);
 
 radar_target* get_tracked_target();
-int16_t* get_raw_FFT();
+int32_t* get_raw_FFT();
 
 #endif /* DOPPLER_RADAR_H_ */

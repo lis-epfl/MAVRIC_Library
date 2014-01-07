@@ -133,7 +133,7 @@ ubx_tim_vrfy *ubx_lastTimVRFYMessage = &ubx_TimVRFYMessage[1];
 unsigned short ubx_numberOfValidTimVRFYMessage = 0;
 
 // Set to true to print all data
-bool printNavOnDebug = false;
+bool printNavOnDebug = true;
 
 uint8_t loopPosllh = 0, loopVelned = 0, loopStatus = 0, loopSolution = 0, loopTimTp = 0, loopTimVrfy = 0;
 uint8_t numSkippedMsg = 10;

@@ -55,11 +55,11 @@ void initialisation() {
 	init_pos_integration(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 	
 	centralData->imu1.attitude.calibration_level=LEVELING;	
-	centralData->mav_state = MAV_STATE_BOOT;
+	centralData->mav_state = MAV_STATE_CALIBRATING;
 	centralData->mav_mode = MAV_MODE_PREFLIGHT;
 
-//	calibrate_Gyros(&centralData->imu1);
-	for (i=400; i>0; i--) {
+	calibrate_Gyros(&centralData->imu1);
+	for (i=700; i>0; i--) {
 		run_imu_update();
 		mavlink_protocol_update();	
 		delay_ms(5);
@@ -83,10 +83,6 @@ void initialisation() {
 	}
 	centralData->mav_state = MAV_STATE_STANDBY;
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
-	
-	centralData->mav_mode_previous = centralData->mav_mode;
-	centralData->mav_state_previous = centralData->mav_state;
-	
 	init_nav();
 	init_waypoint_handler();
 	//e_init();
@@ -107,7 +103,7 @@ void main (void)
 	create_tasks();
 	
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	centralData->simulation_mode = 1;
+	centralData->simulation_mode = 0;
 	
 	// main loop
 	

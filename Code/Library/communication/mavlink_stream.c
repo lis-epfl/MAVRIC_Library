@@ -20,7 +20,8 @@ static volatile Buffer_t mavlink_in_buffer;
 
 central_data_t *centralData;
 
-NEW_TASK_SET (mavlink_tasks, 30)
+//NEW_TASK_SET (mavlink_tasks, 30)
+task_set mavlink_tasks;
 
 void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 {
@@ -44,6 +45,8 @@ void mavlink_receive_handler() {
 }
 
 void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream, int sysid) {
+	mavlink_tasks.number_of_tasks=30;
+	
 	mavlink_system.sysid = sysid; // System ID, 1-255
 	mavlink_system.compid = 50; // Component/Subsystem ID, 1-255
 	mavlink_system.type = MAV_TYPE_QUADROTOR;
@@ -57,7 +60,7 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream,
 	
 	init_scheduler(&mavlink_tasks);
 	
-	add_task(&mavlink_tasks, 100000, RUN_REGULAR, &send_scheduled_parameters, MAVLINK_MSG_ID_PARAM_VALUE);
+	//add_task(&mavlink_tasks, 100000, RUN_REGULAR, &send_scheduled_parameters, MAVLINK_MSG_ID_PARAM_VALUE);
 
 	centralData = get_central_data();
 }
@@ -112,6 +115,14 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 }
 
 void handle_mavlink_message(Mavlink_Received_t* rec) {
+	dbg_print("\n Received message with ID");
+	dbg_print_num(rec->msg.msgid, 10);
+	dbg_print(" from system");
+	dbg_print_num(rec->msg.sysid, 10);
+	dbg_print(" for component");
+	dbg_print_num(rec->msg.compid,10);
+	dbg_print( "\n");
+	
 	if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) {
 		switch(rec->msg.msgid) {
 			case MAVLINK_MSG_ID_PARAM_REQUEST_LIST: { // 21
@@ -132,8 +143,9 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 				mavlink_param_request_read_t request;
 				mavlink_msg_param_request_read_decode(&rec->msg, &request);
 				// Check if this message is for this system and subsystem
-				if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid
-				&& (uint8_t)request.target_component == (uint8_t)mavlink_system.compid) {
+				if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid)
+				//&& (uint8_t)request.target_component == (uint8_t)mavlink_system.compid)
+				 {
 
 					send_parameter(&request);
 				}				
@@ -146,11 +158,11 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 			break;
 
 			case MAVLINK_MSG_ID_REQUEST_DATA_STREAM: { // 66
-				mavlink_request_data_stream_t request;
+				volatile mavlink_request_data_stream_t request;
 				mavlink_msg_request_data_stream_decode(&rec->msg, &request);
 				// TODO: control target_component == compid!
-				if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid
-				&& (uint8_t)request.target_component == (uint8_t)mavlink_system.compid)
+				if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid)
+				//&& (uint8_t)request.target_component == (uint8_t)mavlink_system.compid)
 				{
 					dbg_print("stream request:");
 					dbg_print_num(request.target_component,10);

@@ -14,7 +14,7 @@
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
     <OutputType>Executable</OutputType>
     <Language>C</Language>
-    <avrtool>com.atmel.avrdbg.tool.jtagice3plus</avrtool>
+    <avrtool>com.atmel.avrdbg.tool.jtagicemk3</avrtool>
     <avrtoolinterface>JTAG</avrtoolinterface>
     <com_atmel_avrdbg_tool_jtagicemkii>
       <ToolType>com.atmel.avrdbg.tool.jtagicemkii</ToolType>
@@ -234,7 +234,7 @@
     <com_atmel_avrdbg_tool_jtagicemk3>
       <ToolType>com.atmel.avrdbg.tool.jtagicemk3</ToolType>
       <ToolName>JTAGICE3</ToolName>
-      <ToolNumber>J30200015895</ToolNumber>
+      <ToolNumber>J30200014870</ToolNumber>
       <Channel>
         <host>127.0.0.1</host>
         <port>49558</port>
@@ -243,7 +243,7 @@
       <ToolOptions>
         <InterfaceName>JTAG</InterfaceName>
         <InterfaceProperties>
-          <JtagDbgClock>0</JtagDbgClock>
+          <JtagDbgClock>7500000</JtagDbgClock>
           <JtagProgClock>1000000</JtagProgClock>
           <IspClock>150000</IspClock>
           <JtagInChain>false</JtagInChain>
@@ -260,23 +260,6 @@
     <RamSnippetAddress>0x20000000</RamSnippetAddress>
     <UncachedRange />
     <BootSegment>0</BootSegment>
-    <com_atmel_avrdbg_tool_jtagice3plus>
-      <ToolOptions>
-        <InterfaceProperties>
-          <JtagEnableExtResetOnStartSession>true</JtagEnableExtResetOnStartSession>
-          <JtagDbgClock>7500000</JtagDbgClock>
-          <JtagInChain>false</JtagInChain>
-          <JtagDevicesBefore>0</JtagDevicesBefore>
-          <JtagDevicesAfter>0</JtagDevicesAfter>
-          <JtagInstrBitsBefore>0</JtagInstrBitsBefore>
-          <JtagInstrBitsAfter>0</JtagInstrBitsAfter>
-        </InterfaceProperties>
-        <InterfaceName>JTAG</InterfaceName>
-      </ToolOptions>
-      <ToolType>com.atmel.avrdbg.tool.jtagicemk3</ToolType>
-      <ToolNumber>J30200015895</ToolNumber>
-      <ToolName>JTAGICE3</ToolName>
-    </com_atmel_avrdbg_tool_jtagice3plus>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <OutputFileName>MegaFly2</OutputFileName>
@@ -1025,6 +1008,15 @@
     <Compile Include="src\central_data.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\conf_imu_rev3.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\conf_platform.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\conf_stabilisation_copter.h">
       <SubType>compile</SubType>
     </Compile>
@@ -1095,12 +1087,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\adc_int.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\ads1274.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\ads1274.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\adxl345_driver.c">
@@ -1539,9 +1525,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\conf_clock.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\config\conf_platform.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\conf_sim_model.h">

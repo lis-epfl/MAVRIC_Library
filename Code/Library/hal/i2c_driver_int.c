@@ -9,9 +9,9 @@
 #include "sysclk.h"
 #include "print_util.h"
 
+i2c_packet_t transfer_queue[I2C_SCHEDULE_SLOTS];
+int current_slot, last_slot;
 i2c_packet_t *current_transfer;
-
-i2c_callback_t current_callback;
 
 /*!  The I2C interrupt handler.
  */
@@ -82,6 +82,8 @@ ISR(i2c_int_handler_i2c0,CONF_TWIM_IRQ_GROUP,CONF_TWIM_IRQ_LEVEL)
 //   if (schedule[0][current_schedule_slot[0]].callback) schedule[0][current_schedule_slot[0]].callback;
    //putstring(&AVR32_USART0, "!");
 }
+
+
 
 /*!  The I2C interrupt handler.
  */
@@ -300,3 +302,27 @@ char i2c_trigger_request(unsigned char i2c_device, i2c_packet_t *transfer) {
 
 }
 
+
+int i2c_append_transfer(i2c_packet_t *request) {
+	
+}
+int i2c_append_read_transfer(uint8_t slave_address, uint8_t *data, uint16_t size, task_handle_t *event_handler) {
+	
+}
+int i2c_append_write_transfer(uint8_t slave_address, uint8_t *data, uint16_t size, task_handle_t *event_handler) {
+	
+}
+int i2c_append_register_read_transfer(uint8_t slave_address, uint8_t register_address, uint8_t *data, uint16_t size, task_handle_t *event_handler) {
+	
+}
+
+int i2c_clear_queue() {
+	
+}
+
+bool i2c_is_ready() {
+	
+}
+int i2c_get_queued_requests() {
+	
+}

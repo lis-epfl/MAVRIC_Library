@@ -7,7 +7,7 @@
 
 #include "central_data.h"
 
-central_data_t central_data;
+static volatile central_data_t central_data;
 
 
 central_data_t* get_central_data() {
@@ -21,5 +21,5 @@ byte_stream_t* get_telemetry_downstream() {
 	return central_data.telemetry_down_stream;
 }
 byte_stream_t* get_debug_stream() {
-	return &central_data.debug_stream;
+	return central_data.debug_out_stream;
 }

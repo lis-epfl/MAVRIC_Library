@@ -146,10 +146,10 @@ typedef struct lsm330dlc_gyro_conf_t{
 
 
 
-#define LSM_ACC_OUT_ADDRESS 0x27
+#define LSM_ACC_OUT_ADDRESS 0x28
 
 #define LSM_ACC_FIFO_CTRL_ADDRESS 0x2E
-#define LSM_ACC_FIFO_SRC_ADDRESS 0x2E
+#define LSM_ACC_FIFO_SRC_ADDRESS 0x2F
 
 #define LSM_GYRO_OUT_ADDRESS 0x26
 
@@ -158,10 +158,10 @@ typedef struct lsm330dlc_gyro_conf_t{
 static const lms330dlc_acc_conf_t lsm_acc_default_config=
 {.start_address=0x20 | LSM_AUTO_INCREMENT,
 	.ctrl_reg_a=
-	{	LSM_ACC_DATARATE_1620Hz | LSM_ACC_ALL_EN ,	//CTRL_REG_G_1
+	{	LSM_ACC_DATARATE_400Hz | LSM_ACC_ALL_EN ,	//CTRL_REG_G_1
 		0,											//CTRL_REG_G_2
 		0,											//CTRL_REG_G_3
-		LSM_ACC_HIGH_RES | LSM_ACC_FULL_SCALE_8G,  //|LSM_ACC_BIG_ENDIAN,					//CTRL_REG_G_4
+		LSM_ACC_HIGH_RES | LSM_ACC_FULL_SCALE_8G  |LSM_ACC_BIG_ENDIAN,					//CTRL_REG_G_4
 		LSM_ACC_FIFO_EN								//CTRL_REG_G_5
 	}
 };
@@ -173,7 +173,7 @@ static const lsm330dlc_gyro_conf_t lsm_gyro_default_config=
 		0,											//CTRL_REG_A_2
 		0,											//CTRL_REG_A_3
 		LSM_GYRO_FULL_SCALE_2000|LSM_GYRO_BIG_ENDIAN,	//CTRL_REG_A_4
-		LSM_GYRO_FIFO_EN
+		0//LSM_GYRO_FIFO_EN
 	}
 };
 
@@ -198,8 +198,8 @@ typedef struct{
 } lsm_acc_data_t;
 
 typedef struct{
-	uint8_t status_register;
-	int16_t axes[32*3];
+	//uint8_t status_register;
+	uint8_t axes[32*6];
 } lsm_acc_fifo_t;
 
 void init_lsm330(void);

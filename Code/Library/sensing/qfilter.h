@@ -14,7 +14,7 @@
 #include "coord_conventions.h"
 
 #define GYRO_LPF 0.1
-#define ACC_LPF 0.02
+#define ACC_LPF 0.05
 #define MAG_LPF 0.1
 
 
