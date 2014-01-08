@@ -45,7 +45,20 @@ class DropTarget(QtGui.QWidget):
         self.updateSource( event.source().model().lastDraggedNode)
 
 
+class DockPlot(QtGui.QDockWidget):
+    def __init__(self,  title="Plot",  parent=None,  widget=None):
+        QtGui.QDockWidget.__init__( self, title,  parent)
+        if widget!= None:
+            self.setWidget(widget)
+        
+        self.setFloating(True)
+        self.setAllowedAreas(QtCore.Qt.NoDockWidgetArea)
 
+        
+    def closeEvent(self,  event):
+        self.widget().closeEvent(event)
+        print "closing dock"
+    
 class DropPlot(QtGui.QWidget):
     def __init__(self, parent=None):
         QtGui.QWidget.__init__( self, parent=parent)
@@ -81,7 +94,8 @@ class DropPlot(QtGui.QWidget):
       self.source=source
 
     def updatePlot(self):
-      for t in self.targets:
+        print "up"
+        for t in self.targets:
          source=t.source
          if source!=None:
             if t.curve==None:
@@ -106,3 +120,7 @@ class DropPlot(QtGui.QWidget):
         self.targets.append(sourceTarget)
         self.targets_layout.addWidget(sourceTarget)
         print "dropped on plot!"
+        
+    def closeEvent(self,  event):
+        print "closing window"
+        self.t.stop()
