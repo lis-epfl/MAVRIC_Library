@@ -45,7 +45,7 @@ initialise_board(central_data_t *central_data){
 		
 		register_write_stream(get_UART_handle(4), &central_data->wired_out_stream);
 
-		make_buffered_stream(&(central_data->wired_in_buffer), &(central_data->wired_in_stream));
+		make_buffered_stream_lossy(&(central_data->wired_in_buffer), &(central_data->wired_in_stream));
 		register_read_stream(get_UART_handle(4), &(central_data->wired_in_stream));
 
 		central_data->telemetry_down_stream=&(central_data->wired_out_stream);
@@ -62,6 +62,23 @@ initialise_board(central_data_t *central_data){
 		Enable_global_interrupt();
 }
 
+
+__attribute__((__naked__))
+void eic_nmi_handler( void )
+{
+	// dummy non-maskable interrupt handler
+	//	int i=0;
+	__asm__ __volatile__ (
+			/* Save registers not saved upon NMI exception. */
+			"pushm   r0-r12, lr\n\t"
+			);
+	__asm__ __volatile__ (
+			/* Restore the registers. */
+			"popm   r0-r12, lr\n\t"
+			/* Leaving the exception handler. */
+			"rete"
+			);
+}
 
 
 

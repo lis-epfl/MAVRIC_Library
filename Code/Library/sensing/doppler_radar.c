@@ -75,7 +75,7 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 	//time1=get_micros();
 	amplitude=0;
 	index=0;
-	for(i=1;i<50;i++) //ignore the element 0 (low frequency noise)
+	for(i=1;i<RADAR_BUFFER_SIZE/2 - 1;i++) //ignore the element 0 (low frequency noise)
 	{
 				
 		if(fft_amp[i]>amplitude)
@@ -89,7 +89,7 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 	//Let's find the second maximum peak
 	amplitude2=0;
 	index2=0;
-	for(i=1;i<50;i++)
+	for(i=1;i<RADAR_BUFFER_SIZE/2 - 1;i++)
 	{
 		if(fft_amp[i]>amplitude2 && i!=index)
 		{

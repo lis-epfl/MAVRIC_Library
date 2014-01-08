@@ -53,7 +53,7 @@ typedef struct  {
 	uint8_t number_of_tasks;
 	int running_task;
 	int current_schedule_slot;
-	task_entry tasks[30];
+	task_entry tasks[MAX_NUMBER_OF_TASKS];
 } task_set;
 
 //#define NEW_TASK_SET(NAME,NUMBER) struct task_set {const task_handle_t number_of_tasks; int running_task; int current_schedule_slot; task_entry tasks[NUMBER];} NAME = {.number_of_tasks=NUMBER}; 

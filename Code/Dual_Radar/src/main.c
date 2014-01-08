@@ -113,11 +113,11 @@ void main (void)
 				// get new samples
 				if (wait_for_buffer==0) {
 					for (i=0; i<SAMPLE_BUFFER_SIZE/2; i++) {
-						input_buffer[ch][RADAR_BUFFER_SIZE-(SAMPLE_BUFFER_SIZE/2)+i]=sample_buffer[ch][i];
+						input_buffer[ch][RADAR_BUFFER_SIZE-(SAMPLE_BUFFER_SIZE/2)+i]= sample_buffer[ch][i];
 					}
 				} else {
 					for (i=0; i<SAMPLE_BUFFER_SIZE/2; i++) {
-						input_buffer[ch][RADAR_BUFFER_SIZE-(SAMPLE_BUFFER_SIZE/2)+i]=sample_buffer[ch][i+(SAMPLE_BUFFER_SIZE/2)];
+						input_buffer[ch][RADAR_BUFFER_SIZE-(SAMPLE_BUFFER_SIZE/2)+i]= sample_buffer[ch][i+(SAMPLE_BUFFER_SIZE/2)];
 					}
 				}
 			}

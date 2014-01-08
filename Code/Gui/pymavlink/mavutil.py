@@ -638,6 +638,7 @@ class mavserial(mavfile):
         self.baud = baud
         self.device = device
         self.autoreconnect = autoreconnect
+        print "opening serial port",  device,  "with baudrate", self.baud
         self.port = serial.Serial(self.device, self.baud, timeout=0,
                                   dsrdtr=False, rtscts=False, xonxoff=False)
         try:

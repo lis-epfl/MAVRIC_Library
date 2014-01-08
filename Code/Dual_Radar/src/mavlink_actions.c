@@ -46,11 +46,11 @@ void mavlink_send_radar_raw() {
 	for (i=0; i<64; i++) values[i]=ADCI_get_sample(0, i);
 	mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 1, values);
 
-	for (i=0; i<64; i++) values[i]=ADCI_get_sample(1, i);
-	mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 2, values);
+	//for (i=0; i<64; i++) values[i]=ADCI_get_sample(1, i);
+	//mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 2, values);
 	
-	for (i=0; i<64; i++) values[i]=ADCI_get_sample(2, i);
-	mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 3, values);
+	//for (i=0; i<64; i++) values[i]=ADCI_get_sample(2, i);
+	//mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, get_millis(), 3, values);
 
 	
 //	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Radar_velocity", target->velocity);

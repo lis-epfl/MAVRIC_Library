@@ -34,7 +34,7 @@
 		}\
 	}\
 }			
-/*
+
 ISR(uart_handler_4, usart_opt[4].uart_device.IRQ, AVR32_INTC_INTLEV_INT1) {\
 	uint8_t c1;\
 	int csr=usart_opt[4].uart_device.uart->csr;\
@@ -55,14 +55,14 @@ ISR(uart_handler_4, usart_opt[4].uart_device.IRQ, AVR32_INTC_INTLEV_INT1) {\
 				usart_opt[4].uart_device.uart->idr=AVR32_USART_IDR_TXRDY_MASK;\
 		}\
 	}\
-}*/			
+}
 
 // define interrupt handlers using above macro
 UART_HANDLER(0);
 UART_HANDLER(1);
 UART_HANDLER(2);
 UART_HANDLER(3);
-UART_HANDLER(4);
+//UART_HANDLER(4);
 
 
 void register_UART_handler(int UID) {
