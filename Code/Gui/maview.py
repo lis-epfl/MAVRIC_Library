@@ -27,7 +27,7 @@ class Update_Thread():
         self.treeUpdateFrequency=1.0
         self.t = QtCore.QTimer()
         self.t.timeout.connect(self.update)
-        self.t.start(1)
+        self.t.start(2)
 
       
     def update(self):
@@ -88,10 +88,7 @@ class MainWindow(QtGui.QMainWindow):
         print "clicked"
         pw1 = DropPlot() 
         #self.l.addWidget(pw1,  0,  1)
-        dock1=QtGui.QDockWidget("plot",  self)
-        dock1.setWidget(pw1)
-        dock1.setFloating(True)
-        dock1.setAllowedAreas(QtCore.Qt.NoDockWidgetArea)
+        dock1=DockPlot(title="plot",  parent=self,  widget=pw1)
         self.addDockWidget(QtCore.Qt.NoDockWidgetArea,  dock1)
         dock1.show()
         

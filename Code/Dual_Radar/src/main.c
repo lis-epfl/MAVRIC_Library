@@ -98,10 +98,13 @@ void main (void)
 
 	
 	// start sampling in continuous mode
-	ADCI_Start_Sampling(SAMPLE_BUFFER_SIZE, Sampling_frequency, 16, 1, true);
+	ADCI_Start_Sampling(SAMPLE_BUFFER_SIZE, Sampling_frequency, 16, 1, false);
 	while (1==1) {
 		this_looptime=get_millis();
-		
+		if (ADCI_get_sampling_status()>=SAMPLE_BUFFER_SIZE) {
+			ADCI_Start_Sampling(SAMPLE_BUFFER_SIZE, Sampling_frequency, 16, 1, false);
+		}
+
 		if (((ADCI_get_sampling_status()>=SAMPLE_BUFFER_SIZE/2) && (wait_for_buffer==0)) ||
 		   ((ADCI_get_sampling_status()<SAMPLE_BUFFER_SIZE/2) && (wait_for_buffer==1)))
 		 {  // half of the sample buffer is ready for processing
@@ -121,18 +124,18 @@ void main (void)
 					}
 				}
 			}
-			//ADCI_Start_Sampling(SAMPLE_BUFFER_SIZE, Sampling_frequency, 16, 1, true);
 			wait_for_buffer=1-wait_for_buffer;
 			LED_On(LED1);
 
 			calculate_radar(&input_buffer[0], &input_buffer[1]);
+		
 			mavlink_send_radar();
 			//mavlink_send_radar_raw();
 			
 			//dbg_putfloat(get_tracked_target()->velocity,2);
 			//dbg_print(".\n");
 
-		}			
+		}	
 		
 		//run_scheduler_update(&main_tasks, FIXED_PRIORITY);
 		mavlink_protocol_update();
