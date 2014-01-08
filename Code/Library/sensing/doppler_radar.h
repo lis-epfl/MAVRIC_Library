@@ -17,7 +17,7 @@
 
 #define THRESHOLD 500
 //#define Sampling_frequency 23437
-#define Sampling_frequency 3000//15625
+#define Sampling_frequency 6000//15625
 #define filter_conversion 100
 #define RADAR_BUFFER_SIZE 512
 #define FFT_POWER 9  //2^9 =512
