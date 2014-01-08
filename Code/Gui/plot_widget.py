@@ -7,8 +7,9 @@ class DropTarget(QtGui.QWidget):
     def __init__(self,text, parent ,  color=QtGui.QColor(0, 0, 0)):
         QtGui.QWidget.__init__( self, parent=parent)
         self.myParent=parent
+        self.originalName=text
         self.color=color
-        self.label=QtGui.QLabel("text", self)
+        self.label=QtGui.QLabel(text, self)
         self.removeButton=QtGui.QPushButton("-")
         #self.removeButton.setAutoFillBackground(True)
         #self.removeButton.setStyleSheet("background-color: rgba(%i, %i, %i, %i); "%(color.red(),  color.green(),  color.blue(),  255))
@@ -32,9 +33,10 @@ class DropTarget(QtGui.QWidget):
             event.ignore() 
 
     def remove(self):
+        self.source=None
+        self.label.setText(self.originalName)
         self.myParent.removeTarget(self)
     
-
     def updateSource(self,  source):
         self.source=source
         self.label.setAutoFillBackground(True)
@@ -43,21 +45,58 @@ class DropTarget(QtGui.QWidget):
                      
     def dropEvent(self, event):
         self.updateSource( event.source().model().lastDraggedNode)
-
-
-class DockPlot(QtGui.QDockWidget):
-    def __init__(self,  title="Plot",  parent=None,  widget=None):
-        QtGui.QDockWidget.__init__( self, title,  parent)
-        if widget!= None:
-            self.setWidget(widget)
         
-        self.setFloating(True)
-        self.setAllowedAreas(QtCore.Qt.NoDockWidgetArea)
-
         
-    def closeEvent(self,  event):
-        self.widget().closeEvent(event)
-        print "closing dock"
+    def getData(self):
+        if self.source==None:
+            return []
+        if isinstance(self.source.content(), list):
+            return self.source.content()
+        else:
+            return self.source.trace
+
+
+class Curve2DBox(QtGui.QWidget):
+    def __init__(self,text, parent ,  color=QtGui.QColor(0, 0, 0)):
+        QtGui.QWidget.__init__( self, parent=parent)
+        self.myParent=parent
+        self.color=color
+
+        self.sources=[DropTarget("x", self,  color=self.color),  DropTarget("y", self,  color=self.color)]
+        self.layout = QtGui.QVBoxLayout()
+        self.layout.addStretch()
+        self.setLayout(self.layout)
+        for s in self.sources:
+            self.layout.addWidget(s)
+        self.curve=None
+
+    def updateCurve(self):
+        
+        xdata=self.sources[0].getData()
+        ydata=self.sources[1].getData()
+        length=max(len(xdata),  len(ydata))
+        if len(xdata)==0:
+            xdata=[i for i in range(0, length)]
+        if len(xdata)==0:
+            ydata=[i for i in range(0, length)]
+            
+        self.curve.setData(x=xdata,  y=ydata)
+            
+
+    def removeTarget(self,  target):
+        #self.layout.removeWidget(target)
+        #target.deleteLater()
+        #self.targets.remove(target)
+        removal=True
+        for s in self.sources:
+            if s.source!=None:
+                removal=False
+            
+        if removal:
+            self.myParent.removeTarget(self)
+
+
+
     
 class DropPlot(QtGui.QWidget):
     def __init__(self, parent=None):
@@ -94,19 +133,10 @@ class DropPlot(QtGui.QWidget):
       self.source=source
 
     def updatePlot(self):
-        print "up"
         for t in self.targets:
-         source=t.source
-         if source!=None:
             if t.curve==None:
-               t.curve=self.plotwidget.plot(pen=pg.mkPen(t.color))
-            
-            if isinstance(source.content(), list):
-                x=[i for i in range(0, len(source.content()))]
-                t.curve.setData(y=source.content(), x=x) 
-            else:
-                x=[i for i in range(0, len(source.trace))]
-                t.curve.setData(y=source.trace, x=x) 
+                t.curve=self.plotwidget.plot(pen=pg.mkPen(t.color))
+            t.updateCurve()
               
     def dragEnterEvent(self, event):
         if event.mimeData().hasFormat('application/x-mavplot'):
@@ -115,8 +145,8 @@ class DropPlot(QtGui.QWidget):
             event.ignore() 
 
     def dropEvent(self, event):
-        sourceTarget=DropTarget("data", self,  color=pg.intColor(len(self.targets)))
-        sourceTarget.updateSource(event.source().model().lastDraggedNode)
+        sourceTarget=Curve2DBox("data", self,  color=pg.intColor(len(self.targets)))
+        sourceTarget.sources[1].updateSource(event.source().model().lastDraggedNode)
         self.targets.append(sourceTarget)
         self.targets_layout.addWidget(sourceTarget)
         print "dropped on plot!"
@@ -124,3 +154,18 @@ class DropPlot(QtGui.QWidget):
     def closeEvent(self,  event):
         print "closing window"
         self.t.stop()
+
+
+
+class DockPlot(QtGui.QDockWidget):
+    def __init__(self,  title="Plot",  parent=None,  widget=None):
+        QtGui.QDockWidget.__init__( self, title,  parent)
+        if widget!= None:
+            self.setWidget(widget)
+        
+        self.setFloating(True)
+        self.setAllowedAreas(QtCore.Qt.NoDockWidgetArea)
+
+    def closeEvent(self,  event):
+        self.widget().closeEvent(event)
+        print "closing dock"
