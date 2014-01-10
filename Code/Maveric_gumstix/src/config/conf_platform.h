@@ -12,7 +12,7 @@
 
 #define NATIVE_BIG_ENDIAN  
 
-#define MAVLINK_SYS_ID 44
+#define MAVLINK_SYS_ID 1
 
 #define MAVLINK_BASE_STATION_ID 255
 
@@ -179,5 +179,9 @@
 // define type of remote controller
 //#define SPEKTRUM_REMOTE
 #define TURNIGY_REMOTE
+
+//define type Gumstix
+#define SF_GUMSTIX_API 1
+#define SF_ADVANCED_GUMSTIX_API 1
 
 #endif /* CONF_PLATFORM_H_ */

@@ -11,6 +11,7 @@
 #include "print_util.h"
 #include "stabilisation.h"
 #include "gps_ublox.h"
+#include "gumstix.h"
 #include "estimator.h"
 #include "navigation.h"
 #include "led.h"
@@ -454,6 +455,15 @@ task_return_t gps_task() {
 	}
 }
 
+task_return_t gumstix_task() {
+	uint32_t tnow = get_millis();
+	if (centralData->simulation_mode==1) {
+		// TODO : simulate_gumstix(&centralData->sim_model, &centralData->GUMSTIX_data);
+		} else {
+			gumstix_update();
+	}
+}
+
 task_return_t run_estimator()
 {
 	estimator_loop();
@@ -526,6 +536,7 @@ void create_tasks() {
 	main_tasks.tasks[1].timing_mode=PERIODIC_RELATIVE;
 
 	register_task(&main_tasks, 2, 100000, RUN_REGULAR, &gps_task);
+	//register_task(&main_tasks, 6, 100000, RUN_REGULAR, &gumstix_task);
 	//register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
 	//register_task(&main_tasks, , 100000, RUN_REGULAR, &read_radar);
 

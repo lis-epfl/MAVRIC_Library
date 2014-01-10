@@ -71,6 +71,11 @@ typedef struct  {
 	byte_stream_t gps_stream_out;
 	gps_Data_type GPS_data;
 	
+	Buffer_t gumstix_buffer;
+	byte_stream_t gumstix_stream_in;
+	byte_stream_t gumstix_stream_out;
+	//gumstix_Data_type GUMSTIX_data;
+	
 	Estimator_Data_t estimation;
 	simulation_model_t sim_model;
 	

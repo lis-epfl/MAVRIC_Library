@@ -530,14 +530,14 @@ typedef struct
 	
 	unsigned char horizontalStatus;
 	
-// 	unsigned char latitudeStatus;
-// 	unsigned char longitudeStatus;
+ 	unsigned char latitudeStatus;
+ 	unsigned char longitudeStatus;
  	unsigned char altitudeStatus;
  	unsigned char speedStatus;
-// 	unsigned char groundSpeedStatus;
+ 	unsigned char groundSpeedStatus;
 // 	unsigned char northSpeedStatus;
 // 	unsigned char eastSpeedStatus;
-// 	unsigned char verticalSpeedStatus;
+ 	unsigned char verticalSpeedStatus;
  	unsigned char courseStatus;
 	unsigned char accuracyStatus;
 } gps_Data_type;

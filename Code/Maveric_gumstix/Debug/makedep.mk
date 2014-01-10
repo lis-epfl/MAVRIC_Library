@@ -34,7 +34,17 @@ Library\util\quick_trig.c
 
 src\central_data.c
 
+src\gumstix.c
+
+src\uart_hub.c
+
+src\gumstix_api.c
+
 src\mavlink_actions.c
+
+src\sensor_hub.c
+
+src\sipp.c
 
 src\tasks.c
 

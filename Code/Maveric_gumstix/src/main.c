@@ -31,6 +31,8 @@
 #include "orca.h"
 //#include "flashvault.h"
 
+#include "gumstix_api.h"
+
 central_data_t *centralData;
 
 void initialisation() {
@@ -94,6 +96,9 @@ void initialisation() {
 	init_neighbors();
 	init_orca();
 	
+	//init gumstix
+	//gum_Setup();
+	
 	LED_On(LED1);
 }
 
@@ -107,7 +112,7 @@ void main (void)
 	create_tasks();
 	
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	centralData->simulation_mode = 1;
+	centralData->simulation_mode = 0;
 	
 	// main loop
 	

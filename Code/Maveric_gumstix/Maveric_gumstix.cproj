@@ -10,7 +10,7 @@
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
     <AvrGccProjectExtensions />
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
-    <Name>Maveric_myCopter</Name>
+    <Name>Maveric_gumstix</Name>
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
     <OutputType>Executable</OutputType>
     <Language>C</Language>
@@ -273,8 +273,8 @@
         </InterfaceProperties>
         <InterfaceName>JTAG</InterfaceName>
       </ToolOptions>
-      <ToolType>com.atmel.avrdbg.tool.jtagicemk3</ToolType>
-      <ToolNumber>J30200015895</ToolNumber>
+      <ToolType>com.atmel.avrdbg.tool.jtagice3plus</ToolType>
+      <ToolNumber>J30200016182</ToolNumber>
       <ToolName>JTAGICE3</ToolName>
     </com_atmel_avrdbg_tool_jtagice3plus>
   </PropertyGroup>
@@ -1019,6 +1019,9 @@
     <Compile Include="Library\util\quick_trig.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\advanced_gapi.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\central_data.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1031,10 +1034,43 @@
     <Compile Include="src\config\conf_stabilisation_hybrid.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\gapi.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\gumstix.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\gumstix.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\uart_hub.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\uart_hub.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\gumstix_api.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\gumstix_api.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\mavlink_actions.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\mavlink_actions.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\sensor_hub.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\sensor_hub.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\sipp.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\sipp.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\tasks.c">

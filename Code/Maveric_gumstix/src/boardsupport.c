@@ -58,12 +58,13 @@ void initialise_board(central_data_t *centralData) {
 		} else {
 		//putstring(STDOUT, "initialised I2C.\n");
 	};
+	/* Remove ic1 which was for the radar interface to activate uart2 for the gumstix interface
 	if (init_i2c(1)!=STATUS_OK) {
 		//putstring(STDOUT, "Error initialising I2C\n");
 		while (1==1);
 		} else {
 		//putstring(STDOUT, "initialised I2C.\n");
-	};
+	};*/
 
 	LED_Off(LED1);
 	// Configure the pins connected to LEDs as output and set their default
@@ -78,6 +79,11 @@ void initialise_board(central_data_t *centralData) {
 	init_UART_int(0);
 	register_write_stream(get_UART_handle(0), &(centralData->xbee_out_stream));
 				
+	//gumstix interface
+	init_UART_int(2);
+	make_buffered_stream(&(centralData->gumstix_buffer), &(centralData->gumstix_stream_in));
+	register_read_stream(get_UART_handle(3), &(centralData->gumstix_stream_in));
+	register_write_stream(get_UART_handle(3), &(centralData->gumstix_stream_out));
 		
 	init_UART_int(3);
 	make_buffered_stream(&(centralData->gps_buffer), &(centralData->gps_stream_in));

@@ -32,6 +32,7 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool);
 task_return_t set_mav_mode_n_state();
 task_return_t run_stabilisation();
 task_return_t gps_task();
+task_return_t gumstix_task();
 task_return_t run_estimator();
 task_return_t run_navigation_task();
 task_return_t run_barometer();

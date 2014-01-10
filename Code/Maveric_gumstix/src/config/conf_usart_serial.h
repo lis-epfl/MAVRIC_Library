@@ -105,12 +105,12 @@ static  usart_config_t usart_opt[UART_COUNT] =
 			.rx_pin_map= {AVR32_USART1_RXD_1_PIN, AVR32_USART1_RXD_1_FUNCTION},
 			.tx_pin_map= {AVR32_USART1_TXD_1_PIN, AVR32_USART1_TXD_1_FUNCTION}
 	},
-	{   .mode=UART_OFF,
+	{   .mode=UART_IN_OUT,
 		.uart_device.uart=&AVR32_USART2,
 		.uart_device.IRQ=AVR32_USART2_IRQ,
 		.uart_device.receive_stream=NULL,
 		.options={
-			.baudrate     = 57600,
+			.baudrate     = 115200,
 			.charlength   = 8,
 			.paritytype   = USART_NO_PARITY,
 			.stopbits     = USART_1_STOPBIT,
