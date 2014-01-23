@@ -3554,6 +3554,7 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <part name="P+4" library="supply1" deviceset="+5V" device=""/>
 <part name="D2" library="SparkFun" deviceset="DIODE" device="SOD"/>
 <part name="P+2" library="supply1" deviceset="+5V" device=""/>
+<part name="GND4" library="supply1" deviceset="GND" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -3578,6 +3579,7 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <instance part="P+4" gate="1" x="2.54" y="60.96"/>
 <instance part="D2" gate="G$1" x="5.08" y="96.52"/>
 <instance part="P+2" gate="1" x="-2.54" y="101.6"/>
+<instance part="GND4" gate="1" x="68.58" y="50.8"/>
 </instances>
 <busses>
 </busses>
@@ -3621,23 +3623,6 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <pinref part="U$1" gate="G$1" pin="RST"/>
 <wire x1="121.92" y1="63.5" x2="33.02" y2="63.5" width="0.1524" layer="91"/>
 <pinref part="JP1" gate="NAME" pin="6"/>
-</segment>
-</net>
-<net name="N$6" class="0">
-<segment>
-<pinref part="JP1" gate="NAME" pin="10"/>
-<wire x1="33.02" y1="53.34" x2="35.56" y2="53.34" width="0.1524" layer="91"/>
-<pinref part="U$1" gate="G$1" pin="GND"/>
-<wire x1="35.56" y1="53.34" x2="121.92" y2="53.34" width="0.1524" layer="91"/>
-<pinref part="JP1" gate="NAME" pin="2"/>
-<wire x1="33.02" y1="73.66" x2="35.56" y2="73.66" width="0.1524" layer="91"/>
-<wire x1="35.56" y1="73.66" x2="35.56" y2="53.34" width="0.1524" layer="91"/>
-<pinref part="U$2" gate="G$1" pin="-"/>
-<wire x1="35.56" y1="91.44" x2="35.56" y2="73.66" width="0.1524" layer="91"/>
-<pinref part="U$3" gate="G$1" pin="GND"/>
-<wire x1="33.02" y1="43.18" x2="35.56" y2="43.18" width="0.1524" layer="91"/>
-<wire x1="35.56" y1="43.18" x2="35.56" y2="53.34" width="0.1524" layer="91"/>
-<junction x="35.56" y="73.66"/>
 </segment>
 </net>
 <net name="N$7" class="0">
@@ -3708,6 +3693,25 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <pinref part="U$5" gate="G$1" pin="TEST"/>
 <pinref part="GND3" gate="1" pin="GND"/>
 <pinref part="C1" gate="G$1" pin="1"/>
+</segment>
+<segment>
+<pinref part="JP1" gate="NAME" pin="10"/>
+<wire x1="33.02" y1="53.34" x2="35.56" y2="53.34" width="0.1524" layer="91"/>
+<pinref part="U$1" gate="G$1" pin="GND"/>
+<wire x1="35.56" y1="53.34" x2="68.58" y2="53.34" width="0.1524" layer="91"/>
+<pinref part="JP1" gate="NAME" pin="2"/>
+<wire x1="68.58" y1="53.34" x2="121.92" y2="53.34" width="0.1524" layer="91"/>
+<wire x1="33.02" y1="73.66" x2="35.56" y2="73.66" width="0.1524" layer="91"/>
+<wire x1="35.56" y1="73.66" x2="35.56" y2="53.34" width="0.1524" layer="91"/>
+<pinref part="U$2" gate="G$1" pin="-"/>
+<wire x1="35.56" y1="91.44" x2="35.56" y2="73.66" width="0.1524" layer="91"/>
+<pinref part="U$3" gate="G$1" pin="GND"/>
+<wire x1="33.02" y1="43.18" x2="35.56" y2="43.18" width="0.1524" layer="91"/>
+<wire x1="35.56" y1="43.18" x2="35.56" y2="53.34" width="0.1524" layer="91"/>
+<junction x="35.56" y="73.66"/>
+<pinref part="GND4" gate="1" pin="GND"/>
+<junction x="68.58" y="53.34"/>
+<junction x="35.56" y="53.34"/>
 </segment>
 </net>
 <net name="N$13" class="0">
