@@ -91,15 +91,18 @@ typedef struct  {
 	bool waypoint_set;
 	bool waypoint_sending;
 	bool waypoint_receiving;
-	bool waypoint_hold_init;
 	bool critical_landing;
-	bool critical_init;
 	bool critical_next_state;
 	
 	bool collision_avoidance;
+	bool automatic_take_off;
 	
 	uint8_t mav_mode;
 	uint8_t mav_state;
+	
+	uint8_t mav_mode_previous;
+	uint8_t mav_state_previous;
+	
 	uint32_t simulation_mode;
 	
 	pressure_data pressure;

@@ -17,6 +17,7 @@ float timeHorizon, invTimeHorizon;
 
 int8_t loop_count_orca = 0;
 
+float min_coll_dist;
 void init_orca()
 {
 	centralData = get_central_data();
@@ -24,6 +25,8 @@ void init_orca()
 		
 	timeHorizon = TIME_HORIZON;
 	invTimeHorizon = 1.0/timeHorizon;
+
+	min_coll_dist = 2.0 * SIZE_VHC_ORCA + 1.0;
 }
 
 void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
@@ -37,7 +40,7 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 	float relativePosition[3], relativeVelocity[3];
 	float combinedRadius, distSq, combinedRadiusSq, dotProduct, wLength, wLenghtSq;
 	
-	float w[3], unitW[3], u[3];
+	float w[3], unitW[3], u[3], neighor_bf[3];
 	
 	for (i=0;i<3;i++)
 	{
@@ -75,9 +78,13 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		q_neighbor.v[2] = relativeVelocity[2];
 		q_neighbor_bf = quat_global_to_local(centralData->imu1.attitude.qe,q_neighbor);
 		
+		neighor_bf[0] = q_neighbor_bf.v[0];
+		neighor_bf[1] = q_neighbor_bf.v[1];
+		neighor_bf[2] = q_neighbor_bf.v[2];
+		
 		for (i=0;i<3;i++)
 		{
-			relativeVelocity[i] = q_neighbor_bf.v[i];
+			relativeVelocity[i] = neighor_bf[i];
 		}
 		
 		q_neighbor.s = 0.0;
@@ -86,9 +93,13 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		q_neighbor.v[2] = relativePosition[2];
 		q_neighbor_bf = quat_global_to_local(centralData->imu1.attitude.qe,q_neighbor);
 		
+		neighor_bf[0] = q_neighbor_bf.v[0];
+		neighor_bf[1] = q_neighbor_bf.v[1];
+		neighor_bf[2] = q_neighbor_bf.v[2];
+		
 		for (i=0;i<3;i++)
 		{
-			relativePosition[i] = q_neighbor_bf.v[i];
+			relativePosition[i] = neighor_bf[i];
 		}
 		
 		distSq = vector_norm_sqr(relativePosition);
@@ -139,11 +150,15 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 			}
 		}else{
 			/* Collisions */
+			
+			min_coll_dist = f_min(min_coll_dist,sqrt(distSq));
 			dbg_print("Collision! ");
 			dbg_print("Distance with neighbor ");
 			dbg_print_num(ind,10);
 			dbg_print("(x100):");
 			dbg_print_num(sqrt(distSq)*100.0,10);
+			dbg_print(", min dist:");
+			dbg_print_num(min_coll_dist*100.0,10);
 			dbg_print("\n");
 			
 			float invTimeStep = 1.0 / ORCA_TIME_STEP_MILLIS; //PROBLEM wrong time step

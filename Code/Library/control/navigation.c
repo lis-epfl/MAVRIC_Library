@@ -113,11 +113,9 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	// calculate dir_desired in local frame
 	// vel = qe-1 * rel_pos * qe
 	qtmp1 = quat_from_vector(rel_pos);
-	//qtmp1.s= 0.0; qtmp1.v[0]=dir_desired[0]; qtmp1.v[1]=dir_desired[1]; qtmp1.v[2]=dir_desired[2];
 	qtmp2 = quat_global_to_local(centralData->imu1.attitude.qe,qtmp1);
 	dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
 	
-	// experimental: Z-axis in velocity mode is in global frame...
 	dir_desired_bf[2] = rel_pos[2];
 	
 	v_desired = f_min(V_CRUISE,(center_window_2(rel_heading) * DIST_2_VEL_GAIN * norm_rel_dist));
@@ -149,7 +147,13 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 		computeNewVelocity(dir_desired_bf,new_velocity);
 	}
 
-	rel_heading= atan2(new_velocity[Y],new_velocity[X]);
+	//rel_heading= atan2(new_velocity[Y],new_velocity[X]);
+	if (f_abs(new_velocity[X])<0.001 && f_abs(new_velocity[Y])<0.001 || centralData->controls.yaw_mode == YAW_ABSOLUTE || !centralData->waypoint_set)
+	{
+		rel_heading = 0.0;
+	}else{
+		rel_heading = atan2(new_velocity[Y],new_velocity[X]);
+	}
 
 	centralData->controls_nav.tvel[X] = new_velocity[X];
 	centralData->controls_nav.tvel[Y] = new_velocity[Y];
@@ -166,7 +170,7 @@ void low_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude, float rel_d
 	
 	float yaw_angle_tolerance = PI/10.0;
 	
-	if ((f_abs(dir_desired_bf[X]) < 0.001 && f_abs(dir_desired_bf[Y]) < 0.001) || centralData->waypoint_hold_init || (rel_distance<=5.0))
+	if ((f_abs(dir_desired_bf[X]) < 0.001 && f_abs(dir_desired_bf[Y]) < 0.001) || (centralData->mav_mode ==  MAV_MODE_GUIDED_ARMED) || !centralData->waypoint_set || (rel_distance<=5.0))
 	{
 		centralData->controls_nav.rpy[YAW] = 0.0;
 		centralData->controls_nav.tvel[X] = dir_desired_bf[X];

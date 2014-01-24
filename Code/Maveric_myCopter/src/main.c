@@ -42,6 +42,8 @@ void initialisation() {
 	initialise_board(centralData);
 	initialise_central_data();
 	
+	// turn on simulation mode: 1: simulation mode, 0: reality
+	centralData->simulation_mode = 1;
 
 	init_radar_modules();
 	dbg_print("Debug stream initialised\n");
@@ -103,7 +105,7 @@ void main (void)
 	create_tasks();
 	
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	centralData->simulation_mode = 0;
+	//centralData->simulation_mode = 0;
 	
 	// main loop
 	

@@ -21,6 +21,7 @@ central_data_t *centralData;
 
 void mavlink_send_heartbeat(void) {
 
+	float battery_lvl = get_battery_rail();
 	central_data_t *centralData=get_central_data();
 
 	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, centralData->mav_mode, 0, centralData->mav_state);
@@ -31,7 +32,7 @@ void mavlink_send_heartbeat(void) {
 								0,                  // load
 								(int)(1000.0*get_battery_rail()), // bat voltage (mV)
 								0,                // current (mA)
-								99,					// battery remaining
+								battery_lvl/12.4*100.0,					// battery remaining
 								0, 0,  				// comms drop, comms errors
 								0, 0, 0, 0);        // autopilot specific errors
 	mavlink_msg_battery_status_send(MAVLINK_COMM_0, 0, (int)(1000.0*get_battery_rail()), 
@@ -446,6 +447,13 @@ task_return_t control_waypoint_timeout () {
 void handle_specific_messages (Mavlink_Received_t* rec) {
 	if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) {
 		
+		dbg_print("\n Received message with ID");
+		dbg_print_num(rec->msg.msgid, 10);
+		dbg_print(" from system");
+		dbg_print_num(rec->msg.sysid, 10);
+		dbg_print(" for component");
+		dbg_print_num(rec->msg.compid,10);
+		dbg_print( "\n");
 		
 		switch(rec->msg.msgid) {
 				case MAVLINK_MSG_ID_MISSION_ITEM: { // 39
@@ -493,6 +501,9 @@ void handle_specific_messages (Mavlink_Received_t* rec) {
 				break;
 				case MAVLINK_MSG_ID_COMMAND_LONG : { // 76
 					receive_message_long(rec);
+				}
+				case MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN: { // 48
+					set_home(rec);
 				}
 				break;
 		}
@@ -610,6 +621,36 @@ void receive_message_long(Mavlink_Received_t* rec)
 			break;
 			case MAV_CMD_DO_SET_HOME: {
 				/* Changes the home location either to the current location or a specified location. |Use current (1=use current location, 0=use specified location)| Empty| Empty| Empty| Latitude| Longitude| Altitude|  */
+				if (packet.param1 == 1)
+				{
+					// Set new home position to actual position
+					dbg_print("Set new home location to actual position.\n");
+					centralData->position_estimator.localPosition.origin = local_to_global_position(centralData->position_estimator.localPosition);
+					
+					dbg_print("New Home location: (");
+					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0,10);
+					dbg_print(", ");
+					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0,10);
+					dbg_print(", ");
+					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0,10);
+					dbg_print(")\n");
+				}else{
+					// Set new home position from msg
+					dbg_print("Set new home location. \n");
+					
+					centralData->position_estimator.localPosition.origin.latitude = packet.param5;
+					centralData->position_estimator.localPosition.origin.longitude = packet.param6;
+					centralData->position_estimator.localPosition.origin.altitude = packet.param7;
+					
+					dbg_print("New Home location: (");
+					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0,10);
+					dbg_print(", ");
+					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0,10);
+					dbg_print(", ");
+					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0,10);
+					dbg_print(")\n");
+				}
+				
 			}
 			break;
 			case MAV_CMD_DO_SET_PARAMETER: {
@@ -702,9 +743,9 @@ void init_mavlink_actions(void) {
 	centralData=get_central_data();
 	add_PID_parameters();
 	
-	write_parameters_to_flashc();
+	//write_parameters_to_flashc();
 	
-	read_parameters_from_flashc();
+	//read_parameters_from_flashc();
 	
 	add_task(get_mavlink_taskset(),   10000, RUN_REGULAR, &control_waypoint_timeout, 0);
 	

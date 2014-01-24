@@ -53,6 +53,7 @@ void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool*
 void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t number_of_waypoints, bool* waypoint_receiving);
 void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t num_of_waypoint);
 void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints, bool* waypoint_set);
+void set_home(Mavlink_Received_t* rec);
 
 void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* board_mav_state, uint8_t sim_mode);
 
@@ -60,6 +61,7 @@ void control_time_out_waypoint_msg(uint16_t* num_of_waypoint, bool* waypoint_rec
 
 local_coordinates_t set_waypoint_from_frame(waypoint_struct current_wp, global_position_t origin);
 void wp_hold_init();
+void wp_take_off();
 
 void waypoint_hold_position_handler();
 void waypoint_navigation_handler();

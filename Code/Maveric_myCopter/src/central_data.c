@@ -22,6 +22,8 @@ void initialise_central_data(){
 		centralData.controls.rpy[YAW]=0;
 		centralData.controls.thrust=-1.0;
 		
+		centralData.controls.run_mode = MOTORS_OFF;
+		
 		// init stabilisers
 		init_stabilisation_copter(&centralData.stabiliser_stack);
 		// centralData.stabilisers_stack = 
@@ -33,11 +35,12 @@ void initialise_central_data(){
 		centralData.waypoint_set = false;
 		centralData.waypoint_sending = false;
 		centralData.waypoint_receiving = false;
-		centralData.waypoint_hold_init = false;
+		
 		centralData.critical_landing = false;
-		centralData.critical_init = false;
+		
 		centralData.collision_avoidance = false;
-
+		centralData.automatic_take_off = false;
+		
 		// default GPS home position
 		centralData.position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;
 		centralData.position_estimator.localPosition.origin.latitude =   HOME_LATITUDE;
@@ -49,8 +52,6 @@ void initialise_central_data(){
 		// init simulation
 		init_simulation(&(centralData.sim_model),&(centralData.imu1.attitude));
 		centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
-		
-		//init_waypoint_list(centralData.waypoint_list,&(centralData.number_of_waypoints));
 
 }
 
