@@ -119,7 +119,7 @@ task_return_t set_mav_mode_n_state()
 						position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 						centralData->controls.run_mode = MOTORS_ON;
 						has_started_engines = true;
-						centralData->mav_state = MAV_STATE_ACTIVE;
+						//centralData->mav_state = MAV_STATE_ACTIVE;
 						centralData->mav_mode = MAV_MODE_MANUAL_ARMED;
 						break;
 					case 1:
@@ -133,89 +133,89 @@ task_return_t set_mav_mode_n_state()
 						break;
 				}
 			}
-			////if (centralData->controls.run_mode == MOTORS_ON)
-			//if (has_started_engines)
-			//{
-				//switch (channelSwitches)
-				//{
-					//case 0:
-					//centralData->mav_mode = MAV_MODE_MANUAL_ARMED;
-					//break;
-					//case 1:
-					//centralData->mav_mode = MAV_MODE_STABILIZE_ARMED;
-					//break;
-					//case 2:
-					//centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
-					//// Automatic take-off mode
-					//if (centralData->mav_mode_previous != MAV_MODE_GUIDED_ARMED)
-					//{
-						//centralData->automatic_take_off = true;
-					//}
-					//break;
-					//case 3:
-					//centralData->mav_state = MAV_STATE_ACTIVE;
-					//centralData->mav_mode = MAV_MODE_AUTO_ARMED;
-					//break;
-				//}
-				//
-				//switch (centralData->mav_mode)
-				//{
-					//case MAV_MODE_MANUAL_ARMED:
-					//distFromHomeSqr = centralData->position_estimator.localPosition.pos[X]*centralData->position_estimator.localPosition.pos[X] + centralData->position_estimator.localPosition.pos[Y]*centralData->position_estimator.localPosition.pos[Y];
-					//// if further than 8m from home waypoint in the xy plane => active mode
-					//if (distFromHomeSqr >= 64.0)
-					//{
-						//centralData->mav_state = MAV_STATE_ACTIVE;
-					//}
-					//break;
-					//case MAV_MODE_STABILIZE_ARMED:
-					//distFromHomeSqr = centralData->position_estimator.localPosition.pos[X]*centralData->position_estimator.localPosition.pos[X] + centralData->position_estimator.localPosition.pos[Y]*centralData->position_estimator.localPosition.pos[Y];
-					//// if further than 8m from home waypoint in the xy plane => active mode
-					//if (distFromHomeSqr >= 64.0)
-					//{
-						//centralData->mav_state = MAV_STATE_ACTIVE;
-					//}
-					//break;
-					//case MAV_MODE_GUIDED_ARMED:
-					//// Automatic take-off mode
-					//if ((get_thrust_from_remote()>-0.7)&&(centralData->automatic_take_off))
-					//{
-						//centralData->automatic_take_off = false;
-						//wp_take_off();
-					//}
-					//
-					//if ((centralData->dist2wp_sqr <= 25.0)&&(!centralData->automatic_take_off))
-					//{
-						//centralData->mav_state = MAV_STATE_ACTIVE;
-					//}
-					//break;
-					//case MAV_MODE_AUTO_ARMED:
-					//if (centralData->mav_mode_previous != MAV_MODE_AUTO_ARMED)
-					//{
-						//wp_hold_init();
-					//}
-					//if (!centralData->waypoint_set)
-					//{
-						//init_wp();
-					//}
-					//break;
-				//}
-				//switch (RC_check)
-				//{
-					//case 1:
-					//break;
-					//case -1:
-					//centralData->mav_state = MAV_STATE_CRITICAL;
-					//break;
-					//case -2:
-					//centralData->mav_state = MAV_STATE_CRITICAL;
-					//break;
-				//}
-			//}
-			//if (motor_switch == -1)
-			//{
-				//switch_off_motors();
-			//}
+			//if (centralData->controls.run_mode == MOTORS_ON)
+			if (has_started_engines)
+			{
+				switch (channelSwitches)
+				{
+					case 0:
+					centralData->mav_mode = MAV_MODE_MANUAL_ARMED;
+					break;
+					case 1:
+					centralData->mav_mode = MAV_MODE_STABILIZE_ARMED;
+					break;
+					case 2:
+					centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
+					// Automatic take-off mode
+					if (centralData->mav_mode_previous != MAV_MODE_GUIDED_ARMED)
+					{
+						centralData->automatic_take_off = true;
+					}
+					break;
+					case 3:
+					centralData->mav_state = MAV_STATE_ACTIVE;
+					centralData->mav_mode = MAV_MODE_AUTO_ARMED;
+					break;
+				}
+				
+				switch (centralData->mav_mode)
+				{
+					case MAV_MODE_MANUAL_ARMED:
+					distFromHomeSqr = centralData->position_estimator.localPosition.pos[X]*centralData->position_estimator.localPosition.pos[X] + centralData->position_estimator.localPosition.pos[Y]*centralData->position_estimator.localPosition.pos[Y];
+					// if further than 8m from home waypoint in the xy plane => active mode
+					if (distFromHomeSqr >= 64.0)
+					{
+						centralData->mav_state = MAV_STATE_ACTIVE;
+					}
+					break;
+					case MAV_MODE_STABILIZE_ARMED:
+					distFromHomeSqr = centralData->position_estimator.localPosition.pos[X]*centralData->position_estimator.localPosition.pos[X] + centralData->position_estimator.localPosition.pos[Y]*centralData->position_estimator.localPosition.pos[Y];
+					// if further than 8m from home waypoint in the xy plane => active mode
+					if (distFromHomeSqr >= 64.0)
+					{
+						centralData->mav_state = MAV_STATE_ACTIVE;
+					}
+					break;
+					case MAV_MODE_GUIDED_ARMED:
+					// Automatic take-off mode
+					if ((get_thrust_from_remote()>-0.7)&&(centralData->automatic_take_off))
+					{
+						centralData->automatic_take_off = false;
+						wp_take_off();
+					}
+					
+					if ((centralData->dist2wp_sqr <= 25.0)&&(!centralData->automatic_take_off))
+					{
+						centralData->mav_state = MAV_STATE_ACTIVE;
+					}
+					break;
+					case MAV_MODE_AUTO_ARMED:
+					if (centralData->mav_mode_previous != MAV_MODE_AUTO_ARMED)
+					{
+						wp_hold_init();
+					}
+					if (!centralData->waypoint_set)
+					{
+						init_wp();
+					}
+					break;
+				}
+				switch (RC_check)
+				{
+					case 1:
+					break;
+					case -1:
+					centralData->mav_state = MAV_STATE_CRITICAL;
+					break;
+					case -2:
+					centralData->mav_state = MAV_STATE_CRITICAL;
+					break;
+				}
+			}
+			if (motor_switch == -1)
+			{
+				switch_off_motors();
+			}
 			break;
 		case MAV_STATE_ACTIVE:
 			switch(channelSwitches)
