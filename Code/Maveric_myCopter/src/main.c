@@ -60,7 +60,7 @@ void initialisation() {
 	centralData->mav_state = MAV_STATE_CALIBRATING;
 	centralData->mav_mode = MAV_MODE_PREFLIGHT;
 
-	calibrate_Gyros(&centralData->imu1);
+	//calibrate_Gyros(&centralData->imu1);
 	for (i=700; i>0; i--) {
 		run_imu_update();
 		mavlink_protocol_update();	
