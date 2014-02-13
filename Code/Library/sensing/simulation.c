@@ -19,21 +19,24 @@ void init_simulation(simulation_model_t *sim, Quat_Attitude_t *start_attitude) {
 	int i;
 	(*sim)=vehicle_model_parameters;
 	for (i=0; i<3; i++) {
-		sim->rates_bf[i]=0;
-		sim->torques_bf[i]=0;
-		sim->lin_forces_bf[i]=0;
-		sim->vel_bf[i]=0.0;
-		sim->pos[i]=0.0;
+		sim->rates_bf[i]=0.0f;
+		sim->torques_bf[i]=0.0f;
+		sim->lin_forces_bf[i]=0.0f;
+		sim->vel_bf[i]=0.0f;
+		sim->pos[i]=0.0f;
 		
 	}
-
+	sim->localPosition.origin.latitude=HOME_LATITUDE;
+	sim->localPosition.origin.longitude=HOME_LONGITUDE;
+	sim->localPosition.origin.altitude=HOME_ALTITUDE;
+	
 	// set initial conditions to given attitude (including scalefactors and biases for simulated IMU)
 	sim->attitude=*start_attitude;
 
 	for (i=0; i<ROTORCOUNT; i++) {
 		sim->rotorspeeds[i]=0.0;			
 	}
-	sim->last_update=get_time();
+	sim->last_update=get_micros();
 	sim->dt=0.01;
 }
 
@@ -130,6 +133,7 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	central_data_t *central_data;
 	uint32_t now=get_micros();
 	sim->dt=(now - sim->last_update)/1000000.0;
+	if (sim->dt>0.1) sim->dt=0.1;
 	sim->last_update=now;
 	central_data=get_central_data();
 	// compute torques and forces based on servo commands
@@ -175,15 +179,24 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 
 		// simulate "acceleration" caused by contact force with ground, compensating gravity
 		for (i=0; i<3; i++) {
-			sim->lin_forces_bf[i]+=sim->attitude.up_vec.v[i]*sim->total_mass *GRAVITY;
+			sim->lin_forces_bf[i]=sim->attitude.up_vec.v[i]*sim->total_mass *GRAVITY;
 		}
 				
 		// slow down... (will make velocity slightly inconsistent until next update cycle, but shouldn't matter much)
 		for (i=0; i<3; i++) {
 			sim->vel_bf[i]=0.95*sim->vel_bf[i];
 		}
+		
+		//upright
+		sim->rates_bf[0]=  - (-sim->attitude.up_vec.v[1] ); 
+		sim->rates_bf[1]=  - sim->attitude.up_vec.v[0];
+		sim->rates_bf[2]=0;
 	}
 	
+	sim->attitude.qe = quat_normalise(sim->attitude.qe);
+	sim->attitude.up_vec = quat_global_to_local(sim->attitude.qe, up);
+	
+	sim->attitude.north_vec=quat_global_to_local(sim->attitude.qe, front);	
 	for (i=0; i<3; i++){
 			qtmp1.v[i] = sim->vel[i];
 	}

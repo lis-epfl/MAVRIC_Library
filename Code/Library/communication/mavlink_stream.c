@@ -115,15 +115,15 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 }
 
 void handle_mavlink_message(Mavlink_Received_t* rec) {
-	dbg_print("\n Received message with ID");
-	dbg_print_num(rec->msg.msgid, 10);
-	dbg_print(" from system");
-	dbg_print_num(rec->msg.sysid, 10);
-	dbg_print(" for component");
-	dbg_print_num(rec->msg.compid,10);
-	dbg_print( "\n");
-	
 	if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) {
+		dbg_print("\n Received message with ID");
+		dbg_print_num(rec->msg.msgid, 10);
+		dbg_print(" from system");
+		dbg_print_num(rec->msg.sysid, 10);
+		dbg_print(" for component");
+		dbg_print_num(rec->msg.compid,10);
+		dbg_print( "\n");
+		
 		switch(rec->msg.msgid) {
 			case MAVLINK_MSG_ID_PARAM_REQUEST_LIST: { // 21
 				mavlink_param_request_list_t request;

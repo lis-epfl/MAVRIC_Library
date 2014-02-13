@@ -60,7 +60,7 @@ void initialisation() {
 	centralData->mav_state = MAV_STATE_CALIBRATING;
 	centralData->mav_mode = MAV_MODE_PREFLIGHT;
 
-	calibrate_Gyros(&centralData->imu1);
+	//calibrate_Gyros(&centralData->imu1);
 	for (i=700; i>0; i--) {
 		run_imu_update();
 		mavlink_protocol_update();	
@@ -105,8 +105,9 @@ void main (void)
 	create_tasks();
 	
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	//centralData->simulation_mode = 0;
-	
+	centralData->simulation_mode = 1;
+	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude));
+
 	// main loop
 	
 	while (1==1) {

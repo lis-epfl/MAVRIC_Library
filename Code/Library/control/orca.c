@@ -16,6 +16,7 @@ central_data_t *centralData;
 float timeHorizon, invTimeHorizon;
 
 int8_t loop_count_orca = 0;
+int8_t loop_count_collisions = 0;
 
 float min_coll_dist;
 void init_orca()
@@ -152,14 +153,19 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 			/* Collisions */
 			
 			min_coll_dist = f_min(min_coll_dist,sqrt(distSq));
-			dbg_print("Collision! ");
-			dbg_print("Distance with neighbor ");
-			dbg_print_num(ind,10);
-			dbg_print("(x100):");
-			dbg_print_num(sqrt(distSq)*100.0,10);
-			dbg_print(", min dist:");
-			dbg_print_num(min_coll_dist*100.0,10);
-			dbg_print("\n");
+			
+			loop_count_collisions = loop_count_collisions++ % 100;
+			if (loop_count_collisions == 0)
+			{
+				dbg_print("Collision! ");
+				dbg_print("Distance with neighbor ");
+				dbg_print_num(ind,10);
+				dbg_print("(x100):");
+				dbg_print_num(sqrt(distSq)*100.0,10);
+				dbg_print(", min dist:");
+				dbg_print_num(min_coll_dist*100.0,10);
+				dbg_print("\n");
+			}
 			
 			float invTimeStep = 1.0 / ORCA_TIME_STEP_MILLIS; //PROBLEM wrong time step
 			for (i=0;i<3;i++)
