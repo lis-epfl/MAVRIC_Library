@@ -1,8 +1,8 @@
 #ifndef TEST_MATHS_H
 #define TEST_MATHS_H
 
-
-int run_math_tests();
+#include "compiler.h"
+bool run_math_tests();
 
 
 

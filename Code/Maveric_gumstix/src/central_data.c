@@ -55,10 +55,6 @@ void initialise_central_data(){
 
 }
 
-central_data_t* get_central_data(void)
-{
-	return &centralData;
-}
 
 byte_stream_t* get_telemetry_upstream() {
 	return centralData.telemetry_up_stream;

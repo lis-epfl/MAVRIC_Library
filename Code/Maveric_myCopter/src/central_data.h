@@ -124,7 +124,6 @@ central_data_t* get_central_data(void);
 
 byte_stream_t* get_telemetry_upstream(void);
 byte_stream_t* get_telemetry_downstream(void);
-byte_stream_t* get_debug_stream(void);
 
 Imu_Data_t* get_imu_data();
 Control_Command_t* get_control_inputs_data();
