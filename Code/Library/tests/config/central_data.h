@@ -19,7 +19,9 @@
 #include "qfilter.h"
 #include "imu.h"
 
-#include "stabilisation_hybrid.h"
+// #include "stabilisation.h"
+#include "stabilisation_copter.h"
+// #include "stabilisation_hybrid.h"
 
 #include "remote_controller.h"
 #include "pid_control.h"
@@ -35,14 +37,12 @@
 
 #include "gps_ublox.h"
 #include "mavlink_waypoint_handler.h"
-#include "estimator.h"
 #include "simulation.h"
 #include "bmp085.h"
 #include "conf_sim_model.h"
-#include "neighbor_selection.h"
 #include "position_estimation.h"
 
-static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=0}, {.value=0}, {.value=0}, {.value=0}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
+static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
 
 enum CRITICAL_BEHAVIOR_ENUM{
 	CLIMB_TO_SAFE_ALT = 1,
@@ -55,7 +55,7 @@ typedef struct  {
 	Control_Command_t controls;
 	Control_Command_t controls_nav;
 
-	Stabiliser_Stack_hybrid_t stabiliser_stack;
+	Stabiliser_Stack_copter_t stabiliser_stack;
 
 	simulation_model_t uav_model;
 	servo_output servos[NUMBER_OF_SERVO_OUTPUTS];
@@ -69,7 +69,6 @@ typedef struct  {
 	byte_stream_t gps_stream_out;
 	gps_Data_type GPS_data;
 	
-	Estimator_Data_t estimation;
 	simulation_model_t sim_model;
 	
 	position_estimator_t position_estimator;
@@ -91,22 +90,23 @@ typedef struct  {
 	bool waypoint_receiving;
 	bool waypoint_hold_init;
 	bool critical_landing;
-	bool critical_init;
 	bool critical_next_state;
 	
 	bool collision_avoidance;
+	bool automatic_take_off;
 	
 	uint8_t mav_mode;
 	uint8_t mav_state;
+	
+	uint8_t mav_mode_previous;
+	uint8_t mav_state_previous;
+	
 	uint32_t simulation_mode;
 	
 	pressure_data pressure;
 	//float pressure_filtered;
 	//float altitude_filtered;
 	
-	uint8_t number_of_neighbors;
-	float safe_size;
-	track_neighbor_t listNeighbors[MAX_NUM_NEIGHBORS];
 	
 	enum CRITICAL_BEHAVIOR_ENUM critical_behavior;
 	

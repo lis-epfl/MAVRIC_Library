@@ -64,9 +64,6 @@ byte_stream_t* get_telemetry_upstream() {
 byte_stream_t* get_telemetry_downstream() {
 	return centralData.telemetry_down_stream;
 }
-byte_stream_t* get_debug_stream() {
-	return centralData.debug_out_stream;
-}
 
 Imu_Data_t* get_imu_data() {
 	return &centralData.imu1;

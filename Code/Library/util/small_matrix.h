@@ -73,8 +73,16 @@ float static inline sp2(const vector_2_t vec1, const vector_2_t vec2) {
  }
 
 
+// pointwise add for 2x2 matrices
+matrix_2x2_t static inline madd2(const matrix_2x2_t m1, const matrix_2x2_t m2) {
+   matrix_2x2_t result= 
+   {.v={m1.v[0][0]+ m2.v[0][0], m1.v[0][1]+ m2.v[0][1], 
+        m1.v[1][0]+ m2.v[1][0], m1.v[1][1]+ m2.v[1][1]}};
+   return result;
+}
+
 // pointwise add for 2x2 vectors
-vector_2_t static inline madd2(const vector_2_t v1, const vector_2_t v2) {
+vector_2_t static inline vadd2(const vector_2_t v1, const vector_2_t v2) {
    vector_2_t result= 
    {.v={v1.v[0]+ v2.v[0], 
         v1.v[1]+ v2.v[1]}};
@@ -82,8 +90,16 @@ vector_2_t static inline madd2(const vector_2_t v1, const vector_2_t v2) {
 }
 
 
+// pointwise sub for 2x2 matrices
+matrix_2x2_t static inline msub2(const matrix_2x2_t m1, const matrix_2x2_t m2) {
+   matrix_2x2_t result= 
+   {.v={m1.v[0][0]- m2.v[0][0], m1.v[0][1]- m2.v[0][1], 
+        m1.v[1][0]- m2.v[1][0], m1.v[1][1]- m2.v[1][1]}};
+   return result;
+}
+
 // pointwise sub for 2x2 vectors
-vector_2_t static inline msub2(const vector_2_t v1, const vector_2_t v2) {
+vector_2_t static inline vsub2(const vector_2_t v1, const vector_2_t v2) {
    vector_2_t result= 
    {.v={v1.v[0]- v2.v[0], 
         v1.v[1]- v2.v[1]}};
@@ -91,8 +107,16 @@ vector_2_t static inline msub2(const vector_2_t v1, const vector_2_t v2) {
 }
 
 
+// pointwise pwmul for 2x2 matrices
+matrix_2x2_t static inline mpwmul2(const matrix_2x2_t m1, const matrix_2x2_t m2) {
+   matrix_2x2_t result= 
+   {.v={m1.v[0][0]* m2.v[0][0], m1.v[0][1]* m2.v[0][1], 
+        m1.v[1][0]* m2.v[1][0], m1.v[1][1]* m2.v[1][1]}};
+   return result;
+}
+
 // pointwise pwmul for 2x2 vectors
-vector_2_t static inline mpwmul2(const vector_2_t v1, const vector_2_t v2) {
+vector_2_t static inline vpwmul2(const vector_2_t v1, const vector_2_t v2) {
    vector_2_t result= 
    {.v={v1.v[0]* v2.v[0], 
         v1.v[1]* v2.v[1]}};
@@ -178,8 +202,17 @@ float static inline sp3(const vector_3_t vec1, const vector_3_t vec2) {
  }
 
 
+// pointwise add for 3x3 matrices
+matrix_3x3_t static inline madd3(const matrix_3x3_t m1, const matrix_3x3_t m2) {
+   matrix_3x3_t result= 
+   {.v={m1.v[0][0]+ m2.v[0][0], m1.v[0][1]+ m2.v[0][1], m1.v[0][2]+ m2.v[0][2], 
+        m1.v[1][0]+ m2.v[1][0], m1.v[1][1]+ m2.v[1][1], m1.v[1][2]+ m2.v[1][2], 
+        m1.v[2][0]+ m2.v[2][0], m1.v[2][1]+ m2.v[2][1], m1.v[2][2]+ m2.v[2][2]}};
+   return result;
+}
+
 // pointwise add for 3x3 vectors
-vector_3_t static inline madd3(const vector_3_t v1, const vector_3_t v2) {
+vector_3_t static inline vadd3(const vector_3_t v1, const vector_3_t v2) {
    vector_3_t result= 
    {.v={v1.v[0]+ v2.v[0], 
         v1.v[1]+ v2.v[1], 
@@ -188,8 +221,17 @@ vector_3_t static inline madd3(const vector_3_t v1, const vector_3_t v2) {
 }
 
 
+// pointwise sub for 3x3 matrices
+matrix_3x3_t static inline msub3(const matrix_3x3_t m1, const matrix_3x3_t m2) {
+   matrix_3x3_t result= 
+   {.v={m1.v[0][0]- m2.v[0][0], m1.v[0][1]- m2.v[0][1], m1.v[0][2]- m2.v[0][2], 
+        m1.v[1][0]- m2.v[1][0], m1.v[1][1]- m2.v[1][1], m1.v[1][2]- m2.v[1][2], 
+        m1.v[2][0]- m2.v[2][0], m1.v[2][1]- m2.v[2][1], m1.v[2][2]- m2.v[2][2]}};
+   return result;
+}
+
 // pointwise sub for 3x3 vectors
-vector_3_t static inline msub3(const vector_3_t v1, const vector_3_t v2) {
+vector_3_t static inline vsub3(const vector_3_t v1, const vector_3_t v2) {
    vector_3_t result= 
    {.v={v1.v[0]- v2.v[0], 
         v1.v[1]- v2.v[1], 
@@ -198,8 +240,17 @@ vector_3_t static inline msub3(const vector_3_t v1, const vector_3_t v2) {
 }
 
 
+// pointwise pwmul for 3x3 matrices
+matrix_3x3_t static inline mpwmul3(const matrix_3x3_t m1, const matrix_3x3_t m2) {
+   matrix_3x3_t result= 
+   {.v={m1.v[0][0]* m2.v[0][0], m1.v[0][1]* m2.v[0][1], m1.v[0][2]* m2.v[0][2], 
+        m1.v[1][0]* m2.v[1][0], m1.v[1][1]* m2.v[1][1], m1.v[1][2]* m2.v[1][2], 
+        m1.v[2][0]* m2.v[2][0], m1.v[2][1]* m2.v[2][1], m1.v[2][2]* m2.v[2][2]}};
+   return result;
+}
+
 // pointwise pwmul for 3x3 vectors
-vector_3_t static inline mpwmul3(const vector_3_t v1, const vector_3_t v2) {
+vector_3_t static inline vpwmul3(const vector_3_t v1, const vector_3_t v2) {
    vector_3_t result= 
    {.v={v1.v[0]* v2.v[0], 
         v1.v[1]* v2.v[1], 
@@ -294,8 +345,18 @@ float static inline sp4(const vector_4_t vec1, const vector_4_t vec2) {
  }
 
 
+// pointwise add for 4x4 matrices
+matrix_4x4_t static inline madd4(const matrix_4x4_t m1, const matrix_4x4_t m2) {
+   matrix_4x4_t result= 
+   {.v={m1.v[0][0]+ m2.v[0][0], m1.v[0][1]+ m2.v[0][1], m1.v[0][2]+ m2.v[0][2], m1.v[0][3]+ m2.v[0][3], 
+        m1.v[1][0]+ m2.v[1][0], m1.v[1][1]+ m2.v[1][1], m1.v[1][2]+ m2.v[1][2], m1.v[1][3]+ m2.v[1][3], 
+        m1.v[2][0]+ m2.v[2][0], m1.v[2][1]+ m2.v[2][1], m1.v[2][2]+ m2.v[2][2], m1.v[2][3]+ m2.v[2][3], 
+        m1.v[3][0]+ m2.v[3][0], m1.v[3][1]+ m2.v[3][1], m1.v[3][2]+ m2.v[3][2], m1.v[3][3]+ m2.v[3][3]}};
+   return result;
+}
+
 // pointwise add for 4x4 vectors
-vector_4_t static inline madd4(const vector_4_t v1, const vector_4_t v2) {
+vector_4_t static inline vadd4(const vector_4_t v1, const vector_4_t v2) {
    vector_4_t result= 
    {.v={v1.v[0]+ v2.v[0], 
         v1.v[1]+ v2.v[1], 
@@ -305,8 +366,18 @@ vector_4_t static inline madd4(const vector_4_t v1, const vector_4_t v2) {
 }
 
 
+// pointwise sub for 4x4 matrices
+matrix_4x4_t static inline msub4(const matrix_4x4_t m1, const matrix_4x4_t m2) {
+   matrix_4x4_t result= 
+   {.v={m1.v[0][0]- m2.v[0][0], m1.v[0][1]- m2.v[0][1], m1.v[0][2]- m2.v[0][2], m1.v[0][3]- m2.v[0][3], 
+        m1.v[1][0]- m2.v[1][0], m1.v[1][1]- m2.v[1][1], m1.v[1][2]- m2.v[1][2], m1.v[1][3]- m2.v[1][3], 
+        m1.v[2][0]- m2.v[2][0], m1.v[2][1]- m2.v[2][1], m1.v[2][2]- m2.v[2][2], m1.v[2][3]- m2.v[2][3], 
+        m1.v[3][0]- m2.v[3][0], m1.v[3][1]- m2.v[3][1], m1.v[3][2]- m2.v[3][2], m1.v[3][3]- m2.v[3][3]}};
+   return result;
+}
+
 // pointwise sub for 4x4 vectors
-vector_4_t static inline msub4(const vector_4_t v1, const vector_4_t v2) {
+vector_4_t static inline vsub4(const vector_4_t v1, const vector_4_t v2) {
    vector_4_t result= 
    {.v={v1.v[0]- v2.v[0], 
         v1.v[1]- v2.v[1], 
@@ -316,8 +387,18 @@ vector_4_t static inline msub4(const vector_4_t v1, const vector_4_t v2) {
 }
 
 
+// pointwise pwmul for 4x4 matrices
+matrix_4x4_t static inline mpwmul4(const matrix_4x4_t m1, const matrix_4x4_t m2) {
+   matrix_4x4_t result= 
+   {.v={m1.v[0][0]* m2.v[0][0], m1.v[0][1]* m2.v[0][1], m1.v[0][2]* m2.v[0][2], m1.v[0][3]* m2.v[0][3], 
+        m1.v[1][0]* m2.v[1][0], m1.v[1][1]* m2.v[1][1], m1.v[1][2]* m2.v[1][2], m1.v[1][3]* m2.v[1][3], 
+        m1.v[2][0]* m2.v[2][0], m1.v[2][1]* m2.v[2][1], m1.v[2][2]* m2.v[2][2], m1.v[2][3]* m2.v[2][3], 
+        m1.v[3][0]* m2.v[3][0], m1.v[3][1]* m2.v[3][1], m1.v[3][2]* m2.v[3][2], m1.v[3][3]* m2.v[3][3]}};
+   return result;
+}
+
 // pointwise pwmul for 4x4 vectors
-vector_4_t static inline mpwmul4(const vector_4_t v1, const vector_4_t v2) {
+vector_4_t static inline vpwmul4(const vector_4_t v1, const vector_4_t v2) {
    vector_4_t result= 
    {.v={v1.v[0]* v2.v[0], 
         v1.v[1]* v2.v[1], 

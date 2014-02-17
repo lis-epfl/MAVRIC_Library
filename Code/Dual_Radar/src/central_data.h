@@ -46,7 +46,6 @@ central_data_t* get_central_data();
 
 byte_stream_t* get_telemetry_upstream();
 byte_stream_t* get_telemetry_downstream();
-byte_stream_t* get_debug_stream();
 
 
 #define STDOUT &get_debug_stream()

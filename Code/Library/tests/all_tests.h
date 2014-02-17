@@ -2,10 +2,12 @@
 #define ALL_TESTS_H
 
 #include "test_maths.h"
-
-static bool inline run_all_tests() {
-	bool result= (run_math_tests());
+#include "compiler.h"
+static inline bool run_all_tests() {
+	bool result=true;
+	result= result && (run_math_tests());
 	
+	result=result && run_matrix_tests();
 	
 	return result;
 }

@@ -9,7 +9,7 @@
 //#define STDOUT 0
 
 void dbg_print_init(byte_stream_t* debug_stream);
-
+byte_stream_t* get_debug_stream(void);
 
 void putstring(byte_stream_t *out_stream, const char* s);
 void putdigit(byte_stream_t *out_stream, unsigned c);

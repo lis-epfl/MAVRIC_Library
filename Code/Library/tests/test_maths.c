@@ -10,7 +10,7 @@ float v[3];
 
 float v2[3] = {-0.3, 0.44, 0.55};
 
-int run_math_tests() {
+bool run_math_tests() {
 	
 	bool result=true;
 	
@@ -37,5 +37,5 @@ int run_math_tests() {
 	dbg_putfloat(fast_sqrt(2), 6);   dbg_print(" sqrt(2)\n");
 	dbg_putfloat(fast_sqrt(4), 6);   dbg_print(" sqrt(4)\n");
 	dbg_putfloat(fast_sqrt(-4), 6);   dbg_print(" sqrt(-4)\n");
-	
+	return result;
 }

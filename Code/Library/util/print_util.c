@@ -9,6 +9,10 @@
 byte_stream_t* deb_stream;
 
 
+byte_stream_t* get_debug_stream(){
+	return deb_stream;
+}
+
 Bool blocking;
 
 /**
@@ -140,6 +144,21 @@ void print_quaternion(byte_stream_t *out_stream, UQuat_t *quat, int after_digits
 	print_vector(out_stream, quat->v, after_digits);
 	putstring(out_stream, ") ");
 }
+
+
+void print_matrix(byte_stream_t *out_stream, float v[], int rows, int columns, int after_digits) {
+	int i, j;
+	
+	for (i=0; i<rows; i++) {
+		putstring(out_stream, "| ");
+		for (j=0; j<columns; j++) {
+			putfloat(out_stream, v[i*rows+j], after_digits);
+			if (j<columns-1) putstring(out_stream, ", ");
+		}
+		putstring(out_stream, " |\n");
+	}
+}
+
 
 void dbg_print(const char* s) {
 	putstring(deb_stream, s);
