@@ -568,10 +568,12 @@ void receive_message_long(Mavlink_Received_t* rec)
 			}
 			break;
 			case MAV_CMD_NAV_LAND: {
+				dbg_print("Command for automatic land. Not implemented!\n");
 				/* Land at location |Empty| Empty| Empty| Desired yaw angle.| Latitude| Longitude| Altitude|  */
 			}
 			break;
 			case MAV_CMD_NAV_TAKEOFF: {
+				dbg_print("Command for automatic take-off. Not implemented!\n");
 				/* Takeoff from ground / hand |Minimum pitch (if airspeed sensor present), desired pitch without sensor| Empty| Empty| Yaw angle (if magnetometer present), ignored without magnetometer| Latitude| Longitude| Altitude|  */
 			}
 			break;
@@ -743,9 +745,9 @@ void init_mavlink_actions(void) {
 	centralData=get_central_data();
 	add_PID_parameters();
 	
-	//write_parameters_to_flashc();
+	write_parameters_to_flashc();
 	
-	//read_parameters_from_flashc();
+	read_parameters_from_flashc();
 	
 	add_task(get_mavlink_taskset(),   10000, RUN_REGULAR, &control_waypoint_timeout, 0);
 	
@@ -756,7 +758,7 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
 	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
 	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
-	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
+	add_task(get_mavlink_taskset(),  100000, RUN_NEVER, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
 
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_speed_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT);

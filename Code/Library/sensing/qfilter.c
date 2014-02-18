@@ -88,7 +88,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	
 	
 	for (i=0; i<3; i++){
-		attitude->om[i]  = (1.0-GYRO_LPF)*attitude->om[i]+GYRO_LPF*(((float)rates[GYRO_OFFSET+i]-attitude->be[GYRO_OFFSET+i])*attitude->sf[i]);
+		attitude->om[i]  = (1.0-GYRO_LPF)*attitude->om[i]+GYRO_LPF*(((float)rates[i+GYRO_OFFSET]-attitude->be[i+GYRO_OFFSET])*attitude->sf[i]);
 		attitude->a[i]   = (1.0-ACC_LPF)*attitude->a[i]+ACC_LPF*(((float)rates[i+ACC_OFFSET]-attitude->be[i+ACC_OFFSET])*attitude->sf[i+ACC_OFFSET]);
 		attitude->mag[i] = (1.0-MAG_LPF)*attitude->mag[i]+MAG_LPF*(((float)rates[i+COMPASS_OFFSET]-attitude->be[i+COMPASS_OFFSET])*attitude->sf[i+COMPASS_OFFSET]);
 	}

@@ -41,9 +41,6 @@ void initialisation() {
 	centralData = get_central_data();
 	initialise_board(centralData);
 	initialise_central_data();
-	
-	// turn on simulation mode: 1: simulation mode, 0: reality
-	centralData->simulation_mode = 1;
 
 	init_radar_modules();
 	dbg_print("Debug stream initialised\n");

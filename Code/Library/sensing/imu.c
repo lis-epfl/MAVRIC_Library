@@ -28,9 +28,9 @@ void init_imu (Imu_Data_t *imu1) {
 	init_hmc5883_slow();
 
 	//calibrate_Gyros(imu1);
-	imu1->raw_scale[0] =  RAW_GYRO_X_SCALE;
-	imu1->raw_scale[1] =  RAW_GYRO_Y_SCALE;
-	imu1->raw_scale[2] =  RAW_GYRO_Z_SCALE;
+	imu1->raw_scale[0+GYRO_OFFSET] =  RAW_GYRO_X_SCALE;
+	imu1->raw_scale[1+GYRO_OFFSET] =  RAW_GYRO_Y_SCALE;
+	imu1->raw_scale[2+GYRO_OFFSET] =  RAW_GYRO_Z_SCALE;
 	imu1->raw_scale[0+ACC_OFFSET] =  RAW_ACC_X_SCALE;
 	imu1->raw_scale[1+ACC_OFFSET] =  RAW_ACC_Y_SCALE;
 	imu1->raw_scale[2+ACC_OFFSET] =  RAW_ACC_Z_SCALE;
@@ -75,13 +75,17 @@ void imu_get_raw_data(Imu_Data_t *imu1) {
 	imu1->raw_channels[GYRO_OFFSET+IMU_Y]=(float)gyros->axes[RAW_GYRO_Y];
 	imu1->raw_channels[GYRO_OFFSET+IMU_Z]=(float)gyros->axes[RAW_GYRO_Z];
 
-	imu1->raw_channels[ACC_OFFSET+IMU_X]=(float)accs->axes[RAW_ACC_X];
-	imu1->raw_channels[ACC_OFFSET+IMU_Y]=(float)accs->axes[RAW_ACC_Y];
-	imu1->raw_channels[ACC_OFFSET+IMU_Z]=(float)accs->axes[RAW_ACC_Z];
+	imu1->raw_channels[ACC_OFFSET+IMU_X]=((float)accs->axes[RAW_ACC_X])*ACC_AXIS_X;
+	imu1->raw_channels[ACC_OFFSET+IMU_Y]=((float)accs->axes[RAW_ACC_Y])*ACC_AXIS_Y;
+	imu1->raw_channels[ACC_OFFSET+IMU_Z]=((float)accs->axes[RAW_ACC_Z])*ACC_AXIS_Z;
 
-	imu1->raw_channels[COMPASS_OFFSET+IMU_X]=(float)-compass->axes[RAW_COMPASS_X];
-	imu1->raw_channels[COMPASS_OFFSET+IMU_Y]=(float)-compass->axes[RAW_COMPASS_Y];
-	imu1->raw_channels[COMPASS_OFFSET+IMU_Z]=(float)compass->axes[RAW_COMPASS_Z];
+	//imu1->raw_channels[COMPASS_OFFSET+IMU_X]=(float)-compass->axes[RAW_COMPASS_X];
+	//imu1->raw_channels[COMPASS_OFFSET+IMU_Y]=(float)-compass->axes[RAW_COMPASS_Y];
+	//imu1->raw_channels[COMPASS_OFFSET+IMU_Z]=(float)compass->axes[RAW_COMPASS_Z];
+	
+	imu1->raw_channels[COMPASS_OFFSET+IMU_X]=(float)compass->axes[RAW_COMPASS_X]*MAG_AXIS_X;
+	imu1->raw_channels[COMPASS_OFFSET+IMU_Y]=(float)compass->axes[RAW_COMPASS_Y]*MAG_AXIS_Y;
+	imu1->raw_channels[COMPASS_OFFSET+IMU_Z]=(float)compass->axes[RAW_COMPASS_Z]*MAG_AXIS_Z;
 	
 }
 
