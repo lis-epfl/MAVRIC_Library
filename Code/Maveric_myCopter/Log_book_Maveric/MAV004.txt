@@ -8,3 +8,5 @@ status: not fly ready
 13-11-21: need calibration
 13-11-21: microcontroller gets hot
 13-11-21: rear right motor hard to set the setpoint
+14-02-18: IMU broken!
+14-02-18: no GPS cable

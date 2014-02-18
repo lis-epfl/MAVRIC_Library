@@ -6,3 +6,31 @@ status: not fly ready
 
 13-11-21: ID flashed
 13-11-21: need calibration
+14-02-18: motors setpoint set
+14-02-18: calibration done
+#define RAW_ACC_X_SCALE  4020.9
+#define RAW_ACC_Y_SCALE  4069.2
+#define RAW_ACC_Z_SCALE  4300.8
+
+#define ACC_BIAIS_X -119.74;
+#define ACC_BIAIS_Y  268.87;
+#define ACC_BIAIS_Z   95.34;
+
+#define ACC_AXIS_X  1.0
+#define ACC_AXIS_Y -1.0
+#define ACC_AXIS_Z -1.0
+
+#define RAW_MAG_X_SCALE 613.00
+#define RAW_MAG_Y_SCALE 589.89
+#define RAW_MAG_Z_SCALE 522.41
+
+#define MAG_BIAIS_X -110.27
+#define MAG_BIAIS_Y -139.87
+#define MAG_BIAIS_Z   23.97
+
+#define MAG_AXIS_X -1.0
+#define MAG_AXIS_Y -1.0
+#define MAG_AXIS_Z  1.0
+14-02-18: ID & parameters flashed
+14-02-18: RC reciever working
+14-02-18: missing GPS cable
