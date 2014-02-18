@@ -17,7 +17,7 @@ typedef struct UQuat {
 	out[2] = u[0] * v[1] - u[1]*v[0];
 
 #define SCP(u,v) \
-	(u[0]*v[0]+u[1]*v[1]+u[2]*v[2]);
+	(u[0]*v[0]+u[1]*v[1]+u[2]*v[2])
 
 #define QI(q, out) \
 	out.s = q.s;\
@@ -124,17 +124,35 @@ UQuat_t static inline quat_local_to_global(const UQuat_t qe, const UQuat_t qvect
 	return qtmp;
 }
 
-// fast newton iteration for approximate square root
-float static inline fast_sqrt(float input) {
+
+// fast newton iteration for approximate square root of numbers close to 1 (for re-normalisation)
+float static inline fast_sqrt(float number) {
+	long i;
+	float x, y;
+	const float f = 1.5F;
+
+	x = number * 0.5F;
+	y  = number;
+	i  = * ( long * ) &y;
+	i  = 0x5f3759df - ( i >> 1 );
+	y  = * ( float * ) &i;
+	y  = y * ( f - ( x * y * y ) );
+	y  = y * ( f - ( x * y * y ) ); // repeat newton iteration for more accuracy
+	return number * y;
+}
+
+
+// fast newton iteration for approximate square root of numbers close to 1 (for re-normalisation)
+float static inline fast_sqrt_1(float input) {
 	if (input<0) {
 		//dbg_print("negative root");
-		return 0.0;
+		return 0.0F;
 	}
-	float result=1.0;
-	result=0.5*(result+(input/result));
-	result=0.5*(result+(input/result));
-	result=0.5*(result+(input/result));
-	result=0.5*(result+(input/result));
+	float result=1.0F;
+	result=0.5F*(result+(input/result));
+	result=0.5F*(result+(input/result));
+	//result=0.5*(result+(input/result));
+	//result=0.5*(result+(input/result));
 	return result;
 }
 

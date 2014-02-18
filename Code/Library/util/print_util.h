@@ -15,6 +15,7 @@ void putstring(byte_stream_t *out_stream, const char* s);
 void putdigit(byte_stream_t *out_stream, unsigned c);
 void putnum(byte_stream_t *out_stream, long c, char base);
 void putfloat(byte_stream_t *out_stream, float c, int after_digits);
+void print_matrix(byte_stream_t *out_stream, float v[], int rows, int columns, int after_digits);
 void print_vector(byte_stream_t *out_stream, float v[], int after_digits); 
 void print_quaternion(byte_stream_t *out_stream, UQuat_t *quat, int after_digits); 
 
