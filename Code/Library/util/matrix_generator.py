@@ -7,8 +7,8 @@ def generate_types( dim):
     output+="typedef struct vector_%i_t {\n"%dim+\
                     "   float v[%i];\n"%(dim)+\
                     "} vector_%i_t;\n\n"%dim
-    #define constants
-    
+ 
+  #define constants    
     type_ext="%ix%i"%(dim,  dim)
     output+="static const matrix_"+type_ext+"_t zero_"+type_ext+"= \n   {.v={{";
     for i in range(0, dim):
@@ -19,6 +19,17 @@ def generate_types( dim):
             elif i!=dim-1:
                 output+="}, \n        {"
     output+="}} };\n\n"
+
+    output+="static const matrix_"+type_ext+"_t ones_"+type_ext+"= \n   {.v={{";
+    for i in range(0, dim):
+        for j in range(0, dim):
+            output+="1.0f"
+            if j!=dim-1:
+                output+=", "
+            elif i!=dim-1:
+                output+="}, \n        {"
+    output+="}} };\n\n"
+
 
     output+="static const matrix_"+type_ext+"_t ident_"+type_ext+"= \n   {.v={{";
     for i in range(0, dim):
@@ -32,9 +43,50 @@ def generate_types( dim):
             elif i!=dim-1:
                 output+="}, \n        {"
     output+="}} };\n\n"    
+
+    #define initialisers
+    output+="// create diagonal matrix\n"
+    output+="matrix_"+type_ext+"_t static inline diag_"+type_ext+"(const vector_%i_t v) {\n"%dim+\
+                     "   matrix_"+type_ext+"_t result= zero_"+type_ext+";\n   ";
+    for i in range(0, dim):
+            output+="result.v[%i][%i]=v.v[%i];"%(i,  i, i)
+    output+="   return result;\n}\n\n"
     
+    #define getters
+    output+="// return vector of a row\n"
+    output+="vector_%i_t"%dim+" static inline row%i"%dim+"(const matrix_"+type_ext+"_t m, int row) {\n"+\
+                     "   vector_%i_t"%dim+"  result= {.v={";
+    for i in range(0, dim):
+            output+="m.v[row][%i]"%(  i)
+            if i!=dim-1:
+                output+=", "
+    output+="}};\n"
+    output+="   return result;\n}\n\n"
+
+    output+="// return vector of a column\n"
+    output+="vector_%i_t"%dim+" static inline col%i"%dim+"(const matrix_"+type_ext+"_t m, int col) {\n"+\
+                     "   vector_%i_t"%dim+"  result= {.v={";
+    for i in range(0, dim):
+            output+="m.v[%i][col]"%(i)
+            if i!=dim-1:
+                output+=", "
+    output+="}};\n"
+    output+="   return result;\n}\n\n"
+
+
+    output+="// return matrix diagonal as a vector\n"
+    output+="vector_%i_t"%dim+" static inline diag_vector%i"%dim+"(const matrix_"+type_ext+"_t m) {\n"+\
+                     "   vector_%i_t"%dim+" result= {.v={";
+    for i in range(0, dim):
+            output+="m.v[%i][%i]"%(i,  i)
+            if i!=dim-1:
+                output+=", "
+    output+="}};\n"
+    output+="   return result;\n}\n\n"
+
+
     #define transpose
-    type_ext="%ix%i"%(dim,  dim)
+    output+="// transpose of a matrix\n"    
     output+="matrix_"+type_ext+"_t static inline trans%i"%dim+"(const matrix_"+type_ext+"_t m) {\n"+\
                      "   matrix_"+type_ext+"_t result= \n   {.v={";
     for i in range(0, dim):
@@ -167,9 +219,9 @@ def generate_pointwise(dim,  name,  operator):
     output+="}};\n"
     output+="   return result;\n}\n\n"
 
-    output="// pointwise "+name+" for "+type_ext+" vectors\n"
+    output+="// pointwise "+name+" for "+type_ext+" vectors\n"
 
-    output +="vector_%i_t"%dim+" static inline m"+name+"%i"%dim+"(const vector_%i_t"%dim+" v1, const vector_%i_t"%dim+" v2) {\n"+\
+    output +="vector_%i_t"%dim+" static inline v"+name+"%i"%dim+"(const vector_%i_t"%dim+" v1, const vector_%i_t"%dim+" v2) {\n"+\
                     "   vector_%i_t"%dim+" result= \n   {.v={";
     
     for i in range(0, dim):
@@ -182,10 +234,82 @@ def generate_pointwise(dim,  name,  operator):
     output+="}};\n"
     output+="   return result;\n}\n\n"
 
-
     return output
     
     
+    
+def generate_norms(dim):
+    type_ext="%ix%i"%(dim,  dim)
+    output="//squared frobenius norm  for "+type_ext+" matrices\n"
+    output +="float static inline sqr_f_norm%i"%dim+"(const matrix_"+type_ext+"_t m) {\n"+\
+                    "   float result= \n   ";
+    for i in range(0, dim):
+        for j in range(0, dim):
+            output+="m.v[%i][%i]"%( i,  j)+"* m.v[%i][%i]"%(i,  j)
+            if j!=dim-1:
+                output+=" + "
+            elif i!=dim-1:
+                output+=" +\n   "
+            else:
+                output+=";\n"
+    output+="   return result;\n}\n\n"
+
+    output+="//sum of each row  for "+type_ext+" matrices\n"
+    output +="vector_%i_t"%dim+" static inline row_sum%i"%dim+"(const matrix_"+type_ext+"_t m) {\n"+\
+                    "   vector_%i_t"%dim+" result= {.v={\n   ";
+    for i in range(0, dim):
+        for j in range(0, dim):
+            output+="m.v[%i][%i]"%( i,  j)
+            if j!=dim-1:
+                output+=" + "
+            elif i!=dim-1:
+                output+=" , \n   "
+    output+="}};\n"
+    output+="   return result;\n}\n\n"
+
+    output+="//sum of each column  for "+type_ext+" matrices\n"
+    output +="vector_%i_t"%dim+" static inline col_sum%i"%dim+"(const matrix_"+type_ext+"_t m) {\n"+\
+                    "   vector_%i_t"%dim+" result= {.v={\n   ";
+    for i in range(0, dim):
+        for j in range(0, dim):
+            output+="m.v[%i][%i]"%( j,  i)
+            if j!=dim-1:
+                output+=" + "
+            elif i!=dim-1:
+                output+=" , \n   "
+    output+="}};\n"
+    output+="   return result;\n}\n\n"
+
+    output+="//sum for %iD"%dim+" vectors\n"
+    output +="float static inline sum%i"%dim+"(const vector_%i_t vec) {\n"%dim+\
+                    "   float result= ";
+    for i in range(0, dim):
+            output+="vec.v[%i]"%( i)
+            if j!=dim-1:
+                output+=" + "
+            if i!=dim-1:
+                output+=" + "
+    output+=";\n"
+    output+="   return result;\n}\n\n"
+
+    output+="//trace for %iD"%dim+" matrices\n"
+    output +="float static inline trace%i"%dim+"(const matrix_"+type_ext+"_t m) {\n"
+    output +="   return sum%i(diag_vector%i(m));\n}\n\n"%(dim,  dim)
+
+    output+="//squared norm  for %iD"%dim+" vectors\n"
+    output +="float static inline sqr_norm%i"%dim+"(const vector_%i_t vec) {\n"%dim+\
+                    "   float result= ";
+    for i in range(0, dim):
+            output+="vec.v[%i]"%( i)+"* vec.v[%i]"%(i)
+            if j!=dim-1:
+                output+=" + "
+            if i!=dim-1:
+                output+=" + "
+    output+=";\n"
+    output+="   return result;\n}\n\n"
+    return output
+
+
 print "#ifndef SMALL_MATRIX_H_\n#define SMALL_MATRIX_H_\n\n\n"
 for d in range(2, 5):
     print generate_types(d)
@@ -193,4 +317,5 @@ for d in range(2, 5):
     print generate_pointwise(d,  "add",  "+")
     print generate_pointwise(d,  "sub",  "-")
     print generate_pointwise(d,  "pwmul",  "*")
+    print generate_norms(d)
 print "#endif"

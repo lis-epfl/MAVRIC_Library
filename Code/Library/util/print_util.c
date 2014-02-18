@@ -108,7 +108,7 @@ void putfloat(byte_stream_t *out_stream, float c, int after_digits){
 	if (c<0) {
 		putstring(out_stream, "-");
 		num=-c;
-	}
+	} else putstring(out_stream, "");
 	int whole=abs((int)num);
 	float after=(num-(float)whole);
 

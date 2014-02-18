@@ -348,7 +348,7 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 		// ------ THRUST PID ---------------------------------------------------
 		// ---------------------------------------------------------------------
 		.thrust_controller={
-				.p_gain = 0.4,
+				.p_gain = 0.2,
 				.clip_min = -0.9, 
 				.clip_max = 0.65,
 				.integrator={
@@ -359,10 +359,10 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 					.leakiness = 0.0
 				},
 				.differentiator={
-					.gain = 0.5,
+					.gain = 0.4,
 					.previous = 0.0,
-					.LPF = 0.95,
-					.clip = 1.0
+					.LPF = 0.97,
+					.clip = 0.2
 				},
 				.output = 0.0,
 				.error = 0.0,
