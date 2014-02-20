@@ -96,6 +96,7 @@ typedef struct  {
 	
 	bool collision_avoidance;
 	bool automatic_take_off;
+	bool in_the_air;
 	
 	uint8_t mav_mode;
 	uint8_t mav_state;

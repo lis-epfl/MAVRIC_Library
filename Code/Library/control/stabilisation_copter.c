@@ -22,7 +22,12 @@ void init_stabilisation_copter(Stabiliser_Stack_copter_t* stabiliser_stack)
 	*stabiliser_stack = stabiliser_defaults_copter;
 }
 
-
+void get_velocity_vector_from_remote(float tvel[])
+{
+	tvel[X]=-10.0*centralData->controls.rpy[PITCH];
+	tvel[Y]= 10.0*centralData->controls.rpy[ROLL];
+	tvel[Z]=- 1.5*centralData->controls.thrust;
+}
 void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input) {
 	float rpyt_errors[4];
 	Control_Command_t input;

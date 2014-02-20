@@ -757,9 +757,9 @@ void wp_take_off()
 	dbg_print_num(centralData->position_estimator.localPosition.pos[Y],10);
 	dbg_print(", ");
 	dbg_print_num(-10.0,10);
-	dbg_print(", ");
+	dbg_print("), with heading of: ");
 	dbg_print_num((int)(centralData->position_estimator.localPosition.heading*180.0/3.14),10);
-	dbg_print(")\n");
+	dbg_print("\n");
 
 	centralData->waypoint_hold_coordinates = centralData->position_estimator.localPosition;
 	centralData->waypoint_hold_coordinates.pos[Z] = -10.0;
@@ -823,7 +823,7 @@ void waypoint_navigation_handler()
 				
 				mavlink_msg_mission_current_send(MAVLINK_COMM_0,centralData->current_wp_count);
 				
-				}else{
+			}else{
 				centralData->waypoint_set = false;
 				dbg_print("Stop\n");
 				

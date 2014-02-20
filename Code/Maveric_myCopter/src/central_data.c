@@ -40,6 +40,7 @@ void initialise_central_data(){
 		
 		centralData.collision_avoidance = false;
 		centralData.automatic_take_off = false;
+		centralData.in_the_air = false;
 		
 		// default GPS home position
 		centralData.position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;

@@ -23,6 +23,8 @@ typedef struct {
 
 void init_stabilisation_copter(Stabiliser_Stack_copter_t* stabiliser_stack);
 
+void get_velocity_vector_from_remote(float tvel[]);
+
 void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input);
 
 void mix_to_servos_diag_quad(Control_Command_t *control);
