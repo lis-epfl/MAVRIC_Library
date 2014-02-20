@@ -21,7 +21,11 @@ bool run_matrix_tests() {
 
 	
 	matrix_3x3_t m3={.v={{1, 2, 4},{2,4,2},{4,2,1}}};
+	
 	print_matrix(get_debug_stream(), m3.v, 3, 3, 2); dbg_print("\n");
+	
+	matrix_3x3_t m3d=diag_3x3(row3(m3, 0));
+	print_matrix(get_debug_stream(), m3d.v, 3, 3, 2); dbg_print("\n");
 	
 	matrix_3x3_t m3t=trans3(m3);
 	print_matrix(get_debug_stream(), m3t.v, 3, 3, 2); dbg_print("\n");
@@ -30,6 +34,7 @@ bool run_matrix_tests() {
 	print_matrix(get_debug_stream(), m3i.v, 3, 3, 2); dbg_print("\n");
 	
 	matrix_3x3_t m3_=mmul3(m3, m3i);
+	m3_=mmul3(m3, inv3(m3));
 	print_matrix(get_debug_stream(), m3_.v, 3, 3, 2); dbg_print("\n");
 	
 	
@@ -48,8 +53,13 @@ bool run_matrix_tests() {
 	
 	vector_3_t v1={.v={2,4,7}};
 	print_matrix(get_debug_stream(), v1.v, 1, 3, 2); dbg_print("\n");
-	print_matrix(get_debug_stream(), mvmul3(ident_3x3, v1).v, 1, 3, 2); dbg_print("\n");
-	print_matrix(get_debug_stream(), tp3(v1, v1).v, 3, 3, 2); dbg_print("\n");
+//	print_matrix(get_debug_stream(), mvmul3(ident_3x3, v1).v, 1, 3, 2); dbg_print("\n");
+//	print_matrix(get_debug_stream(), tp3(v1, v1).v, 3, 3, 2); dbg_print("\n");
+	
+	dbg_print("sqared Norm m3:   "); dbg_putfloat(sqr_f_norm3(m3), 4);dbg_print("\n");
+	dbg_print("trace m3:         "); dbg_putfloat(trace3(m3), 4);dbg_print("\n");
+	dbg_print("residual |MxM^{-1} - I| "); dbg_putfloat(sqr_f_norm3(msub3(mmul3(m3, inv3(m3)), ident_3x3)), 10);dbg_print("\n");
+	
 	
 	
 }

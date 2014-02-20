@@ -8,10 +8,9 @@
 #include "quick_trig.h"
 
 #include <math.h>
-#include "maths.h"
 
-#define INTERP_POINTS 50
-#define PI 3.14159265
+
+#define PI 3.141592653589793f
 
 const float acos_x_min = 0.0;
 const float acos_x_max = 1.0;
@@ -76,40 +75,20 @@ const float atan_y[INTERP_POINTS] = {	0.        ,  0.20131711,  0.38752381,  0.5
 								        1.44890362,  1.45184831,  1.4546547 ,  1.45733227,  1.45988967,
 								        1.46233476,  1.46467476,  1.46691629,  1.4690654 ,  1.47112767};
 
-float quick_func(float x, const float func_x_min, const float func_x_max, float func_x_step, const float func_y[])
-{
-	float y, step;
-	int i;
-	if ( x <= func_x_min )
-	{
-		y = func_y[0];
-	}
-	else if ( x >= func_x_max )
-	{
-		y = func_y[INTERP_POINTS - 1];
-	}
-	else
-	{
-		i = (int) ((x - func_x_min) / func_x_step);
-		y = interpolate(x, func_x_min + i * func_x_step, 
-						func_x_min + (i + 1) * func_x_step, 
-						func_y[i], func_y[i+1]);
-	}
-	return y;
-}
+
 
 
 float quick_sin(float x)
 {
 	float y;
 	
-	float xx = fmod(x, 2 * PI);
+	float xx = fmod(x, 2.0f * PI);
 
 	if (xx < 0)
 	{
 		y = - quick_sin(-xx);
 	}
-	else if (xx > PI/2)
+	else if (xx > PI/2.0f)
 	{
 		y = quick_sin(PI - xx);
 	}
@@ -124,7 +103,7 @@ float quick_sin(float x)
 
 float quick_cos(float x)
 {
-	return quick_sin(PI/2 + x);	
+	return quick_sin(PI/2.0f + x);	
 }
 
 
@@ -147,7 +126,7 @@ float quick_acos(float x)
 
 float quick_asin(float x)
 {
-	return PI/2 - quick_acos(x);
+	return PI/2.0f - quick_acos(x);
 }
 
 
@@ -177,11 +156,11 @@ float quick_atan(float x)
 	{
 		y = - quick_atan(-x);
 	}
-	else if (x > 1000)
+	else if (x > 1000.0f)
 	{
-		y = PI/2;
+		y = PI/2.0f;
 	}
-	else if (x > 10)
+	else if (x > 10.0f)
 	{
 		y = interpolate(x, 10, 1000, atan_y[INTERP_POINTS - 1], PI/2);
 	}
