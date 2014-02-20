@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.1">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.025" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.025" altunitdist="inch" altunit="inch"/>
+<grid distance="0.05" unitdist="mm" unit="mm" style="lines" multiple="1" display="no" altdistance="0.025" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
@@ -353,7 +353,7 @@ Source: http://www.osram.convergy.de/ ... LG_R971.pdf</description>
 <class number="0" name="default" width="0" drill="0">
 </class>
 </classes>
-<designrules>
+<designrules name="default">
 <description language="de">&lt;b&gt;EAGLE Design Rules&lt;/b&gt;
 &lt;p&gt;
 Die Standard-Design-Rules sind so gewählt, dass sie für 
@@ -651,9 +651,9 @@ design rules under a new name.</description>
 <wire x1="14.986" y1="15.494" x2="14.986" y2="14.478" width="0.254" layer="1"/>
 <wire x1="14.224" y1="16.256" x2="14.986" y2="15.494" width="0.254" layer="16"/>
 <wire x1="9.652" y1="16.256" x2="14.224" y2="16.256" width="0.254" layer="16"/>
-<wire x1="7.62" y1="16.256" x2="9.652" y2="16.256" width="0.254" layer="1"/>
+<wire x1="9.37" y1="16.056" x2="9.652" y2="16.256" width="0.254" layer="1"/>
 <wire x1="14.732" y1="10.414" x2="14.84" y2="10.314" width="0.254" layer="1"/>
-<wire x1="7.62" y1="16.256" x2="7.58" y2="16.04" width="0.254" layer="1"/>
+<wire x1="9.37" y1="16.056" x2="7.58" y2="16.04" width="0.254" layer="1"/>
 <via x="14.986" y="15.494" extent="1-16" drill="0.6096"/>
 <via x="9.652" y="16.256" extent="1-16" drill="0.6096"/>
 </signal>
@@ -664,9 +664,9 @@ design rules under a new name.</description>
 <wire x1="13.97" y1="14.732" x2="13.97" y2="10.668" width="0.254" layer="1"/>
 <wire x1="13.716" y1="14.986" x2="13.97" y2="14.732" width="0.254" layer="16"/>
 <wire x1="9.652" y1="14.986" x2="13.716" y2="14.986" width="0.254" layer="16"/>
-<wire x1="9.144" y1="14.986" x2="9.652" y2="14.986" width="0.254" layer="1"/>
-<wire x1="8.89" y1="15.24" x2="9.144" y2="14.986" width="0.254" layer="1"/>
-<wire x1="7.58" y1="15.24" x2="8.89" y2="15.24" width="0.254" layer="1"/>
+<wire x1="9.644" y1="14.986" x2="9.652" y2="14.986" width="0.254" layer="1"/>
+<wire x1="9.39" y1="15.24" x2="9.644" y2="14.986" width="0.254" layer="1"/>
+<wire x1="7.58" y1="15.24" x2="9.39" y2="15.24" width="0.254" layer="1"/>
 <wire x1="14.224" y1="10.414" x2="14.19" y2="10.314" width="0.254" layer="1"/>
 <via x="13.97" y="14.732" extent="1-16" drill="0.6096"/>
 <via x="9.652" y="14.986" extent="1-16" drill="0.6096"/>
