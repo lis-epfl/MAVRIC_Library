@@ -76,8 +76,8 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// -----------------------------------------------------------------
 			{
 				.p_gain = 0.5,
-				.clip_min = -0.9, 
-				.clip_max = 0.9,
+				.clip_min = -0.3, 
+				.clip_max = 0.3,
 				.integrator={
 					.pregain = 0.5, 
 					.postgain = 0.5,

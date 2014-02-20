@@ -39,15 +39,22 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 		
 
 		if (control_input->yaw_mode == YAW_COORDINATED)  {
-			float rel_heading = atan2(pos_est->vel_bf[Y], pos_est->vel_bf[X]);
-			float current_velocity_sqr=SQR(pos_est->vel_bf[X])+SQR(pos_est->vel_bf[Y]);
-			//float blend_func=0.5*(sigmoid(4.0*(current_velocity_sqr - yaw_coordination_velocity))+1.0);
-			//blend_func=1.0;
-			if (current_velocity_sqr > SQR(centralData->stabiliser_stack.yaw_coordination_velocity)) {
-				input.rpy[YAW]+=sigmoid(3.0*rel_heading);
-			} else {
-				//input.rpy[YAW]=input.theading;
+			float rel_heading_coordinated;
+			if ((f_abs(pos_est->vel_bf[X])<0.001)&&(f_abs(pos_est->vel_bf[Y])<0.001))
+			{
+				rel_heading_coordinated = 0.0;
+			}else{
+				rel_heading_coordinated = atan2(pos_est->vel_bf[Y], pos_est->vel_bf[X]);
 			}
+			//float current_velocity_sqr=SQR(pos_est->vel_bf[X])+SQR(pos_est->vel_bf[Y]);
+			//if (current_velocity_sqr > SQR(centralData->stabiliser_stack.yaw_coordination_velocity)) {
+				//input.rpy[YAW]+=sigmoid(3.0*rel_heading);
+			//} else {
+				////input.rpy[YAW]=input.theading;
+			//}
+			
+			float w = 0.5*(sigmoid(vector_norm(pos_est->vel_bf)-centralData->stabiliser_stack.yaw_coordination_velocity)+1.0);
+			input.rpy[YAW] = (1.0-w)*input.rpy[YAW] + w*rel_heading_coordinated;
 		}
 
 		rpyt_errors[YAW]= input.rpy[YAW];

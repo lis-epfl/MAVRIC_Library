@@ -49,6 +49,8 @@
 central_data_t *centralData;
 float alt_integrator;
 
+uint8_t loopCount = 0;
+
 void init_nav()
 {
 	int8_t i;
@@ -118,7 +120,15 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	
 	dir_desired_bf[2] = rel_pos[2];
 	
-	v_desired = f_min(V_CRUISE,(center_window_2(rel_heading) * DIST_2_VEL_GAIN * norm_rel_dist));
+	if (((f_abs(rel_pos[X])<=1.0)&&(f_abs(rel_pos[Y])<=1.0))||((f_abs(rel_pos[X])<=5.0)&&(f_abs(rel_pos[Y])<=5.0)&&(f_abs(rel_pos[Z])>=3.0)))
+	{
+		rel_heading = 0.0;
+	}else{
+		rel_heading = calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - centralData->position_estimator.localPosition.heading);
+		//rel_heading = atan2(dir_desired_bf[Y]);
+	}
+	
+	v_desired = f_min(V_CRUISE,(center_window_2(6.0*rel_heading) * DIST_2_VEL_GAIN * norm_rel_dist));
 	
 	if (v_desired *  f_abs(dir_desired_bf[Z]) > MAX_CLIMB_RATE * norm_rel_dist ) {
 		v_desired = MAX_CLIMB_RATE * norm_rel_dist /f_abs(dir_desired_bf[Z]);
@@ -148,12 +158,12 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	}
 
 	//rel_heading= atan2(new_velocity[Y],new_velocity[X]);
-	if (f_abs(new_velocity[X])<0.001 && f_abs(new_velocity[Y])<0.001 || centralData->controls.yaw_mode == YAW_ABSOLUTE || !centralData->waypoint_set)
-	{
-		rel_heading = 0.0;
-	}else{
-		rel_heading = atan2(new_velocity[Y],new_velocity[X]);
-	}
+	//if (f_abs(new_velocity[X])<0.001 && f_abs(new_velocity[Y])<0.001 || centralData->controls.yaw_mode == YAW_ABSOLUTE || !centralData->waypoint_set)
+	//{
+		//rel_heading = 0.0;
+	//}else{
+		//rel_heading = atan2(new_velocity[Y],new_velocity[X]);
+	//}
 
 	centralData->controls_nav.tvel[X] = new_velocity[X];
 	centralData->controls_nav.tvel[Y] = new_velocity[Y];
