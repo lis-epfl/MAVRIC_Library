@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.1">
+<eagle version="6.4">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="yes"/>
@@ -643,57 +643,6 @@ Farnell: 1885500</description>
 <pad name="P$7" x="6.25" y="1" drill="0.8"/>
 <pad name="P$8" x="6.25" y="3" drill="0.8"/>
 </package>
-<package name="BMP085">
-<wire x1="2.5" y1="2.5" x2="2.5" y2="-2.5" width="0.127" layer="51"/>
-<wire x1="2.5" y1="-2.5" x2="-2.5" y2="-2.5" width="0.127" layer="51"/>
-<wire x1="-2.5" y1="2.5" x2="-2.5" y2="-2.5" width="0.127" layer="51"/>
-<wire x1="2.5" y1="2.5" x2="-2.5" y2="2.5" width="0.127" layer="51"/>
-<wire x1="-2.5" y1="2.5" x2="-2.5" y2="1.9" width="0.127" layer="21"/>
-<wire x1="-2.5" y1="2.5" x2="-1.9" y2="2.5" width="0.127" layer="21"/>
-<wire x1="2.5" y1="2.5" x2="1.9" y2="2.5" width="0.127" layer="21"/>
-<wire x1="2.5" y1="2.5" x2="2.5" y2="1.9" width="0.127" layer="21"/>
-<wire x1="-2.5" y1="-2.5" x2="-2.5" y2="-1.9" width="0.127" layer="21"/>
-<wire x1="-2.5" y1="-2.5" x2="-1.8" y2="-2.5" width="0.127" layer="21"/>
-<wire x1="2.5" y1="-2.5" x2="1.8" y2="-2.5" width="0.127" layer="21"/>
-<wire x1="2.5" y1="-2.5" x2="2.5" y2="-1.9" width="0.127" layer="21"/>
-<circle x="-2.1" y="2.1" radius="0.2" width="0.127" layer="21"/>
-<smd name="8" x="0" y="2.45" dx="2" dy="0.8" layer="1" rot="R90"/>
-<smd name="4" x="0" y="-2.565" dx="2" dy="0.8" layer="1" rot="R90"/>
-<smd name="7" x="2.565" y="1.27" dx="0.8" dy="2" layer="1" rot="R270"/>
-<smd name="6" x="2.565" y="0" dx="0.8" dy="2" layer="1" rot="R270"/>
-<smd name="5" x="2.565" y="-1.27" dx="0.8" dy="2" layer="1" rot="R270"/>
-<smd name="3" x="-2.565" y="-1.27" dx="0.8" dy="2" layer="1" rot="R270"/>
-<smd name="2" x="-2.565" y="0" dx="0.8" dy="2" layer="1" rot="R270"/>
-<smd name="1" x="-2.565" y="1.27" dx="0.8" dy="2" layer="1" rot="R270"/>
-<text x="0" y="-3.81" size="1.27" layer="21">&gt;NAME</text>
-</package>
-<package name="HMC5843">
-<wire x1="-2" y1="2" x2="2" y2="2" width="0.127" layer="21"/>
-<wire x1="2" y1="2" x2="2" y2="-2" width="0.127" layer="21"/>
-<wire x1="2" y1="-2" x2="-2" y2="-2" width="0.127" layer="21"/>
-<wire x1="-2" y1="-2" x2="-2" y2="2" width="0.127" layer="21"/>
-<circle x="2.1" y="2.4" radius="0.2236" width="0.127" layer="21"/>
-<smd name="P$1" x="1" y="2.1" dx="1.2" dy="0.28" layer="1" rot="R90"/>
-<smd name="P$2" x="0.5" y="2.1" dx="1.2" dy="0.28" layer="1" rot="R90"/>
-<smd name="P$3" x="0" y="2.1" dx="1.2" dy="0.28" layer="1" rot="R90"/>
-<smd name="P$4" x="-0.5" y="2.1" dx="1.2" dy="0.28" layer="1" rot="R90"/>
-<smd name="P$5" x="-1" y="2.1" dx="1.2" dy="0.28" layer="1" rot="R90"/>
-<smd name="P$6" x="-2.1" y="1" dx="1.2" dy="0.28" layer="1" rot="R180"/>
-<smd name="P$7" x="-2.1" y="0.5" dx="1.2" dy="0.28" layer="1" rot="R180"/>
-<smd name="P$8" x="-2.1" y="0" dx="1.2" dy="0.28" layer="1" rot="R180"/>
-<smd name="P$9" x="-2.1" y="-0.5" dx="1.2" dy="0.28" layer="1" rot="R180"/>
-<smd name="P$10" x="-2.1" y="-1" dx="1.2" dy="0.28" layer="1" rot="R180"/>
-<smd name="P$11" x="-1" y="-2.1" dx="1.2" dy="0.28" layer="1" rot="R270"/>
-<smd name="P$12" x="-0.5" y="-2.1" dx="1.2" dy="0.28" layer="1" rot="R270"/>
-<smd name="P$13" x="0" y="-2.1" dx="1.2" dy="0.28" layer="1" rot="R270"/>
-<smd name="P$14" x="0.5" y="-2.1" dx="1.2" dy="0.28" layer="1" rot="R270"/>
-<smd name="P$15" x="1" y="-2.1" dx="1.2" dy="0.28" layer="1" rot="R270"/>
-<smd name="P$16" x="2.1" y="-1" dx="1.2" dy="0.28" layer="1"/>
-<smd name="P$17" x="2.1" y="-0.5" dx="1.2" dy="0.28" layer="1"/>
-<smd name="P$18" x="2.1" y="0" dx="1.2" dy="0.28" layer="1"/>
-<smd name="P$19" x="2.1" y="0.5" dx="1.2" dy="0.28" layer="1"/>
-<smd name="P$20" x="2.1" y="1" dx="1.2" dy="0.28" layer="1"/>
-</package>
 <package name="PIXART_WII_IR">
 <wire x1="0" y1="5.8" x2="-4.6" y2="5.8" width="0.127" layer="21"/>
 <wire x1="-4.6" y1="5.8" x2="-4.6" y2="-4.8" width="0.127" layer="21"/>
@@ -818,22 +767,35 @@ Farnell: 1885500</description>
 <smd name="P$3" x="0" y="1.1" dx="0.6" dy="1.5" layer="1" rot="R180"/>
 <smd name="P$4" x="0" y="-1.1" dx="0.6" dy="1.5" layer="1" rot="R180"/>
 </package>
-<package name="BMP180">
-<smd name="7" x="-1.75" y="0" dx="0.5" dy="1" layer="1" rot="R90"/>
-<smd name="5" x="0" y="1.75" dx="0.5" dy="1" layer="1" rot="R180"/>
-<smd name="6" x="-1.5" y="1.75" dx="0.5" dy="1" layer="1" rot="R180"/>
-<smd name="4" x="1.5" y="1.75" dx="0.5" dy="1" layer="1" rot="R180"/>
-<smd name="3" x="1.5" y="-1.75" dx="0.5" dy="1" layer="1" rot="R180"/>
-<smd name="2" x="0" y="-1.75" dx="0.5" dy="1" layer="1" rot="R180"/>
-<smd name="1" x="-1.5" y="-1.75" dx="0.5" dy="1" layer="1" rot="R180"/>
-<wire x1="-2" y1="2" x2="-2" y2="0.5" width="0.127" layer="21"/>
-<wire x1="-2" y1="-0.5" x2="-2" y2="-2" width="0.127" layer="21"/>
-<wire x1="2" y1="2" x2="2" y2="-2" width="0.127" layer="21"/>
-<wire x1="-1" y1="2" x2="-0.5" y2="2" width="0.127" layer="21"/>
-<wire x1="0.5" y1="2" x2="1" y2="2" width="0.127" layer="21"/>
-<wire x1="-1" y1="-2" x2="-0.5" y2="-2" width="0.127" layer="21"/>
-<wire x1="0.5" y1="-2" x2="1" y2="-2" width="0.127" layer="21"/>
-<circle x="-2.25" y="-2.5" radius="0.25" width="0.127" layer="21"/>
+<package name="PIEZO_CMT-1203-SMT">
+<wire x1="-6" y1="6" x2="6" y2="6" width="0.127" layer="21"/>
+<wire x1="6" y1="6" x2="6" y2="-6" width="0.127" layer="21"/>
+<wire x1="6" y1="-6" x2="-6" y2="-6" width="0.127" layer="21"/>
+<wire x1="-6" y1="-6" x2="-6" y2="6" width="0.127" layer="21"/>
+<smd name="P$1" x="0" y="6" dx="3" dy="6" layer="1" rot="R90"/>
+<smd name="P$2" x="0" y="-6" dx="3" dy="6" layer="1" rot="R90"/>
+</package>
+<package name="PIEZO_CMT_1203-SMT-REDUCED_FOOTPRINT">
+<wire x1="-6" y1="6" x2="6" y2="6" width="0.127" layer="21"/>
+<wire x1="6" y1="6" x2="6" y2="-6" width="0.127" layer="21"/>
+<wire x1="6" y1="-6" x2="-6" y2="-6" width="0.127" layer="21"/>
+<wire x1="-6" y1="-6" x2="-6" y2="6" width="0.127" layer="21"/>
+<smd name="P$1" x="0" y="6" dx="2" dy="4.5" layer="1" rot="R90"/>
+<smd name="P$2" x="0" y="-6" dx="2" dy="4.5" layer="1" rot="R90"/>
+</package>
+<package name="SOT23-8L">
+<wire x1="-0.85" y1="1.85" x2="0.85" y2="1.85" width="0.127" layer="21"/>
+<wire x1="0.85" y1="1.85" x2="0.85" y2="-1.2" width="0.127" layer="21"/>
+<wire x1="0.85" y1="-1.2" x2="-0.85" y2="-1.2" width="0.127" layer="21"/>
+<wire x1="-0.85" y1="-1.2" x2="-0.85" y2="1.85" width="0.127" layer="21"/>
+<smd name="P$1" x="-1.175" y="1.3" dx="1.3" dy="0.42" layer="1"/>
+<smd name="P$2" x="-1.175" y="0.65" dx="1.3" dy="0.42" layer="1"/>
+<smd name="P$3" x="-1.175" y="0" dx="1.3" dy="0.42" layer="1"/>
+<smd name="P$4" x="-1.175" y="-0.65" dx="1.3" dy="0.42" layer="1"/>
+<smd name="P$5" x="1.175" y="-0.65" dx="1.3" dy="0.42" layer="1" rot="R180"/>
+<smd name="P$6" x="1.175" y="0" dx="1.3" dy="0.42" layer="1" rot="R180"/>
+<smd name="P$7" x="1.175" y="0.65" dx="1.3" dy="0.42" layer="1" rot="R180"/>
+<smd name="P$8" x="1.175" y="1.3" dx="1.3" dy="0.42" layer="1" rot="R180"/>
 </package>
 </packages>
 <symbols>
@@ -1058,47 +1020,6 @@ Farnell: 1885500</description>
 <pin name="7_VDD" x="15.24" y="10.16" length="middle" rot="R180"/>
 <pin name="8_REFA" x="15.24" y="12.7" length="middle" rot="R180"/>
 </symbol>
-<symbol name="BMP085">
-<wire x1="-10.16" y1="-10.16" x2="-10.16" y2="10.16" width="0.254" layer="94"/>
-<wire x1="-10.16" y1="10.16" x2="10.16" y2="10.16" width="0.254" layer="94"/>
-<wire x1="10.16" y1="10.16" x2="10.16" y2="-10.16" width="0.254" layer="94"/>
-<wire x1="10.16" y1="-10.16" x2="-10.16" y2="-10.16" width="0.254" layer="94"/>
-<pin name="XCLR" x="0" y="15.24" length="middle" rot="R270"/>
-<pin name="SDA" x="15.24" y="7.62" length="middle" rot="R180"/>
-<pin name="SCL" x="15.24" y="0" length="middle" rot="R180"/>
-<pin name="NC" x="15.24" y="-7.62" length="middle" rot="R180"/>
-<pin name="VDDD" x="0" y="-15.24" length="middle" rot="R90"/>
-<pin name="VDDA" x="-15.24" y="-7.62" length="middle"/>
-<pin name="EOC" x="-15.24" y="0" length="middle"/>
-<pin name="GND" x="-15.24" y="7.62" length="middle"/>
-<text x="-10.16" y="-12.7" size="1.27" layer="94">&gt;NAME</text>
-</symbol>
-<symbol name="HMC5843">
-<wire x1="-22.86" y1="33.02" x2="-22.86" y2="-20.32" width="0.254" layer="94"/>
-<wire x1="-22.86" y1="-20.32" x2="-50.8" y2="-20.32" width="0.254" layer="94"/>
-<wire x1="-50.8" y1="-20.32" x2="-50.8" y2="33.02" width="0.254" layer="94"/>
-<wire x1="-50.8" y1="33.02" x2="-22.86" y2="33.02" width="0.254" layer="94"/>
-<pin name="1_SCL" x="-17.78" y="17.78" length="middle" rot="R180"/>
-<pin name="2_SDAP" x="-17.78" y="12.7" length="middle" rot="R180"/>
-<pin name="3_SCLP" x="-17.78" y="20.32" length="middle" rot="R180"/>
-<pin name="4_NC" x="-55.88" y="15.24" length="middle"/>
-<pin name="5_NC" x="-55.88" y="12.7" length="middle"/>
-<pin name="6_OFFP" x="-55.88" y="10.16" length="middle"/>
-<pin name="7_OFFN" x="-55.88" y="7.62" length="middle"/>
-<pin name="8_NC" x="-55.88" y="5.08" length="middle"/>
-<pin name="9_SETP" x="-17.78" y="0" length="middle" rot="R180"/>
-<pin name="10_SETN" x="-55.88" y="2.54" length="middle"/>
-<pin name="11_SVDD" x="-55.88" y="0" length="middle"/>
-<pin name="12_DGND" x="-17.78" y="-17.78" length="middle" rot="R180"/>
-<pin name="13_C1" x="-17.78" y="-10.16" length="middle" rot="R180"/>
-<pin name="14_SETC" x="-17.78" y="5.08" length="middle" rot="R180"/>
-<pin name="15_DVDD" x="-17.78" y="-7.62" length="middle" rot="R180"/>
-<pin name="16_VREN" x="-17.78" y="27.94" length="middle" rot="R180"/>
-<pin name="17_AGND" x="-17.78" y="-15.24" length="middle" rot="R180"/>
-<pin name="18_AVDD" x="-17.78" y="30.48" length="middle" rot="R180"/>
-<pin name="19_DRDY" x="-55.88" y="-2.54" length="middle"/>
-<pin name="20_SDA" x="-17.78" y="15.24" length="middle" rot="R180"/>
-</symbol>
 <symbol name="PIXART_WII_IR">
 <wire x1="-7.62" y1="12.7" x2="-7.62" y2="-22.86" width="0.254" layer="94"/>
 <wire x1="-7.62" y1="-22.86" x2="20.32" y2="-22.86" width="0.254" layer="94"/>
@@ -1119,29 +1040,6 @@ Farnell: 1885500</description>
 <pin name="SDA" x="-12.7" y="-7.62" length="middle"/>
 <pin name="CLK" x="-12.7" y="-12.7" length="middle"/>
 <pin name="!RESET" x="-12.7" y="-17.78" length="middle"/>
-</symbol>
-<symbol name="HMC5883L">
-<wire x1="-17.78" y1="20.32" x2="7.62" y2="20.32" width="0.254" layer="94"/>
-<wire x1="7.62" y1="20.32" x2="7.62" y2="-5.08" width="0.254" layer="94"/>
-<wire x1="7.62" y1="-5.08" x2="-17.78" y2="-5.08" width="0.254" layer="94"/>
-<wire x1="-17.78" y1="-5.08" x2="-17.78" y2="20.32" width="0.254" layer="94"/>
-<pin name="1_SCL" x="-22.86" y="17.78" length="middle"/>
-<pin name="2_VDD" x="-22.86" y="-2.54" length="middle"/>
-<pin name="3_NC" x="12.7" y="10.16" length="middle" rot="R180"/>
-<pin name="4_S1" x="-22.86" y="2.54" length="middle"/>
-<pin name="5_NC" x="12.7" y="10.16" length="middle" rot="R180"/>
-<pin name="6_NC" x="12.7" y="10.16" length="middle" rot="R180"/>
-<pin name="7_NC" x="12.7" y="10.16" length="middle" rot="R180"/>
-<pin name="8_SETP" x="12.7" y="17.78" length="middle" rot="R180"/>
-<pin name="9_GND" x="12.7" y="0" length="middle" rot="R180"/>
-<pin name="10_C1" x="12.7" y="5.08" length="middle" rot="R180"/>
-<pin name="11_GND" x="12.7" y="-2.54" length="middle" rot="R180"/>
-<pin name="12_SETC" x="12.7" y="15.24" length="middle" rot="R180"/>
-<pin name="13_VDDIO" x="-22.86" y="0" length="middle"/>
-<pin name="14_NC" x="12.7" y="10.16" length="middle" rot="R180"/>
-<pin name="15_DRDY" x="-22.86" y="12.7" length="middle"/>
-<pin name="16_SDA" x="-22.86" y="15.24" length="middle"/>
-<text x="-17.78" y="-7.62" size="1.27" layer="94">&gt;NAME</text>
 </symbol>
 <symbol name="ATMEL_ZIGBIT900">
 <wire x1="-17.78" y1="35.56" x2="-17.78" y2="-30.48" width="0.254" layer="94"/>
@@ -1219,18 +1117,34 @@ Farnell: 1885500</description>
 <pin name="GND" x="0" y="-12.7" length="middle" rot="R90"/>
 <pin name="GND2" x="2.54" y="-12.7" length="middle" rot="R90"/>
 </symbol>
-<symbol name="BMP180">
-<pin name="2_VDD" x="-12.7" y="5.08" length="middle"/>
-<pin name="3_VDD_IO" x="-12.7" y="2.54" length="middle"/>
-<pin name="7_GND" x="-12.7" y="-2.54" length="middle"/>
-<pin name="5_SCL" x="17.78" y="0" length="middle" rot="R180"/>
-<pin name="6_SDA" x="17.78" y="-2.54" length="middle" rot="R180"/>
-<wire x1="-7.62" y1="7.62" x2="-7.62" y2="-5.08" width="0.254" layer="94"/>
-<wire x1="-7.62" y1="-5.08" x2="12.7" y2="-5.08" width="0.254" layer="94"/>
-<wire x1="12.7" y1="-5.08" x2="12.7" y2="7.62" width="0.254" layer="94"/>
-<wire x1="12.7" y1="7.62" x2="-7.62" y2="7.62" width="0.254" layer="94"/>
-<text x="-7.62" y="-7.62" size="1.27" layer="94">&gt;NAME</text>
-<text x="5.08" y="5.08" size="1.27" layer="94">BMP180</text>
+<symbol name="PIEZO_SPEAKER">
+<pin name="P$1" x="-10.16" y="2.54" length="middle"/>
+<pin name="P$2" x="-10.16" y="-2.54" length="middle"/>
+<wire x1="-5.08" y1="5.08" x2="-5.08" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="-5.08" x2="0" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="0" y1="-5.08" x2="0" y2="5.08" width="0.254" layer="94"/>
+<wire x1="-5.08" y1="5.08" x2="0" y2="5.08" width="0.254" layer="94"/>
+<wire x1="0" y1="5.08" x2="0" y2="6.35" width="0.254" layer="94"/>
+<wire x1="0" y1="6.35" x2="3.81" y2="10.16" width="0.254" layer="94"/>
+<wire x1="3.81" y1="10.16" x2="3.81" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="3.81" y1="-10.16" x2="0" y2="-6.35" width="0.254" layer="94"/>
+<wire x1="0" y1="-6.35" x2="0" y2="-5.08" width="0.254" layer="94"/>
+<text x="-7.62" y="7.62" size="1.778" layer="95">&gt;NAME</text>
+</symbol>
+<symbol name="MAX3051">
+<wire x1="-10.16" y1="7.62" x2="10.16" y2="7.62" width="0.254" layer="94"/>
+<wire x1="10.16" y1="7.62" x2="10.16" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="10.16" y1="-5.08" x2="-10.16" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-10.16" y1="-5.08" x2="-10.16" y2="7.62" width="0.254" layer="94"/>
+<pin name="TXD" x="-15.24" y="5.08" visible="pin" length="middle"/>
+<pin name="RXD" x="-15.24" y="2.54" visible="pin" length="middle"/>
+<pin name="SHDN" x="-15.24" y="0" visible="pin" length="middle"/>
+<pin name="RS" x="-15.24" y="-2.54" visible="pin" length="middle"/>
+<pin name="GND" x="15.24" y="-2.54" visible="pin" length="middle" rot="R180"/>
+<pin name="CANL" x="15.24" y="0" visible="pin" length="middle" rot="R180"/>
+<pin name="CANH" x="15.24" y="2.54" visible="pin" length="middle" rot="R180"/>
+<pin name="VCC" x="15.24" y="5.08" visible="pin" length="middle" rot="R180"/>
+<text x="-10.16" y="-7.62" size="1.778" layer="94">&gt;NAME</text>
 </symbol>
 </symbols>
 <devicesets>
@@ -1256,7 +1170,16 @@ Video Sync Splitter with auto detect
 <connect gate="G$1" pin="V_IN" pad="P$4"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -1274,7 +1197,16 @@ Video Sync Splitter with auto detect
 <connect gate="G$1" pin="R" pad="P$1"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -1307,7 +1239,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="VCCIO" pad="4"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -1333,7 +1274,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="VBUS" pad="GND"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 <device name="-A-S" package="USB-A-S">
@@ -1344,7 +1294,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="VBUS" pad="VBUS"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 <device name="-MB-H" package="USB-MB-H">
@@ -1355,7 +1314,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="VBUS" pad="VBUS"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 <device name="-B-S" package="USB-B-SMT">
@@ -1366,7 +1334,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="VBUS" pad="VUSB"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 <device name="OLD" package="USB-MINIB-OLD">
@@ -1377,7 +1354,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="VBUS" pad="VBUS"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 <device name="PTH" package="USB-B-PTH">
@@ -1388,7 +1374,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="VBUS" pad="VBUS"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 <device name="-JST-2MM-SMT" package="S4B-PH">
@@ -1399,7 +1394,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="VBUS" pad="4"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 <device name="SMD" package="USB-MINIB">
@@ -1410,7 +1414,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="VBUS" pad="VBUS"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 <device name="PCB" package="USB-A-PCB">
@@ -1421,7 +1434,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="VBUS" pad="5V"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -1432,7 +1454,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <devices>
 <device name="">
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -1462,7 +1493,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="REF" pad="P$9"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -1525,7 +1565,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="OR4" pad="P$9"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -1555,7 +1604,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="VCC" pad="P$16"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -1577,63 +1635,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="8_REFA" pad="P$8"/>
 </connects>
 <technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-<deviceset name="BMP085">
-<gates>
-<gate name="G$1" symbol="BMP085" x="0" y="0"/>
-</gates>
-<devices>
-<device name="" package="BMP085">
-<connects>
-<connect gate="G$1" pin="EOC" pad="2"/>
-<connect gate="G$1" pin="GND" pad="1"/>
-<connect gate="G$1" pin="NC" pad="5"/>
-<connect gate="G$1" pin="SCL" pad="6"/>
-<connect gate="G$1" pin="SDA" pad="7"/>
-<connect gate="G$1" pin="VDDA" pad="3"/>
-<connect gate="G$1" pin="VDDD" pad="4"/>
-<connect gate="G$1" pin="XCLR" pad="8"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-<deviceset name="HMC5843">
-<gates>
-<gate name="G$1" symbol="HMC5843" x="12.7" y="-5.08"/>
-</gates>
-<devices>
-<device name="" package="HMC5843">
-<connects>
-<connect gate="G$1" pin="10_SETN" pad="P$10"/>
-<connect gate="G$1" pin="11_SVDD" pad="P$11"/>
-<connect gate="G$1" pin="12_DGND" pad="P$12"/>
-<connect gate="G$1" pin="13_C1" pad="P$13"/>
-<connect gate="G$1" pin="14_SETC" pad="P$14"/>
-<connect gate="G$1" pin="15_DVDD" pad="P$15"/>
-<connect gate="G$1" pin="16_VREN" pad="P$16"/>
-<connect gate="G$1" pin="17_AGND" pad="P$17"/>
-<connect gate="G$1" pin="18_AVDD" pad="P$18"/>
-<connect gate="G$1" pin="19_DRDY" pad="P$19"/>
-<connect gate="G$1" pin="1_SCL" pad="P$1"/>
-<connect gate="G$1" pin="20_SDA" pad="P$20"/>
-<connect gate="G$1" pin="2_SDAP" pad="P$2"/>
-<connect gate="G$1" pin="3_SCLP" pad="P$3"/>
-<connect gate="G$1" pin="4_NC" pad="P$4"/>
-<connect gate="G$1" pin="5_NC" pad="P$5"/>
-<connect gate="G$1" pin="6_OFFP" pad="P$6"/>
-<connect gate="G$1" pin="7_OFFN" pad="P$7"/>
-<connect gate="G$1" pin="8_NC" pad="P$8"/>
-<connect gate="G$1" pin="9_SETP" pad="P$9"/>
-</connects>
-<technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -1654,37 +1665,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="VCC" pad="P$1"/>
 </connects>
 <technologies>
-<technology name=""/>
-</technologies>
-</device>
-</devices>
-</deviceset>
-<deviceset name="HMC5883L">
-<gates>
-<gate name="G$1" symbol="HMC5883L" x="5.08" y="-7.62"/>
-</gates>
-<devices>
-<device name="" package="LPCC16_0.5MM">
-<connects>
-<connect gate="G$1" pin="10_C1" pad="P$10"/>
-<connect gate="G$1" pin="11_GND" pad="P$11"/>
-<connect gate="G$1" pin="12_SETC" pad="P$12"/>
-<connect gate="G$1" pin="13_VDDIO" pad="P$13"/>
-<connect gate="G$1" pin="14_NC" pad="P$14"/>
-<connect gate="G$1" pin="15_DRDY" pad="P$15"/>
-<connect gate="G$1" pin="16_SDA" pad="P$16"/>
-<connect gate="G$1" pin="1_SCL" pad="P$1"/>
-<connect gate="G$1" pin="2_VDD" pad="P$2"/>
-<connect gate="G$1" pin="3_NC" pad="P$3"/>
-<connect gate="G$1" pin="4_S1" pad="P$4"/>
-<connect gate="G$1" pin="5_NC" pad="P$5"/>
-<connect gate="G$1" pin="6_NC" pad="P$6"/>
-<connect gate="G$1" pin="7_NC" pad="P$7"/>
-<connect gate="G$1" pin="8_SETP" pad="P$8"/>
-<connect gate="G$1" pin="9_GND" pad="P$9"/>
-</connects>
-<technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -1746,7 +1736,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="48_RF_GND" pad="P$48"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -1766,7 +1765,16 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="UNBAL" pad="P$2"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -1784,26 +1792,90 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <connect gate="G$1" pin="IO2" pad="P$2"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
 </deviceset>
-<deviceset name="BMP180">
+<deviceset name="PIEZO_SPEAKER">
 <gates>
-<gate name="G$1" symbol="BMP180" x="-2.54" y="-2.54"/>
+<gate name="G$1" symbol="PIEZO_SPEAKER" x="0" y="0"/>
 </gates>
 <devices>
-<device name="" package="BMP180">
+<device name="" package="PIEZO_CMT-1203-SMT">
 <connects>
-<connect gate="G$1" pin="2_VDD" pad="2"/>
-<connect gate="G$1" pin="3_VDD_IO" pad="3"/>
-<connect gate="G$1" pin="5_SCL" pad="5"/>
-<connect gate="G$1" pin="6_SDA" pad="6"/>
-<connect gate="G$1" pin="7_GND" pad="7"/>
+<connect gate="G$1" pin="P$1" pad="P$1"/>
+<connect gate="G$1" pin="P$2" pad="P$2"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="" constant="no"/>
+<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
+</technologies>
+</device>
+<device name="SMALLER" package="PIEZO_CMT_1203-SMT-REDUCED_FOOTPRINT">
+<connects>
+<connect gate="G$1" pin="P$1" pad="P$1"/>
+<connect gate="G$1" pin="P$2" pad="P$2"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
+<attribute name="ORDER_CODE" value="102-2197-1-ND" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="MAX3051" prefix="SOT23">
+<gates>
+<gate name="G$1" symbol="MAX3051" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="SOT23-8L">
+<connects>
+<connect gate="G$1" pin="CANH" pad="P$7"/>
+<connect gate="G$1" pin="CANL" pad="P$6"/>
+<connect gate="G$1" pin="GND" pad="P$2"/>
+<connect gate="G$1" pin="RS" pad="P$8"/>
+<connect gate="G$1" pin="RXD" pad="P$4"/>
+<connect gate="G$1" pin="SHDN" pad="P$5"/>
+<connect gate="G$1" pin="TXD" pad="P$1"/>
+<connect gate="G$1" pin="VCC" pad="P$3"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="DISTRIBUTOR" value="Mouser" constant="no"/>
+<attribute name="ORDER_CODE" value="700-MAX3051EKAT" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="2.69" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="1.76" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="2.69" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="2.02" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="1.91" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>

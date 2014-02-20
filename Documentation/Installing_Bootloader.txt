@@ -1,0 +1,57 @@
+Installing the DFU bootloader on AVR32 devices
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+This document describes the necessary steps to flash a DFU bootloader onto the AVR32 (AT32UC3C1512C) used on the maveric autopilot. Note that all Atmel devices with USB support have the DFU bootloader already installed by default, however, a chip erase carried out with the JTAG will erase the bootloader, and it needs to be re-flashed if needed. To avoid removing the bootloader when using JTAG in Atmel Studio, go to Project Settings -> Tool, and change "Programming Settings" to "Erase only program area". 
+
+1) Flashing the bootloader image
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Open Atmel Studio, go to Tools -> Device Programming. 
+   - connect your board to the JTAG cable, and check if it has power
+   - select JTAGICE3 tool (should be listed if connected properly), Device AT32UC3C1512C, Interface JTAG, and click Apply. 
+   - to verify if the board is powered, click "Target Voltage". It should be above 3.0 V and not give and error. 
+   - to verify if the chip is responding, click "Device signature". If any of the above steps fail, check all cables and connections and repeat.
+
+- Go to Tab "Memories"
+   - optional: Do a full chip erase
+   - under "Flash", select the bootloader image file <...>/maveric/Code/Library/Bootloader/BOOTLOADER_AT32UC3C1512_original.hex
+   - Program the flash
+   - under "Userpage", select the bootloader userpage file <...>/maveric/Code/Library/Bootloader/BOOTLOADER_AT32UC3C1512_original_userpage.hex
+   - Program the user page
+- Go to Tab "Fuses"
+   - verify that "Auto Read" is enabled, or "Read" fuses from the AVR
+   - for BOOTPROT, select BOOTAREA_8KB
+
+
+To flash the chip via the bootloader, one needs (in windows) batchisp from Atmel which is included in the FLIP download package, or dfu-programmer (in Linux). 
+
+For dfu-programmer:
+
+- download tar-ball from Sourceforge
+- unzip somewhere, enter directory, follow build instructions: 
+
+./configure --disable-libusb_1_0
+make
+sudo cp src/dfu-programmer /usr/local/bin
+
+to get instructions:
+dfu-programmer -h 
+
+A typical flashing sequence:
+
+dfu-programmer at32uc3c1512 erase
+dfu-programmer at32uc3c1512 get 
+dfu-programmer at32uc3c1512 flash <flash-image.hex> --suppress-bootloader-mem 
+dfu-programmer at32uc3c1512 reset 
+
+A script with this command sequence is useful to add to an IDE "Run" command, so that reflashing can be done by clicking a button or automatically after make. 
+
+- Known issues:
+Depending on configuration, the bootloader usually comes up at power-up, which means the application doesn't start automatically. A reset (hardware or software via dfu) will start the application.
+Getting the bootloader to start again is sometimes tricky, as it won't always launch at power-up. It's possible that it checks an input pin which might still have charge. Waiting a few seconds before plugging in usually works. It probably would make sense to invert the behaviour: the application starts at normal power-up, pressing the reset button will launch the bootloader. Another option would be to integrate the bootloader into the application, so that a software reset into boot-mode can be issued through USB.
+
+
+ 
+
+
