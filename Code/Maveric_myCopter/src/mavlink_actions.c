@@ -573,6 +573,7 @@ void receive_message_long(Mavlink_Received_t* rec)
 			}
 			break;
 			case MAV_CMD_NAV_TAKEOFF: {
+				centralData->in_the_air = true;
 				dbg_print("Command for automatic take-off. Not implemented!\n");
 				/* Takeoff from ground / hand |Minimum pitch (if airspeed sensor present), desired pitch without sensor| Empty| Empty| Yaw angle (if magnetometer present), ignored without magnetometer| Latitude| Longitude| Altitude|  */
 			}

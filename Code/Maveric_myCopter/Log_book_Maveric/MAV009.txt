@@ -13,4 +13,8 @@ status: not fly ready
 #define ACC_BIAIS_Y -44;
 #define ACC_BIAIS_Z -275;
 
+acc b = 0 100 300
+
+mag b = 42.38 -107.5 2.47
+
 
