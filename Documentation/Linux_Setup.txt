@@ -1,0 +1,62 @@
+Build Environment for Linux
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is possible to build an AVR32 project in Linux. Setting up new projects is probably easier in Atmel Studio, as the Atmel Software Framework is easiest to set up with the built-in wizard. However, once created, it is easily possible to create additional Makefiles or workspaces/projects in Linux, even in the same directory. It is recommended to use a different build directory (e.g. "Debug_linux" instead of "Debug". 
+
+To build an AVR32 project in Linux, install: 
+- CodeLite 
+- avr32-gcc (from Atmel) 
+- atmel-headers (also from Atmel, has to go into the avr32/include directory of the avr32-gcc install). 
+
+
+
+Installing the toolchain
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+- download  avr32-gnu-toolchain-3.4.2.435-linux.any.x86.tar.gz and atmel-headers-6.1.3.1475.zip from Atmel's website (or the more current version if available). We assume the files are in ~/Downloads/
+
+- unpack the toolchain, install headers and create symbolic links in /usr/local/bin:
+
+----
+cd Downloads
+tar xvfz avr32-gnu-toolchain-3.4.2.435-linux.any.x86.tar.gz
+sudo mv avr32-gnu-toolchain-linux_x86 /usr/local
+
+unzip atmel-headers-6.1.3.1475.zip
+sudo mv atmel-headers-6.1.3.1475/* /usr/local/avr32-gnu-toolchain-linux_x86/avr32/include
+rmdir atmel-headers-6.1.3.1475
+
+sudo ln -s /usr/local/avr32-gnu-toolchain-linux_x86/bin/avr32* /usr/local/bin
+----
+
+Now avr32-gcc should be available (try avr32-gcc -v to verify).
+
+
+
+Setting up a CodeLite
+~~~~~~~~~~~~~~~~~~~~~
+
+Open workspace "Maveric_???.workspace" in codelite. 
+To set up the avr32 compiler, go to Settings -> build settings, create a 'New...' compiler profile (e.g. avr32gcc), and under 'Tools', enter 'avr32-gcc' for C compiler, assembler, linker, and 'avr32-g++' for C++. 
+To speed up build time, change 'make' to 'make -j 16'.
+
+Go to Menu Workspace -> Open Active project settings
+under Common Settings -> General, select the avr32gcc compiler profile.
+
+The project should now build successfully.
+
+To create a new workspace/project:
+Select "New workspace...", create a new workspace in the desired directory
+Select "New Project", create a new gcc executable project in the desired directory containing the files. Choose avr32gcc as the compiler.
+right-click on the new project, select "Import files from directory" and select all the required directories to import
+
+Go to project Settings, and set up compiler, assembler and linker options, as well as Include paths (all Library directories that should be included). It's probably easiest to copy this from either an existing codelite project, or open the makefile that Atmel Studio created and search for the compiler/linker/assembler options there.
+
+Set up "post-build" commands to convert the .elf file to a .hex file, and print the size:
+
+avr32-objcopy -O ihex -R .eeprom -R .fuse -R .lock -R .signature  $(IntermediateDirectory)/../$(ProjectName).elf $(IntermediateDirectory)/../$(ProjectName).hex
+avr32-size $(IntermediateDirectory)/../$(ProjectName).elf
+
+Try building the project. There are most likely some files that were imported which are redundant or otherwise in conflict. If so, remove those files from the project ("Remove"). When asked, only remove them from the project, but do not delete from disk - they might be needed by other projects. 
+
+Flashing the binary image to the AVR32 can be done via bootloader (check separate install instructions for bootloader). Unfortunately, the JTAGICE3 is not supported in Linux. 
