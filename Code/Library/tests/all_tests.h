@@ -8,9 +8,13 @@
 #include "compiler.h"
 static inline bool run_all_tests() {
 	bool result=true;
-//	result=result && = (run_math_tests());
+	result=result &&  run_math_tests();
 	
 	result=result && run_matrix_tests();
+
+	result=result && run_quick_trig_tests();
+
+	profile_quick_trig();
 	
 	return result;
 }

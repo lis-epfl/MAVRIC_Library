@@ -56,7 +56,7 @@ bool run_matrix_tests() {
 //	print_matrix(get_debug_stream(), mvmul3(ident_3x3, v1).v, 1, 3, 2); dbg_print("\n");
 //	print_matrix(get_debug_stream(), tp3(v1, v1).v, 3, 3, 2); dbg_print("\n");
 	
-	dbg_print("sqared Norm m3:   "); dbg_putfloat(sqr_f_norm3(m3), 4);dbg_print("\n");
+	dbg_print("squared Norm m3:  "); dbg_putfloat(sqr_f_norm3(m3), 4);dbg_print("\n");
 	dbg_print("trace m3:         "); dbg_putfloat(trace3(m3), 4);dbg_print("\n");
 	dbg_print("residual |MxM^{-1} - I| "); dbg_putfloat(sqr_f_norm3(msub3(mmul3(m3, inv3(m3)), ident_3x3)), 10);dbg_print("\n");
 	

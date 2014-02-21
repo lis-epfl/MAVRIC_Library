@@ -318,6 +318,7 @@
     <File Name="../util/small_matrix.h"/>
     <File Name="../util/coord_conventions.h"/>
     <File Name="../util/print_matrix.h"/>
+    <File Name="../util/linear_algebra.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="hal_emu">
     <File Name="../hal_emu/bmp085.h"/>
@@ -377,6 +378,9 @@
       <File Name="test_small_matrix.h"/>
     </VirtualDirectory>
     <File Name="test_small_matrix.c"/>
+    <File Name="test_quick_trig.c"/>
+    <File Name="test_quick_trig.h"/>
+    <File Name="test_utils.h"/>
   </VirtualDirectory>
   <VirtualDirectory Name="sensing">
     <File Name="../sensing/simulation.h"/>
