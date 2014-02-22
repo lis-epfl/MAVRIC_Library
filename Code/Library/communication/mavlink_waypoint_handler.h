@@ -14,6 +14,10 @@
 
 #define MAX_WAYPOINTS 10
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
 * N.B.: Frames, MAV_CMD_NAV are defined in "maveric.h"
 */
@@ -66,5 +70,9 @@ void wp_take_off();
 void waypoint_hold_position_handler();
 void waypoint_navigation_handler();
 void waypoint_critical_handler();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // MAVLINK_WAYPOINT_HANDLER__

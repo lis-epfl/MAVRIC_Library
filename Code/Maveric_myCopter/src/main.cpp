@@ -9,27 +9,31 @@
  * Include header files for all drivers that have been imported from
  * AVR Software Framework (ASF).
  */
-#include <asf.h>
+
+//#include <asf.h>
+
 #include "led.h"
 #include "delay.h"
 //#include "stdio_serial.h"
 #include "print_util.h"
-#include "generator.h"
+//#include "generator.h"
 
-#include "time_keeper.h"
-#include "streams.h"
+//#include "time_keeper.h"
+//#include "streams.h"
 
-#include "bmp085.h"
+//#include "bmp085.h"
 
-#include "scheduler.h"
+//#include "scheduler.h"
 #include "central_data.h"
 #include "boardsupport.h"
-#include "mavlink_waypoint_handler.h"
+//#include "mavlink_waypoint_handler.h"
 #include "navigation.h"
 #include "tasks.h"
-#include "neighbor_selection.h"
+//#include "neighbor_selection.h"
 #include "orca.h"
 //#include "flashvault.h"
+
+#include "rectangle.hpp"
 
 central_data_t *centralData;
 
@@ -47,8 +51,6 @@ void initialisation() {
 
 	//init_gps_ubx(engine_nav_settings);
 	
-	set_servos(&servo_failsafe);
-
 	init_onboard_parameters();
 	init_mavlink_actions();
 	init_pos_integration(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
@@ -92,9 +94,7 @@ void initialisation() {
 	LED_On(LED1);
 }
 
-
-
-void main (void)
+int main (void)
 {
 	
 	initialisation();
@@ -105,17 +105,20 @@ void main (void)
 	centralData->simulation_mode = 1;
 	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude));
 
-	// main loop
+	Rectangle rec = Rectangle();
+	float rectangle_size;
 	
+	// main loop
 	while (1==1) {
-		
 		//run_scheduler_update(get_main_taskset(), FIXED_PRIORITY);
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
 		
 		//LED_On(LED1);
+	
+		rectangle_size = rec.get_size();
+	}
 
-		
-	}		
+	return 0;		
 }
 
 

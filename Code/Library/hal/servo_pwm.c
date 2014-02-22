@@ -13,7 +13,7 @@
 #define SERVO_PERIOD (SERVO_TIMER_FREQ/SERVO_REPEAT_FREQ)
 #define SERVO_CENTER_DUTY_TICKS 1500//(SERVO_CENTER_DUTY_MICROSEC*SERVO_TIMER_FREQ/1000000)
 
-
+static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
 
 void init_Servos(void){
       int i;
@@ -69,7 +69,8 @@ void init_Servos(void){
 	// enable
 	AVR32_PWM.ena=0b1111;
 	
-	
+	// Init servo values
+	set_servos_to_failsafe();
 }
 
 void set_servo(int channel, int val_a, int val_b){
@@ -81,6 +82,11 @@ void set_servo(int channel, int val_a, int val_b){
 	AVR32_PWM.channel[channel &0b11].dtupd= deadtime<<16 | deadtime;	
 }
 
+
+void set_servos_to_failsafe()
+{
+	set_servos(&servo_failsafe);
+}
 
 void set_servos(servo_output *servo_outputs) {
 	#ifdef GPS_ON_SERVO_1_2

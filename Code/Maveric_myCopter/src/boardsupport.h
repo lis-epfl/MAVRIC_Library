@@ -14,6 +14,10 @@
 
 #include "central_data.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
 
 //typedef struct  {
@@ -79,5 +83,8 @@ void initialise_board(central_data_t* centralData);
 //#define STDOUT &get_debug_stream()
 //#define STDOUT &xbee_out_stream
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* BOARDSUPPORT_H_ */

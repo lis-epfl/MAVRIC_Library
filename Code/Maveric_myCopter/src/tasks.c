@@ -458,9 +458,10 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_GUIDED_DISARMED:
 		case MAV_MODE_AUTO_DISARMED:
 			centralData->controls.run_mode = MOTORS_OFF;
-			for (i=0; i<NUMBER_OF_SERVO_OUTPUTS; i++) {
-				centralData->servos[i]=servo_failsafe[i];
-			}
+//			for (i=0; i<NUMBER_OF_SERVO_OUTPUTS; i++) {
+//				centralData->servos[i]=servo_failsafe[i];
+//			}
+			set_servos_to_failsafe();
 			break;
 		
 	}
