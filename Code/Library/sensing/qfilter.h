@@ -10,9 +10,6 @@
 #define QFILTER_H_
 #include "compiler.h"
 
-#include "maths.h"
-#include "coord_conventions.h"
-
 #define GYRO_LPF 0.1
 #define ACC_LPF 0.05
 #define MAG_LPF 0.1
@@ -20,7 +17,7 @@
 
 #define GRAVITY 9.81
 
-
+#include "coord_conventions.h"
 
 enum calibration_mode {OFF, LEVELING, LEVEL_PLUS_ACCEL};
 

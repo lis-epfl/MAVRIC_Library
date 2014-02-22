@@ -13,6 +13,10 @@
 #include "mavlink_actions.h"
 #include "radar_module_driver.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef const struct {
 	U8 var8;
 	U16 var16;
@@ -37,5 +41,8 @@ task_return_t run_navigation_task();
 task_return_t run_barometer();
 task_return_t send_rt_stats();
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TASKS_H_ */

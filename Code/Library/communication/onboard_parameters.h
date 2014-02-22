@@ -10,6 +10,10 @@
 
 #include "mavlink_stream.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define MAX_ONBOARD_PARAM_COUNT 120
 
 #define USER_PAGE_FIRST_FREE_WORD 0x8080020C
@@ -50,5 +54,9 @@ void receive_parameter(Mavlink_Received_t* rec);
 
 void read_parameters_from_flashc();
 void write_parameters_to_flashc();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ONBOARD_PARAMETERS_H */

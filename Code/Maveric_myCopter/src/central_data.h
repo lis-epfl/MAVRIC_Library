@@ -40,11 +40,13 @@
 #include "estimator.h"
 #include "simulation.h"
 #include "bmp085.h"
-#include "conf_sim_model.h"
+//#include "conf_sim_model.h"
 #include "neighbor_selection.h"
 #include "position_estimation.h"
 
-static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 enum CRITICAL_BEHAVIOR_ENUM{
 	CLIMB_TO_SAFE_ALT = 1,
@@ -131,5 +133,9 @@ Imu_Data_t* get_imu_data();
 Control_Command_t* get_control_inputs_data();
 
 #define STDOUT &get_debug_stream()
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CENTRAL_DATA_H_ */

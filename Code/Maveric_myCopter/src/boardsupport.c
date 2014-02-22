@@ -72,7 +72,7 @@ void initialise_board(central_data_t *centralData) {
 	//gpio_configure_pin(LED1_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
 
 	init_Servos();
-	set_servos(&servo_failsafe);
+	set_servos_to_failsafe();
 	
 		
 	init_UART_int(0);

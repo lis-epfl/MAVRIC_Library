@@ -9,7 +9,6 @@
 #define COORD_CONVENTIONS_H_
 
 #include "compiler.h"
-#include <math.h>
 #include "maths.h"
 
 #define EARTH_RADIUS 6378137.0   // radius of the earth in meters

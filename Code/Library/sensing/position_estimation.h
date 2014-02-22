@@ -13,6 +13,10 @@
 #include "bmp085.h"
 #include "gps_ublox.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
 #define VEL_DECAY 0.0
 #define POS_DECAY 0.0
@@ -42,5 +46,9 @@ void position_reset_home_altitude(position_estimator_t *pos_est, pressure_data *
 
 void position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitude, float dt);
 void position_correction(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, float dt);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // POSITION_ESTIMATION_H__

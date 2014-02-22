@@ -57,6 +57,10 @@
 #endif
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*!
  * \brief Initialize the delay driver.
  *
@@ -74,5 +78,8 @@ extern void delay_init(unsigned long fcpu_hz);
  */
 extern void delay_ms(unsigned long delay);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // _DELAY_H_

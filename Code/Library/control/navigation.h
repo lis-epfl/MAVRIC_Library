@@ -12,8 +12,9 @@
 #include "qfilter.h"
 #include "mavlink_waypoint_handler.h"
 
-
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 void init_nav();
 
@@ -25,5 +26,9 @@ void set_speed_command(float rel_pos[], float dist2wpSqr);
 
 void low_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude, float rel_distance);
 void high_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif NAVIGATION_H_

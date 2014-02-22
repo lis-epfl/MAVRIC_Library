@@ -19,6 +19,10 @@
 #include "servo_pwm.h"
 #include "bmp085.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct {
 	float torques_bf[3], rates_bf[3], lin_forces_bf[3], vel_bf[3], vel[3], pos[3];
 	Quat_Attitude_t attitude;
@@ -45,5 +49,9 @@ void init_simulation(simulation_model_t *sim, Quat_Attitude_t *start_attitude);
 void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est);
 void simulate_barometer(simulation_model_t *sim, pressure_data *pressure);
 void simulate_gps(simulation_model_t *sim, gps_Data_type *gps);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SIMULATION_H_ */

@@ -51,6 +51,10 @@
 #include "sysclk.h"
 #include "serial.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif 
+
 #if defined(XMEGA) && defined(__GNUC__)
 	extern int _write (char c, int *f);
 	extern int _read (int *f);
@@ -85,5 +89,9 @@ static inline void stdio_serial_init(volatile void *usart, const usart_serial_op
 		fdevopen((int (*)(char, FILE*))(_write),(int (*)(FILE*))(_read)); //for printf redirection
 	#endif
 }
+
+#ifdef __cplusplus
+}
+#endif 
 
 #endif  // _STDIO_SERIAL_H_
