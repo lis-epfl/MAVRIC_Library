@@ -2,13 +2,21 @@
 # Automatically-generated file. Do not edit or delete the file
 ################################################################################
 
-Library\control\adaptive_parameter.c
+Library\communication\mavlink_waypoint_handler.c
 
-Library\control\neighbor_selection.c
+Library\control\adaptive_parameter.c
 
 Library\control\orca.c
 
+Library\control\pid_control.c
+
+Library\control\stabilisation_copter.c
+
+Library\control\stabilisation_hybrid.c
+
 Library\hal\analog_monitor.c
+
+Library\hal\i2c_driver_int.c
 
 Library\hal\lsm330dlc_driver.c
 
@@ -16,11 +24,17 @@ Library\hal\time_keeper.c
 
 Library\sensing\estimator.c
 
+Library\sensing\neighbor_selection.c
+
 Library\sensing\position_estimation.c
 
 Library\sensing\qfilter.c
 
+Library\util\quick_trig.c
+
 src\central_data.c
+
+src\CPPFile1.cpp
 
 src\mavlink_actions.c
 
@@ -33,8 +47,6 @@ Library\communication\ishtar_stream.c
 Library\communication\mavlink_stream.c
 
 Library\communication\onboard_parameters.c
-
-Library\control\control.c
 
 Library\control\navigation.c
 
@@ -53,8 +65,6 @@ Library\hal\bmp085.c
 Library\hal\compass_hmc5883l.c
 
 Library\hal\dac_dma.c
-
-Library\hal\i2c_driver.c
 
 Library\hal\itg3200_driver.c
 
@@ -77,8 +87,6 @@ Library\sensing\gps_ublox.c
 Library\sensing\imu.c
 
 Library\sensing\simulation.c
-
-Library\sensing\waypoint_navigation.c
 
 Library\util\buffer.c
 
@@ -159,6 +167,4 @@ src\asf\common\utils\stdio\stdio_usb\stdio_usb.c
 src\asf\common\utils\stdio\write.c
 
 src\boardsupport.c
-
-src\main.c
 
