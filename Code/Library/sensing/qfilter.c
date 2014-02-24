@@ -80,8 +80,10 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 
 void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	uint8_t i;
-	float  omc[3], omc_mag[3], rvc[3], tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
-	UQuat_t qed, qtmp1, up, up_bf, qtmp2, qtmp3;
+	float  omc[3], omc_mag[3] , tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
+	// float rvc[3];
+	UQuat_t qed, qtmp1, up, up_bf;
+	// UQuat_t qtmp2, qtmp3;
 	UQuat_t mag_global, mag_corrected_local;
 	UQuat_t front_vec_global = {.s=0.0, .v={1.0, 0.0, 0.0}};
 	float kp, kp_mag;

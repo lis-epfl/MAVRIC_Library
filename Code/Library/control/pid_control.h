@@ -36,7 +36,7 @@ typedef struct {
 	float soft_zone_width;  // approximate width of a "soft zone" on the error input, i.e. a region of low gain around the target point. Value 0 -> switched off
 }PID_Controller_t;
 
-PID_Controller_t passthroughController();
+PID_Controller_t passthroughController(void);
 
 void initInt(Integrator_t *integrator, float pregain, float postgain, float clip_val);
 

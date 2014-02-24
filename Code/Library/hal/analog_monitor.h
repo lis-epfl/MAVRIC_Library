@@ -14,16 +14,16 @@
 #define CONV_FACTOR_6V 0.00155
 #define CONV_FACTOR_5V 0.00155
 
-void init_analog_monitor();
-void trigger_analog_monitor();
-float get_battery_rail();
+void init_analog_monitor(void);
+void trigger_analog_monitor(void);
+float get_battery_rail(void);
 
-float get_internal_rail();
-
-
-float get_6V_analog_rail();
+float get_internal_rail(void);
 
 
-float get_5V_analog_rail();
+float get_6V_analog_rail(void);
+
+
+float get_5V_analog_rail(void);
 
 #endif /* ANALOG_MONITOR_H_ */

@@ -16,7 +16,7 @@ void init_onboard_parameters(void) {
 	param_set.param_count = 0;
 	param_set.enumerate=false;
 	param_set.transmit_parameter_index=0;
-	
+	dbg_print("Onboard parameters initialised.\n");	
 }
 
 void add_parameter_uint8(uint8_t* val, const char* param_name) {
@@ -190,6 +190,8 @@ void read_parameters_from_flashc()
 	float cksum1, cksum2;
 	cksum1 = 0;
 	cksum2 = 0;
+
+
 	
 	for (i=0;i<(param_set.param_count+1);i++)
 	{
@@ -231,9 +233,11 @@ void write_parameters_to_flashc()
 	{
 		//flashc_memcpy((void *)&(nvram_array->values[i]),   param_set.parameters[i].param, sizeof((nvram_array->values[i])),   true);
 		local_array.values[i] = *param_set.parameters[i-1].param;
+		
 		cksum1 += local_array.values[i];
 		cksum2 += cksum1;
 	}
+	
 	local_array.values[param_set.param_count+1] = cksum1;
 	local_array.values[param_set.param_count+2] = cksum2;
 	

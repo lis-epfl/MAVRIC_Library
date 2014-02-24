@@ -51,9 +51,9 @@ float alt_integrator;
 
 uint8_t loopCount = 0;
 
-void init_nav()
+void init_nav(void)
 {
-	int8_t i;
+//	int8_t i;
 	
 	centralData = get_central_data();
 	
@@ -68,10 +68,11 @@ void init_nav()
 
 void run_navigation(local_coordinates_t waypoint_input)
 {
-	int8_t i;
-	float newVelocity[3];
+	// int8_t i;
+	// float newVelocity[3];
 	
-	float rel_pos[3], dist2wp_sqr;
+	float rel_pos[3]; 
+	// dist2wp_sqr;
 	
 	// Control in translational speed of the platform
 	centralData->dist2wp_sqr = set_rel_pos_n_dist2wp(waypoint_input.pos, rel_pos);
@@ -99,7 +100,8 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	float  norm_rel_dist, v_desired;
 	UQuat_t qtmp1, qtmp2;
 	
-	float dir_desired_bf[3], dir_desired[3], new_velocity[3];
+	float dir_desired_bf[3], new_velocity[3];
+	// dir_desired[3],
 	
 	float rel_heading;
 	

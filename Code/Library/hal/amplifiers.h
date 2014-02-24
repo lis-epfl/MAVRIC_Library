@@ -22,7 +22,7 @@
 #define AMP_CS4		AVR32_PIN_PA25
 
 
-void init_amplifiers();
+void init_amplifiers(void);
 
 void AMP_set_gain(int amp_number);	// amp_number is from 1 to 4
 

@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-void init_nav();
+void init_nav(void);
 
 void run_navigation(local_coordinates_t waypoint_input);
 
@@ -31,4 +31,4 @@ void high_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude);
 }
 #endif
 
-#endif NAVIGATION_H_
+#endif // NAVIGATION_H_

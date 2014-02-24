@@ -20,7 +20,7 @@ float quick_atan(float x);
 
 static inline float quick_func(float x, const float func_x_min, const float func_x_max, float func_x_step, const float func_y[])
 {
-	float y, step;
+	float y;
 	int i;
 	if ( x <= func_x_min )
 	{

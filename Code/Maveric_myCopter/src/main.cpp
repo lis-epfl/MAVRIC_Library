@@ -39,21 +39,24 @@ central_data_t *centralData;
 
 void initialisation() {
 	int i;
-	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
+	// enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 
+	dbg_print("Initialising...\n");
 	
 	centralData = get_central_data();
 	initialise_board(centralData);
 	initialise_central_data();
 
+
+
 	init_radar_modules();
-	dbg_print("Debug stream initialised\n");
 
 	//init_gps_ubx(engine_nav_settings);
 	
 	init_onboard_parameters();
 	init_mavlink_actions();
 	init_pos_integration(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
+
 	
 	init_nav();
 	init_waypoint_handler();
@@ -124,7 +127,7 @@ int main (void)
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
 		
 		//LED_On(LED1);
-	
+		dbg_print("abcd\n");
 		rectangle_size = rec.get_size();
 	}
 

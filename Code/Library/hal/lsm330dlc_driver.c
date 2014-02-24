@@ -23,7 +23,7 @@ uint8_t lsm_read_register(uint8_t device, unsigned char address) {
 }
 
 uint8_t lsm_write_register(uint8_t device, unsigned char address, uint8_t value) {
-	int16_t result;
+	// int16_t result;
 	twim_write(&AVR32_TWIM0, (uint8_t*) &address, 1, device, false);
 	twim_write(&AVR32_TWIM0, (uint8_t*) &value, 1, device, false);
 }
@@ -66,7 +66,7 @@ lsm_get_acc_config() {
 	
 	dbg_print("lsm acc config:\n");
 	for (i=0; i<sizeof(readbuffer); i++) {
-		dbg_print_num(readbuffer[i], 16); dbg_print(" ( ");
+		dbg_print_num(readbuffer[i], 16); dbg_print(" (");
 		dbg_print_num(lsm_acc_default_config.ctrl_reg_a[i], 16); dbg_print(")\n");
 	}
 }
@@ -90,7 +90,7 @@ lsm_get_gyro_config() {
 	
 	dbg_print("lsm gyro config:\n");
 	for (i=0; i<sizeof(readbuffer); i++) {
-		dbg_print_num(readbuffer[i], 16); dbg_print(" ( ");
+		dbg_print_num(readbuffer[i], 16); dbg_print(" (");
 		dbg_print_num(lsm_gyro_default_config.ctrl_reg_g[i], 16); dbg_print(")\n");
 	}
 }
@@ -109,7 +109,6 @@ void init_lsm330(void) {
 	init_lsm330_gyro();
 	lsm_get_acc_config();
 	lsm_get_gyro_config();
-
 }
 
 

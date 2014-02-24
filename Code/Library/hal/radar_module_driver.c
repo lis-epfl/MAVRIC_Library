@@ -19,6 +19,7 @@ void init_radar_modules() {
 	};
 
 	twim_master_init(&AVR32_TWIM1, &twi_opt);
+	dbg_print("Radar modules initialised.\n");
 }
 
 
