@@ -141,8 +141,36 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 		omc_mag[0]=0;		omc_mag[1]=0; 		omc_mag[2]=0;
 	}
 
+
+	// get error correction gains depending on mode
+	switch (attitude->calibration_level) {
+		case OFF:
+			kp=attitude->kp;//*(0.1/(0.1+s_acc_norm-1.0));
+			kp_mag = attitude->kp_mag;
+			attitude->ki=attitude->kp/15.0;
+			break;
+		case LEVELING:
+			kp=0.5;
+			kp_mag = 0.5;
+			attitude->ki=attitude->kp/10.0;
+			break;
+		case LEVEL_PLUS_ACCEL:  // experimental - do not use
+			kp=0.3;
+			attitude->ki=attitude->kp/10.0;
+			attitude->be[3]+=   dt * attitude->kp * (attitude->a[0]-up_bf.v[0]);
+			attitude->be[4]+=   dt * attitude->kp * (attitude->a[1]-up_bf.v[1]);
+			attitude->be[5]+=   dt * attitude->kp * (attitude->a[2]-up_bf.v[2]);
+			break;
+		default:
+			kp=attitude->kp;
+			kp_mag = attitude->kp_mag;
+			attitude->ki=attitude->kp/15.0;
+			break;
+	}
+
+	// apply error correction with appropriate gains for accelerometer and compass
 	for (i=0; i<3; i++){
-		qtmp1.v[i] = attitude->om[i] +attitude->kp*omc[i] +attitude->kp_mag*omc_mag[i];
+		qtmp1.v[i] = attitude->om[i] + kp*omc[i] + kp_mag*omc_mag[i];
 	}
 	qtmp1.s=0;
 
@@ -175,27 +203,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	//attitude->be[7]+= - dt * attitude->ki_mag * omc[1];
 	//attitude->be[8]+= - dt * attitude->ki_mag * omc[2];
 
-	switch (attitude->calibration_level) {
-		case OFF:
-			kp=attitude->kp;//*(0.1/(0.1+s_acc_norm-1.0));
-			attitude->ki=attitude->kp/15.0;
-			break;
-		case LEVELING:
-			kp=1.0;
-			attitude->ki=attitude->kp/10.0;
-			break;
-		case LEVEL_PLUS_ACCEL:
-			kp=0.3;
-			attitude->ki=attitude->kp/10.0;
-			attitude->be[3]+=   dt * attitude->kp * (attitude->a[0]-up_bf.v[0]);
-			attitude->be[4]+=   dt * attitude->kp * (attitude->a[1]-up_bf.v[1]);
-			attitude->be[5]+=   dt * attitude->kp * (attitude->a[2]-up_bf.v[2]);
-			break;
-		default:
-			kp=attitude->kp;
-			attitude->ki=attitude->kp/15.0;
-			break;
-	}
+
 
 	// set up-vector (bodyframe) in attitude
 	attitude->up_vec.v[0]=up_bf.v[0];

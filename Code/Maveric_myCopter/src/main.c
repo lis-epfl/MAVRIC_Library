@@ -53,12 +53,35 @@ void initialisation() {
 	init_mavlink_actions();
 	init_pos_integration(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 	
+	init_nav();
+	init_waypoint_handler();
+	//e_init();
+	
+	init_neighbors();
+	init_orca();
+	
+	LED_On(LED1);
+}
+
+
+
+void main (void)
+{
+	int i;
+	// turn on simulation mode: 1: simulation mode, 0: reality
+	centralData->simulation_mode = 0;
+	initialisation();
+	
+	create_tasks();
+	
+
 	centralData->imu1.attitude.calibration_level=LEVELING;	
 	centralData->mav_state = MAV_STATE_CALIBRATING;
 	centralData->mav_mode = MAV_MODE_PREFLIGHT;
 
+	dbg_print("calibrating IMU...\n");
 	//calibrate_Gyros(&centralData->imu1);
-	for (i=700; i>0; i--) {
+	for (i=1000; i>0; i--) {
 		run_imu_update();
 		mavlink_protocol_update();	
 		delay_ms(5);
@@ -82,31 +105,16 @@ void initialisation() {
 	}
 	centralData->mav_state = MAV_STATE_STANDBY;
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
-	init_nav();
-	init_waypoint_handler();
-	//e_init();
 	
-	init_neighbors();
-	init_orca();
-	
-	LED_On(LED1);
-}
-
-
-
-void main (void)
-{
-	
-	initialisation();
-	
-	create_tasks();
-	
-	// turn on simulation mode: 1: simulation mode, 0: reality
-	centralData->simulation_mode = 1;
+	dbg_print("Initialise HIL Simulator...\n");
 	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude));
 
 	// main loop
-	
+	delay_ms(10);
+	dbg_print("Reset home position...\n");
+	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
+	dbg_print("OK. Starting up.\n");
+
 	while (1==1) {
 		
 		//run_scheduler_update(get_main_taskset(), FIXED_PRIORITY);

@@ -396,8 +396,6 @@ task_return_t set_mav_mode_n_state()
 void run_imu_update() {
 	if (centralData->simulation_mode==1) {
 		simu_update(&centralData->sim_model, &centralData->servos, &(centralData->imu1), &centralData->position_estimator);
-		
-		
 		imu_update(&(centralData->imu1), &(centralData->position_estimator), &centralData->pressure, &centralData->GPS_data);
 		
 		//for (i=0; i<3; i++) centralData->position_estimator.vel[i]=centralData->sim_model.vel[i];
