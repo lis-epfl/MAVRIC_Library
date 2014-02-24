@@ -50,6 +50,7 @@
 #define _BOARD_H_
 
 #include "compiler.h"
+#include "conf_board.h"
 
 #ifdef __cplusplus
 extern "C" {

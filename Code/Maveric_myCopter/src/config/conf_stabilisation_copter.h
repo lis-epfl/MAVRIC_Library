@@ -23,7 +23,7 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ ROLL PID -------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.08,
+				.p_gain = 0.14,
 				.clip_min = -0.9, 
 				.clip_max = 0.9,
 				.integrator={
@@ -34,9 +34,9 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 					.leakiness = 0.0
 				},
 				.differentiator={
-					.gain = 0.2,
+					.gain = 0.1,
 					.previous = 0.0,
-					.LPF = 0.4,
+					.LPF = 0.5,
 					.clip = 0.65
 				},
 				.output = 0.0,
@@ -49,7 +49,7 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ PITCH PID ------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.08,
+				.p_gain = 0.14,
 				.clip_min = -0.9, 
 				.clip_max = 0.9,
 				.integrator={
@@ -60,9 +60,9 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 					.leakiness = 0.0
 				},
 				.differentiator={
-					.gain = 0.2,
+					.gain = 0.1,
 					.previous = 0.0,
-					.LPF = 0.4,
+					.LPF = 0.5,
 					.clip = 0.65
 				},
 				.output = 0.0,
@@ -75,14 +75,14 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ YAW PID --------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.5,
+				.p_gain = 0.6,
 				.clip_min = -0.3, 
 				.clip_max = 0.3,
 				.integrator={
 					.pregain = 0.5, 
 					.postgain = 0.5,
 					.accumulator = 0.0,
-					.clip = 0.15,
+					.clip = 0.3,
 					.leakiness = 0.0
 				},
 				.differentiator={
@@ -147,7 +147,7 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ ROLL PID -------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 1.5,
+				.p_gain = 2.0,
 				.clip_min = -1.2, 
 				.clip_max = 1.2,
 				.integrator={
@@ -173,7 +173,7 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ PITCH PID ------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 1.5,
+				.p_gain = 2.0,
 				.clip_min = -1.2, 
 				.clip_max = 1.2,
 				.integrator={
@@ -275,10 +275,10 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 				.clip_min = -0.5, 
 				.clip_max = 0.5,
 				.integrator={
-					.pregain = 0.0, 
-					.postgain = 0.0,
+					.pregain = 1.0, 
+					.postgain = 0.5,
 					.accumulator = 0.0,
-					.clip = 0.3,
+					.clip = 0.5,
 					.leakiness = 0.0
 				},
 				.differentiator={
@@ -291,7 +291,7 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 				.error = 0.0,
 				.last_update = 0.0, 
 				.dt = 1,
-				.soft_zone_width = 0.3
+				.soft_zone_width = 0.2
 			},
 			// -----------------------------------------------------------------
 			// ------ PITCH PID ------------------------------------------------
@@ -301,10 +301,10 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 				.clip_min = -0.5, 
 				.clip_max = 0.5,
 				.integrator={
-					.pregain = 0.0, 
-					.postgain = 0.0,
+					.pregain = 1.0, 
+					.postgain = 0.5,
 					.accumulator = 0.0,
-					.clip = 0.3,
+					.clip = 0.5,
 					.leakiness = 0.0
 				},
 				.differentiator={
@@ -317,7 +317,7 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 				.error = 0.0,
 				.last_update = 0.0, 
 				.dt = 1,
-				.soft_zone_width = 0.3
+				.soft_zone_width = 0.2
 			},
 			// -----------------------------------------------------------------
 			// ------ YAW PID --------------------------------------------------
@@ -350,7 +350,7 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 		// ------ THRUST PID ---------------------------------------------------
 		// ---------------------------------------------------------------------
 		.thrust_controller={
-				.p_gain = 0.2,
+				.p_gain = 0.25,
 				.clip_min = -0.9, 
 				.clip_max = 0.65,
 				.integrator={

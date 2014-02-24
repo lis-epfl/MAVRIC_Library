@@ -3,7 +3,7 @@
 
 #include "compiler.h"
 #include <math.h>
-#define PI 3.141592653589793
+#define PI 3.141592653589793f
 
 typedef struct UQuat {
 	float s;
@@ -261,7 +261,7 @@ static float inline median_filter_3x(float a, float b, float c) {
 }
 
 
-static float interpolate(float x, float x1, float x2, float y1, float y2)
+static inline float interpolate(float x, float x1, float x2, float y1, float y2)
 {
 	if (x1 == x2)
 	{
@@ -273,5 +273,7 @@ static float interpolate(float x, float x1, float x2, float y1, float y2)
 		return y;
 	}
 }
+
+
 
 #endif
