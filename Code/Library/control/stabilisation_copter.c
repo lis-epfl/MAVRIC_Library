@@ -15,7 +15,7 @@ central_data_t *centralData;
 void init_stabilisation_copter(Stabiliser_Stack_copter_t* stabiliser_stack)
 {
 	centralData = get_central_data();
-	centralData->controls.run_mode = MOTORS_OFF;
+	centralData->run_mode = MOTORS_OFF;
 	centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 	centralData->controls.yaw_mode = YAW_RELATIVE;
 
@@ -80,11 +80,12 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 		rpyt_errors[0]= input.rpy[0] - (-imu->attitude.up_vec.v[1] ); 
 		rpyt_errors[1]= input.rpy[1] - imu->attitude.up_vec.v[0];
 		
-		rpyt_errors[2]= input.rpy[2];
-		
 		if ((control_input->yaw_mode == YAW_ABSOLUTE) ) {
-			rpyt_errors[2] +=calc_smaller_angle(input.theading- pos_est->localPosition.heading);
+			rpyt_errors[2] =calc_smaller_angle(input.theading- pos_est->localPosition.heading);
+		} else { // relative yaw
+			rpyt_errors[2]= input.rpy[2];
 		}
+		
 		rpyt_errors[3]= input.thrust;       // no feedback for thrust at this level
 		
 		// run PID update on all attitude controllers

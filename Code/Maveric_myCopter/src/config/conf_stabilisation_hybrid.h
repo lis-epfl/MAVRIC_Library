@@ -133,8 +133,9 @@ static Stabiliser_Stack_hybrid_t stabiliser_defaults_hybrid =
 			.tvel = {0.0, 0.0, 0.0},
 			.theading = 0.0,
 			.control_mode =  RATE_COMMAND_MODE,
-			.yaw_mode = YAW_RELATIVE,
-			.run_mode = MOTORS_OFF
+			.yaw_mode = YAW_RELATIVE
+			//.yaw_mode = YAW_RELATIVE,
+			//.run_mode = MOTORS_OFF
 		},
 	},
 // #############################################################################
@@ -256,8 +257,9 @@ static Stabiliser_Stack_hybrid_t stabiliser_defaults_hybrid =
 			.tvel = {0.0, 0.0, 0.0},
 			.theading = 0.0,
 			.control_mode =  RATE_COMMAND_MODE,
-			.yaw_mode = YAW_RELATIVE,
-			.run_mode = MOTORS_OFF
+			.yaw_mode = YAW_RELATIVE
+			//.yaw_mode = YAW_RELATIVE,
+			//.run_mode = MOTORS_OFF
 		},
 	}
 };

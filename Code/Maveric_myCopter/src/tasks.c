@@ -24,7 +24,7 @@ NEW_TASK_SET(main_tasks, 10)
 
 central_data_t *centralData;
 
-bool has_started_engines;
+//bool has_started_engines;
 
 task_set* get_main_taskset() {
 	return &main_tasks;
@@ -85,8 +85,8 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 void switch_off_motors()
 {
 	dbg_print("Switching off motors!\n");
-	centralData->controls.run_mode = MOTORS_OFF;
-	has_started_engines = false;
+	centralData->run_mode = MOTORS_OFF;
+	//has_started_engines = false;
 	centralData->mav_state = MAV_STATE_STANDBY;
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	
@@ -120,8 +120,8 @@ task_return_t set_mav_mode_n_state()
 						dbg_print("Switching on the motors!\n");
 						position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 						centralData->waypoint_set = false;
-						centralData->controls.run_mode = MOTORS_ON;
-						has_started_engines = true;
+						centralData->run_mode = MOTORS_ON;
+						//has_started_engines = true;
 						//centralData->mav_state = MAV_STATE_ACTIVE;
 						centralData->mav_mode = MAV_MODE_MANUAL_ARMED;
 						break;
@@ -136,8 +136,8 @@ task_return_t set_mav_mode_n_state()
 						break;
 				}
 			}
-			//if (centralData->controls.run_mode == MOTORS_ON)
-			if (has_started_engines)
+			if (centralData->run_mode == MOTORS_ON)
+			//if (has_started_engines)
 			{
 				switch (channelSwitches)
 				{
@@ -389,8 +389,9 @@ task_return_t set_mav_mode_n_state()
 	centralData->mav_mode_previous = centralData->mav_mode;
 	centralData->mav_state_previous = centralData->mav_state;
 	
-	mavlink_msg_named_value_int_send(MAVLINK_COMM_0,get_millis(),"run_mode", centralData->controls.run_mode);
-	mavlink_msg_named_value_int_send(MAVLINK_COMM_0,get_millis(),"in_the_air", centralData->in_the_air);
+	//mavlink_msg_named_value_int_send(MAVLINK_COMM_0,get_millis(),"run_mode", centralData->run_mode);
+	//dbg_print_num(centralData->run_mode,10);
+	//mavlink_msg_named_value_int_send(MAVLINK_COMM_0,get_millis(),"in_the_air", centralData->in_the_air);
 }
 
 void run_imu_update() {
@@ -457,7 +458,7 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_STABILIZE_DISARMED:
 		case MAV_MODE_GUIDED_DISARMED:
 		case MAV_MODE_AUTO_DISARMED:
-			centralData->controls.run_mode = MOTORS_OFF;
+			centralData->run_mode = MOTORS_OFF;
 			for (i=0; i<NUMBER_OF_SERVO_OUTPUTS; i++) {
 				centralData->servos[i]=servo_failsafe[i];
 			}
@@ -542,7 +543,7 @@ task_return_t run_barometer()
 
 void create_tasks() {
 	
-	has_started_engines = false;
+	//has_started_engines = false;
 	
 	init_scheduler(&main_tasks);
 	

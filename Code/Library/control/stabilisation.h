@@ -27,7 +27,6 @@ typedef struct {
 	
 	control_mode_t control_mode;
 	yaw_mode_t     yaw_mode;
-	run_mode_t     run_mode;
 	
 } Control_Command_t;
 

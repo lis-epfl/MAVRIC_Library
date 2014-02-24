@@ -56,6 +56,7 @@ typedef struct  {
 	Imu_Data_t imu1;
 	Control_Command_t controls;
 	Control_Command_t controls_nav;
+	run_mode_t run_mode;
 
 	Stabiliser_Stack_copter_t stabiliser_stack;
 

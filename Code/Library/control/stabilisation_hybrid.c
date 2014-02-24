@@ -15,7 +15,7 @@ central_data_t *centralData;
 void init_stabilisation_hybrid(Stabiliser_Stack_hybrid_t* stabiliser_stack)
 {
 	centralData = get_central_data();
-	centralData->controls.run_mode = MOTORS_OFF;
+	centralData->run_mode = MOTORS_OFF;
 	centralData->controls.control_mode = RATE_COMMAND_MODE;
 
 	*stabiliser_stack = stabiliser_defaults_hybrid;
