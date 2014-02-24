@@ -250,7 +250,7 @@ Pk1 = F * Pk0 * F' + Q;
 */
 void e_kalman_predict (int axis, float accel_meas, float dt)
 {
-	double accel_corr;
+	// double accel_corr;
 	double FPF00,FPF01,FPF02,FPF10,FPF11,FPF12,FPF20,FPF21,FPF22;
 	
 	
@@ -364,7 +364,8 @@ Pp = Pm - K*H*Pm;
 */
 void e_kalman_update_position (int axis, double position_meas)
 {
-	double y,y2,S,K1,K2,K3;
+	double y,S,K1,K2,K3;
+//	double y2;
 	double P11,P12,P13,P21,P22,P23,P31,P32,P33;
 
 	y = position_meas - centralData->estimation.state[axis][POSITION];
@@ -654,9 +655,9 @@ void e_kalman_update_speed_hf(int axis, float speed_meas)
 //--------------------------------GLOBAL--------------------------
 void estimator_loop()
 {
-	double pos_x,pos_y,pos_z;
-	double	latitude_rad;
-	float time_before_baro;
+	// double pos_x,pos_y,pos_z;
+	// double	latitude_rad;
+	// float time_before_baro;
 	uint32_t actual_time;
 	
 	global_position_t global_gps_position;

@@ -42,9 +42,9 @@ int i2c_append_read_transfer(uint8_t slave_address, uint8_t *data, uint16_t size
 int i2c_append_write_transfer(uint8_t slave_address, uint8_t *data, uint16_t size, task_handle_t *event_handler);
 int i2c_append_register_read_transfer(uint8_t slave_address, uint8_t register_address, uint8_t *data, uint16_t size, task_handle_t *event_handler);
 
-int i2c_clear_queue();
+int i2c_clear_queue(void);
 
-bool i2c_is_ready();
-int i2c_get_queued_requests();
+bool i2c_is_ready(void);
+int i2c_get_queued_requests(void);
 
 #endif /* I2C_DRIVER_H_ */

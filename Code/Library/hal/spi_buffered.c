@@ -28,13 +28,13 @@ void spi_handler(int spi_index);
   * manages sending and receiving data
 */
 __attribute__((__interrupt__))
-void spi0_int_handler() {
+void spi0_int_handler(void) {
 	//LED_On(LED1);
 	spi_handler(0);
 }
 
 __attribute__((__interrupt__))
-void spi1_int_handler() {
+void spi1_int_handler(void) {
 	spi_handler(1);
 }
 

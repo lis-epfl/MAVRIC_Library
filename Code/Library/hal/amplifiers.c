@@ -7,7 +7,7 @@
 
 #include "amplifiers.h"
 
-void init_amplifiers()
+void init_amplifiers(void)
 {
 	gpio_configure_pin(SDN,GPIO_DIR_OUTPUT);
 	//gpio_configure_pin(GAIN_0,GPIO_DIR_OUTPUT);		//doesn't work
@@ -21,7 +21,7 @@ void init_amplifiers()
 	gpio_set_pin_high(SDN);		//enable the amplifiers
 }
 
-void reset_amplifiers()
+void reset_amplifiers(void)
 {
 	gpio_set_pin_low(AMP_CS1);
 	gpio_set_pin_low(AMP_CS2);

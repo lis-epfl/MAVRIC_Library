@@ -440,7 +440,7 @@ void add_PID_parameters(void) {
 }
 
 
-task_return_t control_waypoint_timeout () {
+task_return_t control_waypoint_timeout (void) {
 	control_time_out_waypoint_msg(&(centralData->number_of_waypoints),&centralData->waypoint_receiving,&centralData->waypoint_sending);
 }
 
@@ -744,10 +744,9 @@ void init_mavlink_actions(void) {
 	//board=get_board_hardware();
 	centralData=get_central_data();
 	add_PID_parameters();
-	
+		
 	//write_parameters_to_flashc();
-	
-	read_parameters_from_flashc();
+	//read_parameters_from_flashc();
 	
 	add_task(get_mavlink_taskset(),   10000, RUN_REGULAR, &control_waypoint_timeout, 0);
 	
@@ -779,4 +778,6 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
 	sort_taskset_by_period(get_mavlink_taskset());
+	
+	dbg_print("MAVlink actions initialiased\n");
 }

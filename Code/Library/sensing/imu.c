@@ -24,6 +24,7 @@ void init_imu (Imu_Data_t *imu1) {
 	//init_itg3200_slow();	
 	//init_adxl345_slow();
 	init_lsm330();
+	dbg_print("LSM330 initialised\n");	
 	
 	init_hmc5883_slow();
 
@@ -41,7 +42,7 @@ void init_imu (Imu_Data_t *imu1) {
 	imu1->raw_bias[0+GYRO_OFFSET]= 0.0;
 	imu1->raw_bias[1+GYRO_OFFSET]= 0.0;
 	imu1->raw_bias[2+GYRO_OFFSET]= 0.0;
-	//myquad
+	
 	// acceleration biais
 	imu1->raw_bias[0+ACC_OFFSET]= ACC_BIAIS_X;
 	imu1->raw_bias[1+ACC_OFFSET]= ACC_BIAIS_Y;
@@ -52,7 +53,6 @@ void init_imu (Imu_Data_t *imu1) {
 	imu1->raw_bias[1+COMPASS_OFFSET]= MAG_BIAIS_Y;
 	imu1->raw_bias[2+COMPASS_OFFSET]= MAG_BIAIS_Z;
 	
-	
 	imu_last_update_init = false;
 	
 	qfInit(&imu1->attitude, imu1->raw_scale, imu1->raw_bias);
@@ -61,7 +61,7 @@ void init_imu (Imu_Data_t *imu1) {
 
 
 void imu_get_raw_data(Imu_Data_t *imu1) {
-	int i=0;
+	// int i=0;
 	
 	//gyro_data* gyros=get_gyro_data_slow();
 	//acc_data* accs=get_acc_data_slow();

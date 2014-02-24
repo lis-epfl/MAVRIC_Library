@@ -55,7 +55,8 @@ static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr
 void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos){
 	int i;
 	float motor_command[4];
-	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4], rotor_lateral_drag[4];
+	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4];
+	// float rotor_lateral_drag[4];
 	float ldb;
 	
 	float sqr_lateral_airspeed=SQR(sim->vel_bf[0]) + SQR(sim->vel_bf[1]*sim->vel_bf[1]);
@@ -106,8 +107,8 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 
 
 void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos){
-	int i;
-	float motor_command[4];
+	// int i;
+	// float motor_command[4];
 	
 /*	motor_command[M_FRONT]= control->thrust + control->rpy[PITCH] + M_FRONT_DIR * control->rpy[YAW];
 	motor_command[M_RIGHT] = control->thrust - control->rpy[ROLL] + M_RIGHT_DIR * control->rpy[YAW];

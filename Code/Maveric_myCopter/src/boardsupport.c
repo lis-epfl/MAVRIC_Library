@@ -31,8 +31,8 @@
 //static volatile board_hardware_t board_hardware;
 
 void initialise_board(central_data_t *centralData) {
-	int i;
-	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
+	// int i;
+	// enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 	
 
 	irq_initialize_vectors();
@@ -87,20 +87,18 @@ void initialise_board(central_data_t *centralData) {
 	init_UART_int(4);
 	register_write_stream(get_UART_handle(4), &(centralData->wired_out_stream));
 
-
 	make_buffered_stream_lossy(&(centralData->xbee_in_buffer), &(centralData->xbee_in_stream));
 	make_buffered_stream_lossy(&(centralData->wired_in_buffer), &(centralData->wired_in_stream));
 	register_read_stream(get_UART_handle(4), &(centralData->wired_in_stream));
 	register_read_stream(get_UART_handle(0), &(centralData->xbee_in_stream));
-
 		
 	// connect abstracted aliases to hardware ports
-
-
+/**/
 	centralData->telemetry_down_stream=&(centralData->xbee_out_stream);
 	centralData->telemetry_up_stream=&(centralData->xbee_in_stream);
 	centralData->debug_out_stream=&(centralData->wired_out_stream);
 	centralData->debug_in_stream=&(centralData->wired_in_stream);
+/**/
 /*
 	centralData->telemetry_down_stream=&(centralData->wired_out_stream);
 	centralData->telemetry_up_stream  =&(centralData->wired_in_stream);		
@@ -118,34 +116,13 @@ void initialise_board(central_data_t *centralData) {
 		
 	// init debug output
 	dbg_print_init(centralData->debug_out_stream);
-		
+	dbg_print("\nDebug stream initialised\n");	
+				
+	dbg_print("\nInitialising imu...\n");
 	init_imu(&(centralData->imu1));
+	
 	init_bmp085();
-
-
-
+	
 	Enable_global_interrupt();
 	dbg_print("Board initialised.\n");
 }
-
-//board_hardware_t* get_board_hardware() {
-	//return &board_hardware;
-//}
-
-
-//byte_stream_t* get_telemetry_upstream() {
-	//return board_hardware.telemetry_up_stream;
-//}
-//byte_stream_t* get_telemetry_downstream() {
-	//return board_hardware.telemetry_down_stream;
-//}
-//byte_stream_t* get_debug_stream() {
-	//return board_hardware.debug_out_stream;
-//}
-//
-//Imu_Data_t* get_imu() {
-	//return &board_hardware.imu1;
-//}
-//Control_Command_t* get_control_inputs() {
-	//return &board_hardware.controls;
-//}

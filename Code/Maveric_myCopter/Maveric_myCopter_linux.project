@@ -251,12 +251,12 @@
     <File Name="src/tasks.h"/>
     <File Name="src/tasks.c"/>
     <File Name="src/mavlink_actions.h"/>
-    <File Name="src/boardsupport.c"/>
     <File Name="src/rectangle.hpp"/>
     <File Name="src/rectangle.cpp"/>
     <File Name="src/main.cpp"/>
     <File Name="src/central_data.c"/>
     <File Name="Library/Makefile"/>
+    <File Name="src/boardsupport.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Library">
     <VirtualDirectory Name="mavlink">
@@ -586,6 +586,7 @@
       <File Name="Library/control/adaptive_parameter.c"/>
       <File Name="Library/control/stabilisation.c"/>
       <File Name="Library/control/adaptive_parameter.h"/>
+      <File Name="Library/control/orca.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="hal">
       <File Name="Library/hal/uart_int.h"/>
@@ -673,7 +674,6 @@
       <File Name="Library/util/small_matrix.h"/>
       <File Name="Library/util/generator.h"/>
       <File Name="Library/util/generator.c"/>
-      <File Name="Library/control/orca.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Settings Type="Executable">

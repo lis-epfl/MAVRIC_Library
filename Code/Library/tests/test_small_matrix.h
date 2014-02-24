@@ -3,7 +3,7 @@
 
 #include "compiler.h"
 
-bool run_matrix_tests();
+bool run_matrix_tests(void);
 
 
 

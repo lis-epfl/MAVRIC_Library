@@ -2,7 +2,7 @@
 
 
 
-void init_radar() {
+void init_radar(void) {
 	gpio_configure_pin(RADAR_POWER1_PIN, GPIO_DIR_OUTPUT);	
 	gpio_configure_pin(RADAR_POWER2_PIN, GPIO_DIR_OUTPUT);
 	switch_power(0,0);

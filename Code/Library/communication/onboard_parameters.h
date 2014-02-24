@@ -52,8 +52,8 @@ void send_scheduled_parameters(void);
 void send_parameter(mavlink_param_request_read_t* request);
 void receive_parameter(Mavlink_Received_t* rec);
 
-void read_parameters_from_flashc();
-void write_parameters_to_flashc();
+void read_parameters_from_flashc(void);
+void write_parameters_to_flashc(void);
 
 #ifdef __cplusplus
 }

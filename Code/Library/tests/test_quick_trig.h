@@ -11,9 +11,9 @@
 
 #include "test_utils.h"
 
-bool run_quick_trig_tests();
+bool run_quick_trig_tests(void);
 
-void profile_quick_trig();
+void profile_quick_trig(void);
 
 
 #endif /* TEST_QUICK_TRIG_H_ */

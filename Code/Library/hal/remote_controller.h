@@ -28,13 +28,13 @@
 
 
 
-static float inline get_roll_from_remote()	{return rc_get_channel_neutral(RC_ROLL)*RC_ROLL_DIR * RC_SCALEFACTOR; };
-static float inline get_pitch_from_remote()	{return rc_get_channel_neutral(RC_PITCH)*RC_PITCH_DIR * RC_SCALEFACTOR; };
-static float inline get_yaw_from_remote()	{return rc_get_channel_neutral(RC_YAW)*RC_YAW_DIR * RC_SCALEFACTOR; };
-static float inline get_thrust_from_remote()	{return rc_get_channel(RC_THROTTLE)*RC_THROTTLE_DIR*RC_SCALEFACTOR; };
+static float inline get_roll_from_remote(void)	{return rc_get_channel_neutral(RC_ROLL)*RC_ROLL_DIR * RC_SCALEFACTOR; };
+static float inline get_pitch_from_remote(void)	{return rc_get_channel_neutral(RC_PITCH)*RC_PITCH_DIR * RC_SCALEFACTOR; };
+static float inline get_yaw_from_remote(void)	{return rc_get_channel_neutral(RC_YAW)*RC_YAW_DIR * RC_SCALEFACTOR; };
+static float inline get_thrust_from_remote(void)	{return rc_get_channel(RC_THROTTLE)*RC_THROTTLE_DIR*RC_SCALEFACTOR; };
 
 
-static inline Control_Command_t get_command_from_remote()
+static inline Control_Command_t get_command_from_remote(void)
 {
 	Control_Command_t controls;
 	controls.rpy[ROLL]= get_roll_from_remote()*RC_INPUT_SCALE;

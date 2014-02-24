@@ -142,8 +142,9 @@ void position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitu
 {
 	int i;
 	
-	UQuat_t qvel_bf,qvel, qtmp1, qtmp2, qtmp3;
-	float tmp[3];
+	UQuat_t qvel_bf,qvel; 
+	// UQuat_t qtmp1, qtmp2, qtmp3;
+	// float tmp[3];
 	qvel.s=0;
 	for (i=0; i<3; i++) qvel.v[i]=pos_est->vel[i];
 	qvel_bf=quat_global_to_local(attitude->qe, qvel);
@@ -182,7 +183,7 @@ void position_correction(position_estimator_t *pos_est, pressure_data *barometer
 	global_position_t global_gps_position;
 	local_coordinates_t local_coordinates;
 	
-	UQuat_t bias_correction ={.s=0, .v={0.0, 0.0, 1.0}};
+	// UQuat_t bias_correction ={.s=0, .v={0.0, 0.0, 1.0}};
 	UQuat_t vel_correction ={.s=0, .v={0.0, 0.0, 1.0}};
 	float pos_error[3]= {0.0,0.0,0.0};
 	float baro_alt_error=0.0;

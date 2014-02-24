@@ -175,7 +175,6 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 							run_task_now(task);
 						}					
 					} else {
-						int i;
 						task_entry *task=get_task_by_id(&mavlink_tasks, request.req_stream_id);
 						dbg_print(" stream="); dbg_print_num(request.req_stream_id, 10);
 						dbg_print(" start_stop=");dbg_print_num(request.start_stop, 10);

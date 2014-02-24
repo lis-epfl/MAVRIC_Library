@@ -96,7 +96,7 @@ ISR(i2c_int_handler_i2c0,CONF_TWIM_IRQ_GROUP,CONF_TWIM_IRQ_LEVEL)
 
 
 int init_i2c(unsigned char i2c_device) {
-	int i;
+	// int i;
 	volatile avr32_twim_t *twim;
 	switch (i2c_device) {
 	case 0: 

@@ -2,7 +2,7 @@
 #define TEST_MATHS_H
 
 #include "compiler.h"
-bool run_math_tests();
+bool run_math_tests(void);
 
 
 

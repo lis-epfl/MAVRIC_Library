@@ -82,7 +82,7 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 	//dbg_print("\n");
 }
 
-void switch_off_motors()
+void switch_off_motors(void)
 {
 	dbg_print("Switching off motors!\n");
 	centralData->controls.run_mode = MOTORS_OFF;
@@ -93,7 +93,7 @@ void switch_off_motors()
 	centralData->in_the_air = false;
 }
 
-task_return_t set_mav_mode_n_state()
+task_return_t set_mav_mode_n_state(void)
 {
 	uint8_t channelSwitches = 0;
 	int8_t RC_check = 0;
@@ -410,8 +410,6 @@ void run_imu_update() {
 
 
 task_return_t run_stabilisation() {
-	int i;
-	
 	run_imu_update();
 
 	switch(centralData->mav_mode)
@@ -475,7 +473,7 @@ task_return_t run_stabilisation() {
 }
 
 task_return_t gps_task() {
-	uint32_t tnow = get_millis();	
+	// uint32_t tnow = get_millis();	
 	if (centralData->simulation_mode==1) {
 		simulate_gps(&centralData->sim_model, &centralData->GPS_data);
 	} else {
@@ -529,7 +527,7 @@ task_return_t run_navigation_task()
 uint32_t last_baro_update;
 task_return_t run_barometer()
 {
-	uint32_t tnow = get_micros();
+	// uint32_t tnow = get_micros();
 	central_data_t *central_data=get_central_data();
 	
 	pressure_data *pressure= get_pressure_data_slow(centralData->pressure.altitude_offset);

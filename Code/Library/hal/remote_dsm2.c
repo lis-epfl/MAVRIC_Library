@@ -154,7 +154,7 @@ void rc_center_channel(uint8_t index){
 	channelCenter[index]=rc_get_channel(index);
 }
 
-int8_t checkReceiver1() {
+int8_t checkReceiver1(void) {
 	int8_t i;
 	uint32_t now = get_time_ticks();
 	uint32_t duration=now-spRec1.last_update;
@@ -180,7 +180,7 @@ int8_t checkReceiver1() {
 
 }
 
-int8_t checkReceiver2(){
+int8_t checkReceiver2(void){
 	int8_t i;
 	uint32_t now = 0; //TCC0.CNT;
 	uint32_t duration = now - spRec2.last_update;
@@ -201,7 +201,7 @@ int8_t checkReceiver2(){
 
 }
 
-int8_t rc_check_receivers() {
+int8_t rc_check_receivers(void) {
 	return checkReceiver1();// + checkReceiver2();
 }
 
