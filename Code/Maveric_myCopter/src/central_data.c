@@ -15,7 +15,7 @@
 static volatile central_data_t centralData;
 
 void initialise_central_data(){
-		
+		init_imu(&centralData.imu1);
 		// init controls
 		centralData.controls.rpy[ROLL]=0;
 		centralData.controls.rpy[PITCH]=0;

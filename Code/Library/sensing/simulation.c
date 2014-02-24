@@ -57,8 +57,10 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 	float motor_command[4];
 	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4], rotor_lateral_drag[4];
 	float ldb;
+	UQuat_t wind_gf={.s=0, .v={sim->wind_x, sim->wind_y, 0.0}};
+	UQuat_t wind_bf=quat_global_to_local(sim->attitude.qe, wind_gf);
 	
-	float sqr_lateral_airspeed=SQR(sim->vel_bf[0]) + SQR(sim->vel_bf[1]*sim->vel_bf[1]);
+	float sqr_lateral_airspeed=SQR(sim->vel_bf[0]+wind_bf.v[0]) + SQR(sim->vel_bf[1]+wind_bf.v[1]);
 	float lateral_airspeed=sqrt(sqr_lateral_airspeed);
 	
 	for (i=0; i<4; i++) {
@@ -98,8 +100,8 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 	
 
 	
-	sim->lin_forces_bf[X] = -sim->vel_bf[X]*lateral_airspeed* sim->vehicle_drag;  
-	sim->lin_forces_bf[Y] = -sim->vel_bf[Y]*lateral_airspeed* sim->vehicle_drag;
+	sim->lin_forces_bf[X] = -(sim->vel_bf[X]-wind_bf.v[0])*lateral_airspeed* sim->vehicle_drag;  
+	sim->lin_forces_bf[Y] = -(sim->vel_bf[Y]-wind_bf.v[1])*lateral_airspeed* sim->vehicle_drag;
 	sim->lin_forces_bf[Z] = -(rotor_lifts[M_FRONT_LEFT]+ rotor_lifts[M_FRONT_RIGHT] +rotor_lifts[M_REAR_LEFT] +rotor_lifts[M_REAR_RIGHT]);
 
 }
@@ -130,12 +132,11 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	const UQuat_t front = {.s=0.0, .v={1.0, 0.0, 0.0}};
 	const UQuat_t up = {.s=0.0, .v={UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}};
 	
-	central_data_t *central_data;
+	
 	uint32_t now=get_micros();
 	sim->dt=(now - sim->last_update)/1000000.0;
 	if (sim->dt>0.1) sim->dt=0.1;
 	sim->last_update=now;
-	central_data=get_central_data();
 	// compute torques and forces based on servo commands
 	#ifdef CONF_DIAG
 	forces_from_servos_diag_quad(sim, servo_commands);

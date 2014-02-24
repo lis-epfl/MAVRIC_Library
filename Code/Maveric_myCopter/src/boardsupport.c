@@ -123,29 +123,7 @@ void initialise_board(central_data_t *centralData) {
 	init_bmp085();
 
 
-
 	Enable_global_interrupt();
 	dbg_print("Board initialised.\n");
 }
 
-//board_hardware_t* get_board_hardware() {
-	//return &board_hardware;
-//}
-
-
-//byte_stream_t* get_telemetry_upstream() {
-	//return board_hardware.telemetry_up_stream;
-//}
-//byte_stream_t* get_telemetry_downstream() {
-	//return board_hardware.telemetry_down_stream;
-//}
-//byte_stream_t* get_debug_stream() {
-	//return board_hardware.debug_out_stream;
-//}
-//
-//Imu_Data_t* get_imu() {
-	//return &board_hardware.imu1;
-//}
-//Control_Command_t* get_control_inputs() {
-	//return &board_hardware.controls;
-//}

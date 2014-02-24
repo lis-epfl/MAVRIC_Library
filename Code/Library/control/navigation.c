@@ -118,7 +118,7 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	qtmp2 = quat_global_to_local(centralData->imu1.attitude.qe,qtmp1);
 	dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
 	
-	dir_desired_bf[2] = rel_pos[2];
+	//dir_desired_bf[2] = rel_pos[2];
 	
 	if (((f_abs(rel_pos[X])<=1.0)&&(f_abs(rel_pos[Y])<=1.0))||((f_abs(rel_pos[X])<=5.0)&&(f_abs(rel_pos[Y])<=5.0)&&(f_abs(rel_pos[Z])>=3.0)))
 	{
@@ -128,7 +128,7 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 		//rel_heading = atan2(dir_desired_bf[Y]);
 	}
 	
-	v_desired = f_min(V_CRUISE,(center_window_2(6.0*rel_heading) * DIST_2_VEL_GAIN * norm_rel_dist));
+	v_desired = f_min(V_CRUISE,(center_window_2(4.0*rel_heading) * DIST_2_VEL_GAIN * norm_rel_dist));
 	
 	if (v_desired *  f_abs(dir_desired_bf[Z]) > MAX_CLIMB_RATE * norm_rel_dist ) {
 		v_desired = MAX_CLIMB_RATE * norm_rel_dist /f_abs(dir_desired_bf[Z]);

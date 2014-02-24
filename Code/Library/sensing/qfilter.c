@@ -67,7 +67,7 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 	//attitude->qe.v[2]=sin((PI + init_angle)/2.0);
 	attitude->qe.v[2]=sin(init_angle/2.0);
 	
-	attitude->kp=0.09;
+	attitude->kp=0.07;
 	attitude->ki=attitude->kp/15.0;
 	
 	attitude->kp_mag = 0.1;

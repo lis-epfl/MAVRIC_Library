@@ -35,7 +35,7 @@ typedef struct {
 	float rotor_arm_length;							 			// distance between CoG and motor (in meter)
 	uint32_t last_update;											// last update in system ticks
 	float dt;													// time base of current update
-	
+	float wind_x, wind_y;
 } simulation_model_t;
 
 

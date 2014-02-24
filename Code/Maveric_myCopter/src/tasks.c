@@ -481,10 +481,6 @@ task_return_t gps_task() {
 	}
 }
 
-task_return_t run_estimator()
-{
-	estimator_loop();
-}
 
 task_return_t run_navigation_task()
 {

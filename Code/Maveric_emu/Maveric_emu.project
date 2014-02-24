@@ -149,22 +149,26 @@
       <File Name="../Library/sensing/gps_ublox.c"/>
       <File Name="../Library/sensing/imu.h"/>
       <File Name="../Library/sensing/simulation.c"/>
-      <File Name="../Library/sensing/estimator.c"/>
-      <File Name="../Library/sensing/estimator.h"/>
       <File Name="../Library/sensing/position_estimation.c"/>
       <File Name="../Library/sensing/position_estimation.h"/>
+      <File Name="../Library/sensing/neighbor_selection.h"/>
+      <File Name="../Library/sensing/neighbor_selection.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="control">
-      <File Name="../Library/control/stabilisation.h"/>
-      <File Name="../Library/control/navigation.h"/>
+      <File Name="../Library/control/adaptive_parameter.c"/>
+      <File Name="../Library/control/adaptive_parameter.h"/>
       <File Name="../Library/control/navigation.c"/>
-      <File Name="../Library/control/control.h"/>
-      <File Name="../Library/control/stabilisation.c"/>
-      <File Name="../Library/control/control.c"/>
-      <File Name="../Library/control/neighbor_selection.c"/>
-      <File Name="../Library/control/neighbor_selection.h"/>
+      <File Name="../Library/control/navigation.h"/>
       <File Name="../Library/control/orca.c"/>
       <File Name="../Library/control/orca.h"/>
+      <File Name="../Library/control/pid_control.c"/>
+      <File Name="../Library/control/pid_control.h"/>
+      <File Name="../Library/control/stabilisation.c"/>
+      <File Name="../Library/control/stabilisation.h"/>
+      <File Name="../Library/control/stabilisation_copter.c"/>
+      <File Name="../Library/control/stabilisation_copter.h"/>
+      <File Name="../Library/control/stabilisation_hybrid.c"/>
+      <File Name="../Library/control/stabilisation_hybrid.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="communication">
       <File Name="../Library/communication/mavlink_stream.c"/>
@@ -172,6 +176,8 @@
       <File Name="../Library/communication/onboard_parameters.c"/>
       <File Name="../Library/communication/mavlink_stream.h"/>
       <File Name="../Library/communication/mavlink_bridge.h"/>
+      <File Name="../Library/communication/mavlink_waypoint_handler.c"/>
+      <File Name="../Library/communication/mavlink_waypoint_handler.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="hal_emu">
       <File Name="../Library/hal_emu/compass_hmc5883l.h"/>
@@ -221,6 +227,11 @@
     <File Name="config/conf_platform.h"/>
     <File Name="config/conf_twim.h"/>
     <File Name="config/conf_sim_model.h"/>
+    <File Name="config/conf_stabilisation_hybrid.h"/>
+    <File Name="config/conf_imu_rev4.h"/>
+    <File Name="config/conf_usart_serial.h"/>
+    <File Name="config/conf_stabilisation_copter.h"/>
+    <File Name="config/conf_imu_rev3.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
