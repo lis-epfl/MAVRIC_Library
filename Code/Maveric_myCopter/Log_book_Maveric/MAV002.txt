@@ -33,3 +33,9 @@ status: not fly ready
 #define MAG_AXIS_Z  1.0
 14-02-18: ID & parameters flashed
 14-02-18: missing GPS cable
+
+14-02-25: compass calibration was off during test flight, due to scaled-imu message bug. New hand-tuned compass biases:
+#define MAG_BIAIS_X  -150		
+#define MAG_BIAIS_Y -160
+#define MAG_BIAIS_Z   -46.51
+
