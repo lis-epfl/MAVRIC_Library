@@ -118,7 +118,7 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	qtmp2 = quat_global_to_local(centralData->imu1.attitude.qe,qtmp1);
 	dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
 	
-	//dir_desired_bf[2] = rel_pos[2];
+	dir_desired_bf[2] = rel_pos[2];
 	
 	if (((f_abs(rel_pos[X])<=1.0)&&(f_abs(rel_pos[Y])<=1.0))||((f_abs(rel_pos[X])<=5.0)&&(f_abs(rel_pos[Y])<=5.0)&&(f_abs(rel_pos[Z])>=3.0)))
 	{

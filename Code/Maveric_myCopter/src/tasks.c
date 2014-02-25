@@ -43,6 +43,10 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 		centralData->collision_avoidance = false;
 	}
 	
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"P1",rc_get_channel_neutral(RC_TRIM_P1));
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"P2",rc_get_channel_neutral(RC_TRIM_P2));
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"P3",rc_get_channel_neutral(RC_TRIM_P3));
+	
 	//dbg_print("chanSwitch ");
 	//dbg_print_num(*chanSwitch,10);
 	//dbg_print_num(getChannel(4),10);

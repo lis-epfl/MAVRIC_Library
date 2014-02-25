@@ -36,7 +36,8 @@ static simulation_model_t vehicle_model_parameters= {
 	.yaw_momentum		=  0.1 * 0.17 ,  // approximate motor arm mass * rotor arm length
 	.rotor_momentum     =  0.005*0.03,  // rotor inertia  (5g off center mass * rotor radius)
 	.rotor_arm_length	=  0.17,  	    // distance between CoG and motor (in meter)
-	0
+	.wind_x=0.0,
+	.wind_y=0.0
 };
 
 
