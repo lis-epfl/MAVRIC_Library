@@ -68,12 +68,12 @@ void mavlink_send_scaled_imu(void) {
 	1000*centralData->imu1.attitude.om[IMU_X], 
 	1000*centralData->imu1.attitude.om[IMU_Y], 
 	1000*centralData->imu1.attitude.om[IMU_Z], 
-	//1000*centralData->imu1.attitude.mag[IMU_X],
-	//1000*centralData->imu1.attitude.mag[IMU_Y],
-	//1000*centralData->imu1.attitude.mag[IMU_Z]
-	1000*centralData->imu1.attitude.north_vec.v[0],
-	1000*centralData->imu1.attitude.north_vec.v[1],
-	1000*centralData->imu1.attitude.north_vec.v[2]
+	1000*centralData->imu1.attitude.mag[IMU_X],
+	1000*centralData->imu1.attitude.mag[IMU_Y],
+	1000*centralData->imu1.attitude.mag[IMU_Z]
+	//1000*centralData->imu1.attitude.north_vec.v[0],
+	//1000*centralData->imu1.attitude.north_vec.v[1],
+	//1000*centralData->imu1.attitude.north_vec.v[2]
 	//1000*centralData->imu1.attitude.up_vec.v[0],
 	//1000*centralData->imu1.attitude.up_vec.v[1],
 	//1000*centralData->imu1.attitude.up_vec.v[2]
