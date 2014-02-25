@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-#define MAX_ONBOARD_PARAM_COUNT 120
+#define MAX_ONBOARD_PARAM_COUNT 200 //120
 
 #define USER_PAGE_FIRST_FREE_WORD 0x8080020C
 

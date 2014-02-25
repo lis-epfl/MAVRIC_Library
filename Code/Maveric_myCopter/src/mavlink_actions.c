@@ -429,8 +429,8 @@ void add_PID_parameters(void) {
 	add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Y],"Scale_Mag_Y");
 	add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Z],"Scale_Mag_Z");
 	
-	add_parameter_uint8(&(mavlink_system.sysid),"ID_System");
-	add_parameter_uint8(&(mavlink_mission_planner.sysid),"ID_Planner");
+	//add_parameter_uint8(&(mavlink_system.sysid),"ID_System");
+	//add_parameter_uint8(&(mavlink_mission_planner.sysid),"ID_Planner");
 
 	add_parameter_float(&centralData->position_estimator.kp_alt,"Pos_kp_alt");
 	add_parameter_float(&centralData->position_estimator.kp_vel_baro,"Pos_kp_velb");
@@ -745,7 +745,7 @@ void init_mavlink_actions(void) {
 	centralData=get_central_data();
 	add_PID_parameters();
 		
-	//write_parameters_to_flashc();
+	write_parameters_to_flashc();
 	//read_parameters_from_flashc();
 	
 	add_task(get_mavlink_taskset(),   10000, RUN_REGULAR, &control_waypoint_timeout, 0);
