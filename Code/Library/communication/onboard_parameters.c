@@ -7,8 +7,15 @@
 
 #include "onboard_parameters.h"
 #include "stabilisation.h"
-#include "flashc.h"
 #include "print_util.h"
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+	#include "flashc.h"
+#ifdef __cplusplus
+	}
+#endif
 
 Parameter_Set_t param_set;
 
@@ -229,9 +236,15 @@ void write_parameters_to_flashc()
 	
 	dbg_print("Begin write to flashc...\n");
 	
-	for (i=1;i<(param_set.param_count+1);i++)
+	for (i=1;i<=param_set.param_count;i++)
+//	for (i=1;i<(param_set.param_count);i++)
 	{
-		//flashc_memcpy((void *)&(nvram_array->values[i]),   param_set.parameters[i].param, sizeof((nvram_array->values[i])),   true);
+		dbg_print("This is a debug test\n");
+		dbg_print_num(i,10);
+		dbg_print_num(param_set.param_count,10);
+		dbg_print_num((*param_set.parameters[i-1].param)*100,10);
+		dbg_print("\n");
+		
 		local_array.values[i] = *param_set.parameters[i-1].param;
 		
 		cksum1 += local_array.values[i];
@@ -240,6 +253,9 @@ void write_parameters_to_flashc()
 	
 	local_array.values[param_set.param_count+1] = cksum1;
 	local_array.values[param_set.param_count+2] = cksum2;
+
+	
+	
 	
 	flashc_memcpy((void *)nvram_array, &local_array, sizeof(*nvram_array) ,   true);
 	dbg_print("Write to flashc completed.\n");
