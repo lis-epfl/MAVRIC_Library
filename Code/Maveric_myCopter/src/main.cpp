@@ -109,7 +109,7 @@ int main (void)
 	create_tasks();
 	
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	centralData->simulation_mode = 1;
+	centralData->simulation_mode = 0;
 	
 	dbg_print("Initialise HIL Simulator...\n");	
 	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude));
@@ -129,7 +129,7 @@ int main (void)
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
 		
 		//LED_On(LED1);
-		dbg_print("abcd\n");
+		// dbg_print("abcd\n");
 		rectangle_size = rec.get_size();
 	}
 

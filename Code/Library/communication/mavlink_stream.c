@@ -14,6 +14,9 @@
 #include "central_data.h"
 #include "mavlink_actions.h"
 
+mavlink_system_t mavlink_system;
+mavlink_system_t mavlink_mission_planner;
+
 static volatile byte_stream_t* mavlink_out_stream;
 static volatile byte_stream_t* mavlink_in_stream;
 static volatile Buffer_t mavlink_in_buffer;

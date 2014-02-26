@@ -7,10 +7,14 @@
 #include "conf_platform.h"
 #include "stdint.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "mavlink/include/mavlink_types.h"
 
-mavlink_system_t mavlink_system;
-mavlink_system_t mavlink_mission_planner;
+extern mavlink_system_t mavlink_system;
+extern mavlink_system_t mavlink_mission_planner;
 
 /* Struct that stores the communication settings of this system.
    you can also define / alter these settings elsewhere, as long
@@ -30,5 +34,9 @@ mavlink_system_t mavlink_mission_planner;
  * @param ch Character to send
  */
 void comm_send_ch(mavlink_channel_t chan, uint8_t ch);
- 
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* MAVLINK_BRIDGE_H */
