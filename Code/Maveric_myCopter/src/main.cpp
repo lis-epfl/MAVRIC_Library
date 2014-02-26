@@ -65,20 +65,7 @@ void initialisation() {
 	init_neighbors();
 	init_orca();
 	
-	LED_On(LED1);
-}
-
-
-
-int main (void)
-{
-	int i;
-	// turn on simulation mode: 1: simulation mode, 0: reality
-	initialisation();
-	centralData->simulation_mode = 0;
-	
 	create_tasks();
-	
 
 	centralData->imu1.attitude.calibration_level=LEVELING;	
 	centralData->mav_state = MAV_STATE_CALIBRATING;
@@ -86,7 +73,7 @@ int main (void)
 
 	dbg_print("calibrating IMU...\n");
 	//calibrate_Gyros(&centralData->imu1);
-	for (i=1000; i>0; i--) {
+	for (i=700; i>0; i--) {
 		run_imu_update();
 		mavlink_protocol_update();	
 		delay_ms(5);
@@ -111,7 +98,20 @@ int main (void)
 	centralData->mav_state = MAV_STATE_STANDBY;
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	
-	dbg_print("Initialise HIL Simulator...\n");
+	LED_On(LED1);
+}
+
+int main (void)
+{
+	
+	initialisation();
+	
+	create_tasks();
+	
+	// turn on simulation mode: 1: simulation mode, 0: reality
+	centralData->simulation_mode = 1;
+	
+	dbg_print("Initialise HIL Simulator...\n");	
 	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude));
 
 	// main loop
@@ -122,6 +122,8 @@ int main (void)
 
 	Rectangle rec = Rectangle();
 	float rectangle_size;
+	
+	// main loop
 	while (1==1) {
 		//run_scheduler_update(get_main_taskset(), FIXED_PRIORITY);
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
