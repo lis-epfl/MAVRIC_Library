@@ -12,6 +12,7 @@
 #include "qfilter.h"
 #include "bmp085.h"
 #include "gps_ublox.h"
+#include "coord_conventions.h"
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
 #define VEL_DECAY 0.0
@@ -38,7 +39,7 @@ typedef struct position_estimator_t {
 
 void init_pos_integration(position_estimator_t *pos_est, pressure_data *barometer,gps_Data_type *gps );
 
-void position_reset_home_altitude(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps);
+void position_reset_home_altitude(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, local_coordinates_t *simLocalPos);
 
 void position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitude, float dt);
 void position_correction(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, float dt);

@@ -14,7 +14,7 @@
 #include "bmp085.h"
 #include "math_util.h"
 #include "time_keeper.h"
-
+#include "conf_sim_model.h"
 //central_data_t *centralData;
 
 //float prev_pos[3];
@@ -60,7 +60,6 @@ void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps)
 
 		pos_est->lastGpsPos=pos_est->localPosition;
 		
-		
 		pos_est->last_alt=0;
 		for(i=0;i<3;i++)
 		{
@@ -99,7 +98,8 @@ void init_barometer_offset(position_estimator_t *pos_est, pressure_data *baromet
 	}
 }
 
-void position_reset_home_altitude(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps) {
+void position_reset_home_altitude(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, local_coordinates_t *simLocalPos)
+{
 		int i;
 		// reset origin to position where quad is armed if we have GPS
 		if (pos_est->init_gps_position) {
@@ -109,6 +109,16 @@ void position_reset_home_altitude(position_estimator_t *pos_est, pressure_data *
 			pos_est->localPosition.timestamp_ms=gps->timeLastMsg;
 
 			pos_est->lastGpsPos=pos_est->localPosition;
+			
+		//}else{
+			//pos_est->localPosition.origin.longitude = HOME_LONGITUDE;
+			//pos_est->localPosition.origin.latitude = HOME_LATITUDE;
+			//pos_est->localPosition.origin.altitude = HOME_ALTITUDE;
+			//
+			//simLocalPos->origin.longitude = HOME_LONGITUDE;
+			//simLocalPos->origin.latitude = HOME_LATITUDE;
+			//simLocalPos->origin.altitude = HOME_ALTITUDE;
+			//
 		}
 		// reset barometer offset
 		barometer->altitude_offset = -(barometer->altitude - barometer->altitude_offset - pos_est->localPosition.origin.altitude);
@@ -133,6 +143,7 @@ void position_reset_home_altitude(position_estimator_t *pos_est, pressure_data *
 			pos_est->last_vel[i]=0.0;
 			pos_est->localPosition.pos[i] = 0.0;
 			pos_est->vel[i]=0.0;
+			
 		}
 
 	

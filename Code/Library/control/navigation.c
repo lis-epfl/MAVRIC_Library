@@ -134,6 +134,8 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 		v_desired = MAX_CLIMB_RATE * norm_rel_dist /f_abs(dir_desired_bf[Z]);
 	}
 	
+	//mavlink_msg_named_value_int_send(MAVLINK_COMM_0,get_millis(),"v_desired",v_desired*100);
+	
 	dir_desired_bf[X] = v_desired * dir_desired_bf[X] / norm_rel_dist;
 	dir_desired_bf[Y] = v_desired * dir_desired_bf[Y] / norm_rel_dist;
 	dir_desired_bf[Z] = v_desired * dir_desired_bf[Z] / norm_rel_dist;

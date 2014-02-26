@@ -29,6 +29,7 @@ void initialise_central_data(){
 		// centralData.stabilisers_stack = 
 
 		centralData.simulation_mode=0;
+		centralData.simulation_mode_previous = 0;
 
 		// init waypoint navigation
 		centralData.number_of_waypoints = 0;		
@@ -46,9 +47,9 @@ void initialise_central_data(){
 		centralData.position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;
 		centralData.position_estimator.localPosition.origin.latitude =   HOME_LATITUDE;
 		centralData.position_estimator.localPosition.origin.altitude =   HOME_ALTITUDE;
-		centralData.position_estimator.localPosition.pos[0]=0;
-		centralData.position_estimator.localPosition.pos[1]=0;
-		centralData.position_estimator.localPosition.pos[2]=0;
+		centralData.position_estimator.localPosition.pos[X]=0;
+		centralData.position_estimator.localPosition.pos[Y]=0;
+		centralData.position_estimator.localPosition.pos[Z]=0;
 
 		// init simulation
 		init_simulation(&(centralData.sim_model),&(centralData.imu1.attitude));

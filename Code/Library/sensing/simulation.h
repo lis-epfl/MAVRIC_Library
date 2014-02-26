@@ -18,6 +18,7 @@
 #include "imu.h"
 #include "servo_pwm.h"
 #include "bmp085.h"
+#include "position_estimation.h"
 
 typedef struct {
 	float torques_bf[3], rates_bf[3], lin_forces_bf[3], vel_bf[3], vel[3], pos[3];

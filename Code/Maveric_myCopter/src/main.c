@@ -70,7 +70,8 @@ void main (void)
 	int i;
 	// turn on simulation mode: 1: simulation mode, 0: reality
 	initialisation();
-	centralData->simulation_mode = 1;
+	centralData->simulation_mode = 0;
+	centralData->simulation_mode_previous = 0;
 	
 	create_tasks();
 	
@@ -112,7 +113,7 @@ void main (void)
 	// main loop
 	delay_ms(10);
 	dbg_print("Reset home position...\n");
-	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
+	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model);
 	dbg_print("OK. Starting up.\n");
 
 	while (1==1) {

@@ -122,7 +122,7 @@ task_return_t set_mav_mode_n_state()
 				{
 					case 0:
 						dbg_print("Switching on the motors!\n");
-						position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
+						position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data,&centralData->sim_model.localPosition);
 						centralData->waypoint_set = false;
 						centralData->run_mode = MOTORS_ON;
 						//has_started_engines = true;
@@ -392,6 +392,35 @@ task_return_t set_mav_mode_n_state()
 	
 	centralData->mav_mode_previous = centralData->mav_mode;
 	centralData->mav_state_previous = centralData->mav_state;
+	
+	if (centralData->simulation_mode_previous != centralData->simulation_mode)
+	{
+		uint8_t i;
+		// From simulation to reality
+		if (centralData->simulation_mode == 0)
+		{
+			centralData->position_estimator.localPosition.origin = centralData->sim_model.localPosition.origin;
+			for (i=0;i<3;i++)
+			{
+				centralData->position_estimator.localPosition.pos[i] = centralData->sim_model.localPosition.pos[i];
+			}
+			centralData->position_estimator.init_gps_position = false;
+			
+		}
+		// From reality to simulation
+		if (centralData->simulation_mode == 1)
+		{
+			centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
+			for (i=0;i<3;i++)
+			{
+				centralData->sim_model.localPosition.pos[i] = centralData->position_estimator.localPosition.pos[i];
+			}
+			centralData->position_estimator.init_gps_position = false;
+			centralData->sim_model.attitude = centralData->imu1.attitude;
+		}
+	}
+	
+	centralData->simulation_mode_previous = centralData->simulation_mode;
 	
 	//mavlink_msg_named_value_int_send(MAVLINK_COMM_0,get_millis(),"run_mode", centralData->run_mode);
 	//dbg_print_num(centralData->run_mode,10);

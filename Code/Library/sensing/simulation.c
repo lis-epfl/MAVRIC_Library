@@ -11,7 +11,7 @@
 #include "conf_sim_model.h"
 #include "time_keeper.h"
 #include "coord_conventions.h"
-#include "position_estimation.h"
+
 #include "central_data.h"
 #include "maths.h"
 
@@ -23,9 +23,9 @@ void init_simulation(simulation_model_t *sim, Quat_Attitude_t *start_attitude) {
 		sim->torques_bf[i]=0.0f;
 		sim->lin_forces_bf[i]=0.0f;
 		sim->vel_bf[i]=0.0f;
-		sim->pos[i]=0.0f;
-		
+		sim->localPosition.pos[i]=0.0f;
 	}
+	
 	sim->localPosition.origin.latitude=HOME_LATITUDE;
 	sim->localPosition.origin.longitude=HOME_LONGITUDE;
 	sim->localPosition.origin.altitude=HOME_ALTITUDE;
