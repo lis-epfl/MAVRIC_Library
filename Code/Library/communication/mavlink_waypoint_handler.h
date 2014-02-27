@@ -74,10 +74,11 @@ void waypoint_hold_position_handler(void);
 void waypoint_navigation_handler(void);
 void waypoint_critical_handler(void);
 
+void continueToNextWaypoint(void);
+
 #ifdef __cplusplus
 }
 #endif
 
-void continueToNextWaypoint();
 
 #endif // MAVLINK_WAYPOINT_HANDLER__

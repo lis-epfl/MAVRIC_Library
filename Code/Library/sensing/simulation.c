@@ -15,6 +15,8 @@
 #include "central_data.h"
 #include "maths.h"
 
+void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos);
+
 void init_simulation(simulation_model_t *sim, Quat_Attitude_t *start_attitude, local_coordinates_t localPos) {
 	int i;
 	
@@ -113,7 +115,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 }
 
 
-void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos){
+//void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos){
 	// int i;
 	// float motor_command[4];
 	
@@ -130,7 +132,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos
 		centralData->servos[i].value=SERVO_SCALE*motor_command[i];
 	}
 	*/
-}
+//}
 
 void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est) {
 	int i;
