@@ -145,6 +145,7 @@ void receive_parameter(Mavlink_Received_t* rec) {
 	// Check if this message is for this system and subsystem
 	if ((uint8_t)set.target_system == (uint8_t)mavlink_system.sysid
 	&& (uint8_t)set.target_component == (uint8_t)mavlink_system.compid) {
+		dbg_print("Setting new paramater value.\n");
 		char* key = (char*) set.param_id;
 				
 		for (uint16_t i = 0; i < param_set.param_count; i++) {
@@ -205,6 +206,7 @@ void read_parameters_from_flashc()
 		{
 			*param_set.parameters[i-1].param = local_array.values[i];
 		}
+		
 	}else{
 		dbg_print("Flash memory corrupted! Hardcoded values taken.\n");
 	}

@@ -455,13 +455,13 @@ task_return_t control_waypoint_timeout () {
 void handle_specific_messages (Mavlink_Received_t* rec) {
 	if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) {
 		
-		dbg_print("\n Received message with ID");
-		dbg_print_num(rec->msg.msgid, 10);
-		dbg_print(" from system");
-		dbg_print_num(rec->msg.sysid, 10);
-		dbg_print(" for component");
-		dbg_print_num(rec->msg.compid,10);
-		dbg_print( "\n");
+		//dbg_print("\n Received message with ID");
+		//dbg_print_num(rec->msg.msgid, 10);
+		//dbg_print(" from system");
+		//dbg_print_num(rec->msg.sysid, 10);
+		//dbg_print(" for component");
+		//dbg_print_num(rec->msg.compid,10);
+		//dbg_print( "\n");
 		
 		switch(rec->msg.msgid) {
 				case MAVLINK_MSG_ID_MISSION_ITEM: { // 39
@@ -653,6 +653,7 @@ void receive_message_long(Mavlink_Received_t* rec)
 					// Set new home position to actual position
 					dbg_print("Set new home location to actual position.\n");
 					centralData->position_estimator.localPosition.origin = local_to_global_position(centralData->position_estimator.localPosition);
+					centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
 					
 					dbg_print("New Home location: (");
 					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0,10);
@@ -668,6 +669,7 @@ void receive_message_long(Mavlink_Received_t* rec)
 					centralData->position_estimator.localPosition.origin.latitude = packet.param5;
 					centralData->position_estimator.localPosition.origin.longitude = packet.param6;
 					centralData->position_estimator.localPosition.origin.altitude = packet.param7;
+					centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
 					
 					dbg_print("New Home location: (");
 					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0,10);
@@ -677,7 +679,7 @@ void receive_message_long(Mavlink_Received_t* rec)
 					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0,10);
 					dbg_print(")\n");
 				}
-				
+				centralData->waypoint_set = false;
 			}
 			break;
 			case MAV_CMD_DO_SET_PARAMETER: {
@@ -777,8 +779,9 @@ void receive_message_long(Mavlink_Received_t* rec)
 		}
 	}
 	
-	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid) //254
-	&&((uint8_t)packet.target_component == (uint8_t)0))
+	//if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid) //254
+	//&&((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
+	if((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER)
 	{
 		// print packet command and parameters for debug
 		dbg_print("All vehicles parameters:");
@@ -826,7 +829,7 @@ void init_mavlink_actions(void) {
 	
 	//write_parameters_to_flashc();
 	
-	//read_parameters_from_flashc();
+	read_parameters_from_flashc();
 	
 	add_task(get_mavlink_taskset(),   10000, RUN_REGULAR, &control_waypoint_timeout, 0);
 	
@@ -836,8 +839,8 @@ void init_mavlink_actions(void) {
 	
 	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
 	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
-	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
-	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
+	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
+	add_task(get_mavlink_taskset(),  100000, RUN_NEVER, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
 
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_speed_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT);
@@ -852,7 +855,7 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
 	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
 
-	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_simulation, MAVLINK_MSG_ID_HIL_STATE);
+	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_simulation, MAVLINK_MSG_ID_HIL_STATE);
 
 	//add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);

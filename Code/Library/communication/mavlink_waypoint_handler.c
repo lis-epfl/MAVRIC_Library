@@ -26,8 +26,8 @@ void init_waypoint_handler()
 	//centralData->critical_init = false;
 	centralData->critical_next_state = false;
 	
-	init_waypoint_list(centralData->waypoint_list, &centralData->number_of_waypoints);
-	//init_homing_waypoint(centralData->waypoint_list, &centralData->number_of_waypoints);
+	//init_waypoint_list(centralData->waypoint_list, &centralData->number_of_waypoints);
+	init_homing_waypoint(centralData->waypoint_list, &centralData->number_of_waypoints);
 	init_wp();
 }
 
@@ -89,7 +89,7 @@ void init_homing_waypoint(waypoint_struct waypoint_list[],uint16_t* number_of_wa
 	waypoint.param1 = 10; // Hold time in decimal seconds
 	waypoint.param2 = 2; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
+	waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
 	
 	waypoint_list[0] = waypoint;
 }
@@ -118,7 +118,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	waypoint.param1 = 10; // Hold time in decimal seconds
 	waypoint.param2 = 2; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
+	waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
 	
 	waypoint_list[0] = waypoint;
 	
@@ -135,7 +135,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	waypoint.param1 = 10; // Hold time in decimal seconds
 	waypoint.param2 = 4; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
+	waypoint.param4 = 270; // Desired yaw angle at MISSION (rotary wing)
 	
 	waypoint_list[1] = waypoint;
 	
@@ -147,7 +147,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	
 	waypoint.x = 465186816 / 1.0e7f; // convert to deg
 	waypoint.y = 65659084 / 1.0e7f; // convert to deg
-	waypoint.z = 40; //m
+	waypoint.z = 180; //m
 	
 	waypoint.param1 = 10; // Hold time in decimal seconds
 	waypoint.param2 = 15; // Acceptance radius in meters
@@ -573,7 +573,7 @@ void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints
 		*number_of_waypoints = 0;
 		num_waypoint_onboard = 0;
 		*waypoint_set = 0;
-		wp_hold_init();
+		wp_hold_init(centralData->position_estimator.localPosition);
 		mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_OK);
 		dbg_print("Clear Waypoint list");
 	}		
@@ -717,6 +717,8 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_wp, global_p
 			waypoint_global.altitude = current_wp.z;
 			waypoint_coor = global_to_local_position(waypoint_global,origin);
 			
+			waypoint_coor.heading = deg_to_rad(current_wp.param4);
+			
 			dbg_print("wp_global: lat (x1e7):");
 			dbg_print_num(waypoint_global.latitude*10000000,10);
 			dbg_print(" long (x1e7):");
@@ -756,7 +758,9 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_wp, global_p
 			global_position_t origin_relative_alt = origin;
 			origin_relative_alt.altitude = 0.0;
 			waypoint_coor = global_to_local_position(waypoint_global,origin_relative_alt);
-		
+			
+			waypoint_coor.heading = deg_to_rad(current_wp.param4);
+			
 			dbg_print("LocalOrigin: lat (x1e7):");
 			dbg_print_num(origin_relative_alt.latitude * 10000000,10);
 			dbg_print(" long (x1e7):");
@@ -780,23 +784,36 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_wp, global_p
 	return waypoint_coor;
 }
 
-void wp_hold_init()
+void wp_hold_init(local_coordinates_t localPos)
 {
-	dbg_print("Position hold at: (");
-	dbg_print_num(centralData->position_estimator.localPosition.pos[X],10);
-	dbg_print(", ");
-	dbg_print_num(centralData->position_estimator.localPosition.pos[Y],10);
-	dbg_print(", ");
-	dbg_print_num(centralData->position_estimator.localPosition.pos[Z],10);
-	dbg_print(", ");
-	dbg_print_num((int)(centralData->position_estimator.localPosition.heading*180.0/3.14),10);
-	dbg_print(")\n");
-
-	centralData->waypoint_hold_coordinates = centralData->position_estimator.localPosition;
 	
-	Aero_Attitude_t aero_attitude;
-	aero_attitude=Quat_to_Aero(centralData->imu1.attitude.qe);
-	centralData->waypoint_hold_coordinates.heading = aero_attitude.rpy[2];
+	
+	//dbg_print("Position hold at: (");
+	//dbg_print_num(centralData->position_estimator.localPosition.pos[X],10);
+	//dbg_print(", ");
+	//dbg_print_num(centralData->position_estimator.localPosition.pos[Y],10);
+	//dbg_print(", ");
+	//dbg_print_num(centralData->position_estimator.localPosition.pos[Z],10);
+	//dbg_print(", ");
+	//dbg_print_num((int)(centralData->position_estimator.localPosition.heading*180.0/3.14),10);
+	//dbg_print(")\n");
+	//centralData->waypoint_hold_coordinates = centralData->position_estimator.localPosition;
+	
+	centralData->waypoint_hold_coordinates = localPos;
+	
+	//centralData->waypoint_hold_coordinates.heading = get_yaw(centralData->imu1.attitude.qe);
+	centralData->waypoint_hold_coordinates.heading = localPos.heading;
+	
+	dbg_print("Position hold at: (");
+	dbg_print_num(centralData->waypoint_hold_coordinates.pos[X],10);
+	dbg_print(", ");
+	dbg_print_num(centralData->waypoint_hold_coordinates.pos[Y],10);
+	dbg_print(", ");
+	dbg_print_num(centralData->waypoint_hold_coordinates.pos[Z],10);
+	dbg_print(", ");
+	dbg_print_num((int)(centralData->waypoint_hold_coordinates.heading*180.0/3.14),10);
+	dbg_print(")\n");
+	
 }
 
 void wp_take_off()
@@ -827,7 +844,7 @@ void waypoint_hold_position_handler()
 	{
 		init_wp();
 	}
-	wp_hold_init();
+	wp_hold_init(centralData->position_estimator.localPosition);
 }
 
 void waypoint_navigation_handler()
@@ -877,7 +894,10 @@ void waypoint_navigation_handler()
 				centralData->waypoint_set = false;
 				dbg_print("Stop\n");
 				
-				wp_hold_init();
+				wp_hold_init(centralData->waypoint_coordinates);
+				//Aero_Attitude_t aero_attitude;
+				//aero_attitude=Quat_to_Aero(centralData->imu1.attitude.qe);
+				//centralData->waypoint_coordinates.heading = aero_attitude.rpy[2];
 			}
 		}
 	}
@@ -944,7 +964,7 @@ void waypoint_critical_handler()
 
 void continueToNextWaypoint()
 {
-	if (centralData->number_of_waypoints>0)
+	if ((centralData->number_of_waypoints>0)&&(!centralData->waypoint_set))
 	{
 		centralData->waypoint_list[centralData->current_wp_count].current = 0;
 		
@@ -953,7 +973,7 @@ void continueToNextWaypoint()
 		if (centralData->current_wp_count == (centralData->number_of_waypoints-1))
 		{
 			centralData->current_wp_count = 0;
-			}else{
+		}else{
 			centralData->current_wp_count++;
 		}
 		dbg_print_num(centralData->current_wp_count,10);
@@ -966,13 +986,14 @@ void continueToNextWaypoint()
 		
 		centralData->waypoint_set = true;
 	}else{
-		dbg_print("No waypoint onboard, please set waypoint before continuing.\n");
+		dbg_print("Not ready to switch to next waypoint. Either no waypoint loaded or flying towards one\n");
 	}
 }
 
 void set_circle_scenarios(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc)
 {
 	*number_of_waypoints = 2;
+	centralData->current_wp_count = -1;
 	
 	float angle_step = 2.0 * PI / num_of_vhc;
 	
@@ -1005,14 +1026,14 @@ void set_circle_scenarios(waypoint_struct waypoint_list[], uint16_t* number_of_w
 	waypoint.z = waypoint_global.altitude;
 	
 	waypoint.autocontinue = 0;
-	waypoint.current = 1;
+	waypoint.current = 0;
 	waypoint.frame = MAV_FRAME_GLOBAL;
 	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
 	
 	waypoint.param1 = 10; // Hold time in decimal seconds
 	waypoint.param2 = 4; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
+	waypoint.param4 = rad_to_deg(calc_smaller_angle(PI + angle_step * (mavlink_system.sysid-1))); // Desired yaw angle at MISSION (rotary wing)
 	
 	waypoint_list[0] = waypoint;
 	
@@ -1044,7 +1065,7 @@ void set_circle_scenarios(waypoint_struct waypoint_list[], uint16_t* number_of_w
 	waypoint.param1 = 10; // Hold time in decimal seconds
 	waypoint.param2 = 4; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
+	waypoint.param4 = rad_to_deg(angle_step * (mavlink_system.sysid-1)); // Desired yaw angle at MISSION (rotary wing)
 	
 	waypoint_list[1] = waypoint;
 	

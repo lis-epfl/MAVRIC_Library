@@ -63,7 +63,7 @@ void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* boa
 void control_time_out_waypoint_msg(uint16_t* num_of_waypoint, bool* waypoint_receiving, bool* waypoint_sending);
 
 local_coordinates_t set_waypoint_from_frame(waypoint_struct current_wp, global_position_t origin);
-void wp_hold_init();
+void wp_hold_init(local_coordinates_t localPos);
 void wp_take_off();
 
 void waypoint_hold_position_handler();
