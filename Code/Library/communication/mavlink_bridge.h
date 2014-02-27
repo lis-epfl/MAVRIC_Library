@@ -3,7 +3,6 @@
 #define MAVLINK_BRIDGE_H
  
 #define MAVLINK_USE_CONVENIENCE_FUNCTIONS
-//#define NATIVE_BIG_ENDIAN  /moved to config 
 #include "conf_platform.h"
 #include "stdint.h"
 

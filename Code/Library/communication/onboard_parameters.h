@@ -29,7 +29,7 @@ typedef struct {
 
 typedef struct {
 	Onboard_Parameter_t parameters[MAX_ONBOARD_PARAM_COUNT];
-	int param_count;
+	uint16_t param_count;
 	bool enumerate;
 	int transmit_parameter_index;
 	

@@ -10,30 +10,29 @@
  * AVR Software Framework (ASF).
  */
 
+extern "C" {
+	#include "led.h"
+	#include "delay.h"
+	#include "print_util.h"
+	#include "central_data.h"
+	#include "boardsupport.h"
+	#include "navigation.h"
+	#include "tasks.h"
+	#include "orca.h"
+}
+ 
 //#include <asf.h>
-
-#include "led.h"
-#include "delay.h"
 //#include "stdio_serial.h"
-#include "print_util.h"
+//#include "mavlink_waypoint_handler.h"
+//#include "neighbor_selection.h"
+//#include "flashvault.h"
 //#include "generator.h"
-
 //#include "time_keeper.h"
 //#include "streams.h"
-
 //#include "bmp085.h"
-
 //#include "scheduler.h"
-#include "central_data.h"
-#include "boardsupport.h"
-//#include "mavlink_waypoint_handler.h"
-#include "navigation.h"
-#include "tasks.h"
-//#include "neighbor_selection.h"
-#include "orca.h"
-//#include "flashvault.h"
 
-#include "rectangle.hpp"
+//#include "rectangle.hpp"
 
 central_data_t *centralData;
 
@@ -120,8 +119,8 @@ int main (void)
 	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 	dbg_print("OK. Starting up.\n");
 
-	Rectangle rec = Rectangle();
-	float rectangle_size;
+	// Rectangle rec = Rectangle();
+	// float rectangle_size;
 	
 	// main loop
 	while (1==1) {
@@ -130,7 +129,7 @@ int main (void)
 		
 		//LED_On(LED1);
 		// dbg_print("abcd\n");
-		rectangle_size = rec.get_size();
+		// rectangle_size = rec.get_size();
 	}
 
 	return 0;		
