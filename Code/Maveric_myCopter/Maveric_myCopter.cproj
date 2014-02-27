@@ -329,7 +329,7 @@
     </ListValues>
   </avr32gcc.compiler.directories.IncludePaths>
   <avr32gcc.compiler.optimization.level>Optimize (-O1)</avr32gcc.compiler.optimization.level>
-  <avr32gcc.compiler.optimization.OtherFlags>-fdata-sections</avr32gcc.compiler.optimization.OtherFlags>
+  <avr32gcc.compiler.optimization.OtherFlags>-fdata-sections  -mhard-float</avr32gcc.compiler.optimization.OtherFlags>
   <avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
   <avr32gcc.compiler.optimization.GeneratePositionIndependentCode>True</avr32gcc.compiler.optimization.GeneratePositionIndependentCode>
   <avr32gcc.compiler.warnings.AllWarnings>True</avr32gcc.compiler.warnings.AllWarnings>
@@ -393,12 +393,14 @@
     </ListValues>
   </avr32gcccpp.compiler.directories.IncludePaths>
   <avr32gcccpp.compiler.optimization.level>Optimize (-O1)</avr32gcccpp.compiler.optimization.level>
-  <avr32gcccpp.compiler.optimization.OtherFlags>-fdata-sections</avr32gcccpp.compiler.optimization.OtherFlags>
+  <avr32gcccpp.compiler.optimization.OtherFlags>-fdata-sections -mhard-float</avr32gcccpp.compiler.optimization.OtherFlags>
   <avr32gcccpp.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcccpp.compiler.optimization.PrepareFunctionsForGarbageCollection>
-  <avr32gcccpp.compiler.optimization.EnableFastFloatingPointLibrary>True</avr32gcccpp.compiler.optimization.EnableFastFloatingPointLibrary>
   <avr32gcccpp.compiler.optimization.GeneratePositionIndependentCode>True</avr32gcccpp.compiler.optimization.GeneratePositionIndependentCode>
   <avr32gcccpp.compiler.warnings.AllWarnings>True</avr32gcccpp.compiler.warnings.AllWarnings>
   <avr32gcccpp.compiler.miscellaneous.OtherFlags>-std=gnu++0x -Wpointer-arith -mrelax</avr32gcccpp.compiler.miscellaneous.OtherFlags>
+  <avr32gcccpp.linker.general.DoNotUseStandardStartFiles>True</avr32gcccpp.linker.general.DoNotUseStandardStartFiles>
+  <avr32gcccpp.linker.optimization.EnableFastFloatingPointLibrary>True</avr32gcccpp.linker.optimization.EnableFastFloatingPointLibrary>
+  <avr32gcccpp.linker.optimization.EnableFastMath>True</avr32gcccpp.linker.optimization.EnableFastMath>
 </Avr32GccCpp>
     </ToolchainSettings>
   </PropertyGroup>
@@ -996,9 +998,6 @@
     <Compile Include="src\config\conf_stabilisation_hybrid.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\CPPFile1.cpp">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\mavlink_actions.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1533,9 +1532,9 @@
     <Compile Include="src\config\dma_channel_config.h">
       <SubType>compile</SubType>
     </Compile>
-    <None Include="src\main.cpp">
+    <Compile Include="src\main.cpp">
       <SubType>compile</SubType>
-    </None>
+    </Compile>
     <None Include="src\rectangle.cpp">
       <SubType>compile</SubType>
     </None>

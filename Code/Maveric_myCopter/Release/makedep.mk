@@ -34,8 +34,6 @@ Library\util\quick_trig.c
 
 src\central_data.c
 
-src\CPPFile1.cpp
-
 src\mavlink_actions.c
 
 src\tasks.c
@@ -167,4 +165,6 @@ src\asf\common\utils\stdio\stdio_usb\stdio_usb.c
 src\asf\common\utils\stdio\write.c
 
 src\boardsupport.c
+
+src\main.cpp
 
