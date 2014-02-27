@@ -969,3 +969,84 @@ void continueToNextWaypoint()
 		dbg_print("No waypoint onboard, please set waypoint before continuing.\n");
 	}
 }
+
+void set_circle_scenarios(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc)
+{
+	*number_of_waypoints = 2;
+	
+	float angle_step = 2.0 * PI / num_of_vhc;
+	
+	waypoint_struct waypoint;
+	
+	local_coordinates_t waypoint_transfo;
+	global_position_t waypoint_global;
+	
+	waypoint_transfo.origin = centralData->position_estimator.localPosition.origin;
+	
+	
+	// Start waypoint
+	
+	waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (mavlink_system.sysid-1));
+	waypoint_transfo.pos[Y] = circle_radius * sin(angle_step * (mavlink_system.sysid-1));
+	waypoint_transfo.pos[Z] = -20.0;
+	waypoint_global = local_to_global_position(waypoint_transfo);
+	
+	dbg_print("Circle departure(x100): (");
+	dbg_print_num(waypoint_transfo.pos[X]*100.0,10);
+	dbg_print(", ");
+	dbg_print_num(waypoint_transfo.pos[Y]*100.0,10);
+	dbg_print(", ");
+	dbg_print_num(waypoint_transfo.pos[Z]*100.0,10);
+	dbg_print("). For system:");
+	dbg_print_num(mavlink_system.sysid,10);
+	dbg_print(".\n");
+	waypoint.x = waypoint_global.latitude;
+	waypoint.y = waypoint_global.longitude;
+	waypoint.z = waypoint_global.altitude;
+	
+	waypoint.autocontinue = 0;
+	waypoint.current = 1;
+	waypoint.frame = MAV_FRAME_GLOBAL;
+	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
+	
+	waypoint.param1 = 10; // Hold time in decimal seconds
+	waypoint.param2 = 4; // Acceptance radius in meters
+	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
+	
+	waypoint_list[0] = waypoint;
+	
+	// End waypoint
+	waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (mavlink_system.sysid-1) + PI);
+	waypoint_transfo.pos[Y] = circle_radius * sin(angle_step * (mavlink_system.sysid-1) + PI);
+	waypoint_transfo.pos[Z] = -20.0;
+	waypoint_global = local_to_global_position(waypoint_transfo);
+	
+	dbg_print("Circle destination(x100): (");
+	dbg_print_num(waypoint_transfo.pos[X]*100.0,10);
+	dbg_print(", ");
+	dbg_print_num(waypoint_transfo.pos[Y]*100.0,10);
+	dbg_print(", ");
+	dbg_print_num(waypoint_transfo.pos[Z]*100.0,10);
+	dbg_print("). For system:");
+	dbg_print_num(mavlink_system.sysid,10);
+	dbg_print(".\n");
+	
+	waypoint.x = waypoint_global.latitude;
+	waypoint.y = waypoint_global.longitude;
+	waypoint.z = waypoint_global.altitude;
+	
+	waypoint.autocontinue = 0;
+	waypoint.current = 0;
+	waypoint.frame = MAV_FRAME_GLOBAL;
+	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
+	
+	waypoint.param1 = 10; // Hold time in decimal seconds
+	waypoint.param2 = 4; // Acceptance radius in meters
+	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
+	
+	waypoint_list[1] = waypoint;
+	
+	centralData->waypoint_set = false;
+}

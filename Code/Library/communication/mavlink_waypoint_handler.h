@@ -72,4 +72,6 @@ void waypoint_critical_handler();
 
 void continueToNextWaypoint();
 
+void set_circle_scenarios(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc);
+
 #endif // MAVLINK_WAYPOINT_HANDLER__

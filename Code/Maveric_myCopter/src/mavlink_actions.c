@@ -592,7 +592,7 @@ void receive_message_long(Mavlink_Received_t* rec)
 			}
 			break;
 			case MAV_CMD_NAV_ROI: {
-				/* Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras. |Region of intereset mode. (see MAV_ROI enum)| MISSION index/ target ID. (see MAV_ROI enum)| ROI index (allows a vehicle to manage multiple ROI's)| Empty| x the location of the fixed ROI (see MAV_FRAME)| y| z|  */
+				/* Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras. |Region of interest mode. (see MAV_ROI enum)| MISSION index/ target ID. (see MAV_ROI enum)| ROI index (allows a vehicle to manage multiple ROI's)| Empty| x the location of the fixed ROI (see MAV_FRAME)| y| z|  */
 				dbg_print("Nav ROI command, not implemented!\n");
 			}
 			break;
@@ -808,6 +808,12 @@ void receive_message_long(Mavlink_Received_t* rec)
 				continueToNextWaypoint();
 			}
 			break;
+			case MAV_CMD_CONDITION_LAST: {
+				dbg_print("All vehicles, setting circle scenario!\n");
+				//void set_circle_scenarios(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc)
+				set_circle_scenarios(centralData->waypoint_list, &(centralData->number_of_waypoints), packet.param1, packet.param2);
+			}
+			break;
 		}
 	}
 	
@@ -820,7 +826,7 @@ void init_mavlink_actions(void) {
 	
 	//write_parameters_to_flashc();
 	
-	read_parameters_from_flashc();
+	//read_parameters_from_flashc();
 	
 	add_task(get_mavlink_taskset(),   10000, RUN_REGULAR, &control_waypoint_timeout, 0);
 	

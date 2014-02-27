@@ -34,7 +34,7 @@ typedef struct{
 
 void init_orca();
 
-void computeNewVelocity();
+void computeNewVelocity(float OptimalVelocity[], float NewVelocity[]);
 
 bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt);
 bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt);
