@@ -38,3 +38,6 @@ z -100
 #define MAG_AXIS_Z  1.0
 
 14-02-19: damping frame broken
+14-02-25: foam frame inserted
+14-02-25: hand tuned calibration
+acc biais 0 64 90

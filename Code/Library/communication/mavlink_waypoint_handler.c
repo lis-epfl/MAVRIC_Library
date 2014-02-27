@@ -27,6 +27,7 @@ void init_waypoint_handler()
 	centralData->critical_next_state = false;
 	
 	init_waypoint_list(centralData->waypoint_list, &centralData->number_of_waypoints);
+	//init_homing_waypoint(centralData->waypoint_list, &centralData->number_of_waypoints);
 	init_wp();
 }
 
@@ -68,6 +69,31 @@ void init_wp()
 	}
 }
 
+void init_homing_waypoint(waypoint_struct waypoint_list[],uint16_t* number_of_waypoints)
+{
+	waypoint_struct waypoint;
+	*number_of_waypoints = 1;
+	
+	num_waypoint_onboard = *number_of_waypoints;
+	
+	//Set home waypoint
+	waypoint.autocontinue = 0;
+	waypoint.current = 1;
+	waypoint.frame = MAV_FRAME_LOCAL_NED;
+	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
+	
+	waypoint.x = 0.0;
+	waypoint.y = 0.0;
+	waypoint.z = -10.0;
+	
+	waypoint.param1 = 10; // Hold time in decimal seconds
+	waypoint.param2 = 2; // Acceptance radius in meters
+	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
+	
+	waypoint_list[0] = waypoint;
+}
+
 
 void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints)
 {
@@ -80,7 +106,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	num_waypoint_onboard = *number_of_waypoints;
 	
 	// Set nav waypoint
-	waypoint.autocontinue = 1;
+	waypoint.autocontinue = 0;
 	waypoint.current = 1;
 	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
 	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
@@ -97,7 +123,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	waypoint_list[0] = waypoint;
 	
 	// Set nav waypoint
-	waypoint.autocontinue = 1;
+	waypoint.autocontinue = 0;
 	waypoint.current = 0;
 	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
 	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
@@ -131,7 +157,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	waypoint_list[2] = waypoint;
 	
 	// Set nav waypoint
-	waypoint.autocontinue = 1;
+	waypoint.autocontinue = 0;
 	waypoint.current = 0;
 	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
 	waypoint.wp_id = MAV_CMD_NAV_WAYPOINT;
@@ -498,7 +524,7 @@ void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], u
 			}
 			
 			waypoint_list[packet.seq].current = 1;
-			mavlink_msg_mission_current_send(MAVLINK_COMM_0,waypoint_list[packet.seq].current);
+			mavlink_msg_mission_current_send(MAVLINK_COMM_0,packet.seq);
 			
 			dbg_print("Set current waypoint to number");
 			dbg_print_num(packet.seq,10);
@@ -509,6 +535,30 @@ void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], u
 		}else{
 			mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_ACCESS_DENIED);
 		}
+	}
+}
+
+void set_current_wp_from_parameter(waypoint_struct waypoint_list[], uint16_t num_of_waypoint, uint16_t new_current)
+{
+	uint8_t i;
+	if (new_current < num_of_waypoint)
+	{
+
+		for (i=0;i<num_of_waypoint;i++)
+		{
+			waypoint_list[i].current = 0;
+		}
+		waypoint_list[new_current].current = 1;
+		mavlink_msg_mission_current_send(MAVLINK_COMM_0,new_current);
+		
+		dbg_print("Set current waypoint to number");
+		dbg_print_num(new_current,10);
+		dbg_print("\n");
+		
+		centralData->waypoint_set = false;
+		init_wp();
+		}else{
+		mavlink_msg_mission_ack_send(MAVLINK_COMM_0,mavlink_mission_planner.sysid,mavlink_mission_planner.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
 	}
 }
 
@@ -812,7 +862,7 @@ void waypoint_navigation_handler()
 				if (centralData->current_wp_count == (centralData->number_of_waypoints-1))
 				{
 					centralData->current_wp_count = 0;
-					}else{
+				}else{
 					centralData->current_wp_count++;
 				}
 				dbg_print_num(centralData->current_wp_count,10);
@@ -889,5 +939,33 @@ void waypoint_critical_handler()
 			centralData->critical_landing = true;
 			break;
 		}
+	}
+}
+
+void continueToNextWaypoint()
+{
+	if (centralData->number_of_waypoints>0)
+	{
+		centralData->waypoint_list[centralData->current_wp_count].current = 0;
+		
+		dbg_print("Continuing towards waypoint Nr");
+		
+		if (centralData->current_wp_count == (centralData->number_of_waypoints-1))
+		{
+			centralData->current_wp_count = 0;
+			}else{
+			centralData->current_wp_count++;
+		}
+		dbg_print_num(centralData->current_wp_count,10);
+		dbg_print("\n");
+		centralData->waypoint_list[centralData->current_wp_count].current = 1;
+		centralData->current_waypoint = centralData->waypoint_list[centralData->current_wp_count];
+		centralData->waypoint_coordinates = set_waypoint_from_frame(centralData->current_waypoint,centralData->position_estimator.localPosition.origin);
+		
+		mavlink_msg_mission_current_send(MAVLINK_COMM_0,centralData->current_wp_count);
+		
+		centralData->waypoint_set = true;
+	}else{
+		dbg_print("No waypoint onboard, please set waypoint before continuing.\n");
 	}
 }

@@ -10,15 +10,6 @@
 #define CONF_SIM_MODEL_H_
 #include "simulation.h"
 
-
-// default home location (EFPL Esplanade)
-#define HOME_LONGITUDE 6.566044801857777
-#define HOME_LATITUDE 46.51852236174565
-//#define HOME_LATITUDE 46.5184
-#define HOME_ALTITUDE 400.0
-
-
-
 #define AIR_DENSITY 1.2
 
 static simulation_model_t vehicle_model_parameters= {
@@ -36,7 +27,8 @@ static simulation_model_t vehicle_model_parameters= {
 	.yaw_momentum		=  0.1 * 0.17 ,  // approximate motor arm mass * rotor arm length
 	.rotor_momentum     =  0.005*0.03,  // rotor inertia  (5g off center mass * rotor radius)
 	.rotor_arm_length	=  0.17,  	    // distance between CoG and motor (in meter)
-	0
+	.wind_x=0.0,
+	.wind_y=0.0
 };
 
 

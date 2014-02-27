@@ -35,11 +35,11 @@ void mavlink_send_heartbeat(void) {
 								battery_lvl/12.4*100.0,					// battery remaining
 								0, 0,  				// comms drop, comms errors
 								0, 0, 0, 0);        // autopilot specific errors
-	mavlink_msg_battery_status_send(MAVLINK_COMM_0, 0, (int)(1000.0*get_battery_rail()), 
-														(int)(1000.0*get_internal_rail()), 
-														(int)(1000.0*get_6V_analog_rail()), 
-														(int)(1000.0*get_5V_analog_rail()),
-														0.0, 0.0, 0.0, 0.0);
+	//mavlink_msg_battery_status_send(MAVLINK_COMM_0, 0, (int)(1000.0*get_battery_rail()), 
+														//(int)(1000.0*get_internal_rail()), 
+														//(int)(1000.0*get_6V_analog_rail()), 
+														//(int)(1000.0*get_5V_analog_rail()),
+														//0.0, 0.0, 0.0, 0.0);
 														
 	trigger_analog_monitor();
 	
@@ -269,6 +269,14 @@ void mavlink_send_simulation(void) {
 	100*centralData->sim_model.vel[X], 100*centralData->sim_model.vel[Y], 100*centralData->sim_model.vel[Z],
 	1000*centralData->sim_model.lin_forces_bf[0], 1000*centralData->sim_model.lin_forces_bf[1], 1000*centralData->sim_model.lin_forces_bf[2]
 	);
+	
+	mavlink_msg_hil_state_quaternion_send(MAVLINK_COMM_0,get_micros(),
+	&centralData->sim_model.attitude.qe,
+	aero_attitude.rpy[ROLL],aero_attitude.rpy[PITCH],aero_attitude.rpy[YAW],
+	gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0,
+	100*centralData->sim_model.vel[X], 100*centralData->sim_model.vel[Y], 100*centralData->sim_model.vel[Z],100*vector_norm(centralData->sim_model.vel),0.0,
+	centralData->sim_model.attitude.acc_bf[X],centralData->sim_model.attitude.acc_bf[Y],centralData->sim_model.attitude.acc_bf[Z]);
+	
 	//flush_mavlink();
 	mavlink_msg_named_value_int_send(MAVLINK_COMM_0, get_millis(), "rolltorque", centralData->sim_model.torques_bf[0]);//flush_mavlink();
 	mavlink_msg_named_value_int_send(MAVLINK_COMM_0, get_millis(), "pitchtorque", centralData->sim_model.torques_bf[1]);//flush_mavlink();
@@ -528,8 +536,8 @@ void receive_message_long(Mavlink_Received_t* rec)
 	// Check if this message is for this system and subsystem
 	// dbg_print("target_comp:");
 	// dbg_print_num(packet.target_component,10);
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid
-	&&(uint8_t)packet.target_component == (uint8_t)0)
+	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
+	&&((uint8_t)packet.target_component == (uint8_t)0))
 	{
 		// print packet command and parameters for debug
 		dbg_print("parameters:");
@@ -549,77 +557,93 @@ void receive_message_long(Mavlink_Received_t* rec)
 		switch(packet.command) {
 			case MAV_CMD_NAV_WAYPOINT: {
 				/* Navigate to MISSION. |Hold time in decimal seconds. (ignored by fixed wing, time to stay at MISSION for rotary wing)| Acceptance radius in meters (if the sphere with this radius is hit, the MISSION counts as reached)| 0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.| Desired yaw angle at MISSION (rotary wing)| Latitude| Longitude| Altitude|  */
+				dbg_print("Nav waypoint command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_NAV_LOITER_UNLIM: {
 				/* Loiter around this MISSION an unlimited amount of time |Empty| Empty| Radius around MISSION, in meters. If positive loiter clockwise, else counter-clockwise| Desired yaw angle.| Latitude| Longitude| Altitude|  */
+				dbg_print("Nav loiter unlim command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_NAV_LOITER_TURNS: {
 				/* Loiter around this MISSION for X turns |Turns| Empty| Radius around MISSION, in meters. If positive loiter clockwise, else counter-clockwise| Desired yaw angle.| Latitude| Longitude| Altitude|  */
+				dbg_print("Nav loiter turns command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_NAV_LOITER_TIME: {
 				/* Loiter around this MISSION for X seconds |Seconds (decimal)| Empty| Radius around MISSION, in meters. If positive loiter clockwise, else counter-clockwise| Desired yaw angle.| Latitude| Longitude| Altitude|  */
+				dbg_print("Nav loiter time command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_NAV_RETURN_TO_LAUNCH: {
 				/* Return to launch location |Empty| Empty| Empty| Empty| Empty| Empty| Empty|  */
+				dbg_print("Nav Return to launch command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_NAV_LAND: {
-				dbg_print("Command for automatic land. Not implemented!\n");
 				/* Land at location |Empty| Empty| Empty| Desired yaw angle.| Latitude| Longitude| Altitude|  */
+				dbg_print("Command for automatic land, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_NAV_TAKEOFF: {
-				centralData->in_the_air = true;
-				dbg_print("Command for automatic take-off. Not implemented!\n");
 				/* Takeoff from ground / hand |Minimum pitch (if airspeed sensor present), desired pitch without sensor| Empty| Empty| Yaw angle (if magnetometer present), ignored without magnetometer| Latitude| Longitude| Altitude|  */
+				centralData->in_the_air = true;
+				dbg_print("Starting automatic take-off from button\n");
 			}
 			break;
 			case MAV_CMD_NAV_ROI: {
 				/* Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras. |Region of intereset mode. (see MAV_ROI enum)| MISSION index/ target ID. (see MAV_ROI enum)| ROI index (allows a vehicle to manage multiple ROI's)| Empty| x the location of the fixed ROI (see MAV_FRAME)| y| z|  */
+				dbg_print("Nav ROI command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_NAV_PATHPLANNING: {
 				/* Control autonomous path planning on the MAV. |0: Disable local obstacle avoidance / local path planning (without resetting map), 1: Enable local path planning, 2: Enable and reset local path planning| 0: Disable full path planning (without resetting map), 1: Enable, 2: Enable and reset map/occupancy grid, 3: Enable and reset planned route, but not occupancy grid| Empty| Yaw angle at goal, in compass degrees, [0..360]| Latitude/X of goal| Longitude/Y of goal| Altitude/Z of goal|  */
+				dbg_print("Nav pathplanning command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_NAV_LAST: {
 				/* NOP - This command is only used to mark the upper limit of the NAV/ACTION commands in the enumeration |Empty| Empty| Empty| Empty| Empty| Empty| Empty|  */
+				dbg_print("Nav last command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_CONDITION_DELAY: {
 				/* Delay mission state machine. |Delay in seconds (decimal)| Empty| Empty| Empty| Empty| Empty| Empty|  */
+				dbg_print("Condition Delay command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_CONDITION_CHANGE_ALT: {
 				/* Ascend/descend at rate.  Delay mission state machine until desired altitude reached. |Descent / Ascend rate (m/s)| Empty| Empty| Empty| Empty| Empty| Finish Altitude|  */
+				dbg_print("Condition change alt command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_CONDITION_DISTANCE: {
 				/* Delay mission state machine until within desired distance of next NAV point. |Distance (meters)| Empty| Empty| Empty| Empty| Empty| Empty|  */
+				dbg_print("Condition distance command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_CONDITION_YAW: {
 				/* Reach a certain target angle. |target angle: [0-360], 0 is north| speed during yaw change:[deg per second]| direction: negative: counter clockwise, positive: clockwise [-1,1]| relative offset or absolute angle: [ 1,0]| Empty| Empty| Empty|  */
+				dbg_print("Condition yaw command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_CONDITION_LAST: {
 				/* NOP - This command is only used to mark the upper limit of the CONDITION commands in the enumeration |Empty| Empty| Empty| Empty| Empty| Empty| Empty|  */
+				dbg_print("Condition last command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_DO_SET_MODE: {
 				/* Set system mode. |Mode, as defined by ENUM MAV_MODE| Empty| Empty| Empty| Empty| Empty| Empty|  */
+				dbg_print("Do set mode command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_DO_JUMP: {
 				/* Jump to the desired command in the mission list.  Repeat this action only the specified number of times |Sequence number| Repeat count| Empty| Empty| Empty| Empty| Empty|  */
+				dbg_print("Do jump command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_DO_CHANGE_SPEED: {
 				/* Change speed and/or throttle set points. |Speed type (0=Airspeed, 1=Ground Speed)| Speed  (m/s, -1 indicates no change)| Throttle  ( Percent, -1 indicates no change)| Empty| Empty| Empty| Empty|  */
+				dbg_print("Do change speed command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_DO_SET_HOME: {
@@ -658,38 +682,47 @@ void receive_message_long(Mavlink_Received_t* rec)
 			break;
 			case MAV_CMD_DO_SET_PARAMETER: {
 				/* Set a system parameter.  Caution!  Use of this command requires knowledge of the numeric enumeration value of the parameter. |Parameter number| Parameter value| Empty| Empty| Empty| Empty| Empty|  */
+				dbg_print("Set parameter command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_DO_SET_RELAY: {
 				/* Set a relay to a condition. |Relay number| Setting (1=on, 0=off, others possible depending on system hardware)| Empty| Empty| Empty| Empty| Empty|  */
+				dbg_print("Set relay command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_DO_REPEAT_RELAY: {
 				/* Cycle a relay on and off for a desired number of cyles with a desired period. |Relay number| Cycle count| Cycle time (seconds, decimal)| Empty| Empty| Empty| Empty|  */
+				dbg_print("Repeat relay command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_DO_SET_SERVO: {
 				/* Set a servo to a desired PWM value. |Servo number| PWM (microseconds, 1000 to 2000 typical)| Empty| Empty| Empty| Empty| Empty|  */
+				dbg_print("Set servo command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_DO_REPEAT_SERVO: {
 				/* Cycle a between its nominal setting and a desired PWM for a desired number of cycles with a desired period. |Servo number| PWM (microseconds, 1000 to 2000 typical)| Cycle count| Cycle time (seconds)| Empty| Empty| Empty|  */
+				dbg_print("Repeat servo command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_DO_CONTROL_VIDEO: {
 				/* Control onboard camera system. |Camera ID (-1 for all)| Transmission: 0: disabled, 1: enabled compressed, 2: enabled raw| Transmission mode: 0: video stream, >0: single images every n seconds (decimal)| Recording: 0: disabled, 1: enabled compressed, 2: enabled raw| Empty| Empty| Empty|  */
+				dbg_print("Control video command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_DO_LAST: {
 				/* NOP - This command is only used to mark the upper limit of the DO commands in the enumeration |Empty| Empty| Empty| Empty| Empty| Empty| Empty|  */
+				dbg_print("Do last command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_PREFLIGHT_CALIBRATION: {
 				/* Trigger calibration. This command will be only accepted if in pre-flight mode. |Gyro calibration: 0: no, 1: yes| Magnetometer calibration: 0: no, 1: yes| Ground pressure: 0: no, 1: yes| Radio calibration: 0: no, 1: yes| Accelerometer calibration: 0: no, 1: yes| Empty| Empty|  */
+				dbg_print("Preflight calibration command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_PREFLIGHT_SET_SENSOR_OFFSETS: {
 				/* Set sensor offsets. This command will be only accepted if in pre-flight mode. |Sensor to adjust the offsets for: 0: gyros, 1: accelerometer, 2: magnetometer, 3: barometer, 4: optical flow| X axis offset (or generic dimension 1), in the sensor's raw units| Y axis offset (or generic dimension 2), in the sensor's raw units| Z axis offset (or generic dimension 3), in the sensor's raw units| Generic dimension 4, in the sensor's raw units| Generic dimension 5, in the sensor's raw units| Generic dimension 6, in the sensor's raw units|  */
+				dbg_print("Set sensor offsets command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_PREFLIGHT_STORAGE: {
@@ -703,6 +736,7 @@ void receive_message_long(Mavlink_Received_t* rec)
 				}
 				else if (packet.param1 == 1) {
 					// write parameters to flash
+					//dbg_print("No Writing to flashc\n");
 					dbg_print("Writing to flashc\n");
 					write_parameters_to_flashc();
 				}
@@ -718,18 +752,22 @@ void receive_message_long(Mavlink_Received_t* rec)
 			break;
 			case MAV_CMD_PREFLIGHT_REBOOT_SHUTDOWN: {
 				/* Request the reboot or shutdown of system components. |0: Do nothing for autopilot, 1: Reboot autopilot, 2: Shutdown autopilot.| 0: Do nothing for onboard computer, 1: Reboot onboard computer, 2: Shutdown onboard computer.| Reserved| Reserved| Empty| Empty| Empty|  */
+				dbg_print("Reboot/Shutdown command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_OVERRIDE_GOTO: {
 				/* Hold / continue the current action |MAV_GOTO_DO_HOLD: hold MAV_GOTO_DO_CONTINUE: continue with next item in mission plan| MAV_GOTO_HOLD_AT_CURRENT_POSITION: Hold at current position MAV_GOTO_HOLD_AT_SPECIFIED_POSITION: hold at specified position| MAV_FRAME coordinate frame of hold point| Desired yaw angle in degrees| Latitude / X position| Longitude / Y position| Altitude / Z position|  */
+				dbg_print("Goto command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_MISSION_START: {
 				/* start running a mission |first_item: the first mission item to run| last_item:  the last mission item to run (after this item is run, the mission ends)|  */
+				dbg_print("Mission start command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_COMPONENT_ARM_DISARM: {
 				/* Arms / Disarms a component |1 to arm, 0 to disarm|  */
+				dbg_print("Disarm command, not implemented!\n");
 			}
 			break;
 			case MAV_CMD_ENUM_END: {
@@ -738,8 +776,42 @@ void receive_message_long(Mavlink_Received_t* rec)
 			break;
 		}
 	}
+	
+	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid) //254
+	&&((uint8_t)packet.target_component == (uint8_t)0))
+	{
+		// print packet command and parameters for debug
+		dbg_print("All vehicles parameters:");
+		dbg_print_num(packet.param1,10);
+		dbg_print_num(packet.param2,10);
+		dbg_print_num(packet.param3,10);
+		dbg_print_num(packet.param4,10);
+		dbg_print_num(packet.param5,10);
+		dbg_print_num(packet.param6,10);
+		dbg_print_num(packet.param7,10);
+		dbg_print(", command id:");
+		dbg_print_num(packet.command,10);
+		dbg_print(", confirmation:");
+		dbg_print_num(packet.confirmation,10);
+		dbg_print("\n");
+		
+		switch(packet.command) {
+			case MAV_CMD_NAV_RETURN_TO_LAUNCH: {
+				/* Return to launch location |Empty| Empty| Empty| Empty| Empty| Empty| Empty|  */
+				dbg_print("All vehicles: Return to first waypoint. \n");
+				set_current_wp_from_parameter(centralData->waypoint_list,centralData->number_of_waypoints,0);
+			}
+			break;
+			case MAV_CMD_MISSION_START: {
+				/* start running a mission |first_item: the first mission item to run| last_item:  the last mission item to run (after this item is run, the mission ends)|  */
+				dbg_print("All vehicles: Navigating to next waypoint. \n");
+				continueToNextWaypoint();
+			}
+			break;
+		}
+	}
+	
 }
-
 
 void init_mavlink_actions(void) {
 	//board=get_board_hardware();
@@ -758,7 +830,7 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
 	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
 	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
-	add_task(get_mavlink_taskset(),  100000, RUN_NEVER, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
+	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
 
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_speed_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT);
@@ -767,13 +839,13 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_servo_output, MAVLINK_MSG_ID_SERVO_OUTPUT_RAW);
 
 //	add_task(get_mavlink_taskset(),  50000, &mavlink_send_radar);
-	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
+	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
 	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER,   &mavlink_send_gps_raw, MAVLINK_MSG_ID_GPS_RAW_INT);
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
 	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
 
-	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_simulation, MAVLINK_MSG_ID_HIL_STATE);
+	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_simulation, MAVLINK_MSG_ID_HIL_STATE);
 
 	//add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);

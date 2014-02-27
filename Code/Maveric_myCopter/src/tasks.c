@@ -16,7 +16,7 @@
 #include "led.h"
 #include "imu.h"
 #include "orca.h"
-
+#include "delay.h"
 
 NEW_TASK_SET(main_tasks, 10)
 
@@ -42,6 +42,10 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 	}else{
 		centralData->collision_avoidance = false;
 	}
+	
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"P1",rc_get_channel_neutral(RC_TRIM_P1));
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"P2",rc_get_channel_neutral(RC_TRIM_P2));
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"P3",rc_get_channel_neutral(RC_TRIM_P3));
 	
 	//dbg_print("chanSwitch ");
 	//dbg_print_num(*chanSwitch,10);
@@ -93,7 +97,43 @@ void switch_off_motors(void)
 	centralData->in_the_air = false;
 }
 
-task_return_t set_mav_mode_n_state(void)
+void relevel_imu()
+{
+	uint8_t i;
+	centralData->imu1.attitude.calibration_level=LEVELING;	
+	centralData->mav_state = MAV_STATE_CALIBRATING;
+	centralData->mav_mode = MAV_MODE_PREFLIGHT;
+
+	dbg_print("calibrating IMU...\n");
+	//calibrate_Gyros(&centralData->imu1);
+	for (i=1000; i>0; i--) {
+		run_imu_update();
+		mavlink_protocol_update();	
+		delay_ms(5);
+	}
+	// after initial leveling, initialise accelerometer biases
+	
+	/*
+	centralData->imu1.attitude.calibration_level=LEVEL_PLUS_ACCEL;
+	for (i=100; i>0; i--) {
+		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);	
+		mavlink_protocol_update();			
+		delay_ms(5);
+	}*/
+	
+	for (i=0;i<3;i++)
+	{
+		centralData->position_estimator.vel_bf[i]=0.0;
+		centralData->position_estimator.vel[i]=0.0;
+	}
+	
+	centralData->imu1.attitude.calibration_level=OFF;
+	
+	centralData->mav_state = MAV_STATE_STANDBY;
+	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
+}
+
+task_return_t set_mav_mode_n_state()
 {
 	uint8_t channelSwitches = 0;
 	int8_t RC_check = 0;
@@ -118,7 +158,7 @@ task_return_t set_mav_mode_n_state(void)
 				{
 					case 0:
 						dbg_print("Switching on the motors!\n");
-						position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
+						position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data,&centralData->sim_model.localPosition);
 						centralData->waypoint_set = false;
 						centralData->run_mode = MOTORS_ON;
 						//has_started_engines = true;
@@ -389,6 +429,40 @@ task_return_t set_mav_mode_n_state(void)
 	centralData->mav_mode_previous = centralData->mav_mode;
 	centralData->mav_state_previous = centralData->mav_state;
 	
+	if (centralData->simulation_mode_previous != centralData->simulation_mode)
+	{
+		uint8_t i;
+		// From simulation to reality
+		if (centralData->simulation_mode == 0)
+		{
+			centralData->position_estimator.localPosition.origin = centralData->sim_model.localPosition.origin;
+			for (i=0;i<3;i++)
+			{
+				centralData->position_estimator.localPosition.pos[i] = centralData->sim_model.localPosition.pos[i];
+			}
+			centralData->position_estimator.init_gps_position = false;
+			
+			//relevel_imu();
+		}
+		// From reality to simulation
+		if (centralData->simulation_mode == 1)
+		{
+			//centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
+			//for (i=0;i<3;i++)
+			//{
+				//centralData->sim_model.localPosition.pos[i] = centralData->position_estimator.localPosition.pos[i];
+			//}
+			//centralData->sim_model.attitude = centralData->imu1.attitude;
+			
+			
+			init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude),centralData->position_estimator.localPosition);
+			centralData->position_estimator.init_gps_position = false;
+			
+		}
+	}
+	
+	centralData->simulation_mode_previous = centralData->simulation_mode;
+	
 	//mavlink_msg_named_value_int_send(MAVLINK_COMM_0,get_millis(),"run_mode", centralData->run_mode);
 	//dbg_print_num(centralData->run_mode,10);
 	//mavlink_msg_named_value_int_send(MAVLINK_COMM_0,get_millis(),"in_the_air", centralData->in_the_air);
@@ -443,8 +517,16 @@ task_return_t run_stabilisation() {
 			break;
 		case MAV_MODE_AUTO_ARMED:
 			centralData->controls = centralData->controls_nav;
-			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;	
-			centralData->controls.yaw_mode = YAW_COORDINATED;
+			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
+			
+			// if no waypoints are set, we do position hold therefore the yaw mode is absolute
+			if(centralData->waypoint_set)
+			{
+				centralData->controls.yaw_mode = YAW_COORDINATED;
+			}else{
+				centralData->controls.yaw_mode = YAW_ABSOLUTE;
+			}
+			
 			
 			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
@@ -468,15 +550,38 @@ task_return_t run_stabilisation() {
 
 }
 
+void fake_gps_fix()
+{
+	local_coordinates_t fake_pos;
+	
+	fake_pos.pos[X] = 10.0;
+	fake_pos.pos[Y] = 10.0;
+	fake_pos.pos[Z] = 0.0;
+	fake_pos.origin.latitude = HOME_LATITUDE;
+	fake_pos.origin.longitude = HOME_LONGITUDE;
+	fake_pos.origin.altitude = HOME_ALTITUDE;
+	fake_pos.timestamp_ms = centralData->position_estimator.localPosition.timestamp_ms;
+	global_position_t gpos = local_to_global_position(fake_pos);
+	
+	centralData->GPS_data.latitude = gpos.latitude;
+	centralData->GPS_data.longitude = gpos.longitude;
+	centralData->GPS_data.altitude = gpos.altitude;
+	
+	centralData->GPS_data.timeLastMsg = get_millis();
+	
+	centralData->GPS_data.status = GPS_OK;
+	
+}
+
 task_return_t gps_task() {
 	// uint32_t tnow = get_millis();	
 	if (centralData->simulation_mode==1) {
 		simulate_gps(&centralData->sim_model, &centralData->GPS_data);
 	} else {
-		gps_update();
+		//gps_update();
+		fake_gps_fix();
 	}
 }
-
 
 task_return_t run_navigation_task()
 {

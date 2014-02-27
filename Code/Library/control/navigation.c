@@ -120,7 +120,7 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	qtmp2 = quat_global_to_local(centralData->imu1.attitude.qe,qtmp1);
 	dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
 	
-	//dir_desired_bf[2] = rel_pos[2];
+	dir_desired_bf[2] = rel_pos[2];
 	
 	if (((f_abs(rel_pos[X])<=1.0)&&(f_abs(rel_pos[Y])<=1.0))||((f_abs(rel_pos[X])<=5.0)&&(f_abs(rel_pos[Y])<=5.0)&&(f_abs(rel_pos[Z])>=3.0)))
 	{
@@ -135,6 +135,8 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	if (v_desired *  f_abs(dir_desired_bf[Z]) > MAX_CLIMB_RATE * norm_rel_dist ) {
 		v_desired = MAX_CLIMB_RATE * norm_rel_dist /f_abs(dir_desired_bf[Z]);
 	}
+	
+	//mavlink_msg_named_value_int_send(MAVLINK_COMM_0,get_millis(),"v_desired",v_desired*100);
 	
 	dir_desired_bf[X] = v_desired * dir_desired_bf[X] / norm_rel_dist;
 	dir_desired_bf[Y] = v_desired * dir_desired_bf[Y] / norm_rel_dist;

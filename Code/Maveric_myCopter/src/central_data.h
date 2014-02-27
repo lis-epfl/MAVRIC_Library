@@ -108,6 +108,7 @@ typedef struct  {
 	uint8_t mav_state_previous;
 	
 	uint32_t simulation_mode;
+	uint32_t simulation_mode_previous;
 	
 	pressure_data pressure;
 	//float pressure_filtered;

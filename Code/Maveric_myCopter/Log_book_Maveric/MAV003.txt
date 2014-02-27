@@ -34,3 +34,6 @@ status: not fly ready
 14-02-18: ID & parameters flashed
 14-02-18: RC reciever working
 14-02-18: missing GPS cable
+14-02-25: GPS cable set
+14-02-25: handed tuned calibration
+acc biais 100 110 95.34

@@ -11,24 +11,29 @@
 #include "conf_sim_model.h"
 #include "time_keeper.h"
 #include "coord_conventions.h"
-#include "position_estimation.h"
+
 #include "central_data.h"
 #include "maths.h"
 
-void init_simulation(simulation_model_t *sim, Quat_Attitude_t *start_attitude) {
+void init_simulation(simulation_model_t *sim, Quat_Attitude_t *start_attitude, local_coordinates_t localPos) {
 	int i;
+	
+	dbg_print("Init HIL simulation. \n");
+	
 	(*sim)=vehicle_model_parameters;
 	for (i=0; i<3; i++) {
 		sim->rates_bf[i]=0.0f;
 		sim->torques_bf[i]=0.0f;
 		sim->lin_forces_bf[i]=0.0f;
 		sim->vel_bf[i]=0.0f;
-		sim->pos[i]=0.0f;
-		
+		sim->localPosition.pos[i]=localPos.pos[i];
 	}
-	sim->localPosition.origin.latitude=HOME_LATITUDE;
-	sim->localPosition.origin.longitude=HOME_LONGITUDE;
-	sim->localPosition.origin.altitude=HOME_ALTITUDE;
+	
+	//sim->localPosition.origin.latitude=HOME_LATITUDE;
+	//sim->localPosition.origin.longitude=HOME_LONGITUDE;
+	//sim->localPosition.origin.altitude=HOME_ALTITUDE;
+	
+	sim->localPosition.origin = localPos.origin;
 	
 	// set initial conditions to given attitude (including scalefactors and biases for simulated IMU)
 	sim->attitude=*start_attitude;

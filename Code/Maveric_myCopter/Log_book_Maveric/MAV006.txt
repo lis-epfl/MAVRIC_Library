@@ -33,3 +33,6 @@ status: not fly ready
 #define MAG_AXIS_Z  1.0
 14-02-18: ID & parameters flashed
 14-02-18: missing GPS cable
+14-02-25: GPS cable set
+14-02-25: handed tuned calibration
+acc biais 128 160 220

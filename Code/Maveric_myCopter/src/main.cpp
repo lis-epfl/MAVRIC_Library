@@ -32,30 +32,27 @@ extern "C" {
 //#include "bmp085.h"
 //#include "scheduler.h"
 
-//#include "rectangle.hpp"
-
 central_data_t *centralData;
 
 void initialisation() {
 	int i;
-	// enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
+	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 
-	dbg_print("Initialising...\n");
 	
 	centralData = get_central_data();
 	initialise_board(centralData);
 	initialise_central_data();
 
-
-
 	init_radar_modules();
+	dbg_print("Debug stream initialised\n");
 
 	//init_gps_ubx(engine_nav_settings);
 	
+	set_servos_to_failsafe();
+
 	init_onboard_parameters();
 	init_mavlink_actions();
 	init_pos_integration(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
-
 	
 	init_nav();
 	init_waypoint_handler();
@@ -64,29 +61,23 @@ void initialisation() {
 	init_neighbors();
 	init_orca();
 	
-	create_tasks();
+	LED_On(LED1);
+}
 
-	centralData->imu1.attitude.calibration_level=LEVELING;	
-	centralData->mav_state = MAV_STATE_CALIBRATING;
-	centralData->mav_mode = MAV_MODE_PREFLIGHT;
 
-	dbg_print("calibrating IMU...\n");
-	//calibrate_Gyros(&centralData->imu1);
-	for (i=700; i>0; i--) {
-		run_imu_update();
-		mavlink_protocol_update();	
-		delay_ms(5);
-	}
-	// after initial leveling, initialise accelerometer biases
+
+int main (void)
+{
+	int i;
+	// turn on simulation mode: 1: simulation mode, 0: reality
+	initialisation();
+	centralData->simulation_mode = 0;
+	centralData->simulation_mode_previous = 0;
 	
-	/*
-	centralData->imu1.attitude.calibration_level=LEVEL_PLUS_ACCEL;
-	for (i=100; i>0; i--) {
-		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);	
-		mavlink_protocol_update();			
-		delay_ms(5);
-	}*/
-	centralData->imu1.attitude.calibration_level=OFF;
+	create_tasks();
+	
+	relevel_imu();
+
 	//reset position estimate
 	for (i=0; i<3; i++) {
 		// clean acceleration estimate without gravity:
@@ -94,45 +85,24 @@ void initialisation() {
 		centralData->position_estimator.vel[i]=0.0;
 		centralData->position_estimator.localPosition.pos[i]=0.0;
 	}
-	centralData->mav_state = MAV_STATE_STANDBY;
-	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	
-	LED_On(LED1);
-}
-
-int main (void)
-{
-	
-	initialisation();
-	
-	create_tasks();
-	
-	// turn on simulation mode: 1: simulation mode, 0: reality
-	centralData->simulation_mode = 0;
-	
-	dbg_print("Initialise HIL Simulator...\n");	
-	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude));
+	//dbg_print("Initialise HIL Simulator...\n");
+	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude),centralData->position_estimator.localPosition);
 
 	// main loop
 	delay_ms(10);
 	dbg_print("Reset home position...\n");
-	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
+	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model.localPosition);
 	dbg_print("OK. Starting up.\n");
 
-	// Rectangle rec = Rectangle();
-	// float rectangle_size;
-	
-	// main loop
 	while (1==1) {
+		
 		//run_scheduler_update(get_main_taskset(), FIXED_PRIORITY);
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
 		
 		//LED_On(LED1);
-		// dbg_print("abcd\n");
-		// rectangle_size = rec.get_size();
-	}
 
+		
+	}
 	return 0;		
 }
-
-

@@ -45,8 +45,10 @@ uint16_t num_waypoint_onboard;
 uint32_t start_timeout;
 uint32_t timeout_max_wp;
 
+
 void init_waypoint_handler(void);
 void init_wp(void);
+void init_homing_waypoint(waypoint_struct waypoint_list[],uint16_t* number_of_waypoints);
 void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints);
 
 void send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint, bool* waypoint_receiving, bool * waypoint_sending);
@@ -56,6 +58,7 @@ void receive_ack_msg(Mavlink_Received_t* rec, bool* waypoint_sending);
 void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool* waypoint_receiving, bool* waypoint_sending);
 void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t number_of_waypoints, bool* waypoint_receiving);
 void set_current_wp(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t num_of_waypoint);
+void set_current_wp_from_parameter(waypoint_struct waypoint_list[], uint16_t num_of_waypoint, uint16_t new_current);
 void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints, bool* waypoint_set);
 void set_home(Mavlink_Received_t* rec);
 
@@ -74,5 +77,7 @@ void waypoint_critical_handler(void);
 #ifdef __cplusplus
 }
 #endif
+
+void continueToNextWaypoint();
 
 #endif // MAVLINK_WAYPOINT_HANDLER__

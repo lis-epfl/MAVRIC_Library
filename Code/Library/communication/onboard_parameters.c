@@ -29,7 +29,7 @@ void init_onboard_parameters(void) {
 void add_parameter_uint8(uint8_t* val, const char* param_name) {
 	param_set.parameters[param_set.param_count].param = val;
 	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
-	param_set.parameters[param_set.param_count].data_type= MAVLINK_TYPE_UINT8_T;
+	param_set.parameters[param_set.param_count].data_type= MAV_PARAM_TYPE_UINT8;
 	param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
 	param_set.parameters[param_set.param_count].schedule_for_transmission=true;
 	param_set.param_count++;
@@ -38,7 +38,7 @@ void add_parameter_uint8(uint8_t* val, const char* param_name) {
 void add_parameter_uint32(uint32_t* val, const char* param_name) {
 	param_set.parameters[param_set.param_count].param = (float*)val;
 	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
-	param_set.parameters[param_set.param_count].data_type= MAVLINK_TYPE_UINT32_T;
+	param_set.parameters[param_set.param_count].data_type= MAV_PARAM_TYPE_UINT32;
     param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
 	param_set.parameters[param_set.param_count].schedule_for_transmission=true;
 	param_set.param_count++;
@@ -47,7 +47,7 @@ void add_parameter_uint32(uint32_t* val, const char* param_name) {
 void add_parameter_int32(int32_t* val, const char* param_name) {
 	param_set.parameters[param_set.param_count].param = (float*)val;
 	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
-	param_set.parameters[param_set.param_count].data_type = MAVLINK_TYPE_INT32_T;
+	param_set.parameters[param_set.param_count].data_type = MAV_PARAM_TYPE_INT32;
 	param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
 	param_set.parameters[param_set.param_count].schedule_for_transmission=true;
 	param_set.param_count++;
@@ -56,7 +56,7 @@ void add_parameter_int32(int32_t* val, const char* param_name) {
 void add_parameter_float(float* val, const char* param_name) {
 	param_set.parameters[param_set.param_count].param = val;
 	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
-	param_set.parameters[param_set.param_count].data_type = MAVLINK_TYPE_FLOAT;
+	param_set.parameters[param_set.param_count].data_type = MAV_PARAM_TYPE_REAL32;
 	param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
 	param_set.parameters[param_set.param_count].schedule_for_transmission=true;
 	param_set.param_count++;
