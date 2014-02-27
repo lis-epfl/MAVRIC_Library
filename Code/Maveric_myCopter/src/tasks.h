@@ -28,6 +28,8 @@ task_set* get_main_taskset();
 
 void run_imu_update();
 
+void relevel_imu();
+
 void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool);
 task_return_t set_mav_mode_n_state();
 task_return_t run_stabilisation();

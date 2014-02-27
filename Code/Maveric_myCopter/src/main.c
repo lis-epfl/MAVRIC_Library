@@ -75,28 +75,8 @@ void main (void)
 	
 	create_tasks();
 	
+	relevel_imu();
 
-	centralData->imu1.attitude.calibration_level=LEVELING;	
-	centralData->mav_state = MAV_STATE_CALIBRATING;
-	centralData->mav_mode = MAV_MODE_PREFLIGHT;
-
-	dbg_print("calibrating IMU...\n");
-	//calibrate_Gyros(&centralData->imu1);
-	for (i=1000; i>0; i--) {
-		run_imu_update();
-		mavlink_protocol_update();	
-		delay_ms(5);
-	}
-	// after initial leveling, initialise accelerometer biases
-	
-	/*
-	centralData->imu1.attitude.calibration_level=LEVEL_PLUS_ACCEL;
-	for (i=100; i>0; i--) {
-		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);	
-		mavlink_protocol_update();			
-		delay_ms(5);
-	}*/
-	centralData->imu1.attitude.calibration_level=OFF;
 	//reset position estimate
 	for (i=0; i<3; i++) {
 		// clean acceleration estimate without gravity:
@@ -104,11 +84,9 @@ void main (void)
 		centralData->position_estimator.vel[i]=0.0;
 		centralData->position_estimator.localPosition.pos[i]=0.0;
 	}
-	centralData->mav_state = MAV_STATE_STANDBY;
-	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	
-	dbg_print("Initialise HIL Simulator...\n");
-	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude));
+	//dbg_print("Initialise HIL Simulator...\n");
+	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude),centralData->position_estimator.localPosition);
 
 	// main loop
 	delay_ms(10);

@@ -1289,10 +1289,6 @@ void gps_update(void)
 		}
 		
 	} else {
-		// centralData->GPS_data.status = centralData->GPS_data.status ? GPS_OK : NO_FIX;
-		
-// 		valid_read = true;
-// 		new_data = true;
 
 		// reset the idle timer
 		idleTimer = tnow;
