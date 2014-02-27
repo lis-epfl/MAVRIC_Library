@@ -22,7 +22,7 @@ void init_onboard_parameters(void) {
 void add_parameter_uint8(uint8_t* val, const char* param_name) {
 	param_set.parameters[param_set.param_count].param = val;
 	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
-	param_set.parameters[param_set.param_count].data_type= MAV_PARAM_TYPE_UINT8;
+	param_set.parameters[param_set.param_count].data_type= MAV_PARAM_TYPE_INT8;
 	param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
 	param_set.parameters[param_set.param_count].schedule_for_transmission=true;
 	param_set.param_count++;
@@ -55,6 +55,86 @@ void add_parameter_float(float* val, const char* param_name) {
 	param_set.param_count++;
 }
 
+
+void update_parameter(int param_index, float value) {
+	float converted=0;
+	switch (param_set.parameters[param_index].data_type) {
+		case MAVLINK_TYPE_CHAR:
+		case MAVLINK_TYPE_UINT8_T:
+		case MAVLINK_TYPE_INT8_T:
+			// take care of different ENDIAN-ness (usually MAVLINK does this, but here MAVLINK assumes all parameters are 4-byte so we need to swap it back)
+			#if MAVLINK_NEED_BYTE_SWAP
+			byte_swap_4(&converted, &value);
+			#else
+			byte_copy_4(&converted, &value);
+			#endif
+			memcpy(param_set.parameters[param_index].param, &converted, 1);
+		break;
+		case MAVLINK_TYPE_UINT16_T:
+		case MAVLINK_TYPE_INT16_T:
+			// take care of different ENDIAN-ness (usually MAVLINK does this, but here MAVLINK assumes all parameters are 4-byte so we need to swap it back)
+			#if MAVLINK_NEED_BYTE_SWAP
+			byte_swap_4(&converted, &value);
+			#else
+			byte_copy_4(&converted, &value);
+			#endif
+			memcpy(param_set.parameters[param_index].param, &value, 2);
+		break;
+		case MAVLINK_TYPE_UINT32_T:
+		case MAVLINK_TYPE_INT32_T:
+		case MAVLINK_TYPE_FLOAT:
+			*param_set.parameters[param_index].param= value;
+		break;
+		
+		// these following types are not supported
+		case MAVLINK_TYPE_UINT64_T:
+		case MAVLINK_TYPE_INT64_T:
+		case MAVLINK_TYPE_DOUBLE:
+		break;
+	}
+}
+
+float read_parameter(int param_index) {
+	float return_value=0;
+	float converted=0;
+	switch (param_set.parameters[param_index].data_type) {
+		case MAVLINK_TYPE_CHAR:
+		case MAVLINK_TYPE_UINT8_T:
+		case MAVLINK_TYPE_INT8_T:
+		memcpy(&return_value, param_set.parameters[param_index].param, 1);
+		#if MAVLINK_NEED_BYTE_SWAP
+		byte_swap_4(&converted, &return_value);
+		#else
+		byte_copy_4(&converted, &return_value);
+		#endif
+		break;
+		case MAVLINK_TYPE_UINT16_T:
+		case MAVLINK_TYPE_INT16_T:
+		memcpy(&return_value, param_set.parameters[param_index].param, 2);
+		#if MAVLINK_NEED_BYTE_SWAP
+		byte_swap_4(&converted, &return_value);
+		#else
+		byte_copy_4(&converted, &return_value);
+		#endif
+
+		break;
+		case MAVLINK_TYPE_UINT32_T:
+		case MAVLINK_TYPE_INT32_T:
+		case MAVLINK_TYPE_FLOAT:
+		converted= *param_set.parameters[param_index].param;
+		break;
+		
+		// these following types are not supported
+		case MAVLINK_TYPE_UINT64_T:
+		case MAVLINK_TYPE_INT64_T:
+		case MAVLINK_TYPE_DOUBLE:
+		break;
+	}	
+	return converted;
+}
+
+
+
 void send_all_parameters() {
 	// schedule all parameters for transmission
 	for (uint8_t i = 0; i < param_set.param_count; i++) {
@@ -66,7 +146,7 @@ void send_all_parameters_now() {
 	for (uint8_t i = 0; i < param_set.param_count; i++) {
 		mavlink_msg_param_value_send(MAVLINK_COMM_0,
 										(int8_t*)param_set.parameters[i].param_name,
-										*param_set.parameters[i].param,
+										read_parameter(i),
 										param_set.parameters[i].data_type,
 										param_set.param_count,
 										i);
@@ -82,7 +162,7 @@ void send_scheduled_parameters() {
 		if (param_set.parameters[i].schedule_for_transmission) {
 			mavlink_msg_param_value_send(MAVLINK_COMM_0,
 										(int8_t*)param_set.parameters[i].param_name,
-										*param_set.parameters[i].param,
+										read_parameter(i),
 										param_set.parameters[i].data_type,
 										param_set.param_count,
 										i);
@@ -166,7 +246,9 @@ void receive_parameter(Mavlink_Received_t* rec) {
 			if (match) {
 				// Only write and emit changes if there is actually a difference
 				if (*param_set.parameters[i].param != set.param_value && set.param_type == param_set.parameters[i].data_type) {
-					*param_set.parameters[i].param = set.param_value;
+					//*param_set.parameters[i].param = set.param_value;
+					update_parameter(i, set.param_value);
+					
 					// Report back new value
 //					mavlink_msg_param_value_send(MAVLINK_COMM_0,
 //												(int8_t*)param_set.parameters[i].param_name,
@@ -204,7 +286,8 @@ void read_parameters_from_flashc()
 		dbg_print("Flash read successful! New Parameters inserted. \n");
 		for (i=1;i<(param_set.param_count+1);i++)
 		{
-			*param_set.parameters[i-1].param = local_array.values[i];
+			//*param_set.parameters[i-1].param = local_array.values[i];
+			update_parameter(i-1, local_array.values[i]);
 		}
 		
 	}else{
@@ -232,7 +315,7 @@ void write_parameters_to_flashc()
 	for (i=1;i<(param_set.param_count+1);i++)
 	{
 		//flashc_memcpy((void *)&(nvram_array->values[i]),   param_set.parameters[i].param, sizeof((nvram_array->values[i])),   true);
-		local_array.values[i] = *param_set.parameters[i-1].param;
+		local_array.values[i] = read_parameter(i-1);
 		cksum1 += local_array.values[i];
 		cksum2 += cksum1;
 	}
