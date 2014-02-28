@@ -10,3 +10,5 @@ status: not fly ready
 13-11-21: rear right motor hard to set the setpoint
 14-02-18: IMU broken!
 14-02-18: no GPS cable
+14-02-28: IMU seems to work now, but x gyro bias is way off - careful with this MAV. Calibrated manually.
+
