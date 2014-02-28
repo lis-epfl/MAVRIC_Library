@@ -14,9 +14,6 @@ typedef struct __mavlink_global_position_setpoint_int_t
 #define MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN 15
 #define MAVLINK_MSG_ID_52_LEN 15
 
-#define MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_CRC 141
-#define MAVLINK_MSG_ID_52_CRC 141
-
 
 
 #define MAVLINK_MESSAGE_INFO_GLOBAL_POSITION_SETPOINT_INT { \
@@ -48,14 +45,14 @@ static inline uint16_t mavlink_msg_global_position_setpoint_int_pack(uint8_t sys
 						       uint8_t coordinate_frame, int32_t latitude, int32_t longitude, int32_t altitude, int16_t yaw)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN];
+	char buf[15];
 	_mav_put_int32_t(buf, 0, latitude);
 	_mav_put_int32_t(buf, 4, longitude);
 	_mav_put_int32_t(buf, 8, altitude);
 	_mav_put_int16_t(buf, 12, yaw);
 	_mav_put_uint8_t(buf, 14, coordinate_frame);
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 15);
 #else
 	mavlink_global_position_setpoint_int_t packet;
 	packet.latitude = latitude;
@@ -64,22 +61,18 @@ static inline uint16_t mavlink_msg_global_position_setpoint_int_pack(uint8_t sys
 	packet.yaw = yaw;
 	packet.coordinate_frame = coordinate_frame;
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 15);
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_CRC);
-#else
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN);
-#endif
+	return mavlink_finalize_message(msg, system_id, component_id, 15, 141);
 }
 
 /**
  * @brief Pack a global_position_setpoint_int message on a channel
  * @param system_id ID of this system
  * @param component_id ID of this component (e.g. 200 for IMU)
- * @param chan The MAVLink channel this message will be sent over
+ * @param chan The MAVLink channel this message was sent over
  * @param msg The MAVLink message to compress the data into
  * @param coordinate_frame Coordinate frame - valid values are only MAV_FRAME_GLOBAL or MAV_FRAME_GLOBAL_RELATIVE_ALT
  * @param latitude Latitude (WGS84), in degrees * 1E7
@@ -93,14 +86,14 @@ static inline uint16_t mavlink_msg_global_position_setpoint_int_pack_chan(uint8_
 						           uint8_t coordinate_frame,int32_t latitude,int32_t longitude,int32_t altitude,int16_t yaw)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN];
+	char buf[15];
 	_mav_put_int32_t(buf, 0, latitude);
 	_mav_put_int32_t(buf, 4, longitude);
 	_mav_put_int32_t(buf, 8, altitude);
 	_mav_put_int16_t(buf, 12, yaw);
 	_mav_put_uint8_t(buf, 14, coordinate_frame);
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 15);
 #else
 	mavlink_global_position_setpoint_int_t packet;
 	packet.latitude = latitude;
@@ -109,19 +102,15 @@ static inline uint16_t mavlink_msg_global_position_setpoint_int_pack_chan(uint8_
 	packet.yaw = yaw;
 	packet.coordinate_frame = coordinate_frame;
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 15);
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_CRC);
-#else
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN);
-#endif
+	return mavlink_finalize_message_chan(msg, system_id, component_id, chan, 15, 141);
 }
 
 /**
- * @brief Encode a global_position_setpoint_int struct
+ * @brief Encode a global_position_setpoint_int struct into a message
  *
  * @param system_id ID of this system
  * @param component_id ID of this component (e.g. 200 for IMU)
@@ -131,20 +120,6 @@ static inline uint16_t mavlink_msg_global_position_setpoint_int_pack_chan(uint8_
 static inline uint16_t mavlink_msg_global_position_setpoint_int_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_global_position_setpoint_int_t* global_position_setpoint_int)
 {
 	return mavlink_msg_global_position_setpoint_int_pack(system_id, component_id, msg, global_position_setpoint_int->coordinate_frame, global_position_setpoint_int->latitude, global_position_setpoint_int->longitude, global_position_setpoint_int->altitude, global_position_setpoint_int->yaw);
-}
-
-/**
- * @brief Encode a global_position_setpoint_int struct on a channel
- *
- * @param system_id ID of this system
- * @param component_id ID of this component (e.g. 200 for IMU)
- * @param chan The MAVLink channel this message will be sent over
- * @param msg The MAVLink message to compress the data into
- * @param global_position_setpoint_int C-struct to read the message contents from
- */
-static inline uint16_t mavlink_msg_global_position_setpoint_int_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_global_position_setpoint_int_t* global_position_setpoint_int)
-{
-	return mavlink_msg_global_position_setpoint_int_pack_chan(system_id, component_id, chan, msg, global_position_setpoint_int->coordinate_frame, global_position_setpoint_int->latitude, global_position_setpoint_int->longitude, global_position_setpoint_int->altitude, global_position_setpoint_int->yaw);
 }
 
 /**
@@ -162,18 +137,14 @@ static inline uint16_t mavlink_msg_global_position_setpoint_int_encode_chan(uint
 static inline void mavlink_msg_global_position_setpoint_int_send(mavlink_channel_t chan, uint8_t coordinate_frame, int32_t latitude, int32_t longitude, int32_t altitude, int16_t yaw)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN];
+	char buf[15];
 	_mav_put_int32_t(buf, 0, latitude);
 	_mav_put_int32_t(buf, 4, longitude);
 	_mav_put_int32_t(buf, 8, altitude);
 	_mav_put_int16_t(buf, 12, yaw);
 	_mav_put_uint8_t(buf, 14, coordinate_frame);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT, buf, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT, buf, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN);
-#endif
+	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT, buf, 15, 141);
 #else
 	mavlink_global_position_setpoint_int_t packet;
 	packet.latitude = latitude;
@@ -182,11 +153,7 @@ static inline void mavlink_msg_global_position_setpoint_int_send(mavlink_channel
 	packet.yaw = yaw;
 	packet.coordinate_frame = coordinate_frame;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT, (const char *)&packet, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT, (const char *)&packet, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN);
-#endif
+	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT, (const char *)&packet, 15, 141);
 #endif
 }
 
@@ -260,6 +227,6 @@ static inline void mavlink_msg_global_position_setpoint_int_decode(const mavlink
 	global_position_setpoint_int->yaw = mavlink_msg_global_position_setpoint_int_get_yaw(msg);
 	global_position_setpoint_int->coordinate_frame = mavlink_msg_global_position_setpoint_int_get_coordinate_frame(msg);
 #else
-	memcpy(global_position_setpoint_int, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_GLOBAL_POSITION_SETPOINT_INT_LEN);
+	memcpy(global_position_setpoint_int, _MAV_PAYLOAD(msg), 15);
 #endif
 }

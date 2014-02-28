@@ -9,18 +9,14 @@
 #ifndef RADAR_MODULE_DRIVER_H_
 #define RADAR_MODULE_DRIVER_H_
 
-typedef struct {
-	float velocity;
-	float amplitude;
-	long timestamp;
-} radar_target;
+#include "mavlink_stream.h"
 
 
 void init_radar_modules(void);
 
 void read_radar(void);
 
-radar_target* get_radar_main_target(void);
+mavlink_radar_tracked_target_t* get_radar_main_target(void);
 
 
 #endif /* RADAR_MODULE_H_ */

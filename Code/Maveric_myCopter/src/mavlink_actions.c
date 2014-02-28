@@ -177,9 +177,9 @@ void mavlink_send_pressure(void) {
 
 void mavlink_send_radar(void) {
 	read_radar();
-	radar_target *target=get_radar_main_target();
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Radar_velocity", target->velocity);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Radar_amplitude", target->amplitude/1000.0);
+	mavlink_radar_tracked_target_t *target=get_radar_main_target();
+	mavlink_msg_radar_tracked_target_send(MAVLINK_COMM_0, get_millis(), target->sensor_id, target->target_id, target->velocity, target->amplitude, target->distance, target->azimuth, target->elevation, target->uncertainty);
+	
 }
 
 void mavlink_send_estimator(void)
@@ -848,7 +848,7 @@ void init_mavlink_actions(void) {
 
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_servo_output, MAVLINK_MSG_ID_SERVO_OUTPUT_RAW);
 
-//	add_task(get_mavlink_taskset(),  50000, &mavlink_send_radar);
+	add_task(get_mavlink_taskset(),  100000, RUN_NEVER, &mavlink_send_radar, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET);
 	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
 	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER,   &mavlink_send_gps_raw, MAVLINK_MSG_ID_GPS_RAW_INT);
