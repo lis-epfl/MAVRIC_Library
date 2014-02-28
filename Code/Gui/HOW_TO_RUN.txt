@@ -1,0 +1,6 @@
+How to run the Python script (on Windows):
+
+- open the standard command prompt (cmd.exe)
+- type:
+	python maview.py --device comXX
+where XX is the number of your com port

@@ -489,14 +489,14 @@ task_return_t run_stabilisation() {
 	switch(centralData->mav_mode)
 	{
 		
-		case MAV_MODE_MANUAL_ARMED:
+		case MAV_MODE_MANUAL_ARMED: // Attitude control
 			centralData->controls = get_command_from_remote();
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			centralData->controls.yaw_mode=YAW_RELATIVE;
 			
 			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
-		case MAV_MODE_STABILIZE_ARMED:
+		case MAV_MODE_STABILIZE_ARMED: // Velocity control
 			centralData->controls = get_command_from_remote();
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			centralData->controls.yaw_mode=YAW_RELATIVE;
@@ -509,14 +509,14 @@ task_return_t run_stabilisation() {
 			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			
 			break;
-		case MAV_MODE_GUIDED_ARMED:
+		case MAV_MODE_GUIDED_ARMED: // Position hold control
 			centralData->controls = centralData->controls_nav;
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			centralData->controls.yaw_mode = YAW_ABSOLUTE;
 			
 			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
-		case MAV_MODE_AUTO_ARMED:
+		case MAV_MODE_AUTO_ARMED: // GPS navigation control
 			centralData->controls = centralData->controls_nav;
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			
@@ -649,7 +649,7 @@ void create_tasks() {
 	
 	register_task(&main_tasks, 0, 4000, RUN_REGULAR, &run_stabilisation );
 	
-	register_task(&main_tasks, 1, 15000, RUN_REGULAR, &run_barometer);
+	register_task(&main_tasks, 1,	000, RUN_REGULAR, &run_barometer);
 	main_tasks.tasks[1].timing_mode=PERIODIC_RELATIVE;
 
 	register_task(&main_tasks, 2, 100000, RUN_REGULAR, &gps_task);

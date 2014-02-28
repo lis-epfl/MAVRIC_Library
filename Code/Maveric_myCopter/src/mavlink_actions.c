@@ -782,8 +782,8 @@ void receive_message_long(Mavlink_Received_t* rec)
 	
 	//if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid) //254
 	//&&((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
-	if((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER)
-	{
+	//if((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER)
+	//{
 		// print packet command and parameters for debug
 		dbg_print("All vehicles parameters:");
 		dbg_print_num(packet.param1,10);
@@ -819,7 +819,7 @@ void receive_message_long(Mavlink_Received_t* rec)
 			}
 			break;
 		}
-	}
+	//}
 	
 }
 

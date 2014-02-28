@@ -747,7 +747,7 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_wp, global_p
 			waypoint_coor.pos[Y] = current_wp.y;
 			waypoint_coor.pos[Z] = current_wp.z;
 			waypoint_coor.heading= deg_to_rad(current_wp.param4);
-			waypoint_coor.origin = local_to_global_position(waypoint_coor);
+			waypoint_coor.origin = local_to_global_position(waypoint_coor); //PROBLEM?
 		break;
 		case MAV_FRAME_MISSION:
 			//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_RESULT_UNSUPPORTED);
