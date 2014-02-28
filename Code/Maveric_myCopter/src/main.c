@@ -37,8 +37,6 @@ void initialisation() {
 	int i;
 	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 
-	
-	centralData = get_central_data();
 	initialise_board(centralData);
 	initialise_central_data();
 
@@ -68,10 +66,12 @@ void initialisation() {
 void main (void)
 {
 	int i;
+	centralData = get_central_data();
+	
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	initialisation();
-	centralData->simulation_mode = 1;
+	centralData->simulation_mode = 0;
 	centralData->simulation_mode_previous = centralData->simulation_mode;
+	initialisation();
 	
 	create_tasks();
 	

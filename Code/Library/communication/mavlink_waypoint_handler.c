@@ -557,7 +557,7 @@ void set_current_wp_from_parameter(waypoint_struct waypoint_list[], uint16_t num
 		
 		centralData->waypoint_set = false;
 		init_wp();
-		}else{
+	}else{
 		mavlink_msg_mission_ack_send(MAVLINK_COMM_0,mavlink_mission_planner.sysid,mavlink_mission_planner.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
 	}
 }
@@ -590,6 +590,8 @@ void set_home(Mavlink_Received_t* rec)
 		centralData->position_estimator.localPosition.origin.latitude = (double) packet.latitude / 10000000.0;
 		centralData->position_estimator.localPosition.origin.longitude = (double) packet.longitude / 10000000.0;
 		centralData->position_estimator.localPosition.origin.altitude = (float) packet.altitude / 1000.0;
+		
+		centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
 		
 		dbg_print("New Home location: (");
 		dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0,10);

@@ -34,11 +34,14 @@ status: not fly ready
 14-02-18: ID & parameters flashed
 14-02-18: missing GPS cable
 14-02-25: GPS cable set
-14-02-25: handed tuned calibration
+14-02-25: hand tuned calibration
 acc biais : 15 30 440 
 
 14-02-25: compass calibration was off during test flight, due to scaled-imu message bug. New hand-tuned compass biases:
 #define MAG_BIAIS_X  -150		
 #define MAG_BIAIS_Y -160
 #define MAG_BIAIS_Z   -46.51
+
+14-02-28: hand tuned calibration
+30 40 450 
 

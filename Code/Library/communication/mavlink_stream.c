@@ -129,12 +129,13 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 				mavlink_param_request_list_t request;
 				mavlink_msg_param_request_list_decode(&rec->msg, &request);
 			
-				dbg_print("msg comp id:");
-				dbg_print_num(request.target_component,10);
-				dbg_print("\n");
+				//dbg_print("msg comp id:");
+				//dbg_print_num(request.target_component,10);
+				//dbg_print("\n");
 			
 				// Check if this message is for this system
 				if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid) {
+					dbg_print("Sending parameter list...\n");
 					send_all_parameters();
 				}				
 			}
@@ -146,7 +147,7 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 				if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid)
 				//&& (uint8_t)request.target_component == (uint8_t)mavlink_system.compid)
 				 {
-					dbg_print("Sending all parameters...");
+					dbg_print("Sending requested parameters...");
 					send_parameter(&request);
 				}				
 			}

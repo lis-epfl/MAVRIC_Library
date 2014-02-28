@@ -13,8 +13,18 @@ status: not fly ready
 #define ACC_BIAIS_Y -44;
 #define ACC_BIAIS_Z -275;
 
-acc b = 0 100 300
+acc b = 0 100 350
 
 mag b = 42.38 -107.5 2.47
 
+#define RAW_ACC_X_SCALE  3924
+#define RAW_ACC_Y_SCALE  3844.8
+#define RAW_ACC_Z_SCALE  4119.6
 
+#define RAW_MAG_X_SCALE 614.51
+#define RAW_MAG_Y_SCALE 584.28
+#define RAW_MAG_Z_SCALE 531.95
+
+#define MAG_BIAIS_X 42.38
+#define MAG_BIAIS_Y -107.51
+#define MAG_BIAIS_Z  2.47

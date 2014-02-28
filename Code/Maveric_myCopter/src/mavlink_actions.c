@@ -510,6 +510,7 @@ void handle_specific_messages (Mavlink_Received_t* rec) {
 				case MAVLINK_MSG_ID_COMMAND_LONG : { // 76
 					receive_message_long(rec);
 				}
+				break;
 				case MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN: { // 48
 					set_home(rec);
 				}
@@ -835,9 +836,9 @@ void init_mavlink_actions(void) {
 	
 	add_task(get_mavlink_taskset(), 1000000, RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
 	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_attitude_quaternion, MAVLINK_MSG_ID_ATTITUDE_QUATERNION);
-	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_attitude, MAVLINK_MSG_ID_ATTITUDE);
+	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_attitude, MAVLINK_MSG_ID_ATTITUDE);
 	
-	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
+	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
 	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
 	add_task(get_mavlink_taskset(),  100000, RUN_NEVER, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
@@ -848,7 +849,7 @@ void init_mavlink_actions(void) {
 
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_servo_output, MAVLINK_MSG_ID_SERVO_OUTPUT_RAW);
 
-	add_task(get_mavlink_taskset(),  100000, RUN_NEVER, &mavlink_send_radar, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET);
+	//add_task(get_mavlink_taskset(),  100000, RUN_NEVER, &mavlink_send_radar, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET);
 	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
 	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER,   &mavlink_send_gps_raw, MAVLINK_MSG_ID_GPS_RAW_INT);

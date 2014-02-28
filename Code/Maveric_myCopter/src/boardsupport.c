@@ -96,17 +96,17 @@ void initialise_board(central_data_t *centralData) {
 		
 	// connect abstracted aliases to hardware ports
 
-/*
+
 	centralData->telemetry_down_stream=&(centralData->xbee_out_stream);
 	centralData->telemetry_up_stream=&(centralData->xbee_in_stream);
 	centralData->debug_out_stream=&(centralData->wired_out_stream);
 	centralData->debug_in_stream=&(centralData->wired_in_stream);
-*/
+/*
 	centralData->telemetry_down_stream=&(centralData->wired_out_stream);
 	centralData->telemetry_up_stream  =&(centralData->wired_in_stream);		
 	centralData->debug_out_stream     =&(centralData->xbee_out_stream);
 	centralData->debug_in_stream      =&(centralData->xbee_in_stream);
-/**/
+*/
 
 	//rc_activate_bind_mode();
 
