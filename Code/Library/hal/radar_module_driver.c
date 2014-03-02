@@ -8,7 +8,7 @@
 #include "i2c_driver_int.h"
 #include "print_util.h"
 
-radar_target main_target;
+mavlink_radar_tracked_target_t main_target;
 
 void init_radar_modules() {
 	static twim_options_t twi_opt= {
@@ -35,7 +35,7 @@ void read_radar() {
 	
 }
 
-radar_target* get_radar_main_target() {
+mavlink_radar_tracked_target_t* get_radar_main_target() {
 	return &main_target;
 	
 }

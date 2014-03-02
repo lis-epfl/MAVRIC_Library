@@ -177,9 +177,9 @@ void mavlink_send_pressure(void) {
 
 void mavlink_send_radar(void) {
 	read_radar();
-	radar_target *target=get_radar_main_target();
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Radar_velocity", target->velocity);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Radar_amplitude", target->amplitude/1000.0);
+	mavlink_radar_tracked_target_t *target=get_radar_main_target();
+	mavlink_msg_radar_tracked_target_send(MAVLINK_COMM_0, get_millis(), target->sensor_id, target->target_id, target->velocity, target->amplitude, target->distance, target->azimuth, target->elevation, target->uncertainty);
+	
 }
 
 void mavlink_send_estimator(void)
@@ -455,13 +455,13 @@ task_return_t control_waypoint_timeout (void) {
 void handle_specific_messages (Mavlink_Received_t* rec) {
 	if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) {
 		
-		dbg_print("\n Received message with ID");
-		dbg_print_num(rec->msg.msgid, 10);
-		dbg_print(" from system");
-		dbg_print_num(rec->msg.sysid, 10);
-		dbg_print(" for component");
-		dbg_print_num(rec->msg.compid,10);
-		dbg_print( "\n");
+		//dbg_print("\n Received message with ID");
+		//dbg_print_num(rec->msg.msgid, 10);
+		//dbg_print(" from system");
+		//dbg_print_num(rec->msg.sysid, 10);
+		//dbg_print(" for component");
+		//dbg_print_num(rec->msg.compid,10);
+		//dbg_print( "\n");
 		
 		switch(rec->msg.msgid) {
 				case MAVLINK_MSG_ID_MISSION_ITEM: { // 39
@@ -592,7 +592,7 @@ void receive_message_long(Mavlink_Received_t* rec)
 			}
 			break;
 			case MAV_CMD_NAV_ROI: {
-				/* Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras. |Region of intereset mode. (see MAV_ROI enum)| MISSION index/ target ID. (see MAV_ROI enum)| ROI index (allows a vehicle to manage multiple ROI's)| Empty| x the location of the fixed ROI (see MAV_FRAME)| y| z|  */
+				/* Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras. |Region of interest mode. (see MAV_ROI enum)| MISSION index/ target ID. (see MAV_ROI enum)| ROI index (allows a vehicle to manage multiple ROI's)| Empty| x the location of the fixed ROI (see MAV_FRAME)| y| z|  */
 				dbg_print("Nav ROI command, not implemented!\n");
 			}
 			break;
@@ -653,6 +653,7 @@ void receive_message_long(Mavlink_Received_t* rec)
 					// Set new home position to actual position
 					dbg_print("Set new home location to actual position.\n");
 					centralData->position_estimator.localPosition.origin = local_to_global_position(centralData->position_estimator.localPosition);
+					centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
 					
 					dbg_print("New Home location: (");
 					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0,10);
@@ -668,6 +669,7 @@ void receive_message_long(Mavlink_Received_t* rec)
 					centralData->position_estimator.localPosition.origin.latitude = packet.param5;
 					centralData->position_estimator.localPosition.origin.longitude = packet.param6;
 					centralData->position_estimator.localPosition.origin.altitude = packet.param7;
+					centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
 					
 					dbg_print("New Home location: (");
 					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0,10);
@@ -677,7 +679,7 @@ void receive_message_long(Mavlink_Received_t* rec)
 					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0,10);
 					dbg_print(")\n");
 				}
-				
+				centralData->waypoint_set = false;
 			}
 			break;
 			case MAV_CMD_DO_SET_PARAMETER: {
@@ -777,8 +779,9 @@ void receive_message_long(Mavlink_Received_t* rec)
 		}
 	}
 	
-	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid) //254
-	&&((uint8_t)packet.target_component == (uint8_t)0))
+	//if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid) //254
+	//&&((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
+	if((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER)
 	{
 		// print packet command and parameters for debug
 		dbg_print("All vehicles parameters:");
@@ -808,6 +811,12 @@ void receive_message_long(Mavlink_Received_t* rec)
 				continueToNextWaypoint();
 			}
 			break;
+			case MAV_CMD_CONDITION_LAST: {
+				dbg_print("All vehicles, setting circle scenario!\n");
+				//void set_circle_scenarios(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc)
+				set_circle_scenarios(centralData->waypoint_list, &(centralData->number_of_waypoints), packet.param1, packet.param2);
+			}
+			break;
 		}
 	}
 	
@@ -829,8 +838,8 @@ void init_mavlink_actions(void) {
 	
 	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
 	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
-	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
-	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
+	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
+	add_task(get_mavlink_taskset(),  100000, RUN_NEVER, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
 
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_speed_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT);
@@ -838,14 +847,14 @@ void init_mavlink_actions(void) {
 
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER, &mavlink_send_servo_output, MAVLINK_MSG_ID_SERVO_OUTPUT_RAW);
 
-//	add_task(get_mavlink_taskset(),  50000, &mavlink_send_radar);
+	add_task(get_mavlink_taskset(),  100000, RUN_NEVER, &mavlink_send_radar, MAVLINK_MSG_ID_RADAR_TRACKED_TARGET);
 	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
 	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
 	add_task(get_mavlink_taskset(), 1000000, RUN_NEVER,   &mavlink_send_gps_raw, MAVLINK_MSG_ID_GPS_RAW_INT);
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
 	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
 
-	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_simulation, MAVLINK_MSG_ID_HIL_STATE);
+	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_simulation, MAVLINK_MSG_ID_HIL_STATE);
 
 	//add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);

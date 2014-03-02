@@ -52,7 +52,7 @@ void initialise_central_data(){
 		centralData.position_estimator.localPosition.pos[Z]=0;
 
 		// init simulation
-		//init_simulation(&(centralData.sim_model),&(centralData.imu1.attitude),centralData.position_estimator.localPosition);
+		init_simulation(&(centralData.sim_model),&(centralData.imu1.attitude),centralData.position_estimator.localPosition);
 		//centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
 }
 

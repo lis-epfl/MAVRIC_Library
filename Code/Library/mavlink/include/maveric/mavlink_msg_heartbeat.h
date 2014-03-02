@@ -15,9 +15,6 @@ typedef struct __mavlink_heartbeat_t
 #define MAVLINK_MSG_ID_HEARTBEAT_LEN 9
 #define MAVLINK_MSG_ID_0_LEN 9
 
-#define MAVLINK_MSG_ID_HEARTBEAT_CRC 50
-#define MAVLINK_MSG_ID_0_CRC 50
-
 
 
 #define MAVLINK_MESSAGE_INFO_HEARTBEAT { \
@@ -50,7 +47,7 @@ static inline uint16_t mavlink_msg_heartbeat_pack(uint8_t system_id, uint8_t com
 						       uint8_t type, uint8_t autopilot, uint8_t base_mode, uint32_t custom_mode, uint8_t system_status)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_HEARTBEAT_LEN];
+	char buf[9];
 	_mav_put_uint32_t(buf, 0, custom_mode);
 	_mav_put_uint8_t(buf, 4, type);
 	_mav_put_uint8_t(buf, 5, autopilot);
@@ -58,7 +55,7 @@ static inline uint16_t mavlink_msg_heartbeat_pack(uint8_t system_id, uint8_t com
 	_mav_put_uint8_t(buf, 7, system_status);
 	_mav_put_uint8_t(buf, 8, 3);
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_HEARTBEAT_LEN);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 9);
 #else
 	mavlink_heartbeat_t packet;
 	packet.custom_mode = custom_mode;
@@ -68,22 +65,18 @@ static inline uint16_t mavlink_msg_heartbeat_pack(uint8_t system_id, uint8_t com
 	packet.system_status = system_status;
 	packet.mavlink_version = 3;
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_HEARTBEAT_LEN);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 9);
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_HEARTBEAT;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_HEARTBEAT_LEN, MAVLINK_MSG_ID_HEARTBEAT_CRC);
-#else
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_HEARTBEAT_LEN);
-#endif
+	return mavlink_finalize_message(msg, system_id, component_id, 9, 50);
 }
 
 /**
  * @brief Pack a heartbeat message on a channel
  * @param system_id ID of this system
  * @param component_id ID of this component (e.g. 200 for IMU)
- * @param chan The MAVLink channel this message will be sent over
+ * @param chan The MAVLink channel this message was sent over
  * @param msg The MAVLink message to compress the data into
  * @param type Type of the MAV (quadrotor, helicopter, etc., up to 15 types, defined in MAV_TYPE ENUM)
  * @param autopilot Autopilot type / class. defined in MAV_AUTOPILOT ENUM
@@ -97,7 +90,7 @@ static inline uint16_t mavlink_msg_heartbeat_pack_chan(uint8_t system_id, uint8_
 						           uint8_t type,uint8_t autopilot,uint8_t base_mode,uint32_t custom_mode,uint8_t system_status)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_HEARTBEAT_LEN];
+	char buf[9];
 	_mav_put_uint32_t(buf, 0, custom_mode);
 	_mav_put_uint8_t(buf, 4, type);
 	_mav_put_uint8_t(buf, 5, autopilot);
@@ -105,7 +98,7 @@ static inline uint16_t mavlink_msg_heartbeat_pack_chan(uint8_t system_id, uint8_
 	_mav_put_uint8_t(buf, 7, system_status);
 	_mav_put_uint8_t(buf, 8, 3);
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_HEARTBEAT_LEN);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 9);
 #else
 	mavlink_heartbeat_t packet;
 	packet.custom_mode = custom_mode;
@@ -115,19 +108,15 @@ static inline uint16_t mavlink_msg_heartbeat_pack_chan(uint8_t system_id, uint8_
 	packet.system_status = system_status;
 	packet.mavlink_version = 3;
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_HEARTBEAT_LEN);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 9);
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_HEARTBEAT;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_HEARTBEAT_LEN, MAVLINK_MSG_ID_HEARTBEAT_CRC);
-#else
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_HEARTBEAT_LEN);
-#endif
+	return mavlink_finalize_message_chan(msg, system_id, component_id, chan, 9, 50);
 }
 
 /**
- * @brief Encode a heartbeat struct
+ * @brief Encode a heartbeat struct into a message
  *
  * @param system_id ID of this system
  * @param component_id ID of this component (e.g. 200 for IMU)
@@ -137,20 +126,6 @@ static inline uint16_t mavlink_msg_heartbeat_pack_chan(uint8_t system_id, uint8_
 static inline uint16_t mavlink_msg_heartbeat_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_heartbeat_t* heartbeat)
 {
 	return mavlink_msg_heartbeat_pack(system_id, component_id, msg, heartbeat->type, heartbeat->autopilot, heartbeat->base_mode, heartbeat->custom_mode, heartbeat->system_status);
-}
-
-/**
- * @brief Encode a heartbeat struct on a channel
- *
- * @param system_id ID of this system
- * @param component_id ID of this component (e.g. 200 for IMU)
- * @param chan The MAVLink channel this message will be sent over
- * @param msg The MAVLink message to compress the data into
- * @param heartbeat C-struct to read the message contents from
- */
-static inline uint16_t mavlink_msg_heartbeat_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_heartbeat_t* heartbeat)
-{
-	return mavlink_msg_heartbeat_pack_chan(system_id, component_id, chan, msg, heartbeat->type, heartbeat->autopilot, heartbeat->base_mode, heartbeat->custom_mode, heartbeat->system_status);
 }
 
 /**
@@ -168,7 +143,7 @@ static inline uint16_t mavlink_msg_heartbeat_encode_chan(uint8_t system_id, uint
 static inline void mavlink_msg_heartbeat_send(mavlink_channel_t chan, uint8_t type, uint8_t autopilot, uint8_t base_mode, uint32_t custom_mode, uint8_t system_status)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_HEARTBEAT_LEN];
+	char buf[9];
 	_mav_put_uint32_t(buf, 0, custom_mode);
 	_mav_put_uint8_t(buf, 4, type);
 	_mav_put_uint8_t(buf, 5, autopilot);
@@ -176,11 +151,7 @@ static inline void mavlink_msg_heartbeat_send(mavlink_channel_t chan, uint8_t ty
 	_mav_put_uint8_t(buf, 7, system_status);
 	_mav_put_uint8_t(buf, 8, 3);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HEARTBEAT, buf, MAVLINK_MSG_ID_HEARTBEAT_LEN, MAVLINK_MSG_ID_HEARTBEAT_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HEARTBEAT, buf, MAVLINK_MSG_ID_HEARTBEAT_LEN);
-#endif
+	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HEARTBEAT, buf, 9, 50);
 #else
 	mavlink_heartbeat_t packet;
 	packet.custom_mode = custom_mode;
@@ -190,11 +161,7 @@ static inline void mavlink_msg_heartbeat_send(mavlink_channel_t chan, uint8_t ty
 	packet.system_status = system_status;
 	packet.mavlink_version = 3;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HEARTBEAT, (const char *)&packet, MAVLINK_MSG_ID_HEARTBEAT_LEN, MAVLINK_MSG_ID_HEARTBEAT_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HEARTBEAT, (const char *)&packet, MAVLINK_MSG_ID_HEARTBEAT_LEN);
-#endif
+	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HEARTBEAT, (const char *)&packet, 9, 50);
 #endif
 }
 
@@ -279,6 +246,6 @@ static inline void mavlink_msg_heartbeat_decode(const mavlink_message_t* msg, ma
 	heartbeat->system_status = mavlink_msg_heartbeat_get_system_status(msg);
 	heartbeat->mavlink_version = mavlink_msg_heartbeat_get_mavlink_version(msg);
 #else
-	memcpy(heartbeat, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_HEARTBEAT_LEN);
+	memcpy(heartbeat, _MAV_PAYLOAD(msg), 9);
 #endif
 }

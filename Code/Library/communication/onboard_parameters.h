@@ -42,14 +42,46 @@ typedef struct{
 nvram_data_ttt *nvram_array;
 
 void init_onboard_parameters(void);
+
+/**
+ * registers parameter in the internal parameter list that gets published to MAVlink
+ */
 void add_parameter_uint8(uint8_t* val, const char* param_name);
 void add_parameter_uint32(uint32_t* val, const char* param_name);
 void add_parameter_int32(int32_t* val, const char* param_name);
 void add_parameter_float(float* val, const char* param_name);
+
+/** updates linked memory location of a parameter with given value
+ *  This method takes care of necessary size/type conversions
+*/
+void update_parameter(int param_index, float value);
+
+/** reads linked memory location and returns parameter value
+ *  This method takes care of necessary size/type conversions.
+ *  Note that the parameter might not be a float, but float is the 
+ *  default data type for the MAVlink message.
+*/
+float read_parameter(int param_index);
+
+/**
+ * Immediately sends all parameters via MAVlink. This might block for a while.
+ */
 void send_all_parameters_now(void);
+
+/**
+ * marks all parameters to be scheduled for transmission
+ */
 void send_all_parameters(void);
 void send_scheduled_parameters(void);
+
+/**
+ * responds to a MAVlink parameter request
+ */
 void send_parameter(mavlink_param_request_read_t* request);
+
+/**
+ * responds to a MAVlink parameter set
+ */
 void receive_parameter(Mavlink_Received_t* rec);
 
 void read_parameters_from_flashc(void);

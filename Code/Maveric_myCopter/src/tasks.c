@@ -314,13 +314,13 @@ task_return_t set_mav_mode_n_state()
 				case MAV_MODE_GUIDED_ARMED:
 					if (centralData->mav_mode_previous != MAV_MODE_GUIDED_ARMED)
 					{
-						wp_hold_init();
+						wp_hold_init(centralData->position_estimator.localPosition);
 					}
 					break;
 				case MAV_MODE_AUTO_ARMED:
 					if (centralData->mav_mode_previous != MAV_MODE_AUTO_ARMED)
 					{
-						wp_hold_init();
+						wp_hold_init(centralData->position_estimator.localPosition);
 					}
 					if (!centralData->waypoint_set)
 					{
@@ -441,7 +441,8 @@ task_return_t set_mav_mode_n_state()
 				centralData->position_estimator.localPosition.pos[i] = centralData->sim_model.localPosition.pos[i];
 			}
 			centralData->position_estimator.init_gps_position = false;
-			
+			centralData->mav_state = MAV_STATE_STANDBY;
+			centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 			//relevel_imu();
 		}
 		// From reality to simulation
@@ -473,8 +474,6 @@ void run_imu_update() {
 		simu_update(&centralData->sim_model, &centralData->servos, &(centralData->imu1), &centralData->position_estimator);
 		imu_update(&(centralData->imu1), &(centralData->position_estimator), &centralData->pressure, &centralData->GPS_data);
 		
-		//for (i=0; i<3; i++) centralData->position_estimator.vel[i]=centralData->sim_model.vel[i];
-		//centralData->position_estimator.localPosition=centralData->sim_model.localPosition;
 	} else {
 		imu_get_raw_data(&(centralData->imu1));
 		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
@@ -520,7 +519,7 @@ task_return_t run_stabilisation() {
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			
 			// if no waypoints are set, we do position hold therefore the yaw mode is absolute
-			if(centralData->waypoint_set)
+			if(centralData->waypoint_set&&(centralData->mav_state!=MAV_STATE_STANDBY))
 			{
 				centralData->controls.yaw_mode = YAW_COORDINATED;
 			}else{
@@ -578,8 +577,8 @@ task_return_t gps_task() {
 	if (centralData->simulation_mode==1) {
 		simulate_gps(&centralData->sim_model, &centralData->GPS_data);
 	} else {
-		//gps_update();
-		fake_gps_fix();
+		gps_update();
+		//fake_gps_fix();
 	}
 }
 
@@ -602,10 +601,10 @@ task_return_t run_navigation_task()
 						if (centralData->waypoint_set)
 						{
 							run_navigation(centralData->waypoint_coordinates);
-					
 						}else{
 							run_navigation(centralData->waypoint_hold_coordinates);
 						}
+						//run_navigation(centralData->waypoint_coordinates);
 						break;
 					case MAV_MODE_GUIDED_ARMED:
 						run_navigation(centralData->waypoint_hold_coordinates);

@@ -44,7 +44,7 @@
 #define NAV_LOW_VELOCITY   1
 #define NAV_HIGH_VELOCITY  2
 
-#define DIST_2_VEL_GAIN 0.3
+#define DIST_2_VEL_GAIN 0.7
 
 central_data_t *centralData;
 float alt_integrator;
@@ -136,11 +136,26 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 		v_desired = MAX_CLIMB_RATE * norm_rel_dist /f_abs(dir_desired_bf[Z]);
 	}
 	
-	//mavlink_msg_named_value_int_send(MAVLINK_COMM_0,get_millis(),"v_desired",v_desired*100);
-	
 	dir_desired_bf[X] = v_desired * dir_desired_bf[X] / norm_rel_dist;
 	dir_desired_bf[Y] = v_desired * dir_desired_bf[Y] / norm_rel_dist;
 	dir_desired_bf[Z] = v_desired * dir_desired_bf[Z] / norm_rel_dist;
+	
+	//loopCount = loopCount++ %50;
+	//if (loopCount == 0)
+	//{
+		//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"v_desired",v_desired*100);
+		//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"act_vel",vector_norm(centralData->position_estimator.vel_bf)*100);
+		//dbg_print("Desired_vel_Bf(x100): (");
+		//dbg_print_num(dir_desired_bf[X]*100,10);
+		//dbg_print_num(dir_desired_bf[Y]*100,10);
+		//dbg_print_num(dir_desired_bf[Z]*100,10);
+		//dbg_print("). \n");
+		//dbg_print("Actual_vel_bf(x100): (");
+		//dbg_print_num(centralData->position_estimator.vel_bf[X]*100,10);
+		//dbg_print_num(centralData->position_estimator.vel_bf[Y]*100,10);
+		//dbg_print_num(centralData->position_estimator.vel_bf[Z]*100,10);
+		//dbg_print("). \n");
+	//}
 	
 	
 	//h_vel_sqr_norm = centralData->imu1.attitude.vel_bf[0]*centralData->imu1.attitude.vel_bf[0] + centralData->imu1.attitude.vel_bf[1]*centralData->imu1.attitude.vel_bf[1];
