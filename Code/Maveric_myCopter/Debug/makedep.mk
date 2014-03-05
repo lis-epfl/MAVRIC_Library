@@ -166,5 +166,5 @@ src\asf\common\utils\stdio\write.c
 
 src\boardsupport.c
 
-src\main.c
+src\main.cpp
 

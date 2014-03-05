@@ -54,7 +54,6 @@ void initialise_central_data(){
 		// init simulation
 		init_simulation(&(centralData.sim_model),&(centralData.imu1.attitude),centralData.position_estimator.localPosition);
 		//centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
-
 }
 
 central_data_t* get_central_data(void)

@@ -1,7 +1,7 @@
 #include "test_maths.h"
 
 #include "maths.h"
-#include "print_util.h";
+#include "print_util.h"
 
 UQuat_t quat1= {.s=0.0, .v={0.0, 0.0, 0.0} };
 UQuat_t quat2, quat3, quat4; 

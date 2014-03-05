@@ -182,7 +182,7 @@ void Init_ADCI(uint32_t adc_frequency, uint8_t reference_source){
 		//INTC_register_interrupt( (__int_handler) &processData, AVR32_ADCIFA_SEQUENCER1_IRQ, AVR32_INTC_INT1);
 //	int period_us=1000000/samplingrate;
 }
-void clear_adc_sequencer() {
+void clear_adc_sequencer(void) {
 	sequencer_item_count=0;
 	adcifa_sequence_opt.convnb=sequencer_item_count;
 }
@@ -226,13 +226,13 @@ void ADCI_Start_Sampling(int length, int samplingrate, int set_oversampling, int
 }
 
 // stops sampling immediately
-void ADCI_Stop_Sampling(){
+void ADCI_Stop_Sampling(void){
 	adcifa_stop_itimer(adcifa);
 	
 }
 
 // Returns true if one-shot sampling has finished
-Bool ADCI_Sampling_Complete(){
+Bool ADCI_Sampling_Complete(void){
 	return (sample_counter>=number_of_samples);
 }
 
@@ -249,12 +249,12 @@ int16_t ADCI_get_sample(int channel, int sample) {
 	return buffer[sample];
 }
 
-int16_t* ADCI_get_buffer() {
+int16_t* ADCI_get_buffer(void) {
 	return adci_buffer;
 }
 	
-int ADCI_get_sampling_status() {
+int ADCI_get_sampling_status(void) {
 	return sample_counter;
 }
 
-uint32_t get_adc_int_period() {return adc_int_period;}
+uint32_t get_adc_int_period(void) {return adc_int_period;}

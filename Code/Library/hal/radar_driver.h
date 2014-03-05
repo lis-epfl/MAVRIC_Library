@@ -15,7 +15,7 @@
 #define RADAR_POWER1_PIN AVR32_PIN_PC17
 #define RADAR_POWER2_PIN AVR32_PIN_PC18
 
-void init_radar();
+void init_radar(void);
 
 void switch_power(int supply1, int supply2);
 

@@ -10,7 +10,11 @@
 
 #include "mavlink_stream.h"
 
-#define MAX_ONBOARD_PARAM_COUNT 120
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#define MAX_ONBOARD_PARAM_COUNT 200 //120
 
 #define USER_PAGE_FIRST_FREE_WORD 0x8080020C
 
@@ -25,7 +29,7 @@ typedef struct {
 
 typedef struct {
 	Onboard_Parameter_t parameters[MAX_ONBOARD_PARAM_COUNT];
-	int param_count;
+	uint16_t param_count;
 	bool enumerate;
 	int transmit_parameter_index;
 	
@@ -80,7 +84,11 @@ void send_parameter(mavlink_param_request_read_t* request);
  */
 void receive_parameter(Mavlink_Received_t* rec);
 
-void read_parameters_from_flashc();
-void write_parameters_to_flashc();
+void read_parameters_from_flashc(void);
+void write_parameters_to_flashc(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ONBOARD_PARAMETERS_H */

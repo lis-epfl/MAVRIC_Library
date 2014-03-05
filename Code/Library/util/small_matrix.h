@@ -1,7 +1,9 @@
 #ifndef SMALL_MATRIX_H_
 #define SMALL_MATRIX_H_
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct matrix_2x2_t {
    float v[2][2];
@@ -632,5 +634,8 @@ float static inline sqr_norm4(const vector_4_t vec) {
    return result;
 }
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

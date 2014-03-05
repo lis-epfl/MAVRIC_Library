@@ -8,6 +8,10 @@
 #define MAX_DIGITS 10
 //#define STDOUT 0
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void dbg_print_init(byte_stream_t* debug_stream);
 byte_stream_t* get_debug_stream(void);
 
@@ -26,5 +30,9 @@ void dbg_putfloat(float c, int after_digits);
 
 void dbg_print_vector(float v[], int after_digits); 
 void dbg_print_quaternion(UQuat_t *quat, int after_digits); 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -51,6 +51,10 @@
 
 #include "compiler.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 
 /*! \name Identifiers of LEDs to Use with LED Functions
  */
@@ -180,6 +184,10 @@ extern U8 LED_Get_Intensity(U32 led);
  * \note The pins of the specified LEDs are set to PWM output mode.
  */
 extern void LED_Set_Intensity(U32 leds, U8 intensity);
+
+#ifdef __cplusplus
+}
+#endif
 
 
 #endif  // _LED_H_

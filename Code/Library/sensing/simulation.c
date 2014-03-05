@@ -15,6 +15,8 @@
 #include "central_data.h"
 #include "maths.h"
 
+void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos);
+
 void init_simulation(simulation_model_t *sim, Quat_Attitude_t *start_attitude, local_coordinates_t localPos) {
 	int i;
 	
@@ -60,7 +62,8 @@ static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr
 void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos){
 	int i;
 	float motor_command[4];
-	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4], rotor_lateral_drag[4];
+	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4];
+	// float rotor_lateral_drag[4];
 	float ldb;
 	UQuat_t wind_gf={.s=0, .v={sim->wind_x, sim->wind_y, 0.0}};
 	UQuat_t wind_bf=quat_global_to_local(sim->attitude.qe, wind_gf);
@@ -112,9 +115,9 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 }
 
 
-void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos){
-	int i;
-	float motor_command[4];
+//void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos){
+	// int i;
+	// float motor_command[4];
 	
 /*	motor_command[M_FRONT]= control->thrust + control->rpy[PITCH] + M_FRONT_DIR * control->rpy[YAW];
 	motor_command[M_RIGHT] = control->thrust - control->rpy[ROLL] + M_RIGHT_DIR * control->rpy[YAW];
@@ -129,7 +132,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos
 		centralData->servos[i].value=SERVO_SCALE*motor_command[i];
 	}
 	*/
-}
+//}
 
 void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est) {
 	int i;

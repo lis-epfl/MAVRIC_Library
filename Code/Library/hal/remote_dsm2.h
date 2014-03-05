@@ -27,7 +27,7 @@ typedef struct Spektrum_Receiver {
 
 
 // function to set slave receiver into bind mode. has to be called 100ms after power-up
-void rc_activate_bind_mode();
+void rc_activate_bind_mode(void);
 
 // initialise UART receiver for Spektrum/DSM2 slave receivers
 void    rc_init (void);

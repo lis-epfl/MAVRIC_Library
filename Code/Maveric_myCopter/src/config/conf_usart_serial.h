@@ -43,6 +43,9 @@
 #include "buffer.h"
 #include "streams.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define XBEE_UART_ID 0
 #define DEBUG_UART_ID 4
@@ -148,6 +151,8 @@ static  usart_config_t usart_opt[UART_COUNT] =
 	}
 };
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CONF_USART_SERIAL_H_INCLUDED */

@@ -13,6 +13,10 @@
 #include "mavlink_actions.h"
 #include "radar_module_driver.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef const struct {
 	U8 var8;
 	U16 var16;
@@ -23,21 +27,24 @@ nvram_datas_t *ptr_nvram;
 
 static const U8 write_data[8] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
 	
-void create_tasks();
-task_set* get_main_taskset();
+void create_tasks(void);
+task_set* get_main_taskset(void);
 
-void run_imu_update();
+void run_imu_update(void);
 
 void relevel_imu();
 
 void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool);
-task_return_t set_mav_mode_n_state();
-task_return_t run_stabilisation();
-task_return_t gps_task();
-task_return_t run_estimator();
-task_return_t run_navigation_task();
-task_return_t run_barometer();
-task_return_t send_rt_stats();
+task_return_t set_mav_mode_n_state(void);
+task_return_t run_stabilisation(void);
+task_return_t gps_task(void);
+task_return_t run_estimator(void);
+task_return_t run_navigation_task(void);
+task_return_t run_barometer(void);
+task_return_t send_rt_stats(void);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TASKS_H_ */
