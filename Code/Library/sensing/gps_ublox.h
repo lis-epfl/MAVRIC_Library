@@ -14,6 +14,7 @@
 //#include "gps_maveric.h"
 #include "stdint.h"
 #include "stdbool.h"
+#include "maths.h"
 
 /*
  *  try to put a UBlox into binary mode. This is in two parts. First we
@@ -140,9 +141,9 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define TIME_OF_YEAR 2 //< MTK, NMEA
 #define UNIX_EPOCH 3
 
-#ifndef PI
-#define PI 3.141592
-#endif
+//#ifndef PI
+//#define PI 3.141592
+//#endif
 
 #define DEG2RAD PI/180
 

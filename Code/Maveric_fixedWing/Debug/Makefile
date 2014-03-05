@@ -117,8 +117,6 @@ C_SRCS +=  \
 ../src/central_data.c \
 ../src/mavlink_actions.c \
 ../src/tasks.c \
-../Library/communication/ishtar.c \
-../Library/communication/ishtar_stream.c \
 ../Library/communication/mavlink_stream.c \
 ../Library/communication/onboard_parameters.c \
 ../Library/control/navigation.c \
@@ -177,7 +175,8 @@ C_SRCS +=  \
 ../src/asf/common/utils/stdio/read.c \
 ../src/asf/common/utils/stdio/stdio_usb/stdio_usb.c \
 ../src/asf/common/utils/stdio/write.c \
-../src/boardsupport.c
+../src/boardsupport.c \
+../src/main.cpp
 
 
 PREPROCESSING_SRCS +=  \
@@ -208,8 +207,6 @@ Library/util/quick_trig.o \
 src/central_data.o \
 src/mavlink_actions.o \
 src/tasks.o \
-Library/communication/ishtar.o \
-Library/communication/ishtar_stream.o \
 Library/communication/mavlink_stream.o \
 Library/communication/onboard_parameters.o \
 Library/control/navigation.o \
@@ -271,7 +268,8 @@ src/asf/common/services/usb/udc/udc.o \
 src/asf/common/utils/stdio/read.o \
 src/asf/common/utils/stdio/stdio_usb/stdio_usb.o \
 src/asf/common/utils/stdio/write.o \
-src/boardsupport.o
+src/boardsupport.o \
+src/main.o
 
 OBJS_AS_ARGS +=  \
 Library/communication/mavlink_waypoint_handler.o \
@@ -292,8 +290,6 @@ Library/util/quick_trig.o \
 src/central_data.o \
 src/mavlink_actions.o \
 src/tasks.o \
-Library/communication/ishtar.o \
-Library/communication/ishtar_stream.o \
 Library/communication/mavlink_stream.o \
 Library/communication/onboard_parameters.o \
 Library/control/navigation.o \
@@ -355,7 +351,8 @@ src/asf/common/services/usb/udc/udc.o \
 src/asf/common/utils/stdio/read.o \
 src/asf/common/utils/stdio/stdio_usb/stdio_usb.o \
 src/asf/common/utils/stdio/write.o \
-src/boardsupport.o
+src/boardsupport.o \
+src/main.o
 
 C_DEPS +=  \
 Library/communication/mavlink_waypoint_handler.d \
@@ -376,8 +373,6 @@ Library/util/quick_trig.d \
 src/central_data.d \
 src/mavlink_actions.d \
 src/tasks.d \
-Library/communication/ishtar.d \
-Library/communication/ishtar_stream.d \
 Library/communication/mavlink_stream.d \
 Library/communication/onboard_parameters.d \
 Library/control/navigation.d \
@@ -439,7 +434,8 @@ src/asf/common/services/usb/udc/udc.d \
 src/asf/common/utils/stdio/read.d \
 src/asf/common/utils/stdio/stdio_usb/stdio_usb.d \
 src/asf/common/utils/stdio/write.d \
-src/boardsupport.d
+src/boardsupport.d \
+src/main.d
 
 C_DEPS_AS_ARGS +=  \
 Library/communication/mavlink_waypoint_handler.d \
@@ -460,8 +456,6 @@ Library/util/quick_trig.d \
 src/central_data.d \
 src/mavlink_actions.d \
 src/tasks.d \
-Library/communication/ishtar.d \
-Library/communication/ishtar_stream.d \
 Library/communication/mavlink_stream.d \
 Library/communication/onboard_parameters.d \
 Library/control/navigation.d \
@@ -523,7 +517,8 @@ src/asf/common/services/usb/udc/udc.d \
 src/asf/common/utils/stdio/read.d \
 src/asf/common/utils/stdio/stdio_usb/stdio_usb.d \
 src/asf/common/utils/stdio/write.d \
-src/boardsupport.d
+src/boardsupport.d \
+src/main.d
 
 OUTPUT_FILE_PATH +=MegaFly2.elf
 
@@ -536,8 +531,6 @@ OUTPUT_FILE_DEP:= ./makedep.mk
 LIB_DEP+= 
 
 # AVR32/GNU C Compiler
-
-
 
 
 
@@ -734,6 +727,13 @@ src/%.o: ../src/%.c
 	@echo Building file: $<
 	@echo Invoking: AVR32/GNU C++ Compiler : 3.4.2
 	$(QUOTE)C:\Program Files\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.2.1002\avr32-gnu-toolchain\bin\avr32-gcc.exe$(QUOTE)  -DBOARD=USER_BOARD  -I"../src" -I"../src/asf/avr32/drivers/intc" -I"../src/asf/avr32/utils" -I"../src/asf/avr32/utils/preprocessor" -I"../src/asf/common/applications/user_application/user_board" -I"../src/asf/common/boards" -I"../src/asf/common/boards/user_board" -I"../src/asf/common/utils" -I"../src/config" -I"../src/asf/avr32/drivers/gpio" -I"../src/asf/avr32/drivers/scif" -I"../src/asf/avr32/drivers/pm" -I"../src/asf/avr32/drivers/flashc" -I"../src/asf/common/services/sleepmgr" -I"../src/asf/common/services/clock" -I"../src/asf/avr32/drivers/cpu/cycle_counter" -I"../src/asf/avr32/services/delay" -I"../src/asf/avr32/drivers/usbc" -I"../src/asf/common/utils/stdio/stdio_usb" -I"../src/asf/common/services/usb/class/cdc/device" -I"../src/asf/common/services/usb/class/cdc" -I"../src/asf/common/services/usb/udc" -I"../src/asf/common/services/usb" -I"../src/asf/avr32/drivers/usart" -I"../src/asf/common/services/serial" -I"../src/asf/avr32/drivers/adcifa" -I"../src/asf/avr32/drivers/dacifb" -I"../src/asf/avr32/drivers/pevc" -I"../src/asf/avr32/drivers/spi" -I"../src/asf/avr32/drivers/tc" -I"../src/asf/avr32/drivers/eic" -I"../src/asf/common/services/spi" -I"../src/asf/common/services/spi/uc3_spi" -I"../src/asf/avr32/drivers/pdca" -I"../src/asf/common/utils/stdio/stdio_serial" -I"../src/asf/avr32/drivers/pwm" -I"../src/asf/avr32/drivers/twim" -I"../src/asf/avr32/drivers/ast" -I"../src/asf/avr32/drivers/twis" -I"../src/asf/common/services/twi" -I"../src/asf/common/services/twi/uc3_twim" -I"../Library/communication" -I"../Library/actuation" -I"../Library/control" -I"../Library/hal" -I"../Library/runtime" -I"../Library/sensing" -I"../Library/util" -I"../Library"  -O0 -mhard-float -ffunction-sections -fdata-sections -fpic -g2 -pg -p -Wall -mpart=uc3c1512c -c -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -march=ucr3fp -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<"
+	@echo Finished building: $<
+	
+
+src/%.o: ../src/%.cpp
+	@echo Building file: $<
+	@echo Invoking: AVR32/GNU C++ Compiler : 3.4.2
+	$(QUOTE)C:\Program Files\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.2.1002\avr32-gnu-toolchain\bin\avr32-g++.exe$(QUOTE) -DBOARD=USER_BOARD  -I"../src/asf/avr32/drivers/intc" -I"../src" -I"../src/asf/avr32/utils" -I"../src/asf/avr32/utils/preprocessor" -I"../src/asf/common/applications/user_application/user_board" -I"../src/asf/common/boards" -I"../src/asf/common/boards/user_board" -I"../src/asf/common/utils" -I"../src/config" -I"../src/asf/avr32/drivers/gpio" -I"../src/asf/avr32/drivers/scif" -I"../src/asf/avr32/drivers/pm" -I"../src/asf/avr32/drivers/flashc" -I"../src/asf/common/services/sleepmgr" -I"../src/asf/common/services/clock" -I"../src/asf/avr32/drivers/cpu/cycle_counter" -I"../src/asf/avr32/services/delay" -I"../src/asf/avr32/drivers/usbc" -I"../src/asf/common/utils/stdio/stdio_usb" -I"../src/asf/common/services/usb/class/cdc/device" -I"../src/asf/common/services/usb/class/cdc" -I"../src/asf/common/services/usb/udc" -I"../src/asf/common/services/usb" -I"../src/asf/avr32/drivers/usart" -I"../src/asf/common/services/serial" -I"../src/asf/avr32/drivers/adcifa" -I"../src/asf/avr32/drivers/dacifb" -I"../src/asf/avr32/drivers/pevc" -I"../src/asf/avr32/drivers/spi" -I"../src/asf/avr32/drivers/tc" -I"../src/asf/avr32/drivers/eic" -I"../src/asf/common/services/spi" -I"../src/asf/common/services/spi/uc3_spi" -I"../src/asf/avr32/drivers/pdca" -I"../src/asf/common/utils/stdio/stdio_serial" -I"../src/asf/avr32/drivers/pwm" -I"../src/asf/avr32/drivers/twim" -I"../src/asf/avr32/drivers/ast" -I"../src/asf/avr32/drivers/twis" -I"../src/asf/common/services/twi" -I"../src/asf/common/services/twi/uc3_twim" -I"../Library/communication" -I"../Library/actuation" -I"../Library/control" -I"../Library/hal" -I"../Library/runtime" -I"../Library/sensing" -I"../Library/util" -I"../Library"  -O1 -fdata-sections -mhard-float -ffunction-sections -fpic -Wall -mpart=uc3c1512c -c -std=gnu++0x -Wpointer-arith -mrelax -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<"
 	@echo Finished building: $<
 	
 
@@ -993,7 +993,7 @@ all: $(OUTPUT_FILE_PATH) $(ADDITIONAL_DEPENDENCIES)
 $(OUTPUT_FILE_PATH): $(OBJS) $(USER_OBJS) $(OUTPUT_FILE_DEP) $(LIB_DEP)
 	@echo Building target: $@
 	@echo Invoking: AVR32/GNU Linker : 3.4.2
-	$(QUOTE)C:\Program Files\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.2.1002\avr32-gnu-toolchain\bin\avr32-g++.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -Wl,-Map="MegaFly2.map" -Wl,--start-group  -Wl,--end-group -mpart=uc3c1512c 
+	$(QUOTE)C:\Program Files\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.2.1002\avr32-gnu-toolchain\bin\avr32-g++.exe$(QUOTE) -o$(OUTPUT_FILE_PATH_AS_ARGS) $(OBJS_AS_ARGS) $(USER_OBJS) $(LIBS) -nostartfiles -Wl,-Map="MegaFly2.map" -Wl,--start-group  -Wl,--end-group -mfast-float -ffast-math -mpart=uc3c1512c 
 	@echo Finished building target: $@
 	"C:\Program Files\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.2.1002\avr32-gnu-toolchain\bin\avr32-objcopy.exe" -O ihex -R .eeprom -R .fuse -R .lock -R .signature  "MegaFly2.elf" "MegaFly2.hex"
 	"C:\Program Files\Atmel\Atmel Toolchain\AVR32 GCC\Native\3.4.2.1002\avr32-gnu-toolchain\bin\avr32-objcopy.exe" -j .eeprom  --set-section-flags=.eeprom=alloc,load --change-section-lma .eeprom=0  --no-change-warnings -O ihex "MegaFly2.elf" "MegaFly2.eep" || exit 0
