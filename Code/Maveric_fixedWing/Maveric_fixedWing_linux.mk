@@ -5,15 +5,15 @@
 ## Debug
 ProjectName            :=Maveric_myCopter_linux
 ConfigurationName      :=Debug
-WorkspacePath          := "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing"
-ProjectPath            := "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing"
+WorkspacePath          := "/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter"
+ProjectPath            := "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter"
 IntermediateDirectory  :=./Debug_Linux/obj
 OutDir                 := $(IntermediateDirectory)
 CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Julien Lecoeur
-Date                   :=03/05/14
+Date                   :=03/04/14
 CodeLitePath           :="/home/julien/.codelite"
 LinkerName             :=avr32-g++
 SharedObjectLinkerName :=avr32-g++ -shared -fPIC
@@ -112,437 +112,437 @@ PreBuild:
 ## Objects
 ##
 $(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix): src/mavlink_actions.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/mavlink_actions.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/mavlink_actions.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_mavlink_actions$(PreprocessSuffix): src/mavlink_actions.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_mavlink_actions$(PreprocessSuffix) "src/mavlink_actions.c"
 
 $(IntermediateDirectory)/src_tasks$(ObjectSuffix): src/tasks.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/tasks.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_tasks$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/tasks.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_tasks$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_tasks$(PreprocessSuffix): src/tasks.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_tasks$(PreprocessSuffix) "src/tasks.c"
 
 $(IntermediateDirectory)/src_main$(ObjectSuffix): src/main.cpp 
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/main.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_main$(ObjectSuffix) $(IncludePath)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/main.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_main$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_main$(PreprocessSuffix): src/main.cpp
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_main$(PreprocessSuffix) "src/main.cpp"
 
 $(IntermediateDirectory)/src_central_data$(ObjectSuffix): src/central_data.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/central_data.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/central_data.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_central_data$(PreprocessSuffix): src/central_data.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_central_data$(PreprocessSuffix) "src/central_data.c"
 
 $(IntermediateDirectory)/src_boardsupport$(ObjectSuffix): src/boardsupport.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/boardsupport.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_boardsupport$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/boardsupport.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_boardsupport$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/src_boardsupport$(PreprocessSuffix): src/boardsupport.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_boardsupport$(PreprocessSuffix) "src/boardsupport.c"
 
 $(IntermediateDirectory)/tests_test_small_matrix$(ObjectSuffix): Library/tests/test_small_matrix.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/tests/test_small_matrix.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/tests_test_small_matrix$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/tests/test_small_matrix.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/tests_test_small_matrix$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/tests_test_small_matrix$(PreprocessSuffix): Library/tests/test_small_matrix.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/tests_test_small_matrix$(PreprocessSuffix) "Library/tests/test_small_matrix.c"
 
 $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix): Library/tests/test_maths.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/tests/test_maths.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/tests/test_maths.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/tests_test_maths$(PreprocessSuffix): Library/tests/test_maths.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/tests_test_maths$(PreprocessSuffix) "Library/tests/test_maths.c"
 
 $(IntermediateDirectory)/tests_test_quick_trig$(ObjectSuffix): Library/tests/test_quick_trig.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/tests/test_quick_trig.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/tests_test_quick_trig$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/tests/test_quick_trig.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/tests_test_quick_trig$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/tests_test_quick_trig$(PreprocessSuffix): Library/tests/test_quick_trig.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/tests_test_quick_trig$(PreprocessSuffix) "Library/tests/test_quick_trig.c"
 
 $(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix): Library/communication/mavlink_stream.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/communication/mavlink_stream.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/communication/mavlink_stream.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/communication_mavlink_stream$(PreprocessSuffix): Library/communication/mavlink_stream.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/communication_mavlink_stream$(PreprocessSuffix) "Library/communication/mavlink_stream.c"
 
 $(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix): Library/communication/onboard_parameters.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/communication/onboard_parameters.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/communication/onboard_parameters.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/communication_onboard_parameters$(PreprocessSuffix): Library/communication/onboard_parameters.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/communication_onboard_parameters$(PreprocessSuffix) "Library/communication/onboard_parameters.c"
 
 $(IntermediateDirectory)/communication_mavlink_waypoint_handler$(ObjectSuffix): Library/communication/mavlink_waypoint_handler.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/communication/mavlink_waypoint_handler.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/communication_mavlink_waypoint_handler$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/communication/mavlink_waypoint_handler.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/communication_mavlink_waypoint_handler$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/communication_mavlink_waypoint_handler$(PreprocessSuffix): Library/communication/mavlink_waypoint_handler.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/communication_mavlink_waypoint_handler$(PreprocessSuffix) "Library/communication/mavlink_waypoint_handler.c"
 
 $(IntermediateDirectory)/control_pid_control$(ObjectSuffix): Library/control/pid_control.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/control/pid_control.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_pid_control$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/control/pid_control.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_pid_control$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/control_pid_control$(PreprocessSuffix): Library/control/pid_control.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/control_pid_control$(PreprocessSuffix) "Library/control/pid_control.c"
 
 $(IntermediateDirectory)/control_orca$(ObjectSuffix): Library/control/orca.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/control/orca.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_orca$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/control/orca.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_orca$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/control_orca$(PreprocessSuffix): Library/control/orca.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/control_orca$(PreprocessSuffix) "Library/control/orca.c"
 
 $(IntermediateDirectory)/control_navigation$(ObjectSuffix): Library/control/navigation.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/control/navigation.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_navigation$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/control/navigation.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_navigation$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/control_navigation$(PreprocessSuffix): Library/control/navigation.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/control_navigation$(PreprocessSuffix) "Library/control/navigation.c"
 
 $(IntermediateDirectory)/control_stabilisation_hybrid$(ObjectSuffix): Library/control/stabilisation_hybrid.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/control/stabilisation_hybrid.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_stabilisation_hybrid$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/control/stabilisation_hybrid.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_stabilisation_hybrid$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/control_stabilisation_hybrid$(PreprocessSuffix): Library/control/stabilisation_hybrid.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/control_stabilisation_hybrid$(PreprocessSuffix) "Library/control/stabilisation_hybrid.c"
 
 $(IntermediateDirectory)/control_stabilisation_copter$(ObjectSuffix): Library/control/stabilisation_copter.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/control/stabilisation_copter.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_stabilisation_copter$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/control/stabilisation_copter.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_stabilisation_copter$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/control_stabilisation_copter$(PreprocessSuffix): Library/control/stabilisation_copter.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/control_stabilisation_copter$(PreprocessSuffix) "Library/control/stabilisation_copter.c"
 
 $(IntermediateDirectory)/control_adaptive_parameter$(ObjectSuffix): Library/control/adaptive_parameter.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/control/adaptive_parameter.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_adaptive_parameter$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/control/adaptive_parameter.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_adaptive_parameter$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/control_adaptive_parameter$(PreprocessSuffix): Library/control/adaptive_parameter.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/control_adaptive_parameter$(PreprocessSuffix) "Library/control/adaptive_parameter.c"
 
 $(IntermediateDirectory)/control_stabilisation$(ObjectSuffix): Library/control/stabilisation.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/control/stabilisation.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_stabilisation$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/control/stabilisation.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_stabilisation$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/control_stabilisation$(PreprocessSuffix): Library/control/stabilisation.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/control_stabilisation$(PreprocessSuffix) "Library/control/stabilisation.c"
 
 $(IntermediateDirectory)/hal_lsm330dlc_driver$(ObjectSuffix): Library/hal/lsm330dlc_driver.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/lsm330dlc_driver.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_lsm330dlc_driver$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/lsm330dlc_driver.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_lsm330dlc_driver$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_lsm330dlc_driver$(PreprocessSuffix): Library/hal/lsm330dlc_driver.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_lsm330dlc_driver$(PreprocessSuffix) "Library/hal/lsm330dlc_driver.c"
 
 $(IntermediateDirectory)/hal_adxl345_driver$(ObjectSuffix): Library/hal/adxl345_driver.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/adxl345_driver.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_adxl345_driver$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/adxl345_driver.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_adxl345_driver$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_adxl345_driver$(PreprocessSuffix): Library/hal/adxl345_driver.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_adxl345_driver$(PreprocessSuffix) "Library/hal/adxl345_driver.c"
 
 $(IntermediateDirectory)/hal_compass_hmc5883l$(ObjectSuffix): Library/hal/compass_hmc5883l.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/compass_hmc5883l.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_compass_hmc5883l$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/compass_hmc5883l.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_compass_hmc5883l$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_compass_hmc5883l$(PreprocessSuffix): Library/hal/compass_hmc5883l.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_compass_hmc5883l$(PreprocessSuffix) "Library/hal/compass_hmc5883l.c"
 
 $(IntermediateDirectory)/hal_bmp085$(ObjectSuffix): Library/hal/bmp085.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/bmp085.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_bmp085$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/bmp085.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_bmp085$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_bmp085$(PreprocessSuffix): Library/hal/bmp085.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_bmp085$(PreprocessSuffix) "Library/hal/bmp085.c"
 
 $(IntermediateDirectory)/hal_time_keeper$(ObjectSuffix): Library/hal/time_keeper.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/time_keeper.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_time_keeper$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/time_keeper.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_time_keeper$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_time_keeper$(PreprocessSuffix): Library/hal/time_keeper.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_time_keeper$(PreprocessSuffix) "Library/hal/time_keeper.c"
 
 $(IntermediateDirectory)/hal_uart_int$(ObjectSuffix): Library/hal/uart_int.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/uart_int.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_uart_int$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/uart_int.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_uart_int$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_uart_int$(PreprocessSuffix): Library/hal/uart_int.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_uart_int$(PreprocessSuffix) "Library/hal/uart_int.c"
 
 $(IntermediateDirectory)/hal_amplifiers$(ObjectSuffix): Library/hal/amplifiers.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/amplifiers.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_amplifiers$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/amplifiers.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_amplifiers$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_amplifiers$(PreprocessSuffix): Library/hal/amplifiers.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_amplifiers$(PreprocessSuffix) "Library/hal/amplifiers.c"
 
 $(IntermediateDirectory)/hal_radar_driver$(ObjectSuffix): Library/hal/radar_driver.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/radar_driver.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_radar_driver$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/radar_driver.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_radar_driver$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_radar_driver$(PreprocessSuffix): Library/hal/radar_driver.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_radar_driver$(PreprocessSuffix) "Library/hal/radar_driver.c"
 
 $(IntermediateDirectory)/hal_radar_module_driver$(ObjectSuffix): Library/hal/radar_module_driver.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/radar_module_driver.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_radar_module_driver$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/radar_module_driver.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_radar_module_driver$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_radar_module_driver$(PreprocessSuffix): Library/hal/radar_module_driver.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_radar_module_driver$(PreprocessSuffix) "Library/hal/radar_module_driver.c"
 
 $(IntermediateDirectory)/hal_led$(ObjectSuffix): Library/hal/led.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/led.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_led$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/led.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_led$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_led$(PreprocessSuffix): Library/hal/led.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_led$(PreprocessSuffix) "Library/hal/led.c"
 
 $(IntermediateDirectory)/hal_spi_buffered$(ObjectSuffix): Library/hal/spi_buffered.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/spi_buffered.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_spi_buffered$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/spi_buffered.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_spi_buffered$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_spi_buffered$(PreprocessSuffix): Library/hal/spi_buffered.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_spi_buffered$(PreprocessSuffix) "Library/hal/spi_buffered.c"
 
 $(IntermediateDirectory)/hal_itg3200_driver$(ObjectSuffix): Library/hal/itg3200_driver.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/itg3200_driver.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_itg3200_driver$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/itg3200_driver.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_itg3200_driver$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_itg3200_driver$(PreprocessSuffix): Library/hal/itg3200_driver.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_itg3200_driver$(PreprocessSuffix) "Library/hal/itg3200_driver.c"
 
 $(IntermediateDirectory)/hal_adc_int$(ObjectSuffix): Library/hal/adc_int.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/adc_int.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_adc_int$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/adc_int.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_adc_int$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_adc_int$(PreprocessSuffix): Library/hal/adc_int.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_adc_int$(PreprocessSuffix) "Library/hal/adc_int.c"
 
 $(IntermediateDirectory)/hal_dac_dma$(ObjectSuffix): Library/hal/dac_dma.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/dac_dma.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_dac_dma$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/dac_dma.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_dac_dma$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_dac_dma$(PreprocessSuffix): Library/hal/dac_dma.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_dac_dma$(PreprocessSuffix) "Library/hal/dac_dma.c"
 
 $(IntermediateDirectory)/hal_ads1274$(ObjectSuffix): Library/hal/ads1274.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/ads1274.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_ads1274$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/ads1274.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_ads1274$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_ads1274$(PreprocessSuffix): Library/hal/ads1274.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_ads1274$(PreprocessSuffix) "Library/hal/ads1274.c"
 
 $(IntermediateDirectory)/hal_servo_pwm$(ObjectSuffix): Library/hal/servo_pwm.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/servo_pwm.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_servo_pwm$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/servo_pwm.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_servo_pwm$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_servo_pwm$(PreprocessSuffix): Library/hal/servo_pwm.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_servo_pwm$(PreprocessSuffix) "Library/hal/servo_pwm.c"
 
 $(IntermediateDirectory)/hal_analog_monitor$(ObjectSuffix): Library/hal/analog_monitor.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/analog_monitor.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_analog_monitor$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/analog_monitor.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_analog_monitor$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_analog_monitor$(PreprocessSuffix): Library/hal/analog_monitor.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_analog_monitor$(PreprocessSuffix) "Library/hal/analog_monitor.c"
 
 $(IntermediateDirectory)/hal_remote_dsm2$(ObjectSuffix): Library/hal/remote_dsm2.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/remote_dsm2.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_remote_dsm2$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/remote_dsm2.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_remote_dsm2$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_remote_dsm2$(PreprocessSuffix): Library/hal/remote_dsm2.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_remote_dsm2$(PreprocessSuffix) "Library/hal/remote_dsm2.c"
 
 $(IntermediateDirectory)/hal_i2c_driver_int$(ObjectSuffix): Library/hal/i2c_driver_int.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/hal/i2c_driver_int.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_i2c_driver_int$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/hal/i2c_driver_int.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_i2c_driver_int$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/hal_i2c_driver_int$(PreprocessSuffix): Library/hal/i2c_driver_int.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_i2c_driver_int$(PreprocessSuffix) "Library/hal/i2c_driver_int.c"
 
 $(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix): Library/runtime/scheduler.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/runtime/scheduler.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/runtime/scheduler.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/runtime_scheduler$(PreprocessSuffix): Library/runtime/scheduler.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/runtime_scheduler$(PreprocessSuffix) "Library/runtime/scheduler.c"
 
 $(IntermediateDirectory)/sensing_imu$(ObjectSuffix): Library/sensing/imu.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/sensing/imu.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_imu$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/sensing/imu.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_imu$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sensing_imu$(PreprocessSuffix): Library/sensing/imu.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_imu$(PreprocessSuffix) "Library/sensing/imu.c"
 
 $(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix): Library/sensing/position_estimation.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/sensing/position_estimation.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/sensing/position_estimation.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sensing_position_estimation$(PreprocessSuffix): Library/sensing/position_estimation.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_position_estimation$(PreprocessSuffix) "Library/sensing/position_estimation.c"
 
 $(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix): Library/sensing/qfilter.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/sensing/qfilter.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/sensing/qfilter.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sensing_qfilter$(PreprocessSuffix): Library/sensing/qfilter.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_qfilter$(PreprocessSuffix) "Library/sensing/qfilter.c"
 
 $(IntermediateDirectory)/sensing_estimator$(ObjectSuffix): Library/sensing/estimator.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/sensing/estimator.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_estimator$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/sensing/estimator.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_estimator$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sensing_estimator$(PreprocessSuffix): Library/sensing/estimator.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_estimator$(PreprocessSuffix) "Library/sensing/estimator.c"
 
 $(IntermediateDirectory)/sensing_neighbor_selection$(ObjectSuffix): Library/sensing/neighbor_selection.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/sensing/neighbor_selection.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_neighbor_selection$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/sensing/neighbor_selection.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_neighbor_selection$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sensing_neighbor_selection$(PreprocessSuffix): Library/sensing/neighbor_selection.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_neighbor_selection$(PreprocessSuffix) "Library/sensing/neighbor_selection.c"
 
 $(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix): Library/sensing/gps_ublox.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/sensing/gps_ublox.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/sensing/gps_ublox.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sensing_gps_ublox$(PreprocessSuffix): Library/sensing/gps_ublox.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_gps_ublox$(PreprocessSuffix) "Library/sensing/gps_ublox.c"
 
 $(IntermediateDirectory)/sensing_simulation$(ObjectSuffix): Library/sensing/simulation.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/sensing/simulation.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/sensing/simulation.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sensing_simulation$(PreprocessSuffix): Library/sensing/simulation.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_simulation$(PreprocessSuffix) "Library/sensing/simulation.c"
 
 $(IntermediateDirectory)/util_linear_algebra$(ObjectSuffix): Library/util/linear_algebra.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/util/linear_algebra.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_linear_algebra$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/util/linear_algebra.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_linear_algebra$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/util_linear_algebra$(PreprocessSuffix): Library/util/linear_algebra.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_linear_algebra$(PreprocessSuffix) "Library/util/linear_algebra.c"
 
 $(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix): Library/util/coord_conventions.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/util/coord_conventions.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/util/coord_conventions.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/util_coord_conventions$(PreprocessSuffix): Library/util/coord_conventions.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_coord_conventions$(PreprocessSuffix) "Library/util/coord_conventions.c"
 
 $(IntermediateDirectory)/util_sinus$(ObjectSuffix): Library/util/sinus.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/util/sinus.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_sinus$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/util/sinus.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_sinus$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/util_sinus$(PreprocessSuffix): Library/util/sinus.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_sinus$(PreprocessSuffix) "Library/util/sinus.c"
 
 $(IntermediateDirectory)/util_print_util$(ObjectSuffix): Library/util/print_util.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/util/print_util.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_print_util$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/util/print_util.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_print_util$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/util_print_util$(PreprocessSuffix): Library/util/print_util.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_print_util$(PreprocessSuffix) "Library/util/print_util.c"
 
 $(IntermediateDirectory)/util_buffer$(ObjectSuffix): Library/util/buffer.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/util/buffer.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_buffer$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/util/buffer.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_buffer$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/util_buffer$(PreprocessSuffix): Library/util/buffer.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_buffer$(PreprocessSuffix) "Library/util/buffer.c"
 
 $(IntermediateDirectory)/util_kalman$(ObjectSuffix): Library/util/kalman.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/util/kalman.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_kalman$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/util/kalman.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_kalman$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/util_kalman$(PreprocessSuffix): Library/util/kalman.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_kalman$(PreprocessSuffix) "Library/util/kalman.c"
 
 $(IntermediateDirectory)/util_quick_trig$(ObjectSuffix): Library/util/quick_trig.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/util/quick_trig.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_quick_trig$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/util/quick_trig.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_quick_trig$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/util_quick_trig$(PreprocessSuffix): Library/util/quick_trig.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_quick_trig$(PreprocessSuffix) "Library/util/quick_trig.c"
 
 $(IntermediateDirectory)/util_generator$(ObjectSuffix): Library/util/generator.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/Library/util/generator.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_generator$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/Library/util/generator.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_generator$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/util_generator$(PreprocessSuffix): Library/util/generator.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_generator$(PreprocessSuffix) "Library/util/generator.c"
 
 $(IntermediateDirectory)/user_board_init$(ObjectSuffix): src/asf/common/boards/user_board/init.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/common/boards/user_board/init.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/user_board_init$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/common/boards/user_board/init.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/user_board_init$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/user_board_init$(PreprocessSuffix): src/asf/common/boards/user_board/init.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/user_board_init$(PreprocessSuffix) "src/asf/common/boards/user_board/init.c"
 
 $(IntermediateDirectory)/stdio_read$(ObjectSuffix): src/asf/common/utils/stdio/read.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/common/utils/stdio/read.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/stdio_read$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/common/utils/stdio/read.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/stdio_read$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/stdio_read$(PreprocessSuffix): src/asf/common/utils/stdio/read.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/stdio_read$(PreprocessSuffix) "src/asf/common/utils/stdio/read.c"
 
 $(IntermediateDirectory)/stdio_write$(ObjectSuffix): src/asf/common/utils/stdio/write.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/common/utils/stdio/write.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/stdio_write$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/common/utils/stdio/write.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/stdio_write$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/stdio_write$(PreprocessSuffix): src/asf/common/utils/stdio/write.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/stdio_write$(PreprocessSuffix) "src/asf/common/utils/stdio/write.c"
 
 $(IntermediateDirectory)/pm_power_clocks_lib$(ObjectSuffix): src/asf/avr32/drivers/pm/power_clocks_lib.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/pm/power_clocks_lib.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/pm_power_clocks_lib$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/pm/power_clocks_lib.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/pm_power_clocks_lib$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/pm_power_clocks_lib$(PreprocessSuffix): src/asf/avr32/drivers/pm/power_clocks_lib.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/pm_power_clocks_lib$(PreprocessSuffix) "src/asf/avr32/drivers/pm/power_clocks_lib.c"
 
 $(IntermediateDirectory)/pm_pm_uc3c$(ObjectSuffix): src/asf/avr32/drivers/pm/pm_uc3c.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/pm/pm_uc3c.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/pm_pm_uc3c$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/pm/pm_uc3c.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/pm_pm_uc3c$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/pm_pm_uc3c$(PreprocessSuffix): src/asf/avr32/drivers/pm/pm_uc3c.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/pm_pm_uc3c$(PreprocessSuffix) "src/asf/avr32/drivers/pm/pm_uc3c.c"
 
 $(IntermediateDirectory)/adcifa_adcifa$(ObjectSuffix): src/asf/avr32/drivers/adcifa/adcifa.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/adcifa/adcifa.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/adcifa_adcifa$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/adcifa/adcifa.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/adcifa_adcifa$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/adcifa_adcifa$(PreprocessSuffix): src/asf/avr32/drivers/adcifa/adcifa.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/adcifa_adcifa$(PreprocessSuffix) "src/asf/avr32/drivers/adcifa/adcifa.c"
 
 $(IntermediateDirectory)/usart_usart$(ObjectSuffix): src/asf/avr32/drivers/usart/usart.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/usart/usart.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/usart_usart$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/usart/usart.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/usart_usart$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/usart_usart$(PreprocessSuffix): src/asf/avr32/drivers/usart/usart.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/usart_usart$(PreprocessSuffix) "src/asf/avr32/drivers/usart/usart.c"
 
 $(IntermediateDirectory)/twim_twim$(ObjectSuffix): src/asf/avr32/drivers/twim/twim.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/twim/twim.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/twim_twim$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/twim/twim.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/twim_twim$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/twim_twim$(PreprocessSuffix): src/asf/avr32/drivers/twim/twim.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/twim_twim$(PreprocessSuffix) "src/asf/avr32/drivers/twim/twim.c"
 
 $(IntermediateDirectory)/intc_intc$(ObjectSuffix): src/asf/avr32/drivers/intc/intc.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/intc/intc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/intc_intc$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/intc/intc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/intc_intc$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/intc_intc$(PreprocessSuffix): src/asf/avr32/drivers/intc/intc.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/intc_intc$(PreprocessSuffix) "src/asf/avr32/drivers/intc/intc.c"
 
 $(IntermediateDirectory)/intc_exception$(ObjectSuffix): src/asf/avr32/drivers/intc/exception.S 
-	$(AS) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/intc/exception.S" $(ASFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/intc_exception$(ObjectSuffix) -I$(IncludePath)
+	$(AS) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/intc/exception.S" $(ASFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/intc_exception$(ObjectSuffix) -I$(IncludePath)
 $(IntermediateDirectory)/intc_exception$(PreprocessSuffix): src/asf/avr32/drivers/intc/exception.S
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/intc_exception$(PreprocessSuffix) "src/asf/avr32/drivers/intc/exception.S"
 
 $(IntermediateDirectory)/ast_ast$(ObjectSuffix): src/asf/avr32/drivers/ast/ast.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/ast/ast.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/ast_ast$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/ast/ast.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/ast_ast$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/ast_ast$(PreprocessSuffix): src/asf/avr32/drivers/ast/ast.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/ast_ast$(PreprocessSuffix) "src/asf/avr32/drivers/ast/ast.c"
 
 $(IntermediateDirectory)/pevc_pevc$(ObjectSuffix): src/asf/avr32/drivers/pevc/pevc.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/pevc/pevc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/pevc_pevc$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/pevc/pevc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/pevc_pevc$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/pevc_pevc$(PreprocessSuffix): src/asf/avr32/drivers/pevc/pevc.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/pevc_pevc$(PreprocessSuffix) "src/asf/avr32/drivers/pevc/pevc.c"
 
 $(IntermediateDirectory)/tc_tc$(ObjectSuffix): src/asf/avr32/drivers/tc/tc.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/tc/tc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/tc_tc$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/tc/tc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/tc_tc$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/tc_tc$(PreprocessSuffix): src/asf/avr32/drivers/tc/tc.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/tc_tc$(PreprocessSuffix) "src/asf/avr32/drivers/tc/tc.c"
 
 $(IntermediateDirectory)/spi_spi$(ObjectSuffix): src/asf/avr32/drivers/spi/spi.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/spi/spi.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/spi_spi$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/spi/spi.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/spi_spi$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/spi_spi$(PreprocessSuffix): src/asf/avr32/drivers/spi/spi.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/spi_spi$(PreprocessSuffix) "src/asf/avr32/drivers/spi/spi.c"
 
 $(IntermediateDirectory)/pdca_pdca$(ObjectSuffix): src/asf/avr32/drivers/pdca/pdca.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/pdca/pdca.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/pdca_pdca$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/pdca/pdca.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/pdca_pdca$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/pdca_pdca$(PreprocessSuffix): src/asf/avr32/drivers/pdca/pdca.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/pdca_pdca$(PreprocessSuffix) "src/asf/avr32/drivers/pdca/pdca.c"
 
 $(IntermediateDirectory)/eic_eic$(ObjectSuffix): src/asf/avr32/drivers/eic/eic.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/eic/eic.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/eic_eic$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/eic/eic.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/eic_eic$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/eic_eic$(PreprocessSuffix): src/asf/avr32/drivers/eic/eic.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/eic_eic$(PreprocessSuffix) "src/asf/avr32/drivers/eic/eic.c"
 
 $(IntermediateDirectory)/dacifb_dacifb$(ObjectSuffix): src/asf/avr32/drivers/dacifb/dacifb.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/dacifb/dacifb.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/dacifb_dacifb$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/dacifb/dacifb.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/dacifb_dacifb$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/dacifb_dacifb$(PreprocessSuffix): src/asf/avr32/drivers/dacifb/dacifb.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/dacifb_dacifb$(PreprocessSuffix) "src/asf/avr32/drivers/dacifb/dacifb.c"
 
 $(IntermediateDirectory)/pwm_pwm4$(ObjectSuffix): src/asf/avr32/drivers/pwm/pwm4.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/pwm/pwm4.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/pwm_pwm4$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/pwm/pwm4.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/pwm_pwm4$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/pwm_pwm4$(PreprocessSuffix): src/asf/avr32/drivers/pwm/pwm4.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/pwm_pwm4$(PreprocessSuffix) "src/asf/avr32/drivers/pwm/pwm4.c"
 
 $(IntermediateDirectory)/flashc_flashc$(ObjectSuffix): src/asf/avr32/drivers/flashc/flashc.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/flashc/flashc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/flashc_flashc$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/flashc/flashc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/flashc_flashc$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/flashc_flashc$(PreprocessSuffix): src/asf/avr32/drivers/flashc/flashc.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/flashc_flashc$(PreprocessSuffix) "src/asf/avr32/drivers/flashc/flashc.c"
 
 $(IntermediateDirectory)/gpio_gpio$(ObjectSuffix): src/asf/avr32/drivers/gpio/gpio.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/gpio/gpio.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/gpio_gpio$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/gpio/gpio.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/gpio_gpio$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/gpio_gpio$(PreprocessSuffix): src/asf/avr32/drivers/gpio/gpio.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/gpio_gpio$(PreprocessSuffix) "src/asf/avr32/drivers/gpio/gpio.c"
 
 $(IntermediateDirectory)/scif_scif_uc3c$(ObjectSuffix): src/asf/avr32/drivers/scif/scif_uc3c.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/scif/scif_uc3c.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/scif_scif_uc3c$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/scif/scif_uc3c.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/scif_scif_uc3c$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/scif_scif_uc3c$(PreprocessSuffix): src/asf/avr32/drivers/scif/scif_uc3c.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/scif_scif_uc3c$(PreprocessSuffix) "src/asf/avr32/drivers/scif/scif_uc3c.c"
 
 $(IntermediateDirectory)/usbc_usbc_device$(ObjectSuffix): src/asf/avr32/drivers/usbc/usbc_device.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/drivers/usbc/usbc_device.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/usbc_usbc_device$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/usbc/usbc_device.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/usbc_usbc_device$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/usbc_usbc_device$(PreprocessSuffix): src/asf/avr32/drivers/usbc/usbc_device.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/usbc_usbc_device$(PreprocessSuffix) "src/asf/avr32/drivers/usbc/usbc_device.c"
 
 $(IntermediateDirectory)/startup_startup_uc3$(ObjectSuffix): src/asf/avr32/utils/startup/startup_uc3.S 
-	$(AS) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/utils/startup/startup_uc3.S" $(ASFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/startup_startup_uc3$(ObjectSuffix) -I$(IncludePath)
+	$(AS) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/utils/startup/startup_uc3.S" $(ASFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/startup_startup_uc3$(ObjectSuffix) -I$(IncludePath)
 $(IntermediateDirectory)/startup_startup_uc3$(PreprocessSuffix): src/asf/avr32/utils/startup/startup_uc3.S
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/startup_startup_uc3$(PreprocessSuffix) "src/asf/avr32/utils/startup/startup_uc3.S"
 
 $(IntermediateDirectory)/startup_trampoline_uc3$(ObjectSuffix): src/asf/avr32/utils/startup/trampoline_uc3.S 
-	$(AS) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/utils/startup/trampoline_uc3.S" $(ASFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/startup_trampoline_uc3$(ObjectSuffix) -I$(IncludePath)
+	$(AS) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/utils/startup/trampoline_uc3.S" $(ASFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/startup_trampoline_uc3$(ObjectSuffix) -I$(IncludePath)
 $(IntermediateDirectory)/startup_trampoline_uc3$(PreprocessSuffix): src/asf/avr32/utils/startup/trampoline_uc3.S
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/startup_trampoline_uc3$(PreprocessSuffix) "src/asf/avr32/utils/startup/trampoline_uc3.S"
 
 $(IntermediateDirectory)/delay_delay$(ObjectSuffix): src/asf/avr32/services/delay/delay.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/avr32/services/delay/delay.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/delay_delay$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/services/delay/delay.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/delay_delay$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/delay_delay$(PreprocessSuffix): src/asf/avr32/services/delay/delay.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/delay_delay$(PreprocessSuffix) "src/asf/avr32/services/delay/delay.c"
 
 $(IntermediateDirectory)/stdio_usb_stdio_usb$(ObjectSuffix): src/asf/common/utils/stdio/stdio_usb/stdio_usb.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/common/utils/stdio/stdio_usb/stdio_usb.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/stdio_usb_stdio_usb$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/common/utils/stdio/stdio_usb/stdio_usb.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/stdio_usb_stdio_usb$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/stdio_usb_stdio_usb$(PreprocessSuffix): src/asf/common/utils/stdio/stdio_usb/stdio_usb.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/stdio_usb_stdio_usb$(PreprocessSuffix) "src/asf/common/utils/stdio/stdio_usb/stdio_usb.c"
 
 $(IntermediateDirectory)/uc3_sleepmgr$(ObjectSuffix): src/asf/common/services/sleepmgr/uc3/sleepmgr.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/common/services/sleepmgr/uc3/sleepmgr.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/uc3_sleepmgr$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/common/services/sleepmgr/uc3/sleepmgr.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/uc3_sleepmgr$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/uc3_sleepmgr$(PreprocessSuffix): src/asf/common/services/sleepmgr/uc3/sleepmgr.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/uc3_sleepmgr$(PreprocessSuffix) "src/asf/common/services/sleepmgr/uc3/sleepmgr.c"
 
 $(IntermediateDirectory)/uc3_spi_spi_master$(ObjectSuffix): src/asf/common/services/spi/uc3_spi/spi_master.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/common/services/spi/uc3_spi/spi_master.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/uc3_spi_spi_master$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/common/services/spi/uc3_spi/spi_master.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/uc3_spi_spi_master$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/uc3_spi_spi_master$(PreprocessSuffix): src/asf/common/services/spi/uc3_spi/spi_master.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/uc3_spi_spi_master$(PreprocessSuffix) "src/asf/common/services/spi/uc3_spi/spi_master.c"
 
 $(IntermediateDirectory)/uc3c_pll$(ObjectSuffix): src/asf/common/services/clock/uc3c/pll.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/common/services/clock/uc3c/pll.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/uc3c_pll$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/common/services/clock/uc3c/pll.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/uc3c_pll$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/uc3c_pll$(PreprocessSuffix): src/asf/common/services/clock/uc3c/pll.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/uc3c_pll$(PreprocessSuffix) "src/asf/common/services/clock/uc3c/pll.c"
 
 $(IntermediateDirectory)/uc3c_osc$(ObjectSuffix): src/asf/common/services/clock/uc3c/osc.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/common/services/clock/uc3c/osc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/uc3c_osc$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/common/services/clock/uc3c/osc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/uc3c_osc$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/uc3c_osc$(PreprocessSuffix): src/asf/common/services/clock/uc3c/osc.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/uc3c_osc$(PreprocessSuffix) "src/asf/common/services/clock/uc3c/osc.c"
 
 $(IntermediateDirectory)/uc3c_sysclk$(ObjectSuffix): src/asf/common/services/clock/uc3c/sysclk.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/common/services/clock/uc3c/sysclk.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/uc3c_sysclk$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/common/services/clock/uc3c/sysclk.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/uc3c_sysclk$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/uc3c_sysclk$(PreprocessSuffix): src/asf/common/services/clock/uc3c/sysclk.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/uc3c_sysclk$(PreprocessSuffix) "src/asf/common/services/clock/uc3c/sysclk.c"
 
 $(IntermediateDirectory)/udc_udc$(ObjectSuffix): src/asf/common/services/usb/udc/udc.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/common/services/usb/udc/udc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/udc_udc$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/common/services/usb/udc/udc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/udc_udc$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/udc_udc$(PreprocessSuffix): src/asf/common/services/usb/udc/udc.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/udc_udc$(PreprocessSuffix) "src/asf/common/services/usb/udc/udc.c"
 
 $(IntermediateDirectory)/device_udi_cdc$(ObjectSuffix): src/asf/common/services/usb/class/cdc/device/udi_cdc.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/common/services/usb/class/cdc/device/udi_cdc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/device_udi_cdc$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/common/services/usb/class/cdc/device/udi_cdc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/device_udi_cdc$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/device_udi_cdc$(PreprocessSuffix): src/asf/common/services/usb/class/cdc/device/udi_cdc.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/device_udi_cdc$(PreprocessSuffix) "src/asf/common/services/usb/class/cdc/device/udi_cdc.c"
 
 $(IntermediateDirectory)/device_udi_cdc_desc$(ObjectSuffix): src/asf/common/services/usb/class/cdc/device/udi_cdc_desc.c 
-	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_fixedWing/src/asf/common/services/usb/class/cdc/device/udi_cdc_desc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/device_udi_cdc_desc$(ObjectSuffix) $(IncludePath)
+	$(CC) $(SourceSwitch) "/media/julien/Data/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/common/services/usb/class/cdc/device/udi_cdc_desc.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/device_udi_cdc_desc$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/device_udi_cdc_desc$(PreprocessSuffix): src/asf/common/services/usb/class/cdc/device/udi_cdc_desc.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/device_udi_cdc_desc$(PreprocessSuffix) "src/asf/common/services/usb/class/cdc/device/udi_cdc_desc.c"
 
@@ -812,6 +812,6 @@ clean:
 	$(RM) $(IntermediateDirectory)/device_udi_cdc_desc$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/device_udi_cdc_desc$(PreprocessSuffix)
 	$(RM) $(OutputFile)
-	$(RM) ".build-debug/Maveric_myCopter_linux"
+	$(RM) "../../../../../../../../home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/.build-debug/Maveric_myCopter_linux"
 
 
