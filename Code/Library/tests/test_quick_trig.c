@@ -8,9 +8,8 @@
 #include "quick_trig.h"
 
 
-bool run_quick_trig_tests() {
+bool run_quick_trig_tests(void) {
 	float input=0.0f;
-	float output;
 	bool test_result;
 	float error=0.001;
 	
@@ -21,7 +20,7 @@ bool run_quick_trig_tests() {
 	return test_result;
 }
 
-void profile_quick_trig() {
+void profile_quick_trig(void) {
 	uint32_t ex_time=0;
 	float input=0.1234;
 	static volatile float output;

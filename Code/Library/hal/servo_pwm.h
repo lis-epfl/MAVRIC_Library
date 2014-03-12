@@ -31,6 +31,6 @@ void init_Servos(void);
 
 
 void set_servos(servo_output *servo_outputs);
-
+void set_servos_to_failsafe(void);
 
 #endif /* SERVO_PWM_H_ */

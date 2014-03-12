@@ -148,7 +148,7 @@ void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting)
 	
 	//centralData->gps_stream_out.flush(centralData->gps_stream_out.data);
 	
-	uint8_t epoch = TIME_OF_WEEK;
+	// uint8_t epoch = TIME_OF_WEEK;
 	idleTimeout = 1200;
 	
 	configure_gps();
@@ -1221,7 +1221,7 @@ The GPS and UART channel should already be configured in the good baudrate 38400
 void configure_gps(void)
 {
 	ubx_cfg_nav_rate_send msg;
-	const unsigned baudrates[4] = {9600U, 19200U, 38400U, 57600U};
+	// const unsigned baudrates[4] = {9600U, 19200U, 38400U, 57600U};
 
 	const char *set_binary = UBLOX_SET_BINARY;
 	// the GPS may be setup for a different baud rate. This ensures

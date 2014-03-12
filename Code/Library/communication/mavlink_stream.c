@@ -14,6 +14,9 @@
 #include "central_data.h"
 #include "mavlink_actions.h"
 
+mavlink_system_t mavlink_system;
+mavlink_system_t mavlink_mission_planner;
+
 static volatile byte_stream_t* mavlink_out_stream;
 static volatile byte_stream_t* mavlink_in_stream;
 static volatile Buffer_t mavlink_in_buffer;
@@ -176,7 +179,6 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 							run_task_now(task);
 						}					
 					} else {
-						int i;
 						task_entry *task=get_task_by_id(&mavlink_tasks, request.req_stream_id);
 						dbg_print(" stream="); dbg_print_num(request.req_stream_id, 10);
 						dbg_print(" start_stop=");dbg_print_num(request.start_stop, 10);

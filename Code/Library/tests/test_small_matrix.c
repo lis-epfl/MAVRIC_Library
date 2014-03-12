@@ -4,7 +4,7 @@
 #include "linear_algebra.h"
 #include "print_util.h"
 
-bool run_matrix_tests() {
+bool run_matrix_tests(void) {
 	
 	matrix_2x2_t m2={.v={{1, 2},{7,13},{3,2}}};
 	print_matrix(get_debug_stream(), m2.v, 2, 2, 2); dbg_print("\n");
@@ -61,5 +61,5 @@ bool run_matrix_tests() {
 	dbg_print("residual |MxM^{-1} - I| "); dbg_putfloat(sqr_f_norm3(msub3(mmul3(m3, inv3(m3)), ident_3x3)), 10);dbg_print("\n");
 	
 	
-	
+	return true;
 }

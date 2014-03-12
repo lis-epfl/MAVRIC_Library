@@ -11,6 +11,10 @@
 
 #include "mavlink_stream.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define MAX_NUM_NEIGHBORS 15
 
 #define SIZE_VHC_ORCA 5.0
@@ -22,8 +26,12 @@ typedef struct  {
 	float size;
 }track_neighbor_t;
 
-void init_neighbors();
+void init_neighbors(void);
 
 void read_msg_from_neighbors(Mavlink_Received_t* rec);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // NEIGHBOR_SEL_H__

@@ -5,6 +5,10 @@
 #include <math.h>
 #define PI 3.141592653589793f
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct UQuat {
 	float s;
 	float v[3];
@@ -177,14 +181,23 @@ void static inline vector_normalize(float v[], float u[])
 	}
 }
 
-static inline UQuat_t quat_normalise(const UQuat_t q) {
-	UQuat_t result={.s=1.0, .v={0.0, 0.0, 0.0} };
+static inline UQuat_t quat_normalise(const UQuat_t q) 
+{
+	UQuat_t result;
+	
 	float snorm= SQR(q.s) + SQR(q.v[0]) + SQR(q.v[1]) + SQR(q.v[2]);
+
 	if (snorm >0.0000001) {
 		float norm=fast_sqrt(snorm);
 		result.s=q.s/norm;
 		result.v[0]=q.v[0]/norm;		result.v[1]=q.v[1]/norm;		result.v[2]=q.v[2]/norm;
-
+	}
+	else
+	{
+		result.s=1.0;
+		result.v[0]=0.0;
+		result.v[1]=0.0;
+		result.v[2]=0.0;
 	}
 	return result;
 }
@@ -274,6 +287,8 @@ static inline float interpolate(float x, float x1, float x2, float y1, float y2)
 	}
 }
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif

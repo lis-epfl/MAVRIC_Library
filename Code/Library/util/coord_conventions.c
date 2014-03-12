@@ -7,6 +7,7 @@
 
 #include "coord_conventions.h"
 #include <math.h>
+#include "maths.h"
 #include "print_util.h"
 #include "conf_platform.h"
 

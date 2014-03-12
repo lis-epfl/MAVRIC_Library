@@ -11,6 +11,10 @@
 //#include <asf.h>
 #include "compiler.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define GET_TIME get_micros()
 #define SCHEDULER_TIMEBASE 1000000
 #define MAX_NUMBER_OF_TASKS 30
@@ -30,9 +34,8 @@ typedef task_return_t (*function_pointer)(void);
 
 typedef uint8_t task_handle_t;
 
-
-typedef struct {	
-	struct task_set *tasks;	
+typedef struct task_entry {	
+	struct task_set *tasks;		
 	function_pointer call_function;
 	uint16_t task_id;
 	task_run_mode_t  run_mode;		
@@ -49,12 +52,14 @@ typedef struct {
 #endif
 } task_entry;
 
-typedef struct  {
+typedef struct task_set {
 	uint8_t number_of_tasks;
 	int running_task;
 	int current_schedule_slot;
-	task_entry tasks[30];
+	struct task_entry tasks[30];
 } task_set;
+
+
 
 //#define NEW_TASK_SET(NAME,NUMBER) struct task_set {const task_handle_t number_of_tasks; int running_task; int current_schedule_slot; task_entry tasks[NUMBER];} NAME = {.number_of_tasks=NUMBER}; 
 
@@ -79,5 +84,9 @@ void change_task_period(task_entry *te, unsigned long repeat_period);
 void suspend_task(task_entry *te, unsigned long delay);
 
 void run_task_now(task_entry *te);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SCHEDULER_H_ */

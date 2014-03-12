@@ -19,6 +19,7 @@ int8_t loop_count_orca = 0;
 int8_t loop_count_collisions = 0;
 
 float min_coll_dist;
+
 void init_orca()
 {
 	centralData = get_central_data();

@@ -20,6 +20,16 @@
 #include "bmp085.h"
 #include "position_estimation.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+// default home location (EFPL Esplanade)
+#define HOME_LONGITUDE 6.566044801857777
+#define HOME_LATITUDE 46.51852236174565
+#define HOME_ALTITUDE 400.0
+
 typedef struct {
 	float torques_bf[3], rates_bf[3], lin_forces_bf[3], vel_bf[3], vel[3], pos[3];
 	Quat_Attitude_t attitude;
@@ -46,5 +56,9 @@ void init_simulation(simulation_model_t *sim, Quat_Attitude_t *start_attitude, l
 void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est);
 void simulate_barometer(simulation_model_t *sim, pressure_data *pressure);
 void simulate_gps(simulation_model_t *sim, gps_Data_type *gps);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SIMULATION_H_ */
