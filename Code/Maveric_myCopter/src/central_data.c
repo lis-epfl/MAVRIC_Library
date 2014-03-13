@@ -55,6 +55,9 @@ void initialise_central_data(){
 		init_simulation(&(centralData.sim_model),&(centralData.imu1.attitude),centralData.position_estimator.localPosition);
 		//centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
 
+		centralData.dist2vel_gain = 0.7;
+		centralData.cruise_speed = 3.0;
+		centralData.max_climb_rate = 1.0;
 }
 
 central_data_t* get_central_data(void)

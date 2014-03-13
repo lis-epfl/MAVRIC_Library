@@ -70,7 +70,7 @@ void main (void)
 	int i;
 	centralData = get_central_data();
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	centralData->simulation_mode = 0;
+	centralData->simulation_mode = 1;
 	centralData->simulation_mode_previous = centralData->simulation_mode;
 	initialisation();
 	

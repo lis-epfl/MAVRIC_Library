@@ -89,6 +89,10 @@ typedef struct  {
 	local_coordinates_t waypoint_coordinates, waypoint_hold_coordinates, waypoint_critical_coordinates;
 	float dist2wp_sqr;
 	
+	float dist2vel_gain;
+	float cruise_speed;
+	float max_climb_rate;
+	
 	bool waypoint_set;
 	bool waypoint_sending;
 	bool waypoint_receiving;

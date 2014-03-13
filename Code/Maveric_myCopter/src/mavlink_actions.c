@@ -445,6 +445,11 @@ void add_PID_parameters(void) {
 	add_parameter_float(&centralData->position_estimator.kp_pos[0],"Pos_kp_pos0");
 	add_parameter_float(&centralData->position_estimator.kp_pos[1],"Pos_kp_pos1");
 	add_parameter_float(&centralData->position_estimator.kp_pos[2],"Pos_kp_pos2");
+	
+	add_parameter_float(&centralData->dist2vel_gain,"vel_dist2Vel");
+	add_parameter_float(&centralData->cruise_speed,"vel_cruiseSpeed");
+	add_parameter_float(&centralData->max_climb_rate,"vel_climbRate");
+	
 }
 
 
@@ -510,6 +515,7 @@ void handle_specific_messages (Mavlink_Received_t* rec) {
 				case MAVLINK_MSG_ID_COMMAND_LONG : { // 76
 					receive_message_long(rec);
 				}
+				break;
 				case MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN: { // 48
 					set_home(rec);
 				}
