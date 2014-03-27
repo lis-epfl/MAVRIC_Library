@@ -15,7 +15,8 @@
 static volatile central_data_t centralData;
 
 void initialise_central_data(){
-		init_imu(&centralData.imu1);
+		//init_imu(&centralData.imu1);
+		
 		// init controls
 		centralData.controls.rpy[ROLL]=0;
 		centralData.controls.rpy[PITCH]=0;
@@ -58,6 +59,7 @@ void initialise_central_data(){
 		centralData.dist2vel_gain = 0.7;
 		centralData.cruise_speed = 3.0;
 		centralData.max_climb_rate = 1.0;
+		centralData.softZoneSize = 0.5;
 }
 
 central_data_t* get_central_data(void)

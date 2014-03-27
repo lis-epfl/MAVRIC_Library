@@ -92,6 +92,7 @@ typedef struct  {
 	float dist2vel_gain;
 	float cruise_speed;
 	float max_climb_rate;
+	float softZoneSize;
 	
 	bool waypoint_set;
 	bool waypoint_sending;

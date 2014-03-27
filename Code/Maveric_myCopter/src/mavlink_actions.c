@@ -449,7 +449,7 @@ void add_PID_parameters(void) {
 	add_parameter_float(&centralData->dist2vel_gain,"vel_dist2Vel");
 	add_parameter_float(&centralData->cruise_speed,"vel_cruiseSpeed");
 	add_parameter_float(&centralData->max_climb_rate,"vel_climbRate");
-	
+	add_parameter_float(&centralData->softZoneSize,"vel_softZone");
 }
 
 

@@ -28,25 +28,25 @@
 #define RAW_GYRO_Y_SCALE  -1637.02223
 #define RAW_GYRO_Z_SCALE  -1637.02223
 
-#define RAW_ACC_X_SCALE  3929.0
-#define RAW_ACC_Y_SCALE  4080.4
-#define RAW_ACC_Z_SCALE  4056.5
+#define RAW_ACC_X_SCALE  3924.0
+#define RAW_ACC_Y_SCALE  3844.8
+#define RAW_ACC_Z_SCALE  4119.6
 
-#define ACC_BIAIS_X  15  
-#define ACC_BIAIS_Y  30
-#define ACC_BIAIS_Z  440
+#define ACC_BIAIS_X   0 
+#define ACC_BIAIS_Y   64
+#define ACC_BIAIS_Z   90
 
 #define ACC_AXIS_X  1.0
 #define ACC_AXIS_Y -1.0
 #define ACC_AXIS_Z -1.0
 
-#define RAW_MAG_X_SCALE 624.21
-#define RAW_MAG_Y_SCALE 590.0
-#define RAW_MAG_Z_SCALE 512.0
+#define RAW_MAG_X_SCALE 614.51
+#define RAW_MAG_Y_SCALE 584.28
+#define RAW_MAG_Z_SCALE 531.95
 
-#define MAG_BIAIS_X  -150
-#define MAG_BIAIS_Y -160
-#define MAG_BIAIS_Z   -46.51
+#define MAG_BIAIS_X   42.38
+#define MAG_BIAIS_Y -107.51
+#define MAG_BIAIS_Z    2.47
 
 #define MAG_AXIS_X -1.0
 #define MAG_AXIS_Y -1.0

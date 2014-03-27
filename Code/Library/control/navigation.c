@@ -128,7 +128,7 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 		//rel_heading = atan2(dir_desired_bf[Y]);
 	}
 	
-	v_desired = f_min(centralData->cruise_speed,(center_window_2(4.0*rel_heading) * centralData->dist2vel_gain * soft_zone(norm_rel_dist,0.5)));
+	v_desired = f_min(centralData->cruise_speed,(center_window_2(4.0*rel_heading) * centralData->dist2vel_gain * soft_zone(norm_rel_dist,centralData->softZoneSize)));
 	
 	if (v_desired *  f_abs(dir_desired_bf[Z]) > centralData->max_climb_rate * norm_rel_dist ) {
 		v_desired = centralData->max_climb_rate * norm_rel_dist /f_abs(dir_desired_bf[Z]);
