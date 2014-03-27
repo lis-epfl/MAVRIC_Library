@@ -64,9 +64,6 @@ void initialisation() {
 	
 	LED_On(LED1);
 	init_piezo_speaker_binary();
-	beep(100, 1000);
-	delay_ms(100);
-	beep(300, 2000);
 
 }
 
@@ -99,9 +96,12 @@ void main (void)
 	// main loop
 	delay_ms(10);
 	dbg_print("Reset home position...\n");
-	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model);
+	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model.localPosition);
 	dbg_print("OK. Starting up.\n");
 
+	beep(100, 1000);
+	delay_ms(100);
+	beep(300, 2000);
 
 	while (1==1) {
 		
