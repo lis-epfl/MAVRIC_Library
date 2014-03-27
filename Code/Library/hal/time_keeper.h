@@ -30,6 +30,6 @@ float ticks_to_seconds(uint32_t timer_ticks);
 
 void delay_micros(int microseconds);
 
-void delay_until(int until_time);
+void delay_until(uint32_t until_time);
 
 #endif /* TIME_KEEPER_H_ */

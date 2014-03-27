@@ -39,7 +39,7 @@ void delay_micros(int microseconds) {
 	while (get_micros()<now+microseconds);
 }
 
-void delay_until(int until_time) {
+void delay_until(uint32_t until_time) {
 	
 	while (get_micros()<until_time);
 }

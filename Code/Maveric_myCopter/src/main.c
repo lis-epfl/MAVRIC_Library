@@ -99,9 +99,10 @@ void main (void)
 	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model.localPosition);
 	dbg_print("OK. Starting up.\n");
 
-	beep(100, 1000);
-	delay_ms(100);
-	beep(300, 2000);
+	for (i=1; i<8; i++) {
+		beep(100, 500*i);
+		delay_ms(2);
+	}
 
 	while (1==1) {
 		
