@@ -27,4 +27,9 @@ uint32_t get_time_ticks(void); //raw timer ticks
 
 float ticks_to_seconds(uint32_t timer_ticks);
 
+
+void delay_micros(int microseconds);
+
+void delay_until(int until_time);
+
 #endif /* TIME_KEEPER_H_ */

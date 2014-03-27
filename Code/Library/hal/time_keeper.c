@@ -32,3 +32,14 @@ uint32_t get_time_ticks(){ //raw timer ticks
 float ticks_to_seconds(uint32_t timer_ticks){
 	return ((double)timer_ticks/(double)TK_AST_FREQUENCY);
 }
+
+
+void delay_micros(int microseconds) {
+	uint32_t now=get_micros();
+	while (get_micros()<now+microseconds);
+}
+
+void delay_until(int until_time) {
+	
+	while (get_micros()<until_time);
+}

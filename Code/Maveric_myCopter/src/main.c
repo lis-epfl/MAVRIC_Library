@@ -29,6 +29,8 @@
 #include "tasks.h"
 #include "neighbor_selection.h"
 #include "orca.h"
+#include "piezo_speaker.h"
+
 //#include "flashvault.h"
 
 central_data_t *centralData;
@@ -61,6 +63,11 @@ void initialisation() {
 	init_orca();
 	
 	LED_On(LED1);
+	init_piezo_speaker_binary();
+	beep(100, 1000);
+	delay_ms(100);
+	beep(300, 2000);
+
 }
 
 
@@ -73,7 +80,7 @@ void main (void)
 	centralData->simulation_mode = 0;
 	centralData->simulation_mode_previous = centralData->simulation_mode;
 	initialisation();
-	
+		
 	create_tasks();
 	
 	relevel_imu();
@@ -94,6 +101,7 @@ void main (void)
 	dbg_print("Reset home position...\n");
 	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model);
 	dbg_print("OK. Starting up.\n");
+
 
 	while (1==1) {
 		

@@ -82,7 +82,7 @@ void set_servo(int channel, int val_a, int val_b){
 }
 
 
-void set_servos(servo_output *servo_outputs) {
+void set_servos(const servo_output *servo_outputs) {
 	#ifdef GPS_ON_SERVO_1_2
 		set_servo(1, servo_outputs[0].value, servo_outputs[1].value);
 		set_servo(2, servo_outputs[2].value, servo_outputs[3].value);

@@ -676,6 +676,12 @@
     <Compile Include="Library\hal\lsm330dlc_driver.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\hal\piezo_speaker.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\piezo_speaker.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\hal\remote_controller.h">
       <SubType>compile</SubType>
     </Compile>
