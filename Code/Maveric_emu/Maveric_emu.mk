@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=felix
-Date                   :=02/25/14
+Date                   :=04/04/14
 CodeLitePath           :="/home/felix/.codelite"
 LinkerName             :=gcc
 SharedObjectLinkerName :=gcc -shared -fPIC
@@ -60,12 +60,13 @@ AS       := as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/boardsupport$(ObjectSuffix) $(IntermediateDirectory)/main$(ObjectSuffix) $(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IntermediateDirectory)/src_tasks$(ObjectSuffix) $(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) $(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) $(IntermediateDirectory)/util_sinus$(ObjectSuffix) $(IntermediateDirectory)/util_print_util$(ObjectSuffix) $(IntermediateDirectory)/util_buffer$(ObjectSuffix) \
-	$(IntermediateDirectory)/sensing_imu$(ObjectSuffix) $(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix) $(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix) $(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) $(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix) $(IntermediateDirectory)/sensing_neighbor_selection$(ObjectSuffix) $(IntermediateDirectory)/control_adaptive_parameter$(ObjectSuffix) $(IntermediateDirectory)/control_navigation$(ObjectSuffix) $(IntermediateDirectory)/control_orca$(ObjectSuffix) $(IntermediateDirectory)/control_pid_control$(ObjectSuffix) \
-	$(IntermediateDirectory)/control_stabilisation$(ObjectSuffix) $(IntermediateDirectory)/control_stabilisation_copter$(ObjectSuffix) $(IntermediateDirectory)/control_stabilisation_hybrid$(ObjectSuffix) $(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix) $(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix) $(IntermediateDirectory)/communication_mavlink_waypoint_handler$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_adxl345_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_bmp085$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_radar_module_driver$(ObjectSuffix) \
-	$(IntermediateDirectory)/hal_emu_servo_pwm$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_led$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_udp_stream$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_joystick_rc$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/boardsupport$(ObjectSuffix) $(IntermediateDirectory)/main$(ObjectSuffix) $(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IntermediateDirectory)/src_tasks$(ObjectSuffix) $(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) $(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) $(IntermediateDirectory)/util_sinus$(ObjectSuffix) $(IntermediateDirectory)/util_print_util$(ObjectSuffix) $(IntermediateDirectory)/util_buffer$(ObjectSuffix) $(IntermediateDirectory)/sensing_imu$(ObjectSuffix) \
+	$(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix) $(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix) $(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) $(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix) $(IntermediateDirectory)/sensing_neighbor_selection$(ObjectSuffix) $(IntermediateDirectory)/control_adaptive_parameter$(ObjectSuffix) $(IntermediateDirectory)/control_navigation$(ObjectSuffix) $(IntermediateDirectory)/control_orca$(ObjectSuffix) $(IntermediateDirectory)/control_pid_control$(ObjectSuffix) $(IntermediateDirectory)/control_stabilisation$(ObjectSuffix) \
+	$(IntermediateDirectory)/control_stabilisation_copter$(ObjectSuffix) $(IntermediateDirectory)/control_stabilisation_hybrid$(ObjectSuffix) $(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix) $(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix) $(IntermediateDirectory)/communication_mavlink_waypoint_handler$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_adxl345_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_bmp085$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_radar_module_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_servo_pwm$(ObjectSuffix) \
+	$(IntermediateDirectory)/hal_emu_led$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_udp_stream$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_joystick_rc$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_piezo_speaker$(ObjectSuffix) 
 
-Objects1=$(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) 
+Objects1=$(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) \
+	
 
 
 
@@ -108,14 +109,6 @@ $(IntermediateDirectory)/main$(DependSuffix): main.c
 
 $(IntermediateDirectory)/main$(PreprocessSuffix): main.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/main$(PreprocessSuffix) "main.c"
-
-$(IntermediateDirectory)/src_central_data$(ObjectSuffix): ../Maveric_myCopter/src/central_data.c $(IntermediateDirectory)/src_central_data$(DependSuffix)
-	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_myCopter/src/central_data.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/src_central_data$(DependSuffix): ../Maveric_myCopter/src/central_data.c
-	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_central_data$(ObjectSuffix) -MF$(IntermediateDirectory)/src_central_data$(DependSuffix) -MM "../Maveric_myCopter/src/central_data.c"
-
-$(IntermediateDirectory)/src_central_data$(PreprocessSuffix): ../Maveric_myCopter/src/central_data.c
-	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_central_data$(PreprocessSuffix) "../Maveric_myCopter/src/central_data.c"
 
 $(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix): ../Maveric_myCopter/src/mavlink_actions.c $(IntermediateDirectory)/src_mavlink_actions$(DependSuffix)
 	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_myCopter/src/mavlink_actions.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IncludePath)
@@ -397,6 +390,22 @@ $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(DependSuffix): ../Library/hal
 $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(PreprocessSuffix): ../Library/hal_emu/lsm330dlc_driver.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(PreprocessSuffix) "../Library/hal_emu/lsm330dlc_driver.c"
 
+$(IntermediateDirectory)/hal_emu_piezo_speaker$(ObjectSuffix): ../Library/hal_emu/piezo_speaker.c $(IntermediateDirectory)/hal_emu_piezo_speaker$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/piezo_speaker.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_piezo_speaker$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/hal_emu_piezo_speaker$(DependSuffix): ../Library/hal_emu/piezo_speaker.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/hal_emu_piezo_speaker$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_piezo_speaker$(DependSuffix) -MM "../Library/hal_emu/piezo_speaker.c"
+
+$(IntermediateDirectory)/hal_emu_piezo_speaker$(PreprocessSuffix): ../Library/hal_emu/piezo_speaker.c
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_piezo_speaker$(PreprocessSuffix) "../Library/hal_emu/piezo_speaker.c"
+
+$(IntermediateDirectory)/src_central_data$(ObjectSuffix): ../Maveric_myCopter/src/central_data.c $(IntermediateDirectory)/src_central_data$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_myCopter/src/central_data.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/src_central_data$(DependSuffix): ../Maveric_myCopter/src/central_data.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/src_central_data$(ObjectSuffix) -MF$(IntermediateDirectory)/src_central_data$(DependSuffix) -MM "../Maveric_myCopter/src/central_data.c"
+
+$(IntermediateDirectory)/src_central_data$(PreprocessSuffix): ../Maveric_myCopter/src/central_data.c
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/src_central_data$(PreprocessSuffix) "../Maveric_myCopter/src/central_data.c"
+
 $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix): ../Library/tests/test_maths.c $(IntermediateDirectory)/tests_test_maths$(DependSuffix)
 	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/tests/test_maths.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/tests_test_maths$(DependSuffix): ../Library/tests/test_maths.c
@@ -417,9 +426,6 @@ clean:
 	$(RM) $(IntermediateDirectory)/main$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/main$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/main$(PreprocessSuffix)
-	$(RM) $(IntermediateDirectory)/src_central_data$(ObjectSuffix)
-	$(RM) $(IntermediateDirectory)/src_central_data$(DependSuffix)
-	$(RM) $(IntermediateDirectory)/src_central_data$(PreprocessSuffix)
 	$(RM) $(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/src_mavlink_actions$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/src_mavlink_actions$(PreprocessSuffix)
@@ -525,6 +531,12 @@ clean:
 	$(RM) $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/hal_emu_piezo_speaker$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/hal_emu_piezo_speaker$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/hal_emu_piezo_speaker$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/src_central_data$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/src_central_data$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/src_central_data$(PreprocessSuffix)
 	$(RM) $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/tests_test_maths$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/tests_test_maths$(PreprocessSuffix)
