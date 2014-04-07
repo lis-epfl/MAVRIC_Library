@@ -628,6 +628,8 @@
       <File Name="Library/hal/remote_dsm2.c"/>
       <File Name="Library/hal/i2c_driver_int.h"/>
       <File Name="Library/hal/i2c_driver_int.c"/>
+      <File Name="Library/hal/piezo_speaker.h"/>
+      <File Name="Library/hal/piezo_speaker.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>
@@ -684,7 +686,7 @@
       </Linker>
       <ResourceCompiler Options=""/>
     </GlobalSettings>
-    <Configuration Name="Debug" CompilerType="avr32gcc" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+    <Configuration Name="Debug" CompilerType="avr32-g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
       <Compiler Options="-g;-Os;-Wall" C_Options="-O1 -mhard-float -ffunction-sections -fdata-sections -muse-rodata-section -g2 -pg -p -Wall -mpart=uc3c1512c -c -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -MD -MP -MF" Assembler=" -x assembler-with-cpp -c -mpart=uc3c1512c -mrelax " Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
         <IncludePath Value="src"/>
         <IncludePath Value="src/config"/>
