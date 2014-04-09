@@ -28,6 +28,6 @@ typedef struct {
 
 void init_Servos(void);
 void set_servos(const servo_output *servo_outputs);
-void set_servos_to_failsafe(servo_output *servo_outputs);
+void servos_failsafe(servo_output *servo_outputs);
 
 #endif /* SERVO_PWM_H_ */

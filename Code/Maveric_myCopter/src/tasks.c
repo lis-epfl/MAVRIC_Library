@@ -537,14 +537,13 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_GUIDED_DISARMED:
 		case MAV_MODE_AUTO_DISARMED:
 			centralData->run_mode = MOTORS_OFF;
-			set_servos_to_failsafe(&(centralData->servos));
+			servos_failsafe(centralData->servos);
 			break;
-		
 	}
 	
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
 	if (centralData->simulation_mode!=1) {
-		set_servos(&(centralData->servos));
+		set_servos(centralData->servos);
 	}
 		
 
