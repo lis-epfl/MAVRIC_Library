@@ -15,6 +15,16 @@
 static volatile central_data_t centralData;
 
 void initialise_central_data(){
+		// Init servos
+		for (int i = 0; i < NUMBER_OF_SERVO_OUTPUTS; ++i)
+		{
+			centralData.servos[i].value = -600;
+			centralData.servos[i].min = -600;
+			centralData.servos[i].max = 600;
+			centralData.servos[i].failsafe_position = -600;
+		}
+
+
 		init_imu(&centralData.imu1);
 		// init controls
 		centralData.controls.rpy[ROLL]=0;

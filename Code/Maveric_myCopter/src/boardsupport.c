@@ -98,6 +98,7 @@ void initialise_board(central_data_t *centralData) {
 	centralData->telemetry_up_stream=&(centralData->xbee_in_stream);
 	centralData->debug_out_stream=&(centralData->wired_out_stream);
 	centralData->debug_in_stream=&(centralData->wired_in_stream);
+/**/
 /*
 	centralData->telemetry_down_stream=&(centralData->wired_out_stream);
 	centralData->telemetry_up_stream  =&(centralData->wired_in_stream);		
@@ -121,7 +122,7 @@ void initialise_board(central_data_t *centralData) {
 	init_imu(&(centralData->imu1));
 	
 	init_bmp085();
-
+	
 	Enable_global_interrupt();
 	dbg_print("Board initialised.\n");
 }

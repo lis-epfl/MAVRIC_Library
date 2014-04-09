@@ -48,7 +48,7 @@ void initialisation() {
 
 	//init_gps_ubx(engine_nav_settings);
 	
-	set_servos_to_failsafe();
+	set_servos_to_failsafe(centralData->servos);
 
 	init_onboard_parameters();
 	init_mavlink_actions();
@@ -100,9 +100,7 @@ int main (void)
 		//run_scheduler_update(get_main_taskset(), FIXED_PRIORITY);
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
 		
-		//LED_On(LED1);
-
-		
+		//LED_On(LED1);		
 	}
 	return 0;		
 }

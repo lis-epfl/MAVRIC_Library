@@ -26,11 +26,8 @@ typedef struct {
 	int min, max, failsafe_position;
 } servo_output;
 
-
 void init_Servos(void);
-
-
-void set_servos(servo_output *servo_outputs);
-void set_servos_to_failsafe(void);
+void set_servos(const servo_output *servo_outputs);
+void set_servos_to_failsafe(servo_output *servo_outputs);
 
 #endif /* SERVO_PWM_H_ */
