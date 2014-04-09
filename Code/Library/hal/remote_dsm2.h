@@ -14,6 +14,8 @@
 #define REMOTE_UART AVR32_USART1
 
 #define DSM_RECEIVER_PIN AVR32_PIN_PD12
+
+#define RECEIVER_POWER_ENABLE_PIN AVR32_PIN_PC01
 //#define SPEKTRUM_10BIT
 
 typedef struct Spektrum_Receiver {
@@ -25,6 +27,7 @@ typedef struct Spektrum_Receiver {
 	uint32_t duration;
 } Spektrum_Receiver_t;
 
+void rc_switch_power(bool on);
 
 // function to set slave receiver into bind mode. has to be called 100ms after power-up
 void rc_activate_bind_mode(void);

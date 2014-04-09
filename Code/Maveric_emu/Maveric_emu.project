@@ -11,7 +11,6 @@
     <File Name="boardsupport.h"/>
     <File Name="boardsupport.c"/>
     <File Name="main.c"/>
-    <File Name="../Maveric_myCopter/src/central_data.c"/>
     <File Name="../Maveric_myCopter/src/central_data.h"/>
     <File Name="../Maveric_myCopter/src/mavlink_actions.c"/>
     <File Name="../Maveric_myCopter/src/mavlink_actions.h"/>
@@ -209,6 +208,9 @@
       <File Name="../Library/hal_emu/flashc.h"/>
       <File Name="../Library/hal_emu/lsm330dlc_driver.c"/>
       <File Name="../Library/hal_emu/lsm330dlc_driver.h"/>
+      <File Name="../Library/hal_emu/piezo_speaker.c"/>
+      <File Name="../Library/hal_emu/piezo_speaker.h"/>
+      <File Name="../Maveric_myCopter/src/central_data.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="tests">
       <File Name="../Library/tests/test_maths.h"/>

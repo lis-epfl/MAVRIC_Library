@@ -47,7 +47,7 @@ void init_simulation(simulation_model_t *sim, Quat_Attitude_t *start_attitude, l
 	sim->dt=0.01;
 }
 
-
+//void set_simu_biaisnscale()
 
 // inverse function of mix_to_servos in stabilisation to recover torques and forces
 

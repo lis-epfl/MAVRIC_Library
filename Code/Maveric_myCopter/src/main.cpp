@@ -19,6 +19,7 @@ extern "C" {
 	#include "navigation.h"
 	#include "tasks.h"
 	#include "orca.h"
+	#include "piezo_speaker.h"
 }
  
 //#include <asf.h>
@@ -63,6 +64,8 @@ void initialisation() {
 	init_orca();
 	
 	LED_On(LED1);
+	init_piezo_speaker_binary();
+
 }
 
 
@@ -95,6 +98,11 @@ int main (void)
 	dbg_print("Reset home position...\n");
 	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model.localPosition);
 	dbg_print("OK. Starting up.\n");
+
+	for (i=1; i<8; i++) {
+		beep(100, 500*i);
+		delay_ms(2);
+	}
 
 	while (1==1) {
 		

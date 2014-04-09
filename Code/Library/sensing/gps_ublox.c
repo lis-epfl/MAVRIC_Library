@@ -199,9 +199,9 @@ bool ubx_read(void)
 		reset:
 		
 		
-// 		dbg_print(" 0x");
-//  	dbg_print_num(data,16);
-// 		dbg_print("\n");
+ 		//dbg_print(" 0x");
+  		//dbg_print_num(data,16);
+ 		//dbg_print("\n");
 		
 		switch (step)
 		{

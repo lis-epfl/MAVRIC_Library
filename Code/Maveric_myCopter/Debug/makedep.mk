@@ -20,6 +20,8 @@ Library\hal\i2c_driver_int.c
 
 Library\hal\lsm330dlc_driver.c
 
+Library\hal\piezo_speaker.c
+
 Library\hal\time_keeper.c
 
 Library\sensing\estimator.c

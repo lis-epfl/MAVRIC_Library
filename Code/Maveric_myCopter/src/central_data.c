@@ -26,6 +26,7 @@ void initialise_central_data(){
 
 
 		init_imu(&centralData.imu1);
+		
 		// init controls
 		centralData.controls.rpy[ROLL]=0;
 		centralData.controls.rpy[PITCH]=0;
@@ -62,8 +63,13 @@ void initialise_central_data(){
 		centralData.position_estimator.localPosition.pos[Z]=0;
 
 		// init simulation
-		//init_simulation(&(centralData.sim_model),&(centralData.imu1.attitude),centralData.position_estimator.localPosition);
+		init_simulation(&(centralData.sim_model),&(centralData.imu1.attitude),centralData.position_estimator.localPosition);
 		//centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
+
+		centralData.dist2vel_gain = 0.7;
+		centralData.cruise_speed = 3.0;
+		centralData.max_climb_rate = 1.0;
+		centralData.softZoneSize = 0.5;
 }
 
 central_data_t* get_central_data(void)

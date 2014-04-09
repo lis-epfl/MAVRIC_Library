@@ -4671,8 +4671,11 @@ static void mavlink_test_radar_tracked_target(uint8_t system_id, uint8_t compone
 	45.0,
 	73.0,
 	101.0,
-	53,
-	120,
+	129.0,
+	157.0,
+	185.0,
+	89,
+	156,
 	};
 	mavlink_radar_tracked_target_t packet1, packet2;
         memset(&packet1, 0, sizeof(packet1));
@@ -4680,6 +4683,9 @@ static void mavlink_test_radar_tracked_target(uint8_t system_id, uint8_t compone
         	packet1.velocity = packet_in.velocity;
         	packet1.amplitude = packet_in.amplitude;
         	packet1.distance = packet_in.distance;
+        	packet1.azimuth = packet_in.azimuth;
+        	packet1.elevation = packet_in.elevation;
+        	packet1.uncertainty = packet_in.uncertainty;
         	packet1.sensor_id = packet_in.sensor_id;
         	packet1.target_id = packet_in.target_id;
         
@@ -4691,12 +4697,12 @@ static void mavlink_test_radar_tracked_target(uint8_t system_id, uint8_t compone
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_radar_tracked_target_pack(system_id, component_id, &msg , packet1.time_boot_ms , packet1.sensor_id , packet1.target_id , packet1.velocity , packet1.amplitude , packet1.distance );
+	mavlink_msg_radar_tracked_target_pack(system_id, component_id, &msg , packet1.time_boot_ms , packet1.sensor_id , packet1.target_id , packet1.velocity , packet1.amplitude , packet1.distance , packet1.azimuth , packet1.elevation , packet1.uncertainty );
 	mavlink_msg_radar_tracked_target_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_radar_tracked_target_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.time_boot_ms , packet1.sensor_id , packet1.target_id , packet1.velocity , packet1.amplitude , packet1.distance );
+	mavlink_msg_radar_tracked_target_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.time_boot_ms , packet1.sensor_id , packet1.target_id , packet1.velocity , packet1.amplitude , packet1.distance , packet1.azimuth , packet1.elevation , packet1.uncertainty );
 	mavlink_msg_radar_tracked_target_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
@@ -4709,7 +4715,7 @@ static void mavlink_test_radar_tracked_target(uint8_t system_id, uint8_t compone
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
         
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_radar_tracked_target_send(MAVLINK_COMM_1 , packet1.time_boot_ms , packet1.sensor_id , packet1.target_id , packet1.velocity , packet1.amplitude , packet1.distance );
+	mavlink_msg_radar_tracked_target_send(MAVLINK_COMM_1 , packet1.time_boot_ms , packet1.sensor_id , packet1.target_id , packet1.velocity , packet1.amplitude , packet1.distance , packet1.azimuth , packet1.elevation , packet1.uncertainty );
 	mavlink_msg_radar_tracked_target_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 }
@@ -4761,37 +4767,43 @@ static void mavlink_test_radar_velocity_hist(uint8_t system_id, uint8_t componen
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 }
 
-static void mavlink_test_radar_raw_data(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
+static void mavlink_test_raw_data_stream(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
 {
 	mavlink_message_t msg;
         uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
         uint16_t i;
-	mavlink_radar_raw_data_t packet_in = {
+	mavlink_raw_data_stream_t packet_in = {
 		963497464,
 	{ 17443, 17444, 17445, 17446, 17447, 17448, 17449, 17450, 17451, 17452, 17453, 17454, 17455, 17456, 17457, 17458, 17459, 17460, 17461, 17462, 17463, 17464, 17465, 17466, 17467, 17468, 17469, 17470, 17471, 17472, 17473, 17474, 17475, 17476, 17477, 17478, 17479, 17480, 17481, 17482, 17483, 17484, 17485, 17486, 17487, 17488, 17489, 17490, 17491, 17492, 17493, 17494, 17495, 17496, 17497, 17498, 17499, 17500, 17501, 17502, 17503, 17504, 17505, 17506 },
 	145,
+	212,
+	23,
+	90,
 	};
-	mavlink_radar_raw_data_t packet1, packet2;
+	mavlink_raw_data_stream_t packet1, packet2;
         memset(&packet1, 0, sizeof(packet1));
         	packet1.time_boot_ms = packet_in.time_boot_ms;
-        	packet1.sensor_id = packet_in.sensor_id;
+        	packet1.stream_id = packet_in.stream_id;
+        	packet1.packets_per_block = packet_in.packets_per_block;
+        	packet1.packet_id = packet_in.packet_id;
+        	packet1.sample_count = packet_in.sample_count;
         
         	mav_array_memcpy(packet1.values, packet_in.values, sizeof(int16_t)*64);
         
 
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_radar_raw_data_encode(system_id, component_id, &msg, &packet1);
-	mavlink_msg_radar_raw_data_decode(&msg, &packet2);
+	mavlink_msg_raw_data_stream_encode(system_id, component_id, &msg, &packet1);
+	mavlink_msg_raw_data_stream_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_radar_raw_data_pack(system_id, component_id, &msg , packet1.time_boot_ms , packet1.sensor_id , packet1.values );
-	mavlink_msg_radar_raw_data_decode(&msg, &packet2);
+	mavlink_msg_raw_data_stream_pack(system_id, component_id, &msg , packet1.time_boot_ms , packet1.stream_id , packet1.packets_per_block , packet1.packet_id , packet1.sample_count , packet1.values );
+	mavlink_msg_raw_data_stream_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_radar_raw_data_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.time_boot_ms , packet1.sensor_id , packet1.values );
-	mavlink_msg_radar_raw_data_decode(&msg, &packet2);
+	mavlink_msg_raw_data_stream_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.time_boot_ms , packet1.stream_id , packet1.packets_per_block , packet1.packet_id , packet1.sample_count , packet1.values );
+	mavlink_msg_raw_data_stream_decode(&msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 
         memset(&packet2, 0, sizeof(packet2));
@@ -4799,12 +4811,63 @@ static void mavlink_test_radar_raw_data(uint8_t system_id, uint8_t component_id,
         for (i=0; i<mavlink_msg_get_send_buffer_length(&msg); i++) {
         	comm_send_ch(MAVLINK_COMM_0, buffer[i]);
         }
-	mavlink_msg_radar_raw_data_decode(last_msg, &packet2);
+	mavlink_msg_raw_data_stream_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
         
         memset(&packet2, 0, sizeof(packet2));
-	mavlink_msg_radar_raw_data_send(MAVLINK_COMM_1 , packet1.time_boot_ms , packet1.sensor_id , packet1.values );
-	mavlink_msg_radar_raw_data_decode(last_msg, &packet2);
+	mavlink_msg_raw_data_stream_send(MAVLINK_COMM_1 , packet1.time_boot_ms , packet1.stream_id , packet1.packets_per_block , packet1.packet_id , packet1.sample_count , packet1.values );
+	mavlink_msg_raw_data_stream_decode(last_msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+}
+
+static void mavlink_test_raw_data_stream_descriptor(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
+{
+	mavlink_message_t msg;
+        uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
+        uint16_t i;
+	mavlink_raw_data_stream_descriptor_t packet_in = {
+		963497464,
+	963497672,
+	29,
+	96,
+	"KLMNOPQRS",
+	};
+	mavlink_raw_data_stream_descriptor_t packet1, packet2;
+        memset(&packet1, 0, sizeof(packet1));
+        	packet1.time_boot_ms = packet_in.time_boot_ms;
+        	packet1.sample_count = packet_in.sample_count;
+        	packet1.stream_id = packet_in.stream_id;
+        	packet1.packets_per_block = packet_in.packets_per_block;
+        
+        	mav_array_memcpy(packet1.name, packet_in.name, sizeof(char)*10);
+        
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_raw_data_stream_descriptor_encode(system_id, component_id, &msg, &packet1);
+	mavlink_msg_raw_data_stream_descriptor_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_raw_data_stream_descriptor_pack(system_id, component_id, &msg , packet1.time_boot_ms , packet1.stream_id , packet1.packets_per_block , packet1.sample_count , packet1.name );
+	mavlink_msg_raw_data_stream_descriptor_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_raw_data_stream_descriptor_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.time_boot_ms , packet1.stream_id , packet1.packets_per_block , packet1.sample_count , packet1.name );
+	mavlink_msg_raw_data_stream_descriptor_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+        mavlink_msg_to_send_buffer(buffer, &msg);
+        for (i=0; i<mavlink_msg_get_send_buffer_length(&msg); i++) {
+        	comm_send_ch(MAVLINK_COMM_0, buffer[i]);
+        }
+	mavlink_msg_raw_data_stream_descriptor_decode(last_msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+        
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_raw_data_stream_descriptor_send(MAVLINK_COMM_1 , packet1.time_boot_ms , packet1.stream_id , packet1.packets_per_block , packet1.sample_count , packet1.name );
+	mavlink_msg_raw_data_stream_descriptor_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 }
 
@@ -5183,7 +5246,8 @@ static void mavlink_test_maveric2(uint8_t system_id, uint8_t component_id, mavli
 	mavlink_test_setpoint_6dof(system_id, component_id, last_msg);
 	mavlink_test_radar_tracked_target(system_id, component_id, last_msg);
 	mavlink_test_radar_velocity_hist(system_id, component_id, last_msg);
-	mavlink_test_radar_raw_data(system_id, component_id, last_msg);
+	mavlink_test_raw_data_stream(system_id, component_id, last_msg);
+	mavlink_test_raw_data_stream_descriptor(system_id, component_id, last_msg);
 	mavlink_test_memory_vect(system_id, component_id, last_msg);
 	mavlink_test_debug_vect(system_id, component_id, last_msg);
 	mavlink_test_named_value_float(system_id, component_id, last_msg);

@@ -24,9 +24,6 @@ typedef struct __mavlink_hil_sensor_t
 #define MAVLINK_MSG_ID_HIL_SENSOR_LEN 64
 #define MAVLINK_MSG_ID_107_LEN 64
 
-#define MAVLINK_MSG_ID_HIL_SENSOR_CRC 108
-#define MAVLINK_MSG_ID_107_CRC 108
-
 
 
 #define MAVLINK_MESSAGE_INFO_HIL_SENSOR { \
@@ -78,7 +75,7 @@ static inline uint16_t mavlink_msg_hil_sensor_pack(uint8_t system_id, uint8_t co
 						       uint64_t time_usec, float xacc, float yacc, float zacc, float xgyro, float ygyro, float zgyro, float xmag, float ymag, float zmag, float abs_pressure, float diff_pressure, float pressure_alt, float temperature, uint32_t fields_updated)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_HIL_SENSOR_LEN];
+	char buf[64];
 	_mav_put_uint64_t(buf, 0, time_usec);
 	_mav_put_float(buf, 8, xacc);
 	_mav_put_float(buf, 12, yacc);
@@ -95,7 +92,7 @@ static inline uint16_t mavlink_msg_hil_sensor_pack(uint8_t system_id, uint8_t co
 	_mav_put_float(buf, 56, temperature);
 	_mav_put_uint32_t(buf, 60, fields_updated);
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_HIL_SENSOR_LEN);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 64);
 #else
 	mavlink_hil_sensor_t packet;
 	packet.time_usec = time_usec;
@@ -114,22 +111,18 @@ static inline uint16_t mavlink_msg_hil_sensor_pack(uint8_t system_id, uint8_t co
 	packet.temperature = temperature;
 	packet.fields_updated = fields_updated;
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_HIL_SENSOR_LEN);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 64);
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_HIL_SENSOR;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_HIL_SENSOR_LEN, MAVLINK_MSG_ID_HIL_SENSOR_CRC);
-#else
-    return mavlink_finalize_message(msg, system_id, component_id, MAVLINK_MSG_ID_HIL_SENSOR_LEN);
-#endif
+	return mavlink_finalize_message(msg, system_id, component_id, 64, 108);
 }
 
 /**
  * @brief Pack a hil_sensor message on a channel
  * @param system_id ID of this system
  * @param component_id ID of this component (e.g. 200 for IMU)
- * @param chan The MAVLink channel this message will be sent over
+ * @param chan The MAVLink channel this message was sent over
  * @param msg The MAVLink message to compress the data into
  * @param time_usec Timestamp (microseconds, synced to UNIX time or since system boot)
  * @param xacc X acceleration (m/s^2)
@@ -153,7 +146,7 @@ static inline uint16_t mavlink_msg_hil_sensor_pack_chan(uint8_t system_id, uint8
 						           uint64_t time_usec,float xacc,float yacc,float zacc,float xgyro,float ygyro,float zgyro,float xmag,float ymag,float zmag,float abs_pressure,float diff_pressure,float pressure_alt,float temperature,uint32_t fields_updated)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_HIL_SENSOR_LEN];
+	char buf[64];
 	_mav_put_uint64_t(buf, 0, time_usec);
 	_mav_put_float(buf, 8, xacc);
 	_mav_put_float(buf, 12, yacc);
@@ -170,7 +163,7 @@ static inline uint16_t mavlink_msg_hil_sensor_pack_chan(uint8_t system_id, uint8
 	_mav_put_float(buf, 56, temperature);
 	_mav_put_uint32_t(buf, 60, fields_updated);
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_HIL_SENSOR_LEN);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, 64);
 #else
 	mavlink_hil_sensor_t packet;
 	packet.time_usec = time_usec;
@@ -189,19 +182,15 @@ static inline uint16_t mavlink_msg_hil_sensor_pack_chan(uint8_t system_id, uint8
 	packet.temperature = temperature;
 	packet.fields_updated = fields_updated;
 
-        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_HIL_SENSOR_LEN);
+        memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, 64);
 #endif
 
 	msg->msgid = MAVLINK_MSG_ID_HIL_SENSOR;
-#if MAVLINK_CRC_EXTRA
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_HIL_SENSOR_LEN, MAVLINK_MSG_ID_HIL_SENSOR_CRC);
-#else
-    return mavlink_finalize_message_chan(msg, system_id, component_id, chan, MAVLINK_MSG_ID_HIL_SENSOR_LEN);
-#endif
+	return mavlink_finalize_message_chan(msg, system_id, component_id, chan, 64, 108);
 }
 
 /**
- * @brief Encode a hil_sensor struct
+ * @brief Encode a hil_sensor struct into a message
  *
  * @param system_id ID of this system
  * @param component_id ID of this component (e.g. 200 for IMU)
@@ -211,20 +200,6 @@ static inline uint16_t mavlink_msg_hil_sensor_pack_chan(uint8_t system_id, uint8
 static inline uint16_t mavlink_msg_hil_sensor_encode(uint8_t system_id, uint8_t component_id, mavlink_message_t* msg, const mavlink_hil_sensor_t* hil_sensor)
 {
 	return mavlink_msg_hil_sensor_pack(system_id, component_id, msg, hil_sensor->time_usec, hil_sensor->xacc, hil_sensor->yacc, hil_sensor->zacc, hil_sensor->xgyro, hil_sensor->ygyro, hil_sensor->zgyro, hil_sensor->xmag, hil_sensor->ymag, hil_sensor->zmag, hil_sensor->abs_pressure, hil_sensor->diff_pressure, hil_sensor->pressure_alt, hil_sensor->temperature, hil_sensor->fields_updated);
-}
-
-/**
- * @brief Encode a hil_sensor struct on a channel
- *
- * @param system_id ID of this system
- * @param component_id ID of this component (e.g. 200 for IMU)
- * @param chan The MAVLink channel this message will be sent over
- * @param msg The MAVLink message to compress the data into
- * @param hil_sensor C-struct to read the message contents from
- */
-static inline uint16_t mavlink_msg_hil_sensor_encode_chan(uint8_t system_id, uint8_t component_id, uint8_t chan, mavlink_message_t* msg, const mavlink_hil_sensor_t* hil_sensor)
-{
-	return mavlink_msg_hil_sensor_pack_chan(system_id, component_id, chan, msg, hil_sensor->time_usec, hil_sensor->xacc, hil_sensor->yacc, hil_sensor->zacc, hil_sensor->xgyro, hil_sensor->ygyro, hil_sensor->zgyro, hil_sensor->xmag, hil_sensor->ymag, hil_sensor->zmag, hil_sensor->abs_pressure, hil_sensor->diff_pressure, hil_sensor->pressure_alt, hil_sensor->temperature, hil_sensor->fields_updated);
 }
 
 /**
@@ -252,7 +227,7 @@ static inline uint16_t mavlink_msg_hil_sensor_encode_chan(uint8_t system_id, uin
 static inline void mavlink_msg_hil_sensor_send(mavlink_channel_t chan, uint64_t time_usec, float xacc, float yacc, float zacc, float xgyro, float ygyro, float zgyro, float xmag, float ymag, float zmag, float abs_pressure, float diff_pressure, float pressure_alt, float temperature, uint32_t fields_updated)
 {
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
-	char buf[MAVLINK_MSG_ID_HIL_SENSOR_LEN];
+	char buf[64];
 	_mav_put_uint64_t(buf, 0, time_usec);
 	_mav_put_float(buf, 8, xacc);
 	_mav_put_float(buf, 12, yacc);
@@ -269,11 +244,7 @@ static inline void mavlink_msg_hil_sensor_send(mavlink_channel_t chan, uint64_t 
 	_mav_put_float(buf, 56, temperature);
 	_mav_put_uint32_t(buf, 60, fields_updated);
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HIL_SENSOR, buf, MAVLINK_MSG_ID_HIL_SENSOR_LEN, MAVLINK_MSG_ID_HIL_SENSOR_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HIL_SENSOR, buf, MAVLINK_MSG_ID_HIL_SENSOR_LEN);
-#endif
+	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HIL_SENSOR, buf, 64, 108);
 #else
 	mavlink_hil_sensor_t packet;
 	packet.time_usec = time_usec;
@@ -292,11 +263,7 @@ static inline void mavlink_msg_hil_sensor_send(mavlink_channel_t chan, uint64_t 
 	packet.temperature = temperature;
 	packet.fields_updated = fields_updated;
 
-#if MAVLINK_CRC_EXTRA
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HIL_SENSOR, (const char *)&packet, MAVLINK_MSG_ID_HIL_SENSOR_LEN, MAVLINK_MSG_ID_HIL_SENSOR_CRC);
-#else
-    _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HIL_SENSOR, (const char *)&packet, MAVLINK_MSG_ID_HIL_SENSOR_LEN);
-#endif
+	_mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_HIL_SENSOR, (const char *)&packet, 64, 108);
 #endif
 }
 
@@ -480,6 +447,6 @@ static inline void mavlink_msg_hil_sensor_decode(const mavlink_message_t* msg, m
 	hil_sensor->temperature = mavlink_msg_hil_sensor_get_temperature(msg);
 	hil_sensor->fields_updated = mavlink_msg_hil_sensor_get_fields_updated(msg);
 #else
-	memcpy(hil_sensor, _MAV_PAYLOAD(msg), MAVLINK_MSG_ID_HIL_SENSOR_LEN);
+	memcpy(hil_sensor, _MAV_PAYLOAD(msg), 64);
 #endif
 }

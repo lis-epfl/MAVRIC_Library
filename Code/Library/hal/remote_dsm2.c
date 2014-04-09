@@ -73,6 +73,12 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) {
 	}		
 }
 
+void rc_switch_power(bool on) {
+	gpio_configure_pin(RECEIVER_POWER_ENABLE_PIN, GPIO_DIR_OUTPUT);
+	gpio_set_pin_low(RECEIVER_POWER_ENABLE_PIN);
+}
+
+
 void rc_activate_bind_mode() {
 	int i=0;
 	unsigned long cpu_freq=sysclk_get_cpu_hz();
@@ -132,7 +138,7 @@ void rc_init (void) {
 	REMOTE_UART.ier=AVR32_USART_IER_RXRDY_MASK;
 	//initUART_RX(&spRec1.receiver,  &USARTC1, USART_RXCINTLVL_LO_gc, BSEL_SPEKTRUM);
 	//initUART_RX(&spRec2.receiver,  &USARTD0, USART_RXCINTLVL_LO_gc, BSEL_SPEKTRUM);
-
+	rc_switch_power(true);
 }
 /**/
 int16_t rc_get_channel(uint8_t index) {

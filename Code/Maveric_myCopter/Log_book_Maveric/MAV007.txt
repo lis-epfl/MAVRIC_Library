@@ -41,3 +41,4 @@ z -100
 14-02-25: foam frame inserted
 14-02-25: hand tuned calibration
 acc biais 0 64 90
+mag biais 

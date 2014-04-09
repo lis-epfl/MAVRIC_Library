@@ -13,6 +13,8 @@
 extern "C" {
 #endif
 
+#include "mavlink_stream.h"
+
 typedef struct {
 	float velocity;
 	float amplitude;
@@ -24,7 +26,7 @@ void init_radar_modules(void);
 
 void read_radar(void);
 
-radar_target* get_radar_main_target(void);
+mavlink_radar_tracked_target_t* get_radar_main_target(void);
 
 
 #ifdef __cplusplus
