@@ -537,7 +537,7 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_GUIDED_DISARMED:
 		case MAV_MODE_AUTO_DISARMED:
 			centralData->run_mode = MOTORS_OFF;
-			set_servos_to_failsafe();
+			set_servos_to_failsafe(&(centralData->servos));
 			break;
 		
 	}
