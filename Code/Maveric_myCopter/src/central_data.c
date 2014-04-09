@@ -23,7 +23,8 @@ void initialise_central_data(){
 			centralData.servos[i].max = 600;
 			centralData.servos[i].failsafe_position = -600;
 		}
-
+		servos_failsafe(centralData.servos);
+		set_servos(centralData.servos);
 
 		init_imu(&centralData.imu1);
 		

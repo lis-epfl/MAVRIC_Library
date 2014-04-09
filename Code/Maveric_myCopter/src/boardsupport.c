@@ -72,8 +72,6 @@ void initialise_board(central_data_t *centralData) {
 	//gpio_configure_pin(LED1_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
 
 	init_Servos();
-	servos_failsafe(centralData->servos);
-	set_servos(centralData->servos);
 		
 	init_UART_int(0);
 	register_write_stream(get_UART_handle(0), &(centralData->xbee_out_stream));

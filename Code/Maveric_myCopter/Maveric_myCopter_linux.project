@@ -245,7 +245,6 @@
       <File Name="src/config/conf_twim.h"/>
     </VirtualDirectory>
     <File Name="src/asf.h"/>
-    <File Name="src/mavlink_actions.c"/>
     <File Name="src/central_data.h"/>
     <File Name="src/boardsupport.h"/>
     <File Name="src/tasks.h"/>
@@ -632,6 +631,7 @@
       <File Name="Library/hal/i2c_driver_int.c"/>
       <File Name="Library/hal/piezo_speaker.h"/>
       <File Name="Library/hal/piezo_speaker.c"/>
+      <File Name="src/mavlink_actions.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>

@@ -438,7 +438,7 @@ void add_PID_parameters(void) {
 	add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Z],"Scale_Mag_Z");
 			
 	add_parameter_uint8(&(mavlink_system.sysid),"ID_System");
-	//add_parameter_uint8(&(mavlink_mission_planner.sysid),"ID_Planner");
+	add_parameter_uint8(&(mavlink_mission_planner.sysid),"ID_Planner");
 
 	add_parameter_float(&centralData->position_estimator.kp_alt,"Pos_kp_alt");
 	add_parameter_float(&centralData->position_estimator.kp_vel_baro,"Pos_kp_velb");
