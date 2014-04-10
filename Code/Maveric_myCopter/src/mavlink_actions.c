@@ -317,8 +317,13 @@ void add_PID_parameters(void) {
 	Stabiliser_t* attitude_stabiliser = &centralData->stabiliser_stack.attitude_stabiliser;
 	Stabiliser_t* velocity_stabiliser= &centralData->stabiliser_stack.velocity_stabiliser;
 
+	// Comp and sys ID
+	add_parameter_uint8(&(mavlink_system.sysid),"ID_System");
+	add_parameter_uint8(&(mavlink_mission_planner.sysid),"ID_Planner");
 	
+	// Simulation mode
 	add_parameter_int32(&centralData->simulation_mode, "Sim_mode");
+	
 	// Roll rate PID
 	add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].p_gain, "RollRPid_P_G");
 	//add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].clip_max, "RollRPid_P_CLmx");
@@ -436,9 +441,6 @@ void add_PID_parameters(void) {
 	add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+X],"Scale_Mag_X");
 	add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Y],"Scale_Mag_Y");
 	add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Z],"Scale_Mag_Z");
-			
-	add_parameter_uint8(&(mavlink_system.sysid),"ID_System");
-	add_parameter_uint8(&(mavlink_mission_planner.sysid),"ID_Planner");
 
 	add_parameter_float(&centralData->position_estimator.kp_alt,"Pos_kp_alt");
 	add_parameter_float(&centralData->position_estimator.kp_vel_baro,"Pos_kp_velb");
