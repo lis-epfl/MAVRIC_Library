@@ -40,10 +40,6 @@ src\mavlink_actions.c
 
 src\tasks.c
 
-Library\communication\ishtar.c
-
-Library\communication\ishtar_stream.c
-
 Library\communication\mavlink_stream.c
 
 Library\communication\onboard_parameters.c
@@ -167,4 +163,6 @@ src\asf\common\utils\stdio\stdio_usb\stdio_usb.c
 src\asf\common\utils\stdio\write.c
 
 src\boardsupport.c
+
+src\main.cpp
 

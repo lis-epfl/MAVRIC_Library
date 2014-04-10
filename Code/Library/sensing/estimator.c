@@ -58,7 +58,7 @@ u[0]=u[0]*a;\
 u[1]=u[1]*a;\
 u[2]=u[2]*a;
 
-#define SCP(u,v) \
+//#define SCP(u,v) \
 (u[0]*v[0]+u[1]*v[1]+u[2]*v[2]);
 
 #define QI(q, out) \

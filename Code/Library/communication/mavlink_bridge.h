@@ -14,6 +14,9 @@ extern "C" {
 
 extern mavlink_system_t mavlink_system;
 extern mavlink_system_t mavlink_mission_planner;
+//mavlink_system_t mavlink_system;
+//mavlink_system_t mavlink_mission_planner;
+
 
 /* Struct that stores the communication settings of this system.
    you can also define / alter these settings elsewhere, as long

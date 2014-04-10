@@ -74,8 +74,10 @@ void update_parameter(int param_index, float value) {
 			byte_swap_4(&converted, &value);
 			memcpy(param_set.parameters[param_index].param, &converted, 1);
 			#else
+			// byte_copy_4(&converted, &value);
 			memcpy(param_set.parameters[param_index].param, &value, 1);
 			#endif
+			// memcpy(param_set.parameters[param_index].param, &converted, 1);
 		break;
 		case MAVLINK_TYPE_UINT16_T:
 		case MAVLINK_TYPE_INT16_T:
@@ -84,8 +86,10 @@ void update_parameter(int param_index, float value) {
 			byte_swap_4(&converted, &value);
 			memcpy(param_set.parameters[param_index].param, &converted, 2);
 			#else
+			// byte_copy_4(&converted, &value);
 			memcpy(param_set.parameters[param_index].param, &value, 2);
 			#endif
+			// memcpy(param_set.parameters[param_index].param, &value, 2);
 		break;
 		case MAVLINK_TYPE_UINT32_T:
 		case MAVLINK_TYPE_INT32_T:
