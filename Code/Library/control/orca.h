@@ -14,8 +14,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#define ORCA_TIME_STEP_MILLIS 10.0
-
 #define TIME_HORIZON 12.0
 
 #define MAXSPEED 4.5

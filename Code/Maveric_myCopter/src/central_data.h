@@ -46,12 +46,6 @@
 
 static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
 
-enum CRITICAL_BEHAVIOR_ENUM{
-	CLIMB_TO_SAFE_ALT = 1,
-	FLY_TO_HOME_WP = 2,
-	CRITICAL_LAND = 3,
-};
-
 typedef struct  {
 	Imu_Data_t imu1;
 	Control_Command_t controls;
@@ -102,6 +96,7 @@ typedef struct  {
 	
 	bool collision_avoidance;
 	bool automatic_take_off;
+	bool automatic_landing;
 	bool in_the_air;
 	
 	uint8_t mav_mode;
@@ -122,7 +117,7 @@ typedef struct  {
 	track_neighbor_t listNeighbors[MAX_NUM_NEIGHBORS];
 	
 	enum CRITICAL_BEHAVIOR_ENUM critical_behavior;
-	
+	enum AUTO_LANDING_ENUM auto_landing_enum;
 } central_data_t;
 
 

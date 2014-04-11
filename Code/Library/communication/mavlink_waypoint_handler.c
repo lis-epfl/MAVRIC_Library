@@ -962,6 +962,48 @@ void waypoint_critical_handler()
 	}
 }
 
+void auto_landing()
+{
+	local_coordinates_t local_position;
+	
+	switch(centralData->auto_landing_enum)
+	{
+		case DESCENT_TO_SMALL_ALTITUDE:
+			local_position = centralData->position_estimator.localPosition;
+			local_position.pos[Z] = -2.0;
+			
+			wp_hold_init(local_position);
+			break;
+		case DESCENT_TO_GND:
+			local_position = centralData->position_estimator.localPosition;
+			local_position.pos[Z] = 0.0;
+			
+			wp_hold_init(local_position);
+			break;
+	}
+	float rel_pos[3];
+	uint8_t i;
+	for (i=0;i<3;i++)
+	{
+		rel_pos[i] = centralData->waypoint_critical_coordinates.pos[i] - centralData->position_estimator.localPosition.pos[i];
+	}
+	centralData->dist2wp_sqr = vector_norm_sqr(rel_pos);
+	
+	if (centralData->dist2wp_sqr < 0.5)
+	{
+		switch(centralData->auto_landing_enum)
+		{
+			case DESCENT_TO_SMALL_ALTITUDE:
+				dbg_print("Automatic-landing: descent_to_GND\n");
+				centralData->critical_behavior = FLY_TO_HOME_WP;
+				break;
+			case DESCENT_TO_GND:
+				
+				break;
+		}
+	}
+}
+
 void continueToNextWaypoint()
 {
 	if ((centralData->number_of_waypoints>0)&&(!centralData->waypoint_set))
@@ -990,7 +1032,7 @@ void continueToNextWaypoint()
 	}
 }
 
-void set_circle_scenarios(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc)
+void set_circle_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc)
 {
 	*number_of_waypoints = 2;
 	centralData->current_wp_count = -1;
@@ -1070,4 +1112,12 @@ void set_circle_scenarios(waypoint_struct waypoint_list[], uint16_t* number_of_w
 	waypoint_list[1] = waypoint;
 	
 	centralData->waypoint_set = false;
+}
+
+void set_stream_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc)
+{
+	waypoint_struct waypoint;
+	
+	
+	
 }

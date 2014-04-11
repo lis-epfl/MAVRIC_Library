@@ -177,7 +177,6 @@ task_return_t set_mav_mode_n_state()
 				}
 			}
 			if (centralData->run_mode == MOTORS_ON)
-			//if (has_started_engines)
 			{
 				switch (channelSwitches)
 				{
@@ -316,10 +315,15 @@ task_return_t set_mav_mode_n_state()
 					{
 						wp_hold_init(centralData->position_estimator.localPosition);
 					}
+					//if(centralData->automatic_landing)
+					//{
+						//auto_landing();
+					//}
 					break;
 				case MAV_MODE_AUTO_ARMED:
 					if (centralData->mav_mode_previous != MAV_MODE_AUTO_ARMED)
 					{
+						centralData->auto_landing_enum = DESCENT_TO_SMALL_ALTITUDE;
 						wp_hold_init(centralData->position_estimator.localPosition);
 					}
 					if (!centralData->waypoint_set)
@@ -327,6 +331,10 @@ task_return_t set_mav_mode_n_state()
 						init_wp();
 					}
 					waypoint_navigation_handler();
+					//if(centralData->automatic_landing)
+					//{
+						//auto_landing();
+					//}
 					break;
 			}
 			

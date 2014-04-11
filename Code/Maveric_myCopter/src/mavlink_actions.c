@@ -807,8 +807,13 @@ void receive_message_long(Mavlink_Received_t* rec)
 		switch(packet.command) {
 			case MAV_CMD_NAV_RETURN_TO_LAUNCH: {
 				/* Return to launch location |Empty| Empty| Empty| Empty| Empty| Empty| Empty|  */
-				dbg_print("All vehicles: Return to first waypoint. \n");
+				dbg_print("All MAVs: Return to first waypoint. \n");
 				set_current_wp_from_parameter(centralData->waypoint_list,centralData->number_of_waypoints,0);
+			}
+			break;
+			case MAV_CMD_NAV_LAND: {
+				dbg_print("All MAVs: Auto-landing");
+				//centralData->automatic_landing = true;
 			}
 			break;
 			case MAV_CMD_MISSION_START: {
@@ -818,9 +823,15 @@ void receive_message_long(Mavlink_Received_t* rec)
 			}
 			break;
 			case MAV_CMD_CONDITION_LAST: {
-				dbg_print("All vehicles, setting circle scenario!\n");
+				dbg_print("All MAVs: setting circle scenario!\n");
 				//void set_circle_scenarios(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc)
-				set_circle_scenarios(centralData->waypoint_list, &(centralData->number_of_waypoints), packet.param1, packet.param2);
+				set_circle_scenario(centralData->waypoint_list, &(centralData->number_of_waypoints), packet.param1, packet.param2);
+				if(packet.param3 == 1)
+				{
+					set_circle_scenario(centralData->waypoint_list, &(centralData->number_of_waypoints), packet.param1, packet.param2);
+				}else{
+					set_stream_scenario(centralData->waypoint_list, &(centralData->number_of_waypoints), packet.param1, packet.param2);
+				}
 			}
 			break;
 		}

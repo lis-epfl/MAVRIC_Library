@@ -10,11 +10,11 @@
 #define CONF_PLATFORM_H_
 
 //#include "conf_imu_rev3.h"
-#include "conf_imu_rev4.h"
+//#include "conf_imu_rev4.h"
 
 #define NATIVE_BIG_ENDIAN  
 
-#define MAVLINK_SYS_ID 7
+#define MAVLINK_SYS_ID 8
 
 #define MAVLINK_BASE_STATION_ID 255
 
@@ -25,6 +25,47 @@
 // Thrust compensation for hover (relative to center position)
 #define THRUST_HOVER_POINT (-0.3)
 
+//#if MAVLINK_SYS_ID == 1
+//#include "MAVsettings/MAV001_conf_imu_rev4.h"
+//#elif MAVLINK_SYS_ID == 2
+//#include "MAVsettings/MAV002_conf_imu_rev4.h"
+//#elif MAVLINK_SYS_ID == 3
+//#include "MAVsettings/MAV003_conf_imu_rev4.h"
+//#elif MAVLINK_SYS_ID == 4
+//#include "MAVsettings/MAV004_conf_imu_rev4.h"
+//#elif MAVLINK_SYS_ID == 5
+//#include "MAVsettings/MAV005_conf_imu_rev4.h"
+//#elif MAVLINK_SYS_ID == 6
+//#include "MAVsettings/MAV006_conf_imu_rev4.h"
+//#elif MAVLINK_SYS_ID == 7
+//#include "MAVsettings/MAV007_conf_imu_rev4.h"
+//#elif MAVLINK_SYS_ID == 8
+//#include "MAVsettings/MAV008_conf_imu_rev4.h"
+//#elif MAVLINK_SYS_ID == 9
+//#include "MAVsettings/MAV009_conf_imu_rev4.h"
+//#elif MAVLINK_SYS_ID == 10
+//#include "MAVsettings/MAV010_conf_imu_rev4.h"
+//#else
+//#include "conf_imu_rev4.h"
+//#endif
+
+#if MAVLINK_SYS_ID == 2
+#include "MAVsettings/MAV002_conf_imu_rev4.h"
+#elif MAVLINK_SYS_ID == 4
+#include "MAVsettings/MAV004_conf_imu_rev4.h"
+#elif MAVLINK_SYS_ID == 6
+#include "MAVsettings/MAV006_conf_imu_rev4.h"
+#elif MAVLINK_SYS_ID == 7
+#include "MAVsettings/MAV007_conf_imu_rev4.h"
+#elif MAVLINK_SYS_ID == 8
+#include "MAVsettings/MAV008_conf_imu_rev4.h"
+#elif MAVLINK_SYS_ID == 9
+#include "MAV009_conf_imu_rev4.h"
+#elif MAVLINK_SYS_ID == 10
+#include "MAVsettings/MAV010_conf_imu_rev4.h"
+#else
+#include "conf_imu_rev4.h"
+#endif
 
 #define IMU_X 0
 #define IMU_Y 1
