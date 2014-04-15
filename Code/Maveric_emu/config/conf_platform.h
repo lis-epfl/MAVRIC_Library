@@ -18,6 +18,9 @@
 
 #define MAVLINK_BASE_STATION_ID 255
 
+#define MAVLINK_END_UART_SEND(chan, length) flush_mavlink();
+
+
 #define CONF_DIAG
 //#define CONF_CROSS
 
