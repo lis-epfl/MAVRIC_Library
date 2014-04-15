@@ -318,7 +318,7 @@ void add_PID_parameters(void) {
 	Stabiliser_t* velocity_stabiliser= &centralData->stabiliser_stack.velocity_stabiliser;
 
 	// Comp and sys ID
-//	add_parameter_uint8(&(mavlink_system.sysid),"ID_System");
+	// add_parameter_uint8(&(mavlink_system.sysid),"ID_System");
 	// add_parameter_uint8(&(mavlink_mission_planner.sysid),"ID_Planner");
 	
 	// Simulation mode

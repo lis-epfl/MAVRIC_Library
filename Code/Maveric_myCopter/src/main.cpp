@@ -75,8 +75,8 @@ int main (void)
 	int i;
 	// turn on simulation mode: 1: simulation mode, 0: reality
 	initialisation();
-	centralData->simulation_mode = 0;
-	centralData->simulation_mode_previous = 0;
+	centralData->simulation_mode = 1;
+	centralData->simulation_mode_previous = 1;
 	
 	create_tasks();
 	
