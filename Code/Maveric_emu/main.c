@@ -109,7 +109,7 @@ void main (void)
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
 		
 		//LED_On(LED1);
-
+		delay_ms(1);
 		
 	}		
 }
