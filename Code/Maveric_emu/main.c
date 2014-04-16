@@ -9,13 +9,16 @@
  * Include header files for all drivers that have been imported from
  * AVR Software Framework (ASF).
  */
+//#include <asf.h>
 #include "led.h"
 #include "delay.h"
 //#include "stdio_serial.h"
 #include "print_util.h"
+
 #include "time_keeper.h"
 #include "streams.h"
 
+#include "bmp085.h"
 
 #include "scheduler.h"
 #include "central_data.h"
@@ -25,6 +28,8 @@
 #include "tasks.h"
 #include "neighbor_selection.h"
 #include "orca.h"
+#include "piezo_speaker.h"
+
 //#include "flashvault.h"
 
 central_data_t *centralData;
@@ -34,7 +39,7 @@ void initialisation() {
 	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 
 	
-	centralData = get_central_data();
+	
 	initialise_board(centralData);
 	initialise_central_data();
 
@@ -57,6 +62,8 @@ void initialisation() {
 	init_orca();
 	
 	LED_On(LED1);
+	init_piezo_speaker_binary();
+
 }
 
 
@@ -64,35 +71,16 @@ void initialisation() {
 void main (void)
 {
 	int i;
+	centralData = get_central_data();
 	// turn on simulation mode: 1: simulation mode, 0: reality
-
-	initialisation();
 	centralData->simulation_mode = 1;
+	centralData->simulation_mode_previous = centralData->simulation_mode;
+	initialisation();
 		
 	create_tasks();
 	
+	relevel_imu();
 
-	centralData->imu1.attitude.calibration_level=LEVELING;	
-	centralData->mav_state = MAV_STATE_CALIBRATING;
-	centralData->mav_mode = MAV_MODE_PREFLIGHT;
-
-	dbg_print("calibrating IMU...\n");
-	//calibrate_Gyros(&centralData->imu1);
-	for (i=100; i>0; i--) {
-		run_imu_update();
-		mavlink_protocol_update();	
-		delay_ms(5);
-	}
-	// after initial leveling, initialise accelerometer biases
-	
-	/*
-	centralData->imu1.attitude.calibration_level=LEVEL_PLUS_ACCEL;
-	for (i=100; i>0; i--) {
-		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);	
-		mavlink_protocol_update();			
-		delay_ms(5);
-	}*/
-	centralData->imu1.attitude.calibration_level=OFF;
 	//reset position estimate
 	for (i=0; i<3; i++) {
 		// clean acceleration estimate without gravity:
@@ -101,17 +89,19 @@ void main (void)
 		centralData->position_estimator.localPosition.pos[i]=0.0;
 	}
 	
-	centralData->mav_state = MAV_STATE_STANDBY;
-	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
-	
-	dbg_print("Initialise HIL Simulator...\n");
-	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude));
+	//dbg_print("Initialise HIL Simulator...\n");
+	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude),centralData->position_estimator.localPosition);
 
 	// main loop
 	delay_ms(10);
 	dbg_print("Reset home position...\n");
-	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
+	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model.localPosition);
 	dbg_print("OK. Starting up.\n");
+
+	for (i=1; i<8; i++) {
+		beep(100, 500*i);
+		delay_ms(2);
+	}
 
 	while (1==1) {
 		
@@ -119,7 +109,7 @@ void main (void)
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
 		
 		//LED_On(LED1);
-
+		delay_ms(1);
 		
 	}		
 }

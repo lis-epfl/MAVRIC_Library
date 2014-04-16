@@ -53,6 +53,7 @@ static inline int udp_bytes_available(udp_connection_t *udpconn) {
 	tv.tv_usec = 100;
 
 	if (select(udpconn->sock+1, &rset, NULL, NULL, &tv)) {
+		fromlen=sizeof(udpconn->Addr);		
 		recsize= recvfrom(udpconn->sock, (void *)buf, BUFFER_SIZE, 0, (struct sockaddr *)&(udpconn->Addr), &fromlen);
 		if (recsize!=-1) printf("rec: %i\n", recsize);
 		for (i=0; i<recsize; i++) {

@@ -230,7 +230,7 @@
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
     <OverrideVtorValue>exception_table</OverrideVtorValue>
-    <eraseonlaunchrule>0</eraseonlaunchrule>
+    <eraseonlaunchrule>1</eraseonlaunchrule>
     <com_atmel_avrdbg_tool_jtagicemk3>
       <ToolType>com.atmel.avrdbg.tool.jtagicemk3</ToolType>
       <ToolName>JTAGICE3</ToolName>
@@ -274,7 +274,7 @@
         <InterfaceName>JTAG</InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.jtagice3plus</ToolType>
-      <ToolNumber>J30200015895</ToolNumber>
+      <ToolNumber>J30200008882</ToolNumber>
       <ToolName>JTAGICE3</ToolName>
     </com_atmel_avrdbg_tool_jtagice3plus>
   </PropertyGroup>
@@ -674,6 +674,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\lsm330dlc_driver.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\piezo_speaker.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\piezo_speaker.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\remote_controller.h">

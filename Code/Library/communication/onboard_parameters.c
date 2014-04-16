@@ -9,7 +9,6 @@
 #include "stabilisation.h"
 #include "flashc.h"
 #include "print_util.h"
-
 Parameter_Set_t param_set;
 
 
@@ -66,20 +65,20 @@ void update_parameter(int param_index, float value) {
 			// take care of different ENDIAN-ness (usually MAVLINK does this, but here MAVLINK assumes all parameters are 4-byte so we need to swap it back)
 			#if MAVLINK_NEED_BYTE_SWAP
 			byte_swap_4(&converted, &value);
-			#else
-			byte_copy_4(&converted, &value);
-			#endif
 			memcpy(param_set.parameters[param_index].param, &converted, 1);
+			#else
+			memcpy(param_set.parameters[param_index].param, &value, 1);
+			#endif
 		break;
 		case MAVLINK_TYPE_UINT16_T:
 		case MAVLINK_TYPE_INT16_T:
 			// take care of different ENDIAN-ness (usually MAVLINK does this, but here MAVLINK assumes all parameters are 4-byte so we need to swap it back)
 			#if MAVLINK_NEED_BYTE_SWAP
 			byte_swap_4(&converted, &value);
+			memcpy(param_set.parameters[param_index].param, &converted, 2);
 			#else
-			byte_copy_4(&converted, &value);
-			#endif
 			memcpy(param_set.parameters[param_index].param, &value, 2);
+			#endif
 		break;
 		case MAVLINK_TYPE_UINT32_T:
 		case MAVLINK_TYPE_INT32_T:
@@ -106,7 +105,7 @@ float read_parameter(int param_index) {
 		#if MAVLINK_NEED_BYTE_SWAP
 		byte_swap_4(&converted, &return_value);
 		#else
-		byte_copy_4(&converted, &return_value);
+		memcpy(&converted, &return_value, 4);
 		#endif
 		break;
 		case MAVLINK_TYPE_UINT16_T:
@@ -115,7 +114,7 @@ float read_parameter(int param_index) {
 		#if MAVLINK_NEED_BYTE_SWAP
 		byte_swap_4(&converted, &return_value);
 		#else
-		byte_copy_4(&converted, &return_value);
+		memcpy(&converted, &return_value, 4);
 		#endif
 
 		break;
