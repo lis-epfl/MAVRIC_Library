@@ -18,7 +18,9 @@ matrix_3x3_t inv3(matrix_3x3_t m);
 
 matrix_4x4_t inv4(matrix_4x4_t m);
 
+matrix_5x5_t inv5(matrix_5x5_t m);
 
+matrix_6x6_t inv6(matrix_6x6_t m);
 
 
 

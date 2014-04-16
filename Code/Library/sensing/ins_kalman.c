@@ -329,8 +329,8 @@ void ins_update(Quat_Attitude_t *attitude, float *rates, float dt)
 	float h[INS_NMEASURES];
 	float R[INS_NMEASURES*INS_NMEASURES];
 	
-	float h_g[3],h_cent[3],h_long[3];
-	
+	float h_g[3],h_cent[3],h_long[3],h_acc[3],h_compass[3];
+	float h_acc_tot[INS_NMEASURES], h_compass_tot[INS_NMEASURES];
 
 	wx = rates[X+GYRO_OFFSET]*attitude->sf[X+GYRO_OFFSET] + x[4];
 	wy = rates[Y+GYRO_OFFSET]*attitude->sf[Y+GYRO_OFFSET] + x[5];
@@ -343,6 +343,28 @@ void ins_update(Quat_Attitude_t *attitude, float *rates, float dt)
 	z[X] = -g*(rates[X+ACC_OFFSET]-attitude->be[X+ACC_OFFSET])*attitude->sf[X+ACC_OFFSET];
 	z[Y] = -g*(rates[Y+ACC_OFFSET]-attitude->be[Y+ACC_OFFSET])*attitude->sf[Y+ACC_OFFSET];
 	z[Z] = -g*(rates[Z+ACC_OFFSET]-attitude->be[Z+ACC_OFFSET])*attitude->sf[Z+ACC_OFFSET];
+	
+	float scaled_mag[3];
+	scaled_mag[X] = (rates[X+COMPASS_OFFSET]-attitude->be[X+COMPASS_OFFSET])*attitude->sf[X+COMPASS_OFFSET];
+	scaled_mag[Y] = (rates[Y+COMPASS_OFFSET]-attitude->be[Y+COMPASS_OFFSET])*attitude->sf[Y+COMPASS_OFFSET];
+	scaled_mag[Z] = (rates[Z+COMPASS_OFFSET]-attitude->be[Z+COMPASS_OFFSET])*attitude->sf[Z+COMPASS_OFFSET];
+	
+	UQuat_t qtmp = quat_from_vector(scaled_mag);
+	UQuat_t mag_global = quat_local_to_global(attitude->qe, qtmp);
+	float s_mag_norm=SQR(mag_global.v[0])+SQR(mag_global.v[1]);
+	if ((s_mag_norm>0.004*0.004)&&(s_mag_norm<1.8*1.8))
+	{
+		float mag_norm = fast_sqrt(s_mag_norm);
+		mag_global.v[0]/=mag_norm;
+		mag_global.v[1]/=mag_norm;
+		mag_global.v[2]=0.0;   // set z component in global frame to 0	
+	}
+		
+	UQuat_t mag_2D_local = quat_global_to_local(attitude->qe, mag_global);
+	
+	z[X+3] = mag_2D_local.v[X];
+	z[Y+3] = mag_2D_local.v[Y];
+	z[Z+3] = mag_2D_local.v[Z];
 	
 	//if(ins_p.COMPCENTR == 1)
 	//{
@@ -359,18 +381,33 @@ void ins_update(Quat_Attitude_t *attitude, float *rates, float dt)
 	h_cent[0] = -dv;
 	h_cent[1] = v*(-wz);
 	h_cent[2] = v*( wy);
-	
 	//CROSS(omega,v_bf,h_cent);
-	
-	
 	
 	// temp = DCM^-1 *g
 	h_g[0] = 2*g*(-(q0*q2) + q1*q3);
 	h_g[1] = 2*g*(q0*q1 + q2*q3);
 	h_g[2] = g*(1 - 2*(q1*q1 + q2*q2));
-	
 	// h = DCM*g + fcent
-	matf_add(3, 1, h_cent, h_g, h);
+	matf_add(3, 1, h_cent, h_g, h_acc);
+	
+	matf_zeros(INS_NMEASURES,1,h_acc_tot);
+	
+	h_acc_tot[0] = h_acc[0];
+	h_acc_tot[1] = h_acc[1];
+	h_acc_tot[2] = h_acc[2];
+	
+	// h_compass = DCM^-1 * (1;0;0)
+	h_compass[0] = 1-2*(q2*q2+q3*q3);
+	h_compass[1] = 2*(q1*q2 - q0*q3);
+	h_compass[2] = 2*(q0*q2 + q1*q3);
+	
+	matf_zeros(INS_NMEASURES,1,h_compass_tot);
+	
+	h_compass_tot[3] = h_compass[0];
+	h_compass_tot[4] = h_compass[1];
+	h_compass_tot[5] = h_compass[2];
+	
+	matf_add(INS_NMEASURES,1, h_compass,h_acc,h);
 	
 	// generates H
 	matf_zeros(INS_NSTATES, INS_NMEASURES, H);
@@ -388,21 +425,49 @@ void ins_update(Quat_Attitude_t *attitude, float *rates, float dt)
 	H[16] = -4*g*q2;
 	H[19] =  v;
 	
+	H[23] = -4*q2;
+	H[24] = -4*q3;
+	H[28] = -2*q3;
+	H[29] = 2*q2;
+	H[30] = 2*q1;
+	H[31] = -2*q0;
+	H[35] = 2*q2;
+	H[36] = 2*q3;
+	H[37] = 2*q0;
+	H[38] = 2*q1;
+	
 	// generates R (measurement error)
 	
 	// part 1 of the measurement error (R_var1) is calculated from the angular speed (ponderated by parameter R_k1)
 	filter_LowPassf(&ins_p.R_var1,ins_p.R_k1*sqrtf(wx*wx + wy*wy + wz*wz),10., dt);   // low-pass filtered
+	float temp[3];
 	
 	// part 2 of the measurement error (R_var2) is calculated from the difference between the estimated gravity norm and 9.81 (ponderated by parameter R_k2)
-	matf_sub(3, 1, z, h_cent, h_g);       // temp = z - h_cent
-	filter_LowPassf(&ins_p.R_var2,ins_p.R_k2*f_abs(9.81 - matf_norm(3, h_g)),10., dt);   // low-pass filtered
+	float z_sup[3];
+	z_sup[0] = z[0];
+	z_sup[1] = z[1];
+	z_sup[2] = z[2];
+	matf_sub(3, 1, z_sup, h_cent, temp);       // temp = z - h_cent
+	filter_LowPassf(&ins_p.R_var2,ins_p.R_k2*f_abs(9.81 - matf_norm(3, temp)),10., dt);   // low-pass filtered
+	
+	float z_inf[3];
+	z_inf[0] = z[3];
+	z_inf[1] = z[4];
+	z_inf[2] = z[5];
+	
+	
+	// part 3 of the measurement error (R_var3) is calculated from the difference between the estimated north vector and the real north vector (ponderated by parameter R_k3)
+	matf_sub(3,1,z_inf,h_compass,temp);       // temp = z - h_compass
+	filter_LowPassf(&ins_p.R_var3,ins_p.R_k3*matf_norm(3, temp),10., dt);   // low-pass filtered
 	
 	// the measurement error variance is calculated. A constant variance (R_var0) is added to both variances calculated above
 	ins_p.R_var_tot = ins_p.R_var0 + ins_p.R_var1 + ins_p.R_var2;
+	ins_p.R_var_tot2 = ins_p.R_var0 + ins_p.R_var1 + ins_p.R_var3;
 	
 	matf_zeros(INS_NMEASURES, INS_NMEASURES, R);
 	
-	matf_diag(INS_NMEASURES, INS_NMEASURES, R, ins_p.R_var_tot, 1, INS_NMEASURES);       // uses variance calculated above
+	matf_diag(INS_NMEASURES, INS_NMEASURES, R, ins_p.R_var_tot, 1, 3);       // uses variance calculated above
+	matf_diag(INS_NMEASURES, INS_NMEASURES, R, ins_p.R_var_tot2, 4, INS_NMEASURES);       // uses variance calculated above
 	
 	// runs the update step of the Kalman filter
 	kf_Update(&ins_mainKF, H, R, z, h,0);

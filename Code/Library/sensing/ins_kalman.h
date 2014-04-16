@@ -13,7 +13,8 @@
 #include "qfilter.h"
 
 #define INS_NSTATES 7
-#define INS_NMEASURES 3
+#define INS_NMEASURES 6
+//#define INS_NMEASURES 3
 
 #define g 9.81
 
@@ -55,10 +56,13 @@ typedef struct
 	float R_var0;
 	float R_k1;
 	float R_k2;
+	float R_k3;
 	float R_var;
 	float R_var1;
 	float R_var2;
+	float R_var3;
 	float R_var_tot;
+	float R_var_tot2;
 	
 }
 ins_param;

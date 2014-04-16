@@ -92,83 +92,121 @@ void kf_Update(kf_State* kf, float* H, float* R, float* z, float* h, int nmeasur
     matf_multiply   (nmeasures, kf->nstates,   nmeasures, H,     kf_t3, kf_t2);   // temp2 = H*temp3 = H*P*H'
     matf_add        (nmeasures, nmeasures,                kf_t2, R,     kf_t1);   // temp1 = temp2 + R = H*P*H' + R
     if(nmeasures == 1)
+	{
     	kf_t2[0] = 1/kf_t1[0];
-    else
+    }else{
     	//matf_invert     (nmeasures,                           kf_t2, kf_t1);   // temp2 = inv(temp1) = inv(H*P*H' + R)
-		if (nmeasures == 3)
+		matrix_3x3_t temp3;
+		matrix_6x6_t temp6;
+		int i,j;
+		
+		switch(nmeasures)
 		{
-			matrix_3x3_t temp;
-			temp.v[0][0] = kf_t2[0];
-			temp.v[0][1] = kf_t2[1];
-			temp.v[0][2] = kf_t2[2];
-			temp.v[1][0] = kf_t2[3];
-			temp.v[1][1] = kf_t2[4];
-			temp.v[1][2] = kf_t2[5];
-			temp.v[2][0] = kf_t2[6];
-			temp.v[2][1] = kf_t2[7];
-			temp.v[2][2] = kf_t2[8];
-			
-			temp = inv3(temp);
-			
-			kf_t1[0] = temp.v[0][0];
-			kf_t1[1] = temp.v[0][1];
-			kf_t1[2] = temp.v[0][2];
-			kf_t1[3] = temp.v[1][0];
-			kf_t1[4] = temp.v[1][1];
-			kf_t1[5] = temp.v[1][2];
-			kf_t1[6] = temp.v[2][0];
-			kf_t1[7] = temp.v[2][1];
-			kf_t1[8] = temp.v[2][2];
+			case 3:
+				for (i=0;i<3;i++)
+				{
+					for (j=0;j<3;j++)
+					{
+						temp3.v[i][j] = kf_t2[3*i+j];
+					}
+				}
+				//temp3.v[0][0] = kf_t2[0];
+				//temp3.v[0][1] = kf_t2[1];
+				//temp3.v[0][2] = kf_t2[2];
+				//temp3.v[1][0] = kf_t2[3];
+				//temp3.v[1][1] = kf_t2[4];
+				//temp3.v[1][2] = kf_t2[5];
+				//temp3.v[2][0] = kf_t2[6];
+				//temp3.v[2][1] = kf_t2[7];
+				//temp3.v[2][2] = kf_t2[8];
+				
+				temp3 = inv3(temp3);
+				
+				for (i=0;i<3;i++)
+				{
+					for (j=0;j<3;j++)
+					{
+						kf_t2[3*i+j] = temp3.v[i][j];
+					}
+				}
+				//kf_t1[0] = temp3.v[0][0];
+				//kf_t1[1] = temp3.v[0][1];
+				//kf_t1[2] = temp3.v[0][2];
+				//kf_t1[3] = temp3.v[1][0];
+				//kf_t1[4] = temp3.v[1][1];
+				//kf_t1[5] = temp3.v[1][2];
+				//kf_t1[6] = temp3.v[2][0];
+				//kf_t1[7] = temp3.v[2][1];
+				//kf_t1[8] = temp3.v[2][2];
+				break;
+			case 6:
+				for (i=0;i<6;i++)
+				{
+					for (j=0;j<6;j++)
+					{
+						temp6.v[i][j] = kf_t2[6*i + j];
+					}
+				}
+				//temp6 = inv6(temp6);
+				for (i=0;i<6;i++)
+				{
+					for (j=0;j<6;j++)
+					{
+						kf_t2[6*i + j] = temp6.v[i][j];
+					}
+				}
+				break;
 		}
-		matf_multiply   (kf->nstates,   nmeasures, nmeasures, kf_t3, kf_t2, kf_t1);   // temp1(=K) = temp3*temp2 = P*H'*inv(H*P*H' + R)       (temp1(=K) is used twice to compute x and P updates)
+	}
+	matf_multiply   (kf->nstates,   nmeasures, nmeasures, kf_t3, kf_t2, kf_t1);   // temp1(=K) = temp3*temp2 = P*H'*inv(H*P*H' + R)       (temp1(=K) is used twice to compute x and P updates)
 	
-		if(h == 0)
-		{
-			matf_multiply  (nmeasures,   kf->nstates, 1, H,  kf->x, H_times_x);    // H_times_x = H * x
-			h = H_times_x;
-		}	
+	if(h == 0)
+	{
+		matf_multiply  (nmeasures,   kf->nstates, 1, H,  kf->x, H_times_x);    // H_times_x = H * x
+		h = H_times_x;
+	}	
 	
-		// updates x	
-		matf_sub       (nmeasures, 1,                z,      h,     kf_t2);    // temp2 = z - h
-		matf_multiply  (kf->nstates,   nmeasures, 1, kf_t1,  kf_t2, kf_t3);    // temp3(=x_corr) = temp1(=K)*temp2 = K*(z-h)
-		matf_add       (kf->nstates,   1,                kf->x,  kf_t3, kf->x);    // x = x + temp3(=x_corr)
+	// updates x	
+	matf_sub       (nmeasures, 1,                z,      h,     kf_t2);    // temp2 = z - h
+	matf_multiply  (kf->nstates,   nmeasures, 1, kf_t1,  kf_t2, kf_t3);    // temp3(=x_corr) = temp1(=K)*temp2 = K*(z-h)
+	matf_add       (kf->nstates,   1,                kf->x,  kf_t3, kf->x);    // x = x + temp3(=x_corr)
     
     
-		if(kf->debug == 1)
-		{
-			matf_copy(nmeasures, kf->nstates,   H,     kf->H);
-			matf_copy(nmeasures, nmeasures, R,     kf->R);
-			matf_copy(kf->nstates,   nmeasures, kf_t1, kf->K);
-			matf_copy(nmeasures, 1,             z,     kf->z);
-			matf_copy(nmeasures, 1,             h,     kf->h);
+	if(kf->debug == 1)
+	{
+		matf_copy(nmeasures, kf->nstates,   H,     kf->H);
+		matf_copy(nmeasures, nmeasures, R,     kf->R);
+		matf_copy(kf->nstates,   nmeasures, kf_t1, kf->K);
+		matf_copy(nmeasures, 1,             z,     kf->z);
+		matf_copy(nmeasures, 1,             h,     kf->h);
         
-			// adds correction due to update to statistics vector
-			kf->stats_up[kf->stats_buf_pos] = matf_norm(kf->nstates, kf_t3);
+		// adds correction due to update to statistics vector
+		kf->stats_up[kf->stats_buf_pos] = matf_norm(kf->nstates, kf_t3);
         
-			// computes total corrections due to prediction and update
-			kf->stats_pr_tot    = matf_sum(KF_STATS_BUFFER, kf->stats_pr);
-			kf->stats_up_tot    = matf_sum(KF_STATS_BUFFER, kf->stats_up);
+		// computes total corrections due to prediction and update
+		kf->stats_pr_tot    = matf_sum(KF_STATS_BUFFER, kf->stats_pr);
+		kf->stats_up_tot    = matf_sum(KF_STATS_BUFFER, kf->stats_up);
         
-			kf->stats_up_prct = kf->stats_up_tot/(kf->stats_up_tot + kf->stats_pr_tot); // percentage
+		kf->stats_up_prct = kf->stats_up_tot/(kf->stats_up_tot + kf->stats_pr_tot); // percentage
         
-			// increments stats counter
-			kf->stats_buf_pos++;
-			if(kf->stats_buf_pos >= KF_STATS_BUFFER) kf->stats_buf_pos = 0;
+		// increments stats counter
+		kf->stats_buf_pos++;
+		if(kf->stats_buf_pos >= KF_STATS_BUFFER) kf->stats_buf_pos = 0;
             
-			// sets next stat value of correction due to prediction to 0 
-			kf->stats_pr[kf->stats_buf_pos] = 0.;
-		}
+		// sets next stat value of correction due to prediction to 0 
+		kf->stats_pr[kf->stats_buf_pos] = 0.;
+	}
     
-		// updates P
-		matf_zeros     (kf->nstates, kf->nstates,   kf_t2);
-		matf_diag      (kf->nstates, kf->nstates,   kf_t2, 1., 1, kf->nstates);          // temp2 = I
-		matf_multiply  (kf->nstates, nmeasures, kf->nstates, kf_t1, H    , kf_t3);   // temp3 = temp1(=K)*H
-		matf_sub       (kf->nstates, kf->nstates,                kf_t2, kf_t3, kf_t1);   // temp1 = temp2 - temp3 = I - K*H
-		matf_multiply  (kf->nstates, kf->nstates,   kf->nstates, kf_t1, kf->P, kf_t2);   // temp2(=P) = temp1*P = (I - K*H)*P_pr
-		matf_copy      (kf->nstates, kf->nstates,   kf_t2      , kf->P);                 // P = temp2
+	// updates P
+	matf_zeros     (kf->nstates, kf->nstates,   kf_t2);
+	matf_diag      (kf->nstates, kf->nstates,   kf_t2, 1., 1, kf->nstates);          // temp2 = I
+	matf_multiply  (kf->nstates, nmeasures, kf->nstates, kf_t1, H    , kf_t3);   // temp3 = temp1(=K)*H
+	matf_sub       (kf->nstates, kf->nstates,                kf_t2, kf_t3, kf_t1);   // temp1 = temp2 - temp3 = I - K*H
+	matf_multiply  (kf->nstates, kf->nstates,   kf->nstates, kf_t1, kf->P, kf_t2);   // temp2(=P) = temp1*P = (I - K*H)*P_pr
+	matf_copy      (kf->nstates, kf->nstates,   kf_t2      , kf->P);                 // P = temp2
     
-		if(kf->debug == 1)
-		matf_std (kf->nstates, kf->P, kf->P_std);
+	if(kf->debug == 1)
+	matf_std (kf->nstates, kf->P, kf->P_std);
 }
 
 /*!
