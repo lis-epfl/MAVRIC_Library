@@ -14,9 +14,8 @@
 
 #include "mavlink_stream.h"
 
-void add_PID_parameters(void);
-
 void init_mavlink_actions(void);
+void add_onboard_parameters(void);
 
 void handle_specific_messages (Mavlink_Received_t* rec);
 void receive_message_long(Mavlink_Received_t* rec);

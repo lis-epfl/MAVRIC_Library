@@ -12,6 +12,7 @@
 
 Parameter_Set_t param_set;
 
+
 void init_onboard_parameters(void) {
 	param_set.param_count = 0;
 	param_set.enumerate=false;
@@ -225,7 +226,10 @@ void receive_parameter(Mavlink_Received_t* rec) {
 	// Check if this message is for this system and subsystem
 	if ((uint8_t)set.target_system == (uint8_t)mavlink_system.sysid
 	&& (uint8_t)set.target_component == (uint8_t)mavlink_system.compid) {
-		dbg_print("Setting new paramater value.\n");
+		dbg_print("Setting new parameter value for parameter ");
+		dbg_print(set.param_id);
+		dbg_print("\n");
+		
 		char* key = (char*) set.param_id;
 				
 		for (uint16_t i = 0; i < param_set.param_count; i++) {

@@ -114,14 +114,16 @@ void initialise_board(central_data_t *centralData) {
 	rc_init();
 
 	init_analog_monitor();
+	
+	// init imu & compass
+	init_imu(&(centralData->imu1));
+	init_bmp085();
+	
 	// init mavlink
 	init_mavlink(centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID);
 		
 	// init debug output
 	dbg_print_init(centralData->debug_out_stream);
-		
-	init_imu(&(centralData->imu1));
-	init_bmp085();
 
 
 	Enable_global_interrupt();

@@ -507,7 +507,7 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_STABILIZE_ARMED:
 			centralData->controls = get_command_from_remote();
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
-			centralData->controls.yaw_mode=YAW_RELATIVE;
+			centralData->controls.yaw_mode=YAW_COORDINATED;//YAW_RELATIVE;
 			
 			//centralData->controls.tvel[X]=-10.0*centralData->controls.rpy[PITCH];
 			//centralData->controls.tvel[Y]= 10.0*centralData->controls.rpy[ROLL];

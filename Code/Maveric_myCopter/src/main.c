@@ -87,7 +87,7 @@ void main (void)
 	}
 	
 	//dbg_print("Initialise HIL Simulator...\n");
-	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude),centralData->position_estimator.localPosition);
+	init_simulation(&(centralData->sim_model),&(centralData->imu1),centralData->position_estimator.localPosition);
 
 	// main loop
 	delay_ms(10);

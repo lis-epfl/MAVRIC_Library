@@ -787,22 +787,10 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_wp, global_p
 void wp_hold_init(local_coordinates_t localPos)
 {
 	
-	
-	//dbg_print("Position hold at: (");
-	//dbg_print_num(centralData->position_estimator.localPosition.pos[X],10);
-	//dbg_print(", ");
-	//dbg_print_num(centralData->position_estimator.localPosition.pos[Y],10);
-	//dbg_print(", ");
-	//dbg_print_num(centralData->position_estimator.localPosition.pos[Z],10);
-	//dbg_print(", ");
-	//dbg_print_num((int)(centralData->position_estimator.localPosition.heading*180.0/3.14),10);
-	//dbg_print(")\n");
-	//centralData->waypoint_hold_coordinates = centralData->position_estimator.localPosition;
-	
 	centralData->waypoint_hold_coordinates = localPos;
 	
 	//centralData->waypoint_hold_coordinates.heading = get_yaw(centralData->imu1.attitude.qe);
-	centralData->waypoint_hold_coordinates.heading = localPos.heading;
+	//centralData->waypoint_hold_coordinates.heading = localPos.heading;
 	
 	dbg_print("Position hold at: (");
 	dbg_print_num(centralData->waypoint_hold_coordinates.pos[X],10);

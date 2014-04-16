@@ -992,6 +992,24 @@
     <Compile Include="Library\sensing\estimator.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\sensing\filter.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\sensing\filter.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\sensing\ins_kalman.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\sensing\ins_kalman.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\sensing\kalman_filter.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\sensing\kalman_filter.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\sensing\neighbor_selection.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1007,16 +1025,31 @@
     <Compile Include="Library\sensing\qfilter.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\util\linear_algebra.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\util\linear_algebra.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\util\maths.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\util\math_util.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\util\matrixlib_float.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\util\matrixlib_float.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\util\quick_trig.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\util\quick_trig.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\util\small_matrix.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\central_data.c">
@@ -1040,6 +1073,9 @@
     <Compile Include="src\config\conf_stabilisation_hybrid.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\MAVsettings\MAV002_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\MAVsettings\MAV004_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
@@ -1053,6 +1089,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\MAVsettings\MAV009_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\MAVsettings\MAV010_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\mavlink_actions.c">

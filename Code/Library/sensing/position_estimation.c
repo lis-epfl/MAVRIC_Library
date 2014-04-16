@@ -185,7 +185,7 @@ void position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitu
 		pos_est->localPosition.pos[i] =pos_est->localPosition.pos[i]*(1.0-(POS_DECAY*dt)) + pos_est->vel[i] *dt;
 		pos_est->localPosition.heading=get_yaw(attitude->qe);
 	}
-
+	
 }
 	
 void position_correction(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, float dt)
@@ -260,7 +260,7 @@ void position_correction(position_estimator_t *pos_est, pressure_data *barometer
 			}
 			tinterGps = get_millis() - gps->timeLastMsg;
 			
-			gps_gain=fmax(1.0-tinterGps/1000.0, 0.0);
+			//gps_gain=fmax(1.0-tinterGps/1000.0, 0.0);
 			gps_gain=1.0;
 			
 			for (i=0;i<3;i++){

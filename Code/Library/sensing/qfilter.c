@@ -17,8 +17,6 @@
 
 float front_mag_vect_z;
 
-
-
 void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 	uint8_t i;
 	float init_angle;
@@ -78,7 +76,7 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 }
 
 
-void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
+void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	uint8_t i;
 	float  omc[3], omc_mag[3], rvc[3], tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
 	UQuat_t qed, qtmp1, up, up_bf, qtmp2, qtmp3;
@@ -122,8 +120,9 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	//QMUL(qtmp5, attitude->qe, front_bf);
 	
 	// calculate norm of compass vector
-	s_mag_norm=SQR(mag_global.v[0])+SQR(mag_global.v[1])+SQR(mag_global.v[2]);
-	if ((s_mag_norm>0.4*0.4)&&(s_mag_norm<1.8*1.8)) 
+	//s_mag_norm=SQR(mag_global.v[0])+SQR(mag_global.v[1])+SQR(mag_global.v[2]);
+	s_mag_norm=SQR(mag_global.v[0])+SQR(mag_global.v[1]);
+	if ((s_mag_norm>0.004*0.004)&&(s_mag_norm<1.8*1.8)) 
 	{
 		mag_norm=fast_sqrt(s_mag_norm);
 

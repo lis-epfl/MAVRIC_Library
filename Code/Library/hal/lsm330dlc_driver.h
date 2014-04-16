@@ -1,5 +1,5 @@
 /*
- * itg3200_driver.h
+ * lsm330dlc_driver.h
  *
  * Created: 18/05/2012 17:51:08
  *  Author: sfx

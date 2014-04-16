@@ -15,7 +15,7 @@
 #include "central_data.h"
 #include "maths.h"
 
-void init_simulation(simulation_model_t *sim, Quat_Attitude_t *start_attitude, local_coordinates_t localPos) {
+void init_simulation(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates_t localPos) {
 	int i;
 	
 	dbg_print("Init HIL simulation. \n");
@@ -36,13 +36,19 @@ void init_simulation(simulation_model_t *sim, Quat_Attitude_t *start_attitude, l
 	sim->localPosition.origin = localPos.origin;
 	
 	// set initial conditions to given attitude (including scalefactors and biases for simulated IMU)
-	sim->attitude=*start_attitude;
+	sim->attitude=imu->attitude;
 
 	for (i=0; i<ROTORCOUNT; i++) {
 		sim->rotorspeeds[i]=0.0;			
 	}
 	sim->last_update=get_micros();
 	sim->dt=0.01;
+	
+	for (i=0;i<9;i++)
+	{
+		sim->simu_raw_scale[i] = 1.0/imu->attitude.sf[i];
+		sim->simu_raw_biais[i] = imu->attitude.be[i];
+	}
 }
 
 //void set_simu_biaisnscale()
@@ -234,21 +240,21 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 
 	// fill in simulated IMU values
 	
-	imu->raw_channels[GYRO_OFFSET+IMU_X]=sim->rates_bf[0] * imu->raw_scale[GYRO_OFFSET+IMU_X]+imu->raw_bias[GYRO_OFFSET+IMU_X];
-	imu->raw_channels[GYRO_OFFSET+IMU_Y]=sim->rates_bf[1] * imu->raw_scale[GYRO_OFFSET+IMU_Y]+imu->raw_bias[GYRO_OFFSET+IMU_Y];
-	imu->raw_channels[GYRO_OFFSET+IMU_Z]=sim->rates_bf[2] * imu->raw_scale[GYRO_OFFSET+IMU_Z]+imu->raw_bias[GYRO_OFFSET+IMU_Z];
+	imu->raw_channels[GYRO_OFFSET+IMU_X]=sim->rates_bf[0] * sim->simu_raw_scale[GYRO_OFFSET+IMU_X]+sim->simu_raw_biais[GYRO_OFFSET+IMU_X];
+	imu->raw_channels[GYRO_OFFSET+IMU_Y]=sim->rates_bf[1] * sim->simu_raw_scale[GYRO_OFFSET+IMU_Y]+sim->simu_raw_biais[GYRO_OFFSET+IMU_Y];
+	imu->raw_channels[GYRO_OFFSET+IMU_Z]=sim->rates_bf[2] * sim->simu_raw_scale[GYRO_OFFSET+IMU_Z]+sim->simu_raw_biais[GYRO_OFFSET+IMU_Z];
 
-	imu->raw_channels[ACC_OFFSET+IMU_X]=(sim->lin_forces_bf[0] / sim->total_mass / GRAVITY)*imu->raw_scale[ACC_OFFSET+IMU_X]+imu->raw_bias[ACC_OFFSET+IMU_X];
-	imu->raw_channels[ACC_OFFSET+IMU_Y]=(sim->lin_forces_bf[1] / sim->total_mass / GRAVITY)*imu->raw_scale[ACC_OFFSET+IMU_Y]+imu->raw_bias[ACC_OFFSET+IMU_Y];
-	imu->raw_channels[ACC_OFFSET+IMU_Z]=(sim->lin_forces_bf[2] / sim->total_mass / GRAVITY)*imu->raw_scale[ACC_OFFSET+IMU_Z]+imu->raw_bias[ACC_OFFSET+IMU_Z];
+	imu->raw_channels[ACC_OFFSET+IMU_X]=(sim->lin_forces_bf[0] / sim->total_mass / GRAVITY)*sim->simu_raw_scale[ACC_OFFSET+IMU_X]+sim->simu_raw_biais[ACC_OFFSET+IMU_X];
+	imu->raw_channels[ACC_OFFSET+IMU_Y]=(sim->lin_forces_bf[1] / sim->total_mass / GRAVITY)*sim->simu_raw_scale[ACC_OFFSET+IMU_Y]+sim->simu_raw_biais[ACC_OFFSET+IMU_Y];
+	imu->raw_channels[ACC_OFFSET+IMU_Z]=(sim->lin_forces_bf[2] / sim->total_mass / GRAVITY)*sim->simu_raw_scale[ACC_OFFSET+IMU_Z]+sim->simu_raw_biais[ACC_OFFSET+IMU_Z];
 	// cheating... provide true upvector instead of simulated forces
 	//imu->raw_channels[ACC_OFFSET+IMU_X]=sim->attitude.up_vec.v[0] *imu->raw_scale[ACC_OFFSET+IMU_X]+imu->raw_bias[ACC_OFFSET+IMU_X];
 	//imu->raw_channels[ACC_OFFSET+IMU_Y]=sim->attitude.up_vec.v[1] *imu->raw_scale[ACC_OFFSET+IMU_Y]+imu->raw_bias[ACC_OFFSET+IMU_Y];
 	//imu->raw_channels[ACC_OFFSET+IMU_Z]=sim->attitude.up_vec.v[2] *imu->raw_scale[ACC_OFFSET+IMU_Z]+imu->raw_bias[ACC_OFFSET+IMU_Z];
 	
-	imu->raw_channels[COMPASS_OFFSET+IMU_X]=(sim->attitude.north_vec.v[0] )*imu->raw_scale[COMPASS_OFFSET+IMU_X]+imu->raw_bias[COMPASS_OFFSET+IMU_X];
-	imu->raw_channels[COMPASS_OFFSET+IMU_Y]=(sim->attitude.north_vec.v[1] )*imu->raw_scale[COMPASS_OFFSET+IMU_Y]+imu->raw_bias[COMPASS_OFFSET+IMU_Y];
-	imu->raw_channels[COMPASS_OFFSET+IMU_Z]=(sim->attitude.north_vec.v[2] )*imu->raw_scale[COMPASS_OFFSET+IMU_Z]+imu->raw_bias[COMPASS_OFFSET+IMU_Z];
+	imu->raw_channels[COMPASS_OFFSET+IMU_X]=(sim->attitude.north_vec.v[0] )*sim->simu_raw_scale[COMPASS_OFFSET+IMU_X]+sim->simu_raw_biais[COMPASS_OFFSET+IMU_X];
+	imu->raw_channels[COMPASS_OFFSET+IMU_Y]=(sim->attitude.north_vec.v[1] )*sim->simu_raw_scale[COMPASS_OFFSET+IMU_Y]+sim->simu_raw_biais[COMPASS_OFFSET+IMU_Y];
+	imu->raw_channels[COMPASS_OFFSET+IMU_Z]=(sim->attitude.north_vec.v[2] )*sim->simu_raw_scale[COMPASS_OFFSET+IMU_Z]+sim->simu_raw_biais[COMPASS_OFFSET+IMU_Z];
 	
 	
 	//imu->dt=sim->dt;

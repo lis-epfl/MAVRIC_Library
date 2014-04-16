@@ -10,6 +10,10 @@ typedef struct UQuat {
 	float v[3];
 } UQuat_t;
 
+//! Conversion from degrees to radians
+#define MATH_DEG_TO_RAD (PI/180.)
+//! Conversion from radians to degrees
+#define MATH_RAD_TO_DEG (180./PI)
 
 #define CROSS(u,v,out) \
 	out[0] = u[1] * v[2] - u[2]*v[1];\
@@ -273,7 +277,5 @@ static inline float interpolate(float x, float x1, float x2, float y1, float y2)
 		return y;
 	}
 }
-
-
 
 #endif

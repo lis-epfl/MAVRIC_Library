@@ -21,6 +21,9 @@ void initialise_central_data(){
 		centralData.controls.rpy[ROLL]=0;
 		centralData.controls.rpy[PITCH]=0;
 		centralData.controls.rpy[YAW]=0;
+		centralData.controls.tvel[X]=0;
+		centralData.controls.tvel[Y]=0;
+		centralData.controls.tvel[Z]=0;
 		centralData.controls.thrust=-1.0;
 		
 		centralData.run_mode = MOTORS_OFF;
@@ -56,7 +59,7 @@ void initialise_central_data(){
 		centralData.position_estimator.localPosition.pos[Z]=0;
 
 		// init simulation
-		init_simulation(&(centralData.sim_model),&(centralData.imu1.attitude),centralData.position_estimator.localPosition);
+		init_simulation(&(centralData.sim_model),&(centralData.imu1),centralData.position_estimator.localPosition);
 		//centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
 
 		centralData.dist2vel_gain = 0.7;
