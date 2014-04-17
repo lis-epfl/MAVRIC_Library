@@ -566,11 +566,11 @@
     <VirtualDirectory Name="communication">
       <File Name="Library/communication/mavlink_stream.c"/>
       <File Name="Library/communication/onboard_parameters.h"/>
-      <File Name="Library/communication/onboard_parameters.c"/>
       <File Name="Library/communication/mavlink_stream.h"/>
       <File Name="Library/communication/mavlink_bridge.h"/>
       <File Name="Library/communication/mavlink_waypoint_handler.c"/>
       <File Name="Library/communication/mavlink_waypoint_handler.h"/>
+      <File Name="Library/communication/onboard_parameters.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="control">
       <File Name="Library/control/pid_control.h"/>

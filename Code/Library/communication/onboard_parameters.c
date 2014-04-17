@@ -36,7 +36,7 @@ void add_parameter_uint8(uint8_t* val, const char* param_name) {
 }
 
 void add_parameter_uint32(uint32_t* val, const char* param_name) {
-	param_set.parameters[param_set.param_count].param = (float*)val;
+	param_set.parameters[param_set.param_count].param = val;
 	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
 	param_set.parameters[param_set.param_count].data_type= MAV_PARAM_TYPE_UINT32;
     param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
@@ -45,7 +45,7 @@ void add_parameter_uint32(uint32_t* val, const char* param_name) {
 }
 
 void add_parameter_int32(int32_t* val, const char* param_name) {
-	param_set.parameters[param_set.param_count].param = (float*)val;
+	param_set.parameters[param_set.param_count].param = val;
 	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
 	param_set.parameters[param_set.param_count].data_type = MAV_PARAM_TYPE_INT32;
 	param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
@@ -74,10 +74,8 @@ void update_parameter(int param_index, float value) {
 			byte_swap_4(&converted, &value);
 			memcpy(param_set.parameters[param_index].param, &converted, 1);
 			#else
-			// byte_copy_4(&converted, &value);
 			memcpy(param_set.parameters[param_index].param, &value, 1);
 			#endif
-			// memcpy(param_set.parameters[param_index].param, &converted, 1);
 		break;
 		case MAVLINK_TYPE_UINT16_T:
 		case MAVLINK_TYPE_INT16_T:
@@ -86,10 +84,8 @@ void update_parameter(int param_index, float value) {
 			byte_swap_4(&converted, &value);
 			memcpy(param_set.parameters[param_index].param, &converted, 2);
 			#else
-			// byte_copy_4(&converted, &value);
 			memcpy(param_set.parameters[param_index].param, &value, 2);
 			#endif
-			// memcpy(param_set.parameters[param_index].param, &value, 2);
 		break;
 		case MAVLINK_TYPE_UINT32_T:
 		case MAVLINK_TYPE_INT32_T:
@@ -257,7 +253,6 @@ void receive_parameter(Mavlink_Received_t* rec) {
 			if (match) {
 				// Only write and emit changes if there is actually a difference
 				if (*param_set.parameters[i].param != set.param_value && set.param_type == param_set.parameters[i].data_type) {
-					//*param_set.parameters[i].param = set.param_value;
 					update_parameter(i, set.param_value);
 					
 					// Report back new value
@@ -277,16 +272,14 @@ void receive_parameter(Mavlink_Received_t* rec) {
 void read_parameters_from_flashc()
 {
 	uint8_t i;
-	nvram_array = AVR32_FLASHC_USER_PAGE_ADDRESS + 0x04;
 	
+	nvram_array = MAVERIC_FLASHC_USER_PAGE_START_ADDRESS;
 	nvram_data_ttt local_array;
 	
 	float cksum1, cksum2;
 	cksum1 = 0;
 	cksum2 = 0;
 
-
-	
 	for (i=0;i<(param_set.param_count+1);i++)
 	{
 		local_array.values[i] = nvram_array->values[i];
@@ -299,11 +292,11 @@ void read_parameters_from_flashc()
 		dbg_print("Flash read successful! New Parameters inserted. \n");
 		for (i=1;i<(param_set.param_count+1);i++)
 		{
-			//*param_set.parameters[i-1].param = local_array.values[i];
 			update_parameter(i-1, local_array.values[i]);
 		}
-		
-	}else{
+	}
+	else
+	{
 		dbg_print("Flash memory corrupted! Hardcoded values taken.\n");
 	}
 }
@@ -313,10 +306,10 @@ void write_parameters_to_flashc()
 	float cksum1, cksum2;
 	cksum1 = 0;
 	cksum2 = 0;
-
 	uint8_t i;
-	nvram_array = AVR32_FLASHC_USER_PAGE_ADDRESS + 0x04;
+	size_t bytes_to_write = 0;
 	
+	nvram_array = MAVERIC_FLASHC_USER_PAGE_START_ADDRESS;
 	nvram_data_ttt local_array;
 	
 	local_array.values[0] = param_set.param_count;
@@ -327,15 +320,22 @@ void write_parameters_to_flashc()
 	
 	for (i=1;i<=param_set.param_count;i++)
 	{
-		//flashc_memcpy((void *)&(nvram_array->values[i]),   param_set.parameters[i].param, sizeof((nvram_array->values[i])),   true);
 		local_array.values[i] = read_parameter(i-1);
 		cksum1 += local_array.values[i];
 		cksum2 += cksum1;
 	}
-	
 	local_array.values[param_set.param_count+1] = cksum1;
 	local_array.values[param_set.param_count+2] = cksum2;
 
-	flashc_memcpy((void *)nvram_array, &local_array, sizeof(*nvram_array) ,   true);
-	dbg_print("Write to flashc completed.\n");
+	bytes_to_write = 4 * (param_set.param_count + 3);	// (1 param_count + parameters + 2 checksums) floats
+	
+	if(bytes_to_write < MAVERIC_FLASHC_USER_PAGE_FREE_SPACE)
+	{
+		flashc_memcpy((void *)nvram_array, &local_array, bytes_to_write, true);
+		dbg_print("Write to flashc completed.\n");
+	}
+	else
+	{
+		dbg_print("Attempted to write too many parameters on flash user page, aborted.\n");
+	}
 }

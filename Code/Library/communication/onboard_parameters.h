@@ -14,9 +14,12 @@
 extern "C" {
 #endif
 
-#define MAX_ONBOARD_PARAM_COUNT 200 //120
+#define MAX_ONBOARD_PARAM_COUNT 120	// should be < 122 to fit on user page on AT32UC3C1512
 
-#define USER_PAGE_FIRST_FREE_WORD 0x8080020C
+#define MAVERIC_FLASHC_USER_PAGE_START_ADDRESS AVR32_FLASHC_USER_PAGE_ADDRESS + 0x04	// +4bytes for unknown reason
+#define MAVERIC_FLASHC_USER_PAGE_FREE_SPACE 500	// 	512bytes user page, 
+												//	-4bytes at the start, 
+												//  -8bytes for the protected fuses at the end of the user page
 
 typedef struct {
 	float* param;
@@ -36,8 +39,8 @@ typedef struct {
 }Parameter_Set_t;
 
 typedef struct{
-	float values[MAX_ONBOARD_PARAM_COUNT+3]; // for number of parameters and two checksums
-} nvram_data_ttt;	
+	float values[MAVERIC_FLASHC_USER_PAGE_FREE_SPACE];
+} nvram_data_ttt;
 
 nvram_data_ttt *nvram_array;
 
