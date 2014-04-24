@@ -587,6 +587,8 @@
       <File Name="Library/control/stabilisation.c"/>
       <File Name="Library/control/adaptive_parameter.h"/>
       <File Name="Library/control/orca.h"/>
+      <File Name="Library/control/quaternion_controller.c"/>
+      <File Name="Library/control/quaternion_controller.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="hal">
       <File Name="Library/hal/uart_int.h"/>

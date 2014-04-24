@@ -10,6 +10,7 @@
 #include "maths.h"
 #include "print_util.h"
 #include "conf_platform.h"
+#include "quick_trig.h"
 
 // convert local NED coordinates to global GPS coordinates (relative to origin given in local coordinate frame)
 global_position_t local_to_global_position(local_coordinates_t input){
@@ -68,6 +69,28 @@ Aero_Attitude_t Quat_to_Aero(UQuat_t qe) {
 	aero.rpy[2]= atan2(2*(qe.s*qe.v[2] + qe.v[0]*qe.v[1]) , (qe.s*qe.s + qe.v[0]*qe.v[0] - qe.v[1]*qe.v[1] - qe.v[2]*qe.v[2]));
 	
 	return aero;
+}
+
+UQuat_t quaternion_from_aero(Aero_Attitude_t aero)
+{
+	UQuat_t quat;
+
+	// intermediate values
+	float cr, cp, cy, sr, sp, sy;
+	cr = quick_cos(aero.rpy[0] / 2);
+	cp = quick_cos(aero.rpy[1] / 2);
+	cy = quick_cos(aero.rpy[2] / 2);
+	sr = quick_sin(aero.rpy[0] / 2);
+	sp = quick_sin(aero.rpy[1] / 2);
+	sy = quick_sin(aero.rpy[2] / 2);
+
+
+	quat.s = 	(cr * cp * cy) + (sr * sp * sy);
+	quat.v[0] = (sr * cp * cy) - (cr * sp * sy);
+	quat.v[1] = (cr * sp * cy) + (sr * cp * sy);
+	quat.v[2] = (cr * cp * sy) - (sr * sp * cy);
+
+	return quat;
 }
 
 float get_yaw(UQuat_t qe) {

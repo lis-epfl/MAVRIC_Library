@@ -48,10 +48,8 @@ typedef struct {
 	float rpy[3];
 } Aero_Attitude_t;
 
-
-
 Aero_Attitude_t Quat_to_Aero(UQuat_t qe);
-
+UQuat_t quaternion_from_aero(Aero_Attitude_t aero);
 float get_yaw(UQuat_t qe);
 
 #endif /* STABILISATION_H_ */
