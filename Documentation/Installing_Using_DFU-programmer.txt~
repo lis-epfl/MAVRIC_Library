@@ -1,0 +1,101 @@
+Installing and using DFU-programmer with the maveric board
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+##################################
+1) Instructions for dfu-programmer
+##################################
+
+==================
+LINUX instructions
+==================
+
+a) Install dfu-programmer
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- download tar-ball from Sourceforge
+- unzip somewhere, enter directory, follow build instructions: 
+
+./configure --disable-libusb_1_0
+make
+sudo cp src/dfu-programmer /usr/local/bin
+
+to get instructions:
+dfu-programmer -h 
+
+
+b) Allow standard users to access the board via usb:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- Create the file /etc/udev/rules.d/99-dfu_programmer.rules with the following content:
+ATTR{idVendor}=="03eb", ATTR{idProduct}=="*", GROUP="users", MODE="0660"
+- Reboot
+
+
+c) A typical flashing sequence:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+dfu-programmer at32uc3c1512 erase
+dfu-programmer at32uc3c1512 get 
+dfu-programmer at32uc3c1512 flash <flash-image.hex> --suppress-bootloader-mem 
+dfu-programmer at32uc3c1512 reset 
+
+A script with this command sequence is useful to add to an IDE "Run" command, so that reflashing can be done by clicking a button or automatically after make. 
+
+
+====================
+WINDOWS instructions
+====================
+
+a) Install dfu-programmer
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- unzip somewhere dfu-programmer-win-0.6.2.zip found in DFU-programmer folder
+
+
+b) Install driver
+~~~~~~~~~~~~~~~~~
+
+- connect the usb cable to a maveric board WITH THE BOOTLOADER FLASHED (If it's not the case, read the documentation related to the bootloader)
+- install the driver: (DO NOT let windows search for the driver) Specify the path to the .inf file found in the folder dfu-prog-usb-1.2.2
+
+
+c) A typical flashing sequence:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+dfu-programmer at32uc3c1512 erase
+dfu-programmer at32uc3c1512 get 
+dfu-programmer at32uc3c1512 flash <flash-image.hex> --suppress-bootloader-mem 
+dfu-programmer at32uc3c1512 reset 
+
+The script dfu-programming.bat with this command sequence is include in DFU-programmer folder. This script flashes your last compiled .hex to your maveric board (by default the file <YourProject>/Debug/megafly.hex)
+
+- move this file in your project directory (ex. Maveric_myCopter)
+- execute this script whenever you want to flash your code (the .hex file by default is Debug/megafly.hex)
+
+
+######################################################
+2) Instructions for flashing code in the maveric board
+######################################################
+
+In order to flash the code on the maveric board, a bootloader is running at startup. During the boot, the pin SDA1 (corresponding to PC04) is tested to determine wheter the DFU software or the application will start.
+During a normal startup, the application will start as the pin SDA1 is pulled up by a resistor.
+For launching the DFU software, the pin SDA1 must be set to 0, for example, by connecting the pin n°1 (SDA1) and n°5 (GND) of an I2C 1 connector. An extra push button might also be used if soldered between SDA1 and GND.
+After a flash of the bootloader, the DFU software is forced to start allowing a first application flashing.   
+
+a) Flashing code right after flashing the bootloader
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- connect the usb cable to a maveric board WITH THE BOOTLOADER FLASHED (If it's not the case, read the documentation related to the bootloader)
+- run the script dfu-programming.bat or execute manually a flashing sequence in a terminal
+
+
+b) Flashing code with an existing application
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+- connect the usb cable to a maveric board WITH THE BOOTLOADER FLASHED (If it's not the case, read the documentation related to the bootloader)
+- ground the SDA1 pin by using an electric wire between pin 1 and 5 of an I2C 1 connector
+- reset the microcontroller by pressing the reset push button
+- run the script dfu-programming.bat or execute manually a flashing sequence in a terminal
+- remove the grounding of SDA1 pin
+
+
