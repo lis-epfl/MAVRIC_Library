@@ -37,7 +37,6 @@
 
 #include "gps_ublox.h"
 #include "mavlink_waypoint_handler.h"
-#include "estimator.h"
 #include "simulation.h"
 #include "bmp085.h"
 #include "conf_sim_model.h"
@@ -66,7 +65,6 @@ typedef struct  {
 	byte_stream_t gps_stream_out;
 	gps_Data_type GPS_data;
 	
-	Estimator_Data_t estimation;
 	simulation_model_t sim_model;
 	
 	position_estimator_t position_estimator;

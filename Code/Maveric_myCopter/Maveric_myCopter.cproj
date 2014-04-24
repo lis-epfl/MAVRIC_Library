@@ -274,7 +274,7 @@
         <InterfaceName>JTAG</InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.jtagice3plus</ToolType>
-      <ToolNumber>J30200008882</ToolNumber>
+      <ToolNumber>J30200015895</ToolNumber>
       <ToolName>JTAGICE3</ToolName>
     </com_atmel_avrdbg_tool_jtagice3plus>
   </PropertyGroup>
@@ -992,30 +992,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\mavlink\include\maveric\version.h" />
-    <Compile Include="Library\sensing\estimator.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\estimator.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\filter.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\filter.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\ins_kalman.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\ins_kalman.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\kalman_filter.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\kalman_filter.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\sensing\neighbor_selection.c">
       <SubType>compile</SubType>
     </Compile>

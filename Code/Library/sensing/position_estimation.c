@@ -143,10 +143,8 @@ void position_reset_home_altitude(position_estimator_t *pos_est, pressure_data *
 			pos_est->last_vel[i]=0.0;
 			pos_est->localPosition.pos[i] = 0.0;
 			pos_est->vel[i]=0.0;
-			
-		}
-
-	
+			pos_est->vel_bf[i] = 0.0;
+		}	
 }
 
 void position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitude, float dt)

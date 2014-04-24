@@ -24,8 +24,6 @@ NEW_TASK_SET(main_tasks, 10)
 
 central_data_t *centralData;
 
-//bool has_started_engines;
-
 task_set* get_main_taskset() {
 	return &main_tasks;
 }
@@ -55,15 +53,11 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 	
 	if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() > 0.9))
 	{
-		//dbg_print("motor on\n");
-		//dbg_print("motor on: yaw=\n"); dbg_putfloat(get_yaw_from_remote(),2);
 		*motorbool = 1;
 	}else if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() <-0.9))
 	{
-		//dbg_print("motor off\n");
 		*motorbool = -1;
 	}else{
-		//dbg_print("motor nothing\n");
 		*motorbool = 0;
 	}
 	
@@ -90,7 +84,6 @@ void switch_off_motors()
 {
 	dbg_print("Switching off motors!\n");
 	centralData->run_mode = MOTORS_OFF;
-	//has_started_engines = false;
 	centralData->mav_state = MAV_STATE_STANDBY;
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	
@@ -99,8 +92,9 @@ void switch_off_motors()
 
 void relevel_imu()
 {
-	uint8_t i;
-	centralData->imu1.attitude.calibration_level=LEVELING;	
+	uint8_t i,j;
+
+	centralData->imu1.attitude.calibration_level=LEVELING;
 	centralData->mav_state = MAV_STATE_CALIBRATING;
 	centralData->mav_mode = MAV_MODE_PREFLIGHT;
 
@@ -108,11 +102,16 @@ void relevel_imu()
 	//calibrate_Gyros(&centralData->imu1);
 	for (i=1000; i>0; i--) {
 		run_imu_update();
-		mavlink_protocol_update();	
+		mavlink_protocol_update();
+		
+		for (j=0;j<3;j++)
+		{
+			centralData->imu1.attitude.raw_mag_mean[j] = (1.0-MAG_LPF)*centralData->imu1.attitude.raw_mag_mean[j]+MAG_LPF*((float)centralData->imu1.raw_channels[j+COMPASS_OFFSET]);
+		}
 		delay_ms(5);
 	}
-	// after initial leveling, initialise accelerometer biases
 	
+	// after initial leveling, initialise accelerometer biases
 	/*
 	centralData->imu1.attitude.calibration_level=LEVEL_PLUS_ACCEL;
 	for (i=100; i>0; i--) {
@@ -121,16 +120,11 @@ void relevel_imu()
 		delay_ms(5);
 	}*/
 	
-	for (i=0;i<3;i++)
-	{
-		centralData->position_estimator.vel_bf[i]=0.0;
-		centralData->position_estimator.vel[i]=0.0;
-	}
-	
 	centralData->imu1.attitude.calibration_level=OFF;
-	
 	centralData->mav_state = MAV_STATE_STANDBY;
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
+	
+	dbg_print("IMU calibration done.\n");
 }
 
 task_return_t set_mav_mode_n_state()
@@ -161,7 +155,6 @@ task_return_t set_mav_mode_n_state()
 						position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data,&centralData->sim_model.localPosition);
 						centralData->waypoint_set = false;
 						centralData->run_mode = MOTORS_ON;
-						//has_started_engines = true;
 						//centralData->mav_state = MAV_STATE_ACTIVE;
 						centralData->mav_mode = MAV_MODE_MANUAL_ARMED;
 						break;
@@ -338,8 +331,6 @@ task_return_t set_mav_mode_n_state()
 					break;
 			}
 			
-			//dbg_print("motor_switch: ");
-			//dbg_print_num(motor_switch,10);
 			if (motor_switch == -1)
 			{
 				switch_off_motors();
@@ -403,9 +394,9 @@ task_return_t set_mav_mode_n_state()
 				case -2:
 					//if (centralData->critical_landing)
 					//{
-						centralData->mav_state = MAV_STATE_EMERGENCY;
+						//centralData->mav_state = MAV_STATE_EMERGENCY;
 					//}
-					//centralData->mav_state = MAV_STATE_EMERGENCY;
+					centralData->mav_state = MAV_STATE_EMERGENCY;
 					break;
 			}
 			break;
@@ -427,12 +418,6 @@ task_return_t set_mav_mode_n_state()
 			}
 			break;
 	}
-
-	//dbg_print("MAV state :");
-	//dbg_print_num(centralData->mav_state,10);
-	//dbg_print(", MAV mode :");
-	//dbg_print_num(centralData->mav_mode,10);
-	//dbg_print("\n");
 	
 	centralData->mav_mode_previous = centralData->mav_mode;
 	centralData->mav_state_previous = centralData->mav_state;
@@ -451,7 +436,6 @@ task_return_t set_mav_mode_n_state()
 			centralData->position_estimator.init_gps_position = false;
 			centralData->mav_state = MAV_STATE_STANDBY;
 			centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
-			//relevel_imu();
 		}
 		// From reality to simulation
 		if (centralData->simulation_mode == 1)
@@ -471,10 +455,6 @@ task_return_t set_mav_mode_n_state()
 	}
 	
 	centralData->simulation_mode_previous = centralData->simulation_mode;
-	
-	//mavlink_msg_named_value_int_send(MAVLINK_COMM_0,get_millis(),"run_mode", centralData->run_mode);
-	//dbg_print_num(centralData->run_mode,10);
-	//mavlink_msg_named_value_int_send(MAVLINK_COMM_0,get_millis(),"in_the_air", centralData->in_the_air);
 }
 
 void run_imu_update() {
@@ -507,11 +487,8 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_STABILIZE_ARMED:
 			centralData->controls = get_command_from_remote();
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
-			centralData->controls.yaw_mode=YAW_COORDINATED;//YAW_RELATIVE;
+			centralData->controls.yaw_mode=YAW_RELATIVE;
 			
-			//centralData->controls.tvel[X]=-10.0*centralData->controls.rpy[PITCH];
-			//centralData->controls.tvel[Y]= 10.0*centralData->controls.rpy[ROLL];
-			//centralData->controls.tvel[Z]=- 1.5*centralData->controls.thrust;
 			get_velocity_vector_from_remote(centralData->controls.tvel);
 			
 			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
@@ -616,7 +593,6 @@ task_return_t run_navigation_task()
 						}else{
 							run_navigation(centralData->waypoint_hold_coordinates);
 						}
-						//run_navigation(centralData->waypoint_coordinates);
 						break;
 					case MAV_MODE_GUIDED_ARMED:
 						run_navigation(centralData->waypoint_hold_coordinates);
@@ -649,8 +625,6 @@ task_return_t run_barometer()
 
 void create_tasks() {
 	
-	//has_started_engines = false;
-	
 	init_scheduler(&main_tasks);
 	
 	centralData = get_central_data();
@@ -661,7 +635,6 @@ void create_tasks() {
 	main_tasks.tasks[1].timing_mode=PERIODIC_RELATIVE;
 
 	register_task(&main_tasks, 2, 100000, RUN_REGULAR, &gps_task);
-	//register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
 	//register_task(&main_tasks, , 100000, RUN_REGULAR, &read_radar);
 
 	register_task(&main_tasks, 3, ORCA_TIME_STEP_MILLIS * 1000.0, RUN_REGULAR, &run_navigation_task);

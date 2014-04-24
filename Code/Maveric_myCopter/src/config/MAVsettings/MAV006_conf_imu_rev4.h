@@ -59,6 +59,6 @@
 
 #define MAG_AXIS_X -1.0
 #define MAG_AXIS_Y -1.0
-#define MAG_AXIS_Z  1.0
+#define MAG_AXIS_Z -1.0
 
 #endif /* CONF_IMU_REV4_H_ */

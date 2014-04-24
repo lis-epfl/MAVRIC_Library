@@ -24,14 +24,6 @@ Library\hal\piezo_speaker.c
 
 Library\hal\time_keeper.c
 
-Library\sensing\estimator.c
-
-Library\sensing\filter.c
-
-Library\sensing\ins_kalman.c
-
-Library\sensing\kalman_filter.c
-
 Library\sensing\neighbor_selection.c
 
 Library\sensing\position_estimation.c

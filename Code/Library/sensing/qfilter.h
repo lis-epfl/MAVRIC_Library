@@ -26,11 +26,10 @@ enum calibration_mode {OFF, LEVELING, LEVEL_PLUS_ACCEL};
 
 typedef struct {
 	UQuat_t qe;
-	UQuat_t qe_kalman;
 	UQuat_t up_vec, north_vec;
 	
 	float be[9], sf[9];
-	float om[3], a[3], mag[3], om_kalman[3];
+	float om[3], a[3], mag[3];
 	float kp;
 	float ki;
 	float kp_mag;
@@ -44,6 +43,8 @@ typedef struct {
 //float dt;
 
 void qfInit(Quat_Attitude_t *attitude, float *scalefactor, float *bias);
+
+void initQuat(Quat_Attitude_t *attitude);
 
 void qfilter(Quat_Attitude_t *attitude, float *rates, float dt);
 

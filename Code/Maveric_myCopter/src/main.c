@@ -30,19 +30,19 @@
 #include "neighbor_selection.h"
 #include "orca.h"
 #include "piezo_speaker.h"
-
-//#include "flashvault.h"
+#include "qfilter.h"
 
 central_data_t *centralData;
 
 void initialisation() {
 	int i;
 	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
-
-	
 	
 	initialise_board(centralData);
 	initialise_central_data();
+	qfInit(&(centralData->imu1.attitude), &(centralData->imu1.raw_scale), &(centralData->imu1.raw_bias));
+	
+	relevel_imu();
 
 	init_radar_modules();
 	dbg_print("Debug stream initialised\n");
@@ -54,6 +54,8 @@ void initialisation() {
 	init_onboard_parameters();
 	init_mavlink_actions();
 	init_pos_integration(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
+	
+	initQuat(&centralData->imu1.attitude);
 	
 	init_nav();
 	init_waypoint_handler();
@@ -74,13 +76,11 @@ void main (void)
 	int i;
 	centralData = get_central_data();
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	centralData->simulation_mode = 0;
+	centralData->simulation_mode = 1;
 	centralData->simulation_mode_previous = centralData->simulation_mode;
 	initialisation();
 		
 	create_tasks();
-	
-	relevel_imu();
 
 	//reset position estimate
 	for (i=0; i<3; i++) {
@@ -106,12 +106,8 @@ void main (void)
 
 	while (1==1) {
 		
-		//run_scheduler_update(get_main_taskset(), FIXED_PRIORITY);
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
-		
-		//LED_On(LED1);
 
-		
 	}		
 }
 

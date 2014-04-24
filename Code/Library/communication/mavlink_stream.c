@@ -20,7 +20,6 @@ static volatile Buffer_t mavlink_in_buffer;
 
 central_data_t *centralData;
 
-//NEW_TASK_SET (mavlink_tasks, 30)
 task_set mavlink_tasks;
 
 void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
@@ -78,7 +77,6 @@ task_return_t mavlink_protocol_update() {
 	mavlink_receive_handler();
 	if ((mavlink_out_stream->buffer_empty(mavlink_out_stream->data))==true) {
 		result = run_scheduler_update(&mavlink_tasks, ROUND_ROBIN);
-		//flush_mavlink();
 	}
 		
 	
@@ -98,18 +96,11 @@ void suspend_downstream(uint32_t delay) {
 
 uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
 	uint8_t byte;
-	//dbg_print(" ");
 	while(stream->bytes_available(stream->data) > 0) {
 		byte = stream->get(stream->data);
-		//dbg_print(".");
-		//dbg_print_num(byte, 16);
-		//dbg_print(" ");
 		if(mavlink_parse_char(MAVLINK_COMM_0, byte, &rec->msg, &rec->status)) {
-			//dbg_print("\n");
 			return 1;
 		}
-		//dbg_print_num(rec->status.parse_state, 16);
-		//dbg_print("\n");
 	}
 	return 0;
 }

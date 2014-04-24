@@ -30,7 +30,6 @@ void initialise_central_data(){
 		
 		// init stabilisers
 		init_stabilisation_copter(&centralData.stabiliser_stack);
-		// centralData.stabilisers_stack = 
 
 		centralData.simulation_mode=0;
 		centralData.simulation_mode_previous = 0;
@@ -65,7 +64,7 @@ void initialise_central_data(){
 		centralData.dist2vel_gain = 0.7;
 		centralData.cruise_speed = 3.0;
 		centralData.max_climb_rate = 1.0;
-		centralData.softZoneSize = 0.5;
+		centralData.softZoneSize = 0.0;
 }
 
 central_data_t* get_central_data(void)
