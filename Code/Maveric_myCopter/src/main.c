@@ -105,9 +105,7 @@ void main (void)
 	}
 
 	while (1==1) {
-		
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
-
 	}		
 }
 
