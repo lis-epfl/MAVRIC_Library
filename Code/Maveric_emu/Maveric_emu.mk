@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=felix
-Date                   :=04/15/14
+Date                   :=04/25/14
 CodeLitePath           :="/home/felix/.codelite"
 LinkerName             :=gcc
 SharedObjectLinkerName :=gcc -shared -fPIC
@@ -60,13 +60,13 @@ AS       := as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/boardsupport$(ObjectSuffix) $(IntermediateDirectory)/main$(ObjectSuffix) $(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IntermediateDirectory)/src_tasks$(ObjectSuffix) $(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) $(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) $(IntermediateDirectory)/util_sinus$(ObjectSuffix) $(IntermediateDirectory)/util_print_util$(ObjectSuffix) $(IntermediateDirectory)/util_buffer$(ObjectSuffix) $(IntermediateDirectory)/sensing_imu$(ObjectSuffix) \
-	$(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix) $(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix) $(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) $(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix) $(IntermediateDirectory)/sensing_neighbor_selection$(ObjectSuffix) $(IntermediateDirectory)/control_adaptive_parameter$(ObjectSuffix) $(IntermediateDirectory)/control_navigation$(ObjectSuffix) $(IntermediateDirectory)/control_orca$(ObjectSuffix) $(IntermediateDirectory)/control_pid_control$(ObjectSuffix) $(IntermediateDirectory)/control_stabilisation$(ObjectSuffix) \
-	$(IntermediateDirectory)/control_stabilisation_copter$(ObjectSuffix) $(IntermediateDirectory)/control_stabilisation_hybrid$(ObjectSuffix) $(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix) $(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix) $(IntermediateDirectory)/communication_mavlink_waypoint_handler$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_adxl345_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_bmp085$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_radar_module_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_servo_pwm$(ObjectSuffix) \
-	$(IntermediateDirectory)/hal_emu_led$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_udp_stream$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_joystick_rc$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_piezo_speaker$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/boardsupport$(ObjectSuffix) $(IntermediateDirectory)/main$(ObjectSuffix) $(IntermediateDirectory)/src_mavlink_actions$(ObjectSuffix) $(IntermediateDirectory)/src_tasks$(ObjectSuffix) $(IntermediateDirectory)/runtime_scheduler$(ObjectSuffix) $(IntermediateDirectory)/util_coord_conventions$(ObjectSuffix) $(IntermediateDirectory)/util_sinus$(ObjectSuffix) $(IntermediateDirectory)/util_print_util$(ObjectSuffix) $(IntermediateDirectory)/util_buffer$(ObjectSuffix) $(IntermediateDirectory)/util_matrixlib_float$(ObjectSuffix) \
+	$(IntermediateDirectory)/util_linear_algebra$(ObjectSuffix) $(IntermediateDirectory)/sensing_imu$(ObjectSuffix) $(IntermediateDirectory)/sensing_qfilter$(ObjectSuffix) $(IntermediateDirectory)/sensing_gps_ublox$(ObjectSuffix) $(IntermediateDirectory)/sensing_simulation$(ObjectSuffix) $(IntermediateDirectory)/sensing_position_estimation$(ObjectSuffix) $(IntermediateDirectory)/sensing_neighbor_selection$(ObjectSuffix) $(IntermediateDirectory)/sensing_ins_kalman$(ObjectSuffix) $(IntermediateDirectory)/sensing_kalman_filter$(ObjectSuffix) $(IntermediateDirectory)/sensing_filter$(ObjectSuffix) \
+	$(IntermediateDirectory)/control_adaptive_parameter$(ObjectSuffix) $(IntermediateDirectory)/control_navigation$(ObjectSuffix) $(IntermediateDirectory)/control_orca$(ObjectSuffix) $(IntermediateDirectory)/control_pid_control$(ObjectSuffix) $(IntermediateDirectory)/control_stabilisation$(ObjectSuffix) $(IntermediateDirectory)/control_stabilisation_copter$(ObjectSuffix) $(IntermediateDirectory)/control_stabilisation_hybrid$(ObjectSuffix) $(IntermediateDirectory)/communication_mavlink_stream$(ObjectSuffix) $(IntermediateDirectory)/communication_onboard_parameters$(ObjectSuffix) $(IntermediateDirectory)/communication_mavlink_waypoint_handler$(ObjectSuffix) \
+	$(IntermediateDirectory)/hal_emu_adxl345_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_bmp085$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_radar_module_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_servo_pwm$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_led$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_time_keeper$(ObjectSuffix) 
 
-Objects1=$(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) \
-	
+Objects1=$(IntermediateDirectory)/hal_emu_udp_stream$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_joystick_rc$(ObjectSuffix) \
+	$(IntermediateDirectory)/hal_emu_analog_monitor$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_lsm330dlc_driver$(ObjectSuffix) $(IntermediateDirectory)/hal_emu_piezo_speaker$(ObjectSuffix) $(IntermediateDirectory)/src_central_data$(ObjectSuffix) $(IntermediateDirectory)/tests_test_maths$(ObjectSuffix) 
 
 
 
@@ -166,6 +166,22 @@ $(IntermediateDirectory)/util_buffer$(DependSuffix): ../Library/util/buffer.c
 $(IntermediateDirectory)/util_buffer$(PreprocessSuffix): ../Library/util/buffer.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_buffer$(PreprocessSuffix) "../Library/util/buffer.c"
 
+$(IntermediateDirectory)/util_matrixlib_float$(ObjectSuffix): Library/util/matrixlib_float.c $(IntermediateDirectory)/util_matrixlib_float$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_emu/Library/util/matrixlib_float.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_matrixlib_float$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/util_matrixlib_float$(DependSuffix): Library/util/matrixlib_float.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/util_matrixlib_float$(ObjectSuffix) -MF$(IntermediateDirectory)/util_matrixlib_float$(DependSuffix) -MM "Library/util/matrixlib_float.c"
+
+$(IntermediateDirectory)/util_matrixlib_float$(PreprocessSuffix): Library/util/matrixlib_float.c
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_matrixlib_float$(PreprocessSuffix) "Library/util/matrixlib_float.c"
+
+$(IntermediateDirectory)/util_linear_algebra$(ObjectSuffix): Library/util/linear_algebra.c $(IntermediateDirectory)/util_linear_algebra$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_emu/Library/util/linear_algebra.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/util_linear_algebra$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/util_linear_algebra$(DependSuffix): Library/util/linear_algebra.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/util_linear_algebra$(ObjectSuffix) -MF$(IntermediateDirectory)/util_linear_algebra$(DependSuffix) -MM "Library/util/linear_algebra.c"
+
+$(IntermediateDirectory)/util_linear_algebra$(PreprocessSuffix): Library/util/linear_algebra.c
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/util_linear_algebra$(PreprocessSuffix) "Library/util/linear_algebra.c"
+
 $(IntermediateDirectory)/sensing_imu$(ObjectSuffix): ../Library/sensing/imu.c $(IntermediateDirectory)/sensing_imu$(DependSuffix)
 	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/sensing/imu.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_imu$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/sensing_imu$(DependSuffix): ../Library/sensing/imu.c
@@ -213,6 +229,30 @@ $(IntermediateDirectory)/sensing_neighbor_selection$(DependSuffix): ../Library/s
 
 $(IntermediateDirectory)/sensing_neighbor_selection$(PreprocessSuffix): ../Library/sensing/neighbor_selection.c
 	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_neighbor_selection$(PreprocessSuffix) "../Library/sensing/neighbor_selection.c"
+
+$(IntermediateDirectory)/sensing_ins_kalman$(ObjectSuffix): Library/sensing/ins_kalman.c $(IntermediateDirectory)/sensing_ins_kalman$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_emu/Library/sensing/ins_kalman.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_ins_kalman$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/sensing_ins_kalman$(DependSuffix): Library/sensing/ins_kalman.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/sensing_ins_kalman$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_ins_kalman$(DependSuffix) -MM "Library/sensing/ins_kalman.c"
+
+$(IntermediateDirectory)/sensing_ins_kalman$(PreprocessSuffix): Library/sensing/ins_kalman.c
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_ins_kalman$(PreprocessSuffix) "Library/sensing/ins_kalman.c"
+
+$(IntermediateDirectory)/sensing_kalman_filter$(ObjectSuffix): Library/sensing/kalman_filter.c $(IntermediateDirectory)/sensing_kalman_filter$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_emu/Library/sensing/kalman_filter.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_kalman_filter$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/sensing_kalman_filter$(DependSuffix): Library/sensing/kalman_filter.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/sensing_kalman_filter$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_kalman_filter$(DependSuffix) -MM "Library/sensing/kalman_filter.c"
+
+$(IntermediateDirectory)/sensing_kalman_filter$(PreprocessSuffix): Library/sensing/kalman_filter.c
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_kalman_filter$(PreprocessSuffix) "Library/sensing/kalman_filter.c"
+
+$(IntermediateDirectory)/sensing_filter$(ObjectSuffix): Library/sensing/filter.c $(IntermediateDirectory)/sensing_filter$(DependSuffix)
+	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Maveric_emu/Library/sensing/filter.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/sensing_filter$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/sensing_filter$(DependSuffix): Library/sensing/filter.c
+	@$(CC) $(CFLAGS) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/sensing_filter$(ObjectSuffix) -MF$(IntermediateDirectory)/sensing_filter$(DependSuffix) -MM "Library/sensing/filter.c"
+
+$(IntermediateDirectory)/sensing_filter$(PreprocessSuffix): Library/sensing/filter.c
+	@$(CC) $(CFLAGS) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/sensing_filter$(PreprocessSuffix) "Library/sensing/filter.c"
 
 $(IntermediateDirectory)/control_adaptive_parameter$(ObjectSuffix): ../Library/control/adaptive_parameter.c $(IntermediateDirectory)/control_adaptive_parameter$(DependSuffix)
 	$(CC) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/control/adaptive_parameter.c" $(CFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/control_adaptive_parameter$(ObjectSuffix) $(IncludePath)
@@ -447,6 +487,12 @@ clean:
 	$(RM) $(IntermediateDirectory)/util_buffer$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/util_buffer$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/util_buffer$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/util_matrixlib_float$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/util_matrixlib_float$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/util_matrixlib_float$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/util_linear_algebra$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/util_linear_algebra$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/util_linear_algebra$(PreprocessSuffix)
 	$(RM) $(IntermediateDirectory)/sensing_imu$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/sensing_imu$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/sensing_imu$(PreprocessSuffix)
@@ -465,6 +511,15 @@ clean:
 	$(RM) $(IntermediateDirectory)/sensing_neighbor_selection$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/sensing_neighbor_selection$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/sensing_neighbor_selection$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/sensing_ins_kalman$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/sensing_ins_kalman$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/sensing_ins_kalman$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/sensing_kalman_filter$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/sensing_kalman_filter$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/sensing_kalman_filter$(PreprocessSuffix)
+	$(RM) $(IntermediateDirectory)/sensing_filter$(ObjectSuffix)
+	$(RM) $(IntermediateDirectory)/sensing_filter$(DependSuffix)
+	$(RM) $(IntermediateDirectory)/sensing_filter$(PreprocessSuffix)
 	$(RM) $(IntermediateDirectory)/control_adaptive_parameter$(ObjectSuffix)
 	$(RM) $(IntermediateDirectory)/control_adaptive_parameter$(DependSuffix)
 	$(RM) $(IntermediateDirectory)/control_adaptive_parameter$(PreprocessSuffix)
