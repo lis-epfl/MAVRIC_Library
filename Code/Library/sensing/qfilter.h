@@ -40,8 +40,6 @@ typedef struct {
 	float acc_bf[3];
 } Quat_Attitude_t;	
 
-//float dt;
-
 void qfInit(Quat_Attitude_t *attitude, float *scalefactor, float *bias);
 
 void initQuat(Quat_Attitude_t *attitude);

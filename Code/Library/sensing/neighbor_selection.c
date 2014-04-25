@@ -51,11 +51,6 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 			}else{
 				i++;
 			}
-			
-			//if (i>centralData->number_of_neighbors)
-			//{
-				//ID_found = true;
-			//}
 		}
 		
 		if (i>=centralData->number_of_neighbors)

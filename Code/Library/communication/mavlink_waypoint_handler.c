@@ -725,7 +725,7 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_wp, global_p
 			waypoint_coor.origin = local_to_global_position(waypoint_coor);
 		break;
 		case MAV_FRAME_MISSION:
-			mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
+			//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
 		break;
 		case MAV_FRAME_GLOBAL_RELATIVE_ALT:
 			waypoint_global.latitude = current_wp.x;
@@ -754,7 +754,7 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_wp, global_p
 		
 		break;
 		case MAV_FRAME_LOCAL_ENU:
-			mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
+			//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
 		break;
 	}
 	

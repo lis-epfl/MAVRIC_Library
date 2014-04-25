@@ -1094,21 +1094,6 @@
     <None Include="src\asf.h">
       <SubType>compile</SubType>
     </None>
-    <Compile Include="Library\communication\ishtar.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\communication\ishtar.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\communication\ishtar_def.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\communication\ishtar_stream.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\communication\ishtar_stream.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\communication\mavlink_bridge.h">
       <SubType>compile</SubType>
     </Compile>

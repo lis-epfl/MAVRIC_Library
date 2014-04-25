@@ -73,11 +73,6 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 		*rc_check = -2;
 		break;
 	}
-	//dbg_print("rc_check: ");
-	//dbg_print_num(rc_check,10);
-	//dbg_print("; motorbool : ");
-	//dbg_print_num(*motorbool,10);
-	//dbg_print("\n");
 }
 
 void switch_off_motors()
@@ -233,6 +228,7 @@ task_return_t set_mav_mode_n_state()
 							centralData->mav_state = MAV_STATE_ACTIVE;
 							dbg_print("Automatic take-off finised, distFromHomeSqr (10x):");
 							dbg_print_num(distFromHomeSqr*10.0,10);
+							dbg_print(".\n");
 						}
 						break;
 					case MAV_MODE_AUTO_ARMED:
@@ -241,10 +237,6 @@ task_return_t set_mav_mode_n_state()
 							centralData->automatic_take_off = false;
 							wp_take_off();
 						}
-						//if (centralData->mav_mode_previous != MAV_MODE_AUTO_ARMED)
-						//{
-							//wp_hold_init();
-						//}
 						if (!centralData->waypoint_set)
 						{
 							init_wp();
@@ -255,6 +247,7 @@ task_return_t set_mav_mode_n_state()
 							centralData->mav_state = MAV_STATE_ACTIVE;
 							dbg_print("Automatic take-off finised, distFromHomeSqr (10x):");
 							dbg_print_num(distFromHomeSqr*10.0,10);
+							dbg_print(".\n");
 						}
 						break;
 				}

@@ -23,18 +23,12 @@ PID_Controller_t passthroughController() {
 	return out;
 }
 
-
-
-
 float integrate(Integrator_t *integrator, float input, float dt) {
 
 	integrator->accumulator=clip(integrator->accumulator+dt* integrator->pregain * input, integrator->clip);
 	return integrator->postgain* integrator->accumulator;
 
 }
-
-
-
 
 void initInt(Integrator_t *integrator, float pregain, float postgain, float clip_val) {
 	integrator->pregain=pregain;

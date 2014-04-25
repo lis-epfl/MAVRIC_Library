@@ -42,10 +42,6 @@ src\mavlink_actions.c
 
 src\tasks.c
 
-Library\communication\ishtar.c
-
-Library\communication\ishtar_stream.c
-
 Library\communication\mavlink_stream.c
 
 Library\communication\onboard_parameters.c

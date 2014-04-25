@@ -13,8 +13,6 @@
 // convert local NED coordinates to global GPS coordinates (relative to origin given in local coordinate frame)
 global_position_t local_to_global_position(local_coordinates_t input){
 	global_position_t output;
-	//output.latitude = input.origin.latitude  + rad_to_deg( input.pos[0] *2.0 / (PI * EARTH_RADIUS));
-	//output.longitude= input.origin.longitude + rad_to_deg( input.pos[1] *2.0 / (PI * EARTH_RADIUS*cos(deg_to_rad(output.latitude))));
 	output.latitude = input.origin.latitude  + rad_to_deg( input.pos[0] / EARTH_RADIUS);
 	output.longitude= input.origin.longitude + rad_to_deg( input.pos[1] / ( EARTH_RADIUS*cos(deg_to_rad(output.latitude))));
 	output.altitude = -input.pos[2] + input.origin.altitude;
@@ -33,29 +31,6 @@ local_coordinates_t global_to_local_position(global_position_t position, global_
 	output.pos[Z]=  (float)(-(position.altitude - origin.altitude));
 	output.heading=position.heading;
 	
-	//dbg_print("global2local: (x1e7): ");
-	//dbg_print("lat:(");
-	//dbg_print_num(position.latitude*10000000,10);
-	//dbg_print(", ");
-	//dbg_print_num(origin.latitude*10000000,10);
-	//dbg_print(")");
-	//dbg_print(", long: (");
-	//dbg_print_num(position.longitude*100000000,10);
-	//dbg_print(", ");
-	//dbg_print_num(origin.longitude*10000000,10);
-	//dbg_print(")");
-	//dbg_print(", small rad:");
-	//dbg_print_num(small_radius*10000000, 10);
-	//dbg_print(", d2r_lat:");
-	//dbg_print_num(deg_to_rad((position.latitude-origin.latitude))*10000000,10);
-	//dbg_print(", sin_lat:");
-	//dbg_print_num(sin(deg_to_rad((position.latitude-origin.latitude)))*EARTH_RADIUS*10000000,10);
-	//dbg_print(", d2r_long:");
-	//dbg_print_num(deg_to_rad((position.longitude-origin.longitude))*10000000,10);
-	//dbg_print(", sin_long:");
-	//dbg_print_num(sin(deg_to_rad((position.longitude-origin.longitude)))*small_radius*10000000,10);
-	//dbg_print("\n");
-	
 	return output;
 }
 
@@ -72,4 +47,3 @@ Aero_Attitude_t Quat_to_Aero(UQuat_t qe) {
 float get_yaw(UQuat_t qe) {
 	return  atan2(2*(qe.s*qe.v[2] + qe.v[0]*qe.v[1]) , (qe.s*qe.s + qe.v[0]*qe.v[0] - qe.v[1]*qe.v[1] - qe.v[2]*qe.v[2]));
 }
-

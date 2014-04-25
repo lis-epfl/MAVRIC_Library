@@ -120,10 +120,6 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	qtmp1=quat_from_vector(attitude->mag); 
 	mag_global = quat_local_to_global(attitude->qe, qtmp1);
 	
-	//QI(attitude->qe,qtmp4);
-	//QMUL(qtmp4, front_bf, qtmp5);
-	//QMUL(qtmp5, attitude->qe, front_bf);
-	
 	// calculate norm of compass vector
 	//s_mag_norm=SQR(mag_global.v[0])+SQR(mag_global.v[1])+SQR(mag_global.v[2]);
 	s_mag_norm=SQR(mag_global.v[0])+SQR(mag_global.v[1]);
@@ -173,19 +169,20 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	}
 
 	// apply error correction with appropriate gains for accelerometer and compass
-	//for (i=0; i<3; i++){
-		//qtmp1.v[i] = 0.5*(attitude->om[i] + kp*omc[i] + kp_mag*omc_mag[i]);
-	//}
-	//qtmp1.s=0;
-//
-	//// apply step rotation with corrections
-	//qed = quat_multi(attitude->qe,qtmp1);
-//
-	//attitude->qe.s=attitude->qe.s+qed.s*dt;
-	//attitude->qe.v[0]+=qed.v[0]*dt;
-	//attitude->qe.v[1]+=qed.v[1]*dt;
-	//attitude->qe.v[2]+=qed.v[2]*dt;
+/*
+	for (i=0; i<3; i++){
+		qtmp1.v[i] = 0.5*(attitude->om[i] + kp*omc[i] + kp_mag*omc_mag[i]);
+	}
+	qtmp1.s=0;
 
+	// apply step rotation with corrections
+	qed = quat_multi(attitude->qe,qtmp1);
+
+	attitude->qe.s=attitude->qe.s+qed.s*dt;
+	attitude->qe.v[0]+=qed.v[0]*dt;
+	attitude->qe.v[1]+=qed.v[1]*dt;
+	attitude->qe.v[2]+=qed.v[2]*dt;
+*/
 
 	float wx = attitude->om[X] + kp*omc[X] + kp_mag*omc_mag[X];
 	float wy = attitude->om[Y] + kp*omc[Y] + kp_mag*omc_mag[Y];
@@ -231,58 +228,3 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	attitude->up_vec.v[2]=up_bf.v[2];
 	
 }
-
-/*
-void qfilter_f (int16_t *rates, float dt) {
-	uint8_t i;
-	float omc[3], rvc[3], cp2[3], snorm, norm;
-	UQuat_t qed;
-
-	for (i=0; i<3; i++){
-		om[i]  = ((float)rates[i]-be[i])*sf[i];
-		a[i] = ((float)rates[i+3]-be[i+3])*sf[i+3];
-	}
-
-
-	cp2[0] = (qe.v[0]-qe.v[2])*qe.v[2] - qe.s*qe.v[1];          //u[1] * v[2] - u[2]*v[1];
-	cp2[1] = qe.s*qe.v[0] + qe.v[1] * qe.v[2];                  //u[2] * v[0] - u[0]*v[2];
-	cp2[2] = -qe.v[1] * qe.v[1] - (qe.v[0]-qe.v[2])* qe.v[0];   //u[0] * v[1] - v[1]*u[0];
-
-// calculate angular deviation between "up" estimate and acceleration vector
-	omc[0]= -qe.s * qe.v[1]         - qe.v[1]*qe.v[0] + cp2[0];
-	omc[1]=  qe.s*(qe.v[0]-qe.v[2]) - qe.v[2]*qe.v[1] + cp2[1];
-	omc[2]=                           qe.v[2]*qe.v[2] + cp2[2];
-	CROSS(a,omc,omc);
-
-	for (i=0; i<3; i++){
-		rvc[i] = om[i];// +kp*omc[i];
-	}
-	qed.s=-SCP(qe.v,rvc);
-	qed.v[0]=qe.s*rvc[0] +qe.v[1]*rvc[2]-qe.v[2]*rvc[1];
-	qed.v[1]=qe.s*rvc[1] +qe.v[2]*rvc[0]-qe.v[0]*rvc[2];
-	qed.v[2]=qe.s*rvc[2] +qe.v[0]*rvc[1]-qe.v[1]*rvc[0];
-
-	qe.s=qe.s+qed.s*dt;
-
-	qe.v[0]+=qed.v[0]*dt;
-	qe.v[1]+=qed.v[1]*dt;
-	qe.v[2]+=qed.v[2]*dt;
-	snorm=qe.s*qe.s+qe.v[0]*qe.v[0] + qe.v[1] * qe.v[1] + qe.v[2] * qe.v[2];
-	// approximate square root by running 2 iterations of newton method
-	norm=1.0;
-	norm=0.5*(norm+(snorm/norm));
-	norm=0.5*(norm+(snorm/norm));
-
-	qe.s/= norm;
-	qe.v[0] /= norm;
-	qe.v[1] /= norm;
-	qe.v[2] /= norm;
-
-	// bias estimate update
-	//be[0]+= - dt * ki * omc[0];
-	//be[1]+= - dt * ki * omc[1];
-	//be[2]+= - dt * ki * omc[2];
-
-
-}
-*/

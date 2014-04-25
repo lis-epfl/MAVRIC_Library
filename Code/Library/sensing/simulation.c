@@ -51,8 +51,6 @@ void init_simulation(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates
 	}
 }
 
-//void set_simu_biaisnscale()
-
 // inverse function of mix_to_servos in stabilisation to recover torques and forces
 
 static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr_lat_airspeed, float axial_airspeed) {
@@ -122,6 +120,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos
 	int i;
 	float motor_command[4];
 	
+	//TODO: implement the correct forces
 /*	motor_command[M_FRONT]= control->thrust + control->rpy[PITCH] + M_FRONT_DIR * control->rpy[YAW];
 	motor_command[M_RIGHT] = control->thrust - control->rpy[ROLL] + M_RIGHT_DIR * control->rpy[YAW];
 	motor_command[M_REAR] = control->thrust - control->rpy[PITCH] + M_REAR_DIR * control->rpy[YAW];
@@ -157,11 +156,9 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	#endif
 	
 	// integrate torques to get simulated gyro rates (with some damping)
-	//for (i=0; i<3; i++) {
 	sim->rates_bf[0] = clip((1.0-0.1*sim->dt)*sim->rates_bf[0] + sim->dt * sim->torques_bf[0] /sim->roll_pitch_momentum, 10.0);
 	sim->rates_bf[1] = clip((1.0-0.1*sim->dt)*sim->rates_bf[1] + sim->dt * sim->torques_bf[1] /sim->roll_pitch_momentum, 10.0);
 	sim->rates_bf[2] = clip((1.0-0.1*sim->dt)*sim->rates_bf[2] + sim->dt * sim->torques_bf[2] /sim->yaw_momentum, 10.0);
-	//}
 	
 	
 	for (i=0; i<3; i++){
@@ -263,23 +260,21 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	//pos_est->localPosition=sim->localPosition;
 }
 
-void simulate_barometer(simulation_model_t *sim, pressure_data *pressure) {
-
-		pressure->altitude=sim->localPosition.origin.altitude - sim->localPosition.pos[Z];
-		pressure->vario_vz=sim->vel[Z];
-		pressure->last_update=get_millis();
-		pressure->altitude_offset=0;
-		
-	}
+void simulate_barometer(simulation_model_t *sim, pressure_data *pressure)
+{
+	pressure->altitude=sim->localPosition.origin.altitude - sim->localPosition.pos[Z];
+	pressure->vario_vz=sim->vel[Z];
+	pressure->last_update=get_millis();
+	pressure->altitude_offset=0;
+}
 	
-void simulate_gps(simulation_model_t *sim, gps_Data_type *gps) {
-		global_position_t gpos=local_to_global_position(sim->localPosition);
+void simulate_gps(simulation_model_t *sim, gps_Data_type *gps)
+{
+	global_position_t gpos=local_to_global_position(sim->localPosition);
 	
-		gps->altitude=gpos.altitude;
-		gps->latitude=gpos.latitude;
-		gps->longitude=gpos.longitude;
-		gps->timeLastMsg=get_millis();
-		gps->status=GPS_OK;
-	
-
+	gps->altitude=gpos.altitude;
+	gps->latitude=gpos.latitude;
+	gps->longitude=gpos.longitude;
+	gps->timeLastMsg=get_millis();
+	gps->status=GPS_OK;
 }
