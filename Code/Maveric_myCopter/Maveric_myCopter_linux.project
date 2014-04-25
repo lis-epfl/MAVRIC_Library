@@ -650,6 +650,12 @@
       <File Name="Library/sensing/estimator.h"/>
       <File Name="Library/sensing/gps_ublox.c"/>
       <File Name="Library/sensing/simulation.c"/>
+      <File Name="Library/sensing/kalman_filter.h"/>
+      <File Name="Library/sensing/kalman_filter.c"/>
+      <File Name="Library/sensing/ins_kalman.h"/>
+      <File Name="Library/sensing/ins_kalman.c"/>
+      <File Name="Library/sensing/filter.h"/>
+      <File Name="Library/sensing/filter.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="util">
       <File Name="Library/util/linear_algebra.c"/>
@@ -674,6 +680,8 @@
       <File Name="Library/util/small_matrix.h"/>
       <File Name="Library/util/generator.h"/>
       <File Name="Library/util/generator.c"/>
+      <File Name="Library/util/matrixlib_float.h"/>
+      <File Name="Library/util/matrixlib_float.c"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Settings Type="Executable">
