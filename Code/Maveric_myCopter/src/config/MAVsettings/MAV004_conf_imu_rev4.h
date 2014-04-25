@@ -5,6 +5,7 @@
  *  Author: sfx
  */ 
 
+// Values of April 11 2014
 
 #ifndef CONF_IMU_REV4_H_
 #define CONF_IMU_REV4_H_
@@ -25,16 +26,20 @@
 // from datasheet: FS 2000dps --> 70 mdps/digit
 // scale = 1/(0.07 * PI / 180.0) = 818.5111
 #define RAW_GYRO_X_SCALE  1637.02223
-#define RAW_GYRO_Y_SCALE  -1637.02223
-#define RAW_GYRO_Z_SCALE  -1637.02223
+#define RAW_GYRO_Y_SCALE  1637.02223
+#define RAW_GYRO_Z_SCALE  1637.02223
+
+#define GYRO_AXIS_X  1.0
+#define GYRO_AXIS_Y -1.0
+#define GYRO_AXIS_Z -1.0
 
 #define RAW_ACC_X_SCALE  4101
 #define RAW_ACC_Y_SCALE  3900.6
 #define RAW_ACC_Z_SCALE  4222.8
 
-#define ACC_BIAIS_X  20	
-#define ACC_BIAIS_Y  20
-#define ACC_BIAIS_Z  223
+#define ACC_BIAIS_X  32	
+#define ACC_BIAIS_Y  32
+#define ACC_BIAIS_Z  335
 
 #define ACC_AXIS_X  1.0
 #define ACC_AXIS_Y -1.0
@@ -50,6 +55,6 @@
 
 #define MAG_AXIS_X -1.0
 #define MAG_AXIS_Y -1.0
-#define MAG_AXIS_Z  1.0
+#define MAG_AXIS_Z -1.0
 
 #endif /* CONF_IMU_REV4_H_ */

@@ -137,10 +137,8 @@ bool printNavOnDebug = false;
 
 uint8_t loopPosllh = 0, loopVelned = 0, loopStatus = 0, loopSolution = 0, loopTimTp = 0, loopTimVrfy = 0;
 uint8_t numSkippedMsg = 10;
-/*
-************************************************************************************
-Initialization of the GPS with the type of platform
-************************************************************************************
+/**
+* Initialization of the GPS with the type of platform
 */
 void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting)
 {
@@ -173,17 +171,15 @@ void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting)
 	}
 
 
-/*
-************************************************************************************
-Process bytes available from the stream
-
-The stream is assumed to contain only messages we recognise.  If it
-contains other messages, and those messages contain the preamble
-bytes, it is possible for this code to fail to synchronise to the
-stream immediately.  Without buffering the entire message and
-re-processing it from the top, this is unavoidable. The parser
-attempts to avoid this when possible.
-************************************************************************************
+/**
+* Process bytes available from the stream
+* 
+* The stream is assumed to contain only messages we recognise.  If it
+* contains other messages, and those messages contain the preamble
+* bytes, it is possible for this code to fail to synchronise to the
+* stream immediately.  Without buffering the entire message and
+* re-processing it from the top, this is unavoidable. The parser
+* attempts to avoid this when possible.
 */
 bool ubx_read(void)
 {
@@ -197,11 +193,6 @@ bool ubx_read(void)
 	{
 		data = buffer_get(&(centralData->gps_buffer));
 		reset:
-		
-		
- 		//dbg_print(" 0x");
-  		//dbg_print_num(data,16);
- 		//dbg_print("\n");
 		
 		switch (step)
 		{
@@ -273,7 +264,6 @@ bool ubx_read(void)
 // 			dbg_print_num(data<<8,10);
 // 			dbg_print("\n");
 			
-			//payload_length |= (uint16_t)(data<<8);
 			if (payload_length > 512)
 			{
 				// we assume very large payloads are line noise
@@ -402,14 +392,7 @@ bool ubx_read(void)
 					goto reset;
 				}	
 			}else if(ubxclass == UBX_CLASS_CFG)
-			{	
-// 				dbg_print("Message class: 0x"); //if ubxclass == UBX_CLASS_CFG
-// 				dbg_print_num(ubxclass,16);
-// 				dbg_print(", msg_id : 0x");
-// 				dbg_print_num(msg_id,16);
-// 				dbg_print("payload_length :");
-// 				dbg_print_num(payload_length,10);
-// 				dbg_print("\n");
+			{
 				
 				switch(msg_id)
 				{			
@@ -651,16 +634,13 @@ bool ubx_read(void)
 				msg_ok = true;
 			}
 		}
-		
 	}
 	return msg_ok;
 }
 
-/*
-************************************************************************************
-Process the new received message, class by class
-return true if new position and velocity messages are received, false otherwise
-************************************************************************************
+/** 
+* Process the new received message, class by class
+* return true if new position and velocity messages are received, false otherwise
 */
 bool ubx_process_data(void)
 {
@@ -669,8 +649,6 @@ bool ubx_process_data(void)
 	ubx_nav_solution *gpsSolution;
 	ubx_nav_velned *gpsVelned;
 	ubx_nav_SVInfo *gpsSVInfo;
-	
-	//dbg_print("ubx_process_data\n");
 	
 	if (ubxclass == UBX_CLASS_ACK)
 	{
@@ -833,7 +811,6 @@ bool ubx_process_data(void)
 			centralData->GPS_data.altitude = ((float)gpsPosllh->altitude_msl) / 1000.0;
 			centralData->GPS_data.horizontalAccuracy = ((float)gpsPosllh->horizontal_accuracy) / 1000.0;
 			centralData->GPS_data.verticalAccuracy = ((float)gpsPosllh->vertical_accuracy) / 1000.0;
-			//centralData->GPS_data.status = next_fix;
 			
 			new_position = true;
 		}
@@ -848,14 +825,10 @@ bool ubx_process_data(void)
 			{
 				dbg_print("MSG_STATUS fix_type = 0x");
 				dbg_print_num(gpsStatus->fix_type,16);
-//	 			dbg_print(" fix_status = 0x");
-//	 			dbg_print_num(gpsStatus->fix_status,16);
 				dbg_print(", uptime =");
 				dbg_print_num(gpsStatus->uptime,10);
 				dbg_print("\n");
-			}		
-		
-			//next_fix = (gpsStatus->fix_status & NAV_STATUS_FIX_VALID) && (gpsStatus->fix_type == GPS_FIX_TYPE_3DFIX);
+			}
 			next_fix = (gpsStatus->fix_type == GPS_FIX_TYPE_3DFIX);
 			if (!next_fix)
 			{
@@ -894,7 +867,6 @@ bool ubx_process_data(void)
 				dbg_print_num(gpsSolution->satellites,10);
 				dbg_print("\n");
 			}
-			//next_fix = (gpsSolution->fix_status & NAV_STATUS_FIX_VALID) && (gpsSolution->fix_type == GPS_FIX_TYPE_3DFIX);
 			next_fix = (gpsSolution->fix_type == GPS_FIX_TYPE_3DFIX);
 			if (!next_fix)
 			{
@@ -969,7 +941,6 @@ bool ubx_process_data(void)
 		dbg_print("\n");
 		
 		if (++disable_counter == 0) {
-			//Debug("Disabling NAV message 0x%02x", (unsigned)_msg_id);
 			dbg_print("Disabling NAV message 0x");
 			dbg_print_num(msg_id,16);
 			dbg_print("\n");
@@ -982,21 +953,13 @@ bool ubx_process_data(void)
 	if (new_position && new_speed) {
 		new_speed = false;
 		new_position = false;
-// 		fix_count++;
-// 		if (fix_count == 100) {
-// 			// ask for nav settings every 20 seconds
-// 			dbg_print("Asking for engine setting\n");
-// 			ubx_send_message(UBX_CLASS_CFG, MSG_CFG_NAV_SETTINGS, NULL, 0);
-// 		}
 		return true;
 	}
 	return false;
 }
 
-/*
-************************************************************************************
-Checksum update
-************************************************************************************
+/** 
+* Checksum update
 */
 void update_checksum(uint8_t *data, uint8_t len, uint8_t *ck_a, uint8_t *ck_b)
 {
@@ -1007,10 +970,8 @@ void update_checksum(uint8_t *data, uint8_t len, uint8_t *ck_a, uint8_t *ck_b)
 	}
 }
 
-/*
-************************************************************************************
-To send the lower byte of an uint16_t in the Little Endian format
-************************************************************************************
+/** 
+* To send the lower byte of an uint16_t in the Little Endian format
 */
 
 uint8_t endian_lower_bytes_uint16(uint16_t bytes)
@@ -1018,20 +979,16 @@ uint8_t endian_lower_bytes_uint16(uint16_t bytes)
 	return (bytes & 0x00FF);
 }
 
-/*
-************************************************************************************
-To send the higher byte of an uint16_t in the Little Endian format
-************************************************************************************
+/**
+* To send the higher byte of an uint16_t in the Little Endian format
 */
 uint8_t endian_higher_bytes_uint16(uint16_t bytes)
 {
 	return (bytes & 0xFF00)>>8;
 }
 
-/*
-************************************************************************************
-To send the UBX header of all messages
-************************************************************************************
+/**
+* To send the UBX header of all messages
 */
 void ubx_send_header(uint8_t msg_class, uint8_t _msg_id, uint8_t size)
 {
@@ -1041,14 +998,6 @@ void ubx_send_header(uint8_t msg_class, uint8_t _msg_id, uint8_t size)
 	header.msg_class		= msg_class;
 	header.msg_id_header    = _msg_id;
 	header.length			= size;
-	
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,header.preamble1);
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,header.preamble2);
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,header.msg_class);
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,header.msg_id_header);
-	//
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,(uint8_t) (header.length & 0x0F));
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,(uint8_t) (header.length & 0xF0)>>8);
 	
 	putnum(&centralData->gps_stream_out,header.preamble1,16);
 	putnum(&centralData->gps_stream_out,header.preamble2,16);
@@ -1060,25 +1009,18 @@ void ubx_send_header(uint8_t msg_class, uint8_t _msg_id, uint8_t size)
 	
 }
 
-/*
-************************************************************************************
-To send the checksum of every message
-************************************************************************************
+/**
+* To send the checksum of every message
 */
 void ubx_send_cksum(uint8_t ck_sum_a, uint8_t ck_sum_b)
 {
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,ck_sum_a);
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,ck_sum_b);
-	
 	putnum(&centralData->gps_stream_out,ck_sum_a,16);
 	putnum(&centralData->gps_stream_out,ck_sum_b,16);
 }
 
-/*
-************************************************************************************
-NOT USED ANYMORE
-To send a message to the GPS
-************************************************************************************
+/**
+* NOT USED ANYMORE
+* To send a message to the GPS
 */
 void ubx_send_message(uint8_t msg_class, uint8_t _msg_id, void *msg, uint8_t size)
 {
@@ -1097,16 +1039,12 @@ void ubx_send_message(uint8_t msg_class, uint8_t _msg_id, void *msg, uint8_t siz
  	putstring(&(centralData->gps_stream_out),(uint8_t *)msg);
  	putstring(&(centralData->gps_stream_out),&ck_a);
  	putstring(&(centralData->gps_stream_out),&ck_b);
-	
-	//centralData->gps_stream_out.flush(&(centralData->gps_stream_out.data));
 }
 
-/*
-************************************************************************************
-To send a CFG NAV RATE message,
-Class:		0x06	UBX_CLASS_CFG
-Msg_id:		0x08	MSG_CFG_RATE
-************************************************************************************
+/**
+* To send a CFG NAV RATE message,
+* Class:		0x06	UBX_CLASS_CFG
+* Msg_id:		0x08	MSG_CFG_RATE
 */
 void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_nav_rate_send msg, uint8_t size)
 {
@@ -1116,17 +1054,9 @@ void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_n
 	update_checksum((uint8_t *)&_msg_id, 1, &ck_a, &ck_b);
 	update_checksum((uint8_t *)&size, 1, &ck_a, &ck_b);
 
-	//update_checksum((uint8_t *)&header.msg_class, sizeof(header)-2, &ck_a, &ck_b);
 	update_checksum((uint8_t *)&msg, size, &ck_a, &ck_b);
 	
 	ubx_send_header(msg_class,_msg_id,size);
-	
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data, endian_lower_bytes_uint16(msg.measure_rate_ms));
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data, endian_higher_bytes_uint16(msg.measure_rate_ms));
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data, endian_lower_bytes_uint16(msg.nav_rate));
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data, endian_higher_bytes_uint16(msg.nav_rate));
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data, endian_lower_bytes_uint16(msg.timeref));
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data, endian_higher_bytes_uint16(msg.timeref));	
 	
 	putnum(&centralData->gps_stream_out, endian_lower_bytes_uint16(msg.measure_rate_ms),16);
 	putnum(&centralData->gps_stream_out, endian_higher_bytes_uint16(msg.measure_rate_ms),16);
@@ -1136,16 +1066,12 @@ void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_n
 	putnum(&centralData->gps_stream_out, endian_higher_bytes_uint16(msg.timeref),16);
 	
 	ubx_send_cksum(ck_a,ck_b);
-	
-	//centralData->gps_stream_out.flush(&(centralData->gps_stream_out.data));
 }
 
-/*
-************************************************************************************
-To send the NAV settings message
-Class:		0x06	UBX_CLASS_CFG
-Msg_id :	0x24	MSG_CFG_NAV_SETTINGS
-************************************************************************************
+/**
+* To send the NAV settings message
+* Class:		0x06	UBX_CLASS_CFG
+* Msg_id :	0x24	MSG_CFG_NAV_SETTINGS
 */
 void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, enum GPS_Engine_Setting *engine_settings, uint8_t size)
 {
@@ -1154,30 +1080,22 @@ void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, enum GPS_
 	update_checksum((uint8_t *)&msg_class, 1, &ck_a, &ck_b);
 	update_checksum((uint8_t *)&_msg_id, 1, &ck_a, &ck_b);
 	update_checksum((uint8_t *)&size, 1, &ck_a, &ck_b);
-
-	//update_checksum((uint8_t *)&header.msg_class, sizeof(header)-2, &ck_a, &ck_b);
-	
 	
 	ubx_send_header(msg_class,_msg_id,size);
 	
 	if (engine_settings != NULL)
 	{
 		update_checksum((uint8_t *)engine_settings, size, &ck_a, &ck_b);
-		//centralData->gps_stream_out.put(centralData->gps_stream_out.data, (uint8_t) *engine_settings);
 		putnum(&centralData->gps_stream_out, (uint8_t) *engine_settings,10);
 	}
 	
 	ubx_send_cksum(ck_a,ck_b);
-	
-	//centralData->gps_stream_out.flush(&(centralData->gps_stream_out.data));
 }
 
-/*
-************************************************************************************
-To send the NAV messages that we want to receive
-Class:		0x06	UBX_CLASS_CFG
-Msg_id :	0x01	MSG_CFG_SET_RATE
-************************************************************************************
+/**
+* To send the NAV messages that we want to receive
+* Class:		0x06	UBX_CLASS_CFG
+* Msg_id :	0x01	MSG_CFG_SET_RATE
 */
 void ubx_configure_message_rate(uint8_t msg_class, uint8_t _msg_id, uint8_t rate)
 {
@@ -1193,30 +1111,20 @@ void ubx_configure_message_rate(uint8_t msg_class, uint8_t _msg_id, uint8_t rate
 	update_checksum((uint8_t *)&_msg_id, 1, &ck_a, &ck_b);
 	update_checksum((uint8_t *)&size, 1, &ck_a, &ck_b);
 
-	//update_checksum((uint8_t *)&header.msg_class, sizeof(header)-2, &ck_a, &ck_b);
 	update_checksum((uint8_t *)&msg, size, &ck_a, &ck_b);
 	
 	ubx_send_header(UBX_CLASS_CFG,MSG_CFG_SET_RATE,sizeof(msg));
-	
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,msg.msg_class);
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,msg.msg_id_rate);
-	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,msg.rate);
 	
 	putnum(&centralData->gps_stream_out,msg.msg_class,16);
 	putnum(&centralData->gps_stream_out,msg.msg_id_rate,16);
 	putnum(&centralData->gps_stream_out,msg.rate,16);
 	
 	ubx_send_cksum(ck_a,ck_b);
-	//ubx_send_message(UBX_CLASS_CFG, MSG_CFG_SET_RATE, &msg, sizeof(msg));
-	
-	//centralData->gps_stream_out.flush(centralData->gps_stream_out.data);
 }
 
-/*
-************************************************************************************
-To configure the GPS in binary mode and the Navigation messages we want
-The GPS and UART channel should already be configured in the good baudrate 38400U
-************************************************************************************
+/**
+* To configure the GPS in binary mode and the Navigation messages we want
+* The GPS and UART channel should already be configured in the good baudrate 38400U
 */
 void configure_gps(void)
 {
@@ -1235,9 +1143,6 @@ void configure_gps(void)
 	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,set_binary);
 	//centralData->gps_stream_out.flush(&(centralData->gps_stream_out.data));
 	//}
-	
-	
-	//_port->begin(38400U);
 
 	// ask for navigation solutions every 200ms
 	msg.measure_rate_ms = 200;		// ms
@@ -1255,15 +1160,12 @@ void configure_gps(void)
 	ubx_configure_message_rate(UBX_CLASS_NAV, MSG_NAV_SVINFO, 1);
 
 	// ask for the current navigation settings
-	//Debug("Asking for engine setting\n");
 	//dbg_print("Asking for engine setting\n");
 	ubx_send_message_nav_settings(UBX_CLASS_CFG, MSG_CFG_NAV_SETTINGS, NULL, 0);
 }
 
-/*
-************************************************************************************
-The function that needs to be called to get the GPS information
-************************************************************************************
+/**
+* The function that needs to be called to get the GPS information
 */
 void gps_update(void)
 {
@@ -1278,10 +1180,6 @@ void gps_update(void)
 	{
 		if ((tnow - idleTimer) > idleTimeout)
 		{
-			/*dbg_print("gps read timeout ");
-			dbg_print_num(tnow,10);
-			dbg_print("\n");
-			*/
 			centralData->GPS_data.status = NO_GPS;
 			
 			init_gps_ubx(engine_nav_setting);
@@ -1354,7 +1252,7 @@ void gps_update(void)
 	}
 }
 
-/*
+/**
 * This function returns true if there is a new valid GPS message that arrived at time tnow
 * false otherwise
 */
@@ -1374,7 +1272,7 @@ bool newValidGpsMsg(uint32_t *prevGpsMsgTime)
 	
 }
 
-/*!
+/**
 *	This function returns a pointer to the last NAV-POSLLH message that was received
 *	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
 *
@@ -1388,7 +1286,7 @@ ubx_nav_posllh * ubx_GetPosllh()
 	return 0;
 }
 
-/*!
+/**
 *	This function returns a pointer to the last NAV-STATUS message that was received
 *	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
 *
@@ -1402,7 +1300,7 @@ ubx_nav_status * ubx_GetStatus()
 	return 0;
 }
 
-/*!
+/**
 *	This function returns a pointer to the last NAV-VELNED message that was received
 *	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
 *
@@ -1416,7 +1314,7 @@ ubx_nav_solution * ubx_GetSolution()
 	return 0;
 }
 
-/*!
+/**
 *	This function returns a pointer to the last NAV-VELNED message that was received
 *	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
 *
@@ -1430,7 +1328,7 @@ ubx_nav_velned * ubx_GetVelned()
 	return 0;
 }
 
-/*!
+/**
 *	This function returns a pointer to the last NAV-SVINFO message that was received
 *	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
 *
@@ -1444,7 +1342,7 @@ ubx_nav_SVInfo * ubx_GetSVInfo()
 	return 0;
 }
 
-/*!
+/**
 *	This function returns a pointer to the last NAV-Settings message that was received
 *	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
 *
@@ -1458,7 +1356,7 @@ ubx_cfg_nav_settings * ubx_GetNavSettings()
 	return 0;
 }
 
-/*!
+/**
 *	This function returns a pointer to the last CFG set/get rate message that was received
 *	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
 *
@@ -1472,7 +1370,7 @@ ubx_cfg_msg_rate * ubx_GetMsgRate()
 	return 0;
 }
 
-/*!
+/**
 *	This function returns a pointer to the last MON RXR message that was received
 *	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
 *
@@ -1486,7 +1384,7 @@ ubx_mon_rxr_struct * ubx_GetMonRXR()
 	return 0;
 }
 
-/*!
+/**
 *	This function returns a pointer to the last TIM TP message that was received
 *	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
 *
@@ -1500,7 +1398,7 @@ ubx_tim_tp * ubx_GetTimTP()
 	return 0;
 }
 
-/*!
+/**
 *	This function returns a pointer to the last TIM VRFY message that was received
 *	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
 *
@@ -1514,6 +1412,11 @@ ubx_tim_vrfy * ubx_GetTimVRFY()
 	return 0;
 }
 
+/**
+*	This function transforms a float angle in degree in a float angle in radians
+*
+*	@return The value in radians
+*/
 float ToRad(float numdeg)
 {
 	return numdeg * DEG2RAD;

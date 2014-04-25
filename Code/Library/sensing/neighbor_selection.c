@@ -20,7 +20,6 @@ void init_neighbors()
 	centralData->number_of_neighbors = 0;
 }
 
-
 void read_msg_from_neighbors(Mavlink_Received_t* rec)
 {
 	uint8_t i;
@@ -52,11 +51,6 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 			}else{
 				i++;
 			}
-			
-			//if (i>centralData->number_of_neighbors)
-			//{
-				//ID_found = true;
-			//}
 		}
 		
 		if (i>=centralData->number_of_neighbors)
@@ -88,6 +82,7 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 		
 		centralData->listNeighbors[actualNeighbor].size = SIZE_VHC_ORCA;
 		
+		centralData->listNeighbors[actualNeighbor].time_msg_received = get_millis();
 		
 		//dbg_print("Neighbor with ID ");
 		//dbg_print_num(centralData->listNeighbors[actualNeighbor].neighborID,10);
@@ -105,5 +100,42 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 		//dbg_print_vector(rel_pos,3);
 		//dbg_print("\n");
 		
+	}
+}
+
+void extrapolate_or_delete_position(track_neighbor_t listNeighbors[], uint8_t* number_of_neighbors)
+{
+	int i, ind, indSup;
+	uint32_t delta_t;
+	
+	uint32_t actualTime = get_millis();
+	
+	for (ind=0;ind<*number_of_neighbors;ind++)
+	{
+		delta_t = actualTime- listNeighbors[ind].time_msg_received;
+
+		if (delta_t >= NEIGHBOR_TIMEOUT_LIMIT_MS)
+		{
+			// suppressing element ind
+			for (indSup=ind;indSup<(*number_of_neighbors-1);indSup++)
+			{
+				listNeighbors[indSup] = listNeighbors[indSup + 1];
+			}
+			(*number_of_neighbors)--;
+			
+		}else if (delta_t > ORCA_TIME_STEP_MILLIS)
+		{
+			// extrapolating the last known position assuming a constant velocity
+			for(i=0;i<3;i++)
+			{
+				listNeighbors[ind].extrapolatedPosition[i] = listNeighbors[ind].position[i] + listNeighbors[ind].velocity[i] *((float)delta_t);
+			}
+		}else{
+			// taking the latest known position
+			for (i=0;i<3;i++)
+			{
+				listNeighbors[ind].extrapolatedPosition[i] = listNeighbors[ind].position[i];
+			}
+		}
 	}
 }

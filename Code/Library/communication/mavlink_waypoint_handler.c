@@ -23,7 +23,6 @@ void init_waypoint_handler()
 	centralData = get_central_data();
 	
 	centralData->critical_behavior = CLIMB_TO_SAFE_ALT;
-	//centralData->critical_init = false;
 	centralData->critical_next_state = false;
 	
 	//init_waypoint_list(centralData->waypoint_list, &centralData->number_of_waypoints);
@@ -57,7 +56,6 @@ void init_wp()
 				dbg_print(" set,\n");
 			
 				centralData->waypoint_set = true;
-				//waypoint_reached = false;
 				
 				for (j=0;j<3;j++)
 				{
@@ -274,12 +272,6 @@ void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool*
 	mavlink_mission_count_t packet;
 	mavlink_msg_mission_count_decode(&rec->msg, &packet);
 	// Check if this message is for this system and subsystem
-	//dbg_print("check msg");
-	//dbg_print_num(packet.target_system,10);
-	//dbg_print_num(mavlink_mission_planner.sysid,10);
-	//dbg_print_num(packet.target_component,10);
-	//dbg_print_num(mavlink_mission_planner.compid,10);
-	//dbg_print("\n");
 	if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
 	&& (uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
 	{
@@ -434,29 +426,14 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 		//}
 		
 		if(packet.current == 2) {                                               //current = 2 is a flag to tell us this is a "guided mode" waypoint and not for the mission
-			// switch to guided mode
-			//set_mode(GUIDED);
-
-			// set wp_nav's destination
-			//wp_nav.set_destination(pv_location_to_vector(tell_command));
 
 			// verify we received the command
-			mavlink_msg_mission_ack_send(MAVLINK_COMM_0, rec->msg.sysid,rec->msg.compid, MAV_CMD_ACK_OK);
+			mavlink_msg_mission_ack_send(MAVLINK_COMM_0, rec->msg.sysid,rec->msg.compid, MAV_CMD_ACK_ERR_NOT_SUPPORTED);
 
 		} else if(packet.current == 3){                                    //current = 3 is a flag to tell us this is a alt change only
 
-			// add home alt if needed
-			//if (new_waypoint.options & MASK_OPTIONS_RELATIVE_ALT) 
-			//{
-			//	new_waypoint.alt += home.alt;
-			//}
-
-			// To-Do: update target altitude for loiter or waypoint controller depending upon nav mode
-			// similar to how do_change_alt works
-			//wp_nav.set_desired_alt(new_waypoint.alt);
-
 			// verify we received the command
-			mavlink_msg_mission_ack_send(MAVLINK_COMM_0, rec->msg.sysid,rec->msg.compid, MAV_CMD_ACK_OK);
+			mavlink_msg_mission_ack_send(MAVLINK_COMM_0, rec->msg.sysid,rec->msg.compid, MAV_CMD_ACK_ERR_NOT_SUPPORTED);
 
 		} else {
 			// Check if receiving waypoints
@@ -748,7 +725,7 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_wp, global_p
 			waypoint_coor.origin = local_to_global_position(waypoint_coor);
 		break;
 		case MAV_FRAME_MISSION:
-			//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_RESULT_UNSUPPORTED);
+			//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
 		break;
 		case MAV_FRAME_GLOBAL_RELATIVE_ALT:
 			waypoint_global.latitude = current_wp.x;
@@ -777,7 +754,7 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_wp, global_p
 		
 		break;
 		case MAV_FRAME_LOCAL_ENU:
-			//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_RESULT_UNSUPPORTED);
+			//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
 		break;
 	}
 	
@@ -787,22 +764,10 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_wp, global_p
 void wp_hold_init(local_coordinates_t localPos)
 {
 	
-	
-	//dbg_print("Position hold at: (");
-	//dbg_print_num(centralData->position_estimator.localPosition.pos[X],10);
-	//dbg_print(", ");
-	//dbg_print_num(centralData->position_estimator.localPosition.pos[Y],10);
-	//dbg_print(", ");
-	//dbg_print_num(centralData->position_estimator.localPosition.pos[Z],10);
-	//dbg_print(", ");
-	//dbg_print_num((int)(centralData->position_estimator.localPosition.heading*180.0/3.14),10);
-	//dbg_print(")\n");
-	//centralData->waypoint_hold_coordinates = centralData->position_estimator.localPosition;
-	
 	centralData->waypoint_hold_coordinates = localPos;
 	
 	//centralData->waypoint_hold_coordinates.heading = get_yaw(centralData->imu1.attitude.qe);
-	centralData->waypoint_hold_coordinates.heading = localPos.heading;
+	//centralData->waypoint_hold_coordinates.heading = localPos.heading;
 	
 	dbg_print("Position hold at: (");
 	dbg_print_num(centralData->waypoint_hold_coordinates.pos[X],10);
@@ -895,9 +860,6 @@ void waypoint_navigation_handler()
 				dbg_print("Stop\n");
 				
 				wp_hold_init(centralData->waypoint_coordinates);
-				//Aero_Attitude_t aero_attitude;
-				//aero_attitude=Quat_to_Aero(centralData->imu1.attitude.qe);
-				//centralData->waypoint_coordinates.heading = aero_attitude.rpy[2];
 			}
 		}
 	}
@@ -962,6 +924,48 @@ void waypoint_critical_handler()
 	}
 }
 
+void auto_landing()
+{
+	local_coordinates_t local_position;
+	
+	switch(centralData->auto_landing_enum)
+	{
+		case DESCENT_TO_SMALL_ALTITUDE:
+			local_position = centralData->position_estimator.localPosition;
+			local_position.pos[Z] = -2.0;
+			
+			wp_hold_init(local_position);
+			break;
+		case DESCENT_TO_GND:
+			local_position = centralData->position_estimator.localPosition;
+			local_position.pos[Z] = 0.0;
+			
+			wp_hold_init(local_position);
+			break;
+	}
+	float rel_pos[3];
+	uint8_t i;
+	for (i=0;i<3;i++)
+	{
+		rel_pos[i] = centralData->waypoint_critical_coordinates.pos[i] - centralData->position_estimator.localPosition.pos[i];
+	}
+	centralData->dist2wp_sqr = vector_norm_sqr(rel_pos);
+	
+	if (centralData->dist2wp_sqr < 0.5)
+	{
+		switch(centralData->auto_landing_enum)
+		{
+			case DESCENT_TO_SMALL_ALTITUDE:
+				dbg_print("Automatic-landing: descent_to_GND\n");
+				centralData->critical_behavior = FLY_TO_HOME_WP;
+				break;
+			case DESCENT_TO_GND:
+				
+				break;
+		}
+	}
+}
+
 void continueToNextWaypoint()
 {
 	if ((centralData->number_of_waypoints>0)&&(!centralData->waypoint_set))
@@ -990,7 +994,7 @@ void continueToNextWaypoint()
 	}
 }
 
-void set_circle_scenarios(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc)
+void set_circle_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc)
 {
 	*number_of_waypoints = 2;
 	centralData->current_wp_count = -1;
@@ -1070,4 +1074,12 @@ void set_circle_scenarios(waypoint_struct waypoint_list[], uint16_t* number_of_w
 	waypoint_list[1] = waypoint;
 	
 	centralData->waypoint_set = false;
+}
+
+void set_stream_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc)
+{
+	waypoint_struct waypoint;
+	
+	//TODO: add code here :)
+	
 }

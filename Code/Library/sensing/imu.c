@@ -16,6 +16,8 @@
 #include "time_keeper.h"
 #include "print_util.h"
 #include "position_estimation.h"
+#include "mavlink_stream.h"
+
 
 int ic;
 void init_imu (Imu_Data_t *imu1) {
@@ -54,9 +56,6 @@ void init_imu (Imu_Data_t *imu1) {
 	imu1->raw_bias[Z+COMPASS_OFFSET]= MAG_BIAIS_Z;
 	
 	imu_last_update_init = false;
-	
-	qfInit(&imu1->attitude, imu1->raw_scale, imu1->raw_bias);
-	imu1->attitude.calibration_level=OFF;
 }
 
 
@@ -71,17 +70,13 @@ void imu_get_raw_data(Imu_Data_t *imu1) {
 	compass_data* compass=get_compass_data_slow();
 
 
-	imu1->raw_channels[GYRO_OFFSET+IMU_X]=(float)gyros->axes[RAW_GYRO_X];
-	imu1->raw_channels[GYRO_OFFSET+IMU_Y]=(float)gyros->axes[RAW_GYRO_Y];
-	imu1->raw_channels[GYRO_OFFSET+IMU_Z]=(float)gyros->axes[RAW_GYRO_Z];
+	imu1->raw_channels[GYRO_OFFSET+IMU_X]=(float)gyros->axes[RAW_GYRO_X]*GYRO_AXIS_X;
+	imu1->raw_channels[GYRO_OFFSET+IMU_Y]=(float)gyros->axes[RAW_GYRO_Y]*GYRO_AXIS_Y;
+	imu1->raw_channels[GYRO_OFFSET+IMU_Z]=(float)gyros->axes[RAW_GYRO_Z]*GYRO_AXIS_Z;
 
 	imu1->raw_channels[ACC_OFFSET+IMU_X]=((float)accs->axes[RAW_ACC_X])*ACC_AXIS_X;
 	imu1->raw_channels[ACC_OFFSET+IMU_Y]=((float)accs->axes[RAW_ACC_Y])*ACC_AXIS_Y;
 	imu1->raw_channels[ACC_OFFSET+IMU_Z]=((float)accs->axes[RAW_ACC_Z])*ACC_AXIS_Z;
-
-	//imu1->raw_channels[COMPASS_OFFSET+IMU_X]=(float)-compass->axes[RAW_COMPASS_X];
-	//imu1->raw_channels[COMPASS_OFFSET+IMU_Y]=(float)-compass->axes[RAW_COMPASS_Y];
-	//imu1->raw_channels[COMPASS_OFFSET+IMU_Z]=(float)compass->axes[RAW_COMPASS_Z];
 	
 	imu1->raw_channels[COMPASS_OFFSET+IMU_X]=(float)compass->axes[RAW_COMPASS_X]*MAG_AXIS_X;
 	imu1->raw_channels[COMPASS_OFFSET+IMU_Y]=(float)compass->axes[RAW_COMPASS_Y]*MAG_AXIS_Y;
@@ -122,7 +117,7 @@ void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *
 	}else{
 		imu1->dt=ticks_to_seconds(t - imu1->last_update);
 		imu1->last_update=t;
-		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt, false);
+		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt);
 		if (imu1->attitude.calibration_level==OFF) {
 			position_integration(pos_est, &imu1->attitude, imu1->dt);
 			position_correction(pos_est, barometer, gps, imu1->dt);

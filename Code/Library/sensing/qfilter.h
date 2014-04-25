@@ -1,5 +1,5 @@
 /*
- * qfilter.c
+ * qfilter.h
  * Quaternion complementary attitude filter
  * 
  *  Created on: Apr 13, 2010
@@ -37,10 +37,10 @@ typedef struct {
 	float acc_bf[3];
 } Quat_Attitude_t;	
 
-//float dt;
-
 void qfInit(Quat_Attitude_t *attitude, float *scalefactor, float *bias);
 
-void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode);
+void initQuat(Quat_Attitude_t *attitude);
+
+void qfilter(Quat_Attitude_t *attitude, float *rates, float dt);
 
 #endif /* QFILTER_H_ */

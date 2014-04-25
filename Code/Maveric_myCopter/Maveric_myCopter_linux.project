@@ -646,12 +646,10 @@
       <File Name="Library/sensing/position_estimation.c"/>
       <File Name="Library/sensing/qfilter.c"/>
       <File Name="Library/sensing/imu.h"/>
-      <File Name="Library/sensing/estimator.c"/>
       <File Name="Library/sensing/neighbor_selection.c"/>
       <File Name="Library/sensing/neighbor_selection.h"/>
       <File Name="Library/sensing/simulation.h"/>
       <File Name="Library/sensing/gps_ublox.h"/>
-      <File Name="Library/sensing/estimator.h"/>
       <File Name="Library/sensing/gps_ublox.c"/>
       <File Name="Library/sensing/simulation.c"/>
     </VirtualDirectory>
@@ -678,6 +676,8 @@
       <File Name="Library/util/small_matrix.h"/>
       <File Name="Library/util/generator.h"/>
       <File Name="Library/util/generator.c"/>
+      <File Name="Library/util/matrixlib_float.h"/>
+      <File Name="Library/util/matrixlib_float.c"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Settings Type="Executable">

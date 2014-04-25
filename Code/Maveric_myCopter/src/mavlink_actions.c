@@ -71,13 +71,8 @@ void mavlink_send_scaled_imu(void) {
 	1000*centralData->imu1.attitude.mag[IMU_X],
 	1000*centralData->imu1.attitude.mag[IMU_Y],
 	1000*centralData->imu1.attitude.mag[IMU_Z]
-	//1000*centralData->imu1.attitude.north_vec.v[0],
-	//1000*centralData->imu1.attitude.north_vec.v[1],
-	//1000*centralData->imu1.attitude.north_vec.v[2]
-	//1000*centralData->imu1.attitude.up_vec.v[0],
-	//1000*centralData->imu1.attitude.up_vec.v[1],
-	//1000*centralData->imu1.attitude.up_vec.v[2]
 	);
+	
 }
 void  mavlink_send_rpy_rates_error(void) {
 	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
@@ -96,6 +91,7 @@ void mavlink_send_rpy_thrust_setpoint(void) {
 
 void mavlink_send_servo_output(void) {
 	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
+	// FIXME: send only servos values in this message!
 	mavlink_msg_servo_output_raw_send(MAVLINK_COMM_0, get_micros(), 0, 
 	(uint16_t)(centralData->servos[0].value+1500),
 	(uint16_t)(centralData->servos[1].value+1500),
@@ -120,17 +116,11 @@ void mavlink_send_attitude(void) {
 }
 
 void mavlink_send_global_position(void) {				
-	//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
+	// send integrated position (for now there is no GPS error correction...!!!)
+	global_position_t gpos=local_to_global_position(centralData->position_estimator.localPosition);
 	
-   //if (centralData->GPS_data.status == GPS_OK)
-   //{
-	   //mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis() , centralData->GPS_data.latitude*10000000.0, centralData->GPS_data.longitude*10000000.0, centralData->GPS_data.altitude*1000.0, 1, centralData->GPS_data.northSpeed*100.0, centralData->GPS_data.eastSpeed*100.0, centralData->GPS_data.verticalSpeed*100.0, centralData->GPS_data.course);
-   //}else{
-	   //mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), 46.5193*10000000, 6.56507*10000000, 400*1000, 1, 0, 0, 0, centralData->imu1.attitude.om[2]);
-	   	// send integrated position (for now there is no GPS error correction...!!!)
-		global_position_t gpos=local_to_global_position(centralData->position_estimator.localPosition);
-		mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, centralData->position_estimator.vel[0]*100.0, centralData->position_estimator.vel[1]*100.0, centralData->position_estimator.vel[2]*100.0, centralData->imu1.attitude.om[2]);
-   //} 
+	//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
+	mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, centralData->position_estimator.vel[0]*100.0, centralData->position_estimator.vel[1]*100.0, centralData->position_estimator.vel[2]*100.0, centralData->imu1.attitude.om[2]);
 }
 
 void mavlink_send_hud(void) {
@@ -138,10 +128,17 @@ void mavlink_send_hud(void) {
 	float airspeed=groundspeed;
 	Aero_Attitude_t aero_attitude;
 	aero_attitude=Quat_to_Aero(centralData->imu1.attitude.qe);
+	
+	int16_t heading;
+	if(aero_attitude.rpy[2] < 0)
+	{
+		heading = (int16_t)(360.0 - 180.0*aero_attitude.rpy[2]/PI);
+	}else{
+		heading = (int16_t)(180.0*aero_attitude.rpy[2]/PI);
+	}
+	
 	// mavlink_msg_vfr_hud_send(mavlink_channel_t chan, float airspeed, float groundspeed, int16_t heading, uint16_t throttle, float alt, float climb)
-	//mavlink_msg_vfr_hud_send(MAVLINK_COMM_0, airspeed, groundspeed, 180.0*aero_attitude.rpy[2]/PI, (int)((centralData->controls.thrust+1.0)*50), -centralData->position_estimator.localPosition.pos[2], -centralData->position_estimator.vel[2]);
-
-	mavlink_msg_vfr_hud_send(MAVLINK_COMM_0, airspeed, groundspeed, 180.0*aero_attitude.rpy[2]/PI, (int)((centralData->controls.thrust+1.0)*50), -centralData->position_estimator.localPosition.pos[2]+centralData->position_estimator.localPosition.origin.altitude, -centralData->position_estimator.vel[2]);
+	mavlink_msg_vfr_hud_send(MAVLINK_COMM_0, airspeed, groundspeed, heading, (int)((centralData->controls.thrust+1.0)*50), -centralData->position_estimator.localPosition.pos[2]+centralData->position_estimator.localPosition.origin.altitude, -centralData->position_estimator.vel[2]);
 }
 
 void mavlink_send_gps_raw(void) {	
@@ -155,23 +152,14 @@ void mavlink_send_gps_raw(void) {
 }
 
 
-void mavlink_send_pressure(void) {			
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Pressure", centralData->pressure.pressure/100.0);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "PressureFiltered", centralData->pressure_filtered/100.0);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Temperature", centralData->pressure.temperature);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Altitude", centralData->pressure.altitude);
-	
+void mavlink_send_pressure(void) {
 	
 	//mavlink_msg_scaled_pressure_send(mavlink_channel_t chan, uint32_t time_boot_ms, float press_abs, float press_diff, int16_t temperature)
-	
+
 	mavlink_msg_scaled_pressure_send(MAVLINK_COMM_0, get_millis(), centralData->pressure.pressure/100.0, centralData->pressure.vario_vz, centralData->pressure.temperature*100.0);
-	//flush_mavlink();
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressAlt", centralData->pressure.altitude);
-	//flush_mavlink();
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"lastAlt", centralData->position_estimator.last_alt);
-	//flush_mavlink();
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"baro_dt", centralData->pressure.dt);
-	//flush_mavlink();
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressFilt", centralData->altitude_filtered);
 }
 
@@ -185,9 +173,7 @@ void mavlink_send_radar(void) {
 void mavlink_send_estimator(void)
 {
 	//mavlink_msg_local_position_ned_send(mavlink_channel_t chan, uint32_t time_boot_ms, float x, float y, float z, float vx, float vy, float vz)
-	//mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, get_millis(), centralData->estimation.state[0][0], centralData->estimation.state[1][0], centralData->estimation.state[2][0], centralData->estimation.state[0][1], centralData->estimation.state[1][1], centralData->estimation.state[2][1]);
 	mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, get_millis(), centralData->position_estimator.localPosition.pos[0], centralData->position_estimator.localPosition.pos[1], centralData->position_estimator.localPosition.pos[2], centralData->position_estimator.vel[0], centralData->position_estimator.vel[1], centralData->position_estimator.vel[2]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,0,"Estimation",0);
 	
 	//dbg_print("Local position: (");
 	//dbg_print_num(centralData->position_estimator.localPosition.pos[X],10);
@@ -198,35 +184,6 @@ void mavlink_send_estimator(void)
 	//dbg_print(")\n");
 }
 
-void mavlink_send_kalman_estimator(void)
-{
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiX", centralData->estimation.state[X][POSITION]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiY", centralData->estimation.state[Y][POSITION]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiZ", centralData->estimation.state[Z][POSITION]);
-	
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiVx", centralData->estimation.state[X][SPEED]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiVy", centralData->estimation.state[Y][SPEED]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiVz", centralData->estimation.state[Z][SPEED]);
-	
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estibiaisX", centralData->estimation.state[X][BIAIS]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estibiaisY", centralData->estimation.state[Y][BIAIS]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estibiaisZ", centralData->estimation.state[Z][BIAIS]);
-	
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisX", centralData->imu1.attitude.be[X+ACC_OFFSET]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisY", centralData->imu1.attitude.be[Y+ACC_OFFSET]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisZ", centralData->imu1.attitude.be[Z+ACC_OFFSET]);
-	
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfX", centralData->imu1.attitude.acc_bf[X]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfY", centralData->imu1.attitude.acc_bf[Y]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", centralData->imu1.attitude.acc_bf[Z]);
-	
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", centralData->position_estimator.vel_bf[X]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", centralData->position_estimator.vel_bf[Y]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", centralData->position_estimator.vel_bf[Z]);
-	
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiDeltaT", centralData->estimation.delta_t_filter);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "imuDeltaT", centralData->imu1.dt);
-}
 void mavlink_send_raw_rc_channels(void)
 {
 	mavlink_msg_rc_channels_raw_send(MAVLINK_COMM_0,get_millis(),1,
@@ -277,14 +234,13 @@ void mavlink_send_simulation(void) {
 	100*centralData->sim_model.vel[X], 100*centralData->sim_model.vel[Y], 100*centralData->sim_model.vel[Z],100*vector_norm(centralData->sim_model.vel),0.0,
 	centralData->sim_model.attitude.acc_bf[X],centralData->sim_model.attitude.acc_bf[Y],centralData->sim_model.attitude.acc_bf[Z]);
 	
-	//flush_mavlink();
-	mavlink_msg_named_value_int_send(MAVLINK_COMM_0, get_millis(), "rolltorque", centralData->sim_model.torques_bf[0]);//flush_mavlink();
-	mavlink_msg_named_value_int_send(MAVLINK_COMM_0, get_millis(), "pitchtorque", centralData->sim_model.torques_bf[1]);//flush_mavlink();
-	mavlink_msg_named_value_int_send(MAVLINK_COMM_0, get_millis(), "yawtorque", centralData->sim_model.torques_bf[2]);//flush_mavlink();
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "thrust", centralData->sim_model.lin_forces_bf[2]);//flush_mavlink();
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm1", centralData->sim_model.rotorspeeds[0]);//flush_mavlink();
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm2", centralData->sim_model.rotorspeeds[1]);//flush_mavlink();
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm3", centralData->sim_model.rotorspeeds[2]);//flush_mavlink();
+	mavlink_msg_named_value_int_send(MAVLINK_COMM_0, get_millis(), "rolltorque", centralData->sim_model.torques_bf[0]);
+	mavlink_msg_named_value_int_send(MAVLINK_COMM_0, get_millis(), "pitchtorque", centralData->sim_model.torques_bf[1]);
+	mavlink_msg_named_value_int_send(MAVLINK_COMM_0, get_millis(), "yawtorque", centralData->sim_model.torques_bf[2]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "thrust", centralData->sim_model.lin_forces_bf[2]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm1", centralData->sim_model.rotorspeeds[0]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm2", centralData->sim_model.rotorspeeds[1]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm3", centralData->sim_model.rotorspeeds[2]);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm4", centralData->sim_model.rotorspeeds[3]);
 
 	
@@ -311,8 +267,7 @@ task_return_t send_rt_stats() {
 
 }
 
-
-void add_PID_parameters(void) {
+void add_onboard_parameters(void) {
 	Stabiliser_t* rate_stabiliser = &centralData->stabiliser_stack.rate_stabiliser;
 	Stabiliser_t* attitude_stabiliser = &centralData->stabiliser_stack.attitude_stabiliser;
 	Stabiliser_t* velocity_stabiliser= &centralData->stabiliser_stack.velocity_stabiliser;
@@ -430,17 +385,30 @@ void add_PID_parameters(void) {
 	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET+Z],"Bias_Mag_Z");
 	
 	// Scale factor
-	add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+X],"Scale_Gyro_X");
-	add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+Y],"Scale_Gyro_Y");
-	add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+Z],"Scale_Gyro_Z");
+	//add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+X],"Scale_Gyro_X");
+	//add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+Y],"Scale_Gyro_Y");
+	//add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+Z],"Scale_Gyro_Z");
+	//
+	//add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET+X],"Scale_Acc_X");
+	//add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET+Y],"Scale_Acc_Y");
+	//add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET+Z],"Scale_Acc_Z");
+	//
+	//add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+X],"Scale_Mag_X");
+	//add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Y],"Scale_Mag_Y");
+	//add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Z],"Scale_Mag_Z");
 	
-	add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET+X],"Scale_Acc_X");
-	add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET+Y],"Scale_Acc_Y");
-	add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET+Z],"Scale_Acc_Z");
+	add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET+X],"Scale_Gyro_X");
+	add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET+Y],"Scale_Gyro_Y");
+	add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET+Z],"Scale_Gyro_Z");
 	
-	add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+X],"Scale_Mag_X");
-	add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Y],"Scale_Mag_Y");
-	add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Z],"Scale_Mag_Z");
+	add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET+X],"Scale_Acc_X");
+	add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET+Y],"Scale_Acc_Y");
+	add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET+Z],"Scale_Acc_Z");
+	
+	add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET+X],"Scale_Mag_X");
+	add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET+Y],"Scale_Mag_Y");
+	add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET+Z],"Scale_Mag_Z");
+	
 
 	add_parameter_float(&centralData->position_estimator.kp_alt,"Pos_kp_alt");
 	add_parameter_float(&centralData->position_estimator.kp_vel_baro,"Pos_kp_velb");
@@ -809,8 +777,13 @@ void receive_message_long(Mavlink_Received_t* rec)
 		switch(packet.command) {
 			case MAV_CMD_NAV_RETURN_TO_LAUNCH: {
 				/* Return to launch location |Empty| Empty| Empty| Empty| Empty| Empty| Empty|  */
-				dbg_print("All vehicles: Return to first waypoint. \n");
+				dbg_print("All MAVs: Return to first waypoint. \n");
 				set_current_wp_from_parameter(centralData->waypoint_list,centralData->number_of_waypoints,0);
+			}
+			break;
+			case MAV_CMD_NAV_LAND: {
+				dbg_print("All MAVs: Auto-landing");
+				//centralData->automatic_landing = true;
 			}
 			break;
 			case MAV_CMD_MISSION_START: {
@@ -820,9 +793,15 @@ void receive_message_long(Mavlink_Received_t* rec)
 			}
 			break;
 			case MAV_CMD_CONDITION_LAST: {
-				dbg_print("All vehicles, setting circle scenario!\n");
+				dbg_print("All MAVs: setting circle scenario!\n");
 				//void set_circle_scenarios(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc)
-				set_circle_scenarios(centralData->waypoint_list, &(centralData->number_of_waypoints), packet.param1, packet.param2);
+				set_circle_scenario(centralData->waypoint_list, &(centralData->number_of_waypoints), packet.param1, packet.param2);
+				if(packet.param3 == 1)
+				{
+					set_circle_scenario(centralData->waypoint_list, &(centralData->number_of_waypoints), packet.param1, packet.param2);
+				}else{
+					set_stream_scenario(centralData->waypoint_list, &(centralData->number_of_waypoints), packet.param1, packet.param2);
+				}
 			}
 			break;
 		}
@@ -831,10 +810,10 @@ void receive_message_long(Mavlink_Received_t* rec)
 }
 
 void init_mavlink_actions(void) {
-	//board=get_board_hardware();
+	
 	centralData=get_central_data();
-	add_PID_parameters();
-		
+	add_onboard_parameters();
+	
 	//write_parameters_to_flashc();
 	read_parameters_from_flashc();
 	
@@ -844,10 +823,10 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_attitude_quaternion, MAVLINK_MSG_ID_ATTITUDE_QUATERNION);
 	add_task(get_mavlink_taskset(),  200000, RUN_REGULAR, &mavlink_send_attitude, MAVLINK_MSG_ID_ATTITUDE);
 	
-	add_task(get_mavlink_taskset(),  500000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
+	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
 	add_task(get_mavlink_taskset(),  500000, RUN_NEVER, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
-	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
-	add_task(get_mavlink_taskset(),  100000, RUN_NEVER, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
+	add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
+	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
 
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
 	add_task(get_mavlink_taskset(),  200000, RUN_NEVER, &mavlink_send_rpy_speed_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT);

@@ -24,13 +24,15 @@ Library\hal\piezo_speaker.c
 
 Library\hal\time_keeper.c
 
-Library\sensing\estimator.c
-
 Library\sensing\neighbor_selection.c
 
 Library\sensing\position_estimation.c
 
 Library\sensing\qfilter.c
+
+Library\util\linear_algebra.c
+
+Library\util\matrixlib_float.c
 
 Library\util\quick_trig.c
 

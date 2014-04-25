@@ -13,38 +13,7 @@
 #include <math.h>
 #include "maths.h"
 
-#define V_TRANSITION 5
-#define V_TRANSITION_SQR V_TRANSITION*V_TRANSITION
-
-#define KP_ROLL 1.0
-#define KP_PITCH -1.0
 #define KP_YAW 0.2
-#define KP_ALT -0.02
-
-#define KD_ALT 0.025
-#define KI_ALT -0.15
-
-#define ALT_INT_SATURATION_MAX 2.0
-#define ALT_INT_SATURATION_MIN -2.0
-
-
-#define MIN_ROLL_RATE -0.5
-#define MAX_ROLL_RATE 0.5
-
-#define MIN_PITCH_RATE -0.5
-#define MAX_PITCH_RATE 0.5
-
-#define MIN_YAW_RATE -4.0
-#define MAX_YAW_RATE 4.0
-
-//#define MAX_CLIMB_RATE 1.0
-//#define V_CRUISE 3.0
-
-#define NAV_HOLD_POS       0
-#define NAV_LOW_VELOCITY   1
-#define NAV_HIGH_VELOCITY  2
-
-//#define DIST_2_VEL_GAIN 0.7
 
 central_data_t *centralData;
 float alt_integrator;
@@ -60,7 +29,7 @@ void init_nav(void)
 	centralData->controls_nav.tvel[X] = 0.0;
 	centralData->controls_nav.tvel[Y] = 0.0;
 	centralData->controls_nav.rpy[YAW] = 0.0;
-	centralData->controls_nav.tvel[Z] = 0.0; //centralData->controls.thrust;
+	centralData->controls_nav.tvel[Z] = 0.0;
 	
 	alt_integrator = 0.0;
 }
@@ -112,8 +81,6 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 		norm_rel_dist += 0.0005;
 	}
 	
-
-	
 	// calculate dir_desired in local frame
 	// vel = qe-1 * rel_pos * qe
 	qtmp1 = quat_from_vector(rel_pos);
@@ -127,7 +94,6 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 		rel_heading = 0.0;
 	}else{
 		rel_heading = calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - centralData->position_estimator.localPosition.heading);
-		//rel_heading = atan2(dir_desired_bf[Y]);
 	}
 	
 	v_desired = f_min(centralData->cruise_speed,(center_window_2(4.0*rel_heading) * centralData->dist2vel_gain * soft_zone(norm_rel_dist,centralData->softZoneSize)));
@@ -140,6 +106,7 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	dir_desired_bf[Y] = v_desired * dir_desired_bf[Y] / norm_rel_dist;
 	dir_desired_bf[Z] = v_desired * dir_desired_bf[Z] / norm_rel_dist;
 	
+	/*
 	loopCount = loopCount++ %50;
 	if (loopCount == 0)
 	{
@@ -161,16 +128,7 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 		dbg_print_num(centralData->position_estimator.localPosition.pos[Z]*100,10);
 		dbg_print("). \n");
 	}
-	
-	
-	//h_vel_sqr_norm = centralData->imu1.attitude.vel_bf[0]*centralData->imu1.attitude.vel_bf[0] + centralData->imu1.attitude.vel_bf[1]*centralData->imu1.attitude.vel_bf[1];
-	//if (h_vel_sqr_norm <= V_TRANSITION_SQR)
-	//{
-		//low_speed_nav(dir_desired_bf,centralData->imu1.attitude);
-	//}else{
-		//high_speed_nav(dir_desired_bf,centralData->imu1.attitude);
-	//}
-	
+	*/
 	
 	for (i=0;i<3;i++)
 	{
@@ -193,46 +151,4 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	centralData->controls_nav.tvel[Y] = new_velocity[Y];
 	centralData->controls_nav.tvel[Z] = new_velocity[Z];		
 	centralData->controls_nav.rpy[YAW] = KP_YAW * rel_heading;
-
-	//low_speed_nav(dir_desired_bf,centralData->imu1.attitude,norm_rel_dist);
-
-}
-
-void low_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude, float rel_distance)
-{
-	// dbg_print("Low speed nav\n");
-	
-	float yaw_angle_tolerance = PI/10.0;
-	
-	if ((f_abs(dir_desired_bf[X]) < 0.001 && f_abs(dir_desired_bf[Y]) < 0.001) || (centralData->mav_mode ==  MAV_MODE_GUIDED_ARMED) || !centralData->waypoint_set || (rel_distance<=5.0))
-	{
-		centralData->controls_nav.rpy[YAW] = 0.0;
-		centralData->controls_nav.tvel[X] = dir_desired_bf[X];
-		centralData->controls_nav.tvel[Y] = dir_desired_bf[Y];
-	}else{
-		float rel_heading = atan2(dir_desired_bf[Y],dir_desired_bf[X]);
-		
-		if (rel_heading >= yaw_angle_tolerance)
-		{
-			centralData->controls_nav.tvel[X] = 0.0;
-			centralData->controls_nav.tvel[Y] = 0.0;
-		}else{
-			centralData->controls_nav.tvel[X] = dir_desired_bf[X];
-			centralData->controls_nav.tvel[Y] = dir_desired_bf[Y];
-		}
-		
-		centralData->controls_nav.rpy[YAW] = KP_YAW * rel_heading;
-	}
-
-	centralData->controls_nav.tvel[Z] = dir_desired_bf[Z];
-}
-
-void high_speed_nav(float dir_desired_bf[], Quat_Attitude_t attitude)
-{
-	//dbg_print("High speed nav\n");
-	
-	centralData->controls_nav.tvel[X] = dir_desired_bf[X];
-	centralData->controls_nav.tvel[Y] = dir_desired_bf[Y];
-	centralData->controls_nav.tvel[Z] = dir_desired_bf[Z];
-	centralData->controls_nav.rpy[YAW] = KP_YAW * atan2(centralData->position_estimator.vel_bf[Y], centralData->position_estimator.vel_bf[X]);
 }

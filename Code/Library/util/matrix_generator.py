@@ -1,4 +1,4 @@
-
+import sys
 
 def generate_types( dim):
     output ="typedef struct matrix_%ix%i_t {\n"%(dim, dim)+\
@@ -309,13 +309,23 @@ def generate_norms(dim):
     output+="   return result;\n}\n\n"
     return output
 
-
-print "#ifndef SMALL_MATRIX_H_\n#define SMALL_MATRIX_H_\n\n\n"
-for d in range(2, 5):
-    print generate_types(d)
-    print generate_mul(d)
-    print generate_pointwise(d,  "add",  "+")
-    print generate_pointwise(d,  "sub",  "-")
-    print generate_pointwise(d,  "pwmul",  "*")
-    print generate_norms(d)
-print "#endif"
+object = open("small_matrix.h", "w+",0);
+sys.stdout = object
+#print "#ifndef SMALL_MATRIX_H_\n#define SMALL_MATRIX_H_\n\n\n"
+object.write("#ifndef SMALL_MATRIX_H_\n#define SMALL_MATRIX_H_\n\n\n")
+for d in range(1,7):
+    #print generate_types(d)
+    #print generate_mul(d)
+    #print generate_pointwise(d,  "add",  "+")
+    #print generate_pointwise(d,  "sub",  "-")
+    #print generate_pointwise(d,  "pwmul",  "*")
+    #print generate_norms(d)
+    object.write(generate_types(d))
+    object.write(generate_mul(d))
+    object.write(generate_pointwise(d,  "add",  "+"))
+    object.write(generate_pointwise(d,  "sub",  "-"))
+    object.write(generate_pointwise(d,  "pwmul",  "*"))
+    object.write(generate_norms(d))
+#print "#endif"
+object.write("#endif")
+object.close()

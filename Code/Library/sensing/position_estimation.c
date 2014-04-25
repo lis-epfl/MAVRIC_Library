@@ -15,9 +15,6 @@
 #include "math_util.h"
 #include "time_keeper.h"
 #include "conf_sim_model.h"
-//central_data_t *centralData;
-
-//float prev_pos[3];
 
 void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps);
 void init_barometer_offset(position_estimator_t *pos_est, pressure_data *barometer);
@@ -25,7 +22,6 @@ void init_barometer_offset(position_estimator_t *pos_est, pressure_data *baromet
 
 void init_pos_integration(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps)
 {
-	//centralData = get_central_data();
 	pos_est->init_gps_position = false;
 	pos_est->init_barometer=false;
 	pos_est->timeLastGpsMsg = 0;
@@ -143,10 +139,8 @@ void position_reset_home_altitude(position_estimator_t *pos_est, pressure_data *
 			pos_est->last_vel[i]=0.0;
 			pos_est->localPosition.pos[i] = 0.0;
 			pos_est->vel[i]=0.0;
-			
-		}
-
-	
+			pos_est->vel_bf[i] = 0.0;
+		}	
 }
 
 void position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitude, float dt)
@@ -172,21 +166,13 @@ void position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitu
 	qvel = quat_local_to_global(attitude->qe, qvel_bf);
 	pos_est->vel[0]=qvel.v[0]; pos_est->vel[1]=qvel.v[1]; pos_est->vel[2]=qvel.v[2];
 	
-	// calculate velocity in global frame
-	// vel = qe *vel_bf * qe-1
-	//qtmp1.s= 0.0; qtmp1.v[0]=attitude->vel_bf[0]; qtmp1.v[1]=attitude->vel_bf[1]; qtmp1.v[2]=attitude->vel_bf[2];
-	//QMUL(attitude->qe, qtmp1, qtmp2);
-	//QI(attitude->qe, qtmp1);
-	//QMUL(qtmp2, qtmp1, qtmp3);
-	//attitude->vel[0]=qtmp3.v[0]; attitude->vel[1]=qtmp3.v[1]; attitude->vel[2]=qtmp3.v[2];
-	
 	for (i=0; i<3; i++) {
 		// clean position estimate without gravity:
 		//prev_pos[i]=attitude->localPosition.pos[i];
 		pos_est->localPosition.pos[i] =pos_est->localPosition.pos[i]*(1.0-(POS_DECAY*dt)) + pos_est->vel[i] *dt;
 		pos_est->localPosition.heading=get_yaw(attitude->qe);
 	}
-
+	
 }
 	
 void position_correction(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, float dt)
@@ -245,7 +231,6 @@ void position_correction(position_estimator_t *pos_est, pressure_data *barometer
 		{
 			if (newValidGpsMsg(&pos_est->timeLastGpsMsg))
 			{
-				//dbg_print("New valid message\n");
 				global_gps_position.longitude = gps->longitude;
 				global_gps_position.latitude = gps->latitude;
 				global_gps_position.altitude = gps->altitude;
@@ -261,7 +246,7 @@ void position_correction(position_estimator_t *pos_est, pressure_data *barometer
 			}
 			tinterGps = get_millis() - gps->timeLastMsg;
 			
-			gps_gain=fmax(1.0-tinterGps/1000.0, 0.0);
+			//gps_gain=fmax(1.0-tinterGps/1000.0, 0.0);
 			gps_gain=1.0;
 			
 			for (i=0;i<3;i++){
@@ -286,8 +271,6 @@ void position_correction(position_estimator_t *pos_est, pressure_data *barometer
 
 
 		for (i=0; i<3; i++) vel_correction.v[i] = vel_error[i];
-		//for (i=0; i<3; i++) vel_correction.v[i] = pos_error[i];
-		//vel_correction = quat_global_to_local(pos_est->qe, vel_correction);
 				
 		for (i=0;i<3;i++) {			
 			pos_est->vel[i] += pos_est->kp_vel[i]*gps_gain * vel_correction.v[i]* dt;

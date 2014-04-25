@@ -37,7 +37,6 @@
 
 #include "gps_ublox.h"
 #include "mavlink_waypoint_handler.h"
-#include "estimator.h"
 #include "simulation.h"
 #include "bmp085.h"
 //#include "conf_sim_model.h"
@@ -47,12 +46,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-enum CRITICAL_BEHAVIOR_ENUM{
-	CLIMB_TO_SAFE_ALT = 1,
-	FLY_TO_HOME_WP = 2,
-	CRITICAL_LAND = 3,
-};
 
 typedef struct  {
 	Imu_Data_t imu1;
@@ -74,7 +67,6 @@ typedef struct  {
 	byte_stream_t gps_stream_out;
 	gps_Data_type GPS_data;
 	
-	Estimator_Data_t estimation;
 	simulation_model_t sim_model;
 	
 	position_estimator_t position_estimator;
@@ -104,6 +96,7 @@ typedef struct  {
 	
 	bool collision_avoidance;
 	bool automatic_take_off;
+	bool automatic_landing;
 	bool in_the_air;
 	
 	uint8_t mav_mode;
@@ -124,7 +117,7 @@ typedef struct  {
 	track_neighbor_t listNeighbors[MAX_NUM_NEIGHBORS];
 	
 	enum CRITICAL_BEHAVIOR_ENUM critical_behavior;
-	
+	enum AUTO_LANDING_ENUM auto_landing_enum;
 } central_data_t;
 
 

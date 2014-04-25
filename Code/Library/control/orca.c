@@ -31,6 +31,8 @@ void init_orca()
 	min_coll_dist = 2.0 * SIZE_VHC_ORCA + 1.0;
 }
 
+
+
 void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 {
 	uint8_t ind, i;
@@ -49,28 +51,16 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		NewVelocity[i] = OptimalVelocity[i];
 	}
 	
+	extrapolate_or_delete_position(centralData->listNeighbors, &(centralData->number_of_neighbors));
+	
 	/* Create agent ORCA planes. */
 	for (ind=0; ind<centralData->number_of_neighbors; ind++)
 	{
-		//q_neighbor.s = 0.0; 
-		//q_neighbor.v[0] = centralData->listNeighbors[ind].velocity[0];
-		//q_neighbor.v[1] = centralData->listNeighbors[ind].velocity[1];
-		//q_neighbor.v[2] = centralData->listNeighbors[ind].velocity[2];
-		//q_neighbor_bf = quat_global_to_local(centralData->imu1.attitude.qe,q_neighbor);
-		//
-		//neighor_bf[0] = q_neighbor_bf.v[0];
-		//neighor_bf[1] = q_neighbor_bf.v[1];
-		//neighor_bf[2] = q_neighbor_bf.v[2];
-		//
-		//for (i=0;i<3;i++)
-		//{
-			//relativePosition[i] = centralData->listNeighbors[ind].position[i] - centralData->position_estimator.localPosition.pos[i];
-			//relativeVelocity[i] = centralData->position_estimator.vel_bf[i] - neighor_bf[i];
-		//}
+		// Linear extrapolation of the position of the neighbor between two received messages
 		
 		for (i=0;i<3;i++)
 		{
-			relativePosition[i] = centralData->listNeighbors[ind].position[i] - centralData->position_estimator.localPosition.pos[i];
+			relativePosition[i] = centralData->listNeighbors[ind].extrapolatedPosition[i] - centralData->position_estimator.localPosition.pos[i];
 			relativeVelocity[i] = centralData->position_estimator.vel[i] - centralData->listNeighbors[ind].velocity[i];
 		}
 		

@@ -274,7 +274,7 @@
         <InterfaceName>JTAG</InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.jtagice3plus</ToolType>
-      <ToolNumber>J30200008882</ToolNumber>
+      <ToolNumber>J30200015895</ToolNumber>
       <ToolName>JTAGICE3</ToolName>
     </com_atmel_avrdbg_tool_jtagice3plus>
   </PropertyGroup>
@@ -939,12 +939,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\mavlink\include\maveric\version.h" />
-    <Compile Include="Library\sensing\estimator.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\estimator.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\sensing\neighbor_selection.c">
       <SubType>compile</SubType>
     </Compile>
@@ -960,16 +954,31 @@
     <Compile Include="Library\sensing\qfilter.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\util\linear_algebra.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\util\linear_algebra.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\util\maths.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\util\math_util.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\util\matrixlib_float.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\util\matrixlib_float.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\util\quick_trig.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\util\quick_trig.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\util\small_matrix.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\central_data.c">
@@ -991,6 +1000,27 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\conf_stabilisation_hybrid.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\MAVsettings\MAV002_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\MAVsettings\MAV004_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\MAVsettings\MAV006_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\MAVsettings\MAV007_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\MAVsettings\MAV008_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\MAVsettings\MAV009_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\MAVsettings\MAV010_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\mavlink_actions.c">
@@ -1585,6 +1615,7 @@
     <Folder Include="src\asf\common\utils\stdio\stdio_serial\" />
     <Folder Include="src\asf\common\utils\stdio\stdio_usb\" />
     <Folder Include="src\config\" />
+    <Folder Include="src\config\MAVsettings\" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\AvrGCC32.targets" />
 </Project>

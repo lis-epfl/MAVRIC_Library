@@ -146,6 +146,11 @@
       <File Name="../Library/util/buffer.c"/>
       <File Name="../Library/util/compiler.h"/>
       <File Name="../Library/util/maths.h"/>
+      <File Name="Library/util/matrixlib_float.c"/>
+      <File Name="Library/util/matrixlib_float.h"/>
+      <File Name="Library/util/small_matrix.h"/>
+      <File Name="Library/util/linear_algebra.c"/>
+      <File Name="Library/util/linear_algebra.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="sensing">
       <File Name="../Library/sensing/qfilter.h"/>
@@ -160,6 +165,12 @@
       <File Name="../Library/sensing/position_estimation.h"/>
       <File Name="../Library/sensing/neighbor_selection.h"/>
       <File Name="../Library/sensing/neighbor_selection.c"/>
+      <File Name="Library/sensing/ins_kalman.c"/>
+      <File Name="Library/sensing/ins_kalman.h"/>
+      <File Name="Library/sensing/kalman_filter.c"/>
+      <File Name="Library/sensing/kalman_filter.h"/>
+      <File Name="Library/sensing/filter.c"/>
+      <File Name="Library/sensing/filter.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="control">
       <File Name="../Library/control/adaptive_parameter.c"/>

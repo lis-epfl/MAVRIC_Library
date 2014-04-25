@@ -232,7 +232,12 @@ void receive_parameter(Mavlink_Received_t* rec) {
 	// Check if this message is for this system and subsystem
 	if ((uint8_t)set.target_system == (uint8_t)mavlink_system.sysid
 	&& (uint8_t)set.target_component == (uint8_t)mavlink_system.compid) {
-		dbg_print("Setting new paramater value.\n");
+		dbg_print("Setting parameter ");
+		dbg_print(set.param_id);
+		dbg_print(" to ");
+		dbg_putfloat(set.param_value, 2);
+		dbg_print("\n");
+		
 		char* key = (char*) set.param_id;
 				
 		for (uint16_t i = 0; i < param_set.param_count; i++) {

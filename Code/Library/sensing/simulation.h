@@ -35,6 +35,8 @@ typedef struct {
 	Quat_Attitude_t attitude;
 	local_coordinates_t localPosition;
 	
+	float simu_raw_scale[9], simu_raw_biais[9];
+	
 	float rotorspeeds[ROTORCOUNT];                              // estimated rotor speeds
 	float rotor_lpf, rotor_rpm_gain, rotor_rpm_offset;          // low pass filter to simulate rotor inertia and lag, gain/offset to convert servo commands to rpm
 	float rotor_cd, rotor_cl, rotor_diameter, rotor_foil_area;	// rotor lift and drag coefficients, mean rotor diameter (used to calculate rotor lift, torque and drag)
@@ -50,7 +52,7 @@ typedef struct {
 } simulation_model_t;
 
 
-void init_simulation(simulation_model_t *sim, Quat_Attitude_t *start_attitude, local_coordinates_t localPos);
+void init_simulation(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates_t localPos);
 
 // computes artificial gyro and accelerometer values based on motor commands
 void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est);

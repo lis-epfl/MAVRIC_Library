@@ -37,6 +37,17 @@ typedef struct {
 	
 }waypoint_struct;
 
+enum CRITICAL_BEHAVIOR_ENUM{
+	CLIMB_TO_SAFE_ALT = 1,
+	FLY_TO_HOME_WP = 2,
+	CRITICAL_LAND = 3
+};
+
+enum AUTO_LANDING_ENUM{
+	DESCENT_TO_SMALL_ALTITUDE = 1,
+	DESCENT_TO_GND = 2,
+	};
+
 int sending_wp_num;
 int waypoint_request_number;
 
@@ -74,9 +85,11 @@ void waypoint_hold_position_handler(void);
 void waypoint_navigation_handler(void);
 void waypoint_critical_handler(void);
 
+void auto_landing(void);
 void continueToNextWaypoint(void);
 
-void set_circle_scenarios(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc);
+void set_circle_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc);
+void set_stream_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc);
 
 
 #ifdef __cplusplus

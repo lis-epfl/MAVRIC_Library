@@ -43,6 +43,9 @@ void initialisation() {
 	centralData = get_central_data();
 	initialise_board(centralData);
 	initialise_central_data();
+	qfInit(&(centralData->imu1.attitude), (centralData->imu1.raw_scale), (centralData->imu1.raw_bias));
+	
+	relevel_imu();
 
 	init_radar_modules();
 	dbg_print("Debug stream initialised\n");
@@ -55,6 +58,8 @@ void initialisation() {
 	init_onboard_parameters();
 	init_mavlink_actions();
 	init_pos_integration(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
+	
+	initQuat(&centralData->imu1.attitude);
 	
 	init_nav();
 	init_waypoint_handler();
@@ -74,13 +79,11 @@ int main (void)
 {
 	int i;
 	// turn on simulation mode: 1: simulation mode, 0: reality
-	initialisation();
 	centralData->simulation_mode = 0;
-	centralData->simulation_mode_previous = 0;
-	
+	centralData->simulation_mode_previous = centralData->simulation_mode;
+	initialisation();
+		
 	create_tasks();
-	
-	relevel_imu();
 
 	//reset position estimate
 	for (i=0; i<3; i++) {
@@ -91,7 +94,7 @@ int main (void)
 	}
 	
 	//dbg_print("Initialise HIL Simulator...\n");
-	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude),centralData->position_estimator.localPosition);
+	init_simulation(&(centralData->sim_model),&(centralData->imu1),centralData->position_estimator.localPosition);
 
 	// main loop
 	delay_ms(10);
@@ -105,11 +108,7 @@ int main (void)
 	}
 
 	while (1==1) {
-		
-		//run_scheduler_update(get_main_taskset(), FIXED_PRIORITY);
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
-		
-		//LED_On(LED1);		
 	}
 	return 0;		
 }

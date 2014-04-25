@@ -17,11 +17,10 @@
 
 float front_mag_vect_z;
 
-
+uint8_t counter=0;
 
 void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 	uint8_t i;
-	float init_angle;
 
 	for (i=0; i<9; i++){
 		attitude->sf[i]=1.0/(float)scalefactor[i];
@@ -40,12 +39,26 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 	attitude->qe.v[0]=0.0;
 	attitude->qe.v[1]=0.0;
 	attitude->qe.v[2]=0.0;
+	
+	attitude->kp=0.07;
+	attitude->ki=attitude->kp/15.0;
+	
+	attitude->kp_mag = 0.1;
+	attitude->ki_mag = attitude->kp_mag/15.0;
 
+	//dt=1.0/samplingrate;
+}
+
+void initQuat(Quat_Attitude_t *attitude)
+{
+	uint8_t i;
+	float init_angle;
+	
 	for(i=0; i<3; i++)
 	{
-		attitude->mag[i]=((float)attitude->raw_mag_mean[i])*attitude->sf[i+COMPASS_OFFSET]-attitude->be[i+COMPASS_OFFSET];
+		attitude->mag[i]=((float)attitude->raw_mag_mean[i]-attitude->be[i+COMPASS_OFFSET])*attitude->sf[i+COMPASS_OFFSET];
 	}
-	
+
 	init_angle = atan2(-attitude->mag[1],attitude->mag[0]);
 
 	dbg_print("Initial yaw:");
@@ -66,19 +79,9 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 	attitude->qe.v[1]=0.0;
 	//attitude->qe.v[2]=sin((PI + init_angle)/2.0);
 	attitude->qe.v[2]=sin(init_angle/2.0);
-	
-	attitude->kp=0.07;
-	attitude->ki=attitude->kp/15.0;
-	
-	attitude->kp_mag = 0.1;
-	attitude->ki_mag = attitude->kp_mag/15.0;
-	
-	attitude->calibration_level=LEVELING;
-	//dt=1.0/samplingrate;
 }
 
-
-void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
+void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	uint8_t i;
 	float  omc[3], omc_mag[3] , tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
 	// float rvc[3];
@@ -119,13 +122,10 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	qtmp1=quat_from_vector(attitude->mag); 
 	mag_global = quat_local_to_global(attitude->qe, qtmp1);
 	
-	//QI(attitude->qe,qtmp4);
-	//QMUL(qtmp4, front_bf, qtmp5);
-	//QMUL(qtmp5, attitude->qe, front_bf);
-	
 	// calculate norm of compass vector
-	s_mag_norm=SQR(mag_global.v[0])+SQR(mag_global.v[1])+SQR(mag_global.v[2]);
-	if ((s_mag_norm>0.4*0.4)&&(s_mag_norm<1.8*1.8)) 
+	//s_mag_norm=SQR(mag_global.v[0])+SQR(mag_global.v[1])+SQR(mag_global.v[2]);
+	s_mag_norm=SQR(mag_global.v[0])+SQR(mag_global.v[1]);
+	if ((s_mag_norm>0.004*0.004)&&(s_mag_norm<1.8*1.8)) 
 	{
 		mag_norm=fast_sqrt(s_mag_norm);
 
@@ -171,8 +171,9 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	}
 
 	// apply error correction with appropriate gains for accelerometer and compass
+/*
 	for (i=0; i<3; i++){
-		qtmp1.v[i] = attitude->om[i] + kp*omc[i] + kp_mag*omc_mag[i];
+		qtmp1.v[i] = 0.5*(attitude->om[i] + kp*omc[i] + kp_mag*omc_mag[i]);
 	}
 	qtmp1.s=0;
 
@@ -183,6 +184,22 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	attitude->qe.v[0]+=qed.v[0]*dt;
 	attitude->qe.v[1]+=qed.v[1]*dt;
 	attitude->qe.v[2]+=qed.v[2]*dt;
+*/
+
+	float wx = attitude->om[X] + kp*omc[X] + kp_mag*omc_mag[X];
+	float wy = attitude->om[Y] + kp*omc[Y] + kp_mag*omc_mag[Y];
+	float wz = attitude->om[Z] + kp*omc[Z] + kp_mag*omc_mag[Z];
+
+	float q0 = attitude->qe.s;
+	float q1 = attitude->qe.v[0];
+	float q2 = attitude->qe.v[1];
+	float q3 = attitude->qe.v[2];
+
+	attitude->qe.s = q0 + dt/2*(-q1*wx - q2*wy - q3*wz);
+	attitude->qe.v[0] = q1 + dt/2*( q0*wx - q3*wy + q2*wz);
+	attitude->qe.v[1] = q2 + dt/2*( q3*wx + q0*wy - q1*wz);
+	attitude->qe.v[2] = q3 + dt/2*(-q2*wx + q1*wy + q0*wz);
+
 
 	snorm=attitude->qe.s*attitude->qe.s+attitude->qe.v[0]*attitude->qe.v[0] + attitude->qe.v[1] * attitude->qe.v[1] + attitude->qe.v[2] * attitude->qe.v[2];
 	if (snorm<0.0001) norm=0.01; else {
@@ -213,60 +230,3 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt, bool simu_mode){
 	attitude->up_vec.v[2]=up_bf.v[2];
 	
 }
-
-
-
-/*
-void qfilter_f (int16_t *rates, float dt) {
-	uint8_t i;
-	float omc[3], rvc[3], cp2[3], snorm, norm;
-	UQuat_t qed;
-
-	for (i=0; i<3; i++){
-		om[i]  = ((float)rates[i]-be[i])*sf[i];
-		a[i] = ((float)rates[i+3]-be[i+3])*sf[i+3];
-	}
-
-
-	cp2[0] = (qe.v[0]-qe.v[2])*qe.v[2] - qe.s*qe.v[1];          //u[1] * v[2] - u[2]*v[1];
-	cp2[1] = qe.s*qe.v[0] + qe.v[1] * qe.v[2];                  //u[2] * v[0] - u[0]*v[2];
-	cp2[2] = -qe.v[1] * qe.v[1] - (qe.v[0]-qe.v[2])* qe.v[0];   //u[0] * v[1] - v[1]*u[0];
-
-// calculate angular deviation between "up" estimate and acceleration vector
-	omc[0]= -qe.s * qe.v[1]         - qe.v[1]*qe.v[0] + cp2[0];
-	omc[1]=  qe.s*(qe.v[0]-qe.v[2]) - qe.v[2]*qe.v[1] + cp2[1];
-	omc[2]=                           qe.v[2]*qe.v[2] + cp2[2];
-	CROSS(a,omc,omc);
-
-	for (i=0; i<3; i++){
-		rvc[i] = om[i];// +kp*omc[i];
-	}
-	qed.s=-SCP(qe.v,rvc);
-	qed.v[0]=qe.s*rvc[0] +qe.v[1]*rvc[2]-qe.v[2]*rvc[1];
-	qed.v[1]=qe.s*rvc[1] +qe.v[2]*rvc[0]-qe.v[0]*rvc[2];
-	qed.v[2]=qe.s*rvc[2] +qe.v[0]*rvc[1]-qe.v[1]*rvc[0];
-
-	qe.s=qe.s+qed.s*dt;
-
-	qe.v[0]+=qed.v[0]*dt;
-	qe.v[1]+=qed.v[1]*dt;
-	qe.v[2]+=qed.v[2]*dt;
-	snorm=qe.s*qe.s+qe.v[0]*qe.v[0] + qe.v[1] * qe.v[1] + qe.v[2] * qe.v[2];
-	// approximate square root by running 2 iterations of newton method
-	norm=1.0;
-	norm=0.5*(norm+(snorm/norm));
-	norm=0.5*(norm+(snorm/norm));
-
-	qe.s/= norm;
-	qe.v[0] /= norm;
-	qe.v[1] /= norm;
-	qe.v[2] /= norm;
-
-	// bias estimate update
-	//be[0]+= - dt * ki * omc[0];
-	//be[1]+= - dt * ki * omc[1];
-	//be[2]+= - dt * ki * omc[2];
-
-
-}
-*/
