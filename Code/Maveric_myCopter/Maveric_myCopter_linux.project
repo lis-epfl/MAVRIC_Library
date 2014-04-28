@@ -256,7 +256,6 @@
     <File Name="src/central_data.c"/>
     <File Name="Library/Makefile"/>
     <File Name="src/boardsupport.c"/>
-    <File Name="src/mavlink_actions.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Library">
     <VirtualDirectory Name="mavlink">
@@ -634,6 +633,8 @@
       <File Name="Library/hal/i2c_driver_int.c"/>
       <File Name="Library/hal/piezo_speaker.h"/>
       <File Name="Library/hal/piezo_speaker.c"/>
+      <File Name="Library/hal/i2cxl_sonar.c"/>
+      <File Name="Library/hal/i2cxl_sonar.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>
@@ -679,6 +680,7 @@
       <File Name="Library/util/matrixlib_float.h"/>
       <File Name="Library/util/matrixlib_float.c"/>
     </VirtualDirectory>
+    <File Name="src/mavlink_actions.c"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
