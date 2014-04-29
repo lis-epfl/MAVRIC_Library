@@ -854,7 +854,7 @@ void init_mavlink_actions(void) {
 	//add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
-	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_sonar, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	// add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_sonar, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
 	
 	sort_taskset_by_period(get_mavlink_taskset());

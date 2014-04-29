@@ -78,7 +78,7 @@ void initialise_central_data(){
 		centralData.softZoneSize = 0.0;
 
 		// Init sonar
-		i2cxl_sonar_init(&centralData.i2cxl_sonar);
+		// i2cxl_sonar_init(&centralData.i2cxl_sonar);
 }
 
 central_data_t* get_central_data(void)
