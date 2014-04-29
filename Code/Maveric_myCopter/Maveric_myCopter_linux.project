@@ -642,20 +642,12 @@
       <File Name="Library/sensing/position_estimation.c"/>
       <File Name="Library/sensing/qfilter.c"/>
       <File Name="Library/sensing/imu.h"/>
-      <File Name="Library/sensing/estimator.c"/>
       <File Name="Library/sensing/neighbor_selection.c"/>
       <File Name="Library/sensing/neighbor_selection.h"/>
       <File Name="Library/sensing/simulation.h"/>
       <File Name="Library/sensing/gps_ublox.h"/>
-      <File Name="Library/sensing/estimator.h"/>
       <File Name="Library/sensing/gps_ublox.c"/>
       <File Name="Library/sensing/simulation.c"/>
-      <File Name="Library/sensing/kalman_filter.h"/>
-      <File Name="Library/sensing/kalman_filter.c"/>
-      <File Name="Library/sensing/ins_kalman.h"/>
-      <File Name="Library/sensing/ins_kalman.c"/>
-      <File Name="Library/sensing/filter.h"/>
-      <File Name="Library/sensing/filter.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="util">
       <File Name="Library/util/linear_algebra.c"/>
