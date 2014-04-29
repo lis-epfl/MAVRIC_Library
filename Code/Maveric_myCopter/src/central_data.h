@@ -43,6 +43,8 @@
 #include "neighbor_selection.h"
 #include "position_estimation.h"
 
+#include "i2cxl_sonar.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -118,6 +120,8 @@ typedef struct  {
 	
 	enum CRITICAL_BEHAVIOR_ENUM critical_behavior;
 	enum AUTO_LANDING_ENUM auto_landing_enum;
+
+	i2cxl_sonar_t i2cxl_sonar;
 } central_data_t;
 
 

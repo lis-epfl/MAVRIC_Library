@@ -76,6 +76,9 @@ void initialise_central_data(){
 		centralData.cruise_speed = 3.0;
 		centralData.max_climb_rate = 1.0;
 		centralData.softZoneSize = 0.0;
+
+		// Init sonar
+		i2cxl_sonar_init(&centralData.i2cxl_sonar);
 }
 
 central_data_t* get_central_data(void)

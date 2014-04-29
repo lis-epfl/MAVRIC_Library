@@ -241,10 +241,18 @@ void mavlink_send_simulation(void) {
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm1", centralData->sim_model.rotorspeeds[0]);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm2", centralData->sim_model.rotorspeeds[1]);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm3", centralData->sim_model.rotorspeeds[2]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm4", centralData->sim_model.rotorspeeds[3]);
-
-	
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm4", centralData->sim_model.rotorspeeds[3]);	
 }
+
+
+void mavlink_send_sonar(void)
+{
+	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
+										get_millis(),
+										"sonar(m)", 
+										centralData->i2cxl_sonar.distance_m);
+}
+
 
 task_return_t send_rt_stats() {
 	task_set *main_tasks=get_main_taskset();
@@ -845,6 +853,9 @@ void init_mavlink_actions(void) {
 
 	//add_task(get_mavlink_taskset(),  250000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	
+	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_sonar, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	
 	
 	sort_taskset_by_period(get_mavlink_taskset());
 	

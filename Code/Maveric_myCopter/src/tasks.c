@@ -16,6 +16,7 @@
 #include "imu.h"
 #include "orca.h"
 #include "delay.h"
+#include "i2cxl_sonar.h"
 
 NEW_TASK_SET(main_tasks, 10)
 
@@ -609,6 +610,11 @@ task_return_t run_barometer()
 	
 }
 
+task_return_t sonar_update(void)
+{
+	central_data_t *central_data=get_central_data();
+	i2cxl_sonar_update(&central_data->i2cxl_sonar);
+}
 
 void create_tasks() {
 	
@@ -630,5 +636,8 @@ void create_tasks() {
 	
 
 	register_task(&main_tasks, 5, 4000, RUN_REGULAR, &mavlink_protocol_update);
+	
+	register_task(&main_tasks, 6, 100000, RUN_REGULAR, &sonar_update);
+
 
 }

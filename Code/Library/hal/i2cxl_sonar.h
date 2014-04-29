@@ -25,6 +25,7 @@ extern "C" {
 typedef struct {
 	uint8_t i2c_address;
 	uint16_t distance_cm;
+	float distance_m;
 } i2cxl_sonar_t;
 
 
@@ -34,7 +35,7 @@ typedef struct {
  * 
  * @param i2c_sonar Data struct 
  */
-void I2CXL_sonar_init(i2cxl_sonar_t* i2c_sonar);
+void i2cxl_sonar_init(i2cxl_sonar_t* i2c_sonar);
 
 
 /**
@@ -44,7 +45,7 @@ void I2CXL_sonar_init(i2cxl_sonar_t* i2c_sonar);
  * 
  * @param i2c_sonar Data struct
  */
-void i2cxl_update(i2cxl_sonar_t* i2c_sonar);
+void i2cxl_sonar_update(i2cxl_sonar_t* i2c_sonar);
 
 #ifdef __cplusplus
 }

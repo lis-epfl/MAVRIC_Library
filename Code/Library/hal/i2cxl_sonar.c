@@ -20,7 +20,7 @@
 #include "print_util.h"
 
 
-const uint8_t I2CXL_DEFAULT_ADDRESS				= 0xE0;
+const uint8_t I2CXL_DEFAULT_ADDRESS				= 0x70;
 const uint8_t I2CXL_RANGE_COMMAND				= 0x51;
 const uint8_t I2CXL_CHANGE_ADDRESS_COMMAND_1	= 0xAA;
 const uint8_t I2CXL_CHANGE_ADDRESS_COMMAND_2	= 0xA5;
@@ -35,6 +35,7 @@ void i2cxl_sonar_init(i2cxl_sonar_t* i2cxl_sonar)
 	// Init data_struct
 	i2cxl_sonar->i2c_address = I2CXL_DEFAULT_ADDRESS;
 	i2cxl_sonar->distance_cm = 0;
+	i2cxl_sonar->distance_m  = 0;
 
 	// Init I2C bus
 	static twi_options_t twi_opt = {.pba_hz = 64000000,
@@ -47,7 +48,7 @@ void i2cxl_sonar_init(i2cxl_sonar_t* i2cxl_sonar)
 }
 
 
-void i2cxl_update(i2cxl_sonar_t* i2cxl_sonar)
+void i2cxl_sonar_update(i2cxl_sonar_t* i2cxl_sonar)
 {
 	i2cxl_get_last_measure(i2cxl_sonar);
 	i2cxl_send_range_command(i2cxl_sonar);
@@ -62,6 +63,8 @@ void i2cxl_send_range_command(i2cxl_sonar_t* i2cxl_sonar)
 
 void i2cxl_get_last_measure(i2cxl_sonar_t* i2cxl_sonar)
 {
-	// uint16_t distance = 0;
-	twim_read(&AVR32_TWIM1, (uint8_t*)i2cxl_sonar->distance_cm, 2, i2cxl_sonar->i2c_address, false);
+	uint8_t buf[2];
+	twim_read(&AVR32_TWIM1, buf, 2, i2cxl_sonar->i2c_address, false);
+	i2cxl_sonar->distance_cm = (buf[0]<<8) + buf[1];
+	i2cxl_sonar->distance_m  = ((float)i2cxl_sonar->distance_cm) / 100;
 }
