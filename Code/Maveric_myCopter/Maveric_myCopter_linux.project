@@ -636,6 +636,8 @@
       <File Name="Library/hal/piezo_speaker.c"/>
       <File Name="Library/hal/i2cxl_sonar.c"/>
       <File Name="Library/hal/i2cxl_sonar.h"/>
+      <File Name="Library/hal/airspeed_analog.c"/>
+      <File Name="Library/hal/airspeed_analog.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>

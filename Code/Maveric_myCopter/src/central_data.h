@@ -44,6 +44,7 @@
 #include "position_estimation.h"
 
 #include "i2cxl_sonar.h"
+#include "airspeed_analog.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -122,6 +123,8 @@ typedef struct  {
 	enum AUTO_LANDING_ENUM auto_landing_enum;
 
 	i2cxl_sonar_t i2cxl_sonar;
+	airspeed_analog_t pitot;
+
 } central_data_t;
 
 

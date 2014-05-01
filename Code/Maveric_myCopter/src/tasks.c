@@ -17,6 +17,7 @@
 #include "orca.h"
 #include "delay.h"
 #include "i2cxl_sonar.h"
+#include "airspeed_analog.h"
 
 NEW_TASK_SET(main_tasks, 10)
 
@@ -616,6 +617,12 @@ task_return_t sonar_update(void)
 	i2cxl_sonar_update(&central_data->i2cxl_sonar);
 }
 
+task_return_t airspeed_update(void)
+{
+	central_data_t *central_data=get_central_data();
+	airspeed_analog_update(&central_data->pitot);
+}
+
 void create_tasks() {
 	
 	init_scheduler(&main_tasks);
@@ -637,4 +644,5 @@ void create_tasks() {
 	register_task(&main_tasks, 5, 4000, RUN_REGULAR, &mavlink_protocol_update);
 	
 	// register_task(&main_tasks, 6, 100000, RUN_REGULAR, &sonar_update);
+	register_task(&main_tasks, 6, 100000, RUN_REGULAR, &airspeed_update);
 }

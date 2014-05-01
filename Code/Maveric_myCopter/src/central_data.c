@@ -79,6 +79,9 @@ void initialise_central_data(){
 
 		// Init sonar
 		// i2cxl_sonar_init(&centralData.i2cxl_sonar);
+
+		// Init pitot tube
+		airspeed_analog_init(&centralData.pitot, ANALOG_RAIL_12);
 }
 
 central_data_t* get_central_data(void)

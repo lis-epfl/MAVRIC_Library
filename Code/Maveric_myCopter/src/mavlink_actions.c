@@ -17,6 +17,8 @@
 #include "mavlink_waypoint_handler.h"
 #include "neighbor_selection.h"
 
+#include "analog_monitor.h"
+
 central_data_t *centralData;
 
 void mavlink_send_heartbeat(void) {
@@ -245,13 +247,7 @@ void mavlink_send_simulation(void) {
 }
 
 
-void mavlink_send_sonar(void)
-{
-	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										get_millis(),
-										"sonar(m)", 
-										centralData->i2cxl_sonar.distance_m);
-}
+
 
 
 task_return_t send_rt_stats() {
@@ -817,6 +813,26 @@ void receive_message_long(Mavlink_Received_t* rec)
 	
 }
 
+void mavlink_send_sonar(void)
+{
+	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
+										get_millis(),
+										"sonar(m)", 
+										centralData->i2cxl_sonar.distance_m);
+}
+
+
+void mavlink_send_airspeed(void)
+{
+	mavlink_msg_debug_vect_send(MAVLINK_COMM_0, 
+								"Pitot",
+								get_micros(),
+								analog_get_avg(ANALOG_RAIL_13),
+								// centralData->pitot.pressure_offset, 
+								centralData->pitot.differential_pressure, 
+								centralData->pitot.airspeed);
+}
+
 void init_mavlink_actions(void) {
 	
 	centralData=get_central_data();
@@ -855,6 +871,7 @@ void init_mavlink_actions(void) {
 	add_task(get_mavlink_taskset(),  250000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
 	// add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_sonar, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	add_task(get_mavlink_taskset(),  100000, RUN_REGULAR, &mavlink_send_airspeed, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
 	
 	sort_taskset_by_period(get_mavlink_taskset());

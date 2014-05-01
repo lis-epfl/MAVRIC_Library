@@ -20,6 +20,7 @@ extern "C" {
 	#include "tasks.h"
 	#include "orca.h"
 	#include "piezo_speaker.h"
+	#include "airspeed_analog.h"
 }
  
 //#include <asf.h>
@@ -68,6 +69,8 @@ void initialisation() {
 	init_neighbors();
 	init_orca();
 	
+	airspeed_analog_calibrate(&centralData->pitot);
+
 	LED_On(LED1);
 	init_piezo_speaker_binary();
 

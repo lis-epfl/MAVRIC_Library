@@ -48,9 +48,9 @@
 #define RAW_MAG_Y_SCALE 589.89
 #define RAW_MAG_Z_SCALE 522.41
 
-#define MAG_BIAIS_X -110.27
-#define MAG_BIAIS_Y -139.87
-#define MAG_BIAIS_Z   23.97
+#define MAG_BIAIS_X -274
+#define MAG_BIAIS_Y -76
+#define MAG_BIAIS_Z  23.97
 
 #define MAG_AXIS_X -1.0
 #define MAG_AXIS_Y -1.0
