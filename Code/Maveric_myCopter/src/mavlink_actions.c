@@ -22,30 +22,36 @@
 central_data_t *centralData;
 
 void mavlink_send_heartbeat(void) {
-
-	float battery_lvl = get_battery_rail();
 	central_data_t *centralData=get_central_data();
+
+	float battery_voltage = centralData->adc.avg[ANALOG_RAIL_10];		// bat voltage (mV), actual battery pack plugged to the board
+	// float battery_lvl = centralData->adc.avg[ANALOG_RAIL_11];			// bat voltage (mV), input of the voltage regulators
+	// float battery_remaining = battery_lvl / 12.4 * 100.0;
+	float battery_remaining = centralData->adc.avg[ANALOG_RAIL_11] / 12.4 * 100.0;
+
 
 	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, centralData->mav_mode, 0, centralData->mav_state);
 	mavlink_msg_sys_status_send(MAVLINK_COMM_0, 
-								0b1111110000100111, // sensors present
-								0b1111110000100111, // sensors enabled
-								0b1111110000100111, // sensors health
-								0,                  // load
-								(int)(1000.0*get_battery_rail()), // bat voltage (mV)
-								0,                // current (mA)
-								battery_lvl/12.4*100.0,					// battery remaining
-								0, 0,  				// comms drop, comms errors
-								0, 0, 0, 0);        // autopilot specific errors
-	//mavlink_msg_battery_status_send(MAVLINK_COMM_0, 0, (int)(1000.0*get_battery_rail()), 
-														//(int)(1000.0*get_internal_rail()), 
-														//(int)(1000.0*get_6V_analog_rail()), 
-														//(int)(1000.0*get_5V_analog_rail()),
-														//0.0, 0.0, 0.0, 0.0);
-														
-	trigger_analog_monitor();
-	
-	//dbg_print("Send hearbeat.\n");
+								0b1111110000100111, 									// sensors present
+								0b1111110000100111, 									// sensors enabled
+								0b1111110000100111, 									// sensors health
+								0,                  									// load
+								(int)(1000.0 * battery_voltage), 						// bat voltage (mV)
+								0,               										// current (mA)
+								battery_remaining,										// battery remaining
+								0, 0,  													// comms drop, comms errors
+								0, 0, 0, 0);        									// autopilot specific errors
+
+	// mavlink_msg_battery_status_send(MAVLINK_COMM_0, 
+	// 								(int8_t)0, 													// accu id?
+	// 								(int16_t)(1000.0 * centralData->adc.avg[ANALOG_RAIL_6]), 	// 6V
+	// 								(int16_t)(1000.0 * centralData->adc.avg[ANALOG_RAIL_7]), 	// 5V_ANA
+	// 								(int16_t)(1000.0 * centralData->adc.avg[ANALOG_RAIL_10]), 	// BATTERY_FILTERED
+	// 								(int16_t)(1000.0 * centralData->adc.avg[ANALOG_RAIL_11]),	// BATTERY
+	// 								(int16_t)(1000.0 * centralData->adc.avg[ANALOG_RAIL_12]), 	// P8 pin 1
+	// 								(int16_t)(1000.0 * centralData->adc.avg[ANALOG_RAIL_13]),	// P9 pin 1
+	// 								0, 															// current battery
+	// 								(int8_t)battery_remaining);									// battery_remaining														
 }
 
 void mavlink_send_raw_imu(void) {
@@ -827,7 +833,8 @@ void mavlink_send_airspeed(void)
 	mavlink_msg_debug_vect_send(MAVLINK_COMM_0, 
 								"Pitot",
 								get_micros(),
-								analog_get_avg(ANALOG_RAIL_13),
+								centralData->adc.avg[ANALOG_RAIL_13],
+								// analog_get_avg(&centralData->adc, ANALOG_RAIL_13),
 								// centralData->pitot.pressure_offset, 
 								centralData->pitot.differential_pressure, 
 								centralData->pitot.airspeed);

@@ -51,6 +51,8 @@ extern "C" {
 #endif
 
 typedef struct  {
+	analog_monitor_t adc;
+
 	Imu_Data_t imu1;
 	Control_Command_t controls;
 	Control_Command_t controls_nav;

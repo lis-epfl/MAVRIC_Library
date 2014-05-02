@@ -17,6 +17,7 @@
 #include "orca.h"
 #include "delay.h"
 #include "i2cxl_sonar.h"
+#include "analog_monitor.h"
 #include "airspeed_analog.h"
 
 NEW_TASK_SET(main_tasks, 10)
@@ -623,6 +624,12 @@ task_return_t airspeed_update(void)
 	airspeed_analog_update(&central_data->pitot);
 }
 
+task_return_t adc_update(void)
+{
+	central_data_t *central_data=get_central_data();
+	analog_monitor_update(&central_data->adc);
+}
+
 void create_tasks() {
 	
 	init_scheduler(&main_tasks);
@@ -645,4 +652,6 @@ void create_tasks() {
 	
 	// register_task(&main_tasks, 6, 100000, RUN_REGULAR, &sonar_update);
 	register_task(&main_tasks, 6, 100000, RUN_REGULAR, &airspeed_update);
+
+	register_task(&main_tasks, 7, 100000, RUN_REGULAR, &adc_update);
 }

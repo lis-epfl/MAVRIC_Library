@@ -108,7 +108,18 @@ void initialise_board(central_data_t *centralData) {
 
 	rc_init();
 
-	init_analog_monitor();
+	// Init analog rails
+	centralData->adc.enable[ANALOG_RAIL_2]  = false;
+	centralData->adc.enable[ANALOG_RAIL_3]  = false;
+	centralData->adc.enable[ANALOG_RAIL_4]  = false;
+	centralData->adc.enable[ANALOG_RAIL_5]  = false;
+	centralData->adc.enable[ANALOG_RAIL_6]  = false;
+	centralData->adc.enable[ANALOG_RAIL_7]  = false;
+	centralData->adc.enable[ANALOG_RAIL_10] = true;		// Battery filtered
+	centralData->adc.enable[ANALOG_RAIL_11] = true;		// Battery 
+	centralData->adc.enable[ANALOG_RAIL_12] = true;		// sonar
+	centralData->adc.enable[ANALOG_RAIL_13] = false;    // pitot
+	init_analog_monitor(&centralData->adc);
 	
 	// init imu & compass
 	init_imu(&(centralData->imu1));

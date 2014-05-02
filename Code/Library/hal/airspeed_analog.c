@@ -29,8 +29,9 @@ const float PITOT_GAIN_DEFAULT = 1.9936; 	// this gain come from APM, but it doe
 float airspeed_analog_get_pressure(airspeed_analog_t* airspeed_analog);
 
 
-void airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_rails_t analog_channel)
+void airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, analog_rails_t analog_channel)
 {
+	airspeed_analog->analog_monitor = analog_monitor;
 	airspeed_analog->analog_channel = analog_channel;		// =4 or 5 on board maveric32 v4.1
 	airspeed_analog->gain = PITOT_GAIN_DEFAULT;
 
@@ -44,7 +45,7 @@ void airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_rails_t ana
 
 float airspeed_analog_get_pressure(airspeed_analog_t* airspeed_analog)
 {
-	return analog_get_avg(airspeed_analog->analog_channel) * VOLTS_TO_PASCAL;
+	return airspeed_analog->analog_monitor->avg[airspeed_analog->analog_channel] * VOLTS_TO_PASCAL;
 }
 
 
@@ -58,13 +59,10 @@ void airspeed_analog_calibrate(airspeed_analog_t* airspeed_analog)
 	for(i=0; i<count; i++)
 	{
 		pressure = airspeed_analog_get_pressure(airspeed_analog);
-		// pressure = 300000;
 		sum = sum + pressure;
-		delay_ms(1);
 	}
 
 	airspeed_analog->pressure_offset = sum / count;
-	// airspeed_analog->pressure_offset = sum;
 }
 
 

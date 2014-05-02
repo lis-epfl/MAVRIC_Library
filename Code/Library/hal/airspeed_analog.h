@@ -33,10 +33,11 @@ typedef struct {
 	float pressure_offset;
 	float differential_pressure;
 	float airspeed;
+	analog_monitor_t* analog_monitor;
 } airspeed_analog_t;
 
 
-void airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_rails_t analog_channel);
+void airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, analog_rails_t analog_channel);
 
 void airspeed_analog_calibrate(airspeed_analog_t* airspeed_analog);
 
