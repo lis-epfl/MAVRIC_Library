@@ -132,6 +132,31 @@ UQuat_t static inline quat_local_to_global(const UQuat_t qe, const UQuat_t qvect
 	return qtmp;
 }
 
+/**
+ * @brief Rotates a vector according to a unit quaternion
+ * @details This is an optimized implementation that does not require quaternion multiplications
+ * It should run more than 2 times faster than the standard implementation
+ * 
+ * @param q unit quaternion
+ * @param u input vector
+ * @param v rotated vector (output)
+ * 
+ */
+void static inline quat_rotate_vector(const UQuat_t q, const float u[3], float v[3])
+{
+	float tmp1[3], tmp2[3];
+
+	cross_product(q.v, u, tmp1);
+	tmp1[0] = 2 * tmp1[0];
+	tmp1[1] = 2 * tmp1[1];
+	tmp1[2] = 2 * tmp1[2];
+
+	cross_product(q.v, tmp1, tmp2);
+	
+	v[0] = u[0] + q.s * tmp1[0] + tmp2[0];
+	v[1] = u[1] + q.s * tmp1[1] + tmp2[1];
+	v[2] = u[2] + q.s * tmp1[2] + tmp2[2];
+}
 
 // fast newton iteration for approximate square root of numbers close to 1 (for re-normalisation)
 float static inline fast_sqrt(float number) {
