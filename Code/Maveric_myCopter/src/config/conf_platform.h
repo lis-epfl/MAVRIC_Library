@@ -14,7 +14,7 @@
 
 #define NATIVE_BIG_ENDIAN  
 
-#define MAVLINK_SYS_ID 10
+#define MAVLINK_SYS_ID 101
 
 #define MAVLINK_BASE_STATION_ID 255
 
@@ -63,6 +63,8 @@
 #include "MAVsettings/MAV009_conf_imu_rev4.h"
 #elif MAVLINK_SYS_ID == 10
 #include "MAVsettings/MAV010_conf_imu_rev4.h"
+#elif MAVLINK_SYS_ID == 101
+#include "MAVsettings/MAV101_conf_imu_rev4.h"
 #else
 #include "conf_imu_rev4.h"
 #endif
