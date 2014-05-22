@@ -79,23 +79,27 @@ def read_logfile(filename,
 
 
 def main(argv):
-    # filename = 'boardJ1_calib_14_05_2014_compressed.txt'
-    # filename = 'ludo_1_calib_compressed.txt'
-    # filename = 'acc_header.txt'
-    # filename = 'boardJ2_22_05_2014_compressed.txt'
-    filename = 'logfile_example_compressed.txt'
+    usage = """usage:
+            calib_imu.py -f <inputfile>"""
 
-    # opts, args = getopt.getopt(argv,"f")
-    
-    # for opt, arg in opts:
-    #     if opt == '-h':
-    #         print("""usage:
-    #                 calib_imu.py -f <inputfile>""")
-    #         sys.exit(2)
-    #     elif opt == '-f':
-    #         filename = arg
-    #         print(filename)
-    # print("Analysing " + filename + "...")
+    filename = ''
+
+    try:
+        opts, args = getopt.getopt(argv,"hf:")
+    except getopt.GetoptError:
+        print(usage)
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt == '-h':
+            print(usage)
+            sys.exit(2)
+        elif opt == '-f':
+            filename = arg
+
+    if not filename:
+        print(usage)
+        sys.exit(2)
 
     acc, mag = read_logfile(filename)
 

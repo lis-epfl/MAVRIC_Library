@@ -1,9 +1,8 @@
-
-
-from calib_acc_mag_standalone import *
+from calib_imu import *
 from PyQt4 import QtGui
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
+import sys, getopt
 
 class Mavric_calib(QtGui.QMainWindow):
 
@@ -99,19 +98,42 @@ class Mavric_calib(QtGui.QMainWindow):
         # self.view.addItem(self.sphere)
 
 
-if __name__ == '__main__':
-    ## Always start by initializing Qt (only once per application)
-    app = QtGui.QApplication([])
+def main(argv):
+    usage = """usage:
+            calib_imu.py -f <inputfile>"""
 
-    # filename = 'boardJ1_calib_14_05_2014_compressed.txt'
-    # filename = 'ludo_1_calib_compressed.txt'
-    # filename = 'acc_header.txt'
-    filename = 'boardJ2_22_05_2014_compressed.txt'
+    filename = ''
+
+    try:
+        opts, args = getopt.getopt(argv,"hf:")
+    except getopt.GetoptError:
+        print(usage)
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt == '-h':
+            print(usage)
+            sys.exit(2)
+        elif opt == '-f':
+            filename = arg
+
+    if not filename:
+        print(usage)
+        sys.exit(2)
+
+        
+    print("Analysing '" + filename + "'")
 
     acc, mag = read_logfile(filename)
+
+    ## Always start by initializing Qt (only once per application)
+    app = QtGui.QApplication([])
 
     w = Mavric_calib()
     w.update_points(acc, mag)
 
     ## Start the Qt event loop
     app.exec_()
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
