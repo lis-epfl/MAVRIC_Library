@@ -1,0 +1,22 @@
+Calibrating ESC manually
+
+To be able to have good synchronisation between different motors, you need to manually set the max and min for the Throttle.
+Otherwise your motors may not have the exact same "zero", which would result in different thrust on each of them.
+
+Before running those steps, you are suppose to :
+- have bind your remote and sattelite
+
+Steps:
+- unplug motors from the main Board
+- connect your sattelite to a normal RC receiver
+- plug one motor in the throttle plug of the receiver.
+- power-on your remote, put the throttle stick to the top position (full power)
+- power on the motors. It will power-on the receiver through the ESC wiring.
+- after THIS motor beeps twice, set throttle on the remote down.
+- you shall hear 3 beeps (indicating calibration in process)
+- test motor putting some throttle and setting back throttle stick down (no turn)
+- unplug the battery from the motors.
+
+Then do it for the three others, in the exact same way.
+
+Enjoy your hobby :-)
