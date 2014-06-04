@@ -810,9 +810,9 @@ void init_mavlink_actions(void) {
 	centralData=get_central_data();
 	add_onboard_parameters();
 	
-	//write_parameters_to_flashc();
+	write_parameters_to_flashc();
 	
-	//read_parameters_from_flashc();
+	read_parameters_from_flashc();
 	
 	add_task(get_mavlink_taskset(),   10000, RUN_REGULAR, &control_waypoint_timeout, 0);
 	
