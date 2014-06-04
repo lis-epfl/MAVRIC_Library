@@ -1,0 +1,29 @@
+WARNING:
+you will have first to check that you don't create interference with electronic device as much as possible.
+
+go into 
+mavlink_actions.c->init_mavlink_actions(void)
+Change Mavlink_actions setting of sending IMU RAW and SCALED, from RUN_NEVER to RUN_REGULAR.
+Compile and flash the code on the autopilot
+
+Then open QGroundControl
+Connect to your quad and go into plot.
+
+As the X, Y and Z value of the magnetometer are in 3D.
+level perfectly horizontly the autopilot. If you have already calibrated the IMU, use it to check that you are leveled.
+
+Then,
+place the quad pointing north (x <-> north).
+oscillate a bit around north and read the Max value of RAW_IMU.xmag.
+It will correspond with quad pointing north. write down this value.
+Redo the exact same with x pointing south, and write down the min value (south)
+Compute the mean_X =(Max-Min)/2
+and set Bias_Mag_x = min+mean_X
+
+Do the exact same with y-axis of the quad pointing respectively north and south to get mean_Y.
+and set Bias_Mag_y = min+mean_Y
+
+We will not callibrate Bias_MAg_z, as it not used in the code.
+You would use the IMU to get the autopilot leveled vertically, and then do the exact same.
+
+Enjoy your hobby :-) 
