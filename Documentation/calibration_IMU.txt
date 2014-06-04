@@ -1,0 +1,28 @@
+To calibrate the IMU:
+
+go into 
+mavlink_actions.c->init_mavlink_actions(void)
+Change Mavlink_actions setting of sending IMU RAW and SCALED, from RUN_NEVER to RUN_REGULAR.
+Compile and flash the code on the autopilot
+
+Then open QGroundControl
+Connect to your quad and go into plot.
+
+Level your quad on a nice surface !!!
+YOUR GOAL:
+For SCALED IMU X and Y you should have their mean value at zero.
+For SCALED IMU Z you get its mean value at 1000 (=1 gravity unit * 1000)
+
+Therefore:
+Change in CONFIG, the bias of the IMU to fit those mean values.
+=> set Bias_Acc_X as current mean of RAW_IMU.xacc, 
+=> set Bias_Acc_Y as current mean of RAW_IMU.yacc.
+=> set Bias_Acc_Z manually to reach the SCALED_IMU.zacc mean of 1000.
+
+Then press: Write(ROM), and check on the debug port, if opened, that the write to flash had succeed.
+
+Check in QGroundControl->Flight that the IMU is leveled correctly.
+
+Then go back to atmel and set back mavlink actions to RUN_NEVER.
+
+Enjoy your hobby :-)
