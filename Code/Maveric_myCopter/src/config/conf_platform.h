@@ -51,6 +51,8 @@
 
 #if MAVLINK_SYS_ID == 2
 #include "MAVsettings/MAV002_conf_imu_rev4.h"
+#elif MAVLINK_SYS_ID == 3
+#include "MAVsettings/MAV003_conf_imu_rev4.h"
 #elif MAVLINK_SYS_ID == 4
 #include "MAVsettings/MAV004_conf_imu_rev4.h"
 #elif MAVLINK_SYS_ID == 6
