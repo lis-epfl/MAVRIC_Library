@@ -1055,6 +1055,9 @@
     <Compile Include="src\config\conf_stabilisation_hybrid.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\MAVsettings\MAV001_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\MAVsettings\MAV002_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
