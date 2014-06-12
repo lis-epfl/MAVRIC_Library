@@ -25,9 +25,9 @@
 
 // from datasheet: FS 2000dps --> 70 mdps/digit
 // scale = 1/(0.07 * PI / 180.0) = 818.5111
-#define RAW_GYRO_X_SCALE  1637.02223
-#define RAW_GYRO_Y_SCALE  1637.02223
-#define RAW_GYRO_Z_SCALE  1637.02223
+#define RAW_GYRO_X_SCALE  818.5111
+#define RAW_GYRO_Y_SCALE  818.5111
+#define RAW_GYRO_Z_SCALE  818.5111
 
 #define GYRO_AXIS_X  1.0
 #define GYRO_AXIS_Y -1.0
@@ -37,9 +37,9 @@
 #define RAW_ACC_Y_SCALE  3900.6
 #define RAW_ACC_Z_SCALE  4222.8
 
-#define ACC_BIAIS_X  32	
-#define ACC_BIAIS_Y  32
-#define ACC_BIAIS_Z  335
+#define ACC_BIAIS_X  64
+#define ACC_BIAIS_Y  64
+#define ACC_BIAIS_Z 420
 
 #define ACC_AXIS_X  1.0
 #define ACC_AXIS_Y -1.0

@@ -1058,6 +1058,9 @@
     <Compile Include="src\config\MAVsettings\MAV002_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\MAVsettings\MAV003_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\MAVsettings\MAV004_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
