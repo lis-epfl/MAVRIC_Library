@@ -6,7 +6,7 @@
 
 *************************************************************
 MAV001:
-	status: 	not fly ready
+	status: 	! fly ready (Greg)
 	firmware:	unknown
 	date : 		13-11-21
 *************************************************************
@@ -21,19 +21,19 @@ MAV003:
 	date : 		13-11-21
 *************************************************************
 MAV004:
-	status: 	not fly ready
+	status: 	! fly ready
 	firmware:	14-06-04
-	date : 		13-11-21
+	date : 		14-06-06
 *************************************************************
 MAV005:
-	status: 	! fly ready
+	status: 	! fly ready (Meysam)
 	firmware:	unknown
 	date : 		14-02-19
 *************************************************************
 MAV006:
-	status: 	not fly ready
+	status: 	! fly ready
 	firmware:	14-06-04
-	date : 		13-11-21
+	date : 		14-06-06
 *************************************************************
 MAV007:
 	status: 	! fly ready
@@ -46,11 +46,11 @@ MAV008:
 	date : 		14-06-04
 *************************************************************
 MAV009:
-	status: 	not fly ready
+	status: 	! fly ready
 	firmware:	14-06-04
-	date : 		13-11-21
+	date : 		14-06-06
 *************************************************************
 MAV010:
-	status: 	not fly ready
+	status: 	! fly ready (Lukas)
 	firmware:	unknown
 	date : 		13-11-21
