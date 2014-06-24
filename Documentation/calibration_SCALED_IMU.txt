@@ -15,25 +15,26 @@ Roll the autopilot to face every orientation.
 
 Press end logging.
 
-Then, we will use Matlab to analyse our results and extract the gain.
+Nicolas method:
+	Then, we will use Matlab to analyse our results and extract the gain.
 
-Open Matlab,
-open calibration scripts.m
-Change the file name to point to your logging file
-execute the accelero cellule of that m file.
+	Open Matlab,
+	open calibration scripts.m
+	Change the file name to point to your logging file
+	execute the accelero cellule of that m file.
 
-you will obtain 3 figures
-- raw accelero
-- an ellipsoide to show the logging point, so that you can check that you get log all around the sphere.
-- scaled acceleromter (between 1 and -1)
+	you will obtain 3 figures
+	- raw accelero
+	- an ellipsoide to show the logging point, so that you can check that you get log all around the sphere.
+	- scaled acceleromter (between 1 and -1)
 
-Read in Matlab console the output scaled factor for the accelerometer.
-You will have to paste them in Code/Your_Project/src/config/conf_imu_rev4.h file
+	Read in Matlab console the output scaled factor for the accelerometer.
+	You will have to paste them in Code/Your_Project/src/config/conf_imu_rev4.h file
 
-Then repeat the same to get the scaled gain of the magnetometer !!!
+	Then repeat the same to get the scaled gain of the magnetometer !!!
 
-Good luck and enjoy your hobby :-)
-
-For using python scripts by julien, on windows
-install python 2.7
-install PyQt4 same distribution (eg x64)
+	Good luck and enjoy your hobby :-)
+Julien method
+	For using python scripts by julien, on windows
+	install python 2.7
+	install PyQt4 same distribution (eg x64)

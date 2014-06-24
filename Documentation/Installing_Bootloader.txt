@@ -26,7 +26,7 @@ This document describes the necessary steps to flash a DFU bootloader onto the A
 
 
 To flash the chip via the bootloader, one needs (in windows) batchisp from Atmel which is included in the FLIP download package, or dfu-programmer (in Linux). 
-
+http://www.avrfreaks.net/index.php?name=PNphpBB2&file=viewtopic&t=122767
 
 #######################################
 2) Instructions for dfu-programmer:
