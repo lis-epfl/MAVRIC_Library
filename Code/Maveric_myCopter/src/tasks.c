@@ -384,11 +384,11 @@ task_return_t set_mav_mode_n_state()
 				case -1:
 					break;
 				case -2:
-					//if (centralData->critical_landing)
-					//{
-						//centralData->mav_state = MAV_STATE_EMERGENCY;
-					//}
-					centralData->mav_state = MAV_STATE_EMERGENCY;
+					if (centralData->critical_landing)
+					{
+						centralData->mav_state = MAV_STATE_EMERGENCY;
+					}
+					//centralData->mav_state = MAV_STATE_EMERGENCY;
 					break;
 			}
 			break;
@@ -471,7 +471,13 @@ task_return_t run_stabilisation() {
 		
 		case MAV_MODE_MANUAL_ARMED:
 			centralData->controls = get_command_from_remote();
-			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
+			if (centralData->collision_avoidance)
+			{
+				centralData->controls.control_mode = RATE_COMMAND_MODE;
+			}else{
+				centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
+			}
+			// centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			centralData->controls.yaw_mode=YAW_RELATIVE;
 			
 			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
@@ -480,6 +486,7 @@ task_return_t run_stabilisation() {
 			centralData->controls = get_command_from_remote();
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			centralData->controls.yaw_mode=YAW_RELATIVE;
+			//centralData->controls.yaw_mode = YAW_COORDINATED;
 			
 			get_velocity_vector_from_remote(centralData->controls.tvel);
 			
@@ -504,7 +511,6 @@ task_return_t run_stabilisation() {
 			}else{
 				centralData->controls.yaw_mode = YAW_ABSOLUTE;
 			}
-			
 			
 			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;

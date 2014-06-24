@@ -96,6 +96,8 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	
 	v_desired = f_min(centralData->cruise_speed,(center_window_2(4.0*rel_heading) * centralData->dist2vel_gain * soft_zone(norm_rel_dist,centralData->softZoneSize)));
 	
+	//v_desired = f_min(centralData->cruise_speed,(centralData->dist2vel_gain * norm_rel_dist));
+	
 	if (v_desired *  f_abs(dir_desired_bf[Z]) > centralData->max_climb_rate * norm_rel_dist ) {
 		v_desired = centralData->max_climb_rate * norm_rel_dist /f_abs(dir_desired_bf[Z]);
 	}
@@ -104,7 +106,7 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	dir_desired_bf[Y] = v_desired * dir_desired_bf[Y] / norm_rel_dist;
 	dir_desired_bf[Z] = v_desired * dir_desired_bf[Z] / norm_rel_dist;
 	
-	/*
+	
 	loopCount = loopCount++ %50;
 	if (loopCount == 0)
 	{
@@ -126,7 +128,7 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 		dbg_print_num(centralData->position_estimator.localPosition.pos[Z]*100,10);
 		dbg_print("). \n");
 	}
-	*/
+	
 	
 	for (i=0;i<3;i++)
 	{

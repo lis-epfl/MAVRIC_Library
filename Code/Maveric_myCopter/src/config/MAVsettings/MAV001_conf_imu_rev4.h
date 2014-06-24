@@ -36,9 +36,9 @@
 #define RAW_ACC_Y_SCALE  3844.8
 #define RAW_ACC_Z_SCALE  4119.6
 
-#define ACC_BIAIS_X  -5.00//-97.20;
-#define ACC_BIAIS_Y  182.00//124.35;
-#define ACC_BIAIS_Z  320.00//-40.73;
+#define ACC_BIAIS_X  -32
+#define ACC_BIAIS_Y  64
+#define ACC_BIAIS_Z  250
 
 #define ACC_AXIS_X  1.0
 #define ACC_AXIS_Y -1.0
