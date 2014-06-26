@@ -24,10 +24,14 @@
 
 // from datasheet: FS 2000dps --> 70 mdps/digit
 // scale = 1/(0.07 * PI / 180.0) = 818.5111
-#define RAW_GYRO_X_SCALE  818.5111
-#define RAW_GYRO_Y_SCALE  818.5111
-#define RAW_GYRO_Z_SCALE  818.5111
+#define RAW_GYRO_X_SCALE  1637.0222 //818.5111
+#define RAW_GYRO_Y_SCALE  1637.0222
+#define RAW_GYRO_Z_SCALE  1637.0222
 
+//#define RAW_GYRO_X_SCALE  818.5111
+//#define RAW_GYRO_Y_SCALE  818.5111
+//#define RAW_GYRO_Z_SCALE  818.5111
+//
 #define GYRO_AXIS_X  1.0
 #define GYRO_AXIS_Y -1.0
 #define GYRO_AXIS_Z -1.0
