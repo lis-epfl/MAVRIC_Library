@@ -387,11 +387,11 @@ task_return_t set_mav_mode_n_state()
 				case -1:
 					break;
 				case -2:
-					//if (centralData->critical_landing)
-					//{
-						//centralData->mav_state = MAV_STATE_EMERGENCY;
-					//}
-					centralData->mav_state = MAV_STATE_EMERGENCY;
+					if (centralData->critical_landing)
+					{
+						centralData->mav_state = MAV_STATE_EMERGENCY;
+					}
+					//centralData->mav_state = MAV_STATE_EMERGENCY;
 					break;
 			}
 			break;
@@ -505,7 +505,6 @@ task_return_t run_stabilisation() {
 			}else{
 				centralData->controls.yaw_mode = YAW_ABSOLUTE;
 			}
-			
 			
 			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;

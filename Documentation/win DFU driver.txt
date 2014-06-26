@@ -1,0 +1,18 @@
+For windows:
+download dfu-programmer for windows (http://sourceforge.net/projects/dfu-programmer/files/latest/download)
+
+install lib-usb
+download libusb-win32-bin-1.2.6.0
+run from cmd YOUR_PATH\libusb-win32-bin-1.2.6.0\bin\amd64\install-filter
+
+download usb driver for Atmel
+only the driver (not a tool to install driver)
+http://www.driverscape.com/download/at32uc3c
+
+go in the device manager.
+right-click on the DFU-AT32C3C, 
+select update driver
+select browth my computer
+provide the path to the driver you just download before
+
+Enjoy
