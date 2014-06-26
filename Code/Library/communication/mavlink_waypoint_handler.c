@@ -552,7 +552,7 @@ void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints
 		*waypoint_set = 0;
 		wp_hold_init(centralData->position_estimator.localPosition);
 		mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_OK);
-		dbg_print("Clear Waypoint list");
+		dbg_print("Cleared Waypoint list.\n");
 	}		
 }
 
@@ -837,7 +837,7 @@ void waypoint_navigation_handler()
 			mavlink_msg_mission_item_reached_send(MAVLINK_COMM_0,centralData->current_wp_count);
 			
 			centralData->waypoint_list[centralData->current_wp_count].current = 0;
-			if (centralData->current_waypoint.autocontinue == 1)
+			if((centralData->current_waypoint.autocontinue == 1)&&(centralData->number_of_waypoints>1))
 			{
 				dbg_print("Autocontinue towards waypoint Nr");
 				

@@ -97,6 +97,10 @@ void relevel_imu()
 
 	dbg_print("calibrating IMU...\n");
 	//calibrate_Gyros(&centralData->imu1);
+	for (j=0;j<3;j++)
+	{
+		centralData->imu1.attitude.raw_mag_mean[j] = (float)centralData->imu1.raw_channels[j+COMPASS_OFFSET];
+	}
 	for (i=1000; i>0; i--) {
 		run_imu_update();
 		mavlink_protocol_update();
@@ -431,6 +435,7 @@ task_return_t set_mav_mode_n_state()
 			centralData->position_estimator.init_gps_position = false;
 			centralData->mav_state = MAV_STATE_STANDBY;
 			centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
+			servos_failsafe(centralData->servos);
 		}
 		// From reality to simulation
 		if (centralData->simulation_mode == 1)
@@ -490,7 +495,12 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_GUIDED_ARMED:
 			centralData->controls = centralData->controls_nav;
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
-			centralData->controls.yaw_mode = YAW_ABSOLUTE;
+			if ((centralData->mav_state==MAV_STATE_CRITICAL)&&(centralData->critical_behavior==FLY_TO_HOME_WP))
+			{
+				centralData->controls.yaw_mode = YAW_COORDINATED;
+			}else{
+				centralData->controls.yaw_mode = YAW_ABSOLUTE;
+			}
 			
 			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
@@ -499,7 +509,7 @@ task_return_t run_stabilisation() {
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			
 			// if no waypoints are set, we do position hold therefore the yaw mode is absolute
-			if(centralData->waypoint_set&&(centralData->mav_state!=MAV_STATE_STANDBY))
+			if (((centralData->waypoint_set&&(centralData->mav_state!=MAV_STATE_STANDBY)))||((centralData->mav_state==MAV_STATE_CRITICAL)&&(centralData->critical_behavior==FLY_TO_HOME_WP)))
 			{
 				centralData->controls.yaw_mode = YAW_COORDINATED;
 			}else{

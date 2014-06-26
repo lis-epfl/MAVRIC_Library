@@ -23,12 +23,12 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ ROLL PID -------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.1,
+				.p_gain = 0.14,
 				.clip_min = -0.9, 
 				.clip_max = 0.9,
 				.integrator={
-					.pregain = 0.2, 
-					.postgain = 0.4,
+					.pregain = 0.5, 
+					.postgain = 1.0,
 					.accumulator = 0.0,
 					.clip = 0.65,
 					.leakiness = 0.0
@@ -49,12 +49,12 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ PITCH PID ------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.1,
+				.p_gain = 0.14,
 				.clip_min = -0.9, 
 				.clip_max = 0.9,
 				.integrator={
-					.pregain = 0.2, 
-					.postgain = 0.4,
+					.pregain = 0.5, 
+					.postgain = 1.0,
 					.accumulator = 0.0,
 					.clip = 0.65,
 					.leakiness = 0.0
@@ -147,7 +147,7 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ ROLL PID -------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 2.5,
+				.p_gain = 2.0,
 				.clip_min = -1.2, 
 				.clip_max = 1.2,
 				.integrator={
@@ -173,7 +173,7 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ PITCH PID ------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 2.5,
+				.p_gain = 2.0,
 				.clip_min = -1.2, 
 				.clip_max = 1.2,
 				.integrator={
@@ -350,12 +350,12 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 		// ------ THRUST PID ---------------------------------------------------
 		// ---------------------------------------------------------------------
 		.thrust_controller={
-				.p_gain = 0.4,
+				.p_gain = 0.25,
 				.clip_min = -0.9, 
 				.clip_max = 0.65,
 				.integrator={
-					.pregain = 1.0, 
-					.postgain = 0.5,
+					.pregain = 1.5, 
+					.postgain = 1.0,
 					.accumulator = 0.0,
 					.clip = 1.0,
 					.leakiness = 0.0
@@ -370,7 +370,7 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 				.error = 0.0,
 				.last_update = 0.0, 
 				.dt = 1,
-				.soft_zone_width = 0.05
+				.soft_zone_width = 0.2
 		},
 		// ---------------------------------------------------------------------
 		// ------ OUTPUT -------------------------------------------------------

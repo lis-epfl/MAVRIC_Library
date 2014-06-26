@@ -58,13 +58,22 @@ void initQuat(Quat_Attitude_t *attitude)
 	{
 		attitude->mag[i]=((float)attitude->raw_mag_mean[i]-attitude->be[i+COMPASS_OFFSET])*attitude->sf[i+COMPASS_OFFSET];
 	}
-
+	
+	
+	dbg_print("Raw mag mean: (x1000)(");
+	dbg_print_num(attitude->raw_mag_mean[0]*1000,10);
+	dbg_print(", ");
+	dbg_print_num(attitude->raw_mag_mean[1]*1000,10);
+	dbg_print(", ");
+	dbg_print_num(attitude->raw_mag_mean[2]*1000,10);
+	dbg_print(")\n");
+	
 	init_angle = atan2(-attitude->mag[1],attitude->mag[0]);
 
 	dbg_print("Initial yaw:");
 	dbg_print_num(init_angle*100.0,10);
 	dbg_print(" = atan2(mag_y,mag_x) =");
-	dbg_print_num(attitude->mag[1]*100.0,10);
+	dbg_print_num(-attitude->mag[1]*100.0,10);
 	dbg_print(" ,");
 	dbg_print_num(attitude->mag[0]*100.0,10);
 	dbg_print("\n");
@@ -93,7 +102,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	
 	
 	for (i=0; i<3; i++){
-		attitude->om[i]  = (1.0-GYRO_LPF)*attitude->om[i]+GYRO_LPF*(((float)rates[i+GYRO_OFFSET]-attitude->be[i+GYRO_OFFSET])*attitude->sf[i]);
+		attitude->om[i]  = (1.0-GYRO_LPF)*attitude->om[i]+GYRO_LPF*(((float)rates[i+GYRO_OFFSET]-attitude->be[i+GYRO_OFFSET])*attitude->sf[i+GYRO_OFFSET]);
 		attitude->a[i]   = (1.0-ACC_LPF)*attitude->a[i]+ACC_LPF*(((float)rates[i+ACC_OFFSET]-attitude->be[i+ACC_OFFSET])*attitude->sf[i+ACC_OFFSET]);
 		attitude->mag[i] = (1.0-MAG_LPF)*attitude->mag[i]+MAG_LPF*(((float)rates[i+COMPASS_OFFSET]-attitude->be[i+COMPASS_OFFSET])*attitude->sf[i+COMPASS_OFFSET]);
 	}
@@ -173,7 +182,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	// apply error correction with appropriate gains for accelerometer and compass
 /*
 	for (i=0; i<3; i++){
-		qtmp1.v[i] = 0.5*(attitude->om[i] + kp*omc[i] + kp_mag*omc_mag[i]);
+		qtmp1.v[i] = 0.5*attitude->om[i] + kp*omc[i] + kp_mag*omc_mag[i];//
 	}
 	qtmp1.s=0;
 
