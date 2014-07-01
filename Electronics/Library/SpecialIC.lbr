@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -1839,11 +1839,11 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
 <attribute name="ORDER_CODE" value="102-2197-1-ND" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+<attribute name="UNIT_PRICE" value="1.99" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="1.2329" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="1.644" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="1.644" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="1.644" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -1870,11 +1870,11 @@ This is the simplified version of the FT232RL unit. Only what you need, nothing 
 <attribute name="DISTRIBUTOR" value="Mouser" constant="no"/>
 <attribute name="ORDER_CODE" value="700-MAX3051EKAT" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="2.69" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="1.76" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="2.69" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="2.02" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="1.91" constant="no"/>
+<attribute name="UNIT_PRICE" value="2.64" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="1.73" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="2.64" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="1.98" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="1.88" constant="no"/>
 </technology>
 </technologies>
 </device>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -1841,14 +1841,13 @@ USE AT YOUR OWN RISK!&lt;p&gt;
 <technology name="">
 <attribute name="DISTRIBUTOR" value="" constant="no"/>
 <attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
 <attribute name="UNIT_PRICE" value="" constant="no"/>
 <attribute name="UNIT_PRICE_100X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_10X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_25X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_50X" value="" constant="no"/>
-<attribute name="PLACE_PART" value="YES" constant="no"/>
 </technology>
-
 </technologies>
 </device>
 </devices>
@@ -1930,14 +1929,13 @@ USE AT YOUR OWN RISK!&lt;p&gt;
 <technology name="">
 <attribute name="DISTRIBUTOR" value="" constant="no"/>
 <attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
 <attribute name="UNIT_PRICE" value="" constant="no"/>
 <attribute name="UNIT_PRICE_100X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_10X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_25X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_50X" value="" constant="no"/>
-<attribute name="PLACE_PART" value="YES" constant="no"/>
 </technology>
-
 </technologies>
 </device>
 </devices>
@@ -2055,14 +2053,13 @@ USE AT YOUR OWN RISK!&lt;p&gt;
 <technology name="">
 <attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
 <attribute name="ORDER_CODE" value="AT32UC3C1512C-AUT-ND" constant="no"/>
-<attribute name="UNIT_PRICE" value="17.65000" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="10.02880" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="17.65000" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="11.23240" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="11.23240" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="12.95" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="10.0128" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="11.78" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="10.8964" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="10.8964" constant="no"/>
 </technology>
-
 </technologies>
 </device>
 </devices>
@@ -2090,14 +2087,13 @@ USE AT YOUR OWN RISK!&lt;p&gt;
 <technology name="">
 <attribute name="DISTRIBUTOR" value="" constant="no"/>
 <attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
 <attribute name="UNIT_PRICE" value="" constant="no"/>
 <attribute name="UNIT_PRICE_100X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_10X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_25X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_50X" value="" constant="no"/>
-<attribute name="PLACE_PART" value="YES" constant="no"/>
 </technology>
-
 </technologies>
 </device>
 <device name="-R" package="AVR-JTAG-10R">
@@ -2117,14 +2113,13 @@ USE AT YOUR OWN RISK!&lt;p&gt;
 <technology name="">
 <attribute name="DISTRIBUTOR" value="" constant="no"/>
 <attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
 <attribute name="UNIT_PRICE" value="" constant="no"/>
 <attribute name="UNIT_PRICE_100X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_10X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_25X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_50X" value="" constant="no"/>
-<attribute name="PLACE_PART" value="YES" constant="no"/>
 </technology>
-
 </technologies>
 </device>
 </devices>
@@ -2287,14 +2282,13 @@ USE AT YOUR OWN RISK!&lt;p&gt;
 <technology name="">
 <attribute name="DISTRIBUTOR" value="" constant="no"/>
 <attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
 <attribute name="UNIT_PRICE" value="" constant="no"/>
 <attribute name="UNIT_PRICE_100X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_10X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_25X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_50X" value="" constant="no"/>
-<attribute name="PLACE_PART" value="YES" constant="no"/>
 </technology>
-
 </technologies>
 </device>
 </devices>
@@ -2456,14 +2450,13 @@ USE AT YOUR OWN RISK!&lt;p&gt;
 <technology name="">
 <attribute name="DISTRIBUTOR" value="" constant="no"/>
 <attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
 <attribute name="UNIT_PRICE" value="" constant="no"/>
 <attribute name="UNIT_PRICE_100X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_10X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_25X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_50X" value="" constant="no"/>
-<attribute name="PLACE_PART" value="YES" constant="no"/>
 </technology>
-
 </technologies>
 </device>
 </devices>
@@ -2529,14 +2522,13 @@ USE AT YOUR OWN RISK!&lt;p&gt;
 <technology name="">
 <attribute name="DISTRIBUTOR" value="" constant="no"/>
 <attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
 <attribute name="UNIT_PRICE" value="" constant="no"/>
 <attribute name="UNIT_PRICE_100X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_10X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_25X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_50X" value="" constant="no"/>
-<attribute name="PLACE_PART" value="YES" constant="no"/>
 </technology>
-
 </technologies>
 </device>
 </devices>
@@ -2618,14 +2610,13 @@ USE AT YOUR OWN RISK!&lt;p&gt;
 <technology name="">
 <attribute name="DISTRIBUTOR" value="" constant="no"/>
 <attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
 <attribute name="UNIT_PRICE" value="" constant="no"/>
 <attribute name="UNIT_PRICE_100X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_10X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_25X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_50X" value="" constant="no"/>
-<attribute name="PLACE_PART" value="YES" constant="no"/>
 </technology>
-
 </technologies>
 </device>
 </devices>
@@ -2691,14 +2682,13 @@ USE AT YOUR OWN RISK!&lt;p&gt;
 <technology name="">
 <attribute name="DISTRIBUTOR" value="" constant="no"/>
 <attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
 <attribute name="UNIT_PRICE" value="" constant="no"/>
 <attribute name="UNIT_PRICE_100X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_10X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_25X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_50X" value="" constant="no"/>
-<attribute name="PLACE_PART" value="YES" constant="no"/>
 </technology>
-
 </technologies>
 </device>
 </devices>

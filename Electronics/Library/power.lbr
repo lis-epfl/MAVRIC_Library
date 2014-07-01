@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -493,11 +493,11 @@ Basic small signal diode good up to 200mA. SMB footprint. Common part #: BAS16</
 <attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
 <attribute name="ORDER_CODE" value="LM2734ZMK/NOPBCT-ND" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+<attribute name="UNIT_PRICE" value="2.83" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="2.0705" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="2.532" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="2.2764" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="2.2764" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -530,11 +530,11 @@ Basic small signal diode good up to 200mA. SMB footprint. Common part #: BAS16</
 <attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
 <attribute name="ORDER_CODE" value="445-4847-1-ND" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+<attribute name="UNIT_PRICE" value="0.36" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="0.2423" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="0.323" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="0.323" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="0.2624" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -556,11 +556,11 @@ Basic small signal diode good up to 200mA. SMB footprint. Common part #: BAS16</
 <attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
 <attribute name="ORDER_CODE" value="MC78L05ACHXCT-ND" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+<attribute name="UNIT_PRICE" value="0.41" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="0.2236" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="0.325" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="0.2744" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="0.2744" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -584,11 +584,11 @@ Basic small signal diode good up to 200mA. SMB footprint. Common part #: BAS16</
 <attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
 <attribute name="ORDER_CODE" value="576-2784-1-ND" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+<attribute name="UNIT_PRICE" value="0.9" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="0.6387" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="0.804" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="0.7096" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="0.7096" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -647,11 +647,11 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
 <attribute name="ORDER_CODE" value="568-4128-1-ND" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+<attribute name="UNIT_PRICE" value="0.36" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="0.1907" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="0.277" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="0.234" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="0.234" constant="no"/>
 </technology>
 </technologies>
 </device>

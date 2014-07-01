@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -1036,10 +1036,6 @@ Header as used for the MicroIMU with UART, Programming and full SPI interface. A
 <wire x1="4.375" y1="1.625" x2="4.625" y2="1.625" width="0.0508" layer="21"/>
 <wire x1="4.625" y1="1.625" x2="5.125" y2="1.625" width="0.0508" layer="21"/>
 <wire x1="4.375" y1="1.625" x2="4.375" y2="1" width="0.0508" layer="21"/>
-<wire x1="-5.125" y1="-0.75" x2="-4.625" y2="-0.75" width="0.0508" layer="21"/>
-<wire x1="-4.625" y1="-0.75" x2="-4.625" y2="-1.375" width="0.0508" layer="21"/>
-<wire x1="4.625" y1="-0.75" x2="5.125" y2="-0.75" width="0.0508" layer="21"/>
-<wire x1="4.625" y1="-0.75" x2="4.625" y2="-1.375" width="0.0508" layer="21"/>
 <wire x1="-4.625" y1="1.625" x2="-4.625" y2="2.25" width="0.0508" layer="21"/>
 <wire x1="-4.625" y1="2.25" x2="4.625" y2="2.25" width="0.0508" layer="21"/>
 <wire x1="4.625" y1="2.25" x2="4.625" y2="1.625" width="0.0508" layer="21"/>
@@ -1072,13 +1068,13 @@ Header as used for the MicroIMU with UART, Programming and full SPI interface. A
 <wire x1="5.25" y1="-0.75" x2="7.125" y2="-0.75" width="0.2032" layer="51"/>
 <wire x1="7.125" y1="-0.75" x2="7.125" y2="2.25" width="0.2032" layer="51"/>
 <wire x1="7.125" y1="2.25" x2="5.25" y2="2.25" width="0.2032" layer="51"/>
-<smd name="1" x="3.75" y="-2.5" dx="0.8" dy="2" layer="1"/>
-<smd name="2" x="2.5" y="-2.5" dx="0.8" dy="2" layer="1"/>
-<smd name="3" x="1.25" y="-2.5" dx="0.8" dy="2" layer="1"/>
-<smd name="4" x="0" y="-2.5" dx="0.8" dy="2" layer="1"/>
-<smd name="5" x="-1.25" y="-2.5" dx="0.8" dy="2" layer="1"/>
-<smd name="6" x="-2.5" y="-2.5" dx="0.8" dy="2" layer="1"/>
-<smd name="7" x="-3.75" y="-2.5" dx="0.8" dy="2" layer="1"/>
+<smd name="1" x="3.75" y="-2" dx="0.8" dy="2" layer="1"/>
+<smd name="2" x="2.5" y="-2" dx="0.8" dy="2" layer="1"/>
+<smd name="3" x="1.25" y="-2" dx="0.8" dy="2" layer="1"/>
+<smd name="4" x="0" y="-2" dx="0.8" dy="2" layer="1"/>
+<smd name="5" x="-1.25" y="-2" dx="0.8" dy="2" layer="1"/>
+<smd name="6" x="-2.5" y="-2" dx="0.8" dy="2" layer="1"/>
+<smd name="7" x="-3.75" y="-2" dx="0.8" dy="2" layer="1"/>
 <smd name="S1" x="6.25" y="0.625" dx="2.1" dy="3" layer="1"/>
 <smd name="S2" x="-6.25" y="0.625" dx="2.1" dy="3" layer="1"/>
 <text x="-5" y="2.875" size="1.27" layer="25">&gt;NAME</text>
@@ -1161,16 +1157,16 @@ Header as used for the MicroIMU with UART, Programming and full SPI interface. A
 <rectangle x1="4.75" y1="0.4" x2="5.25" y2="1.275" layer="21"/>
 </package>
 <package name="MOLEX_CONNECTOR_10PINS">
-<smd name="P$1" x="-11.65" y="-0.65" dx="1.3" dy="0.8" layer="1" rot="R90"/>
-<smd name="P$2" x="-10.4" y="-0.65" dx="1.3" dy="0.8" layer="1" rot="R90"/>
-<smd name="P$3" x="-9.15" y="-0.65" dx="1.3" dy="0.8" layer="1" rot="R90"/>
-<smd name="P$4" x="-7.9" y="-0.65" dx="1.3" dy="0.8" layer="1" rot="R90"/>
-<smd name="P$5" x="-6.65" y="-0.65" dx="1.3" dy="0.8" layer="1" rot="R90"/>
-<smd name="P$6" x="-5.4" y="-0.65" dx="1.3" dy="0.8" layer="1" rot="R90"/>
-<smd name="P$7" x="-4.15" y="-0.65" dx="1.3" dy="0.8" layer="1" rot="R90"/>
-<smd name="P$8" x="-2.9" y="-0.65" dx="1.3" dy="0.8" layer="1" rot="R90"/>
-<smd name="P$9" x="-1.65" y="-0.65" dx="1.3" dy="0.8" layer="1" rot="R90"/>
-<smd name="P$10" x="-0.4" y="-0.65" dx="1.3" dy="0.8" layer="1" rot="R90"/>
+<smd name="P$1" x="-11.65" y="-0.65" dx="2" dy="0.8" layer="1" rot="R90"/>
+<smd name="P$2" x="-10.4" y="-0.65" dx="2" dy="0.8" layer="1" rot="R90"/>
+<smd name="P$3" x="-9.15" y="-0.65" dx="2" dy="0.8" layer="1" rot="R90"/>
+<smd name="P$4" x="-7.9" y="-0.65" dx="2" dy="0.8" layer="1" rot="R90"/>
+<smd name="P$5" x="-6.65" y="-0.65" dx="2" dy="0.8" layer="1" rot="R90"/>
+<smd name="P$6" x="-5.4" y="-0.65" dx="2" dy="0.8" layer="1" rot="R90"/>
+<smd name="P$7" x="-4.15" y="-0.65" dx="2" dy="0.8" layer="1" rot="R90"/>
+<smd name="P$8" x="-2.9" y="-0.65" dx="2" dy="0.8" layer="1" rot="R90"/>
+<smd name="P$9" x="-1.65" y="-0.65" dx="2" dy="0.8" layer="1" rot="R90"/>
+<smd name="P$10" x="-0.4" y="-0.65" dx="2" dy="0.8" layer="1" rot="R90"/>
 <smd name="P$11" x="-14.2" y="-3.4" dx="3" dy="2.1" layer="1" rot="R90"/>
 <smd name="P$12" x="2.15" y="-3.4" dx="3" dy="2.1" layer="1" rot="R90"/>
 </package>
@@ -1489,13 +1485,13 @@ Header as used for the MicroIMU with UART, Programming and full SPI interface. A
 <smd name="P$2" x="0.5" y="0" dx="1" dy="0.75" layer="1" rot="R90"/>
 </package>
 <package name="MOLEX_CONNECTOR_5_PINS_VERTICAL">
-<wire x1="-3.98" y1="-2.645" x2="3.355" y2="-2.645" width="0.2032" layer="21"/>
-<wire x1="3.355" y1="-2.645" x2="3.88" y2="-2.645" width="0.2032" layer="21"/>
-<wire x1="3.88" y1="-2.645" x2="3.88" y2="1.355" width="0.2032" layer="21"/>
-<wire x1="3.88" y1="1.355" x2="3.73" y2="1.355" width="0.2032" layer="21"/>
+<wire x1="-4" y1="-2.645" x2="3.355" y2="-2.645" width="0.2032" layer="21"/>
+<wire x1="3.355" y1="-2.645" x2="4" y2="-2.645" width="0.2032" layer="21"/>
+<wire x1="4" y1="-2.645" x2="4" y2="1.355" width="0.2032" layer="21"/>
+<wire x1="4" y1="1.355" x2="3.73" y2="1.355" width="0.2032" layer="21"/>
 <wire x1="3.73" y1="1.355" x2="-3.93" y2="1.355" width="0.2032" layer="21"/>
-<wire x1="-3.93" y1="1.355" x2="-3.98" y2="1.355" width="0.2032" layer="21"/>
-<wire x1="-3.98" y1="1.355" x2="-3.98" y2="-2.645" width="0.2032" layer="21"/>
+<wire x1="-3.93" y1="1.355" x2="-4" y2="1.355" width="0.2032" layer="21"/>
+<wire x1="-4" y1="1.355" x2="-4" y2="-2.645" width="0.2032" layer="21"/>
 <wire x1="-3.895" y1="0.355" x2="-3.495" y2="0.355" width="0.0508" layer="21"/>
 <wire x1="-3.495" y1="0.355" x2="-3.145" y2="0.355" width="0.0508" layer="21"/>
 <wire x1="-3.145" y1="0.355" x2="-3.145" y2="-0.27" width="0.0508" layer="21"/>
@@ -1503,16 +1499,12 @@ Header as used for the MicroIMU with UART, Programming and full SPI interface. A
 <wire x1="3.105" y1="0.355" x2="3.355" y2="0.355" width="0.0508" layer="21"/>
 <wire x1="3.355" y1="0.355" x2="3.855" y2="0.355" width="0.0508" layer="21"/>
 <wire x1="3.105" y1="0.355" x2="3.105" y2="-0.27" width="0.0508" layer="21"/>
-<wire x1="3.355" y1="-2.02" x2="3.855" y2="-2.02" width="0.0508" layer="21"/>
-<wire x1="3.355" y1="-2.02" x2="3.355" y2="-2.645" width="0.0508" layer="21"/>
 <wire x1="-3.495" y1="0.355" x2="-3.495" y2="0.98" width="0.0508" layer="21"/>
 <wire x1="-3.495" y1="0.98" x2="3.355" y2="0.98" width="0.0508" layer="21"/>
 <wire x1="3.355" y1="0.98" x2="3.355" y2="0.355" width="0.0508" layer="21"/>
 <wire x1="-3.495" y1="0.98" x2="-3.93" y2="1.355" width="0.0508" layer="21"/>
 <wire x1="3.355" y1="0.98" x2="3.73" y2="1.355" width="0.0508" layer="21"/>
 <wire x1="-4.02" y1="-2.52" x2="-4.02" y2="-2.02" width="0.0508" layer="21"/>
-<wire x1="-4.02" y1="-2.02" x2="-3.52" y2="-2.02" width="0.0508" layer="21"/>
-<wire x1="-3.52" y1="-2.02" x2="-3.52" y2="-2.52" width="0.0508" layer="21"/>
 <wire x1="-2.77" y1="-2.52" x2="-2.77" y2="-2.02" width="0.0508" layer="21"/>
 <wire x1="-2.77" y1="-2.02" x2="-2.27" y2="-2.02" width="0.0508" layer="21"/>
 <wire x1="-2.27" y1="-2.02" x2="-2.27" y2="-2.52" width="0.0508" layer="21"/>
@@ -1528,22 +1520,22 @@ Header as used for the MicroIMU with UART, Programming and full SPI interface. A
 <wire x1="2.23" y1="-2.52" x2="2.23" y2="-2.02" width="0.0508" layer="21"/>
 <wire x1="2.23" y1="-2.02" x2="2.73" y2="-2.02" width="0.0508" layer="21"/>
 <wire x1="2.73" y1="-2.02" x2="2.73" y2="-2.52" width="0.0508" layer="21"/>
-<wire x1="-4.02" y1="0.98" x2="-6.195" y2="0.98" width="0.2032" layer="51"/>
-<wire x1="-6.195" y1="0.98" x2="-6.195" y2="-2.22" width="0.2032" layer="51"/>
-<wire x1="-6.195" y1="-2.22" x2="-4.02" y2="-2.22" width="0.2032" layer="51"/>
-<wire x1="3.98" y1="-2.22" x2="5.855" y2="-2.22" width="0.2032" layer="51"/>
-<wire x1="5.855" y1="-2.22" x2="5.855" y2="0.98" width="0.2032" layer="51"/>
-<wire x1="5.855" y1="0.98" x2="3.98" y2="0.98" width="0.2032" layer="51"/>
-<smd name="1" x="2.48" y="-2.57" dx="0.8" dy="2" layer="1"/>
-<smd name="2" x="1.23" y="-2.57" dx="0.8" dy="2" layer="1"/>
-<smd name="3" x="-0.02" y="-2.57" dx="0.8" dy="2" layer="1"/>
-<smd name="4" x="-1.27" y="-2.57" dx="0.8" dy="2" layer="1"/>
-<smd name="5" x="-2.52" y="-2.57" dx="0.8" dy="2" layer="1"/>
-<smd name="S1" x="4.98" y="-0.645" dx="2.1" dy="3" layer="1"/>
-<smd name="S2B" x="-5" y="-0.645" dx="2.1" dy="3" layer="1"/>
+<wire x1="-4.02" y1="0.98" x2="-5.5" y2="0.98" width="0.2032" layer="51"/>
+<wire x1="-5.5" y1="0.98" x2="-5.5" y2="-2.22" width="0.2032" layer="51"/>
+<wire x1="-5.5" y1="-2.22" x2="-4.02" y2="-2.22" width="0.2032" layer="51"/>
+<wire x1="3.98" y1="-2.22" x2="5.5" y2="-2.22" width="0.2032" layer="51"/>
+<wire x1="5.5" y1="-2.22" x2="5.5" y2="0.98" width="0.2032" layer="51"/>
+<wire x1="5.5" y1="0.98" x2="3.98" y2="0.98" width="0.2032" layer="51"/>
+<smd name="1" x="2.5" y="-2.82" dx="0.8" dy="2" layer="1"/>
+<smd name="2" x="1.25" y="-2.82" dx="0.8" dy="2" layer="1"/>
+<smd name="3" x="0" y="-2.82" dx="0.8" dy="2" layer="1"/>
+<smd name="4" x="-1.25" y="-2.82" dx="0.8" dy="2" layer="1"/>
+<smd name="5" x="-2.5" y="-2.82" dx="0.8" dy="2" layer="1"/>
+<smd name="S1" x="5" y="-0.25" dx="2.1" dy="3" layer="1"/>
+<smd name="S2B" x="-5" y="-0.25" dx="2.1" dy="3" layer="1"/>
 <text x="-6.27" y="1.605" size="1.27" layer="25">&gt;NAME</text>
 <text x="-3.895" y="-1.77" size="1.27" layer="27">&gt;VALUE</text>
-<text x="4.48" y="-1.52" size="1.9304" layer="51">1</text>
+<text x="3.98" y="-1.52" size="1.9304" layer="51">1</text>
 <rectangle x1="-2.77" y1="-0.27" x2="-2.27" y2="0.605" layer="21"/>
 <rectangle x1="-1.52" y1="-0.27" x2="-1.02" y2="0.605" layer="21"/>
 <rectangle x1="-0.27" y1="-0.27" x2="0.23" y2="0.605" layer="21"/>
@@ -3002,8 +2994,8 @@ Header as used for the MicroIMU with UART, Programming and full SPI interface. A
 </symbol>
 <symbol name="APM2.5_GPS_HEADER">
 <pin name="VCC" x="-10.16" y="5.08" length="middle"/>
-<pin name="TXD" x="-10.16" y="2.54" length="middle"/>
-<pin name="RXD" x="-10.16" y="0" length="middle"/>
+<pin name="RXD" x="-10.16" y="2.54" length="middle"/>
+<pin name="TXD" x="-10.16" y="0" length="middle"/>
 <pin name="PPS" x="-10.16" y="-2.54" length="middle"/>
 <pin name="GND" x="-10.16" y="-5.08" length="middle"/>
 <wire x1="-5.08" y1="7.62" x2="-5.08" y2="-7.62" width="0.254" layer="94"/>
@@ -3488,14 +3480,14 @@ Farnell #:
 </connects>
 <technologies>
 <technology name="">
-<attribute name="DISTRIBUTOR" value="" constant="no"/>
-<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="DISTRIBUTOR" value="Mouser" constant="no"/>
+<attribute name="ORDER_CODE" value="653-XG8S-0231" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+<attribute name="UNIT_PRICE" value="0.096" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="0.072" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="0.096" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="0.088" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="0.08" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -4006,14 +3998,14 @@ Farnell #:
 </connects>
 <technologies>
 <technology name="">
-<attribute name="DISTRIBUTOR" value="" constant="no"/>
-<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
+<attribute name="ORDER_CODE" value="455-1658-ND" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+<attribute name="UNIT_PRICE" value="0.14" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="0.0895" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="0.129" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="0.129" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="0.0962" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -4352,11 +4344,11 @@ Farnell #:
 <attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
 <attribute name="ORDER_CODE" value="WM7625CT-ND" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+<attribute name="UNIT_PRICE" value="1.28" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="0.9673" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="1.121" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="1.0552" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="1.0112" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -4409,11 +4401,11 @@ Farnell #:
 <attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
 <attribute name="ORDER_CODE" value="WM7628CT-ND" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+<attribute name="UNIT_PRICE" value="1.74" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="1.3578" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="1.584" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="1.4868" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="1.4224" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -4562,14 +4554,14 @@ Farnell #:
 </connects>
 <technologies>
 <technology name="">
-<attribute name="DISTRIBUTOR" value="" constant="no"/>
-<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
+<attribute name="ORDER_CODE" value="WM7628CT-ND" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+<attribute name="UNIT_PRICE" value="1.74" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="1.3578" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="1.584" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="1.4868" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="1.4224" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -4637,14 +4629,14 @@ Farnell #:
 </connects>
 <technologies>
 <technology name="">
-<attribute name="DISTRIBUTOR" value="" constant="no"/>
-<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
+<attribute name="ORDER_CODE" value="WM7609CT-ND" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+<attribute name="UNIT_PRICE" value="1.28" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="0.9771" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="1.132" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="1.0656" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="1.0214" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -4834,8 +4826,8 @@ Farnell #:
 <connects>
 <connect gate="G$1" pin="GND" pad="5"/>
 <connect gate="G$1" pin="PPS" pad="4"/>
-<connect gate="G$1" pin="RXD" pad="3"/>
-<connect gate="G$1" pin="TXD" pad="2"/>
+<connect gate="G$1" pin="RXD" pad="2"/>
+<connect gate="G$1" pin="TXD" pad="3"/>
 <connect gate="G$1" pin="VCC" pad="1"/>
 </connects>
 <technologies>
@@ -4855,20 +4847,20 @@ Farnell #:
 <connects>
 <connect gate="G$1" pin="GND" pad="5"/>
 <connect gate="G$1" pin="PPS" pad="4"/>
-<connect gate="G$1" pin="RXD" pad="3"/>
-<connect gate="G$1" pin="TXD" pad="2"/>
+<connect gate="G$1" pin="RXD" pad="2"/>
+<connect gate="G$1" pin="TXD" pad="3"/>
 <connect gate="G$1" pin="VCC" pad="1"/>
 </connects>
 <technologies>
 <technology name="">
-<attribute name="DISTRIBUTOR" value="" constant="no"/>
-<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
+<attribute name="ORDER_CODE" value="WM7609CT-ND" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+<attribute name="UNIT_PRICE" value="1.28" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="0.9771" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="1.132" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="1.0656" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="1.0214" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -4876,8 +4868,8 @@ Farnell #:
 <connects>
 <connect gate="G$1" pin="GND" pad="5"/>
 <connect gate="G$1" pin="PPS" pad="4"/>
-<connect gate="G$1" pin="RXD" pad="3"/>
-<connect gate="G$1" pin="TXD" pad="2"/>
+<connect gate="G$1" pin="RXD" pad="2"/>
+<connect gate="G$1" pin="TXD" pad="3"/>
 <connect gate="G$1" pin="VCC" pad="1"/>
 </connects>
 <technologies>
@@ -4897,8 +4889,8 @@ Farnell #:
 <connects>
 <connect gate="G$1" pin="GND" pad="5"/>
 <connect gate="G$1" pin="PPS" pad="4"/>
-<connect gate="G$1" pin="RXD" pad="3"/>
-<connect gate="G$1" pin="TXD" pad="2"/>
+<connect gate="G$1" pin="RXD" pad="2"/>
+<connect gate="G$1" pin="TXD" pad="3"/>
 <connect gate="G$1" pin="VCC" pad="1"/>
 </connects>
 <technologies>
@@ -4971,11 +4963,11 @@ Push-push type uSD socket. Schematic element and footprint production proven. Sp
 <attribute name="DISTRIBUTOR" value="Mouser" constant="no"/>
 <attribute name="ORDER_CODE" value="517-2908-05WB-MG" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+<attribute name="UNIT_PRICE" value="1.94" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="1.42" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="1.94" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="1.74" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="1.6" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -5011,14 +5003,14 @@ Push-push type uSD socket. Schematic element and footprint production proven. Sp
 </connects>
 <technologies>
 <technology name="">
-<attribute name="DISTRIBUTOR" value="" constant="no"/>
-<attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="DISTRIBUTOR" value="Mouser" constant="no"/>
+<attribute name="ORDER_CODE" value="855-M22-7131042" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+<attribute name="UNIT_PRICE" value="1.23" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="0.957" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="1.01" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="1.01" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="1.01" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -5437,11 +5429,11 @@ Push-push type uSD socket. Schematic element and footprint production proven. Sp
 <attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
 <attribute name="ORDER_CODE" value="609-4613-1-ND" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
+<attribute name="UNIT_PRICE" value="0.37" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="0.2449" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="0.35" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="0.2996" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="0.2548" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -5498,6 +5490,11 @@ Push-push type uSD socket. Schematic element and footprint production proven. Sp
 <attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
 <attribute name="ORDER_CODE" value="450-1140-ND" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="0.19" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="0.1606" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="0.183" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="0.1764" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="0.17" constant="no"/>
 </technology>
 </technologies>
 </device>

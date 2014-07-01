@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.4">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -182,14 +182,13 @@
 <technology name="">
 <attribute name="DISTRIBUTOR" value="" constant="no"/>
 <attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
 <attribute name="UNIT_PRICE" value="" constant="no"/>
 <attribute name="UNIT_PRICE_100X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_10X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_25X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_50X" value="" constant="no"/>
-<attribute name="PLACE_PART" value="YES" constant="no"/>
 </technology>
-
 </technologies>
 </device>
 </devices>
@@ -208,14 +207,13 @@
 <technology name="">
 <attribute name="DISTRIBUTOR" value="Digikey" constant="no"/>
 <attribute name="ORDER_CODE" value="535-9840-1-ND" constant="no"/>
-<attribute name="UNIT_PRICE" value="" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
+<attribute name="UNIT_PRICE" value="0.78" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="0.5653" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="0.684" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="0.684" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="0.6388" constant="no"/>
 </technology>
-
 </technologies>
 </device>
 <device name="THROUGHHOLE" package="HC49U-V">
@@ -227,14 +225,13 @@
 <technology name="">
 <attribute name="DISTRIBUTOR" value="" constant="no"/>
 <attribute name="ORDER_CODE" value="" constant="no"/>
+<attribute name="PLACE_PART" value="YES" constant="no"/>
 <attribute name="UNIT_PRICE" value="" constant="no"/>
 <attribute name="UNIT_PRICE_100X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_10X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_25X" value="" constant="no"/>
 <attribute name="UNIT_PRICE_50X" value="" constant="no"/>
-<attribute name="PLACE_PART" value="YES" constant="no"/>
 </technology>
-
 </technologies>
 </device>
 </devices>
