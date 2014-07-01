@@ -260,8 +260,6 @@
     <File Name="src/tasks.h"/>
     <File Name="src/tasks.c"/>
     <File Name="src/mavlink_actions.h"/>
-    <File Name="src/rectangle.hpp"/>
-    <File Name="src/rectangle.cpp"/>
     <File Name="src/main.cpp"/>
     <File Name="src/central_data.c"/>
     <File Name="Library/Makefile"/>

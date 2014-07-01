@@ -16,9 +16,8 @@ extern "C" {
 	#include "print_util.h"
 	#include "central_data.h"
 	#include "boardsupport.h"
-	#include "navigation.h"
 	#include "tasks.h"
-	#include "orca.h"
+
 	#include "piezo_speaker.h"
 	#include "airspeed_analog.h"
 }
@@ -79,6 +78,6 @@ int main (void)
 	while (1==1) {
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
 	}
-	
+
 	return 0;
 }

@@ -27,6 +27,7 @@
 #include "simulation.h"
 #include "bmp085.h"
 #include "analog_monitor.h"
+#include "piezo_speaker.h"
 
 //static volatile board_hardware_t board_hardware;
 

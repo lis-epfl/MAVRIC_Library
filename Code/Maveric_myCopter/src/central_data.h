@@ -45,7 +45,9 @@
 
 #include "i2cxl_sonar.h"
 #include "airspeed_analog.h"
-
+#include "orca.h"
+#include "navigation.h"
+ 
 #ifdef __cplusplus
 extern "C" {
 #endif
