@@ -1,11 +1,13 @@
-/*
- * mavlink_stream.c
+/**
+ * A wrapper for mavlink to use the stream interface
  *
- * a wrapper for mavlink to use the stream interface
+ * The MAV'RIC Framework
+ * Copyright © 2011-2014
  *
- * Created: 14/02/2013 17:10:05
- *  Author: Felix, Julien, Nicolas
- */ 
+ * Laboratory of Intelligent Systems, EPFL
+ *
+ * This file is part of the MAV'RIC Framework.
+ */
 
 #include "mavlink_stream.h"
 #include "buffer.h"
@@ -25,10 +27,6 @@ central_data_t *centralData;
 
 task_set mavlink_tasks;
 
-/**
-* Send the data ch on channel chan
-* 
-*/
 void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 {
 	if (chan == MAVLINK_COMM_0)
@@ -38,23 +36,18 @@ void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 	}
 }
 
-/**
-* Receive mavlink message
-*
-*/
-void mavlink_receive_handler() {
+void mavlink_receive_handler() 
+{
 	Mavlink_Received_t rec;
 	
-	if(mavlink_receive(mavlink_in_stream, &rec)) {
+	if(mavlink_receive(mavlink_in_stream, &rec)) 
+	{
 		handle_mavlink_message(&rec);
 	}
 }
 
-/**
-* Initialization of mavlink sysid, compid and scheduler to send messages
-*
-*/
-void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream, int sysid) {
+void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream, int sysid) 
+{
 	mavlink_tasks.number_of_tasks=30;
 	
 	mavlink_system.sysid = sysid; // System ID, 1-255
@@ -75,71 +68,58 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream,
 	centralData = get_central_data();
 }
 
-/**
-* Flushing mavlink stream
-*
-*/
-void flush_mavlink() {
-	if (mavlink_out_stream->flush!=NULL) {
+void flush_mavlink() 
+{
+	if (mavlink_out_stream->flush!=NULL) 
+	{
 		//mavlink_out_stream->buffer_empty(mavlink_out_stream->data);
 		mavlink_out_stream->flush(mavlink_out_stream->data);	
-	
 	}
 }
 
-/**
-* run task scheduler update if the buffer if we are not sending messages
-*
-*/
-task_return_t mavlink_protocol_update() {
+task_return_t mavlink_protocol_update() 
+{
 	task_return_t result=0;
 	mavlink_receive_handler();
-	if ((mavlink_out_stream->buffer_empty(mavlink_out_stream->data))==true) {
+	if ((mavlink_out_stream->buffer_empty(mavlink_out_stream->data))==true) 
+	{
 		result = run_scheduler_update(&mavlink_tasks, ROUND_ROBIN);
 	}
 	return result;
 }
 
-/**
-* returns a pointer to the mavlink task set
-*
-*/
-task_set* get_mavlink_taskset() {
+task_set* get_mavlink_taskset() 
+{
 	return &mavlink_tasks;
 }
 
-/**
-* Suspending sending of messages
-*
-*/
-void suspend_downstream(uint32_t delay) {
+void suspend_downstream(uint32_t delay) 
+{
 	int i;
-	for (i=0; i<mavlink_tasks.number_of_tasks; i++) {
+	for (i=0; i<mavlink_tasks.number_of_tasks; i++) 
+	{
 		suspend_task(&mavlink_tasks.tasks[i], delay);
 	}	
 }
 
-/**
-* mavlink parsing of message
-*
-*/
-uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) {
+uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) 
+{
 	uint8_t byte;
-	while(stream->bytes_available(stream->data) > 0) {
+	while(stream->bytes_available(stream->data) > 0) 
+	{
 		byte = stream->get(stream->data);
-		if(mavlink_parse_char(MAVLINK_COMM_0, byte, &rec->msg, &rec->status)) {
+		if(mavlink_parse_char(MAVLINK_COMM_0, byte, &rec->msg, &rec->status)) 
+		{
 			return 1;
 		}
 	}
 	return 0;
 }
 
-/**
-* handling specific mavlink message
-*
-*/
-void handle_mavlink_message(Mavlink_Received_t* rec) {
-	if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) {
+void handle_mavlink_message(Mavlink_Received_t* rec) 
+{
+	if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) 
+	{
 		//dbg_print("\n Received message with ID");
 		//dbg_print_num(rec->msg.msgid, 10);
 		//dbg_print(" from system");
@@ -148,8 +128,10 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 		//dbg_print_num(rec->msg.compid,10);
 		//dbg_print( "\n");
 		
-		switch(rec->msg.msgid) {
-			case MAVLINK_MSG_ID_PARAM_REQUEST_LIST: { // 21
+		switch(rec->msg.msgid) 
+		{
+			case MAVLINK_MSG_ID_PARAM_REQUEST_LIST: 
+			{ // 21
 				mavlink_param_request_list_t request;
 				mavlink_msg_param_request_list_decode(&rec->msg, &request);
 			
@@ -158,13 +140,15 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 				dbg_print("\n");
 			
 				// Check if this message is for this system
-				if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid) {
+				if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid) 
+				{
 					dbg_print("Sending all parameters \n");
 					send_all_parameters();
 				}				
 			}
 			break;
-			case MAVLINK_MSG_ID_PARAM_REQUEST_READ: { //20
+			case MAVLINK_MSG_ID_PARAM_REQUEST_READ: 
+			{ //20
 				mavlink_param_request_read_t request;
 				mavlink_msg_param_request_read_decode(&rec->msg, &request);
 				// Check if this message is for this system and subsystem
@@ -177,13 +161,15 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 				}				
 			}
 			break;
-			case MAVLINK_MSG_ID_PARAM_SET: { //23
+			case MAVLINK_MSG_ID_PARAM_SET: 
+			{ //23
 				suspend_downstream(100000);
 				receive_parameter(rec);
 			}
 			break;
 
-			case MAVLINK_MSG_ID_REQUEST_DATA_STREAM: { // 66
+			case MAVLINK_MSG_ID_REQUEST_DATA_STREAM: 
+			{ // 66
 				volatile mavlink_request_data_stream_t request;
 				mavlink_msg_request_data_stream_decode(&rec->msg, &request);
 				// TODO: control target_component == compid!
@@ -192,27 +178,35 @@ void handle_mavlink_message(Mavlink_Received_t* rec) {
 				{
 					dbg_print("stream request:");
 					dbg_print_num(request.target_component,10);
-					if (request.req_stream_id==255) {
+					if (request.req_stream_id==255) 
+					{
 						int i;
 						dbg_print("send all\n");
 						// send full list of streams
-						for (i=0; i<mavlink_tasks.number_of_tasks; i++) {
+						for (i=0; i<mavlink_tasks.number_of_tasks; i++) 
+						{
 							task_entry *task=get_task_by_index(&mavlink_tasks, i);
 							run_task_now(task);
 						}					
-					} else {
+					} 
+					else 
+					{
 						task_entry *task=get_task_by_id(&mavlink_tasks, request.req_stream_id);
 						dbg_print(" stream="); dbg_print_num(request.req_stream_id, 10);
 						dbg_print(" start_stop=");dbg_print_num(request.start_stop, 10);
 						dbg_print(" rate=");dbg_print_num(request.req_message_rate,10);
 						dbg_print("\n");
 						dbg_print("\n");
-						if (request.start_stop) {
+						if (request.start_stop) 
+						{
 							change_run_mode(task, RUN_REGULAR);
-						}else {
+						}
+						else 
+						{
 							change_run_mode(task, RUN_NEVER);
 						}
-						if (request.req_message_rate>0) {
+						if (request.req_message_rate>0) 
+						{
 							change_task_period(task, SCHEDULER_TIMEBASE/(uint32_t)request.req_message_rate);
 						}
 					}

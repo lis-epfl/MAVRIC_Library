@@ -1,9 +1,13 @@
-/*
- * onboard_parameters.h
+/**
+ * Mav'ric Onboard parameters
  *
- * Created: 19/02/2013 10:34:25
- *  Author: julien
- */ 
+ * The MAV'RIC Framework
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ *
+ * This file is part of the MAV'RIC Framework.
+ */
 
 #ifndef ONBOARD_PARAMETERS_H_
 #define ONBOARD_PARAMETERS_H_
@@ -20,27 +24,37 @@ extern "C" {
 #define MAVERIC_FLASHC_USER_PAGE_FREE_SPACE 500	// 	512bytes user page, 
 												//	-4bytes at the start, 
 												//  -8bytes for the protected fuses at the end of the user page
+												
+/**
+ * \brief	Structure of onboard parameter.
+ */
+typedef struct
+{
+	float* param;												///< Pointer to the parameter value
+	char param_name[MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN];	///< Parameter name composed of 16 characters
+	mavlink_message_type_t data_type;							///< Parameter type
+	uint8_t param_name_length;									///< Length of the parameter name
+	uint8_t param_id;											///< Parameter ID
+	bool  schedule_for_transmission;							///< Boolean to activate the transmission of the parameter
+}Onboard_Parameter_t;
 
-typedef struct {
-	float* param;
-	char param_name[MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN];
-	mavlink_message_type_t data_type;
-	uint8_t param_name_length;
-	uint8_t param_id;
-	bool  schedule_for_transmission;
-} Onboard_Parameter_t;
+/**
+ * \brief	Set of parameter composed of onboard parameters and number of parameters.
+ */
+typedef struct 
+{
+	Onboard_Parameter_t parameters[MAX_ONBOARD_PARAM_COUNT];	///< Onboard parameters array
+	uint16_t param_count;										///< Number of onboard parameter effectively in the array
+	int transmit_parameter_index;								///< Index number for ?transmitting the parameter?
+}Parameter_Set_t;											
 
-typedef struct {
-	Onboard_Parameter_t parameters[MAX_ONBOARD_PARAM_COUNT];
-	uint16_t param_count;
-	bool enumerate;
-	int transmit_parameter_index;
-	
-}Parameter_Set_t;
-
-typedef struct{
+/**
+ * \brief	TODO: Modify the name of this structure to make it sized as the flashmemory to store these parameters. GLE: CONTINUE FROM HERE
+ */															
+typedef struct												
+{
 	float values[MAVERIC_FLASHC_USER_PAGE_FREE_SPACE];
-} nvram_data_ttt;
+}nvram_data_ttt;
 
 nvram_data_ttt *nvram_array;
 

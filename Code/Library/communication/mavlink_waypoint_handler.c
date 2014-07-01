@@ -1,9 +1,13 @@
-/*
- * mavlink_waypoint_handler.c
+/**
+ * The mavlink waypoint handler
  *
- * Created: May 16 2013 17:54:34
- *  Author: Nicolas
- */ 
+ * The MAV'RIC Framework
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ *
+ * This file is part of the MAV'RIC Framework.
+ */
 
 #include "mavlink_waypoint_handler.h"
 #include "print_util.h"
@@ -14,7 +18,7 @@
 
 central_data_t *centralData;
 
-int int_loop_count = 0;
+static int int_loop_count = 0;
 
 void init_waypoint_handler()
 {

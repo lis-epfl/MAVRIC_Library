@@ -1,9 +1,13 @@
-/*
- * stabilisation.c
+/**
+ * Executing the PID controllers for stabilization
  *
- * Created: 13/11/2013 15:46:00
- *  Author: Felix Schill, Julien
- */ 
+ * The MAV'RIC Framework
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ *
+ * This file is part of the MAV'RIC Framework.
+ */
 
 #include "stabilisation.h"
 
