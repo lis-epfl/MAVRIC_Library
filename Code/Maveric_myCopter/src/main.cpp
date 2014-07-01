@@ -32,71 +32,53 @@ void initialisation() {
 	centralData = get_central_data();
 	initialise_board(centralData);
 	initialise_central_data();
-	qfInit(&(centralData->imu1.attitude), (centralData->imu1.raw_scale), (centralData->imu1.raw_bias));
 	
-	relevel_imu();
-
-	init_radar_modules();
 	dbg_print("Debug stream initialised\n");
-
-	//init_gps_ubx(engine_nav_settings);
 	
 	servos_failsafe(centralData->servos);
 	set_servos(centralData->servos);
 	
 	init_onboard_parameters();
-	init_mavlink_actions();
-	init_pos_integration(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
-	
-	initQuat(&centralData->imu1.attitude);
-	
-	init_nav();
-	init_waypoint_handler();
-	//e_init();
-	
-	init_neighbors();
-	init_orca();
-	
-	airspeed_analog_calibrate(&centralData->pitot);
 
-	LED_On(LED1);
-	init_piezo_speaker_binary();
-}
 
-int main (void)
-{
-	int i;
-	// turn on simulation mode: 1: simulation mode, 0: reality
-	centralData->simulation_mode = 0;
-	centralData->simulation_mode_previous = centralData->simulation_mode;
-	initialisation();
-		
-	create_tasks();
+	init_mavlink_actions(); // TODO: move read from flash elsewhere
+	// TODO: this second simulation init is required because we have to wait for the parameters stored on flash
+	init_simulation(&(centralData->sim_model),&(centralData->imu1),centralData->position_estimator.localPosition); // TODO: init only once
+
+	relevel_imu(); // TODO: MOVE	
+	airspeed_analog_calibrate(&centralData->pitot); // TODO: MOVE	
 
 	//reset position estimate
-	for (i=0; i<3; i++) {
+	for (int i=0; i<3; i++) {
 		// clean acceleration estimate without gravity:
 		centralData->position_estimator.vel_bf[i]=0.0;
 		centralData->position_estimator.vel[i]=0.0;
 		centralData->position_estimator.localPosition.pos[i]=0.0;
-	}
-	
-	//dbg_print("Initialise HIL Simulator...\n");
-	init_simulation(&(centralData->sim_model),&(centralData->imu1),centralData->position_estimator.localPosition);
+	} // TODO: move to module
 
-	// main loop
 	delay_ms(10);
 	dbg_print("Reset home position...\n");
 	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model.localPosition);
-	dbg_print("OK. Starting up.\n");
+	// TODO: move to module
 
-	for (i=1; i<8; i++) {
+
+	LED_On(LED1);
+		for (i=1; i<8; i++) {
 		beep(100, 500*i);
 		delay_ms(2);
 	}
+	dbg_print("OK. Starting up.\n");
+}
+
+int main (void)
+{
+	initialisation();
+		
+	create_tasks();
 	
 	while (1==1) {
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
 	}
+	
 	return 0;
 }

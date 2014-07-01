@@ -27,7 +27,19 @@ void initialise_central_data(){
 		set_servos(centralData.servos);
 
 		init_imu(&centralData.imu1);
+		qfInit(&(centralData.imu1.attitude), (centralData.imu1.raw_scale), (centralData.imu1.raw_bias));
 		
+		init_pos_integration(&centralData.position_estimator, &centralData.pressure, &centralData.GPS_data);
+	
+		initQuat(&centralData.imu1.attitude);
+		
+		init_nav();
+		init_waypoint_handler();
+		//e_init();
+		
+		init_neighbors();
+		init_orca();
+
 		// init controls
 		centralData.controls.rpy[ROLL]=0;
 		centralData.controls.rpy[PITCH]=0;

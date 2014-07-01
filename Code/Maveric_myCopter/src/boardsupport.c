@@ -136,5 +136,8 @@ void initialise_board(central_data_t *centralData) {
 	gpio_set_gpio_pin(AVR32_PIN_PA04);
 	
 	Enable_global_interrupt();
+
+	init_piezo_speaker_binary();
+	
 	dbg_print("Board initialised.\n");
 }
