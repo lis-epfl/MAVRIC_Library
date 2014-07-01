@@ -47,7 +47,7 @@
 #include "airspeed_analog.h"
 #include "orca.h"
 #include "navigation.h"
- 
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -136,11 +136,6 @@ void initialise_central_data(void);
 
 central_data_t* get_central_data(void);
 
-byte_stream_t* get_telemetry_upstream(void);
-byte_stream_t* get_telemetry_downstream(void);
-
-Imu_Data_t* get_imu_data(void);
-Control_Command_t* get_control_inputs_data(void);
 
 #define STDOUT &get_debug_stream()
 

@@ -23,9 +23,11 @@ void initialise_central_data(){
 			centralData.servos[i].max = 600;
 			centralData.servos[i].failsafe_position = -600;
 		}
+		
 		servos_failsafe(centralData.servos);
 		set_servos(centralData.servos);
 
+		// TODO change names! XXX_init()
 		init_imu(&centralData.imu1);
 		qfInit(&(centralData.imu1.attitude), (centralData.imu1.raw_scale), (centralData.imu1.raw_bias));
 		
@@ -40,7 +42,14 @@ void initialise_central_data(){
 		init_neighbors();
 		init_orca();
 
+		// init stabilisers
+		init_stabilisation_copter(&centralData.stabiliser_stack);
+
+		// init simulation (should be done after position_estimator)
+		init_simulation(&(centralData.sim_model),&(centralData.imu1),centralData.position_estimator.localPosition);		
+
 		// init controls
+		// TODO: move to a module
 		centralData.controls.rpy[ROLL]=0;
 		centralData.controls.rpy[PITCH]=0;
 		centralData.controls.rpy[YAW]=0;
@@ -51,13 +60,14 @@ void initialise_central_data(){
 		
 		centralData.run_mode = MOTORS_OFF;
 		
-		// init stabilisers
-		init_stabilisation_copter(&centralData.stabiliser_stack);
 
 		centralData.simulation_mode=0;
 		centralData.simulation_mode_previous = 0;
 
 		// init waypoint navigation
+		// TODO: move to 
+		// waypoint_handler_init(&centralData.waypoint_handler);
+		// centralData.waypoint_handler.number_of_waypoints= ...
 		centralData.number_of_waypoints = 0;		
 		centralData.waypoint_set = false;
 		centralData.waypoint_sending = false;
@@ -73,6 +83,7 @@ void initialise_central_data(){
 		centralData.number_of_neighbors = 0;
 		
 		// default GPS home position
+		// TODO: move to position_estimator_init();
 		centralData.position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;
 		centralData.position_estimator.localPosition.origin.latitude =   HOME_LATITUDE;
 		centralData.position_estimator.localPosition.origin.altitude =   HOME_ALTITUDE;
@@ -80,10 +91,10 @@ void initialise_central_data(){
 		centralData.position_estimator.localPosition.pos[Y]=0;
 		centralData.position_estimator.localPosition.pos[Z]=0;
 
-		// init simulation
-		init_simulation(&(centralData.sim_model),&(centralData.imu1),centralData.position_estimator.localPosition);
+
 		//centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
 
+		// TODO: move to navigation_init()
 		centralData.dist2vel_gain = 0.7;
 		centralData.cruise_speed = 3.0;
 		centralData.max_climb_rate = 1.0;
@@ -93,24 +104,10 @@ void initialise_central_data(){
 		// i2cxl_sonar_init(&centralData.i2cxl_sonar);
 
 		// Init pitot tube
-		airspeed_analog_init(&centralData.pitot, &centralData.adc, ANALOG_RAIL_12);
+		// airspeed_analog_init(&centralData.pitot, &centralData.adc, ANALOG_RAIL_12);
 }
 
 central_data_t* get_central_data(void)
 {
 	return &centralData;
-}
-
-byte_stream_t* get_telemetry_upstream() {
-	return centralData.telemetry_up_stream;
-}
-byte_stream_t* get_telemetry_downstream() {
-	return centralData.telemetry_down_stream;
-}
-
-Imu_Data_t* get_imu_data() {
-	return &centralData.imu1;
-}
-Control_Command_t* get_control_inputs_data() {
-	return &centralData.controls;
 }
