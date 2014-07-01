@@ -1,19 +1,23 @@
-/*
- * neighbor_selection.h
+/**
+ * This file decodes the message from the neighbors and computes the relative position and velocity in local coordinates
  *
- *  Created: 30.10.2013 09:40:13
- *  Author: ndousse
- */ 
+ * The MAV'RIC Framework
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ *
+ * This file is part of the MAV'RIC Framework.
+ */
 
 
 #ifndef NEIGHBOR_SEL_H__
 #define NEIGHBOR_SEL_H__
 
-#include "mavlink_stream.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include "mavlink_stream.h"
 
 #define MAX_NUM_NEIGHBORS 15
 
@@ -25,18 +29,40 @@ extern "C" {
 #define NEIGHBOR_TIMEOUT_LIMIT_MS 2000
 
 typedef struct  {
-	uint8_t neighborID;
-	float position[3];
-	float velocity[3];
-	float size;
-	uint32_t time_msg_received;
-	float extrapolatedPosition[3];
-}track_neighbor_t;
+	uint8_t neighborID;					///< The mavlink ID of the vehicle
+	float position[3];					///< The 3D position of the neighbor in m
+	float velocity[3];					///< The 3D velocity of the neighbor in m/s
+	float size;							///< The physical size of the neighbor in m
+	uint32_t time_msg_received;			///< The time at which the message was received in ms
+	float extrapolatedPosition[3];		///< The 3D position of the neighbor
+}track_neighbor_t;						///< The structure of information about a neighbor 
 
+/**
+ * \brief	Initialize the neighbor selection module
+ *
+ * \param	void
+ *
+ * \return	void
+ */
 void init_neighbors(void);
 
+/**
+ * \brief	Decode the message and parse to the neighbor array
+ *
+ * \param	rec		the pointer to the mavlink message
+ *
+ * \return	void
+ */
 void read_msg_from_neighbors(Mavlink_Received_t* rec);
 
+/**
+ * \brief	Extrapolate the position of each UAS bewteen two messages, deletes the message if time elapsed too long from last message
+ *
+ * \param	listNeighbors			the array of all neighbors
+ * \param	number_of_neighbors		the pointer to the number of neighbors
+ *
+ * \return	void
+ */
 void extrapolate_or_delete_position(track_neighbor_t listNeighbors[], uint8_t* number_of_neighbors);
 
 #ifdef __cplusplus

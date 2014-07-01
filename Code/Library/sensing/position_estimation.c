@@ -1,10 +1,13 @@
-/*
-* position_estimation.c
-*
-* Created: 05.09.2013 17:47:51
-*  Author: ndousse
-*/
-
+/**
+ * This file performs the 3D position estimation, either by direct integration or with correction with the GPS and barometer
+ *
+ * The MAV'RIC Framework
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ *
+ * This file is part of the MAV'RIC Framework.
+ */
 
 #include "position_estimation.h"
 #include "qfilter.h"
@@ -16,7 +19,24 @@
 #include "time_keeper.h"
 #include "conf_sim_model.h"
 
+/**
+ * \brief	Initialization of the position estimation from the GPS position
+ *
+ * \param	pos_est			The pointer to the position estimation structure
+ * \param	gps				The pointer to the GPS structure
+ *
+ * \return	void
+ */
 void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps);
+
+/**
+ * \brief	Initialization of the barometer offset
+ *
+ * \param	pos_est			The pointer to the position estimation structure
+ * \param	barometer		The pointer to the barometer structure
+ *
+ * \return	void
+ */
 void init_barometer_offset(position_estimator_t *pos_est, pressure_data *barometer);
 
 
@@ -98,7 +118,8 @@ void position_reset_home_altitude(position_estimator_t *pos_est, pressure_data *
 {
 		int i;
 		// reset origin to position where quad is armed if we have GPS
-		if (pos_est->init_gps_position) {
+		if (pos_est->init_gps_position)
+		{
 			pos_est->localPosition.origin.longitude = gps->longitude;
 			pos_est->localPosition.origin.latitude = gps->latitude;
 			pos_est->localPosition.origin.altitude = gps->altitude;
@@ -153,7 +174,8 @@ void position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitu
 	qvel.s=0;
 	for (i=0; i<3; i++) qvel.v[i]=pos_est->vel[i];
 	qvel_bf=quat_global_to_local(attitude->qe, qvel);
-	for (i=0; i<3; i++) {
+	for (i=0; i<3; i++)
+	{
 		pos_est->vel_bf[i]=qvel_bf.v[i];
 		// clean acceleration estimate without gravity:
 		attitude->acc_bf[i]=GRAVITY * (attitude->a[i] - attitude->up_vec.v[i]) ;
@@ -166,7 +188,8 @@ void position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitu
 	qvel = quat_local_to_global(attitude->qe, qvel_bf);
 	pos_est->vel[0]=qvel.v[0]; pos_est->vel[1]=qvel.v[1]; pos_est->vel[2]=qvel.v[2];
 	
-	for (i=0; i<3; i++) {
+	for (i=0; i<3; i++)
+	{
 		// clean position estimate without gravity:
 		//prev_pos[i]=attitude->localPosition.pos[i];
 		pos_est->localPosition.pos[i] =pos_est->localPosition.pos[i]*(1.0-(POS_DECAY*dt)) + pos_est->vel[i] *dt;
@@ -239,23 +262,28 @@ void position_correction(position_estimator_t *pos_est, pressure_data *barometer
 				local_coordinates.timestamp_ms=gps->timeLastMsg;
 				// compute GPS velocity estimate
 				gps_dt=(local_coordinates.timestamp_ms - pos_est->lastGpsPos.timestamp_ms)/1000.0;
-				if (gps_dt>0.001) {
+				if (gps_dt>0.001)
+				{
 					for (i=0; i<3; i++) pos_est->last_vel[i] = (local_coordinates.pos[i]-pos_est->lastGpsPos.pos[i])/gps_dt;
 					pos_est->lastGpsPos=local_coordinates;
-				} else dbg_print("GPS dt is too small!");
+				}else{
+					dbg_print("GPS dt is too small!");
+				}
 			}
 			tinterGps = get_millis() - gps->timeLastMsg;
 			
 			//gps_gain=fmax(1.0-tinterGps/1000.0, 0.0);
 			gps_gain=1.0;
 			
-			for (i=0;i<3;i++){
+			for (i=0;i<3;i++)
+			{
 				pos_error[i] = pos_est->lastGpsPos.pos[i] - pos_est->localPosition.pos[i];
 				vel_error[i] = pos_est->last_vel[i]       - pos_est->vel[i]; 
 			}
 		}else{
 			init_pos_gps(pos_est, gps);
-			for (i=0;i<2;i++){
+			for (i=0;i<2;i++)
+			{
 				//pos_error[i] = pos_est->lastGpsPos.pos[i] - pos_est->localPosition.pos[i];
 				pos_error[i] = 0.0;
 				vel_error[i] = 0.0;
@@ -264,7 +292,8 @@ void position_correction(position_estimator_t *pos_est, pressure_data *barometer
 		}
 		
 		// Apply error correction to velocity and position estimates
-		for (i=0;i<3;i++) {
+		for (i=0;i<3;i++)
+		{
 			pos_est->localPosition.pos[i] += pos_est->kp_pos[i] * gps_gain * pos_error[i]* dt;
 		}
 		pos_est->localPosition.pos[2] += pos_est->kp_alt * baro_gain * baro_alt_error* dt;
@@ -272,7 +301,8 @@ void position_correction(position_estimator_t *pos_est, pressure_data *barometer
 
 		for (i=0; i<3; i++) vel_correction.v[i] = vel_error[i];
 				
-		for (i=0;i<3;i++) {			
+		for (i=0;i<3;i++)
+		{			
 			pos_est->vel[i] += pos_est->kp_vel[i]*gps_gain * vel_correction.v[i]* dt;
 		}
 		pos_est->vel[2] += pos_est->kp_vel_baro * baro_gain * baro_vel_error* dt;

@@ -13,80 +13,78 @@
 central_data_t *centralData;
 
 
-unsigned char **ubx_currentMessage = 0; ///<  The pointer to the pointer to the structure of the current message to fill
-unsigned char ** ubx_lastMessage = 0; ///<  The pointer to the pointer to the structure of the last message received of the same type than the current one being received (for exchange at the end)
-unsigned short * ubx_validMessage = 0; ///<  The pointer to the number to increment when a message of the type has been received
+unsigned char **ubx_currentMessage = 0;		///<  The pointer to the pointer to the structure of the current message to fill
+unsigned char ** ubx_lastMessage = 0;		///<  The pointer to the pointer to the structure of the last message received of the same type than the current one being received (for exchange at the end)
+unsigned short * ubx_validMessage = 0;		///<  The pointer to the number to increment when a message of the type has been received
 
 // We are using two buffers for each message, one for the last message received, the other for the message being received (not complete)
-
-ubx_nav_posllh ubx_posllhMessage[2]; ///<  The Posllh message buffer
-ubx_nav_status ubx_statusMessage[2]; ///<  The Status message buffer
-ubx_nav_solution ubx_solutionMessage[2]; ///<  The Solution message buffer
-ubx_nav_velned ubx_velnedMessage[2]; ///<  The Velned message buffer
-ubx_nav_SVInfo ubx_svInfoMessage[2]; ///<  The SVInfo message buffer
+ubx_nav_posllh ubx_posllhMessage[2];			///<  The Posllh message buffer
+ubx_nav_status ubx_statusMessage[2];			///<  The Status message buffer
+ubx_nav_solution ubx_solutionMessage[2];		///<  The Solution message buffer
+ubx_nav_velned ubx_velnedMessage[2];			///<  The Velned message buffer
+ubx_nav_SVInfo ubx_svInfoMessage[2];			///<  The SVInfo message buffer
 ubx_cfg_nav_settings ubx_NavSettingsMessage[2]; ///<  The Nav Settings message buffer
-ubx_cfg_nav_rate ubx_CFGRateMessage[2]; ///<  The CFG Rate message buffer
-ubx_cfg_msg_rate ubx_CFGSetGetRateMessage[2]; ///<  The CFG Set/get Rate message buffer
-ubx_mon_rxr_struct ubx_MONRXRMessage[2]; ///<  The MON RXR message buffer
-ubx_tim_tp ubx_TimTPMessage[2]; ///<  The TIM TP message buffer
-ubx_tim_vrfy ubx_TimVRFYMessage[2]; ///<  The TIM VRFY message buffer
+ubx_cfg_nav_rate ubx_CFGRateMessage[2];			///<  The CFG Rate message buffer
+ubx_cfg_msg_rate ubx_CFGSetGetRateMessage[2];	///<  The CFG Set/get Rate message buffer
+ubx_mon_rxr_struct ubx_MONRXRMessage[2];		///<  The MON RXR message buffer
+ubx_tim_tp ubx_TimTPMessage[2];					///<  The TIM TP message buffer
+ubx_tim_vrfy ubx_TimVRFYMessage[2];				///<  The TIM VRFY message buffer
 
 // NAV-POSLLH
-ubx_nav_posllh * ubx_currentPosllhMessage = &ubx_posllhMessage[0]; ///<  The pointer to the Posllh message that is being filled (not usable)
-ubx_nav_posllh * ubx_lastPosllhMessage = &ubx_posllhMessage[1]; ///<  The pointer to the last Posllh message that was completed
-unsigned short ubx_numberOfValidPosllhMessage = 0; ///<  Number of valid Posllh message received
+ubx_nav_posllh * ubx_currentPosllhMessage = &ubx_posllhMessage[0];	///<  The pointer to the Posllh message that is being filled (not usable)
+ubx_nav_posllh * ubx_lastPosllhMessage = &ubx_posllhMessage[1];		///<  The pointer to the last Posllh message that was completed
+unsigned short ubx_numberOfValidPosllhMessage = 0;					///<  Number of valid Posllh message received
 
 // NAV-STATUS
-ubx_nav_status *ubx_currentStatusMessage = &ubx_statusMessage[0]; ///<  The pointer to the Status message that is being filled (not usable)
-ubx_nav_status *ubx_lastStatusMessage = &ubx_statusMessage[1]; ///<  The pointer to the last Status message that was completed
-unsigned short ubx_numberOfValidStatusMessage = 0; ///<  Number of valid Status message received
+ubx_nav_status *ubx_currentStatusMessage = &ubx_statusMessage[0];	///<  The pointer to the Status message that is being filled (not usable)
+ubx_nav_status *ubx_lastStatusMessage = &ubx_statusMessage[1];		///<  The pointer to the last Status message that was completed
+unsigned short ubx_numberOfValidStatusMessage = 0;					///<  Number of valid Status message received
 
 // NAV-Sol
 ubx_nav_solution *ubx_currentSolutionMessage = &ubx_solutionMessage[0]; ///<  The pointer to the Solution message that is being filled (not usable)
-ubx_nav_solution *ubx_lastSolutionMessage = &ubx_solutionMessage[1]; ///<  The pointer to the last Status message that was completed
-unsigned short ubx_numberOfValidSolutionMessage = 0; ///<  Number of valid Status message received
+ubx_nav_solution *ubx_lastSolutionMessage = &ubx_solutionMessage[1];	///<  The pointer to the last Status message that was completed
+unsigned short ubx_numberOfValidSolutionMessage = 0;					///<  Number of valid Status message received
 
 // NAV-VELNED
-ubx_nav_velned *ubx_currentVelnedMessage = &ubx_velnedMessage[0]; ///<  The pointer to the Velned message that is being filled (not usable)
-ubx_nav_velned *ubx_lastVelnedMessage = &ubx_velnedMessage[1]; ///<  The pointer to the last Velned message that was completed
-unsigned short ubx_numberOfValidVelnedMessage = 0; ///<  Number of valid Velned message received
+ubx_nav_velned *ubx_currentVelnedMessage = &ubx_velnedMessage[0];	///<  The pointer to the Velned message that is being filled (not usable)
+ubx_nav_velned *ubx_lastVelnedMessage = &ubx_velnedMessage[1];		///<  The pointer to the last Velned message that was completed
+unsigned short ubx_numberOfValidVelnedMessage = 0;					///<  Number of valid Velned message received
 
 // NAV-SVINFO
-ubx_nav_SVInfo *ubx_currentSVInfoMessage = &ubx_svInfoMessage[0]; ///<  The pointer to the Status message that is being filled (not usable)
-ubx_nav_SVInfo *ubx_lastSVInfoMessage = &ubx_svInfoMessage[1]; ///<  The pointer to the last Status message that was completed
-unsigned short ubx_numberOfValidSVInfoMessage = 0; ///<  Number of valid Status message received
+ubx_nav_SVInfo *ubx_currentSVInfoMessage = &ubx_svInfoMessage[0];	///<  The pointer to the Status message that is being filled (not usable)
+ubx_nav_SVInfo *ubx_lastSVInfoMessage = &ubx_svInfoMessage[1];		///<  The pointer to the last Status message that was completed
+unsigned short ubx_numberOfValidSVInfoMessage = 0;					///<  Number of valid Status message received
 
 // NAV-Settings
-ubx_cfg_nav_settings *ubx_currentNavSettingsMessage = &ubx_NavSettingsMessage[0]; ///<  The pointer to the Nav Settings message that is being filled (not usable)
-ubx_cfg_nav_settings *ubx_lastNavSettingsMessage = &ubx_NavSettingsMessage[1]; ///<  The pointer to the last Nav Settings message that was completed
-unsigned short ubx_numberOfValidNavSettingsMessage = 0; ///<  Number of valid Nav Settings message received
+ubx_cfg_nav_settings *ubx_currentNavSettingsMessage = &ubx_NavSettingsMessage[0];	///<  The pointer to the Nav Settings message that is being filled (not usable)
+ubx_cfg_nav_settings *ubx_lastNavSettingsMessage = &ubx_NavSettingsMessage[1];		///<  The pointer to the last Nav Settings message that was completed
+unsigned short ubx_numberOfValidNavSettingsMessage = 0;								///<  Number of valid Nav Settings message received
 
 // CFG message rate
-ubx_cfg_nav_rate *ubx_currentCFGRateMessage = &ubx_CFGRateMessage[0]; ///<  The pointer to the CFG Rate message that is being filled (not usable)
-ubx_cfg_nav_rate *ubx_lastCFGRateMessage = &ubx_CFGRateMessage[1]; ///<  The pointer to the last CFG Rate message that was completed
-unsigned short ubx_numberOfValidCFGRateMessage = 0; ///<  Number of valid CFG Rate message received
+ubx_cfg_nav_rate *ubx_currentCFGRateMessage = &ubx_CFGRateMessage[0];	///<  The pointer to the CFG Rate message that is being filled (not usable)
+ubx_cfg_nav_rate *ubx_lastCFGRateMessage = &ubx_CFGRateMessage[1];		///<  The pointer to the last CFG Rate message that was completed
+unsigned short ubx_numberOfValidCFGRateMessage = 0;						///<  Number of valid CFG Rate message received
 
 // CFG Set/Get message rate
-ubx_cfg_msg_rate *ubx_currentCFGSetGetRateMessage = &ubx_CFGSetGetRateMessage[0]; ///<  The pointer to the CFG Set/get Rate message that is being filled (not usable)
-ubx_cfg_msg_rate *ubx_lastCFGSetGetRateMessage = &ubx_CFGSetGetRateMessage[1]; ///<  The pointer to the last CFG Set/get Rate message that was completed
-unsigned short ubx_numberOfValidCFGSetGetRateMessage = 0; ///<  Number of valid CFG Set/get Rate message received
+ubx_cfg_msg_rate *ubx_currentCFGSetGetRateMessage = &ubx_CFGSetGetRateMessage[0];	///<  The pointer to the CFG Set/get Rate message that is being filled (not usable)
+ubx_cfg_msg_rate *ubx_lastCFGSetGetRateMessage = &ubx_CFGSetGetRateMessage[1];		///<  The pointer to the last CFG Set/get Rate message that was completed
+unsigned short ubx_numberOfValidCFGSetGetRateMessage = 0;							///<  Number of valid CFG Set/get Rate message received
 
 // MON RXR message
-ubx_mon_rxr_struct *ubx_currentMONRXRMessage = &ubx_MONRXRMessage[0]; ///<  The pointer to the MON RXR message that is being filled (not usable)
-ubx_mon_rxr_struct *ubx_lastMONRXRMessage = &ubx_MONRXRMessage[1]; ///<  The pointer to the last MON RXR message that was completed
-unsigned short ubx_numberOfValidMONRXRMessage = 0; ///<  Number of valid MON RXR message received
+ubx_mon_rxr_struct *ubx_currentMONRXRMessage = &ubx_MONRXRMessage[0];	///<  The pointer to the MON RXR message that is being filled (not usable)
+ubx_mon_rxr_struct *ubx_lastMONRXRMessage = &ubx_MONRXRMessage[1];		///<  The pointer to the last MON RXR message that was completed
+unsigned short ubx_numberOfValidMONRXRMessage = 0;						///<  Number of valid MON RXR message received
 
 // TIM TP message
-ubx_tim_tp *ubx_currentTimTPMessage = &ubx_TimTPMessage[0]; ///<  The pointer to the MON RXR message that is being filled (not usable)
-ubx_tim_tp *ubx_lastTimTPMessage = &ubx_TimTPMessage[1]; ///<  The pointer to the last TIM TP message that was completed
-unsigned short ubx_numberOfValidTimTPMessage = 0; ///<  Number of valid TIM TP message received
+ubx_tim_tp *ubx_currentTimTPMessage = &ubx_TimTPMessage[0];		///<  The pointer to the MON RXR message that is being filled (not usable)
+ubx_tim_tp *ubx_lastTimTPMessage = &ubx_TimTPMessage[1];		///<  The pointer to the last TIM TP message that was completed
+unsigned short ubx_numberOfValidTimTPMessage = 0;				///<  Number of valid TIM TP message received
 
 
 // TIM VRFY message
-ubx_tim_vrfy *ubx_currentTimVRFYMessage = &ubx_TimVRFYMessage[0]; ///<  The pointer to the TIM VRFY message that is being filled (not usable)
-
-ubx_tim_vrfy *ubx_lastTimVRFYMessage = &ubx_TimVRFYMessage[1]; ///<  The pointer to the last TIM VRFY message that was completed
-unsigned short ubx_numberOfValidTimVRFYMessage = 0; ///<  Number of valid TIM VRFY message received
+ubx_tim_vrfy *ubx_currentTimVRFYMessage = &ubx_TimVRFYMessage[0];	///<  The pointer to the TIM VRFY message that is being filled (not usable)
+ubx_tim_vrfy *ubx_lastTimVRFYMessage = &ubx_TimVRFYMessage[1];		///<  The pointer to the last TIM VRFY message that was completed
+unsigned short ubx_numberOfValidTimVRFYMessage = 0;					///<  Number of valid TIM VRFY message received
 
 // Set to true to print all data
 bool printNavOnDebug = false;

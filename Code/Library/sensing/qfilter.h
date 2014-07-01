@@ -1,46 +1,90 @@
-/*
- * qfilter.h
- * Quaternion complementary attitude filter
- * 
- *  Created on: Apr 13, 2010
- *      Author: Felix Schill
+/**
+ * This file implement a complementary filter for the attitude estimation
+ *
+ * The MAV'RIC Framework
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ *
+ * This file is part of the MAV'RIC Framework.
  */
 
 #ifndef QFILTER_H_
 #define QFILTER_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "compiler.h"
-
-#define GYRO_LPF 0.1
-#define ACC_LPF 0.05
-#define MAG_LPF 0.1
-
-
-#define GRAVITY 9.81
-
 #include "coord_conventions.h"
 
-enum calibration_mode {OFF, LEVELING, LEVEL_PLUS_ACCEL};
+#define GYRO_LPF 0.1				///< The gyroscope linear particle filter gain
+#define ACC_LPF 0.05				///< The accelerometer linear particle filter gain
+#define MAG_LPF 0.1					///< The magnetometer linear particle filter gain
+
+
+#define GRAVITY 9.81				///< the gravity constant
+
+enum calibration_mode {OFF, LEVELING, LEVEL_PLUS_ACCEL}; ///< The calibration level of the filter
 
 typedef struct {
-	UQuat_t qe;
-	UQuat_t up_vec, north_vec;
+	UQuat_t qe;						///< The quaternion of the attitude estimation
+	UQuat_t up_vec;					///< The quaternion of the up vector
+	UQuat_t north_vec;				///< The quaternion of the north vector
 	
-	float be[9], sf[9];
-	float om[3], a[3], mag[3];
-	float kp;
-	float ki;
-	float kp_mag;
-	float ki_mag;
-	float raw_mag_mean[3];
-	uint8_t calibration_level;
-	float heading;
-	float acc_bf[3];
-} Quat_Attitude_t;	
+	float be[9];					///< The biais of the IMU and compass
+	float sf[9];					///< The scale factors of the IMU and compass
+	
+	float om[3];					///< The 3D angular rates vector omega
+	float a[3];						///< The 3D linear acceleration vector
+	float mag[3];					///< The 3D magnetometer vector
+	
+	float kp;						///< The proportional gain for the acceleration correction of the angular rates
+	float ki;						///< The integral gain for the acceleration correction of the biais
+	float kp_mag;					///< The proportional gain for the magnetometer correction of the angular rates
+	float ki_mag;					///< The integral gain for the magnetometer correction of the angular rates
+	
+	float raw_mag_mean[3];			///< The raw magnetometer values to compute the initial heading of the platform
+	
+	uint8_t calibration_level;		///< The level of calibration
+	float heading;					///< The heading of the platform
+	float acc_bf[3];				///< The 3D acceleration vector in body frame
+} Quat_Attitude_t;					///< The structure for the attitude estimation
 
+/**
+ * \brief	Initialize the attitude estimation module
+ *
+ * \param	attitude		The pointer to the attitude structure
+ * \param	scalefactor		The pointer to the scale factors structure of the IMU
+ * \param	biais			The pointer to the biaises structure of the IMU
+ *
+ * \return	void
+ */
 void qfInit(Quat_Attitude_t *attitude, float *scalefactor, float *bias);
 
+/**
+ * \brief	Initialize the quaternion for the attitude estimation
+ *
+ * \param	attitude		The pointer to the attitude structure
+ *
+ * \return	void
+ */
 void initQuat(Quat_Attitude_t *attitude);
 
+/**
+ * \brief	Performs the attitude estimation via a complementary filter
+ *
+ * \param	attitude		The pointer to the attitude structure
+ * \param	rates			The raw rates from the IMU
+ * \param	dt				The time interval between two estimation loops
+ *
+ * \return	void
+ */
 void qfilter(Quat_Attitude_t *attitude, float *rates, float dt);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* QFILTER_H_ */

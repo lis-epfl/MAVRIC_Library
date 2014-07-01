@@ -1,9 +1,12 @@
-/*
- * qfilter.c
- * Quaternion complementary attitude filter
- * 
- *  Created on: Apr 13, 2010
- *      Author: Felix Schill
+/**
+ * This file implement a complementary filter for the attitude estimation
+ *
+ * The MAV'RIC Framework
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ *
+ * This file is part of the MAV'RIC Framework.
  */
 
 #include "qfilter.h"
