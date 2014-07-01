@@ -1,8 +1,12 @@
-/*
- * coord_conventions.c
+/**
+ * Coordinate conventions
  *
- * Created: 13/02/2013 16:47:26
- *  Author: Julien, Felix
+ * The MAV'RIC Framework
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ *
+ * This file is part of the MAV'RIC Framework.
  */ 
 
 #include "coord_conventions.h"
@@ -12,39 +16,44 @@
 #include "conf_platform.h"
 #include "quick_trig.h"
 
-// convert local NED coordinates to global GPS coordinates (relative to origin given in local coordinate frame)
-global_position_t local_to_global_position(local_coordinates_t input){
+
+global_position_t local_to_global_position(local_coordinates_t input)
+{
 	global_position_t output;
 	output.latitude = input.origin.latitude  + rad_to_deg( input.pos[0] / EARTH_RADIUS);
-	output.longitude= input.origin.longitude + rad_to_deg( input.pos[1] / ( EARTH_RADIUS*cos(deg_to_rad(output.latitude))));
+	output.longitude= input.origin.longitude + rad_to_deg( input.pos[1] / ( EARTH_RADIUS * cos(deg_to_rad(output.latitude)) ) );
 	output.altitude = -input.pos[2] + input.origin.altitude;
 	output.heading=input.heading;
 
 	return output;
 }
 
-// convert a global position into a local coordinate frame around the given global origin
-local_coordinates_t global_to_local_position(global_position_t position, global_position_t origin) {
+
+local_coordinates_t global_to_local_position(global_position_t position, global_position_t origin) 
+{
 	local_coordinates_t output;
-	output.origin=origin;
-	double small_radius=cos(deg_to_rad(position.latitude))*EARTH_RADIUS;
-	output.pos[X]=  (float)(sin(deg_to_rad((position.latitude-origin.latitude)))*EARTH_RADIUS);
-	output.pos[Y]=  (float)(sin(deg_to_rad((position.longitude-origin.longitude)))*small_radius);
-	output.pos[Z]=  (float)(-(position.altitude - origin.altitude));
-	output.heading=position.heading;
+	output.origin = origin;
+	double small_radius = cos(deg_to_rad(position.latitude)) * EARTH_RADIUS;
+	output.pos[X] = (float)(sin(deg_to_rad((position.latitude-origin.latitude))) * EARTH_RADIUS);
+	output.pos[Y] = (float)(sin(deg_to_rad((position.longitude-origin.longitude))) * small_radius);
+	output.pos[Z] = (float)(-(position.altitude - origin.altitude));
+	output.heading = position.heading;
 	
 	return output;
 }
 
-Aero_Attitude_t Quat_to_Aero(UQuat_t qe) {
+
+Aero_Attitude_t Quat_to_Aero(UQuat_t qe) 
+{
 	Aero_Attitude_t aero;
 
-	aero.rpy[0]= atan2(2*(qe.s*qe.v[0] + qe.v[1]*qe.v[2]) , (qe.s*qe.s - qe.v[0]*qe.v[0] - qe.v[1]*qe.v[1] + qe.v[2]*qe.v[2])); 
-	aero.rpy[1]=-asin(2*(qe.v[0]*qe.v[2] - qe.s*qe.v[1]));
-	aero.rpy[2]= atan2(2*(qe.s*qe.v[2] + qe.v[0]*qe.v[1]) , (qe.s*qe.s + qe.v[0]*qe.v[0] - qe.v[1]*qe.v[1] - qe.v[2]*qe.v[2]));
+	aero.rpy[0] = atan2(2*(qe.s*qe.v[0] + qe.v[1]*qe.v[2]) , (qe.s*qe.s - qe.v[0]*qe.v[0] - qe.v[1]*qe.v[1] + qe.v[2]*qe.v[2])); 
+	aero.rpy[1] = -asin(2*(qe.v[0]*qe.v[2] - qe.s*qe.v[1]));
+	aero.rpy[2] = atan2(2*(qe.s*qe.v[2] + qe.v[0]*qe.v[1]) , (qe.s*qe.s + qe.v[0]*qe.v[0] - qe.v[1]*qe.v[1] - qe.v[2]*qe.v[2]));
 	
 	return aero;
 }
+
 
 UQuat_t quaternion_from_aero(Aero_Attitude_t aero)
 {
@@ -68,6 +77,8 @@ UQuat_t quaternion_from_aero(Aero_Attitude_t aero)
 	return quat;
 }
 
-float get_yaw(UQuat_t qe) {
+
+float get_yaw(UQuat_t qe) 
+{
 	return  atan2(2*(qe.s*qe.v[2] + qe.v[0]*qe.v[1]) , (qe.s*qe.s + qe.v[0]*qe.v[0] - qe.v[1]*qe.v[1] - qe.v[2]*qe.v[2]));
 }
