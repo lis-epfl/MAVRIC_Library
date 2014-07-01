@@ -1,9 +1,13 @@
-/*
-* orca.c
-*
-*  Created: 22.10.2013 09:56:47
-*  Author: ndousse
-*/
+/**
+ *  ORCA  
+ *
+ * The MAV'RIC Framework
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ *
+ * This file is part of the MAV'RIC Framework.
+ */
 
 #include "orca.h"
 #include "central_data.h"

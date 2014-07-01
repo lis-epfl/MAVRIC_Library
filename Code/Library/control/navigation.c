@@ -1,9 +1,13 @@
-/*
-* navigation.c
-*
-*  Created: 13.08.2013 11:57:38
-*  Author: ndousse
-*/
+/**
+ *  Waypoint navigation controller
+ *
+ * The MAV'RIC Framework
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ *
+ * This file is part of the MAV'RIC Framework.
+ */
 
 #include "navigation.h"
 #include "central_data.h"
