@@ -156,7 +156,7 @@
 //#define GPS_ON_SERVO_1_2
 
 // GLE: define CS for SPI
-#define CS_ON_SERVO_7_8
+// #define CS_ON_SERVO_7_8
 
 // define type of remote controller
 //#define SPEKTRUM_REMOTE
