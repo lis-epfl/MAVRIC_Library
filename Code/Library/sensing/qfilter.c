@@ -58,13 +58,13 @@ void initQuat(Quat_Attitude_t *attitude)
 	{
 		attitude->mag[i]=((float)attitude->raw_mag_mean[i]-attitude->be[i+COMPASS_OFFSET])*attitude->sf[i+COMPASS_OFFSET];
 	}
-
+	
 	init_angle = atan2(-attitude->mag[1],attitude->mag[0]);
 
 	dbg_print("Initial yaw:");
 	dbg_print_num(init_angle*100.0,10);
 	dbg_print(" = atan2(mag_y,mag_x) =");
-	dbg_print_num(attitude->mag[1]*100.0,10);
+	dbg_print_num(-attitude->mag[1]*100.0,10);
 	dbg_print(" ,");
 	dbg_print_num(attitude->mag[0]*100.0,10);
 	dbg_print("\n");
@@ -93,7 +93,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	
 	
 	for (i=0; i<3; i++){
-		attitude->om[i]  = (1.0-GYRO_LPF)*attitude->om[i]+GYRO_LPF*(((float)rates[i+GYRO_OFFSET]-attitude->be[i+GYRO_OFFSET])*attitude->sf[i]);
+		attitude->om[i]  = (1.0-GYRO_LPF)*attitude->om[i]+GYRO_LPF*(((float)rates[i+GYRO_OFFSET]-attitude->be[i+GYRO_OFFSET])*attitude->sf[i+GYRO_OFFSET]);
 		attitude->a[i]   = (1.0-ACC_LPF)*attitude->a[i]+ACC_LPF*(((float)rates[i+ACC_OFFSET]-attitude->be[i+ACC_OFFSET])*attitude->sf[i+ACC_OFFSET]);
 		attitude->mag[i] = (1.0-MAG_LPF)*attitude->mag[i]+MAG_LPF*(((float)rates[i+COMPASS_OFFSET]-attitude->be[i+COMPASS_OFFSET])*attitude->sf[i+COMPASS_OFFSET]);
 	}
@@ -171,9 +171,9 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	}
 
 	// apply error correction with appropriate gains for accelerometer and compass
-/*
+
 	for (i=0; i<3; i++){
-		qtmp1.v[i] = 0.5*(attitude->om[i] + kp*omc[i] + kp_mag*omc_mag[i]);
+		qtmp1.v[i] = (attitude->om[i] + kp*omc[i] + kp_mag*omc_mag[i]);//0.5*
 	}
 	qtmp1.s=0;
 
@@ -184,8 +184,8 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	attitude->qe.v[0]+=qed.v[0]*dt;
 	attitude->qe.v[1]+=qed.v[1]*dt;
 	attitude->qe.v[2]+=qed.v[2]*dt;
-*/
 
+/*
 	float wx = attitude->om[X] + kp*omc[X] + kp_mag*omc_mag[X];
 	float wy = attitude->om[Y] + kp*omc[Y] + kp_mag*omc_mag[Y];
 	float wz = attitude->om[Z] + kp*omc[Z] + kp_mag*omc_mag[Z];
@@ -199,7 +199,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	attitude->qe.v[0] = q1 + dt/2*( q0*wx - q3*wy + q2*wz);
 	attitude->qe.v[1] = q2 + dt/2*( q3*wx + q0*wy - q1*wz);
 	attitude->qe.v[2] = q3 + dt/2*(-q2*wx + q1*wy + q0*wz);
-
+*/
 
 	snorm=attitude->qe.s*attitude->qe.s+attitude->qe.v[0]*attitude->qe.v[0] + attitude->qe.v[1] * attitude->qe.v[1] + attitude->qe.v[2] * attitude->qe.v[2];
 	if (snorm<0.0001) norm=0.01; else {

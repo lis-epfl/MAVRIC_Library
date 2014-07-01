@@ -1014,7 +1014,13 @@
     <Compile Include="src\config\conf_stabilisation_hybrid.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\MAVsettings\MAV001_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\MAVsettings\MAV002_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\MAVsettings\MAV003_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\MAVsettings\MAV004_conf_imu_rev4.h">
@@ -1033,6 +1039,18 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\MAVsettings\MAV010_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\MAVsettings\MAV101_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\MAVsettings\MAV102_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\MAVsettings\MAV202_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\MAVsettings\MAV203_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\mavlink_actions.c">

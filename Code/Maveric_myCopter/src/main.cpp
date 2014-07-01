@@ -354,7 +354,6 @@ static void spi_test(){
 void initialisation() {
 	int i;
 	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
-
 	
 	centralData = get_central_data();
 	initialise_board(centralData);
@@ -434,5 +433,5 @@ int main (void)
 	while (1==1) {
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
 	}
-	return 0;		
+	return 0;
 }

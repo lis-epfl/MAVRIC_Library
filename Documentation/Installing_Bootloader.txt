@@ -4,9 +4,9 @@ Installing the DFU bootloader on AVR32 devices
 
 This document describes the necessary steps to flash a DFU bootloader onto the AVR32 (AT32UC3C1512C) used on the maveric autopilot. Note that all Atmel devices with USB support have the DFU bootloader already installed by default, however, a chip erase carried out with the JTAG will erase the bootloader, and it needs to be re-flashed if needed. To avoid removing the bootloader when using JTAG in Atmel Studio, go to Project Settings -> Tool, and change "Programming Settings" to "Erase only program area". 
 
-################################
+#######################################
 1) Flashing the bootloader image
-################################
+#######################################
 
 - Open Atmel Studio, go to Tools -> Device Programming. 
    - connect your board to the JTAG cable, and check if it has power
