@@ -1,9 +1,13 @@
-/*
- * mavlink_waypoint_handler.h
+/**
+ * The mavlink waypoint handler
  *
- * Created: May 16 2013 17:54:34
- *  Author: Nicolas
- */ 
+ * The MAV'RIC Framework
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ *
+ * This file is part of the MAV'RIC Framework.
+ */
 
 #ifndef MAVLINK_WAYPOINT_HANDLER__
 #define MAVLINK_WAYPOINT_HANDLER__
@@ -19,10 +23,11 @@ extern "C" {
 #endif
 
 /*
-* N.B.: Frames, MAV_CMD_NAV are defined in "maveric.h"
-*/
+ * N.B.: Frames, MAV_CMD_NAV are defined in "maveric.h"
+ */
 
-typedef struct {
+typedef struct
+{
 	uint8_t frame;
 	uint16_t wp_id;
 	uint8_t current;
@@ -34,8 +39,8 @@ typedef struct {
 	double x;
 	double y;
 	double z;
-	
 }waypoint_struct;
+
 
 enum CRITICAL_BEHAVIOR_ENUM{
 	CLIMB_TO_SAFE_ALT = 1,
