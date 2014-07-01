@@ -12,139 +12,91 @@
 
 central_data_t *centralData;
 
-//! The pointer to the pointer to the structure of the current message to fill
-unsigned char **ubx_currentMessage = 0;
-//! The pointer to the pointer to the structure of the last message received of the same type than the current one being received (for exchange at the end)
-unsigned char ** ubx_lastMessage = 0;
-//! The pointer to the number to increment when a message of the type has been received
-unsigned short * ubx_validMessage = 0;
+
+unsigned char **ubx_currentMessage = 0; ///<  The pointer to the pointer to the structure of the current message to fill
+unsigned char ** ubx_lastMessage = 0; ///<  The pointer to the pointer to the structure of the last message received of the same type than the current one being received (for exchange at the end)
+unsigned short * ubx_validMessage = 0; ///<  The pointer to the number to increment when a message of the type has been received
 
 // We are using two buffers for each message, one for the last message received, the other for the message being received (not complete)
-//! The Posllh message buffer
-ubx_nav_posllh ubx_posllhMessage[2];
-//! The Status message buffer
-ubx_nav_status ubx_statusMessage[2];
-//! The Solution message buffer
-ubx_nav_solution ubx_solutionMessage[2];
-//! The Velned message buffer
-ubx_nav_velned ubx_velnedMessage[2];
-//! The SVInfo message buffer
-ubx_nav_SVInfo ubx_svInfoMessage[2];
-//! The Nav Settings message buffer
-ubx_cfg_nav_settings ubx_NavSettingsMessage[2];
-//! The CFG Rate message buffer
-ubx_cfg_nav_rate ubx_CFGRateMessage[2];
-//! The CFG Set/get Rate message buffer
-ubx_cfg_msg_rate ubx_CFGSetGetRateMessage[2];
-//! The MON RXR message buffer
-ubx_mon_rxr_struct ubx_MONRXRMessage[2];
-//! The TIM TP message buffer
-ubx_tim_tp ubx_TimTPMessage[2];
-//! The TIM VRFY message buffer
-ubx_tim_vrfy ubx_TimVRFYMessage[2];
+
+ubx_nav_posllh ubx_posllhMessage[2]; ///<  The Posllh message buffer
+ubx_nav_status ubx_statusMessage[2]; ///<  The Status message buffer
+ubx_nav_solution ubx_solutionMessage[2]; ///<  The Solution message buffer
+ubx_nav_velned ubx_velnedMessage[2]; ///<  The Velned message buffer
+ubx_nav_SVInfo ubx_svInfoMessage[2]; ///<  The SVInfo message buffer
+ubx_cfg_nav_settings ubx_NavSettingsMessage[2]; ///<  The Nav Settings message buffer
+ubx_cfg_nav_rate ubx_CFGRateMessage[2]; ///<  The CFG Rate message buffer
+ubx_cfg_msg_rate ubx_CFGSetGetRateMessage[2]; ///<  The CFG Set/get Rate message buffer
+ubx_mon_rxr_struct ubx_MONRXRMessage[2]; ///<  The MON RXR message buffer
+ubx_tim_tp ubx_TimTPMessage[2]; ///<  The TIM TP message buffer
+ubx_tim_vrfy ubx_TimVRFYMessage[2]; ///<  The TIM VRFY message buffer
 
 // NAV-POSLLH
-//! The pointer to the Posllh message that is being filled (not usable)
-ubx_nav_posllh * ubx_currentPosllhMessage = &ubx_posllhMessage[0];
-//! The pointer to the last Posllh message that was completed
-ubx_nav_posllh * ubx_lastPosllhMessage = &ubx_posllhMessage[1];
-//! Number of valid Posllh message received
-unsigned short ubx_numberOfValidPosllhMessage = 0;
+ubx_nav_posllh * ubx_currentPosllhMessage = &ubx_posllhMessage[0]; ///<  The pointer to the Posllh message that is being filled (not usable)
+ubx_nav_posllh * ubx_lastPosllhMessage = &ubx_posllhMessage[1]; ///<  The pointer to the last Posllh message that was completed
+unsigned short ubx_numberOfValidPosllhMessage = 0; ///<  Number of valid Posllh message received
 
 // NAV-STATUS
-//! The pointer to the Status message that is being filled (not usable)
-ubx_nav_status *ubx_currentStatusMessage = &ubx_statusMessage[0];
-//! The pointer to the last Status message that was completed
-ubx_nav_status *ubx_lastStatusMessage = &ubx_statusMessage[1];
-//! Number of valid Status message received
-unsigned short ubx_numberOfValidStatusMessage = 0;
+ubx_nav_status *ubx_currentStatusMessage = &ubx_statusMessage[0]; ///<  The pointer to the Status message that is being filled (not usable)
+ubx_nav_status *ubx_lastStatusMessage = &ubx_statusMessage[1]; ///<  The pointer to the last Status message that was completed
+unsigned short ubx_numberOfValidStatusMessage = 0; ///<  Number of valid Status message received
 
 // NAV-Sol
-//! The pointer to the Solution message that is being filled (not usable)
-ubx_nav_solution *ubx_currentSolutionMessage = &ubx_solutionMessage[0];
-//! The pointer to the last Status message that was completed
-ubx_nav_solution *ubx_lastSolutionMessage = &ubx_solutionMessage[1];
-//! Number of valid Status message received
-unsigned short ubx_numberOfValidSolutionMessage = 0;
+ubx_nav_solution *ubx_currentSolutionMessage = &ubx_solutionMessage[0]; ///<  The pointer to the Solution message that is being filled (not usable)
+ubx_nav_solution *ubx_lastSolutionMessage = &ubx_solutionMessage[1]; ///<  The pointer to the last Status message that was completed
+unsigned short ubx_numberOfValidSolutionMessage = 0; ///<  Number of valid Status message received
 
 // NAV-VELNED
-//! The pointer to the Velned message that is being filled (not usable)
-ubx_nav_velned *ubx_currentVelnedMessage = &ubx_velnedMessage[0];
-//! The pointer to the last Velned message that was completed
-ubx_nav_velned *ubx_lastVelnedMessage = &ubx_velnedMessage[1];
-//! Number of valid Velned message received
-unsigned short ubx_numberOfValidVelnedMessage = 0;
+ubx_nav_velned *ubx_currentVelnedMessage = &ubx_velnedMessage[0]; ///<  The pointer to the Velned message that is being filled (not usable)
+ubx_nav_velned *ubx_lastVelnedMessage = &ubx_velnedMessage[1]; ///<  The pointer to the last Velned message that was completed
+unsigned short ubx_numberOfValidVelnedMessage = 0; ///<  Number of valid Velned message received
 
 // NAV-SVINFO
-//! The pointer to the Status message that is being filled (not usable)
-ubx_nav_SVInfo *ubx_currentSVInfoMessage = &ubx_svInfoMessage[0];
-//! The pointer to the last Status message that was completed
-ubx_nav_SVInfo *ubx_lastSVInfoMessage = &ubx_svInfoMessage[1];
-//! Number of valid Status message received
-unsigned short ubx_numberOfValidSVInfoMessage = 0;
+ubx_nav_SVInfo *ubx_currentSVInfoMessage = &ubx_svInfoMessage[0]; ///<  The pointer to the Status message that is being filled (not usable)
+ubx_nav_SVInfo *ubx_lastSVInfoMessage = &ubx_svInfoMessage[1]; ///<  The pointer to the last Status message that was completed
+unsigned short ubx_numberOfValidSVInfoMessage = 0; ///<  Number of valid Status message received
 
 // NAV-Settings
-//! The pointer to the Nav Settings message that is being filled (not usable)
-ubx_cfg_nav_settings *ubx_currentNavSettingsMessage = &ubx_NavSettingsMessage[0];
-//! The pointer to the last Nav Settings message that was completed
-ubx_cfg_nav_settings *ubx_lastNavSettingsMessage = &ubx_NavSettingsMessage[1];
-//! Number of valid Nav Settings message received
-unsigned short ubx_numberOfValidNavSettingsMessage = 0;
+ubx_cfg_nav_settings *ubx_currentNavSettingsMessage = &ubx_NavSettingsMessage[0]; ///<  The pointer to the Nav Settings message that is being filled (not usable)
+ubx_cfg_nav_settings *ubx_lastNavSettingsMessage = &ubx_NavSettingsMessage[1]; ///<  The pointer to the last Nav Settings message that was completed
+unsigned short ubx_numberOfValidNavSettingsMessage = 0; ///<  Number of valid Nav Settings message received
 
 // CFG message rate
-//! The pointer to the CFG Rate message that is being filled (not usable)
-ubx_cfg_nav_rate *ubx_currentCFGRateMessage = &ubx_CFGRateMessage[0];
-//! The pointer to the last CFG Rate message that was completed
-ubx_cfg_nav_rate *ubx_lastCFGRateMessage = &ubx_CFGRateMessage[1];
-//! Number of valid CFG Rate message received
-unsigned short ubx_numberOfValidCFGRateMessage = 0;
+ubx_cfg_nav_rate *ubx_currentCFGRateMessage = &ubx_CFGRateMessage[0]; ///<  The pointer to the CFG Rate message that is being filled (not usable)
+ubx_cfg_nav_rate *ubx_lastCFGRateMessage = &ubx_CFGRateMessage[1]; ///<  The pointer to the last CFG Rate message that was completed
+unsigned short ubx_numberOfValidCFGRateMessage = 0; ///<  Number of valid CFG Rate message received
 
 // CFG Set/Get message rate
-//! The pointer to the CFG Set/get Rate message that is being filled (not usable)
-ubx_cfg_msg_rate *ubx_currentCFGSetGetRateMessage = &ubx_CFGSetGetRateMessage[0];
-//! The pointer to the last CFG Set/get Rate message that was completed
-ubx_cfg_msg_rate *ubx_lastCFGSetGetRateMessage = &ubx_CFGSetGetRateMessage[1];
-//! Number of valid CFG Set/get Rate message received
-unsigned short ubx_numberOfValidCFGSetGetRateMessage = 0;
+ubx_cfg_msg_rate *ubx_currentCFGSetGetRateMessage = &ubx_CFGSetGetRateMessage[0]; ///<  The pointer to the CFG Set/get Rate message that is being filled (not usable)
+ubx_cfg_msg_rate *ubx_lastCFGSetGetRateMessage = &ubx_CFGSetGetRateMessage[1]; ///<  The pointer to the last CFG Set/get Rate message that was completed
+unsigned short ubx_numberOfValidCFGSetGetRateMessage = 0; ///<  Number of valid CFG Set/get Rate message received
 
 // MON RXR message
-//! The pointer to the MON RXR message that is being filled (not usable)
-ubx_mon_rxr_struct *ubx_currentMONRXRMessage = &ubx_MONRXRMessage[0];
-//! The pointer to the last MON RXR message that was completed
-ubx_mon_rxr_struct *ubx_lastMONRXRMessage = &ubx_MONRXRMessage[1];
-//! Number of valid MON RXR message received
-unsigned short ubx_numberOfValidMONRXRMessage = 0;
+ubx_mon_rxr_struct *ubx_currentMONRXRMessage = &ubx_MONRXRMessage[0]; ///<  The pointer to the MON RXR message that is being filled (not usable)
+ubx_mon_rxr_struct *ubx_lastMONRXRMessage = &ubx_MONRXRMessage[1]; ///<  The pointer to the last MON RXR message that was completed
+unsigned short ubx_numberOfValidMONRXRMessage = 0; ///<  Number of valid MON RXR message received
 
 // TIM TP message
-//! The pointer to the MON RXR message that is being filled (not usable)
-ubx_tim_tp *ubx_currentTimTPMessage = &ubx_TimTPMessage[0];
-//! The pointer to the last TIM TP message that was completed
-ubx_tim_tp *ubx_lastTimTPMessage = &ubx_TimTPMessage[1];
-//! Number of valid TIM TP message received
-unsigned short ubx_numberOfValidTimTPMessage = 0;
+ubx_tim_tp *ubx_currentTimTPMessage = &ubx_TimTPMessage[0]; ///<  The pointer to the MON RXR message that is being filled (not usable)
+ubx_tim_tp *ubx_lastTimTPMessage = &ubx_TimTPMessage[1]; ///<  The pointer to the last TIM TP message that was completed
+unsigned short ubx_numberOfValidTimTPMessage = 0; ///<  Number of valid TIM TP message received
 
 
 // TIM VRFY message
-//! The pointer to the TIM VRFY message that is being filled (not usable)
-ubx_tim_vrfy *ubx_currentTimVRFYMessage = &ubx_TimVRFYMessage[0];
-//! The pointer to the last TIM VRFY message that was completed
-ubx_tim_vrfy *ubx_lastTimVRFYMessage = &ubx_TimVRFYMessage[1];
-//! Number of valid TIM VRFY message received
-unsigned short ubx_numberOfValidTimVRFYMessage = 0;
+ubx_tim_vrfy *ubx_currentTimVRFYMessage = &ubx_TimVRFYMessage[0]; ///<  The pointer to the TIM VRFY message that is being filled (not usable)
+
+ubx_tim_vrfy *ubx_lastTimVRFYMessage = &ubx_TimVRFYMessage[1]; ///<  The pointer to the last TIM VRFY message that was completed
+unsigned short ubx_numberOfValidTimVRFYMessage = 0; ///<  Number of valid TIM VRFY message received
 
 // Set to true to print all data
 bool printNavOnDebug = false;
 
 uint8_t loopPosllh = 0, loopVelned = 0, loopStatus = 0, loopSolution = 0, loopTimTp = 0, loopTimVrfy = 0;
 uint8_t numSkippedMsg = 10;
-/**
-* Initialization of the GPS with the type of platform
-*/
+
 void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting)
 {
 	centralData = get_central_data();
-	
-	//centralData->gps_stream_out.flush(centralData->gps_stream_out.data);
 	
 	// uint8_t epoch = TIME_OF_WEEK;
 	idleTimeout = 1200;
@@ -157,8 +109,6 @@ void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting)
 	centralData->GPS_data.num_sats = 0;
 	
 	next_fix = false;
-// 	new_data = false;
-// 	valid_read = false;
 	have_raw_velocity = false;
 	fix = false;
 	
@@ -170,22 +120,10 @@ void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting)
 	step = 0;
 	}
 
-
-/**
-* Process bytes available from the stream
-* 
-* The stream is assumed to contain only messages we recognise.  If it
-* contains other messages, and those messages contain the preamble
-* bytes, it is possible for this code to fail to synchronise to the
-* stream immediately.  Without buffering the entire message and
-* re-processing it from the top, this is unavoidable. The parser
-* attempts to avoid this when possible.
-*/
 bool ubx_read(void)
 {
 	uint8_t data;
 	bool msg_ok = false;
-	//bool new_message = false;
 	
 	unsigned char * temporaryMessageForSwaping;
 	
@@ -252,17 +190,6 @@ bool ubx_read(void)
 			payload_length |= data<<8;
 			cksum_a += data;
 			cksum_b += cksum_a; // checksum byte
-// 			dbg_print("Class: 0x");
-// 			dbg_print_num(ubxclass,16);
-// 			dbg_print(" Msg_id : 0x");
-// 			dbg_print_num(msg_id,16);
-// 			dbg_print(" Payload length:");
-// 			dbg_print_num(payload_length,10);
-// 			dbg_print(" large byte");
-// 			dbg_print_num(data,10);
-// 			dbg_print(" large byte shifted");
-// 			dbg_print_num(data<<8,10);
-// 			dbg_print("\n");
 			
 			if (payload_length > 512)
 			{
@@ -638,10 +565,6 @@ bool ubx_read(void)
 	return msg_ok;
 }
 
-/** 
-* Process the new received message, class by class
-* return true if new position and velocity messages are received, false otherwise
-*/
 bool ubx_process_data(void)
 {
 	ubx_nav_posllh *gpsPosllh; 
@@ -940,7 +863,8 @@ bool ubx_process_data(void)
 		dbg_print_num(msg_id,10);
 		dbg_print("\n");
 		
-		if (++disable_counter == 0) {
+		if (++disable_counter == 0)
+		{
 			dbg_print("Disabling NAV message 0x");
 			dbg_print_num(msg_id,16);
 			dbg_print("\n");
@@ -950,7 +874,8 @@ bool ubx_process_data(void)
 	}
 	// we only return true when we get new position and speed data
 	// this ensures we don't use stale data
-	if (new_position && new_speed) {
+	if (new_position && new_speed)
+	{
 		new_speed = false;
 		new_position = false;
 		return true;
@@ -958,38 +883,26 @@ bool ubx_process_data(void)
 	return false;
 }
 
-/** 
-* Checksum update
-*/
 void update_checksum(uint8_t *data, uint8_t len, uint8_t *ck_a, uint8_t *ck_b)
 {
-	while (len--) {
+	while (len--)
+	{
 		*ck_a += *data;
 		*ck_b += *ck_a;
 		data++;
 	}
 }
 
-/** 
-* To send the lower byte of an uint16_t in the Little Endian format
-*/
-
 uint8_t endian_lower_bytes_uint16(uint16_t bytes)
 {
 	return (bytes & 0x00FF);
 }
 
-/**
-* To send the higher byte of an uint16_t in the Little Endian format
-*/
 uint8_t endian_higher_bytes_uint16(uint16_t bytes)
 {
 	return (bytes & 0xFF00)>>8;
 }
 
-/**
-* To send the UBX header of all messages
-*/
 void ubx_send_header(uint8_t msg_class, uint8_t _msg_id, uint8_t size)
 {
 	ubx_header header;
@@ -1009,43 +922,12 @@ void ubx_send_header(uint8_t msg_class, uint8_t _msg_id, uint8_t size)
 	
 }
 
-/**
-* To send the checksum of every message
-*/
 void ubx_send_cksum(uint8_t ck_sum_a, uint8_t ck_sum_b)
 {
 	putnum(&centralData->gps_stream_out,ck_sum_a,16);
 	putnum(&centralData->gps_stream_out,ck_sum_b,16);
 }
 
-/**
-* NOT USED ANYMORE
-* To send a message to the GPS
-*/
-void ubx_send_message(uint8_t msg_class, uint8_t _msg_id, void *msg, uint8_t size)
-{
-	ubx_header header;
-	uint8_t ck_a=0, ck_b=0;
-	header.preamble1 = UBX_PREAMBLE1;
-	header.preamble2 = UBX_PREAMBLE2;
-	header.msg_class = msg_class;
-	header.msg_id_header    = _msg_id;
-	header.length    = size;
-	
-	update_checksum((uint8_t *)&header.msg_class, sizeof(header)-2, &ck_a, &ck_b);
-	update_checksum((uint8_t *)msg, size, &ck_a, &ck_b);
-	
- 	putstring(&(centralData->gps_stream_out),&header);
- 	putstring(&(centralData->gps_stream_out),(uint8_t *)msg);
- 	putstring(&(centralData->gps_stream_out),&ck_a);
- 	putstring(&(centralData->gps_stream_out),&ck_b);
-}
-
-/**
-* To send a CFG NAV RATE message,
-* Class:		0x06	UBX_CLASS_CFG
-* Msg_id:		0x08	MSG_CFG_RATE
-*/
 void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_nav_rate_send msg, uint8_t size)
 {
 	uint8_t ck_a=0, ck_b=0;
@@ -1068,11 +950,6 @@ void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_n
 	ubx_send_cksum(ck_a,ck_b);
 }
 
-/**
-* To send the NAV settings message
-* Class:		0x06	UBX_CLASS_CFG
-* Msg_id :	0x24	MSG_CFG_NAV_SETTINGS
-*/
 void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, enum GPS_Engine_Setting *engine_settings, uint8_t size)
 {
 	uint8_t ck_a=0, ck_b=0;
@@ -1092,11 +969,6 @@ void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, enum GPS_
 	ubx_send_cksum(ck_a,ck_b);
 }
 
-/**
-* To send the NAV messages that we want to receive
-* Class:		0x06	UBX_CLASS_CFG
-* Msg_id :	0x01	MSG_CFG_SET_RATE
-*/
 void ubx_configure_message_rate(uint8_t msg_class, uint8_t _msg_id, uint8_t rate)
 {
 	uint8_t ck_a=0, ck_b=0;
@@ -1122,10 +994,6 @@ void ubx_configure_message_rate(uint8_t msg_class, uint8_t _msg_id, uint8_t rate
 	ubx_send_cksum(ck_a,ck_b);
 }
 
-/**
-* To configure the GPS in binary mode and the Navigation messages we want
-* The GPS and UART channel should already be configured in the good baudrate 38400U
-*/
 void configure_gps(void)
 {
 	ubx_cfg_nav_rate_send msg;
@@ -1164,9 +1032,6 @@ void configure_gps(void)
 	ubx_send_message_nav_settings(UBX_CLASS_CFG, MSG_CFG_NAV_SETTINGS, NULL, 0);
 }
 
-/**
-* The function that needs to be called to get the GPS information
-*/
 void gps_update(void)
 {
 	bool result;
@@ -1252,10 +1117,6 @@ void gps_update(void)
 	}
 }
 
-/**
-* This function returns true if there is a new valid GPS message that arrived at time tnow
-* false otherwise
-*/
 bool newValidGpsMsg(uint32_t *prevGpsMsgTime)
 {
 	
@@ -1268,16 +1129,8 @@ bool newValidGpsMsg(uint32_t *prevGpsMsgTime)
 	}else{
 		return false;
 	}
-	
-	
 }
 
-/**
-*	This function returns a pointer to the last NAV-POSLLH message that was received
-*	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-*	@return A pointer to the last valid posllh message, or 0.
-*/
 ubx_nav_posllh * ubx_GetPosllh()
 {
 	if (ubx_numberOfValidPosllhMessage)
@@ -1286,12 +1139,6 @@ ubx_nav_posllh * ubx_GetPosllh()
 	return 0;
 }
 
-/**
-*	This function returns a pointer to the last NAV-STATUS message that was received
-*	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-*	@return A pointer to the last valid status message, or 0.
-*/
 ubx_nav_status * ubx_GetStatus()
 {
 	if (ubx_numberOfValidStatusMessage)
@@ -1300,12 +1147,6 @@ ubx_nav_status * ubx_GetStatus()
 	return 0;
 }
 
-/**
-*	This function returns a pointer to the last NAV-VELNED message that was received
-*	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-*	@return A pointer to the last valid velned message, or 0.
-*/
 ubx_nav_solution * ubx_GetSolution()
 {
 	if (ubx_numberOfValidSolutionMessage)
@@ -1314,12 +1155,6 @@ ubx_nav_solution * ubx_GetSolution()
 	return 0;
 }
 
-/**
-*	This function returns a pointer to the last NAV-VELNED message that was received
-*	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-*	@return A pointer to the last valid velned message, or 0.
-*/
 ubx_nav_velned * ubx_GetVelned()
 {
 	if (ubx_numberOfValidVelnedMessage)
@@ -1328,12 +1163,6 @@ ubx_nav_velned * ubx_GetVelned()
 	return 0;
 }
 
-/**
-*	This function returns a pointer to the last NAV-SVINFO message that was received
-*	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-*	@return A pointer to the last valid status message, or 0.
-*/
 ubx_nav_SVInfo * ubx_GetSVInfo()
 {
 	if (ubx_numberOfValidSVInfoMessage)
@@ -1342,12 +1171,6 @@ ubx_nav_SVInfo * ubx_GetSVInfo()
 	return 0;
 }
 
-/**
-*	This function returns a pointer to the last NAV-Settings message that was received
-*	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-*	@return A pointer to the last valid status message, or 0.
-*/
 ubx_cfg_nav_settings * ubx_GetNavSettings()
 {
 	if (ubx_numberOfValidNavSettingsMessage)
@@ -1356,12 +1179,6 @@ ubx_cfg_nav_settings * ubx_GetNavSettings()
 	return 0;
 }
 
-/**
-*	This function returns a pointer to the last CFG set/get rate message that was received
-*	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-*	@return A pointer to the last valid status message, or 0.
-*/
 ubx_cfg_msg_rate * ubx_GetMsgRate()
 {
 	if (ubx_numberOfValidCFGSetGetRateMessage)
@@ -1370,12 +1187,6 @@ ubx_cfg_msg_rate * ubx_GetMsgRate()
 	return 0;
 }
 
-/**
-*	This function returns a pointer to the last MON RXR message that was received
-*	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-*	@return A pointer to the last valid status message, or 0.
-*/
 ubx_mon_rxr_struct * ubx_GetMonRXR()
 {
 	if (ubx_numberOfValidMONRXRMessage)
@@ -1384,12 +1195,6 @@ ubx_mon_rxr_struct * ubx_GetMonRXR()
 	return 0;
 }
 
-/**
-*	This function returns a pointer to the last TIM TP message that was received
-*	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-*	@return A pointer to the last valid status message, or 0.
-*/
 ubx_tim_tp * ubx_GetTimTP()
 {
 	if(ubx_numberOfValidTimTPMessage)
@@ -1398,12 +1203,6 @@ ubx_tim_tp * ubx_GetTimTP()
 	return 0;
 }
 
-/**
-*	This function returns a pointer to the last TIM VRFY message that was received
-*	Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-*	@return A pointer to the last valid status message, or 0.
-*/
 ubx_tim_vrfy * ubx_GetTimVRFY()
 {
 	if(ubx_numberOfValidTimVRFYMessage)
@@ -1412,11 +1211,6 @@ ubx_tim_vrfy * ubx_GetTimVRFY()
 	return 0;
 }
 
-/**
-*	This function transforms a float angle in degree in a float angle in radians
-*
-*	@return The value in radians
-*/
 float ToRad(float numdeg)
 {
 	return numdeg * DEG2RAD;

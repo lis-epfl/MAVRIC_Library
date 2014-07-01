@@ -1,11 +1,17 @@
-/*
-* orca.c
-*
-*  Created: 22.10.2013 09:56:47
-*  Author: ndousse
-*/
+/**
+ * This file computes a collision-free trajectory for the ORCA algorithm
+ *
+ * The MAV'RIC Framework
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ *
+ * This file is part of the MAV'RIC Framework.
+ */
+
 
 #include "orca.h"
+#include "neighbor_selection.h"
 #include "central_data.h"
 #include "maths.h"
 #include "print_util.h"
@@ -20,7 +26,7 @@ int8_t loop_count_collisions = 0;
 
 float min_coll_dist;
 
-void init_orca()
+void init_orca(void)
 {
 	centralData = get_central_data();
 	centralData->safe_size = SIZE_VHC_ORCA;
@@ -30,8 +36,6 @@ void init_orca()
 
 	min_coll_dist = 2.0 * SIZE_VHC_ORCA + 1.0;
 }
-
-
 
 void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 {
@@ -376,7 +380,8 @@ bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Optimal
 			NewVelocity[i] = OptimalVelocity[i] + scalarProduct * planes[ind].normal[i];
 		}
 		/* If outside planeCircle, project on planeCircle. */
-		if (vector_norm_sqr(NewVelocity) > radiusSq) {
+		if (vector_norm_sqr(NewVelocity) > radiusSq)
+		{
 			float planeResult[3];
 			for(i=0;i<3;i++)
 			{
@@ -442,6 +447,7 @@ bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Optimal
 	}
 	return true;
 }
+
 
 float linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelocity[], float maxSpeed, float NewVelocity[], bool directionOpt)
 {
@@ -530,7 +536,8 @@ void linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float maxS
 				if (vector_norm_sqr(crossProduct)<=RVO_EPSILON)
 				{
 					/* Plane index and plane index2 are (almost) parallel. */
-					if (scalar_product(planes[index].normal, planes[index2].normal) > 0.0f) {
+					if (scalar_product(planes[index].normal, planes[index2].normal) > 0.0f)
+					{
 						/* Plane index and plane index2 point in the same direction. */
 						continue;
 					}else{

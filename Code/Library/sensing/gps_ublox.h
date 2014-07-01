@@ -1,17 +1,18 @@
-/*
-* gps_ublox.h
-* 
-* created on March 28 2013
+/**
+* This file decods the messages from the UBLOX GPS
 *
-* Author: N.Dousse
+* The MAV'RIC Framework
+* Copyright © 2011-2014
 *
+* Laboratory of Intelligent Systems, EPFL
+*
+* This file is part of the MAV'RIC Framework.
 */
 
 
-#ifndef GPS_UBLOX_H__ND
-#define GPS_UBLOX_H__ND
+#ifndef GPS_UBLOX_H__
+#define GPS_UBLOX_H__
 
-//#include "gps_maveric.h"
 #include "stdint.h"
 #include "stdbool.h"
 
@@ -152,290 +153,290 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 
 #ifdef BIG_ENDIAN
 	typedef struct {
-		uint16_t length;
-		uint8_t msg_id_header;
-		uint8_t msg_class;
-		uint8_t preamble2;
-		uint8_t preamble1;
+		uint16_t length;					///> the length of the message
+		uint8_t msg_id_header;				///> the msg id header
+		uint8_t msg_class;					///> the class of the message
+		uint8_t preamble2;					///> the 2nd preamble of the message
+		uint8_t preamble1;					///> the 1st preamble of the message
 	}ubx_header;
 
 	typedef struct {
-		uint16_t timeref;
-		uint16_t nav_rate;
-		uint16_t measure_rate_ms;
+		uint16_t timeref;					///> the time reference
+		uint16_t nav_rate;					///> the rate
+		uint16_t measure_rate_ms;			///> the measure rate of the cfg_nav message in ms
 	}ubx_cfg_nav_rate;
 	
 	// We still have to send to message in the correct order to the GPS
 	typedef struct {
-		uint16_t measure_rate_ms;
-		uint16_t nav_rate;
-		uint16_t timeref;			// 0:UTC time, 1:GPS time
+		uint16_t measure_rate_ms;			///> the measure_rate
+		uint16_t nav_rate;					///> the rate
+		uint16_t timeref;					///< the time reference, 0:UTC time, 1:GPS time
 	}ubx_cfg_nav_rate_send;
 
 	typedef struct {
-		uint8_t rate;
-		uint8_t msg_id_rate;
-		uint8_t msg_class;
+		uint8_t rate;						///> the rate
+		uint8_t msg_id_rate;				///> the msg id
+		uint8_t msg_class;					///> the msg_class
 	}ubx_cfg_msg_rate;
 
 	// We still have to send to message in the correct order to the GPS
 	typedef struct {
-		uint8_t msg_class;
-		uint8_t msg_id_rate;
-		uint8_t rate;
+		uint8_t msg_class;					///> the msg class
+		uint8_t msg_id_rate;				///> the msg id
+		uint8_t rate;						///> the rate of the message id
 	}ubx_cfg_msg_rate_send;
 
 	typedef struct {
-		uint32_t res4;
-		uint32_t res3;
-		uint32_t res2;
-		uint8_t dgpsTimeOut;							// s
-		uint8_t staticHoldThresh;						// cm/s
-		uint16_t tAcc;									// m
-		uint16_t pAcc;									// m
-		uint16_t tDop;
-		uint16_t pDop;
-		uint8_t drLimit;								// s
-		int8_t minElev;									// deg
-		uint32_t fixedAltVar;							// m^2
-		int32_t fixedAlt;								// m
-		uint8_t fixMode;
-		uint8_t dynModel;								// UBX_PLATFORM_... type
-		uint16_t mask;
+		uint32_t res4;						///< reserved slot
+		uint32_t res3;						///< reserved slot
+		uint32_t res2;						///< reserved slot
+		uint8_t dgpsTimeOut;				///< DGPS timeout in sec
+		uint8_t staticHoldThresh;			///< Static hold threshold cm/s
+		uint16_t tAcc;						///< Time accuracy mask in m
+		uint16_t pAcc;						///< Position accuracy mask in m
+		uint16_t tDop;						///< Time DOP mask to use
+		uint16_t pDop;						///< Position DOP mask to use
+		uint8_t drLimit;					///< Maximum time to perform dead reckoning in case of GPS signal loos, in sec
+		int8_t minElev;						///< Minimum elevation for a GNSS satellite to be used in NAV in deg
+		uint32_t fixedAltVar;				///< Fixed altitude variance in 2D mode in m^2
+		int32_t fixedAlt;					///< Fixed altitude for 2D fix mode in m
+		uint8_t fixMode;					///< Fixing mode, 1:2D, 2:3D, 3:auto 2D/3D
+		uint8_t dynModel;					///< UBX_PLATFORM_... type
+		uint16_t mask;						///< Bitmask, see U-Blox 6 documentation
 	}ubx_cfg_nav_settings;
 
 	typedef struct {
-		uint32_t vertical_accuracy;						// mm
-		uint32_t horizontal_accuracy;					// mm
-		int32_t altitude_msl;							// mm
-		int32_t altitude_ellipsoid;						// mm
-		int32_t latitude;								// deg 1e-7
-		int32_t longitude;								// deg 1e-7
-		uint32_t itow;                                  // GPS msToW
+		uint32_t vertical_accuracy;			///< vertical accuracy in mm
+		uint32_t horizontal_accuracy;		///< horizontal accuracy in mm
+		int32_t altitude_msl;				///< height above mean sea level in mm
+		int32_t altitude_ellipsoid;			///< height above ellipsoid in mm
+		int32_t latitude;					///< latitude in deg 1e-7
+		int32_t longitude;					///< longitude in deg 1e-7
+		uint32_t itow;						///< GPS msToW
 	}ubx_nav_posllh;
 
 	typedef struct {
-		uint32_t uptime;                                // milliseconds
-		uint32_t time_to_first_fix;						// milliseconds
-		uint8_t res;
-		uint8_t differential_status;
-		uint8_t fix_status;
-		uint8_t fix_type;
-		uint32_t itow;                                  // GPS msToW
+		uint32_t uptime;					///< milliseconds since startup
+		uint32_t time_to_first_fix;			///< time to first fix in milliseconds
+		uint8_t flags2;						///< information about navigatio output
+		uint8_t fix_status;					///< Fix status information
+		uint8_t flags;						///< Nav status flag
+		uint8_t fix_type;					///< fix type
+		uint32_t itow;						///< GPS msToW
 	}ubx_nav_status;
 
 	typedef struct {
-		uint32_t res2;
-		uint8_t satellites;
-		uint8_t res;
-		uint16_t position_DOP;							// scaling 0.01
-		uint32_t speed_accuracy;						// cm/s
-		int32_t ecef_z_velocity;						// cm/s
-		int32_t ecef_y_velocity;						// cm/s
-		int32_t ecef_x_velocity;						// cm/s
-		uint32_t position_accuracy_3d;					// cm
-		int32_t ecef_z;									// cm
-		int32_t ecef_y;									// cm
-		int32_t ecef_x;									// cm
-		uint8_t fix_status;
-		uint8_t fix_type;
-		int16_t week;
-		int32_t time_nsec;								// nanoseconds
-		uint32_t itow;									// milliseconds
+		uint32_t res2;						///< reserved slot
+		uint8_t satellites;					///< number of of SVs used in Nav solution
+		uint8_t res;						///< reserved slot
+		uint16_t position_DOP;				///< Position DOP, scaling 0.01
+		uint32_t speed_accuracy;			///< Speed accuracy estimate in cm/s
+		int32_t ecef_z_velocity;			///< Earth centered, earth frame, z velocity coordinate in cm/s
+		int32_t ecef_y_velocity;			///< Earth centered, earth frame, y velocity coordinate in cm/s
+		int32_t ecef_x_velocity;			///< Earth centered, earth frame, x velocity coordinate in cm/s
+		uint32_t position_accuracy_3d;		///< 3D position accuracy estimate in cm
+		int32_t ecef_z;						///< Earth centered, earth frame, z coordinate in cm
+		int32_t ecef_y;						///< Earth centered, earth frame, y coordinate in cm
+		int32_t ecef_x;						///< Earth centered, earth frame, x coordinate in cm
+		uint8_t fix_status;					///< the fix status
+		uint8_t fix_type;					///< the fix type
+		int16_t week;						///< GPS week (GPS time)
+		int32_t time_nsec;					///< Fractional nanoseconds remainder of rounded ms above
+		uint32_t itow;						///< GPS msToW
 	}ubx_nav_solution;
 
 	typedef struct {
-		uint32_t heading_accuracy;						// deg
-		uint32_t speed_accuracy;						// cm/s
-		int32_t heading_2d;								// deg
-		uint32_t groundSpeed_2d;						// cm/s
-		uint32_t speed_3d;								// cm/s
-		int32_t ned_down;								// cm/s
-		int32_t ned_east;								// cm/s
-		int32_t ned_north;								// cm/s
-		uint32_t itow;                                  // milliseconds GPS msToW
+		uint32_t heading_accuracy;			///< course/heading estimate accuracy in deg 1e-5
+		uint32_t speed_accuracy;			///< speed accuracy estimate cm/s
+		int32_t heading_2d;					///< heading of motion in deg 1e-5
+		uint32_t groundSpeed_2d;			///< ground speed in cm/s
+		uint32_t speed_3d;					///< 3D speed in cm/s
+		int32_t ned_down;					///< NED Down velocity in cm/s
+		int32_t ned_east;					///< NED East velocity in cm/s
+		int32_t ned_north;					///< NED North velocity in cm/s
+		uint32_t itow;						///< GPS msToW
 	}ubx_nav_velned;
 
 	typedef struct
 	{
 		struct
 		{
-			int32_t prRes;
-			int16_t azim;
-			int8_t elev;
-			uint8_t cno;
-			uint8_t quality;
-			uint8_t flags;
-			uint8_t svid;
-			uint8_t chn;
+			int32_t prRes;					///< Pseudo range in residual in centimeters
+			int16_t azim;					///< Azimuth in integer degrees
+			int8_t elev;					///< Elevation in integer degrees
+			uint8_t cno;					///< Carrier to Noise ratio in dbHz
+			uint8_t quality;				///< Bitmask, see U-Blox 6 documentation
+			uint8_t flags;					///< Bitmask, see U-Blox 6 documentation
+			uint8_t svid;					///< Satellite ID
+			uint8_t chn;					///< GPS msToW
 		} channelData[16];
 		
-		uint16_t reserved;
-		uint8_t globalFlags;
-		uint8_t numCh;
-		uint32_t itow;
+		uint16_t reserved;					///< reserved slot
+		uint8_t globalFlags;				///< Bitmask, 0:antaris, 1:u-blox 5, 2:u-blox 6
+		uint8_t numCh;						///< Number of channels
+		uint32_t itow;						///< GPS msToW
 	}ubx_nav_SVInfo;
 	
  	typedef struct{
- 		uint8_t awake_flag;
+ 		uint8_t awake_flag;					///< Receiver status flag
  	}ubx_mon_rxr_struct;
 	 
 	typedef struct{
-		uint8_t res;
-		uint8_t flags;
-		uint16_t week;
-		int32_t qErr;
-		uint32_t towSubMS;				// ms scaling: 2^-32
-		uint32_t towMS;					// ms
+		uint8_t res;						///< unused
+		uint8_t flags;						///< Bitmask, 0,1:gps timebase, UTC not available, 2,3:UTC timebase, UTC available
+		uint16_t week;						///< Timepulse week number according to timebase
+		int32_t qErr;						///< Quantization error of timepulse
+		uint32_t towSubMS;					///< Sumbmillisecond part of ToWms scaling: 2^-32
+		uint32_t towMS;						///< Timepulse time of week according to time base in ms
 	}ubx_tim_tp;
 
 	typedef struct
 	{
-		uint8_t res;
-		uint8_t flags;
-		uint16_t wno;					// week number
-		int32_t deltaNs;				// ns
-		int32_t deltaMs;				// ms
-		int32_t frac;					// ns
-		int32_t itow;					// ms
+		uint8_t res;						///< reserved slot
+		uint8_t flags;						///< aiding time source, 0:no time aiding done, 2:source was RTC, 3:source was AID-INI
+		uint16_t wno;						///< week number
+		int32_t deltaNs;					///< sub-millisecond part of delta time
+		int32_t deltaMs;					///< inter ms of delta time
+		int32_t frac;						///< sub-millisecond part of ToW in ns
+		int32_t itow;						///< integer ms ToW received by source
 	}ubx_tim_vrfy;
 
-#else
+#else	
 
 	typedef struct {
-		uint8_t preamble1;
-		uint8_t preamble2;
-		uint8_t msg_class;
-		uint8_t msg_id_header;
-		uint16_t length;
+		uint8_t preamble1;					///> the 1st preamble of the message
+		uint8_t preamble2;					///> the 2nd preamble of the message
+		uint8_t msg_class;					///> the class of the message
+		uint8_t msg_id_header;				///> the msg id header
+		uint16_t length;					///> the length of the message
 	}ubx_header;
 
 	typedef struct {
-		uint16_t measure_rate_ms;
-		uint16_t nav_rate;
-		uint16_t timeref;
+		uint16_t measure_rate_ms;			///> the measure rate of the cfg_nav message in ms
+		uint16_t nav_rate;					///> the rate
+		uint16_t timeref;					///> the time reference
 	}ubx_cfg_nav_rate;
 
 	typedef struct {
-		uint8_t msg_class;
-		uint8_t msg_id_rate;
-		uint8_t rate;
+		uint8_t msg_class;					///> the msg_class
+		uint8_t msg_id_rate;				///> the msg id
+		uint8_t rate;						///> the rate
 	}ubx_cfg_msg_rate;
 
 	typedef struct {
-		uint16_t mask;
-		uint8_t dynModel;								// UBX_PLATFORM_... type
-		uint8_t fixMode;
-		int32_t fixedAlt;								// m
-		uint32_t fixedAltVar;							// m^2
-		int8_t minElev;									// deg
-		uint8_t drLimit;								// s
-		uint16_t pDop;
-		uint16_t tDop;
-		uint16_t pAcc;									// m
-		uint16_t tAcc;									// m
-		uint8_t staticHoldThresh;						// cm/s
-		uint8_t dgpsTimeOut;							// s
-		uint32_t res2;
-		uint32_t res3;
-		uint32_t res4;
+		uint16_t mask;						///< Bitmask, see U-Blox 6 documentation
+		uint8_t dynModel;					///< UBX_PLATFORM_... type
+		uint8_t fixMode;					///< Fixing mode, 1:2D, 2:3D, 3:auto 2D/3D
+		int32_t fixedAlt;					///< Fixed altitude for 2D fix mode in m
+		uint32_t fixedAltVar;				///< Fixed altitude variance in 2D mode in m^2
+		int8_t minElev;						///< Minimum elevation for a GNSS satellite to be used in NAV in deg
+		uint8_t drLimit;					///< Maximum time to perform dead reckoning in case of GPS signal loos, in sec
+		uint16_t pDop;						///< Position DOP mask to use
+		uint16_t tDop;						///< Time DOP mask to use
+		uint16_t pAcc;						///< Position accuracy mask in m
+		uint16_t tAcc;						///< Time accuracy mask in m
+		uint8_t staticHoldThresh;			///< Static hold threshold cm/s
+		uint8_t dgpsTimeOut;				///< DGPS timeout in sec
+		uint32_t res2;						///< reserved slot
+		uint32_t res3;						///< reserved slot
+		uint32_t res4;						///< reserved slot
 	}ubx_cfg_nav_settings;
 
 	typedef struct {
-		uint32_t itow;                                  // GPS msToW
-		int32_t longitude;								// deg 1E-7
-		int32_t latitude;								// deg 1E-7
-		int32_t altitude_ellipsoid;						// mm
-		int32_t altitude_msl;							// mm
-		uint32_t horizontal_accuracy;					// mm
-		uint32_t vertical_accuracy;						// mm
+		uint32_t itow;						///< GPS msToW
+		int32_t longitude;					///< longitude in deg 1e-7
+		int32_t latitude;					///< latitude in deg 1e-7
+		int32_t altitude_ellipsoid;			///< height above ellipsoid in mm
+		int32_t altitude_msl;				///< height above mean sea level in mm
+		uint32_t horizontal_accuracy;		///< horizontal accuracy in mm
+		uint32_t vertical_accuracy;			///< vertical accuracy in mm
 	}ubx_nav_posllh;
 
 	typedef struct {
-		uint32_t itow;                                  // GPS msToW
-		uint8_t fix_type;
-		uint8_t fix_status;
-		uint8_t differential_status;
-		uint8_t res;
-		uint32_t time_to_first_fix;						// milliseconds
-		uint32_t uptime;                                // milliseconds
+		uint32_t itow;						///< GPS msToW
+		uint8_t fix_type;					///< fix type
+		uint8_t flags;						///< Nav status flag
+		uint8_t fix_status;					///< Fix status information
+		uint8_t flags2;						///< information about navigatio output
+		uint32_t time_to_first_fix;			///< time to first fix in milliseconds
+		uint32_t uptime;					///< milliseconds since startup
 	}ubx_nav_status;
 
 	typedef struct {
-		uint32_t itow;									// milliseconds
-		int32_t time_nsec;								// nanoseconds
-		int16_t week;
-		uint8_t fix_type;
-		uint8_t fix_status;
-		int32_t ecef_x;									// cm
-		int32_t ecef_y;									// cm
-		int32_t ecef_z;									// cm
-		uint32_t position_accuracy_3d;					// cm
-		int32_t ecef_x_velocity;						// cm/s
-		int32_t ecef_y_velocity;						// cm/s
-		int32_t ecef_z_velocity;						// cm/s
-		uint32_t speed_accuracy;						// cm/s
-		uint16_t position_DOP;							// scaling 0.01
-		uint8_t res;
-		uint8_t satellites;
-		uint32_t res2;
+		uint32_t itow;						///< GPS msToW
+		int32_t time_nsec;					///< Fractional nanoseconds remainder of rounded ms above
+		int16_t week;						///< GPS week (GPS time)
+		uint8_t fix_type;					///< the fix type
+		uint8_t fix_status;					///< the fix status
+		int32_t ecef_x;						///< Earth centered, earth frame, x coordinate in cm
+		int32_t ecef_y;						///< Earth centered, earth frame, y coordinate in cm
+		int32_t ecef_z;						///< Earth centered, earth frame, z coordinate in cm
+		uint32_t position_accuracy_3d;		///< 3D position accuracy estimate in cm
+		int32_t ecef_x_velocity;			///< Earth centered, earth frame, x velocity coordinate in cm/s
+		int32_t ecef_y_velocity;			///< Earth centered, earth frame, y velocity coordinate in cm/s
+		int32_t ecef_z_velocity;			///< Earth centered, earth frame, z velocity coordinate in cm/s
+		uint32_t speed_accuracy;			///< Speed accuracy estimate in cm/s
+		uint16_t position_DOP;				///< Position DOP, scaling 0.01
+		uint8_t res;						///< reserved slot
+		uint8_t satellites;					///< number of of SVs used in Nav solution
+		uint32_t res2;						///< reserved slot
 	}ubx_nav_solution;
 
 	typedef struct {
-		uint32_t itow;                                  // milliseconds GPS msToW
-		int32_t ned_north;								// cm/s
-		int32_t ned_east;								// cm/s
-		int32_t ned_down;								// cm/s
-		uint32_t speed_3d;								// cm/s
-		uint32_t groundSpeed_2d;						// cm/s
-		int32_t heading_2d;								// deg
-		uint32_t speed_accuracy;						// cm/s
-		uint32_t heading_accuracy;						// deg
+		uint32_t itow;						///< GPS msToW
+		int32_t ned_north;					///< NED North velocity in cm/s
+		int32_t ned_east;					///< NED East velocity in cm/s
+		int32_t ned_down;					///< NED Down velocity in cm/s
+		uint32_t speed_3d;					///< 3D speed in cm/s
+		uint32_t groundSpeed_2d;			///< ground speed in cm/s
+		int32_t heading_2d;					///< heading of motion in deg 1e-5
+		uint32_t speed_accuracy;			///< speed accuracy estimate cm/s
+		uint32_t heading_accuracy;			///< course/heading estimate accuracy in deg 1e-5
 	}ubx_nav_velned;
 
 	typedef struct
 	{
-		uint32_t itow;
-		uint8_t numCh;
-		uint8_t globalFlags;
-		uint16_t reserved;
+		uint32_t itow;						///< GPS msToW
+		uint8_t numCh;						///< Number of channels
+		uint8_t globalFlags;				///< Bitmask, 0:antaris, 1:u-blox 5, 2:u-blox 6
+		uint16_t reserved;					///< reserved slot
 	
 		struct
 		{
-			uint8_t chn;
-			uint8_t svid;
-			uint8_t flags;
-			uint8_t quality;
-			uint8_t cno;
-			int8_t elev;
-			int16_t azim;
-			int32_t prRes;
+			uint8_t chn;					///< GPS msToW
+			uint8_t svid;					///< Satellite ID
+			uint8_t flags;					///< Bitmask, see U-Blox 6 documentation
+			uint8_t quality;				///< Bitmask, see U-Blox 6 documentation
+			uint8_t cno;					///< Carrier to Noise ratio in dbHz
+			int8_t elev;					///< Elevation in integer degrees
+			int16_t azim;					///< Azimuth in integer degrees
+			int32_t prRes;					///< Pseudo range in residual in centimeters
 		} channelData[16];
 	}ubx_nav_SVInfo;
-	
+
 	typedef struct{
-		uint8_t awake_flag;
+		uint8_t awake_flag;					///< Receiver status flag
 	}ubx_mon_rxr_struct;
 
 	typedef struct  
 	{
-		uint32_t towMS;					// ms
-		uint32_t towSubMS;				// ms scaling: 2^-32
-		int32_t qErr;
-		uint16_t week;
-		uint8_t flags;
-		uint8_t res;
+		uint32_t towMS;						///< Timepulse time of week according to time base in ms
+		uint32_t towSubMS;					///< Sumbmillisecond part of ToWms scaling: 2^-32
+		int32_t qErr;						///< Quantization error of timepulse
+		uint16_t week;						///< Timepulse week number according to timebase
+		uint8_t flags;						///< Bitmask, 0,1:gps timebase, UTC not available, 2,3:UTC timebase, UTC available
+		uint8_t res;						///< unused
 	}ubx_tim_tp;
-	
+
 	typedef struct
 	{
-		int32_t itow;
-		int32_t frac;
-		int32_t deltaMs;
-		int32_t deltaNs;
-		uint16_t wno;
-		uint8_t flags;
-		uint8_t res;
+		int32_t itow;						///< integer ms ToW received by source
+		int32_t frac;						///< sub-millisecond part of ToW in ns
+		int32_t deltaMs;					///< inter ms of delta time
+		int32_t deltaNs;					///< sub-millisecond part of delta time
+		uint16_t wno;						///< week number
+		uint8_t flags;						///< aiding time source, 0:no time aiding done, 2:source was RTC, 3:source was AID-INI
+		uint8_t res;						///< reserved slot
 	}ubx_tim_vrfy;
 
 #endif
@@ -469,129 +470,325 @@ bool have_raw_velocity;
 // bool valid_read;
 // bool new_data;
 
-uint32_t last_ground_speed_cm;
+//uint32_t last_ground_speed_cm;
 
-#define NO_GPS 0
-#define NO_FIX 1
-#define GPS_OK 2
+#define NO_GPS 0						///< No GPS
+#define NO_FIX 1						///< No GPS fix
+#define GPS_OK 2						///< GPS ok
 
 enum GPS_Engine_Setting{
-	GPS_ENGINE_NONE        = -1,
-	GPS_ENGINE_PORTABLE    = 0,
-	GPS_ENGINE_STATIONARY  = 2,
-	GPS_ENGINE_PEDESTRIAN  = 3,
-	GPS_ENGINE_AUTOMOTIVE  = 4,
-	GPS_ENGINE_SEA         = 5,
-	GPS_ENGINE_AIRBORNE_1G = 6,
-	GPS_ENGINE_AIRBORNE_2G = 7,
-	GPS_ENGINE_AIRBORNE_4G = 8
+	GPS_ENGINE_NONE        = -1,		///< None
+	GPS_ENGINE_PORTABLE    = 0,			///< Portable
+	GPS_ENGINE_STATIONARY  = 2,			///< Stationary
+	GPS_ENGINE_PEDESTRIAN  = 3,			///< Pedestrian
+	GPS_ENGINE_AUTOMOTIVE  = 4,			///< Automotive
+	GPS_ENGINE_SEA         = 5,			///< Sea
+	GPS_ENGINE_AIRBORNE_1G = 6,			///< Airborne with <1g acceleration
+	GPS_ENGINE_AIRBORNE_2G = 7,			///< Airborne with <2g acceleration
+	GPS_ENGINE_AIRBORNE_4G = 8			///< Airborne with <4g acceleration
 };
 
 enum GPS_Engine_Setting engine_nav_setting;
 
-//! Number of times ubx_CheckTimeout() must be called without response from GPS before it is considered as timed out
-#define UBX_TIMEOUT_CYCLES 2
-//! The minimum precision to consider a position as correct (in m)
-#define UBX_POSITION_PRECISION 20
-//! The minimum precision to consider an altitude as correct (in m)
-#define UBX_ALTITUDE_PRECISION 20
-//! The minimum precision to consider a speed as correct (in m/s)
-#define UBX_SPEED_PRECISION 5
-//! The minimum precision to consider a heading as correct (in deg*10^5)
-#define UBX_HEADING_PRECISION 5000000//3000000
 
-// Type definition for GPS data
+#define UBX_TIMEOUT_CYCLES 2			///< Number of times ubx_CheckTimeout() must be called without response from GPS before it is considered as timed out
+#define UBX_POSITION_PRECISION 20		///< The minimum precision to consider a position as correct (in m)
+#define UBX_ALTITUDE_PRECISION 20		///< The minimum precision to consider an altitude as correct (in m)
+#define UBX_SPEED_PRECISION 5			///< The minimum precision to consider a speed as correct (in m/s)
+
+#define UBX_HEADING_PRECISION 5000000	///< The minimum precision to consider a heading as correct (in deg*10^5)
+
+
 typedef struct
 {
-	double latitude; //!< latitude in degrees
-	double longitude; //!< longitude in degrees
-	float altitude; //!< altitude in m
-	float alt_elips; //!< altitude above ellipsoid in m
-	float speed; //!< 3D speed in m/s
-	float groundSpeed; //!< 2D ground speed in m/s
-	float northSpeed; //!< the speed to the north in m/s
-	float eastSpeed; //!< the speed to the east in m/s
-	float verticalSpeed; //!< the vertical speed in m/s
-	float course; //!< heading in degree * 100
+	double latitude;						///< Latitude in degrees
+	double longitude;						///< Longitude in degrees
+	float altitude;							///< Altitude in m
+	float alt_elips;						///< Altitude above ellipsoid in m
+	float speed;							///< 3D speed in m/s
+	float groundSpeed;						///< 2D ground speed in m/s
+	float northSpeed;						///< The speed to the north in m/s
+	float eastSpeed;						///< The speed to the east in m/s
+	float verticalSpeed;					///< The vertical speed in m/s
+	float course;							///< Heading in degree * 100
 	
-	float horizontalAccuracy; //!< horizontal accuracy in m
-	float verticalAccuracy; //!< vertical accuracy in m
+	float horizontalAccuracy;				///< Horizontal accuracy in m
+	float verticalAccuracy;					///< Vertical accuracy in m
 	
-	float speedAccuracy; //!< speed accuracy in m
-	float headingAccuracy; //!< heading accuracy in m
+	float speedAccuracy;					///< Speed accuracy in m
+	float headingAccuracy;					///< Heading accuracy in m
 	
-	uint8_t num_sats;
-	uint16_t hdop;
+	uint8_t num_sats;						///< Number of visible satellites
+	uint16_t hdop;							///< Height DOP
 	
-	uint32_t timeLastMsg; //!< time reference in ms of microcontroller
-	uint32_t timegps; //!< time reference in ms of gps
+	uint32_t timeLastMsg;					///< Time reference in ms of microcontroller
+	uint32_t timegps;						///< Time reference in ms of gps
 	
-	unsigned char status;
+	unsigned char status;					///< GPS status
 	
-	unsigned char horizontalStatus;
+	unsigned char horizontalStatus;			///< Horizontal status
 	
-// 	unsigned char latitudeStatus;
-// 	unsigned char longitudeStatus;
- 	unsigned char altitudeStatus;
- 	unsigned char speedStatus;
-// 	unsigned char groundSpeedStatus;
-// 	unsigned char northSpeedStatus;
-// 	unsigned char eastSpeedStatus;
-// 	unsigned char verticalSpeedStatus;
- 	unsigned char courseStatus;
-	unsigned char accuracyStatus;
-} gps_Data_type;
+ 	unsigned char altitudeStatus;			///< Altitude status
+ 	unsigned char speedStatus;				///< Speed status
+ 	unsigned char courseStatus;				///< Course status
+	unsigned char accuracyStatus;			///< Accuracy status
+} gps_Data_type;						///< Type definition for GPS data
 
-/// Last time that the GPS driver got a good packet from the GPS
-uint32_t idleTimer;
 
-/// Time in milliseconds after which we will assume the GPS is no longer
-/// sending us updates and attempt a re-init.
-///
-/// 1200ms allows a small amount of slack over the worst-case 1Hz update
-/// rate.
-uint32_t idleTimeout;
+uint32_t idleTimer;							///< Last time that the GPS driver got a good packet from the GPS
 
-uint32_t last_fix_time;
 
-float velocity_north;
-float velocity_east;
-float velocity_down;
+uint32_t idleTimeout;						///< Time in milliseconds after which we will assume the GPS is no longer sending us updates and attempt a re-init. 1200ms allows a small amount of slack over the worst-case 1Hz update rate.
 
-//float get_lag() { return 0.5; };
-	
+uint32_t last_fix_time;						///< Last fix time
+
+
+/**
+ * \brief	Initialize the gps U-Blox module
+ *
+ * \param	_engine_nav_setting		the GPS Nav settings 
+ *
+ * \return	void
+ */
 void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting);
 
+/**
+ * \brief	Process bytes available from the stream
+ *
+ * The stream is assumed to contain only messages we recognise.  If it
+ * contains other messages, and those messages contain the preamble
+ * bytes, it is possible for this code to fail to synchronise to the
+ * stream immediately.  Without buffering the entire message and
+ * re-processing it from the top, this is unavoidable. The parser
+ * attempts to avoid this when possible.
+ *
+ * \param	void
+ *
+ * \return	true if new velocity and new position message
+ */
 bool ubx_read(void);
+
+/**
+ * \brief	Process the new received message, class by class
+ *
+ * \param	void
+ *
+ * \return	true if new velocity and new position message
+ */
 bool ubx_process_data(void);
 
+/**
+ * \brief	Checksum update
+ *
+ * \param	data	pointer to the data to update the checksum
+ * \param	len		length of the data to update the checksum
+ * \param	ck_a	checksum a: sum of all the data
+ * \param	ck_b	checksum b: sum of checksum a
+ *
+ * \return	true if new velocity and new position message
+ */
 void update_checksum(uint8_t *data, uint8_t len, uint8_t *ck_a, uint8_t *ck_b);
+
+/**
+ * \brief	To send the lower bytes of an uint16_t in the Little Endian format
+ *
+ * \param	bytes	the uint16 bytes to be transformed
+ *
+ * \return	the lower 8 bytes of the uint16 bytes
+ */
 uint8_t endian_lower_bytes_uint16(uint16_t bytes);
+
+/**
+ * \brief	To send the higher bytes of an uint16_t in the Little Endian format
+ *
+ * \param	bytes	the uint16 bytes to be transformed
+ *
+ * \return	the higher 8 bytes of the uint16 bytes
+ */
 uint8_t endian_higher_bytes_uint16(uint16_t bytes);
+
+/**
+ * \brief	To send the UBX header of all messages
+ *
+ * \param	msg_class	the U-Blox class of the message
+ * \param	_msg_id		the U-Blox message ID
+ * \param	size		the size of the U-Blox following message
+ *
+ * \return	void
+ */
 void ubx_send_header(uint8_t msg_class, uint8_t _msg_id, uint8_t size);
+
+/**
+ * \brief	To send the checksum of every message
+ *
+ * \param	ck_sum_a	the checksum a
+ * \param	ck_sum_b	the checksum b
+ *
+ * \return	void
+ */
 void ubx_send_cksum(uint8_t ck_sum_a, uint8_t ck_sum_b);
 
-void ubx_send_message(uint8_t msg_class, uint8_t msg_id, void *msg, uint8_t size);
+/**
+ * \brief	To send a CFG NAV RATE message
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x08	MSG_CFG_RATE
+ *
+ * \param	msg_class	the U-Blox class of the message
+ * \param	_msg_id		the U-Blox message ID
+ * \param	msg			the CFG_NAV_RATE message
+ * \param	size		the size of the U-Blox following message
+ *
+ * \return	void
+ */
 void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_nav_rate_send msg, uint8_t size);
+
+/**
+ * \brief	To send the NAV settings message
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x24	MSG_CFG_NAV_SETTINGS
+ *
+ * \param	msg_class			the U-Blox class of the message
+ * \param	_msg_id				the U-Blox message ID
+ * \param	engine_settings		the engine_settings sent
+ * \param	size				the size of the U-Blox following message
+ *
+ * \return	void
+ */
 void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, enum GPS_Engine_Setting *engine_settings, uint8_t size);
+
+/**
+ * \brief	To send the NAV messages that we want to receive
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x01	MSG_CFG_SET_RATE
+ *
+ * \param	msg_class	the U-Blox class of the message
+ * \param	msg_id		the U-Blox message ID
+ * \param	rate		the rate of the CFG message
+ *
+ * \return	void
+ */
 void ubx_configure_message_rate(uint8_t msg_class, uint8_t msg_id, uint8_t rate);
 
+/**
+ * \brief	To configure the GPS in binary mode and the Navigation messages we want
+ *
+ * The GPS and UART channel should already be configured in the good baudrate 38400U
+ *
+ * \param	void
+ *
+ * \return	void
+ */
 void configure_gps(void);
 
+
+/**
+ * \brief	The function that needs to be called to get the GPS information
+ *
+ * \param	void
+ *
+ * \return	void
+ */
 void gps_update(void);
+
+/**
+ * \brief	The function that tells if a message is arrived at time tnow
+ *
+ * \param	prevGpsMsgTime		the time of the previous GPS message
+ *
+ * \return	if the latest GPS message is arrived at tnow
+ */
 bool newValidGpsMsg(uint32_t *prevGpsMsgTime);
 
+/**
+ * \brief	This function returns a pointer to the last NAV-POSLLH message that was received
+ *
+ * Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
+ *
+ * \return	A pointer to the last valid posllh message, or 0.
+ */
 ubx_nav_posllh * ubx_GetPosllh(void);
+
+/**
+ * \brief	This function returns a pointer to the last NAV-STATUS message that was received
+ *
+ * Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
+ *
+ * \return	A pointer to the last valid status message, or 0.
+ */
 ubx_nav_status * ubx_GetStatus(void);
+/**
+ * \brief	This function returns a pointer to the last NAV-SOL message that was received
+ *
+ * Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
+ *
+ * \return	A pointer to the last valid NAV-SOL message, or 0.
+ */
 ubx_nav_solution * ubx_GetSolution(void);
+
+/**
+* \brief	This function returns a pointer to the last NAV-VELNED message that was received
+* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
+*
+* \return	A pointer to the last valid velned message, or 0.
+*/
 ubx_nav_velned * ubx_GetVelned(void);
+
+/**
+* \brief	This function returns a pointer to the last NAV-SVINFO message that was received
+* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
+*
+* \return	A pointer to the last valid status message, or 0.
+*/
 ubx_nav_SVInfo * ubx_GetSVInfo(void);
+
+/**
+* \brief	This function returns a pointer to the last NAV-Settings message that was received
+* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
+*
+* \return	A pointer to the last valid status message, or 0.
+*/
 ubx_cfg_nav_settings * ubx_GetNavSettings(void);
+
+/**
+* \brief	This function returns a pointer to the last CFG set/get rate message that was received
+* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
+*
+* \return	A pointer to the last valid status message, or 0.
+*/
 ubx_cfg_msg_rate * ubx_GetMsgRate(void);
+
+/**
+* \brief	This function returns a pointer to the last MON RXR message that was received
+* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
+*
+* \return	A pointer to the last valid status message, or 0.
+*/
 ubx_mon_rxr_struct * ubx_GetMonRXR(void);
+
+/**
+* \brief	This function returns a pointer to the last TIM TP message that was received
+* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
+*
+* \return	A pointer to the last valid status message, or 0.
+*/
 ubx_tim_tp * ubx_GetTimTP(void);
+
+/**
+* \brief	This function returns a pointer to the last TIM VRFY message that was received
+* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
+*
+* \return	A pointer to the last valid status message, or 0.
+*/
 ubx_tim_vrfy * ubx_GetTimVRFY(void);
 
+/**
+* \brief	This function transforms a float angle in degree in a float angle in radians
+*
+* \return	The value in radians
+*/
 float ToRad(float numdeg);
 
 #endif //GPS_UBLOX_H__
