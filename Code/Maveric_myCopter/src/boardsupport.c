@@ -130,7 +130,12 @@ void initialise_board(central_data_t *centralData) {
 		
 	// init debug output
 	dbg_print_init(centralData->debug_out_stream);
-
+	
+	// GLE: Activate 6V enable
+	// init 6V enable
+	gpio_enable_gpio_pin(AVR32_PIN_PA04);
+	gpio_set_gpio_pin(AVR32_PIN_PA04);
+	// GLE: End
 
 	Enable_global_interrupt();
 	dbg_print("Board initialised.\n");

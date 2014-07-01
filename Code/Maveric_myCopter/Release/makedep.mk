@@ -14,21 +14,29 @@ Library\control\stabilisation_copter.c
 
 Library\control\stabilisation_hybrid.c
 
+Library\hal\airspeed_analog.c
+
 Library\hal\analog_monitor.c
+
+Library\hal\i2cxl_sonar.c
 
 Library\hal\i2c_driver_int.c
 
 Library\hal\lsm330dlc_driver.c
 
-Library\hal\time_keeper.c
+Library\hal\piezo_speaker.c
 
-Library\sensing\estimator.c
+Library\hal\time_keeper.c
 
 Library\sensing\neighbor_selection.c
 
 Library\sensing\position_estimation.c
 
 Library\sensing\qfilter.c
+
+Library\util\linear_algebra.c
+
+Library\util\matrixlib_float.c
 
 Library\util\quick_trig.c
 
@@ -37,10 +45,6 @@ src\central_data.c
 src\mavlink_actions.c
 
 src\tasks.c
-
-Library\communication\ishtar.c
-
-Library\communication\ishtar_stream.c
 
 Library\communication\mavlink_stream.c
 

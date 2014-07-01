@@ -14,7 +14,11 @@ Library\control\stabilisation_copter.c
 
 Library\control\stabilisation_hybrid.c
 
+Library\hal\airspeed_analog.c
+
 Library\hal\analog_monitor.c
+
+Library\hal\i2cxl_sonar.c
 
 Library\hal\i2c_driver_int.c
 

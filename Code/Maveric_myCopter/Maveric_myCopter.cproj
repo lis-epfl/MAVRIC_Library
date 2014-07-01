@@ -14,7 +14,7 @@
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
     <OutputType>Executable</OutputType>
     <Language>CPP</Language>
-    <avrtool>com.atmel.avrdbg.tool.jtagicemk3</avrtool>
+    <avrtool>com.atmel.avrdbg.tool.jtagice3plus</avrtool>
     <avrtoolinterface>JTAG</avrtoolinterface>
     <com_atmel_avrdbg_tool_jtagicemkii>
       <ToolType>com.atmel.avrdbg.tool.jtagicemkii</ToolType>
@@ -274,7 +274,7 @@
         <InterfaceName>JTAG</InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.jtagice3plus</ToolType>
-      <ToolNumber>J30200015895</ToolNumber>
+      <ToolNumber>J30200014870</ToolNumber>
       <ToolName>JTAGICE3</ToolName>
     </com_atmel_avrdbg_tool_jtagice3plus>
   </PropertyGroup>
@@ -427,145 +427,145 @@
     <OutputFileExtension>.elf</OutputFileExtension>
     <ToolchainSettings>
       <Avr32GccCpp>
-  <avr32gcc.common.outputfiles.hex>True</avr32gcc.common.outputfiles.hex>
-  <avr32gcc.common.outputfiles.lss>True</avr32gcc.common.outputfiles.lss>
-  <avr32gcc.common.outputfiles.eep>True</avr32gcc.common.outputfiles.eep>
-  <avr32gcc.common.outputfiles.srec>True</avr32gcc.common.outputfiles.srec>
-  <avr32gcc.compiler.symbols.DefSymbols>
-    <ListValues>
-      <Value>BOARD=USER_BOARD</Value>
-    </ListValues>
-  </avr32gcc.compiler.symbols.DefSymbols>
-  <avr32gcc.compiler.directories.IncludePaths>
-    <ListValues>
-      <Value>../src</Value>
-      <Value>../src/asf/avr32/drivers/intc</Value>
-      <Value>../src/asf/avr32/utils</Value>
-      <Value>../src/asf/avr32/utils/preprocessor</Value>
-      <Value>../src/asf/common/applications/user_application/user_board</Value>
-      <Value>../src/asf/common/boards</Value>
-      <Value>../src/asf/common/boards/user_board</Value>
-      <Value>../src/asf/common/utils</Value>
-      <Value>../src/config</Value>
-      <Value>../src/asf/avr32/drivers/gpio</Value>
-      <Value>../src/asf/avr32/drivers/scif</Value>
-      <Value>../src/asf/avr32/drivers/pm</Value>
-      <Value>../src/asf/avr32/drivers/flashc</Value>
-      <Value>../src/asf/common/services/sleepmgr</Value>
-      <Value>../src/asf/common/services/clock</Value>
-      <Value>../src/asf/avr32/drivers/cpu/cycle_counter</Value>
-      <Value>../src/asf/avr32/services/delay</Value>
-      <Value>../src/asf/avr32/drivers/usbc</Value>
-      <Value>../src/asf/common/utils/stdio/stdio_usb</Value>
-      <Value>../src/asf/common/services/usb/class/cdc/device</Value>
-      <Value>../src/asf/common/services/usb/class/cdc</Value>
-      <Value>../src/asf/common/services/usb/udc</Value>
-      <Value>../src/asf/common/services/usb</Value>
-      <Value>../src/asf/avr32/drivers/usart</Value>
-      <Value>../src/asf/common/services/serial</Value>
-      <Value>../src/asf/avr32/drivers/adcifa</Value>
-      <Value>../src/asf/avr32/drivers/dacifb</Value>
-      <Value>../src/asf/avr32/drivers/pevc</Value>
-      <Value>../src/asf/avr32/drivers/spi</Value>
-      <Value>../src/asf/avr32/drivers/tc</Value>
-      <Value>../src/asf/avr32/drivers/eic</Value>
-      <Value>../src/asf/common/services/spi</Value>
-      <Value>../src/asf/common/services/spi/uc3_spi</Value>
-      <Value>../src/asf/avr32/drivers/pdca</Value>
-      <Value>../src/asf/common/utils/stdio/stdio_serial</Value>
-      <Value>../src/asf/avr32/drivers/pwm</Value>
-      <Value>../src/asf/avr32/drivers/twim</Value>
-      <Value>../src/asf/avr32/drivers/ast</Value>
-      <Value>../src/asf/avr32/drivers/twis</Value>
-      <Value>../src/asf/common/services/twi</Value>
-      <Value>../src/asf/common/services/twi/uc3_twim</Value>
-      <Value>../Library/communication</Value>
-      <Value>../Library/actuation</Value>
-      <Value>../Library/control</Value>
-      <Value>../Library/hal</Value>
-      <Value>../Library/runtime</Value>
-      <Value>../Library/sensing</Value>
-      <Value>../Library/util</Value>
-      <Value>../Library</Value>
-    </ListValues>
-  </avr32gcc.compiler.directories.IncludePaths>
-  <avr32gcc.compiler.optimization.OtherFlags>-mhard-float</avr32gcc.compiler.optimization.OtherFlags>
-  <avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
-  <avr32gcc.compiler.optimization.PrepareDataForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareDataForGarbageCollection>
-  <avr32gcc.compiler.optimization.GeneratePositionIndependentCode>True</avr32gcc.compiler.optimization.GeneratePositionIndependentCode>
-  <avr32gcc.compiler.optimization.DebugLevel>Default (-g2)</avr32gcc.compiler.optimization.DebugLevel>
-  <avr32gcc.compiler.optimization.GenerateGprofInformation>True</avr32gcc.compiler.optimization.GenerateGprofInformation>
-  <avr32gcc.compiler.optimization.GenerateProfInformation>True</avr32gcc.compiler.optimization.GenerateProfInformation>
-  <avr32gcc.compiler.warnings.AllWarnings>True</avr32gcc.compiler.warnings.AllWarnings>
-  <avr32gcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -march=ucr3fp</avr32gcc.compiler.miscellaneous.OtherFlags>
-  <avr32gcccpp.compiler.symbols.DefSymbols>
-    <ListValues>
-      <Value>BOARD=USER_BOARD</Value>
-    </ListValues>
-  </avr32gcccpp.compiler.symbols.DefSymbols>
-  <avr32gcccpp.compiler.directories.IncludePaths>
-    <ListValues>
-      <Value>../src</Value>
-      <Value>../src/asf/avr32/drivers/intc</Value>
-      <Value>../src/asf/avr32/utils</Value>
-      <Value>../src/asf/avr32/utils/preprocessor</Value>
-      <Value>../src/asf/common/applications/user_application/user_board</Value>
-      <Value>../src/asf/common/boards</Value>
-      <Value>../src/asf/common/boards/user_board</Value>
-      <Value>../src/asf/common/utils</Value>
-      <Value>../src/config</Value>
-      <Value>../src/asf/avr32/drivers/gpio</Value>
-      <Value>../src/asf/avr32/drivers/scif</Value>
-      <Value>../src/asf/avr32/drivers/pm</Value>
-      <Value>../src/asf/avr32/drivers/flashc</Value>
-      <Value>../src/asf/common/services/sleepmgr</Value>
-      <Value>../src/asf/common/services/clock</Value>
-      <Value>../src/asf/avr32/drivers/cpu/cycle_counter</Value>
-      <Value>../src/asf/avr32/services/delay</Value>
-      <Value>../src/asf/avr32/drivers/usbc</Value>
-      <Value>../src/asf/common/utils/stdio/stdio_usb</Value>
-      <Value>../src/asf/common/services/usb/class/cdc/device</Value>
-      <Value>../src/asf/common/services/usb/class/cdc</Value>
-      <Value>../src/asf/common/services/usb/udc</Value>
-      <Value>../src/asf/common/services/usb</Value>
-      <Value>../src/asf/avr32/drivers/usart</Value>
-      <Value>../src/asf/common/services/serial</Value>
-      <Value>../src/asf/avr32/drivers/adcifa</Value>
-      <Value>../src/asf/avr32/drivers/dacifb</Value>
-      <Value>../src/asf/avr32/drivers/pevc</Value>
-      <Value>../src/asf/avr32/drivers/spi</Value>
-      <Value>../src/asf/avr32/drivers/tc</Value>
-      <Value>../src/asf/avr32/drivers/eic</Value>
-      <Value>../src/asf/common/services/spi</Value>
-      <Value>../src/asf/common/services/spi/uc3_spi</Value>
-      <Value>../src/asf/avr32/drivers/pdca</Value>
-      <Value>../src/asf/common/utils/stdio/stdio_serial</Value>
-      <Value>../src/asf/avr32/drivers/pwm</Value>
-      <Value>../src/asf/avr32/drivers/twim</Value>
-      <Value>../src/asf/avr32/drivers/ast</Value>
-      <Value>../src/asf/avr32/drivers/twis</Value>
-      <Value>../src/asf/common/services/twi</Value>
-      <Value>../src/asf/common/services/twi/uc3_twim</Value>
-      <Value>../Library/communication</Value>
-      <Value>../Library/actuation</Value>
-      <Value>../Library/control</Value>
-      <Value>../Library/hal</Value>
-      <Value>../Library/runtime</Value>
-      <Value>../Library/sensing</Value>
-      <Value>../Library/util</Value>
-      <Value>../Library</Value>
-    </ListValues>
-  </avr32gcccpp.compiler.directories.IncludePaths>
-  <avr32gcccpp.compiler.optimization.OtherFlags>-mhard-float</avr32gcccpp.compiler.optimization.OtherFlags>
-  <avr32gcccpp.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcccpp.compiler.optimization.PrepareFunctionsForGarbageCollection>
-  <avr32gcccpp.compiler.optimization.PrepareDataForGarbageCollection>True</avr32gcccpp.compiler.optimization.PrepareDataForGarbageCollection>
-  <avr32gcccpp.compiler.optimization.GeneratePositionIndependentCode>True</avr32gcccpp.compiler.optimization.GeneratePositionIndependentCode>
-  <avr32gcccpp.compiler.optimization.DebugLevel>Default (-g2)</avr32gcccpp.compiler.optimization.DebugLevel>
-  <avr32gcccpp.compiler.optimization.GenerateGprofInformation>True</avr32gcccpp.compiler.optimization.GenerateGprofInformation>
-  <avr32gcccpp.compiler.optimization.GenerateProfInformation>True</avr32gcccpp.compiler.optimization.GenerateProfInformation>
-  <avr32gcccpp.compiler.warnings.AllWarnings>True</avr32gcccpp.compiler.warnings.AllWarnings>
-  <avr32gcccpp.linker.general.DoNotUseStandardStartFiles>True</avr32gcccpp.linker.general.DoNotUseStandardStartFiles>
-</Avr32GccCpp>
+        <avr32gcc.common.outputfiles.hex>True</avr32gcc.common.outputfiles.hex>
+        <avr32gcc.common.outputfiles.lss>True</avr32gcc.common.outputfiles.lss>
+        <avr32gcc.common.outputfiles.eep>True</avr32gcc.common.outputfiles.eep>
+        <avr32gcc.common.outputfiles.srec>True</avr32gcc.common.outputfiles.srec>
+        <avr32gcc.compiler.symbols.DefSymbols>
+          <ListValues>
+            <Value>BOARD=USER_BOARD</Value>
+          </ListValues>
+        </avr32gcc.compiler.symbols.DefSymbols>
+        <avr32gcc.compiler.directories.IncludePaths>
+          <ListValues>
+            <Value>../src</Value>
+            <Value>../src/asf/avr32/drivers/intc</Value>
+            <Value>../src/asf/avr32/utils</Value>
+            <Value>../src/asf/avr32/utils/preprocessor</Value>
+            <Value>../src/asf/common/applications/user_application/user_board</Value>
+            <Value>../src/asf/common/boards</Value>
+            <Value>../src/asf/common/boards/user_board</Value>
+            <Value>../src/asf/common/utils</Value>
+            <Value>../src/config</Value>
+            <Value>../src/asf/avr32/drivers/gpio</Value>
+            <Value>../src/asf/avr32/drivers/scif</Value>
+            <Value>../src/asf/avr32/drivers/pm</Value>
+            <Value>../src/asf/avr32/drivers/flashc</Value>
+            <Value>../src/asf/common/services/sleepmgr</Value>
+            <Value>../src/asf/common/services/clock</Value>
+            <Value>../src/asf/avr32/drivers/cpu/cycle_counter</Value>
+            <Value>../src/asf/avr32/services/delay</Value>
+            <Value>../src/asf/avr32/drivers/usbc</Value>
+            <Value>../src/asf/common/utils/stdio/stdio_usb</Value>
+            <Value>../src/asf/common/services/usb/class/cdc/device</Value>
+            <Value>../src/asf/common/services/usb/class/cdc</Value>
+            <Value>../src/asf/common/services/usb/udc</Value>
+            <Value>../src/asf/common/services/usb</Value>
+            <Value>../src/asf/avr32/drivers/usart</Value>
+            <Value>../src/asf/common/services/serial</Value>
+            <Value>../src/asf/avr32/drivers/adcifa</Value>
+            <Value>../src/asf/avr32/drivers/dacifb</Value>
+            <Value>../src/asf/avr32/drivers/pevc</Value>
+            <Value>../src/asf/avr32/drivers/spi</Value>
+            <Value>../src/asf/avr32/drivers/tc</Value>
+            <Value>../src/asf/avr32/drivers/eic</Value>
+            <Value>../src/asf/common/services/spi</Value>
+            <Value>../src/asf/common/services/spi/uc3_spi</Value>
+            <Value>../src/asf/avr32/drivers/pdca</Value>
+            <Value>../src/asf/common/utils/stdio/stdio_serial</Value>
+            <Value>../src/asf/avr32/drivers/pwm</Value>
+            <Value>../src/asf/avr32/drivers/twim</Value>
+            <Value>../src/asf/avr32/drivers/ast</Value>
+            <Value>../src/asf/avr32/drivers/twis</Value>
+            <Value>../src/asf/common/services/twi</Value>
+            <Value>../src/asf/common/services/twi/uc3_twim</Value>
+            <Value>../Library/communication</Value>
+            <Value>../Library/actuation</Value>
+            <Value>../Library/control</Value>
+            <Value>../Library/hal</Value>
+            <Value>../Library/runtime</Value>
+            <Value>../Library/sensing</Value>
+            <Value>../Library/util</Value>
+            <Value>../Library</Value>
+          </ListValues>
+        </avr32gcc.compiler.directories.IncludePaths>
+        <avr32gcc.compiler.optimization.OtherFlags>-mhard-float</avr32gcc.compiler.optimization.OtherFlags>
+        <avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
+        <avr32gcc.compiler.optimization.PrepareDataForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareDataForGarbageCollection>
+        <avr32gcc.compiler.optimization.GeneratePositionIndependentCode>True</avr32gcc.compiler.optimization.GeneratePositionIndependentCode>
+        <avr32gcc.compiler.optimization.DebugLevel>Default (-g2)</avr32gcc.compiler.optimization.DebugLevel>
+        <avr32gcc.compiler.optimization.GenerateGprofInformation>True</avr32gcc.compiler.optimization.GenerateGprofInformation>
+        <avr32gcc.compiler.optimization.GenerateProfInformation>True</avr32gcc.compiler.optimization.GenerateProfInformation>
+        <avr32gcc.compiler.warnings.AllWarnings>True</avr32gcc.compiler.warnings.AllWarnings>
+        <avr32gcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -march=ucr3fp</avr32gcc.compiler.miscellaneous.OtherFlags>
+        <avr32gcccpp.compiler.symbols.DefSymbols>
+          <ListValues>
+            <Value>BOARD=USER_BOARD</Value>
+          </ListValues>
+        </avr32gcccpp.compiler.symbols.DefSymbols>
+        <avr32gcccpp.compiler.directories.IncludePaths>
+          <ListValues>
+            <Value>../src</Value>
+            <Value>../src/asf/avr32/drivers/intc</Value>
+            <Value>../src/asf/avr32/utils</Value>
+            <Value>../src/asf/avr32/utils/preprocessor</Value>
+            <Value>../src/asf/common/applications/user_application/user_board</Value>
+            <Value>../src/asf/common/boards</Value>
+            <Value>../src/asf/common/boards/user_board</Value>
+            <Value>../src/asf/common/utils</Value>
+            <Value>../src/config</Value>
+            <Value>../src/asf/avr32/drivers/gpio</Value>
+            <Value>../src/asf/avr32/drivers/scif</Value>
+            <Value>../src/asf/avr32/drivers/pm</Value>
+            <Value>../src/asf/avr32/drivers/flashc</Value>
+            <Value>../src/asf/common/services/sleepmgr</Value>
+            <Value>../src/asf/common/services/clock</Value>
+            <Value>../src/asf/avr32/drivers/cpu/cycle_counter</Value>
+            <Value>../src/asf/avr32/services/delay</Value>
+            <Value>../src/asf/avr32/drivers/usbc</Value>
+            <Value>../src/asf/common/utils/stdio/stdio_usb</Value>
+            <Value>../src/asf/common/services/usb/class/cdc/device</Value>
+            <Value>../src/asf/common/services/usb/class/cdc</Value>
+            <Value>../src/asf/common/services/usb/udc</Value>
+            <Value>../src/asf/common/services/usb</Value>
+            <Value>../src/asf/avr32/drivers/usart</Value>
+            <Value>../src/asf/common/services/serial</Value>
+            <Value>../src/asf/avr32/drivers/adcifa</Value>
+            <Value>../src/asf/avr32/drivers/dacifb</Value>
+            <Value>../src/asf/avr32/drivers/pevc</Value>
+            <Value>../src/asf/avr32/drivers/spi</Value>
+            <Value>../src/asf/avr32/drivers/tc</Value>
+            <Value>../src/asf/avr32/drivers/eic</Value>
+            <Value>../src/asf/common/services/spi</Value>
+            <Value>../src/asf/common/services/spi/uc3_spi</Value>
+            <Value>../src/asf/avr32/drivers/pdca</Value>
+            <Value>../src/asf/common/utils/stdio/stdio_serial</Value>
+            <Value>../src/asf/avr32/drivers/pwm</Value>
+            <Value>../src/asf/avr32/drivers/twim</Value>
+            <Value>../src/asf/avr32/drivers/ast</Value>
+            <Value>../src/asf/avr32/drivers/twis</Value>
+            <Value>../src/asf/common/services/twi</Value>
+            <Value>../src/asf/common/services/twi/uc3_twim</Value>
+            <Value>../Library/communication</Value>
+            <Value>../Library/actuation</Value>
+            <Value>../Library/control</Value>
+            <Value>../Library/hal</Value>
+            <Value>../Library/runtime</Value>
+            <Value>../Library/sensing</Value>
+            <Value>../Library/util</Value>
+            <Value>../Library</Value>
+          </ListValues>
+        </avr32gcccpp.compiler.directories.IncludePaths>
+        <avr32gcccpp.compiler.optimization.OtherFlags>-mhard-float</avr32gcccpp.compiler.optimization.OtherFlags>
+        <avr32gcccpp.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcccpp.compiler.optimization.PrepareFunctionsForGarbageCollection>
+        <avr32gcccpp.compiler.optimization.PrepareDataForGarbageCollection>True</avr32gcccpp.compiler.optimization.PrepareDataForGarbageCollection>
+        <avr32gcccpp.compiler.optimization.GeneratePositionIndependentCode>True</avr32gcccpp.compiler.optimization.GeneratePositionIndependentCode>
+        <avr32gcccpp.compiler.optimization.DebugLevel>Default (-g2)</avr32gcccpp.compiler.optimization.DebugLevel>
+        <avr32gcccpp.compiler.optimization.GenerateGprofInformation>True</avr32gcccpp.compiler.optimization.GenerateGprofInformation>
+        <avr32gcccpp.compiler.optimization.GenerateProfInformation>True</avr32gcccpp.compiler.optimization.GenerateProfInformation>
+        <avr32gcccpp.compiler.warnings.AllWarnings>True</avr32gcccpp.compiler.warnings.AllWarnings>
+        <avr32gcccpp.linker.general.DoNotUseStandardStartFiles>True</avr32gcccpp.linker.general.DoNotUseStandardStartFiles>
+      </Avr32GccCpp>
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
@@ -605,10 +605,22 @@
     <Compile Include="Library\control\stabilisation_hybrid.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\hal\airspeed_analog.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\airspeed_analog.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\hal\analog_monitor.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\analog_monitor.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\i2cxl_sonar.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\i2cxl_sonar.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\i2c_driver_int.c">

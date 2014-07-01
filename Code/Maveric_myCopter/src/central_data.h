@@ -126,6 +126,13 @@ typedef struct  {
 
 	i2cxl_sonar_t i2cxl_sonar;
 	airspeed_analog_t pitot;
+	
+	// GLE: CURVACE SPI communication
+	uint16_t curvace_ini[9];
+	int16_t curvace_data[5];
+	bool curvace_init;
+	int curvace_roiNum;
+	// GLE: end
 
 } central_data_t;
 
