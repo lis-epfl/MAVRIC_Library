@@ -600,7 +600,6 @@
     </VirtualDirectory>
     <VirtualDirectory Name="hal">
       <File Name="Library/hal/uart_int.h"/>
-      <File Name="Library/hal/amplifiers.h"/>
       <File Name="Library/hal/time_keeper.h"/>
       <File Name="Library/hal/lsm330dlc_driver.c"/>
       <File Name="Library/hal/compass_hmc5883l.h"/>
@@ -611,7 +610,6 @@
       <File Name="Library/hal/bmp085.c"/>
       <File Name="Library/hal/time_keeper.c"/>
       <File Name="Library/hal/uart_int.c"/>
-      <File Name="Library/hal/amplifiers.c"/>
       <File Name="Library/hal/adc_int.h"/>
       <File Name="Library/hal/radar_driver.c"/>
       <File Name="Library/hal/radar_module_driver.h"/>
