@@ -1,7 +1,12 @@
-/** Driver for the external ADC: ADS1274  (4ch, 24 bit, SPI interface)
-Author: Felix Schill  
-
-All rights reserved (2011).
+/**
+* This file is the Driver for the external ADC: ADS1274  (4ch, 24 bit, SPI interface)
+*
+* The MAV'RIC Framework
+* Copyright © 2011-2014
+*
+* Laboratory of Intelligent Systems, EPFL
+*
+* This file is part of the MAV'RIC Framework.
 */
 
 
@@ -20,42 +25,90 @@ All rights reserved (2011).
 #define ADC_SPI_PORT AVR32_SPI0
 #define ADC_SPI_INDEX 0
 
-// function pointer to a generator function that is called every time a sample is collected, to generate an output at the DAC pin
+/** 
+* \brief function pointer to a generator function that is called every time a sample is collected, to generate an output at the DAC pin
+*/
 typedef uint16_t (*generatorfunction)(uint32_t);
 
-/** set pointer to a callback function that creates a waveform for the DAC. 
+/** 
+ * \brief set pointer to a callback function that creates a waveform for the DAC. 
  * input:  sample index (0 <= index <= ADC_BUFFER_SIZE)
  * output: a 12-bit value for the DAC to convert (0<= output < 4096)
+ *
+ * \param new_function_generator a function pointer to a generator function
  */
 void set_DAC_generator_function(generatorfunction new_function_generator );
 
-// Initializes ADC (configures Pins, starts Clock, sets defaults)
+/** 
+ * \brief Initializes ADC (configures Pins, starts Clock, sets defaults)
+*/
 void Init_ADC(void);
 
-// Enable/Disable the clock to the ADC
+/** 
+ * \brief Enable/Disable the clock to the ADC
+ *
+ * \param on_off to enable or disable the ADC clock
+*/
 void ADC_Switch_Clock(Bool on_off);
 
-// Switch the four input channels on or off
+/** 
+ * \brief Switch the four input channels on or off
+ *
+ * \param channel select ADC channel
+ * \param on_off enable or disable ADC of that channel
+*/
 void ADC_Switch_Channel(int channel, Bool on_off);
 
-// configures the ADC mode (refer to datasheet for options)
+/** 
+ * \brief configures the ADC mode (refer to datasheet for options)
+ *
+ * \param mode define in which mode the ADC will be used
+*/
 void ADC_Set_Mode(int mode);
 
-// enables continuous sampling  -- not implemented yet
+/** 
+ * \brief enables continuous sampling  -- not implemented yet
+*/
 void ADC_Start_Sampling(void);
 
-// starts sampling, captures one buffer length and then stops
+/** 
+ * \brief starts sampling, captures one buffer length and then stops
+*/
 void ADC_Start_Oneshot(void);
 
-// stops sampling immediately
+/** 
+ * \brief stops sampling immediately
+*/
 void ADC_Stop_Sampling(void);
 
-// Returns true if one-shot sampling has finished
+/** 
+ * \brief get whether one-shot sampling has finished
+ *
+ * \return true if one-shot sampling has finished
+*/
 Bool Sampling_Complete(void);
 
+/**
+ * \brief return the interrupt counter
+ *
+ * \return interrupt counter
+*/
 int get_interrupt_counter(void);
 
+/**
+ * \brief return the status of the sampling process
+ *
+ * \return sampling counter
+*/
 int get_sampling_status(void);
 
+/**
+ * \brief return an ADC sample
+ *
+ * \param channel ADC channel
+ * \param sample the sample number
+ *
+ * \return the sample corresponding to this sample number on this ADC channel
+*/
 float get_sample(int channel, int sample);
 #endif

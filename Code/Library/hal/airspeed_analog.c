@@ -1,31 +1,29 @@
-// Copyright (C) 2014  Julien Lecoeur
-
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Driver for the DIYdrones airspeed sensor V20 (old analog version)
- */
+* This file is the driver for the DIYdrones airspeed sensor V20 (old analog version)
+*
+* The MAV'RIC Framework
+* Copyright © 2011-2014
+*
+* Laboratory of Intelligent Systems, EPFL
+*
+* This file is part of the MAV'RIC Framework.
+*/
 
 #include "airspeed_analog.h"
 #include "analog_monitor.h"
 #include "maths.h"
 #include "delay.h"
 
-const uint32_t VOLTS_TO_PASCAL = 819;
-const float PITOT_GAIN_DEFAULT = 1.9936; 	// this gain come from APM, but it does not make sense (should be)
+const uint32_t VOLTS_TO_PASCAL = 819;		///< conversion factor from volts to pascal units
+const float PITOT_GAIN_DEFAULT = 1.9936; 	///< this gain come from APM, but it does not make sense (should be)
 
-
+/**
+ * \brief Returns the pressure measure by the airspeed sensor
+ *
+ * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
+ *
+ * \return the dynamical pressure measured by the sensor (with potential offset)
+*/
 float airspeed_analog_get_pressure(airspeed_analog_t* airspeed_analog);
 
 

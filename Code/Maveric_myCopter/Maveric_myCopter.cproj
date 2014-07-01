@@ -1116,12 +1116,6 @@
     <Compile Include="Library\hal\adxl345_driver.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\amplifiers.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\amplifiers.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\hal\bmp085.c">
       <SubType>compile</SubType>
     </Compile>
