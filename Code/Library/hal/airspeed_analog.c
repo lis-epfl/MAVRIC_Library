@@ -33,11 +33,10 @@ const float PITOT_GAIN_DEFAULT = 1.9936; 	///< this gain come from APM, but it d
 */
 float airspeed_analog_get_pressure(airspeed_analog_t* airspeed_analog);
 
-
 void airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, analog_rails_t analog_channel)
 {
 	airspeed_analog->analog_monitor = analog_monitor;
-	airspeed_analog->analog_channel = analog_channel;		// =4 or 5 on board maveric32 v4.1
+	airspeed_analog->analog_channel = analog_channel;		///< =4 or 5 on board maveric32 v4.1
 	airspeed_analog->gain = PITOT_GAIN_DEFAULT;
 
 	airspeed_analog->pressure_offset = 1.0;
@@ -75,15 +74,15 @@ void airspeed_analog_update(airspeed_analog_t* airspeed_analog)
 {
 	float raw_airspeed = 0.0;
 
-	// measure differential pressure and remove offset
+	///< measure differential pressure and remove offset
 	airspeed_analog->differential_pressure = airspeed_analog_get_pressure(airspeed_analog) - airspeed_analog->pressure_offset;
 
-	// Avoid negative pressures
+	///< Avoid negative pressures
 	airspeed_analog->differential_pressure = abs(airspeed_analog->differential_pressure);
 
-	// compute airspeed from differential pressure using Bernouilli
+	///< compute airspeed from differential pressure using Bernouilli
 	raw_airspeed = fast_sqrt(airspeed_analog->differential_pressure * airspeed_analog->gain);
 
-	// Filter airspeed estimation
+	///< Filter airspeed estimation
 	airspeed_analog->airspeed = 0.7f * airspeed_analog->airspeed + 0.3f * raw_airspeed; 
 }

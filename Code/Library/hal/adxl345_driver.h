@@ -21,9 +21,9 @@
 
 #include "compiler.h"
 
-#define ACC_X 0 ///< number of the X axis, to be used in an array
-#define ACC_Y 1 ///< number of the Y axis, to be used in an array
-#define ACC_Z 2 ///< number of the Z axis, to be used in an array
+#define ACC_X 0		///< number of the X axis, to be used in an array
+#define ACC_Y 1		///< number of the Y axis, to be used in an array
+#define ACC_Z 2		///< number of the Z axis, to be used in an array
 
 
 #define ADXL_ALT_SLAVE_ADDRESS 0x53  ///< address of adxl345, as a slave on the i2c bus
@@ -57,9 +57,5 @@ void init_adxl345_slow(void);
  * \brief Returns the array: axes[3] of the acc_data structure in slow mode
 */
 acc_data* get_acc_data_slow(void);
-
-
-
-
 
 #endif /* ADXL345_DRIVER_H_ */

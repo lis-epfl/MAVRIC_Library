@@ -37,51 +37,60 @@
  * \brief Defines 4 states for the sampling average
 */
 enum 
-{HMC_SAMPLE_AVG_1, 
- HMC_SAMPLE_AVG_2,
- HMC_SAMPLE_AVG_4, 
- HMC_SAMPLE_AVG_8}; 
+{
+	HMC_SAMPLE_AVG_1, 
+	HMC_SAMPLE_AVG_2,
+	HMC_SAMPLE_AVG_4, 
+	HMC_SAMPLE_AVG_8
+}; 
 
 /**
  * \brief Defines 7 states for the sampling rate
 */
 enum 
-{HMC_RATE_0_75,
- HMC_RATE_1_5,
- HMC_RATE_3_0, 
- HMC_RATE_7_5, 
- HMC_RATE_15, 
- HMC_RATE_30, 
- HMC_RATE_75};
+{
+	HMC_RATE_0_75,
+	HMC_RATE_1_5,
+	HMC_RATE_3_0, 
+	HMC_RATE_7_5, 
+	HMC_RATE_15, 
+	HMC_RATE_30, 
+	HMC_RATE_75
+};
 
 /**
  * \brief Defines 3 states for the sampling bias mode
 */
 enum
-{HMC_BIAS_MODE_NORMAL, 
- HMC_BIAS_MODE_POS_BIAS, 
- HMC_BIAS_MODE_NEG_BIAS};
+{
+	HMC_BIAS_MODE_NORMAL, 
+	HMC_BIAS_MODE_POS_BIAS, 
+	HMC_BIAS_MODE_NEG_BIAS
+};
 
 /**
  * \brief Defines 8 states for the sampling range
 */
 enum
-{HMC_RANGE_0_88_GA,
- HMC_RANGE_1_3_GA,
- HMC_RANGE_1_9_GA,
- HMC_RANGE_2_5_GA,
- HMC_RANGE_4_0_GA,
- HMC_RANGE_4_7_GA,
- HMC_RANGE_5_6_GA,
- HMC_RANGE_8_1_GA};
+{
+	HMC_RANGE_0_88_GA,
+	HMC_RANGE_1_3_GA,
+	HMC_RANGE_1_9_GA,
+	HMC_RANGE_2_5_GA,
+	HMC_RANGE_4_0_GA,
+	HMC_RANGE_4_7_GA,
+	HMC_RANGE_5_6_GA,
+	HMC_RANGE_8_1_GA
+};
 
 /**
  * \brief Defines 3 states for the sampling mode
 */
 enum 
-{HMC_MODE_CONTINUOUS, 
- HMC_MODE_SINGLE, 
- HMC_MODE_IDLE
+{	
+	HMC_MODE_CONTINUOUS, 
+	HMC_MODE_SINGLE, 
+	HMC_MODE_IDLE
 };
 
 #define HMC_SAMPLE_AVG	HMC_SAMPLE_AVG_4		///< Define the sampling average mode used
@@ -93,7 +102,8 @@ enum
 /**
  * \brief structure for the magnetometer's data
 */
-typedef struct{
+typedef struct
+{
 	uint8_t raw_data[6];
 	int16_t axes[3];
 } compass_data;

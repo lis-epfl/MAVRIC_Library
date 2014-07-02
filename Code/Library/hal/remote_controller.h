@@ -93,33 +93,33 @@ static inline Control_Command_t get_command_from_remote(void)
 }
 
 #ifdef SPEKTRUM_REMOTE
-	/**
-	 * \brief return a switch state of the remote
-	 *
-	 * \param chanSwitch pointer to a channel switch
-	 */
-	static inline void get_channel_mode(uint8_t* chanSwitch)
-	{
-		//TODO: remap with remote!
-		*chanSwitch |= 0x00;
+/**
+ * \brief return a switch state of the remote
+ *
+ * \param chanSwitch pointer to a channel switch
+ */
+static inline void get_channel_mode(uint8_t* chanSwitch)
+{
+	//TODO: remap with remote!
+	*chanSwitch |= 0x00;
 	
-		if (rc_get_channel(RC_SAFETY)<0)
-		{
-			*chanSwitch |= 0x00;
-		}
-		else if(rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)<0)
-		{
-			*chanSwitch |= 0x01;
-		}
-		// else if (rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)>20)
-		// {
-		// 	*chanSwitch |= 0x03;
-		// }
-		else
-		{
-			*chanSwitch |= 0x02;
-		}
+	if (rc_get_channel(RC_SAFETY)<0)
+	{
+		*chanSwitch |= 0x00;
 	}
+	else if(rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)<0)
+	{
+		*chanSwitch |= 0x01;
+	}
+	// else if (rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)>20)
+	// {
+	// 	*chanSwitch |= 0x03;
+	// }
+	else
+	{
+		*chanSwitch |= 0x02;
+	}
+}
 #endif
 
 #ifdef TURNIGY_REMOTE
@@ -133,11 +133,17 @@ static inline Control_Command_t get_command_from_remote(void)
 		if (rc_get_channel(RC_SAFETY)<0)
 		{
 			*chanSwitch |= 0x00;
-			}else if(rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)<0){
+		}
+		else if(rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)<0)
+		{
 			*chanSwitch |= 0x01;
-			}else if (rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)>20){
+		}
+		else if (rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)>20)
+		{
 			*chanSwitch |= 0x03;
-			}else{
+		}
+		else
+		{
 			*chanSwitch |= 0x02;
 		}
 	}
@@ -154,11 +160,17 @@ static inline Control_Command_t get_command_from_remote(void)
 		if (rc_get_channel(RC_SAFETY)<0)
 		{
 			*chanSwitch |= 0x00;
-			}else if(rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)<0){
+		}
+		else if(rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)<0)
+		{
 			*chanSwitch |= 0x01;
-			}else if (rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)>20){
+		}
+		else if (rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)>20)
+		{
 			*chanSwitch |= 0x03;
-			}else{
+		}
+		else
+		{
 			*chanSwitch |= 0x02;
 		}
 	}

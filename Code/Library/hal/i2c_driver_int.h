@@ -15,9 +15,9 @@
 * This file is the driver for i2c with interruptions
 */
 
+
 #ifndef I2C_DRIVER_INT_H_
 #define I2C_DRIVER_INT_H_
-
 
 #include "twim.h"
 #include "compiler.h"
@@ -34,7 +34,8 @@
 /**
  * \brief structure to embed the i2c's data
 */
-typedef struct {
+typedef struct 
+{
 	uint8_t			slave_address;				///< I2C address of slave
 	uint32_t		i2c_speed;					///< speed of i2c bus clock in kHz/kbps. Normally 100-400
 	char			direction;					///< direction of the bus

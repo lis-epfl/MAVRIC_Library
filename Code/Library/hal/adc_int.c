@@ -152,27 +152,27 @@ static void processData() {
 			}	
 			else 
 			{
-				sample_counter++; return;
+				sample_counter++; 
+				return;
 			}
-			//if (function_generator!=NULL) {
+			//if (function_generator!= NULL) {
 			//	DAC_set_value((*function_generator)(sampleCounter));
 			//}
 			oversampling_counter++;
 	
-			if (oversampling_counter>= oversampling) 
+			if (oversampling_counter >= oversampling) 
 			{
 				oversampling_counter=0;
 				for (ch=0; ch<channel_count; ch++) 
 				{
-					int16_t *buffer=adci_buffer[ch];
-					buffer[sample_counter]=internal_buffer[ch] / oversampling_divider;
+					int16_t *buffer = adci_buffer[ch];
+					buffer[sample_counter] = internal_buffer[ch] / oversampling_divider;
 				}
 				sample_counter++;
-	
 			}		
 			
 			//DAC_set_value(even_odd*400);
-			// acknowledge processing finished
+			///< acknowledge processing finished
 			adcifa->scr=ADC_INT_SEOS0 | ADC_INT_SEOS1;
 		}
 	}
@@ -182,43 +182,43 @@ static void processData() {
 ///< Initializes ADC (configures Pins, starts Clock, sets defaults)
 void Init_ADCI(uint32_t adc_frequency, uint8_t reference_source)
 {
+	///< Assign and enable GPIO pins to the ADC function.
+	gpio_enable_module(ADCIFA_GPIO_MAP, sizeof(ADCIFA_GPIO_MAP) / sizeof(ADCIFA_GPIO_MAP[0]));
 
-		///< Assign and enable GPIO pins to the ADC function.
-		gpio_enable_module(ADCIFA_GPIO_MAP, sizeof(ADCIFA_GPIO_MAP) / sizeof(ADCIFA_GPIO_MAP[0]));
+	adc_config_options.frequency=adc_frequency;
+	adc_config_options.reference_source=reference_source;
 
-		adc_config_options.frequency=adc_frequency;
-		adc_config_options.reference_source=reference_source;
+	////</ Get ADCIFA Factory Configuration
+	adcifa_get_calibration_data(adcifa, &adc_config_options);
+	if ((uint16_t)adc_config_options.offset_calibration_value == 0xFFFF)
+	{
+		///< Set default calibration if Engineering samples and part is not programmed
+		adc_config_options.offset_calibration_value = 0x3B;
+		adc_config_options.gain_calibration_value = 0x4210;
+		adc_config_options.sh0_calibration_value = 0x210;
+		adc_config_options.sh1_calibration_value = 0x210;
+	}
+	adc_config_options.offset_calibration_value = 0x3B; ///< offset correction
 
-		////</ Get ADCIFA Factory Configuration
-		adcifa_get_calibration_data(adcifa, &adc_config_options);
-		if ((uint16_t)adc_config_options.offset_calibration_value == 0xFFFF){
-			///< Set default calibration if Engineering samples and part is not programmed
-			adc_config_options.offset_calibration_value = 0x3B;
-			adc_config_options.gain_calibration_value = 0x4210;
-			adc_config_options.sh0_calibration_value = 0x210;
-			adc_config_options.sh1_calibration_value = 0x210;
-		}
-		adc_config_options.offset_calibration_value = 0x3B; ///< offset correction
+	///< Configure ADCIFA core
+	adcifa_configure(adcifa, &adc_config_options, sysclk_get_peripheral_bus_hz(AVR32_ADCIFA_ADDRESS));
 
-		///< Configure ADCIFA core
-		adcifa_configure(adcifa, &adc_config_options, sysclk_get_peripheral_bus_hz(AVR32_ADCIFA_ADDRESS));
-
-		clear_adc_sequencer();
-		continuous_mode=false;
-		///< Configure ADCIFA sequencer 1
-		//adcifa_configure_sequencer(adcifa, 1, &adcifa_sequence_opt, adcifa_sequencer1_conversion_opt);
+	clear_adc_sequencer();
+	continuous_mode=false;
+	///< Configure ADCIFA sequencer 1
+	//adcifa_configure_sequencer(adcifa, 1, &adcifa_sequence_opt, adcifa_sequencer1_conversion_opt);
 		
-		adcifa_disable_interrupt(adcifa, 0xffffffff);
-		INTC_register_interrupt( (__int_handler) &processData, AVR32_ADCIFA_SEQUENCER0_IRQ, AVR32_INTC_INT1);
-		//INTC_register_interrupt( (__int_handler) &processData, AVR32_ADCIFA_SEQUENCER1_IRQ, AVR32_INTC_INT1);
-		//int period_us=1000000/samplingrate;
+	adcifa_disable_interrupt(adcifa, 0xffffffff);
+	INTC_register_interrupt( (__int_handler) &processData, AVR32_ADCIFA_SEQUENCER0_IRQ, AVR32_INTC_INT1);
+	//INTC_register_interrupt( (__int_handler) &processData, AVR32_ADCIFA_SEQUENCER1_IRQ, AVR32_INTC_INT1);
+	//int period_us=1000000/samplingrate;
 }
 
 
 void clear_adc_sequencer(void) 
 {
 	sequencer_item_count=0;
-	adcifa_sequence_opt.convnb=sequencer_item_count;
+	adcifa_sequence_opt.convnb = sequencer_item_count;
 }
 
 
@@ -226,13 +226,13 @@ int8_t adc_sequencer_add(int16_t* buffer, uint8_t input_p, uint8_t input_n, uint
 {	
 	if (sequencer_item_count<SLOTS_PER_SEQUENCER-1) 
 	{
-		adcifa_sequencer0_conversion_opt[sequencer_item_count].channel_p=input_p;
-		adcifa_sequencer0_conversion_opt[sequencer_item_count].channel_n=input_n;
-		adcifa_sequencer0_conversion_opt[sequencer_item_count].gain=gain;
+		adcifa_sequencer0_conversion_opt[sequencer_item_count].channel_p = input_p;
+		adcifa_sequencer0_conversion_opt[sequencer_item_count].channel_n = input_n;
+		adcifa_sequencer0_conversion_opt[sequencer_item_count].gain = gain;
 		
 		adci_buffer[sequencer_item_count] = buffer;
 		sequencer_item_count++;
-		adcifa_sequence_opt.convnb=sequencer_item_count;
+		adcifa_sequence_opt.convnb = sequencer_item_count;
 		return sequencer_item_count;
 	} 
 	else 
@@ -242,22 +242,22 @@ int8_t adc_sequencer_add(int16_t* buffer, uint8_t input_p, uint8_t input_n, uint
 }
 
 
-// starts sampling, captures one buffer length and then stops
+///< starts sampling, captures one buffer length and then stops
 void ADCI_Start_Sampling(int length, int samplingrate, int set_oversampling, int set_oversampling_divider, bool continuous)
 {
-	// Configure ADCIFA sequencer 0
-	adcifa_sequence_opt.convnb=sequencer_item_count;
+	///< Configure ADCIFA sequencer 0
+	adcifa_sequence_opt.convnb = sequencer_item_count;
 	adcifa_configure_sequencer(adcifa, 0, &adcifa_sequence_opt, &adcifa_sequencer0_conversion_opt);
 	
-	oversampling=set_oversampling;
-	oversampling_divider=set_oversampling_divider;
+	oversampling = set_oversampling;
+	oversampling_divider = set_oversampling_divider;
 
-	volatile int period_us=adc_config_options.frequency/(samplingrate*oversampling);	
-	oversampling_counter=0;
-	sample_counter=-10;
-	number_of_samples=length;
-	continuous_mode=continuous;
-	channel_count=sequencer_item_count;
+	volatile int period_us = adc_config_options.frequency/(samplingrate*oversampling);	
+	oversampling_counter = 0;
+	sample_counter = -10;
+	number_of_samples = length;
+	continuous_mode = continuous;
+	channel_count = sequencer_item_count;
 
 	adcifa_enable_interrupt(adcifa, ADC_INT_SEOS0);
 	//adcifa_enable_interrupt(adcifa, ADC_INT_SEOS1);
@@ -265,14 +265,14 @@ void ADCI_Start_Sampling(int length, int samplingrate, int set_oversampling, int
 }
 
 
-// stops sampling immediately
+///< stops sampling immediately
 void ADCI_Stop_Sampling(void)
 {
 	adcifa_stop_itimer(adcifa);	
 }
 
 
-// Returns true if one-shot sampling has finished
+///< Returns true if one-shot sampling has finished
 Bool ADCI_Sampling_Complete(void)
 {
 	return (sample_counter>=number_of_samples);
