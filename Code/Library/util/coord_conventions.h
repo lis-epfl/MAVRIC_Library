@@ -1,13 +1,20 @@
 /**
- * Coordinate conventions
+ * \page The MAV'RIC License
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
  */
+
+
+/**
+ * \file coord_conventions.h
+ * 
+ * Coordinate conventions
+ */ 
+
 
 #ifndef COORD_CONVENTIONS_H_
 #define COORD_CONVENTIONS_H_
@@ -27,54 +34,42 @@ extern "C"
 
 
 /**
- * \brief 					Global position
- * 
- * \param longitude    		Current longitude
- * \param latitude     		Current latitude
- * \param altitude     		Current altitude
- * \param heading      		Current heading
- * \param timestamp_ms 		Timestamp (milliseconds)
+ * \brief 		Global position
  */
 typedef struct 
 {
-	double longitude;
-	double latitude;
-	float altitude;
-	float heading;
-	uint32_t timestamp_ms;
+	double longitude;			///<	Current longitude
+	double latitude;			///<	Current latitude
+	float altitude;				///<	Current altitude
+	float heading;				///<	Current heading
+	uint32_t timestamp_ms;		///<	Timestamp (milliseconds)
 } global_position_t;
 
 
 /**
  * \brief Local coordinates
- * 
- * \param pos          	Current position x, y and z
- * \param heading      	Current heading (equal to heading in global frame)
- * \param origin       	Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
- * \param timestamp_ms 	Timestamp (milliseconds)
  */
 typedef struct 
 {
-	float pos[3];
-	float heading;
-	global_position_t origin;
-	uint32_t timestamp_ms;
+	float pos[3];				///<	Current position x, y and z
+	float heading;				///<	Current heading (equal to heading in global frame)
+	global_position_t origin;	///<	Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
+	uint32_t timestamp_ms;		///<	Timestamp (milliseconds)
 } local_coordinates_t;
 
 
 /*
  * \brief 		Attitude with aeronautics convention
+ * 
  * \details 	Expressed with the NED frame: X front, Y right, Z down. 
  * 				The rotations are done in the following order: 
  * 				- first around the local yaw axis, 
  * 				- then around new local pitch axis, 
  * 				- and finally around the new roll axis
- *							
- * \param rpy	Roll pitch and yaw angles in radians
 */
 typedef struct 
 {
-	float rpy[3];
+	float rpy[3];	///<	Roll pitch and yaw angles in radians
 } Aero_Attitude_t;
 
 

@@ -1,13 +1,20 @@
 /**
- * A wrapper for mavlink to use the stream interface
+ * \page The MAV'RIC License
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
  */
+
+
+/**
+ * \file mavlink_stream.c
+ * 
+ * A wrapper for mavlink to use the stream interface
+ */
+
 
 #include "mavlink_stream.h"
 #include "buffer.h"
