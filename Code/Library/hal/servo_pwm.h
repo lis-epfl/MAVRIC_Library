@@ -37,7 +37,7 @@
 typedef struct {
 	int value;					///< Define the PWM value of a servo
 	int min;					///< Define the min value
-	int max,					///< Define the max value
+	int max;					///< Define the max value
 	int failsafe_position;		///< Define the initial(?) position of a servo
 } servo_output;
 

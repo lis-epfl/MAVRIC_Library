@@ -77,12 +77,18 @@ UART_HANDLER(4);
 
 
 void register_UART_handler(int UID) {
-	switch(UID) {
-		case 0: 	INTC_register_interrupt( (__int_handler) &uart_handler_0, AVR32_USART0_IRQ, AVR32_INTC_INT1); break;
-		case 1: 	INTC_register_interrupt( (__int_handler) &uart_handler_1, usart_opt[1].uart_device.IRQ, AVR32_INTC_INT1); break;
-		case 2: 	INTC_register_interrupt( (__int_handler) &uart_handler_2, usart_opt[2].uart_device.IRQ, AVR32_INTC_INT1); break;
-		case 3: 	INTC_register_interrupt( (__int_handler) &uart_handler_3, usart_opt[3].uart_device.IRQ, AVR32_INTC_INT1); break;
-		case 4: 	INTC_register_interrupt( (__int_handler) &uart_handler_4, usart_opt[4].uart_device.IRQ, AVR32_INTC_INT1); break;
+	switch(UID)
+	{
+		case 0: 	INTC_register_interrupt( (__int_handler) &uart_handler_0, AVR32_USART0_IRQ, AVR32_INTC_INT1);
+		break;
+		case 1: 	INTC_register_interrupt( (__int_handler) &uart_handler_1, usart_opt[1].uart_device.IRQ, AVR32_INTC_INT1);
+		break;
+		case 2: 	INTC_register_interrupt( (__int_handler) &uart_handler_2, usart_opt[2].uart_device.IRQ, AVR32_INTC_INT1);
+		break;
+		case 3: 	INTC_register_interrupt( (__int_handler) &uart_handler_3, usart_opt[3].uart_device.IRQ, AVR32_INTC_INT1);
+		break;
+		case 4: 	INTC_register_interrupt( (__int_handler) &uart_handler_4, usart_opt[4].uart_device.IRQ, AVR32_INTC_INT1);
+		break;
 
 	}
 	

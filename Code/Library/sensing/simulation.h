@@ -41,7 +41,8 @@ extern "C" {
 /**
  * \brief The simulation model structure definition
  */
-typedef struct {
+typedef struct
+{
 	float torques_bf[3];									///< The 3D torques vector applied on the vehicle
 	float rates_bf[3];										///< The 3D angular rates vector
 	float lin_forces_bf[3];									///< The 3D linear forces vector in body frame

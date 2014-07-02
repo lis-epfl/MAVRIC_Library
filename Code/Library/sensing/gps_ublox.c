@@ -103,7 +103,7 @@ bool printNavOnDebug = false;
 uint8_t loopPosllh = 0, loopVelned = 0, loopStatus = 0, loopSolution = 0, loopTimTp = 0, loopTimVrfy = 0;
 uint8_t numSkippedMsg = 10;
 
-void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting)
+void init_gps_ubx(GPS_Engine_Setting _engine_nav_setting)
 {
 	centralData = get_central_data();
 	
@@ -958,7 +958,7 @@ void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_n
 	ubx_send_cksum(ck_a,ck_b);
 }
 
-void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, enum GPS_Engine_Setting *engine_settings, uint8_t size)
+void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, GPS_Engine_Setting *engine_settings, uint8_t size)
 {
 	uint8_t ck_a=0, ck_b=0;
 	

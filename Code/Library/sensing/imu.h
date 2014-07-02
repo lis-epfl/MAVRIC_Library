@@ -35,7 +35,8 @@ extern "C" {
 /**
  * \brief The IMU structure
  */
-typedef struct {
+typedef struct
+{
 	Quat_Attitude_t attitude;			///< Attitude structure of the platform
 	float raw_channels[9];				///< The array where the raw value of the IMU and compass are parsed
 	float raw_bias[9];					///< The biaises of the IMU and compass

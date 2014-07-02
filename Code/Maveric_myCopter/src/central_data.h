@@ -9,6 +9,10 @@
 #ifndef CENTRAL_DATA_H_
 #define CENTRAL_DATA_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -47,10 +51,6 @@
 #include "airspeed_analog.h"
 #include "orca.h"
 #include "navigation.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 typedef struct  {
 	analog_monitor_t adc;
@@ -123,8 +123,8 @@ typedef struct  {
 	float safe_size;
 	track_neighbor_t listNeighbors[MAX_NUM_NEIGHBORS];
 	
-	enum CRITICAL_BEHAVIOR_ENUM critical_behavior;
-	enum AUTO_LANDING_ENUM auto_landing_enum;
+	critical_behavior_enum critical_behavior;
+	auto_landing_enum_t auto_landing_enum;
 
 	i2cxl_sonar_t i2cxl_sonar;
 	airspeed_analog_t pitot;

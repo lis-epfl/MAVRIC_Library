@@ -37,7 +37,8 @@ extern "C" {
 /**
  * \brief The neighbor structure
  */
-typedef struct  {
+typedef struct
+{
 	uint8_t neighborID;					///< The mavlink ID of the vehicle
 	float position[3];					///< The 3D position of the neighbor in m
 	float velocity[3];					///< The 3D velocity of the neighbor in m/s

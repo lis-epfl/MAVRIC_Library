@@ -35,7 +35,8 @@ extern "C" {
 /**
  * \brief The position estimator structure
  */
-typedef struct position_estimator_t {
+typedef struct
+{
 	float kp_vel[3];					///< The gain to correct the velocity estimation from the GPS
 	float kp_pos[3];					///< The gain to correct the position estimation from the GPS
 	float kp_alt;						///< The gain to correct the Z position estimation from the GPS
@@ -65,7 +66,7 @@ typedef struct position_estimator_t {
  * \param	barometer		The pointer to the barometer structure
  * \param	gps				The pointer to the GPS structure
  */
-void init_pos_integration(position_estimator_t *pos_est, pressure_data *barometer,gps_Data_type *gps );
+void init_pos_integration(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps );
 
 /**
  * \brief	Reset the home position and altitude

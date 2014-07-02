@@ -19,15 +19,15 @@
 #ifndef MAVLINK_WAYPOINT_HANDLER__
 #define MAVLINK_WAYPOINT_HANDLER__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "mavlink_stream.h"
 #include "stdbool.h"
 #include "coord_conventions.h"
 
 #define MAX_WAYPOINTS 10
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*
  * N.B.: Frames, MAV_CMD_NAV are defined in "maveric.h"
@@ -49,16 +49,18 @@ typedef struct
 }waypoint_struct;
 
 
-enum CRITICAL_BEHAVIOR_ENUM{
-	CLIMB_TO_SAFE_ALT = 1,
-	FLY_TO_HOME_WP = 2,
-	CRITICAL_LAND = 3
-};
+typedef enum critical_behavior_enum
+{
+	CLIMB_TO_SAFE_ALT,
+	FLY_TO_HOME_WP,
+	CRITICAL_LAND
+}critical_behavior_enum;
 
-enum AUTO_LANDING_ENUM{
-	DESCENT_TO_SMALL_ALTITUDE = 1,
-	DESCENT_TO_GND = 2,
-	};
+typedef enum auto_landing_enum_t
+{
+	DESCENT_TO_SMALL_ALTITUDE,
+	DESCENT_TO_GND
+}auto_landing_enum_t;
 
 int sending_wp_num;
 int waypoint_request_number;

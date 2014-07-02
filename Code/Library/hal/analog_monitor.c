@@ -158,7 +158,8 @@ float analog_compute_avg(analog_monitor_t* analog_monitor, analog_rails_t rail)
 {
 	float out=0.0;
 	int i;
-	for (i=0; i<MONITOR_SAMPLES; i++) {
+	for (i=0; i<MONITOR_SAMPLES; i++)
+	{
 		out+=(float)analog_monitor->buffer[rail][i];
 	}
 	out = out / MONITOR_SAMPLES;

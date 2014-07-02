@@ -36,7 +36,8 @@ extern "C" {
 /**
  * \brief The calibration level of the filter
  */
-enum calibration_mode {
+enum calibration_mode
+{
 	OFF,							///< Calibration level: No calibration 
 	LEVELING,						///< Calibration level: leveling 
 	LEVEL_PLUS_ACCEL				///< Calibration level: leveling plus acceleration
@@ -45,7 +46,8 @@ enum calibration_mode {
 /**
  * \brief The structure for the quaternion-based attitude estimation
  */
-typedef struct {
+typedef struct
+{
 	UQuat_t qe;						///< The quaternion of the attitude estimation
 	UQuat_t up_vec;					///< The quaternion of the up vector
 	UQuat_t north_vec;				///< The quaternion of the north vector
