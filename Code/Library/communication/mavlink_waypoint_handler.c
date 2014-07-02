@@ -1,13 +1,20 @@
 /**
- * The mavlink waypoint handler
+ * \page The MAV'RIC License
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
  */
+
+
+/**
+ * \file mavlink_waypoint_handler.c
+ * 
+ * The mavlink waypoint handler
+ */
+
 
 #include "mavlink_waypoint_handler.h"
 #include "print_util.h"

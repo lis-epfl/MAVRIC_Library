@@ -1,13 +1,20 @@
 /**
- * MAVLink adapter header
+ * \page The MAV'RIC License
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
  */
+
+
+/**
+ * \file mavlink_bridge.h
+ * 
+ * MAVLink adapter header
+ */
+
 
 #ifndef MAVLINK_BRIDGE_H
 #define MAVLINK_BRIDGE_H
