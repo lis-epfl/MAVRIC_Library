@@ -2,7 +2,7 @@
 * This file is the driver for the sonar module using i2C communication protocol
 *
 * The MAV'RIC Framework
-* Copyright © 2011-2014
+* Copyright Â© 2011-2014
 *
 * Laboratory of Intelligent Systems, EPFL
 *
