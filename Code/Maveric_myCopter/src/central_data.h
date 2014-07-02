@@ -85,7 +85,7 @@ typedef struct  {
 	waypoint_struct waypoint_list[MAX_WAYPOINTS];
 	waypoint_struct current_waypoint;
 	uint16_t number_of_waypoints;
-	int8_t current_wp_count;
+	int8_t current_waypoint_count;
 	
 	local_coordinates_t waypoint_coordinates, waypoint_hold_coordinates, waypoint_critical_coordinates;
 	float dist2wp_sqr;
