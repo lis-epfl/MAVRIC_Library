@@ -1,13 +1,20 @@
-/**
- * This file implement the code to read the IMU data
+/** 
+ * \page The MAV'RIC license
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
  */
+ 
+
+/**
+ * \file imu.c
+ *
+ * This file implements the code to read the IMU data
+ */
+
 
 #include "imu.h"
 

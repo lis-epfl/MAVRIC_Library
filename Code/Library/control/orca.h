@@ -1,12 +1,18 @@
-/**
- * This file computes a collision-free trajectory for the ORCA algorithm
+ /** 
+ * \page The MAV'RIC license
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
+ */
+ 
+ 
+/**
+ * \file orca.h
  *
- * This file is part of the MAV'RIC Framework.
+ * This file computes a collision-free trajectory for the ORCA algorithm
  */
 
 
@@ -25,22 +31,24 @@ extern "C" {
 #define MAXSPEED 4.5
 #define RVO_EPSILON 0.0001
 
+/**
+ * \brief The 3D plane structure
+ */
 typedef struct{
-	float normal[3];	///< the normal vector to the plane
-	float point[3];		///< a point of the plane
+	float normal[3];	///< The normal vector to the plane
+	float point[3];		///< A point of the plane
 }plane_t;
 
+/**
+ * \brief The 3D line structure
+ */
 typedef struct{
-	float direction[3];	///< the direction vector of a line
-	float point[3];		///< a point of the line
+	float direction[3];	///< The direction vector of a line
+	float point[3];		///< A point of the line
 }line_t;
 
 /**
  * \brief	Initialize the ORCA module
- *
- * \param	void
- *
- * \return	void
  */
 void init_orca(void);
 /**
@@ -48,8 +56,6 @@ void init_orca(void);
  *
  * \param	OptimalVelocity		a 3D array
  * \param	NewVelocity			the 3D output array
- *
- * \return	void
  */
 void computeNewVelocity(float OptimalVelocity[], float NewVelocity[]);
 
@@ -103,8 +109,6 @@ float linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelocity[
  * \param	ind				the index of the plane for which the 3D linear program is infeasible
  * \param	maxSpeed		the norm of the max velocity
  * \param	NewVelocity		the 3D output array
- *
- * \return	void
  */
 void linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float maxSpeed, float NewVelocity[]);
 

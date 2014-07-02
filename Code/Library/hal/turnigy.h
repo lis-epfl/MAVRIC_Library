@@ -1,40 +1,55 @@
-/*
- * turnigy.h
+/** 
+ * \page The MAV'RIC license
  *
- *  Created on: Aug 27, 2013
- *      Author: ndousse
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
  */
+ 
+
+/**
+ * \file turnigy.h
+ *
+ * This file configures the channels and the direction of the Turnigy remote
+ */
+
 
 #ifndef TURNIGY_H_
 #define TURNIGY_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "compiler.h"
 #include "buffer.h"
 #include "stabilisation.h"
 
-#define BAUD_REMOTE  115200
+#define BAUD_REMOTE  115200						///< The baud rate of the remote
 
-#define RC_THROTTLE		0
-#define RC_THROTTLE_DIR 1
+#define RC_THROTTLE		0						///< The throttle channel
+#define RC_THROTTLE_DIR 1						///< The direction of the throttle channel
 
-#define RC_ROLL			1
-#define RC_ROLL_DIR     1
+#define RC_ROLL			1						///< The roll axis channel
+#define RC_ROLL_DIR     1						///< The direction of the roll axis channel
 
-#define RC_PITCH		2
-#define RC_PITCH_DIR    -1
+#define RC_PITCH		2						///< The pitch axis channel
+#define RC_PITCH_DIR    -1						///< The direction of the pitch axis channel
 
-#define RC_YAW			3
-#define RC_YAW_DIR		1
+#define RC_YAW			3						///< The yaw axis channel
+#define RC_YAW_DIR		1						///< The direction of the yaw axis channel
 
-#define RC_SAFETY   4
-#define RC_ID_MODE  5
-#define RC_TRIM_P3  6
-#define RC_TRIM_P1  7
-#define RC_TRIM_P2  8
+#define RC_SAFETY   4							///< The safety switch channel
+#define RC_ID_MODE  5							///< The ID mode switch channel
+#define RC_TRIM_P3  6							///< The P3 trim channel
+#define RC_TRIM_P1  7							///< The P1 trim channel
+#define RC_TRIM_P2  8							///< The P2 trim channel
 
-#define DEADZONE 30.0
+#define DEADZONE 30.0							///< The deadzone of the remote
 
-#define RC_SCALEFACTOR 1.0/880.0
+#define RC_SCALEFACTOR 1.0/880.0				///< The scale factor of remote inputs
 
 /*
 typedef struct Turnigy_Receiver {
@@ -62,4 +77,9 @@ float get_thrust_from_turnigy();
 
 void get_channel_mode_turnigy(uint8_t* chanSwitch);
 */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif //TURNIGY_H_

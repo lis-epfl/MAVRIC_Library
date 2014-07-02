@@ -1,16 +1,22 @@
-/**
- * This file implement a complementary filter for the attitude estimation
+/** 
+ * \page The MAV'RIC license
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
+ */
+ 
+ 
+/**
+ * \file qfilter.c
  *
- * This file is part of the MAV'RIC Framework.
+ * This file implements a complementary filter for the attitude estimation
  */
 
+
 #include "qfilter.h"
-//#include "imu.h"
 #include "conf_platform.h"
 #include "coord_conventions.h"
 #include "print_util.h"

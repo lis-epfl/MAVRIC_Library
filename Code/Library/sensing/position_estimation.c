@@ -1,13 +1,20 @@
-/**
- * This file performs the 3D position estimation, either by direct integration or with correction with the GPS and barometer
+/** 
+ * \page The MAV'RIC license
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
  */
+ 
+
+/**
+ * \file position_estimation.c
+ *
+ * This file performs the 3D position estimation, either by direct integration or with correction with the GPS and barometer
+ */
+
 
 #include "position_estimation.h"
 #include "qfilter.h"

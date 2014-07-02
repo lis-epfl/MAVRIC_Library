@@ -1,35 +1,91 @@
-/*
- * time_keeper.h
+ /* The MAV'RIC Framework
  *
- * Created: 08/06/2012 17:25:26
- *  Author: sfx
- */ 
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+ 
+
+/**
+ * \file time_keeper.h
+ *
+ * This file is used to interact with the clock of the microcontroller
+ */
 
 
 #ifndef TIME_KEEPER_H_
 #define TIME_KEEPER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "compiler.h"
 #include "ast.h"
 
-#define TK_AST_FREQUENCY 1000000   // timer ticks per second (32 bit timer, >1h time-out at 1MHz, >years at 1kHz. We'll go for precision here...)
-#define AST_PRESCALER_SETTING 5    // log(SOURCE_CLOCK/AST_FREQ)/log(2)-1   . when running from PBA (64Mhz), 5 (1Mhz), or 15 (~1khz, not precisely though).
+#define TK_AST_FREQUENCY 1000000					///< Timer ticks per second (32 bit timer, >1h time-out at 1MHz, >years at 1kHz. We'll go for precision here...)
+#define AST_PRESCALER_SETTING 5						///< Log(SOURCE_CLOCK/AST_FREQ)/log(2)-1 when running from PBA (64Mhz), 5 (1Mhz), or 15 (~1khz, not precisely though).
 
+/** 
+ * \brief	This function initialize the clock of the microcontroller
+ */
 void init_time_keeper(void);
 
+/** 
+ * \brief	This function returns the time in seconds since system start
+ * 
+ * \return	The time in seconds since system start
+ */
+double get_time(void);
 
-double get_time(void);          // time in seconds since system start
+/**
+ * \brief	This function returns the time in milliseconds since system start
+ *
+ * \return The time in milliseconds since system start
+ */
+uint32_t get_millis(void);
 
-uint32_t get_millis(void);     //milliseconds since system start
-uint32_t get_micros(void);     // microseconds since system start. Will run over after an hour.
+/**
+ * \brief	This function returns the time in microseconds since system start. 
+ *
+ * \warning	Will run over after an hour.
+ *
+ * \return The time in microseconds since system start
+ */
+uint32_t get_micros(void);
 
-uint32_t get_time_ticks(void); //raw timer ticks
+/**
+ * \brief	raw timer ticks
+ *
+ * \return	The raw timer ticks
+ */
+uint32_t get_time_ticks(void);
 
+/**
+ * \brief	Transforms the timer ticks into seconds
+ *
+ * \param	timer_ticks		The timer ticks
+ *
+ * \return	The time in seconds
+ */
 float ticks_to_seconds(uint32_t timer_ticks);
 
-
+/**
+ * \brief	Functions that runs for the parameters input microseconds before returning
+ *
+ * \param	microseconds		The number of microseconds to wait
+ */
 void delay_micros(int microseconds);
 
+/**
+ * \brief	Wait until time pass the parameter input
+ *
+ * \param	until_time		The time until which the function will run
+ */
 void delay_until(uint32_t until_time);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TIME_KEEPER_H_ */

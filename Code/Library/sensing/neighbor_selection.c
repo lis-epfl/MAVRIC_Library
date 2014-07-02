@@ -1,12 +1,18 @@
-/**
- * This file decodes the message from the neighbors and computes the relative position and velocity in local coordinates
+/** 
+ * \page The MAV'RIC license
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
+ */
+ 
+ 
+/**
+ * \file neighbor_selection.c
  *
- * This file is part of the MAV'RIC Framework.
+ * This file decodes the message from the neighbors and computes the relative position and velocity in local coordinates
  */
 
 

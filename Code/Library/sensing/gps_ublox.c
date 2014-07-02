@@ -1,9 +1,20 @@
-/*
-* gps_ublox.c
-* 
-* created on March 29 2013
-* author: N. Dousse
-*/
+/** 
+ * \page The MAV'RIC license
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+ 
+
+/**
+ * \file gps_ublox.c
+ *
+ * This file decodes the messages from the UBLOX GPS
+ */
+
 
 #include "gps_ublox.h"
 
@@ -108,7 +119,6 @@ void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting)
 	
 	next_fix = false;
 	have_raw_velocity = false;
-	fix = false;
 	
 	last_fix_time = 0;
 	

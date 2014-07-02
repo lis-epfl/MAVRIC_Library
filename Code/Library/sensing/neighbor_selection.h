@@ -1,12 +1,18 @@
-/**
- * This file decodes the message from the neighbors and computes the relative position and velocity in local coordinates
+/** 
+ * \page The MAV'RIC license
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
+ */
+ 
+ 
+/**
+ * \file neighbor_selection.h
  *
- * This file is part of the MAV'RIC Framework.
+ * This file decodes the message from the neighbors and computes the relative position and velocity in local coordinates
  */
 
 
@@ -28,6 +34,9 @@ extern "C" {
 //2 seconds timeout limit
 #define NEIGHBOR_TIMEOUT_LIMIT_MS 2000
 
+/**
+ * \brief The neighbor structure
+ */
 typedef struct  {
 	uint8_t neighborID;					///< The mavlink ID of the vehicle
 	float position[3];					///< The 3D position of the neighbor in m
@@ -39,10 +48,6 @@ typedef struct  {
 
 /**
  * \brief	Initialize the neighbor selection module
- *
- * \param	void
- *
- * \return	void
  */
 void init_neighbors(void);
 
@@ -50,18 +55,14 @@ void init_neighbors(void);
  * \brief	Decode the message and parse to the neighbor array
  *
  * \param	rec		the pointer to the mavlink message
- *
- * \return	void
  */
 void read_msg_from_neighbors(Mavlink_Received_t* rec);
 
 /**
- * \brief	Extrapolate the position of each UAS bewteen two messages, deletes the message if time elapsed too long from last message
+ * \brief	Extrapolate the position of each UAS between two messages, deletes the message if time elapsed too long from last message
  *
  * \param	listNeighbors			the array of all neighbors
  * \param	number_of_neighbors		the pointer to the number of neighbors
- *
- * \return	void
  */
 void extrapolate_or_delete_position(track_neighbor_t listNeighbors[], uint8_t* number_of_neighbors);
 

@@ -1,12 +1,21 @@
-/*
- * simulation.c
+/** 
+ * \page The MAV'RIC license
  *
- * Onboard Hardware-in-the-loop simulation 
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/** 
+ * \file simulation.c
+ *  
+ * This file is an onboard Hardware-in-the-loop simulation. 
  * Simulates quad-copter dynamics based on simple aerodynamics/physics model and generates simulated raw IMU measurements
- * 
- * Created: 06/08/2013 17:02:56
- *  Author: Felix Schill
- */ 
+ */
+
 
 #include "conf_sim_model.h"
 #include "time_keeper.h"
@@ -21,7 +30,8 @@ void init_simulation(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates
 	dbg_print("Init HIL simulation. \n");
 	
 	(*sim)=vehicle_model_parameters;
-	for (i=0; i<3; i++) {
+	for (i=0; i<3; i++)
+	{
 		sim->rates_bf[i]=0.0f;
 		sim->torques_bf[i]=0.0f;
 		sim->lin_forces_bf[i]=0.0f;
@@ -38,7 +48,8 @@ void init_simulation(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates
 	// set initial conditions to given attitude (including scalefactors and biases for simulated IMU)
 	sim->attitude=imu->attitude;
 
-	for (i=0; i<ROTORCOUNT; i++) {
+	for (i=0; i<ROTORCOUNT; i++)
+	{
 		sim->rotorspeeds[i]=0.0;			
 	}
 	sim->last_update=get_micros();
@@ -51,12 +62,24 @@ void init_simulation(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates
 	}
 }
 
-// inverse function of mix_to_servos in stabilisation to recover torques and forces
-
+/** 
+ * \brief Inverse function of mix_to_servos in stabilization to recover torques and forces
+ *
+ * \param	sim					The pointer to the simulation model structure
+ * \param	rpm					The rotation per minute of the rotor
+ * \param	sqr_lat_airspeed	The square of the lateral airspeed
+ * \param	axial_airspeed		The axial airspeed
+ *
+ * \return The value of the lift/drag value without the lift/drag coefficient
+ */
 static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr_lat_airspeed, float axial_airspeed) {
-	if (rpm < 0.1) return 0.0;
+	if (rpm < 0.1)
+	{
+		return 0.0;
+	}
 	float mean_vel=sim->rotor_diameter *PI * rpm/60.0;
-	float exit_vel=rpm/60.0 *sim -> rotor_pitch;           
+	float exit_vel=rpm/60.0 *sim -> rotor_pitch;
+	           
 	return (0.5*AIR_DENSITY*(mean_vel*mean_vel +sqr_lat_airspeed) * sim->rotor_foil_area  * (1.0-(axial_airspeed/exit_vel)));
 }
 
@@ -72,10 +95,14 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 	float sqr_lateral_airspeed=SQR(sim->vel_bf[0]+wind_bf.v[0]) + SQR(sim->vel_bf[1]+wind_bf.v[1]);
 	float lateral_airspeed=sqrt(sqr_lateral_airspeed);
 	
-	for (i=0; i<4; i++) {
+	for (i=0; i<4; i++)
+	{
 		float old_rotor_speed;
 		motor_command[i]=(float)servos[i].value/SERVO_SCALE - sim->rotor_rpm_offset;
-		if (motor_command[i]<0.0) motor_command[i]=0;
+		if (motor_command[i]<0.0) 
+		{
+			motor_command[i]=0;
+		}
 		
 		// temporarily save old rotor speeds
 		old_rotor_speed=sim->rotorspeeds[i];
@@ -145,7 +172,11 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	
 	uint32_t now=get_micros();
 	sim->dt=(now - sim->last_update)/1000000.0;
-	if (sim->dt>0.1) sim->dt=0.1;
+	if (sim->dt>0.1)
+	{
+		sim->dt=0.1;
+	}
+	
 	sim->last_update=now;
 	// compute torques and forces based on servo commands
 	#ifdef CONF_DIAG
@@ -161,9 +192,11 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	sim->rates_bf[2] = clip((1.0-0.1*sim->dt)*sim->rates_bf[2] + sim->dt * sim->torques_bf[2] /sim->yaw_momentum, 10.0);
 	
 	
-	for (i=0; i<3; i++){
+	for (i=0; i<3; i++)
+	{
 			qtmp1.v[i] = sim->rates_bf[i];
 	}
+	
 	qtmp1.s=0;
 
 	// apply step rotation 
@@ -182,17 +215,20 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	// velocity and position integration
 	
 	// check altitude - if it is lower than 0, clamp everything (this is in NED, assuming negative altitude)
-	if (sim->localPosition.pos[Z] >0) {
+	if (sim->localPosition.pos[Z] >0)
+	{
 		sim->vel[Z]=0.0;
 		sim->localPosition.pos[Z]=0.0;
 
 		// simulate "acceleration" caused by contact force with ground, compensating gravity
-		for (i=0; i<3; i++) {
+		for (i=0; i<3; i++)
+		{
 			sim->lin_forces_bf[i]=sim->attitude.up_vec.v[i]*sim->total_mass *GRAVITY;
 		}
 				
 		// slow down... (will make velocity slightly inconsistent until next update cycle, but shouldn't matter much)
-		for (i=0; i<3; i++) {
+		for (i=0; i<3; i++)
+		{
 			sim->vel_bf[i]=0.95*sim->vel_bf[i];
 		}
 		
@@ -206,12 +242,14 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	sim->attitude.up_vec = quat_global_to_local(sim->attitude.qe, up);
 	
 	sim->attitude.north_vec=quat_global_to_local(sim->attitude.qe, front);	
-	for (i=0; i<3; i++){
+	for (i=0; i<3; i++)
+	{
 			qtmp1.v[i] = sim->vel[i];
 	}
 	qtmp1.s=0.0;
 	qvel_bf=quat_global_to_local(sim->attitude.qe, qtmp1);
-	for (i=0; i<3; i++) {
+	for (i=0; i<3; i++)
+	{
 		sim->vel_bf[i]=qvel_bf.v[i];
 		
 		// following the convention in the IMU, this is the acceleration due to force, as measured
@@ -229,7 +267,8 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	qtmp1 = quat_local_to_global(sim->attitude.qe, qvel_bf);
 	sim->vel[0]=qtmp1.v[0]; sim->vel[1]=qtmp1.v[1]; sim->vel[2]=qtmp1.v[2];
 	
-	for (i=0; i<3; i++) {
+	for (i=0; i<3; i++)
+	{
 		sim->localPosition.pos[i] =sim->localPosition.pos[i] + sim->vel[i] * sim->dt;
 	}
 

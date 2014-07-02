@@ -1,17 +1,27 @@
+/** 
+ * \page The MAV'RIC license
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+ 
+
 /**
-* This file decods the messages from the UBLOX GPS
-*
-* The MAV'RIC Framework
-* Copyright © 2011-2014
-*
-* Laboratory of Intelligent Systems, EPFL
-*
-* This file is part of the MAV'RIC Framework.
-*/
+ * \file gps_ublox.h
+ *
+ * This file decodes the messages from the UBLOX GPS
+ */
 
 
 #ifndef GPS_UBLOX_H__
 #define GPS_UBLOX_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "stdint.h"
 #include "stdbool.h"
@@ -152,44 +162,62 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define BIG_ENDIAN
 
 #ifdef BIG_ENDIAN
+	/**
+	 * \brief The U-Blox header structure definition
+	 */
 	typedef struct {
-		uint16_t length;					///> the length of the message
-		uint8_t msg_id_header;				///> the msg id header
-		uint8_t msg_class;					///> the class of the message
-		uint8_t preamble2;					///> the 2nd preamble of the message
-		uint8_t preamble1;					///> the 1st preamble of the message
+		uint16_t length;					///< The length of the message
+		uint8_t msg_id_header;				///< The msg id header
+		uint8_t msg_class;					///< The class of the message
+		uint8_t preamble2;					///< The 2nd preamble of the message
+		uint8_t preamble1;					///< The 1st preamble of the message
 	}ubx_header;
 
+	/**
+	 * \brief The U-Blox CFG_NAV structure definition
+	 */
 	typedef struct {
-		uint16_t timeref;					///> the time reference
-		uint16_t nav_rate;					///> the rate
-		uint16_t measure_rate_ms;			///> the measure rate of the cfg_nav message in ms
+		uint16_t timeref;					///< The time reference
+		uint16_t nav_rate;					///< The rate
+		uint16_t measure_rate_ms;			///< The measure rate of the cfg_nav message in ms
 	}ubx_cfg_nav_rate;
 	
 	// We still have to send to message in the correct order to the GPS
+	/**
+	 * \brief The U-Blox CFG_NAV rate send structure definition
+	 */
 	typedef struct {
-		uint16_t measure_rate_ms;			///> the measure_rate
-		uint16_t nav_rate;					///> the rate
-		uint16_t timeref;					///< the time reference, 0:UTC time, 1:GPS time
+		uint16_t measure_rate_ms;			///< The measure_rate
+		uint16_t nav_rate;					///< The rate
+		uint16_t timeref;					///< The time reference, 0:UTC time, 1:GPS time
 	}ubx_cfg_nav_rate_send;
 
+	/**
+	 * \brief The U-Blox CFG_MSG rate structure definition
+	 */
 	typedef struct {
-		uint8_t rate;						///> the rate
-		uint8_t msg_id_rate;				///> the msg id
-		uint8_t msg_class;					///> the msg_class
+		uint8_t rate;						///< The rate
+		uint8_t msg_id_rate;				///< The msg id
+		uint8_t msg_class;					///< The msg_class
 	}ubx_cfg_msg_rate;
 
 	// We still have to send to message in the correct order to the GPS
+	/**
+	 * \brief The U-Blox CFG_MSG rate send structure definition
+	 */
 	typedef struct {
-		uint8_t msg_class;					///> the msg class
-		uint8_t msg_id_rate;				///> the msg id
-		uint8_t rate;						///> the rate of the message id
+		uint8_t msg_class;					///< The msg class
+		uint8_t msg_id_rate;				///< The msg id
+		uint8_t rate;						///< The rate of the message id
 	}ubx_cfg_msg_rate_send;
 
+	/**
+	 * \brief The U-Blox CFG_NAV settings structure definition
+	 */
 	typedef struct {
-		uint32_t res4;						///< reserved slot
-		uint32_t res3;						///< reserved slot
-		uint32_t res2;						///< reserved slot
+		uint32_t res4;						///< Reserved slot
+		uint32_t res3;						///< Reserved slot
+		uint32_t res2;						///< Reserved slot
 		uint8_t dgpsTimeOut;				///< DGPS timeout in sec
 		uint8_t staticHoldThresh;			///< Static hold threshold cm/s
 		uint16_t tAcc;						///< Time accuracy mask in m
@@ -205,30 +233,39 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint16_t mask;						///< Bitmask, see U-Blox 6 documentation
 	}ubx_cfg_nav_settings;
 
+	/**
+	 * \brief The U-Blox NAV-POSLLH message structure definition
+	 */
 	typedef struct {
-		uint32_t vertical_accuracy;			///< vertical accuracy in mm
-		uint32_t horizontal_accuracy;		///< horizontal accuracy in mm
-		int32_t altitude_msl;				///< height above mean sea level in mm
-		int32_t altitude_ellipsoid;			///< height above ellipsoid in mm
-		int32_t latitude;					///< latitude in deg 1e-7
-		int32_t longitude;					///< longitude in deg 1e-7
+		uint32_t vertical_accuracy;			///< Vertical accuracy in mm
+		uint32_t horizontal_accuracy;		///< Horizontal accuracy in mm
+		int32_t altitude_msl;				///< Height above mean sea level in mm
+		int32_t altitude_ellipsoid;			///< Height above ellipsoid in mm
+		int32_t latitude;					///< Latitude in deg 1e-7
+		int32_t longitude;					///< Longitude in deg 1e-7
 		uint32_t itow;						///< GPS msToW
 	}ubx_nav_posllh;
 
+	/**
+	 * \brief The U-Blox NAV-STATUS message structure definition
+	 */
 	typedef struct {
-		uint32_t uptime;					///< milliseconds since startup
-		uint32_t time_to_first_fix;			///< time to first fix in milliseconds
-		uint8_t flags2;						///< information about navigatio output
+		uint32_t uptime;					///< Milliseconds since startup
+		uint32_t time_to_first_fix;			///< Time to first fix in milliseconds
+		uint8_t flags2;						///< Information about navigatio output
 		uint8_t fix_status;					///< Fix status information
 		uint8_t flags;						///< Nav status flag
-		uint8_t fix_type;					///< fix type
+		uint8_t fix_type;					///< Fix type
 		uint32_t itow;						///< GPS msToW
 	}ubx_nav_status;
 
+	/**
+	 * \brief The U-Blox NAV-SOL message structure definition
+	 */
 	typedef struct {
-		uint32_t res2;						///< reserved slot
-		uint8_t satellites;					///< number of of SVs used in Nav solution
-		uint8_t res;						///< reserved slot
+		uint32_t res2;						///< Reserved slot
+		uint8_t satellites;					///< Number of of SVs used in Nav solution
+		uint8_t res;						///< Reserved slot
 		uint16_t position_DOP;				///< Position DOP, scaling 0.01
 		uint32_t speed_accuracy;			///< Speed accuracy estimate in cm/s
 		int32_t ecef_z_velocity;			///< Earth centered, earth frame, z velocity coordinate in cm/s
@@ -238,18 +275,21 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int32_t ecef_z;						///< Earth centered, earth frame, z coordinate in cm
 		int32_t ecef_y;						///< Earth centered, earth frame, y coordinate in cm
 		int32_t ecef_x;						///< Earth centered, earth frame, x coordinate in cm
-		uint8_t fix_status;					///< the fix status
-		uint8_t fix_type;					///< the fix type
+		uint8_t fix_status;					///< The fix status
+		uint8_t fix_type;					///< The fix type
 		int16_t week;						///< GPS week (GPS time)
 		int32_t time_nsec;					///< Fractional nanoseconds remainder of rounded ms above
 		uint32_t itow;						///< GPS msToW
 	}ubx_nav_solution;
 
+	/**
+	 * \brief The U-Blox NAV-VELNED message structure definition
+	 */
 	typedef struct {
-		uint32_t heading_accuracy;			///< course/heading estimate accuracy in deg 1e-5
-		uint32_t speed_accuracy;			///< speed accuracy estimate cm/s
-		int32_t heading_2d;					///< heading of motion in deg 1e-5
-		uint32_t groundSpeed_2d;			///< ground speed in cm/s
+		uint32_t heading_accuracy;			///< Course/heading estimate accuracy in deg 1e-5
+		uint32_t speed_accuracy;			///< Speed accuracy estimate cm/s
+		int32_t heading_2d;					///< Heading of motion in deg 1e-5
+		uint32_t groundSpeed_2d;			///< Ground speed in cm/s
 		uint32_t speed_3d;					///< 3D speed in cm/s
 		int32_t ned_down;					///< NED Down velocity in cm/s
 		int32_t ned_east;					///< NED East velocity in cm/s
@@ -257,8 +297,14 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint32_t itow;						///< GPS msToW
 	}ubx_nav_velned;
 
+	/**
+	 * \brief The U-Blox NAV-SVINFO message structure definition
+	 */
 	typedef struct
 	{
+		/**
+		* \brief The structure definition defining a specific message from a GPS satellite
+		*/
 		struct
 		{
 			int32_t prRes;					///< Pseudo range in residual in centimeters
@@ -271,18 +317,24 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 			uint8_t chn;					///< GPS msToW
 		} channelData[16];
 		
-		uint16_t reserved;					///< reserved slot
+		uint16_t reserved;					///< Reserved slot
 		uint8_t globalFlags;				///< Bitmask, 0:antaris, 1:u-blox 5, 2:u-blox 6
 		uint8_t numCh;						///< Number of channels
 		uint32_t itow;						///< GPS msToW
 	}ubx_nav_SVInfo;
-	
+
+	/**
+	 * \brief The U-Blox MON-RXR message structure definition
+	 */
  	typedef struct{
  		uint8_t awake_flag;					///< Receiver status flag
  	}ubx_mon_rxr_struct;
-	 
+
+	/**
+	 * \brief The U-Blox TIM-TP message structure definition
+	 */
 	typedef struct{
-		uint8_t res;						///< unused
+		uint8_t res;						///< Unused
 		uint8_t flags;						///< Bitmask, 0,1:gps timebase, UTC not available, 2,3:UTC timebase, UTC available
 		uint16_t week;						///< Timepulse week number according to timebase
 		int32_t qErr;						///< Quantization error of timepulse
@@ -290,39 +342,54 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint32_t towMS;						///< Timepulse time of week according to time base in ms
 	}ubx_tim_tp;
 
+	/**
+	 * \brief The U-Blox TIM-VRFY message structure definition
+	 */
 	typedef struct
 	{
-		uint8_t res;						///< reserved slot
-		uint8_t flags;						///< aiding time source, 0:no time aiding done, 2:source was RTC, 3:source was AID-INI
-		uint16_t wno;						///< week number
-		int32_t deltaNs;					///< sub-millisecond part of delta time
-		int32_t deltaMs;					///< inter ms of delta time
-		int32_t frac;						///< sub-millisecond part of ToW in ns
-		int32_t itow;						///< integer ms ToW received by source
+		uint8_t res;						///< Reserved slot
+		uint8_t flags;						///< Aiding time source, 0:no time aiding done, 2:source was RTC, 3:source was AID-INI
+		uint16_t wno;						///< Week number
+		int32_t deltaNs;					///< Sub-millisecond part of delta time
+		int32_t deltaMs;					///< Inter ms of delta time
+		int32_t frac;						///< Sub-millisecond part of ToW in ns
+		int32_t itow;						///< Integer ms ToW received by source
 	}ubx_tim_vrfy;
 
 #else	
 
+	/**
+	 * \brief The U-Blox header structure definition
+	 */
 	typedef struct {
-		uint8_t preamble1;					///> the 1st preamble of the message
-		uint8_t preamble2;					///> the 2nd preamble of the message
-		uint8_t msg_class;					///> the class of the message
-		uint8_t msg_id_header;				///> the msg id header
-		uint16_t length;					///> the length of the message
+		uint8_t preamble1;					///< The 1st preamble of the message
+		uint8_t preamble2;					///< The 2nd preamble of the message
+		uint8_t msg_class;					///< The class of the message
+		uint8_t msg_id_header;				///< The msg id header
+		uint16_t length;					///< The length of the message
 	}ubx_header;
 
+	/**
+	 * \brief The U-Blox CFG-NAV structure definition
+	 */
 	typedef struct {
-		uint16_t measure_rate_ms;			///> the measure rate of the cfg_nav message in ms
-		uint16_t nav_rate;					///> the rate
-		uint16_t timeref;					///> the time reference
+		uint16_t measure_rate_ms;			///< The measure rate of the cfg_nav message in ms
+		uint16_t nav_rate;					///< The rate
+		uint16_t timeref;					///< The time reference
 	}ubx_cfg_nav_rate;
 
+	/**
+	 * \brief The U-Blox CFG-NAV rate structure definition
+	 */
 	typedef struct {
-		uint8_t msg_class;					///> the msg_class
-		uint8_t msg_id_rate;				///> the msg id
-		uint8_t rate;						///> the rate
+		uint8_t msg_class;					///< The msg_class
+		uint8_t msg_id_rate;				///< The msg id
+		uint8_t rate;						///< The rate
 	}ubx_cfg_msg_rate;
 
+	/**
+	 * \brief The U-Blox CFG-NAV setttings structure definition
+	 */
 	typedef struct {
 		uint16_t mask;						///< Bitmask, see U-Blox 6 documentation
 		uint8_t dynModel;					///< UBX_PLATFORM_... type
@@ -337,37 +404,46 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint16_t tAcc;						///< Time accuracy mask in m
 		uint8_t staticHoldThresh;			///< Static hold threshold cm/s
 		uint8_t dgpsTimeOut;				///< DGPS timeout in sec
-		uint32_t res2;						///< reserved slot
-		uint32_t res3;						///< reserved slot
-		uint32_t res4;						///< reserved slot
+		uint32_t res2;						///< Reserved slot
+		uint32_t res3;						///< Reserved slot
+		uint32_t res4;						///< Reserved slot
 	}ubx_cfg_nav_settings;
 
+	/**
+	 * \brief The U-Blox NAV-POSLLH message structure definition
+	 */
 	typedef struct {
 		uint32_t itow;						///< GPS msToW
-		int32_t longitude;					///< longitude in deg 1e-7
-		int32_t latitude;					///< latitude in deg 1e-7
-		int32_t altitude_ellipsoid;			///< height above ellipsoid in mm
-		int32_t altitude_msl;				///< height above mean sea level in mm
-		uint32_t horizontal_accuracy;		///< horizontal accuracy in mm
-		uint32_t vertical_accuracy;			///< vertical accuracy in mm
+		int32_t longitude;					///< Longitude in deg 1e-7
+		int32_t latitude;					///< Latitude in deg 1e-7
+		int32_t altitude_ellipsoid;			///< Height above ellipsoid in mm
+		int32_t altitude_msl;				///< Height above mean sea level in mm
+		uint32_t horizontal_accuracy;		///< Horizontal accuracy in mm
+		uint32_t vertical_accuracy;			///< Vertical accuracy in mm
 	}ubx_nav_posllh;
 
+	/**
+	 * \brief The U-Blox NAV-STATUS message structure definition
+	 */
 	typedef struct {
 		uint32_t itow;						///< GPS msToW
-		uint8_t fix_type;					///< fix type
+		uint8_t fix_type;					///< Fix type
 		uint8_t flags;						///< Nav status flag
 		uint8_t fix_status;					///< Fix status information
-		uint8_t flags2;						///< information about navigatio output
-		uint32_t time_to_first_fix;			///< time to first fix in milliseconds
-		uint32_t uptime;					///< milliseconds since startup
+		uint8_t flags2;						///< Information about navigatio output
+		uint32_t time_to_first_fix;			///< Time to first fix in milliseconds
+		uint32_t uptime;					///< Milliseconds since startup
 	}ubx_nav_status;
 
+	/**
+	 * \brief The U-Blox NAV-SOL message structure definition
+	 */
 	typedef struct {
 		uint32_t itow;						///< GPS msToW
 		int32_t time_nsec;					///< Fractional nanoseconds remainder of rounded ms above
 		int16_t week;						///< GPS week (GPS time)
-		uint8_t fix_type;					///< the fix type
-		uint8_t fix_status;					///< the fix status
+		uint8_t fix_type;					///< The fix type
+		uint8_t fix_status;					///< The fix status
 		int32_t ecef_x;						///< Earth centered, earth frame, x coordinate in cm
 		int32_t ecef_y;						///< Earth centered, earth frame, y coordinate in cm
 		int32_t ecef_z;						///< Earth centered, earth frame, z coordinate in cm
@@ -377,30 +453,39 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int32_t ecef_z_velocity;			///< Earth centered, earth frame, z velocity coordinate in cm/s
 		uint32_t speed_accuracy;			///< Speed accuracy estimate in cm/s
 		uint16_t position_DOP;				///< Position DOP, scaling 0.01
-		uint8_t res;						///< reserved slot
-		uint8_t satellites;					///< number of of SVs used in Nav solution
-		uint32_t res2;						///< reserved slot
+		uint8_t res;						///< Reserved slot
+		uint8_t satellites;					///< Number of of SVs used in Nav solution
+		uint32_t res2;						///< Reserved slot
 	}ubx_nav_solution;
 
+	/**
+	 * \brief The U-Blox NAV-VELNED message structure definition
+	 */
 	typedef struct {
 		uint32_t itow;						///< GPS msToW
 		int32_t ned_north;					///< NED North velocity in cm/s
 		int32_t ned_east;					///< NED East velocity in cm/s
 		int32_t ned_down;					///< NED Down velocity in cm/s
 		uint32_t speed_3d;					///< 3D speed in cm/s
-		uint32_t groundSpeed_2d;			///< ground speed in cm/s
-		int32_t heading_2d;					///< heading of motion in deg 1e-5
-		uint32_t speed_accuracy;			///< speed accuracy estimate cm/s
-		uint32_t heading_accuracy;			///< course/heading estimate accuracy in deg 1e-5
+		uint32_t groundSpeed_2d;			///< Ground speed in cm/s
+		int32_t heading_2d;					///< Heading of motion in deg 1e-5
+		uint32_t speed_accuracy;			///< Speed accuracy estimate cm/s
+		uint32_t heading_accuracy;			///< Course/heading estimate accuracy in deg 1e-5
 	}ubx_nav_velned;
 
+	/**
+	 * \brief The U-Blox NAV-SVINFO message structure definition
+	 */
 	typedef struct
 	{
 		uint32_t itow;						///< GPS msToW
 		uint8_t numCh;						///< Number of channels
 		uint8_t globalFlags;				///< Bitmask, 0:antaris, 1:u-blox 5, 2:u-blox 6
-		uint16_t reserved;					///< reserved slot
+		uint16_t reserved;					///< Reserved slot
 	
+		/**
+		 * \brief The structure definition defining a specific message from a GPS satellite
+		*/
 		struct
 		{
 			uint8_t chn;					///< GPS msToW
@@ -414,10 +499,16 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		} channelData[16];
 	}ubx_nav_SVInfo;
 
+	/**
+	 * \brief The U-Blox MON-RXR message structure definition
+	 */
 	typedef struct{
 		uint8_t awake_flag;					///< Receiver status flag
 	}ubx_mon_rxr_struct;
 
+	/**
+	 * \brief The U-Blox TIM-TP message structure definition
+	 */
 	typedef struct  
 	{
 		uint32_t towMS;						///< Timepulse time of week according to time base in ms
@@ -425,52 +516,46 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int32_t qErr;						///< Quantization error of timepulse
 		uint16_t week;						///< Timepulse week number according to timebase
 		uint8_t flags;						///< Bitmask, 0,1:gps timebase, UTC not available, 2,3:UTC timebase, UTC available
-		uint8_t res;						///< unused
+		uint8_t res;						///< Unused
 	}ubx_tim_tp;
 
+	/**
+	 * \brief The U-Blox TIM-VRFY message structure definition
+	 */
 	typedef struct
 	{
-		int32_t itow;						///< integer ms ToW received by source
-		int32_t frac;						///< sub-millisecond part of ToW in ns
-		int32_t deltaMs;					///< inter ms of delta time
-		int32_t deltaNs;					///< sub-millisecond part of delta time
-		uint16_t wno;						///< week number
-		uint8_t flags;						///< aiding time source, 0:no time aiding done, 2:source was RTC, 3:source was AID-INI
-		uint8_t res;						///< reserved slot
+		int32_t itow;						///< Integer ms ToW received by source
+		int32_t frac;						///< Sub-millisecond part of ToW in ns
+		int32_t deltaMs;					///< Inter ms of delta time
+		int32_t deltaNs;					///< Sub-millisecond part of delta time
+		uint16_t wno;						///< Week number
+		uint8_t flags;						///< Aiding time source, 0:no time aiding done, 2:source was RTC, 3:source was AID-INI
+		uint8_t res;						///< Reserved slot
 	}ubx_tim_vrfy;
 
 #endif
 
-ubx_cfg_nav_settings nav_settings;
+ubx_cfg_nav_settings nav_settings;			///< CFG-NAV settings structure
 
-uint8_t cksum_a;
-uint8_t cksum_b;
+uint8_t cksum_a;							///< Checksum a
+uint8_t cksum_b;							///< Checksum b
 
 // State machine state
-uint8_t         step;
-uint8_t         msg_id;
-uint16_t        payload_length;
-uint16_t        payload_counter;
+uint8_t         step;							///< Variable defining the state machine in the U-Blox decoding function
+uint8_t         msg_id;							///< The U-Blox message ID
+uint16_t        payload_length;					///< The length of the message
+uint16_t        payload_counter;				///< The incremental counter to receive bytes of data
 
-// 8 bit count of fix messages processed, used for periodic
-// processing
-uint8_t			fix_count;
-
-uint8_t         ubxclass;
+uint8_t         ubxclass;						///< The U-Blox message class
 
 // do we have new position and speed information?
-bool new_position;
-bool new_speed;
+bool new_position;								///< Boolean value to check if we received new position message
+bool new_speed;									///< Boolean value to check if we received new velocity message
 
-uint8_t         disable_counter;
+uint8_t         disable_counter;				///< Counter used to deactivate unwanted messages
 
-bool fix;
-bool next_fix;
-bool have_raw_velocity;
-// bool valid_read;
-// bool new_data;
-
-//uint32_t last_ground_speed_cm;
+bool next_fix;									///< Boolean variable to get whether we have a correct GPS fix or not
+bool have_raw_velocity;							///< Boolean variable that could be used to get a speed approximate with heading and 2D velocity
 
 #define NO_GPS 0						///< No GPS
 #define NO_FIX 1						///< No GPS fix
@@ -488,7 +573,7 @@ enum GPS_Engine_Setting{
 	GPS_ENGINE_AIRBORNE_4G = 8			///< Airborne with <4g acceleration
 };
 
-enum GPS_Engine_Setting engine_nav_setting;
+enum GPS_Engine_Setting engine_nav_setting;		///< Enum GPS engine setting
 
 
 #define UBX_TIMEOUT_CYCLES 2			///< Number of times ubx_CheckTimeout() must be called without response from GPS before it is considered as timed out
@@ -499,6 +584,9 @@ enum GPS_Engine_Setting engine_nav_setting;
 #define UBX_HEADING_PRECISION 5000000	///< The minimum precision to consider a heading as correct (in deg*10^5)
 
 
+/**
+ * \brief Type definition for GPS data
+ */
 typedef struct
 {
 	double latitude;						///< Latitude in degrees
@@ -532,14 +620,11 @@ typedef struct
  	unsigned char speedStatus;				///< Speed status
  	unsigned char courseStatus;				///< Course status
 	unsigned char accuracyStatus;			///< Accuracy status
-} gps_Data_type;						///< Type definition for GPS data
+} gps_Data_type;
 
 
 uint32_t idleTimer;							///< Last time that the GPS driver got a good packet from the GPS
-
-
 uint32_t idleTimeout;						///< Time in milliseconds after which we will assume the GPS is no longer sending us updates and attempt a re-init. 1200ms allows a small amount of slack over the worst-case 1Hz update rate.
-
 uint32_t last_fix_time;						///< Last fix time
 
 
@@ -547,8 +632,6 @@ uint32_t last_fix_time;						///< Last fix time
  * \brief	Initialize the gps U-Blox module
  *
  * \param	_engine_nav_setting		the GPS Nav settings 
- *
- * \return	void
  */
 void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting);
 
@@ -562,16 +645,12 @@ void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting);
  * re-processing it from the top, this is unavoidable. The parser
  * attempts to avoid this when possible.
  *
- * \param	void
- *
  * \return	true if new velocity and new position message
  */
 bool ubx_read(void);
 
 /**
  * \brief	Process the new received message, class by class
- *
- * \param	void
  *
  * \return	true if new velocity and new position message
  */
@@ -613,8 +692,6 @@ uint8_t endian_higher_bytes_uint16(uint16_t bytes);
  * \param	msg_class	the U-Blox class of the message
  * \param	_msg_id		the U-Blox message ID
  * \param	size		the size of the U-Blox following message
- *
- * \return	void
  */
 void ubx_send_header(uint8_t msg_class, uint8_t _msg_id, uint8_t size);
 
@@ -623,8 +700,6 @@ void ubx_send_header(uint8_t msg_class, uint8_t _msg_id, uint8_t size);
  *
  * \param	ck_sum_a	the checksum a
  * \param	ck_sum_b	the checksum b
- *
- * \return	void
  */
 void ubx_send_cksum(uint8_t ck_sum_a, uint8_t ck_sum_b);
 
@@ -638,8 +713,6 @@ void ubx_send_cksum(uint8_t ck_sum_a, uint8_t ck_sum_b);
  * \param	_msg_id		the U-Blox message ID
  * \param	msg			the CFG_NAV_RATE message
  * \param	size		the size of the U-Blox following message
- *
- * \return	void
  */
 void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_nav_rate_send msg, uint8_t size);
 
@@ -653,8 +726,6 @@ void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_n
  * \param	_msg_id				the U-Blox message ID
  * \param	engine_settings		the engine_settings sent
  * \param	size				the size of the U-Blox following message
- *
- * \return	void
  */
 void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, enum GPS_Engine_Setting *engine_settings, uint8_t size);
 
@@ -667,8 +738,6 @@ void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, enum GPS_
  * \param	msg_class	the U-Blox class of the message
  * \param	msg_id		the U-Blox message ID
  * \param	rate		the rate of the CFG message
- *
- * \return	void
  */
 void ubx_configure_message_rate(uint8_t msg_class, uint8_t msg_id, uint8_t rate);
 
@@ -678,18 +747,12 @@ void ubx_configure_message_rate(uint8_t msg_class, uint8_t msg_id, uint8_t rate)
  * The GPS and UART channel should already be configured in the good baudrate 38400U
  *
  * \param	void
- *
- * \return	void
  */
 void configure_gps(void);
 
 
 /**
  * \brief	The function that needs to be called to get the GPS information
- *
- * \param	void
- *
- * \return	void
  */
 void gps_update(void);
 
@@ -790,5 +853,9 @@ ubx_tim_vrfy * ubx_GetTimVRFY(void);
 * \return	The value in radians
 */
 float ToRad(float numdeg);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //GPS_UBLOX_H__

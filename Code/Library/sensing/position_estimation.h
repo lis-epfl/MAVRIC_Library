@@ -1,14 +1,19 @@
-/**
- * This file performs the 3D position estimation, either by direct integration or with correction with the GPS and barometer
+/** 
+ * \page The MAV'RIC license
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
  */
+ 
 
+/**
+ * \file position_estimation.h
+ *
+ * This file performs the 3D position estimation, either by direct integration or with correction with the GPS and barometer
+ */
 
 
 #ifndef POSITION_ESTIMATION_H__
@@ -27,7 +32,9 @@ extern "C" {
 #define VEL_DECAY 0.0
 #define POS_DECAY 0.0
 
-
+/**
+ * \brief The position estimator structure
+ */
 typedef struct position_estimator_t {
 	float kp_vel[3];					///< The gain to correct the velocity estimation from the GPS
 	float kp_pos[3];					///< The gain to correct the position estimation from the GPS
@@ -57,8 +64,6 @@ typedef struct position_estimator_t {
  * \param	pos_est			The pointer to the position estimation structure
  * \param	barometer		The pointer to the barometer structure
  * \param	gps				The pointer to the GPS structure
- *
- * \return	void
  */
 void init_pos_integration(position_estimator_t *pos_est, pressure_data *barometer,gps_Data_type *gps );
 
@@ -69,8 +74,6 @@ void init_pos_integration(position_estimator_t *pos_est, pressure_data *baromete
  * \param	barometer		The pointer to the barometer structure
  * \param	gps				The pointer to the GPS structure
  * \param	simLocalPos		The local position of the simulator
- *
- * \return	void
  */
 void position_reset_home_altitude(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, local_coordinates_t *simLocalPos);
 
@@ -80,8 +83,6 @@ void position_reset_home_altitude(position_estimator_t *pos_est, pressure_data *
  * \param	pos_est			The pointer to the position estimation structure
  * \param	attitude		The pointer to the attitude estimation structure
  * \param	dt				The time interval between two integration step
- *
- * \return	void
  */
 void position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitude, float dt);
 
@@ -92,8 +93,6 @@ void position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitu
  * \param	barometer		The pointer to the barometer structure
  * \param	gps				The pointer to the GPS structure
  * \param	dt				The time interval between two integration step
- *
- * \return	void
  */
 void position_correction(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, float dt);
 

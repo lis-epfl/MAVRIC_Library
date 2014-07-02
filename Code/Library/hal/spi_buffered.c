@@ -1,12 +1,17 @@
+ /* The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+ 
+
 /**
+ * \file spi_buffered.h
+ *
  *  SPI functions for the ATMega / AVR microcontrollers
  *  This library provides buffered SPI send and receive
- *
- *  Author: Felix Schill
- *  Written in 2006
- *  All rights reserved - do not redistribute in whole or in parts without author's explicit permission 
- *
-*/
+ */
 
 
 #include "spi_buffered.h"
@@ -16,11 +21,7 @@
 #include "led.h"
 
 
-static volatile spi_buffer_t spi_buffers[SPI_NUMBER];
-
-uint8_t* get_spi_in_buffer(int spi_index) {
-	return spi_buffers[spi_index].SPIInBuffer;
-}
+static volatile spi_buffer_t spi_buffers[SPI_NUMBER];				///< Allocated memory for SPI buffers
 
 void spi_handler(int spi_index);
 
@@ -28,13 +29,15 @@ void spi_handler(int spi_index);
   * manages sending and receiving data
 */
 __attribute__((__interrupt__))
-void spi0_int_handler(void) {
+void spi0_int_handler(void)
+{
 	//LED_On(LED1);
 	spi_handler(0);
 }
 
 __attribute__((__interrupt__))
-void spi1_int_handler(void) {
+void spi1_int_handler(void)
+{
 	spi_handler(1);
 }
 
@@ -49,24 +52,17 @@ static void pdca_int_handler_spi0(void)
 	pdca_disable(SPI0_DMA_CH_TRANSMIT);
 	pdca_disable_interrupt_transfer_complete(SPI0_DMA_CH_RECEIVE);
 	spi_deselect_device(spi_buffers[0].spi, &spi_buffers[0].adc_spi);
-   // call callback function to process data, at end of transfer
-   // to process data, and maybe add some more data
-   spi_buffers[0].SPIinBufferTail=spi_buffers[0].transmission_in_progress;
-   spi_buffers[0].transmission_in_progress=0;
-   //spi_buffers[0].traffic++;
+	// call callback function to process data, at end of transfer
+	// to process data, and maybe add some more data
+	spi_buffers[0].SPIinBufferTail=spi_buffers[0].transmission_in_progress;
+	spi_buffers[0].transmission_in_progress=0;
+	//spi_buffers[0].traffic++;
    
-   if ((spi_buffers[0].callbackFunction)) spi_buffers[0].callbackFunction();
-   
+	if ((spi_buffers[0].callbackFunction)) spi_buffers[0].callbackFunction();
 }
 
-
-
-/** initialises SPI interface
- *  this interface uses internal buffers and interrupts. 
- *  bytes in the outgoing buffer are sent automatically via interrupt
- */
-
-void initSPI(volatile avr32_spi_t *spi, int spi_index){
+void initSPI(volatile avr32_spi_t *spi, int spi_index)
+{
 	// init SPI
 	spi_buffers[spi_index].spi= spi;
 	
@@ -96,64 +92,56 @@ void initSPI(volatile avr32_spi_t *spi, int spi_index){
 	spi_buffers[spi_index].transmission_in_progress=0;
 	
 	//set up interrupt
-	  // Initialize interrupt vectors.
-    //INTC_init_interrupts();
-    //INTC_register_interrupt(&spi0_int_handler, AVR32_SPI0_IRQ, AVR32_INTC_INT0);
+		// Initialize interrupt vectors.
+	//INTC_init_interrupts();
+	//INTC_register_interrupt(&spi0_int_handler, AVR32_SPI0_IRQ, AVR32_INTC_INT0);
 	
-    //INTC_register_interrupt(&spi1_int_handler, AVR32_SPI1_IRQ, AVR32_INTC_INT0);
+	//INTC_register_interrupt(&spi1_int_handler, AVR32_SPI1_IRQ, AVR32_INTC_INT0);
 	//spi_buffers[spi_index].spi->imr = AVR32_SPI_RDRF;
 
 	enableSPI(spi_index);
 	//spi_buffers[spi_index].spi->cr=AVR32_SPI_SPIEN_MASK;	
 }
 
-void enableSPI(int spi_index) {
-	spi_enable(spi_buffers[spi_index].spi);
+uint8_t* get_spi_in_buffer(int spi_index)
+{
+	return spi_buffers[spi_index].SPIInBuffer;
 }
 
-void disableSPI(int spi_index) {
-	spi_disable(spi_buffers[spi_index].spi);
+void spiInitDMA(int spi_index, int block_size)
+{
+	static  pdca_channel_options_t PDCA_TX_OPTIONS =
+	{
+		.addr = 0,                                // memory address
+		.pid = AVR32_PDCA_PID_SPI0_TX,            // select peripheral - transmit to SPI0
+		.size = 12,	                              // transfer counter
+		.r_addr = NULL,                           // next memory address
+		.r_size = 0,                              // next transfer counter
+		.transfer_size = PDCA_TRANSFER_SIZE_BYTE  // select size of the transfer
+	};
+	static  pdca_channel_options_t PDCA_RX_OPTIONS =
+	{
+		.addr = 0,                                // memory address
+		.pid = AVR32_PDCA_PID_SPI0_RX,            // select peripheral - receiving from SPI0
+		.size = 12,                               // transfer counter
+		.r_addr = NULL,                           // next memory address
+		.r_size = 0,                              // next transfer counter
+		.transfer_size = PDCA_TRANSFER_SIZE_BYTE  // select size of the transfer
+	};
+	
+	PDCA_TX_OPTIONS.addr=(void *) spi_buffers[spi_index].SPIOutBuffer;
+	PDCA_RX_OPTIONS.addr=(void *) spi_buffers[spi_index].SPIInBuffer;
+	
+	// Init PDCA channel with the pdca_options.
+	pdca_init_channel(SPI0_DMA_CH_TRANSMIT, &PDCA_TX_OPTIONS); // init PDCA channel with options.
+	pdca_init_channel(SPI0_DMA_CH_RECEIVE, &PDCA_RX_OPTIONS); // init PDCA channel with options.
+
+	// Register PDCA IRQ interrupt.
+	INTC_register_interrupt( (__int_handler) &pdca_int_handler_spi0, SPI0_DMA_IRQ, AVR32_INTC_INT0);
 }
 
-
-
-
-// initialise DMA for SPI transfers
-  // PDCA channel options
-  
-void spiInitDMA(int spi_index, int block_size) {
-  static  pdca_channel_options_t PDCA_TX_OPTIONS =
-  {
-    .addr = 0,                                // memory address
-    .pid = AVR32_PDCA_PID_SPI0_TX,            // select peripheral - transmit to SPI0
-    .size = 12,	                              // transfer counter
-    .r_addr = NULL,                           // next memory address
-    .r_size = 0,                              // next transfer counter
-    .transfer_size = PDCA_TRANSFER_SIZE_BYTE  // select size of the transfer
-  };
-  static  pdca_channel_options_t PDCA_RX_OPTIONS =
-  {
-    .addr = 0,                                // memory address
-    .pid = AVR32_PDCA_PID_SPI0_RX,            // select peripheral - receiving from SPI0
-    .size = 12,                               // transfer counter
-    .r_addr = NULL,                           // next memory address
-    .r_size = 0,                              // next transfer counter
-    .transfer_size = PDCA_TRANSFER_SIZE_BYTE  // select size of the transfer
-  };
-  PDCA_TX_OPTIONS.addr=(void *) spi_buffers[spi_index].SPIOutBuffer;
-  PDCA_RX_OPTIONS.addr=(void *) spi_buffers[spi_index].SPIInBuffer;
-  // Init PDCA channel with the pdca_options.
-  pdca_init_channel(SPI0_DMA_CH_TRANSMIT, &PDCA_TX_OPTIONS); // init PDCA channel with options.
-  pdca_init_channel(SPI0_DMA_CH_RECEIVE, &PDCA_RX_OPTIONS); // init PDCA channel with options.
-
-  // Register PDCA IRQ interrupt.
-
-  INTC_register_interrupt( (__int_handler) &pdca_int_handler_spi0, SPI0_DMA_IRQ, AVR32_INTC_INT0);
-  
-  
-}
-
-void spiTriggerDMA(int spi_index, int block_size){
+void spiTriggerDMA(int spi_index, int block_size)
+{
 	//spi_buffers[spi_index].SPIinBufferHead=0;
 	//spi_buffers[spi_index].SPIinBufferTail=0;
 	//spi_buffers[spi_index].SPIoutBufferHead=0;
@@ -169,167 +157,166 @@ void spiTriggerDMA(int spi_index, int block_size){
 	
 	spi_select_device(spi_buffers[spi_index].spi, &spi_buffers[spi_index].adc_spi);
 	// Enable pdca interrupt each time the reload counter reaches zero, i.e. each time
-    // the whole block was received
+	// the whole block was received
 	pdca_enable_interrupt_transfer_complete(SPI0_DMA_CH_RECEIVE);
 	
 	pdca_enable(SPI0_DMA_CH_RECEIVE);
 	pdca_enable(SPI0_DMA_CH_TRANSMIT);
-    
 }
 
-/** specify a callback function, that gets called when the SPI buffer is empty
- */
-void setSPIcallBack(int spi_index, functionpointer* functionPointer) {
+void setSPIcallBack(int spi_index, functionpointer* functionPointer)
+{
 	spi_buffers[spi_index].callbackFunction=functionPointer;
 }
 
-/** pauses sending 
-  * be careful not to overfill the buffer - deadlock may occur  
-  */
-void pauseSPI(int spi_index){
-   spi_buffers[spi_index].automatic=0;
+void enableSPI(int spi_index)
+{
+	spi_enable(spi_buffers[spi_index].spi);
 }
 
-/** resumes automatic sending
- */
-void resumeSPI(int spi_index){
-  spi_buffers[spi_index].automatic=1;
-  startSPI(spi_index);
+void disableSPI(int spi_index)
+{
+	spi_disable(spi_buffers[spi_index].spi);
 }
 
-void activateReceiveSPI(int spi_index){
-
-  spi_buffers[spi_index].spiReceiverOn=1;
+void pauseSPI(int spi_index)
+{
+	spi_buffers[spi_index].automatic=0;
 }
 
-void deactivateReceiveSPI(int spi_index){
-  spi_buffers[spi_index].spiReceiverOn=0;
-}
-uint8_t getTraffic(int spi_index) {return spi_buffers[spi_index].traffic;}
-
-
-/** reads one byte from the incoming SPI buffer
- */
-uint8_t readSPI(int spi_index){
-  uint8_t byte;
-  // if buffer empty, wait for incoming data
-  while (spi_buffers[spi_index].SPIinBufferHead==spi_buffers[spi_index].SPIinBufferTail);
-  byte=spi_buffers[spi_index].SPIInBuffer[spi_buffers[spi_index].SPIinBufferTail];
-  spi_buffers[spi_index].SPIinBufferTail=  (spi_buffers[spi_index].SPIinBufferTail+1)&SPI_BUFFER_MASK;
-  return byte;
-
+void resumeSPI(int spi_index)
+{
+	spi_buffers[spi_index].automatic=1;
+	startSPI(spi_index);
 }
 
-void clearSPIReadBuffer(int spi_index){
-  spi_buffers[spi_index].SPIinBufferTail=spi_buffers[spi_index].SPIinBufferHead;
+void startSPI(int spi_index)
+{
+	// check flag if transmission is in progress
+	if ((spi_buffers[spi_index].transmission_in_progress==0)
+	&&(spi_buffers[spi_index].SPIoutBufferHead!=spi_buffers[spi_index].SPIoutBufferTail))
+	{
+		// if not, initiate transmission by sending first byte
+		//!!!!PORTB &= ~_BV(SPI_CS);	// pull chip select low to start transmission
+		spi_select_device(spi_buffers[spi_index].spi, &spi_buffers[spi_index].adc_spi);
+
+		spi_buffers[spi_index].transmission_in_progress=1;
+		// activate interrupt to initiate transmission
+		//!!!!SPCR|=_BV(SPIE);
+		spi_buffers[spi_index].spi->ier = AVR32_SPI_IER_RDRF_MASK | AVR32_SPI_IER_TDRE_MASK;
+
+		SPItransmit(spi_index);
+	}
 }
 
-/** writes one byte to the outgoing SPI buffer
- *  if buffer is full, this method blocks
- *  if sending is paused and buffer runs full, sending is automatically resumed!!
- */
-void writeSPI(int spi_index, uint8_t value){
-  uint8_t newIndex;
-
-  newIndex=(spi_buffers[spi_index].SPIoutBufferHead+1)&SPI_BUFFER_MASK;
-  // check if buffer is already full and wait
-  //while (newIndex==spi_buffers[spi_index].SPIoutBufferTail) 
-  //{
-    //if (spi_buffers[spi_index].automatic==0) resumeSPI(spi_index);
-  //}
-  spi_buffers[spi_index].SPIOutBuffer[(spi_buffers[spi_index].SPIoutBufferHead)]=value;
-  spi_buffers[spi_index].SPIoutBufferHead = newIndex;
-
-
-  if (spi_buffers[spi_index].automatic==1) startSPI(spi_index);
+void activateReceiveSPI(int spi_index)
+{
+	spi_buffers[spi_index].spiReceiverOn=1;
 }
 
-void SPItransmit(int spi_index) {
- if (spi_buffers[spi_index].SPIoutBufferHead!=spi_buffers[spi_index].SPIoutBufferTail) 
- {
-    // read data from buffer and copy it to SPI unit
-	spi_buffers[spi_index].spi->tdr = spi_buffers[spi_index].SPIOutBuffer[spi_buffers[spi_index].SPIoutBufferTail];
-    spi_buffers[spi_index].transmission_in_progress=1;    
-    // update buffer index
-    spi_buffers[spi_index].SPIoutBufferTail=  (spi_buffers[spi_index].SPIoutBufferTail+1)&SPI_BUFFER_MASK;
-	//spi_enable(spi_buffers[spi_index].spi);
-
-  } else {
-    spi_buffers[spi_index].SPIoutBufferTail=spi_buffers[spi_index].SPIoutBufferHead;
-    //PORTB |= _BV(SPI_CS);	// pull chip select high to end transmission
-	spi_deselect_device(spi_buffers[spi_index].spi, &spi_buffers[spi_index].adc_spi);
-    spi_buffers[spi_index].transmission_in_progress=0;
-	spi_buffers[spi_index].spi->idr =AVR32_SPI_IER_RDRF_MASK | AVR32_SPI_IER_TDRE_MASK;
-    //SPCR&=~_BV(SPIE);
- }
+void deactivateReceiveSPI(int spi_index)
+{
+	spi_buffers[spi_index].spiReceiverOn=0;
 }
 
-/** initiates SPI transmission by sending first byte
-*/
-void startSPI(int spi_index) {
-  // check flag if transmission is in progress
-  if ((spi_buffers[spi_index].transmission_in_progress==0)
-	&&(spi_buffers[spi_index].SPIoutBufferHead!=spi_buffers[spi_index].SPIoutBufferTail)) {
-    // if not, initiate transmission by sending first byte
-    //!!!!PORTB &= ~_BV(SPI_CS);	// pull chip select low to start transmission
-	spi_select_device(spi_buffers[spi_index].spi, &spi_buffers[spi_index].adc_spi);
-
-    spi_buffers[spi_index].transmission_in_progress=1;
-    // activate interrupt to initiate transmission
-    //!!!!SPCR|=_BV(SPIE);
- 	spi_buffers[spi_index].spi->ier = AVR32_SPI_IER_RDRF_MASK | AVR32_SPI_IER_TDRE_MASK;
-
-    SPItransmit(spi_index);
-  }
+void clearSPIReadBuffer(int spi_index)
+{
+	spi_buffers[spi_index].SPIinBufferTail=spi_buffers[spi_index].SPIinBufferHead;
 }
 
-int8_t SPITransferFinished(int spi_index) {
+uint8_t getTraffic(int spi_index)
+{
+	return spi_buffers[spi_index].traffic;
+}
+
+uint8_t readSPI(int spi_index)
+{
+	uint8_t byte;
+	// if buffer empty, wait for incoming data
+	while (spi_buffers[spi_index].SPIinBufferHead==spi_buffers[spi_index].SPIinBufferTail);
+	byte=spi_buffers[spi_index].SPIInBuffer[spi_buffers[spi_index].SPIinBufferTail];
+	spi_buffers[spi_index].SPIinBufferTail=  (spi_buffers[spi_index].SPIinBufferTail+1)&SPI_BUFFER_MASK;
+	return byte;
+}
+
+void writeSPI(int spi_index, uint8_t value)
+{
+	uint8_t newIndex;
+
+	newIndex=(spi_buffers[spi_index].SPIoutBufferHead+1)&SPI_BUFFER_MASK;
+	// check if buffer is already full and wait
+	//while (newIndex==spi_buffers[spi_index].SPIoutBufferTail) 
+	//{
+	//if (spi_buffers[spi_index].automatic==0) resumeSPI(spi_index);
+	//}
+	spi_buffers[spi_index].SPIOutBuffer[(spi_buffers[spi_index].SPIoutBufferHead)]=value;
+	spi_buffers[spi_index].SPIoutBufferHead = newIndex;
+
+
+	if (spi_buffers[spi_index].automatic==1) startSPI(spi_index);
+}
+
+void SPItransmit(int spi_index)
+{
+	if (spi_buffers[spi_index].SPIoutBufferHead!=spi_buffers[spi_index].SPIoutBufferTail) 
+	{
+		// read data from buffer and copy it to SPI unit
+		spi_buffers[spi_index].spi->tdr = spi_buffers[spi_index].SPIOutBuffer[spi_buffers[spi_index].SPIoutBufferTail];
+		spi_buffers[spi_index].transmission_in_progress=1;    
+		// update buffer index
+		spi_buffers[spi_index].SPIoutBufferTail=  (spi_buffers[spi_index].SPIoutBufferTail+1)&SPI_BUFFER_MASK;
+		//spi_enable(spi_buffers[spi_index].spi);
+	} else {
+		spi_buffers[spi_index].SPIoutBufferTail=spi_buffers[spi_index].SPIoutBufferHead;
+		//PORTB |= _BV(SPI_CS);	// pull chip select high to end transmission
+		spi_deselect_device(spi_buffers[spi_index].spi, &spi_buffers[spi_index].adc_spi);
+		spi_buffers[spi_index].transmission_in_progress=0;
+		spi_buffers[spi_index].spi->idr =AVR32_SPI_IER_RDRF_MASK | AVR32_SPI_IER_TDRE_MASK;
+		//SPCR&=~_BV(SPIE);
+	}
+}
+
+int8_t SPITransferFinished(int spi_index) 
+{
 	return (spi_buffers[spi_index].SPIoutBufferHead==spi_buffers[spi_index].SPIoutBufferTail);
 }
 
-/** waits until whole buffer is written to SPI bus
- *  automatically resumes sending if SPI interface was paused */
-void SPIFlushBuffer(int spi_index) {
- 	resumeSPI(spi_index);
+void SPIFlushBuffer(int spi_index)
+{
+	resumeSPI(spi_index);
 	while (spi_buffers[spi_index].SPIoutBufferHead!=spi_buffers[spi_index].SPIoutBufferTail);
 }
 
-/** returns the number of bytes in the incoming buffer
- */
-uint8_t SPIBytesAvailable(int spi_index){
+uint8_t SPIBytesAvailable(int spi_index)
+{
   return (SPI_BUFFER_SIZE + spi_buffers[spi_index].SPIinBufferHead - spi_buffers[spi_index].SPIinBufferTail)&SPI_BUFFER_MASK;
 }
 
+void spi_handler(int spi_index)
+{
+	uint8_t inData;
+	uint8_t tmp;
+	inData=spi_buffers[spi_index].spi->rdr;
 
-
-
-
-void spi_handler(int spi_index) {
-  uint8_t inData;
-  uint8_t tmp;
-  inData=spi_buffers[spi_index].spi->rdr;
-
-  if ((spi_buffers[spi_index].spi->sr & AVR32_SPI_SR_TDRE_MASK)!=0) {
+	if ((spi_buffers[spi_index].spi->sr & AVR32_SPI_SR_TDRE_MASK)!=0) {
 	// initiate transfer if necessary
 	SPItransmit(spi_index);
-  }	
-  // only process received data when receiver is activated
-  if ((spi_buffers[spi_index].spiReceiverOn==1)&& ((spi_buffers[spi_index].spi->sr & AVR32_SPI_SR_RDRF_MASK)!=0)) {
-	 // read incoming data from SPI port
+	}	
+	// only process received data when receiver is activated
+	if ((spi_buffers[spi_index].spiReceiverOn==1)&& ((spi_buffers[spi_index].spi->sr & AVR32_SPI_SR_RDRF_MASK)!=0)) {
+		// read incoming data from SPI port
 	spi_buffers[spi_index].traffic++;
 
-    tmp=(spi_buffers[spi_index].SPIinBufferHead+1)&SPI_BUFFER_MASK;
+	tmp=(spi_buffers[spi_index].SPIinBufferHead+1)&SPI_BUFFER_MASK;
     
-    if (tmp==spi_buffers[spi_index].SPIinBufferTail) {
-      //error: receive buffer overflow!!
-      // lose old incoming data at the end of the buffer
-      spi_buffers[spi_index].SPIinBufferTail=(spi_buffers[spi_index].SPIinBufferTail+1)&SPI_BUFFER_MASK;
-    } 
-    // store incoming data in buffer
-    spi_buffers[spi_index].SPIInBuffer[spi_buffers[spi_index].SPIinBufferHead] = inData;
-    // move head pointer forward
-    spi_buffers[spi_index].SPIinBufferHead=tmp;
-  
-  }
-    
+	if (tmp==spi_buffers[spi_index].SPIinBufferTail) {
+		//error: receive buffer overflow!!
+		// lose old incoming data at the end of the buffer
+		spi_buffers[spi_index].SPIinBufferTail=(spi_buffers[spi_index].SPIinBufferTail+1)&SPI_BUFFER_MASK;
+	} 
+	// store incoming data in buffer
+	spi_buffers[spi_index].SPIInBuffer[spi_buffers[spi_index].SPIinBufferHead] = inData;
+	// move head pointer forward
+	spi_buffers[spi_index].SPIinBufferHead=tmp;
+	}
 }
