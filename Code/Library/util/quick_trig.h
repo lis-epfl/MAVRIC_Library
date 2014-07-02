@@ -1,13 +1,20 @@
 /**
- * Quick implementation of trigonometric functions
+ * \page The MAV'RIC License
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
+ */
+
+
+/**
+ * \file quick_trig.h
+ * 
+ * Quick implementation of trigonometric functions
  */ 
+
 
 #ifndef QUICK_TRIG_H_
 #define QUICK_TRIG_H_

@@ -1,35 +1,180 @@
+/**
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+ * \file print_util.h
+ * 
+ * Some utilities for printing strings and numbers 
+ */
+
+
 #ifndef PRINT_UTIL_H
 #define PRINT_UTIL_H
 
-//#include "usart.h"
+#ifdef __cplusplus
+extern "C" 
+{
+#endif
+
 #include "streams.h"
 #include "maths.h"
 
 #define MAX_DIGITS 10
-//#define STDOUT 0
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
+/**
+ * \brief              		Init debug stream
+ * 
+ * \param 	debug_stream 	Stream to be forwarded to the debug stream
+ */
 void dbg_print_init(byte_stream_t* debug_stream);
+
+
+/**
+ * \brief              Get pointer to debug stream
+ * 
+ * \return             Pointer to debug stream
+ */
 byte_stream_t* get_debug_stream(void);
 
+
+/**
+ * \brief              		Writes string of character to a stream
+ * 
+ * \param 	out_stream   	Pointer to ouput stream
+ * \param 	s            	Character string
+ */
 void putstring(byte_stream_t *out_stream, const char* s);
+
+
+/**
+ * \brief              		Writes an alphabet character to a stream,
+ *  
+ * \details 				The number is selected according to its position in the following list
+ * 							alphabet[36] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+ * 							
+ * \param 	out_stream  	Pointer to output stream
+ * \param 	c            	Number between 0 and 35
+ */
 void putdigit(byte_stream_t *out_stream, unsigned c);
+
+
+/**
+ * \brief              Writes a number in any base to a stream
+ * 
+ * \param out_stream   Pointer to output stream
+ * \param c            Number
+ * \param base         Base
+ */
 void putnum(byte_stream_t *out_stream, long c, char base);
+
+
+/**
+ * \brief              		Writes a float to a stream
+ * 
+ * \param 	out_stream   	Pointer to output stream
+ * \param 	c            	Floating point value
+ * \param 	after_digits 	Number of digits to write after the radix point
+ */
 void putfloat(byte_stream_t *out_stream, float c, int after_digits);
+
+
+/**
+ * \brief              		Writes a matrix to a stream
+ * 
+ * \param 	out_stream   	Pointer
+ * \param 	v            	Array of floats containing the matrix elements
+ * \param 	rows 			Number of rows
+ * \param 	columns			Number of columns
+ * \param 	after_digits 	Number of digits to write after the radix point
+ */
 void print_matrix(byte_stream_t *out_stream, float v[], int rows, int columns, int after_digits);
+
+
+/**
+ * \brief              		Writes a vector to a stream
+ * 
+ * \param 	out_stream   	Pointer to output stream
+ * \param 	v            	Array of floats containing the vector elements
+ * \param 	after_digits 	Number of digits to write after the radix point
+ */
 void print_vector(byte_stream_t *out_stream, float v[], int after_digits); 
+
+
+/**
+ * \brief              		Writes a quaternion to stream
+ * 
+ * \param 	out_stream   	Pointer to output stream
+ * \param 	quat         	Unit quaternion
+ * \param 	after_digits 	Number of digits to write after the radix point
+ */
 void print_quaternion(byte_stream_t *out_stream, UQuat_t *quat, int after_digits); 
 
+
+/**
+ * \brief              Writes a character string to the debug stream
+ * 
+ * \param s            Character string
+ */
 void dbg_print(const char* s);
+
+
+/**
+ * \brief              Writes a number in any base to the debug stream
+ * 
+ * \param c            Number
+ * \param base         Base
+ */
 void dbg_print_num(long c, char base);
+
+
+/**
+ * \brief              	Writes a log-like message to the debug stream
+ * 
+ * \details 			The message has the following format: <MSG> <VALUE>. 
+ * 						example: Altitude: 42
+ * 						
+ * \param 	msg         Descriptive message
+ * \param 	value       Associated value
+ * \param 	base        Base
+ */
 void dbg_log_value(const char* msg, long value, char base);
+
+
+/**
+ * \brief              		Writes a floating point value to the debug stream
+ * 
+ * \param 	c           	Floating point value
+ * \param 	after_digits  	Number of digits to write after the radix point
+ */
 void dbg_putfloat(float c, int after_digits);
 
+
+/**
+ * \brief              		Writes a vector to the debug stream
+ * 
+ * \param 	v            	Array of float containing the vector elements
+ * \param 	after_digits 	Number of digits to write after the radix point
+ */
 void dbg_print_vector(float v[], int after_digits); 
+
+
+/*!
+ * \brief              		Writes a quaternion to the debug stream
+ * 
+ * \param 	quat         	Unit quaternion
+ * \param 	after_digits 	Number of digits to write after the radix point
+ */
 void dbg_print_quaternion(UQuat_t *quat, int after_digits); 
+
 
 #ifdef __cplusplus
 }

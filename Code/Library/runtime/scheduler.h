@@ -1,22 +1,30 @@
 /**
- * Scheduler
+ * \page The MAV'RIC License
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+ * \file scheduler.h
  *
- * This file is part of the MAV'RIC Framework.
+ * Scheduler
  */
 
 
 #ifndef SCHEDULER_H_
 #define SCHEDULER_H_
 
+
 #ifdef __cplusplus
 extern "C" 
 {
 #endif
+
 
 #include "compiler.h"
 
@@ -24,7 +32,6 @@ extern "C"
 #define SCHEDULER_TIMEBASE 1000000
 #define MAX_NUMBER_OF_TASKS 30
 #define SCHEDULER_PROFILING
-
 
 
 typedef uint8_t task_handle_t;

@@ -1,12 +1,18 @@
 /**
- * Buffer
+ * \page The MAV'RIC License
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
+ */
+
+
+/**
+ * \file buffer.c
+ * 
+ * Buffer
  */ 
 
 

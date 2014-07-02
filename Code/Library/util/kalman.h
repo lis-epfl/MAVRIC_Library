@@ -1,13 +1,20 @@
 /**
- * 2D kalman filter
+ * \page The MAV'RIC License
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
  */
+
+
+/**
+ * \file kalman.h
+ * 
+ * 2D kalman filter
+ */
+
 
 #ifndef KALMAN_H_
 #define KALMAN_H_
@@ -21,6 +28,7 @@ extern "C"
 
 #include "small_matrix.h"
 #include "linear_algebra.h"
+
 
 /**
  * @brief Kalman filter 

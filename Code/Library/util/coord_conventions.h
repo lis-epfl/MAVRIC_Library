@@ -1,13 +1,20 @@
 /**
- * Coordinate conventions
+ * \page The MAV'RIC License
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
  */
+
+
+/**
+ * \file coord_conventions.h
+ * 
+ * Coordinate conventions
+ */ 
+
 
 #ifndef COORD_CONVENTIONS_H_
 #define COORD_CONVENTIONS_H_
