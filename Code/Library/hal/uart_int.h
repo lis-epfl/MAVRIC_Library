@@ -12,7 +12,7 @@
 /**
  * \file uart_int.h
  *
- * This file decods the messages from the UBLOX GPS
+ * This file implments the UART communication protocol
  */
 
 

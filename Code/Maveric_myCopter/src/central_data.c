@@ -1,9 +1,16 @@
-/*
- * central_data.c
+/* The MAV'RIC Framework
  *
- * Created: 16/09/2013 12:18:14
- *  Author: sfx
- */ 
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+ 
+
+/**
+ * \file central_data.c
+ *
+ *  Place where the central data is stored and initialized
+ */
 
 
 #include "central_data.h"

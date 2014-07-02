@@ -243,7 +243,7 @@ task_return_t set_mav_mode_n_state()
 						if(centralData->automatic_take_off)
 						{
 							centralData->automatic_take_off = false;
-							wp_take_off();
+							waypoint_take_off();
 						}
 						
 						distFromHomeSqr = SQR(centralData->position_estimator.localPosition.pos[X] - centralData->waypoint_hold_coordinates.pos[X]) + SQR(centralData->position_estimator.localPosition.pos[Y] - centralData->waypoint_hold_coordinates.pos[Y]) + SQR(centralData->position_estimator.localPosition.pos[Z] - centralData->waypoint_hold_coordinates.pos[Z]);
@@ -260,12 +260,12 @@ task_return_t set_mav_mode_n_state()
 						if(centralData->automatic_take_off)
 						{
 							centralData->automatic_take_off = false;
-							wp_take_off();
+							waypoint_take_off();
 						}
 
 						if (!centralData->waypoint_set)
 						{
-							init_wp();
+							init_waypoint();
 						}
 
 						distFromHomeSqr = SQR(centralData->position_estimator.localPosition.pos[X]-centralData->waypoint_hold_coordinates.pos[X]) + SQR(centralData->position_estimator.localPosition.pos[Y]-centralData->waypoint_hold_coordinates.pos[Y]) + SQR(centralData->position_estimator.localPosition.pos[Z]-centralData->waypoint_hold_coordinates.pos[Z]);
@@ -336,7 +336,7 @@ task_return_t set_mav_mode_n_state()
 				case MAV_MODE_GUIDED_ARMED:
 					if (centralData->mav_mode_previous != MAV_MODE_GUIDED_ARMED)
 					{
-						wp_hold_init(centralData->position_estimator.localPosition);
+						waypoint_hold_init(centralData->position_estimator.localPosition);
 					}
 					break;
 
@@ -344,12 +344,12 @@ task_return_t set_mav_mode_n_state()
 					if (centralData->mav_mode_previous != MAV_MODE_AUTO_ARMED)
 					{
 						centralData->auto_landing_enum = DESCENT_TO_SMALL_ALTITUDE;
-						wp_hold_init(centralData->position_estimator.localPosition);
+						waypoint_hold_init(centralData->position_estimator.localPosition);
 					}
 
 					if (!centralData->waypoint_set)
 					{
-						init_wp();
+						init_waypoint();
 					}
 
 					waypoint_navigation_handler();
