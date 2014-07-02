@@ -181,18 +181,21 @@ bool ubx_read(void)
 			cksum_a = data;
 			cksum_b = cksum_a; // reset the checksum accumulators
 			break;
+			
 		case 3:
 			step++;
 			cksum_a += data;
 			cksum_b += cksum_a; // checksum byte
 			msg_id = data;
 			break;
+			
 		case 4:
 			step++;
 			cksum_a += data;
 			cksum_b += cksum_a; // checksum byte
 			payload_length = data;
 			break;
+			
 		case 5:
 			step++;
 			payload_length |= data<<8;
@@ -221,7 +224,9 @@ bool ubx_read(void)
 						ubx_currentMessage = (unsigned char**)&ubx_currentPosllhMessage;
 						ubx_lastMessage = (unsigned char**)&ubx_lastPosllhMessage;
 						ubx_validMessage = &ubx_numberOfValidPosllhMessage;
-					}else{
+					}
+					else
+					{
 						dbg_print("Wrong Posllh message 0x");
 						dbg_print_num(ubxclass,16);
 						dbg_print(" Msg id: 0x");
@@ -235,13 +240,16 @@ bool ubx_read(void)
 						goto reset;
 					}
 					break;
+					
 				case MSG_NAV_STATUS:
 					if(payload_length == UBX_SIZE_NAV_STATUS)
 					{
 						ubx_currentMessage = (unsigned char**)&ubx_currentStatusMessage;
 						ubx_lastMessage = (unsigned char**)&ubx_lastStatusMessage;
 						ubx_validMessage = &ubx_numberOfValidStatusMessage;
-					}else{
+					}
+					else
+					{
 						dbg_print("Wrong Nav Status message 0x");
 						dbg_print_num(ubxclass,16);
 						dbg_print(" Msg id: 0x");
@@ -255,13 +263,16 @@ bool ubx_read(void)
 						goto reset;
 					}
 					break;
+					
 				case MSG_NAV_SOL:
 					if(payload_length == UBX_SIZE_NAV_SOL)
 					{
 						ubx_currentMessage = (unsigned char**)&ubx_currentSolutionMessage;
 						ubx_lastMessage = (unsigned char**)&ubx_lastSolutionMessage;
 						ubx_validMessage = &ubx_numberOfValidSolutionMessage;;
-					}else{
+					}
+					else
+					{
 						dbg_print("Wrong Solution message 0x");
 						dbg_print_num(ubxclass,16);
 						dbg_print(" Msg id: 0x");
@@ -275,13 +286,16 @@ bool ubx_read(void)
 						goto reset;
 					}
 					break;
+					
 				case MSG_NAV_VELNED:
 					if(payload_length == UBX_SIZE_NAV_VELNED)
 					{
 						ubx_currentMessage = (unsigned char**)&ubx_currentVelnedMessage;
 						ubx_lastMessage = (unsigned char**)&ubx_lastVelnedMessage;
 						ubx_validMessage = &ubx_numberOfValidVelnedMessage;
-					}else{
+					}
+					else
+					{
 						dbg_print("Wrong Velned message 0x");
 						dbg_print_num(ubxclass,16);
 						dbg_print(" Msg id: 0x");
@@ -295,13 +309,16 @@ bool ubx_read(void)
 						goto reset;
 					}
 					break;
+					
 				case MSG_NAV_SVINFO:
 					if(payload_length == UBX_SIZE_NAV_SVINFO)
 					{
 						ubx_currentMessage = (unsigned char**)&ubx_currentSVInfoMessage;
 						ubx_lastMessage = (unsigned char**)&ubx_lastSVInfoMessage;
 						ubx_validMessage = &ubx_numberOfValidSVInfoMessage;
-					}else{
+					}
+					else
+					{
 						dbg_print("Wrong SV Info message 0x");
 						dbg_print_num(ubxclass,16);
 						dbg_print(" Msg id: 0x");
@@ -315,6 +332,7 @@ bool ubx_read(void)
 						goto reset;
 					}
 					break;
+					
 				default:
 					step = 0;
 					dbg_print("Unexpected NAV message, Class: 0x");
@@ -326,7 +344,8 @@ bool ubx_read(void)
 					dbg_print("\n");
 					goto reset;
 				}	
-			}else if(ubxclass == UBX_CLASS_CFG)
+			}
+			else if(ubxclass == UBX_CLASS_CFG)
 			{
 				
 				switch(msg_id)
@@ -337,7 +356,9 @@ bool ubx_read(void)
 						ubx_currentMessage = (unsigned char**)&ubx_currentNavSettingsMessage;
 						ubx_lastMessage = (unsigned char**)&ubx_lastNavSettingsMessage;
 						ubx_validMessage = &ubx_numberOfValidNavSettingsMessage;
-					}else{
+					}
+					else
+					{
 						dbg_print("Wrong Nav Settings message 0x");
 						dbg_print_num(ubxclass,16);
 						dbg_print(" Msg id: 0x");
@@ -350,14 +371,17 @@ bool ubx_read(void)
 						step = 0;
 						goto reset;
 					}
-					break;		
+					break;
+						
 				case MSG_CFG_RATE:
 					if(payload_length == UBX_SIZE_CFG_RATE)
 					{
 						ubx_currentMessage = (unsigned char**)&ubx_currentCFGRateMessage;
 						ubx_lastMessage = (unsigned char**)&ubx_lastCFGRateMessage;
 						ubx_validMessage = &ubx_numberOfValidCFGRateMessage;
-					}else{
+					}
+					else
+					{
 						dbg_print("Wrong CFG Rate message 0x");
 						dbg_print_num(ubxclass,16);
 						dbg_print(" Msg id: 0x");
@@ -371,13 +395,16 @@ bool ubx_read(void)
 						goto reset;
 					}
 					break;
+					
 				case MSG_CFG_SET_RATE:
 					if (payload_length == UBX_SIZE_CFG_GETSET_RATE)
 					{
 						ubx_currentMessage = (unsigned char**)&ubx_currentCFGSetGetRateMessage;
 						ubx_lastMessage = (unsigned char**)&ubx_lastCFGSetGetRateMessage;
 						ubx_validMessage = &ubx_numberOfValidCFGSetGetRateMessage;
-					}else{
+					}
+					else
+					{
 						dbg_print("Wrong CFG Set/get message 0x");
 						dbg_print_num(ubxclass,16);
 						dbg_print(" Msg id: 0x");
@@ -391,6 +418,7 @@ bool ubx_read(void)
 						goto reset;
 					}
 					break;
+					
 				default:
 					step = 0;
 					dbg_print("Unexpected CFG message, Class: 0x");
@@ -412,7 +440,9 @@ bool ubx_read(void)
  						ubx_currentMessage = (unsigned char**)&ubx_currentMONRXRMessage;
 						ubx_lastMessage = (unsigned char**)&ubx_lastMONRXRMessage;
 						ubx_validMessage = &ubx_numberOfValidMONRXRMessage;
- 					}else{
+ 					}
+					 else
+					 {
  						dbg_print("Wrong MON RXR message 0x");
  						dbg_print_num(ubxclass,16);
  						dbg_print(" Msg id: 0x");
@@ -426,6 +456,7 @@ bool ubx_read(void)
  						goto reset;
  					}
 					break;
+					
  				default:
  					step = 0;
  					dbg_print("Unexpected TIM message, Class: 0x");
@@ -440,7 +471,8 @@ bool ubx_read(void)
  					goto reset;
  				}
 				
-			} else if(ubxclass == UBX_CLASS_TIM)
+			}
+			else if(ubxclass == UBX_CLASS_TIM)
 			{
 				switch(msg_id)
 				{
@@ -450,7 +482,9 @@ bool ubx_read(void)
 						ubx_currentMessage = (unsigned char**)&ubx_currentTimTPMessage;
 						ubx_lastMessage = (unsigned char**)&ubx_lastTimTPMessage;
 						ubx_validMessage = &ubx_numberOfValidTimTPMessage;
-					}else{
+					}
+					else
+					{
 						dbg_print("Wrong TIM TP message 0x");
 						dbg_print_num(ubxclass,16);
 						dbg_print(" Msg id: 0x");
@@ -464,13 +498,16 @@ bool ubx_read(void)
 						goto reset;
 					}
 					break;
+					
 				case MSG_TIM_VRFY:
 					if (payload_length == UBX_SIZE_TIM_VRFY)
 					{
 						ubx_currentMessage = (unsigned char**)&ubx_currentTimVRFYMessage;
 						ubx_lastMessage = (unsigned char**)&ubx_lastTimVRFYMessage;
 						ubx_validMessage = &ubx_numberOfValidTimVRFYMessage;
-						}else{
+						}
+						else
+						{
 						dbg_print("Wrong TIM VRFY message 0x");
 						dbg_print_num(ubxclass,16);
 						dbg_print(" Msg id: 0x");
@@ -498,7 +535,9 @@ bool ubx_read(void)
 					dbg_print("\n");
 					goto reset;
 				}
-			}else{
+			}
+			else
+			{
 				step = 0;
 				dbg_print("Unexpected message, Class: 0x");
 				dbg_print_num(ubxclass,16);
@@ -510,8 +549,8 @@ bool ubx_read(void)
 				goto reset;	
 			}		
 			break;
-		case 6:
 			
+		case 6:
 			cksum_a += data;
 			cksum_b += cksum_a; // checksum byte
 			
@@ -528,6 +567,7 @@ bool ubx_read(void)
 				step++;
 			}
 			break;
+			
 		case 7:
 			step++;
 			if (cksum_a != data)
@@ -545,6 +585,7 @@ bool ubx_read(void)
 				goto reset;
 			}
 			break;
+			
 		case 8:
 			step=0;
 			if (cksum_b != data)
@@ -623,7 +664,6 @@ bool ubx_process_data(void)
 				dbg_print(" deltaNs :");
 				dbg_print_num(gpsTimVrfy->deltaNs,10);
 			}
-			
 		}
 		return false;
 	}
@@ -645,12 +685,12 @@ bool ubx_process_data(void)
 		*/
 		if(gpsNavSettings)
 		{
-			
 			dbg_print("Got engine settings ");
 			dbg_print_num(gpsNavSettings->dynModel,16);
 			dbg_print("\n");
-		
-		}else{
+		}
+		else
+		{
 			if (engine_nav_setting != GPS_ENGINE_NONE && !gpsNavSettings)
 			{
 				if(gpsNavSettings->dynModel != engine_nav_setting)
@@ -746,6 +786,7 @@ bool ubx_process_data(void)
 			new_position = true;
 		}
 		break;
+		
 	case MSG_NAV_STATUS:
 		gpsStatus = ubx_GetStatus();
 		
@@ -764,11 +805,14 @@ bool ubx_process_data(void)
 			if (!next_fix)
 			{
 				centralData->GPS_data.status = NO_FIX;
-			}else{
+			}
+			else
+			{
 				centralData->GPS_data.status = GPS_OK;
 			}
 		}
 		break;
+		
 	case MSG_NAV_SOL:
 		gpsSolution = ubx_GetSolution();
 		
@@ -802,7 +846,9 @@ bool ubx_process_data(void)
 			if (!next_fix)
 			{
 				centralData->GPS_data.status = NO_FIX;
-			}else{
+			}
+			else
+			{
 				centralData->GPS_data.status = GPS_OK;
 			}
 		
@@ -810,6 +856,7 @@ bool ubx_process_data(void)
 			centralData->GPS_data.hdop = gpsSolution->position_DOP;
 		}
 		break;
+		
 	case MSG_NAV_VELNED:
 		gpsVelned = ubx_GetVelned();
 		
@@ -852,6 +899,7 @@ bool ubx_process_data(void)
 			new_speed = true;
 		}
 		break;
+		
 	case MSG_NAV_SVINFO:
 		gpsSVInfo = ubx_GetSVInfo();
 		
@@ -864,7 +912,6 @@ bool ubx_process_data(void)
 				dbg_print("\n");
 			}
 		}
-		
 		
 	default:
 		dbg_print("Unexpected NAV message 0x");
@@ -979,7 +1026,7 @@ void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, GPS_Engin
 
 void ubx_configure_message_rate(uint8_t msg_class, uint8_t _msg_id, uint8_t rate)
 {
-	uint8_t ck_a=0, ck_b=0;
+	uint8_t ck_a = 0, ck_b = 0;
 	ubx_cfg_msg_rate_send msg;
 	msg.msg_class = msg_class;
 	msg.msg_id_rate    = _msg_id;
@@ -1059,7 +1106,9 @@ void gps_update(void)
 			idleTimer = tnow;
 		}
 		
-	} else {
+	}
+	else
+	{
 
 		// reset the idle timer
 		idleTimer = tnow;
@@ -1072,28 +1121,36 @@ void gps_update(void)
 			if (centralData->GPS_data.horizontalAccuracy < UBX_POSITION_PRECISION)
 			{
 				centralData->GPS_data.horizontalStatus = 1;
-			}else{  
+			}
+			else
+			{  
 				centralData->GPS_data.horizontalStatus = 0;
 			}
 			// Check for vertical accuracy
 			if (centralData->GPS_data.verticalAccuracy < UBX_ALTITUDE_PRECISION)
 			{
 				centralData->GPS_data.altitudeStatus = 1;
-			}else{
+			}
+			else
+			{
 				centralData->GPS_data.altitudeStatus = 0;
 			}
 			// Check for speed accuracy
 			if (centralData->GPS_data.speedAccuracy < UBX_SPEED_PRECISION)
 			{
 				centralData->GPS_data.speedStatus = 1;
-			}else{
+			}
+			else
+			{
 				centralData->GPS_data.speedStatus = 0;
 			}
 			// Check for heading accuracy
 			if (centralData->GPS_data.headingAccuracy < UBX_HEADING_PRECISION)
 			{
 				centralData->GPS_data.courseStatus = 1;
-				}else{
+			}
+			else
+			{
 				centralData->GPS_data.courseStatus = 0;
 			}
 			
@@ -1114,7 +1171,9 @@ void gps_update(void)
 // 				// no good way to get descent rate
 // 				centralData->GPS_data.verticalSpeed = 0;
 // 			}
-		}else{
+		}
+		else
+		{
 			centralData->GPS_data.horizontalStatus = 0;
 			centralData->GPS_data.altitudeStatus = 0;
 			centralData->GPS_data.speedStatus = 0;
@@ -1134,7 +1193,9 @@ bool newValidGpsMsg(uint32_t *prevGpsMsgTime)
 	{
 		*prevGpsMsgTime = centralData->GPS_data.timeLastMsg;
 		return true;
-	}else{
+	}
+	else
+	{
 		return false;
 	}
 }
@@ -1142,81 +1203,121 @@ bool newValidGpsMsg(uint32_t *prevGpsMsgTime)
 ubx_nav_posllh * ubx_GetPosllh()
 {
 	if (ubx_numberOfValidPosllhMessage)
-	return ubx_lastPosllhMessage;
+	{
+		return ubx_lastPosllhMessage;
+	}
 	else
-	return 0;
+	{
+		return 0;
+	}
 }
 
 ubx_nav_status * ubx_GetStatus()
 {
 	if (ubx_numberOfValidStatusMessage)
-	return ubx_lastStatusMessage;
+	{
+		return ubx_lastStatusMessage;
+	}
 	else
-	return 0;
+	{
+		return 0;
+	}
 }
 
 ubx_nav_solution * ubx_GetSolution()
 {
 	if (ubx_numberOfValidSolutionMessage)
-	return ubx_lastSolutionMessage;
+	{
+		return ubx_lastSolutionMessage;
+	}
 	else
-	return 0;
+	{
+		return 0;
+	}
 }
 
 ubx_nav_velned * ubx_GetVelned()
 {
 	if (ubx_numberOfValidVelnedMessage)
-	return ubx_lastVelnedMessage;
+	{
+		return ubx_lastVelnedMessage;
+	}
 	else
-	return 0;
+	{
+		return 0;
+	}
 }
 
 ubx_nav_SVInfo * ubx_GetSVInfo()
 {
 	if (ubx_numberOfValidSVInfoMessage)
-	return ubx_lastSVInfoMessage;
+	{
+		return ubx_lastSVInfoMessage;
+	}
 	else
-	return 0;
+	{
+		return 0;
+	}
 }
 
 ubx_cfg_nav_settings * ubx_GetNavSettings()
 {
 	if (ubx_numberOfValidNavSettingsMessage)
-	return ubx_lastNavSettingsMessage;
+	{
+		return ubx_lastNavSettingsMessage;
+	}
 	else
-	return 0;
+	{
+		return 0;
+	}
 }
 
 ubx_cfg_msg_rate * ubx_GetMsgRate()
 {
 	if (ubx_numberOfValidCFGSetGetRateMessage)
-	return ubx_lastCFGSetGetRateMessage;
+	{
+		return ubx_lastCFGSetGetRateMessage;
+	}
 	else
-	return 0;
+	{
+		return 0;
+	}
 }
 
 ubx_mon_rxr_struct * ubx_GetMonRXR()
 {
 	if (ubx_numberOfValidMONRXRMessage)
-	return ubx_lastMONRXRMessage;
+	{
+		return ubx_lastMONRXRMessage;
+	}
 	else
-	return 0;
+	{
+		return 0;
+	}
 }
 
 ubx_tim_tp * ubx_GetTimTP()
 {
 	if(ubx_numberOfValidTimTPMessage)
-	return ubx_lastTimTPMessage;
+	{
+		return ubx_lastTimTPMessage;
+	}
 	else
-	return 0;
+	{
+		return 0;
+	}
 }
 
 ubx_tim_vrfy * ubx_GetTimVRFY()
 {
 	if(ubx_numberOfValidTimVRFYMessage)
-	return ubx_lastTimVRFYMessage;
+	{
+		return ubx_lastTimVRFYMessage;
+	}
 	else
-	return 0;
+	{
+		return 0;
+	}
 }
 
 float ToRad(float numdeg)
