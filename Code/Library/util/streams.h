@@ -26,17 +26,22 @@ extern "C"
 
 #include "compiler.h"
 
-
+/**
+ * @brief Stream data
+ */
 typedef void* stream_data_t;
 
 
+/**
+ * @brief Byte stream
+ */
 typedef struct {
-	uint8_t (*get)(stream_data_t *data);
-	int8_t  (*put)(stream_data_t *data, uint8_t element);
-	void    (*flush)(stream_data_t *data);
-	int     (*buffer_empty)(stream_data_t *data);
-	int     (*bytes_available)(stream_data_t *data);
-	volatile stream_data_t data;
+	uint8_t (*get)(stream_data_t *data);						///<	Pointer to get function
+	int8_t  (*put)(stream_data_t *data, uint8_t element);		///<	Pointer to put function
+	void    (*flush)(stream_data_t *data);						///<	Pointer to flush function
+	int     (*buffer_empty)(stream_data_t *data);				///<	Pointer to buffer_empty function
+	int     (*bytes_available)(stream_data_t *data);			///<	Pointer to bytes_available function
+	volatile stream_data_t data;								///<	Data
 } byte_stream_t;
 
 

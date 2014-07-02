@@ -13,8 +13,11 @@
    height="1052.3622047"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
-   sodipodi:docname="mavric.svg">
+   inkscape:version="0.48.5 r10040"
+   sodipodi:docname="mavric.svg"
+   inkscape:export-filename="/home/julien/Documents/Robots/maveric/Documentation/Logo/mavric.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -26,12 +29,12 @@
      inkscape:pageshadow="2"
      inkscape:zoom="1"
      inkscape:cx="433.0307"
-     inkscape:cy="704.07234"
+     inkscape:cy="776.07234"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1600"
-     inkscape:window-height="817"
+     inkscape:window-height="811"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1" />
@@ -43,7 +46,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
