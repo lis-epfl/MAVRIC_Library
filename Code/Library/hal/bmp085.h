@@ -16,6 +16,9 @@
 */
 
 
+#ifndef BMP085_H_
+#define BMP085_H_
+
 #include "compiler.h"
 
 #define BARO_ALT_LPF 0.95						///< low pass filter factor for altitude measured by the barometer
@@ -49,26 +52,32 @@
 #define BMP085_OVERSAMPLING_MODE BMP085_HIGHRES	///< Set oversampling mode of the barometer sensor to high resolution mode
 
 /**
- * \brief pressure_sensor_state can get three different state: Iddle, get Temperature or get Pressure
+ * \brief pressure_sensor_state can get three different state: Idle, get Temperature or get Pressure
 */
-typedef enum  pressure_sensor_state{IDLE, GET_TEMP, GET_PRESSURE} pressure_sensor_state;
+typedef enum pressure_sensor_state
+{
+	IDLE, 
+	GET_TEMP, 
+	GET_PRESSURE
+} pressure_sensor_state;
 
 /**
  * \brief structure containing all the barometer's data
 */
-typedef struct{
-	uint8_t raw_pressure[3];		///< raw pressure contained in 3 uint8_t
-	uint8_t raw_temperature[2];		///< raw temperature contained in 2 uint8_t
-	float pressure;					///< measured pressure as the concatenation of the 3 uint8_t raw_pressure
-	float temperature;				///< measured temperature as the concatenation of the 2 uint8_t raw_temperature
-	float last_altitudes[3];		///< array to store previous value of the altitude for low pass filtering the output
-	float altitude;					///< measured altitude as the median filter of the 3 last_altitudes
-	float altitude_offset;			///< offset of the barometer sensor for matching GPS altitude value
-	float vario_vz;					///< vario altitude speed
-	uint32_t last_update;			///< time of the last update of the barometer
-	uint32_t last_state_update;		///< time of the last state update
-	pressure_sensor_state state;	///< state of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
-	float dt;						///< time step for the derivative
+typedef struct pressure_data
+{
+	uint8_t raw_pressure[3];		///< Raw pressure contained in 3 uint8_t
+	uint8_t raw_temperature[2];		///< Raw temperature contained in 2 uint8_t
+	float pressure;					///< Measured pressure as the concatenation of the 3 uint8_t raw_pressure
+	float temperature;				///< Measured temperature as the concatenation of the 2 uint8_t raw_temperature
+	float last_altitudes[3];		///< Array to store previous value of the altitude for low pass filtering the output
+	float altitude;					///< Measured altitude as the median filter of the 3 last_altitudes
+	float altitude_offset;			///< Offset of the barometer sensor for matching GPS altitude value
+	float vario_vz;					///< Vario altitude speed
+	uint32_t last_update;			///< Time of the last update of the barometer
+	uint32_t last_state_update;		///< Time of the last state update
+	pressure_sensor_state state;	///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
+	float dt;						///< Time step for the derivative
 } pressure_data;
 
 /**
