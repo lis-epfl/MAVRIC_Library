@@ -77,11 +77,11 @@ typedef struct UQuat {
 
 
 /**
- * @brief 		Quaternion inverse
+ * \brief 		Quaternion inverse
  * 
- * @param 	q  	Input quaternion
+ * \param 	q  	Input quaternion
  * 
- * @return  	Inversed quaternion
+ * \return  	Inversed quaternion
  */
 #define QI(q, out) \
 	out.s = q.s;\
@@ -91,13 +91,13 @@ typedef struct UQuat {
 
 
 /**
- * @brief 		Creates a quaternion from a vector of dimension 4, MACRO version
+ * \brief 		Creates a quaternion from a vector of dimension 4, MACRO version
  * 
- * @param 	q 	Output quaternion
- * @param 	s 	Scalar part of the quaternion
- * @param 	v0 	First component of the vector part of the quaternion
- * @param 	v1 	Second component of the vector part of the quaternion
- * @param 	v2 	Third component of the vector part of the quaternion
+ * \param 	q 	Output quaternion
+ * \param 	s 	Scalar part of the quaternion
+ * \param 	v0 	First component of the vector part of the quaternion
+ * \param 	v1 	Second component of the vector part of the quaternion
+ * \param 	v2 	Third component of the vector part of the quaternion
  */
 #define QUAT(q, s, v0, v1, v2) \
 	q.s = s;\
@@ -107,11 +107,11 @@ typedef struct UQuat {
 
 
 /**
- * @brief 		Creates a quaternion from a vector of dimension 4
+ * \brief 		Creates a quaternion from a vector of dimension 4
  * 
- * @param 	v 	Array of floats of dimension 4 containing the vector components
+ * \param 	v 	Array of floats of dimension 4 containing the vector components
  * 
- * @return 		Unit quaternion
+ * \return 		Unit quaternion
  */
 UQuat_t static inline quat_from_vector(float v[4]) {
 	UQuat_t q;	
@@ -124,11 +124,11 @@ UQuat_t static inline quat_from_vector(float v[4]) {
 
 
 /**
- * @brief 			Quaternion multiplication
+ * \brief 			Quaternion multiplication
  * 
- * @param 	q1 		Input quaternion
- * @param 	q2 		Input quaternion
- * @param 	out 	Output quaternion
+ * \param 	q1 		Input quaternion
+ * \param 	q2 		Input quaternion
+ * \param 	out 	Output quaternion
  */
 #define QMUL(q1,q2,out) \
 	tmp[0] = q1.v[1] * q2.v[2] - q1.v[2] * q2.v[1];\
@@ -141,21 +141,21 @@ UQuat_t static inline quat_from_vector(float v[4]) {
 
 
 /**
- * @brief 			Square function
+ * \brief 			Square function
  * 
- * @param  	in 		Input variable
- * @return 			Squared variable
+ * \param  	in 		Input variable
+ * \return 			Squared variable
  */
 #define SQR(in) \
 		((in)*(in))
 
 
 /**
- * @brief 			For any given angle, computes an equivalent angle between -2pi and 2pi 
+ * \brief 			For any given angle, computes an equivalent angle between -2pi and 2pi 
  * 
- * @param 	angle 	Input angle
+ * \param 	angle 	Input angle
  * 
- * @return 			Output angle
+ * \return 			Output angle
  */
 float static inline calc_smaller_angle(float angle) {
 	float out=angle;
@@ -166,12 +166,12 @@ float static inline calc_smaller_angle(float angle) {
 
 
 /**
- * @brief 		Computes the scalar product of two vectors of dimension 3
+ * \brief 		Computes the scalar product of two vectors of dimension 3
  * 
- * @param 	u 	Input vector (dim 3)
- * @param 	v 	Input vector (dim 3)
+ * \param 	u 	Input vector (dim 3)
+ * \param 	v 	Input vector (dim 3)
  * 
- * @return 		Scalar product
+ * \return 		Scalar product
  */
 float static inline scalar_product(const float u[3], const float v[3])
 {
@@ -181,11 +181,11 @@ float static inline scalar_product(const float u[3], const float v[3])
 
 
 /**
- * @brief 			Computes the cross product of two vectors of dimension 3
+ * \brief 			Computes the cross product of two vectors of dimension 3
  * 
- * @param 	u 		Input vector (dim 3)
- * @param 	v 		Input vector (dim 3)
- * @param 	out 	Output vector (dim 3)
+ * \param 	u 		Input vector (dim 3)
+ * \param 	v 		Input vector (dim 3)
+ * \param 	out 	Output vector (dim 3)
  */
 void static inline cross_product(const float u[3], const float v[3], float out[3])
 {
@@ -196,12 +196,12 @@ void static inline cross_product(const float u[3], const float v[3], float out[3
 
 
 /**
- * @brief 			Multiplies two unit quaternions
+ * \brief 			Multiplies two unit quaternions
  * 
- * @param 	q1 		Input quaternion
- * @param 	q2 		Input quaternion
+ * \param 	q1 		Input quaternion
+ * \param 	q2 		Input quaternion
  * 
- * @return 			Output quaternion
+ * \return 			Output quaternion
  */
 UQuat_t static inline quat_multi(const UQuat_t q1, const UQuat_t q2)
 {
@@ -222,10 +222,10 @@ UQuat_t static inline quat_multi(const UQuat_t q1, const UQuat_t q2)
 
 
 /**
- * @brief 		Inverse quaternion
+ * \brief 		Inverse quaternion
  * 
- * @param 	q 	Input quaternion
- * @return 		Output quaternion
+ * \param 	q 	Input quaternion
+ * \return 		Output quaternion
  */
 UQuat_t static inline quat_inv(const UQuat_t q)
 {
@@ -244,14 +244,14 @@ UQuat_t static inline quat_inv(const UQuat_t q)
 
 
 /**
- * @brief 			Rotates a vector from global frame to local frame according to an attitude quaternion
+ * \brief 			Rotates a vector from global frame to local frame according to an attitude quaternion
  * 
- * @details 		The vector is given in the form of a quaternion with the scalar term equal to 0
+ * \details 		The vector is given in the form of a quaternion with the scalar term equal to 0
  * 
- * @param 	qe 		Attitude quaternion
- * @param 	qvect 	Quaternion containing the vector to be rotated
+ * \param 	qe 		Attitude quaternion
+ * \param 	qvect 	Quaternion containing the vector to be rotated
  * 
- * @return 			Output quaternion
+ * \return 			Output quaternion
  */
 UQuat_t static inline quat_global_to_local(const UQuat_t qe, const UQuat_t qvect)
 {
@@ -266,14 +266,14 @@ UQuat_t static inline quat_global_to_local(const UQuat_t qe, const UQuat_t qvect
 
 
 /**
- * @brief 			Rotates a vector from local frame to global frame according to an attitude quaternion
+ * \brief 			Rotates a vector from local frame to global frame according to an attitude quaternion
  * 
- * @details 		The vector is given in the form of a quaternion with the scalar term equal to 0
+ * \details 		The vector is given in the form of a quaternion with the scalar term equal to 0
  * 
- * @param 	qe 		Attitude quaternion
- * @param 	qvect 	Quaternion containing the vector to be rotated
+ * \param 	qe 		Attitude quaternion
+ * \param 	qvect 	Quaternion containing the vector to be rotated
  * 
- * @return 			Output quaternion
+ * \return 			Output quaternion
  */
 UQuat_t static inline quat_local_to_global(const UQuat_t qe, const UQuat_t qvect)
 {
@@ -288,14 +288,14 @@ UQuat_t static inline quat_local_to_global(const UQuat_t qe, const UQuat_t qvect
 
 
 /**
- * @brief 			Rotates a vector according to a unit quaternion
+ * \brief 			Rotates a vector according to a unit quaternion
  * 
- * @details 		This is an optimized implementation that does not require quaternion multiplications
+ * \details 		This is an optimized implementation that does not require quaternion multiplications
  * 					It should run more than 2 times faster than the standard implementation
  * 
- * @param 	q 		unit quaternion
- * @param 	u 		input vector
- * @param 	v 		rotated vector (output)
+ * \param 	q 		unit quaternion
+ * \param 	u 		input vector
+ * \param 	v 		rotated vector (output)
  * 
  */
 void static inline quat_rotate_vector(const UQuat_t q, const float u[3], float v[3])
@@ -316,11 +316,11 @@ void static inline quat_rotate_vector(const UQuat_t q, const float u[3], float v
 
 
 /**
- * @brief 			Fast newton iteration for approximate square root of numbers close to 1 (for re-normalisation)
+ * \brief 			Fast newton iteration for approximate square root of numbers close to 1 (for re-normalisation)
  * 
- * @param 	number 	Input value
+ * \param 	number 	Input value
  * 
- * @return 			Output value
+ * \return 			Output value
  */
 float static inline fast_sqrt(float number) {
 	long i;
@@ -339,10 +339,10 @@ float static inline fast_sqrt(float number) {
 
 
 /**
- * @brief 			Fast newton iteration for approximate square root of numbers close to 1 (for re-normalisation)
+ * \brief 			Fast newton iteration for approximate square root of numbers close to 1 (for re-normalisation)
  * 
- * @param 	input 	Input value
- * @return 			Output value
+ * \param 	input 	Input value
+ * \return 			Output value
  */
 float static inline fast_sqrt_1(float input) {
 	if (input<0) 
@@ -360,10 +360,10 @@ float static inline fast_sqrt_1(float input) {
 
 
 /**
- * @brief 		Computes the squared norm of a vector (dim 3)
+ * \brief 		Computes the squared norm of a vector (dim 3)
  * 
- * @param 	u 	Input vector
- * @return 		Squared norm
+ * \param 	u 	Input vector
+ * \return 		Squared norm
  */
 float static inline vector_norm_sqr(float u[3])
 {
@@ -373,10 +373,10 @@ float static inline vector_norm_sqr(float u[3])
 
 
 /**
- * @brief 		Computes the norm of a vector of dimension 3
+ * \brief 		Computes the norm of a vector of dimension 3
  * 
- * @param 	u 	Input vector (dim 3)
- * @return 		Norm of the vector
+ * \param 	u 	Input vector (dim 3)
+ * \return 		Norm of the vector
  */
 float static inline vector_norm(float u[3])
 {
@@ -385,10 +385,10 @@ float static inline vector_norm(float u[3])
 
 
 /**
- * @brief 		Normalizes a vector of dimension 3
+ * \brief 		Normalizes a vector of dimension 3
  * 
- * @param 	v 	Input vector (dim 3)
- * @param 	u 	Output vector (dim 3)
+ * \param 	v 	Input vector (dim 3)
+ * \param 	u 	Output vector (dim 3)
  */
 void static inline vector_normalize(float v[3], float u[3])
 {
@@ -402,10 +402,10 @@ void static inline vector_normalize(float v[3], float u[3])
 
 
 /**
- * @brief 		Normalises a quaternion
+ * \brief 		Normalises a quaternion
  * 
- * @param 	q 	Input quaternion
- * @return 		Unit quaternion
+ * \param 	q 	Input quaternion
+ * \return 		Unit quaternion
  */
 static inline UQuat_t quat_normalise(const UQuat_t q) 
 {
@@ -434,11 +434,11 @@ static inline UQuat_t quat_normalise(const UQuat_t q)
 
 
 /**
- * @brief 		Returns the absolute value of a floating point value
+ * \brief 		Returns the absolute value of a floating point value
  * 
- * @param 	a 	Input value
+ * \param 	a 	Input value
  * 
- * @return 		Absolute value
+ * \return 		Absolute value
  */
 static inline float f_abs(const float a)
 {
@@ -454,12 +454,12 @@ static inline float f_abs(const float a)
 
 
 /**
- * @brief 		Returns the minimum value of two floating point values
+ * \brief 		Returns the minimum value of two floating point values
  * 
- * @param 	a 	Input value
- * @param 	b 	Input value
+ * \param 	a 	Input value
+ * \param 	b 	Input value
  * 
- * @return 		Minimum value
+ * \return 		Minimum value
  */
 static inline float f_min(const float a, const float b)
 {
@@ -475,12 +475,12 @@ static inline float f_min(const float a, const float b)
 
 
 /**
- * @brief 		Returns the maximum value of two floating point values
+ * \brief 		Returns the maximum value of two floating point values
  * 
- * @param 	a 	Input value
- * @param 	b 	Input value
+ * \param 	a 	Input value
+ * \param 	b 	Input value
  * 
- * @return 		Maximum value
+ * \return 		Maximum value
  */
 static inline float f_max(const float a, const float b){
 	if (a >= b)
@@ -495,14 +495,14 @@ static inline float f_max(const float a, const float b){
 
 
 /**
- * @brief 					Clip a variable
+ * \brief 					Clip a variable
  * 
- * @details 				Acts like a saturation between -clip_value and clip_value
+ * \details 				Acts like a saturation between -clip_value and clip_value
  * 
- * @param 	input_value 	Input value
- * @param 	clip_value 		Clip value
+ * \param 	input_value 	Input value
+ * \param 	clip_value 		Clip value
  * 
- * @return 					Clipped value
+ * \return 					Clipped value
  */
 static float inline clip(float input_value, float clip_value) {
 	
@@ -513,12 +513,12 @@ static float inline clip(float input_value, float clip_value) {
 
 
 /**
- * @brief 	 				A function to attenuate values bellow a certain threshold
+ * \brief 	 				A function to attenuate values bellow a certain threshold
  * 
- * @param 	x 				Input value
- * @param 	soft_zone_width Width of the soft zone
+ * \param 	x 				Input value
+ * \param 	soft_zone_width Width of the soft zone
  * 
- * @return 					Output value
+ * \return 					Output value
  */
 static float inline soft_zone(float x, float soft_zone_width) 
 {
@@ -534,10 +534,10 @@ static float inline soft_zone(float x, float soft_zone_width)
 
 
 /**
- * @brief 		Sigmoid function
+ * \brief 		Sigmoid function
  * 
- * @param 	x 	Input value
- * @return 		Output value
+ * \param 	x 	Input value
+ * \return 		Output value
  */
 static float inline sigmoid(float x) 
 {
@@ -546,10 +546,10 @@ static float inline sigmoid(float x)
 
 
 /**
- * @brief 		Center window 2 (?)
+ * \brief 		Center window 2 (?)
  * 
- * @param 	x 	Input value
- * @return 		Output value
+ * \param 	x 	Input value
+ * \return 		Output value
  */
 static float inline center_window_2(float x) 
 {
@@ -558,10 +558,10 @@ static float inline center_window_2(float x)
 
 
 /**
- * @brief 		Center window 4 (?)
+ * \brief 		Center window 4 (?)
  * 
- * @param 	x 	Input value
- * @return 		Output value
+ * \param 	x 	Input value
+ * \return 		Output value
  */
 static float inline center_window_4(float x) 
 {
@@ -570,15 +570,15 @@ static float inline center_window_4(float x)
 
 
 /**
- * @brief 		Median filter
+ * \brief 		Median filter
  * 
- * @details  	Returns the median of 3 floating point values
+ * \details  	Returns the median of 3 floating point values
  * 
- * @param 	a 	Input value
- * @param 	b 	Input value
- * @param 	c 	Input value
+ * \param 	a 	Input value
+ * \param 	b 	Input value
+ * \param 	c 	Input value
  * 
- * @return 		Output value
+ * \return 		Output value
  */
 static float inline median_filter_3x(float a, float b, float c) {
 	float middle;
@@ -602,17 +602,17 @@ static float inline median_filter_3x(float a, float b, float c) {
 
 
 /**
- * @brief 		Interpolation
+ * \brief 		Interpolation
  * 
- * @details 	With known y1 = f(x1) and y2 = f(x2), this function will interpolate f to compute f(x)
+ * \details 	With known y1 = f(x1) and y2 = f(x2), this function will interpolate f to compute f(x)
  * 
- * @param 	x 	Target abscissa
- * @param 	x1  First known abscissa
- * @param 	x2 	Second known abscissa
- * @param 	y1 	First known ordinate
- * @param 	y2 	Second known ordinate
+ * \param 	x 	Target abscissa
+ * \param 	x1  First known abscissa
+ * \param 	x2 	Second known abscissa
+ * \param 	y1 	First known ordinate
+ * \param 	y2 	Second known ordinate
  * 
- * @return 		Interpolated value
+ * \return 		Interpolated value
  */
 static inline float interpolate(float x, float x1, float x2, float y1, float y2)
 {
