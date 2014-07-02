@@ -134,6 +134,7 @@ int run_scheduler_update(task_set *ts, uint8_t schedule_strategy)
 				case PERIODIC_ABSOLUTE:
 					ts->tasks[i].next_run += ts->tasks[i].repeat_period;
 				break;
+
 				case PERIODIC_RELATIVE:
 					ts->tasks[i].next_run = GET_TIME + ts->tasks[i].repeat_period;
 				break;

@@ -22,7 +22,7 @@
 
 
 // buffer for DAC output (arbitrary waveform for function generator)
-static volatile uint16_t dac_function_buffer[GENERATOR_BUFFER_SIZE];	// TODO: This should not instanciated by default
+static volatile uint16_t dac_function_buffer[GENERATOR_BUFFER_SIZE];	// TODO: This should not be instanciated by default
 
 
 void init_dac_buffer_triangle() 
