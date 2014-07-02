@@ -52,11 +52,10 @@ typedef struct
 {
 	Onboard_Parameter_t parameters[MAX_ONBOARD_PARAM_COUNT];	///< Onboard parameters array
 	uint16_t param_count;										///< Number of onboard parameter effectively in the array
-	int transmit_parameter_index;								///< Index number for ?transmitting the parameter?
 }Parameter_Set_t;											
 
 /**
- * \brief	TODO: Modify the name of this structure to make it sized as the flashmemory to store these parameters. GLE: CONTINUE FROM HERE
+ * \brief	TODO: Modify the name of this structure to make it sized as the free flash memory to store these parameters
  */															
 typedef struct												
 {
@@ -65,50 +64,101 @@ typedef struct
 
 nvram_data_ttt *nvram_array;
 
+/**
+* \brief	Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0
+*/
 void init_onboard_parameters(void);
 
 /**
- * registers parameter in the internal parameter list that gets published to MAVlink
+ * \brief				Register parameter in the internal parameter list that gets published to MAVlink
+ *
+ * \param val			Unsigned 8-bits integer parameter value
+ * \param param_name	Name of the parameter
  */
 void add_parameter_uint8(uint8_t* val, const char* param_name);
+
+/**
+ * \brief				Register parameter in the internal parameter list that gets published to MAVlink
+ *
+ * \param val			Unsigned 32-bits integer parameter value
+ * \param param_name	Name of the parameter
+ */
 void add_parameter_uint32(uint32_t* val, const char* param_name);
+
+/**
+ * \brief				Register parameter in the internal parameter list that gets published to MAVlink
+ *
+ * \param val			Signed 32-bits integer parameter value
+ * \param param_name	Name of the parameter
+ */
 void add_parameter_int32(int32_t* val, const char* param_name);
+
+/**
+ * \brief				Registers parameter in the internal parameter list that gets published to MAVlink
+ *
+ * \param val			Floating point parameter value
+ * \param param_name	Name of the parameter
+ */
 void add_parameter_float(float* val, const char* param_name);
 
-/** updates linked memory location of a parameter with given value
- *  This method takes care of necessary size/type conversions
-*/
+/**
+ * \brief				Updates linked memory location of a parameter with given value, with care of necessary size/type conversions
+ *
+ * \param param_index	Set index of the parameter to update
+ * \param value			Value of the parameter to update
+ */
 void update_parameter(int param_index, float value);
 
-/** reads linked memory location and returns parameter value
+/** 
  *  This method takes care of necessary size/type conversions.
- *  Note that the parameter might not be a float, but float is the 
- *  default data type for the MAVlink message.
+ *  
 */
+/**
+ * \brief				Reads linked memory location and returns parameter value, with care of necessary size/type conversions
+ *
+ * \param param_index	Set index of the parameter to update
+ *
+ * \return				Value of the parameter read. Note that the parameter might not be a float, but float is the default data type for the MAVlink message.
+ */
 float read_parameter(int param_index);
 
 /**
- * Immediately sends all parameters via MAVlink. This might block for a while.
+ * \brief	Immediately sends all parameters via MAVlink. This might block for a while.
  */
 void send_all_parameters_now(void);
 
 /**
- * marks all parameters to be scheduled for transmission
+ * \brief	Marks all parameters to be scheduled for transmission
  */
 void send_all_parameters(void);
+
+/**
+ * \brief	Sends all parameters that have been scheduled via MAVlink
+ */
 void send_scheduled_parameters(void);
 
 /**
- * responds to a MAVlink parameter request
+ * \brief			Responds to a MAVlink parameter request
+ *
+ * \param request	Pointer to the request structure received by MAVlink
  */
 void send_parameter(mavlink_param_request_read_t* request);
 
 /**
- * responds to a MAVlink parameter set
+ * \brief		Responds to a MAVlink parameter set
+ *
+ * \param rec	Pointer to the received parameter structure
  */
 void receive_parameter(Mavlink_Received_t* rec);
 
+/**
+ * \brief		Read onboard parameters from the user page in the flash memory to the RAM memory
+ */
 void read_parameters_from_flashc(void);
+
+/**
+ * \brief		Write onboard parameters to the RAM memory from the user page in the flash memory
+ */
 void write_parameters_to_flashc(void);
 
 #ifdef __cplusplus
