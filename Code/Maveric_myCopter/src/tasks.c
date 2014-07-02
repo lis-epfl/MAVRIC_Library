@@ -1,8 +1,18 @@
-/*
- * tasks.c
+/**
+ * \page The MAV'RIC License
  *
- * Created: 16/09/2013 13:28:11
- *  Author: sfx
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+ * \file tasks.h
+ *
+ * Definition of the tasks executed on the autopilot
  */ 
 
 
@@ -20,13 +30,15 @@
 #include "analog_monitor.h"
 #include "airspeed_analog.h"
 
+
 NEW_TASK_SET(main_tasks, 10)
 
-#define PRESSURE_LPF 0.1
 
 central_data_t *centralData;
 
-task_set* get_main_taskset() {
+
+task_set* get_main_taskset() 
+{
 	return &main_tasks;
 }
 
@@ -36,50 +48,47 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 	
 	get_channel_mode(chanSwitch);
 	
-	if ((rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR)>0.0)
+	if ((rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0)
 	{
 		centralData->collision_avoidance = true;
-	}else{
+	}
+	else
+	{
 		centralData->collision_avoidance = false;
 	}
 	
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"P1",rc_get_channel_neutral(RC_TRIM_P1));
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"P2",rc_get_channel_neutral(RC_TRIM_P2));
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"P3",rc_get_channel_neutral(RC_TRIM_P3));
-	
-	//dbg_print("chanSwitch ");
-	//dbg_print_num(*chanSwitch,10);
-	//dbg_print_num(getChannel(4),10);
-	//dbg_print_num(getChannel(5),10);
-	//dbg_print("\n");
-	
-	if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() > 0.9))
+	if((get_thrust_from_remote() < -0.95) && (get_yaw_from_remote() > 0.9))
 	{
 		*motorbool = 1;
-	}else if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() <-0.9))
+	}
+	else if((get_thrust_from_remote() < -0.95) && (get_yaw_from_remote() < -0.9))
 	{
 		*motorbool = -1;
-	}else{
+	}
+	else
+	{
 		*motorbool = 0;
 	}
 	
 	switch (rc_check_receivers())
 	{
 		case 1:
-		*rc_check = 1;
-		break;
+			*rc_check = 1;
+			break;
 		case -1:
-		*rc_check = -1;
-		break;
+			*rc_check = -1;
+			break;
 		case -2:
-		*rc_check = -2;
-		break;
+			*rc_check = -2;
+			break;
 	}
 }
+
 
 void switch_off_motors(void)
 {
 	dbg_print("Switching off motors!\n");
+
 	centralData->run_mode = MOTORS_OFF;
 	centralData->mav_state = MAV_STATE_STANDBY;
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
@@ -96,30 +105,24 @@ void relevel_imu()
 	centralData->mav_mode = MAV_MODE_PREFLIGHT;
 
 	dbg_print("calibrating IMU...\n");
-	//calibrate_Gyros(&centralData->imu1);
+
 	for (j=0;j<3;j++)
 	{
-		centralData->imu1.attitude.raw_mag_mean[j] = (float)centralData->imu1.raw_channels[j+COMPASS_OFFSET];
+		centralData->imu1.attitude.raw_mag_mean[j] = (float)centralData->imu1.raw_channels[j + COMPASS_OFFSET];
 	}
-	for (i=1000; i>0; i--) {
+
+	for (i=1000; i>0; i--) 
+	{
 		run_imu_update();
 		mavlink_protocol_update();
 		
 		for (j=0;j<3;j++)
 		{
-			centralData->imu1.attitude.raw_mag_mean[j] = (1.0-MAG_LPF)*centralData->imu1.attitude.raw_mag_mean[j]+MAG_LPF*((float)centralData->imu1.raw_channels[j+COMPASS_OFFSET]);
+			centralData->imu1.attitude.raw_mag_mean[j] = (1.0 - MAG_LPF) * centralData->imu1.attitude.raw_mag_mean[j] + MAG_LPF * ((float)centralData->imu1.raw_channels[j + COMPASS_OFFSET]);
 		}
+
 		delay_ms(5);
 	}
-	
-	// after initial leveling, initialise accelerometer biases
-	/*
-	centralData->imu1.attitude.calibration_level=LEVEL_PLUS_ACCEL;
-	for (i=100; i>0; i--) {
-		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);	
-		mavlink_protocol_update();			
-		delay_ms(5);
-	}*/
 	
 	centralData->imu1.attitude.calibration_level=OFF;
 	centralData->mav_state = MAV_STATE_STANDBY;
@@ -127,6 +130,7 @@ void relevel_imu()
 	
 	dbg_print("IMU calibration done.\n");
 }
+
 
 task_return_t set_mav_mode_n_state()
 {
@@ -156,7 +160,6 @@ task_return_t set_mav_mode_n_state()
 						position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data,&centralData->sim_model.localPosition);
 						centralData->waypoint_set = false;
 						centralData->run_mode = MOTORS_ON;
-						//centralData->mav_state = MAV_STATE_ACTIVE;
 						centralData->mav_mode = MAV_MODE_MANUAL_ARMED;
 						break;
 					case 1:

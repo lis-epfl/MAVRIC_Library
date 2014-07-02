@@ -1,23 +1,32 @@
-/*
- * boardsupport.h
+ /* The MAV'RIC Framework
  *
- * Created: 20/03/2013 12:14:04
- *  Author: sfx
- * 
- * A place for all central data structures, system-specific initialisation and access methods. 
- * To do: Maybe should be renamed - system_support.h ?
- */ 
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+ 
+
+/**
+ * \file boardsupport.h
+ *
+ *  Initialization of all hardware related elements (communication lines, sensors devices, etc)
+ */
 
 
 #ifndef BOARDSUPPORT_H_
 #define BOARDSUPPORT_H_
 
-#include "central_data.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include "central_data.h"
+
+/**
+ * \brief	Initialize the hardware related elements (communication lines, sensors devices, etc)
+ *
+ * \param	centralData		The pointer to the structure where all central data is stored
+ */
 void initialise_board(central_data_t* centralData);
 
 #ifdef __cplusplus

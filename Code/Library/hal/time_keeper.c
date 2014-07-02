@@ -7,10 +7,11 @@
  
 
 /**
- * \file time_keeper.h
+ * \file time_keeper.c
  *
  * This file is used to interact with the clock of the microcontroller
  */
+
 
 #include "time_keeper.h"
 
