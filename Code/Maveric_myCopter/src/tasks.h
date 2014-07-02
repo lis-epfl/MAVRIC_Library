@@ -4,7 +4,7 @@
  * The MAV'RIC Framework
  *
  * Copyright © 2011-2014
- *
+ * 
  * Laboratory of Intelligent Systems, EPFL
  */
 

@@ -3,7 +3,7 @@
  *
  * The MAV'RIC Framework
  *
- * Copyright © 2011-2014
+ * Copyright Â© 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
  */
@@ -38,6 +38,8 @@ void init_waypoint_handler()
 	
 	//init_waypoint_list(centralData->waypoint_list, &centralData->number_of_waypoints);
 	init_homing_waypoint(centralData->waypoint_list, &centralData->number_of_waypoints);
+	
+	dbg_print("Nav init\n");
 	init_waypoint();
 }
 
@@ -45,12 +47,6 @@ void init_waypoint()
 {
 	uint8_t i,j;
 	float rel_pos[3];
-	
-	if (int_loop_count==0)
-	{
-		dbg_print("Nav init\n");
-	}
-	int_loop_count=(int_loop_count+1)%1000;
 	
 	if ((centralData->number_of_waypoints > 0) && (centralData->position_estimator.init_gps_position || centralData->simulation_mode) && centralData->waypoint_receiving == false)
 	{
