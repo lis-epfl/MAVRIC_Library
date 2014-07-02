@@ -1,14 +1,31 @@
-/*
- * streams.h
+/**
+ * \page The MAV'RIC License
  *
- * Created: 07/06/2012 21:07:26
- *  Author: sfx
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+ * \file streams.h
+ *
+ * Stream
  */
 
 
 #ifndef STREAMS_H_
 #define STREAMS_H_
+
+#ifdef __cplusplus
+extern "C" 
+{
+#endif
+
 #include "compiler.h"
+
 
 typedef void* stream_data_t;
 
@@ -23,7 +40,8 @@ typedef struct {
 } byte_stream_t;
 
 
-
-
-
+#ifdef __cplusplus
+}
 #endif
+
+#endif /* STREAMS_H_ */

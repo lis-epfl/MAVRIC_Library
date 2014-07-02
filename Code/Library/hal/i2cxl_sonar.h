@@ -1,17 +1,13 @@
-// Copyright (C) 2014  Julien Lecoeur
-
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see <http://www.gnu.org/licenses/>.
+/**
+* This file is the driver for the sonar module using i2C communication protocol
+*
+* The MAV'RIC Framework
+* Copyright © 2011-2014
+*
+* Laboratory of Intelligent Systems, EPFL
+*
+* This file is part of the MAV'RIC Framework.
+*/
 
 #ifndef I2CXL_SONAR_H_
 #define I2CXL_SONAR_H_
@@ -22,28 +18,29 @@ extern "C" {
 
 #include "compiler.h"
 
+/**
+ * \brief structure of the i2cxl_sonar module
+*/
 typedef struct {
-	uint8_t i2c_address;
-	uint16_t distance_cm;
-	float distance_m;
+	uint8_t i2c_address;		///< address of the sonar module
+	uint16_t distance_cm;		///< measured distance in centimeters
+	float distance_m;			///< measured distance in meters
 } i2cxl_sonar_t;
 
 
 /**
- * @brief I2CXL sonar initialisation
- * @details Initialises the data struct and the i2c bus
+ * \brief Initializes the I2CXL sonar data struct and the i2c bus
  * 
- * @param i2c_sonar Data struct 
+ * \param i2c_sonar pointer to the i2c_sonar Data structure
  */
 void i2cxl_sonar_init(i2cxl_sonar_t* i2c_sonar);
 
 
 /**
- * @brief Reads last value from sensor and start new recording
- * @details This function should be called at a frequency lower
- * than 10Hz
+ * \brief Reads last value from sensor and start new recording
+ * \details This function should be called at a frequency lower than 10Hz
  * 
- * @param i2c_sonar Data struct
+ * \param i2c_sonar Data struct
  */
 void i2cxl_sonar_update(i2cxl_sonar_t* i2c_sonar);
 

@@ -1,9 +1,20 @@
-/*
- * quick_trig.c
+/**
+ * \page The MAV'RIC License
  *
- * Created: 11/11/2013 18:31:00
- *  Author: julien
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+ * \file quick_trig.c
+ * 
+ * Quick implementation of trigonometric functions
  */ 
+
 
 #include "quick_trig.h"
 
@@ -171,10 +182,3 @@ float quick_atan(float x)
 
 	return y;
 }
-
-// #include <stdio.h>
-// int main(int argc, char const *argv[])
-// {
-// 	printf("%f\n", quick_atan(1.2));
-// 	return 0;
-// }

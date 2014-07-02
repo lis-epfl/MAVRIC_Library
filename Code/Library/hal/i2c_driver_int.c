@@ -1,21 +1,33 @@
-/*
- * i2c_driver.c
+/**
+ * \page The MAV'RIC License
  *
- * Created: 16/05/2012 17:31:58
- *  Author: sfx
- */ 
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+* \file i2c_driver_int.c
+*
+* This file is the driver for i2c with interruptions
+*/
+
+
 #include "i2c_driver_int.h"
 #include "gpio.h"
 #include "sysclk.h"
 #include "print_util.h"
 
-i2c_packet_t transfer_queue[I2C_SCHEDULE_SLOTS];
-int current_slot, last_slot;
-i2c_packet_t *current_transfer;
+i2c_packet_t transfer_queue[I2C_SCHEDULE_SLOTS];		///< buffer containing the transfer queue for the i2c
+int current_slot, last_slot;							///< current and last slot for the scheduling of the transfer using i2c
+i2c_packet_t *current_transfer;							///< pointer to the i2c structure
 
-/*!  The I2C interrupt handler.
- */
-
+/**  
+ * \brief The I2C interrupt handler.
+*/
 ISR(i2c_int_handler_i2c0,CONF_TWIM_IRQ_GROUP,CONF_TWIM_IRQ_LEVEL)
 //__attribute__((__interrupt__))
 //static void i2c_int_handler_i2c0(void)

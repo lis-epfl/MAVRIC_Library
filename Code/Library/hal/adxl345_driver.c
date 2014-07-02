@@ -1,9 +1,20 @@
-/*
- * adxl345_driver.c
+/**
+ * \page The MAV'RIC License
  *
- * Created: 19/05/2012 00:29:28
- *  Author: sfx
- */ 
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+* \file adxl345_driver.c
+*
+* This file is the Driver for the ADXL345 accelerometer
+*/
+
 
 #include "adxl345_driver.h"
 #include "i2c_driver_int.h"
@@ -13,20 +24,20 @@
 static volatile acc_data acc_outputs;
 
 
-#define CONFIG_POWER_ADDRESS 0x2D
+#define CONFIG_POWER_ADDRESS 0x2D					///< Address of the power configuration register
 
-#define SENSOR_REG_ADDRESS 0x32
-#define DATA_SETTING_ADDRESS 0x31
-enum {RANGE_2G, RANGE_4G, RANGE_8G, RANGE_16G};
-#define FULL_RES 0b1000
+#define SENSOR_REG_ADDRESS 0x32						///< Address of the accelerometer register
+#define DATA_SETTING_ADDRESS 0x31					///< Address of the data setting register
+enum {RANGE_2G, RANGE_4G, RANGE_8G, RANGE_16G};		///< Define the different range in which you could use the accelerometer
+#define FULL_RES 0b1000								///< Define the full resolution for the output of the accelerometer
 
 uint8_t default_configuration[2] ={
-CONFIG_POWER_ADDRESS, 8};
+CONFIG_POWER_ADDRESS, 8};							///< default configuration of the accelerometer
 
 
 
 uint8_t data_configuration[2] ={
-DATA_SETTING_ADDRESS, FULL_RES | RANGE_16G};
+DATA_SETTING_ADDRESS, FULL_RES | RANGE_16G};		///< configuration of the output data
 
 
 

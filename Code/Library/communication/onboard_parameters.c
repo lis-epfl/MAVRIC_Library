@@ -1,12 +1,18 @@
 /**
- * Mav'ric Onboard parameters
+ * \page The MAV'RIC License
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
+ */
+
+
+/**
+ * \file onboard_parameters.c
+ * 
+ * Mav'ric Onboard parameters
  */
 
 #include "onboard_parameters.h"

@@ -1,12 +1,18 @@
 /**
- * Buffer
+ * \page The MAV'RIC License
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
+ */
+
+
+/**
+ * \file buffer.h
+ * 
+ * Buffer
  */
 
 
@@ -26,18 +32,14 @@ extern "C"
 
 
 /**
- * @brief 				Buffer structure
- * 
- * \param Buffer 		Array of bytes containing the data
- * \param BufferHead 	Head of the buffer
- * \param BufferTail 	Tail of the buffer
- * \param full 			Boolean, 1 if full, 0 if not
+ * @brief 		Buffer structure
  */
 typedef struct 
 {
-	uint8_t Buffer[BUFFER_SIZE];
-	uint8_t BufferHead, BufferTail;
-	uint8_t full;
+	uint8_t Buffer[BUFFER_SIZE];		///<	Array of bytes containing the data
+	uint8_t BufferHead;					///<	Head of the buffer (newest byte)
+	uint8_t BufferTail;					///<	Tail of the buffer (oldest byte)
+	uint8_t full;						///<	Boolean, 1 if full, 0 if not
 } Buffer_t;
 
 

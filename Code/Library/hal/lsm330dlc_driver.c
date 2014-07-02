@@ -1,9 +1,19 @@
-/*
- * lsm330dlc_driver.c
+/**
+ * \page The MAV'RIC License
  *
- * Created: 18/05/2012 17:57:46
- *  Author: sfx
- */ 
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+* \file lsm330dlc_driver.c
+*
+* This file is the driver for the integrated 3axis gyroscope and accelerometer LSM330DLC
+*/
 
 
 #include "lsm330dlc_driver.h"
@@ -12,8 +22,8 @@
 #include "print_util.h"
 //#include "twim.h"
 
-static volatile lsm_gyro_data_t lsm_gyro_outputs;
-static volatile lsm_acc_data_t  lsm_acc_outputs;
+static volatile lsm_gyro_data_t lsm_gyro_outputs;		///< Declare an object containing the gyroscope's data
+static volatile lsm_acc_data_t  lsm_acc_outputs;		///< Declare an object containing the accelerometer's data
 
 uint8_t lsm_read_register(uint8_t device, unsigned char address) {
 	int16_t result;

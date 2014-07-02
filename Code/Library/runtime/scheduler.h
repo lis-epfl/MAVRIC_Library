@@ -1,22 +1,30 @@
 /**
- * Scheduler
+ * \page The MAV'RIC License
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+ * \file scheduler.h
  *
- * This file is part of the MAV'RIC Framework.
+ * Scheduler
  */
 
 
 #ifndef SCHEDULER_H_
 #define SCHEDULER_H_
 
+
 #ifdef __cplusplus
 extern "C" 
 {
 #endif
+
 
 #include "compiler.h"
 
@@ -26,23 +34,17 @@ extern "C"
 #define SCHEDULER_PROFILING
 
 
-
 typedef uint8_t task_handle_t;
 
 
 /**
  * \brief	Task return code
- * 
- * \param	TASK_RUN_ERROR		The task was not not successfully executed
- * \param	TASK_RUN_BLOCKED	If a task returns "TASK_RUN_BLOCKED", the scheduler will try to re-run at the next schedule update, and not update "next_run" 
- * \param	TASK_RUN_SUCCESS	The task was successfully executed 
- * 
  */
 typedef enum task_return_t 
 {
-	TASK_RUN_ERROR=-1,
-	TASK_RUN_BLOCKED=0,     
-	TASK_RUN_SUCCESS=1	
+	TASK_RUN_ERROR=-1,		///< 	The task was not not successfully executed
+	TASK_RUN_BLOCKED=0,     ///< 	If a task returns "TASK_RUN_BLOCKED", the scheduler will try to re-run at the next schedule update, and not update "next_run" 
+	TASK_RUN_SUCCESS=1		///< 	The task was successfully executed 
 } task_return_t;
 
 
@@ -51,102 +53,77 @@ typedef task_return_t (*function_pointer)(void);
 
 /**
  * \brief 	Task run mode
- * 
- * \param 	RUN_NEVER	
- * \param 	RUN_ONCE  
- * \param 	RUN_REGULAR 
- * 
  */
 typedef enum task_run_mode_t 
 {
-	RUN_NEVER, 
-	RUN_ONCE, 
-	RUN_REGULAR
+	RUN_NEVER, 			///<	The task will not be executed
+	RUN_ONCE, 			///<	The task will be executed only once
+	RUN_REGULAR			///<	The task will be executed periodically
 } task_run_mode_t;
 
 
 /**
  * \brief 	Task timing mode
- * 
- * \param 	PERIODIC_ABSOLUTE
- * \param 	PERIODIC_RELATIVE
- * 
  */
 typedef enum task_timing_mode_t 
 {
-	PERIODIC_ABSOLUTE, 
-	PERIODIC_RELATIVE
+	PERIODIC_ABSOLUTE, 	///<	The task will be executed accorded to a fixed schedule (ie. regardless of past delays or realtime violations)	
+	PERIODIC_RELATIVE	///<	The task will be executed with constant period relative to the last execution
 } task_timing_mode_t;
 
 
 /**
  * \brief 	Scheduler strategy
- * 
- * \param 	ROUND_ROBIN
- * \param 	FIXED_PRIORITY
- * 
  */
 enum schedule_strategy_t 
 {
-	ROUND_ROBIN,
-	FIXED_PRIORITY
+	ROUND_ROBIN,	///<	Round robin scheduling
+	FIXED_PRIORITY	///<	Fixed priority scheduling
 };
 
 
 /**
- * \brief Task entry
- * 
- * \param task_set	 		Pointer to the task set to which this task belongs 
- * \param function_pointer	Function to be called
- * \param task_id	 		Unique task identifier
- * \param run_mode			Run mode
- * \param timing_mode		Timing mode
- * \param repeat_period		Period between two calls (us)
- * \param next_run			Next execution time
- * \param execution_time	Last execution time
- * \param delay_max			Maximum delay between expected execution and actual execution
- * \param delay_avg			Average delay between expected execution and actual execution
- * \param delay_var_squared	Standard deviation of the delay
- * \param rt_violations		Number of Real-time violations, this is incremented each time an execution is skipped
- * 
+ * \brief 	Task entry
  */
 typedef struct task_entry 
 {	
-	struct task_set *tasks;		
-	function_pointer call_function;
-	uint16_t task_id;
-	task_run_mode_t  run_mode;		
-	task_timing_mode_t timing_mode;
-	uint32_t repeat_period;   
-	uint32_t next_run;
-	uint32_t execution_time;	
-#ifdef SCHEDULER_PROFILING	
-	uint32_t delay_max;
-	uint32_t delay_avg;
-	uint32_t delay_var_squared;
-	uint32_t rt_violations;
+	struct task_set *tasks;				///<	Pointer to the task set to which this task belongs 
+	function_pointer call_function;		///<	Function to be called
+	uint16_t task_id;					///<	Unique task identifier
+	task_run_mode_t  run_mode;			///<	Run mode
+	task_timing_mode_t timing_mode;		///<	Timing mode
+	uint32_t repeat_period;   			///<	Period between two calls (us)
+	uint32_t next_run;					///<	Next execution time
+	uint32_t execution_time;			///<	Execution time
+#ifdef SCHEDULER_PROFILING		
+	uint32_t delay_max;					///<	Maximum delay between expected execution and actual execution
+	uint32_t delay_avg;					///<	Average delay between expected execution and actual execution
+	uint32_t delay_var_squared;			///<	Standard deviation of the delay
+	uint32_t rt_violations;				///<	Number of Real-time violations, this is incremented each time an execution is skipped
 #endif
 } task_entry;
 
 
 /**
- * \brief 						Task set
- * 
- * \param 						Number_of_tasks
- * \param running_task 			ID of the task being executed
- * \param current_schedule_slot 
- * \param tasks  				Array of tasks_entry to be executed
+ * \brief 	Task set
  */
 typedef struct task_set 
 {
-	uint8_t number_of_tasks;
-	int running_task;
-	int current_schedule_slot;
-	struct task_entry tasks[30];
+	uint8_t number_of_tasks;		///<	Number_of_tasks
+	int running_task;				///<	ID of the task being executed
+	int current_schedule_slot;		///<	Slot of the task being executed
+	struct task_entry tasks[30];	///<	Array of tasks_entry to be executed
 } task_set;
 
 
+/**
+ * @brief Macro to instantiate a new task-set
+ * 
+ * @param NAME 		Name of the task-set
+ * @param NUMBER 	Number of tasks in the task-set
+ */
 #define NEW_TASK_SET(NAME,NUMBER) task_set NAME = {.number_of_tasks=MAX_NUMBER_OF_TASKS};
+
 
 /**
  * \brief 		Scheduler module initialisation

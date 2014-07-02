@@ -1,17 +1,19 @@
-// Copyright (C) 2014  Julien Lecoeur
+/**
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
 
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
 
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see <http://www.gnu.org/licenses/>.
+/**
+* \file i2cxl_sonar.c
+*
+* This file is the driver for the sonar module using i2C communication protocol
+*/
 
 
 #include "i2cxl_sonar.h"
@@ -20,10 +22,10 @@
 #include "print_util.h"
 
 
-const uint8_t I2CXL_DEFAULT_ADDRESS				= 0x70;
-const uint8_t I2CXL_RANGE_COMMAND				= 0x51;
-const uint8_t I2CXL_CHANGE_ADDRESS_COMMAND_1	= 0xAA;
-const uint8_t I2CXL_CHANGE_ADDRESS_COMMAND_2	= 0xA5;
+const uint8_t I2CXL_DEFAULT_ADDRESS				= 0x70;		///< Address of the device
+const uint8_t I2CXL_RANGE_COMMAND				= 0x51;		///< Address of the Range Command Register
+const uint8_t I2CXL_CHANGE_ADDRESS_COMMAND_1	= 0xAA;		///< Address of the Change Command address Register
+const uint8_t I2CXL_CHANGE_ADDRESS_COMMAND_2	= 0xA5;		///< Address of the Change Command address Register
 
 
 void i2cxl_send_range_command(i2cxl_sonar_t* i2c_sonar);

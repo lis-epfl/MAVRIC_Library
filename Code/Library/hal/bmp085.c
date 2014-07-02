@@ -1,9 +1,21 @@
-/*
- * bmp085.c
+/**
+ * \page The MAV'RIC License
  *
- * Created: 12/03/2013 22:14:46
- *  Author: sfx
- */ 
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+* \file bmp085.c
+*
+* This file is the driver for the barometer module: BMP085
+*/
+
+
 #include "bmp085.h"
 
 #include "twim.h"
@@ -15,7 +27,7 @@
 #include <stdbool.h>
 #include "print_util.h"
 
-pressure_data pressure_outputs;
+pressure_data pressure_outputs;		///< declare an object containing the barometer's data
 
 int16_t bmp085_read_int(unsigned char address) {
 	int16_t result;
