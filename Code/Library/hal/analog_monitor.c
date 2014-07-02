@@ -1,8 +1,18 @@
-/*
- * analog_monitor.c
+/**
+ * \page The MAV'RIC License
  *
- * Created: 12/10/2013 23:54:29
- *  Author: sfx
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+ * \file analog_monitor.c
+ *
+ * The driver for the analog monitor module
  */ 
 
 #include "analog_monitor.h"

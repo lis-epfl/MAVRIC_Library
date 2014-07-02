@@ -1,12 +1,18 @@
 /**
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+* \file ads1274.h
+*
 * This file is the Driver for the external ADC: ADS1274  (4ch, 24 bit, SPI interface)
-*
-* The MAV'RIC Framework
-* Copyright © 2011-2014
-*
-* Laboratory of Intelligent Systems, EPFL
-*
-* This file is part of the MAV'RIC Framework.
 */
 
 #include "ads1274.h"

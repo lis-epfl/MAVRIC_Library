@@ -1,13 +1,20 @@
 /**
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+* \file ads1274.h
+*
 * This file is the Analog to Digital Converter module using interruptions
-*
-* The MAV'RIC Framework
-* Copyright © 2011-2014
-*
-* Laboratory of Intelligent Systems, EPFL
-*
-* This file is part of the MAV'RIC Framework.
 */
+
 
 #ifndef ADC_INT_H
 #define ADC_INT_H

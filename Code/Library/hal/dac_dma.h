@@ -1,12 +1,18 @@
 /**
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+* \file dac_dma.h
+*
 * This file is the driver for the Internal DAC (Digital to Analog Conversion) using the DMA
-*
-* The MAV'RIC Framework
-* Copyright © 2011-2014
-*
-* Laboratory of Intelligent Systems, EPFL
-*
-* This file is part of the MAV'RIC Framework.
 */
 
 

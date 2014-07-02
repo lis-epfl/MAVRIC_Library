@@ -1,14 +1,19 @@
 /**
-* This file is the driver for the integrated triple axis gyroscope ITG3200
-*
-* The MAV'RIC Framework
-* Copyright © 2011-2014
-*
-* Laboratory of Intelligent Systems, EPFL
-*
-* This file is part of the MAV'RIC Framework.
-*/
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
 
+
+/**
+* \file itg3200_driver.h
+*
+* This file is the driver for the integrated triple axis gyroscope ITG3200
+*/
 
 #ifndef ITG3200_DRIVER_H_
 #define ITG3200_DRIVER_H_
@@ -29,14 +34,35 @@ typedef struct{
 } gyro_data; 
 
 
-
+/**
+ * \brief Initialize the gyroscope sensor
+ * not implemented yet
+*/
 void init_itg3200(void);
+
+/**
+ * \brief Reconfigure the gyroscope sensor
+*/
 void reconfigure_gyro(void);
 
+/**
+ * \brief Return the gyroscope's data in normal mode
+ * not implemented yet
+ *
+ * \return a pointer to the gyroscope data
+*/
 gyro_data* get_gyro_data(void);
 
+/**
+ * \brief Initialize the gyroscope sensor in slow mode
+*/
 void init_itg3200_slow(void);
 
+/**
+ * \brief Return the gyroscope's data in slow mode
+ *
+ * \return a pointer to the gyroscope data
+*/
 gyro_data* get_gyro_data_slow(void);
 
 

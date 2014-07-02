@@ -1,9 +1,20 @@
-/*
- * piezo_speaker.c
+/**
+ * \page The MAV'RIC License
  *
- * Created: 27/03/2014 18:20:19
- *  Author: schill
- */ 
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+* \file piezo_speaker.c
+*
+* This file is the driver for the piezzo speaker
+*/
+
 
 #include "piezo_speaker.h"
 #include "dac_dma.h"
@@ -15,7 +26,7 @@ void init_piezo_speaker() {
 	gpio_configure_pin(PIEZO_HIGH_PIN, GPIO_DIR_OUTPUT);
 	gpio_set_pin_low(PIEZO_HIGH_PIN);
 	gpio_configure_pin(PIEZO_LOW_PIN, GPIO_DIR_OUTPUT);
-	gpio_set_pin_low(PIEZO_HIGH_PIN);
+	gpio_set_pin_low(PIEZO_LOW_PIN);
 	Init_DAC(0);
 	DAC_set_value(0);
 	
@@ -25,7 +36,7 @@ void init_piezo_speaker_binary() {
 	gpio_configure_pin(PIEZO_HIGH_PIN, GPIO_DIR_OUTPUT);
 	gpio_set_pin_low(PIEZO_HIGH_PIN);
 	gpio_configure_pin(PIEZO_LOW_PIN, GPIO_DIR_OUTPUT);
-	gpio_set_pin_low(PIEZO_HIGH_PIN);
+	gpio_set_pin_low(PIEZO_LOW_PIN);
 	
 }
 

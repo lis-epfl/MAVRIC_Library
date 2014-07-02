@@ -1,12 +1,18 @@
 /**
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+* \file compass_hmc58831l.h
+*
 * This file is the driver for the magnetometer HMC58831
-*
-* The MAV'RIC Framework
-* Copyright © 2011-2014
-*
-* Laboratory of Intelligent Systems, EPFL
-*
-* This file is part of the MAV'RIC Framework.
 */
 
 

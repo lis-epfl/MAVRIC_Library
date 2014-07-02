@@ -1,9 +1,21 @@
-/*
- * spektrum.c
+/**
+ * \page The MAV'RIC License
  *
- *  Created on: Mar 2, 2010
- *      Author: felix
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
  */
+
+
+/**
+* \file remote_dsm2.c
+*
+* This file is the driver for the remote control
+*/
+
+
 #include "remote_dsm2.h"
 #include "remote_controller.h"
 #include "usart.h"
@@ -12,14 +24,17 @@
 #include "sysclk.h"
 #include "print_util.h"
 #include "delay.h"
-static volatile uint8_t packet_byte_counter=0;
 
-Spektrum_Receiver_t spRec1;
-Spektrum_Receiver_t spRec2;
+static volatile uint8_t packet_byte_counter=0;			///< Declare a counter of bytes in a packet 
 
-int16_t channelCenter[16];
+Spektrum_Receiver_t spRec1;								///< Declare an object containing the receiver structure for receiver 1
+Spektrum_Receiver_t spRec2;								///< Declare an object containing the receiver structure for receiver 2
 
+int16_t channelCenter[16];								///< Declare an array to store the central position of each channel
 
+/**
+ * \brief Define the service routine for the spektrum handler interruption
+ */
 ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) {
 	uint8_t c1, c2, i;
 	uint8_t channel_encoding, frame_number;
@@ -152,7 +167,10 @@ int16_t rc_get_channel(uint8_t index) {
 int16_t rc_get_channel_neutral(uint8_t index) {
 	int16_t value=rc_get_channel(index)-channelCenter[index];
 	// clamp to dead zone
-	if ((value>-DEADZONE)&&(value<DEADZONE)) value=0;
+	if ((value>-DEADZONE)&&(value<DEADZONE))
+	{
+		value=0;
+	}
 	return value;
 }
 

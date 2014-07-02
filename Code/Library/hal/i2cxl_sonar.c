@@ -1,13 +1,20 @@
 /**
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+* \file i2cxl_sonar.c
+*
 * This file is the driver for the sonar module using i2C communication protocol
-*
-* The MAV'RIC Framework
-* Copyright © 2011-2014
-*
-* Laboratory of Intelligent Systems, EPFL
-*
-* This file is part of the MAV'RIC Framework.
 */
+
 
 #include "i2cxl_sonar.h"
 #include "twim.h"

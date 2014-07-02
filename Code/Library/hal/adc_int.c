@@ -1,13 +1,20 @@
 /**
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+* \file ads1274.h
+*
 * This file is the Analog to Digital Converter module using interruptions
-*
-* The MAV'RIC Framework
-* Copyright © 2011-2014
-*
-* Laboratory of Intelligent Systems, EPFL
-*
-* This file is part of the MAV'RIC Framework.
 */
+
 
 #include "adc_int.h"
 #include "gpio.h"
@@ -20,13 +27,13 @@
 #include "dac_dma.h"
 #include "sysclk.h"
 
-#define ADC_INT_SEOS0 1
-#define ADC_INT_SEOS1 16
-#define ADC_INT_SEOC0 2
-#define ADC_INT_SEOC1 32
+#define ADC_INT_SEOS0 1			///< Define the Analog to Digital interrupt (?)
+#define ADC_INT_SEOS1 16		///< Define the Analog to Digital interrupt (?)
+#define ADC_INT_SEOC0 2			///< Define the Analog to Digital interrupt (?)
+#define ADC_INT_SEOC1 32		///< Define the Analog to Digital interrupt (?)
 
-	// GPIO pin/adc-function map.
-	static const gpio_map_t ADCIFA_GPIO_MAP = {
+///< GPIO pin/adc-function map.
+static const gpio_map_t ADCIFA_GPIO_MAP = {
 	{AVR32_ADCREF0_PIN,AVR32_ADCREF0_FUNCTION},
 	{AVR32_ADCREFP_PIN,AVR32_ADCREFP_FUNCTION},
 	{AVR32_ADCREFN_PIN,AVR32_ADCREFN_FUNCTION},
@@ -48,56 +55,53 @@
 	{AVR32_ADCIN14_PIN, AVR32_ADCIN14_FUNCTION},
 	{AVR32_ADCIN15_PIN, AVR32_ADCIN15_FUNCTION}
 
-		
-	};
+};
 
-	volatile avr32_adcifa_t *adcifa = &AVR32_ADCIFA; // ADCIFA IP registers address
+volatile avr32_adcifa_t *adcifa = &AVR32_ADCIFA;							///< ADCIFA IP registers address
 
-	static volatile int sequencer_item_count, channel_count;
+static volatile int sequencer_item_count, channel_count;					///< Declare counters
 	
-	static volatile int32_t sample_counter, oversampling_counter;
+static volatile int32_t sample_counter, oversampling_counter;				///< Declare counters
 	
-	static volatile int number_of_samples, oversampling, oversampling_divider;
-	bool continuous_mode;
+static volatile int number_of_samples, oversampling, oversampling_divider;	///< Declare ADC sampling stuff
+
+bool continuous_mode;														///< Declare whether to work in continuous mode or not
 	
-	static volatile uint32_t last_adc_int_time, adc_int_period;
+static volatile uint32_t last_adc_int_time, adc_int_period;					///< Declare ADC interrupt time and period
 	
-	//32bits version
-	//int32_t adci_buffer[ADCI_INPUT_CHANNELS][ADCI_BUFFER_SIZE];
-	//16bits version
-	static volatile int32_t internal_buffer[MAX_CHANNELS];
-	int16_t *adci_buffer[MAX_CHANNELS];
-	uint8_t even_odd;
+///< 32bits version
+// int32_t adci_buffer[ADCI_INPUT_CHANNELS][ADCI_BUFFER_SIZE];
+
+///< 16bits version
+static volatile int32_t internal_buffer[MAX_CHANNELS];		///< Declare an internal buffer
+int16_t *adci_buffer[MAX_CHANNELS];							///< Declare a pointer on the ADC interrupt buffer
+uint8_t even_odd;											///< Declare whether even or odd
 	
 
-			// ADC Configuration
-	volatile adcifa_opt_t adc_config_options = {
-				.frequency                = ADC_FREQUENCY,  // ADC frequency (Hz)
-				.reference_source         = ADCIFA_REF1V, // Reference Source
-				.sample_and_hold_disable  = false,    // Disable Sample and Hold Time
-				.single_sequencer_mode    = false,     // Single Sequencer Mode
-				.free_running_mode_enable = false,    // Free Running Mode
-				.sleep_mode_enable        = false     // Sleep Mode
-			};
+///< ADC Configuration
+volatile adcifa_opt_t adc_config_options = {
+	.frequency                = ADC_FREQUENCY,		///< ADC frequency (Hz)
+	.reference_source         = ADCIFA_REF1V,		///< Reference Source
+	.sample_and_hold_disable  = false,				///< Disable Sample and Hold Time
+	.single_sequencer_mode    = false,				///< Single Sequencer Mode
+	.free_running_mode_enable = false,				///< Free Running Mode
+	.sleep_mode_enable        = false				///< Sleep Mode
+};
 			
-			// Sequencer Configuration
-			adcifa_sequencer_opt_t adcifa_sequence_opt = {
-				.convnb               = 0, // Number of sequence
-				.resolution           = ADCIFA_SRES_12B,         // Resolution selection
-				.trigger_selection    = ADCIFA_TRGSEL_ITIMER,      // Trigger selection
-				.start_of_conversion  = ADCIFA_SOCB_ALLSEQ,      // Conversion Management
-				.sh_mode              = ADCIFA_SH_MODE_STANDARD, // Oversampling Management
-				.half_word_adjustment = ADCIFA_HWLA_NOADJ,       // Half word Adjustment
-				.software_acknowledge = ADCIFA_SA_NO_EOS_SOFTACK // Software Acknowledge
-			};
+///< Sequencer Configuration
+adcifa_sequencer_opt_t adcifa_sequence_opt = {
+	.convnb               = 0,							///< Number of sequence
+	.resolution           = ADCIFA_SRES_12B,			///< Resolution selection
+	.trigger_selection    = ADCIFA_TRGSEL_ITIMER,		///< Trigger selection
+	.start_of_conversion  = ADCIFA_SOCB_ALLSEQ,			///< Conversion Management
+	.sh_mode              = ADCIFA_SH_MODE_STANDARD,	///< Oversampling Management
+	.half_word_adjustment = ADCIFA_HWLA_NOADJ,			///< Half word Adjustment
+	.software_acknowledge = ADCIFA_SA_NO_EOS_SOFTACK	///< Software Acknowledge
+};
 			
-			
-
-// Conversions in the Sequencer Configuration
+///< Conversions in the Sequencer Configuration
 adcifa_sequencer_conversion_opt_t adcifa_sequencer0_conversion_opt[SLOTS_PER_SEQUENCER];
-			
-			
-			
+	
 __attribute__((__interrupt__))
 static void processData() {
 	int ch;
@@ -175,39 +179,39 @@ static void processData() {
 }
 
 
-// Initializes ADC (configures Pins, starts Clock, sets defaults)
+///< Initializes ADC (configures Pins, starts Clock, sets defaults)
 void Init_ADCI(uint32_t adc_frequency, uint8_t reference_source)
 {
 
-		// Assign and enable GPIO pins to the ADC function.
+		///< Assign and enable GPIO pins to the ADC function.
 		gpio_enable_module(ADCIFA_GPIO_MAP, sizeof(ADCIFA_GPIO_MAP) / sizeof(ADCIFA_GPIO_MAP[0]));
 
 		adc_config_options.frequency=adc_frequency;
 		adc_config_options.reference_source=reference_source;
 
-		// Get ADCIFA Factory Configuration
+		////</ Get ADCIFA Factory Configuration
 		adcifa_get_calibration_data(adcifa, &adc_config_options);
 		if ((uint16_t)adc_config_options.offset_calibration_value == 0xFFFF){
-			// Set default calibration if Engineering samples and part is not programmed
+			///< Set default calibration if Engineering samples and part is not programmed
 			adc_config_options.offset_calibration_value = 0x3B;
 			adc_config_options.gain_calibration_value = 0x4210;
 			adc_config_options.sh0_calibration_value = 0x210;
 			adc_config_options.sh1_calibration_value = 0x210;
 		}
-		adc_config_options.offset_calibration_value = 0x3B; // offset correction
+		adc_config_options.offset_calibration_value = 0x3B; ///< offset correction
 
-		// Configure ADCIFA core
+		///< Configure ADCIFA core
 		adcifa_configure(adcifa, &adc_config_options, sysclk_get_peripheral_bus_hz(AVR32_ADCIFA_ADDRESS));
 
 		clear_adc_sequencer();
 		continuous_mode=false;
-		// Configure ADCIFA sequencer 1
+		///< Configure ADCIFA sequencer 1
 		//adcifa_configure_sequencer(adcifa, 1, &adcifa_sequence_opt, adcifa_sequencer1_conversion_opt);
 		
 		adcifa_disable_interrupt(adcifa, 0xffffffff);
 		INTC_register_interrupt( (__int_handler) &processData, AVR32_ADCIFA_SEQUENCER0_IRQ, AVR32_INTC_INT1);
 		//INTC_register_interrupt( (__int_handler) &processData, AVR32_ADCIFA_SEQUENCER1_IRQ, AVR32_INTC_INT1);
-//	int period_us=1000000/samplingrate;
+		//int period_us=1000000/samplingrate;
 }
 
 

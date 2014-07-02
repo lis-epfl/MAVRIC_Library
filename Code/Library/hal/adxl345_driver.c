@@ -1,13 +1,20 @@
 /**
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+* \file adxl345_driver.c
+*
 * This file is the Driver for the ADXL345 accelerometer
-*
-* The MAV'RIC Framework
-* Copyright © 2011-2014
-*
-* Laboratory of Intelligent Systems, EPFL
-*
-* This file is part of the MAV'RIC Framework.
 */
+
 
 #include "adxl345_driver.h"
 #include "i2c_driver_int.h"

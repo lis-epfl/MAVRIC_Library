@@ -1,16 +1,19 @@
 /**
-* This file is the driver for the barometer module: BMP085
-*
-* The MAV'RIC Framework
-* Copyright © 2011-2014
-*
-* Laboratory of Intelligent Systems, EPFL
-*
-* This file is part of the MAV'RIC Framework.
-*/
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
 
-#ifndef BMP085_H_
-#define BMP085_H_
+
+/**
+* \file bmp085.h
+*
+* This file is the driver for the barometer module: BMP085
+*/
 
 
 #include "compiler.h"

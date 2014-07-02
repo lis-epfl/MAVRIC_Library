@@ -1,9 +1,20 @@
-/*
- * spektrum.h
+/**
+ * \page The MAV'RIC License
  *
- *  Created on: Nov 01, 2013
- *      Author: ndousse
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
  */
+
+
+/**
+* \file spektrum.h
+*
+* This file is the driver for the remote control
+*/
+
 
 #ifndef SPEKTRUM_H_
 #define SPEKTRUM_H_
@@ -12,28 +23,27 @@
 #include "buffer.h"
 #include "stabilisation.h"
 
-#define BAUD_REMOTE  115200
+#define BAUD_REMOTE  115200			///< Define the remote baudrate
 
-#define RC_THROTTLE		0
-#define RC_THROTTLE_DIR 1
+#define RC_THROTTLE		0			///< Define the remote channel number for the throttle
+#define RC_THROTTLE_DIR 1			///< Define the remote channel direction for the throttle
 
-#define RC_ROLL			1
-#define RC_ROLL_DIR     -1
+#define RC_ROLL			1			///< Define the remote channel number for the roll
+#define RC_ROLL_DIR     -1			///< Define the remote channel direction for the roll
 
-#define RC_PITCH		2
-#define RC_PITCH_DIR    1
+#define RC_PITCH		2			///< Define the remote channel number for the pitch
+#define RC_PITCH_DIR    1			///< Define the remote channel direction for the pitch
 
-#define RC_YAW			3
-#define RC_YAW_DIR		1
+#define RC_YAW			3			///< Define the remote channel number for the yaw
+#define RC_YAW_DIR		1			///< Define the remote channel direction for the yaw
 
-#define RC_SAFETY   4
-#define RC_ID_MODE  5
-#define RC_TRIM_P3  6
+#define RC_SAFETY   4				///< Define the remote channel number for the safety switch
+#define RC_ID_MODE  5				///< Define the remote channel number for the mode selection
+#define RC_TRIM_P3  6				///< Define the remote channel number for the trim of (?)
 
+#define DEADZONE 30.0				///< Define the dead zone of a remote channel
 
-#define DEADZONE 30.0
-
-#define RC_SCALEFACTOR 1.0/700.0
+#define RC_SCALEFACTOR 1.0/700.0	///< Define the scale factor to apply on a channel value
 
 /*
 typedef struct Turnigy_Receiver {
