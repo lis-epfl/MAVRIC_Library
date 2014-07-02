@@ -1,3 +1,14 @@
+/**
+* This file is the Analog to Digital Converter module using interruptions
+*
+* The MAV'RIC Framework
+* Copyright © 2011-2014
+*
+* Laboratory of Intelligent Systems, EPFL
+*
+* This file is part of the MAV'RIC Framework.
+*/
+
 #include "adc_int.h"
 #include "gpio.h"
 #include "tc.h"

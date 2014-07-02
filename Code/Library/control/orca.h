@@ -1,5 +1,5 @@
 /**
- *  ORCA  
+ * This file computes a collision-free trajectory for the ORCA algorithm
  *
  * The MAV'RIC Framework
  * Copyright © 2011-2014
@@ -13,14 +13,12 @@
 #ifndef ORCA_H__
 #define ORCA_H__
 
-#include <stdbool.h>
-#include <stdint.h>
-
-#include "neighbor_selection.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include <stdbool.h>
+#include <stdint.h>
 
 #define ORCA_TIME_STEP_MILLIS 10.0
 #define TIME_HORIZON 12.0
@@ -28,71 +26,85 @@ extern "C" {
 #define RVO_EPSILON 0.0001
 
 typedef struct{
-	float normal[3];
-	float point[3];
+	float normal[3];	///< the normal vector to the plane
+	float point[3];		///< a point of the plane
 }plane_t;
 
 typedef struct{
-	float direction[3];
-	float point[3];
+	float direction[3];	///< the direction vector of a line
+	float point[3];		///< a point of the line
 }line_t;
 
 /**
- * \brief Initialize ORCA
+ * \brief	Initialize the ORCA module
+ *
+ * \param	void
+ *
+ * \return	void
  */
 void init_orca(void);
-
 /**
- * \brief Compute new velocity
- * \param OptimalVelocity
- * \param NewVelocity
+ * \brief	Initialize the ORCA module
+ *
+ * \param	OptimalVelocity		a 3D array
+ * \param	NewVelocity			the 3D output array
+ *
+ * \return	void
  */
 void computeNewVelocity(float OptimalVelocity[], float NewVelocity[]);
 
 /**
- * \brief Linear Program
- * \param planes
- * \param index
- * \param line
- * \param maxSpeed
- * \param OptimalVelocity
- * \param NewVelocity
- * \param directionOpt 
- * \return
+ * \brief	computes the solution of a 1D linear program
+ * 
+ * \param	planes				the array of all planes
+ * \param	index				the starting index of the plane
+ * \param	line				the intersecting line between the two conflicting planes
+ * \param	OptimalVelocity		a 3D array
+ * \param	NewVelocity			the 3D output array
+ * \param	directionOpt		whether we are solving a 4D or a 3D linear program
+ *
+ * \return	whether the linear program has a solution or not
  */
 bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt);
 
 /**
- * \brief Linear Program 2
- * \param planes
- * \param ind 
- * \param maxSpeed
- * \param OptimalVelocity
- * \param NewVelocity
- * \param directionOpt 
- * \return
+ * \brief	computes the solution of a 2D linear program
+ *
+ * \param	planes				the array of all planes
+ * \param	ind					the index of the plane
+ * \param	maxSpeed			the norm of the max velocity
+ * \param	OptimalVelocity		a 3D array
+ * \param	NewVelocity			the 3D output array
+ * \param	directionOpt		whether we are solving a 4D or a 3D linear program
+ *
+ * \return	whether the linear program has a solution or not
  */
 bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt);
 
 /**
- * \brief Linear Program 3
- * \param planes
- * \param planeSize
- * \param maxSpeed
- * \param OptimalVelocity
- * \param NewVelocity
- * \param directionOpt 
- * \return
+ * \brief	computes the solution of a 3D linear program
+ *
+ * \param	planes				the array of all planes
+ * \param	planeSize			the number of planes
+ * \param	OptimalVelocity		a 3D array
+ * \param	maxSpeed			the norm of the max velocity
+ * \param	NewVelocity			the 3D output array
+ * \param	directionOpt		whether we are solving a 4D or a 3D linear program
+ *
+ * \return the number of the last plane to be evaluated, if smaller than the number of planes, linear program is infeasible
  */
 float linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelocity[], float maxSpeed, float NewVelocity[], bool directionOpt);
 
 /**
- * \brief Linear Program 4
- * \param planes
- * \param ind
- * \param maxSpeed
- * \param NewVelocity
- * \return
+ * \brief	computes the solution of a 3D linear program
+ *
+ * \param	planes			the array of all planes
+ * \param	planeSize		the number of planes
+ * \param	ind				the index of the plane for which the 3D linear program is infeasible
+ * \param	maxSpeed		the norm of the max velocity
+ * \param	NewVelocity		the 3D output array
+ *
+ * \return	void
  */
 void linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float maxSpeed, float NewVelocity[]);
 

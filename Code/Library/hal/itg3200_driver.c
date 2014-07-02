@@ -1,9 +1,13 @@
-/*
- * itg3200_driver.c
- *
- * Created: 18/05/2012 17:57:46
- *  Author: sfx
- */ 
+/**
+* This file is the driver for the integrated triple axis gyroscope ITG3200
+*
+* The MAV'RIC Framework
+* Copyright © 2011-2014
+*
+* Laboratory of Intelligent Systems, EPFL
+*
+* This file is part of the MAV'RIC Framework.
+*/
 
 
 #include "itg3200_driver.h"

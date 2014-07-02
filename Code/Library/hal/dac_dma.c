@@ -1,3 +1,14 @@
+/**
+* This file is the driver for the Internal DAC (Digital to Analog Conversion) using the DMA
+*
+* The MAV'RIC Framework
+* Copyright © 2011-2014
+*
+* Laboratory of Intelligent Systems, EPFL
+*
+* This file is part of the MAV'RIC Framework.
+*/
+
 #include "dac_dma.h"
 
 #include "board.h"
@@ -11,17 +22,18 @@
 #include "print_util.h"
 
 
-static volatile uint16_t* buffer;
-static volatile uint16_t from, to;
-static volatile int autoplay;
-volatile avr32_pevc_t   *ppevc  = &AVR32_PEVC;
-volatile avr32_dacifb_t *dacifb = &AVR32_DACIFB0; // DACIFB registers address
- S16 dac_value_audio = -1;
+static volatile uint16_t* buffer;					///< pointer to the sampling buffer of the DAC
+static volatile uint16_t from, to;					///< (?)
+static volatile int autoplay;						///< (?)
+volatile avr32_pevc_t   *ppevc  = &AVR32_PEVC;		///< (?)
+volatile avr32_dacifb_t *dacifb = &AVR32_DACIFB0;	///< DACIFB registers address
+S16 dac_value_audio = -1;							///< (?)
 
-  // Assign the on-board sensors to their DAC channel.
- U8 dac_channel_audio = DAC_AUDIO_CHANNEL;
+U8 dac_channel_audio = DAC_AUDIO_CHANNEL;			///< Assign the on-board sensors to their DAC channel.
 
-
+/**
+ * \brief intterupt handler for the DAC
+*/
 __attribute__((__interrupt__))
 static void pdca_int_handler_dac(void)
 {
@@ -78,15 +90,15 @@ void init_gclk(void)
 
 void Init_DAC(int trigger_mode) {
 	  // GPIO pin/dac-function map.
-  static const gpio_map_t DACIFB_GPIO_MAP =
-  {
-    {AVR32_DACREF_PIN,AVR32_DACREF_FUNCTION},
-    {AVR32_ADCREFP_PIN,AVR32_ADCREFP_FUNCTION},
-    {AVR32_ADCREFN_PIN,AVR32_ADCREFN_FUNCTION},
-    {DAC_AUDIO_PIN, DAC_AUDIO_FUNCTION}
-  };
-   // DACIFB Configuration
-dacifb_opt_t dacifb_opt = {
+	static const gpio_map_t DACIFB_GPIO_MAP =
+	{
+	{AVR32_DACREF_PIN,AVR32_DACREF_FUNCTION},
+	{AVR32_ADCREFP_PIN,AVR32_ADCREFP_FUNCTION},
+	{AVR32_ADCREFN_PIN,AVR32_ADCREFN_FUNCTION},
+	{DAC_AUDIO_PIN, DAC_AUDIO_FUNCTION}
+	};
+	// DACIFB Configuration
+	dacifb_opt_t dacifb_opt = {
                             .reference                  = DACIFB_REFERENCE_VDDANA,        // VDDANA Reference
                             .channel_selection          = DAC_AUDIO_CHANNEL,     // Selection Channels A&B
                             .low_power                  = false,                          // Low Power Mode     
@@ -94,45 +106,43 @@ dacifb_opt_t dacifb_opt = {
                             .prescaler_clock_hz         = DAC_PRESCALER_CLOCK,             // Prescaler Clock (Should be 500Khz)             
 							.offset_calibration_value   = 0,
 							.gain_calibration_value     = 1                 
-};
-
-// DACIFB Channel Configuration
-dacifb_channel_opt_t dacifb_channel_opt = {
-                                                .auto_refresh_mode    = true,                       // Auto Refresh Mode 
-                                                .trigger_mode         = trigger_mode,               // Trigger selection
-                                                .left_adjustment      = false,                      // Right Adjustment
-                                                .data_shift           = 0,                          // Number of Data Shift 
-                                                .data_round_enable    = false                       // Data Rouding Mode                                              };
-};
-
+	};
+	// DACIFB Channel Configuration
+	dacifb_channel_opt_t dacifb_channel_opt = {
+													.auto_refresh_mode    = true,                       // Auto Refresh Mode 
+													.trigger_mode         = trigger_mode,               // Trigger selection
+													.left_adjustment      = false,                      // Right Adjustment
+													.data_shift           = 0,                          // Number of Data Shift 
+													.data_round_enable    = false                       // Data Rouding Mode                                              };
+	};
     // Assign and enable GPIO pins to the DAC function.
-  gpio_enable_module(DACIFB_GPIO_MAP, sizeof(DACIFB_GPIO_MAP) / sizeof(DACIFB_GPIO_MAP[0]));
+	gpio_enable_module(DACIFB_GPIO_MAP, sizeof(DACIFB_GPIO_MAP) / sizeof(DACIFB_GPIO_MAP[0]));
 
-  // Get DACIFB Factory Configuration
-  //dacifb_get_calibration_data(dacifb, &dacifb_opt, DAC_AUDIO_INSTANCE);
+	// Get DACIFB Factory Configuration
+	//dacifb_get_calibration_data(dacifb, &dacifb_opt, DAC_AUDIO_INSTANCE);
                               
-  // configure DACIFB
-  if (dacifb_configure(dacifb,
-                   &dacifb_opt,
-                   FOSC0) ==0) {
+	// configure DACIFB
+	if (dacifb_configure(dacifb,
+					&dacifb_opt,
+					FOSC0) ==0) {
 				dbg_print("error configuring DAC");
 				while (1);
-  }
+	}
   
-  // Enable the DACIFB channels.
+	// Enable the DACIFB channels.
 
-  // configure channel DACIFB
-  if (dacifb_configure_channel(dacifb,
-                           dac_channel_audio,
-                           &dacifb_channel_opt,
-                           DAC_PRESCALER_CLOCK) ==0) {
+	// configure channel DACIFB
+	if (dacifb_configure_channel(dacifb,
+							dac_channel_audio,
+							&dacifb_channel_opt,
+							DAC_PRESCALER_CLOCK) ==0) {
 				dbg_print("error configuring DAC channel");
 				while (1);
-  }
+	}
   
-  dacifb_start_channel(dacifb,
-                       dac_channel_audio,
-                       FOSC0);
+	dacifb_start_channel(dacifb,
+						dac_channel_audio,
+						FOSC0);
 
 
 }

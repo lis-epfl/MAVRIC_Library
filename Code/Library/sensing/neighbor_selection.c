@@ -1,9 +1,13 @@
-/*
- * neighbor_selection.c
+/**
+ * This file decodes the message from the neighbors and computes the relative position and velocity in local coordinates
  *
- *  Created: 30.10.2013 09:38:28
- *  Author: ndousse
- */ 
+ * The MAV'RIC Framework
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ *
+ * This file is part of the MAV'RIC Framework.
+ */
 
 
 #include "neighbor_selection.h"

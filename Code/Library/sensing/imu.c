@@ -1,9 +1,14 @@
-/*
- * imu.c
+/**
+ * This file implement the code to read the IMU data
  *
- *  Created on: Mar 7, 2010
- *      Author: felix
+ * The MAV'RIC Framework
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ *
+ * This file is part of the MAV'RIC Framework.
  */
+
 #include "imu.h"
 
 #include "qfilter.h"
@@ -20,9 +25,8 @@
 
 
 int ic;
-void init_imu (Imu_Data_t *imu1) {
-	
-	
+void init_imu (Imu_Data_t *imu1)
+{
 	//init_itg3200_slow();	
 	//init_adxl345_slow();
 	init_lsm330();
@@ -59,7 +63,8 @@ void init_imu (Imu_Data_t *imu1) {
 }
 
 
-void imu_get_raw_data(Imu_Data_t *imu1) {
+void imu_get_raw_data(Imu_Data_t *imu1)
+{
 	// int i=0;
 	
 	//gyro_data* gyros=get_gyro_data_slow();
@@ -84,20 +89,24 @@ void imu_get_raw_data(Imu_Data_t *imu1) {
 	
 }
 
-void calibrate_Gyros(Imu_Data_t *imu1) {
+void calibrate_Gyros(Imu_Data_t *imu1)
+{
 	int i,j;
 	imu_get_raw_data(imu1);
-	for (j=0; j<3; j++) {
+	for (j=0; j<3; j++)
+	{
 		imu1->raw_bias[j]=(float)imu1->raw_channels[j];
 	}
 	
-	for (i=0; i<100; i++) {
+	for (i=0; i<100; i++)
+	{
 		imu_get_raw_data(imu1);
 
 		//imu1->raw_bias[0+ACC_OFFSET]  = (0.9*imu1->raw_bias[0+ACC_OFFSET]+0.1*(float)imu1->raw_channels[0+ACC_OFFSET]);
 		//imu1->raw_bias[1+ACC_OFFSET]  = (0.9*imu1->raw_bias[1+ACC_OFFSET]+0.1*(float)imu1->raw_channels[1+ACC_OFFSET]);
 		//imu1->raw_bias[2+ACC_OFFSET]  = (0.9*imu1->raw_bias[2+ACC_OFFSET]+0.1*((float)imu1->raw_channels[2+ACC_OFFSET]-imu1->raw_scale[2+ACC_OFFSET]));
-		for (j=0; j<3; j++) {
+		for (j=0; j<3; j++)
+		{
 			imu1->raw_bias[j]=(0.9*imu1->raw_bias[j]+0.1*(float)imu1->raw_channels[j]);
 			//imu1->attitude.raw_mag_mean[j] = (1.0-MAG_LPF)*imu1->attitude.raw_mag_mean[j]+MAG_LPF*((float)imu1->raw_channels[j+COMPASS_OFFSET]);
 		}
@@ -118,7 +127,8 @@ void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *
 		imu1->dt=ticks_to_seconds(t - imu1->last_update);
 		imu1->last_update=t;
 		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt);
-		if (imu1->attitude.calibration_level==OFF) {
+		if (imu1->attitude.calibration_level==OFF)
+		{
 			position_integration(pos_est, &imu1->attitude, imu1->dt);
 			position_correction(pos_est, barometer, gps, imu1->dt);
 		}

@@ -1,21 +1,13 @@
-// Copyright (C) 2014  Julien Lecoeur
-
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-
-// You should have received a copy of the GNU General Public License
-// along with this program. If not, see <http://www.gnu.org/licenses/>.
-
 /**
- * Driver for the DIYdrones airspeed sensor V20 (old analog version)
- */
+* This file is the driver for the DIYdrones airspeed sensor V20 (old analog version)
+*
+* The MAV'RIC Framework
+* Copyright © 2011-2014
+*
+* Laboratory of Intelligent Systems, EPFL
+*
+* This file is part of the MAV'RIC Framework.
+*/
 
 #ifndef AIRSPEED_ANALOG_H_
 #define AIRSPEED_ANALOG_H_
@@ -27,20 +19,42 @@ extern "C" {
 #include "compiler.h"
 #include "analog_monitor.h"
 
+/**
+ * \brief Structure containing the analog airspeed sensor datas
+*/
 typedef struct {
-	uint8_t analog_channel;
-	float gain;
-	float pressure_offset;
-	float differential_pressure;
-	float airspeed;
-	analog_monitor_t* analog_monitor;
+	uint8_t analog_channel;					///< analog channel of the ADC
+	float gain;								///< gain factor for the ADC
+	float pressure_offset;					///< offset of the pressure sensor
+	float differential_pressure;			///< true dynamical pressure (diff between pressure and offset)
+	float airspeed;							///< measure airspeed
+	analog_monitor_t* analog_monitor;		///< pointer to the structure of analog monitor module
 } airspeed_analog_t;
 
-
+/**
+ * \brief Initialize the airspeed sensor
+ *
+ * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
+ * \param analog_monitor pointer to the structure of analog monitor module
+ * \param analog_channel set which channel of the ADC is map to the airspeed sensor
+ *
+*/
 void airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, analog_rails_t analog_channel);
 
+/**
+ * \brief Calibrates the airspeed sensor
+ * 
+ * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
+ *
+*/
 void airspeed_analog_calibrate(airspeed_analog_t* airspeed_analog);
 
+/**
+ * \brief Updates the values in the airspeed structure
+ *
+ * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
+ *
+*/
 void airspeed_analog_update(airspeed_analog_t* airspeed_analog);
 
 

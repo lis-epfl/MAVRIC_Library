@@ -1,16 +1,18 @@
-/*
- * compass_hmc5883.c
- *
- * Created: 12/03/2013 20:51:33
- *  Author: sfx
- */ 
+/**
+* This file is the driver for the magnetometer HMC58831
+*
+* The MAV'RIC Framework
+* Copyright © 2011-2014
+*
+* Laboratory of Intelligent Systems, EPFL
+*
+* This file is part of the MAV'RIC Framework.
+*/
+
 #include "compass_hmc5883l.h"
 #include "twim.h"
 
-static volatile compass_data compass_outputs;
-
-
-
+static volatile compass_data compass_outputs;		///< Declare a structure of magnetometer's data
 
 void init_hmc5883_slow() {
 	static twim_options_t twi_opt= {
