@@ -373,8 +373,8 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 			//current = 3 is a flag to tell us this is a alt change only
 			if(packet.current == 3)
 			{                                    
-			// verify we received the command
-			mavlink_msg_mission_ack_send(MAVLINK_COMM_0, rec->msg.sysid,rec->msg.compid, MAV_CMD_ACK_ERR_NOT_SUPPORTED);
+				// verify we received the command
+				mavlink_msg_mission_ack_send(MAVLINK_COMM_0, rec->msg.sysid,rec->msg.compid, MAV_CMD_ACK_ERR_NOT_SUPPORTED);
 			}
 			else
 			{
@@ -382,46 +382,46 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 				if (*waypoint_receiving)
 				{
 
-				// check if this is the requested waypoint
-				if (packet.seq == waypoint_request_number)
-				{
-					print_util_dbg_print("Receiving good waypoint, number ");
-					print_util_dbg_print_num(waypoint_request_number,10);
-					print_util_dbg_print(" of ");
-					print_util_dbg_print_num(number_of_waypoints-num_waypoint_onboard,10);
-					print_util_dbg_print("\n");
-					
-				    waypoint_list[num_waypoint_onboard + waypoint_request_number] = new_waypoint;
-					waypoint_request_number++;
-					
-					if ((num_waypoint_onboard + waypoint_request_number) == number_of_waypoints) 
+					// check if this is the requested waypoint
+					if (packet.seq == waypoint_request_number)
 					{
+						print_util_dbg_print("Receiving good waypoint, number ");
+						print_util_dbg_print_num(waypoint_request_number,10);
+						print_util_dbg_print(" of ");
+						print_util_dbg_print_num(number_of_waypoints-num_waypoint_onboard,10);
+						print_util_dbg_print("\n");
+					
+						waypoint_list[num_waypoint_onboard + waypoint_request_number] = new_waypoint;
+						waypoint_request_number++;
+					
+						if ((num_waypoint_onboard + waypoint_request_number) == number_of_waypoints) 
+						{
 						
-							uint8_t type = MAV_CMD_ACK_OK;	//MAV_CMD_ACK_ERR_FAIL;                         
+								uint8_t type = MAV_CMD_ACK_OK;	//MAV_CMD_ACK_ERR_FAIL;                         
 							
-						mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,type);
+							mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,type);
 						
-						print_util_dbg_print("flight plan received!\n");
-						*waypoint_receiving = false;
-						num_waypoint_onboard = number_of_waypoints;
-						centralData->waypoint_set = false;
-						init_waypoint();
+							print_util_dbg_print("flight plan received!\n");
+							*waypoint_receiving = false;
+							num_waypoint_onboard = number_of_waypoints;
+							centralData->waypoint_set = false;
+							init_waypoint();
 						}
 						else
 						{
-						mavlink_msg_mission_request_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,waypoint_request_number);
+							mavlink_msg_mission_request_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,waypoint_request_number);
 						
-						print_util_dbg_print("Asking for waypoint ");
-						print_util_dbg_print_num(waypoint_request_number,10);
-						print_util_dbg_print("\n");
+							print_util_dbg_print("Asking for waypoint ");
+							print_util_dbg_print_num(waypoint_request_number,10);
+							print_util_dbg_print("\n");
+						}
 					}
-				}
 				}
 				else
 				{
 					uint8_t type = MAV_CMD_ACK_OK;	//MAV_CMD_ACK_ERR_FAIL;      
-				print_util_dbg_print("Ack not received!");
-				mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,type);
+					print_util_dbg_print("Ack not received!");
+					mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,type);
 			}				
 		}		
 	}			
