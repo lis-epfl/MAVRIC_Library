@@ -724,7 +724,7 @@ void handle_specific_messages (Mavlink_Received_t* rec)
 		 * dbg_print( "\n");
 		*/
 
-		read_msg_from_neighbors(rec);
+		neighbors_selection_read_message_from_neighbors(rec);
 	}
 }
 

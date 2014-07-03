@@ -25,13 +25,13 @@
 
 central_data_t *centralData;
 
-void init_neighbors()
+void neighbors_selection_init()
 {
 	centralData = get_central_data();
 	centralData->number_of_neighbors = 0;
 }
 
-void read_msg_from_neighbors(Mavlink_Received_t* rec)
+void neighbors_selection_read_message_from_neighbors(Mavlink_Received_t* rec)
 {
 	uint8_t i;
 	
@@ -120,7 +120,7 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 	}
 }
 
-void extrapolate_or_delete_position(track_neighbor_t listNeighbors[], uint8_t* number_of_neighbors)
+void neighbors_selection_extrapolate_or_delete_position(track_neighbor_t listNeighbors[], uint8_t* number_of_neighbors)
 {
 	int i, ind, indSup;
 	uint32_t delta_t;

@@ -33,24 +33,24 @@ void initialise_central_data(){
 		set_servos(centralData.servos);
 
 		// TODO change names! XXX_init()
-		init_imu(&centralData.imu1);
-		qfInit(&(centralData.imu1.attitude), (centralData.imu1.raw_scale), (centralData.imu1.raw_bias));
+		imu_init(&centralData.imu1);
+		qfilter_init(&(centralData.imu1.attitude), (centralData.imu1.raw_scale), (centralData.imu1.raw_bias));
 		
-		init_pos_integration(&centralData.position_estimator, &centralData.pressure, &centralData.GPS_data);
+		position_estimation_init(&centralData.position_estimator, &centralData.pressure, &centralData.GPS_data);
 	
-		initQuat(&centralData.imu1.attitude);
+		qfilter_init_quaternion(&centralData.imu1.attitude);
 		
 		init_nav();
 		init_waypoint_handler();
 		
-		init_neighbors();
+		neighbors_selection_init();
 		init_orca();
 
 		// init stabilisers
 		init_stabilisation_copter(&centralData.stabiliser_stack);
 
 		// init simulation (should be done after position_estimator)
-		init_simulation(&(centralData.sim_model),&(centralData.imu1),centralData.position_estimator.localPosition);		
+		simulation_init(&(centralData.sim_model),&(centralData.imu1),centralData.position_estimator.localPosition);		
 		
 
 		centralData.simulation_mode=0;

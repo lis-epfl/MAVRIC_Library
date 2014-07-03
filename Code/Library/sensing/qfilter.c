@@ -28,7 +28,7 @@ float front_mag_vect_z;
 
 uint8_t counter=0;
 
-void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
+void qfilter_init(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 	uint8_t i;
 
 	for (i=0; i<9; i++)
@@ -57,7 +57,7 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 	attitude->ki_mag = attitude->kp_mag/15.0;
 }
 
-void initQuat(Quat_Attitude_t *attitude)
+void qfilter_init_quaternion(Quat_Attitude_t *attitude)
 {
 	uint8_t i;
 	float init_angle;
@@ -89,7 +89,7 @@ void initQuat(Quat_Attitude_t *attitude)
 	attitude->qe.v[2] = sin(init_angle/2.0);
 }
 
-void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
+void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float *rates, float dt){
 	uint8_t i;
 	float  omc[3], omc_mag[3] , tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
 	UQuat_t qed, qtmp1, up, up_bf;

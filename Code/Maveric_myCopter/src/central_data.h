@@ -92,7 +92,7 @@ typedef struct  {
 	waypoint_struct waypoint_list[MAX_WAYPOINTS];				///< The array of all waypoints (max MAX_WAYPOINTS)
 	waypoint_struct current_waypoint;							///< The structure of the current waypoint
 	uint16_t number_of_waypoints;								///< The total number of waypoints
-	int8_t current_waypoint_count;									///< The number of the current waypoint
+	int8_t current_waypoint_count;								///< The number of the current waypoint
 	
 	local_coordinates_t waypoint_coordinates;					///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
 	local_coordinates_t waypoint_hold_coordinates;				///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)

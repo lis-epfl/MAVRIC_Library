@@ -134,7 +134,7 @@ void initialise_board(central_data_t *centralData) {
 	init_analog_monitor(&centralData->adc);
 	
 	// init imu & compass
-	init_imu(&(centralData->imu1));
+	imu_init(&(centralData->imu1));
 	init_bmp085();
 	
 	// init mavlink

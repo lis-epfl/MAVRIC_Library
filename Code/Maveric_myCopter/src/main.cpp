@@ -42,7 +42,7 @@ void initialisation()
 
 	init_mavlink_actions(); // TODO: move read from flash elsewhere
 	// TODO: this second simulation init is required because we have to wait for the parameters stored on flash
-	init_simulation(&(centralData->sim_model),&(centralData->imu1),centralData->position_estimator.localPosition); // TODO: init only once
+	simulation_init(&(centralData->sim_model),&(centralData->imu1),centralData->position_estimator.localPosition); // TODO: init only once
 
 	relevel_imu(); // TODO: MOVE	
 
@@ -57,7 +57,7 @@ void initialisation()
 
 	delay_ms(10);
 	dbg_print("Reset home position...\n");
-	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model.localPosition);
+	position_estimation_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model.localPosition);
 	// TODO: move to module
 	
 	LED_On(LED1);

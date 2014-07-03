@@ -154,7 +154,7 @@ task_return_t set_mav_mode_n_state()
 					case 0:
 						dbg_print("Switching on the motors!\n");
 
-						position_reset_home_altitude(	&centralData->position_estimator, 
+						position_estimation_reset_home_altitude(	&centralData->position_estimator, 
 														&centralData->pressure, 
 														&centralData->GPS_data,
 														&centralData->sim_model.localPosition);
@@ -474,7 +474,7 @@ task_return_t set_mav_mode_n_state()
 		// From reality to simulation
 		if (centralData->simulation_mode == 1)
 		{			
-			init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude),centralData->position_estimator.localPosition);
+			simulation_init(&(centralData->sim_model),&(centralData->imu1.attitude),centralData->position_estimator.localPosition);
 			centralData->position_estimator.init_gps_position = false;
 		}
 	}
@@ -486,7 +486,7 @@ task_return_t set_mav_mode_n_state()
 void run_imu_update() {
 	if (centralData->simulation_mode==1) 
 	{
-		simu_update(&centralData->sim_model, 
+		simulation_update(&centralData->sim_model, 
 					&centralData->servos, 
 					&(centralData->imu1), 
 					&centralData->position_estimator);
@@ -611,11 +611,11 @@ task_return_t gps_task()
 {
 	if (centralData->simulation_mode==1) 
 	{
-		simulate_gps(&centralData->sim_model, &centralData->GPS_data);
+		simulation_simulate_gps(&centralData->sim_model, &centralData->GPS_data);
 	} 
 	else 
 	{
-		gps_update();
+		gps_ublox_update();
 	}
 }
 
@@ -673,7 +673,7 @@ task_return_t run_barometer()
 	
 	if (central_data->simulation_mode == 1) 
 	{
-		simulate_barometer(&centralData->sim_model, pressure);
+		simulation_simulate_barometer(&centralData->sim_model, pressure);
 	} 
 
 	centralData->pressure=*pressure;
