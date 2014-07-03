@@ -34,7 +34,7 @@ uint8_t default_configuration[2] ={CONFIG_POWER_ADDRESS, 8};	///< default config
 
 uint8_t data_configuration[2] ={DATA_SETTING_ADDRESS, FULL_RES | RANGE_16G};	///< configuration of the output data
 
-void init_adxl345_slow(void) 
+void adxl345_driver_init_slow(void) 
 {
 	static twim_options_t twi_opt = 
 	{
@@ -49,7 +49,7 @@ void init_adxl345_slow(void)
 	twim_write(&AVR32_TWIM0, (uint8_t*)&data_configuration, 2, ADXL_ALT_SLAVE_ADDRESS, false);
 }
 
-acc_data* get_acc_data_slow(void) 
+acc_data* adxl345_driver_get_acc_data_slow(void) 
 {
 	int i;
 	uint8_t write_then_read_preamble=SENSOR_REG_ADDRESS;

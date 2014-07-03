@@ -560,10 +560,10 @@ float velocity_down;
 
 //float get_lag() { return 0.5; };
 	
-void init_gps_ubx(enum GPS_Engine_Setting _engine_nav_setting);
+void gps_ublox_init(enum GPS_Engine_Setting _engine_nav_setting);
 
-bool ubx_read(void);
-bool ubx_process_data(void);
+bool gps_ublox_message_decode(void);
+bool gps_ublox_process_data(void);
 
 void update_checksum(uint8_t *data, uint8_t len, uint8_t *ck_a, uint8_t *ck_b);
 uint8_t endian_lower_bytes_uint16(uint16_t bytes);
@@ -576,10 +576,10 @@ void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_n
 void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, enum GPS_Engine_Setting *engine_settings, uint8_t size);
 void ubx_configure_message_rate(uint8_t msg_class, uint8_t msg_id, uint8_t rate);
 
-void configure_gps(void);
+void gps_ublox_configure_gps(void);
 
-void gps_update(void);
-bool newValidGpsMsg(uint32_t *prevGpsMsgTime);
+void gps_ublox_update(void);
+bool gps_ublox_newValidGpsMsg(uint32_t *prevGpsMsgTime);
 
 ubx_nav_posllh * ubx_GetPosllh(void);
 ubx_nav_status * ubx_GetStatus(void);

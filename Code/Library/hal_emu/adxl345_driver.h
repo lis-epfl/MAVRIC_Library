@@ -25,13 +25,13 @@ typedef struct{
 
 
 
-void init_adxl345(void);
+void adxl345_driver_init(void);
 
-acc_data* get_acc_data(void);
+acc_data* adxl345_driver_get_acc_data(void);
 
-void init_adxl345_slow(void);
+void adxl345_driver_init_slow(void);
 
-acc_data* get_acc_data_slow(void);
+acc_data* adxl345_driver_get_acc_data_slow(void);
 
 
 

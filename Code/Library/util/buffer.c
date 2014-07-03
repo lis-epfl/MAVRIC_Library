@@ -120,7 +120,7 @@ void buffer_clear(Buffer_t * buffer)
 }
 
 
-void make_buffered_stream(Buffer_t *buffer, byte_stream_t *stream) 
+void buffer_make_buffered_stream(Buffer_t *buffer, byte_stream_t *stream) 
 {
 	stream->get = &buffer_get;
 	stream->put = &buffer_put;
@@ -130,7 +130,7 @@ void make_buffered_stream(Buffer_t *buffer, byte_stream_t *stream)
 }
 
 
-void make_buffered_stream_lossy(Buffer_t *buffer, byte_stream_t *stream) 
+void buffer_make_buffered_stream_lossy(Buffer_t *buffer, byte_stream_t *stream) 
 {
 	stream->get = &buffer_get;
 	stream->put = &buffer_put_lossy;

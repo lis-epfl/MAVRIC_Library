@@ -29,8 +29,8 @@ void central_data_init(){
 			centralData.servos[i].failsafe_position = -600;
 		}
 		
-		servos_failsafe(centralData.servos);
-		set_servos(centralData.servos);
+		servo_pwm_failsafe(centralData.servos);
+		servo_pwm_set(centralData.servos);
 
 		// TODO change names! XXX_init()
 		imu_init(&centralData.imu1);
@@ -40,14 +40,14 @@ void central_data_init(){
 	
 		qfilter_init_quaternion(&centralData.imu1.attitude);
 		
-		init_nav();
+		navigation_init();
 		init_waypoint_handler();
 		
 		neighbors_selection_init();
-		init_orca();
+		orca_init();
 
 		// init stabilisers
-		init_stabilisation_copter(&centralData.stabiliser_stack);
+		stabilisation_copter_init(&centralData.stabiliser_stack);
 
 		// init simulation (should be done after position_estimator)
 		simulation_init(&(centralData.sim_model),&(centralData.imu1),centralData.position_estimator.localPosition);		

@@ -44,26 +44,26 @@ typedef struct {
  * \param receive_stream	Pointer to the mavlink receive stream structure
  * \param sysid				System ID (1-255)
  */
-void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream, int sysid);
+void mavlink_stream_init(byte_stream_t *transmit_stream, byte_stream_t *receive_stream, int sysid);
 
 /**
  * \brief	Run task scheduler update if the buffer is empty 
  *
  * \return	Task status return
  */
-task_return_t mavlink_protocol_update(void);
+task_return_t mavlink_stream_protocol_update(void);
 
 /**
  * \brief	Obtain the address of the mavlink task set
  *
  * \return	A pointer to the task set
  */
-task_set* get_mavlink_taskset(void);
+task_set* mavlink_stream_get_taskset(void);
 
 /**
  * \brief	Receive mavlink message
  */
-void mavlink_receive_handler(void);
+void mavlink_stream_receive_handler(void);
 
 /**
  * \brief			Mavlink parsing of message
@@ -73,26 +73,26 @@ void mavlink_receive_handler(void);
  *
  * \return			Error code, 0 if no message decoded, 1 else
  */
-uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec);
+uint8_t mavlink_stream_receive(byte_stream_t* stream, Mavlink_Received_t* rec);
 
 /**
  * \brief		handling specific mavlink message
  *
  * \param rec	Pointer to the mavlink receive message structure
  */
-void handle_mavlink_message(Mavlink_Received_t* rec);
+void mavlink_stream_handle_message(Mavlink_Received_t* rec);
 
 /**
  * \brief	Flushing mavlink stream
  */
-void flush_mavlink(void);
+void mavlink_stream_flush(void);
 
 /**
  * \brief		Suspending sending of messages
  *
  * \param delay	Delay of suspension in microsecond
  */
-void suspend_downstream(uint32_t delay);
+void mavlink_stream_suspend_downstream(uint32_t delay);
 
 #ifdef __cplusplus
 }

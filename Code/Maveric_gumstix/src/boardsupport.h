@@ -64,19 +64,19 @@
 //} board_hardware_t;
 
 
-void initialise_board(central_data_t* centralData);
+void boardsupport_init(central_data_t* centralData);
 
 //board_hardware_t* get_board_hardware(void);
 
 //byte_stream_t* get_telemetry_upstream(void);
 //byte_stream_t* get_telemetry_downstream(void);
-//byte_stream_t* get_debug_stream(void);
+//byte_stream_t* print_util_get_debug_stream(void);
 
 //Imu_Data_t* get_imu(void);
 //Control_Command_t* get_control_inputs(void);
 
 
-//#define STDOUT &get_debug_stream()
+//#define STDOUT &print_util_get_debug_stream()
 //#define STDOUT &xbee_out_stream
 
 

@@ -31,7 +31,7 @@ lsm_get_gyro_config() {
 }
 
 
-void init_lsm330(void) {
+void lsm330dlc_driver_init(void) {
 
 }
 
@@ -39,12 +39,12 @@ void init_lsm330(void) {
 
 
 
-lsm_acc_data_t* lsm330_get_acc_data(void) {
+lsm_acc_data_t* lsm330dlc_driver_get_acc_data(void) {
 	
 	return &lsm_acc_outputs;
 }
 
 
-lsm_gyro_data_t* lsm330_get_gyro_data(void) {
+lsm_gyro_data_t* lsm330dlc_driver_get_gyro_data(void) {
 	return &lsm_gyro_outputs;
 }

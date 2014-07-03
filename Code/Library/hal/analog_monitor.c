@@ -58,7 +58,7 @@ void trigger_analog_monitor(void);
  */
 float analog_compute_avg(analog_monitor_t* analog_monitor, analog_rails_t rail);
 
-void init_analog_monitor(analog_monitor_t* analog_monitor) 
+void analog_monitor_init(analog_monitor_t* analog_monitor) 
 {
 	///< Init buffer and avg outputs
 	for (int i = 0; i < MONITOR_CHANNELS; ++i)
@@ -73,74 +73,74 @@ void init_analog_monitor(analog_monitor_t* analog_monitor)
 	}
 
 	// Init desired ADC pin
-	Init_ADCI(100000, ADCIFA_REF06VDD);
+	adc_int_init(100000, ADCIFA_REF06VDD);
 
 	if (analog_monitor->enable[ANALOG_RAIL_2])
 	{
-		adc_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_2], 
+		adc_int_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_2], 
 							AVR32_ADCIFA_INP_ADCIN2, 
 							AVR32_ADCIFA_INN_GNDANA, 
 							ADCIFA_SHG_1);  
 	}
 	if (analog_monitor->enable[ANALOG_RAIL_3])
 	{
-		adc_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_3], 
+		adc_int_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_3], 
 							AVR32_ADCIFA_INP_ADCIN3, 
 							AVR32_ADCIFA_INN_GNDANA, 
 							ADCIFA_SHG_1);  
 	}
 	if (analog_monitor->enable[ANALOG_RAIL_4])
 	{
-		adc_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_4], 
+		adc_int_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_4], 
 							AVR32_ADCIFA_INP_ADCIN4, 
 							AVR32_ADCIFA_INN_GNDANA, 
 							ADCIFA_SHG_1);  
 	}
 	if (analog_monitor->enable[ANALOG_RAIL_5])
 	{
-		adc_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_5], 
+		adc_int_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_5], 
 							AVR32_ADCIFA_INP_ADCIN5, 
 							AVR32_ADCIFA_INN_GNDANA, 
 							ADCIFA_SHG_1);  
 	}
 	if (analog_monitor->enable[ANALOG_RAIL_6])
 	{
-		adc_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_6], 
+		adc_int_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_6], 
 							AVR32_ADCIFA_INP_ADCIN6, 
 							AVR32_ADCIFA_INN_GNDANA, 
 							ADCIFA_SHG_1);  
 	}
 	if (analog_monitor->enable[ANALOG_RAIL_7])
 	{
-		adc_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_7], 
+		adc_int_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_7], 
 							AVR32_ADCIFA_INP_ADCIN7, 
 							AVR32_ADCIFA_INN_GNDANA, 
 							ADCIFA_SHG_1);  ///< 5V_ANALOG
 	}
 	if (analog_monitor->enable[ANALOG_RAIL_10])
 	{
-		adc_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_10], 
+		adc_int_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_10], 
 							AVR32_ADCIFA_INP_GNDANA, 
 							AVR32_ADCIFA_INN_ADCIN10, 
 							ADCIFA_SHG_1);  ///< BAT_FILTERED
 	}
 	if (analog_monitor->enable[ANALOG_RAIL_11])
 	{
-		adc_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_11], 
+		adc_int_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_11], 
 							AVR32_ADCIFA_INP_GNDANA, 
 							AVR32_ADCIFA_INN_ADCIN11, 
 							ADCIFA_SHG_1); ///< BATTERY
 	}
 	if (analog_monitor->enable[ANALOG_RAIL_12])
 	{
-		adc_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_12], 
+		adc_int_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_12], 
 							AVR32_ADCIFA_INP_GNDANA, 
 							AVR32_ADCIFA_INN_ADCIN12, 
 							ADCIFA_SHG_1); ///< Analog pin 12
 	}
 	if (analog_monitor->enable[ANALOG_RAIL_13])
 	{
-		adc_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_13], 
+		adc_int_sequencer_add(	analog_monitor->buffer[ANALOG_RAIL_13], 
 							AVR32_ADCIFA_INP_GNDANA, 
 							AVR32_ADCIFA_INN_ADCIN13, 
 							ADCIFA_SHG_1); ///< Analog pin 13
@@ -161,7 +161,7 @@ void analog_monitor_update(analog_monitor_t* analog_monitor)
 
 void trigger_analog_monitor(void) 
 {
-	ADCI_Start_Sampling(MONITOR_SAMPLES, 100,16, 4, false);
+	adc_int_start_sampling(MONITOR_SAMPLES, 100,16, 4, false);
 }
 
 float analog_compute_avg(analog_monitor_t* analog_monitor, analog_rails_t rail)

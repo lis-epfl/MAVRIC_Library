@@ -97,7 +97,7 @@ void register_UART_handler(int UID) {
 	}
 }
 
-void init_UART_int(int UID) {
+void uart_int_init(int UID) {
 	if ((usart_opt[UID].mode&UART_IN) > 0)
 	{
 		gpio_enable_module_pin(usart_opt[UID].rx_pin_map.pin, usart_opt[UID].rx_pin_map.function); 
@@ -127,7 +127,7 @@ void init_UART_int(int UID) {
 	//}
 } 
 
-usart_config_t *get_UART_handle(int UID) {
+usart_config_t *uart_int_get_uart_handle(int UID) {
 	return &usart_opt[UID];
 }
 
@@ -160,7 +160,7 @@ int uart_out_buffer_empty(usart_config_t *usart_opt) {
 	return buffer_empty(&(usart_opt->uart_device.transmit_buffer));
 }
 
-void register_write_stream(usart_config_t *usart_opt, byte_stream_t *stream) {
+void uart_int_register_write_stream(usart_config_t *usart_opt, byte_stream_t *stream) {
 	stream->get = NULL;
 	//stream->get = &uart_int_get_byte;
 	stream->put = &uart_int_send_byte;
@@ -170,7 +170,7 @@ void register_write_stream(usart_config_t *usart_opt, byte_stream_t *stream) {
 
 }
 
-void register_read_stream(usart_config_t *usart_opt,  byte_stream_t *stream) {
+void uart_int_register_read_stream(usart_config_t *usart_opt,  byte_stream_t *stream) {
 	usart_opt->uart_device.receive_stream = stream;
 }
 

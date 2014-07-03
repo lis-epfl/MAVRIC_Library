@@ -15,7 +15,7 @@
 static mavlink_system_t mavlink_system = {42,11,};
 
 #define MAVLINK_ASSERT(x) assert(x)
-static void comm_send_ch(mavlink_channel_t chan, uint8_t c);
+static void mavlink_bridge_comm_send_ch(mavlink_channel_t chan, uint8_t c);
 
 static mavlink_message_t last_msg;
 
@@ -108,7 +108,7 @@ static void print_message(mavlink_message_t *msg)
 	printf("}\n");
 }
 
-static void comm_send_ch(mavlink_channel_t chan, uint8_t c)
+static void mavlink_bridge_comm_send_ch(mavlink_channel_t chan, uint8_t c)
 {
 	mavlink_status_t status;
 	if (mavlink_parse_char(chan, c, &last_msg, &status)) {

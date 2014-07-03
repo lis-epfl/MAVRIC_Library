@@ -30,13 +30,13 @@
 
 Parameter_Set_t param_set;
 
-void init_onboard_parameters(void) 
+void onboard_parameters_init(void) 
 {
 	param_set.param_count = 0;
-	dbg_print("Onboard parameters initialised.\n");	
+	print_util_dbg_print("Onboard parameters initialised.\n");	
 }
 
-void add_parameter_uint8(uint8_t* val, const char* param_name) 
+void onboard_parameters_add_parameter_uint8(uint8_t* val, const char* param_name) 
 {
 	param_set.parameters[param_set.param_count].param = val;
 	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
@@ -46,7 +46,7 @@ void add_parameter_uint8(uint8_t* val, const char* param_name)
 	param_set.param_count++;
 }
 
-void add_parameter_uint32(uint32_t* val, const char* param_name) 
+void onboard_parameters_add_parameter_uint32(uint32_t* val, const char* param_name) 
 {
 	param_set.parameters[param_set.param_count].param = val;
 	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
@@ -56,7 +56,7 @@ void add_parameter_uint32(uint32_t* val, const char* param_name)
 	param_set.param_count++;
 }
 
-void add_parameter_int32(int32_t* val, const char* param_name) 
+void onboard_parameters_add_parameter_int32(int32_t* val, const char* param_name) 
 {
 	param_set.parameters[param_set.param_count].param = val;
 	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
@@ -66,7 +66,7 @@ void add_parameter_int32(int32_t* val, const char* param_name)
 	param_set.param_count++;
 }
 
-void add_parameter_float(float* val, const char* param_name) 
+void onboard_parameters_add_parameter_float(float* val, const char* param_name) 
 {
 	param_set.parameters[param_set.param_count].param = val;
 	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
@@ -77,7 +77,7 @@ void add_parameter_float(float* val, const char* param_name)
 }
 
 
-void update_parameter(int param_index, float value) 
+void onboard_parameters_update_parameter(int param_index, float value) 
 {
 	float converted=0;
 	
@@ -120,7 +120,7 @@ void update_parameter(int param_index, float value)
 	}
 }
 
-float read_parameter(int param_index) 
+float onboard_parameters_read_parameter(int param_index) 
 {
 	float return_value=0;
 	float converted=0;
@@ -165,7 +165,7 @@ float read_parameter(int param_index)
 
 
 
-void send_all_parameters() 
+void onboard_parameters_send_all_parameters() 
 {
 	// schedule all parameters for transmission
 	for (uint8_t i = 0; i < param_set.param_count; i++)
@@ -174,13 +174,13 @@ void send_all_parameters()
 	}		
 }
 
-void send_all_parameters_now() 
+void onboard_parameters_send_all_parameters_now() 
 {
 	for (uint8_t i = 0; i < param_set.param_count; i++)
 	{
 		mavlink_msg_param_value_send(MAVLINK_COMM_0,
 										(int8_t*)param_set.parameters[i].param_name,
-										read_parameter(i),
+										onboard_parameters_read_parameter(i),
 										param_set.parameters[i].data_type,
 										param_set.param_count,
 										i);
@@ -190,7 +190,7 @@ void send_all_parameters_now()
 }
 
 
-void send_scheduled_parameters() 
+void onboard_parameters_send_scheduled_parameters() 
 {
 	for (uint8_t i = 0; i < param_set.param_count; i++)
 	{
@@ -198,7 +198,7 @@ void send_scheduled_parameters()
 		{
 			mavlink_msg_param_value_send(MAVLINK_COMM_0,
 										(int8_t*)param_set.parameters[i].param_name,
-										read_parameter(i),
+										onboard_parameters_read_parameter(i),
 										param_set.parameters[i].data_type,
 										param_set.param_count,
 										i);
@@ -208,7 +208,7 @@ void send_scheduled_parameters()
 	}
 }
 
-void send_parameter(mavlink_param_request_read_t* request) 
+void onboard_parameters_send_parameter(mavlink_param_request_read_t* request) 
 {
 	// Check param_index to determine if the request is made by name (== -1) or by index (!= -1)
 	if(request->param_index!=-1) 
@@ -253,7 +253,7 @@ void send_parameter(mavlink_param_request_read_t* request)
 	}
 }
 
-void receive_parameter(Mavlink_Received_t* rec) 
+void onboard_parameters_receive_parameter(Mavlink_Received_t* rec) 
 {
 	bool match = true;
 	
@@ -264,11 +264,11 @@ void receive_parameter(Mavlink_Received_t* rec)
 	if ((uint8_t)set.target_system == (uint8_t)mavlink_system.sysid
 	&& (uint8_t)set.target_component == (uint8_t)mavlink_system.compid) 
 	{
-		dbg_print("Setting parameter ");
-		dbg_print(set.param_id);
-		dbg_print(" to ");
-		dbg_putfloat(set.param_value, 2);
-		dbg_print("\n");
+		print_util_dbg_print("Setting parameter ");
+		print_util_dbg_print(set.param_id);
+		print_util_dbg_print(" to ");
+		print_util_dbg_putfloat(set.param_value, 2);
+		print_util_dbg_print("\n");
 		
 		char* key = (char*) set.param_id;
 				
@@ -297,7 +297,7 @@ void receive_parameter(Mavlink_Received_t* rec)
 				// Only write and emit changes if there is actually a difference
 				if (*param_set.parameters[i].param != set.param_value && set.param_type == param_set.parameters[i].data_type) 
 				{
-					update_parameter(i, set.param_value);
+					onboard_parameters_update_parameter(i, set.param_value);
 
 					// schedule parameter for transmission downstream
 					param_set.parameters[i].schedule_for_transmission=true;
@@ -308,7 +308,7 @@ void receive_parameter(Mavlink_Received_t* rec)
 	}
 }
 
-void read_parameters_from_flashc()
+void onboard_parameters_read_parameters_from_flashc()
 {
 	uint8_t i;
 	
@@ -328,19 +328,19 @@ void read_parameters_from_flashc()
 	
 	if ((param_set.param_count==local_array.values[0])&&(cksum1 == nvram_array->values[param_set.param_count + 1])&&(cksum2 == nvram_array->values[param_set.param_count + 2]))
 	{
-		dbg_print("Flash read successful! New Parameters inserted. \n");
+		print_util_dbg_print("Flash read successful! New Parameters inserted. \n");
 		for (i=1;i<(param_set.param_count + 1);i++)
 		{
-			update_parameter(i-1, local_array.values[i]);
+			onboard_parameters_update_parameter(i-1, local_array.values[i]);
 		}
 	}
 	else
 	{
-		dbg_print("Flash memory corrupted! Hardcoded values taken.\n");
+		print_util_dbg_print("Flash memory corrupted! Hardcoded values taken.\n");
 	}
 }
 
-void write_parameters_to_flashc()
+void onboard_parameters_write_parameters_from_flashc()
 {
 	float cksum1, cksum2;
 	cksum1 = 0;
@@ -355,11 +355,11 @@ void write_parameters_to_flashc()
 	cksum1 += local_array.values[0];
 	cksum2 += cksum1;
 	
-	dbg_print("Begin write to flashc...\n");
+	print_util_dbg_print("Begin write to flashc...\n");
 	
 	for (i=1;i<=param_set.param_count;i++)
 	{
-		local_array.values[i] = read_parameter(i-1);
+		local_array.values[i] = onboard_parameters_read_parameter(i-1);
 		cksum1 += local_array.values[i];
 		cksum2 += cksum1;
 	}
@@ -371,10 +371,10 @@ void write_parameters_to_flashc()
 	if(bytes_to_write < MAVERIC_FLASHC_USER_PAGE_FREE_SPACE)
 	{
 		flashc_memcpy((void *)nvram_array, &local_array, bytes_to_write, true);
-		dbg_print("Write to flashc completed.\n");
+		print_util_dbg_print("Write to flashc completed.\n");
 	}
 	else
 	{
-		dbg_print("Attempted to write too many parameters on flash user page, aborted.\n");
+		print_util_dbg_print("Attempted to write too many parameters on flash user page, aborted.\n");
 	}
 }

@@ -45,18 +45,18 @@ typedef struct  {
 
 
 
-int init_i2c(unsigned char i2c_device);
+int i2c_driver_init(unsigned char i2c_device);
 
-char i2c_reset(unsigned char i2c_device);
+char i2c_driver_reset(unsigned char i2c_device);
 
 
-char i2c_add_request(unsigned char i2c_device, i2c_schedule_event* new_event);
-char i2c_change_request(unsigned char i2c_device, i2c_schedule_event* new_event);
+char i2c_driver_add_request(unsigned char i2c_device, i2c_schedule_event* new_event);
+char i2c_driver_change_request(unsigned char i2c_device, i2c_schedule_event* new_event);
 
-char i2c_enable_request(unsigned char i2c_device, unsigned char schedule_slot);
-char i2c_pause_request(unsigned char i2c_device, unsigned char schedule_slot);  // if the slot is currently processing, this blocks until it's finished
-char i2c_remove_request(unsigned char i2c_device, unsigned char schedule_slot);  // if the slot is currently processing, this blocks until it's finished
-char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot);
+char i2c_driver_enable_request(unsigned char i2c_device, unsigned char schedule_slot);
+char i2c_driver_pause_request(unsigned char i2c_device, unsigned char schedule_slot);  // if the slot is currently processing, this blocks until it's finished
+char i2c_driver_remove_request(unsigned char i2c_device, unsigned char schedule_slot);  // if the slot is currently processing, this blocks until it's finished
+char i2c_driver_trigger_request(unsigned char i2c_device, unsigned char schedule_slot);
 
 
 #endif /* I2C_DRIVER_H_ */

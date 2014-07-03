@@ -250,21 +250,21 @@ typedef struct
 /**
  * \brief Initialize the LSM330 accelerometer+gyroscope sensor
 */
-void init_lsm330(void);
+void lsm330dlc_driver_init(void);
 
 /**
  * \brief Return the gyroscope's data
  *
  * \return a pointer to the gyroscope data structure
 */
-lsm_gyro_data_t* lsm330_get_gyro_data(void);
+lsm_gyro_data_t* lsm330dlc_driver_get_gyro_data(void);
 
 /**
  * \brief Return the accelerometer's data
  *
  * \return a pointer to the accelerometer data structure
 */
-lsm_acc_data_t* lsm330_get_acc_data(void);
+lsm_acc_data_t* lsm330dlc_driver_get_acc_data(void);
 
 #ifdef __cplusplus
 	}

@@ -89,7 +89,7 @@ const float atan_y[INTERP_POINTS] = {	0.0f        ,  0.20131711f,  0.38752381f, 
 
 
 
-float quick_sin(float x)
+float quick_trig_sin(float x)
 {
 	float y;
 	
@@ -97,75 +97,75 @@ float quick_sin(float x)
 
 	if (xx < 0)
 	{
-		y = - quick_sin(-xx);
+		y = - quick_trig_sin(-xx);
 	}
 	else if (xx > PI/2.0f)
 	{
-		y = quick_sin(PI - xx);
+		y = quick_trig_sin(PI - xx);
 	}
 	else
 	{
-		y = quick_func(xx, sin_x_min, sin_x_max, sin_x_step, sin_y);
+		y = quick_trig_func(xx, sin_x_min, sin_x_max, sin_x_step, sin_y);
 	}
 
 	return y;
 }
 
 
-float quick_cos(float x)
+float quick_trig_cos(float x)
 {
-	return quick_sin(PI/2.0f + x);	
+	return quick_trig_sin(PI/2.0f + x);	
 }
 
 
-float quick_acos(float x)
+float quick_trig_acos(float x)
 {
 	float y;
 
 	if (x < 0)
 	{
-		y = PI - quick_acos(-x);
+		y = PI - quick_trig_acos(-x);
 	}
 	else
 	{
-		y = quick_func(x, acos_x_min, acos_x_max, acos_x_step, acos_y);
+		y = quick_trig_func(x, acos_x_min, acos_x_max, acos_x_step, acos_y);
 	}
 
 	return y;
 }
 
 
-float quick_asin(float x)
+float quick_trig_asin(float x)
 {
-	return PI/2.0f - quick_acos(x);
+	return PI/2.0f - quick_trig_acos(x);
 }
 
 
-float quick_tan(float x)
+float quick_trig_tan(float x)
 {
 	float y;
 	float xx = fmod(x, PI/2);
 
 	if (xx < 0)
 	{
-		y = - quick_tan(-xx);
+		y = - quick_trig_tan(-xx);
 	}
 	else
 	{
-		y = quick_func(xx, sin_x_min, sin_x_max, sin_x_step, tan_y);
+		y = quick_trig_func(xx, sin_x_min, sin_x_max, sin_x_step, tan_y);
 	}
 
 	return y;
 }
 
 
-float quick_atan(float x)
+float quick_trig_atan(float x)
 {
 	float y;
 
 	if (x < 0)
 	{
-		y = - quick_atan(-x);
+		y = - quick_trig_atan(-x);
 	}
 	else if (x > 1000.0f)
 	{
@@ -173,11 +173,11 @@ float quick_atan(float x)
 	}
 	else if (x > 10.0f)
 	{
-		y = interpolate(x, 10, 1000, atan_y[INTERP_POINTS - 1], PI/2);
+		y = maths_interpolate(x, 10, 1000, atan_y[INTERP_POINTS - 1], PI/2);
 	}
 	else
 	{
-		y = quick_func(x, atan_x_min, atan_x_max, atan_x_step, atan_y);
+		y = quick_trig_func(x, atan_x_min, atan_x_max, atan_x_step, atan_y);
 	}
 
 	return y;

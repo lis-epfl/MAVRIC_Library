@@ -43,24 +43,24 @@ typedef struct{
 /**
  * \brief Initializes the accelerometer
 */
-void init_adxl345(void);
+void adxl345_driver_init(void);
 
 /**
  * \brief Get the accelerometer values
  *
  * \return the array: axes[3] of the acc_data structure
 */
-acc_data* get_acc_data(void);
+acc_data* adxl345_driver_get_acc_data(void);
 
 /**
  * \brief Initializes the accelerometer in slow mode
 */
-void init_adxl345_slow(void);
+void adxl345_driver_init_slow(void);
 
 /**
  * \brief Returns the array: axes[3] of the acc_data structure in slow mode
 */
-acc_data* get_acc_data_slow(void);
+acc_data* adxl345_driver_get_acc_data_slow(void);
 
 #ifdef __cplusplus
 	}

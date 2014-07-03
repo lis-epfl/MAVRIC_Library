@@ -30,13 +30,13 @@ static void pdca_int_handler_i2c0(void)
    schedule[0][current_schedule_slot[0]].transfer_in_progress = 0;
    
    if (schedule[0][current_schedule_slot[0]].callback) schedule[0][current_schedule_slot[0]].callback;
-   putstring(&AVR32_USART0, "!");
+   print_util_putstring(&AVR32_USART0, "!");
 }
 
 
 
 
-int init_i2c(unsigned char i2c_device) {
+int i2c_driver_init(unsigned char i2c_device) {
 	int i;
 	volatile avr32_twim_t *twim;
 	switch (i2c_device) {
@@ -103,7 +103,7 @@ int init_i2c(unsigned char i2c_device) {
 
 
 
-char i2c_reset(unsigned char i2c_device) {
+char i2c_driver_reset(unsigned char i2c_device) {
 	volatile avr32_twim_t *twim;
 	switch (i2c_device) {
 	case 0: 
@@ -131,11 +131,11 @@ char i2c_reset(unsigned char i2c_device) {
 	// Clear SR
 	twim->scr = ~0UL;
 }
-char i2c_add_request(unsigned char i2c_device, i2c_schedule_event* new_event){
+char i2c_driver_add_request(unsigned char i2c_device, i2c_schedule_event* new_event){
 	// find free schedule slot
 	int i = 0;
 	for (i = 0; (i < I2C_SCHEDULE_SLOTS)&& (schedule[i2c_device][i].active >= 0); i++) {
-		putstring(&AVR32_USART0, ".");
+		print_util_putstring(&AVR32_USART0, ".");
 	}
 	// add request to schedule
 	if (i < I2C_SCHEDULE_SLOTS) {
@@ -144,13 +144,13 @@ char i2c_add_request(unsigned char i2c_device, i2c_schedule_event* new_event){
 		new_event->active = 1;
 		schedule[i2c_device][i] = *new_event;
 		schedule[i2c_device][i].config = new_event->config;
-		putstring(&AVR32_USART0, "slave address:");
-		putnum(&AVR32_USART0, schedule[i2c_device][i].config.slave_address, 2);
+		print_util_putstring(&AVR32_USART0, "slave address:");
+		print_util_putnum(&AVR32_USART0, schedule[i2c_device][i].config.slave_address, 2);
 	} else i = -1;
 	// return assigned schedule slot
 	return i;
 }
-char i2c_change_request(unsigned char i2c_device, i2c_schedule_event* new_event){
+char i2c_driver_change_request(unsigned char i2c_device, i2c_schedule_event* new_event){
 	int i = new_event->schedule_slot;
 	if ((i >= 0) && (i < I2C_SCHEDULE_SLOTS)) {
 		new_event->transfer_in_progress = 0;
@@ -160,7 +160,7 @@ char i2c_change_request(unsigned char i2c_device, i2c_schedule_event* new_event)
 }
 
 
-char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) {
+char i2c_driver_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) {
 	// initiate transfer of given request
 	// set up DMA channel
 	volatile avr32_twim_t *twim;
@@ -232,8 +232,8 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
     
 	switch (conf->direction)  {
 		case I2C_READ:
-			putnum(&AVR32_USART0, conf->slave_address, 2);
-			putstring(&AVR32_USART0, "r");
+			print_util_putnum(&AVR32_USART0, conf->slave_address, 2);
+			print_util_putstring(&AVR32_USART0, "r");
 			twim->cmdr = (conf->slave_address << AVR32_TWIM_CMDR_SADR_OFFSET)
 						| (conf->read_count << AVR32_TWIM_CMDR_NBYTES_OFFSET)
 						| (AVR32_TWIM_CMDR_VALID_MASK)
@@ -242,8 +242,8 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
 						| (0 << AVR32_TWIM_CMDR_READ_OFFSET);
 			break;	
 		case I2C_WRITE1_THEN_READ:
-			putnum(&AVR32_USART0, conf->slave_address, 2);
-			putstring(&AVR32_USART0, "wr");
+			print_util_putnum(&AVR32_USART0, conf->slave_address, 2);
+			print_util_putstring(&AVR32_USART0, "wr");
 			
 			// set up next command register for the burst read transfer
 			// set up command register to initiate the write transfer. The DMA will take care of the reading once this is done.
@@ -268,9 +268,9 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
 			
 			break;	
 		case I2C_WRITE:
-			putnum(&AVR32_USART0, conf->slave_address, 16);
-			putstring(&AVR32_USART0, "w");
-			putnum(&AVR32_USART0, conf->write_count, 10);
+			print_util_putnum(&AVR32_USART0, conf->slave_address, 16);
+			print_util_putstring(&AVR32_USART0, "w");
+			print_util_putnum(&AVR32_USART0, conf->write_count, 10);
 			twim->cmdr = (conf->slave_address << AVR32_TWIM_CMDR_SADR_OFFSET)
 						| ((conf->write_count) << AVR32_TWIM_CMDR_NBYTES_OFFSET)
 						| (AVR32_TWIM_CMDR_VALID_MASK)
@@ -298,18 +298,18 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
 	
 }
 
-char i2c_pause_request(unsigned char i2c_device, unsigned char schedule_slot){
+char i2c_driver_pause_request(unsigned char i2c_device, unsigned char schedule_slot){
 	// pause scheduler
 	// if this request currently active, wait for current transfer to finish
 	// deactivate request
 	// resume scheduler
 }
 
-char i2c_enable_request(unsigned char i2c_device, unsigned char schedule_slot){
+char i2c_driver_enable_request(unsigned char i2c_device, unsigned char schedule_slot){
 	
 }
 
-char i2c_remove_request(unsigned char i2c_device, unsigned char schedule_slot){
+char i2c_driver_remove_request(unsigned char i2c_device, unsigned char schedule_slot){
 	
 }
 

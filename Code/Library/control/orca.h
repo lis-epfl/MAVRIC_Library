@@ -50,14 +50,14 @@ typedef struct{
 /**
  * \brief	Initialize the ORCA module
  */
-void init_orca(void);
+void orca_init(void);
 /**
  * \brief	Initialize the ORCA module
  *
  * \param	OptimalVelocity		a 3D array
  * \param	NewVelocity			the 3D output array
  */
-void computeNewVelocity(float OptimalVelocity[], float NewVelocity[]);
+void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[]);
 
 /**
  * \brief	computes the solution of a 1D linear program
@@ -71,7 +71,7 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[]);
  *
  * \return	whether the linear program has a solution or not
  */
-bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt);
+bool orca_linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt);
 
 /**
  * \brief	computes the solution of a 2D linear program
@@ -85,7 +85,7 @@ bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed
  *
  * \return	whether the linear program has a solution or not
  */
-bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt);
+bool orca_linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt);
 
 /**
  * \brief	computes the solution of a 3D linear program
@@ -99,7 +99,7 @@ bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Optimal
  *
  * \return the number of the last plane to be evaluated, if smaller than the number of planes, linear program is infeasible
  */
-float linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelocity[], float maxSpeed, float NewVelocity[], bool directionOpt);
+float orca_linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelocity[], float maxSpeed, float NewVelocity[], bool directionOpt);
 
 /**
  * \brief	computes the solution of a 3D linear program
@@ -110,7 +110,7 @@ float linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelocity[
  * \param	maxSpeed		the norm of the max velocity
  * \param	NewVelocity		the 3D output array
  */
-void linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float maxSpeed, float NewVelocity[]);
+void orca_linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float maxSpeed, float NewVelocity[]);
 
 #ifdef __cplusplus
 }

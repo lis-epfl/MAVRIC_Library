@@ -58,7 +58,7 @@ void mavlink_send_heartbeat(void)
 void mavlink_send_raw_imu(void) 
 {
 	mavlink_msg_raw_imu_send(	MAVLINK_COMM_0, 
-								get_micros(), 
+								time_keeper_get_micros(), 
 								centralData->imu1.raw_channels[ACC_OFFSET + IMU_X], 
 								centralData->imu1.raw_channels[ACC_OFFSET + IMU_Y], 
 								centralData->imu1.raw_channels[ACC_OFFSET + IMU_Z], 
@@ -74,10 +74,10 @@ void mavlink_send_raw_imu(void)
 void mavlink_send_scaled_imu(void) 
 {
 	mavlink_msg_scaled_imu_send(MAVLINK_COMM_0, 
-								get_millis(),
-								1000 * centralData->imu1.attitude.a [IMU_X],
-								1000 * centralData->imu1.attitude.a [IMU_Y], 
-								1000 * centralData->imu1.attitude.a [IMU_Z], 
+								time_keeper_get_millis(),
+								1000 * centralData->imu1.attitude.a[IMU_X],
+								1000 * centralData->imu1.attitude.a[IMU_Y], 
+								1000 * centralData->imu1.attitude.a[IMU_Z], 
 								1000 * centralData->imu1.attitude.om[IMU_X], 
 								1000 * centralData->imu1.attitude.om[IMU_Y], 
 								1000 * centralData->imu1.attitude.om[IMU_Z], 
@@ -94,7 +94,7 @@ void  mavlink_send_rpy_rates_error(void)
 	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
 
 	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_send(	MAVLINK_COMM_0, 
-															get_millis(), 
+															time_keeper_get_millis(), 
 															rate_stab->rpy_controller[0].error, 
 															rate_stab->rpy_controller[1].error,
 															rate_stab->rpy_controller[2].error,
@@ -107,7 +107,7 @@ void  mavlink_send_rpy_speed_thrust_setpoint(void)
 	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
 
 	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_send(	MAVLINK_COMM_0, 
-															get_millis(), 
+															time_keeper_get_millis(), 
 															rate_stab->rpy_controller[0].output, 
 															rate_stab->rpy_controller[1].output,
 															rate_stab->rpy_controller[2].output,
@@ -119,7 +119,7 @@ void mavlink_send_rpy_thrust_setpoint(void)
 {	
 	// Controls output
 	mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(	MAVLINK_COMM_0, 
-														get_millis(), 
+														time_keeper_get_millis(), 
 														centralData->controls.rpy[ROLL], 
 														centralData->controls.rpy[PITCH], 
 														centralData->controls.rpy[YAW], 
@@ -133,7 +133,7 @@ void mavlink_send_servo_output(void)
 
 	// FIXME: send only servos values in this message!
 	mavlink_msg_servo_output_raw_send(	MAVLINK_COMM_0, 
-										get_micros(), 
+										time_keeper_get_micros(), 
 										0, 
 										(uint16_t)(centralData->servos[0].value + 1500),
 										(uint16_t)(centralData->servos[1].value + 1500),
@@ -150,7 +150,7 @@ void mavlink_send_attitude_quaternion(void)
 {
 	// ATTITUDE QUATERNION
 	mavlink_msg_attitude_quaternion_send(	MAVLINK_COMM_0, 
-											get_millis(), 
+											time_keeper_get_millis(), 
 											centralData->imu1.attitude.qe.s, 
 											centralData->imu1.attitude.qe.v[0], 
 											centralData->imu1.attitude.qe.v[1], 
@@ -165,10 +165,10 @@ void mavlink_send_attitude(void)
 {
 	// ATTITUDE
 	Aero_Attitude_t aero_attitude;
-	aero_attitude = Quat_to_Aero(centralData->imu1.attitude.qe);
+	aero_attitude = coord_conventions_quat_to_aero(centralData->imu1.attitude.qe);
 
 	mavlink_msg_attitude_send(	MAVLINK_COMM_0, 
-								get_millis(), 
+								time_keeper_get_millis(), 
 								aero_attitude.rpy[0], 
 								aero_attitude.rpy[1], 
 								aero_attitude.rpy[2], 
@@ -181,11 +181,11 @@ void mavlink_send_attitude(void)
 void mavlink_send_global_position(void) 
 {				
 	// send integrated position (for now there is no GPS error correction...!!!)
-	global_position_t gpos = local_to_global_position(centralData->position_estimator.localPosition);
+	global_position_t gpos = coord_conventions_local_to_global_position(centralData->position_estimator.localPosition);
 	
 	//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
 	mavlink_msg_global_position_int_send(	MAVLINK_COMM_0, 
-											get_millis(), 
+											time_keeper_get_millis(), 
 											gpos.latitude * 10000000, 
 											gpos.longitude * 10000000, 
 											gpos.altitude * 1000.0f, 
@@ -203,7 +203,7 @@ void mavlink_send_hud(void)
 	float airspeed=groundspeed;
 
 	Aero_Attitude_t aero_attitude;
-	aero_attitude = Quat_to_Aero(centralData->imu1.attitude.qe);
+	aero_attitude = coord_conventions_quat_to_aero(centralData->imu1.attitude.qe);
 	
 	int16_t heading;
 	if(aero_attitude.rpy[2] < 0)
@@ -244,7 +244,7 @@ void mavlink_send_gps_raw(void)
 	else
 	{
 		mavlink_msg_gps_raw_int_send(	MAVLINK_COMM_0,
-										get_micros(), 
+										time_keeper_get_micros(), 
 										centralData->GPS_data.status, 
 										46.5193f * 10000000, 
 										6.56507f * 10000000, 
@@ -261,23 +261,23 @@ void mavlink_send_gps_raw(void)
 void mavlink_send_pressure(void) 
 {	
 	mavlink_msg_scaled_pressure_send(	MAVLINK_COMM_0, 
-										get_millis(), 
+										time_keeper_get_millis(), 
 										centralData->pressure.pressure / 100.0f, 
 										centralData->pressure.vario_vz, 
 										centralData->pressure.temperature * 100.0f);
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										get_millis(),
+										time_keeper_get_millis(),
 										"pressAlt", 
 										centralData->pressure.altitude);
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										get_millis(),
+										time_keeper_get_millis(),
 										"lastAlt", 
 										centralData->position_estimator.last_alt);
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										get_millis(),
+										time_keeper_get_millis(),
 										"baro_dt", 
 										centralData->pressure.dt);
 }
@@ -286,7 +286,7 @@ void mavlink_send_pressure(void)
 void mavlink_send_estimator(void)
 {
 	mavlink_msg_local_position_ned_send(	MAVLINK_COMM_0, 
-											get_millis(), 
+											time_keeper_get_millis(), 
 											centralData->position_estimator.localPosition.pos[0], 
 											centralData->position_estimator.localPosition.pos[1], 
 											centralData->position_estimator.localPosition.pos[2], 
@@ -298,36 +298,36 @@ void mavlink_send_estimator(void)
 
 void mavlink_send_raw_rc_channels(void)
 {
-	mavlink_msg_rc_channels_raw_send(	MAVLINK_COMM_0,get_millis(),
+	mavlink_msg_rc_channels_raw_send(	MAVLINK_COMM_0,time_keeper_get_millis(),
 										1,
-										rc_get_channel(0) + 1000,
-										rc_get_channel(1) + 1000,
-										rc_get_channel(2) + 1000,
-										rc_get_channel(3) + 1000,
-										rc_get_channel(4) + 1000,
-										rc_get_channel(5) + 1000,
-										rc_get_channel(6) + 1000,
-										rc_get_channel(7) + 1000,
-										rc_check_receivers()	);
+										remote_dsm2_rc_get_channel(0) + 1000,
+										remote_dsm2_rc_get_channel(1) + 1000,
+										remote_dsm2_rc_get_channel(2) + 1000,
+										remote_dsm2_rc_get_channel(3) + 1000,
+										remote_dsm2_rc_get_channel(4) + 1000,
+										remote_dsm2_rc_get_channel(5) + 1000,
+										remote_dsm2_rc_get_channel(6) + 1000,
+										remote_dsm2_rc_get_channel(7) + 1000,
+										remote_dsm2_rc_check_receivers()	);
 }
 
 
 void mavlink_send_scaled_rc_channels(void)
 {
-	mavlink_msg_rc_channels_scaled_send(	MAVLINK_COMM_0,get_millis(),
+	mavlink_msg_rc_channels_scaled_send(	MAVLINK_COMM_0,time_keeper_get_millis(),
 											1,
-											rc_get_channel(0) * 1000.0f * RC_SCALEFACTOR,
-											rc_get_channel(1) * 1000.0f * RC_SCALEFACTOR,
-											rc_get_channel(2) * 1000.0f * RC_SCALEFACTOR,
-											rc_get_channel(3) * 1000.0f * RC_SCALEFACTOR,
-											rc_get_channel(4) * 1000.0f * RC_SCALEFACTOR,
-											rc_get_channel(5) * 1000.0f * RC_SCALEFACTOR,
-											rc_get_channel(6) * 1000.0f * RC_SCALEFACTOR,
-											rc_get_channel(7) * 1000.0f * RC_SCALEFACTOR,
-											rc_check_receivers()	);
+											remote_dsm2_rc_get_channel(0) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(1) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(2) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(3) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(4) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(5) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(6) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(7) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_check_receivers()	);
 	
 	mavlink_msg_named_value_int_send(	MAVLINK_COMM_0,
-										get_millis(),
+										time_keeper_get_millis(),
 										"Coll_Avoidance",
 										centralData->collision_avoidance	);
 }
@@ -336,12 +336,12 @@ void mavlink_send_scaled_rc_channels(void)
 void mavlink_send_simulation(void) 
 {
 	Aero_Attitude_t aero_attitude;
-	aero_attitude = Quat_to_Aero(centralData->sim_model.attitude.qe);
+	aero_attitude = coord_conventions_quat_to_aero(centralData->sim_model.attitude.qe);
 
-	global_position_t gpos = local_to_global_position(centralData->sim_model.localPosition);
+	global_position_t gpos = coord_conventions_local_to_global_position(centralData->sim_model.localPosition);
 	
 	mavlink_msg_hil_state_send(	MAVLINK_COMM_0, 
-								get_micros(),
+								time_keeper_get_micros(),
 								aero_attitude.rpy[0], 
 								aero_attitude.rpy[1], 
 								aero_attitude.rpy[2],
@@ -359,7 +359,7 @@ void mavlink_send_simulation(void)
 								1000 * centralData->sim_model.lin_forces_bf[2] 	);
 	
 	mavlink_msg_hil_state_quaternion_send(	MAVLINK_COMM_0,
-											get_micros(),
+											time_keeper_get_micros(),
 											&centralData->sim_model.attitude.qe,
 											aero_attitude.rpy[ROLL],
 											aero_attitude.rpy[PITCH],
@@ -370,49 +370,49 @@ void mavlink_send_simulation(void)
 											100 * centralData->sim_model.vel[X], 
 											100 * centralData->sim_model.vel[Y], 
 											100 * centralData->sim_model.vel[Z],
-											100 * vector_norm(centralData->sim_model.vel),
+											100 * maths_vector_norm(centralData->sim_model.vel),
 											0.0f,
 											centralData->sim_model.attitude.acc_bf[X],
 											centralData->sim_model.attitude.acc_bf[Y],
 											centralData->sim_model.attitude.acc_bf[Z]	);
 	
 	mavlink_msg_named_value_int_send(	MAVLINK_COMM_0, 
-										get_millis(), 
+										time_keeper_get_millis(), 
 										"rolltorque", 
 										centralData->sim_model.torques_bf[0]	);
 
 	mavlink_msg_named_value_int_send(	MAVLINK_COMM_0, 
-										get_millis(), 
+										time_keeper_get_millis(), 
 										"pitchtorque", 
 										centralData->sim_model.torques_bf[1]	);
 
 	mavlink_msg_named_value_int_send(	MAVLINK_COMM_0, 
-										get_millis(), 
+										time_keeper_get_millis(), 
 										"yawtorque", 
 										centralData->sim_model.torques_bf[2]);
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										get_millis(), 
+										time_keeper_get_millis(), 
 										"thrust", 
 										centralData->sim_model.lin_forces_bf[2]);
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										get_millis(),
+										time_keeper_get_millis(),
 										"rpm1",
 										centralData->sim_model.rotorspeeds[0]);
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										get_millis(),
+										time_keeper_get_millis(),
 										"rpm2",
 										centralData->sim_model.rotorspeeds[1]);
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										get_millis(),
+										time_keeper_get_millis(),
 										"rpm3",
 										centralData->sim_model.rotorspeeds[2]);
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										get_millis(),
+										time_keeper_get_millis(),
 										"rpm4",
 										centralData->sim_model.rotorspeeds[3]);
 }
@@ -423,43 +423,43 @@ task_return_t mavlink_send_rt_stats()
 	task_set* main_tasks = tasks_get_main_taskset();
 	
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										get_millis(), 
+										time_keeper_get_millis(), 
 										"stabAvgDelay", 
 										main_tasks->tasks[0].delay_avg);
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										get_millis(), 
+										time_keeper_get_millis(), 
 										"stabDelayVar", 
 										sqrt(main_tasks->tasks[0].delay_var_squared));
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										get_millis(), 
+										time_keeper_get_millis(), 
 										"stabMaxDelay", 
 										main_tasks->tasks[0].delay_max);
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										get_millis(), 
+										time_keeper_get_millis(), 
 										"stabRTvio", 
 										main_tasks->tasks[0].rt_violations);
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										get_millis(), 
+										time_keeper_get_millis(), 
 										"baroAvgDelay", 
 										main_tasks->tasks[1].delay_avg);
 
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										get_millis(), 
+										time_keeper_get_millis(), 
 										"imuExTime", 
 										main_tasks->tasks[0].execution_time);
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										get_millis(), 
+										time_keeper_get_millis(), 
 										"navExTime", 
 										main_tasks->tasks[3].execution_time);
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										get_millis(), 
+										time_keeper_get_millis(), 
 										"imu_dt", 
 										central_data_get_pointer_to_struct()->imu1.dt);
 
@@ -476,144 +476,144 @@ void mavlink_actions_add_onboard_parameters(void) {
 	Stabiliser_t* velocity_stabiliser= &centralData->stabiliser_stack.velocity_stabiliser;
 
 	// Comp and sys ID
-	// add_parameter_uint8(&(mavlink_system.sysid),"ID_System");
-	// add_parameter_uint8(&(mavlink_mission_planner.sysid),"ID_Planner");
+	// onboard_parameters_add_parameter_uint8(&(mavlink_system.sysid),"ID_System");
+	// onboard_parameters_add_parameter_uint8(&(mavlink_mission_planner.sysid),"ID_Planner");
 	
 	// Simulation mode
-	add_parameter_int32(&centralData->simulation_mode, "Sim_mode");
+	onboard_parameters_add_parameter_int32(&centralData->simulation_mode, "Sim_mode");
 	
 	// Roll rate PID
-	add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].p_gain, "RollRPid_P_G");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.clip, "RollRPid_I_CLip");
-	add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollRPid_I_PstG");
-	add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollRPid_I_PreG");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.clip, "RollRPid_D_Clip");
-	add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollRPid_D_Gain");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.LPF, "RollRPid_D_LPF");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].p_gain, "RollRPid_P_G");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.maths_clip, "RollRPid_I_CLip");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollRPid_I_PstG");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollRPid_I_PreG");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.maths_clip, "RollRPid_D_Clip");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollRPid_D_Gain");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.LPF, "RollRPid_D_LPF");
 	
 	// Roll attitude PID
-	add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].p_gain, "RollAPid_P_G");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.clip, "RollAPid_I_CLip");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollAPid_I_PstG");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollAPid_I_PreG");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.clip, "RollAPid_D_Clip");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollAPid_D_Gain");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.LPF, "RollAPid_D_LPF");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].p_gain, "RollAPid_P_G");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.maths_clip, "RollAPid_I_CLip");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollAPid_I_PstG");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollAPid_I_PreG");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.maths_clip, "RollAPid_D_Clip");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollAPid_D_Gain");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.LPF, "RollAPid_D_LPF");
 
 	// Pitch rate PID
-	add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].p_gain, "PitchRPid_P_G");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.clip, "PitchRPid_I_CLip");
-	add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchRPid_I_PstG");
-	add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchRPid_I_PreG");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.clip, "PitchRPid_D_Clip");
-	add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchRPid_D_Gain");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.LPF, "PitchRPid_D_LPF");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].p_gain, "PitchRPid_P_G");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.maths_clip, "PitchRPid_I_CLip");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchRPid_I_PstG");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchRPid_I_PreG");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.maths_clip, "PitchRPid_D_Clip");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchRPid_D_Gain");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.LPF, "PitchRPid_D_LPF");
 	
 	// Pitch attitude PID
-	add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].p_gain, "PitchAPid_P_G");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.clip, "PitchAPid_I_CLip");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchAPid_I_PstG");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchAPid_I_PreG");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.clip, "PitchAPid_D_Clip");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchAPid_D_Gain");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.LPF, "PitchAPid_D_LPF");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].p_gain, "PitchAPid_P_G");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.maths_clip, "PitchAPid_I_CLip");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchAPid_I_PstG");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchAPid_I_PreG");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.maths_clip, "PitchAPid_D_Clip");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchAPid_D_Gain");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.LPF, "PitchAPid_D_LPF");
 
 	// Yaw rate PID
-	add_parameter_float(&rate_stabiliser->rpy_controller[YAW].p_gain, "YawRPid_P_G");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[YAW].clip_max, "YawRPid_P_CLmx");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[YAW].clip_min, "YawRPid_P_CLmn");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.clip, "YawRPid_I_CLip");
-	add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.postgain, "YawRPid_I_PstG");
-	add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.pregain, "YawRPid_I_PreG");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.clip, "YawRPid_D_Clip");
-	add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.gain, "YawRPid_D_Gain");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.LPF, "YawRPid_D_LPF");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].p_gain, "YawRPid_P_G");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].clip_max, "YawRPid_P_CLmx");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].clip_min, "YawRPid_P_CLmn");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.maths_clip, "YawRPid_I_CLip");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.postgain, "YawRPid_I_PstG");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.pregain, "YawRPid_I_PreG");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.maths_clip, "YawRPid_D_Clip");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.gain, "YawRPid_D_Gain");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.LPF, "YawRPid_D_LPF");
 	
 	// Yaw attitude PID
-	add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].p_gain, "YawAPid_P_G");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_max, "YawAPid_P_CLmx");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_min, "YawAPid_P_CLmn");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.clip, "YawAPid_I_CLip");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.postgain, "YawAPid_I_PstG");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.pregain, "YawAPid_I_PreG");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.clip, "YawAPid_D_Clip");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain, "YawAPid_D_Gain");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.LPF, "YawAPid_D_LPF");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].p_gain, "YawAPid_P_G");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_max, "YawAPid_P_CLmx");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_min, "YawAPid_P_CLmn");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.maths_clip, "YawAPid_I_CLip");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.postgain, "YawAPid_I_PstG");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.pregain, "YawAPid_I_PreG");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.maths_clip, "YawAPid_D_Clip");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain, "YawAPid_D_Gain");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.LPF, "YawAPid_D_LPF");
 
 
 	// Roll velocity PID
-	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].p_gain, "RollVPid_P_G");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollVPid_I_PstG");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollVPid_I_PreG");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollVPid_D_Gain");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].p_gain, "RollVPid_P_G");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollVPid_I_PstG");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollVPid_I_PreG");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollVPid_D_Gain");
 
 	// Pitch velocity PID
-	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].p_gain, "PitchVPid_P_G");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchVPid_I_PstG");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchVPid_I_PreG");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchVPid_D_Gain");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].p_gain, "PitchVPid_P_G");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchVPid_I_PstG");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchVPid_I_PreG");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchVPid_D_Gain");
 
 	// Thrust velocity PID
-	add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain, "ThrVPid_P_G");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.postgain, "ThrVPid_I_PstG");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.pregain, "ThrVPid_I_PreG");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain, "ThrVPid_D_Gain");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.LPF, "ThrVPid_D_LPF");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.soft_zone_width, "ThrVPid_soft");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain, "ThrVPid_P_G");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.postgain, "ThrVPid_I_PstG");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.pregain, "ThrVPid_I_PreG");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain, "ThrVPid_D_Gain");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.LPF, "ThrVPid_D_LPF");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->thrust_controller.soft_zone_width, "ThrVPid_soft");
 
 	// qfilter
-	add_parameter_float(&centralData->imu1.attitude.kp, "QF_kp_acc");
-	add_parameter_float(&centralData->imu1.attitude.kp_mag, "QF_kp_mag");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain, "YawAPid_D_Gain");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.kp, "QF_kp_acc");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.kp_mag, "QF_kp_mag");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain, "YawAPid_D_Gain");
 	
 	// Biaises
-	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET + X],"Bias_Gyro_X");
-	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET + Y],"Bias_Gyro_Y");
-	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET + Z],"Bias_Gyro_Z");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET + X],"Bias_Gyro_X");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET + Y],"Bias_Gyro_Y");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET + Z],"Bias_Gyro_Z");
 	
-	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET + X],"Bias_Acc_X");
-	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET + Y],"Bias_Acc_Y");
-	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET + Z],"Bias_Acc_Z");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET + X],"Bias_Acc_X");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET + Y],"Bias_Acc_Y");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET + Z],"Bias_Acc_Z");
 	
-	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET + X],"Bias_Mag_X");
-	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET + Y],"Bias_Mag_Y");
-	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET + Z],"Bias_Mag_Z");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET + X],"Bias_Mag_X");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET + Y],"Bias_Mag_Y");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET + Z],"Bias_Mag_Z");
 	
 	// Scale factor
-	//add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET + X],"Scale_Gyro_X");
-	//add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET + Y],"Scale_Gyro_Y");
-	//add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET + Z],"Scale_Gyro_Z");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET + X],"Scale_Gyro_X");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET + Y],"Scale_Gyro_Y");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET + Z],"Scale_Gyro_Z");
 	//
-	//add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET + X],"Scale_Acc_X");
-	//add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET + Y],"Scale_Acc_Y");
-	//add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET + Z],"Scale_Acc_Z");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET + X],"Scale_Acc_X");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET + Y],"Scale_Acc_Y");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET + Z],"Scale_Acc_Z");
 	//
-	//add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET + X],"Scale_Mag_X");
-	//add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET + Y],"Scale_Mag_Y");
-	//add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET + Z],"Scale_Mag_Z");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET + X],"Scale_Mag_X");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET + Y],"Scale_Mag_Y");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET + Z],"Scale_Mag_Z");
 	
-	add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET + X],"Scale_Gyro_X");
-	add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET + Y],"Scale_Gyro_Y");
-	add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET + Z],"Scale_Gyro_Z");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET + X],"Scale_Gyro_X");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET + Y],"Scale_Gyro_Y");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET + Z],"Scale_Gyro_Z");
 	
-	add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET + X],"Scale_Acc_X");
-	add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET + Y],"Scale_Acc_Y");
-	add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET + Z],"Scale_Acc_Z");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET + X],"Scale_Acc_X");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET + Y],"Scale_Acc_Y");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET + Z],"Scale_Acc_Z");
 	
-	add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET + X],"Scale_Mag_X");
-	add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET + Y],"Scale_Mag_Y");
-	add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET + Z],"Scale_Mag_Z");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET + X],"Scale_Mag_X");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET + Y],"Scale_Mag_Y");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET + Z],"Scale_Mag_Z");
 
-	//add_parameter_float(&centralData->position_estimator.kp_alt,"Pos_kp_alt");
-	//add_parameter_float(&centralData->position_estimator.kp_vel_baro,"Pos_kp_velb");
-	//add_parameter_float(&centralData->position_estimator.kp_pos[0],"Pos_kp_pos0");
-	//add_parameter_float(&centralData->position_estimator.kp_pos[1],"Pos_kp_pos1");
-	//add_parameter_float(&centralData->position_estimator.kp_pos[2],"Pos_kp_pos2");
+	//onboard_parameters_add_parameter_float(&centralData->position_estimator.kp_alt,"Pos_kp_alt");
+	//onboard_parameters_add_parameter_float(&centralData->position_estimator.kp_vel_baro,"Pos_kp_velb");
+	//onboard_parameters_add_parameter_float(&centralData->position_estimator.kp_pos[0],"Pos_kp_pos0");
+	//onboard_parameters_add_parameter_float(&centralData->position_estimator.kp_pos[1],"Pos_kp_pos1");
+	//onboard_parameters_add_parameter_float(&centralData->position_estimator.kp_pos[2],"Pos_kp_pos2");
 	
-	add_parameter_float(&centralData->dist2vel_gain,"vel_dist2Vel");
-	add_parameter_float(&centralData->cruise_speed,"vel_cruiseSpeed");
-	add_parameter_float(&centralData->max_climb_rate,"vel_climbRate");
-	add_parameter_float(&centralData->softZoneSize,"vel_softZone");
+	onboard_parameters_add_parameter_float(&centralData->dist2vel_gain,"vel_dist2Vel");
+	onboard_parameters_add_parameter_float(&centralData->cruise_speed,"vel_cruiseSpeed");
+	onboard_parameters_add_parameter_float(&centralData->max_climb_rate,"vel_climbRate");
+	onboard_parameters_add_parameter_float(&centralData->softZoneSize,"vel_softZone");
 }
 
 
@@ -630,19 +630,19 @@ void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec)
 	if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) 
 	{	
 		/*	Use this block for message debugging		
-		dbg_print("\n Received message with ID");
-		dbg_print_num(rec->msg.msgid, 10);
-		dbg_print(" from system");
-		dbg_print_num(rec->msg.sysid, 10);
-		dbg_print(" for component");
-		dbg_print_num(rec->msg.compid,10);
-		dbg_print( "\n");
+		print_util_dbg_print("\n Received message with ID");
+		print_util_dbg_print_num(rec->msg.msgid, 10);
+		print_util_dbg_print(" from system");
+		print_util_dbg_print_num(rec->msg.sysid, 10);
+		print_util_dbg_print(" for component");
+		print_util_dbg_print_num(rec->msg.compid,10);
+		print_util_dbg_print( "\n");
 		*/
 
 		switch(rec->msg.msgid) 
 		{
 			case MAVLINK_MSG_ID_MISSION_ITEM:	// 39 
-				suspend_downstream(500000);
+				mavlink_stream_suspend_downstream(500000);
 				receive_waypoint(	rec, 
 									centralData->waypoint_list, 
 									centralData->number_of_waypoints,
@@ -650,7 +650,7 @@ void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec)
 				break;
 	
 			case MAVLINK_MSG_ID_MISSION_REQUEST : // 40
-				suspend_downstream(500000);
+				mavlink_stream_suspend_downstream(500000);
 				send_waypoint(	rec, 
 								centralData->waypoint_list, 
 								centralData->number_of_waypoints,
@@ -666,7 +666,7 @@ void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec)
 			case MAVLINK_MSG_ID_MISSION_REQUEST_LIST:  // 43
 				// this initiates all waypoints being sent to the base-station - therefore, we pause the downstream telemetry to free the channel
 				// (at least until we have a radio system with guaranteed bandwidth)
-				suspend_downstream(500000);
+				mavlink_stream_suspend_downstream(500000);
 				send_count(	rec, 
 							centralData->number_of_waypoints,
 							&centralData->waypoint_receiving,
@@ -676,7 +676,7 @@ void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec)
 			case MAVLINK_MSG_ID_MISSION_COUNT :  // 44
 				// this initiates all waypoints being sent from base-station - therefore, we pause the downstream telemetry to free the channel
 				// (at least until we have a radio system with guaranteed bandwidth)
-				suspend_downstream(500000);
+				mavlink_stream_suspend_downstream(500000);
 				receive_count(	rec, 
 								&(centralData->number_of_waypoints),
 								&centralData->waypoint_receiving,
@@ -715,13 +715,13 @@ void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec)
 		/* 
 		 * Use this block for message debugging
 		 * 
-		 * dbg_print("\n Received message with ID");
-		 * dbg_print_num(rec->msg.msgid, 10);
-		 * dbg_print(" from system");
-		 * dbg_print_num(rec->msg.sysid, 10);
-		 * dbg_print(" for component");
-		 * dbg_print_num(rec->msg.compid,10);
-		 * dbg_print( "\n");
+		 * print_util_dbg_print("\n Received message with ID");
+		 * print_util_dbg_print_num(rec->msg.msgid, 10);
+		 * print_util_dbg_print(" from system");
+		 * print_util_dbg_print_num(rec->msg.sysid, 10);
+		 * print_util_dbg_print(" for component");
+		 * print_util_dbg_print_num(rec->msg.compid,10);
+		 * print_util_dbg_print( "\n");
 		*/
 
 		neighbors_selection_read_message_from_neighbors(rec);
@@ -739,19 +739,19 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid) && ((uint8_t)packet.target_component == (uint8_t)0))		// TODO check this 0
 	{
 		// print packet command and parameters for debug
-		dbg_print("parameters:");
-		dbg_print_num(packet.param1,10);
-		dbg_print_num(packet.param2,10);
-		dbg_print_num(packet.param3,10);
-		dbg_print_num(packet.param4,10);
-		dbg_print_num(packet.param5,10);
-		dbg_print_num(packet.param6,10);
-		dbg_print_num(packet.param7,10);
-		dbg_print(", command id:");
-		dbg_print_num(packet.command,10);
-		dbg_print(", confirmation:");
-		dbg_print_num(packet.confirmation,10);
-		dbg_print("\n");
+		print_util_dbg_print("parameters:");
+		print_util_dbg_print_num(packet.param1,10);
+		print_util_dbg_print_num(packet.param2,10);
+		print_util_dbg_print_num(packet.param3,10);
+		print_util_dbg_print_num(packet.param4,10);
+		print_util_dbg_print_num(packet.param5,10);
+		print_util_dbg_print_num(packet.param6,10);
+		print_util_dbg_print_num(packet.param7,10);
+		print_util_dbg_print(", command id:");
+		print_util_dbg_print_num(packet.command,10);
+		print_util_dbg_print(", confirmation:");
+		print_util_dbg_print_num(packet.confirmation,10);
+		print_util_dbg_print("\n");
 		
 		switch(packet.command) 
 		{
@@ -765,7 +765,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Longitude
 				| Altitude
 				| */
-				dbg_print("Nav waypoint command, not implemented!\n");
+				print_util_dbg_print("Nav waypoint command, not implemented!\n");
 				break;
 
 			case MAV_CMD_NAV_LOITER_UNLIM:
@@ -778,7 +778,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Longitude
 				| Altitude
 				| */
-				dbg_print("Nav loiter unlim command, not implemented!\n");
+				print_util_dbg_print("Nav loiter unlim command, not implemented!\n");
 				break;
 
 			case MAV_CMD_NAV_LOITER_TURNS:
@@ -791,7 +791,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Longitude
 				| Altitude
 				| */
-				dbg_print("Nav loiter turns command, not implemented!\n");
+				print_util_dbg_print("Nav loiter turns command, not implemented!\n");
 				break;
 
 			case MAV_CMD_NAV_LOITER_TIME:
@@ -804,7 +804,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Longitude
 				| Altitude
 				| */
-				dbg_print("Nav loiter time command, not implemented!\n");
+				print_util_dbg_print("Nav loiter time command, not implemented!\n");
 				break;
 
 			case MAV_CMD_NAV_RETURN_TO_LAUNCH:
@@ -817,7 +817,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				| */
-				dbg_print("Nav Return to launch command, not implemented!\n");
+				print_util_dbg_print("Nav Return to launch command, not implemented!\n");
 				break;
 
 			case MAV_CMD_NAV_LAND:
@@ -830,7 +830,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Longitude
 				| Altitude
 				| */
-				dbg_print("Command for automatic land, not implemented!\n");
+				print_util_dbg_print("Command for automatic land, not implemented!\n");
 				break;
 
 			case MAV_CMD_NAV_TAKEOFF:
@@ -844,7 +844,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Altitude
 				| */
 				centralData->in_the_air = true;
-				dbg_print("Starting automatic take-off from button\n");
+				print_util_dbg_print("Starting automatic take-off from button\n");
 				break;
 
 			case MAV_CMD_NAV_ROI:
@@ -857,7 +857,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| y
 				| z
 				| */
-				dbg_print("Nav ROI command, not implemented!\n");
+				print_util_dbg_print("Nav ROI command, not implemented!\n");
 				break;
 
 			case MAV_CMD_NAV_PATHPLANNING:
@@ -870,7 +870,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Longitude/Y of goal
 				| Altitude/Z of goal
 				| */
-				dbg_print("Nav pathplanning command, not implemented!\n");
+				print_util_dbg_print("Nav pathplanning command, not implemented!\n");
 				break;
 
 			case MAV_CMD_NAV_LAST:
@@ -883,7 +883,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				| */
-				dbg_print("Nav last command, not implemented!\n");
+				print_util_dbg_print("Nav last command, not implemented!\n");
 				break;
 
 			case MAV_CMD_CONDITION_DELAY:
@@ -896,7 +896,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				| */
-				dbg_print("Condition Delay command, not implemented!\n");
+				print_util_dbg_print("Condition Delay command, not implemented!\n");
 				break;
 
 			case MAV_CMD_CONDITION_CHANGE_ALT:
@@ -909,7 +909,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Finish Altitude
 				| */
-				dbg_print("Condition change alt command, not implemented!\n");
+				print_util_dbg_print("Condition change alt command, not implemented!\n");
 				break;
 
 			case MAV_CMD_CONDITION_DISTANCE:
@@ -922,7 +922,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				| */
-				dbg_print("Condition distance command, not implemented!\n");
+				print_util_dbg_print("Condition distance command, not implemented!\n");
 				break;
 
 			case MAV_CMD_CONDITION_YAW:
@@ -935,7 +935,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				| */
-				dbg_print("Condition yaw command, not implemented!\n");
+				print_util_dbg_print("Condition yaw command, not implemented!\n");
 				break;
 
 			case MAV_CMD_CONDITION_LAST:
@@ -948,7 +948,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				| */
-				dbg_print("Condition last command, not implemented!\n");
+				print_util_dbg_print("Condition last command, not implemented!\n");
 				break;
 
 			case MAV_CMD_DO_SET_MODE:
@@ -961,7 +961,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				| */
-				dbg_print("Do set mode command, not implemented!\n");
+				print_util_dbg_print("Do set mode command, not implemented!\n");
 				break;
 
 			case MAV_CMD_DO_JUMP:
@@ -974,7 +974,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				| */
-				dbg_print("Do jump command, not implemented!\n");
+				print_util_dbg_print("Do jump command, not implemented!\n");
 				break;
 
 			case MAV_CMD_DO_CHANGE_SPEED:
@@ -987,7 +987,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				| */
-				dbg_print("Do change speed command, not implemented!\n");
+				print_util_dbg_print("Do change speed command, not implemented!\n");
 				break;
 
 			case MAV_CMD_DO_SET_HOME:
@@ -1003,35 +1003,35 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				if (packet.param1 == 1)
 				{
 					// Set new home position to actual position
-					dbg_print("Set new home location to actual position.\n");
-					centralData->position_estimator.localPosition.origin = local_to_global_position(centralData->position_estimator.localPosition);
+					print_util_dbg_print("Set new home location to actual position.\n");
+					centralData->position_estimator.localPosition.origin = coord_conventions_local_to_global_position(centralData->position_estimator.localPosition);
 					centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
 					
-					dbg_print("New Home location: (");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude * 10000000.0f,10);
-					dbg_print(", ");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude * 10000000.0f,10);
-					dbg_print(", ");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude * 1000.0f,10);
-					dbg_print(")\n");
+					print_util_dbg_print("New Home location: (");
+					print_util_dbg_print_num(centralData->position_estimator.localPosition.origin.latitude * 10000000.0f,10);
+					print_util_dbg_print(", ");
+					print_util_dbg_print_num(centralData->position_estimator.localPosition.origin.longitude * 10000000.0f,10);
+					print_util_dbg_print(", ");
+					print_util_dbg_print_num(centralData->position_estimator.localPosition.origin.altitude * 1000.0f,10);
+					print_util_dbg_print(")\n");
 				}
 				else
 				{
 					// Set new home position from msg
-					dbg_print("Set new home location. \n");
+					print_util_dbg_print("Set new home location. \n");
 					
 					centralData->position_estimator.localPosition.origin.latitude = packet.param5;
 					centralData->position_estimator.localPosition.origin.longitude = packet.param6;
 					centralData->position_estimator.localPosition.origin.altitude = packet.param7;
 					centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
 					
-					dbg_print("New Home location: (");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude * 10000000.0f,10);
-					dbg_print(", ");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude * 10000000.0f,10);
-					dbg_print(", ");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude * 1000.0f,10);
-					dbg_print(")\n");
+					print_util_dbg_print("New Home location: (");
+					print_util_dbg_print_num(centralData->position_estimator.localPosition.origin.latitude * 10000000.0f,10);
+					print_util_dbg_print(", ");
+					print_util_dbg_print_num(centralData->position_estimator.localPosition.origin.longitude * 10000000.0f,10);
+					print_util_dbg_print(", ");
+					print_util_dbg_print_num(centralData->position_estimator.localPosition.origin.altitude * 1000.0f,10);
+					print_util_dbg_print(")\n");
 				}
 
 				centralData->waypoint_set = false;
@@ -1047,7 +1047,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				|  */
-				dbg_print("Set parameter command, not implemented!\n");
+				print_util_dbg_print("Set parameter command, not implemented!\n");
 				break;
 
 			case MAV_CMD_DO_SET_RELAY:
@@ -1060,7 +1060,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				|  */
-				dbg_print("Set relay command, not implemented!\n");
+				print_util_dbg_print("Set relay command, not implemented!\n");
 				break;
 
 			case MAV_CMD_DO_REPEAT_RELAY:
@@ -1073,7 +1073,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				|  */
-				dbg_print("Repeat relay command, not implemented!\n");
+				print_util_dbg_print("Repeat relay command, not implemented!\n");
 				break;
 
 			case MAV_CMD_DO_SET_SERVO:
@@ -1086,7 +1086,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				|  */
-				dbg_print("Set servo command, not implemented!\n");
+				print_util_dbg_print("Set servo command, not implemented!\n");
 				break;
 
 			case MAV_CMD_DO_REPEAT_SERVO:
@@ -1099,7 +1099,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				|  */
-				dbg_print("Repeat servo command, not implemented!\n");
+				print_util_dbg_print("Repeat servo command, not implemented!\n");
 				break;
 
 			case MAV_CMD_DO_CONTROL_VIDEO:
@@ -1112,7 +1112,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				|  */
-				dbg_print("Control video command, not implemented!\n");
+				print_util_dbg_print("Control video command, not implemented!\n");
 				break;
 
 			case MAV_CMD_DO_LAST:
@@ -1125,7 +1125,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				|  */
-				dbg_print("Do last command, not implemented!\n");
+				print_util_dbg_print("Do last command, not implemented!\n");
 				break;
 
 			case MAV_CMD_PREFLIGHT_CALIBRATION:
@@ -1138,7 +1138,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				|  */
-				dbg_print("Preflight calibration command, not implemented!\n");
+				print_util_dbg_print("Preflight calibration command, not implemented!\n");
 				break;
 
 			case MAV_CMD_PREFLIGHT_SET_SENSOR_OFFSETS:
@@ -1151,7 +1151,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Generic dimension 5, in the sensor's raw units
 				| Generic dimension 6, in the sensor's raw units
 				|  */
-				dbg_print("Set sensor offsets command, not implemented!\n");
+				print_util_dbg_print("Set sensor offsets command, not implemented!\n");
 				break;
 
 			case MAV_CMD_PREFLIGHT_STORAGE:
@@ -1169,15 +1169,15 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				if (packet.param1 == 0) 
 				{
 					// read parameters from flash
-					dbg_print("Reading from flashc...\n");
-					read_parameters_from_flashc();
+					print_util_dbg_print("Reading from flashc...\n");
+					onboard_parameters_read_parameters_from_flashc();
 				}
 				else if (packet.param1 == 1) 
 				{
 					// write parameters to flash
-					//dbg_print("No Writing to flashc\n");
-					dbg_print("Writing to flashc\n");
-					write_parameters_to_flashc();
+					//print_util_dbg_print("No Writing to flashc\n");
+					print_util_dbg_print("Writing to flashc\n");
+					onboard_parameters_write_parameters_from_flashc();
 				}
 				
 				// Mission parameters storage
@@ -1201,7 +1201,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				|  */
-				dbg_print("Reboot/Shutdown command, not implemented!\n");
+				print_util_dbg_print("Reboot/Shutdown command, not implemented!\n");
 				break;
 
 			case MAV_CMD_OVERRIDE_GOTO:
@@ -1214,7 +1214,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Longitude / Y position
 				| Altitude / Z position
 				|  */
-				dbg_print("Goto command, not implemented!\n");
+				print_util_dbg_print("Goto command, not implemented!\n");
 				break;
 
 			case MAV_CMD_MISSION_START:
@@ -1222,14 +1222,14 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| first_item: the first mission item to run
 				| last_item:  the last mission item to run (after this item is run, the mission ends)
 				|  */
-				dbg_print("Mission start command, not implemented!\n");
+				print_util_dbg_print("Mission start command, not implemented!\n");
 				break;
 
 			case MAV_CMD_COMPONENT_ARM_DISARM:
 				/* Arms / Disarms a component 
 				| 1 to arm, 0 to disarm
 				|  */
-				dbg_print("Disarm command, not implemented!\n");
+				print_util_dbg_print("Disarm command, not implemented!\n");
 				break;
 
 			case MAV_CMD_ENUM_END:
@@ -1245,19 +1245,19 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 	if((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER)		// TODO: this part needs comments
 	{
 		// print packet command and parameters for debug
-		dbg_print("All vehicles parameters:");
-		dbg_print_num(packet.param1,10);
-		dbg_print_num(packet.param2,10);
-		dbg_print_num(packet.param3,10);
-		dbg_print_num(packet.param4,10);
-		dbg_print_num(packet.param5,10);
-		dbg_print_num(packet.param6,10);
-		dbg_print_num(packet.param7,10);
-		dbg_print(", command id:");
-		dbg_print_num(packet.command,10);
-		dbg_print(", confirmation:");
-		dbg_print_num(packet.confirmation,10);
-		dbg_print("\n");
+		print_util_dbg_print("All vehicles parameters:");
+		print_util_dbg_print_num(packet.param1,10);
+		print_util_dbg_print_num(packet.param2,10);
+		print_util_dbg_print_num(packet.param3,10);
+		print_util_dbg_print_num(packet.param4,10);
+		print_util_dbg_print_num(packet.param5,10);
+		print_util_dbg_print_num(packet.param6,10);
+		print_util_dbg_print_num(packet.param7,10);
+		print_util_dbg_print(", command id:");
+		print_util_dbg_print_num(packet.command,10);
+		print_util_dbg_print(", confirmation:");
+		print_util_dbg_print_num(packet.confirmation,10);
+		print_util_dbg_print("\n");
 		
 		switch(packet.command) {
 			case MAV_CMD_NAV_RETURN_TO_LAUNCH:
@@ -1270,7 +1270,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| Empty
 				| */
-				dbg_print("All MAVs: Return to first waypoint. \n");
+				print_util_dbg_print("All MAVs: Return to first waypoint. \n");
 				set_current_waypoint_from_parameter(centralData->waypoint_list,centralData->number_of_waypoints,0);
 				break;
 
@@ -1284,7 +1284,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Longitude
 				| Altitude
 				| */
-				dbg_print("All MAVs: Auto-landing");
+				print_util_dbg_print("All MAVs: Auto-landing");
 				break;
 
 			case MAV_CMD_MISSION_START:
@@ -1292,14 +1292,14 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| first_item: the first mission item to run
 				| last_item:  the last mission item to run (after this item is run, the mission ends)
 				| */
-				dbg_print("All vehicles: Navigating to next waypoint. \n");
+				print_util_dbg_print("All vehicles: Navigating to next waypoint. \n");
 				continueToNextWaypoint();
 				break;
 
 			case MAV_CMD_CONDITION_LAST:
 				/*
 				| */
-				dbg_print("All MAVs: setting circle scenario!\n");
+				print_util_dbg_print("All MAVs: setting circle scenario!\n");
 				set_circle_scenario(centralData->waypoint_list, &(centralData->number_of_waypoints), packet.param1, packet.param2);
 				break;			
 		}
@@ -1311,7 +1311,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 void mavlink_send_sonar(void)
 {
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										get_millis(),
+										time_keeper_get_millis(),
 										"sonar(m)", 
 										centralData->i2cxl_sonar.distance_m);
 }
@@ -1324,52 +1324,52 @@ void mavlink_actions_init(void) {
 	/*	
 	 * Use this to store or read or reset parameters on flash memory
 	 *
-	write_parameters_to_flashc();
-	read_parameters_from_flashc();
+	onboard_parameters_write_parameters_from_flashc();
+	onboard_parameters_read_parameters_from_flashc();
 	 *
 	 */
 
-	scheduler_add_task(get_mavlink_taskset(),  10000,    RUN_REGULAR,  &control_waypoint_timeout,                0	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  10000,    RUN_REGULAR,  &control_waypoint_timeout,                0	);
 	
-	scheduler_add_task(get_mavlink_taskset(),  1000000,  RUN_REGULAR,  &mavlink_send_heartbeat,                  MAVLINK_MSG_ID_HEARTBEAT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  1000000,  RUN_REGULAR,  &mavlink_send_heartbeat,                  MAVLINK_MSG_ID_HEARTBEAT	);
 
-	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_REGULAR,  &mavlink_send_attitude_quaternion,        MAVLINK_MSG_ID_ATTITUDE_QUATERNION	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_REGULAR,  &mavlink_send_attitude_quaternion,        MAVLINK_MSG_ID_ATTITUDE_QUATERNION	);
 
-	scheduler_add_task(get_mavlink_taskset(),  200000,   RUN_REGULAR,  &mavlink_send_attitude,                   MAVLINK_MSG_ID_ATTITUDE	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_REGULAR,  &mavlink_send_attitude,                   MAVLINK_MSG_ID_ATTITUDE	);
 	
-	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_hud,                        MAVLINK_MSG_ID_VFR_HUD	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_hud,                        MAVLINK_MSG_ID_VFR_HUD	);
 
-	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_pressure,                   MAVLINK_MSG_ID_SCALED_PRESSURE	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_pressure,                   MAVLINK_MSG_ID_SCALED_PRESSURE	);
 
-	scheduler_add_task(get_mavlink_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_scaled_imu,                 MAVLINK_MSG_ID_SCALED_IMU	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_scaled_imu,                 MAVLINK_MSG_ID_SCALED_IMU	);
 
-	scheduler_add_task(get_mavlink_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_raw_imu,                    MAVLINK_MSG_ID_RAW_IMU	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_raw_imu,                    MAVLINK_MSG_ID_RAW_IMU	);
 
-	scheduler_add_task(get_mavlink_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_rates_error,            MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_rates_error,            MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT	);
 
-	scheduler_add_task(get_mavlink_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_speed_thrust_setpoint,  MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_speed_thrust_setpoint,  MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT	);
 
-	scheduler_add_task(get_mavlink_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_thrust_setpoint,        MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_thrust_setpoint,        MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT	);
 
-	scheduler_add_task(get_mavlink_taskset(),  1000000,  RUN_NEVER,    &mavlink_send_servo_output,               MAVLINK_MSG_ID_SERVO_OUTPUT_RAW	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  1000000,  RUN_NEVER,    &mavlink_send_servo_output,               MAVLINK_MSG_ID_SERVO_OUTPUT_RAW	);
 
-	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_estimator,                  MAVLINK_MSG_ID_LOCAL_POSITION_NED	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_estimator,                  MAVLINK_MSG_ID_LOCAL_POSITION_NED	);
 
-	scheduler_add_task(get_mavlink_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_global_position,            MAVLINK_MSG_ID_GLOBAL_POSITION_INT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_global_position,            MAVLINK_MSG_ID_GLOBAL_POSITION_INT	);
 
-	scheduler_add_task(get_mavlink_taskset(),  1000000,  RUN_NEVER,    &mavlink_send_gps_raw,                    MAVLINK_MSG_ID_GPS_RAW_INT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  1000000,  RUN_NEVER,    &mavlink_send_gps_raw,                    MAVLINK_MSG_ID_GPS_RAW_INT	);
 
-	scheduler_add_task(get_mavlink_taskset(),  250000,   RUN_NEVER,    &mavlink_send_raw_rc_channels,            MAVLINK_MSG_ID_RC_CHANNELS_RAW	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_NEVER,    &mavlink_send_raw_rc_channels,            MAVLINK_MSG_ID_RC_CHANNELS_RAW	);
 
-	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_scaled_rc_channels,         MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_scaled_rc_channels,         MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);
 
-	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_simulation,                 MAVLINK_MSG_ID_HIL_STATE	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_simulation,                 MAVLINK_MSG_ID_HIL_STATE	);
 
-	scheduler_add_task(get_mavlink_taskset(),  250000,   RUN_NEVER,    &mavlink_send_rt_stats,                   MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_NEVER,    &mavlink_send_rt_stats,                   MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
 
-	scheduler_add_task(get_mavlink_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_sonar,                      MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_sonar,                      MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
 
-	scheduler_sort_taskset_by_period(get_mavlink_taskset());
+	scheduler_sort_taskset_by_period(mavlink_stream_get_taskset());
 	
-	dbg_print("MAVlink actions initialiased\n");
+	print_util_dbg_print("MAVlink actions initialiased\n");
 }

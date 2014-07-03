@@ -21,19 +21,19 @@
 
 Adaptive_Parameter_Set_t adapt_param_set;
 
-Adaptive_Parameter_Set_t* get_param_set(void)
+Adaptive_Parameter_Set_t* adaptive_parameter_get_param_set(void)
 {
 	return &adapt_param_set;
 }
 
 
-void init_adaptive_parameters(void)
+void adaptive_parameter_init(void)
 {
 	adapt_param_set.param_count = 0;
 }
 
 
-int add_adaptive_parameter(float* control_variable, float* parameter, 
+int adaptive_parameter_add(float* control_variable, float* parameter, 
 							int nb_setpoints, float setpoints[], float setvalues[])
 {
 	if (adapt_param_set.param_count >= MAX_ADAPT_PARAM_COUNT)
@@ -60,7 +60,7 @@ int add_adaptive_parameter(float* control_variable, float* parameter,
 }
 
 
-void update_adaptive_parameter(Adaptive_Parameter_t param)
+void adaptive_parameter_update(Adaptive_Parameter_t param)
 {
 	if (*param.control_variable <= param.setpoints[0])
 	{
@@ -77,7 +77,7 @@ void update_adaptive_parameter(Adaptive_Parameter_t param)
 		{
 			if (*param.control_variable >= param.setpoints[i])
 			{
-				*param.parameter = interpolate(*param.control_variable, 
+				*param.parameter = maths_interpolate(*param.control_variable, 
 												param.setpoints[i], param.setpoints[i + 1],
 												param.setvalues[i], param.setvalues[i + 1]);
 				break;
@@ -87,11 +87,11 @@ void update_adaptive_parameter(Adaptive_Parameter_t param)
 }
 
 
-void update_all_adaptive_parameters(void)
+void adaptive_parameter_update_all(void)
 {
 	int i;
 	for (i = 0; i < adapt_param_set.param_count; ++i)
 	{
-		update_adaptive_parameter(adapt_param_set.parameters[i]);
+		adaptive_parameter_update(adapt_param_set.parameters[i]);
 	}
 }

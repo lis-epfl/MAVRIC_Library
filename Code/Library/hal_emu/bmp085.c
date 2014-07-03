@@ -13,22 +13,22 @@
 
 pressure_data pressure_outputs;
 
-void init_bmp085(){
-	init_bmp085_slow();
+void bmp085_init(){
+	bmp085_init_slow();
 }
 
-void init_bmp085_slow(){
+void bmp085_init_slow(){
 	
 }
 
 
 
-pressure_data* get_pressure_data_slow(float offset){
+pressure_data* bmp085_get_pressure_data_slow(float offset){
 		
 		return &pressure_outputs;
 }
 
-bool newValidBarometer(uint32_t *timePrevBarometer) {
+bool bmp085_newValidBarometer(uint32_t *timePrevBarometer) {
 		if (*timePrevBarometer < pressure_outputs.last_update) 
 	{
 		*timePrevBarometer = pressure_outputs.last_update;

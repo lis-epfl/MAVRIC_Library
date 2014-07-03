@@ -512,7 +512,7 @@ MAVLINK_HELPER uint8_t put_bitfield_n_by_index(int32_t b, uint8_t bits, uint8_t 
 
 #ifdef MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
-// To make MAVLink work on your MCU, define comm_send_ch() if you wish
+// To make MAVLink work on your MCU, define mavlink_bridge_comm_send_ch() if you wish
 // to send 1 byte at a time, or MAVLINK_SEND_UART_BYTES() to send a
 // whole packet at a time
 
@@ -520,7 +520,7 @@ MAVLINK_HELPER uint8_t put_bitfield_n_by_index(int32_t b, uint8_t bits, uint8_t 
 
 #include "mavlink_types.h"
 
-void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
+void mavlink_bridge_comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 {
     if (chan == MAVLINK_COMM_0)
     {
@@ -543,7 +543,7 @@ MAVLINK_HELPER void _mavlink_send_uart(mavlink_channel_t chan, const char *buf, 
 	/* fallback to one byte at a time */
 	uint16_t i;
 	for (i = 0; i < len; i++) {
-		comm_send_ch(chan, (uint8_t)buf[i]);
+		mavlink_bridge_comm_send_ch(chan, (uint8_t)buf[i]);
 	}
 #endif
 }

@@ -191,10 +191,10 @@ typedef struct{
 } lsm_acc_data_t;
 
 
-void init_lsm330(void);
+void lsm330dlc_driver_init(void);
 
-lsm_gyro_data_t* lsm330_get_gyro_data(void);
-lsm_acc_data_t* lsm330_get_acc_data(void);
+lsm_gyro_data_t* lsm330dlc_driver_get_gyro_data(void);
+lsm_acc_data_t* lsm330dlc_driver_get_acc_data(void);
 
 
 #endif 

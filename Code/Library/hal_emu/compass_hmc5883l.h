@@ -74,11 +74,11 @@ typedef struct{
 
 
 
-void init_hmc5883();
+void compass_hmc58831l_init();
 
-void init_hmc5883_slow();
+void compass_hmc58831l_init_slow();
 
-compass_data* get_compass_data_slow();
+compass_data* compass_hmc58831l_get_data_slow();
 
 
 

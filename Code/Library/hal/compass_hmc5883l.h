@@ -115,19 +115,19 @@ typedef struct
 /**
  * \brief Initializes the magnetometer sensor
 */
-void init_hmc5883(void);
+void compass_hmc58831l_init(void);
 
 /**
  * \brief Initializes the magnetometer sensor in slow mode
 */
-void init_hmc5883_slow(void);
+void compass_hmc58831l_init_slow(void);
 
 /**
  * \brief Returns the magnetometer's data in slow mode
  *
  * \return a pointer to the magnetometer's data in slow mode
 */
-compass_data* get_compass_data_slow(void);
+compass_data* compass_hmc58831l_get_data_slow(void);
 
 #ifdef __cplusplus
 	}

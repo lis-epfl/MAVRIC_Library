@@ -24,19 +24,19 @@ Bool blocking;
 static const char alphabet[36] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 
-byte_stream_t* get_debug_stream()
+byte_stream_t* print_util_get_debug_stream()
 {
 	return deb_stream;
 }
 
 
-void dbg_print_init(byte_stream_t* debug_stream)
+void print_util_dbg_print_init(byte_stream_t* debug_stream)
 {
 	deb_stream=debug_stream;
 }
 
 
-void putstring(byte_stream_t *out_stream, const char* s) 
+void print_util_putstring(byte_stream_t *out_stream, const char* s) 
 {
 	if ((out_stream==NULL) || (out_stream->put==NULL)) 
 	{
@@ -50,7 +50,7 @@ void putstring(byte_stream_t *out_stream, const char* s)
 }
 
 
-void putdigit(byte_stream_t *out_stream, unsigned c)
+void print_util_putdigit(byte_stream_t *out_stream, unsigned c)
 {
 	if ((out_stream==NULL) || (out_stream->put==NULL)) 
 	{
@@ -66,7 +66,7 @@ void putdigit(byte_stream_t *out_stream, unsigned c)
 }
 
 
-void putnum(byte_stream_t *out_stream, long c, char base)
+void print_util_putnum(byte_stream_t *out_stream, long c, char base)
 {
 	char storage[MAX_DIGITS];
 	long i = MAX_DIGITS;
@@ -99,7 +99,7 @@ void putnum(byte_stream_t *out_stream, long c, char base)
 	/* Hence, there is no need to initialize i */
 	for( ; i<MAX_DIGITS; i++)
 	{
-		putdigit(out_stream, storage[i]);
+		print_util_putdigit(out_stream, storage[i]);
 	}
 }
 
@@ -132,131 +132,131 @@ void putnum_tight(byte_stream_t *out_stream, long c, char base)
 	/* Hence, there is no need to initialize i */
 	for( ; i<MAX_DIGITS; i++)
 	{
-		putdigit(out_stream, storage[i]);
+		print_util_putdigit(out_stream, storage[i]);
 	}
 }
 
 
-void putfloat(byte_stream_t *out_stream, float c, int after_digits)
+void print_util_putfloat(byte_stream_t *out_stream, float c, int after_digits)
 {
 	int i;
 	float num = c;
 	
 	if (c<0) 
 	{
-		putstring(out_stream, "-");
+		print_util_putstring(out_stream, "-");
 		num=-c;
 	} 
 	else 
 	{
-		putstring(out_stream, "");
+		print_util_putstring(out_stream, "");
 	}
 
 	int whole=abs((int)num);
 	float after=(num-(float)whole);
 
 	putnum_tight(out_stream, whole, 10);
-	putstring(out_stream, "."); 
+	print_util_putstring(out_stream, "."); 
 	
 	for (i=0; i<after_digits; i++) 
 	{
 		after*=10;
-		putdigit(out_stream, (int)after);
+		print_util_putdigit(out_stream, (int)after);
 		after=after-(int)after;
 	}
 }
 
 
-void print_vector(byte_stream_t *out_stream, float v[], int after_digits) 
+void print_util_print_vector(byte_stream_t *out_stream, float v[], int after_digits) 
 {
 	int i;
-	putstring(out_stream, "(");
+	print_util_putstring(out_stream, "(");
 
 	for (i=0; i<3; i++) 
 	{
-		putfloat(out_stream, v[i], after_digits);
+		print_util_putfloat(out_stream, v[i], after_digits);
 		
 		if (i<2) 
 		{
-			putstring(out_stream, ", ");
+			print_util_putstring(out_stream, ", ");
 		}
 	}
 
-	putstring(out_stream, ") ");
+	print_util_putstring(out_stream, ") ");
 
 }
 
 
-void print_quaternion(byte_stream_t *out_stream, UQuat_t *quat, int after_digits) 
+void print_util_print_quaternion(byte_stream_t *out_stream, UQuat_t *quat, int after_digits) 
 {
-	putstring(out_stream, "(");
-	putfloat(out_stream, quat->s, after_digits);
-	putstring(out_stream, ", ");
-	print_vector(out_stream, quat->v, after_digits);
-	putstring(out_stream, ") ");
+	print_util_putstring(out_stream, "(");
+	print_util_putfloat(out_stream, quat->s, after_digits);
+	print_util_putstring(out_stream, ", ");
+	print_util_print_vector(out_stream, quat->v, after_digits);
+	print_util_putstring(out_stream, ") ");
 }
 
 
-void print_matrix(byte_stream_t *out_stream, float v[], int rows, int columns, int after_digits) 
+void print_util_print_matrix(byte_stream_t *out_stream, float v[], int rows, int columns, int after_digits) 
 {
 	int i, j;
 	
 	for (i=0; i<rows; i++) 
 	{
-		putstring(out_stream, "| ");
+		print_util_putstring(out_stream, "| ");
 		
 		for (j=0; j<columns; j++) 
 		{
-			putfloat(out_stream, v[i*rows+j], after_digits);
+			print_util_putfloat(out_stream, v[i*rows+j], after_digits);
 			if (j<columns-1) 
 			{
-				putstring(out_stream, ", ");
+				print_util_putstring(out_stream, ", ");
 			}
 		}
 
-		putstring(out_stream, " |\n");
+		print_util_putstring(out_stream, " |\n");
 	}
 }
 
 
-void dbg_print(const char* s) 
+void print_util_dbg_print(const char* s) 
 {
-	putstring(deb_stream, s);
+	print_util_putstring(deb_stream, s);
 }
 
 
-void dbg_print_num(long c, char base) 
+void print_util_dbg_print_num(long c, char base) 
 {
-	putnum(deb_stream, c, base);
+	print_util_putnum(deb_stream, c, base);
 }
 
 
-void dbg_putfloat(float c, int after_digits) 
+void print_util_dbg_putfloat(float c, int after_digits) 
 {
-	putfloat(deb_stream, c, after_digits);
+	print_util_putfloat(deb_stream, c, after_digits);
 }
 
 
-void dbg_print_vector(float v[], int after_digits) 
+void print_util_dbg_print_vector(float v[], int after_digits) 
 {
-	print_vector(deb_stream, v, after_digits);
+	print_util_print_vector(deb_stream, v, after_digits);
 }
 
 
-void dbg_print_quaternion(UQuat_t *quat, int after_digits) 
+void print_util_dbg_print_quaternion(UQuat_t *quat, int after_digits) 
 {
-	print_quaternion(deb_stream, quat, after_digits);
+	print_util_print_quaternion(deb_stream, quat, after_digits);
 }
 
 
-void dbg_log_value(const char* msg, long value, char base) 
+void print_util_dbg_log_value(const char* msg, long value, char base) 
 {
-	dbg_print(msg);
+	print_util_dbg_print(msg);
 	
 	if (base>1) 
 	{
-		dbg_print_num(value, base);
+		print_util_dbg_print_num(value, base);
 	}
 	
-	dbg_print("\n");
+	print_util_dbg_print("\n");
 }

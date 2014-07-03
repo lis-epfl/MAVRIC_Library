@@ -58,8 +58,8 @@ static inline int udp_bytes_available(udp_connection_t *udpconn) {
 		if (recsize!=-1) printf("rec: %i\n", recsize);
 		for (i=0; i<recsize; i++) {
 			buffer_put(&udpconn->udp_buffer, buf[i]);
-			dbg_print(" ");dbg_print_num((uint8_t)buf[i], 16);
-		}dbg_print("--\n");
+			print_util_dbg_print(" ");print_util_dbg_print_num((uint8_t)buf[i], 16);
+		}print_util_dbg_print("--\n");
 		
 	}
 	return buffer_bytes_available(&udpconn->udp_buffer);

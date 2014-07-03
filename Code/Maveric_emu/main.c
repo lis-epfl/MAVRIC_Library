@@ -39,30 +39,29 @@ void initialisation() {
 	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 
 	
-	
-	initialise_board(centralData);
-	initialise_central_data();
+	boardsupport_init(centralData);
+	central_data_init();
 
-	init_radar_modules();
-	dbg_print("Debug stream initialised\n");
+	radar_module_init();
+	print_util_dbg_print("Debug stream initialised\n");
 
-	//init_gps_ubx(engine_nav_settings);
+	//gps_ublox_init(engine_nav_settings);
 	
-	set_servos(&servo_failsafe);
+	servo_pwm_set(&servo_failsafe);
 
-	init_onboard_parameters();
-	init_mavlink_actions();
-	init_pos_integration(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
+	onboard_parameters_init();
+	mavlink_actions_init();
+	position_estimation_init(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 	
-	init_nav();
+	navigation_init();
 	init_waypoint_handler();
 	//e_init();
 	
-	init_neighbors();
-	init_orca();
+	neighbors_selection_init();
+	orca_init();
 	
 	LED_On(LED1);
-	init_piezo_speaker_binary();
+	piezo_speaker_init_binary();
 
 }
 
@@ -71,7 +70,7 @@ void initialisation() {
 void main (void)
 {
 	int i;
-	centralData = get_central_data();
+	centralData = central_data_get_pointer_to_struct();
 	// turn on simulation mode: 1: simulation mode, 0: reality
 	centralData->simulation_mode = 1;
 	centralData->simulation_mode_previous = centralData->simulation_mode;
@@ -79,7 +78,7 @@ void main (void)
 		
 	create_tasks();
 	
-	relevel_imu();
+	tasks_relevel_imu();
 
 	//reset position estimate
 	for (i=0; i<3; i++) {
@@ -89,29 +88,27 @@ void main (void)
 		centralData->position_estimator.localPosition.pos[i]=0.0;
 	}
 	
-	//dbg_print("Initialise HIL Simulator...\n");
-	init_simulation(&(centralData->sim_model),&(centralData->imu1.attitude),centralData->position_estimator.localPosition);
+	//print_util_dbg_print("Initialise HIL Simulator...\n");
+	simulation_init(&(centralData->sim_model),&(centralData->imu1.attitude),centralData->position_estimator.localPosition);
 
 	// main loop
 	delay_ms(10);
-	dbg_print("Reset home position...\n");
-	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model.localPosition);
-	dbg_print("OK. Starting up.\n");
+	print_util_dbg_print("Reset home position...\n");
+	position_estimation_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model.localPosition);
+	print_util_dbg_print("OK. Starting up.\n");
 
 	for (i=1; i<8; i++) {
-		beep(100, 500*i);
+		piezo_speaker_beep(100, 500*i);
 		delay_ms(2);
 	}
 
 	while (1==1) {
 		
-		//run_scheduler_update(get_main_taskset(), FIXED_PRIORITY);
-		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
+		//scheduler_run_update(tasks_get_main_taskset(), FIXED_PRIORITY);
+		scheduler_run_update(tasks_get_main_taskset(), ROUND_ROBIN);
 		
 		//LED_On(LED1);
 		delay_ms(1);
 		
-	}		
+	}
 }
-
-

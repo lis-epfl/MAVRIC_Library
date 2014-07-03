@@ -317,7 +317,7 @@
     <File Name="../util/math_util.h"/>
     <File Name="../util/small_matrix.h"/>
     <File Name="../util/coord_conventions.h"/>
-    <File Name="../util/print_matrix.h"/>
+    <File Name="../util/print_util_print_matrix.h"/>
     <File Name="../util/linear_algebra.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="hal_emu">

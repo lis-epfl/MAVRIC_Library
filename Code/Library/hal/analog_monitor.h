@@ -51,7 +51,7 @@ typedef struct
 	float avg[MONITOR_CHANNELS];
 } analog_monitor_t;
 
-void init_analog_monitor(analog_monitor_t* analog_monitor);
+void analog_monitor_init(analog_monitor_t* analog_monitor);
 void analog_monitor_update(analog_monitor_t* analog_monitor);
 
 #ifdef __cplusplus

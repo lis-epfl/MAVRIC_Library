@@ -27,7 +27,7 @@
 void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates_t localPos) {
 	int i;
 	
-	dbg_print("Init HIL simulation. \n");
+	print_util_dbg_print("Init HIL simulation. \n");
 	
 	(*sim) = vehicle_model_parameters;
 	for (i = 0; i < 3; i++)
@@ -52,7 +52,7 @@ void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates
 	{
 		sim->rotorspeeds[i] = 0.0f;			
 	}
-	sim->last_update = get_micros();
+	sim->last_update = time_keeper_get_micros();
 	sim->dt = 0.01f;
 	
 	for (i = 0;i < 9;i++)
@@ -90,7 +90,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4], rotor_lateral_drag[4];
 	float ldb;
 	UQuat_t wind_gf = {.s = 0, .v = {sim->wind_x, sim->wind_y, 0.0f}};
-	UQuat_t wind_bf = quat_global_to_local(sim->attitude.qe, wind_gf);
+	UQuat_t wind_bf = maths_quat_global_to_local(sim->attitude.qe, wind_gf);
 	
 	float sqr_lateral_airspeed = SQR(sim->vel_bf[0] + wind_bf.v[0]) + SQR(sim->vel_bf[1] + wind_bf.v[1]);
 	float lateral_airspeed = sqrt(sqr_lateral_airspeed);
@@ -170,7 +170,7 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	const UQuat_t up = {.s = 0.0f, .v = {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}};
 	
 	
-	uint32_t now = get_micros();
+	uint32_t now = time_keeper_get_micros();
 	sim->dt = (now - sim->last_update) / 1000000.0f;
 	if (sim->dt > 0.1f)
 	{
@@ -186,10 +186,10 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	forces_from_servos_cross_quad(sim, servo_commands);
 	#endif
 	
-	// integrate torques to get simulated gyro rates (with some damping)
-	sim->rates_bf[0] = clip((1.0f - 0.1f * sim->dt) * sim->rates_bf[0] + sim->dt * sim->torques_bf[0] /sim->roll_pitch_momentum, 10.0f);
-	sim->rates_bf[1] = clip((1.0f - 0.1f * sim->dt) * sim->rates_bf[1] + sim->dt * sim->torques_bf[1] /sim->roll_pitch_momentum, 10.0f);
-	sim->rates_bf[2] = clip((1.0f - 0.1f * sim->dt) * sim->rates_bf[2] + sim->dt * sim->torques_bf[2] /sim->yaw_momentum, 10.0f);
+	// pid_control_integrate torques to get simulated gyro rates (with some damping)
+	sim->rates_bf[0] = maths_clip((1.0f - 0.1f * sim->dt) * sim->rates_bf[0] + sim->dt * sim->torques_bf[0] / sim->roll_pitch_momentum, 10.0f);
+	sim->rates_bf[1] = maths_clip((1.0f - 0.1f * sim->dt) * sim->rates_bf[1] + sim->dt * sim->torques_bf[1] / sim->roll_pitch_momentum, 10.0f);
+	sim->rates_bf[2] = maths_clip((1.0f - 0.1f * sim->dt) * sim->rates_bf[2] + sim->dt * sim->torques_bf[2] / sim->yaw_momentum, 10.0f);
 	
 	
 	for (i = 0; i < 3; i++)
@@ -200,17 +200,17 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	qtmp1.s = 0;
 
 	// apply step rotation 
-	qed = quat_multi(sim->attitude.qe,qtmp1);
+	qed = maths_quat_multi(sim->attitude.qe,qtmp1);
 
 	sim->attitude.qe.s = sim->attitude.qe.s + qed.s * sim->dt;
 	sim->attitude.qe.v[0] += qed.v[0] * sim->dt;
 	sim->attitude.qe.v[1] += qed.v[1] * sim->dt;
 	sim->attitude.qe.v[2] += qed.v[2] * sim->dt;
 
-	sim->attitude.qe = quat_normalise(sim->attitude.qe);
-	sim->attitude.up_vec = quat_global_to_local(sim->attitude.qe, up);
+	sim->attitude.qe = maths_quat_normalise(sim->attitude.qe);
+	sim->attitude.up_vec = maths_quat_global_to_local(sim->attitude.qe, up);
 	
-	sim->attitude.north_vec = quat_global_to_local(sim->attitude.qe, front);	
+	sim->attitude.north_vec = maths_quat_global_to_local(sim->attitude.qe, front);	
 
 	// velocity and position integration
 	
@@ -238,16 +238,16 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 		sim->rates_bf[2] = 0;
 	}
 	
-	sim->attitude.qe = quat_normalise(sim->attitude.qe);
-	sim->attitude.up_vec = quat_global_to_local(sim->attitude.qe, up);
+	sim->attitude.qe = maths_quat_normalise(sim->attitude.qe);
+	sim->attitude.up_vec = maths_quat_global_to_local(sim->attitude.qe, up);
 	
-	sim->attitude.north_vec = quat_global_to_local(sim->attitude.qe, front);	
+	sim->attitude.north_vec = maths_quat_global_to_local(sim->attitude.qe, front);	
 	for (i = 0; i < 3; i++)
 	{
 			qtmp1.v[i] = sim->vel[i];
 	}
 	qtmp1.s = 0.0f;
-	qvel_bf = quat_global_to_local(sim->attitude.qe, qtmp1);
+	qvel_bf = maths_quat_global_to_local(sim->attitude.qe, qtmp1);
 	for (i = 0; i < 3; i++)
 	{
 		sim->vel_bf[i] = qvel_bf.v[i];
@@ -264,7 +264,7 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	// calculate velocity in global frame
 	// vel = qe *vel_bf * qe - 1
 	qvel_bf.s = 0.0f; qvel_bf.v[0] = sim->vel_bf[0]; qvel_bf.v[1] = sim->vel_bf[1]; qvel_bf.v[2] = sim->vel_bf[2];
-	qtmp1 = quat_local_to_global(sim->attitude.qe, qvel_bf);
+	qtmp1 = maths_quat_local_to_global(sim->attitude.qe, qvel_bf);
 	sim->vel[0] = qtmp1.v[0]; sim->vel[1] = qtmp1.v[1]; sim->vel[2] = qtmp1.v[2];
 	
 	for (i = 0; i < 3; i++)
@@ -292,7 +292,7 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	
 	//imu->dt = sim->dt;
 
-	sim->localPosition.heading = get_yaw(sim->attitude.qe);
+	sim->localPosition.heading = coord_conventions_get_yaw(sim->attitude.qe);
 	//pos_est->localPosition = sim->localPosition;
 }
 
@@ -300,17 +300,17 @@ void simulation_simulate_barometer(simulation_model_t *sim, pressure_data *press
 {
 	pressure->altitude = sim->localPosition.origin.altitude - sim->localPosition.pos[Z];
 	pressure->vario_vz = sim->vel[Z];
-	pressure->last_update = get_millis();
+	pressure->last_update = time_keeper_get_millis();
 	pressure->altitude_offset = 0;
 }
 	
 void simulation_simulate_gps(simulation_model_t *sim, gps_Data_type *gps)
 {
-	global_position_t gpos = local_to_global_position(sim->localPosition);
+	global_position_t gpos = coord_conventions_local_to_global_position(sim->localPosition);
 	
 	gps->altitude = gpos.altitude;
 	gps->latitude = gpos.latitude;
 	gps->longitude = gpos.longitude;
-	gps->timeLastMsg = get_millis();
+	gps->timeLastMsg = time_keeper_get_millis();
 	gps->status = GPS_OK;
 }

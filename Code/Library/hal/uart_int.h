@@ -33,7 +33,7 @@ extern "C" {
  *
  * \param	UID							The UART ID line
  */
-void init_UART_int(int UID);
+void uart_int_init(int UID);
 
 /**
  * \brief	Get the UART line pointer
@@ -42,7 +42,7 @@ void init_UART_int(int UID);
  *
  * \return	A pointer to the UART 
  */
-usart_config_t *get_UART_handle(int UID);
+usart_config_t *uart_int_get_uart_handle(int UID);
 
 /**
  * \brief	Blocking operation to retrieve a received byte from uart
@@ -88,7 +88,7 @@ void uart_int_flush(usart_config_t *usart_opt );
  * \param	usart_opt	The pointer to the UART line
  * \param	stream		The pointer to the stream on which you want to register a write stream
  */
-void register_write_stream(usart_config_t *usart_opt, byte_stream_t *stream);
+void uart_int_register_write_stream(usart_config_t *usart_opt, byte_stream_t *stream);
 
 /**
  * \brief Registers a stream interface with the UART transmitter (data put into the stream will be sent). 
@@ -98,9 +98,9 @@ void register_write_stream(usart_config_t *usart_opt, byte_stream_t *stream);
  * \param	usart_opt	The pointer to the UART line
  * \param	stream		The pointer to the stream on which you want to register a write stream
  */
-void register_write_stream_nonblocking(usart_config_t *usart_opt, byte_stream_t *stream);
+void uart_int_register_write_stream_nonblocking(usart_config_t *usart_opt, byte_stream_t *stream);
 
-void register_read_stream(usart_config_t *usart_opt,  byte_stream_t *stream);
+void uart_int_register_read_stream(usart_config_t *usart_opt,  byte_stream_t *stream);
 
 #ifdef __cplusplus
 }

@@ -44,12 +44,12 @@ typedef struct
  * \brief Initialize the gyroscope sensor
  * not implemented yet
 */
-void init_itg3200(void);
+void itg3200_driver_init(void);
 
 /**
  * \brief Reconfigure the gyroscope sensor
 */
-void reconfigure_gyro(void);
+void itg3200_driver_reconfigure_gyro(void);
 
 /**
  * \brief Return the gyroscope's data in normal mode
@@ -57,19 +57,19 @@ void reconfigure_gyro(void);
  *
  * \return a pointer to the gyroscope data
 */
-gyro_data* get_gyro_data(void);
+gyro_data* itg3200_driver_get_gyro_data(void);
 
 /**
  * \brief Initialize the gyroscope sensor in slow mode
 */
-void init_itg3200_slow(void);
+void itg3200_driver_init_slow(void);
 
 /**
  * \brief Return the gyroscope's data in slow mode
  *
  * \return a pointer to the gyroscope data
 */
-gyro_data* get_gyro_data_slow(void);
+gyro_data* itg3200_driver_get_data_slow(void);
 
 #ifdef __cplusplus
 	}

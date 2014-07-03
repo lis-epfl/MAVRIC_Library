@@ -14,7 +14,7 @@
 
 static volatile central_data_t centralData;
 
-void initialise_central_data(){
+void central_data_init(){
 		
 		// init controls
 		centralData.controls.rpy[ROLL]=0;
@@ -25,7 +25,7 @@ void initialise_central_data(){
 		centralData.controls.run_mode = MOTORS_OFF;
 		
 		// init stabilisers
-		init_stabilisation_copter(&centralData.stabiliser_stack);
+		stabilisation_copter_init(&centralData.stabiliser_stack);
 		// centralData.stabilisers_stack = 
 
 		centralData.simulation_mode=0;
@@ -50,7 +50,7 @@ void initialise_central_data(){
 		centralData.position_estimator.localPosition.pos[2]=0;
 
 		// init simulation
-		init_simulation(&(centralData.sim_model),&(centralData.imu1.attitude));
+		simulation_init(&(centralData.sim_model),&(centralData.imu1.attitude));
 		centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
 
 }
@@ -62,7 +62,7 @@ byte_stream_t* get_telemetry_upstream() {
 byte_stream_t* get_telemetry_downstream() {
 	return centralData.telemetry_down_stream;
 }
-byte_stream_t* get_debug_stream() {
+byte_stream_t* print_util_get_debug_stream() {
 	return centralData.debug_out_stream;
 }
 

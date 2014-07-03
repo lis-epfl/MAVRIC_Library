@@ -29,12 +29,12 @@
 /**
  * \brief Initialize the piezo speaker
  */
-void init_piezo_speaker();
+void piezo_speaker_init();
 
 /**
  * \brief Initialize the speaker in a binary(?) mode
  */
-void init_piezo_speaker_binary();
+void piezo_speaker_init_binary();
 
 /**
  * \brief instantaneous output voltage sent to the speaker 
@@ -42,22 +42,22 @@ void init_piezo_speaker_binary();
  *
  * \param analog_value sent to speaker
  */
-void set_value(int analog_value);
+void piezo_speaker_set_value(int analog_value);
 
 /**
  * \brief Set a beeping 
  *
- * \param  binary_value different beep depending on the sign of binary_value 
+ * \param  binary_value different piezo_speaker_beep depending on the sign of binary_value 
  */
-void set_value_binary(int binary_value);
+void piezo_speaker_set_value_binary(int binary_value);
 
 /**
  * \brief Beep at a given frequency for a duration
  *
- * \param duration_ms Duration of the beep
- * \param frequency Frequency of the beep
+ * \param duration_ms Duration of the piezo_speaker_beep
+ * \param frequency Frequency of the piezo_speaker_beep
  */
-void beep(int duration_ms, int frequency);
+void piezo_speaker_beep(int duration_ms, int frequency);
 
 #ifdef __cplusplus
 	}

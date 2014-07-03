@@ -38,7 +38,7 @@ void quaternion_controller_set_quat_ref(Quaternion_Controller_t* controller, UQu
 
 void quaternion_controller_set_quat_ref_from_aero(Quaternion_Controller_t* controller, Aero_Attitude_t aero)
 {
-	controller->quat_ref = quaternion_from_aero(aero);
+	controller->quat_ref = coord_conventions_quaternion_from_aero(aero);
 }
 
 void quaternion_controller_set_quat_ref_from_rpy(Quaternion_Controller_t* controller, float rpy[3])
@@ -48,7 +48,7 @@ void quaternion_controller_set_quat_ref_from_rpy(Quaternion_Controller_t* contro
 	aero.rpy[1] = rpy[1];
 	aero.rpy[2] = rpy[2];
 
-	controller->quat_ref = quaternion_from_aero(aero);
+	controller->quat_ref = coord_conventions_quaternion_from_aero(aero);
 }
 
 void quaternion_controller_update(Quaternion_Controller_t* controller)
@@ -58,16 +58,16 @@ void quaternion_controller_update(Quaternion_Controller_t* controller)
 	UQuat_t quat_error;
 
 	// Compute quaternioin error in global frame
-	quat_error = quat_multi(quat_ref, quat_inv(quat_attitude));
+	quat_error = maths_quat_multi(quat_ref, maths_quat_inv(quat_attitude));
 	
 	// Express error in local coordinates
-	quat_error = quat_multi(quat_inv(quat_attitude),
-							quat_multi(quat_error, quat_attitude));
+	quat_error = maths_quat_multi(maths_quat_inv(quat_attitude),
+							maths_quat_multi(quat_error, quat_attitude));
 
 	// Find shortest rotation
 	if (quat_error.s < 0)
 	{
-		quat_error = quat_inv(quat_error);
+		quat_error = maths_quat_inv(quat_error);
 	}
 
 	// Approximate roll pitch and yaw errors with quat_error vector part

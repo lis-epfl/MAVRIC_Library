@@ -24,7 +24,7 @@
 #define SERVO_PERIOD (SERVO_TIMER_FREQ/SERVO_REPEAT_FREQ)	///< Define the servo period
 #define SERVO_CENTER_DUTY_TICKS 1500						///< (SERVO_CENTER_DUTY_MICROSEC*SERVO_TIMER_FREQ/1000000)
 
-void init_Servos(void)
+void servo_pwm_init(void)
 {
 	int i = 0;
 	
@@ -98,7 +98,7 @@ void set_servo(int channel, int val_a, int val_b)
 	AVR32_PWM.channel[channel &0b11].dtupd= deadtime << 16 | deadtime;	
 }
 
-void set_servos(const servo_output *servo_outputs) 
+void servo_pwm_set(const servo_output *servo_outputs) 
 {
 	set_servo(0, servo_outputs[0].value, servo_outputs[1].value);
 	set_servo(1, servo_outputs[2].value, servo_outputs[3].value);
@@ -108,7 +108,7 @@ void set_servos(const servo_output *servo_outputs)
 	#endif
 }
 
-void servos_failsafe(servo_output *servo_outputs)
+void servo_pwm_failsafe(servo_output *servo_outputs)
 {
 	for(int i = 0; i < NUMBER_OF_SERVO_OUTPUTS; i++)
 	{

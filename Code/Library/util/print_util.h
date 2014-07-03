@@ -35,7 +35,7 @@ extern "C"
  * 
  * \param 	debug_stream 	Stream to be forwarded to the debug stream
  */
-void dbg_print_init(byte_stream_t* debug_stream);
+void print_util_dbg_print_init(byte_stream_t* debug_stream);
 
 
 /**
@@ -43,7 +43,7 @@ void dbg_print_init(byte_stream_t* debug_stream);
  * 
  * \return             Pointer to debug stream
  */
-byte_stream_t* get_debug_stream(void);
+byte_stream_t* print_util_get_debug_stream(void);
 
 
 /**
@@ -52,7 +52,7 @@ byte_stream_t* get_debug_stream(void);
  * \param 	out_stream   	Pointer to ouput stream
  * \param 	s            	Character string
  */
-void putstring(byte_stream_t *out_stream, const char* s);
+void print_util_putstring(byte_stream_t *out_stream, const char* s);
 
 
 /**
@@ -64,7 +64,7 @@ void putstring(byte_stream_t *out_stream, const char* s);
  * \param 	out_stream  	Pointer to output stream
  * \param 	c            	Number between 0 and 35
  */
-void putdigit(byte_stream_t *out_stream, unsigned c);
+void print_util_putdigit(byte_stream_t *out_stream, unsigned c);
 
 
 /**
@@ -74,7 +74,7 @@ void putdigit(byte_stream_t *out_stream, unsigned c);
  * \param c            Number
  * \param base         Base
  */
-void putnum(byte_stream_t *out_stream, long c, char base);
+void print_util_putnum(byte_stream_t *out_stream, long c, char base);
 
 
 /**
@@ -84,7 +84,7 @@ void putnum(byte_stream_t *out_stream, long c, char base);
  * \param 	c            	Floating point value
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void putfloat(byte_stream_t *out_stream, float c, int after_digits);
+void print_util_putfloat(byte_stream_t *out_stream, float c, int after_digits);
 
 
 /**
@@ -96,7 +96,7 @@ void putfloat(byte_stream_t *out_stream, float c, int after_digits);
  * \param 	columns			Number of columns
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void print_matrix(byte_stream_t *out_stream, float v[], int rows, int columns, int after_digits);
+void print_util_print_matrix(byte_stream_t *out_stream, float v[], int rows, int columns, int after_digits);
 
 
 /**
@@ -106,7 +106,7 @@ void print_matrix(byte_stream_t *out_stream, float v[], int rows, int columns, i
  * \param 	v            	Array of floats containing the vector elements
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void print_vector(byte_stream_t *out_stream, float v[], int after_digits); 
+void print_util_print_vector(byte_stream_t *out_stream, float v[], int after_digits); 
 
 
 /**
@@ -116,7 +116,7 @@ void print_vector(byte_stream_t *out_stream, float v[], int after_digits);
  * \param 	quat         	Unit quaternion
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void print_quaternion(byte_stream_t *out_stream, UQuat_t *quat, int after_digits); 
+void print_util_print_quaternion(byte_stream_t *out_stream, UQuat_t *quat, int after_digits); 
 
 
 /**
@@ -124,7 +124,7 @@ void print_quaternion(byte_stream_t *out_stream, UQuat_t *quat, int after_digits
  * 
  * \param s            Character string
  */
-void dbg_print(const char* s);
+void print_util_dbg_print(const char* s);
 
 
 /**
@@ -133,7 +133,7 @@ void dbg_print(const char* s);
  * \param c            Number
  * \param base         Base
  */
-void dbg_print_num(long c, char base);
+void print_util_dbg_print_num(long c, char base);
 
 
 /**
@@ -146,7 +146,7 @@ void dbg_print_num(long c, char base);
  * \param 	value       Associated value
  * \param 	base        Base
  */
-void dbg_log_value(const char* msg, long value, char base);
+void print_util_dbg_log_value(const char* msg, long value, char base);
 
 
 /**
@@ -155,7 +155,7 @@ void dbg_log_value(const char* msg, long value, char base);
  * \param 	c           	Floating point value
  * \param 	after_digits  	Number of digits to write after the radix point
  */
-void dbg_putfloat(float c, int after_digits);
+void print_util_dbg_putfloat(float c, int after_digits);
 
 
 /**
@@ -164,7 +164,7 @@ void dbg_putfloat(float c, int after_digits);
  * \param 	v            	Array of float containing the vector elements
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void dbg_print_vector(float v[], int after_digits); 
+void print_util_dbg_print_vector(float v[], int after_digits); 
 
 
 /*!
@@ -173,7 +173,7 @@ void dbg_print_vector(float v[], int after_digits);
  * \param 	quat         	Unit quaternion
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void dbg_print_quaternion(UQuat_t *quat, int after_digits); 
+void print_util_dbg_print_quaternion(UQuat_t *quat, int after_digits); 
 
 
 #ifdef __cplusplus

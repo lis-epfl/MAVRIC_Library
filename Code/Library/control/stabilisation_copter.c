@@ -22,7 +22,7 @@
 
 central_data_t *centralData;
 
-void init_stabilisation_copter(Stabiliser_Stack_copter_t* stabiliser_stack)
+void stabilisation_copter_init(Stabiliser_Stack_copter_t* stabiliser_stack)
 {
 	centralData = central_data_get_pointer_to_struct();
 	centralData->run_mode = MOTORS_OFF;
@@ -49,14 +49,14 @@ void init_stabilisation_copter(Stabiliser_Stack_copter_t* stabiliser_stack)
 	centralData->controls_nav.thrust = -1.0f;
 }
 
-void get_velocity_vector_from_remote(float tvel[])
+void stabilisation_copter_get_velocity_vector_from_remote(float tvel[])
 {
 	tvel[X]= - 10.0f * centralData->controls.rpy[PITCH];
 	tvel[Y]= 10.0f * centralData->controls.rpy[ROLL];
 	tvel[Z]=- 1.5f * centralData->controls.thrust;
 }
 
-void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input) 
+void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input) 
 {
 	float rpyt_errors[4];
 	Control_Command_t input;
@@ -68,8 +68,8 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 	switch (control_input->control_mode) {
 	case VELOCITY_COMMAND_MODE:
 		
-		qtmp=quat_from_vector(input.tvel);
-		UQuat_t inputLocal = quat_local_to_global(imu->attitude.qe, qtmp);
+		qtmp=maths_quat_from_vector(input.tvel);
+		UQuat_t inputLocal = maths_quat_local_to_global(imu->attitude.qe, qtmp);
 		
 		input.tvel[X] = inputLocal.v[X];
 		input.tvel[Y] = inputLocal.v[Y];
@@ -82,7 +82,7 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 		if (control_input->yaw_mode == YAW_COORDINATED) 
 		{
 			float rel_heading_coordinated;
-			if ((f_abs(pos_est->vel_bf[X])<0.001f)&&(f_abs(pos_est->vel_bf[Y])<0.001f))
+			if ((maths_f_abs(pos_est->vel_bf[X])<0.001f)&&(maths_f_abs(pos_est->vel_bf[Y])<0.001f))
 			{
 				rel_heading_coordinated = 0.0f;
 			}
@@ -91,22 +91,22 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 				rel_heading_coordinated = atan2(pos_est->vel_bf[Y], pos_est->vel_bf[X]);
 			}
 			
-			float w = 0.5f * (sigmoid(vector_norm(pos_est->vel_bf) - centralData->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
+			float w = 0.5f * (maths_sigmoid(maths_vector_norm(pos_est->vel_bf)-centralData->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
 			input.rpy[YAW] = (1.0f - w) * input.rpy[YAW] + w * rel_heading_coordinated;
 		}
 
 		rpyt_errors[YAW]= input.rpy[YAW];
 		
 		// run PID update on all velocity controllers
-		stabilise(&centralData->stabiliser_stack.velocity_stabiliser, centralData->imu1.dt, rpyt_errors);
+		stabilisation_run(&centralData->stabiliser_stack.velocity_stabiliser, centralData->imu1.dt, rpyt_errors);
 		
-		//velocity_stabiliser.output.thrust = f_min(velocity_stabiliser.output.thrust,control_input->thrust);
+		//velocity_stabiliser.output.thrust = maths_f_min(velocity_stabiliser.output.thrust,control_input->thrust);
 		centralData->stabiliser_stack.velocity_stabiliser.output.thrust += THRUST_HOVER_POINT;
 		centralData->stabiliser_stack.velocity_stabiliser.output.theading = input.theading;
 		input = centralData->stabiliser_stack.velocity_stabiliser.output;
 		
-		qtmp=quat_from_vector(centralData->stabiliser_stack.velocity_stabiliser.output.rpy);
-		UQuat_t rpyLocal = quat_global_to_local(imu->attitude.qe, qtmp);
+		qtmp=maths_quat_from_vector(centralData->stabiliser_stack.velocity_stabiliser.output.rpy);
+		UQuat_t rpyLocal = maths_quat_global_to_local(imu->attitude.qe, qtmp);
 		
 		input.rpy[ROLL] = rpyLocal.v[Y];
 		input.rpy[PITCH] = -rpyLocal.v[X];
@@ -119,7 +119,7 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 		rpyt_errors[1]= input.rpy[1] - imu->attitude.up_vec.v[0];
 		
 		if ((control_input->yaw_mode == YAW_ABSOLUTE) ) {
-			rpyt_errors[2] =calc_smaller_angle(input.theading- pos_est->localPosition.heading);
+			rpyt_errors[2] =maths_calc_smaller_angle(input.theading- pos_est->localPosition.heading);
 		}
 		else
 		{ // relative yaw
@@ -129,7 +129,7 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 		rpyt_errors[3]= input.thrust;       // no feedback for thrust at this level
 		
 		// run PID update on all attitude controllers
-		stabilise(&centralData->stabiliser_stack.attitude_stabiliser, centralData->imu1.dt, &rpyt_errors);
+		stabilisation_run(&centralData->stabiliser_stack.attitude_stabiliser, centralData->imu1.dt, &rpyt_errors);
 		
 		// use output of attitude controller to set rate setpoints for rate controller 
 		input = centralData->stabiliser_stack.attitude_stabiliser.output;
@@ -144,20 +144,20 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 		rpyt_errors[3] = input.thrust ;  // no feedback for thrust at this level
 		
 		// run PID update on all rate controllers
-		stabilise(&centralData->stabiliser_stack.rate_stabiliser, centralData->imu1.dt, &rpyt_errors );
+		stabilisation_run(&centralData->stabiliser_stack.rate_stabiliser, centralData->imu1.dt, &rpyt_errors );
 	}
 	
 	// mix to servo outputs depending on configuration
 	#ifdef CONF_DIAG
-	mix_to_servos_diag_quad(&centralData->stabiliser_stack.rate_stabiliser.output);
+	stabilisation_copter_mix_to_servos_diag_quad(&centralData->stabiliser_stack.rate_stabiliser.output);
 	#else
 	#ifdef CONF_CROSS
-	mix_to_servos_cross_quad(&centralData->stabiliser_stack.rate_stabiliser.output);
+	stabilisation_copter_mix_to_servos_cross_quad(&centralData->stabiliser_stack.rate_stabiliser.output);
 	#endif
 	#endif
 }
 
-void mix_to_servos_diag_quad(Control_Command_t *control)
+void stabilisation_copter_mix_to_servos_diag_quad(Control_Command_t *control)
 {
 	int i;
 	float motor_command[4];
@@ -184,7 +184,7 @@ void mix_to_servos_diag_quad(Control_Command_t *control)
 	}
 }
 
-void mix_to_servos_cross_quad(Control_Command_t *control)
+void stabilisation_copter_mix_to_servos_cross_quad(Control_Command_t *control)
 {
 	int i;
 	float motor_command[4];

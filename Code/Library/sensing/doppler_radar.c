@@ -67,15 +67,15 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 						
 	for (i = 0;i< RADAR_BUFFER_SIZE;i++)
 	{				
-		fft_amp[i] = fast_sqrt(SQR(vect_outputI[i].real) + SQR(vect_outputI[i].imag));
+		fft_amp[i] = maths_fast_sqrt(SQR(vect_outputI[i].real) + SQR(vect_outputI[i].imag));
 	}
 
 			
 	//Find maximum of FFT and corresponding frequency
-	//time1 = get_micros();
+	//time1 = time_keeper_get_micros();
 	amplitude = 0;
 	index = 0;
-	for(i = 1;i < RADAR_BUFFER_SIZE / 2-1;i++) //ignore the element 0 (low frequency noise)
+	for(i = 1;i < RADAR_BUFFER_SIZE / 2 - 1; i++) //ignore the element 0 (low frequency noise)
 	{
 				
 		if(fft_amp[i] > amplitude)
@@ -196,13 +196,13 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 		}
 	}
 	
-	time2 = get_micros();
+	time2 = time_keeper_get_micros();
 	time_result = time2 - time1;
 	//
-	time1 = get_micros();
+	time1 = time_keeper_get_micros();
 
 	main_target.velocity = direction * speed / 100.0f;
-	// main_target.velocity = speed / 100.0f;
+	//main_target.velocity = speed / 100.0f;
 	main_target.amplitude = amplitude;
 
 	amplitude = 0;

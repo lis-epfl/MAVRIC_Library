@@ -36,7 +36,7 @@ int16_t bmp085_read_int(unsigned char address) {
 	return result;
 }
 
-void init_bmp085()
+void bmp085_init()
 {
 	pressure_outputs.altitude_offset = 0.0f;
 	for (int i = 0; i < 3; i++) 
@@ -44,14 +44,14 @@ void init_bmp085()
 		pressure_outputs.last_altitudes[i] = 0.0f;
 	}
 	pressure_outputs.vario_vz = 0.0f;
-	init_bmp085_slow();
+	bmp085_init_slow();
 }
 
 ///< Declare configuration values for the barometer, given by the datasheet of the sensor
 int16_t ac1, ac2, ac3, b1, b2, mb, mc, md;		
 uint16_t ac4, ac5, ac6;
 
-void init_bmp085_slow(){
+void bmp085_init_slow(){
 	static twim_options_t twi_opt= 
 	{
 		.pba_hz = 64000000,
@@ -64,11 +64,11 @@ void init_bmp085_slow(){
 
 	if (twim_probe(&AVR32_TWIM0, BMP085_SLAVE_ADDRESS) == STATUS_OK) 
 	{
-		dbg_print("BMP85/180 pressure sensor found (0x77)\n");
+		print_util_dbg_print("BMP85/180 pressure sensor found (0x77)\n");
 	} 
 	else 
 	{
-		dbg_print("BMP85/180 pressure sensor not responding (0x77)\n");
+		print_util_dbg_print("BMP85/180 pressure sensor not responding (0x77)\n");
 		return;
 	}
 	
@@ -101,7 +101,7 @@ void init_bmp085_slow(){
  
 
 
-pressure_data* get_pressure_data_slow(float offset) 
+pressure_data* bmp085_get_pressure_data_slow(float offset) 
 {
 		int i;
 		float altitude, vertical_speed;
@@ -187,9 +187,9 @@ pressure_data* get_pressure_data_slow(float offset)
 					pressure_outputs.last_altitudes[i] = pressure_outputs.last_altitudes[i + 1];
 				}
 				pressure_outputs.last_altitudes[2] = altitude;
-				altitude=median_filter_3x(pressure_outputs.last_altitudes[0], pressure_outputs.last_altitudes[1], pressure_outputs.last_altitudes[2]);
+				altitude=maths_median_filter_3x(pressure_outputs.last_altitudes[0], pressure_outputs.last_altitudes[1], pressure_outputs.last_altitudes[2]);
 			
-				if (f_abs(altitude-pressure_outputs.altitude) < 15.0f) 
+				if (maths_f_abs(altitude-pressure_outputs.altitude) < 15.0f) 
 				{
 					pressure_outputs.altitude = (BARO_ALT_LPF * pressure_outputs.altitude) + (1.0f - BARO_ALT_LPF) * altitude;
 				}
@@ -198,7 +198,7 @@ pressure_data* get_pressure_data_slow(float offset)
 					pressure_outputs.altitude = altitude;
 				}
 			
-				dt = (get_micros() - pressure_outputs.last_update) / 1000000.0f;
+				dt = (time_keeper_get_micros()-pressure_outputs.last_update) / 1000000.0f;
 				pressure_outputs.dt = dt;
 				vertical_speed = -(pressure_outputs.altitude-vertical_speed) / dt;
 			
@@ -208,17 +208,17 @@ pressure_data* get_pressure_data_slow(float offset)
 				}
 				pressure_outputs.vario_vz = (VARIO_LPF) * pressure_outputs.vario_vz + (1.0f - VARIO_LPF) * (vertical_speed);
 			
-				pressure_outputs.last_update = get_micros();
+				pressure_outputs.last_update = time_keeper_get_micros();
 				pressure_outputs.state = IDLE;
 				break;
 		}
-		pressure_outputs.last_state_update=get_micros();
+		pressure_outputs.last_state_update=time_keeper_get_micros();
 		pressure_outputs.altitude_offset = offset;
 		
 		return &pressure_outputs;
 }
 
-bool newValidBarometer(uint32_t *timePrevBarometer)
+bool bmp085_newValidBarometer(uint32_t *timePrevBarometer)
 {
 	if (*timePrevBarometer < pressure_outputs.last_update) 
 	{

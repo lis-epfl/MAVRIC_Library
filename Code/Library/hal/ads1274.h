@@ -48,19 +48,19 @@ typedef uint16_t (*generatorfunction)(uint32_t);
  *
  * \param new_function_generator a function pointer to a generator function
  */
-void set_DAC_generator_function(generatorfunction new_function_generator );
+void ads1274_set_DAC_generator_function(generatorfunction new_function_generator );
 
 /** 
  * \brief Initializes ADC (configures Pins, starts Clock, sets defaults)
 */
-void Init_ADC(void);
+void ads1274_init_DAC(void);
 
 /** 
  * \brief Enable/Disable the clock to the ADC
  *
  * \param on_off to enable or disable the ADC clock
 */
-void ADC_Switch_Clock(Bool on_off);
+void ads1274_ADC_switch_clock(Bool on_off);
 
 /** 
  * \brief Switch the four input channels on or off
@@ -68,29 +68,29 @@ void ADC_Switch_Clock(Bool on_off);
  * \param channel select ADC channel
  * \param on_off enable or disable ADC of that channel
 */
-void ADC_Switch_Channel(int channel, Bool on_off);
+void ads1274_ADC_switch_channel(int channel, Bool on_off);
 
 /** 
  * \brief configures the ADC mode (refer to datasheet for options)
  *
  * \param mode define in which mode the ADC will be used
 */
-void ADC_Set_Mode(int mode);
+void ads1274_ADC_set_mode(int mode);
 
 /** 
  * \brief enables continuous sampling  -- not implemented yet
 */
-void ADC_Start_Sampling(void);
+void ads1274_ADC_start_sampling(void);
 
 /** 
  * \brief starts sampling, captures one buffer length and then stops
 */
-void ADC_Start_Oneshot(void);
+void ads1274_ADC_start_oneshot(void);
 
 /** 
  * \brief stops sampling immediately
 */
-void ADC_Stop_Sampling(void);
+void ads1274_ADC_stop_sampling(void);
 
 /** 
  * \brief get whether one-shot sampling has finished

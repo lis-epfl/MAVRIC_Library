@@ -51,18 +51,18 @@ void initialisation() {
 	int i;
 	
 	main_tasks.number_of_tasks=30;
-	initialise_board(central_data);
+	boardsupport_init(central_data);
 	
 
-	init_radar();
+	radar_driver_init();
 
 	Enable_global_interrupt();
 		
-	//dbg_print("Debug stream initialised\n");
+	//print_util_dbg_print("Debug stream initialised\n");
 
 
-	init_onboard_parameters();
-	init_mavlink_actions();
+	onboard_parameters_init();
+	mavlink_actions_init();
 	
 	
 }
@@ -77,19 +77,19 @@ void main (void)
 	
 	initialisation();
 	
-	init_scheduler(&main_tasks);
-	register_task(&main_tasks, 0, 1000, RUN_REGULAR, &mavlink_protocol_update);
+	scheduler_init(&main_tasks);
+	scheduler_register_task(&main_tasks, 0, 1000, RUN_REGULAR, &mavlink_protocol_update);
 	// main loop
 	counter=0;
 	// turn on radar power:
-	switch_power(1,0);
+	radar_driver_switch_power(1,0);
 
 
-	Init_ADCI(1500000, ADCIFA_REF1V);
-	adc_sequencer_add(&sample_buffer[0], AVR32_ADCIFA_INP_ADCIN0, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16);  
-	adc_sequencer_add(&sample_buffer[1], AVR32_ADCIFA_INP_ADCIN1, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16);  
-	adc_sequencer_add(&sample_buffer[2], AVR32_ADCIFA_INP_ADCIN3, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16);  
-	adc_sequencer_add(&sample_buffer[3], AVR32_ADCIFA_INP_ADCIN4, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16); 
+	adc_int_init(1500000, ADCIFA_REF1V);
+	adc_int_sequencer_add(&sample_buffer[0], AVR32_ADCIFA_INP_ADCIN0, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16);  
+	adc_int_sequencer_add(&sample_buffer[1], AVR32_ADCIFA_INP_ADCIN1, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16);  
+	adc_int_sequencer_add(&sample_buffer[2], AVR32_ADCIFA_INP_ADCIN3, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16);  
+	adc_int_sequencer_add(&sample_buffer[3], AVR32_ADCIFA_INP_ADCIN4, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16); 
 	
 	LED_On(LED0);
 	delay_ms(1000);
@@ -98,12 +98,12 @@ void main (void)
 
 	
 	// start sampling in continuous mode
-	ADCI_Start_Sampling(SAMPLE_BUFFER_SIZE, Sampling_frequency, 16, 1, true);
+	adc_int_start_sampling(SAMPLE_BUFFER_SIZE, Sampling_frequency, 16, 1, true);
 	while (1==1) {
-		this_looptime=get_millis();
+		this_looptime=time_keeper_get_millis();
 		
-		if (((ADCI_get_sampling_status()>=SAMPLE_BUFFER_SIZE/2) && (wait_for_buffer==0)) ||
-		   ((ADCI_get_sampling_status()<SAMPLE_BUFFER_SIZE/2) && (wait_for_buffer==1)))
+		if (((adc_int_get_sampling_status()>=SAMPLE_BUFFER_SIZE/2) && (wait_for_buffer==0)) ||
+		   ((adc_int_get_sampling_status()<SAMPLE_BUFFER_SIZE/2) && (wait_for_buffer==1)))
 		 {  // half of the sample buffer is ready for processing
 			// copy samples to end of input buffer
 			for (ch=0; ch<4; ch++) {
@@ -121,7 +121,7 @@ void main (void)
 					}
 				}
 			}
-			//ADCI_Start_Sampling(SAMPLE_BUFFER_SIZE, Sampling_frequency, 16, 1, true);
+			//adc_int_start_sampling(SAMPLE_BUFFER_SIZE, Sampling_frequency, 16, 1, true);
 			wait_for_buffer=1-wait_for_buffer;
 			LED_On(LED1);
 
@@ -129,14 +129,14 @@ void main (void)
 			mavlink_send_radar();
 			//mavlink_send_radar_raw();
 			
-			//dbg_putfloat(get_tracked_target()->velocity,2);
-			//dbg_print(".\n");
+			//print_util_dbg_putfloat(get_tracked_target()->velocity,2);
+			//print_util_dbg_print(".\n");
 
 		}			
 		
-		//run_scheduler_update(&main_tasks, FIXED_PRIORITY);
-		mavlink_protocol_update();
-		//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "ADC_period", get_adc_int_period());
+		//scheduler_run_update(&main_tasks, FIXED_PRIORITY);
+		mavlink_stream_protocol_update();
+		//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "ADC_period", adc_int_get_period());
 
 		LED_Off(LED1);
 

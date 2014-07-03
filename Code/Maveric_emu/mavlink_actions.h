@@ -14,7 +14,7 @@
 
 void add_PID_parameters(void);
 
-void init_mavlink_actions(void);
+void mavlink_actions_init(void);
 
 
 #endif /* MAVLINK_ACTIONS_H_ */

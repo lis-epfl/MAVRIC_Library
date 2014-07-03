@@ -58,10 +58,10 @@ typedef struct Spektrum_Receiver {
 } Spektrum_Receiver_t;
 
 
-void rc_init (void);
-int16_t rc_get_channel(uint8_t index);
-void rc_center_channel(uint8_t index);
-int16_t rc_get_channel_neutral(uint8_t index);
-int8_t rc_check_receivers(void);
+void remote_dsm2_rc_init (void);
+int16_t remote_dsm2_rc_get_channel(uint8_t index);
+void remote_dsm2_rc_center_channel(uint8_t index);
+int16_t remote_dsm2_rc_get_channel_neutral(uint8_t index);
+int8_t remote_dsm2_rc_check_receivers(void);
 
 #endif 

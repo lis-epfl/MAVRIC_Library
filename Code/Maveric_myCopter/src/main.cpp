@@ -32,12 +32,12 @@ void initialisation()
 	boardsupport_init(centralData);
 	central_data_init();
 	
-	dbg_print("Debug stream initialised\n");
+	print_util_dbg_print("Debug stream initialised\n");
 	
-	servos_failsafe(centralData->servos);
-	set_servos(centralData->servos);
+	servo_pwm_failsafe(centralData->servos);
+	servo_pwm_set(centralData->servos);
 	
-	init_onboard_parameters();
+	onboard_parameters_init();
 
 
 	mavlink_actions_init(); // TODO: move read from flash elsewhere
@@ -56,17 +56,17 @@ void initialisation()
 	} // TODO: move to module
 
 	delay_ms(10);
-	dbg_print("Reset home position...\n");
+	print_util_dbg_print("Reset home position...\n");
 	position_estimation_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model.localPosition);
 	// TODO: move to module
 	
 	LED_On(LED1);
 	for (i = 1; i < 8; i++)
 	{
-		beep(100, 500 * i);
+		piezo_speaker_beep(100, 500 * i);
 		delay_ms(2);
 	}
-	dbg_print("OK. Starting up.\n");
+	print_util_dbg_print("OK. Starting up.\n");
 }
 
 int main (void)
