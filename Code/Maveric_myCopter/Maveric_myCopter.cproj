@@ -605,12 +605,6 @@
     <Compile Include="Library\control\stabilisation_hybrid.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\airspeed_analog.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\airspeed_analog.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\hal\analog_monitor.h">
       <SubType>compile</SubType>
     </Compile>
@@ -999,9 +993,6 @@
     <Compile Include="src\central_data.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\config\conf_imu_rev3.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\config\conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
@@ -1009,9 +1000,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\conf_stabilisation_copter.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\config\conf_stabilisation_hybrid.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\MAVsettings\MAV001_conf_imu_rev4.h">
@@ -1530,9 +1518,6 @@
     <Compile Include="src\boardsupport.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\config\conf_board.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\config\conf_clock.h">
       <SubType>compile</SubType>
     </Compile>
@@ -1540,9 +1525,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\conf_sleepmgr.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\config\conf_spi_master.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\conf_twim.h">

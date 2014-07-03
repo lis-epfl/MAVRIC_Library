@@ -1,4 +1,4 @@
-/*! \file *********************************************************************
+/*! \file conf_spi_master.h
  *
  * \brief Spi Master configuration template file
  *
