@@ -1,12 +1,18 @@
-/**
- * This file computes a collision-free trajectory for the ORCA algorithm
+ /** 
+ * \page The MAV'RIC license
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
+ */
+ 
+ 
+/**
+ * \file orca.c
  *
- * This file is part of the MAV'RIC Framework.
+ * This file computes a collision-free trajectory for the ORCA algorithm
  */
 
 
@@ -57,11 +63,10 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 	
 	neighbors_selection_extrapolate_or_delete_position(centralData->listNeighbors, &(centralData->number_of_neighbors));
 	
-	/* Create agent ORCA planes. */
+	// Create agent ORCA planes
 	for (ind=0; ind<centralData->number_of_neighbors; ind++)
 	{
 		// Linear extrapolation of the position of the neighbor between two received messages
-		
 		for (i=0;i<3;i++)
 		{
 			relativePosition[i] = centralData->listNeighbors[ind].extrapolatedPosition[i] - centralData->position_estimator.localPosition.pos[i];
@@ -105,7 +110,7 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		
 		if (distSq > combinedRadiusSq)
 		{
-			/* No collisions */
+			// No collisions
 			for (i=0;i<3;i++)
 			{
 				w[i] = relativeVelocity[i] - invTimeHorizon * relativePosition[i];
@@ -116,7 +121,7 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 			
 			if ((dotProduct < 0.0f)&&(SQR(dotProduct) > (combinedRadiusSq * wLenghtSq)))
 			{
-				/* Project on cut-off circle. */
+				// Project on cut-off circle
 				wLength = fast_sqrt(wLenghtSq);
 				for (i=0;i<3;i++)
 				{
@@ -124,8 +129,10 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 					planes[ind].normal[i] = unitW[i];
 					u[i] = (combinedRadius * invTimeHorizon - wLength) * unitW[i];
 				}
-			}else{
-				/* Project on cone. */
+			}
+			else
+			{
+				// Project on cone
 				float a = distSq;
 				float b = scalar_product(relativePosition,relativeVelocity);
 				float crossProduct[3];
@@ -144,9 +151,10 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 					u[i] = (combinedRadius * t - wLength) * unitW[i];
 				}
 			}
-		}else{
-			/* Collisions */
-			
+		}
+		else
+		{
+			// Collisions
 			min_coll_dist = f_min(min_coll_dist,sqrt(distSq));
 			
 			loop_count_collisions = loop_count_collisions++ % 100;
@@ -163,11 +171,14 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 			}
 			
 			float invTimeStep = 1.0f / ORCA_TIME_STEP_MILLIS; //PROBLEM wrong time step
+			
 			for (i=0;i<3;i++)
 			{
 				w[i] = relativeVelocity[i] - invTimeStep * relativePosition[i];
 			}
+			
 			wLength = vector_norm(w);
+			
 			for (i=0;i<3;i++)
 			{
 				unitW[i] = w[i] / wLength;
@@ -182,7 +193,9 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		}
 		
 	}
+	
 	float planeFail = linearProgram3(planes,centralData->number_of_neighbors, OptimalVelocity, MAXSPEED, NewVelocity, false);
+	
 	if (planeFail < centralData->number_of_neighbors)
 	{
 		linearProgram4(planes,centralData->number_of_neighbors,planeFail,MAXSPEED,NewVelocity);
@@ -190,10 +203,12 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 	
 	loop_count_orca = loop_count_orca++ % 100;
 	float orca_diff[3];
+	
 	for (i=0;i<3;i++)
 	{
 		orca_diff[i] = OptimalVelocity[i] - NewVelocity[i];
 	}
+	
 	if (loop_count_orca == 0)
 	{
 		dbg_print("Orca diffvel:");
@@ -203,19 +218,20 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		dbg_print(", New:");
 		dbg_print_vector(NewVelocity,2);
 		dbg_print("\n");
-	//}else{
-		//if (vector_norm_sqr(orca_diff)>0.2f)
-		//{
-			//dbg_print("Orca diffvel:");
-			//dbg_print_vector(orca_diff,2);
-			//dbg_print(", Optimal:");
-			//dbg_print_vector(OptimalVelocity,2);
-			//dbg_print(", New:");
-			//dbg_print_vector(NewVelocity,2);
-			//dbg_print("\n");
-		//}
+	/*}
+	else
+	{
+		if (vector_norm_sqr(orca_diff)>0.2)
+		{
+			dbg_print("Orca diffvel:");
+			dbg_print_vector(orca_diff,2);
+			dbg_print(", Optimal:");
+			dbg_print_vector(OptimalVelocity,2);
+			dbg_print(", New:");
+			dbg_print_vector(NewVelocity,2);
+			dbg_print("\n");
+		}*/
 	}
-
 }
 
 bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt)
@@ -227,7 +243,7 @@ bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed
 	
 	if (discriminant < 0.0f)
 	{
-		/* Max speed sphere fully invalidates line. */
+		// Max speed sphere fully invalidates line
 		return false;
 	}
 	
@@ -239,20 +255,24 @@ bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed
 	for (index2=0;index2<index;index2++)
 	{
 		float diffPoints[3];
+		
 		for (i=0;i<3;i++)
 		{
 			diffPoints[i] = planes[index2].point[i] - line.point[i];
 		}
+		
 		float numerator = scalar_product(diffPoints, planes[index2].normal);
 		float denominator = scalar_product(line.direction, planes[index2].normal);
 		
 		if (SQR(denominator) <= RVO_EPSILON)
 		{
-			/* Lines line is (almost) parallel to plane i. */
+			// Lines line is (almost) parallel to plane i
 			if (numerator > 0.0f)
 			{
 				return false;
-			}else{
+			}
+			else
+			{
 				continue;
 			}
 		}
@@ -261,10 +281,12 @@ bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed
 		
 		if (denominator >= 0.0f)
 		{
-			/* Plane i bounds line on the left. */
+			// Plane i bounds line on the left
 			tLeft = f_max(tLeft, t);
-		}else{
-			/* Plane i bounds line on the right. */
+		}
+		else
+		{
+			// Plane i bounds line on the right
 			tRight = f_min(tRight, t);
 		}
 		
@@ -276,22 +298,27 @@ bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed
 	
 	if (directionOpt)
 	{
-		/* Optimize direction. */
-		if (scalar_product(OptimalVelocity, line.direction) > 0.0f) {
-			/* Take right extreme. */
+		// Optimize direction
+		if (scalar_product(OptimalVelocity, line.direction) > 0.0f) 
+		{
+			// Take right extreme
 			for (i=0;i<3;i++)
 			{
 				NewVelocity[i] = line.point[i] + tRight * line.direction[i];
 			}
-		}else {
-			/* Take left extreme. */
+		}
+		else 
+		{
+			// Take left extreme
 			for (i=0;i<3;i++)
 			{
 				NewVelocity[i] = line.point[i] + tLeft * line.direction[i];
 			}
 		}
-	}else{
-		/* Optimize closest point. */
+	}
+	else
+	{
+		// Optimize closest point
 		float diffVelPoint[3];
 		for (i=0;i<3;i++)
 		{
@@ -306,15 +333,22 @@ bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed
 			{
 				NewVelocity[i] = line.point[i] + tLeft * line.direction[i];
 			}
-		}else if (t > tRight){
-			for (i=0;i<3;i++)
+		}
+		else
+		{
+			if (t > tRight)
 			{
-				NewVelocity[i] = line.point[i] + tRight * line.direction[i];
+				for (i=0;i<3;i++)
+				{
+					NewVelocity[i] = line.point[i] + tRight * line.direction[i];
+				}
 			}
-		}else{
-			for (i=0;i<3;i++)
+			else
 			{
-				NewVelocity[i] = line.point[i] + t * line.direction[i];
+				for (i=0;i<3;i++)
+				{
+					NewVelocity[i] = line.point[i] + t * line.direction[i];
+				}
 			}
 		}
 	}
@@ -324,6 +358,7 @@ bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed
 bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt)
 {
 	uint8_t i;
+	uint8_t index;
 	
 	float planeDist = scalar_product(planes[ind].point,planes[ind].normal);
 	float planeDistSq = SQR(planeDist);
@@ -331,7 +366,7 @@ bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Optimal
 	
 	if (planeDistSq > radiusSq)
 	{
-		/* Max speed sphere fully invalidates plane planeNo. */
+		// Max speed sphere fully invalidates plane planeNo
 		return false;
 	}
 	
@@ -345,13 +380,15 @@ bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Optimal
 	
 	if (directionOpt)
 	{
-		/* Project direction optVelocity on plane ind. */
+		// Project direction optVelocity on plane ind
 		float planeOptVelocity[3];
 		float scalarProduct = scalar_product(OptimalVelocity,planes[ind].normal);
+		
 		for(i=0;i<3;i++)
 		{
 			planeOptVelocity[i] = OptimalVelocity[i] - scalarProduct * planes[ind].normal[i];
 		}
+		
 		float planeOptVelocityLengthSq = vector_norm_sqr(planeOptVelocity);
 		
 		if (planeOptVelocityLengthSq <= RVO_EPSILON)
@@ -360,36 +397,47 @@ bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Optimal
 			{
 				NewVelocity[i] = planeCenter[i];
 			}
-		}else{
+		}
+		else
+		{
 			float sqrtPlane = fast_sqrt(planeRadiusSq / planeOptVelocityLengthSq);
+			
 			for(i=0;i<3;i++)
 			{
 				NewVelocity[i] = planeCenter[i] + sqrtPlane * planeOptVelocity[i];
 			}
 		}
-	}else{
-		/* Project point optVelocity on plane ind. */
+	}
+	else
+	{
+		// Project point optVelocity on plane ind
 		float diffPtsVel[3];
+		
 		for(i=0;i<3;i++)
 		{
 			diffPtsVel[i] = planes[ind].point[i]-OptimalVelocity[i];
 		}
+		
 		float scalarProduct = scalar_product(diffPtsVel,planes[ind].normal);
+		
 		for(i=0;i<3;i++)
 		{
 			NewVelocity[i] = OptimalVelocity[i] + scalarProduct * planes[ind].normal[i];
 		}
-		/* If outside planeCircle, project on planeCircle. */
+		// If outside planeCircle, project on planeCircle
 		if (vector_norm_sqr(NewVelocity) > radiusSq)
 		{
 			float planeResult[3];
+			
 			for(i=0;i<3;i++)
 			{
 				planeResult[i] = NewVelocity[i] - planeCenter[i];
 			}
+			
 			float planeResultLengthSq = vector_norm_sqr(planeResult);
 			
 			float planeSqrt = fast_sqrt(planeRadiusSq / planeResultLengthSq);
+			
 			for(i=0;i<3;i++)
 			{
 				NewVelocity[i] = planeCenter[i] + planeSqrt * planeResult[i];
@@ -397,7 +445,6 @@ bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Optimal
 		}
 	}
 	
-	uint8_t index;
 	for (index=0;index<ind;index++)
 	{
 		float diffPtsNewVel[3];
@@ -461,17 +508,24 @@ float linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelocity[
 		{
 			NewVelocity[i] = OptimalVelocity[i]/normOptimalVelocity * maxSpeed;
 		}
-	}else if (vector_norm_sqr(OptimalVelocity) > SQR(maxSpeed)){
-		/* Optimize closest point and outside circle. */
-		float normOptimalVelocity = vector_norm(OptimalVelocity);
-		for(i=0;i<3;i++)
+	}
+	else
+	{
+		if (vector_norm_sqr(OptimalVelocity) > SQR(maxSpeed))
 		{
-			NewVelocity[i] = OptimalVelocity[i]/normOptimalVelocity * maxSpeed;
+			/* Optimize closest point and outside circle. */
+			float normOptimalVelocity = vector_norm(OptimalVelocity);
+			for(i=0;i<3;i++)
+			{
+				NewVelocity[i] = OptimalVelocity[i]/normOptimalVelocity * maxSpeed;
+			}
 		}
-	}else{
-		for(i=0;i<3;i++)
+		else
 		{
-			NewVelocity[i] = OptimalVelocity[i];
+			for(i=0;i<3;i++)
+			{
+				NewVelocity[i] = OptimalVelocity[i];
+			}
 		}
 	}
 	
@@ -540,14 +594,18 @@ void linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float maxS
 					{
 						/* Plane index and plane index2 point in the same direction. */
 						continue;
-					}else{
+					}
+					else
+					{
 						/* Plane index and plane index2 point in opposite direction. */
 						for (i=0;i<3;i++)
 						{
 							plane.point[i] = 0.5f * (planes[index].point[i] + planes[index2].point[i]);
 						}
 					}
-				}else{
+				}
+				else
+				{
 					float lineNormal[3];
 					CROSS(crossProduct,planes[index].normal,lineNormal);
 					

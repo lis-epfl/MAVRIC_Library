@@ -44,6 +44,10 @@
 #ifndef ADAPTIVE_PARAMETER_H_
 #define ADAPTIVE_PARAMETER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define MAX_ADAPT_PARAM_SETPOINTS 5
 #define MAX_ADAPT_PARAM_COUNT 10
 
@@ -96,5 +100,9 @@ void update_adaptive_parameter(Adaptive_Parameter_t param);
  * \brief					Update all adaptive parameters
  */	
 void update_all_adaptive_parameters(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ADAPTIVE_PARAMETER_H_ */

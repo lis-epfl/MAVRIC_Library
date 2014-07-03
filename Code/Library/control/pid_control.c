@@ -1,13 +1,20 @@
-/**
- *  PID controller
+/** 
+ * \page The MAV'RIC license
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
  */
+ 
+ 
+/**
+ * \file pid_control.c
+ *
+ * PID controller
+ */
+
 
 #include "time_keeper.h"
 
