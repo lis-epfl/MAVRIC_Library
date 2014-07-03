@@ -3,7 +3,7 @@
  *
  * The MAV'RIC Framework
  *
- * Copyright © 2011-2014
+ * Copyright Â© 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
  */
@@ -58,7 +58,9 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 			if (rec->msg.sysid == centralData->listNeighbors[i].neighborID)
 			{
 				ID_found = true;
-			}else{
+			}
+			else
+			{
 				i++;
 			}
 		}
@@ -69,12 +71,16 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 			{
 				actualNeighbor = centralData->number_of_neighbors;
 				centralData->number_of_neighbors++;
-			}else{
+			}
+			else
+			{
 				// This case shouldn't happen
 				dbg_print("Error! There is more neighbors than planned!\n");
 				actualNeighbor = centralData->number_of_neighbors-1;
 			}
-		}else{
+		}
+		else
+		{
 			actualNeighbor = i;
 		}
 		
@@ -82,7 +88,7 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 		
 		centralData->listNeighbors[actualNeighbor].neighborID = rec->msg.sysid;
 		
-		for (i=0;i<3;i++)
+		for (i=0; i<3; i++)
 		{
 			centralData->listNeighbors[actualNeighbor].position[i] = localPosNeighbor.pos[i];
 		}
@@ -103,7 +109,7 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec)
 		//dbg_print(" with relative position ");
 		//float rel_pos[3];
 		//uint8_t i;
-		//for (i=0;i<3;i++)
+		//for (i=0; i<3; i++)
 		//{
 			//rel_pos[i] = centralData->listNeighbors[actualNeighbor].position[i] - centralData->position_estimator.localPosition.pos[i];
 		//}
@@ -127,22 +133,25 @@ void extrapolate_or_delete_position(track_neighbor_t listNeighbors[], uint8_t* n
 		if (delta_t >= NEIGHBOR_TIMEOUT_LIMIT_MS)
 		{
 			// suppressing element ind
-			for (indSup=ind;indSup<(*number_of_neighbors-1);indSup++)
+			for (indSup=ind; indSup<(*number_of_neighbors-1); indSup++)
 			{
 				listNeighbors[indSup] = listNeighbors[indSup + 1];
 			}
 			(*number_of_neighbors)--;
 			
-		}else if (delta_t > ORCA_TIME_STEP_MILLIS)
+		}
+		else if (delta_t > ORCA_TIME_STEP_MILLIS)
 		{
 			// extrapolating the last known position assuming a constant velocity
-			for(i=0;i<3;i++)
+			for(i=0; i<3; i++)
 			{
 				listNeighbors[ind].extrapolatedPosition[i] = listNeighbors[ind].position[i] + listNeighbors[ind].velocity[i] *((float)delta_t);
 			}
-		}else{
+		}
+		else
+		{
 			// taking the latest known position
-			for (i=0;i<3;i++)
+			for (i=0; i<3; i++)
 			{
 				listNeighbors[ind].extrapolatedPosition[i] = listNeighbors[ind].position[i];
 			}

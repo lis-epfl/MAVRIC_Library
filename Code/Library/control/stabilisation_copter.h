@@ -2,7 +2,7 @@
  *  This file handles the stabilization of the platform
  *
  * The MAV'RIC Framework
- * Copyright © 2011-2014
+ * Copyright Â© 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
  *

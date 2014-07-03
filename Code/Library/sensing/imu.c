@@ -3,7 +3,7 @@
  *
  * The MAV'RIC Framework
  *
- * Copyright © 2011-2014
+ * Copyright Â© 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
  */
@@ -72,27 +72,26 @@ void init_imu (Imu_Data_t *imu1)
 
 void imu_get_raw_data(Imu_Data_t *imu1)
 {
-	// int i=0;
 	
-	//gyro_data* gyros=get_gyro_data_slow();
-	//acc_data* accs=get_acc_data_slow();
+	//gyro_data* gyros = get_gyro_data_slow();
+	//acc_data* accs = get_acc_data_slow();
 	
-	lsm_gyro_data_t* gyros=lsm330_get_gyro_data();
-	lsm_acc_data_t* accs=lsm330_get_acc_data();
-	compass_data* compass=get_compass_data_slow();
+	lsm_gyro_data_t* gyros = lsm330_get_gyro_data();
+	lsm_acc_data_t* accs = lsm330_get_acc_data();
+	compass_data* compass = get_compass_data_slow();
 
 
-	imu1->raw_channels[GYRO_OFFSET+IMU_X]=(float)gyros->axes[RAW_GYRO_X]*GYRO_AXIS_X;
-	imu1->raw_channels[GYRO_OFFSET+IMU_Y]=(float)gyros->axes[RAW_GYRO_Y]*GYRO_AXIS_Y;
-	imu1->raw_channels[GYRO_OFFSET+IMU_Z]=(float)gyros->axes[RAW_GYRO_Z]*GYRO_AXIS_Z;
+	imu1->raw_channels[GYRO_OFFSET+IMU_X] = (float)gyros->axes[RAW_GYRO_X]*GYRO_AXIS_X;
+	imu1->raw_channels[GYRO_OFFSET+IMU_Y] = (float)gyros->axes[RAW_GYRO_Y]*GYRO_AXIS_Y;
+	imu1->raw_channels[GYRO_OFFSET+IMU_Z] = (float)gyros->axes[RAW_GYRO_Z]*GYRO_AXIS_Z;
 
-	imu1->raw_channels[ACC_OFFSET+IMU_X]=((float)accs->axes[RAW_ACC_X])*ACC_AXIS_X;
-	imu1->raw_channels[ACC_OFFSET+IMU_Y]=((float)accs->axes[RAW_ACC_Y])*ACC_AXIS_Y;
-	imu1->raw_channels[ACC_OFFSET+IMU_Z]=((float)accs->axes[RAW_ACC_Z])*ACC_AXIS_Z;
+	imu1->raw_channels[ACC_OFFSET+IMU_X] = ((float)accs->axes[RAW_ACC_X])*ACC_AXIS_X;
+	imu1->raw_channels[ACC_OFFSET+IMU_Y] = ((float)accs->axes[RAW_ACC_Y])*ACC_AXIS_Y;
+	imu1->raw_channels[ACC_OFFSET+IMU_Z] = ((float)accs->axes[RAW_ACC_Z])*ACC_AXIS_Z;
 	
-	imu1->raw_channels[COMPASS_OFFSET+IMU_X]=(float)compass->axes[RAW_COMPASS_X]*MAG_AXIS_X;
-	imu1->raw_channels[COMPASS_OFFSET+IMU_Y]=(float)compass->axes[RAW_COMPASS_Y]*MAG_AXIS_Y;
-	imu1->raw_channels[COMPASS_OFFSET+IMU_Z]=(float)compass->axes[RAW_COMPASS_Z]*MAG_AXIS_Z;
+	imu1->raw_channels[COMPASS_OFFSET+IMU_X] = (float)compass->axes[RAW_COMPASS_X]*MAG_AXIS_X;
+	imu1->raw_channels[COMPASS_OFFSET+IMU_Y] = (float)compass->axes[RAW_COMPASS_Y]*MAG_AXIS_Y;
+	imu1->raw_channels[COMPASS_OFFSET+IMU_Z] = (float)compass->axes[RAW_COMPASS_Z]*MAG_AXIS_Z;
 	
 }
 
@@ -102,19 +101,19 @@ void calibrate_Gyros(Imu_Data_t *imu1)
 	imu_get_raw_data(imu1);
 	for (j=0; j<3; j++)
 	{
-		imu1->raw_bias[j]=(float)imu1->raw_channels[j];
+		imu1->raw_bias[j] = (float)imu1->raw_channels[j];
 	}
 	
 	for (i=0; i<100; i++)
 	{
 		imu_get_raw_data(imu1);
 
-		//imu1->raw_bias[0+ACC_OFFSET]  = (0.9*imu1->raw_bias[0+ACC_OFFSET]+0.1*(float)imu1->raw_channels[0+ACC_OFFSET]);
-		//imu1->raw_bias[1+ACC_OFFSET]  = (0.9*imu1->raw_bias[1+ACC_OFFSET]+0.1*(float)imu1->raw_channels[1+ACC_OFFSET]);
-		//imu1->raw_bias[2+ACC_OFFSET]  = (0.9*imu1->raw_bias[2+ACC_OFFSET]+0.1*((float)imu1->raw_channels[2+ACC_OFFSET]-imu1->raw_scale[2+ACC_OFFSET]));
+		//imu1->raw_bias[0+ACC_OFFSET] = (0.9*imu1->raw_bias[0+ACC_OFFSET]+0.1*(float)imu1->raw_channels[0+ACC_OFFSET]);
+		//imu1->raw_bias[1+ACC_OFFSET] = (0.9*imu1->raw_bias[1+ACC_OFFSET]+0.1*(float)imu1->raw_channels[1+ACC_OFFSET]);
+		//imu1->raw_bias[2+ACC_OFFSET] = (0.9*imu1->raw_bias[2+ACC_OFFSET]+0.1*((float)imu1->raw_channels[2+ACC_OFFSET]-imu1->raw_scale[2+ACC_OFFSET]));
 		for (j=0; j<3; j++)
 		{
-			imu1->raw_bias[j]=(0.9*imu1->raw_bias[j]+0.1*(float)imu1->raw_channels[j]);
+			imu1->raw_bias[j] = (0.9*imu1->raw_bias[j]+0.1*(float)imu1->raw_channels[j]);
 			//imu1->attitude.raw_mag_mean[j] = (1.0-MAG_LPF)*imu1->attitude.raw_mag_mean[j]+MAG_LPF*((float)imu1->raw_channels[j+COMPASS_OFFSET]);
 		}
 		delay_ms(4);
@@ -124,15 +123,15 @@ void calibrate_Gyros(Imu_Data_t *imu1)
 }
 
 void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps){
-	uint32_t t=get_time_ticks();
+	uint32_t t = get_time_ticks();
 	
 	if (!imu_last_update_init)
 	{
 		imu1->last_update = t;
 		imu_last_update_init = true;
 	}else{
-		imu1->dt=ticks_to_seconds(t - imu1->last_update);
-		imu1->last_update=t;
+		imu1->dt = ticks_to_seconds(t - imu1->last_update);
+		imu1->last_update = t;
 		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt);
 		if (imu1->attitude.calibration_level==OFF)
 		{
@@ -141,7 +140,3 @@ void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *
 		}
 	}
 }
-
-
-
-
