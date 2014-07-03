@@ -73,7 +73,7 @@ void boardsupport_init(central_data_t *centralData) {
 		//print_util_dbg_print("initialised I2C.\n");
 	}
 
-	LED_Off(LED1);
+	LED_On(LED1);
 	// Configure the pins connected to LEDs as output and set their default
 	// initial state to high (LEDs off).
 	//gpio_configure_pin(LED0_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);

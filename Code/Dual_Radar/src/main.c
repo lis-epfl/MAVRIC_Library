@@ -91,9 +91,9 @@ void main (void)
 	adc_int_sequencer_add(&sample_buffer[2], AVR32_ADCIFA_INP_ADCIN3, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16);  
 	adc_int_sequencer_add(&sample_buffer[3], AVR32_ADCIFA_INP_ADCIN4, AVR32_ADCIFA_INN_ADCIN8, ADCIFA_SHG_16); 
 	
-	LED_On(LED0);
-	delay_ms(1000);
 	LED_Off(LED0);
+	delay_ms(1000);
+	LED_On(LED0);
 	delay_ms(1000);
 
 	
@@ -123,7 +123,7 @@ void main (void)
 			}
 			//adc_int_start_sampling(SAMPLE_BUFFER_SIZE, Sampling_frequency, 16, 1, true);
 			wait_for_buffer=1-wait_for_buffer;
-			LED_On(LED1);
+			LED_Off(LED1);
 
 			calculate_radar(&input_buffer[0], &input_buffer[1]);
 			mavlink_send_radar();
@@ -138,7 +138,7 @@ void main (void)
 		mavlink_stream_protocol_update();
 		//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "ADC_period", adc_int_get_period());
 
-		LED_Off(LED1);
+		LED_On(LED1);
 
 		counter=(counter+1)%1000;
 		last_looptime=this_looptime;	

@@ -186,8 +186,8 @@ void LED_Off(U32 leds)
   leds &= (1 << LED_COUNT) - 1;
 
   // Update the saved state of all LEDs with the requested changes.
-  //Clr_bits(LED_State, leds);
-  Set_bits(LED_State, leds);
+  Clr_bits(LED_State, leds);
+
   // While there are specified LEDs left to manage...
   while (leds)
   {
@@ -214,8 +214,8 @@ void LED_On(U32 leds)
   leds &= (1 << LED_COUNT) - 1;
 
   // Update the saved state of all LEDs with the requested changes.
-  //Set_bits(LED_State, leds);
-  Clr_bits(LED_State, leds);
+  Set_bits(LED_State, leds);
+
   // While there are specified LEDs left to manage...
   while (leds)
   {
