@@ -26,10 +26,10 @@ extern "C" {
 #include <stdbool.h>
 #include <stdint.h>
 
-#define ORCA_TIME_STEP_MILLIS 10.0
-#define TIME_HORIZON 12.0
-#define MAXSPEED 4.5
-#define RVO_EPSILON 0.0001
+#define ORCA_TIME_STEP_MILLIS 10.0f
+#define TIME_HORIZON 12.0f
+#define MAXSPEED 4.5f
+#define RVO_EPSILON 0.0001f
 
 /**
  * \brief The 3D plane structure

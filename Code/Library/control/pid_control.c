@@ -17,14 +17,14 @@
 PID_Controller_t passthroughController() 
 {
 	PID_Controller_t out;
-	out.p_gain=1.0;
+	out.p_gain=1.0f;
 	out.last_update=get_time_ticks();	
-	out.clip_min=-10000.0;
-	out.clip_max= 10000.0;
-	out.output=0.0;
-	out.soft_zone_width=0.0;
-	initDiff(&(out.differentiator), 0.0, 0.0, 0.0);
-	initInt(&(out.integrator), 0.0, 0.0, 0.0);
+	out.clip_min=-10000.0f;
+	out.clip_max= 10000.0f;
+	out.output=0.0f;
+	out.soft_zone_width=0.0f;
+	initDiff(&(out.differentiator), 0.0f, 0.0f, 0.0f);
+	initInt(&(out.integrator), 0.0f, 0.0f, 0.0f);
 	return out;
 }
 
@@ -39,12 +39,12 @@ void initInt(Integrator_t *integrator, float pregain, float postgain, float clip
 	integrator->pregain=pregain;
 	integrator->postgain=postgain;
 	integrator->clip=clip_val;
-	integrator->accumulator=0.0;
+	integrator->accumulator=0.0f;
 }
 
 void resetInt(Integrator_t *integrator)
 {
-	integrator->accumulator=0.0;
+	integrator->accumulator=0.0f;
 }
 
 void initDiff(Differentiator_t *diff, float gain, float LPF, float clip_val) 
@@ -56,13 +56,13 @@ void initDiff(Differentiator_t *diff, float gain, float LPF, float clip_val)
 
 float differentiate(Differentiator_t *diff, float input, float dt) 
 {
-	float output=0.0;
-	if (dt<0.000001) {
-		output=0.0; 
+	float output=0.0f;
+	if (dt<0.000001f) {
+		output=0.0f; 
 	} else {
 		output=clip(diff->gain*(input - diff->previous)/dt, diff->clip);
 	}	
-	//diff->previous=(1.0-(diff->LPF))*input + (diff->LPF) * (diff->previous);
+	//diff->previous=(1.0f-(diff->LPF))*input + (diff->LPF) * (diff->previous);
 	diff->previous=input;
 	return output;
 }

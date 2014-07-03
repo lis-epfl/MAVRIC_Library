@@ -41,9 +41,9 @@
 #define RC_ID_MODE  5				///< Define the remote channel number for the mode selection
 #define RC_TRIM_P3  6				///< Define the remote channel number for the trim of (?)
 
-#define DEADZONE 30.0				///< Define the dead zone of a remote channel
+#define DEADZONE 30.0f				///< Define the dead zone of a remote channel
 
-#define RC_SCALEFACTOR 1.0/700.0	///< Define the scale factor to apply on a channel value
+#define RC_SCALEFACTOR 1.0f/700.0f	///< Define the scale factor to apply on a channel value
 
 /*
 typedef struct Turnigy_Receiver {

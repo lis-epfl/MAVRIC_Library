@@ -776,12 +776,12 @@ bool ubx_process_data(void)
 			}
 			
 			centralData->GPS_data.timegps = gpsPosllh->itow;
-			centralData->GPS_data.longitude = gpsPosllh->longitude / 10000000.0;
-			centralData->GPS_data.latitude = gpsPosllh->latitude / 10000000.0;
-			centralData->GPS_data.alt_elips = ((float)gpsPosllh->altitude_ellipsoid) / 1000.0;
-			centralData->GPS_data.altitude = ((float)gpsPosllh->altitude_msl) / 1000.0;
-			centralData->GPS_data.horizontalAccuracy = ((float)gpsPosllh->horizontal_accuracy) / 1000.0;
-			centralData->GPS_data.verticalAccuracy = ((float)gpsPosllh->vertical_accuracy) / 1000.0;
+			centralData->GPS_data.longitude = gpsPosllh->longitude / 10000000.0f;
+			centralData->GPS_data.latitude = gpsPosllh->latitude / 10000000.0f;
+			centralData->GPS_data.alt_elips = ((float)gpsPosllh->altitude_ellipsoid) / 1000.0f;
+			centralData->GPS_data.altitude = ((float)gpsPosllh->altitude_msl) / 1000.0f;
+			centralData->GPS_data.horizontalAccuracy = ((float)gpsPosllh->horizontal_accuracy) / 1000.0f;
+			centralData->GPS_data.verticalAccuracy = ((float)gpsPosllh->vertical_accuracy) / 1000.0f;
 			
 			new_position = true;
 		}
@@ -891,7 +891,7 @@ bool ubx_process_data(void)
 			centralData->GPS_data.groundSpeed = ((float)gpsVelned->groundSpeed_2d) / 100.; // m/s
 			centralData->GPS_data.course = ((float)gpsVelned->heading_2d) / 100000.; // Heading 2D deg * 100000 rescaled to deg * 100
 			have_raw_velocity = true;
-			centralData->GPS_data.northSpeed  = ((float)gpsVelned->ned_north) / 100.0;
+			centralData->GPS_data.northSpeed  = ((float)gpsVelned->ned_north) / 100.0f;
 			centralData->GPS_data.eastSpeed   = ((float)gpsVelned->ned_east) / 100.;
 			centralData->GPS_data.verticalSpeed   = ((float)gpsVelned->ned_down) / 100.;
 			centralData->GPS_data.speedAccuracy = ((float)gpsVelned->speed_accuracy)/100.;

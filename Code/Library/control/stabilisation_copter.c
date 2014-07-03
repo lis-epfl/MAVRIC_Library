@@ -26,9 +26,9 @@ void init_stabilisation_copter(Stabiliser_Stack_copter_t* stabiliser_stack)
 
 void get_velocity_vector_from_remote(float tvel[])
 {
-	tvel[X]=-10.0*centralData->controls.rpy[PITCH];
-	tvel[Y]= 10.0*centralData->controls.rpy[ROLL];
-	tvel[Z]=- 1.5*centralData->controls.thrust;
+	tvel[X]=-10.0f*centralData->controls.rpy[PITCH];
+	tvel[Y]= 10.0f*centralData->controls.rpy[ROLL];
+	tvel[Z]=- 1.5f*centralData->controls.thrust;
 }
 
 void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input) 
@@ -57,17 +57,17 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 		if (control_input->yaw_mode == YAW_COORDINATED) 
 		{
 			float rel_heading_coordinated;
-			if ((f_abs(pos_est->vel_bf[X])<0.001)&&(f_abs(pos_est->vel_bf[Y])<0.001))
+			if ((f_abs(pos_est->vel_bf[X])<0.001f)&&(f_abs(pos_est->vel_bf[Y])<0.001f))
 			{
-				rel_heading_coordinated = 0.0;
+				rel_heading_coordinated = 0.0f;
 			}
 			else
 			{
 				rel_heading_coordinated = atan2(pos_est->vel_bf[Y], pos_est->vel_bf[X]);
 			}
 			
-			float w = 0.5*(sigmoid(vector_norm(pos_est->vel_bf)-centralData->stabiliser_stack.yaw_coordination_velocity)+1.0);
-			input.rpy[YAW] = (1.0-w)*input.rpy[YAW] + w*rel_heading_coordinated;
+			float w = 0.5f*(sigmoid(vector_norm(pos_est->vel_bf)-centralData->stabiliser_stack.yaw_coordination_velocity)+1.0f);
+			input.rpy[YAW] = (1.0f-w)*input.rpy[YAW] + w*rel_heading_coordinated;
 		}
 
 		rpyt_errors[YAW]= input.rpy[YAW];

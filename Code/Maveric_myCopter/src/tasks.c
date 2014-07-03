@@ -48,7 +48,7 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 	
 	get_channel_mode(chanSwitch);
 	
-	if ((rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0)
+	if ((rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0f)
 	{
 		centralData->collision_avoidance = true;
 	}
@@ -57,11 +57,11 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 		centralData->collision_avoidance = false;
 	}
 	
-	if((get_thrust_from_remote() < -0.95) && (get_yaw_from_remote() > 0.9))
+	if((get_thrust_from_remote() < -0.95f) && (get_yaw_from_remote() > 0.9f))
 	{
 		*motorbool = 1;
 	}
-	else if((get_thrust_from_remote() < -0.95) && (get_yaw_from_remote() < -0.9))
+	else if((get_thrust_from_remote() < -0.95f) && (get_yaw_from_remote() < -0.9f))
 	{
 		*motorbool = -1;
 	}
@@ -118,7 +118,7 @@ void relevel_imu()
 		
 		for (j=0;j<3;j++)
 		{
-			centralData->imu1.attitude.raw_mag_mean[j] = (1.0 - MAG_LPF) * centralData->imu1.attitude.raw_mag_mean[j] + MAG_LPF * ((float)centralData->imu1.raw_channels[j + COMPASS_OFFSET]);
+			centralData->imu1.attitude.raw_mag_mean[j] = (1.0f - MAG_LPF) * centralData->imu1.attitude.raw_mag_mean[j] + MAG_LPF * ((float)centralData->imu1.raw_channels[j + COMPASS_OFFSET]);
 		}
 
 		delay_ms(5);
@@ -247,11 +247,11 @@ task_return_t set_mav_mode_n_state()
 						}
 						
 						distFromHomeSqr = SQR(centralData->position_estimator.localPosition.pos[X] - centralData->waypoint_hold_coordinates.pos[X]) + SQR(centralData->position_estimator.localPosition.pos[Y] - centralData->waypoint_hold_coordinates.pos[Y]) + SQR(centralData->position_estimator.localPosition.pos[Z] - centralData->waypoint_hold_coordinates.pos[Z]);
-						if ((centralData->dist2wp_sqr <= 16.0)&&(!centralData->automatic_take_off))
+						if ((centralData->dist2wp_sqr <= 16.0f)&&(!centralData->automatic_take_off))
 						{
 							centralData->mav_state = MAV_STATE_ACTIVE;
 							dbg_print("Automatic take-off finised, distFromHomeSqr (10x):");
-							dbg_print_num(distFromHomeSqr*10.0,10);
+							dbg_print_num(distFromHomeSqr*10.0f,10);
 							dbg_print(".\n");
 						}
 						break;
@@ -270,11 +270,11 @@ task_return_t set_mav_mode_n_state()
 
 						distFromHomeSqr = SQR(centralData->position_estimator.localPosition.pos[X]-centralData->waypoint_hold_coordinates.pos[X]) + SQR(centralData->position_estimator.localPosition.pos[Y]-centralData->waypoint_hold_coordinates.pos[Y]) + SQR(centralData->position_estimator.localPosition.pos[Z]-centralData->waypoint_hold_coordinates.pos[Z]);
 						
-						if ((centralData->dist2wp_sqr <= 16.0)&&(!centralData->automatic_take_off))
+						if ((centralData->dist2wp_sqr <= 16.0f)&&(!centralData->automatic_take_off))
 						{
 							centralData->mav_state = MAV_STATE_ACTIVE;
 							dbg_print("Automatic take-off finised, distFromHomeSqr (10x):");
-							dbg_print_num(distFromHomeSqr*10.0,10);
+							dbg_print_num(distFromHomeSqr*10.0f,10);
 							dbg_print(".\n");
 						}
 						break;
@@ -292,7 +292,7 @@ task_return_t set_mav_mode_n_state()
 						centralData->mav_state = MAV_STATE_CRITICAL;
 						break;
 				}
-				if (get_thrust_from_remote() > -0.7)
+				if (get_thrust_from_remote() > -0.7f)
 				{
 					centralData->in_the_air = true;
 				}
@@ -595,9 +595,9 @@ void fake_gps_fix()
 {
 	local_coordinates_t fake_pos;
 	
-	fake_pos.pos[X] = 10.0;
-	fake_pos.pos[Y] = 10.0;
-	fake_pos.pos[Z] = 0.0;
+	fake_pos.pos[X] = 10.0f;
+	fake_pos.pos[Y] = 10.0f;
+	fake_pos.pos[Z] = 0.0f;
 	fake_pos.origin.latitude = HOME_LATITUDE;
 	fake_pos.origin.longitude = HOME_LONGITUDE;
 	fake_pos.origin.altitude = HOME_ALTITUDE;
@@ -721,7 +721,7 @@ void create_tasks()
 	register_task(&main_tasks, 2, 100000, RUN_REGULAR, &gps_task);
 	//register_task(&main_tasks, , 100000, RUN_REGULAR, &read_radar);
 
-	register_task(&main_tasks, 3, ORCA_TIME_STEP_MILLIS * 1000.0, RUN_REGULAR, &run_navigation_task);
+	register_task(&main_tasks, 3, ORCA_TIME_STEP_MILLIS * 1000.0f, RUN_REGULAR, &run_navigation_task);
 
 	register_task(&main_tasks, 4, 200000, RUN_REGULAR, &set_mav_mode_n_state);
 	

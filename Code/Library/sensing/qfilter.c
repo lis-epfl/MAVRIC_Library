@@ -33,28 +33,28 @@ void qfInit(Quat_Attitude_t *attitude,  float *scalefactor, float *bias) {
 
 	for (i=0; i<9; i++)
 	{
-		attitude->sf[i] = 1.0/(float)scalefactor[i];
+		attitude->sf[i] = 1.0f/(float)scalefactor[i];
 		attitude->be[i] = bias[i];
 	}
 	for (i=0; i<3; i++)
 	{
-		attitude->acc_bf[i] = 0.0;
+		attitude->acc_bf[i] = 0.0f;
 	}
 
-//	attitude->be[3] = -0.03;
-//	attitude->be[4] = 0.08;
-//	attitude->be[5] = 0.15;
+//	attitude->be[3] = -0.03f;
+//	attitude->be[4] = 0.08f;
+//	attitude->be[5] = 0.15f;
 
-	attitude->qe.s = 1.0;
-	attitude->qe.v[0] = 0.0;
-	attitude->qe.v[1] = 0.0;
-	attitude->qe.v[2] = 0.0;
+	attitude->qe.s = 1.0f;
+	attitude->qe.v[0] = 0.0f;
+	attitude->qe.v[1] = 0.0f;
+	attitude->qe.v[2] = 0.0f;
 	
-	attitude->kp = 0.07;
-	attitude->ki = attitude->kp/15.0;
+	attitude->kp = 0.07f;
+	attitude->ki = attitude->kp/15.0f;
 	
-	attitude->kp_mag = 0.1;
-	attitude->ki_mag = attitude->kp_mag/15.0;
+	attitude->kp_mag = 0.1f;
+	attitude->ki_mag = attitude->kp_mag/15.0f;
 }
 
 void initQuat(Quat_Attitude_t *attitude)
@@ -70,23 +70,23 @@ void initQuat(Quat_Attitude_t *attitude)
 	init_angle = atan2(-attitude->mag[1],attitude->mag[0]);
 
 	dbg_print("Initial yaw:");
-	dbg_print_num(init_angle*100.0,10);
+	dbg_print_num(init_angle*100.0f,10);
 	dbg_print(" = atan2(mag_y,mag_x) =");
-	dbg_print_num(-attitude->mag[1]*100.0,10);
+	dbg_print_num(-attitude->mag[1]*100.0f,10);
 	dbg_print(" ,");
-	dbg_print_num(attitude->mag[0]*100.0,10);
+	dbg_print_num(attitude->mag[0]*100.0f,10);
 	dbg_print("\n");
 
 	front_mag_vect_z = attitude->mag[2];
 	dbg_print("Front mag(z) (*100):");
-	dbg_print_num(front_mag_vect_z*100.0,10);
+	dbg_print_num(front_mag_vect_z*100.0f,10);
 	dbg_print("\n");
 
-	attitude->qe.s = cos(init_angle/2.0);
-	attitude->qe.v[0] = 0.0;
-	attitude->qe.v[1] = 0.0;
-	//attitude->qe.v[2] = sin((PI + init_angle)/2.0);
-	attitude->qe.v[2] = sin(init_angle/2.0);
+	attitude->qe.s = cos(init_angle/2.0f);
+	attitude->qe.v[0] = 0.0f;
+	attitude->qe.v[1] = 0.0f;
+	//attitude->qe.v[2] = sin((PI + init_angle)/2.0f);
+	attitude->qe.v[2] = sin(init_angle/2.0f);
 }
 
 void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
@@ -94,15 +94,15 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	float  omc[3], omc_mag[3] , tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
 	UQuat_t qed, qtmp1, up, up_bf;
 	UQuat_t mag_global, mag_corrected_local;
-	UQuat_t front_vec_global = {.s=0.0, .v={1.0, 0.0, 0.0}};
+	UQuat_t front_vec_global = {.s=0.0f, .v={1.0f, 0.0f, 0.0f}};
 	float kp, kp_mag;
 	
 	
 	for (i=0; i<3; i++)
 	{
-		attitude->om[i]  = (1.0-GYRO_LPF)*attitude->om[i]+GYRO_LPF*(((float)rates[i+GYRO_OFFSET]-attitude->be[i+GYRO_OFFSET])*attitude->sf[i+GYRO_OFFSET]);
-		attitude->a[i]   = (1.0-ACC_LPF)*attitude->a[i]+ACC_LPF*(((float)rates[i+ACC_OFFSET]-attitude->be[i+ACC_OFFSET])*attitude->sf[i+ACC_OFFSET]);
-		attitude->mag[i] = (1.0-MAG_LPF)*attitude->mag[i]+MAG_LPF*(((float)rates[i+COMPASS_OFFSET]-attitude->be[i+COMPASS_OFFSET])*attitude->sf[i+COMPASS_OFFSET]);
+		attitude->om[i]  = (1.0f-GYRO_LPF)*attitude->om[i]+GYRO_LPF*(((float)rates[i+GYRO_OFFSET]-attitude->be[i+GYRO_OFFSET])*attitude->sf[i+GYRO_OFFSET]);
+		attitude->a[i]   = (1.0f-ACC_LPF)*attitude->a[i]+ACC_LPF*(((float)rates[i+ACC_OFFSET]-attitude->be[i+ACC_OFFSET])*attitude->sf[i+ACC_OFFSET]);
+		attitude->mag[i] = (1.0f-MAG_LPF)*attitude->mag[i]+MAG_LPF*(((float)rates[i+COMPASS_OFFSET]-attitude->be[i+COMPASS_OFFSET])*attitude->sf[i+COMPASS_OFFSET]);
 	}
 
 	// up_bf = qe^-1 *(0,0,0,-1) * qe
@@ -111,7 +111,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	
 	// calculate norm of acceleration vector
 	s_acc_norm = attitude->a[0]*attitude->a[0]+attitude->a[1]*attitude->a[1]+attitude->a[2]*attitude->a[2];
-	if ((s_acc_norm > 0.7*0.7)&&(s_acc_norm < 1.3*1.3)) {
+	if ((s_acc_norm > 0.7f*0.7f)&&(s_acc_norm < 1.3f*1.3f)) {
 		// approximate square root by running 2 iterations of newton method
 		acc_norm = fast_sqrt(s_acc_norm);
 
@@ -136,13 +136,13 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	// calculate norm of compass vector
 	//s_mag_norm = SQR(mag_global.v[0])+SQR(mag_global.v[1])+SQR(mag_global.v[2]);
 	s_mag_norm = SQR(mag_global.v[0])+SQR(mag_global.v[1]);
-	if ((s_mag_norm > 0.004*0.004)&&(s_mag_norm < 1.8*1.8)) 
+	if ((s_mag_norm > 0.004f*0.004f)&&(s_mag_norm < 1.8f*1.8f)) 
 	{
 		mag_norm = fast_sqrt(s_mag_norm);
 
 		mag_global.v[0] /= mag_norm;
 		mag_global.v[1] /= mag_norm;
-		mag_global.v[2] = 0.0;   // set z component in global frame to 0
+		mag_global.v[2] = 0.0f;   // set z component in global frame to 0
 
 		// transfer magneto vector back to body frame 
 		attitude->north_vec = quat_global_to_local(attitude->qe, front_vec_global);		
@@ -163,20 +163,20 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 	switch (attitude->calibration_level)
 	{
 		case OFF:
-			kp=attitude->kp;//*(0.1/(0.1+s_acc_norm-1.0));
+			kp=attitude->kp;//*(0.1f/(0.1f+s_acc_norm-1.0f));
 			kp_mag = attitude->kp_mag;
-			attitude->ki = attitude->kp/15.0;
+			attitude->ki = attitude->kp/15.0f;
 			break;
 			
 		case LEVELING:
-			kp = 0.5;
-			kp_mag = 0.5;
-			attitude->ki = attitude->kp/10.0;
+			kp = 0.5f;
+			kp_mag = 0.5f;
+			attitude->ki = attitude->kp/10.0f;
 			break;
 			
 		case LEVEL_PLUS_ACCEL:  // experimental - do not use
-			kp = 0.3;
-			attitude->ki = attitude->kp/10.0;
+			kp = 0.3f;
+			attitude->ki = attitude->kp/10.0f;
 			attitude->be[3] += dt * attitude->kp * (attitude->a[0]-up_bf.v[0]);
 			attitude->be[4] += dt * attitude->kp * (attitude->a[1]-up_bf.v[1]);
 			attitude->be[5] += dt * attitude->kp * (attitude->a[2]-up_bf.v[2]);
@@ -185,7 +185,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 		default:
 			kp = attitude->kp;
 			kp_mag = attitude->kp_mag;
-			attitude->ki = attitude->kp/15.0;
+			attitude->ki = attitude->kp/15.0f;
 			break;
 	}
 
@@ -193,7 +193,7 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 
 	for (i=0; i<3; i++)
 	{
-		qtmp1.v[i] = (attitude->om[i] + kp*omc[i] + kp_mag*omc_mag[i]);//0.5*
+		qtmp1.v[i] = (attitude->om[i] + kp*omc[i] + kp_mag*omc_mag[i]);//0.5f*
 	}
 	qtmp1.s = 0;
 
@@ -222,9 +222,9 @@ void qfilter(Quat_Attitude_t *attitude, float *rates, float dt){
 */
 
 	snorm = attitude->qe.s*attitude->qe.s+attitude->qe.v[0]*attitude->qe.v[0] + attitude->qe.v[1] * attitude->qe.v[1] + attitude->qe.v[2] * attitude->qe.v[2];
-	if (snorm < 0.0001)
+	if (snorm < 0.0001f)
 	{
-		norm = 0.01;
+		norm = 0.01f;
 	}
 	else
 	{

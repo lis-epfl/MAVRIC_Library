@@ -123,7 +123,7 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 	}
 	else
 	{
-			//lowpass exponential filtering applied (alpha =0.75 so we multiply by 100, do the operations then divide by 100)
+			//lowpass exponential filtering applied (alpha =0.75f so we multiply by 100, do the operations then divide by 100)
 		if(index>1)
 		{
 			mean_amp=(alpha*((fft_amp[index]+fft_amp[index+1]+fft_amp[index-1])/3)+(filter_conversion-alpha)*amp_old)/filter_conversion;
@@ -140,10 +140,10 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 				
 			
 		frequency=f_v_factor*10*(index);
-		speed=1000*(3*powf(10,8)*frequency/(2*2415*pow(10,9)));	//compute speed (*0.01 because of Fsample and *10 because of freq)
+		speed=1000*(3*powf(10,8)*frequency/(2*2415*pow(10,9)));	//compute speed (*0.01f because of Fsample and *10 because of freq)
 			
 		frequency=f_v_factor*10*(index2);
-		speed2=1000*(3*powf(10,8)*frequency/(2*2415*pow(10,9)));	//compute speed (*0.01 because of Fsample and *10 because of freq)											
+		speed2=1000*(3*powf(10,8)*frequency/(2*2415*pow(10,9)));	//compute speed (*0.01f because of Fsample and *10 because of freq)											
 				
 			
 		//Let's find the speed that is closer to the previous one (to avoid high frequency changes for the speed)
@@ -201,8 +201,8 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 	//
 	time1=get_micros();
 
-	main_target.velocity=direction*speed/100.0;
-	//main_target.velocity=speed/100.0;
+	main_target.velocity=direction*speed/100.0f;
+	//main_target.velocity=speed/100.0f;
 	main_target.amplitude=amplitude;
 
 	amplitude=0;

@@ -52,9 +52,9 @@ void init_imu (Imu_Data_t *imu1)
 	imu1->raw_scale[Y+COMPASS_OFFSET] =  RAW_MAG_Y_SCALE;
 	imu1->raw_scale[Z+COMPASS_OFFSET] =  RAW_MAG_Z_SCALE;
 	
-	imu1->raw_bias[X+GYRO_OFFSET]= 0.0;
-	imu1->raw_bias[Y+GYRO_OFFSET]= 0.0;
-	imu1->raw_bias[Z+GYRO_OFFSET]= 0.0;
+	imu1->raw_bias[X+GYRO_OFFSET]= 0.0f;
+	imu1->raw_bias[Y+GYRO_OFFSET]= 0.0f;
+	imu1->raw_bias[Z+GYRO_OFFSET]= 0.0f;
 
 	// acceleration biais
 	imu1->raw_bias[X+ACC_OFFSET]= ACC_BIAIS_X;
@@ -108,13 +108,13 @@ void calibrate_Gyros(Imu_Data_t *imu1)
 	{
 		imu_get_raw_data(imu1);
 
-		//imu1->raw_bias[0+ACC_OFFSET] = (0.9*imu1->raw_bias[0+ACC_OFFSET]+0.1*(float)imu1->raw_channels[0+ACC_OFFSET]);
-		//imu1->raw_bias[1+ACC_OFFSET] = (0.9*imu1->raw_bias[1+ACC_OFFSET]+0.1*(float)imu1->raw_channels[1+ACC_OFFSET]);
-		//imu1->raw_bias[2+ACC_OFFSET] = (0.9*imu1->raw_bias[2+ACC_OFFSET]+0.1*((float)imu1->raw_channels[2+ACC_OFFSET]-imu1->raw_scale[2+ACC_OFFSET]));
+		//imu1->raw_bias[0+ACC_OFFSET] = (0.9f*imu1->raw_bias[0+ACC_OFFSET]+0.1f*(float)imu1->raw_channels[0+ACC_OFFSET]);
+		//imu1->raw_bias[1+ACC_OFFSET] = (0.9f*imu1->raw_bias[1+ACC_OFFSET]+0.1f*(float)imu1->raw_channels[1+ACC_OFFSET]);
+		//imu1->raw_bias[2+ACC_OFFSET] = (0.9f*imu1->raw_bias[2+ACC_OFFSET]+0.1f*((float)imu1->raw_channels[2+ACC_OFFSET]-imu1->raw_scale[2+ACC_OFFSET]));
 		for (j=0; j<3; j++)
 		{
-			imu1->raw_bias[j] = (0.9*imu1->raw_bias[j]+0.1*(float)imu1->raw_channels[j]);
-			//imu1->attitude.raw_mag_mean[j] = (1.0-MAG_LPF)*imu1->attitude.raw_mag_mean[j]+MAG_LPF*((float)imu1->raw_channels[j+COMPASS_OFFSET]);
+			imu1->raw_bias[j] = (0.9f*imu1->raw_bias[j]+0.1f*(float)imu1->raw_channels[j]);
+			//imu1->attitude.raw_mag_mean[j] = (1.0f-MAG_LPF)*imu1->attitude.raw_mag_mean[j]+MAG_LPF*((float)imu1->raw_channels[j+COMPASS_OFFSET]);
 		}
 		delay_ms(4);
 	}

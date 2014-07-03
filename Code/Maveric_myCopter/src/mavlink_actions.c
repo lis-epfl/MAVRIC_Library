@@ -38,7 +38,7 @@ void mavlink_send_heartbeat(void)
 	central_data_t *centralData = get_central_data();
 
 	float battery_voltage = centralData->adc.avg[ANALOG_RAIL_10];		// bat voltage (mV), actual battery pack plugged to the board
-	float battery_remaining = centralData->adc.avg[ANALOG_RAIL_11] / 12.4 * 100.0;
+	float battery_remaining = centralData->adc.avg[ANALOG_RAIL_11] / 12.4f * 100.0f;
 
 	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, centralData->mav_mode, 0, centralData->mav_state);
 
@@ -47,7 +47,7 @@ void mavlink_send_heartbeat(void)
 								0b1111110000100111, 									// sensors enabled
 								0b1111110000100111, 									// sensors health
 								0,                  									// load
-								(int)(1000.0 * battery_voltage), 						// bat voltage (mV)
+								(int)(1000.0f * battery_voltage), 						// bat voltage (mV)
 								0,               										// current (mA)
 								battery_remaining,										// battery remaining
 								0, 0,  													// comms drop, comms errors
@@ -188,11 +188,11 @@ void mavlink_send_global_position(void)
 											get_millis(), 
 											gpos.latitude * 10000000, 
 											gpos.longitude * 10000000, 
-											gpos.altitude * 1000.0, 
+											gpos.altitude * 1000.0f, 
 											1, 
-											centralData->position_estimator.vel[0] * 100.0, 
-											centralData->position_estimator.vel[1] * 100.0, 
-											centralData->position_estimator.vel[2] * 100.0, 
+											centralData->position_estimator.vel[0] * 100.0f, 
+											centralData->position_estimator.vel[1] * 100.0f, 
+											centralData->position_estimator.vel[2] * 100.0f, 
 											centralData->imu1.attitude.om[2]);
 }
 
@@ -208,11 +208,11 @@ void mavlink_send_hud(void)
 	int16_t heading;
 	if(aero_attitude.rpy[2] < 0)
 	{
-		heading = (int16_t)(360.0 - 180.0 * aero_attitude.rpy[2] / PI);
+		heading = (int16_t)(360.0f - 180.0f * aero_attitude.rpy[2] / PI);
 	}
 	else
 	{
-		heading = (int16_t)(180.0 * aero_attitude.rpy[2] / PI);
+		heading = (int16_t)(180.0f * aero_attitude.rpy[2] / PI);
 	}
 	
 	// mavlink_msg_vfr_hud_send(mavlink_channel_t chan, float airspeed, float groundspeed, int16_t heading, uint16_t throttle, float alt, float climb)
@@ -220,7 +220,7 @@ void mavlink_send_hud(void)
 								airspeed, 
 								groundspeed, 
 								heading, 
-								(int)((centralData->controls.thrust+1.0)*50), 
+								(int)((centralData->controls.thrust+1.0f)*50), 
 								-centralData->position_estimator.localPosition.pos[2] + centralData->position_estimator.localPosition.origin.altitude, 
 								-centralData->position_estimator.vel[2]	);
 }
@@ -232,12 +232,12 @@ void mavlink_send_gps_raw(void)
 		mavlink_msg_gps_raw_int_send(	MAVLINK_COMM_0,
 										1000 * centralData->GPS_data.timeLastMsg, 
 										centralData->GPS_data.status, 
-										centralData->GPS_data.latitude * 10000000.0, 
-										centralData->GPS_data.longitude * 10000000.0, 
-										centralData->GPS_data.altitude * 1000.0, 
-										centralData->GPS_data.hdop * 100.0, 
-										centralData->GPS_data.speedAccuracy * 100.0,
-										centralData->GPS_data.groundSpeed * 100.0, 
+										centralData->GPS_data.latitude * 10000000.0f, 
+										centralData->GPS_data.longitude * 10000000.0f, 
+										centralData->GPS_data.altitude * 1000.0f, 
+										centralData->GPS_data.hdop * 100.0f, 
+										centralData->GPS_data.speedAccuracy * 100.0f,
+										centralData->GPS_data.groundSpeed * 100.0f, 
 										centralData->GPS_data.course, 
 										centralData->GPS_data.num_sats	);	
 	}
@@ -246,8 +246,8 @@ void mavlink_send_gps_raw(void)
 		mavlink_msg_gps_raw_int_send(	MAVLINK_COMM_0,
 										get_micros(), 
 										centralData->GPS_data.status, 
-										46.5193 * 10000000, 
-										6.56507 * 10000000, 
+										46.5193f * 10000000, 
+										6.56507f * 10000000, 
 										400 * 1000, 
 										0, 
 										0, 
@@ -262,9 +262,9 @@ void mavlink_send_pressure(void)
 {	
 	mavlink_msg_scaled_pressure_send(	MAVLINK_COMM_0, 
 										get_millis(), 
-										centralData->pressure.pressure / 100.0, 
+										centralData->pressure.pressure / 100.0f, 
 										centralData->pressure.vario_vz, 
-										centralData->pressure.temperature * 100.0);
+										centralData->pressure.temperature * 100.0f);
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
 										get_millis(),
@@ -316,14 +316,14 @@ void mavlink_send_scaled_rc_channels(void)
 {
 	mavlink_msg_rc_channels_scaled_send(	MAVLINK_COMM_0,get_millis(),
 											1,
-											rc_get_channel(0) * 1000.0 * RC_SCALEFACTOR,
-											rc_get_channel(1) * 1000.0 * RC_SCALEFACTOR,
-											rc_get_channel(2) * 1000.0 * RC_SCALEFACTOR,
-											rc_get_channel(3) * 1000.0 * RC_SCALEFACTOR,
-											rc_get_channel(4) * 1000.0 * RC_SCALEFACTOR,
-											rc_get_channel(5) * 1000.0 * RC_SCALEFACTOR,
-											rc_get_channel(6) * 1000.0 * RC_SCALEFACTOR,
-											rc_get_channel(7) * 1000.0 * RC_SCALEFACTOR,
+											rc_get_channel(0) * 1000.0f * RC_SCALEFACTOR,
+											rc_get_channel(1) * 1000.0f * RC_SCALEFACTOR,
+											rc_get_channel(2) * 1000.0f * RC_SCALEFACTOR,
+											rc_get_channel(3) * 1000.0f * RC_SCALEFACTOR,
+											rc_get_channel(4) * 1000.0f * RC_SCALEFACTOR,
+											rc_get_channel(5) * 1000.0f * RC_SCALEFACTOR,
+											rc_get_channel(6) * 1000.0f * RC_SCALEFACTOR,
+											rc_get_channel(7) * 1000.0f * RC_SCALEFACTOR,
 											rc_check_receivers()	);
 	
 	mavlink_msg_named_value_int_send(	MAVLINK_COMM_0,
@@ -350,7 +350,7 @@ void mavlink_send_simulation(void)
 								centralData->sim_model.rates_bf[YAW],
 								gpos.latitude * 10000000, 
 								gpos.longitude * 10000000, 
-								gpos.altitude * 1000.0,
+								gpos.altitude * 1000.0f,
 								100 * centralData->sim_model.vel[X], 
 								100 * centralData->sim_model.vel[Y], 
 								100 * centralData->sim_model.vel[Z],
@@ -366,12 +366,12 @@ void mavlink_send_simulation(void)
 											aero_attitude.rpy[YAW],
 											gpos.latitude * 10000000, 
 											gpos.longitude * 10000000, 
-											gpos.altitude * 1000.0,
+											gpos.altitude * 1000.0f,
 											100 * centralData->sim_model.vel[X], 
 											100 * centralData->sim_model.vel[Y], 
 											100 * centralData->sim_model.vel[Z],
 											100 * vector_norm(centralData->sim_model.vel),
-											0.0,
+											0.0f,
 											centralData->sim_model.attitude.acc_bf[X],
 											centralData->sim_model.attitude.acc_bf[Y],
 											centralData->sim_model.attitude.acc_bf[Z]	);
@@ -1008,11 +1008,11 @@ void receive_message_long(Mavlink_Received_t* rec)
 					centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
 					
 					dbg_print("New Home location: (");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0f,10);
 					dbg_print(", ");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0f,10);
 					dbg_print(", ");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0f,10);
 					dbg_print(")\n");
 				}
 				else
@@ -1026,11 +1026,11 @@ void receive_message_long(Mavlink_Received_t* rec)
 					centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
 					
 					dbg_print("New Home location: (");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0f,10);
 					dbg_print(", ");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0f,10);
 					dbg_print(", ");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0f,10);
 					dbg_print(")\n");
 				}
 

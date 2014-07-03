@@ -43,9 +43,9 @@ void cascade_stabilise_hybrid(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 	
 	case ATTITUDE_COMMAND_MODE:
 		// reference vector	in local frame
-		reference_loc[0] = 1.0;	// front vector
-		reference_loc[1] = 0.0;
-		reference_loc[2] = 0.0;	// norm = 1
+		reference_loc[0] = 1.0f;	// front vector
+		reference_loc[1] = 0.0f;
+		reference_loc[2] = 0.0f;	// norm = 1
 
 		// get target vector in global frame
 		target_global[0] = input.rpy[1];

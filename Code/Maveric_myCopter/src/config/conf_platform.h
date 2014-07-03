@@ -20,9 +20,9 @@
 #define CONF_DIAG
 //#define CONF_CROSS
 
-#define RC_INPUT_SCALE 0.8
+#define RC_INPUT_SCALE 0.8f
 // Thrust compensation for hover (relative to center position)
-#define THRUST_HOVER_POINT (-0.3)
+#define THRUST_HOVER_POINT (-0.3f)
 
 //#if MAVLINK_SYS_ID == 1
 //#include "MAVsettings/MAV001_conf_imu_rev4.h"
@@ -99,9 +99,9 @@
 #define FRONTVECTOR_Y 0
 #define FRONTVECTOR_Z 0
 // Inside value
-//#define FRONTVECTOR_Z -1.3846
+//#define FRONTVECTOR_Z -1.3846f
 // Outside value
-//#define FRONTVECTOR_Z -0.8985
+//#define FRONTVECTOR_Z -0.8985f
 
 
 // Definitions of Platform configuration
@@ -128,8 +128,8 @@
 #define M_REAR_DIR  ( 1)
 #define M_LEFT_DIR  (-1)
 
-#define MIN_THRUST -0.9
-#define MAX_THRUST 1.0
+#define MIN_THRUST -0.9f
+#define MAX_THRUST 1.0f
 #define SERVO_SCALE 500
 
 
@@ -145,8 +145,8 @@
 #define FLAP_REAR_DIR (1) 
 #define FLAP_LEFT_DIR (1)
 
-#define MIN_DEFLECTION -1.0
-#define MAX_DEFLECTION 1.0
+#define MIN_DEFLECTION -1.0f
+#define MAX_DEFLECTION 1.0f
 #define SERVO_AMPLITUDE 500
 #define SERVO_NEUTRAL 0
 

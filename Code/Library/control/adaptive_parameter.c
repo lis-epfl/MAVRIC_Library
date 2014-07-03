@@ -3,17 +3,17 @@
  *
  * [usage example:
  *	// control variable
- *	float control = 0.0;
+ *	float control = 0.0f;
  *	// param1
- *	float param1 = 0.0;
+ *	float param1 = 0.0f;
  *	int number_set_points1 = 5;
- *	float new_setpoints1[5] = {0.1, 0.2, 0.4, 0.7, 0.9};
+ *	float new_setpoints1[5] = {0.1f, 0.2f, 0.4f, 0.7f, 0.9f};
  *	float new_setvalues1[5] = {0, 1, 0, 100, 0};
  *	add_adaptive_parameter(&control, &param1, number_set_points1, new_setpoints1, new_setvalues1);
  *	// param2
- *	float param2 = 0.0;
+ *	float param2 = 0.0f;
  *	int number_set_points2 = 2;
- *	float new_setpoints2[2] = {0.1, 1.5};
+ *	float new_setpoints2[2] = {0.1f, 1.5f};
  *	float new_setvalues2[2] = {10, -10};
  *	add_adaptive_parameter(&control, &param2, number_set_points2,
  *							new_setpoints2, new_setvalues2);
@@ -21,7 +21,7 @@
  *	int i;
  *	for (i = 0; i < 20; ++i)
  *	{
- *		control = 1 / 20.0 * i;
+ *		control = 1 / 20.0f * i;
  *		update_all_adaptive_parameters();
  *		printf("%f, %f, %f\n", control, param1, param2);
  *	}]

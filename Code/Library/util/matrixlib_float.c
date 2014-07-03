@@ -37,7 +37,7 @@ float* matf_zeros(int n1, int n2, float* A)
 {
     int i;
     for(i=0; i < n1*n2; i++) 
-        A[i] = 0.0;
+        A[i] = 0.0f;
     
     return A;
 }
@@ -117,7 +117,7 @@ float* matf_copy_part(float* A, int a1, int a2, int ra, int ca, int p1, int p2, 
 float matf_norm(int n, float* A)
 {
     int i;
-    float norm = 0.0;
+    float norm = 0.0f;
     for(i=0; i < n; i++) 
         norm += A[i]*A[i];
     
@@ -130,7 +130,7 @@ float matf_norm(int n, float* A)
 float matf_sum(int n, float* A)
 {
     int i;
-    float sum = 0.0;
+    float sum = 0.0f;
     for(i=0; i < n; i++) 
         sum += A[i];
     
@@ -215,7 +215,7 @@ float* matf_multiply(int n1, int n12, int n2, float* A, float* B, float* C)
     {
         a = row*n12;
         b = col;
-        C[c] = 0.0;
+        C[c] = 0.0f;
         for(el=0; el < n12; el++)  
         {
             C[c] = C[c] + A[a]*B[b];
@@ -243,7 +243,7 @@ float* matf_multiply_Bt(int n1, int n12, int n2, float* A, float* B, float* C)
     {
         a = row*n12;
         b = col*n12;
-        C[c] = 0.0;
+        C[c] = 0.0f;
         for(el=0; el < n12; el++)  
         {
             C[c] = C[c] + A[a]*B[b];

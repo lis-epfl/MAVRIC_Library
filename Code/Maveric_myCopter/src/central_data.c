@@ -63,7 +63,7 @@ void initialise_central_data(){
 		centralData.controls.tvel[X]=0;
 		centralData.controls.tvel[Y]=0;
 		centralData.controls.tvel[Z]=0;
-		centralData.controls.thrust=-1.0;
+		centralData.controls.thrust=-1.0f;
 		
 		centralData.run_mode = MOTORS_OFF;
 		
@@ -102,10 +102,10 @@ void initialise_central_data(){
 		//centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
 
 		// TODO: move to navigation_init()
-		centralData.dist2vel_gain = 0.7;
-		centralData.cruise_speed = 3.0;
-		centralData.max_climb_rate = 1.0;
-		centralData.softZoneSize = 0.0;
+		centralData.dist2vel_gain = 0.7f;
+		centralData.cruise_speed = 3.0f;
+		centralData.max_climb_rate = 1.0f;
+		centralData.softZoneSize = 0.0f;
 
 		// Init sonar
 		// i2cxl_sonar_init(&centralData.i2cxl_sonar);

@@ -32,9 +32,9 @@ void init_orca(void)
 	centralData->safe_size = SIZE_VHC_ORCA;
 		
 	timeHorizon = TIME_HORIZON;
-	invTimeHorizon = 1.0/timeHorizon;
+	invTimeHorizon = 1.0f/timeHorizon;
 
-	min_coll_dist = 2.0 * SIZE_VHC_ORCA + 1.0;
+	min_coll_dist = 2.0f * SIZE_VHC_ORCA + 1.0f;
 }
 
 void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
@@ -68,7 +68,7 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 			relativeVelocity[i] = centralData->position_estimator.vel[i] - centralData->listNeighbors[ind].velocity[i];
 		}
 		
-		q_neighbor.s = 0.0;
+		q_neighbor.s = 0.0f;
 		q_neighbor.v[0] = relativeVelocity[0];
 		q_neighbor.v[1] = relativeVelocity[1];
 		q_neighbor.v[2] = relativeVelocity[2];
@@ -83,7 +83,7 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 			relativeVelocity[i] = neighor_bf[i];
 		}
 		
-		q_neighbor.s = 0.0;
+		q_neighbor.s = 0.0f;
 		q_neighbor.v[0] = relativePosition[0];
 		q_neighbor.v[1] = relativePosition[1];
 		q_neighbor.v[2] = relativePosition[2];
@@ -114,7 +114,7 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 			
 			dotProduct = scalar_product(w,relativePosition);
 			
-			if ((dotProduct < 0.0)&&(SQR(dotProduct) > (combinedRadiusSq * wLenghtSq)))
+			if ((dotProduct < 0.0f)&&(SQR(dotProduct) > (combinedRadiusSq * wLenghtSq)))
 			{
 				/* Project on cut-off circle. */
 				wLength = fast_sqrt(wLenghtSq);
@@ -156,13 +156,13 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 				dbg_print("Distance with neighbor ");
 				dbg_print_num(ind,10);
 				dbg_print("(x100):");
-				dbg_print_num(sqrt(distSq)*100.0,10);
+				dbg_print_num(sqrt(distSq)*100.0f,10);
 				dbg_print(", min dist:");
-				dbg_print_num(min_coll_dist*100.0,10);
+				dbg_print_num(min_coll_dist*100.0f,10);
 				dbg_print("\n");
 			}
 			
-			float invTimeStep = 1.0 / ORCA_TIME_STEP_MILLIS; //PROBLEM wrong time step
+			float invTimeStep = 1.0f / ORCA_TIME_STEP_MILLIS; //PROBLEM wrong time step
 			for (i=0;i<3;i++)
 			{
 				w[i] = relativeVelocity[i] - invTimeStep * relativePosition[i];
@@ -178,7 +178,7 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		
 		for (i=0;i<3;i++)
 		{
-			planes[ind].point[i] = centralData->position_estimator.vel_bf[i] + 0.5 * u[i];
+			planes[ind].point[i] = centralData->position_estimator.vel_bf[i] + 0.5f * u[i];
 		}
 		
 	}
@@ -204,7 +204,7 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		dbg_print_vector(NewVelocity,2);
 		dbg_print("\n");
 	//}else{
-		//if (vector_norm_sqr(orca_diff)>0.2)
+		//if (vector_norm_sqr(orca_diff)>0.2f)
 		//{
 			//dbg_print("Orca diffvel:");
 			//dbg_print_vector(orca_diff,2);
@@ -225,7 +225,7 @@ bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed
 	float dotProduct = scalar_product(line.point,line.direction);
 	float discriminant = SQR(dotProduct) + SQR(maxSpeed) - vector_norm_sqr(line.point);
 	
-	if (discriminant < 0.0)
+	if (discriminant < 0.0f)
 	{
 		/* Max speed sphere fully invalidates line. */
 		return false;
@@ -249,7 +249,7 @@ bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed
 		if (SQR(denominator) <= RVO_EPSILON)
 		{
 			/* Lines line is (almost) parallel to plane i. */
-			if (numerator > 0.0)
+			if (numerator > 0.0f)
 			{
 				return false;
 			}else{
@@ -259,7 +259,7 @@ bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed
 		
 		float t = numerator / denominator;
 		
-		if (denominator >= 0.0)
+		if (denominator >= 0.0f)
 		{
 			/* Plane i bounds line on the left. */
 			tLeft = f_max(tLeft, t);
@@ -405,7 +405,7 @@ bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Optimal
 		{
 			diffPtsNewVel[i] = planes[index].point[i] - NewVelocity[i];
 		}
-		if (scalar_product(planes[index].normal,diffPtsNewVel)>0.0)
+		if (scalar_product(planes[index].normal,diffPtsNewVel)>0.0f)
 		{
 			/* Result does not satisfy constraint index. Compute new optimal result. */
 			/* Compute intersection line of plane index and plane ind. */
@@ -484,7 +484,7 @@ float linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelocity[
 		{
 			diffPointVel[i] = planes[ind].point[i] - NewVelocity[i];
 		}
-		if (scalar_product(planes[ind].normal, diffPointVel ) > 0.0)
+		if (scalar_product(planes[ind].normal, diffPointVel ) > 0.0f)
 		{
 			/* Result does not satisfy constraint ind. Compute new optimal result. */
 			float tempResult[3];
@@ -514,7 +514,7 @@ void linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float maxS
 	
 	plane_t projPlanes[MAX_NUM_NEIGHBORS];
 	
-	float distance = 0.0;
+	float distance = 0.0f;
 	
 	for (index = ind;index < planeSize;index++)
 	{
@@ -544,7 +544,7 @@ void linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float maxS
 						/* Plane index and plane index2 point in opposite direction. */
 						for (i=0;i<3;i++)
 						{
-							plane.point[i] = 0.5 * (planes[index].point[i] + planes[index2].point[i]);
+							plane.point[i] = 0.5f * (planes[index].point[i] + planes[index2].point[i]);
 						}
 					}
 				}else{
