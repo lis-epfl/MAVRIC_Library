@@ -77,7 +77,7 @@
 
 #define GYRO_OFFSET 0		///< Define the index for the IMU array
 #define ACC_OFFSET 3		///< Define the index for the IMU array
-#define COMPASS_OFFSET 6	///< Define the index for the IMU array
+#define MAG_OFFSET 6	///< Define the index for the IMU array
 							
 #define UPVECTOR_X  0		///< Define the index for the IMU array
 #define UPVECTOR_Y  0		///< Define the index for the IMU array

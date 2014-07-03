@@ -65,9 +65,9 @@ void mavlink_send_raw_imu(void)
 								centralData->imu1.raw_channels[GYRO_OFFSET + IMU_X], 
 								centralData->imu1.raw_channels[GYRO_OFFSET + IMU_Y], 
 								centralData->imu1.raw_channels[GYRO_OFFSET + IMU_Z], 
-								centralData->imu1.raw_channels[COMPASS_OFFSET + IMU_X], 
-								centralData->imu1.raw_channels[COMPASS_OFFSET + IMU_Y], 
-								centralData->imu1.raw_channels[COMPASS_OFFSET + IMU_Z] );
+								centralData->imu1.raw_channels[MAG_OFFSET + IMU_X], 
+								centralData->imu1.raw_channels[MAG_OFFSET + IMU_Y], 
+								centralData->imu1.raw_channels[MAG_OFFSET + IMU_Z] );
 }
 
 
@@ -575,9 +575,9 @@ void mavlink_actions_add_onboard_parameters(void) {
 	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET + Y],"Bias_Acc_Y");
 	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET + Z],"Bias_Acc_Z");
 	
-	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET + X],"Bias_Mag_X");
-	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET + Y],"Bias_Mag_Y");
-	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET + Z],"Bias_Mag_Z");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[MAG_OFFSET + X],"Bias_Mag_X");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[MAG_OFFSET + Y],"Bias_Mag_Y");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[MAG_OFFSET + Z],"Bias_Mag_Z");
 	
 	// Scale factor
 	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET + X],"Scale_Gyro_X");
@@ -588,9 +588,9 @@ void mavlink_actions_add_onboard_parameters(void) {
 	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET + Y],"Scale_Acc_Y");
 	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET + Z],"Scale_Acc_Z");
 	//
-	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET + X],"Scale_Mag_X");
-	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET + Y],"Scale_Mag_Y");
-	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET + Z],"Scale_Mag_Z");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[MAG_OFFSET + X],"Scale_Mag_X");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[MAG_OFFSET + Y],"Scale_Mag_Y");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[MAG_OFFSET + Z],"Scale_Mag_Z");
 	
 	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET + X],"Scale_Gyro_X");
 	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET + Y],"Scale_Gyro_Y");
@@ -600,9 +600,9 @@ void mavlink_actions_add_onboard_parameters(void) {
 	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET + Y],"Scale_Acc_Y");
 	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET + Z],"Scale_Acc_Z");
 	
-	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET + X],"Scale_Mag_X");
-	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET + Y],"Scale_Mag_Y");
-	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET + Z],"Scale_Mag_Z");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[MAG_OFFSET + X],"Scale_Mag_X");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[MAG_OFFSET + Y],"Scale_Mag_Y");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[MAG_OFFSET + Z],"Scale_Mag_Z");
 
 	//onboard_parameters_add_parameter_float(&centralData->position_estimator.kp_alt,"Pos_kp_alt");
 	//onboard_parameters_add_parameter_float(&centralData->position_estimator.kp_vel_baro,"Pos_kp_velb");

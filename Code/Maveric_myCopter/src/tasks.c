@@ -102,7 +102,7 @@ void tasks_relevel_imu()
 
 	for (j = 0;j < 3;j++)
 	{
-		centralData->imu1.attitude.raw_mag_mean[j] = (float)centralData->imu1.raw_channels[j + COMPASS_OFFSET];
+		centralData->imu1.attitude.raw_mag_mean[j] = (float)centralData->imu1.raw_channels[j + MAG_OFFSET];
 	}
 
 	for (i = 1000; i > 0; i--) 
@@ -112,7 +112,7 @@ void tasks_relevel_imu()
 		
 		for (j = 0;j < 3;j++)
 		{
-			centralData->imu1.attitude.raw_mag_mean[j] = (1.0f - MAG_LPF) * centralData->imu1.attitude.raw_mag_mean[j] + MAG_LPF * ((float)centralData->imu1.raw_channels[j + COMPASS_OFFSET]);
+			centralData->imu1.attitude.raw_mag_mean[j] = (1.0f - MAG_LPF) * centralData->imu1.attitude.raw_mag_mean[j] + MAG_LPF * ((float)centralData->imu1.raw_channels[j + MAG_OFFSET]);
 		}
 
 		delay_ms(5);

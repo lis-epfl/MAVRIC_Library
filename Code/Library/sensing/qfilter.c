@@ -64,7 +64,7 @@ void qfilter_init_quaternion(Quat_Attitude_t *attitude)
 	
 	for(i = 0; i < 3; i++)
 	{
-		attitude->mag[i] = ((float)attitude->raw_mag_mean[i] - attitude->be[i + COMPASS_OFFSET]) * attitude->sf[i + COMPASS_OFFSET];
+		attitude->mag[i] = ((float)attitude->raw_mag_mean[i] - attitude->be[i + MAG_OFFSET]) * attitude->sf[i + MAG_OFFSET];
 	}
 	
 	init_angle = atan2( -attitude->mag[1],attitude->mag[0]);
@@ -102,7 +102,7 @@ void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float *rates, float 
 	{
 		attitude->om[i]  = (1.0f - GYRO_LPF) * attitude->om[i] + GYRO_LPF * (((float)rates[i + GYRO_OFFSET] - attitude->be[i + GYRO_OFFSET]) * attitude->sf[i + GYRO_OFFSET]);
 		attitude->a[i]   = (1.0f - ACC_LPF) * attitude->a[i] + ACC_LPF * (((float)rates[i + ACC_OFFSET] - attitude->be[i + ACC_OFFSET]) * attitude->sf[i + ACC_OFFSET]);
-		attitude->mag[i] = (1.0f - MAG_LPF) * attitude->mag[i] + MAG_LPF * (((float)rates[i + COMPASS_OFFSET] - attitude->be[i + COMPASS_OFFSET]) * attitude->sf[i + COMPASS_OFFSET]);
+		attitude->mag[i] = (1.0f - MAG_LPF) * attitude->mag[i] + MAG_LPF * (((float)rates[i + MAG_OFFSET] - attitude->be[i + MAG_OFFSET]) * attitude->sf[i + MAG_OFFSET]);
 	}
 
 	// up_bf = qe^-1 *(0,0,0,-1) * qe

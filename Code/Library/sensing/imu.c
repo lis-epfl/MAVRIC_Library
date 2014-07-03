@@ -48,9 +48,9 @@ void imu_init (Imu_Data_t *imu1)
 	imu1->raw_scale[X + ACC_OFFSET] =  RAW_ACC_X_SCALE;
 	imu1->raw_scale[Y + ACC_OFFSET] =  RAW_ACC_Y_SCALE;
 	imu1->raw_scale[Z + ACC_OFFSET] =  RAW_ACC_Z_SCALE;
-	imu1->raw_scale[X + COMPASS_OFFSET] =  RAW_MAG_X_SCALE;
-	imu1->raw_scale[Y + COMPASS_OFFSET] =  RAW_MAG_Y_SCALE;
-	imu1->raw_scale[Z + COMPASS_OFFSET] =  RAW_MAG_Z_SCALE;
+	imu1->raw_scale[X + MAG_OFFSET] =  RAW_MAG_X_SCALE;
+	imu1->raw_scale[Y + MAG_OFFSET] =  RAW_MAG_Y_SCALE;
+	imu1->raw_scale[Z + MAG_OFFSET] =  RAW_MAG_Z_SCALE;
 	imu1->raw_bias[X + GYRO_OFFSET] = 0.0f;
 	imu1->raw_bias[Y + GYRO_OFFSET] = 0.0f;
 	imu1->raw_bias[Z + GYRO_OFFSET] = 0.0f;
@@ -61,9 +61,9 @@ void imu_init (Imu_Data_t *imu1)
 	imu1->raw_bias[Z + ACC_OFFSET] = ACC_BIAIS_Z;
 	
 	// magneto bias
-	imu1->raw_bias[X + COMPASS_OFFSET] = MAG_BIAIS_X;
-	imu1->raw_bias[Y + COMPASS_OFFSET] = MAG_BIAIS_Y;
-	imu1->raw_bias[Z + COMPASS_OFFSET] = MAG_BIAIS_Z;
+	imu1->raw_bias[X + MAG_OFFSET] = MAG_BIAIS_X;
+	imu1->raw_bias[Y + MAG_OFFSET] = MAG_BIAIS_Y;
+	imu1->raw_bias[Z + MAG_OFFSET] = MAG_BIAIS_Z;
 	
 	imu_last_update_init = false;
 }
@@ -86,9 +86,9 @@ void imu_get_raw_data(Imu_Data_t *imu1)
 	imu1->raw_channels[ACC_OFFSET + IMU_Y] = ((float)accs->axes[RAW_ACC_Y]) * ACC_AXIS_Y;
 	imu1->raw_channels[ACC_OFFSET + IMU_Z] = ((float)accs->axes[RAW_ACC_Z]) * ACC_AXIS_Z;
 	
-	imu1->raw_channels[COMPASS_OFFSET + IMU_X] = (float)compass->axes[RAW_MAG_X] * MAG_AXIS_X;
-	imu1->raw_channels[COMPASS_OFFSET + IMU_Y] = (float)compass->axes[RAW_MAG_Y] * MAG_AXIS_Y;
-	imu1->raw_channels[COMPASS_OFFSET + IMU_Z] = (float)compass->axes[RAW_MAG_Z] * MAG_AXIS_Z;
+	imu1->raw_channels[MAG_OFFSET + IMU_X] = (float)compass->axes[RAW_MAG_X] * MAG_AXIS_X;
+	imu1->raw_channels[MAG_OFFSET + IMU_Y] = (float)compass->axes[RAW_MAG_Y] * MAG_AXIS_Y;
+	imu1->raw_channels[MAG_OFFSET + IMU_Z] = (float)compass->axes[RAW_MAG_Z] * MAG_AXIS_Z;
 }
 
 void imu_calibrate_Gyros(Imu_Data_t *imu1)
@@ -111,7 +111,7 @@ void imu_calibrate_Gyros(Imu_Data_t *imu1)
 		for (j = 0; j < 3; j++)
 		{
 			imu1->raw_bias[j] = (0.9f * imu1->raw_bias[j] + 0.1f * (float)imu1->raw_channels[j]);
-			//imu1->attitude.raw_mag_mean[j] = (1.0 - fMAG_LPF) * imu1->attitude.raw_mag_mean[j] + MAG_LPF * ((float)imu1->raw_channels[j + COMPASS_OFFSET]);
+			//imu1->attitude.raw_mag_mean[j] = (1.0 - fMAG_LPF) * imu1->attitude.raw_mag_mean[j] + MAG_LPF * ((float)imu1->raw_channels[j + MAG_OFFSET]);
 		}
 	
 		delay_ms(4);

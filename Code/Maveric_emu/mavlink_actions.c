@@ -49,9 +49,9 @@ void mavlink_send_raw_imu(void) {
 	board->imu1.raw_channels[GYRO_OFFSET+IMU_X], 
 	board->imu1.raw_channels[GYRO_OFFSET+IMU_Y], 
 	board->imu1.raw_channels[GYRO_OFFSET+IMU_Z], 
-	board->imu1.raw_channels[COMPASS_OFFSET+IMU_X], 
-	board->imu1.raw_channels[COMPASS_OFFSET+IMU_Y], 
-	board->imu1.raw_channels[COMPASS_OFFSET+IMU_Z]
+	board->imu1.raw_channels[MAG_OFFSET+IMU_X], 
+	board->imu1.raw_channels[MAG_OFFSET+IMU_Y], 
+	board->imu1.raw_channels[MAG_OFFSET+IMU_Z]
 	);
 }
 

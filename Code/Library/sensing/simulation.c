@@ -286,9 +286,9 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	//imu->raw_channels[ACC_OFFSET + IMU_Y] = sim->attitude.up_vec.v[1] * imu->raw_scale[ACC_OFFSET + IMU_Y] + imu->raw_bias[ACC_OFFSET + IMU_Y];
 	//imu->raw_channels[ACC_OFFSET + IMU_Z] = sim->attitude.up_vec.v[2] * imu->raw_scale[ACC_OFFSET + IMU_Z] + imu->raw_bias[ACC_OFFSET + IMU_Z];
 	
-	imu->raw_channels[COMPASS_OFFSET + IMU_X] = (sim->attitude.north_vec.v[0] ) * sim->simu_raw_scale[COMPASS_OFFSET + IMU_X] + sim->simu_raw_biais[COMPASS_OFFSET + IMU_X];
-	imu->raw_channels[COMPASS_OFFSET + IMU_Y] = (sim->attitude.north_vec.v[1] ) * sim->simu_raw_scale[COMPASS_OFFSET + IMU_Y] + sim->simu_raw_biais[COMPASS_OFFSET + IMU_Y];
-	imu->raw_channels[COMPASS_OFFSET + IMU_Z] = (sim->attitude.north_vec.v[2] ) * sim->simu_raw_scale[COMPASS_OFFSET + IMU_Z] + sim->simu_raw_biais[COMPASS_OFFSET + IMU_Z];
+	imu->raw_channels[MAG_OFFSET + IMU_X] = (sim->attitude.north_vec.v[0] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_X] + sim->simu_raw_biais[MAG_OFFSET + IMU_X];
+	imu->raw_channels[MAG_OFFSET + IMU_Y] = (sim->attitude.north_vec.v[1] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_Y] + sim->simu_raw_biais[MAG_OFFSET + IMU_Y];
+	imu->raw_channels[MAG_OFFSET + IMU_Z] = (sim->attitude.north_vec.v[2] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_Z] + sim->simu_raw_biais[MAG_OFFSET + IMU_Z];
 	
 	//imu->dt = sim->dt;
 

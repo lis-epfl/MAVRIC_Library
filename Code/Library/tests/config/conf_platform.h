@@ -43,7 +43,7 @@
 
 #define GYRO_OFFSET 0
 #define ACC_OFFSET 3
-#define COMPASS_OFFSET 6
+#define MAG_OFFSET 6
 
 #define UPVECTOR_X  0
 #define UPVECTOR_Y  0
