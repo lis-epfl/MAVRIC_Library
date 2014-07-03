@@ -47,8 +47,6 @@ typedef struct lsm330dlc_gyro_conf_t
 	uint8_t	ctrl_reg_g[5];						///< Define an array containing the Control register
 } lsm330dlc_gyro_conf_t;
 
-static volatile gyro_data gyro_outputs;		///< Create an object containing the gyroscope's data
-
 ///< CTRL_REG_A_1
 #define LSM_ACC_DATARATE_OFF		0x00		///< Define the frequency of the Accelerometer data rate
 #define LSM_ACC_DATARATE_1HZ		0x10		///< Define the frequency of the Accelerometer data rate
