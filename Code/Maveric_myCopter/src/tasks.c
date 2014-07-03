@@ -10,7 +10,7 @@
 
 
 /**
- * \file tasks.h
+ * \file tasks.c
  *
  * Definition of the tasks executed on the autopilot
  */ 
