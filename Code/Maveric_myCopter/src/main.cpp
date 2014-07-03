@@ -50,9 +50,9 @@ void initialisation()
 	for (i=0; i<3; i++) 
 	{
 		// clean acceleration estimate without gravity:
-		centralData->position_estimator.vel_bf[i]=0.0;
-		centralData->position_estimator.vel[i]=0.0;
-		centralData->position_estimator.localPosition.pos[i]=0.0;
+		centralData->position_estimator.vel_bf[i]=0.0f;
+		centralData->position_estimator.vel[i]=0.0f;
+		centralData->position_estimator.localPosition.pos[i]=0.0f;
 	} // TODO: move to module
 
 	delay_ms(10);

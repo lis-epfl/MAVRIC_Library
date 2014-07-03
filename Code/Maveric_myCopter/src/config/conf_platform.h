@@ -36,7 +36,7 @@
 
 #define RC_INPUT_SCALE 0.8
 ///< Thrust compensation for hover (relative to center position)
-#define THRUST_HOVER_POINT (-0.3)
+#define THRUST_HOVER_POINT (-0.3f)
 
 ///< Define which configuration of the imu to use, depending on the autopilot ID
 #if MAVLINK_SYS_ID == 1
@@ -87,8 +87,8 @@
 #define FRONTVECTOR_Y 0		///< Define the index for the IMU array
 #define FRONTVECTOR_Z 0		///< Define the index for the IMU array
 
-//#define FRONTVECTOR_Z -1.3846	///< Inside value
-//#define FRONTVECTOR_Z -0.8985 ///< Outside value
+//#define FRONTVECTOR_Z -1.3846f	///< Inside value
+//#define FRONTVECTOR_Z -0.8985f ///< Outside value
 
 ///< Definitions of Platform configuration
 #define ROTORCOUNT 4		///< Define number of motors
@@ -113,8 +113,8 @@
 #define M_REAR_DIR  ( 1)	///< Define the direction of control
 #define M_LEFT_DIR  (-1)	///< Define the direction of control
 
-#define MIN_THRUST -0.9		///< Define the minimum thrust to apply
-#define MAX_THRUST 1.0		///< Define the maximum thrust to apply
+#define MIN_THRUST -0.9f		///< Define the minimum thrust to apply
+#define MAX_THRUST 1.0f		///< Define the maximum thrust to apply
 #define SERVO_SCALE 500		///< Define the scale factor for the servos
 
 ///< define GPS type

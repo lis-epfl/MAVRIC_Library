@@ -29,7 +29,7 @@ void read_radar() {
 	twim_write(&AVR32_TWIM1, (uint8_t*) &output, 1, 1, false);
 	twim_read(&AVR32_TWIM1, (uint8_t*)&main_target, sizeof(main_target), 1, false);
 	
-	dbg_print_num(main_target.velocity*100.0,10);
+	dbg_print_num(main_target.velocity*100.0f,10);
 	dbg_print_num(main_target.amplitude,10);
 	dbg_print("\n");
 	

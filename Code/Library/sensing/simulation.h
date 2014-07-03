@@ -34,9 +34,9 @@ extern "C" {
 #include "position_estimation.h"
 
 // default home location (EFPL Esplanade)
-#define HOME_LONGITUDE 6.566044801857777					///< Latitude of home location
-#define HOME_LATITUDE 46.51852236174565 					///< Longitude of home location
-#define HOME_ALTITUDE 400.0									///< Altitude of home location
+#define HOME_LONGITUDE 6.566044801857777f					///< Latitude of home location
+#define HOME_LATITUDE 46.51852236174565f 					///< Longitude of home location
+#define HOME_ALTITUDE 400.0f									///< Altitude of home location
 
 /**
  * \brief The simulation model structure definition

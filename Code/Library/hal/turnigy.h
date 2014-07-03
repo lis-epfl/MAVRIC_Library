@@ -47,9 +47,9 @@ extern "C" {
 #define RC_TRIM_P1  7							///< The P1 trim channel
 #define RC_TRIM_P2  8							///< The P2 trim channel
 
-#define DEADZONE 30.0							///< The deadzone of the remote
+#define DEADZONE 30.0f							///< The deadzone of the remote
 
-#define RC_SCALEFACTOR 1.0/880.0				///< The scale factor of remote inputs
+#define RC_SCALEFACTOR 1.0f/880.0f				///< The scale factor of remote inputs
 
 /*
 typedef struct Turnigy_Receiver {

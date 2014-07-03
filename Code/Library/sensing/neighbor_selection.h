@@ -27,9 +27,9 @@ extern "C" {
 
 #define MAX_NUM_NEIGHBORS 15
 
-#define SIZE_VHC_ORCA 5.0
+#define SIZE_VHC_ORCA 5.0f
 
-#define ORCA_TIME_STEP_MILLIS 10.0
+#define ORCA_TIME_STEP_MILLIS 10.0f
 
 //2 seconds timeout limit
 #define NEIGHBOR_TIMEOUT_LIMIT_MS 2000
