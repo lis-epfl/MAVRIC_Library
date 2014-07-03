@@ -28,7 +28,8 @@
 /**
  * \brief structure for the gyroscope's data
 */
-typedef struct{
+typedef struct
+{
 	int16_t temperature;	///< temperature measured(?) by the gyroscope
 	int16_t axes[3];		///< buffer to store the 3 axis rates for the gyroscope
 } gyro_data; 
@@ -64,6 +65,5 @@ void init_itg3200_slow(void);
  * \return a pointer to the gyroscope data
 */
 gyro_data* get_gyro_data_slow(void);
-
 
 #endif /* ITG3200_DRIVER_H_ */

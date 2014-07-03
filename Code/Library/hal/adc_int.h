@@ -25,12 +25,12 @@
 #include "adcifa.h"
 
 
-#define ADC_FREQUENCY 1000000
-//#define OVERSAMPLING 8				// maximum sampling frequency: 1000000 / 4ch /2(HW-OVRSMP) /4 (OVERSAMPLING) = 31250 Hz
+#define ADC_FREQUENCY 1000000			///< Define the frequency of the ADC
+//#define OVERSAMPLING 8				///< maximum sampling frequency: 1000000 / 4ch /2(HW-OVRSMP) /4 (OVERSAMPLING) = 31250 Hz
 //#define OVERSAMPLING_DIVIDER 2
 
-#define SLOTS_PER_SEQUENCER 8
-#define MAX_CHANNELS 16
+#define SLOTS_PER_SEQUENCER 8			///< Define the number of slots per sequencer
+#define MAX_CHANNELS 16					///< Define the maximum number of channels
 
 /**
  * \brief Initializes ADC (configures Pins, starts Clock, sets defaults)
