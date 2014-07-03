@@ -20,6 +20,7 @@
 
 #include "central_data.h"
 #include "print_util.h"
+#include "buffer.h"
 
 central_data_t *centralData;
 
@@ -126,7 +127,7 @@ void init_gps_ubx(GPS_Engine_Setting _engine_nav_setting)
 	new_speed = false;
 	
 	step = 0;
-	}
+}
 
 bool ubx_read(void)
 {
@@ -965,17 +966,17 @@ uint8_t endian_lower_bytes_uint32(uint32_t bytes)
 
 uint8_t endian_mid_lower_bytes_uint32(uint32_t bytes)
 {
-	return (bytes & 0x0000FF00);
+	return (bytes & 0x0000FF00)>>8;
 }
 
 uint8_t endian_mid_higher_bytes_uint32(uint32_t bytes)
 {
-	return (bytes & 0x00FF0000);
+	return (bytes & 0x00FF0000)>>16;
 }
 
 uint8_t endian_higher_bytes_uint32(uint32_t bytes)
 {
-	return (bytes & 0xFF000000);
+	return (bytes & 0xFF000000)>>24;
 }
 
 void ubx_send_header(uint8_t msg_class, uint8_t _msg_id, uint16_t size)

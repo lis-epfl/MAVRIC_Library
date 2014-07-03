@@ -14,8 +14,6 @@
 
 
 #include "central_data.h"
-#include "remote_controller.h"
-#include "simulation.h"
 #include "conf_sim_model.h"
 
 
@@ -44,7 +42,6 @@ void initialise_central_data(){
 		
 		init_nav();
 		init_waypoint_handler();
-		//e_init();
 		
 		init_neighbors();
 		init_orca();

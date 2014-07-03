@@ -33,9 +33,9 @@ extern "C" {
 #include "remote_controller.h"
 #include "pid_control.h"
 #include "streams.h"
+#include "buffer.h"
 #include "print_util.h"
 
-#include "bmp085.h"
 #include "mavlink_stream.h"
 #include "coord_conventions.h"
 #include "onboard_parameters.h"

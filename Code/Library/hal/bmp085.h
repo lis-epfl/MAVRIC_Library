@@ -115,4 +115,8 @@ pressure_data* get_pressure_data_slow(float offset);
 */
 bool newValidBarometer(uint32_t *timePrevBarometer);
 
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* BMP085_H_ */
