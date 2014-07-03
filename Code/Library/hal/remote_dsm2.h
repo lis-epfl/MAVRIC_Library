@@ -19,6 +19,10 @@
 #ifndef REMOTE_DSM2_
 #define REMOTE_DSM2_
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 #include "compiler.h"
 #include "buffer.h"
 #include "stabilisation.h"
@@ -102,5 +106,9 @@ float get_thrust_from_spektrum();
 
 void get_channel_mode_spektrum(uint8_t *chanSwitch);
 */
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif /* REMOTE_DSM2_ */

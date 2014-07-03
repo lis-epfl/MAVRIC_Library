@@ -12,10 +12,6 @@ Library\control\pid_control.c
 
 Library\control\stabilisation_copter.c
 
-Library\control\stabilisation_hybrid.c
-
-Library\hal\airspeed_analog.c
-
 Library\hal\analog_monitor.c
 
 Library\hal\i2cxl_sonar.c
@@ -60,8 +56,6 @@ Library\hal\ads1274.c
 
 Library\hal\adxl345_driver.c
 
-Library\hal\amplifiers.c
-
 Library\hal\bmp085.c
 
 Library\hal\compass_hmc5883l.c
@@ -71,8 +65,6 @@ Library\hal\dac_dma.c
 Library\hal\itg3200_driver.c
 
 Library\hal\led.c
-
-Library\hal\radar_module_driver.c
 
 Library\hal\servo_pwm.c
 

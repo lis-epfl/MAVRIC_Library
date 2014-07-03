@@ -22,6 +22,8 @@ extern "C" {
 
 #include "central_data.h"
 
+#define BOARD USER_BOARD
+
 /**
  * \brief	Initialize the hardware related elements (communication lines, sensors devices, etc)
  *

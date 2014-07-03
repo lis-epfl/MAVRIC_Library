@@ -18,6 +18,11 @@
 
 #ifndef DAC_DMA_H
 #define DAC_DMA_H
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 #include <avr32/io.h>
 #include "preprocessor.h"
 #include "compiler.h"
@@ -73,4 +78,9 @@ int  DAC_is_finished();
  * \param output desired voltage
 */
 void DAC_set_value(int32_t output);
+
+#ifdef __cplusplus
+	}
+#endif
+
 #endif

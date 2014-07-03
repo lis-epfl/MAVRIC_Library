@@ -19,6 +19,10 @@
 #ifndef I2C_DRIVER_INT_H_
 #define I2C_DRIVER_INT_H_
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 #include "twim.h"
 #include "compiler.h"
 #include "dma_channel_config.h"
@@ -122,5 +126,9 @@ bool i2c_is_ready(void);
  * \return nothing implemented yet
 */
 int i2c_get_queued_requests(void);
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif /* I2C_DRIVER_H_ */

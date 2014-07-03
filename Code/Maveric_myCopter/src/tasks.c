@@ -10,7 +10,7 @@
 
 
 /**
- * \file tasks.h
+ * \file tasks.c
  *
  * Definition of the tasks executed on the autopilot
  */ 
@@ -28,20 +28,15 @@
 #include "delay.h"
 #include "i2cxl_sonar.h"
 #include "analog_monitor.h"
-#include "airspeed_analog.h"
-
 
 NEW_TASK_SET(main_tasks, 10)
 
-
 central_data_t *centralData;
-
 
 task_set* get_main_taskset() 
 {
 	return &main_tasks;
 }
-
 
 void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 {
@@ -83,7 +78,6 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 			break;
 	}
 }
-
 
 void switch_off_motors(void)
 {
@@ -692,20 +686,11 @@ task_return_t sonar_update(void)
 	i2cxl_sonar_update(&central_data->i2cxl_sonar);
 }
 
-
-task_return_t airspeed_update(void)
-{
-	central_data_t* central_data=get_central_data();
-	airspeed_analog_update(&central_data->pitot);
-}
-
-
 task_return_t adc_update(void)
 {
 	central_data_t* central_data=get_central_data();
 	analog_monitor_update(&central_data->adc);
 }
-
 
 void create_tasks() 
 {
@@ -728,7 +713,5 @@ void create_tasks()
 	register_task(&main_tasks, 5, 4000, RUN_REGULAR, &mavlink_protocol_update);
 	
 	// register_task(&main_tasks, 6, 100000, RUN_REGULAR, &sonar_update);
-	register_task(&main_tasks, 6, 100000, RUN_REGULAR, &airspeed_update);
-
-	register_task(&main_tasks, 7, 100000, RUN_REGULAR, &adc_update);
+	register_task(&main_tasks, 6, 100000, RUN_REGULAR, &adc_update);
 }

@@ -49,6 +49,15 @@ void init_barometer_offset(position_estimator_t *pos_est, pressure_data *baromet
 
 void init_pos_integration(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps)
 {
+	
+	// default GPS home position
+	pos_est->localPosition.origin.longitude=   HOME_LONGITUDE;
+	pos_est->localPosition.origin.latitude =   HOME_LATITUDE;
+	pos_est->localPosition.origin.altitude =   HOME_ALTITUDE;
+	pos_est->localPosition.pos[X]=0;
+	pos_est->localPosition.pos[Y]=0;
+	pos_est->localPosition.pos[Z]=0;
+	
 	pos_est->init_gps_position = false;
 	pos_est->init_barometer = false;
 	pos_est->timeLastGpsMsg = 0;

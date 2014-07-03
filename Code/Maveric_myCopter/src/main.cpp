@@ -19,12 +19,12 @@ extern "C" {
 	#include "tasks.h"
 
 	#include "piezo_speaker.h"
-	#include "airspeed_analog.h"
 }
  
 central_data_t *centralData;
 
-void initialisation() {
+void initialisation() 
+{
 	int i;
 	GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 	
@@ -45,10 +45,10 @@ void initialisation() {
 	init_simulation(&(centralData->sim_model),&(centralData->imu1),centralData->position_estimator.localPosition); // TODO: init only once
 
 	relevel_imu(); // TODO: MOVE	
-	airspeed_analog_calibrate(&centralData->pitot); // TODO: MOVE	
 
 	//reset position estimate
-	for (int i=0; i<3; i++) {
+	for (i=0; i<3; i++) 
+	{
 		// clean acceleration estimate without gravity:
 		centralData->position_estimator.vel_bf[i]=0.0;
 		centralData->position_estimator.vel[i]=0.0;
@@ -59,10 +59,10 @@ void initialisation() {
 	dbg_print("Reset home position...\n");
 	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model.localPosition);
 	// TODO: move to module
-
-
+	
 	LED_On(LED1);
-		for (i=1; i<8; i++) {
+	for (i=1; i<8; i++)
+	{
 		beep(100, 500*i);
 		delay_ms(2);
 	}
@@ -72,10 +72,10 @@ void initialisation() {
 int main (void)
 {
 	initialisation();
-		
 	create_tasks();
 	
-	while (1==1) {
+	while (1==1) 
+	{
 		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
 	}
 

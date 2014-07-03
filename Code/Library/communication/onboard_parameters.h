@@ -19,11 +19,11 @@
 #ifndef ONBOARD_PARAMETERS_H_
 #define ONBOARD_PARAMETERS_H_
 
-#include "mavlink_stream.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include "mavlink_stream.h"
 
 #define MAX_ONBOARD_PARAM_COUNT 120	// should be < 122 to fit on user page on AT32UC3C1512
 

@@ -22,6 +22,24 @@ void init_stabilisation_copter(Stabiliser_Stack_copter_t* stabiliser_stack)
 	centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 	centralData->controls.yaw_mode = YAW_RELATIVE;
 	*stabiliser_stack = stabiliser_defaults_copter;
+	
+	centralData->controls.rpy[ROLL] = 0.0f;
+	centralData->controls.rpy[PITCH] = 0.0f;
+	centralData->controls.rpy[YAW] = 0.0f;
+	centralData->controls.tvel[X] = 0.0f;
+	centralData->controls.tvel[Y] = 0.0f;
+	centralData->controls.tvel[Z] = 0.0f;
+	centralData->controls.theading = 0.0f;
+	centralData->controls.thrust = -1.0f;
+	
+	centralData->controls_nav.rpy[ROLL] = 0.0f;
+	centralData->controls_nav.rpy[PITCH] = 0.0f;
+	centralData->controls_nav.rpy[YAW] = 0.0f;
+	centralData->controls_nav.tvel[X] = 0.0f;
+	centralData->controls_nav.tvel[Y] = 0.0f;
+	centralData->controls_nav.tvel[Z] = 0.0f;
+	centralData->controls.theading = 0.0f;
+	centralData->controls_nav.thrust = -1.0f;
 }
 
 void get_velocity_vector_from_remote(float tvel[])

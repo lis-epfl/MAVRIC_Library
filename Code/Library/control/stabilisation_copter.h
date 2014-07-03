@@ -15,7 +15,6 @@
 
 #include "stabilisation.h"
 
-
 typedef struct {
 	Stabiliser_t rate_stabiliser;
 	Stabiliser_t attitude_stabiliser;
