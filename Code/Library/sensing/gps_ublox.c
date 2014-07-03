@@ -1451,7 +1451,7 @@ void gps_ublox_update(void)
 	
 	result = gps_ublox_message_decode();
 	
-	tnow = get_millis();
+	tnow = time_keeper_get_millis();
 	
 	if (! result)
 	{

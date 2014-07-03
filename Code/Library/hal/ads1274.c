@@ -104,7 +104,7 @@ void processData(void)
 	{
 		return;
 	}	
-	uint8_t* buffer = get_spi_in_buffer(ADC_SPI_INDEX);
+	uint8_t* buffer = spi_buffered_get_spi_in_buffer(ADC_SPI_INDEX);
 	for (ch=0; ch<4; ch++) 
 	{
 		value = (buffer[3*ch]<<24) + (buffer[3*ch+1]<<16)+(buffer[3*ch+2]<<8);
@@ -114,12 +114,12 @@ void processData(void)
 	
 	if (function_generator != NULL) 
 	{
-		DAC_set_value((*function_generator)(sampleCounter));
+		dac_dma_set_value((*function_generator)(sampleCounter));
 	}		
 	sampleCounter++;
 }  
 
-void set_DAC_generator_function(generatorfunction new_function_generator ) 
+void ads1274_set_DAC_generator_function(generatorfunction new_function_generator ) 
 {
 	function_generator = new_function_generator;
 }
@@ -135,7 +135,7 @@ int get_sampling_status(void)
 }
 
 ///< Initializes ADC (configures Pins, starts Clock, sets defaults)
-void Init_ADC(void) 
+void ads1274_init_DAC(void) 
 {
 	function_generator = NULL;
 	
@@ -157,7 +157,7 @@ void Init_ADC(void)
 	//gpio_configure_pin(AVR32_TC1_B0_0_0_PIN,GPIO_DIR_OUTPUT | GPIO_INIT_HIGH);	
 	//gpio_configure_pin(AVR32_PIN_PC19, GPIO_DIR_OUTPUT| GPIO_INIT_HIGH);	
 
-	ADC_Switch_Clock(true);	
+	ads1274_ADC_switch_clock(true);	
 	
 	//tc_init_waveform(tc, &waveform_opt);  ///< Initialize the timer/counter .
 
@@ -186,9 +186,9 @@ void Init_ADC(void)
 
 	///<INTC_init_interrupts();
 	///< initialize SPI0 interface
-	initSPI(&AVR32_SPI0, ADC_SPI_INDEX);
-	spiInitDMA(0, 12);
-	setSPIcallBack(ADC_SPI_INDEX, &processData);
+	spi_buffered_init(&AVR32_SPI0, ADC_SPI_INDEX);
+	spi_buffered_init_DMA(0, 12);
+	spi_buffered_set_callback(ADC_SPI_INDEX, &processData);
 	
 	///< Register the EIC interrupt handlers to the interrupt controller.
 	//INTC_register_interrupt(&eic_int_handler1, AVR32_EIC_IRQ_1, AVR32_INTC_INT1);
@@ -204,7 +204,7 @@ void Init_ADC(void)
 }
 
 ///< Enable/Disable the clock to the ADC
-void ADC_Switch_Clock(Bool on_off) 
+void ads1274_ADC_switch_clock(Bool on_off) 
 {
 	if (on_off==true) 
 	{
@@ -226,19 +226,19 @@ void ADC_Switch_Clock(Bool on_off)
 }
 
 ///< Switch the four input channels on or off
-void ADC_Switch_Channel(int channel, Bool on_off)
+void ads1274_ADC_switch_channel(int channel, Bool on_off)
 {
 	
 }
 
 ///< configures the ADC mode (refer to datasheet for options)
-void ADC_Set_Mode(int mode){};
+void ads1274_ADC_set_mode(int mode){};
 
 ///< enables continuous sampling  -- not implemented yet
-//void ADC_Start_Sampling(void){}
+//void ads1274_ADC_start_sampling(void){}
 
 ///< starts sampling, captures one buffer length and then stops
-void ADC_Start_Oneshot(void)
+void ads1274_ADC_start_oneshot(void)
 {
 	//Disable_global_interrupt();
 	//eic_enable_interrupt_line(&AVR32_EIC, eic_options[0].eic_line);
@@ -247,7 +247,7 @@ void ADC_Start_Oneshot(void)
 }
 
 ///< stops sampling immediately
-void ADC_Stop_Sampling(void){};
+void ads1274_ADC_stop_sampling(void){};
 
 ///< Returns true if one-shot sampling has finished
 Bool Sampling_Complete(void){};
@@ -265,7 +265,7 @@ void eic_nmi_handler( void )
 	
 	if (sampleCounter<ADC_BUFFER_SIZE) 
 	{
-		spiTriggerDMA(0, 12);
+		spi_buffered_trigger_DMA(0, 12);
 	} 
 	else 
 	{

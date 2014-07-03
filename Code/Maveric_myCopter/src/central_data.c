@@ -29,8 +29,8 @@ void central_data_init(){
 			centralData.servos[i].failsafe_position = -600;
 		}
 		
-		servos_failsafe(centralData.servos);
-		set_servos(centralData.servos);
+		servo_pwm_failsafe(centralData.servos);
+		servo_pwm_set(centralData.servos);
 
 		// TODO change names! XXX_init()
 		imu_init(&centralData.imu1);

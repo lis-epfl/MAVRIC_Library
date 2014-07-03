@@ -51,21 +51,21 @@ void boardsupport_init(central_data_t *centralData) {
 
 	board_init();
 	delay_init(sysclk_get_cpu_hz());
-	init_time_keeper();
+	time_keeper_init();
 		
 	INTC_init_interrupts();
 		
 	
 
 		
-	if (init_i2c(0)!=STATUS_OK)
+	if (i2c_driver_init(0)!=STATUS_OK)
 	{
 		//dbg_print("Error initialising I2C\n");
 		//while (1==1);
 	} else {
 		//dbg_print("initialised I2C.\n");
 	}
-	if (init_i2c(1)!=STATUS_OK)
+	if (i2c_driver_init(1)!=STATUS_OK)
 	{
 		//dbg_print("Error initialising I2C\n");
 		//while (1==1);
@@ -79,27 +79,27 @@ void boardsupport_init(central_data_t *centralData) {
 	//gpio_configure_pin(LED0_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
 	//gpio_configure_pin(LED1_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
 
-	init_Servos();
+	servo_pwm_init();
 	
 	// Init UART 0 for XBEE communication
-	init_UART_int(0);
-	register_write_stream(get_UART_handle(0), &(centralData->xbee_out_stream));
+	uart_int_init(0);
+	uart_int_register_write_stream(uart_int_get_uart_handle(0), &(centralData->xbee_out_stream));
 				
 	// Init UART 3 for GPS communication
-	init_UART_int(3);
+	uart_int_init(3);
 	make_buffered_stream(&(centralData->gps_buffer), &(centralData->gps_stream_in));
-	register_read_stream(get_UART_handle(3), &(centralData->gps_stream_in));
-	register_write_stream(get_UART_handle(3), &(centralData->gps_stream_out));
+	uart_int_register_read_stream(uart_int_get_uart_handle(3), &(centralData->gps_stream_in));
+	uart_int_register_write_stream(uart_int_get_uart_handle(3), &(centralData->gps_stream_out));
 	
 	// Init UART 4 for wired communication
-	init_UART_int(4);
-	register_write_stream(get_UART_handle(4), &(centralData->wired_out_stream));
+	uart_int_init(4);
+	uart_int_register_write_stream(uart_int_get_uart_handle(4), &(centralData->wired_out_stream));
 
 	// Registering streams
 	make_buffered_stream_lossy(&(centralData->xbee_in_buffer), &(centralData->xbee_in_stream));
 	make_buffered_stream_lossy(&(centralData->wired_in_buffer), &(centralData->wired_in_stream));
-	register_read_stream(get_UART_handle(4), &(centralData->wired_in_stream));
-	register_read_stream(get_UART_handle(0), &(centralData->xbee_in_stream));
+	uart_int_register_read_stream(uart_int_get_uart_handle(4), &(centralData->wired_in_stream));
+	uart_int_register_read_stream(uart_int_get_uart_handle(0), &(centralData->xbee_in_stream));
 		
 	// connect abstracted aliases to hardware ports
 	centralData->telemetry_down_stream=&(centralData->xbee_out_stream);
@@ -115,10 +115,10 @@ void boardsupport_init(central_data_t *centralData) {
 */
 
 	// Bind RC receiver with remote
-	//rc_activate_bind_mode();
+	//remote_dsm2_rc_activate_bind_mode();
 
 	// RC receiver initialization
-	rc_init();
+	remote_dsm2_rc_init();
 
 	// Init analog rails
 	centralData->adc.enable[ANALOG_RAIL_2]  = false;
@@ -131,11 +131,11 @@ void boardsupport_init(central_data_t *centralData) {
 	centralData->adc.enable[ANALOG_RAIL_11] = true;		// Battery 
 	centralData->adc.enable[ANALOG_RAIL_12] = true;		// sonar
 	centralData->adc.enable[ANALOG_RAIL_13] = false;    // pitot
-	init_analog_monitor(&centralData->adc);
+	analog_monitor_init(&centralData->adc);
 	
 	// init imu & compass
 	imu_init(&(centralData->imu1));
-	init_bmp085();
+	bmp085_init();
 	
 	// init mavlink
 	mavlink_stream_init(centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID);
@@ -150,7 +150,7 @@ void boardsupport_init(central_data_t *centralData) {
 	Enable_global_interrupt();
 
 	// Init piezo speaker
-	init_piezo_speaker_binary();
+	piezo_speaker_init_binary();
 	
 	dbg_print("Board initialised.\n");
 }

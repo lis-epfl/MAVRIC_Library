@@ -47,7 +47,7 @@ static volatile gyro_data gyro_outputs;		///< Create an object containing the gy
 gyro_config default_configuration;			///< Declare the object containing the gyroscope configuration structure
 uint8_t read_preamble=SENSOR_REG_ADDRESS;	///< Declare the address of the sensor
 
-void init_itg3200_slow(void) 
+void itg3200_driver_init_slow(void) 
 {
 	static twim_options_t twi_opt= 
 	{
@@ -60,7 +60,7 @@ void init_itg3200_slow(void)
 	twim_write(&AVR32_TWIM0, (uint8_t*)&default_configuration, 4, ITG3200_SLAVE_ADDRESS, false);
 }
 
-gyro_data* get_gyro_data_slow(void) 
+gyro_data* itg3200_driver_get_data_slow(void) 
 {
 	uint8_t write_then_read_preamble=SENSOR_REG_ADDRESS;
 	

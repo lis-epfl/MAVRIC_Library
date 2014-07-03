@@ -24,12 +24,12 @@ initialise_board(central_data_t *central_data){
 
 		board_init();
 		delay_init(sysclk_get_cpu_hz());
-		init_time_keeper();
+		time_keeper_init();
 			
 		INTC_init_interrupts();
 
 		/*
-		if (init_i2c(1)!=STATUS_OK) {
+		if (i2c_driver_init(1)!=STATUS_OK) {
 			//putstring(STDOUT, "Error initialising I2C\n");
 			while (1==1);
 			} else {
@@ -38,15 +38,15 @@ initialise_board(central_data_t *central_data){
 		i2c_slave_interface_init(1);
 		*/
 		
-		init_UART_int(4);
+		uart_int_init(4);
 
 		
 		
 		
-		register_write_stream(get_UART_handle(4), &central_data->wired_out_stream);
+		uart_int_register_write_stream(uart_int_get_uart_handle(4), &central_data->wired_out_stream);
 
 		make_buffered_stream(&(central_data->wired_in_buffer), &(central_data->wired_in_stream));
-		register_read_stream(get_UART_handle(4), &(central_data->wired_in_stream));
+		uart_int_register_read_stream(uart_int_get_uart_handle(4), &(central_data->wired_in_stream));
 
 		central_data->telemetry_down_stream=&(central_data->wired_out_stream);
 		central_data->telemetry_up_stream  =&(central_data->wired_in_stream);
@@ -57,8 +57,8 @@ initialise_board(central_data_t *central_data){
 		mavlink_stream_init(central_data->telemetry_down_stream, central_data->telemetry_up_stream, 100);
 		dbg_print_init(central_data->debug_out_stream);
 		
-		Init_DAC(0);
-		DAC_set_value(0);
+		dac_dma_init(0);
+		dac_dma_set_value(0);
 		Enable_global_interrupt();
 }
 

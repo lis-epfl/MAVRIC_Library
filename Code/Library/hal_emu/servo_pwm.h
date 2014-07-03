@@ -25,10 +25,10 @@ typedef struct {
 } servo_output;
 
 
-void init_Servos(void);
+void servo_pwm_init(void);
 
 
-void set_servos(servo_output *servo_outputs);
+void servo_pwm_set(servo_output *servo_outputs);
 
 
 #endif /* SERVO_PWM_H_ */

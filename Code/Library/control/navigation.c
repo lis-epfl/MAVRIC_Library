@@ -119,8 +119,8 @@ void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
 	loopCount = loopCount++ %50;
 	if (loopCount == 0)
 	{
-		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"v_desired",v_desired*100);
-		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"act_vel",vector_norm(centralData->position_estimator.vel_bf)*100);
+		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"v_desired",v_desired*100);
+		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"act_vel",vector_norm(centralData->position_estimator.vel_bf)*100);
 		dbg_print("Desired_vel_Bf(x100): (");
 		dbg_print_num(dir_desired_bf[X]*100,10);
 		dbg_print_num(dir_desired_bf[Y]*100,10);

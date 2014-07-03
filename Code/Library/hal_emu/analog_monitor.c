@@ -15,7 +15,7 @@
 
 int16_t monitor_buffer[MONITOR_CHANNELS *MONITOR_SAMPLES];
 
-void init_analog_monitor() {
+void analog_monitor_init() {
 	
 }
 

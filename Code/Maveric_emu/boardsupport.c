@@ -75,7 +75,7 @@ void register_read_stream_stdin( byte_stream_t *stream) {
 
 
 void initialise_board(central_data_t *centralData) {
-//		init_UART_int(0);
+//		uart_int_init(0);
 
 		make_buffered_stream(&centralData->xbee_in_buffer, &centralData->xbee_in_stream);
 
@@ -84,18 +84,18 @@ void initialise_board(central_data_t *centralData) {
 		register_read_stream_udp( &centralData->xbee_in_stream, &udp_in, 14551);
 		udp_out.sock=udp_in.sock;
 
-//		register_write_stream(get_UART_handle(0), &centralData->xbee_out_stream);
+//		uart_int_register_write_stream(uart_int_get_uart_handle(0), &centralData->xbee_out_stream);
 		//register_write_stream_stdout( &centralData->xbee_out_stream);		
 		register_write_stream_udp(&centralData->xbee_out_stream, &udp_out, "127.0.0.1",14550);
 		
-//		init_UART_int(3);
+//		uart_int_init(3);
 		make_buffered_stream(&(centralData->gps_buffer), &centralData->gps_stream_in);
-//		register_read_stream(get_UART_handle(3), &centralData->gps_stream_in);
-//		register_write_stream(get_UART_handle(3), &centralData->gps_stream_out);
+//		uart_int_register_read_stream(uart_int_get_uart_handle(3), &centralData->gps_stream_in);
+//		uart_int_register_write_stream(uart_int_get_uart_handle(3), &centralData->gps_stream_out);
 		
-//		init_UART_int(4);
+//		uart_int_init(4);
 
-//		register_write_stream(get_UART_handle(4), &centralData->wired_out_stream);
+//		uart_int_register_write_stream(uart_int_get_uart_handle(4), &centralData->wired_out_stream);
 		register_write_stream_stdout( &centralData->wired_out_stream);
 		
 		// connect abstracted aliases to hardware ports
@@ -115,8 +115,8 @@ void initialise_board(central_data_t *centralData) {
 		// init mavlink
 		mavlink_stream_init(centralData->telemetry_down_stream, centralData->telemetry_up_stream, 42);
 		
-//		register_read_stream(get_UART_handle(4), &centralData->wired_in_stream);
-//		register_read_stream(get_UART_handle(0), &centralData->xbee_in_stream);
+//		uart_int_register_read_stream(uart_int_get_uart_handle(4), &centralData->wired_in_stream);
+//		uart_int_register_read_stream(uart_int_get_uart_handle(0), &centralData->xbee_in_stream);
 		
 		
 
@@ -124,8 +124,8 @@ void initialise_board(central_data_t *centralData) {
 		dbg_print_init(centralData->debug_out_stream);
 		
 
-		rc_init();
-		init_Servos();
+		remote_dsm2_rc_init();
+		servo_pwm_init();
 		
 		
 

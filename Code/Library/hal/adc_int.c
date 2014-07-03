@@ -127,8 +127,8 @@ static void processData() {
 		//|| ((adcifa->sr&ADC_INT_SEOS1) ==0) ) {}
 		else 
 		{
-			adc_int_period=(get_time_ticks()-last_adc_int_time);
-			last_adc_int_time=get_time_ticks();
+			adc_int_period=(time_keeper_get_time_ticks()-last_adc_int_time);
+			last_adc_int_time=time_keeper_get_time_ticks();
 		
 			if (sample_counter>=0) 
 			{
@@ -156,7 +156,7 @@ static void processData() {
 				return;
 			}
 			//if (function_generator!= NULL) {
-			//	DAC_set_value((*function_generator)(sampleCounter));
+			//	dac_dma_set_value((*function_generator)(sampleCounter));
 			//}
 			oversampling_counter++;
 	
@@ -171,7 +171,7 @@ static void processData() {
 				sample_counter++;
 			}		
 			
-			//DAC_set_value(even_odd*400);
+			//dac_dma_set_value(even_odd*400);
 			///< acknowledge processing finished
 			adcifa->scr=ADC_INT_SEOS0 | ADC_INT_SEOS1;
 		}
@@ -180,7 +180,7 @@ static void processData() {
 
 
 ///< Initializes ADC (configures Pins, starts Clock, sets defaults)
-void Init_ADCI(uint32_t adc_frequency, uint8_t reference_source)
+void adc_int_init(uint32_t adc_frequency, uint8_t reference_source)
 {
 	///< Assign and enable GPIO pins to the ADC function.
 	gpio_enable_module(ADCIFA_GPIO_MAP, sizeof(ADCIFA_GPIO_MAP) / sizeof(ADCIFA_GPIO_MAP[0]));
@@ -203,7 +203,7 @@ void Init_ADCI(uint32_t adc_frequency, uint8_t reference_source)
 	///< Configure ADCIFA core
 	adcifa_configure(adcifa, &adc_config_options, sysclk_get_peripheral_bus_hz(AVR32_ADCIFA_ADDRESS));
 
-	clear_adc_sequencer();
+	adc_int_clear_sequencer();
 	continuous_mode=false;
 	///< Configure ADCIFA sequencer 1
 	//adcifa_configure_sequencer(adcifa, 1, &adcifa_sequence_opt, adcifa_sequencer1_conversion_opt);
@@ -215,14 +215,14 @@ void Init_ADCI(uint32_t adc_frequency, uint8_t reference_source)
 }
 
 
-void clear_adc_sequencer(void) 
+void adc_int_clear_sequencer(void) 
 {
 	sequencer_item_count=0;
 	adcifa_sequence_opt.convnb = sequencer_item_count;
 }
 
 
-int8_t adc_sequencer_add(int16_t* buffer, uint8_t input_p, uint8_t input_n, uint8_t gain) 
+int8_t adc_int_sequencer_add(int16_t* buffer, uint8_t input_p, uint8_t input_n, uint8_t gain) 
 {	
 	if (sequencer_item_count<SLOTS_PER_SEQUENCER-1) 
 	{
@@ -243,7 +243,7 @@ int8_t adc_sequencer_add(int16_t* buffer, uint8_t input_p, uint8_t input_n, uint
 
 
 ///< starts sampling, captures one buffer length and then stops
-void ADCI_Start_Sampling(int length, int samplingrate, int set_oversampling, int set_oversampling_divider, bool continuous)
+void adc_int_start_sampling(int length, int samplingrate, int set_oversampling, int set_oversampling_divider, bool continuous)
 {
 	///< Configure ADCIFA sequencer 0
 	adcifa_sequence_opt.convnb = sequencer_item_count;
@@ -266,45 +266,45 @@ void ADCI_Start_Sampling(int length, int samplingrate, int set_oversampling, int
 
 
 ///< stops sampling immediately
-void ADCI_Stop_Sampling(void)
+void adc_int_stop_sampling(void)
 {
 	adcifa_stop_itimer(adcifa);	
 }
 
 
 ///< Returns true if one-shot sampling has finished
-Bool ADCI_Sampling_Complete(void)
+Bool adc_int_sampling_complete(void)
 {
 	return (sample_counter>=number_of_samples);
 }
 
 
-//void set_DAC_generator_function(generatorfunction new_function_generator ) {
+//void ads1274_set_DAC_generator_function(generatorfunction new_function_generator ) {
 //	function_generator=new_function_generator;
 	
 //}
 
 
-int16_t ADCI_get_sample(int channel, int sample) 
+int16_t adc_int_get_sample(int channel, int sample) 
 {
 	int16_t *buffer=adci_buffer[channel];
 	return buffer[sample];
 }
 
 
-int16_t* ADCI_get_buffer(void) 
+int16_t* adc_int_get_buffer(void) 
 {
 	return adci_buffer;
 }
 
 	
-int ADCI_get_sampling_status(void) 
+int adc_int_get_sampling_status(void) 
 {
 	return sample_counter;
 }
 
 
-uint32_t get_adc_int_period(void) 
+uint32_t adc_int_get_period(void) 
 {
 	return adc_int_period;
 }

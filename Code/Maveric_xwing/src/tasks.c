@@ -35,9 +35,9 @@ task_return_t run_imu_update() {
 void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 {
 	
-	get_channel_mode(chanSwitch);
+	remote_controller_get_channel_mode(chanSwitch);
 	
-/*	if ((rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR)>0.0)
+/*	if ((remote_dsm2_rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR)>0.0)
 	{
 		centralData->collision_avoidance = true;
 	}else{
@@ -50,12 +50,12 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 	//dbg_print_num(getChannel(5),10);
 	//dbg_print("\n");
 	
-	if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() > 0.9))
+	if((remote_controller_get_thrust_from_remote()<-0.95) && (remote_controller_get_yaw_from_remote() > 0.9))
 	{
 		//dbg_print("motor on\n");
-		dbg_print("motor on: yaw=\n"); dbg_putfloat(get_yaw_from_remote(),2);
+		dbg_print("motor on: yaw=\n"); dbg_putfloat(remote_controller_get_yaw_from_remote(),2);
 		*motorbool = 1;
-	}else if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() <-0.9))
+	}else if((remote_controller_get_thrust_from_remote()<-0.95) && (remote_controller_get_yaw_from_remote() <-0.9))
 	{
 		//dbg_print("motor off\n");
 		*motorbool = -1;
@@ -64,7 +64,7 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 		*motorbool = 0;
 	}
 	
-	switch (rc_check_receivers())
+	switch (remote_dsm2_rc_check_receivers())
 	{
 		case 1:
 		*rc_check = 1;
@@ -282,7 +282,7 @@ task_return_t run_stabilisation() {
 	{
 		
 		case MAV_MODE_MANUAL_ARMED:
-			centralData->controls = get_command_from_remote();
+			centralData->controls = remote_controller_get_command_from_remote();
 			
 			centralData->controls.yaw_mode=YAW_RELATIVE;
 			centralData->controls.control_mode = RATE_COMMAND_MODE;
@@ -290,7 +290,7 @@ task_return_t run_stabilisation() {
 			stabilisation_hybrid_cascade_stabilise_hybrid(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
-			centralData->controls = get_command_from_remote();
+			centralData->controls = remote_controller_get_command_from_remote();
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			
 			stabilisation_hybrid_cascade_stabilise_hybrid(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
@@ -298,7 +298,7 @@ task_return_t run_stabilisation() {
 			break;
 		case MAV_MODE_GUIDED_ARMED:
 			// centralData->controls = centralData->controls_nav;
-			centralData->controls = get_command_from_remote();
+			centralData->controls = remote_controller_get_command_from_remote();
 			
 			
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
@@ -306,7 +306,7 @@ task_return_t run_stabilisation() {
 			break;
 		case MAV_MODE_AUTO_ARMED:
 			// centralData->controls = centralData->controls_nav;
-			centralData->controls = get_command_from_remote();
+			centralData->controls = remote_controller_get_command_from_remote();
 			
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;	
 			stabilisation_hybrid_cascade_stabilise_hybrid(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
@@ -327,14 +327,14 @@ task_return_t run_stabilisation() {
 	
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
 	if (centralData->simulation_mode!=1) {
-		set_servos(&(centralData->servos));
+		servo_pwm_set(&(centralData->servos));
 	}
 		
 
 }
 
 task_return_t gps_task() {
-	uint32_t tnow = get_millis();	
+	uint32_t tnow = time_keeper_get_millis();	
 	if (centralData->simulation_mode==1) {
 		simulate_gps(&centralData->sim_model, &centralData->GPS_data);
 	} else {
@@ -390,10 +390,10 @@ task_return_t run_navigation_task()
 uint32_t last_baro_update;
 task_return_t run_barometer()
 {
-	uint32_t tnow = get_micros();
+	uint32_t tnow = time_keeper_get_micros();
 	central_data_t *central_data=get_central_data();
 	
-	pressure_data *pressure= get_pressure_data_slow(centralData->pressure.altitude_offset);
+	pressure_data *pressure= bmp085_get_pressure_data_slow(centralData->pressure.altitude_offset);
 	if (central_data->simulation_mode==1) {
 		simulate_barometer(&centralData->sim_model, pressure);
 	} 
@@ -415,7 +415,7 @@ void create_tasks() {
 
 	register_task(&main_tasks, 2, 100000, RUN_REGULAR, &gps_task);
 	//register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
-	//register_task(&main_tasks, , 100000, RUN_REGULAR, &read_radar);
+	//register_task(&main_tasks, , 100000, RUN_REGULAR, &radar_module_read);
 
 	register_task(&main_tasks, 3, ORCA_TIME_STEP_MILLIS * 1000.0, RUN_REGULAR, &run_navigation_task);
 

@@ -10,19 +10,19 @@
 
 radar_target main_target;
 
-void init_radar_modules() {
+void radar_module_init() {
 	dbg_print("not implemented\n");
 
 }
 
 
-void read_radar() {
+void radar_module_read() {
 
 	dbg_print("not implemented\n");
 	
 }
 
-radar_target* get_radar_main_target() {
+radar_target* radar_module_get_main_target() {
 	return &main_target;
 	
 }

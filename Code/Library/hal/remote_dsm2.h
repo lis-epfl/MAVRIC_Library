@@ -50,18 +50,18 @@ typedef struct Spektrum_Receiver
  *
  * \param on if true power-on the receiver, false not implemented yet
  */
-void rc_switch_power(bool on);
+void remote_dsm2_rc_switch_power(bool on);
 
 /**
  * \brief set slave receiver into bind mode. 
  * has to be called 100ms after power-up
  */
-void rc_activate_bind_mode(void);
+void remote_dsm2_rc_activate_bind_mode(void);
 
 /**
  * \brief Initialize UART receiver for Spektrum/DSM2 slave receivers
  */
-void rc_init (void);
+void remote_dsm2_rc_init (void);
 
 /**
  * \brief Return a remote channel
@@ -70,7 +70,7 @@ void rc_init (void);
  *
  * \return the remote channel value
  */
-int16_t rc_get_channel(uint8_t index);
+int16_t remote_dsm2_rc_get_channel(uint8_t index);
 
 /**
  * \brief Update the remote channel central position array stored in .c file
@@ -78,7 +78,7 @@ int16_t rc_get_channel(uint8_t index);
  *
  * \param index Specify which channel we are interested in
  */
-void rc_center_channel(uint8_t index);
+void remote_dsm2_rc_center_channel(uint8_t index);
 
 /**
  * \brief Return the neutral position of a remote channel
@@ -88,23 +88,23 @@ void rc_center_channel(uint8_t index);
  *
  * \return the neutral position of this remote channel
  */
-int16_t rc_get_channel_neutral(uint8_t index);
+int16_t remote_dsm2_rc_get_channel_neutral(uint8_t index);
 
 /**
  * \brief return 1 if enabled receivers works
  *
  * \return the error value of receivers' checks: 0 for no error
  */
-int8_t  rc_check_receivers(void);
+int8_t  remote_dsm2_rc_check_receivers(void);
 
 /*
-Control_Command_t get_command_from_spektrum();
-float get_roll_from_spektrum();
-float get_pitch_from_spektrum();
-float get_yaw_from_spektrum();
-float get_thrust_from_spektrum();
+Control_Command_t remote_dsm2_get_command_from_spektrum();
+float remote_dsm2_get_roll_from_spektrum();
+float remote_dsm2_get_pitch_from_spektrum();
+float remote_dsm2_get_yaw_from_spektrum();
+float remote_dsm2_get_thrust_from_spektrum();
 
-void get_channel_mode_spektrum(uint8_t *chanSwitch);
+void remote_dsm2_get_channel_mode_spektrum(uint8_t *chanSwitch);
 */
 
 #ifdef __cplusplus

@@ -42,7 +42,7 @@ void mavlink_send_heartbeat(void) {
 }
 
 void mavlink_send_raw_imu(void) {
-	mavlink_msg_raw_imu_send(MAVLINK_COMM_0, get_micros(), 
+	mavlink_msg_raw_imu_send(MAVLINK_COMM_0, time_keeper_get_micros(), 
 	board->imu1.raw_channels[ACC_OFFSET+IMU_X], 
 	board->imu1.raw_channels[ACC_OFFSET+IMU_Y], 
 	board->imu1.raw_channels[ACC_OFFSET+IMU_Z], 
@@ -56,7 +56,7 @@ void mavlink_send_raw_imu(void) {
 }
 
 void mavlink_send_scaled_imu(void) {
-	mavlink_msg_scaled_imu_send(MAVLINK_COMM_0, get_millis(),
+	mavlink_msg_scaled_imu_send(MAVLINK_COMM_0, time_keeper_get_millis(),
 	1000*board->imu1.attitude.a [IMU_X],
 	1000*board->imu1.attitude.a [IMU_Y], 
 	1000*board->imu1.attitude.a [IMU_Z], 
@@ -73,22 +73,22 @@ void mavlink_send_scaled_imu(void) {
 }
 void  mavlink_send_rpy_rates_error(void) {
 	Stabiliser_t *rate_stab=get_rate_stabiliser();
-	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_send(MAVLINK_COMM_0, get_millis(), rate_stab->rpy_controller[0].error, rate_stab->rpy_controller[1].error,rate_stab->rpy_controller[2].error,0 );
+	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_send(MAVLINK_COMM_0, time_keeper_get_millis(), rate_stab->rpy_controller[0].error, rate_stab->rpy_controller[1].error,rate_stab->rpy_controller[2].error,0 );
 }
 void  mavlink_send_rpy_speed_thrust_setpoint(void) {
 	Stabiliser_t *rate_stab=get_rate_stabiliser();
-	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_send(MAVLINK_COMM_0, get_millis(), rate_stab->rpy_controller[0].output, rate_stab->rpy_controller[1].output,rate_stab->rpy_controller[2].output,0 );
+	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_send(MAVLINK_COMM_0, time_keeper_get_millis(), rate_stab->rpy_controller[0].output, rate_stab->rpy_controller[1].output,rate_stab->rpy_controller[2].output,0 );
 }
 void mavlink_send_rpy_thrust_setpoint(void) {
 	
 	// Controls output
 	//mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(mavlink_channel_t chan, uint32_t time_boot_ms, float roll, float pitch, float yaw, float thrust)
-	mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(MAVLINK_COMM_0, get_millis(), board->controls.rpy[ROLL], board->controls.rpy[PITCH], board->controls.rpy[YAW], board->controls.thrust);
+	mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(MAVLINK_COMM_0, time_keeper_get_millis(), board->controls.rpy[ROLL], board->controls.rpy[PITCH], board->controls.rpy[YAW], board->controls.thrust);
 }
 
 void mavlink_send_servo_output(void) {
 	Stabiliser_t *rate_stab=get_rate_stabiliser();
-	mavlink_msg_servo_output_raw_send(MAVLINK_COMM_0, get_micros(), 0, 
+	mavlink_msg_servo_output_raw_send(MAVLINK_COMM_0, time_keeper_get_micros(), 0, 
 	(uint16_t)(board->servos[0].value+1500),
 	(uint16_t)(board->servos[1].value+1500),
 	(uint16_t)(board->servos[2].value+1500),
@@ -103,13 +103,13 @@ void mavlink_send_servo_output(void) {
 
 void mavlink_send_attitude_quaternion(void) {
 	// ATTITUDE QUATERNION
-	mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, get_millis(), board->imu1.attitude.qe.s, board->imu1.attitude.qe.v[0], board->imu1.attitude.qe.v[1], board->imu1.attitude.qe.v[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
+	mavlink_msg_attitude_quaternion_send(MAVLINK_COMM_0, time_keeper_get_millis(), board->imu1.attitude.qe.s, board->imu1.attitude.qe.v[0], board->imu1.attitude.qe.v[1], board->imu1.attitude.qe.v[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
 }
 void mavlink_send_attitude(void) {
 	// ATTITUDE
 	Aero_Attitude_t aero_attitude;
 	aero_attitude=Quat_to_Aero(board->imu1.attitude.qe);
-	mavlink_msg_attitude_send(MAVLINK_COMM_0, get_millis(), aero_attitude.rpy[0], aero_attitude.rpy[1], aero_attitude.rpy[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
+	mavlink_msg_attitude_send(MAVLINK_COMM_0, time_keeper_get_millis(), aero_attitude.rpy[0], aero_attitude.rpy[1], aero_attitude.rpy[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
 }
 
 void mavlink_send_global_position(void) {				
@@ -117,13 +117,13 @@ void mavlink_send_global_position(void) {
 	
    //if (board->GPS_data.status == GPS_OK)
    //{
-	   //mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis() , board->GPS_data.latitude*10000000.0, board->GPS_data.longitude*10000000.0, board->GPS_data.altitude*1000.0, 1, board->GPS_data.northSpeed*100.0, board->GPS_data.eastSpeed*100.0, board->GPS_data.verticalSpeed*100.0, board->GPS_data.course);
+	   //mavlink_msg_global_position_int_send(MAVLINK_COMM_0, time_keeper_get_millis() , board->GPS_data.latitude*10000000.0, board->GPS_data.longitude*10000000.0, board->GPS_data.altitude*1000.0, 1, board->GPS_data.northSpeed*100.0, board->GPS_data.eastSpeed*100.0, board->GPS_data.verticalSpeed*100.0, board->GPS_data.course);
    //}else{
-	   //mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), 46.5193*10000000, 6.56507*10000000, 400*1000, 1, 0, 0, 0, board->imu1.attitude.om[2]);
+	   //mavlink_msg_global_position_int_send(MAVLINK_COMM_0, time_keeper_get_millis(), 46.5193*10000000, 6.56507*10000000, 400*1000, 1, 0, 0, 0, board->imu1.attitude.om[2]);
 	   	// send integrated position (for now there is no GPS error correction...!!!)
 		global_position_t gpos=local_to_global_position(board->imu1.attitude.localPosition);
-		mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, board->imu1.attitude.vel[0]*100.0, board->imu1.attitude.vel[1]*100.0, board->imu1.attitude.vel[2]*100.0, board->imu1.attitude.om[2]);
-		mavlink_msg_global_position_int_send(MAVLINK_COMM_1, get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, board->imu1.attitude.vel[0]*100.0, board->imu1.attitude.vel[1]*100.0, board->imu1.attitude.vel[2]*100.0, board->imu1.attitude.om[2]);
+		mavlink_msg_global_position_int_send(MAVLINK_COMM_0, time_keeper_get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, board->imu1.attitude.vel[0]*100.0, board->imu1.attitude.vel[1]*100.0, board->imu1.attitude.vel[2]*100.0, board->imu1.attitude.om[2]);
+		mavlink_msg_global_position_int_send(MAVLINK_COMM_1, time_keeper_get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, board->imu1.attitude.vel[0]*100.0, board->imu1.attitude.vel[1]*100.0, board->imu1.attitude.vel[2]*100.0, board->imu1.attitude.om[2]);
    //} 
 }
 
@@ -144,37 +144,37 @@ void mavlink_send_gps_raw(void) {
 	{
 		mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0,1000*board->GPS_data.timeLastMsg, board->GPS_data.status, board->GPS_data.latitude*10000000.0, board->GPS_data.longitude*10000000.0, board->GPS_data.altitude*1000.0, board->GPS_data.hdop*100.0, board->GPS_data.speedAccuracy*100.0 ,board->GPS_data.groundSpeed*100.0, board->GPS_data.course, board->GPS_data.num_sats);	
 	}else{
-		mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0,get_micros(), board->GPS_data.status, 46.5193*10000000, 6.56507*10000000, 400 * 1000, 0, 0 , 0, 0, board->GPS_data.num_sats);
+		mavlink_msg_gps_raw_int_send(MAVLINK_COMM_0,time_keeper_get_micros(), board->GPS_data.status, 46.5193*10000000, 6.56507*10000000, 400 * 1000, 0, 0 , 0, 0, board->GPS_data.num_sats);
 	}
 }
 
 
 void mavlink_send_pressure(void) {			
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Pressure", board->pressure.pressure/100.0);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "PressureFiltered", board->pressure_filtered/100.0);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Temperature", board->pressure.temperature);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Altitude", board->pressure.altitude);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "Pressure", board->pressure.pressure/100.0);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "PressureFiltered", board->pressure_filtered/100.0);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "Temperature", board->pressure.temperature);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "Altitude", board->pressure.altitude);
 	
 	
 	//mavlink_msg_scaled_pressure_send(mavlink_channel_t chan, uint32_t time_boot_ms, float press_abs, float press_diff, int16_t temperature)
 	
-	mavlink_msg_scaled_pressure_send(MAVLINK_COMM_0, get_millis(), board->pressure.pressure/100.0, board->pressure.vario_vz, board->pressure.temperature*100.0);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressAlt", board->pressure.altitude);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"pressFilt", board->altitude_filtered);
+	mavlink_msg_scaled_pressure_send(MAVLINK_COMM_0, time_keeper_get_millis(), board->pressure.pressure/100.0, board->pressure.vario_vz, board->pressure.temperature*100.0);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"pressAlt", board->pressure.altitude);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"pressFilt", board->altitude_filtered);
 }
 
 void mavlink_send_radar(void) {
-	read_radar();
-	radar_target *target=get_radar_main_target();
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Radar_velocity", target->velocity);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Radar_amplitude", target->amplitude/1000.0);
+	radar_module_read();
+	radar_target *target=radar_module_get_main_target();
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "Radar_velocity", target->velocity);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "Radar_amplitude", target->amplitude/1000.0);
 }
 
 void mavlink_send_estimator(void)
 {
 	//mavlink_msg_local_position_ned_send(mavlink_channel_t chan, uint32_t time_boot_ms, float x, float y, float z, float vx, float vy, float vz)
-	//mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, get_millis(), board->estimation.state[0][0], board->estimation.state[1][0], board->estimation.state[2][0], board->estimation.state[0][1], board->estimation.state[1][1], board->estimation.state[2][1]);
-	mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, get_millis(), board->imu1.attitude.localPosition.pos[0], board->imu1.attitude.localPosition.pos[1], board->imu1.attitude.localPosition.pos[2], board->imu1.attitude.vel[0], board->imu1.attitude.vel[1], board->imu1.attitude.vel[2]);
+	//mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, time_keeper_get_millis(), board->estimation.state[0][0], board->estimation.state[1][0], board->estimation.state[2][0], board->estimation.state[0][1], board->estimation.state[1][1], board->estimation.state[2][1]);
+	mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, time_keeper_get_millis(), board->imu1.attitude.localPosition.pos[0], board->imu1.attitude.localPosition.pos[1], board->imu1.attitude.localPosition.pos[2], board->imu1.attitude.vel[0], board->imu1.attitude.vel[1], board->imu1.attitude.vel[2]);
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,0,"Estimation",0);
 	
 	//dbg_print("Local position: (");
@@ -188,70 +188,70 @@ void mavlink_send_estimator(void)
 
 void mavlink_send_kalman_estimator(void)
 {
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiX", board->estimation.state[X][POSITION]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiY", board->estimation.state[Y][POSITION]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiZ", board->estimation.state[Z][POSITION]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "estiX", board->estimation.state[X][POSITION]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "estiY", board->estimation.state[Y][POSITION]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "estiZ", board->estimation.state[Z][POSITION]);
 	
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiVx", board->estimation.state[X][SPEED]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiVy", board->estimation.state[Y][SPEED]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiVz", board->estimation.state[Z][SPEED]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "estiVx", board->estimation.state[X][SPEED]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "estiVy", board->estimation.state[Y][SPEED]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "estiVz", board->estimation.state[Z][SPEED]);
 	
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estibiaisX", board->estimation.state[X][BIAIS]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estibiaisY", board->estimation.state[Y][BIAIS]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estibiaisZ", board->estimation.state[Z][BIAIS]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "estibiaisX", board->estimation.state[X][BIAIS]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "estibiaisY", board->estimation.state[Y][BIAIS]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "estibiaisZ", board->estimation.state[Z][BIAIS]);
 	
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisX", board->imu1.attitude.be[X+ACC_OFFSET]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisY", board->imu1.attitude.be[Y+ACC_OFFSET]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "accbiaisZ", board->imu1.attitude.be[Z+ACC_OFFSET]);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "accbiaisX", board->imu1.attitude.be[X+ACC_OFFSET]);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "accbiaisY", board->imu1.attitude.be[Y+ACC_OFFSET]);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "accbiaisZ", board->imu1.attitude.be[Z+ACC_OFFSET]);
 	
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfX", board->imu1.attitude.acc_bf[X]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfY", board->imu1.attitude.acc_bf[Y]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", board->imu1.attitude.acc_bf[Z]);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "acc_bfX", board->imu1.attitude.acc_bf[X]);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "acc_bfY", board->imu1.attitude.acc_bf[Y]);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "acc_bfZ", board->imu1.attitude.acc_bf[Z]);
 	
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", board->imu1.attitude.vel_bf[X]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", board->imu1.attitude.vel_bf[Y]);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "acc_bfZ", board->imu1.attitude.vel_bf[Z]);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "acc_bfZ", board->imu1.attitude.vel_bf[X]);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "acc_bfZ", board->imu1.attitude.vel_bf[Y]);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "acc_bfZ", board->imu1.attitude.vel_bf[Z]);
 	
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estiDeltaT", board->estimation.delta_t_filter);
-	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "imuDeltaT", board->imu1.dt);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "estiDeltaT", board->estimation.delta_t_filter);
+	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "imuDeltaT", board->imu1.dt);
 }
 void mavlink_send_raw_rc_channels(void)
 {
-	mavlink_msg_rc_channels_raw_send(MAVLINK_COMM_0,get_millis(),1,
-	rc_get_channel(0)+1000,
-	rc_get_channel(1)+1000,
-	rc_get_channel(2)+1000,
-	rc_get_channel(3)+1000,
-	rc_get_channel(4)+1000,
-	rc_get_channel(5)+1000,
-	rc_get_channel(6)+1000,
-	rc_get_channel(7)+1000,
-	rc_check_receivers());
+	mavlink_msg_rc_channels_raw_send(MAVLINK_COMM_0,time_keeper_get_millis(),1,
+	remote_dsm2_rc_get_channel(0)+1000,
+	remote_dsm2_rc_get_channel(1)+1000,
+	remote_dsm2_rc_get_channel(2)+1000,
+	remote_dsm2_rc_get_channel(3)+1000,
+	remote_dsm2_rc_get_channel(4)+1000,
+	remote_dsm2_rc_get_channel(5)+1000,
+	remote_dsm2_rc_get_channel(6)+1000,
+	remote_dsm2_rc_get_channel(7)+1000,
+	remote_dsm2_rc_check_receivers());
 }
 
 void mavlink_send_scaled_rc_channels(void)
 {
-	mavlink_msg_rc_channels_scaled_send(MAVLINK_COMM_0,get_millis(),1,
-	rc_get_channel(0) * 1000.0 * RC_SCALEFACTOR ,
-	rc_get_channel(1) * 1000.0 * RC_SCALEFACTOR,
-	rc_get_channel(2) * 1000.0 * RC_SCALEFACTOR,
-	rc_get_channel(3) * 1000.0 * RC_SCALEFACTOR,
-	rc_get_channel(4) * 1000.0 * RC_SCALEFACTOR,
-	rc_get_channel(5) * 1000.0 * RC_SCALEFACTOR,
-	rc_get_channel(6) * 1000.0 * RC_SCALEFACTOR,
-	rc_get_channel(7) * 1000.0 * RC_SCALEFACTOR,
-	rc_check_receivers());
+	mavlink_msg_rc_channels_scaled_send(MAVLINK_COMM_0,time_keeper_get_millis(),1,
+	remote_dsm2_rc_get_channel(0) * 1000.0 * RC_SCALEFACTOR ,
+	remote_dsm2_rc_get_channel(1) * 1000.0 * RC_SCALEFACTOR,
+	remote_dsm2_rc_get_channel(2) * 1000.0 * RC_SCALEFACTOR,
+	remote_dsm2_rc_get_channel(3) * 1000.0 * RC_SCALEFACTOR,
+	remote_dsm2_rc_get_channel(4) * 1000.0 * RC_SCALEFACTOR,
+	remote_dsm2_rc_get_channel(5) * 1000.0 * RC_SCALEFACTOR,
+	remote_dsm2_rc_get_channel(6) * 1000.0 * RC_SCALEFACTOR,
+	remote_dsm2_rc_get_channel(7) * 1000.0 * RC_SCALEFACTOR,
+	remote_dsm2_rc_check_receivers());
 }
 
 void mavlink_send_simulation(void) {
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rolltorque", board->sim_model.torques_bf[0]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "pitchtorque", board->sim_model.torques_bf[1]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "yawtorque", board->sim_model.torques_bf[2]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "thrust", board->sim_model.lin_forces_bf[2]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm1", board->sim_model.rotorspeeds[0]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm2", board->sim_model.rotorspeeds[1]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm3", board->sim_model.rotorspeeds[2]);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "rpm4", board->sim_model.rotorspeeds[3]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "rolltorque", board->sim_model.torques_bf[0]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "pitchtorque", board->sim_model.torques_bf[1]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "yawtorque", board->sim_model.torques_bf[2]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "thrust", board->sim_model.lin_forces_bf[2]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "rpm1", board->sim_model.rotorspeeds[0]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "rpm2", board->sim_model.rotorspeeds[1]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "rpm3", board->sim_model.rotorspeeds[2]);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "rpm4", board->sim_model.rotorspeeds[3]);
 
 	
 }

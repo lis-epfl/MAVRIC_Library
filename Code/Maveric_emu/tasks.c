@@ -32,7 +32,7 @@ task_return_t run_imu_update() {
 void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 {
 	
-	get_channel_mode(chanSwitch);
+	remote_controller_get_channel_mode(chanSwitch);
 	
 	//dbg_print("chanSwitch ");
 	//dbg_print_num(*chanSwitch,10);
@@ -40,11 +40,11 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 	//dbg_print_num(getChannel(5),10);
 	//dbg_print("\n");
 	
-	if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() > 0.9))
+	if((remote_controller_get_thrust_from_remote()<-0.95) && (remote_controller_get_yaw_from_remote() > 0.9))
 	{
 		//dbg_print("motor on\n");
 		*motorbool = 1;
-	}else if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() <-0.9))
+	}else if((remote_controller_get_thrust_from_remote()<-0.95) && (remote_controller_get_yaw_from_remote() <-0.9))
 	{
 		//dbg_print("motor off\n");
 		*motorbool = -1;
@@ -53,7 +53,7 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 		*motorbool = 0;
 	}
 	
-	switch (rc_check_receivers())
+	switch (remote_dsm2_rc_check_receivers())
 	{
 		case 1:
 		*rc_check = 1;
@@ -215,7 +215,7 @@ task_return_t run_stabilisation() {
 	{
 		case MAV_MODE_PREFLIGHT:
 		case MAV_MODE_MANUAL_ARMED:
-			//board->controls = get_command_from_remote();
+			//board->controls = remote_controller_get_command_from_remote();
 			//for (i=0; i<4; i++) {
 			//	board->servos[i].value=SERVO_SCALE*board->controls.thrust;
 			//}
@@ -224,7 +224,7 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_STABILIZE_ARMED:
 			board->waypoint_hold_init = false;
 			board->mission_started = false;
-			board->controls = get_command_from_remote();
+			board->controls = remote_controller_get_command_from_remote();
 			//dbg_print("Thrust:");
 			//dbg_print_num(board->controls.thrust*10000,10);
 			//dbg_print("\n");
@@ -238,15 +238,15 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_GUIDED_ARMED:
 			board->mission_started = false;
 			board->controls = board->controls_nav;
-			board->controls.thrust = min(get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0;
+			board->controls.thrust = min(remote_controller_get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0;
 			//board->controls.thrust = board->controls_nav.thrust;
 			
 			//dbg_print("Thrust (x10000):");
 			//dbg_print_num(board->controls.thrust*10000.0,10);
 			//dbg_print(", remote (x10000):");
-			//dbg_print_num(get_thrust_from_remote()*10000.0,10);
+			//dbg_print_num(remote_controller_get_thrust_from_remote()*10000.0,10);
 			//dbg_print(" => min (x10000):");
-			//dbg_print_num(min(get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0 *10000.0,10);
+			//dbg_print_num(min(remote_controller_get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0 *10000.0,10);
 			//dbg_print("\n");
 			
 			quad_stabilise(&(board->imu1), &(board->controls));
@@ -255,7 +255,7 @@ task_return_t run_stabilisation() {
 			board->mission_started = true;
 			board->waypoint_hold_init = false;
 			board->controls = board->controls_nav;
-			board->controls.thrust = min(get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0;
+			board->controls.thrust = min(remote_controller_get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0;
 			//board->controls.thrust = board->controls_nav.thrust;
 			
 			//dbg_print("Thrust main:");
@@ -268,7 +268,7 @@ task_return_t run_stabilisation() {
 		case MAV_MODE_STABILIZE_DISARMED:
 		case MAV_MODE_GUIDED_DISARMED:
 		case MAV_MODE_AUTO_DISARMED:
-			//set_servos(&(servo_failsafe));
+			//servo_pwm_set(&(servo_failsafe));
 			for (i=0; i<NUMBER_OF_SERVO_OUTPUTS; i++) {
 				board->servos[i]=servo_failsafe[i];
 			}
@@ -278,7 +278,7 @@ task_return_t run_stabilisation() {
 	
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
 	if (board->simulation_mode!=1) {
-		set_servos(&(board->servos));
+		servo_pwm_set(&(board->servos));
 	}
 		
 
@@ -311,16 +311,16 @@ task_return_t run_stabilisation() {
 	//
 	//if (control_input->run_mode==MOTORS_ON) {
 		//// send values to servo outputs
-		//set_servos(&(board->servos));
+		//servo_pwm_set(&(board->servos));
 	//} else {	
-		//set_servos(&(servo_failsafe));
+		//servo_pwm_set(&(servo_failsafe));
 	//}
 	//
 //
 //}
 
 task_return_t gps_task() {
-	uint32_t tnow = get_millis();	
+	uint32_t tnow = time_keeper_get_millis();	
 	
 	gps_update();
 	
@@ -402,9 +402,9 @@ task_return_t run_navigation_task()
 
 task_return_t run_barometer()
 {
-	uint32_t tnow = get_micros();
+	uint32_t tnow = time_keeper_get_micros();
 
-	pressure_data *pressure = get_pressure_data_slow(board->pressure.altitude_offset);
+	pressure_data *pressure = bmp085_get_pressure_data_slow(board->pressure.altitude_offset);
 	board->pressure =  *pressure;
 	
 	
@@ -412,15 +412,15 @@ task_return_t run_barometer()
 
 task_return_t send_rt_stats() {
 	
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "stabAvgDelay", main_tasks.tasks[1].delay_avg);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "stabDelayVar", sqrt(main_tasks.tasks[1].delay_var_squared));
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "stabMaxDelay", main_tasks.tasks[1].delay_max);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "stabRTvio", main_tasks.tasks[0].rt_violations);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "stabAvgDelay", main_tasks.tasks[1].delay_avg);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "stabDelayVar", sqrt(main_tasks.tasks[1].delay_var_squared));
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "stabMaxDelay", main_tasks.tasks[1].delay_max);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "stabRTvio", main_tasks.tasks[0].rt_violations);
 
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "imuExTime", main_tasks.tasks[0].execution_time);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "stabExTime", main_tasks.tasks[1].execution_time);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "estExTime", main_tasks.tasks[3].execution_time);
-	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "MVLExTime", main_tasks.tasks[9].execution_time);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "imuExTime", main_tasks.tasks[0].execution_time);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "stabExTime", main_tasks.tasks[1].execution_time);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "estExTime", main_tasks.tasks[3].execution_time);
+	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "MVLExTime", main_tasks.tasks[9].execution_time);
 
 	
 	main_tasks.tasks[1].rt_violations=0;
@@ -439,7 +439,7 @@ void create_tasks() {
 	
 	register_task(&main_tasks, 3, 100000, RUN_REGULAR, &gps_task);
 	//register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
-	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &read_radar);
+	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &radar_module_read);
 
 	register_task(&main_tasks, 5, 10000, RUN_REGULAR, &run_navigation_task);
 

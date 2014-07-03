@@ -34,8 +34,8 @@ void initialisation()
 	
 	dbg_print("Debug stream initialised\n");
 	
-	servos_failsafe(centralData->servos);
-	set_servos(centralData->servos);
+	servo_pwm_failsafe(centralData->servos);
+	servo_pwm_set(centralData->servos);
 	
 	onboard_parameters_init();
 
@@ -63,7 +63,7 @@ void initialisation()
 	LED_On(LED1);
 	for (i=1; i<8; i++)
 	{
-		beep(100, 500*i);
+		piezo_speaker_beep(100, 500*i);
 		delay_ms(2);
 	}
 	dbg_print("OK. Starting up.\n");

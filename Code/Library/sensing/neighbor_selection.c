@@ -99,7 +99,7 @@ void neighbors_selection_read_message_from_neighbors(Mavlink_Received_t* rec)
 		
 		centralData->listNeighbors[actualNeighbor].size = SIZE_VHC_ORCA;
 		
-		centralData->listNeighbors[actualNeighbor].time_msg_received = get_millis();
+		centralData->listNeighbors[actualNeighbor].time_msg_received = time_keeper_get_millis();
 		
 		//dbg_print("Neighbor with ID ");
 		//dbg_print_num(centralData->listNeighbors[actualNeighbor].neighborID,10);
@@ -125,7 +125,7 @@ void neighbors_selection_extrapolate_or_delete_position(track_neighbor_t listNei
 	int i, ind, indSup;
 	uint32_t delta_t;
 	
-	uint32_t actualTime = get_millis();
+	uint32_t actualTime = time_keeper_get_millis();
 	
 	for (ind=0;ind<*number_of_neighbors;ind++)
 	{

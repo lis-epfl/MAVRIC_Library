@@ -43,12 +43,12 @@ void initialisation() {
 	initialise_board(centralData);
 	initialise_central_data();
 
-	init_radar_modules();
+	radar_module_init();
 	dbg_print("Debug stream initialised\n");
 
 	//init_gps_ubx(engine_nav_settings);
 	
-	set_servos(&servo_failsafe);
+	servo_pwm_set(&servo_failsafe);
 
 	onboard_parameters_init();
 	init_mavlink_actions();
@@ -62,7 +62,7 @@ void initialisation() {
 	orca_init();
 	
 	LED_On(LED1);
-	init_piezo_speaker_binary();
+	piezo_speaker_init_binary();
 
 }
 
@@ -99,7 +99,7 @@ void main (void)
 	dbg_print("OK. Starting up.\n");
 
 	for (i=1; i<8; i++) {
-		beep(100, 500*i);
+		piezo_speaker_beep(100, 500*i);
 		delay_ms(2);
 	}
 

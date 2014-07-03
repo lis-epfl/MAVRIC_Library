@@ -12,12 +12,12 @@ static volatile compass_data compass_outputs;
 
 
 
-void init_hmc5883_slow() {
+void compass_hmc58831l_init_slow() {
 	dbg_print("not implemented\n");
 }
 
 
-compass_data* get_compass_data_slow() {
+compass_data* compass_hmc58831l_get_data_slow() {
 	return &compass_outputs;
 
 }

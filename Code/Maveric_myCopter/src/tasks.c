@@ -41,9 +41,9 @@ task_set* tasks_get_main_taskset()
 void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 {
 	
-	get_channel_mode(chanSwitch);
+	remote_controller_get_channel_mode(chanSwitch);
 	
-	if ((rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0f)
+	if ((remote_dsm2_rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0f)
 	{
 		centralData->collision_avoidance = true;
 	}
@@ -52,11 +52,11 @@ void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motor
 		centralData->collision_avoidance = false;
 	}
 	
-	if((get_thrust_from_remote() < -0.95f) && (get_yaw_from_remote() > 0.9f))
+	if((remote_controller_get_thrust_from_remote() < -0.95f) && (remote_controller_get_yaw_from_remote() > 0.9f))
 	{
 		*motorbool = 1;
 	}
-	else if((get_thrust_from_remote() < -0.95f) && (get_yaw_from_remote() < -0.9f))
+	else if((remote_controller_get_thrust_from_remote() < -0.95f) && (remote_controller_get_yaw_from_remote() < -0.9f))
 	{
 		*motorbool = -1;
 	}
@@ -65,7 +65,7 @@ void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motor
 		*motorbool = 0;
 	}
 	
-	switch (rc_check_receivers())
+	switch (remote_dsm2_rc_check_receivers())
 	{
 		case 1:
 			*rc_check = 1;
@@ -286,7 +286,7 @@ task_return_t tasks_set_mav_mode_n_state()
 						centralData->mav_state = MAV_STATE_CRITICAL;
 						break;
 				}
-				if (get_thrust_from_remote() > -0.7f)
+				if (remote_controller_get_thrust_from_remote() > -0.7f)
 				{
 					centralData->in_the_air = true;
 				}
@@ -468,7 +468,7 @@ task_return_t tasks_set_mav_mode_n_state()
 			centralData->position_estimator.init_gps_position = false;
 			centralData->mav_state = MAV_STATE_STANDBY;
 			centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
-			servos_failsafe(centralData->servos);
+			servo_pwm_failsafe(centralData->servos);
 		}
 
 		// From reality to simulation
@@ -515,7 +515,7 @@ task_return_t tasks_run_stabilisation()
 	switch(centralData->mav_mode)
 	{		
 		case MAV_MODE_MANUAL_ARMED:
-			centralData->controls = get_command_from_remote();
+			centralData->controls = remote_controller_get_command_from_remote();
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			centralData->controls.yaw_mode=YAW_RELATIVE;
 			
@@ -523,7 +523,7 @@ task_return_t tasks_run_stabilisation()
 			break;
 
 		case MAV_MODE_STABILIZE_ARMED:
-			centralData->controls = get_command_from_remote();
+			centralData->controls = remote_controller_get_command_from_remote();
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			centralData->controls.yaw_mode=YAW_RELATIVE;
 			
@@ -573,14 +573,14 @@ task_return_t tasks_run_stabilisation()
 		case MAV_MODE_GUIDED_DISARMED:
 		case MAV_MODE_AUTO_DISARMED:
 			centralData->run_mode = MOTORS_OFF;
-			servos_failsafe(centralData->servos);
+			servo_pwm_failsafe(centralData->servos);
 			break;
 	}
 	
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
 	if (centralData->simulation_mode!=1) 
 	{
-		set_servos(centralData->servos);
+		servo_pwm_set(centralData->servos);
 	}
 }
 
@@ -602,7 +602,7 @@ void fake_gps_fix()
 	centralData->GPS_data.latitude = gpos.latitude;
 	centralData->GPS_data.longitude = gpos.longitude;
 	centralData->GPS_data.altitude = gpos.altitude;	
-	centralData->GPS_data.timeLastMsg = get_millis();
+	centralData->GPS_data.timeLastMsg = time_keeper_get_millis();
 	centralData->GPS_data.status = GPS_OK;
 }
 
@@ -669,7 +669,7 @@ uint32_t last_baro_update;
 task_return_t tasks_run_barometer_update()
 {
 	central_data_t *central_data = central_data_get_pointer_to_struct();
-	pressure_data *pressure = get_pressure_data_slow(centralData->pressure.altitude_offset);
+	pressure_data *pressure = bmp085_get_pressure_data_slow(centralData->pressure.altitude_offset);
 	
 	if (central_data->simulation_mode == 1) 
 	{
@@ -704,7 +704,7 @@ void tasks_create_tasks()
 	main_tasks.tasks[1].timing_mode=PERIODIC_RELATIVE;
 
 	scheduler_register_task(&main_tasks, 2, 100000, RUN_REGULAR, &tasks_run_gps_update);
-	//scheduler_register_task(&main_tasks, , 100000, RUN_REGULAR, &read_radar);
+	//scheduler_register_task(&main_tasks, , 100000, RUN_REGULAR, &radar_module_read);
 
 	scheduler_register_task(&main_tasks, 3, ORCA_TIME_STEP_MILLIS * 1000.0f, RUN_REGULAR, &tasks_run_navigation_update);
 

@@ -45,21 +45,21 @@ void initialise_board(central_data_t *centralData) {
 
 	board_init();
 	delay_init(sysclk_get_cpu_hz());
-	init_time_keeper();
+	time_keeper_init();
 		
 	INTC_init_interrupts();
 		
 	
 
 		
-	if (init_i2c(0)!=STATUS_OK) {
+	if (i2c_driver_init(0)!=STATUS_OK) {
 		//putstring(STDOUT, "Error initialising I2C\n");
 		while (1==1);
 		} else {
 		//putstring(STDOUT, "initialised I2C.\n");
 	};
 	/* Remove ic1 which was for the radar interface to activate uart2 for the gumstix interface
-	if (init_i2c(1)!=STATUS_OK) {
+	if (i2c_driver_init(1)!=STATUS_OK) {
 		//putstring(STDOUT, "Error initialising I2C\n");
 		while (1==1);
 		} else {
@@ -72,32 +72,32 @@ void initialise_board(central_data_t *centralData) {
 	//gpio_configure_pin(LED0_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
 	//gpio_configure_pin(LED1_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
 
-	init_Servos();
-	set_servos(&servo_failsafe);
+	servo_pwm_init();
+	servo_pwm_set(&servo_failsafe);
 	
 		
-	init_UART_int(0);
-	register_write_stream(get_UART_handle(0), &(centralData->xbee_out_stream));
+	uart_int_init(0);
+	uart_int_register_write_stream(uart_int_get_uart_handle(0), &(centralData->xbee_out_stream));
 				
 	//gumstix interface
-	init_UART_int(2);
+	uart_int_init(2);
 	make_buffered_stream(&(centralData->gumstix_buffer), &(centralData->gumstix_stream_in));
-	register_read_stream(get_UART_handle(3), &(centralData->gumstix_stream_in));
-	register_write_stream(get_UART_handle(3), &(centralData->gumstix_stream_out));
+	uart_int_register_read_stream(uart_int_get_uart_handle(3), &(centralData->gumstix_stream_in));
+	uart_int_register_write_stream(uart_int_get_uart_handle(3), &(centralData->gumstix_stream_out));
 		
-	init_UART_int(3);
+	uart_int_init(3);
 	make_buffered_stream(&(centralData->gps_buffer), &(centralData->gps_stream_in));
-	register_read_stream(get_UART_handle(3), &(centralData->gps_stream_in));
-	register_write_stream(get_UART_handle(3), &(centralData->gps_stream_out));
+	uart_int_register_read_stream(uart_int_get_uart_handle(3), &(centralData->gps_stream_in));
+	uart_int_register_write_stream(uart_int_get_uart_handle(3), &(centralData->gps_stream_out));
 		
-	init_UART_int(4);
-	register_write_stream(get_UART_handle(4), &(centralData->wired_out_stream));
+	uart_int_init(4);
+	uart_int_register_write_stream(uart_int_get_uart_handle(4), &(centralData->wired_out_stream));
 
 
 	make_buffered_stream_lossy(&(centralData->xbee_in_buffer), &(centralData->xbee_in_stream));
 	make_buffered_stream_lossy(&(centralData->wired_in_buffer), &(centralData->wired_in_stream));
-	register_read_stream(get_UART_handle(4), &(centralData->wired_in_stream));
-	register_read_stream(get_UART_handle(0), &(centralData->xbee_in_stream));
+	uart_int_register_read_stream(uart_int_get_uart_handle(4), &(centralData->wired_in_stream));
+	uart_int_register_read_stream(uart_int_get_uart_handle(0), &(centralData->xbee_in_stream));
 
 		
 	// connect abstracted aliases to hardware ports
@@ -114,11 +114,11 @@ void initialise_board(central_data_t *centralData) {
 	centralData->debug_in_stream      =&(centralData->xbee_in_stream);
 */
 
-	//rc_activate_bind_mode();
+	//remote_dsm2_rc_activate_bind_mode();
 
-	rc_init();
+	remote_dsm2_rc_init();
 
-	init_analog_monitor();
+	analog_monitor_init();
 	// init mavlink
 	mavlink_stream_init(centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID);
 		
@@ -126,7 +126,7 @@ void initialise_board(central_data_t *centralData) {
 	dbg_print_init(centralData->debug_out_stream);
 		
 	init_imu(&(centralData->imu1));
-	init_bmp085();
+	bmp085_init();
 
 
 

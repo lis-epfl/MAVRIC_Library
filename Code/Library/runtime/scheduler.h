@@ -28,7 +28,7 @@ extern "C"
 
 #include "compiler.h"
 
-#define GET_TIME get_micros()
+#define GET_TIME time_keeper_get_micros()
 #define SCHEDULER_TIMEBASE 1000000
 #define MAX_NUMBER_OF_TASKS 30
 #define SCHEDULER_PROFILING

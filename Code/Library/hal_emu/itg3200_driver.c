@@ -39,24 +39,24 @@ typedef struct {
 gyro_config default_configuration;
 uint8_t read_preamble=SENSOR_REG_ADDRESS;
 
-void init_itg3200(void) {
+void itg3200_driver_init(void) {
 
 }
 
-void reconfigure_gyro(void) {
+void itg3200_driver_reconfigure_gyro(void) {
 	
 }
 
-void init_itg3200_slow(void) {
+void itg3200_driver_init_slow(void) {
 
 }
 
-gyro_data* get_gyro_data(void) {
+gyro_data* itg3200_driver_get_gyro_data(void) {
 	
 	return &gyro_outputs;
 }
 
-gyro_data* get_gyro_data_slow(void) {
+gyro_data* itg3200_driver_get_data_slow(void) {
 	
 	
 	

@@ -30,9 +30,9 @@
 #define PROFILE(TIME_RESULT, TESTFUNC) {\
 	get_debug_stream()->flush(get_debug_stream()->data);\
 	delay_ms(10);\
-	uint32_t __profile_time_start=get_time_ticks();\
+	uint32_t __profile_time_start=time_keeper_get_time_ticks();\
 	TESTFUNC;\
-	TIME_RESULT=get_time_ticks()-__profile_time_start);\
+	TIME_RESULT=time_keeper_get_time_ticks()-__profile_time_start);\
 	dbg_print("Profiling: ");\
 	dbg_print(str(TESTFUNC)"\t");\
 	dbg_print_num(TIME_RESULT, 10);\
@@ -45,7 +45,7 @@
 #define PROFILE_10X(TIME_RESULT, TESTFUNC) {\
 	get_debug_stream()->flush(get_debug_stream()->data);\
 	delay_ms(10);\
-	uint32_t __profile_time_start=get_time_ticks();\
+	uint32_t __profile_time_start=time_keeper_get_time_ticks();\
 	TESTFUNC;\
 	TESTFUNC;\
 	TESTFUNC;\
@@ -56,7 +56,7 @@
 	TESTFUNC;\
 	TESTFUNC;\
 	TESTFUNC;\
-	TIME_RESULT=get_time_ticks()-__profile_time_start;\
+	TIME_RESULT=time_keeper_get_time_ticks()-__profile_time_start;\
 	dbg_print("Profiling (10x): ");\
 	dbg_print(#TESTFUNC "\t");\
 	dbg_print_num(TIME_RESULT, 10);\
@@ -68,7 +68,7 @@
 #define PROFILE_100X(TIME_RESULT, TESTFUNC) {\
 	get_debug_stream()->flush(get_debug_stream()->data);\
 	delay_ms(10);\
-	uint32_t __profile_time_start=get_time_ticks();\
+	uint32_t __profile_time_start=time_keeper_get_time_ticks();\
 	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;\
 	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;\
 	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;\
@@ -79,7 +79,7 @@
 	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;\
 	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;\
 	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;\
-	TIME_RESULT=get_time_ticks()-__profile_time_start;\
+	TIME_RESULT=time_keeper_get_time_ticks()-__profile_time_start;\
 	dbg_print("Profiling (100x): ");\
 	dbg_print(#TESTFUNC "\t");\
 	dbg_print_num(TIME_RESULT, 10);\

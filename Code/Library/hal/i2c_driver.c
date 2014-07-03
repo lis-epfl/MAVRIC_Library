@@ -36,7 +36,7 @@ static void pdca_int_handler_i2c0(void)
 
 
 
-int init_i2c(unsigned char i2c_device) {
+int i2c_driver_init(unsigned char i2c_device) {
 	int i;
 	volatile avr32_twim_t *twim;
 	switch (i2c_device) {
@@ -101,7 +101,7 @@ int init_i2c(unsigned char i2c_device) {
 
 
 
-char i2c_reset(unsigned char i2c_device) {
+char i2c_driver_reset(unsigned char i2c_device) {
 	volatile avr32_twim_t *twim;
 	switch (i2c_device) {
 	case 0: 
@@ -129,7 +129,7 @@ char i2c_reset(unsigned char i2c_device) {
 	// Clear SR
 	twim->scr = ~0UL;
 }
-char i2c_add_request(unsigned char i2c_device, i2c_schedule_event* new_event){
+char i2c_driver_add_request(unsigned char i2c_device, i2c_schedule_event* new_event){
 	// find free schedule slot
 	int i=0;
 	for (i=0; (i<I2C_SCHEDULE_SLOTS)&& (schedule[i2c_device][i].active>=0); i++) {
@@ -144,7 +144,7 @@ char i2c_add_request(unsigned char i2c_device, i2c_schedule_event* new_event){
 	// return assigned schedule slot
 	return i;
 }
-char i2c_change_request(unsigned char i2c_device, i2c_schedule_event* new_event){
+char i2c_driver_change_request(unsigned char i2c_device, i2c_schedule_event* new_event){
 	int i=new_event->schedule_slot;
 	if ((i>=0) && (i<I2C_SCHEDULE_SLOTS)) {
 		new_event->transfer_in_progress=0;
@@ -154,7 +154,7 @@ char i2c_change_request(unsigned char i2c_device, i2c_schedule_event* new_event)
 }
 
 
-char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) {
+char i2c_driver_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) {
 	// initiate transfer of given request
 	// set up DMA channel
 	volatile avr32_twim_t *twim;
@@ -273,18 +273,18 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
 	return 0;
 }
 
-char i2c_pause_request(unsigned char i2c_device, unsigned char schedule_slot){
+char i2c_driver_pause_request(unsigned char i2c_device, unsigned char schedule_slot){
 	// pause scheduler
 	// if this request currently active, wait for current transfer to finish
 	// deactivate request
 	// resume scheduler
 }
 
-char i2c_enable_request(unsigned char i2c_device, unsigned char schedule_slot){
+char i2c_driver_enable_request(unsigned char i2c_device, unsigned char schedule_slot){
 	return 0;
 }
 
-char i2c_remove_request(unsigned char i2c_device, unsigned char schedule_slot){
+char i2c_driver_remove_request(unsigned char i2c_device, unsigned char schedule_slot){
 	return 0;
 }
 

@@ -23,22 +23,22 @@ static volatile acc_data acc_outputs;
 uint8_t default_configuration[2] ={
 CONFIG_POWER_ADDRESS, 8};
 
-void init_adxl345(void) {
+void adxl345_driver_init(void) {
 	
 
 
 }
 
-void init_adxl345_slow(void) {
+void adxl345_driver_init_slow(void) {
 
 }
 
-acc_data* get_acc_data(void) {
+acc_data* adxl345_driver_get_acc_data(void) {
 	
 	return &acc_outputs;
 }
 
-acc_data* get_acc_data_slow(void) {
+acc_data* adxl345_driver_get_acc_data_slow(void) {
 	
 	return &acc_outputs;
 }

@@ -22,17 +22,17 @@
 #include "delay.h"
 #include "time_keeper.h"
 
-void init_piezo_speaker() 
+void piezo_speaker_init() 
 {
 	gpio_configure_pin(PIEZO_HIGH_PIN, GPIO_DIR_OUTPUT);
 	gpio_set_pin_low(PIEZO_HIGH_PIN);
 	gpio_configure_pin(PIEZO_LOW_PIN, GPIO_DIR_OUTPUT);
 	gpio_set_pin_low(PIEZO_LOW_PIN);
-	Init_DAC(0);
-	DAC_set_value(0);
+	dac_dma_init(0);
+	dac_dma_set_value(0);
 }
 
-void init_piezo_speaker_binary() 
+void piezo_speaker_init_binary() 
 {
 	gpio_configure_pin(PIEZO_HIGH_PIN, GPIO_DIR_OUTPUT);
 	gpio_set_pin_low(PIEZO_HIGH_PIN);
@@ -42,13 +42,13 @@ void init_piezo_speaker_binary()
 
 
 ///< instantaneous output voltage sent to the speaker - to make sounds this needs to be called repeatedly.
-void set_value(int analog_value)
+void piezo_speaker_set_value(int analog_value)
 {
-	DAC_set_value(analog_value);
+	dac_dma_set_value(analog_value);
 	gpio_set_pin_low(PIEZO_LOW_PIN);
 }
 
-void set_value_binary(int binary_value)
+void piezo_speaker_set_value_binary(int binary_value)
 {
 	if (binary_value<0) 
 	{
@@ -66,7 +66,7 @@ void set_value_binary(int binary_value)
 	}
 }
 
-void beep(int duration_ms, int frequency)
+void piezo_speaker_beep(int duration_ms, int frequency)
 {
 	int i;
 	int val=-1;
@@ -75,15 +75,15 @@ void beep(int duration_ms, int frequency)
 	{
 		del_us=100000;
 	}
-	uint32_t now=get_micros();
+	uint32_t now=time_keeper_get_micros();
 	uint32_t start=now;
 	
-	while( get_micros()<start+1000*duration_ms) 
+	while( time_keeper_get_micros()<start+1000*duration_ms) 
 	{
-		set_value_binary(val);
+		piezo_speaker_set_value_binary(val);
 		val=-val;
 		now+=del_us/2;
-		delay_until(now);
+		time_keeper_delay_until(now);
 	}
-	set_value_binary(0);
+	piezo_speaker_set_value_binary(0);
 }

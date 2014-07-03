@@ -107,7 +107,7 @@ void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps)
 
 void init_barometer_offset(position_estimator_t *pos_est, pressure_data *barometer)
 {
-	bool boolNewBaro = newValidBarometer(&pos_est->timeLastBarometerMsg);
+	bool boolNewBaro = bmp085_newValidBarometer(&pos_est->timeLastBarometerMsg);
 
 		
 	//if ((centralData->init_gps_position)&&(boolNewBaro))
@@ -239,7 +239,7 @@ void position_estimation_position_correction(position_estimator_t *pos_est, pres
 		if (pos_est->init_barometer)
 		{
 			// altimeter correction
-			if (newValidBarometer(&pos_est->timeLastBarometerMsg))
+			if (bmp085_newValidBarometer(&pos_est->timeLastBarometerMsg))
 			{
 				//alt_error = -(barometer->altitude + barometer->altitude_offset) - pos_est->localPosition.pos[2]+pos_est->localPosition.origin.altitude;
 				pos_est->last_alt = -(barometer->altitude ) + pos_est->localPosition.origin.altitude;
@@ -257,7 +257,7 @@ void position_estimation_position_correction(position_estimator_t *pos_est, pres
 				dbg_print("\n");*/
 				pos_est->timeLastBarometerMsg = barometer->last_update;
 			}
-			tinterBaro = (get_micros()-barometer->last_update)/1000.0f;
+			tinterBaro = (time_keeper_get_micros()-barometer->last_update)/1000.0f;
 			baro_gain = 1.0f;//fmax(1.0f-tinterBaro/1000.0f, 0.0f);
 			
 			//pos_est->localPosition.pos[2] += kp_alt/((float)(tinterBaro/2.5f + 1.0f)) * alt_error;
@@ -297,7 +297,7 @@ void position_estimation_position_correction(position_estimator_t *pos_est, pres
 					dbg_print("GPS dt is too small!");
 				}
 			}
-			tinterGps = get_millis() - gps->timeLastMsg;
+			tinterGps = time_keeper_get_millis() - gps->timeLastMsg;
 			
 			//gps_gain = fmax(1.0f-tinterGps/1000.0f, 0.0f);
 			gps_gain = 1.0f;

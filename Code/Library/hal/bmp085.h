@@ -87,17 +87,17 @@ typedef struct pressure_data
 /**
  * \brief Initialize the barometer sensor
 */
-void init_bmp085(void);
+void bmp085_init(void);
 
 /**
  * \brief Initialize the barometer sensor in slow mode
 */
-void init_bmp085_slow(void);
+void bmp085_init_slow(void);
 
 /**
  * \brief Start the pressure measurement
 */
-void start_pressure_measurement(void);
+void bmp085_start_pressure_measurement(void);
 
 /**
  * \brief Get the pressure data n slow mode
@@ -106,14 +106,14 @@ void start_pressure_measurement(void);
  *
  * \return a pointer to the pressure data structure
 */
-pressure_data* get_pressure_data_slow(float offset);
+pressure_data* bmp085_get_pressure_data_slow(float offset);
 
 /**
  * \brief Returns whether a new valid measure is ready
  *
  * \return a boolean: true if a new valid measure is ready
 */
-bool newValidBarometer(uint32_t *timePrevBarometer);
+bool bmp085_newValidBarometer(uint32_t *timePrevBarometer);
 
 #ifdef __cplusplus
 }

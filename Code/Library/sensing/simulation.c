@@ -52,7 +52,7 @@ void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates
 	{
 		sim->rotorspeeds[i] = 0.0f;			
 	}
-	sim->last_update = get_micros();
+	sim->last_update = time_keeper_get_micros();
 	sim->dt = 0.01f;
 	
 	for (i=0;i<9;i++)
@@ -170,7 +170,7 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	const UQuat_t up = {.s = 0.0f, .v = {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}};
 	
 	
-	uint32_t now = get_micros();
+	uint32_t now = time_keeper_get_micros();
 	sim->dt = (now - sim->last_update)/1000000.0f;
 	if (sim->dt>0.1f)
 	{
@@ -300,7 +300,7 @@ void simulation_simulate_barometer(simulation_model_t *sim, pressure_data *press
 {
 	pressure->altitude = sim->localPosition.origin.altitude - sim->localPosition.pos[Z];
 	pressure->vario_vz = sim->vel[Z];
-	pressure->last_update = get_millis();
+	pressure->last_update = time_keeper_get_millis();
 	pressure->altitude_offset = 0;
 }
 	
@@ -311,6 +311,6 @@ void simulation_simulate_gps(simulation_model_t *sim, gps_Data_type *gps)
 	gps->altitude = gpos.altitude;
 	gps->latitude = gpos.latitude;
 	gps->longitude = gpos.longitude;
-	gps->timeLastMsg = get_millis();
+	gps->timeLastMsg = time_keeper_get_millis();
 	gps->status = GPS_OK;
 }

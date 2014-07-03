@@ -45,9 +45,9 @@
  *
  * \return the roll angle from the remote
  */
-static float inline get_roll_from_remote(void)	
+static float inline remote_controller_get_roll_from_remote(void)	
 {
-	return rc_get_channel_neutral(RC_ROLL)*RC_ROLL_DIR * RC_SCALEFACTOR; 
+	return remote_dsm2_rc_get_channel_neutral(RC_ROLL)*RC_ROLL_DIR * RC_SCALEFACTOR; 
 }
 
 /**
@@ -55,9 +55,9 @@ static float inline get_roll_from_remote(void)
  *
  * \return the pitch angle from the remote
  */
-static float inline get_pitch_from_remote(void)	
+static float inline remote_controller_get_pitch_from_remote(void)	
 {
-	return rc_get_channel_neutral(RC_PITCH)*RC_PITCH_DIR * RC_SCALEFACTOR; 
+	return remote_dsm2_rc_get_channel_neutral(RC_PITCH)*RC_PITCH_DIR * RC_SCALEFACTOR; 
 }
 
 /**
@@ -65,9 +65,9 @@ static float inline get_pitch_from_remote(void)
  *
  * \return the yaw angle from the remote
  */
-static float inline get_yaw_from_remote(void)	
+static float inline remote_controller_get_yaw_from_remote(void)	
 {
-	return rc_get_channel_neutral(RC_YAW)*RC_YAW_DIR * RC_SCALEFACTOR; 
+	return remote_dsm2_rc_get_channel_neutral(RC_YAW)*RC_YAW_DIR * RC_SCALEFACTOR; 
 }
 
 /**
@@ -75,9 +75,9 @@ static float inline get_yaw_from_remote(void)
  *
  * \return the thrust command from the remote
  */
-static float inline get_thrust_from_remote(void)	
+static float inline remote_controller_get_thrust_from_remote(void)	
 {
-	return rc_get_channel(RC_THROTTLE)*RC_THROTTLE_DIR*RC_SCALEFACTOR; 
+	return remote_dsm2_rc_get_channel(RC_THROTTLE)*RC_THROTTLE_DIR*RC_SCALEFACTOR; 
 }
 
 /**
@@ -85,13 +85,13 @@ static float inline get_thrust_from_remote(void)
  *
  * \return an object containing the stick position of the remote (roll, pitch, yaw and thrust)
  */
-static inline Control_Command_t get_command_from_remote(void)
+static inline Control_Command_t remote_controller_get_command_from_remote(void)
 {
 	Control_Command_t controls;
-	controls.rpy[ROLL]= get_roll_from_remote()*RC_INPUT_SCALE;
-	controls.rpy[PITCH]= get_pitch_from_remote()*RC_INPUT_SCALE;
-	controls.rpy[YAW]= get_yaw_from_remote()*RC_INPUT_SCALE;
-	controls.thrust = get_thrust_from_remote();
+	controls.rpy[ROLL]= remote_controller_get_roll_from_remote()*RC_INPUT_SCALE;
+	controls.rpy[PITCH]= remote_controller_get_pitch_from_remote()*RC_INPUT_SCALE;
+	controls.rpy[YAW]= remote_controller_get_yaw_from_remote()*RC_INPUT_SCALE;
+	controls.thrust = remote_controller_get_thrust_from_remote();
 	
 	return controls;
 }
@@ -102,20 +102,20 @@ static inline Control_Command_t get_command_from_remote(void)
  *
  * \param chanSwitch pointer to a channel switch
  */
-static inline void get_channel_mode(uint8_t* chanSwitch)
+static inline void remote_controller_get_channel_mode(uint8_t* chanSwitch)
 {
 	//TODO: remap with remote!
 	*chanSwitch |= 0x00;
 	
-	if (rc_get_channel(RC_SAFETY)<0)
+	if (remote_dsm2_rc_get_channel(RC_SAFETY)<0)
 	{
 		*chanSwitch |= 0x00;
 	}
-	else if(rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)<0)
+	else if(remote_dsm2_rc_get_channel(RC_SAFETY)>0 && remote_dsm2_rc_get_channel(RC_ID_MODE)<0)
 	{
 		*chanSwitch |= 0x01;
 	}
-	// else if (rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)>20)
+	// else if (remote_dsm2_rc_get_channel(RC_SAFETY)>0 && remote_dsm2_rc_get_channel(RC_ID_MODE)>20)
 	// {
 	// 	*chanSwitch |= 0x03;
 	// }
@@ -132,17 +132,17 @@ static inline void get_channel_mode(uint8_t* chanSwitch)
 	 *
 	 * \param chanSwitch pointer to a channel switch
 	 */
-	static inline void get_channel_mode(uint8_t* chanSwitch)
+	static inline void remote_controller_get_channel_mode(uint8_t* chanSwitch)
 	{
-		if (rc_get_channel(RC_SAFETY)<0)
+		if (remote_dsm2_rc_get_channel(RC_SAFETY)<0)
 		{
 			*chanSwitch |= 0x00;
 		}
-		else if(rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)<0)
+		else if(remote_dsm2_rc_get_channel(RC_SAFETY)>0 && remote_dsm2_rc_get_channel(RC_ID_MODE)<0)
 		{
 			*chanSwitch |= 0x01;
 		}
-		else if (rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)>20)
+		else if (remote_dsm2_rc_get_channel(RC_SAFETY)>0 && remote_dsm2_rc_get_channel(RC_ID_MODE)>20)
 		{
 			*chanSwitch |= 0x03;
 		}
@@ -159,17 +159,17 @@ static inline void get_channel_mode(uint8_t* chanSwitch)
 	 *
 	 * \param chanSwitch pointer to a channel switch
 	 */
-	static inline void get_channel_mode(uint8_t* chanSwitch)
+	static inline void remote_controller_get_channel_mode(uint8_t* chanSwitch)
 	{
-		if (rc_get_channel(RC_SAFETY)<0)
+		if (remote_dsm2_rc_get_channel(RC_SAFETY)<0)
 		{
 			*chanSwitch |= 0x00;
 		}
-		else if(rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)<0)
+		else if(remote_dsm2_rc_get_channel(RC_SAFETY)>0 && remote_dsm2_rc_get_channel(RC_ID_MODE)<0)
 		{
 			*chanSwitch |= 0x01;
 		}
-		else if (rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)>20)
+		else if (remote_dsm2_rc_get_channel(RC_SAFETY)>0 && remote_dsm2_rc_get_channel(RC_ID_MODE)>20)
 		{
 			*chanSwitch |= 0x03;
 		}

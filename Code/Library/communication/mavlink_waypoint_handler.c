@@ -29,7 +29,7 @@ static int int_loop_count = 0;
 
 void init_waypoint_handler()
 {
-	start_timeout = get_millis();
+	start_timeout = time_keeper_get_millis();
 	timeout_max_waypoint = 10000;
 	centralData = central_data_get_pointer_to_struct();
 	
@@ -199,7 +199,7 @@ void send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint, bool* waypoin
 		{
 			*waypoint_sending = true;
 			*waypoint_receiving = false;
-			start_timeout = get_millis();
+			start_timeout = time_keeper_get_millis();
 		}
 		
 		sending_waypoint_num = 0;
@@ -238,7 +238,7 @@ void send_waypoint(Mavlink_Received_t* rec, waypoint_struct waypoint[], uint16_t
 				dbg_print_num(sending_waypoint_num, 10);
 				dbg_print("\n");
 				
-				start_timeout = get_millis();
+				start_timeout = time_keeper_get_millis();
 				
 				//sending_waypoint_num += 1;
 			}			
@@ -292,7 +292,7 @@ void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool*
 			waypoint_request_number = 0;
 			
 			
-			start_timeout = get_millis();
+			start_timeout = time_keeper_get_millis();
 		}
 		
 		mavlink_msg_mission_request_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,waypoint_request_number);
@@ -312,7 +312,7 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid
 	&& (uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid)
 	{
-		start_timeout = get_millis();
+		start_timeout = time_keeper_get_millis();
 		
 		waypoint_struct new_waypoint;
 		
@@ -600,7 +600,7 @@ void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* boa
 					*board_mav_mode = MAV_MODE_MANUAL_DISARMED;
 				break;
 				case MAV_MODE_MANUAL_ARMED:
-					if (get_thrust_from_remote()<-0.95f)
+					if (remote_controller_get_thrust_from_remote()<-0.95f)
 					{
 						*board_mav_state = MAV_STATE_ACTIVE;
 						*board_mav_mode = MAV_MODE_MANUAL_ARMED;
@@ -642,7 +642,7 @@ void control_time_out_waypoint_msg(uint16_t* num_of_waypoint, bool* waypoint_rec
 {
 	if (*waypoint_sending || *waypoint_receiving)
 	{
-		uint32_t tnow = get_millis();
+		uint32_t tnow = time_keeper_get_millis();
 		
 		if ((tnow - start_timeout) > timeout_max_waypoint)
 		{

@@ -6,9 +6,9 @@
 
 
 static inline void delay_ms(int t) {
-		uint32_t now=get_micros();
+		uint32_t now=time_keeper_get_micros();
 		
-		while (get_micros()<now+1000*t) usleep(100);
+		while (time_keeper_get_micros()<now+1000*t) usleep(100);
 };
 
 

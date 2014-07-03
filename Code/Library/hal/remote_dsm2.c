@@ -40,7 +40,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) {
 	uint8_t channel_encoding, frame_number;
 	uint16_t sw;
 	uint8_t channel;
-	uint32_t now =get_time_ticks() ;
+	uint32_t now =time_keeper_get_time_ticks() ;
 	if (REMOTE_UART.csr & AVR32_USART_CSR_RXRDY_MASK) {
 		spRec1.duration=now-spRec1.last_time;
 		spRec1.last_time=now;
@@ -88,13 +88,13 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) {
 	}		
 }
 
-void rc_switch_power(bool on) {
+void remote_dsm2_rc_switch_power(bool on) {
 	gpio_configure_pin(RECEIVER_POWER_ENABLE_PIN, GPIO_DIR_OUTPUT);
 	gpio_set_pin_low(RECEIVER_POWER_ENABLE_PIN);
 }
 
 
-void rc_activate_bind_mode() {
+void remote_dsm2_rc_activate_bind_mode() {
 	int i=0;
 	unsigned long cpu_freq=sysclk_get_cpu_hz();
 	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_DOWN);	
@@ -119,7 +119,7 @@ void rc_activate_bind_mode() {
 
 }
 
-void rc_init (void) {
+void remote_dsm2_rc_init (void) {
    static const usart_options_t usart_opt =
    {
      .baudrate     = BAUD_REMOTE,
@@ -153,10 +153,10 @@ void rc_init (void) {
 	REMOTE_UART.ier=AVR32_USART_IER_RXRDY_MASK;
 	//initUART_RX(&spRec1.receiver,  &USARTC1, USART_RXCINTLVL_LO_gc, BSEL_SPEKTRUM);
 	//initUART_RX(&spRec2.receiver,  &USARTD0, USART_RXCINTLVL_LO_gc, BSEL_SPEKTRUM);
-	rc_switch_power(true);
+	remote_dsm2_rc_switch_power(true);
 }
 /**/
-int16_t rc_get_channel(uint8_t index) {
+int16_t remote_dsm2_rc_get_channel(uint8_t index) {
 	//if (checkReceiver1()<checkReceiver2()) {
 		return spRec1.channels[index];
 	//} else {
@@ -164,8 +164,8 @@ int16_t rc_get_channel(uint8_t index) {
 	//}
 }
 
-int16_t rc_get_channel_neutral(uint8_t index) {
-	int16_t value=rc_get_channel(index)-channelCenter[index];
+int16_t remote_dsm2_rc_get_channel_neutral(uint8_t index) {
+	int16_t value=remote_dsm2_rc_get_channel(index)-channelCenter[index];
 	// clamp to dead zone
 	if ((value>-DEADZONE)&&(value<DEADZONE))
 	{
@@ -174,13 +174,13 @@ int16_t rc_get_channel_neutral(uint8_t index) {
 	return value;
 }
 
-void rc_center_channel(uint8_t index){
-	channelCenter[index]=rc_get_channel(index);
+void remote_dsm2_rc_center_channel(uint8_t index){
+	channelCenter[index]=remote_dsm2_rc_get_channel(index);
 }
 
 int8_t checkReceiver1(void) {
 	int8_t i;
-	uint32_t now = get_time_ticks();
+	uint32_t now = time_keeper_get_time_ticks();
 	uint32_t duration=now-spRec1.last_update;
 	if (spRec1.valid==0) return -2;
 	if (duration<100000) {
@@ -225,7 +225,7 @@ int8_t checkReceiver2(void){
 
 }
 
-int8_t rc_check_receivers(void) {
+int8_t remote_dsm2_rc_check_receivers(void) {
 	return checkReceiver1();// + checkReceiver2();
 }
 

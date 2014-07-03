@@ -88,7 +88,7 @@ void init_gclk(void)
   scif_gc_enable(AVR32_SCIF_GCLK_GCLK2_EVENT);
 }
 
-void Init_DAC(int trigger_mode) {
+void dac_dma_init(int trigger_mode) {
 	///< GPIO pin/dac-function map.
 	static const gpio_map_t DACIFB_GPIO_MAP =
 	{
@@ -142,7 +142,7 @@ void Init_DAC(int trigger_mode) {
 						FOSC0);
 }
 
-void DAC_load_buffer(uint16_t* samples, int from_sample, int to_sample, int repeat) 
+void dac_dma_load_buffer(uint16_t* samples, int from_sample, int to_sample, int repeat) 
 {
 	///< PDCA channel options
 	buffer = samples;
@@ -179,7 +179,7 @@ void DAC_load_buffer(uint16_t* samples, int from_sample, int to_sample, int repe
 	//}  
 } 
 
-void DAC_play() 
+void dac_dma_play() 
 {
 	//Disable_global_interrupt();
 	pdca_disable(PDCA_CHANNEL_DAC);
@@ -198,7 +198,7 @@ int  DAC_is_finished(void)
 	return 0;
 }
 
-void DAC_set_value(int32_t output) 
+void dac_dma_set_value(int32_t output) 
 {
 	dacifb->dr0 = (output); 
 }

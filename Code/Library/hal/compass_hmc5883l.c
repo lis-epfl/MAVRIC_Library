@@ -20,7 +20,7 @@
 
 static volatile compass_data compass_outputs;		///< Declare a structure of magnetometer's data
 
-void init_hmc5883_slow() {
+void compass_hmc58831l_init_slow() {
 	static twim_options_t twi_opt= 
 	{
 		.pba_hz	= 64000000,
@@ -41,7 +41,7 @@ void init_hmc5883_slow() {
 }
 
 
-compass_data* get_compass_data_slow() {
+compass_data* compass_hmc58831l_get_data_slow() {
 	int i;
 	uint8_t start_address=DataRegBegin;
 	

@@ -58,7 +58,7 @@ typedef struct
  *
  * \return -1 if the device selected is not correct, -9 if the speed setting failed or STATUS_OK = 0 otherwise
 */
-int init_i2c(unsigned char i2c_device);
+int i2c_driver_init(unsigned char i2c_device);
 
 /**
  * \brief Append the i2c transfer

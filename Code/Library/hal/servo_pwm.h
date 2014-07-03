@@ -49,21 +49,21 @@ typedef struct
 /**
  * \brief Initialize the servos
  */
-void init_Servos(void);
+void servo_pwm_init(void);
 
 /**
  * \brief Set servos' values
  *
  * \param servo_outputs pointer to a structure containing the servos' data
  */
-void set_servos(const servo_output *servo_outputs);
+void servo_pwm_set(const servo_output *servo_outputs);
 
 /**
  * \brief Set the servos' value to the failsafe value
  *
  * \param servo_outputs pointer to a structure containing the servos' data
  */
-void servos_failsafe(servo_output *servo_outputs);
+void servo_pwm_failsafe(servo_output *servo_outputs);
 
 #ifdef __cplusplus
 	}

@@ -25,7 +25,7 @@ PID_Controller_t pid_control_passthroughController()
 {
 	PID_Controller_t out;
 	out.p_gain=1.0f;
-	out.last_update=get_time_ticks();	
+	out.last_update=time_keeper_get_time_ticks();	
 	out.clip_min=-10000.0f;
 	out.clip_max= 10000.0f;
 	out.output=0.0f;
@@ -76,9 +76,9 @@ float pid_control_differentiate(Differentiator_t *diff, float input, float dt)
 
 float pid_control_update(PID_Controller_t* controller, float error)
 {
-	uint32_t t= get_time_ticks();
+	uint32_t t= time_keeper_get_time_ticks();
 	controller->error=soft_zone(error, controller->soft_zone_width);
-	controller->dt=ticks_to_seconds(t - controller->last_update);
+	controller->dt=time_keeper_ticks_to_seconds(t - controller->last_update);
 	controller->last_update=t;
 	controller->output = controller->p_gain* (controller->error +pid_control_integrate(&controller->integrator, controller->error, controller->dt) + pid_control_differentiate(&controller->differentiator, controller->error, controller->dt));
 	if (controller->output < controller->clip_min) controller->output=controller->clip_min;
@@ -90,7 +90,7 @@ float pid_control_update_dt(PID_Controller_t* controller, float error, float dt)
 {
 	controller->error=error;
 	controller->dt=dt;
-	controller->last_update=get_time_ticks();
+	controller->last_update=time_keeper_get_time_ticks();
 	controller->output = controller->p_gain* (controller->error +pid_control_integrate(&controller->integrator, controller->error, controller->dt) + pid_control_differentiate(&controller->differentiator, controller->error, controller->dt));
 	if (controller->output < controller->clip_min) controller->output=controller->clip_min;
 	if (controller->output > controller->clip_max) controller->output=controller->clip_max;

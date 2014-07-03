@@ -29,21 +29,21 @@ extern "C" {
 /** 
  * \brief	This function initialize the clock of the microcontroller
  */
-void init_time_keeper(void);
+void time_keeper_init(void);
 
 /** 
  * \brief	This function returns the time in seconds since system start
  * 
  * \return	The time in seconds since system start
  */
-double get_time(void);
+double time_keeper_get_time(void);
 
 /**
  * \brief	This function returns the time in milliseconds since system start
  *
  * \return The time in milliseconds since system start
  */
-uint32_t get_millis(void);
+uint32_t time_keeper_get_millis(void);
 
 /**
  * \brief	This function returns the time in microseconds since system start. 
@@ -52,14 +52,14 @@ uint32_t get_millis(void);
  *
  * \return The time in microseconds since system start
  */
-uint32_t get_micros(void);
+uint32_t time_keeper_get_micros(void);
 
 /**
  * \brief	raw timer ticks
  *
  * \return	The raw timer ticks
  */
-uint32_t get_time_ticks(void);
+uint32_t time_keeper_get_time_ticks(void);
 
 /**
  * \brief	Transforms the timer ticks into seconds
@@ -68,21 +68,21 @@ uint32_t get_time_ticks(void);
  *
  * \return	The time in seconds
  */
-float ticks_to_seconds(uint32_t timer_ticks);
+float time_keeper_ticks_to_seconds(uint32_t timer_ticks);
 
 /**
  * \brief	Functions that runs for the parameters input microseconds before returning
  *
  * \param	microseconds		The number of microseconds to wait
  */
-void delay_micros(int microseconds);
+void time_keeper_delay_micros(int microseconds);
 
 /**
  * \brief	Wait until time pass the parameter input
  *
  * \param	until_time		The time until which the function will run
  */
-void delay_until(uint32_t until_time);
+void time_keeper_delay_until(uint32_t until_time);
 
 #ifdef __cplusplus
 }

@@ -23,14 +23,14 @@ typedef struct{
 
 
 
-void init_itg3200(void);
-void reconfigure_gyro(void);
+void itg3200_driver_init(void);
+void itg3200_driver_reconfigure_gyro(void);
 
-gyro_data* get_gyro_data(void);
+gyro_data* itg3200_driver_get_gyro_data(void);
 
-void init_itg3200_slow(void);
+void itg3200_driver_init_slow(void);
 
-gyro_data* get_gyro_data_slow(void);
+gyro_data* itg3200_driver_get_data_slow(void);
 
 
 #endif /* ITG3200_DRIVER_H_ */

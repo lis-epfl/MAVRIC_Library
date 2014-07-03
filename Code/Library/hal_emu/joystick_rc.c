@@ -166,7 +166,7 @@ int get_joystick_status(int joystick_file_descriptor, int *axes, int *buttons, i
 }
 
 
-void rc_init (void) {
+void remote_dsm2_rc_init (void) {
 	
 	int i;
 	for (i=0; i<16; i++) {
@@ -180,7 +180,7 @@ void rc_init (void) {
 	spRec1.channels[RC_THROTTLE]=0;
 	channelCenter[RC_YAW]=0;
 	joystick_filedescriptor=open_joystick(JOYSTICK_DEVICE);
-	last_update=get_millis();
+	last_update=time_keeper_get_millis();
 	
 	#ifdef KEYBOARD_ACTIVE
 	set_conio_terminal_mode();
@@ -190,9 +190,9 @@ void rc_init (void) {
 uint32_t last_keypress;
 void get_keyboard_input(int *joystick_axes) {
 	if (!kbhit()) {
-		if (get_millis()-last_keypress<1000) {
+		if (time_keeper_get_millis()-last_keypress<1000) {
 			
-			if (get_millis()-last_keypress<500) {
+			if (time_keeper_get_millis()-last_keypress<500) {
 				joystick_axes[JOY_PITCH]/=2;
 				joystick_axes[JOY_ROLL]/=2;
 				joystick_axes[JOY_YAW]/=2;
@@ -206,7 +206,7 @@ void get_keyboard_input(int *joystick_axes) {
 		}
 	} else
 	while (kbhit()) {
-		last_keypress=get_millis();
+		last_keypress=time_keeper_get_millis();
 		char c=getch();
 		if (c==3) exit(0);
 		//wdbg_print(c);
@@ -239,9 +239,9 @@ void get_keyboard_input(int *joystick_axes) {
 }
 
 
-int16_t rc_get_channel(uint8_t index) {
+int16_t remote_dsm2_rc_get_channel(uint8_t index) {
 	int i;
-	if (get_millis()-last_update>20) 
+	if (time_keeper_get_millis()-last_update>20) 
 	{
 
 		#ifdef KEYBOARD_ACTIVE
@@ -261,20 +261,20 @@ int16_t rc_get_channel(uint8_t index) {
 		spRec1.channels[RC_THROTTLE] = -joystick_axes[JOY_THROTTLE]*J_GAIN/ (joyMax[JOY_THROTTLE]-joyMin[JOY_THROTTLE]);
 		spRec1.channels[RC_SAFETY] = joystick_axes[JOY_SAFETY] *J_GAIN/ (joyMax[JOY_SAFETY]-joyMin[JOY_SAFETY]);
 		spRec1.channels[RC_ID_MODE] =joystick_axes[JOY_ID_MODE]*J_GAIN/ (joyMax[JOY_ID_MODE]-joyMin[JOY_ID_MODE]);
-		last_update=get_millis();
+		last_update=time_keeper_get_millis();
 	}	
 	return spRec1.channels[index];
 }
 
-int16_t rc_get_channel_neutral(uint8_t index) {
-	int16_t value=rc_get_channel(index)-channelCenter[index];
+int16_t remote_dsm2_rc_get_channel_neutral(uint8_t index) {
+	int16_t value=remote_dsm2_rc_get_channel(index)-channelCenter[index];
 	// clamp to dead zone
 	if ((value>-DEADZONE)&&(value<DEADZONE)) value=0;
 	return value;
 }
 
-void rc_center_channel(uint8_t index){
-	channelCenter[index]=rc_get_channel(index);
+void remote_dsm2_rc_center_channel(uint8_t index){
+	channelCenter[index]=remote_dsm2_rc_get_channel(index);
 }
 
 int8_t checkReceiver1() {
@@ -283,7 +283,7 @@ int8_t checkReceiver1() {
 }
 
 
-int8_t rc_check_receivers() {
+int8_t remote_dsm2_rc_check_receivers() {
 	return checkReceiver1();// + checkReceiver2();
 }
 

@@ -42,12 +42,12 @@ void initialisation() {
 	initialise_central_data();
 	
 
-	init_radar_modules();
+	radar_module_init();
 	dbg_print("Debug stream initialised\n");
 
 	//init_gps_ubx(engine_nav_settings);
 	
-	set_servos(&servo_failsafe);
+	servo_pwm_set(&servo_failsafe);
 
 	onboard_parameters_init();
 	init_mavlink_actions();

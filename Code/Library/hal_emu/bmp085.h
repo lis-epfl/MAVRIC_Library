@@ -59,14 +59,14 @@ typedef struct{
 } pressure_data;
 
 
-void init_bmp085(void);
+void bmp085_init(void);
 
-void init_bmp085_slow(void);
+void bmp085_init_slow(void);
 
-void start_pressure_measurement(void);
+void bmp085_start_pressure_measurement(void);
 
-pressure_data* get_pressure_data_slow(float offset);
+pressure_data* bmp085_get_pressure_data_slow(float offset);
 
-bool newValidBarometer(uint32_t *timePrevBarometer);
+bool bmp085_newValidBarometer(uint32_t *timePrevBarometer);
 
 #endif /* BMP085_H_ */

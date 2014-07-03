@@ -10,7 +10,7 @@
 
 mavlink_radar_tracked_target_t main_target;
 
-void init_radar_modules() {
+void radar_module_init() {
 	static twim_options_t twi_opt= {
 		.pba_hz=64000000,
 		.speed = 400000,
@@ -23,7 +23,7 @@ void init_radar_modules() {
 }
 
 
-void read_radar() {
+void radar_module_read() {
 	uint8_t output = 0;
 //	uint8_t input [8];
 	twim_write(&AVR32_TWIM1, (uint8_t*) &output, 1, 1, false);
@@ -35,7 +35,7 @@ void read_radar() {
 	
 }
 
-mavlink_radar_tracked_target_t* get_radar_main_target() {
+mavlink_radar_tracked_target_t* radar_module_get_main_target() {
 	return &main_target;
 	
 }

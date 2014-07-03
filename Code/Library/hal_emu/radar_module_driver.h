@@ -16,11 +16,11 @@ typedef struct {
 } radar_target;
 
 
-void init_radar_modules(void);
+void radar_module_init(void);
 
-void read_radar(void);
+void radar_module_read(void);
 
-radar_target* get_radar_main_target(void);
+radar_target* radar_module_get_main_target(void);
 
 
 #endif /* RADAR_MODULE_H_ */

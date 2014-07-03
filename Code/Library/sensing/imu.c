@@ -33,11 +33,11 @@
 int ic;
 void imu_init (Imu_Data_t *imu1)
 {
-	//init_itg3200_slow();
-	//init_adxl345_slow();
-	init_lsm330();
+	//itg3200_driver_init_slow();
+	//adxl345_driver_init_slow();
+	lsm330dlc_driver_init();
 	dbg_print("LSM330 initialised\n");	
-	init_hmc5883_slow();
+	compass_hmc58831l_init_slow();
 	 
 	//imu_calibrate_Gyros(imu1);
 	imu1->raw_scale[X+GYRO_OFFSET] = RAW_GYRO_X_SCALE;
@@ -67,11 +67,11 @@ void imu_init (Imu_Data_t *imu1)
  
 void imu_get_raw_data(Imu_Data_t *imu1)
 {
-	//gyro_data* gyros = get_gyro_data_slow();
-	//acc_data* accs = get_acc_data_slow();
-	lsm_gyro_data_t* gyros = lsm330_get_gyro_data();
-	lsm_acc_data_t* accs = lsm330_get_acc_data();
-	compass_data* compass = get_compass_data_slow();
+	//gyro_data* gyros = itg3200_driver_get_data_slow();
+	//acc_data* accs = adxl345_driver_get_acc_data_slow();
+	lsm_gyro_data_t* gyros = lsm330dlc_driver_get_gyro_data();
+	lsm_acc_data_t* accs = lsm330dlc_driver_get_acc_data();
+	compass_data* compass = compass_hmc58831l_get_data_slow();
 	 
 	 
 	imu1->raw_channels[GYRO_OFFSET+IMU_X] = (float)gyros->axes[RAW_GYRO_X]*GYRO_AXIS_X;
@@ -115,7 +115,7 @@ void imu_calibrate_Gyros(Imu_Data_t *imu1)
  
 void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps)
 {
-	uint32_t t = get_time_ticks();
+	uint32_t t = time_keeper_get_time_ticks();
 	if (!imu_last_update_init)
 	{
 		imu1->last_update = t;
@@ -123,7 +123,7 @@ void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *
 	}
 	else
 	{
-		imu1->dt = ticks_to_seconds(t - imu1->last_update);
+		imu1->dt = time_keeper_ticks_to_seconds(t - imu1->last_update);
 		imu1->last_update = t;
 		qfilter_attitude_estimation(&imu1->attitude, &imu1->raw_channels, imu1->dt);
 		

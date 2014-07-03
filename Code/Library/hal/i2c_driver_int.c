@@ -103,7 +103,7 @@ ISR(i2c_int_handler_i2c0,CONF_TWIM_IRQ_GROUP,CONF_TWIM_IRQ_LEVEL)
 //__attribute__((__interrupt__))
 //static void i2c_int_handler_i2c1(void) {};
 
-int init_i2c(unsigned char i2c_device) 
+int i2c_driver_init(unsigned char i2c_device) 
 {
 	volatile avr32_twim_t *twim;
 	switch (i2c_device) {
@@ -161,7 +161,7 @@ int init_i2c(unsigned char i2c_device)
 	return STATUS_OK;
 }
 
-char i2c_reset(unsigned char i2c_device) 
+char i2c_driver_reset(unsigned char i2c_device) 
 {
 	volatile avr32_twim_t *twim;
 	switch (i2c_device) 
@@ -194,7 +194,7 @@ char i2c_reset(unsigned char i2c_device)
 	twim->scr = ~0UL;
 }
 
-char i2c_trigger_request(unsigned char i2c_device, i2c_packet_t *transfer) 
+char i2c_driver_trigger_request(unsigned char i2c_device, i2c_packet_t *transfer) 
 {
 	///< initiate transfer of given request
 	///< set up DMA channel
