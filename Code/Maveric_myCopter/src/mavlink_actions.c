@@ -1316,17 +1316,6 @@ void mavlink_send_sonar(void)
 										centralData->i2cxl_sonar.distance_m);
 }
 
-void mavlink_send_airspeed(void)
-{
-	mavlink_msg_debug_vect_send(MAVLINK_COMM_0, 
-								"Pitot",
-								get_micros(),
-								centralData->adc.avg[ANALOG_RAIL_13],
-								centralData->pitot.differential_pressure, 
-								centralData->pitot.airspeed);
-}
-
-
 void init_mavlink_actions(void) {
 	
 	centralData=get_central_data();
@@ -1380,8 +1369,6 @@ void init_mavlink_actions(void) {
 
 	add_task(get_mavlink_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_sonar,                      MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
 
-	add_task(get_mavlink_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_airspeed,                   MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
-	
 	sort_taskset_by_period(get_mavlink_taskset());
 	
 	dbg_print("MAVlink actions initialiased\n");

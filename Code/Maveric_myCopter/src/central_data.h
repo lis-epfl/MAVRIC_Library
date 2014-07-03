@@ -48,8 +48,8 @@ extern "C" {
 #include "neighbor_selection.h"
 #include "position_estimation.h"
 
+#include "analog_monitor.h"
 #include "i2cxl_sonar.h"
-#include "airspeed_analog.h"
 #include "orca.h"
 #include "navigation.h"
 
@@ -136,8 +136,6 @@ typedef struct  {
 	auto_landing_enum_t auto_landing_enum;						///< The autolanding enum
 
 	i2cxl_sonar_t i2cxl_sonar;									///< The i2cxl sonar structure
-	airspeed_analog_t pitot;									///< The pitot tube structure
-
 } central_data_t;
 
 
