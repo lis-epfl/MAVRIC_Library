@@ -30,12 +30,17 @@ void init_nav(void)
 	
 	centralData = get_central_data();
 	
-	centralData->controls_nav.tvel[X] = 0.0;
-	centralData->controls_nav.tvel[Y] = 0.0;
-	centralData->controls_nav.rpy[YAW] = 0.0;
-	centralData->controls_nav.tvel[Z] = 0.0;
+	centralData->controls_nav.tvel[X] = 0.0f;
+	centralData->controls_nav.tvel[Y] = 0.0f;
+	centralData->controls_nav.rpy[YAW] = 0.0f;
+	centralData->controls_nav.tvel[Z] = 0.0f;
 	
-	alt_integrator = 0.0;
+	centralData->dist2vel_gain = 0.7f;
+	centralData->cruise_speed = 3.0f;
+	centralData->max_climb_rate = 1.0f;
+	centralData->softZoneSize = 0.0f;
+	
+	alt_integrator = 0.0f;
 }
 
 

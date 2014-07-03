@@ -14,8 +14,6 @@
 
 
 #include "central_data.h"
-#include "remote_controller.h"
-#include "simulation.h"
 #include "conf_sim_model.h"
 
 
@@ -44,7 +42,6 @@ void initialise_central_data(){
 		
 		init_nav();
 		init_waypoint_handler();
-		//e_init();
 		
 		init_neighbors();
 		init_orca();
@@ -54,18 +51,6 @@ void initialise_central_data(){
 
 		// init simulation (should be done after position_estimator)
 		init_simulation(&(centralData.sim_model),&(centralData.imu1),centralData.position_estimator.localPosition);		
-
-		// init controls
-		// TODO: move to init_stabilsation_copter()
-		centralData.controls.rpy[ROLL]=0;
-		centralData.controls.rpy[PITCH]=0;
-		centralData.controls.rpy[YAW]=0;
-		centralData.controls.tvel[X]=0;
-		centralData.controls.tvel[Y]=0;
-		centralData.controls.tvel[Z]=0;
-		centralData.controls.thrust=-1.0;
-		
-		centralData.run_mode = MOTORS_OFF;
 		
 
 		centralData.simulation_mode=0;
@@ -88,24 +73,9 @@ void initialise_central_data(){
 		centralData.in_the_air = false;
 		
 		centralData.number_of_neighbors = 0;
-		
-		// default GPS home position
-		// TODO: move to position_estimator_init();
-		centralData.position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;
-		centralData.position_estimator.localPosition.origin.latitude =   HOME_LATITUDE;
-		centralData.position_estimator.localPosition.origin.altitude =   HOME_ALTITUDE;
-		centralData.position_estimator.localPosition.pos[X]=0;
-		centralData.position_estimator.localPosition.pos[Y]=0;
-		centralData.position_estimator.localPosition.pos[Z]=0;
 
 
 		//centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
-
-		// TODO: move to navigation_init()
-		centralData.dist2vel_gain = 0.7;
-		centralData.cruise_speed = 3.0;
-		centralData.max_climb_rate = 1.0;
-		centralData.softZoneSize = 0.0;
 
 		// Init sonar
 		// i2cxl_sonar_init(&centralData.i2cxl_sonar);

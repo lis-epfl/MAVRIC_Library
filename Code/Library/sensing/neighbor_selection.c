@@ -20,6 +20,7 @@
 #include "central_data.h"
 #include "coord_conventions.h"
 #include "conf_platform.h"
+#include "print_util.h"
 #include <stdbool.h>
 
 central_data_t *centralData;

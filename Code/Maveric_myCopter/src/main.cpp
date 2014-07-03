@@ -17,6 +17,7 @@ extern "C" {
 	#include "central_data.h"
 	#include "boardsupport.h"
 	#include "tasks.h"
+
 	#include "piezo_speaker.h"
 }
  
@@ -46,7 +47,7 @@ void initialisation()
 	relevel_imu(); // TODO: MOVE	
 
 	//reset position estimate
-	for (i=0; i<3; i++)
+	for (i=0; i<3; i++) 
 	{
 		// clean acceleration estimate without gravity:
 		centralData->position_estimator.vel_bf[i]=0.0;
@@ -71,7 +72,6 @@ void initialisation()
 int main (void)
 {
 	initialisation();
-		
 	create_tasks();
 	
 	while (1==1) 
