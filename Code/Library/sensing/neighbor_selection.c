@@ -27,7 +27,7 @@ central_data_t *centralData;
 
 void neighbors_selection_init()
 {
-	centralData = get_central_data();
+	centralData = central_data_get_pointer_to_struct();
 	centralData->number_of_neighbors = 0;
 }
 

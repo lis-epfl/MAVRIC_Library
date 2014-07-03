@@ -319,7 +319,7 @@ float ToRad(float numdeg);
 
 void gps_ublox_init(GPS_Engine_Setting _engine_nav_setting)
 {
-	centralData = get_central_data();
+	centralData = central_data_get_pointer_to_struct();
 	
 	// uint8_t epoch = TIME_OF_WEEK;
 	idleTimeout = 1200;

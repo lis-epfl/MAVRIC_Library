@@ -28,7 +28,7 @@ float min_coll_dist;
 
 void init_orca(void)
 {
-	centralData = get_central_data();
+	centralData = central_data_get_pointer_to_struct();
 	centralData->safe_size = SIZE_VHC_ORCA;
 		
 	timeHorizon = TIME_HORIZON;

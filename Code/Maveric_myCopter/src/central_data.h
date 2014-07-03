@@ -142,14 +142,14 @@ typedef struct  {
 /**
  * \brief	Initialization of the central data structure
  */
-void initialise_central_data(void);
+void central_data_init(void);
 
 /**
  * \brief	Get a pointer to the central data
  *
  * \return	A pointer to the structure central data
 */
-central_data_t* get_central_data(void);
+central_data_t* central_data_get_pointer_to_struct(void);
 
 #ifdef __cplusplus
 }

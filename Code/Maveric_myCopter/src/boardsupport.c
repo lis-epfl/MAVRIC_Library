@@ -36,7 +36,7 @@
 #include "analog_monitor.h"
 #include "piezo_speaker.h"
 
-void initialise_board(central_data_t *centralData) {
+void boardsupport_init(central_data_t *centralData) {
 	// int i;
 	// enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 	

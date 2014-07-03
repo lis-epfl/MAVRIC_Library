@@ -19,7 +19,7 @@
 
 static volatile central_data_t centralData;
 
-void initialise_central_data(){
+void central_data_init(){
 		// Init servos
 		for (int i = 0; i < NUMBER_OF_SERVO_OUTPUTS; ++i)
 		{
@@ -81,7 +81,7 @@ void initialise_central_data(){
 		// i2cxl_sonar_init(&centralData.i2cxl_sonar);
 }
 
-central_data_t* get_central_data(void)
+central_data_t* central_data_get_pointer_to_struct(void)
 {
 	return &centralData;
 }

@@ -17,7 +17,7 @@ central_data_t *centralData;
 
 void init_stabilisation_copter(Stabiliser_Stack_copter_t* stabiliser_stack)
 {
-	centralData = get_central_data();
+	centralData = central_data_get_pointer_to_struct();
 	centralData->run_mode = MOTORS_OFF;
 	centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 	centralData->controls.yaw_mode = YAW_RELATIVE;
