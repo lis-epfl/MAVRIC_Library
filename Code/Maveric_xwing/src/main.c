@@ -37,27 +37,27 @@ void initialisation() {
 	int i;
 	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 
-	centralData = get_central_data();
-	initialise_board(centralData);
-	initialise_central_data();
+	centralData = central_data_get_pointer_to_struct();
+	boardsupport_init(centralData);
+	central_data_init();
 	
 
 	init_radar_modules();
 	dbg_print("Debug stream initialised\n");
 
-	//init_gps_ubx(engine_nav_settings);
+	//gps_ublox_init(engine_nav_settings);
 	
 	set_servos(&servo_failsafe);
 
 	onboard_parameters_init();
-	init_mavlink_actions();
-	init_pos_integration(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
+	mavlink_actions_init();
+	position_estimation_init(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 	
 	centralData->imu1.attitude.calibration_level=LEVELING;	
 	centralData->mav_state = MAV_STATE_CALIBRATING;
 	centralData->mav_mode = MAV_MODE_PREFLIGHT;
 
-//	calibrate_Gyros(&centralData->imu1);
+//	imu_calibrate_gyros(&centralData->imu1);
 	for (i=400; i>0; i--) {
 		imu_get_raw_data(&(centralData->imu1));
 		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);	
@@ -87,7 +87,7 @@ void initialisation() {
 	init_waypoint_handler();
 	//e_init();
 	
-	init_neighbors();
+	neighbors_selection_init();
 	orca_init();
 	
 	LED_On(LED1);
@@ -107,8 +107,8 @@ void main (void)
 
 	while (1==1) {
 		
-		//run_scheduler_update(get_main_taskset(), FIXED_PRIORITY);
-		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
+		//scheduler_run_update(tasks_get_main_taskset(), FIXED_PRIORITY);
+		scheduler_run_update(tasks_get_main_taskset(), ROUND_ROBIN);
 		
 		//LED_On(LED1);
 	}		

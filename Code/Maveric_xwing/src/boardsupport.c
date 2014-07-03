@@ -30,7 +30,7 @@
 
 //static volatile board_hardware_t board_hardware;
 
-void initialise_board(central_data_t *centralData) {
+void boardsupport_init(central_data_t *centralData) {
 	int i;
 	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 
@@ -114,7 +114,7 @@ void initialise_board(central_data_t *centralData) {
 	// init debug output
 	dbg_print_init(centralData->debug_out_stream);
 		
-	init_imu(&(centralData->imu1));
+	imu_init(&(centralData->imu1));
 	init_bmp085();
 
 	Enable_global_interrupt();

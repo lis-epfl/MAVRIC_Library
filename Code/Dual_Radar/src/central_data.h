@@ -42,7 +42,7 @@ typedef struct  {
 
 } central_data_t;
 
-central_data_t* get_central_data();
+central_data_t* central_data_get_pointer_to_struct();
 
 byte_stream_t* get_telemetry_upstream();
 byte_stream_t* get_telemetry_downstream();

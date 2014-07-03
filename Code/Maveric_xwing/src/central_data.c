@@ -14,7 +14,7 @@
 
 static volatile central_data_t centralData;
 
-void initialise_central_data(){
+void central_data_init(){
 		
 		// init controls
 		centralData.controls.rpy[ROLL]=0;
@@ -46,14 +46,14 @@ void initialise_central_data(){
 		centralData.position_estimator.localPosition.pos[2]=0;
 
 		// init simulation
-		init_simulation(&(centralData.sim_model),&(centralData.imu1.attitude));
+		simulation_init(&(centralData.sim_model),&(centralData.imu1.attitude));
 		centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
 		
 		//init_waypoint_list(centralData.waypoint_list,&(centralData.number_of_waypoints));
 
 }
 
-central_data_t* get_central_data(void)
+central_data_t* central_data_get_pointer_to_struct(void)
 {
 	return &centralData;
 }

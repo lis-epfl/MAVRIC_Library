@@ -15,11 +15,11 @@
 #include "mavlink_stream.h"
 
 
-void init_mavlink_actions();
+void mavlink_actions_init();
 
 void mavlink_send_radar() ;
 void mavlink_send_radar_raw();
 
-void handle_specific_messages (Mavlink_Received_t* rec);
+void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec);
 
 #endif /* MAVLINK_ACTIONS_H_ */

@@ -74,7 +74,7 @@ void register_read_stream_stdin( byte_stream_t *stream) {
 
 
 
-void initialise_board(central_data_t *centralData) {
+void boardsupport_init(central_data_t *centralData) {
 //		init_UART_int(0);
 
 		make_buffered_stream(&centralData->xbee_in_buffer, &centralData->xbee_in_stream);
@@ -123,7 +123,7 @@ void initialise_board(central_data_t *centralData) {
 		// init debug output
 		dbg_print_init(centralData->debug_out_stream);
 		
-		init_imu(&centralData->imu1);
+		imu_init(&centralData->imu1);
 
 		rc_init();
 		init_Servos();
@@ -144,7 +144,7 @@ void initialise_board(central_data_t *centralData) {
 		centralData->position_estimator.localPosition.origin.altitude =   HOME_ALTITUDE;
 		centralData->position_estimator.localPosition.pos[0]=0;	centralData->position_estimator.localPosition.pos[1]=0; centralData->position_estimator.localPosition.pos[2]=0;
 		
-		init_simulation(&centralData->sim_model, &centralData->imu1.attitude);
+		simulation_init(&centralData->sim_model, &centralData->imu1.attitude);
 		centralData->sim_model.localPosition=centralData->position_estimator.localPosition;
 
 

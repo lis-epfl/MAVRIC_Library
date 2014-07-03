@@ -64,7 +64,7 @@
 //} board_hardware_t;
 
 
-void initialise_board(central_data_t* centralData);
+void boardsupport_init(central_data_t* centralData);
 
 //board_hardware_t* get_board_hardware(void);
 

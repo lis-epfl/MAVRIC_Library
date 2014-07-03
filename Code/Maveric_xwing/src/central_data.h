@@ -113,9 +113,9 @@ typedef struct  {
 } central_data_t;
 
 
-void initialise_central_data(void);
+void central_data_init(void);
 
-central_data_t* get_central_data(void);
+central_data_t* central_data_get_pointer_to_struct(void);
 
 byte_stream_t* get_telemetry_upstream(void);
 byte_stream_t* get_telemetry_downstream(void);

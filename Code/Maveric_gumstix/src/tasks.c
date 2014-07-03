@@ -27,12 +27,12 @@ central_data_t *centralData;
 
 bool has_started_engines;
 
-task_set* get_main_taskset() {
+task_set* tasks_get_main_taskset() {
 	return &main_tasks;
 }
 
 
-void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
+void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 {
 	
 	get_channel_mode(chanSwitch);
@@ -92,7 +92,7 @@ void switch_off_motors()
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 }
 
-task_return_t set_mav_mode_n_state()
+task_return_t tasks_set_mav_mode_n_state()
 {
 	uint8_t channelSwitches = 0;
 	int8_t RC_check = 0;
@@ -102,7 +102,7 @@ task_return_t set_mav_mode_n_state()
 	
 	LED_Toggle(LED1);
 	
-	rc_user_channels(&channelSwitches,&RC_check, &motor_switch);
+	tasks_rc_user_channels(&channelSwitches,&RC_check, &motor_switch);
 	
 	switch(centralData->mav_state)
 	{
@@ -117,7 +117,7 @@ task_return_t set_mav_mode_n_state()
 				{
 					case 0:
 						dbg_print("Switching on the motors!\n");
-						position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
+						position_estimation_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 						centralData->controls.run_mode = MOTORS_ON;
 						has_started_engines = true;
 						//centralData->mav_state = MAV_STATE_ACTIVE;
@@ -362,9 +362,9 @@ task_return_t set_mav_mode_n_state()
 	centralData->mav_state_previous = centralData->mav_state;
 }
 
-void run_imu_update() {
+void tasks_run_imu_update() {
 	if (centralData->simulation_mode==1) {
-		simu_update(&centralData->sim_model, &centralData->servos, &(centralData->imu1), &centralData->position_estimator);
+		simulation_update(&centralData->sim_model, &centralData->servos, &(centralData->imu1), &centralData->position_estimator);
 		
 		
 		imu_update(&(centralData->imu1), &(centralData->position_estimator), &centralData->pressure, &centralData->GPS_data);
@@ -377,11 +377,10 @@ void run_imu_update() {
 	}
 }	
 
-
-task_return_t run_stabilisation() {
+task_return_t tasks_run_stabilisation() {
 	int i;
 	
-	run_imu_update();
+	tasks_run_imu_update();
 
 	switch(centralData->mav_mode)
 	{
@@ -446,12 +445,12 @@ task_return_t run_stabilisation() {
 
 }
 
-task_return_t gps_task() {
+task_return_t tasks_run_gps_update() {
 	uint32_t tnow = get_millis();	
 	if (centralData->simulation_mode==1) {
-		simulate_gps(&centralData->sim_model, &centralData->GPS_data);
+		simulation_simulate_gps(&centralData->sim_model, &centralData->GPS_data);
 	} else {
-		gps_update();
+		gps_ublox_update();
 	}
 }
 
@@ -469,7 +468,7 @@ task_return_t run_estimator()
 	estimator_loop();
 }
 
-task_return_t run_navigation_task()
+task_return_t tasks_run_navigation_update()
 {
 	int8_t i;
 	
@@ -508,14 +507,14 @@ task_return_t run_navigation_task()
 	
 }
 uint32_t last_baro_update;
-task_return_t run_barometer()
+task_return_t tasks_run_barometer_update()
 {
 	uint32_t tnow = get_micros();
-	central_data_t *central_data=get_central_data();
+	central_data_t *central_data=central_data_get_pointer_to_struct();
 	
 	pressure_data *pressure= get_pressure_data_slow(centralData->pressure.altitude_offset);
 	if (central_data->simulation_mode==1) {
-		simulate_barometer(&centralData->sim_model, pressure);
+		simulation_simulate_barometer(&centralData->sim_model, pressure);
 	} 
 	centralData->pressure=*pressure;
 	
@@ -526,25 +525,25 @@ void create_tasks() {
 	
 	has_started_engines = false;
 	
-	init_scheduler(&main_tasks);
+	scheduler_init(&main_tasks);
 	
-	centralData = get_central_data();
+	centralData = central_data_get_pointer_to_struct();
 	
-	register_task(&main_tasks, 0, 4000, RUN_REGULAR, &run_stabilisation );
+	scheduler_register_task(&main_tasks, 0, 4000, RUN_REGULAR, &tasks_run_stabilisation );
 	
-	register_task(&main_tasks, 1, 15000, RUN_REGULAR, &run_barometer);
+	scheduler_register_task(&main_tasks, 1, 15000, RUN_REGULAR, &tasks_run_barometer_update);
 	main_tasks.tasks[1].timing_mode=PERIODIC_RELATIVE;
 
-	register_task(&main_tasks, 2, 100000, RUN_REGULAR, &gps_task);
-	//register_task(&main_tasks, 6, 100000, RUN_REGULAR, &gumstix_task);
-	//register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
-	//register_task(&main_tasks, , 100000, RUN_REGULAR, &read_radar);
+	scheduler_register_task(&main_tasks, 2, 100000, RUN_REGULAR, &tasks_run_gps_update);
+	//scheduler_register_task(&main_tasks, 6, 100000, RUN_REGULAR, &gumstix_task);
+	//scheduler_register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
+	//scheduler_register_task(&main_tasks, , 100000, RUN_REGULAR, &read_radar);
 
-	register_task(&main_tasks, 3, ORCA_TIME_STEP_MILLIS * 1000.0, RUN_REGULAR, &run_navigation_task);
+	scheduler_register_task(&main_tasks, 3, ORCA_TIME_STEP_MILLIS * 1000.0, RUN_REGULAR, &tasks_run_navigation_update);
 
-	register_task(&main_tasks, 4, 200000, RUN_REGULAR, &set_mav_mode_n_state);
+	scheduler_register_task(&main_tasks, 4, 200000, RUN_REGULAR, &tasks_set_mav_mode_n_state);
 	
 
-	register_task(&main_tasks, 5, 4000, RUN_REGULAR, &mavlink_stream_protocol_update);
+	scheduler_register_task(&main_tasks, 5, 4000, RUN_REGULAR, &mavlink_protocol_update);
 
 }

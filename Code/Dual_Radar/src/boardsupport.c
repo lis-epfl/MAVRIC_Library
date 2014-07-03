@@ -12,7 +12,7 @@
 #include "delay.h"
 
 
-initialise_board(central_data_t *central_data){
+boardsupport_init(central_data_t *central_data){
 		
 		irq_initialize_vectors();
 		cpu_irq_enable();
