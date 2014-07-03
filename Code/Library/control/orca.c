@@ -28,7 +28,7 @@ float min_coll_dist;
 
 void init_orca(void)
 {
-	centralData = get_central_data();
+	centralData = central_data_get_pointer_to_struct();
 	centralData->safe_size = SIZE_VHC_ORCA;
 		
 	timeHorizon = TIME_HORIZON;
@@ -55,7 +55,7 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		NewVelocity[i] = OptimalVelocity[i];
 	}
 	
-	extrapolate_or_delete_position(centralData->listNeighbors, &(centralData->number_of_neighbors));
+	neighbors_selection_extrapolate_or_delete_position(centralData->listNeighbors, &(centralData->number_of_neighbors));
 	
 	/* Create agent ORCA planes. */
 	for (ind=0; ind<centralData->number_of_neighbors; ind++)

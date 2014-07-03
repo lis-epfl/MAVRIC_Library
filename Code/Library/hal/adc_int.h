@@ -19,6 +19,10 @@
 #ifndef ADC_INT_H
 #define ADC_INT_H
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 #include "preprocessor.h"
 #include "compiler.h"
 #include "user_board.h"
@@ -110,5 +114,9 @@ int ADCI_get_sampling_status(void);
  * \return the period of the ADC interruption
 */
 uint32_t get_adc_int_period(void);
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif

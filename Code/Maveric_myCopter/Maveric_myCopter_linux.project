@@ -588,8 +588,6 @@
       <File Name="Library/control/navigation.h"/>
       <File Name="Library/control/navigation.c"/>
       <File Name="Library/control/stabilisation_copter.h"/>
-      <File Name="Library/control/stabilisation_hybrid.c"/>
-      <File Name="Library/control/stabilisation_hybrid.h"/>
       <File Name="Library/control/stabilisation_copter.c"/>
       <File Name="Library/control/adaptive_parameter.c"/>
       <File Name="Library/control/stabilisation.c"/>

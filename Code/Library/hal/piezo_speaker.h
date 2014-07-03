@@ -19,6 +19,10 @@
 #ifndef PIEZO_SPEAKER_H_
 #define PIEZO_SPEAKER_H_
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 #define PIEZO_HIGH_PIN AVR32_PIN_PA12			///< Define the Microcontroller pin associated with the high pin of the piezo speaker
 #define PIEZO_LOW_PIN AVR32_PIN_PA15			///< Define the Microcontroller pin associated with the low pin of the piezo speaker
 
@@ -54,5 +58,9 @@ void set_value_binary(int binary_value);
  * \param frequency Frequency of the beep
  */
 void beep(int duration_ms, int frequency);
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif /* PIEZO_SPEAKER_H_ */

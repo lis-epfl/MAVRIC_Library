@@ -33,9 +33,9 @@ extern "C" {
 #include "remote_controller.h"
 #include "pid_control.h"
 #include "streams.h"
+#include "buffer.h"
 #include "print_util.h"
 
-#include "bmp085.h"
 #include "mavlink_stream.h"
 #include "coord_conventions.h"
 #include "onboard_parameters.h"
@@ -48,8 +48,8 @@ extern "C" {
 #include "neighbor_selection.h"
 #include "position_estimation.h"
 
+#include "analog_monitor.h"
 #include "i2cxl_sonar.h"
-#include "airspeed_analog.h"
 #include "orca.h"
 #include "navigation.h"
 
@@ -92,7 +92,7 @@ typedef struct  {
 	waypoint_struct waypoint_list[MAX_WAYPOINTS];				///< The array of all waypoints (max MAX_WAYPOINTS)
 	waypoint_struct current_waypoint;							///< The structure of the current waypoint
 	uint16_t number_of_waypoints;								///< The total number of waypoints
-	int8_t current_waypoint_count;									///< The number of the current waypoint
+	int8_t current_waypoint_count;								///< The number of the current waypoint
 	
 	local_coordinates_t waypoint_coordinates;					///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
 	local_coordinates_t waypoint_hold_coordinates;				///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
@@ -136,22 +136,20 @@ typedef struct  {
 	auto_landing_enum_t auto_landing_enum;						///< The autolanding enum
 
 	i2cxl_sonar_t i2cxl_sonar;									///< The i2cxl sonar structure
-	airspeed_analog_t pitot;									///< The pitot tube structure
-
 } central_data_t;
 
 
 /**
  * \brief	Initialization of the central data structure
  */
-void initialise_central_data(void);
+void central_data_init(void);
 
 /**
  * \brief	Get a pointer to the central data
  *
  * \return	A pointer to the structure central data
 */
-central_data_t* get_central_data(void);
+central_data_t* central_data_get_pointer_to_struct(void);
 
 #ifdef __cplusplus
 }

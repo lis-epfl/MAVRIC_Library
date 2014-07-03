@@ -19,15 +19,15 @@
 #ifndef MAVLINK_STREAM_H_
 #define MAVLINK_STREAM_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include "streams.h"
 #include "mavlink_bridge.h"
 #include "mavlink/include/maveric/mavlink.h"
 #include "scheduler.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /**
  * \brief	Mavlink structures for the receive message and its status

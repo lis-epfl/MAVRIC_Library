@@ -35,7 +35,7 @@ central_data_t *centralData;
 
 void mavlink_send_heartbeat(void) 
 {
-	central_data_t *centralData = get_central_data();
+	central_data_t *centralData = central_data_get_pointer_to_struct();
 
 	float battery_voltage = centralData->adc.avg[ANALOG_RAIL_10];		// bat voltage (mV), actual battery pack plugged to the board
 	float battery_remaining = centralData->adc.avg[ANALOG_RAIL_11] / 12.4f * 100.0f;
@@ -420,7 +420,7 @@ void mavlink_send_simulation(void)
 
 task_return_t mavlink_send_rt_stats() 
 {
-	task_set* main_tasks = get_main_taskset();
+	task_set* main_tasks = tasks_get_main_taskset();
 	
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
 										get_millis(), 
@@ -461,7 +461,7 @@ task_return_t mavlink_send_rt_stats()
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
 										get_millis(), 
 										"imu_dt", 
-										get_central_data()->imu1.dt);
+										central_data_get_pointer_to_struct()->imu1.dt);
 
 	
 	main_tasks->tasks[1].rt_violations=0;
@@ -470,7 +470,7 @@ task_return_t mavlink_send_rt_stats()
 }
 
 
-void add_onboard_parameters(void) {
+void mavlink_actions_add_onboard_parameters(void) {
 	Stabiliser_t* rate_stabiliser = &centralData->stabiliser_stack.rate_stabiliser;
 	Stabiliser_t* attitude_stabiliser = &centralData->stabiliser_stack.attitude_stabiliser;
 	Stabiliser_t* velocity_stabiliser= &centralData->stabiliser_stack.velocity_stabiliser;
@@ -625,7 +625,7 @@ task_return_t control_waypoint_timeout (void)
 }
 
 
-void handle_specific_messages (Mavlink_Received_t* rec) 
+void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec) 
 {
 	if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) 
 	{	
@@ -702,7 +702,7 @@ void handle_specific_messages (Mavlink_Received_t* rec)
 				break;
 
 			case MAVLINK_MSG_ID_COMMAND_LONG :  // 76
-				receive_message_long(rec);
+				mavlink_actions_receive_message_long(rec);
 				break;
 
 			case MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN:  // 48
@@ -724,12 +724,12 @@ void handle_specific_messages (Mavlink_Received_t* rec)
 		 * dbg_print( "\n");
 		*/
 
-		read_msg_from_neighbors(rec);
+		neighbors_selection_read_message_from_neighbors(rec);
 	}
 }
 
 
-void receive_message_long(Mavlink_Received_t* rec)
+void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 {
 	mavlink_command_long_t packet;
 	
@@ -1316,21 +1316,10 @@ void mavlink_send_sonar(void)
 										centralData->i2cxl_sonar.distance_m);
 }
 
-void mavlink_send_airspeed(void)
-{
-	mavlink_msg_debug_vect_send(MAVLINK_COMM_0, 
-								"Pitot",
-								get_micros(),
-								centralData->adc.avg[ANALOG_RAIL_13],
-								centralData->pitot.differential_pressure, 
-								centralData->pitot.airspeed);
-}
-
-
-void init_mavlink_actions(void) {
+void mavlink_actions_init(void) {
 	
-	centralData=get_central_data();
-	add_onboard_parameters();
+	centralData=central_data_get_pointer_to_struct();
+	mavlink_actions_add_onboard_parameters();
 	
 	/*	
 	 * Use this to store or read or reset parameters on flash memory
@@ -1340,49 +1329,47 @@ void init_mavlink_actions(void) {
 	 *
 	 */
 
-	add_task(get_mavlink_taskset(),  10000,    RUN_REGULAR,  &control_waypoint_timeout,                0	);
+	scheduler_add_task(get_mavlink_taskset(),  10000,    RUN_REGULAR,  &control_waypoint_timeout,                0	);
 	
-	add_task(get_mavlink_taskset(),  1000000,  RUN_REGULAR,  &mavlink_send_heartbeat,                  MAVLINK_MSG_ID_HEARTBEAT	);
+	scheduler_add_task(get_mavlink_taskset(),  1000000,  RUN_REGULAR,  &mavlink_send_heartbeat,                  MAVLINK_MSG_ID_HEARTBEAT	);
 
-	add_task(get_mavlink_taskset(),  500000,   RUN_REGULAR,  &mavlink_send_attitude_quaternion,        MAVLINK_MSG_ID_ATTITUDE_QUATERNION	);
+	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_REGULAR,  &mavlink_send_attitude_quaternion,        MAVLINK_MSG_ID_ATTITUDE_QUATERNION	);
 
-	add_task(get_mavlink_taskset(),  200000,   RUN_REGULAR,  &mavlink_send_attitude,                   MAVLINK_MSG_ID_ATTITUDE	);
+	scheduler_add_task(get_mavlink_taskset(),  200000,   RUN_REGULAR,  &mavlink_send_attitude,                   MAVLINK_MSG_ID_ATTITUDE	);
 	
-	add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_hud,                        MAVLINK_MSG_ID_VFR_HUD	);
+	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_hud,                        MAVLINK_MSG_ID_VFR_HUD	);
 
-	add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_pressure,                   MAVLINK_MSG_ID_SCALED_PRESSURE	);
+	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_pressure,                   MAVLINK_MSG_ID_SCALED_PRESSURE	);
 
-	add_task(get_mavlink_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_scaled_imu,                 MAVLINK_MSG_ID_SCALED_IMU	);
+	scheduler_add_task(get_mavlink_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_scaled_imu,                 MAVLINK_MSG_ID_SCALED_IMU	);
 
-	add_task(get_mavlink_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_raw_imu,                    MAVLINK_MSG_ID_RAW_IMU	);
+	scheduler_add_task(get_mavlink_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_raw_imu,                    MAVLINK_MSG_ID_RAW_IMU	);
 
-	add_task(get_mavlink_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_rates_error,            MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT	);
+	scheduler_add_task(get_mavlink_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_rates_error,            MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT	);
 
-	add_task(get_mavlink_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_speed_thrust_setpoint,  MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT	);
+	scheduler_add_task(get_mavlink_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_speed_thrust_setpoint,  MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT	);
 
-	add_task(get_mavlink_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_thrust_setpoint,        MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT	);
+	scheduler_add_task(get_mavlink_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_thrust_setpoint,        MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT	);
 
-	add_task(get_mavlink_taskset(),  1000000,  RUN_NEVER,    &mavlink_send_servo_output,               MAVLINK_MSG_ID_SERVO_OUTPUT_RAW	);
+	scheduler_add_task(get_mavlink_taskset(),  1000000,  RUN_NEVER,    &mavlink_send_servo_output,               MAVLINK_MSG_ID_SERVO_OUTPUT_RAW	);
 
-	add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_estimator,                  MAVLINK_MSG_ID_LOCAL_POSITION_NED	);
+	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_estimator,                  MAVLINK_MSG_ID_LOCAL_POSITION_NED	);
 
-	add_task(get_mavlink_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_global_position,            MAVLINK_MSG_ID_GLOBAL_POSITION_INT	);
+	scheduler_add_task(get_mavlink_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_global_position,            MAVLINK_MSG_ID_GLOBAL_POSITION_INT	);
 
-	add_task(get_mavlink_taskset(),  1000000,  RUN_NEVER,    &mavlink_send_gps_raw,                    MAVLINK_MSG_ID_GPS_RAW_INT	);
+	scheduler_add_task(get_mavlink_taskset(),  1000000,  RUN_NEVER,    &mavlink_send_gps_raw,                    MAVLINK_MSG_ID_GPS_RAW_INT	);
 
-	add_task(get_mavlink_taskset(),  250000,   RUN_NEVER,    &mavlink_send_raw_rc_channels,            MAVLINK_MSG_ID_RC_CHANNELS_RAW	);
+	scheduler_add_task(get_mavlink_taskset(),  250000,   RUN_NEVER,    &mavlink_send_raw_rc_channels,            MAVLINK_MSG_ID_RC_CHANNELS_RAW	);
 
-	add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_scaled_rc_channels,         MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);
+	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_scaled_rc_channels,         MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);
 
-	add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_simulation,                 MAVLINK_MSG_ID_HIL_STATE	);
+	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_simulation,                 MAVLINK_MSG_ID_HIL_STATE	);
 
-	add_task(get_mavlink_taskset(),  250000,   RUN_NEVER,    &mavlink_send_rt_stats,                   MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
+	scheduler_add_task(get_mavlink_taskset(),  250000,   RUN_NEVER,    &mavlink_send_rt_stats,                   MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
 
-	add_task(get_mavlink_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_sonar,                      MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
+	scheduler_add_task(get_mavlink_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_sonar,                      MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
 
-	add_task(get_mavlink_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_airspeed,                   MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
-	
-	sort_taskset_by_period(get_mavlink_taskset());
+	scheduler_sort_taskset_by_period(get_mavlink_taskset());
 	
 	dbg_print("MAVlink actions initialiased\n");
 }

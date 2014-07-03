@@ -87,7 +87,7 @@ typedef struct
  * \param	imu				The pointer to the real IMU structure to match the simulated IMU
  * \param	localPos		The pointer to the structure of the real local position estimation of the vehicle
  */
-void init_simulation(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates_t localPos);
+void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates_t localPos);
 
 /**
  * \brief	Computes artificial gyro and accelerometer values based on motor commands
@@ -97,7 +97,7 @@ void init_simulation(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates
  * \param	imu				The pointer to the "real" IMU structure to update the belief of the attitude
  * \param	localPos		The pointer to the structure of the "real" local position of the vehicle to update the belief of the position and velocity
  */
-void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est);
+void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est);
 
 /**
  * \brief	Simulates barometer outputs
@@ -105,7 +105,7 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
  * \param	sim				The pointer to the simulation model structure
  * \param	pressure		The pointer to the "real" barometer structure to update the belief of the barometer value
  */
-void simulate_barometer(simulation_model_t *sim, pressure_data *pressure);
+void simulation_simulate_barometer(simulation_model_t *sim, pressure_data *pressure);
 
 /**
  * \brief	Simulates GPS outputs
@@ -113,7 +113,7 @@ void simulate_barometer(simulation_model_t *sim, pressure_data *pressure);
  * \param	sim				The pointer to the simulation model structure
  * \param	gps				The pointer to the "real" GPS structure to update the belief of the GPS value
  */
-void simulate_gps(simulation_model_t *sim, gps_Data_type *gps);
+void simulation_simulate_gps(simulation_model_t *sim, gps_Data_type *gps);
 
 #ifdef __cplusplus
 }

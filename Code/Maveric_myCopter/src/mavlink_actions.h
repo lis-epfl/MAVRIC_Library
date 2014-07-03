@@ -29,13 +29,13 @@ extern "C" {
 /**
  * \brief     Initialisation of the module mavlink actions
  */
-void init_mavlink_actions(void);
+void mavlink_actions_init(void);
 
 
 /**
  * \brief     Add all onboard parameters to the parameter list
  */
-void add_onboard_parameters(void);
+void mavlink_actions_add_onboard_parameters(void);
 
 
 /**
@@ -46,7 +46,7 @@ void add_onboard_parameters(void);
  * 
  * \param 	rec 	Received mavlink message 
  */
-void handle_specific_messages (Mavlink_Received_t* rec);
+void mavlink_actions_handle_specific_messages(Mavlink_Received_t* rec);
 
 
 /**
@@ -54,7 +54,7 @@ void handle_specific_messages (Mavlink_Received_t* rec);
  * 
  * \param 	rec 	Received message
  */
-void receive_message_long(Mavlink_Received_t* rec);
+void mavlink_actions_receive_message_long(Mavlink_Received_t* rec);
 
 #ifdef __cplusplus
 }

@@ -22,12 +22,14 @@ extern "C" {
 
 #include "central_data.h"
 
+#define BOARD USER_BOARD
+
 /**
  * \brief	Initialize the hardware related elements (communication lines, sensors devices, etc)
  *
  * \param	centralData		The pointer to the structure where all central data is stored
  */
-void initialise_board(central_data_t* centralData);
+void boardsupport_init(central_data_t* centralData);
 
 #ifdef __cplusplus
 }

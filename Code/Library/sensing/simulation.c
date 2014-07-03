@@ -24,7 +24,7 @@
 #include "central_data.h"
 #include "maths.h"
 
-void init_simulation(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates_t localPos) {
+void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates_t localPos) {
 	int i;
 	
 	dbg_print("Init HIL simulation. \n");
@@ -163,7 +163,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos
 	*/
 }
 
-void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est) {
+void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est) {
 	int i;
 	UQuat_t qtmp1, qvel_bf,  qed;
 	const UQuat_t front = {.s = 0.0f, .v = {1.0f, 0.0f, 0.0f}};
@@ -296,7 +296,7 @@ void simu_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data
 	//pos_est->localPosition = sim->localPosition;
 }
 
-void simulate_barometer(simulation_model_t *sim, pressure_data *pressure)
+void simulation_simulate_barometer(simulation_model_t *sim, pressure_data *pressure)
 {
 	pressure->altitude = sim->localPosition.origin.altitude - sim->localPosition.pos[Z];
 	pressure->vario_vz = sim->vel[Z];
@@ -304,7 +304,7 @@ void simulate_barometer(simulation_model_t *sim, pressure_data *pressure)
 	pressure->altitude_offset = 0;
 }
 	
-void simulate_gps(simulation_model_t *sim, gps_Data_type *gps)
+void simulation_simulate_gps(simulation_model_t *sim, gps_Data_type *gps)
 {
 	global_position_t gpos = local_to_global_position(sim->localPosition);
 	

@@ -1,10 +1,18 @@
-/*
- * conf_stabilisation_hybrid.h
+/** 
+ * \page The MAV'RIC license
  *
- * Default values for stabilisation
- * 
- * Created: 13/11/2013 17:46:00
- *  Author: Julien
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+ 
+
+/**
+ * \file conf_stabilisation_hybrid.h
+ *
+ * This file contains the default values for the stabilization
  */
 
 #ifndef CONF_STABILISATION_HYBRID_H_

@@ -32,7 +32,7 @@ extern "C" {
 /**
  * \brief 			Initialises all the tasks
  */	
-void create_tasks(void);
+void tasks_create_tasks(void);
 
 
 /**
@@ -40,19 +40,19 @@ void create_tasks(void);
  * 
  * \return          Pointer to the main task-set
  */
-task_set* get_main_taskset(void);
+task_set* tasks_get_main_taskset(void);
 
 
 /**
  * \brief            Relevel the imu
  */
-void relevel_imu(void);
+void tasks_relevel_imu(void);
 
 
 /**
  * \brief            Updates the IMU
  */
-void run_imu_update(void);
+void tasks_run_imu_update(void);
 
 
 /**
@@ -65,37 +65,37 @@ void run_imu_update(void);
  * \param rc_check   [ description]
  * \param motorbool  [ description]
  */
-void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool);
+void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool);
 
 
 /**
  * \brief            Updates the state and mode of the UAV
  */
-task_return_t set_mav_mode_n_state(void);
+task_return_t tasks_set_mav_mode_n_state(void);
 
 
 /**
  * \brief            Run the main stabilisation loop
  */
-task_return_t run_stabilisation(void);
+task_return_t tasks_run_stabilisation(void);
 
 
 /**
  * \brief            Run GPS update
  */
-task_return_t gps_task(void);
+task_return_t tasks_run_gps_update(void);
 
 
 /**
  * \brief            Run the navigation task
  */
-task_return_t run_navigation_task(void);
+task_return_t tasks_run_navigation_update(void);
 
 
 /**
  * \brief            Run the barometer task
  */
-task_return_t run_barometer(void);
+task_return_t tasks_run_barometer_update(void);
 
 
 #ifdef __cplusplus

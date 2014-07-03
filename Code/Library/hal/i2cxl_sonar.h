@@ -13,7 +13,7 @@
 #define I2CXL_SONAR_H_
 
 #ifdef __cplusplus
-extern "C" {
+	extern "C" {
 #endif
 
 #include "compiler.h"
@@ -44,7 +44,7 @@ void i2cxl_sonar_init(i2cxl_sonar_t* i2c_sonar);
 void i2cxl_sonar_update(i2cxl_sonar_t* i2c_sonar);
 
 #ifdef __cplusplus
-}
+	}
 #endif
 
 #endif /* I2CXL_SONAR_H */

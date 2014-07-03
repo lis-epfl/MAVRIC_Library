@@ -104,8 +104,6 @@ C_SRCS +=  \
 ../Library/control/orca.c \
 ../Library/control/pid_control.c \
 ../Library/control/stabilisation_copter.c \
-../Library/control/stabilisation_hybrid.c \
-../Library/hal/airspeed_analog.c \
 ../Library/hal/analog_monitor.c \
 ../Library/hal/i2cxl_sonar.c \
 ../Library/hal/i2c_driver_int.c \
@@ -128,13 +126,11 @@ C_SRCS +=  \
 ../Library/hal/adc_int.c \
 ../Library/hal/ads1274.c \
 ../Library/hal/adxl345_driver.c \
-../Library/hal/amplifiers.c \
 ../Library/hal/bmp085.c \
 ../Library/hal/compass_hmc5883l.c \
 ../Library/hal/dac_dma.c \
 ../Library/hal/itg3200_driver.c \
 ../Library/hal/led.c \
-../Library/hal/radar_module_driver.c \
 ../Library/hal/servo_pwm.c \
 ../Library/hal/remote_dsm2.c \
 ../Library/hal/spi_buffered.c \
@@ -198,8 +194,6 @@ Library/control/adaptive_parameter.o \
 Library/control/orca.o \
 Library/control/pid_control.o \
 Library/control/stabilisation_copter.o \
-Library/control/stabilisation_hybrid.o \
-Library/hal/airspeed_analog.o \
 Library/hal/analog_monitor.o \
 Library/hal/i2cxl_sonar.o \
 Library/hal/i2c_driver_int.o \
@@ -222,13 +216,11 @@ Library/control/stabilisation.o \
 Library/hal/adc_int.o \
 Library/hal/ads1274.o \
 Library/hal/adxl345_driver.o \
-Library/hal/amplifiers.o \
 Library/hal/bmp085.o \
 Library/hal/compass_hmc5883l.o \
 Library/hal/dac_dma.o \
 Library/hal/itg3200_driver.o \
 Library/hal/led.o \
-Library/hal/radar_module_driver.o \
 Library/hal/servo_pwm.o \
 Library/hal/remote_dsm2.o \
 Library/hal/spi_buffered.o \
@@ -285,8 +277,6 @@ Library/control/adaptive_parameter.o \
 Library/control/orca.o \
 Library/control/pid_control.o \
 Library/control/stabilisation_copter.o \
-Library/control/stabilisation_hybrid.o \
-Library/hal/airspeed_analog.o \
 Library/hal/analog_monitor.o \
 Library/hal/i2cxl_sonar.o \
 Library/hal/i2c_driver_int.o \
@@ -309,13 +299,11 @@ Library/control/stabilisation.o \
 Library/hal/adc_int.o \
 Library/hal/ads1274.o \
 Library/hal/adxl345_driver.o \
-Library/hal/amplifiers.o \
 Library/hal/bmp085.o \
 Library/hal/compass_hmc5883l.o \
 Library/hal/dac_dma.o \
 Library/hal/itg3200_driver.o \
 Library/hal/led.o \
-Library/hal/radar_module_driver.o \
 Library/hal/servo_pwm.o \
 Library/hal/remote_dsm2.o \
 Library/hal/spi_buffered.o \
@@ -372,8 +360,6 @@ Library/control/adaptive_parameter.d \
 Library/control/orca.d \
 Library/control/pid_control.d \
 Library/control/stabilisation_copter.d \
-Library/control/stabilisation_hybrid.d \
-Library/hal/airspeed_analog.d \
 Library/hal/analog_monitor.d \
 Library/hal/i2cxl_sonar.d \
 Library/hal/i2c_driver_int.d \
@@ -396,13 +382,11 @@ Library/control/stabilisation.d \
 Library/hal/adc_int.d \
 Library/hal/ads1274.d \
 Library/hal/adxl345_driver.d \
-Library/hal/amplifiers.d \
 Library/hal/bmp085.d \
 Library/hal/compass_hmc5883l.d \
 Library/hal/dac_dma.d \
 Library/hal/itg3200_driver.d \
 Library/hal/led.d \
-Library/hal/radar_module_driver.d \
 Library/hal/servo_pwm.d \
 Library/hal/remote_dsm2.d \
 Library/hal/spi_buffered.d \
@@ -459,8 +443,6 @@ Library/control/adaptive_parameter.d \
 Library/control/orca.d \
 Library/control/pid_control.d \
 Library/control/stabilisation_copter.d \
-Library/control/stabilisation_hybrid.d \
-Library/hal/airspeed_analog.d \
 Library/hal/analog_monitor.d \
 Library/hal/i2cxl_sonar.d \
 Library/hal/i2c_driver_int.d \
@@ -483,13 +465,11 @@ Library/control/stabilisation.d \
 Library/hal/adc_int.d \
 Library/hal/ads1274.d \
 Library/hal/adxl345_driver.d \
-Library/hal/amplifiers.d \
 Library/hal/bmp085.d \
 Library/hal/compass_hmc5883l.d \
 Library/hal/dac_dma.d \
 Library/hal/itg3200_driver.d \
 Library/hal/led.d \
-Library/hal/radar_module_driver.d \
 Library/hal/servo_pwm.d \
 Library/hal/remote_dsm2.d \
 Library/hal/spi_buffered.d \
@@ -551,14 +531,6 @@ OUTPUT_FILE_DEP:= ./makedep.mk
 LIB_DEP+= 
 
 # AVR32/GNU C Compiler
-
-
-
-
-
-
-
-
 
 
 

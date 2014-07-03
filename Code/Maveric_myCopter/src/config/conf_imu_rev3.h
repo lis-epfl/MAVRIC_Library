@@ -34,9 +34,9 @@
 #define RAW_ACC_Y_SCALE  258.9853f
 #define RAW_ACC_Z_SCALE  258.0829f
 
-#define RAW_COMPASS_X 2
-#define RAW_COMPASS_Y 0
-#define RAW_COMPASS_Z 1
+#define RAW_MAG_X 2
+#define RAW_MAG_Y 0
+#define RAW_MAG_Z 1
 
 // Inside values
 //#define RAW_MAG_X_SCALE 579.41f

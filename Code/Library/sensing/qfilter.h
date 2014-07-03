@@ -78,14 +78,14 @@ typedef struct
  * \param	scalefactor		The pointer to the scale factors structure of the IMU
  * \param	biais			The pointer to the biaises structure of the IMU
  */
-void qfInit(Quat_Attitude_t *attitude, float *scalefactor, float *bias);
+void qfilter_init(Quat_Attitude_t *attitude, float *scalefactor, float *bias);
 
 /**
  * \brief	Initialize the quaternion for the attitude estimation
  *
  * \param	attitude		The pointer to the attitude structure
  */
-void initQuat(Quat_Attitude_t *attitude);
+void qfilter_init_quaternion(Quat_Attitude_t *attitude);
 
 /**
  * \brief	Performs the attitude estimation via a complementary filter
@@ -94,7 +94,7 @@ void initQuat(Quat_Attitude_t *attitude);
  * \param	rates			The raw rates from the IMU
  * \param	dt				The time interval between two estimation loops
  */
-void qfilter(Quat_Attitude_t *attitude, float *rates, float dt);
+void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float *rates, float dt);
 
 #ifdef __cplusplus
 }
