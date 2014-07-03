@@ -10,7 +10,7 @@
 
 
 /**
-* \file ads1274.h
+* \file adc_int.c
 *
 * This file is the Analog to Digital Converter module using interruptions
 */
