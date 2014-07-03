@@ -25,7 +25,7 @@ void initialise_central_data(){
 		centralData.controls.run_mode = MOTORS_OFF;
 		
 		// init stabilisers
-		init_stabilisation_copter(&centralData.stabiliser_stack);
+		stabilisation_copter_init(&centralData.stabiliser_stack);
 		// centralData.stabilisers_stack = 
 
 		centralData.simulation_mode=0;

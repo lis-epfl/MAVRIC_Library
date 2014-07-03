@@ -519,7 +519,7 @@ task_return_t tasks_run_stabilisation()
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			centralData->controls.yaw_mode=YAW_RELATIVE;
 			
-			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			stabilisation_copter_cascade_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 
 		case MAV_MODE_STABILIZE_ARMED:
@@ -527,9 +527,9 @@ task_return_t tasks_run_stabilisation()
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			centralData->controls.yaw_mode=YAW_RELATIVE;
 			
-			get_velocity_vector_from_remote(centralData->controls.tvel);
+			stabilisation_copter_get_velocity_vector_from_remote(centralData->controls.tvel);
 			
-			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			stabilisation_copter_cascade_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			
 			break;
 
@@ -546,7 +546,7 @@ task_return_t tasks_run_stabilisation()
 				centralData->controls.yaw_mode = YAW_ABSOLUTE;
 			}
 			
-			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			stabilisation_copter_cascade_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			
 			break;
 
@@ -564,7 +564,7 @@ task_return_t tasks_run_stabilisation()
 				centralData->controls.yaw_mode = YAW_ABSOLUTE;
 			}
 			
-			cascade_stabilise_copter(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			stabilisation_copter_cascade_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		
 		case MAV_MODE_PREFLIGHT:
@@ -629,7 +629,7 @@ task_return_t tasks_run_navigation_update()
 		case MAV_STATE_STANDBY:
 			if (((centralData->mav_mode == MAV_MODE_GUIDED_ARMED)||(centralData->mav_mode == MAV_MODE_AUTO_ARMED)) && !centralData->automatic_take_off)
 			{
-				run_navigation(centralData->waypoint_hold_coordinates);
+				navigation_run(centralData->waypoint_hold_coordinates);
 			}
 			break;
 
@@ -639,16 +639,16 @@ task_return_t tasks_run_navigation_update()
 				case MAV_MODE_AUTO_ARMED:
 					if (centralData->waypoint_set)
 					{
-						run_navigation(centralData->waypoint_coordinates);
+						navigation_run(centralData->waypoint_coordinates);
 					}
 					else
 					{
-						run_navigation(centralData->waypoint_hold_coordinates);
+						navigation_run(centralData->waypoint_hold_coordinates);
 					}
 					break;
 
 				case MAV_MODE_GUIDED_ARMED:
-					run_navigation(centralData->waypoint_hold_coordinates);
+					navigation_run(centralData->waypoint_hold_coordinates);
 					break;
 			}
 			break;
@@ -656,7 +656,7 @@ task_return_t tasks_run_navigation_update()
 		case MAV_STATE_CRITICAL:
 			if ((centralData->mav_mode == MAV_MODE_GUIDED_ARMED)||(centralData->mav_mode == MAV_MODE_AUTO_ARMED))
 			{
-				run_navigation(centralData->waypoint_critical_coordinates);
+				navigation_run(centralData->waypoint_critical_coordinates);
 			}
 			break;
 	}	

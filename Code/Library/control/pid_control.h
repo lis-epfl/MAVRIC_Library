@@ -55,7 +55,7 @@ typedef struct {
 /**
  * \brief				Passing through the controller
  */
-PID_Controller_t passthroughController(void);
+PID_Controller_t pid_control_passthroughController(void);
 
 /**
  * \brief				Initialize integrator parameters
@@ -65,12 +65,12 @@ PID_Controller_t passthroughController(void);
  * \param	postgain
  * \param	clip_val	Clipping value
  */
-void initInt(Integrator_t *integrator, float pregain, float postgain, float clip_val);
+void pid_control_init_integrator(Integrator_t *integrator, float pregain, float postgain, float clip_val);
 
 /**
  * \brief				Reset integrator
  */
-void resetInt(Integrator_t *integrator);
+void pid_control_reset_integrator(Integrator_t *integrator);
 
 /**
  * \brief				Initialize Differentiator parameters
@@ -80,7 +80,7 @@ void resetInt(Integrator_t *integrator);
  * \param	LPF			Low pass filter
  * \param	clip_val	Clipping value
  */
-void initDiff(Differentiator_t *diff, float gain, float LPF, float clip_val);
+void pid_control_init_differenciator(Differentiator_t *diff, float gain, float LPF, float clip_val);
 
 /**
  * \brief				Integrating
@@ -91,7 +91,7 @@ void initDiff(Differentiator_t *diff, float gain, float LPF, float clip_val);
  *
  * \return				Result
  */
-float integrate(Integrator_t *integrator, float input, float dt);
+float pid_control_integrate(Integrator_t *integrator, float input, float dt);
 
 /**
  * \brief Differentiating
@@ -102,7 +102,7 @@ float integrate(Integrator_t *integrator, float input, float dt);
  *
  * \return				Result
  */
-float differentiate(Differentiator_t *diff, float input,  float dt);
+float pid_control_differentiate(Differentiator_t *diff, float input,  float dt);
 
 /**
  * \brief				Update the PID controller
@@ -112,7 +112,7 @@ float differentiate(Differentiator_t *diff, float input,  float dt);
  *
  * \return				Controller output
  */
-float pid_update(PID_Controller_t* controller, float error);
+float pid_control_update(PID_Controller_t* controller, float error);
 
 /**
  * \brief				Update the PID controller for a given time step
@@ -123,7 +123,7 @@ float pid_update(PID_Controller_t* controller, float error);
  *
  * \return				Controller output
  */
-float pid_update_dt(PID_Controller_t* controller, float error, float dt);
+float pid_control_update_dt(PID_Controller_t* controller, float error, float dt);
 
 #ifdef __cplusplus
 }

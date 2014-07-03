@@ -23,7 +23,7 @@ void initialise_central_data(){
 		centralData.controls.thrust=-1.0;
 		
 		// init stabilisers
-		init_stabilisation_hybrid(&centralData.stabiliser_stack);
+		stabilisation_hybrid_init(&centralData.stabiliser_stack);
 
 		centralData.simulation_mode=0;
 

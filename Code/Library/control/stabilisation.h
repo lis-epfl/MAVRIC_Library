@@ -71,7 +71,7 @@ typedef struct {
  * \param	dt			Timestep
  * \param	errors		Array containing the errors of the controlling variables
  */
-void stabilise(Stabiliser_t *stabiliser, float dt, float errors[]);
+void stabilisation_run(Stabiliser_t *stabiliser, float dt, float errors[]);
 
 #ifdef __cplusplus
 }

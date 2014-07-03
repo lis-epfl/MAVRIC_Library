@@ -15,9 +15,9 @@ typedef struct {
 	Stabiliser_t attitude_stabiliser;
 } Stabiliser_Stack_hybrid_t;
 
-void init_stabilisation_hybrid(Stabiliser_Stack_hybrid_t* stabiliser_stack);
+void stabilisation_hybrid_init(Stabiliser_Stack_hybrid_t* stabiliser_stack);
 
-void cascade_stabilise_hybrid(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input);
-void mix_to_servos_xwing(Control_Command_t *control);
+void stabilisation_hybrid_cascade_stabilise_hybrid(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input);
+void stabilisation_hybrid_mix_to_servos_xwing(Control_Command_t *control);
 
 #endif /* STABILISATION_HYBRID_H_ */

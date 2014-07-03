@@ -32,7 +32,7 @@ int8_t loop_count_collisions = 0;
 
 float min_coll_dist;
 
-void init_orca(void)
+void orca_init(void)
 {
 	centralData = central_data_get_pointer_to_struct();
 	centralData->safe_size = SIZE_VHC_ORCA;
@@ -43,7 +43,7 @@ void init_orca(void)
 	min_coll_dist = 2.0f * SIZE_VHC_ORCA + 1.0f;
 }
 
-void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
+void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 {
 	uint8_t ind, i;
 	
@@ -194,11 +194,11 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		
 	}
 	
-	float planeFail = linearProgram3(planes,centralData->number_of_neighbors, OptimalVelocity, MAXSPEED, NewVelocity, false);
+	float planeFail = orca_linearProgram3(planes,centralData->number_of_neighbors, OptimalVelocity, MAXSPEED, NewVelocity, false);
 	
 	if (planeFail < centralData->number_of_neighbors)
 	{
-		linearProgram4(planes,centralData->number_of_neighbors,planeFail,MAXSPEED,NewVelocity);
+		orca_linearProgram4(planes,centralData->number_of_neighbors,planeFail,MAXSPEED,NewVelocity);
 	}
 	
 	loop_count_orca = loop_count_orca++ % 100;
@@ -234,7 +234,7 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 	}
 }
 
-bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt)
+bool orca_linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt)
 {
 	uint8_t i;
 	
@@ -355,7 +355,7 @@ bool linearProgram1(plane_t planes[], uint8_t index, line_t line, float maxSpeed
 	return true;
 }
 
-bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt)
+bool orca_linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float OptimalVelocity[], float NewVelocity[], bool directionOpt)
 {
 	uint8_t i;
 	uint8_t index;
@@ -486,7 +486,7 @@ bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Optimal
 				line.point[i] = planes[ind].point[i] + (scalarProductPointsNormal / scalarProductNormals) * lineNormal[i];
 			}
 			
-			if (!(linearProgram1(planes,index,line,maxSpeed,OptimalVelocity,NewVelocity,directionOpt)))
+			if (!(orca_linearProgram1(planes,index,line,maxSpeed,OptimalVelocity,NewVelocity,directionOpt)))
 			{
 				return false;
 			}
@@ -496,7 +496,7 @@ bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Optimal
 }
 
 
-float linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelocity[], float maxSpeed, float NewVelocity[], bool directionOpt)
+float orca_linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelocity[], float maxSpeed, float NewVelocity[], bool directionOpt)
 {
 	uint8_t i;
 	
@@ -546,7 +546,7 @@ float linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelocity[
 			{
 				tempResult[i] = NewVelocity[i];
 			}
-			if (!(linearProgram2(planes,ind,maxSpeed,OptimalVelocity,NewVelocity,directionOpt)))
+			if (!(orca_linearProgram2(planes,ind,maxSpeed,OptimalVelocity,NewVelocity,directionOpt)))
 			{
 				for (i=0;i<3;i++)
 				{
@@ -560,7 +560,7 @@ float linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelocity[
 	return planeSize;
 }
 
-void linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float maxSpeed, float NewVelocity[])
+void orca_linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float maxSpeed, float NewVelocity[])
 {
 	uint8_t i;
 	
@@ -641,7 +641,7 @@ void linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float maxS
 			{
 				tempResult[i] = NewVelocity[i];
 			}
-			if (linearProgram3(projPlanes,index2,planes[index].normal,maxSpeed,NewVelocity,true)<index2)
+			if (orca_linearProgram3(projPlanes,index2,planes[index].normal,maxSpeed,NewVelocity,true)<index2)
 			{
 				for (i=0;i<3;i++)
 				{

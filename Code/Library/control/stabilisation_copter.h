@@ -38,14 +38,14 @@ typedef struct
  *
  * \param	stabiliser_stack	Pointer to structure with all controllers 
  */
-void init_stabilisation_copter(Stabiliser_Stack_copter_t* stabiliser_stack);
+void stabilisation_copter_init(Stabiliser_Stack_copter_t* stabiliser_stack);
 
 /**
  * \brief						Gets the velocity vector from the remote
  *
  * \param	tvel				Pointer to array for storing the velocity vector 
  */
-void get_velocity_vector_from_remote(float tvel[]);
+void stabilisation_copter_get_velocity_vector_from_remote(float tvel[]);
 
 /**
  * \brief						Main Controller for controlling and stabilizing the quad
@@ -54,21 +54,21 @@ void get_velocity_vector_from_remote(float tvel[]);
  * \param	pos_est				Pointer to position estimator
  * \param	control_input		Pointer to the controlling inputs
  */
-void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input);
+void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input);
 
 /**
  * \brief						Mix to servo for quad configuration diagonal
  *
  * \param	control				Pointer to controlling inputs
  */
-void mix_to_servos_diag_quad(Control_Command_t *control);
+void stabilisation_copter_mix_to_servos_diag_quad(Control_Command_t *control);
 
 /**
  * \brief						Mix to servo for quad configuration cross
  *
  * \param	control				Pointer to controlling inputs
  */
-void mix_to_servos_cross_quad(Control_Command_t *control);
+void stabilisation_copter_mix_to_servos_cross_quad(Control_Command_t *control);
 
 #ifdef __cplusplus
 }

@@ -12,7 +12,7 @@
 
 central_data_t *centralData;
 
-void init_stabilisation_hybrid(Stabiliser_Stack_hybrid_t* stabiliser_stack)
+void stabilisation_hybrid_init(Stabiliser_Stack_hybrid_t* stabiliser_stack)
 {
 	centralData = central_data_get_pointer_to_struct();
 	centralData->run_mode = MOTORS_OFF;
@@ -21,7 +21,7 @@ void init_stabilisation_hybrid(Stabiliser_Stack_hybrid_t* stabiliser_stack)
 	*stabiliser_stack = stabiliser_defaults_hybrid;
 }
 
-void cascade_stabilise_hybrid(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input)
+void stabilisation_hybrid_cascade_stabilise_hybrid(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input)
 {
 	float rpyt_errors[4];
 	Control_Command_t input;
@@ -77,7 +77,7 @@ void cascade_stabilise_hybrid(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 		rpyt_errors[3]= input.thrust;       // no feedback for thrust at this level
 		
 		// run PID update on all attitude controllers
-		stabilise(&centralData->stabiliser_stack.attitude_stabiliser, centralData->imu1.dt, &rpyt_errors);
+		stabilisation_run(&centralData->stabiliser_stack.attitude_stabiliser, centralData->imu1.dt, &rpyt_errors);
 		
 		// use output of attitude controller to set rate setpoints for rate controller 
 		input = centralData->stabiliser_stack.attitude_stabiliser.output;
@@ -92,14 +92,14 @@ void cascade_stabilise_hybrid(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 		rpyt_errors[3] = input.thrust ;  // no feedback for thrust at this level
 		
 		// run PID update on all rate controllers
-		stabilise(&centralData->stabiliser_stack.rate_stabiliser, centralData->imu1.dt, &rpyt_errors );
+		stabilisation_run(&centralData->stabiliser_stack.rate_stabiliser, centralData->imu1.dt, &rpyt_errors );
 	}
 
 	// mix to servos 
-	mix_to_servos_xwing(&centralData->stabiliser_stack.rate_stabiliser.output);
+	stabilisation_hybrid_mix_to_servos_xwing(&centralData->stabiliser_stack.rate_stabiliser.output);
 }
 
-void mix_to_servos_xwing(Control_Command_t *control)
+void stabilisation_hybrid_mix_to_servos_xwing(Control_Command_t *control)
 {
 	int i;
 	float motor_command;
