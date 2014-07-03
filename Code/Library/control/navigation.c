@@ -31,7 +31,7 @@ float alt_integrator;
 
 uint8_t loopCount = 0;
 
-void init_nav(void)
+void navigation_init(void)
 {
 	centralData = central_data_get_pointer_to_struct();
 	
@@ -48,18 +48,18 @@ void init_nav(void)
 	alt_integrator = 0.0f;
 }
 
-void run_navigation(local_coordinates_t waypoint_input)
+void navigation_run(local_coordinates_t waypoint_input)
 {
 	float rel_pos[3]; 
 	
 	// Control in translational speed of the platform
-	centralData->dist2wp_sqr = set_rel_pos_n_dist2wp(waypoint_input.pos, rel_pos);
-	set_speed_command(rel_pos,centralData->dist2wp_sqr);
+	centralData->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos, rel_pos);
+	navigation_set_speed_command(rel_pos,centralData->dist2wp_sqr);
 	
 	centralData->controls_nav.theading=waypoint_input.heading;
 }
 
-float set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[])
+float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[])
 {
 	float dist2wp_sqr;
 	
@@ -72,7 +72,7 @@ float set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[])
 	return dist2wp_sqr;
 }
 
-void set_speed_command(float rel_pos[], float dist2wpSqr)
+void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
 {
 	uint8_t i;
 	float  norm_rel_dist, v_desired;
@@ -145,7 +145,7 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	}
 	if (centralData->collision_avoidance)
 	{
-		computeNewVelocity(dir_desired_bf,new_velocity);
+		orca_computeNewVelocity(dir_desired_bf,new_velocity);
 	}
 
 	//rel_heading= atan2(new_velocity[Y],new_velocity[X]);

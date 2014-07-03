@@ -39,7 +39,6 @@ void initialisation() {
 	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 
 	
-	
 	boardsupport_init(centralData);
 	central_data_init();
 
@@ -54,12 +53,12 @@ void initialisation() {
 	mavlink_actions_init();
 	position_estimation_init(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 	
-	init_nav();
+	navigation_init();
 	init_waypoint_handler();
 	//e_init();
 	
 	neighbors_selection_init();
-	init_orca();
+	orca_init();
 	
 	LED_On(LED1);
 	init_piezo_speaker_binary();

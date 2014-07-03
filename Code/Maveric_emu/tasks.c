@@ -364,7 +364,7 @@ task_return_t tasks_run_navigation_update()
 	
 	if (((board->mav_state == MAV_STATE_ACTIVE)||(board->mav_state == MAV_STATE_CRITICAL))&&((board->mav_mode == MAV_MODE_AUTO_ARMED)||(board->mav_mode == MAV_MODE_GUIDED_ARMED)))
 	{
-		run_navigation();
+		navigation_run();
 	}
 	
 	

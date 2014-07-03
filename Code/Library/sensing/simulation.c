@@ -186,7 +186,7 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	forces_from_servos_cross_quad(sim, servo_commands);
 	#endif
 	
-	// integrate torques to get simulated gyro rates (with some damping)
+	// pid_control_integrate torques to get simulated gyro rates (with some damping)
 	sim->rates_bf[0] = clip((1.0f-0.1f*sim->dt)*sim->rates_bf[0] + sim->dt * sim->torques_bf[0] /sim->roll_pitch_momentum, 10.0f);
 	sim->rates_bf[1] = clip((1.0f-0.1f*sim->dt)*sim->rates_bf[1] + sim->dt * sim->torques_bf[1] /sim->roll_pitch_momentum, 10.0f);
 	sim->rates_bf[2] = clip((1.0f-0.1f*sim->dt)*sim->rates_bf[2] + sim->dt * sim->torques_bf[2] /sim->yaw_momentum, 10.0f);

@@ -89,11 +89,11 @@ void initialisation() {
 	centralData->mav_mode_previous = centralData->mav_mode;
 	centralData->mav_state_previous = centralData->mav_state;
 	
-	init_nav();
+	navigation_init();
 	init_waypoint_handler();
 	
 	neighbors_selection_init();
-	init_orca();
+	orca_init();
 	
 	//init gumstix
 	//gum_Setup();

@@ -287,13 +287,13 @@ task_return_t tasks_run_stabilisation() {
 			centralData->controls.yaw_mode=YAW_RELATIVE;
 			centralData->controls.control_mode = RATE_COMMAND_MODE;
 			
-			cascade_stabilise_hybrid(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			stabilisation_hybrid_cascade_stabilise_hybrid(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
 			centralData->controls = get_command_from_remote();
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			
-			cascade_stabilise_hybrid(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			stabilisation_hybrid_cascade_stabilise_hybrid(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			
 			break;
 		case MAV_MODE_GUIDED_ARMED:
@@ -302,14 +302,14 @@ task_return_t tasks_run_stabilisation() {
 			
 			
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
-			cascade_stabilise_hybrid(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			stabilisation_hybrid_cascade_stabilise_hybrid(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		case MAV_MODE_AUTO_ARMED:
 			// centralData->controls = centralData->controls_nav;
 			centralData->controls = get_command_from_remote();
 			
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;	
-			cascade_stabilise_hybrid(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			stabilisation_hybrid_cascade_stabilise_hybrid(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
 			break;
 		
 		case MAV_MODE_PREFLIGHT:
@@ -359,18 +359,18 @@ task_return_t tasks_run_navigation_update()
 					case MAV_MODE_AUTO_ARMED:
 						if (centralData->waypoint_set)
 						{
-							run_navigation(centralData->waypoint_coordinates);
+							navigation_run(centralData->waypoint_coordinates);
 					
-							//computeNewVelocity(centralData->controls_nav.tvel,newVelocity);
+							//orca_computeNewVelocity(centralData->controls_nav.tvel,newVelocity);
 						}else if(centralData->waypoint_hold_init)
 						{
-							run_navigation(centralData->waypoint_hold_coordinates);
+							navigation_run(centralData->waypoint_hold_coordinates);
 						}
 						break;
 					case MAV_MODE_GUIDED_ARMED:
 						if(centralData->waypoint_hold_init)
 						{
-							run_navigation(centralData->waypoint_hold_coordinates);
+							navigation_run(centralData->waypoint_hold_coordinates);
 						}
 						break;
 				}
@@ -380,7 +380,7 @@ task_return_t tasks_run_navigation_update()
 				{
 					if(centralData->critical_init)
 					{
-						run_navigation(centralData->waypoint_critical_coordinates);
+						navigation_run(centralData->waypoint_critical_coordinates);
 					}
 				}
 				break;

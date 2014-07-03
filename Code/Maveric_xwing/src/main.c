@@ -83,12 +83,12 @@ void initialisation() {
 	}
 	centralData->mav_state = MAV_STATE_STANDBY;
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
-	init_nav();
+	navigation_init();
 	init_waypoint_handler();
 	//e_init();
 	
 	neighbors_selection_init();
-	init_orca();
+	orca_init();
 	
 	LED_On(LED1);
 }
