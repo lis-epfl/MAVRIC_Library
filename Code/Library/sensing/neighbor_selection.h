@@ -50,14 +50,14 @@ typedef struct
 /**
  * \brief	Initialize the neighbor selection module
  */
-void init_neighbors(void);
+void neighbors_selection_init(void);
 
 /**
  * \brief	Decode the message and parse to the neighbor array
  *
  * \param	rec		the pointer to the mavlink message
  */
-void read_msg_from_neighbors(Mavlink_Received_t* rec);
+void neighbors_selection_read_message_from_neighbors(Mavlink_Received_t* rec);
 
 /**
  * \brief	Extrapolate the position of each UAS between two messages, deletes the message if time elapsed too long from last message
@@ -65,7 +65,7 @@ void read_msg_from_neighbors(Mavlink_Received_t* rec);
  * \param	listNeighbors			the array of all neighbors
  * \param	number_of_neighbors		the pointer to the number of neighbors
  */
-void extrapolate_or_delete_position(track_neighbor_t listNeighbors[], uint8_t* number_of_neighbors);
+void neighbors_selection_extrapolate_or_delete_position(track_neighbor_t listNeighbors[], uint8_t* number_of_neighbors);
 
 #ifdef __cplusplus
 }

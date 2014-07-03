@@ -36,7 +36,7 @@
 #include "analog_monitor.h"
 #include "piezo_speaker.h"
 
-void initialise_board(central_data_t *centralData) {
+void boardsupport_init(central_data_t *centralData) {
 	// int i;
 	// enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 	
@@ -134,7 +134,7 @@ void initialise_board(central_data_t *centralData) {
 	init_analog_monitor(&centralData->adc);
 	
 	// init imu & compass
-	init_imu(&(centralData->imu1));
+	imu_init(&(centralData->imu1));
 	init_bmp085();
 	
 	// init mavlink

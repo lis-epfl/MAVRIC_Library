@@ -68,11 +68,11 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream,
 	mavlink_out_stream = transmit_stream;
 	mavlink_in_stream = receive_stream;
 	
-	init_scheduler(&mavlink_tasks);
+	scheduler_init(&mavlink_tasks);
 	
-	add_task(&mavlink_tasks, 100000, RUN_REGULAR, &send_scheduled_parameters, MAVLINK_MSG_ID_PARAM_VALUE);
+	scheduler_add_task(&mavlink_tasks, 100000, RUN_REGULAR, &send_scheduled_parameters, MAVLINK_MSG_ID_PARAM_VALUE);
 
-	centralData = get_central_data();
+	centralData = central_data_get_pointer_to_struct();
 }
 
 void flush_mavlink() 
@@ -90,7 +90,7 @@ task_return_t mavlink_protocol_update()
 	mavlink_receive_handler();
 	if ((mavlink_out_stream->buffer_empty(mavlink_out_stream->data))==true) 
 	{
-		result = run_scheduler_update(&mavlink_tasks, ROUND_ROBIN);
+		result = scheduler_run_update(&mavlink_tasks, ROUND_ROBIN);
 	}
 	return result;
 }
@@ -105,7 +105,7 @@ void suspend_downstream(uint32_t delay)
 	int i;
 	for (i=0; i<mavlink_tasks.number_of_tasks; i++) 
 	{
-		suspend_task(&mavlink_tasks.tasks[i], delay);
+		scheduler_suspend_task(&mavlink_tasks.tasks[i], delay);
 	}	
 }
 
@@ -192,13 +192,13 @@ void handle_mavlink_message(Mavlink_Received_t* rec)
 						// send full list of streams
 						for (i=0; i<mavlink_tasks.number_of_tasks; i++) 
 						{
-							task_entry *task=get_task_by_index(&mavlink_tasks, i);
-							run_task_now(task);
+							task_entry *task=scheduler_get_task_by_index(&mavlink_tasks, i);
+							scheduler_run_task_now(task);
 						}					
 					} 
 					else 
 					{
-						task_entry *task=get_task_by_id(&mavlink_tasks, request.req_stream_id);
+						task_entry *task =scheduler_get_task_by_id(&mavlink_tasks, request.req_stream_id);
 						dbg_print(" stream="); dbg_print_num(request.req_stream_id, 10);
 						dbg_print(" start_stop=");dbg_print_num(request.start_stop, 10);
 						dbg_print(" rate=");dbg_print_num(request.req_message_rate,10);
@@ -206,15 +206,15 @@ void handle_mavlink_message(Mavlink_Received_t* rec)
 						dbg_print("\n");
 						if (request.start_stop) 
 						{
-							change_run_mode(task, RUN_REGULAR);
+							scheduler_change_run_mode(task, RUN_REGULAR);
 						}
 						else 
 						{
-							change_run_mode(task, RUN_NEVER);
+							scheduler_change_run_mode(task, RUN_NEVER);
 						}
 						if (request.req_message_rate>0) 
 						{
-							change_task_period(task, SCHEDULER_TIMEBASE/(uint32_t)request.req_message_rate);
+							scheduler_change_task_period(task, SCHEDULER_TIMEBASE/(uint32_t)request.req_message_rate);
 						}
 					}
 				}
@@ -224,5 +224,5 @@ void handle_mavlink_message(Mavlink_Received_t* rec)
 	}
 
 	// handle all platform-specific messages in mavlink-actions:
-	handle_specific_messages(rec);
+	mavlink_actions_handle_specific_messages(rec);
 }	

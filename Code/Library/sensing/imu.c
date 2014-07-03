@@ -32,7 +32,7 @@
 
 
 int ic;
-void init_imu (Imu_Data_t *imu1)
+void imu_init (Imu_Data_t *imu1)
 {
 	//init_itg3200_slow();	
 	//init_adxl345_slow();
@@ -41,7 +41,7 @@ void init_imu (Imu_Data_t *imu1)
 	
 	init_hmc5883_slow();
 
-	//calibrate_Gyros(imu1);
+	//imu_calibrate_Gyros(imu1);
 	imu1->raw_scale[X+GYRO_OFFSET] =  RAW_GYRO_X_SCALE;
 	imu1->raw_scale[Y+GYRO_OFFSET] =  RAW_GYRO_Y_SCALE;
 	imu1->raw_scale[Z+GYRO_OFFSET] =  RAW_GYRO_Z_SCALE;
@@ -95,7 +95,7 @@ void imu_get_raw_data(Imu_Data_t *imu1)
 	
 }
 
-void calibrate_Gyros(Imu_Data_t *imu1)
+void imu_calibrate_Gyros(Imu_Data_t *imu1)
 {
 	int i,j;
 	imu_get_raw_data(imu1);
@@ -134,11 +134,11 @@ void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *
 	{
 		imu1->dt = ticks_to_seconds(t - imu1->last_update);
 		imu1->last_update = t;
-		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt);
+		qfilter_attitude_estimation(&imu1->attitude, &imu1->raw_channels, imu1->dt);
 		if (imu1->attitude.calibration_level==OFF)
 		{
-			position_integration(pos_est, &imu1->attitude, imu1->dt);
-			position_correction(pos_est, barometer, gps, imu1->dt);
+			position_estimation_position_integration(pos_est, &imu1->attitude, imu1->dt);
+			position_estimation_position_correction(pos_est, barometer, gps, imu1->dt);
 		}
 	}
 }

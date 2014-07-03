@@ -33,7 +33,7 @@ uint8_t loopCount = 0;
 
 void init_nav(void)
 {
-	centralData = get_central_data();
+	centralData = central_data_get_pointer_to_struct();
 	
 	centralData->controls_nav.tvel[X] = 0.0f;
 	centralData->controls_nav.tvel[Y] = 0.0f;
