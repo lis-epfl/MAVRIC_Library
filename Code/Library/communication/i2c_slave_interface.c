@@ -16,22 +16,22 @@
 
 int status;
 
-void handle_twis_receive(uint8_t data){
+void i2c_slave_interface_handle_twis_receive(uint8_t data){
 	status=data;
 }
 
-uint8_t handle_twis_reply() {
+uint8_t i2c_slave_interface_handle_twis_reply() {
 	uint8_t *radar_output= (uint8_t*) get_tracked_target();
 	uint8_t ret=radar_output[status];
 	status++;
 	return ret;
 }
 
-void handle_twis_stop() {
+void i2c_slave_interface_handle_twis_stop() {
 	
 }
 
-void init_i2c_slave_interface(int device_address) {
+void i2c_slave_interface_init(int device_address) {
 	twis_options_t twis_options;
 		twis_options.pba_hz =sysclk_get_pba_hz(),
 		//! The baudrate of the TWI bus.
@@ -44,9 +44,9 @@ void init_i2c_slave_interface(int device_address) {
 		twis_options.tenbit=false;
 	
 	twis_slave_fct_t twis_functions={
-		.rx=&handle_twis_receive,
-		.tx=&handle_twis_reply,
-		.stop=&handle_twis_stop
+		.rx=&i2c_slave_interface_handle_twis_receive,
+		.tx=&i2c_slave_interface_handle_twis_reply,
+		.stop=&i2c_slave_interface_handle_twis_stop
 	};
 	twis_slave_init(&AVR32_TWIS1, &twis_options, &twis_functions);
 }	

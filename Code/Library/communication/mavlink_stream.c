@@ -34,7 +34,7 @@ central_data_t *centralData;
 
 task_set mavlink_tasks;
 
-void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
+void mavlink_bridge_comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 {
 	if (chan == MAVLINK_COMM_0)
 	{
@@ -43,17 +43,17 @@ void comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 	}
 }
 
-void mavlink_receive_handler() 
+void mavlink_stream_receive_handler() 
 {
 	Mavlink_Received_t rec;
 	
-	if(mavlink_receive(mavlink_in_stream, &rec)) 
+	if(mavlink_stream_receive(mavlink_in_stream, &rec)) 
 	{
-		handle_mavlink_message(&rec);
+		mavlink_stream_handle_message(&rec);
 	}
 }
 
-void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream, int sysid) 
+void mavlink_stream_init(byte_stream_t *transmit_stream, byte_stream_t *receive_stream, int sysid) 
 {
 	mavlink_tasks.number_of_tasks=30;
 	
@@ -70,12 +70,12 @@ void init_mavlink(byte_stream_t *transmit_stream, byte_stream_t *receive_stream,
 	
 	scheduler_init(&mavlink_tasks);
 	
-	scheduler_add_task(&mavlink_tasks, 100000, RUN_REGULAR, &send_scheduled_parameters, MAVLINK_MSG_ID_PARAM_VALUE);
+	scheduler_add_task(&mavlink_tasks, 100000, RUN_REGULAR, &onboard_parameters_send_scheduled_parameters, MAVLINK_MSG_ID_PARAM_VALUE);
 
 	centralData = central_data_get_pointer_to_struct();
 }
 
-void flush_mavlink() 
+void mavlink_stream_flush() 
 {
 	if (mavlink_out_stream->flush!=NULL) 
 	{
@@ -84,10 +84,10 @@ void flush_mavlink()
 	}
 }
 
-task_return_t mavlink_protocol_update() 
+task_return_t mavlink_stream_protocol_update() 
 {
 	task_return_t result=0;
-	mavlink_receive_handler();
+	mavlink_stream_receive_handler();
 	if ((mavlink_out_stream->buffer_empty(mavlink_out_stream->data))==true) 
 	{
 		result = scheduler_run_update(&mavlink_tasks, ROUND_ROBIN);
@@ -95,12 +95,12 @@ task_return_t mavlink_protocol_update()
 	return result;
 }
 
-task_set* get_mavlink_taskset() 
+task_set* mavlink_stream_get_taskset() 
 {
 	return &mavlink_tasks;
 }
 
-void suspend_downstream(uint32_t delay) 
+void mavlink_stream_suspend_downstream(uint32_t delay) 
 {
 	int i;
 	for (i=0; i<mavlink_tasks.number_of_tasks; i++) 
@@ -109,7 +109,7 @@ void suspend_downstream(uint32_t delay)
 	}	
 }
 
-uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec) 
+uint8_t mavlink_stream_receive(byte_stream_t* stream, Mavlink_Received_t* rec) 
 {
 	uint8_t byte;
 	while(stream->bytes_available(stream->data) > 0) 
@@ -123,7 +123,7 @@ uint8_t mavlink_receive(byte_stream_t* stream, Mavlink_Received_t* rec)
 	return 0;
 }
 
-void handle_mavlink_message(Mavlink_Received_t* rec) 
+void mavlink_stream_handle_message(Mavlink_Received_t* rec) 
 {
 	if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) 
 	{
@@ -150,7 +150,7 @@ void handle_mavlink_message(Mavlink_Received_t* rec)
 				if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid) 
 				{
 					dbg_print("Sending all parameters \n");
-					send_all_parameters();
+					onboard_parameters_send_all_parameters();
 				}				
 			}
 			break;
@@ -164,14 +164,14 @@ void handle_mavlink_message(Mavlink_Received_t* rec)
 				 {
 					dbg_print("Sending parameter ");
 					dbg_print(request.param_id);
-					send_parameter(&request);
+					onboard_parameters_send_parameter(&request);
 				}				
 			}
 			break;
 			case MAVLINK_MSG_ID_PARAM_SET: 
 			{ //23
-				suspend_downstream(100000);
-				receive_parameter(rec);
+				mavlink_stream_suspend_downstream(100000);
+				onboard_parameters_receive_parameter(rec);
 			}
 			break;
 

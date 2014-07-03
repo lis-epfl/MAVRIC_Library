@@ -50,16 +50,16 @@ void initialisation() {
 	
 	set_servos(&servo_failsafe);
 
-	init_onboard_parameters();
+	onboard_parameters_init();
 	init_mavlink_actions();
 	init_pos_integration(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 	
-	init_nav();
+	navigation_init();
 	init_waypoint_handler();
 	//e_init();
 	
 	init_neighbors();
-	init_orca();
+	orca_init();
 	
 	LED_On(LED1);
 	init_piezo_speaker_binary();

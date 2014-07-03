@@ -88,9 +88,9 @@ void init_homing_waypoint(waypoint_struct waypoint_list[], uint16_t* number_of_w
 	waypoint.frame = MAV_FRAME_LOCAL_NED;
 	waypoint.waypoint_id = MAV_CMD_NAV_WAYPOINT;
 	
-	waypoint.x = 0.0;
-	waypoint.y = 0.0;
-	waypoint.z = -10.0;
+	waypoint.x = 0.0f;
+	waypoint.y = 0.0f;
+	waypoint.z = -10.0f;
 	
 	waypoint.param1 = 10; // Hold time in decimal seconds
 	waypoint.param2 = 2; // Acceptance radius in meters
@@ -115,7 +115,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
 	waypoint.waypoint_id = MAV_CMD_NAV_WAYPOINT;
 	
-	waypoint.x =  465185223.6174 / 1.0e7f; // convert to deg
+	waypoint.x =  465185223.6174f / 1.0e7f; // convert to deg
 	waypoint.y = 65670560 / 1.0e7f; // convert to deg
 	waypoint.z = 20; //m
 	
@@ -502,22 +502,22 @@ void set_home(Mavlink_Received_t* rec)
 	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
 	{
 		dbg_print("Set new home location.\n");
-		centralData->position_estimator.localPosition.origin.latitude = (double) packet.latitude / 10000000.0;
-		centralData->position_estimator.localPosition.origin.longitude = (double) packet.longitude / 10000000.0;
-		centralData->position_estimator.localPosition.origin.altitude = (float) packet.altitude / 1000.0;
+		centralData->position_estimator.localPosition.origin.latitude = (double) packet.latitude / 10000000.0f;
+		centralData->position_estimator.localPosition.origin.longitude = (double) packet.longitude / 10000000.0f;
+		centralData->position_estimator.localPosition.origin.altitude = (float) packet.altitude / 1000.0f;
 		
 		dbg_print("New Home location: (");
-		dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0,10);
+		dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0f,10);
 		dbg_print(", ");
-		dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0,10);
+		dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0f,10);
 		dbg_print(", ");
-		dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0,10);
+		dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0f,10);
 		dbg_print(")\n");
 		
 		mavlink_msg_gps_global_origin_send(MAVLINK_COMM_0,
-		centralData->position_estimator.localPosition.origin.latitude*10000000.0,
-		centralData->position_estimator.localPosition.origin.longitude*10000000.0,
-		centralData->position_estimator.localPosition.origin.altitude*1000.0);
+		centralData->position_estimator.localPosition.origin.latitude*10000000.0f,
+		centralData->position_estimator.localPosition.origin.longitude*10000000.0f,
+		centralData->position_estimator.localPosition.origin.altitude*1000.0f);
 	}
 }
 
@@ -549,7 +549,7 @@ void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* boa
 				break;
 				
 				case MAV_MODE_MANUAL_ARMED:
-					if (get_thrust_from_remote()<-0.95)
+					if (get_thrust_from_remote()<-0.95f)
 					{
 						*board_mav_state = MAV_STATE_ACTIVE;
 						*board_mav_mode = MAV_MODE_MANUAL_ARMED;
@@ -625,7 +625,7 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_waypoint, gl
 	
 	for (i=0;i<3;i++)
 	{
-		waypoint_coor.pos[i] = 0.0;
+		waypoint_coor.pos[i] = 0.0f;
 	}
 
 	switch(current_waypoint.frame)
@@ -676,7 +676,7 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_waypoint, gl
 			waypoint_global.altitude = current_waypoint.z;
 		
 			global_position_t origin_relative_alt = origin;
-			origin_relative_alt.altitude = 0.0;
+			origin_relative_alt.altitude = 0.0f;
 			waypoint_coor = global_to_local_position(waypoint_global,origin_relative_alt);
 			
 			waypoint_coor.heading = deg_to_rad(current_waypoint.param4);
@@ -717,7 +717,7 @@ void waypoint_hold_init(local_coordinates_t localPos)
 	dbg_print(", ");
 	dbg_print_num(centralData->waypoint_hold_coordinates.pos[Z],10);
 	dbg_print(", ");
-	dbg_print_num((int)(centralData->waypoint_hold_coordinates.heading*180.0/3.14),10);
+	dbg_print_num((int)(centralData->waypoint_hold_coordinates.heading*180.0f/3.14f),10);
 	dbg_print(")\n");
 	
 }
@@ -729,20 +729,21 @@ void waypoint_take_off()
 	dbg_print(", ");
 	dbg_print_num(centralData->position_estimator.localPosition.pos[Y],10);
 	dbg_print(", ");
-	dbg_print_num(-10.0,10);
+	dbg_print_num(-10.0f,10);
 	dbg_print("), with heading of: ");
-	dbg_print_num((int)(centralData->position_estimator.localPosition.heading*180.0/3.14),10);
+	dbg_print_num((int)(centralData->position_estimator.localPosition.heading*180.0f/3.14f),10);
 	dbg_print("\n");
 
 	centralData->waypoint_hold_coordinates = centralData->position_estimator.localPosition;
-	centralData->waypoint_hold_coordinates.pos[Z] = -10.0;
+	centralData->waypoint_hold_coordinates.pos[Z] = -10.0f;
 	
 	Aero_Attitude_t aero_attitude;
 	aero_attitude=Quat_to_Aero(centralData->imu1.attitude.qe);
 	centralData->waypoint_hold_coordinates.heading = aero_attitude.rpy[2];
 	
-	centralData->dist2wp_sqr = 100.0; // same position, 10m above => distSqr = 100.0
+	centralData->dist2wp_sqr = 100.0f; // same position, 10m above => distSqr = 100.0f
 }
+
 
 void waypoint_hold_position_handler()
 {
@@ -829,18 +830,18 @@ void waypoint_critical_handler()
 			case CLIMB_TO_SAFE_ALT:
 			centralData->waypoint_critical_coordinates.pos[X] = centralData->position_estimator.localPosition.pos[X];
 			centralData->waypoint_critical_coordinates.pos[Y] = centralData->position_estimator.localPosition.pos[Y];
-			centralData->waypoint_critical_coordinates.pos[Z] = -30.0;
+			centralData->waypoint_critical_coordinates.pos[Z] = -30.0f;
 			
 			break;
 			case FLY_TO_HOME_WP:
-			centralData->waypoint_critical_coordinates.pos[X] = 0.0;
-			centralData->waypoint_critical_coordinates.pos[Y] = 0.0;
-			centralData->waypoint_critical_coordinates.pos[Z] = -30.0;
+			centralData->waypoint_critical_coordinates.pos[X] = 0.0f;
+			centralData->waypoint_critical_coordinates.pos[Y] = 0.0f;
+			centralData->waypoint_critical_coordinates.pos[Z] = -30.0f;
 			break;
 			case CRITICAL_LAND:
-			centralData->waypoint_critical_coordinates.pos[X] = 0.0;
-			centralData->waypoint_critical_coordinates.pos[Y] = 0.0;
-			centralData->waypoint_critical_coordinates.pos[Z] = 0.0;
+			centralData->waypoint_critical_coordinates.pos[X] = 0.0f;
+			centralData->waypoint_critical_coordinates.pos[Y] = 0.0f;
+			centralData->waypoint_critical_coordinates.pos[Z] = 0.0f;
 			break;
 		}
 		
@@ -852,7 +853,7 @@ void waypoint_critical_handler()
 		centralData->dist2wp_sqr = vector_norm_sqr(rel_pos);
 	}
 	
-	if (centralData->dist2wp_sqr < 3.0)
+	if (centralData->dist2wp_sqr < 3.0f)
 	{
 		centralData->critical_next_state = false;
 		switch (centralData->critical_behavior)
@@ -884,13 +885,13 @@ void auto_landing()
 	{
 		case DESCENT_TO_SMALL_ALTITUDE:
 			local_position = centralData->position_estimator.localPosition;
-			local_position.pos[Z] = -2.0;
+			local_position.pos[Z] = -2.0f;
 			
 			waypoint_hold_init(local_position);
 			break;
 		case DESCENT_TO_GND:
 			local_position = centralData->position_estimator.localPosition;
-			local_position.pos[Z] = 0.0;
+			local_position.pos[Z] = 0.0f;
 			
 			waypoint_hold_init(local_position);
 			break;
@@ -902,7 +903,7 @@ void auto_landing()
 	}
 	centralData->dist2wp_sqr = vector_norm_sqr(rel_pos);
 	
-	if (centralData->dist2wp_sqr < 0.5)
+	if (centralData->dist2wp_sqr < 0.5f)
 	{
 		switch(centralData->auto_landing_enum)
 		{
@@ -966,15 +967,15 @@ void set_circle_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_wa
 	// Start waypoint
 	waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (mavlink_system.sysid-1));
 	waypoint_transfo.pos[Y] = circle_radius * sin(angle_step * (mavlink_system.sysid-1));
-	waypoint_transfo.pos[Z] = -20.0;
+	waypoint_transfo.pos[Z] = -20.0f;
 	waypoint_global = local_to_global_position(waypoint_transfo);
 	
 	dbg_print("Circle departure(x100): (");
-	dbg_print_num(waypoint_transfo.pos[X]*100.0,10);
+	dbg_print_num(waypoint_transfo.pos[X]*100.0f,10);
 	dbg_print(", ");
-	dbg_print_num(waypoint_transfo.pos[Y]*100.0,10);
+	dbg_print_num(waypoint_transfo.pos[Y]*100.0f,10);
 	dbg_print(", ");
-	dbg_print_num(waypoint_transfo.pos[Z]*100.0,10);
+	dbg_print_num(waypoint_transfo.pos[Z]*100.0f,10);
 	dbg_print("). For system:");
 	dbg_print_num(mavlink_system.sysid,10);
 	dbg_print(".\n");
@@ -997,15 +998,15 @@ void set_circle_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_wa
 	// End waypoint
 	waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (mavlink_system.sysid-1) + PI);
 	waypoint_transfo.pos[Y] = circle_radius * sin(angle_step * (mavlink_system.sysid-1) + PI);
-	waypoint_transfo.pos[Z] = -20.0;
+	waypoint_transfo.pos[Z] = -20.0f;
 	waypoint_global = local_to_global_position(waypoint_transfo);
 	
 	dbg_print("Circle destination(x100): (");
-	dbg_print_num(waypoint_transfo.pos[X]*100.0,10);
+	dbg_print_num(waypoint_transfo.pos[X]*100.0f,10);
 	dbg_print(", ");
-	dbg_print_num(waypoint_transfo.pos[Y]*100.0,10);
+	dbg_print_num(waypoint_transfo.pos[Y]*100.0f,10);
 	dbg_print(", ");
-	dbg_print_num(waypoint_transfo.pos[Z]*100.0,10);
+	dbg_print_num(waypoint_transfo.pos[Z]*100.0f,10);
 	dbg_print("). For system:");
 	dbg_print_num(mavlink_system.sysid,10);
 	dbg_print(".\n");

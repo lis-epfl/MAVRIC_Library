@@ -29,14 +29,14 @@ extern "C" {
 /**
  * \brief					Initialization 
  */
-void init_nav(void);
+void navigation_init(void);
 
 /**
  * \brief					Navigates the robot towards waypoint
  *
  * \param	waypoint_input	Destination waypoint in local coordinate system
  */
-void run_navigation(local_coordinates_t waypoint_input);
+void navigation_run(local_coordinates_t waypoint_input);
 
 /**
  * \brief					Computes the relative position and distance to the given way point
@@ -46,7 +46,7 @@ void run_navigation(local_coordinates_t waypoint_input);
  *
  * \return					Distance to waypoint squared
  */
-float set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[]);
+float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[]);
 
 /**
  * \brief					Sets the Robot speed to reach waypoint
@@ -54,7 +54,7 @@ float set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[]);
  * \param	rel_pos			Relative position of the waypoint
  * \param	dist2wpSqr		Squared of distance to waypoint
  */
-void set_speed_command(float rel_pos[], float dist2wpSqr);
+void navigation_set_speed_command(float rel_pos[], float dist2wpSqr);
 
 #ifdef __cplusplus
 }

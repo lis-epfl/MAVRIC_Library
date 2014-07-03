@@ -38,7 +38,7 @@ void mavlink_send_heartbeat(void)
 	central_data_t *centralData = central_data_get_pointer_to_struct();
 
 	float battery_voltage = centralData->adc.avg[ANALOG_RAIL_10];		// bat voltage (mV), actual battery pack plugged to the board
-	float battery_remaining = centralData->adc.avg[ANALOG_RAIL_11] / 12.4 * 100.0;
+	float battery_remaining = centralData->adc.avg[ANALOG_RAIL_11] / 12.4f * 100.0f;
 
 	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, centralData->mav_mode, 0, centralData->mav_state);
 
@@ -47,7 +47,7 @@ void mavlink_send_heartbeat(void)
 								0b1111110000100111, 									// sensors enabled
 								0b1111110000100111, 									// sensors health
 								0,                  									// load
-								(int)(1000.0 * battery_voltage), 						// bat voltage (mV)
+								(int)(1000.0f * battery_voltage), 						// bat voltage (mV)
 								0,               										// current (mA)
 								battery_remaining,										// battery remaining
 								0, 0,  													// comms drop, comms errors
@@ -188,11 +188,11 @@ void mavlink_send_global_position(void)
 											get_millis(), 
 											gpos.latitude * 10000000, 
 											gpos.longitude * 10000000, 
-											gpos.altitude * 1000.0, 
+											gpos.altitude * 1000.0f, 
 											1, 
-											centralData->position_estimator.vel[0] * 100.0, 
-											centralData->position_estimator.vel[1] * 100.0, 
-											centralData->position_estimator.vel[2] * 100.0, 
+											centralData->position_estimator.vel[0] * 100.0f, 
+											centralData->position_estimator.vel[1] * 100.0f, 
+											centralData->position_estimator.vel[2] * 100.0f, 
 											centralData->imu1.attitude.om[2]);
 }
 
@@ -208,11 +208,11 @@ void mavlink_send_hud(void)
 	int16_t heading;
 	if(aero_attitude.rpy[2] < 0)
 	{
-		heading = (int16_t)(360.0 - 180.0 * aero_attitude.rpy[2] / PI);
+		heading = (int16_t)(360.0f - 180.0f * aero_attitude.rpy[2] / PI);
 	}
 	else
 	{
-		heading = (int16_t)(180.0 * aero_attitude.rpy[2] / PI);
+		heading = (int16_t)(180.0f * aero_attitude.rpy[2] / PI);
 	}
 	
 	// mavlink_msg_vfr_hud_send(mavlink_channel_t chan, float airspeed, float groundspeed, int16_t heading, uint16_t throttle, float alt, float climb)
@@ -220,7 +220,7 @@ void mavlink_send_hud(void)
 								airspeed, 
 								groundspeed, 
 								heading, 
-								(int)((centralData->controls.thrust+1.0)*50), 
+								(int)((centralData->controls.thrust+1.0f)*50), 
 								-centralData->position_estimator.localPosition.pos[2] + centralData->position_estimator.localPosition.origin.altitude, 
 								-centralData->position_estimator.vel[2]	);
 }
@@ -232,12 +232,12 @@ void mavlink_send_gps_raw(void)
 		mavlink_msg_gps_raw_int_send(	MAVLINK_COMM_0,
 										1000 * centralData->GPS_data.timeLastMsg, 
 										centralData->GPS_data.status, 
-										centralData->GPS_data.latitude * 10000000.0, 
-										centralData->GPS_data.longitude * 10000000.0, 
-										centralData->GPS_data.altitude * 1000.0, 
-										centralData->GPS_data.hdop * 100.0, 
-										centralData->GPS_data.speedAccuracy * 100.0,
-										centralData->GPS_data.groundSpeed * 100.0, 
+										centralData->GPS_data.latitude * 10000000.0f, 
+										centralData->GPS_data.longitude * 10000000.0f, 
+										centralData->GPS_data.altitude * 1000.0f, 
+										centralData->GPS_data.hdop * 100.0f, 
+										centralData->GPS_data.speedAccuracy * 100.0f,
+										centralData->GPS_data.groundSpeed * 100.0f, 
 										centralData->GPS_data.course, 
 										centralData->GPS_data.num_sats	);	
 	}
@@ -246,8 +246,8 @@ void mavlink_send_gps_raw(void)
 		mavlink_msg_gps_raw_int_send(	MAVLINK_COMM_0,
 										get_micros(), 
 										centralData->GPS_data.status, 
-										46.5193 * 10000000, 
-										6.56507 * 10000000, 
+										46.5193f * 10000000, 
+										6.56507f * 10000000, 
 										400 * 1000, 
 										0, 
 										0, 
@@ -262,9 +262,9 @@ void mavlink_send_pressure(void)
 {	
 	mavlink_msg_scaled_pressure_send(	MAVLINK_COMM_0, 
 										get_millis(), 
-										centralData->pressure.pressure / 100.0, 
+										centralData->pressure.pressure / 100.0f, 
 										centralData->pressure.vario_vz, 
-										centralData->pressure.temperature * 100.0);
+										centralData->pressure.temperature * 100.0f);
 
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
 										get_millis(),
@@ -316,14 +316,14 @@ void mavlink_send_scaled_rc_channels(void)
 {
 	mavlink_msg_rc_channels_scaled_send(	MAVLINK_COMM_0,get_millis(),
 											1,
-											rc_get_channel(0) * 1000.0 * RC_SCALEFACTOR,
-											rc_get_channel(1) * 1000.0 * RC_SCALEFACTOR,
-											rc_get_channel(2) * 1000.0 * RC_SCALEFACTOR,
-											rc_get_channel(3) * 1000.0 * RC_SCALEFACTOR,
-											rc_get_channel(4) * 1000.0 * RC_SCALEFACTOR,
-											rc_get_channel(5) * 1000.0 * RC_SCALEFACTOR,
-											rc_get_channel(6) * 1000.0 * RC_SCALEFACTOR,
-											rc_get_channel(7) * 1000.0 * RC_SCALEFACTOR,
+											rc_get_channel(0) * 1000.0f * RC_SCALEFACTOR,
+											rc_get_channel(1) * 1000.0f * RC_SCALEFACTOR,
+											rc_get_channel(2) * 1000.0f * RC_SCALEFACTOR,
+											rc_get_channel(3) * 1000.0f * RC_SCALEFACTOR,
+											rc_get_channel(4) * 1000.0f * RC_SCALEFACTOR,
+											rc_get_channel(5) * 1000.0f * RC_SCALEFACTOR,
+											rc_get_channel(6) * 1000.0f * RC_SCALEFACTOR,
+											rc_get_channel(7) * 1000.0f * RC_SCALEFACTOR,
 											rc_check_receivers()	);
 	
 	mavlink_msg_named_value_int_send(	MAVLINK_COMM_0,
@@ -350,7 +350,7 @@ void mavlink_send_simulation(void)
 								centralData->sim_model.rates_bf[YAW],
 								gpos.latitude * 10000000, 
 								gpos.longitude * 10000000, 
-								gpos.altitude * 1000.0,
+								gpos.altitude * 1000.0f,
 								100 * centralData->sim_model.vel[X], 
 								100 * centralData->sim_model.vel[Y], 
 								100 * centralData->sim_model.vel[Z],
@@ -366,12 +366,12 @@ void mavlink_send_simulation(void)
 											aero_attitude.rpy[YAW],
 											gpos.latitude * 10000000, 
 											gpos.longitude * 10000000, 
-											gpos.altitude * 1000.0,
+											gpos.altitude * 1000.0f,
 											100 * centralData->sim_model.vel[X], 
 											100 * centralData->sim_model.vel[Y], 
 											100 * centralData->sim_model.vel[Z],
 											100 * vector_norm(centralData->sim_model.vel),
-											0.0,
+											0.0f,
 											centralData->sim_model.attitude.acc_bf[X],
 											centralData->sim_model.attitude.acc_bf[Y],
 											centralData->sim_model.attitude.acc_bf[Z]	);
@@ -476,144 +476,144 @@ void mavlink_actions_add_onboard_parameters(void) {
 	Stabiliser_t* velocity_stabiliser= &centralData->stabiliser_stack.velocity_stabiliser;
 
 	// Comp and sys ID
-	// add_parameter_uint8(&(mavlink_system.sysid),"ID_System");
-	// add_parameter_uint8(&(mavlink_mission_planner.sysid),"ID_Planner");
+	// onboard_parameters_add_parameter_uint8(&(mavlink_system.sysid),"ID_System");
+	// onboard_parameters_add_parameter_uint8(&(mavlink_mission_planner.sysid),"ID_Planner");
 	
 	// Simulation mode
-	add_parameter_int32(&centralData->simulation_mode, "Sim_mode");
+	onboard_parameters_add_parameter_int32(&centralData->simulation_mode, "Sim_mode");
 	
 	// Roll rate PID
-	add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].p_gain, "RollRPid_P_G");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.clip, "RollRPid_I_CLip");
-	add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollRPid_I_PstG");
-	add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollRPid_I_PreG");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.clip, "RollRPid_D_Clip");
-	add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollRPid_D_Gain");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.LPF, "RollRPid_D_LPF");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].p_gain, "RollRPid_P_G");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.clip, "RollRPid_I_CLip");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollRPid_I_PstG");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollRPid_I_PreG");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.clip, "RollRPid_D_Clip");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollRPid_D_Gain");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.LPF, "RollRPid_D_LPF");
 	
 	// Roll attitude PID
-	add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].p_gain, "RollAPid_P_G");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.clip, "RollAPid_I_CLip");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollAPid_I_PstG");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollAPid_I_PreG");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.clip, "RollAPid_D_Clip");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollAPid_D_Gain");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.LPF, "RollAPid_D_LPF");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].p_gain, "RollAPid_P_G");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.clip, "RollAPid_I_CLip");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollAPid_I_PstG");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollAPid_I_PreG");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.clip, "RollAPid_D_Clip");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollAPid_D_Gain");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.LPF, "RollAPid_D_LPF");
 
 	// Pitch rate PID
-	add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].p_gain, "PitchRPid_P_G");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.clip, "PitchRPid_I_CLip");
-	add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchRPid_I_PstG");
-	add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchRPid_I_PreG");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.clip, "PitchRPid_D_Clip");
-	add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchRPid_D_Gain");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.LPF, "PitchRPid_D_LPF");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].p_gain, "PitchRPid_P_G");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.clip, "PitchRPid_I_CLip");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchRPid_I_PstG");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchRPid_I_PreG");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.clip, "PitchRPid_D_Clip");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchRPid_D_Gain");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.LPF, "PitchRPid_D_LPF");
 	
 	// Pitch attitude PID
-	add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].p_gain, "PitchAPid_P_G");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.clip, "PitchAPid_I_CLip");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchAPid_I_PstG");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchAPid_I_PreG");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.clip, "PitchAPid_D_Clip");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchAPid_D_Gain");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.LPF, "PitchAPid_D_LPF");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].p_gain, "PitchAPid_P_G");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.clip, "PitchAPid_I_CLip");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchAPid_I_PstG");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchAPid_I_PreG");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.clip, "PitchAPid_D_Clip");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchAPid_D_Gain");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.LPF, "PitchAPid_D_LPF");
 
 	// Yaw rate PID
-	add_parameter_float(&rate_stabiliser->rpy_controller[YAW].p_gain, "YawRPid_P_G");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[YAW].clip_max, "YawRPid_P_CLmx");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[YAW].clip_min, "YawRPid_P_CLmn");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.clip, "YawRPid_I_CLip");
-	add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.postgain, "YawRPid_I_PstG");
-	add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.pregain, "YawRPid_I_PreG");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.clip, "YawRPid_D_Clip");
-	add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.gain, "YawRPid_D_Gain");
-	//add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.LPF, "YawRPid_D_LPF");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].p_gain, "YawRPid_P_G");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].clip_max, "YawRPid_P_CLmx");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].clip_min, "YawRPid_P_CLmn");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.clip, "YawRPid_I_CLip");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.postgain, "YawRPid_I_PstG");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.pregain, "YawRPid_I_PreG");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.clip, "YawRPid_D_Clip");
+	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.gain, "YawRPid_D_Gain");
+	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.LPF, "YawRPid_D_LPF");
 	
 	// Yaw attitude PID
-	add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].p_gain, "YawAPid_P_G");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_max, "YawAPid_P_CLmx");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_min, "YawAPid_P_CLmn");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.clip, "YawAPid_I_CLip");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.postgain, "YawAPid_I_PstG");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.pregain, "YawAPid_I_PreG");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.clip, "YawAPid_D_Clip");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain, "YawAPid_D_Gain");
-	//add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.LPF, "YawAPid_D_LPF");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].p_gain, "YawAPid_P_G");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_max, "YawAPid_P_CLmx");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_min, "YawAPid_P_CLmn");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.clip, "YawAPid_I_CLip");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.postgain, "YawAPid_I_PstG");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.pregain, "YawAPid_I_PreG");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.clip, "YawAPid_D_Clip");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain, "YawAPid_D_Gain");
+	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.LPF, "YawAPid_D_LPF");
 
 
 	// Roll velocity PID
-	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].p_gain, "RollVPid_P_G");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollVPid_I_PstG");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollVPid_I_PreG");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollVPid_D_Gain");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].p_gain, "RollVPid_P_G");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollVPid_I_PstG");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollVPid_I_PreG");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollVPid_D_Gain");
 
 	// Pitch velocity PID
-	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].p_gain, "PitchVPid_P_G");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchVPid_I_PstG");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchVPid_I_PreG");
-	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchVPid_D_Gain");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].p_gain, "PitchVPid_P_G");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchVPid_I_PstG");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchVPid_I_PreG");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchVPid_D_Gain");
 
 	// Thrust velocity PID
-	add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain, "ThrVPid_P_G");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.postgain, "ThrVPid_I_PstG");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.pregain, "ThrVPid_I_PreG");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain, "ThrVPid_D_Gain");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.LPF, "ThrVPid_D_LPF");
-	add_parameter_float(&velocity_stabiliser->thrust_controller.soft_zone_width, "ThrVPid_soft");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain, "ThrVPid_P_G");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.postgain, "ThrVPid_I_PstG");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.pregain, "ThrVPid_I_PreG");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain, "ThrVPid_D_Gain");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.LPF, "ThrVPid_D_LPF");
+	onboard_parameters_add_parameter_float(&velocity_stabiliser->thrust_controller.soft_zone_width, "ThrVPid_soft");
 
 	// qfilter
-	add_parameter_float(&centralData->imu1.attitude.kp, "QF_kp_acc");
-	add_parameter_float(&centralData->imu1.attitude.kp_mag, "QF_kp_mag");
-	add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain, "YawAPid_D_Gain");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.kp, "QF_kp_acc");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.kp_mag, "QF_kp_mag");
+	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain, "YawAPid_D_Gain");
 	
 	// Biaises
-	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET+X],"Bias_Gyro_X");
-	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET+Y],"Bias_Gyro_Y");
-	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET+Z],"Bias_Gyro_Z");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET+X],"Bias_Gyro_X");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET+Y],"Bias_Gyro_Y");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET+Z],"Bias_Gyro_Z");
 	
-	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET+X],"Bias_Acc_X");
-	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET+Y],"Bias_Acc_Y");
-	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET+Z],"Bias_Acc_Z");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET+X],"Bias_Acc_X");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET+Y],"Bias_Acc_Y");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET+Z],"Bias_Acc_Z");
 	
-	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET+X],"Bias_Mag_X");
-	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET+Y],"Bias_Mag_Y");
-	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET+Z],"Bias_Mag_Z");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET+X],"Bias_Mag_X");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET+Y],"Bias_Mag_Y");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET+Z],"Bias_Mag_Z");
 	
 	// Scale factor
-	//add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+X],"Scale_Gyro_X");
-	//add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+Y],"Scale_Gyro_Y");
-	//add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+Z],"Scale_Gyro_Z");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+X],"Scale_Gyro_X");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+Y],"Scale_Gyro_Y");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+Z],"Scale_Gyro_Z");
 	//
-	//add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET+X],"Scale_Acc_X");
-	//add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET+Y],"Scale_Acc_Y");
-	//add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET+Z],"Scale_Acc_Z");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET+X],"Scale_Acc_X");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET+Y],"Scale_Acc_Y");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET+Z],"Scale_Acc_Z");
 	//
-	//add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+X],"Scale_Mag_X");
-	//add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Y],"Scale_Mag_Y");
-	//add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Z],"Scale_Mag_Z");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+X],"Scale_Mag_X");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Y],"Scale_Mag_Y");
+	//onboard_parameters_add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Z],"Scale_Mag_Z");
 	
-	add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET+X],"Scale_Gyro_X");
-	add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET+Y],"Scale_Gyro_Y");
-	add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET+Z],"Scale_Gyro_Z");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET+X],"Scale_Gyro_X");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET+Y],"Scale_Gyro_Y");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET+Z],"Scale_Gyro_Z");
 	
-	add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET+X],"Scale_Acc_X");
-	add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET+Y],"Scale_Acc_Y");
-	add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET+Z],"Scale_Acc_Z");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET+X],"Scale_Acc_X");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET+Y],"Scale_Acc_Y");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET+Z],"Scale_Acc_Z");
 	
-	add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET+X],"Scale_Mag_X");
-	add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET+Y],"Scale_Mag_Y");
-	add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET+Z],"Scale_Mag_Z");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET+X],"Scale_Mag_X");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET+Y],"Scale_Mag_Y");
+	onboard_parameters_add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET+Z],"Scale_Mag_Z");
 
-	//add_parameter_float(&centralData->position_estimator.kp_alt,"Pos_kp_alt");
-	//add_parameter_float(&centralData->position_estimator.kp_vel_baro,"Pos_kp_velb");
-	//add_parameter_float(&centralData->position_estimator.kp_pos[0],"Pos_kp_pos0");
-	//add_parameter_float(&centralData->position_estimator.kp_pos[1],"Pos_kp_pos1");
-	//add_parameter_float(&centralData->position_estimator.kp_pos[2],"Pos_kp_pos2");
+	//onboard_parameters_add_parameter_float(&centralData->position_estimator.kp_alt,"Pos_kp_alt");
+	//onboard_parameters_add_parameter_float(&centralData->position_estimator.kp_vel_baro,"Pos_kp_velb");
+	//onboard_parameters_add_parameter_float(&centralData->position_estimator.kp_pos[0],"Pos_kp_pos0");
+	//onboard_parameters_add_parameter_float(&centralData->position_estimator.kp_pos[1],"Pos_kp_pos1");
+	//onboard_parameters_add_parameter_float(&centralData->position_estimator.kp_pos[2],"Pos_kp_pos2");
 	
-	add_parameter_float(&centralData->dist2vel_gain,"vel_dist2Vel");
-	add_parameter_float(&centralData->cruise_speed,"vel_cruiseSpeed");
-	add_parameter_float(&centralData->max_climb_rate,"vel_climbRate");
-	add_parameter_float(&centralData->softZoneSize,"vel_softZone");
+	onboard_parameters_add_parameter_float(&centralData->dist2vel_gain,"vel_dist2Vel");
+	onboard_parameters_add_parameter_float(&centralData->cruise_speed,"vel_cruiseSpeed");
+	onboard_parameters_add_parameter_float(&centralData->max_climb_rate,"vel_climbRate");
+	onboard_parameters_add_parameter_float(&centralData->softZoneSize,"vel_softZone");
 }
 
 
@@ -642,7 +642,7 @@ void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec)
 		switch(rec->msg.msgid) 
 		{
 			case MAVLINK_MSG_ID_MISSION_ITEM:	// 39 
-				suspend_downstream(500000);
+				mavlink_stream_suspend_downstream(500000);
 				receive_waypoint(	rec, 
 									centralData->waypoint_list, 
 									centralData->number_of_waypoints,
@@ -650,7 +650,7 @@ void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec)
 				break;
 	
 			case MAVLINK_MSG_ID_MISSION_REQUEST : // 40
-				suspend_downstream(500000);
+				mavlink_stream_suspend_downstream(500000);
 				send_waypoint(	rec, 
 								centralData->waypoint_list, 
 								centralData->number_of_waypoints,
@@ -666,7 +666,7 @@ void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec)
 			case MAVLINK_MSG_ID_MISSION_REQUEST_LIST:  // 43
 				// this initiates all waypoints being sent to the base-station - therefore, we pause the downstream telemetry to free the channel
 				// (at least until we have a radio system with guaranteed bandwidth)
-				suspend_downstream(500000);
+				mavlink_stream_suspend_downstream(500000);
 				send_count(	rec, 
 							centralData->number_of_waypoints,
 							&centralData->waypoint_receiving,
@@ -676,7 +676,7 @@ void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec)
 			case MAVLINK_MSG_ID_MISSION_COUNT :  // 44
 				// this initiates all waypoints being sent from base-station - therefore, we pause the downstream telemetry to free the channel
 				// (at least until we have a radio system with guaranteed bandwidth)
-				suspend_downstream(500000);
+				mavlink_stream_suspend_downstream(500000);
 				receive_count(	rec, 
 								&(centralData->number_of_waypoints),
 								&centralData->waypoint_receiving,
@@ -1008,11 +1008,11 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 					centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
 					
 					dbg_print("New Home location: (");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0f,10);
 					dbg_print(", ");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0f,10);
 					dbg_print(", ");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0f,10);
 					dbg_print(")\n");
 				}
 				else
@@ -1026,11 +1026,11 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 					centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
 					
 					dbg_print("New Home location: (");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0f,10);
 					dbg_print(", ");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0f,10);
 					dbg_print(", ");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0f,10);
 					dbg_print(")\n");
 				}
 
@@ -1170,14 +1170,14 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				{
 					// read parameters from flash
 					dbg_print("Reading from flashc...\n");
-					read_parameters_from_flashc();
+					onboard_parameters_read_parameters_from_flashc();
 				}
 				else if (packet.param1 == 1) 
 				{
 					// write parameters to flash
 					//dbg_print("No Writing to flashc\n");
 					dbg_print("Writing to flashc\n");
-					write_parameters_to_flashc();
+					onboard_parameters_write_parameters_from_flashc();
 				}
 				
 				// Mission parameters storage
@@ -1324,52 +1324,52 @@ void mavlink_actions_init(void) {
 	/*	
 	 * Use this to store or read or reset parameters on flash memory
 	 *
-	write_parameters_to_flashc();
-	read_parameters_from_flashc();
+	onboard_parameters_write_parameters_from_flashc();
+	onboard_parameters_read_parameters_from_flashc();
 	 *
 	 */
 
-	scheduler_add_task(get_mavlink_taskset(),  10000,    RUN_REGULAR,  &control_waypoint_timeout,                0	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  10000,    RUN_REGULAR,  &control_waypoint_timeout,                0	);
 	
-	scheduler_add_task(get_mavlink_taskset(),  1000000,  RUN_REGULAR,  &mavlink_send_heartbeat,                  MAVLINK_MSG_ID_HEARTBEAT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  1000000,  RUN_REGULAR,  &mavlink_send_heartbeat,                  MAVLINK_MSG_ID_HEARTBEAT	);
 
-	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_REGULAR,  &mavlink_send_attitude_quaternion,        MAVLINK_MSG_ID_ATTITUDE_QUATERNION	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_REGULAR,  &mavlink_send_attitude_quaternion,        MAVLINK_MSG_ID_ATTITUDE_QUATERNION	);
 
-	scheduler_add_task(get_mavlink_taskset(),  200000,   RUN_REGULAR,  &mavlink_send_attitude,                   MAVLINK_MSG_ID_ATTITUDE	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_REGULAR,  &mavlink_send_attitude,                   MAVLINK_MSG_ID_ATTITUDE	);
 	
-	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_hud,                        MAVLINK_MSG_ID_VFR_HUD	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_hud,                        MAVLINK_MSG_ID_VFR_HUD	);
 
-	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_pressure,                   MAVLINK_MSG_ID_SCALED_PRESSURE	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_pressure,                   MAVLINK_MSG_ID_SCALED_PRESSURE	);
 
-	scheduler_add_task(get_mavlink_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_scaled_imu,                 MAVLINK_MSG_ID_SCALED_IMU	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_scaled_imu,                 MAVLINK_MSG_ID_SCALED_IMU	);
 
-	scheduler_add_task(get_mavlink_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_raw_imu,                    MAVLINK_MSG_ID_RAW_IMU	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_raw_imu,                    MAVLINK_MSG_ID_RAW_IMU	);
 
-	scheduler_add_task(get_mavlink_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_rates_error,            MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_rates_error,            MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT	);
 
-	scheduler_add_task(get_mavlink_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_speed_thrust_setpoint,  MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_speed_thrust_setpoint,  MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT	);
 
-	scheduler_add_task(get_mavlink_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_thrust_setpoint,        MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_thrust_setpoint,        MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT	);
 
-	scheduler_add_task(get_mavlink_taskset(),  1000000,  RUN_NEVER,    &mavlink_send_servo_output,               MAVLINK_MSG_ID_SERVO_OUTPUT_RAW	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  1000000,  RUN_NEVER,    &mavlink_send_servo_output,               MAVLINK_MSG_ID_SERVO_OUTPUT_RAW	);
 
-	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_estimator,                  MAVLINK_MSG_ID_LOCAL_POSITION_NED	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_estimator,                  MAVLINK_MSG_ID_LOCAL_POSITION_NED	);
 
-	scheduler_add_task(get_mavlink_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_global_position,            MAVLINK_MSG_ID_GLOBAL_POSITION_INT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_global_position,            MAVLINK_MSG_ID_GLOBAL_POSITION_INT	);
 
-	scheduler_add_task(get_mavlink_taskset(),  1000000,  RUN_NEVER,    &mavlink_send_gps_raw,                    MAVLINK_MSG_ID_GPS_RAW_INT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  1000000,  RUN_NEVER,    &mavlink_send_gps_raw,                    MAVLINK_MSG_ID_GPS_RAW_INT	);
 
-	scheduler_add_task(get_mavlink_taskset(),  250000,   RUN_NEVER,    &mavlink_send_raw_rc_channels,            MAVLINK_MSG_ID_RC_CHANNELS_RAW	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_NEVER,    &mavlink_send_raw_rc_channels,            MAVLINK_MSG_ID_RC_CHANNELS_RAW	);
 
-	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_scaled_rc_channels,         MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_scaled_rc_channels,         MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);
 
-	scheduler_add_task(get_mavlink_taskset(),  500000,   RUN_NEVER,    &mavlink_send_simulation,                 MAVLINK_MSG_ID_HIL_STATE	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_simulation,                 MAVLINK_MSG_ID_HIL_STATE	);
 
-	scheduler_add_task(get_mavlink_taskset(),  250000,   RUN_NEVER,    &mavlink_send_rt_stats,                   MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_NEVER,    &mavlink_send_rt_stats,                   MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
 
-	scheduler_add_task(get_mavlink_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_sonar,                      MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_sonar,                      MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
 
-	scheduler_sort_taskset_by_period(get_mavlink_taskset());
+	scheduler_sort_taskset_by_period(mavlink_stream_get_taskset());
 	
 	dbg_print("MAVlink actions initialiased\n");
 }

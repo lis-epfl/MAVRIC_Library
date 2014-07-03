@@ -24,14 +24,14 @@
 #include <math.h>
 #include "maths.h"
 
-#define KP_YAW 0.2
+#define KP_YAW 0.2f
 
 central_data_t *centralData;
 float alt_integrator;
 
 uint8_t loopCount = 0;
 
-void init_nav(void)
+void navigation_init(void)
 {
 	centralData = central_data_get_pointer_to_struct();
 	
@@ -48,18 +48,18 @@ void init_nav(void)
 	alt_integrator = 0.0f;
 }
 
-void run_navigation(local_coordinates_t waypoint_input)
+void navigation_run(local_coordinates_t waypoint_input)
 {
 	float rel_pos[3]; 
 	
 	// Control in translational speed of the platform
-	centralData->dist2wp_sqr = set_rel_pos_n_dist2wp(waypoint_input.pos, rel_pos);
-	set_speed_command(rel_pos,centralData->dist2wp_sqr);
+	centralData->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos, rel_pos);
+	navigation_set_speed_command(rel_pos,centralData->dist2wp_sqr);
 	
 	centralData->controls_nav.theading=waypoint_input.heading;
 }
 
-float set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[])
+float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[])
 {
 	float dist2wp_sqr;
 	
@@ -72,7 +72,7 @@ float set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[])
 	return dist2wp_sqr;
 }
 
-void set_speed_command(float rel_pos[], float dist2wpSqr)
+void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
 {
 	uint8_t i;
 	float  norm_rel_dist, v_desired;
@@ -85,9 +85,9 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	
 	norm_rel_dist = sqrt(dist2wpSqr);
 	
-	if (norm_rel_dist < 0.0005)
+	if (norm_rel_dist < 0.0005f)
 	{
-		norm_rel_dist += 0.0005;
+		norm_rel_dist += 0.0005f;
 	}
 	
 	// calculate dir_desired in local frame
@@ -98,14 +98,14 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	
 	dir_desired_bf[2] = rel_pos[2];
 	
-	if (((f_abs(rel_pos[X])<=1.0)&&(f_abs(rel_pos[Y])<=1.0))||((f_abs(rel_pos[X])<=5.0)&&(f_abs(rel_pos[Y])<=5.0)&&(f_abs(rel_pos[Z])>=3.0)))
+	if (((f_abs(rel_pos[X])<=1.0f)&&(f_abs(rel_pos[Y])<=1.0f))||((f_abs(rel_pos[X])<=5.0f)&&(f_abs(rel_pos[Y])<=5.0f)&&(f_abs(rel_pos[Z])>=3.0f)))
 	{
-		rel_heading = 0.0;
+		rel_heading = 0.0f;
 	}else{
 		rel_heading = calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - centralData->position_estimator.localPosition.heading);
 	}
 	
-	v_desired = f_min(centralData->cruise_speed,(center_window_2(4.0*rel_heading) * centralData->dist2vel_gain * soft_zone(norm_rel_dist,centralData->softZoneSize)));
+	v_desired = f_min(centralData->cruise_speed,(center_window_2(4.0f*rel_heading) * centralData->dist2vel_gain * soft_zone(norm_rel_dist,centralData->softZoneSize)));
 	
 	if (v_desired *  f_abs(dir_desired_bf[Z]) > centralData->max_climb_rate * norm_rel_dist ) {
 		v_desired = centralData->max_climb_rate * norm_rel_dist /f_abs(dir_desired_bf[Z]);
@@ -145,13 +145,13 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	}
 	if (centralData->collision_avoidance)
 	{
-		computeNewVelocity(dir_desired_bf,new_velocity);
+		orca_computeNewVelocity(dir_desired_bf,new_velocity);
 	}
 
 	//rel_heading= atan2(new_velocity[Y],new_velocity[X]);
-	//if (f_abs(new_velocity[X])<0.001 && f_abs(new_velocity[Y])<0.001 || centralData->controls.yaw_mode == YAW_ABSOLUTE || !centralData->waypoint_set)
+	//if (f_abs(new_velocity[X])<0.001f && f_abs(new_velocity[Y])<0.001f || centralData->controls.yaw_mode == YAW_ABSOLUTE || !centralData->waypoint_set)
 	//{
-		//rel_heading = 0.0;
+		//rel_heading = 0.0f;
 	//}else{
 		//rel_heading = atan2(new_velocity[Y],new_velocity[X]);
 	//}

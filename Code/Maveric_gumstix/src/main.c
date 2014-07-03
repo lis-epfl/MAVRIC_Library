@@ -52,7 +52,7 @@ void initialisation() {
 	
 	set_servos(&servo_failsafe);
 
-	init_onboard_parameters();
+	onboard_parameters_init();
 	init_mavlink_actions();
 	init_pos_integration(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 	
@@ -63,7 +63,7 @@ void initialisation() {
 //	calibrate_Gyros(&centralData->imu1);
 	for (i=400; i>0; i--) {
 		run_imu_update();
-		mavlink_protocol_update();	
+		mavlink_stream_protocol_update();	
 		delay_ms(5);
 	}
 	// after initial leveling, initialise accelerometer biases
@@ -72,7 +72,7 @@ void initialisation() {
 	centralData->imu1.attitude.calibration_level=LEVEL_PLUS_ACCEL;
 	for (i=100; i>0; i--) {
 		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);	
-		mavlink_protocol_update();			
+		mavlink_stream_protocol_update();			
 		delay_ms(5);
 	}*/
 	centralData->imu1.attitude.calibration_level=OFF;
@@ -89,12 +89,12 @@ void initialisation() {
 	centralData->mav_mode_previous = centralData->mav_mode;
 	centralData->mav_state_previous = centralData->mav_state;
 	
-	init_nav();
+	navigation_init();
 	init_waypoint_handler();
 	//e_init();
 	
 	init_neighbors();
-	init_orca();
+	orca_init();
 	
 	//init gumstix
 	//gum_Setup();

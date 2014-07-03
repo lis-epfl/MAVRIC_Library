@@ -64,8 +64,8 @@ void handle_specific_messages (Mavlink_Received_t* rec) {
 
 void init_mavlink_actions() {
 	central_data=get_central_data();
-	add_task(get_mavlink_taskset(), 1000000, RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
-	//add_task(get_mavlink_taskset(), 250000, RUN_REGULAR, &mavlink_send_radar, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
-	add_task(get_mavlink_taskset(), 250000, RUN_NEVER, &mavlink_send_radar_raw, MAVLINK_MSG_ID_RADAR_RAW_DATA);
+	add_task(mavlink_stream_get_taskset(), 1000000, RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
+	//add_task(mavlink_stream_get_taskset(), 250000, RUN_REGULAR, &mavlink_send_radar, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	add_task(mavlink_stream_get_taskset(), 250000, RUN_NEVER, &mavlink_send_radar_raw, MAVLINK_MSG_ID_RADAR_RAW_DATA);
 
 }
