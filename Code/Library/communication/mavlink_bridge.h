@@ -30,7 +30,7 @@ extern "C" {
 
 #define MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
-// Structures that stores the communication settings of this system. DO NOT (re)move.
+// Structures that stores the communication settings of this system: DO NOT (re)move
 extern mavlink_system_t mavlink_system;
 extern mavlink_system_t mavlink_mission_planner;
 

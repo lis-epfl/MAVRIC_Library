@@ -15,6 +15,7 @@
  * Mav'ric Onboard parameters
  */
 
+
 #include "onboard_parameters.h"
 #include "stabilisation.h"
 #include "print_util.h"
@@ -32,7 +33,6 @@ Parameter_Set_t param_set;
 void init_onboard_parameters(void) 
 {
 	param_set.param_count = 0;
-	param_set.transmit_parameter_index=0;
 	dbg_print("Onboard parameters initialised.\n");	
 }
 
@@ -80,40 +80,43 @@ void add_parameter_float(float* val, const char* param_name)
 void update_parameter(int param_index, float value) 
 {
 	float converted=0;
+	
 	switch (param_set.parameters[param_index].data_type) 
 	{
 		case MAVLINK_TYPE_CHAR:
 		case MAVLINK_TYPE_UINT8_T:
 		case MAVLINK_TYPE_INT8_T:
-			// take care of different ENDIAN-ness (usually MAVLINK does this, but here MAVLINK assumes all parameters are 4-byte so we need to swap it back)
+			// take care of different Endianness (usually MAVLINK does this, but here MAVLINK assumes all parameters are 4-byte so we need to swap it back)
 			#if MAVLINK_NEED_BYTE_SWAP
-			byte_swap_4(&converted, &value);
-			memcpy(param_set.parameters[param_index].param, &converted, 1);
+				byte_swap_4(&converted, &value);
+				memcpy(param_set.parameters[param_index].param, &converted, 1);
 			#else
-			memcpy(param_set.parameters[param_index].param, &value, 1);
+				memcpy(param_set.parameters[param_index].param, &value, 1);
 			#endif
-		break;
+			break;
+		
 		case MAVLINK_TYPE_UINT16_T:
 		case MAVLINK_TYPE_INT16_T:
-			// take care of different ENDIAN-ness (usually MAVLINK does this, but here MAVLINK assumes all parameters are 4-byte so we need to swap it back)
+			// take care of different Endianness (usually MAVLINK does this, but here MAVLINK assumes all parameters are 4-byte so we need to swap it back)
 			#if MAVLINK_NEED_BYTE_SWAP
-			byte_swap_4(&converted, &value);
-			memcpy(param_set.parameters[param_index].param, &converted, 2);
+				byte_swap_4(&converted, &value);
+				memcpy(param_set.parameters[param_index].param, &converted, 2);
 			#else
-			memcpy(param_set.parameters[param_index].param, &value, 2);
+				memcpy(param_set.parameters[param_index].param, &value, 2);
 			#endif
-		break;
+			break;
+		
 		case MAVLINK_TYPE_UINT32_T:
 		case MAVLINK_TYPE_INT32_T:
 		case MAVLINK_TYPE_FLOAT:
 			*param_set.parameters[param_index].param= value;
-		break;
+			break;
 		
 		// these following types are not supported
 		case MAVLINK_TYPE_UINT64_T:
 		case MAVLINK_TYPE_INT64_T:
 		case MAVLINK_TYPE_DOUBLE:
-		break;
+			break;
 	}
 }
 
@@ -121,39 +124,41 @@ float read_parameter(int param_index)
 {
 	float return_value=0;
 	float converted=0;
+	
 	switch (param_set.parameters[param_index].data_type) 
 	{
 		case MAVLINK_TYPE_CHAR:
 		case MAVLINK_TYPE_UINT8_T:
 		case MAVLINK_TYPE_INT8_T:
-		memcpy(&return_value, param_set.parameters[param_index].param, 1);
-		#if MAVLINK_NEED_BYTE_SWAP
-		byte_swap_4(&converted, &return_value);
-		#else
-		memcpy(&converted, &return_value, 4);
-		#endif
-		break;
+			memcpy(&return_value, param_set.parameters[param_index].param, 1);
+			#if MAVLINK_NEED_BYTE_SWAP
+				byte_swap_4(&converted, &return_value);
+			#else
+				memcpy(&converted, &return_value, 4);
+			#endif
+			break;
+		
 		case MAVLINK_TYPE_UINT16_T:
 		case MAVLINK_TYPE_INT16_T:
-		memcpy(&return_value, param_set.parameters[param_index].param, 2);
-		#if MAVLINK_NEED_BYTE_SWAP
-		byte_swap_4(&converted, &return_value);
-		#else
-		memcpy(&converted, &return_value, 4);
-		#endif
-
-		break;
+			memcpy(&return_value, param_set.parameters[param_index].param, 2);
+			#if MAVLINK_NEED_BYTE_SWAP
+				byte_swap_4(&converted, &return_value);
+			#else
+				memcpy(&converted, &return_value, 4);
+			#endif
+			break;
+			
 		case MAVLINK_TYPE_UINT32_T:
 		case MAVLINK_TYPE_INT32_T:
 		case MAVLINK_TYPE_FLOAT:
-		converted= *param_set.parameters[param_index].param;
-		break;
+			converted= *param_set.parameters[param_index].param;
+			break;
 		
 		// these following types are not supported
 		case MAVLINK_TYPE_UINT64_T:
 		case MAVLINK_TYPE_INT64_T:
 		case MAVLINK_TYPE_DOUBLE:
-		break;
+			break;
 	}	
 	return converted;
 }
@@ -163,30 +168,32 @@ float read_parameter(int param_index)
 void send_all_parameters() 
 {
 	// schedule all parameters for transmission
-	for (uint8_t i = 0; i < param_set.param_count; i++) {
+	for (uint8_t i = 0; i < param_set.param_count; i++)
+	{
 		param_set.parameters[i].schedule_for_transmission=true;
 	}		
 }
 
 void send_all_parameters_now() 
 {
-	for (uint8_t i = 0; i < param_set.param_count; i++) {
+	for (uint8_t i = 0; i < param_set.param_count; i++)
+	{
 		mavlink_msg_param_value_send(MAVLINK_COMM_0,
 										(int8_t*)param_set.parameters[i].param_name,
 										read_parameter(i),
 										param_set.parameters[i].data_type,
 										param_set.param_count,
 										i);
+										
 		param_set.parameters[i].schedule_for_transmission=false;
-
 	}
-
 }
 
 
 void send_scheduled_parameters() 
 {
-	for (uint8_t i = 0; i < param_set.param_count; i++) {
+	for (uint8_t i = 0; i < param_set.param_count; i++)
+	{
 		if (param_set.parameters[i].schedule_for_transmission) 
 		{
 			mavlink_msg_param_value_send(MAVLINK_COMM_0,
@@ -195,27 +202,22 @@ void send_scheduled_parameters()
 										param_set.parameters[i].data_type,
 										param_set.param_count,
 										i);
+										
 			param_set.parameters[i].schedule_for_transmission=false;
-			return;
 		}			
-
 	}
 }
 
 void send_parameter(mavlink_param_request_read_t* request) 
 {
+	// Check param_index to determine if the request is made by name (== -1) or by index (!= -1)
 	if(request->param_index!=-1) 
-	{
-		/*
-		mavlink_msg_param_value_send(MAVLINK_COMM_0,
-									(int8_t*)param_set.parameters[request->param_index].param_name,
-									*param_set.parameters[request->param_index].param,
-									param_set.parameters[request->param_index].data_type,
-									param_set.param_count,
-									request->param_index);*/
-		if (request->param_index>param_set.param_count) return;
-		param_set.parameters[request->param_index].schedule_for_transmission=true;
-
+	{	
+		// Control if the index is in the range of existing parameters and schedule it for transmission
+		if ((request->param_index<=param_set.param_count) == true)
+		{
+			param_set.parameters[request->param_index].schedule_for_transmission=true;
+		}
 	}
 	else 
 	{
@@ -234,6 +236,7 @@ void send_parameter(mavlink_param_request_read_t* request)
 				// End matching if null termination is reached
 				if (((char)param_set.parameters[i].param_name[j]) == '\0') 
 				{
+					// Exit internal (j) for() loop
 					break;
 				}
 			}
@@ -241,13 +244,9 @@ void send_parameter(mavlink_param_request_read_t* request)
 			// Check if matched
 			if (match) 
 			{
-				/*
-				mavlink_msg_param_value_send(MAVLINK_COMM_0,
-											(int8_t*)param_set.parameters[i].param_name,
-											*param_set.parameters[i].param, param_set.parameters[i].data_type, 
-											param_set.param_count, i);*/
 				param_set.parameters[i].schedule_for_transmission=true;
 
+				// Exit external (i) for() loop
 				break;
 			}					
 		}
@@ -256,6 +255,8 @@ void send_parameter(mavlink_param_request_read_t* request)
 
 void receive_parameter(Mavlink_Received_t* rec) 
 {
+	bool match = true;
+	
 	mavlink_param_set_t set;
 	mavlink_msg_param_set_decode(&rec->msg, &set);
  
@@ -273,7 +274,7 @@ void receive_parameter(Mavlink_Received_t* rec)
 				
 		for (uint16_t i = 0; i < param_set.param_count; i++) 
 		{
-			bool match = true;
+			match = true;
 			for (uint16_t j = 0; j < param_set.parameters[i].param_name_length; j++) 
 			{
 				// Compare
@@ -285,6 +286,7 @@ void receive_parameter(Mavlink_Received_t* rec)
 				// End matching if null termination is reached
 				if (((char)param_set.parameters[i].param_name[j]) == '\0') 
 				{
+					// Exit internal (j) for() loop
 					break;
 				}
 			}
@@ -296,12 +298,7 @@ void receive_parameter(Mavlink_Received_t* rec)
 				if (*param_set.parameters[i].param != set.param_value && set.param_type == param_set.parameters[i].data_type) 
 				{
 					update_parameter(i, set.param_value);
-					
-					// Report back new value
-//					mavlink_msg_param_value_send(MAVLINK_COMM_0,
-//												(int8_t*)param_set.parameters[i].param_name,
-//												*param_set.parameters[i].param, param_set.parameters[i].data_type, 
-//												param_set.param_count, i);
+
 					// schedule parameter for transmission downstream
 					param_set.parameters[i].schedule_for_transmission=true;
 				}

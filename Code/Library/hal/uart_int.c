@@ -12,7 +12,7 @@
 /**
  * \file uart_int.c
  *
- * This file decods the messages from the UBLOX GPS
+ * This file implments the UART communication protocol
  */
 
 
@@ -79,28 +79,31 @@ UART_HANDLER(4);
 void register_UART_handler(int UID) {
 	switch(UID)
 	{
-		case 0: 	INTC_register_interrupt( (__int_handler) &uart_handler_0, AVR32_USART0_IRQ, AVR32_INTC_INT1);
-		break;
-		case 1: 	INTC_register_interrupt( (__int_handler) &uart_handler_1, usart_opt[1].uart_device.IRQ, AVR32_INTC_INT1);
-		break;
-		case 2: 	INTC_register_interrupt( (__int_handler) &uart_handler_2, usart_opt[2].uart_device.IRQ, AVR32_INTC_INT1);
-		break;
-		case 3: 	INTC_register_interrupt( (__int_handler) &uart_handler_3, usart_opt[3].uart_device.IRQ, AVR32_INTC_INT1);
-		break;
-		case 4: 	INTC_register_interrupt( (__int_handler) &uart_handler_4, usart_opt[4].uart_device.IRQ, AVR32_INTC_INT1);
-		break;
-
+		case 0: 	
+			INTC_register_interrupt( (__int_handler) &uart_handler_0, AVR32_USART0_IRQ, AVR32_INTC_INT1);
+			break;
+		case 1: 
+			INTC_register_interrupt( (__int_handler) &uart_handler_1, usart_opt[1].uart_device.IRQ, AVR32_INTC_INT1);
+			break;
+		case 2: 
+			INTC_register_interrupt( (__int_handler) &uart_handler_2, usart_opt[2].uart_device.IRQ, AVR32_INTC_INT1);
+			break;
+		case 3: 
+			INTC_register_interrupt( (__int_handler) &uart_handler_3, usart_opt[3].uart_device.IRQ, AVR32_INTC_INT1);
+			break;
+		case 4: 
+			INTC_register_interrupt( (__int_handler) &uart_handler_4, usart_opt[4].uart_device.IRQ, AVR32_INTC_INT1);
+			break;
 	}
-	
 }
 
 void init_UART_int(int UID) {
-	if ((usart_opt[UID].mode&UART_IN) >0)
+	if ((usart_opt[UID].mode&UART_IN) > 0)
 	{
 		gpio_enable_module_pin(usart_opt[UID].rx_pin_map.pin, usart_opt[UID].rx_pin_map.function); 
 	}
 	
-	if ((usart_opt[UID].mode&UART_OUT)>0)
+	if ((usart_opt[UID].mode&UART_OUT) > 0)
 	{
 		gpio_enable_module_pin(usart_opt[UID].tx_pin_map.pin, usart_opt[UID].tx_pin_map.function); 
 	}
@@ -113,7 +116,7 @@ void init_UART_int(int UID) {
 	buffer_init(&usart_opt[UID].uart_device.transmit_buffer);
 	buffer_init(&usart_opt[UID].uart_device.receive_buffer);
 	
-	if (usart_opt[UID].mode&UART_IN >0)
+	if (usart_opt[UID].mode&UART_IN > 0)
 	{
 		usart_opt[UID].uart_device.uart->ier=AVR32_USART_IER_RXRDY_MASK;
 	}
@@ -138,7 +141,7 @@ int uart_int_bytes_available(usart_config_t *usart_opt) {
 
 short uart_int_send_byte(usart_config_t *usart_opt, char data) {
 //	usart_write_line(usart_opt->uart_device.uart, "\ns");
-	while (buffer_put(&(usart_opt->uart_device.transmit_buffer), data)<0);
+	while (buffer_put(&(usart_opt->uart_device.transmit_buffer), data) < 0);
 	if ((buffer_bytes_available(&(usart_opt->uart_device.transmit_buffer)) >= 1))//&&
 //	  (usart_opt->uart_device.uart->csr & AVR32_USART_CSR_TXRDY_MASK)) 
 	{ // if there is exactly one byte in the buffer (this one...), and transmitter ready
@@ -149,7 +152,7 @@ short uart_int_send_byte(usart_config_t *usart_opt, char data) {
 }
 
 void uart_int_flush(usart_config_t *usart_opt) {
-	usart_opt->uart_device.uart->ier=AVR32_USART_IER_TXRDY_MASK;
+	usart_opt->uart_device.uart->ier = AVR32_USART_IER_TXRDY_MASK;
 	while (!buffer_empty(&(usart_opt->uart_device.transmit_buffer)));
 }
 
@@ -158,17 +161,17 @@ int uart_out_buffer_empty(usart_config_t *usart_opt) {
 }
 
 void register_write_stream(usart_config_t *usart_opt, byte_stream_t *stream) {
-	stream->get=NULL;
-	//stream->get=&uart_int_get_byte;
-	stream->put=&uart_int_send_byte;
-	stream->flush=&uart_int_flush;
-	stream->buffer_empty=&uart_out_buffer_empty;
-	stream->data=usart_opt;
+	stream->get = NULL;
+	//stream->get = &uart_int_get_byte;
+	stream->put = &uart_int_send_byte;
+	stream->flush = &uart_int_flush;
+	stream->buffer_empty = &uart_out_buffer_empty;
+	stream->data = usart_opt;
 
 }
 
 void register_read_stream(usart_config_t *usart_opt,  byte_stream_t *stream) {
-	usart_opt->uart_device.receive_stream=stream;
+	usart_opt->uart_device.receive_stream = stream;
 }
 
 

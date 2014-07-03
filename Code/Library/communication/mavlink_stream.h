@@ -30,7 +30,7 @@ extern "C" {
 #endif
 
 /**
- * \brief	Mavlink structures for the receive message and its status.
+ * \brief	Mavlink structures for the receive message and its status
  */
 typedef struct {
 	mavlink_message_t msg;

@@ -1,9 +1,16 @@
-/*
- * boardsupport.c
+ /* The MAV'RIC Framework
  *
- * Created: 20/03/2013 12:14:18
- *  Author: sfx
- */ 
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+ 
+
+/**
+ * \file boardsupport.c
+ *
+ *  Initialization of all hardware related elements (communication lines, sensors devices, etc)
+ */
 
 #include "boardsupport.h"
 #include "conf_sim_model.h"
@@ -29,8 +36,6 @@
 #include "analog_monitor.h"
 #include "piezo_speaker.h"
 
-//static volatile board_hardware_t board_hardware;
-
 void initialise_board(central_data_t *centralData) {
 	// int i;
 	// enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
@@ -53,18 +58,20 @@ void initialise_board(central_data_t *centralData) {
 	
 
 		
-	if (init_i2c(0)!=STATUS_OK) {
-		//putstring(STDOUT, "Error initialising I2C\n");
-		while (1==1);
-		} else {
-		//putstring(STDOUT, "initialised I2C.\n");
-	};
-	if (init_i2c(1)!=STATUS_OK) {
-		//putstring(STDOUT, "Error initialising I2C\n");
-		while (1==1);
-		} else {
-		//putstring(STDOUT, "initialised I2C.\n");
-	};
+	if (init_i2c(0)!=STATUS_OK)
+	{
+		//dbg_print("Error initialising I2C\n");
+		//while (1==1);
+	} else {
+		//dbg_print("initialised I2C.\n");
+	}
+	if (init_i2c(1)!=STATUS_OK)
+	{
+		//dbg_print("Error initialising I2C\n");
+		//while (1==1);
+	} else {
+		//dbg_print("initialised I2C.\n");
+	}
 
 	LED_Off(LED1);
 	// Configure the pins connected to LEDs as output and set their default
@@ -73,40 +80,44 @@ void initialise_board(central_data_t *centralData) {
 	//gpio_configure_pin(LED1_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
 
 	init_Servos();
-		
+	
+	// Init UART 0 for XBEE communication
 	init_UART_int(0);
 	register_write_stream(get_UART_handle(0), &(centralData->xbee_out_stream));
 				
-		
+	// Init UART 3 for GPS communication
 	init_UART_int(3);
 	make_buffered_stream(&(centralData->gps_buffer), &(centralData->gps_stream_in));
 	register_read_stream(get_UART_handle(3), &(centralData->gps_stream_in));
 	register_write_stream(get_UART_handle(3), &(centralData->gps_stream_out));
-		
+	
+	// Init UART 4 for wired communication
 	init_UART_int(4);
 	register_write_stream(get_UART_handle(4), &(centralData->wired_out_stream));
 
+	// Registering streams
 	make_buffered_stream_lossy(&(centralData->xbee_in_buffer), &(centralData->xbee_in_stream));
 	make_buffered_stream_lossy(&(centralData->wired_in_buffer), &(centralData->wired_in_stream));
 	register_read_stream(get_UART_handle(4), &(centralData->wired_in_stream));
 	register_read_stream(get_UART_handle(0), &(centralData->xbee_in_stream));
 		
 	// connect abstracted aliases to hardware ports
-/**/
 	centralData->telemetry_down_stream=&(centralData->xbee_out_stream);
 	centralData->telemetry_up_stream=&(centralData->xbee_in_stream);
 	centralData->debug_out_stream=&(centralData->wired_out_stream);
 	centralData->debug_in_stream=&(centralData->wired_in_stream);
-/**/
+
 /*
 	centralData->telemetry_down_stream=&(centralData->wired_out_stream);
 	centralData->telemetry_up_stream  =&(centralData->wired_in_stream);		
 	centralData->debug_out_stream     =&(centralData->xbee_out_stream);
 	centralData->debug_in_stream      =&(centralData->xbee_in_stream);
-/**/
+*/
 
+	// Bind RC receiver with remote
 	//rc_activate_bind_mode();
 
+	// RC receiver initialization
 	rc_init();
 
 	// Init analog rails
@@ -138,6 +149,7 @@ void initialise_board(central_data_t *centralData) {
 	
 	Enable_global_interrupt();
 
+	// Init piezo speaker
 	init_piezo_speaker_binary();
 	
 	dbg_print("Board initialised.\n");

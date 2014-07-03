@@ -7,7 +7,7 @@
  
 
 /**
- * \file spi_buffered.h
+ * \file spi_buffered.c
  *
  *  SPI functions for the ATMega / AVR microcontrollers
  *  This library provides buffered SPI send and receive
