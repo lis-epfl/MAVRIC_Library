@@ -7,7 +7,7 @@
  
 
 /**
- * \file MAV001_conf_imu_rev4.h
+ * \file MAV202_conf_imu_rev4.h
  *
  *  This file defines the mapping between the IMU and the compass and the frames of the vehicles 
  * as well as the scales and the biaises. The NED frame is used. 
@@ -39,25 +39,25 @@
 #define GYRO_AXIS_Y -1.0								///< Gyroscope y axis direction
 #define GYRO_AXIS_Z -1.0								///< Gyroscope z axis direction
 
-#define RAW_ACC_X_SCALE 3924.0							///< Accelerometer x axis scale
-#define RAW_ACC_Y_SCALE 3844.8							///< Accelerometer y axis scale
-#define RAW_ACC_Z_SCALE 4119.6							///< Accelerometer z axis scale
+#define RAW_ACC_X_SCALE 4145.7462						///< Accelerometer x axis scale
+#define RAW_ACC_Y_SCALE 4071.6653						///< Accelerometer y axis scale
+#define RAW_ACC_Z_SCALE 4141.9266						///< Accelerometer z axis scale
 
-#define ACC_BIAIS_X -32									///< Accelerometer x axis biais
-#define ACC_BIAIS_Y  64									///< Accelerometer y axis biais
-#define ACC_BIAIS_Z 250									///< Accelerometer z axis biais
+#define ACC_BIAIS_X -128.0								///< Accelerometer x axis biais
+#define ACC_BIAIS_Y  130.0								///< Accelerometer y axis biais
+#define ACC_BIAIS_Z  230.0								///< Accelerometer z axis biais
 
 #define ACC_AXIS_X  1.0									///< Accelerometer x axis direction
 #define ACC_AXIS_Y -1.0									///< Accelerometer y axis direction
 #define ACC_AXIS_Z -1.0									///< Accelerometer z axis direction
 
-#define RAW_MAG_X_SCALE 601.3117						///< Compass x axis scale
-#define RAW_MAG_Y_SCALE 580.3974						///< Compass y axis scale
-#define RAW_MAG_Z_SCALE 513.8466						///< Compass z axis scale
+#define RAW_MAG_X_SCALE 671.1324						///< Compass x axis scale
+#define RAW_MAG_Y_SCALE 699.7155						///< Compass y axis scale
+#define RAW_MAG_Z_SCALE 600.8004						///< Compass z axis scale
 
-#define MAG_BIAIS_X -339.00								///< Compass x axis biais
-#define MAG_BIAIS_Y -251.5 								///< Compass y axis biais
-#define MAG_BIAIS_Z   83.0 								///< Compass z axis biais
+#define MAG_BIAIS_X   22.6809							///< Compass x axis biais
+#define MAG_BIAIS_Y   53.48								///< Compass y axis biais
+#define MAG_BIAIS_Z -357.72								///< Compass z axis biais
 
 #define MAG_AXIS_X -1.0									///< Compass x axis direction
 #define MAG_AXIS_Y -1.0									///< Compass y axis direction

@@ -18,9 +18,9 @@
 #define RAW_ACC_Y 1
 #define RAW_ACC_Z 2
 
-#define RAW_COMPASS_X 2
-#define RAW_COMPASS_Y 0
-#define RAW_COMPASS_Z 1
+#define RAW_MAG_X 2
+#define RAW_MAG_Y 0
+#define RAW_MAG_Z 1
 
 // from datasheet: FS 2000dps --> 70 mdps/digit
 // scale = 1/(0.07 * PI / 180.0) = 818.5111

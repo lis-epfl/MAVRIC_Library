@@ -56,7 +56,7 @@ void initialise_central_data(){
 		init_simulation(&(centralData.sim_model),&(centralData.imu1),centralData.position_estimator.localPosition);		
 
 		// init controls
-		// TODO: move to a module
+		// TODO: move to init_stabilsation_copter()
 		centralData.controls.rpy[ROLL]=0;
 		centralData.controls.rpy[PITCH]=0;
 		centralData.controls.rpy[YAW]=0;

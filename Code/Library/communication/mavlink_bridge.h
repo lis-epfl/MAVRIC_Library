@@ -19,14 +19,14 @@
 #ifndef MAVLINK_BRIDGE_H
 #define MAVLINK_BRIDGE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "conf_platform.h"
 #include "stdint.h"
 
 #include "mavlink/include/mavlink_types.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #define MAVLINK_USE_CONVENIENCE_FUNCTIONS
 
