@@ -25,16 +25,17 @@
 #define SERVO_CENTER_DUTY_MICROSEC 1500				///< Define the center of the duty cycle(?) in micro second
 #define SERVO_REPEAT_FREQ 200						///< Define the period
 
-#ifdef CS_ON_SERVO_7_8								///< to be able to use servo 7 and 8 as a normal GPIO
-	#define NUMBER_OF_SERVO_OUTPUTS 6				///< free 2 last servo pin for GPIO usage
-#else
+#ifndef CS_ON_SERVO_7_8								///< to be able to use servo 7 and 8 as a normal GPIO
 	#define NUMBER_OF_SERVO_OUTPUTS 8				///< use all servo pins for PWM
+#else
+	#define NUMBER_OF_SERVO_OUTPUTS 6				///< free 2 last servo pin for GPIO usage
 #endif
 
 /**
  * \brief Structure containing the servo output's data
  */
-typedef struct {
+typedef struct 
+{
 	int value;					///< Define the PWM value of a servo
 	int min;					///< Define the min value
 	int max;					///< Define the max value

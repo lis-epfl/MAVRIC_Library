@@ -1146,12 +1146,6 @@
     <Compile Include="Library\hal\led.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\radar_module_driver.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\radar_module_driver.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\hal\servo_pwm.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1569,12 +1563,6 @@
     <Compile Include="src\main.cpp">
       <SubType>compile</SubType>
     </Compile>
-    <None Include="src\rectangle.cpp">
-      <SubType>compile</SubType>
-    </None>
-    <None Include="src\rectangle.hpp">
-      <SubType>compile</SubType>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Library\" />
