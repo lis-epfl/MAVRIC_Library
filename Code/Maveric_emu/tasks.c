@@ -21,15 +21,15 @@ NEW_TASK_SET(main_tasks, 10)
 board_hardware_t *board;
 
 
-task_set* get_main_taskset() {
+task_set* tasks_get_main_taskset() {
 	return &main_tasks;
 }
 
-task_return_t run_imu_update() {
+task_return_t tasks_run_imu_update() {
 	imu_update(&(board->imu1));	
 }	
 
-void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
+void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 {
 	
 	get_channel_mode(chanSwitch);
@@ -72,13 +72,13 @@ void rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
 	//dbg_print("\n");
 }
 
-task_return_t set_mav_mode_n_state()
+task_return_t tasks_set_mav_mode_n_state()
 {
 	uint8_t channelSwitches = 0;
 	int8_t RC_check = 0;
 	int8_t motor_switch = 0;
 	
-	rc_user_channels(&channelSwitches,&RC_check, &motor_switch);
+	tasks_rc_user_channels(&channelSwitches,&RC_check, &motor_switch);
 	
 	switch(board->mav_state)
 	{
@@ -199,11 +199,11 @@ task_return_t set_mav_mode_n_state()
 	
 }
 
-task_return_t run_stabilisation() {
+task_return_t tasks_run_stabilisation() {
 	int i;
 	
 	if (board->simulation_mode==1) {
-		simu_update(&(board->sim_model), &(board->servos), &(board->imu1));
+		simulation_update(&(board->sim_model), &(board->servos), &(board->imu1));
 	} else {
 		imu_update(&(board->imu1));
 	}
@@ -284,7 +284,7 @@ task_return_t run_stabilisation() {
 
 }
 
-//task_return_t run_stabilisation() {
+//task_return_t tasks_run_stabilisation() {
 	//board->controls.rpy[ROLL]=-getChannel(S_ROLL)/350.0;
 	//board->controls.rpy[PITCH]=-getChannel(S_PITCH)/350.0;
 	//board->controls.rpy[YAW]=-getChannel(S_YAW)/350.0;
@@ -319,10 +319,10 @@ task_return_t run_stabilisation() {
 //
 //}
 
-task_return_t gps_task() {
+task_return_t tasks_run_gps_update() {
 	uint32_t tnow = get_millis();	
 	
-	gps_update();
+	gps_ublox_update();
 	
  	//dbg_print("time :");
  	//dbg_print_num(tnow,10);
@@ -337,7 +337,7 @@ task_return_t gps_task() {
  	//dbg_print_num(board->GPS_data.courseStatus,10);
  	//dbg_print("\n");
 	//
-	/*if(newValidGpsMsg())
+	/*if(gps_ublox_newValidGpsMsg())
 	{
 		dbg_print("GPS status:");
 		dbg_print_num(board->GPS_data.status,10);
@@ -358,7 +358,7 @@ task_return_t run_estimator()
 	estimator_loop();
 }
 
-task_return_t run_navigation_task()
+task_return_t tasks_run_navigation_update()
 {
 	int8_t i;
 	
@@ -400,7 +400,7 @@ task_return_t run_navigation_task()
 	
 }
 
-task_return_t run_barometer()
+task_return_t tasks_run_barometer_update()
 {
 	uint32_t tnow = get_micros();
 
@@ -430,22 +430,22 @@ task_return_t send_rt_stats() {
 
 
 void create_tasks() {
-	init_scheduler(&main_tasks);
+	scheduler_init(&main_tasks);
 	board=get_board_hardware();
 	
-	//	register_task(&main_tasks, 0, 4000, RUN_REGULAR, &run_imu_update );
-	register_task(&main_tasks, 1, 4000, RUN_REGULAR, &run_stabilisation );
-	register_task(&main_tasks, 2, 1000, RUN_REGULAR, &mavlink_protocol_update);
+	//	scheduler_register_task(&main_tasks, 0, 4000, RUN_REGULAR, &tasks_run_imu_update );
+	scheduler_register_task(&main_tasks, 1, 4000, RUN_REGULAR, &tasks_run_stabilisation );
+	scheduler_register_task(&main_tasks, 2, 1000, RUN_REGULAR, &mavlink_protocol_update);
 	
-	register_task(&main_tasks, 3, 100000, RUN_REGULAR, &gps_task);
-	//register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
-	//register_task(&main_tasks, 4, 100000, RUN_REGULAR, &read_radar);
+	scheduler_register_task(&main_tasks, 3, 100000, RUN_REGULAR, &tasks_run_gps_update);
+	//scheduler_register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
+	//scheduler_register_task(&main_tasks, 4, 100000, RUN_REGULAR, &read_radar);
 
-	register_task(&main_tasks, 5, 10000, RUN_REGULAR, &run_navigation_task);
+	scheduler_register_task(&main_tasks, 5, 10000, RUN_REGULAR, &tasks_run_navigation_update);
 
-	register_task(&main_tasks, 6, 250000, RUN_REGULAR, &set_mav_mode_n_state);
+	scheduler_register_task(&main_tasks, 6, 250000, RUN_REGULAR, &tasks_set_mav_mode_n_state);
 	
-	register_task(&main_tasks, 7, 150000, RUN_REGULAR, &run_barometer);
+	scheduler_register_task(&main_tasks, 7, 150000, RUN_REGULAR, &tasks_run_barometer_update);
 
-	add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	scheduler_add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 }

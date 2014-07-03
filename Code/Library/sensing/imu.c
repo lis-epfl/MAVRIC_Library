@@ -41,7 +41,7 @@ void imu_init (Imu_Data_t *imu1)
 	
 	init_hmc5883_slow();
 
-	//imu_calibrate_Gyros(imu1);
+	//imu_calibrate_gyros(imu1);
 	imu1->raw_scale[X+GYRO_OFFSET] =  RAW_GYRO_X_SCALE;
 	imu1->raw_scale[Y+GYRO_OFFSET] =  RAW_GYRO_Y_SCALE;
 	imu1->raw_scale[Z+GYRO_OFFSET] =  RAW_GYRO_Z_SCALE;
@@ -95,7 +95,7 @@ void imu_get_raw_data(Imu_Data_t *imu1)
 	
 }
 
-void imu_calibrate_Gyros(Imu_Data_t *imu1)
+void imu_calibrate_gyros(Imu_Data_t *imu1)
 {
 	int i,j;
 	imu_get_raw_data(imu1);

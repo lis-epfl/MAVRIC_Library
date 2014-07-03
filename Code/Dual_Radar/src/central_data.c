@@ -10,7 +10,7 @@
 static volatile central_data_t central_data;
 
 
-central_data_t* get_central_data() {
+central_data_t* central_data_get_pointer_to_struct() {
 	return &central_data;
 }
 

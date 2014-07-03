@@ -32,7 +32,7 @@
 
 
 
-initialise_board(central_data_t *central_data);
+boardsupport_init(central_data_t *central_data);
 
 
 

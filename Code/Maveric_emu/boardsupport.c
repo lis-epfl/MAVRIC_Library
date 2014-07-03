@@ -74,7 +74,7 @@ void register_read_stream_stdin( byte_stream_t *stream) {
 
 
 
-void initialise_board(central_data_t *centralData) {
+void boardsupport_init(central_data_t *centralData) {
 //		init_UART_int(0);
 
 		make_buffered_stream(&centralData->xbee_in_buffer, &centralData->xbee_in_stream);

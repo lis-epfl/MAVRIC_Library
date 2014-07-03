@@ -51,7 +51,7 @@ void initialisation() {
 	int i;
 	
 	main_tasks.number_of_tasks=30;
-	initialise_board(central_data);
+	boardsupport_init(central_data);
 	
 
 	init_radar();
@@ -62,7 +62,7 @@ void initialisation() {
 
 
 	init_onboard_parameters();
-	init_mavlink_actions();
+	mavlink_actions_init();
 	
 	
 }
@@ -77,8 +77,8 @@ void main (void)
 	
 	initialisation();
 	
-	init_scheduler(&main_tasks);
-	register_task(&main_tasks, 0, 1000, RUN_REGULAR, &mavlink_protocol_update);
+	scheduler_init(&main_tasks);
+	scheduler_register_task(&main_tasks, 0, 1000, RUN_REGULAR, &mavlink_protocol_update);
 	// main loop
 	counter=0;
 	// turn on radar power:
@@ -134,7 +134,7 @@ void main (void)
 
 		}			
 		
-		//run_scheduler_update(&main_tasks, FIXED_PRIORITY);
+		//scheduler_run_update(&main_tasks, FIXED_PRIORITY);
 		mavlink_protocol_update();
 		//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "ADC_period", get_adc_int_period());
 
