@@ -1,11 +1,18 @@
-/*
- * mavlink_actions.h
+/**
+ * \page The MAV'RIC License
  *
- * This file interfaces between the various parts of the system and the MAVlink downstream
- * Put all commands here that collect data and can be scheduled for transmission
+ * The MAV'RIC Framework
  *
- * Created: 21/03/2013 01:00:46
- *  Author: sfx
+ * Copyright © 2011-2014
+ * 
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+ * \file mavlink_action.h
+ *
+ * Definition of the tasks executed on the autopilot
  */ 
 
 
@@ -18,10 +25,35 @@
 extern "C" {
 #endif
 
+
+/**
+ * \brief     Initialisation of the module mavlink actions
+ */
 void init_mavlink_actions(void);
+
+
+/**
+ * \brief     Add all onboard parameters to the parameter list
+ */
 void add_onboard_parameters(void);
 
+
+/**
+ * \brief     		Handle project-specific mavlink messages
+ * \details 		A mavlink message is first handled in Library/mavlink_stream, 
+ * 					it is forwarded to this function if it does not match any 
+ * 					general messages
+ * 
+ * \param 	rec 	Received mavlink message 
+ */
 void handle_specific_messages (Mavlink_Received_t* rec);
+
+
+/**
+ * \brief     		Handle long mavlink messages (ie. MAV_CMD_XXX messages)
+ * 
+ * \param 	rec 	Received message
+ */
 void receive_message_long(Mavlink_Received_t* rec);
 
 #ifdef __cplusplus
