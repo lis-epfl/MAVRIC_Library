@@ -1,14 +1,24 @@
-/*
- * conf_stabilisation_copter.h
+/* The MAV'RIC Framework
  *
- * Default values for stabilisation
- * 
- * Created: 13/11/2013 17:46:00
- *  Author: Julien
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
  */
+ 
+
+/**
+ * \file conf_stabilisation_copter.h
+ *
+ *  Default values for cascade PID controller 
+ */
+
 
 #ifndef CONF_STABILISATION_COPTER_H_
 #define CONF_STABILISATION_COPTER_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "stabilisation_copter.h"
 
@@ -392,5 +402,8 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 	.yaw_coordination_velocity=1.5
 };
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CONF_STABILISATION_COPTER_H_ */

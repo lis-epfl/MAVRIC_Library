@@ -52,19 +52,19 @@ void init_imu (Imu_Data_t *imu1)
 	imu1->raw_scale[Y+COMPASS_OFFSET] =  RAW_MAG_Y_SCALE;
 	imu1->raw_scale[Z+COMPASS_OFFSET] =  RAW_MAG_Z_SCALE;
 	
-	imu1->raw_bias[X+GYRO_OFFSET]= 0.0;
-	imu1->raw_bias[Y+GYRO_OFFSET]= 0.0;
-	imu1->raw_bias[Z+GYRO_OFFSET]= 0.0;
+	imu1->raw_bias[X+GYRO_OFFSET] = 0.0;
+	imu1->raw_bias[Y+GYRO_OFFSET] = 0.0;
+	imu1->raw_bias[Z+GYRO_OFFSET] = 0.0;
 
 	// acceleration biais
-	imu1->raw_bias[X+ACC_OFFSET]= ACC_BIAIS_X;
-	imu1->raw_bias[Y+ACC_OFFSET]= ACC_BIAIS_Y;
-	imu1->raw_bias[Z+ACC_OFFSET]= ACC_BIAIS_Z;
+	imu1->raw_bias[X+ACC_OFFSET] = ACC_BIAIS_X;
+	imu1->raw_bias[Y+ACC_OFFSET] = ACC_BIAIS_Y;
+	imu1->raw_bias[Z+ACC_OFFSET] = ACC_BIAIS_Z;
 	
 	// magneto bias
-	imu1->raw_bias[X+COMPASS_OFFSET]= MAG_BIAIS_X;
-	imu1->raw_bias[Y+COMPASS_OFFSET]= MAG_BIAIS_Y;
-	imu1->raw_bias[Z+COMPASS_OFFSET]= MAG_BIAIS_Z;
+	imu1->raw_bias[X+COMPASS_OFFSET] = MAG_BIAIS_X;
+	imu1->raw_bias[Y+COMPASS_OFFSET] = MAG_BIAIS_Y;
+	imu1->raw_bias[Z+COMPASS_OFFSET] = MAG_BIAIS_Z;
 	
 	imu_last_update_init = false;
 }
@@ -89,9 +89,9 @@ void imu_get_raw_data(Imu_Data_t *imu1)
 	imu1->raw_channels[ACC_OFFSET+IMU_Y] = ((float)accs->axes[RAW_ACC_Y])*ACC_AXIS_Y;
 	imu1->raw_channels[ACC_OFFSET+IMU_Z] = ((float)accs->axes[RAW_ACC_Z])*ACC_AXIS_Z;
 	
-	imu1->raw_channels[COMPASS_OFFSET+IMU_X] = (float)compass->axes[RAW_COMPASS_X]*MAG_AXIS_X;
-	imu1->raw_channels[COMPASS_OFFSET+IMU_Y] = (float)compass->axes[RAW_COMPASS_Y]*MAG_AXIS_Y;
-	imu1->raw_channels[COMPASS_OFFSET+IMU_Z] = (float)compass->axes[RAW_COMPASS_Z]*MAG_AXIS_Z;
+	imu1->raw_channels[COMPASS_OFFSET+IMU_X] = (float)compass->axes[RAW_MAG_X]*MAG_AXIS_X;
+	imu1->raw_channels[COMPASS_OFFSET+IMU_Y] = (float)compass->axes[RAW_MAG_Y]*MAG_AXIS_Y;
+	imu1->raw_channels[COMPASS_OFFSET+IMU_Z] = (float)compass->axes[RAW_MAG_Z]*MAG_AXIS_Z;
 	
 }
 
@@ -129,7 +129,9 @@ void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *
 	{
 		imu1->last_update = t;
 		imu_last_update_init = true;
-	}else{
+	}
+	else
+	{
 		imu1->dt = ticks_to_seconds(t - imu1->last_update);
 		imu1->last_update = t;
 		qfilter(&imu1->attitude, &imu1->raw_channels, imu1->dt);
