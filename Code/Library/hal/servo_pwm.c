@@ -26,6 +26,8 @@
 
 void init_Servos(void)
 {
+	int i = 0;
+	
 	  ///< To unlock registers
 	  AVR32_PWM.wpcr = (AVR32_PWM_WPCR_WPKEY_KEY   << AVR32_PWM_WPCR_WPKEY) |
 	          AVR32_PWM_WPCR_WPRG0_MASK                            |
@@ -53,7 +55,7 @@ void init_Servos(void)
 	AVR32_PWM.osc  = ( 0b1111 <<(AVR32_PWM_OOVH0_OFFSET+i))|( 0b1111 <<(AVR32_PWM_OOVL0_OFFSET+i)); 
 	
 	///< set up channels: enable dead time insertion
-	for (int i=0; i<4; i++) 
+	for (i=0; i<4; i++) 
 	{
 		///< enable dead time, set channel clock to CLKA
 		AVR32_PWM.channel[i].cmr=AVR32_PWM_CMR0_DTE_MASK | 11;
