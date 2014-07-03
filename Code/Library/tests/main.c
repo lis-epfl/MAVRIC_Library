@@ -9,8 +9,8 @@
 int main(int argc, char **argv)
 {
 	
-	initialise_board(get_central_data());
-	initialise_central_data();
+	boardsupport_init(central_data_get_pointer_to_struct());
+	central_data_init();
 	
 	run_all_tests();
 

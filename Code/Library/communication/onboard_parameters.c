@@ -33,7 +33,7 @@ Parameter_Set_t param_set;
 void onboard_parameters_init(void) 
 {
 	param_set.param_count = 0;
-	dbg_print("Onboard parameters initialised.\n");	
+	print_util_dbg_print("Onboard parameters initialised.\n");	
 }
 
 void onboard_parameters_add_parameter_uint8(uint8_t* val, const char* param_name) 
@@ -264,11 +264,11 @@ void onboard_parameters_receive_parameter(Mavlink_Received_t* rec)
 	if ((uint8_t)set.target_system == (uint8_t)mavlink_system.sysid
 	&& (uint8_t)set.target_component == (uint8_t)mavlink_system.compid) 
 	{
-		dbg_print("Setting parameter ");
-		dbg_print(set.param_id);
-		dbg_print(" to ");
-		dbg_putfloat(set.param_value, 2);
-		dbg_print("\n");
+		print_util_dbg_print("Setting parameter ");
+		print_util_dbg_print(set.param_id);
+		print_util_dbg_print(" to ");
+		print_util_dbg_putfloat(set.param_value, 2);
+		print_util_dbg_print("\n");
 		
 		char* key = (char*) set.param_id;
 				
@@ -328,7 +328,7 @@ void onboard_parameters_read_parameters_from_flashc()
 	
 	if ((param_set.param_count==local_array.values[0])&&(cksum1 == nvram_array->values[param_set.param_count+1])&&(cksum2 == nvram_array->values[param_set.param_count+2]))
 	{
-		dbg_print("Flash read successful! New Parameters inserted. \n");
+		print_util_dbg_print("Flash read successful! New Parameters inserted. \n");
 		for (i=1;i<(param_set.param_count+1);i++)
 		{
 			onboard_parameters_update_parameter(i-1, local_array.values[i]);
@@ -336,7 +336,7 @@ void onboard_parameters_read_parameters_from_flashc()
 	}
 	else
 	{
-		dbg_print("Flash memory corrupted! Hardcoded values taken.\n");
+		print_util_dbg_print("Flash memory corrupted! Hardcoded values taken.\n");
 	}
 }
 
@@ -355,7 +355,7 @@ void onboard_parameters_write_parameters_from_flashc()
 	cksum1 += local_array.values[0];
 	cksum2 += cksum1;
 	
-	dbg_print("Begin write to flashc...\n");
+	print_util_dbg_print("Begin write to flashc...\n");
 	
 	for (i=1;i<=param_set.param_count;i++)
 	{
@@ -371,10 +371,10 @@ void onboard_parameters_write_parameters_from_flashc()
 	if(bytes_to_write < MAVERIC_FLASHC_USER_PAGE_FREE_SPACE)
 	{
 		flashc_memcpy((void *)nvram_array, &local_array, bytes_to_write, true);
-		dbg_print("Write to flashc completed.\n");
+		print_util_dbg_print("Write to flashc completed.\n");
 	}
 	else
 	{
-		dbg_print("Attempted to write too many parameters on flash user page, aborted.\n");
+		print_util_dbg_print("Attempted to write too many parameters on flash user page, aborted.\n");
 	}
 }

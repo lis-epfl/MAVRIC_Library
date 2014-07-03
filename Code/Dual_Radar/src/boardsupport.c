@@ -12,7 +12,7 @@
 #include "delay.h"
 
 
-initialise_board(central_data_t *central_data){
+boardsupport_init(central_data_t *central_data){
 		
 		irq_initialize_vectors();
 		cpu_irq_enable();
@@ -30,10 +30,10 @@ initialise_board(central_data_t *central_data){
 
 		/*
 		if (i2c_driver_init(1)!=STATUS_OK) {
-			//putstring(STDOUT, "Error initialising I2C\n");
+			//print_util_putstring(STDOUT, "Error initialising I2C\n");
 			while (1==1);
 			} else {
-			//putstring(STDOUT, "initialised I2C.\n");
+			//print_util_putstring(STDOUT, "initialised I2C.\n");
 		};
 		i2c_slave_interface_init(1);
 		*/
@@ -45,7 +45,7 @@ initialise_board(central_data_t *central_data){
 		
 		uart_int_register_write_stream(uart_int_get_uart_handle(4), &central_data->wired_out_stream);
 
-		make_buffered_stream(&(central_data->wired_in_buffer), &(central_data->wired_in_stream));
+		buffer_make_buffered_stream(&(central_data->wired_in_buffer), &(central_data->wired_in_stream));
 		uart_int_register_read_stream(uart_int_get_uart_handle(4), &(central_data->wired_in_stream));
 
 		central_data->telemetry_down_stream=&(central_data->wired_out_stream);
@@ -55,7 +55,7 @@ initialise_board(central_data_t *central_data){
 
 		// init mavlink
 		mavlink_stream_init(central_data->telemetry_down_stream, central_data->telemetry_up_stream, 100);
-		dbg_print_init(central_data->debug_out_stream);
+		print_util_dbg_print_init(central_data->debug_out_stream);
 		
 		dac_dma_init(0);
 		dac_dma_set_value(0);

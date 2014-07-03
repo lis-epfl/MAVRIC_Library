@@ -38,7 +38,7 @@ void mavlink_send_heartbeat(void) {
 								0, 0,  				// comms drop, comms errors
 								0, 0, 0, 0);        // autopilot specific errors
 								
-	//dbg_print("Send hearbeat.\n");
+	//print_util_dbg_print("Send hearbeat.\n");
 }
 
 void mavlink_send_raw_imu(void) {
@@ -108,7 +108,7 @@ void mavlink_send_attitude_quaternion(void) {
 void mavlink_send_attitude(void) {
 	// ATTITUDE
 	Aero_Attitude_t aero_attitude;
-	aero_attitude=Quat_to_Aero(board->imu1.attitude.qe);
+	aero_attitude=coord_conventions_quat_to_aero(board->imu1.attitude.qe);
 	mavlink_msg_attitude_send(MAVLINK_COMM_0, time_keeper_get_millis(), aero_attitude.rpy[0], aero_attitude.rpy[1], aero_attitude.rpy[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
 }
 
@@ -121,7 +121,7 @@ void mavlink_send_global_position(void) {
    //}else{
 	   //mavlink_msg_global_position_int_send(MAVLINK_COMM_0, time_keeper_get_millis(), 46.5193*10000000, 6.56507*10000000, 400*1000, 1, 0, 0, 0, board->imu1.attitude.om[2]);
 	   	// send integrated position (for now there is no GPS error correction...!!!)
-		global_position_t gpos=local_to_global_position(board->imu1.attitude.localPosition);
+		global_position_t gpos=coord_conventions_local_to_global_position(board->imu1.attitude.localPosition);
 		mavlink_msg_global_position_int_send(MAVLINK_COMM_0, time_keeper_get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, board->imu1.attitude.vel[0]*100.0, board->imu1.attitude.vel[1]*100.0, board->imu1.attitude.vel[2]*100.0, board->imu1.attitude.om[2]);
 		mavlink_msg_global_position_int_send(MAVLINK_COMM_1, time_keeper_get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, board->imu1.attitude.vel[0]*100.0, board->imu1.attitude.vel[1]*100.0, board->imu1.attitude.vel[2]*100.0, board->imu1.attitude.om[2]);
    //} 
@@ -131,7 +131,7 @@ void mavlink_send_hud(void) {
 	float groundspeed=sqrt(board->imu1.attitude.vel[0]*board->imu1.attitude.vel[0] +board->imu1.attitude.vel[1]*board->imu1.attitude.vel[1]);
 	float airspeed=groundspeed;
 	Aero_Attitude_t aero_attitude;
-	aero_attitude=Quat_to_Aero(board->imu1.attitude.qe);
+	aero_attitude=coord_conventions_quat_to_aero(board->imu1.attitude.qe);
 	// mavlink_msg_vfr_hud_send(mavlink_channel_t chan, float airspeed, float groundspeed, int16_t heading, uint16_t throttle, float alt, float climb)
 	mavlink_msg_vfr_hud_send(MAVLINK_COMM_0, airspeed, groundspeed, 180.0*aero_attitude.rpy[2]/PI, (int)((board->controls.thrust+1.0)*50), -board->imu1.attitude.localPosition.pos[2], -board->imu1.attitude.vel[2]);
 
@@ -177,13 +177,13 @@ void mavlink_send_estimator(void)
 	mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, time_keeper_get_millis(), board->imu1.attitude.localPosition.pos[0], board->imu1.attitude.localPosition.pos[1], board->imu1.attitude.localPosition.pos[2], board->imu1.attitude.vel[0], board->imu1.attitude.vel[1], board->imu1.attitude.vel[2]);
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,0,"Estimation",0);
 	
-	//dbg_print("Local position: (");
-	//dbg_print_num(board->imu1.attitude.localPosition.pos[X],10);
-	//dbg_print(", ");
-	//dbg_print_num(board->imu1.attitude.localPosition.pos[Y],10);
-	//dbg_print(", ");
-	//dbg_print_num(board->imu1.attitude.localPosition.pos[Z],10);
-	//dbg_print(")\n");
+	//print_util_dbg_print("Local position: (");
+	//print_util_dbg_print_num(board->imu1.attitude.localPosition.pos[X],10);
+	//print_util_dbg_print(", ");
+	//print_util_dbg_print_num(board->imu1.attitude.localPosition.pos[Y],10);
+	//print_util_dbg_print(", ");
+	//print_util_dbg_print_num(board->imu1.attitude.localPosition.pos[Z],10);
+	//print_util_dbg_print(")\n");
 }
 
 void mavlink_send_kalman_estimator(void)
@@ -263,112 +263,55 @@ void add_PID_parameters(void) {
 
 	onboard_parameters_add_parameter_int32(&board->simulation_mode, "Sim_mode");
 	// Roll rate PID
-	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].p_gain, "RollRPid_P_G");
-	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].clip_max, "RollRPid_P_CLmx");
-	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].clip_min, "RollRPid_P_CLmn");
-	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.clip, "RollRPid_I_CLip");
-	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollRPid_I_PstG");
-	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollRPid_I_PreG");
-	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.clip, "RollRPid_D_Clip");
-	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollRPid_D_Gain");
-	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.LPF, "RollRPid_D_LPF");
+	//add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].differentiator.LPF, "RollRPid_D_LPF");
 	
 	// Roll attitude PID
-	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].p_gain, "RollAPid_P_G");
-	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].clip_max, "RollAPid_P_CLmx");
-	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].clip_min, "RollAPid_P_CLmn");
-	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.clip, "RollAPid_I_CLip");
-	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollAPid_I_PstG");
-	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollAPid_I_PreG");
-	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.clip, "RollAPid_D_Clip");
-	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollAPid_D_Gain");
-	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.LPF, "RollAPid_D_LPF");
+	//add_parameter_float(&attitude_stabiliser->rpy_controller[ROLL].differentiator.LPF, "RollAPid_D_LPF");
 
 	// Pitch rate PID
-	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].p_gain, "PitchRPid_P_G");
-	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].clip_max, "PitchRPid_P_CLmx");
-	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].clip_min, "PitchRPid_P_CLmn");
-	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.clip, "PitchRPid_I_CLip");
-	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchRPid_I_PstG");
-	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchRPid_I_PreG");
-	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.clip, "PitchRPid_D_Clip");
-	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchRPid_D_Gain");
-	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.LPF, "PitchRPid_D_LPF");
+	//add_parameter_float(&rate_stabiliser->rpy_controller[PITCH].differentiator.LPF, "PitchRPid_D_LPF");
 	
 	// Pitch attitude PID
-	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].p_gain, "PitchAPid_P_G");
-	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].clip_max, "PitchAPid_P_CLmx");
-	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].clip_min, "PitchAPid_P_CLmn");
-	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.clip, "PitchAPid_I_CLip");
-	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchAPid_I_PstG");
-	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchAPid_I_PreG");
-	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.clip, "PitchAPid_D_Clip");
-	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchAPid_D_Gain");
-	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.LPF, "PitchAPid_D_LPF");
+	//add_parameter_float(&attitude_stabiliser->rpy_controller[PITCH].differentiator.LPF, "PitchAPid_D_LPF");
 
 	// Yaw rate PID
-	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].p_gain, "YawRPid_P_G");
-	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].clip_max, "YawRPid_P_CLmx");
-	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].clip_min, "YawRPid_P_CLmn");
-	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.clip, "YawRPid_I_CLip");
-	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.postgain, "YawRPid_I_PstG");
-	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].integrator.pregain, "YawRPid_I_PreG");
-	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.clip, "YawRPid_D_Clip");
-	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.gain, "YawRPid_D_Gain");
-	//onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.LPF, "YawRPid_D_LPF");
+	//add_parameter_float(&rate_stabiliser->rpy_controller[YAW].differentiator.LPF, "YawRPid_D_LPF");
 	
 	// Yaw attitude PID
-	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].p_gain, "YawAPid_P_G");
-	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_max, "YawAPid_P_CLmx");
-	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].clip_min, "YawAPid_P_CLmn");
-	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.clip, "YawAPid_I_CLip");
-	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.postgain, "YawAPid_I_PstG");
-	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].integrator.pregain, "YawAPid_I_PreG");
-	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.clip, "YawAPid_D_Clip");
-	onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain, "YawAPid_D_Gain");
-	//onboard_parameters_add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.LPF, "YawAPid_D_LPF");
+	//add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.LPF, "YawAPid_D_LPF");
 
 	// Roll velocity PID
-	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].p_gain, "RollVPid_P_G");
-	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.postgain, "RollVPid_I_PstG");
-	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].integrator.pregain, "RollVPid_I_PreG");
-	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollVPid_D_Gain");
+	add_parameter_float(&velocity_stabiliser->rpy_controller[ROLL].differentiator.gain, "RollVPid_D_Gain");
 
 	// Pitch velocity PID
-	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].p_gain, "PitchVPid_P_G");
-	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.postgain, "PitchVPid_I_PstG");
-	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].integrator.pregain, "PitchVPid_I_PreG");
-	onboard_parameters_add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchVPid_D_Gain");
+	add_parameter_float(&velocity_stabiliser->rpy_controller[PITCH].differentiator.gain, "PitchVPid_D_Gain");
 
 	// Thrust velocity PID
-	onboard_parameters_add_parameter_float(&velocity_stabiliser->thrust_controller.p_gain, "ThrustVPid_P_G");
-	onboard_parameters_add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.postgain, "ThrustVPid_I_PstG");
-	onboard_parameters_add_parameter_float(&velocity_stabiliser->thrust_controller.integrator.pregain, "ThrustVPid_I_PreG");
-	onboard_parameters_add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain, "ThrustVPid_D_Gain");
+	add_parameter_float(&velocity_stabiliser->thrust_controller.differentiator.gain, "ThrustVPid_D_Gain");
 }
 
-void init_mavlink_actions(void) {
+void mavlink_actions_init(void) {
 	board=get_board_hardware();
 	add_PID_parameters();
-	add_task(mavlink_stream_get_taskset(), 1000000,RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
-	add_task(mavlink_stream_get_taskset(),  100000, RUN_REGULAR, &mavlink_send_attitude, MAVLINK_MSG_ID_ATTITUDE);
-	add_task(mavlink_stream_get_taskset(),  100000, RUN_REGULAR, &mavlink_send_attitude_quaternion, MAVLINK_MSG_ID_ATTITUDE_QUATERNION);
-	add_task(mavlink_stream_get_taskset(),  250000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
-	add_task(mavlink_stream_get_taskset(),  300000, RUN_REGULAR, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
-	add_task(mavlink_stream_get_taskset(),  200000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
-	add_task(mavlink_stream_get_taskset(),  200000, RUN_REGULAR, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
-	add_task(mavlink_stream_get_taskset(),  200000, RUN_REGULAR, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
-	add_task(mavlink_stream_get_taskset(),  200000, RUN_REGULAR, &mavlink_send_rpy_speed_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT);
-	add_task(mavlink_stream_get_taskset(),  200000, RUN_REGULAR, &mavlink_send_rpy_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT);
-	add_task(mavlink_stream_get_taskset(),  100000, RUN_REGULAR, &mavlink_send_servo_output, MAVLINK_MSG_ID_SERVO_OUTPUT_RAW);
-	//add_task(mavlink_stream_get_taskset(),  50000, &mavlink_send_radar);
-	add_task(mavlink_stream_get_taskset(),  100000, RUN_REGULAR, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
-	add_task(mavlink_stream_get_taskset(),  100000, RUN_REGULAR, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
-	add_task(mavlink_stream_get_taskset(),  250000, RUN_REGULAR, &mavlink_send_gps_raw, MAVLINK_MSG_ID_GPS_RAW_INT);
-	add_task(mavlink_stream_get_taskset(), 1000000, RUN_NEVER, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
-	add_task(mavlink_stream_get_taskset(), 1000000, RUN_REGULAR, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
-	add_task(mavlink_stream_get_taskset(),  500000, RUN_REGULAR, &mavlink_send_simulation, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
-	//add_task(mavlink_stream_get_taskset(),  250000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	scheduler_add_task(mavlink_stream_get_taskset(), 1000000,RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
+	scheduler_add_task(mavlink_stream_get_taskset(),  100000, RUN_REGULAR, &mavlink_send_attitude, MAVLINK_MSG_ID_ATTITUDE);
+	scheduler_add_task(mavlink_stream_get_taskset(),  100000, RUN_REGULAR, &mavlink_send_attitude_quaternion, MAVLINK_MSG_ID_ATTITUDE_QUATERNION);
+	scheduler_add_task(mavlink_stream_get_taskset(),  250000, RUN_REGULAR, &mavlink_send_hud, MAVLINK_MSG_ID_VFR_HUD);
+	scheduler_add_task(mavlink_stream_get_taskset(),  300000, RUN_REGULAR, &mavlink_send_pressure, MAVLINK_MSG_ID_SCALED_PRESSURE);
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000, RUN_REGULAR, &mavlink_send_scaled_imu, MAVLINK_MSG_ID_SCALED_IMU);
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000, RUN_REGULAR, &mavlink_send_raw_imu, MAVLINK_MSG_ID_RAW_IMU);
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000, RUN_REGULAR, &mavlink_send_rpy_rates_error, MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT);
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000, RUN_REGULAR, &mavlink_send_rpy_speed_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT);
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000, RUN_REGULAR, &mavlink_send_rpy_thrust_setpoint, MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT);
+	scheduler_add_task(mavlink_stream_get_taskset(),  100000, RUN_REGULAR, &mavlink_send_servo_output, MAVLINK_MSG_ID_SERVO_OUTPUT_RAW);
+	//scheduler_add_task(mavlink_stream_get_taskset(),  50000, &mavlink_send_radar);
+	scheduler_add_task(mavlink_stream_get_taskset(),  100000, RUN_REGULAR, &mavlink_send_estimator, MAVLINK_MSG_ID_LOCAL_POSITION_NED);
+	scheduler_add_task(mavlink_stream_get_taskset(),  100000, RUN_REGULAR, &mavlink_send_global_position, MAVLINK_MSG_ID_GLOBAL_POSITION_INT);
+	scheduler_add_task(mavlink_stream_get_taskset(),  250000, RUN_REGULAR, &mavlink_send_gps_raw, MAVLINK_MSG_ID_GPS_RAW_INT);
+	scheduler_add_task(mavlink_stream_get_taskset(), 1000000, RUN_NEVER, &mavlink_send_raw_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_RAW);
+	scheduler_add_task(mavlink_stream_get_taskset(), 1000000, RUN_REGULAR, &mavlink_send_scaled_rc_channels, MAVLINK_MSG_ID_RC_CHANNELS_SCALED);
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000, RUN_REGULAR, &mavlink_send_simulation, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	//scheduler_add_task(mavlink_stream_get_taskset(),  250000, RUN_REGULAR, &mavlink_send_kalman_estimator, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 	
-	sort_taskset_by_period(mavlink_stream_get_taskset());
+	scheduler_sort_taskset_by_period(mavlink_stream_get_taskset());
 }

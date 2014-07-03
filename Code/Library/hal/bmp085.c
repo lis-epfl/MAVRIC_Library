@@ -64,11 +64,11 @@ void bmp085_init_slow(){
 
 	if (twim_probe(&AVR32_TWIM0, BMP085_SLAVE_ADDRESS)==STATUS_OK) 
 	{
-		dbg_print("BMP85/180 pressure sensor found (0x77)\n");
+		print_util_dbg_print("BMP85/180 pressure sensor found (0x77)\n");
 	} 
 	else 
 	{
-		dbg_print("BMP85/180 pressure sensor not responding (0x77)\n");
+		print_util_dbg_print("BMP85/180 pressure sensor not responding (0x77)\n");
 		return;
 	}
 	
@@ -187,9 +187,9 @@ pressure_data* bmp085_get_pressure_data_slow(float offset)
 					pressure_outputs.last_altitudes[i] = pressure_outputs.last_altitudes[i+1];
 				}
 				pressure_outputs.last_altitudes[2] = altitude;
-				altitude=median_filter_3x(pressure_outputs.last_altitudes[0], pressure_outputs.last_altitudes[1], pressure_outputs.last_altitudes[2]);
+				altitude=maths_median_filter_3x(pressure_outputs.last_altitudes[0], pressure_outputs.last_altitudes[1], pressure_outputs.last_altitudes[2]);
 			
-				if (f_abs(altitude-pressure_outputs.altitude)<15.0f) 
+				if (maths_f_abs(altitude-pressure_outputs.altitude)<15.0f) 
 				{
 					pressure_outputs.altitude = (BARO_ALT_LPF*pressure_outputs.altitude) + (1.0f-BARO_ALT_LPF)*altitude;
 				}

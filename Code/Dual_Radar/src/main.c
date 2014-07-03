@@ -51,18 +51,18 @@ void initialisation() {
 	int i;
 	
 	main_tasks.number_of_tasks=30;
-	initialise_board(central_data);
+	boardsupport_init(central_data);
 	
 
 	radar_driver_init();
 
 	Enable_global_interrupt();
 		
-	//dbg_print("Debug stream initialised\n");
+	//print_util_dbg_print("Debug stream initialised\n");
 
 
 	onboard_parameters_init();
-	init_mavlink_actions();
+	mavlink_actions_init();
 	
 	
 }
@@ -77,8 +77,8 @@ void main (void)
 	
 	initialisation();
 	
-	init_scheduler(&main_tasks);
-	register_task(&main_tasks, 0, 1000, RUN_REGULAR, &mavlink_stream_protocol_update);
+	scheduler_init(&main_tasks);
+	scheduler_register_task(&main_tasks, 0, 1000, RUN_REGULAR, &mavlink_protocol_update);
 	// main loop
 	counter=0;
 	// turn on radar power:
@@ -129,12 +129,12 @@ void main (void)
 			mavlink_send_radar();
 			//mavlink_send_radar_raw();
 			
-			//dbg_putfloat(get_tracked_target()->velocity,2);
-			//dbg_print(".\n");
+			//print_util_dbg_putfloat(get_tracked_target()->velocity,2);
+			//print_util_dbg_print(".\n");
 
 		}			
 		
-		//run_scheduler_update(&main_tasks, FIXED_PRIORITY);
+		//scheduler_run_update(&main_tasks, FIXED_PRIORITY);
 		mavlink_stream_protocol_update();
 		//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "ADC_period", adc_int_get_period());
 

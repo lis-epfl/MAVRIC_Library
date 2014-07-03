@@ -16,10 +16,10 @@
 
 void add_PID_parameters(void);
 
-void init_mavlink_actions(void);
+void mavlink_actions_init(void);
 
-static inline void handle_specific_messages (Mavlink_Received_t* rec) {}
+static inline void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec) {}
 
-void receive_message_long(Mavlink_Received_t* rec);
+void mavlink_actions_receive_message_long(Mavlink_Received_t* rec);
 
 #endif /* MAVLINK_ACTIONS_H_ */

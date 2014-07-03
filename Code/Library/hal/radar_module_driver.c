@@ -19,7 +19,7 @@ void radar_module_init() {
 	};
 
 	twim_master_init(&AVR32_TWIM1, &twi_opt);
-	dbg_print("Radar modules initialised.\n");
+	print_util_dbg_print("Radar modules initialised.\n");
 }
 
 
@@ -29,9 +29,9 @@ void radar_module_read() {
 	twim_write(&AVR32_TWIM1, (uint8_t*) &output, 1, 1, false);
 	twim_read(&AVR32_TWIM1, (uint8_t*)&main_target, sizeof(main_target), 1, false);
 	
-	dbg_print_num(main_target.velocity*100.0f,10);
-	dbg_print_num(main_target.amplitude,10);
-	dbg_print("\n");
+	print_util_dbg_print_num(main_target.velocity*100.0f,10);
+	print_util_dbg_print_num(main_target.amplitude,10);
+	print_util_dbg_print("\n");
 	
 }
 

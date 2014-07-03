@@ -69,18 +69,18 @@ void qfilter_init_quaternion(Quat_Attitude_t *attitude)
 	
 	init_angle = atan2(-attitude->mag[1],attitude->mag[0]);
 
-	dbg_print("Initial yaw:");
-	dbg_print_num(init_angle*100.0f,10);
-	dbg_print(" = atan2(mag_y,mag_x) =");
-	dbg_print_num(-attitude->mag[1]*100.0f,10);
-	dbg_print(" ,");
-	dbg_print_num(attitude->mag[0]*100.0f,10);
-	dbg_print("\n");
+	print_util_dbg_print("Initial yaw:");
+	print_util_dbg_print_num(init_angle*100.0f,10);
+	print_util_dbg_print(" = atan2(mag_y,mag_x) =");
+	print_util_dbg_print_num(-attitude->mag[1]*100.0f,10);
+	print_util_dbg_print(" ,");
+	print_util_dbg_print_num(attitude->mag[0]*100.0f,10);
+	print_util_dbg_print("\n");
 
 	front_mag_vect_z = attitude->mag[2];
-	dbg_print("Front mag(z) (*100):");
-	dbg_print_num(front_mag_vect_z*100.0f,10);
-	dbg_print("\n");
+	print_util_dbg_print("Front mag(z) (*100):");
+	print_util_dbg_print_num(front_mag_vect_z*100.0f,10);
+	print_util_dbg_print("\n");
 
 	attitude->qe.s = cos(init_angle/2.0f);
 	attitude->qe.v[0] = 0.0f;
@@ -107,13 +107,13 @@ void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float *rates, float 
 
 	// up_bf = qe^-1 *(0,0,0,-1) * qe
 	up.s = 0; up.v[0] = UPVECTOR_X; up.v[1] = UPVECTOR_Y; up.v[2] = UPVECTOR_Z;
-	up_bf = quat_global_to_local(attitude->qe, up);
+	up_bf = maths_quat_global_to_local(attitude->qe, up);
 	
 	// calculate norm of acceleration vector
 	s_acc_norm = attitude->a[0]*attitude->a[0]+attitude->a[1]*attitude->a[1]+attitude->a[2]*attitude->a[2];
 	if ((s_acc_norm > 0.7f*0.7f)&&(s_acc_norm < 1.3f*1.3f)) {
 		// approximate square root by running 2 iterations of newton method
-		acc_norm = fast_sqrt(s_acc_norm);
+		acc_norm = maths_fast_sqrt(s_acc_norm);
 
 		tmp[0] = attitude->a[0]/acc_norm;
 		tmp[1] = attitude->a[1]/acc_norm;
@@ -130,23 +130,23 @@ void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float *rates, float 
 
 	// Heading computation
 	// transfer 
-	qtmp1 = quat_from_vector(attitude->mag); 
-	mag_global = quat_local_to_global(attitude->qe, qtmp1);
+	qtmp1 = maths_quat_from_vector(attitude->mag); 
+	mag_global = maths_quat_local_to_global(attitude->qe, qtmp1);
 	
 	// calculate norm of compass vector
 	//s_mag_norm = SQR(mag_global.v[0])+SQR(mag_global.v[1])+SQR(mag_global.v[2]);
 	s_mag_norm = SQR(mag_global.v[0])+SQR(mag_global.v[1]);
 	if ((s_mag_norm > 0.004f*0.004f)&&(s_mag_norm < 1.8f*1.8f)) 
 	{
-		mag_norm = fast_sqrt(s_mag_norm);
+		mag_norm = maths_fast_sqrt(s_mag_norm);
 
 		mag_global.v[0] /= mag_norm;
 		mag_global.v[1] /= mag_norm;
 		mag_global.v[2] = 0.0f;   // set z component in global frame to 0
 
 		// transfer magneto vector back to body frame 
-		attitude->north_vec = quat_global_to_local(attitude->qe, front_vec_global);		
-		mag_corrected_local = quat_global_to_local(attitude->qe, mag_global);		
+		attitude->north_vec = maths_quat_global_to_local(attitude->qe, front_vec_global);		
+		mag_corrected_local = maths_quat_global_to_local(attitude->qe, mag_global);		
 		// omc = a x up_bf.v
 		CROSS(mag_corrected_local.v, attitude->north_vec.v,  omc_mag);
 		
@@ -198,7 +198,7 @@ void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float *rates, float 
 	qtmp1.s = 0;
 
 	// apply step rotation with corrections
-	qed = quat_multi(attitude->qe,qtmp1);
+	qed = maths_quat_multi(attitude->qe,qtmp1);
 
 	attitude->qe.s = attitude->qe.s+qed.s*dt;
 	attitude->qe.v[0] += qed.v[0]*dt;
@@ -229,7 +229,7 @@ void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float *rates, float 
 	else
 	{
 		// approximate square root by running 2 iterations of newton method
-		norm = fast_sqrt(snorm);
+		norm = maths_fast_sqrt(snorm);
 	}
 	attitude->qe.s /= norm;
 	attitude->qe.v[0] /= norm;

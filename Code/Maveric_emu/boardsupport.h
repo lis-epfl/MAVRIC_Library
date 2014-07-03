@@ -16,7 +16,7 @@
 
 
 
-void initialise_board(central_data_t *centralData);
+void boardsupport_init(central_data_t *centralData);
 
 
 #endif /* BOARDSUPPORT_H_ */

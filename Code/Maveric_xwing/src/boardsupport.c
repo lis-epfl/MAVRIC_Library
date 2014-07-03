@@ -30,7 +30,7 @@
 
 //static volatile board_hardware_t board_hardware;
 
-void initialise_board(central_data_t *centralData) {
+void boardsupport_init(central_data_t *centralData) {
 	int i;
 	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 
@@ -49,16 +49,16 @@ void initialise_board(central_data_t *centralData) {
 		
 		
 	if (i2c_driver_init(0)!=STATUS_OK) {
-		//putstring(STDOUT, "Error initialising I2C\n");
+		//print_util_putstring(STDOUT, "Error initialising I2C\n");
 		while (1==1);
 		} else {
-		//putstring(STDOUT, "initialised I2C.\n");
+		//print_util_putstring(STDOUT, "initialised I2C.\n");
 	};
 	if (i2c_driver_init(1)!=STATUS_OK) {
-		//putstring(STDOUT, "Error initialising I2C\n");
+		//print_util_putstring(STDOUT, "Error initialising I2C\n");
 		while (1==1);
 		} else {
-		//putstring(STDOUT, "initialised I2C.\n");
+		//print_util_putstring(STDOUT, "initialised I2C.\n");
 	};
 
 	LED_Off(LED1);
@@ -76,7 +76,7 @@ void initialise_board(central_data_t *centralData) {
 				
 		
 	uart_int_init(3);
-	make_buffered_stream(&(centralData->gps_buffer), &(centralData->gps_stream_in));
+	buffer_make_buffered_stream(&(centralData->gps_buffer), &(centralData->gps_stream_in));
 	uart_int_register_read_stream(uart_int_get_uart_handle(3), &(centralData->gps_stream_in));
 	uart_int_register_write_stream(uart_int_get_uart_handle(3), &(centralData->gps_stream_out));
 		
@@ -84,8 +84,8 @@ void initialise_board(central_data_t *centralData) {
 	uart_int_register_write_stream(uart_int_get_uart_handle(4), &(centralData->wired_out_stream));
 
 
-	make_buffered_stream_lossy(&(centralData->xbee_in_buffer), &(centralData->xbee_in_stream));
-	make_buffered_stream_lossy(&(centralData->wired_in_buffer), &(centralData->wired_in_stream));
+	buffer_make_buffered_stream_lossy(&(centralData->xbee_in_buffer), &(centralData->xbee_in_stream));
+	buffer_make_buffered_stream_lossy(&(centralData->wired_in_buffer), &(centralData->wired_in_stream));
 	uart_int_register_read_stream(uart_int_get_uart_handle(4), &(centralData->wired_in_stream));
 	uart_int_register_read_stream(uart_int_get_uart_handle(0), &(centralData->xbee_in_stream));
 
@@ -112,13 +112,13 @@ void initialise_board(central_data_t *centralData) {
 	mavlink_stream_init(centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID);
 		
 	// init debug output
-	dbg_print_init(centralData->debug_out_stream);
+	print_util_dbg_print_init(centralData->debug_out_stream);
 		
-	init_imu(&(centralData->imu1));
+	imu_init(&(centralData->imu1));
 	bmp085_init();
 
 	Enable_global_interrupt();
-	dbg_print("Board initialised.\n");
+	print_util_dbg_print("Board initialised.\n");
 }
 
 //board_hardware_t* get_board_hardware() {
@@ -132,7 +132,7 @@ void initialise_board(central_data_t *centralData) {
 //byte_stream_t* get_telemetry_downstream() {
 	//return board_hardware.telemetry_down_stream;
 //}
-//byte_stream_t* get_debug_stream() {
+//byte_stream_t* print_util_get_debug_stream() {
 	//return board_hardware.debug_out_stream;
 //}
 //

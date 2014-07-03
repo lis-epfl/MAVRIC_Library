@@ -670,7 +670,7 @@
       <File Name="Library/util/print_util.h"/>
       <File Name="Library/util/sinus.c"/>
       <File Name="Library/util/print_util.c"/>
-      <File Name="Library/util/print_matrix.h"/>
+      <File Name="Library/util/print_util_print_matrix.h"/>
       <File Name="Library/util/coord_conventions.h"/>
       <File Name="Library/util/sinus.h"/>
       <File Name="Library/util/buffer.c"/>

@@ -68,7 +68,7 @@ void imu_get_raw_data(Imu_Data_t *imu1);
  *
  * \param	imu1		the pointer to the IMU structure
  */
-void imu_calibrate_Gyros(Imu_Data_t *imu1);
+void imu_calibrate_gyros(Imu_Data_t *imu1);
 
 /**
  * \brief	Computes the attitude estimation, do the position estimation and the position correction

@@ -44,7 +44,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) {
 	if (REMOTE_UART.csr & AVR32_USART_CSR_RXRDY_MASK) {
 		spRec1.duration=now-spRec1.last_time;
 		spRec1.last_time=now;
-//		//dbg_print("!");
+//		//print_util_dbg_print("!");
 		//receiveInterruptHandler(&spRec1.receiver);
 		if ((spRec1.duration>2500)) {
 			buffer_clear(&spRec1.receiver);
@@ -61,7 +61,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) {
 			channel_encoding =(c2 & 0x10)>>4; /* 0 = 11bit, 1 = 10 bit */
 			frame_number     = c2 & 0x03; /* 1 = 1 frame contains all channels */
 			//PORTC.OUT = _BV(5);
-			//dbg_print("!");
+			//print_util_dbg_print("!");
 			for (i=1; i<8; i++) {
 				c1=buffer_get(&spRec1.receiver);
 				c2=buffer_get(&spRec1.receiver);

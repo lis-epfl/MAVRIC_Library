@@ -74,10 +74,10 @@ void register_read_stream_stdin( byte_stream_t *stream) {
 
 
 
-void initialise_board(central_data_t *centralData) {
+void boardsupport_init(central_data_t *centralData) {
 //		uart_int_init(0);
 
-		make_buffered_stream(&centralData->xbee_in_buffer, &centralData->xbee_in_stream);
+		buffer_make_buffered_stream(&centralData->xbee_in_buffer, &centralData->xbee_in_stream);
 
 		//register_read_stream_stdin( &centralData->xbee_in_stream);
 		
@@ -89,7 +89,7 @@ void initialise_board(central_data_t *centralData) {
 		//register_write_stream_udp(&centralData->xbee_out_stream, &udp_out, "127.0.0.1",14550);
 		
 //		uart_int_init(3);
-		make_buffered_stream(&(centralData->gps_buffer), &centralData->gps_stream_in);
+		buffer_make_buffered_stream(&(centralData->gps_buffer), &centralData->gps_stream_in);
 //		uart_int_register_read_stream(uart_int_get_uart_handle(3), &centralData->gps_stream_in);
 //		uart_int_register_write_stream(uart_int_get_uart_handle(3), &centralData->gps_stream_out);
 		
@@ -121,9 +121,9 @@ void initialise_board(central_data_t *centralData) {
 		
 
 		// init debug output
-		dbg_print_init(centralData->debug_out_stream);
+		print_util_dbg_print_init(centralData->debug_out_stream);
 		
-		init_imu(&centralData->imu1);
+		imu_init(&centralData->imu1);
 
 		remote_dsm2_rc_init();
 		servo_pwm_init();
@@ -144,7 +144,7 @@ void initialise_board(central_data_t *centralData) {
 		centralData->position_estimator.localPosition.origin.altitude =   HOME_ALTITUDE;
 		centralData->position_estimator.localPosition.pos[0]=0;	centralData->position_estimator.localPosition.pos[1]=0; centralData->position_estimator.localPosition.pos[2]=0;
 		
-		init_simulation(&centralData->sim_model, &centralData->imu1.attitude);
+		simulation_init(&centralData->sim_model, &centralData->imu1.attitude);
 		centralData->sim_model.localPosition=centralData->position_estimator.localPosition;
 
 

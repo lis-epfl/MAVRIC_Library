@@ -127,13 +127,13 @@ void mavlink_stream_handle_message(Mavlink_Received_t* rec)
 {
 	if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) 
 	{
-		//dbg_print("\n Received message with ID");
-		//dbg_print_num(rec->msg.msgid, 10);
-		//dbg_print(" from system");
-		//dbg_print_num(rec->msg.sysid, 10);
-		//dbg_print(" for component");
-		//dbg_print_num(rec->msg.compid,10);
-		//dbg_print( "\n");
+		//print_util_dbg_print("\n Received message with ID");
+		//print_util_dbg_print_num(rec->msg.msgid, 10);
+		//print_util_dbg_print(" from system");
+		//print_util_dbg_print_num(rec->msg.sysid, 10);
+		//print_util_dbg_print(" for component");
+		//print_util_dbg_print_num(rec->msg.compid,10);
+		//print_util_dbg_print( "\n");
 		
 		switch(rec->msg.msgid) 
 		{
@@ -142,14 +142,14 @@ void mavlink_stream_handle_message(Mavlink_Received_t* rec)
 				mavlink_param_request_list_t request;
 				mavlink_msg_param_request_list_decode(&rec->msg, &request);
 			
-				dbg_print("msg comp id:");
-				dbg_print_num(request.target_component,10);
-				dbg_print("\n");
+				print_util_dbg_print("msg comp id:");
+				print_util_dbg_print_num(request.target_component,10);
+				print_util_dbg_print("\n");
 			
 				// Check if this message is for this system
 				if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid) 
 				{
-					dbg_print("Sending all parameters \n");
+					print_util_dbg_print("Sending all parameters \n");
 					onboard_parameters_send_all_parameters();
 				}				
 			}
@@ -162,8 +162,8 @@ void mavlink_stream_handle_message(Mavlink_Received_t* rec)
 				if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid)
 				//&& (uint8_t)request.target_component == (uint8_t)mavlink_system.compid)
 				 {
-					dbg_print("Sending parameter ");
-					dbg_print(request.param_id);
+					print_util_dbg_print("Sending parameter ");
+					print_util_dbg_print(request.param_id);
 					onboard_parameters_send_parameter(&request);
 				}				
 			}
@@ -183,12 +183,12 @@ void mavlink_stream_handle_message(Mavlink_Received_t* rec)
 				if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid)
 				//&& (uint8_t)request.target_component == (uint8_t)mavlink_system.compid)
 				{
-					dbg_print("stream request:");
-					dbg_print_num(request.target_component,10);
+					print_util_dbg_print("stream request:");
+					print_util_dbg_print_num(request.target_component,10);
 					if (request.req_stream_id==255) 
 					{
 						int i;
-						dbg_print("send all\n");
+						print_util_dbg_print("send all\n");
 						// send full list of streams
 						for (i=0; i<mavlink_tasks.number_of_tasks; i++) 
 						{
@@ -199,11 +199,11 @@ void mavlink_stream_handle_message(Mavlink_Received_t* rec)
 					else 
 					{
 						task_entry *task =scheduler_get_task_by_id(&mavlink_tasks, request.req_stream_id);
-						dbg_print(" stream="); dbg_print_num(request.req_stream_id, 10);
-						dbg_print(" start_stop=");dbg_print_num(request.start_stop, 10);
-						dbg_print(" rate=");dbg_print_num(request.req_message_rate,10);
-						dbg_print("\n");
-						dbg_print("\n");
+						print_util_dbg_print(" stream="); print_util_dbg_print_num(request.req_stream_id, 10);
+						print_util_dbg_print(" start_stop=");print_util_dbg_print_num(request.start_stop, 10);
+						print_util_dbg_print(" rate=");print_util_dbg_print_num(request.req_message_rate,10);
+						print_util_dbg_print("\n");
+						print_util_dbg_print("\n");
 						if (request.start_stop) 
 						{
 							scheduler_change_run_mode(task, RUN_REGULAR);

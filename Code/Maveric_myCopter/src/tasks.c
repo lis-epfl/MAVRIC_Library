@@ -81,7 +81,7 @@ void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motor
 
 void switch_off_motors(void)
 {
-	dbg_print("Switching off motors!\n");
+	print_util_dbg_print("Switching off motors!\n");
 
 	centralData->run_mode = MOTORS_OFF;
 	centralData->mav_state = MAV_STATE_STANDBY;
@@ -98,7 +98,7 @@ void tasks_relevel_imu()
 	centralData->mav_state = MAV_STATE_CALIBRATING;
 	centralData->mav_mode = MAV_MODE_PREFLIGHT;
 
-	dbg_print("calibrating IMU...\n");
+	print_util_dbg_print("calibrating IMU...\n");
 
 	for (j=0;j<3;j++)
 	{
@@ -122,7 +122,7 @@ void tasks_relevel_imu()
 	centralData->mav_state = MAV_STATE_STANDBY;
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	
-	dbg_print("IMU calibration done.\n");
+	print_util_dbg_print("IMU calibration done.\n");
 }
 
 
@@ -152,7 +152,7 @@ task_return_t tasks_set_mav_mode_n_state()
 				switch(channelSwitches)
 				{
 					case 0:
-						dbg_print("Switching on the motors!\n");
+						print_util_dbg_print("Switching on the motors!\n");
 
 						position_estimation_reset_home_altitude(	&centralData->position_estimator, 
 														&centralData->pressure, 
@@ -164,15 +164,15 @@ task_return_t tasks_set_mav_mode_n_state()
 						break;
 
 					case 1:
-						dbg_print("Switches not ready, both should be pushed!\n");
+						print_util_dbg_print("Switches not ready, both should be pushed!\n");
 						break;
 
 					case 2:
-						dbg_print("Switches not ready, both should be pushed!\n");
+						print_util_dbg_print("Switches not ready, both should be pushed!\n");
 						break;
 
 					case 3:
-						dbg_print("Switches not ready, both should be pushed!\n");
+						print_util_dbg_print("Switches not ready, both should be pushed!\n");
 						break;
 				}
 			}
@@ -244,9 +244,9 @@ task_return_t tasks_set_mav_mode_n_state()
 						if ((centralData->dist2wp_sqr <= 16.0f)&&(!centralData->automatic_take_off))
 						{
 							centralData->mav_state = MAV_STATE_ACTIVE;
-							dbg_print("Automatic take-off finised, distFromHomeSqr (10x):");
-							dbg_print_num(distFromHomeSqr*10.0f,10);
-							dbg_print(".\n");
+							print_util_dbg_print("Automatic take-off finised, distFromHomeSqr (10x):");
+							print_util_dbg_print_num(distFromHomeSqr*10.0f,10);
+							print_util_dbg_print(".\n");
 						}
 						break;
 
@@ -267,9 +267,9 @@ task_return_t tasks_set_mav_mode_n_state()
 						if ((centralData->dist2wp_sqr <= 16.0f)&&(!centralData->automatic_take_off))
 						{
 							centralData->mav_state = MAV_STATE_ACTIVE;
-							dbg_print("Automatic take-off finised, distFromHomeSqr (10x):");
-							dbg_print_num(distFromHomeSqr*10.0f,10);
-							dbg_print(".\n");
+							print_util_dbg_print("Automatic take-off finised, distFromHomeSqr (10x):");
+							print_util_dbg_print_num(distFromHomeSqr*10.0f,10);
+							print_util_dbg_print(".\n");
 						}
 						break;
 				}
@@ -597,7 +597,7 @@ void fake_gps_fix()
 	fake_pos.origin.altitude = HOME_ALTITUDE;
 	fake_pos.timestamp_ms = centralData->position_estimator.localPosition.timestamp_ms;
 
-	global_position_t gpos = local_to_global_position(fake_pos);
+	global_position_t gpos = coord_conventions_local_to_global_position(fake_pos);
 	
 	centralData->GPS_data.latitude = gpos.latitude;
 	centralData->GPS_data.longitude = gpos.longitude;

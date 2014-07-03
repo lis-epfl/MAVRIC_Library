@@ -10,7 +10,7 @@ matrix_2x2_t  inv2(matrix_2x2_t m) {
 								 -m.v[1][0]*det,     m.v[0][0]*det}};
 		return result;
 	} else {
-		dbg_print("matrix inversion 2x2 failed!\n");
+		print_util_dbg_print("matrix inversion 2x2 failed!\n");
 		return zero_2x2;			
 	}
 }
@@ -28,7 +28,7 @@ matrix_3x3_t inv3(matrix_3x3_t m) {
 		            { (m.v[1][0]*m.v[2][1] - m.v[1][1]*m.v[2][0]) *det,  -(m.v[0][0]*m.v[2][1] - m.v[0][1]*m.v[2][0]) *det  , (m.v[0][0]*m.v[1][1] - m.v[0][1]*m.v[1][0]) *det}}};
 		return result;
 	} else {
-		dbg_print("matrix inversion 3x3 failed!\n");
+		print_util_dbg_print("matrix inversion 3x3 failed!\n");
 		return zero_3x3;
 	}
 }
@@ -153,7 +153,7 @@ matrix_4x4_t inv4(matrix_4x4_t m) {
     det = m.v[0][0] * result.v[0][0] + m.v[0][1] * result.v[1][0] + m.v[0][2] * result.v[2][0] + m.v[0][3] * result.v[3][0];
 
     if (det == 0) {
-		dbg_print("inversion 4x4 failed");
+		print_util_dbg_print("inversion 4x4 failed");
         return zero_4x4;
 	}
 

@@ -75,11 +75,11 @@ lsm_get_acc_config()
 	twim_write(&AVR32_TWIM0, (uint8_t*) &data_register_address, 1, LSM330_ACC_SLAVE_ADDRESS, false);
 	twim_read(&AVR32_TWIM0, (uint8_t*)&readbuffer, sizeof(readbuffer), LSM330_ACC_SLAVE_ADDRESS, false);
 	
-	dbg_print("lsm acc config:\n");
+	print_util_dbg_print("lsm acc config:\n");
 	for (i=0; i<sizeof(readbuffer); i++) 
 	{
-		dbg_print_num(readbuffer[i], 16); dbg_print(" (");
-		dbg_print_num(lsm_acc_default_config.ctrl_reg_a[i], 16); dbg_print(")\n");
+		print_util_dbg_print_num(readbuffer[i], 16); print_util_dbg_print(" (");
+		print_util_dbg_print_num(lsm_acc_default_config.ctrl_reg_a[i], 16); print_util_dbg_print(")\n");
 	}
 }
 
@@ -103,11 +103,11 @@ lsm_get_gyro_config()
 	twim_write(&AVR32_TWIM0, (uint8_t*) &data_register_address, 1, LSM330_GYRO_SLAVE_ADDRESS, false);
 	twim_read(&AVR32_TWIM0, (uint8_t*)&readbuffer, sizeof(readbuffer), LSM330_GYRO_SLAVE_ADDRESS, false);
 	
-	dbg_print("lsm gyro config:\n");
+	print_util_dbg_print("lsm gyro config:\n");
 	for (i=0; i<sizeof(readbuffer); i++) 
 	{
-		dbg_print_num(readbuffer[i], 16); dbg_print(" (");
-		dbg_print_num(lsm_gyro_default_config.ctrl_reg_g[i], 16); dbg_print(")\n");
+		print_util_dbg_print_num(readbuffer[i], 16); print_util_dbg_print(" (");
+		print_util_dbg_print_num(lsm_gyro_default_config.ctrl_reg_g[i], 16); print_util_dbg_print(")\n");
 	}
 }
 

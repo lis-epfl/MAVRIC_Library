@@ -36,7 +36,7 @@ extern "C"
  * 
  * @return            Estimated return value of the function
  */
-float quick_sin(float x);
+float quick_trig_sin(float x);
 
 
 /**
@@ -46,7 +46,7 @@ float quick_sin(float x);
  * 
  * @return            Estimated return value of the function
  */
-float quick_cos(float x);
+float quick_trig_cos(float x);
 
 
 /**
@@ -56,7 +56,7 @@ float quick_cos(float x);
  * 
  * @return            Estimated return value of the function
  */
-float quick_acos(float x);
+float quick_trig_acos(float x);
 
 
 /**
@@ -66,7 +66,7 @@ float quick_acos(float x);
  * 
  * @return            Estimated return value of the function
  */
-float quick_asin(float x);
+float quick_trig_asin(float x);
 
 
 /**
@@ -76,7 +76,7 @@ float quick_asin(float x);
  * 
  * @return            Estimated return value of the function
  */
-float quick_tan(float x);
+float quick_trig_tan(float x);
 
 
 /**
@@ -86,7 +86,7 @@ float quick_tan(float x);
  * 
  * @return            Estimated return value of the function
  */
-float quick_atan(float x);
+float quick_trig_atan(float x);
 
 
 /**
@@ -100,7 +100,7 @@ float quick_atan(float x);
  * 
  * @return            Estimated return value of the function
  */
-static inline float quick_func(float x, const float func_x_min, const float func_x_max, float func_x_step, const float func_y[])
+static inline float quick_trig_func(float x, const float func_x_min, const float func_x_max, float func_x_step, const float func_y[])
 {
 	float y;
 	int i;
@@ -115,7 +115,7 @@ static inline float quick_func(float x, const float func_x_min, const float func
 	else
 	{
 		i = (int) ((x - func_x_min) / func_x_step);
-		y = interpolate(x, 
+		y = maths_interpolate(x, 
 						func_x_min + i * func_x_step,
 						func_x_min + (i + 1) * func_x_step,
 						func_y[i], 

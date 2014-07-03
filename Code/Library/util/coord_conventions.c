@@ -24,7 +24,7 @@
 #include "quick_trig.h"
 
 
-global_position_t local_to_global_position(local_coordinates_t input)
+global_position_t coord_conventions_local_to_global_position(local_coordinates_t input)
 {
 	global_position_t output;
 	output.latitude = input.origin.latitude  + rad_to_deg( input.pos[0] / EARTH_RADIUS);
@@ -36,7 +36,7 @@ global_position_t local_to_global_position(local_coordinates_t input)
 }
 
 
-local_coordinates_t global_to_local_position(global_position_t position, global_position_t origin) 
+local_coordinates_t coord_conventions_global_to_local_position(global_position_t position, global_position_t origin) 
 {
 	local_coordinates_t output;
 	output.origin = origin;
@@ -50,7 +50,7 @@ local_coordinates_t global_to_local_position(global_position_t position, global_
 }
 
 
-Aero_Attitude_t Quat_to_Aero(UQuat_t qe) 
+Aero_Attitude_t coord_conventions_quat_to_aero(UQuat_t qe) 
 {
 	Aero_Attitude_t aero;
 
@@ -62,18 +62,18 @@ Aero_Attitude_t Quat_to_Aero(UQuat_t qe)
 }
 
 
-UQuat_t quaternion_from_aero(Aero_Attitude_t aero)
+UQuat_t coord_conventions_quaternion_from_aero(Aero_Attitude_t aero)
 {
 	UQuat_t quat;
 
 	// intermediate values
 	float cr, cp, cy, sr, sp, sy;
-	cr = quick_cos(aero.rpy[0] / 2);
-	cp = quick_cos(aero.rpy[1] / 2);
-	cy = quick_cos(aero.rpy[2] / 2);
-	sr = quick_sin(aero.rpy[0] / 2);
-	sp = quick_sin(aero.rpy[1] / 2);
-	sy = quick_sin(aero.rpy[2] / 2);
+	cr = quick_trig_cos(aero.rpy[0] / 2);
+	cp = quick_trig_cos(aero.rpy[1] / 2);
+	cy = quick_trig_cos(aero.rpy[2] / 2);
+	sr = quick_trig_sin(aero.rpy[0] / 2);
+	sp = quick_trig_sin(aero.rpy[1] / 2);
+	sy = quick_trig_sin(aero.rpy[2] / 2);
 
 
 	quat.s = 	(cr * cp * cy) + (sr * sp * sy);
@@ -85,7 +85,7 @@ UQuat_t quaternion_from_aero(Aero_Attitude_t aero)
 }
 
 
-float get_yaw(UQuat_t qe) 
+float coord_conventions_get_yaw(UQuat_t qe) 
 {
 	return  atan2(2*(qe.s*qe.v[2] + qe.v[0]*qe.v[1]) , (qe.s*qe.s + qe.v[0]*qe.v[0] - qe.v[1]*qe.v[1] - qe.v[2]*qe.v[2]));
 }
