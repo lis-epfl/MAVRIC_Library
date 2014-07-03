@@ -654,7 +654,7 @@ uint32_t last_fix_time;						///< Last fix time
  *
  * \param	_engine_nav_setting		the GPS Nav settings 
  */
-void init_gps_ubx(GPS_Engine_Setting _engine_nav_setting);
+void gps_ublox_init(GPS_Engine_Setting _engine_nav_setting);
 
 /**
  * \brief	Process bytes available from the stream
@@ -668,138 +668,14 @@ void init_gps_ubx(GPS_Engine_Setting _engine_nav_setting);
  *
  * \return	true if new velocity and new position message
  */
-bool ubx_read(void);
+bool gps_ublox_message_decode(void);
 
 /**
  * \brief	Process the new received message, class by class
  *
  * \return	true if new velocity and new position message
  */
-bool ubx_process_data(void);
-
-/**
- * \brief	Checksum update
- *
- * \param	data	pointer to the data to update the checksum
- * \param	len		length of the data to update the checksum
- * \param	ck_a	checksum a: sum of all the data
- * \param	ck_b	checksum b: sum of checksum a
- *
- * \return	true if new velocity and new position message
- */
-void update_checksum(uint8_t *data, uint8_t len, uint8_t *ck_a, uint8_t *ck_b);
-
-/**
- * \brief	To send the lower bytes of an uint16_t in the Little Endian format
- *
- * \param	bytes	the uint16 bytes to be transformed
- *
- * \return	the lower 8 bytes of the uint16 uint
- */
-uint8_t endian_lower_bytes_uint16(uint16_t bytes);
-
-/**
- * \brief	To send the higher bytes of an uint16_t in the Little Endian format
- *
- * \param	bytes	the uint16 bytes to be transformed
- *
- * \return	the higher 8 bytes of the uint16 uint
- */
-uint8_t endian_higher_bytes_uint16(uint16_t bytes);
-
-/**
- * \brief	To send the lower bytes of an uint32_t in the Little Endian format
- *
- * \param	bytes	the uint16 bytes to be transformed
- *
- * \return	the lower 8 bytes of the uint32_t uint
- */
-uint8_t endian_lower_bytes_uint32(uint32_t bytes);
-
-/**
- * \brief	To send the mid lower bytes of an uint32_t in the Little Endian format
- *
- * \param	bytes	the uint16 bytes to be transformed
- *
- * \return	the mid lower 8 bytes of the uint32_t uint
- */
-uint8_t endian_mid_lower_bytes_uint32(uint32_t bytes);
-
-/**
- * \brief	To send the mid higher bytes of an uint32_t in the Little Endian format
- *
- * \param	bytes	the uint16 bytes to be transformed
- *
- * \return	the mid higher 8 bytes of the uint32_t uint
- */
-uint8_t endian_mid_higher_bytes_uint32(uint32_t bytes);
-
-/**
- * \brief	To send the higher bytes of an uint32_t in the Little Endian format
- *
- * \param	bytes	the uint16 bytes to be transformed
- *
- * \return	the higher 8 bytes of the uint32_t uint
- */
-uint8_t endian_higher_bytes_uint32(uint32_t bytes);
-
-/**
- * \brief	To send the UBX header of all messages
- *
- * \param	msg_class	the U-Blox class of the message
- * \param	_msg_id		the U-Blox message ID
- * \param	size		the size of the U-Blox following message
- */
-void ubx_send_header(uint8_t msg_class, uint8_t _msg_id, uint16_t size);
-
-/**
- * \brief	To send the checksum of every message
- *
- * \param	ck_sum_a	the checksum a
- * \param	ck_sum_b	the checksum b
- */
-void ubx_send_cksum(uint8_t ck_sum_a, uint8_t ck_sum_b);
-
-/**
- * \brief	To send a CFG NAV RATE message
- *
- * Class:	0x06	UBX_CLASS_CFG
- * Msg_id:	0x08	MSG_CFG_RATE
- *
- * \param	msg_class	the U-Blox class of the message
- * \param	_msg_id		the U-Blox message ID
- * \param	msg			the CFG_NAV_RATE message
- * \param	size		the size of the U-Blox following message
- */
-void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_nav_rate_send msg, uint16_t size);
-
-/**
- * \brief	To send the NAV settings message
- *
- * Class:	0x06	UBX_CLASS_CFG
- * Msg_id:	0x24	MSG_CFG_NAV_SETTINGS
- *
- *
- * \warning	This function sends wrong element
- *
- * \param	msg_class			the U-Blox class of the message
- * \param	_msg_id				the U-Blox message ID
- * \param	engine_settings		the engine_settings sent
- * \param	size				the size of the U-Blox following message
- */
-void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_nav_settings *engine_settings, uint16_t size);
-
-/**
- * \brief	To send the NAV messages that we want to receive
- *
- * Class:	0x06	UBX_CLASS_CFG
- * Msg_id:	0x01	MSG_CFG_SET_RATE
- *
- * \param	msg_class	the U-Blox class of the message
- * \param	msg_id		the U-Blox message ID
- * \param	rate		the rate of the CFG message
- */
-void ubx_configure_message_rate(uint8_t msg_class, uint8_t msg_id, uint8_t rate);
+bool gps_ublox_process_data(void);
 
 /**
  * \brief	To configure the GPS in binary mode and the Navigation messages we want
@@ -808,13 +684,13 @@ void ubx_configure_message_rate(uint8_t msg_class, uint8_t msg_id, uint8_t rate)
  *
  * \param	void
  */
-void configure_gps(void);
+void gps_ublox_configure_gps(void);
 
 
 /**
  * \brief	The function that needs to be called to get the GPS information
  */
-void gps_update(void);
+void gps_ublox_update(void);
 
 /**
  * \brief	The function that tells if a message is arrived at time tnow
@@ -823,96 +699,8 @@ void gps_update(void);
  *
  * \return	if the latest GPS message is arrived at tnow
  */
-bool newValidGpsMsg(uint32_t *prevGpsMsgTime);
+bool gps_ublox_newValidGpsMsg(uint32_t *prevGpsMsgTime);
 
-/**
- * \brief	This function returns a pointer to the last NAV-POSLLH message that was received
- *
- * Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
- *
- * \return	A pointer to the last valid posllh message, or 0.
- */
-ubx_nav_posllh * ubx_GetPosllh(void);
-
-/**
- * \brief	This function returns a pointer to the last NAV-STATUS message that was received
- *
- * Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
- *
- * \return	A pointer to the last valid status message, or 0.
- */
-ubx_nav_status * ubx_GetStatus(void);
-/**
- * \brief	This function returns a pointer to the last NAV-SOL message that was received
- *
- * Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
- *
- * \return	A pointer to the last valid NAV-SOL message, or 0.
- */
-ubx_nav_solution * ubx_GetSolution(void);
-
-/**
-* \brief	This function returns a pointer to the last NAV-VELNED message that was received
-* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-* \return	A pointer to the last valid velned message, or 0.
-*/
-ubx_nav_velned * ubx_GetVelned(void);
-
-/**
-* \brief	This function returns a pointer to the last NAV-SVINFO message that was received
-* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-* \return	A pointer to the last valid status message, or 0.
-*/
-ubx_nav_SVInfo * ubx_GetSVInfo(void);
-
-/**
-* \brief	This function returns a pointer to the last NAV-Settings message that was received
-* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-* \return	A pointer to the last valid status message, or 0.
-*/
-ubx_cfg_nav_settings * ubx_GetNavSettings(void);
-
-/**
-* \brief	This function returns a pointer to the last CFG set/get rate message that was received
-* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-* \return	A pointer to the last valid status message, or 0.
-*/
-ubx_cfg_msg_rate * ubx_GetMsgRate(void);
-
-/**
-* \brief	This function returns a pointer to the last MON RXR message that was received
-* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-* \return	A pointer to the last valid status message, or 0.
-*/
-ubx_mon_rxr_struct * ubx_GetMonRXR(void);
-
-/**
-* \brief	This function returns a pointer to the last TIM TP message that was received
-* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-* \return	A pointer to the last valid status message, or 0.
-*/
-ubx_tim_tp * ubx_GetTimTP(void);
-
-/**
-* \brief	This function returns a pointer to the last TIM VRFY message that was received
-* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
-*
-* \return	A pointer to the last valid status message, or 0.
-*/
-ubx_tim_vrfy * ubx_GetTimVRFY(void);
-
-/**
-* \brief	This function transforms a float angle in degree in a float angle in radians
-*
-* \return	The value in radians
-*/
-float ToRad(float numdeg);
 
 #ifdef __cplusplus
 }

@@ -1,13 +1,20 @@
 /**
- *  Waypoint navigation controller
+ * \page The MAV'RIC License
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
  */
+
+
+/**
+ * \file navigation.c
+ * 
+ * Waypoint navigation controller 
+ */
+
 
 #include "navigation.h"
 #include "central_data.h"
@@ -26,9 +33,7 @@ uint8_t loopCount = 0;
 
 void init_nav(void)
 {
-//	int8_t i;
-	
-	centralData = get_central_data();
+	centralData = central_data_get_pointer_to_struct();
 	
 	centralData->controls_nav.tvel[X] = 0.0f;
 	centralData->controls_nav.tvel[Y] = 0.0f;
@@ -43,14 +48,9 @@ void init_nav(void)
 	alt_integrator = 0.0f;
 }
 
-
 void run_navigation(local_coordinates_t waypoint_input)
 {
-	// int8_t i;
-	// float newVelocity[3];
-	
 	float rel_pos[3]; 
-	// dist2wp_sqr;
 	
 	// Control in translational speed of the platform
 	centralData->dist2wp_sqr = set_rel_pos_n_dist2wp(waypoint_input.pos, rel_pos);

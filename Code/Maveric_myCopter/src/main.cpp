@@ -28,9 +28,9 @@ void initialisation()
 	int i;
 	GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 	
-	centralData = get_central_data();
-	initialise_board(centralData);
-	initialise_central_data();
+	centralData = central_data_get_pointer_to_struct();
+	boardsupport_init(centralData);
+	central_data_init();
 	
 	dbg_print("Debug stream initialised\n");
 	
@@ -40,11 +40,11 @@ void initialisation()
 	init_onboard_parameters();
 
 
-	init_mavlink_actions(); // TODO: move read from flash elsewhere
+	mavlink_actions_init(); // TODO: move read from flash elsewhere
 	// TODO: this second simulation init is required because we have to wait for the parameters stored on flash
-	init_simulation(&(centralData->sim_model),&(centralData->imu1),centralData->position_estimator.localPosition); // TODO: init only once
+	simulation_init(&(centralData->sim_model),&(centralData->imu1),centralData->position_estimator.localPosition); // TODO: init only once
 
-	relevel_imu(); // TODO: MOVE	
+	tasks_relevel_imu(); // TODO: MOVE	
 
 	//reset position estimate
 	for (i=0; i<3; i++) 
@@ -57,7 +57,7 @@ void initialisation()
 
 	delay_ms(10);
 	dbg_print("Reset home position...\n");
-	position_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model.localPosition);
+	position_estimation_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model.localPosition);
 	// TODO: move to module
 	
 	LED_On(LED1);
@@ -72,11 +72,11 @@ void initialisation()
 int main (void)
 {
 	initialisation();
-	create_tasks();
+	tasks_create_tasks();
 	
 	while (1==1) 
 	{
-		run_scheduler_update(get_main_taskset(), ROUND_ROBIN);
+		scheduler_run_update(tasks_get_main_taskset(), ROUND_ROBIN);
 	}
 
 	return 0;

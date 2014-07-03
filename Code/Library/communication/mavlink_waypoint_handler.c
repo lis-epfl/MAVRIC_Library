@@ -31,7 +31,7 @@ void init_waypoint_handler()
 {
 	start_timeout = get_millis();
 	timeout_max_waypoint = 10000;
-	centralData = get_central_data();
+	centralData = central_data_get_pointer_to_struct();
 	
 	centralData->critical_behavior = CLIMB_TO_SAFE_ALT;
 	centralData->critical_next_state = false;

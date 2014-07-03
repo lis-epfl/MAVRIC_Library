@@ -1,13 +1,20 @@
-/**
- * This file handles the stabilization of the platform
+/** 
+ * \page The MAV'RIC license
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
  */
+ 
+ 
+/**
+ * \file stabilisation_copter.c
+ *
+ * This file handles the stabilization of the platform
+ */
+
 
 #include "stabilisation_copter.h"
 #include "conf_stabilisation_copter.h"
@@ -17,7 +24,7 @@ central_data_t *centralData;
 
 void init_stabilisation_copter(Stabiliser_Stack_copter_t* stabiliser_stack)
 {
-	centralData = get_central_data();
+	centralData = central_data_get_pointer_to_struct();
 	centralData->run_mode = MOTORS_OFF;
 	centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 	centralData->controls.yaw_mode = YAW_RELATIVE;
@@ -113,7 +120,9 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 		
 		if ((control_input->yaw_mode == YAW_ABSOLUTE) ) {
 			rpyt_errors[2] =calc_smaller_angle(input.theading- pos_est->localPosition.heading);
-		} else { // relative yaw
+		}
+		else
+		{ // relative yaw
 			rpyt_errors[2]= input.rpy[2];
 		}
 		
@@ -148,7 +157,8 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 	#endif
 }
 
-void mix_to_servos_diag_quad(Control_Command_t *control){
+void mix_to_servos_diag_quad(Control_Command_t *control)
+{
 	int i;
 	float motor_command[4];
 	
@@ -158,8 +168,14 @@ void mix_to_servos_diag_quad(Control_Command_t *control){
 	motor_command[M_REAR_LEFT]  = control->thrust + ( control->rpy[ROLL] - control->rpy[PITCH]) + M_RL_DIR * control->rpy[YAW];
 	for (i=0; i<4; i++)
 	{
-		if (motor_command[i]<MIN_THRUST) motor_command[i]=MIN_THRUST;
-		if (motor_command[i]>MAX_THRUST) motor_command[i]=MAX_THRUST;
+		if (motor_command[i]<MIN_THRUST)
+		{
+			motor_command[i]=MIN_THRUST;
+		}
+		if (motor_command[i]>MAX_THRUST)
+		{
+			motor_command[i]=MAX_THRUST;
+		}
 	}
 
 	for (i=0; i<4; i++) 
@@ -179,8 +195,14 @@ void mix_to_servos_cross_quad(Control_Command_t *control)
 	motor_command[M_LEFT]  = control->thrust + control->rpy[ROLL] + M_LEFT_DIR * control->rpy[YAW];
 	for (i=0; i<4; i++) 
 	{
-		if (motor_command[i]<MIN_THRUST) motor_command[i]=MIN_THRUST;
-		if (motor_command[i]>MAX_THRUST) motor_command[i]=MAX_THRUST;
+		if (motor_command[i]<MIN_THRUST)
+		{
+			motor_command[i]=MIN_THRUST;
+		}
+		if (motor_command[i]>MAX_THRUST)
+		{
+			motor_command[i]=MAX_THRUST;
+		}
 	}
 	for (i=0; i<4; i++) 
 	{
