@@ -56,9 +56,9 @@
 */
 typedef enum pressure_sensor_state
 {
-	IDLE, 
-	GET_TEMP, 
-	GET_PRESSURE
+	IDLE,				///< Idle state
+	GET_TEMP,			///< Getting temperature state
+	GET_PRESSURE		///< Getting pressure state
 } pressure_sensor_state;
 
 /**

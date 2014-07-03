@@ -27,7 +27,7 @@
 #define DAC_MODE_DMA    DACIFB_TRIGGER_MODE_EVENT						///< Define the DAC mode in respect to the DMA usage
 #define DAC_MODE_MANUAL DACIFB_TRIGGER_MODE_MANUAL						///< Define The DAC mode in manual usage
 
- // Sampling Rate = (115200/DAC_SAMPLING_CLOCK_DIVIDER) = 11'520Hz
+ ///< Sampling Rate = (115200/DAC_SAMPLING_CLOCK_DIVIDER) = 11'520Hz
 #define DAC_SAMPLE_CLOCK_DIVIDER 10										///< Define the Clock Divider for the sampling of the DAC
 
 #  define DAC_AUDIO_INSTANCE            0								///< Define the audio instance for the DAC
@@ -60,11 +60,10 @@ void DAC_load_buffer(uint16_t* samples, int from_sample, int to_sample, int repe
 */
 void DAC_play(void);
 
-/*  // not implemented yet
+///< not implemented yet
+/*
 void DAC_pause();
-
 void DAC_resume();
-
 int  DAC_is_finished();
 */
 
@@ -74,5 +73,4 @@ int  DAC_is_finished();
  * \param output desired voltage
 */
 void DAC_set_value(int32_t output);
-
 #endif

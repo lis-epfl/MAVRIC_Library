@@ -55,5 +55,4 @@ void set_value_binary(int binary_value);
  */
 void beep(int duration_ms, int frequency);
 
-
 #endif /* PIEZO_SPEAKER_H_ */
