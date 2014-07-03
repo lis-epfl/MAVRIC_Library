@@ -38,7 +38,7 @@ void init_orca(void)
 	centralData->safe_size = SIZE_VHC_ORCA;
 		
 	timeHorizon = TIME_HORIZON;
-	invTimeHorizon = 1.0f/timeHorizon;
+	invTimeHorizon = 1.0f / timeHorizon;
 
 	min_coll_dist = 2.0f * SIZE_VHC_ORCA + 1.0f;
 }
@@ -138,7 +138,7 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 				float crossProduct[3];
 				CROSS(relativePosition,relativeVelocity,crossProduct);
 				float c = vector_norm_sqr(relativeVelocity) - vector_norm_sqr(crossProduct) / (distSq - combinedRadiusSq);
-				float t = (b + fast_sqrt(SQR(b) - a*c)) / a;
+				float t = (b + fast_sqrt(SQR(b) - a * c)) / a;
 				for (i=0;i<3;i++)
 				{
 					w[i] = relativeVelocity[i] - t * relativePosition[i];
@@ -164,9 +164,9 @@ void computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 				dbg_print("Distance with neighbor ");
 				dbg_print_num(ind,10);
 				dbg_print("(x100):");
-				dbg_print_num(sqrt(distSq)*100.0f,10);
+				dbg_print_num(sqrt(distSq) * 100.0f,10);
 				dbg_print(", min dist:");
-				dbg_print_num(min_coll_dist*100.0f,10);
+				dbg_print_num(min_coll_dist * 100.0f,10);
 				dbg_print("\n");
 			}
 			
@@ -415,7 +415,7 @@ bool linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Optimal
 		
 		for(i=0;i<3;i++)
 		{
-			diffPtsVel[i] = planes[ind].point[i]-OptimalVelocity[i];
+			diffPtsVel[i] = planes[ind].point[i] - OptimalVelocity[i];
 		}
 		
 		float scalarProduct = scalar_product(diffPtsVel,planes[ind].normal);
@@ -506,7 +506,7 @@ float linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelocity[
 		float normOptimalVelocity = vector_norm(OptimalVelocity);
 		for(i=0;i<3;i++)
 		{
-			NewVelocity[i] = OptimalVelocity[i]/normOptimalVelocity * maxSpeed;
+			NewVelocity[i] = OptimalVelocity[i] / normOptimalVelocity * maxSpeed;
 		}
 	}
 	else
@@ -517,7 +517,7 @@ float linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelocity[
 			float normOptimalVelocity = vector_norm(OptimalVelocity);
 			for(i=0;i<3;i++)
 			{
-				NewVelocity[i] = OptimalVelocity[i]/normOptimalVelocity * maxSpeed;
+				NewVelocity[i] = OptimalVelocity[i] / normOptimalVelocity * maxSpeed;
 			}
 		}
 		else

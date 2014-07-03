@@ -53,7 +53,7 @@ void central_data_init(){
 		simulation_init(&(centralData.sim_model),&(centralData.imu1),centralData.position_estimator.localPosition);		
 		
 
-		centralData.simulation_mode=0;
+		centralData.simulation_mode = 0;
 		centralData.simulation_mode_previous = 0;
 
 		// init waypoint navigation

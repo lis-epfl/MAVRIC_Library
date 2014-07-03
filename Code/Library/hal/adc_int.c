@@ -127,7 +127,7 @@ static void processData() {
 		//|| ((adcifa->sr&ADC_INT_SEOS1) ==0) ) {}
 		else 
 		{
-			adc_int_period=(get_time_ticks()-last_adc_int_time);
+			adc_int_period=(get_time_ticks() - last_adc_int_time);
 			last_adc_int_time=get_time_ticks();
 		
 			if (sample_counter>=0) 
@@ -156,7 +156,7 @@ static void processData() {
 				return;
 			}
 			//if (function_generator!= NULL) {
-			//	DAC_set_value((*function_generator)(sampleCounter));
+			//	DAC_set_value(( * function_generator)(sampleCounter));
 			//}
 			oversampling_counter++;
 	
@@ -171,7 +171,7 @@ static void processData() {
 				sample_counter++;
 			}		
 			
-			//DAC_set_value(even_odd*400);
+			//DAC_set_value(even_odd * 400);
 			///< acknowledge processing finished
 			adcifa->scr=ADC_INT_SEOS0 | ADC_INT_SEOS1;
 		}
@@ -211,7 +211,7 @@ void Init_ADCI(uint32_t adc_frequency, uint8_t reference_source)
 	adcifa_disable_interrupt(adcifa, 0xffffffff);
 	INTC_register_interrupt( (__int_handler) &processData, AVR32_ADCIFA_SEQUENCER0_IRQ, AVR32_INTC_INT1);
 	//INTC_register_interrupt( (__int_handler) &processData, AVR32_ADCIFA_SEQUENCER1_IRQ, AVR32_INTC_INT1);
-	//int period_us=1000000/samplingrate;
+	//int period_us=1000000 / samplingrate;
 }
 
 
@@ -224,7 +224,7 @@ void clear_adc_sequencer(void)
 
 int8_t adc_sequencer_add(int16_t* buffer, uint8_t input_p, uint8_t input_n, uint8_t gain) 
 {	
-	if (sequencer_item_count<SLOTS_PER_SEQUENCER-1) 
+	if (sequencer_item_count<SLOTS_PER_SEQUENCER - 1) 
 	{
 		adcifa_sequencer0_conversion_opt[sequencer_item_count].channel_p = input_p;
 		adcifa_sequencer0_conversion_opt[sequencer_item_count].channel_n = input_n;
@@ -252,7 +252,7 @@ void ADCI_Start_Sampling(int length, int samplingrate, int set_oversampling, int
 	oversampling = set_oversampling;
 	oversampling_divider = set_oversampling_divider;
 
-	volatile int period_us = adc_config_options.frequency/(samplingrate*oversampling);	
+	volatile int period_us = adc_config_options.frequency / (samplingrate*oversampling);	
 	oversampling_counter = 0;
 	sample_counter = -10;
 	number_of_samples = length;

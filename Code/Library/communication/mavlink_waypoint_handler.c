@@ -279,7 +279,7 @@ void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool*
 			{
 				packet.count = MAX_WAYPOINTS - *number_of_waypoints;
 			}
-			*number_of_waypoints =  packet.count+ *number_of_waypoints;
+			*number_of_waypoints =  packet.count + *number_of_waypoints;
 			dbg_print("Receiving ");
 			dbg_print_num(packet.count,10);
 			dbg_print(" new waypoints. ");

@@ -60,7 +60,7 @@ void airspeed_analog_calibrate(airspeed_analog_t* airspeed_analog)
 	uint8_t count = 100;
 	uint8_t i;
 
-	for(i=0; i<count; i++)
+	for(i = 0; i < count; i++)
 	{
 		pressure = airspeed_analog_get_pressure(airspeed_analog);
 		sum = sum + pressure;

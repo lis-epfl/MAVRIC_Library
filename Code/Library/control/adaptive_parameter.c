@@ -78,8 +78,8 @@ void update_adaptive_parameter(Adaptive_Parameter_t param)
 			if (*param.control_variable >= param.setpoints[i])
 			{
 				*param.parameter = interpolate(*param.control_variable, 
-												param.setpoints[i], param.setpoints[i+1],
-												param.setvalues[i], param.setvalues[i+1]);
+												param.setpoints[i], param.setpoints[i + 1],
+												param.setvalues[i], param.setvalues[i + 1]);
 				break;
 			}
 		}

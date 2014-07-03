@@ -27,7 +27,7 @@ static void pdca_int_handler_i2c0(void)
 	
    // call callback function to process data, at end of transfer
    // to process data, and maybe add some more data
-   schedule[0][current_schedule_slot[0]].transfer_in_progress=0;
+   schedule[0][current_schedule_slot[0]].transfer_in_progress = 0;
    
    if (schedule[0][current_schedule_slot[0]].callback) schedule[0][current_schedule_slot[0]].callback;
    putstring(&AVR32_USART0, "!");
@@ -41,7 +41,7 @@ int init_i2c(unsigned char i2c_device) {
 	volatile avr32_twim_t *twim;
 	switch (i2c_device) {
 	case 0: 
-		twim=&AVR32_TWIM0;
+		twim = &AVR32_TWIM0;
 		// Register PDCA IRQ interrupt.
 //		INTC_register_interrupt( (__int_handler) &pdca_int_handler_i2c0, TWI0_DMA_IRQ, AVR32_INTC_INT0);
 		gpio_enable_module_pin(AVR32_TWIMS0_TWCK_0_0_PIN, AVR32_TWIMS0_TWCK_0_0_FUNCTION);
@@ -51,7 +51,7 @@ int init_i2c(unsigned char i2c_device) {
 
 	break;
 	case 1:
-		twim=&AVR32_TWIM1;// Register PDCA IRQ interrupt.
+		twim = &AVR32_TWIM1;// Register PDCA IRQ interrupt.
 //		INTC_register_interrupt( (__int_handler) &pdca_int_handler_i2c0, TWI1_DMA_IRQ, AVR32_INTC_INT0);
 		gpio_enable_module_pin(AVR32_TWIMS1_TWCK_0_0_PIN, AVR32_TWIMS1_TWCK_0_0_FUNCTION);
 		gpio_enable_module_pin(AVR32_TWIMS1_TWD_0_0_PIN, AVR32_TWIMS1_TWD_0_0_FUNCTION);
@@ -61,8 +61,8 @@ int init_i2c(unsigned char i2c_device) {
 	default: // invalid device ID
 		return -1;
 	}		
-	for (i=0; i<I2C_SCHEDULE_SLOTS; i++) {
-		schedule[i2c_device][i].active=-1;
+	for (i = 0; i < I2C_SCHEDULE_SLOTS; i++) {
+		schedule[i2c_device][i].active = -1;
 	}
 				
 	bool global_interrupt_enabled = cpu_irq_is_enabled ();
@@ -107,10 +107,10 @@ char i2c_reset(unsigned char i2c_device) {
 	volatile avr32_twim_t *twim;
 	switch (i2c_device) {
 	case 0: 
-		twim=&AVR32_TWIM0;
+		twim = &AVR32_TWIM0;
 	break;
 	case 1:
-		twim=&AVR32_TWIM1;
+		twim = &AVR32_TWIM1;
 	break;
 	default: // invalid device ID
 		return -1;
@@ -133,29 +133,29 @@ char i2c_reset(unsigned char i2c_device) {
 }
 char i2c_add_request(unsigned char i2c_device, i2c_schedule_event* new_event){
 	// find free schedule slot
-	int i=0;
-	for (i=0; (i<I2C_SCHEDULE_SLOTS)&& (schedule[i2c_device][i].active>=0); i++) {
+	int i = 0;
+	for (i = 0; (i < I2C_SCHEDULE_SLOTS)&& (schedule[i2c_device][i].active >= 0); i++) {
 		putstring(&AVR32_USART0, ".");
 	}
 	// add request to schedule
-	if (i<I2C_SCHEDULE_SLOTS) {
-		new_event->schedule_slot=i;
-		new_event->transfer_in_progress=0;
-		new_event->active=1;
-		schedule[i2c_device][i]=*new_event;
-		schedule[i2c_device][i].config=new_event->config;
+	if (i < I2C_SCHEDULE_SLOTS) {
+		new_event->schedule_slot = i;
+		new_event->transfer_in_progress = 0;
+		new_event->active = 1;
+		schedule[i2c_device][i] = *new_event;
+		schedule[i2c_device][i].config = new_event->config;
 		putstring(&AVR32_USART0, "slave address:");
 		putnum(&AVR32_USART0, schedule[i2c_device][i].config.slave_address, 2);
-	} else i=-1;
+	} else i = -1;
 	// return assigned schedule slot
 	return i;
 }
 char i2c_change_request(unsigned char i2c_device, i2c_schedule_event* new_event){
-	int i=new_event->schedule_slot;
-	if ((i>=0) && (i<I2C_SCHEDULE_SLOTS)) {
-		new_event->transfer_in_progress=0;
+	int i = new_event->schedule_slot;
+	if ((i >= 0) && (i < I2C_SCHEDULE_SLOTS)) {
+		new_event->transfer_in_progress = 0;
 		new_event->active=1;
-		schedule[i2c_device][i]=*new_event;
+		schedule[i2c_device][i] = *new_event;
 	};
 }
 
@@ -164,7 +164,7 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
 	// initiate transfer of given request
 	// set up DMA channel
 	volatile avr32_twim_t *twim;
-	i2c_packet_conf* conf=&schedule[i2c_device][schedule_slot].config;
+	i2c_packet_conf* conf = &schedule[i2c_device][schedule_slot].config;
 	static  pdca_channel_options_t PDCA_OPTIONS =
 			{
 				.addr = 0,                                // memory address
@@ -180,7 +180,7 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
 	}
 	switch (i2c_device) {
 	case 0: 
-		twim=&AVR32_TWIM0;
+		twim = &AVR32_TWIM0;
 		twim->cr = AVR32_TWIM_CR_MEN_MASK;
 		twim->cr = AVR32_TWIM_CR_SWRST_MASK;
 		twim->cr = AVR32_TWIM_CR_MDIS_MASK;
@@ -192,17 +192,17 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
 		switch (conf->direction)  {
 		case I2C_WRITE1_THEN_READ:
 		case I2C_READ:
-			PDCA_OPTIONS.pid=AVR32_TWIM0_PDCA_ID_RX;
-			PDCA_OPTIONS.addr=(void *)conf->read_data;
+			PDCA_OPTIONS.pid = AVR32_TWIM0_PDCA_ID_RX;
+			PDCA_OPTIONS.addr = (void *)conf->read_data;
 			PDCA_OPTIONS.size=conf->read_count;
 			// Init PDCA channel with the pdca_options.
 			pdca_init_channel(TWI0_DMA_CH, &PDCA_OPTIONS); // init PDCA channel with options.
 			break;
 		case I2C_WRITE:
-			PDCA_OPTIONS.pid=AVR32_TWIM0_PDCA_ID_TX;
-			PDCA_OPTIONS.addr=(void *)conf->write_data;
+			PDCA_OPTIONS.pid = AVR32_TWIM0_PDCA_ID_TX;
+			PDCA_OPTIONS.addr = (void *)conf->write_data;
 			PDCA_OPTIONS.size=conf->write_count;
-			PDCA_OPTIONS.r_addr=(void *)conf->write_data;
+			PDCA_OPTIONS.r_addr = (void *)conf->write_data;
 			PDCA_OPTIONS.r_size=conf->write_count;
 			// Init PDCA channel with the pdca_options.
 			pdca_init_channel(TWI0_DMA_CH, &PDCA_OPTIONS); // init PDCA channel with options.
@@ -221,7 +221,7 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
 		
 		break;
 	case 1:
-		twim=&AVR32_TWIM1;
+		twim = &AVR32_TWIM1;
 	break;
 	default: // invalid device ID
 		return -1;
@@ -263,7 +263,7 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
 						
 			// set up writing of one byte (usually a slave register index)
 			//twim->cr = AVR32_TWIM_CR_MEN_MASK;
-			twim->thr=conf->write_then_read_preamble;
+			twim->thr = conf->write_then_read_preamble;
 			twim->cr = AVR32_TWIM_CR_MEN_MASK;
 			
 			break;	
@@ -278,7 +278,7 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
 						| (AVR32_TWIM_CMDR_STOP_MASK)
 						
 						;
-			twim->ncmdr=(conf->slave_address << AVR32_TWIM_CMDR_SADR_OFFSET)
+			twim->ncmdr = (conf->slave_address << AVR32_TWIM_CMDR_SADR_OFFSET)
 						| ((conf->write_count) << AVR32_TWIM_CMDR_NBYTES_OFFSET)
 						//| (AVR32_TWIM_CMDR_VALID_MASK)
 						| (AVR32_TWIM_CMDR_START_MASK)
@@ -290,8 +290,8 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
 	// start transfer
 	
 
-	current_schedule_slot[i2c_device]=schedule_slot;
-	schedule[i2c_device][schedule_slot].transfer_in_progress=1;
+	current_schedule_slot[i2c_device] = schedule_slot;
+	schedule[i2c_device][schedule_slot].transfer_in_progress = 1;
 	twim->cr = AVR32_TWIM_CR_MEN_MASK;
 	pdca_enable(TWI0_DMA_CH);
 	

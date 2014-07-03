@@ -59,15 +59,15 @@ void mavlink_send_raw_imu(void)
 {
 	mavlink_msg_raw_imu_send(	MAVLINK_COMM_0, 
 								get_micros(), 
-								centralData->imu1.raw_channels[ACC_OFFSET+IMU_X], 
-								centralData->imu1.raw_channels[ACC_OFFSET+IMU_Y], 
-								centralData->imu1.raw_channels[ACC_OFFSET+IMU_Z], 
-								centralData->imu1.raw_channels[GYRO_OFFSET+IMU_X], 
-								centralData->imu1.raw_channels[GYRO_OFFSET+IMU_Y], 
-								centralData->imu1.raw_channels[GYRO_OFFSET+IMU_Z], 
-								centralData->imu1.raw_channels[COMPASS_OFFSET+IMU_X], 
-								centralData->imu1.raw_channels[COMPASS_OFFSET+IMU_Y], 
-								centralData->imu1.raw_channels[COMPASS_OFFSET+IMU_Z] );
+								centralData->imu1.raw_channels[ACC_OFFSET + IMU_X], 
+								centralData->imu1.raw_channels[ACC_OFFSET + IMU_Y], 
+								centralData->imu1.raw_channels[ACC_OFFSET + IMU_Z], 
+								centralData->imu1.raw_channels[GYRO_OFFSET + IMU_X], 
+								centralData->imu1.raw_channels[GYRO_OFFSET + IMU_Y], 
+								centralData->imu1.raw_channels[GYRO_OFFSET + IMU_Z], 
+								centralData->imu1.raw_channels[COMPASS_OFFSET + IMU_X], 
+								centralData->imu1.raw_channels[COMPASS_OFFSET + IMU_Y], 
+								centralData->imu1.raw_channels[COMPASS_OFFSET + IMU_Z] );
 }
 
 
@@ -75,15 +75,15 @@ void mavlink_send_scaled_imu(void)
 {
 	mavlink_msg_scaled_imu_send(MAVLINK_COMM_0, 
 								get_millis(),
-								1000*centralData->imu1.attitude.a [IMU_X],
-								1000*centralData->imu1.attitude.a [IMU_Y], 
-								1000*centralData->imu1.attitude.a [IMU_Z], 
-								1000*centralData->imu1.attitude.om[IMU_X], 
-								1000*centralData->imu1.attitude.om[IMU_Y], 
-								1000*centralData->imu1.attitude.om[IMU_Z], 
-								1000*centralData->imu1.attitude.mag[IMU_X],
-								1000*centralData->imu1.attitude.mag[IMU_Y],
-								1000*centralData->imu1.attitude.mag[IMU_Z]
+								1000 * centralData->imu1.attitude.a [IMU_X],
+								1000 * centralData->imu1.attitude.a [IMU_Y], 
+								1000 * centralData->imu1.attitude.a [IMU_Z], 
+								1000 * centralData->imu1.attitude.om[IMU_X], 
+								1000 * centralData->imu1.attitude.om[IMU_Y], 
+								1000 * centralData->imu1.attitude.om[IMU_Z], 
+								1000 * centralData->imu1.attitude.mag[IMU_X],
+								1000 * centralData->imu1.attitude.mag[IMU_Y],
+								1000 * centralData->imu1.attitude.mag[IMU_Z]
 	);
 	
 }
@@ -135,14 +135,14 @@ void mavlink_send_servo_output(void)
 	mavlink_msg_servo_output_raw_send(	MAVLINK_COMM_0, 
 										get_micros(), 
 										0, 
-										(uint16_t)(centralData->servos[0].value+1500),
-										(uint16_t)(centralData->servos[1].value+1500),
-										(uint16_t)(centralData->servos[2].value+1500),
-										(uint16_t)(centralData->servos[3].value+1500),
-										(uint16_t)(centralData->servos[4].value+1500),
-										(uint16_t)(centralData->servos[5].value+1500),
-										(uint16_t)(centralData->servos[6].value+1500),
-										(uint16_t)(centralData->servos[7].value+1500)	);
+										(uint16_t)(centralData->servos[0].value + 1500),
+										(uint16_t)(centralData->servos[1].value + 1500),
+										(uint16_t)(centralData->servos[2].value + 1500),
+										(uint16_t)(centralData->servos[3].value + 1500),
+										(uint16_t)(centralData->servos[4].value + 1500),
+										(uint16_t)(centralData->servos[5].value + 1500),
+										(uint16_t)(centralData->servos[6].value + 1500),
+										(uint16_t)(centralData->servos[7].value + 1500)	);
 }
 
 
@@ -165,7 +165,7 @@ void mavlink_send_attitude(void)
 {
 	// ATTITUDE
 	Aero_Attitude_t aero_attitude;
-	aero_attitude=Quat_to_Aero(centralData->imu1.attitude.qe);
+	aero_attitude = Quat_to_Aero(centralData->imu1.attitude.qe);
 
 	mavlink_msg_attitude_send(	MAVLINK_COMM_0, 
 								get_millis(), 
@@ -203,7 +203,7 @@ void mavlink_send_hud(void)
 	float airspeed=groundspeed;
 
 	Aero_Attitude_t aero_attitude;
-	aero_attitude=Quat_to_Aero(centralData->imu1.attitude.qe);
+	aero_attitude = Quat_to_Aero(centralData->imu1.attitude.qe);
 	
 	int16_t heading;
 	if(aero_attitude.rpy[2] < 0)
@@ -220,7 +220,7 @@ void mavlink_send_hud(void)
 								airspeed, 
 								groundspeed, 
 								heading, 
-								(int)((centralData->controls.thrust+1.0f)*50), 
+								(int)((centralData->controls.thrust + 1.0f) * 50), 
 								-centralData->position_estimator.localPosition.pos[2] + centralData->position_estimator.localPosition.origin.altitude, 
 								-centralData->position_estimator.vel[2]	);
 }
@@ -464,8 +464,8 @@ task_return_t mavlink_send_rt_stats()
 										central_data_get_pointer_to_struct()->imu1.dt);
 
 	
-	main_tasks->tasks[1].rt_violations=0;
-	main_tasks->tasks[1].delay_max=0;
+	main_tasks->tasks[1].rt_violations = 0;
+	main_tasks->tasks[1].delay_max = 0;
 
 }
 
@@ -567,42 +567,42 @@ void mavlink_actions_add_onboard_parameters(void) {
 	add_parameter_float(&attitude_stabiliser->rpy_controller[YAW].differentiator.gain, "YawAPid_D_Gain");
 	
 	// Biaises
-	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET+X],"Bias_Gyro_X");
-	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET+Y],"Bias_Gyro_Y");
-	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET+Z],"Bias_Gyro_Z");
+	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET + X],"Bias_Gyro_X");
+	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET + Y],"Bias_Gyro_Y");
+	add_parameter_float(&centralData->imu1.attitude.be[GYRO_OFFSET + Z],"Bias_Gyro_Z");
 	
-	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET+X],"Bias_Acc_X");
-	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET+Y],"Bias_Acc_Y");
-	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET+Z],"Bias_Acc_Z");
+	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET + X],"Bias_Acc_X");
+	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET + Y],"Bias_Acc_Y");
+	add_parameter_float(&centralData->imu1.attitude.be[ACC_OFFSET + Z],"Bias_Acc_Z");
 	
-	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET+X],"Bias_Mag_X");
-	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET+Y],"Bias_Mag_Y");
-	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET+Z],"Bias_Mag_Z");
+	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET + X],"Bias_Mag_X");
+	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET + Y],"Bias_Mag_Y");
+	add_parameter_float(&centralData->imu1.attitude.be[COMPASS_OFFSET + Z],"Bias_Mag_Z");
 	
 	// Scale factor
-	//add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+X],"Scale_Gyro_X");
-	//add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+Y],"Scale_Gyro_Y");
-	//add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET+Z],"Scale_Gyro_Z");
+	//add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET + X],"Scale_Gyro_X");
+	//add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET + Y],"Scale_Gyro_Y");
+	//add_parameter_float(&centralData->imu1.raw_scale[GYRO_OFFSET + Z],"Scale_Gyro_Z");
 	//
-	//add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET+X],"Scale_Acc_X");
-	//add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET+Y],"Scale_Acc_Y");
-	//add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET+Z],"Scale_Acc_Z");
+	//add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET + X],"Scale_Acc_X");
+	//add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET + Y],"Scale_Acc_Y");
+	//add_parameter_float(&centralData->imu1.raw_scale[ACC_OFFSET + Z],"Scale_Acc_Z");
 	//
-	//add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+X],"Scale_Mag_X");
-	//add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Y],"Scale_Mag_Y");
-	//add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET+Z],"Scale_Mag_Z");
+	//add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET + X],"Scale_Mag_X");
+	//add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET + Y],"Scale_Mag_Y");
+	//add_parameter_float(&centralData->imu1.raw_scale[COMPASS_OFFSET + Z],"Scale_Mag_Z");
 	
-	add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET+X],"Scale_Gyro_X");
-	add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET+Y],"Scale_Gyro_Y");
-	add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET+Z],"Scale_Gyro_Z");
+	add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET + X],"Scale_Gyro_X");
+	add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET + Y],"Scale_Gyro_Y");
+	add_parameter_float(&centralData->imu1.attitude.sf[GYRO_OFFSET + Z],"Scale_Gyro_Z");
 	
-	add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET+X],"Scale_Acc_X");
-	add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET+Y],"Scale_Acc_Y");
-	add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET+Z],"Scale_Acc_Z");
+	add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET + X],"Scale_Acc_X");
+	add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET + Y],"Scale_Acc_Y");
+	add_parameter_float(&centralData->imu1.attitude.sf[ACC_OFFSET + Z],"Scale_Acc_Z");
 	
-	add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET+X],"Scale_Mag_X");
-	add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET+Y],"Scale_Mag_Y");
-	add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET+Z],"Scale_Mag_Z");
+	add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET + X],"Scale_Mag_X");
+	add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET + Y],"Scale_Mag_Y");
+	add_parameter_float(&centralData->imu1.attitude.sf[COMPASS_OFFSET + Z],"Scale_Mag_Z");
 
 	//add_parameter_float(&centralData->position_estimator.kp_alt,"Pos_kp_alt");
 	//add_parameter_float(&centralData->position_estimator.kp_vel_baro,"Pos_kp_velb");
@@ -1008,11 +1008,11 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 					centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
 					
 					dbg_print("New Home location: (");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0f,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude * 10000000.0f,10);
 					dbg_print(", ");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0f,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude * 10000000.0f,10);
 					dbg_print(", ");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0f,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude * 1000.0f,10);
 					dbg_print(")\n");
 				}
 				else
@@ -1026,11 +1026,11 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 					centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
 					
 					dbg_print("New Home location: (");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0f,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.latitude * 10000000.0f,10);
 					dbg_print(", ");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0f,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.longitude * 10000000.0f,10);
 					dbg_print(", ");
-					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0f,10);
+					dbg_print_num(centralData->position_estimator.localPosition.origin.altitude * 1000.0f,10);
 					dbg_print(")\n");
 				}
 
@@ -1318,7 +1318,7 @@ void mavlink_send_sonar(void)
 
 void mavlink_actions_init(void) {
 	
-	centralData=central_data_get_pointer_to_struct();
+	centralData = central_data_get_pointer_to_struct();
 	mavlink_actions_add_onboard_parameters();
 	
 	/*	

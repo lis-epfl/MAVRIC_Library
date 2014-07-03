@@ -214,7 +214,7 @@ void handle_mavlink_message(Mavlink_Received_t* rec)
 						}
 						if (request.req_message_rate>0) 
 						{
-							scheduler_change_task_period(task, SCHEDULER_TIMEBASE/(uint32_t)request.req_message_rate);
+							scheduler_change_task_period(task, SCHEDULER_TIMEBASE / (uint32_t)request.req_message_rate);
 						}
 					}
 				}

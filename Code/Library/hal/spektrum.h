@@ -47,7 +47,7 @@
 
 #define DEADZONE 30.0f				///< Define the dead zone of a remote channel
 
-#define RC_SCALEFACTOR 1.0f/700.0f	///< Define the scale factor to apply on a channel value
+#define RC_SCALEFACTOR 1.0f / 700.0f	///< Define the scale factor to apply on a channel value
 
 /*
 typedef struct Turnigy_Receiver {

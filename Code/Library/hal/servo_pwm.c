@@ -58,10 +58,10 @@ void init_Servos(void)
 	for (i=0; i<4; i++) 
 	{
 		///< enable dead time, set channel clock to CLKA
-		AVR32_PWM.channel[i].cmr=AVR32_PWM_CMR0_DTE_MASK | 11;
-		AVR32_PWM.channel[i].cprd=10000;
-		AVR32_PWM.channel[i].cdty=4000;
-		AVR32_PWM.channel[i].dt= 1000<<16 | 1000;
+		AVR32_PWM.channel[i].cmr = AVR32_PWM_CMR0_DTE_MASK | 11;
+		AVR32_PWM.channel[i].cprd = 10000;
+		AVR32_PWM.channel[i].cdty = 4000;
+		AVR32_PWM.channel[i].dt= 1000 << 16 | 1000;
 		
 	}		
 	static const gpio_map_t PWM_GPIO_MAP =
@@ -81,7 +81,7 @@ void init_Servos(void)
     };			
 	gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
 	
-	AVR32_PWM.ena=0b1111; ///< enable
+	AVR32_PWM.ena = 0b1111; ///< enable
 	
 	///< Init servo values
 	// set_servos_to_failsafe(servo_outputs);
@@ -89,13 +89,13 @@ void init_Servos(void)
 
 void set_servo(int channel, int val_a, int val_b)
 {
-	int duty_a=val_a+SERVO_CENTER_DUTY_TICKS;
-	int duty_b=val_b+SERVO_CENTER_DUTY_TICKS;
-	int deadtime=(SERVO_PERIOD-duty_a-duty_b)/2;
+	int duty_a = val_a + SERVO_CENTER_DUTY_TICKS;
+	int duty_b = val_b + SERVO_CENTER_DUTY_TICKS;
+	int deadtime=(SERVO_PERIOD - duty_a - duty_b) / 2;
 	
-	AVR32_PWM.channel[channel &0b11].cprdupd=SERVO_PERIOD;
-	AVR32_PWM.channel[channel &0b11].cdtyupd=duty_a+deadtime;
-	AVR32_PWM.channel[channel &0b11].dtupd= deadtime<<16 | deadtime;	
+	AVR32_PWM.channel[channel &0b11].cprdupd = SERVO_PERIOD;
+	AVR32_PWM.channel[channel &0b11].cdtyupd = duty_a + deadtime;
+	AVR32_PWM.channel[channel &0b11].dtupd= deadtime << 16 | deadtime;	
 }
 
 void set_servos(const servo_output *servo_outputs) 
@@ -110,7 +110,7 @@ void set_servos(const servo_output *servo_outputs)
 
 void servos_failsafe(servo_output *servo_outputs)
 {
-	for(int i=0; i<NUMBER_OF_SERVO_OUTPUTS; i++)
+	for(int i = 0; i < NUMBER_OF_SERVO_OUTPUTS; i++)
 	{
 		servo_outputs[i].value = servo_outputs[i].failsafe_position;
 	}

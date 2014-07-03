@@ -40,7 +40,7 @@ __attribute__((__interrupt__))
 static void pdca_int_handler_dac(void)
 {
 	AVR32_PDCA.channel[PDCA_CHANNEL_DAC].isr;
-	if (autoplay==0) 
+	if (autoplay == 0) 
 	{
 		pdca_disable(PDCA_CHANNEL_DAC);
 	    pdca_disable_interrupt_transfer_complete(PDCA_CHANNEL_DAC);
@@ -48,7 +48,7 @@ static void pdca_int_handler_dac(void)
 	else 
 	{	
        ///< Set PDCA channel reload values with address where data to load are stored, and size of the data block to load.
-       pdca_reload_channel(PDCA_CHANNEL_DAC, (char *)buffer+2*from, to-from);
+       pdca_reload_channel(PDCA_CHANNEL_DAC, (char *)buffer + 2 * from, to - from);
 	}	   	
 }
 
@@ -72,7 +72,7 @@ void init_pevc(void)
 									AVR32_PEVC_ID_GEN_GCLK_0, 
 									&PEVC_EVS_OPTIONS);							  
 	///< Enable the PEVC channel 0.
-	pevc_channels_enable(ppevc, 1<<AVR32_PEVC_ID_USER_DACIFB0_CHA);
+	pevc_channels_enable(ppevc, 1 << AVR32_PEVC_ID_USER_DACIFB0_CHA);
 }
 
 void init_gclk(void)
@@ -124,7 +124,7 @@ void Init_DAC(int trigger_mode) {
 	//dacifb_get_calibration_data(dacifb, &dacifb_opt, DAC_AUDIO_INSTANCE);
                               
 	///< configure DACIFB
-	if (dacifb_configure(dacifb, &dacifb_opt, FOSC0) ==0) 
+	if (dacifb_configure(dacifb, &dacifb_opt, FOSC0) == 0) 
 	{
 		dbg_print("error configuring DAC");
 		return;
@@ -159,8 +159,8 @@ void DAC_load_buffer(uint16_t* samples, int from_sample, int to_sample, int repe
 		.transfer_size = PDCA_TRANSFER_SIZE_HALF_WORD	///< select size of the transfer      
 	};
 	
-	PDCA_OPTIONS.addr = (char *)samples + 2*from;
-	PDCA_OPTIONS.size = to-from;
+	PDCA_OPTIONS.addr = (char *)samples + 2 * from;
+	PDCA_OPTIONS.size = to - from;
 
 	///< Initialize Event Controller
 	init_pevc();
@@ -170,7 +170,7 @@ void DAC_load_buffer(uint16_t* samples, int from_sample, int to_sample, int repe
 	///< Init PDCA channel with the pdca_options.
 	pdca_init_channel(PDCA_CHANNEL_DAC, &PDCA_OPTIONS); ///< init PDCA channel with options.
 
-	autoplay=repeat;
+	autoplay = repeat;
 	//if (repeat==1) 
 	//{
 		// TODO: for some reason having this interrupt tends to crash occasionally
@@ -183,7 +183,7 @@ void DAC_play()
 {
 	//Disable_global_interrupt();
 	pdca_disable(PDCA_CHANNEL_DAC);
-	pdca_reload_channel(PDCA_CHANNEL_DAC, (void *)buffer+2*from, to-from);
+	pdca_reload_channel(PDCA_CHANNEL_DAC, (void *)buffer + 2 * from, to - from);
 	///< Enable now the transfer.
 	//Enable_global_interrupt();
 	pdca_enable(PDCA_CHANNEL_DAC); 

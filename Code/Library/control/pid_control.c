@@ -26,7 +26,7 @@ PID_Controller_t passthroughController()
 	PID_Controller_t out;
 	out.p_gain=1.0f;
 	out.last_update=get_time_ticks();	
-	out.clip_min=-10000.0f;
+	out.clip_min= - 10000.0f;
 	out.clip_max= 10000.0f;
 	out.output=0.0f;
 	out.soft_zone_width=0.0f;
@@ -37,7 +37,7 @@ PID_Controller_t passthroughController()
 
 float integrate(Integrator_t *integrator, float input, float dt)
 {
-	integrator->accumulator=clip(integrator->accumulator+dt* integrator->pregain * input, integrator->clip);
+	integrator->accumulator=clip(integrator->accumulator + dt* integrator->pregain * input, integrator->clip);
 	return integrator->postgain* integrator->accumulator;
 }
 
@@ -67,9 +67,9 @@ float differentiate(Differentiator_t *diff, float input, float dt)
 	if (dt<0.000001f) {
 		output=0.0f; 
 	} else {
-		output=clip(diff->gain*(input - diff->previous)/dt, diff->clip);
+		output=clip(diff->gain * (input - diff->previous) / dt, diff->clip);
 	}	
-	//diff->previous=(1.0f-(diff->LPF))*input + (diff->LPF) * (diff->previous);
+	//diff->previous=(1.0f - (diff->LPF)) * input + (diff->LPF) * (diff->previous);
 	diff->previous=input;
 	return output;
 }

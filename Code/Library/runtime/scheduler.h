@@ -42,9 +42,9 @@ typedef uint8_t task_handle_t;
  */
 typedef enum 
 {
-	TASK_RUN_ERROR=-1,		///< 	The task was not not successfully executed
-	TASK_RUN_BLOCKED=0,     ///< 	If a task returns "TASK_RUN_BLOCKED", the scheduler will try to re-run at the next schedule update, and not update "next_run" 
-	TASK_RUN_SUCCESS=1		///< 	The task was successfully executed 
+	TASK_RUN_ERROR = -1,		///< 	The task was not not successfully executed
+	TASK_RUN_BLOCKED = 0,     ///< 	If a task returns "TASK_RUN_BLOCKED", the scheduler will try to re-run at the next schedule update, and not update "next_run" 
+	TASK_RUN_SUCCESS = 1		///< 	The task was successfully executed 
 } task_return_t;
 
 
@@ -122,7 +122,7 @@ typedef struct task_set
  * @param NAME 		Name of the task-set
  * @param NUMBER 	Number of tasks in the task-set
  */
-#define NEW_TASK_SET(NAME,NUMBER) task_set NAME = {.number_of_tasks=MAX_NUMBER_OF_TASKS};
+#define NEW_TASK_SET(NAME,NUMBER) task_set NAME = {.number_of_tasks = MAX_NUMBER_OF_TASKS};
 
 
 /**

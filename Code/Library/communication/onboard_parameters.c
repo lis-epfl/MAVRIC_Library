@@ -319,17 +319,17 @@ void read_parameters_from_flashc()
 	cksum1 = 0;
 	cksum2 = 0;
 
-	for (i=0;i<(param_set.param_count+1);i++)
+	for (i=0;i<(param_set.param_count +1);i++)
 	{
 		local_array.values[i] = nvram_array->values[i];
 		cksum1 += local_array.values[i];
 		cksum2 += cksum1;
 	}
 	
-	if ((param_set.param_count==local_array.values[0])&&(cksum1 == nvram_array->values[param_set.param_count+1])&&(cksum2 == nvram_array->values[param_set.param_count+2]))
+	if ((param_set.param_count==local_array.values[0])&&(cksum1 == nvram_array->values[param_set.param_count + 1])&&(cksum2 == nvram_array->values[param_set.param_count + 2]))
 	{
 		dbg_print("Flash read successful! New Parameters inserted. \n");
-		for (i=1;i<(param_set.param_count+1);i++)
+		for (i=1;i<(param_set.param_count + 1);i++)
 		{
 			update_parameter(i-1, local_array.values[i]);
 		}
@@ -363,8 +363,8 @@ void write_parameters_to_flashc()
 		cksum1 += local_array.values[i];
 		cksum2 += cksum1;
 	}
-	local_array.values[param_set.param_count+1] = cksum1;
-	local_array.values[param_set.param_count+2] = cksum2;
+	local_array.values[param_set.param_count + 1] = cksum1;
+	local_array.values[param_set.param_count + 2] = cksum2;
 
 	bytes_to_write = 4 * (param_set.param_count + 3);	// (1 param_count + parameters + 2 checksums) floats
 	

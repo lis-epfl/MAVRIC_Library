@@ -51,10 +51,10 @@ void init_itg3200_slow(void)
 {
 	static twim_options_t twi_opt= 
 	{
-		.pba_hz=64000000, 
+		.pba_hz = 64000000, 
 		.speed = 400000,
 		.chip = ITG3200_SLAVE_ADDRESS, 
-		.smbus=false
+		.smbus = false
 	};
 	twim_master_init(&AVR32_TWIM0, &twi_opt);
 	twim_write(&AVR32_TWIM0, (uint8_t*)&default_configuration, 4, ITG3200_SLAVE_ADDRESS, false);

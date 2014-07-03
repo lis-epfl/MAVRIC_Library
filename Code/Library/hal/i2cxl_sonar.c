@@ -79,6 +79,6 @@ void i2cxl_get_last_measure(i2cxl_sonar_t* i2cxl_sonar)
 {
 	uint8_t buf[2];
 	twim_read(&AVR32_TWIM1, buf, 2, i2cxl_sonar->i2c_address, false);
-	i2cxl_sonar->distance_cm = (buf[0]<<8) + buf[1];
+	i2cxl_sonar->distance_cm = (buf[0] << 8) + buf[1];
 	i2cxl_sonar->distance_m  = ((float)i2cxl_sonar->distance_cm) / 100;
 }

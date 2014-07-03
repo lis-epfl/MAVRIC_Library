@@ -47,12 +47,12 @@ void initialisation()
 	tasks_relevel_imu(); // TODO: MOVE	
 
 	//reset position estimate
-	for (i=0; i<3; i++) 
+	for (i = 0; i < 3; i++) 
 	{
 		// clean acceleration estimate without gravity:
-		centralData->position_estimator.vel_bf[i]=0.0f;
-		centralData->position_estimator.vel[i]=0.0f;
-		centralData->position_estimator.localPosition.pos[i]=0.0f;
+		centralData->position_estimator.vel_bf[i] = 0.0f;
+		centralData->position_estimator.vel[i] = 0.0f;
+		centralData->position_estimator.localPosition.pos[i] = 0.0f;
 	} // TODO: move to module
 
 	delay_ms(10);
@@ -61,9 +61,9 @@ void initialisation()
 	// TODO: move to module
 	
 	LED_On(LED1);
-	for (i=1; i<8; i++)
+	for (i = 1; i < 8; i++)
 	{
-		beep(100, 500*i);
+		beep(100, 500 * i);
 		delay_ms(2);
 	}
 	dbg_print("OK. Starting up.\n");
@@ -74,7 +74,7 @@ int main (void)
 	initialisation();
 	tasks_create_tasks();
 	
-	while (1==1) 
+	while (1 == 1) 
 	{
 		scheduler_run_update(tasks_get_main_taskset(), ROUND_ROBIN);
 	}

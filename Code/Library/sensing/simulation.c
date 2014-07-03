@@ -30,7 +30,7 @@ void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates
 	dbg_print("Init HIL simulation. \n");
 	
 	(*sim) = vehicle_model_parameters;
-	for (i=0; i<3; i++)
+	for (i = 0; i < 3; i++)
 	{
 		sim->rates_bf[i] = 0.0f;
 		sim->torques_bf[i] = 0.0f;
@@ -48,16 +48,16 @@ void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates
 	// set initial conditions to given attitude (including scalefactors and biases for simulated IMU)
 	sim->attitude = imu->attitude;
 
-	for (i=0; i<ROTORCOUNT; i++)
+	for (i = 0; i < ROTORCOUNT; i++)
 	{
 		sim->rotorspeeds[i] = 0.0f;			
 	}
 	sim->last_update = get_micros();
 	sim->dt = 0.01f;
 	
-	for (i=0;i<9;i++)
+	for (i = 0;i < 9;i++)
 	{
-		sim->simu_raw_scale[i] = 1.0f/imu->attitude.sf[i];
+		sim->simu_raw_scale[i] = 1.0f / imu->attitude.sf[i];
 		sim->simu_raw_biais[i] = imu->attitude.be[i];
 	}
 }
@@ -70,17 +70,17 @@ void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates
  * \param	sqr_lat_airspeed	The square of the lateral airspeed
  * \param	axial_airspeed		The axial airspeed
  *
- * \return The value of the lift/drag value without the lift/drag coefficient
+ * \return The value of the lift / drag value without the lift / drag coefficient
  */
 static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr_lat_airspeed, float axial_airspeed) {
 	if (rpm < 0.1f)
 	{
 		return 0.0f;
 	}
-	float mean_vel = sim->rotor_diameter *PI * rpm/60.0f;
-	float exit_vel = rpm/60.0f *sim -> rotor_pitch;
+	float mean_vel = sim->rotor_diameter *PI * rpm / 60.0f;
+	float exit_vel = rpm / 60.0f *sim -> rotor_pitch;
 	           
-	return (0.5f*AIR_DENSITY*(mean_vel*mean_vel +sqr_lat_airspeed) * sim->rotor_foil_area  * (1.0f-(axial_airspeed/exit_vel)));
+	return (0.5f * AIR_DENSITY * (mean_vel * mean_vel +sqr_lat_airspeed) * sim->rotor_foil_area  * (1.0f - (axial_airspeed / exit_vel)));
 }
 
 
@@ -92,26 +92,26 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 	UQuat_t wind_gf = {.s = 0, .v = {sim->wind_x, sim->wind_y, 0.0f}};
 	UQuat_t wind_bf = quat_global_to_local(sim->attitude.qe, wind_gf);
 	
-	float sqr_lateral_airspeed = SQR(sim->vel_bf[0]+wind_bf.v[0]) + SQR(sim->vel_bf[1]+wind_bf.v[1]);
+	float sqr_lateral_airspeed = SQR(sim->vel_bf[0] + wind_bf.v[0]) + SQR(sim->vel_bf[1] + wind_bf.v[1]);
 	float lateral_airspeed = sqrt(sqr_lateral_airspeed);
 	
-	for (i=0; i<4; i++)
+	for (i = 0; i < 4; i++)
 	{
 		float old_rotor_speed;
-		motor_command[i] = (float)servos[i].value/SERVO_SCALE - sim->rotor_rpm_offset;
-		if (motor_command[i]<0.0f) 
+		motor_command[i] = (float)servos[i].value / SERVO_SCALE - sim->rotor_rpm_offset;
+		if (motor_command[i] < 0.0f) 
 		{
 			motor_command[i] = 0;
 		}
 		
 		// temporarily save old rotor speeds
 		old_rotor_speed = sim->rotorspeeds[i];
-		// estimate rotor speeds by low-pass filtering
-		//sim->rotorspeeds[i] = (sim->rotor_lpf) * sim->rotorspeeds[i] + (1.0f-sim->rotor_lpf) * (motor_command[i] * sim->rotor_rpm_gain);
+		// estimate rotor speeds by low - pass filtering
+		//sim->rotorspeeds[i] = (sim->rotor_lpf) * sim->rotorspeeds[i] + (1.0f - sim->rotor_lpf) * (motor_command[i] * sim->rotor_rpm_gain);
 		sim->rotorspeeds[i] = (motor_command[i] * sim->rotor_rpm_gain);
 		
 		// calculate torque created by rotor inertia
-		rotor_inertia[i] = (sim->rotorspeeds[i] - old_rotor_speed)/sim->dt * sim->rotor_momentum;
+		rotor_inertia[i] = (sim->rotorspeeds[i] - old_rotor_speed) / sim->dt * sim->rotor_momentum;
 		
 		ldb = lift_drag_base(sim, sim->rotorspeeds[i], sqr_lateral_airspeed, -sim->vel_bf[Z]);
 		//ldb = lift_drag_base(sim, sim->rotorspeeds[i], sqr_lateral_airspeed, 0.0f);
@@ -131,13 +131,13 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 	sim->torques_bf[PITCH] = ((rotor_lifts[M_FRONT_LEFT]  + rotor_lifts[M_FRONT_RIGHT] )
 							- (rotor_lifts[M_REAR_LEFT]   + rotor_lifts[M_REAR_RIGHT] ))*  mpos_x;
 
-	sim->torques_bf[YAW]   = (M_FL_DIR*(10.0f*rotor_drags[M_FRONT_LEFT]+rotor_inertia[M_FRONT_LEFT])  + M_FR_DIR*(10.0f*rotor_drags[M_FRONT_RIGHT]+rotor_inertia[M_FRONT_RIGHT])
-							+ M_RL_DIR*(10.0f*rotor_drags[M_REAR_LEFT] +rotor_inertia[M_REAR_LEFT])   + M_RR_DIR*(10.0f*rotor_drags[M_REAR_RIGHT] +rotor_inertia[M_REAR_RIGHT] ))*  sim->rotor_diameter;
+	sim->torques_bf[YAW]   = (M_FL_DIR * (10.0f * rotor_drags[M_FRONT_LEFT] + rotor_inertia[M_FRONT_LEFT])  + M_FR_DIR * (10.0f * rotor_drags[M_FRONT_RIGHT] + rotor_inertia[M_FRONT_RIGHT])
+							+ M_RL_DIR * (10.0f * rotor_drags[M_REAR_LEFT] +rotor_inertia[M_REAR_LEFT])   + M_RR_DIR * (10.0f * rotor_drags[M_REAR_RIGHT] +rotor_inertia[M_REAR_RIGHT] ))*  sim->rotor_diameter;
 	
 
 	
-	sim->lin_forces_bf[X] = -(sim->vel_bf[X]-wind_bf.v[0])*lateral_airspeed* sim->vehicle_drag;  
-	sim->lin_forces_bf[Y] = -(sim->vel_bf[Y]-wind_bf.v[1])*lateral_airspeed* sim->vehicle_drag;
+	sim->lin_forces_bf[X] = -(sim->vel_bf[X] - wind_bf.v[0]) * lateral_airspeed * sim->vehicle_drag;  
+	sim->lin_forces_bf[Y] = -(sim->vel_bf[Y] - wind_bf.v[1]) * lateral_airspeed * sim->vehicle_drag;
 	sim->lin_forces_bf[Z] = -(rotor_lifts[M_FRONT_LEFT]+ rotor_lifts[M_FRONT_RIGHT] +rotor_lifts[M_REAR_LEFT] +rotor_lifts[M_REAR_RIGHT]);
 
 }
@@ -152,13 +152,13 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos
 	motor_command[M_RIGHT] = control->thrust - control->rpy[ROLL] + M_RIGHT_DIR * control->rpy[YAW];
 	motor_command[M_REAR]  = control->thrust - control->rpy[PITCH] + M_REAR_DIR * control->rpy[YAW];
 	motor_command[M_LEFT]  = control->thrust + control->rpy[ROLL] + M_LEFT_DIR * control->rpy[YAW];
-	for (i=0; i<4; i++) {
-		if (motor_command[i]<MIN_THRUST) motor_command[i] = MIN_THRUST;
-		if (motor_command[i]>MAX_THRUST) motor_command[i] = MAX_THRUST;
+	for (i = 0; i < 4; i++) {
+		if (motor_command[i] < MIN_THRUST) motor_command[i] = MIN_THRUST;
+		if (motor_command[i] > MAX_THRUST) motor_command[i] = MAX_THRUST;
 	}
 
-	for (i=0; i<4; i++) {
-		centralData->servos[i].value = SERVO_SCALE*motor_command[i];
+	for (i = 0; i < 4; i++) {
+		centralData->servos[i].value = SERVO_SCALE * motor_command[i];
 	}
 	*/
 }
@@ -171,8 +171,8 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	
 	
 	uint32_t now = get_micros();
-	sim->dt = (now - sim->last_update)/1000000.0f;
-	if (sim->dt>0.1f)
+	sim->dt = (now - sim->last_update) / 1000000.0f;
+	if (sim->dt > 0.1f)
 	{
 		sim->dt = 0.1f;
 	}
@@ -187,12 +187,12 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	#endif
 	
 	// integrate torques to get simulated gyro rates (with some damping)
-	sim->rates_bf[0] = clip((1.0f-0.1f*sim->dt)*sim->rates_bf[0] + sim->dt * sim->torques_bf[0] /sim->roll_pitch_momentum, 10.0f);
-	sim->rates_bf[1] = clip((1.0f-0.1f*sim->dt)*sim->rates_bf[1] + sim->dt * sim->torques_bf[1] /sim->roll_pitch_momentum, 10.0f);
-	sim->rates_bf[2] = clip((1.0f-0.1f*sim->dt)*sim->rates_bf[2] + sim->dt * sim->torques_bf[2] /sim->yaw_momentum, 10.0f);
+	sim->rates_bf[0] = clip((1.0f - 0.1f * sim->dt) * sim->rates_bf[0] + sim->dt * sim->torques_bf[0] /sim->roll_pitch_momentum, 10.0f);
+	sim->rates_bf[1] = clip((1.0f - 0.1f * sim->dt) * sim->rates_bf[1] + sim->dt * sim->torques_bf[1] /sim->roll_pitch_momentum, 10.0f);
+	sim->rates_bf[2] = clip((1.0f - 0.1f * sim->dt) * sim->rates_bf[2] + sim->dt * sim->torques_bf[2] /sim->yaw_momentum, 10.0f);
 	
 	
-	for (i=0; i<3; i++)
+	for (i = 0; i < 3; i++)
 	{
 			qtmp1.v[i] = sim->rates_bf[i];
 	}
@@ -202,10 +202,10 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	// apply step rotation 
 	qed = quat_multi(sim->attitude.qe,qtmp1);
 
-	sim->attitude.qe.s = sim->attitude.qe.s+qed.s*sim->dt;
-	sim->attitude.qe.v[0] += qed.v[0]*sim->dt;
-	sim->attitude.qe.v[1] += qed.v[1]*sim->dt;
-	sim->attitude.qe.v[2] += qed.v[2]*sim->dt;
+	sim->attitude.qe.s = sim->attitude.qe.s + qed.s * sim->dt;
+	sim->attitude.qe.v[0] += qed.v[0] * sim->dt;
+	sim->attitude.qe.v[1] += qed.v[1] * sim->dt;
+	sim->attitude.qe.v[2] += qed.v[2] * sim->dt;
 
 	sim->attitude.qe = quat_normalise(sim->attitude.qe);
 	sim->attitude.up_vec = quat_global_to_local(sim->attitude.qe, up);
@@ -221,15 +221,15 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 		sim->localPosition.pos[Z] = 0.0f;
 
 		// simulate "acceleration" caused by contact force with ground, compensating gravity
-		for (i = 0; i<3; i++)
+		for (i = 0; i < 3; i++)
 		{
-			sim->lin_forces_bf[i] = sim->attitude.up_vec.v[i]*sim->total_mass *GRAVITY;
+			sim->lin_forces_bf[i] = sim->attitude.up_vec.v[i] * sim->total_mass * GRAVITY;
 		}
 				
 		// slow down... (will make velocity slightly inconsistent until next update cycle, but shouldn't matter much)
-		for (i = 0; i<3; i++)
+		for (i = 0; i < 3; i++)
 		{
-			sim->vel_bf[i] = 0.95f*sim->vel_bf[i];
+			sim->vel_bf[i] = 0.95f * sim->vel_bf[i];
 		}
 		
 		//upright
@@ -242,13 +242,13 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	sim->attitude.up_vec = quat_global_to_local(sim->attitude.qe, up);
 	
 	sim->attitude.north_vec = quat_global_to_local(sim->attitude.qe, front);	
-	for (i=0; i<3; i++)
+	for (i = 0; i < 3; i++)
 	{
 			qtmp1.v[i] = sim->vel[i];
 	}
 	qtmp1.s = 0.0f;
 	qvel_bf = quat_global_to_local(sim->attitude.qe, qtmp1);
-	for (i=0; i<3; i++)
+	for (i = 0; i < 3; i++)
 	{
 		sim->vel_bf[i] = qvel_bf.v[i];
 		
@@ -262,33 +262,33 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	}
 	
 	// calculate velocity in global frame
-	// vel = qe *vel_bf * qe-1
+	// vel = qe *vel_bf * qe - 1
 	qvel_bf.s = 0.0f; qvel_bf.v[0] = sim->vel_bf[0]; qvel_bf.v[1] = sim->vel_bf[1]; qvel_bf.v[2] = sim->vel_bf[2];
 	qtmp1 = quat_local_to_global(sim->attitude.qe, qvel_bf);
 	sim->vel[0] = qtmp1.v[0]; sim->vel[1] = qtmp1.v[1]; sim->vel[2] = qtmp1.v[2];
 	
-	for (i=0; i<3; i++)
+	for (i = 0; i < 3; i++)
 	{
 		sim->localPosition.pos[i] = sim->localPosition.pos[i] + sim->vel[i] * sim->dt;
 	}
 
 	// fill in simulated IMU values
 	
-	imu->raw_channels[GYRO_OFFSET+IMU_X] = sim->rates_bf[0] * sim->simu_raw_scale[GYRO_OFFSET+IMU_X]+sim->simu_raw_biais[GYRO_OFFSET+IMU_X];
-	imu->raw_channels[GYRO_OFFSET+IMU_Y] = sim->rates_bf[1] * sim->simu_raw_scale[GYRO_OFFSET+IMU_Y]+sim->simu_raw_biais[GYRO_OFFSET+IMU_Y];
-	imu->raw_channels[GYRO_OFFSET+IMU_Z] = sim->rates_bf[2] * sim->simu_raw_scale[GYRO_OFFSET+IMU_Z]+sim->simu_raw_biais[GYRO_OFFSET+IMU_Z];
+	imu->raw_channels[GYRO_OFFSET + IMU_X] = sim->rates_bf[0] * sim->simu_raw_scale[GYRO_OFFSET + IMU_X] + sim->simu_raw_biais[GYRO_OFFSET + IMU_X];
+	imu->raw_channels[GYRO_OFFSET + IMU_Y] = sim->rates_bf[1] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Y] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Y];
+	imu->raw_channels[GYRO_OFFSET + IMU_Z] = sim->rates_bf[2] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Z] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Z];
 
-	imu->raw_channels[ACC_OFFSET+IMU_X] = (sim->lin_forces_bf[0] / sim->total_mass / GRAVITY)*sim->simu_raw_scale[ACC_OFFSET+IMU_X]+sim->simu_raw_biais[ACC_OFFSET+IMU_X];
-	imu->raw_channels[ACC_OFFSET+IMU_Y] = (sim->lin_forces_bf[1] / sim->total_mass / GRAVITY)*sim->simu_raw_scale[ACC_OFFSET+IMU_Y]+sim->simu_raw_biais[ACC_OFFSET+IMU_Y];
-	imu->raw_channels[ACC_OFFSET+IMU_Z] = (sim->lin_forces_bf[2] / sim->total_mass / GRAVITY)*sim->simu_raw_scale[ACC_OFFSET+IMU_Z]+sim->simu_raw_biais[ACC_OFFSET+IMU_Z];
+	imu->raw_channels[ACC_OFFSET + IMU_X] = (sim->lin_forces_bf[0] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_X] + sim->simu_raw_biais[ACC_OFFSET + IMU_X];
+	imu->raw_channels[ACC_OFFSET + IMU_Y] = (sim->lin_forces_bf[1] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_Y] + sim->simu_raw_biais[ACC_OFFSET + IMU_Y];
+	imu->raw_channels[ACC_OFFSET + IMU_Z] = (sim->lin_forces_bf[2] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_Z] + sim->simu_raw_biais[ACC_OFFSET + IMU_Z];
 	// cheating... provide true upvector instead of simulated forces
-	//imu->raw_channels[ACC_OFFSET+IMU_X] = sim->attitude.up_vec.v[0] *imu->raw_scale[ACC_OFFSET+IMU_X]+imu->raw_bias[ACC_OFFSET+IMU_X];
-	//imu->raw_channels[ACC_OFFSET+IMU_Y] = sim->attitude.up_vec.v[1] *imu->raw_scale[ACC_OFFSET+IMU_Y]+imu->raw_bias[ACC_OFFSET+IMU_Y];
-	//imu->raw_channels[ACC_OFFSET+IMU_Z] = sim->attitude.up_vec.v[2] *imu->raw_scale[ACC_OFFSET+IMU_Z]+imu->raw_bias[ACC_OFFSET+IMU_Z];
+	//imu->raw_channels[ACC_OFFSET + IMU_X] = sim->attitude.up_vec.v[0] * imu- > raw_scale[ACC_OFFSET + IMU_X] + imu->raw_bias[ACC_OFFSET + IMU_X];
+	//imu->raw_channels[ACC_OFFSET + IMU_Y] = sim->attitude.up_vec.v[1] * imu->raw_scale[ACC_OFFSET + IMU_Y] + imu->raw_bias[ACC_OFFSET + IMU_Y];
+	//imu->raw_channels[ACC_OFFSET + IMU_Z] = sim->attitude.up_vec.v[2] * imu->raw_scale[ACC_OFFSET + IMU_Z] + imu->raw_bias[ACC_OFFSET + IMU_Z];
 	
-	imu->raw_channels[COMPASS_OFFSET+IMU_X] = (sim->attitude.north_vec.v[0] )*sim->simu_raw_scale[COMPASS_OFFSET+IMU_X]+sim->simu_raw_biais[COMPASS_OFFSET+IMU_X];
-	imu->raw_channels[COMPASS_OFFSET+IMU_Y] = (sim->attitude.north_vec.v[1] )*sim->simu_raw_scale[COMPASS_OFFSET+IMU_Y]+sim->simu_raw_biais[COMPASS_OFFSET+IMU_Y];
-	imu->raw_channels[COMPASS_OFFSET+IMU_Z] = (sim->attitude.north_vec.v[2] )*sim->simu_raw_scale[COMPASS_OFFSET+IMU_Z]+sim->simu_raw_biais[COMPASS_OFFSET+IMU_Z];
+	imu->raw_channels[COMPASS_OFFSET + IMU_X] = (sim->attitude.north_vec.v[0] ) * sim->simu_raw_scale[COMPASS_OFFSET + IMU_X] + sim->simu_raw_biais[COMPASS_OFFSET + IMU_X];
+	imu->raw_channels[COMPASS_OFFSET + IMU_Y] = (sim->attitude.north_vec.v[1] ) * sim->simu_raw_scale[COMPASS_OFFSET + IMU_Y] + sim->simu_raw_biais[COMPASS_OFFSET + IMU_Y];
+	imu->raw_channels[COMPASS_OFFSET + IMU_Z] = (sim->attitude.north_vec.v[2] ) * sim->simu_raw_scale[COMPASS_OFFSET + IMU_Z] + sim->simu_raw_biais[COMPASS_OFFSET + IMU_Z];
 	
 	//imu->dt = sim->dt;
 

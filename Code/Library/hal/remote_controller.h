@@ -47,7 +47,7 @@
  */
 static float inline get_roll_from_remote(void)	
 {
-	return rc_get_channel_neutral(RC_ROLL)*RC_ROLL_DIR * RC_SCALEFACTOR; 
+	return rc_get_channel_neutral(RC_ROLL) * RC_ROLL_DIR * RC_SCALEFACTOR; 
 }
 
 /**
@@ -57,7 +57,7 @@ static float inline get_roll_from_remote(void)
  */
 static float inline get_pitch_from_remote(void)	
 {
-	return rc_get_channel_neutral(RC_PITCH)*RC_PITCH_DIR * RC_SCALEFACTOR; 
+	return rc_get_channel_neutral(RC_PITCH) * RC_PITCH_DIR * RC_SCALEFACTOR; 
 }
 
 /**
@@ -67,7 +67,7 @@ static float inline get_pitch_from_remote(void)
  */
 static float inline get_yaw_from_remote(void)	
 {
-	return rc_get_channel_neutral(RC_YAW)*RC_YAW_DIR * RC_SCALEFACTOR; 
+	return rc_get_channel_neutral(RC_YAW) * RC_YAW_DIR * RC_SCALEFACTOR; 
 }
 
 /**
@@ -77,7 +77,7 @@ static float inline get_yaw_from_remote(void)
  */
 static float inline get_thrust_from_remote(void)	
 {
-	return rc_get_channel(RC_THROTTLE)*RC_THROTTLE_DIR*RC_SCALEFACTOR; 
+	return rc_get_channel(RC_THROTTLE) * RC_THROTTLE_DIR * RC_SCALEFACTOR; 
 }
 
 /**
@@ -88,9 +88,9 @@ static float inline get_thrust_from_remote(void)
 static inline Control_Command_t get_command_from_remote(void)
 {
 	Control_Command_t controls;
-	controls.rpy[ROLL]= get_roll_from_remote()*RC_INPUT_SCALE;
-	controls.rpy[PITCH]= get_pitch_from_remote()*RC_INPUT_SCALE;
-	controls.rpy[YAW]= get_yaw_from_remote()*RC_INPUT_SCALE;
+	controls.rpy[ROLL]= get_roll_from_remote() * RC_INPUT_SCALE;
+	controls.rpy[PITCH]= get_pitch_from_remote() * RC_INPUT_SCALE;
+	controls.rpy[YAW]= get_yaw_from_remote() * RC_INPUT_SCALE;
 	controls.thrust = get_thrust_from_remote();
 	
 	return controls;
@@ -107,15 +107,15 @@ static inline void get_channel_mode(uint8_t* chanSwitch)
 	//TODO: remap with remote!
 	*chanSwitch |= 0x00;
 	
-	if (rc_get_channel(RC_SAFETY)<0)
+	if (rc_get_channel(RC_SAFETY) < 0)
 	{
 		*chanSwitch |= 0x00;
 	}
-	else if(rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)<0)
+	else if(rc_get_channel(RC_SAFETY) > 0 && rc_get_channel(RC_ID_MODE) < 0)
 	{
 		*chanSwitch |= 0x01;
 	}
-	// else if (rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)>20)
+	// else if (rc_get_channel(RC_SAFETY) > 0 && rc_get_channel(RC_ID_MODE) > 20)
 	// {
 	// 	*chanSwitch |= 0x03;
 	// }
@@ -134,15 +134,15 @@ static inline void get_channel_mode(uint8_t* chanSwitch)
 	 */
 	static inline void get_channel_mode(uint8_t* chanSwitch)
 	{
-		if (rc_get_channel(RC_SAFETY)<0)
+		if (rc_get_channel(RC_SAFETY) < 0)
 		{
 			*chanSwitch |= 0x00;
 		}
-		else if(rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)<0)
+		else if(rc_get_channel(RC_SAFETY) > 0 && rc_get_channel(RC_ID_MODE) < 0)
 		{
 			*chanSwitch |= 0x01;
 		}
-		else if (rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)>20)
+		else if (rc_get_channel(RC_SAFETY) > 0 && rc_get_channel(RC_ID_MODE) > 20)
 		{
 			*chanSwitch |= 0x03;
 		}
@@ -161,15 +161,15 @@ static inline void get_channel_mode(uint8_t* chanSwitch)
 	 */
 	static inline void get_channel_mode(uint8_t* chanSwitch)
 	{
-		if (rc_get_channel(RC_SAFETY)<0)
+		if (rc_get_channel(RC_SAFETY) < 0)
 		{
 			*chanSwitch |= 0x00;
 		}
-		else if(rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)<0)
+		else if(rc_get_channel(RC_SAFETY) > 0 && rc_get_channel(RC_ID_MODE) < 0)
 		{
 			*chanSwitch |= 0x01;
 		}
-		else if (rc_get_channel(RC_SAFETY)>0 && rc_get_channel(RC_ID_MODE)>20)
+		else if (rc_get_channel(RC_SAFETY) > 0 && rc_get_channel(RC_ID_MODE) > 20)
 		{
 			*chanSwitch |= 0x03;
 		}

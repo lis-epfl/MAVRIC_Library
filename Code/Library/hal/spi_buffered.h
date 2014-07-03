@@ -31,7 +31,7 @@ typedef void (functionpointer)(void);
 
 #define SPI_BUFFER_SIZE 32								///< The SPI buffer size, this has to be a power of 2
 
-#define SPI_BUFFER_MASK (SPI_BUFFER_SIZE-1)				///< The SPI buffer mask
+#define SPI_BUFFER_MASK (SPI_BUFFER_SIZE - 1)				///< The SPI buffer mask
 
 #define SPI_NUMBER 2									///< The number of SPI
 

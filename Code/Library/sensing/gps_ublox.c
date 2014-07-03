@@ -801,7 +801,7 @@ bool gps_ublox_message_decode(void)
 			break;
 			
 		case 8:
-			step=0;
+			step = 0;
 			if (cksum_b != data)
 			{
 				dbg_print("bad cksum_b ");
@@ -1101,14 +1101,14 @@ bool gps_ublox_process_data(void)
 				dbg_print("\n");
 			}
 			centralData->GPS_data.timegps = gpsVelned->itow;
-			centralData->GPS_data.speed        = ((float)gpsVelned->speed_3d)/100.; // m/s
+			centralData->GPS_data.speed        = ((float)gpsVelned->speed_3d) / 100.; // m/s
 			centralData->GPS_data.groundSpeed = ((float)gpsVelned->groundSpeed_2d) / 100.; // m/s
 			centralData->GPS_data.course = ((float)gpsVelned->heading_2d) / 100000.; // Heading 2D deg * 100000 rescaled to deg * 100
 			have_raw_velocity = true;
 			centralData->GPS_data.northSpeed  = ((float)gpsVelned->ned_north) / 100.0f;
 			centralData->GPS_data.eastSpeed   = ((float)gpsVelned->ned_east) / 100.;
 			centralData->GPS_data.verticalSpeed   = ((float)gpsVelned->ned_down) / 100.;
-			centralData->GPS_data.speedAccuracy = ((float)gpsVelned->speed_accuracy)/100.;
+			centralData->GPS_data.speedAccuracy = ((float)gpsVelned->speed_accuracy) / 100.;
 			centralData->GPS_data.headingAccuracy = gpsVelned->heading_accuracy;
 			new_speed = true;
 		}
@@ -1219,7 +1219,7 @@ void ubx_send_cksum(uint8_t ck_sum_a, uint8_t ck_sum_b)
 
 void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_nav_rate_send msg, uint16_t size)
 {
-	uint8_t ck_a=0, ck_b=0;
+	uint8_t ck_a = 0, ck_b = 0;
 	
 	uint8_t data;
 	
@@ -1255,7 +1255,7 @@ void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_n
 
 void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_nav_settings *engine_settings, uint16_t size)
 {
-	uint8_t ck_a=0, ck_b=0;
+	uint8_t ck_a = 0, ck_b = 0;
 	uint8_t data;
 	
 	ubx_send_header(msg_class,_msg_id,size);
@@ -1414,7 +1414,7 @@ void gps_ublox_configure_gps(void)
 	const char *set_binary = UBLOX_SET_BINARY;
 	// the GPS may be setup for a different baud rate. This ensures
 	// it gets configured correctly
-// 	for (uint8_t i=0; i<4; i++)
+// 	for (uint8_t i = 0; i < 4; i++)
 // 	{
 	
 	//dbg_print("Set to binary mode ");

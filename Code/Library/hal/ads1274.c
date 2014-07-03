@@ -105,16 +105,16 @@ void processData(void)
 		return;
 	}	
 	uint8_t* buffer = get_spi_in_buffer(ADC_SPI_INDEX);
-	for (ch=0; ch<4; ch++) 
+	for (ch = 0; ch < 4; ch++) 
 	{
-		value = (buffer[3*ch]<<24) + (buffer[3*ch+1]<<16)+(buffer[3*ch+2]<<8);
+		value = (buffer[3 * ch] << 24) + (buffer[3 * ch + 1] << 16) + (buffer[3 * ch + 2] << 8);
 		adc_buffer[ch][sampleCounter] = (value/256);
 		
 	}
 	
 	if (function_generator != NULL) 
 	{
-		DAC_set_value((*function_generator)(sampleCounter));
+		DAC_set_value(( *function_generator)(sampleCounter));
 	}		
 	sampleCounter++;
 }  
@@ -206,7 +206,7 @@ void Init_ADC(void)
 ///< Enable/Disable the clock to the ADC
 void ADC_Switch_Clock(Bool on_off) 
 {
-	if (on_off==true) 
+	if (on_off == true) 
 	{
 		gpio_enable_module_pin(AVR32_SCIF_GCLK_1_1_PIN, AVR32_SCIF_GCLK_1_1_FUNCTION);	
 
@@ -242,7 +242,7 @@ void ADC_Start_Oneshot(void)
 {
 	//Disable_global_interrupt();
 	//eic_enable_interrupt_line(&AVR32_EIC, eic_options[0].eic_line);
-	sampleCounter=0;
+	sampleCounter = 0;
 	//Enable_global_interrupt();
 }
 
@@ -256,14 +256,14 @@ __attribute__((__naked__))
 
 void eic_nmi_handler( void )
 {
-	//int i=0;
+	//int i = 0;
 	__asm__ __volatile__ (
 			/* Save registers not saved upon NMI exception. */
 			"pushm   r0-r12, lr\n\t"
 			);
 	//interrupt_counter++;
 	
-	if (sampleCounter<ADC_BUFFER_SIZE) 
+	if (sampleCounter < ADC_BUFFER_SIZE) 
 	{
 		spiTriggerDMA(0, 12);
 	} 

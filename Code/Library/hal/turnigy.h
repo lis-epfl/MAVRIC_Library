@@ -49,7 +49,7 @@ extern "C" {
 
 #define DEADZONE 30.0f							///< The deadzone of the remote
 
-#define RC_SCALEFACTOR 1.0f/880.0f				///< The scale factor of remote inputs
+#define RC_SCALEFACTOR 1.0f / 880.0f				///< The scale factor of remote inputs
 
 /*
 typedef struct Turnigy_Receiver {

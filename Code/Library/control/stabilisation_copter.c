@@ -51,9 +51,9 @@ void init_stabilisation_copter(Stabiliser_Stack_copter_t* stabiliser_stack)
 
 void get_velocity_vector_from_remote(float tvel[])
 {
-	tvel[X]=-10.0f*centralData->controls.rpy[PITCH];
-	tvel[Y]= 10.0f*centralData->controls.rpy[ROLL];
-	tvel[Z]=- 1.5f*centralData->controls.thrust;
+	tvel[X]= - 10.0f * centralData->controls.rpy[PITCH];
+	tvel[Y]= 10.0f * centralData->controls.rpy[ROLL];
+	tvel[Z]=- 1.5f * centralData->controls.thrust;
 }
 
 void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input) 
@@ -64,7 +64,7 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 	UQuat_t qtmp;
 	
 	// set the controller input
-	input=*control_input;
+	input= * control_input;
 	switch (control_input->control_mode) {
 	case VELOCITY_COMMAND_MODE:
 		
@@ -91,8 +91,8 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 				rel_heading_coordinated = atan2(pos_est->vel_bf[Y], pos_est->vel_bf[X]);
 			}
 			
-			float w = 0.5f*(sigmoid(vector_norm(pos_est->vel_bf)-centralData->stabiliser_stack.yaw_coordination_velocity)+1.0f);
-			input.rpy[YAW] = (1.0f-w)*input.rpy[YAW] + w*rel_heading_coordinated;
+			float w = 0.5f * (sigmoid(vector_norm(pos_est->vel_bf) - centralData->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
+			input.rpy[YAW] = (1.0f - w) * input.rpy[YAW] + w * rel_heading_coordinated;
 		}
 
 		rpyt_errors[YAW]= input.rpy[YAW];
@@ -115,7 +115,7 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 	
 	case ATTITUDE_COMMAND_MODE:
 		// run absolute attitude controller
-		rpyt_errors[0]= input.rpy[0] - (-imu->attitude.up_vec.v[1] ); 
+		rpyt_errors[0]= input.rpy[0] - ( - imu->attitude.up_vec.v[1] ); 
 		rpyt_errors[1]= input.rpy[1] - imu->attitude.up_vec.v[0];
 		
 		if ((control_input->yaw_mode == YAW_ABSOLUTE) ) {
@@ -162,9 +162,9 @@ void mix_to_servos_diag_quad(Control_Command_t *control)
 	int i;
 	float motor_command[4];
 	
-	motor_command[M_FRONT_RIGHT]= control->thrust + (-control->rpy[ROLL] + control->rpy[PITCH]) + M_FR_DIR * control->rpy[YAW];
+	motor_command[M_FRONT_RIGHT]= control->thrust + ( - control->rpy[ROLL] + control->rpy[PITCH]) + M_FR_DIR * control->rpy[YAW];
 	motor_command[M_FRONT_LEFT] = control->thrust + ( control->rpy[ROLL] + control->rpy[PITCH]) + M_FL_DIR * control->rpy[YAW];
-	motor_command[M_REAR_RIGHT] = control->thrust + (-control->rpy[ROLL] - control->rpy[PITCH]) + M_RR_DIR * control->rpy[YAW];
+	motor_command[M_REAR_RIGHT] = control->thrust + ( - control->rpy[ROLL] - control->rpy[PITCH]) + M_RR_DIR * control->rpy[YAW];
 	motor_command[M_REAR_LEFT]  = control->thrust + ( control->rpy[ROLL] - control->rpy[PITCH]) + M_RL_DIR * control->rpy[YAW];
 	for (i=0; i<4; i++)
 	{
@@ -180,7 +180,7 @@ void mix_to_servos_diag_quad(Control_Command_t *control)
 
 	for (i=0; i<4; i++) 
 	{
-		centralData->servos[i].value=SERVO_SCALE*motor_command[i];
+		centralData->servos[i].value=SERVO_SCALE * motor_command[i];
 	}
 }
 
@@ -206,6 +206,6 @@ void mix_to_servos_cross_quad(Control_Command_t *control)
 	}
 	for (i=0; i<4; i++) 
 	{
-		centralData->servos[i].value=SERVO_SCALE*motor_command[i];
+		centralData->servos[i].value=SERVO_SCALE * motor_command[i];
 	}
 }

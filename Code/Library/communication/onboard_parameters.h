@@ -72,7 +72,7 @@ void init_onboard_parameters(void);
 /**
  * \brief				Register parameter in the internal parameter list that gets published to MAVlink
  *
- * \param val			Unsigned 8-bits integer parameter value
+ * \param val			Unsigned 8 - bits integer parameter value
  * \param param_name	Name of the parameter
  */
 void add_parameter_uint8(uint8_t* val, const char* param_name);
@@ -80,7 +80,7 @@ void add_parameter_uint8(uint8_t* val, const char* param_name);
 /**
  * \brief				Register parameter in the internal parameter list that gets published to MAVlink
  *
- * \param val			Unsigned 32-bits integer parameter value
+ * \param val			Unsigned 32 - bits integer parameter value
  * \param param_name	Name of the parameter
  */
 void add_parameter_uint32(uint32_t* val, const char* param_name);
@@ -88,7 +88,7 @@ void add_parameter_uint32(uint32_t* val, const char* param_name);
 /**
  * \brief				Register parameter in the internal parameter list that gets published to MAVlink
  *
- * \param val			Signed 32-bits integer parameter value
+ * \param val			Signed 32 - bits integer parameter value
  * \param param_name	Name of the parameter
  */
 void add_parameter_int32(int32_t* val, const char* param_name);

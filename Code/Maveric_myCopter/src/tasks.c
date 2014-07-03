@@ -94,23 +94,23 @@ void tasks_relevel_imu()
 {
 	uint8_t i,j;
 
-	centralData->imu1.attitude.calibration_level=LEVELING;
+	centralData->imu1.attitude.calibration_level = LEVELING;
 	centralData->mav_state = MAV_STATE_CALIBRATING;
 	centralData->mav_mode = MAV_MODE_PREFLIGHT;
 
 	dbg_print("calibrating IMU...\n");
 
-	for (j=0;j<3;j++)
+	for (j = 0;j < 3;j++)
 	{
 		centralData->imu1.attitude.raw_mag_mean[j] = (float)centralData->imu1.raw_channels[j + COMPASS_OFFSET];
 	}
 
-	for (i=1000; i>0; i--) 
+	for (i = 1000; i > 0; i--) 
 	{
 		tasks_run_imu_update();
 		mavlink_protocol_update();
 		
-		for (j=0;j<3;j++)
+		for (j = 0;j < 3;j++)
 		{
 			centralData->imu1.attitude.raw_mag_mean[j] = (1.0f - MAG_LPF) * centralData->imu1.attitude.raw_mag_mean[j] + MAG_LPF * ((float)centralData->imu1.raw_channels[j + COMPASS_OFFSET]);
 		}
@@ -118,7 +118,7 @@ void tasks_relevel_imu()
 		delay_ms(5);
 	}
 	
-	centralData->imu1.attitude.calibration_level=OFF;
+	centralData->imu1.attitude.calibration_level = OFF;
 	centralData->mav_state = MAV_STATE_STANDBY;
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	
@@ -245,7 +245,7 @@ task_return_t tasks_set_mav_mode_n_state()
 						{
 							centralData->mav_state = MAV_STATE_ACTIVE;
 							dbg_print("Automatic take-off finised, distFromHomeSqr (10x):");
-							dbg_print_num(distFromHomeSqr*10.0f,10);
+							dbg_print_num(distFromHomeSqr * 10.0f,10);
 							dbg_print(".\n");
 						}
 						break;
@@ -262,13 +262,13 @@ task_return_t tasks_set_mav_mode_n_state()
 							init_waypoint();
 						}
 
-						distFromHomeSqr = SQR(centralData->position_estimator.localPosition.pos[X]-centralData->waypoint_hold_coordinates.pos[X]) + SQR(centralData->position_estimator.localPosition.pos[Y]-centralData->waypoint_hold_coordinates.pos[Y]) + SQR(centralData->position_estimator.localPosition.pos[Z]-centralData->waypoint_hold_coordinates.pos[Z]);
+						distFromHomeSqr = SQR(centralData->position_estimator.localPosition.pos[X] - centralData->waypoint_hold_coordinates.pos[X]) + SQR(centralData->position_estimator.localPosition.pos[Y] - centralData->waypoint_hold_coordinates.pos[Y]) + SQR(centralData->position_estimator.localPosition.pos[Z] - centralData->waypoint_hold_coordinates.pos[Z]);
 						
 						if ((centralData->dist2wp_sqr <= 16.0f)&&(!centralData->automatic_take_off))
 						{
 							centralData->mav_state = MAV_STATE_ACTIVE;
 							dbg_print("Automatic take-off finised, distFromHomeSqr (10x):");
-							dbg_print_num(distFromHomeSqr*10.0f,10);
+							dbg_print_num(distFromHomeSqr * 10.0f,10);
 							dbg_print(".\n");
 						}
 						break;
@@ -461,7 +461,7 @@ task_return_t tasks_set_mav_mode_n_state()
 		if (centralData->simulation_mode == 0)
 		{
 			centralData->position_estimator.localPosition.origin = centralData->sim_model.localPosition.origin;
-			for (i=0;i<3;i++)
+			for (i = 0;i < 3;i++)
 			{
 				centralData->position_estimator.localPosition.pos[i] = centralData->sim_model.localPosition.pos[i];
 			}
@@ -484,7 +484,7 @@ task_return_t tasks_set_mav_mode_n_state()
 
 
 void tasks_run_imu_update() {
-	if (centralData->simulation_mode==1) 
+	if (centralData->simulation_mode == 1) 
 	{
 		simulation_update(&centralData->sim_model, 
 					&centralData->servos, 
@@ -525,7 +525,7 @@ task_return_t tasks_run_stabilisation()
 		case MAV_MODE_STABILIZE_ARMED:
 			centralData->controls = get_command_from_remote();
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
-			centralData->controls.yaw_mode=YAW_RELATIVE;
+			centralData->controls.yaw_mode = YAW_RELATIVE;
 			
 			get_velocity_vector_from_remote(centralData->controls.tvel);
 			
@@ -537,7 +537,7 @@ task_return_t tasks_run_stabilisation()
 			centralData->controls = centralData->controls_nav;
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			
-			if ((centralData->mav_state==MAV_STATE_CRITICAL)&&(centralData->critical_behavior==FLY_TO_HOME_WP))
+			if ((centralData->mav_state == MAV_STATE_CRITICAL) && (centralData->critical_behavior == FLY_TO_HOME_WP))
 			{
 				centralData->controls.yaw_mode = YAW_COORDINATED;
 			}
@@ -555,7 +555,7 @@ task_return_t tasks_run_stabilisation()
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			
 			// if no waypoints are set, we do position hold therefore the yaw mode is absolute
-			if (((centralData->waypoint_set&&(centralData->mav_state!=MAV_STATE_STANDBY)))||((centralData->mav_state==MAV_STATE_CRITICAL)&&(centralData->critical_behavior==FLY_TO_HOME_WP)))
+			if (((centralData->waypoint_set&&(centralData->mav_state != MAV_STATE_STANDBY)))||((centralData->mav_state == MAV_STATE_CRITICAL)&&(centralData->critical_behavior == FLY_TO_HOME_WP)))
 			{
 				centralData->controls.yaw_mode = YAW_COORDINATED;
 			}
@@ -578,7 +578,7 @@ task_return_t tasks_run_stabilisation()
 	}
 	
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
-	if (centralData->simulation_mode!=1) 
+	if (centralData->simulation_mode != 1) 
 	{
 		set_servos(centralData->servos);
 	}
@@ -609,7 +609,7 @@ void fake_gps_fix()
 
 task_return_t tasks_run_gps_update() 
 {
-	if (centralData->simulation_mode==1) 
+	if (centralData->simulation_mode == 1) 
 	{
 		simulation_simulate_gps(&centralData->sim_model, &centralData->GPS_data);
 	} 
@@ -676,7 +676,7 @@ task_return_t tasks_run_barometer_update()
 		simulation_simulate_barometer(&centralData->sim_model, pressure);
 	} 
 
-	centralData->pressure=*pressure;
+	centralData->pressure = *pressure;
 }
 
 
@@ -688,7 +688,7 @@ task_return_t sonar_update(void)
 
 task_return_t adc_update(void)
 {
-	central_data_t* central_data=central_data_get_pointer_to_struct();
+	central_data_t* central_data = central_data_get_pointer_to_struct();
 	analog_monitor_update(&central_data->adc);
 }
 
@@ -701,7 +701,7 @@ void tasks_create_tasks()
 	scheduler_register_task(&main_tasks, 0, 4000, RUN_REGULAR, &tasks_run_stabilisation );
 	
 	scheduler_register_task(&main_tasks, 1, 15000, RUN_REGULAR, &tasks_run_barometer_update);
-	main_tasks.tasks[1].timing_mode=PERIODIC_RELATIVE;
+	main_tasks.tasks[1].timing_mode = PERIODIC_RELATIVE;
 
 	scheduler_register_task(&main_tasks, 2, 100000, RUN_REGULAR, &tasks_run_gps_update);
 	//scheduler_register_task(&main_tasks, , 100000, RUN_REGULAR, &read_radar);

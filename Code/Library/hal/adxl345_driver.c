@@ -57,9 +57,9 @@ acc_data* get_acc_data_slow(void)
 	twim_write(&AVR32_TWIM0, (uint8_t*)&write_then_read_preamble, 1, ADXL_ALT_SLAVE_ADDRESS, false);
 	twim_read(&AVR32_TWIM0, (uint8_t*)&acc_outputs, 6, ADXL_ALT_SLAVE_ADDRESS, false);
 	
-	for (i=0; i<3; i++) 
+	for (i = 0; i < 3; i++) 
 	{
-		acc_outputs.axes[i]=(int16_t)(acc_outputs.raw_data[2*i])+(int16_t)(acc_outputs.raw_data[2*i+1]<<8);
+		acc_outputs.axes[i] = (int16_t)(acc_outputs.raw_data[2 * i]) + (int16_t)(acc_outputs.raw_data[2 * i + 1] << 8);
 	}
 				
 	return &acc_outputs;

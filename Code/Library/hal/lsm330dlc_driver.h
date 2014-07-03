@@ -193,7 +193,7 @@ static const lms330dlc_acc_conf_t lsm_acc_default_config=
 */
 static const lsm330dlc_gyro_conf_t lsm_gyro_default_config=
 {
-	.start_address=0x20| LSM_AUTO_INCREMENT,
+	.start_address = 0x20| LSM_AUTO_INCREMENT,
 	.ctrl_reg_g=
 	{	
 		LSM_GYRO_POWER_ON | LSM_GYRO_DATARATE_760Hz | LSM_GYRO_BANDWIDTH_50Hz | LSM_GYRO_ALL_EN,	///< CTRL_REG_A_1
@@ -207,7 +207,7 @@ static const lsm330dlc_gyro_conf_t lsm_gyro_default_config=
 /**
  * \brief Declare the configuration of the FIFO
 */
-static const uint8_t fifo_config[2]={LSM_ACC_FIFO_CTRL_ADDRESS, 0x80};
+static const uint8_t fifo_config[2] = {LSM_ACC_FIFO_CTRL_ADDRESS, 0x80};
 
 /**
  * \brief Structure containing the gyroscope's data
@@ -226,7 +226,7 @@ typedef struct
 {
 	int8_t temperature;				///< Define the temperature of the sensor
 	uint8_t status_register;		///< Define the status register of the FIFO of the gyroscope
-	int16_t axes[32*3];				/// Define an array containing the 3 axis of the gyroscope in the FIFO
+	int16_t axes[32 * 3];				/// Define an array containing the 3 axis of the gyroscope in the FIFO
 } lsm_gyro_fifo_t;
 
 /**
@@ -244,7 +244,7 @@ typedef struct
 typedef struct
 {
 	//uint8_t status_register;
-	uint8_t axes[32*6];				/// Define an array containing the 3 axis of the accelerometer in the FIFO
+	uint8_t axes[32 * 6];				/// Define an array containing the 3 axis of the accelerometer in the FIFO
 } lsm_acc_fifo_t;
 
 /**

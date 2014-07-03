@@ -75,7 +75,7 @@ ISR(i2c_int_handler_i2c0,CONF_TWIM_IRQ_GROUP,CONF_TWIM_IRQ_LEVEL)
 		{ 
 			///<nothing more to write
 			twim->idr = AVR32_TWIM_IDR_TXRDY_MASK;
-			if (current_transfer->direction==I2C_WRITE1_THEN_READ) 
+			if (current_transfer->direction == I2C_WRITE1_THEN_READ) 
 			{
 				///< reading should already be set up in next command register...	
 			}	
@@ -92,7 +92,7 @@ ISR(i2c_int_handler_i2c0,CONF_TWIM_IRQ_GROUP,CONF_TWIM_IRQ_LEVEL)
 	
 	///< call callback function to process data, at end of transfer
 	///< to process data, and maybe add some more data
-	//schedule[0][current_schedule_slot[0]].transfer_in_progress=0;
+	//schedule[0][current_schedule_slot[0]].transfer_in_progress = 0;
    
 	//if (schedule[0][current_schedule_slot[0]].callback) schedule[0][current_schedule_slot[0]].callback;
 	//putstring(&AVR32_USART0, "!");
@@ -108,7 +108,7 @@ int init_i2c(unsigned char i2c_device)
 	volatile avr32_twim_t *twim;
 	switch (i2c_device) {
 	case 0: 
-		twim=&AVR32_TWIM0;
+		twim = &AVR32_TWIM0;
 		///< Register PDCA IRQ interrupt.
 		INTC_register_interrupt( (__int_handler) &i2c_int_handler_i2c0, AVR32_TWIM0_IRQ, AVR32_INTC_INT1);
 		gpio_enable_module_pin(AVR32_TWIMS0_TWCK_0_0_PIN, AVR32_TWIMS0_TWCK_0_0_FUNCTION);
@@ -116,7 +116,7 @@ int init_i2c(unsigned char i2c_device)
 
 	break;
 	case 1:
-		twim=&AVR32_TWIM1;///< Register PDCA IRQ interrupt.
+		twim = &AVR32_TWIM1;///< Register PDCA IRQ interrupt.
 		//INTC_register_interrupt( (__int_handler) &i2c_int_handler_i2c1, AVR32_TWIM1_IRQ, AVR32_INTC_INT1);
 		gpio_enable_module_pin(AVR32_TWIMS1_TWCK_0_0_PIN, AVR32_TWIMS1_TWCK_0_0_FUNCTION);
 		gpio_enable_module_pin(AVR32_TWIMS1_TWD_0_0_PIN, AVR32_TWIMS1_TWD_0_0_FUNCTION);
@@ -167,10 +167,10 @@ char i2c_reset(unsigned char i2c_device)
 	switch (i2c_device) 
 	{
 		case 0: 
-			twim=&AVR32_TWIM0;
+			twim = &AVR32_TWIM0;
 		break;
 		case 1:
-			twim=&AVR32_TWIM1;
+			twim = &AVR32_TWIM1;
 		break;
 		default: ///< invalid device ID
 			return -1;
@@ -209,7 +209,7 @@ char i2c_trigger_request(unsigned char i2c_device, i2c_packet_t *transfer)
 	switch (i2c_device) 
 	{
 		case 0: 
-			twim=&AVR32_TWIM0;
+			twim = &AVR32_TWIM0;
 			twim->cr = AVR32_TWIM_CR_MEN_MASK;
 			twim->cr = AVR32_TWIM_CR_SWRST_MASK;
 			twim->cr = AVR32_TWIM_CR_MDIS_MASK;
@@ -228,7 +228,7 @@ char i2c_trigger_request(unsigned char i2c_device, i2c_packet_t *transfer)
 			//pdca_enable_interrupt_transfer_error(TWI0_DMA_CH);		
 			break;
 		case 1:
-			twim=&AVR32_TWIM1;
+			twim = &AVR32_TWIM1;
 			twim->cr = AVR32_TWIM_CR_MEN_MASK;
 			twim->cr = AVR32_TWIM_CR_SWRST_MASK;
 			twim->cr = AVR32_TWIM_CR_MDIS_MASK;
@@ -256,7 +256,7 @@ char i2c_trigger_request(unsigned char i2c_device, i2c_packet_t *transfer)
  						| (AVR32_TWIM_CMDR_START_MASK)
  						| (AVR32_TWIM_CMDR_STOP_MASK)
  						| (AVR32_TWIM_CMDR_READ_MASK);
-			twim->ncmdr=0;					
+			twim->ncmdr = 0;					
 			twim->ier = AVR32_TWIM_IER_STD_MASK |  AVR32_TWIM_IER_RXRDY_MASK;
 			break;	
 		case I2C_WRITE1_THEN_READ:
@@ -278,7 +278,7 @@ char i2c_trigger_request(unsigned char i2c_device, i2c_packet_t *transfer)
 			twim->ier = AVR32_TWIM_IER_STD_MASK | AVR32_TWIM_IER_RXRDY_MASK | AVR32_TWIM_IER_TXRDY_MASK;
 			///< set up writing of one byte (usually a slave register index)
 			twim->cr = AVR32_TWIM_CR_MEN_MASK;
-			twim->thr=transfer->write_then_read_preamble;
+			twim->thr = transfer->write_then_read_preamble;
 			twim->cr = AVR32_TWIM_CR_MEN_MASK;
 			break;	
 		case I2C_WRITE:
@@ -287,15 +287,15 @@ char i2c_trigger_request(unsigned char i2c_device, i2c_packet_t *transfer)
  						| (AVR32_TWIM_CMDR_VALID_MASK)
  						| (AVR32_TWIM_CMDR_START_MASK)
  						| (AVR32_TWIM_CMDR_STOP_MASK);
-			twim->ncmdr=0;						;	
+			twim->ncmdr = 0;						;	
 			twim->ier = AVR32_TWIM_IER_NAK_MASK |  AVR32_TWIM_IER_TXRDY_MASK;
 		break;	
 	}
 			
 	///< start transfer
-	current_transfer=transfer;
-	current_transfer->transfer_in_progress=1;
-	current_transfer->data_index=0;
+	current_transfer = transfer;
+	current_transfer->transfer_in_progress = 1;
+	current_transfer->data_index = 0;
 	
 	if (global_interrupt_enabled) 
 	{

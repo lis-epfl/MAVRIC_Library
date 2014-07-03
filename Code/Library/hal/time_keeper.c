@@ -30,13 +30,13 @@ double get_time()
 uint32_t get_millis()
 {
 	//milliseconds since system start
-	return get_time_ticks()/1000; /// (TK_AST_FREQUENCY/1000);
+	return get_time_ticks() / 1000; /// (TK_AST_FREQUENCY / 1000);
 }
 
 uint32_t get_micros()
 {
 	// microseconds since system start. Will run over after an hour.
-	return get_time_ticks()* (1000000/TK_AST_FREQUENCY);
+	return get_time_ticks()* (1000000 / TK_AST_FREQUENCY);
 }
 
 uint32_t get_time_ticks()
@@ -47,16 +47,16 @@ uint32_t get_time_ticks()
 
 float ticks_to_seconds(uint32_t timer_ticks)
 {
-	return ((double)timer_ticks/(double)TK_AST_FREQUENCY);
+	return ((double)timer_ticks / (double)TK_AST_FREQUENCY);
 }
 
 void delay_micros(int microseconds)
 {
-	uint32_t now=get_micros();
-	while (get_micros()<now+microseconds);
+	uint32_t now = get_micros();
+	while (get_micros() < now + microseconds);
 }
 
 void delay_until(uint32_t until_time)
 {
-	while (get_micros()<until_time);
+	while (get_micros() < until_time);
 }

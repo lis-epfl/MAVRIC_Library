@@ -105,7 +105,7 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 		rel_heading = calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - centralData->position_estimator.localPosition.heading);
 	}
 	
-	v_desired = f_min(centralData->cruise_speed,(center_window_2(4.0f*rel_heading) * centralData->dist2vel_gain * soft_zone(norm_rel_dist,centralData->softZoneSize)));
+	v_desired = f_min(centralData->cruise_speed,(center_window_2(4.0f * rel_heading) * centralData->dist2vel_gain * soft_zone(norm_rel_dist,centralData->softZoneSize)));
 	
 	if (v_desired *  f_abs(dir_desired_bf[Z]) > centralData->max_climb_rate * norm_rel_dist ) {
 		v_desired = centralData->max_climb_rate * norm_rel_dist /f_abs(dir_desired_bf[Z]);
@@ -119,22 +119,22 @@ void set_speed_command(float rel_pos[], float dist2wpSqr)
 	loopCount = loopCount++ %50;
 	if (loopCount == 0)
 	{
-		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"v_desired",v_desired*100);
-		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"act_vel",vector_norm(centralData->position_estimator.vel_bf)*100);
+		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"v_desired",v_desired * 100);
+		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"act_vel",vector_norm(centralData->position_estimator.vel_bf) * 100);
 		dbg_print("Desired_vel_Bf(x100): (");
-		dbg_print_num(dir_desired_bf[X]*100,10);
-		dbg_print_num(dir_desired_bf[Y]*100,10);
-		dbg_print_num(dir_desired_bf[Z]*100,10);
+		dbg_print_num(dir_desired_bf[X] * 100,10);
+		dbg_print_num(dir_desired_bf[Y] * 100,10);
+		dbg_print_num(dir_desired_bf[Z] * 100,10);
 		dbg_print("). \n");
 		dbg_print("Actual_vel_bf(x100): (");
-		dbg_print_num(centralData->position_estimator.vel_bf[X]*100,10);
-		dbg_print_num(centralData->position_estimator.vel_bf[Y]*100,10);
-		dbg_print_num(centralData->position_estimator.vel_bf[Z]*100,10);
+		dbg_print_num(centralData->position_estimator.vel_bf[X] * 100,10);
+		dbg_print_num(centralData->position_estimator.vel_bf[Y] * 100,10);
+		dbg_print_num(centralData->position_estimator.vel_bf[Z] * 100,10);
 		dbg_print("). \n");
 		dbg_print("Actual_pos(x100): (");
-		dbg_print_num(centralData->position_estimator.localPosition.pos[X]*100,10);
-		dbg_print_num(centralData->position_estimator.localPosition.pos[Y]*100,10);
-		dbg_print_num(centralData->position_estimator.localPosition.pos[Z]*100,10);
+		dbg_print_num(centralData->position_estimator.localPosition.pos[X] * 100,10);
+		dbg_print_num(centralData->position_estimator.localPosition.pos[Y] * 100,10);
+		dbg_print_num(centralData->position_estimator.localPosition.pos[Z] * 100,10);
 		dbg_print("). \n");
 	}
 	*/
