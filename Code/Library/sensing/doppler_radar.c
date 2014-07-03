@@ -67,7 +67,7 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 						
 	for (i=0;i< RADAR_BUFFER_SIZE;i++)
 	{				
-		fft_amp[i]=fast_sqrt(SQR(vect_outputI[i].real) + SQR(vect_outputI[i].imag));
+		fft_amp[i]=maths_fast_sqrt(SQR(vect_outputI[i].real) + SQR(vect_outputI[i].imag));
 	}
 
 			

@@ -46,7 +46,7 @@ void initialisation() {
 	
 
 	init_radar_modules();
-	dbg_print("Debug stream initialised\n");
+	print_util_dbg_print("Debug stream initialised\n");
 
 	//gps_ublox_init(engine_nav_settings);
 	

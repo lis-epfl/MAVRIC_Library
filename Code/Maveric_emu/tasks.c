@@ -34,22 +34,22 @@ void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motor
 	
 	get_channel_mode(chanSwitch);
 	
-	//dbg_print("chanSwitch ");
-	//dbg_print_num(*chanSwitch,10);
-	//dbg_print_num(getChannel(4),10);
-	//dbg_print_num(getChannel(5),10);
-	//dbg_print("\n");
+	//print_util_dbg_print("chanSwitch ");
+	//print_util_dbg_print_num(*chanSwitch,10);
+	//print_util_dbg_print_num(getChannel(4),10);
+	//print_util_dbg_print_num(getChannel(5),10);
+	//print_util_dbg_print("\n");
 	
 	if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() > 0.9))
 	{
-		//dbg_print("motor on\n");
+		//print_util_dbg_print("motor on\n");
 		*motorbool = 1;
 	}else if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() <-0.9))
 	{
-		//dbg_print("motor off\n");
+		//print_util_dbg_print("motor off\n");
 		*motorbool = -1;
 	}else{
-		//dbg_print("motor nothing\n");
+		//print_util_dbg_print("motor nothing\n");
 		*motorbool = 0;
 	}
 	
@@ -65,11 +65,11 @@ void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motor
 		*rc_check = -2;
 		break;
 	}
-	//dbg_print("rc_check: ");
-	//dbg_print_num(rc_check,10);
-	//dbg_print("; motorbool : ");
-	//dbg_print_num(*motorbool,10);
-	//dbg_print("\n");
+	//print_util_dbg_print("rc_check: ");
+	//print_util_dbg_print_num(rc_check,10);
+	//print_util_dbg_print("; motorbool : ");
+	//print_util_dbg_print_num(*motorbool,10);
+	//print_util_dbg_print("\n");
 }
 
 task_return_t tasks_set_mav_mode_n_state()
@@ -90,22 +90,22 @@ task_return_t tasks_set_mav_mode_n_state()
 				switch(channelSwitches)
 				{
 					case 0:
-						dbg_print("Switching on the motors!\n");
+						print_util_dbg_print("Switching on the motors!\n");
 						board->controls.run_mode = MOTORS_ON;
 						board->mav_state = MAV_STATE_ACTIVE;
 						board->mav_mode = MAV_MODE_MANUAL_ARMED;
 						break;
 					case 1:
-						dbg_print("Switches not ready, both should be pushed!\n");
+						print_util_dbg_print("Switches not ready, both should be pushed!\n");
 						//board->controls.run_mode = MOTORS_ON;
 						//board->mav_state = MAV_STATE_ACTIVE;
 						//board->mav_mode = MAV_MODE_STABILIZE_ARMED;
 						break;
 					case 2:
-						dbg_print("Switches not ready, both should be pushed!\n");
+						print_util_dbg_print("Switches not ready, both should be pushed!\n");
 						break;
 					case 3:
-						dbg_print("Switches not ready, both should be pushed!\n");
+						print_util_dbg_print("Switches not ready, both should be pushed!\n");
 						break;
 				}
 			}
@@ -126,11 +126,11 @@ task_return_t tasks_set_mav_mode_n_state()
 					board->mav_mode = MAV_MODE_AUTO_ARMED;
 					break;
 			}
-			//dbg_print("motor_switch: ");
-			//dbg_print_num(motor_switch,10);
+			//print_util_dbg_print("motor_switch: ");
+			//print_util_dbg_print_num(motor_switch,10);
 			if (motor_switch == -1)
 			{
-				dbg_print("Switching off motors!\n");
+				print_util_dbg_print("Switching off motors!\n");
 				board->controls.run_mode = MOTORS_OFF;
 				board->mav_state = MAV_STATE_STANDBY;
 				board->mav_mode = MAV_MODE_MANUAL_DISARMED;
@@ -165,7 +165,7 @@ task_return_t tasks_set_mav_mode_n_state()
 			}
 			if (motor_switch == -1)
 			{
-				dbg_print("Switching off motors!\n");
+				print_util_dbg_print("Switching off motors!\n");
 				board->controls.run_mode = MOTORS_OFF;
 				board->mav_state = MAV_STATE_STANDBY;
 				board->mav_mode = MAV_MODE_MANUAL_DISARMED;
@@ -191,11 +191,11 @@ task_return_t tasks_set_mav_mode_n_state()
 			break;
 	}
 
-	//dbg_print("MAV state :");
-	//dbg_print_num(board->mav_state,10);
-	//dbg_print(", MAV mode :");
-	//dbg_print_num(board->mav_mode,10);
-	//dbg_print("\n");
+	//print_util_dbg_print("MAV state :");
+	//print_util_dbg_print_num(board->mav_state,10);
+	//print_util_dbg_print(", MAV mode :");
+	//print_util_dbg_print_num(board->mav_mode,10);
+	//print_util_dbg_print("\n");
 	
 }
 
@@ -225,9 +225,9 @@ task_return_t tasks_run_stabilisation() {
 			board->waypoint_hold_init = false;
 			board->mission_started = false;
 			board->controls = get_command_from_remote();
-			//dbg_print("Thrust:");
-			//dbg_print_num(board->controls.thrust*10000,10);
-			//dbg_print("\n");
+			//print_util_dbg_print("Thrust:");
+			//print_util_dbg_print_num(board->controls.thrust*10000,10);
+			//print_util_dbg_print("\n");
 			//board->controls.control_mode=ATTITUDE_COMMAND_MODE_REL_YAW;
 			board->controls.tvel[X]=-10.0*board->controls.rpy[PITCH];
 			board->controls.tvel[Y]= 10.0*board->controls.rpy[ROLL];
@@ -241,13 +241,13 @@ task_return_t tasks_run_stabilisation() {
 			board->controls.thrust = min(get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0;
 			//board->controls.thrust = board->controls_nav.thrust;
 			
-			//dbg_print("Thrust (x10000):");
-			//dbg_print_num(board->controls.thrust*10000.0,10);
-			//dbg_print(", remote (x10000):");
-			//dbg_print_num(get_thrust_from_remote()*10000.0,10);
-			//dbg_print(" => min (x10000):");
-			//dbg_print_num(min(get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0 *10000.0,10);
-			//dbg_print("\n");
+			//print_util_dbg_print("Thrust (x10000):");
+			//print_util_dbg_print_num(board->controls.thrust*10000.0,10);
+			//print_util_dbg_print(", remote (x10000):");
+			//print_util_dbg_print_num(get_thrust_from_remote()*10000.0,10);
+			//print_util_dbg_print(" => min (x10000):");
+			//print_util_dbg_print_num(min(get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0 *10000.0,10);
+			//print_util_dbg_print("\n");
 			
 			quad_stabilise(&(board->imu1), &(board->controls));
 			break;
@@ -258,9 +258,9 @@ task_return_t tasks_run_stabilisation() {
 			board->controls.thrust = min(get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0;
 			//board->controls.thrust = board->controls_nav.thrust;
 			
-			//dbg_print("Thrust main:");
-			//dbg_print_num(board->controls.thrust*10000,10);
-			//dbg_print("\n");
+			//print_util_dbg_print("Thrust main:");
+			//print_util_dbg_print_num(board->controls.thrust*10000,10);
+			//print_util_dbg_print("\n");
 			
 			quad_stabilise(&(board->imu1), &(board->controls));
 			break;
@@ -324,32 +324,32 @@ task_return_t tasks_run_gps_update() {
 	
 	gps_ublox_update();
 	
- 	//dbg_print("time :");
- 	//dbg_print_num(tnow,10);
- 	//dbg_print_num(board->GPS_data.timeLastMsg,10);
- 	//dbg_print(" GPS status : 0x");
- 	//dbg_print_num(board->GPS_data.status,16);
- 	//dbg_print(" status:");
- 	//dbg_print_num(board->GPS_data.accuracyStatus,10);
- 	//dbg_print_num(board->GPS_data.horizontalStatus,10);
- 	//dbg_print_num(board->GPS_data.altitudeStatus,10);
- 	//dbg_print_num(board->GPS_data.speedStatus,10);
- 	//dbg_print_num(board->GPS_data.courseStatus,10);
- 	//dbg_print("\n");
+ 	//print_util_dbg_print("time :");
+ 	//print_util_dbg_print_num(tnow,10);
+ 	//print_util_dbg_print_num(board->GPS_data.timeLastMsg,10);
+ 	//print_util_dbg_print(" GPS status : 0x");
+ 	//print_util_dbg_print_num(board->GPS_data.status,16);
+ 	//print_util_dbg_print(" status:");
+ 	//print_util_dbg_print_num(board->GPS_data.accuracyStatus,10);
+ 	//print_util_dbg_print_num(board->GPS_data.horizontalStatus,10);
+ 	//print_util_dbg_print_num(board->GPS_data.altitudeStatus,10);
+ 	//print_util_dbg_print_num(board->GPS_data.speedStatus,10);
+ 	//print_util_dbg_print_num(board->GPS_data.courseStatus,10);
+ 	//print_util_dbg_print("\n");
 	//
 	/*if(gps_ublox_newValidGpsMsg())
 	{
-		dbg_print("GPS status:");
-		dbg_print_num(board->GPS_data.status,10);
-		dbg_print(" time gps:");
-		dbg_print_num(board->GPS_data.timegps,10);
-		dbg_print(" latitude :");
-		dbg_print_num(board->GPS_data.latitude,10);
-		dbg_print(" longitude :");
-		dbg_print_num(board->GPS_data.longitude,10);
-		dbg_print(" altitude");
-		dbg_print_num(board->GPS_data.altitude,10);
-		dbg_print("\n");
+		print_util_dbg_print("GPS status:");
+		print_util_dbg_print_num(board->GPS_data.status,10);
+		print_util_dbg_print(" time gps:");
+		print_util_dbg_print_num(board->GPS_data.timegps,10);
+		print_util_dbg_print(" latitude :");
+		print_util_dbg_print_num(board->GPS_data.latitude,10);
+		print_util_dbg_print(" longitude :");
+		print_util_dbg_print_num(board->GPS_data.longitude,10);
+		print_util_dbg_print(" altitude");
+		print_util_dbg_print_num(board->GPS_data.altitude,10);
+		print_util_dbg_print("\n");
 	}*/
 }
 
@@ -370,31 +370,31 @@ task_return_t tasks_run_navigation_update()
 	
 	//if ((board->number_of_waypoints > 0)&& waypoint_receiving == 0 )
 	//{
-		//dbg_print("List of Waypoint:");
+		//print_util_dbg_print("List of Waypoint:");
 		//for (i=0; i<board->number_of_waypoints; i++)
 		//{
-			//dbg_print("wp_id:");
-			//dbg_print_num(board->waypoint_list[i].wp_id,10);
-			//dbg_print(" autocontinue:");
-			//dbg_print_num(board->waypoint_list[i].autocontinue,10);
-			//dbg_print(" current:");
-			//dbg_print_num(board->waypoint_list[i].current,10);
-			//dbg_print(" frame:");
-			//dbg_print_num(board->waypoint_list[i].frame,10);
-			//dbg_print(" x:");
-			//dbg_print_num(board->waypoint_list[i].x,10);
-			//dbg_print(" y:");
-			//dbg_print_num(board->waypoint_list[i].y,10);
-			//dbg_print(" z:");
-			//dbg_print_num(board->waypoint_list[i].z,10);
-			//dbg_print(" params:");
-			//dbg_print_num(board->waypoint_list[i].param1,10);
-			//dbg_print_num(board->waypoint_list[i].param2,10);
-			//dbg_print_num(board->waypoint_list[i].param3,10);
-			//dbg_print_num(board->waypoint_list[i].param4,10);
-			//dbg_print(";");
+			//print_util_dbg_print("wp_id:");
+			//print_util_dbg_print_num(board->waypoint_list[i].wp_id,10);
+			//print_util_dbg_print(" autocontinue:");
+			//print_util_dbg_print_num(board->waypoint_list[i].autocontinue,10);
+			//print_util_dbg_print(" current:");
+			//print_util_dbg_print_num(board->waypoint_list[i].current,10);
+			//print_util_dbg_print(" frame:");
+			//print_util_dbg_print_num(board->waypoint_list[i].frame,10);
+			//print_util_dbg_print(" x:");
+			//print_util_dbg_print_num(board->waypoint_list[i].x,10);
+			//print_util_dbg_print(" y:");
+			//print_util_dbg_print_num(board->waypoint_list[i].y,10);
+			//print_util_dbg_print(" z:");
+			//print_util_dbg_print_num(board->waypoint_list[i].z,10);
+			//print_util_dbg_print(" params:");
+			//print_util_dbg_print_num(board->waypoint_list[i].param1,10);
+			//print_util_dbg_print_num(board->waypoint_list[i].param2,10);
+			//print_util_dbg_print_num(board->waypoint_list[i].param3,10);
+			//print_util_dbg_print_num(board->waypoint_list[i].param4,10);
+			//print_util_dbg_print(";");
 		//}
-		//dbg_print("\n");
+		//print_util_dbg_print("\n");
 		//board->number_of_waypoints = 0;
 	//}
 	

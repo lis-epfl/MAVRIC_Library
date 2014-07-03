@@ -39,7 +39,7 @@ void init_waypoint_handler()
 	//init_waypoint_list(centralData->waypoint_list, &centralData->number_of_waypoints);
 	init_homing_waypoint(centralData->waypoint_list, &centralData->number_of_waypoints);
 	
-	dbg_print("Nav init\n");
+	print_util_dbg_print("Nav init\n");
 	init_waypoint();
 }
 
@@ -58,9 +58,9 @@ void init_waypoint()
 				centralData->current_waypoint = centralData->waypoint_list[centralData->current_waypoint_count];
 				centralData->waypoint_coordinates = set_waypoint_from_frame(centralData->current_waypoint,centralData->position_estimator.localPosition.origin);
 				
-				dbg_print("Waypoint Nr");
-				dbg_print_num(i,10);
-				dbg_print(" set,\n");
+				print_util_dbg_print("Waypoint Nr");
+				print_util_dbg_print_num(i,10);
+				print_util_dbg_print(" set,\n");
 			
 				centralData->waypoint_set = true;
 				
@@ -68,7 +68,7 @@ void init_waypoint()
 				{
 					rel_pos[j] = centralData->waypoint_coordinates.pos[j]-centralData->position_estimator.localPosition.pos[j];
 				}
-				centralData->dist2wp_sqr = vector_norm_sqr(rel_pos);
+				centralData->dist2wp_sqr = maths_vector_norm_sqr(rel_pos);
 			}
 		}
 	}
@@ -178,9 +178,9 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 
 	waypoint_list[3] = waypoint;
 	
-	dbg_print("Number of Waypoint onboard:");
-	dbg_print_num(num_waypoint_onboard,10);
-	dbg_print("\n");
+	print_util_dbg_print("Number of Waypoint onboard:");
+	print_util_dbg_print_num(num_waypoint_onboard,10);
+	print_util_dbg_print("\n");
 	
 }
 
@@ -203,9 +203,9 @@ void send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint, bool* waypoin
 		}
 		
 		sending_waypoint_num = 0;
-		dbg_print("Will send ");
-		dbg_print_num(num_of_waypoint,10);
-		dbg_print(" waypoints\n");
+		print_util_dbg_print("Will send ");
+		print_util_dbg_print_num(num_of_waypoint,10);
+		print_util_dbg_print(" waypoints\n");
 	}
 }
 
@@ -216,9 +216,9 @@ void send_waypoint(Mavlink_Received_t* rec, waypoint_struct waypoint[], uint16_t
 		mavlink_mission_request_t packet;
 		mavlink_msg_mission_request_decode(&rec->msg,&packet);
 		
-		dbg_print("Asking for waypoint number ");
-		dbg_print_num(packet.seq,10);
-		dbg_print("\n");
+		print_util_dbg_print("Asking for waypoint number ");
+		print_util_dbg_print_num(packet.seq,10);
+		print_util_dbg_print("\n");
 		
 		// Check if this message is for this system and subsystem
 		if ((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid
@@ -234,9 +234,9 @@ void send_waypoint(Mavlink_Received_t* rec, waypoint_struct waypoint[], uint16_t
 				waypoint[sending_waypoint_num].param1,  waypoint[sending_waypoint_num].param2,       waypoint[sending_waypoint_num].param3,    waypoint[sending_waypoint_num].param4,
 				waypoint[sending_waypoint_num].x,       waypoint[sending_waypoint_num].y,            waypoint[sending_waypoint_num].z);
 				
-				dbg_print("Sending waypoint ");
-				dbg_print_num(sending_waypoint_num, 10);
-				dbg_print("\n");
+				print_util_dbg_print("Sending waypoint ");
+				print_util_dbg_print_num(sending_waypoint_num, 10);
+				print_util_dbg_print("\n");
 				
 				start_timeout = get_millis();
 				
@@ -256,7 +256,7 @@ void receive_ack_msg(Mavlink_Received_t* rec, bool* waypoint_sending)
 	{
 		*waypoint_sending = false;
 		sending_waypoint_num = 0;
-		dbg_print("Acknowledgment received, end of waypoint sending.\n");
+		print_util_dbg_print("Acknowledgment received, end of waypoint sending.\n");
 	}
 }
 
@@ -280,12 +280,12 @@ void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool*
 				packet.count = MAX_WAYPOINTS - *number_of_waypoints;
 			}
 			*number_of_waypoints =  packet.count+ *number_of_waypoints;
-			dbg_print("Receiving ");
-			dbg_print_num(packet.count,10);
-			dbg_print(" new waypoints. ");
-			dbg_print("New total number of waypoints:");
-			dbg_print_num(*number_of_waypoints,10);
-			dbg_print("\n");
+			print_util_dbg_print("Receiving ");
+			print_util_dbg_print_num(packet.count,10);
+			print_util_dbg_print(" new waypoints. ");
+			print_util_dbg_print("New total number of waypoints:");
+			print_util_dbg_print_num(*number_of_waypoints,10);
+			print_util_dbg_print("\n");
 			
 			*waypoint_receiving   = true;
 			*waypoint_sending     = false;
@@ -297,9 +297,9 @@ void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool*
 		
 		mavlink_msg_mission_request_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,waypoint_request_number);
 		
-		dbg_print("Asking for waypoint ");
-		dbg_print_num(waypoint_request_number,10);
-		dbg_print("\n");	
+		print_util_dbg_print("Asking for waypoint ");
+		print_util_dbg_print_num(waypoint_request_number,10);
+		print_util_dbg_print("\n");	
 	}
 	
 }
@@ -332,30 +332,30 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 		new_waypoint.param3 = packet.param3;
 		new_waypoint.param4 = packet.param4;
 		
-		dbg_print("New waypoint received ");
-		//dbg_print("(");
- 		//dbg_print_num(new_waypoint.x,10);
- 		//dbg_print(", ");
- 		//dbg_print_num(new_waypoint.y,10);
- 		//dbg_print(", ");
- 		//dbg_print_num(new_waypoint.z,10);
- 		//dbg_print(") Autocontinue:");
- 		//dbg_print_num(new_waypoint.autocontinue,10);
- 		//dbg_print(" Frame:");
- 		//dbg_print_num(new_waypoint.frame,10);
- 		//dbg_print(" Current :");
- 		//dbg_print_num(packet.current,10);
- 		//dbg_print(" Seq :");
- 		//dbg_print_num(packet.seq,10);
-		//dbg_print(" command id :");
-		//dbg_print_num(packet.command,10);
-		dbg_print(" requested num :");
-		dbg_print_num(waypoint_request_number,10);
-		dbg_print(" receiving num :");
-		dbg_print_num(packet.seq,10);
-		//dbg_print(" is it receiving :");
-		//dbg_print_num(waypoint_receiving,10); // boolean value
-		dbg_print("\n");
+		print_util_dbg_print("New waypoint received ");
+		//print_util_dbg_print("(");
+ 		//print_util_dbg_print_num(new_waypoint.x,10);
+ 		//print_util_dbg_print(", ");
+ 		//print_util_dbg_print_num(new_waypoint.y,10);
+ 		//print_util_dbg_print(", ");
+ 		//print_util_dbg_print_num(new_waypoint.z,10);
+ 		//print_util_dbg_print(") Autocontinue:");
+ 		//print_util_dbg_print_num(new_waypoint.autocontinue,10);
+ 		//print_util_dbg_print(" Frame:");
+ 		//print_util_dbg_print_num(new_waypoint.frame,10);
+ 		//print_util_dbg_print(" Current :");
+ 		//print_util_dbg_print_num(packet.current,10);
+ 		//print_util_dbg_print(" Seq :");
+ 		//print_util_dbg_print_num(packet.seq,10);
+		//print_util_dbg_print(" command id :");
+		//print_util_dbg_print_num(packet.command,10);
+		print_util_dbg_print(" requested num :");
+		print_util_dbg_print_num(waypoint_request_number,10);
+		print_util_dbg_print(" receiving num :");
+		print_util_dbg_print_num(packet.seq,10);
+		//print_util_dbg_print(" is it receiving :");
+		//print_util_dbg_print_num(waypoint_receiving,10); // boolean value
+		print_util_dbg_print("\n");
 		
 		//switch(packet.command)
 		//{
@@ -435,11 +435,11 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 				// check if this is the requested waypoint
 				if (packet.seq == waypoint_request_number)
 				{
-					dbg_print("Receiving good waypoint, number ");
-					dbg_print_num(waypoint_request_number,10);
-					dbg_print(" of ");
-					dbg_print_num(number_of_waypoints-num_waypoint_onboard,10);
-					dbg_print("\n");
+					print_util_dbg_print("Receiving good waypoint, number ");
+					print_util_dbg_print_num(waypoint_request_number,10);
+					print_util_dbg_print(" of ");
+					print_util_dbg_print_num(number_of_waypoints-num_waypoint_onboard,10);
+					print_util_dbg_print("\n");
 					
 				    waypoint_list[num_waypoint_onboard + waypoint_request_number] = new_waypoint;
 					waypoint_request_number++;
@@ -455,7 +455,7 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 						
 						//mavlink_msg_mission_ack_send(MAVLINK_COMM_0, packet.target_system, packet.target_component,type);
 
-						dbg_print("flight plan received!\n");
+						print_util_dbg_print("flight plan received!\n");
 						*waypoint_receiving = false;
 						num_waypoint_onboard = number_of_waypoints;
 						centralData->waypoint_set = false;
@@ -463,14 +463,14 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 					}else{
 						mavlink_msg_mission_request_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,waypoint_request_number);
 						
-						dbg_print("Asking for waypoint ");
-						dbg_print_num(waypoint_request_number,10);
-						dbg_print("\n");
+						print_util_dbg_print("Asking for waypoint ");
+						print_util_dbg_print_num(waypoint_request_number,10);
+						print_util_dbg_print("\n");
 					}
 				}
 			}else{
 				uint8_t type = MAV_CMD_ACK_OK; //MAV_CMD_ACK_ERR_FAIL;                         // ok (0), error(1)
-				dbg_print("Ack not received!");
+				print_util_dbg_print("Ack not received!");
 				mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,type);
 			}				
 		}		
@@ -496,9 +496,9 @@ void set_current_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_lis
 			waypoint_list[packet.seq].current = 1;
 			mavlink_msg_mission_current_send(MAVLINK_COMM_0,packet.seq);
 			
-			dbg_print("Set current waypoint to number");
-			dbg_print_num(packet.seq,10);
-			dbg_print("\n");
+			print_util_dbg_print("Set current waypoint to number");
+			print_util_dbg_print_num(packet.seq,10);
+			print_util_dbg_print("\n");
 			
 			centralData->waypoint_set = false;
 			init_waypoint();
@@ -521,9 +521,9 @@ void set_current_waypoint_from_parameter(waypoint_struct waypoint_list[], uint16
 		waypoint_list[new_current].current = 1;
 		mavlink_msg_mission_current_send(MAVLINK_COMM_0,new_current);
 		
-		dbg_print("Set current waypoint to number");
-		dbg_print_num(new_current,10);
-		dbg_print("\n");
+		print_util_dbg_print("Set current waypoint to number");
+		print_util_dbg_print_num(new_current,10);
+		print_util_dbg_print("\n");
 		
 		centralData->waypoint_set = false;
 		init_waypoint();
@@ -545,7 +545,7 @@ void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints
 		*waypoint_set = 0;
 		waypoint_hold_init(centralData->position_estimator.localPosition);
 		mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_OK);
-		dbg_print("Cleared Waypoint list.\n");
+		print_util_dbg_print("Cleared Waypoint list.\n");
 	}		
 }
 
@@ -556,18 +556,18 @@ void set_home(Mavlink_Received_t* rec)
 	// Check if this message is for this system and subsystem
 	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
 	{
-		dbg_print("Set new home location.\n");
+		print_util_dbg_print("Set new home location.\n");
 		centralData->position_estimator.localPosition.origin.latitude = (double) packet.latitude / 10000000.0f;
 		centralData->position_estimator.localPosition.origin.longitude = (double) packet.longitude / 10000000.0f;
 		centralData->position_estimator.localPosition.origin.altitude = (float) packet.altitude / 1000.0f;
 		
-		dbg_print("New Home location: (");
-		dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0f,10);
-		dbg_print(", ");
-		dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0f,10);
-		dbg_print(", ");
-		dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0f,10);
-		dbg_print(")\n");
+		print_util_dbg_print("New Home location: (");
+		print_util_dbg_print_num(centralData->position_estimator.localPosition.origin.latitude*10000000.0f,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(centralData->position_estimator.localPosition.origin.longitude*10000000.0f,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(centralData->position_estimator.localPosition.origin.altitude*1000.0f,10);
+		print_util_dbg_print(")\n");
 		
 		mavlink_msg_gps_global_origin_send(MAVLINK_COMM_0,
 		centralData->position_estimator.localPosition.origin.latitude*10000000.0f,
@@ -583,11 +583,11 @@ void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* boa
 	// Check if this message is for this system and subsystem
 	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
 	{
-		dbg_print("base_mode:");
-		dbg_print_num(packet.base_mode,10);
-		dbg_print(", custom mode:");
-		dbg_print_num(packet.custom_mode,10);
-		dbg_print("\n");
+		print_util_dbg_print("base_mode:");
+		print_util_dbg_print_num(packet.base_mode,10);
+		print_util_dbg_print(", custom mode:");
+		print_util_dbg_print_num(packet.custom_mode,10);
+		print_util_dbg_print("\n");
 
 		if (sim_mode == 0)
 		{
@@ -650,13 +650,13 @@ void control_time_out_waypoint_msg(uint16_t* num_of_waypoint, bool* waypoint_rec
 			if (*waypoint_sending)
 			{
 				*waypoint_sending = false;
-				dbg_print("Sending waypoint timeout");
+				print_util_dbg_print("Sending waypoint timeout");
 			}
 			if (*waypoint_receiving)
 			{
 				*waypoint_receiving = false;
 				
-				dbg_print("Receiving waypoint timeout");
+				print_util_dbg_print("Receiving waypoint timeout");
 				*num_of_waypoint = 0;
 				num_waypoint_onboard = 0;
 				
@@ -685,29 +685,29 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_waypoint, gl
 			waypoint_global.latitude = current_waypoint.x;
 			waypoint_global.longitude = current_waypoint.y;
 			waypoint_global.altitude = current_waypoint.z;
-			waypoint_coor = global_to_local_position(waypoint_global,origin);
+			waypoint_coor = coord_conventions_global_to_local_position(waypoint_global,origin);
 			
 			waypoint_coor.heading = deg_to_rad(current_waypoint.param4);
 			
-			dbg_print("waypoint_global: lat (x1e7):");
-			dbg_print_num(waypoint_global.latitude*10000000,10);
-			dbg_print(" long (x1e7):");
-			dbg_print_num(waypoint_global.longitude*10000000,10);
-			dbg_print(" alt (x1000):");
-			dbg_print_num(waypoint_global.altitude*1000,10);
-			dbg_print(" waypoint_coor: x (x100):");
-			dbg_print_num(waypoint_coor.pos[X]*100,10);
-			dbg_print(", y (x100):");
-			dbg_print_num(waypoint_coor.pos[Y]*100,10);
-			dbg_print(", z (x100):");
-			dbg_print_num(waypoint_coor.pos[Z]*100,10);
-			dbg_print(" localOrigin lat (x1e7):");
-			dbg_print_num(origin.latitude*10000000,10);
-			dbg_print(" long (x1e7):");
-			dbg_print_num(origin.longitude*10000000,10);
-			dbg_print(" alt (x1000):");
-			dbg_print_num(origin.altitude*1000,10);
-			dbg_print("\n");
+			print_util_dbg_print("waypoint_global: lat (x1e7):");
+			print_util_dbg_print_num(waypoint_global.latitude*10000000,10);
+			print_util_dbg_print(" long (x1e7):");
+			print_util_dbg_print_num(waypoint_global.longitude*10000000,10);
+			print_util_dbg_print(" alt (x1000):");
+			print_util_dbg_print_num(waypoint_global.altitude*1000,10);
+			print_util_dbg_print(" waypoint_coor: x (x100):");
+			print_util_dbg_print_num(waypoint_coor.pos[X]*100,10);
+			print_util_dbg_print(", y (x100):");
+			print_util_dbg_print_num(waypoint_coor.pos[Y]*100,10);
+			print_util_dbg_print(", z (x100):");
+			print_util_dbg_print_num(waypoint_coor.pos[Z]*100,10);
+			print_util_dbg_print(" localOrigin lat (x1e7):");
+			print_util_dbg_print_num(origin.latitude*10000000,10);
+			print_util_dbg_print(" long (x1e7):");
+			print_util_dbg_print_num(origin.longitude*10000000,10);
+			print_util_dbg_print(" alt (x1000):");
+			print_util_dbg_print_num(origin.altitude*1000,10);
+			print_util_dbg_print("\n");
 		
 		break;
 		case MAV_FRAME_LOCAL_NED:
@@ -715,7 +715,7 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_waypoint, gl
 			waypoint_coor.pos[Y] = current_waypoint.y;
 			waypoint_coor.pos[Z] = current_waypoint.z;
 			waypoint_coor.heading= deg_to_rad(current_waypoint.param4);
-			waypoint_coor.origin = local_to_global_position(waypoint_coor);
+			waypoint_coor.origin = coord_conventions_local_to_global_position(waypoint_coor);
 		break;
 		case MAV_FRAME_MISSION:
 			//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
@@ -727,23 +727,23 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_waypoint, gl
 		
 			global_position_t origin_relative_alt = origin;
 			origin_relative_alt.altitude = 0.0f;
-			waypoint_coor = global_to_local_position(waypoint_global,origin_relative_alt);
+			waypoint_coor = coord_conventions_global_to_local_position(waypoint_global,origin_relative_alt);
 			
 			waypoint_coor.heading = deg_to_rad(current_waypoint.param4);
 			
-			dbg_print("LocalOrigin: lat (x1e7):");
-			dbg_print_num(origin_relative_alt.latitude * 10000000,10);
-			dbg_print(" long (x1e7):");
-			dbg_print_num(origin_relative_alt.longitude * 10000000,10);
-			dbg_print(" global alt (x1000):");
-			dbg_print_num(origin.altitude*1000,10);
-			dbg_print(" waypoint_coor: x (x100):");
-			dbg_print_num(waypoint_coor.pos[X]*100,10);
-			dbg_print(", y (x100):");
-			dbg_print_num(waypoint_coor.pos[Y]*100,10);
-			dbg_print(", z (x100):");
-			dbg_print_num(waypoint_coor.pos[Z]*100,10);
-			dbg_print("\n");
+			print_util_dbg_print("LocalOrigin: lat (x1e7):");
+			print_util_dbg_print_num(origin_relative_alt.latitude * 10000000,10);
+			print_util_dbg_print(" long (x1e7):");
+			print_util_dbg_print_num(origin_relative_alt.longitude * 10000000,10);
+			print_util_dbg_print(" global alt (x1000):");
+			print_util_dbg_print_num(origin.altitude*1000,10);
+			print_util_dbg_print(" waypoint_coor: x (x100):");
+			print_util_dbg_print_num(waypoint_coor.pos[X]*100,10);
+			print_util_dbg_print(", y (x100):");
+			print_util_dbg_print_num(waypoint_coor.pos[Y]*100,10);
+			print_util_dbg_print(", z (x100):");
+			print_util_dbg_print_num(waypoint_coor.pos[Z]*100,10);
+			print_util_dbg_print("\n");
 		
 		break;
 		case MAV_FRAME_LOCAL_ENU:
@@ -759,38 +759,38 @@ void waypoint_hold_init(local_coordinates_t localPos)
 	
 	centralData->waypoint_hold_coordinates = localPos;
 	
-	//centralData->waypoint_hold_coordinates.heading = get_yaw(centralData->imu1.attitude.qe);
+	//centralData->waypoint_hold_coordinates.heading = coord_conventions_get_yaw(centralData->imu1.attitude.qe);
 	//centralData->waypoint_hold_coordinates.heading = localPos.heading;
 	
-	dbg_print("Position hold at: (");
-	dbg_print_num(centralData->waypoint_hold_coordinates.pos[X],10);
-	dbg_print(", ");
-	dbg_print_num(centralData->waypoint_hold_coordinates.pos[Y],10);
-	dbg_print(", ");
-	dbg_print_num(centralData->waypoint_hold_coordinates.pos[Z],10);
-	dbg_print(", ");
-	dbg_print_num((int)(centralData->waypoint_hold_coordinates.heading*180.0f/3.14f),10);
-	dbg_print(")\n");
+	print_util_dbg_print("Position hold at: (");
+	print_util_dbg_print_num(centralData->waypoint_hold_coordinates.pos[X],10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(centralData->waypoint_hold_coordinates.pos[Y],10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(centralData->waypoint_hold_coordinates.pos[Z],10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num((int)(centralData->waypoint_hold_coordinates.heading*180.0f/3.14f),10);
+	print_util_dbg_print(")\n");
 	
 }
 
 void waypoint_take_off()
 {
-	dbg_print("Automatic take-off. Position hold at: (");
-	dbg_print_num(centralData->position_estimator.localPosition.pos[X],10);
-	dbg_print(", ");
-	dbg_print_num(centralData->position_estimator.localPosition.pos[Y],10);
-	dbg_print(", ");
-	dbg_print_num(-10.0f,10);
-	dbg_print("), with heading of: ");
-	dbg_print_num((int)(centralData->position_estimator.localPosition.heading*180.0f/3.14f),10);
-	dbg_print("\n");
+	print_util_dbg_print("Automatic take-off. Position hold at: (");
+	print_util_dbg_print_num(centralData->position_estimator.localPosition.pos[X],10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(centralData->position_estimator.localPosition.pos[Y],10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(-10.0f,10);
+	print_util_dbg_print("), with heading of: ");
+	print_util_dbg_print_num((int)(centralData->position_estimator.localPosition.heading*180.0f/3.14f),10);
+	print_util_dbg_print("\n");
 
 	centralData->waypoint_hold_coordinates = centralData->position_estimator.localPosition;
 	centralData->waypoint_hold_coordinates.pos[Z] = -10.0f;
 	
 	Aero_Attitude_t aero_attitude;
-	aero_attitude=Quat_to_Aero(centralData->imu1.attitude.qe);
+	aero_attitude=coord_conventions_quat_to_aero(centralData->imu1.attitude.qe);
 	centralData->waypoint_hold_coordinates.heading = aero_attitude.rpy[2];
 	
 	centralData->dist2wp_sqr = 100.0f; // same position, 10m above => distSqr = 100.0f
@@ -817,23 +817,23 @@ void waypoint_navigation_handler()
 		{
 			rel_pos[i] = centralData->waypoint_coordinates.pos[i]-centralData->position_estimator.localPosition.pos[i];
 		}
-		centralData->dist2wp_sqr = vector_norm_sqr(rel_pos);
+		centralData->dist2wp_sqr = maths_vector_norm_sqr(rel_pos);
 		
 		if (centralData->dist2wp_sqr < (centralData->current_waypoint.param2*centralData->current_waypoint.param2))
 		{
-			dbg_print("Waypoint Nr");
-			dbg_print_num(centralData->current_waypoint_count,10);
-			dbg_print(" reached, distance:");
-			dbg_print_num(sqrt(centralData->dist2wp_sqr),10);
-			dbg_print(" less than :");
-			dbg_print_num(centralData->current_waypoint.param2,10);
-			dbg_print(".\n");
+			print_util_dbg_print("Waypoint Nr");
+			print_util_dbg_print_num(centralData->current_waypoint_count,10);
+			print_util_dbg_print(" reached, distance:");
+			print_util_dbg_print_num(sqrt(centralData->dist2wp_sqr),10);
+			print_util_dbg_print(" less than :");
+			print_util_dbg_print_num(centralData->current_waypoint.param2,10);
+			print_util_dbg_print(".\n");
 			mavlink_msg_mission_item_reached_send(MAVLINK_COMM_0,centralData->current_waypoint_count);
 			
 			centralData->waypoint_list[centralData->current_waypoint_count].current = 0;
 			if((centralData->current_waypoint.autocontinue == 1)&&(centralData->number_of_waypoints>1))
 			{
-				dbg_print("Autocontinue towards waypoint Nr");
+				print_util_dbg_print("Autocontinue towards waypoint Nr");
 				
 				if (centralData->current_waypoint_count == (centralData->number_of_waypoints-1))
 				{
@@ -841,8 +841,8 @@ void waypoint_navigation_handler()
 				}else{
 					centralData->current_waypoint_count++;
 				}
-				dbg_print_num(centralData->current_waypoint_count,10);
-				dbg_print("\n");
+				print_util_dbg_print_num(centralData->current_waypoint_count,10);
+				print_util_dbg_print("\n");
 				centralData->waypoint_list[centralData->current_waypoint_count].current = 1;
 				centralData->current_waypoint = centralData->waypoint_list[centralData->current_waypoint_count];
 				centralData->waypoint_coordinates = set_waypoint_from_frame(centralData->current_waypoint,centralData->position_estimator.localPosition.origin);
@@ -851,7 +851,7 @@ void waypoint_navigation_handler()
 				
 			}else{
 				centralData->waypoint_set = false;
-				dbg_print("Stop\n");
+				print_util_dbg_print("Stop\n");
 				
 				waypoint_hold_init(centralData->waypoint_coordinates);
 			}
@@ -866,7 +866,7 @@ void waypoint_critical_handler()
 		centralData->critical_next_state = true;
 		
 		Aero_Attitude_t aero_attitude;
-		aero_attitude=Quat_to_Aero(centralData->imu1.attitude.qe);
+		aero_attitude=coord_conventions_quat_to_aero(centralData->imu1.attitude.qe);
 		centralData->waypoint_critical_coordinates.heading = aero_attitude.rpy[2];
 		
 		switch (centralData->critical_behavior)
@@ -894,7 +894,7 @@ void waypoint_critical_handler()
 		{
 			rel_pos[i] = centralData->waypoint_critical_coordinates.pos[i] - centralData->position_estimator.localPosition.pos[i];
 		}
-		centralData->dist2wp_sqr = vector_norm_sqr(rel_pos);
+		centralData->dist2wp_sqr = maths_vector_norm_sqr(rel_pos);
 	}
 	
 	if (centralData->dist2wp_sqr < 3.0f)
@@ -903,15 +903,15 @@ void waypoint_critical_handler()
 		switch (centralData->critical_behavior)
 		{
 			case CLIMB_TO_SAFE_ALT:
-			dbg_print("Critical State! Flying to home waypoint.\n");
+			print_util_dbg_print("Critical State! Flying to home waypoint.\n");
 			centralData->critical_behavior = FLY_TO_HOME_WP;
 			break;
 			case FLY_TO_HOME_WP:
-			dbg_print("Critical State! Performing critical landing.\n");
+			print_util_dbg_print("Critical State! Performing critical landing.\n");
 			centralData->critical_behavior = CRITICAL_LAND;
 			break;
 			case CRITICAL_LAND:
-			dbg_print("Critical State! Landed, switching off motors, Emergency mode.\n");
+			print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\n");
 			centralData->critical_landing = true;
 			break;
 		}
@@ -943,14 +943,14 @@ void auto_landing()
 	{
 		rel_pos[i] = centralData->waypoint_critical_coordinates.pos[i] - centralData->position_estimator.localPosition.pos[i];
 	}
-	centralData->dist2wp_sqr = vector_norm_sqr(rel_pos);
+	centralData->dist2wp_sqr = maths_vector_norm_sqr(rel_pos);
 	
 	if (centralData->dist2wp_sqr < 0.5f)
 	{
 		switch(centralData->auto_landing_enum)
 		{
 			case DESCENT_TO_SMALL_ALTITUDE:
-				dbg_print("Automatic-landing: descent_to_GND\n");
+				print_util_dbg_print("Automatic-landing: descent_to_GND\n");
 				centralData->critical_behavior = FLY_TO_HOME_WP;
 				break;
 			case DESCENT_TO_GND:
@@ -966,7 +966,7 @@ void continueToNextWaypoint()
 	{
 		centralData->waypoint_list[centralData->current_waypoint_count].current = 0;
 		
-		dbg_print("Continuing towards waypoint Nr");
+		print_util_dbg_print("Continuing towards waypoint Nr");
 		
 		if (centralData->current_waypoint_count == (centralData->number_of_waypoints-1))
 		{
@@ -974,8 +974,8 @@ void continueToNextWaypoint()
 		}else{
 			centralData->current_waypoint_count++;
 		}
-		dbg_print_num(centralData->current_waypoint_count,10);
-		dbg_print("\n");
+		print_util_dbg_print_num(centralData->current_waypoint_count,10);
+		print_util_dbg_print("\n");
 		centralData->waypoint_list[centralData->current_waypoint_count].current = 1;
 		centralData->current_waypoint = centralData->waypoint_list[centralData->current_waypoint_count];
 		centralData->waypoint_coordinates = set_waypoint_from_frame(centralData->current_waypoint,centralData->position_estimator.localPosition.origin);
@@ -984,7 +984,7 @@ void continueToNextWaypoint()
 		
 		centralData->waypoint_set = true;
 	}else{
-		dbg_print("Not ready to switch to next waypoint. Either no waypoint loaded or flying towards one\n");
+		print_util_dbg_print("Not ready to switch to next waypoint. Either no waypoint loaded or flying towards one\n");
 	}
 }
 
@@ -1008,17 +1008,17 @@ void set_circle_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_wa
 	waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (mavlink_system.sysid-1));
 	waypoint_transfo.pos[Y] = circle_radius * sin(angle_step * (mavlink_system.sysid-1));
 	waypoint_transfo.pos[Z] = -20.0f;
-	waypoint_global = local_to_global_position(waypoint_transfo);
+	waypoint_global = coord_conventions_local_to_global_position(waypoint_transfo);
 	
-	dbg_print("Circle departure(x100): (");
-	dbg_print_num(waypoint_transfo.pos[X]*100.0f,10);
-	dbg_print(", ");
-	dbg_print_num(waypoint_transfo.pos[Y]*100.0f,10);
-	dbg_print(", ");
-	dbg_print_num(waypoint_transfo.pos[Z]*100.0f,10);
-	dbg_print("). For system:");
-	dbg_print_num(mavlink_system.sysid,10);
-	dbg_print(".\n");
+	print_util_dbg_print("Circle departure(x100): (");
+	print_util_dbg_print_num(waypoint_transfo.pos[X]*100.0f,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(waypoint_transfo.pos[Y]*100.0f,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(waypoint_transfo.pos[Z]*100.0f,10);
+	print_util_dbg_print("). For system:");
+	print_util_dbg_print_num(mavlink_system.sysid,10);
+	print_util_dbg_print(".\n");
 	waypoint.x = waypoint_global.latitude;
 	waypoint.y = waypoint_global.longitude;
 	waypoint.z = waypoint_global.altitude;
@@ -1031,7 +1031,7 @@ void set_circle_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_wa
 	waypoint.param1 = 10; // Hold time in decimal seconds
 	waypoint.param2 = 4; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-	waypoint.param4 = rad_to_deg(calc_smaller_angle(PI + angle_step * (mavlink_system.sysid-1))); // Desired yaw angle at MISSION (rotary wing)
+	waypoint.param4 = rad_to_deg(maths_calc_smaller_angle(PI + angle_step * (mavlink_system.sysid-1))); // Desired yaw angle at MISSION (rotary wing)
 	
 	waypoint_list[0] = waypoint;
 	
@@ -1039,17 +1039,17 @@ void set_circle_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_wa
 	waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (mavlink_system.sysid-1) + PI);
 	waypoint_transfo.pos[Y] = circle_radius * sin(angle_step * (mavlink_system.sysid-1) + PI);
 	waypoint_transfo.pos[Z] = -20.0f;
-	waypoint_global = local_to_global_position(waypoint_transfo);
+	waypoint_global = coord_conventions_local_to_global_position(waypoint_transfo);
 	
-	dbg_print("Circle destination(x100): (");
-	dbg_print_num(waypoint_transfo.pos[X]*100.0f,10);
-	dbg_print(", ");
-	dbg_print_num(waypoint_transfo.pos[Y]*100.0f,10);
-	dbg_print(", ");
-	dbg_print_num(waypoint_transfo.pos[Z]*100.0f,10);
-	dbg_print("). For system:");
-	dbg_print_num(mavlink_system.sysid,10);
-	dbg_print(".\n");
+	print_util_dbg_print("Circle destination(x100): (");
+	print_util_dbg_print_num(waypoint_transfo.pos[X]*100.0f,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(waypoint_transfo.pos[Y]*100.0f,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(waypoint_transfo.pos[Z]*100.0f,10);
+	print_util_dbg_print("). For system:");
+	print_util_dbg_print_num(mavlink_system.sysid,10);
+	print_util_dbg_print(".\n");
 	
 	waypoint.x = waypoint_global.latitude;
 	waypoint.y = waypoint_global.longitude;

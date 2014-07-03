@@ -38,14 +38,14 @@ static Stabiliser_Stack_hybrid_t stabiliser_defaults_hybrid =
 					.pregain = 0.0f, 
 					.postgain = 0.0f,
 					.accumulator = 0.0f,
-					.clip = 0.0f,
+					.maths_clip = 0.0f,
 					.leakiness = 0.0f
 				},
 				.differentiator={
 					.gain = 0.0f,
 					.previous = 0.0f,
 					.LPF = 0.0f,
-					.clip = 0.0f
+					.maths_clip = 0.0f
 				},
 				.output = 0.0f,
 				.error = 0.0f,
@@ -64,14 +64,14 @@ static Stabiliser_Stack_hybrid_t stabiliser_defaults_hybrid =
 					.pregain = 0.0f, 
 					.postgain = 0.0f,
 					.accumulator = 0.0f,
-					.clip = 0.0f,
+					.maths_clip = 0.0f,
 					.leakiness = 0.0f
 				},
 				.differentiator={
 					.gain = 0.0f,
 					.previous = 0.0f,
 					.LPF = 0.0f,
-					.clip = 0.0f
+					.maths_clip = 0.0f
 				},
 				.output = 0.0f,
 				.error = 0.0f,
@@ -90,14 +90,14 @@ static Stabiliser_Stack_hybrid_t stabiliser_defaults_hybrid =
 					.pregain = 0.0f, 
 					.postgain = 0.0f,
 					.accumulator = 0.0f,
-					.clip = 0.0f,
+					.maths_clip = 0.0f,
 					.leakiness = 0.0f
 				},
 				.differentiator={
 					.gain = 0.0f,
 					.previous = 0.0f,
 					.LPF = 0.0f,
-					.clip = 0.0f
+					.maths_clip = 0.0f
 				},
 				.output = 0.0f,
 				.error = 0.0f,
@@ -117,14 +117,14 @@ static Stabiliser_Stack_hybrid_t stabiliser_defaults_hybrid =
 					.pregain = 0.0f, 
 					.postgain = 0.0f,
 					.accumulator = 0.0f,
-					.clip = 0.0f,
+					.maths_clip = 0.0f,
 					.leakiness = 0.0f
 				},
 				.differentiator={
 					.gain = 0.0f,
 					.previous = 0.0f,
 					.LPF = 0.0f,
-					.clip = 0.0f
+					.maths_clip = 0.0f
 				},
 				.output = 0.0f,
 				.error = 0.0f,
@@ -162,14 +162,14 @@ static Stabiliser_Stack_hybrid_t stabiliser_defaults_hybrid =
 					.pregain = 0.0f, 
 					.postgain = 0.0f,
 					.accumulator = 0.0f,
-					.clip = 0.0f,
+					.maths_clip = 0.0f,
 					.leakiness = 0.0f
 				},
 				.differentiator={
 					.gain = 0.0f,
 					.previous = 0.0f,
 					.LPF = 0.0f,
-					.clip = 0.0f
+					.maths_clip = 0.0f
 				},
 				.output = 0.0f,
 				.error = 0.0f,
@@ -188,14 +188,14 @@ static Stabiliser_Stack_hybrid_t stabiliser_defaults_hybrid =
 					.pregain = 0.0f, 
 					.postgain = 0.0f,
 					.accumulator = 0.0f,
-					.clip = 0.0f,
+					.maths_clip = 0.0f,
 					.leakiness = 0.0f
 				},
 				.differentiator={
 					.gain = 0.0f,
 					.previous = 0.0f,
 					.LPF = 0.0f,
-					.clip = 0.0f
+					.maths_clip = 0.0f
 				},
 				.output = 0.0f,
 				.error = 0.0f,
@@ -214,14 +214,14 @@ static Stabiliser_Stack_hybrid_t stabiliser_defaults_hybrid =
 					.pregain = 0.0f, 
 					.postgain = 0.0f,
 					.accumulator = 0.0f,
-					.clip = 0.0f,
+					.maths_clip = 0.0f,
 					.leakiness = 0.0f
 				},
 				.differentiator={
 					.gain = 0.0f,
 					.previous = 0.0f,
 					.LPF = 0.0f,
-					.clip = 0.0f
+					.maths_clip = 0.0f
 				},
 				.output = 0.0f,
 				.error = 0.0f,
@@ -241,14 +241,14 @@ static Stabiliser_Stack_hybrid_t stabiliser_defaults_hybrid =
 					.pregain = 0.0f, 
 					.postgain = 0.0f,
 					.accumulator = 0.0f,
-					.clip = 0.0f,
+					.maths_clip = 0.0f,
 					.leakiness = 0.0f
 				},
 				.differentiator={
 					.gain = 0.0f,
 					.previous = 0.0f,
 					.LPF = 0.0f,
-					.clip = 0.0f
+					.maths_clip = 0.0f
 				},
 				.output = 0.0f,
 				.error = 0.0f,

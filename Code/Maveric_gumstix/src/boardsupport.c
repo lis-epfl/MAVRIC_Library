@@ -53,17 +53,17 @@ void boardsupport_init(central_data_t *centralData) {
 
 		
 	if (init_i2c(0)!=STATUS_OK) {
-		//putstring(STDOUT, "Error initialising I2C\n");
+		//print_util_putstring(STDOUT, "Error initialising I2C\n");
 		while (1==1);
 		} else {
-		//putstring(STDOUT, "initialised I2C.\n");
+		//print_util_putstring(STDOUT, "initialised I2C.\n");
 	};
 	/* Remove ic1 which was for the radar interface to activate uart2 for the gumstix interface
 	if (init_i2c(1)!=STATUS_OK) {
-		//putstring(STDOUT, "Error initialising I2C\n");
+		//print_util_putstring(STDOUT, "Error initialising I2C\n");
 		while (1==1);
 		} else {
-		//putstring(STDOUT, "initialised I2C.\n");
+		//print_util_putstring(STDOUT, "initialised I2C.\n");
 	};*/
 
 	LED_Off(LED1);
@@ -81,12 +81,12 @@ void boardsupport_init(central_data_t *centralData) {
 				
 	//gumstix interface
 	init_UART_int(2);
-	make_buffered_stream(&(centralData->gumstix_buffer), &(centralData->gumstix_stream_in));
+	buffer_make_buffered_stream(&(centralData->gumstix_buffer), &(centralData->gumstix_stream_in));
 	register_read_stream(get_UART_handle(3), &(centralData->gumstix_stream_in));
 	register_write_stream(get_UART_handle(3), &(centralData->gumstix_stream_out));
 		
 	init_UART_int(3);
-	make_buffered_stream(&(centralData->gps_buffer), &(centralData->gps_stream_in));
+	buffer_make_buffered_stream(&(centralData->gps_buffer), &(centralData->gps_stream_in));
 	register_read_stream(get_UART_handle(3), &(centralData->gps_stream_in));
 	register_write_stream(get_UART_handle(3), &(centralData->gps_stream_out));
 		
@@ -94,8 +94,8 @@ void boardsupport_init(central_data_t *centralData) {
 	register_write_stream(get_UART_handle(4), &(centralData->wired_out_stream));
 
 
-	make_buffered_stream_lossy(&(centralData->xbee_in_buffer), &(centralData->xbee_in_stream));
-	make_buffered_stream_lossy(&(centralData->wired_in_buffer), &(centralData->wired_in_stream));
+	buffer_make_buffered_stream_lossy(&(centralData->xbee_in_buffer), &(centralData->xbee_in_stream));
+	buffer_make_buffered_stream_lossy(&(centralData->wired_in_buffer), &(centralData->wired_in_stream));
 	register_read_stream(get_UART_handle(4), &(centralData->wired_in_stream));
 	register_read_stream(get_UART_handle(0), &(centralData->xbee_in_stream));
 
@@ -123,7 +123,7 @@ void boardsupport_init(central_data_t *centralData) {
 	mavlink_stream_init(centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID);
 		
 	// init debug output
-	dbg_print_init(centralData->debug_out_stream);
+	print_util_dbg_print_init(centralData->debug_out_stream);
 		
 	imu_init(&(centralData->imu1));
 	init_bmp085();
@@ -131,7 +131,7 @@ void boardsupport_init(central_data_t *centralData) {
 
 
 	Enable_global_interrupt();
-	dbg_print("Board initialised.\n");
+	print_util_dbg_print("Board initialised.\n");
 }
 
 //board_hardware_t* get_board_hardware() {
@@ -145,7 +145,7 @@ void boardsupport_init(central_data_t *centralData) {
 //byte_stream_t* get_telemetry_downstream() {
 	//return board_hardware.telemetry_down_stream;
 //}
-//byte_stream_t* get_debug_stream() {
+//byte_stream_t* print_util_get_debug_stream() {
 	//return board_hardware.debug_out_stream;
 //}
 //

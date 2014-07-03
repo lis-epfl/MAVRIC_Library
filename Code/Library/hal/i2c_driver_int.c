@@ -95,7 +95,7 @@ ISR(i2c_int_handler_i2c0,CONF_TWIM_IRQ_GROUP,CONF_TWIM_IRQ_LEVEL)
 	//schedule[0][current_schedule_slot[0]].transfer_in_progress=0;
    
 	//if (schedule[0][current_schedule_slot[0]].callback) schedule[0][current_schedule_slot[0]].callback;
-	//putstring(&AVR32_USART0, "!");
+	//print_util_putstring(&AVR32_USART0, "!");
 }
 
 /*!  The I2C interrupt handler.

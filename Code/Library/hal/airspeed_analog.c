@@ -81,7 +81,7 @@ void airspeed_analog_update(airspeed_analog_t* airspeed_analog)
 	airspeed_analog->differential_pressure = abs(airspeed_analog->differential_pressure);
 
 	///< compute airspeed from differential pressure using Bernouilli
-	raw_airspeed = fast_sqrt(airspeed_analog->differential_pressure * airspeed_analog->gain);
+	raw_airspeed = maths_fast_sqrt(airspeed_analog->differential_pressure * airspeed_analog->gain);
 
 	///< Filter airspeed estimation
 	airspeed_analog->airspeed = 0.7f * airspeed_analog->airspeed + 0.3f * raw_airspeed; 

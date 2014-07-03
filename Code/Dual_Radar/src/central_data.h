@@ -48,7 +48,7 @@ byte_stream_t* get_telemetry_upstream();
 byte_stream_t* get_telemetry_downstream();
 
 
-#define STDOUT &get_debug_stream()
+#define STDOUT &print_util_get_debug_stream()
 //#define STDOUT &xbee_out_stream
 
 #endif /* CENTRAL_DATA_H_ */

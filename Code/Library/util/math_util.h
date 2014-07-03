@@ -36,7 +36,7 @@ extern "C"
  * 
  * \return 	Maximum
  */
-#define fmax(a,b) ((a>b)?a:b)		
+#define math_util_fmax(a,b) ((a>b)?a:b)		
 
 
 /**
@@ -47,7 +47,7 @@ extern "C"
  * 
  * \return 	Minimum
  */
-#define fmin(a,b) ((a<b)?a:b)
+#define math_util_fmin(a,b) ((a<b)?a:b)
 
 
 #ifdef __cplusplus

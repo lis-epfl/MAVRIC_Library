@@ -419,9 +419,9 @@ bool gps_ublox_message_decode(void)
 			if (payload_length > 512)
 			{
 				// we assume very large payloads are line noise
-				dbg_print("large payload: ");
-				dbg_print_num(payload_length,10);
-				dbg_print("\n");
+				print_util_dbg_print("large payload: ");
+				print_util_dbg_print_num(payload_length,10);
+				print_util_dbg_print("\n");
 				payload_length = 0;
 				step = 0;
 				goto reset;
@@ -441,15 +441,15 @@ bool gps_ublox_message_decode(void)
 					}
 					else
 					{
-						dbg_print("Wrong Posllh message 0x");
-						dbg_print_num(ubxclass,16);
-						dbg_print(" Msg id: 0x");
-						dbg_print_num(msg_id,16);
-						dbg_print(" Received size:");
-						dbg_print_num(payload_length,10);
-						dbg_print(" should be:");
-						dbg_print_num(UBX_SIZE_NAV_POSLLH,10);
-						dbg_print("\n");
+						print_util_dbg_print("Wrong Posllh message 0x");
+						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print(" Msg id: 0x");
+						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print(" Received size:");
+						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print(" should be:");
+						print_util_dbg_print_num(UBX_SIZE_NAV_POSLLH,10);
+						print_util_dbg_print("\n");
 						step = 0;
 						goto reset;
 					}
@@ -464,15 +464,15 @@ bool gps_ublox_message_decode(void)
 					}
 					else
 					{
-						dbg_print("Wrong Nav Status message 0x");
-						dbg_print_num(ubxclass,16);
-						dbg_print(" Msg id: 0x");
-						dbg_print_num(msg_id,16);
-						dbg_print(" Received size:");
-						dbg_print_num(payload_length,10);
-						dbg_print(" should be:");
-						dbg_print_num(UBX_SIZE_NAV_STATUS,10);
-						dbg_print("\n");
+						print_util_dbg_print("Wrong Nav Status message 0x");
+						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print(" Msg id: 0x");
+						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print(" Received size:");
+						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print(" should be:");
+						print_util_dbg_print_num(UBX_SIZE_NAV_STATUS,10);
+						print_util_dbg_print("\n");
 						step = 0;
 						goto reset;
 					}
@@ -487,15 +487,15 @@ bool gps_ublox_message_decode(void)
 					}
 					else
 					{
-						dbg_print("Wrong Solution message 0x");
-						dbg_print_num(ubxclass,16);
-						dbg_print(" Msg id: 0x");
-						dbg_print_num(msg_id,16);
-						dbg_print(" Received size:");
-						dbg_print_num(payload_length,10);
-						dbg_print(" should be:");
-						dbg_print_num(UBX_SIZE_NAV_SOL,10);
-						dbg_print("\n");
+						print_util_dbg_print("Wrong Solution message 0x");
+						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print(" Msg id: 0x");
+						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print(" Received size:");
+						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print(" should be:");
+						print_util_dbg_print_num(UBX_SIZE_NAV_SOL,10);
+						print_util_dbg_print("\n");
 						step = 0;
 						goto reset;
 					}
@@ -510,15 +510,15 @@ bool gps_ublox_message_decode(void)
 					}
 					else
 					{
-						dbg_print("Wrong Velned message 0x");
-						dbg_print_num(ubxclass,16);
-						dbg_print(" Msg id: 0x");
-						dbg_print_num(msg_id,16);
-						dbg_print(" Received size:");
-						dbg_print_num(payload_length,10);
-						dbg_print(" should be:");
-						dbg_print_num(UBX_SIZE_NAV_VELNED,10);
-						dbg_print("\n");
+						print_util_dbg_print("Wrong Velned message 0x");
+						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print(" Msg id: 0x");
+						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print(" Received size:");
+						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print(" should be:");
+						print_util_dbg_print_num(UBX_SIZE_NAV_VELNED,10);
+						print_util_dbg_print("\n");
 						step = 0;
 						goto reset;
 					}
@@ -533,15 +533,15 @@ bool gps_ublox_message_decode(void)
 					}
 					else
 					{
-						dbg_print("Wrong SV Info message 0x");
-						dbg_print_num(ubxclass,16);
-						dbg_print(" Msg id: 0x");
-						dbg_print_num(msg_id,16);
-						dbg_print(" Received size:");
-						dbg_print_num(payload_length,10);
-						dbg_print(" should be:");
-						dbg_print_num(UBX_SIZE_NAV_SVINFO,10);
-						dbg_print("\n");
+						print_util_dbg_print("Wrong SV Info message 0x");
+						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print(" Msg id: 0x");
+						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print(" Received size:");
+						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print(" should be:");
+						print_util_dbg_print_num(UBX_SIZE_NAV_SVINFO,10);
+						print_util_dbg_print("\n");
 						step = 0;
 						goto reset;
 					}
@@ -549,13 +549,13 @@ bool gps_ublox_message_decode(void)
 					
 				default:
 					step = 0;
-					dbg_print("Unexpected NAV message, Class: 0x");
-					dbg_print_num(ubxclass,16);
-					dbg_print(", msg id: 0x");
-					dbg_print_num(msg_id,16);
-					dbg_print(" of size ");
-					dbg_print_num(payload_length,10);
-					dbg_print("\n");
+					print_util_dbg_print("Unexpected NAV message, Class: 0x");
+					print_util_dbg_print_num(ubxclass,16);
+					print_util_dbg_print(", msg id: 0x");
+					print_util_dbg_print_num(msg_id,16);
+					print_util_dbg_print(" of size ");
+					print_util_dbg_print_num(payload_length,10);
+					print_util_dbg_print("\n");
 					goto reset;
 				}	
 			}
@@ -573,15 +573,15 @@ bool gps_ublox_message_decode(void)
 					}
 					else
 					{
-						dbg_print("Wrong Nav Settings message 0x");
-						dbg_print_num(ubxclass,16);
-						dbg_print(" Msg id: 0x");
-						dbg_print_num(msg_id,16);
-						dbg_print(" Received size:");
-						dbg_print_num(payload_length,10);
-						dbg_print(" should be:");
-						dbg_print_num(UBX_SIZE_NAV_SETTINGS,10);
-						dbg_print("\n");
+						print_util_dbg_print("Wrong Nav Settings message 0x");
+						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print(" Msg id: 0x");
+						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print(" Received size:");
+						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print(" should be:");
+						print_util_dbg_print_num(UBX_SIZE_NAV_SETTINGS,10);
+						print_util_dbg_print("\n");
 						step = 0;
 						goto reset;
 					}
@@ -596,15 +596,15 @@ bool gps_ublox_message_decode(void)
 					}
 					else
 					{
-						dbg_print("Wrong CFG Rate message 0x");
-						dbg_print_num(ubxclass,16);
-						dbg_print(" Msg id: 0x");
-						dbg_print_num(msg_id,16);
-						dbg_print(" Received size:");
-						dbg_print_num(payload_length,10);
-						dbg_print(" should be:");
-						dbg_print_num(UBX_SIZE_CFG_RATE,10);
-						dbg_print("\n");
+						print_util_dbg_print("Wrong CFG Rate message 0x");
+						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print(" Msg id: 0x");
+						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print(" Received size:");
+						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print(" should be:");
+						print_util_dbg_print_num(UBX_SIZE_CFG_RATE,10);
+						print_util_dbg_print("\n");
 						step = 0;
 						goto reset;
 					}
@@ -619,15 +619,15 @@ bool gps_ublox_message_decode(void)
 					}
 					else
 					{
-						dbg_print("Wrong CFG Set/get message 0x");
-						dbg_print_num(ubxclass,16);
-						dbg_print(" Msg id: 0x");
-						dbg_print_num(msg_id,16);
-						dbg_print(" Received size:");
-						dbg_print_num(payload_length,10);
-						dbg_print(" should be:");
-						dbg_print_num(UBX_SIZE_CFG_GETSET_RATE,10);
-						dbg_print("\n");
+						print_util_dbg_print("Wrong CFG Set/get message 0x");
+						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print(" Msg id: 0x");
+						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print(" Received size:");
+						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print(" should be:");
+						print_util_dbg_print_num(UBX_SIZE_CFG_GETSET_RATE,10);
+						print_util_dbg_print("\n");
 						step = 0;
 						goto reset;
 					}
@@ -635,13 +635,13 @@ bool gps_ublox_message_decode(void)
 					
 				default:
 					step = 0;
-					dbg_print("Unexpected CFG message, Class: 0x");
-					dbg_print_num(ubxclass,16);
-					dbg_print(", msg id: 0x");
-					dbg_print_num(msg_id,16);
-					dbg_print(" of size ");
-					dbg_print_num(payload_length,10);
-					dbg_print("\n");
+					print_util_dbg_print("Unexpected CFG message, Class: 0x");
+					print_util_dbg_print_num(ubxclass,16);
+					print_util_dbg_print(", msg id: 0x");
+					print_util_dbg_print_num(msg_id,16);
+					print_util_dbg_print(" of size ");
+					print_util_dbg_print_num(payload_length,10);
+					print_util_dbg_print("\n");
 					goto reset;
 				}
 			} else if (ubxclass == UBX_CLASS_MON)
@@ -657,15 +657,15 @@ bool gps_ublox_message_decode(void)
  					}
 					 else
 					 {
- 						dbg_print("Wrong MON RXR message 0x");
- 						dbg_print_num(ubxclass,16);
- 						dbg_print(" Msg id: 0x");
- 						dbg_print_num(msg_id,16);
- 						dbg_print(" Received size:");
- 						dbg_print_num(payload_length,10);
- 						dbg_print(" should be:");
- 						dbg_print_num(UBX_SIZE_MON_RXR,10);
- 						dbg_print("\n");
+ 						print_util_dbg_print("Wrong MON RXR message 0x");
+ 						print_util_dbg_print_num(ubxclass,16);
+ 						print_util_dbg_print(" Msg id: 0x");
+ 						print_util_dbg_print_num(msg_id,16);
+ 						print_util_dbg_print(" Received size:");
+ 						print_util_dbg_print_num(payload_length,10);
+ 						print_util_dbg_print(" should be:");
+ 						print_util_dbg_print_num(UBX_SIZE_MON_RXR,10);
+ 						print_util_dbg_print("\n");
  						step = 0;
  						goto reset;
  					}
@@ -673,15 +673,15 @@ bool gps_ublox_message_decode(void)
 					
  				default:
  					step = 0;
- 					dbg_print("Unexpected TIM message, Class: 0x");
- 					dbg_print_num(ubxclass,16);
- 					dbg_print(", msg id: 0x");
- 					dbg_print_num(msg_id,16);
- 					dbg_print(" of size ");
- 					dbg_print_num(payload_length,10);
-					dbg_print(" should be :");
-					dbg_print_num(MSG_MON_RXR,16);
- 					dbg_print("\n");
+ 					print_util_dbg_print("Unexpected TIM message, Class: 0x");
+ 					print_util_dbg_print_num(ubxclass,16);
+ 					print_util_dbg_print(", msg id: 0x");
+ 					print_util_dbg_print_num(msg_id,16);
+ 					print_util_dbg_print(" of size ");
+ 					print_util_dbg_print_num(payload_length,10);
+					print_util_dbg_print(" should be :");
+					print_util_dbg_print_num(MSG_MON_RXR,16);
+ 					print_util_dbg_print("\n");
  					goto reset;
  				}
 				
@@ -699,15 +699,15 @@ bool gps_ublox_message_decode(void)
 					}
 					else
 					{
-						dbg_print("Wrong TIM TP message 0x");
-						dbg_print_num(ubxclass,16);
-						dbg_print(" Msg id: 0x");
-						dbg_print_num(msg_id,16);
-						dbg_print(" Received size:");
-						dbg_print_num(payload_length,10);
-						dbg_print(" should be:");
-						dbg_print_num(UBX_SIZE_TIM_TP,10);
-						dbg_print("\n");
+						print_util_dbg_print("Wrong TIM TP message 0x");
+						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print(" Msg id: 0x");
+						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print(" Received size:");
+						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print(" should be:");
+						print_util_dbg_print_num(UBX_SIZE_TIM_TP,10);
+						print_util_dbg_print("\n");
 						step = 0;
 						goto reset;
 					}
@@ -722,15 +722,15 @@ bool gps_ublox_message_decode(void)
 						}
 						else
 						{
-						dbg_print("Wrong TIM VRFY message 0x");
-						dbg_print_num(ubxclass,16);
-						dbg_print(" Msg id: 0x");
-						dbg_print_num(msg_id,16);
-						dbg_print(" Received size:");
-						dbg_print_num(payload_length,10);
-						dbg_print(" should be:");
-						dbg_print_num(UBX_SIZE_TIM_VRFY,10);
-						dbg_print("\n");
+						print_util_dbg_print("Wrong TIM VRFY message 0x");
+						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print(" Msg id: 0x");
+						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print(" Received size:");
+						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print(" should be:");
+						print_util_dbg_print_num(UBX_SIZE_TIM_VRFY,10);
+						print_util_dbg_print("\n");
 						step = 0;
 						goto reset;
 					}
@@ -738,28 +738,28 @@ bool gps_ublox_message_decode(void)
 					
 				default:
 					step = 0;
-					dbg_print("Unexpected TIM message, Class: 0x");
-					dbg_print_num(ubxclass,16);
-					dbg_print(", msg id: 0x");
-					dbg_print_num(msg_id,16);
-					dbg_print(" of size ");
-					dbg_print_num(payload_length,10);
-					dbg_print(" should be :");
-					dbg_print_num(MSG_TIM_TP,16);
-					dbg_print("\n");
+					print_util_dbg_print("Unexpected TIM message, Class: 0x");
+					print_util_dbg_print_num(ubxclass,16);
+					print_util_dbg_print(", msg id: 0x");
+					print_util_dbg_print_num(msg_id,16);
+					print_util_dbg_print(" of size ");
+					print_util_dbg_print_num(payload_length,10);
+					print_util_dbg_print(" should be :");
+					print_util_dbg_print_num(MSG_TIM_TP,16);
+					print_util_dbg_print("\n");
 					goto reset;
 				}
 			}
 			else
 			{
 				step = 0;
-				dbg_print("Unexpected message, Class: 0x");
-				dbg_print_num(ubxclass,16);
-				dbg_print(", msg id: 0x");
-				dbg_print_num(msg_id,16);
-				dbg_print(" of size ");
-				dbg_print_num(payload_length,10);
-				dbg_print("\n");
+				print_util_dbg_print("Unexpected message, Class: 0x");
+				print_util_dbg_print_num(ubxclass,16);
+				print_util_dbg_print(", msg id: 0x");
+				print_util_dbg_print_num(msg_id,16);
+				print_util_dbg_print(" of size ");
+				print_util_dbg_print_num(payload_length,10);
+				print_util_dbg_print("\n");
 				goto reset;	
 			}		
 			break;
@@ -786,15 +786,15 @@ bool gps_ublox_message_decode(void)
 			step++;
 			if (cksum_a != data)
 			{
-				dbg_print("bad cksum_a ");
-				dbg_print_num(data,16);
-				dbg_print(" should be ");
-				dbg_print_num(cksum_a,16);
-				dbg_print(" class : 0x");
-				dbg_print_num(ubxclass,16);
-				dbg_print(" msg_id : 0x");
-				dbg_print_num(msg_id,16);
-				dbg_print("\n");
+				print_util_dbg_print("bad cksum_a ");
+				print_util_dbg_print_num(data,16);
+				print_util_dbg_print(" should be ");
+				print_util_dbg_print_num(cksum_a,16);
+				print_util_dbg_print(" class : 0x");
+				print_util_dbg_print_num(ubxclass,16);
+				print_util_dbg_print(" msg_id : 0x");
+				print_util_dbg_print_num(msg_id,16);
+				print_util_dbg_print("\n");
 				step = 0;
 				goto reset;
 			}
@@ -804,15 +804,15 @@ bool gps_ublox_message_decode(void)
 			step=0;
 			if (cksum_b != data)
 			{
-				dbg_print("bad cksum_b ");
-				dbg_print_num(data,16);
-				dbg_print(" should be ");
-				dbg_print_num(cksum_b,16);
-				dbg_print("\n");
+				print_util_dbg_print("bad cksum_b ");
+				print_util_dbg_print_num(data,16);
+				print_util_dbg_print(" should be ");
+				print_util_dbg_print_num(cksum_b,16);
+				print_util_dbg_print("\n");
 				break;
 			}
 			++(*ubx_validMessage);
-			//dbg_print("Valid message");
+			//print_util_dbg_print("Valid message");
 			
 			// swap message buffers, old message is discarded and becomes incoming buffer, new message become valid message (=old)
 			temporaryMessageForSwaping = *ubx_currentMessage;
@@ -838,8 +838,8 @@ bool gps_ublox_process_data(void)
 	
 	if (ubxclass == UBX_CLASS_ACK)
 	{
-		dbg_print_num(msg_id,10);
-		dbg_print("\n");
+		print_util_dbg_print_num(msg_id,10);
+		print_util_dbg_print("\n");
 		return false;
 	}
  	if (ubxclass == UBX_CLASS_MON)
@@ -847,7 +847,7 @@ bool gps_ublox_process_data(void)
  		ubx_mon_rxr_struct *gpsRXR = ubx_GetMonRXR();
  		if (gpsRXR)
  		{
- 			dbg_print("MSG_MON GPS awake\n");
+ 			print_util_dbg_print("MSG_MON GPS awake\n");
  		}
 		 return false;
  	}
@@ -859,7 +859,7 @@ bool gps_ublox_process_data(void)
 			loopTimTp = ++loopTimTp % numSkippedMsg;
 			if((printNavOnDebug)&&(loopTimTp == 0))
 			{
-				dbg_print("MSG_TIM_TP GPS awake\n");
+				print_util_dbg_print("MSG_TIM_TP GPS awake\n");
 			}
 		}
 		ubx_tim_vrfy *gpsTimVrfy = ubx_GetTimVRFY();
@@ -868,15 +868,15 @@ bool gps_ublox_process_data(void)
 			loopTimVrfy = ++loopTimVrfy % numSkippedMsg;
 			if((printNavOnDebug)&&(loopTimVrfy == 0))
 			{
-				dbg_print("MSG_TIM_VRFY");
-				dbg_print(" itow :");
-				dbg_print_num(gpsTimVrfy->itow,10);
-				dbg_print(" frac :");
-				dbg_print_num(gpsTimVrfy->frac,10);
-				dbg_print(" deltaMs :");
-				dbg_print_num(gpsTimVrfy->deltaMs,10);
-				dbg_print(" deltaNs :");
-				dbg_print_num(gpsTimVrfy->deltaNs,10);
+				print_util_dbg_print("MSG_TIM_VRFY");
+				print_util_dbg_print(" itow :");
+				print_util_dbg_print_num(gpsTimVrfy->itow,10);
+				print_util_dbg_print(" frac :");
+				print_util_dbg_print_num(gpsTimVrfy->frac,10);
+				print_util_dbg_print(" deltaMs :");
+				print_util_dbg_print_num(gpsTimVrfy->deltaMs,10);
+				print_util_dbg_print(" deltaNs :");
+				print_util_dbg_print_num(gpsTimVrfy->deltaNs,10);
 			}
 		}
 		return false;
@@ -899,9 +899,9 @@ bool gps_ublox_process_data(void)
 		*/
 		if(gpsNavSettings)
 		{
-			dbg_print("Got engine settings ");
-			dbg_print_num(gpsNavSettings->dynModel,16);
-			dbg_print("\n");
+			print_util_dbg_print("Got engine settings ");
+			print_util_dbg_print_num(gpsNavSettings->dynModel,16);
+			print_util_dbg_print("\n");
 		}
 		else
 		{
@@ -910,13 +910,13 @@ bool gps_ublox_process_data(void)
 				if(gpsNavSettings->dynModel != engine_nav_setting)
 				{
 					nav_settings.dynModel = engine_nav_setting;
-					dbg_print("Send Nav settings");
+					print_util_dbg_print("Send Nav settings");
 					ubx_send_message_nav_settings(UBX_CLASS_CFG, MSG_CFG_NAV_SETTINGS, &nav_settings, sizeof(nav_settings));
 				}				
 			}
-			dbg_print("No engine settings received ");
-			dbg_print_num(msg_id,16);
-			dbg_print("\n");
+			print_util_dbg_print("No engine settings received ");
+			print_util_dbg_print_num(msg_id,16);
+			print_util_dbg_print("\n");
 		}
 		return false;
 	}
@@ -928,22 +928,22 @@ bool gps_ublox_process_data(void)
 		
 		if (gpsMsgRate)
 		{
-			dbg_print("Message CFG Rate 0x");
-			dbg_print_num(gpsMsgRate->msg_class,16);
-			dbg_print_num(gpsMsgRate->msg_id_rate,16);
-			dbg_print_num(gpsMsgRate->rate,10);
-			dbg_print("\n");
+			print_util_dbg_print("Message CFG Rate 0x");
+			print_util_dbg_print_num(gpsMsgRate->msg_class,16);
+			print_util_dbg_print_num(gpsMsgRate->msg_id_rate,16);
+			print_util_dbg_print_num(gpsMsgRate->rate,10);
+			print_util_dbg_print("\n");
 		}		
 		return false;
 	}
 	
 	if (ubxclass != UBX_CLASS_NAV)
 	{
-		dbg_print("Unexpected message 0x");
-		dbg_print_num(ubxclass,16);
-		dbg_print("02x 0x");
-		dbg_print_num(msg_id,10);
-		dbg_print("02x\n");
+		print_util_dbg_print("Unexpected message 0x");
+		print_util_dbg_print_num(ubxclass,16);
+		print_util_dbg_print("02x 0x");
+		print_util_dbg_print_num(msg_id,10);
+		print_util_dbg_print("02x\n");
 		if (++disable_counter == 0)
 		{
 			// disable future sends of this message id, but
@@ -951,11 +951,11 @@ bool gps_ublox_process_data(void)
 			// message types can't be disabled and we don't
 			// want to get into an ack war
 			
-			dbg_print("Disabling message 0x");
-			dbg_print_num(ubxclass,16);
-			dbg_print("02x 0x");
-			dbg_print_num(msg_id,16);
-			dbg_print("02x\n");
+			print_util_dbg_print("Disabling message 0x");
+			print_util_dbg_print_num(ubxclass,16);
+			print_util_dbg_print("02x 0x");
+			print_util_dbg_print_num(msg_id,16);
+			print_util_dbg_print("02x\n");
 			ubx_configure_message_rate(ubxclass, msg_id, 0);
 		}
 		return false;
@@ -971,22 +971,22 @@ bool gps_ublox_process_data(void)
 			loopPosllh = ++loopPosllh % numSkippedMsg;
 			if (printNavOnDebug && (loopPosllh == 0))
 			{
-				dbg_print("MSG_NAV_POSLLH");
-				dbg_print(" itow :");
-				dbg_print_num(gpsPosllh->itow,10);
-				dbg_print(" longitude :");
-				dbg_print_num(gpsPosllh->longitude,10);
-				dbg_print(" latitude :");
-				dbg_print_num(gpsPosllh->latitude,10);
-				dbg_print(" alt_ellips :");
-				dbg_print_num(gpsPosllh->altitude_ellipsoid,10);
-				dbg_print(" alt_msl :");
-				dbg_print_num(gpsPosllh->altitude_msl,10);
-				dbg_print(" horz_acc :");
-				dbg_print_num(gpsPosllh->horizontal_accuracy,10);
-				dbg_print(" vert_acc :");
-				dbg_print_num(gpsPosllh->vertical_accuracy,10);
-				dbg_print("\n");
+				print_util_dbg_print("MSG_NAV_POSLLH");
+				print_util_dbg_print(" itow :");
+				print_util_dbg_print_num(gpsPosllh->itow,10);
+				print_util_dbg_print(" longitude :");
+				print_util_dbg_print_num(gpsPosllh->longitude,10);
+				print_util_dbg_print(" latitude :");
+				print_util_dbg_print_num(gpsPosllh->latitude,10);
+				print_util_dbg_print(" alt_ellips :");
+				print_util_dbg_print_num(gpsPosllh->altitude_ellipsoid,10);
+				print_util_dbg_print(" alt_msl :");
+				print_util_dbg_print_num(gpsPosllh->altitude_msl,10);
+				print_util_dbg_print(" horz_acc :");
+				print_util_dbg_print_num(gpsPosllh->horizontal_accuracy,10);
+				print_util_dbg_print(" vert_acc :");
+				print_util_dbg_print_num(gpsPosllh->vertical_accuracy,10);
+				print_util_dbg_print("\n");
 			}
 			
 			centralData->GPS_data.timegps = gpsPosllh->itow;
@@ -1009,11 +1009,11 @@ bool gps_ublox_process_data(void)
 			loopStatus = ++loopStatus % numSkippedMsg;
 			if (printNavOnDebug && (loopStatus == 0))
 			{
-				dbg_print("MSG_STATUS fix_type = 0x");
-				dbg_print_num(gpsStatus->fix_type,16);
-				dbg_print(", uptime =");
-				dbg_print_num(gpsStatus->uptime,10);
-				dbg_print("\n");
+				print_util_dbg_print("MSG_STATUS fix_type = 0x");
+				print_util_dbg_print_num(gpsStatus->fix_type,16);
+				print_util_dbg_print(", uptime =");
+				print_util_dbg_print_num(gpsStatus->uptime,10);
+				print_util_dbg_print("\n");
 			}
 			next_fix = (gpsStatus->fix_type == GPS_FIX_TYPE_3DFIX);
 			if (!next_fix)
@@ -1035,26 +1035,26 @@ bool gps_ublox_process_data(void)
 			loopSolution = ++loopSolution % numSkippedMsg;
 			if (printNavOnDebug && (loopSolution == 0))
 			{
-				dbg_print("MSG_SOL ");
-				dbg_print("itow :");
-				dbg_print_num(gpsSolution->itow,10);
-				dbg_print(" week :");
-				dbg_print_num(gpsSolution->week,10);
-				dbg_print(" fix_type = 0x0");
-				dbg_print_num(gpsSolution->fix_type,16);
-				dbg_print(" pos_acc_3d :");
-				dbg_print_num(gpsSolution->position_accuracy_3d,10);
-				dbg_print(" ecefx :");
-				dbg_print_num(gpsSolution->ecef_x,10);
-				dbg_print(" ecefy :");
-				dbg_print_num(gpsSolution->ecef_y,10);
-				dbg_print(" ecefz :");
-				dbg_print_num(gpsSolution->ecef_z,10);
-				dbg_print(" pos_DOP :");
-				dbg_print_num(gpsSolution->position_DOP,10);
-				dbg_print(" num sat :");
-				dbg_print_num(gpsSolution->satellites,10);
-				dbg_print("\n");
+				print_util_dbg_print("MSG_SOL ");
+				print_util_dbg_print("itow :");
+				print_util_dbg_print_num(gpsSolution->itow,10);
+				print_util_dbg_print(" week :");
+				print_util_dbg_print_num(gpsSolution->week,10);
+				print_util_dbg_print(" fix_type = 0x0");
+				print_util_dbg_print_num(gpsSolution->fix_type,16);
+				print_util_dbg_print(" pos_acc_3d :");
+				print_util_dbg_print_num(gpsSolution->position_accuracy_3d,10);
+				print_util_dbg_print(" ecefx :");
+				print_util_dbg_print_num(gpsSolution->ecef_x,10);
+				print_util_dbg_print(" ecefy :");
+				print_util_dbg_print_num(gpsSolution->ecef_y,10);
+				print_util_dbg_print(" ecefz :");
+				print_util_dbg_print_num(gpsSolution->ecef_z,10);
+				print_util_dbg_print(" pos_DOP :");
+				print_util_dbg_print_num(gpsSolution->position_DOP,10);
+				print_util_dbg_print(" num sat :");
+				print_util_dbg_print_num(gpsSolution->satellites,10);
+				print_util_dbg_print("\n");
 			}
 			next_fix = (gpsSolution->fix_type == GPS_FIX_TYPE_3DFIX);
 			if (!next_fix)
@@ -1080,25 +1080,25 @@ bool gps_ublox_process_data(void)
 			if (printNavOnDebug && (loopVelned == 0))
 			{
 			
-				dbg_print("MSG_NAV_VELNED ");
+				print_util_dbg_print("MSG_NAV_VELNED ");
 		
-				dbg_print("itow :");
-				dbg_print_num(gpsVelned->itow,10);
-				dbg_print(" ned_north :");
-				dbg_print_num(gpsVelned->ned_north,10);
-				dbg_print(" ned_east :");
-				dbg_print_num(gpsVelned->ned_east,10);
-				dbg_print(" ned_down :");
-				dbg_print_num(gpsVelned->ned_down,10);
-				dbg_print(" speed_3d :");
-				dbg_print_num(gpsVelned->speed_3d,10);
-				dbg_print(" heading_2d :");
-				dbg_print_num(gpsVelned->heading_2d,10);
-				dbg_print(" speed_accuracy :");
-				dbg_print_num(gpsVelned->speed_accuracy,10);
-				dbg_print(" heading_accuracy :");
-				dbg_print_num(gpsVelned->heading_accuracy,10);
-				dbg_print("\n");
+				print_util_dbg_print("itow :");
+				print_util_dbg_print_num(gpsVelned->itow,10);
+				print_util_dbg_print(" ned_north :");
+				print_util_dbg_print_num(gpsVelned->ned_north,10);
+				print_util_dbg_print(" ned_east :");
+				print_util_dbg_print_num(gpsVelned->ned_east,10);
+				print_util_dbg_print(" ned_down :");
+				print_util_dbg_print_num(gpsVelned->ned_down,10);
+				print_util_dbg_print(" speed_3d :");
+				print_util_dbg_print_num(gpsVelned->speed_3d,10);
+				print_util_dbg_print(" heading_2d :");
+				print_util_dbg_print_num(gpsVelned->heading_2d,10);
+				print_util_dbg_print(" speed_accuracy :");
+				print_util_dbg_print_num(gpsVelned->speed_accuracy,10);
+				print_util_dbg_print(" heading_accuracy :");
+				print_util_dbg_print_num(gpsVelned->heading_accuracy,10);
+				print_util_dbg_print("\n");
 			}
 			centralData->GPS_data.timegps = gpsVelned->itow;
 			centralData->GPS_data.speed        = ((float)gpsVelned->speed_3d)/100.; // m/s
@@ -1121,22 +1121,22 @@ bool gps_ublox_process_data(void)
 		{
 			if (printNavOnDebug)
 			{
-				dbg_print("MSG_NAV_SVINFO, numChannel:");
-				dbg_print_num(gpsSVInfo->numCh,10);
-				dbg_print("\n");
+				print_util_dbg_print("MSG_NAV_SVINFO, numChannel:");
+				print_util_dbg_print_num(gpsSVInfo->numCh,10);
+				print_util_dbg_print("\n");
 			}
 		}
 		
 	default:
-		dbg_print("Unexpected NAV message 0x");
-		dbg_print_num(msg_id,10);
-		dbg_print("\n");
+		print_util_dbg_print("Unexpected NAV message 0x");
+		print_util_dbg_print_num(msg_id,10);
+		print_util_dbg_print("\n");
 		
 		if (++disable_counter == 0)
 		{
-			dbg_print("Disabling NAV message 0x");
-			dbg_print_num(msg_id,16);
-			dbg_print("\n");
+			print_util_dbg_print("Disabling NAV message 0x");
+			print_util_dbg_print_num(msg_id,16);
+			print_util_dbg_print("\n");
 			ubx_configure_message_rate(UBX_CLASS_NAV, msg_id, 0);
 		}
 		return false;
@@ -1201,20 +1201,20 @@ void ubx_send_header(uint8_t msg_class, uint8_t _msg_id, uint16_t size)
 	header.msg_id_header    = _msg_id;
 	header.length			= size;
 	
-	putnum(&centralData->gps_stream_out,header.preamble1,16);
-	putnum(&centralData->gps_stream_out,header.preamble2,16);
-	putnum(&centralData->gps_stream_out,header.msg_class,10);
-	putnum(&centralData->gps_stream_out,header.msg_id_header,16);
+	print_util_putnum(&centralData->gps_stream_out,header.preamble1,16);
+	print_util_putnum(&centralData->gps_stream_out,header.preamble2,16);
+	print_util_putnum(&centralData->gps_stream_out,header.msg_class,10);
+	print_util_putnum(&centralData->gps_stream_out,header.msg_id_header,16);
 	
-	putnum(&centralData->gps_stream_out,(uint8_t) endian_lower_bytes_uint16(header.length),16);
-	putnum(&centralData->gps_stream_out,(uint8_t) endian_higher_bytes_uint16(header.length),16);
+	print_util_putnum(&centralData->gps_stream_out,(uint8_t) endian_lower_bytes_uint16(header.length),16);
+	print_util_putnum(&centralData->gps_stream_out,(uint8_t) endian_higher_bytes_uint16(header.length),16);
 	
 }
 
 void ubx_send_cksum(uint8_t ck_sum_a, uint8_t ck_sum_b)
 {
-	putnum(&centralData->gps_stream_out,ck_sum_a,16);
-	putnum(&centralData->gps_stream_out,ck_sum_b,16);
+	print_util_putnum(&centralData->gps_stream_out,ck_sum_a,16);
+	print_util_putnum(&centralData->gps_stream_out,ck_sum_b,16);
 }
 
 void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_nav_rate_send msg, uint16_t size)
@@ -1233,22 +1233,22 @@ void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_n
 	
 	data = endian_lower_bytes_uint16(msg.measure_rate_ms);
 	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-	putnum(&centralData->gps_stream_out, data, 16);
+	print_util_putnum(&centralData->gps_stream_out, data, 16);
 	data = endian_higher_bytes_uint16(msg.measure_rate_ms);
 	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-	putnum(&centralData->gps_stream_out, data, 16);
+	print_util_putnum(&centralData->gps_stream_out, data, 16);
 	data = endian_lower_bytes_uint16(msg.nav_rate);
 	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-	putnum(&centralData->gps_stream_out, data, 16);
+	print_util_putnum(&centralData->gps_stream_out, data, 16);
 	data = endian_higher_bytes_uint16(msg.nav_rate);
 	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-	putnum(&centralData->gps_stream_out, data, 16);
+	print_util_putnum(&centralData->gps_stream_out, data, 16);
 	data = endian_lower_bytes_uint16(msg.timeref);
 	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-	putnum(&centralData->gps_stream_out, data, 16);
+	print_util_putnum(&centralData->gps_stream_out, data, 16);
 	data = endian_higher_bytes_uint16(msg.timeref);
 	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-	putnum(&centralData->gps_stream_out, data, 16);
+	print_util_putnum(&centralData->gps_stream_out, data, 16);
 	
 	ubx_send_cksum(ck_a,ck_b);
 }
@@ -1270,112 +1270,112 @@ void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_n
 		
 		data = endian_lower_bytes_uint16(engine_settings->mask);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_higher_bytes_uint16(engine_settings->mask);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = engine_settings->dynModel;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = engine_settings->fixMode;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_lower_bytes_uint32(engine_settings->fixedAlt);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_mid_lower_bytes_uint32(engine_settings->fixedAlt);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_mid_higher_bytes_uint32(engine_settings->fixedAlt);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_higher_bytes_uint32(engine_settings->fixedAlt);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_lower_bytes_uint32(engine_settings->fixedAltVar);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_mid_lower_bytes_uint32(engine_settings->fixedAltVar);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_mid_higher_bytes_uint32(engine_settings->fixedAltVar);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_higher_bytes_uint32(engine_settings->fixedAltVar);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = engine_settings->minElev;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = engine_settings->drLimit;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_lower_bytes_uint16(engine_settings->pDop);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_higher_bytes_uint16(engine_settings->pDop);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_lower_bytes_uint16(engine_settings->tDop);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_higher_bytes_uint16(engine_settings->tDop);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_lower_bytes_uint16(engine_settings->pAcc);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_higher_bytes_uint16(engine_settings->pAcc);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_lower_bytes_uint16(engine_settings->tAcc);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_higher_bytes_uint16(engine_settings->tAcc);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = engine_settings->staticHoldThresh;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = engine_settings->dgpsTimeOut;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_lower_bytes_uint32(engine_settings->res2);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_mid_lower_bytes_uint32(engine_settings->res2);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_mid_higher_bytes_uint32(engine_settings->res2);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_higher_bytes_uint32(engine_settings->res2);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_lower_bytes_uint32(engine_settings->res3);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_mid_lower_bytes_uint32(engine_settings->res3);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_mid_higher_bytes_uint32(engine_settings->res3);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_higher_bytes_uint32(engine_settings->res3);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_lower_bytes_uint32(engine_settings->res4);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_mid_lower_bytes_uint32(engine_settings->res4);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_mid_higher_bytes_uint32(engine_settings->res4);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 		data = endian_higher_bytes_uint32(engine_settings->res4);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		putnum(&centralData->gps_stream_out, data, 16);
+		print_util_putnum(&centralData->gps_stream_out, data, 16);
 	}
 	
 	ubx_send_cksum(ck_a,ck_b);
@@ -1399,9 +1399,9 @@ void ubx_configure_message_rate(uint8_t msg_class, uint8_t _msg_id, uint8_t rate
 	
 	ubx_send_header(UBX_CLASS_CFG,MSG_CFG_SET_RATE,sizeof(msg));
 	
-	putnum(&centralData->gps_stream_out,msg.msg_class,16);
-	putnum(&centralData->gps_stream_out,msg.msg_id_rate,16);
-	putnum(&centralData->gps_stream_out,msg.rate,16);
+	print_util_putnum(&centralData->gps_stream_out,msg.msg_class,16);
+	print_util_putnum(&centralData->gps_stream_out,msg.msg_id_rate,16);
+	print_util_putnum(&centralData->gps_stream_out,msg.rate,16);
 	
 	ubx_send_cksum(ck_a,ck_b);
 }
@@ -1417,9 +1417,9 @@ void gps_ublox_configure_gps(void)
 // 	for (uint8_t i=0; i<4; i++)
 // 	{
 	
-	//dbg_print("Set to binary mode ");
-	//dbg_print(set_binary);
-	putstring(&(centralData->gps_stream_out),set_binary);
+	//print_util_dbg_print("Set to binary mode ");
+	//print_util_dbg_print(set_binary);
+	print_util_putstring(&(centralData->gps_stream_out),set_binary);
 	//centralData->gps_stream_out.put(centralData->gps_stream_out.data,set_binary);
 	//centralData->gps_stream_out.flush(&(centralData->gps_stream_out.data));
 	//}
@@ -1432,7 +1432,7 @@ void gps_ublox_configure_gps(void)
 	ubx_send_message_CFG_nav_rate(UBX_CLASS_CFG, MSG_CFG_RATE, msg, sizeof(msg));
 
 	// ask for the messages we parse to be sent on every navigation solution
-	//dbg_print("Set navigation messages\n");
+	//print_util_dbg_print("Set navigation messages\n");
 	ubx_configure_message_rate(UBX_CLASS_NAV, MSG_NAV_POSLLH, 4);
 	ubx_configure_message_rate(UBX_CLASS_NAV, MSG_NAV_STATUS, 4);
 	ubx_configure_message_rate(UBX_CLASS_NAV, MSG_NAV_SOL, 4);
@@ -1440,7 +1440,7 @@ void gps_ublox_configure_gps(void)
 	ubx_configure_message_rate(UBX_CLASS_NAV, MSG_NAV_SVINFO, 4);
 
 	// ask for the current navigation settings
-	//dbg_print("Asking for engine setting\n");
+	//print_util_dbg_print("Asking for engine setting\n");
 	ubx_send_message_nav_settings(UBX_CLASS_CFG, MSG_CFG_NAV_SETTINGS, NULL, 0);
 }
 

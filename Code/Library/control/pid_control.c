@@ -37,7 +37,7 @@ PID_Controller_t pid_control_passthroughController()
 
 float pid_control_integrate(Integrator_t *integrator, float input, float dt)
 {
-	integrator->accumulator=clip(integrator->accumulator+dt* integrator->pregain * input, integrator->clip);
+	integrator->accumulator=maths_clip(integrator->accumulator+dt* integrator->pregain * input, integrator->maths_clip);
 	return integrator->postgain* integrator->accumulator;
 }
 
@@ -45,7 +45,7 @@ void pid_control_init_integrator(Integrator_t *integrator, float pregain, float 
 {
 	integrator->pregain=pregain;
 	integrator->postgain=postgain;
-	integrator->clip=clip_val;
+	integrator->maths_clip=clip_val;
 	integrator->accumulator=0.0f;
 }
 
@@ -58,7 +58,7 @@ void pid_control_init_differenciator(Differentiator_t *diff, float gain, float L
 {
 	diff->gain=gain;
 	diff->LPF=LPF;
-	diff->clip=clip_val;
+	diff->maths_clip=clip_val;
 }
 
 float pid_control_differentiate(Differentiator_t *diff, float input, float dt) 
@@ -67,7 +67,7 @@ float pid_control_differentiate(Differentiator_t *diff, float input, float dt)
 	if (dt<0.000001f) {
 		output=0.0f; 
 	} else {
-		output=clip(diff->gain*(input - diff->previous)/dt, diff->clip);
+		output=maths_clip(diff->gain*(input - diff->previous)/dt, diff->maths_clip);
 	}	
 	//diff->previous=(1.0f-(diff->LPF))*input + (diff->LPF) * (diff->previous);
 	diff->previous=input;
@@ -77,7 +77,7 @@ float pid_control_differentiate(Differentiator_t *diff, float input, float dt)
 float pid_control_update(PID_Controller_t* controller, float error)
 {
 	uint32_t t= get_time_ticks();
-	controller->error=soft_zone(error, controller->soft_zone_width);
+	controller->error=maths_soft_zone(error, controller->soft_zone_width);
 	controller->dt=ticks_to_seconds(t - controller->last_update);
 	controller->last_update=t;
 	controller->output = controller->p_gain* (controller->error +pid_control_integrate(&controller->integrator, controller->error, controller->dt) + pid_control_differentiate(&controller->differentiator, controller->error, controller->dt));

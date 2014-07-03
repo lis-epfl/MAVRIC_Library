@@ -60,17 +60,17 @@ void boardsupport_init(central_data_t *centralData) {
 		
 	if (init_i2c(0)!=STATUS_OK)
 	{
-		//dbg_print("Error initialising I2C\n");
+		//print_util_dbg_print("Error initialising I2C\n");
 		//while (1==1);
 	} else {
-		//dbg_print("initialised I2C.\n");
+		//print_util_dbg_print("initialised I2C.\n");
 	}
 	if (init_i2c(1)!=STATUS_OK)
 	{
-		//dbg_print("Error initialising I2C\n");
+		//print_util_dbg_print("Error initialising I2C\n");
 		//while (1==1);
 	} else {
-		//dbg_print("initialised I2C.\n");
+		//print_util_dbg_print("initialised I2C.\n");
 	}
 
 	LED_Off(LED1);
@@ -87,7 +87,7 @@ void boardsupport_init(central_data_t *centralData) {
 				
 	// Init UART 3 for GPS communication
 	init_UART_int(3);
-	make_buffered_stream(&(centralData->gps_buffer), &(centralData->gps_stream_in));
+	buffer_make_buffered_stream(&(centralData->gps_buffer), &(centralData->gps_stream_in));
 	register_read_stream(get_UART_handle(3), &(centralData->gps_stream_in));
 	register_write_stream(get_UART_handle(3), &(centralData->gps_stream_out));
 	
@@ -96,8 +96,8 @@ void boardsupport_init(central_data_t *centralData) {
 	register_write_stream(get_UART_handle(4), &(centralData->wired_out_stream));
 
 	// Registering streams
-	make_buffered_stream_lossy(&(centralData->xbee_in_buffer), &(centralData->xbee_in_stream));
-	make_buffered_stream_lossy(&(centralData->wired_in_buffer), &(centralData->wired_in_stream));
+	buffer_make_buffered_stream_lossy(&(centralData->xbee_in_buffer), &(centralData->xbee_in_stream));
+	buffer_make_buffered_stream_lossy(&(centralData->wired_in_buffer), &(centralData->wired_in_stream));
 	register_read_stream(get_UART_handle(4), &(centralData->wired_in_stream));
 	register_read_stream(get_UART_handle(0), &(centralData->xbee_in_stream));
 		
@@ -141,7 +141,7 @@ void boardsupport_init(central_data_t *centralData) {
 	mavlink_stream_init(centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID);
 		
 	// init debug output
-	dbg_print_init(centralData->debug_out_stream);
+	print_util_dbg_print_init(centralData->debug_out_stream);
 	
 	// init 6V enable
 	gpio_enable_gpio_pin(AVR32_PIN_PA04);
@@ -152,5 +152,5 @@ void boardsupport_init(central_data_t *centralData) {
 	// Init piezo speaker
 	init_piezo_speaker_binary();
 	
-	dbg_print("Board initialised.\n");
+	print_util_dbg_print("Board initialised.\n");
 }

@@ -30,10 +30,10 @@ boardsupport_init(central_data_t *central_data){
 
 		/*
 		if (init_i2c(1)!=STATUS_OK) {
-			//putstring(STDOUT, "Error initialising I2C\n");
+			//print_util_putstring(STDOUT, "Error initialising I2C\n");
 			while (1==1);
 			} else {
-			//putstring(STDOUT, "initialised I2C.\n");
+			//print_util_putstring(STDOUT, "initialised I2C.\n");
 		};
 		i2c_slave_interface_init(1);
 		*/
@@ -45,7 +45,7 @@ boardsupport_init(central_data_t *central_data){
 		
 		register_write_stream(get_UART_handle(4), &central_data->wired_out_stream);
 
-		make_buffered_stream(&(central_data->wired_in_buffer), &(central_data->wired_in_stream));
+		buffer_make_buffered_stream(&(central_data->wired_in_buffer), &(central_data->wired_in_stream));
 		register_read_stream(get_UART_handle(4), &(central_data->wired_in_stream));
 
 		central_data->telemetry_down_stream=&(central_data->wired_out_stream);
@@ -55,7 +55,7 @@ boardsupport_init(central_data_t *central_data){
 
 		// init mavlink
 		mavlink_stream_init(central_data->telemetry_down_stream, central_data->telemetry_up_stream, 100);
-		dbg_print_init(central_data->debug_out_stream);
+		print_util_dbg_print_init(central_data->debug_out_stream);
 		
 		Init_DAC(0);
 		DAC_set_value(0);

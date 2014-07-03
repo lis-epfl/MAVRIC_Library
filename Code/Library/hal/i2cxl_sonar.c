@@ -58,7 +58,7 @@ void i2cxl_sonar_init(i2cxl_sonar_t* i2cxl_sonar)
 	};
 
 	twi_master_init(&AVR32_TWIM1, &twi_opt);
-	dbg_print("i2cxl Sonar initialized");
+	print_util_dbg_print("i2cxl Sonar initialized");
 }
 
 

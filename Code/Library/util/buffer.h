@@ -124,7 +124,7 @@ int8_t buffer_empty(Buffer_t * buffer);
  * @param buffer 	Pointer to buffer
  * @param stream 	Pointer to stream
  */
-void make_buffered_stream(Buffer_t *buffer, byte_stream_t *stream);
+void buffer_make_buffered_stream(Buffer_t *buffer, byte_stream_t *stream);
 
 
 /**
@@ -134,7 +134,7 @@ void make_buffered_stream(Buffer_t *buffer, byte_stream_t *stream);
  * @param buffer 	Pointer to buffer
  * @param stream 	Pointer to stream
  */
-void make_buffered_stream_lossy(Buffer_t *buffer, byte_stream_t *stream);
+void buffer_make_buffered_stream_lossy(Buffer_t *buffer, byte_stream_t *stream);
 
 
 #ifdef __cplusplus

@@ -77,7 +77,7 @@ void register_read_stream_stdin( byte_stream_t *stream) {
 void boardsupport_init(central_data_t *centralData) {
 //		init_UART_int(0);
 
-		make_buffered_stream(&centralData->xbee_in_buffer, &centralData->xbee_in_stream);
+		buffer_make_buffered_stream(&centralData->xbee_in_buffer, &centralData->xbee_in_stream);
 
 		//register_read_stream_stdin( &centralData->xbee_in_stream);
 		
@@ -89,7 +89,7 @@ void boardsupport_init(central_data_t *centralData) {
 		register_write_stream_udp(&centralData->xbee_out_stream, &udp_out, "127.0.0.1",14550);
 		
 //		init_UART_int(3);
-		make_buffered_stream(&(centralData->gps_buffer), &centralData->gps_stream_in);
+		buffer_make_buffered_stream(&(centralData->gps_buffer), &centralData->gps_stream_in);
 //		register_read_stream(get_UART_handle(3), &centralData->gps_stream_in);
 //		register_write_stream(get_UART_handle(3), &centralData->gps_stream_out);
 		
@@ -121,7 +121,7 @@ void boardsupport_init(central_data_t *centralData) {
 		
 
 		// init debug output
-		dbg_print_init(centralData->debug_out_stream);
+		print_util_dbg_print_init(centralData->debug_out_stream);
 		
 
 		rc_init();

@@ -44,23 +44,23 @@ void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motor
 		centralData->collision_avoidance = false;
 	}*/
 	
-	//dbg_print("chanSwitch ");
-	//dbg_print_num(*chanSwitch,10);
-	//dbg_print_num(getChannel(4),10);
-	//dbg_print_num(getChannel(5),10);
-	//dbg_print("\n");
+	//print_util_dbg_print("chanSwitch ");
+	//print_util_dbg_print_num(*chanSwitch,10);
+	//print_util_dbg_print_num(getChannel(4),10);
+	//print_util_dbg_print_num(getChannel(5),10);
+	//print_util_dbg_print("\n");
 	
 	if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() > 0.9))
 	{
-		//dbg_print("motor on\n");
-		dbg_print("motor on: yaw=\n"); dbg_putfloat(get_yaw_from_remote(),2);
+		//print_util_dbg_print("motor on\n");
+		print_util_dbg_print("motor on: yaw=\n"); print_util_dbg_putfloat(get_yaw_from_remote(),2);
 		*motorbool = 1;
 	}else if((get_thrust_from_remote()<-0.95) && (get_yaw_from_remote() <-0.9))
 	{
-		//dbg_print("motor off\n");
+		//print_util_dbg_print("motor off\n");
 		*motorbool = -1;
 	}else{
-		//dbg_print("motor nothing\n");
+		//print_util_dbg_print("motor nothing\n");
 		*motorbool = 0;
 	}
 	
@@ -76,11 +76,11 @@ void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motor
 		*rc_check = -2;
 		break;
 	}
-	//dbg_print("rc_check: ");
-	//dbg_print_num(rc_check,10);
-	//dbg_print("; motorbool : ");
-	//dbg_print_num(*motorbool,10);
-	//dbg_print("\n");
+	//print_util_dbg_print("rc_check: ");
+	//print_util_dbg_print_num(rc_check,10);
+	//print_util_dbg_print("; motorbool : ");
+	//print_util_dbg_print_num(*motorbool,10);
+	//print_util_dbg_print("\n");
 }
 
 task_return_t tasks_set_mav_mode_n_state()
@@ -103,23 +103,23 @@ task_return_t tasks_set_mav_mode_n_state()
 				switch(channelSwitches)
 				{
 					case 0:
-						dbg_print("Switching on the motors!\n");
+						print_util_dbg_print("Switching on the motors!\n");
 						position_estimation_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 						centralData->controls.run_mode = MOTORS_ON;
 						centralData->mav_state = MAV_STATE_ACTIVE;
 						centralData->mav_mode = MAV_MODE_MANUAL_ARMED;
 						break;
 					case 1:
-						dbg_print("Switches not ready, both should be pushed!\n");
+						print_util_dbg_print("Switches not ready, both should be pushed!\n");
 						//centralData->controls.run_mode = MOTORS_ON;
 						//centralData->mav_state = MAV_STATE_ACTIVE;
 						//centralData->mav_mode = MAV_MODE_STABILIZE_ARMED;
 						break;
 					case 2:
-						dbg_print("Switches not ready, both should be pushed!\n");
+						print_util_dbg_print("Switches not ready, both should be pushed!\n");
 						break;
 					case 3:
-						dbg_print("Switches not ready, both should be pushed!\n");
+						print_util_dbg_print("Switches not ready, both should be pushed!\n");
 						break;
 				}
 			}
@@ -164,11 +164,11 @@ task_return_t tasks_set_mav_mode_n_state()
 					break;
 			}
 			
-			//dbg_print("motor_switch: ");
-			//dbg_print_num(motor_switch,10);
+			//print_util_dbg_print("motor_switch: ");
+			//print_util_dbg_print_num(motor_switch,10);
 			if (motor_switch == -1)
 			{
-				dbg_print("Switching off motors!\n");
+				print_util_dbg_print("Switching off motors!\n");
 				centralData->controls.run_mode = MOTORS_OFF;
 				centralData->mav_state = MAV_STATE_STANDBY;
 				centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
@@ -204,7 +204,7 @@ task_return_t tasks_set_mav_mode_n_state()
 			}
 			if (motor_switch == -1)
 			{
-				dbg_print("Switching off motors!\n");
+				print_util_dbg_print("Switching off motors!\n");
 				centralData->controls.run_mode = MOTORS_OFF;
 				centralData->mav_state = MAV_STATE_STANDBY;
 				centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
@@ -254,11 +254,11 @@ task_return_t tasks_set_mav_mode_n_state()
 			break;
 	}
 
-	//dbg_print("MAV state :");
-	//dbg_print_num(centralData->mav_state,10);
-	//dbg_print(", MAV mode :");
-	//dbg_print_num(centralData->mav_mode,10);
-	//dbg_print("\n");
+	//print_util_dbg_print("MAV state :");
+	//print_util_dbg_print_num(centralData->mav_state,10);
+	//print_util_dbg_print(", MAV mode :");
+	//print_util_dbg_print_num(centralData->mav_mode,10);
+	//print_util_dbg_print("\n");
 	
 }
 

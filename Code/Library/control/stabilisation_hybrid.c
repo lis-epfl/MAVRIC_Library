@@ -53,21 +53,21 @@ void stabilisation_hybrid_cascade_stabilise_hybrid(Imu_Data_t *imu, position_est
 		target_global[2] = -1;
 
 		// target vector in local frame
-		UQuat_t qtarget = quat_from_vector(&target_global);
-		qtarget = quat_global_to_local(imu->attitude.qe, qtarget);
+		UQuat_t qtarget = maths_quat_from_vector(&target_global);
+		qtarget = maths_quat_global_to_local(imu->attitude.qe, qtarget);
 		target_loc[0] = qtarget.v[0];
 		target_loc[1] = qtarget.v[1];
 		target_loc[2] = qtarget.v[2];
-		vector_normalize(target_loc, target_loc);
+		maths_vector_normalize(target_loc, target_loc);
 
 		// get rotation axis
 		float axis[3];
-		cross_product(reference_loc, target_loc, axis);
-		vector_normalize(axis, axis);
+		maths_cross_product(reference_loc, target_loc, axis);
+		maths_vector_normalize(axis, axis);
 
 		// get angle
-		float angle = acosf(scalar_product(reference_loc, target_loc));
-		// float angle = quick_acos(scalar_product(reference_loc, target_loc));
+		float angle = acosf(maths_scalar_product(reference_loc, target_loc));
+		// float angle = quick_trig_acos(maths_scalar_product(reference_loc, target_loc));
 		
 		// get errors
 		rpyt_errors[0]= input.rpy[0];
@@ -116,7 +116,7 @@ void stabilisation_hybrid_mix_to_servos_xwing(Control_Command_t *control)
 	servo_command[FLAP_LEFT] = FLAP_LEFT_DIR * ( + control->rpy[ROLL] 
 												 - control->rpy[PITCH] ); 
 
-	// clip
+	// maths_clip
 	if (motor_command < MIN_THRUST) motor_command = MIN_THRUST;
 	if (motor_command > MAX_THRUST) motor_command = MAX_THRUST;
 	for (i=0; i<4; i++) 

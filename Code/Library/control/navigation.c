@@ -67,7 +67,7 @@ float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[])
 	rel_pos[Y] = (float)(waypointPos[Y] - centralData->position_estimator.localPosition.pos[Y]);
 	rel_pos[Z] = (float)(waypointPos[Z] - centralData->position_estimator.localPosition.pos[Z]);
 	
-	dist2wp_sqr = vector_norm_sqr(rel_pos);
+	dist2wp_sqr = maths_vector_norm_sqr(rel_pos);
 	
 	return dist2wp_sqr;
 }
@@ -92,23 +92,23 @@ void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
 	
 	// calculate dir_desired in local frame
 	// vel = qe-1 * rel_pos * qe
-	qtmp1 = quat_from_vector(rel_pos);
-	qtmp2 = quat_global_to_local(centralData->imu1.attitude.qe,qtmp1);
+	qtmp1 = maths_quat_from_vector(rel_pos);
+	qtmp2 = maths_quat_global_to_local(centralData->imu1.attitude.qe,qtmp1);
 	dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
 	
 	dir_desired_bf[2] = rel_pos[2];
 	
-	if (((f_abs(rel_pos[X])<=1.0f)&&(f_abs(rel_pos[Y])<=1.0f))||((f_abs(rel_pos[X])<=5.0f)&&(f_abs(rel_pos[Y])<=5.0f)&&(f_abs(rel_pos[Z])>=3.0f)))
+	if (((maths_f_abs(rel_pos[X])<=1.0f)&&(maths_f_abs(rel_pos[Y])<=1.0f))||((maths_f_abs(rel_pos[X])<=5.0f)&&(maths_f_abs(rel_pos[Y])<=5.0f)&&(maths_f_abs(rel_pos[Z])>=3.0f)))
 	{
 		rel_heading = 0.0f;
 	}else{
-		rel_heading = calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - centralData->position_estimator.localPosition.heading);
+		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - centralData->position_estimator.localPosition.heading);
 	}
 	
-	v_desired = f_min(centralData->cruise_speed,(center_window_2(4.0f*rel_heading) * centralData->dist2vel_gain * soft_zone(norm_rel_dist,centralData->softZoneSize)));
+	v_desired = maths_f_min(centralData->cruise_speed,(maths_center_window_2(4.0f*rel_heading) * centralData->dist2vel_gain * maths_soft_zone(norm_rel_dist,centralData->softZoneSize)));
 	
-	if (v_desired *  f_abs(dir_desired_bf[Z]) > centralData->max_climb_rate * norm_rel_dist ) {
-		v_desired = centralData->max_climb_rate * norm_rel_dist /f_abs(dir_desired_bf[Z]);
+	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > centralData->max_climb_rate * norm_rel_dist ) {
+		v_desired = centralData->max_climb_rate * norm_rel_dist /maths_f_abs(dir_desired_bf[Z]);
 	}
 	
 	dir_desired_bf[X] = v_desired * dir_desired_bf[X] / norm_rel_dist;
@@ -120,22 +120,22 @@ void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
 	if (loopCount == 0)
 	{
 		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"v_desired",v_desired*100);
-		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"act_vel",vector_norm(centralData->position_estimator.vel_bf)*100);
-		dbg_print("Desired_vel_Bf(x100): (");
-		dbg_print_num(dir_desired_bf[X]*100,10);
-		dbg_print_num(dir_desired_bf[Y]*100,10);
-		dbg_print_num(dir_desired_bf[Z]*100,10);
-		dbg_print("). \n");
-		dbg_print("Actual_vel_bf(x100): (");
-		dbg_print_num(centralData->position_estimator.vel_bf[X]*100,10);
-		dbg_print_num(centralData->position_estimator.vel_bf[Y]*100,10);
-		dbg_print_num(centralData->position_estimator.vel_bf[Z]*100,10);
-		dbg_print("). \n");
-		dbg_print("Actual_pos(x100): (");
-		dbg_print_num(centralData->position_estimator.localPosition.pos[X]*100,10);
-		dbg_print_num(centralData->position_estimator.localPosition.pos[Y]*100,10);
-		dbg_print_num(centralData->position_estimator.localPosition.pos[Z]*100,10);
-		dbg_print("). \n");
+		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,get_millis(),"act_vel",maths_vector_norm(centralData->position_estimator.vel_bf)*100);
+		print_util_dbg_print("Desired_vel_Bf(x100): (");
+		print_util_dbg_print_num(dir_desired_bf[X]*100,10);
+		print_util_dbg_print_num(dir_desired_bf[Y]*100,10);
+		print_util_dbg_print_num(dir_desired_bf[Z]*100,10);
+		print_util_dbg_print("). \n");
+		print_util_dbg_print("Actual_vel_bf(x100): (");
+		print_util_dbg_print_num(centralData->position_estimator.vel_bf[X]*100,10);
+		print_util_dbg_print_num(centralData->position_estimator.vel_bf[Y]*100,10);
+		print_util_dbg_print_num(centralData->position_estimator.vel_bf[Z]*100,10);
+		print_util_dbg_print("). \n");
+		print_util_dbg_print("Actual_pos(x100): (");
+		print_util_dbg_print_num(centralData->position_estimator.localPosition.pos[X]*100,10);
+		print_util_dbg_print_num(centralData->position_estimator.localPosition.pos[Y]*100,10);
+		print_util_dbg_print_num(centralData->position_estimator.localPosition.pos[Z]*100,10);
+		print_util_dbg_print("). \n");
 	}
 	*/
 	
@@ -149,7 +149,7 @@ void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
 	}
 
 	//rel_heading= atan2(new_velocity[Y],new_velocity[X]);
-	//if (f_abs(new_velocity[X])<0.001f && f_abs(new_velocity[Y])<0.001f || centralData->controls.yaw_mode == YAW_ABSOLUTE || !centralData->waypoint_set)
+	//if (maths_f_abs(new_velocity[X])<0.001f && maths_f_abs(new_velocity[Y])<0.001f || centralData->controls.yaw_mode == YAW_ABSOLUTE || !centralData->waypoint_set)
 	//{
 		//rel_heading = 0.0f;
 	//}else{

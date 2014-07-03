@@ -68,8 +68,8 @@ void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, position_estimator_
 	switch (control_input->control_mode) {
 	case VELOCITY_COMMAND_MODE:
 		
-		qtmp=quat_from_vector(input.tvel);
-		UQuat_t inputLocal = quat_local_to_global(imu->attitude.qe, qtmp);
+		qtmp=maths_quat_from_vector(input.tvel);
+		UQuat_t inputLocal = maths_quat_local_to_global(imu->attitude.qe, qtmp);
 		
 		input.tvel[X] = inputLocal.v[X];
 		input.tvel[Y] = inputLocal.v[Y];
@@ -82,7 +82,7 @@ void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, position_estimator_
 		if (control_input->yaw_mode == YAW_COORDINATED) 
 		{
 			float rel_heading_coordinated;
-			if ((f_abs(pos_est->vel_bf[X])<0.001f)&&(f_abs(pos_est->vel_bf[Y])<0.001f))
+			if ((maths_f_abs(pos_est->vel_bf[X])<0.001f)&&(maths_f_abs(pos_est->vel_bf[Y])<0.001f))
 			{
 				rel_heading_coordinated = 0.0f;
 			}
@@ -91,7 +91,7 @@ void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, position_estimator_
 				rel_heading_coordinated = atan2(pos_est->vel_bf[Y], pos_est->vel_bf[X]);
 			}
 			
-			float w = 0.5f*(sigmoid(vector_norm(pos_est->vel_bf)-centralData->stabiliser_stack.yaw_coordination_velocity)+1.0f);
+			float w = 0.5f*(maths_sigmoid(maths_vector_norm(pos_est->vel_bf)-centralData->stabiliser_stack.yaw_coordination_velocity)+1.0f);
 			input.rpy[YAW] = (1.0f-w)*input.rpy[YAW] + w*rel_heading_coordinated;
 		}
 
@@ -100,13 +100,13 @@ void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, position_estimator_
 		// run PID update on all velocity controllers
 		stabilisation_run(&centralData->stabiliser_stack.velocity_stabiliser, centralData->imu1.dt, rpyt_errors);
 		
-		//velocity_stabiliser.output.thrust = f_min(velocity_stabiliser.output.thrust,control_input->thrust);
+		//velocity_stabiliser.output.thrust = maths_f_min(velocity_stabiliser.output.thrust,control_input->thrust);
 		centralData->stabiliser_stack.velocity_stabiliser.output.thrust += THRUST_HOVER_POINT;
 		centralData->stabiliser_stack.velocity_stabiliser.output.theading = input.theading;
 		input = centralData->stabiliser_stack.velocity_stabiliser.output;
 		
-		qtmp=quat_from_vector(centralData->stabiliser_stack.velocity_stabiliser.output.rpy);
-		UQuat_t rpyLocal = quat_global_to_local(imu->attitude.qe, qtmp);
+		qtmp=maths_quat_from_vector(centralData->stabiliser_stack.velocity_stabiliser.output.rpy);
+		UQuat_t rpyLocal = maths_quat_global_to_local(imu->attitude.qe, qtmp);
 		
 		input.rpy[ROLL] = rpyLocal.v[Y];
 		input.rpy[PITCH] = -rpyLocal.v[X];
@@ -119,7 +119,7 @@ void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, position_estimator_
 		rpyt_errors[1]= input.rpy[1] - imu->attitude.up_vec.v[0];
 		
 		if ((control_input->yaw_mode == YAW_ABSOLUTE) ) {
-			rpyt_errors[2] =calc_smaller_angle(input.theading- pos_est->localPosition.heading);
+			rpyt_errors[2] =maths_calc_smaller_angle(input.theading- pos_est->localPosition.heading);
 		}
 		else
 		{ // relative yaw

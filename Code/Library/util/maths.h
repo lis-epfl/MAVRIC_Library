@@ -113,7 +113,7 @@ typedef struct UQuat {
  * 
  * \return 		Unit quaternion
  */
-UQuat_t static inline quat_from_vector(float v[4]) {
+UQuat_t static inline maths_quat_from_vector(float v[4]) {
 	UQuat_t q;	
 	q.s = 0; 
 	q.v[0] = v[0]; 
@@ -157,7 +157,7 @@ UQuat_t static inline quat_from_vector(float v[4]) {
  * 
  * \return 			Output angle
  */
-float static inline calc_smaller_angle(float angle) {
+float static inline maths_calc_smaller_angle(float angle) {
 	float out=angle;
 	while (out<-PI) out += 2.0f * PI;
 	while (out>=PI) out -= 2.0f * PI;
@@ -173,7 +173,7 @@ float static inline calc_smaller_angle(float angle) {
  * 
  * \return 		Scalar product
  */
-float static inline scalar_product(const float u[3], const float v[3])
+float static inline maths_scalar_product(const float u[3], const float v[3])
 {
 	float scp = (u[0] * v[0] + u[1] * v[1] + u[2] * v[2]);
 	return scp;
@@ -187,7 +187,7 @@ float static inline scalar_product(const float u[3], const float v[3])
  * \param 	v 		Input vector (dim 3)
  * \param 	out 	Output vector (dim 3)
  */
-void static inline cross_product(const float u[3], const float v[3], float out[3])
+void static inline maths_cross_product(const float u[3], const float v[3], float out[3])
 {
 	out[0] = u[1] * v[2] - u[2] * v[1];
 	out[1] = u[2] * v[0] - u[0] * v[2];
@@ -203,7 +203,7 @@ void static inline cross_product(const float u[3], const float v[3], float out[3
  * 
  * \return 			Output quaternion
  */
-UQuat_t static inline quat_multi(const UQuat_t q1, const UQuat_t q2)
+UQuat_t static inline maths_quat_multi(const UQuat_t q1, const UQuat_t q2)
 {
 	float tmp[3];
 	UQuat_t out;
@@ -215,7 +215,7 @@ UQuat_t static inline quat_multi(const UQuat_t q1, const UQuat_t q2)
 	out.v[0] = q2.s * q1.v[0] + q1.s * q2.v[0] + tmp[0];
 	out.v[1] = q2.s * q1.v[1] + q1.s * q2.v[1] + tmp[1];
 	out.v[2] = q2.s * q1.v[2] + q1.s * q2.v[2] + tmp[2];
-	out.s= q1.s * q2.s - scalar_product(q1.v, q2.v);
+	out.s= q1.s * q2.s - maths_scalar_product(q1.v, q2.v);
 	
 	return out;
 }
@@ -227,7 +227,7 @@ UQuat_t static inline quat_multi(const UQuat_t q1, const UQuat_t q2)
  * \param 	q 	Input quaternion
  * \return 		Output quaternion
  */
-UQuat_t static inline quat_inv(const UQuat_t q)
+UQuat_t static inline maths_quat_inv(const UQuat_t q)
 {
 	int i;
 	
@@ -253,13 +253,13 @@ UQuat_t static inline quat_inv(const UQuat_t q)
  * 
  * \return 			Output quaternion
  */
-UQuat_t static inline quat_global_to_local(const UQuat_t qe, const UQuat_t qvect)
+UQuat_t static inline maths_quat_global_to_local(const UQuat_t qe, const UQuat_t qvect)
 {
 	UQuat_t qinv, qtmp;
 	
-	qinv = quat_inv(qe);
-	qtmp = quat_multi(qinv,qvect);
-	qtmp = quat_multi(qtmp,qe);
+	qinv = maths_quat_inv(qe);
+	qtmp = maths_quat_multi(qinv,qvect);
+	qtmp = maths_quat_multi(qtmp,qe);
 
 	return qtmp;
 }
@@ -275,13 +275,13 @@ UQuat_t static inline quat_global_to_local(const UQuat_t qe, const UQuat_t qvect
  * 
  * \return 			Output quaternion
  */
-UQuat_t static inline quat_local_to_global(const UQuat_t qe, const UQuat_t qvect)
+UQuat_t static inline maths_quat_local_to_global(const UQuat_t qe, const UQuat_t qvect)
 {
 	UQuat_t qinv, qtmp;
 	
-	qinv = quat_inv(qe);
-	qtmp = quat_multi(qe, qvect);
-	qtmp = quat_multi(qtmp, qinv);
+	qinv = maths_quat_inv(qe);
+	qtmp = maths_quat_multi(qe, qvect);
+	qtmp = maths_quat_multi(qtmp, qinv);
 	
 	return qtmp;
 }
@@ -298,16 +298,16 @@ UQuat_t static inline quat_local_to_global(const UQuat_t qe, const UQuat_t qvect
  * \param 	v 		rotated vector (output)
  * 
  */
-void static inline quat_rotate_vector(const UQuat_t q, const float u[3], float v[3])
+void static inline maths_quat_rotate_vector(const UQuat_t q, const float u[3], float v[3])
 {
 	float tmp1[3], tmp2[3];
 
-	cross_product(q.v, u, tmp1);
+	maths_cross_product(q.v, u, tmp1);
 	tmp1[0] = 2 * tmp1[0];
 	tmp1[1] = 2 * tmp1[1];
 	tmp1[2] = 2 * tmp1[2];
 
-	cross_product(q.v, tmp1, tmp2);
+	maths_cross_product(q.v, tmp1, tmp2);
 	
 	v[0] = u[0] + q.s * tmp1[0] + tmp2[0];
 	v[1] = u[1] + q.s * tmp1[1] + tmp2[1];
@@ -322,7 +322,7 @@ void static inline quat_rotate_vector(const UQuat_t q, const float u[3], float v
  * 
  * \return 			Output value
  */
-float static inline fast_sqrt(float number) {
+float static inline maths_fast_sqrt(float number) {
 	long i;
 	float x, y;
 	const float f = 1.5f;
@@ -344,7 +344,7 @@ float static inline fast_sqrt(float number) {
  * \param 	input 	Input value
  * \return 			Output value
  */
-float static inline fast_sqrt_1(float input) {
+float static inline maths_fast_sqrt_1(float input) {
 	if (input<0) 
 	{
 		return 0.0f;
@@ -365,9 +365,9 @@ float static inline fast_sqrt_1(float input) {
  * \param 	u 	Input vector
  * \return 		Squared norm
  */
-float static inline vector_norm_sqr(float u[3])
+float static inline maths_vector_norm_sqr(float u[3])
 {
-	float norm = scalar_product(u, u);
+	float norm = maths_scalar_product(u, u);
 	return norm;
 }
 
@@ -378,9 +378,9 @@ float static inline vector_norm_sqr(float u[3])
  * \param 	u 	Input vector (dim 3)
  * \return 		Norm of the vector
  */
-float static inline vector_norm(float u[3])
+float static inline maths_vector_norm(float u[3])
 {
-	return fast_sqrt(vector_norm_sqr(u));
+	return maths_fast_sqrt(maths_vector_norm_sqr(u));
 }
 
 
@@ -390,10 +390,10 @@ float static inline vector_norm(float u[3])
  * \param 	v 	Input vector (dim 3)
  * \param 	u 	Output vector (dim 3)
  */
-void static inline vector_normalize(float v[3], float u[3])
+void static inline maths_vector_normalize(float v[3], float u[3])
 {
 	int i;
-	float norm = vector_norm(v);
+	float norm = maths_vector_norm(v);
 	for (i = 0; i < 3; ++i)
 	{
 		u[i] = v[i] / norm;
@@ -407,7 +407,7 @@ void static inline vector_normalize(float v[3], float u[3])
  * \param 	q 	Input quaternion
  * \return 		Unit quaternion
  */
-static inline UQuat_t quat_normalise(const UQuat_t q) 
+static inline UQuat_t maths_quat_normalise(const UQuat_t q) 
 {
 	UQuat_t result;
 	
@@ -415,7 +415,7 @@ static inline UQuat_t quat_normalise(const UQuat_t q)
 
 	if (snorm >0.0000001f) 
 	{
-		float norm = fast_sqrt(snorm);
+		float norm = maths_fast_sqrt(snorm);
 		result.s = q.s / norm;
 		result.v[0] = q.v[0] / norm;		
 		result.v[1] = q.v[1] / norm;		
@@ -440,7 +440,7 @@ static inline UQuat_t quat_normalise(const UQuat_t q)
  * 
  * \return 		Absolute value
  */
-static inline float f_abs(const float a)
+static inline float maths_f_abs(const float a)
 {
 	if (a >= 0.0f)
 	{
@@ -461,7 +461,7 @@ static inline float f_abs(const float a)
  * 
  * \return 		Minimum value
  */
-static inline float f_min(const float a, const float b)
+static inline float maths_f_min(const float a, const float b)
 {
 	if (a <= b)
 	{
@@ -482,7 +482,7 @@ static inline float f_min(const float a, const float b)
  * 
  * \return 		Maximum value
  */
-static inline float f_max(const float a, const float b){
+static inline float maths_f_max(const float a, const float b){
 	if (a >= b)
 	{
 		return a;
@@ -504,7 +504,7 @@ static inline float f_max(const float a, const float b){
  * 
  * \return 					Clipped value
  */
-static float inline clip(float input_value, float clip_value) {
+static float inline maths_clip(float input_value, float clip_value) {
 	
 	if (input_value>clip_value)  return clip_value;     
 	if (input_value<-clip_value) return -clip_value; 
@@ -520,7 +520,7 @@ static float inline clip(float input_value, float clip_value) {
  * 
  * \return 					Output value
  */
-static float inline soft_zone(float x, float soft_zone_width) 
+static float inline maths_soft_zone(float x, float soft_zone_width) 
 {
 	if (soft_zone_width < 0.0000001f) 
 	{	
@@ -539,9 +539,9 @@ static float inline soft_zone(float x, float soft_zone_width)
  * \param 	x 	Input value
  * \return 		Output value
  */
-static float inline sigmoid(float x) 
+static float inline maths_sigmoid(float x) 
 {
-	return (x / fast_sqrt(1 + SQR(x)));
+	return (x / maths_fast_sqrt(1 + SQR(x)));
 };
 
 
@@ -551,7 +551,7 @@ static float inline sigmoid(float x)
  * \param 	x 	Input value
  * \return 		Output value
  */
-static float inline center_window_2(float x) 
+static float inline maths_center_window_2(float x) 
 {
 	return 1.0f / (1 + SQR(x));
 }
@@ -563,7 +563,7 @@ static float inline center_window_2(float x)
  * \param 	x 	Input value
  * \return 		Output value
  */
-static float inline center_window_4(float x) 
+static float inline maths_center_window_4(float x) 
 {
 	return 1.0f / (1 + SQR(SQR(x)));
 }
@@ -580,7 +580,7 @@ static float inline center_window_4(float x)
  * 
  * \return 		Output value
  */
-static float inline median_filter_3x(float a, float b, float c) {
+static float inline maths_median_filter_3x(float a, float b, float c) {
 	float middle;
 	
 	if ((a <= b) && (a <= c)) 
@@ -604,7 +604,7 @@ static float inline median_filter_3x(float a, float b, float c) {
 /**
  * \brief 		Interpolation
  * 
- * \details 	With known y1 = f(x1) and y2 = f(x2), this function will interpolate f to compute f(x)
+ * \details 	With known y1 = f(x1) and y2 = f(x2), this function will maths_interpolate f to compute f(x)
  * 
  * \param 	x 	Target abscissa
  * \param 	x1  First known abscissa
@@ -614,7 +614,7 @@ static float inline median_filter_3x(float a, float b, float c) {
  * 
  * \return 		Interpolated value
  */
-static inline float interpolate(float x, float x1, float x2, float y1, float y2)
+static inline float maths_interpolate(float x, float x1, float x2, float y1, float y2)
 {
 	if (x1 == x2)
 	{

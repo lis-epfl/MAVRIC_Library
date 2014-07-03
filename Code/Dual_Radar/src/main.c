@@ -58,7 +58,7 @@ void initialisation() {
 
 	Enable_global_interrupt();
 		
-	//dbg_print("Debug stream initialised\n");
+	//print_util_dbg_print("Debug stream initialised\n");
 
 
 	onboard_parameters_init();
@@ -129,8 +129,8 @@ void main (void)
 			mavlink_send_radar();
 			//mavlink_send_radar_raw();
 			
-			//dbg_putfloat(get_tracked_target()->velocity,2);
-			//dbg_print(".\n");
+			//print_util_dbg_putfloat(get_tracked_target()->velocity,2);
+			//print_util_dbg_print(".\n");
 
 		}			
 		

@@ -11,14 +11,14 @@
 radar_target main_target;
 
 void init_radar_modules() {
-	dbg_print("not implemented\n");
+	print_util_dbg_print("not implemented\n");
 
 }
 
 
 void read_radar() {
 
-	dbg_print("not implemented\n");
+	print_util_dbg_print("not implemented\n");
 	
 }
 

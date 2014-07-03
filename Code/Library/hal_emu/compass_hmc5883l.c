@@ -13,7 +13,7 @@ static volatile compass_data compass_outputs;
 
 
 void init_hmc5883_slow() {
-	dbg_print("not implemented\n");
+	print_util_dbg_print("not implemented\n");
 }
 
 

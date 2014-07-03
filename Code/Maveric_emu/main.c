@@ -43,7 +43,7 @@ void initialisation() {
 	central_data_init();
 
 	init_radar_modules();
-	dbg_print("Debug stream initialised\n");
+	print_util_dbg_print("Debug stream initialised\n");
 
 	//gps_ublox_init(engine_nav_settings);
 	
@@ -88,14 +88,14 @@ void main (void)
 		centralData->position_estimator.localPosition.pos[i]=0.0;
 	}
 	
-	//dbg_print("Initialise HIL Simulator...\n");
+	//print_util_dbg_print("Initialise HIL Simulator...\n");
 	simulation_init(&(centralData->sim_model),&(centralData->imu1.attitude),centralData->position_estimator.localPosition);
 
 	// main loop
 	delay_ms(10);
-	dbg_print("Reset home position...\n");
+	print_util_dbg_print("Reset home position...\n");
 	position_estimation_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model.localPosition);
-	dbg_print("OK. Starting up.\n");
+	print_util_dbg_print("OK. Starting up.\n");
 
 	for (i=1; i<8; i++) {
 		beep(100, 500*i);

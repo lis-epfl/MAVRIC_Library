@@ -30,7 +30,7 @@ static void pdca_int_handler_i2c0(void)
    schedule[0][current_schedule_slot[0]].transfer_in_progress=0;
    
    if (schedule[0][current_schedule_slot[0]].callback) schedule[0][current_schedule_slot[0]].callback;
-   dbg_print( "!");
+   print_util_dbg_print( "!");
 }
 
 
@@ -222,7 +222,7 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
 						| (0 << AVR32_TWIM_CMDR_READ_OFFSET);
 			break;	
 		case I2C_WRITE1_THEN_READ:
-			dbg_print( "wr");
+			print_util_dbg_print( "wr");
 			
 			// set up next command register for the burst read transfer
 			// set up command register to initiate the write transfer. The DMA will take care of the reading once this is done.
@@ -247,7 +247,7 @@ char i2c_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
 			
 			break;	
 		case I2C_WRITE:
-			dbg_print( "w");
+			print_util_dbg_print( "w");
 			twim->cmdr = (conf->slave_address << AVR32_TWIM_CMDR_SADR_OFFSET)
 						| ((conf->write_count) << AVR32_TWIM_CMDR_NBYTES_OFFSET)
 						| (AVR32_TWIM_CMDR_VALID_MASK)

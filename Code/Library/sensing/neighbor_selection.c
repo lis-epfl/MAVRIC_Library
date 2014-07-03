@@ -50,7 +50,7 @@ void neighbors_selection_read_message_from_neighbors(Mavlink_Received_t* rec)
 		globalPosNeighbor.altitude = (float)packet.alt / 1000.0f;
 		globalPosNeighbor.heading = (float)packet.hdg;
 		
-		localPosNeighbor = global_to_local_position(globalPosNeighbor,centralData->position_estimator.localPosition.origin);
+		localPosNeighbor = coord_conventions_global_to_local_position(globalPosNeighbor,centralData->position_estimator.localPosition.origin);
 		
 		bool ID_found = false;
 		i = 0;
@@ -76,7 +76,7 @@ void neighbors_selection_read_message_from_neighbors(Mavlink_Received_t* rec)
 			else
 			{
 				// This case shouldn't happen
-				dbg_print("Error! There is more neighbors than planned!\n");
+				print_util_dbg_print("Error! There is more neighbors than planned!\n");
 				actualNeighbor = centralData->number_of_neighbors-1;
 			}
 		}
@@ -101,21 +101,21 @@ void neighbors_selection_read_message_from_neighbors(Mavlink_Received_t* rec)
 		
 		centralData->listNeighbors[actualNeighbor].time_msg_received = get_millis();
 		
-		//dbg_print("Neighbor with ID ");
-		//dbg_print_num(centralData->listNeighbors[actualNeighbor].neighborID,10);
-		//dbg_print(" at position ");
-		//dbg_print_vector(centralData->listNeighbors[actualNeighbor].position,3);
-		//dbg_print(" with velocity ");
-		//dbg_print_vector(centralData->listNeighbors[actualNeighbor].velocity,3);
-		//dbg_print(" with relative position ");
+		//print_util_dbg_print("Neighbor with ID ");
+		//print_util_dbg_print_num(centralData->listNeighbors[actualNeighbor].neighborID,10);
+		//print_util_dbg_print(" at position ");
+		//print_util_dbg_print_vector(centralData->listNeighbors[actualNeighbor].position,3);
+		//print_util_dbg_print(" with velocity ");
+		//print_util_dbg_print_vector(centralData->listNeighbors[actualNeighbor].velocity,3);
+		//print_util_dbg_print(" with relative position ");
 		//float rel_pos[3];
 		//uint8_t i;
 		//for (i=0; i<3; i++)
 		//{
 			//rel_pos[i] = centralData->listNeighbors[actualNeighbor].position[i] - centralData->position_estimator.localPosition.pos[i];
 		//}
-		//dbg_print_vector(rel_pos,3);
-		//dbg_print("\n");
+		//print_util_dbg_print_vector(rel_pos,3);
+		//print_util_dbg_print("\n");
 		
 	}
 }

@@ -29,7 +29,7 @@ extern "C" {
 typedef struct {
 	float pregain, postgain;			///< pregain and postgain 
 	float accumulator;					///< accumulator
-	float clip;							///< clipping value
+	float maths_clip;							///< clipping value
 	float leakiness;					///< leakiness
 } Integrator_t;							///< integrator parameters
 
@@ -37,7 +37,7 @@ typedef struct {
 	float gain;							///< gain 
 	float previous;						///< Previous input to the differentiator 
 	float LPF;							///< Low pass filter
-	float clip;							///< clipping value
+	float maths_clip;							///< clipping value
 } Differentiator_t;						///< differentiator parameters
 
 typedef struct {

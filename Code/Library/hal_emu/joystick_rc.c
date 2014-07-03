@@ -146,7 +146,7 @@ int get_joystick_status(int joystick_file_descriptor, int *axes, int *buttons, i
 		  case 0:buttons[event.number] = event.value; break;
 		  
 		  case 1: 
-		    dbg_print_num(event.number, 10);dbg_print(": ");dbg_print_num(event.value, 10);dbg_print("\n");
+		    print_util_dbg_print_num(event.number, 10);print_util_dbg_print(": ");print_util_dbg_print_num(event.value, 10);print_util_dbg_print("\n");
 			buttons[event.number] = event.value;
 			switch (event.number) {
 			 case JOY_SAFETY_OFF_BUTTON: axes[RC_SAFETY]=-32000; break;

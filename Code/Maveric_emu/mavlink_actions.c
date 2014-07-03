@@ -38,7 +38,7 @@ void mavlink_send_heartbeat(void) {
 								0, 0,  				// comms drop, comms errors
 								0, 0, 0, 0);        // autopilot specific errors
 								
-	//dbg_print("Send hearbeat.\n");
+	//print_util_dbg_print("Send hearbeat.\n");
 }
 
 void mavlink_send_raw_imu(void) {
@@ -108,7 +108,7 @@ void mavlink_send_attitude_quaternion(void) {
 void mavlink_send_attitude(void) {
 	// ATTITUDE
 	Aero_Attitude_t aero_attitude;
-	aero_attitude=Quat_to_Aero(board->imu1.attitude.qe);
+	aero_attitude=coord_conventions_quat_to_aero(board->imu1.attitude.qe);
 	mavlink_msg_attitude_send(MAVLINK_COMM_0, get_millis(), aero_attitude.rpy[0], aero_attitude.rpy[1], aero_attitude.rpy[2], board->imu1.attitude.om[0], board->imu1.attitude.om[1], board->imu1.attitude.om[2]);
 }
 
@@ -121,7 +121,7 @@ void mavlink_send_global_position(void) {
    //}else{
 	   //mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), 46.5193*10000000, 6.56507*10000000, 400*1000, 1, 0, 0, 0, board->imu1.attitude.om[2]);
 	   	// send integrated position (for now there is no GPS error correction...!!!)
-		global_position_t gpos=local_to_global_position(board->imu1.attitude.localPosition);
+		global_position_t gpos=coord_conventions_local_to_global_position(board->imu1.attitude.localPosition);
 		mavlink_msg_global_position_int_send(MAVLINK_COMM_0, get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, board->imu1.attitude.vel[0]*100.0, board->imu1.attitude.vel[1]*100.0, board->imu1.attitude.vel[2]*100.0, board->imu1.attitude.om[2]);
 		mavlink_msg_global_position_int_send(MAVLINK_COMM_1, get_millis(), gpos.latitude*10000000, gpos.longitude*10000000, gpos.altitude*1000.0, 1, board->imu1.attitude.vel[0]*100.0, board->imu1.attitude.vel[1]*100.0, board->imu1.attitude.vel[2]*100.0, board->imu1.attitude.om[2]);
    //} 
@@ -131,7 +131,7 @@ void mavlink_send_hud(void) {
 	float groundspeed=sqrt(board->imu1.attitude.vel[0]*board->imu1.attitude.vel[0] +board->imu1.attitude.vel[1]*board->imu1.attitude.vel[1]);
 	float airspeed=groundspeed;
 	Aero_Attitude_t aero_attitude;
-	aero_attitude=Quat_to_Aero(board->imu1.attitude.qe);
+	aero_attitude=coord_conventions_quat_to_aero(board->imu1.attitude.qe);
 	// mavlink_msg_vfr_hud_send(mavlink_channel_t chan, float airspeed, float groundspeed, int16_t heading, uint16_t throttle, float alt, float climb)
 	mavlink_msg_vfr_hud_send(MAVLINK_COMM_0, airspeed, groundspeed, 180.0*aero_attitude.rpy[2]/PI, (int)((board->controls.thrust+1.0)*50), -board->imu1.attitude.localPosition.pos[2], -board->imu1.attitude.vel[2]);
 
@@ -177,13 +177,13 @@ void mavlink_send_estimator(void)
 	mavlink_msg_local_position_ned_send(MAVLINK_COMM_0, get_millis(), board->imu1.attitude.localPosition.pos[0], board->imu1.attitude.localPosition.pos[1], board->imu1.attitude.localPosition.pos[2], board->imu1.attitude.vel[0], board->imu1.attitude.vel[1], board->imu1.attitude.vel[2]);
 	//mavlink_msg_named_value_float_send(MAVLINK_COMM_0,0,"Estimation",0);
 	
-	//dbg_print("Local position: (");
-	//dbg_print_num(board->imu1.attitude.localPosition.pos[X],10);
-	//dbg_print(", ");
-	//dbg_print_num(board->imu1.attitude.localPosition.pos[Y],10);
-	//dbg_print(", ");
-	//dbg_print_num(board->imu1.attitude.localPosition.pos[Z],10);
-	//dbg_print(")\n");
+	//print_util_dbg_print("Local position: (");
+	//print_util_dbg_print_num(board->imu1.attitude.localPosition.pos[X],10);
+	//print_util_dbg_print(", ");
+	//print_util_dbg_print_num(board->imu1.attitude.localPosition.pos[Y],10);
+	//print_util_dbg_print(", ");
+	//print_util_dbg_print_num(board->imu1.attitude.localPosition.pos[Z],10);
+	//print_util_dbg_print(")\n");
 }
 
 void mavlink_send_kalman_estimator(void)

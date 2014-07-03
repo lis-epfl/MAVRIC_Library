@@ -32,13 +32,13 @@ extern "C"
 /**
  * \brief       Initialises the DAC buffer to a triangle
  */
-void init_dac_buffer_triangle();
+void generator_init_dac_buffer_triangle();
 
  
 /**
  * \brief       Initialises the DAC buffer to a sine
  */
-void init_dac_buffer_sine();
+void generator_init_dac_buffer_sine();
 
 
 /**
@@ -51,7 +51,7 @@ void init_dac_buffer_sine();
  * 
  * \return 			Signal  
  */
-int16_t ramp_generator(int32_t index);
+int16_t generator_ramp_generator(int32_t index);
 
 
 /**
@@ -62,7 +62,7 @@ int16_t ramp_generator(int32_t index);
  * 
  * \return      	Signal
  */
-int16_t arbitrary_generator(int32_t index);
+int16_t generator_arbitrary_generator(int32_t index);
 
 
 #ifdef __cplusplus

@@ -123,6 +123,6 @@ byte_stream_t* get_telemetry_downstream(void);
 Imu_Data_t* get_imu_data();
 Control_Command_t* get_control_inputs_data();
 
-#define STDOUT &get_debug_stream()
+#define STDOUT &print_util_get_debug_stream()
 
 #endif /* CENTRAL_DATA_H_ */

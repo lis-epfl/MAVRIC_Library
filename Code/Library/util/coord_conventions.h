@@ -81,7 +81,7 @@ typedef struct
  * 
  * \return 			Global position
  */
-global_position_t local_to_global_position(local_coordinates_t input);
+global_position_t coord_conventions_local_to_global_position(local_coordinates_t input);
 
 
 /**
@@ -92,7 +92,7 @@ global_position_t local_to_global_position(local_coordinates_t input);
  * 
  * \return 			Local position
  */
-local_coordinates_t global_to_local_position(global_position_t position, global_position_t origin);
+local_coordinates_t coord_conventions_global_to_local_position(global_position_t position, global_position_t origin);
 
 
 /**
@@ -102,7 +102,7 @@ local_coordinates_t global_to_local_position(global_position_t position, global_
  *
  * \return     Aero attitude
  */
-Aero_Attitude_t Quat_to_Aero(UQuat_t qe);
+Aero_Attitude_t coord_conventions_quat_to_aero(UQuat_t qe);
 
 
 /**
@@ -112,7 +112,7 @@ Aero_Attitude_t Quat_to_Aero(UQuat_t qe);
  * 
  * \return     	Attitude quaternion
  */
-UQuat_t quaternion_from_aero(Aero_Attitude_t aero);
+UQuat_t coord_conventions_quaternion_from_aero(Aero_Attitude_t aero);
 
 
 /**
@@ -122,7 +122,7 @@ UQuat_t quaternion_from_aero(Aero_Attitude_t aero);
  * 
  * \return     Yaw angle in radians
  */
-float get_yaw(UQuat_t qe);
+float coord_conventions_get_yaw(UQuat_t qe);
 
 
 #ifdef __cplusplus

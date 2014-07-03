@@ -37,7 +37,7 @@ void imu_init (Imu_Data_t *imu1)
 	//init_itg3200_slow();	
 	//init_adxl345_slow();
 	init_lsm330();
-	dbg_print("LSM330 initialised\n");	
+	print_util_dbg_print("LSM330 initialised\n");	
 	
 	init_hmc5883_slow();
 
