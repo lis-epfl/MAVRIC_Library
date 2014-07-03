@@ -19,6 +19,10 @@
 #ifndef ANALOG_MONITOR_H_
 #define ANALOG_MONITOR_H_
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 #include "compiler.h"
 
 #define MONITOR_CHANNELS 10
@@ -49,5 +53,9 @@ typedef struct
 
 void init_analog_monitor(analog_monitor_t* analog_monitor);
 void analog_monitor_update(analog_monitor_t* analog_monitor);
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif /* ANALOG_MONITOR_H_ */

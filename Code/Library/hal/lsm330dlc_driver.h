@@ -18,6 +18,10 @@
 #ifndef LSM330DLC_DRIVER_H_
 #define LSM330DLC_DRIVER_H_
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 #include "compiler.h"
 
 #define GY_X 0									///< Define the gyroscope X_axis for using in array
@@ -261,4 +265,9 @@ lsm_gyro_data_t* lsm330_get_gyro_data(void);
  * \return a pointer to the accelerometer data structure
 */
 lsm_acc_data_t* lsm330_get_acc_data(void);
+
+#ifdef __cplusplus
+	}
+#endif
+
 #endif 

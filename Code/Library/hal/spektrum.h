@@ -19,6 +19,10 @@
 #ifndef SPEKTRUM_H_
 #define SPEKTRUM_H_
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+	
 #include "compiler.h"
 #include "buffer.h"
 #include "stabilisation.h"
@@ -71,4 +75,9 @@ float get_thrust_from_turnigy();
 
 void get_channel_mode_turnigy(uint8_t* chanSwitch);
 */
+
+#ifdef __cplusplus
+	}
+#endif
+
 #endif //SPEKTRUM_H_

@@ -19,6 +19,11 @@
 
 #ifndef ADS1274_H
 #define ADS1274_H
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 #include <avr32/io.h>
 #include "preprocessor.h"
 #include "compiler.h"
@@ -117,4 +122,9 @@ int get_sampling_status(void);
  * \return the sample corresponding to this sample number on this ADC channel
 */
 float get_sample(int channel, int sample);
+
+#ifdef __cplusplus
+	}
+#endif
+
 #endif

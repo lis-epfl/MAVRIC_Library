@@ -19,6 +19,10 @@
 #ifndef REMOTE_CONTROLLER_H_
 #define REMOTE_CONTROLLER_H_
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 #include "conf_platform.h"
 
 #ifdef SPEKTRUM_REMOTE				///< If you use the SPEKTRUM remote
@@ -173,6 +177,10 @@ static inline void get_channel_mode(uint8_t* chanSwitch)
 		{
 			*chanSwitch |= 0x02;
 		}
+	}
+#endif
+
+#ifdef __cplusplus
 	}
 #endif
 

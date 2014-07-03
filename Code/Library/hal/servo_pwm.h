@@ -19,6 +19,10 @@
 #ifndef SERVO_PWM_H_
 #define SERVO_PWM_H_
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 #include "conf_platform.h"
 
 #define SERVO_TIMER_FREQ 1000000					///< Define the timer frequency for the servos
@@ -60,5 +64,9 @@ void set_servos(const servo_output *servo_outputs);
  * \param servo_outputs pointer to a structure containing the servos' data
  */
 void servos_failsafe(servo_output *servo_outputs);
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif /* SERVO_PWM_H_ */

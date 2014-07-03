@@ -19,6 +19,10 @@
 #ifndef COMPASS_HMC5883L_H_
 #define COMPASS_HMC5883L_H_
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 #include "compiler.h"
 
 
@@ -124,5 +128,9 @@ void init_hmc5883_slow(void);
  * \return a pointer to the magnetometer's data in slow mode
 */
 compass_data* get_compass_data_slow(void);
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif /* COMPASS_HMC5883_H_ */

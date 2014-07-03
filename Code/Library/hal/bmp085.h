@@ -19,6 +19,10 @@
 #ifndef BMP085_H_
 #define BMP085_H_
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 #include "compiler.h"
 
 #define BARO_ALT_LPF 0.95						///< low pass filter factor for altitude measured by the barometer
