@@ -37,7 +37,7 @@ void initialisation()
 	servos_failsafe(centralData->servos);
 	set_servos(centralData->servos);
 	
-	init_onboard_parameters();
+	onboard_parameters_init();
 
 
 	mavlink_actions_init(); // TODO: move read from flash elsewhere

@@ -35,7 +35,7 @@ initialise_board(central_data_t *central_data){
 			} else {
 			//putstring(STDOUT, "initialised I2C.\n");
 		};
-		init_i2c_slave_interface(1);
+		i2c_slave_interface_init(1);
 		*/
 		
 		init_UART_int(4);
@@ -54,7 +54,7 @@ initialise_board(central_data_t *central_data){
 		central_data->debug_out_stream=&central_data->wired_out_stream;
 
 		// init mavlink
-		init_mavlink(central_data->telemetry_down_stream, central_data->telemetry_up_stream, 100);
+		mavlink_stream_init(central_data->telemetry_down_stream, central_data->telemetry_up_stream, 100);
 		dbg_print_init(central_data->debug_out_stream);
 		
 		Init_DAC(0);

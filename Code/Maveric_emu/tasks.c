@@ -435,7 +435,7 @@ void create_tasks() {
 	
 	//	register_task(&main_tasks, 0, 4000, RUN_REGULAR, &run_imu_update );
 	register_task(&main_tasks, 1, 4000, RUN_REGULAR, &run_stabilisation );
-	register_task(&main_tasks, 2, 1000, RUN_REGULAR, &mavlink_protocol_update);
+	register_task(&main_tasks, 2, 1000, RUN_REGULAR, &mavlink_stream_protocol_update);
 	
 	register_task(&main_tasks, 3, 100000, RUN_REGULAR, &gps_task);
 	//register_task(&main_tasks, 4, 4000, RUN_REGULAR, &run_estimator);
@@ -447,5 +447,5 @@ void create_tasks() {
 	
 	register_task(&main_tasks, 7, 150000, RUN_REGULAR, &run_barometer);
 
-	add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	add_task(mavlink_stream_get_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 }

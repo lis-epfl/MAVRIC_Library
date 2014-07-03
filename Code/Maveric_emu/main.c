@@ -50,7 +50,7 @@ void initialisation() {
 	
 	set_servos(&servo_failsafe);
 
-	init_onboard_parameters();
+	onboard_parameters_init();
 	init_mavlink_actions();
 	init_pos_integration(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 	

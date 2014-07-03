@@ -422,6 +422,6 @@ void create_tasks() {
 	register_task(&main_tasks, 4, 200000, RUN_REGULAR, &set_mav_mode_n_state);
 	
 
-	register_task(&main_tasks, 5, 4000, RUN_REGULAR, &mavlink_protocol_update);
+	register_task(&main_tasks, 5, 4000, RUN_REGULAR, &mavlink_stream_protocol_update);
 
 }

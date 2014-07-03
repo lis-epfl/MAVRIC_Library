@@ -108,7 +108,7 @@ void tasks_relevel_imu()
 	for (i=1000; i>0; i--) 
 	{
 		tasks_run_imu_update();
-		mavlink_protocol_update();
+		mavlink_stream_protocol_update();
 		
 		for (j=0;j<3;j++)
 		{
@@ -710,7 +710,7 @@ void tasks_create_tasks()
 
 	scheduler_register_task(&main_tasks, 4, 200000, RUN_REGULAR, &tasks_set_mav_mode_n_state);
 	
-	scheduler_register_task(&main_tasks, 5, 4000, RUN_REGULAR, &mavlink_protocol_update);
+	scheduler_register_task(&main_tasks, 5, 4000, RUN_REGULAR, &mavlink_stream_protocol_update);
 	
 	// scheduler_register_task(&main_tasks, 6, 100000, RUN_REGULAR, &sonar_update);
 	scheduler_register_task(&main_tasks, 6, 100000, RUN_REGULAR, &adc_update);
