@@ -19,6 +19,10 @@
 #ifndef ADXL345_DRIVER_H_
 #define ADXL345_DRIVER_H_
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 #include "compiler.h"
 
 #define ACC_X 0		///< number of the X axis, to be used in an array
@@ -57,5 +61,9 @@ void init_adxl345_slow(void);
  * \brief Returns the array: axes[3] of the acc_data structure in slow mode
 */
 acc_data* get_acc_data_slow(void);
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif /* ADXL345_DRIVER_H_ */

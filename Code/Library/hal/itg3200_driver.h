@@ -17,6 +17,11 @@
 
 #ifndef ITG3200_DRIVER_H_
 #define ITG3200_DRIVER_H_
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 #include "compiler.h"
 
 #define GY_X 0									///< Define the X Axis of the Gyroscope, as the first one of the gyroData array
@@ -65,5 +70,9 @@ void init_itg3200_slow(void);
  * \return a pointer to the gyroscope data
 */
 gyro_data* get_gyro_data_slow(void);
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif /* ITG3200_DRIVER_H_ */

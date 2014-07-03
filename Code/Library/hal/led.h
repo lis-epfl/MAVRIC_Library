@@ -49,6 +49,10 @@
 #ifndef _LED_H_
 #define _LED_H_
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 #include "compiler.h"
 
 
@@ -181,5 +185,8 @@ extern U8 LED_Get_Intensity(U32 led);
  */
 extern void LED_Set_Intensity(U32 leds, U8 intensity);
 
+#ifdef __cplusplus
+	}
+#endif
 
 #endif  // _LED_H_
