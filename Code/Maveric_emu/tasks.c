@@ -447,5 +447,5 @@ void create_tasks() {
 	
 	scheduler_register_task(&main_tasks, 7, 150000, RUN_REGULAR, &tasks_run_barometer_update);
 
-	scheduler_add_task(get_mavlink_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	scheduler_add_task(mavlink_stream_get_taskset(),  1000000, RUN_NEVER, &send_rt_stats, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
 }

@@ -19,16 +19,16 @@
 #include "analog_monitor.h"
 #include "adc_int.h"
 
-#define CONV_FACTOR_2 1.0			///< Conversion factor for the analog channel 2
-#define CONV_FACTOR_3 1.0			///< Conversion factor for the analog channel 3
-#define CONV_FACTOR_4 1.0			///< Conversion factor for the analog channel 4
-#define CONV_FACTOR_5 1.0			///< Conversion factor for the analog channel 5
-#define CONV_FACTOR_6 0.00155		///< Conversion factor for the analog channel 6: 6V
-#define CONV_FACTOR_7 0.00155		///< Conversion factor for the analog channel 7: 5V_ANA
-#define CONV_FACTOR_10 -0.00265		///< Conversion factor for the analog channel 10: Input
-#define CONV_FACTOR_11 -0.00265		///< Conversion factor for the analog channel 11: Battery
-#define CONV_FACTOR_12 -0.00025		///< Conversion factor for the analog channel 12: Sonar
-#define CONV_FACTOR_13 -1.0			///< Conversion factor for the analog channel 13
+#define CONV_FACTOR_2 1.0f				///< Conversion factor for the analog channel 2
+#define CONV_FACTOR_3 1.0f				///< Conversion factor for the analog channel 3
+#define CONV_FACTOR_4 1.0f				///< Conversion factor for the analog channel 4
+#define CONV_FACTOR_5 1.0f				///< Conversion factor for the analog channel 5
+#define CONV_FACTOR_6 0.00155f			///< Conversion factor for the analog channel 6: 6V
+#define CONV_FACTOR_7 0.00155f			///< Conversion factor for the analog channel 7: 5V_ANA
+#define CONV_FACTOR_10 -0.00265f		///< Conversion factor for the analog channel 10: Input
+#define CONV_FACTOR_11 -0.00265f		///< Conversion factor for the analog channel 11: Battery
+#define CONV_FACTOR_12 -0.00025f		///< Conversion factor for the analog channel 12: Sonar
+#define CONV_FACTOR_13 -1.0f			///< Conversion factor for the analog channel 13
 
 /**
  * \brief Declare an array containing the conversion factor for each analog channel 
@@ -166,7 +166,7 @@ void trigger_analog_monitor(void)
 
 float analog_compute_avg(analog_monitor_t* analog_monitor, analog_rails_t rail)
 {
-	float out = 0.0;
+	float out = 0.0f;
 	int i;
 	for (i = 0; i  <MONITOR_SAMPLES; i++)
 	{

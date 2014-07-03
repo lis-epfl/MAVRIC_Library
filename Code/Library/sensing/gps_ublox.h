@@ -152,7 +152,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UNIX_EPOCH 3
 
 #ifndef PI
-#define PI 3.141592
+#define PI 3.141592f
 #endif
 
 #define DEG2RAD PI/180
@@ -275,7 +275,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint32_t res2;						///< Reserved slot
 		uint8_t satellites;					///< Number of of SVs used in Nav solution
 		uint8_t res;						///< Reserved slot
-		uint16_t position_DOP;				///< Position DOP, scaling 0.01
+		uint16_t position_DOP;				///< Position DOP, scaling 0.01f
 		uint32_t speed_accuracy;			///< Speed accuracy estimate in cm/s
 		int32_t ecef_z_velocity;			///< Earth centered, earth frame, z velocity coordinate in cm/s
 		int32_t ecef_y_velocity;			///< Earth centered, earth frame, y velocity coordinate in cm/s
@@ -471,7 +471,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int32_t ecef_y_velocity;			///< Earth centered, earth frame, y velocity coordinate in cm/s
 		int32_t ecef_z_velocity;			///< Earth centered, earth frame, z velocity coordinate in cm/s
 		uint32_t speed_accuracy;			///< Speed accuracy estimate in cm/s
-		uint16_t position_DOP;				///< Position DOP, scaling 0.01
+		uint16_t position_DOP;				///< Position DOP, scaling 0.01f
 		uint8_t res;						///< Reserved slot
 		uint8_t satellites;					///< Number of of SVs used in Nav solution
 		uint32_t res2;						///< Reserved slot

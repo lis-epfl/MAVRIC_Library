@@ -49,7 +49,7 @@ void initialisation() {
 	
 	set_servos(&servo_failsafe);
 
-	init_onboard_parameters();
+	onboard_parameters_init();
 	mavlink_actions_init();
 	position_estimation_init(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 	
@@ -61,7 +61,7 @@ void initialisation() {
 	for (i=400; i>0; i--) {
 		imu_get_raw_data(&(centralData->imu1));
 		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);	
-		mavlink_protocol_update();	
+		mavlink_stream_protocol_update();	
 		delay_ms(5);
 	}
 	// after initial leveling, initialise accelerometer biases
@@ -70,7 +70,7 @@ void initialisation() {
 	centralData->imu1.attitude.calibration_level=LEVEL_PLUS_ACCEL;
 	for (i=100; i>0; i--) {
 		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);	
-		mavlink_protocol_update();			
+		mavlink_stream_protocol_update();			
 		delay_ms(5);
 	}*/
 	centralData->imu1.attitude.calibration_level=OFF;

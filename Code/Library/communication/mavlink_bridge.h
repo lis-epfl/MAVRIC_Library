@@ -40,7 +40,7 @@ extern mavlink_system_t mavlink_mission_planner;
  * \param chan MAVLink channel to use, usually MAVLINK_COMM_0 = UART0
  * \param ch Character to send
  */
-void comm_send_ch(mavlink_channel_t chan, uint8_t ch);
+void mavlink_bridge_comm_send_ch(mavlink_channel_t chan, uint8_t ch);
 
 #ifdef __cplusplus
 }

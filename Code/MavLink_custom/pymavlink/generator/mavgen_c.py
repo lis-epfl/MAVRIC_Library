@@ -375,7 +375,7 @@ static void mavlink_test_${name_lower}(uint8_t system_id, uint8_t component_id, 
         memset(&packet2, 0, sizeof(packet2));
         mavlink_msg_to_send_buffer(buffer, &msg);
         for (i=0; i<mavlink_msg_get_send_buffer_length(&msg); i++) {
-        	comm_send_ch(MAVLINK_COMM_0, buffer[i]);
+        	mavlink_bridge_comm_send_ch(MAVLINK_COMM_0, buffer[i]);
         }
 	mavlink_msg_${name_lower}_decode(last_msg, &packet2);
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);

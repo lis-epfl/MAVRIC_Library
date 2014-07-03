@@ -26,12 +26,12 @@ extern "C" {
 #include "compiler.h"
 #include "coord_conventions.h"
 
-#define GYRO_LPF 0.1				///< The gyroscope linear particle filter gain
-#define ACC_LPF 0.05				///< The accelerometer linear particle filter gain
-#define MAG_LPF 0.1					///< The magnetometer linear particle filter gain
+#define GYRO_LPF 0.1f				///< The gyroscope linear particle filter gain
+#define ACC_LPF 0.05f				///< The accelerometer linear particle filter gain
+#define MAG_LPF 0.1f					///< The magnetometer linear particle filter gain
 
 
-#define GRAVITY 9.81				///< The gravity constant
+#define GRAVITY 9.81f				///< The gravity constant
 
 /**
  * \brief The calibration level of the filter

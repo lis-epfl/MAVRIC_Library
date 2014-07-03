@@ -7,7 +7,7 @@
  *
  * Laboratory of Intelligent Systems, EPFL
  */
- 
+
 
 /**
  * \file imu.c
@@ -41,7 +41,7 @@ void imu_init (Imu_Data_t *imu1)
 	
 	init_hmc5883_slow();
 
-	//imu_calibrate_gyros(imu1);
+	//imu_calibrate_Gyros(imu1);
 	imu1->raw_scale[X+GYRO_OFFSET] =  RAW_GYRO_X_SCALE;
 	imu1->raw_scale[Y+GYRO_OFFSET] =  RAW_GYRO_Y_SCALE;
 	imu1->raw_scale[Z+GYRO_OFFSET] =  RAW_GYRO_Z_SCALE;
@@ -51,11 +51,10 @@ void imu_init (Imu_Data_t *imu1)
 	imu1->raw_scale[X+COMPASS_OFFSET] =  RAW_MAG_X_SCALE;
 	imu1->raw_scale[Y+COMPASS_OFFSET] =  RAW_MAG_Y_SCALE;
 	imu1->raw_scale[Z+COMPASS_OFFSET] =  RAW_MAG_Z_SCALE;
+	imu1->raw_bias[X+GYRO_OFFSET] = 0.0f;
+	imu1->raw_bias[Y+GYRO_OFFSET] = 0.0f;
+	imu1->raw_bias[Z+GYRO_OFFSET] = 0.0f;
 	
-	imu1->raw_bias[X+GYRO_OFFSET] = 0.0;
-	imu1->raw_bias[Y+GYRO_OFFSET] = 0.0;
-	imu1->raw_bias[Z+GYRO_OFFSET] = 0.0;
-
 	// acceleration biais
 	imu1->raw_bias[X+ACC_OFFSET] = ACC_BIAIS_X;
 	imu1->raw_bias[Y+ACC_OFFSET] = ACC_BIAIS_Y;
@@ -92,13 +91,13 @@ void imu_get_raw_data(Imu_Data_t *imu1)
 	imu1->raw_channels[COMPASS_OFFSET+IMU_X] = (float)compass->axes[RAW_MAG_X]*MAG_AXIS_X;
 	imu1->raw_channels[COMPASS_OFFSET+IMU_Y] = (float)compass->axes[RAW_MAG_Y]*MAG_AXIS_Y;
 	imu1->raw_channels[COMPASS_OFFSET+IMU_Z] = (float)compass->axes[RAW_MAG_Z]*MAG_AXIS_Z;
-	
 }
 
-void imu_calibrate_gyros(Imu_Data_t *imu1)
+void imu_calibrate_Gyros(Imu_Data_t *imu1)
 {
 	int i,j;
 	imu_get_raw_data(imu1);
+	
 	for (j=0; j<3; j++)
 	{
 		imu1->raw_bias[j] = (float)imu1->raw_channels[j];
@@ -108,21 +107,21 @@ void imu_calibrate_gyros(Imu_Data_t *imu1)
 	{
 		imu_get_raw_data(imu1);
 
-		//imu1->raw_bias[0+ACC_OFFSET] = (0.9*imu1->raw_bias[0+ACC_OFFSET]+0.1*(float)imu1->raw_channels[0+ACC_OFFSET]);
-		//imu1->raw_bias[1+ACC_OFFSET] = (0.9*imu1->raw_bias[1+ACC_OFFSET]+0.1*(float)imu1->raw_channels[1+ACC_OFFSET]);
-		//imu1->raw_bias[2+ACC_OFFSET] = (0.9*imu1->raw_bias[2+ACC_OFFSET]+0.1*((float)imu1->raw_channels[2+ACC_OFFSET]-imu1->raw_scale[2+ACC_OFFSET]));
+		//imu1->raw_bias[0+ACC_OFFSET] = (0.9f*imu1->raw_bias[0+ACC_OFFSET]+0.1f*(float)imu1->raw_channels[0+ACC_OFFSET]);
+		//imu1->raw_bias[1+ACC_OFFSET] = (0.9f*imu1->raw_bias[1+ACC_OFFSET]+0.1f*(float)imu1->raw_channels[1+ACC_OFFSET]);
+		//imu1->raw_bias[2+ACC_OFFSET] = (0.9f*imu1->raw_bias[2+ACC_OFFSET]+0.1f*((float)imu1->raw_channels[2+ACC_OFFSET]-imu1->raw_scale[2+ACC_OFFSET]));
 		for (j=0; j<3; j++)
 		{
-			imu1->raw_bias[j] = (0.9*imu1->raw_bias[j]+0.1*(float)imu1->raw_channels[j]);
-			//imu1->attitude.raw_mag_mean[j] = (1.0-MAG_LPF)*imu1->attitude.raw_mag_mean[j]+MAG_LPF*((float)imu1->raw_channels[j+COMPASS_OFFSET]);
+			imu1->raw_bias[j] = (0.9f*imu1->raw_bias[j]+0.1f*(float)imu1->raw_channels[j]);
+			//imu1->attitude.raw_mag_mean[j] = (1.0-fMAG_LPF)*imu1->attitude.raw_mag_mean[j]+MAG_LPF*((float)imu1->raw_channels[j+COMPASS_OFFSET]);
 		}
+	
 		delay_ms(4);
 	}
-
-
 }
 
-void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps){
+void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps)
+{
 	uint32_t t = get_time_ticks();
 	
 	if (!imu_last_update_init)

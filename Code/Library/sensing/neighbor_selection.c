@@ -45,9 +45,9 @@ void neighbors_selection_read_message_from_neighbors(Mavlink_Received_t* rec)
 		local_coordinates_t localPosNeighbor;
 		uint8_t actualNeighbor;
 		
-		globalPosNeighbor.longitude = (double)packet.lon / 10000000.0;
-		globalPosNeighbor.latitude = (double)packet.lat / 10000000.0;
-		globalPosNeighbor.altitude = (float)packet.alt / 1000.0;
+		globalPosNeighbor.longitude = (double)packet.lon / 10000000.0f;
+		globalPosNeighbor.latitude = (double)packet.lat / 10000000.0f;
+		globalPosNeighbor.altitude = (float)packet.alt / 1000.0f;
 		globalPosNeighbor.heading = (float)packet.hdg;
 		
 		localPosNeighbor = global_to_local_position(globalPosNeighbor,centralData->position_estimator.localPosition.origin);
@@ -93,9 +93,9 @@ void neighbors_selection_read_message_from_neighbors(Mavlink_Received_t* rec)
 		{
 			centralData->listNeighbors[actualNeighbor].position[i] = localPosNeighbor.pos[i];
 		}
-		centralData->listNeighbors[actualNeighbor].velocity[X] = packet.vx / 100.0;
-		centralData->listNeighbors[actualNeighbor].velocity[Y] = packet.vy / 100.0;
-		centralData->listNeighbors[actualNeighbor].velocity[Z] = packet.vz / 100.0;
+		centralData->listNeighbors[actualNeighbor].velocity[X] = packet.vx / 100.0f;
+		centralData->listNeighbors[actualNeighbor].velocity[Y] = packet.vy / 100.0f;
+		centralData->listNeighbors[actualNeighbor].velocity[Z] = packet.vz / 100.0f;
 		
 		centralData->listNeighbors[actualNeighbor].size = SIZE_VHC_ORCA;
 		

@@ -4,7 +4,7 @@
 matrix_2x2_t  inv2(matrix_2x2_t m) {
 	
 	float det=(m.v[0][0]*m.v[1][1] - m.v[0][1]*m.v[1][0]);
-	if (det!=0.0) {
+	if (det!=0.0f) {
 		det=1.0f/det;
 		matrix_2x2_t result={.v={ m.v[1][1]*det,    -m.v[0][1]*det, 
 								 -m.v[1][0]*det,     m.v[0][0]*det}};
@@ -21,7 +21,7 @@ matrix_3x3_t inv3(matrix_3x3_t m) {
 	        - m.v[0][1]*(m.v[2][2]*m.v[1][0]-m.v[1][2]*m.v[2][0])
 			+ m.v[0][2]*(m.v[1][0]*m.v[2][1]-m.v[1][1]*m.v[2][0]);
 	
-	if (det!=0.0) {
+	if (det!=0.0f) {
 		det=1.0f/det;
 		matrix_3x3_t result={.v={{ (m.v[1][1]*m.v[2][2] - m.v[1][2]*m.v[2][1]) *det,  -(m.v[0][1]*m.v[2][2] - m.v[0][2]*m.v[2][1]) *det  , (m.v[0][1]*m.v[1][2] - m.v[0][2]*m.v[1][1]) *det},
 		            {-(m.v[1][0]*m.v[2][2] - m.v[1][2]*m.v[2][0]) *det,   (m.v[0][0]*m.v[2][2] - m.v[0][2]*m.v[2][0]) *det  ,-(m.v[0][0]*m.v[1][2] - m.v[0][2]*m.v[1][0]) *det},

@@ -10,7 +10,7 @@
 
 
 /**
- * \file navigation.c
+ * \file navigation.h
  * 
  * Waypoint navigation controller 
  */
@@ -19,12 +19,12 @@
 #ifndef NAVIGATION_H_
 #define NAVIGATION_H_
 
-#include "qfilter.h"
-#include "mavlink_waypoint_handler.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include "qfilter.h"
+#include "mavlink_waypoint_handler.h"
 
 /**
  * \brief					Initialization 

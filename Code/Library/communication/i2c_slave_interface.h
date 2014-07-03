@@ -9,7 +9,7 @@
 #ifndef I2C_SLAVE_INTERFACE_H_
 #define I2C_SLAVE_INTERFACE_H_
 
-void init_i2c_slave_interface(int device_address);
+void i2c_slave_interface_init(int device_address);
 
 
 

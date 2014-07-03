@@ -1,13 +1,20 @@
-/**
- * This file handles the stabilization of the platform
+/** 
+ * \page The MAV'RIC license
  *
  * The MAV'RIC Framework
+ *
  * Copyright © 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
- *
- * This file is part of the MAV'RIC Framework.
  */
+ 
+ 
+/**
+ * \file stabilisation_copter.c
+ *
+ * This file handles the stabilization of the platform
+ */
+
 
 #include "stabilisation_copter.h"
 #include "conf_stabilisation_copter.h"
@@ -44,9 +51,9 @@ void init_stabilisation_copter(Stabiliser_Stack_copter_t* stabiliser_stack)
 
 void get_velocity_vector_from_remote(float tvel[])
 {
-	tvel[X]=-10.0*centralData->controls.rpy[PITCH];
-	tvel[Y]= 10.0*centralData->controls.rpy[ROLL];
-	tvel[Z]=- 1.5*centralData->controls.thrust;
+	tvel[X]=-10.0f*centralData->controls.rpy[PITCH];
+	tvel[Y]= 10.0f*centralData->controls.rpy[ROLL];
+	tvel[Z]=- 1.5f*centralData->controls.thrust;
 }
 
 void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input) 
@@ -75,17 +82,17 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 		if (control_input->yaw_mode == YAW_COORDINATED) 
 		{
 			float rel_heading_coordinated;
-			if ((f_abs(pos_est->vel_bf[X])<0.001)&&(f_abs(pos_est->vel_bf[Y])<0.001))
+			if ((f_abs(pos_est->vel_bf[X])<0.001f)&&(f_abs(pos_est->vel_bf[Y])<0.001f))
 			{
-				rel_heading_coordinated = 0.0;
+				rel_heading_coordinated = 0.0f;
 			}
 			else
 			{
 				rel_heading_coordinated = atan2(pos_est->vel_bf[Y], pos_est->vel_bf[X]);
 			}
 			
-			float w = 0.5*(sigmoid(vector_norm(pos_est->vel_bf)-centralData->stabiliser_stack.yaw_coordination_velocity)+1.0);
-			input.rpy[YAW] = (1.0-w)*input.rpy[YAW] + w*rel_heading_coordinated;
+			float w = 0.5f*(sigmoid(vector_norm(pos_est->vel_bf)-centralData->stabiliser_stack.yaw_coordination_velocity)+1.0f);
+			input.rpy[YAW] = (1.0f-w)*input.rpy[YAW] + w*rel_heading_coordinated;
 		}
 
 		rpyt_errors[YAW]= input.rpy[YAW];
@@ -113,7 +120,9 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 		
 		if ((control_input->yaw_mode == YAW_ABSOLUTE) ) {
 			rpyt_errors[2] =calc_smaller_angle(input.theading- pos_est->localPosition.heading);
-		} else { // relative yaw
+		}
+		else
+		{ // relative yaw
 			rpyt_errors[2]= input.rpy[2];
 		}
 		
@@ -148,7 +157,8 @@ void cascade_stabilise_copter(Imu_Data_t *imu, position_estimator_t *pos_est, Co
 	#endif
 }
 
-void mix_to_servos_diag_quad(Control_Command_t *control){
+void mix_to_servos_diag_quad(Control_Command_t *control)
+{
 	int i;
 	float motor_command[4];
 	
@@ -158,8 +168,14 @@ void mix_to_servos_diag_quad(Control_Command_t *control){
 	motor_command[M_REAR_LEFT]  = control->thrust + ( control->rpy[ROLL] - control->rpy[PITCH]) + M_RL_DIR * control->rpy[YAW];
 	for (i=0; i<4; i++)
 	{
-		if (motor_command[i]<MIN_THRUST) motor_command[i]=MIN_THRUST;
-		if (motor_command[i]>MAX_THRUST) motor_command[i]=MAX_THRUST;
+		if (motor_command[i]<MIN_THRUST)
+		{
+			motor_command[i]=MIN_THRUST;
+		}
+		if (motor_command[i]>MAX_THRUST)
+		{
+			motor_command[i]=MAX_THRUST;
+		}
 	}
 
 	for (i=0; i<4; i++) 
@@ -179,8 +195,14 @@ void mix_to_servos_cross_quad(Control_Command_t *control)
 	motor_command[M_LEFT]  = control->thrust + control->rpy[ROLL] + M_LEFT_DIR * control->rpy[YAW];
 	for (i=0; i<4; i++) 
 	{
-		if (motor_command[i]<MIN_THRUST) motor_command[i]=MIN_THRUST;
-		if (motor_command[i]>MAX_THRUST) motor_command[i]=MAX_THRUST;
+		if (motor_command[i]<MIN_THRUST)
+		{
+			motor_command[i]=MIN_THRUST;
+		}
+		if (motor_command[i]>MAX_THRUST)
+		{
+			motor_command[i]=MAX_THRUST;
+		}
 	}
 	for (i=0; i<4; i++) 
 	{

@@ -61,7 +61,7 @@ void initialisation() {
 	//dbg_print("Debug stream initialised\n");
 
 
-	init_onboard_parameters();
+	onboard_parameters_init();
 	mavlink_actions_init();
 	
 	
@@ -135,7 +135,7 @@ void main (void)
 		}			
 		
 		//scheduler_run_update(&main_tasks, FIXED_PRIORITY);
-		mavlink_protocol_update();
+		mavlink_stream_protocol_update();
 		//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "ADC_period", get_adc_int_period());
 
 		LED_Off(LED1);

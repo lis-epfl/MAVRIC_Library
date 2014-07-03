@@ -109,7 +109,7 @@ void boardsupport_init(central_data_t *centralData) {
 
 	init_analog_monitor();
 	// init mavlink
-	init_mavlink(centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID);
+	mavlink_stream_init(centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID);
 		
 	// init debug output
 	dbg_print_init(centralData->debug_out_stream);

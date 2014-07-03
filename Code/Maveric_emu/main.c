@@ -50,7 +50,7 @@ void initialisation() {
 	
 	set_servos(&servo_failsafe);
 
-	init_onboard_parameters();
+	onboard_parameters_init();
 	mavlink_actions_init();
 	position_estimation_init(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 	
@@ -111,7 +111,5 @@ void main (void)
 		//LED_On(LED1);
 		delay_ms(1);
 		
-	}		
+	}
 }
-
-

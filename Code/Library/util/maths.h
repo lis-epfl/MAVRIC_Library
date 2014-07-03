@@ -159,8 +159,8 @@ UQuat_t static inline quat_from_vector(float v[4]) {
  */
 float static inline calc_smaller_angle(float angle) {
 	float out=angle;
-	while (out<-PI) out += 2.0 * PI;
-	while (out>=PI) out -= 2.0 * PI;
+	while (out<-PI) out += 2.0f * PI;
+	while (out>=PI) out -= 2.0f * PI;
 	return out;
 }
 
@@ -325,9 +325,9 @@ void static inline quat_rotate_vector(const UQuat_t q, const float u[3], float v
 float static inline fast_sqrt(float number) {
 	long i;
 	float x, y;
-	const float f = 1.5F;
+	const float f = 1.5f;
 
-	x = number * 0.5F;
+	x = number * 0.5f;
 	y  = number;
 	i  = * ( long * ) &y;
 	i  = 0x5f3759df - ( i >> 1 );
@@ -413,7 +413,7 @@ static inline UQuat_t quat_normalise(const UQuat_t q)
 	
 	float snorm= SQR(q.s) + SQR(q.v[0]) + SQR(q.v[1]) + SQR(q.v[2]);
 
-	if (snorm >0.0000001) 
+	if (snorm >0.0000001f) 
 	{
 		float norm = fast_sqrt(snorm);
 		result.s = q.s / norm;
@@ -423,10 +423,10 @@ static inline UQuat_t quat_normalise(const UQuat_t q)
 	}
 	else
 	{
-		result.s = 1.0;
-		result.v[0] = 0.0;
-		result.v[1] = 0.0;
-		result.v[2] = 0.0;
+		result.s = 1.0f;
+		result.v[0] = 0.0f;
+		result.v[1] = 0.0f;
+		result.v[2] = 0.0f;
 	}
 
 	return result;
@@ -442,7 +442,7 @@ static inline UQuat_t quat_normalise(const UQuat_t q)
  */
 static inline float f_abs(const float a)
 {
-	if (a >= 0.0)
+	if (a >= 0.0f)
 	{
 		return a;
 	}
@@ -522,7 +522,7 @@ static float inline clip(float input_value, float clip_value) {
  */
 static float inline soft_zone(float x, float soft_zone_width) 
 {
-	if (soft_zone_width < 0.0000001) 
+	if (soft_zone_width < 0.0000001f) 
 	{	
 		return x;
 	} 
@@ -553,7 +553,7 @@ static float inline sigmoid(float x)
  */
 static float inline center_window_2(float x) 
 {
-	return 1.0 / (1 + SQR(x));
+	return 1.0f / (1 + SQR(x));
 }
 
 
@@ -565,7 +565,7 @@ static float inline center_window_2(float x)
  */
 static float inline center_window_4(float x) 
 {
-	return 1.0 / (1 + SQR(SQR(x)));
+	return 1.0f / (1 + SQR(SQR(x)));
 }
 
 

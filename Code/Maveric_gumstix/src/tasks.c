@@ -377,7 +377,6 @@ void tasks_run_imu_update() {
 	}
 }	
 
-
 task_return_t tasks_run_stabilisation() {
 	int i;
 	

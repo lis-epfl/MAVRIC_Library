@@ -50,14 +50,14 @@ void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates
 
 	for (i=0; i<ROTORCOUNT; i++)
 	{
-		sim->rotorspeeds[i] = 0.0;			
+		sim->rotorspeeds[i] = 0.0f;			
 	}
 	sim->last_update = get_micros();
-	sim->dt = 0.01;
+	sim->dt = 0.01f;
 	
 	for (i=0;i<9;i++)
 	{
-		sim->simu_raw_scale[i] = 1.0/imu->attitude.sf[i];
+		sim->simu_raw_scale[i] = 1.0f/imu->attitude.sf[i];
 		sim->simu_raw_biais[i] = imu->attitude.be[i];
 	}
 }
@@ -73,14 +73,14 @@ void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates
  * \return The value of the lift/drag value without the lift/drag coefficient
  */
 static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr_lat_airspeed, float axial_airspeed) {
-	if (rpm < 0.1)
+	if (rpm < 0.1f)
 	{
-		return 0.0;
+		return 0.0f;
 	}
-	float mean_vel = sim->rotor_diameter *PI * rpm/60.0;
-	float exit_vel = rpm/60.0 *sim -> rotor_pitch;
+	float mean_vel = sim->rotor_diameter *PI * rpm/60.0f;
+	float exit_vel = rpm/60.0f *sim -> rotor_pitch;
 	           
-	return (0.5*AIR_DENSITY*(mean_vel*mean_vel +sqr_lat_airspeed) * sim->rotor_foil_area  * (1.0-(axial_airspeed/exit_vel)));
+	return (0.5f*AIR_DENSITY*(mean_vel*mean_vel +sqr_lat_airspeed) * sim->rotor_foil_area  * (1.0f-(axial_airspeed/exit_vel)));
 }
 
 
@@ -89,7 +89,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 	float motor_command[4];
 	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4], rotor_lateral_drag[4];
 	float ldb;
-	UQuat_t wind_gf = {.s = 0, .v = {sim->wind_x, sim->wind_y, 0.0}};
+	UQuat_t wind_gf = {.s = 0, .v = {sim->wind_x, sim->wind_y, 0.0f}};
 	UQuat_t wind_bf = quat_global_to_local(sim->attitude.qe, wind_gf);
 	
 	float sqr_lateral_airspeed = SQR(sim->vel_bf[0]+wind_bf.v[0]) + SQR(sim->vel_bf[1]+wind_bf.v[1]);
@@ -99,7 +99,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 	{
 		float old_rotor_speed;
 		motor_command[i] = (float)servos[i].value/SERVO_SCALE - sim->rotor_rpm_offset;
-		if (motor_command[i]<0.0) 
+		if (motor_command[i]<0.0f) 
 		{
 			motor_command[i] = 0;
 		}
@@ -107,21 +107,21 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 		// temporarily save old rotor speeds
 		old_rotor_speed = sim->rotorspeeds[i];
 		// estimate rotor speeds by low-pass filtering
-		//sim->rotorspeeds[i] = (sim->rotor_lpf) * sim->rotorspeeds[i] + (1.0-sim->rotor_lpf) * (motor_command[i] * sim->rotor_rpm_gain);
+		//sim->rotorspeeds[i] = (sim->rotor_lpf) * sim->rotorspeeds[i] + (1.0f-sim->rotor_lpf) * (motor_command[i] * sim->rotor_rpm_gain);
 		sim->rotorspeeds[i] = (motor_command[i] * sim->rotor_rpm_gain);
 		
 		// calculate torque created by rotor inertia
 		rotor_inertia[i] = (sim->rotorspeeds[i] - old_rotor_speed)/sim->dt * sim->rotor_momentum;
 		
 		ldb = lift_drag_base(sim, sim->rotorspeeds[i], sqr_lateral_airspeed, -sim->vel_bf[Z]);
-		//ldb = lift_drag_base(sim, sim->rotorspeeds[i], sqr_lateral_airspeed, 0.0);
+		//ldb = lift_drag_base(sim, sim->rotorspeeds[i], sqr_lateral_airspeed, 0.0f);
 		
 		rotor_lifts[i] = ldb * sim->rotor_cl;
 		rotor_drags[i] = ldb * sim->rotor_cd;
 	}
 	
-	float mpos_x = sim->rotor_arm_length / 1.4142;
-	float mpos_y = sim->rotor_arm_length / 1.4142;
+	float mpos_x = sim->rotor_arm_length / 1.4142f;
+	float mpos_y = sim->rotor_arm_length / 1.4142f;
 	
 	// torque around x axis (roll)
 	sim->torques_bf[ROLL]  = ((rotor_lifts[M_FRONT_LEFT]  + rotor_lifts[M_REAR_LEFT]  ) 
@@ -131,8 +131,8 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 	sim->torques_bf[PITCH] = ((rotor_lifts[M_FRONT_LEFT]  + rotor_lifts[M_FRONT_RIGHT] )
 							- (rotor_lifts[M_REAR_LEFT]   + rotor_lifts[M_REAR_RIGHT] ))*  mpos_x;
 
-	sim->torques_bf[YAW]   = (M_FL_DIR*(10.0*rotor_drags[M_FRONT_LEFT]+rotor_inertia[M_FRONT_LEFT])  + M_FR_DIR*(10.0*rotor_drags[M_FRONT_RIGHT]+rotor_inertia[M_FRONT_RIGHT])
-							+ M_RL_DIR*(10.0*rotor_drags[M_REAR_LEFT] +rotor_inertia[M_REAR_LEFT])   + M_RR_DIR*(10.0*rotor_drags[M_REAR_RIGHT] +rotor_inertia[M_REAR_RIGHT] ))*  sim->rotor_diameter;
+	sim->torques_bf[YAW]   = (M_FL_DIR*(10.0f*rotor_drags[M_FRONT_LEFT]+rotor_inertia[M_FRONT_LEFT])  + M_FR_DIR*(10.0f*rotor_drags[M_FRONT_RIGHT]+rotor_inertia[M_FRONT_RIGHT])
+							+ M_RL_DIR*(10.0f*rotor_drags[M_REAR_LEFT] +rotor_inertia[M_REAR_LEFT])   + M_RR_DIR*(10.0f*rotor_drags[M_REAR_RIGHT] +rotor_inertia[M_REAR_RIGHT] ))*  sim->rotor_diameter;
 	
 
 	
@@ -166,15 +166,15 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos
 void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est) {
 	int i;
 	UQuat_t qtmp1, qvel_bf,  qed;
-	const UQuat_t front = {.s = 0.0, .v = {1.0, 0.0, 0.0}};
-	const UQuat_t up = {.s = 0.0, .v = {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}};
+	const UQuat_t front = {.s = 0.0f, .v = {1.0f, 0.0f, 0.0f}};
+	const UQuat_t up = {.s = 0.0f, .v = {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}};
 	
 	
 	uint32_t now = get_micros();
-	sim->dt = (now - sim->last_update)/1000000.0;
-	if (sim->dt>0.1)
+	sim->dt = (now - sim->last_update)/1000000.0f;
+	if (sim->dt>0.1f)
 	{
-		sim->dt = 0.1;
+		sim->dt = 0.1f;
 	}
 	
 	sim->last_update = now;
@@ -187,9 +187,9 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	#endif
 	
 	// integrate torques to get simulated gyro rates (with some damping)
-	sim->rates_bf[0] = clip((1.0-0.1*sim->dt)*sim->rates_bf[0] + sim->dt * sim->torques_bf[0] /sim->roll_pitch_momentum, 10.0);
-	sim->rates_bf[1] = clip((1.0-0.1*sim->dt)*sim->rates_bf[1] + sim->dt * sim->torques_bf[1] /sim->roll_pitch_momentum, 10.0);
-	sim->rates_bf[2] = clip((1.0-0.1*sim->dt)*sim->rates_bf[2] + sim->dt * sim->torques_bf[2] /sim->yaw_momentum, 10.0);
+	sim->rates_bf[0] = clip((1.0f-0.1f*sim->dt)*sim->rates_bf[0] + sim->dt * sim->torques_bf[0] /sim->roll_pitch_momentum, 10.0f);
+	sim->rates_bf[1] = clip((1.0f-0.1f*sim->dt)*sim->rates_bf[1] + sim->dt * sim->torques_bf[1] /sim->roll_pitch_momentum, 10.0f);
+	sim->rates_bf[2] = clip((1.0f-0.1f*sim->dt)*sim->rates_bf[2] + sim->dt * sim->torques_bf[2] /sim->yaw_momentum, 10.0f);
 	
 	
 	for (i=0; i<3; i++)
@@ -217,8 +217,8 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	// check altitude - if it is lower than 0, clamp everything (this is in NED, assuming negative altitude)
 	if (sim->localPosition.pos[Z] >0)
 	{
-		sim->vel[Z] = 0.0;
-		sim->localPosition.pos[Z] = 0.0;
+		sim->vel[Z] = 0.0f;
+		sim->localPosition.pos[Z] = 0.0f;
 
 		// simulate "acceleration" caused by contact force with ground, compensating gravity
 		for (i = 0; i<3; i++)
@@ -229,7 +229,7 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 		// slow down... (will make velocity slightly inconsistent until next update cycle, but shouldn't matter much)
 		for (i = 0; i<3; i++)
 		{
-			sim->vel_bf[i] = 0.95*sim->vel_bf[i];
+			sim->vel_bf[i] = 0.95f*sim->vel_bf[i];
 		}
 		
 		//upright
@@ -246,7 +246,7 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	{
 			qtmp1.v[i] = sim->vel[i];
 	}
-	qtmp1.s = 0.0;
+	qtmp1.s = 0.0f;
 	qvel_bf = quat_global_to_local(sim->attitude.qe, qtmp1);
 	for (i=0; i<3; i++)
 	{
@@ -263,7 +263,7 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	
 	// calculate velocity in global frame
 	// vel = qe *vel_bf * qe-1
-	qvel_bf.s = 0.0; qvel_bf.v[0] = sim->vel_bf[0]; qvel_bf.v[1] = sim->vel_bf[1]; qvel_bf.v[2] = sim->vel_bf[2];
+	qvel_bf.s = 0.0f; qvel_bf.v[0] = sim->vel_bf[0]; qvel_bf.v[1] = sim->vel_bf[1]; qvel_bf.v[2] = sim->vel_bf[2];
 	qtmp1 = quat_local_to_global(sim->attitude.qe, qvel_bf);
 	sim->vel[0] = qtmp1.v[0]; sim->vel[1] = qtmp1.v[1]; sim->vel[2] = qtmp1.v[2];
 	

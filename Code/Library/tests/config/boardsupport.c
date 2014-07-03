@@ -113,7 +113,7 @@ void boardsupport_init(central_data_t *centralData) {
 		centralData->debug_in_stream      =&centralData->xbee_in_stream;
 */
 		// init mavlink
-		init_mavlink(centralData->telemetry_down_stream, centralData->telemetry_up_stream, 42);
+		mavlink_stream_init(centralData->telemetry_down_stream, centralData->telemetry_up_stream, 42);
 		
 //		register_read_stream(get_UART_handle(4), &centralData->wired_in_stream);
 //		register_read_stream(get_UART_handle(0), &centralData->xbee_in_stream);

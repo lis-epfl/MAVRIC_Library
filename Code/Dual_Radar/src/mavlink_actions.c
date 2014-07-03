@@ -56,16 +56,14 @@ void mavlink_send_radar_raw() {
 //	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Radar_velocity", target->velocity);
 //	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, get_millis(), "Radar_amplitude", target->amplitude/1000.0);
 }
-
-
 void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec) {
 	
 }
 
 void mavlink_actions_init() {
 	central_data=central_data_get_pointer_to_struct();
-	scheduler_add_task(get_mavlink_taskset(), 1000000, RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
-	//scheduler_add_task(get_mavlink_taskset(), 250000, RUN_REGULAR, &mavlink_send_radar, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
-	scheduler_add_task(get_mavlink_taskset(), 250000, RUN_NEVER, &mavlink_send_radar_raw, MAVLINK_MSG_ID_RADAR_RAW_DATA);
+	scheduler_add_task(mavlink_stream_get_taskset(), 1000000, RUN_REGULAR, &mavlink_send_heartbeat, MAVLINK_MSG_ID_HEARTBEAT);
+	//scheduler_add_task(mavlink_stream_get_taskset(), 250000, RUN_REGULAR, &mavlink_send_radar, MAVLINK_MSG_ID_NAMED_VALUE_FLOAT);
+	scheduler_add_task(mavlink_stream_get_taskset(), 250000, RUN_NEVER, &mavlink_send_radar_raw, MAVLINK_MSG_ID_RADAR_RAW_DATA);
 
 }
