@@ -79,7 +79,7 @@ void boardsupport_init(central_data_t *centralData) {
 	//gpio_configure_pin(LED0_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
 	//gpio_configure_pin(LED1_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
 
-	servo_pwm_init();
+	servo_pwm_hardware_init();
 	
 	// Init UART 0 for XBEE communication
 	uart_int_init(0);

@@ -47,9 +47,16 @@ typedef struct
 } servo_output;
 
 /**
- * \brief Initialize the servos
+ * \brief Initialize the hardware line for servos
  */
-void servo_pwm_init(void);
+void servo_pwm_hardware_init(void);
+
+/**
+ * \brief	Initialize the brushless motors values
+ *
+ * \param	servos		The array of servos structure
+ */
+void servo_pwm_init(servo_output servos[]);
 
 /**
  * \brief Set servos' values
