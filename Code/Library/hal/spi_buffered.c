@@ -20,9 +20,10 @@
 #include "pdca.h"
 #include "led.h"
 
-
 static volatile spi_buffer_t spi_buffers[SPI_NUMBER];				///< Allocated memory for SPI buffers
 
+__attribute__((__interrupt__)) void spi0_int_handler(void);
+__attribute__((__interrupt__)) void spi1_int_handler(void);
 void spi_handler(int spi_index);
 
 /** interrupt handler
@@ -51,7 +52,7 @@ static void pdca_int_handler_spi0(void)
 	pdca_disable(SPI0_DMA_CH_RECEIVE);
 	pdca_disable(SPI0_DMA_CH_TRANSMIT);
 	pdca_disable_interrupt_transfer_complete(SPI0_DMA_CH_RECEIVE);
-	spi_deselect_device(spi_buffers[0].spi, &spi_buffers[0].adc_spi);
+	spi_deselect_device(spi_buffers[0].spi, (struct spi_device *)&spi_buffers[0].adc_spi);
 	// call callback function to process data, at end of transfer
 	// to process data, and maybe add some more data
 	spi_buffers[0].SPIinBufferTail = spi_buffers[0].transmission_in_progress;
@@ -69,7 +70,7 @@ void spi_buffered_init(volatile avr32_spi_t *spi, int spi_index)
 	spi_buffers[spi_index].adc_spi.id = 0;
 	
 	spi_master_init(spi_buffers[spi_index].spi);
-	spi_master_setup_device(spi_buffers[spi_index].spi, &spi_buffers[spi_index].adc_spi, SPI_MODE_0, 20000000, 0);
+	spi_master_setup_device(spi_buffers[spi_index].spi, (struct spi_device *)&spi_buffers[spi_index].adc_spi, SPI_MODE_0, 20000000, 0);
 	
 	//spi_buffers[spi_index].spi->cr = AVR32_SPI_SWRST_MASK;
 	
@@ -105,7 +106,7 @@ void spi_buffered_init(volatile avr32_spi_t *spi, int spi_index)
 
 uint8_t* spi_buffered_get_spi_in_buffer(int spi_index)
 {
-	return spi_buffers[spi_index].SPIInBuffer;
+	return (uint8_t*)spi_buffers[spi_index].SPIInBuffer;
 }
 
 void spi_buffered_init_DMA(int spi_index, int block_size)
@@ -155,7 +156,7 @@ void spi_buffered_trigger_DMA(int spi_index, int block_size)
 	pdca_load_channel(SPI0_DMA_CH_RECEIVE,  (void *)(spi_buffers[spi_index].SPIInBuffer), block_size);
 
 	
-	spi_select_device(spi_buffers[spi_index].spi, &spi_buffers[spi_index].adc_spi);
+	spi_select_device(spi_buffers[spi_index].spi, (struct spi_device *)&spi_buffers[spi_index].adc_spi);
 	// Enable pdca interrupt each time the reload counter reaches zero, i.e. each time
 	// the whole block was received
 	pdca_enable_interrupt_transfer_complete(SPI0_DMA_CH_RECEIVE);
@@ -166,7 +167,7 @@ void spi_buffered_trigger_DMA(int spi_index, int block_size)
 
 void spi_buffered_set_callback(int spi_index, functionpointer* functionPointer)
 {
-	spi_buffers[spi_index].callbackFunction = functionPointer;
+	spi_buffers[spi_index].callbackFunction = (volatile functionpointer*)functionPointer;
 }
 
 void spi_buffered_enable(int spi_index)
@@ -198,7 +199,7 @@ void spi_buffered_start(int spi_index)
 	{
 		// if not, initiate transmission by sending first byte
 		//!!!!PORTB &= ~_BV(SPI_CS);	// pull chip select low to start transmission
-		spi_select_device(spi_buffers[spi_index].spi, &spi_buffers[spi_index].adc_spi);
+		spi_select_device(spi_buffers[spi_index].spi, (struct spi_device *)&spi_buffers[spi_index].adc_spi);
 
 		spi_buffers[spi_index].transmission_in_progress = 1;
 		// activate interrupt to initiate transmission
@@ -269,7 +270,7 @@ void spi_buffered_transmit(int spi_index)
 	} else {
 		spi_buffers[spi_index].SPIoutBufferTail=spi_buffers[spi_index].SPIoutBufferHead;
 		//PORTB |= _BV(SPI_CS);	// pull chip select high to end transmission
-		spi_deselect_device(spi_buffers[spi_index].spi, &spi_buffers[spi_index].adc_spi);
+		spi_deselect_device(spi_buffers[spi_index].spi, (struct spi_device *)&spi_buffers[spi_index].adc_spi);
 		spi_buffers[spi_index].transmission_in_progress=0;
 		spi_buffers[spi_index].spi->idr =AVR32_SPI_IER_RDRF_MASK | AVR32_SPI_IER_TDRE_MASK;
 		//SPCR&=~_BV(SPIE);
