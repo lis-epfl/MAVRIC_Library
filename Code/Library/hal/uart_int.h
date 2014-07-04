@@ -24,8 +24,8 @@ extern "C" {
 #endif
 
 #include "compiler.h"
-#include "buffer.h"
 #include "conf_usart_serial.h"
+#include "buffer.h"
 #include "streams.h"
 
 /**
