@@ -353,7 +353,7 @@ extern int pwm_update_period_value_update(unsigned int value);
 /*! \brief Return Current Counter of Update Period Value 
  *  \return Value of Counter
  */
-extern unsigned int pwm_get_update_period_counter_value();
+extern unsigned int pwm_get_update_period_counter_value(void);
 
 /*! \brief Prepare a Synchronous Channel, User should call this function for all the synchronous channel
  *  \return PWM_SUCCESS or PWM_INVALID_INPUT
@@ -363,22 +363,22 @@ extern int pwm_synchronous_prepare_update(unsigned int channel_id, const avr32_p
 /*! \brief Synchronous Update with Manual Write and Manual Update Method
  *  \return PWM_SUCCESS or PWM_INVALID_INPUT
  */
-extern int pwm_update_manual_write_manual_update();
+extern int pwm_update_manual_write_manual_update(void);
 
 /*! \brief Synchronous Update with Manual Write and Auto Update Method
  *  \return PWM_SUCCESS or PWM_INVALID_INPUT
  */
-extern int pwm_update_manual_write_auto_update();
+extern int pwm_update_manual_write_auto_update(void);
 
 /*! \brief Synchronous Update with Manual Write and Auto Update Method
  *  \return PWM_SUCCESS or PWM_INVALID_INPUT
  */
-extern int pwm_update_auto_write_auto_update_check_ready();
+extern int pwm_update_auto_write_auto_update_check_ready(void);
 
 /*! \brief Synchronous Update with Manual Write and Auto Update Method
  *  \return PWM_SUCCESS or PWM_INVALID_INPUT
  */
-extern int pwm_update_auto_write_auto_update_check_eot();
+extern int pwm_update_auto_write_auto_update_check_eot(void);
 
 /*! \brief Fault Lines Level Polarity Function
  *  \param line      Line
@@ -412,11 +412,11 @@ extern int pwm_fault_lines_enable(U8 line,
 /*! \brief Get Fault Status
  *  \return Value of FSR register
  */
-extern int pwm_get_fault_status();
+extern int pwm_get_fault_status(void);
 
 /*! \brief Return Fault Status
  */
-extern void pwm_clr_fault_status();
+extern void pwm_clr_fault_status(void);
 
 /*! \brief Compare Match Setup
  *  \param line Compare Line to be used
