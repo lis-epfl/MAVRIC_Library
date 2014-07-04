@@ -57,7 +57,6 @@
 /*! \name Serial Management Configuration
  */
 //! @{
-#include "conf_usart_serial.h"
 
 //! Default Usart Mode
 #ifndef CONFIG_USART_SERIAL_MODE

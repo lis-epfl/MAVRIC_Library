@@ -81,7 +81,8 @@ typedef struct {
 
 // USART options.
 
-static usart_config_t usart_opt[UART_COUNT] =
+static usart_config_t usart_conf[UART_COUNT] =
+//usart_config_t usart_conf[UART_COUNT] =
 {	
 	{   .mode=UART_IN_OUT,
 		.uart_device.uart=(avr32_usart_t *)&AVR32_USART0, 

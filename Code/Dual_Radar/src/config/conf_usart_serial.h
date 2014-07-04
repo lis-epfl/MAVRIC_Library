@@ -77,7 +77,7 @@ typedef struct {
 	} usart_config_t;
 
 // USART options.
-static volatile usart_config_t usart_opt[UART_COUNT] =
+static volatile usart_config_t usart_conf[UART_COUNT] =
 {	
 	{   .mode=UART_IN_OUT,
 		.uart_device.uart=&AVR32_USART0, 

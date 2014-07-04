@@ -46,37 +46,37 @@ usart_config_t *uart_int_get_uart_handle(int UID);
 
 /**
  * \brief	Blocking operation to retrieve a received byte from uart
- * \param	usart_opt	The pointer to the UART receive buffer
+ * \param	usart_conf	The pointer to the UART receive buffer
  *
  * \return	The byte received on the UART
  */
-char uart_int_get_byte(usart_config_t *usart_opt);
+char uart_int_get_byte(usart_config_t *usart_conf);
 
 /**
  * \brief returns number of received bytes in the receive buffer
  *
- * \param	usart_opt	The pointer to the UART line
+ * \param	usart_conf	The pointer to the UART line
  *
  * \return	the number of received bytes in the receive buffer
  */
-int uart_int_bytes_available(usart_config_t *usart_opt);
+int uart_int_bytes_available(usart_config_t *usart_conf);
 
 /**
  * \brief Non-blocking operation to append a byte to the uart send buffer if buffer is full, the command has no effect  (returns -1).
  *
- * \param	usart_opt	The pointer to the UART line
+ * \param	usart_conf	The pointer to the UART line
  * \param	data		The data to be added to the UART buffer
  *
  * \return	TODO: clean this up, should be a void function
  */
-uint8_t uart_int_send_byte(usart_config_t *usart_opt, char data);
+uint8_t uart_int_send_byte(usart_config_t *usart_conf, char data);
 
 /** 
  * \brief	Blocking operation to flush the uart buffer. Returns once the last byte has been passed to hardware for transmission.
  *
- * \param	usart_opt	The pointer to the UART line to be flushed
+ * \param	usart_conf	The pointer to the UART line to be flushed
  */
-void uart_int_flush(usart_config_t *usart_opt );
+void uart_int_flush(usart_config_t *usart_conf );
 
 /**
  * \brief Registers a stream interface with the UART transmitter (data put into the stream will be sent). 
@@ -85,28 +85,28 @@ void uart_int_flush(usart_config_t *usart_opt );
  * interface - if the output buffer is full, the function will block
  * until there is space.
  * 
- * \param	usart_opt	The pointer to the UART line
+ * \param	usart_conf	The pointer to the UART line
  * \param	stream		The pointer to the stream on which you want to register a write stream
  */
-void uart_int_register_write_stream(usart_config_t *usart_opt, byte_stream_t *stream);
+void uart_int_register_write_stream(usart_config_t *usart_conf, byte_stream_t *stream);
 
 /**
  * \brief Registers a stream interface with the UART transmitter (data put into the stream will be sent). 
  * This function will create a non-blocking interface. If the output buffer is full, the function will
  * overwrite the oldest data in the buffer.
  *
- * \param	usart_opt	The pointer to the UART line
+ * \param	usart_conf	The pointer to the UART line
  * \param	stream		The pointer to the stream on which you want to register a write stream
  */
-void uart_int_register_write_stream_nonblocking(usart_config_t *usart_opt, byte_stream_t *stream);
+void uart_int_register_write_stream_nonblocking(usart_config_t *usart_conf, byte_stream_t *stream);
 
 /**
  * \brief Registers a stream interface with the UART receiver (data from the stream will be read). 
  * 
- * \param	usart_opt	The pointer to the UART line
+ * \param	usart_conf	The pointer to the UART line
  * \param	stream		The pointer to the stream on which you want to register a read stream
  */
-void uart_int_register_read_stream(usart_config_t *usart_opt,  byte_stream_t *stream);
+void uart_int_register_read_stream(usart_config_t *usart_conf,  byte_stream_t *stream);
 
 #ifdef __cplusplus
 }
