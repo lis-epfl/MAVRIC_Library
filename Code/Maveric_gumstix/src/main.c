@@ -90,7 +90,7 @@ void initialisation() {
 	centralData->mav_state_previous = centralData->mav_state;
 	
 	navigation_init();
-	init_waypoint_handler();
+	waypoint_handler_init();
 	
 	neighbors_selection_init();
 	orca_init();

@@ -35,10 +35,10 @@
 #define RAW_GYRO_Y_SCALE 1637.0222				 		///< Gyroscope y axis scale
 #define RAW_GYRO_Z_SCALE 1637.0222				 		///< Gyroscope z axis scale
 
-//#define RAW_GYRO_X_SCALE  818.5111			 		
-//#define RAW_GYRO_Y_SCALE  818.5111			 		
-//#define RAW_GYRO_Z_SCALE  818.5111			 		
-//
+//#define RAW_GYRO_X_SCALE  818.5111			 		///< Gyroscope x axis scale
+//#define RAW_GYRO_Y_SCALE  818.5111			 		///< Gyroscope y axis scale
+//#define RAW_GYRO_Z_SCALE  818.5111					///< Gyroscope z axis scale
+
 #define GYRO_AXIS_X  1.0						 		///< Gyroscope x axis direction
 #define GYRO_AXIS_Y -1.0						 		///< Gyroscope y axis direction
 #define GYRO_AXIS_Z -1.0						 		///< Gyroscope z axis direction

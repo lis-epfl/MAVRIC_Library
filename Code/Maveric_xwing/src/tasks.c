@@ -128,11 +128,11 @@ task_return_t tasks_set_mav_mode_n_state()
 			switch(channelSwitches)
 			{
 				case 0:
-					centralData->waypoint_hold_init = false;
+					centralData->waypoint_handler_waypoint_hold_init = false;
 					centralData->mav_mode= MAV_MODE_MANUAL_ARMED;
 					break;
 				case 1:
-					centralData->waypoint_hold_init = false;
+					centralData->waypoint_handler_waypoint_hold_init = false;
 					centralData->mav_mode= MAV_MODE_STABILIZE_ARMED;
 					break;
 				case 2:
@@ -147,20 +147,20 @@ task_return_t tasks_set_mav_mode_n_state()
 			switch (centralData->mav_mode)
 			{
 				case MAV_MODE_MANUAL_ARMED:
-					centralData->waypoint_hold_init = false;
+					centralData->waypoint_handler_waypoint_hold_init = false;
 					break;
 				case MAV_MODE_STABILIZE_ARMED:
-					centralData->waypoint_hold_init = false;
+					centralData->waypoint_handler_waypoint_hold_init = false;
 					break;
 				case MAV_MODE_GUIDED_ARMED:
-					waypoint_hold_position_handler();
+					waypoint_handler_waypoint_hold_position_handler();
 					break;
 				case MAV_MODE_AUTO_ARMED:
 					if (centralData->waypoint_set)
 					{
-						centralData->waypoint_hold_init = false;
+						centralData->waypoint_handler_waypoint_hold_init = false;
 					}
-					waypoint_navigation_handler();
+					waypoint_handler_waypoint_navigation_handler();
 					break;
 			}
 			
@@ -214,7 +214,7 @@ task_return_t tasks_set_mav_mode_n_state()
 			{
 				case MAV_MODE_GUIDED_ARMED:
 				case MAV_MODE_AUTO_ARMED:
-					waypoint_critical_handler();
+					waypoint_handler_waypoint_critical_handler();
 					break;
 			}
 			
@@ -362,13 +362,13 @@ task_return_t tasks_run_navigation_update()
 							navigation_run(centralData->waypoint_coordinates);
 					
 							//orca_computeNewVelocity(centralData->controls_nav.tvel,newVelocity);
-						}else if(centralData->waypoint_hold_init)
+						}else if(centralData->waypoint_handler_waypoint_hold_init)
 						{
 							navigation_run(centralData->waypoint_hold_coordinates);
 						}
 						break;
 					case MAV_MODE_GUIDED_ARMED:
-						if(centralData->waypoint_hold_init)
+						if(centralData->waypoint_handler_waypoint_hold_init)
 						{
 							navigation_run(centralData->waypoint_hold_coordinates);
 						}

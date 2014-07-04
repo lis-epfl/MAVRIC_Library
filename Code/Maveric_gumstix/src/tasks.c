@@ -258,7 +258,7 @@ task_return_t tasks_set_mav_mode_n_state()
 					{
 						init_wp();
 					}
-					waypoint_navigation_handler();
+					waypoint_handler_waypoint_navigation_handler();
 					break;
 			}
 			
@@ -311,7 +311,7 @@ task_return_t tasks_set_mav_mode_n_state()
 						centralData->critical_behavior = CLIMB_TO_SAFE_ALT;
 						centralData->critical_next_state = false;
 					}
-					waypoint_critical_handler();
+					waypoint_handler_waypoint_critical_handler();
 					break;
 			}
 			

@@ -51,7 +51,7 @@
 	//bool mission_started;
 	//bool waypoint_sending;
 	//bool waypoint_receiving;
-	//bool waypoint_hold_init;
+	//bool waypoint_handler_waypoint_hold_init;
 	//
 	//uint8_t mav_mode;
 	//uint8_t mav_state;

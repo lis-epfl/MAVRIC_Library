@@ -609,7 +609,7 @@ task_return_t mavlink_send_sonar(void)
 
 task_return_t control_waypoint_timeout (void)
 {
-	control_time_out_waypoint_msg(	&(centralData->number_of_waypoints),
+	waypoint_handler_control_time_out_waypoint_msg(	&(centralData->number_of_waypoints),
 	&centralData->waypoint_receiving,
 	&centralData->waypoint_sending);
 	
@@ -780,7 +780,7 @@ void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec)
 		{
 			case MAVLINK_MSG_ID_MISSION_ITEM:	// 39 
 				mavlink_stream_suspend_downstream(500000);
-				receive_waypoint(	rec, 
+				waypoint_handler_receive_waypoint(	rec, 
 									centralData->waypoint_list, 
 									centralData->number_of_waypoints,
 									&centralData->waypoint_receiving	);
@@ -788,14 +788,14 @@ void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec)
 	
 			case MAVLINK_MSG_ID_MISSION_REQUEST : // 40
 				mavlink_stream_suspend_downstream(500000);
-				send_waypoint(	rec, 
+				waypoint_handler_send_waypoint(	rec, 
 								centralData->waypoint_list, 
 								centralData->number_of_waypoints,
 								&centralData->waypoint_sending	);
 				break;
 
 			case MAVLINK_MSG_ID_MISSION_SET_CURRENT :  // 41
-				set_current_waypoint(	rec, 
+				waypoint_handler_set_current_waypoint(	rec, 
 										centralData->waypoint_list, 
 										centralData->number_of_waypoints	);
 				break;
@@ -804,7 +804,7 @@ void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec)
 				// this initiates all waypoints being sent to the base-station - therefore, we pause the downstream telemetry to free the channel
 				// (at least until we have a radio system with guaranteed bandwidth)
 				mavlink_stream_suspend_downstream(500000);
-				send_count(	rec, 
+				waypoint_handler_send_count(	rec, 
 							centralData->number_of_waypoints,
 							&centralData->waypoint_receiving,
 							&centralData->waypoint_sending	);
@@ -814,25 +814,25 @@ void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec)
 				// this initiates all waypoints being sent from base-station - therefore, we pause the downstream telemetry to free the channel
 				// (at least until we have a radio system with guaranteed bandwidth)
 				mavlink_stream_suspend_downstream(500000);
-				receive_count(	rec, 
+				waypoint_handler_receive_count(	rec, 
 								&(centralData->number_of_waypoints),
 								&centralData->waypoint_receiving,
 								&centralData->waypoint_sending	);
 				break;
 
 			case MAVLINK_MSG_ID_MISSION_CLEAR_ALL :  // 45
-				clear_waypoint_list(	rec, 
+				waypoint_handler_clear_waypoint_list(	rec, 
 										&(centralData->number_of_waypoints),
 										&centralData->waypoint_set	);
 				break;
 
 			case MAVLINK_MSG_ID_MISSION_ACK :  // 47
-				receive_ack_msg(	rec,
+				waypoint_handler_receive_ack_msg(	rec,
 									&centralData->waypoint_sending	);
 				break;
 
 			case MAVLINK_MSG_ID_SET_MODE :  // 11
-				set_mav_mode(	rec, 
+				waypoint_handler_set_mav_mode(	rec, 
 								&centralData->mav_mode, 
 								&(centralData->mav_state),
 								centralData->simulation_mode	);
@@ -843,7 +843,7 @@ void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec)
 				break;
 
 			case MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN:  // 48
-				set_home(rec);
+				waypoint_handler_set_home(rec);
 				break;
 		}
 	} 
@@ -1408,7 +1408,7 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| Empty
 				| */
 				print_util_dbg_print("All MAVs: Return to first waypoint. \n");
-				set_current_waypoint_from_parameter(centralData->waypoint_list,centralData->number_of_waypoints,0);
+				waypoint_handler_set_current_waypoint_from_parameter(centralData->waypoint_list,centralData->number_of_waypoints,0);
 				break;
 
 			case MAV_CMD_NAV_LAND:
@@ -1430,14 +1430,14 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 				| last_item:  the last mission item to run (after this item is run, the mission ends)
 				| */
 				print_util_dbg_print("All vehicles: Navigating to next waypoint. \n");
-				continueToNextWaypoint();
+				waypoint_handler_continueToNextWaypoint();
 				break;
 
 			case MAV_CMD_CONDITION_LAST:
 				/*
 				| */
 				print_util_dbg_print("All MAVs: setting circle scenario!\n");
-				set_circle_scenario(centralData->waypoint_list, &(centralData->number_of_waypoints), packet.param1, packet.param2);
+				waypoint_handler_set_circle_scenario(centralData->waypoint_list, &(centralData->number_of_waypoints), packet.param1, packet.param2);
 				break;			
 		}
 	}
@@ -1475,8 +1475,8 @@ void mavlink_actions_init(void) {
 	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_hud,                        MAVLINK_MSG_ID_VFR_HUD	);								// ID 74	
 	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_rates_error,            MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT	);	// ID 80
 	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_simulation,                 MAVLINK_MSG_ID_HIL_STATE	);							// ID 90
-	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_NEVER,    &mavlink_send_rt_stats,                   MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
-	scheduler_add_task(mavlink_stream_get_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_sonar,                      MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
+	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_REGULAR,    &mavlink_send_rt_stats,                   MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
+	//scheduler_add_task(mavlink_stream_get_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_sonar,                      MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
 
 	scheduler_add_task(mavlink_stream_get_taskset(),  10000,    RUN_REGULAR,  &control_waypoint_timeout,                255	);													// ID 255
 

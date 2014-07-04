@@ -89,7 +89,7 @@ typedef struct  {
 	bool waypoint_set;
 	bool waypoint_sending;
 	bool waypoint_receiving;
-	bool waypoint_hold_init;
+	bool waypoint_handler_waypoint_hold_init;
 	bool critical_landing;
 	bool critical_init;
 	bool critical_next_state;

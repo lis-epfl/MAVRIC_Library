@@ -222,7 +222,7 @@ task_return_t tasks_run_stabilisation() {
 			
 			break;
 		case MAV_MODE_STABILIZE_ARMED:
-			board->waypoint_hold_init = false;
+			board->waypoint_handler_waypoint_hold_init = false;
 			board->mission_started = false;
 			board->controls = remote_controller_get_command_from_remote();
 			//print_util_dbg_print("Thrust:");
@@ -253,7 +253,7 @@ task_return_t tasks_run_stabilisation() {
 			break;
 		case MAV_MODE_AUTO_ARMED:
 			board->mission_started = true;
-			board->waypoint_hold_init = false;
+			board->waypoint_handler_waypoint_hold_init = false;
 			board->controls = board->controls_nav;
 			board->controls.thrust = min(remote_controller_get_thrust_from_remote()*100000.0,board->controls_nav.thrust*100000.0)/100000.0;
 			//board->controls.thrust = board->controls_nav.thrust;

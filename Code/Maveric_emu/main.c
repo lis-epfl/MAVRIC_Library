@@ -54,7 +54,7 @@ void initialisation() {
 	position_estimation_init(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);
 	
 	navigation_init();
-	init_waypoint_handler();
+	waypoint_handler_init();
 	//e_init();
 	
 	neighbors_selection_init();

@@ -32,7 +32,7 @@ void central_data_init(){
 		centralData.waypoint_set = false;
 		centralData.waypoint_sending = false;
 		centralData.waypoint_receiving = false;
-		centralData.waypoint_hold_init = false;
+		centralData.waypoint_handler_waypoint_hold_init = false;
 		centralData.critical_landing = false;
 		centralData.critical_init = false;
 		centralData.collision_avoidance = false;
@@ -49,7 +49,7 @@ void central_data_init(){
 		simulation_init(&(centralData.sim_model),&(centralData.imu1.attitude));
 		centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
 		
-		//init_waypoint_list(centralData.waypoint_list,&(centralData.number_of_waypoints));
+		//waypoint_handler_init_waypoint_list(centralData.waypoint_list,&(centralData.number_of_waypoints));
 
 }
 

@@ -25,7 +25,7 @@
 
 central_data_t *centralData;
 
-void init_waypoint_handler()
+void waypoint_handler_init()
 {
 	start_timeout = time_keeper_get_millis();
 	timeout_max_waypoint = 10000;
@@ -34,14 +34,14 @@ void init_waypoint_handler()
 	centralData->critical_behavior = CLIMB_TO_SAFE_ALT;
 	centralData->critical_next_state = false;
 	
-	//init_waypoint_list(centralData->waypoint_list, &centralData->number_of_waypoints);
-	init_homing_waypoint(centralData->waypoint_list, &centralData->number_of_waypoints);
+	//waypoint_handler_init_waypoint_list(centralData->waypoint_list, &centralData->number_of_waypoints);
+	waypoint_handler_init_homing_waypoint(centralData->waypoint_list, &centralData->number_of_waypoints);
 	
 	print_util_dbg_print("Nav init\n");
-	init_waypoint();
+	waypoint_handler_waypoint_init();
 }
 
-void init_waypoint()
+void waypoint_handler_waypoint_init()
 {
 	uint8_t i,j;
 	float rel_pos[3];
@@ -56,7 +56,7 @@ void init_waypoint()
 			{
 				centralData->current_waypoint_count = i;
 				centralData->current_waypoint = centralData->waypoint_list[centralData->current_waypoint_count];
-				centralData->waypoint_coordinates = set_waypoint_from_frame(centralData->current_waypoint,centralData->position_estimator.localPosition.origin);
+				centralData->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(centralData->current_waypoint,centralData->position_estimator.localPosition.origin);
 				
 				print_util_dbg_print("Waypoint Nr");
 				print_util_dbg_print_num(i,10);
@@ -74,7 +74,7 @@ void init_waypoint()
 	}
 }
 
-void init_homing_waypoint(waypoint_struct waypoint_list[],uint16_t* number_of_waypoints)
+void waypoint_handler_init_homing_waypoint(waypoint_struct waypoint_list[],uint16_t* number_of_waypoints)
 {
 	waypoint_struct waypoint;
 	
@@ -100,7 +100,7 @@ void init_homing_waypoint(waypoint_struct waypoint_list[],uint16_t* number_of_wa
 	waypoint_list[0] = waypoint;
 }
 
-void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints)
+void waypoint_handler_init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints)
 {
 	// Visit https://code.google.com/p/ardupilot-mega/wiki/MAVLink to have a description of all messages (or common.h)
 	waypoint_struct waypoint;
@@ -182,7 +182,7 @@ void init_waypoint_list(waypoint_struct waypoint_list[], uint16_t* number_of_way
 	print_util_dbg_print("\n");
 }
 
-void send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint, bool* waypoint_receiving, bool * waypoint_sending)
+void waypoint_handler_send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint, bool* waypoint_receiving, bool * waypoint_sending)
 {
 	mavlink_mission_request_list_t packet;
 	
@@ -208,7 +208,7 @@ void send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint, bool* waypoin
 	}
 }
 
-void send_waypoint(Mavlink_Received_t* rec, waypoint_struct waypoint[], uint16_t num_of_waypoint, bool* waypoint_sending)
+void waypoint_handler_send_waypoint(Mavlink_Received_t* rec, waypoint_struct waypoint[], uint16_t num_of_waypoint, bool* waypoint_sending)
 {
 	if (*waypoint_sending)
 	{
@@ -245,7 +245,7 @@ void send_waypoint(Mavlink_Received_t* rec, waypoint_struct waypoint[], uint16_t
 	}	
 }
 
-void receive_ack_msg(Mavlink_Received_t* rec, bool* waypoint_sending)
+void waypoint_handler_receive_ack_msg(Mavlink_Received_t* rec, bool* waypoint_sending)
 {
 	mavlink_mission_ack_t packet;
 	
@@ -261,7 +261,7 @@ void receive_ack_msg(Mavlink_Received_t* rec, bool* waypoint_sending)
 	}
 }
 
-void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool* waypoint_receiving, bool* waypoint_sending)
+void waypoint_handler_receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool* waypoint_receiving, bool* waypoint_sending)
 {
 	mavlink_mission_count_t packet;
 	
@@ -307,7 +307,7 @@ void receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool*
 	
 }
 
-void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t number_of_waypoints, bool* waypoint_receiving)
+void waypoint_handler_receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t number_of_waypoints, bool* waypoint_receiving)
 {
 	mavlink_mission_item_t packet;
 	
@@ -405,7 +405,7 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 							*waypoint_receiving = false;
 							num_waypoint_onboard = number_of_waypoints;
 							centralData->waypoint_set = false;
-							init_waypoint();
+							waypoint_handler_waypoint_init();
 						}
 						else
 						{
@@ -428,7 +428,7 @@ void receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[],
 }		
 }		
 
-void set_current_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t num_of_waypoint)
+void waypoint_handler_set_current_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t num_of_waypoint)
 {
 	mavlink_mission_set_current_t packet;
 	
@@ -454,7 +454,7 @@ void set_current_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_lis
 			print_util_dbg_print("\n");
 			
 			centralData->waypoint_set = false;
-			init_waypoint();
+			waypoint_handler_waypoint_init();
 		}
 		else
 		{
@@ -463,7 +463,7 @@ void set_current_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_lis
 	}
 }
 
-void set_current_waypoint_from_parameter(waypoint_struct waypoint_list[], uint16_t num_of_waypoint, uint16_t new_current)
+void waypoint_handler_set_current_waypoint_from_parameter(waypoint_struct waypoint_list[], uint16_t num_of_waypoint, uint16_t new_current)
 {
 	uint8_t i;
 	
@@ -482,7 +482,7 @@ void set_current_waypoint_from_parameter(waypoint_struct waypoint_list[], uint16
 		print_util_dbg_print("\n");
 		
 		centralData->waypoint_set = false;
-		init_waypoint();
+		waypoint_handler_waypoint_init();
 	}
 	else
 	{
@@ -490,7 +490,7 @@ void set_current_waypoint_from_parameter(waypoint_struct waypoint_list[], uint16
 	}
 }
 
-void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints, bool* waypoint_set)
+void waypoint_handler_clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints, bool* waypoint_set)
 {
 	mavlink_mission_clear_all_t packet;
 	
@@ -503,13 +503,13 @@ void clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints
 		*number_of_waypoints = 0;
 		num_waypoint_onboard = 0;
 		*waypoint_set = 0;
-		waypoint_hold_init(centralData->position_estimator.localPosition);
+		waypoint_handler_waypoint_hold_init(centralData->position_estimator.localPosition);
 		mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_OK);
 		print_util_dbg_print("Cleared Waypoint list.\n");
 	}		
 }
 
-void set_home(Mavlink_Received_t* rec)
+void waypoint_handler_set_home(Mavlink_Received_t* rec)
 {
 	mavlink_set_gps_global_origin_t packet;
 	
@@ -539,7 +539,7 @@ void set_home(Mavlink_Received_t* rec)
 	}
 }
 
-void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* board_mav_state, uint8_t sim_mode)
+void waypoint_handler_set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* board_mav_state, uint8_t sim_mode)
 {
 	mavlink_set_mode_t packet;
 	
@@ -606,7 +606,7 @@ void set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* boa
 	}
 }
 
-void control_time_out_waypoint_msg(uint16_t* num_of_waypoint, bool* waypoint_receiving, bool* waypoint_sending)
+void waypoint_handler_control_time_out_waypoint_msg(uint16_t* num_of_waypoint, bool* waypoint_receiving, bool* waypoint_sending)
 {
 	if (*waypoint_sending || *waypoint_receiving)
 	{
@@ -632,7 +632,7 @@ void control_time_out_waypoint_msg(uint16_t* num_of_waypoint, bool* waypoint_rec
 	}
 }
 
-local_coordinates_t set_waypoint_from_frame(waypoint_struct current_waypoint, global_position_t origin)
+local_coordinates_t waypoint_handler_set_waypoint_from_frame(waypoint_struct current_waypoint, global_position_t origin)
 {
 	uint8_t i;
 	
@@ -724,7 +724,7 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_waypoint, gl
 	return waypoint_coor;
 }
 
-void waypoint_hold_init(local_coordinates_t localPos)
+void waypoint_handler_waypoint_hold_init(local_coordinates_t localPos)
 {
 	
 	centralData->waypoint_hold_coordinates = localPos;
@@ -744,7 +744,7 @@ void waypoint_hold_init(local_coordinates_t localPos)
 	
 }
 
-void waypoint_take_off()
+void waypoint_handler_waypoint_take_off()
 {
 	print_util_dbg_print("Automatic take-off. Position hold at: (");
 	print_util_dbg_print_num(centralData->position_estimator.localPosition.pos[X],10);
@@ -767,16 +767,16 @@ void waypoint_take_off()
 }
 
 
-void waypoint_hold_position_handler()
+void waypoint_handler_waypoint_hold_position_handler()
 {
 	if (!centralData->waypoint_set)
 	{
-		init_waypoint();
+		waypoint_handler_waypoint_init();
 	}
-	waypoint_hold_init(centralData->position_estimator.localPosition);
+	waypoint_handler_waypoint_hold_init(centralData->position_estimator.localPosition);
 }
 
-void waypoint_navigation_handler()
+void waypoint_handler_waypoint_navigation_handler()
 {
 
 	if (centralData->waypoint_set)
@@ -818,7 +818,7 @@ void waypoint_navigation_handler()
 				print_util_dbg_print("\n");
 				centralData->waypoint_list[centralData->current_waypoint_count].current = 1;
 				centralData->current_waypoint = centralData->waypoint_list[centralData->current_waypoint_count];
-				centralData->waypoint_coordinates = set_waypoint_from_frame(centralData->current_waypoint,centralData->position_estimator.localPosition.origin);
+				centralData->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(centralData->current_waypoint,centralData->position_estimator.localPosition.origin);
 				
 				mavlink_msg_mission_current_send(MAVLINK_COMM_0,centralData->current_waypoint_count);
 				
@@ -828,13 +828,13 @@ void waypoint_navigation_handler()
 				centralData->waypoint_set = false;
 				print_util_dbg_print("Stop\n");
 				
-				waypoint_hold_init(centralData->waypoint_coordinates);
+				waypoint_handler_waypoint_hold_init(centralData->waypoint_coordinates);
 			}
 		}
 	}
 }
 
-void waypoint_critical_handler()
+void waypoint_handler_waypoint_critical_handler()
 {
 	float rel_pos[3];
 	uint8_t i;
@@ -895,7 +895,7 @@ void waypoint_critical_handler()
 	}
 }
 
-void auto_landing()
+void waypoint_handler_auto_landing()
 {
 	float rel_pos[3];
 	uint8_t i;
@@ -908,13 +908,13 @@ void auto_landing()
 			local_position = centralData->position_estimator.localPosition;
 			local_position.pos[Z] = -2.0f;
 			
-			waypoint_hold_init(local_position);
+			waypoint_handler_waypoint_hold_init(local_position);
 			break;
 		case DESCENT_TO_GND:
 			local_position = centralData->position_estimator.localPosition;
 			local_position.pos[Z] = 0.0f;
 			
-			waypoint_hold_init(local_position);
+			waypoint_handler_waypoint_hold_init(local_position);
 			break;
 	}
 	
@@ -939,7 +939,7 @@ void auto_landing()
 	}
 }
 
-void continueToNextWaypoint()
+void waypoint_handler_continueToNextWaypoint()
 {
 	if ((centralData->number_of_waypoints>0)&&(!centralData->waypoint_set))
 	{
@@ -959,7 +959,7 @@ void continueToNextWaypoint()
 		print_util_dbg_print("\n");
 		centralData->waypoint_list[centralData->current_waypoint_count].current = 1;
 		centralData->current_waypoint = centralData->waypoint_list[centralData->current_waypoint_count];
-		centralData->waypoint_coordinates = set_waypoint_from_frame(centralData->current_waypoint,centralData->position_estimator.localPosition.origin);
+		centralData->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(centralData->current_waypoint,centralData->position_estimator.localPosition.origin);
 		
 		mavlink_msg_mission_current_send(MAVLINK_COMM_0,centralData->current_waypoint_count);
 		
@@ -971,7 +971,7 @@ void continueToNextWaypoint()
 	}
 }
 
-void set_circle_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc)
+void waypoint_handler_set_circle_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc)
 {
 	float angle_step = 2.0 * PI / num_of_vhc;
 	

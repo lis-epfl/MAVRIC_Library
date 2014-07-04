@@ -84,7 +84,7 @@ void initialisation() {
 	centralData->mav_state = MAV_STATE_STANDBY;
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	navigation_init();
-	init_waypoint_handler();
+	waypoint_handler_init();
 	//e_init();
 	
 	neighbors_selection_init();

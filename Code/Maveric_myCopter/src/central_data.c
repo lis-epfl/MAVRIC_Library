@@ -41,7 +41,7 @@ void central_data_init(){
 		qfilter_init_quaternion((Quat_Attitude_t*)&(centralData.imu1.attitude));
 		
 		navigation_init();
-		init_waypoint_handler();
+		waypoint_handler_init();
 		
 		neighbors_selection_init();
 		orca_init();

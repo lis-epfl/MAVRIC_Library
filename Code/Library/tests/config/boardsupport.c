@@ -135,7 +135,7 @@ void boardsupport_init(central_data_t *centralData) {
 		centralData->controls.thrust=-1.0;
 		
 		centralData->number_of_waypoints = 0;
-		centralData->waypoint_hold_init=false;
+		centralData->waypoint_handler_waypoint_hold_init=false;
 		centralData->simulation_mode=0;
 		
 		// default GPS home position
