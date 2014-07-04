@@ -639,12 +639,13 @@ local_coordinates_t set_waypoint_from_frame(waypoint_struct current_waypoint, gl
 	global_position_t waypoint_global;
 	local_coordinates_t waypoint_coor;
 	
-	float rel_pos[3];
-	
 	for (i=0;i<3;i++)
 	{
 		waypoint_coor.pos[i] = 0.0f;
 	}
+	waypoint_coor.origin = origin;
+	waypoint_coor.heading = deg_to_rad(current_waypoint.param4);
+	waypoint_coor.timestamp_ms = time_keeper_get_millis();
 
 	switch(current_waypoint.frame)
 	{

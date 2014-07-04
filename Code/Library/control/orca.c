@@ -157,7 +157,8 @@ void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 			// Collisions
 			min_coll_dist = maths_f_min(min_coll_dist,sqrt(distSq));
 			
-			loop_count_collisions = loop_count_collisions++ % 100;
+			loop_count_collisions++;
+			loop_count_collisions %= 100;
 			if (loop_count_collisions == 0)
 			{
 				print_util_dbg_print("Collision! ");
@@ -201,7 +202,8 @@ void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		orca_linearProgram4(planes,centralData->number_of_neighbors,planeFail,MAXSPEED,NewVelocity);
 	}
 	
-	loop_count_orca = loop_count_orca++ % 100;
+	loop_count_orca++;
+	loop_count_orca %= 100;
 	float orca_diff[3];
 	
 	for (i=0;i<3;i++)

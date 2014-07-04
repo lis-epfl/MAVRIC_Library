@@ -24,6 +24,25 @@
 #include "central_data.h"
 #include "maths.h"
 
+
+/**
+ * \brief	Computes the forces in the local frame of a "cross" quadrotor configuration
+ *
+ * \warning	This function is not implemented
+ *
+ * \param	sim		The pointer to the simulation structure
+ * \param	servos	The pointer to the servos structure
+ */
+void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos);
+
+/**
+ * \brief	Computer the forces in the local frame for a "diagonal" quadrotor configuration
+ *
+ * \param	sim		The pointer to the simulation structure
+ * \param	servos	The pointer to the servos structure
+ */
+void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos);
+
 void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates_t localPos) {
 	int i;
 	
@@ -87,7 +106,7 @@ static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr
 void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos){
 	int i;
 	float motor_command[4];
-	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4], rotor_lateral_drag[4];
+	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4];
 	float ldb;
 	UQuat_t wind_gf = {.s = 0, .v = {sim->wind_x, sim->wind_y, 0.0f}};
 	UQuat_t wind_bf = maths_quat_global_to_local(sim->attitude.qe, wind_gf);
@@ -144,8 +163,8 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 
 
 void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos){
-	int i;
-	float motor_command[4];
+	//int i;
+	//float motor_command[4];
 	
 	//TODO: implement the correct forces
 /*	motor_command[M_FRONT] = control->thrust + control->rpy[PITCH] + M_FRONT_DIR * control->rpy[YAW];

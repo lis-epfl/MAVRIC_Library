@@ -47,7 +47,7 @@ void mavlink_stream_receive_handler()
 {
 	Mavlink_Received_t rec;
 	
-	if(mavlink_stream_receive(mavlink_in_stream, &rec)) 
+	if(mavlink_stream_receive((byte_stream_t*)mavlink_in_stream, &rec)) 
 	{
 		mavlink_stream_handle_message(&rec);
 	}
@@ -178,7 +178,7 @@ void mavlink_stream_handle_message(Mavlink_Received_t* rec)
 			case MAVLINK_MSG_ID_REQUEST_DATA_STREAM: 
 			{ // 66
 				volatile mavlink_request_data_stream_t request;
-				mavlink_msg_request_data_stream_decode(&rec->msg, &request);
+				mavlink_msg_request_data_stream_decode(&rec->msg, (mavlink_request_data_stream_t*) &request);
 				// TODO: control target_component == compid!
 				if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid)
 				//&& (uint8_t)request.target_component == (uint8_t)mavlink_system.compid)

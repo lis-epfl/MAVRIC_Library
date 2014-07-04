@@ -1,0 +1,514 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"quat",
+				"quat_attitude"
+			],
+			[
+				"Aero",
+				"Aero_Attitude_t"
+			],
+			[
+				"quaternion",
+				"quaternion_controler_t"
+			],
+			[
+				"quater",
+				"quaternion_controler"
+			],
+			[
+				"get",
+				"get_public_attribute"
+			],
+			[
+				"private",
+				"private_attribute"
+			],
+			[
+				"publi",
+				"public_attribute"
+			],
+			[
+				"quaternion_",
+				"quaternion_conjugate"
+			],
+			[
+				"torque",
+				"torque_glob"
+			],
+			[
+				"vec",
+				"vectorToWorld"
+			],
+			[
+				"vert_w",
+				"vert_wing_vertices"
+			],
+			[
+				"Shape",
+				"ShapeXwing"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 52.0,
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"au",
+				"Auto Update Source Header"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"prefe",
+				"Preferences: Settings - User"
+			],
+			[
+				"indent",
+				"Indentation: Convert to Spaces"
+			],
+			[
+				"inden",
+				"Indentation: Convert to Tabs"
+			],
+			[
+				"rei",
+				"Indentation: Reindent Lines"
+			],
+			[
+				"inde",
+				"Indentation: Reindent Lines"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 139.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/julien/Desktop/bumblesim/xwing2.py",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_emu/boardsupport.h",
+		"/home/julien/Documents/Robots/maveric/Code/Library/control/pid_control.h",
+		"/home/julien/Documents/Robots/maveric/Code/Library/control/stabilisation.c",
+		"/home/julien/Documents/Robots/maveric/Code/Library/control/stabilisation.h",
+		"/home/julien/Documents/Robots/maveric/Code/Library/control/stabilisation_copter.c",
+		"/home/julien/Documents/Robots/maveric/Code/Library/sensing/imu.h",
+		"/home/julien/Documents/Robots/maveric/Code/Library/sensing/qfilter.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/src/boardsupport.c",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/src/mavlink_actions.c",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/src/main.cpp",
+		"/home/julien/Documents/Robots/maveric/Code/Library/sensing/simulation.c",
+		"/home/julien/Documents/Robots/maveric/Code/Library/hal/servo_pwm.c",
+		"/home/julien/Documents/Robots/maveric/Code/Library/util/maths.h",
+		"/home/julien/Documents/Robots/maveric/Code/Library/util/coord_conventions.c",
+		"/home/julien/Documents/Robots/maveric/Code/Library/util/coord_conventions.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/src/config/conf_stabilisation_copter.h",
+		"/home/julien/Documents/Robots/maveric/Code/Library/control/quaternion_controller.h",
+		"/home/julien/Documents/Robots/maveric/Code/Library/control/quaternion_controller.c",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/src/config/conf_platform.h",
+		"/home/julien/Documents/Robots/maveric/Electronics/Library/SpecialIC.lbr",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_gumstix/src/main.c",
+		"/home/julien/Documents/Robots/maveric/Code/Library/tests/main.c",
+		"/home/julien/Documents/Robots/maveric/Code/Dual_Radar/src/main.c",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_emu/main.c",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_emu/mavlink_actions.c",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric.atsln",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Maveric_myCopter_linux.txt",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/-DBOARD=USER_BOARD",
+		"/home/julien/Documents/Robots/maveric/Code/Library/Bootloader/Old/BOOTLOADER_AT32UC3C1512_original.hex",
+		"/home/julien/Documents/Robots/maveric/Code/Library/hal_emu/compiler.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_emu/config/conf_twim.h",
+		"/home/julien/Documents/Robots/maveric/Electronics/Library/con-special_purpose.lbr",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_gumstix/src/config/conf_stabilisation_hybrid.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_gumstix/src/config/conf_stabilisation_copter.h",
+		"/home/julien/Documents/Robots/maveric/Code/Library/tests/config/conf_stabilisation_hybrid.h",
+		"/home/julien/Documents/Robots/maveric/Code/Library/tests/config/conf_stabilisation_copter.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_emu/config/conf_stabilisation_hybrid.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_emu/config/conf_stabilisation_copter.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_emu/config/conf_sleepmgr.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_emu/config/conf_board.h",
+		"/home/julien/Documents/Robots/maveric/Code/Library/control/stabilisation_copter.h",
+		"/home/julien/Documents/Robots/maveric/Code/MavLink_custom/pymavlink/generator/CS/common/ByteArrayUtil.cs",
+		"/home/julien/Documents/Robots/maveric/Code/Library/mavlink/include/common/mavlink_msg_command_ack.h",
+		"/home/julien/Documents/Robots/maveric/Code/Dual_Radar/src/asf.h",
+		"/home/julien/Documents/Robots/maveric/Code/Library/sensing/imu.c",
+		"/home/julien/Documents/Robots/maveric/Documentation/Installing_Bootloader.txt",
+		"/home/julien/Documents/Robots/maveric/Code/Dual_Radar/src/asf/avr32/utils/startup/startup_uc3.S",
+		"/home/julien/Documents/Robots/maveric/Code/Library/mavlink/include/common/mavlink_msg_system_time.h",
+		"/home/julien/Documents/Robots/maveric/Code/Gui/pymavlink/scanwin32.py",
+		"/home/julien/Documents/Robots/maveric/Code/Library/control/pid_control.c",
+		"/home/julien/Documents/Robots/maveric/Code/Dual_Radar/src/asf/avr32/drivers/pevc/uc3c_pevc_ids.h",
+		"/home/julien/Documents/Robots/maveric/Electronics/Library/power.lbr",
+		"/home/julien/.config/sublime-text-3/Packages/FileHeader/Default (Linux).sublime-keymap",
+		"/home/julien/.config/sublime-text-3/Packages/FileHeader/quaternion_controller.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_emu/boardsupport.c",
+		"/home/julien/Documents/Robots/maveric/Code/Library/mavlink/include/common/mavlink_msg_attitude_quaternion.h",
+		"/run/media/julien/Data/Documents/Presentations/2014Apr03_Flying_LIS/index.html",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/utils/parts.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/common/boards/board.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/common/boards/user_board/user_board.h",
+		"/run/media/julien/Data/Documents/Presentations/2014Mar31_Lab_meeting/index.html",
+		"/run/media/julien/Data/Documents/Presentations/2014Apr03_Flying_LIS/Design and control of an agile flying platform\n",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_gumstix/src/asf/avr32/utils/parts.h",
+		"/home/julien/Documents/Robots/maveric/Code/Dual_Radar/src/asf/avr32/utils/parts.h",
+		"/home/julien/Documents/Robots/maveric/CAD/PartsList_quad.xlsx",
+		"/home/julien/ipe.properties",
+		"/run/media/julien/Data/Documents/Robots/lis-embedded/install.txt",
+		"/run/media/julien/Data/Documents/Teaching/TP_robotique_OF/TP Optic Flow_2013/101. Julien_Ramon/I2A.c",
+		"/run/media/julien/ANTERGOS201311/I2A.c",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Maveric.atsln",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Makefile",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/src/rectangle.cpp",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/common/utils/stdio/read.c",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/Bootloader/BOOTLOADER_AT32UC3C1512.elf",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf.h",
+		"/run/media/julien/Data/Documents/Robots/maveric/Documentation/Installing_Bootloader.txt",
+		"/home/julien/Desktop/bumblesim/brain.py",
+		"/home/julien/Downloads/39177277.txt",
+		"/run/media/julien/Data/Documents/Robots/maveric/Electronics/Maveric32_autopilot/Rev4.1/MegaFly_rev4.1.bom.csv",
+		"/run/media/julien/Data/Documents/Robots/maveric/Electronics/Maveric32_autopilot/Rev4.1/MegaFly_rev4.1.mouser_list.txt",
+		"/run/media/julien/Data/Documents/Eagle/lis-hardware/2014_Lecoeur_Curvace_Interface/Curvace_Interface_BOM.txt",
+		"/home/julien/Desktop/Platform design and control for agile flight",
+		"/run/media/julien/Data/Documents/Experiments/BumbleMirror/model_new/model_circle.py",
+		"/home/julien/Documents/Presentations/2014Mar31_Lab_meeting/index.html",
+		"/home/julien/Desktop/bumblesim/xwing.py",
+		"/home/julien/Documents/Presentations/2014Mar24_Lab_meeting/start_presentation.sh",
+		"/home/julien/Documents/Presentations/2014Mar24_Lab_meeting/index.html",
+		"/home/julien/Documents/Experiments/BumbleMirror/model_new/model_circle.py",
+		"/run/media/julien/Data/Documents/Robots/maveric/Code/Library/util/quick_trig.c",
+		"/home/julien/Desktop/publication_list.txt",
+		"/run/media/julien/Data/Documents/Robots/microflyers/Firmware STM/burrsens/optic_flow.h",
+		"/run/media/julien/Data/Documents/Robots/maveric/Code/Library/util/quick_trig.h",
+		"/run/media/julien/Data/Documents/Robots/maveric/Code/Library/util/maths.h",
+		"/home/julien/Desktop/migros/Biomimétisme ou la nature pour modèle.html",
+		"/home/julien/.config/sublime-text-3/Packages/User/Python2.sublime-build",
+		"/home/julien/Desktop/Spectra/test.for",
+		"/home/julien/Desktop/bumblesim/quaternion.py",
+		"/home/julien/Desktop/bumblesim/quaternion_new.py",
+		"/home/julien/Desktop/bumblesim/simple_wing.py",
+		"/home/julien/Documents/Doctoral-school/candidacy_papers/proposal_temp/proposal.bbl",
+		"/home/julien/Documents/Doctoral-school/candidacy_papers/proposal_temp/proposal.tex",
+		"/home/julien/Documents/Doctoral-school/candidacy_papers/proposal_temp/proposal.aux",
+		"/home/julien/Documents/Doctoral-school/candidacy_papers/proposal_temp/short.bib",
+		"/home/julien/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/julien/.config/sublime-text-3/Packages/Default/Preferences.sublime-settings",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/gpio/gpio.c",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/intc/intc.c",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/twis.c",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/common/utils/interrupt/interrupt_avr32.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers/gpio/gpio.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/common/mavlink_msg_omnidirectional_flow.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/common/mavlink_msg_optical_flow.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/maveric/mavlink_msg_omnidirectional_flow.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/maveric/mavlink_msg_optical_flow.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/common/mavlink_msg_servo_output_raw.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/maveric/mavlink_msg_servo_output_raw.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/maveric/mavlink_msg_hil_optical_flow.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/common/mavlink_msg_change_operator_control.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/maveric/mavlink_msg_change_operator_control.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/common/mavlink_msg_gps_global_origin.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/common/mavlink_msg_nav_controller_output.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/maveric/mavlink_msg_gps_global_origin.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/maveric/mavlink_msg_nav_controller_output.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/common/mavlink_msg_rc_channels_override.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/maveric/mavlink_msg_rc_channels_override.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/common/mavlink_msg_change_operator_control_ack.h",
+		"/home/julien/Documents/Robots/maveric/Code/Maveric_myCopter/Library/mavlink/include/maveric/mavlink_msg_change_operator_control_ack.h"
+	],
+	"find":
+	{
+		"height": 23.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"AVR32_PWM_PWML_1_0_PIN",
+			"*",
+			"s",
+			"quat_attitude",
+			"quatattitude",
+			"BOARDSUPPORT",
+			"45",
+			"lecoeur",
+			"leco",
+			"delta",
+			"PART",
+			"protected:",
+			"test",
+			"mavlink_mission_planner",
+			"write_parameters_to_flashc",
+			"flash",
+			"MAVLINK_TYPE_CHAR",
+			"MAVLINK_TYPE_INT8_T",
+			"MAV_PARAM_TYPE_INT8",
+			"planner",
+			"mavlink.h",
+			"failsafe",
+			"value",
+			"failsafe",
+			"set_servos_to_failsafe",
+			"set_servos_to_failsafe();",
+			"failsafe",
+			"video",
+			"tf.",
+			"self.",
+			"cos",
+			"-> ",
+			"right",
+			"<td",
+			"							<td",
+			"<td",
+			"10k",
+			"10n",
+			"10u",
+			"22pF",
+			"10uF ",
+			"JPG",
+			"np.deg2rad(",
+			"q[0]",
+			"q[3]",
+			"q[2]",
+			"q[1]",
+			"q2[3]",
+			"q1[0]",
+			"q2[2]",
+			"q1[1]",
+			"q2[1]",
+			"q1[2]",
+			"q2[0]",
+			"*",
+			"q1[3]",
+			"q[3]",
+			"q[2]",
+			"q[1]",
+			"q[0]",
+			"q2[3]",
+			"q2[2]",
+			"q2[1]",
+			"q2[0]",
+			"main",
+			"self",
+			"drag_coef",
+			"stabilise_rpy",
+			"x",
+			"forces",
+			"] ",
+			"[",
+			"trace",
+			"stabilise_attitude_rate"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "Maveric_myCopter_linux.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"simulation",
+				"Code/Library/sensing/simulation.c"
+			],
+			[
+				"main",
+				"Code/Maveric_myCopter/src/main.cpp"
+			],
+			[
+				"xwin",
+				"~/Desktop/bumblesim/xwing2.py"
+			],
+			[
+				"coord",
+				"Code/Library/util/coord_conventions.h"
+			],
+			[
+				"coo",
+				"Code/Library/util/coord_conventions.c"
+			],
+			[
+				"contro",
+				"Code/Library/control/quaternion_controller.c"
+			],
+			[
+				"conf_sta",
+				"Code/Maveric_myCopter/src/config/conf_stabilisation_copter.h"
+			],
+			[
+				"stabil",
+				"Code/Library/control/stabilisation_copter.c"
+			],
+			[
+				"imu",
+				"Code/Library/sensing/imu.h"
+			],
+			[
+				"stabi",
+				"Code/Library/control/stabilisation.h"
+			],
+			[
+				"pid",
+				"Code/Library/control/pid_control.h"
+			],
+			[
+				"board",
+				"Code/Maveric_emu/boardsupport.h"
+			],
+			[
+				"parts",
+				"Code/Maveric_myCopter/src/asf/avr32/utils/parts.h"
+			],
+			[
+				"action",
+				"src/mavlink_actions.c"
+			],
+			[
+				"mavlink",
+				"src/mavlink_actions.c"
+			],
+			[
+				"boot",
+				"/run/media/julien/Data/Documents/Robots/maveric/Documentation/Installing_Bootloader.txt"
+			],
+			[
+				"shap",
+				"shape.py"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 307.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

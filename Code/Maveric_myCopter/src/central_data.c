@@ -14,7 +14,7 @@
 
 
 #include "central_data.h"
-#include "conf_sim_model.h"
+//#include "conf_sim_model.h"
 
 
 static volatile central_data_t centralData;
@@ -29,16 +29,16 @@ void central_data_init(){
 			centralData.servos[i].failsafe_position = -600;
 		}
 		
-		servo_pwm_failsafe(centralData.servos);
-		servo_pwm_set(centralData.servos);
+		servo_pwm_failsafe((servo_output*)centralData.servos);
+		servo_pwm_set((servo_output*)centralData.servos);
 
 		// TODO change names! XXX_init()
-		imu_init(&centralData.imu1);
-		qfilter_init(&(centralData.imu1.attitude), (centralData.imu1.raw_scale), (centralData.imu1.raw_bias));
+		imu_init((Imu_Data_t*)&(centralData.imu1));
+		qfilter_init((Quat_Attitude_t*)&(centralData.imu1.attitude), (float*)(centralData.imu1.raw_scale), (float*)(centralData.imu1.raw_bias));
 		
-		position_estimation_init(&centralData.position_estimator, &centralData.pressure, &centralData.GPS_data);
+		position_estimation_init((position_estimator_t*)&(centralData.position_estimator), (pressure_data*)&centralData.pressure, (gps_Data_type*)&centralData.GPS_data);
 	
-		qfilter_init_quaternion(&centralData.imu1.attitude);
+		qfilter_init_quaternion((Quat_Attitude_t*)&(centralData.imu1.attitude));
 		
 		navigation_init();
 		init_waypoint_handler();
@@ -47,10 +47,10 @@ void central_data_init(){
 		orca_init();
 
 		// init stabilisers
-		stabilisation_copter_init(&centralData.stabiliser_stack);
+		stabilisation_copter_init((Stabiliser_Stack_copter_t*)&centralData.stabiliser_stack);
 
 		// init simulation (should be done after position_estimator)
-		simulation_init(&(centralData.sim_model),&(centralData.imu1),centralData.position_estimator.localPosition);		
+		simulation_init((simulation_model_t*)&(centralData.sim_model), (Imu_Data_t*)&(centralData.imu1), (local_coordinates_t)centralData.position_estimator.localPosition);		
 		
 
 		centralData.simulation_mode = 0;
@@ -83,5 +83,5 @@ void central_data_init(){
 
 central_data_t* central_data_get_pointer_to_struct(void)
 {
-	return &centralData;
+	return (central_data_t*)&centralData;
 }

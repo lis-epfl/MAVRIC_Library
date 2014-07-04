@@ -32,8 +32,28 @@
 
 central_data_t *centralData;
 
+task_return_t control_waypoint_timeout (void);
+task_return_t mavlink_send_attitude(void);
+task_return_t mavlink_send_attitude_quaternion(void);
+task_return_t mavlink_send_estimator(void);
+task_return_t mavlink_send_global_position(void);
+task_return_t mavlink_send_gps_raw(void);
+task_return_t mavlink_send_heartbeat(void);
+task_return_t mavlink_send_hud(void);
+task_return_t mavlink_send_pressure(void);
+task_return_t mavlink_send_raw_imu(void);
+task_return_t mavlink_send_raw_rc_channels(void);
+task_return_t mavlink_send_rpy_rates_error(void);
+task_return_t mavlink_send_rpy_speed_thrust_setpoint(void);
+task_return_t mavlink_send_rpy_thrust_setpoint(void);
+task_return_t mavlink_send_rt_stats(void);
+task_return_t mavlink_send_scaled_imu(void);
+task_return_t mavlink_send_scaled_rc_channels(void);
+task_return_t mavlink_send_servo_output(void);
+task_return_t mavlink_send_simulation(void);
+task_return_t mavlink_send_sonar(void);
 
-void mavlink_send_heartbeat(void) 
+task_return_t mavlink_send_heartbeat(void) 
 {
 	central_data_t *centralData = central_data_get_pointer_to_struct();
 
@@ -52,10 +72,11 @@ void mavlink_send_heartbeat(void)
 								battery_remaining,										// battery remaining
 								0, 0,  													// comms drop, comms errors
 								0, 0, 0, 0);        									// autopilot specific errors
+	return TASK_RUN_SUCCESS;
 }
 
 
-void mavlink_send_raw_imu(void) 
+task_return_t mavlink_send_raw_imu(void) 
 {
 	mavlink_msg_raw_imu_send(	MAVLINK_COMM_0, 
 								time_keeper_get_micros(), 
@@ -68,10 +89,11 @@ void mavlink_send_raw_imu(void)
 								centralData->imu1.raw_channels[MAG_OFFSET + IMU_X], 
 								centralData->imu1.raw_channels[MAG_OFFSET + IMU_Y], 
 								centralData->imu1.raw_channels[MAG_OFFSET + IMU_Z] );
+	return TASK_RUN_SUCCESS;
 }
 
 
-void mavlink_send_scaled_imu(void) 
+task_return_t mavlink_send_scaled_imu(void) 
 {
 	mavlink_msg_scaled_imu_send(MAVLINK_COMM_0, 
 								time_keeper_get_millis(),
@@ -83,13 +105,12 @@ void mavlink_send_scaled_imu(void)
 								1000 * centralData->imu1.attitude.om[IMU_Z], 
 								1000 * centralData->imu1.attitude.mag[IMU_X],
 								1000 * centralData->imu1.attitude.mag[IMU_Y],
-								1000 * centralData->imu1.attitude.mag[IMU_Z]
-	);
-	
+								1000 * centralData->imu1.attitude.mag[IMU_Z]);
+	return TASK_RUN_SUCCESS;
 }
 
 
-void  mavlink_send_rpy_rates_error(void) 
+task_return_t  mavlink_send_rpy_rates_error(void) 
 {
 	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
 
@@ -99,10 +120,11 @@ void  mavlink_send_rpy_rates_error(void)
 															rate_stab->rpy_controller[1].error,
 															rate_stab->rpy_controller[2].error,
 															0 );
+	return TASK_RUN_SUCCESS;
 }
 
 
-void  mavlink_send_rpy_speed_thrust_setpoint(void) 
+task_return_t  mavlink_send_rpy_speed_thrust_setpoint(void) 
 {
 	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
 
@@ -112,10 +134,11 @@ void  mavlink_send_rpy_speed_thrust_setpoint(void)
 															rate_stab->rpy_controller[1].output,
 															rate_stab->rpy_controller[2].output,
 															0 );
+	return TASK_RUN_SUCCESS;
 }
 
 
-void mavlink_send_rpy_thrust_setpoint(void) 
+task_return_t mavlink_send_rpy_thrust_setpoint(void) 
 {	
 	// Controls output
 	mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(	MAVLINK_COMM_0, 
@@ -124,13 +147,12 @@ void mavlink_send_rpy_thrust_setpoint(void)
 														centralData->controls.rpy[PITCH], 
 														centralData->controls.rpy[YAW], 
 														centralData->controls.thrust);
+	return TASK_RUN_SUCCESS;
 }
 
 
-void mavlink_send_servo_output(void) 
+task_return_t mavlink_send_servo_output(void) 
 {
-	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
-
 	// FIXME: send only servos values in this message!
 	mavlink_msg_servo_output_raw_send(	MAVLINK_COMM_0, 
 										time_keeper_get_micros(), 
@@ -143,10 +165,11 @@ void mavlink_send_servo_output(void)
 										(uint16_t)(centralData->servos[5].value + 1500),
 										(uint16_t)(centralData->servos[6].value + 1500),
 										(uint16_t)(centralData->servos[7].value + 1500)	);
+	return TASK_RUN_SUCCESS;
 }
 
 
-void mavlink_send_attitude_quaternion(void) 
+task_return_t mavlink_send_attitude_quaternion(void) 
 {
 	// ATTITUDE QUATERNION
 	mavlink_msg_attitude_quaternion_send(	MAVLINK_COMM_0, 
@@ -158,10 +181,11 @@ void mavlink_send_attitude_quaternion(void)
 											centralData->imu1.attitude.om[0], 
 											centralData->imu1.attitude.om[1], 
 											centralData->imu1.attitude.om[2]	);
+	return TASK_RUN_SUCCESS;
 }
 
 
-void mavlink_send_attitude(void) 
+task_return_t mavlink_send_attitude(void) 
 {
 	// ATTITUDE
 	Aero_Attitude_t aero_attitude;
@@ -175,10 +199,11 @@ void mavlink_send_attitude(void)
 								centralData->imu1.attitude.om[0], 
 								centralData->imu1.attitude.om[1], 
 								centralData->imu1.attitude.om[2]);
+	return TASK_RUN_SUCCESS;
 }
 
 
-void mavlink_send_global_position(void) 
+task_return_t mavlink_send_global_position(void) 
 {				
 	// send integrated position (for now there is no GPS error correction...!!!)
 	global_position_t gpos = coord_conventions_local_to_global_position(centralData->position_estimator.localPosition);
@@ -194,10 +219,11 @@ void mavlink_send_global_position(void)
 											centralData->position_estimator.vel[1] * 100.0f, 
 											centralData->position_estimator.vel[2] * 100.0f, 
 											centralData->imu1.attitude.om[2]);
+	return TASK_RUN_SUCCESS;
 }
 
 
-void mavlink_send_hud(void) 
+task_return_t mavlink_send_hud(void) 
 {
 	float groundspeed = sqrt(centralData->position_estimator.vel[0] * centralData->position_estimator.vel[0] + centralData->position_estimator.vel[1] * centralData->position_estimator.vel[1]);
 	float airspeed=groundspeed;
@@ -223,9 +249,10 @@ void mavlink_send_hud(void)
 								(int)((centralData->controls.thrust + 1.0f) * 50), 
 								-centralData->position_estimator.localPosition.pos[2] + centralData->position_estimator.localPosition.origin.altitude, 
 								-centralData->position_estimator.vel[2]	);
+	return TASK_RUN_SUCCESS;
 }
 
-void mavlink_send_gps_raw(void) 
+task_return_t mavlink_send_gps_raw(void) 
 {	
 	if (centralData->GPS_data.status == GPS_OK)
 	{
@@ -255,10 +282,11 @@ void mavlink_send_gps_raw(void)
 										0, 
 										centralData->GPS_data.num_sats);
 	}
+	return TASK_RUN_SUCCESS;
 }
 
 
-void mavlink_send_pressure(void) 
+task_return_t mavlink_send_pressure(void) 
 {	
 	mavlink_msg_scaled_pressure_send(	MAVLINK_COMM_0, 
 										time_keeper_get_millis(), 
@@ -280,10 +308,11 @@ void mavlink_send_pressure(void)
 										time_keeper_get_millis(),
 										"baro_dt", 
 										centralData->pressure.dt);
+	return TASK_RUN_SUCCESS;
 }
 
 
-void mavlink_send_estimator(void)
+task_return_t mavlink_send_estimator(void)
 {
 	mavlink_msg_local_position_ned_send(	MAVLINK_COMM_0, 
 											time_keeper_get_millis(), 
@@ -293,10 +322,11 @@ void mavlink_send_estimator(void)
 											centralData->position_estimator.vel[0], 
 											centralData->position_estimator.vel[1], 
 											centralData->position_estimator.vel[2]);
+	return TASK_RUN_SUCCESS;
 }
 
 
-void mavlink_send_raw_rc_channels(void)
+task_return_t mavlink_send_raw_rc_channels(void)
 {
 	mavlink_msg_rc_channels_raw_send(	MAVLINK_COMM_0,time_keeper_get_millis(),
 										1,
@@ -309,10 +339,11 @@ void mavlink_send_raw_rc_channels(void)
 										remote_dsm2_rc_get_channel(6) + 1000,
 										remote_dsm2_rc_get_channel(7) + 1000,
 										remote_dsm2_rc_check_receivers()	);
+	return TASK_RUN_SUCCESS;
 }
 
 
-void mavlink_send_scaled_rc_channels(void)
+task_return_t mavlink_send_scaled_rc_channels(void)
 {
 	mavlink_msg_rc_channels_scaled_send(	MAVLINK_COMM_0,time_keeper_get_millis(),
 											1,
@@ -330,10 +361,11 @@ void mavlink_send_scaled_rc_channels(void)
 										time_keeper_get_millis(),
 										"Coll_Avoidance",
 										centralData->collision_avoidance	);
+	return TASK_RUN_SUCCESS;
 }
 
 
-void mavlink_send_simulation(void) 
+task_return_t mavlink_send_simulation(void) 
 {
 	Aero_Attitude_t aero_attitude;
 	aero_attitude = coord_conventions_quat_to_aero(centralData->sim_model.attitude.qe);
@@ -360,7 +392,7 @@ void mavlink_send_simulation(void)
 	
 	mavlink_msg_hil_state_quaternion_send(	MAVLINK_COMM_0,
 											time_keeper_get_micros(),
-											&centralData->sim_model.attitude.qe,
+											(float*) &centralData->sim_model.attitude.qe,
 											aero_attitude.rpy[ROLL],
 											aero_attitude.rpy[PITCH],
 											aero_attitude.rpy[YAW],
@@ -415,10 +447,11 @@ void mavlink_send_simulation(void)
 										time_keeper_get_millis(),
 										"rpm4",
 										centralData->sim_model.rotorspeeds[3]);
+	return TASK_RUN_SUCCESS;
 }
 
 
-task_return_t mavlink_send_rt_stats() 
+task_return_t mavlink_send_rt_stats(void) 
 {
 	task_set* main_tasks = tasks_get_main_taskset();
 	
@@ -467,6 +500,7 @@ task_return_t mavlink_send_rt_stats()
 	main_tasks->tasks[1].rt_violations = 0;
 	main_tasks->tasks[1].delay_max = 0;
 
+	return TASK_RUN_SUCCESS;
 }
 
 
@@ -480,7 +514,7 @@ void mavlink_actions_add_onboard_parameters(void) {
 	// onboard_parameters_add_parameter_uint8(&(mavlink_mission_planner.sysid),"ID_Planner");
 	
 	// Simulation mode
-	onboard_parameters_add_parameter_int32(&centralData->simulation_mode, "Sim_mode");
+	onboard_parameters_add_parameter_int32((int32_t*)&centralData->simulation_mode, "Sim_mode");
 	
 	// Roll rate PID
 	onboard_parameters_add_parameter_float(&rate_stabiliser->rpy_controller[ROLL].p_gain, "RollRPid_P_G");
@@ -622,6 +656,8 @@ task_return_t control_waypoint_timeout (void)
 	control_time_out_waypoint_msg(	&(centralData->number_of_waypoints),
 									&centralData->waypoint_receiving,
 									&centralData->waypoint_sending);
+	
+	return TASK_RUN_SUCCESS;
 }
 
 
@@ -1308,12 +1344,13 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 }
 
 
-void mavlink_send_sonar(void)
+task_return_t mavlink_send_sonar(void)
 {
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
 										time_keeper_get_millis(),
 										"sonar(m)", 
 										centralData->i2cxl_sonar.distance_m);
+	return TASK_RUN_SUCCESS;
 }
 
 void mavlink_actions_init(void) {
