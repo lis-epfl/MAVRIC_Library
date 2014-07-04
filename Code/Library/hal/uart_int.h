@@ -100,6 +100,12 @@ void uart_int_register_write_stream(usart_config_t *usart_opt, byte_stream_t *st
  */
 void uart_int_register_write_stream_nonblocking(usart_config_t *usart_opt, byte_stream_t *stream);
 
+/**
+ * \brief Registers a stream interface with the UART receiver (data from the stream will be read). 
+ * 
+ * \param	usart_opt	The pointer to the UART line
+ * \param	stream		The pointer to the stream on which you want to register a read stream
+ */
 void uart_int_register_read_stream(usart_config_t *usart_opt,  byte_stream_t *stream);
 
 #ifdef __cplusplus
