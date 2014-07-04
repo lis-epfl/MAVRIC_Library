@@ -99,7 +99,7 @@ int16_t adc_int_get_sample(int channel, int sample);
  *
  * \return a 2 dimension table of samples for all channels
 */
-int16_t* adc_int_get_buffer(void);
+int16_t** adc_int_get_buffer(void);
 
 /**
  * \brief return the sampling counter, which indicates where the sampling process stand
