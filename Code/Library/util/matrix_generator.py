@@ -90,13 +90,14 @@ def generate_types( dim):
     output+="matrix_"+type_ext+"_t static inline trans%i"%dim+"(const matrix_"+type_ext+"_t m) {\n"+\
                      "   matrix_"+type_ext+"_t result= \n   {.v={";
     for i in range(0, dim):
+        output+="{"
         for j in range(0, dim):
             output+="m.v[%i][%i]"%(j,  i)
             if j!=dim-1:
                 output+=", "
             elif i!=dim-1:
-                output+=", \n        "
-    output+="}};\n"
+                output+="}, \n        "
+    output+="}}};\n"
     output+="   return result;\n}\n"
 
     return output
@@ -111,6 +112,7 @@ def generate_mul(dim):
                     "   matrix_"+type_ext+"_t result= \n   {.v={";
     
     for i in range(0, dim):
+        output+="{"
         for j in range(0, dim):
             for k in range(0, dim):
                 output+="m1.v[%i][%i]* m2.v[%i][%i]"%(i,  k,  k,  j)
@@ -119,9 +121,9 @@ def generate_mul(dim):
             if j!=dim-1:
                 output+=", "
             elif i!=dim-1:
-                output+=", \n        "
+                output+="}, \n        "
         
-    output+="}};\n"
+    output+="}}};\n"
     output+="   return result;\n}\n\n"
     
     
@@ -131,14 +133,15 @@ def generate_mul(dim):
                     "   matrix_"+type_ext+"_t result= \n   {.v={";
     
     for i in range(0, dim):
+        output+="{"
         for j in range(0, dim):
             output+="s * m.v[%i][%i]"%(i,  j)
             if j!=dim-1:
                 output+=", "
             elif i!=dim-1:
-                output+=", \n        "
+                output+="}, \n        "
         
-    output+="}};\n"
+    output+="}}};\n"
     output+="   return result;\n}\n\n"
     
     #matrix / vector
@@ -176,14 +179,15 @@ def generate_mul(dim):
                     "   matrix_"+type_ext+"_t result= \n   {.v={";
     
     for i in range(0, dim):
+        output+="{"    
         for j in range(0, dim):
             output+="vec1.v[%i]* vec2.v[%i]"%(i,   j)
             if j!=dim-1:
                 output+=", "
             elif i!=dim-1:
-                output+=", \n        "
+                output+="}, \n        "
         
-    output+="}};\n"
+    output+="}}};\n"
     output+="   return result;\n}\n\n"
 
     #scalar product
@@ -209,14 +213,15 @@ def generate_pointwise(dim,  name,  operator):
                     "   matrix_"+type_ext+"_t result= \n   {.v={";
     
     for i in range(0, dim):
+        output+="{"    
         for j in range(0, dim):
             output+="m1.v[%i][%i]"%( i,  j)+operator+" m2.v[%i][%i]"%(i,  j)
             if j!=dim-1:
                 output+=", "
             elif i!=dim-1:
-                output+=", \n        "
+                output+="}, \n        "
         
-    output+="}};\n"
+    output+="}}};\n"
     output+="   return result;\n}\n\n"
 
     output+="// pointwise "+name+" for "+type_ext+" vectors\n"
