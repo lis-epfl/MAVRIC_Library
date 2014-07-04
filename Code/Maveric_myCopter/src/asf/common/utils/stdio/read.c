@@ -49,7 +49,7 @@
 
 extern volatile void *volatile stdio_base;
 void (*ptr_get)(void volatile*,int*);
-
+int __attribute__((weak)) _read (int file, char * ptr, int len);
 
 // IAR common implementation
 #if ( defined(__ICCAVR32__) || defined(__ICCAVR__))

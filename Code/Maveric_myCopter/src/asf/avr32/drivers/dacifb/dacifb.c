@@ -50,12 +50,15 @@
 #include "dacifb.h"
 #include "cycle_counter.h"
 
+///< Function prototype definitions
+static void dacifb_us_delay(unsigned long us, unsigned long hsb_mhz_up);
+
 /*! \brief Waits during at least the specified delay before returning.
  *
  * \param us Number of microseconds to wait.
  * \param hsb_mhz_up Rounded-up HSB frequency in MHz.
  */
-static void dacifb_us_delay(us, hsb_mhz_up)
+static void dacifb_us_delay(unsigned long us, unsigned long hsb_mhz_up)
 {
 	t_cpu_time timer;
     cpu_set_timeout( cpu_us_2_cy(us, hsb_mhz_up), &timer ); // timeout in 10 ms
