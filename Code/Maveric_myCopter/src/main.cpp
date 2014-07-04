@@ -26,7 +26,6 @@ central_data_t *centralData;
 void initialisation() 
 {
 	int i;
-	GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 	
 	centralData = central_data_get_pointer_to_struct();
 	boardsupport_init(centralData);

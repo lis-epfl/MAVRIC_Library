@@ -52,5 +52,5 @@ compass_data* compass_hmc58831l_get_data_slow() {
 	{
 		compass_outputs.axes[i] = (int16_t)(compass_outputs.raw_data[2 * i] << 8) + (int16_t)(compass_outputs.raw_data[2 * i + 1]);
 	}
-	return &compass_outputs;
+	return (compass_data*)&compass_outputs;
 }

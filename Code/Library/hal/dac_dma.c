@@ -33,6 +33,13 @@ volatile avr32_dacifb_t *dacifb = &AVR32_DACIFB0;	///< DACIFB registers address
 S16 dac_value_audio = -1;							///< (?)
 U8 dac_channel_audio = DAC_AUDIO_CHANNEL;			///< Assign the on-board sensors to their DAC channel.
 
+///< Functions Prototype Definition
+void init_pevc(void);
+void init_gclk(void);
+void DAC_pause(void);
+void DAC_resume(void);
+int  DAC_is_finished(void);
+
 /**
  * \brief intterupt handler for the DAC
 */
@@ -183,7 +190,7 @@ void dac_dma_play()
 {
 	//Disable_global_interrupt();
 	pdca_disable(PDCA_CHANNEL_DAC);
-	pdca_reload_channel(PDCA_CHANNEL_DAC, (void *)buffer + 2 * from, to - from);
+	pdca_reload_channel(PDCA_CHANNEL_DAC, (char *)buffer + 2 * from, to - from);
 	///< Enable now the transfer.
 	//Enable_global_interrupt();
 	pdca_enable(PDCA_CHANNEL_DAC); 

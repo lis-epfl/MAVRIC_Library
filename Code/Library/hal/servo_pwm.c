@@ -24,6 +24,9 @@
 #define SERVO_PERIOD (SERVO_TIMER_FREQ/SERVO_REPEAT_FREQ)	///< Define the servo period
 #define SERVO_CENTER_DUTY_TICKS 1500						///< (SERVO_CENTER_DUTY_MICROSEC*SERVO_TIMER_FREQ/1000000)
 
+///< Function prototype definitions
+void set_servo(int channel, int val_a, int val_b);
+
 void servo_pwm_init(void)
 {
 	int i = 0;
