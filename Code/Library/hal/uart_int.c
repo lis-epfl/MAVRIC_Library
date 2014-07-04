@@ -12,7 +12,7 @@
 /**
  * \file uart_int.c
  *
- * This file implments the UART communication protocol
+ * This file implements the UART communication protocol
  */
 
 
