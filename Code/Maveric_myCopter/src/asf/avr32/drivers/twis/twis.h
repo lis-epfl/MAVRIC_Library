@@ -61,9 +61,9 @@
  * to UC3 devices with TWIM module
  * @{
  */
-#define avr32_twi_t avr32_twis_t
-#define twi_options_t twis_options_t
-#define twi_package_t twis_package_t
+//#define avr32_twi_t avr32_twis_t
+//#define twi_options_t twis_options_t
+//#define twi_package_t twis_package_t
 #define twi_slave_fct_t twis_slave_fct_t
 #define twi_slave_init twis_slave_init
 //! @}
