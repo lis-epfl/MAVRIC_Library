@@ -60,9 +60,9 @@ typedef struct
 typedef struct												
 {
 	float values[MAVERIC_FLASHC_USER_PAGE_FREE_SPACE];
-}nvram_data_ttt;
+}nvram_data_t;
 
-nvram_data_ttt *nvram_array;
+nvram_data_t *nvram_array;
 
 /**
 * \brief	Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0
@@ -135,7 +135,7 @@ void onboard_parameters_send_all_parameters(void);
 /**
  * \brief	Sends all parameters that have been scheduled via MAVlink
  */
-void onboard_parameters_send_scheduled_parameters(void);
+task_return_t onboard_parameters_send_scheduled_parameters(void);
 
 /**
  * \brief			Responds to a MAVlink parameter request
