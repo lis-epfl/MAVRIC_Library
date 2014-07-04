@@ -26,10 +26,6 @@ extern "C" {
 #include "compiler.h"
 #include "coord_conventions.h"
 
-#define GYRO_LPF 0.1f				///< The gyroscope linear particle filter gain
-#define ACC_LPF 0.05f				///< The accelerometer linear particle filter gain
-#define MAG_LPF 0.1f					///< The magnetometer linear particle filter gain
-
 
 #define GRAVITY 9.81f				///< The gravity constant
 
@@ -91,10 +87,9 @@ void qfilter_init_quaternion(Quat_Attitude_t *attitude);
  * \brief	Performs the attitude estimation via a complementary filter
  *
  * \param	attitude		The pointer to the attitude structure
- * \param	rates			The raw rates from the IMU
  * \param	dt				The time interval between two estimation loops
  */
-void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float rates[9], float dt);
+void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float dt);
 
 #ifdef __cplusplus
 }

@@ -89,21 +89,13 @@ void qfilter_init_quaternion(Quat_Attitude_t *attitude)
 	attitude->qe.v[2] = sin(init_angle / 2.0f);
 }
 
-void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float rates[9], float dt){
+void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float dt){
 	uint8_t i;
 	float  omc[3], omc_mag[3] , tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
 	UQuat_t qed, qtmp1, up, up_bf;
 	UQuat_t mag_global, mag_corrected_local;
 	UQuat_t front_vec_global = {.s = 0.0f, .v = {1.0f, 0.0f, 0.0f}};
 	float kp, kp_mag;
-	
-	
-	for (i = 0; i < 3; i++)
-	{
-		attitude->om[i]  = (1.0f - GYRO_LPF) * attitude->om[i] + GYRO_LPF * (((float)rates[i + GYRO_OFFSET] - attitude->be[i + GYRO_OFFSET]) * attitude->sf[i + GYRO_OFFSET]);
-		attitude->a[i]   = (1.0f - ACC_LPF) * attitude->a[i] + ACC_LPF * (((float)rates[i + ACC_OFFSET] - attitude->be[i + ACC_OFFSET]) * attitude->sf[i + ACC_OFFSET]);
-		attitude->mag[i] = (1.0f - MAG_LPF) * attitude->mag[i] + MAG_LPF * (((float)rates[i + MAG_OFFSET] - attitude->be[i + MAG_OFFSET]) * attitude->sf[i + MAG_OFFSET]);
-	}
 
 	// up_bf = qe^-1 *(0,0,0,-1) * qe
 	up.s = 0; up.v[0] = UPVECTOR_X; up.v[1] = UPVECTOR_Y; up.v[2] = UPVECTOR_Z;
