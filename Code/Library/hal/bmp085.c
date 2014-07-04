@@ -29,7 +29,11 @@
 
 pressure_data pressure_outputs;		///< declare an object containing the barometer's data
 
-int16_t bmp085_read_int(unsigned char address) {
+///< Prototype definition
+int16_t bmp085_read_int(unsigned char address);
+
+int16_t bmp085_read_int(unsigned char address) 
+{
 	int16_t result;
 	twim_write(&AVR32_TWIM0, (uint8_t*) &address, 1, BMP085_SLAVE_ADDRESS, false);
 	twim_read(&AVR32_TWIM0, (uint8_t*)&(result), 2, BMP085_SLAVE_ADDRESS, false);
