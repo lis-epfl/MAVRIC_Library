@@ -32,6 +32,10 @@ Spektrum_Receiver_t spRec2;								///< Declare an object containing the receive
 
 int16_t channelCenter[16];								///< Declare an array to store the central position of each channel
 
+///< Function prototype definitions
+int8_t checkReceiver1(void);
+int8_t checkReceiver2(void);
+
 /**
  * \brief Define the service routine for the spektrum handler interruption
  */
@@ -174,58 +178,72 @@ int16_t remote_dsm2_rc_get_channel_neutral(uint8_t index) {
 	return value;
 }
 
-void remote_dsm2_rc_center_channel(uint8_t index){
+void remote_dsm2_rc_center_channel(uint8_t index)
+{
 	channelCenter[index] = remote_dsm2_rc_get_channel(index);
 }
 
-int8_t checkReceiver1(void) {
+int8_t checkReceiver1(void) 
+{
 	int8_t i;
 	uint32_t now = time_keeper_get_time_ticks();
 	uint32_t duration = now - spRec1.last_update;
-	if (spRec1.valid == 0) return - 2;
-	if (duration < 100000) {
+	if (spRec1.valid == 0)
+	{
+		return - 2;
+	}
+	if (duration < 100000) 
+	{
 		return 1;
-	} else
-	if (duration < 1500000) {
+	} 
+	else if (duration < 1500000) 
+	{
 		spRec1.channels[RC_ROLL] = 0;	
 		spRec1.channels[RC_PITCH] = 0;	
 		spRec1.channels[RC_YAW] = 0;	
 		return -1; // brief drop out - hold pattern
 		
-	} else {
+	} 
+	else 
+	{
 		spRec1.valid = 0;
-		for (i = 1; i < 8; i++) {
+		for (i = 1; i < 8; i++) 
+		{
 			spRec1.channels[i] = 0;			
 		}
 		spRec1.channels[RC_THROTTLE] = -1000;
 		return -2; // fade - fail safe
-
 	}
-
 }
 
-int8_t checkReceiver2(void){
+int8_t checkReceiver2(void)
+{
 	int8_t i;
 	uint32_t now = 0; //TCC0.CNT;
 	uint32_t duration = now - spRec2.last_update;
 	if (spRec2.valid == 0) return -2;
-	if (duration < 200000) {
+	if (duration < 200000) 
+	{
 		return 1;
-	} else if (duration < 500000) {
+	} 
+	else if (duration < 500000) 
+	{
 		return -1; // brief drop out - hold pattern
-	} else {
+	} 
+	else 
+	{
 		spRec2.valid = 0;
-		for (i = 1; i < 8; i++) {
+		for (i = 1; i < 8; i++) 
+		{
 			spRec2.channels[i] = 0;
 		}
 		spRec2.channels[RC_THROTTLE] = -1000;
 		return -2; // fade - fail safe
-
 	}
-
 }
 
-int8_t remote_dsm2_rc_check_receivers(void) {
+int8_t remote_dsm2_rc_check_receivers(void) 
+{
 	return checkReceiver1();// + checkReceiver2();
 }
 

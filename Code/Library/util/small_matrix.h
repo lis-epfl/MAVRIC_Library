@@ -1,9 +1,6 @@
 #ifndef SMALL_MATRIX_H_
 #define SMALL_MATRIX_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 typedef struct matrix_1x1_t {
    float v[1][1];
@@ -50,20 +47,20 @@ vector_1_t static inline diag_vector1(const matrix_1x1_t m) {
 // transpose of a matrix
 matrix_1x1_t static inline trans1(const matrix_1x1_t m) {
    matrix_1x1_t result= 
-   {.v={m.v[0][0]}};
+   {.v={{m.v[0][0]}}};
    return result;
 }
 // matrix product for 1x1 matrices
 matrix_1x1_t static inline mmul1(const matrix_1x1_t m1, const matrix_1x1_t m2) {
    matrix_1x1_t result= 
-   {.v={m1.v[0][0]* m2.v[0][0]}};
+   {.v={{m1.v[0][0]* m2.v[0][0]}}};
    return result;
 }
 
 // scalar/matrix product for 1x1 matrices
 matrix_1x1_t static inline smmul1(const float s, const matrix_1x1_t m) {
    matrix_1x1_t result= 
-   {.v={s * m.v[0][0]}};
+   {.v={{s * m.v[0][0]}}};
    return result;
 }
 
@@ -84,7 +81,7 @@ vector_1_t static inline svmul1(const float s, const vector_1_t vec) {
 // tensor product for 1D vectors
 matrix_1x1_t static inline tp1(const vector_1_t vec1, const vector_1_t vec2) {
    matrix_1x1_t result= 
-   {.v={vec1.v[0]* vec2.v[0]}};
+   {.v={{vec1.v[0]* vec2.v[0]}}};
    return result;
 }
 
@@ -96,7 +93,7 @@ float static inline sp1(const vector_1_t vec1, const vector_1_t vec2) {
 // pointwise add for 1x1 matrices
 matrix_1x1_t static inline madd1(const matrix_1x1_t m1, const matrix_1x1_t m2) {
    matrix_1x1_t result= 
-   {.v={m1.v[0][0]+ m2.v[0][0]}};
+   {.v={{m1.v[0][0]+ m2.v[0][0]}}};
    return result;
 }
 
@@ -110,7 +107,7 @@ vector_1_t static inline vadd1(const vector_1_t v1, const vector_1_t v2) {
 // pointwise sub for 1x1 matrices
 matrix_1x1_t static inline msub1(const matrix_1x1_t m1, const matrix_1x1_t m2) {
    matrix_1x1_t result= 
-   {.v={m1.v[0][0]- m2.v[0][0]}};
+   {.v={{m1.v[0][0]- m2.v[0][0]}}};
    return result;
 }
 
@@ -124,7 +121,7 @@ vector_1_t static inline vsub1(const vector_1_t v1, const vector_1_t v2) {
 // pointwise pwmul for 1x1 matrices
 matrix_1x1_t static inline mpwmul1(const matrix_1x1_t m1, const matrix_1x1_t m2) {
    matrix_1x1_t result= 
-   {.v={m1.v[0][0]* m2.v[0][0]}};
+   {.v={{m1.v[0][0]* m2.v[0][0]}}};
    return result;
 }
 
@@ -221,23 +218,23 @@ vector_2_t static inline diag_vector2(const matrix_2x2_t m) {
 // transpose of a matrix
 matrix_2x2_t static inline trans2(const matrix_2x2_t m) {
    matrix_2x2_t result= 
-   {.v={m.v[0][0], m.v[1][0], 
-        m.v[0][1], m.v[1][1]}};
+   {.v={{m.v[0][0], m.v[1][0]}, 
+        {m.v[0][1], m.v[1][1]}}};
    return result;
 }
 // matrix product for 2x2 matrices
 matrix_2x2_t static inline mmul2(const matrix_2x2_t m1, const matrix_2x2_t m2) {
    matrix_2x2_t result= 
-   {.v={m1.v[0][0]* m2.v[0][0]+m1.v[0][1]* m2.v[1][0], m1.v[0][0]* m2.v[0][1]+m1.v[0][1]* m2.v[1][1], 
-        m1.v[1][0]* m2.v[0][0]+m1.v[1][1]* m2.v[1][0], m1.v[1][0]* m2.v[0][1]+m1.v[1][1]* m2.v[1][1]}};
+   {.v={{m1.v[0][0]* m2.v[0][0]+m1.v[0][1]* m2.v[1][0], m1.v[0][0]* m2.v[0][1]+m1.v[0][1]* m2.v[1][1]}, 
+        {m1.v[1][0]* m2.v[0][0]+m1.v[1][1]* m2.v[1][0], m1.v[1][0]* m2.v[0][1]+m1.v[1][1]* m2.v[1][1]}}};
    return result;
 }
 
 // scalar/matrix product for 2x2 matrices
 matrix_2x2_t static inline smmul2(const float s, const matrix_2x2_t m) {
    matrix_2x2_t result= 
-   {.v={s * m.v[0][0], s * m.v[0][1], 
-        s * m.v[1][0], s * m.v[1][1]}};
+   {.v={{s * m.v[0][0], s * m.v[0][1]}, 
+        {s * m.v[1][0], s * m.v[1][1]}}};
    return result;
 }
 
@@ -260,8 +257,8 @@ vector_2_t static inline svmul2(const float s, const vector_2_t vec) {
 // tensor product for 2D vectors
 matrix_2x2_t static inline tp2(const vector_2_t vec1, const vector_2_t vec2) {
    matrix_2x2_t result= 
-   {.v={vec1.v[0]* vec2.v[0], vec1.v[0]* vec2.v[1], 
-        vec1.v[1]* vec2.v[0], vec1.v[1]* vec2.v[1]}};
+   {.v={{vec1.v[0]* vec2.v[0], vec1.v[0]* vec2.v[1]}, 
+        {vec1.v[1]* vec2.v[0], vec1.v[1]* vec2.v[1]}}};
    return result;
 }
 
@@ -273,8 +270,8 @@ float static inline sp2(const vector_2_t vec1, const vector_2_t vec2) {
 // pointwise add for 2x2 matrices
 matrix_2x2_t static inline madd2(const matrix_2x2_t m1, const matrix_2x2_t m2) {
    matrix_2x2_t result= 
-   {.v={m1.v[0][0]+ m2.v[0][0], m1.v[0][1]+ m2.v[0][1], 
-        m1.v[1][0]+ m2.v[1][0], m1.v[1][1]+ m2.v[1][1]}};
+   {.v={{m1.v[0][0]+ m2.v[0][0], m1.v[0][1]+ m2.v[0][1]}, 
+        {m1.v[1][0]+ m2.v[1][0], m1.v[1][1]+ m2.v[1][1]}}};
    return result;
 }
 
@@ -289,8 +286,8 @@ vector_2_t static inline vadd2(const vector_2_t v1, const vector_2_t v2) {
 // pointwise sub for 2x2 matrices
 matrix_2x2_t static inline msub2(const matrix_2x2_t m1, const matrix_2x2_t m2) {
    matrix_2x2_t result= 
-   {.v={m1.v[0][0]- m2.v[0][0], m1.v[0][1]- m2.v[0][1], 
-        m1.v[1][0]- m2.v[1][0], m1.v[1][1]- m2.v[1][1]}};
+   {.v={{m1.v[0][0]- m2.v[0][0], m1.v[0][1]- m2.v[0][1]}, 
+        {m1.v[1][0]- m2.v[1][0], m1.v[1][1]- m2.v[1][1]}}};
    return result;
 }
 
@@ -305,8 +302,8 @@ vector_2_t static inline vsub2(const vector_2_t v1, const vector_2_t v2) {
 // pointwise pwmul for 2x2 matrices
 matrix_2x2_t static inline mpwmul2(const matrix_2x2_t m1, const matrix_2x2_t m2) {
    matrix_2x2_t result= 
-   {.v={m1.v[0][0]* m2.v[0][0], m1.v[0][1]* m2.v[0][1], 
-        m1.v[1][0]* m2.v[1][0], m1.v[1][1]* m2.v[1][1]}};
+   {.v={{m1.v[0][0]* m2.v[0][0], m1.v[0][1]* m2.v[0][1]}, 
+        {m1.v[1][0]* m2.v[1][0], m1.v[1][1]* m2.v[1][1]}}};
    return result;
 }
 
@@ -410,26 +407,26 @@ vector_3_t static inline diag_vector3(const matrix_3x3_t m) {
 // transpose of a matrix
 matrix_3x3_t static inline trans3(const matrix_3x3_t m) {
    matrix_3x3_t result= 
-   {.v={m.v[0][0], m.v[1][0], m.v[2][0], 
-        m.v[0][1], m.v[1][1], m.v[2][1], 
-        m.v[0][2], m.v[1][2], m.v[2][2]}};
+   {.v={{m.v[0][0], m.v[1][0], m.v[2][0]}, 
+        {m.v[0][1], m.v[1][1], m.v[2][1]}, 
+        {m.v[0][2], m.v[1][2], m.v[2][2]}}};
    return result;
 }
 // matrix product for 3x3 matrices
 matrix_3x3_t static inline mmul3(const matrix_3x3_t m1, const matrix_3x3_t m2) {
    matrix_3x3_t result= 
-   {.v={m1.v[0][0]* m2.v[0][0]+m1.v[0][1]* m2.v[1][0]+m1.v[0][2]* m2.v[2][0], m1.v[0][0]* m2.v[0][1]+m1.v[0][1]* m2.v[1][1]+m1.v[0][2]* m2.v[2][1], m1.v[0][0]* m2.v[0][2]+m1.v[0][1]* m2.v[1][2]+m1.v[0][2]* m2.v[2][2], 
-        m1.v[1][0]* m2.v[0][0]+m1.v[1][1]* m2.v[1][0]+m1.v[1][2]* m2.v[2][0], m1.v[1][0]* m2.v[0][1]+m1.v[1][1]* m2.v[1][1]+m1.v[1][2]* m2.v[2][1], m1.v[1][0]* m2.v[0][2]+m1.v[1][1]* m2.v[1][2]+m1.v[1][2]* m2.v[2][2], 
-        m1.v[2][0]* m2.v[0][0]+m1.v[2][1]* m2.v[1][0]+m1.v[2][2]* m2.v[2][0], m1.v[2][0]* m2.v[0][1]+m1.v[2][1]* m2.v[1][1]+m1.v[2][2]* m2.v[2][1], m1.v[2][0]* m2.v[0][2]+m1.v[2][1]* m2.v[1][2]+m1.v[2][2]* m2.v[2][2]}};
+   {.v={{m1.v[0][0]* m2.v[0][0]+m1.v[0][1]* m2.v[1][0]+m1.v[0][2]* m2.v[2][0], m1.v[0][0]* m2.v[0][1]+m1.v[0][1]* m2.v[1][1]+m1.v[0][2]* m2.v[2][1], m1.v[0][0]* m2.v[0][2]+m1.v[0][1]* m2.v[1][2]+m1.v[0][2]* m2.v[2][2]}, 
+        {m1.v[1][0]* m2.v[0][0]+m1.v[1][1]* m2.v[1][0]+m1.v[1][2]* m2.v[2][0], m1.v[1][0]* m2.v[0][1]+m1.v[1][1]* m2.v[1][1]+m1.v[1][2]* m2.v[2][1], m1.v[1][0]* m2.v[0][2]+m1.v[1][1]* m2.v[1][2]+m1.v[1][2]* m2.v[2][2]}, 
+        {m1.v[2][0]* m2.v[0][0]+m1.v[2][1]* m2.v[1][0]+m1.v[2][2]* m2.v[2][0], m1.v[2][0]* m2.v[0][1]+m1.v[2][1]* m2.v[1][1]+m1.v[2][2]* m2.v[2][1], m1.v[2][0]* m2.v[0][2]+m1.v[2][1]* m2.v[1][2]+m1.v[2][2]* m2.v[2][2]}}};
    return result;
 }
 
 // scalar/matrix product for 3x3 matrices
 matrix_3x3_t static inline smmul3(const float s, const matrix_3x3_t m) {
    matrix_3x3_t result= 
-   {.v={s * m.v[0][0], s * m.v[0][1], s * m.v[0][2], 
-        s * m.v[1][0], s * m.v[1][1], s * m.v[1][2], 
-        s * m.v[2][0], s * m.v[2][1], s * m.v[2][2]}};
+   {.v={{s * m.v[0][0], s * m.v[0][1], s * m.v[0][2]}, 
+        {s * m.v[1][0], s * m.v[1][1], s * m.v[1][2]}, 
+        {s * m.v[2][0], s * m.v[2][1], s * m.v[2][2]}}};
    return result;
 }
 
@@ -454,9 +451,9 @@ vector_3_t static inline svmul3(const float s, const vector_3_t vec) {
 // tensor product for 3D vectors
 matrix_3x3_t static inline tp3(const vector_3_t vec1, const vector_3_t vec2) {
    matrix_3x3_t result= 
-   {.v={vec1.v[0]* vec2.v[0], vec1.v[0]* vec2.v[1], vec1.v[0]* vec2.v[2], 
-        vec1.v[1]* vec2.v[0], vec1.v[1]* vec2.v[1], vec1.v[1]* vec2.v[2], 
-        vec1.v[2]* vec2.v[0], vec1.v[2]* vec2.v[1], vec1.v[2]* vec2.v[2]}};
+   {.v={{vec1.v[0]* vec2.v[0], vec1.v[0]* vec2.v[1], vec1.v[0]* vec2.v[2]}, 
+        {vec1.v[1]* vec2.v[0], vec1.v[1]* vec2.v[1], vec1.v[1]* vec2.v[2]}, 
+        {vec1.v[2]* vec2.v[0], vec1.v[2]* vec2.v[1], vec1.v[2]* vec2.v[2]}}};
    return result;
 }
 
@@ -468,9 +465,9 @@ float static inline sp3(const vector_3_t vec1, const vector_3_t vec2) {
 // pointwise add for 3x3 matrices
 matrix_3x3_t static inline madd3(const matrix_3x3_t m1, const matrix_3x3_t m2) {
    matrix_3x3_t result= 
-   {.v={m1.v[0][0]+ m2.v[0][0], m1.v[0][1]+ m2.v[0][1], m1.v[0][2]+ m2.v[0][2], 
-        m1.v[1][0]+ m2.v[1][0], m1.v[1][1]+ m2.v[1][1], m1.v[1][2]+ m2.v[1][2], 
-        m1.v[2][0]+ m2.v[2][0], m1.v[2][1]+ m2.v[2][1], m1.v[2][2]+ m2.v[2][2]}};
+   {.v={{m1.v[0][0]+ m2.v[0][0], m1.v[0][1]+ m2.v[0][1], m1.v[0][2]+ m2.v[0][2]}, 
+        {m1.v[1][0]+ m2.v[1][0], m1.v[1][1]+ m2.v[1][1], m1.v[1][2]+ m2.v[1][2]}, 
+        {m1.v[2][0]+ m2.v[2][0], m1.v[2][1]+ m2.v[2][1], m1.v[2][2]+ m2.v[2][2]}}};
    return result;
 }
 
@@ -486,9 +483,9 @@ vector_3_t static inline vadd3(const vector_3_t v1, const vector_3_t v2) {
 // pointwise sub for 3x3 matrices
 matrix_3x3_t static inline msub3(const matrix_3x3_t m1, const matrix_3x3_t m2) {
    matrix_3x3_t result= 
-   {.v={m1.v[0][0]- m2.v[0][0], m1.v[0][1]- m2.v[0][1], m1.v[0][2]- m2.v[0][2], 
-        m1.v[1][0]- m2.v[1][0], m1.v[1][1]- m2.v[1][1], m1.v[1][2]- m2.v[1][2], 
-        m1.v[2][0]- m2.v[2][0], m1.v[2][1]- m2.v[2][1], m1.v[2][2]- m2.v[2][2]}};
+   {.v={{m1.v[0][0]- m2.v[0][0], m1.v[0][1]- m2.v[0][1], m1.v[0][2]- m2.v[0][2]}, 
+        {m1.v[1][0]- m2.v[1][0], m1.v[1][1]- m2.v[1][1], m1.v[1][2]- m2.v[1][2]}, 
+        {m1.v[2][0]- m2.v[2][0], m1.v[2][1]- m2.v[2][1], m1.v[2][2]- m2.v[2][2]}}};
    return result;
 }
 
@@ -504,9 +501,9 @@ vector_3_t static inline vsub3(const vector_3_t v1, const vector_3_t v2) {
 // pointwise pwmul for 3x3 matrices
 matrix_3x3_t static inline mpwmul3(const matrix_3x3_t m1, const matrix_3x3_t m2) {
    matrix_3x3_t result= 
-   {.v={m1.v[0][0]* m2.v[0][0], m1.v[0][1]* m2.v[0][1], m1.v[0][2]* m2.v[0][2], 
-        m1.v[1][0]* m2.v[1][0], m1.v[1][1]* m2.v[1][1], m1.v[1][2]* m2.v[1][2], 
-        m1.v[2][0]* m2.v[2][0], m1.v[2][1]* m2.v[2][1], m1.v[2][2]* m2.v[2][2]}};
+   {.v={{m1.v[0][0]* m2.v[0][0], m1.v[0][1]* m2.v[0][1], m1.v[0][2]* m2.v[0][2]}, 
+        {m1.v[1][0]* m2.v[1][0], m1.v[1][1]* m2.v[1][1], m1.v[1][2]* m2.v[1][2]}, 
+        {m1.v[2][0]* m2.v[2][0], m1.v[2][1]* m2.v[2][1], m1.v[2][2]* m2.v[2][2]}}};
    return result;
 }
 
@@ -617,29 +614,29 @@ vector_4_t static inline diag_vector4(const matrix_4x4_t m) {
 // transpose of a matrix
 matrix_4x4_t static inline trans4(const matrix_4x4_t m) {
    matrix_4x4_t result= 
-   {.v={m.v[0][0], m.v[1][0], m.v[2][0], m.v[3][0], 
-        m.v[0][1], m.v[1][1], m.v[2][1], m.v[3][1], 
-        m.v[0][2], m.v[1][2], m.v[2][2], m.v[3][2], 
-        m.v[0][3], m.v[1][3], m.v[2][3], m.v[3][3]}};
+   {.v={{m.v[0][0], m.v[1][0], m.v[2][0], m.v[3][0]}, 
+        {m.v[0][1], m.v[1][1], m.v[2][1], m.v[3][1]}, 
+        {m.v[0][2], m.v[1][2], m.v[2][2], m.v[3][2]}, 
+        {m.v[0][3], m.v[1][3], m.v[2][3], m.v[3][3]}}};
    return result;
 }
 // matrix product for 4x4 matrices
 matrix_4x4_t static inline mmul4(const matrix_4x4_t m1, const matrix_4x4_t m2) {
    matrix_4x4_t result= 
-   {.v={m1.v[0][0]* m2.v[0][0]+m1.v[0][1]* m2.v[1][0]+m1.v[0][2]* m2.v[2][0]+m1.v[0][3]* m2.v[3][0], m1.v[0][0]* m2.v[0][1]+m1.v[0][1]* m2.v[1][1]+m1.v[0][2]* m2.v[2][1]+m1.v[0][3]* m2.v[3][1], m1.v[0][0]* m2.v[0][2]+m1.v[0][1]* m2.v[1][2]+m1.v[0][2]* m2.v[2][2]+m1.v[0][3]* m2.v[3][2], m1.v[0][0]* m2.v[0][3]+m1.v[0][1]* m2.v[1][3]+m1.v[0][2]* m2.v[2][3]+m1.v[0][3]* m2.v[3][3], 
-        m1.v[1][0]* m2.v[0][0]+m1.v[1][1]* m2.v[1][0]+m1.v[1][2]* m2.v[2][0]+m1.v[1][3]* m2.v[3][0], m1.v[1][0]* m2.v[0][1]+m1.v[1][1]* m2.v[1][1]+m1.v[1][2]* m2.v[2][1]+m1.v[1][3]* m2.v[3][1], m1.v[1][0]* m2.v[0][2]+m1.v[1][1]* m2.v[1][2]+m1.v[1][2]* m2.v[2][2]+m1.v[1][3]* m2.v[3][2], m1.v[1][0]* m2.v[0][3]+m1.v[1][1]* m2.v[1][3]+m1.v[1][2]* m2.v[2][3]+m1.v[1][3]* m2.v[3][3], 
-        m1.v[2][0]* m2.v[0][0]+m1.v[2][1]* m2.v[1][0]+m1.v[2][2]* m2.v[2][0]+m1.v[2][3]* m2.v[3][0], m1.v[2][0]* m2.v[0][1]+m1.v[2][1]* m2.v[1][1]+m1.v[2][2]* m2.v[2][1]+m1.v[2][3]* m2.v[3][1], m1.v[2][0]* m2.v[0][2]+m1.v[2][1]* m2.v[1][2]+m1.v[2][2]* m2.v[2][2]+m1.v[2][3]* m2.v[3][2], m1.v[2][0]* m2.v[0][3]+m1.v[2][1]* m2.v[1][3]+m1.v[2][2]* m2.v[2][3]+m1.v[2][3]* m2.v[3][3], 
-        m1.v[3][0]* m2.v[0][0]+m1.v[3][1]* m2.v[1][0]+m1.v[3][2]* m2.v[2][0]+m1.v[3][3]* m2.v[3][0], m1.v[3][0]* m2.v[0][1]+m1.v[3][1]* m2.v[1][1]+m1.v[3][2]* m2.v[2][1]+m1.v[3][3]* m2.v[3][1], m1.v[3][0]* m2.v[0][2]+m1.v[3][1]* m2.v[1][2]+m1.v[3][2]* m2.v[2][2]+m1.v[3][3]* m2.v[3][2], m1.v[3][0]* m2.v[0][3]+m1.v[3][1]* m2.v[1][3]+m1.v[3][2]* m2.v[2][3]+m1.v[3][3]* m2.v[3][3]}};
+   {.v={{m1.v[0][0]* m2.v[0][0]+m1.v[0][1]* m2.v[1][0]+m1.v[0][2]* m2.v[2][0]+m1.v[0][3]* m2.v[3][0], m1.v[0][0]* m2.v[0][1]+m1.v[0][1]* m2.v[1][1]+m1.v[0][2]* m2.v[2][1]+m1.v[0][3]* m2.v[3][1], m1.v[0][0]* m2.v[0][2]+m1.v[0][1]* m2.v[1][2]+m1.v[0][2]* m2.v[2][2]+m1.v[0][3]* m2.v[3][2], m1.v[0][0]* m2.v[0][3]+m1.v[0][1]* m2.v[1][3]+m1.v[0][2]* m2.v[2][3]+m1.v[0][3]* m2.v[3][3]}, 
+        {m1.v[1][0]* m2.v[0][0]+m1.v[1][1]* m2.v[1][0]+m1.v[1][2]* m2.v[2][0]+m1.v[1][3]* m2.v[3][0], m1.v[1][0]* m2.v[0][1]+m1.v[1][1]* m2.v[1][1]+m1.v[1][2]* m2.v[2][1]+m1.v[1][3]* m2.v[3][1], m1.v[1][0]* m2.v[0][2]+m1.v[1][1]* m2.v[1][2]+m1.v[1][2]* m2.v[2][2]+m1.v[1][3]* m2.v[3][2], m1.v[1][0]* m2.v[0][3]+m1.v[1][1]* m2.v[1][3]+m1.v[1][2]* m2.v[2][3]+m1.v[1][3]* m2.v[3][3]}, 
+        {m1.v[2][0]* m2.v[0][0]+m1.v[2][1]* m2.v[1][0]+m1.v[2][2]* m2.v[2][0]+m1.v[2][3]* m2.v[3][0], m1.v[2][0]* m2.v[0][1]+m1.v[2][1]* m2.v[1][1]+m1.v[2][2]* m2.v[2][1]+m1.v[2][3]* m2.v[3][1], m1.v[2][0]* m2.v[0][2]+m1.v[2][1]* m2.v[1][2]+m1.v[2][2]* m2.v[2][2]+m1.v[2][3]* m2.v[3][2], m1.v[2][0]* m2.v[0][3]+m1.v[2][1]* m2.v[1][3]+m1.v[2][2]* m2.v[2][3]+m1.v[2][3]* m2.v[3][3]}, 
+        {m1.v[3][0]* m2.v[0][0]+m1.v[3][1]* m2.v[1][0]+m1.v[3][2]* m2.v[2][0]+m1.v[3][3]* m2.v[3][0], m1.v[3][0]* m2.v[0][1]+m1.v[3][1]* m2.v[1][1]+m1.v[3][2]* m2.v[2][1]+m1.v[3][3]* m2.v[3][1], m1.v[3][0]* m2.v[0][2]+m1.v[3][1]* m2.v[1][2]+m1.v[3][2]* m2.v[2][2]+m1.v[3][3]* m2.v[3][2], m1.v[3][0]* m2.v[0][3]+m1.v[3][1]* m2.v[1][3]+m1.v[3][2]* m2.v[2][3]+m1.v[3][3]* m2.v[3][3]}}};
    return result;
 }
 
 // scalar/matrix product for 4x4 matrices
 matrix_4x4_t static inline smmul4(const float s, const matrix_4x4_t m) {
    matrix_4x4_t result= 
-   {.v={s * m.v[0][0], s * m.v[0][1], s * m.v[0][2], s * m.v[0][3], 
-        s * m.v[1][0], s * m.v[1][1], s * m.v[1][2], s * m.v[1][3], 
-        s * m.v[2][0], s * m.v[2][1], s * m.v[2][2], s * m.v[2][3], 
-        s * m.v[3][0], s * m.v[3][1], s * m.v[3][2], s * m.v[3][3]}};
+   {.v={{s * m.v[0][0], s * m.v[0][1], s * m.v[0][2], s * m.v[0][3]}, 
+        {s * m.v[1][0], s * m.v[1][1], s * m.v[1][2], s * m.v[1][3]}, 
+        {s * m.v[2][0], s * m.v[2][1], s * m.v[2][2], s * m.v[2][3]}, 
+        {s * m.v[3][0], s * m.v[3][1], s * m.v[3][2], s * m.v[3][3]}}};
    return result;
 }
 
@@ -666,10 +663,10 @@ vector_4_t static inline svmul4(const float s, const vector_4_t vec) {
 // tensor product for 4D vectors
 matrix_4x4_t static inline tp4(const vector_4_t vec1, const vector_4_t vec2) {
    matrix_4x4_t result= 
-   {.v={vec1.v[0]* vec2.v[0], vec1.v[0]* vec2.v[1], vec1.v[0]* vec2.v[2], vec1.v[0]* vec2.v[3], 
-        vec1.v[1]* vec2.v[0], vec1.v[1]* vec2.v[1], vec1.v[1]* vec2.v[2], vec1.v[1]* vec2.v[3], 
-        vec1.v[2]* vec2.v[0], vec1.v[2]* vec2.v[1], vec1.v[2]* vec2.v[2], vec1.v[2]* vec2.v[3], 
-        vec1.v[3]* vec2.v[0], vec1.v[3]* vec2.v[1], vec1.v[3]* vec2.v[2], vec1.v[3]* vec2.v[3]}};
+   {.v={{vec1.v[0]* vec2.v[0], vec1.v[0]* vec2.v[1], vec1.v[0]* vec2.v[2], vec1.v[0]* vec2.v[3]}, 
+        {vec1.v[1]* vec2.v[0], vec1.v[1]* vec2.v[1], vec1.v[1]* vec2.v[2], vec1.v[1]* vec2.v[3]}, 
+        {vec1.v[2]* vec2.v[0], vec1.v[2]* vec2.v[1], vec1.v[2]* vec2.v[2], vec1.v[2]* vec2.v[3]}, 
+        {vec1.v[3]* vec2.v[0], vec1.v[3]* vec2.v[1], vec1.v[3]* vec2.v[2], vec1.v[3]* vec2.v[3]}}};
    return result;
 }
 
@@ -681,10 +678,10 @@ float static inline sp4(const vector_4_t vec1, const vector_4_t vec2) {
 // pointwise add for 4x4 matrices
 matrix_4x4_t static inline madd4(const matrix_4x4_t m1, const matrix_4x4_t m2) {
    matrix_4x4_t result= 
-   {.v={m1.v[0][0]+ m2.v[0][0], m1.v[0][1]+ m2.v[0][1], m1.v[0][2]+ m2.v[0][2], m1.v[0][3]+ m2.v[0][3], 
-        m1.v[1][0]+ m2.v[1][0], m1.v[1][1]+ m2.v[1][1], m1.v[1][2]+ m2.v[1][2], m1.v[1][3]+ m2.v[1][3], 
-        m1.v[2][0]+ m2.v[2][0], m1.v[2][1]+ m2.v[2][1], m1.v[2][2]+ m2.v[2][2], m1.v[2][3]+ m2.v[2][3], 
-        m1.v[3][0]+ m2.v[3][0], m1.v[3][1]+ m2.v[3][1], m1.v[3][2]+ m2.v[3][2], m1.v[3][3]+ m2.v[3][3]}};
+   {.v={{m1.v[0][0]+ m2.v[0][0], m1.v[0][1]+ m2.v[0][1], m1.v[0][2]+ m2.v[0][2], m1.v[0][3]+ m2.v[0][3]}, 
+        {m1.v[1][0]+ m2.v[1][0], m1.v[1][1]+ m2.v[1][1], m1.v[1][2]+ m2.v[1][2], m1.v[1][3]+ m2.v[1][3]}, 
+        {m1.v[2][0]+ m2.v[2][0], m1.v[2][1]+ m2.v[2][1], m1.v[2][2]+ m2.v[2][2], m1.v[2][3]+ m2.v[2][3]}, 
+        {m1.v[3][0]+ m2.v[3][0], m1.v[3][1]+ m2.v[3][1], m1.v[3][2]+ m2.v[3][2], m1.v[3][3]+ m2.v[3][3]}}};
    return result;
 }
 
@@ -701,10 +698,10 @@ vector_4_t static inline vadd4(const vector_4_t v1, const vector_4_t v2) {
 // pointwise sub for 4x4 matrices
 matrix_4x4_t static inline msub4(const matrix_4x4_t m1, const matrix_4x4_t m2) {
    matrix_4x4_t result= 
-   {.v={m1.v[0][0]- m2.v[0][0], m1.v[0][1]- m2.v[0][1], m1.v[0][2]- m2.v[0][2], m1.v[0][3]- m2.v[0][3], 
-        m1.v[1][0]- m2.v[1][0], m1.v[1][1]- m2.v[1][1], m1.v[1][2]- m2.v[1][2], m1.v[1][3]- m2.v[1][3], 
-        m1.v[2][0]- m2.v[2][0], m1.v[2][1]- m2.v[2][1], m1.v[2][2]- m2.v[2][2], m1.v[2][3]- m2.v[2][3], 
-        m1.v[3][0]- m2.v[3][0], m1.v[3][1]- m2.v[3][1], m1.v[3][2]- m2.v[3][2], m1.v[3][3]- m2.v[3][3]}};
+   {.v={{m1.v[0][0]- m2.v[0][0], m1.v[0][1]- m2.v[0][1], m1.v[0][2]- m2.v[0][2], m1.v[0][3]- m2.v[0][3]}, 
+        {m1.v[1][0]- m2.v[1][0], m1.v[1][1]- m2.v[1][1], m1.v[1][2]- m2.v[1][2], m1.v[1][3]- m2.v[1][3]}, 
+        {m1.v[2][0]- m2.v[2][0], m1.v[2][1]- m2.v[2][1], m1.v[2][2]- m2.v[2][2], m1.v[2][3]- m2.v[2][3]}, 
+        {m1.v[3][0]- m2.v[3][0], m1.v[3][1]- m2.v[3][1], m1.v[3][2]- m2.v[3][2], m1.v[3][3]- m2.v[3][3]}}};
    return result;
 }
 
@@ -721,10 +718,10 @@ vector_4_t static inline vsub4(const vector_4_t v1, const vector_4_t v2) {
 // pointwise pwmul for 4x4 matrices
 matrix_4x4_t static inline mpwmul4(const matrix_4x4_t m1, const matrix_4x4_t m2) {
    matrix_4x4_t result= 
-   {.v={m1.v[0][0]* m2.v[0][0], m1.v[0][1]* m2.v[0][1], m1.v[0][2]* m2.v[0][2], m1.v[0][3]* m2.v[0][3], 
-        m1.v[1][0]* m2.v[1][0], m1.v[1][1]* m2.v[1][1], m1.v[1][2]* m2.v[1][2], m1.v[1][3]* m2.v[1][3], 
-        m1.v[2][0]* m2.v[2][0], m1.v[2][1]* m2.v[2][1], m1.v[2][2]* m2.v[2][2], m1.v[2][3]* m2.v[2][3], 
-        m1.v[3][0]* m2.v[3][0], m1.v[3][1]* m2.v[3][1], m1.v[3][2]* m2.v[3][2], m1.v[3][3]* m2.v[3][3]}};
+   {.v={{m1.v[0][0]* m2.v[0][0], m1.v[0][1]* m2.v[0][1], m1.v[0][2]* m2.v[0][2], m1.v[0][3]* m2.v[0][3]}, 
+        {m1.v[1][0]* m2.v[1][0], m1.v[1][1]* m2.v[1][1], m1.v[1][2]* m2.v[1][2], m1.v[1][3]* m2.v[1][3]}, 
+        {m1.v[2][0]* m2.v[2][0], m1.v[2][1]* m2.v[2][1], m1.v[2][2]* m2.v[2][2], m1.v[2][3]* m2.v[2][3]}, 
+        {m1.v[3][0]* m2.v[3][0], m1.v[3][1]* m2.v[3][1], m1.v[3][2]* m2.v[3][2], m1.v[3][3]* m2.v[3][3]}}};
    return result;
 }
 
@@ -842,32 +839,32 @@ vector_5_t static inline diag_vector5(const matrix_5x5_t m) {
 // transpose of a matrix
 matrix_5x5_t static inline trans5(const matrix_5x5_t m) {
    matrix_5x5_t result= 
-   {.v={m.v[0][0], m.v[1][0], m.v[2][0], m.v[3][0], m.v[4][0], 
-        m.v[0][1], m.v[1][1], m.v[2][1], m.v[3][1], m.v[4][1], 
-        m.v[0][2], m.v[1][2], m.v[2][2], m.v[3][2], m.v[4][2], 
-        m.v[0][3], m.v[1][3], m.v[2][3], m.v[3][3], m.v[4][3], 
-        m.v[0][4], m.v[1][4], m.v[2][4], m.v[3][4], m.v[4][4]}};
+   {.v={{m.v[0][0], m.v[1][0], m.v[2][0], m.v[3][0], m.v[4][0]}, 
+        {m.v[0][1], m.v[1][1], m.v[2][1], m.v[3][1], m.v[4][1]}, 
+        {m.v[0][2], m.v[1][2], m.v[2][2], m.v[3][2], m.v[4][2]}, 
+        {m.v[0][3], m.v[1][3], m.v[2][3], m.v[3][3], m.v[4][3]}, 
+        {m.v[0][4], m.v[1][4], m.v[2][4], m.v[3][4], m.v[4][4]}}};
    return result;
 }
 // matrix product for 5x5 matrices
 matrix_5x5_t static inline mmul5(const matrix_5x5_t m1, const matrix_5x5_t m2) {
    matrix_5x5_t result= 
-   {.v={m1.v[0][0]* m2.v[0][0]+m1.v[0][1]* m2.v[1][0]+m1.v[0][2]* m2.v[2][0]+m1.v[0][3]* m2.v[3][0]+m1.v[0][4]* m2.v[4][0], m1.v[0][0]* m2.v[0][1]+m1.v[0][1]* m2.v[1][1]+m1.v[0][2]* m2.v[2][1]+m1.v[0][3]* m2.v[3][1]+m1.v[0][4]* m2.v[4][1], m1.v[0][0]* m2.v[0][2]+m1.v[0][1]* m2.v[1][2]+m1.v[0][2]* m2.v[2][2]+m1.v[0][3]* m2.v[3][2]+m1.v[0][4]* m2.v[4][2], m1.v[0][0]* m2.v[0][3]+m1.v[0][1]* m2.v[1][3]+m1.v[0][2]* m2.v[2][3]+m1.v[0][3]* m2.v[3][3]+m1.v[0][4]* m2.v[4][3], m1.v[0][0]* m2.v[0][4]+m1.v[0][1]* m2.v[1][4]+m1.v[0][2]* m2.v[2][4]+m1.v[0][3]* m2.v[3][4]+m1.v[0][4]* m2.v[4][4], 
-        m1.v[1][0]* m2.v[0][0]+m1.v[1][1]* m2.v[1][0]+m1.v[1][2]* m2.v[2][0]+m1.v[1][3]* m2.v[3][0]+m1.v[1][4]* m2.v[4][0], m1.v[1][0]* m2.v[0][1]+m1.v[1][1]* m2.v[1][1]+m1.v[1][2]* m2.v[2][1]+m1.v[1][3]* m2.v[3][1]+m1.v[1][4]* m2.v[4][1], m1.v[1][0]* m2.v[0][2]+m1.v[1][1]* m2.v[1][2]+m1.v[1][2]* m2.v[2][2]+m1.v[1][3]* m2.v[3][2]+m1.v[1][4]* m2.v[4][2], m1.v[1][0]* m2.v[0][3]+m1.v[1][1]* m2.v[1][3]+m1.v[1][2]* m2.v[2][3]+m1.v[1][3]* m2.v[3][3]+m1.v[1][4]* m2.v[4][3], m1.v[1][0]* m2.v[0][4]+m1.v[1][1]* m2.v[1][4]+m1.v[1][2]* m2.v[2][4]+m1.v[1][3]* m2.v[3][4]+m1.v[1][4]* m2.v[4][4], 
-        m1.v[2][0]* m2.v[0][0]+m1.v[2][1]* m2.v[1][0]+m1.v[2][2]* m2.v[2][0]+m1.v[2][3]* m2.v[3][0]+m1.v[2][4]* m2.v[4][0], m1.v[2][0]* m2.v[0][1]+m1.v[2][1]* m2.v[1][1]+m1.v[2][2]* m2.v[2][1]+m1.v[2][3]* m2.v[3][1]+m1.v[2][4]* m2.v[4][1], m1.v[2][0]* m2.v[0][2]+m1.v[2][1]* m2.v[1][2]+m1.v[2][2]* m2.v[2][2]+m1.v[2][3]* m2.v[3][2]+m1.v[2][4]* m2.v[4][2], m1.v[2][0]* m2.v[0][3]+m1.v[2][1]* m2.v[1][3]+m1.v[2][2]* m2.v[2][3]+m1.v[2][3]* m2.v[3][3]+m1.v[2][4]* m2.v[4][3], m1.v[2][0]* m2.v[0][4]+m1.v[2][1]* m2.v[1][4]+m1.v[2][2]* m2.v[2][4]+m1.v[2][3]* m2.v[3][4]+m1.v[2][4]* m2.v[4][4], 
-        m1.v[3][0]* m2.v[0][0]+m1.v[3][1]* m2.v[1][0]+m1.v[3][2]* m2.v[2][0]+m1.v[3][3]* m2.v[3][0]+m1.v[3][4]* m2.v[4][0], m1.v[3][0]* m2.v[0][1]+m1.v[3][1]* m2.v[1][1]+m1.v[3][2]* m2.v[2][1]+m1.v[3][3]* m2.v[3][1]+m1.v[3][4]* m2.v[4][1], m1.v[3][0]* m2.v[0][2]+m1.v[3][1]* m2.v[1][2]+m1.v[3][2]* m2.v[2][2]+m1.v[3][3]* m2.v[3][2]+m1.v[3][4]* m2.v[4][2], m1.v[3][0]* m2.v[0][3]+m1.v[3][1]* m2.v[1][3]+m1.v[3][2]* m2.v[2][3]+m1.v[3][3]* m2.v[3][3]+m1.v[3][4]* m2.v[4][3], m1.v[3][0]* m2.v[0][4]+m1.v[3][1]* m2.v[1][4]+m1.v[3][2]* m2.v[2][4]+m1.v[3][3]* m2.v[3][4]+m1.v[3][4]* m2.v[4][4], 
-        m1.v[4][0]* m2.v[0][0]+m1.v[4][1]* m2.v[1][0]+m1.v[4][2]* m2.v[2][0]+m1.v[4][3]* m2.v[3][0]+m1.v[4][4]* m2.v[4][0], m1.v[4][0]* m2.v[0][1]+m1.v[4][1]* m2.v[1][1]+m1.v[4][2]* m2.v[2][1]+m1.v[4][3]* m2.v[3][1]+m1.v[4][4]* m2.v[4][1], m1.v[4][0]* m2.v[0][2]+m1.v[4][1]* m2.v[1][2]+m1.v[4][2]* m2.v[2][2]+m1.v[4][3]* m2.v[3][2]+m1.v[4][4]* m2.v[4][2], m1.v[4][0]* m2.v[0][3]+m1.v[4][1]* m2.v[1][3]+m1.v[4][2]* m2.v[2][3]+m1.v[4][3]* m2.v[3][3]+m1.v[4][4]* m2.v[4][3], m1.v[4][0]* m2.v[0][4]+m1.v[4][1]* m2.v[1][4]+m1.v[4][2]* m2.v[2][4]+m1.v[4][3]* m2.v[3][4]+m1.v[4][4]* m2.v[4][4]}};
+   {.v={{m1.v[0][0]* m2.v[0][0]+m1.v[0][1]* m2.v[1][0]+m1.v[0][2]* m2.v[2][0]+m1.v[0][3]* m2.v[3][0]+m1.v[0][4]* m2.v[4][0], m1.v[0][0]* m2.v[0][1]+m1.v[0][1]* m2.v[1][1]+m1.v[0][2]* m2.v[2][1]+m1.v[0][3]* m2.v[3][1]+m1.v[0][4]* m2.v[4][1], m1.v[0][0]* m2.v[0][2]+m1.v[0][1]* m2.v[1][2]+m1.v[0][2]* m2.v[2][2]+m1.v[0][3]* m2.v[3][2]+m1.v[0][4]* m2.v[4][2], m1.v[0][0]* m2.v[0][3]+m1.v[0][1]* m2.v[1][3]+m1.v[0][2]* m2.v[2][3]+m1.v[0][3]* m2.v[3][3]+m1.v[0][4]* m2.v[4][3], m1.v[0][0]* m2.v[0][4]+m1.v[0][1]* m2.v[1][4]+m1.v[0][2]* m2.v[2][4]+m1.v[0][3]* m2.v[3][4]+m1.v[0][4]* m2.v[4][4]}, 
+        {m1.v[1][0]* m2.v[0][0]+m1.v[1][1]* m2.v[1][0]+m1.v[1][2]* m2.v[2][0]+m1.v[1][3]* m2.v[3][0]+m1.v[1][4]* m2.v[4][0], m1.v[1][0]* m2.v[0][1]+m1.v[1][1]* m2.v[1][1]+m1.v[1][2]* m2.v[2][1]+m1.v[1][3]* m2.v[3][1]+m1.v[1][4]* m2.v[4][1], m1.v[1][0]* m2.v[0][2]+m1.v[1][1]* m2.v[1][2]+m1.v[1][2]* m2.v[2][2]+m1.v[1][3]* m2.v[3][2]+m1.v[1][4]* m2.v[4][2], m1.v[1][0]* m2.v[0][3]+m1.v[1][1]* m2.v[1][3]+m1.v[1][2]* m2.v[2][3]+m1.v[1][3]* m2.v[3][3]+m1.v[1][4]* m2.v[4][3], m1.v[1][0]* m2.v[0][4]+m1.v[1][1]* m2.v[1][4]+m1.v[1][2]* m2.v[2][4]+m1.v[1][3]* m2.v[3][4]+m1.v[1][4]* m2.v[4][4]}, 
+        {m1.v[2][0]* m2.v[0][0]+m1.v[2][1]* m2.v[1][0]+m1.v[2][2]* m2.v[2][0]+m1.v[2][3]* m2.v[3][0]+m1.v[2][4]* m2.v[4][0], m1.v[2][0]* m2.v[0][1]+m1.v[2][1]* m2.v[1][1]+m1.v[2][2]* m2.v[2][1]+m1.v[2][3]* m2.v[3][1]+m1.v[2][4]* m2.v[4][1], m1.v[2][0]* m2.v[0][2]+m1.v[2][1]* m2.v[1][2]+m1.v[2][2]* m2.v[2][2]+m1.v[2][3]* m2.v[3][2]+m1.v[2][4]* m2.v[4][2], m1.v[2][0]* m2.v[0][3]+m1.v[2][1]* m2.v[1][3]+m1.v[2][2]* m2.v[2][3]+m1.v[2][3]* m2.v[3][3]+m1.v[2][4]* m2.v[4][3], m1.v[2][0]* m2.v[0][4]+m1.v[2][1]* m2.v[1][4]+m1.v[2][2]* m2.v[2][4]+m1.v[2][3]* m2.v[3][4]+m1.v[2][4]* m2.v[4][4]}, 
+        {m1.v[3][0]* m2.v[0][0]+m1.v[3][1]* m2.v[1][0]+m1.v[3][2]* m2.v[2][0]+m1.v[3][3]* m2.v[3][0]+m1.v[3][4]* m2.v[4][0], m1.v[3][0]* m2.v[0][1]+m1.v[3][1]* m2.v[1][1]+m1.v[3][2]* m2.v[2][1]+m1.v[3][3]* m2.v[3][1]+m1.v[3][4]* m2.v[4][1], m1.v[3][0]* m2.v[0][2]+m1.v[3][1]* m2.v[1][2]+m1.v[3][2]* m2.v[2][2]+m1.v[3][3]* m2.v[3][2]+m1.v[3][4]* m2.v[4][2], m1.v[3][0]* m2.v[0][3]+m1.v[3][1]* m2.v[1][3]+m1.v[3][2]* m2.v[2][3]+m1.v[3][3]* m2.v[3][3]+m1.v[3][4]* m2.v[4][3], m1.v[3][0]* m2.v[0][4]+m1.v[3][1]* m2.v[1][4]+m1.v[3][2]* m2.v[2][4]+m1.v[3][3]* m2.v[3][4]+m1.v[3][4]* m2.v[4][4]}, 
+        {m1.v[4][0]* m2.v[0][0]+m1.v[4][1]* m2.v[1][0]+m1.v[4][2]* m2.v[2][0]+m1.v[4][3]* m2.v[3][0]+m1.v[4][4]* m2.v[4][0], m1.v[4][0]* m2.v[0][1]+m1.v[4][1]* m2.v[1][1]+m1.v[4][2]* m2.v[2][1]+m1.v[4][3]* m2.v[3][1]+m1.v[4][4]* m2.v[4][1], m1.v[4][0]* m2.v[0][2]+m1.v[4][1]* m2.v[1][2]+m1.v[4][2]* m2.v[2][2]+m1.v[4][3]* m2.v[3][2]+m1.v[4][4]* m2.v[4][2], m1.v[4][0]* m2.v[0][3]+m1.v[4][1]* m2.v[1][3]+m1.v[4][2]* m2.v[2][3]+m1.v[4][3]* m2.v[3][3]+m1.v[4][4]* m2.v[4][3], m1.v[4][0]* m2.v[0][4]+m1.v[4][1]* m2.v[1][4]+m1.v[4][2]* m2.v[2][4]+m1.v[4][3]* m2.v[3][4]+m1.v[4][4]* m2.v[4][4]}}};
    return result;
 }
 
 // scalar/matrix product for 5x5 matrices
 matrix_5x5_t static inline smmul5(const float s, const matrix_5x5_t m) {
    matrix_5x5_t result= 
-   {.v={s * m.v[0][0], s * m.v[0][1], s * m.v[0][2], s * m.v[0][3], s * m.v[0][4], 
-        s * m.v[1][0], s * m.v[1][1], s * m.v[1][2], s * m.v[1][3], s * m.v[1][4], 
-        s * m.v[2][0], s * m.v[2][1], s * m.v[2][2], s * m.v[2][3], s * m.v[2][4], 
-        s * m.v[3][0], s * m.v[3][1], s * m.v[3][2], s * m.v[3][3], s * m.v[3][4], 
-        s * m.v[4][0], s * m.v[4][1], s * m.v[4][2], s * m.v[4][3], s * m.v[4][4]}};
+   {.v={{s * m.v[0][0], s * m.v[0][1], s * m.v[0][2], s * m.v[0][3], s * m.v[0][4]}, 
+        {s * m.v[1][0], s * m.v[1][1], s * m.v[1][2], s * m.v[1][3], s * m.v[1][4]}, 
+        {s * m.v[2][0], s * m.v[2][1], s * m.v[2][2], s * m.v[2][3], s * m.v[2][4]}, 
+        {s * m.v[3][0], s * m.v[3][1], s * m.v[3][2], s * m.v[3][3], s * m.v[3][4]}, 
+        {s * m.v[4][0], s * m.v[4][1], s * m.v[4][2], s * m.v[4][3], s * m.v[4][4]}}};
    return result;
 }
 
@@ -896,11 +893,11 @@ vector_5_t static inline svmul5(const float s, const vector_5_t vec) {
 // tensor product for 5D vectors
 matrix_5x5_t static inline tp5(const vector_5_t vec1, const vector_5_t vec2) {
    matrix_5x5_t result= 
-   {.v={vec1.v[0]* vec2.v[0], vec1.v[0]* vec2.v[1], vec1.v[0]* vec2.v[2], vec1.v[0]* vec2.v[3], vec1.v[0]* vec2.v[4], 
-        vec1.v[1]* vec2.v[0], vec1.v[1]* vec2.v[1], vec1.v[1]* vec2.v[2], vec1.v[1]* vec2.v[3], vec1.v[1]* vec2.v[4], 
-        vec1.v[2]* vec2.v[0], vec1.v[2]* vec2.v[1], vec1.v[2]* vec2.v[2], vec1.v[2]* vec2.v[3], vec1.v[2]* vec2.v[4], 
-        vec1.v[3]* vec2.v[0], vec1.v[3]* vec2.v[1], vec1.v[3]* vec2.v[2], vec1.v[3]* vec2.v[3], vec1.v[3]* vec2.v[4], 
-        vec1.v[4]* vec2.v[0], vec1.v[4]* vec2.v[1], vec1.v[4]* vec2.v[2], vec1.v[4]* vec2.v[3], vec1.v[4]* vec2.v[4]}};
+   {.v={{vec1.v[0]* vec2.v[0], vec1.v[0]* vec2.v[1], vec1.v[0]* vec2.v[2], vec1.v[0]* vec2.v[3], vec1.v[0]* vec2.v[4]}, 
+        {vec1.v[1]* vec2.v[0], vec1.v[1]* vec2.v[1], vec1.v[1]* vec2.v[2], vec1.v[1]* vec2.v[3], vec1.v[1]* vec2.v[4]}, 
+        {vec1.v[2]* vec2.v[0], vec1.v[2]* vec2.v[1], vec1.v[2]* vec2.v[2], vec1.v[2]* vec2.v[3], vec1.v[2]* vec2.v[4]}, 
+        {vec1.v[3]* vec2.v[0], vec1.v[3]* vec2.v[1], vec1.v[3]* vec2.v[2], vec1.v[3]* vec2.v[3], vec1.v[3]* vec2.v[4]}, 
+        {vec1.v[4]* vec2.v[0], vec1.v[4]* vec2.v[1], vec1.v[4]* vec2.v[2], vec1.v[4]* vec2.v[3], vec1.v[4]* vec2.v[4]}}};
    return result;
 }
 
@@ -912,11 +909,11 @@ float static inline sp5(const vector_5_t vec1, const vector_5_t vec2) {
 // pointwise add for 5x5 matrices
 matrix_5x5_t static inline madd5(const matrix_5x5_t m1, const matrix_5x5_t m2) {
    matrix_5x5_t result= 
-   {.v={m1.v[0][0]+ m2.v[0][0], m1.v[0][1]+ m2.v[0][1], m1.v[0][2]+ m2.v[0][2], m1.v[0][3]+ m2.v[0][3], m1.v[0][4]+ m2.v[0][4], 
-        m1.v[1][0]+ m2.v[1][0], m1.v[1][1]+ m2.v[1][1], m1.v[1][2]+ m2.v[1][2], m1.v[1][3]+ m2.v[1][3], m1.v[1][4]+ m2.v[1][4], 
-        m1.v[2][0]+ m2.v[2][0], m1.v[2][1]+ m2.v[2][1], m1.v[2][2]+ m2.v[2][2], m1.v[2][3]+ m2.v[2][3], m1.v[2][4]+ m2.v[2][4], 
-        m1.v[3][0]+ m2.v[3][0], m1.v[3][1]+ m2.v[3][1], m1.v[3][2]+ m2.v[3][2], m1.v[3][3]+ m2.v[3][3], m1.v[3][4]+ m2.v[3][4], 
-        m1.v[4][0]+ m2.v[4][0], m1.v[4][1]+ m2.v[4][1], m1.v[4][2]+ m2.v[4][2], m1.v[4][3]+ m2.v[4][3], m1.v[4][4]+ m2.v[4][4]}};
+   {.v={{m1.v[0][0]+ m2.v[0][0], m1.v[0][1]+ m2.v[0][1], m1.v[0][2]+ m2.v[0][2], m1.v[0][3]+ m2.v[0][3], m1.v[0][4]+ m2.v[0][4]}, 
+        {m1.v[1][0]+ m2.v[1][0], m1.v[1][1]+ m2.v[1][1], m1.v[1][2]+ m2.v[1][2], m1.v[1][3]+ m2.v[1][3], m1.v[1][4]+ m2.v[1][4]}, 
+        {m1.v[2][0]+ m2.v[2][0], m1.v[2][1]+ m2.v[2][1], m1.v[2][2]+ m2.v[2][2], m1.v[2][3]+ m2.v[2][3], m1.v[2][4]+ m2.v[2][4]}, 
+        {m1.v[3][0]+ m2.v[3][0], m1.v[3][1]+ m2.v[3][1], m1.v[3][2]+ m2.v[3][2], m1.v[3][3]+ m2.v[3][3], m1.v[3][4]+ m2.v[3][4]}, 
+        {m1.v[4][0]+ m2.v[4][0], m1.v[4][1]+ m2.v[4][1], m1.v[4][2]+ m2.v[4][2], m1.v[4][3]+ m2.v[4][3], m1.v[4][4]+ m2.v[4][4]}}};
    return result;
 }
 
@@ -934,11 +931,11 @@ vector_5_t static inline vadd5(const vector_5_t v1, const vector_5_t v2) {
 // pointwise sub for 5x5 matrices
 matrix_5x5_t static inline msub5(const matrix_5x5_t m1, const matrix_5x5_t m2) {
    matrix_5x5_t result= 
-   {.v={m1.v[0][0]- m2.v[0][0], m1.v[0][1]- m2.v[0][1], m1.v[0][2]- m2.v[0][2], m1.v[0][3]- m2.v[0][3], m1.v[0][4]- m2.v[0][4], 
-        m1.v[1][0]- m2.v[1][0], m1.v[1][1]- m2.v[1][1], m1.v[1][2]- m2.v[1][2], m1.v[1][3]- m2.v[1][3], m1.v[1][4]- m2.v[1][4], 
-        m1.v[2][0]- m2.v[2][0], m1.v[2][1]- m2.v[2][1], m1.v[2][2]- m2.v[2][2], m1.v[2][3]- m2.v[2][3], m1.v[2][4]- m2.v[2][4], 
-        m1.v[3][0]- m2.v[3][0], m1.v[3][1]- m2.v[3][1], m1.v[3][2]- m2.v[3][2], m1.v[3][3]- m2.v[3][3], m1.v[3][4]- m2.v[3][4], 
-        m1.v[4][0]- m2.v[4][0], m1.v[4][1]- m2.v[4][1], m1.v[4][2]- m2.v[4][2], m1.v[4][3]- m2.v[4][3], m1.v[4][4]- m2.v[4][4]}};
+   {.v={{m1.v[0][0]- m2.v[0][0], m1.v[0][1]- m2.v[0][1], m1.v[0][2]- m2.v[0][2], m1.v[0][3]- m2.v[0][3], m1.v[0][4]- m2.v[0][4]}, 
+        {m1.v[1][0]- m2.v[1][0], m1.v[1][1]- m2.v[1][1], m1.v[1][2]- m2.v[1][2], m1.v[1][3]- m2.v[1][3], m1.v[1][4]- m2.v[1][4]}, 
+        {m1.v[2][0]- m2.v[2][0], m1.v[2][1]- m2.v[2][1], m1.v[2][2]- m2.v[2][2], m1.v[2][3]- m2.v[2][3], m1.v[2][4]- m2.v[2][4]}, 
+        {m1.v[3][0]- m2.v[3][0], m1.v[3][1]- m2.v[3][1], m1.v[3][2]- m2.v[3][2], m1.v[3][3]- m2.v[3][3], m1.v[3][4]- m2.v[3][4]}, 
+        {m1.v[4][0]- m2.v[4][0], m1.v[4][1]- m2.v[4][1], m1.v[4][2]- m2.v[4][2], m1.v[4][3]- m2.v[4][3], m1.v[4][4]- m2.v[4][4]}}};
    return result;
 }
 
@@ -956,11 +953,11 @@ vector_5_t static inline vsub5(const vector_5_t v1, const vector_5_t v2) {
 // pointwise pwmul for 5x5 matrices
 matrix_5x5_t static inline mpwmul5(const matrix_5x5_t m1, const matrix_5x5_t m2) {
    matrix_5x5_t result= 
-   {.v={m1.v[0][0]* m2.v[0][0], m1.v[0][1]* m2.v[0][1], m1.v[0][2]* m2.v[0][2], m1.v[0][3]* m2.v[0][3], m1.v[0][4]* m2.v[0][4], 
-        m1.v[1][0]* m2.v[1][0], m1.v[1][1]* m2.v[1][1], m1.v[1][2]* m2.v[1][2], m1.v[1][3]* m2.v[1][3], m1.v[1][4]* m2.v[1][4], 
-        m1.v[2][0]* m2.v[2][0], m1.v[2][1]* m2.v[2][1], m1.v[2][2]* m2.v[2][2], m1.v[2][3]* m2.v[2][3], m1.v[2][4]* m2.v[2][4], 
-        m1.v[3][0]* m2.v[3][0], m1.v[3][1]* m2.v[3][1], m1.v[3][2]* m2.v[3][2], m1.v[3][3]* m2.v[3][3], m1.v[3][4]* m2.v[3][4], 
-        m1.v[4][0]* m2.v[4][0], m1.v[4][1]* m2.v[4][1], m1.v[4][2]* m2.v[4][2], m1.v[4][3]* m2.v[4][3], m1.v[4][4]* m2.v[4][4]}};
+   {.v={{m1.v[0][0]* m2.v[0][0], m1.v[0][1]* m2.v[0][1], m1.v[0][2]* m2.v[0][2], m1.v[0][3]* m2.v[0][3], m1.v[0][4]* m2.v[0][4]}, 
+        {m1.v[1][0]* m2.v[1][0], m1.v[1][1]* m2.v[1][1], m1.v[1][2]* m2.v[1][2], m1.v[1][3]* m2.v[1][3], m1.v[1][4]* m2.v[1][4]}, 
+        {m1.v[2][0]* m2.v[2][0], m1.v[2][1]* m2.v[2][1], m1.v[2][2]* m2.v[2][2], m1.v[2][3]* m2.v[2][3], m1.v[2][4]* m2.v[2][4]}, 
+        {m1.v[3][0]* m2.v[3][0], m1.v[3][1]* m2.v[3][1], m1.v[3][2]* m2.v[3][2], m1.v[3][3]* m2.v[3][3], m1.v[3][4]* m2.v[3][4]}, 
+        {m1.v[4][0]* m2.v[4][0], m1.v[4][1]* m2.v[4][1], m1.v[4][2]* m2.v[4][2], m1.v[4][3]* m2.v[4][3], m1.v[4][4]* m2.v[4][4]}}};
    return result;
 }
 
@@ -1085,35 +1082,35 @@ vector_6_t static inline diag_vector6(const matrix_6x6_t m) {
 // transpose of a matrix
 matrix_6x6_t static inline trans6(const matrix_6x6_t m) {
    matrix_6x6_t result= 
-   {.v={m.v[0][0], m.v[1][0], m.v[2][0], m.v[3][0], m.v[4][0], m.v[5][0], 
-        m.v[0][1], m.v[1][1], m.v[2][1], m.v[3][1], m.v[4][1], m.v[5][1], 
-        m.v[0][2], m.v[1][2], m.v[2][2], m.v[3][2], m.v[4][2], m.v[5][2], 
-        m.v[0][3], m.v[1][3], m.v[2][3], m.v[3][3], m.v[4][3], m.v[5][3], 
-        m.v[0][4], m.v[1][4], m.v[2][4], m.v[3][4], m.v[4][4], m.v[5][4], 
-        m.v[0][5], m.v[1][5], m.v[2][5], m.v[3][5], m.v[4][5], m.v[5][5]}};
+   {.v={{m.v[0][0], m.v[1][0], m.v[2][0], m.v[3][0], m.v[4][0], m.v[5][0]}, 
+        {m.v[0][1], m.v[1][1], m.v[2][1], m.v[3][1], m.v[4][1], m.v[5][1]}, 
+        {m.v[0][2], m.v[1][2], m.v[2][2], m.v[3][2], m.v[4][2], m.v[5][2]}, 
+        {m.v[0][3], m.v[1][3], m.v[2][3], m.v[3][3], m.v[4][3], m.v[5][3]}, 
+        {m.v[0][4], m.v[1][4], m.v[2][4], m.v[3][4], m.v[4][4], m.v[5][4]}, 
+        {m.v[0][5], m.v[1][5], m.v[2][5], m.v[3][5], m.v[4][5], m.v[5][5]}}};
    return result;
 }
 // matrix product for 6x6 matrices
 matrix_6x6_t static inline mmul6(const matrix_6x6_t m1, const matrix_6x6_t m2) {
    matrix_6x6_t result= 
-   {.v={m1.v[0][0]* m2.v[0][0]+m1.v[0][1]* m2.v[1][0]+m1.v[0][2]* m2.v[2][0]+m1.v[0][3]* m2.v[3][0]+m1.v[0][4]* m2.v[4][0]+m1.v[0][5]* m2.v[5][0], m1.v[0][0]* m2.v[0][1]+m1.v[0][1]* m2.v[1][1]+m1.v[0][2]* m2.v[2][1]+m1.v[0][3]* m2.v[3][1]+m1.v[0][4]* m2.v[4][1]+m1.v[0][5]* m2.v[5][1], m1.v[0][0]* m2.v[0][2]+m1.v[0][1]* m2.v[1][2]+m1.v[0][2]* m2.v[2][2]+m1.v[0][3]* m2.v[3][2]+m1.v[0][4]* m2.v[4][2]+m1.v[0][5]* m2.v[5][2], m1.v[0][0]* m2.v[0][3]+m1.v[0][1]* m2.v[1][3]+m1.v[0][2]* m2.v[2][3]+m1.v[0][3]* m2.v[3][3]+m1.v[0][4]* m2.v[4][3]+m1.v[0][5]* m2.v[5][3], m1.v[0][0]* m2.v[0][4]+m1.v[0][1]* m2.v[1][4]+m1.v[0][2]* m2.v[2][4]+m1.v[0][3]* m2.v[3][4]+m1.v[0][4]* m2.v[4][4]+m1.v[0][5]* m2.v[5][4], m1.v[0][0]* m2.v[0][5]+m1.v[0][1]* m2.v[1][5]+m1.v[0][2]* m2.v[2][5]+m1.v[0][3]* m2.v[3][5]+m1.v[0][4]* m2.v[4][5]+m1.v[0][5]* m2.v[5][5], 
-        m1.v[1][0]* m2.v[0][0]+m1.v[1][1]* m2.v[1][0]+m1.v[1][2]* m2.v[2][0]+m1.v[1][3]* m2.v[3][0]+m1.v[1][4]* m2.v[4][0]+m1.v[1][5]* m2.v[5][0], m1.v[1][0]* m2.v[0][1]+m1.v[1][1]* m2.v[1][1]+m1.v[1][2]* m2.v[2][1]+m1.v[1][3]* m2.v[3][1]+m1.v[1][4]* m2.v[4][1]+m1.v[1][5]* m2.v[5][1], m1.v[1][0]* m2.v[0][2]+m1.v[1][1]* m2.v[1][2]+m1.v[1][2]* m2.v[2][2]+m1.v[1][3]* m2.v[3][2]+m1.v[1][4]* m2.v[4][2]+m1.v[1][5]* m2.v[5][2], m1.v[1][0]* m2.v[0][3]+m1.v[1][1]* m2.v[1][3]+m1.v[1][2]* m2.v[2][3]+m1.v[1][3]* m2.v[3][3]+m1.v[1][4]* m2.v[4][3]+m1.v[1][5]* m2.v[5][3], m1.v[1][0]* m2.v[0][4]+m1.v[1][1]* m2.v[1][4]+m1.v[1][2]* m2.v[2][4]+m1.v[1][3]* m2.v[3][4]+m1.v[1][4]* m2.v[4][4]+m1.v[1][5]* m2.v[5][4], m1.v[1][0]* m2.v[0][5]+m1.v[1][1]* m2.v[1][5]+m1.v[1][2]* m2.v[2][5]+m1.v[1][3]* m2.v[3][5]+m1.v[1][4]* m2.v[4][5]+m1.v[1][5]* m2.v[5][5], 
-        m1.v[2][0]* m2.v[0][0]+m1.v[2][1]* m2.v[1][0]+m1.v[2][2]* m2.v[2][0]+m1.v[2][3]* m2.v[3][0]+m1.v[2][4]* m2.v[4][0]+m1.v[2][5]* m2.v[5][0], m1.v[2][0]* m2.v[0][1]+m1.v[2][1]* m2.v[1][1]+m1.v[2][2]* m2.v[2][1]+m1.v[2][3]* m2.v[3][1]+m1.v[2][4]* m2.v[4][1]+m1.v[2][5]* m2.v[5][1], m1.v[2][0]* m2.v[0][2]+m1.v[2][1]* m2.v[1][2]+m1.v[2][2]* m2.v[2][2]+m1.v[2][3]* m2.v[3][2]+m1.v[2][4]* m2.v[4][2]+m1.v[2][5]* m2.v[5][2], m1.v[2][0]* m2.v[0][3]+m1.v[2][1]* m2.v[1][3]+m1.v[2][2]* m2.v[2][3]+m1.v[2][3]* m2.v[3][3]+m1.v[2][4]* m2.v[4][3]+m1.v[2][5]* m2.v[5][3], m1.v[2][0]* m2.v[0][4]+m1.v[2][1]* m2.v[1][4]+m1.v[2][2]* m2.v[2][4]+m1.v[2][3]* m2.v[3][4]+m1.v[2][4]* m2.v[4][4]+m1.v[2][5]* m2.v[5][4], m1.v[2][0]* m2.v[0][5]+m1.v[2][1]* m2.v[1][5]+m1.v[2][2]* m2.v[2][5]+m1.v[2][3]* m2.v[3][5]+m1.v[2][4]* m2.v[4][5]+m1.v[2][5]* m2.v[5][5], 
-        m1.v[3][0]* m2.v[0][0]+m1.v[3][1]* m2.v[1][0]+m1.v[3][2]* m2.v[2][0]+m1.v[3][3]* m2.v[3][0]+m1.v[3][4]* m2.v[4][0]+m1.v[3][5]* m2.v[5][0], m1.v[3][0]* m2.v[0][1]+m1.v[3][1]* m2.v[1][1]+m1.v[3][2]* m2.v[2][1]+m1.v[3][3]* m2.v[3][1]+m1.v[3][4]* m2.v[4][1]+m1.v[3][5]* m2.v[5][1], m1.v[3][0]* m2.v[0][2]+m1.v[3][1]* m2.v[1][2]+m1.v[3][2]* m2.v[2][2]+m1.v[3][3]* m2.v[3][2]+m1.v[3][4]* m2.v[4][2]+m1.v[3][5]* m2.v[5][2], m1.v[3][0]* m2.v[0][3]+m1.v[3][1]* m2.v[1][3]+m1.v[3][2]* m2.v[2][3]+m1.v[3][3]* m2.v[3][3]+m1.v[3][4]* m2.v[4][3]+m1.v[3][5]* m2.v[5][3], m1.v[3][0]* m2.v[0][4]+m1.v[3][1]* m2.v[1][4]+m1.v[3][2]* m2.v[2][4]+m1.v[3][3]* m2.v[3][4]+m1.v[3][4]* m2.v[4][4]+m1.v[3][5]* m2.v[5][4], m1.v[3][0]* m2.v[0][5]+m1.v[3][1]* m2.v[1][5]+m1.v[3][2]* m2.v[2][5]+m1.v[3][3]* m2.v[3][5]+m1.v[3][4]* m2.v[4][5]+m1.v[3][5]* m2.v[5][5], 
-        m1.v[4][0]* m2.v[0][0]+m1.v[4][1]* m2.v[1][0]+m1.v[4][2]* m2.v[2][0]+m1.v[4][3]* m2.v[3][0]+m1.v[4][4]* m2.v[4][0]+m1.v[4][5]* m2.v[5][0], m1.v[4][0]* m2.v[0][1]+m1.v[4][1]* m2.v[1][1]+m1.v[4][2]* m2.v[2][1]+m1.v[4][3]* m2.v[3][1]+m1.v[4][4]* m2.v[4][1]+m1.v[4][5]* m2.v[5][1], m1.v[4][0]* m2.v[0][2]+m1.v[4][1]* m2.v[1][2]+m1.v[4][2]* m2.v[2][2]+m1.v[4][3]* m2.v[3][2]+m1.v[4][4]* m2.v[4][2]+m1.v[4][5]* m2.v[5][2], m1.v[4][0]* m2.v[0][3]+m1.v[4][1]* m2.v[1][3]+m1.v[4][2]* m2.v[2][3]+m1.v[4][3]* m2.v[3][3]+m1.v[4][4]* m2.v[4][3]+m1.v[4][5]* m2.v[5][3], m1.v[4][0]* m2.v[0][4]+m1.v[4][1]* m2.v[1][4]+m1.v[4][2]* m2.v[2][4]+m1.v[4][3]* m2.v[3][4]+m1.v[4][4]* m2.v[4][4]+m1.v[4][5]* m2.v[5][4], m1.v[4][0]* m2.v[0][5]+m1.v[4][1]* m2.v[1][5]+m1.v[4][2]* m2.v[2][5]+m1.v[4][3]* m2.v[3][5]+m1.v[4][4]* m2.v[4][5]+m1.v[4][5]* m2.v[5][5], 
-        m1.v[5][0]* m2.v[0][0]+m1.v[5][1]* m2.v[1][0]+m1.v[5][2]* m2.v[2][0]+m1.v[5][3]* m2.v[3][0]+m1.v[5][4]* m2.v[4][0]+m1.v[5][5]* m2.v[5][0], m1.v[5][0]* m2.v[0][1]+m1.v[5][1]* m2.v[1][1]+m1.v[5][2]* m2.v[2][1]+m1.v[5][3]* m2.v[3][1]+m1.v[5][4]* m2.v[4][1]+m1.v[5][5]* m2.v[5][1], m1.v[5][0]* m2.v[0][2]+m1.v[5][1]* m2.v[1][2]+m1.v[5][2]* m2.v[2][2]+m1.v[5][3]* m2.v[3][2]+m1.v[5][4]* m2.v[4][2]+m1.v[5][5]* m2.v[5][2], m1.v[5][0]* m2.v[0][3]+m1.v[5][1]* m2.v[1][3]+m1.v[5][2]* m2.v[2][3]+m1.v[5][3]* m2.v[3][3]+m1.v[5][4]* m2.v[4][3]+m1.v[5][5]* m2.v[5][3], m1.v[5][0]* m2.v[0][4]+m1.v[5][1]* m2.v[1][4]+m1.v[5][2]* m2.v[2][4]+m1.v[5][3]* m2.v[3][4]+m1.v[5][4]* m2.v[4][4]+m1.v[5][5]* m2.v[5][4], m1.v[5][0]* m2.v[0][5]+m1.v[5][1]* m2.v[1][5]+m1.v[5][2]* m2.v[2][5]+m1.v[5][3]* m2.v[3][5]+m1.v[5][4]* m2.v[4][5]+m1.v[5][5]* m2.v[5][5]}};
+   {.v={{m1.v[0][0]* m2.v[0][0]+m1.v[0][1]* m2.v[1][0]+m1.v[0][2]* m2.v[2][0]+m1.v[0][3]* m2.v[3][0]+m1.v[0][4]* m2.v[4][0]+m1.v[0][5]* m2.v[5][0], m1.v[0][0]* m2.v[0][1]+m1.v[0][1]* m2.v[1][1]+m1.v[0][2]* m2.v[2][1]+m1.v[0][3]* m2.v[3][1]+m1.v[0][4]* m2.v[4][1]+m1.v[0][5]* m2.v[5][1], m1.v[0][0]* m2.v[0][2]+m1.v[0][1]* m2.v[1][2]+m1.v[0][2]* m2.v[2][2]+m1.v[0][3]* m2.v[3][2]+m1.v[0][4]* m2.v[4][2]+m1.v[0][5]* m2.v[5][2], m1.v[0][0]* m2.v[0][3]+m1.v[0][1]* m2.v[1][3]+m1.v[0][2]* m2.v[2][3]+m1.v[0][3]* m2.v[3][3]+m1.v[0][4]* m2.v[4][3]+m1.v[0][5]* m2.v[5][3], m1.v[0][0]* m2.v[0][4]+m1.v[0][1]* m2.v[1][4]+m1.v[0][2]* m2.v[2][4]+m1.v[0][3]* m2.v[3][4]+m1.v[0][4]* m2.v[4][4]+m1.v[0][5]* m2.v[5][4], m1.v[0][0]* m2.v[0][5]+m1.v[0][1]* m2.v[1][5]+m1.v[0][2]* m2.v[2][5]+m1.v[0][3]* m2.v[3][5]+m1.v[0][4]* m2.v[4][5]+m1.v[0][5]* m2.v[5][5]}, 
+        {m1.v[1][0]* m2.v[0][0]+m1.v[1][1]* m2.v[1][0]+m1.v[1][2]* m2.v[2][0]+m1.v[1][3]* m2.v[3][0]+m1.v[1][4]* m2.v[4][0]+m1.v[1][5]* m2.v[5][0], m1.v[1][0]* m2.v[0][1]+m1.v[1][1]* m2.v[1][1]+m1.v[1][2]* m2.v[2][1]+m1.v[1][3]* m2.v[3][1]+m1.v[1][4]* m2.v[4][1]+m1.v[1][5]* m2.v[5][1], m1.v[1][0]* m2.v[0][2]+m1.v[1][1]* m2.v[1][2]+m1.v[1][2]* m2.v[2][2]+m1.v[1][3]* m2.v[3][2]+m1.v[1][4]* m2.v[4][2]+m1.v[1][5]* m2.v[5][2], m1.v[1][0]* m2.v[0][3]+m1.v[1][1]* m2.v[1][3]+m1.v[1][2]* m2.v[2][3]+m1.v[1][3]* m2.v[3][3]+m1.v[1][4]* m2.v[4][3]+m1.v[1][5]* m2.v[5][3], m1.v[1][0]* m2.v[0][4]+m1.v[1][1]* m2.v[1][4]+m1.v[1][2]* m2.v[2][4]+m1.v[1][3]* m2.v[3][4]+m1.v[1][4]* m2.v[4][4]+m1.v[1][5]* m2.v[5][4], m1.v[1][0]* m2.v[0][5]+m1.v[1][1]* m2.v[1][5]+m1.v[1][2]* m2.v[2][5]+m1.v[1][3]* m2.v[3][5]+m1.v[1][4]* m2.v[4][5]+m1.v[1][5]* m2.v[5][5]}, 
+        {m1.v[2][0]* m2.v[0][0]+m1.v[2][1]* m2.v[1][0]+m1.v[2][2]* m2.v[2][0]+m1.v[2][3]* m2.v[3][0]+m1.v[2][4]* m2.v[4][0]+m1.v[2][5]* m2.v[5][0], m1.v[2][0]* m2.v[0][1]+m1.v[2][1]* m2.v[1][1]+m1.v[2][2]* m2.v[2][1]+m1.v[2][3]* m2.v[3][1]+m1.v[2][4]* m2.v[4][1]+m1.v[2][5]* m2.v[5][1], m1.v[2][0]* m2.v[0][2]+m1.v[2][1]* m2.v[1][2]+m1.v[2][2]* m2.v[2][2]+m1.v[2][3]* m2.v[3][2]+m1.v[2][4]* m2.v[4][2]+m1.v[2][5]* m2.v[5][2], m1.v[2][0]* m2.v[0][3]+m1.v[2][1]* m2.v[1][3]+m1.v[2][2]* m2.v[2][3]+m1.v[2][3]* m2.v[3][3]+m1.v[2][4]* m2.v[4][3]+m1.v[2][5]* m2.v[5][3], m1.v[2][0]* m2.v[0][4]+m1.v[2][1]* m2.v[1][4]+m1.v[2][2]* m2.v[2][4]+m1.v[2][3]* m2.v[3][4]+m1.v[2][4]* m2.v[4][4]+m1.v[2][5]* m2.v[5][4], m1.v[2][0]* m2.v[0][5]+m1.v[2][1]* m2.v[1][5]+m1.v[2][2]* m2.v[2][5]+m1.v[2][3]* m2.v[3][5]+m1.v[2][4]* m2.v[4][5]+m1.v[2][5]* m2.v[5][5]}, 
+        {m1.v[3][0]* m2.v[0][0]+m1.v[3][1]* m2.v[1][0]+m1.v[3][2]* m2.v[2][0]+m1.v[3][3]* m2.v[3][0]+m1.v[3][4]* m2.v[4][0]+m1.v[3][5]* m2.v[5][0], m1.v[3][0]* m2.v[0][1]+m1.v[3][1]* m2.v[1][1]+m1.v[3][2]* m2.v[2][1]+m1.v[3][3]* m2.v[3][1]+m1.v[3][4]* m2.v[4][1]+m1.v[3][5]* m2.v[5][1], m1.v[3][0]* m2.v[0][2]+m1.v[3][1]* m2.v[1][2]+m1.v[3][2]* m2.v[2][2]+m1.v[3][3]* m2.v[3][2]+m1.v[3][4]* m2.v[4][2]+m1.v[3][5]* m2.v[5][2], m1.v[3][0]* m2.v[0][3]+m1.v[3][1]* m2.v[1][3]+m1.v[3][2]* m2.v[2][3]+m1.v[3][3]* m2.v[3][3]+m1.v[3][4]* m2.v[4][3]+m1.v[3][5]* m2.v[5][3], m1.v[3][0]* m2.v[0][4]+m1.v[3][1]* m2.v[1][4]+m1.v[3][2]* m2.v[2][4]+m1.v[3][3]* m2.v[3][4]+m1.v[3][4]* m2.v[4][4]+m1.v[3][5]* m2.v[5][4], m1.v[3][0]* m2.v[0][5]+m1.v[3][1]* m2.v[1][5]+m1.v[3][2]* m2.v[2][5]+m1.v[3][3]* m2.v[3][5]+m1.v[3][4]* m2.v[4][5]+m1.v[3][5]* m2.v[5][5]}, 
+        {m1.v[4][0]* m2.v[0][0]+m1.v[4][1]* m2.v[1][0]+m1.v[4][2]* m2.v[2][0]+m1.v[4][3]* m2.v[3][0]+m1.v[4][4]* m2.v[4][0]+m1.v[4][5]* m2.v[5][0], m1.v[4][0]* m2.v[0][1]+m1.v[4][1]* m2.v[1][1]+m1.v[4][2]* m2.v[2][1]+m1.v[4][3]* m2.v[3][1]+m1.v[4][4]* m2.v[4][1]+m1.v[4][5]* m2.v[5][1], m1.v[4][0]* m2.v[0][2]+m1.v[4][1]* m2.v[1][2]+m1.v[4][2]* m2.v[2][2]+m1.v[4][3]* m2.v[3][2]+m1.v[4][4]* m2.v[4][2]+m1.v[4][5]* m2.v[5][2], m1.v[4][0]* m2.v[0][3]+m1.v[4][1]* m2.v[1][3]+m1.v[4][2]* m2.v[2][3]+m1.v[4][3]* m2.v[3][3]+m1.v[4][4]* m2.v[4][3]+m1.v[4][5]* m2.v[5][3], m1.v[4][0]* m2.v[0][4]+m1.v[4][1]* m2.v[1][4]+m1.v[4][2]* m2.v[2][4]+m1.v[4][3]* m2.v[3][4]+m1.v[4][4]* m2.v[4][4]+m1.v[4][5]* m2.v[5][4], m1.v[4][0]* m2.v[0][5]+m1.v[4][1]* m2.v[1][5]+m1.v[4][2]* m2.v[2][5]+m1.v[4][3]* m2.v[3][5]+m1.v[4][4]* m2.v[4][5]+m1.v[4][5]* m2.v[5][5]}, 
+        {m1.v[5][0]* m2.v[0][0]+m1.v[5][1]* m2.v[1][0]+m1.v[5][2]* m2.v[2][0]+m1.v[5][3]* m2.v[3][0]+m1.v[5][4]* m2.v[4][0]+m1.v[5][5]* m2.v[5][0], m1.v[5][0]* m2.v[0][1]+m1.v[5][1]* m2.v[1][1]+m1.v[5][2]* m2.v[2][1]+m1.v[5][3]* m2.v[3][1]+m1.v[5][4]* m2.v[4][1]+m1.v[5][5]* m2.v[5][1], m1.v[5][0]* m2.v[0][2]+m1.v[5][1]* m2.v[1][2]+m1.v[5][2]* m2.v[2][2]+m1.v[5][3]* m2.v[3][2]+m1.v[5][4]* m2.v[4][2]+m1.v[5][5]* m2.v[5][2], m1.v[5][0]* m2.v[0][3]+m1.v[5][1]* m2.v[1][3]+m1.v[5][2]* m2.v[2][3]+m1.v[5][3]* m2.v[3][3]+m1.v[5][4]* m2.v[4][3]+m1.v[5][5]* m2.v[5][3], m1.v[5][0]* m2.v[0][4]+m1.v[5][1]* m2.v[1][4]+m1.v[5][2]* m2.v[2][4]+m1.v[5][3]* m2.v[3][4]+m1.v[5][4]* m2.v[4][4]+m1.v[5][5]* m2.v[5][4], m1.v[5][0]* m2.v[0][5]+m1.v[5][1]* m2.v[1][5]+m1.v[5][2]* m2.v[2][5]+m1.v[5][3]* m2.v[3][5]+m1.v[5][4]* m2.v[4][5]+m1.v[5][5]* m2.v[5][5]}}};
    return result;
 }
 
 // scalar/matrix product for 6x6 matrices
 matrix_6x6_t static inline smmul6(const float s, const matrix_6x6_t m) {
    matrix_6x6_t result= 
-   {.v={s * m.v[0][0], s * m.v[0][1], s * m.v[0][2], s * m.v[0][3], s * m.v[0][4], s * m.v[0][5], 
-        s * m.v[1][0], s * m.v[1][1], s * m.v[1][2], s * m.v[1][3], s * m.v[1][4], s * m.v[1][5], 
-        s * m.v[2][0], s * m.v[2][1], s * m.v[2][2], s * m.v[2][3], s * m.v[2][4], s * m.v[2][5], 
-        s * m.v[3][0], s * m.v[3][1], s * m.v[3][2], s * m.v[3][3], s * m.v[3][4], s * m.v[3][5], 
-        s * m.v[4][0], s * m.v[4][1], s * m.v[4][2], s * m.v[4][3], s * m.v[4][4], s * m.v[4][5], 
-        s * m.v[5][0], s * m.v[5][1], s * m.v[5][2], s * m.v[5][3], s * m.v[5][4], s * m.v[5][5]}};
+   {.v={{s * m.v[0][0], s * m.v[0][1], s * m.v[0][2], s * m.v[0][3], s * m.v[0][4], s * m.v[0][5]}, 
+        {s * m.v[1][0], s * m.v[1][1], s * m.v[1][2], s * m.v[1][3], s * m.v[1][4], s * m.v[1][5]}, 
+        {s * m.v[2][0], s * m.v[2][1], s * m.v[2][2], s * m.v[2][3], s * m.v[2][4], s * m.v[2][5]}, 
+        {s * m.v[3][0], s * m.v[3][1], s * m.v[3][2], s * m.v[3][3], s * m.v[3][4], s * m.v[3][5]}, 
+        {s * m.v[4][0], s * m.v[4][1], s * m.v[4][2], s * m.v[4][3], s * m.v[4][4], s * m.v[4][5]}, 
+        {s * m.v[5][0], s * m.v[5][1], s * m.v[5][2], s * m.v[5][3], s * m.v[5][4], s * m.v[5][5]}}};
    return result;
 }
 
@@ -1144,12 +1141,12 @@ vector_6_t static inline svmul6(const float s, const vector_6_t vec) {
 // tensor product for 6D vectors
 matrix_6x6_t static inline tp6(const vector_6_t vec1, const vector_6_t vec2) {
    matrix_6x6_t result= 
-   {.v={vec1.v[0]* vec2.v[0], vec1.v[0]* vec2.v[1], vec1.v[0]* vec2.v[2], vec1.v[0]* vec2.v[3], vec1.v[0]* vec2.v[4], vec1.v[0]* vec2.v[5], 
-        vec1.v[1]* vec2.v[0], vec1.v[1]* vec2.v[1], vec1.v[1]* vec2.v[2], vec1.v[1]* vec2.v[3], vec1.v[1]* vec2.v[4], vec1.v[1]* vec2.v[5], 
-        vec1.v[2]* vec2.v[0], vec1.v[2]* vec2.v[1], vec1.v[2]* vec2.v[2], vec1.v[2]* vec2.v[3], vec1.v[2]* vec2.v[4], vec1.v[2]* vec2.v[5], 
-        vec1.v[3]* vec2.v[0], vec1.v[3]* vec2.v[1], vec1.v[3]* vec2.v[2], vec1.v[3]* vec2.v[3], vec1.v[3]* vec2.v[4], vec1.v[3]* vec2.v[5], 
-        vec1.v[4]* vec2.v[0], vec1.v[4]* vec2.v[1], vec1.v[4]* vec2.v[2], vec1.v[4]* vec2.v[3], vec1.v[4]* vec2.v[4], vec1.v[4]* vec2.v[5], 
-        vec1.v[5]* vec2.v[0], vec1.v[5]* vec2.v[1], vec1.v[5]* vec2.v[2], vec1.v[5]* vec2.v[3], vec1.v[5]* vec2.v[4], vec1.v[5]* vec2.v[5]}};
+   {.v={{vec1.v[0]* vec2.v[0], vec1.v[0]* vec2.v[1], vec1.v[0]* vec2.v[2], vec1.v[0]* vec2.v[3], vec1.v[0]* vec2.v[4], vec1.v[0]* vec2.v[5]}, 
+        {vec1.v[1]* vec2.v[0], vec1.v[1]* vec2.v[1], vec1.v[1]* vec2.v[2], vec1.v[1]* vec2.v[3], vec1.v[1]* vec2.v[4], vec1.v[1]* vec2.v[5]}, 
+        {vec1.v[2]* vec2.v[0], vec1.v[2]* vec2.v[1], vec1.v[2]* vec2.v[2], vec1.v[2]* vec2.v[3], vec1.v[2]* vec2.v[4], vec1.v[2]* vec2.v[5]}, 
+        {vec1.v[3]* vec2.v[0], vec1.v[3]* vec2.v[1], vec1.v[3]* vec2.v[2], vec1.v[3]* vec2.v[3], vec1.v[3]* vec2.v[4], vec1.v[3]* vec2.v[5]}, 
+        {vec1.v[4]* vec2.v[0], vec1.v[4]* vec2.v[1], vec1.v[4]* vec2.v[2], vec1.v[4]* vec2.v[3], vec1.v[4]* vec2.v[4], vec1.v[4]* vec2.v[5]}, 
+        {vec1.v[5]* vec2.v[0], vec1.v[5]* vec2.v[1], vec1.v[5]* vec2.v[2], vec1.v[5]* vec2.v[3], vec1.v[5]* vec2.v[4], vec1.v[5]* vec2.v[5]}}};
    return result;
 }
 
@@ -1161,12 +1158,12 @@ float static inline sp6(const vector_6_t vec1, const vector_6_t vec2) {
 // pointwise add for 6x6 matrices
 matrix_6x6_t static inline madd6(const matrix_6x6_t m1, const matrix_6x6_t m2) {
    matrix_6x6_t result= 
-   {.v={m1.v[0][0]+ m2.v[0][0], m1.v[0][1]+ m2.v[0][1], m1.v[0][2]+ m2.v[0][2], m1.v[0][3]+ m2.v[0][3], m1.v[0][4]+ m2.v[0][4], m1.v[0][5]+ m2.v[0][5], 
-        m1.v[1][0]+ m2.v[1][0], m1.v[1][1]+ m2.v[1][1], m1.v[1][2]+ m2.v[1][2], m1.v[1][3]+ m2.v[1][3], m1.v[1][4]+ m2.v[1][4], m1.v[1][5]+ m2.v[1][5], 
-        m1.v[2][0]+ m2.v[2][0], m1.v[2][1]+ m2.v[2][1], m1.v[2][2]+ m2.v[2][2], m1.v[2][3]+ m2.v[2][3], m1.v[2][4]+ m2.v[2][4], m1.v[2][5]+ m2.v[2][5], 
-        m1.v[3][0]+ m2.v[3][0], m1.v[3][1]+ m2.v[3][1], m1.v[3][2]+ m2.v[3][2], m1.v[3][3]+ m2.v[3][3], m1.v[3][4]+ m2.v[3][4], m1.v[3][5]+ m2.v[3][5], 
-        m1.v[4][0]+ m2.v[4][0], m1.v[4][1]+ m2.v[4][1], m1.v[4][2]+ m2.v[4][2], m1.v[4][3]+ m2.v[4][3], m1.v[4][4]+ m2.v[4][4], m1.v[4][5]+ m2.v[4][5], 
-        m1.v[5][0]+ m2.v[5][0], m1.v[5][1]+ m2.v[5][1], m1.v[5][2]+ m2.v[5][2], m1.v[5][3]+ m2.v[5][3], m1.v[5][4]+ m2.v[5][4], m1.v[5][5]+ m2.v[5][5]}};
+   {.v={{m1.v[0][0]+ m2.v[0][0], m1.v[0][1]+ m2.v[0][1], m1.v[0][2]+ m2.v[0][2], m1.v[0][3]+ m2.v[0][3], m1.v[0][4]+ m2.v[0][4], m1.v[0][5]+ m2.v[0][5]}, 
+        {m1.v[1][0]+ m2.v[1][0], m1.v[1][1]+ m2.v[1][1], m1.v[1][2]+ m2.v[1][2], m1.v[1][3]+ m2.v[1][3], m1.v[1][4]+ m2.v[1][4], m1.v[1][5]+ m2.v[1][5]}, 
+        {m1.v[2][0]+ m2.v[2][0], m1.v[2][1]+ m2.v[2][1], m1.v[2][2]+ m2.v[2][2], m1.v[2][3]+ m2.v[2][3], m1.v[2][4]+ m2.v[2][4], m1.v[2][5]+ m2.v[2][5]}, 
+        {m1.v[3][0]+ m2.v[3][0], m1.v[3][1]+ m2.v[3][1], m1.v[3][2]+ m2.v[3][2], m1.v[3][3]+ m2.v[3][3], m1.v[3][4]+ m2.v[3][4], m1.v[3][5]+ m2.v[3][5]}, 
+        {m1.v[4][0]+ m2.v[4][0], m1.v[4][1]+ m2.v[4][1], m1.v[4][2]+ m2.v[4][2], m1.v[4][3]+ m2.v[4][3], m1.v[4][4]+ m2.v[4][4], m1.v[4][5]+ m2.v[4][5]}, 
+        {m1.v[5][0]+ m2.v[5][0], m1.v[5][1]+ m2.v[5][1], m1.v[5][2]+ m2.v[5][2], m1.v[5][3]+ m2.v[5][3], m1.v[5][4]+ m2.v[5][4], m1.v[5][5]+ m2.v[5][5]}}};
    return result;
 }
 
@@ -1185,12 +1182,12 @@ vector_6_t static inline vadd6(const vector_6_t v1, const vector_6_t v2) {
 // pointwise sub for 6x6 matrices
 matrix_6x6_t static inline msub6(const matrix_6x6_t m1, const matrix_6x6_t m2) {
    matrix_6x6_t result= 
-   {.v={m1.v[0][0]- m2.v[0][0], m1.v[0][1]- m2.v[0][1], m1.v[0][2]- m2.v[0][2], m1.v[0][3]- m2.v[0][3], m1.v[0][4]- m2.v[0][4], m1.v[0][5]- m2.v[0][5], 
-        m1.v[1][0]- m2.v[1][0], m1.v[1][1]- m2.v[1][1], m1.v[1][2]- m2.v[1][2], m1.v[1][3]- m2.v[1][3], m1.v[1][4]- m2.v[1][4], m1.v[1][5]- m2.v[1][5], 
-        m1.v[2][0]- m2.v[2][0], m1.v[2][1]- m2.v[2][1], m1.v[2][2]- m2.v[2][2], m1.v[2][3]- m2.v[2][3], m1.v[2][4]- m2.v[2][4], m1.v[2][5]- m2.v[2][5], 
-        m1.v[3][0]- m2.v[3][0], m1.v[3][1]- m2.v[3][1], m1.v[3][2]- m2.v[3][2], m1.v[3][3]- m2.v[3][3], m1.v[3][4]- m2.v[3][4], m1.v[3][5]- m2.v[3][5], 
-        m1.v[4][0]- m2.v[4][0], m1.v[4][1]- m2.v[4][1], m1.v[4][2]- m2.v[4][2], m1.v[4][3]- m2.v[4][3], m1.v[4][4]- m2.v[4][4], m1.v[4][5]- m2.v[4][5], 
-        m1.v[5][0]- m2.v[5][0], m1.v[5][1]- m2.v[5][1], m1.v[5][2]- m2.v[5][2], m1.v[5][3]- m2.v[5][3], m1.v[5][4]- m2.v[5][4], m1.v[5][5]- m2.v[5][5]}};
+   {.v={{m1.v[0][0]- m2.v[0][0], m1.v[0][1]- m2.v[0][1], m1.v[0][2]- m2.v[0][2], m1.v[0][3]- m2.v[0][3], m1.v[0][4]- m2.v[0][4], m1.v[0][5]- m2.v[0][5]}, 
+        {m1.v[1][0]- m2.v[1][0], m1.v[1][1]- m2.v[1][1], m1.v[1][2]- m2.v[1][2], m1.v[1][3]- m2.v[1][3], m1.v[1][4]- m2.v[1][4], m1.v[1][5]- m2.v[1][5]}, 
+        {m1.v[2][0]- m2.v[2][0], m1.v[2][1]- m2.v[2][1], m1.v[2][2]- m2.v[2][2], m1.v[2][3]- m2.v[2][3], m1.v[2][4]- m2.v[2][4], m1.v[2][5]- m2.v[2][5]}, 
+        {m1.v[3][0]- m2.v[3][0], m1.v[3][1]- m2.v[3][1], m1.v[3][2]- m2.v[3][2], m1.v[3][3]- m2.v[3][3], m1.v[3][4]- m2.v[3][4], m1.v[3][5]- m2.v[3][5]}, 
+        {m1.v[4][0]- m2.v[4][0], m1.v[4][1]- m2.v[4][1], m1.v[4][2]- m2.v[4][2], m1.v[4][3]- m2.v[4][3], m1.v[4][4]- m2.v[4][4], m1.v[4][5]- m2.v[4][5]}, 
+        {m1.v[5][0]- m2.v[5][0], m1.v[5][1]- m2.v[5][1], m1.v[5][2]- m2.v[5][2], m1.v[5][3]- m2.v[5][3], m1.v[5][4]- m2.v[5][4], m1.v[5][5]- m2.v[5][5]}}};
    return result;
 }
 
@@ -1209,12 +1206,12 @@ vector_6_t static inline vsub6(const vector_6_t v1, const vector_6_t v2) {
 // pointwise pwmul for 6x6 matrices
 matrix_6x6_t static inline mpwmul6(const matrix_6x6_t m1, const matrix_6x6_t m2) {
    matrix_6x6_t result= 
-   {.v={m1.v[0][0]* m2.v[0][0], m1.v[0][1]* m2.v[0][1], m1.v[0][2]* m2.v[0][2], m1.v[0][3]* m2.v[0][3], m1.v[0][4]* m2.v[0][4], m1.v[0][5]* m2.v[0][5], 
-        m1.v[1][0]* m2.v[1][0], m1.v[1][1]* m2.v[1][1], m1.v[1][2]* m2.v[1][2], m1.v[1][3]* m2.v[1][3], m1.v[1][4]* m2.v[1][4], m1.v[1][5]* m2.v[1][5], 
-        m1.v[2][0]* m2.v[2][0], m1.v[2][1]* m2.v[2][1], m1.v[2][2]* m2.v[2][2], m1.v[2][3]* m2.v[2][3], m1.v[2][4]* m2.v[2][4], m1.v[2][5]* m2.v[2][5], 
-        m1.v[3][0]* m2.v[3][0], m1.v[3][1]* m2.v[3][1], m1.v[3][2]* m2.v[3][2], m1.v[3][3]* m2.v[3][3], m1.v[3][4]* m2.v[3][4], m1.v[3][5]* m2.v[3][5], 
-        m1.v[4][0]* m2.v[4][0], m1.v[4][1]* m2.v[4][1], m1.v[4][2]* m2.v[4][2], m1.v[4][3]* m2.v[4][3], m1.v[4][4]* m2.v[4][4], m1.v[4][5]* m2.v[4][5], 
-        m1.v[5][0]* m2.v[5][0], m1.v[5][1]* m2.v[5][1], m1.v[5][2]* m2.v[5][2], m1.v[5][3]* m2.v[5][3], m1.v[5][4]* m2.v[5][4], m1.v[5][5]* m2.v[5][5]}};
+   {.v={{m1.v[0][0]* m2.v[0][0], m1.v[0][1]* m2.v[0][1], m1.v[0][2]* m2.v[0][2], m1.v[0][3]* m2.v[0][3], m1.v[0][4]* m2.v[0][4], m1.v[0][5]* m2.v[0][5]}, 
+        {m1.v[1][0]* m2.v[1][0], m1.v[1][1]* m2.v[1][1], m1.v[1][2]* m2.v[1][2], m1.v[1][3]* m2.v[1][3], m1.v[1][4]* m2.v[1][4], m1.v[1][5]* m2.v[1][5]}, 
+        {m1.v[2][0]* m2.v[2][0], m1.v[2][1]* m2.v[2][1], m1.v[2][2]* m2.v[2][2], m1.v[2][3]* m2.v[2][3], m1.v[2][4]* m2.v[2][4], m1.v[2][5]* m2.v[2][5]}, 
+        {m1.v[3][0]* m2.v[3][0], m1.v[3][1]* m2.v[3][1], m1.v[3][2]* m2.v[3][2], m1.v[3][3]* m2.v[3][3], m1.v[3][4]* m2.v[3][4], m1.v[3][5]* m2.v[3][5]}, 
+        {m1.v[4][0]* m2.v[4][0], m1.v[4][1]* m2.v[4][1], m1.v[4][2]* m2.v[4][2], m1.v[4][3]* m2.v[4][3], m1.v[4][4]* m2.v[4][4], m1.v[4][5]* m2.v[4][5]}, 
+        {m1.v[5][0]* m2.v[5][0], m1.v[5][1]* m2.v[5][1], m1.v[5][2]* m2.v[5][2], m1.v[5][3]* m2.v[5][3], m1.v[5][4]* m2.v[5][4], m1.v[5][5]* m2.v[5][5]}}};
    return result;
 }
 
@@ -1282,9 +1279,5 @@ float static inline sqr_norm6(const vector_6_t vec) {
    float result= vec.v[0]* vec.v[0] + vec.v[1]* vec.v[1] + vec.v[2]* vec.v[2] + vec.v[3]* vec.v[3] + vec.v[4]* vec.v[4] + vec.v[5]* vec.v[5];
    return result;
 }
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

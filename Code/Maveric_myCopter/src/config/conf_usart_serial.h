@@ -83,7 +83,7 @@ typedef struct {
 static  usart_config_t usart_opt[UART_COUNT] =
 {	
 	{   .mode=UART_IN_OUT,
-		.uart_device.uart=&AVR32_USART0, 
+		.uart_device.uart=(avr32_usart_t *)&AVR32_USART0, 
 		.uart_device.IRQ=AVR32_USART0_IRQ,
 		.uart_device.receive_stream=NULL,
 		.options={
@@ -96,7 +96,7 @@ static  usart_config_t usart_opt[UART_COUNT] =
 		 .tx_pin_map= {AVR32_USART0_TXD_0_0_PIN, AVR32_USART0_TXD_0_0_FUNCTION}
 	}, 
 	{   .mode=UART_OFF,
-		.uart_device.uart=&AVR32_USART1,
+		.uart_device.uart=(avr32_usart_t *)&AVR32_USART1,
 		.uart_device.IRQ=AVR32_USART1_IRQ,
 		.uart_device.receive_stream=NULL,
 		.options={
@@ -109,7 +109,7 @@ static  usart_config_t usart_opt[UART_COUNT] =
 			.tx_pin_map= {AVR32_USART1_TXD_1_PIN, AVR32_USART1_TXD_1_FUNCTION}
 	},
 	{   .mode=UART_OFF,
-		.uart_device.uart=&AVR32_USART2,
+		.uart_device.uart=(avr32_usart_t *)&AVR32_USART2,
 		.uart_device.IRQ=AVR32_USART2_IRQ,
 		.uart_device.receive_stream=NULL,
 		.options={
@@ -122,7 +122,7 @@ static  usart_config_t usart_opt[UART_COUNT] =
 			.tx_pin_map= {AVR32_USART2_TXD_0_0_PIN, AVR32_USART2_TXD_0_0_FUNCTION}
 	},
 	{   .mode=UART_IN_OUT,
-		.uart_device.uart=&AVR32_USART3,
+		.uart_device.uart=(avr32_usart_t *)&AVR32_USART3,
 		.uart_device.IRQ=AVR32_USART3_IRQ,
 		.uart_device.receive_stream=NULL,
 		.options={
@@ -137,7 +137,7 @@ static  usart_config_t usart_opt[UART_COUNT] =
 			.tx_pin_map= {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION}
 	},
 	{   .mode=UART_IN_OUT,
-		.uart_device.uart=&AVR32_USART4,
+		.uart_device.uart=(avr32_usart_t *)&AVR32_USART4,
 		.uart_device.IRQ=AVR32_USART4_IRQ,
 		.uart_device.receive_stream=NULL,
 		.options={

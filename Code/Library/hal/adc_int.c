@@ -74,7 +74,7 @@ static volatile uint32_t last_adc_int_time, adc_int_period;					///< Declare ADC
 
 ///< 16bits version
 static volatile int32_t internal_buffer[MAX_CHANNELS];		///< Declare an internal buffer
-int16_t *adci_buffer[MAX_CHANNELS];							///< Declare a pointer on the ADC interrupt buffer
+int16_t* adci_buffer[MAX_CHANNELS];							///< Declare a pointer on the ADC interrupt buffer
 uint8_t even_odd;											///< Declare whether even or odd
 	
 
@@ -103,7 +103,8 @@ adcifa_sequencer_opt_t adcifa_sequence_opt = {
 adcifa_sequencer_conversion_opt_t adcifa_sequencer0_conversion_opt[SLOTS_PER_SEQUENCER];
 	
 __attribute__((__interrupt__))
-static void processData() {
+static void processData(void) 
+{
 	int ch;
 	volatile int16_t value;
 
@@ -189,7 +190,7 @@ void adc_int_init(uint32_t adc_frequency, uint8_t reference_source)
 	adc_config_options.reference_source=reference_source;
 
 	////</ Get ADCIFA Factory Configuration
-	adcifa_get_calibration_data(adcifa, &adc_config_options);
+	adcifa_get_calibration_data(adcifa, (adcifa_opt_t *)&adc_config_options);
 	if ((uint16_t)adc_config_options.offset_calibration_value == 0xFFFF)
 	{
 		///< Set default calibration if Engineering samples and part is not programmed
@@ -201,7 +202,7 @@ void adc_int_init(uint32_t adc_frequency, uint8_t reference_source)
 	adc_config_options.offset_calibration_value = 0x3B; ///< offset correction
 
 	///< Configure ADCIFA core
-	adcifa_configure(adcifa, &adc_config_options, sysclk_get_peripheral_bus_hz(AVR32_ADCIFA_ADDRESS));
+	adcifa_configure(adcifa, (adcifa_opt_t *)&adc_config_options, sysclk_get_peripheral_bus_hz((const volatile void *)AVR32_ADCIFA_ADDRESS));
 
 	adc_int_clear_sequencer();
 	continuous_mode=false;
@@ -247,7 +248,7 @@ void adc_int_start_sampling(int length, int samplingrate, int set_oversampling, 
 {
 	///< Configure ADCIFA sequencer 0
 	adcifa_sequence_opt.convnb = sequencer_item_count;
-	adcifa_configure_sequencer(adcifa, 0, &adcifa_sequence_opt, &adcifa_sequencer0_conversion_opt);
+	adcifa_configure_sequencer(adcifa, 0, (adcifa_sequencer_opt_t *)&adcifa_sequence_opt, (adcifa_sequencer_conversion_opt_t *)&adcifa_sequencer0_conversion_opt);
 	
 	oversampling = set_oversampling;
 	oversampling_divider = set_oversampling_divider;
@@ -292,7 +293,7 @@ int16_t adc_int_get_sample(int channel, int sample)
 }
 
 
-int16_t* adc_int_get_buffer(void) 
+int16_t** adc_int_get_buffer(void) 
 {
 	return adci_buffer;
 }

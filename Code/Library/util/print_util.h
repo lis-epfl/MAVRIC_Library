@@ -72,7 +72,7 @@ void print_util_putdigit(byte_stream_t *out_stream, unsigned c);
  * 
  * \param out_stream   Pointer to output stream
  * \param c            Number
- * \param base         Base
+ * \param base         Base in which the number should be printed
  */
 void print_util_putnum(byte_stream_t *out_stream, long c, char base);
 
@@ -131,7 +131,7 @@ void print_util_dbg_print(const char* s);
  * \brief              Writes a number in any base to the debug stream
  * 
  * \param c            Number
- * \param base         Base
+ * \param base         Base in which the number should be printed
  */
 void print_util_dbg_print_num(long c, char base);
 
@@ -144,7 +144,7 @@ void print_util_dbg_print_num(long c, char base);
  * 						
  * \param 	msg         Descriptive message
  * \param 	value       Associated value
- * \param 	base        Base
+ * \param 	base        Base in which the number should be printed
  */
 void print_util_dbg_log_value(const char* msg, long value, char base);
 

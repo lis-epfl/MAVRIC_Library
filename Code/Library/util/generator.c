@@ -25,7 +25,7 @@
 static volatile uint16_t dac_function_buffer[GENERATOR_BUFFER_SIZE];	// TODO: This should not be instanciated by default
 
 
-void generator_init_dac_buffer_triangle() 
+void generator_init_dac_buffer_triangle(void) 
 {
 	int i;
 	for (i=0; i<GENERATOR_BUFFER_SIZE/2; i++) 
@@ -40,7 +40,7 @@ void generator_init_dac_buffer_triangle()
 }
 
 
-void generator_init_dac_buffer_sine() 
+void generator_init_dac_buffer_sine(void) 
 {
 	int i;
 	for (i=0; i<GENERATOR_BUFFER_SIZE; i++) 
