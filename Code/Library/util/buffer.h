@@ -57,7 +57,7 @@ void buffer_init(Buffer_t * buffer);
  * @param buffer 	Pointer to buffer
  * @param byte   	Byte to write
  */
-void buffer_put_lossy(Buffer_t * buffer, uint8_t byte);
+uint8_t buffer_put_lossy(Buffer_t * buffer, uint8_t byte);
 
 
 /**
@@ -66,9 +66,9 @@ void buffer_put_lossy(Buffer_t * buffer, uint8_t byte);
  * @param buffer 	Pointer to buffer
  * @param byte   	Byte to write
  * 
- * @return       	Boolean, 1 if successfully added, 0 if not
+ * @return       	Boolean, 0 if successfully added, 1 if not
  */
-int8_t buffer_put(Buffer_t * buffer, uint8_t byte);
+uint8_t buffer_put(Buffer_t * buffer, uint8_t byte);
 
 
 /**
@@ -96,7 +96,7 @@ void buffer_clear(Buffer_t * buffer);
  * @param buffer 	Pointer to buffer
  * @return       	Number of available bytes
  */
-int buffer_bytes_available(Buffer_t * buffer);
+uint32_t buffer_bytes_available(Buffer_t * buffer);
 
 
 /**
@@ -105,7 +105,7 @@ int buffer_bytes_available(Buffer_t * buffer);
  * @param buffer 	Pointer to buffer
  * @return       	Boolean, 1 if full, 0 if not
  */
-int8_t buffer_full(Buffer_t * buffer);
+uint8_t buffer_full(Buffer_t * buffer);
 
 
 /**
