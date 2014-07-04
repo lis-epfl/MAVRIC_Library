@@ -69,7 +69,7 @@ int uart_int_bytes_available(usart_config_t *usart_opt);
  *
  * \return	TODO: clean this up, should be a void function
  */
-short uart_int_send_byte(usart_config_t *usart_opt, char data);
+uint8_t uart_int_send_byte(usart_config_t *usart_opt, char data);
 
 /** 
  * \brief	Blocking operation to flush the uart buffer. Returns once the last byte has been passed to hardware for transmission.
