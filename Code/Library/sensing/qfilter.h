@@ -94,7 +94,7 @@ void qfilter_init_quaternion(Quat_Attitude_t *attitude);
  * \param	rates			The raw rates from the IMU
  * \param	dt				The time interval between two estimation loops
  */
-void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float *rates, float dt);
+void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float rates[9], float dt);
 
 #ifdef __cplusplus
 }
