@@ -89,7 +89,7 @@ void qfilter_init_quaternion(Quat_Attitude_t *attitude)
 	attitude->qe.v[2] = sin(init_angle / 2.0f);
 }
 
-void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float *rates, float dt){
+void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float rates[9], float dt){
 	uint8_t i;
 	float  omc[3], omc_mag[3] , tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
 	UQuat_t qed, qtmp1, up, up_bf;
@@ -180,6 +180,7 @@ void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float *rates, float 
 			attitude->be[3] += dt * attitude->kp * (attitude->a[0] - up_bf.v[0]);
 			attitude->be[4] += dt * attitude->kp * (attitude->a[1] - up_bf.v[1]);
 			attitude->be[5] += dt * attitude->kp * (attitude->a[2] - up_bf.v[2]);
+			kp_mag = attitude->kp_mag;
 			break;
 			
 		default:

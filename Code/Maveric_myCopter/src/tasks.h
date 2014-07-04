@@ -97,6 +97,15 @@ task_return_t tasks_run_navigation_update(void);
  */
 task_return_t tasks_run_barometer_update(void);
 
+/**
+ * \brief            Run the sonar task
+ */
+task_return_t sonar_update(void);
+
+/**
+ * \brief            Run the analog to digital converter task
+ */
+task_return_t adc_update(void);
 
 #ifdef __cplusplus
 }
