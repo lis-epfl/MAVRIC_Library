@@ -32,13 +32,13 @@ extern "C"
 /**
  * \brief       Initialises the DAC buffer to a triangle
  */
-void generator_init_dac_buffer_triangle();
+void generator_init_dac_buffer_triangle(void);
 
  
 /**
  * \brief       Initialises the DAC buffer to a sine
  */
-void generator_init_dac_buffer_sine();
+void generator_init_dac_buffer_sine(void);
 
 
 /**
