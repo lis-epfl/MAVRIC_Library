@@ -39,6 +39,7 @@ typedef struct UQuat {
 } UQuat_t;
 
 
+
 /**
  * \brief Conversion from degrees to radians
  */
@@ -314,24 +315,28 @@ void static inline maths_quat_rotate_vector(const UQuat_t q, const float u[3], f
 	v[2] = u[2] + q.s * tmp1[2] + tmp2[2];
 }
 
-
 /**
- * \brief 			Fast newton iteration for approximate square root of numbers close to 1 (for re-normalisation)
+ * \brief 			Fast newton iteration for approximate square root
  * 
  * \param 	number 	Input value
  * 
  * \return 			Output value
  */
-float static inline maths_fast_sqrt(float number) {
-	long i;
+float static inline maths_fast_sqrt(float number) 
+{
+	union
+	{
+		float	f;
+		long	l;
+	}i;
+	
 	float x, y;
 	const float f = 1.5f;
 
 	x = number * 0.5f;
-	y  = number;
-	i  = * ( long * ) &y;
-	i  = 0x5f3759df - ( i >> 1 );
-	y  = * ( float * ) &i;
+	i.f = number;
+	i.l  = 0x5f3759df - ( i.l >> 1 );
+	y = i.f;
 	y  = y * ( f - ( x * y * y ) );
 	y  = y * ( f - ( x * y * y ) ); // repeat newton iteration for more accuracy
 	return number * y;
