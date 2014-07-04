@@ -62,5 +62,5 @@ acc_data* adxl345_driver_get_acc_data_slow(void)
 		acc_outputs.axes[i] = (int16_t)(acc_outputs.raw_data[2 * i]) + (int16_t)(acc_outputs.raw_data[2 * i + 1] << 8);
 	}
 				
-	return &acc_outputs;
+	return (acc_data*)&acc_outputs;
 }

@@ -67,5 +67,5 @@ gyro_data* itg3200_driver_get_data_slow(void)
 	twim_write(&AVR32_TWIM0, (uint8_t*) &write_then_read_preamble, 1, ITG3200_SLAVE_ADDRESS, false);
 	twim_read(&AVR32_TWIM0, (uint8_t*)&gyro_outputs, 8, ITG3200_SLAVE_ADDRESS, false);
 	
-	return &gyro_outputs;
+	return (gyro_data*)&gyro_outputs;
 }

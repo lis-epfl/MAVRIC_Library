@@ -105,7 +105,7 @@ typedef struct lsm330dlc_gyro_conf_t
 #define LSM_ACC_FIFO_EN	0x40					///< Define the Accelerometer control register A5
 #define LSM_ACC_BOOT	0x80					///< Define the Accelerometer control register A5
 
-///< CTRL_REG_G_1
+///< CTRL_REG1_G
 #define LSM_GYRO_DATARATE_95HZ		0x00		///< Define the frequency of the gyroscope data rate
 #define LSM_GYRO_DATARATE_190HZ		0x40		///< Define the frequency of the gyroscope data rate
 #define LSM_GYRO_DATARATE_380Hz		0x80		///< Define the frequency of the gyroscope data rate
@@ -123,7 +123,7 @@ typedef struct lsm330dlc_gyro_conf_t
 #define LSM_GYRO_ALL_EN	0x07					///< Enable the gyroscope 3 axis
 #define LSM_GYRO_POWER_ON	0x08				///< Power on the gyroscope X_axis
 
-///< CTRL_REG_G_2
+///< CTRL_REG2_G
 #define LSM_GYRO_HPCF0	0x01					///< Define the gyroscope control register G2
 #define LSM_GYRO_HPCF1	0x02					///< Define the gyroscope control register G2
 #define LSM_GYRO_HPCF2	0x04					///< Define the gyroscope control register G2
@@ -133,7 +133,7 @@ typedef struct lsm330dlc_gyro_conf_t
 #define LSM_GYRO_LVL_EN	0x40					///< Enable the gyroscope control register G2
 #define LSM_GYRO_EXTREN	0x80					///< Define the gyroscope control register G2
 
-///< CTRL_REG_G_3
+///< CTRL_REG3_G
 #define LSM_GYRO_FIFO_EMPTY_INT	0x01			///< Define the gyroscope control register G3
 #define LSM_GYRO_FIFO_OVRUN_INT	0x02			///< Define the gyroscope control register G3
 #define LSM_GYRO_FIFO_WM_INT	0x04			///< Define the gyroscope control register G3
@@ -143,18 +143,18 @@ typedef struct lsm330dlc_gyro_conf_t
 #define LSM_GYRO_I1_BOOT		0x40			///< Define the gyroscope control register G3
 #define LSM_GYRO_I1_INT1		0x80			///< Define the gyroscope control register G3
 
-///< CTRL_REG_G_4
+///< CTRL_REG4_G
 #define LSM_GYRO_SPI_MODE	0x01
 
 #define LSM_GYRO_FULL_SCALE_250		0x00		///< Define the range of the gyroscope sensor
 #define LSM_GYRO_FULL_SCALE_500		0x10		///< Define the range of the gyroscope sensor
-#define LSM_GYRO_FULL_SCALE_2000	0x20		///< Define the range of the gyroscope sensor
-#define LSM_GYRO_FULL_SCALE_2000	0x30		///< Define the range of the gyroscope sensor
+#define LSM_GYRO_FULL_SCALE_2000_1	0x20		///< Define the range of the gyroscope sensor
+#define LSM_GYRO_FULL_SCALE_2000_2	0x30		///< Define the range of the gyroscope sensor
 
 #define LSM_GYRO_BIG_ENDIAN	0x40				///< Define the gyroscope sensor endianness
 #define LSM_GYRO_BLOCK_DATA	0x80				///< Define the block transmission mode of the gyroscope
 
-///< CTRL_REG_G_5
+///< CTRL_REG5_G
 #define LSM_OUT_SEL0		0x01				///< Define the gyroscope control register G5
 #define LSM_OUT_SEL1		0x02				///< Define the gyroscope control register G5
 #define LSM_INT_SEL0		0x04				///< Define the gyroscope control register G5
@@ -199,7 +199,7 @@ static const lsm330dlc_gyro_conf_t lsm_gyro_default_config=
 		LSM_GYRO_POWER_ON | LSM_GYRO_DATARATE_760Hz | LSM_GYRO_BANDWIDTH_50Hz | LSM_GYRO_ALL_EN,	///< CTRL_REG_A_1
 		0,											///< CTRL_REG_A_2
 		0,											///< CTRL_REG_A_3
-		LSM_GYRO_FULL_SCALE_2000|LSM_GYRO_BIG_ENDIAN,	///< CTRL_REG_A_4
+		LSM_GYRO_FULL_SCALE_2000_2|LSM_GYRO_BIG_ENDIAN,	///< CTRL_REG_A_4
 		0 ///< LSM_GYRO_FIFO_EN
 	}
 };

@@ -33,6 +33,16 @@ NEW_TASK_SET(main_tasks, 10)
 
 central_data_t *centralData;
 
+/**
+ * \brief	Gives a fake gps value
+ */
+void fake_gps_fix(void);
+
+/**
+ * \brief	Function to call when the motors should be switched off
+ */
+void switch_off_motors(void);
+
 task_set* tasks_get_main_taskset() 
 {
 	return &main_tasks;
@@ -92,7 +102,7 @@ void switch_off_motors(void)
 
 void tasks_relevel_imu()
 {
-	uint8_t i,j;
+	uint32_t i,j;
 
 	centralData->imu1.attitude.calibration_level = LEVELING;
 	centralData->mav_state = MAV_STATE_CALIBRATING;
@@ -474,12 +484,14 @@ task_return_t tasks_set_mav_mode_n_state()
 		// From reality to simulation
 		if (centralData->simulation_mode == 1)
 		{			
-			simulation_init(&(centralData->sim_model),&(centralData->imu1.attitude),centralData->position_estimator.localPosition);
+			simulation_init(&(centralData->sim_model),&(centralData->imu1),centralData->position_estimator.localPosition);
 			centralData->position_estimator.init_gps_position = false;
 		}
 	}
 	
 	centralData->simulation_mode_previous = centralData->simulation_mode;
+	
+	return TASK_RUN_SUCCESS;
 }
 
 
@@ -487,7 +499,7 @@ void tasks_run_imu_update() {
 	if (centralData->simulation_mode == 1) 
 	{
 		simulation_update(&centralData->sim_model, 
-					&centralData->servos, 
+					centralData->servos, 
 					&(centralData->imu1), 
 					&centralData->position_estimator);
 		
@@ -582,6 +594,8 @@ task_return_t tasks_run_stabilisation()
 	{
 		servo_pwm_set(centralData->servos);
 	}
+	
+	return TASK_RUN_SUCCESS;
 }
 
 
@@ -617,13 +631,13 @@ task_return_t tasks_run_gps_update()
 	{
 		gps_ublox_update();
 	}
+	
+	return TASK_RUN_SUCCESS;
 }
 
 
 task_return_t tasks_run_navigation_update()
-{
-	int8_t i;
-	
+{	
 	switch (centralData->mav_state)
 	{
 		case MAV_STATE_STANDBY:
@@ -659,7 +673,9 @@ task_return_t tasks_run_navigation_update()
 				navigation_run(centralData->waypoint_critical_coordinates);
 			}
 			break;
-	}	
+	}
+	
+	return TASK_RUN_SUCCESS;
 }
 
 
@@ -677,6 +693,8 @@ task_return_t tasks_run_barometer_update()
 	} 
 
 	centralData->pressure = *pressure;
+	
+	return TASK_RUN_SUCCESS;
 }
 
 
@@ -684,12 +702,16 @@ task_return_t sonar_update(void)
 {
 	central_data_t* central_data = central_data_get_pointer_to_struct();
 	i2cxl_sonar_update(&central_data->i2cxl_sonar);
+	
+	return TASK_RUN_SUCCESS;
 }
 
 task_return_t adc_update(void)
 {
 	central_data_t* central_data = central_data_get_pointer_to_struct();
 	analog_monitor_update(&central_data->adc);
+	
+	return TASK_RUN_SUCCESS;
 }
 
 void tasks_create_tasks() 

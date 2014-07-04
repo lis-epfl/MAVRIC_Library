@@ -24,7 +24,7 @@
 #include "bmp085.h"
 #include "math_util.h"
 #include "time_keeper.h"
-#include "conf_sim_model.h"
+#include "simulation.h"
 
 /**
  * \brief	Initialization of the position estimation from the GPS position

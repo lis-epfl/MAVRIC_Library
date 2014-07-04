@@ -38,7 +38,7 @@ void onboard_parameters_init(void)
 
 void onboard_parameters_add_parameter_uint8(uint8_t* val, const char* param_name) 
 {
-	param_set.parameters[param_set.param_count].param = val;
+	param_set.parameters[param_set.param_count].param = (float*) val;
 	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
 	param_set.parameters[param_set.param_count].data_type= MAV_PARAM_TYPE_INT8;
 	param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
@@ -48,7 +48,7 @@ void onboard_parameters_add_parameter_uint8(uint8_t* val, const char* param_name
 
 void onboard_parameters_add_parameter_uint32(uint32_t* val, const char* param_name) 
 {
-	param_set.parameters[param_set.param_count].param = val;
+	param_set.parameters[param_set.param_count].param = (float*) val;
 	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
 	param_set.parameters[param_set.param_count].data_type= MAV_PARAM_TYPE_UINT32;
     param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
@@ -58,7 +58,7 @@ void onboard_parameters_add_parameter_uint32(uint32_t* val, const char* param_na
 
 void onboard_parameters_add_parameter_int32(int32_t* val, const char* param_name) 
 {
-	param_set.parameters[param_set.param_count].param = val;
+	param_set.parameters[param_set.param_count].param = (float*) val;
 	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
 	param_set.parameters[param_set.param_count].data_type = MAV_PARAM_TYPE_INT32;
 	param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
@@ -88,7 +88,7 @@ void onboard_parameters_update_parameter(int param_index, float value)
 		case MAVLINK_TYPE_INT8_T:
 			// take care of different Endianness (usually MAVLINK does this, but here MAVLINK assumes all parameters are 4-byte so we need to swap it back)
 			#if MAVLINK_NEED_BYTE_SWAP
-				byte_swap_4(&converted, &value);
+				byte_swap_4((char *)&converted, (char *)&value);
 				memcpy(param_set.parameters[param_index].param, &converted, 1);
 			#else
 				memcpy(param_set.parameters[param_index].param, &value, 1);
@@ -99,7 +99,7 @@ void onboard_parameters_update_parameter(int param_index, float value)
 		case MAVLINK_TYPE_INT16_T:
 			// take care of different Endianness (usually MAVLINK does this, but here MAVLINK assumes all parameters are 4-byte so we need to swap it back)
 			#if MAVLINK_NEED_BYTE_SWAP
-				byte_swap_4(&converted, &value);
+				byte_swap_4((char *)&converted, (char *)&value);
 				memcpy(param_set.parameters[param_index].param, &converted, 2);
 			#else
 				memcpy(param_set.parameters[param_index].param, &value, 2);
@@ -132,7 +132,7 @@ float onboard_parameters_read_parameter(int param_index)
 		case MAVLINK_TYPE_INT8_T:
 			memcpy(&return_value, param_set.parameters[param_index].param, 1);
 			#if MAVLINK_NEED_BYTE_SWAP
-				byte_swap_4(&converted, &return_value);
+				byte_swap_4((char *)&converted, (char *)&return_value);
 			#else
 				memcpy(&converted, &return_value, 4);
 			#endif
@@ -142,7 +142,7 @@ float onboard_parameters_read_parameter(int param_index)
 		case MAVLINK_TYPE_INT16_T:
 			memcpy(&return_value, param_set.parameters[param_index].param, 2);
 			#if MAVLINK_NEED_BYTE_SWAP
-				byte_swap_4(&converted, &return_value);
+				byte_swap_4((char *)&converted, (char *)&return_value);
 			#else
 				memcpy(&converted, &return_value, 4);
 			#endif
@@ -179,7 +179,7 @@ void onboard_parameters_send_all_parameters_now()
 	for (uint8_t i = 0; i < param_set.param_count; i++)
 	{
 		mavlink_msg_param_value_send(MAVLINK_COMM_0,
-										(int8_t*)param_set.parameters[i].param_name,
+										(char*)param_set.parameters[i].param_name,
 										onboard_parameters_read_parameter(i),
 										param_set.parameters[i].data_type,
 										param_set.param_count,
@@ -190,14 +190,14 @@ void onboard_parameters_send_all_parameters_now()
 }
 
 
-void onboard_parameters_send_scheduled_parameters() 
+task_return_t onboard_parameters_send_scheduled_parameters(void) 
 {
 	for (uint8_t i = 0; i < param_set.param_count; i++)
 	{
 		if (param_set.parameters[i].schedule_for_transmission) 
 		{
 			mavlink_msg_param_value_send(MAVLINK_COMM_0,
-										(int8_t*)param_set.parameters[i].param_name,
+										(char*)param_set.parameters[i].param_name,
 										onboard_parameters_read_parameter(i),
 										param_set.parameters[i].data_type,
 										param_set.param_count,
@@ -206,6 +206,8 @@ void onboard_parameters_send_scheduled_parameters()
 			param_set.parameters[i].schedule_for_transmission=false;
 		}			
 	}
+	
+	return TASK_RUN_SUCCESS;
 }
 
 void onboard_parameters_send_parameter(mavlink_param_request_read_t* request) 
@@ -312,8 +314,8 @@ void onboard_parameters_read_parameters_from_flashc()
 {
 	uint8_t i;
 	
-	nvram_array = MAVERIC_FLASHC_USER_PAGE_START_ADDRESS;
-	nvram_data_ttt local_array;
+	nvram_array = (nvram_data_t *) MAVERIC_FLASHC_USER_PAGE_START_ADDRESS;
+	nvram_data_t local_array;
 	
 	float cksum1, cksum2;
 	cksum1 = 0;
@@ -348,8 +350,8 @@ void onboard_parameters_write_parameters_from_flashc()
 	uint8_t i;
 	size_t bytes_to_write = 0;
 	
-	nvram_array = MAVERIC_FLASHC_USER_PAGE_START_ADDRESS;
-	nvram_data_ttt local_array;
+	nvram_array = (nvram_data_t*) MAVERIC_FLASHC_USER_PAGE_START_ADDRESS;
+	nvram_data_t local_array;
 	
 	local_array.values[0] = param_set.param_count;
 	cksum1 += local_array.values[0];

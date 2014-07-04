@@ -24,6 +24,14 @@
 static volatile lsm_gyro_data_t lsm_gyro_outputs;		///< Declare an object containing the gyroscope's data
 static volatile lsm_acc_data_t  lsm_acc_outputs;		///< Declare an object containing the accelerometer's data
 
+///< Function prototype definitions
+uint8_t lsm_read_register(uint8_t device, unsigned char address);
+void lsm_write_register(uint8_t device, unsigned char address, uint8_t value);
+void init_lsm330_acc(void);
+void init_lsm330_gyro(void);
+void lsm_get_acc_config(void);
+void lsm_get_gyro_config(void);
+
 uint8_t lsm_read_register(uint8_t device, unsigned char address) 
 {
 	int16_t result;
@@ -32,9 +40,8 @@ uint8_t lsm_read_register(uint8_t device, unsigned char address)
 	return result;
 }
 
-uint8_t lsm_write_register(uint8_t device, unsigned char address, uint8_t value) 
+void lsm_write_register(uint8_t device, unsigned char address, uint8_t value) 
 {
-	// int16_t result;
 	twim_write(&AVR32_TWIM0, (uint8_t*) &address, 1, device, false);
 	twim_write(&AVR32_TWIM0, (uint8_t*) &value, 1, device, false);
 }
@@ -55,7 +62,7 @@ void init_lsm330_gyro(void)
 	twim_write(&AVR32_TWIM0, (uint8_t*) &fifo_config, 2, LSM330_GYRO_SLAVE_ADDRESS, false);
 }
 
-lsm_get_acc_config() 
+void lsm_get_acc_config(void)
 {
 	int i;
 	uint8_t data_register_address = lsm_acc_default_config.start_address | LSM_AUTO_INCREMENT;
@@ -83,7 +90,7 @@ lsm_get_acc_config()
 	}
 }
 
-lsm_get_gyro_config() 
+void lsm_get_gyro_config(void) 
 {
 	int i;
 	uint8_t data_register_address = lsm_acc_default_config.start_address | LSM_AUTO_INCREMENT;
@@ -163,7 +170,7 @@ lsm_acc_data_t* lsm330dlc_driver_get_acc_data(void)
 	lsm_acc_outputs.axes[1] = (int16_t)(axes[1] / fifo_fill);
 	lsm_acc_outputs.axes[2] = (int16_t)(axes[2] / fifo_fill);
 	
-	return &lsm_acc_outputs;
+	return (lsm_acc_data_t*)&lsm_acc_outputs;
 }
 
 lsm_gyro_data_t* lsm330dlc_driver_get_gyro_data(void) 
@@ -178,7 +185,7 @@ lsm_gyro_data_t* lsm330dlc_driver_get_gyro_data(void)
 	
 	if (fifo_fill <= 0) 
 	{
-		return &lsm_gyro_outputs;
+		return (lsm_gyro_data_t*)&lsm_gyro_outputs;
 	}
 	//if (fifo_fill > 6) fifo_fill = 6;
 	
@@ -198,5 +205,5 @@ lsm_gyro_data_t* lsm330dlc_driver_get_gyro_data(void)
 	lsm_gyro_outputs.axes[1] = (int16_t)(axes[1] / fifo_fill);
 	lsm_gyro_outputs.axes[2] = (int16_t)(axes[2] / fifo_fill);
 	
-	return &lsm_gyro_outputs;
+	return (lsm_gyro_data_t*)&lsm_gyro_outputs;
 }

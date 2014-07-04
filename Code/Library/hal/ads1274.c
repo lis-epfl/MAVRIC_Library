@@ -90,6 +90,10 @@ static volatile generatorfunction function_generator;
 #define EXT_INT_LINES 1
 eic_options_t eic_options[EXT_INT_LINES];  
 
+///< Function prototype definitions
+void processData(void);
+__attribute__((__naked__)) void eic_nmi_handler( void );
+
 int get_interrupt_counter(void) 
 {
 	return interrupt_counter;
@@ -246,14 +250,15 @@ void ads1274_ADC_start_oneshot(void)
 	//Enable_global_interrupt();
 }
 
+/* NOT IMPLEMENTED YET
 ///< stops sampling immediately
 void ads1274_ADC_stop_sampling(void){};
 
 ///< Returns true if one-shot sampling has finished
 Bool Sampling_Complete(void){};
+*/
 
 __attribute__((__naked__))
-
 void eic_nmi_handler( void )
 {
 	//int i = 0;
