@@ -13,7 +13,7 @@
  */
 
 #include "boardsupport.h"
-#include "conf_sim_model.h"
+#include "uart_int.h"
 #include "sysclk.h"
 #include "sleepmgr.h"
 #include "led.h"
@@ -25,7 +25,6 @@
 #include "i2c_driver_int.h"
 #include "imu.h"
 #include "remote_controller.h"
-#include "uart_int.h"
 #include "print_util.h"
 
 #include "mavlink_stream.h"

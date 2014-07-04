@@ -23,6 +23,14 @@ byte_stream_t* deb_stream;
 Bool blocking;
 static const char alphabet[36] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
+/**
+ * \brief	
+ *
+ *	\param	out_stream		Pointer to output stream
+ *	\param	c				Number between 0 and 35
+ *	\param	base			Base in which the number should be printed
+ */
+void putnum_tight(byte_stream_t *out_stream, long c, char base);
 
 byte_stream_t* print_util_get_debug_stream()
 {
