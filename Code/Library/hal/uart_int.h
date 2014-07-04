@@ -24,9 +24,36 @@ extern "C" {
 #endif
 
 #include "compiler.h"
-#include "conf_usart_serial.h"
+#include "usart.h"
+//#include "conf_usart_serial.h"
 #include "buffer.h"
 #include "streams.h"
+
+typedef struct {
+avr32_usart_t *uart;
+int IRQ;
+Buffer_t transmit_buffer;
+Buffer_t receive_buffer;
+byte_stream_t *receive_stream;
+} uart_interface_t;
+
+
+typedef struct
+{
+unsigned char pin;              //!< Module pin.
+unsigned char function;         //!< Module function.
+} uart_gpio_map_t;
+
+
+typedef struct {
+int mode;
+uart_interface_t uart_device;
+usart_options_t options;
+uart_gpio_map_t rx_pin_map;
+uart_gpio_map_t tx_pin_map;
+} usart_config_t;
+
+
 
 /**
  * \brief	Initialize the UART line

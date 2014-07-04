@@ -17,6 +17,7 @@
 
 
 #include "uart_int.h"
+#include "conf_usart_serial.h"
 #include "buffer.h"
 #include "gpio.h"
 #include "streams.h"

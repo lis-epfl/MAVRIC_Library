@@ -38,7 +38,8 @@
 #ifndef CONF_USART_SERIAL_H_INCLUDED
 #define CONF_USART_SERIAL_H_INCLUDED
 
-#include "usart.h"
+#include "uart_int.h"
+//#include "usart.h"
 #include "gpio.h"
 #include "buffer.h"
 #include "streams.h"
@@ -55,34 +56,7 @@ enum UART_MODE {UART_OFF, UART_IN, UART_OUT, UART_IN_OUT};
 enum AVAILABLE_UARTS {UART0, UART1, UART2, UART3, UART4, 
 					 UART_COUNT};
 
-typedef struct {
-	avr32_usart_t *uart;
-	int IRQ;
-	Buffer_t transmit_buffer;
-	Buffer_t receive_buffer;
-	byte_stream_t *receive_stream;
-} uart_interface_t;
-
-
-typedef struct
-{
-	unsigned char pin;              //!< Module pin.
-	unsigned char function;         //!< Module function.
-} uart_gpio_map_t;
-
-
-typedef struct {
-	int mode;
-	uart_interface_t uart_device; 
-	usart_options_t options; 
-	uart_gpio_map_t rx_pin_map;
-	uart_gpio_map_t tx_pin_map;
-	} usart_config_t;
-
-// USART options.
-
-static usart_config_t usart_conf[UART_COUNT] =
-//usart_config_t usart_conf[UART_COUNT] =
+usart_config_t usart_conf[UART_COUNT] =
 {	
 	{   .mode=UART_IN_OUT,
 		.uart_device.uart=(avr32_usart_t *)&AVR32_USART0, 
