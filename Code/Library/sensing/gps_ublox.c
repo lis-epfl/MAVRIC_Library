@@ -856,7 +856,8 @@ bool gps_ublox_process_data(void)
 		ubx_tim_tp *gpsTimTP = ubx_GetTimTP();
 		if (gpsTimTP)
 		{
-			loopTimTp = ++loopTimTp % numSkippedMsg;
+			++loopTimTp;
+			loopTimTp %= numSkippedMsg;
 			if((printNavOnDebug)&&(loopTimTp == 0))
 			{
 				print_util_dbg_print("MSG_TIM_TP GPS awake\n");
@@ -865,7 +866,8 @@ bool gps_ublox_process_data(void)
 		ubx_tim_vrfy *gpsTimVrfy = ubx_GetTimVRFY();
 		if (gpsTimVrfy)
 		{
-			loopTimVrfy = ++loopTimVrfy % numSkippedMsg;
+			++loopTimVrfy;
+			loopTimVrfy %= numSkippedMsg;
 			if((printNavOnDebug)&&(loopTimVrfy == 0))
 			{
 				print_util_dbg_print("MSG_TIM_VRFY");
@@ -968,7 +970,8 @@ bool gps_ublox_process_data(void)
 		gpsPosllh = ubx_GetPosllh();
 		if (gpsPosllh)
 		{
-			loopPosllh = ++loopPosllh % numSkippedMsg;
+			++loopPosllh;
+			loopPosllh %= numSkippedMsg;
 			if (printNavOnDebug && (loopPosllh == 0))
 			{
 				print_util_dbg_print("MSG_NAV_POSLLH");
@@ -1006,7 +1009,8 @@ bool gps_ublox_process_data(void)
 		
 		if (gpsStatus)
 		{
-			loopStatus = ++loopStatus % numSkippedMsg;
+			++loopStatus;
+			loopStatus %= numSkippedMsg;
 			if (printNavOnDebug && (loopStatus == 0))
 			{
 				print_util_dbg_print("MSG_STATUS fix_type = 0x");
@@ -1032,7 +1036,8 @@ bool gps_ublox_process_data(void)
 		
 		if (gpsSolution)
 		{
-			loopSolution = ++loopSolution % numSkippedMsg;
+			++loopSolution;
+			loopSolution %= numSkippedMsg;
 			if (printNavOnDebug && (loopSolution == 0))
 			{
 				print_util_dbg_print("MSG_SOL ");
@@ -1076,7 +1081,8 @@ bool gps_ublox_process_data(void)
 		
 		if (gpsVelned)
 		{
-			loopVelned = ++loopVelned % numSkippedMsg;
+			++loopVelned;
+			loopVelned %= numSkippedMsg;
 			if (printNavOnDebug && (loopVelned == 0))
 			{
 			
