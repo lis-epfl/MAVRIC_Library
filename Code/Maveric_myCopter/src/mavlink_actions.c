@@ -32,36 +32,147 @@
 
 central_data_t *centralData;
 
+/**
+ * \brief	Task to check if the time overpass the timer limit
+ * 
+ * \return	The status of execution of the task
+ */
 task_return_t control_waypoint_timeout (void);
-task_return_t mavlink_send_attitude(void);
-task_return_t mavlink_send_attitude_quaternion(void);
-task_return_t mavlink_send_estimator(void);
-task_return_t mavlink_send_global_position(void);
-task_return_t mavlink_send_gps_raw(void);
+/**
+ * \brief	Task to send the mavlink heartbeat message
+ * 
+ * \return	The status of execution of the task
+ */
 task_return_t mavlink_send_heartbeat(void);
-task_return_t mavlink_send_hud(void);
-task_return_t mavlink_send_pressure(void);
-task_return_t mavlink_send_raw_imu(void);
-task_return_t mavlink_send_raw_rc_channels(void);
-task_return_t mavlink_send_rpy_rates_error(void);
-task_return_t mavlink_send_rpy_speed_thrust_setpoint(void);
-task_return_t mavlink_send_rpy_thrust_setpoint(void);
-task_return_t mavlink_send_rt_stats(void);
+/**
+ * \brief	Task to send the mavlink system status message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_send_status(void);
+/**
+ * \brief	Task to send the mavlink gps raw message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_send_gps_raw(void);
+/**
+ * \brief	Task to send the mavlink scaled IMU message
+ * 
+ * \return	The status of execution of the task
+ */
 task_return_t mavlink_send_scaled_imu(void);
+/**
+ * \brief	Task to send the mavlink raw IMU message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_send_raw_imu(void);
+/**
+ * \brief	Task to send the mavlink scaled pressure message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_send_pressure(void);
+/**
+ * \brief	Task to send the mavlink attitude message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_send_attitude(void);
+/**
+ * \brief	Task to send the mavlink quaternion attitude message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_send_attitude_quaternion(void);
+/**
+ * \brief	Task to send the mavlink position estimation message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_send_estimator(void);
+/**
+ * \brief	Task to send the mavlink GPS global position message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_send_global_position(void);
+/**
+ * \brief	Task to send the mavlink RC scaled message
+ * 
+ * \return	The status of execution of the task
+ */
 task_return_t mavlink_send_scaled_rc_channels(void);
+/**
+ * \brief	Task to send the mavlink RC raw message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_send_raw_rc_channels(void);
+/**
+ * \brief	Task to send the mavlink servo output message
+ * 
+ * \return	The status of execution of the task
+ */
 task_return_t mavlink_send_servo_output(void);
+/**
+ * \brief	Task to send the mavlink roll, pitch, yaw and thrust setpoints message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_send_rpy_thrust_setpoint(void);
+/**
+ * \brief	Task to send the mavlink roll, pitch, yaw angular speeds and thrust setpoints message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_send_rpy_speed_thrust_setpoint(void);
+/**
+ * \brief	Task to send the mavlink HUD message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_send_hud(void);
+/**
+ * \brief	Task to send the mavlink roll, pitch and yaw errors message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_send_rpy_rates_error(void);
+/**
+ * \brief	Task to send the mavlink HIL simulation message
+ * 
+ * \return	The status of execution of the task
+ */
 task_return_t mavlink_send_simulation(void);
+/**
+ * \brief	Task to send the mavlink real time statistics message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_send_rt_stats(void);
+/**
+ * \brief	Task to send the mavlink sonar message
+ * 
+ * \return	The status of execution of the task
+ */
 task_return_t mavlink_send_sonar(void);
+
+
 
 task_return_t mavlink_send_heartbeat(void) 
 {
-	central_data_t *centralData = central_data_get_pointer_to_struct();
-
-	float battery_voltage = centralData->adc.avg[ANALOG_RAIL_10];		// bat voltage (mV), actual battery pack plugged to the board
-	float battery_remaining = centralData->adc.avg[ANALOG_RAIL_11] / 12.4f * 100.0f;
-
 	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, MAV_TYPE_QUADROTOR, MAV_AUTOPILOT_GENERIC, centralData->mav_mode, 0, centralData->mav_state);
 
+	return TASK_RUN_SUCCESS;
+}
+
+task_return_t mavlink_send_status(void)
+{
+	float battery_voltage = centralData->adc.avg[ANALOG_RAIL_10];		// bat voltage (mV), actual battery pack plugged to the board
+	float battery_remaining = centralData->adc.avg[ANALOG_RAIL_11] / 12.4f * 100.0f;
+	
 	mavlink_msg_sys_status_send(MAVLINK_COMM_0, 
 								0b1111110000100111, 									// sensors present
 								0b1111110000100111, 									// sensors enabled
@@ -75,6 +186,54 @@ task_return_t mavlink_send_heartbeat(void)
 	return TASK_RUN_SUCCESS;
 }
 
+task_return_t mavlink_send_gps_raw(void)
+{
+	if (centralData->GPS_data.status == GPS_OK)
+	{
+		mavlink_msg_gps_raw_int_send(	MAVLINK_COMM_0,
+		1000 * centralData->GPS_data.timeLastMsg,
+		centralData->GPS_data.status,
+		centralData->GPS_data.latitude * 10000000.0f,
+		centralData->GPS_data.longitude * 10000000.0f,
+		centralData->GPS_data.altitude * 1000.0f,
+		centralData->GPS_data.hdop * 100.0f,
+		centralData->GPS_data.speedAccuracy * 100.0f,
+		centralData->GPS_data.groundSpeed * 100.0f,
+		centralData->GPS_data.course,
+		centralData->GPS_data.num_sats	);
+	}
+	else
+	{
+		mavlink_msg_gps_raw_int_send(	MAVLINK_COMM_0,
+		time_keeper_get_micros(),
+		centralData->GPS_data.status,
+		46.5193f * 10000000,
+		6.56507f * 10000000,
+		400 * 1000,
+		0,
+		0,
+		0,
+		0,
+		centralData->GPS_data.num_sats);
+	}
+	return TASK_RUN_SUCCESS;
+}
+
+task_return_t mavlink_send_scaled_imu(void)
+{
+	mavlink_msg_scaled_imu_send(MAVLINK_COMM_0,
+	time_keeper_get_millis(),
+	1000 * centralData->imu1.attitude.a[IMU_X],
+	1000 * centralData->imu1.attitude.a[IMU_Y],
+	1000 * centralData->imu1.attitude.a[IMU_Z],
+	1000 * centralData->imu1.attitude.om[IMU_X],
+	1000 * centralData->imu1.attitude.om[IMU_Y],
+	1000 * centralData->imu1.attitude.om[IMU_Z],
+	1000 * centralData->imu1.attitude.mag[IMU_X],
+	1000 * centralData->imu1.attitude.mag[IMU_Y],
+	1000 * centralData->imu1.attitude.mag[IMU_Z]);
+	return TASK_RUN_SUCCESS;
+}
 
 task_return_t mavlink_send_raw_imu(void) 
 {
@@ -92,98 +251,30 @@ task_return_t mavlink_send_raw_imu(void)
 	return TASK_RUN_SUCCESS;
 }
 
-
-task_return_t mavlink_send_scaled_imu(void) 
-{
-	mavlink_msg_scaled_imu_send(MAVLINK_COMM_0, 
-								time_keeper_get_millis(),
-								1000 * centralData->imu1.attitude.a[IMU_X],
-								1000 * centralData->imu1.attitude.a[IMU_Y], 
-								1000 * centralData->imu1.attitude.a[IMU_Z], 
-								1000 * centralData->imu1.attitude.om[IMU_X], 
-								1000 * centralData->imu1.attitude.om[IMU_Y], 
-								1000 * centralData->imu1.attitude.om[IMU_Z], 
-								1000 * centralData->imu1.attitude.mag[IMU_X],
-								1000 * centralData->imu1.attitude.mag[IMU_Y],
-								1000 * centralData->imu1.attitude.mag[IMU_Z]);
-	return TASK_RUN_SUCCESS;
-}
-
-
-task_return_t  mavlink_send_rpy_rates_error(void) 
-{
-	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
-
-	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_send(	MAVLINK_COMM_0, 
-															time_keeper_get_millis(), 
-															rate_stab->rpy_controller[0].error, 
-															rate_stab->rpy_controller[1].error,
-															rate_stab->rpy_controller[2].error,
-															0 );
-	return TASK_RUN_SUCCESS;
-}
-
-
-task_return_t  mavlink_send_rpy_speed_thrust_setpoint(void) 
-{
-	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
-
-	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_send(	MAVLINK_COMM_0, 
-															time_keeper_get_millis(), 
-															rate_stab->rpy_controller[0].output, 
-															rate_stab->rpy_controller[1].output,
-															rate_stab->rpy_controller[2].output,
-															0 );
-	return TASK_RUN_SUCCESS;
-}
-
-
-task_return_t mavlink_send_rpy_thrust_setpoint(void) 
+task_return_t mavlink_send_pressure(void) 
 {	
-	// Controls output
-	mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(	MAVLINK_COMM_0, 
-														time_keeper_get_millis(), 
-														centralData->controls.rpy[ROLL], 
-														centralData->controls.rpy[PITCH], 
-														centralData->controls.rpy[YAW], 
-														centralData->controls.thrust);
+	mavlink_msg_scaled_pressure_send(	MAVLINK_COMM_0, 
+										time_keeper_get_millis(), 
+										centralData->pressure.pressure / 100.0f, 
+										centralData->pressure.vario_vz, 
+										centralData->pressure.temperature * 100.0f);
+
+	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
+										time_keeper_get_millis(),
+										"pressAlt", 
+										centralData->pressure.altitude);
+
+	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
+										time_keeper_get_millis(),
+										"lastAlt", 
+										centralData->position_estimator.last_alt);
+
+	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
+										time_keeper_get_millis(),
+										"baro_dt", 
+										centralData->pressure.dt);
 	return TASK_RUN_SUCCESS;
 }
-
-
-task_return_t mavlink_send_servo_output(void) 
-{
-	// FIXME: send only servos values in this message!
-	mavlink_msg_servo_output_raw_send(	MAVLINK_COMM_0, 
-										time_keeper_get_micros(), 
-										0, 
-										(uint16_t)(centralData->servos[0].value + 1500),
-										(uint16_t)(centralData->servos[1].value + 1500),
-										(uint16_t)(centralData->servos[2].value + 1500),
-										(uint16_t)(centralData->servos[3].value + 1500),
-										(uint16_t)(centralData->servos[4].value + 1500),
-										(uint16_t)(centralData->servos[5].value + 1500),
-										(uint16_t)(centralData->servos[6].value + 1500),
-										(uint16_t)(centralData->servos[7].value + 1500)	);
-	return TASK_RUN_SUCCESS;
-}
-
-
-task_return_t mavlink_send_attitude_quaternion(void) 
-{
-	// ATTITUDE QUATERNION
-	mavlink_msg_attitude_quaternion_send(	MAVLINK_COMM_0, 
-											time_keeper_get_millis(), 
-											centralData->imu1.attitude.qe.s, 
-											centralData->imu1.attitude.qe.v[0], 
-											centralData->imu1.attitude.qe.v[1], 
-											centralData->imu1.attitude.qe.v[2], 
-											centralData->imu1.attitude.om[0], 
-											centralData->imu1.attitude.om[1], 
-											centralData->imu1.attitude.om[2]	);
-	return TASK_RUN_SUCCESS;
-}
-
 
 task_return_t mavlink_send_attitude(void) 
 {
@@ -202,6 +293,33 @@ task_return_t mavlink_send_attitude(void)
 	return TASK_RUN_SUCCESS;
 }
 
+task_return_t mavlink_send_attitude_quaternion(void) 
+{
+	// ATTITUDE QUATERNION
+	mavlink_msg_attitude_quaternion_send(	MAVLINK_COMM_0, 
+											time_keeper_get_millis(), 
+											centralData->imu1.attitude.qe.s, 
+											centralData->imu1.attitude.qe.v[0], 
+											centralData->imu1.attitude.qe.v[1], 
+											centralData->imu1.attitude.qe.v[2], 
+											centralData->imu1.attitude.om[0], 
+											centralData->imu1.attitude.om[1], 
+											centralData->imu1.attitude.om[2]	);
+	return TASK_RUN_SUCCESS;
+}
+
+task_return_t mavlink_send_estimator(void)
+{
+	mavlink_msg_local_position_ned_send(	MAVLINK_COMM_0, 
+											time_keeper_get_millis(), 
+											centralData->position_estimator.localPosition.pos[0], 
+											centralData->position_estimator.localPosition.pos[1], 
+											centralData->position_estimator.localPosition.pos[2], 
+											centralData->position_estimator.vel[0], 
+											centralData->position_estimator.vel[1], 
+											centralData->position_estimator.vel[2]);
+	return TASK_RUN_SUCCESS;
+}
 
 task_return_t mavlink_send_global_position(void) 
 {				
@@ -222,6 +340,84 @@ task_return_t mavlink_send_global_position(void)
 	return TASK_RUN_SUCCESS;
 }
 
+task_return_t mavlink_send_scaled_rc_channels(void)
+{
+	mavlink_msg_rc_channels_scaled_send(	MAVLINK_COMM_0,time_keeper_get_millis(),
+											1,
+											remote_dsm2_rc_get_channel(0) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(1) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(2) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(3) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(4) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(5) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(6) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(7) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_check_receivers()	);
+	
+	mavlink_msg_named_value_int_send(	MAVLINK_COMM_0,
+										time_keeper_get_millis(),
+										"Coll_Avoidance",
+										centralData->collision_avoidance	);
+	return TASK_RUN_SUCCESS;
+}
+
+task_return_t mavlink_send_raw_rc_channels(void)
+{
+	mavlink_msg_rc_channels_raw_send(	MAVLINK_COMM_0,time_keeper_get_millis(),
+										1,
+										remote_dsm2_rc_get_channel(0) + 1000,
+										remote_dsm2_rc_get_channel(1) + 1000,
+										remote_dsm2_rc_get_channel(2) + 1000,
+										remote_dsm2_rc_get_channel(3) + 1000,
+										remote_dsm2_rc_get_channel(4) + 1000,
+										remote_dsm2_rc_get_channel(5) + 1000,
+										remote_dsm2_rc_get_channel(6) + 1000,
+										remote_dsm2_rc_get_channel(7) + 1000,
+										remote_dsm2_rc_check_receivers()	);
+	return TASK_RUN_SUCCESS;
+}
+
+task_return_t mavlink_send_servo_output(void) 
+{
+	// FIXME: send only servos values in this message!
+	mavlink_msg_servo_output_raw_send(	MAVLINK_COMM_0, 
+										time_keeper_get_micros(), 
+										0, 
+										(uint16_t)(centralData->servos[0].value + 1500),
+										(uint16_t)(centralData->servos[1].value + 1500),
+										(uint16_t)(centralData->servos[2].value + 1500),
+										(uint16_t)(centralData->servos[3].value + 1500),
+										(uint16_t)(centralData->servos[4].value + 1500),
+										(uint16_t)(centralData->servos[5].value + 1500),
+										(uint16_t)(centralData->servos[6].value + 1500),
+										(uint16_t)(centralData->servos[7].value + 1500)	);
+	return TASK_RUN_SUCCESS;
+}
+
+task_return_t mavlink_send_rpy_thrust_setpoint(void) 
+{	
+	// Controls output
+	mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(	MAVLINK_COMM_0, 
+														time_keeper_get_millis(), 
+														centralData->controls.rpy[ROLL], 
+														centralData->controls.rpy[PITCH], 
+														centralData->controls.rpy[YAW], 
+														centralData->controls.thrust);
+	return TASK_RUN_SUCCESS;
+}
+
+task_return_t  mavlink_send_rpy_speed_thrust_setpoint(void)
+{
+	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
+
+	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_send(	MAVLINK_COMM_0,
+	time_keeper_get_millis(),
+	rate_stab->rpy_controller[0].output,
+	rate_stab->rpy_controller[1].output,
+	rate_stab->rpy_controller[2].output,
+	0 );
+	return TASK_RUN_SUCCESS;
+}
 
 task_return_t mavlink_send_hud(void) 
 {
@@ -252,118 +448,18 @@ task_return_t mavlink_send_hud(void)
 	return TASK_RUN_SUCCESS;
 }
 
-task_return_t mavlink_send_gps_raw(void) 
-{	
-	if (centralData->GPS_data.status == GPS_OK)
-	{
-		mavlink_msg_gps_raw_int_send(	MAVLINK_COMM_0,
-										1000 * centralData->GPS_data.timeLastMsg, 
-										centralData->GPS_data.status, 
-										centralData->GPS_data.latitude * 10000000.0f, 
-										centralData->GPS_data.longitude * 10000000.0f, 
-										centralData->GPS_data.altitude * 1000.0f, 
-										centralData->GPS_data.hdop * 100.0f, 
-										centralData->GPS_data.speedAccuracy * 100.0f,
-										centralData->GPS_data.groundSpeed * 100.0f, 
-										centralData->GPS_data.course, 
-										centralData->GPS_data.num_sats	);	
-	}
-	else
-	{
-		mavlink_msg_gps_raw_int_send(	MAVLINK_COMM_0,
-										time_keeper_get_micros(), 
-										centralData->GPS_data.status, 
-										46.5193f * 10000000, 
-										6.56507f * 10000000, 
-										400 * 1000, 
-										0, 
-										0, 
-										0, 
-										0, 
-										centralData->GPS_data.num_sats);
-	}
-	return TASK_RUN_SUCCESS;
-}
-
-
-task_return_t mavlink_send_pressure(void) 
-{	
-	mavlink_msg_scaled_pressure_send(	MAVLINK_COMM_0, 
-										time_keeper_get_millis(), 
-										centralData->pressure.pressure / 100.0f, 
-										centralData->pressure.vario_vz, 
-										centralData->pressure.temperature * 100.0f);
-
-	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										time_keeper_get_millis(),
-										"pressAlt", 
-										centralData->pressure.altitude);
-
-	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										time_keeper_get_millis(),
-										"lastAlt", 
-										centralData->position_estimator.last_alt);
-
-	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										time_keeper_get_millis(),
-										"baro_dt", 
-										centralData->pressure.dt);
-	return TASK_RUN_SUCCESS;
-}
-
-
-task_return_t mavlink_send_estimator(void)
+task_return_t  mavlink_send_rpy_rates_error(void) 
 {
-	mavlink_msg_local_position_ned_send(	MAVLINK_COMM_0, 
-											time_keeper_get_millis(), 
-											centralData->position_estimator.localPosition.pos[0], 
-											centralData->position_estimator.localPosition.pos[1], 
-											centralData->position_estimator.localPosition.pos[2], 
-											centralData->position_estimator.vel[0], 
-											centralData->position_estimator.vel[1], 
-											centralData->position_estimator.vel[2]);
+	Stabiliser_t *rate_stab = &centralData->stabiliser_stack.rate_stabiliser;
+
+	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_send(	MAVLINK_COMM_0, 
+															time_keeper_get_millis(), 
+															rate_stab->rpy_controller[0].error, 
+															rate_stab->rpy_controller[1].error,
+															rate_stab->rpy_controller[2].error,
+															0 );
 	return TASK_RUN_SUCCESS;
 }
-
-
-task_return_t mavlink_send_raw_rc_channels(void)
-{
-	mavlink_msg_rc_channels_raw_send(	MAVLINK_COMM_0,time_keeper_get_millis(),
-										1,
-										remote_dsm2_rc_get_channel(0) + 1000,
-										remote_dsm2_rc_get_channel(1) + 1000,
-										remote_dsm2_rc_get_channel(2) + 1000,
-										remote_dsm2_rc_get_channel(3) + 1000,
-										remote_dsm2_rc_get_channel(4) + 1000,
-										remote_dsm2_rc_get_channel(5) + 1000,
-										remote_dsm2_rc_get_channel(6) + 1000,
-										remote_dsm2_rc_get_channel(7) + 1000,
-										remote_dsm2_rc_check_receivers()	);
-	return TASK_RUN_SUCCESS;
-}
-
-
-task_return_t mavlink_send_scaled_rc_channels(void)
-{
-	mavlink_msg_rc_channels_scaled_send(	MAVLINK_COMM_0,time_keeper_get_millis(),
-											1,
-											remote_dsm2_rc_get_channel(0) * 1000.0f * RC_SCALEFACTOR,
-											remote_dsm2_rc_get_channel(1) * 1000.0f * RC_SCALEFACTOR,
-											remote_dsm2_rc_get_channel(2) * 1000.0f * RC_SCALEFACTOR,
-											remote_dsm2_rc_get_channel(3) * 1000.0f * RC_SCALEFACTOR,
-											remote_dsm2_rc_get_channel(4) * 1000.0f * RC_SCALEFACTOR,
-											remote_dsm2_rc_get_channel(5) * 1000.0f * RC_SCALEFACTOR,
-											remote_dsm2_rc_get_channel(6) * 1000.0f * RC_SCALEFACTOR,
-											remote_dsm2_rc_get_channel(7) * 1000.0f * RC_SCALEFACTOR,
-											remote_dsm2_rc_check_receivers()	);
-	
-	mavlink_msg_named_value_int_send(	MAVLINK_COMM_0,
-										time_keeper_get_millis(),
-										"Coll_Avoidance",
-										centralData->collision_avoidance	);
-	return TASK_RUN_SUCCESS;
-}
-
 
 task_return_t mavlink_send_simulation(void) 
 {
@@ -450,7 +546,6 @@ task_return_t mavlink_send_simulation(void)
 	return TASK_RUN_SUCCESS;
 }
 
-
 task_return_t mavlink_send_rt_stats(void) 
 {
 	task_set* main_tasks = tasks_get_main_taskset();
@@ -503,6 +598,23 @@ task_return_t mavlink_send_rt_stats(void)
 	return TASK_RUN_SUCCESS;
 }
 
+task_return_t mavlink_send_sonar(void)
+{
+	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
+										time_keeper_get_millis(),
+										"sonar(m)", 
+										centralData->i2cxl_sonar.distance_m);
+	return TASK_RUN_SUCCESS;
+}
+
+task_return_t control_waypoint_timeout (void)
+{
+	control_time_out_waypoint_msg(	&(centralData->number_of_waypoints),
+	&centralData->waypoint_receiving,
+	&centralData->waypoint_sending);
+	
+	return TASK_RUN_SUCCESS;
+}
 
 void mavlink_actions_add_onboard_parameters(void) {
 	Stabiliser_t* rate_stabiliser = &centralData->stabiliser_stack.rate_stabiliser;
@@ -649,17 +761,6 @@ void mavlink_actions_add_onboard_parameters(void) {
 	onboard_parameters_add_parameter_float(&centralData->max_climb_rate,"vel_climbRate");
 	onboard_parameters_add_parameter_float(&centralData->softZoneSize,"vel_softZone");
 }
-
-
-task_return_t control_waypoint_timeout (void) 
-{
-	control_time_out_waypoint_msg(	&(centralData->number_of_waypoints),
-									&centralData->waypoint_receiving,
-									&centralData->waypoint_sending);
-	
-	return TASK_RUN_SUCCESS;
-}
-
 
 void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec) 
 {
@@ -1343,16 +1444,6 @@ void mavlink_actions_receive_message_long(Mavlink_Received_t* rec)
 	
 }
 
-
-task_return_t mavlink_send_sonar(void)
-{
-	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										time_keeper_get_millis(),
-										"sonar(m)", 
-										centralData->i2cxl_sonar.distance_m);
-	return TASK_RUN_SUCCESS;
-}
-
 void mavlink_actions_init(void) {
 	
 	centralData = central_data_get_pointer_to_struct();
@@ -1365,46 +1456,29 @@ void mavlink_actions_init(void) {
 	onboard_parameters_read_parameters_from_flashc();
 	 *
 	 */
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  10000,    RUN_REGULAR,  &control_waypoint_timeout,                0	);
 	
-	scheduler_add_task(mavlink_stream_get_taskset(),  1000000,  RUN_REGULAR,  &mavlink_send_heartbeat,                  MAVLINK_MSG_ID_HEARTBEAT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  1000000,  RUN_REGULAR,  &mavlink_send_heartbeat,                  MAVLINK_MSG_ID_HEARTBEAT	);							// ID 0
+	scheduler_add_task(mavlink_stream_get_taskset(),  1000000,	RUN_REGULAR,  &mavlink_send_status,						MAVLINK_MSG_ID_SYS_STATUS	);							// ID 1
+	scheduler_add_task(mavlink_stream_get_taskset(),  1000000,  RUN_NEVER,    &mavlink_send_gps_raw,                    MAVLINK_MSG_ID_GPS_RAW_INT	);							// ID 24
+	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_scaled_imu,                 MAVLINK_MSG_ID_SCALED_IMU	);							// ID 26
+	scheduler_add_task(mavlink_stream_get_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_raw_imu,                    MAVLINK_MSG_ID_RAW_IMU	);								// ID 27
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_pressure,                   MAVLINK_MSG_ID_SCALED_PRESSURE	);						// ID 29
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_REGULAR,  &mavlink_send_attitude,                   MAVLINK_MSG_ID_ATTITUDE	);								// ID 30
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_REGULAR,  &mavlink_send_attitude_quaternion,        MAVLINK_MSG_ID_ATTITUDE_QUATERNION	);					// ID 31
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_estimator,                  MAVLINK_MSG_ID_LOCAL_POSITION_NED	);					// ID 32
+	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_global_position,            MAVLINK_MSG_ID_GLOBAL_POSITION_INT	);					// ID 33
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_scaled_rc_channels,         MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);					// ID 34
+	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_NEVER,    &mavlink_send_raw_rc_channels,            MAVLINK_MSG_ID_RC_CHANNELS_RAW	);						// ID 35
+	scheduler_add_task(mavlink_stream_get_taskset(),  1000000,  RUN_NEVER,    &mavlink_send_servo_output,               MAVLINK_MSG_ID_SERVO_OUTPUT_RAW	);						// ID 36
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_thrust_setpoint,        MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT	);		// ID 58
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_speed_thrust_setpoint,  MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT	);	// ID 59
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_hud,                        MAVLINK_MSG_ID_VFR_HUD	);								// ID 74	
+	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_rates_error,            MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT	);	// ID 80
+	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_simulation,                 MAVLINK_MSG_ID_HIL_STATE	);							// ID 90
+	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_NEVER,    &mavlink_send_rt_stats,                   MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
+	scheduler_add_task(mavlink_stream_get_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_sonar,                      MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
 
-	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_REGULAR,  &mavlink_send_attitude_quaternion,        MAVLINK_MSG_ID_ATTITUDE_QUATERNION	);
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_REGULAR,  &mavlink_send_attitude,                   MAVLINK_MSG_ID_ATTITUDE	);
-	
-	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_hud,                        MAVLINK_MSG_ID_VFR_HUD	);
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_pressure,                   MAVLINK_MSG_ID_SCALED_PRESSURE	);
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_scaled_imu,                 MAVLINK_MSG_ID_SCALED_IMU	);
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_raw_imu,                    MAVLINK_MSG_ID_RAW_IMU	);
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_rates_error,            MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT	);
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_speed_thrust_setpoint,  MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT	);
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_thrust_setpoint,        MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT	);
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  1000000,  RUN_NEVER,    &mavlink_send_servo_output,               MAVLINK_MSG_ID_SERVO_OUTPUT_RAW	);
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_estimator,                  MAVLINK_MSG_ID_LOCAL_POSITION_NED	);
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_global_position,            MAVLINK_MSG_ID_GLOBAL_POSITION_INT	);
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  1000000,  RUN_NEVER,    &mavlink_send_gps_raw,                    MAVLINK_MSG_ID_GPS_RAW_INT	);
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_NEVER,    &mavlink_send_raw_rc_channels,            MAVLINK_MSG_ID_RC_CHANNELS_RAW	);
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_scaled_rc_channels,         MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_simulation,                 MAVLINK_MSG_ID_HIL_STATE	);
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_NEVER,    &mavlink_send_rt_stats,                   MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
-
-	scheduler_add_task(mavlink_stream_get_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_sonar,                      MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);
+	scheduler_add_task(mavlink_stream_get_taskset(),  10000,    RUN_REGULAR,  &control_waypoint_timeout,                255	);													// ID 255
 
 	scheduler_sort_taskset_by_period(mavlink_stream_get_taskset());
 	
