@@ -29,12 +29,12 @@
 /**
  * \brief Initialize the piezo speaker
  */
-void piezo_speaker_init();
+void piezo_speaker_init(void);
 
 /**
  * \brief Initialize the speaker in a binary(?) mode
  */
-void piezo_speaker_init_binary();
+void piezo_speaker_init_binary(void);
 
 /**
  * \brief instantaneous output voltage sent to the speaker 

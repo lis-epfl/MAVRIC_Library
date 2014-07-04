@@ -22,7 +22,7 @@
 #include "delay.h"
 #include "time_keeper.h"
 
-void piezo_speaker_init() 
+void piezo_speaker_init(void) 
 {
 	gpio_configure_pin(PIEZO_HIGH_PIN, GPIO_DIR_OUTPUT);
 	gpio_set_pin_low(PIEZO_HIGH_PIN);
@@ -32,7 +32,7 @@ void piezo_speaker_init()
 	dac_dma_set_value(0);
 }
 
-void piezo_speaker_init_binary() 
+void piezo_speaker_init_binary(void) 
 {
 	gpio_configure_pin(PIEZO_HIGH_PIN, GPIO_DIR_OUTPUT);
 	gpio_set_pin_low(PIEZO_HIGH_PIN);
@@ -68,7 +68,6 @@ void piezo_speaker_set_value_binary(int binary_value)
 
 void piezo_speaker_beep(int duration_ms, int frequency)
 {
-	int i;
 	int val = -1;
 	uint32_t del_us = (uint32_t)1000000 / (uint32_t)frequency;
 	if (frequency < 10) 
