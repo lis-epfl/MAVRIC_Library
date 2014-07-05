@@ -498,7 +498,7 @@ task_return_t mavlink_send_simulation(void)
 											100 * centralData->sim_model.vel[X], 
 											100 * centralData->sim_model.vel[Y], 
 											100 * centralData->sim_model.vel[Z],
-											100 * maths_vector_norm(centralData->sim_model.vel),
+											100 * vectors_norm(centralData->sim_model.vel),
 											0.0f,
 											centralData->sim_model.attitude.acc_bf[X],
 											centralData->sim_model.attitude.acc_bf[Y],
