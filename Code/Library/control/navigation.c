@@ -67,7 +67,7 @@ float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[])
 	rel_pos[Y] = (float)(waypointPos[Y] - centralData->position_estimator.localPosition.pos[Y]);
 	rel_pos[Z] = (float)(waypointPos[Z] - centralData->position_estimator.localPosition.pos[Z]);
 	
-	dist2wp_sqr = maths_vector_norm_sqr(rel_pos);
+	dist2wp_sqr = vectors_norm_sqr(rel_pos);
 	
 	return dist2wp_sqr;
 }
@@ -92,8 +92,8 @@ void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
 	
 	// calculate dir_desired in local frame
 	// vel = qe-1 * rel_pos * qe
-	qtmp1 = maths_quat_from_vector(rel_pos);
-	qtmp2 = maths_quat_global_to_local(centralData->imu1.attitude.qe,qtmp1);
+	qtmp1 = quaternions_create_from_vector(rel_pos);
+	qtmp2 = quaternions_global_to_local(centralData->imu1.attitude.qe,qtmp1);
 	dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
 	
 	dir_desired_bf[2] = rel_pos[2];

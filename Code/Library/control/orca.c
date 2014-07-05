@@ -19,9 +19,8 @@
 #include "orca.h"
 #include "neighbor_selection.h"
 #include "central_data.h"
-#include "maths.h"
 #include "print_util.h"
-#include "maths.h"
+#include "quaternions.h"
 
 central_data_t *centralData;
 
@@ -77,7 +76,7 @@ void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		q_neighbor.v[0] = relativeVelocity[0];
 		q_neighbor.v[1] = relativeVelocity[1];
 		q_neighbor.v[2] = relativeVelocity[2];
-		q_neighbor_bf = maths_quat_global_to_local(centralData->imu1.attitude.qe,q_neighbor);
+		q_neighbor_bf = quaternions_global_to_local(centralData->imu1.attitude.qe,q_neighbor);
 		
 		neighor_bf[0] = q_neighbor_bf.v[0];
 		neighor_bf[1] = q_neighbor_bf.v[1];
@@ -92,7 +91,7 @@ void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		q_neighbor.v[0] = relativePosition[0];
 		q_neighbor.v[1] = relativePosition[1];
 		q_neighbor.v[2] = relativePosition[2];
-		q_neighbor_bf = maths_quat_global_to_local(centralData->imu1.attitude.qe,q_neighbor);
+		q_neighbor_bf = quaternions_global_to_local(centralData->imu1.attitude.qe,q_neighbor);
 		
 		neighor_bf[0] = q_neighbor_bf.v[0];
 		neighor_bf[1] = q_neighbor_bf.v[1];
@@ -103,7 +102,7 @@ void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 			relativePosition[i] = neighor_bf[i];
 		}
 		
-		distSq = maths_vector_norm_sqr(relativePosition);
+		distSq = vectors_norm_sqr(relativePosition);
 		combinedRadius = centralData->safe_size + centralData->listNeighbors[ind].size;
 		combinedRadiusSq = SQR(combinedRadius);
 		
@@ -115,9 +114,9 @@ void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 			{
 				w[i] = relativeVelocity[i] - invTimeHorizon * relativePosition[i];
 			}
-			wLenghtSq = maths_vector_norm_sqr(w);
+			wLenghtSq = vectors_norm_sqr(w);
 			
-			dotProduct = maths_scalar_product(w,relativePosition);
+			dotProduct = vectors_scalar_product(w,relativePosition);
 			
 			if ((dotProduct < 0.0f)&&(SQR(dotProduct) > (combinedRadiusSq * wLenghtSq)))
 			{
@@ -134,16 +133,16 @@ void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 			{
 				// Project on cone
 				float a = distSq;
-				float b = maths_scalar_product(relativePosition,relativeVelocity);
+				float b = vectors_scalar_product(relativePosition,relativeVelocity);
 				float crossProduct[3];
 				CROSS(relativePosition,relativeVelocity,crossProduct);
-				float c = maths_vector_norm_sqr(relativeVelocity) - maths_vector_norm_sqr(crossProduct) / (distSq - combinedRadiusSq);
+				float c = vectors_norm_sqr(relativeVelocity) - vectors_norm_sqr(crossProduct) / (distSq - combinedRadiusSq);
 				float t = (b + maths_fast_sqrt(SQR(b) - a * c)) / a;
 				for (i=0;i<3;i++)
 				{
 					w[i] = relativeVelocity[i] - t * relativePosition[i];
 				}
-				wLength = maths_vector_norm(w);
+				wLength = vectors_norm(w);
 				for (i=0;i<3;i++)
 				{
 					unitW[i] = w[i] / wLength;
@@ -178,7 +177,7 @@ void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 				w[i] = relativeVelocity[i] - invTimeStep * relativePosition[i];
 			}
 			
-			wLength = maths_vector_norm(w);
+			wLength = vectors_norm(w);
 			
 			for (i=0;i<3;i++)
 			{
@@ -223,7 +222,7 @@ void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 	/*}
 	else
 	{
-		if (maths_vector_norm_sqr(orca_diff)>0.2)
+		if (vectors_norm_sqr(orca_diff)>0.2)
 		{
 			print_util_dbg_print("Orca diffvel:");
 			print_util_dbg_print_vector(orca_diff,2);
@@ -240,8 +239,8 @@ bool orca_linearProgram1(plane_t planes[], uint8_t index, line_t line, float max
 {
 	uint8_t i;
 	
-	float dotProduct = maths_scalar_product(line.point,line.direction);
-	float discriminant = SQR(dotProduct) + SQR(maxSpeed) - maths_vector_norm_sqr(line.point);
+	float dotProduct = vectors_scalar_product(line.point,line.direction);
+	float discriminant = SQR(dotProduct) + SQR(maxSpeed) - vectors_norm_sqr(line.point);
 	
 	if (discriminant < 0.0f)
 	{
@@ -263,8 +262,8 @@ bool orca_linearProgram1(plane_t planes[], uint8_t index, line_t line, float max
 			diffPoints[i] = planes[index2].point[i] - line.point[i];
 		}
 		
-		float numerator = maths_scalar_product(diffPoints, planes[index2].normal);
-		float denominator = maths_scalar_product(line.direction, planes[index2].normal);
+		float numerator = vectors_scalar_product(diffPoints, planes[index2].normal);
+		float denominator = vectors_scalar_product(line.direction, planes[index2].normal);
 		
 		if (SQR(denominator) <= RVO_EPSILON)
 		{
@@ -301,7 +300,7 @@ bool orca_linearProgram1(plane_t planes[], uint8_t index, line_t line, float max
 	if (directionOpt)
 	{
 		// Optimize direction
-		if (maths_scalar_product(OptimalVelocity, line.direction) > 0.0f) 
+		if (vectors_scalar_product(OptimalVelocity, line.direction) > 0.0f) 
 		{
 			// Take right extreme
 			for (i=0;i<3;i++)
@@ -327,7 +326,7 @@ bool orca_linearProgram1(plane_t planes[], uint8_t index, line_t line, float max
 			diffVelPoint[i] = OptimalVelocity[i] - line.point[i];
 		}
 		
-		float t = maths_scalar_product(line.direction, diffVelPoint);
+		float t = vectors_scalar_product(line.direction, diffVelPoint);
 
 		if (t < tLeft)
 		{
@@ -362,7 +361,7 @@ bool orca_linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Op
 	uint8_t i;
 	uint8_t index;
 	
-	float planeDist = maths_scalar_product(planes[ind].point,planes[ind].normal);
+	float planeDist = vectors_scalar_product(planes[ind].point,planes[ind].normal);
 	float planeDistSq = SQR(planeDist);
 	float radiusSq = SQR(maxSpeed);
 	
@@ -384,14 +383,14 @@ bool orca_linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Op
 	{
 		// Project direction optVelocity on plane ind
 		float planeOptVelocity[3];
-		float scalarProduct = maths_scalar_product(OptimalVelocity,planes[ind].normal);
+		float scalarProduct = vectors_scalar_product(OptimalVelocity,planes[ind].normal);
 		
 		for(i=0;i<3;i++)
 		{
 			planeOptVelocity[i] = OptimalVelocity[i] - scalarProduct * planes[ind].normal[i];
 		}
 		
-		float planeOptVelocityLengthSq = maths_vector_norm_sqr(planeOptVelocity);
+		float planeOptVelocityLengthSq = vectors_norm_sqr(planeOptVelocity);
 		
 		if (planeOptVelocityLengthSq <= RVO_EPSILON)
 		{
@@ -420,14 +419,14 @@ bool orca_linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Op
 			diffPtsVel[i] = planes[ind].point[i] - OptimalVelocity[i];
 		}
 		
-		float scalarProduct = maths_scalar_product(diffPtsVel,planes[ind].normal);
+		float scalarProduct = vectors_scalar_product(diffPtsVel,planes[ind].normal);
 		
 		for(i=0;i<3;i++)
 		{
 			NewVelocity[i] = OptimalVelocity[i] + scalarProduct * planes[ind].normal[i];
 		}
 		// If outside planeCircle, project on planeCircle
-		if (maths_vector_norm_sqr(NewVelocity) > radiusSq)
+		if (vectors_norm_sqr(NewVelocity) > radiusSq)
 		{
 			float planeResult[3];
 			
@@ -436,7 +435,7 @@ bool orca_linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Op
 				planeResult[i] = NewVelocity[i] - planeCenter[i];
 			}
 			
-			float planeResultLengthSq = maths_vector_norm_sqr(planeResult);
+			float planeResultLengthSq = vectors_norm_sqr(planeResult);
 			
 			float planeSqrt = maths_fast_sqrt(planeRadiusSq / planeResultLengthSq);
 			
@@ -454,21 +453,21 @@ bool orca_linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Op
 		{
 			diffPtsNewVel[i] = planes[index].point[i] - NewVelocity[i];
 		}
-		if (maths_scalar_product(planes[index].normal,diffPtsNewVel)>0.0f)
+		if (vectors_scalar_product(planes[index].normal,diffPtsNewVel)>0.0f)
 		{
 			/* Result does not satisfy constraint index. Compute new optimal result. */
 			/* Compute intersection line of plane index and plane ind. */
 			float crossProduct[3];
 			CROSS(planes[index].normal,planes[ind].normal,crossProduct);
 			
-			if (maths_vector_norm_sqr(crossProduct) <= RVO_EPSILON)
+			if (vectors_norm_sqr(crossProduct) <= RVO_EPSILON)
 			{
 				/* Planes ind and index are (almost) parallel, and plane index fully invalidates plane ind. */
 				return false;
 			}
 			
 			line_t line;
-			float normCrossProduct = maths_vector_norm(crossProduct);
+			float normCrossProduct = vectors_norm(crossProduct);
 			for (i=0;i<3;i++)
 			{
 				line.direction[i] = crossProduct[i] / normCrossProduct;
@@ -481,8 +480,8 @@ bool orca_linearProgram2(plane_t planes[], uint8_t ind, float maxSpeed, float Op
 			{
 				diffPoints[i] = planes[index].point[i] - planes[ind].point[i];
 			}
-			float scalarProductPointsNormal = maths_scalar_product(diffPoints,planes[index].normal);
-			float scalarProductNormals = maths_scalar_product(lineNormal,planes[index].normal);
+			float scalarProductPointsNormal = vectors_scalar_product(diffPoints,planes[index].normal);
+			float scalarProductNormals = vectors_scalar_product(lineNormal,planes[index].normal);
 			for(i=0;i<3;i++)
 			{
 				line.point[i] = planes[ind].point[i] + (scalarProductPointsNormal / scalarProductNormals) * lineNormal[i];
@@ -505,7 +504,7 @@ float orca_linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelo
 	if (directionOpt)
 	{
 		/* Optimize direction. Note that the optimization velocity is of unit length in this case. */
-		float normOptimalVelocity = maths_vector_norm(OptimalVelocity);
+		float normOptimalVelocity = vectors_norm(OptimalVelocity);
 		for(i=0;i<3;i++)
 		{
 			NewVelocity[i] = OptimalVelocity[i] / normOptimalVelocity * maxSpeed;
@@ -513,10 +512,10 @@ float orca_linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelo
 	}
 	else
 	{
-		if (maths_vector_norm_sqr(OptimalVelocity) > SQR(maxSpeed))
+		if (vectors_norm_sqr(OptimalVelocity) > SQR(maxSpeed))
 		{
 			/* Optimize closest point and outside circle. */
-			float normOptimalVelocity = maths_vector_norm(OptimalVelocity);
+			float normOptimalVelocity = vectors_norm(OptimalVelocity);
 			for(i=0;i<3;i++)
 			{
 				NewVelocity[i] = OptimalVelocity[i] / normOptimalVelocity * maxSpeed;
@@ -540,7 +539,7 @@ float orca_linearProgram3(plane_t planes[], uint8_t planeSize, float OptimalVelo
 		{
 			diffPointVel[i] = planes[ind].point[i] - NewVelocity[i];
 		}
-		if (maths_scalar_product(planes[ind].normal, diffPointVel ) > 0.0f)
+		if (vectors_scalar_product(planes[ind].normal, diffPointVel ) > 0.0f)
 		{
 			/* Result does not satisfy constraint ind. Compute new optimal result. */
 			float tempResult[3];
@@ -579,7 +578,7 @@ void orca_linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float
 		{
 			diffPointVel[i] = planes[index].point[i] - NewVelocity[i];
 		}
-		if (maths_scalar_product(planes[index].normal,diffPointVel)>distance)
+		if (vectors_scalar_product(planes[index].normal,diffPointVel)>distance)
 		{
 			/* Result does not satisfy constraint of plane i. */
 			
@@ -589,10 +588,10 @@ void orca_linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float
 				float crossProduct[3];
 				CROSS(planes[index2].normal, planes[index].normal, crossProduct);
 				
-				if (maths_vector_norm_sqr(crossProduct)<=RVO_EPSILON)
+				if (vectors_norm_sqr(crossProduct)<=RVO_EPSILON)
 				{
 					/* Plane index and plane index2 are (almost) parallel. */
-					if (maths_scalar_product(planes[index].normal, planes[index2].normal) > 0.0f)
+					if (vectors_scalar_product(planes[index].normal, planes[index2].normal) > 0.0f)
 					{
 						/* Plane index and plane index2 point in the same direction. */
 						continue;
@@ -617,8 +616,8 @@ void orca_linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float
 						diffPoints[i] = planes[index2].point[i] - planes[index].point[i];
 					}
 					
-					float scalarProdPtsNormal = maths_scalar_product(diffPoints, planes[index2].normal);
-					float scalarProdNormals = maths_scalar_product(lineNormal, planes[index2].normal);
+					float scalarProdPtsNormal = vectors_scalar_product(diffPoints, planes[index2].normal);
+					float scalarProdNormals = vectors_scalar_product(lineNormal, planes[index2].normal);
 					for (i=0;i<3;i++)
 					{
 						plane.point[i] = planes[index].point[i] + (scalarProdPtsNormal / scalarProdNormals) * lineNormal[i];
@@ -629,7 +628,7 @@ void orca_linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float
 				{
 					plane.normal[i] = planes[index2].normal[i] - planes[index].normal[i];
 				}
-				float normNormal = maths_vector_norm(plane.normal);
+				float normNormal = vectors_norm(plane.normal);
 				for(i=0;i<3;i++)
 				{
 					plane.normal[i] = plane.normal[i] / normNormal;
@@ -655,7 +654,7 @@ void orca_linearProgram4(plane_t planes[], uint8_t planeSize, uint8_t ind, float
 			{
 				diffPointVel[i] = planes[index].point[i] - NewVelocity[i];
 			}
-			distance = maths_scalar_product(planes[index].normal,diffPointVel);
+			distance = vectors_scalar_product(planes[index].normal,diffPointVel);
 		}
 	}
 }

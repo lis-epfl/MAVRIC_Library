@@ -109,7 +109,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4];
 	float ldb;
 	UQuat_t wind_gf = {.s = 0, .v = {sim->wind_x, sim->wind_y, 0.0f}};
-	UQuat_t wind_bf = maths_quat_global_to_local(sim->attitude.qe, wind_gf);
+	UQuat_t wind_bf = quaternions_global_to_local(sim->attitude.qe, wind_gf);
 	
 	float sqr_lateral_airspeed = SQR(sim->vel_bf[0] + wind_bf.v[0]) + SQR(sim->vel_bf[1] + wind_bf.v[1]);
 	float lateral_airspeed = sqrt(sqr_lateral_airspeed);
@@ -219,17 +219,17 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	qtmp1.s = 0;
 
 	// apply step rotation 
-	qed = maths_quat_multi(sim->attitude.qe,qtmp1);
+	qed = quaternions_multiply(sim->attitude.qe,qtmp1);
 
 	sim->attitude.qe.s = sim->attitude.qe.s + qed.s * sim->dt;
 	sim->attitude.qe.v[0] += qed.v[0] * sim->dt;
 	sim->attitude.qe.v[1] += qed.v[1] * sim->dt;
 	sim->attitude.qe.v[2] += qed.v[2] * sim->dt;
 
-	sim->attitude.qe = maths_quat_normalise(sim->attitude.qe);
-	sim->attitude.up_vec = maths_quat_global_to_local(sim->attitude.qe, up);
+	sim->attitude.qe = quaternions_normalise(sim->attitude.qe);
+	sim->attitude.up_vec = quaternions_global_to_local(sim->attitude.qe, up);
 	
-	sim->attitude.north_vec = maths_quat_global_to_local(sim->attitude.qe, front);	
+	sim->attitude.north_vec = quaternions_global_to_local(sim->attitude.qe, front);	
 
 	// velocity and position integration
 	
@@ -257,16 +257,16 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 		sim->rates_bf[2] = 0;
 	}
 	
-	sim->attitude.qe = maths_quat_normalise(sim->attitude.qe);
-	sim->attitude.up_vec = maths_quat_global_to_local(sim->attitude.qe, up);
+	sim->attitude.qe = quaternions_normalise(sim->attitude.qe);
+	sim->attitude.up_vec = quaternions_global_to_local(sim->attitude.qe, up);
 	
-	sim->attitude.north_vec = maths_quat_global_to_local(sim->attitude.qe, front);	
+	sim->attitude.north_vec = quaternions_global_to_local(sim->attitude.qe, front);	
 	for (i = 0; i < 3; i++)
 	{
 			qtmp1.v[i] = sim->vel[i];
 	}
 	qtmp1.s = 0.0f;
-	qvel_bf = maths_quat_global_to_local(sim->attitude.qe, qtmp1);
+	qvel_bf = quaternions_global_to_local(sim->attitude.qe, qtmp1);
 	for (i = 0; i < 3; i++)
 	{
 		sim->vel_bf[i] = qvel_bf.v[i];
@@ -283,7 +283,7 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	// calculate velocity in global frame
 	// vel = qe *vel_bf * qe - 1
 	qvel_bf.s = 0.0f; qvel_bf.v[0] = sim->vel_bf[0]; qvel_bf.v[1] = sim->vel_bf[1]; qvel_bf.v[2] = sim->vel_bf[2];
-	qtmp1 = maths_quat_local_to_global(sim->attitude.qe, qvel_bf);
+	qtmp1 = quaternions_local_to_global(sim->attitude.qe, qvel_bf);
 	sim->vel[0] = qtmp1.v[0]; sim->vel[1] = qtmp1.v[1]; sim->vel[2] = qtmp1.v[2];
 	
 	for (i = 0; i < 3; i++)

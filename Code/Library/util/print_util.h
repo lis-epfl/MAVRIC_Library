@@ -25,7 +25,7 @@ extern "C"
 #endif
 
 #include "streams.h"
-#include "maths.h"
+#include "quaternions.h"
 
 #define MAX_DIGITS 10
 

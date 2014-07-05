@@ -107,7 +107,7 @@ void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float rates[9], floa
 
 	// up_bf = qe^-1 *(0,0,0,-1) * qe
 	up.s = 0; up.v[0] = UPVECTOR_X; up.v[1] = UPVECTOR_Y; up.v[2] = UPVECTOR_Z;
-	up_bf = maths_quat_global_to_local(attitude->qe, up);
+	up_bf = quaternions_global_to_local(attitude->qe, up);
 	
 	// calculate norm of acceleration vector
 	s_acc_norm = attitude->a[0] * attitude->a[0] + attitude->a[1] * attitude->a[1] + attitude->a[2] * attitude->a[2];
@@ -130,8 +130,8 @@ void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float rates[9], floa
 
 	// Heading computation
 	// transfer 
-	qtmp1 = maths_quat_from_vector(attitude->mag); 
-	mag_global = maths_quat_local_to_global(attitude->qe, qtmp1);
+	qtmp1 = quaternions_create_from_vector(attitude->mag); 
+	mag_global = quaternions_local_to_global(attitude->qe, qtmp1);
 	
 	// calculate norm of compass vector
 	//s_mag_norm = SQR(mag_global.v[0]) + SQR(mag_global.v[1]) + SQR(mag_global.v[2]);
@@ -145,8 +145,8 @@ void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float rates[9], floa
 		mag_global.v[2] = 0.0f;   // set z component in global frame to 0
 
 		// transfer magneto vector back to body frame 
-		attitude->north_vec = maths_quat_global_to_local(attitude->qe, front_vec_global);		
-		mag_corrected_local = maths_quat_global_to_local(attitude->qe, mag_global);		
+		attitude->north_vec = quaternions_global_to_local(attitude->qe, front_vec_global);		
+		mag_corrected_local = quaternions_global_to_local(attitude->qe, mag_global);		
 		// omc = a x up_bf.v
 		CROSS(mag_corrected_local.v, attitude->north_vec.v,  omc_mag);
 		
@@ -199,7 +199,7 @@ void qfilter_attitude_estimation(Quat_Attitude_t *attitude, float rates[9], floa
 	qtmp1.s = 0;
 
 	// apply step rotation with corrections
-	qed = maths_quat_multi(attitude->qe,qtmp1);
+	qed = quaternions_multiply(attitude->qe,qtmp1);
 
 	attitude->qe.s = attitude->qe.s + qed.s * dt;
 	attitude->qe.v[0] += qed.v[0] * dt;

@@ -193,7 +193,7 @@ void position_estimation_position_integration(position_estimator_t *pos_est, Qua
 	{
 		qvel.v[i] = pos_est->vel[i];
 	}
-	qvel_bf = maths_quat_global_to_local(attitude->qe, qvel);
+	qvel_bf = quaternions_global_to_local(attitude->qe, qvel);
 	for (i = 0; i < 3; i++)
 	{
 		pos_est->vel_bf[i] = qvel_bf.v[i];
@@ -205,7 +205,7 @@ void position_estimation_position_integration(position_estimator_t *pos_est, Qua
 	// calculate velocity in global frame
 	// vel = qe *vel_bf * qe - 1
 	qvel_bf.s = 0.0f; qvel_bf.v[0] = pos_est->vel_bf[0]; qvel_bf.v[1] = pos_est->vel_bf[1]; qvel_bf.v[2] = pos_est->vel_bf[2];
-	qvel = maths_quat_local_to_global(attitude->qe, qvel_bf);
+	qvel = quaternions_local_to_global(attitude->qe, qvel_bf);
 	pos_est->vel[0] = qvel.v[0]; pos_est->vel[1] = qvel.v[1]; pos_est->vel[2] = qvel.v[2];
 	
 	for (i = 0; i < 3; i++)

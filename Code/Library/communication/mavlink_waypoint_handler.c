@@ -68,7 +68,7 @@ void waypoint_handler_waypoint_init()
 				{
 					rel_pos[j] = centralData->waypoint_coordinates.pos[j]-centralData->position_estimator.localPosition.pos[j];
 				}
-				centralData->dist2wp_sqr = maths_vector_norm_sqr(rel_pos);
+				centralData->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 			}
 		}
 	}
@@ -788,7 +788,7 @@ void waypoint_handler_waypoint_navigation_handler()
 		{
 			rel_pos[i] = centralData->waypoint_coordinates.pos[i]-centralData->position_estimator.localPosition.pos[i];
 		}
-		centralData->dist2wp_sqr = maths_vector_norm_sqr(rel_pos);
+		centralData->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 		
 		if (centralData->dist2wp_sqr < (centralData->current_waypoint.param2*centralData->current_waypoint.param2))
 		{
@@ -871,7 +871,7 @@ void waypoint_handler_waypoint_critical_handler()
 		{
 			rel_pos[i] = centralData->waypoint_critical_coordinates.pos[i] - centralData->position_estimator.localPosition.pos[i];
 		}
-		centralData->dist2wp_sqr = maths_vector_norm_sqr(rel_pos);
+		centralData->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 	}
 	
 	if (centralData->dist2wp_sqr < 3.0f)
@@ -922,7 +922,7 @@ void waypoint_handler_auto_landing()
 	{
 		rel_pos[i] = centralData->waypoint_critical_coordinates.pos[i] - centralData->position_estimator.localPosition.pos[i];
 	}
-	centralData->dist2wp_sqr = maths_vector_norm_sqr(rel_pos);
+	centralData->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 	
 	if (centralData->dist2wp_sqr < 0.5f)
 	{

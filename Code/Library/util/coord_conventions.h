@@ -25,7 +25,7 @@ extern "C"
 #endif
 
 #include "compiler.h"
-#include "maths.h"
+#include "quaternions.h"
 
 #define EARTH_RADIUS 6378137.0f   // radius of the earth in meters
 
