@@ -167,11 +167,6 @@ void stabilisation_copter_mix_to_servos_diag_quad(Control_Command_t *control)
 	motor_command[M_REAR_RIGHT] = control->thrust + ( - control->rpy[ROLL] - control->rpy[PITCH]) + M_RR_DIR * control->rpy[YAW];
 	motor_command[M_REAR_LEFT]  = control->thrust + ( control->rpy[ROLL] - control->rpy[PITCH]) + M_RL_DIR * control->rpy[YAW];
 	
-	motor_command[M_FRONT_RIGHT] = control->thrust;
-	motor_command[M_FRONT_LEFT] = control->thrust;
-	motor_command[M_REAR_RIGHT] = control->thrust;
-	motor_command[M_REAR_LEFT] = control->thrust;
-	
 	for (i=0; i<4; i++)
 	{
 		if (motor_command[i]<MIN_THRUST)

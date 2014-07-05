@@ -39,6 +39,27 @@ void waypoint_handler_init()
 	
 	print_util_dbg_print("Nav init\n");
 	waypoint_handler_waypoint_init();
+	
+
+
+	// init waypoint navigation
+	// TODO: move to
+	// waypoint_handler_init(&centralData->waypoint_handler);
+	// centralData->waypoint_handler.number_of_waypoints= ...
+	centralData->number_of_waypoints = 0;
+	centralData->waypoint_set = false;
+	centralData->waypoint_sending = false;
+	centralData->waypoint_receiving = false;
+			
+	centralData->critical_landing = false;
+			
+	centralData->collision_avoidance = false;
+	centralData->automatic_take_off = false;
+	centralData->automatic_landing = false;
+	centralData->in_the_air = false;
+			
+	centralData->number_of_neighbors = 0;
+	
 }
 
 void waypoint_handler_waypoint_init()

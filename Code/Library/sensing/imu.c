@@ -131,11 +131,24 @@ void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *
 	{
 		imu1->dt = time_keeper_ticks_to_seconds(t - imu1->last_update);
 		imu1->last_update = t;
-		qfilter_attitude_estimation(&imu1->attitude, imu1->raw_channels, imu1->dt);
+		imu_raw2scale(&imu1->attitude, imu1->raw_channels);
+		qfilter_attitude_estimation(&imu1->attitude, imu1->dt);
 		if (imu1->attitude.calibration_level == OFF)
 		{
 			position_estimation_position_integration(pos_est, &imu1->attitude, imu1->dt);
 			position_estimation_position_correction(pos_est, barometer, gps, imu1->dt);
 		}
+	}
+}
+
+void imu_raw2scale(Quat_Attitude_t *attitude, float rates[9])
+{
+	int16_t i;
+	
+	for (i = 0; i < 3; i++)
+	{
+		attitude->om[i]  = (1.0f - GYRO_LPF) * attitude->om[i] + GYRO_LPF * (((float)rates[i + GYRO_OFFSET] - attitude->be[i + GYRO_OFFSET]) * attitude->sf[i + GYRO_OFFSET]);
+		attitude->a[i]   = (1.0f - ACC_LPF) * attitude->a[i] + ACC_LPF * (((float)rates[i + ACC_OFFSET] - attitude->be[i + ACC_OFFSET]) * attitude->sf[i + ACC_OFFSET]);
+		attitude->mag[i] = (1.0f - MAG_LPF) * attitude->mag[i] + MAG_LPF * (((float)rates[i + MAG_OFFSET] - attitude->be[i + MAG_OFFSET]) * attitude->sf[i + MAG_OFFSET]);
 	}
 }

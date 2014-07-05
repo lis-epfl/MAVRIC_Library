@@ -1475,7 +1475,7 @@ void mavlink_actions_init(void) {
 	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_hud,                        MAVLINK_MSG_ID_VFR_HUD	);								// ID 74	
 	scheduler_add_task(mavlink_stream_get_taskset(),  200000,   RUN_NEVER,    &mavlink_send_rpy_rates_error,            MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT	);	// ID 80
 	scheduler_add_task(mavlink_stream_get_taskset(),  500000,   RUN_NEVER,    &mavlink_send_simulation,                 MAVLINK_MSG_ID_HIL_STATE	);							// ID 90
-	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_REGULAR,    &mavlink_send_rt_stats,                   MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
+	scheduler_add_task(mavlink_stream_get_taskset(),  250000,   RUN_REGULAR,  &mavlink_send_rt_stats,                   MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
 	//scheduler_add_task(mavlink_stream_get_taskset(),  100000,   RUN_REGULAR,  &mavlink_send_sonar,                      MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
 
 	scheduler_add_task(mavlink_stream_get_taskset(),  10000,    RUN_REGULAR,  &control_waypoint_timeout,                255	);													// ID 255

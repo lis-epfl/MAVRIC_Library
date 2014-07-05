@@ -30,7 +30,11 @@ extern "C" {
 #include "gps_ublox.h"
 #include "conf_platform.h"
 
-#define IMU_AXES 6
+#define GYRO_LPF 0.1f					///< The gyroscope linear particle filter gain
+#define ACC_LPF 0.05f					///< The accelerometer linear particle filter gain
+#define MAG_LPF 0.1f					///< The magnetometer linear particle filter gain
+
+#define IMU_AXES 6						///< The number of axis of the device
 
 /**
  * \brief The IMU structure
@@ -79,6 +83,14 @@ void imu_calibrate_gyros(Imu_Data_t *imu1);
  * \param	gps			the pointer to the GPS structure
  */
 void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps);
+
+/**
+ * \brief	Computes the transition from raw values to scaled values
+ *
+ * \param	attitude	the pointer structure of the attitude
+ * \param	rates		the array of angular rates (IMU), accelerations and magnetometer
+ */
+void imu_raw2scale(Quat_Attitude_t *attitude, float rates[9]);
 
 #ifdef __cplusplus
 }

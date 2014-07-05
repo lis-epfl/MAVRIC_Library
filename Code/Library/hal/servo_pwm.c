@@ -27,7 +27,7 @@
 ///< Function prototype definitions
 void set_servo(int channel, int val_a, int val_b);
 
-void servo_pwm_init(void)
+void servo_pwm_hardware_init(void)
 {
 	int i = 0;
 	
@@ -88,6 +88,18 @@ void servo_pwm_init(void)
 	
 	///< Init servo values
 	// set_servos_to_failsafe(servo_outputs);
+}
+
+void servo_pwm_init(servo_output servos[])
+{
+	// Init servos
+	for (int i = 0; i < NUMBER_OF_SERVO_OUTPUTS; ++i)
+	{
+		servos[i].value = -600;
+		servos[i].min = -600;
+		servos[i].max = 600;
+		servos[i].failsafe_position = -600;
+	}
 }
 
 void set_servo(int channel, int val_a, int val_b)

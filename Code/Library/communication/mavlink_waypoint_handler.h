@@ -34,21 +34,21 @@ extern "C" {
  */
 
 /**
- * \brief	
+ * \brief	The mavlink waypoint structure
  */
 typedef struct
 {
-	uint8_t frame;				///<
-	uint16_t waypoint_id;		///<
-	uint8_t current;			///<
-	uint8_t autocontinue;		///<
-	float param1;				///< hold time in seconds
-	float param2;				///< acceptance radius
-	float param3;				///< loiter radius
-	float param4;				///< desired heading at waypoint
-	double x;					///<
-	double y;					///<
-	double z;					///<
+	uint8_t frame;				///< The reference frame of the waypoint
+	uint16_t waypoint_id;		///< The MAV_CMD_NAV id of the waypoint
+	uint8_t current;			///< Flag to tell whether the waypoint is the current one or not
+	uint8_t autocontinue;		///< Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
+	float param1;				///< Parameter depending on the MAV_CMD_NAV id
+	float param2;				///< Parameter depending on the MAV_CMD_NAV id
+	float param3;				///< Parameter depending on the MAV_CMD_NAV id
+	float param4;				///< Parameter depending on the MAV_CMD_NAV id
+	double x;					///< The value on the x axis (depends on the reference frame)
+	double y;					///< The value on the y axis (depends on the reference frame)
+	double z;					///< The value on the z axis (depends on the reference frame)
 } waypoint_struct;
 
 /**
@@ -56,9 +56,9 @@ typedef struct
  */
 typedef enum
 {
-	CLIMB_TO_SAFE_ALT,			///<
-	FLY_TO_HOME_WP,				///<
-	CRITICAL_LAND				///<
+	CLIMB_TO_SAFE_ALT,			///< First critical behavior
+	FLY_TO_HOME_WP,				///< Second critical behavior, comes after CLIMB_TO_SAFE_ALT
+	CRITICAL_LAND				///< Third critical behavior, comes after FLY_TO_HOME_WP
 } critical_behavior_enum;
 
 /**
@@ -66,10 +66,34 @@ typedef enum
  */
 typedef enum
 {
-	DESCENT_TO_SMALL_ALTITUDE,	///<
-	DESCENT_TO_GND				///<
+	DESCENT_TO_SMALL_ALTITUDE,	///< First auto landing behavior
+	DESCENT_TO_GND				///< Second auto landing behavior, comes after DESCENT_TO_SMAL_ALTITUDE
 } auto_landing_enum_t;
 
+typedef struct
+{
+	waypoint_struct waypoint_list[MAX_WAYPOINTS];				///< The array of all waypoints (max MAX_WAYPOINTS)
+	waypoint_struct current_waypoint;							///< The structure of the current waypoint
+	uint16_t number_of_waypoints;								///< The total number of waypoints
+	int8_t current_waypoint_count;								///< The number of the current waypoint
+	
+	local_coordinates_t waypoint_coordinates;					///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
+	local_coordinates_t waypoint_hold_coordinates;				///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
+	local_coordinates_t waypoint_critical_coordinates;			///< The coordinates of the waypoint in critical state
+	float dist2wp_sqr;											///< The square of the distance to the waypoint
+	
+	bool waypoint_set;											///< Flag to tell that a flight plan (min 1 waypoint) is active
+	bool waypoint_sending;										///< Flag to tell whether waypoint are being sent
+	bool waypoint_receiving;									///< Flag to tell whether waypoint are being received or not
+	bool critical_landing;										///< Flag to execute critical landing (switching motors off)
+	bool critical_next_state;									///< Flag to change critical state in its dedicated state machine
+	
+	bool collision_avoidance;									///< Flag to tell whether the collision avoidance is active or not
+	bool automatic_take_off;									///< Flag to initiate the auto takeoff procedure
+	bool automatic_landing;										///< Flag to initiate the auto landing procedure
+	bool in_the_air;											///< Flag to tell whether the vehicle is airborne or not
+	
+}waypoint_handler_t;
 
 int sending_waypoint_num;
 int waypoint_request_number;
