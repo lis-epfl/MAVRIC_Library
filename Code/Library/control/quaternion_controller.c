@@ -1,12 +1,20 @@
-/*
- * quaternion_controler.c
+/** 
+ * \page The MAV'RIC license
  *
- * Created: 24/04/2013 12:14:04
- *  Author: julien
- * 
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+ 
+ 
+/**
+ * \file quaternion_controler.c
+ *
  * A quaternion-based attitude controller, takes a reference quaternion as input
- * and provides angular errors for roll, pitch and yaw in the local frame. 
- */ 
+ * and provides angular errors for roll, pitch and yaw in the local frame.
+ */
 
 
 #include "quaternion_controller.h"
@@ -41,6 +49,7 @@ void quaternion_controller_set_quat_ref_from_aero(Quaternion_Controller_t* contr
 	controller->quat_ref = coord_conventions_quaternion_from_aero(aero);
 }
 
+
 void quaternion_controller_set_quat_ref_from_rpy(Quaternion_Controller_t* controller, float rpy[3])
 {
 	Aero_Attitude_t aero;
@@ -50,6 +59,7 @@ void quaternion_controller_set_quat_ref_from_rpy(Quaternion_Controller_t* contro
 
 	controller->quat_ref = coord_conventions_quaternion_from_aero(aero);
 }
+
 
 void quaternion_controller_update(Quaternion_Controller_t* controller)
 {
