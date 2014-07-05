@@ -147,7 +147,7 @@ int uart_int_bytes_available(usart_config_t *usart_conf)
 	return buffer_bytes_available(&(usart_conf->uart_device.receive_buffer));
 }
 
-uint8_t uart_int_send_byte(usart_config_t *usart_conf, char data) 
+void uart_int_send_byte(usart_config_t *usart_conf, uint8_t data) 
 {
 //	usart_write_line(usart_conf->uart_device.uart, "\ns");
 	while (buffer_put(&(usart_conf->uart_device.transmit_buffer), data) < 0);
@@ -157,8 +157,7 @@ uint8_t uart_int_send_byte(usart_config_t *usart_conf, char data)
 		 // kick-start transmission
 //		usart_conf->uart_device.uart->thr='c';//buffer_get(&(usart_conf->uart_device.transmit_buffer));
 		usart_conf->uart_device.uart->ier = AVR32_USART_IER_TXRDY_MASK;
-	}
-	return 0;		
+	}		
 }
 
 void uart_int_flush(usart_config_t *usart_conf) 
