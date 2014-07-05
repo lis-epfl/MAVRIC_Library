@@ -24,14 +24,23 @@
 PID_Controller_t pid_control_passthroughController() 
 {
 	PID_Controller_t out;
-	out.p_gain=1.0f;
-	out.last_update=time_keeper_get_time_ticks();	
-	out.clip_min= -10000.0f;
-	out.clip_max= 10000.0f;
-	out.output=0.0f;
-	out.soft_zone_width=0.0f;
+	uint32_t t= time_keeper_get_time_ticks();
+
+	out.dt = 0.0f;
+	out.last_update = t;
+	
+	out.p_gain = 1.0f;	
+	out.clip_min = -10000.0f;
+	out.clip_max = 10000.0f;
+	out.error = 0.0f;
+	out.output = 0.0f;
+	out.soft_zone_width = 0.0f;
+	out.integrator.leakiness = 0.0f;
+	out.differentiator.previous = 0.0f;
+	
 	pid_control_init_differenciator(&(out.differentiator), 0.0f, 0.0f, 0.0f);
 	pid_control_init_integrator(&(out.integrator), 0.0f, 0.0f, 0.0f);
+	
 	return out;
 }
 
