@@ -17,7 +17,7 @@
 
 void radar_driver_init(void);
 
-void radar_driver_switch_power(int supply1, int supply2);
+void radar_driver_switch_power(int32_t supply1, int32_t supply2);
 
 
 #endif
