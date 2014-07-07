@@ -30,8 +30,6 @@ static volatile byte_stream_t* mavlink_out_stream;
 static volatile byte_stream_t* mavlink_in_stream;
 static volatile Buffer_t mavlink_in_buffer;
 
-central_data_t *centralData;
-
 task_set mavlink_tasks;
 
 void mavlink_bridge_comm_send_ch(mavlink_channel_t chan, uint8_t ch)
@@ -71,15 +69,12 @@ void mavlink_stream_init(byte_stream_t *transmit_stream, byte_stream_t *receive_
 	scheduler_init(&mavlink_tasks);
 	
 	scheduler_add_task(&mavlink_tasks, 100000, RUN_REGULAR, &onboard_parameters_send_scheduled_parameters, MAVLINK_MSG_ID_PARAM_VALUE);
-
-	centralData = central_data_get_pointer_to_struct();
 }
 
 void mavlink_stream_flush() 
 {
-	if (mavlink_out_stream->flush!=NULL) 
+	if (mavlink_out_stream->flush != NULL) 
 	{
-		//mavlink_out_stream->buffer_empty(mavlink_out_stream->data);
 		mavlink_out_stream->flush(mavlink_out_stream->data);	
 	}
 }
