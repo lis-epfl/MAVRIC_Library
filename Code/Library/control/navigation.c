@@ -17,49 +17,44 @@
 
 
 #include "navigation.h"
-#include "central_data.h"
-#include "print_util.h"
-#include "orca.h"
-
-#include <math.h>
-#include "maths.h"
+#include "central_data.h"			// TODO: remove this dependency to central_data
 
 #define KP_YAW 0.2f
 
-central_data_t *centralData;
-float alt_integrator;
+central_data_t *centralData;		// TODO: remove this dependency to central_data
 
+float alt_integrator;				// TODO: move this into a struct in central_data
 uint8_t loopCount = 0;
 
-void navigation_init(void)
-{
-	centralData = central_data_get_pointer_to_struct();
-	
-	centralData->controls_nav.tvel[X] = 0.0f;
-	centralData->controls_nav.tvel[Y] = 0.0f;
-	centralData->controls_nav.rpy[YAW] = 0.0f;
-	centralData->controls_nav.tvel[Z] = 0.0f;
-	
-	centralData->dist2vel_gain = 0.7f;
-	centralData->cruise_speed = 3.0f;
-	centralData->max_climb_rate = 1.0f;
-	centralData->softZoneSize = 0.0f;
-	
-	alt_integrator = 0.0f;
-}
 
-void navigation_run(local_coordinates_t waypoint_input)
-{
-	float rel_pos[3]; 
-	
-	// Control in translational speed of the platform
-	centralData->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos, rel_pos);
-	navigation_set_speed_command(rel_pos,centralData->dist2wp_sqr);
-	
-	centralData->controls_nav.theading=waypoint_input.heading;
-}
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
 
-float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[])
+/**
+ * \brief					Computes the relative position and distance to the given way point
+ *
+ * \param	waypointPos		Local coordinates of the waypoint
+ * \param	rel_pos			Array to store the relative 3D position of the waypoint
+ *
+ * \return					Distance to waypoint squared
+ */
+static float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[]);
+
+
+/**
+ * \brief					Sets the Robot speed to reach waypoint
+ *
+ * \param	rel_pos			Relative position of the waypoint
+ * \param	dist2wpSqr		Squared of distance to waypoint
+ */
+static void navigation_set_speed_command(float rel_pos[], float dist2wpSqr);
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+static float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[])
 {
 	float dist2wp_sqr;
 	
@@ -72,7 +67,8 @@ float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[])
 	return dist2wp_sqr;
 }
 
-void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
+
+static void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
 {
 	uint8_t i;
 	float  norm_rel_dist, v_desired;
@@ -160,4 +156,38 @@ void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
 	centralData->controls_nav.tvel[Y] = new_velocity[Y];
 	centralData->controls_nav.tvel[Z] = new_velocity[Z];		
 	centralData->controls_nav.rpy[YAW] = KP_YAW * rel_heading;
+}
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void navigation_init(void)
+{
+	centralData = central_data_get_pointer_to_struct();
+	
+	centralData->controls_nav.tvel[X] = 0.0f;
+	centralData->controls_nav.tvel[Y] = 0.0f;
+	centralData->controls_nav.rpy[YAW] = 0.0f;
+	centralData->controls_nav.tvel[Z] = 0.0f;
+	
+	centralData->dist2vel_gain = 0.7f;
+	centralData->cruise_speed = 3.0f;
+	centralData->max_climb_rate = 1.0f;
+	centralData->softZoneSize = 0.0f;
+	
+	alt_integrator = 0.0f;
+}
+
+
+void navigation_run(local_coordinates_t waypoint_input)
+{
+	float rel_pos[3]; 
+	
+	// Control in translational speed of the platform
+	centralData->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos, rel_pos);
+	navigation_set_speed_command(rel_pos,centralData->dist2wp_sqr);
+	
+	centralData->controls_nav.theading=waypoint_input.heading;
 }

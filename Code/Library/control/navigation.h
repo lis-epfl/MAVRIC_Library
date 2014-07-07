@@ -23,13 +23,14 @@
 extern "C" {
 #endif
 
-#include "qfilter.h"
 #include "mavlink_waypoint_handler.h"
+
 
 /**
  * \brief					Initialization 
  */
 void navigation_init(void);
+
 
 /**
  * \brief					Navigates the robot towards waypoint
@@ -38,23 +39,6 @@ void navigation_init(void);
  */
 void navigation_run(local_coordinates_t waypoint_input);
 
-/**
- * \brief					Computes the relative position and distance to the given way point
- *
- * \param	waypointPos		Local coordinates of the waypoint
- * \param	rel_pos			Array to store the relative 3D position of the waypoint
- *
- * \return					Distance to waypoint squared
- */
-float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[]);
-
-/**
- * \brief					Sets the Robot speed to reach waypoint
- *
- * \param	rel_pos			Relative position of the waypoint
- * \param	dist2wpSqr		Squared of distance to waypoint
- */
-void navigation_set_speed_command(float rel_pos[], float dist2wpSqr);
 
 #ifdef __cplusplus
 }
