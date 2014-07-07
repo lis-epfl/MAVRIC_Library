@@ -17,7 +17,6 @@
 
 
 #include "onboard_parameters.h"
-#include "stabilisation.h"
 #include "print_util.h"
 #include "flashc.h"
 
