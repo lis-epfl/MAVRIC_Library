@@ -1,3 +1,21 @@
+/**
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+ * \file test_maths.c
+ * 
+ * to Test math functions
+ */
+ 
+ 
 #include "test_maths.h"
 
 #include "maths.h"

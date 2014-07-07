@@ -1,10 +1,28 @@
-#include "test_small_matrix.h"
+/**
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
 
+
+/**
+ * \file test_small_matrix.c
+ * 
+ * Test functions for small matrix
+ */
+ 
+ 
+#include "test_small_matrix.h"
 #include "small_matrix.h"
 #include "linear_algebra.h"
 #include "print_util.h"
 
-bool run_matrix_tests(void) {
+bool run_matrix_tests(void) 
+{
 	
 	matrix_2x2_t m2={.v={{1, 2},{3,2}}};
 	print_util_print_matrix(print_util_get_debug_stream(), m2.v[0], 2, 2, 2); print_util_dbg_print("\n");
@@ -57,7 +75,6 @@ bool run_matrix_tests(void) {
 	print_util_dbg_print("squared Norm m3:  "); print_util_dbg_putfloat(sqr_f_norm3(m3), 4);print_util_dbg_print("\n");
 	print_util_dbg_print("trace m3:         "); print_util_dbg_putfloat(trace3(m3), 4);print_util_dbg_print("\n");
 	print_util_dbg_print("residual |MxM^{-1} - I| "); print_util_dbg_putfloat(sqr_f_norm3(msub3(mmul3(m3, inv3(m3)), ident_3x3)), 10);print_util_dbg_print("\n");
-	
 	
 	return true;
 }

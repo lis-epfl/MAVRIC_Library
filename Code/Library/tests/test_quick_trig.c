@@ -1,26 +1,41 @@
-/*
- * test_quick_trig.c
+/**
+ * \page The MAV'RIC License
  *
- * Created: 20/02/2014 15:08:08
- *  Author: sfx
- */ 
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+ * \file test_quick_trig.c
+ * 
+ * to Test simplyfied trigonometric functions
+ */
+ 
+ 
 #include "test_quick_trig.h"
 #include "quick_trig.h"
 
 
-bool run_quick_trig_tests(void) {
+bool run_quick_trig_tests(void) 
+{
 	float input=0.0f;
 	bool test_result;
 	float error=0.001;
 	
-	for (input=0.0; input<2*PI; input+=0.3) {
+	for (input=0.0; input<2*PI; input+=0.3) 
+	{
 		TEST_ASSERT(sin, (maths_f_abs(quick_trig_sin(input)-sin(input)) < error), test_result);
 		TEST_ASSERT(cos, (maths_f_abs(quick_trig_cos(input)-cos(input)) < error), test_result);
 	}
 	return test_result;
 }
 
-void profile_quick_trig(void) {
+void profile_quick_trig(void) 
+{
 	uint32_t ex_time=0;
 	float input=0.1234;
 	static volatile float output;
@@ -80,6 +95,4 @@ void profile_quick_trig(void) {
 	print_util_dbg_print("start value in=");print_util_dbg_putfloat(input, 10);print_util_dbg_print("\n");
 	PROFILE_100X(ex_time, output=      sqrt(input);input=output+0.1f; );
 	print_util_dbg_print("in=");print_util_dbg_putfloat(input, 10); print_util_dbg_print("\tout=");print_util_dbg_putfloat(output, 10);print_util_dbg_print("\n\n");
-
-	
 }

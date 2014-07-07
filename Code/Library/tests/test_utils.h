@@ -1,9 +1,19 @@
-/*
- * test_utils.h
+/**
+ * \page The MAV'RIC License
  *
- * Created: 20/02/2014 15:16:44
- *  Author: sfx
- */ 
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+ * \file test_quick_trig.c
+ * 
+ * to Test simplyfied trigonometric functions
+ */
 
 
 #ifndef TEST_UTILS_H_
@@ -13,8 +23,8 @@
 #include "time_keeper.h"
 #include "delay.h"
 
-#define xstr(a) str(a)
-#define str(a) #a
+#define xstr(a) str(a)		///< Define strings
+#define str(a) #a 			///< Define strings
 
 #define TEST_ASSERT(TEST_NAME, CONDITION, RESULT_OUT) {\
 	if (CONDITION) {\
