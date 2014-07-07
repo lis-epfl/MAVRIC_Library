@@ -1,9 +1,21 @@
-/*
- * i2c_driver.c
+/**
+ * \page The MAV'RIC License
  *
- * Created: 16/05/2012 17:31:58
- *  Author: sfx
- */ 
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+ * \file i2c_driver.c
+ * 
+ * The i2c driver
+ */
+
+ 
 #include "i2c_driver.h"
 #include "gpio.h"
 #include "pdca.h"
@@ -22,50 +34,56 @@ static void pdca_int_handler_i2c0(void)
 {
 	AVR32_TWIM0.cr = AVR32_TWIM_CR_MDIS_MASK;
 	pdca_disable(TWI0_DMA_CH);
-	
+
 	pdca_disable_interrupt_transfer_complete(TWI0_DMA_CH);
-	
-   // call callback function to process data, at end of transfer
-   // to process data, and maybe add some more data
-   schedule[0][current_schedule_slot[0]].transfer_in_progress = 0;
-   
-   if (schedule[0][current_schedule_slot[0]].callback) schedule[0][current_schedule_slot[0]].callback;
+
+	// call callback function to process data, at end of transfer
+	// to process data, and maybe add some more data
+	schedule[0][current_schedule_slot[0]].transfer_in_progress = 0;
+
+	if (schedule[0][current_schedule_slot[0]].callback) 
+	{
+		schedule[0][current_schedule_slot[0]].callback;
+	}
    print_util_dbg_print( "!");
 }
 
-
-
-
-int i2c_driver_init(unsigned char i2c_device) {
+int i2c_driver_init(unsigned char i2c_device) 
+{
 	int i;
 	volatile avr32_twim_t *twim;
-	switch (i2c_device) {
-	case 0: 
-		twim = &AVR32_TWIM0;
-		// Register PDCA IRQ interrupt.
-		INTC_register_interrupt( (__int_handler) &pdca_int_handler_i2c0, TWI0_DMA_IRQ, AVR32_INTC_INT0);
-		gpio_enable_module_pin(AVR32_TWIMS0_TWCK_0_0_PIN, AVR32_TWIMS0_TWCK_0_0_FUNCTION);
-		gpio_enable_module_pin(AVR32_TWIMS0_TWD_0_0_PIN, AVR32_TWIMS0_TWD_0_0_FUNCTION);
-
-	break;
-	case 1:
-		twim = &AVR32_TWIM1;// Register PDCA IRQ interrupt.
-		INTC_register_interrupt( (__int_handler) &pdca_int_handler_i2c0, TWI1_DMA_IRQ, AVR32_INTC_INT0);
-		gpio_enable_module_pin(AVR32_TWIMS1_TWCK_0_0_PIN, AVR32_TWIMS1_TWCK_0_0_FUNCTION);
-		gpio_enable_module_pin(AVR32_TWIMS1_TWD_0_0_PIN, AVR32_TWIMS1_TWD_0_0_FUNCTION);
-		gpio_enable_pin_pull_up(AVR32_TWIMS1_TWCK_0_0_PIN);
-		gpio_enable_pin_pull_up(AVR32_TWIMS1_TWD_0_0_PIN);
-	break;
-	default: // invalid device ID
-		return -1;
+	
+	switch (i2c_device) 
+	{
+		case 0: 
+			twim = &AVR32_TWIM0;
+			// Register PDCA IRQ interrupt.
+			INTC_register_interrupt( (__int_handler) &pdca_int_handler_i2c0, TWI0_DMA_IRQ, AVR32_INTC_INT0);
+			gpio_enable_module_pin(AVR32_TWIMS0_TWCK_0_0_PIN, AVR32_TWIMS0_TWCK_0_0_FUNCTION);
+			gpio_enable_module_pin(AVR32_TWIMS0_TWD_0_0_PIN, AVR32_TWIMS0_TWD_0_0_FUNCTION);
+		break;
+		
+		case 1:
+			twim = &AVR32_TWIM1;// Register PDCA IRQ interrupt.
+			INTC_register_interrupt( (__int_handler) &pdca_int_handler_i2c0, TWI1_DMA_IRQ, AVR32_INTC_INT0);
+			gpio_enable_module_pin(AVR32_TWIMS1_TWCK_0_0_PIN, AVR32_TWIMS1_TWCK_0_0_FUNCTION);
+			gpio_enable_module_pin(AVR32_TWIMS1_TWD_0_0_PIN, AVR32_TWIMS1_TWD_0_0_FUNCTION);
+			gpio_enable_pin_pull_up(AVR32_TWIMS1_TWCK_0_0_PIN);
+			gpio_enable_pin_pull_up(AVR32_TWIMS1_TWD_0_0_PIN);
+		break;
+		
+		default: // invalid device ID
+			return -1;
 	}		
-	for (i = 0; i < I2C_SCHEDULE_SLOTS; i++) {
+	for (i = 0; i < I2C_SCHEDULE_SLOTS; i++) 
+	{
 		schedule[i2c_device][i].active = -1;
 	}
 				
 	bool global_interrupt_enabled = cpu_irq_is_enabled ();
 	// Disable TWI interrupts
-	if (global_interrupt_enabled) {
+	if (global_interrupt_enabled) 
+	{
 		cpu_irq_disable ();
 	}
 	twim->idr = ~0UL;
@@ -74,14 +92,12 @@ int i2c_driver_init(unsigned char i2c_device) {
 	// Reset TWI
 	twim->cr = AVR32_TWIM_CR_SWRST_MASK;
 	
-	
-	if (global_interrupt_enabled) {
+	if (global_interrupt_enabled) 
+	{
 		cpu_irq_enable ();
 	}
 	// Clear SR
 	twim->scr = ~0UL;
-	
-	
 	
 	// register Register twim_master_interrupt_handler interrupt on level CONF_TWIM_IRQ_LEVEL
 //	irqflags_t flags = cpu_irq_save();
@@ -91,31 +107,32 @@ int i2c_driver_init(unsigned char i2c_device) {
 	
 	// Select the speed
 	if (twim_set_speed(twim, 100000, sysclk_get_pba_hz()) == 
-			ERR_INVALID_ARG) {
-		
+			ERR_INVALID_ARG) 
+	{	
 		return ERR_INVALID_ARG;
 	}
-	return STATUS_OK;				
-
+	return STATUS_OK;
 }
 
-
-
-char i2c_driver_reset(unsigned char i2c_device) {
+char i2c_driver_reset(unsigned char i2c_device) 
+{
 	volatile avr32_twim_t *twim;
-	switch (i2c_device) {
-	case 0: 
-		twim = &AVR32_TWIM0;
-	break;
-	case 1:
-		twim = &AVR32_TWIM1;
-	break;
-	default: // invalid device ID
-		return -1;
+	
+	switch (i2c_device) 
+	{
+		case 0: 
+			twim = &AVR32_TWIM0;
+		break;
+		case 1:
+			twim = &AVR32_TWIM1;
+		break;
+		default: // invalid device ID
+			return -1;
 	}		
 	bool global_interrupt_enabled = cpu_irq_is_enabled ();
 	// Disable TWI interrupts
-	if (global_interrupt_enabled) {
+	if (global_interrupt_enabled) 
+	{
 		cpu_irq_disable ();
 	}
 	twim->idr = ~0UL;
@@ -123,41 +140,60 @@ char i2c_driver_reset(unsigned char i2c_device) {
 	twim->cr = AVR32_TWIM_CR_MEN_MASK;
 	// Reset TWI
 	twim->cr = AVR32_TWIM_CR_SWRST_MASK;
-	if (global_interrupt_enabled) {
+	if (global_interrupt_enabled) 
+	{
 		cpu_irq_enable ();
 	}
 	// Clear SR
 	twim->scr = ~0UL;
 }
-char i2c_driver_add_request(unsigned char i2c_device, i2c_schedule_event* new_event){
+char i2c_driver_add_request(unsigned char i2c_device, i2c_schedule_event* new_event)
+{
 	// find free schedule slot
 	int i = 0;
-	for (i = 0; (i < I2C_SCHEDULE_SLOTS)&& (schedule[i2c_device][i].active >= 0); i++) {
+	
+	for (i = 0; i < I2C_SCHEDULE_SLOTS; i++) 
+	{
+		if(schedule[i2c_device][i].active < 0)
+		{
+			break;
+		}
 	}
 	// add request to schedule
-	if (i < I2C_SCHEDULE_SLOTS) {
+	if (i < I2C_SCHEDULE_SLOTS) 
+	{
 		new_event->schedule_slot = i;
 		new_event->transfer_in_progress = 0;
 		new_event->active=1;
 		schedule[i2c_device][i] = *new_event;
-	} else i = -1;
+	} 
+	else 
+	{
+		i = -1;
+	}
 	// return assigned schedule slot
 	return i;
 }
-char i2c_driver_change_request(unsigned char i2c_device, i2c_schedule_event* new_event){
+
+char i2c_driver_change_request(unsigned char i2c_device, i2c_schedule_event* new_event)
+{
 	int i = new_event->schedule_slot;
-	if ((i>=0) && (i < I2C_SCHEDULE_SLOTS)) {
+	
+	if ((i>=0) && (i < I2C_SCHEDULE_SLOTS)) 
+	{
 		new_event->transfer_in_progress = 0;
 		new_event->active=1;
 		schedule[i2c_device][i] = *new_event;
-	};
+	}
 }
 
 
-char i2c_driver_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) {
+char i2c_driver_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) 
+{
 	// initiate transfer of given request
 	// set up DMA channel
 	volatile avr32_twim_t *twim;
+	
 	i2c_packet_conf* conf = &schedule[i2c_device][schedule_slot].config;
 	static  pdca_channel_options_t PDCA_OPTIONS =
 			{
@@ -168,13 +204,16 @@ char i2c_driver_trigger_request(unsigned char i2c_device, unsigned char schedule
 				.r_size = 0,                              // next transfer counter
 				.transfer_size = PDCA_TRANSFER_SIZE_BYTE  // select size of the transfer
 			};
-	switch (i2c_device) {
+	switch (i2c_device) 
+	{
 	case 0: 
 		twim = &AVR32_TWIM0;
 		twim->cr = AVR32_TWIM_CR_MEN_MASK;
 		twim->cr = AVR32_TWIM_CR_SWRST_MASK;
 		twim->cr = AVR32_TWIM_CR_MDIS_MASK;
-		switch (conf->direction)  {
+		
+		switch (conf->direction)  
+		{
 		case I2C_WRITE1_THEN_READ:
 		case I2C_READ:
 			PDCA_OPTIONS.pid = AVR32_TWIM0_PDCA_ID_RX;
@@ -183,6 +222,7 @@ char i2c_driver_trigger_request(unsigned char i2c_device, unsigned char schedule
 			// Init PDCA channel with the pdca_options.
 			pdca_init_channel(TWI0_DMA_CH, &PDCA_OPTIONS); // init PDCA channel with options.
 			break;
+			
 		case I2C_WRITE:
 			PDCA_OPTIONS.pid = AVR32_TWIM0_PDCA_ID_TX;
 			PDCA_OPTIONS.addr = (void *)conf->write_data;
@@ -194,25 +234,26 @@ char i2c_driver_trigger_request(unsigned char i2c_device, unsigned char schedule
 			break;
 		}
 		
-//		pdca_load_channel(TWI0_DMA_CH, (void *)schedule[i2c_device][schedule_slot].config.write_data, schedule[i2c_device][schedule_slot].config.write_count);
+		//pdca_load_channel(TWI0_DMA_CH, (void *)schedule[i2c_device][schedule_slot].config.write_data, schedule[i2c_device][schedule_slot].config.write_count);
 		// Enable pdca interrupt each time the reload counter reaches zero, i.e. each time
 		// the whole block was received
 		pdca_enable_interrupt_transfer_complete(TWI0_DMA_CH);
 		pdca_enable_interrupt_transfer_error(TWI0_DMA_CH);
+	break;
 		
-		
-		break;
 	case 1:
 		twim = &AVR32_TWIM1;
 	break;
+	
 	default: // invalid device ID
 		return -1;
 	}		
 
 	// set up I2C speed and mode
-//	twim_set_speed(twim, 100000, sysclk_get_pba_hz());
+	//twim_set_speed(twim, 100000, sysclk_get_pba_hz());
     
-	switch (conf->direction)  {
+	switch (conf->direction)  
+	{
 		case I2C_READ:
 			twim->cmdr = (conf->slave_address << AVR32_TWIM_CMDR_SADR_OFFSET)
 						| (conf->read_count << AVR32_TWIM_CMDR_NBYTES_OFFSET)
@@ -220,7 +261,8 @@ char i2c_driver_trigger_request(unsigned char i2c_device, unsigned char schedule
 						| (AVR32_TWIM_CMDR_START_MASK)
 						| (0 << AVR32_TWIM_CMDR_STOP_OFFSET)
 						| (0 << AVR32_TWIM_CMDR_READ_OFFSET);
-			break;	
+		break;
+		
 		case I2C_WRITE1_THEN_READ:
 			print_util_dbg_print( "wr");
 			
@@ -233,7 +275,6 @@ char i2c_driver_trigger_request(unsigned char i2c_device, unsigned char schedule
 						| (0 << AVR32_TWIM_CMDR_STOP_OFFSET)
 						;
 			
-
 			twim->ncmdr = (conf->slave_address << AVR32_TWIM_CMDR_SADR_OFFSET)
 						| ((conf->read_count) << AVR32_TWIM_CMDR_NBYTES_OFFSET)
 						| (AVR32_TWIM_CMDR_VALID_MASK)
@@ -244,8 +285,8 @@ char i2c_driver_trigger_request(unsigned char i2c_device, unsigned char schedule
 			//twim->cr = AVR32_TWIM_CR_MEN_MASK;
 			twim->thr = conf->write_then_read_preamble;
 			twim->cr = AVR32_TWIM_CR_MEN_MASK;
+		break;	
 			
-			break;	
 		case I2C_WRITE:
 			print_util_dbg_print( "w");
 			twim->cmdr = (conf->slave_address << AVR32_TWIM_CMDR_SADR_OFFSET)
@@ -264,7 +305,6 @@ char i2c_driver_trigger_request(unsigned char i2c_device, unsigned char schedule
 		break;	
 	}		
 	// start transfer
-	
 
 	current_schedule_slot[i2c_device] = schedule_slot;
 	schedule[i2c_device][schedule_slot].transfer_in_progress = 1;
@@ -273,18 +313,21 @@ char i2c_driver_trigger_request(unsigned char i2c_device, unsigned char schedule
 	return 0;
 }
 
-char i2c_driver_pause_request(unsigned char i2c_device, unsigned char schedule_slot){
+char i2c_driver_pause_request(unsigned char i2c_device, unsigned char schedule_slot)
+{
 	// pause scheduler
 	// if this request currently active, wait for current transfer to finish
 	// deactivate request
 	// resume scheduler
 }
 
-char i2c_driver_enable_request(unsigned char i2c_device, unsigned char schedule_slot){
+char i2c_driver_enable_request(unsigned char i2c_device, unsigned char schedule_slot)
+{
 	return 0;
 }
 
-char i2c_driver_remove_request(unsigned char i2c_device, unsigned char schedule_slot){
+char i2c_driver_remove_request(unsigned char i2c_device, unsigned char schedule_slot)
+{
 	return 0;
 }
 
