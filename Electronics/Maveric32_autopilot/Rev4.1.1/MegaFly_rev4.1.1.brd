@@ -2521,8 +2521,8 @@ Covered vias can be set in Masks (Limit).
 <element name="R2" library="rcl" package="R0603" value="31.6k" x="15.882" y="22.992" smashed="yes">
 <attribute name="NAME" x="15.224" y="21.5164" size="0.8128" layer="25" ratio="10"/>
 <attribute name="VALUE" x="14.358" y="21.468" size="0.6096" layer="27" ratio="10"/>
-<attribute name="DISTRIBUTOR" value="" x="15.882" y="22.992" size="1.778" layer="27" display="off"/>
-<attribute name="ORDER_CODE" value="" x="15.882" y="22.992" size="1.778" layer="27" display="off"/>
+<attribute name="DISTRIBUTOR" value="Digikey" x="15.882" y="22.992" size="1.778" layer="27" display="off"/>
+<attribute name="ORDER_CODE" value="RMCF0603FT31K6CT-ND" x="15.882" y="22.992" size="1.778" layer="27" display="off"/>
 <attribute name="PLACE_PART" value="YES" x="15.882" y="22.992" size="1.778" layer="27" display="off"/>
 </element>
 <element name="R3" library="rcl" package="R0603" value="10k" x="19.378" y="23.012" smashed="yes">
@@ -3275,8 +3275,8 @@ Covered vias can be set in Masks (Limit).
 <element name="R9" library="rcl" package="R0805" value="0.25R" x="45.95" y="6.1" smashed="yes">
 <attribute name="NAME" x="47.965" y="5.77" size="0.8128" layer="25"/>
 <attribute name="VALUE" x="45.315" y="3.56" size="1.27" layer="27"/>
-<attribute name="DISTRIBUTOR" value="" x="45.95" y="6.1" size="1.778" layer="27" display="off"/>
-<attribute name="ORDER_CODE" value="" x="45.95" y="6.1" size="1.778" layer="27" display="off"/>
+<attribute name="DISTRIBUTOR" value="Digikey" x="45.95" y="6.1" size="1.778" layer="27" display="off"/>
+<attribute name="ORDER_CODE" value="311-.25SCT-ND" x="45.95" y="6.1" size="1.778" layer="27" display="off"/>
 <attribute name="PLACE_PART" value="YES" x="45.95" y="6.1" size="1.778" layer="27" display="off"/>
 </element>
 <element name="SP" library="SpecialIC" package="PIEZO_CMT_1203-SMT-REDUCED_FOOTPRINT" value="PIEZO_SPEAKERSMALLER" x="33.35" y="18.2">
@@ -3336,8 +3336,8 @@ Covered vias can be set in Masks (Limit).
 <element name="R24" library="rcl" package="R0603" value="25k" x="56.3" y="16.1" smashed="yes" rot="MR0">
 <attribute name="NAME" x="57.335" y="14.435" size="0.8128" layer="26" rot="MR0"/>
 <attribute name="VALUE" x="56.935" y="14.195" size="1.27" layer="28" rot="MR0"/>
-<attribute name="DISTRIBUTOR" value="" x="56.3" y="16.1" size="1.778" layer="28" rot="MR0" display="off"/>
-<attribute name="ORDER_CODE" value="" x="56.3" y="16.1" size="1.778" layer="28" rot="MR0" display="off"/>
+<attribute name="DISTRIBUTOR" value="Digikey" x="56.3" y="16.1" size="1.778" layer="28" rot="MR0" display="off"/>
+<attribute name="ORDER_CODE" value="PNM0603-25KBCT-ND" x="56.3" y="16.1" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="PLACE_PART" value="YES" x="56.3" y="16.1" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
 <element name="C24" library="rcl" package="C0603" value="100nF" x="53.35" y="19.55" smashed="yes" rot="MR270">
