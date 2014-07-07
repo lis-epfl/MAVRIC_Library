@@ -53,7 +53,7 @@ void mavlink_stream_receive_handler()
 	}
 }
 
-void mavlink_stream_init(byte_stream_t *transmit_stream, byte_stream_t *receive_stream, int sysid) 
+void mavlink_stream_init(byte_stream_t *transmit_stream, byte_stream_t *receive_stream, int32_t sysid) 
 {
 	mavlink_tasks.number_of_tasks=30;
 	
@@ -102,7 +102,7 @@ task_set* mavlink_stream_get_taskset()
 
 void mavlink_stream_suspend_downstream(uint32_t delay) 
 {
-	int i;
+	int32_t i;
 	for (i=0; i<mavlink_tasks.number_of_tasks; i++) 
 	{
 		scheduler_suspend_task(&mavlink_tasks.tasks[i], delay);
@@ -187,7 +187,7 @@ void mavlink_stream_handle_message(Mavlink_Received_t* rec)
 					print_util_dbg_print_num(request.target_component,10);
 					if (request.req_stream_id==255) 
 					{
-						int i;
+						int32_t i;
 						print_util_dbg_print("send all\n");
 						// send full list of streams
 						for (i=0; i<mavlink_tasks.number_of_tasks; i++) 

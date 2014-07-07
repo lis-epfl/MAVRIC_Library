@@ -52,12 +52,12 @@ radar_target main_target;
 
 	
 void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
-	int i = 0;
-	int j = 0;
-	int counter = 0;
-	int reading_status = 3;
-	int *c = 0;
-	int read_value = 0;
+	int32_t i = 0;
+	int32_t j = 0;
+	int32_t counter = 0;
+	int32_t reading_status = 3;
+	int32_t *c = 0;
+	int32_t read_value = 0;
 	int32_t index = 0;
 
 

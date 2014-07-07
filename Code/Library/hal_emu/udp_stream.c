@@ -21,8 +21,8 @@ static inline void udp_put_byte(udp_connection_t *udpconn, char data) {
 }
 
 static inline void udp_transmit(udp_connection_t *udpconn) {
-	int i;
-	int bytes_sent = sendto(udpconn->sock, &udpconn->udp_buffer, buffer_bytes_available(&(udpconn->udp_buffer)), 0, (struct sockaddr*)&(udpconn->Addr), sizeof(struct sockaddr_in));
+	int32_t i;
+	int32_t bytes_sent = sendto(udpconn->sock, &udpconn->udp_buffer, buffer_bytes_available(&(udpconn->udp_buffer)), 0, (struct sockaddr*)&(udpconn->Addr), sizeof(struct sockaddr_in));
 	if (bytes_sent==buffer_bytes_available(&(udpconn->udp_buffer))) {
 		buffer_clear(&udpconn->udp_buffer);
 	}else {
@@ -40,9 +40,9 @@ static inline bool udp_buffer_empty(udp_connection_t *udpconn) {
 	return (buffer_bytes_available(&udpconn->udp_buffer) ==0);
 }
 
-static inline int udp_bytes_available(udp_connection_t *udpconn) {
-	int i;
-	int recsize;
+static inline int32_t udp_bytes_available(udp_connection_t *udpconn) {
+	int32_t i;
+	int32_t recsize;
 	char buf[BUFFER_SIZE];
 	socklen_t fromlen;
 	fd_set rset;
@@ -71,7 +71,7 @@ static inline char udp_get_byte(udp_connection_t *udpconn) {
 	return buffer_get(&udpconn->udp_buffer);
 }
 
-void register_write_stream_udp(byte_stream_t *stream, udp_connection_t *udpconn, const char* target_ip, int port) {
+void register_write_stream_udp(byte_stream_t *stream, udp_connection_t *udpconn, const char* target_ip, int32_t port) {
  
 	//udpconn->sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	memset(&udpconn->Addr, 0, sizeof(&udpconn->Addr));
@@ -87,7 +87,7 @@ void register_write_stream_udp(byte_stream_t *stream, udp_connection_t *udpconn,
 	stream->buffer_empty=udp_buffer_empty;
 }
 
-void register_read_stream_udp(byte_stream_t *stream, udp_connection_t *udpconn, int port) {
+void register_read_stream_udp(byte_stream_t *stream, udp_connection_t *udpconn, int32_t port) {
 	udpconn->sock = socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
 	memset(&udpconn->Addr, 0, sizeof(udpconn->Addr));

@@ -20,7 +20,7 @@
 
 void stabilisation_run(Stabiliser_t *stabiliser, float dt, float errors[]) 
 {
-	int i;
+	int32_t i;
 	for (i = 0; i < 3; i++) 
 	{
 		stabiliser->output.rpy[i]=	pid_control_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);

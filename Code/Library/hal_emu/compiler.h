@@ -19,8 +19,8 @@ typedef int32_t                 S32;  //!< 32-bit signed integer.
 typedef uint32_t                U32;  //!< 32-bit unsigned integer.
 typedef uint32_t                le32_t;
 typedef uint32_t                be32_t;
-typedef signed long long int    S64;  //!< 64-bit signed integer.
-typedef unsigned long long int  U64;  //!< 64-bit unsigned integer.
+typedef signed long long int32_t    S64;  //!< 64-bit signed integer.
+typedef unsigned long long int32_t  U64;  //!< 64-bit unsigned integer.
 typedef float                   F32;  //!< 32-bit floating-point number.
 typedef double                  F64;  //!< 64-bit floating-point number.
 typedef uint32_t                iram_size_t;
@@ -72,7 +72,7 @@ typedef uint32_t                iram_size_t;
   #define bit_reverse32(u32) \
   (\
     {\
-      unsigned int __value = (U32)(u32);\
+      uint32_t __value = (U32)(u32);\
       __asm__ ("brev\t%0" : "+r" (__value) :  : "cc");\
       (U32)__value;\
     }\

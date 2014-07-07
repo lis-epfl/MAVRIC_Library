@@ -20,15 +20,15 @@ void analog_monitor_init() {
 }
 
 void trigger_analog_monitor() {
-	int i;
+	int32_t i;
 	for (i=0; i<MONITOR_SAMPLES*MONITOR_CHANNELS; i++) {
 		monitor_buffer[i]=0;
 	}
 }
 
-float get_monitored_avg(int channel) {
+float get_monitored_avg(int32_t channel) {
 	float out=0.0;
-	int i;
+	int32_t i;
 	for (i=0; i<MONITOR_SAMPLES; i++) {
 		out+=(float)monitor_buffer[channel + i*MONITOR_CHANNELS];
 	}

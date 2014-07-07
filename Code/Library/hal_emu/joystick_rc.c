@@ -22,8 +22,8 @@
 #include <termios.h>
 
 struct joystick_event {
-  unsigned int timestamp;
-  short value;
+  uint32_t timestamp;
+  int16_t value;
   unsigned char type;
   unsigned char number;
 };
@@ -32,29 +32,29 @@ struct joystick_event {
 #define JS_AXIS 0x02   // axis event
 #define JS_INIT 0x80
 
-int joystick_filedescriptor;
+int32_t joystick_filedescriptor;
 
 Spektrum_Receiver_t spRec1;
 
 
-int joystick_axes[16];
-int joystick_buttons[16];
+int32_t joystick_axes[16];
+int32_t joystick_buttons[16];
 
 int16_t channelCenter[16];
-int joyMax[16], joyMin[16];
+int32_t joyMax[16], joyMin[16];
 uint32_t last_update;
 
-int open_joystick(char* device_name)
+int32_t open_joystick(char* device_name)
 {
-  int joystick_file_descriptor;
+  int32_t joystick_file_descriptor;
   joystick_file_descriptor = open(device_name, O_RDONLY | O_NONBLOCK);
   fcntl(joystick_file_descriptor, F_SETFL, O_NONBLOCK);
   return joystick_file_descriptor;
 }
 
-int read_joystick_event(int joystick_file_descriptor, struct joystick_event *event)
+int32_t read_joystick_event(int32_t joystick_file_descriptor, struct joystick_event *event)
 {
-  int bytes;
+  int32_t bytes;
   //struct timeval tv;
   //fd_set fds;
   //tv.tv_sec = 0;
@@ -74,7 +74,7 @@ int read_joystick_event(int joystick_file_descriptor, struct joystick_event *eve
   return -1;
 }
 
-void close_joystick(int joystick_file_descriptor)
+void close_joystick(int32_t joystick_file_descriptor)
 {
 	close(joystick_file_descriptor);
 }
@@ -100,7 +100,7 @@ void set_conio_terminal_mode()
     tcsetattr(0, TCSANOW, &new_termios);
 }
 
-int kbhit()
+int32_t kbhit()
 {
     struct timeval tv;
     fd_set fds;
@@ -112,9 +112,9 @@ int kbhit()
     return FD_ISSET(STDIN_FILENO, &fds);
 }
 
-int getch()
+int32_t getch()
 {
-    int r;
+    int32_t r;
     unsigned char c;
     if ((r = read(0, &c, sizeof(c))) < 0) {
         return r;
@@ -124,9 +124,9 @@ int getch()
 }
 
 
-int get_joystick_status(int joystick_file_descriptor, int *axes, int *buttons, int axes_size, int buttons_size)
+int32_t get_joystick_status(int32_t joystick_file_descriptor, int32_t *axes, int32_t *buttons, int32_t axes_size, int32_t buttons_size)
 {
-  int rc;
+  int32_t rc;
   struct joystick_event event;
 
 
@@ -168,7 +168,7 @@ int get_joystick_status(int joystick_file_descriptor, int *axes, int *buttons, i
 
 void remote_dsm2_rc_init (void) {
 	
-	int i;
+	int32_t i;
 	for (i=0; i<16; i++) {
 		spRec1.channels[i]=-500;
 		channelCenter[i]=0;
@@ -188,7 +188,7 @@ void remote_dsm2_rc_init (void) {
 }
 /**/
 uint32_t last_keypress;
-void get_keyboard_input(int *joystick_axes) {
+void get_keyboard_input(int32_t *joystick_axes) {
 	if (!kbhit()) {
 		if (time_keeper_get_millis()-last_keypress<1000) {
 			
@@ -240,7 +240,7 @@ void get_keyboard_input(int *joystick_axes) {
 
 
 int16_t remote_dsm2_rc_get_channel(uint8_t index) {
-	int i;
+	int32_t i;
 	if (time_keeper_get_millis()-last_update>20) 
 	{
 

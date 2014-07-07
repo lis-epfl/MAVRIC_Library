@@ -103,7 +103,7 @@ float quick_trig_atan(float x);
 static inline float quick_trig_func(float x, const float func_x_min, const float func_x_max, float func_x_step, const float func_y[])
 {
 	float y;
-	int i;
+	int32_t i;
 	if ( x <= func_x_min )
 	{
 		y = func_y[0];
@@ -114,7 +114,7 @@ static inline float quick_trig_func(float x, const float func_x_min, const float
 	}
 	else
 	{
-		i = (int) ((x - func_x_min) / func_x_step);
+		i = (int32_t) ((x - func_x_min) / func_x_step);
 		y = maths_interpolate(x, 
 						func_x_min + i * func_x_step,
 						func_x_min + (i + 1) * func_x_step,

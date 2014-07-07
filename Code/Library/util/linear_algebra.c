@@ -45,7 +45,7 @@ matrix_3x3_t inv3(matrix_3x3_t m)
 matrix_4x4_t inv4(matrix_4x4_t m) 
 {
 	matrix_4x4_t result;
-	int i, j;	
+	int32_t i, j;	
 	float det;
 	result.v[0][0] = m.v[1][1]  * m.v[2][2] * m.v[3][3] - 
              m.v[1][1]  * m.v[2][3] * m.v[3][2] - 

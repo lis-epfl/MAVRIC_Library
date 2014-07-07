@@ -42,7 +42,7 @@ void compass_hmc58831l_init_slow() {
 
 
 compass_data* compass_hmc58831l_get_data_slow() {
-	int i;
+	int32_t i;
 	uint8_t start_address = DataRegBegin;
 	
 	twim_write(&AVR32_TWIM0, (uint8_t*) &start_address, 1, HMC5883_SLAVE_ADDRESS, false);

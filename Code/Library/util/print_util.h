@@ -64,7 +64,7 @@ void print_util_putstring(byte_stream_t *out_stream, const char* s);
  * \param 	out_stream  	Pointer to output stream
  * \param 	c            	Number between 0 and 35
  */
-void print_util_putdigit(byte_stream_t *out_stream, unsigned c);
+void print_util_putdigit(byte_stream_t *out_stream, uint32_t  c);
 
 
 /**
@@ -74,7 +74,7 @@ void print_util_putdigit(byte_stream_t *out_stream, unsigned c);
  * \param c            Number
  * \param base         Base in which the number should be printed
  */
-void print_util_putnum(byte_stream_t *out_stream, long c, char base);
+void print_util_putnum(byte_stream_t *out_stream, int32_t c, char base);
 
 
 /**
@@ -84,7 +84,7 @@ void print_util_putnum(byte_stream_t *out_stream, long c, char base);
  * \param 	c            	Floating point value
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void print_util_putfloat(byte_stream_t *out_stream, float c, int after_digits);
+void print_util_putfloat(byte_stream_t *out_stream, float c, int32_t after_digits);
 
 
 /**
@@ -96,7 +96,7 @@ void print_util_putfloat(byte_stream_t *out_stream, float c, int after_digits);
  * \param 	columns			Number of columns
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void print_util_print_matrix(byte_stream_t *out_stream, float v[], int rows, int columns, int after_digits);
+void print_util_print_matrix(byte_stream_t *out_stream, float v[], int32_t rows, int32_t columns, int32_t after_digits);
 
 
 /**
@@ -106,7 +106,7 @@ void print_util_print_matrix(byte_stream_t *out_stream, float v[], int rows, int
  * \param 	v            	Array of floats containing the vector elements
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void print_util_print_vector(byte_stream_t *out_stream, float v[], int after_digits); 
+void print_util_print_vector(byte_stream_t *out_stream, float v[], int32_t after_digits); 
 
 
 /**
@@ -116,7 +116,7 @@ void print_util_print_vector(byte_stream_t *out_stream, float v[], int after_dig
  * \param 	quat         	Unit quaternion
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void print_util_print_quaternion(byte_stream_t *out_stream, UQuat_t *quat, int after_digits); 
+void print_util_print_quaternion(byte_stream_t *out_stream, UQuat_t *quat, int32_t after_digits); 
 
 
 /**
@@ -133,7 +133,7 @@ void print_util_dbg_print(const char* s);
  * \param c            Number
  * \param base         Base in which the number should be printed
  */
-void print_util_dbg_print_num(long c, char base);
+void print_util_dbg_print_num(int32_t c, char base);
 
 
 /**
@@ -146,7 +146,7 @@ void print_util_dbg_print_num(long c, char base);
  * \param 	value       Associated value
  * \param 	base        Base in which the number should be printed
  */
-void print_util_dbg_log_value(const char* msg, long value, char base);
+void print_util_dbg_log_value(const char* msg, int32_t value, char base);
 
 
 /**
@@ -155,7 +155,7 @@ void print_util_dbg_log_value(const char* msg, long value, char base);
  * \param 	c           	Floating point value
  * \param 	after_digits  	Number of digits to write after the radix point
  */
-void print_util_dbg_putfloat(float c, int after_digits);
+void print_util_dbg_putfloat(float c, int32_t after_digits);
 
 
 /**
@@ -164,7 +164,7 @@ void print_util_dbg_putfloat(float c, int after_digits);
  * \param 	v            	Array of float containing the vector elements
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void print_util_dbg_print_vector(float v[], int after_digits); 
+void print_util_dbg_print_vector(float v[], int32_t after_digits); 
 
 
 /*!
@@ -173,7 +173,7 @@ void print_util_dbg_print_vector(float v[], int after_digits);
  * \param 	quat         	Unit quaternion
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void print_util_dbg_print_quaternion(UQuat_t *quat, int after_digits); 
+void print_util_dbg_print_quaternion(UQuat_t *quat, int32_t after_digits); 
 
 
 #ifdef __cplusplus

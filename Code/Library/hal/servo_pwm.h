@@ -24,6 +24,7 @@
 #endif
 
 #include "conf_platform.h"
+#include "compiler.h"
 
 #define SERVO_TIMER_FREQ 1000000					///< Define the timer frequency for the servos
 #define SERVO_CENTER_DUTY_MICROSEC 1500				///< Define the center of the duty cycle(?) in micro second
@@ -40,10 +41,10 @@
  */
 typedef struct 
 {
-	int value;					///< Define the PWM value of a servo
-	int min;					///< Define the min value
-	int max;					///< Define the max value
-	int failsafe_position;		///< Define the initial(?) position of a servo
+	int32_t value;					///< Define the PWM value of a servo
+	int32_t min;					///< Define the min value
+	int32_t max;					///< Define the max value
+	int32_t failsafe_position;		///< Define the initial(?) position of a servo
 } servo_output;
 
 /**

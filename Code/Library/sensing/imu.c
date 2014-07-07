@@ -31,7 +31,7 @@
 #include "mavlink_stream.h"
 
 
-int ic;
+int32_t ic;
 void imu_init (Imu_Data_t *imu1)
 {
 	//itg3200_driver_init_slow();
@@ -93,7 +93,7 @@ void imu_get_raw_data(Imu_Data_t *imu1)
 
 void imu_calibrate_gyros(Imu_Data_t *imu1)
 {
-	int i,j;
+	int32_t i,j;
 	imu_get_raw_data(imu1);
 	
 	for (j = 0; j < 3; j++)

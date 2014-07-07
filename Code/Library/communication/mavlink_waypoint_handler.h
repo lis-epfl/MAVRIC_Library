@@ -95,8 +95,8 @@ typedef struct
 	
 }waypoint_handler_t;
 
-int sending_waypoint_num;
-int waypoint_request_number;
+int32_t sending_waypoint_num;
+int32_t waypoint_request_number;
 
 uint16_t num_waypoint_onboard;
 

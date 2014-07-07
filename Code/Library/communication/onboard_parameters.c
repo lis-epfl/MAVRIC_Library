@@ -77,7 +77,7 @@ void onboard_parameters_add_parameter_float(float* val, const char* param_name)
 }
 
 
-void onboard_parameters_update_parameter(int param_index, float value) 
+void onboard_parameters_update_parameter(int32_t param_index, float value) 
 {
 	float converted=0;
 	
@@ -120,7 +120,7 @@ void onboard_parameters_update_parameter(int param_index, float value)
 	}
 }
 
-float onboard_parameters_read_parameter(int param_index) 
+float onboard_parameters_read_parameter(int32_t param_index) 
 {
 	float return_value=0;
 	float converted=0;

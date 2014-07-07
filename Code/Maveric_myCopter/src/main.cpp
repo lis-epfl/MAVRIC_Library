@@ -25,7 +25,7 @@ central_data_t *centralData;
 
 void initialisation() 
 {
-	int i;
+	int32_t i;
 	
 	centralData = central_data_get_pointer_to_struct();
 	boardsupport_init(centralData);

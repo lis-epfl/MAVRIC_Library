@@ -3,7 +3,7 @@
  *
  * The MAV'RIC Framework
  *
- * Copyright © 2011-2014
+ * Copyright Â© 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
  */
@@ -27,7 +27,7 @@
 
 /**
  * \brief Initialize the radar driver
- *\
+ */
 void radar_driver_init(void);
 
 /**
@@ -35,7 +35,7 @@ void radar_driver_init(void);
  *
  * \param supply1 set power pin1 to a high or low level
  * \param supply2 set power pin2 to a high or low level
- *\
+ */
 void radar_driver_switch_power(int32_t supply1, int32_t supply2);
 
 

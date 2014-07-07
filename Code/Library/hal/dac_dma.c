@@ -27,7 +27,7 @@
 
 static volatile uint16_t* buffer;					///< pointer to the sampling buffer of the DAC
 static volatile uint16_t from, to;					///< (?)
-static volatile int autoplay;						///< (?)
+static volatile int32_t autoplay;						///< (?)
 volatile avr32_pevc_t   *ppevc  = &AVR32_PEVC;		///< (?)
 volatile avr32_dacifb_t *dacifb = &AVR32_DACIFB0;	///< DACIFB registers address
 S16 dac_value_audio = -1;							///< (?)
@@ -38,7 +38,7 @@ void init_pevc(void);
 void init_gclk(void);
 void DAC_pause(void);
 void DAC_resume(void);
-int  DAC_is_finished(void);
+int32_t  DAC_is_finished(void);
 
 /**
  * \brief intterupt handler for the DAC
@@ -55,7 +55,7 @@ static void pdca_int_handler_dac(void)
 	else 
 	{	
        ///< Set PDCA channel reload values with address where data to load are stored, and size of the data block to load.
-       pdca_reload_channel(PDCA_CHANNEL_DAC, (char *)buffer + 2 * from, to - from);
+       pdca_reload_channel(PDCA_CHANNEL_DAC, (int8_t  *)buffer + 2 * from, to - from);
 	}	   	
 }
 
@@ -95,7 +95,7 @@ void init_gclk(void)
   scif_gc_enable(AVR32_SCIF_GCLK_GCLK2_EVENT);
 }
 
-void dac_dma_init(int trigger_mode) {
+void dac_dma_init(int32_t trigger_mode) {
 	///< GPIO pin/dac-function map.
 	static const gpio_map_t DACIFB_GPIO_MAP =
 	{
@@ -149,7 +149,7 @@ void dac_dma_init(int trigger_mode) {
 						FOSC0);
 }
 
-void dac_dma_load_buffer(uint16_t* samples, int from_sample, int to_sample, int repeat) 
+void dac_dma_load_buffer(uint16_t* samples, int32_t from_sample, int32_t to_sample, int32_t repeat) 
 {
 	///< PDCA channel options
 	buffer = samples;
@@ -166,7 +166,7 @@ void dac_dma_load_buffer(uint16_t* samples, int from_sample, int to_sample, int 
 		.transfer_size = PDCA_TRANSFER_SIZE_HALF_WORD	///< select size of the transfer      
 	};
 	
-	PDCA_OPTIONS.addr = (char *)samples + 2 * from;
+	PDCA_OPTIONS.addr = (int8_t  *)samples + 2 * from;
 	PDCA_OPTIONS.size = to - from;
 
 	///< Initialize Event Controller
@@ -190,7 +190,7 @@ void dac_dma_play()
 {
 	//Disable_global_interrupt();
 	pdca_disable(PDCA_CHANNEL_DAC);
-	pdca_reload_channel(PDCA_CHANNEL_DAC, (char *)buffer + 2 * from, to - from);
+	pdca_reload_channel(PDCA_CHANNEL_DAC, (int8_t  *)buffer + 2 * from, to - from);
 	///< Enable now the transfer.
 	//Enable_global_interrupt();
 	pdca_enable(PDCA_CHANNEL_DAC); 
@@ -200,7 +200,7 @@ void DAC_pause(void) {};
 
 void DAC_resume(void) {};
 
-int  DAC_is_finished(void) 
+int32_t  DAC_is_finished(void) 
 {
 	return 0;
 }

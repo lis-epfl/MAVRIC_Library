@@ -18,7 +18,7 @@ extern "C" {
 typedef struct {
 	float velocity;
 	float amplitude;
-	long timestamp;
+	int32_t timestamp;
 } radar_target;
 
 

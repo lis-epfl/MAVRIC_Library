@@ -24,9 +24,12 @@
 #ifndef __MF_H__
 #define __MF_H__
 
+#include "compiler.h"
+
 #ifndef USE_MATF
 	#define USE_MATF			0
 #endif
+
 /** Errors module can throw */
 enum matf_errors
 {
@@ -37,20 +40,20 @@ enum matf_errors
 // Public function prototypes
 //----------------------------
 
-float* matf_zeros(int, int, float *);
-float* matf_diag(int, int, float *, float, int, int);
-float* matf_std(int, float*, float*);
-float* matf_copy(int, int, float *, float *);
+float* matf_zeros(int32_t, int32_t, float *);
+float* matf_diag(int32_t, int32_t, float *, float, int32_t, int32_t);
+float* matf_std(int32_t, float*, float*);
+float* matf_copy(int32_t, int32_t, float *, float *);
 float* matf_cross(float* a, float* b, float* c);
-float* matf_copy_part(float *, int, int, int, int, int, int, float *, int, int, int, int);
-float  matf_norm(int, float *);
-float  matf_sum (int, float *);
-float* matf_add(int, int, float*, float*, float*);
-float* matf_multiply_factor(int n1, int n2, float* A, float* B, float c);
-float* matf_sub(int, int, float*, float*, float*);
-float* matf_tr (int, int, float*, float*);
-float* matf_multiply(int, int, int, float*, float*, float*);
-float* matf_multiply_Bt(int, int, int, float*, float*, float*);
-// float* matf_invert(int numRowsCols, float* dstM, float* srcM);
+float* matf_copy_part(float *, int32_t, int32_t, int32_t, int32_t, int32_t, int32_t, float *, int32_t, int32_t, int32_t, int32_t);
+float  matf_norm(int32_t, float *);
+float  matf_sum (int32_t, float *);
+float* matf_add(int32_t, int32_t, float*, float*, float*);
+float* matf_multiply_factor(int32_t n1, int32_t n2, float* A, float* B, float c);
+float* matf_sub(int32_t, int32_t, float*, float*, float*);
+float* matf_tr (int32_t, int32_t, float*, float*);
+float* matf_multiply(int32_t, int32_t, int32_t, float*, float*, float*);
+float* matf_multiply_Bt(int32_t, int32_t, int32_t, float*, float*, float*);
+// float* matf_invert(int32_t numRowsCols, float* dstM, float* srcM);
 
 #endif

@@ -139,7 +139,7 @@ UQuat_t static inline quaternions_multiply(const UQuat_t q1, const UQuat_t q2) /
  */
 UQuat_t static inline quaternions_inverse(const UQuat_t q) //maths_quat_inv(const UQuat_t q)
 {
-	int i;
+	int32_t i;
 	
 	UQuat_t qinv;
 	qinv.s = q.s;

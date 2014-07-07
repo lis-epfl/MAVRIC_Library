@@ -6,7 +6,7 @@
 #include "central_data.h"
 #include "boardsupport.h"
 
-int main(int argc, char **argv)
+int32_t main(int32_t argc, char **argv)
 {
 	
 	boardsupport_init(central_data_get_pointer_to_struct());

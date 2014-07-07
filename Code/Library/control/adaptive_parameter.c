@@ -33,8 +33,8 @@ void adaptive_parameter_init(void)
 }
 
 
-int adaptive_parameter_add(float* control_variable, float* parameter, 
-							int nb_setpoints, float setpoints[], float setvalues[])
+int32_t adaptive_parameter_add(float* control_variable, float* parameter, 
+							int32_t nb_setpoints, float setpoints[], float setvalues[])
 {
 	if (adapt_param_set.param_count >= MAX_ADAPT_PARAM_COUNT)
 	{
@@ -46,7 +46,7 @@ int adaptive_parameter_add(float* control_variable, float* parameter,
 		new_param.control_variable = control_variable;
 		new_param.parameter = parameter;
 		new_param.nb_setpoints = nb_setpoints;
-		int i;
+		int32_t i;
 		for (i = 0; i < nb_setpoints; ++i)
 		{
 			new_param.setpoints[i] = setpoints[i];
@@ -72,7 +72,7 @@ void adaptive_parameter_update(Adaptive_Parameter_t param)
 	}
 	else
 	{
-		int i;
+		int32_t i;
 		for (i = 0; i < param.nb_setpoints; ++i)
 		{
 			if (*param.control_variable >= param.setpoints[i])
@@ -89,7 +89,7 @@ void adaptive_parameter_update(Adaptive_Parameter_t param)
 
 void adaptive_parameter_update_all(void)
 {
-	int i;
+	int32_t i;
 	for (i = 0; i < adapt_param_set.param_count; ++i)
 	{
 		adaptive_parameter_update(adapt_param_set.parameters[i]);

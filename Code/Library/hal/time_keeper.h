@@ -78,7 +78,7 @@ float time_keeper_ticks_to_seconds(uint32_t timer_ticks);
  *
  * \param	microseconds		The number of microseconds to wait
  */
-void time_keeper_delay_micros(int microseconds);
+void time_keeper_delay_micros(int32_t microseconds);
 
 /**
  * \brief	Wait until time pass the parameter input

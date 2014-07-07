@@ -27,7 +27,7 @@ static volatile uint16_t dac_function_buffer[GENERATOR_BUFFER_SIZE];	// TODO: Th
 
 void generator_init_dac_buffer_triangle(void) 
 {
-	int i;
+	int32_t i;
 	for (i=0; i<GENERATOR_BUFFER_SIZE/2; i++) 
 	{
 		dac_function_buffer[i] = (uint16_t)((4095.0f / (float)(GENERATOR_BUFFER_SIZE / 2))*(float)i);
@@ -42,7 +42,7 @@ void generator_init_dac_buffer_triangle(void)
 
 void generator_init_dac_buffer_sine(void) 
 {
-	int i;
+	int32_t i;
 	for (i=0; i<GENERATOR_BUFFER_SIZE; i++) 
 	{
 		dac_function_buffer[i]=(uint16_t)(4095.0f * (0.5f + 0.5f * sin((float)10 * i * 2.0f * M_PI / (float)GENERATOR_BUFFER_SIZE)));

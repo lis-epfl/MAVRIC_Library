@@ -30,7 +30,7 @@ static const char alphabet[36] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
  *	\param	c				Number between 0 and 35
  *	\param	base			Base in which the number should be printed
  */
-void putnum_tight(byte_stream_t *out_stream, long c, char base);
+void putnum_tight(byte_stream_t *out_stream, int32_t c, char base);
 
 byte_stream_t* print_util_get_debug_stream()
 {
@@ -58,7 +58,7 @@ void print_util_putstring(byte_stream_t *out_stream, const char* s)
 }
 
 
-void print_util_putdigit(byte_stream_t *out_stream, unsigned c)
+void print_util_putdigit(byte_stream_t *out_stream, uint32_t  c)
 {
 	if ((out_stream==NULL) || (out_stream->put==NULL)) 
 	{
@@ -74,10 +74,10 @@ void print_util_putdigit(byte_stream_t *out_stream, unsigned c)
 }
 
 
-void print_util_putnum(byte_stream_t *out_stream, long c, char base)
+void print_util_putnum(byte_stream_t *out_stream, int32_t c, char base)
 {
 	char storage[MAX_DIGITS];
-	long i = MAX_DIGITS;
+	int32_t i = MAX_DIGITS;
 
 	if ((out_stream==NULL) || (out_stream->put==NULL))
 	{
@@ -112,10 +112,10 @@ void print_util_putnum(byte_stream_t *out_stream, long c, char base)
 }
 
 
-void putnum_tight(byte_stream_t *out_stream, long c, char base)
+void putnum_tight(byte_stream_t *out_stream, int32_t c, char base)
 {
 	char storage[MAX_DIGITS];
-	long i = MAX_DIGITS;
+	int32_t i = MAX_DIGITS;
 	if ((out_stream==NULL) || (out_stream->put==NULL)) 
 	{
 		return;
@@ -145,9 +145,9 @@ void putnum_tight(byte_stream_t *out_stream, long c, char base)
 }
 
 
-void print_util_putfloat(byte_stream_t *out_stream, float c, int after_digits)
+void print_util_putfloat(byte_stream_t *out_stream, float c, int32_t after_digits)
 {
-	int i;
+	int32_t i;
 	float num = c;
 	
 	if (c<0) 
@@ -160,7 +160,7 @@ void print_util_putfloat(byte_stream_t *out_stream, float c, int after_digits)
 		print_util_putstring(out_stream, "");
 	}
 
-	int whole=abs((int)num);
+	int32_t whole=abs((int32_t)num);
 	float after=(num-(float)whole);
 
 	putnum_tight(out_stream, whole, 10);
@@ -169,15 +169,15 @@ void print_util_putfloat(byte_stream_t *out_stream, float c, int after_digits)
 	for (i=0; i<after_digits; i++) 
 	{
 		after*=10;
-		print_util_putdigit(out_stream, (int)after);
-		after=after-(int)after;
+		print_util_putdigit(out_stream, (int32_t)after);
+		after=after-(int32_t)after;
 	}
 }
 
 
-void print_util_print_vector(byte_stream_t *out_stream, float v[], int after_digits) 
+void print_util_print_vector(byte_stream_t *out_stream, float v[], int32_t after_digits) 
 {
-	int i;
+	int32_t i;
 	print_util_putstring(out_stream, "(");
 
 	for (i=0; i<3; i++) 
@@ -195,7 +195,7 @@ void print_util_print_vector(byte_stream_t *out_stream, float v[], int after_dig
 }
 
 
-void print_util_print_quaternion(byte_stream_t *out_stream, UQuat_t *quat, int after_digits) 
+void print_util_print_quaternion(byte_stream_t *out_stream, UQuat_t *quat, int32_t after_digits) 
 {
 	print_util_putstring(out_stream, "(");
 	print_util_putfloat(out_stream, quat->s, after_digits);
@@ -205,9 +205,9 @@ void print_util_print_quaternion(byte_stream_t *out_stream, UQuat_t *quat, int a
 }
 
 
-void print_util_print_matrix(byte_stream_t *out_stream, float v[], int rows, int columns, int after_digits) 
+void print_util_print_matrix(byte_stream_t *out_stream, float v[], int32_t rows, int32_t columns, int32_t after_digits) 
 {
-	int i, j;
+	int32_t i, j;
 	
 	for (i=0; i<rows; i++) 
 	{
@@ -233,31 +233,31 @@ void print_util_dbg_print(const char* s)
 }
 
 
-void print_util_dbg_print_num(long c, char base) 
+void print_util_dbg_print_num(int32_t c, char base) 
 {
 	print_util_putnum(deb_stream, c, base);
 }
 
 
-void print_util_dbg_putfloat(float c, int after_digits) 
+void print_util_dbg_putfloat(float c, int32_t after_digits) 
 {
 	print_util_putfloat(deb_stream, c, after_digits);
 }
 
 
-void print_util_dbg_print_vector(float v[], int after_digits) 
+void print_util_dbg_print_vector(float v[], int32_t after_digits) 
 {
 	print_util_print_vector(deb_stream, v, after_digits);
 }
 
 
-void print_util_dbg_print_quaternion(UQuat_t *quat, int after_digits) 
+void print_util_dbg_print_quaternion(UQuat_t *quat, int32_t after_digits) 
 {
 	print_util_print_quaternion(deb_stream, quat, after_digits);
 }
 
 
-void print_util_dbg_log_value(const char* msg, long value, char base) 
+void print_util_dbg_log_value(const char* msg, int32_t value, char base) 
 {
 	print_util_dbg_print(msg);
 	

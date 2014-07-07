@@ -12,7 +12,7 @@
 
 static volatile i2c_schedule_event schedule[I2C_DEVICES][I2C_SCHEDULE_SLOTS];
 
-static volatile char current_schedule_slot[I2C_DEVICES];
+static volatile int8_t  current_schedule_slot[I2C_DEVICES];
 
 
 /*!  The PDCA interrupt handler.
@@ -36,8 +36,8 @@ static void pdca_int_handler_i2c0(void)
 
 
 
-int i2c_driver_init(unsigned char i2c_device) {
-	int i;
+int32_t i2c_driver_init(uint8_t  i2c_device) {
+	int32_t i;
 	volatile avr32_twim_t *twim;
 	switch (i2c_device) {
 	case 0: 
@@ -103,7 +103,7 @@ int i2c_driver_init(unsigned char i2c_device) {
 
 
 
-char i2c_driver_reset(unsigned char i2c_device) {
+int8_t  i2c_driver_reset(uint8_t  i2c_device) {
 	volatile avr32_twim_t *twim;
 	switch (i2c_device) {
 	case 0: 
@@ -131,9 +131,9 @@ char i2c_driver_reset(unsigned char i2c_device) {
 	// Clear SR
 	twim->scr = ~0UL;
 }
-char i2c_driver_add_request(unsigned char i2c_device, i2c_schedule_event* new_event){
+int8_t  i2c_driver_add_request(uint8_t  i2c_device, i2c_schedule_event* new_event){
 	// find free schedule slot
-	int i = 0;
+	int32_t i = 0;
 	for (i = 0; (i < I2C_SCHEDULE_SLOTS)&& (schedule[i2c_device][i].active >= 0); i++) {
 		print_util_putstring(&AVR32_USART0, ".");
 	}
@@ -150,8 +150,8 @@ char i2c_driver_add_request(unsigned char i2c_device, i2c_schedule_event* new_ev
 	// return assigned schedule slot
 	return i;
 }
-char i2c_driver_change_request(unsigned char i2c_device, i2c_schedule_event* new_event){
-	int i = new_event->schedule_slot;
+int8_t  i2c_driver_change_request(uint8_t  i2c_device, i2c_schedule_event* new_event){
+	int32_t i = new_event->schedule_slot;
 	if ((i >= 0) && (i < I2C_SCHEDULE_SLOTS)) {
 		new_event->transfer_in_progress = 0;
 		new_event->active=1;
@@ -160,7 +160,7 @@ char i2c_driver_change_request(unsigned char i2c_device, i2c_schedule_event* new
 }
 
 
-char i2c_driver_trigger_request(unsigned char i2c_device, unsigned char schedule_slot) {
+int8_t  i2c_driver_trigger_request(uint8_t  i2c_device, uint8_t  schedule_slot) {
 	// initiate transfer of given request
 	// set up DMA channel
 	volatile avr32_twim_t *twim;
@@ -298,18 +298,18 @@ char i2c_driver_trigger_request(unsigned char i2c_device, unsigned char schedule
 	
 }
 
-char i2c_driver_pause_request(unsigned char i2c_device, unsigned char schedule_slot){
+int8_t  i2c_driver_pause_request(uint8_t  i2c_device, uint8_t  schedule_slot){
 	// pause scheduler
 	// if this request currently active, wait for current transfer to finish
 	// deactivate request
 	// resume scheduler
 }
 
-char i2c_driver_enable_request(unsigned char i2c_device, unsigned char schedule_slot){
+int8_t  i2c_driver_enable_request(uint8_t  i2c_device, uint8_t  schedule_slot){
 	
 }
 
-char i2c_driver_remove_request(unsigned char i2c_device, unsigned char schedule_slot){
+int8_t  i2c_driver_remove_request(uint8_t  i2c_device, uint8_t  schedule_slot){
 	
 }
 

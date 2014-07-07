@@ -461,7 +461,7 @@ void waypoint_handler_set_current_waypoint(Mavlink_Received_t* rec,  waypoint_st
 	{
 		if (packet.seq < num_of_waypoint)
 		{
-			int i;
+			int32_t i;
 			for (i=0;i<num_of_waypoint;i++)
 			{
 				waypoint_list[i].current = 0;
@@ -760,7 +760,7 @@ void waypoint_handler_waypoint_hold_init(local_coordinates_t localPos)
 	print_util_dbg_print(", ");
 	print_util_dbg_print_num(centralData->waypoint_hold_coordinates.pos[Z],10);
 	print_util_dbg_print(", ");
-	print_util_dbg_print_num((int)(centralData->waypoint_hold_coordinates.heading*180.0f/3.14f),10);
+	print_util_dbg_print_num((int32_t)(centralData->waypoint_hold_coordinates.heading*180.0f/3.14f),10);
 	print_util_dbg_print(")\n");
 	
 }
@@ -774,7 +774,7 @@ void waypoint_handler_waypoint_take_off()
 	print_util_dbg_print(", ");
 	print_util_dbg_print_num(-10.0f,10);
 	print_util_dbg_print("), with heading of: ");
-	print_util_dbg_print_num((int)(centralData->position_estimator.localPosition.heading*180.0f/3.14f),10);
+	print_util_dbg_print_num((int32_t)(centralData->position_estimator.localPosition.heading*180.0f/3.14f),10);
 	print_util_dbg_print("\n");
 
 	centralData->waypoint_hold_coordinates = centralData->position_estimator.localPosition;

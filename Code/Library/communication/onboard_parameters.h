@@ -107,7 +107,7 @@ void onboard_parameters_add_parameter_float(float* val, const char* param_name);
  * \param param_index	Set index of the parameter to update
  * \param value			Value of the parameter to update
  */
-void onboard_parameters_update_parameter(int param_index, float value);
+void onboard_parameters_update_parameter(int32_t param_index, float value);
 
 /** 
  *  This method takes care of necessary size/type conversions.
@@ -120,7 +120,7 @@ void onboard_parameters_update_parameter(int param_index, float value);
  *
  * \return				Value of the parameter read. Note that the parameter might not be a float, but float is the default data type for the MAVlink message.
  */
-float onboard_parameters_read_parameter(int param_index);
+float onboard_parameters_read_parameter(int32_t param_index);
 
 /**
  * \brief	Immediately sends all parameters via MAVlink. This might block for a while.

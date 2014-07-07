@@ -70,7 +70,7 @@ int8_t adc_int_sequencer_add(int16_t *buffer, uint8_t input_p, uint8_t input_n, 
  * \param set_oversampling_divider oversampling divider
  * \param continuous define whether we will mode in continuous or discrete mode
 */
-void adc_int_start_sampling(int length, int samplingrate, int set_oversampling, int set_oversampling_divider, bool continuous);
+void adc_int_start_sampling(int32_t length, int32_t samplingrate, int32_t set_oversampling, int32_t set_oversampling_divider, bool continuous);
 
 /**
  * \brief stops sampling immediately
@@ -92,7 +92,7 @@ Bool adc_int_sampling_complete(void);
  *
  * \return that specific sample for the given channel
 */
-int16_t adc_int_get_sample(int channel, int sample);
+int16_t adc_int_get_sample(int32_t channel, int32_t sample);
 
 /**
  * \brief return a 2 dimension table of samples for all channels
@@ -106,7 +106,7 @@ int16_t** adc_int_get_buffer(void);
  *
  * \return the sampling counter
 */
-int adc_int_get_sampling_status(void);
+int32_t adc_int_get_sampling_status(void);
 
 /**
  * \brief return the period of the ADC interruption

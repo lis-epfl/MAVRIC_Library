@@ -2,6 +2,8 @@
 #define SMALL_MATRIX_H_
 
 
+#include"compiler.h"
+
 typedef struct matrix_1x1_t {
    float v[1][1];
 } matrix_1x1_t; 
@@ -27,13 +29,13 @@ matrix_1x1_t static inline diag_1x1(const vector_1_t v) {
 }
 
 // return vector of a row
-vector_1_t static inline row1(const matrix_1x1_t m, int row) {
+vector_1_t static inline row1(const matrix_1x1_t m, int32_t row) {
    vector_1_t  result= {.v={m.v[row][0]}};
    return result;
 }
 
 // return vector of a column
-vector_1_t static inline col1(const matrix_1x1_t m, int col) {
+vector_1_t static inline col1(const matrix_1x1_t m, int32_t col) {
    vector_1_t  result= {.v={m.v[0][col]}};
    return result;
 }
@@ -198,13 +200,13 @@ matrix_2x2_t static inline diag_2x2(const vector_2_t v) {
 }
 
 // return vector of a row
-vector_2_t static inline row2(const matrix_2x2_t m, int row) {
+vector_2_t static inline row2(const matrix_2x2_t m, int32_t row) {
    vector_2_t  result= {.v={m.v[row][0], m.v[row][1]}};
    return result;
 }
 
 // return vector of a column
-vector_2_t static inline col2(const matrix_2x2_t m, int col) {
+vector_2_t static inline col2(const matrix_2x2_t m, int32_t col) {
    vector_2_t  result= {.v={m.v[0][col], m.v[1][col]}};
    return result;
 }
@@ -387,13 +389,13 @@ matrix_3x3_t static inline diag_3x3(const vector_3_t v) {
 }
 
 // return vector of a row
-vector_3_t static inline row3(const matrix_3x3_t m, int row) {
+vector_3_t static inline row3(const matrix_3x3_t m, int32_t row) {
    vector_3_t  result= {.v={m.v[row][0], m.v[row][1], m.v[row][2]}};
    return result;
 }
 
 // return vector of a column
-vector_3_t static inline col3(const matrix_3x3_t m, int col) {
+vector_3_t static inline col3(const matrix_3x3_t m, int32_t col) {
    vector_3_t  result= {.v={m.v[0][col], m.v[1][col], m.v[2][col]}};
    return result;
 }
@@ -594,13 +596,13 @@ matrix_4x4_t static inline diag_4x4(const vector_4_t v) {
 }
 
 // return vector of a row
-vector_4_t static inline row4(const matrix_4x4_t m, int row) {
+vector_4_t static inline row4(const matrix_4x4_t m, int32_t row) {
    vector_4_t  result= {.v={m.v[row][0], m.v[row][1], m.v[row][2], m.v[row][3]}};
    return result;
 }
 
 // return vector of a column
-vector_4_t static inline col4(const matrix_4x4_t m, int col) {
+vector_4_t static inline col4(const matrix_4x4_t m, int32_t col) {
    vector_4_t  result= {.v={m.v[0][col], m.v[1][col], m.v[2][col], m.v[3][col]}};
    return result;
 }
@@ -819,13 +821,13 @@ matrix_5x5_t static inline diag_5x5(const vector_5_t v) {
 }
 
 // return vector of a row
-vector_5_t static inline row5(const matrix_5x5_t m, int row) {
+vector_5_t static inline row5(const matrix_5x5_t m, int32_t row) {
    vector_5_t  result= {.v={m.v[row][0], m.v[row][1], m.v[row][2], m.v[row][3], m.v[row][4]}};
    return result;
 }
 
 // return vector of a column
-vector_5_t static inline col5(const matrix_5x5_t m, int col) {
+vector_5_t static inline col5(const matrix_5x5_t m, int32_t col) {
    vector_5_t  result= {.v={m.v[0][col], m.v[1][col], m.v[2][col], m.v[3][col], m.v[4][col]}};
    return result;
 }
@@ -1062,13 +1064,13 @@ matrix_6x6_t static inline diag_6x6(const vector_6_t v) {
 }
 
 // return vector of a row
-vector_6_t static inline row6(const matrix_6x6_t m, int row) {
+vector_6_t static inline row6(const matrix_6x6_t m, int32_t row) {
    vector_6_t  result= {.v={m.v[row][0], m.v[row][1], m.v[row][2], m.v[row][3], m.v[row][4], m.v[row][5]}};
    return result;
 }
 
 // return vector of a column
-vector_6_t static inline col6(const matrix_6x6_t m, int col) {
+vector_6_t static inline col6(const matrix_6x6_t m, int32_t col) {
    vector_6_t  result= {.v={m.v[0][col], m.v[1][col], m.v[2][col], m.v[3][col], m.v[4][col], m.v[5][col]}};
    return result;
 }

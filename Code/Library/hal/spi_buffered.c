@@ -27,7 +27,7 @@ static volatile spi_buffer_t spi_buffers[SPI_NUMBER];				///< Allocated memory f
 
 __attribute__((__interrupt__)) void spi0_int_handler(void);
 __attribute__((__interrupt__)) void spi1_int_handler(void);
-void spi_handler(int spi_index);
+void spi_handler(int32_t spi_index);
 
 /** interrupt handler
   * manages sending and receiving data
@@ -65,7 +65,7 @@ static void pdca_int_handler_spi0(void)
 	if ((spi_buffers[0].callbackFunction)) spi_buffers[0].callbackFunction();
 }
 
-void spi_buffered_init(volatile avr32_spi_t *spi, int spi_index)
+void spi_buffered_init(volatile avr32_spi_t *spi, int32_t spi_index)
 {
 	// init SPI
 	spi_buffers[spi_index].spi= spi;
@@ -107,12 +107,12 @@ void spi_buffered_init(volatile avr32_spi_t *spi, int spi_index)
 	//spi_buffers[spi_index].spi->cr = AVR32_SPI_SPIEN_MASK;	
 }
 
-uint8_t* spi_buffered_get_spi_in_buffer(int spi_index)
+uint8_t* spi_buffered_get_spi_in_buffer(int32_t spi_index)
 {
 	return (uint8_t*)spi_buffers[spi_index].SPIInBuffer;
 }
 
-void spi_buffered_init_DMA(int spi_index, int block_size)
+void spi_buffered_init_DMA(int32_t spi_index, int32_t block_size)
 {
 	static  pdca_channel_options_t PDCA_TX_OPTIONS =
 	{
@@ -144,7 +144,7 @@ void spi_buffered_init_DMA(int spi_index, int block_size)
 	INTC_register_interrupt( (__int_handler) &pdca_int_handler_spi0, SPI0_DMA_IRQ, AVR32_INTC_INT0);
 }
 
-void spi_buffered_trigger_DMA(int spi_index, int block_size)
+void spi_buffered_trigger_DMA(int32_t spi_index, int32_t block_size)
 {
 	//spi_buffers[spi_index].SPIinBufferHead = 0;
 	//spi_buffers[spi_index].SPIinBufferTail = 0;
@@ -168,33 +168,33 @@ void spi_buffered_trigger_DMA(int spi_index, int block_size)
 	pdca_enable(SPI0_DMA_CH_TRANSMIT);
 }
 
-void spi_buffered_set_callback(int spi_index, functionpointer* functionPointer)
+void spi_buffered_set_callback(int32_t spi_index, functionpointer* functionPointer)
 {
 	spi_buffers[spi_index].callbackFunction = (volatile functionpointer*)functionPointer;
 }
 
-void spi_buffered_enable(int spi_index)
+void spi_buffered_enable(int32_t spi_index)
 {
 	spi_enable(spi_buffers[spi_index].spi);
 }
 
-void spi_buffered_disable(int spi_index)
+void spi_buffered_disable(int32_t spi_index)
 {
 	spi_disable(spi_buffers[spi_index].spi);
 }
 
-void spi_buffered_pause(int spi_index)
+void spi_buffered_pause(int32_t spi_index)
 {
 	spi_buffers[spi_index].automatic = 0;
 }
 
-void spi_buffered_resume(int spi_index)
+void spi_buffered_resume(int32_t spi_index)
 {
 	spi_buffers[spi_index].automatic = 1;
 	spi_buffered_start(spi_index);
 }
 
-void spi_buffered_start(int spi_index)
+void spi_buffered_start(int32_t spi_index)
 {
 	// check flag if transmission is in progress
 	if ((spi_buffers[spi_index].transmission_in_progress == 0)
@@ -213,27 +213,27 @@ void spi_buffered_start(int spi_index)
 	}
 }
 
-void spi_buffered_activate_receive(int spi_index)
+void spi_buffered_activate_receive(int32_t spi_index)
 {
 	spi_buffers[spi_index].spiReceiverOn = 1;
 }
 
-void spi_buffered_deactivate_receive(int spi_index)
+void spi_buffered_deactivate_receive(int32_t spi_index)
 {
 	spi_buffers[spi_index].spiReceiverOn = 0;
 }
 
-void spi_buffered_clear_read_buffer(int spi_index)
+void spi_buffered_clear_read_buffer(int32_t spi_index)
 {
 	spi_buffers[spi_index].SPIinBufferTail = spi_buffers[spi_index].SPIinBufferHead;
 }
 
-uint8_t spi_buffered_get_traffic(int spi_index)
+uint8_t spi_buffered_get_traffic(int32_t spi_index)
 {
 	return spi_buffers[spi_index].traffic;
 }
 
-uint8_t spi_buffered_read(int spi_index)
+uint8_t spi_buffered_read(int32_t spi_index)
 {
 	uint8_t byte;
 	// if buffer empty, wait for incoming data
@@ -243,7 +243,7 @@ uint8_t spi_buffered_read(int spi_index)
 	return byte;
 }
 
-void spi_buffered_write(int spi_index, uint8_t value)
+void spi_buffered_write(int32_t spi_index, uint8_t value)
 {
 	uint8_t newIndex;
 
@@ -260,7 +260,7 @@ void spi_buffered_write(int spi_index, uint8_t value)
 	if (spi_buffers[spi_index].automatic == 1) spi_buffered_start(spi_index);
 }
 
-void spi_buffered_transmit(int spi_index)
+void spi_buffered_transmit(int32_t spi_index)
 {
 	if (spi_buffers[spi_index].SPIoutBufferHead != spi_buffers[spi_index].SPIoutBufferTail) 
 	{
@@ -280,23 +280,23 @@ void spi_buffered_transmit(int spi_index)
 	}
 }
 
-int8_t spi_buffered_is_transfered_finished(int spi_index) 
+int8_t spi_buffered_is_transfered_finished(int32_t spi_index) 
 {
 	return (spi_buffers[spi_index].SPIoutBufferHead==spi_buffers[spi_index].SPIoutBufferTail);
 }
 
-void spi_buffered_flush_buffer(int spi_index)
+void spi_buffered_flush_buffer(int32_t spi_index)
 {
 	spi_buffered_resume(spi_index);
 	while (spi_buffers[spi_index].SPIoutBufferHead!=spi_buffers[spi_index].SPIoutBufferTail);
 }
 
-uint8_t spi_buffered_bytes_available(int spi_index)
+uint8_t spi_buffered_bytes_available(int32_t spi_index)
 {
   return (SPI_BUFFER_SIZE + spi_buffers[spi_index].SPIinBufferHead - spi_buffers[spi_index].SPIinBufferTail)&SPI_BUFFER_MASK;
 }
 
-void spi_handler(int spi_index)
+void spi_handler(int32_t spi_index)
 {
 	uint8_t inData;
 	uint8_t tmp;

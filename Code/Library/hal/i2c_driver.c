@@ -24,7 +24,7 @@
 
 static volatile i2c_schedule_event schedule[I2C_DEVICES][I2C_SCHEDULE_SLOTS];
 
-static volatile char current_schedule_slot[I2C_DEVICES];
+static volatile int8_t current_schedule_slot[I2C_DEVICES];
 
 
 /*!  The PDCA interrupt handler.

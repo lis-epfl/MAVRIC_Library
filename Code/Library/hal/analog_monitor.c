@@ -61,10 +61,10 @@ float analog_compute_avg(analog_monitor_t* analog_monitor, analog_rails_t rail);
 void analog_monitor_init(analog_monitor_t* analog_monitor) 
 {
 	///< Init buffer and avg outputs
-	for (int i = 0; i < MONITOR_CHANNELS; ++i)
+	for (int32_t i = 0; i < MONITOR_CHANNELS; ++i)
 	{
 		///< Init buffer
-		for (int j = 0; j < MONITOR_SAMPLES; ++j)
+		for (int32_t j = 0; j < MONITOR_SAMPLES; ++j)
 		{
 			analog_monitor->buffer[i][j] = 0;
 		}
@@ -149,7 +149,7 @@ void analog_monitor_init(analog_monitor_t* analog_monitor)
 
 void analog_monitor_update(analog_monitor_t* analog_monitor)
 {
-	for (int i = 0; i < MONITOR_CHANNELS; ++i)
+	for (int32_t i = 0; i < MONITOR_CHANNELS; ++i)
 	{
 		if(analog_monitor->enable[i])
 		{
@@ -167,7 +167,7 @@ void trigger_analog_monitor(void)
 float analog_compute_avg(analog_monitor_t* analog_monitor, analog_rails_t rail)
 {
 	float out = 0.0f;
-	int i;
+	int32_t i;
 	for (i = 0; i  <MONITOR_SAMPLES; i++)
 	{
 		out += (float)analog_monitor->buffer[rail][i];

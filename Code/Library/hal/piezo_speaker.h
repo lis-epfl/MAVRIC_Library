@@ -23,6 +23,8 @@
 	extern "C" {
 #endif
 
+#include "compiler.h"
+
 #define PIEZO_HIGH_PIN AVR32_PIN_PA12			///< Define the Microcontroller pin associated with the high pin of the piezo speaker
 #define PIEZO_LOW_PIN AVR32_PIN_PA15			///< Define the Microcontroller pin associated with the low pin of the piezo speaker
 
@@ -42,14 +44,14 @@ void piezo_speaker_init_binary(void);
  *
  * \param analog_value sent to speaker
  */
-void piezo_speaker_set_value(int analog_value);
+void piezo_speaker_set_value(int32_t analog_value);
 
 /**
  * \brief Set a beeping 
  *
  * \param  binary_value different piezo_speaker_beep depending on the sign of binary_value 
  */
-void piezo_speaker_set_value_binary(int binary_value);
+void piezo_speaker_set_value_binary(int32_t binary_value);
 
 /**
  * \brief Beep at a given frequency for a duration
@@ -57,7 +59,7 @@ void piezo_speaker_set_value_binary(int binary_value);
  * \param duration_ms Duration of the piezo_speaker_beep
  * \param frequency Frequency of the piezo_speaker_beep
  */
-void piezo_speaker_beep(int duration_ms, int frequency);
+void piezo_speaker_beep(int32_t duration_ms, int32_t frequency);
 
 #ifdef __cplusplus
 	}

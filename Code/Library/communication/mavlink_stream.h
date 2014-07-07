@@ -44,7 +44,7 @@ typedef struct {
  * \param receive_stream	Pointer to the mavlink receive stream structure
  * \param sysid				System ID (1-255)
  */
-void mavlink_stream_init(byte_stream_t *transmit_stream, byte_stream_t *receive_stream, int sysid);
+void mavlink_stream_init(byte_stream_t *transmit_stream, byte_stream_t *receive_stream, int32_t sysid);
 
 /**
  * \brief	Run task scheduler update if the buffer is empty 

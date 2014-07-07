@@ -25,7 +25,7 @@ void stabilisation_hybrid_cascade_stabilise_hybrid(Imu_Data_t *imu, position_est
 {
 	float rpyt_errors[4];
 	Control_Command_t input;
-	int i;
+	int32_t i;
 	
 	// set the controller input
 	input = *control_input;
@@ -101,7 +101,7 @@ void stabilisation_hybrid_cascade_stabilise_hybrid(Imu_Data_t *imu, position_est
 
 void stabilisation_hybrid_mix_to_servos_xwing(Control_Command_t *control)
 {
-	int i;
+	int32_t i;
 	float motor_command;
 	float servo_command[4];
 

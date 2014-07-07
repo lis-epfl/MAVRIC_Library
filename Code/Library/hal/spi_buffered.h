@@ -66,7 +66,7 @@ typedef struct {
  * \param	spi					The SPI chip address
  * \param	spi_index			The SPI index
  */
-void spi_buffered_init(volatile avr32_spi_t *spi, int spi_index);
+void spi_buffered_init(volatile avr32_spi_t *spi, int32_t spi_index);
 
 /**
  * \brief	To get the SPI ingoing buffer
@@ -75,7 +75,7 @@ void spi_buffered_init(volatile avr32_spi_t *spi, int spi_index);
  *
  * \return	The pointer to the incoming SPI buffer
  */
-uint8_t* spi_buffered_get_spi_in_buffer(int spi_index);
+uint8_t* spi_buffered_get_spi_in_buffer(int32_t spi_index);
 
 /** 
  * \brief	InitialiZe DMA-based SPI transfer mode
@@ -83,7 +83,7 @@ uint8_t* spi_buffered_get_spi_in_buffer(int spi_index);
  * \param	spi_index			The SPI index
  * \param	block_size			The block size
  */
-void spi_buffered_init_DMA(int spi_index, int block_size);
+void spi_buffered_init_DMA(int32_t spi_index, int32_t block_size);
 
 /**
  * \brief specify a callback function, that gets called when a DMA transfer completes. 
@@ -93,7 +93,7 @@ void spi_buffered_init_DMA(int spi_index, int block_size);
  * \param	spi_index			The index of the SPI
  * \param	block_size			The size of the block
  */
-void spi_buffered_trigger_DMA(int spi_index, int block_size);
+void spi_buffered_trigger_DMA(int32_t spi_index, int32_t block_size);
 
 /** 
  * \brief	Specify a callback function, that gets called when the SPI buffer is empty
@@ -101,63 +101,63 @@ void spi_buffered_trigger_DMA(int spi_index, int block_size);
  * \param	spi_index			The index of the SPI
  * \param	functionPointer		The pointer to the callback function
  */
-void spi_buffered_set_callback(int spi_index, functionpointer* functionPointer);
+void spi_buffered_set_callback(int32_t spi_index, functionpointer* functionPointer);
 
 /**
  * \brief	Enables SPI communication
  *
  * \param	spi_index			The index of the SPI to enable
  */
-void spi_buffered_enable(int spi_index);
+void spi_buffered_enable(int32_t spi_index);
 
 /**
  * \brief	Disables SPI communication
  *
  * \param	spi_index			The index of the SPI to disable
  */
-void spi_buffered_disable(int spi_index);
+void spi_buffered_disable(int32_t spi_index);
 
 /**
  * \brief	Pauses the sending on SPI
  *
  * \param	spi_index			The index of the SPI to pause
  */
-void spi_buffered_pause(int spi_index);
+void spi_buffered_pause(int32_t spi_index);
 
 /**
  * \brief	Resumes the SPI automatic sending
  *
  * \param	spi_index			The index of the SPI
  */
-void spi_buffered_resume(int spi_index);
+void spi_buffered_resume(int32_t spi_index);
 
 /**
  * \brief	Initiates pending transmissions by sending first byte, if in paused or non-automatic mode
  *
  * \param	spi_index			The index of the SPI
  */
-void  spi_buffered_start(int spi_index);
+void  spi_buffered_start(int32_t spi_index);
 
 /**
  * \brief	Activates reception of SPI
  *
  * \param	spi_index			The index of the SPI
  */
-void spi_buffered_activate_receive(int spi_index);
+void spi_buffered_activate_receive(int32_t spi_index);
 
 /**
  * \brief	Deactivates reception of SPI
  *
  * \param	spi_index			The index of the SPI
  */
-void spi_buffered_deactivate_receive(int spi_index);
+void spi_buffered_deactivate_receive(int32_t spi_index);
 
 /**
  * \brief	Clear SPI buffer
  *
  * \param	spi_index			The index of the SPI
  */
-void spi_buffered_clear_read_buffer(int spi_index);
+void spi_buffered_clear_read_buffer(int32_t spi_index);
 
 /**
  * \brief	Get the traffic of SPI line index
@@ -166,7 +166,7 @@ void spi_buffered_clear_read_buffer(int spi_index);
  *
  * \return	The traffic of SPI index
  */
-uint8_t spi_buffered_get_traffic(int spi_index);
+uint8_t spi_buffered_get_traffic(int32_t spi_index);
 
 /** 
  * \brief	Reads one byte from the incoming SPI buffer, if the buffer is empty, waits for data
@@ -175,7 +175,7 @@ uint8_t spi_buffered_get_traffic(int spi_index);
  *
  * \return	The byte read
  */
-uint8_t spi_buffered_read(int spi_index);
+uint8_t spi_buffered_read(int32_t spi_index);
 
 /**
  * \brief	Writes one byte to the outgoing SPI buffer
@@ -186,14 +186,14 @@ uint8_t spi_buffered_read(int spi_index);
  * \param	spi_index			The index of the SPI
  * \param	value				The byte to be written on the SPI
  */
-void spi_buffered_write(int spi_index, uint8_t value);
+void spi_buffered_write(int32_t spi_index, uint8_t value);
 
 /**
  * \brief	Read data from buffer index and copy it to SPI unit
  *
  * \param	spi_index			The index of the SPI
  */
-void spi_buffered_transmit(int spi_index);
+void spi_buffered_transmit(int32_t spi_index);
 
 /**
  * \brief	Check if the transmission is finished
@@ -202,7 +202,7 @@ void spi_buffered_transmit(int spi_index);
  *
  * \return	1 if the transmission is finished, 0 otherwise
  */
-int8_t spi_buffered_is_transfered_finished(int spi_index);
+int8_t spi_buffered_is_transfered_finished(int32_t spi_index);
 
 /** 
  * \brief	Waits until whole buffer is written to SPI bus
@@ -210,7 +210,7 @@ int8_t spi_buffered_is_transfered_finished(int spi_index);
  *
  * \param	spi_index			The index of the SPI
  */
-void spi_buffered_flush_buffer(int spi_index);
+void spi_buffered_flush_buffer(int32_t spi_index);
 
 /** 
  * \brief	Returns the number of bytes in the incoming buffer
@@ -219,7 +219,7 @@ void spi_buffered_flush_buffer(int spi_index);
  *
  * \return	Returns the number of bytes in the incoming buffer
  */
-uint8_t spi_buffered_bytes_available(int spi_index);
+uint8_t spi_buffered_bytes_available(int32_t spi_index);
 
 #ifdef __cplusplus
 }

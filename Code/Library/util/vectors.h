@@ -116,7 +116,7 @@ float static inline vectors_norm(float u[3]) //maths_vector_norm(float u[3])
  */
 void static inline vectors_normalize(float v[3], float u[3]) //maths_vector_normalize(float v[3], float u[3])
 {
-	int i;
+	int32_t i;
 	float norm = vectors_norm(v);
 	for (i = 0; i < 3; ++i)
 	{
