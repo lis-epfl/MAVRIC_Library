@@ -27,21 +27,6 @@
 
 central_data_t *centralData;
 
-/**
- * \brief	Task to check if the time overpass the timer limit
- * 
- * \return	The status of execution of the task
- */
-task_return_t control_waypoint_timeout (void);
-
-task_return_t control_waypoint_timeout (void)
-{
-	waypoint_handler_control_time_out_waypoint_msg(	&(centralData->number_of_waypoints),
-													&centralData->waypoint_receiving,
-													&centralData->waypoint_sending);
-	
-	return TASK_RUN_SUCCESS;
-}
 
 void mavlink_actions_add_onboard_parameters(void) {
 	Stabiliser_t* rate_stabiliser = &centralData->stabiliser_stack.rate_stabiliser;
@@ -883,11 +868,6 @@ void mavlink_actions_init(void) {
 	onboard_parameters_read_parameters_from_flashc();
 	 *
 	 */
-	
-	
-	scheduler_add_task(mavlink_stream_get_taskset(),  10000,    RUN_REGULAR,  &control_waypoint_timeout,                255	);													// ID 255
 
-	scheduler_sort_taskset_by_period(mavlink_stream_get_taskset());
-	
 	print_util_dbg_print("MAVlink actions initialiased\n");
 }

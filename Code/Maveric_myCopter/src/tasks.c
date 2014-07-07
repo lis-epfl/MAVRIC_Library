@@ -714,6 +714,23 @@ task_return_t adc_update(void)
 	return TASK_RUN_SUCCESS;
 }
 
+/**
+ * \brief	Task to check if the time overpass the timer limit
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t control_waypoint_timeout (void);
+
+task_return_t control_waypoint_timeout (void)
+{
+	waypoint_handler_control_time_out_waypoint_msg(	&(centralData->number_of_waypoints),
+													&centralData->waypoint_receiving,
+													&centralData->waypoint_sending);
+	
+	return TASK_RUN_SUCCESS;
+}
+
+
 void tasks_create_tasks() 
 {
 	scheduler_init(&main_tasks);
@@ -736,4 +753,6 @@ void tasks_create_tasks()
 	
 	// scheduler_register_task(&main_tasks, 6, 100000, RUN_REGULAR, &sonar_update);
 	scheduler_register_task(&main_tasks, 6, 100000, RUN_REGULAR, &adc_update);
+	
+	scheduler_register_task(&main_tasks, 7, 10000, RUN_REGULAR, &control_waypoint_timeout);
 }
