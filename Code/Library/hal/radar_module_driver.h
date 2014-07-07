@@ -1,9 +1,19 @@
-/*
- * radar_module.h
+/**
+ * \page The MAV'RIC License
  *
- * Created: 22/04/2013 16:38:00
- *  Author: sfx
- */ 
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+ * \file radar_module_driver.h
+ * 
+ * The radar module driver
+ */
 
 
 #ifndef RADAR_MODULE_DRIVER_H_
@@ -15,17 +25,31 @@ extern "C" {
 
 #include "mavlink_stream.h"
 
-typedef struct {
-	float velocity;
-	float amplitude;
-	int32_t timestamp;
+/**
+ * \brief Structure containing the radar target
+ */
+typedef struct 
+{
+	float velocity;			///< Define the velocity of the target
+	float amplitude;		///< Define the amplitude signal
+	int32_t timestamp;		///< Define the time stamp to use
 } radar_target;
 
-
+/**
+ * \brief Initialize the radar module
+ */
 void radar_module_init(void);
 
+/**
+ * \brief Read the radar module
+ */
 void radar_module_read(void);
 
+/**
+ * \brief Return the main target
+ *
+ * \return a pointer to an object containing the mavlink radar tracked target
+ */
 mavlink_radar_tracked_target_t* radar_module_get_main_target(void);
 
 
