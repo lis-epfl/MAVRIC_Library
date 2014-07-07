@@ -1,3 +1,21 @@
+/**
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+ * \file linear_algebra.h
+ * 
+ * Matrix inversion functions
+ */
+ 
+
 #include "linear_algebra.h"
 #include "print_util.h"
 
