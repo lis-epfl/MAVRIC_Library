@@ -343,7 +343,7 @@ void onboard_parameters_read_parameters_from_flashc()
 {
 	uint8_t i;
 	
-	nvram_array = (nvram_data_t *) MAVERIC_FLASHC_USER_PAGE_START_ADDRESS;
+	nvram_data_t* nvram_array = (nvram_data_t *) MAVERIC_FLASHC_USER_PAGE_START_ADDRESS;
 	nvram_data_t local_array;
 	
 	float cksum1, cksum2;
@@ -380,7 +380,7 @@ void onboard_parameters_write_parameters_from_flashc()
 	uint8_t i;
 	size_t bytes_to_write = 0;
 	
-	nvram_array = (nvram_data_t*) MAVERIC_FLASHC_USER_PAGE_START_ADDRESS;
+	nvram_data_t* nvram_array = (nvram_data_t*) MAVERIC_FLASHC_USER_PAGE_START_ADDRESS;
 	nvram_data_t local_array;
 	
 	local_array.values[0] = param_set.param_count;

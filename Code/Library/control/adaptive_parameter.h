@@ -57,15 +57,16 @@ typedef struct
 {
 	float* control_variable;					///< Control Variable
 	float* parameter;							///< Parameter
-	int32_t nb_setpoints;							///< Number of setpoints
+	int32_t nb_setpoints;						///< Number of setpoints
 	float setpoints[MAX_ADAPT_PARAM_SETPOINTS];	///< set points
 	float setvalues[MAX_ADAPT_PARAM_SETPOINTS];	///< set values
 } Adaptive_Parameter_t;
 
+
 typedef struct
 {
 	int32_t param_count;										///< Number of Parameters
-	Adaptive_Parameter_t parameters[MAX_ADAPT_PARAM_COUNT];	///< Parameter set
+	Adaptive_Parameter_t parameters[MAX_ADAPT_PARAM_COUNT];		///< Parameter set
 } Adaptive_Parameter_Set_t;
 
 /**

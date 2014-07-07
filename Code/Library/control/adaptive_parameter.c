@@ -21,11 +21,15 @@
 
 Adaptive_Parameter_Set_t adapt_param_set;
 
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
 Adaptive_Parameter_Set_t* adaptive_parameter_get_param_set(void)
 {
 	return &adapt_param_set;
 }
-
 
 void adaptive_parameter_init(void)
 {

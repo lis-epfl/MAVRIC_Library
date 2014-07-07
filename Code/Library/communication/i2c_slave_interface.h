@@ -12,5 +12,4 @@
 void i2c_slave_interface_init(int32_t device_address);
 
 
-
 #endif /* I2C_SLAVE_INTERFACE_H_ */

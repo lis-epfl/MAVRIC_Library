@@ -43,7 +43,8 @@ typedef struct
 	uint8_t param_name_length;									///< Length of the parameter name
 	uint8_t param_id;											///< Parameter ID
 	bool  schedule_for_transmission;							///< Boolean to activate the transmission of the parameter
-}Onboard_Parameter_t;
+} Onboard_Parameter_t;
+
 
 /**
  * \brief	Set of parameter composed of onboard parameters and number of parameters.
@@ -52,7 +53,8 @@ typedef struct
 {
 	Onboard_Parameter_t parameters[MAX_ONBOARD_PARAM_COUNT];	///< Onboard parameters array
 	uint16_t param_count;										///< Number of onboard parameter effectively in the array
-}Parameter_Set_t;											
+} Parameter_Set_t;											
+
 
 /**
  * \brief	TODO: Modify the name of this structure to make it sized as the free flash memory to store these parameters
@@ -60,9 +62,8 @@ typedef struct
 typedef struct												
 {
 	float values[MAVERIC_FLASHC_USER_PAGE_FREE_SPACE];
-}nvram_data_t;
+} nvram_data_t;
 
-nvram_data_t *nvram_array;
 
 /**
 * \brief	Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0
