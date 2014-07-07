@@ -23,7 +23,7 @@
 	extern "C" {
 #endif
 
-#include "compiler.h"
+#include <stdint.h>
 
 #define PIEZO_HIGH_PIN AVR32_PIN_PA12			///< Define the Microcontroller pin associated with the high pin of the piezo speaker
 #define PIEZO_LOW_PIN AVR32_PIN_PA15			///< Define the Microcontroller pin associated with the low pin of the piezo speaker

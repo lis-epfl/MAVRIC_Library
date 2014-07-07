@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 
-#include "compiler.h"
+#include <stdint.h>
 #include <math.h>
 
 typedef struct {

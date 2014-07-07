@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 
-#include "compiler.h"
+#include <stdint.h>
 #include "coord_conventions.h"
 
 

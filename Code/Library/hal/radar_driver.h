@@ -19,7 +19,7 @@
 #ifndef RADAR_DRIVER_H_
 #define RADAR_DRIVER_H_
 
-#include "compiler.h"
+#include <stdint.h>
 #include "gpio.h"
 
 #define RADAR_POWER1_PIN AVR32_PIN_PC17		///< Define the microcontroller pin mapped with the radar power pin1

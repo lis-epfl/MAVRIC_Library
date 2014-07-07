@@ -318,7 +318,7 @@ object = open("small_matrix.h", "w+",0);
 sys.stdout = object
 #print "#ifndef SMALL_MATRIX_H_\n#define SMALL_MATRIX_H_\n\n\n"
 object.write("#ifndef SMALL_MATRIX_H_\n#define SMALL_MATRIX_H_\n\n\n")
-object.write('#include"compiler.h"\n\n')
+object.write('#include"#include <stdbool.h>"\n\n')
 for d in range(1,7):
     #print generate_types(d)
     #print generate_mul(d)

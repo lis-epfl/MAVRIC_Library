@@ -26,7 +26,7 @@ extern "C" {
 
 #include <avr32/io.h>
 #include "preprocessor.h"
-#include "compiler.h"
+#include <stdint.h>
 #include "user_board.h"
 #include "spi_master.h"
 #include "dma_channel_config.h"

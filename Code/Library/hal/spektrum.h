@@ -23,7 +23,7 @@
 	extern "C" {
 #endif
 	
-#include "compiler.h"
+#include <stdint.h>
 #include "buffer.h"
 #include "stabilisation.h"
 

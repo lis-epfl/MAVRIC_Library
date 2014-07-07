@@ -3,7 +3,7 @@
  *
  * The MAV'RIC Framework
  *
- * Copyright © 2011-2014
+ * Copyright Â© 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
  */
@@ -19,8 +19,8 @@
 #ifndef TEST_SMALL_MATRIX_H
 #define TEST_SMALL_MATRIX_H
 
-#include "compiler.h"
-
+#include <stdint.h>
+#include <stdbool.h>
 
 /**
  * \brief Run tests on matrix

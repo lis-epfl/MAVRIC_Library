@@ -23,7 +23,8 @@
 extern "C" {
 #endif
 
-#include "compiler.h"
+#include <stdint.h>
+#include <stdbool.h>
 #include "qfilter.h"
 #include "bmp085.h"
 #include "position_estimation.h"

@@ -24,7 +24,6 @@
 #include "math.h"
 #include "maths.h"
 #include "time_keeper.h"
-#include <stdbool.h>
 #include "print_util.h"
 
 pressure_data pressure_outputs;		///< declare an object containing the barometer's data

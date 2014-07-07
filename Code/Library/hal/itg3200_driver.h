@@ -22,7 +22,7 @@
 	extern "C" {
 #endif
 
-#include "compiler.h"
+#include <stdint.h>
 
 #define GY_X 0									///< Define the X Axis of the Gyroscope, as the first one of the gyroData array
 #define GY_Y 1									///< Define the Y Axis of the Gyroscope, as the second one of the gyroData array

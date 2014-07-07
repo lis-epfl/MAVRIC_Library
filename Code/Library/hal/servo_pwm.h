@@ -24,7 +24,7 @@
 #endif
 
 #include "conf_platform.h"
-#include "compiler.h"
+#include <stdint.h>
 
 #define SERVO_TIMER_FREQ 1000000					///< Define the timer frequency for the servos
 #define SERVO_CENTER_DUTY_MICROSEC 1500				///< Define the center of the duty cycle(?) in micro second

@@ -17,10 +17,11 @@
 
 
 #include "print_util.h"
+#include "compiler.h"
 
 byte_stream_t* deb_stream;
 
-Bool blocking;
+bool blocking;
 static const char alphabet[36] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 /**

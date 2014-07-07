@@ -25,7 +25,7 @@
 
 #include <avr32/io.h>
 #include "preprocessor.h"
-#include "compiler.h"
+#include <stdint.h>
 #include "user_board.h"
 #include "dacifb.h"
 

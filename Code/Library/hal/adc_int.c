@@ -21,7 +21,7 @@
 #include "tc.h"
 #include "intc.h"
 #include "led.h"
-#include "compiler.h"
+#include <stdint.h>
 #include "adcifa.h"
 #include "time_keeper.h"
 #include "dac_dma.h"
@@ -274,7 +274,7 @@ void adc_int_stop_sampling(void)
 
 
 ///< Returns true if one-shot sampling has finished
-Bool adc_int_sampling_complete(void)
+bool adc_int_sampling_complete(void)
 {
 	return (sample_counter>=number_of_samples);
 }

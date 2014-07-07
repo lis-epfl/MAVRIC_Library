@@ -24,7 +24,7 @@
 extern "C" {
 #endif
 
-#include "compiler.h"
+#include <stdint.h>
 #include "qfilter.h"
 
 #include "conf_platform.h"

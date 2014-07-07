@@ -25,8 +25,8 @@ extern "C"
 {
 #endif
 
-
-#include "compiler.h"
+#include "stdint.h"
+#include <stdbool.h>
 
 #define GET_TIME time_keeper_get_micros()
 #define SCHEDULER_TIMEBASE 1000000

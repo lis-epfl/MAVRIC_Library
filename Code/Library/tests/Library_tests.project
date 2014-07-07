@@ -330,7 +330,7 @@
     <File Name="../hal_emu/itg3200_driver.h"/>
     <File Name="../hal_emu/servo_pwm.h"/>
     <File Name="../hal_emu/udp_stream.h"/>
-    <File Name="../hal_emu/compiler.h"/>
+    <File Name="../hal_emu/#include <stdbool.h>"/>
     <File Name="../hal_emu/gps_ublox.h"/>
     <File Name="../hal_emu/time_keeper.c"/>
     <File Name="../hal_emu/led.h"/>

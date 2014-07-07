@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 
-#include "compiler.h"
+#include <stdint.h>
 #include "ast.h"
 
 #define TK_AST_FREQUENCY 1000000					///< Timer ticks per second (32 bit timer, >1h time-out at 1MHz, >years at 1kHz. We'll go for precision here...)

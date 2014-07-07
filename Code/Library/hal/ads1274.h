@@ -26,7 +26,8 @@
 
 #include <avr32/io.h>
 #include "preprocessor.h"
-#include "compiler.h"
+#include <stdint.h>
+#include <stdbool.h>
 #include "user_board.h"
 
 
@@ -60,7 +61,7 @@ void ads1274_init_DAC(void);
  *
  * \param on_off to enable or disable the ADC clock
 */
-void ads1274_ADC_switch_clock(Bool on_off);
+void ads1274_ADC_switch_clock(bool on_off);
 
 /** 
  * \brief Switch the four input channels on or off
@@ -68,7 +69,7 @@ void ads1274_ADC_switch_clock(Bool on_off);
  * \param channel select ADC channel
  * \param on_off enable or disable ADC of that channel
 */
-void ads1274_ADC_switch_channel(int32_t channel, Bool on_off);
+void ads1274_ADC_switch_channel(int32_t channel, bool on_off);
 
 /** 
  * \brief configures the ADC mode (refer to datasheet for options)
@@ -97,7 +98,7 @@ void ads1274_ADC_stop_sampling(void);
  *
  * \return true if one-shot sampling has finished
 */
-Bool Sampling_Complete(void);
+bool Sampling_Complete(void);
 
 /**
  * \brief return the interrupt counter

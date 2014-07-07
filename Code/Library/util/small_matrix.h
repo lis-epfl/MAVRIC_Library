@@ -1,8 +1,7 @@
 #ifndef SMALL_MATRIX_H_
 #define SMALL_MATRIX_H_
 
-
-#include"compiler.h"
+#include <stdint.h>
 
 typedef struct matrix_1x1_t {
    float v[1][1];

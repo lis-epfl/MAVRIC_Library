@@ -23,7 +23,7 @@
 	extern "C" {
 #endif
 
-#include "compiler.h"
+#include <stdint.h>
 
 #define ACC_X 0		///< number of the X axis, to be used in an array
 #define ACC_Y 1		///< number of the Y axis, to be used in an array

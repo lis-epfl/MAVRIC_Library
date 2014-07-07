@@ -24,7 +24,7 @@
 #endif
 
 #include "twim.h"
-#include "compiler.h"
+#include <stdint.h>
 #include "dma_channel_config.h"
 #include "scheduler.h"
 
