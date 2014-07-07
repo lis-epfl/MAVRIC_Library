@@ -19,108 +19,38 @@
 #include "onboard_parameters.h"
 #include "stabilisation.h"
 #include "print_util.h"
+#include "flashc.h"
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
-	#include "flashc.h"
-#ifdef __cplusplus
-	}
-#endif
 
 Parameter_Set_t param_set;
 
-void onboard_parameters_init(void) 
-{
-	param_set.param_count = 0;
-	print_util_dbg_print("Onboard parameters initialised.\n");	
-}
 
-void onboard_parameters_add_parameter_uint8(uint8_t* val, const char* param_name) 
-{
-	param_set.parameters[param_set.param_count].param = (float*) val;
-	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
-	param_set.parameters[param_set.param_count].data_type= MAV_PARAM_TYPE_INT8;
-	param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
-	param_set.parameters[param_set.param_count].schedule_for_transmission=true;
-	param_set.param_count++;
-}
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS
+//------------------------------------------------------------------------------
 
-void onboard_parameters_add_parameter_uint32(uint32_t* val, const char* param_name) 
-{
-	param_set.parameters[param_set.param_count].param = (float*) val;
-	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
-	param_set.parameters[param_set.param_count].data_type= MAV_PARAM_TYPE_UINT32;
-    param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
-	param_set.parameters[param_set.param_count].schedule_for_transmission=true;
-	param_set.param_count++;
-}
-
-void onboard_parameters_add_parameter_int32(int32_t* val, const char* param_name) 
-{
-	param_set.parameters[param_set.param_count].param = (float*) val;
-	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
-	param_set.parameters[param_set.param_count].data_type = MAV_PARAM_TYPE_INT32;
-	param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
-	param_set.parameters[param_set.param_count].schedule_for_transmission=true;
-	param_set.param_count++;
-}
-
-void onboard_parameters_add_parameter_float(float* val, const char* param_name) 
-{
-	param_set.parameters[param_set.param_count].param = val;
-	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
-	param_set.parameters[param_set.param_count].data_type = MAV_PARAM_TYPE_REAL32;
-	param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
-	param_set.parameters[param_set.param_count].schedule_for_transmission=true;
-	param_set.param_count++;
-}
+/**
+ * \brief				Reads linked memory location and returns parameter value, with care of necessary size/type conversions
+ * 
+ * \details 			This method takes care of necessary size/type conversions.
+ *
+ * \param param_index	Set index of the parameter to update
+ *
+ * \return				Value of the parameter read. Note that the parameter might not be a float, but float is the default data type for the MAVlink message.
+ */
+static float onboard_parameters_read_parameter(int32_t param_index);
 
 
-void onboard_parameters_update_parameter(int32_t param_index, float value) 
-{
-	float converted=0;
-	
-	switch (param_set.parameters[param_index].data_type) 
-	{
-		case MAVLINK_TYPE_CHAR:
-		case MAVLINK_TYPE_UINT8_T:
-		case MAVLINK_TYPE_INT8_T:
-			// take care of different Endianness (usually MAVLINK does this, but here MAVLINK assumes all parameters are 4-byte so we need to swap it back)
-			#if MAVLINK_NEED_BYTE_SWAP
-				byte_swap_4((char *)&converted, (char *)&value);
-				memcpy(param_set.parameters[param_index].param, &converted, 1);
-			#else
-				memcpy(param_set.parameters[param_index].param, &value, 1);
-			#endif
-			break;
-		
-		case MAVLINK_TYPE_UINT16_T:
-		case MAVLINK_TYPE_INT16_T:
-			// take care of different Endianness (usually MAVLINK does this, but here MAVLINK assumes all parameters are 4-byte so we need to swap it back)
-			#if MAVLINK_NEED_BYTE_SWAP
-				byte_swap_4((char *)&converted, (char *)&value);
-				memcpy(param_set.parameters[param_index].param, &converted, 2);
-			#else
-				memcpy(param_set.parameters[param_index].param, &value, 2);
-			#endif
-			break;
-		
-		case MAVLINK_TYPE_UINT32_T:
-		case MAVLINK_TYPE_INT32_T:
-		case MAVLINK_TYPE_FLOAT:
-			*param_set.parameters[param_index].param= value;
-			break;
-		
-		// these following types are not supported
-		case MAVLINK_TYPE_UINT64_T:
-		case MAVLINK_TYPE_INT64_T:
-		case MAVLINK_TYPE_DOUBLE:
-			break;
-	}
-}
+/**
+ * \brief				Updates linked memory location of a parameter with given value, with care of necessary size/type conversions
+ *
+ * \param param_index	Set index of the parameter to update
+ * \param value			Value of the parameter to update
+ */
+static void onboard_parameters_update_parameter(int32_t param_index, float value);
 
-float onboard_parameters_read_parameter(int32_t param_index) 
+
+static float onboard_parameters_read_parameter(int32_t param_index) 
 {
 	float return_value=0;
 	float converted=0;
@@ -164,6 +94,98 @@ float onboard_parameters_read_parameter(int32_t param_index)
 }
 
 
+static void onboard_parameters_update_parameter(int32_t param_index, float value) 
+{
+	float converted=0;
+	
+	switch (param_set.parameters[param_index].data_type) 
+	{
+		case MAVLINK_TYPE_CHAR:
+		case MAVLINK_TYPE_UINT8_T:
+		case MAVLINK_TYPE_INT8_T:
+			// take care of different Endianness (usually MAVLINK does this, but here MAVLINK assumes all parameters are 4-byte so we need to swap it back)
+			#if MAVLINK_NEED_BYTE_SWAP
+				byte_swap_4((char *)&converted, (char *)&value);
+				memcpy(param_set.parameters[param_index].param, &converted, 1);
+			#else
+				memcpy(param_set.parameters[param_index].param, &value, 1);
+			#endif
+			break;
+		
+		case MAVLINK_TYPE_UINT16_T:
+		case MAVLINK_TYPE_INT16_T:
+			// take care of different Endianness (usually MAVLINK does this, but here MAVLINK assumes all parameters are 4-byte so we need to swap it back)
+			#if MAVLINK_NEED_BYTE_SWAP
+				byte_swap_4((char *)&converted, (char *)&value);
+				memcpy(param_set.parameters[param_index].param, &converted, 2);
+			#else
+				memcpy(param_set.parameters[param_index].param, &value, 2);
+			#endif
+			break;
+		
+		case MAVLINK_TYPE_UINT32_T:
+		case MAVLINK_TYPE_INT32_T:
+		case MAVLINK_TYPE_FLOAT:
+			*param_set.parameters[param_index].param= value;
+			break;
+		
+		// these following types are not supported
+		case MAVLINK_TYPE_UINT64_T:
+		case MAVLINK_TYPE_INT64_T:
+		case MAVLINK_TYPE_DOUBLE:
+			break;
+	}
+}
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS
+//------------------------------------------------------------------------------
+
+
+void onboard_parameters_add_parameter_uint8(uint8_t* val, const char* param_name) 
+{
+	param_set.parameters[param_set.param_count].param = (float*) val;
+	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
+	param_set.parameters[param_set.param_count].data_type= MAV_PARAM_TYPE_INT8;
+	param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
+	param_set.parameters[param_set.param_count].schedule_for_transmission=true;
+	param_set.param_count++;
+}
+
+
+void onboard_parameters_add_parameter_uint32(uint32_t* val, const char* param_name) 
+{
+	param_set.parameters[param_set.param_count].param = (float*) val;
+	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
+	param_set.parameters[param_set.param_count].data_type= MAV_PARAM_TYPE_UINT32;
+    param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
+	param_set.parameters[param_set.param_count].schedule_for_transmission=true;
+	param_set.param_count++;
+}
+
+
+void onboard_parameters_add_parameter_int32(int32_t* val, const char* param_name) 
+{
+	param_set.parameters[param_set.param_count].param = (float*) val;
+	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
+	param_set.parameters[param_set.param_count].data_type = MAV_PARAM_TYPE_INT32;
+	param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
+	param_set.parameters[param_set.param_count].schedule_for_transmission=true;
+	param_set.param_count++;
+}
+
+
+void onboard_parameters_add_parameter_float(float* val, const char* param_name) 
+{
+	param_set.parameters[param_set.param_count].param = val;
+	strcpy(param_set.parameters[param_set.param_count].param_name, param_name);
+	param_set.parameters[param_set.param_count].data_type = MAV_PARAM_TYPE_REAL32;
+	param_set.parameters[param_set.param_count].param_name_length = strlen(param_name);
+	param_set.parameters[param_set.param_count].schedule_for_transmission=true;
+	param_set.param_count++;
+}
+
 
 void onboard_parameters_send_all_parameters() 
 {
@@ -173,6 +195,7 @@ void onboard_parameters_send_all_parameters()
 		param_set.parameters[i].schedule_for_transmission=true;
 	}		
 }
+
 
 void onboard_parameters_send_all_parameters_now() 
 {
@@ -209,6 +232,7 @@ task_return_t onboard_parameters_send_scheduled_parameters(void)
 	
 	return TASK_RUN_SUCCESS;
 }
+
 
 void onboard_parameters_send_parameter(mavlink_param_request_read_t* request) 
 {
@@ -254,6 +278,7 @@ void onboard_parameters_send_parameter(mavlink_param_request_read_t* request)
 		}
 	}
 }
+
 
 void onboard_parameters_receive_parameter(Mavlink_Received_t* rec) 
 {
@@ -310,6 +335,7 @@ void onboard_parameters_receive_parameter(Mavlink_Received_t* rec)
 	}
 }
 
+
 void onboard_parameters_read_parameters_from_flashc()
 {
 	uint8_t i;
@@ -341,6 +367,7 @@ void onboard_parameters_read_parameters_from_flashc()
 		print_util_dbg_print("Flash memory corrupted! Hardcoded values taken.\n");
 	}
 }
+
 
 void onboard_parameters_write_parameters_from_flashc()
 {
@@ -379,4 +406,11 @@ void onboard_parameters_write_parameters_from_flashc()
 	{
 		print_util_dbg_print("Attempted to write too many parameters on flash user page, aborted.\n");
 	}
+}
+
+
+void onboard_parameters_init(void) 
+{
+	param_set.param_count = 0;
+	print_util_dbg_print("Onboard parameters initialised.\n");	
 }

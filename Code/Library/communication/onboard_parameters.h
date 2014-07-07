@@ -101,26 +101,6 @@ void onboard_parameters_add_parameter_int32(int32_t* val, const char* param_name
  */
 void onboard_parameters_add_parameter_float(float* val, const char* param_name);
 
-/**
- * \brief				Updates linked memory location of a parameter with given value, with care of necessary size/type conversions
- *
- * \param param_index	Set index of the parameter to update
- * \param value			Value of the parameter to update
- */
-void onboard_parameters_update_parameter(int32_t param_index, float value);
-
-/** 
- *  This method takes care of necessary size/type conversions.
- *  
-*/
-/**
- * \brief				Reads linked memory location and returns parameter value, with care of necessary size/type conversions
- *
- * \param param_index	Set index of the parameter to update
- *
- * \return				Value of the parameter read. Note that the parameter might not be a float, but float is the default data type for the MAVlink message.
- */
-float onboard_parameters_read_parameter(int32_t param_index);
 
 /**
  * \brief	Immediately sends all parameters via MAVlink. This might block for a while.
