@@ -25,11 +25,11 @@
 #define SERVO_CENTER_DUTY_TICKS 1500						///< (SERVO_CENTER_DUTY_MICROSEC*SERVO_TIMER_FREQ/1000000)
 
 ///< Function prototype definitions
-void set_servo(int channel, int val_a, int val_b);
+void set_servo(int32_t channel, int32_t val_a, int32_t val_b);
 
 void servo_pwm_hardware_init(void)
 {
-	int i = 0;
+	int32_t i = 0;
 	
 	  ///< To unlock registers
 	  AVR32_PWM.wpcr = (AVR32_PWM_WPCR_WPKEY_KEY   << AVR32_PWM_WPCR_WPKEY) |
@@ -93,7 +93,7 @@ void servo_pwm_hardware_init(void)
 void servo_pwm_init(servo_output servos[])
 {
 	// Init servos
-	for (int i = 0; i < NUMBER_OF_SERVO_OUTPUTS; ++i)
+	for (int32_t i = 0; i < NUMBER_OF_SERVO_OUTPUTS; ++i)
 	{
 		servos[i].value = -600;
 		servos[i].min = -600;
@@ -102,11 +102,11 @@ void servo_pwm_init(servo_output servos[])
 	}
 }
 
-void set_servo(int channel, int val_a, int val_b)
+void set_servo(int32_t channel, int32_t val_a, int32_t val_b)
 {
-	int duty_a = val_a + SERVO_CENTER_DUTY_TICKS;
-	int duty_b = val_b + SERVO_CENTER_DUTY_TICKS;
-	int deadtime=(SERVO_PERIOD - duty_a - duty_b) / 2;
+	int32_t duty_a = val_a + SERVO_CENTER_DUTY_TICKS;
+	int32_t duty_b = val_b + SERVO_CENTER_DUTY_TICKS;
+	int32_t deadtime=(SERVO_PERIOD - duty_a - duty_b) / 2;
 	
 	AVR32_PWM.channel[channel &0b11].cprdupd = SERVO_PERIOD;
 	AVR32_PWM.channel[channel &0b11].cdtyupd = duty_a + deadtime;
@@ -125,7 +125,7 @@ void servo_pwm_set(const servo_output *servo_outputs)
 
 void servo_pwm_failsafe(servo_output *servo_outputs)
 {
-	for(int i = 0; i < NUMBER_OF_SERVO_OUTPUTS; i++)
+	for(int32_t i = 0; i < NUMBER_OF_SERVO_OUTPUTS; i++)
 	{
 		servo_outputs[i].value = servo_outputs[i].failsafe_position;
 	}

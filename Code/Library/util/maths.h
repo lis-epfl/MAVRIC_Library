@@ -78,7 +78,7 @@ float static inline maths_fast_sqrt(float number)
 	union
 	{
 		float	f;
-		long	l;
+		int32_t	l;
 	}i;
 	
 	float x, y;

@@ -31,7 +31,7 @@ extern "C" {
 
 typedef struct {
 avr32_usart_t *uart;
-int IRQ;
+int32_t IRQ;
 Buffer_t transmit_buffer;
 Buffer_t receive_buffer;
 byte_stream_t *receive_stream;
@@ -40,13 +40,13 @@ byte_stream_t *receive_stream;
 
 typedef struct
 {
-unsigned char pin;              //!< Module pin.
-unsigned char function;         //!< Module function.
+uint8_t  pin;              //!< Module pin.
+uint8_t  function;         //!< Module function.
 } uart_gpio_map_t;
 
 
 typedef struct {
-int mode;
+int32_t mode;
 uart_interface_t uart_device;
 usart_options_t options;
 uart_gpio_map_t rx_pin_map;
@@ -60,7 +60,7 @@ uart_gpio_map_t tx_pin_map;
  *
  * \param	UID							The UART ID line
  */
-void uart_int_init(int UID);
+void uart_int_init(int32_t UID);
 
 /**
  * \brief	Get the UART line pointer
@@ -69,7 +69,7 @@ void uart_int_init(int UID);
  *
  * \return	A pointer to the UART 
  */
-usart_config_t *uart_int_get_uart_handle(int UID);
+usart_config_t *uart_int_get_uart_handle(int32_t UID);
 
 /**
  * \brief	Blocking operation to retrieve a received byte from uart
@@ -77,7 +77,7 @@ usart_config_t *uart_int_get_uart_handle(int UID);
  *
  * \return	The byte received on the UART
  */
-char uart_int_get_byte(usart_config_t *usart_conf);
+int8_t  uart_int_get_byte(usart_config_t *usart_conf);
 
 /**
  * \brief returns number of received bytes in the receive buffer
@@ -86,7 +86,7 @@ char uart_int_get_byte(usart_config_t *usart_conf);
  *
  * \return	the number of received bytes in the receive buffer
  */
-int uart_int_bytes_available(usart_config_t *usart_conf);
+int32_t uart_int_bytes_available(usart_config_t *usart_conf);
 
 /**
  * \brief Non-blocking operation to append a byte to the uart send buffer if buffer is full, the command has no effect  (returns -1).

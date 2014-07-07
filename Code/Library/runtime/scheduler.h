@@ -110,8 +110,8 @@ typedef struct task_entry
 typedef struct task_set 
 {
 	uint8_t number_of_tasks;		///<	Number_of_tasks
-	int running_task;				///<	ID of the task being executed
-	int current_schedule_slot;		///<	Slot of the task being executed
+	int32_t running_task;				///<	ID of the task being executed
+	int32_t current_schedule_slot;		///<	Slot of the task being executed
 	struct task_entry tasks[30];	///<	Array of tasks_entry to be executed
 } task_set;
 
@@ -144,7 +144,7 @@ void scheduler_init(task_set *ts);
  * 
  * \return 	Task handle
  */
-task_handle_t scheduler_register_task(task_set *ts, int task_slot, unsigned long repeat_period, task_run_mode_t run_mode, function_pointer call_function);
+task_handle_t scheduler_register_task(task_set *ts, int32_t task_slot, uint32_t repeat_period, task_run_mode_t run_mode, function_pointer call_function);
 
 
 /**
@@ -158,7 +158,7 @@ task_handle_t scheduler_register_task(task_set *ts, int task_slot, unsigned long
  * 
  * \return              	True if the task was successfully added, False if not
  */
-bool scheduler_add_task(task_set *ts, unsigned long repeat_period, task_run_mode_t run_mode, function_pointer call_function, uint32_t task_id);
+bool scheduler_add_task(task_set *ts, uint32_t repeat_period, task_run_mode_t run_mode, function_pointer call_function, uint32_t task_id);
 
 
 /**
@@ -177,7 +177,7 @@ void scheduler_sort_taskset_by_period(task_set *ts);
  * 
  * \return                  	Number of realtime violations
  */
-int scheduler_run_update(task_set *ts, uint8_t schedule_strategy);
+int32_t scheduler_run_update(task_set *ts, uint8_t schedule_strategy);
 
 
 /**
@@ -217,7 +217,7 @@ void scheduler_change_run_mode(task_entry *te, task_run_mode_t new_run_mode);
  * \param te   				Pointer to a task entry
  * \param repeat_period 	New repeat period (us)
  */
-void scheduler_change_task_period(task_entry *te, unsigned long repeat_period);
+void scheduler_change_task_period(task_entry *te, uint32_t repeat_period);
 
 
 /**
@@ -226,7 +226,7 @@ void scheduler_change_task_period(task_entry *te, unsigned long repeat_period);
  * \param te   		Pointer to a task entry
  * \param delay 	Duration (us)
  */
-void scheduler_suspend_task(task_entry *te, unsigned long delay);
+void scheduler_suspend_task(task_entry *te, uint32_t delay);
 
 
 /**

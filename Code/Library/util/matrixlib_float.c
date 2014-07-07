@@ -33,9 +33,9 @@
 *	Initializes a matrix with zeros
 *   sizes : A(n1 x n2)
 */
-float* matf_zeros(int n1, int n2, float* A)
+float* matf_zeros(int32_t n1, int32_t n2, float* A)
 {
-    int i;
+    int32_t i;
     for(i=0; i < n1*n2; i++) 
         A[i] = 0.0f;
     
@@ -46,9 +46,9 @@ float* matf_zeros(int n1, int n2, float* A)
 *	Sets the "start"th to "stop"th diagonal elements of a matrix to the value "val"   (indices for this function start at 1)
 *   sizes : A(n1 x n2)
 */
-float* matf_diag(int n1, int n2, float* A, float val, int start, int stop)
+float* matf_diag(int32_t n1, int32_t n2, float* A, float val, int32_t start, int32_t stop)
 {
-    int i;
+    int32_t i;
     if(start < 1) start = 1;
     for(i=start-1; i < stop; i++) 
         A[(n2+1)*i] = val;
@@ -60,9 +60,9 @@ float* matf_diag(int n1, int n2, float* A, float val, int start, int stop)
 *	Copies a matrix B = A
 *   sizes : A(n1 x n2), B(n1 x n2)
 */
-float* matf_copy(int n1, int n2, float* A, float* B)
+float* matf_copy(int32_t n1, int32_t n2, float* A, float* B)
 {
-    int i;
+    int32_t i;
     for(i=0; i < n1*n2; i++) 
         B[i] = A[i];
     
@@ -85,9 +85,9 @@ float* matf_cross(float* a, float* b, float* c)
 *	Gets the vector of standard deviations from the matrix A's diagonal
 *   sizes : A(n x n), v(n x 1)
 */
-float* matf_std(int n, float* A, float* v)
+float* matf_std(int32_t n, float* A, float* v)
 {
-    int i;
+    int32_t i;
     for(i=0; i < n; i++) 
         v[i] = sqrtf(A[i*(n+1)]);
     
@@ -99,10 +99,10 @@ float* matf_std(int n, float* A, float* v)
 *       B(rb,cb,p1 x p2) = A(ra,ca,p1 x p2)
 *   sizes : A(a1 x a2), B(b1 x b2)
 */
-float* matf_copy_part(float* A, int a1, int a2, int ra, int ca, int p1, int p2, float* B, int b1, int b2, int rb, int cb)
+float* matf_copy_part(float* A, int32_t a1, int32_t a2, int32_t ra, int32_t ca, int32_t p1, int32_t p2, float* B, int32_t b1, int32_t b2, int32_t rb, int32_t cb)
 {
-    int row;
-    int col;
+    int32_t row;
+    int32_t col;
     
     for(row = 0; row < p2; row ++)
     for(col = 0; col < p1; col ++)
@@ -114,9 +114,9 @@ float* matf_copy_part(float* A, int a1, int a2, int ra, int ca, int p1, int p2, 
 /*!
 *	Gets the norm of a vector A of length n
 */
-float matf_norm(int n, float* A)
+float matf_norm(int32_t n, float* A)
 {
-    int i;
+    int32_t i;
     float norm = 0.0f;
     for(i=0; i < n; i++) 
         norm += A[i]*A[i];
@@ -127,9 +127,9 @@ float matf_norm(int n, float* A)
 /*!
 *	Gets the sum of a vector A of length n
 */
-float matf_sum(int n, float* A)
+float matf_sum(int32_t n, float* A)
 {
-    int i;
+    int32_t i;
     float sum = 0.0f;
     for(i=0; i < n; i++) 
         sum += A[i];
@@ -142,9 +142,9 @@ float matf_sum(int n, float* A)
 *	Adds two matrices A+B = C
 *   sizes : A(n1 x n2), B(n1 x n2), C(n1 x n2)
 */
-float* matf_add(int n1, int n2, float* A, float* B, float* C)
+float* matf_add(int32_t n1, int32_t n2, float* A, float* B, float* C)
 {
-    int i;
+    int32_t i;
     for(i=0; i < n1*n2; i++) 
         C[i] = A[i] + B[i];
     
@@ -156,9 +156,9 @@ float* matf_add(int n1, int n2, float* A, float* B, float* C)
 *	Multiply matrix by factor B = c * A
 *   sizes : A(n1 x n2), B(n1 x n2)
 */
-float* matf_multiply_factor(int n1, int n2, float* A, float* B, float c)
+float* matf_multiply_factor(int32_t n1, int32_t n2, float* A, float* B, float c)
 {
-    int i;
+    int32_t i;
     for(i=0; i < n1*n2; i++) 
         B[i] = c*A[i];
     
@@ -169,9 +169,9 @@ float* matf_multiply_factor(int n1, int n2, float* A, float* B, float c)
 *	Subtracts two matrices A-B = C
 *   sizes : A(n1 x n2), B(n1 x n2), C(n1 x n2)
 */
-float* matf_sub(int n1, int n2, float* A, float* B, float* C)
+float* matf_sub(int32_t n1, int32_t n2, float* A, float* B, float* C)
 {
-    int i;
+    int32_t i;
     for(i=0; i < n1*n2; i++) 
         C[i] = A[i] - B[i];
     
@@ -183,10 +183,10 @@ float* matf_sub(int n1, int n2, float* A, float* B, float* C)
 *	Transposes a matrix B = A'
 *   sizes : A(n1 x n2), B(n2 x n1)
 */
-float* matf_tr(int n1, int n2, float* A, float* B)
+float* matf_tr(int32_t n1, int32_t n2, float* A, float* B)
 {
-    int a, col, row;
-    int b = 0;
+    int32_t a, col, row;
+    int32_t b = 0;
     
     for(row=0; row < n2; row++) 
     {
@@ -205,10 +205,10 @@ float* matf_tr(int n1, int n2, float* A, float* B)
 *	Multiplies two matrices A.B = C
 *   sizes : A(n1 x n12), B(n12 x n2), C(n1 x n2)
 */
-float* matf_multiply(int n1, int n12, int n2, float* A, float* B, float* C)
+float* matf_multiply(int32_t n1, int32_t n12, int32_t n2, float* A, float* B, float* C)
 {
-    int a, b, col, row, el;
-    int c = 0;
+    int32_t a, b, col, row, el;
+    int32_t c = 0;
     
     for(row=0; row < n1; row++) 
     for(col=0; col < n2; col++)
@@ -233,10 +233,10 @@ float* matf_multiply(int n1, int n12, int n2, float* A, float* B, float* C)
 *	Multiplies two matrices A.B' = C, but uses the transpose of the second matrix
 *   sizes : A(n1 x n12), B(n2 x n12), C(n1 x n2)
 */
-float* matf_multiply_Bt(int n1, int n12, int n2, float* A, float* B, float* C)
+float* matf_multiply_Bt(int32_t n1, int32_t n12, int32_t n2, float* A, float* B, float* C)
 {
-    int a, b, col, row, el;
-    int c = 0;
+    int32_t a, b, col, row, el;
+    int32_t c = 0;
     
     for(row=0; row < n1; row++) 
     for(col=0; col < n2; col++)
@@ -256,7 +256,7 @@ float* matf_multiply_Bt(int n1, int n12, int n2, float* A, float* B, float* C)
     return C;
 }
 
-//float* matf_invert(int numRowsCols, float* dstM, float* srcM)
+//float* matf_invert(int32_t numRowsCols, float* dstM, float* srcM)
 //{
 	//arm_matrix_instance_f32 in = {numRowsCols, numRowsCols, srcM};
 	//arm_matrix_instance_f32 out = {numRowsCols, numRowsCols, dstM};

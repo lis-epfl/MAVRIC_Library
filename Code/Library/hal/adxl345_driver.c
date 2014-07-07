@@ -51,7 +51,7 @@ void adxl345_driver_init_slow(void)
 
 acc_data* adxl345_driver_get_acc_data_slow(void) 
 {
-	int i;
+	int32_t i;
 	uint8_t write_then_read_preamble=SENSOR_REG_ADDRESS;
 	
 	twim_write(&AVR32_TWIM0, (uint8_t*)&write_then_read_preamble, 1, ADXL_ALT_SLAVE_ADDRESS, false);

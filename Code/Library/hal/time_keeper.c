@@ -53,7 +53,7 @@ float time_keeper_ticks_to_seconds(uint32_t timer_ticks)
 	return ((double)timer_ticks / (double)TK_AST_FREQUENCY);
 }
 
-void time_keeper_delay_micros(int microseconds)
+void time_keeper_delay_micros(int32_t microseconds)
 {
 	uint32_t now = time_keeper_get_micros();
 	while (time_keeper_get_micros() < now + microseconds);

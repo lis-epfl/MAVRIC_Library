@@ -68,14 +68,14 @@ void ads1274_ADC_switch_clock(Bool on_off);
  * \param channel select ADC channel
  * \param on_off enable or disable ADC of that channel
 */
-void ads1274_ADC_switch_channel(int channel, Bool on_off);
+void ads1274_ADC_switch_channel(int32_t channel, Bool on_off);
 
 /** 
  * \brief configures the ADC mode (refer to datasheet for options)
  *
  * \param mode define in which mode the ADC will be used
 */
-void ads1274_ADC_set_mode(int mode);
+void ads1274_ADC_set_mode(int32_t mode);
 
 /** 
  * \brief enables continuous sampling  -- not implemented yet
@@ -104,14 +104,14 @@ Bool Sampling_Complete(void);
  *
  * \return interrupt counter
 */
-int get_interrupt_counter(void);
+int32_t get_interrupt_counter(void);
 
 /**
  * \brief return the status of the sampling process
  *
  * \return sampling counter
 */
-int get_sampling_status(void);
+int32_t get_sampling_status(void);
 
 /**
  * \brief return an ADC sample
@@ -121,7 +121,7 @@ int get_sampling_status(void);
  *
  * \return the sample corresponding to this sample number on this ADC channel
 */
-float get_sample(int channel, int sample);
+float get_sample(int32_t channel, int32_t sample);
 
 #ifdef __cplusplus
 	}

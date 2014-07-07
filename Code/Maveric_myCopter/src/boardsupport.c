@@ -37,7 +37,7 @@
 #include "gpio.h"
 
 void boardsupport_init(central_data_t *centralData) {
-	// int i;
+	// int32_t i;
 	// enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
 	
 

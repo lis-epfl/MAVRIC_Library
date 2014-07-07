@@ -79,7 +79,7 @@ void position_estimation_init(position_estimator_t *pos_est, pressure_data *baro
 
 void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps)
 {
-	int i;
+	int32_t i;
 	
 	if (gps_ublox_newValidGpsMsg(&pos_est->timeLastGpsMsg) && (!(pos_est->init_gps_position)))
 	{
@@ -132,7 +132,7 @@ void init_barometer_offset(position_estimator_t *pos_est, pressure_data *baromet
 
 void position_estimation_reset_home_altitude(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, local_coordinates_t *simLocalPos)
 {
-		int i;
+		int32_t i;
 		// reset origin to position where quad is armed if we have GPS
 		if (pos_est->init_gps_position)
 		{
@@ -184,7 +184,7 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est, pres
 
 void position_estimation_position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitude, float dt)
 {
-	int i;
+	int32_t i;
 	
 	UQuat_t qvel_bf,qvel; 
 
@@ -233,7 +233,7 @@ void position_estimation_position_correction(position_estimator_t *pos_est, pres
 	float gps_dt = 0.0f;
 	float vel_error[3] = {0.0f,0.0f,0.0f};
 	uint32_t tinterGps, tinterBaro;
-	int i;
+	int32_t i;
 	//if ((centralData->simulation_mode == 0))
 	//{
 		if (pos_est->init_barometer)

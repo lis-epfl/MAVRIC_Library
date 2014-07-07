@@ -686,6 +686,8 @@
       <File Name="Library/util/generator.c"/>
       <File Name="Library/util/matrixlib_float.h"/>
       <File Name="Library/util/matrixlib_float.c"/>
+      <File Name="Library/util/vectors.h"/>
+      <File Name="Library/util/quaternions.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <Settings Type="Executable">

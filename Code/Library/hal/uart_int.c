@@ -27,7 +27,7 @@
 // macro for interrupt handler
 #define UART_HANDLER(UID) ISR(uart_handler_##UID, usart_conf[UID].uart_device.IRQ, AVR32_INTC_INTLEV_INT1) {\
 	uint8_t c1;\
-	int csr = usart_conf[UID].uart_device.uart->csr;\
+	int32_t csr = usart_conf[UID].uart_device.uart->csr;\
 	if (csr & AVR32_USART_CSR_RXRDY_MASK) {\
 		c1 = (uint8_t)usart_conf[UID].uart_device.uart->rhr;\
 		if (usart_conf[UID].uart_device.receive_stream == NULL) {\
@@ -49,7 +49,7 @@
 /*
 ISR(uart_handler_4, usart_conf[4].uart_device.IRQ, AVR32_INTC_INTLEV_INT1) {\
 	uint8_t c1;\
-	int csr = usart_conf[4].uart_device.uart->csr;\
+	int32_t csr = usart_conf[4].uart_device.uart->csr;\
 	if (csr & AVR32_USART_CSR_RXRDY_MASK) {\
 		c1 = (uint8_t)usart_conf[4].uart_device.uart->rhr;\
 		if (usart_conf[4].uart_device.receive_stream == NULL) {\
@@ -77,10 +77,10 @@ UART_HANDLER(3);
 UART_HANDLER(4);
 
 ///< Function prototype definitions
-void register_UART_handler(int UID);
-int uart_out_buffer_empty(usart_config_t *usart_conf);
+void register_UART_handler(int32_t UID);
+int32_t uart_out_buffer_empty(usart_config_t *usart_conf);
 
-void register_UART_handler(int UID)
+void register_UART_handler(int32_t UID)
 {
 	switch(UID)
 	{
@@ -102,7 +102,7 @@ void register_UART_handler(int UID)
 	}
 }
 
-void uart_int_init(int UID) {
+void uart_int_init(int32_t UID) {
 	if ((usart_conf[UID].mode&UART_IN) > 0)
 	{
 		gpio_enable_module_pin(usart_conf[UID].rx_pin_map.pin, usart_conf[UID].rx_pin_map.function); 
@@ -132,17 +132,17 @@ void uart_int_init(int UID) {
 	//}
 } 
 
-usart_config_t *uart_int_get_uart_handle(int UID) 
+usart_config_t *uart_int_get_uart_handle(int32_t UID) 
 {
 	return &usart_conf[UID];
 }
 
-char uart_int_get_byte(usart_config_t *usart_conf) 
+int8_t  uart_int_get_byte(usart_config_t *usart_conf) 
 {
 	return buffer_get(&(usart_conf->uart_device.receive_buffer));
 }
 
-int uart_int_bytes_available(usart_config_t *usart_conf) 
+int32_t uart_int_bytes_available(usart_config_t *usart_conf) 
 {
 	return buffer_bytes_available(&(usart_conf->uart_device.receive_buffer));
 }
@@ -166,7 +166,7 @@ void uart_int_flush(usart_config_t *usart_conf)
 	while (!buffer_empty(&(usart_conf->uart_device.transmit_buffer)));
 }
 
-int uart_out_buffer_empty(usart_config_t *usart_conf) 
+int32_t uart_out_buffer_empty(usart_config_t *usart_conf) 
 {
 	return buffer_empty(&(usart_conf->uart_device.transmit_buffer));
 }
@@ -177,7 +177,7 @@ void uart_int_register_write_stream(usart_config_t *usart_conf, byte_stream_t *s
 	//stream->get = &uart_int_get_byte;
 	stream->put = (uint8_t(*)(stream_data_t*, uint8_t))&uart_int_send_byte;			// Here we need to explicitly cast the function to match the prototype
 	stream->flush = (void(*)(stream_data_t*))&uart_int_flush;						// stream->get and stream->put expect stream_data_t* as first argument
-	stream->buffer_empty = (int(*)(stream_data_t*))&uart_out_buffer_empty;			// but buffer_get and buffer_put take Buffer_t* as first argument
+	stream->buffer_empty = (int32_t(*)(stream_data_t*))&uart_out_buffer_empty;			// but buffer_get and buffer_put take Buffer_t* as first argument
 	stream->data = usart_conf;
 }
 

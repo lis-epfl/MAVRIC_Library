@@ -630,14 +630,14 @@ typedef struct
 	uint32_t timeLastMsg;					///< Time reference in ms of microcontroller
 	uint32_t timegps;						///< Time reference in ms of gps
 	
-	unsigned char status;					///< GPS status
+	uint8_t  status;					///< GPS status
 	
-	unsigned char horizontalStatus;			///< Horizontal status
+	uint8_t  horizontalStatus;			///< Horizontal status
 	
- 	unsigned char altitudeStatus;			///< Altitude status
- 	unsigned char speedStatus;				///< Speed status
- 	unsigned char courseStatus;				///< Course status
-	unsigned char accuracyStatus;			///< Accuracy status
+ 	uint8_t  altitudeStatus;			///< Altitude status
+ 	uint8_t  speedStatus;				///< Speed status
+ 	uint8_t  courseStatus;				///< Course status
+	uint8_t  accuracyStatus;			///< Accuracy status
 } gps_Data_type;
 
 

@@ -14,7 +14,7 @@
 #include "doppler_radar.h"
 
 
-int status;
+int32_t status;
 
 void i2c_slave_interface_handle_twis_receive(uint8_t data){
 	status=data;
@@ -31,7 +31,7 @@ void i2c_slave_interface_handle_twis_stop() {
 	
 }
 
-void i2c_slave_interface_init(int device_address) {
+void i2c_slave_interface_init(int32_t device_address) {
 	twis_options_t twis_options;
 		twis_options.pba_hz =sysclk_get_pba_hz(),
 		//! The baudrate of the TWI bus.

@@ -68,16 +68,16 @@ void quaternion_controller_update(Quaternion_Controller_t* controller)
 	UQuat_t quat_error;
 
 	// Compute quaternioin error in global frame
-	quat_error = maths_quat_multi(quat_ref, maths_quat_inv(quat_attitude));
+	quat_error = quaternions_multiply(quat_ref, quaternions_inverse(quat_attitude));
 	
 	// Express error in local coordinates
-	quat_error = maths_quat_multi(maths_quat_inv(quat_attitude),
-							maths_quat_multi(quat_error, quat_attitude));
+	quat_error = quaternions_multiply(quaternions_inverse(quat_attitude),
+							quaternions_multiply(quat_error, quat_attitude));
 
 	// Find shortest rotation
 	if (quat_error.s < 0)
 	{
-		quat_error = maths_quat_inv(quat_error);
+		quat_error = quaternions_inverse(quat_error);
 	}
 
 	// Approximate roll pitch and yaw errors with quat_error vector part

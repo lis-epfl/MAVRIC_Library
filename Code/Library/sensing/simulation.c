@@ -44,7 +44,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos
 void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos);
 
 void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates_t localPos) {
-	int i;
+	int32_t i;
 	
 	print_util_dbg_print("Init HIL simulation. \n");
 	
@@ -104,7 +104,7 @@ static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr
 
 
 void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos){
-	int i;
+	int32_t i;
 	float motor_command[4];
 	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4];
 	float ldb;
@@ -163,7 +163,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 
 
 void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos){
-	//int i;
+	//int32_t i;
 	//float motor_command[4];
 	
 	//TODO: implement the correct forces
@@ -183,7 +183,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos
 }
 
 void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est) {
-	int i;
+	int32_t i;
 	UQuat_t qtmp1, qvel_bf,  qed;
 	const UQuat_t front = {.s = 0.0f, .v = {1.0f, 0.0f, 0.0f}};
 	const UQuat_t up = {.s = 0.0f, .v = {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}};

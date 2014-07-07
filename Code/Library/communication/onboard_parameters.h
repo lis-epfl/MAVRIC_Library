@@ -43,7 +43,8 @@ typedef struct
 	uint8_t param_name_length;									///< Length of the parameter name
 	uint8_t param_id;											///< Parameter ID
 	bool  schedule_for_transmission;							///< Boolean to activate the transmission of the parameter
-}Onboard_Parameter_t;
+} Onboard_Parameter_t;
+
 
 /**
  * \brief	Set of parameter composed of onboard parameters and number of parameters.
@@ -52,7 +53,8 @@ typedef struct
 {
 	Onboard_Parameter_t parameters[MAX_ONBOARD_PARAM_COUNT];	///< Onboard parameters array
 	uint16_t param_count;										///< Number of onboard parameter effectively in the array
-}Parameter_Set_t;											
+} Parameter_Set_t;											
+
 
 /**
  * \brief	TODO: Modify the name of this structure to make it sized as the free flash memory to store these parameters
@@ -60,9 +62,8 @@ typedef struct
 typedef struct												
 {
 	float values[MAVERIC_FLASHC_USER_PAGE_FREE_SPACE];
-}nvram_data_t;
+} nvram_data_t;
 
-nvram_data_t *nvram_array;
 
 /**
 * \brief	Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0
@@ -101,26 +102,6 @@ void onboard_parameters_add_parameter_int32(int32_t* val, const char* param_name
  */
 void onboard_parameters_add_parameter_float(float* val, const char* param_name);
 
-/**
- * \brief				Updates linked memory location of a parameter with given value, with care of necessary size/type conversions
- *
- * \param param_index	Set index of the parameter to update
- * \param value			Value of the parameter to update
- */
-void onboard_parameters_update_parameter(int param_index, float value);
-
-/** 
- *  This method takes care of necessary size/type conversions.
- *  
-*/
-/**
- * \brief				Reads linked memory location and returns parameter value, with care of necessary size/type conversions
- *
- * \param param_index	Set index of the parameter to update
- *
- * \return				Value of the parameter read. Note that the parameter might not be a float, but float is the default data type for the MAVlink message.
- */
-float onboard_parameters_read_parameter(int param_index);
 
 /**
  * \brief	Immediately sends all parameters via MAVlink. This might block for a while.

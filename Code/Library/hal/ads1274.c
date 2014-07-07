@@ -83,8 +83,8 @@
 volatile avr32_tc_t *tc = EXAMPLE_TC;
 struct genclk_config gcfg;
 static volatile int32_t adc_buffer[ADC_INPUT_CHANNELS][ADC_BUFFER_SIZE];
-static volatile int sampleCounter;
-static volatile int interrupt_counter;
+static volatile int32_t sampleCounter;
+static volatile int32_t interrupt_counter;
 static volatile generatorfunction function_generator;
 
 #define EXT_INT_LINES 1
@@ -94,7 +94,7 @@ eic_options_t eic_options[EXT_INT_LINES];
 void processData(void);
 __attribute__((__naked__)) void eic_nmi_handler( void );
 
-int get_interrupt_counter(void) 
+int32_t get_interrupt_counter(void) 
 {
 	return interrupt_counter;
 }
@@ -102,7 +102,7 @@ int get_interrupt_counter(void)
 
 void processData(void) 
 {
-	int ch;
+	int32_t ch;
 	int32_t value;
 	if (sampleCounter >= ADC_BUFFER_SIZE) 
 	{
@@ -128,12 +128,12 @@ void ads1274_set_DAC_generator_function(generatorfunction new_function_generator
 	function_generator = new_function_generator;
 }
 
-float get_sample(int channel, int sample) 
+float get_sample(int32_t channel, int32_t sample) 
 {
 	return adc_buffer[channel][sample];
 }
 
-int get_sampling_status(void) 
+int32_t get_sampling_status(void) 
 {
 	return sampleCounter;
 }
@@ -230,13 +230,13 @@ void ads1274_ADC_switch_clock(Bool on_off)
 }
 
 ///< Switch the four input channels on or off
-void ads1274_ADC_switch_channel(int channel, Bool on_off)
+void ads1274_ADC_switch_channel(int32_t channel, Bool on_off)
 {
 	
 }
 
 ///< configures the ADC mode (refer to datasheet for options)
-void ads1274_ADC_set_mode(int mode){};
+void ads1274_ADC_set_mode(int32_t mode){};
 
 ///< enables continuous sampling  -- not implemented yet
 //void ads1274_ADC_start_sampling(void){}
@@ -261,7 +261,7 @@ Bool Sampling_Complete(void){};
 __attribute__((__naked__))
 void eic_nmi_handler( void )
 {
-	//int i = 0;
+	//int32_t i = 0;
 	__asm__ __volatile__ (
 			/* Save registers not saved upon NMI exception. */
 			"pushm   r0-r12, lr\n\t"

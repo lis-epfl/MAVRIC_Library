@@ -1,3 +1,21 @@
+/**
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+ * \file test_maths.c
+ * 
+ * to Test math functions
+ */
+ 
+ 
 #include "test_maths.h"
 
 #include "maths.h"
@@ -21,17 +39,20 @@ bool run_math_tests() {
 	print_util_dbg_print_vector(v2, 3);
 
 	print_util_dbg_print_quaternion(&quat1, 3);	print_util_dbg_print(" (quat1)\n");
-	quat1=maths_quat_from_vector(v);
+	
+	quat1 = quaternions_create_from_vector(v);
 	print_util_dbg_print_quaternion(&quat1, 3);    print_util_dbg_print(" (quat1 from v)\n");
-	quat2=maths_quat_from_vector(v2);
+	
+	quat2 = quaternions_create_from_vector(v2);
 	print_util_dbg_print_quaternion(&quat2, 3);    print_util_dbg_print(" (quat2 from v2)\n");
-	quat2=maths_quat_normalise(quat2);
+	
+	quat2 = quaternions_normalise(quat2);
 	print_util_dbg_print_quaternion(&quat2, 3);    print_util_dbg_print(" (quat2 normalised)\n");
 	
-	quat3=maths_quat_global_to_local(quat2, quat1);
+	quat3 = quaternions_global_to_local(quat2, quat1);
 	print_util_dbg_print_quaternion(&quat3, 4);    print_util_dbg_print(" (quat3 global to local)\n");
 	
-	quat4=maths_quat_local_to_global(quat2, quat3);
+	quat4 = quaternions_local_to_global(quat2, quat3);
 	print_util_dbg_print_quaternion(&quat4, 4);    print_util_dbg_print(" (quat4 local to global)\n");
 	
 	print_util_dbg_putfloat(maths_fast_sqrt(2), 6);   print_util_dbg_print(" sqrt(2)\n");

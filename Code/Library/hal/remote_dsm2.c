@@ -99,8 +99,8 @@ void remote_dsm2_rc_switch_power(bool on) {
 
 
 void remote_dsm2_rc_activate_bind_mode() {
-	int i = 0;
-	unsigned long cpu_freq = sysclk_get_cpu_hz();
+	int32_t i = 0;
+	uint32_t cpu_freq = sysclk_get_cpu_hz();
 	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_DOWN);	
 	delay_ms(1);
 	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT| GPIO_INIT_LOW);
@@ -137,7 +137,7 @@ void remote_dsm2_rc_init (void) {
     {AVR32_USART1_RXD_0_1_PIN, AVR32_USART1_RXD_0_1_FUNCTION}
    ,{AVR32_USART1_TXD_0_1_PIN, AVR32_USART1_TXD_0_1_FUNCTION}
    };
-	int i;
+	int32_t i;
 	for (i = 0; i < 16; i++) {
 		spRec1.channels[i] = 0;
 		spRec2.channels[i] = 0;

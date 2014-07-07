@@ -42,13 +42,13 @@ void piezo_speaker_init_binary(void)
 
 
 ///< instantaneous output voltage sent to the speaker - to make sounds this needs to be called repeatedly.
-void piezo_speaker_set_value(int analog_value)
+void piezo_speaker_set_value(int32_t analog_value)
 {
 	dac_dma_set_value(analog_value);
 	gpio_set_pin_low(PIEZO_LOW_PIN);
 }
 
-void piezo_speaker_set_value_binary(int binary_value)
+void piezo_speaker_set_value_binary(int32_t binary_value)
 {
 	if (binary_value<0) 
 	{
@@ -66,9 +66,9 @@ void piezo_speaker_set_value_binary(int binary_value)
 	}
 }
 
-void piezo_speaker_beep(int duration_ms, int frequency)
+void piezo_speaker_beep(int32_t duration_ms, int32_t frequency)
 {
-	int val = -1;
+	int32_t val = -1;
 	uint32_t del_us = (uint32_t)1000000 / (uint32_t)frequency;
 	if (frequency < 10) 
 	{

@@ -9,14 +9,14 @@
 typedef struct udp_connection_t {
 	Buffer_t udp_buffer;
 	struct sockaddr_in Addr; 
-	int sock;
+	int32_t sock;
 } udp_connection_t;
 
 
 
-void register_write_stream_udp(byte_stream_t *stream, udp_connection_t *udpconn, const char* target_ip, int port);
+void register_write_stream_udp(byte_stream_t *stream, udp_connection_t *udpconn, const char* target_ip, int32_t port);
 
-void register_read_stream_udp(byte_stream_t *stream, udp_connection_t *udpconn, int port);
+void register_read_stream_udp(byte_stream_t *stream, udp_connection_t *udpconn, int32_t port);
 
 
 #endif

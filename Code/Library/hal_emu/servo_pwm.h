@@ -20,8 +20,8 @@
 #endif
 
 typedef struct {
-	int value;
-	int min, max, failsafe_position;
+	int32_t value;
+	int32_t min, max, failsafe_position;
 } servo_output;
 
 

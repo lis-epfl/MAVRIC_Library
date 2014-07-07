@@ -48,7 +48,7 @@
  *
  * \param trigger_mode trigger selection for the DAC mode
 */
-void dac_dma_init(int trigger_mode);
+void dac_dma_init(int32_t trigger_mode);
 
 /**
  * \brief get the DAC sampling buffer
@@ -58,7 +58,7 @@ void dac_dma_init(int trigger_mode);
  * \param to_sample (?)
  * \param repeat (?)
 */
-void dac_dma_load_buffer(uint16_t* samples, int from_sample, int to_sample, int repeat);
+void dac_dma_load_buffer(uint16_t* samples, int32_t from_sample, int32_t to_sample, int32_t repeat);
 
 /**
  * \brief Play a sound using the DAC
@@ -69,7 +69,7 @@ void dac_dma_play(void);
 /*
 void DAC_pause();
 void DAC_resume();
-int  DAC_is_finished();
+int32_t  DAC_is_finished();
 */
 
 /**

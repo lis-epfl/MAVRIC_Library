@@ -1,14 +1,24 @@
-/*
- * doppler_radar.c
+/**
+ * \page The MAV'RIC License
  *
- * Created: 19/04/2013 16:41:52
- *  Author: sfx
- */ 
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+
+
+/**
+ * \file doppler_radar.c
+ * 
+ * The doppler effect computed by the radar
+ */
+ 
+ 
 #include "doppler_radar.h"
 #include "print_util.h"
-
 #include "math.h"
-
 #include "time_keeper.h"
 
 static volatile uint32_t even_odd2;
@@ -30,60 +40,56 @@ int32_t fft_amp[RADAR_BUFFER_SIZE];
 radar_target main_target;
 
 
-	int32_t alpha = 12;		//constant ( * 100) for the lowpass filtering of amplitude
-	int32_t input_max = 0;
-	int32_t input_min = 0;
-	int32_t rms = 0;
-	int32_t amplitude = 0;
-	int32_t amplitude2 = 0;
-	int32_t amp_old = 0;
-	int32_t mean_amp = 0;
-	int32_t frequency = 0;
-	int32_t speed = 0;
-	int32_t speed_old = 0;
-	int32_t speed2 = 0;
-	int32_t index2 = 0;
-	int32_t amp_in = 0;
-	int32_t taille = 0;
-	int32_t direction = 0;
-	int32_t f_v_factor = Sampling_frequency / RADAR_BUFFER_SIZE;		//Conversion factor to compute speed
+int32_t alpha = 12;		//constant ( * 100) for the lowpass filtering of amplitude
+int32_t input_max = 0;
+int32_t input_min = 0;
+int32_t rms = 0;
+int32_t amplitude = 0;
+int32_t amplitude2 = 0;
+int32_t amp_old = 0;
+int32_t mean_amp = 0;
+int32_t frequency = 0;
+int32_t speed = 0;
+int32_t speed_old = 0;
+int32_t speed2 = 0;
+int32_t index2 = 0;
+int32_t amp_in = 0;
+int32_t taille = 0;
+int32_t direction = 0;
+int32_t f_v_factor = Sampling_frequency / RADAR_BUFFER_SIZE;		//Conversion factor to compute speed
 
-	uint32_t time1, time2,time_result; //time1 - time2 = time_result for measure
+uint32_t time1, time2,time_result; //time1 - time2 = time_result for measure
 
 	
-void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
-	int i = 0;
-	int j = 0;
-	int counter = 0;
-	int reading_status = 3;
-	int *c = 0;
-	int read_value = 0;
+void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) 
+{
+	int32_t i = 0;
+	int32_t j = 0;
+	int32_t counter = 0;
+	int32_t reading_status = 3;
+	int32_t *c = 0;
+	int32_t read_value = 0;
 	int32_t index = 0;
-
 
 	dsp16_trans_realcomplexfft(vect_outputI, i_buffer, FFT_POWER);  //WARNING !! If you change the buffer size you need to change the base 2 power size
 	dsp16_trans_realcomplexfft(vect_outputQ, q_buffer, FFT_POWER);  //WARNING !! If you change the buffer size you need to change the base 2 power size
 			
-						
 	for (i = 0;i< RADAR_BUFFER_SIZE;i++)
 	{				
 		fft_amp[i] = maths_fast_sqrt(SQR(vect_outputI[i].real) + SQR(vect_outputI[i].imag));
 	}
 
-			
 	//Find maximum of FFT and corresponding frequency
 	//time1 = time_keeper_get_micros();
 	amplitude = 0;
 	index = 0;
 	for(i = 1;i < RADAR_BUFFER_SIZE / 2 - 1; i++) //ignore the element 0 (low frequency noise)
 	{
-				
 		if(fft_amp[i] > amplitude)
 		{
 			amplitude = fft_amp[i];
 			index = i;			//find index of max
 		}
-
 	}
 			
 	//Let's find the second maximum peak
@@ -94,23 +100,18 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 		if(fft_amp[i] > amplitude2 && i != index)
 		{
 			amplitude2 = fft_amp[i];
-			index2 = i;
-					
+			index2 = i;	
 		}
-				
 	}
 			
 	//Don't need to test the following with index2 because index corresponds to the absolute maximum anyway
-			
 	if(index > 1)
 	{
 		mean_amp = (2 * fft_amp[index] + fft_amp[index + 1] + fft_amp[index - 1]) / 4; //Average on the three peaks in Fourier domain
 	}
-			
 	else
 	{
-		mean_amp = (fft_amp[index] + fft_amp[index + 1]) / 2; //Same average
-				
+		mean_amp = (fft_amp[index] + fft_amp[index + 1]) / 2; //Same average	
 	}
 			
 	if(mean_amp < THRESHOLD)
@@ -129,7 +130,6 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 			mean_amp = (alpha * ((fft_amp[index] + fft_amp[index + 1] + fft_amp[index - 1]) / 3) + (filter_conversion - alpha) * amp_old) / filter_conversion;
 			amp_old = mean_amp;	//update the value of the previous amplitude for next iteration
 		}
-			
 		else
 		{
 			mean_amp = (alpha * ((fft_amp[index] + fft_amp[index + 1]) / 2) + (filter_conversion - alpha) * amp_old) / filter_conversion;
@@ -137,21 +137,18 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 		}
 		//Factor 1000 for speed to avoid decimal value
 		//The true speed is (speed) / 100 (m / s) or interpret it as cm / s
-				
 			
 		frequency = f_v_factor * 10 * (index);
 		speed = 1000 * (3 * powf(10,8) * frequency / (2 * 2415 * pow(10,9)));	//compute speed (*0.01f because of Fsample and *10 because of freq)
 			
 		frequency = f_v_factor * 10 * (index2);
 		speed2 = 1000 * (3 * powf(10,8) * frequency / (2 * 2415 * pow(10,9)));	//compute speed (*0.01f because of Fsample and *10 because of freq)											
-				
 			
 		//Let's find the speed that is closer to the previous one (to avoid high frequency changes for the speed)
 					
 		if(abs(speed - speed_old) <= abs(speed2 - speed_old))
 		{
 			speed_old = speed;			//update the old speed
-					
 	
 		}
 		else if(abs(speed - speed_old) > abs(speed2 - speed_old)) // in this case the speed is the one corresponding to the second peak
@@ -162,7 +159,6 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 					
 			if(index > 1)
 			{
-						
 				mean_amp = (alpha * ((fft_amp[index2] + fft_amp[index2 + 1] + fft_amp[index2 - 1]) / 3) + (filter_conversion - alpha) * amp_old) / filter_conversion;
 				amp_old = mean_amp;
 			}					
@@ -171,12 +167,9 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 				//mean_amp = (vect_inputQ[index2] + vect_inputQ[index2 + 1]) / 2;	
 				mean_amp = (alpha * ((fft_amp[index2] + fft_amp[index2 + 1]) / 2) + (filter_conversion - alpha) * amp_old) / filter_conversion;
 				amp_old = mean_amp;
-					
 			}					
 		}
-				
 	}
-			
 
 	//Find the direction of motion by doing vector product between I and Q channel
 	if(vect_outputI[index].real * vect_outputQ[index].imag - vect_outputI[index].imag * vect_outputQ[index].real < 0)
@@ -188,17 +181,20 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 		direction = 0;
 	}
 	else
+	{	
 		direction = 1;
-
-	for (i = 0; i < RADAR_BUFFER_SIZE; i++) {
-		if(vect_outputI[index].real * vect_outputQ[index].imag - vect_outputI[index].imag * vect_outputQ[index].real < 0){
+	}
+	
+	for (i = 0; i < RADAR_BUFFER_SIZE; i++) 
+	{
+		if(vect_outputI[index].real * vect_outputQ[index].imag - vect_outputI[index].imag * vect_outputQ[index].real < 0)
+		{
 			fft_amp[i] = -fft_amp[i];
 		}
 	}
 	
 	time2 = time_keeper_get_micros();
 	time_result = time2 - time1;
-	//
 	time1 = time_keeper_get_micros();
 
 	main_target.velocity = direction * speed / 100.0f;
@@ -214,13 +210,14 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]) {
 	rms = 0;
 	mean_amp = 0;
 	read_value = 0;
-	
 }
 
-radar_target* get_tracked_target() {
+radar_target* get_tracked_target()
+{
 	return &main_target;
 }
 
-int32_t* get_raw_FFT() {
+int32_t* get_raw_FFT() 
+{
 	return &fft_amp;
 }

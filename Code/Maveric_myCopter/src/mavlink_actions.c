@@ -178,7 +178,7 @@ task_return_t mavlink_send_status(void)
 								0b1111110000100111, 									// sensors enabled
 								0b1111110000100111, 									// sensors health
 								0,                  									// load
-								(int)(1000.0f * battery_voltage), 						// bat voltage (mV)
+								(int32_t)(1000.0f * battery_voltage), 						// bat voltage (mV)
 								0,               										// current (mA)
 								battery_remaining,										// battery remaining
 								0, 0,  													// comms drop, comms errors
@@ -442,7 +442,7 @@ task_return_t mavlink_send_hud(void)
 								airspeed, 
 								groundspeed, 
 								heading, 
-								(int)((centralData->controls.thrust + 1.0f) * 50), 
+								(int32_t)((centralData->controls.thrust + 1.0f) * 50), 
 								-centralData->position_estimator.localPosition.pos[2] + centralData->position_estimator.localPosition.origin.altitude, 
 								-centralData->position_estimator.vel[2]	);
 	return TASK_RUN_SUCCESS;

@@ -60,7 +60,7 @@ void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, position_estimator_
 {
 	float rpyt_errors[4];
 	Control_Command_t input;
-	int i;
+	int32_t i;
 	UQuat_t qtmp;
 	
 	// set the controller input
@@ -159,7 +159,7 @@ void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, position_estimator_
 
 void stabilisation_copter_mix_to_servos_diag_quad(Control_Command_t *control)
 {
-	int i;
+	int32_t i;
 	float motor_command[4];
 	
 	motor_command[M_FRONT_RIGHT]= control->thrust + ( - control->rpy[ROLL] + control->rpy[PITCH]) + M_FR_DIR * control->rpy[YAW];
@@ -187,7 +187,7 @@ void stabilisation_copter_mix_to_servos_diag_quad(Control_Command_t *control)
 
 void stabilisation_copter_mix_to_servos_cross_quad(Control_Command_t *control)
 {
-	int i;
+	int32_t i;
 	float motor_command[4];
 	
 	motor_command[M_FRONT]= control->thrust + control->rpy[PITCH] + M_FRONT_DIR * control->rpy[YAW];

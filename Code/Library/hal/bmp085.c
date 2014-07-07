@@ -30,20 +30,21 @@
 pressure_data pressure_outputs;		///< declare an object containing the barometer's data
 
 ///< Prototype definition
-int16_t bmp085_read_int(unsigned char address);
+int16_t bmp085_read_int(uint8_t address);
 
-int16_t bmp085_read_int(unsigned char address) 
+int16_t bmp085_read_int(uint8_t address) 
 {
 	int16_t result;
-	twim_write(&AVR32_TWIM0, (uint8_t*) &address, 1, BMP085_SLAVE_ADDRESS, false);
+	twim_write(&AVR32_TWIM0, &address, 1, BMP085_SLAVE_ADDRESS, false);
 	twim_read(&AVR32_TWIM0, (uint8_t*)&(result), 2, BMP085_SLAVE_ADDRESS, false);
+	
 	return result;
 }
 
 void bmp085_init()
 {
 	pressure_outputs.altitude_offset = 0.0f;
-	for (int i = 0; i < 3; i++) 
+	for (int32_t i = 0; i < 3; i++) 
 	{
 		pressure_outputs.last_altitudes[i] = 0.0f;
 	}
@@ -107,7 +108,7 @@ void bmp085_init_slow(){
 
 pressure_data* bmp085_get_pressure_data_slow(float offset) 
 {
-		int i;
+		int32_t i;
 		float altitude, vertical_speed;
 		int32_t UT, UP, B3, B5, B6, X1, X2, X3, p;
 		uint32_t B4, B7;

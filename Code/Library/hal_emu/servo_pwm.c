@@ -16,7 +16,7 @@
 
 
 void servo_pwm_init(void){
-      int i;
+      int32_t i;
 /*	  // unlock registers
 	  AVR32_PWM.wpcr = (AVR32_PWM_WPCR_WPKEY_KEY   << AVR32_PWM_WPCR_WPKEY) |
 	          AVR32_PWM_WPCR_WPRG0_MASK                            |
@@ -72,10 +72,10 @@ void servo_pwm_init(void){
 	
 }
 
-void set_servo(int channel, int val_a, int val_b){
-	int duty_a=val_a+SERVO_CENTER_DUTY_TICKS;
-	int duty_b=val_b+SERVO_CENTER_DUTY_TICKS;
-	int deadtime=(SERVO_PERIOD-duty_a-duty_b)/2;
+void set_servo(int32_t channel, int32_t val_a, int32_t val_b){
+	int32_t duty_a=val_a+SERVO_CENTER_DUTY_TICKS;
+	int32_t duty_b=val_b+SERVO_CENTER_DUTY_TICKS;
+	int32_t deadtime=(SERVO_PERIOD-duty_a-duty_b)/2;
 	/*AVR32_PWM.channel[channel &0b11].cprdupd=SERVO_PERIOD;
 	AVR32_PWM.channel[channel &0b11].cdtyupd=duty_a+deadtime;
 	AVR32_PWM.channel[channel &0b11].dtupd= deadtime<<16 | deadtime;	*/

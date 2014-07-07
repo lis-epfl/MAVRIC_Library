@@ -59,11 +59,11 @@ static const gpio_map_t ADCIFA_GPIO_MAP = {
 
 volatile avr32_adcifa_t *adcifa = &AVR32_ADCIFA;							///< ADCIFA IP registers address
 
-static volatile int sequencer_item_count, channel_count;					///< Declare counters
+static volatile int32_t sequencer_item_count, channel_count;					///< Declare counters
 	
 static volatile int32_t sample_counter, oversampling_counter;				///< Declare counters
 	
-static volatile int number_of_samples, oversampling, oversampling_divider;	///< Declare ADC sampling stuff
+static volatile int32_t number_of_samples, oversampling, oversampling_divider;	///< Declare ADC sampling stuff
 
 bool continuous_mode;														///< Declare whether to work in continuous mode or not
 	
@@ -105,7 +105,7 @@ adcifa_sequencer_conversion_opt_t adcifa_sequencer0_conversion_opt[SLOTS_PER_SEQ
 __attribute__((__interrupt__))
 static void processData(void) 
 {
-	int ch;
+	int32_t ch;
 	volatile int16_t value;
 
 	if (sample_counter>=number_of_samples)  
@@ -212,7 +212,7 @@ void adc_int_init(uint32_t adc_frequency, uint8_t reference_source)
 	adcifa_disable_interrupt(adcifa, 0xffffffff);
 	INTC_register_interrupt( (__int_handler) &processData, AVR32_ADCIFA_SEQUENCER0_IRQ, AVR32_INTC_INT1);
 	//INTC_register_interrupt( (__int_handler) &processData, AVR32_ADCIFA_SEQUENCER1_IRQ, AVR32_INTC_INT1);
-	//int period_us=1000000 / samplingrate;
+	//int32_t period_us=1000000 / samplingrate;
 }
 
 
@@ -244,7 +244,7 @@ int8_t adc_int_sequencer_add(int16_t* buffer, uint8_t input_p, uint8_t input_n, 
 
 
 ///< starts sampling, captures one buffer length and then stops
-void adc_int_start_sampling(int length, int samplingrate, int set_oversampling, int set_oversampling_divider, bool continuous)
+void adc_int_start_sampling(int32_t length, int32_t samplingrate, int32_t set_oversampling, int32_t set_oversampling_divider, bool continuous)
 {
 	///< Configure ADCIFA sequencer 0
 	adcifa_sequence_opt.convnb = sequencer_item_count;
@@ -253,7 +253,7 @@ void adc_int_start_sampling(int length, int samplingrate, int set_oversampling, 
 	oversampling = set_oversampling;
 	oversampling_divider = set_oversampling_divider;
 
-	volatile int period_us = adc_config_options.frequency / (samplingrate*oversampling);	
+	volatile int32_t period_us = adc_config_options.frequency / (samplingrate*oversampling);	
 	oversampling_counter = 0;
 	sample_counter = -10;
 	number_of_samples = length;
@@ -286,7 +286,7 @@ Bool adc_int_sampling_complete(void)
 //}
 
 
-int16_t adc_int_get_sample(int channel, int sample) 
+int16_t adc_int_get_sample(int32_t channel, int32_t sample) 
 {
 	int16_t *buffer=adci_buffer[channel];
 	return buffer[sample];
@@ -299,7 +299,7 @@ int16_t** adc_int_get_buffer(void)
 }
 
 	
-int adc_int_get_sampling_status(void) 
+int32_t adc_int_get_sampling_status(void) 
 {
 	return sample_counter;
 }

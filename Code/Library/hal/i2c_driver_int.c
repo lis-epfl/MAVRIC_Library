@@ -22,7 +22,7 @@
 #include "print_util.h"
 
 i2c_packet_t transfer_queue[I2C_SCHEDULE_SLOTS];		///< buffer containing the transfer queue for the i2c
-int current_slot, last_slot;							///< current and last slot for the scheduling of the transfer using i2c
+int32_t current_slot, last_slot;							///< current and last slot for the scheduling of the transfer using i2c
 i2c_packet_t *current_transfer;							///< pointer to the i2c structure
 
 ///< Function prototype definition
@@ -33,7 +33,7 @@ i2c_packet_t *current_transfer;							///< pointer to the i2c structure
  *
  * \return error status
  */
-char i2c_driver_reset(unsigned char i2c_device);
+int8_t  i2c_driver_reset(uint8_t  i2c_device);
 /**
  * \brief Trigger a request on the i2c driver
  *
@@ -42,7 +42,7 @@ char i2c_driver_reset(unsigned char i2c_device);
  *
  * \return error status
  */
-char i2c_driver_trigger_request(unsigned char i2c_device, i2c_packet_t *transfer);
+int8_t  i2c_driver_trigger_request(uint8_t  i2c_device, i2c_packet_t *transfer);
 
 /**  
  * \brief The I2C interrupt handler.
@@ -122,7 +122,7 @@ ISR(i2c_int_handler_i2c0,CONF_TWIM_IRQ_GROUP,CONF_TWIM_IRQ_LEVEL)
 //__attribute__((__interrupt__))
 //static void i2c_int_handler_i2c1(void) {};
 
-int i2c_driver_init(unsigned char i2c_device) 
+int32_t i2c_driver_init(uint8_t  i2c_device) 
 {
 	volatile avr32_twim_t *twim;
 	switch (i2c_device) {
@@ -180,7 +180,7 @@ int i2c_driver_init(unsigned char i2c_device)
 	return STATUS_OK;
 }
 
-char i2c_driver_reset(unsigned char i2c_device) 
+int8_t  i2c_driver_reset(uint8_t  i2c_device) 
 {
 	volatile avr32_twim_t *twim;
 	switch (i2c_device) 
@@ -215,7 +215,7 @@ char i2c_driver_reset(unsigned char i2c_device)
 	return STATUS_OK; //No error
 }
 
-char i2c_driver_trigger_request(unsigned char i2c_device, i2c_packet_t *transfer) 
+int8_t  i2c_driver_trigger_request(uint8_t  i2c_device, i2c_packet_t *transfer) 
 {
 	///< initiate transfer of given request
 	///< set up DMA channel
@@ -328,16 +328,16 @@ char i2c_driver_trigger_request(unsigned char i2c_device, i2c_packet_t *transfer
 }
 
 //NOT IMPLEMENTED YET
-//int i2c_append_transfer(i2c_packet_t *request) {};
+//int32_t i2c_append_transfer(i2c_packet_t *request) {};
 //
-//int i2c_append_read_transfer(uint8_t slave_address, uint8_t *data, uint16_t size, task_handle_t *event_handler) {};
+//int32_t i2c_append_read_transfer(uint8_t slave_address, uint8_t *data, uint16_t size, task_handle_t *event_handler) {};
 	//
-//int i2c_append_write_transfer(uint8_t slave_address, uint8_t *data, uint16_t size, task_handle_t *event_handler) {};
+//int32_t i2c_append_write_transfer(uint8_t slave_address, uint8_t *data, uint16_t size, task_handle_t *event_handler) {};
 	//
-//int i2c_append_register_read_transfer(uint8_t slave_address, uint8_t register_address, uint8_t *data, uint16_t size, task_handle_t *event_handler) {};
+//int32_t i2c_append_register_read_transfer(uint8_t slave_address, uint8_t register_address, uint8_t *data, uint16_t size, task_handle_t *event_handler) {};
 //
-//int i2c_clear_queue() {};
+//int32_t i2c_clear_queue() {};
 //
 //bool i2c_is_ready() {};
 //
-//int i2c_get_queued_requests() {};
+//int32_t i2c_get_queued_requests() {};

@@ -22,7 +22,7 @@
 
 void scheduler_init(task_set *ts) 
 {
-	int i;
+	int32_t i;
 	
 	for (i = 0; i < ts->number_of_tasks; i++) 
 	{
@@ -35,7 +35,7 @@ void scheduler_init(task_set *ts)
 }
 
 
-task_handle_t scheduler_register_task(task_set *ts, int task_slot, unsigned long repeat_period, task_run_mode_t run_mode, function_pointer call_function) 
+task_handle_t scheduler_register_task(task_set *ts, int32_t task_slot, uint32_t repeat_period, task_run_mode_t run_mode, function_pointer call_function) 
 {
 	if ((task_slot < 0) || (task_slot >= ts->number_of_tasks)) 
 	{
@@ -61,9 +61,9 @@ task_handle_t scheduler_register_task(task_set *ts, int task_slot, unsigned long
 }
 
 
-bool scheduler_add_task(task_set *ts, unsigned long repeat_period, task_run_mode_t run_mode, function_pointer call_function, uint32_t task_id) 
+bool scheduler_add_task(task_set *ts, uint32_t repeat_period, task_run_mode_t run_mode, function_pointer call_function, uint32_t task_id) 
 {
-	int task_slot = 0;
+	int32_t task_slot = 0;
 	
 	while ((task_slot < ts->number_of_tasks) && (ts->tasks[task_slot].call_function != NULL)) 
 	{
@@ -83,7 +83,7 @@ bool scheduler_add_task(task_set *ts, unsigned long repeat_period, task_run_mode
 
 
 void scheduler_sort_taskset_by_period(task_set *ts){
-	int i;
+	int32_t i;
 	bool sorted = false;
 	task_entry tmp;
 	if (ts->number_of_tasks < 2) 
@@ -110,10 +110,10 @@ void scheduler_sort_taskset_by_period(task_set *ts){
 }
 
 
-int scheduler_run_update(task_set *ts, uint8_t schedule_strategy) 
+int32_t scheduler_run_update(task_set *ts, uint8_t schedule_strategy) 
 {
-	int i;
-	int realtime_violation = 0;
+	int32_t i;
+	int32_t realtime_violation = 0;
 	volatile function_pointer call_task;
 	task_return_t treturn;
 
@@ -189,7 +189,7 @@ int scheduler_run_update(task_set *ts, uint8_t schedule_strategy)
 
 task_entry* scheduler_get_task_by_id(task_set *ts, uint16_t task_id)
 {
-	int i = 0;
+	int32_t i = 0;
 	for (i = 0; i < ts->number_of_tasks; i++) 
 	{
 		if (ts->tasks[i].task_id == task_id)
@@ -219,7 +219,7 @@ void scheduler_change_run_mode(task_entry *te, task_run_mode_t new_run_mode)
 }
 
 
-void scheduler_change_task_period(task_entry *te, unsigned long repeat_period) 
+void scheduler_change_task_period(task_entry *te, uint32_t repeat_period) 
 {
 	te->repeat_period = repeat_period;
 	scheduler_change_run_mode(te, RUN_REGULAR);
@@ -227,7 +227,7 @@ void scheduler_change_task_period(task_entry *te, unsigned long repeat_period)
 }
 
 
-void scheduler_suspend_task(task_entry *te, unsigned long delay) 
+void scheduler_suspend_task(task_entry *te, uint32_t delay) 
 {
 	te->next_run = GET_TIME + delay;
 }

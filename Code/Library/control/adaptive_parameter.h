@@ -19,19 +19,19 @@
  * float control = 0.0;
  * // param1
  * float param1 = 0.0;
- * int number_set_points1 = 5;
+ * int32_t number_set_points1 = 5;
  * float new_setpoints1[5] = {0.1, 0.2, 0.4, 0.7, 0.9};
  * float new_setvalues1[5] = {0, 1, 0, 100, 0};
  * adaptive_parameter_add(&control, &param1, number_set_points1, new_setpoints1, new_setvalues1);
  * // param2
  * float param2 = 0.0;
- * int number_set_points2 = 2;
+ * int32_t number_set_points2 = 2;
  * float new_setpoints2[2] = {0.1, 1.5};
  * float new_setvalues2[2] = {10, -10};
  * adaptive_parameter_add(&control, &param2, number_set_points2,
  * 						new_setpoints2, new_setvalues2);
  * printf("Control, Param1, Param2\n");
- * int i;
+ * int32_t i;
  * for (i = 0; i < 20; ++i)
  * {
  *		control = 1 / 20.0 * i;
@@ -48,6 +48,8 @@
 extern "C" {
 #endif
 
+#include "compiler.h"
+
 #define MAX_ADAPT_PARAM_SETPOINTS 5
 #define MAX_ADAPT_PARAM_COUNT 10
 
@@ -55,15 +57,16 @@ typedef struct
 {
 	float* control_variable;					///< Control Variable
 	float* parameter;							///< Parameter
-	int nb_setpoints;							///< Number of setpoints
+	int32_t nb_setpoints;						///< Number of setpoints
 	float setpoints[MAX_ADAPT_PARAM_SETPOINTS];	///< set points
 	float setvalues[MAX_ADAPT_PARAM_SETPOINTS];	///< set values
 } Adaptive_Parameter_t;
 
+
 typedef struct
 {
-	int param_count;										///< Number of Parameters
-	Adaptive_Parameter_t parameters[MAX_ADAPT_PARAM_COUNT];	///< Parameter set
+	int32_t param_count;										///< Number of Parameters
+	Adaptive_Parameter_t parameters[MAX_ADAPT_PARAM_COUNT];		///< Parameter set
 } Adaptive_Parameter_Set_t;
 
 /**
@@ -87,8 +90,8 @@ void adaptive_parameter_init(void);
  *
  * \return					Returns 1 if successfully added and 0 otherwise
  */
-int adaptive_parameter_add(float* control_variable, float* parameter, 
-							int nb_setpoints, float* setpoints, float* setvalues);
+int32_t adaptive_parameter_add(float* control_variable, float* parameter, 
+							int32_t nb_setpoints, float* setpoints, float* setvalues);
 /**
  * \brief					Update adaptive parameter
  *

@@ -58,7 +58,7 @@ bool inputAvailable()
 
 bool fill_input_buffer(Buffer_t *buffer) {
 	char buf;
-	int n;
+	int32_t n;
 	if (inputAvailable()){
 		n=read(STDIN_FILENO, &buf, 1);
 		if (n>0) buffer_put(buffer, buf);

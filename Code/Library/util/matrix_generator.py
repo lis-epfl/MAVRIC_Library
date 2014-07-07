@@ -54,7 +54,7 @@ def generate_types( dim):
     
     #define getters
     output+="// return vector of a row\n"
-    output+="vector_%i_t"%dim+" static inline row%i"%dim+"(const matrix_"+type_ext+"_t m, int row) {\n"+\
+    output+="vector_%i_t"%dim+" static inline row%i"%dim+"(const matrix_"+type_ext+"_t m, int32_t row) {\n"+\
                      "   vector_%i_t"%dim+"  result= {.v={";
     for i in range(0, dim):
             output+="m.v[row][%i]"%(  i)
@@ -64,7 +64,7 @@ def generate_types( dim):
     output+="   return result;\n}\n\n"
 
     output+="// return vector of a column\n"
-    output+="vector_%i_t"%dim+" static inline col%i"%dim+"(const matrix_"+type_ext+"_t m, int col) {\n"+\
+    output+="vector_%i_t"%dim+" static inline col%i"%dim+"(const matrix_"+type_ext+"_t m, int32_t col) {\n"+\
                      "   vector_%i_t"%dim+"  result= {.v={";
     for i in range(0, dim):
             output+="m.v[%i][col]"%(i)
@@ -318,6 +318,7 @@ object = open("small_matrix.h", "w+",0);
 sys.stdout = object
 #print "#ifndef SMALL_MATRIX_H_\n#define SMALL_MATRIX_H_\n\n\n"
 object.write("#ifndef SMALL_MATRIX_H_\n#define SMALL_MATRIX_H_\n\n\n")
+object.write('#include"compiler.h"\n\n')
 for d in range(1,7):
     #print generate_types(d)
     #print generate_mul(d)
