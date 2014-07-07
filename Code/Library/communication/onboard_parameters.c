@@ -26,7 +26,7 @@ Parameter_Set_t param_set;
 
 
 //------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS
+// PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
 /**
@@ -49,6 +49,10 @@ static float onboard_parameters_read_parameter(int32_t param_index);
  */
 static void onboard_parameters_update_parameter(int32_t param_index, float value);
 
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
 static float onboard_parameters_read_parameter(int32_t param_index) 
 {
@@ -139,9 +143,8 @@ static void onboard_parameters_update_parameter(int32_t param_index, float value
 
 
 //------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS
+// PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-
 
 void onboard_parameters_add_parameter_uint8(uint8_t* val, const char* param_name) 
 {
