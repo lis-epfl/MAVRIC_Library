@@ -65,31 +65,6 @@ task_set* mavlink_stream_get_taskset(void);
 
 
 /**
- * \brief	Receive mavlink message
- */
-void mavlink_stream_receive_handler(void);
-
-
-/**
- * \brief			Mavlink parsing of message
- *
- * \param stream	Pointer to the mavlink receive stream structure
- * \param rec		Pointer to the mavlink receive message structure 
- *
- * \return			Error code, 0 if no message decoded, 1 else
- */
-uint8_t mavlink_stream_receive(byte_stream_t* stream, Mavlink_Received_t* rec);
-
-
-/**
- * \brief		handling specific mavlink message
- *
- * \param rec	Pointer to the mavlink receive message structure
- */
-void mavlink_stream_handle_message(Mavlink_Received_t* rec);
-
-
-/**
  * \brief	Flushing mavlink stream
  */
 void mavlink_stream_flush(void);
