@@ -121,7 +121,7 @@ void boardsupport_init(central_data_t *centralData) {
 	
 	// init imu & compass
 	imu_init(&(centralData->imu1));
-	bmp085_init();
+	bmp085_init(&(centralData->pressure));
 	
 	// init mavlink
 	mavlink_stream_init(centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID);

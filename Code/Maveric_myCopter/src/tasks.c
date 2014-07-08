@@ -679,21 +679,17 @@ task_return_t tasks_run_navigation_update()
 }
 
 
-uint32_t last_baro_update;
-
-
 task_return_t tasks_run_barometer_update()
 {
 	central_data_t *central_data = central_data_get_pointer_to_struct();
-	pressure_data *pressure = bmp085_get_pressure_data_slow(centralData->pressure.altitude_offset);
+	
+	bmp085_get_pressure_data_slow(&(central_data->pressure));
 	
 	if (central_data->simulation_mode == 1) 
 	{
-		simulation_simulate_barometer(&centralData->sim_model, pressure);
+		simulation_simulate_barometer(&centralData->sim_model, &(central_data->pressure));
 	} 
 
-	centralData->pressure = *pressure;
-	
 	return TASK_RUN_SUCCESS;
 }
 

@@ -26,7 +26,7 @@
 #include "time_keeper.h"
 #include "print_util.h"
 
-pressure_data pressure_outputs;		///< declare an object containing the barometer's data
+//pressure_data pressure_outputs;		///< declare an object containing the barometer's data
 
 ///< Prototype definition
 int16_t bmp085_read_int(uint8_t address);
@@ -40,14 +40,14 @@ int16_t bmp085_read_int(uint8_t address)
 	return result;
 }
 
-void bmp085_init()
+void bmp085_init(pressure_data *pressure_outputs)
 {
-	pressure_outputs.altitude_offset = 0.0f;
+	pressure_outputs->altitude_offset = 0.0f;
 	for (int32_t i = 0; i < 3; i++) 
 	{
-		pressure_outputs.last_altitudes[i] = 0.0f;
+		pressure_outputs->last_altitudes[i] = 0.0f;
 	}
-	pressure_outputs.vario_vz = 0.0f;
+	pressure_outputs->vario_vz = 0.0f;
 	bmp085_init_slow();
 }
 
@@ -105,7 +105,7 @@ void bmp085_init_slow(){
  
 
 
-pressure_data* bmp085_get_pressure_data_slow(float offset) 
+void bmp085_get_pressure_data_slow(pressure_data *pressure_outputs) 
 {
 		int32_t i;
 		float altitude, vertical_speed;
@@ -120,36 +120,36 @@ pressure_data* bmp085_get_pressure_data_slow(float offset)
 		float dt;
 		///< calibration: use datasheet numbers!
 
-		switch (pressure_outputs.state) 
+		switch (pressure_outputs->state) 
 		{
 			case IDLE:
 				twim_write(&AVR32_TWIM0, (uint8_t*) &start_command_temp, 2, BMP085_SLAVE_ADDRESS, false);
 				//delay_ms(7);
-				pressure_outputs.state=GET_TEMP;
+				pressure_outputs->state=GET_TEMP;
 				break;
 			case GET_TEMP:
 				start_address = BMP085_TEMPDATA;
 				twim_write(&AVR32_TWIM0, (uint8_t*) &start_address, 1, BMP085_SLAVE_ADDRESS, false);
-				twim_read(&AVR32_TWIM0, (uint8_t*)&(pressure_outputs.raw_temperature), 2, BMP085_SLAVE_ADDRESS, false);
+				twim_read(&AVR32_TWIM0, (uint8_t*)&(pressure_outputs->raw_temperature), 2, BMP085_SLAVE_ADDRESS, false);
 		
 				twim_write(&AVR32_TWIM0, (uint8_t*) &start_command_pressure, 2, BMP085_SLAVE_ADDRESS, false);
-				pressure_outputs.state=GET_PRESSURE;
+				pressure_outputs->state=GET_PRESSURE;
 				//delay_ms(15);
 				break;
 			case GET_PRESSURE:
 				start_address = BMP085_PRESSUREDATA;
 				twim_write(&AVR32_TWIM0, (uint8_t*) &start_address, 1, BMP085_SLAVE_ADDRESS, false);
-				twim_read(&AVR32_TWIM0, (uint8_t*)&(pressure_outputs.raw_pressure), 3, BMP085_SLAVE_ADDRESS, false);
+				twim_read(&AVR32_TWIM0, (uint8_t*)&(pressure_outputs->raw_pressure), 3, BMP085_SLAVE_ADDRESS, false);
 		
-				UP= ((uint32_t)pressure_outputs.raw_pressure[0] << 16 |(uint32_t)pressure_outputs.raw_pressure[1] << 8 | (uint32_t)pressure_outputs.raw_pressure[2]) >> (8 - BMP085_OVERSAMPLING_MODE);
+				UP= ((uint32_t)pressure_outputs->raw_pressure[0] << 16 |(uint32_t)pressure_outputs->raw_pressure[1] << 8 | (uint32_t)pressure_outputs->raw_pressure[2]) >> (8 - BMP085_OVERSAMPLING_MODE);
  
-				UT = pressure_outputs.raw_temperature[0] << 8 |pressure_outputs.raw_temperature[1];
+				UT = pressure_outputs->raw_temperature[0] << 8 |pressure_outputs->raw_temperature[1];
 				///< step 1
 				X1 = (UT - (int32_t)ac6) * ((int32_t)ac5) / pow(2,15);
 				X2 = ((int32_t)mc * pow(2,11)) / (X1 + (int32_t)md);
 				B5 = X1 + X2;
-				pressure_outputs.temperature = (B5 + 8) / pow(2,4);
-				pressure_outputs.temperature /= 10;
+				pressure_outputs->temperature = (B5 + 8) / pow(2,4);
+				pressure_outputs->temperature /= 10;
 	
 				///< do pressure calcs
 				B6 = B5 - 4000;
@@ -181,57 +181,53 @@ pressure_data* bmp085_get_pressure_data_slow(float offset)
 
 				p = p + ((X1 + X2 + (int32_t)3791) >> 4);
 
-				pressure_outputs.pressure=p;
+				pressure_outputs->pressure = p;
 		
-				vertical_speed = pressure_outputs.altitude;
-				altitude=44330.0f * (1.0f - pow(pressure_outputs.pressure /sealevelPressure,0.190295f)) + pressure_outputs.altitude_offset;
+				vertical_speed = pressure_outputs->altitude;
+				altitude = 44330.0f * (1.0f - pow(pressure_outputs->pressure /sealevelPressure,0.190295f)) + pressure_outputs->altitude_offset;
 			
 				for (i = 0; i < 2; i++) 
 				{
-					pressure_outputs.last_altitudes[i] = pressure_outputs.last_altitudes[i + 1];
+					pressure_outputs->last_altitudes[i] = pressure_outputs->last_altitudes[i + 1];
 				}
-				pressure_outputs.last_altitudes[2] = altitude;
-				altitude=maths_median_filter_3x(pressure_outputs.last_altitudes[0], pressure_outputs.last_altitudes[1], pressure_outputs.last_altitudes[2]);
+				pressure_outputs->last_altitudes[2] = altitude;
+				altitude = maths_median_filter_3x(pressure_outputs->last_altitudes[0], pressure_outputs->last_altitudes[1], pressure_outputs->last_altitudes[2]);
 			
-				if (maths_f_abs(altitude-pressure_outputs.altitude) < 15.0f) 
+				if (maths_f_abs(altitude-pressure_outputs->altitude) < 15.0f) 
 				{
-					pressure_outputs.altitude = (BARO_ALT_LPF * pressure_outputs.altitude) + (1.0f - BARO_ALT_LPF) * altitude;
+					pressure_outputs->altitude = (BARO_ALT_LPF * pressure_outputs->altitude) + (1.0f - BARO_ALT_LPF) * altitude;
 				}
 				else 
 				{
-					pressure_outputs.altitude = altitude;
+					pressure_outputs->altitude = altitude;
 				}
 			
-				dt = (time_keeper_get_micros()-pressure_outputs.last_update) / 1000000.0f;
-				pressure_outputs.dt = dt;
-				vertical_speed = -(pressure_outputs.altitude-vertical_speed) / dt;
+				dt = (time_keeper_get_micros()-pressure_outputs->last_update) / 1000000.0f;
+				pressure_outputs->dt = dt;
+				vertical_speed = -(pressure_outputs->altitude-vertical_speed) / dt;
 			
 				if (abs(vertical_speed) > 20) 
 				{
 					vertical_speed = 0.0f;
 				}
-				pressure_outputs.vario_vz = (VARIO_LPF) * pressure_outputs.vario_vz + (1.0f - VARIO_LPF) * (vertical_speed);
+				pressure_outputs->vario_vz = (VARIO_LPF) * pressure_outputs->vario_vz + (1.0f - VARIO_LPF) * (vertical_speed);
 			
-				pressure_outputs.last_update = time_keeper_get_micros();
-				pressure_outputs.state = IDLE;
+				pressure_outputs->last_update = time_keeper_get_micros();
+				pressure_outputs->state = IDLE;
 				break;
 		}
-		pressure_outputs.last_state_update=time_keeper_get_micros();
-		pressure_outputs.altitude_offset = offset;
-		
-		return &pressure_outputs;
+		pressure_outputs->last_state_update = time_keeper_get_micros();
 }
 
-bool bmp085_newValidBarometer(uint32_t *timePrevBarometer)
+bool bmp085_newValidBarometer(pressure_data *pressure_outputs, uint32_t *timePrevBarometer)
 {
-	if (*timePrevBarometer < pressure_outputs.last_update) 
+	if (*timePrevBarometer < pressure_outputs->last_update) 
 	{
-		*timePrevBarometer = pressure_outputs.last_update;
+		*timePrevBarometer = pressure_outputs->last_update;
 		return true;
 	}
 	else
 	{
 		return false;
 	}
-	
 }

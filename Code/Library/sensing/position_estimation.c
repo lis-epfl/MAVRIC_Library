@@ -107,7 +107,7 @@ void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps)
 
 void init_barometer_offset(position_estimator_t *pos_est, pressure_data *barometer)
 {
-	bool boolNewBaro = bmp085_newValidBarometer(&pos_est->timeLastBarometerMsg);
+	bool boolNewBaro = bmp085_newValidBarometer(barometer, &pos_est->timeLastBarometerMsg);
 
 		
 	//if ((centralData->init_gps_position)&&(boolNewBaro))
@@ -239,7 +239,7 @@ void position_estimation_position_correction(position_estimator_t *pos_est, pres
 		if (pos_est->init_barometer)
 		{
 			// altimeter correction
-			if (bmp085_newValidBarometer(&pos_est->timeLastBarometerMsg))
+			if (bmp085_newValidBarometer(barometer, &pos_est->timeLastBarometerMsg))
 			{
 				//alt_error = -(barometer->altitude + barometer->altitude_offset) - pos_est->localPosition.pos[2] + pos_est->localPosition.origin.altitude;
 				pos_est->last_alt = -(barometer->altitude ) + pos_est->localPosition.origin.altitude;
