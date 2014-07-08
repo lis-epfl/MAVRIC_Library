@@ -22,7 +22,7 @@
 #include "test_small_matrix.h"
 #include "test_quick_trig.h"
 
-#include "compiler.h"
+#include <stdint.h>
 
 /**
  * \brief Run all the test

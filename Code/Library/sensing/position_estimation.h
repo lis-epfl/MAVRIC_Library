@@ -23,6 +23,7 @@
 extern "C" {
 #endif
 
+#include <stdbool.h>
 #include "qfilter.h"
 #include "bmp085.h"
 #include "gps_ublox.h"

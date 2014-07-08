@@ -17,7 +17,8 @@
 
 
 #include "buffer.h"
-
+#include <stdbool.h>
+#include "compiler.h"
 
 uint8_t buffer_full(Buffer_t * buffer) 
 {

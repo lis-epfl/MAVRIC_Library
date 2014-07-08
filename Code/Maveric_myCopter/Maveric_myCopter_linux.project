@@ -265,6 +265,8 @@
     <File Name="Library/Makefile"/>
     <File Name="src/boardsupport.c"/>
     <File Name="src/mavlink_actions.c"/>
+    <File Name="src/mavlink_telemetry.h"/>
+    <File Name="src/mavlink_telemetry.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Library">
     <VirtualDirectory Name="mavlink">

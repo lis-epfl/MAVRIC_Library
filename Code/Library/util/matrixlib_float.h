@@ -24,7 +24,7 @@
 #ifndef __MF_H__
 #define __MF_H__
 
-#include "compiler.h"
+#include <stdint.h>
 
 #ifndef USE_MATF
 	#define USE_MATF			0

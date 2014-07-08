@@ -17,7 +17,7 @@ extern "C" {
 	#include "central_data.h"
 	#include "boardsupport.h"
 	#include "tasks.h"
-
+	#include "mavlink_telemetry.h"
 	#include "piezo_speaker.h"
 }
  
@@ -40,6 +40,8 @@ void initialisation()
 
 
 	mavlink_actions_init(); // TODO: move read from flash elsewhere
+	mavlink_telemetry_init();
+	
 	// TODO: this second simulation init is required because we have to wait for the parameters stored on flash
 	simulation_init(&(centralData->sim_model),&(centralData->imu1),centralData->position_estimator.localPosition); // TODO: init only once
 

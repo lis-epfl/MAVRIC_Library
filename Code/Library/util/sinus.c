@@ -41,6 +41,7 @@
  *
  */
 #include "sinus.h"
+#include "compiler.h"
 
 U16 sin_table[SINUS_SAMPLES] = {
     2222,

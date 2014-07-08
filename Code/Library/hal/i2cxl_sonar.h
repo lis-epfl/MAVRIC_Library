@@ -22,7 +22,7 @@
 	extern "C" {
 #endif
 
-#include "compiler.h"
+#include <stdint.h>
 
 /**
  * \brief structure of the i2cxl_sonar module

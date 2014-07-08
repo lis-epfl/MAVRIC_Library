@@ -1045,6 +1045,12 @@
     <Compile Include="src\mavlink_actions.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\mavlink_telemetry.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\mavlink_telemetry.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\tasks.c">
       <SubType>compile</SubType>
     </Compile>

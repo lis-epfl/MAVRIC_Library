@@ -21,7 +21,7 @@
 
 
 #include "twim.h"
-#include "compiler.h"
+#include <stdint.h>
 #include "dma_channel_config.h"
 
 #define I2C_DEVICES 2				///< Define the max number of i2c devices

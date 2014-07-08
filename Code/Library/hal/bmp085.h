@@ -23,7 +23,8 @@
 	extern "C" {
 #endif
 
-#include "compiler.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 #define BARO_ALT_LPF 0.95f						///< low pass filter factor for altitude measured by the barometer
 #define VARIO_LPF 0.95f							///< low pass filter factor for the Vario altitude speed

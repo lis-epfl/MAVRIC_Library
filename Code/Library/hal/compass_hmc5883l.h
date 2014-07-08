@@ -23,7 +23,7 @@
 	extern "C" {
 #endif
 
-#include "compiler.h"
+#include <stdint.h>
 
 
 #define ConfRegA 0x00					///< Configuration Register A

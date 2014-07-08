@@ -43,8 +43,6 @@
 #ifndef _SINUS_H_
 #define _SINUS_H_
 
-#include "compiler.h"
-
 #define SINUS_SAMPLES 60
 
 #endif /* _SINUS_H_ */

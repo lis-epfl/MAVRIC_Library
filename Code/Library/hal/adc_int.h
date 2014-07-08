@@ -24,7 +24,8 @@
 #endif
 
 #include "preprocessor.h"
-#include "compiler.h"
+#include <stdint.h>
+#include <stdbool.h>
 #include "user_board.h"
 #include "adcifa.h"
 
@@ -82,7 +83,7 @@ void adc_int_stop_sampling(void);
  * 
  * \return Returns true if one-shot sampling has finished
 */
-Bool adc_int_sampling_complete(void);
+bool adc_int_sampling_complete(void);
 
 /**
  * \brief return a specific sample of the ADC channel

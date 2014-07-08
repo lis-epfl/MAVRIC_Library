@@ -24,7 +24,7 @@ extern "C"
 {
 #endif
 
-#include "compiler.h"
+#include <stdint.h>
 
 /**
  * @brief Stream data

@@ -48,7 +48,7 @@
 extern "C" {
 #endif
 
-#include "compiler.h"
+#include "stdint.h"
 
 #define MAX_ADAPT_PARAM_SETPOINTS 5
 #define MAX_ADAPT_PARAM_COUNT 10

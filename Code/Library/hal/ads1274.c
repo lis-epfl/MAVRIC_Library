@@ -208,7 +208,7 @@ void ads1274_init_DAC(void)
 }
 
 ///< Enable/Disable the clock to the ADC
-void ads1274_ADC_switch_clock(Bool on_off) 
+void ads1274_ADC_switch_clock(bool on_off) 
 {
 	if (on_off == true) 
 	{
@@ -230,7 +230,7 @@ void ads1274_ADC_switch_clock(Bool on_off)
 }
 
 ///< Switch the four input channels on or off
-void ads1274_ADC_switch_channel(int32_t channel, Bool on_off)
+void ads1274_ADC_switch_channel(int32_t channel, bool on_off)
 {
 	
 }
@@ -255,7 +255,7 @@ void ads1274_ADC_start_oneshot(void)
 void ads1274_ADC_stop_sampling(void){};
 
 ///< Returns true if one-shot sampling has finished
-Bool Sampling_Complete(void){};
+bool Sampling_Complete(void){};
 */
 
 __attribute__((__naked__))

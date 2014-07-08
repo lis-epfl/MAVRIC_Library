@@ -23,7 +23,8 @@
 	extern "C" {
 #endif
 
-#include "compiler.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 #define MONITOR_CHANNELS 10
 #define MONITOR_SAMPLES  10

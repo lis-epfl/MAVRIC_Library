@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 
-#include "compiler.h"
+#include <stdint.h>
 #include "usart.h"
 //#include "conf_usart_serial.h"
 #include "buffer.h"
