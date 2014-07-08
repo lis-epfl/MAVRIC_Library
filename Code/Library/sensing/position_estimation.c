@@ -81,7 +81,7 @@ void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps)
 {
 	int32_t i;
 	
-	if (gps_ublox_newValidGpsMsg(&pos_est->timeLastGpsMsg) && (!(pos_est->init_gps_position)))
+	if (gps_ublox_newValidGpsMsg(gps, &pos_est->timeLastGpsMsg) && (!(pos_est->init_gps_position)))
 	{
 		pos_est->init_gps_position = true;
 		
@@ -274,7 +274,7 @@ void position_estimation_position_correction(position_estimator_t *pos_est, pres
 	
 		if (pos_est->init_gps_position)
 		{
-			if (gps_ublox_newValidGpsMsg(&pos_est->timeLastGpsMsg))
+			if (gps_ublox_newValidGpsMsg(gps, &pos_est->timeLastGpsMsg))
 			{
 				global_gps_position.longitude = gps->longitude;
 				global_gps_position.latitude = gps->latitude;

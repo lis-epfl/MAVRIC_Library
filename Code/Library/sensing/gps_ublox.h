@@ -26,6 +26,8 @@ extern "C" {
 #include "stdint.h"
 #include "stdbool.h"
 #include "maths.h"
+#include "streams.h"
+#include "buffer.h"
 
 /*
  *  try to put a UBlox into binary mode. This is in two parts. First we
@@ -638,6 +640,10 @@ typedef struct
  	uint8_t  speedStatus;				///< Speed status
  	uint8_t  courseStatus;				///< Course status
 	uint8_t  accuracyStatus;			///< Accuracy status
+	
+	Buffer_t gps_buffer;										///< The GPS buffer
+	byte_stream_t gps_stream_in;								///< The incoming GPS byte stream
+	byte_stream_t gps_stream_out;								///< The outgoing GPS byte stream
 } gps_Data_type;
 
 
@@ -651,7 +657,7 @@ uint32_t last_fix_time;						///< Last fix time
  *
  * \param	_engine_nav_setting		the GPS Nav settings 
  */
-void gps_ublox_init(GPS_Engine_Setting _engine_nav_setting);
+void gps_ublox_init(gps_Data_type *GPS_data, GPS_Engine_Setting _engine_nav_setting);
 
 /**
  * \brief	Process bytes available from the stream
@@ -665,14 +671,14 @@ void gps_ublox_init(GPS_Engine_Setting _engine_nav_setting);
  *
  * \return	true if new velocity and new position message
  */
-bool gps_ublox_message_decode(void);
+bool gps_ublox_message_decode(gps_Data_type *GPS_data);
 
 /**
  * \brief	Process the new received message, class by class
  *
  * \return	true if new velocity and new position message
  */
-bool gps_ublox_process_data(void);
+bool gps_ublox_process_data(gps_Data_type *GPS_data);
 
 /**
  * \brief	To configure the GPS in binary mode and the Navigation messages we want
@@ -681,13 +687,13 @@ bool gps_ublox_process_data(void);
  *
  * \param	void
  */
-void gps_ublox_configure_gps(void);
+void gps_ublox_configure_gps(gps_Data_type *GPS_data);
 
 
 /**
  * \brief	The function that needs to be called to get the GPS information
  */
-void gps_ublox_update(void);
+void gps_ublox_update(gps_Data_type *GPS_data);
 
 /**
  * \brief	The function that tells if a message is arrived at time tnow
@@ -696,7 +702,7 @@ void gps_ublox_update(void);
  *
  * \return	if the latest GPS message is arrived at tnow
  */
-bool gps_ublox_newValidGpsMsg(uint32_t *prevGpsMsgTime);
+bool gps_ublox_newValidGpsMsg(gps_Data_type *GPS_data, uint32_t *prevGpsMsgTime);
 
 
 #ifdef __cplusplus

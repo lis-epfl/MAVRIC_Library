@@ -629,7 +629,7 @@ task_return_t tasks_run_gps_update()
 	} 
 	else 
 	{
-		gps_ublox_update();
+		gps_ublox_update(&centralData->GPS_data);
 	}
 	
 	return TASK_RUN_SUCCESS;

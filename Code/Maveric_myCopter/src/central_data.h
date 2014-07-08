@@ -74,9 +74,6 @@ typedef struct  {
 	byte_stream_t wired_out_stream;								///< The wired outgoing byte stream
 	byte_stream_t wired_in_stream;								///< The wired incoming byte stream
 	
-	Buffer_t gps_buffer;										///< The GPS buffer
-	byte_stream_t gps_stream_in;								///< The incoming GPS byte stream 
-	byte_stream_t gps_stream_out;								///< The outgoing GPS byte stream 
 	gps_Data_type GPS_data;										///< The GPS structure
 	
 	simulation_model_t sim_model;								///< The simulation model structure

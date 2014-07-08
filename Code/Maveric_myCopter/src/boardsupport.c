@@ -36,6 +36,8 @@
 #include "piezo_speaker.h"
 #include "gpio.h"
 
+#include "gps_ublox.h"
+
 void boardsupport_init(central_data_t *centralData) {
 	// int32_t i;
 	// enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
@@ -87,9 +89,9 @@ void boardsupport_init(central_data_t *centralData) {
 				
 	// Init UART 3 for GPS communication
 	uart_int_init(3);
-	buffer_make_buffered_stream(&(centralData->gps_buffer), &(centralData->gps_stream_in));
-	uart_int_register_read_stream(uart_int_get_uart_handle(3), &(centralData->gps_stream_in));
-	uart_int_register_write_stream(uart_int_get_uart_handle(3), &(centralData->gps_stream_out));
+	buffer_make_buffered_stream(&(centralData->GPS_data.gps_buffer), &(centralData->GPS_data.gps_stream_in));
+	uart_int_register_read_stream(uart_int_get_uart_handle(3), &(centralData->GPS_data.gps_stream_in));
+	uart_int_register_write_stream(uart_int_get_uart_handle(3), &(centralData->GPS_data.gps_stream_out));
 	
 	// Init UART 4 for wired communication
 	uart_int_init(4);
