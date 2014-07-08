@@ -1114,12 +1114,6 @@
     <Compile Include="Library\hal\ads1274.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\adxl345_driver.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\adxl345_driver.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\hal\bmp085.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1136,12 +1130,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\dac_dma.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\itg3200_driver.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\itg3200_driver.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\led.c">
