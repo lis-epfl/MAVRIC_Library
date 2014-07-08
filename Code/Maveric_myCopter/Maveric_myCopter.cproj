@@ -567,6 +567,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Library\communication\console.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\console.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\communication\mavlink_waypoint_handler.c">
       <SubType>compile</SubType>
     </Compile>
@@ -640,6 +646,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\turnigy.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\xbee.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\xbee.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\mavlink\include\maveric\maveric2.h">
@@ -1535,9 +1547,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\conf_twis.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\config\conf_usart_serial.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\conf_usb.h">

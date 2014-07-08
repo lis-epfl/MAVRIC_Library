@@ -651,13 +651,19 @@ uint32_t idleTimer;							///< Last time that the GPS driver got a good packet f
 uint32_t idleTimeout;						///< Time in milliseconds after which we will assume the GPS is no longer sending us updates and attempt a re-init. 1200ms allows a small amount of slack over the worst-case 1Hz update rate.
 uint32_t last_fix_time;						///< Last fix time
 
-
 /**
  * \brief	Initialize the gps U-Blox module
  *
+ * \param	UID the uart ID
+ */
+void gps_ublox_init(gps_Data_type *GPS_data, int32_t UID);
+
+/**
+ * \brief	Reset the gps U-Blox module
+ *
  * \param	_engine_nav_setting		the GPS Nav settings 
  */
-void gps_ublox_init(gps_Data_type *GPS_data, GPS_Engine_Setting _engine_nav_setting);
+void gps_ublox_reset(gps_Data_type *GPS_data, GPS_Engine_Setting _engine_nav_setting);
 
 /**
  * \brief	Process bytes available from the stream

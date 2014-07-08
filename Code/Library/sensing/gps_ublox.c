@@ -20,6 +20,7 @@
 
 #include "central_data.h"
 #include "print_util.h"
+#include "uart_int.h"
 #include "buffer.h"
 
 uint8_t  **ubx_currentMessage = 0;		///<  The pointer to the pointer to the structure of the current message to fill
@@ -314,7 +315,33 @@ ubx_tim_vrfy * ubx_GetTimVRFY(void);
 */
 float ToRad(float numdeg);
 
-void gps_ublox_init(gps_Data_type *GPS_data, GPS_Engine_Setting _engine_nav_setting)
+void gps_ublox_init(gps_Data_type *GPS_data, int32_t UID)
+{
+	// uart setting
+	usart_config_t usart_conf_gps =
+	{
+		.mode=UART_IN_OUT,
+		.uart_device.uart=(avr32_usart_t *)&AVR32_USART3,
+		.uart_device.IRQ=AVR32_USART3_IRQ,
+		.uart_device.receive_stream=NULL,
+		.options={
+			.baudrate     = 38400,
+			.charlength   = 8,
+			.paritytype   = USART_NO_PARITY,
+			.stopbits     = USART_1_STOPBIT,
+			.channelmode  = USART_NORMAL_CHMODE },
+		.rx_pin_map= {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION},
+		.tx_pin_map= {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION}
+	};
+	uart_int_set_usart_conf(UID, &usart_conf_gps);
+	
+	uart_int_init(UID);
+	buffer_make_buffered_stream(&(GPS_data->gps_buffer), &(GPS_data->gps_stream_in));
+	uart_int_register_read_stream(uart_int_get_uart_handle(UID), &(GPS_data->gps_stream_in));
+	uart_int_register_write_stream(uart_int_get_uart_handle(UID), &(GPS_data->gps_stream_out));
+}
+
+void gps_ublox_reset(gps_Data_type *GPS_data, GPS_Engine_Setting _engine_nav_setting)
 {
 	// uint8_t epoch = TIME_OF_WEEK;
 	idleTimeout = 1200;
@@ -1460,7 +1487,7 @@ void gps_ublox_update(gps_Data_type *GPS_data)
 		{
 			GPS_data->status = NO_GPS;
 			
-			gps_ublox_init(GPS_data, engine_nav_setting);
+			gps_ublox_reset(GPS_data, engine_nav_setting);
 			idleTimer = tnow;
 		}
 		

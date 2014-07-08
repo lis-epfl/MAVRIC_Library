@@ -67,12 +67,6 @@ typedef struct  {
 	Stabiliser_Stack_copter_t stabiliser_stack;					///< The stabilisation stack structure (rates, attitude, velocity, thrust)
 
 	servo_output servos[NUMBER_OF_SERVO_OUTPUTS];				///< The array of servos (size NUMBER_OF_SERVO_OUTPUTS)
-	Buffer_t xbee_in_buffer;									///< The XBEE incoming buffer
-	Buffer_t wired_in_buffer;									///< The wired incoming buffer
-	byte_stream_t xbee_out_stream;								///< The XBEE outgoing byte stream
-	byte_stream_t xbee_in_stream;								///< The XBEE incoming byte stream
-	byte_stream_t wired_out_stream;								///< The wired outgoing byte stream
-	byte_stream_t wired_in_stream;								///< The wired incoming byte stream
 	
 	gps_Data_type GPS_data;										///< The GPS structure
 	

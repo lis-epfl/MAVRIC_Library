@@ -25,7 +25,6 @@ extern "C" {
 
 #include <stdint.h>
 #include "usart.h"
-//#include "conf_usart_serial.h"
 #include "buffer.h"
 #include "streams.h"
 
@@ -54,6 +53,12 @@ uart_gpio_map_t tx_pin_map;
 } usart_config_t;
 
 
+enum UART_MODE {UART_OFF, UART_IN, UART_OUT, UART_IN_OUT};
+
+enum AVAILABLE_UARTS {UART0, UART1, UART2, UART3, UART4,
+UART_COUNT};
+
+void uart_int_set_usart_conf(int32_t UID, usart_config_t* usart_config);
 
 /**
  * \brief	Initialize the UART line

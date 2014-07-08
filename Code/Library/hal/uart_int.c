@@ -17,12 +17,13 @@
 
 
 #include "uart_int.h"
-#include "conf_usart_serial.h"
 #include "buffer.h"
 #include "gpio.h"
 #include "streams.h"
 #include "sysclk.h"
 
+
+static usart_config_t usart_conf[UART_COUNT];
 
 // macro for interrupt handler
 #define UART_HANDLER(UID) ISR(uart_handler_##UID, usart_conf[UID].uart_device.IRQ, AVR32_INTC_INTLEV_INT1) {\
@@ -100,6 +101,21 @@ void register_UART_handler(int32_t UID)
 			INTC_register_interrupt( (__int_handler) &uart_handler_4, usart_conf[4].uart_device.IRQ, AVR32_INTC_INT1);
 			break;
 	}
+}
+
+void uart_int_set_usart_conf(int32_t UID, usart_config_t* usart_config)
+{
+	usart_conf[UID].mode						= usart_config->mode;
+	usart_conf[UID].uart_device.uart			= usart_config->uart_device.uart;
+	usart_conf[UID].uart_device.IRQ				= usart_config->uart_device.IRQ;
+	usart_conf[UID].uart_device.receive_stream	= usart_config->uart_device.receive_stream;
+	usart_conf[UID].options.baudrate			= usart_config->options.baudrate;
+	usart_conf[UID].options.charlength			= usart_config->options.charlength;
+	usart_conf[UID].options.paritytype			= usart_config->options.paritytype;
+	usart_conf[UID].options.stopbits			= usart_config->options.stopbits;
+	usart_conf[UID].options.channelmode			= usart_config->options.channelmode; 		
+	usart_conf[UID].rx_pin_map					= usart_config->rx_pin_map;
+	usart_conf[UID].tx_pin_map					= usart_config->tx_pin_map;
 }
 
 void uart_int_init(int32_t UID) {

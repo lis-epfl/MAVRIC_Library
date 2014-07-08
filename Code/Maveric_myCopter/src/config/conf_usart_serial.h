@@ -48,14 +48,10 @@
 extern "C" {
 #endif
 
-#define XBEE_UART_ID 0
-#define DEBUG_UART_ID 4
+#define XBEE_UART_ID UART0
+#define DEBUG_UART_ID UART4
 
-enum UART_MODE {UART_OFF, UART_IN, UART_OUT, UART_IN_OUT};
-
-enum AVAILABLE_UARTS {UART0, UART1, UART2, UART3, UART4, 
-					 UART_COUNT};
-
+/*
 usart_config_t usart_conf[UART_COUNT] =
 {	
 	{   .mode=UART_IN_OUT,
@@ -126,6 +122,7 @@ usart_config_t usart_conf[UART_COUNT] =
 			.tx_pin_map= {AVR32_USART4_TXD_2_PIN, AVR32_USART4_TXD_2_FUNCTION}
 	}
 };
+*/
 
 #ifdef __cplusplus
 }
