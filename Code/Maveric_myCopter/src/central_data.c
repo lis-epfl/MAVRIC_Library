@@ -36,7 +36,7 @@ void central_data_init(){
 	navigation_init();
 	waypoint_handler_init();// ((waypoint_handler_t*)&centralData.waypoint_handler);
 		
-	neighbors_selection_init();
+	neighbors_selection_init((neighbor_t*)&(centralData.neighborData), (position_estimator_t*)&(centralData.position_estimator));
 	orca_init();
 
 	// init stabilisers

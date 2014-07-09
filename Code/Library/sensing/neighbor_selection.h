@@ -24,6 +24,7 @@ extern "C" {
 #endif
 
 #include "mavlink_stream.h"
+#include "position_estimation.h"
 
 #define MAX_NUM_NEIGHBORS 15
 
@@ -47,25 +48,34 @@ typedef struct
 	float extrapolatedPosition[3];		///< The 3D position of the neighbor
 }track_neighbor_t;						///< The structure of information about a neighbor 
 
+typedef struct
+{
+		uint8_t number_of_neighbors;								///< The actual number of neighbors at a given time step
+		float safe_size;											///< The safe size for collision avoidance
+		track_neighbor_t listNeighbors[MAX_NUM_NEIGHBORS];
+		position_estimator_t *positionData;
+}neighbor_t;
 /**
  * \brief	Initialize the neighbor selection module
+ *
+ * \param neighborData pointer to the neighbor struct
+ * \param positionData pointer to the position estimator struct
  */
-void neighbors_selection_init(void);
+void neighbors_selection_init(neighbor_t *neighborData, position_estimator_t *positionData);
 
 /**
  * \brief	Decode the message and parse to the neighbor array
  *
  * \param	rec		the pointer to the mavlink message
  */
-void neighbors_selection_read_message_from_neighbors(Mavlink_Received_t* rec);
+void neighbors_selection_read_message_from_neighbors(neighbor_t *neighborData, Mavlink_Received_t* rec);
 
 /**
  * \brief	Extrapolate the position of each UAS between two messages, deletes the message if time elapsed too long from last message
  *
- * \param	listNeighbors			the array of all neighbors
- * \param	number_of_neighbors		the pointer to the number of neighbors
+ * \param	neighborData		the pointer to the neighbors struct
  */
-void neighbors_selection_extrapolate_or_delete_position(track_neighbor_t listNeighbors[], uint8_t* number_of_neighbors);
+void neighbors_selection_extrapolate_or_delete_position(neighbor_t *neighborData);
 
 #ifdef __cplusplus
 }

@@ -121,9 +121,7 @@ typedef struct  {
 	//float pressure_filtered;									///< The filtered pressure
 	//float altitude_filtered;									///< The filtered altitude
 	
-	uint8_t number_of_neighbors;								///< The actual number of neighbors at a given time step
-	float safe_size;											///< The safe size for collision avoidance
-	track_neighbor_t listNeighbors[MAX_NUM_NEIGHBORS];			///< The array of neighbor structure
+	neighbor_t neighborData;
 	
 	critical_behavior_enum critical_behavior;					///< The critical behavior enum
 	auto_landing_enum_t auto_landing_enum;						///< The autolanding enum

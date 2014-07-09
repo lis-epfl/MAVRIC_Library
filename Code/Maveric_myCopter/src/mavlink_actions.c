@@ -273,7 +273,7 @@ void mavlink_actions_handle_specific_messages (Mavlink_Received_t* rec)
 		 * print_util_dbg_print( "\n");
 		*/
 
-		neighbors_selection_read_message_from_neighbors(rec);
+		neighbors_selection_read_message_from_neighbors(&(centralData->neighborData),rec);
 	}
 }
 

@@ -58,7 +58,7 @@ void waypoint_handler_init()
 	centralData->automatic_landing = false;
 	centralData->in_the_air = false;
 			
-	centralData->number_of_neighbors = 0;
+	centralData->neighborData.number_of_neighbors = 0;
 	
 }
 
