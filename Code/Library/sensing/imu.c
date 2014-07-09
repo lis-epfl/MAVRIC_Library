@@ -71,24 +71,17 @@ void imu_init (Imu_Data_t *imu1)
 
 void imu_get_raw_data(Imu_Data_t *imu1)
 {
-	//gyro_data* gyros = itg3200_driver_get_data_slow();
-	//acc_data* accs = adxl345_driver_get_acc_data_slow();
-	lsm_gyro_data_t* gyros = lsm330dlc_driver_get_gyro_data();
-	lsm_acc_data_t* accs = lsm330dlc_driver_get_acc_data();
-	compass_data* compass = compass_hmc58831l_get_data_slow();
+	imu1->raw_channels[GYRO_OFFSET + IMU_X] = (float)imu1->gyroData.raw_data[RAW_GYRO_X] * GYRO_AXIS_X;
+	imu1->raw_channels[GYRO_OFFSET + IMU_Y] = (float)imu1->gyroData.raw_data[RAW_GYRO_Y] * GYRO_AXIS_Y;
+	imu1->raw_channels[GYRO_OFFSET + IMU_Z] = (float)imu1->gyroData.raw_data[RAW_GYRO_Z] * GYRO_AXIS_Z;
 
-
-	imu1->raw_channels[GYRO_OFFSET + IMU_X] = (float)gyros->axes[RAW_GYRO_X] * GYRO_AXIS_X;
-	imu1->raw_channels[GYRO_OFFSET + IMU_Y] = (float)gyros->axes[RAW_GYRO_Y] * GYRO_AXIS_Y;
-	imu1->raw_channels[GYRO_OFFSET + IMU_Z] = (float)gyros->axes[RAW_GYRO_Z] * GYRO_AXIS_Z;
-
-	imu1->raw_channels[ACC_OFFSET + IMU_X] = ((float)accs->axes[RAW_ACC_X]) * ACC_AXIS_X;
-	imu1->raw_channels[ACC_OFFSET + IMU_Y] = ((float)accs->axes[RAW_ACC_Y]) * ACC_AXIS_Y;
-	imu1->raw_channels[ACC_OFFSET + IMU_Z] = ((float)accs->axes[RAW_ACC_Z]) * ACC_AXIS_Z;
+	imu1->raw_channels[ACC_OFFSET + IMU_X] = ((float)imu1->acceleroData.raw_data[RAW_ACC_X]) * ACC_AXIS_X;
+	imu1->raw_channels[ACC_OFFSET + IMU_Y] = ((float)imu1->acceleroData.raw_data[RAW_ACC_Y]) * ACC_AXIS_Y;
+	imu1->raw_channels[ACC_OFFSET + IMU_Z] = ((float)imu1->acceleroData.raw_data[RAW_ACC_Z]) * ACC_AXIS_Z;
 	
-	imu1->raw_channels[MAG_OFFSET + IMU_X] = (float)compass->axes[RAW_MAG_X] * MAG_AXIS_X;
-	imu1->raw_channels[MAG_OFFSET + IMU_Y] = (float)compass->axes[RAW_MAG_Y] * MAG_AXIS_Y;
-	imu1->raw_channels[MAG_OFFSET + IMU_Z] = (float)compass->axes[RAW_MAG_Z] * MAG_AXIS_Z;
+	imu1->raw_channels[MAG_OFFSET + IMU_X] = (float)imu1->compassData.raw_data[RAW_MAG_X] * MAG_AXIS_X;
+	imu1->raw_channels[MAG_OFFSET + IMU_Y] = (float)imu1->compassData.raw_data[RAW_MAG_Y] * MAG_AXIS_Y;
+	imu1->raw_channels[MAG_OFFSET + IMU_Z] = (float)imu1->compassData.raw_data[RAW_MAG_Z] * MAG_AXIS_Z;
 }
 
 void imu_calibrate_gyros(Imu_Data_t *imu1)

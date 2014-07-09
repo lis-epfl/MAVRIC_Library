@@ -225,9 +225,6 @@ static const lsm330dlc_gyro_conf_t lsm_gyro_default_config=
 */
 static const uint8_t fifo_config[2] = {LSM_ACC_FIFO_CTRL_ADDRESS, 0x80};
 
-static volatile lsm_acc_data_t  lsm_acc_outputs;		///< Declare an object containing the accelerometer's data
-static volatile lsm_gyro_data_t lsm_gyro_outputs;		///< Declare an object containing the gyroscope's data
-
 
 /**
  * \brief			Write data to one device of the LSM330, accelerometer or gyroscope  
@@ -407,37 +404,35 @@ void lsm330dlc_driver_init(void)
 	lsm330dlc_get_gyro_config();
 }
 
-lsm_acc_data_t* lsm330dlc_driver_get_acc_data(void) 
+void lsm330dlc_acc_update(accelero_data_t *lsm_acc_outputs) 
 {
 	
 	lsm_acc_fifo_t fifo_values = { .start_address = LSM_ACC_OUT_ADDRESS | LSM_AUTO_INCREMENT };
 	int32_t axes[3] = {0,0,0};
 	uint8_t i;
+	
 	///< read number of bytes in fifo
 	lsm_fifo_fill_t read_fifo = {LSM_ACC_FIFO_SRC_ADDRESS, 0};
-	
 	lsm330dlc_acc_read_register((uint8_t*)&read_fifo, sizeof(read_fifo));
 	
-	if (read_fifo.fifo_fill <= 0)
-	{
-		return (lsm_acc_data_t*)&lsm_acc_outputs;
-	}
 	if (read_fifo.fifo_fill > 6)
 	{
 		read_fifo.fifo_fill = 6;
 	}
-	
-	for (i = 0; i < read_fifo.fifo_fill; i++)
+	else if (read_fifo.fifo_fill > 0)
 	{
-		lsm330dlc_acc_read_register((uint8_t*)&fifo_values, sizeof(fifo_values));
-		axes[0]+=fifo_values.axes[0];
-		axes[1]+=fifo_values.axes[1];
-		axes[2]+=fifo_values.axes[2];
+		for (i = 0; i < read_fifo.fifo_fill; i++)
+		{
+			lsm330dlc_acc_read_register((uint8_t*)&fifo_values, sizeof(fifo_values));
+			axes[0]+=fifo_values.axes[0];
+			axes[1]+=fifo_values.axes[1];
+			axes[2]+=fifo_values.axes[2];
+		}
+		
+		lsm_acc_outputs->raw_data[0] = (int16_t)(axes[0] / read_fifo.fifo_fill);
+		lsm_acc_outputs->raw_data[1] = (int16_t)(axes[1] / read_fifo.fifo_fill);
+		lsm_acc_outputs->raw_data[2] = (int16_t)(axes[2] / read_fifo.fifo_fill);
 	}
-	
-	lsm_acc_outputs.axes[0] = (int16_t)(axes[0] / read_fifo.fifo_fill);
-	lsm_acc_outputs.axes[1] = (int16_t)(axes[1] / read_fifo.fifo_fill);
-	lsm_acc_outputs.axes[2] = (int16_t)(axes[2] / read_fifo.fifo_fill);
 	
 	/* // OLD
 	uint8_t data_register_address = LSM_ACC_OUT_ADDRESS | LSM_AUTO_INCREMENT;
@@ -477,10 +472,9 @@ lsm_acc_data_t* lsm330dlc_driver_get_acc_data(void)
 	lsm_acc_outputs.axes[1] = (int16_t)(axes[1] / fifo_fill);
 	lsm_acc_outputs.axes[2] = (int16_t)(axes[2] / fifo_fill);
 	*/
-	return (lsm_acc_data_t*)&lsm_acc_outputs;
 }
 
-lsm_gyro_data_t* lsm330dlc_driver_get_gyro_data(void) 
+void lsm330dlc_gyro_update(gyro_data_t *lsm_gyro_outputs) 
 {
 	lsm_gyro_fifo_t fifo_values = { .start_address = LSM_GYRO_OUT_ADDRESS | LSM_AUTO_INCREMENT };
 	int32_t temperature = 0;
@@ -491,28 +485,24 @@ lsm_gyro_data_t* lsm330dlc_driver_get_gyro_data(void)
 	
 	lsm330dlc_gyro_read_register((uint8_t*)&read_fifo, sizeof(read_fifo));
 	
-	if (read_fifo.fifo_fill <= 0) 
-	{
-		return (lsm_gyro_data_t*)&lsm_gyro_outputs;
-	}
 	if (read_fifo.fifo_fill > 6)
 	{
 		read_fifo.fifo_fill = 6;
 	}
-	
-	for (i = 0; i < read_fifo.fifo_fill; i++) 
+	else if (read_fifo.fifo_fill > 0) 
 	{
-		lsm330dlc_gyro_read_register((uint8_t*)&fifo_values, sizeof(fifo_values));
-		temperature+=fifo_values.temperature;
-		axes[0]+=fifo_values.axes[0];
-		axes[1]+=fifo_values.axes[1];
-		axes[2]+=fifo_values.axes[2];
+		for (i = 0; i < read_fifo.fifo_fill; i++)
+		{
+			lsm330dlc_gyro_read_register((uint8_t*)&fifo_values, sizeof(fifo_values));
+			temperature+=fifo_values.temperature;
+			axes[0]+=fifo_values.axes[0];
+			axes[1]+=fifo_values.axes[1];
+			axes[2]+=fifo_values.axes[2];
+		}
+		
+		lsm_gyro_outputs->temperature = (int16_t)(temperature / read_fifo.fifo_fill);
+		lsm_gyro_outputs->raw_data[0] = (int16_t)(axes[0] / read_fifo.fifo_fill);
+		lsm_gyro_outputs->raw_data[1] = (int16_t)(axes[1] / read_fifo.fifo_fill);
+		lsm_gyro_outputs->raw_data[2] = (int16_t)(axes[2] / read_fifo.fifo_fill);
 	}
-	
-	lsm_gyro_outputs.temperature = (int16_t)(temperature / read_fifo.fifo_fill);
-	lsm_gyro_outputs.axes[0] = (int16_t)(axes[0] / read_fifo.fifo_fill);
-	lsm_gyro_outputs.axes[1] = (int16_t)(axes[1] / read_fifo.fifo_fill);
-	lsm_gyro_outputs.axes[2] = (int16_t)(axes[2] / read_fifo.fifo_fill);
-	
-	return (lsm_gyro_data_t*)&lsm_gyro_outputs;
 }

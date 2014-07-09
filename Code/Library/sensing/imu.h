@@ -30,6 +30,9 @@ extern "C" {
 #include "position_estimation.h"
 #include "gps_ublox.h"
 #include "conf_platform.h"
+#include "gyro.h"
+#include "accelero.h"
+#include "compass.h"
 
 #define GYRO_LPF 0.1f					///< The gyroscope linear particle filter gain
 #define ACC_LPF 0.05f					///< The accelerometer linear particle filter gain
@@ -50,6 +53,9 @@ typedef struct
 	//uint8_t valid;						///< True if the message is valid (TODO: is it sill used?)
 	float dt;							///< The time interval between two IMU updates
 	//int8_t ready;							///< Is the IMU ready (TODO: is it still used?)
+	gyro_data_t gyroData;
+	accelero_data_t acceleroData;
+	compass_data_t compassData;
 } Imu_Data_t;
 
 bool imu_last_update_init;				///< Variable to initialize the IMU

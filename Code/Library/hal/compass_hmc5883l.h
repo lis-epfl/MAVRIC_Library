@@ -24,7 +24,7 @@
 #endif
 
 #include <stdint.h>
-
+#include "compass.h"
 
 #define ConfRegA 0x00					///< Configuration Register A
 #define ConfRegB 0x01					///< Configuration Register B
@@ -108,9 +108,8 @@ enum
 */
 typedef struct
 {
-	uint8_t raw_data[6];
-	int16_t axes[3];
-} compass_data;
+	compass_data_t *compassData;
+} compass_hmc58831l_data_t;
 
 /**
  * \brief Initializes the magnetometer sensor
@@ -127,7 +126,7 @@ void compass_hmc58831l_init_slow(void);
  *
  * \return a pointer to the magnetometer's data in slow mode
 */
-compass_data* compass_hmc58831l_get_data_slow(void);
+void compass_hmc58831l_update(compass_data_t *compass_outputs);
 
 #ifdef __cplusplus
 	}

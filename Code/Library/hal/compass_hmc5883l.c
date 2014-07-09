@@ -18,9 +18,8 @@
 #include "compass_hmc5883l.h"
 #include "twim.h"
 
-static volatile compass_data compass_outputs;		///< Declare a structure of magnetometer's data
-
-void compass_hmc58831l_init_slow() {
+void compass_hmc58831l_init_slow() 
+{
 	static twim_options_t twi_opt= 
 	{
 		.pba_hz	= 64000000,
@@ -41,16 +40,10 @@ void compass_hmc58831l_init_slow() {
 }
 
 
-compass_data* compass_hmc58831l_get_data_slow() {
-	int32_t i;
+void compass_hmc58831l_update(compass_data_t *compass_outputs) 
+{
 	uint8_t start_address = DataRegBegin;
-	
+		
 	twim_write(&AVR32_TWIM0, (uint8_t*) &start_address, 1, HMC5883_SLAVE_ADDRESS, false);
-	twim_read(&AVR32_TWIM0, (uint8_t*)&(compass_outputs.raw_data), 6, HMC5883_SLAVE_ADDRESS, false);
-	
-	for (i = 0; i < 3; i++) 
-	{
-		compass_outputs.axes[i] = (int16_t)(compass_outputs.raw_data[2 * i] << 8) + (int16_t)(compass_outputs.raw_data[2 * i + 1]);
-	}
-	return (compass_data*)&compass_outputs;
+	twim_read(&AVR32_TWIM0, (uint8_t*)&(compass_outputs->raw_data), 6, HMC5883_SLAVE_ADDRESS, false);
 }
