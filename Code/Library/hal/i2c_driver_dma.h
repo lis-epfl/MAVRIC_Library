@@ -44,23 +44,23 @@ typedef struct
 	uint32_t    write_count;				///< i2c write counter
 	uint8_t*  	read_data;					///< i2c read data buffer
 	uint32_t    read_count;					///< i2c read counter
-} i2c_packet_conf;
+} i2c_packet_conf_t;
 
-typedef void (i2c_callback_t)(i2c_packet_conf* data);
+typedef void (i2c_callback_t)(i2c_packet_conf_t* data);
 
 /**
  * \brief i2c event scheduler packet
  */
 typedef struct  
 {
-	i2c_packet_conf config;
+	i2c_packet_conf_t config;
 	uint8_t   		schedule_slot;       	///< the assigned slot in the schedule  - READ ONLY!
 	int32_t   		repetition_rate_ms;  	///< schedule repetition rate in milliseconds. A value of 0 means no repetition (one-shot)
 	uint8_t   		trigger_next_event;  	///< number of event that should be scheduled immediately after the end of this one (repetition for next event should be 0)
 	int8_t    		active;              	///< indicates if event should be scheduled or not. Will be set to false after a one-shot event 0:false, 1:true
 	int8_t    		transfer_in_progress;   ///< flag indicates if this event is currently being processed. 0: false, 1: true, -1: uninitialised
 	i2c_callback_t* callback;		     	///< callback function to be called when transfer finished.
-} i2c_schedule_event ;
+} i2c_schedule_event_t ;
 
 /**
  * \brief Initialize the i2c driver
@@ -88,7 +88,7 @@ int8_t i2c_driver_reset(uint8_t i2c_device);
  *
  * \return the error status
  */
-int8_t i2c_driver_add_request(uint8_t i2c_device, i2c_schedule_event* new_event);
+int8_t i2c_driver_add_request(uint8_t i2c_device, i2c_schedule_event_t* new_event);
 
 /**
  * \brief Change the i2c request
@@ -98,7 +98,7 @@ int8_t i2c_driver_add_request(uint8_t i2c_device, i2c_schedule_event* new_event)
  *
  * \return the error status
  */
-int8_t i2c_driver_change_request(uint8_t i2c_device, i2c_schedule_event* new_event);
+int8_t i2c_driver_change_request(uint8_t i2c_device, i2c_schedule_event_t* new_event);
 
 /**
  * \brief Enable an i2c request

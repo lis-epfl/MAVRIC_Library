@@ -567,6 +567,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Library\communication\console.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\console.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\communication\mavlink_waypoint_handler.c">
       <SubType>compile</SubType>
     </Compile>
@@ -597,10 +603,25 @@
     <Compile Include="Library\control\stabilisation_copter.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\hal\accelero.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\hal\analog_monitor.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\analog_monitor.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\compass.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\gps_ublox.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\gps_ublox.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\gyro.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\i2cxl_sonar.c">
@@ -640,6 +661,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\turnigy.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\xbee.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\xbee.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\mavlink\include\maveric\maveric2.h">
@@ -1102,12 +1129,6 @@
     <Compile Include="Library\hal\ads1274.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\adxl345_driver.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\adxl345_driver.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\hal\bmp085.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1124,12 +1145,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\dac_dma.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\itg3200_driver.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\itg3200_driver.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\led.c">
@@ -1178,12 +1193,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\runtime\scheduler.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\gps_ublox.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\gps_ublox.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\sensing\imu.c">
@@ -1535,9 +1544,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\conf_twis.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\config\conf_usart_serial.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\conf_usb.h">

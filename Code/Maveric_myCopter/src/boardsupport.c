@@ -36,6 +36,10 @@
 #include "piezo_speaker.h"
 #include "gpio.h"
 
+#include "gps_ublox.h"
+#include "xbee.h"
+#include "console.h"
+
 void boardsupport_init(central_data_t *centralData) {
 	// int32_t i;
 	// enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
@@ -82,37 +86,19 @@ void boardsupport_init(central_data_t *centralData) {
 	servo_pwm_hardware_init();
 	
 	// Init UART 0 for XBEE communication
-	uart_int_init(0);
-	uart_int_register_write_stream(uart_int_get_uart_handle(0), &(centralData->xbee_out_stream));
+	xbee_init(UART0);
 				
 	// Init UART 3 for GPS communication
-	uart_int_init(3);
-	buffer_make_buffered_stream(&(centralData->gps_buffer), &(centralData->gps_stream_in));
-	uart_int_register_read_stream(uart_int_get_uart_handle(3), &(centralData->gps_stream_in));
-	uart_int_register_write_stream(uart_int_get_uart_handle(3), &(centralData->gps_stream_out));
+	gps_ublox_init(&(centralData->GPS_data), UART3);
 	
 	// Init UART 4 for wired communication
-	uart_int_init(4);
-	uart_int_register_write_stream(uart_int_get_uart_handle(4), &(centralData->wired_out_stream));
-
-	// Registering streams
-	buffer_make_buffered_stream_lossy(&(centralData->xbee_in_buffer), &(centralData->xbee_in_stream));
-	buffer_make_buffered_stream_lossy(&(centralData->wired_in_buffer), &(centralData->wired_in_stream));
-	uart_int_register_read_stream(uart_int_get_uart_handle(4), &(centralData->wired_in_stream));
-	uart_int_register_read_stream(uart_int_get_uart_handle(0), &(centralData->xbee_in_stream));
+	console_init(UART4);
 		
 	// connect abstracted aliases to hardware ports
-	centralData->telemetry_down_stream = &(centralData->xbee_out_stream);
-	centralData->telemetry_up_stream = &(centralData->xbee_in_stream);
-	centralData->debug_out_stream = &(centralData->wired_out_stream);
-	centralData->debug_in_stream = &(centralData->wired_in_stream);
-
-/*
-	centralData->telemetry_down_stream = &(centralData->wired_out_stream);
-	centralData->telemetry_up_stream  = &(centralData->wired_in_stream);		
-	centralData->debug_out_stream     = &(centralData->xbee_out_stream);
-	centralData->debug_in_stream      = &(centralData->xbee_in_stream);
-*/
+	centralData->telemetry_down_stream = xbee_get_out_stream();
+	centralData->telemetry_up_stream = xbee_get_in_stream();
+	centralData->debug_out_stream = console_get_out_stream();
+	centralData->debug_in_stream = console_get_out_stream();
 
 	// Bind RC receiver with remote
 	//remote_dsm2_rc_activate_bind_mode();
@@ -135,7 +121,7 @@ void boardsupport_init(central_data_t *centralData) {
 	
 	// init imu & compass
 	imu_init(&(centralData->imu1));
-	bmp085_init();
+	bmp085_init(&(centralData->pressure));
 	
 	// init mavlink
 //	mavlink_stream_init(&centralData->mavlink_stream, centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID, 50); // TODO : uncomment

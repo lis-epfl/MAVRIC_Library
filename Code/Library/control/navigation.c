@@ -141,7 +141,7 @@ static void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
 	}
 	if (centralData->collision_avoidance)
 	{
-		orca_computeNewVelocity(dir_desired_bf,new_velocity);
+		orca_computeNewVelocity(&(centralData->orcaData),dir_desired_bf,new_velocity);
 	}
 
 	//rel_heading= atan2(new_velocity[Y],new_velocity[X]);

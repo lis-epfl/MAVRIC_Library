@@ -92,7 +92,7 @@ typedef struct
 {	
 	struct task_set_t* tasks;			///<	Pointer to the task set to which this task belongs 
 	task_function_t call_function;		///<	Function to be called
-	void* function_argument;
+	task_argument_t function_argument;
 	uint16_t task_id;					///<	Unique task identifier
 	task_run_mode_t  run_mode;			///<	Run mode
 	task_timing_mode_t timing_mode;		///<	Timing mode
@@ -148,7 +148,7 @@ void scheduler_init(task_set_t *ts);
  * 
  * \return 	Task handle
  */
-task_handle_t scheduler_register_task(task_set_t *ts, int32_t task_slot, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, void* function_argument);
+task_handle_t scheduler_register_task(task_set_t *ts, int32_t task_slot, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, task_argument_t function_argument);
 
 
 /**
@@ -162,7 +162,7 @@ task_handle_t scheduler_register_task(task_set_t *ts, int32_t task_slot, uint32_
  * 
  * \return              	True if the task was successfully added, False if not
  */
-bool scheduler_add_task(task_set_t *ts, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, void* function_argument, uint32_t task_id);
+bool scheduler_add_task(task_set_t *ts, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, task_argument_t function_argument, uint32_t task_id);
 
 
 /**

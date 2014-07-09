@@ -38,7 +38,7 @@ void scheduler_init(task_set_t *ts)
 }
 
 
-task_handle_t scheduler_register_task(task_set_t *ts, int32_t task_slot, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, void* function_argument) 
+task_handle_t scheduler_register_task(task_set_t *ts, int32_t task_slot, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, task_argument_t function_argument) 
 {
 	if ((task_slot < 0) || (task_slot >= ts->number_of_tasks)) 
 	{
@@ -65,7 +65,7 @@ task_handle_t scheduler_register_task(task_set_t *ts, int32_t task_slot, uint32_
 }
 
 
-bool scheduler_add_task(task_set_t *ts, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, void* function_argument, uint32_t task_id) 
+bool scheduler_add_task(task_set_t *ts, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, task_argument_t function_argument, uint32_t task_id) 
 {
 	int32_t task_slot = 0;
 	

@@ -393,7 +393,7 @@ task_return_t tasks_run_barometer_update()
 	uint32_t tnow = time_keeper_get_micros();
 	central_data_t *central_data=central_data_get_pointer_to_struct();
 	
-	pressure_data *pressure= bmp085_get_pressure_data_slow(centralData->pressure.altitude_offset);
+	pressure_data_t *pressure= bmp085_get_pressure_data_slow(centralData->pressure.altitude_offset);
 	if (central_data->simulation_mode==1) {
 		simulation_simulate_barometer(&centralData->sim_model, pressure);
 	} 

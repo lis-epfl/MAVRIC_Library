@@ -177,7 +177,7 @@ void mavlink_send_pressure(void) {
 
 void mavlink_send_radar(void) {
 	radar_module_read();
-	radar_target *target=radar_module_get_main_target();
+	radar_target_t *target=radar_module_get_main_target();
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "Radar_velocity", target->velocity);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "Radar_amplitude", target->amplitude/1000.0);
 }

@@ -29,8 +29,6 @@
 #define MONITOR_CHANNELS 10
 #define MONITOR_SAMPLES  10
 
-const 
-
 typedef enum
 {
 	ANALOG_RAIL_2,		// ANA connector, pin1

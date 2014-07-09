@@ -34,7 +34,7 @@
  *
  * \return	void
  */
-void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps);
+void init_pos_gps(position_estimator_t *pos_est, gps_Data_type_t *gps);
 
 /**
  * \brief	Initialization of the barometer offset
@@ -44,10 +44,10 @@ void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps);
  *
  * \return	void
  */
-void init_barometer_offset(position_estimator_t *pos_est, pressure_data *barometer);
+void init_barometer_offset(position_estimator_t *pos_est, pressure_data_t *barometer);
 
 
-void position_estimation_init(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps)
+void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps)
 {
 	
 	// default GPS home position
@@ -77,11 +77,11 @@ void position_estimation_init(position_estimator_t *pos_est, pressure_data *baro
 	init_pos_gps(pos_est, gps);
 }
 
-void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps)
+void init_pos_gps(position_estimator_t *pos_est, gps_Data_type_t *gps)
 {
 	int32_t i;
 	
-	if (gps_ublox_newValidGpsMsg(&pos_est->timeLastGpsMsg) && (!(pos_est->init_gps_position)))
+	if (gps_ublox_newValidGpsMsg(gps, &pos_est->timeLastGpsMsg) && (!(pos_est->init_gps_position)))
 	{
 		pos_est->init_gps_position = true;
 		
@@ -105,9 +105,9 @@ void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps)
 	}
 }
 
-void init_barometer_offset(position_estimator_t *pos_est, pressure_data *barometer)
+void init_barometer_offset(position_estimator_t *pos_est, pressure_data_t *barometer)
 {
-	bool boolNewBaro = bmp085_newValidBarometer(&pos_est->timeLastBarometerMsg);
+	bool boolNewBaro = bmp085_newValidBarometer(barometer, &pos_est->timeLastBarometerMsg);
 
 		
 	//if ((centralData->init_gps_position)&&(boolNewBaro))
@@ -130,7 +130,7 @@ void init_barometer_offset(position_estimator_t *pos_est, pressure_data *baromet
 	}
 }
 
-void position_estimation_reset_home_altitude(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, local_coordinates_t *simLocalPos)
+void position_estimation_reset_home_altitude(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, local_coordinates_t *simLocalPos)
 {
 		int32_t i;
 		// reset origin to position where quad is armed if we have GPS
@@ -218,7 +218,7 @@ void position_estimation_position_integration(position_estimator_t *pos_est, Qua
 	
 }
 	
-void position_estimation_position_correction(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, float dt)
+void position_estimation_position_correction(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, float dt)
 {
 	global_position_t global_gps_position;
 	local_coordinates_t local_coordinates;
@@ -239,7 +239,7 @@ void position_estimation_position_correction(position_estimator_t *pos_est, pres
 		if (pos_est->init_barometer)
 		{
 			// altimeter correction
-			if (bmp085_newValidBarometer(&pos_est->timeLastBarometerMsg))
+			if (bmp085_newValidBarometer(barometer, &pos_est->timeLastBarometerMsg))
 			{
 				//alt_error = -(barometer->altitude + barometer->altitude_offset) - pos_est->localPosition.pos[2] + pos_est->localPosition.origin.altitude;
 				pos_est->last_alt = -(barometer->altitude ) + pos_est->localPosition.origin.altitude;
@@ -274,7 +274,7 @@ void position_estimation_position_correction(position_estimator_t *pos_est, pres
 	
 		if (pos_est->init_gps_position)
 		{
-			if (gps_ublox_newValidGpsMsg(&pos_est->timeLastGpsMsg))
+			if (gps_ublox_newValidGpsMsg(gps, &pos_est->timeLastGpsMsg))
 			{
 				global_gps_position.longitude = gps->longitude;
 				global_gps_position.latitude = gps->latitude;

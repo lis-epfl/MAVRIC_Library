@@ -28,6 +28,8 @@
 #include "delay.h"
 #include "i2cxl_sonar.h"
 #include "analog_monitor.h"
+#include "lsm330dlc_driver.h"
+#include "compass_hmc5883l.h"
 
 NEW_TASK_SET(main_tasks, 10)
 
@@ -510,6 +512,10 @@ void tasks_run_imu_update(void* arg) {
 	} 
 	else 
 	{
+		lsm330dlc_gyro_update(&(centralData->imu1.gyroData));
+		lsm330dlc_acc_update(&(centralData->imu1.acceleroData));
+		compass_hmc58831l_update(&(centralData->imu1.compassData));
+		
 		imu_get_raw_data(&(centralData->imu1));
 
 		imu_update(	&(centralData->imu1), 
@@ -629,7 +635,7 @@ task_return_t tasks_run_gps_update(void* arg)
 	} 
 	else 
 	{
-		gps_ublox_update();
+		gps_ublox_update(&centralData->GPS_data);
 	}
 	
 	return TASK_RUN_SUCCESS;
@@ -679,21 +685,17 @@ task_return_t tasks_run_navigation_update(void* arg)
 }
 
 
-uint32_t last_baro_update;
-
-
 task_return_t tasks_run_barometer_update(void* arg)
 {
 	central_data_t *central_data = central_data_get_pointer_to_struct();
-	pressure_data *pressure = bmp085_get_pressure_data_slow(centralData->pressure.altitude_offset);
+	
+	bmp085_get_pressure_data_slow(&(central_data->pressure));
 	
 	if (central_data->simulation_mode == 1) 
 	{
-		simulation_simulate_barometer(&centralData->sim_model, pressure);
+		simulation_simulate_barometer(&centralData->sim_model, &(central_data->pressure));
 	} 
 
-	centralData->pressure = *pressure;
-	
 	return TASK_RUN_SUCCESS;
 }
 

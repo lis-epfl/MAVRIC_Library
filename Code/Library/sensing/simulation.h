@@ -97,7 +97,7 @@ void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates
  * \param	imu				The pointer to the "real" IMU structure to update the belief of the attitude
  * \param	localPos		The pointer to the structure of the "real" local position of the vehicle to update the belief of the position and velocity
  */
-void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est);
+void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est);
 
 /**
  * \brief	Simulates barometer outputs
@@ -105,7 +105,7 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
  * \param	sim				The pointer to the simulation model structure
  * \param	pressure		The pointer to the "real" barometer structure to update the belief of the barometer value
  */
-void simulation_simulate_barometer(simulation_model_t *sim, pressure_data *pressure);
+void simulation_simulate_barometer(simulation_model_t *sim, pressure_data_t *pressure);
 
 /**
  * \brief	Simulates GPS outputs
@@ -113,7 +113,7 @@ void simulation_simulate_barometer(simulation_model_t *sim, pressure_data *press
  * \param	sim				The pointer to the simulation model structure
  * \param	gps				The pointer to the "real" GPS structure to update the belief of the GPS value
  */
-void simulation_simulate_gps(simulation_model_t *sim, gps_Data_type *gps);
+void simulation_simulate_gps(simulation_model_t *sim, gps_Data_type_t *gps);
 
 #ifdef __cplusplus
 }

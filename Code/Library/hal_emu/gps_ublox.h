@@ -157,33 +157,33 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t msg_class;
 		uint8_t preamble2;
 		uint8_t preamble1;
-	}ubx_header;
+	}ubx_header_t;
 
 	typedef struct {
 		uint16_t timeref;
 		uint16_t nav_rate;
 		uint16_t measure_rate_ms;
-	}ubx_cfg_nav_rate;
+	}ubx_cfg_nav_rate_t;
 	
 	// We still have to send to message in the correct order to the GPS
 	typedef struct {
 		uint16_t measure_rate_ms;
 		uint16_t nav_rate;
 		uint16_t timeref;			// 0:UTC time, 1:GPS time
-	}ubx_cfg_nav_rate_send;
+	}ubx_cfg_nav_rate_send_t;
 
 	typedef struct {
 		uint8_t rate;
 		uint8_t msg_id_rate;
 		uint8_t msg_class;
-	}ubx_cfg_msg_rate;
+	}ubx_cfg_msg_rate_t;
 
 	// We still have to send to message in the correct order to the GPS
 	typedef struct {
 		uint8_t msg_class;
 		uint8_t msg_id_rate;
 		uint8_t rate;
-	}ubx_cfg_msg_rate_send;
+	}ubx_cfg_msg_rate_send_t;
 
 	typedef struct {
 		uint32_t res4;
@@ -202,7 +202,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t fixMode;
 		uint8_t dynModel;								// UBX_PLATFORM_... type
 		uint16_t mask;
-	}ubx_cfg_nav_settings;
+	}ubx_cfg_nav_settings_t;
 
 	typedef struct {
 		uint32_t vertical_accuracy;						// mm
@@ -212,7 +212,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int32_t latitude;								// deg 1e-7
 		int32_t longitude;								// deg 1e-7
 		uint32_t itow;                                  // GPS msToW
-	}ubx_nav_posllh;
+	}ubx_nav_posllh_t;
 
 	typedef struct {
 		uint32_t uptime;                                // milliseconds
@@ -222,7 +222,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t fix_status;
 		uint8_t fix_type;
 		uint32_t itow;                                  // GPS msToW
-	}ubx_nav_status;
+	}ubx_nav_status_t;
 
 	typedef struct {
 		uint32_t res2;
@@ -242,7 +242,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int16_t week;
 		int32_t time_nsec;								// nanoseconds
 		uint32_t itow;									// milliseconds
-	}ubx_nav_solution;
+	}ubx_nav_solution_t;
 
 	typedef struct {
 		uint32_t heading_accuracy;						// deg
@@ -254,7 +254,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int32_t ned_east;								// cm/s
 		int32_t ned_north;								// cm/s
 		uint32_t itow;                                  // milliseconds GPS msToW
-	}ubx_nav_velned;
+	}ubx_nav_velned_t;
 
 	typedef struct
 	{
@@ -274,11 +274,11 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t globalFlags;
 		uint8_t numCh;
 		uint32_t itow;
-	}ubx_nav_SVInfo;
+	}ubx_nav_SVInfo_t;
 	
  	typedef struct{
  		uint8_t awake_flag;
- 	}ubx_mon_rxr_struct;
+ 	}ubx_mon_rxr_struct_t;
 	 
 	typedef struct{
 		uint8_t res;
@@ -287,7 +287,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int32_t qErr;
 		uint32_t towSubMS;				// ms scaling: 2^-32
 		uint32_t towMS;					// ms
-	}ubx_tim_tp;
+	}ubx_tim_tp_t;
 
 	typedef struct
 	{
@@ -298,7 +298,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int32_t deltaMs;				// ms
 		int32_t frac;					// ns
 		int32_t itow;					// ms
-	}ubx_tim_vrfy;
+	}ubx_tim_vrfy_t;
 
 #else
 
@@ -308,19 +308,19 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t msg_class;
 		uint8_t msg_id_header;
 		uint16_t length;
-	}ubx_header;
+	}ubx_header_t;
 
 	typedef struct {
 		uint16_t measure_rate_ms;
 		uint16_t nav_rate;
 		uint16_t timeref;
-	}ubx_cfg_nav_rate;
+	}ubx_cfg_nav_rate_t;
 
 	typedef struct {
 		uint8_t msg_class;
 		uint8_t msg_id_rate;
 		uint8_t rate;
-	}ubx_cfg_msg_rate;
+	}ubx_cfg_msg_rate_t;
 
 	typedef struct {
 		uint16_t mask;
@@ -339,7 +339,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint32_t res2;
 		uint32_t res3;
 		uint32_t res4;
-	}ubx_cfg_nav_settings;
+	}ubx_cfg_nav_settings_t;
 
 	typedef struct {
 		uint32_t itow;                                  // GPS msToW
@@ -349,7 +349,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int32_t altitude_msl;							// mm
 		uint32_t horizontal_accuracy;					// mm
 		uint32_t vertical_accuracy;						// mm
-	}ubx_nav_posllh;
+	}ubx_nav_posllh_t;
 
 	typedef struct {
 		uint32_t itow;                                  // GPS msToW
@@ -359,7 +359,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t res;
 		uint32_t time_to_first_fix;						// milliseconds
 		uint32_t uptime;                                // milliseconds
-	}ubx_nav_status;
+	}ubx_nav_status_t;
 
 	typedef struct {
 		uint32_t itow;									// milliseconds
@@ -379,7 +379,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t res;
 		uint8_t satellites;
 		uint32_t res2;
-	}ubx_nav_solution;
+	}ubx_nav_solution_t;
 
 	typedef struct {
 		uint32_t itow;                                  // milliseconds GPS msToW
@@ -391,7 +391,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int32_t heading_2d;								// deg
 		uint32_t speed_accuracy;						// cm/s
 		uint32_t heading_accuracy;						// deg
-	}ubx_nav_velned;
+	}ubx_nav_velned_t;
 
 	typedef struct
 	{
@@ -411,11 +411,11 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 			int16_t azim;
 			int32_t prRes;
 		} channelData[16];
-	}ubx_nav_SVInfo;
+	}ubx_nav_SVInfo_t;
 	
 	typedef struct{
 		uint8_t awake_flag;
-	}ubx_mon_rxr_struct;
+	}ubx_mon_rxr_struct_t;
 
 	typedef struct  
 	{
@@ -425,7 +425,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint16_t week;
 		uint8_t flags;
 		uint8_t res;
-	}ubx_tim_tp;
+	}ubx_tim_tp_t;
 	
 	typedef struct
 	{
@@ -436,11 +436,11 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint16_t wno;
 		uint8_t flags;
 		uint8_t res;
-	}ubx_tim_vrfy;
+	}ubx_tim_vrfy_t;
 
 #endif
 
-ubx_cfg_nav_settings nav_settings;
+ubx_cfg_nav_settings_t nav_settings;
 
 uint8_t cksum_a;
 uint8_t cksum_b;
@@ -540,7 +540,7 @@ typedef struct
 // 	unsigned char verticalSpeedStatus;
  	unsigned char courseStatus;
 	unsigned char accuracyStatus;
-} gps_Data_type;
+} gps_Data_type_t;
 
 /// Last time that the GPS driver got a good packet from the GPS
 uint32_t idleTimer;
@@ -572,7 +572,7 @@ void ubx_send_header(uint8_t msg_class, uint8_t _msg_id, uint8_t size);
 void ubx_send_cksum(uint8_t ck_sum_a, uint8_t ck_sum_b);
 
 void ubx_send_message(uint8_t msg_class, uint8_t msg_id, void *msg, uint8_t size);
-void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_nav_rate_send msg, uint8_t size);
+void ubx_send_message_CFG_nav_rate(uint8_t msg_class, uint8_t _msg_id, ubx_cfg_nav_rate_send_t msg, uint8_t size);
 void ubx_send_message_nav_settings(uint8_t msg_class, uint8_t _msg_id, enum GPS_Engine_Setting *engine_settings, uint8_t size);
 void ubx_configure_message_rate(uint8_t msg_class, uint8_t msg_id, uint8_t rate);
 
@@ -581,16 +581,16 @@ void gps_ublox_configure_gps(void);
 void gps_ublox_update(void);
 bool gps_ublox_newValidGpsMsg(uint32_t *prevGpsMsgTime);
 
-ubx_nav_posllh * ubx_GetPosllh(void);
-ubx_nav_status * ubx_GetStatus(void);
-ubx_nav_solution * ubx_GetSolution(void);
-ubx_nav_velned * ubx_GetVelned(void);
-ubx_nav_SVInfo * ubx_GetSVInfo(void);
-ubx_cfg_nav_settings * ubx_GetNavSettings(void);
-ubx_cfg_msg_rate * ubx_GetMsgRate(void);
-ubx_mon_rxr_struct * ubx_GetMonRXR(void);
-ubx_tim_tp * ubx_GetTimTP(void);
-ubx_tim_vrfy * ubx_GetTimVRFY(void);
+ubx_nav_posllh_t * ubx_GetPosllh(void);
+ubx_nav_status_t * ubx_GetStatus(void);
+ubx_nav_solution_t * ubx_GetSolution(void);
+ubx_nav_velned_t * ubx_GetVelned(void);
+ubx_nav_SVInfo_t * ubx_GetSVInfo(void);
+ubx_cfg_nav_settings_t * ubx_GetNavSettings(void);
+ubx_cfg_msg_rate_t * ubx_GetMsgRate(void);
+ubx_mon_rxr_struct_t * ubx_GetMonRXR(void);
+ubx_tim_tp_t * ubx_GetTimTP(void);
+ubx_tim_vrfy_t * ubx_GetTimVRFY(void);
 
 float ToRad(float numdeg);
 
