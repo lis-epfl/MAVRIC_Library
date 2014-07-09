@@ -615,6 +615,12 @@
     <Compile Include="Library\hal\compass.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\hal\gps_ublox.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\gps_ublox.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\hal\gyro.h">
       <SubType>compile</SubType>
     </Compile>
@@ -1187,12 +1193,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\runtime\scheduler.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\gps_ublox.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\gps_ublox.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\sensing\imu.c">
