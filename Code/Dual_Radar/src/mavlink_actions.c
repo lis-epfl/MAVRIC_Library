@@ -22,7 +22,7 @@ mavlink_send_heartbeat() {
 
 int even_odd;
 void mavlink_send_radar() {
-	radar_target *target=get_tracked_target();
+	radar_target_t *target=get_tracked_target();
 	//mavlink_msg_radar_tracked_target_send(MAVLINK_COMM_0, time_keeper_get_millis(), 0, 0, target->velocity, target->amplitude, 0.0);
 	//mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, time_keeper_get_millis(), 0, get_raw_FFT());
 	//mavlink_msg_radar_raw_data_send(MAVLINK_COMM_0, time_keeper_get_millis(), 1, adc_int_get_buffer(0, 0));
@@ -37,7 +37,7 @@ void mavlink_send_radar() {
 }
 
 void mavlink_send_radar_raw() {
-	radar_target *target=get_tracked_target();
+	radar_target_t *target=get_tracked_target();
 	int16_t values[64];
 	int32_t *fft =get_raw_FFT();
 	int i;

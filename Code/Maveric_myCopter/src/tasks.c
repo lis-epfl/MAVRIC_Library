@@ -45,7 +45,7 @@ void fake_gps_fix(void);
  */
 void switch_off_motors(void);
 
-task_set* tasks_get_main_taskset() 
+task_set_t* tasks_get_main_taskset() 
 {
 	return &main_tasks;
 }

@@ -89,7 +89,7 @@ void imu_calibrate_gyros(Imu_Data_t *imu1);
  * \param	barometer	the pointer to the barometer structure
  * \param	gps			the pointer to the GPS structure
  */
-void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps);
+void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps);
 
 /**
  * \brief	Computes the transition from raw values to scaled values

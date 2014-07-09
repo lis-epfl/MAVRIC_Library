@@ -22,7 +22,7 @@
 #include "sysclk.h"
 #include "print_util.h"
 
-static volatile i2c_schedule_event schedule[I2C_DEVICES][I2C_SCHEDULE_SLOTS];
+static volatile i2c_schedule_event_t schedule[I2C_DEVICES][I2C_SCHEDULE_SLOTS];
 
 static volatile int8_t current_schedule_slot[I2C_DEVICES];
 
@@ -150,7 +150,7 @@ int8_t  i2c_driver_reset(uint8_t  i2c_device)
 	// Clear SR
 	twim->scr = ~0UL;
 }
-int8_t  i2c_driver_add_request(uint8_t  i2c_device, i2c_schedule_event* new_event)
+int8_t  i2c_driver_add_request(uint8_t  i2c_device, i2c_schedule_event_t* new_event)
 {
 	// find free schedule slot
 	int32_t i = 0;
@@ -177,7 +177,7 @@ int8_t  i2c_driver_add_request(uint8_t  i2c_device, i2c_schedule_event* new_even
 	// return assigned schedule slot
 	return i;
 }
-int8_t  i2c_driver_change_request(uint8_t  i2c_device, i2c_schedule_event* new_event)
+int8_t  i2c_driver_change_request(uint8_t  i2c_device, i2c_schedule_event_t* new_event)
 {
 	int32_t i = new_event->schedule_slot;
 
@@ -196,7 +196,7 @@ int8_t  i2c_driver_trigger_request(uint8_t  i2c_device, uint8_t  schedule_slot)
 	// set up DMA channel
 	volatile avr32_twim_t *twim;
 	
-	i2c_packet_conf* conf = &schedule[i2c_device][schedule_slot].config;
+	i2c_packet_conf_t* conf = &schedule[i2c_device][schedule_slot].config;
 	static  pdca_channel_options_t PDCA_OPTIONS =
 			{
 				.addr = 0,                                // memory address

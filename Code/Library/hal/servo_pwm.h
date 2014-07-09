@@ -45,7 +45,7 @@ typedef struct
 	int32_t min;					///< Define the min value
 	int32_t max;					///< Define the max value
 	int32_t failsafe_position;		///< Define the initial(?) position of a servo
-} servo_output;
+} servo_output_t;
 
 /**
  * \brief Initialize the hardware line for servos
@@ -57,21 +57,21 @@ void servo_pwm_hardware_init(void);
  *
  * \param	servos		The array of servos structure
  */
-void servo_pwm_init(servo_output servos[]);
+void servo_pwm_init(servo_output_t servos[]);
 
 /**
  * \brief Set servos' values
  *
  * \param servo_outputs pointer to a structure containing the servos' data
  */
-void servo_pwm_set(const servo_output *servo_outputs);
+void servo_pwm_set(const servo_output_t *servo_outputs);
 
 /**
  * \brief Set the servos' value to the failsafe value
  *
  * \param servo_outputs pointer to a structure containing the servos' data
  */
-void servo_pwm_failsafe(servo_output *servo_outputs);
+void servo_pwm_failsafe(servo_output_t *servo_outputs);
 
 #ifdef __cplusplus
 	}

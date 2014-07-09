@@ -66,9 +66,9 @@ typedef struct  {
 
 	Stabiliser_Stack_copter_t stabiliser_stack;					///< The stabilisation stack structure (rates, attitude, velocity, thrust)
 
-	servo_output servos[NUMBER_OF_SERVO_OUTPUTS];				///< The array of servos (size NUMBER_OF_SERVO_OUTPUTS)
+	servo_output_t servos[NUMBER_OF_SERVO_OUTPUTS];				///< The array of servos (size NUMBER_OF_SERVO_OUTPUTS)
 	
-	gps_Data_type GPS_data;										///< The GPS structure
+	gps_Data_type_t GPS_data;										///< The GPS structure
 	
 	simulation_model_t sim_model;								///< The simulation model structure
 	
@@ -117,7 +117,7 @@ typedef struct  {
 	uint32_t simulation_mode;									///< The value of the simulation_mode (0: real, 1: simulation)
 	uint32_t simulation_mode_previous;							///< The value of the simulation_mode at previous time step
 	
-	pressure_data pressure;										///< The pressure structure
+	pressure_data_t pressure;										///< The pressure structure
 	//float pressure_filtered;									///< The filtered pressure
 	//float altitude_filtered;									///< The filtered altitude
 	

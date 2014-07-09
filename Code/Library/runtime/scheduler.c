@@ -20,7 +20,7 @@
 #include "time_keeper.h"
 
 
-void scheduler_init(task_set *ts) 
+void scheduler_init(task_set_t *ts) 
 {
 	int32_t i;
 	
@@ -35,7 +35,7 @@ void scheduler_init(task_set *ts)
 }
 
 
-task_handle_t scheduler_register_task(task_set *ts, int32_t task_slot, uint32_t repeat_period, task_run_mode_t run_mode, function_pointer call_function) 
+task_handle_t scheduler_register_task(task_set_t *ts, int32_t task_slot, uint32_t repeat_period, task_run_mode_t run_mode, function_pointer call_function) 
 {
 	if ((task_slot < 0) || (task_slot >= ts->number_of_tasks)) 
 	{
@@ -61,7 +61,7 @@ task_handle_t scheduler_register_task(task_set *ts, int32_t task_slot, uint32_t 
 }
 
 
-bool scheduler_add_task(task_set *ts, uint32_t repeat_period, task_run_mode_t run_mode, function_pointer call_function, uint32_t task_id) 
+bool scheduler_add_task(task_set_t *ts, uint32_t repeat_period, task_run_mode_t run_mode, function_pointer call_function, uint32_t task_id) 
 {
 	int32_t task_slot = 0;
 	
@@ -82,10 +82,10 @@ bool scheduler_add_task(task_set *ts, uint32_t repeat_period, task_run_mode_t ru
 }
 
 
-void scheduler_sort_taskset_by_period(task_set *ts){
+void scheduler_sort_taskset_by_period(task_set_t *ts){
 	int32_t i;
 	bool sorted = false;
-	task_entry tmp;
+	task_entry_t tmp;
 	if (ts->number_of_tasks < 2) 
 	{
 		return;
@@ -110,7 +110,7 @@ void scheduler_sort_taskset_by_period(task_set *ts){
 }
 
 
-int32_t scheduler_run_update(task_set *ts, uint8_t schedule_strategy) 
+int32_t scheduler_run_update(task_set_t *ts, uint8_t schedule_strategy) 
 {
 	int32_t i;
 	int32_t realtime_violation = 0;
@@ -187,7 +187,7 @@ int32_t scheduler_run_update(task_set *ts, uint8_t schedule_strategy)
 }
 
 
-task_entry* scheduler_get_task_by_id(task_set *ts, uint16_t task_id)
+task_entry_t* scheduler_get_task_by_id(task_set_t *ts, uint16_t task_id)
 {
 	int32_t i = 0;
 	for (i = 0; i < ts->number_of_tasks; i++) 
@@ -202,7 +202,7 @@ task_entry* scheduler_get_task_by_id(task_set *ts, uint16_t task_id)
 }
 
 
-task_entry* scheduler_get_task_by_index(task_set *ts, uint16_t task_index) 
+task_entry_t* scheduler_get_task_by_index(task_set_t *ts, uint16_t task_index) 
 {
 	if (task_index < ts->number_of_tasks) 
 	{
@@ -213,13 +213,13 @@ task_entry* scheduler_get_task_by_index(task_set *ts, uint16_t task_index)
 }
 
 
-void scheduler_change_run_mode(task_entry *te, task_run_mode_t new_run_mode) 
+void scheduler_change_run_mode(task_entry_t *te, task_run_mode_t new_run_mode) 
 {
 	te->run_mode = new_run_mode;
 }
 
 
-void scheduler_change_task_period(task_entry *te, uint32_t repeat_period) 
+void scheduler_change_task_period(task_entry_t *te, uint32_t repeat_period) 
 {
 	te->repeat_period = repeat_period;
 	scheduler_change_run_mode(te, RUN_REGULAR);
@@ -227,13 +227,13 @@ void scheduler_change_task_period(task_entry *te, uint32_t repeat_period)
 }
 
 
-void scheduler_suspend_task(task_entry *te, uint32_t delay) 
+void scheduler_suspend_task(task_entry_t *te, uint32_t delay) 
 {
 	te->next_run = GET_TIME + delay;
 }
 
 
-void scheduler_run_task_now(task_entry *te) 
+void scheduler_run_task_now(task_entry_t *te) 
 {
 	if ((te->run_mode == RUN_NEVER))
 	{

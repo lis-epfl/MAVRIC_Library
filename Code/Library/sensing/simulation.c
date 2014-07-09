@@ -33,7 +33,7 @@
  * \param	sim		The pointer to the simulation structure
  * \param	servos	The pointer to the servos structure
  */
-void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos);
+void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *servos);
 
 /**
  * \brief	Computer the forces in the local frame for a "diagonal" quadrotor configuration
@@ -41,7 +41,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos
  * \param	sim		The pointer to the simulation structure
  * \param	servos	The pointer to the servos structure
  */
-void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos);
+void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servos);
 
 void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates_t localPos) {
 	int32_t i;
@@ -103,7 +103,7 @@ static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr
 }
 
 
-void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos){
+void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servos){
 	int32_t i;
 	float motor_command[4];
 	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4];
@@ -162,7 +162,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output *servos)
 }
 
 
-void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos){
+void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *servos){
 	//int32_t i;
 	//float motor_command[4];
 	
@@ -182,7 +182,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output *servos
 	*/
 }
 
-void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est) {
+void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est) {
 	int32_t i;
 	UQuat_t qtmp1, qvel_bf,  qed;
 	const UQuat_t front = {.s = 0.0f, .v = {1.0f, 0.0f, 0.0f}};
@@ -315,7 +315,7 @@ void simulation_update(simulation_model_t *sim, servo_output *servo_commands, Im
 	//pos_est->localPosition = sim->localPosition;
 }
 
-void simulation_simulate_barometer(simulation_model_t *sim, pressure_data *pressure)
+void simulation_simulate_barometer(simulation_model_t *sim, pressure_data_t *pressure)
 {
 	pressure->altitude = sim->localPosition.origin.altitude - sim->localPosition.pos[Z];
 	pressure->vario_vz = sim->vel[Z];
@@ -323,7 +323,7 @@ void simulation_simulate_barometer(simulation_model_t *sim, pressure_data *press
 	pressure->altitude_offset = 0;
 }
 	
-void simulation_simulate_gps(simulation_model_t *sim, gps_Data_type *gps)
+void simulation_simulate_gps(simulation_model_t *sim, gps_Data_type_t *gps)
 {
 	global_position_t gpos = coord_conventions_local_to_global_position(sim->localPosition);
 	

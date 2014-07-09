@@ -111,7 +111,7 @@ void imu_calibrate_gyros(Imu_Data_t *imu1)
 	}
 }
 
-void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps)
+void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps)
 {
 	uint32_t t = time_keeper_get_time_ticks();
 	

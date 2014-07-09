@@ -30,7 +30,7 @@ static volatile byte_stream_t* mavlink_out_stream;
 static volatile byte_stream_t* mavlink_in_stream;
 static volatile Buffer_t mavlink_in_buffer;
 
-task_set mavlink_tasks;
+task_set_t mavlink_tasks;
 
 
 //------------------------------------------------------------------------------
@@ -161,13 +161,13 @@ void mavlink_stream_handle_message(Mavlink_Received_t* rec)
 						// send full list of streams
 						for (i=0; i<mavlink_tasks.number_of_tasks; i++) 
 						{
-							task_entry *task=scheduler_get_task_by_index(&mavlink_tasks, i);
+							task_entry_t *task=scheduler_get_task_by_index(&mavlink_tasks, i);
 							scheduler_run_task_now(task);
 						}					
 					} 
 					else 
 					{
-						task_entry *task =scheduler_get_task_by_id(&mavlink_tasks, request.req_stream_id);
+						task_entry_t *task =scheduler_get_task_by_id(&mavlink_tasks, request.req_stream_id);
 						print_util_dbg_print(" stream="); print_util_dbg_print_num(request.req_stream_id, 10);
 						print_util_dbg_print(" start_stop=");print_util_dbg_print_num(request.start_stop, 10);
 						print_util_dbg_print(" rate=");print_util_dbg_print_num(request.req_message_rate,10);
@@ -249,7 +249,7 @@ task_return_t mavlink_stream_protocol_update()
 	return result;
 }
 
-task_set* mavlink_stream_get_taskset() 
+task_set_t* mavlink_stream_get_taskset() 
 {
 	return &mavlink_tasks;
 }

@@ -82,7 +82,7 @@ void set_servo(int32_t channel, int32_t val_a, int32_t val_b){
 }
 
 
-void servo_pwm_set(servo_output *servo_outputs) {
+void servo_pwm_set(servo_output_t *servo_outputs) {
 	#ifdef GPS_ENABLE_OFF
 		set_servo(0, servo_outputs[0].value, servo_outputs[1].value);
 		set_servo(1, servo_outputs[2].value, servo_outputs[3].value);

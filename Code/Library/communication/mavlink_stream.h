@@ -61,7 +61,7 @@ task_return_t mavlink_stream_protocol_update(void);
  *
  * \return	A pointer to the task set
  */
-task_set* mavlink_stream_get_taskset(void);
+task_set_t* mavlink_stream_get_taskset(void);
 
 
 /**

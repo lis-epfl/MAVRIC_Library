@@ -21,15 +21,15 @@ static volatile central_data_t centralData;
 
 void central_data_init(){
 		
-	servo_pwm_init((servo_output*)centralData.servos);
-	servo_pwm_failsafe((servo_output*)centralData.servos);
-	servo_pwm_set((servo_output*)centralData.servos);
+	servo_pwm_init((servo_output_t*)centralData.servos);
+	servo_pwm_failsafe((servo_output_t*)centralData.servos);
+	servo_pwm_set((servo_output_t*)centralData.servos);
 
 	// TODO change names! XXX_init()
 	imu_init((Imu_Data_t*)&(centralData.imu1));
 	qfilter_init((Quat_Attitude_t*)&(centralData.imu1.attitude), (float*)(centralData.imu1.raw_scale), (float*)(centralData.imu1.raw_bias));
 		
-	position_estimation_init((position_estimator_t*)&(centralData.position_estimator), (pressure_data*)&centralData.pressure, (gps_Data_type*)&centralData.GPS_data);
+	position_estimation_init((position_estimator_t*)&(centralData.position_estimator), (pressure_data_t*)&centralData.pressure, (gps_Data_type_t*)&centralData.GPS_data);
 	
 	qfilter_init_quaternion((Quat_Attitude_t*)&(centralData.imu1.attitude));
 		

@@ -57,19 +57,19 @@
 #define BMP085_OVERSAMPLING_MODE BMP085_HIGHRES	///< Set oversampling mode of the barometer sensor to high resolution mode
 
 /**
- * \brief pressure_sensor_state can get three different state: Idle, get Temperature or get Pressure
+ * \brief pressure_sensor_state_t can get three different state: Idle, get Temperature or get Pressure
 */
-typedef enum pressure_sensor_state
+typedef enum pressure_sensor_state_t
 {
 	IDLE,				///< Idle state
 	GET_TEMP,			///< Getting temperature state
 	GET_PRESSURE		///< Getting pressure state
-} pressure_sensor_state;
+} pressure_sensor_state_t;
 
 /**
  * \brief structure containing all the barometer's data
 */
-typedef struct pressure_data
+typedef struct pressure_data_t
 {
 	uint8_t raw_pressure[3];		///< Raw pressure contained in 3 uint8_t
 	uint8_t raw_temperature[2];		///< Raw temperature contained in 2 uint8_t
@@ -81,14 +81,14 @@ typedef struct pressure_data
 	float vario_vz;					///< Vario altitude speed
 	uint32_t last_update;			///< Time of the last update of the barometer
 	uint32_t last_state_update;		///< Time of the last state update
-	pressure_sensor_state state;	///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
+	pressure_sensor_state_t state;	///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
 	float dt;						///< Time step for the derivative
-} pressure_data;
+} pressure_data_t;
 
 /**
  * \brief Initialize the barometer sensor
 */
-void bmp085_init(pressure_data *pressure_outputs);
+void bmp085_init(pressure_data_t *pressure_outputs);
 
 /**
  * \brief Initialize the barometer sensor in slow mode
@@ -98,7 +98,7 @@ void bmp085_init_slow(void);
 /**
  * \brief Start the pressure measurement
 */
-void bmp085_start_pressure_measurement(pressure_data *pressure_outputs);
+void bmp085_start_pressure_measurement(pressure_data_t *pressure_outputs);
 
 /**
  * \brief Get the pressure data n slow mode
@@ -107,14 +107,14 @@ void bmp085_start_pressure_measurement(pressure_data *pressure_outputs);
  *
  * \return a pointer to the pressure data structure
 */
-void bmp085_get_pressure_data_slow(pressure_data *pressure_outputs);
+void bmp085_get_pressure_data_slow(pressure_data_t *pressure_outputs);
 
 /**
  * \brief Returns whether a new valid measure is ready
  *
  * \return a boolean: true if a new valid measure is ready
 */
-bool bmp085_newValidBarometer(pressure_data *pressure_outputs, uint32_t *timePrevBarometer);
+bool bmp085_newValidBarometer(pressure_data_t *pressure_outputs, uint32_t *timePrevBarometer);
 
 #ifdef __cplusplus
 }

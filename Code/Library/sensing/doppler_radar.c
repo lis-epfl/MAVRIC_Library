@@ -37,7 +37,7 @@ dsp16_t vect_inputI[ RADAR_BUFFER_SIZE];
 
 int32_t fft_amp[RADAR_BUFFER_SIZE];
 
-radar_target main_target;
+radar_target_t main_target;
 
 
 int32_t alpha = 12;		//constant ( * 100) for the lowpass filtering of amplitude
@@ -212,7 +212,7 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[])
 	read_value = 0;
 }
 
-radar_target* get_tracked_target()
+radar_target_t* get_tracked_target()
 {
 	return &main_target;
 }

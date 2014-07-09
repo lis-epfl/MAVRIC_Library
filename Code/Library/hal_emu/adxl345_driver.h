@@ -21,17 +21,17 @@
 typedef struct{
 	uint8_t raw_data[6];
 	int16_t axes[3];
-} acc_data; 
+} acc_data_t; 
 
 
 
 void adxl345_driver_init(void);
 
-acc_data* adxl345_driver_get_acc_data(void);
+acc_data_t* adxl345_driver_get_acc_data(void);
 
 void adxl345_driver_init_slow(void);
 
-acc_data* adxl345_driver_get_acc_data_slow(void);
+acc_data_t* adxl345_driver_get_acc_data_slow(void);
 
 
 

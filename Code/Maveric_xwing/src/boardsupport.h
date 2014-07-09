@@ -14,14 +14,14 @@
 
 #include "central_data.h"
 
-//static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
+//static const servo_output_t servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
 
 //typedef struct  {
 	//Imu_Data_t imu1;
 	//Control_Command_t controls;
 	//Control_Command_t controls_nav;
 	//simulation_model_t uav_model;
-	//servo_output servos[NUMBER_OF_SERVO_OUTPUTS];
+	//servo_output_t servos[NUMBER_OF_SERVO_OUTPUTS];
 	//Buffer_t xbee_in_buffer, wired_in_buffer;
 	//byte_stream_t xbee_out_stream;
 	//byte_stream_t xbee_in_stream;
@@ -30,7 +30,7 @@
 	//Buffer_t gps_buffer;
 	//byte_stream_t gps_stream_in;
 	//byte_stream_t gps_stream_out;
-	//gps_Data_type GPS_data;
+	//gps_Data_type_t GPS_data;
 	//
 	//Estimator_Data_t estimation;
 	//simulation_model_t sim_model;
@@ -57,7 +57,7 @@
 	//uint8_t mav_state;
 	//uint32_t simulation_mode;
 	//
-	//pressure_data pressure;
+	//pressure_data_t pressure;
 	////float pressure_filtered;
 	////float altitude_filtered;
 	//

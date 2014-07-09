@@ -90,7 +90,7 @@ void servo_pwm_hardware_init(void)
 	// set_servos_to_failsafe(servo_outputs);
 }
 
-void servo_pwm_init(servo_output servos[])
+void servo_pwm_init(servo_output_t servos[])
 {
 	// Init servos
 	for (int32_t i = 0; i < NUMBER_OF_SERVO_OUTPUTS; ++i)
@@ -113,7 +113,7 @@ void set_servo(int32_t channel, int32_t val_a, int32_t val_b)
 	AVR32_PWM.channel[channel &0b11].dtupd= deadtime << 16 | deadtime;	
 }
 
-void servo_pwm_set(const servo_output *servo_outputs) 
+void servo_pwm_set(const servo_output_t *servo_outputs) 
 {
 	set_servo(0, servo_outputs[0].value, servo_outputs[1].value);
 	set_servo(1, servo_outputs[2].value, servo_outputs[3].value);
@@ -123,7 +123,7 @@ void servo_pwm_set(const servo_output *servo_outputs)
 	#endif
 }
 
-void servo_pwm_failsafe(servo_output *servo_outputs)
+void servo_pwm_failsafe(servo_output_t *servo_outputs)
 {
 	for(int32_t i = 0; i < NUMBER_OF_SERVO_OUTPUTS; i++)
 	{

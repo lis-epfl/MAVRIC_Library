@@ -606,7 +606,7 @@ task_return_t mavlink_telemetry_send_simulation(void)
 
 task_return_t mavlink_telemetry_send_rt_stats(void) 
 {
-	task_set* main_tasks = tasks_get_main_taskset();
+	task_set_t* main_tasks = tasks_get_main_taskset();
 	
 	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
 										time_keeper_get_millis(), 

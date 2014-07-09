@@ -67,7 +67,7 @@ typedef struct
  * \param	barometer		The pointer to the barometer structure
  * \param	gps				The pointer to the GPS structure
  */
-void position_estimation_init(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps );
+void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps );
 
 /**
  * \brief	Reset the home position and altitude
@@ -77,7 +77,7 @@ void position_estimation_init(position_estimator_t *pos_est, pressure_data *baro
  * \param	gps				The pointer to the GPS structure
  * \param	simLocalPos		The local position of the simulator
  */
-void position_estimation_reset_home_altitude(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, local_coordinates_t *simLocalPos);
+void position_estimation_reset_home_altitude(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, local_coordinates_t *simLocalPos);
 
 /**
  * \brief	Direct integration of the position with the IMU data
@@ -96,7 +96,7 @@ void position_estimation_position_integration(position_estimator_t *pos_est, Qua
  * \param	gps				The pointer to the GPS structure
  * \param	dt				The time interval between two integration step
  */
-void position_estimation_position_correction(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, float dt);
+void position_estimation_position_correction(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, float dt);
 
 #ifdef __cplusplus
 }

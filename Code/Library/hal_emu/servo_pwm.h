@@ -22,13 +22,13 @@
 typedef struct {
 	int32_t value;
 	int32_t min, max, failsafe_position;
-} servo_output;
+} servo_output_t;
 
 
 void servo_pwm_init(void);
 
 
-void servo_pwm_set(servo_output *servo_outputs);
+void servo_pwm_set(servo_output_t *servo_outputs);
 
 
 #endif /* SERVO_PWM_H_ */

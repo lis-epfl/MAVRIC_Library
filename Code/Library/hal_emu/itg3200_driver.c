@@ -12,9 +12,9 @@
 #include "print_util.h"
 //#include "twim.h"
 
-static volatile gyro_data gyro_outputs;
+static volatile gyro_data_t gyro_outputs;
 
-//static  i2c_schedule_event gyro_event;
+//static  i2c_schedule_event_t gyro_event;
 
 #define CONFIG_REG_ADDRESS 21
 #define SENSOR_REG_ADDRESS 27
@@ -51,12 +51,12 @@ void itg3200_driver_init_slow(void) {
 
 }
 
-gyro_data* itg3200_driver_get_gyro_data(void) {
+gyro_data_t* itg3200_driver_get_gyro_data(void) {
 	
 	return &gyro_outputs;
 }
 
-gyro_data* itg3200_driver_get_data_slow(void) {
+gyro_data_t* itg3200_driver_get_data_slow(void) {
 	
 	
 	

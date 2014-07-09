@@ -40,7 +40,7 @@ void tasks_create_tasks(void);
  * 
  * \return          Pointer to the main task-set
  */
-task_set* tasks_get_main_taskset(void);
+task_set_t* tasks_get_main_taskset(void);
 
 
 /**
