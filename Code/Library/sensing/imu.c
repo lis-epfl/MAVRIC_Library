@@ -20,8 +20,6 @@
 
 #include "qfilter.h"
 #include "delay.h"
-#include "itg3200_driver.h"
-#include "adxl345_driver.h"
 #include "lsm330dlc_driver.h"
 
 #include "compass_hmc5883l.h"
