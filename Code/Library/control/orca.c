@@ -17,12 +17,8 @@
 
 
 #include "orca.h"
-#include "neighbor_selection.h"
-#include "central_data.h"
 #include "print_util.h"
 #include "quaternions.h"
-
-central_data_t *centralData;
 
 float timeHorizon, invTimeHorizon;
 
@@ -31,10 +27,13 @@ int8_t loop_count_collisions = 0;
 
 float min_coll_dist;
 
-void orca_init(void)
+void orca_init(orca_t *orcaData, neighbor_t *neighborData, position_estimator_t *positionData, Imu_Data_t *imuData)
 {
-	centralData = central_data_get_pointer_to_struct();
-	centralData->neighborData.safe_size = SIZE_VHC_ORCA;
+	orcaData->neighborData = neighborData;
+	orcaData->positionData = positionData;
+	orcaData->imuData = imuData;
+	
+	orcaData->neighborData->safe_size = SIZE_VHC_ORCA;
 		
 	timeHorizon = TIME_HORIZON;
 	invTimeHorizon = 1.0f / timeHorizon;
@@ -42,7 +41,7 @@ void orca_init(void)
 	min_coll_dist = 2.0f * SIZE_VHC_ORCA + 1.0f;
 }
 
-void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
+void orca_computeNewVelocity(orca_t *orcaData, float OptimalVelocity[], float NewVelocity[])
 {
 	uint8_t ind, i;
 	
@@ -60,23 +59,23 @@ void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		NewVelocity[i] = OptimalVelocity[i];
 	}
 	
-	neighbors_selection_extrapolate_or_delete_position(&(centralData->neighborData));
+	neighbors_selection_extrapolate_or_delete_position(orcaData->neighborData);
 	
 	// Create agent ORCA planes
-	for (ind=0; ind<centralData->neighborData.number_of_neighbors; ind++)
+	for (ind=0; ind < orcaData->neighborData->number_of_neighbors; ind++)
 	{
 		// Linear extrapolation of the position of the neighbor between two received messages
-		for (i=0;i<3;i++)
+		for (i = 0; i < 3; i++)
 		{
-			relativePosition[i] = centralData->neighborData.listNeighbors[ind].extrapolatedPosition[i] - centralData->position_estimator.localPosition.pos[i];
-			relativeVelocity[i] = centralData->position_estimator.vel[i] - centralData->neighborData.listNeighbors[ind].velocity[i];
+			relativePosition[i] = orcaData->neighborData->listNeighbors[ind].extrapolatedPosition[i] - orcaData->positionData->localPosition.pos[i];
+			relativeVelocity[i] = orcaData->positionData->vel[i] - orcaData->neighborData->listNeighbors[ind].velocity[i];
 		}
 		
 		q_neighbor.s = 0.0f;
 		q_neighbor.v[0] = relativeVelocity[0];
 		q_neighbor.v[1] = relativeVelocity[1];
 		q_neighbor.v[2] = relativeVelocity[2];
-		q_neighbor_bf = quaternions_global_to_local(centralData->imu1.attitude.qe,q_neighbor);
+		q_neighbor_bf = quaternions_global_to_local(orcaData->imuData->attitude.qe,q_neighbor);
 		
 		neighor_bf[0] = q_neighbor_bf.v[0];
 		neighor_bf[1] = q_neighbor_bf.v[1];
@@ -91,7 +90,7 @@ void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		q_neighbor.v[0] = relativePosition[0];
 		q_neighbor.v[1] = relativePosition[1];
 		q_neighbor.v[2] = relativePosition[2];
-		q_neighbor_bf = quaternions_global_to_local(centralData->imu1.attitude.qe,q_neighbor);
+		q_neighbor_bf = quaternions_global_to_local(orcaData->imuData->attitude.qe,q_neighbor);
 		
 		neighor_bf[0] = q_neighbor_bf.v[0];
 		neighor_bf[1] = q_neighbor_bf.v[1];
@@ -103,7 +102,7 @@ void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		}
 		
 		distSq = vectors_norm_sqr(relativePosition);
-		combinedRadius = centralData->neighborData.safe_size + centralData->neighborData.listNeighbors[ind].size;
+		combinedRadius = orcaData->neighborData->safe_size + orcaData->neighborData->listNeighbors[ind].size;
 		combinedRadiusSq = SQR(combinedRadius);
 		
 		
@@ -189,16 +188,16 @@ void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[])
 		
 		for (i=0;i<3;i++)
 		{
-			planes[ind].point[i] = centralData->position_estimator.vel_bf[i] + 0.5f * u[i];
+			planes[ind].point[i] = orcaData->positionData->vel_bf[i] + 0.5f * u[i];
 		}
 		
 	}
 	
-	float planeFail = orca_linearProgram3(planes,centralData->neighborData.number_of_neighbors, OptimalVelocity, MAXSPEED, NewVelocity, false);
+	float planeFail = orca_linearProgram3(planes,orcaData->neighborData->number_of_neighbors, OptimalVelocity, MAXSPEED, NewVelocity, false);
 	
-	if (planeFail < centralData->neighborData.number_of_neighbors)
+	if (planeFail < orcaData->neighborData->number_of_neighbors)
 	{
-		orca_linearProgram4(planes,centralData->neighborData.number_of_neighbors,planeFail,MAXSPEED,NewVelocity);
+		orca_linearProgram4(planes,orcaData->neighborData->number_of_neighbors,planeFail,MAXSPEED,NewVelocity);
 	}
 	
 	loop_count_orca++;

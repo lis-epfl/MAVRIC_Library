@@ -56,10 +56,7 @@ void waypoint_handler_init()
 	centralData->collision_avoidance = false;
 	centralData->automatic_take_off = false;
 	centralData->automatic_landing = false;
-	centralData->in_the_air = false;
-			
-	centralData->neighborData.number_of_neighbors = 0;
-	
+	centralData->in_the_air = false;	
 }
 
 void waypoint_handler_waypoint_init()

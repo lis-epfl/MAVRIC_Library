@@ -121,6 +121,7 @@ typedef struct  {
 	//float pressure_filtered;									///< The filtered pressure
 	//float altitude_filtered;									///< The filtered altitude
 	
+	orca_t orcaData;
 	neighbor_t neighborData;
 	
 	critical_behavior_enum critical_behavior;					///< The critical behavior enum

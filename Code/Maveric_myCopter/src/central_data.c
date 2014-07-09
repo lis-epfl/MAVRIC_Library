@@ -37,7 +37,7 @@ void central_data_init(){
 	waypoint_handler_init();// ((waypoint_handler_t*)&centralData.waypoint_handler);
 		
 	neighbors_selection_init((neighbor_t*)&(centralData.neighborData), (position_estimator_t*)&(centralData.position_estimator));
-	orca_init();
+	orca_init((orca_t*)&(centralData.orcaData),(neighbor_t*)&(centralData.neighborData),(position_estimator_t*)&(centralData.position_estimator),(Imu_Data_t*)&(centralData.imu1));
 
 	// init stabilisers
 	stabilisation_copter_init((Stabiliser_Stack_copter_t*)&centralData.stabiliser_stack);
