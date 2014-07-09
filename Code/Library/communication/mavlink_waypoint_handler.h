@@ -139,7 +139,7 @@ void waypoint_handler_init_waypoint_list(waypoint_struct waypoint_list[], uint16
  * \param waypoint_receiving	Flag that is true when we are receiving waypoints, false otherwise
  * \param waypoint_sending		Flag that is true when we are sending waypoints, false otherwise
  */
-void waypoint_handler_send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint, bool* waypoint_receiving, bool * waypoint_sending);
+void waypoint_handler_send_count(mavlink_received_t* rec, uint16_t num_of_waypoint, bool* waypoint_receiving, bool * waypoint_sending);
 
 /**
  * \brief						Sends a given waypoint via a mavlink message
@@ -149,7 +149,7 @@ void waypoint_handler_send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoi
  * \param num_of_waypoint		The number of onboard waypoints
  * \param waypoint_sending		Flag that is true when we are sending waypoints, false otherwise
  */
-void waypoint_handler_send_waypoint(Mavlink_Received_t* rec, waypoint_struct waypoint[], uint16_t num_of_waypoint, bool* waypoint_sending);
+void waypoint_handler_send_waypoint(mavlink_received_t* rec, waypoint_struct waypoint[], uint16_t num_of_waypoint, bool* waypoint_sending);
 
 /**
  * \brief						Receives a acknoledge message from mavlink
@@ -157,7 +157,7 @@ void waypoint_handler_send_waypoint(Mavlink_Received_t* rec, waypoint_struct way
  * \param rec					The received mavlink message structure
  * \param waypoint_sending		Flag that is true when we are sending waypoints, false otherwise
  */
-void waypoint_handler_receive_ack_msg(Mavlink_Received_t* rec, bool* waypoint_sending);
+void waypoint_handler_receive_ack_msg(mavlink_received_t* rec, bool* waypoint_sending);
 //---------------------------------------------------------------------------------------------------------------------------------------//
 
 /**
@@ -168,7 +168,7 @@ void waypoint_handler_receive_ack_msg(Mavlink_Received_t* rec, bool* waypoint_se
  * \param waypoint_receiving	Flag that is true when we are receiving waypoints, false otherwise
  * \param waypoint_sending		Flag that is true when we are sending waypoints, false otherwise
  */
-void waypoint_handler_receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool* waypoint_receiving, bool* waypoint_sending);
+void waypoint_handler_receive_count(mavlink_received_t* rec, uint16_t* number_of_waypoints, bool* waypoint_receiving, bool* waypoint_sending);
 
 /**
  * \brief						Receives a given waypoint and stores it in the local structure
@@ -178,7 +178,7 @@ void waypoint_handler_receive_count(Mavlink_Received_t* rec, uint16_t* number_of
  * \param number_of_waypoints	The number of onboard waypoints	
  * \param waypoint_receiving	Flag that is true when we are receiving waypoints, false otherwise
  */
-void waypoint_handler_receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t number_of_waypoints, bool* waypoint_receiving);
+void waypoint_handler_receive_waypoint(mavlink_received_t* rec,  waypoint_struct waypoint_list[], uint16_t number_of_waypoints, bool* waypoint_receiving);
 //---------------------------------------------------------------------------------------------------------------------------------------//
 
 /**
@@ -188,7 +188,7 @@ void waypoint_handler_receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct
  * \param waypoint_list			The waypoint list of all onboard waypoints
  * \param num_of_waypoint		The waypoint to be set as current
  */
-void waypoint_handler_set_current_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t num_of_waypoint);
+void waypoint_handler_set_current_waypoint(mavlink_received_t* rec,  waypoint_struct waypoint_list[], uint16_t num_of_waypoint);
 
 /**
  * \brief						Set the current waypoint to new_current
@@ -206,14 +206,14 @@ void waypoint_handler_set_current_waypoint_from_parameter(waypoint_struct waypoi
  * \param number_of_waypoints	The pointer to the number of waypoints
  * \param waypoint_set			Flag telling whether a flight plan (true) is set or not (false)
  */
-void waypoint_handler_clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints, bool* waypoint_set);
+void waypoint_handler_clear_waypoint_list(mavlink_received_t* rec,  uint16_t* number_of_waypoints, bool* waypoint_set);
 
 /**
  * \brief						Set a new home position, origin of the local frame
  *
  * \param rec					The received mavlink message structure with the new home position
  */
-void waypoint_handler_set_home(Mavlink_Received_t* rec);
+void waypoint_handler_set_home(mavlink_received_t* rec);
 //---------------------------------------------------------------------------------------------------------------------------------------//
 
 /**
@@ -224,7 +224,7 @@ _* \param board_mav_mode		The pointer to the mode of the vehicle
  * \param board_mav_state		The pointer to the state of the vehicle
  * \param sim_mode				The simulation mode
  */
-void waypoint_handler_set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* board_mav_state, uint8_t sim_mode);
+void waypoint_handler_set_mav_mode(mavlink_received_t* rec, uint8_t* board_mav_mode, uint8_t* board_mav_state, uint8_t sim_mode);
 //---------------------------------------------------------------------------------------------------------------------------------------//
 
 /**

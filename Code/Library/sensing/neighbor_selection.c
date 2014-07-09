@@ -31,7 +31,7 @@ void neighbors_selection_init()
 	centralData->number_of_neighbors = 0;
 }
 
-void neighbors_selection_read_message_from_neighbors(Mavlink_Received_t* rec)
+void neighbors_selection_read_message_from_neighbors(mavlink_received_t* rec)
 {
 	uint8_t i;
 	

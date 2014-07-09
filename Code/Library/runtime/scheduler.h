@@ -36,19 +36,22 @@ extern "C"
 
 typedef uint8_t task_handle_t;
 
+// TODO: update documentation
+
 
 /**
  * \brief	Task return code
  */
 typedef enum 
 {
-	TASK_RUN_ERROR = -1,		///< 	The task was not not successfully executed
-	TASK_RUN_BLOCKED = 0,     ///< 	If a task returns "TASK_RUN_BLOCKED", the scheduler will try to re-run at the next schedule update, and not update "next_run" 
+	TASK_RUN_ERROR 	 = -1,		///< 	The task was not not successfully executed
+	TASK_RUN_BLOCKED = 0,     	///< 	If a task returns "TASK_RUN_BLOCKED", the scheduler will try to re-run at the next schedule update, and not update "next_run" 
 	TASK_RUN_SUCCESS = 1		///< 	The task was successfully executed 
 } task_return_t;
 
 
-typedef task_return_t (*function_pointer)(void);
+typedef void* task_argument_t;
+typedef task_return_t (*task_function_t)(task_argument_t);
 
 
 /**
@@ -77,18 +80,19 @@ typedef enum
  */
 typedef enum  
 {
-	ROUND_ROBIN,	///<	Round robin scheduling
-	FIXED_PRIORITY	///<	Fixed priority scheduling
-}schedule_strategy_t;
+	ROUND_ROBIN,		///<	Round robin scheduling
+	FIXED_PRIORITY		///<	Fixed priority scheduling
+} schedule_strategy_t;
 
 
 /**
  * \brief 	Task entry
  */
-typedef struct task_entry 
+typedef struct
 {	
-	struct task_set *tasks;				///<	Pointer to the task set to which this task belongs 
-	function_pointer call_function;		///<	Function to be called
+	struct task_set_t* tasks;			///<	Pointer to the task set to which this task belongs 
+	task_function_t call_function;		///<	Function to be called
+	void* function_argument;
 	uint16_t task_id;					///<	Unique task identifier
 	task_run_mode_t  run_mode;			///<	Run mode
 	task_timing_mode_t timing_mode;		///<	Timing mode
@@ -101,19 +105,19 @@ typedef struct task_entry
 	uint32_t delay_var_squared;			///<	Standard deviation of the delay
 	uint32_t rt_violations;				///<	Number of Real-time violations, this is incremented each time an execution is skipped
 #endif
-} task_entry;
+} task_entry_t;
 
 
 /**
  * \brief 	Task set
  */
-typedef struct task_set 
+typedef struct task_set_t
 {
-	uint8_t number_of_tasks;		///<	Number_of_tasks
+	uint8_t number_of_tasks;			///<	Number_of_tasks
 	int32_t running_task;				///<	ID of the task being executed
 	int32_t current_schedule_slot;		///<	Slot of the task being executed
-	struct task_entry tasks[30];	///<	Array of tasks_entry to be executed
-} task_set;
+	task_entry_t tasks[30];				///<	Array of tasks_entry to be executed
+} task_set_t;
 
 
 /**
@@ -122,7 +126,7 @@ typedef struct task_set
  * @param NAME 		Name of the task-set
  * @param NUMBER 	Number of tasks in the task-set
  */
-#define NEW_TASK_SET(NAME,NUMBER) task_set NAME = {.number_of_tasks = MAX_NUMBER_OF_TASKS};
+#define NEW_TASK_SET(NAME,NUMBER) task_set_t NAME = {.number_of_tasks = MAX_NUMBER_OF_TASKS};
 
 
 /**
@@ -130,7 +134,7 @@ typedef struct task_set
  * 
  * \param ts 	Pointer to task set
  */
-void scheduler_init(task_set *ts);
+void scheduler_init(task_set_t *ts);
 
 
 /**
@@ -144,7 +148,7 @@ void scheduler_init(task_set *ts);
  * 
  * \return 	Task handle
  */
-task_handle_t scheduler_register_task(task_set *ts, int32_t task_slot, uint32_t repeat_period, task_run_mode_t run_mode, function_pointer call_function);
+task_handle_t scheduler_register_task(task_set_t *ts, int32_t task_slot, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, void* function_argument);
 
 
 /**
@@ -158,7 +162,7 @@ task_handle_t scheduler_register_task(task_set *ts, int32_t task_slot, uint32_t 
  * 
  * \return              	True if the task was successfully added, False if not
  */
-bool scheduler_add_task(task_set *ts, uint32_t repeat_period, task_run_mode_t run_mode, function_pointer call_function, uint32_t task_id);
+bool scheduler_add_task(task_set_t *ts, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, void* function_argument, uint32_t task_id);
 
 
 /**
@@ -166,7 +170,7 @@ bool scheduler_add_task(task_set *ts, uint32_t repeat_period, task_run_mode_t ru
 *
 * \param ts  Pointer to task set
 */
-void scheduler_sort_taskset_by_period(task_set *ts);
+void scheduler_sort_taskset_by_period(task_set_t *ts);
 
 
 /**
@@ -177,7 +181,7 @@ void scheduler_sort_taskset_by_period(task_set *ts);
  * 
  * \return                  	Number of realtime violations
  */
-int32_t scheduler_run_update(task_set *ts, uint8_t schedule_strategy);
+int32_t scheduler_update(task_set_t *ts, uint8_t schedule_strategy);
 
 
 /**
@@ -188,7 +192,7 @@ int32_t scheduler_run_update(task_set *ts, uint8_t schedule_strategy);
  * 
  * \return        	Pointer to the target task
  */
-task_entry* scheduler_get_task_by_id(task_set *ts, uint16_t task_id);
+task_entry_t* scheduler_get_task_by_id(task_set_t *ts, uint16_t task_id);
 
 
 /**
@@ -199,7 +203,7 @@ task_entry* scheduler_get_task_by_id(task_set *ts, uint16_t task_id);
  * 
  * \return           	Pointer to the target task
  */
-task_entry* scheduler_get_task_by_index(task_set *ts, uint16_t task_index);
+task_entry_t* scheduler_get_task_by_index(task_set_t *ts, uint16_t task_index);
 
 
 /**
@@ -208,7 +212,7 @@ task_entry* scheduler_get_task_by_index(task_set *ts, uint16_t task_index);
  * \param te           	Pointer to a task entry
  * \param new_run_mode 	New run mode
  */
-void scheduler_change_run_mode(task_entry *te, task_run_mode_t new_run_mode);
+void scheduler_change_run_mode(task_entry_t *te, task_run_mode_t new_run_mode);
 
 
 /**
@@ -217,7 +221,7 @@ void scheduler_change_run_mode(task_entry *te, task_run_mode_t new_run_mode);
  * \param te   				Pointer to a task entry
  * \param repeat_period 	New repeat period (us)
  */
-void scheduler_change_task_period(task_entry *te, uint32_t repeat_period);
+void scheduler_change_task_period(task_entry_t *te, uint32_t repeat_period);
 
 
 /**
@@ -226,7 +230,7 @@ void scheduler_change_task_period(task_entry *te, uint32_t repeat_period);
  * \param te   		Pointer to a task entry
  * \param delay 	Duration (us)
  */
-void scheduler_suspend_task(task_entry *te, uint32_t delay);
+void scheduler_suspend_task(task_entry_t *te, uint32_t delay);
 
 
 /**
@@ -234,7 +238,7 @@ void scheduler_suspend_task(task_entry *te, uint32_t delay);
  * 
  * \param te 	Pointer to a task entry
  */
-void scheduler_run_task_now(task_entry *te);
+void scheduler_run_task_now(task_entry_t *te);
 
 
 #ifdef __cplusplus

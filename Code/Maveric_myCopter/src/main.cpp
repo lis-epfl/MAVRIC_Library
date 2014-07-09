@@ -36,9 +36,8 @@ void initialisation()
 	servo_pwm_failsafe(centralData->servos);
 	servo_pwm_set(centralData->servos);
 	
-	onboard_parameters_init();
-
-
+//	onboard_parameters_init(&centralData->onboard_parameters);	// TODO: remove
+	
 	mavlink_actions_init(); // TODO: move read from flash elsewhere
 	mavlink_telemetry_init();
 	
@@ -77,7 +76,7 @@ int main (void)
 	
 	while (1 == 1) 
 	{
-		scheduler_run_update(tasks_get_main_taskset(), ROUND_ROBIN);
+		scheduler_update(tasks_get_main_taskset(), ROUND_ROBIN);
 	}
 
 	return 0;

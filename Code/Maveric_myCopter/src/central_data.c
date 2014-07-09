@@ -14,13 +14,12 @@
 
 
 #include "central_data.h"
-//#include "conf_sim_model.h"
 
 
-static volatile central_data_t centralData;
+static central_data_t centralData;
 
-void central_data_init(){
-		
+void central_data_init()
+{
 	servo_pwm_init((servo_output*)centralData.servos);
 	servo_pwm_failsafe((servo_output*)centralData.servos);
 	servo_pwm_set((servo_output*)centralData.servos);

@@ -43,7 +43,7 @@ void fake_gps_fix(void);
  */
 void switch_off_motors(void);
 
-task_set* tasks_get_main_taskset() 
+task_set_t* tasks_get_main_taskset() 
 {
 	return &main_tasks;
 }
@@ -100,7 +100,7 @@ void switch_off_motors(void)
 	centralData->in_the_air = false;
 }
 
-void tasks_relevel_imu()
+void tasks_relevel_imu(void)
 {
 	uint32_t i,j;
 
@@ -117,8 +117,8 @@ void tasks_relevel_imu()
 
 	for (i = 1000; i > 0; i--) 
 	{
-		tasks_run_imu_update();
-		mavlink_stream_protocol_update();
+		tasks_run_imu_update(0);
+		//mavlink_communication_update(&centralData->mavlink_communication);
 		
 		for (j = 0;j < 3;j++)
 		{
@@ -136,7 +136,7 @@ void tasks_relevel_imu()
 }
 
 
-task_return_t tasks_set_mav_mode_n_state()
+task_return_t tasks_set_mav_mode_n_state(void* arg)
 {
 	uint8_t channelSwitches = 0;
 	int8_t RC_check = 0;
@@ -495,7 +495,7 @@ task_return_t tasks_set_mav_mode_n_state()
 }
 
 
-void tasks_run_imu_update() {
+void tasks_run_imu_update(void* arg) {
 	if (centralData->simulation_mode == 1) 
 	{
 		simulation_update(&centralData->sim_model, 
@@ -520,9 +520,9 @@ void tasks_run_imu_update() {
 }	
 
 
-task_return_t tasks_run_stabilisation() 
+task_return_t tasks_run_stabilisation(void* arg) 
 {
-	tasks_run_imu_update();
+	tasks_run_imu_update(0);
 
 	switch(centralData->mav_mode)
 	{		
@@ -621,7 +621,7 @@ void fake_gps_fix()
 }
 
 
-task_return_t tasks_run_gps_update() 
+task_return_t tasks_run_gps_update(void* arg) 
 {
 	if (centralData->simulation_mode == 1) 
 	{
@@ -636,7 +636,7 @@ task_return_t tasks_run_gps_update()
 }
 
 
-task_return_t tasks_run_navigation_update()
+task_return_t tasks_run_navigation_update(void* arg)
 {	
 	switch (centralData->mav_state)
 	{
@@ -682,7 +682,7 @@ task_return_t tasks_run_navigation_update()
 uint32_t last_baro_update;
 
 
-task_return_t tasks_run_barometer_update()
+task_return_t tasks_run_barometer_update(void* arg)
 {
 	central_data_t *central_data = central_data_get_pointer_to_struct();
 	pressure_data *pressure = bmp085_get_pressure_data_slow(centralData->pressure.altitude_offset);
@@ -698,7 +698,7 @@ task_return_t tasks_run_barometer_update()
 }
 
 
-task_return_t sonar_update(void)
+task_return_t sonar_update(void* arg)
 {
 	central_data_t* central_data = central_data_get_pointer_to_struct();
 	i2cxl_sonar_update(&central_data->i2cxl_sonar);
@@ -706,7 +706,7 @@ task_return_t sonar_update(void)
 	return TASK_RUN_SUCCESS;
 }
 
-task_return_t adc_update(void)
+task_return_t adc_update(void* arg)
 {
 	central_data_t* central_data = central_data_get_pointer_to_struct();
 	analog_monitor_update(&central_data->adc);
@@ -719,9 +719,9 @@ task_return_t adc_update(void)
  * 
  * \return	The status of execution of the task
  */
-task_return_t control_waypoint_timeout (void);
+task_return_t control_waypoint_timeout (void* arg);
 
-task_return_t control_waypoint_timeout (void)
+task_return_t control_waypoint_timeout (void* arg)
 {
 	waypoint_handler_control_time_out_waypoint_msg(	&(centralData->number_of_waypoints),
 													&centralData->waypoint_receiving,
@@ -737,22 +737,22 @@ void tasks_create_tasks()
 	
 	centralData = central_data_get_pointer_to_struct();
 	
-	scheduler_register_task(&main_tasks, 0, 4000, RUN_REGULAR, &tasks_run_stabilisation );
+	scheduler_register_task(&main_tasks, 0, 4000, RUN_REGULAR, &tasks_run_stabilisation, 0);
 	
-	scheduler_register_task(&main_tasks, 1, 15000, RUN_REGULAR, &tasks_run_barometer_update);
+	scheduler_register_task(&main_tasks, 1, 15000, RUN_REGULAR, &tasks_run_barometer_update, 0);
 	main_tasks.tasks[1].timing_mode = PERIODIC_RELATIVE;
 
-	scheduler_register_task(&main_tasks, 2, 100000, RUN_REGULAR, &tasks_run_gps_update);
-	//scheduler_register_task(&main_tasks, , 100000, RUN_REGULAR, &radar_module_read);
+	scheduler_register_task(&main_tasks, 2, 100000, RUN_REGULAR, &tasks_run_gps_update, 0);
+	//scheduler_register_task(&main_tasks, , 100000, RUN_REGULAR, &radar_module_read, 0);
 
-	scheduler_register_task(&main_tasks, 3, ORCA_TIME_STEP_MILLIS * 1000.0f, RUN_REGULAR, &tasks_run_navigation_update);
+	scheduler_register_task(&main_tasks, 3, ORCA_TIME_STEP_MILLIS * 1000.0f, RUN_REGULAR, &tasks_run_navigation_update, 0);
 
-	scheduler_register_task(&main_tasks, 4, 200000, RUN_REGULAR, &tasks_set_mav_mode_n_state);
+	scheduler_register_task(&main_tasks, 4, 200000, RUN_REGULAR, &tasks_set_mav_mode_n_state, 0);
 	
-	scheduler_register_task(&main_tasks, 5, 4000, RUN_REGULAR, &mavlink_stream_protocol_update);
+	scheduler_register_task(&main_tasks, 5, 4000, RUN_REGULAR, (task_function_t)&mavlink_communication_update, (task_argument_t)&centralData->mavlink_communication);
 	
-	// scheduler_register_task(&main_tasks, 6, 100000, RUN_REGULAR, &sonar_update);
-	scheduler_register_task(&main_tasks, 6, 100000, RUN_REGULAR, &adc_update);
+	// scheduler_register_task(&main_tasks, 6, 100000, RUN_REGULAR, &sonar_update, 0);
+	scheduler_register_task(&main_tasks, 6, 100000, RUN_REGULAR, &adc_update, 0);
 	
-	scheduler_register_task(&main_tasks, 7, 10000, RUN_REGULAR, &control_waypoint_timeout);
+	scheduler_register_task(&main_tasks, 7, 10000, RUN_REGULAR, &control_waypoint_timeout, 0);
 }

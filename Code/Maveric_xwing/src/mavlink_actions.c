@@ -282,7 +282,7 @@ void mavlink_send_simulation(void) {
 }
 
 task_return_t send_rt_stats() {
-	task_set *main_tasks=tasks_get_main_taskset();
+	task_set_t *main_tasks=tasks_get_main_taskset();
 	
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "stabAvgDelay", main_tasks->tasks[0].delay_avg);
 	mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "stabDelayVar", sqrt(main_tasks->tasks[0].delay_var_squared));

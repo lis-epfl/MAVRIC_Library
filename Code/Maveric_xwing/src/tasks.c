@@ -24,7 +24,7 @@ NEW_TASK_SET(main_tasks, 10)
 
 central_data_t *centralData;
 
-task_set* tasks_get_main_taskset() {
+task_set_t* tasks_get_main_taskset() {
 	return &main_tasks;
 }
 

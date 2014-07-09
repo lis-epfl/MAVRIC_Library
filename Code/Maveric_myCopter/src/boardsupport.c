@@ -27,7 +27,7 @@
 #include "remote_controller.h"
 #include "print_util.h"
 
-#include "mavlink_stream.h"
+// #include "mavlink_stream.h"
 #include "servo_pwm.h"
 
 #include "simulation.h"
@@ -138,8 +138,17 @@ void boardsupport_init(central_data_t *centralData) {
 	bmp085_init();
 	
 	// init mavlink
-	mavlink_stream_init(centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID);
-		
+//	mavlink_stream_init(&centralData->mavlink_stream, centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID, 50); // TODO : uncomment
+	// Init mavlink communication
+	mavlink_communication_conf_t mavlink_config = {	.up_stream = centralData->telemetry_up_stream,
+													.down_stream = centralData->telemetry_down_stream,
+													.sysid = MAVLINK_SYS_ID,
+													.compid = 50};
+	mavlink_communication_init(&centralData->mavlink_communication, &mavlink_config);
+
+
+
+
 	// init debug output
 	print_util_dbg_print_init(centralData->debug_out_stream);
 	

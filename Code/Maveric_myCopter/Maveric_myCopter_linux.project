@@ -581,6 +581,10 @@
       <File Name="Library/communication/mavlink_waypoint_handler.c"/>
       <File Name="Library/communication/mavlink_waypoint_handler.h"/>
       <File Name="Library/communication/onboard_parameters.c"/>
+      <File Name="Library/communication/mavlink_message_handler.h"/>
+      <File Name="Library/communication/mavlink_message_handler.c"/>
+      <File Name="Library/communication/mavlink_communication.h"/>
+      <File Name="Library/communication/mavlink_communication.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="control">
       <File Name="Library/control/pid_control.h"/>

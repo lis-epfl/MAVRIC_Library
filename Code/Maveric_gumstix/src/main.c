@@ -63,7 +63,7 @@ void initialisation() {
 //	imu_calibrate_gyros(&centralData->imu1);
 	for (i=400; i>0; i--) {
 		tasks_run_imu_update();
-		mavlink_stream_protocol_update();	
+		mavlink_schedule_update();	
 		delay_ms(5);
 	}
 	// after initial leveling, initialise accelerometer biases
@@ -72,7 +72,7 @@ void initialisation() {
 	centralData->imu1.attitude.calibration_level=LEVEL_PLUS_ACCEL;
 	for (i=100; i>0; i--) {
 		imu_update(&(centralData->imu1), &centralData->position_estimator, &centralData->pressure, &centralData->GPS_data);	
-		mavlink_stream_protocol_update();			
+		mavlink_schedule_update();			
 		delay_ms(5);
 	}*/
 	centralData->imu1.attitude.calibration_level=OFF;
@@ -117,8 +117,8 @@ void main (void)
 	
 	while (1==1) {
 		
-		//scheduler_run_update(tasks_get_main_taskset(), FIXED_PRIORITY);
-		scheduler_run_update(tasks_get_main_taskset(), ROUND_ROBIN);
+		//scheduler_update(tasks_get_main_taskset(), FIXED_PRIORITY);
+		scheduler_update(tasks_get_main_taskset(), ROUND_ROBIN);
 		
 		//LED_On(LED1);
 

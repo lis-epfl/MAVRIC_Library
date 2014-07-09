@@ -37,6 +37,7 @@ extern "C" {
 #include "print_util.h"
 
 #include "mavlink_stream.h"
+#include "mavlink_communication.h"
 #include "coord_conventions.h"
 #include "onboard_parameters.h"
 #include "servo_pwm.h"
@@ -53,10 +54,14 @@ extern "C" {
 #include "orca.h"
 #include "navigation.h"
 
+// TODO : update documentation
+
 /**
  * \brief The central data structure
  */
 typedef struct  {
+	mavlink_communication_t mavlink_communication;
+
 	analog_monitor_t adc;										///< The analog to digital converter structure
 
 	Imu_Data_t imu1;											///< The IMU structure

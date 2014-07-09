@@ -27,7 +27,7 @@ central_data_t *centralData;
 
 bool has_started_engines;
 
-task_set* tasks_get_main_taskset() {
+task_set_t* tasks_get_main_taskset() {
 	return &main_tasks;
 }
 

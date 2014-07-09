@@ -35,7 +35,7 @@
 central_data_t *central_data;
 
 //NEW_TASK_SET(main_tasks, 10)
-task_set main_tasks;
+task_set_t main_tasks;
 
 // size of the double buffer (processing occurs when half is filled)
 #define SAMPLE_BUFFER_SIZE 256
@@ -134,8 +134,8 @@ void main (void)
 
 		}			
 		
-		//scheduler_run_update(&main_tasks, FIXED_PRIORITY);
-		mavlink_stream_protocol_update();
+		//scheduler_update(&main_tasks, FIXED_PRIORITY);
+		mavlink_schedule_update();
 		//mavlink_msg_named_value_float_send(MAVLINK_COMM_0, time_keeper_get_millis(), "ADC_period", adc_int_get_period());
 
 		LED_On(LED1);

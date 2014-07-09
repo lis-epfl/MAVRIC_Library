@@ -24,7 +24,7 @@ nvram_datas_t *ptr_nvram;
 static const U8 write_data[8] = {0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF};
 	
 void create_tasks();
-task_set* tasks_get_main_taskset();
+task_set_t* tasks_get_main_taskset();
 
 void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool);
 task_return_t tasks_set_mav_mode_n_state();

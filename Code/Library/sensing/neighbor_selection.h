@@ -57,7 +57,7 @@ void neighbors_selection_init(void);
  *
  * \param	rec		the pointer to the mavlink message
  */
-void neighbors_selection_read_message_from_neighbors(Mavlink_Received_t* rec);
+void neighbors_selection_read_message_from_neighbors(mavlink_received_t* rec);
 
 /**
  * \brief	Extrapolate the position of each UAS between two messages, deletes the message if time elapsed too long from last message
