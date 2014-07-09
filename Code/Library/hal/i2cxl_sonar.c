@@ -23,8 +23,8 @@
 
 const uint8_t I2CXL_DEFAULT_ADDRESS				= 0x70;		///< Address of the device
 const uint8_t I2CXL_RANGE_COMMAND				= 0x51;		///< Address of the Range Command Register
-const uint8_t I2CXL_CHANGE_ADDRESS_COMMAND_1	= 0xAA;		///< Address of the Change Command address Register
-const uint8_t I2CXL_CHANGE_ADDRESS_COMMAND_2	= 0xA5;		///< Address of the Change Command address Register
+const uint8_t I2CXL_CHANGE_ADDRESS_COMMAND_1	= 0xAA;		///< Address of the Change Command address Register 1
+const uint8_t I2CXL_CHANGE_ADDRESS_COMMAND_2	= 0xA5;		///< Address of the Change Command address Register 2
 
 /**
  * \brief Send range Command for the i2cxl_sonar
