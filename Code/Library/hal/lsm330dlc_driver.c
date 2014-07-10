@@ -418,29 +418,26 @@ void lsm330dlc_acc_update(accelero_data_t *lsm_acc_outputs)
 	// Problem here: BUG with the accelerometer (attitude extremely non stable) ! ==> Skip the FIFO (set 1 in fifo_fill)
 	lsm330dlc_acc_read_register((uint8_t*)&read_fifo.start_address, (uint8_t*)&read_fifo.fifo_fill, 1);
 	
-	if (read_fifo.fifo_fill <= 0)
+	if (read_fifo.fifo_fill > 0)
 	{
-		return (lsm_acc_data_t*)&lsm_acc_outputs;
-	}
-	if (read_fifo.fifo_fill > 1)
-	{
-		read_fifo.fifo_fill = 1;
-	}
-	
-	for (i = 0; i < read_fifo.fifo_fill; i++)
-	{
-		lsm330dlc_acc_read_register((uint8_t*)&fifo_values.start_address, (uint8_t*)&fifo_values.status_register, 7);
+		if (read_fifo.fifo_fill > 1)
+		{
+			read_fifo.fifo_fill = 1;
+		}
+		
+		for (i = 0; i < read_fifo.fifo_fill; i++)
+		{
+			lsm330dlc_acc_read_register((uint8_t*)&fifo_values.start_address, (uint8_t*)&fifo_values.status_register, 7);
 
-		axes[0]+=fifo_values.axes[0];
-		axes[1]+=fifo_values.axes[1];
-		axes[2]+=fifo_values.axes[2];
+			axes[0]+=fifo_values.axes[0];
+			axes[1]+=fifo_values.axes[1];
+			axes[2]+=fifo_values.axes[2];
+		}
+		
+		lsm_acc_outputs->raw_data[0] = (float)((int16_t)(axes[0] / read_fifo.fifo_fill));
+		lsm_acc_outputs->raw_data[1] = (float)((int16_t)(axes[1] / read_fifo.fifo_fill));
+		lsm_acc_outputs->raw_data[2] = (float)((int16_t)(axes[2] / read_fifo.fifo_fill));
 	}
-	
-	lsm_acc_outputs.axes[0] = (int16_t)(axes[0] / read_fifo.fifo_fill);
-	lsm_acc_outputs.axes[1] = (int16_t)(axes[1] / read_fifo.fifo_fill);
-	lsm_acc_outputs.axes[2] = (int16_t)(axes[2] / read_fifo.fifo_fill);
-	
-	return (lsm_acc_data_t*)&lsm_acc_outputs;
 }
 
 void lsm330dlc_gyro_update(gyro_data_t *lsm_gyro_outputs) 
@@ -457,30 +454,31 @@ void lsm330dlc_gyro_update(gyro_data_t *lsm_gyro_outputs)
 	{
 		.fifo_fill = 1,
 		.start_address = LSM_GYRO_FIFO_SRC_ADDRESS
-		
 	};
 	
 	// FIFO seems to work with the gyroscope ==> Test & Tune the max number of FIFO's reading
 	lsm330dlc_gyro_read_register((uint8_t*)&read_fifo.start_address, (uint8_t*)&read_fifo.fifo_fill, 1);
 	
-	if (read_fifo.fifo_fill > 6)
+	if (read_fifo.fifo_fill > 0)
 	{
-		read_fifo.fifo_fill = 6;
-	}
-	else if (read_fifo.fifo_fill > 0) 
-	{
-		lsm330dlc_gyro_read_register((uint8_t*)&fifo_values.start_address, (uint8_t*)&fifo_values.temperature, 8);
+		if (read_fifo.fifo_fill > 6)
+		{
+			read_fifo.fifo_fill = 6;
+		}
 		
-		temperature+=fifo_values.temperature;
-		axes[0]+=fifo_values.axes[0];
-		axes[1]+=fifo_values.axes[1];
-		axes[2]+=fifo_values.axes[2];
+		for (i = 0; i < read_fifo.fifo_fill; i++)
+		{
+			lsm330dlc_gyro_read_register((uint8_t*)&fifo_values.start_address, (uint8_t*)&fifo_values.temperature, 8);
+			
+			temperature+=fifo_values.temperature;
+			axes[0]+=fifo_values.axes[0];
+			axes[1]+=fifo_values.axes[1];
+			axes[2]+=fifo_values.axes[2];
+		}
+		
+		lsm_gyro_outputs->temperature = (int8_t)(temperature / read_fifo.fifo_fill);
+		lsm_gyro_outputs->raw_data[0] = (float)((int16_t)(axes[0] / read_fifo.fifo_fill));
+		lsm_gyro_outputs->raw_data[1] = (float)((int16_t)(axes[1] / read_fifo.fifo_fill));
+		lsm_gyro_outputs->raw_data[2] = (float)((int16_t)(axes[2] / read_fifo.fifo_fill));
 	}
-	
-	lsm_gyro_outputs.temperature = (int8_t)(temperature / read_fifo.fifo_fill);
-	lsm_gyro_outputs.axes[0] = (int16_t)(axes[0] / read_fifo.fifo_fill);
-	lsm_gyro_outputs.axes[1] = (int16_t)(axes[1] / read_fifo.fifo_fill);
-	lsm_gyro_outputs.axes[2] = (int16_t)(axes[2] / read_fifo.fifo_fill);
-
-	return (lsm_gyro_data_t*)&lsm_gyro_outputs;
 }

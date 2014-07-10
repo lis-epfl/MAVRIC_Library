@@ -73,9 +73,9 @@ void imu_get_raw_data(Imu_Data_t *imu1)
 	imu1->raw_channels[GYRO_OFFSET + IMU_Y] = (float)imu1->gyroData.raw_data[RAW_GYRO_Y] * GYRO_AXIS_Y;
 	imu1->raw_channels[GYRO_OFFSET + IMU_Z] = (float)imu1->gyroData.raw_data[RAW_GYRO_Z] * GYRO_AXIS_Z;
 
-	imu1->raw_channels[ACC_OFFSET + IMU_X] = ((float)imu1->acceleroData.raw_data[RAW_ACC_X]) * ACC_AXIS_X;
-	imu1->raw_channels[ACC_OFFSET + IMU_Y] = ((float)imu1->acceleroData.raw_data[RAW_ACC_Y]) * ACC_AXIS_Y;
-	imu1->raw_channels[ACC_OFFSET + IMU_Z] = ((float)imu1->acceleroData.raw_data[RAW_ACC_Z]) * ACC_AXIS_Z;
+	imu1->raw_channels[ACC_OFFSET + IMU_X] = (float)imu1->acceleroData.raw_data[RAW_ACC_X] * ACC_AXIS_X;
+	imu1->raw_channels[ACC_OFFSET + IMU_Y] = (float)imu1->acceleroData.raw_data[RAW_ACC_Y] * ACC_AXIS_Y;
+	imu1->raw_channels[ACC_OFFSET + IMU_Z] = (float)imu1->acceleroData.raw_data[RAW_ACC_Z] * ACC_AXIS_Z;
 	
 	imu1->raw_channels[MAG_OFFSET + IMU_X] = (float)imu1->compassData.raw_data[RAW_MAG_X] * MAG_AXIS_X;
 	imu1->raw_channels[MAG_OFFSET + IMU_Y] = (float)imu1->compassData.raw_data[RAW_MAG_Y] * MAG_AXIS_Y;

@@ -50,9 +50,9 @@ typedef struct
 	float raw_bias[9];					///< The biaises of the IMU and compass
 	float raw_scale[9];					///< The scales of the IMU and compass
 	uint32_t last_update;				///< The time of the last IMU update in ms
-	//uint8_t valid;						///< True if the message is valid (TODO: is it sill used?)
+	//uint8_t valid;					///< True if the message is valid (TODO: is it sill used?)
 	float dt;							///< The time interval between two IMU updates
-	//int8_t ready;							///< Is the IMU ready (TODO: is it still used?)
+	//int8_t ready;						///< Is the IMU ready (TODO: is it still used?)
 	gyro_data_t gyroData;
 	accelero_data_t acceleroData;
 	compass_data_t compassData;
