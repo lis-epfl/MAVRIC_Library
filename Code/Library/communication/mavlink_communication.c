@@ -30,7 +30,7 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 	mavlink_stream_init(&mavlink_communication->mavlink_stream, config->down_stream, config->up_stream, config->sysid, config->compid);
 
 	// Init message handler
-	mavlink_message_handler_init(&mavlink_communication->message_handler);
+	mavlink_message_handler_init(&mavlink_communication->message_handler, MAV_MSG_HANDLER_INIT_DEBUG);
 
 	// Init onboard parameters
 	onboard_parameters_init(&mavlink_communication->onboard_parameters); 

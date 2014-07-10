@@ -24,23 +24,29 @@
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
-void mavlink_message_handler_default_do_nothing(mavlink_received_t* rec);
+void msg_handler_default_do_nothing(mavlink_received_t* rec);
 
 
-void mavlink_message_handler_default_print_dbg(mavlink_received_t* rec);
+void msg_handler_default_dbg(mavlink_received_t* rec);
+
+
+void cmd_handler_default_do_nothing(mavlink_command_long_t* cmd);
+
+
+void cmd_handler_default_dbg(mavlink_command_long_t* cmd);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void mavlink_message_handler_default_do_nothing(mavlink_received_t* rec)
+void msg_handler_default_do_nothing(mavlink_received_t* rec)
 {
 	;
 }
 
 
-void mavlink_message_handler_default_print_dbg(mavlink_received_t* rec)
+void msg_handler_default_dbg(mavlink_received_t* rec)
 {
 	print_util_dbg_print("\n Received message with ID");
 	print_util_dbg_print_num(rec->msg.msgid, 10);
@@ -52,14 +58,71 @@ void mavlink_message_handler_default_print_dbg(mavlink_received_t* rec)
 }
 
 
+void cmd_handler_default_do_nothing(mavlink_command_long_t* cmd)
+{
+	;
+}
+
+
+void cmd_handler_default_dbg(mavlink_command_long_t* cmd)
+{
+		print_util_dbg_print("\n Received command with ID");
+		print_util_dbg_print_num(cmd->command,10);
+		print_util_dbg_print(" with parameters: [");
+		print_util_dbg_print_num(cmd->param1,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(cmd->param2,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(cmd->param3,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(cmd->param4,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(cmd->param5,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(cmd->param6,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(cmd->param7,10);
+		print_util_dbg_print("] confirmation: ");
+		print_util_dbg_print_num(cmd->confirmation,10);
+		print_util_dbg_print("\n");
+}
+
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
 
-void mavlink_message_handler_init(mavlink_message_handler_t* message_handler)
+void mavlink_message_handler_init(mavlink_message_handler_t* message_handler, mavlink_message_handler_init_method_t method)
 {
-	;
+	switch (method)
+	{
+		case MAV_MSG_HANDLER_INIT_DO_NOTHING:
+			for (int i = 0; i < MAV_MSG_ENUM_END; ++i)
+			{
+				message_handler->msg_from_ground_station[i] = &msg_handler_default_do_nothing;
+				message_handler->msg_from_other_mav[i] = &msg_handler_default_do_nothing;
+			}
+			for (int i = 0; i < MAV_CMD_ENUM_END; ++i)
+			{
+				message_handler->cmd_from_ground_station[i] = &cmd_handler_default_do_nothing;
+				message_handler->cmd_from_other_mav[i] = &cmd_handler_default_do_nothing;
+			}
+			break;
+
+		case MAV_MSG_HANDLER_INIT_DEBUG:
+			for (int i = 0; i < MAV_MSG_ENUM_END; ++i)
+			{
+				message_handler->msg_from_ground_station[i] = &msg_handler_default_dbg;
+				message_handler->msg_from_other_mav[i] = &msg_handler_default_dbg;
+			}
+			for (int i = 0; i < MAV_CMD_ENUM_END; ++i)
+			{
+				message_handler->cmd_from_ground_station[i] = &cmd_handler_default_dbg;
+				message_handler->cmd_from_other_mav[i] = &cmd_handler_default_dbg;
+			}
+			break;	
+	}
 }
 
 void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler, mavlink_received_t* rec) 

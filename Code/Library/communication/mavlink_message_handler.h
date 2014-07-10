@@ -25,7 +25,12 @@ extern "C" {
 
 // #include "onboard_parameters.h"
 #include "mavlink_stream.h"
+
+
 // TODO : Update documentation
+
+#define MAV_MSG_ENUM_END 255
+
 
 
 typedef void (*mavlink_msg_callback_t) (mavlink_received_t*);
@@ -36,14 +41,21 @@ typedef void (*mavlink_cmd_callback_t) (mavlink_command_long_t*);
 
 typedef struct
 {
-	mavlink_msg_callback_t msg_from_ground_station[255];
-	mavlink_cmd_callback_t cmd_from_ground_station[400];
-	mavlink_msg_callback_t msg_from_other_mav[255];	
-	mavlink_cmd_callback_t cmd_from_other_mav[400];
+	mavlink_msg_callback_t msg_from_ground_station[MAV_MSG_ENUM_END];
+	mavlink_cmd_callback_t cmd_from_ground_station[MAV_CMD_ENUM_END];
+	mavlink_msg_callback_t msg_from_other_mav[MAV_MSG_ENUM_END];	
+	mavlink_cmd_callback_t cmd_from_other_mav[MAV_CMD_ENUM_END];
 } mavlink_message_handler_t;
 
 
-void mavlink_message_handler_init(mavlink_message_handler_t* mavlink_message_handler);
+typedef enum
+{
+	MAV_MSG_HANDLER_INIT_DO_NOTHING = 0,	
+	MAV_MSG_HANDLER_INIT_DEBUG = 1,	
+} mavlink_message_handler_init_method_t;
+
+
+void mavlink_message_handler_init(mavlink_message_handler_t* mavlink_message_handler, mavlink_message_handler_init_method_t method);
 
 
 /**
