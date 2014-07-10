@@ -25,24 +25,6 @@
 #include <stdint.h>		
 
 /**
- * \brief Structure containing the configuration data of the accelerometer sensor
-*/
-typedef struct
-{
-	uint8_t start_address;			///< Define the start Address of the accelerometer sensor
-	uint8_t	ctrl_reg_g[5];			///< Define an array containing the Control register
-} lsm330dlc_gyro_conf_t;
-
-/**
- * \brief Structure containing the configuration data of the accelerometer sensor
-*/
-typedef struct
-{
-	uint8_t start_address;			///< Define the start Address of the accelerometer sensor
-	uint8_t ctrl_reg_a[5];			///< Define an array containing the Control register
-} lsm330dlc_acc_conf_t;
-
-/**
  * \brief	Structure containing the accelerometer's data
 */
 typedef struct
