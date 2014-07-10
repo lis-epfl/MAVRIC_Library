@@ -573,6 +573,18 @@
     <Compile Include="Library\communication\console.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\communication\mavlink_communication.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\mavlink_communication.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\mavlink_message_handler.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\mavlink_message_handler.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\communication\mavlink_waypoint_handler.c">
       <SubType>compile</SubType>
     </Compile>
