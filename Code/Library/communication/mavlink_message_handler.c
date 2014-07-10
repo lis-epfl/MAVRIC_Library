@@ -36,6 +36,8 @@ void cmd_handler_default_do_nothing(mavlink_command_long_t* cmd);
 void cmd_handler_default_dbg(mavlink_command_long_t* cmd);
 
 
+void mavlink_command_handler(mavlink_message_handler_t* message_handler, mavlink_received_t* rec);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -127,6 +129,69 @@ void mavlink_message_handler_init(mavlink_message_handler_t* message_handler, ma
 
 void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler, mavlink_received_t* rec) 
 {
+	if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) 				// The message is from ground station
+	{	
+		if (rec->msg.msgid == MAVLINK_MSG_ID_COMMAND_LONG)		// The message is a command from ground station
+		{
+			mavlink_command_long_t cmd;
+			mavlink_msg_command_long_decode(&rec->msg, &cmd);
+			
+			if (cmd.command >= 0 && cmd.command < MAV_CMD_ENUM_END)
+			{
+				// Valid command id
+				message_handler->cmd_from_ground_station[cmd.command](&cmd);
+			}
+			else
+			{	
+				// Invalid command id
+				cmd_handler_default_dbg(&cmd);
+			}
+		}
+		else if (rec->msg.msgid >= 0 && rec->msg.msgid < MAV_MSG_ENUM_END)		// The message is a standard message from ground station
+		{
+			// Valid message id
+			message_handler->msg_from_ground_station[rec->msg.msgid](rec);
+		}
+		else
+		{
+			// Invalid message id
+			msg_handler_default_dbg(rec);
+		}
+	}
+	else if (rec->msg.sysid != mavlink_system.sysid)			// The message comes from another mav
+	{
+		if (rec->msg.msgid == MAVLINK_MSG_ID_COMMAND_LONG)		// The message is a command from another mav
+		{
+			mavlink_command_long_t cmd;
+			mavlink_msg_command_long_decode(&rec->msg, &cmd);
+			
+			if (cmd.command >= 0 && cmd.command < MAV_CMD_ENUM_END)
+			{
+				// Valid command id
+				message_handler->cmd_from_other_mav[cmd.command](&cmd);
+			}
+			else
+			{	
+				// Invalid command id
+				cmd_handler_default_dbg(&cmd);
+			}
+		}
+		else if (rec->msg.msgid >= 0 && rec->msg.msgid < MAV_MSG_ENUM_END)		// The message is a standard message from another mav
+		{
+			// Valid message id
+			message_handler->msg_from_other_mav[rec->msg.msgid](rec);
+		}
+		else
+		{
+			// Invalid message id
+			msg_handler_default_dbg(rec);
+		}
+	}
+}
+
+
+
+
 	// if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) 
 	// {
 	// 	//print_util_dbg_print("\n Received message with ID");
@@ -227,4 +292,3 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 
 	// // handle all platform-specific messages in mavlink-actions:
 	// mavlink_actions_handle_specific_messages(rec);
-}
