@@ -33,7 +33,7 @@ typedef struct
 	float velocity;			///< Define the velocity of the target
 	float amplitude;		///< Define the amplitude signal
 	int32_t timestamp;		///< Define the time stamp to use
-} radar_target;
+} radar_target_t;
 
 /**
  * \brief Initialize the radar module

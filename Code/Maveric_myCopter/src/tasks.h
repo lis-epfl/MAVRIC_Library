@@ -40,7 +40,7 @@ void tasks_create_tasks(void);
  * 
  * \return          Pointer to the main task-set
  */
-task_set* tasks_get_main_taskset(void);
+task_set_t* tasks_get_main_taskset(void);
 
 
 /**
@@ -52,7 +52,7 @@ void tasks_relevel_imu(void);
 /**
  * \brief            Updates the IMU
  */
-void tasks_run_imu_update(void);
+void tasks_run_imu_update(void* arg);
 
 
 /**
@@ -71,41 +71,41 @@ void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motor
 /**
  * \brief            Updates the state and mode of the UAV
  */
-task_return_t tasks_set_mav_mode_n_state(void);
+task_return_t tasks_set_mav_mode_n_state(void* arg);
 
 
 /**
  * \brief            Run the main stabilisation loop
  */
-task_return_t tasks_run_stabilisation(void);
+task_return_t tasks_run_stabilisation(void* arg);
 
 
 /**
  * \brief            Run GPS update
  */
-task_return_t tasks_run_gps_update(void);
+task_return_t tasks_run_gps_update(void* arg);
 
 
 /**
  * \brief            Run the navigation task
  */
-task_return_t tasks_run_navigation_update(void);
+task_return_t tasks_run_navigation_update(void* arg);
 
 
 /**
  * \brief            Run the barometer task
  */
-task_return_t tasks_run_barometer_update(void);
+task_return_t tasks_run_barometer_update(void* arg);
 
 /**
  * \brief            Run the sonar task
  */
-task_return_t sonar_update(void);
+task_return_t sonar_update(void* arg);
 
 /**
  * \brief            Run the analog to digital converter task
  */
-task_return_t adc_update(void);
+task_return_t adc_update(void* arg);
 
 #ifdef __cplusplus
 }

@@ -46,7 +46,7 @@ void calculate_radar(dsp16_t i_buffer[], dsp16_t q_buffer[]);
  *
  * \return a pointer to the radar target object
  */
-radar_target* get_tracked_target();
+radar_target_t* get_tracked_target();
 
 /**
  * \brief Return the raw FFT of the radar module

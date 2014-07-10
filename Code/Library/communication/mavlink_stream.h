@@ -24,18 +24,34 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
 #include "streams.h"
 #include "mavlink_bridge.h"
 #include "mavlink/include/maveric/mavlink.h"
-#include "scheduler.h"
+// #include "scheduler.h"
+
+
+// TODO update documentation
+
 
 /**
  * \brief	Mavlink structures for the receive message and its status
  */
-typedef struct {
+typedef struct 
+{
 	mavlink_message_t msg;
 	mavlink_status_t status;
-} Mavlink_Received_t;
+} mavlink_received_t;
+
+typedef struct
+{
+	byte_stream_t* out_stream;
+	byte_stream_t* in_stream;
+	mavlink_received_t rec;
+	bool message_available;
+} mavlink_stream_t;
+
+
 
 
 /**
@@ -45,37 +61,27 @@ typedef struct {
  * \param receive_stream	Pointer to the mavlink receive stream structure
  * \param sysid				System ID (1-255)
  */
-void mavlink_stream_init(byte_stream_t *transmit_stream, byte_stream_t *receive_stream, int32_t sysid);
+void mavlink_stream_init(mavlink_stream_t* mavlink_stream, byte_stream_t *transmit_stream, byte_stream_t *receive_stream, int32_t sysid, int32_t compid);
 
 
 /**
- * \brief	Run task scheduler update if the buffer is empty 
+ * \brief			Mavlink parsing of message
  *
- * \return	Task status return
- */
-task_return_t mavlink_stream_protocol_update(void);
-
-
-/**
- * \brief	Obtain the address of the mavlink task set
+ * \param stream	Pointer to the mavlink receive stream structure
+ * \param rec		Pointer to the mavlink receive message structure 
  *
- * \return	A pointer to the task set
+ * \return			Error code, 0 if no message decoded, 1 else
  */
-task_set* mavlink_stream_get_taskset(void);
+void mavlink_stream_receive(mavlink_stream_t* mavlink_stream);
 
 
 /**
  * \brief	Flushing mavlink stream
  */
-void mavlink_stream_flush(void);
+void mavlink_stream_flush(mavlink_stream_t* mavlink_stream);
 
 
-/**
- * \brief		Suspending sending of messages
- *
- * \param delay	Delay of suspension in microsecond
- */
-void mavlink_stream_suspend_downstream(uint32_t delay);
+
 
 
 #ifdef __cplusplus

@@ -44,7 +44,7 @@
 #include "neighbor_selection.h"
 #include "position_estimation.h"
 
-static const servo_output servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
+static const servo_output_t servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
 
 enum CRITICAL_BEHAVIOR_ENUM{
 	CLIMB_TO_SAFE_ALT = 1,
@@ -60,7 +60,7 @@ typedef struct  {
 	Stabiliser_Stack_copter_t stabiliser_stack;
 
 	simulation_model_t uav_model;
-	servo_output servos[NUMBER_OF_SERVO_OUTPUTS];
+	servo_output_t servos[NUMBER_OF_SERVO_OUTPUTS];
 	Buffer_t xbee_in_buffer, wired_in_buffer;
 	byte_stream_t xbee_out_stream;
 	byte_stream_t xbee_in_stream;
@@ -69,7 +69,7 @@ typedef struct  {
 	Buffer_t gps_buffer;
 	byte_stream_t gps_stream_in;
 	byte_stream_t gps_stream_out;
-	gps_Data_type GPS_data;
+	gps_Data_type_t GPS_data;
 	
 	Buffer_t gumstix_buffer;
 	byte_stream_t gumstix_stream_in;
@@ -110,7 +110,7 @@ typedef struct  {
 	
 	uint32_t simulation_mode;
 	
-	pressure_data pressure;
+	pressure_data_t pressure;
 	//float pressure_filtered;
 	//float altitude_filtered;
 	

@@ -34,7 +34,7 @@
  *
  * \return	void
  */
-void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps);
+void init_pos_gps(position_estimator_t *pos_est, gps_Data_type_t *gps);
 
 /**
  * \brief	Initialization of the barometer offset
@@ -44,10 +44,10 @@ void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps);
  *
  * \return	void
  */
-void init_barometer_offset(position_estimator_t *pos_est, pressure_data *barometer);
+void init_barometer_offset(position_estimator_t *pos_est, pressure_data_t *barometer);
 
 
-void position_estimation_init(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps)
+void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps)
 {
 	
 	// default GPS home position
@@ -77,7 +77,7 @@ void position_estimation_init(position_estimator_t *pos_est, pressure_data *baro
 	init_pos_gps(pos_est, gps);
 }
 
-void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps)
+void init_pos_gps(position_estimator_t *pos_est, gps_Data_type_t *gps)
 {
 	int32_t i;
 	
@@ -105,7 +105,7 @@ void init_pos_gps(position_estimator_t *pos_est, gps_Data_type *gps)
 	}
 }
 
-void init_barometer_offset(position_estimator_t *pos_est, pressure_data *barometer)
+void init_barometer_offset(position_estimator_t *pos_est, pressure_data_t *barometer)
 {
 	bool boolNewBaro = bmp085_newValidBarometer(barometer, &pos_est->timeLastBarometerMsg);
 
@@ -130,7 +130,7 @@ void init_barometer_offset(position_estimator_t *pos_est, pressure_data *baromet
 	}
 }
 
-void position_estimation_reset_home_altitude(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, local_coordinates_t *simLocalPos)
+void position_estimation_reset_home_altitude(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, local_coordinates_t *simLocalPos)
 {
 		int32_t i;
 		// reset origin to position where quad is armed if we have GPS
@@ -198,7 +198,7 @@ void position_estimation_position_integration(position_estimator_t *pos_est, Qua
 	{
 		pos_est->vel_bf[i] = qvel_bf.v[i];
 		// clean acceleration estimate without gravity:
-		attitude->acc_bf[i] = GRAVITY * (attitude->a[i] - attitude->up_vec.v[i]) ;
+		attitude->acc_bf[i] = GRAVITY * (attitude->a[i] - attitude->up_vec.v[i]) ;							// TODO: review this line!
 		pos_est->vel_bf[i] = pos_est->vel_bf[i] * (1.0f - (VEL_DECAY * dt)) + attitude->acc_bf[i]  * dt;
 	}
 	
@@ -218,7 +218,7 @@ void position_estimation_position_integration(position_estimator_t *pos_est, Qua
 	
 }
 	
-void position_estimation_position_correction(position_estimator_t *pos_est, pressure_data *barometer, gps_Data_type *gps, float dt)
+void position_estimation_position_correction(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, float dt)
 {
 	global_position_t global_gps_position;
 	local_coordinates_t local_coordinates;

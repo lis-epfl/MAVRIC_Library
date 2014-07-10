@@ -46,7 +46,7 @@ void mavlink_actions_add_onboard_parameters(void);
  * 
  * \param 	rec 	Received mavlink message 
  */
-void mavlink_actions_handle_specific_messages(Mavlink_Received_t* rec);
+void mavlink_actions_handle_specific_messages(mavlink_received_t* rec);
 
 
 /**
@@ -54,7 +54,7 @@ void mavlink_actions_handle_specific_messages(Mavlink_Received_t* rec);
  * 
  * \param 	rec 	Received message
  */
-void mavlink_actions_receive_message_long(Mavlink_Received_t* rec);
+void mavlink_actions_receive_message_long(mavlink_received_t* rec);
 
 #ifdef __cplusplus
 }

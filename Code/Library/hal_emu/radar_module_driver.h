@@ -13,14 +13,14 @@ typedef struct {
 	float velocity;
 	float amplitude;
 	long timestamp;
-} radar_target;
+} radar_target_t;
 
 
 void radar_module_init(void);
 
 void radar_module_read(void);
 
-radar_target* radar_module_get_main_target(void);
+radar_target_t* radar_module_get_main_target(void);
 
 
 #endif /* RADAR_MODULE_H_ */

@@ -259,9 +259,6 @@ static const lsm330dlc_gyro_write_conf_t lsm_gyro_default_config=
 */
 static const uint8_t fifo_config[2] = {LSM_ACC_FIFO_CTRL_ADDRESS, 0x80};
 
-static volatile lsm_acc_data_t  lsm_acc_outputs;		///< Declare an object containing the accelerometer's data
-static volatile lsm_gyro_data_t lsm_gyro_outputs;		///< Declare an object containing the gyroscope's data
-
 
 /**
  * \brief			Write data to the LSM330 accelerometer  
@@ -403,7 +400,7 @@ void lsm330dlc_driver_init(void)
 	lsm330dlc_get_gyro_config();
 }
 
-lsm_acc_data_t* lsm330dlc_driver_get_acc_data(void) 
+void lsm330dlc_acc_update(accelero_data_t *lsm_acc_outputs) 
 {
 	lsm_acc_read_t fifo_values;
 	int32_t axes[3] = {0,0,0};
@@ -446,7 +443,7 @@ lsm_acc_data_t* lsm330dlc_driver_get_acc_data(void)
 	return (lsm_acc_data_t*)&lsm_acc_outputs;
 }
 
-lsm_gyro_data_t* lsm330dlc_driver_get_gyro_data(void) 
+void lsm330dlc_gyro_update(gyro_data_t *lsm_gyro_outputs) 
 {
 	lsm_gyro_read_t fifo_values;
 	int16_t temperature = 0;
@@ -466,16 +463,11 @@ lsm_gyro_data_t* lsm330dlc_driver_get_gyro_data(void)
 	// FIFO seems to work with the gyroscope ==> Test & Tune the max number of FIFO's reading
 	lsm330dlc_gyro_read_register((uint8_t*)&read_fifo.start_address, (uint8_t*)&read_fifo.fifo_fill, 1);
 	
-	if (read_fifo.fifo_fill <= 0) 
-	{
-		return (lsm_gyro_data_t*)&lsm_gyro_outputs;
-	}
 	if (read_fifo.fifo_fill > 6)
 	{
 		read_fifo.fifo_fill = 6;
 	}
-	
-	for (i = 0; i < read_fifo.fifo_fill; i++) 
+	else if (read_fifo.fifo_fill > 0) 
 	{
 		lsm330dlc_gyro_read_register((uint8_t*)&fifo_values.start_address, (uint8_t*)&fifo_values.temperature, 8);
 		

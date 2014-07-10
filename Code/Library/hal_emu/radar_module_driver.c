@@ -8,7 +8,7 @@
 //#include "i2c_driver_int.h"
 #include "print_util.h"
 
-radar_target main_target;
+radar_target_t main_target;
 
 void radar_module_init() {
 	print_util_dbg_print("not implemented\n");
@@ -22,7 +22,7 @@ void radar_module_read() {
 	
 }
 
-radar_target* radar_module_get_main_target() {
+radar_target_t* radar_module_get_main_target() {
 	return &main_target;
 	
 }

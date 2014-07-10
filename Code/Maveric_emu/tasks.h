@@ -14,7 +14,7 @@
 #include "radar_module_driver.h"
 
 void create_tasks();
-task_set* tasks_get_main_taskset();
+task_set_t* tasks_get_main_taskset();
 
 void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool);
 task_return_t tasks_set_mav_mode_n_state();

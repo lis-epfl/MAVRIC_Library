@@ -23,6 +23,9 @@
 extern "C" {
 #endif
 
+#include "neighbor_selection.h"
+#include "imu.h"
+#include "position_estimation.h"
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -47,17 +50,27 @@ typedef struct{
 	float point[3];		///< A point of the line
 }line_t;
 
-/**
- * \brief	Initialize the ORCA module
- */
-void orca_init(void);
+typedef struct
+{
+	neighbor_t				*neighborData;
+	position_estimator_t	*positionData;
+	Imu_Data_t				*imuData;
+}orca_t;
+
 /**
  * \brief	Initialize the ORCA module
  *
+ * \param neighborData pointer to the neighbor data structure
+ */
+void orca_init(orca_t *orcaData, neighbor_t *neighborData, position_estimator_t *positionData, Imu_Data_t *imuData);
+/**
+ * \brief	Initialize the ORCA module
+ *
+ * \param	orcaData			pointer to the orca_t struct
  * \param	OptimalVelocity		a 3D array
  * \param	NewVelocity			the 3D output array
  */
-void orca_computeNewVelocity(float OptimalVelocity[], float NewVelocity[]);
+void orca_computeNewVelocity(orca_t *orcaData, float OptimalVelocity[], float NewVelocity[]);
 
 /**
  * \brief	computes the solution of a 1D linear program

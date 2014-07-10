@@ -26,7 +26,7 @@
 #include "time_keeper.h"
 #include "print_util.h"
 
-//pressure_data pressure_outputs;		///< declare an object containing the barometer's data
+//pressure_data_t pressure_outputs;		///< declare an object containing the barometer's data
 
 ///< Prototype definition
 int16_t bmp085_read_int(uint8_t address);
@@ -40,7 +40,7 @@ int16_t bmp085_read_int(uint8_t address)
 	return result;
 }
 
-void bmp085_init(pressure_data *pressure_outputs)
+void bmp085_init(pressure_data_t *pressure_outputs)
 {
 	pressure_outputs->altitude_offset = 0.0f;
 	for (int32_t i = 0; i < 3; i++) 
@@ -105,7 +105,7 @@ void bmp085_init_slow(){
  
 
 
-void bmp085_get_pressure_data_slow(pressure_data *pressure_outputs) 
+void bmp085_get_pressure_data_slow(pressure_data_t *pressure_outputs) 
 {
 		int32_t i;
 		float altitude, vertical_speed;
@@ -219,7 +219,7 @@ void bmp085_get_pressure_data_slow(pressure_data *pressure_outputs)
 		pressure_outputs->last_state_update = time_keeper_get_micros();
 }
 
-bool bmp085_newValidBarometer(pressure_data *pressure_outputs, uint32_t *timePrevBarometer)
+bool bmp085_newValidBarometer(pressure_data_t *pressure_outputs, uint32_t *timePrevBarometer)
 {
 	if (*timePrevBarometer < pressure_outputs->last_update) 
 	{

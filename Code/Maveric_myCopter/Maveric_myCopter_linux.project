@@ -581,6 +581,12 @@
       <File Name="Library/communication/mavlink_waypoint_handler.c"/>
       <File Name="Library/communication/mavlink_waypoint_handler.h"/>
       <File Name="Library/communication/onboard_parameters.c"/>
+      <File Name="Library/communication/mavlink_message_handler.h"/>
+      <File Name="Library/communication/mavlink_message_handler.c"/>
+      <File Name="Library/communication/mavlink_communication.h"/>
+      <File Name="Library/communication/mavlink_communication.c"/>
+      <File Name="Library/communication/console.h"/>
+      <File Name="Library/communication/console.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="control">
       <File Name="Library/control/pid_control.h"/>
@@ -644,6 +650,10 @@
       <File Name="Library/hal/i2cxl_sonar.h"/>
       <File Name="Library/hal/airspeed_analog.c"/>
       <File Name="Library/hal/airspeed_analog.h"/>
+      <File Name="Library/hal/gps_ublox.h"/>
+      <File Name="Library/hal/gps_ublox.c"/>
+      <File Name="Library/hal/xbee.h"/>
+      <File Name="Library/hal/xbee.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>
@@ -659,8 +669,6 @@
       <File Name="Library/sensing/neighbor_selection.c"/>
       <File Name="Library/sensing/neighbor_selection.h"/>
       <File Name="Library/sensing/simulation.h"/>
-      <File Name="Library/sensing/gps_ublox.h"/>
-      <File Name="Library/sensing/gps_ublox.c"/>
       <File Name="Library/sensing/simulation.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="util">

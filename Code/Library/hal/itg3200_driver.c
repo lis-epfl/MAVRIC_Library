@@ -43,7 +43,7 @@ typedef struct
 	uint8_t interrupts;						///< Define the interruption
 } gyro_config;
 
-static volatile gyro_data gyro_outputs;		///< Create an object containing the gyroscope's data
+static volatile gyro_data_t gyro_outputs;		///< Create an object containing the gyroscope's data
 gyro_config default_configuration;			///< Declare the object containing the gyroscope configuration structure
 uint8_t read_preamble=SENSOR_REG_ADDRESS;	///< Declare the address of the sensor
 
@@ -60,12 +60,12 @@ void itg3200_driver_init_slow(void)
 	twim_write(&AVR32_TWIM0, (uint8_t*)&default_configuration, 4, ITG3200_SLAVE_ADDRESS, false);
 }
 
-gyro_data* itg3200_driver_get_data_slow(void) 
+gyro_data_t* itg3200_driver_get_data_slow(void) 
 {
 	uint8_t write_then_read_preamble=SENSOR_REG_ADDRESS;
 	
 	twim_write(&AVR32_TWIM0, (uint8_t*) &write_then_read_preamble, 1, ITG3200_SLAVE_ADDRESS, false);
 	twim_read(&AVR32_TWIM0, (uint8_t*)&gyro_outputs, 8, ITG3200_SLAVE_ADDRESS, false);
 	
-	return (gyro_data*)&gyro_outputs;
+	return (gyro_data_t*)&gyro_outputs;
 }

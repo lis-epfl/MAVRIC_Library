@@ -56,10 +56,7 @@ void waypoint_handler_init()
 	centralData->collision_avoidance = false;
 	centralData->automatic_take_off = false;
 	centralData->automatic_landing = false;
-	centralData->in_the_air = false;
-			
-	centralData->number_of_neighbors = 0;
-	
+	centralData->in_the_air = false;	
 }
 
 void waypoint_handler_waypoint_init()
@@ -203,7 +200,7 @@ void waypoint_handler_init_waypoint_list(waypoint_struct waypoint_list[], uint16
 	print_util_dbg_print("\n");
 }
 
-void waypoint_handler_send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoint, bool* waypoint_receiving, bool * waypoint_sending)
+void waypoint_handler_send_count(mavlink_received_t* rec, uint16_t num_of_waypoint, bool* waypoint_receiving, bool * waypoint_sending)
 {
 	mavlink_mission_request_list_t packet;
 	
@@ -229,7 +226,7 @@ void waypoint_handler_send_count(Mavlink_Received_t* rec, uint16_t num_of_waypoi
 	}
 }
 
-void waypoint_handler_send_waypoint(Mavlink_Received_t* rec, waypoint_struct waypoint[], uint16_t num_of_waypoint, bool* waypoint_sending)
+void waypoint_handler_send_waypoint(mavlink_received_t* rec, waypoint_struct waypoint[], uint16_t num_of_waypoint, bool* waypoint_sending)
 {
 	if (*waypoint_sending)
 	{
@@ -266,7 +263,7 @@ void waypoint_handler_send_waypoint(Mavlink_Received_t* rec, waypoint_struct way
 	}	
 }
 
-void waypoint_handler_receive_ack_msg(Mavlink_Received_t* rec, bool* waypoint_sending)
+void waypoint_handler_receive_ack_msg(mavlink_received_t* rec, bool* waypoint_sending)
 {
 	mavlink_mission_ack_t packet;
 	
@@ -282,7 +279,7 @@ void waypoint_handler_receive_ack_msg(Mavlink_Received_t* rec, bool* waypoint_se
 	}
 }
 
-void waypoint_handler_receive_count(Mavlink_Received_t* rec, uint16_t* number_of_waypoints, bool* waypoint_receiving, bool* waypoint_sending)
+void waypoint_handler_receive_count(mavlink_received_t* rec, uint16_t* number_of_waypoints, bool* waypoint_receiving, bool* waypoint_sending)
 {
 	mavlink_mission_count_t packet;
 	
@@ -328,7 +325,7 @@ void waypoint_handler_receive_count(Mavlink_Received_t* rec, uint16_t* number_of
 	
 }
 
-void waypoint_handler_receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t number_of_waypoints, bool* waypoint_receiving)
+void waypoint_handler_receive_waypoint(mavlink_received_t* rec,  waypoint_struct waypoint_list[], uint16_t number_of_waypoints, bool* waypoint_receiving)
 {
 	mavlink_mission_item_t packet;
 	
@@ -449,7 +446,7 @@ void waypoint_handler_receive_waypoint(Mavlink_Received_t* rec,  waypoint_struct
 }		
 }		
 
-void waypoint_handler_set_current_waypoint(Mavlink_Received_t* rec,  waypoint_struct waypoint_list[], uint16_t num_of_waypoint)
+void waypoint_handler_set_current_waypoint(mavlink_received_t* rec,  waypoint_struct waypoint_list[], uint16_t num_of_waypoint)
 {
 	mavlink_mission_set_current_t packet;
 	
@@ -511,7 +508,7 @@ void waypoint_handler_set_current_waypoint_from_parameter(waypoint_struct waypoi
 	}
 }
 
-void waypoint_handler_clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* number_of_waypoints, bool* waypoint_set)
+void waypoint_handler_clear_waypoint_list(mavlink_received_t* rec,  uint16_t* number_of_waypoints, bool* waypoint_set)
 {
 	mavlink_mission_clear_all_t packet;
 	
@@ -530,7 +527,7 @@ void waypoint_handler_clear_waypoint_list(Mavlink_Received_t* rec,  uint16_t* nu
 	}		
 }
 
-void waypoint_handler_set_home(Mavlink_Received_t* rec)
+void waypoint_handler_set_home(mavlink_received_t* rec)
 {
 	mavlink_set_gps_global_origin_t packet;
 	
@@ -560,7 +557,7 @@ void waypoint_handler_set_home(Mavlink_Received_t* rec)
 	}
 }
 
-void waypoint_handler_set_mav_mode(Mavlink_Received_t* rec, uint8_t* board_mav_mode, uint8_t* board_mav_state, uint8_t sim_mode)
+void waypoint_handler_set_mav_mode(mavlink_received_t* rec, uint8_t* board_mav_mode, uint8_t* board_mav_state, uint8_t sim_mode)
 {
 	mavlink_set_mode_t packet;
 	

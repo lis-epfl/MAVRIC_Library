@@ -21,7 +21,7 @@ NEW_TASK_SET(main_tasks, 10)
 board_hardware_t *board;
 
 
-task_set* tasks_get_main_taskset() {
+task_set_t* tasks_get_main_taskset() {
 	return &main_tasks;
 }
 
@@ -404,7 +404,7 @@ task_return_t tasks_run_barometer_update()
 {
 	uint32_t tnow = time_keeper_get_micros();
 
-	pressure_data *pressure = bmp085_get_pressure_data_slow(board->pressure.altitude_offset);
+	pressure_data_t *pressure = bmp085_get_pressure_data_slow(board->pressure.altitude_offset);
 	board->pressure =  *pressure;
 	
 	

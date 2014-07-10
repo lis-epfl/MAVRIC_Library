@@ -21,7 +21,7 @@
 #include "print_util.h"
 #include "twim.h"
 
-static volatile acc_data acc_outputs;				///< Declare an object containing accelerometer's data
+static volatile acc_data_t acc_outputs;				///< Declare an object containing accelerometer's data
 
 #define CONFIG_POWER_ADDRESS 0x2D					///< Address of the power configuration register
 
@@ -49,7 +49,7 @@ void adxl345_driver_init_slow(void)
 	twim_write(&AVR32_TWIM0, (uint8_t*)&data_configuration, 2, ADXL_ALT_SLAVE_ADDRESS, false);
 }
 
-acc_data* adxl345_driver_get_acc_data_slow(void) 
+acc_data_t* adxl345_driver_get_acc_data_slow(void) 
 {
 	int32_t i;
 	uint8_t write_then_read_preamble=SENSOR_REG_ADDRESS;
@@ -62,5 +62,5 @@ acc_data* adxl345_driver_get_acc_data_slow(void)
 		acc_outputs.axes[i] = (int16_t)(acc_outputs.raw_data[2 * i]) + (int16_t)(acc_outputs.raw_data[2 * i + 1] << 8);
 	}
 				
-	return (acc_data*)&acc_outputs;
+	return (acc_data_t*)&acc_outputs;
 }

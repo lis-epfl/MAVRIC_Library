@@ -22,14 +22,17 @@
 	extern "C" {
 #endif
 
-#include <stdint.h>		
+#include <stdint.h>
+#include "gyro.h"
+#include "accelero.h"		
 
 /**
  * \brief	Structure containing the accelerometer's data
 */
 typedef struct
 {
-	int16_t axes[3];				///< Define an array containing the 3 axis of the accelerometer
+	//int16_t axes[3];				///< Define an array containing the 3 axis of the accelerometer
+	accelero_data_t *acceleroData;
 } lsm_acc_data_t;
 
 /**
@@ -37,8 +40,7 @@ typedef struct
 */
 typedef struct
 {
-	int8_t temperature;				///< Define the temperature of the sensor
-	int16_t axes[3];				///< Define an array containing the 3 axis of the gyroscope
+	gyro_data_t *gyroData;
 } lsm_gyro_data_t;
 
 
@@ -52,14 +54,14 @@ void lsm330dlc_driver_init(void);
  *
  * \return	A pointer to the gyroscope data structure
 */
-lsm_gyro_data_t* lsm330dlc_driver_get_gyro_data(void);
+void lsm330dlc_gyro_update(gyro_data_t *lsm_gyro_outputs);
 
 /**
  * \brief	Return the accelerometer's data
  *
  * \return	A pointer to the accelerometer data structure
 */
-lsm_acc_data_t* lsm330dlc_driver_get_acc_data(void);
+void lsm330dlc_acc_update(accelero_data_t *lsm_acc_outputs);
 
 #ifdef __cplusplus
 	}

@@ -37,6 +37,7 @@ extern "C" {
 #include "print_util.h"
 
 #include "mavlink_stream.h"
+#include "mavlink_communication.h"
 #include "coord_conventions.h"
 #include "onboard_parameters.h"
 #include "servo_pwm.h"
@@ -53,10 +54,14 @@ extern "C" {
 #include "orca.h"
 #include "navigation.h"
 
+// TODO : update documentation
+
 /**
  * \brief The central data structure
  */
 typedef struct  {
+	mavlink_communication_t mavlink_communication;
+
 	analog_monitor_t adc;										///< The analog to digital converter structure
 
 	Imu_Data_t imu1;											///< The IMU structure
@@ -66,9 +71,9 @@ typedef struct  {
 
 	Stabiliser_Stack_copter_t stabiliser_stack;					///< The stabilisation stack structure (rates, attitude, velocity, thrust)
 
-	servo_output servos[NUMBER_OF_SERVO_OUTPUTS];				///< The array of servos (size NUMBER_OF_SERVO_OUTPUTS)
+	servo_output_t servos[NUMBER_OF_SERVO_OUTPUTS];				///< The array of servos (size NUMBER_OF_SERVO_OUTPUTS)
 	
-	gps_Data_type GPS_data;										///< The GPS structure
+	gps_Data_type_t GPS_data;										///< The GPS structure
 	
 	simulation_model_t sim_model;								///< The simulation model structure
 	
@@ -117,13 +122,12 @@ typedef struct  {
 	uint32_t simulation_mode;									///< The value of the simulation_mode (0: real, 1: simulation)
 	uint32_t simulation_mode_previous;							///< The value of the simulation_mode at previous time step
 	
-	pressure_data pressure;										///< The pressure structure
+	pressure_data_t pressure;										///< The pressure structure
 	//float pressure_filtered;									///< The filtered pressure
 	//float altitude_filtered;									///< The filtered altitude
 	
-	uint8_t number_of_neighbors;								///< The actual number of neighbors at a given time step
-	float safe_size;											///< The safe size for collision avoidance
-	track_neighbor_t listNeighbors[MAX_NUM_NEIGHBORS];			///< The array of neighbor structure
+	orca_t orcaData;
+	neighbor_t neighborData;
 	
 	critical_behavior_enum critical_behavior;					///< The critical behavior enum
 	auto_landing_enum_t auto_landing_enum;						///< The autolanding enum

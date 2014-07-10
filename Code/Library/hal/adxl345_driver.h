@@ -38,7 +38,7 @@
 typedef struct{
 	uint8_t raw_data[6];	///< raw data for the 3 axis are stored in 2 uint8_t
 	int16_t axes[3];		///< value of the accelerometer on each axis as a combination of 2 uint8_t
-} acc_data; 
+} acc_data_t; 
 
 /**
  * \brief Initializes the accelerometer
@@ -48,9 +48,9 @@ void adxl345_driver_init(void);
 /**
  * \brief Get the accelerometer values
  *
- * \return the array: axes[3] of the acc_data structure
+ * \return the array: axes[3] of the acc_data_t structure
 */
-acc_data* adxl345_driver_get_acc_data(void);
+acc_data_t* adxl345_driver_get_acc_data(void);
 
 /**
  * \brief Initializes the accelerometer in slow mode
@@ -58,9 +58,9 @@ acc_data* adxl345_driver_get_acc_data(void);
 void adxl345_driver_init_slow(void);
 
 /**
- * \brief Returns the array: axes[3] of the acc_data structure in slow mode
+ * \brief Returns the array: axes[3] of the acc_data_t structure in slow mode
 */
-acc_data* adxl345_driver_get_acc_data_slow(void);
+acc_data_t* adxl345_driver_get_acc_data_slow(void);
 
 #ifdef __cplusplus
 	}

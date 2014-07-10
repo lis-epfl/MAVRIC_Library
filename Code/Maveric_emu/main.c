@@ -104,8 +104,8 @@ void main (void)
 
 	while (1==1) {
 		
-		//scheduler_run_update(tasks_get_main_taskset(), FIXED_PRIORITY);
-		scheduler_run_update(tasks_get_main_taskset(), ROUND_ROBIN);
+		//scheduler_update(tasks_get_main_taskset(), FIXED_PRIORITY);
+		scheduler_update(tasks_get_main_taskset(), ROUND_ROBIN);
 		
 		//LED_On(LED1);
 		delay_ms(1);
