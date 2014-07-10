@@ -198,7 +198,7 @@ void position_estimation_position_integration(position_estimator_t *pos_est, Qua
 	{
 		pos_est->vel_bf[i] = qvel_bf.v[i];
 		// clean acceleration estimate without gravity:
-		attitude->acc_bf[i] = GRAVITY * (attitude->a[i] - attitude->up_vec.v[i]) ;
+		attitude->acc_bf[i] = GRAVITY * (attitude->a[i] - attitude->up_vec.v[i]) ;							// TODO: review this line!
 		pos_est->vel_bf[i] = pos_est->vel_bf[i] * (1.0f - (VEL_DECAY * dt)) + attitude->acc_bf[i]  * dt;
 	}
 	
