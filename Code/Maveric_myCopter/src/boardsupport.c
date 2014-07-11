@@ -1,4 +1,7 @@
- /* The MAV'RIC Framework
+/**
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
  *
  * Copyright © 2011-2014
  *
@@ -11,6 +14,7 @@
  *
  *  Initialization of all hardware related elements (communication lines, sensors devices, etc)
  */
+
 
 #include "boardsupport.h"
 #include "uart_int.h"

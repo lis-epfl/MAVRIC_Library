@@ -1,4 +1,7 @@
- /* The MAV'RIC Framework
+/**
+ * \page The MAV'RIC License
+ *
+ * The MAV'RIC Framework
  *
  * Copyright © 2011-2014
  *
