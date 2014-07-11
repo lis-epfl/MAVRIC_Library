@@ -56,14 +56,14 @@ int16_t ac1, ac2, ac3, b1, b2, mb, mc, md;
 uint16_t ac4, ac5, ac6;
 
 void bmp085_init_slow()
-{
-	if (twim_probe(&AVR32_TWIM0, BMP085_SLAVE_ADDRESS) == STATUS_OK) 
+{	
+	if (twim_probe(&AVR32_TWIM0, BMP085_SLAVE_ADDRESS) == STATUS_OK)
 	{
-		print_util_dbg_print("BMP85/180 pressure sensor found (0x77)\n");
-	} 
-	else 
+		print_util_dbg_print("BMP85 pressure sensor found (0x77) \r");
+	}
+	else
 	{
-		print_util_dbg_print("BMP85/180 pressure sensor not responding (0x77)\n");
+		print_util_dbg_print("BMP85 pressure sensor not responding (0x77) \r");
 		return;
 	}
 	
@@ -91,6 +91,8 @@ void bmp085_init_slow()
 	mb = bmp085_read_int(0xBA);
 	mc = bmp085_read_int(0xBC);
 	md = bmp085_read_int(0xBE);
+	
+	print_util_dbg_print("BMP085 initialised \r");
 }
 
  

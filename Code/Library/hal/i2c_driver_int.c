@@ -141,7 +141,7 @@ void i2c_driver_init(uint8_t  i2c_device)
 		gpio_enable_module_pin(AVR32_TWIMS1_TWD_0_0_PIN, AVR32_TWIMS1_TWD_0_0_FUNCTION);
 	break;
 	default: ///< invalid device ID
-		return -1;
+		return;
 	}		
 	
 	static twim_options_t twi_opt=
@@ -154,13 +154,20 @@ void i2c_driver_init(uint8_t  i2c_device)
 	
 	twi_opt.pba_hz = sysclk_get_pba_hz();
 	
-	if(twim_master_init(twim, &twi_opt) != STATUS_OK)
+	status_code_t ret_twim_init = twim_master_init(twim, &twi_opt);
+	
+	print_util_dbg_print("\r");
+	
+	switch(ret_twim_init)
 	{
-		print_util_dbg_print("Error initialising I2C\n");
-	}
-	else
-	{
-		print_util_dbg_print("I2C initialised\n");
+		case ERR_IO_ERROR :
+			print_util_dbg_print("NO Twim probe here \r");
+		case STATUS_OK :
+			print_util_dbg_print("I2C initialised \r");
+			break;
+		default :
+			print_util_dbg_print("Error initialising I2C \r");
+			break;
 	}
 }
 

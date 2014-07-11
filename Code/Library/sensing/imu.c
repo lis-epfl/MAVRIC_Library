@@ -35,10 +35,11 @@ void imu_init (Imu_Data_t *imu1)
 	//itg3200_driver_init_slow();
 	//adxl345_driver_init_slow();
 	lsm330dlc_driver_init();
-	print_util_dbg_print("LSM330 initialised\n");	
+	print_util_dbg_print("LSM330 initialised \r");	
 	
 	compass_hmc58831l_init_slow();
-
+	print_util_dbg_print("HMC5883 initialised \r");
+	
 	//imu_calibrate_Gyros(imu1);
 	imu1->raw_scale[X + GYRO_OFFSET] =  RAW_GYRO_X_SCALE;
 	imu1->raw_scale[Y + GYRO_OFFSET] =  RAW_GYRO_Y_SCALE;

@@ -25,7 +25,7 @@ void central_data_init()
 	servo_pwm_set((servo_output_t*)centralData.servos);
 
 	// TODO change names! XXX_init()
-	imu_init((Imu_Data_t*)&(centralData.imu1));
+	//imu_init((Imu_Data_t*)&(centralData.imu1));
 	qfilter_init((Quat_Attitude_t*)&(centralData.imu1.attitude), (float*)(centralData.imu1.raw_scale), (float*)(centralData.imu1.raw_bias));
 		
 	position_estimation_init((position_estimator_t*)&(centralData.position_estimator), (pressure_data_t*)&centralData.pressure, (gps_Data_type_t*)&centralData.GPS_data);
