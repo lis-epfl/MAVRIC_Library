@@ -90,6 +90,9 @@ void boardsupport_init(central_data_t *centralData) {
 	centralData->telemetry_up_stream = xbee_get_in_stream();
 	centralData->debug_out_stream = console_get_out_stream();
 	centralData->debug_in_stream = console_get_out_stream();
+	
+	// init debug output
+	print_util_dbg_print_init(centralData->debug_out_stream);
 
 	// Bind RC receiver with remote
 	//remote_dsm2_rc_activate_bind_mode();
@@ -113,10 +116,11 @@ void boardsupport_init(central_data_t *centralData) {
 	// init imu & compass
 	if (i2c_driver_init(0)!=STATUS_OK)
 	{
-		//print_util_dbg_print("Error initialising I2C\n");
-		//while (1==1);
-		} else {
-		//print_util_dbg_print("initialised I2C.\n");
+		print_util_dbg_print("Error initialising I2C\n");
+	}
+	else
+	{
+		print_util_dbg_print("I2C initialised\n");
 	}
 	imu_init(&(centralData->imu1));
 	bmp085_init(&(centralData->pressure));
@@ -129,12 +133,6 @@ void boardsupport_init(central_data_t *centralData) {
 													.sysid = MAVLINK_SYS_ID,
 													.compid = 50};
 	mavlink_communication_init(&centralData->mavlink_communication, &mavlink_config);
-
-
-
-
-	// init debug output
-	print_util_dbg_print_init(centralData->debug_out_stream);
 	
 	// init 6V enable
 	gpio_enable_gpio_pin(AVR32_PIN_PA04);

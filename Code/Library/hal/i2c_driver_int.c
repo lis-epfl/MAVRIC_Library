@@ -139,43 +139,22 @@ int32_t i2c_driver_init(uint8_t  i2c_device)
 		//INTC_register_interrupt( (__int_handler) &i2c_int_handler_i2c1, AVR32_TWIM1_IRQ, AVR32_INTC_INT1);
 		gpio_enable_module_pin(AVR32_TWIMS1_TWCK_0_0_PIN, AVR32_TWIMS1_TWCK_0_0_FUNCTION);
 		gpio_enable_module_pin(AVR32_TWIMS1_TWD_0_0_PIN, AVR32_TWIMS1_TWD_0_0_FUNCTION);
-		//gpio_enable_pin_pull_up(AVR32_TWIMS1_TWCK_0_0_PIN);
-		//gpio_enable_pin_pull_up(AVR32_TWIMS1_TWD_0_0_PIN);
 	break;
 	default: ///< invalid device ID
 		return -1;
 	}		
-				
-	bool global_interrupt_enabled = cpu_irq_is_enabled ();
-	///< Disable TWI interrupts
-	if (global_interrupt_enabled) 
+	
+	static twim_options_t twi_opt=
 	{
-		cpu_irq_disable ();
-	}
-	twim->idr = ~0UL;
-	///< Enable master transfer
-	twim->cr = AVR32_TWIM_CR_MEN_MASK;
-	///< Reset TWI
-	twim->cr = AVR32_TWIM_CR_SWRST_MASK;
-	twim->cr = AVR32_TWIM_CR_MDIS_MASK;
+		.pba_hz = 64000000,
+		.speed = 400000,
+		.chip = 0xff,
+		.smbus = false
+	};
 	
-	if (global_interrupt_enabled) 
-	{
-		cpu_irq_enable ();
-	}
-	///< Clear SR
-	twim->scr = ~0UL;
+	twi_opt.pba_hz = sysclk_get_pba_hz();
 	
-	///< register Register twim_master_interrupt_handler interrupt on level CONF_TWIM_IRQ_LEVEL
-	//irqflags_t flags = cpu_irq_save();
-	//irq_register_handler(twim_master_interrupt_handler, CONF_TWIM_IRQ_LINE, CONF_TWIM_IRQ_LEVEL);
-	//cpu_irq_restore(flags);
-	
-	///< Select the speed
-	if (twim_set_speed(twim, 400000, sysclk_get_pba_hz()) == ERR_INVALID_ARG) 
-	{	
-		return ERR_INVALID_ARG;
-	}
+	twim_master_init(twim, &twi_opt);
 	
 	return STATUS_OK;
 }

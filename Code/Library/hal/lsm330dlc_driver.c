@@ -385,15 +385,16 @@ static void lsm330dlc_get_gyro_config(void)
 
 void lsm330dlc_driver_init(void) 
 {
-	static twim_options_t twi_opt= 
+	if(twim_probe(&AVR32_TWIM0, LSM330_ACC_SLAVE_ADDRESS) == STATUS_OK)
 	{
-		.pba_hz = 64000000,
-		.speed = 400000,
-		.chip = LSM330_ACC_SLAVE_ADDRESS,
-		.smbus = false
-	};
-
-	twim_master_init(&AVR32_TWIM0, &twi_opt);
+		print_util_dbg_print("LSM330 sensor found (0x18)\n");
+	}
+	else
+	{
+		print_util_dbg_print("LSM330 sensor not responding (0x18)\n");
+		return;
+	} 
+	
 	lsm330dlc_acc_init();
 	lsm330dlc_gyro_init();
 	lsm330dlc_get_acc_config();
@@ -461,9 +462,9 @@ void lsm330dlc_gyro_update(gyro_data_t *lsm_gyro_outputs)
 	
 	if (read_fifo.fifo_fill > 0)
 	{
-		if (read_fifo.fifo_fill > 6)
+		if (read_fifo.fifo_fill > 3)
 		{
-			read_fifo.fifo_fill = 6;
+			read_fifo.fifo_fill = 3;
 		}
 		
 		for (i = 0; i < read_fifo.fifo_fill; i++)

@@ -17,16 +17,19 @@
 
 #include "compass_hmc5883l.h"
 #include "twim.h"
+#include "print_util.h"
 
 void compass_hmc58831l_init_slow() 
 {
-	static twim_options_t twi_opt= 
+	if(twim_probe(&AVR32_TWIM0, HMC5883_SLAVE_ADDRESS) == STATUS_OK)
 	{
-		.pba_hz	= 64000000,
-		.speed	= 400000,
-		.chip	= HMC5883_SLAVE_ADDRESS,
-		.smbus	= false
-	};
+		print_util_dbg_print("HMC5883 compass sensor found (0x1E)\n");
+	}
+	else
+	{
+		print_util_dbg_print("HMC5883 compass sensor not responding (0x1E)\n");
+		return;
+	}
 	
 	static uint8_t compass_default_configuration[4] =
 	{
@@ -35,7 +38,7 @@ void compass_hmc58831l_init_slow()
 		(HMC_RANGE) << 5,
 		(HMC_MODE)
 	};
-	twim_master_init(&AVR32_TWIM0, &twi_opt);
+	
 	twim_write(&AVR32_TWIM0, (uint8_t*)&compass_default_configuration, 4, HMC5883_SLAVE_ADDRESS, false);
 }
 

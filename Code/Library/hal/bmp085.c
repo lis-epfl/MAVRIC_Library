@@ -55,17 +55,8 @@ void bmp085_init(pressure_data_t *pressure_outputs)
 int16_t ac1, ac2, ac3, b1, b2, mb, mc, md;		
 uint16_t ac4, ac5, ac6;
 
-void bmp085_init_slow(){
-	static twim_options_t twi_opt= 
-	{
-		.pba_hz = 64000000,
-		.speed = 400000,
-		.chip = BMP085_SLAVE_ADDRESS,
-		.smbus = false
-	};
-
-	twim_master_init(&AVR32_TWIM0, &twi_opt);
-
+void bmp085_init_slow()
+{
 	if (twim_probe(&AVR32_TWIM0, BMP085_SLAVE_ADDRESS) == STATUS_OK) 
 	{
 		print_util_dbg_print("BMP85/180 pressure sensor found (0x77)\n");
