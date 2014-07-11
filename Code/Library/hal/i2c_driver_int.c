@@ -122,11 +122,11 @@ ISR(i2c_int_handler_i2c0,CONF_TWIM_IRQ_GROUP,CONF_TWIM_IRQ_LEVEL)
 //__attribute__((__interrupt__))
 //static void i2c_int_handler_i2c1(void) {};
 
-int32_t i2c_driver_init(uint8_t  i2c_device) 
+void i2c_driver_init(uint8_t  i2c_device) 
 {
 	volatile avr32_twim_t *twim;
 	switch (i2c_device) {
-	case 0: 
+	case I2C0: 
 		twim = &AVR32_TWIM0;
 		///< Register PDCA IRQ interrupt.
 		INTC_register_interrupt( (__int_handler) &i2c_int_handler_i2c0, AVR32_TWIM0_IRQ, AVR32_INTC_INT1);
@@ -134,7 +134,7 @@ int32_t i2c_driver_init(uint8_t  i2c_device)
 		gpio_enable_module_pin(AVR32_TWIMS0_TWD_0_0_PIN, AVR32_TWIMS0_TWD_0_0_FUNCTION);
 
 	break;
-	case 1:
+	case I2C1:
 		twim = &AVR32_TWIM1;///< Register PDCA IRQ interrupt.
 		//INTC_register_interrupt( (__int_handler) &i2c_int_handler_i2c1, AVR32_TWIM1_IRQ, AVR32_INTC_INT1);
 		gpio_enable_module_pin(AVR32_TWIMS1_TWCK_0_0_PIN, AVR32_TWIMS1_TWCK_0_0_FUNCTION);
@@ -154,9 +154,14 @@ int32_t i2c_driver_init(uint8_t  i2c_device)
 	
 	twi_opt.pba_hz = sysclk_get_pba_hz();
 	
-	twim_master_init(twim, &twi_opt);
-	
-	return STATUS_OK;
+	if(twim_master_init(twim, &twi_opt) != STATUS_OK)
+	{
+		print_util_dbg_print("Error initialising I2C\n");
+	}
+	else
+	{
+		print_util_dbg_print("I2C initialised\n");
+	}
 }
 
 int8_t  i2c_driver_reset(uint8_t  i2c_device) 

@@ -35,6 +35,12 @@
 #define I2C_WRITE 1					///< Define the I2C mode to Write
 #define I2C_WRITE1_THEN_READ 2		///< Define the I2C mode to Write followed by read
 
+enum AVAILABLE_I2CS
+{
+	I2C0, 
+	I2C1
+};
+
 /**
  * \brief structure to embed the i2c's data
 */
@@ -55,10 +61,8 @@ typedef struct
  * \brief Initialize the I2C communication
  *
  * \param i2c_device select which device to initialize
- *
- * \return -1 if the device selected is not correct, -9 if the speed setting failed or STATUS_OK = 0 otherwise
 */
-int32_t i2c_driver_init(uint8_t  i2c_device);
+void i2c_driver_init(uint8_t  i2c_device);
 
 /**
  * \brief Append the i2c transfer

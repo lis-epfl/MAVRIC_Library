@@ -58,15 +58,6 @@ void boardsupport_init(central_data_t *centralData) {
 	time_keeper_init();
 		
 	INTC_init_interrupts();
-		
-
-	if (i2c_driver_init(1)!=STATUS_OK)
-	{
-		//print_util_dbg_print("Error initialising I2C\n");
-		//while (1==1);
-	} else {
-		//print_util_dbg_print("initialised I2C.\n");
-	}
 
 	LED_On(LED1);
 	// Configure the pins connected to LEDs as output and set their default
@@ -114,19 +105,15 @@ void boardsupport_init(central_data_t *centralData) {
 	analog_monitor_init(&centralData->adc);
 	
 	// init imu & compass
-	if (i2c_driver_init(0)!=STATUS_OK)
-	{
-		print_util_dbg_print("Error initialising I2C\n");
-	}
-	else
-	{
-		print_util_dbg_print("I2C initialised\n");
-	}
+	i2c_driver_init(I2C0);
 	imu_init(&(centralData->imu1));
 	bmp085_init(&(centralData->pressure));
 	
+	// init radar or ultrasound (not implemented yet)
+	//i2c_driver_init(I2C1);
+	
 	// init mavlink
-//	mavlink_stream_init(&centralData->mavlink_stream, centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID, 50); // TODO : uncomment
+	//	mavlink_stream_init(&centralData->mavlink_stream, centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID, 50); // TODO : uncomment
 	// Init mavlink communication
 	mavlink_communication_conf_t mavlink_config = {	.up_stream = centralData->telemetry_up_stream,
 													.down_stream = centralData->telemetry_down_stream,
