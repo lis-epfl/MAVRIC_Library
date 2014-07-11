@@ -59,16 +59,7 @@ void boardsupport_init(central_data_t *centralData) {
 		
 	INTC_init_interrupts();
 		
-	
 
-		
-	if (i2c_driver_init(0)!=STATUS_OK)
-	{
-		//print_util_dbg_print("Error initialising I2C\n");
-		//while (1==1);
-	} else {
-		//print_util_dbg_print("initialised I2C.\n");
-	}
 	if (i2c_driver_init(1)!=STATUS_OK)
 	{
 		//print_util_dbg_print("Error initialising I2C\n");
@@ -120,6 +111,13 @@ void boardsupport_init(central_data_t *centralData) {
 	analog_monitor_init(&centralData->adc);
 	
 	// init imu & compass
+	if (i2c_driver_init(0)!=STATUS_OK)
+	{
+		//print_util_dbg_print("Error initialising I2C\n");
+		//while (1==1);
+		} else {
+		//print_util_dbg_print("initialised I2C.\n");
+	}
 	imu_init(&(centralData->imu1));
 	bmp085_init(&(centralData->pressure));
 	
