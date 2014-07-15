@@ -44,7 +44,7 @@ typedef struct
 	float lin_forces_bf[3];									///< The 3D linear forces vector in body frame
 	float vel_bf[3];										///< The 3D velocity vector in body frame
 	float vel[3];											///< The 3D velocity vector in NED frame
-	Quat_Attitude_t attitude;								///< The simulated attitude estimation
+	qfilter_t attitude_filter;								///< The simulated attitude estimation
 	local_coordinates_t localPosition;						///< The simulated local position
 	
 	float simu_raw_scale[9];								///< The raw scales of the simulated IMU
@@ -74,9 +74,8 @@ typedef struct
 	float wind_y;											///< The y component of wind in global frame in m/s
 	
 	float home_coordinates[3];
+	float sim_gravity;
 	
-	//AHRS_t *attitude_estimation;							///< The pointer to the attitude estimation structure
-	Quat_Attitude_t attitude_filter;
 	Imu_Data_t* imu;
 	position_estimator_t* pos_est;
 	pressure_data_t* pressure;
@@ -93,7 +92,7 @@ typedef struct
  * \param	imu				The pointer to the real IMU structure to match the simulated IMU
  * \param	localPos		The pointer to the structure of the real local position estimation of the vehicle
  */
-void simulation_init(simulation_model_t* sim, Quat_Attitude_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, float home_lat, float home_lon, float home_alt);
+void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, float home_lat, float home_lon, float home_alt, float gravity);
 
 /**
  * \brief	Sets the calibration to the "real" IMU values

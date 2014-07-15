@@ -44,7 +44,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *serv
  */
 void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servos);
 
-void simulation_init(simulation_model_t* sim, Quat_Attitude_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, float home_lat, float home_lon, float home_alt)
+void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, float home_lat, float home_lon, float home_alt, float gravity)
 {
 	int32_t i;
 	
@@ -58,6 +58,8 @@ void simulation_init(simulation_model_t* sim, Quat_Attitude_t* attitude_filter, 
 	sim->home_coordinates[0] = home_lat;
 	sim->home_coordinates[1] = home_lon;
 	sim->home_coordinates[2] = home_alt;
+	
+	sim->sim_gravity = gravity;
 	
 	print_util_dbg_print("Init HIL simulation. \n");
 	
@@ -262,10 +264,10 @@ void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands, 
 	// apply step rotation 
 	qed = quaternions_multiply(sim->attitude.qe,qtmp1);
 
-	sim->attitude.qe.s = sim->attitude.qe.s + qed.s * sim->dt;
-	sim->attitude.qe.v[0] += qed.v[0] * sim->dt;
-	sim->attitude.qe.v[1] += qed.v[1] * sim->dt;
-	sim->attitude.qe.v[2] += qed.v[2] * sim->dt;
+	sim->attitude_filter.attitude_estimation->qe.s = sim->attitude.qe.s + qed.s * sim->dt;
+	sim->attitude_filter.attitude_estimation->qe.v[0] += qed.v[0] * sim->dt;
+	sim->attitude_filter.attitude_estimation->qe.v[1] += qed.v[1] * sim->dt;
+	sim->attitude_filter.attitude_estimation->qe.v[2] += qed.v[2] * sim->dt;
 
 	sim->attitude.qe = quaternions_normalise(sim->attitude.qe);
 	sim->attitude.up_vec = quaternions_global_to_local(sim->attitude.qe, up);
@@ -283,7 +285,7 @@ void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands, 
 		// simulate "acceleration" caused by contact force with ground, compensating gravity
 		for (i = 0; i < 3; i++)
 		{
-			sim->lin_forces_bf[i] = sim->attitude.up_vec.v[i] * sim->total_mass * GRAVITY;
+			sim->lin_forces_bf[i] = sim->attitude.up_vec.v[i] * sim->total_mass * sim->sim_gravity;
 		}
 				
 		// slow down... (will make velocity slightly inconsistent until next update cycle, but shouldn't matter much)
@@ -334,7 +336,7 @@ void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands, 
 
 	// fill in simulated IMU values
 	
-	imu->raw_channels[GYRO_OFFSET + IMU_X] = sim->rates_bf[0] * sim->simu_raw_scale[GYRO_OFFSET + IMU_X] + sim->simu_raw_biais[GYRO_OFFSET + IMU_X];
+	imu->raw_gyro.data[GYRO_OFFSET + IMU_X] = sim->rates_bf[0] * sim->simu_raw_scale[GYRO_OFFSET + IMU_X] + sim->simu_raw_biais[GYRO_OFFSET + IMU_X];
 	imu->raw_channels[GYRO_OFFSET + IMU_Y] = sim->rates_bf[1] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Y] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Y];
 	imu->raw_channels[GYRO_OFFSET + IMU_Z] = sim->rates_bf[2] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Z] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Z];
 
@@ -371,7 +373,7 @@ void simulation_simulate_gps(simulation_model_t *sim, gps_Data_type_t *gps)
 	gps->altitude = gpos.altitude;
 	gps->latitude = gpos.latitude;
 	gps->longitude = gpos.longitude;
-	gps->timeLastMsg = time_keeper_get_millis();
+	gps->time_last_msg = time_keeper_get_millis();
 	gps->status = GPS_OK;
 }
 
@@ -392,7 +394,7 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 	sim->gps->latitude = gpos.latitude;
 	sim->gps->longitude = gpos.longitude;
 	sim->gps->altitude = gpos.altitude;
-	sim->gps->timeLastMsg = time_keeper_get_millis();
+	sim->gps->time_last_msg = time_keeper_get_millis();
 	sim->gps->status = GPS_OK;
 }
 
