@@ -50,7 +50,7 @@ task_set_t* tasks_get_main_taskset()
 	return &main_tasks;
 }
 
-void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motorbool)
+void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motor_state)
 {
 	
 	remote_controller_get_channel_mode(chanSwitch);
@@ -64,32 +64,10 @@ void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motor
 		centralData->collision_avoidance = false;
 	}
 	
-	if((remote_controller_get_thrust_from_remote() < -0.95f) && (remote_controller_get_yaw_from_remote() > 0.9f))
-	{
-		*motorbool = 1;
-	}
-	else if((remote_controller_get_thrust_from_remote() < -0.95f) && (remote_controller_get_yaw_from_remote() < -0.9f))
-	{
-		*motorbool = -1;
-	}
-	else
-	{
-		*motorbool = 0;
-	}
+	remote_controller_get_motor_state(motor_state);
 	
-	switch (remote_dsm2_rc_check_receivers())
-	{
-		case 1:
-			*rc_check = 1;
-			break;
-		case -1:
-			*rc_check = -1;
-			break;
-		case -2:
-			*rc_check = -2;
-			break;
+	*rc_check = remote_dsm2_rc_check_receivers();
 	}
-}
 
 void switch_off_motors(void)
 {
@@ -467,30 +445,8 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 	
 	if (centralData->simulation_mode_previous != centralData->simulation_mode)
 	{
-		uint8_t i;
-		
-		// From simulation to reality
-		if (centralData->simulation_mode == 0)
-		{
-			centralData->position_estimator.localPosition.origin = centralData->sim_model.localPosition.origin;
-			for (i = 0;i < 3;i++)
-			{
-				centralData->position_estimator.localPosition.pos[i] = centralData->sim_model.localPosition.pos[i];
+		simulation_switch_between_reality_n_simulation(&centralData->sim_model,centralData->servos);
 			}
-			centralData->position_estimator.init_gps_position = false;
-			centralData->mav_state = MAV_STATE_STANDBY;
-			centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
-			servo_pwm_failsafe(centralData->servos);
-		}
-
-		// From reality to simulation
-		if (centralData->simulation_mode == 1)
-		{			
-			simulation_init(&(centralData->sim_model),&(centralData->imu1),centralData->position_estimator.localPosition);
-			centralData->position_estimator.init_gps_position = false;
-		}
-	}
-	
 	centralData->simulation_mode_previous = centralData->simulation_mode;
 	
 	return TASK_RUN_SUCCESS;

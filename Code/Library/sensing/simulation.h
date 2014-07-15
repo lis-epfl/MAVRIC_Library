@@ -33,11 +33,6 @@ extern "C" {
 #include "bmp085.h"
 #include "position_estimation.h"
 
-// default home location (EFPL Esplanade)
-#define HOME_LONGITUDE 6.566044801857777f					///< Latitude of home location
-#define HOME_LATITUDE 46.51852236174565f 					///< Longitude of home location
-#define HOME_ALTITUDE 400.0f									///< Altitude of home location
-
 /**
  * \brief The simulation model structure definition
  */
@@ -48,7 +43,6 @@ typedef struct
 	float lin_forces_bf[3];									///< The 3D linear forces vector in body frame
 	float vel_bf[3];										///< The 3D velocity vector in body frame
 	float vel[3];											///< The 3D velocity vector in NED frame
-	float pos[3];											///< The 3D position vector in NED frame
 	Quat_Attitude_t attitude;								///< The simulated attitude estimation
 	local_coordinates_t localPosition;						///< The simulated local position
 	
@@ -77,6 +71,13 @@ typedef struct
 	float dt;												///< The time base of current update
 	float wind_x;											///< The x component of wind in global frame in m/s
 	float wind_y;											///< The y component of wind in global frame in m/s
+	
+	Imu_Data_t* imu;
+	position_estimator_t* pos_est;
+	pressure_data_t* pressure;
+	gps_Data_type_t* gps;
+	state_structure_t* state_structure;
+	
 } simulation_model_t;
 
 
@@ -87,7 +88,21 @@ typedef struct
  * \param	imu				The pointer to the real IMU structure to match the simulated IMU
  * \param	localPos		The pointer to the structure of the real local position estimation of the vehicle
  */
-void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates_t localPos);
+void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure);
+
+/**
+ * \brief	Sets the calibration to the "real" IMU values
+ *
+ * \param	sim				The pointer to the simulation model structure
+ */
+void simulation_calib_set(simulation_model_t *sim);
+
+/**
+ * \brief	Resets the simulation towards the "real" estimated position
+ *
+ * \param	sim				The pointer to the simulation model structure
+ */
+void simulation_reset_simulation(simulation_model_t *sim);
 
 /**
  * \brief	Computes artificial gyro and accelerometer values based on motor commands
@@ -111,9 +126,25 @@ void simulation_simulate_barometer(simulation_model_t *sim, pressure_data_t *pre
  * \brief	Simulates GPS outputs
  *
  * \param	sim				The pointer to the simulation model structure
- * \param	gps				The pointer to the "real" GPS structure to update the belief of the GPS value
  */
 void simulation_simulate_gps(simulation_model_t *sim, gps_Data_type_t *gps);
+
+
+/**
+ * \brief	Gives a fake gps value
+ * 
+ * \param	sim				The pointer to the simulation model structure
+ * \param	timestamp_ms	The time stamp in ms
+ */
+void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms);
+
+/**
+ * \brief	Changes between simulation to and from reality
+ *
+ * \param	sim				The pointer to the simulation model structure
+ * \param	servos			The array of the servos
+ */
+void simulation_switch_between_reality_n_simulation(simulation_model_t *sim, servo_output_t servos[]);
 
 #ifdef __cplusplus
 }

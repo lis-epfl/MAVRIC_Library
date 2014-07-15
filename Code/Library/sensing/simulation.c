@@ -43,29 +43,24 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *serv
  */
 void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servos);
 
-void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates_t localPos) {
+void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure)
+{
 	int32_t i;
+	
+	sim->imu = imu;
+	sim->pos_est = pos_est;
+	sim->pressure = pressure;
+	sim->gps = gps;
+	sim->state_structure = state_structure;
 	
 	print_util_dbg_print("Init HIL simulation. \n");
 	
 	(*sim) = vehicle_model_parameters;
-	for (i = 0; i < 3; i++)
-	{
-		sim->rates_bf[i] = 0.0f;
-		sim->torques_bf[i] = 0.0f;
-		sim->lin_forces_bf[i] = 0.0f;
-		sim->vel_bf[i] = 0.0f;
-		sim->localPosition.pos[i] = localPos.pos[i];
-	}
 	
-	//sim->localPosition.origin.latitude = HOME_LATITUDE;
-	//sim->localPosition.origin.longitude = HOME_LONGITUDE;
-	//sim->localPosition.origin.altitude = HOME_ALTITUDE;
+	simulation_reset_simulation(sim);
 	
-	sim->localPosition.origin = localPos.origin;
-	
-	// set initial conditions to given attitude (including scalefactors and biases for simulated IMU)
-	sim->attitude = imu->attitude;
+	// set initial conditions to a given attitude_filter
+	sim->attitude_filter = *attitude_filter;
 
 	for (i = 0; i < ROTORCOUNT; i++)
 	{
@@ -74,11 +69,51 @@ void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates
 	sim->last_update = time_keeper_get_micros();
 	sim->dt = 0.01f;
 	
-	for (i = 0;i < 9;i++)
+	simulation_calib_set(sim);
+	
+}
+
+void simulation_calib_set(simulation_model_t *sim)
+{
+	int32_t i;
+	
+	for (i = 0;i < 3;i++)
 	{
-		sim->simu_raw_scale[i] = 1.0f / imu->attitude.sf[i];
-		sim->simu_raw_biais[i] = imu->attitude.be[i];
+		//sim->simu_raw_scale[i + GYRO_OFFSET]	= 1.0f / sim->imu->gyro_calib.scale[i];				// Because the inversion is done in imu_init
+		//sim->simu_raw_scale[i + ACC_OFFSET]		= 1.0f / sim->imu->accelero_calib.scale[i];
+		//sim->simu_raw_scale[i + MAG_OFFSET]		= 1.0f / sim->imu->compass_calib.scale[i];
+		
+		sim->simu_raw_scale[i + GYRO_OFFSET]	= sim->imu->gyro_calib.scale[i];
+		sim->simu_raw_scale[i + ACC_OFFSET]		= sim->imu->accelero_calib.scale[i];
+		sim->simu_raw_scale[i + MAG_OFFSET]		= sim->imu->compass_calib.scale[i];
+		sim->simu_raw_biais[i + GYRO_OFFSET]	= sim->imu->gyro_calib.bias[i];
+		sim->simu_raw_biais[i + ACC_OFFSET]		= sim->imu->accelero_calib.bias[i];
+		sim->simu_raw_biais[i + MAG_OFFSET]		= sim->imu->compass_calib.bias[i];
 	}
+}
+
+void simulation_reset_simulation(simulation_model_t *sim)
+{
+	int32_t i;
+	
+	for (i = 0; i < 3; i++)
+	{
+		sim->rates_bf[i] = 0.0f;
+		sim->torques_bf[i] = 0.0f;
+		sim->lin_forces_bf[i] = 0.0f;
+		sim->vel_bf[i] = 0.0f;
+		sim->vel[i] = 0.0f;
+		//sim->localPosition.pos[i] = sim->pos_est->localPosition.pos[i];
+	}
+	
+	sim->localPosition = sim->pos_est->localPosition;
+	
+	//sim->localPosition.origin.latitude = HOME_LATITUDE;
+	//sim->localPosition.origin.longitude = HOME_LONGITUDE;
+	//sim->localPosition.origin.altitude = HOME_ALTITUDE;
+	
+	//sim->localPosition.origin = sim->pos_est->localPosition.origin;
+	//sim->localPosition.heading = sim->pos_est->localPosition.heading;
 }
 
 /** 
@@ -332,4 +367,53 @@ void simulation_simulate_gps(simulation_model_t *sim, gps_Data_type_t *gps)
 	gps->longitude = gpos.longitude;
 	gps->timeLastMsg = time_keeper_get_millis();
 	gps->status = GPS_OK;
+}
+
+void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
+{
+	local_coordinates_t fake_pos;
+	
+	fake_pos.pos[X] = 10.0f;
+	fake_pos.pos[Y] = 10.0f;
+	fake_pos.pos[Z] = 0.0f;
+	fake_pos.origin.latitude = HOME_LATITUDE;
+	fake_pos.origin.longitude = HOME_LONGITUDE;
+	fake_pos.origin.altitude = HOME_ALTITUDE;
+	fake_pos.timestamp_ms = timestamp_ms;
+
+	global_position_t gpos = coord_conventions_local_to_global_position(fake_pos);
+	
+	sim->gps->latitude = gpos.latitude;
+	sim->gps->longitude = gpos.longitude;
+	sim->gps->altitude = gpos.altitude;
+	sim->gps->time_last_msg = time_keeper_get_millis();
+	sim->gps->status = GPS_OK;
+}
+
+void simulation_switch_between_reality_n_simulation(simulation_model_t *sim, servo_output_t servos[])
+{
+	uint32_t i;
+	
+	// From simulation to reality
+	if (sim->state_structure->simulation_mode == 0)
+	{
+		sim->pos_est->
+		sim->pos_est->localPosition.origin = sim->localPosition.origin;
+		for (i = 0;i < 3;i++)
+		{
+			sim->pos_est->localPosition.pos[i] = sim->localPosition.pos[i];
+		}
+		sim->pos_est->init_gps_position = false;
+		sim->state_structure->mav_state = MAV_STATE_STANDBY;
+		sim->state_structure->mav_mode = MAV_MODE_MANUAL_DISARMED;
+		servo_pwm_failsafe(servos);
+	}
+
+	// From reality to simulation
+	if (sim->state_structure->simulation_mode == 1)
+	{
+		simulation_reset_simulation(sim);
+		simulation_calib_set(sim);
+		centralData->position_estimator.init_gps_position = false;
+	}
 }
