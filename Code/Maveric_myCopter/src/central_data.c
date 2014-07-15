@@ -52,10 +52,7 @@ void central_data_init()
 	
 	// Init servos
 	servo_pwm_init((servo_output_t*)centralData.servos);
-	servo_pwm_failsafe((servo_output_t*)centralData.servos);
-	servo_pwm_set((servo_output_t*)centralData.servos);
-
-	// TODO change names! XXX_init()
+	
 	//imu_init((Imu_Data_t*)&(centralData.imu1));
 	qfilter_init((Quat_Attitude_t*)&(centralData.imu1.attitude), (float*)(centralData.imu1.raw_scale), (float*)(centralData.imu1.raw_bias));
 		
