@@ -21,54 +21,85 @@
 #include "print_util.h"
 
 #include <stdlib.h>
+#include <stdbool.h>
+
+#include "piezo_speaker.h" // TODO: remove
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
-void mavlink_message_handler_msg_default_dbg(mavlink_received_t* rec);
+/**
+ * \brief 					Checks whether a message matches with a registered callback
+ * 
+ * \param 	msg_callback 	Pointer to a registered message callback
+ * \param 	msg 			Incoming message
+ * 
+ * \return 					Boolean (true if the message matches, false if not)
+ */
+static bool match_msg(mavlink_message_handler_msg_callback_t* msg_callback, mavlink_message_t* msg);
 
 
-void mavlink_message_handler_cmd_default_dbg(mavlink_command_long_t* cmd);
+/**
+ * \brief 					Checks whether a command matches with a registered callback
+ * 
+ * \param 	msg_callback 	Pointer to a registered command callback
+ * \param 	msg 			Incoming message containing the command
+ * \param 	cmd 			Incoming command encoded in the message
+ * 
+ * \return 					Boolean (true if the message matches, false if not)
+ */
+static bool match_cmd(mavlink_message_handler_cmd_callback_t* cmd_callback, mavlink_message_t* msg, mavlink_command_long_t* cmd);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void mavlink_message_handler_msg_default_dbg(mavlink_received_t* rec)
+static bool match_msg(mavlink_message_handler_msg_callback_t* msg_callback, mavlink_message_t* msg)
 {
-	print_util_dbg_print("\n Received message with ID");
-	print_util_dbg_print_num(rec->msg.msgid, 10);
-	print_util_dbg_print(" from system");
-	print_util_dbg_print_num(rec->msg.sysid, 10);
-	print_util_dbg_print(" for component");
-	print_util_dbg_print_num(rec->msg.compid,10);
-	print_util_dbg_print( "\n");
+	bool match = false;
+
+	if ( msg->sysid != mavlink_system.sysid )																		// This message is not from this system
+	{
+		if ( msg_callback->message_id == msg->msgid )																// The message has the good ID
+		{
+			if ( msg_callback->sysid_filter == MAV_SYS_ID_ALL || msg_callback->sysid_filter == msg->sysid )			// The message is from the good system
+			{
+				if ( msg_callback->compid_filter == MAV_COMP_ID_ALL || msg_callback->compid_filter == msg->compid )	// The system is from the good component 
+				{
+					match = true;
+				}
+			}
+		}
+	}
+
+	return match;
 }
 
 
-void mavlink_message_handler_cmd_default_dbg(mavlink_command_long_t* cmd)
+static bool match_cmd(mavlink_message_handler_cmd_callback_t* cmd_callback, mavlink_message_t* msg, mavlink_command_long_t* cmd)
 {
-		print_util_dbg_print("\n Received command with ID");
-		print_util_dbg_print_num(cmd->command,10);
-		print_util_dbg_print(" with parameters: [");
-		print_util_dbg_print_num(cmd->param1,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(cmd->param2,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(cmd->param3,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(cmd->param4,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(cmd->param5,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(cmd->param6,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(cmd->param7,10);
-		print_util_dbg_print("] confirmation: ");
-		print_util_dbg_print_num(cmd->confirmation,10);
-		print_util_dbg_print("\n");
+	bool match = false;
+	
+	if ( msg->sysid != mavlink_system.sysid )																							// This message is not from this system
+	{
+		if ( cmd_callback->command_id == cmd->command )																					// The message has the good ID
+		{
+			if ( cmd_callback->sysid_filter == MAV_SYS_ID_ALL || cmd_callback->sysid_filter == msg->sysid )								// The message is from the good system
+			{
+				if ( cmd_callback->compid_filter == MAV_COMP_ID_ALL || cmd_callback->compid_filter == msg->compid )						// The system is from the good component 
+				{
+					if ( cmd_callback->compid_target == MAV_COMP_ID_ALL || cmd_callback->compid_target == mavlink_system.compid )		// This system is the target of the command
+					{				
+						match = true;
+					}
+				}
+			}
+		}
+	}
+
+	return match;
 }
 
 
@@ -76,126 +107,151 @@ void mavlink_message_handler_cmd_default_dbg(mavlink_command_long_t* cmd)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-
-void mavlink_message_handler_init(mavlink_message_handler_t* message_handler, mavlink_message_handler_conf_t config)
+void mavlink_message_handler_init(mavlink_message_handler_t* message_handler, mavlink_message_handler_conf_t* config)
 {
-	// Init structure
-	message_handler->debug = config.debug;
-
 	// Allocate memory for msg handling
-	message_handler->msg_callback_set = malloc( sizeof(mavlink_message_handler_msg_callback_set_t) + sizeof(mavlink_message_handler_msg_callback_t[config.max_msg_callback_count]) );
-    message_handler->msg_callback_set->max_callback_count = config.max_msg_callback_count;
+	message_handler->msg_callback_set = malloc( sizeof(mavlink_message_handler_msg_callback_set_t) + sizeof(mavlink_message_handler_msg_callback_t[config->max_msg_callback_count]) );
+    message_handler->msg_callback_set->max_callback_count = config->max_msg_callback_count;
 	message_handler->msg_callback_set->callback_count = 0;
 
 	// Allocate memory for msg handling
-	message_handler->cmd_callback_set = malloc( sizeof(mavlink_message_handler_cmd_callback_set_t) + sizeof(mavlink_message_handler_cmd_callback_t[config.max_cmd_callback_count]) );
-    message_handler->cmd_callback_set->max_callback_count = config.max_cmd_callback_count;
+	message_handler->cmd_callback_set = malloc( sizeof(mavlink_message_handler_cmd_callback_set_t) + sizeof(mavlink_message_handler_cmd_callback_t[config->max_cmd_callback_count]) );
+    message_handler->cmd_callback_set->max_callback_count = config->max_cmd_callback_count;
 	message_handler->cmd_callback_set->callback_count = 0;	
-
-	// switch (method)
-	// {
-	// 	case MAV_MSG_HANDLER_INIT_DO_NOTHING:
-	// 		for (int i = 0; i < MAV_MSG_ENUM_END; ++i)
-	// 		{
-	// 			message_handler->msg_from_ground_station[i] = &mavlink_message_handler_msg_default_do_nothing;
-	// 			message_handler->msg_from_other_mav[i] = &mavlink_message_handler_msg_default_do_nothing;
-	// 		}
-	// 		for (int i = 0; i < MAV_CMD_ENUM_END; ++i)
-	// 		{
-	// 			message_handler->cmd_from_ground_station[i] = &cmd_handler_default_do_nothing;
-	// 			message_handler->cmd_from_other_mav[i] = &cmd_handler_default_do_nothing;
-	// 		}
-	// 		break;
-
-	// 	case MAV_MSG_HANDLER_INIT_DEBUG:
-	// 		for (int i = 0; i < MAV_MSG_ENUM_END; ++i)
-	// 		{
-	// 			message_handler->msg_from_ground_station[i] = &mavlink_message_handler_msg_default_dbg;
-	// 			message_handler->msg_from_other_mav[i] = &mavlink_message_handler_msg_default_dbg;
-	// 		}
-	// 		for (int i = 0; i < MAV_CMD_ENUM_END; ++i)
-	// 		{
-	// 			message_handler->cmd_from_ground_station[i] = &mavlink_message_handler_cmd_default_dbg;
-	// 			message_handler->cmd_from_other_mav[i] = &mavlink_message_handler_cmd_default_dbg;
-	// 		}
-	// 		break;	
-	// }
 }
 
 
 void mavlink_message_handler_add_msg_callback(	mavlink_message_handler_t* 				message_handler, 
-												mavlink_message_handler_msg_callback_t 	msg_callback)
+												mavlink_message_handler_msg_callback_t* msg_callback)
 {
-	;
+	mavlink_message_handler_msg_callback_set_t* msg_callback_set = message_handler->msg_callback_set;
+	
+	if ( msg_callback_set->callback_count <  msg_callback_set->max_callback_count )
+	{
+		mavlink_message_handler_msg_callback_t* new_callback = &msg_callback_set->callback_list[msg_callback_set->callback_count];
+
+		new_callback->message_id 	= msg_callback->message_id;
+		new_callback->sysid_filter 	= msg_callback->sysid_filter;
+	 	new_callback->compid_filter = msg_callback->compid_filter;
+		new_callback->function 		= msg_callback->function;
+		new_callback->module_struct = msg_callback->module_struct;
+
+		msg_callback_set->callback_count += 1;
+	}
+	else
+	{
+		print_util_dbg_print("[MESSAGE HANDLER] Error: Cannot add more msg callback");
+	}
 }
 
 void mavlink_message_handler_add_cmd_callback(	mavlink_message_handler_t* 				message_handler, 
-												mavlink_message_handler_cmd_callback_t 	cmd_callback)
+												mavlink_message_handler_cmd_callback_t*	cmd_callback)
 {
-	;
+	mavlink_message_handler_cmd_callback_set_t* cmd_callback_set = message_handler->cmd_callback_set;
+	
+	if ( cmd_callback_set->callback_count <  cmd_callback_set->max_callback_count )
+	{
+		mavlink_message_handler_cmd_callback_t* new_callback = &cmd_callback_set->callback_list[cmd_callback_set->callback_count];
+
+		new_callback->command_id = cmd_callback->command_id;
+		new_callback->sysid_filter = cmd_callback->sysid_filter;
+	 	new_callback->compid_filter = cmd_callback->compid_filter;
+		new_callback->function = cmd_callback->function;
+		new_callback->module_struct = cmd_callback->module_struct;
+
+		cmd_callback_set->callback_count += 1;
+	}
+	else
+	{
+		print_util_dbg_print("[MESSAGE HANDLER] Error: Cannot add more msg callback");
+	}
+}
+
+
+void mavlink_message_handler_msg_default_dbg(mavlink_message_t* msg)
+{
+	print_util_dbg_print("\n Received message with ID");
+	print_util_dbg_print_num(msg->msgid, 10);
+	print_util_dbg_print(" from system");
+	print_util_dbg_print_num(msg->sysid, 10);
+	print_util_dbg_print(" from component");
+	print_util_dbg_print_num(msg->compid,10);
+	print_util_dbg_print( "\n");
+}
+
+
+void mavlink_message_handler_cmd_default_dbg(mavlink_command_long_t* cmd)
+{
+	print_util_dbg_print("\n Received command with ID");
+	print_util_dbg_print_num(cmd->command,10);
+	print_util_dbg_print(" with parameters: [");
+	print_util_dbg_print_num(cmd->param1,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(cmd->param2,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(cmd->param3,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(cmd->param4,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(cmd->param5,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(cmd->param6,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(cmd->param7,10);
+	print_util_dbg_print("] confirmation: ");
+	print_util_dbg_print_num(cmd->confirmation,10);
+	print_util_dbg_print("\n");
 }
 
 
 void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler, mavlink_received_t* rec) 
 {
-	// if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) 				// The message is from ground station
-	// {	
-	// 	if (rec->msg.msgid == MAVLINK_MSG_ID_COMMAND_LONG)		// The message is a command from ground station
-	// 	{
-	// 		mavlink_command_long_t cmd;
-	// 		mavlink_msg_command_long_decode(&rec->msg, &cmd);
-			
-	// 		if (cmd.command >= 0 && cmd.command < MAV_CMD_ENUM_END)
-	// 		{
-	// 			// Valid command id
-	// 			message_handler->cmd_from_ground_station[cmd.command](&cmd);
-	// 		}
-	// 		else
-	// 		{	
-	// 			// Invalid command id
-	// 			mavlink_message_handler_cmd_default_dbg(&cmd);
-	// 		}
-	// 	}
-	// 	else if (rec->msg.msgid >= 0 && rec->msg.msgid < MAV_MSG_ENUM_END)		// The message is a standard message from ground station
-	// 	{
-	// 		// Valid message id
-	// 		message_handler->msg_from_ground_station[rec->msg.msgid](rec);
-	// 	}
-	// 	else
-	// 	{
-	// 		// Invalid message id
-	// 		mavlink_message_handler_msg_default_dbg(rec);
-	// 	}
-	// }
-	// else if (rec->msg.sysid != mavlink_system.sysid)			// The message comes from another mav
+	mavlink_message_t* msg = &rec->msg;
+
+	// int i;
+	// for (i = 1; i < 8; i++)
 	// {
-	// 	if (rec->msg.msgid == MAVLINK_MSG_ID_COMMAND_LONG)		// The message is a command from another mav
-	// 	{
-	// 		mavlink_command_long_t cmd;
-	// 		mavlink_msg_command_long_decode(&rec->msg, &cmd);
-			
-	// 		if (cmd.command >= 0 && cmd.command < MAV_CMD_ENUM_END)
-	// 		{
-	// 			// Valid command id
-	// 			message_handler->cmd_from_other_mav[cmd.command](&cmd);
-	// 		}
-	// 		else
-	// 		{	
-	// 			// Invalid command id
-	// 			mavlink_message_handler_cmd_default_dbg(&cmd);
-	// 		}
-	// 	}
-	// 	else if (rec->msg.msgid >= 0 && rec->msg.msgid < MAV_MSG_ENUM_END)		// The message is a standard message from another mav
-	// 	{
-	// 		// Valid message id
-	// 		message_handler->msg_from_other_mav[rec->msg.msgid](rec);
-	// 	}
-	// 	else
-	// 	{
-	// 		// Invalid message id
-	// 		mavlink_message_handler_msg_default_dbg(rec);
-	// 	}
-	// }
+	// 	piezo_speaker_beep(100, 500 * i);
+	// 	//delay_ms(2);
+	// }	
+
+	if (msg->msgid == MAVLINK_MSG_ID_COMMAND_LONG)
+	{
+		// The message is a command
+		mavlink_command_long_t cmd;
+		mavlink_msg_command_long_decode(msg, &cmd);
+		
+		if (cmd.command >= 0 && cmd.command < MAV_CMD_ENUM_END)
+		{
+			// The command has valid command ID 
+			for (uint32_t i = 0; i < message_handler->cmd_callback_set->callback_count; ++i)
+			{
+				if ( match_cmd(&message_handler->cmd_callback_set->callback_list[i], msg, &cmd) )
+				{
+					mavlink_cmd_callback_function_t function 		= message_handler->cmd_callback_set->callback_list[i].function;
+					handling_module_struct_t 		module_struct 	= message_handler->cmd_callback_set->callback_list[i].module_struct;
+					
+					// Call appropriate function callback
+					function(module_struct, &cmd);
+				}
+			}
+		}
+	}
+	else if ( msg->msgid >= 0 && msg->msgid < MAV_MSG_ENUM_END )
+	{
+		// The message has a valid message ID, and is not a command
+		for (uint32_t i = 0; i < message_handler->msg_callback_set->callback_count; ++i)
+		{
+			if ( match_msg(&message_handler->msg_callback_set->callback_list[i], msg) )
+			{
+				mavlink_msg_callback_function_t function 		= message_handler->msg_callback_set->callback_list[i].function;
+				handling_module_struct_t 		module_struct 	= message_handler->msg_callback_set->callback_list[i].module_struct;
+				
+				// Call appropriate function callback
+				function(module_struct, msg);
+			}
+		}
+	}
 }
 
 
@@ -210,7 +266,10 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 	// 	//print_util_dbg_print(" for component");
 	// 	//print_util_dbg_print_num(rec->msg.compid,10);
 	// 	//print_util_dbg_print( "\n");
-		
+	
+	// ############
+	// DONE
+	// ############
 	// 	switch(rec->msg.msgid) 
 	// 	{
 	// 		case MAVLINK_MSG_ID_PARAM_REQUEST_LIST: 
@@ -251,6 +310,11 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 	// 		}
 	// 		break;
 
+
+
+	// ################
+	// TODO
+	// ##############
 	// 		case MAVLINK_MSG_ID_REQUEST_DATA_STREAM: 
 	// 		{ // 66
 	// 			volatile mavlink_request_data_stream_t request;

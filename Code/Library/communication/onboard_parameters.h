@@ -24,6 +24,7 @@ extern "C" {
 #endif
 
 #include "mavlink_stream.h"
+#include "mavlink_message_handler.h"
 #include "scheduler.h"
 
 #include <stdbool.h>
@@ -68,84 +69,62 @@ typedef struct
 } nvram_data_t;
 
 
-// TODO: update documentation to new function prototypes
-
 /**
 * \brief	Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0
+* 
+* \param   	onboard_parameters		Pointer to module structure
+* \param 	task_set 				Pointer to mavlink scheduler task set
+* \param 	message_handler 		Pointer to mavlink message handler
 */
-void onboard_parameters_init(onboard_parameter_set_t* param_set);
+void onboard_parameters_init(onboard_parameter_set_t* onboard_parameters, task_set_t* task_set, mavlink_message_handler_t* message_handler);
+
 
 /**
- * \brief				Register parameter in the internal parameter list that gets published to MAVlink
+ * \brief	Register parameter in the internal parameter list that gets published to MAVlink
  *
- * \param val			Unsigned 8 - bits integer parameter value
- * \param param_name	Name of the parameter
+ * \param   onboard_parameters		Pointer to module structure
+ * \param 	val						Unsigned 32 - bits integer parameter value
+ * \param 	param_name				Name of the parameter
  */
-void onboard_parameters_add_parameter_uint8(onboard_parameter_set_t* param_set, uint8_t* val, const char* param_name);
+void onboard_parameters_add_parameter_uint32(onboard_parameter_set_t* onboard_parameters, uint32_t* val, const char* param_name);
+
 
 /**
- * \brief				Register parameter in the internal parameter list that gets published to MAVlink
+ * \brief	Register parameter in the internal parameter list that gets published to MAVlink
  *
- * \param val			Unsigned 32 - bits integer parameter value
- * \param param_name	Name of the parameter
+ * \param   onboard_parameters		Pointer to module structure
+ * \param 	val						Signed 32 - bits integer parameter value
+ * \param 	param_name				Name of the parameter
  */
-void onboard_parameters_add_parameter_uint32(onboard_parameter_set_t* param_set, uint32_t* val, const char* param_name);
+void onboard_parameters_add_parameter_int32(onboard_parameter_set_t* onboard_parameters, int32_t* val, const char* param_name);
+
 
 /**
- * \brief				Register parameter in the internal parameter list that gets published to MAVlink
+ * \brief	Registers parameter in the internal parameter list that gets published to MAVlink
  *
- * \param val			Signed 32 - bits integer parameter value
- * \param param_name	Name of the parameter
+ * \param   onboard_parameters		Pointer to module structure
+ * \param 	val						Floating point parameter value
+ * \param 	param_name				Name of the parameter
  */
-void onboard_parameters_add_parameter_int32(onboard_parameter_set_t* param_set, int32_t* val, const char* param_name);
+void onboard_parameters_add_parameter_float(onboard_parameter_set_t* onboard_parameters, float* val, const char* param_name);
+
 
 /**
- * \brief				Registers parameter in the internal parameter list that gets published to MAVlink
+ * \brief	Read onboard parameters from the user page in the flash memory to the RAM memory
  *
- * \param val			Floating point parameter value
- * \param param_name	Name of the parameter
+ * \param   onboard_parameters		Pointer to module structure
+ * \param   msg 					Incoming mavlink message
  */
-void onboard_parameters_add_parameter_float(onboard_parameter_set_t* param_set, float* val, const char* param_name);
+void onboard_parameters_read_parameters_from_flashc(onboard_parameter_set_t* onboard_parameters, mavlink_message_t* msg);
 
 
 /**
- * \brief	Immediately sends all parameters via MAVlink. This might block for a while.
+ * \brief	Write onboard parameters to the RAM memory from the user page in the flash memory
+ * 
+ * \param   onboard_parameters		Pointer to module structure
+ * \param   msg 					Incoming mavlink message
  */
-void onboard_parameters_send_all_parameters_now(onboard_parameter_set_t* param_set);
-
-/**
- * \brief	Marks all parameters to be scheduled for transmission
- */
-void onboard_parameters_send_all_parameters(onboard_parameter_set_t* param_set);
-
-/**
- * \brief	Sends all parameters that have been scheduled via MAVlink
- */
-task_return_t onboard_parameters_send_scheduled_parameters(onboard_parameter_set_t* param_set);
-
-/**
- * \brief			Responds to a MAVlink parameter request
- *
- * \param request	Pointer to the request structure received by MAVlink
- */
-void onboard_parameters_send_parameter(onboard_parameter_set_t* param_set, mavlink_param_request_read_t* request);
-
-/**
- * \brief		Responds to a MAVlink parameter set
- *
- * \param rec	Pointer to the received parameter structure
- */
-void onboard_parameters_receive_parameter(onboard_parameter_set_t* param_set, mavlink_received_t* rec);
-
-/**
- * \brief		Read onboard parameters from the user page in the flash memory to the RAM memory
- */
-void onboard_parameters_read_parameters_from_flashc(onboard_parameter_set_t* param_set);
-
-/**
- * \brief		Write onboard parameters to the RAM memory from the user page in the flash memory
- */
-void onboard_parameters_write_parameters_from_flashc(onboard_parameter_set_t* param_set);
+void onboard_parameters_write_parameters_from_flashc(onboard_parameter_set_t* onboard_parameters, mavlink_message_t* msg);
 
 #ifdef __cplusplus
 }

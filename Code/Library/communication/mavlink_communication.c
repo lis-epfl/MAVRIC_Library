@@ -32,17 +32,11 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 	// Init message handler
 	mavlink_message_handler_conf_t message_handler_config= {	.max_msg_callback_count=10,
 																.max_cmd_callback_count=10,
-																.debug=true	};
-	mavlink_message_handler_init(&mavlink_communication->message_handler, message_handler_config);
+															};
+	mavlink_message_handler_init(&mavlink_communication->message_handler, &message_handler_config);
 
 	// Init onboard parameters
-	onboard_parameters_init(&mavlink_communication->onboard_parameters); 
-	scheduler_add_task(	&mavlink_communication->task_set, 
-						100000, 
-						RUN_REGULAR, 
-						(task_function_t)&onboard_parameters_send_scheduled_parameters, 
-						(task_argument_t)&mavlink_communication->onboard_parameters, 
-						MAVLINK_MSG_ID_PARAM_VALUE);
+	onboard_parameters_init(&mavlink_communication->onboard_parameters, &mavlink_communication->task_set, &mavlink_communication->message_handler); 
 }
 
 
