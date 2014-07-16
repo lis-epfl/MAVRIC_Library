@@ -122,7 +122,7 @@ typedef struct
 {
 	mavlink_message_handler_msg_callback_set_t* msg_callback_set;	///<	Set of message callbacks
 	mavlink_message_handler_cmd_callback_set_t* cmd_callback_set;	///<	Set of command callbacks
-	bool debug;
+	bool debug;														///<	Indicates whether debug message are written for every incoming message
 } mavlink_message_handler_t;
 
 
@@ -133,7 +133,7 @@ typedef struct
 {
 	uint32_t max_msg_callback_count;								///<	Maximum number of message callbacks
 	uint32_t max_cmd_callback_count;								///<	Maximum number of command callbacks
-	bool debug;
+	bool debug;														///<	Indicates whether debug message are written for every incoming message
 } mavlink_message_handler_conf_t;
 
 

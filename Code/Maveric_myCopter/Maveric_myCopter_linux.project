@@ -587,6 +587,8 @@
       <File Name="Library/communication/mavlink_communication.c"/>
       <File Name="Library/communication/console.h"/>
       <File Name="Library/communication/console.c"/>
+      <File Name="Library/communication/state.h"/>
+      <File Name="Library/communication/state.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="control">
       <File Name="Library/control/pid_control.h"/>

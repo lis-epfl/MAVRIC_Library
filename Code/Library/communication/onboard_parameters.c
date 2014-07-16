@@ -19,6 +19,7 @@
 #include "onboard_parameters.h"
 #include "print_util.h"
 #include "flashc.h"
+#include <stdlib.h>
 
 
 //------------------------------------------------------------------------------
@@ -28,25 +29,7 @@
 /**
  * \brief	Sends all parameters that have been scheduled via MAVlink
  */
-static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parameter_set_t* onboard_parameters);
-
-
-/**
- * \brief	Callback to a MAVlink parameter request
- *
- * \param   onboard_parameters		Pointer to module structure
- * \param   msg 					Incoming mavlink message
- */
-static void onboard_parameters_send_parameter(onboard_parameter_set_t* onboard_parameters, mavlink_message_t* msg);
-
-
-/**
- * \brief	Callback to a MAVlink parameter set
- *
- * \param   onboard_parameters		Pointer to module structure
- * \param   msg 					Incoming mavlink message
- */
-static void onboard_parameters_receive_parameter(onboard_parameter_set_t* onboard_parameters, mavlink_message_t* msg);
+static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parameters_t* onboard_parameters);
 
 
 /**
@@ -55,48 +38,48 @@ static void onboard_parameters_receive_parameter(onboard_parameter_set_t* onboar
  * \param   onboard_parameters		Pointer to module structure
  * \param   msg 					Incoming mavlink message
  */
-static void onboard_parameters_send_all_parameters(onboard_parameter_set_t* onboard_parameters, mavlink_message_t* msg);
+static void onboard_parameters_send_all_parameters(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg);
 
 
 /**
- * \brief		Reads linked memory location and returns parameter value, with care of necessary size/type conversions
- * 
- * \details 	This method takes care of necessary size/type conversions.
+ * \brief	Callback to a MAVlink parameter request
  *
- * \param 		param_index		Set index of the parameter to update
- *
- * \return						Value of the parameter read. Note that the parameter might not be a float, but float is the default data type for the MAVlink message.
+ * \param   onboard_parameters		Pointer to module structure
+ * \param   msg 					Incoming mavlink message
  */
-static float onboard_parameters_read_parameter(onboard_parameter_set_t* onboard_parameters, int32_t param_index);
+static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg);
 
 
 /**
- * \brief	Updates linked memory location of a parameter with given value, with care of necessary size/type conversions
+ * \brief	Callback to a MAVlink parameter set
  *
- * \param 	param_index		Set index of the parameter to update
- * \param 	value			Value of the parameter to update
+ * \param   onboard_parameters		Pointer to module structure
+ * \param   msg 					Incoming mavlink message
  */
-static void onboard_parameters_update_parameter(onboard_parameter_set_t* onboard_parameters, int32_t param_index, float value);
+static void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parameter_set_t* onboard_parameters) 
+static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parameters_t* onboard_parameters) 
 {
-	for (uint8_t i = 0; i < onboard_parameters->param_count; i++)
+	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
+
+	for (uint8_t i = 0; i < param_set->param_count; i++)
 	{
-		if (onboard_parameters->parameters[i].schedule_for_transmission) 
+		if (param_set->parameters[i].schedule_for_transmission) 
 		{
-			mavlink_msg_param_value_send(MAVLINK_COMM_0,
-										(char*)onboard_parameters->parameters[i].param_name,
-										onboard_parameters_read_parameter(onboard_parameters, i),
-										onboard_parameters->parameters[i].data_type,
-										onboard_parameters->param_count,
-										i);
+			mavlink_msg_param_value_send(	MAVLINK_COMM_0,
+											(char*)param_set->parameters[i].param_name,
+											*(param_set->parameters[i].param),
+											// onboard_parameters_read_parameter(onboard_parameters, i),
+											param_set->parameters[i].data_type,
+											param_set->param_count,
+											i 	);
 										
-			onboard_parameters->parameters[i].schedule_for_transmission=false;
+			param_set->parameters[i].schedule_for_transmission=false;
 		}			
 	}
 	
@@ -104,18 +87,22 @@ static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parame
 }
 
 
-static void onboard_parameters_send_all_parameters(onboard_parameter_set_t* onboard_parameters, mavlink_message_t* msg) 
+static void onboard_parameters_send_all_parameters(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg) 
 {	
+	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
+
 	// schedule all parameters for transmission
-	for (uint8_t i = 0; i < onboard_parameters->param_count; i++)
+	for (uint8_t i = 0; i < param_set->param_count; i++)
 	{
-		onboard_parameters->parameters[i].schedule_for_transmission=true;
+		param_set->parameters[i].schedule_for_transmission=true;
 	}		
 }
 
 
-static void onboard_parameters_send_parameter(onboard_parameter_set_t* onboard_parameters, mavlink_message_t* msg) 
+static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg) 
 {
+	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
+
 	mavlink_param_request_read_t request;
 	mavlink_msg_param_request_read_decode(msg, &request);
 
@@ -123,27 +110,31 @@ static void onboard_parameters_send_parameter(onboard_parameter_set_t* onboard_p
 	if(request.param_index != -1) 
 	{	
 		// Control if the index is in the range of existing parameters and schedule it for transmission
-		if ( request.param_index <= onboard_parameters->param_count)
+		if ( request.param_index <= param_set->param_count)
 		{
-			onboard_parameters->parameters[request.param_index].schedule_for_transmission = true;
+			param_set->parameters[request.param_index].schedule_for_transmission = true;
 		}
 	}
 	else 
 	{
 		char* key = (char*) request.param_id;
-		for (uint16_t i = 0; i < onboard_parameters->param_count; i++) 
+		for (uint16_t i = 0; i < param_set->param_count; i++) 
 		{
 			bool match = true;
-			for (uint16_t j = 0; j < onboard_parameters->parameters[i].param_name_length; j++) 
+
+			// Get pointer to parameter number i
+			onboard_parameters_entry_t* param = &param_set->parameters[i];
+
+			for (uint16_t j = 0; j < param->param_name_length; j++) 
 			{
 				// Compare
-				if ((char)onboard_parameters->parameters[i].param_name[j] != (char)key[j]) 
+				if ( (char)param->param_name[j] != (char)key[j] ) 
 				{
 					match = false;
 				}
  
 				// End matching if null termination is reached
-				if (((char)onboard_parameters->parameters[i].param_name[j]) == '\0') 
+				if ( ((char)param->param_name[j]) == '\0' ) 
 				{
 					// Exit internal (j) for() loop
 					break;
@@ -151,9 +142,9 @@ static void onboard_parameters_send_parameter(onboard_parameter_set_t* onboard_p
 			}
  
 			// Check if matched
-			if (match) 
+			if ( match ) 
 			{
-				onboard_parameters->parameters[i].schedule_for_transmission = true;
+				param->schedule_for_transmission = true;
 
 				// Exit external (i) for() loop
 				break;
@@ -163,103 +154,20 @@ static void onboard_parameters_send_parameter(onboard_parameter_set_t* onboard_p
 }
 
 
-static float onboard_parameters_read_parameter(onboard_parameter_set_t* onboard_parameters, int32_t param_index) 
-{
-	float return_value=0;
-	float converted=0;
-	
-	switch (onboard_parameters->parameters[param_index].data_type) 
-	{
-		case MAVLINK_TYPE_CHAR:
-		case MAVLINK_TYPE_UINT8_T:
-		case MAVLINK_TYPE_INT8_T:
-			memcpy(&return_value, onboard_parameters->parameters[param_index].param, 1);
-			#if MAVLINK_NEED_BYTE_SWAP
-				byte_swap_4((char *)&converted, (char *)&return_value);
-			#else
-				memcpy(&converted, &return_value, 4);
-			#endif
-			break;
-		
-		case MAVLINK_TYPE_UINT16_T:
-		case MAVLINK_TYPE_INT16_T:
-			memcpy(&return_value, onboard_parameters->parameters[param_index].param, 2);
-			#if MAVLINK_NEED_BYTE_SWAP
-				byte_swap_4((char *)&converted, (char *)&return_value);
-			#else
-				memcpy(&converted, &return_value, 4);
-			#endif
-			break;
-			
-		case MAVLINK_TYPE_UINT32_T:
-		case MAVLINK_TYPE_INT32_T:
-		case MAVLINK_TYPE_FLOAT:
-			converted= *onboard_parameters->parameters[param_index].param;
-			break;
-		
-		// these following types are not supported
-		case MAVLINK_TYPE_UINT64_T:
-		case MAVLINK_TYPE_INT64_T:
-		case MAVLINK_TYPE_DOUBLE:
-			break;
-	}	
-	return converted;
-}
-
-
-static void onboard_parameters_update_parameter(onboard_parameter_set_t* onboard_parameters, int32_t param_index, float value) 
-{
-	float converted=0;
-	
-	switch (onboard_parameters->parameters[param_index].data_type) 
-	{
-		case MAVLINK_TYPE_CHAR:
-		case MAVLINK_TYPE_UINT8_T:
-		case MAVLINK_TYPE_INT8_T:
-			// take care of different Endianness (usually MAVLINK does this, but here MAVLINK assumes all parameters are 4-byte so we need to swap it back)
-			#if MAVLINK_NEED_BYTE_SWAP
-				byte_swap_4((char *)&converted, (char *)&value);
-				memcpy(onboard_parameters->parameters[param_index].param, &converted, 1);
-			#else
-				memcpy(onboard_parameters->parameters[param_index].param, &value, 1);
-			#endif
-			break;
-		
-		case MAVLINK_TYPE_UINT16_T:
-		case MAVLINK_TYPE_INT16_T:
-			// take care of different Endianness (usually MAVLINK does this, but here MAVLINK assumes all parameters are 4-byte so we need to swap it back)
-			#if MAVLINK_NEED_BYTE_SWAP
-				byte_swap_4((char *)&converted, (char *)&value);
-				memcpy(onboard_parameters->parameters[param_index].param, &converted, 2);
-			#else
-				memcpy(onboard_parameters->parameters[param_index].param, &value, 2);
-			#endif
-			break;
-		
-		case MAVLINK_TYPE_UINT32_T:
-		case MAVLINK_TYPE_INT32_T:
-		case MAVLINK_TYPE_FLOAT:
-			*onboard_parameters->parameters[param_index].param= value;
-			break;
-		
-		// these following types are not supported
-		case MAVLINK_TYPE_UINT64_T:
-		case MAVLINK_TYPE_INT64_T:
-		case MAVLINK_TYPE_DOUBLE:
-			break;
-	}
-}
-
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void onboard_parameters_init(onboard_parameter_set_t* onboard_parameters, task_set_t* task_set, mavlink_message_handler_t* message_handler) 
+void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, task_set_t* task_set, mavlink_message_handler_t* message_handler) 
 {
-	// Init param_count
-	onboard_parameters->param_count = 0;
-	
+	// Init debug mode
+	onboard_parameters->debug       = config->debug;
+
+	// Allocate memory for the onboard parameters
+	onboard_parameters->param_set = malloc( sizeof(onboard_parameters_set_t) + sizeof(onboard_parameters_entry_t[config->max_param_count]) );
+	onboard_parameters->param_set->max_param_count = config->max_param_count;
+	onboard_parameters->param_set->param_count = 0;
+
 	// Add onboard parameter telemetry to the scheduler
 	scheduler_add_task(	task_set, 
 						100000, 
@@ -296,40 +204,76 @@ void onboard_parameters_init(onboard_parameter_set_t* onboard_parameters, task_s
 }
 
 
-void onboard_parameters_add_parameter_uint32(onboard_parameter_set_t* onboard_parameters, uint32_t* val, const char* param_name) 
+void onboard_parameters_add_parameter_uint32(onboard_parameters_t* onboard_parameters, uint32_t* val, const char* param_name) 
 {
-	onboard_parameters->parameters[onboard_parameters->param_count].param                     = (float*) val;
-	strcpy(onboard_parameters->parameters[onboard_parameters->param_count].param_name, param_name);
-	onboard_parameters->parameters[onboard_parameters->param_count].data_type                 = MAV_PARAM_TYPE_UINT32;
-	onboard_parameters->parameters[onboard_parameters->param_count].param_name_length         = strlen(param_name);
-	onboard_parameters->parameters[onboard_parameters->param_count].schedule_for_transmission = true;
-	onboard_parameters->param_count++;
+	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
+
+	if( param_set->param_count < param_set->max_param_count )
+	{
+		onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
+
+		new_param->param                     = (float*) val;
+		strcpy( new_param->param_name, 		param_name );
+		new_param->data_type                 = MAV_PARAM_TYPE_UINT32;
+		new_param->param_name_length         = strlen(param_name);
+		new_param->schedule_for_transmission = true;
+		
+		param_set->param_count += 1;
+	}
+	else
+	{
+		print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param");
+	}
 }
 
 
-void onboard_parameters_add_parameter_int32(onboard_parameter_set_t* onboard_parameters, int32_t* val, const char* param_name) 
+void onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parameters, int32_t* val, const char* param_name) 
 {
-	onboard_parameters->parameters[onboard_parameters->param_count].param                     = (float*) val;
-	strcpy(onboard_parameters->parameters[onboard_parameters->param_count].param_name, param_name);
-	onboard_parameters->parameters[onboard_parameters->param_count].data_type                 = MAV_PARAM_TYPE_INT32;
-	onboard_parameters->parameters[onboard_parameters->param_count].param_name_length         = strlen(param_name);
-	onboard_parameters->parameters[onboard_parameters->param_count].schedule_for_transmission = true;
-	onboard_parameters->param_count++;
+	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
+
+	if( param_set->param_count < param_set->max_param_count )
+	{
+		onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
+
+		new_param->param                     = (float*) val;
+		strcpy( new_param->param_name, 		param_name );
+		new_param->data_type                 = MAV_PARAM_TYPE_INT32;
+		new_param->param_name_length         = strlen(param_name);
+		new_param->schedule_for_transmission = true;
+		
+		param_set->param_count += 1;
+	}
+	else
+	{
+		print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param");
+	}
 }
 
 
-void onboard_parameters_add_parameter_float(onboard_parameter_set_t* onboard_parameters, float* val, const char* param_name) 
+void onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parameters, float* val, const char* param_name) 
 {
-	onboard_parameters->parameters[onboard_parameters->param_count].param                     = val;
-	strcpy(onboard_parameters->parameters[onboard_parameters->param_count].param_name, param_name);
-	onboard_parameters->parameters[onboard_parameters->param_count].data_type                 = MAV_PARAM_TYPE_REAL32;
-	onboard_parameters->parameters[onboard_parameters->param_count].param_name_length         = strlen(param_name);
-	onboard_parameters->parameters[onboard_parameters->param_count].schedule_for_transmission = true;
-	onboard_parameters->param_count++;
+	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
+
+	if( param_set->param_count < param_set->max_param_count )
+	{
+		onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
+
+		new_param->param                     = val;
+		strcpy( new_param->param_name, 		param_name );
+		new_param->data_type                 = MAV_PARAM_TYPE_REAL32;
+		new_param->param_name_length         = strlen(param_name);
+		new_param->schedule_for_transmission = true;
+		
+		param_set->param_count += 1;
+	}
+	else
+	{
+		print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param");
+	}
 }
 
 
-void onboard_parameters_receive_parameter(onboard_parameter_set_t* onboard_parameters, mavlink_message_t* msg) 
+void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg) 
 {
 	bool match = true;
 	
@@ -340,27 +284,33 @@ void onboard_parameters_receive_parameter(onboard_parameter_set_t* onboard_param
 	if ( 	set.target_system 	 == mavlink_system.sysid 
 		 &&	set.target_component == mavlink_system.compid	)
 	{
-		print_util_dbg_print("Setting parameter ");
-		print_util_dbg_print(set.param_id);
-		print_util_dbg_print(" to ");
-		print_util_dbg_putfloat(set.param_value, 2);
-		print_util_dbg_print("\n");
-		
 		char* key = (char*) set.param_id;
-				
-		for (uint16_t i = 0; i < onboard_parameters->param_count; i++) 
+		onboard_parameters_entry_t* param;
+
+		if ( onboard_parameters->debug == true )
 		{
+			print_util_dbg_print("Setting parameter ");
+			print_util_dbg_print(set.param_id);
+			print_util_dbg_print(" to ");
+			print_util_dbg_putfloat(set.param_value, 2);
+			print_util_dbg_print("\n");
+		}
+				
+		for (uint16_t i = 0; i < onboard_parameters->param_set->param_count; i++) 
+		{
+			param = &onboard_parameters->param_set->parameters[i];
 			match = true;
-			for (uint16_t j = 0; j < onboard_parameters->parameters[i].param_name_length; j++) 
+
+			for (uint16_t j = 0; j < param->param_name_length; j++) 
 			{
 				// Compare
-				if ((char)onboard_parameters->parameters[i].param_name[j] != (char)key[j]) 
+				if ((char)param->param_name[j] != (char)key[j]) 
 				{
 					match = false;
 				}
 		
 				// End matching if null termination is reached
-				if (((char)onboard_parameters->parameters[i].param_name[j]) == '\0') 
+				if (((char)param->param_name[j]) == '\0') 
 				{
 					// Exit internal (j) for() loop
 					break;
@@ -371,12 +321,13 @@ void onboard_parameters_receive_parameter(onboard_parameter_set_t* onboard_param
 			if (match) 
 			{
 				// Only write and emit changes if there is actually a difference
-				if (*onboard_parameters->parameters[i].param != set.param_value && set.param_type == onboard_parameters->parameters[i].data_type) 
+				if (*(param->param) != set.param_value && set.param_type == param->data_type) 
 				{
-					onboard_parameters_update_parameter(onboard_parameters, i, set.param_value);
+					// onboard_parameters_update_parameter(onboard_parameters, i, set.param_value);
+					(*param->param) = set.param_value;
 
 					// schedule parameter for transmission downstream
-					onboard_parameters->parameters[i].schedule_for_transmission=true;
+					param->schedule_for_transmission=true;
 				}
 				break;
 			}
@@ -385,10 +336,11 @@ void onboard_parameters_receive_parameter(onboard_parameter_set_t* onboard_param
 }
 
 
-bool onboard_parameters_read_parameters_from_flashc(onboard_parameter_set_t* onboard_parameters, mavlink_message_t* msg)
+bool onboard_parameters_read_parameters_from_flashc(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg)
 {
 	uint8_t i;
-	
+	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
+
 	nvram_data_t* nvram_array = (nvram_data_t *) MAVERIC_FLASHC_USER_PAGE_START_ADDRESS;
 	nvram_data_t local_array;
 	
@@ -398,19 +350,22 @@ bool onboard_parameters_read_parameters_from_flashc(onboard_parameter_set_t* onb
 
 	bool flash_read_successful = false;
 
-	for (i=0;i<(onboard_parameters->param_count +1);i++)
+	for (i = 0; i < (param_set->param_count +1);i++)
 	{
 		local_array.values[i] = nvram_array->values[i];
 		cksum1 += local_array.values[i];
 		cksum2 += cksum1;
 	}
 	
-	if ((onboard_parameters->param_count==local_array.values[0])&&(cksum1 == nvram_array->values[onboard_parameters->param_count + 1])&&(cksum2 == nvram_array->values[onboard_parameters->param_count + 2]))
+	if ( 	(param_set->param_count == local_array.values[0] )
+		&&	(cksum1 == nvram_array->values[param_set->param_count + 1])
+		&&	(cksum2 == nvram_array->values[param_set->param_count + 2]) )
 	{
 		print_util_dbg_print("Flash read successful! New Parameters inserted. \n");
-		for (i=1;i<(onboard_parameters->param_count + 1);i++)
+		for (i = 1; i < (param_set->param_count + 1); i++)
 		{
-			onboard_parameters_update_parameter(onboard_parameters, i-1, local_array.values[i]);
+			*(param_set->parameters[i-1].param) = local_array.values[i];
+			// onboard_parameters_update_parameter(onboard_parameters, i-1, local_array.values[i]);
 		}
 		flash_read_successful = true;
 	}
@@ -423,33 +378,38 @@ bool onboard_parameters_read_parameters_from_flashc(onboard_parameter_set_t* onb
 }
 
 
-void onboard_parameters_write_parameters_to_flashc(onboard_parameter_set_t* onboard_parameters, mavlink_message_t* msg)
+void onboard_parameters_write_parameters_to_flashc(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg)
 {
+	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
+
 	float cksum1, cksum2;
 	cksum1 = 0;
 	cksum2 = 0;
+
 	uint8_t i;
 	size_t bytes_to_write = 0;
 	
 	nvram_data_t* nvram_array = (nvram_data_t*) MAVERIC_FLASHC_USER_PAGE_START_ADDRESS;
 	nvram_data_t local_array;
 	
-	local_array.values[0] = onboard_parameters->param_count;
+	local_array.values[0] = param_set->param_count;
 	cksum1 += local_array.values[0];
 	cksum2 += cksum1;
 	
 	print_util_dbg_print("Begin write to flashc...\n");
 	
-	for (i=1;i<=onboard_parameters->param_count;i++)
+	for (i = 1; i <= param_set->param_count; i++)
 	{
-		local_array.values[i] = onboard_parameters_read_parameter(onboard_parameters, i-1);
+		// local_array.values[i] = onboard_parameters_read_parameter(onboard_parameters, i-1);
+		local_array.values[i] = *(param_set->parameters[i-1].param);
+
 		cksum1 += local_array.values[i];
 		cksum2 += cksum1;
 	}
-	local_array.values[onboard_parameters->param_count + 1] = cksum1;
-	local_array.values[onboard_parameters->param_count + 2] = cksum2;
+	local_array.values[param_set->param_count + 1] = cksum1;
+	local_array.values[param_set->param_count + 2] = cksum2;
 
-	bytes_to_write = 4 * (onboard_parameters->param_count + 3);	// (1 param_count + parameters + 2 checksums) floats
+	bytes_to_write = 4 * (param_set->param_count + 3);	// (1 param_count + parameters + 2 checksums) floats
 	
 	if(bytes_to_write < MAVERIC_FLASHC_USER_PAGE_FREE_SPACE)
 	{
