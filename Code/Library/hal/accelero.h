@@ -21,10 +21,9 @@
 
 typedef struct
 {
-	float raw_data[3];		///< Raw values from the
-	float bias[3];			///< bias factor
-	float scale[3];			///< scale factor
-	float data[3];			///< computed values, using raw_data - bias factor and scale factor
+	float data[3];
+	float temperature;
+	float last_update;
 } accelero_data_t;
 
 #endif /* ACCEL_H_ */
