@@ -93,7 +93,9 @@ typedef struct  {
 	uint16_t number_of_waypoints;								///< The total number of waypoints
 	int8_t current_waypoint_count;								///< The number of the current waypoint
 	
-	waypoint_handler_t waypoint_handler;
+	mavlink_waypoint_handler_t waypoint_handler;
+	
+	state_structure_t state_structure;							///< The structure with all state information
 	
 	local_coordinates_t waypoint_coordinates;					///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
 	local_coordinates_t waypoint_hold_coordinates;				///< The coordinates of the waypoint in position hold mode (MAV_MODE_GUIDED_ARMED)
