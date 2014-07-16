@@ -179,44 +179,7 @@ void mavlink_actions_add_onboard_parameters(void) {
 
 void mavlink_actions_handle_specific_messages (mavlink_received_t* rec) 
 {
-	// if (rec->msg.sysid == MAVLINK_BASE_STATION_ID) 
-	// {	
-	// 	/*	Use this block for message debugging		
-	// 	print_util_dbg_print("\n Received message with ID");
-	// 	print_util_dbg_print_num(rec->msg.msgid, 10);
-	// 	print_util_dbg_print(" from system");
-	// 	print_util_dbg_print_num(rec->msg.sysid, 10);
-	// 	print_util_dbg_print(" for component");
-	// 	print_util_dbg_print_num(rec->msg.compid,10);
-	// 	print_util_dbg_print( "\n");
-	// 	*/
 
-	// 	switch(rec->msg.msgid) 
-	// 	{
-
-
-	// 		case MAVLINK_MSG_ID_SET_MODE :  // 11
-	// 			waypoint_handler_set_mav_mode(	rec, // 							&centralData->mav_mode, // 							&(centralData->mav_state), // 							centralData->simulation_mode	);
-	// 			break;
-
-	// 	}
-	// } 
-	// else if (rec->msg.msgid == MAVLINK_MSG_ID_GLOBAL_POSITION_INT)
-	// {
-	// 	/* 
-	// 	 * Use this block for message debugging
-	// 	 * 
-	// 	 * print_util_dbg_print("\n Received message with ID");
-	// 	 * print_util_dbg_print_num(rec->msg.msgid, 10);
-	// 	 * print_util_dbg_print(" from system");
-	// 	 * print_util_dbg_print_num(rec->msg.sysid, 10);
-	// 	 * print_util_dbg_print(" for component");
-	// 	 * print_util_dbg_print_num(rec->msg.compid,10);
-	// 	 * print_util_dbg_print( "\n");
-	// 	*/
-
-	// 	neighbors_selection_read_message_from_neighbors(rec);
-	// }
 }
 
 
@@ -262,57 +225,6 @@ void mavlink_actions_receive_message_long(mavlink_received_t* rec)
 	// 			centralData->in_the_air = true;
 	// 			print_util_dbg_print("Starting automatic take-off from button\n");
 	// 			break;
-
-
-
-	// 		case MAV_CMD_DO_SET_HOME:
-	// 			/* Changes the home location either to the current location or a specified location. 
-	// 			| Use current (1=use current location, 0=use specified location)
-	// 			| Empty
-	// 			| Empty
-	// 			| Empty
-	// 			| Latitude
-	// 			| Longitude
-	// 			| Altitude
-	// 			| */
-	// 			if (packet.param1 == 1)
-	// 			{
-	// 				// Set new home position to actual position
-	// 				print_util_dbg_print("Set new home location to actual position.\n");
-	// 				centralData->position_estimator.localPosition.origin = coord_conventions_local_to_global_position(centralData->position_estimator.localPosition);
-	// 				centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
-					
-	// 				print_util_dbg_print("New Home location: (");
-	// 				print_util_dbg_print_num(centralData->position_estimator.localPosition.origin.latitude * 10000000.0f,10);
-	// 				print_util_dbg_print(", ");
-	// 				print_util_dbg_print_num(centralData->position_estimator.localPosition.origin.longitude * 10000000.0f,10);
-	// 				print_util_dbg_print(", ");
-	// 				print_util_dbg_print_num(centralData->position_estimator.localPosition.origin.altitude * 1000.0f,10);
-	// 				print_util_dbg_print(")\n");
-	// 			}
-	// 			else
-	// 			{
-	// 				// Set new home position from msg
-	// 				print_util_dbg_print("Set new home location. \n");
-					
-	// 				centralData->position_estimator.localPosition.origin.latitude = packet.param5;
-	// 				centralData->position_estimator.localPosition.origin.longitude = packet.param6;
-	// 				centralData->position_estimator.localPosition.origin.altitude = packet.param7;
-	// 				centralData->sim_model.localPosition.origin = centralData->position_estimator.localPosition.origin;
-					
-	// 				print_util_dbg_print("New Home location: (");
-	// 				print_util_dbg_print_num(centralData->position_estimator.localPosition.origin.latitude * 10000000.0f,10);
-	// 				print_util_dbg_print(", ");
-	// 				print_util_dbg_print_num(centralData->position_estimator.localPosition.origin.longitude * 10000000.0f,10);
-	// 				print_util_dbg_print(", ");
-	// 				print_util_dbg_print_num(centralData->position_estimator.localPosition.origin.altitude * 1000.0f,10);
-	// 				print_util_dbg_print(")\n");
-	// 			}
-
-	// 			centralData->waypoint_set = false;
-	// 			break;
-
-
 
 	// 		case MAV_CMD_PREFLIGHT_STORAGE:
 	// 			/* Request storage of different parameter values and logs. This command will be only accepted if in pre-flight mode. 

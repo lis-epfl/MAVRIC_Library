@@ -91,12 +91,12 @@ void simulation_calib_set(simulation_model_t *sim)
 		//sim->simu_raw_scale[i + ACC_OFFSET]		= 1.0f / sim->imu->accelero_calib.scale[i];
 		//sim->simu_raw_scale[i + MAG_OFFSET]		= 1.0f / sim->imu->compass_calib.scale[i];
 		
-		//sim->simu_raw_scale[i + GYRO_OFFSET]	= sim->imu->gyro_calib.scale[i];
-		//sim->simu_raw_scale[i + ACC_OFFSET]		= sim->imu->accelero_calib.scale[i];
-		//sim->simu_raw_scale[i + MAG_OFFSET]		= sim->imu->compass_calib.scale[i];
-		//sim->simu_raw_biais[i + GYRO_OFFSET]	= sim->imu->gyro_calib.bias[i];
-		//sim->simu_raw_biais[i + ACC_OFFSET]		= sim->imu->accelero_calib.bias[i];
-		//sim->simu_raw_biais[i + MAG_OFFSET]		= sim->imu->compass_calib.bias[i];
+		sim->simu_raw_scale[i + GYRO_OFFSET]	= sim->imu->gyro_calib.scale[i];
+		sim->simu_raw_scale[i + ACC_OFFSET]		= sim->imu->accelero_calib.scale[i];
+		sim->simu_raw_scale[i + MAG_OFFSET]		= sim->imu->compass_calib.scale[i];
+		sim->simu_raw_biais[i + GYRO_OFFSET]	= sim->imu->gyro_calib.bias[i];
+		sim->simu_raw_biais[i + ACC_OFFSET]		= sim->imu->accelero_calib.bias[i];
+		sim->simu_raw_biais[i + MAG_OFFSET]		= sim->imu->compass_calib.bias[i];
 	}
 }
 
