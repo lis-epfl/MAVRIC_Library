@@ -70,17 +70,17 @@ void imu_init (Imu_Data_t *imu1)
 
 void imu_get_raw_data(Imu_Data_t *imu1)
 {
-	imu1->raw_channels[GYRO_OFFSET + IMU_X] = (float)imu1->gyroData.data[RAW_GYRO_X] * GYRO_AXIS_X;
-	imu1->raw_channels[GYRO_OFFSET + IMU_Y] = (float)imu1->gyroData.data[RAW_GYRO_Y] * GYRO_AXIS_Y;
-	imu1->raw_channels[GYRO_OFFSET + IMU_Z] = (float)imu1->gyroData.data[RAW_GYRO_Z] * GYRO_AXIS_Z;
+	imu1->raw_channels[GYRO_OFFSET + IMU_X] = (float)imu1->raw_gyro.data[RAW_GYRO_X] * GYRO_AXIS_X;
+	imu1->raw_channels[GYRO_OFFSET + IMU_Y] = (float)imu1->raw_gyro.data[RAW_GYRO_Y] * GYRO_AXIS_Y;
+	imu1->raw_channels[GYRO_OFFSET + IMU_Z] = (float)imu1->raw_gyro.data[RAW_GYRO_Z] * GYRO_AXIS_Z;
 
-	imu1->raw_channels[ACC_OFFSET + IMU_X] = (float)imu1->acceleroData.data[RAW_ACC_X] * ACC_AXIS_X;
-	imu1->raw_channels[ACC_OFFSET + IMU_Y] = (float)imu1->acceleroData.data[RAW_ACC_Y] * ACC_AXIS_Y;
-	imu1->raw_channels[ACC_OFFSET + IMU_Z] = (float)imu1->acceleroData.data[RAW_ACC_Z] * ACC_AXIS_Z;
+	imu1->raw_channels[ACC_OFFSET + IMU_X] = (float)imu1->raw_accelero.data[RAW_ACC_X] * ACC_AXIS_X;
+	imu1->raw_channels[ACC_OFFSET + IMU_Y] = (float)imu1->raw_accelero.data[RAW_ACC_Y] * ACC_AXIS_Y;
+	imu1->raw_channels[ACC_OFFSET + IMU_Z] = (float)imu1->raw_accelero.data[RAW_ACC_Z] * ACC_AXIS_Z;
 	
-	imu1->raw_channels[MAG_OFFSET + IMU_X] = (float)imu1->compassData.data[RAW_MAG_X] * MAG_AXIS_X;
-	imu1->raw_channels[MAG_OFFSET + IMU_Y] = (float)imu1->compassData.data[RAW_MAG_Y] * MAG_AXIS_Y;
-	imu1->raw_channels[MAG_OFFSET + IMU_Z] = (float)imu1->compassData.data[RAW_MAG_Z] * MAG_AXIS_Z;
+	imu1->raw_channels[MAG_OFFSET + IMU_X] = (float)imu1->raw_compass.data[RAW_MAG_X] * MAG_AXIS_X;
+	imu1->raw_channels[MAG_OFFSET + IMU_Y] = (float)imu1->raw_compass.data[RAW_MAG_Y] * MAG_AXIS_Y;
+	imu1->raw_channels[MAG_OFFSET + IMU_Z] = (float)imu1->raw_compass.data[RAW_MAG_Z] * MAG_AXIS_Z;
 }
 
 void imu_calibrate_gyros(Imu_Data_t *imu1)

@@ -512,9 +512,9 @@ void tasks_run_imu_update(void* arg) {
 	} 
 	else 
 	{
-		lsm330dlc_gyro_update(&(centralData->imu1.gyroData));
-		lsm330dlc_acc_update(&(centralData->imu1.acceleroData));
-		compass_hmc58831l_update(&(centralData->imu1.compassData));
+		lsm330dlc_gyro_update(&(centralData->imu1.raw_gyro));
+		lsm330dlc_acc_update(&(centralData->imu1.raw_accelero));
+		compass_hmc58831l_update(&(centralData->imu1.raw_compass));
 		
 		imu_get_raw_data(&(centralData->imu1));
 

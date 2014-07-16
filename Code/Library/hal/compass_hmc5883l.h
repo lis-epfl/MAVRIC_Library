@@ -108,7 +108,7 @@ enum
 */
 typedef struct
 {
-	compass_data_t *compassData;
+	compass_data_t *raw_compass;
 } compass_hmc58831l_data_t;
 
 /**

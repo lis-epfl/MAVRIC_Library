@@ -53,9 +53,9 @@ typedef struct
 	//uint8_t valid;					///< True if the message is valid (TODO: is it sill used?)
 	float dt;							///< The time interval between two IMU updates
 	//int8_t ready;						///< Is the IMU ready (TODO: is it still used?)
-	gyro_data_t gyroData;
-	accelero_data_t acceleroData;
-	compass_data_t compassData;
+	gyro_data_t raw_gyro, oriented_gyro, scaled_gyro;
+	accelero_data_t raw_accelero, oriented_accelero, scaled_accelero;
+	compass_data_t raw_compass, oriented_compass, scaled_compass;
 } Imu_Data_t;
 
 bool imu_last_update_init;				///< Variable to initialize the IMU
