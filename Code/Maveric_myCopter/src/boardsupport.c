@@ -116,15 +116,6 @@ void boardsupport_init(central_data_t *centralData) {
 	// init radar or ultrasound (not implemented yet)
 	//i2c_driver_init(I2C1);
 	
-	// init mavlink
-	//	mavlink_stream_init(&centralData->mavlink_stream, centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID, 50); // TODO : uncomment
-	// Init mavlink communication
-	mavlink_communication_conf_t mavlink_config = {	.up_stream = centralData->telemetry_up_stream,
-													.down_stream = centralData->telemetry_down_stream,
-													.sysid = MAVLINK_SYS_ID,
-													.compid = 50};
-	mavlink_communication_init(&centralData->mavlink_communication, &mavlink_config);
-	
 	// init 6V enable
 	gpio_enable_gpio_pin(AVR32_PIN_PA04);
 	gpio_set_gpio_pin(AVR32_PIN_PA04);
