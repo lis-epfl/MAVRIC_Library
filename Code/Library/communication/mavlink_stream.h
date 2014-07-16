@@ -43,6 +43,7 @@ typedef struct
 	mavlink_status_t status;
 } mavlink_received_t;
 
+
 typedef struct
 {
 	byte_stream_t* out_stream;
@@ -52,6 +53,13 @@ typedef struct
 } mavlink_stream_t;
 
 
+typedef struct 
+{
+	byte_stream_t* up_stream;
+	byte_stream_t* down_stream;
+	int32_t sysid;
+	int32_t compid;
+} mavlink_stream_conf_t;
 
 
 /**
@@ -61,7 +69,7 @@ typedef struct
  * \param receive_stream	Pointer to the mavlink receive stream structure
  * \param sysid				System ID (1-255)
  */
-void mavlink_stream_init(mavlink_stream_t* mavlink_stream, byte_stream_t *transmit_stream, byte_stream_t *receive_stream, int32_t sysid, int32_t compid);
+void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config);
 
 
 /**

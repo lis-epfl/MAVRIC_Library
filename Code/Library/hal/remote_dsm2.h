@@ -33,10 +33,11 @@
 #define RECEIVER_POWER_ENABLE_PIN AVR32_PIN_PC01		///< Define the microcontroller pin map with the receiver power enable pin
 //#define SPEKTRUM_10BIT
 
+
 /**
  * \brief Structure containing the Spektrum receiver's data
  */
-typedef struct Spektrum_Receiver 
+typedef struct 
 {
 	Buffer_t receiver;				///< Define a buffer for the receiver
 	int16_t channels[16];			///< Define an array to contain the 16 remote channels availbale
@@ -46,6 +47,7 @@ typedef struct Spektrum_Receiver
 	uint32_t duration;				///< Define the duration
 } Spektrum_Receiver_t;
 
+
 /**
  * \brief Power-on/off the receiver
  *
@@ -53,16 +55,19 @@ typedef struct Spektrum_Receiver
  */
 void remote_dsm2_rc_switch_power(bool on);
 
+
 /**
  * \brief set slave receiver into bind mode. 
  * has to be called 100ms after power-up
  */
 void remote_dsm2_rc_activate_bind_mode(void);
 
+
 /**
  * \brief Initialize UART receiver for Spektrum/DSM2 slave receivers
  */
 void remote_dsm2_rc_init (void);
+
 
 /**
  * \brief Return a remote channel
@@ -73,6 +78,7 @@ void remote_dsm2_rc_init (void);
  */
 int16_t remote_dsm2_rc_get_channel(uint8_t index);
 
+
 /**
  * \brief Update the remote channel central position array stored in .c file
  * Warning: you should ensure first that the remote has the stick in their neutral position first
@@ -80,6 +86,7 @@ int16_t remote_dsm2_rc_get_channel(uint8_t index);
  * \param index Specify which channel we are interested in
  */
 void remote_dsm2_rc_center_channel(uint8_t index);
+
 
 /**
  * \brief Return the neutral position of a remote channel
@@ -91,12 +98,14 @@ void remote_dsm2_rc_center_channel(uint8_t index);
  */
 int16_t remote_dsm2_rc_get_channel_neutral(uint8_t index);
 
+
 /**
  * \brief return 1 if enabled receivers works
  *
  * \return the error value of receivers' checks: 0 for no error
  */
 int8_t  remote_dsm2_rc_check_receivers(void);
+
 
 /*
 Control_Command_t remote_dsm2_get_command_from_spektrum();

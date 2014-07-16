@@ -591,6 +591,12 @@
     <Compile Include="Library\communication\mavlink_waypoint_handler.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\communication\state.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\state.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\control\adaptive_parameter.c">
       <SubType>compile</SubType>
     </Compile>

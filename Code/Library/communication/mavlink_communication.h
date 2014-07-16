@@ -42,10 +42,8 @@ typedef struct
 
 typedef struct
 {
-	byte_stream_t* up_stream;
-	byte_stream_t* down_stream;
-	uint8_t sysid;
-	uint8_t compid;
+	mavlink_stream_conf_t 			mavlink_stream_config;
+	mavlink_message_handler_conf_t	message_handler_config;
 } mavlink_communication_conf_t;
 
 

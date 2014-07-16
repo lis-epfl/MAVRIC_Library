@@ -197,7 +197,7 @@ typedef struct
 typedef struct
 {
 	uint8_t status_register;	///< Define the status register of the FIFO of the accelerometer
-	uint16_t axes[3];			///< Define an array containing the 3 axis of the accelerometer in the FIFO
+	int16_t axes[3];			///< Define an array containing the 3 axis of the accelerometer in the FIFO
 	uint8_t start_address;		///< Define the start Address of the accelerometer sensor
 } lsm_acc_read_t;
 
@@ -233,7 +233,7 @@ static const lsm330dlc_acc_write_conf_t lsm_acc_default_config=
 		LSM_ACC_DATARATE_400Hz | LSM_ACC_ALL_EN ,						///< CTRL_REG_G_1
 		0,																///< CTRL_REG_G_2
 		0,																///< CTRL_REG_G_3
-		LSM_ACC_HIGH_RES | LSM_ACC_FULL_SCALE_8G  |LSM_ACC_BIG_ENDIAN,	///< CTRL_REG_G_4
+		LSM_ACC_HIGH_RES | LSM_ACC_FULL_SCALE_8G | LSM_ACC_BIG_ENDIAN,	///< CTRL_REG_G_4
 		LSM_ACC_FIFO_EN													///< CTRL_REG_G_5
 	}
 };
@@ -249,8 +249,8 @@ static const lsm330dlc_gyro_write_conf_t lsm_gyro_default_config=
 		LSM_GYRO_POWER_ON | LSM_GYRO_DATARATE_760Hz | LSM_GYRO_BANDWIDTH_50Hz | LSM_GYRO_ALL_EN,	///< CTRL_REG_A_1
 		0,																							///< CTRL_REG_A_2
 		0,																							///< CTRL_REG_A_3
-		LSM_GYRO_FULL_SCALE_2000_2|LSM_GYRO_BIG_ENDIAN,												///< CTRL_REG_A_4
-		0																							///< LSM_GYRO_FIFO_EN
+		LSM_GYRO_FULL_SCALE_2000_2 | LSM_GYRO_BIG_ENDIAN,												///< CTRL_REG_A_4
+		LSM_GYRO_FIFO_EN																			///< CTRL_REG_G_5
 	}
 };
 
@@ -351,15 +351,13 @@ static void lsm330dlc_gyro_init(void)
 
 static void lsm330dlc_get_acc_config(void)
 {
-	int32_t i;
-	
 	lsm330dlc_acc_read_conf_t lsm_acc_get_config;
 	lsm_acc_get_config.start_address = LSM_ACC_CTRL_REG1_ADDRESS | LSM_AUTO_INCREMENT;
 	
 	lsm330dlc_acc_read_register((uint8_t*)&lsm_acc_get_config.start_address, (uint8_t*)&lsm_acc_get_config.ctrl_reg_a[0], 5);
 	/*
 	print_util_dbg_print("lsm acc config:\r");
-	for (i = 0; i < 5; i++) 
+	for (uint8_t i = 0; i < 5; i++) 
 	{
 		print_util_dbg_print_num(lsm_acc_get_config.ctrl_reg_a[i], 16);
 		print_util_dbg_print(" (");
@@ -370,15 +368,13 @@ static void lsm330dlc_get_acc_config(void)
 
 static void lsm330dlc_get_gyro_config(void) 
 {
-	int32_t i;
-	
 	lsm330dlc_gyro_read_conf_t lsm_gyro_get_config;
 	lsm_gyro_get_config.start_address = LSM_GYRO_CTRL_REG1_ADDRESS | LSM_AUTO_INCREMENT;
 	
 	lsm330dlc_gyro_read_register((uint8_t*)&lsm_gyro_get_config.start_address, (uint8_t*)&lsm_gyro_get_config.ctrl_reg_g[0], 5);
 	/*
 	print_util_dbg_print("lsm gyro config:\r");
-	for (i = 0; i < 5; i++)
+	for (uint8_t i = 0; i < 5; i++)
 	{
 		print_util_dbg_print_num(lsm_gyro_get_config.ctrl_reg_g[i], 16);
 		print_util_dbg_print(" (");
@@ -408,7 +404,7 @@ void lsm330dlc_driver_init(void)
 void lsm330dlc_acc_update(accelero_data_t *lsm_acc_outputs) 
 {
 	lsm_acc_read_t fifo_values;
-	int32_t axes[3] = {0,0,0};
+	float axes[3] = {0.0f, 0.0f, 0.0f};
 	uint8_t i;
 	
 	fifo_values.start_address = LSM_ACC_OUT_ADDRESS | LSM_AUTO_INCREMENT ;
@@ -434,14 +430,14 @@ void lsm330dlc_acc_update(accelero_data_t *lsm_acc_outputs)
 		{
 			lsm330dlc_acc_read_register((uint8_t*)&fifo_values.start_address, (uint8_t*)&fifo_values.status_register, 7);
 
-			axes[0]+=fifo_values.axes[0];
-			axes[1]+=fifo_values.axes[1];
-			axes[2]+=fifo_values.axes[2];
+			axes[0] += (float)((int16_t)fifo_values.axes[0]);
+			axes[1] += (float)((int16_t)fifo_values.axes[1]);
+			axes[2] += (float)((int16_t)fifo_values.axes[2]);
 		}
 		
-		lsm_acc_outputs->data[0] = (float)((int16_t)(axes[0] / read_fifo.fifo_fill));
-		lsm_acc_outputs->data[1] = (float)((int16_t)(axes[1] / read_fifo.fifo_fill));
-		lsm_acc_outputs->data[2] = (float)((int16_t)(axes[2] / read_fifo.fifo_fill));
+		lsm_acc_outputs->data[0] = axes[0] / read_fifo.fifo_fill;
+		lsm_acc_outputs->data[1] = axes[1] / read_fifo.fifo_fill;
+		lsm_acc_outputs->data[2] = axes[2] / read_fifo.fifo_fill;
 	}
 }
 
@@ -449,7 +445,7 @@ void lsm330dlc_gyro_update(gyro_data_t *lsm_gyro_outputs)
 {
 	lsm_gyro_read_t fifo_values;
 	int16_t temperature = 0;
-	int32_t axes[3] = {0,0,0};
+	float axes[3] = {0.0f, 0.0f, 0.0f};
 	uint8_t i;
 	
 	fifo_values.start_address = LSM_GYRO_OUT_ADDRESS | LSM_AUTO_INCREMENT;
@@ -461,29 +457,29 @@ void lsm330dlc_gyro_update(gyro_data_t *lsm_gyro_outputs)
 		.start_address = LSM_GYRO_FIFO_SRC_ADDRESS
 	};
 	
-	// FIFO seems to work with the gyroscope ==> Test & Tune the max number of FIFO's reading
+	// Problem here: BUG with the gyro ! ==> Skip the FIFO (set 1 in fifo_fill)
 	lsm330dlc_gyro_read_register((uint8_t*)&read_fifo.start_address, (uint8_t*)&read_fifo.fifo_fill, 1);
 	
 	if (read_fifo.fifo_fill > 0)
 	{
-		if (read_fifo.fifo_fill > 3)
+		if (read_fifo.fifo_fill > 1)
 		{
-			read_fifo.fifo_fill = 3;
+			read_fifo.fifo_fill = 1;
 		}
 		
 		for (i = 0; i < read_fifo.fifo_fill; i++)
 		{
 			lsm330dlc_gyro_read_register((uint8_t*)&fifo_values.start_address, (uint8_t*)&fifo_values.temperature, 8);
 			
-			temperature+=fifo_values.temperature;
-			axes[0]+=fifo_values.axes[0];
-			axes[1]+=fifo_values.axes[1];
-			axes[2]+=fifo_values.axes[2];
+			temperature += (int16_t)fifo_values.temperature;
+			axes[0] += (float)((int16_t)fifo_values.axes[0]);
+			axes[1] += (float)((int16_t)fifo_values.axes[1]);
+			axes[2] += (float)((int16_t)fifo_values.axes[2]);
 		}
 		
-		lsm_gyro_outputs->temperature = (float)(temperature / read_fifo.fifo_fill);
-		lsm_gyro_outputs->data[0] = (float)((int16_t)(axes[0] / read_fifo.fifo_fill));
-		lsm_gyro_outputs->data[1] = (float)((int16_t)(axes[1] / read_fifo.fifo_fill));
-		lsm_gyro_outputs->data[2] = (float)((int16_t)(axes[2] / read_fifo.fifo_fill));
+		lsm_gyro_outputs->temperature = (int8_t)(temperature / read_fifo.fifo_fill);
+		lsm_gyro_outputs->data[0] = axes[0] / read_fifo.fifo_fill;
+		lsm_gyro_outputs->data[1] = axes[1] / read_fifo.fifo_fill;
+		lsm_gyro_outputs->data[2] = axes[2] / read_fifo.fifo_fill;
 	}
 }

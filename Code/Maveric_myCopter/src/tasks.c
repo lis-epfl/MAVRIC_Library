@@ -249,7 +249,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 						if(centralData->automatic_take_off)
 						{
 							centralData->automatic_take_off = false;
-							waypoint_handler_waypoint_take_off();
+							waypoint_handler_waypoint_take_off(&centralData->waypoint_handler);
 						}
 						
 						distFromHomeSqr = SQR(centralData->position_estimator.localPosition.pos[X] - centralData->waypoint_hold_coordinates.pos[X]) + SQR(centralData->position_estimator.localPosition.pos[Y] - centralData->waypoint_hold_coordinates.pos[Y]) + SQR(centralData->position_estimator.localPosition.pos[Z] - centralData->waypoint_hold_coordinates.pos[Z]);
@@ -266,12 +266,12 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 						if(centralData->automatic_take_off)
 						{
 							centralData->automatic_take_off = false;
-							waypoint_handler_waypoint_take_off();
+							waypoint_handler_waypoint_take_off(&centralData->waypoint_handler);
 						}
 
 						if (!centralData->waypoint_set)
 						{
-							waypoint_handler_waypoint_init();
+							waypoint_handler_waypoint_init(&centralData->waypoint_handler);
 						}
 
 						distFromHomeSqr = SQR(centralData->position_estimator.localPosition.pos[X] - centralData->waypoint_hold_coordinates.pos[X]) + SQR(centralData->position_estimator.localPosition.pos[Y] - centralData->waypoint_hold_coordinates.pos[Y]) + SQR(centralData->position_estimator.localPosition.pos[Z] - centralData->waypoint_hold_coordinates.pos[Z]);
@@ -342,7 +342,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 				case MAV_MODE_GUIDED_ARMED:
 					if (centralData->mav_mode_previous != MAV_MODE_GUIDED_ARMED)
 					{
-						waypoint_handler_waypoint_hold_init(centralData->position_estimator.localPosition);
+						waypoint_handler_waypoint_hold_init(&centralData->waypoint_handler,centralData->position_estimator.localPosition);
 					}
 					break;
 
@@ -350,15 +350,15 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 					if (centralData->mav_mode_previous != MAV_MODE_AUTO_ARMED)
 					{
 						centralData->auto_landing_enum = DESCENT_TO_SMALL_ALTITUDE;
-						waypoint_handler_waypoint_hold_init(centralData->position_estimator.localPosition);
+						waypoint_handler_waypoint_hold_init(&centralData->waypoint_handler,centralData->position_estimator.localPosition);
 					}
 
 					if (!centralData->waypoint_set)
 					{
-						waypoint_handler_waypoint_init();
+						waypoint_handler_waypoint_init(&centralData->waypoint_handler);
 					}
 
-					waypoint_handler_waypoint_navigation_handler();
+					waypoint_handler_waypoint_navigation_handler(&centralData->waypoint_handler);
 					break;
 			}
 			
@@ -419,7 +419,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 						centralData->critical_next_state = false;
 					}
 					
-					waypoint_handler_waypoint_critical_handler();
+					waypoint_handler_waypoint_critical_handler(&centralData->waypoint_handler);
 					break;
 			}
 			
@@ -731,9 +731,7 @@ task_return_t control_waypoint_timeout (void* arg);
 
 task_return_t control_waypoint_timeout (void* arg)
 {
-	waypoint_handler_control_time_out_waypoint_msg(	&(centralData->number_of_waypoints),
-													&centralData->waypoint_receiving,
-													&centralData->waypoint_sending);
+	waypoint_handler_control_time_out_waypoint_msg(&centralData->waypoint_handler);
 	
 	return TASK_RUN_SUCCESS;
 }

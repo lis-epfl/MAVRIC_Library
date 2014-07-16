@@ -22,7 +22,27 @@
 static central_data_t centralData;
 
 void central_data_init()
-{		
+{	
+	// init mavlink
+	mavlink_communication_conf_t mavlink_config = 
+	{	
+		.mavlink_stream_config = 
+		{
+			.up_stream = centralData.telemetry_up_stream,
+			.down_stream = centralData.telemetry_down_stream,
+			.sysid = MAVLINK_SYS_ID,
+			.compid = 50
+		},
+		.message_handler_config = 
+		{
+			.max_msg_callback_count=20,
+			.max_cmd_callback_count=20,
+			.debug=true
+		}
+	};												
+	mavlink_communication_init(&centralData.mavlink_communication, &mavlink_config);
+	
+	// Init servos
 	servo_pwm_init((servo_output_t*)centralData.servos);
 	servo_pwm_failsafe((servo_output_t*)centralData.servos);
 	servo_pwm_set((servo_output_t*)centralData.servos);
@@ -36,7 +56,7 @@ void central_data_init()
 	qfilter_init_quaternion((qfilter_t*)&(centralData.attitude_filter));
 		
 	navigation_init();
-	waypoint_handler_init();// ((waypoint_handler_t*)&centralData.waypoint_handler);
+	waypoint_handler_init(&centralData.waypoint_handler,&centralData.position_estimator,&centralData.imu1.attitude,&centralData.state_structure,&centralData.mavlink_communication);// ((waypoint_handler_t*)&centralData.waypoint_handler);
 		
 	neighbors_selection_init((neighbor_t*)&(centralData.neighborData), (position_estimator_t*)&(centralData.position_estimator));
 	orca_init((orca_t*)&(centralData.orcaData),(neighbor_t*)&(centralData.neighborData),(position_estimator_t*)&(centralData.position_estimator),(Imu_Data_t*)&(centralData.imu1),(AHRS_t*)&centralData.attitude_estimation);
