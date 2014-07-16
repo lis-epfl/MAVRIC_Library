@@ -208,11 +208,10 @@ void waypoint_handler_set_current_waypoint(mavlink_waypoint_handler_t* waypoint_
 /**
  * \brief						Set the current waypoint to new_current
  *
- * \param waypoint_list			The waypoint list of all onboard waypoints
- * \param num_of_waypoint		The number of onboard waypoints	
- * \param new_current			The waypoint to be set as current
+ * \param waypoint_handler		The pointer to the waypoint handler
+ * \param packet				The pointer to the decoded mavlink message long
  */
-void waypoint_handler_set_current_waypoint_from_parameter(mavlink_waypoint_handler_t* waypoint_handler, uint16_t new_current);
+void waypoint_handler_set_current_waypoint_from_parameter(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
 
 /**
  * \brief						Clears the waypoint list
@@ -229,15 +228,6 @@ void waypoint_handler_clear_waypoint_list(mavlink_waypoint_handler_t* waypoint_h
  * \param rec					The received mavlink message structure with the new home position
  */
 void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handler, mavlink_received_t* rec);
-//---------------------------------------------------------------------------------------------------------------------------------------//
-
-/**
- * \brief						Set the state and the mode of the vehicle
- *
- * \param rec					The received mavlink message structure
-_* \param board_mav_mode		The pointer to the mode of the vehicle
- */
-void waypoint_handler_set_mav_mode(mavlink_waypoint_handler_t* waypoint_handler, mavlink_received_t* rec);
 //---------------------------------------------------------------------------------------------------------------------------------------//
 
 /**
@@ -297,7 +287,7 @@ void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_handler)
 /**
  * \brief						Set the next waypoint as current waypoint
  */
-void waypoint_handler_continueToNextWaypoint(mavlink_waypoint_handler_t* waypoint_handler);
+void waypoint_handler_continueToNextWaypoint(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
 //---------------------------------------------------------------------------------------------------------------------------------------//
 
 /**
@@ -308,7 +298,9 @@ void waypoint_handler_continueToNextWaypoint(mavlink_waypoint_handler_t* waypoin
  * \param circle_radius			The radius of the circle
  * \param num_of_vhc			The number of vehicle, the position is set ID wise
  */
-void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* waypoint_handler, float circle_radius, float num_of_vhc);
+void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
+
+void mavlink_waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t *waypoint_handler, mavlink_command_long_t* packet);
 
 // TODO: Add code in the function :)
 //void set_stream_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc);

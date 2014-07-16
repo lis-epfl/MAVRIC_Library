@@ -114,8 +114,10 @@ void onboard_parameters_add_parameter_float(onboard_parameter_set_t* onboard_par
  *
  * \param   onboard_parameters		Pointer to module structure
  * \param   msg 					Incoming mavlink message
+ *
+ * \return	The result of the flash read procedure
  */
-void onboard_parameters_read_parameters_from_flashc(onboard_parameter_set_t* onboard_parameters, mavlink_message_t* msg);
+bool onboard_parameters_read_parameters_from_flashc(onboard_parameter_set_t* onboard_parameters, mavlink_message_t* msg);
 
 
 /**
@@ -124,7 +126,7 @@ void onboard_parameters_read_parameters_from_flashc(onboard_parameter_set_t* onb
  * \param   onboard_parameters		Pointer to module structure
  * \param   msg 					Incoming mavlink message
  */
-void onboard_parameters_write_parameters_from_flashc(onboard_parameter_set_t* onboard_parameters, mavlink_message_t* msg);
+void onboard_parameters_write_parameters_to_flashc(onboard_parameter_set_t* onboard_parameters, mavlink_message_t* msg);
 
 #ifdef __cplusplus
 }

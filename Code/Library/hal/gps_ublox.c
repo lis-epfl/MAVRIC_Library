@@ -18,10 +18,10 @@
 
 #include "gps_ublox.h"
 
-#include "central_data.h"
 #include "print_util.h"
 #include "uart_int.h"
 #include "buffer.h"
+#include "time_keeper.h"
 
 uint8_t  **ubx_currentMessage = 0;		///<  The pointer to the pointer to the structure of the current message to fill
 uint8_t  ** ubx_lastMessage = 0;		///<  The pointer to the pointer to the structure of the last message received of the same type than the current one being received (for exchange at the end)
@@ -1497,7 +1497,7 @@ void gps_ublox_update(gps_Data_type_t *GPS_data)
 		// reset the idle timer
 		idleTimer = tnow;
 		
-		GPS_data->timeLastMsg = tnow;
+		GPS_data->time_last_msg = tnow;
 		
 		if(GPS_data->status == GPS_OK)
 		{
@@ -1572,10 +1572,10 @@ bool gps_ublox_newValidGpsMsg(gps_Data_type_t *GPS_data, uint32_t *prevGpsMsgTim
 {
 	
 	
-	if((*prevGpsMsgTime != GPS_data->timeLastMsg)&&(GPS_data->status == GPS_OK)//&&(GPS_data->accuracyStatus == 1)
+	if((*prevGpsMsgTime != GPS_data->time_last_msg)&&(GPS_data->status == GPS_OK)//&&(GPS_data->accuracyStatus == 1)
 	)
 	{
-		*prevGpsMsgTime = GPS_data->timeLastMsg;
+		*prevGpsMsgTime = GPS_data->time_last_msg;
 		return true;
 	}
 	else

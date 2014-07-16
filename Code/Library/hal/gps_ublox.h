@@ -629,7 +629,7 @@ typedef struct
 	uint8_t num_sats;						///< Number of visible satellites
 	uint16_t hdop;							///< Height DOP
 	
-	uint32_t timeLastMsg;					///< Time reference in ms of microcontroller
+	uint32_t time_last_msg;					///< Time reference in ms of microcontroller
 	uint32_t timegps;						///< Time reference in ms of gps
 	
 	uint8_t  status;					///< GPS status

@@ -17,7 +17,7 @@
 
 
 #include "central_data.h"
-
+#include "conf_constants.h"
 
 static central_data_t centralData;
 
@@ -42,33 +42,79 @@ void central_data_init()
 	};												
 	mavlink_communication_init(&centralData.mavlink_communication, &mavlink_config);
 	
+	state_init(	&centralData.state_structure,
+				MAV_TYPE_QUADROTOR,
+				MAV_AUTOPILOT_GENERIC,
+				MAV_STATE_BOOT,
+				MAV_MODE_PREFLIGHT,
+				REAL_MODE,// SIMULATION_MODE
+				&centralData.mavlink_communication); 
+	
 	// Init servos
 	servo_pwm_init((servo_output_t*)centralData.servos);
-	servo_pwm_failsafe((servo_output_t*)centralData.servos);
-	servo_pwm_set((servo_output_t*)centralData.servos);
-
-	// TODO change names! XXX_init()
+	
 	//imu_init((Imu_Data_t*)&(centralData.imu1));
 	qfilter_init((qfilter_t*)&(centralData.attitude_filter), (Imu_Data_t*)&centralData.imu1, (AHRS_t*)&centralData.attitude_estimation);
 		
-	position_estimation_init((position_estimator_t*)&(centralData.position_estimator), (pressure_data_t*)&centralData.pressure, (gps_Data_type_t*)&centralData.GPS_data);
+	position_estimation_init(   &centralData.position_estimator,
+								&centralData.pressure,
+								&centralData.GPS_data,
+								&centralData.attitude_estimation,
+								&centralData.imu1,
+								&centralData.sim_model.localPosition,
+								&centralData.waypoint_handler.waypoint_set,
+								&centralData.mavlink_communication,
+								HOME_LATITUDE,
+								HOME_LONGITUDE,
+								HOME_ALTITUDE,
+								GRAVITY);
 	
-	qfilter_init_quaternion((qfilter_t*)&(centralData.attitude_filter));
+	qfilter_init_quaternion(&centralData.attitude_filter);
 		
-	navigation_init();
-	waypoint_handler_init(&centralData.waypoint_handler,&centralData.position_estimator,&centralData.attitude_estimation,&centralData.state_structure,&centralData.mavlink_communication);// ((waypoint_handler_t*)&centralData.waypoint_handler);
+	navigation_init(&centralData.navigationData,
+					&centralData.controls_nav,
+					&centralData.attitude_estimation.qe,
+					&centralData.waypoint_handler,
+					&centralData.position_estimator,
+					&centralData.orcaData);
+					
+	waypoint_handler_init(  &centralData.waypoint_handler,
+							&centralData.position_estimator,
+							&centralData.attitude_estimation,
+							&centralData.state_structure,
+							&centralData.mavlink_communication);// ((waypoint_handler_t*)&centralData.waypoint_handler);
 		
-	neighbors_selection_init((neighbor_t*)&(centralData.neighborData), (position_estimator_t*)&(centralData.position_estimator));
-	orca_init((orca_t*)&(centralData.orcaData),(neighbor_t*)&(centralData.neighborData),(position_estimator_t*)&(centralData.position_estimator),(Imu_Data_t*)&(centralData.imu1),(AHRS_t*)&centralData.attitude_estimation);
+	neighbors_selection_init(   &centralData.neighborData, 
+								&centralData.position_estimator,
+								&centralData.mavlink_communication);
+	
+	orca_init(  &centralData.orcaData,
+				&centralData.neighborData,
+				&centralData.position_estimator,
+				&centralData.imu1,
+				&centralData.attitude_estimation);
 
 	// init stabilisers
-	stabilisation_copter_init((Stabiliser_Stack_copter_t*)&centralData.stabiliser_stack);
-
-	centralData.simulation_mode = 0;
-	centralData.simulation_mode_previous = 0;
+	stabilisation_copter_init(	&centralData.stabilisation_copter,
+								&centralData.stabiliser_stack,
+								&centralData.controls,
+								&centralData.run_mode,
+								&centralData.imu1,
+								&centralData.attitude_estimation,
+								&centralData.position_estimator 	);
 
 	// init simulation (should be done after position_estimator)
-	simulation_init((simulation_model_t*)&(centralData.sim_model), (qfilter_t*)&centralData.attitude_filter, (local_coordinates_t)centralData.position_estimator.localPosition);		
+	simulation_init(&centralData.sim_model,
+					&centralData.attitude_filter,
+					&centralData.imu1,
+					&centralData.position_estimator,
+					&centralData.pressure,
+					&centralData.GPS_data,
+					&centralData.state_structure,
+					centralData.position_estimator.localPosition.origin.latitude,
+					centralData.position_estimator.localPosition.origin.longitude,
+					centralData.position_estimator.localPosition.origin.altitude,
+					GRAVITY);		
 
 
 	//centralData.sim_model.localPosition = centralData.position_estimator.localPosition;

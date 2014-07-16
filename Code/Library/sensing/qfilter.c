@@ -42,7 +42,7 @@ void qfilter_init(qfilter_t *attitude_filter, Imu_Data_t *imu1, AHRS_t *attitude
 	}*/
 	for (i = 0; i < 3; i++)
 	{
-		attitude_filter->acc_bf[i] = 0.0f;
+		attitude_filter->attitude_estimation->linear_acc[i] = 0.0f;
 	}
 
 //	imu1->calib_sensor.bias[3] = -0.03f;

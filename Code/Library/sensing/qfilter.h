@@ -54,7 +54,6 @@ typedef struct
 	float ki_mag;					///< The integral gain for the magnetometer correction of the angular rates
 	
 	uint8_t calibration_level;		///< The level of calibration
-	float acc_bf[3];				///< The 3D acceleration vector in body frame
 } qfilter_t;
 
 /**
