@@ -25,7 +25,6 @@
 
 
 mavlink_system_t mavlink_system;
-mavlink_system_t mavlink_mission_planner;		// TODO: remove
 byte_stream_t* mavlink_out_stream;
 
 
@@ -51,9 +50,6 @@ void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_
 	
 	mavlink_system.sysid              = config->sysid; // System ID, 1-255
 	mavlink_system.compid             = config->compid; // Component/Subsystem ID, 1-255
-	
-	mavlink_mission_planner.sysid     = config->sysid;
-	mavlink_mission_planner.compid    = MAV_COMP_ID_MISSIONPLANNER;
 }
 
 

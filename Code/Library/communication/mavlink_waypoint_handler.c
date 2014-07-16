@@ -207,8 +207,8 @@ void waypoint_handler_send_count(mavlink_received_t* rec, uint16_t num_of_waypoi
 	mavlink_msg_mission_request_list_decode(&rec->msg,&packet);
 	
 	// Check if this message is for this system and subsystem
-	if (((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid)
-		&& ((uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid))
+	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
+		&& ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
 	{	
 		mavlink_msg_mission_count_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,num_of_waypoint);
 		
@@ -239,8 +239,8 @@ void waypoint_handler_send_waypoint(mavlink_received_t* rec, waypoint_struct way
 		print_util_dbg_print("\n");
 		
 		// Check if this message is for this system and subsystem
-		if (((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid)
-			&& ((uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid))
+		if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
+			&& ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
 		{
 			sending_waypoint_num = packet.seq;
 			if (sending_waypoint_num < num_of_waypoint)
@@ -270,8 +270,8 @@ void waypoint_handler_receive_ack_msg(mavlink_received_t* rec, bool* waypoint_se
 	mavlink_msg_mission_ack_decode(&rec->msg, &packet);
 	
 	// Check if this message is for this system and subsystem
-	if (((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid) 
-		&& ((uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid))
+	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid) 
+		&& ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
 	{
 		*waypoint_sending = false;
 		sending_waypoint_num = 0;
@@ -286,8 +286,8 @@ void waypoint_handler_receive_count(mavlink_received_t* rec, uint16_t* number_of
 	mavlink_msg_mission_count_decode(&rec->msg, &packet);
 	
 	// Check if this message is for this system and subsystem
-	if (((uint8_t)packet.target_system == (uint8_t)mavlink_mission_planner.sysid)
-		&& ((uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid))
+	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
+		&& ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
 	{
 		if (*waypoint_receiving == false)
 		{
@@ -333,7 +333,7 @@ void waypoint_handler_receive_waypoint(mavlink_received_t* rec,  waypoint_struct
 	
 	// Check if this message is for this system and subsystem
 	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
-		&& ((uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid))
+		&& ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
 	{
 		start_timeout = time_keeper_get_millis();
 		
@@ -454,7 +454,7 @@ void waypoint_handler_set_current_waypoint(mavlink_received_t* rec,  waypoint_st
 	
 	// Check if this message is for this system and subsystem
 	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
-		&& ((uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid))
+		&& ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
 	{
 		if (packet.seq < num_of_waypoint)
 		{
@@ -504,7 +504,7 @@ void waypoint_handler_set_current_waypoint_from_parameter(waypoint_struct waypoi
 	}
 	else
 	{
-		mavlink_msg_mission_ack_send(MAVLINK_COMM_0,mavlink_mission_planner.sysid,mavlink_mission_planner.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
+		mavlink_msg_mission_ack_send(MAVLINK_COMM_0,mavlink_system.sysid,MAV_COMP_ID_MISSIONPLANNER,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
 	}
 }
 
@@ -516,7 +516,7 @@ void waypoint_handler_clear_waypoint_list(mavlink_received_t* rec,  uint16_t* nu
 	
 	// Check if this message is for this system and subsystem
 	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
-		&& ((uint8_t)packet.target_component == (uint8_t)mavlink_mission_planner.compid))
+		&& ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
 	{
 		*number_of_waypoints = 0;
 		num_waypoint_onboard = 0;
