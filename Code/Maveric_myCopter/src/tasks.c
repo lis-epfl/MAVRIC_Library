@@ -106,7 +106,7 @@ void tasks_relevel_imu(void)
 {
 	uint32_t i,j;
 
-	centralData->imu1.attitude.calibration_level = LEVELING;
+	centralData->attitude_filter.calibration_level = LEVELING;
 	centralData->mav_state = MAV_STATE_CALIBRATING;
 	centralData->mav_mode = MAV_MODE_PREFLIGHT;
 
@@ -114,7 +114,7 @@ void tasks_relevel_imu(void)
 
 	for (j = 0;j < 3;j++)
 	{
-		centralData->imu1.attitude.raw_mag_mean[j] = (float)centralData->imu1.raw_channels[j + MAG_OFFSET];
+		centralData->attitude_filter.raw_mag_mean[j] = (float)centralData->imu1.oriented_compass.data[j];
 	}
 
 	for (i = 1000; i > 0; i--) 
@@ -124,13 +124,13 @@ void tasks_relevel_imu(void)
 		
 		for (j = 0;j < 3;j++)
 		{
-			centralData->imu1.attitude.raw_mag_mean[j] = (1.0f - MAG_LPF) * centralData->imu1.attitude.raw_mag_mean[j] + MAG_LPF * ((float)centralData->imu1.raw_channels[j + MAG_OFFSET]);
+			centralData->attitude_filter.raw_mag_mean[j] = (1.0f - MAG_LPF) * centralData->attitude_filter.raw_mag_mean[j] + MAG_LPF * ((float)centralData->imu1.oriented_compass.data[j]);
 		}
 
 		delay_ms(5);
 	}
 	
-	centralData->imu1.attitude.calibration_level = OFF;
+	centralData->attitude_filter.calibration_level = OFF;
 	centralData->mav_state = MAV_STATE_STANDBY;
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	
@@ -486,7 +486,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 		// From reality to simulation
 		if (centralData->simulation_mode == 1)
 		{			
-			simulation_init(&(centralData->sim_model),&(centralData->imu1),centralData->position_estimator.localPosition);
+			simulation_init(&(centralData->sim_model),&(centralData->attitude_filter),centralData->position_estimator.localPosition);
 			centralData->position_estimator.init_gps_position = false;
 		}
 	}
@@ -507,10 +507,10 @@ void tasks_run_imu_update(void* arg) {
 		
 		imu_update(	&(centralData->imu1));
 		//was done in imu_update
-		qfilter_attitude_estimation(&centralData->imu1.attitude, centralData->imu1.dt);
-		if (centralData->imu1.attitude.calibration_level == OFF)
+		qfilter_attitude_estimation(&centralData->attitude_filter, centralData->imu1.dt);
+		if (centralData->attitude_filter.calibration_level == OFF)
 		{
-			position_estimation_position_integration(&centralData->position_estimator, &centralData->imu1.attitude, centralData->imu1.dt);
+			position_estimation_position_integration(&centralData->position_estimator, &centralData->attitude_filter, centralData->imu1.dt);
 			position_estimation_position_correction(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, centralData->imu1.dt);
 		}
 	} 
@@ -520,14 +520,12 @@ void tasks_run_imu_update(void* arg) {
 		lsm330dlc_acc_update(&(centralData->imu1.raw_accelero));
 		compass_hmc58831l_update(&(centralData->imu1.raw_compass));
 		
-		imu_get_raw_data(&(centralData->imu1));
-
 		imu_update(	&(centralData->imu1));
 		//was done in imu_update
-		qfilter_attitude_estimation(&centralData->imu1.attitude, centralData->imu1.dt);
-		if (centralData->imu1.attitude.calibration_level == OFF)
+		qfilter_attitude_estimation(&centralData->attitude_filter, centralData->imu1.dt);
+		if (centralData->attitude_filter.calibration_level == OFF)
 		{
-			position_estimation_position_integration(&centralData->position_estimator, &centralData->imu1.attitude, centralData->imu1.dt);
+			position_estimation_position_integration(&centralData->position_estimator, &centralData->attitude_filter, centralData->imu1.dt);
 			position_estimation_position_correction(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, centralData->imu1.dt);
 		}
 	}
@@ -545,7 +543,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			centralData->controls.yaw_mode=YAW_RELATIVE;
 			
-			stabilisation_copter_cascade_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			stabilisation_copter_cascade_stabilise(&(centralData->imu1), &centralData->attitude_estimation, &centralData->position_estimator, &(centralData->controls));
 			break;
 
 		case MAV_MODE_STABILIZE_ARMED:
@@ -555,7 +553,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 			
 			stabilisation_copter_get_velocity_vector_from_remote(centralData->controls.tvel);
 			
-			stabilisation_copter_cascade_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			stabilisation_copter_cascade_stabilise(&(centralData->imu1), &centralData->attitude_estimation, &centralData->position_estimator, &(centralData->controls));
 			
 			break;
 
@@ -572,7 +570,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 				centralData->controls.yaw_mode = YAW_ABSOLUTE;
 			}
 			
-			stabilisation_copter_cascade_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			stabilisation_copter_cascade_stabilise(&(centralData->imu1), &centralData->attitude_estimation, &centralData->position_estimator, &(centralData->controls));
 			
 			break;
 
@@ -590,7 +588,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 				centralData->controls.yaw_mode = YAW_ABSOLUTE;
 			}
 			
-			stabilisation_copter_cascade_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			stabilisation_copter_cascade_stabilise(&(centralData->imu1), &centralData->attitude_estimation, &centralData->position_estimator, &(centralData->controls));
 			break;
 		
 		case MAV_MODE_PREFLIGHT:

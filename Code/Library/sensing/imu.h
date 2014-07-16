@@ -25,11 +25,11 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "qfilter.h"
 #include "conf_platform.h"
 #include "gyro.h"
 #include "accelero.h"
 #include "compass.h"
+#include "quaternions.h"
 
 #define GYRO_LPF 0.1f					///< The gyroscope linear particle filter gain
 #define ACC_LPF 0.05f					///< The accelerometer linear particle filter gain
@@ -70,23 +70,14 @@ typedef struct
  */
 typedef struct
 {
-	Quat_Attitude_t attitude;			///< Attitude structure of the platform
-	
-	float raw_channels[9];				///< The array where the raw value of the IMU and compass are parsed
-	float raw_bias[9];					///< The biaises of the IMU and compass
-	float raw_scale[9];					///< The scales of the IMU and compass
-	
-	float dt;							///< The time interval between two IMU updates
-	uint32_t last_update;				///< The time of the last IMU update in ms
-	
-	//uint8_t valid;					///< True if the message is valid (TODO: is it sill used?)
-	//int8_t ready;						///< Is the IMU ready (TODO: is it still used?)
-	
 	gyro_data_t raw_gyro, oriented_gyro, scaled_gyro;
 	accelero_data_t raw_accelero, oriented_accelero, scaled_accelero;
 	compass_data_t raw_compass, oriented_compass, scaled_compass;
 	
 	sensor_calib_t calib_gyro, calib_accelero, calib_compass;
+	
+	float dt;							///< The time interval between two IMU updates
+	uint32_t last_update;				///< The time of the last IMU update in ms
 } Imu_Data_t;
 
 bool imu_last_update_init;				///< Variable to initialize the IMU
@@ -121,14 +112,6 @@ void imu_calibrate_gyros(Imu_Data_t *imu1);
  * \param	gps			the pointer to the GPS structure
  */
 void imu_update(Imu_Data_t *imu1);
-
-/**
- * \brief	Computes the transition from raw values to scaled values
- *
- * \param	attitude	the pointer structure of the attitude
- * \param	rates		the array of angular rates (IMU), accelerations and magnetometer
- */
-void imu_oriented2scale(Quat_Attitude_t *attitude, float rates[9]);
 
 #ifdef __cplusplus
 }

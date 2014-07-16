@@ -747,7 +747,7 @@ void waypoint_handler_waypoint_hold_init(local_coordinates_t localPos)
 	
 	centralData->waypoint_hold_coordinates = localPos;
 	
-	//centralData->waypoint_hold_coordinates.heading = coord_conventions_get_yaw(centralData->imu1.attitude.qe);
+	centralData->waypoint_hold_coordinates.heading = coord_conventions_get_yaw(centralData->attitude_estimation.qe);
 	//centralData->waypoint_hold_coordinates.heading = localPos.heading;
 	
 	print_util_dbg_print("Position hold at: (");
@@ -778,7 +778,7 @@ void waypoint_handler_waypoint_take_off()
 	centralData->waypoint_hold_coordinates.pos[Z] = -10.0f;
 	
 	Aero_Attitude_t aero_attitude;
-	aero_attitude=coord_conventions_quat_to_aero(centralData->imu1.attitude.qe);
+	aero_attitude=coord_conventions_quat_to_aero(centralData->attitude_estimation.qe);
 	centralData->waypoint_hold_coordinates.heading = aero_attitude.rpy[2];
 	
 	centralData->dist2wp_sqr = 100.0f; // same position, 10m above => distSqr = 100.0f
@@ -862,7 +862,7 @@ void waypoint_handler_waypoint_critical_handler()
 		centralData->critical_next_state = true;
 		
 		Aero_Attitude_t aero_attitude;
-		aero_attitude=coord_conventions_quat_to_aero(centralData->imu1.attitude.qe);
+		aero_attitude=coord_conventions_quat_to_aero(centralData->attitude_estimation.qe);
 		centralData->waypoint_critical_coordinates.heading = aero_attitude.rpy[2];
 		
 		switch (centralData->critical_behavior)

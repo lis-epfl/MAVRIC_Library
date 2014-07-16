@@ -86,7 +86,7 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est, pres
  * \param	attitude		The pointer to the attitude estimation structure
  * \param	dt				The time interval between two integration step
  */
-void position_estimation_position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitude, float dt);
+void position_estimation_position_integration(position_estimator_t *pos_est, qfilter_t *attitude_filter, float dt);
 
 /**
  * \brief	Position correction with the GPS and the barometer

@@ -55,6 +55,7 @@ typedef struct
 	neighbor_t				*neighborData;
 	position_estimator_t	*positionData;
 	Imu_Data_t				*imuData;
+	AHRS_t					*attitude_estimation;
 }orca_t;
 
 /**
@@ -62,7 +63,7 @@ typedef struct
  *
  * \param neighborData pointer to the neighbor data structure
  */
-void orca_init(orca_t *orcaData, neighbor_t *neighborData, position_estimator_t *positionData, Imu_Data_t *imuData);
+void orca_init(orca_t *orcaData, neighbor_t *neighborData, position_estimator_t *positionData, Imu_Data_t *imuData, AHRS_t *attitude_estimation);
 /**
  * \brief	Initialize the ORCA module
  *
