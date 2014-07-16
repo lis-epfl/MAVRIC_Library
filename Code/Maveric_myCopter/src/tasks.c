@@ -139,10 +139,8 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 					case 0:
 						print_util_dbg_print("Switching on the motors!\n");
 
-						position_estimation_reset_home_altitude(	&centralData->position_estimator, 
-														&centralData->pressure, 
-														&centralData->GPS_data,
-														&centralData->sim_model.localPosition);
+						position_estimation_reset_home_altitude(&centralData->position_estimator);
+						
 						centralData->waypoint_set = false;
 						centralData->run_mode = MOTORS_ON;
 						centralData->mav_mode = MAV_MODE_MANUAL_ARMED;
@@ -456,10 +454,11 @@ void tasks_run_imu_update(void* arg) {
 					&(centralData->imu1), 
 					&centralData->position_estimator);
 		
-		imu_update(	&(centralData->imu1), 
-					&(centralData->position_estimator), 
-					&centralData->pressure, 
-					&centralData->GPS_data);
+		imu_update(	&centralData->imu1, 
+					&centralData->pressure,
+					&centralData->GPS_data );
+		
+		position_estimation_update(&centralData->position_estimator);
 	} 
 	else 
 	{
@@ -470,9 +469,11 @@ void tasks_run_imu_update(void* arg) {
 		imu_get_raw_data(&(centralData->imu1));
 
 		imu_update(	&(centralData->imu1), 
-					&centralData->position_estimator, 
 					&centralData->pressure, 
 					&centralData->GPS_data);
+		
+		position_estimation_update(&centralData->position_estimator);
+		
 	}
 }	
 
@@ -577,7 +578,7 @@ task_return_t tasks_run_navigation_update(void* arg)
 		case MAV_STATE_STANDBY:
 			if (((centralData->mav_mode == MAV_MODE_GUIDED_ARMED)||(centralData->mav_mode == MAV_MODE_AUTO_ARMED)) && !centralData->automatic_take_off)
 			{
-				navigation_run(centralData->waypoint_hold_coordinates);
+				navigation_run(centralData->waypoint_hold_coordinates,&centralData->navigationData);
 			}
 			break;
 
@@ -587,16 +588,16 @@ task_return_t tasks_run_navigation_update(void* arg)
 				case MAV_MODE_AUTO_ARMED:
 					if (centralData->waypoint_set)
 					{
-						navigation_run(centralData->waypoint_coordinates);
+						navigation_run(centralData->waypoint_coordinates,&centralData->navigationData);
 					}
 					else
 					{
-						navigation_run(centralData->waypoint_hold_coordinates);
+						navigation_run(centralData->waypoint_hold_coordinates,&centralData->navigationData);
 					}
 					break;
 
 				case MAV_MODE_GUIDED_ARMED:
-					navigation_run(centralData->waypoint_hold_coordinates);
+					navigation_run(centralData->waypoint_hold_coordinates,&centralData->navigationData);
 					break;
 			}
 			break;
@@ -604,7 +605,7 @@ task_return_t tasks_run_navigation_update(void* arg)
 		case MAV_STATE_CRITICAL:
 			if ((centralData->mav_mode == MAV_MODE_GUIDED_ARMED)||(centralData->mav_mode == MAV_MODE_AUTO_ARMED))
 			{
-				navigation_run(centralData->waypoint_critical_coordinates);
+				navigation_run(centralData->waypoint_critical_coordinates,&centralData->navigationData);
 			}
 			break;
 	}
