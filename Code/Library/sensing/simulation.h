@@ -32,6 +32,7 @@ extern "C" {
 #include "servo_pwm.h"
 #include "bmp085.h"
 #include "position_estimation.h"
+#include "state.h"
 
 /**
  * \brief The simulation model structure definition
@@ -72,6 +73,10 @@ typedef struct
 	float wind_x;											///< The x component of wind in global frame in m/s
 	float wind_y;											///< The y component of wind in global frame in m/s
 	
+	float home_coordinates[3];
+	
+	//AHRS_t *attitude_estimation;								///< The pointer to the attitude estimation structure
+	Quat_Attitude_t attitude_filter;
 	Imu_Data_t* imu;
 	position_estimator_t* pos_est;
 	pressure_data_t* pressure;
@@ -88,7 +93,7 @@ typedef struct
  * \param	imu				The pointer to the real IMU structure to match the simulated IMU
  * \param	localPos		The pointer to the structure of the real local position estimation of the vehicle
  */
-void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure);
+void simulation_init(simulation_model_t* sim, Quat_Attitude_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, float home_lat, float home_lon, float home_alt);
 
 /**
  * \brief	Sets the calibration to the "real" IMU values

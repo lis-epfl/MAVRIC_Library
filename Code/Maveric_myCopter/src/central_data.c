@@ -17,7 +17,7 @@
 
 
 #include "central_data.h"
-
+#include "conf_constants.h"
 
 static central_data_t centralData;
 
@@ -42,13 +42,13 @@ void central_data_init()
 	};												
 	mavlink_communication_init(&centralData.mavlink_communication, &mavlink_config);
 	
-		state_init(	&centralData.state_structure,
-					MAV_TYPE_QUADROTOR,
-					MAV_AUTOPILOT_GENERIC,
-					MAV_STATE_BOOT,
-					MAV_MODE_PREFLIGHT,
-					REAL_MODE,// SIMULATION_MODE
-					&centralData.mavlink_communication); 
+	state_init(	&centralData.state_structure,
+				MAV_TYPE_QUADROTOR,
+				MAV_AUTOPILOT_GENERIC,
+				MAV_STATE_BOOT,
+				MAV_MODE_PREFLIGHT,
+				REAL_MODE,// SIMULATION_MODE
+				&centralData.mavlink_communication); 
 	
 	// Init servos
 	servo_pwm_init((servo_output_t*)centralData.servos);
@@ -82,7 +82,16 @@ void central_data_init()
 	centralData.simulation_mode_previous = 0;
 
 	// init simulation (should be done after position_estimator)
-	simulation_init((simulation_model_t*)&(centralData.sim_model), (Imu_Data_t*)&(centralData.imu1), (local_coordinates_t)centralData.position_estimator.localPosition);		
+	simulation_init(&(centralData.sim_model), 
+					&centralData.imu1.attitude,
+					&(centralData.imu1),
+					&centralData.position_estimator,
+					&centralData.pressure,
+					&centralData.GPS_data,
+					&centralData.state_structure,
+					HOME_LATITUDE,
+					HOME_LONGITUDE,
+					HOME_ALTITUDE);		
 
 
 	//centralData.sim_model.localPosition = centralData.position_estimator.localPosition;

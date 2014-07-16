@@ -330,14 +330,17 @@ void mavlink_actions_receive_message_long(mavlink_received_t* rec)
 	// 			{
 	// 				// read parameters from flash
 	// 				print_util_dbg_print("Reading from flashc...\n");
-	// 				onboard_parameters_read_parameters_from_flashc();
+	//				if(onboard_parameters_read_parameters_from_flashc())
+	//				{
+	//					simulation_calib_set(&(centralData->sim_model));
+	// 				}
 	// 			}
 	// 			else if (packet.param1 == 1) 
 	// 			{
 	// 				// write parameters to flash
 	// 				//print_util_dbg_print("No Writing to flashc\n");
 	// 				print_util_dbg_print("Writing to flashc\n");
-	// 				onboard_parameters_write_parameters_from_flashc();
+	// 				onboard_parameters_write_parameters_to_flashc();
 	// 			}
 				
 	// 			// Mission parameters storage
@@ -425,7 +428,7 @@ void mavlink_actions_init(void) {
 	/*	
 	 * Use this to store or read or reset parameters on flash memory
 	 *
-	onboard_parameters_write_parameters_from_flashc();
+	onboard_parameters_write_parameters_to_flashc();
 	onboard_parameters_read_parameters_from_flashc();
 	 *
 	 */

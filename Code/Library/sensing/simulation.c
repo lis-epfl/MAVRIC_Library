@@ -21,6 +21,7 @@
 #include "time_keeper.h"
 #include "coord_conventions.h"
 
+
 #include "central_data.h"
 #include "maths.h"
 
@@ -43,15 +44,20 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *serv
  */
 void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servos);
 
-void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure)
+void simulation_init(simulation_model_t* sim, Quat_Attitude_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, float home_lat, float home_lon, float home_alt)
 {
 	int32_t i;
+	
 	
 	sim->imu = imu;
 	sim->pos_est = pos_est;
 	sim->pressure = pressure;
 	sim->gps = gps;
 	sim->state_structure = state_structure;
+	
+	sim->home_coordinates[0] = home_lat;
+	sim->home_coordinates[1] = home_lon;
+	sim->home_coordinates[2] = home_alt;
 	
 	print_util_dbg_print("Init HIL simulation. \n");
 	
@@ -83,12 +89,12 @@ void simulation_calib_set(simulation_model_t *sim)
 		//sim->simu_raw_scale[i + ACC_OFFSET]		= 1.0f / sim->imu->accelero_calib.scale[i];
 		//sim->simu_raw_scale[i + MAG_OFFSET]		= 1.0f / sim->imu->compass_calib.scale[i];
 		
-		sim->simu_raw_scale[i + GYRO_OFFSET]	= sim->imu->gyro_calib.scale[i];
-		sim->simu_raw_scale[i + ACC_OFFSET]		= sim->imu->accelero_calib.scale[i];
-		sim->simu_raw_scale[i + MAG_OFFSET]		= sim->imu->compass_calib.scale[i];
-		sim->simu_raw_biais[i + GYRO_OFFSET]	= sim->imu->gyro_calib.bias[i];
-		sim->simu_raw_biais[i + ACC_OFFSET]		= sim->imu->accelero_calib.bias[i];
-		sim->simu_raw_biais[i + MAG_OFFSET]		= sim->imu->compass_calib.bias[i];
+		//sim->simu_raw_scale[i + GYRO_OFFSET]	= sim->imu->gyro_calib.scale[i];
+		//sim->simu_raw_scale[i + ACC_OFFSET]		= sim->imu->accelero_calib.scale[i];
+		//sim->simu_raw_scale[i + MAG_OFFSET]		= sim->imu->compass_calib.scale[i];
+		//sim->simu_raw_biais[i + GYRO_OFFSET]	= sim->imu->gyro_calib.bias[i];
+		//sim->simu_raw_biais[i + ACC_OFFSET]		= sim->imu->accelero_calib.bias[i];
+		//sim->simu_raw_biais[i + MAG_OFFSET]		= sim->imu->compass_calib.bias[i];
 	}
 }
 
@@ -376,9 +382,9 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 	fake_pos.pos[X] = 10.0f;
 	fake_pos.pos[Y] = 10.0f;
 	fake_pos.pos[Z] = 0.0f;
-	fake_pos.origin.latitude = HOME_LATITUDE;
-	fake_pos.origin.longitude = HOME_LONGITUDE;
-	fake_pos.origin.altitude = HOME_ALTITUDE;
+	fake_pos.origin.latitude = sim->home_coordinates[0];
+	fake_pos.origin.longitude = sim->home_coordinates[1];
+	fake_pos.origin.altitude = sim->home_coordinates[2];
 	fake_pos.timestamp_ms = timestamp_ms;
 
 	global_position_t gpos = coord_conventions_local_to_global_position(fake_pos);
@@ -386,7 +392,7 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 	sim->gps->latitude = gpos.latitude;
 	sim->gps->longitude = gpos.longitude;
 	sim->gps->altitude = gpos.altitude;
-	sim->gps->time_last_msg = time_keeper_get_millis();
+	sim->gps->timeLastMsg = time_keeper_get_millis();
 	sim->gps->status = GPS_OK;
 }
 
@@ -397,7 +403,6 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim, ser
 	// From simulation to reality
 	if (sim->state_structure->simulation_mode == 0)
 	{
-		sim->pos_est->
 		sim->pos_est->localPosition.origin = sim->localPosition.origin;
 		for (i = 0;i < 3;i++)
 		{
@@ -414,6 +419,6 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim, ser
 	{
 		simulation_reset_simulation(sim);
 		simulation_calib_set(sim);
-		centralData->position_estimator.init_gps_position = false;
+		sim->pos_est->init_gps_position = false;
 	}
 }
