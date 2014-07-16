@@ -40,6 +40,8 @@ void orca_init(orca_t *orcaData, neighbor_t *neighborData, position_estimator_t 
 	invTimeHorizon = 1.0f / timeHorizon;
 
 	min_coll_dist = 2.0f * SIZE_VHC_ORCA + 1.0f;
+	
+	print_util_dbg_print("Orca initialized.\n");
 }
 
 void orca_computeNewVelocity(orca_t *orcaData, float OptimalVelocity[], float NewVelocity[])

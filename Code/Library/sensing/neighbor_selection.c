@@ -37,6 +37,9 @@ void neighbors_selection_init(neighbor_t *neighborData, position_estimator_t *po
 	callback.function 		= (mavlink_msg_callback_function_t)	&neighbors_selection_read_message_from_neighbors;
 	callback.module_struct 	= (handling_module_struct_t)		neighborData;
 	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	
+		
+	print_util_dbg_print("Neighbor selection initialized.\n");
 }
 
 void neighbors_selection_read_message_from_neighbors(neighbor_t *neighborData, mavlink_received_t* rec)

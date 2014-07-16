@@ -18,6 +18,7 @@
 
 #include "servo_pwm.h"
 #include "gpio.h"
+#include "print_util.h"
 
 #include <stdint.h>
 
@@ -103,6 +104,8 @@ void servo_pwm_init(servo_output_t servos[])
 	
 	servo_pwm_failsafe(servos);
 	servo_pwm_set(servos);
+	
+	print_util_dbg_print("Servo PWM initialized.\n");
 }
 
 void set_servo(int32_t channel, int32_t val_a, int32_t val_b)

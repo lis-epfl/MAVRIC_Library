@@ -197,7 +197,7 @@ void navigation_init(navigation_t* navigationData, Control_Command_t* controls_n
 	
 	navigationData->loopCount = 0;
 	
-	print_util_dbg_print("Navigation init.\n");
+	print_util_dbg_print("Navigation initialized.\n");
 }
 
 

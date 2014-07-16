@@ -114,10 +114,7 @@ void central_data_init()
 					centralData.position_estimator.localPosition.origin.latitude,
 					centralData.position_estimator.localPosition.origin.longitude,
 					centralData.position_estimator.localPosition.origin.altitude,
-					GRAVITY);		
-
-
-	//centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
+					GRAVITY);
 
 	// Init sonar
 	// i2cxl_sonar_init(&centralData.i2cxl_sonar);

@@ -44,6 +44,8 @@ void state_init(state_structure_t *state_structure, uint8_t autopilot_type, uint
 	callback.function 		= (mavlink_msg_callback_function_t)	&state_set_mav_mode;
 	callback.module_struct 	= (handling_module_struct_t)		state_structure;
 	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	
+	print_util_dbg_print("State initialized.\n");
 }
 
 task_return_t mavlink_telemetry_send_heartbeat(state_structure_t* state_structure)

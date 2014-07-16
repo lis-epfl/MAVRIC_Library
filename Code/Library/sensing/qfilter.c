@@ -59,6 +59,8 @@ void qfilter_init(qfilter_t *attitude_filter, Imu_Data_t *imu1, AHRS_t *attitude
 	
 	attitude_filter->kp_mag = 0.1f;
 	attitude_filter->ki_mag = attitude_filter->kp_mag / 15.0f;
+	
+	print_util_dbg_print("qfilter initialized.\n");
 }
 
 void qfilter_init_quaternion(qfilter_t *attitude_filter)
