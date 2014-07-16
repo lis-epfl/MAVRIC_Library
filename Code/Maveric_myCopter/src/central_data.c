@@ -54,22 +54,41 @@ void central_data_init()
 	servo_pwm_init((servo_output_t*)centralData.servos);
 	
 	//imu_init((Imu_Data_t*)&(centralData.imu1));
-	qfilter_init((Quat_Attitude_t*)&(centralData.imu1.attitude), (float*)(centralData.imu1.raw_scale), (float*)(centralData.imu1.raw_bias));
+	//qfilter_init(&centralData.attitude_filter, 
+					//centralData.imu1.raw_scale, 
+					//centralData.imu1.raw_bias);
 		
-	position_estimation_init(   &(centralData.position_estimator),
+	position_estimation_init(   &centralData.position_estimator,
 								&centralData.pressure,
 								&centralData.GPS_data,
+								&centralData.attitude_estimation,
+								&centralData.sim_model.localPosition,
 								HOME_LATITUDE,
 								HOME_LONGITUDE,
 								HOME_ALTITUDE);
 	
-	qfilter_init_quaternion((Quat_Attitude_t*)&(centralData.imu1.attitude));
+	qfilter_init_quaternion(&centralData.attitude_filter);
 		
-	navigation_init();
-	waypoint_handler_init(&centralData.waypoint_handler,&centralData.position_estimator,&centralData.imu1.attitude,&centralData.state_structure,&centralData.mavlink_communication);// ((waypoint_handler_t*)&centralData.waypoint_handler);
+	navigation_init(&centralData.navigationData,
+					&centralData.controls_nav,
+					&centralData.attitude_estimation.qe,
+					&centralData.waypoint_handler,
+					&centralData.position_estimator,
+					&centralData.orcaData);
+					
+	waypoint_handler_init(  &centralData.waypoint_handler,
+							&centralData.position_estimator,
+							&centralData.attitude_estimation,
+							&centralData.state_structure,
+							&centralData.mavlink_communication);// ((waypoint_handler_t*)&centralData.waypoint_handler);
 		
-	neighbors_selection_init((neighbor_t*)&(centralData.neighborData), (position_estimator_t*)&(centralData.position_estimator));
-	orca_init((orca_t*)&(centralData.orcaData),(neighbor_t*)&(centralData.neighborData),(position_estimator_t*)&(centralData.position_estimator),(Imu_Data_t*)&(centralData.imu1));
+	neighbors_selection_init(   &centralData.neighborData, 
+								&centralData.position_estimator);
+	
+	orca_init(  &centralData.orcaData,
+				&centralData.neighborData,
+				&centralData.position_estimator,
+				&centralData.attitude_estimation);
 
 	// init stabilisers
 	stabilisation_copter_init(	&centralData.stabilisation_copter,
@@ -80,20 +99,18 @@ void central_data_init()
 								&centralData.attitude_estimation,
 								&centralData.position_estimator 	);
 
-	centralData.simulation_mode = 0;
-	centralData.simulation_mode_previous = 0;
-
 	// init simulation (should be done after position_estimator)
-	simulation_init(&(centralData.sim_model), 
-					&centralData.imu1.attitude,
-					&(centralData.imu1),
+	simulation_init(&centralData.sim_model,
+					&centralData.attitude_filter,
+					&centralData.imu1,
 					&centralData.position_estimator,
 					&centralData.pressure,
 					&centralData.GPS_data,
 					&centralData.state_structure,
 					HOME_LATITUDE,
 					HOME_LONGITUDE,
-					HOME_ALTITUDE);		
+					HOME_ALTITUDE,
+					GRAVITY);		
 
 
 	//centralData.sim_model.localPosition = centralData.position_estimator.localPosition;

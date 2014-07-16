@@ -68,8 +68,8 @@ typedef struct  {
 	analog_monitor_t adc;										///< The analog to digital converter structure
 
 	Imu_Data_t imu1;											///< The IMU structure
-	Quat_Attitude_t attitude_estimation;								///< The attitude estimation structure
-	//AHRS_t attitude_estimation;								///< The attitude estimation structure
+	qfilter_t attitude_filter;									///< The qfilter structure
+	AHRS_t attitude_estimation;									///< The attitude estimation structure
 	Control_Command_t controls;									///< The control structure used for rate and attitude modes
 	Control_Command_t controls_nav;								///< The control nav structure used for velocity modes
 	run_mode_t run_mode;										///< The mode of the motors (MOTORS_ON, MOTORS_OFF
@@ -98,6 +98,8 @@ typedef struct  {
 	
 	mavlink_waypoint_handler_t waypoint_handler;
 	
+	navigation_t navigationData;								///< The structure to perform GPS navigation
+	
 	state_structure_t state_structure;							///< The structure with all state information
 	
 	local_coordinates_t waypoint_coordinates;					///< The coordinates of the waypoint in GPS navigation mode (MAV_MODE_AUTO_ARMED)
@@ -105,32 +107,7 @@ typedef struct  {
 	local_coordinates_t waypoint_critical_coordinates;			///< The coordinates of the waypoint in critical state
 	float dist2wp_sqr;											///< The square of the distance to the waypoint
 	
-	float dist2vel_gain;										///< The gain linking the distance to the goal to the actual speed
-	float cruise_speed;											///< The cruise speed in m/s
-	float max_climb_rate;										///< Max climb rate in m/s
-	float softZoneSize;											///< Soft zone of the velocity controller
-	
-	bool waypoint_set;											///< Flag to tell that a flight plan (min 1 waypoint) is active
-	bool waypoint_sending;										///< Flag to tell whether waypoint are being sent
-	bool waypoint_receiving;									///< Flag to tell whether waypoint are being received or not
-	bool critical_landing;										///< Flag to execute critical landing (switching motors off)
-	bool critical_next_state;									///< Flag to change critical state in its dedicated state machine
-	
-	bool collision_avoidance;									///< Flag to tell whether the collision avoidance is active or not
-	bool automatic_take_off;									///< Flag to initiate the auto takeoff procedure
-	bool automatic_landing;										///< Flag to initiate the auto landing procedure
-	bool in_the_air;											///< Flag to tell whether the vehicle is airborne or not
-	
-	uint8_t mav_mode;											///< The value of the MAV mode (MAV_MODE enum in common.h)
-	uint8_t mav_state;											///< The value of the MAV state (MAV_STATE enum in common.h)
-	
-	uint8_t mav_mode_previous;									///< The value of the MAV mode at previous time step
-	uint8_t mav_state_previous;									///< The value of the MAV state at previous time step
-	
-	uint32_t simulation_mode;									///< The value of the simulation_mode (0: real, 1: simulation)
-	uint32_t simulation_mode_previous;							///< The value of the simulation_mode at previous time step
-	
-	pressure_data_t pressure;										///< The pressure structure
+	pressure_data_t pressure;									///< The pressure structure
 	//float pressure_filtered;									///< The filtered pressure
 	//float altitude_filtered;									///< The filtered altitude
 	
@@ -140,7 +117,7 @@ typedef struct  {
 	critical_behavior_enum critical_behavior;					///< The critical behavior enum
 	auto_landing_enum_t auto_landing_enum;						///< The autolanding enum
 
-	i2cxl_sonar_t i2cxl_sonar;									///< The i2cxl sonar structure
+	//i2cxl_sonar_t i2cxl_sonar;									///< The i2cxl sonar structure
 } central_data_t;
 
 
