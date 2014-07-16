@@ -36,7 +36,7 @@ void mavlink_actions_add_onboard_parameters(void) {
 	Stabiliser_t* velocity_stabiliser= &centralData->stabiliser_stack.velocity_stabiliser;
 	
 	// Simulation mode
-	onboard_parameters_add_parameter_int32    ( onboard_parameters , ( int32_t*)&centralData->simulation_mode                              , "Sim_mode"         );
+	onboard_parameters_add_parameter_int32    ( onboard_parameters , ( int32_t*)&centralData->state_structure.simulation_mode                              , "Sim_mode"         );
 	
 	// Roll rate PID
 	onboard_parameters_add_parameter_float    ( onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].p_gain                         , "RollRPid_P_G"     );
@@ -120,47 +120,35 @@ void mavlink_actions_add_onboard_parameters(void) {
 
 
 	// qfilter
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.kp                                        , "QF_kp_acc"        );
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.kp_mag                                    , "QF_kp_mag"        );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->attitude_filter.kp                                        , "QF_kp_acc"        );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->attitude_filter.kp_mag                                    , "QF_kp_mag"        );
 	// onboard_parameters_add_parameter_float ( onboard_parameters , &attitude_stabiliser->rpy_controller[YAW].differentiator.gain         , "YawAPid_D_Gain"   );
 	
 	// Biaises
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.be[GYRO_OFFSET + X]                       , "Bias_Gyro_X"      );
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.be[GYRO_OFFSET + Y]                       , "Bias_Gyro_Y"      );
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.be[GYRO_OFFSET + Z]                       , "Bias_Gyro_Z"      );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_gyro.bias[X]                       , "Bias_Gyro_X"      );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_gyro.bias[Y]                       , "Bias_Gyro_Y"      );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_gyro.bias[Z]                       , "Bias_Gyro_Z"      );
 	
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.be[ACC_OFFSET + X]                        , "Bias_Acc_X"       );
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.be[ACC_OFFSET + Y]                        , "Bias_Acc_Y"       );
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.be[ACC_OFFSET + Z]                        , "Bias_Acc_Z"       );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_accelero.bias[X]                        , "Bias_Acc_X"       );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_accelero.bias[Y]                        , "Bias_Acc_Y"       );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_accelero.bias[Z]                        , "Bias_Acc_Z"       );
 	
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.be[MAG_OFFSET + X]                        , "Bias_Mag_X"       );
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.be[MAG_OFFSET + Y]                        , "Bias_Mag_Y"       );
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.be[MAG_OFFSET + Z]                        , "Bias_Mag_Z"       );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_compass.bias[X]                        , "Bias_Mag_X"       );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_compass.bias[Y]                        , "Bias_Mag_Y"       );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_compass.bias[Z]                        , "Bias_Mag_Z"       );
 	
 	// Scale factor
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.raw_scale[GYRO_OFFSET + X]                         , "Scale_Gyro_X"     );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.raw_scale[GYRO_OFFSET + Y]                         , "Scale_Gyro_Y"     );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.raw_scale[GYRO_OFFSET + Z]                         , "Scale_Gyro_Z"     );
-	//
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.raw_scale[ACC_OFFSET + X]                          , "Scale_Acc_X"      );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.raw_scale[ACC_OFFSET + Y]                          , "Scale_Acc_Y"      );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.raw_scale[ACC_OFFSET + Z]                          , "Scale_Acc_Z"      );
-	//
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.raw_scale[MAG_OFFSET + X]                          , "Scale_Mag_X"      );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.raw_scale[MAG_OFFSET + Y]                          , "Scale_Mag_Y"      );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.raw_scale[MAG_OFFSET + Z]                          , "Scale_Mag_Z"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_gyro.scale_factor[X]                         , "Scale_Gyro_X"     );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_gyro.scale_factor[Y]                         , "Scale_Gyro_Y"     );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_gyro.scale_factor[Z]                         , "Scale_Gyro_Z"     );
 	
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.sf[GYRO_OFFSET + X]                       , "Scale_Gyro_X"     );
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.sf[GYRO_OFFSET + Y]                       , "Scale_Gyro_Y"     );
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.sf[GYRO_OFFSET + Z]                       , "Scale_Gyro_Z"     );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_accelero.scale_factor[X]                          , "Scale_Acc_X"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_accelero.scale_factor[Y]                          , "Scale_Acc_Y"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_accelero.scale_factor[Z]                          , "Scale_Acc_Z"      );
 	
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.sf[ACC_OFFSET + X]                        , "Scale_Acc_X"      );
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.sf[ACC_OFFSET + Y]                        , "Scale_Acc_Y"      );
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.sf[ACC_OFFSET + Z]                        , "Scale_Acc_Z"      );
-	
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.sf[MAG_OFFSET + X]                        , "Scale_Mag_X"      );
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.sf[MAG_OFFSET + Y]                        , "Scale_Mag_Y"      );
-	// onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.attitude.sf[MAG_OFFSET + Z]                        , "Scale_Mag_Z"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_compass.scale_factor[X]                          , "Scale_Mag_X"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_compass.scale_factor[Y]                          , "Scale_Mag_Y"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_compass.scale_factor[Z]                          , "Scale_Mag_Z"      );
 
 	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_alt                               , "Pos_kp_alt"       );
 	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_vel_baro                          , "Pos_kp_velb"      );
@@ -170,10 +158,10 @@ void mavlink_actions_add_onboard_parameters(void) {
 	
 
 
-	onboard_parameters_add_parameter_float    ( onboard_parameters , &centralData->dist2vel_gain                                           , "vel_dist2Vel"     );
-	onboard_parameters_add_parameter_float    ( onboard_parameters , &centralData->cruise_speed                                            , "vel_cruiseSpeed"  );
-	onboard_parameters_add_parameter_float    ( onboard_parameters , &centralData->max_climb_rate                                          , "vel_climbRate"    );
-	onboard_parameters_add_parameter_float    ( onboard_parameters , &centralData->softZoneSize                                            , "vel_softZone"     );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &centralData->navigationData.cruise_speed                                   , "vel_dist2Vel"     );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &centralData->navigationData.cruise_speed                                       , "vel_cruiseSpeed"  );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &centralData->navigationData.max_climb_rate                                          , "vel_climbRate"    );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &centralData->navigationData.softZoneSize                                            , "vel_softZone"     );
 
 }
 

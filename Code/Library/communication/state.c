@@ -46,12 +46,12 @@ void state_init(state_structure_t *state_structure, uint8_t autopilot_type, uint
 	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
 }
 
-//task_return_t mavlink_telemetry_send_heartbeat(state_structure_t* state_structure)
-//{
-	////mavlink_msg_heartbeat_send(MAVLINK_COMM_0, state_structure->autopilot_type, state_structure->autopilot_name, state_structure->mav_mode, 0, state_structure->mav_state);
-	//
-	//return TASK_RUN_SUCCESS;
-//}
+task_return_t mavlink_telemetry_send_heartbeat(state_structure_t* state_structure)
+{
+	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, state_structure->autopilot_type, state_structure->autopilot_name, state_structure->mav_mode, 0, state_structure->mav_state);
+	
+	return TASK_RUN_SUCCESS;
+}
 
 void state_set_mav_mode(state_structure_t* state_structure, mavlink_received_t* rec)
 {

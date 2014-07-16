@@ -44,11 +44,12 @@ void gps_position_init(position_estimator_t *pos_est);
  */
 void barometer_offset_init(position_estimator_t *pos_est);
 
-void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, AHRS_t *attitude_estimation, local_coordinates_t *sim_local_position, bool* waypoint_set, mavlink_communication_t *mavlink_communication, float home_lat, float home_lon, float home_alt, float gravity)
+void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, AHRS_t *attitude_estimation, Imu_Data_t *imu, local_coordinates_t *sim_local_position, bool* waypoint_set, mavlink_communication_t *mavlink_communication, float home_lat, float home_lon, float home_alt, float gravity)
 {
 	pos_est->barometer = pos_est->barometer;
 	pos_est->gps = gps;
 	pos_est->attitude_estimation = attitude_estimation;
+	pos_est->imu = imu;
 	pos_est->sim_local_position = sim_local_position;
 	pos_est->waypoint_set = waypoint_set;
 	
@@ -218,8 +219,8 @@ void position_estimation_position_integration(position_estimator_t *pos_est)
 	{
 		pos_est->vel_bf[i] = qvel_bf.v[i];
 		// clean acceleration estimate without gravity:
-		pos_est->attitude_estimation->acc_bf[i] = pos_est->gravity * (pos_est->attitude_estimation->acc[i] - pos_est->attitude_estimation->up_vec.v[i]) ;
-		pos_est->vel_bf[i] = pos_est->vel_bf[i] * (1.0f - (VEL_DECAY * dt)) + pos_est->attitude_estimation->acc_bf[i]  * dt;
+		pos_est->attitude_estimation->linear_acc[i] = pos_est->gravity * (pos_est->imu->scaled_accelero.data[i] - pos_est->attitude_estimation->up_vec.v[i]) ;							// TODO: review this line!
+		pos_est->vel_bf[i] = pos_est->vel_bf[i] * (1.0f - (VEL_DECAY * dt)) + pos_est->attitude_estimation->linear_acc[i]  * dt;
 	}
 	
 	// calculate velocity in global frame
@@ -371,7 +372,7 @@ void position_estimation_update(position_estimator_t *pos_est)
 
 void position_estimation_set_new_home_position(position_estimator_t *pos_est, mavlink_command_long_t* packet)
 {
-	if (packet.param1 == 1)
+	if (packet->param1 == 1)
  	{
  		// Set new home position to actual position
  		print_util_dbg_print("Set new home location to actual position.\n");
@@ -391,10 +392,11 @@ void position_estimation_set_new_home_position(position_estimator_t *pos_est, ma
  		// Set new home position from msg
  		print_util_dbg_print("Set new home location. \n");
 
- 		pos_est->localPosition.origin.latitude = packet.param5;
- 		pos_est->localPosition.origin.longitude = packet.param6;
- 		pos_est->localPosition.origin.altitude = packet.param7;
- 		centralData->sim_model.localPosition.origin = pos_est->localPosition.origin;
+ 		pos_est->localPosition.origin.latitude = packet->param5;
+ 		pos_est->localPosition.origin.longitude = packet->param6;
+ 		pos_est->localPosition.origin.altitude = packet->param7;
+		
+		pos_est->sim_local_position->origin = pos_est->localPosition.origin;
 
  		print_util_dbg_print("New Home location: (");
  		print_util_dbg_print_num(pos_est->localPosition.origin.latitude * 10000000.0f,10);

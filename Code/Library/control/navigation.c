@@ -157,7 +157,7 @@ static void navigation_collision_avoidance(navigation_t* navigationData)
 	{
 		rel_heading = 0.0f;
 	}
-	else
+	if (navigationData->waypoint_handler->collision_avoidance)
 	{
 		rel_heading = maths_calc_smaller_angle(atan2(new_velocity[Y],new_velocity[X]) - navigationData->position_estimator->localPosition.heading);
 	}

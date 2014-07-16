@@ -20,7 +20,7 @@
 #include "conf_stabilisation_copter.h"
 #include "print_util.h"
 
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, run_mode_t* run_mode, Imu_Data_t* imu, Quat_Attitude_t* attitude_estimation, position_estimator_t* pos_est)
+void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, run_mode_t* run_mode, Imu_Data_t* imu, AHRS_t* attitude_estimation, position_estimator_t* pos_est)
 {
 	stabilisation_copter->stabiliser_stack = stabiliser_stack;
 	stabilisation_copter->controls = controls;
@@ -137,7 +137,7 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 	case RATE_COMMAND_MODE: // this level is always run
 		// get rate measurements from IMU (filtered angular rates)
 		for (i=0; i<3; i++) {
-			rpyt_errors[i]= input.rpy[i]- stabilisation_copter->attitude_estimation->om[i];
+			rpyt_errors[i]= input.rpy[i]- stabilisation_copter->attitude_estimation->angular_speed[i];
 		}
 		rpyt_errors[3] = input.thrust ;  // no feedback for thrust at this level
 		

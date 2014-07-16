@@ -20,7 +20,7 @@
 #include "conf_sim_model.h"
 #include "time_keeper.h"
 #include "coord_conventions.h"
-
+#include "quaternions.h"
 
 #include "central_data.h"
 #include "maths.h"
@@ -68,6 +68,7 @@ void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Da
 	simulation_reset_simulation(sim);
 	
 	// set initial conditions to a given attitude_filter
+	//TODO: do not copy the whole structure! Otherwise the two AHRS pointers are equal!!
 	sim->attitude_filter = *attitude_filter;
 
 	for (i = 0; i < ROTORCOUNT; i++)
@@ -87,16 +88,12 @@ void simulation_calib_set(simulation_model_t *sim)
 	
 	for (i = 0;i < 3;i++)
 	{
-		//sim->simu_raw_scale[i + GYRO_OFFSET]	= 1.0f / sim->imu->gyro_calib.scale[i];				// Because the inversion is done in imu_init
-		//sim->simu_raw_scale[i + ACC_OFFSET]		= 1.0f / sim->imu->accelero_calib.scale[i];
-		//sim->simu_raw_scale[i + MAG_OFFSET]		= 1.0f / sim->imu->compass_calib.scale[i];
-		
-		sim->simu_raw_scale[i + GYRO_OFFSET]	= sim->imu->gyro_calib.scale[i];
-		sim->simu_raw_scale[i + ACC_OFFSET]		= sim->imu->accelero_calib.scale[i];
-		sim->simu_raw_scale[i + MAG_OFFSET]		= sim->imu->compass_calib.scale[i];
-		sim->simu_raw_biais[i + GYRO_OFFSET]	= sim->imu->gyro_calib.bias[i];
-		sim->simu_raw_biais[i + ACC_OFFSET]		= sim->imu->accelero_calib.bias[i];
-		sim->simu_raw_biais[i + MAG_OFFSET]		= sim->imu->compass_calib.bias[i];
+		sim->simu_raw_scale[i + GYRO_OFFSET]	= sim->imu->calib_gyro.scale_factor[i];
+		sim->simu_raw_scale[i + ACC_OFFSET]		= sim->imu->calib_accelero.scale_factor[i];
+		sim->simu_raw_scale[i + MAG_OFFSET]		= sim->imu->calib_compass.scale_factor[i];
+		sim->simu_raw_biais[i + GYRO_OFFSET]	= sim->imu->calib_gyro.bias[i];
+		sim->simu_raw_biais[i + ACC_OFFSET]		= sim->imu->calib_accelero.bias[i];
+		sim->simu_raw_biais[i + MAG_OFFSET]		= sim->imu->calib_compass.bias[i];
 	}
 }
 
@@ -111,7 +108,6 @@ void simulation_reset_simulation(simulation_model_t *sim)
 		sim->lin_forces_bf[i] = 0.0f;
 		sim->vel_bf[i] = 0.0f;
 		sim->vel[i] = 0.0f;
-		//sim->localPosition.pos[i] = sim->pos_est->localPosition.pos[i];
 	}
 	
 	sim->localPosition = sim->pos_est->localPosition;
@@ -152,7 +148,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servo
 	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4];
 	float ldb;
 	UQuat_t wind_gf = {.s = 0, .v = {sim->wind_x, sim->wind_y, 0.0f}};
-	UQuat_t wind_bf = quaternions_global_to_local(sim->attitude.qe, wind_gf);
+	UQuat_t wind_bf = quaternions_global_to_local(sim->attitude_filter.attitude_estimation->qe, wind_gf);
 	
 	float sqr_lateral_airspeed = SQR(sim->vel_bf[0] + wind_bf.v[0]) + SQR(sim->vel_bf[1] + wind_bf.v[1]);
 	float lateral_airspeed = sqrt(sqr_lateral_airspeed);
@@ -262,17 +258,17 @@ void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands, 
 	qtmp1.s = 0;
 
 	// apply step rotation 
-	qed = quaternions_multiply(sim->attitude.qe,qtmp1);
+	qed = quaternions_multiply(sim->attitude_filter.attitude_estimation->qe,qtmp1);
 
-	sim->attitude_filter.attitude_estimation->qe.s = sim->attitude.qe.s + qed.s * sim->dt;
+	sim->attitude_filter.attitude_estimation->qe.s = sim->attitude_filter.attitude_estimation->qe.s + qed.s * sim->dt;
 	sim->attitude_filter.attitude_estimation->qe.v[0] += qed.v[0] * sim->dt;
 	sim->attitude_filter.attitude_estimation->qe.v[1] += qed.v[1] * sim->dt;
 	sim->attitude_filter.attitude_estimation->qe.v[2] += qed.v[2] * sim->dt;
 
-	sim->attitude.qe = quaternions_normalise(sim->attitude.qe);
-	sim->attitude.up_vec = quaternions_global_to_local(sim->attitude.qe, up);
+	sim->attitude_filter.attitude_estimation->qe = quaternions_normalise(sim->attitude_filter.attitude_estimation->qe);
+	sim->attitude_filter.attitude_estimation->up_vec = quaternions_global_to_local(sim->attitude_filter.attitude_estimation->qe, up);
 	
-	sim->attitude.north_vec = quaternions_global_to_local(sim->attitude.qe, front);	
+	sim->attitude_filter.attitude_estimation->north_vec = quaternions_global_to_local(sim->attitude_filter.attitude_estimation->qe, front);	
 
 	// velocity and position integration
 	
@@ -285,7 +281,7 @@ void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands, 
 		// simulate "acceleration" caused by contact force with ground, compensating gravity
 		for (i = 0; i < 3; i++)
 		{
-			sim->lin_forces_bf[i] = sim->attitude.up_vec.v[i] * sim->total_mass * sim->sim_gravity;
+			sim->lin_forces_bf[i] = sim->attitude_filter.attitude_estimation->up_vec.v[i] * sim->total_mass * sim->sim_gravity;
 		}
 				
 		// slow down... (will make velocity slightly inconsistent until next update cycle, but shouldn't matter much)
@@ -295,38 +291,38 @@ void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands, 
 		}
 		
 		//upright
-		sim->rates_bf[0] =  - (-sim->attitude.up_vec.v[1] ); 
-		sim->rates_bf[1] =  - sim->attitude.up_vec.v[0];
+		sim->rates_bf[0] =  - (-sim->attitude_filter.attitude_estimation->up_vec.v[1] ); 
+		sim->rates_bf[1] =  - sim->attitude_filter.attitude_estimation->up_vec.v[0];
 		sim->rates_bf[2] = 0;
 	}
 	
-	sim->attitude.qe = quaternions_normalise(sim->attitude.qe);
-	sim->attitude.up_vec = quaternions_global_to_local(sim->attitude.qe, up);
+	sim->attitude_filter.attitude_estimation->qe = quaternions_normalise(sim->attitude_filter.attitude_estimation->qe);
+	sim->attitude_filter.attitude_estimation->up_vec = quaternions_global_to_local(sim->attitude_filter.attitude_estimation->qe, up);
 	
-	sim->attitude.north_vec = quaternions_global_to_local(sim->attitude.qe, front);	
+	sim->attitude_filter.attitude_estimation->north_vec = quaternions_global_to_local(sim->attitude_filter.attitude_estimation->qe, front);	
 	for (i = 0; i < 3; i++)
 	{
 			qtmp1.v[i] = sim->vel[i];
 	}
 	qtmp1.s = 0.0f;
-	qvel_bf = quaternions_global_to_local(sim->attitude.qe, qtmp1);
+	qvel_bf = quaternions_global_to_local(sim->attitude_filter.attitude_estimation->qe, qtmp1);
 	for (i = 0; i < 3; i++)
 	{
 		sim->vel_bf[i] = qvel_bf.v[i];
 		
 		// following the convention in the IMU, this is the acceleration due to force, as measured
-		sim->attitude.a[i] = sim->lin_forces_bf[i] / sim->total_mass;
+		sim->attitude_filter.imu1->scaled_accelero.data[i] = sim->lin_forces_bf[i] / sim->total_mass;
 		
 		// this is the "clean" acceleration without gravity
-		sim->attitude.acc_bf[i] = sim->attitude.a[i] - sim->attitude.up_vec.v[i] * GRAVITY;
+		sim->attitude_filter.attitude_estimation->linear_acc[i] = sim->attitude_filter.imu1->scaled_accelero.data[i] - sim->attitude_filter.attitude_estimation->up_vec.v[i] * GRAVITY;
 		
-		sim->vel_bf[i] = sim->vel_bf[i] + sim->attitude.acc_bf[i] * sim->dt;
+		sim->vel_bf[i] = sim->vel_bf[i] + sim->attitude_filter.attitude_estimation->linear_acc[i] * sim->dt;
 	}
 	
 	// calculate velocity in global frame
 	// vel = qe *vel_bf * qe - 1
 	qvel_bf.s = 0.0f; qvel_bf.v[0] = sim->vel_bf[0]; qvel_bf.v[1] = sim->vel_bf[1]; qvel_bf.v[2] = sim->vel_bf[2];
-	qtmp1 = quaternions_local_to_global(sim->attitude.qe, qvel_bf);
+	qtmp1 = quaternions_local_to_global(sim->attitude_filter.attitude_estimation->qe, qvel_bf);
 	sim->vel[0] = qtmp1.v[0]; sim->vel[1] = qtmp1.v[1]; sim->vel[2] = qtmp1.v[2];
 	
 	for (i = 0; i < 3; i++)
@@ -336,25 +332,25 @@ void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands, 
 
 	// fill in simulated IMU values
 	
-	imu->raw_gyro.data[GYRO_OFFSET + IMU_X] = sim->rates_bf[0] * sim->simu_raw_scale[GYRO_OFFSET + IMU_X] + sim->simu_raw_biais[GYRO_OFFSET + IMU_X];
-	imu->raw_channels[GYRO_OFFSET + IMU_Y] = sim->rates_bf[1] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Y] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Y];
-	imu->raw_channels[GYRO_OFFSET + IMU_Z] = sim->rates_bf[2] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Z] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Z];
+	imu->oriented_gyro.data[IMU_X] = sim->rates_bf[0] * sim->simu_raw_scale[GYRO_OFFSET + IMU_X] + sim->simu_raw_biais[GYRO_OFFSET + IMU_X];
+	imu->oriented_gyro.data[IMU_Y] = sim->rates_bf[1] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Y] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Y];
+	imu->oriented_gyro.data[IMU_Z] = sim->rates_bf[2] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Z] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Z];
 
-	imu->raw_channels[ACC_OFFSET + IMU_X] = (sim->lin_forces_bf[0] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_X] + sim->simu_raw_biais[ACC_OFFSET + IMU_X];
-	imu->raw_channels[ACC_OFFSET + IMU_Y] = (sim->lin_forces_bf[1] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_Y] + sim->simu_raw_biais[ACC_OFFSET + IMU_Y];
-	imu->raw_channels[ACC_OFFSET + IMU_Z] = (sim->lin_forces_bf[2] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_Z] + sim->simu_raw_biais[ACC_OFFSET + IMU_Z];
+	imu->oriented_accelero.data[IMU_X] = (sim->lin_forces_bf[0] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_X] + sim->simu_raw_biais[ACC_OFFSET + IMU_X];
+	imu->oriented_accelero.data[IMU_Y] = (sim->lin_forces_bf[1] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_Y] + sim->simu_raw_biais[ACC_OFFSET + IMU_Y];
+	imu->oriented_accelero.data[IMU_Z] = (sim->lin_forces_bf[2] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_Z] + sim->simu_raw_biais[ACC_OFFSET + IMU_Z];
 	// cheating... provide true upvector instead of simulated forces
-	//imu->raw_channels[ACC_OFFSET + IMU_X] = sim->attitude.up_vec.v[0] * imu- > raw_scale[ACC_OFFSET + IMU_X] + imu->raw_bias[ACC_OFFSET + IMU_X];
-	//imu->raw_channels[ACC_OFFSET + IMU_Y] = sim->attitude.up_vec.v[1] * imu->raw_scale[ACC_OFFSET + IMU_Y] + imu->raw_bias[ACC_OFFSET + IMU_Y];
-	//imu->raw_channels[ACC_OFFSET + IMU_Z] = sim->attitude.up_vec.v[2] * imu->raw_scale[ACC_OFFSET + IMU_Z] + imu->raw_bias[ACC_OFFSET + IMU_Z];
+	//imu->oriented_accelero.data[IMU_X] = sim->attitude_filter.attitude_estimation->up_vec.v[0] * imu->calib_accelero.scale_factor[IMU_X] + imu->calib_accelero.bias[IMU_X];
+	//imu->oriented_accelero.data[IMU_Y] = sim->attitude_filter.attitude_estimation->up_vec.v[1] * imu->calib_accelero.scale_factor[IMU_Y] + imu->calib_accelero.bias[IMU_Y];
+	//imu->oriented_accelero.data[IMU_Z] = sim->attitude_filter.attitude_estimation->up_vec.v[2] * imu->calib_accelero.scale_factor[IMU_Z] + imu->calib_accelero.bias[IMU_Z];
 	
-	imu->raw_channels[MAG_OFFSET + IMU_X] = (sim->attitude.north_vec.v[0] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_X] + sim->simu_raw_biais[MAG_OFFSET + IMU_X];
-	imu->raw_channels[MAG_OFFSET + IMU_Y] = (sim->attitude.north_vec.v[1] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_Y] + sim->simu_raw_biais[MAG_OFFSET + IMU_Y];
-	imu->raw_channels[MAG_OFFSET + IMU_Z] = (sim->attitude.north_vec.v[2] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_Z] + sim->simu_raw_biais[MAG_OFFSET + IMU_Z];
+	imu->oriented_compass.data[IMU_X] = (sim->attitude_filter.attitude_estimation->north_vec.v[0] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_X] + sim->simu_raw_biais[MAG_OFFSET + IMU_X];
+	imu->oriented_compass.data[IMU_Y] = (sim->attitude_filter.attitude_estimation->north_vec.v[1] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_Y] + sim->simu_raw_biais[MAG_OFFSET + IMU_Y];
+	imu->oriented_compass.data[IMU_Z] = (sim->attitude_filter.attitude_estimation->north_vec.v[2] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_Z] + sim->simu_raw_biais[MAG_OFFSET + IMU_Z];
 	
 	//imu->dt = sim->dt;
 
-	sim->localPosition.heading = coord_conventions_get_yaw(sim->attitude.qe);
+	sim->localPosition.heading = coord_conventions_get_yaw(sim->attitude_filter.attitude_estimation->qe);
 	//pos_est->localPosition = sim->localPosition;
 }
 

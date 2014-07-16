@@ -112,8 +112,7 @@ typedef struct
 
 	position_estimator_t* position_estimator;
 	HIL_mode* simulation_mode;
-	//AHRS_t* attitude_estimation;
-	Quat_Attitude_t* attitude_estimation;
+	AHRS_t* attitude_estimation;
 	state_structure_t* state_structure;
 	mavlink_communication_t* mavlink_communication;
 
@@ -123,7 +122,7 @@ typedef struct
 /**
  * \brief						Initialize the waypoint handler
  */
-void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, Quat_Attitude_t* attitude_estimation, state_structure_t* state_structure, mavlink_communication_t* mavlink_communication);
+void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, AHRS_t* attitude_estimation, state_structure_t* state_structure, mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief						Initialize a first waypoint if a flight plan is set
@@ -299,7 +298,9 @@ void waypoint_handler_continueToNextWaypoint(mavlink_waypoint_handler_t* waypoin
  * \param circle_radius			The radius of the circle
  * \param num_of_vhc			The number of vehicle, the position is set ID wise
  */
-void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* waypoint_handler, float circle_radius, float num_of_vhc);
+void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
+
+void mavlink_waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t *waypoint_handler, mavlink_command_long_t* packet);
 
 // TODO: Add code in the function :)
 //void set_stream_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc);

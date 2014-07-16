@@ -54,19 +54,20 @@ void central_data_init()
 	servo_pwm_init((servo_output_t*)centralData.servos);
 	
 	//imu_init((Imu_Data_t*)&(centralData.imu1));
-	//qfilter_init(&centralData.attitude_filter, 
-					//centralData.imu1.raw_scale, 
-					//centralData.imu1.raw_bias);
+	qfilter_init((qfilter_t*)&(centralData.attitude_filter), (Imu_Data_t*)&centralData.imu1, (AHRS_t*)&centralData.attitude_estimation);
 		
 	position_estimation_init(   &centralData.position_estimator,
 								&centralData.pressure,
 								&centralData.GPS_data,
 								&centralData.attitude_estimation,
+								&centralData.imu1,
 								&centralData.sim_model.localPosition,
 								&centralData.waypoint_handler.waypoint_set,
+								&centralData.mavlink_communication,
 								HOME_LATITUDE,
 								HOME_LONGITUDE,
-								HOME_ALTITUDE);
+								HOME_ALTITUDE,
+								GRAVITY);
 	
 	qfilter_init_quaternion(&centralData.attitude_filter);
 		
@@ -84,11 +85,13 @@ void central_data_init()
 							&centralData.mavlink_communication);// ((waypoint_handler_t*)&centralData.waypoint_handler);
 		
 	neighbors_selection_init(   &centralData.neighborData, 
-								&centralData.position_estimator);
+								&centralData.position_estimator,
+								&centralData.mavlink_communication);
 	
 	orca_init(  &centralData.orcaData,
 				&centralData.neighborData,
 				&centralData.position_estimator,
+				&centralData.imu1,
 				&centralData.attitude_estimation);
 
 	// init stabilisers

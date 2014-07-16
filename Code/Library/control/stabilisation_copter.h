@@ -49,8 +49,7 @@ typedef struct
 	Control_Command_t *controls;								///< The pointer to the control structure
 	run_mode_t * run_mode;										///< The pointer to the motor run mode
 	Imu_Data_t *imu;											///< The pointer to the IMU structure
-	//AHRS_t *attitude_estimation;								///< The pointer to the attitude estimation structure
-	Quat_Attitude_t *attitude_estimation;
+	AHRS_t *attitude_estimation;								///< The pointer to the attitude estimation structure
 	position_estimator_t *pos_est;								///< The pointer to the position estimation structure
 } stabilise_copter_t;
 
@@ -65,7 +64,7 @@ typedef struct
  * \param	attitude_estimation		The pointer to the attitude estimation structure
  * \param	pos_est					The pointer to the position estimation structure
  */
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, run_mode_t* run_mode, Imu_Data_t* imu, Quat_Attitude_t* attitude_estimation, position_estimator_t* pos_est);
+void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, run_mode_t* run_mode, Imu_Data_t* imu, AHRS_t* attitude_estimation, position_estimator_t* pos_est);
 
 /**
  * \brief							Gets the velocity vector from the remote
