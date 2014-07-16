@@ -42,18 +42,18 @@ void mavlink_comm_send_ch(mavlink_channel_t chan, uint8_t ch)
 }
 
 
-void mavlink_stream_init(mavlink_stream_t* mavlink_stream, byte_stream_t *transmit_stream, byte_stream_t *receive_stream, int32_t sysid, int32_t compid)
+void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config)
 {	
-	mavlink_out_stream = transmit_stream;
-	mavlink_stream->out_stream = transmit_stream;
-	mavlink_stream->in_stream = receive_stream;
+	mavlink_out_stream                = config->down_stream;
+	mavlink_stream->out_stream        = config->down_stream;
+	mavlink_stream->in_stream         = config->up_stream;
 	mavlink_stream->message_available = false;
 	
-	mavlink_system.sysid = sysid; // System ID, 1-255
-	mavlink_system.compid = compid; // Component/Subsystem ID, 1-255
+	mavlink_system.sysid              = config->sysid; // System ID, 1-255
+	mavlink_system.compid             = config->compid; // Component/Subsystem ID, 1-255
 	
-	mavlink_mission_planner.sysid = sysid;
-	mavlink_mission_planner.compid = MAV_COMP_ID_MISSIONPLANNER;
+	mavlink_mission_planner.sysid     = config->sysid;
+	mavlink_mission_planner.compid    = MAV_COMP_ID_MISSIONPLANNER;
 }
 
 
