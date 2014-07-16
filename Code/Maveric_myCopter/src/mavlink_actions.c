@@ -193,53 +193,12 @@ void mavlink_actions_handle_specific_messages (mavlink_received_t* rec)
 
 	// 	switch(rec->msg.msgid) 
 	// 	{
-	// 		case MAVLINK_MSG_ID_MISSION_ITEM:	// 39 
-	// 			mavlink_stream_suspend_downstream(500000);
-	// 			waypoint_handler_receive_waypoint(	rec, // 								centralData->waypoint_list, // 								centralData->number_of_waypoints, // 								&centralData->waypoint_receiving	);
-	// 			break;
-	
-	// 		case MAVLINK_MSG_ID_MISSION_REQUEST : // 40
-	// 			mavlink_stream_suspend_downstream(500000);
-	// 			waypoint_handler_send_waypoint(	rec, // 							centralData->waypoint_list, // 							centralData->number_of_waypoints, // 							&centralData->waypoint_sending	);
-	// 			break;
 
-	// 		case MAVLINK_MSG_ID_MISSION_SET_CURRENT :  // 41
-	// 			waypoint_handler_set_current_waypoint(	rec, // 									centralData->waypoint_list, // 									centralData->number_of_waypoints	);
-	// 			break;
-
-	// 		case MAVLINK_MSG_ID_MISSION_REQUEST_LIST:  // 43
-	// 			// this initiates all waypoints being sent to the base-station - therefore, we pause the downstream telemetry to free the channel
-	// 			// (at least until we have a radio system with guaranteed bandwidth)
-	// 			mavlink_stream_suspend_downstream(500000);
-	// 			waypoint_handler_send_count(	rec, // 						centralData->number_of_waypoints, // 						&centralData->waypoint_receiving, // 						&centralData->waypoint_sending	);
-	// 			break;
-
-	// 		case MAVLINK_MSG_ID_MISSION_COUNT :  // 44
-	// 			// this initiates all waypoints being sent from base-station - therefore, we pause the downstream telemetry to free the channel
-	// 			// (at least until we have a radio system with guaranteed bandwidth)
-	// 			mavlink_stream_suspend_downstream(500000);
-	// 			waypoint_handler_receive_count(	rec, // 							&(centralData->number_of_waypoints), // 							&centralData->waypoint_receiving, // 							&centralData->waypoint_sending	);
-	// 			break;
-
-	// 		case MAVLINK_MSG_ID_MISSION_CLEAR_ALL :  // 45
-	// 			waypoint_handler_clear_waypoint_list(	rec, // 									&(centralData->number_of_waypoints), // 									&centralData->waypoint_set	);
-	// 			break;
-
-	// 		case MAVLINK_MSG_ID_MISSION_ACK :  // 47
-	// 			waypoint_handler_receive_ack_msg(	rec, // 								&centralData->waypoint_sending	);
-	// 			break;
 
 	// 		case MAVLINK_MSG_ID_SET_MODE :  // 11
 	// 			waypoint_handler_set_mav_mode(	rec, // 							&centralData->mav_mode, // 							&(centralData->mav_state), // 							centralData->simulation_mode	);
 	// 			break;
 
-	// 		case MAVLINK_MSG_ID_COMMAND_LONG :  // 76
-	// 			mavlink_actions_receive_message_long(rec);
-	// 			break;
-
-	// 		case MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN:  // 48
-	// 			waypoint_handler_set_home(rec);
-	// 			break;
 	// 	}
 	// } 
 	// else if (rec->msg.msgid == MAVLINK_MSG_ID_GLOBAL_POSITION_INT)

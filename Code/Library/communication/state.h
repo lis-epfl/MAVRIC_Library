@@ -25,6 +25,7 @@ extern "C" {
 
 #include "stdint.h"
 #include "scheduler.h"
+#include "mavlink_communication.h"
 
 /**
  * \brief The Hardware-in-the-loop simulation enum typedef
@@ -63,7 +64,7 @@ typedef struct
  * \param	mav_mode			The mav mode, MAV_MODE enum
  * \param	simu_mode			The simulation mode, HIL_Mode enum
  */
-void state_init(state_structure_t *state_structure, uint8_t autopilot_type, uint8_t autopilot_name, uint8_t mav_state, uint8_t mav_mode, HIL_mode simu_mode);
+void state_init(state_structure_t *state_structure, uint8_t autopilot_type, uint8_t autopilot_name, uint8_t mav_state, uint8_t mav_mode, HIL_mode simu_mode, mavlink_communication_t *mavlink_communication);
 
 /**
  * \brief	Task to send the mavlink heartbeat message
@@ -71,6 +72,14 @@ void state_init(state_structure_t *state_structure, uint8_t autopilot_type, uint
  * \return	The status of execution of the task
  */
 //task_return_t mavlink_telemetry_send_heartbeat(state_structure_t* state_structure);
+
+/**
+ * \brief						Set the state and the mode of the vehicle
+ *
+ * \param	state_structure		The pointer to the state structure
+ * \param	rec					The received mavlink message structure
+ */
+void state_set_mav_mode(state_structure_t* state_structure, mavlink_received_t* rec);
 
 #ifdef __cplusplus
 }

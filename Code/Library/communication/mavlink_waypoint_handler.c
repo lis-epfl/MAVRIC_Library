@@ -67,13 +67,6 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	// Add callbacks for onboard parameters requests
 	mavlink_message_handler_msg_callback_t callback;
 
-	callback.message_id 	= MAVLINK_MSG_ID_SET_MODE; // 11
-	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
-	callback.compid_filter 	= MAV_COMP_ID_ALL;
-	callback.function 		= (mavlink_msg_callback_function_t)	&waypoint_handler_set_mav_mode;
-	callback.module_struct 	= (handling_module_struct_t)		waypoint_handler;
-	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
-
 	callback.message_id 	= MAVLINK_MSG_ID_MISSION_ITEM; // 39
 	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
@@ -640,73 +633,6 @@ void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handler, mav
 		waypoint_handler->position_estimator->localPosition.origin.latitude*10000000.0f,
 		waypoint_handler->position_estimator->localPosition.origin.longitude*10000000.0f,
 		waypoint_handler->position_estimator->localPosition.origin.altitude*1000.0f);
-	}
-}
-
-void waypoint_handler_set_mav_mode(mavlink_waypoint_handler_t* waypoint_handler, mavlink_received_t* rec)
-{
-	mavlink_set_mode_t packet;
-	
-	mavlink_msg_set_mode_decode(&rec->msg,&packet);
-	
-	// Check if this message is for this system and subsystem
-	// No component ID in mavlink_set_mode_t so no control
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
-	{
-		print_util_dbg_print("base_mode:");
-		print_util_dbg_print_num(packet.base_mode,10);
-		print_util_dbg_print(", custom mode:");
-		print_util_dbg_print_num(packet.custom_mode,10);
-		print_util_dbg_print("\n");
-
-		if (waypoint_handler->state_structure->simulation_mode == 0)
-		{
-			switch(packet.base_mode)
-			{
-				case MAV_MODE_STABILIZE_DISARMED:
-				case MAV_MODE_GUIDED_DISARMED:
-				case MAV_MODE_AUTO_DISARMED:
-					waypoint_handler->state_structure->mav_state = MAV_STATE_STANDBY;
-					waypoint_handler->state_structure->mav_mode = MAV_MODE_MANUAL_DISARMED;
-					break;
-				
-				case MAV_MODE_MANUAL_ARMED:
-					if (remote_controller_get_thrust_from_remote()<-0.95f)
-					{
-						waypoint_handler->state_structure->mav_state = MAV_STATE_ACTIVE;
-						waypoint_handler->state_structure->mav_mode = MAV_MODE_MANUAL_ARMED;
-					}
-					break;
-			}
-		}
-		else
-		{
-			switch(packet.base_mode)
-			{
-				case MAV_MODE_STABILIZE_DISARMED:
-				case MAV_MODE_GUIDED_DISARMED:
-				case MAV_MODE_AUTO_DISARMED:
-					waypoint_handler->state_structure->mav_state = MAV_STATE_STANDBY;
-					waypoint_handler->state_structure->mav_mode = MAV_MODE_MANUAL_DISARMED;
-					break;
-				case MAV_MODE_MANUAL_ARMED:
-					waypoint_handler->state_structure->mav_state = MAV_STATE_ACTIVE;
-					waypoint_handler->state_structure->mav_mode = MAV_MODE_MANUAL_ARMED;
-					break;
-				case MAV_MODE_STABILIZE_ARMED:
-					waypoint_handler->state_structure->mav_state = MAV_STATE_ACTIVE;
-					waypoint_handler->state_structure->mav_mode = MAV_MODE_STABILIZE_ARMED;
-					break;
-				case MAV_MODE_GUIDED_ARMED:
-					waypoint_handler->state_structure->mav_state = MAV_STATE_ACTIVE;
-					waypoint_handler->state_structure->mav_mode = MAV_MODE_GUIDED_ARMED;
-					break;
-				case MAV_MODE_AUTO_ARMED:
-					waypoint_handler->state_structure->mav_state = MAV_STATE_ACTIVE;
-					waypoint_handler->state_structure->mav_mode = MAV_MODE_AUTO_ARMED;
-					break;
-			}
-		}
 	}
 }
 

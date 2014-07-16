@@ -233,15 +233,6 @@ void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handler, mav
 //---------------------------------------------------------------------------------------------------------------------------------------//
 
 /**
- * \brief						Set the state and the mode of the vehicle
- *
- * \param rec					The received mavlink message structure
-_* \param board_mav_mode		The pointer to the mode of the vehicle
- */
-void waypoint_handler_set_mav_mode(mavlink_waypoint_handler_t* waypoint_handler, mavlink_received_t* rec);
-//---------------------------------------------------------------------------------------------------------------------------------------//
-
-/**
  * \brief						Control if time is over timeout and change sending/receiving flags to false
  *
  * \param num_of_waypoint		The pointer to the number of waypoints

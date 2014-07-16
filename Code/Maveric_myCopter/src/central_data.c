@@ -42,6 +42,14 @@ void central_data_init()
 	};												
 	mavlink_communication_init(&centralData.mavlink_communication, &mavlink_config);
 	
+		state_init(	&centralData.state_structure,
+					MAV_TYPE_QUADROTOR,
+					MAV_AUTOPILOT_GENERIC,
+					MAV_STATE_BOOT,
+					MAV_MODE_PREFLIGHT,
+					REAL_MODE,// SIMULATION_MODE
+					&centralData.mavlink_communication); 
+	
 	// Init servos
 	servo_pwm_init((servo_output_t*)centralData.servos);
 	servo_pwm_failsafe((servo_output_t*)centralData.servos);
@@ -62,7 +70,13 @@ void central_data_init()
 	orca_init((orca_t*)&(centralData.orcaData),(neighbor_t*)&(centralData.neighborData),(position_estimator_t*)&(centralData.position_estimator),(Imu_Data_t*)&(centralData.imu1));
 
 	// init stabilisers
-	stabilisation_copter_init((Stabiliser_Stack_copter_t*)&centralData.stabiliser_stack);
+	stabilisation_copter_init(	&centralData.stabilisation_copter,
+								&centralData.stabiliser_stack,
+								&centralData.controls,
+								&centralData.run_mode,
+								&centralData.imu,
+								&centralData.attitude_estimation,
+								&centralData.position_estimator 	);
 
 	centralData.simulation_mode = 0;
 	centralData.simulation_mode_previous = 0;
