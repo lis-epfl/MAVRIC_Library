@@ -35,8 +35,8 @@ void central_data_init()
 		},
 		.message_handler_config = 
 		{
-			.max_msg_callback_count=10,
-			.max_cmd_callback_count=10,
+			.max_msg_callback_count=20,
+			.max_cmd_callback_count=20,
 			.debug=true
 		}
 	};												

@@ -63,8 +63,72 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	waypoint_handler_waypoint_init(waypoint_handler);
 	
 	print_util_dbg_print("Waypoint handler init.\n");
-		
-		
+	
+	// Add callbacks for onboard parameters requests
+	mavlink_message_handler_msg_callback_t callback;
+
+	callback.message_id 	= MAVLINK_MSG_ID_SET_MODE; // 11
+	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
+	callback.compid_filter 	= MAV_COMP_ID_ALL;
+	callback.function 		= (mavlink_msg_callback_function_t)	&waypoint_handler_set_mav_mode;
+	callback.module_struct 	= (handling_module_struct_t)		waypoint_handler;
+	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+
+	callback.message_id 	= MAVLINK_MSG_ID_MISSION_ITEM; // 39
+	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
+	callback.compid_filter 	= MAV_COMP_ID_ALL;
+	callback.function 		= (mavlink_msg_callback_function_t)	&waypoint_handler_receive_waypoint;
+	callback.module_struct 	= (handling_module_struct_t)		waypoint_handler;
+	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	
+	callback.message_id 	= MAVLINK_MSG_ID_MISSION_REQUEST; // 40
+	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
+	callback.compid_filter 	= MAV_COMP_ID_ALL;
+	callback.function 		= (mavlink_msg_callback_function_t)	&waypoint_handler_send_waypoint;
+	callback.module_struct 	= (handling_module_struct_t)		waypoint_handler;
+	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	
+	callback.message_id 	= MAVLINK_MSG_ID_MISSION_SET_CURRENT; // 41
+	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
+	callback.compid_filter 	= MAV_COMP_ID_ALL;
+	callback.function 		= (mavlink_msg_callback_function_t)	&waypoint_handler_set_current_waypoint;
+	callback.module_struct 	= (handling_module_struct_t)		waypoint_handler;
+	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	
+	callback.message_id 	= MAVLINK_MSG_ID_MISSION_REQUEST_LIST; // 43
+	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
+	callback.compid_filter 	= MAV_COMP_ID_ALL;
+	callback.function 		= (mavlink_msg_callback_function_t)	&waypoint_handler_send_count;
+	callback.module_struct 	= (handling_module_struct_t)		waypoint_handler;
+	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	
+	callback.message_id 	= MAVLINK_MSG_ID_MISSION_COUNT; // 44
+	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
+	callback.compid_filter 	= MAV_COMP_ID_ALL;
+	callback.function 		= (mavlink_msg_callback_function_t)	&waypoint_handler_receive_count;
+	callback.module_struct 	= (handling_module_struct_t)		waypoint_handler;
+	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	
+	callback.message_id 	= MAVLINK_MSG_ID_MISSION_CLEAR_ALL; // 45
+	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
+	callback.compid_filter 	= MAV_COMP_ID_ALL;
+	callback.function 		= (mavlink_msg_callback_function_t)	&waypoint_handler_clear_waypoint_list;
+	callback.module_struct 	= (handling_module_struct_t)		waypoint_handler;
+	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	
+	callback.message_id 	= MAVLINK_MSG_ID_MISSION_ACK; // 47
+	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
+	callback.compid_filter 	= MAV_COMP_ID_ALL;
+	callback.function 		= (mavlink_msg_callback_function_t)	&waypoint_handler_receive_ack_msg;
+	callback.module_struct 	= (handling_module_struct_t)		waypoint_handler;
+	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	
+	callback.message_id 	= MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN; // 48
+	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
+	callback.compid_filter 	= MAV_COMP_ID_ALL;
+	callback.function 		= (mavlink_msg_callback_function_t)	&waypoint_handler_set_home;
+	callback.module_struct 	= (handling_module_struct_t)		waypoint_handler;
+	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
 }
 
 void waypoint_handler_waypoint_init(mavlink_waypoint_handler_t* waypoint_handler)
