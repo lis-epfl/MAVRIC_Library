@@ -154,28 +154,25 @@ void imu_oriented2scale(Imu_Data_t *imu1)
 
 void imu_relevel(Imu_Data_t *imu1)
 {
-	uint32_t i,j;
 	float raw_mag_mean[3];			///< The raw magnetometer values to compute the initial heading of the platform
 
-	for (j = 0;j < 3;j++)
-	{
-		raw_mag_mean[j] = (float)imu1->oriented_compass.data[j];
-	}
+	tasks_run_imu_update(0);
+	raw_mag_mean[X] = imu1->oriented_compass.data[X];
+	raw_mag_mean[Y] = imu1->oriented_compass.data[Y];
+	raw_mag_mean[Z] = imu1->oriented_compass.data[Z];
 
-	for (i = 1000; i > 0; i--)
+	for (uint32_t i = 1000; i > 0; i--)
 	{
 		tasks_run_imu_update(0);
 		
-		for (j = 0;j < 3;j++)
-		{
-			raw_mag_mean[j] = (1.0f - MAG_LPF) * raw_mag_mean[j] + MAG_LPF * ((float)imu1->oriented_compass.data[j]);
-		}
+		raw_mag_mean[X] = (1.0f - MAG_LPF) * raw_mag_mean[X] + MAG_LPF * imu1->oriented_compass.data[X];
+		raw_mag_mean[Y] = (1.0f - MAG_LPF) * raw_mag_mean[Y] + MAG_LPF * imu1->oriented_compass.data[Y];
+		raw_mag_mean[Z] = (1.0f - MAG_LPF) * raw_mag_mean[Z] + MAG_LPF * imu1->oriented_compass.data[Z];
 
 		delay_ms(5);
 	}
 	
-	for(i = 0; i < 3; i++)
-	{
-		imu1->scaled_compass.data[i] = (raw_mag_mean[i] - imu1->calib_compass.bias[i]) * imu1->calib_compass.scale_factor[i];
-	}
+	imu1->scaled_compass.data[X] = (raw_mag_mean[X] - imu1->calib_compass.bias[X]) * imu1->calib_compass.scale_factor[X];
+	imu1->scaled_compass.data[Y] = (raw_mag_mean[Y] - imu1->calib_compass.bias[Y]) * imu1->calib_compass.scale_factor[Y];
+	imu1->scaled_compass.data[Z] = (raw_mag_mean[Z] - imu1->calib_compass.bias[Z]) * imu1->calib_compass.scale_factor[Z];
 }
