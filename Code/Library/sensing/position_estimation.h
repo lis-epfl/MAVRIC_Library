@@ -67,7 +67,7 @@ typedef struct
  * \param	barometer		The pointer to the barometer structure
  * \param	gps				The pointer to the GPS structure
  */
-void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps );
+void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, float home_lat, float home_lon, float home_alt);
 
 /**
  * \brief	Reset the home position and altitude

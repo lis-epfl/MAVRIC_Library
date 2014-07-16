@@ -47,13 +47,13 @@ void init_pos_gps(position_estimator_t *pos_est, gps_Data_type_t *gps);
 void init_barometer_offset(position_estimator_t *pos_est, pressure_data_t *barometer);
 
 
-void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps)
+void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, float home_lat, float home_lon, float home_alt)
 {
 	
 	// default GPS home position
-	pos_est->localPosition.origin.longitude =   HOME_LONGITUDE;
-	pos_est->localPosition.origin.latitude =   HOME_LATITUDE;
-	pos_est->localPosition.origin.altitude =   HOME_ALTITUDE;
+	pos_est->localPosition.origin.longitude =   home_lon;
+	pos_est->localPosition.origin.latitude =   home_lat;
+	pos_est->localPosition.origin.altitude =   home_alt;
 	pos_est->localPosition.pos[X] = 0;
 	pos_est->localPosition.pos[Y] = 0;
 	pos_est->localPosition.pos[Z] = 0;
