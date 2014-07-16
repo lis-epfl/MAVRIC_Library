@@ -110,7 +110,7 @@ void tasks_relevel_imu(void)
 
 	print_util_dbg_print("calibrating IMU...\n");
 
-	imu_relevel(&centralData->imu1);
+	//imu_relevel(&centralData->imu1);
 	
 	centralData->attitude_filter.calibration_level = OFF;
 	centralData->mav_state = MAV_STATE_STANDBY;

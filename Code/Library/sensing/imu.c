@@ -90,7 +90,7 @@ void imu_calibrate_gyros(Imu_Data_t *imu1)
 {
 	int32_t i,j;
 	//imu_get_raw_data(imu1);
-	imu_raw2oriented(imu1);
+	tasks_run_imu_update(0);
 	
 	for (j = 0; j < 3; j++)
 	{
@@ -100,6 +100,7 @@ void imu_calibrate_gyros(Imu_Data_t *imu1)
 	for (i = 0; i < 100; i++)
 	{
 		//imu_get_raw_data(imu1);
+		tasks_run_imu_update(0);
 
 		//imu1->imu1->calib_sensor.bias[0 + ACC_OFFSET] = (0.9f * imu1->imu1->calib_accelero.bias[0] + 0.1f * (float)imu1->oriented_accelero.data[0]);
 		//imu1->imu1->calib_sensor.bias[1 + ACC_OFFSET] = (0.9f * imu1->imu1->calib_accelero.bias[1] + 0.1f * (float)imu1->oriented_accelero.data[1]);
