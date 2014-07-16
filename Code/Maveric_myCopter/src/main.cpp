@@ -30,7 +30,7 @@ void initialisation()
 	centralData = central_data_get_pointer_to_struct();
 	boardsupport_init(centralData);
 	central_data_init();
-	
+
 	print_util_dbg_print("Debug stream initialised\n");
 	
 	servo_pwm_failsafe(centralData->servos);
@@ -38,7 +38,7 @@ void initialisation()
 		
 	mavlink_actions_init(); // TODO: move read from flash elsewhere
 	mavlink_telemetry_init();
-	
+
 	// TODO: this second simulation init is required because we have to wait for the parameters stored on flash
 	simulation_init(&(centralData->sim_model),&(centralData->imu1),centralData->position_estimator.localPosition); // TODO: init only once
 
@@ -74,7 +74,7 @@ int main (void)
 	
 	while (1 == 1) 
 	{
-		scheduler_update(tasks_get_main_taskset(), ROUND_ROBIN);
+		scheduler_update(&centralData->scheduler, ROUND_ROBIN);
 	}
 
 	return 0;

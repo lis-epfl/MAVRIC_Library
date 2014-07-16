@@ -18,79 +18,120 @@
 
 #include "scheduler.h"
 #include "time_keeper.h"
+#include "print_util.h"
 
-// TODO: change behaviour of task_set_t.number_of_tasks (ie: initialised at 0 and incremented each time a task is added)
+#include "piezo_speaker.h"
+
+
+// TODO: change behaviour of task_set_t.task_count (ie: initialised at 0 and incremented each time a task is added)
 // currently it is dangerous because the task_set_t can be iterated between 0 and number_of_task even if 
 // number_of_task is superior to the actual number of tasks stored in the structure (risk of empty pointers)
 
-void scheduler_init(task_set_t *ts) 
+void scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config) 
 {
-	int32_t i;
-	
-	for (i = 0; i < ts->number_of_tasks; i++) 
-	{
-		ts->tasks[i].call_function = NULL;
-		ts->tasks[i].tasks = ts;
-	}
+	task_set_t* ts = scheduler->task_set;
 
-	ts->running_task = -1;
+	// Init debug mode
+	scheduler->debug = config->debug;
+
+	// Allocate memory for the task set
+	ts = malloc( sizeof(task_set_t) + sizeof(task_entry_t[config->max_task_count]) );
+	ts->max_task_count = config->max_task_count;
+
+	ts->task_count = 0;
 	ts->current_schedule_slot = 0;
 }
 
 
-task_handle_t scheduler_register_task(task_set_t *ts, int32_t task_slot, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, task_argument_t function_argument) 
-{
-	if ((task_slot < 0) || (task_slot >= ts->number_of_tasks)) 
-	{
-		return -1;
-	}
-
-	ts->tasks[task_slot].task_id = task_slot;
-	ts->tasks[task_slot].call_function = call_function;
-	ts->tasks[task_slot].function_argument = function_argument;
-	ts->tasks[task_slot].run_mode = run_mode;
-	ts->tasks[task_slot].repeat_period = repeat_period;
-	ts->tasks[task_slot].next_run = GET_TIME;
-	ts->tasks[task_slot].execution_time = 0;
-	ts->tasks[task_slot].timing_mode = PERIODIC_ABSOLUTE;
-
-#ifdef SCHEDULER_PROFILING	
-	ts->tasks[task_slot].delay_max = 0;
-	ts->tasks[task_slot].delay_avg = 0;
-	ts->tasks[task_slot].delay_var_squared = 0;
-	ts->tasks[task_slot].rt_violations = 0;
-#endif
-
-	return task_slot;
-}
-
-
-bool scheduler_add_task(task_set_t *ts, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, task_argument_t function_argument, uint32_t task_id) 
-{
-	int32_t task_slot = 0;
+// task_handle_t scheduler_register_task(scheduler_t* scheduler, int32_t task_slot, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, task_argument_t function_argument) 
+// {
+// 	task_set_t* ts = scheduler->task_set;
 	
-	while ((task_slot < ts->number_of_tasks) && (ts->tasks[task_slot].call_function != NULL)) 
-	{
-		task_slot++;
-	}
+// 	if ((task_slot < 0) || (task_slot >= ts->max_task_count)) 
+// 	{
+// 		return -1;
+// 	}
 
-	if (task_slot >= ts->number_of_tasks) 
-	{
-		return false;
-	}
+// 	ts->tasks[task_slot].task_id = task_slot;
+// 	ts->tasks[task_slot].call_function = call_function;
+// 	ts->tasks[task_slot].function_argument = function_argument;
+// 	ts->tasks[task_slot].run_mode = run_mode;
+// 	ts->tasks[task_slot].repeat_period = repeat_period;
+// 	ts->tasks[task_slot].next_run = GET_TIME;
+// 	ts->tasks[task_slot].execution_time = 0;
+// 	ts->tasks[task_slot].timing_mode = PERIODIC_ABSOLUTE;
 
-	scheduler_register_task(ts,  task_slot,   repeat_period, run_mode,  call_function, function_argument);
-	ts->tasks[task_slot].task_id = task_id;
+// 	ts->tasks[task_slot].delay_max = 0;
+// 	ts->tasks[task_slot].delay_avg = 0;
+// 	ts->tasks[task_slot].delay_var_squared = 0;
+// 	ts->tasks[task_slot].rt_violations = 0;
+
+// 	return task_slot;
+// }
+
+
+bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_function_t call_function, task_argument_t function_argument, uint32_t task_id) 
+{
+	task_set_t* ts = scheduler->task_set;
+
+	if (ts->task_count < ts->max_task_count) 
+	{
+		task_entry_t* new_task = &ts->tasks[ts->task_count];
+
+		new_task->call_function     = call_function;
+		new_task->function_argument = function_argument;
+		new_task->task_id           = task_id;		
+		new_task->run_mode          = run_mode;
+		new_task->timing_mode       = timing_mode;	
+		new_task->repeat_period     = repeat_period;
+		new_task->next_run          = GET_TIME;
+		new_task->execution_time    = 0;
+		new_task->delay_max         = 0;
+		new_task->delay_avg         = 0;
+		new_task->delay_var_squared = 0;
+
+		ts->task_count += 1;
+	}
+	else
+	{
+		print_util_dbg_print("[SCHEDULER] Error: Cannot add more task");
+	}
 
 	return true;
 }
 
+// bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, task_argument_t function_argument, uint32_t task_id) 
+// {
+// 	task_set_t* ts = scheduler->task_set;
 
-void scheduler_sort_taskset_by_period(task_set_t *ts){
+// 	int32_t task_slot = 0;
+	
+// 	while ((task_slot < ts->max_task_count) && (ts->tasks[task_slot].call_function != NULL)) 
+// 	{
+// 		task_slot++;
+// 	}
+
+// 	if (task_slot >= ts->max_task_count) 
+// 	{
+// 		return false;
+// 	}
+
+// 	scheduler_register_task(scheduler,  task_slot,   repeat_period, run_mode,  call_function, function_argument);
+// 	ts->tasks[task_slot].task_id = task_id;
+
+// 	return true;
+// }
+
+
+void scheduler_sort_taskset_by_period(scheduler_t* scheduler)
+{
 	int32_t i;
 	bool sorted = false;
+
+	task_set_t* ts = scheduler->task_set;	
 	task_entry_t tmp;
-	if (ts->number_of_tasks < 2) 
+	
+	if (ts->task_count < 2) 
 	{
 		return;
 	}
@@ -98,59 +139,73 @@ void scheduler_sort_taskset_by_period(task_set_t *ts){
 	while (!sorted) 
 	{
 		sorted = true;
-		for (i = 0; i < ts->number_of_tasks - 1; i++) 
+	
+		for (i = 0; i < (ts->task_count - 1); i++) 
 		{
-			if ( ((ts->tasks[i].call_function == NULL) && (ts->tasks[i + 1].call_function != NULL)) ||
-				((ts->tasks[i].call_function != NULL)&&(ts->tasks[i + 1].call_function != NULL) &&
-				(ts->tasks[i].repeat_period > ts->tasks[i + 1].repeat_period))) 
+			if ( ts->tasks[i].repeat_period > ts->tasks[i + 1].repeat_period )
 			{
 				tmp = ts->tasks[i];
 				ts->tasks[i] = ts->tasks[i + 1];
-				ts->tasks[i + 1] = tmp;		
+				ts->tasks[i + 1] = tmp;
 				sorted = false;
 			}
 		}
-	}		
+	}
 }
 
 
-int32_t scheduler_update(task_set_t *ts, uint8_t schedule_strategy) 
+int32_t scheduler_update(scheduler_t* scheduler, uint8_t schedule_strategy) 
 {
 	int32_t i;
 	int32_t realtime_violation = 0;
-	volatile task_function_t call_task;
-	void* function_argument;
+
+	task_set_t* ts = scheduler->task_set;
+
+	task_function_t call_task;
+	task_argument_t function_argument;
 	task_return_t treturn;
 
-	for (i = ts->current_schedule_slot; i < ts->number_of_tasks; i++) 
+	// Iterate through registered tasks
+	for (i = ts->current_schedule_slot; i < ts->task_count; i++) 
 	{
 		uint32_t current_time = GET_TIME;
-		if ((ts->tasks[i].call_function != NULL) && (ts->tasks[i].run_mode != RUN_NEVER) && (current_time >= ts->tasks[i].next_run)) 
+
+		// If the task is active and has waited long enough...
+		if ( (ts->tasks[i].run_mode != RUN_NEVER) && (current_time >= ts->tasks[i].next_run) ) 
 		{
 			uint32_t delay = current_time - (ts->tasks[i].next_run);
 			uint32_t task_start_time;
 
 		    task_start_time = GET_TIME;
+
+		    // Get function pointer and function argument
 		    call_task = ts->tasks[i].call_function;
 			function_argument = ts->tasks[i].function_argument;
+
+			// Execute task
 		    treturn = call_task(function_argument);
 	
+			// Set the next execution time of the task
 			switch (ts->tasks[i].timing_mode) 
 			{
 				case PERIODIC_ABSOLUTE:
+					// Do not take delays into account
 					ts->tasks[i].next_run += ts->tasks[i].repeat_period;
 				break;
 
 				case PERIODIC_RELATIVE:
+					// Take delays into account
 					ts->tasks[i].next_run = GET_TIME + ts->tasks[i].repeat_period;
 				break;
 			}
 			
+			// Set the task to inactive if it has to run only once
 			if (ts->tasks[i].run_mode == RUN_ONCE)
 			{
 				ts->tasks[i].run_mode = RUN_NEVER;
 			}
 
+			// Check real time violations
 			if (ts->tasks[i].next_run < current_time) 
 			{
 				realtime_violation = -i; //realtime violation!!
@@ -158,25 +213,26 @@ int32_t scheduler_update(task_set_t *ts, uint8_t schedule_strategy)
 				ts->tasks[i].next_run = current_time + ts->tasks[i].repeat_period;
 			}
 			
+			// Compute real-time statistics
 			ts->tasks[i].delay_avg = (7 * ts->tasks[i].delay_avg + delay) / 8;
 			if (delay > ts->tasks[i].delay_max) 
 			{
 				ts->tasks[i].delay_max = delay;
 			}
-			
 			ts->tasks[i].delay_var_squared = (15 * ts->tasks[i].delay_var_squared + (delay - ts->tasks[i].delay_avg) * (delay - ts->tasks[i].delay_avg)) / 16;
-			
 			ts->tasks[i].execution_time = (7 * ts->tasks[i].execution_time + (GET_TIME - task_start_time)) / 8;
-						
+				
+			// Depending on shceduling strategy, select next task slot	
 			switch (schedule_strategy) 
 			{
 				case FIXED_PRIORITY: 
+					// Fixed priority scheme - scheduler will start over with tasks with the highest priority
 					ts->current_schedule_slot = 0;
 				break;		
 	
 				case ROUND_ROBIN:
-					// round robin scheme - scheduler will pick up where it left.
-					if (i == ts->number_of_tasks)
+					// Round robin scheme - scheduler will pick up where it left.
+					if (i >= ts->task_count)
 					{ 
 						ts->current_schedule_slot = 0;
 					}
@@ -189,16 +245,19 @@ int32_t scheduler_update(task_set_t *ts, uint8_t schedule_strategy)
 			return realtime_violation;			
 		}
 	}
-	return realtime_violation;;
+	return realtime_violation;
 }
 
 
-task_entry_t* scheduler_get_task_by_id(task_set_t *ts, uint16_t task_id)
+task_entry_t* scheduler_get_task_by_id(scheduler_t* scheduler, uint16_t task_id)
 {
 	int32_t i = 0;
-	for (i = 0; i < ts->number_of_tasks; i++) 
+
+	task_set_t* ts = scheduler->task_set;
+
+	for (i = 0; i < ts->task_count; i++) 
 	{
-		if (ts->tasks[i].task_id == task_id)
+		if ( ts->tasks[i].task_id == task_id )
 		{ 
 			return &ts->tasks[i];
 		}
@@ -208,9 +267,11 @@ task_entry_t* scheduler_get_task_by_id(task_set_t *ts, uint16_t task_id)
 }
 
 
-task_entry_t* scheduler_get_task_by_index(task_set_t *ts, uint16_t task_index) 
+task_entry_t* scheduler_get_task_by_index(scheduler_t* scheduler, uint16_t task_index) 
 {
-	if (task_index < ts->number_of_tasks) 
+	task_set_t* ts = scheduler->task_set;
+
+	if (task_index < ts->task_count) 
 	{
 		return &ts->tasks[task_index];
 	}

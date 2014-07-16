@@ -23,9 +23,21 @@ static central_data_t centralData;
 
 void central_data_init()
 {	
+	scheduler_conf_t scheduler_config =
+	{
+		.max_task_count = 10,
+		.debug = true
+	};
+	scheduler_init(&centralData.scheduler, &scheduler_config);
+	
 	// init mavlink
 	mavlink_communication_conf_t mavlink_config = 
 	{	
+		.scheduler_config =
+		{
+			.max_task_count = 30,
+			.debug = true
+		},
 		.mavlink_stream_config = 
 		{
 			.up_stream   = centralData.telemetry_up_stream,
