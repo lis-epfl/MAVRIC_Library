@@ -49,7 +49,7 @@ typedef struct
 	float vel_bf[3];										///< The 3D velocity vector in body frame
 	float vel[3];											///< The 3D velocity vector in NED frame
 	float pos[3];											///< The 3D position vector in NED frame
-	Quat_Attitude_t attitude;								///< The simulated attitude estimation
+	qfilter_t *attitude_filter;								///< The simulated attitude estimation
 	local_coordinates_t localPosition;						///< The simulated local position
 	
 	float simu_raw_scale[9];								///< The raw scales of the simulated IMU
@@ -87,7 +87,7 @@ typedef struct
  * \param	imu				The pointer to the real IMU structure to match the simulated IMU
  * \param	localPos		The pointer to the structure of the real local position estimation of the vehicle
  */
-void simulation_init(simulation_model_t *sim, Imu_Data_t *imu, local_coordinates_t localPos);
+void simulation_init(simulation_model_t *sim, qfilter_t *attitude_filter, local_coordinates_t localPos);
 
 /**
  * \brief	Computes artificial gyro and accelerometer values based on motor commands

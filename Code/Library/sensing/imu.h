@@ -25,14 +25,11 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "qfilter.h"
-#include "bmp085.h"
-#include "position_estimation.h"
-#include "gps_ublox.h"
 #include "conf_platform.h"
 #include "gyro.h"
 #include "accelero.h"
 #include "compass.h"
+#include "quaternions.h"
 
 #define GYRO_LPF 0.1f					///< The gyroscope linear particle filter gain
 #define ACC_LPF 0.05f					///< The accelerometer linear particle filter gain
@@ -41,21 +38,46 @@ extern "C" {
 #define IMU_AXES 6						///< The number of axis of the device
 
 /**
+ * \brief Structure containing the accelero, gyro and magnetometer sensors' gains
+ */
+typedef struct
+{
+	float bias[3];
+	float scale_factor[3];
+	float orientation[3];
+}sensor_calib_t;
+
+/**
+ * \brief Structure containing the Attitude and Heading Reference System
+ */
+typedef struct
+{
+	UQuat_t		qe;						///< quaternion defining the Attitude estimation of the platform
+	
+	float		angular_speed[3];					///< Gyro rates
+	float		linear_acc[3];					///< Acceleration WITHOUT gravity
+	
+	float		heading;				///< The heading of the platform
+	UQuat_t		up_vec;					///< The quaternion of the up vector
+	UQuat_t		north_vec;				///< The quaternion of the north vector
+	
+	uint32_t	last_update;			///< The time of the last IMU update in ms
+	float		dt;						///< The time interval between two IMU updates
+}AHRS_t;
+
+/**
  * \brief The IMU structure
  */
 typedef struct
 {
-	Quat_Attitude_t attitude;			///< Attitude structure of the platform
-	float raw_channels[9];				///< The array where the raw value of the IMU and compass are parsed
-	float raw_bias[9];					///< The biaises of the IMU and compass
-	float raw_scale[9];					///< The scales of the IMU and compass
-	uint32_t last_update;				///< The time of the last IMU update in ms
-	//uint8_t valid;					///< True if the message is valid (TODO: is it sill used?)
+	gyro_data_t raw_gyro, oriented_gyro, scaled_gyro;
+	accelero_data_t raw_accelero, oriented_accelero, scaled_accelero;
+	compass_data_t raw_compass, oriented_compass, scaled_compass;
+	
+	sensor_calib_t calib_gyro, calib_accelero, calib_compass;
+	
 	float dt;							///< The time interval between two IMU updates
-	//int8_t ready;						///< Is the IMU ready (TODO: is it still used?)
-	gyro_data_t gyroData;
-	accelero_data_t acceleroData;
-	compass_data_t compassData;
+	uint32_t last_update;				///< The time of the last IMU update in ms
 } Imu_Data_t;
 
 bool imu_last_update_init;				///< Variable to initialize the IMU
@@ -89,15 +111,7 @@ void imu_calibrate_gyros(Imu_Data_t *imu1);
  * \param	barometer	the pointer to the barometer structure
  * \param	gps			the pointer to the GPS structure
  */
-void imu_update(Imu_Data_t *imu1, position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps);
-
-/**
- * \brief	Computes the transition from raw values to scaled values
- *
- * \param	attitude	the pointer structure of the attitude
- * \param	rates		the array of angular rates (IMU), accelerations and magnetometer
- */
-void imu_raw2scale(Quat_Attitude_t *attitude, float rates[9]);
+void imu_update(Imu_Data_t *imu1);
 
 #ifdef __cplusplus
 }

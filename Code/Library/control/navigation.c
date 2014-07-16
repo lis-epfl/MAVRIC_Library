@@ -89,7 +89,7 @@ static void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
 	// calculate dir_desired in local frame
 	// vel = qe-1 * rel_pos * qe
 	qtmp1 = quaternions_create_from_vector(rel_pos);
-	qtmp2 = quaternions_global_to_local(centralData->imu1.attitude.qe,qtmp1);
+	qtmp2 = quaternions_global_to_local(centralData->attitude_estimation.qe,qtmp1);
 	dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
 	
 	dir_desired_bf[2] = rel_pos[2];

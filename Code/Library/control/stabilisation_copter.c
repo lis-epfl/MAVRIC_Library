@@ -56,7 +56,7 @@ void stabilisation_copter_get_velocity_vector_from_remote(float tvel[])
 	tvel[Z]=- 1.5f * centralData->controls.thrust;
 }
 
-void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input) 
+void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, AHRS_t *attitude_estimation, position_estimator_t *pos_est, Control_Command_t *control_input) 
 {
 	float rpyt_errors[4];
 	Control_Command_t input;
@@ -69,7 +69,7 @@ void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, position_estimator_
 	case VELOCITY_COMMAND_MODE:
 		
 		qtmp=quaternions_create_from_vector(input.tvel);
-		UQuat_t inputLocal = quaternions_local_to_global(imu->attitude.qe, qtmp);
+		UQuat_t inputLocal = quaternions_local_to_global(attitude_estimation->qe, qtmp);
 		
 		input.tvel[X] = inputLocal.v[X];
 		input.tvel[Y] = inputLocal.v[Y];
@@ -106,7 +106,7 @@ void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, position_estimator_
 		input = centralData->stabiliser_stack.velocity_stabiliser.output;
 		
 		qtmp=quaternions_create_from_vector(centralData->stabiliser_stack.velocity_stabiliser.output.rpy);
-		UQuat_t rpyLocal = quaternions_global_to_local(imu->attitude.qe, qtmp);
+		UQuat_t rpyLocal = quaternions_global_to_local(attitude_estimation->qe, qtmp);
 		
 		input.rpy[ROLL] = rpyLocal.v[Y];
 		input.rpy[PITCH] = -rpyLocal.v[X];
@@ -114,9 +114,8 @@ void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, position_estimator_
 	// -- no break here  - we want to run the lower level modes as well! -- 
 	
 	case ATTITUDE_COMMAND_MODE:
-		// run absolute attitude controller
-		rpyt_errors[0]= input.rpy[0] - ( - imu->attitude.up_vec.v[1] ); 
-		rpyt_errors[1]= input.rpy[1] - imu->attitude.up_vec.v[0];
+		// run absolute attitude controller		rpyt_errors[0]= input.rpy[0] - ( - attitude_estimation->up_vec.v[1] ); 
+		rpyt_errors[1]= input.rpy[1] - attitude_estimation->up_vec.v[0];
 		
 		if ((control_input->yaw_mode == YAW_ABSOLUTE) ) {
 			rpyt_errors[2] =maths_calc_smaller_angle(input.theading- pos_est->localPosition.heading);
@@ -139,7 +138,7 @@ void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, position_estimator_
 	case RATE_COMMAND_MODE: // this level is always run
 		// get rate measurements from IMU (filtered angular rates)
 		for (i=0; i<3; i++) {
-			rpyt_errors[i]= input.rpy[i]- imu->attitude.om[i];
+			rpyt_errors[i]= input.rpy[i]- imu->scaled_gyro.data[i];
 		}
 		rpyt_errors[3] = input.thrust ;  // no feedback for thrust at this level
 		

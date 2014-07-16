@@ -435,9 +435,9 @@ void lsm330dlc_acc_update(accelero_data_t *lsm_acc_outputs)
 			axes[2] += (float)((int16_t)fifo_values.axes[2]);
 		}
 		
-		lsm_acc_outputs->raw_data[0] = axes[0] / read_fifo.fifo_fill;
-		lsm_acc_outputs->raw_data[1] = axes[1] / read_fifo.fifo_fill;
-		lsm_acc_outputs->raw_data[2] = axes[2] / read_fifo.fifo_fill;
+		lsm_acc_outputs->data[0] = axes[0] / read_fifo.fifo_fill;
+		lsm_acc_outputs->data[1] = axes[1] / read_fifo.fifo_fill;
+		lsm_acc_outputs->data[2] = axes[2] / read_fifo.fifo_fill;
 	}
 }
 
@@ -478,8 +478,8 @@ void lsm330dlc_gyro_update(gyro_data_t *lsm_gyro_outputs)
 		}
 		
 		lsm_gyro_outputs->temperature = (int8_t)(temperature / read_fifo.fifo_fill);
-		lsm_gyro_outputs->raw_data[0] = axes[0] / read_fifo.fifo_fill;
-		lsm_gyro_outputs->raw_data[1] = axes[1] / read_fifo.fifo_fill;
-		lsm_gyro_outputs->raw_data[2] = axes[2] / read_fifo.fifo_fill;
+		lsm_gyro_outputs->data[0] = axes[0] / read_fifo.fifo_fill;
+		lsm_gyro_outputs->data[1] = axes[1] / read_fifo.fifo_fill;
+		lsm_gyro_outputs->data[2] = axes[2] / read_fifo.fifo_fill;
 	}
 }

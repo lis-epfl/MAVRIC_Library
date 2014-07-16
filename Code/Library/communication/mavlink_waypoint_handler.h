@@ -112,8 +112,7 @@ typedef struct
 
 	position_estimator_t* position_estimator;
 	HIL_mode* simulation_mode;
-	//AHRS_t* attitude_estimation;
-	Quat_Attitude_t* attitude_estimation;
+	AHRS_t* attitude_estimation;
 	state_structure_t* state_structure;
 	mavlink_communication_t* mavlink_communication;
 
@@ -123,7 +122,7 @@ typedef struct
 /**
  * \brief						Initialize the waypoint handler
  */
-void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, Quat_Attitude_t* attitude_estimation, state_structure_t* state_structure, mavlink_communication_t* mavlink_communication);
+void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, AHRS_t* attitude_estimation, state_structure_t* state_structure, mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief						Initialize a first waypoint if a flight plan is set

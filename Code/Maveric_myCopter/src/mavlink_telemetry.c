@@ -267,15 +267,15 @@ task_return_t mavlink_telemetry_send_scaled_imu(void* arg)
 {
 	mavlink_msg_scaled_imu_send(MAVLINK_COMM_0,
 								time_keeper_get_millis(),
-								1000 * centralData->imu1.attitude.a[IMU_X],
-								1000 * centralData->imu1.attitude.a[IMU_Y],
-								1000 * centralData->imu1.attitude.a[IMU_Z],
-								1000 * centralData->imu1.attitude.om[IMU_X],
-								1000 * centralData->imu1.attitude.om[IMU_Y],
-								1000 * centralData->imu1.attitude.om[IMU_Z],
-								1000 * centralData->imu1.attitude.mag[IMU_X],
-								1000 * centralData->imu1.attitude.mag[IMU_Y],
-								1000 * centralData->imu1.attitude.mag[IMU_Z]);
+								1000 * centralData->imu1.scaled_accelero.data[IMU_X],
+								1000 * centralData->imu1.scaled_accelero.data[IMU_Y],
+								1000 * centralData->imu1.scaled_accelero.data[IMU_Z],
+								1000 * centralData->imu1.scaled_gyro.data[IMU_X],
+								1000 * centralData->imu1.scaled_gyro.data[IMU_Y],
+								1000 * centralData->imu1.scaled_gyro.data[IMU_Z],
+								1000 * centralData->imu1.scaled_compass.data[IMU_X],
+								1000 * centralData->imu1.scaled_compass.data[IMU_Y],
+								1000 * centralData->imu1.scaled_compass.data[IMU_Z]);
 	return TASK_RUN_SUCCESS;
 }
 
@@ -284,15 +284,15 @@ task_return_t mavlink_telemetry_send_raw_imu(void* arg)
 {
 	mavlink_msg_raw_imu_send(	MAVLINK_COMM_0, 
 								time_keeper_get_micros(), 
-								centralData->imu1.raw_channels[ACC_OFFSET + IMU_X], 
-								centralData->imu1.raw_channels[ACC_OFFSET + IMU_Y], 
-								centralData->imu1.raw_channels[ACC_OFFSET + IMU_Z], 
-								centralData->imu1.raw_channels[GYRO_OFFSET + IMU_X], 
-								centralData->imu1.raw_channels[GYRO_OFFSET + IMU_Y], 
-								centralData->imu1.raw_channels[GYRO_OFFSET + IMU_Z], 
-								centralData->imu1.raw_channels[MAG_OFFSET + IMU_X], 
-								centralData->imu1.raw_channels[MAG_OFFSET + IMU_Y], 
-								centralData->imu1.raw_channels[MAG_OFFSET + IMU_Z] );
+								centralData->imu1.oriented_accelero.data[IMU_X], 
+								centralData->imu1.oriented_accelero.data[IMU_Y], 
+								centralData->imu1.oriented_accelero.data[IMU_Z], 
+								centralData->imu1.oriented_gyro.data[IMU_X], 
+								centralData->imu1.oriented_gyro.data[IMU_Y], 
+								centralData->imu1.oriented_gyro.data[IMU_Z], 
+								centralData->imu1.oriented_compass.data[IMU_X], 
+								centralData->imu1.oriented_compass.data[IMU_Y], 
+								centralData->imu1.oriented_compass.data[IMU_Z] );
 	return TASK_RUN_SUCCESS;
 }
 
@@ -327,16 +327,16 @@ task_return_t mavlink_telemetry_send_attitude(void* arg)
 {
 	// ATTITUDE
 	Aero_Attitude_t aero_attitude;
-	aero_attitude = coord_conventions_quat_to_aero(centralData->imu1.attitude.qe);
+	aero_attitude = coord_conventions_quat_to_aero(centralData->attitude_estimation.qe);
 
 	mavlink_msg_attitude_send(	MAVLINK_COMM_0, 
 								time_keeper_get_millis(), 
 								aero_attitude.rpy[0], 
 								aero_attitude.rpy[1], 
 								aero_attitude.rpy[2], 
-								centralData->imu1.attitude.om[0], 
-								centralData->imu1.attitude.om[1], 
-								centralData->imu1.attitude.om[2]);
+								centralData->imu1.scaled_gyro.data[0], 
+								centralData->imu1.scaled_gyro.data[1], 
+								centralData->imu1.scaled_gyro.data[2]);
 	return TASK_RUN_SUCCESS;
 }
 
@@ -346,13 +346,13 @@ task_return_t mavlink_telemetry_send_attitude_quaternion(void* arg)
 	// ATTITUDE QUATERNION
 	mavlink_msg_attitude_quaternion_send(	MAVLINK_COMM_0, 
 											time_keeper_get_millis(), 
-											centralData->imu1.attitude.qe.s, 
-											centralData->imu1.attitude.qe.v[0], 
-											centralData->imu1.attitude.qe.v[1], 
-											centralData->imu1.attitude.qe.v[2], 
-											centralData->imu1.attitude.om[0], 
-											centralData->imu1.attitude.om[1], 
-											centralData->imu1.attitude.om[2]	);
+											centralData->attitude_estimation.qe.s, 
+											centralData->attitude_estimation.qe.v[0], 
+											centralData->attitude_estimation.qe.v[1], 
+											centralData->attitude_estimation.qe.v[2], 
+											centralData->imu1.scaled_gyro.data[0], 
+											centralData->imu1.scaled_gyro.data[1], 
+											centralData->imu1.scaled_gyro.data[2]	);
 	return TASK_RUN_SUCCESS;
 }
 
@@ -386,7 +386,7 @@ task_return_t mavlink_telemetry_send_global_position(void* arg)
 											centralData->position_estimator.vel[0] * 100.0f, 
 											centralData->position_estimator.vel[1] * 100.0f, 
 											centralData->position_estimator.vel[2] * 100.0f, 
-											centralData->imu1.attitude.om[2]);
+											centralData->imu1.scaled_gyro.data[2]);
 	return TASK_RUN_SUCCESS;
 }
 
@@ -480,7 +480,7 @@ task_return_t mavlink_telemetry_send_hud(void* arg)
 	float airspeed=groundspeed;
 
 	Aero_Attitude_t aero_attitude;
-	aero_attitude = coord_conventions_quat_to_aero(centralData->imu1.attitude.qe);
+	aero_attitude = coord_conventions_quat_to_aero(centralData->attitude_estimation.qe);
 	
 	int16_t heading;
 	if(aero_attitude.rpy[2] < 0)
@@ -521,7 +521,7 @@ task_return_t  mavlink_telemetry_send_rpy_rates_error(void* arg)
 task_return_t mavlink_telemetry_send_simulation(void* arg) 
 {
 	Aero_Attitude_t aero_attitude;
-	aero_attitude = coord_conventions_quat_to_aero(centralData->sim_model.attitude.qe);
+	aero_attitude = coord_conventions_quat_to_aero(centralData->sim_model.attitude_filter->attitude_estimation->qe);
 
 	global_position_t gpos = coord_conventions_local_to_global_position(centralData->sim_model.localPosition);
 	
@@ -545,7 +545,7 @@ task_return_t mavlink_telemetry_send_simulation(void* arg)
 	
 	mavlink_msg_hil_state_quaternion_send(	MAVLINK_COMM_0,
 											time_keeper_get_micros(),
-											(float*) &centralData->sim_model.attitude.qe,
+											(float*) &centralData->sim_model.attitude_filter->attitude_estimation->qe,
 											aero_attitude.rpy[ROLL],
 											aero_attitude.rpy[PITCH],
 											aero_attitude.rpy[YAW],
@@ -557,9 +557,9 @@ task_return_t mavlink_telemetry_send_simulation(void* arg)
 											100 * centralData->sim_model.vel[Z],
 											100 * vectors_norm(centralData->sim_model.vel),
 											0.0f,
-											centralData->sim_model.attitude.acc_bf[X],
-											centralData->sim_model.attitude.acc_bf[Y],
-											centralData->sim_model.attitude.acc_bf[Z]	);
+											centralData->sim_model.attitude_filter->acc_bf[X],
+											centralData->sim_model.attitude_filter->acc_bf[Y],
+											centralData->sim_model.attitude_filter->acc_bf[Z]	);
 	
 	mavlink_msg_named_value_int_send(	MAVLINK_COMM_0, 
 										time_keeper_get_millis(), 
