@@ -36,7 +36,7 @@ typedef struct
 	task_set_t task_set;
 	mavlink_stream_t mavlink_stream;				
 	mavlink_message_handler_t message_handler;
-	onboard_parameter_set_t onboard_parameters;
+	onboard_parameters_t onboard_parameters;
 } mavlink_communication_t;
 
 
@@ -44,6 +44,7 @@ typedef struct
 {
 	mavlink_stream_conf_t 			mavlink_stream_config;
 	mavlink_message_handler_conf_t	message_handler_config;
+	onboard_parameters_conf_t		onboard_parameters_config;
 } mavlink_communication_conf_t;
 
 

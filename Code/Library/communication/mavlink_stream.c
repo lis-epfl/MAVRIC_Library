@@ -86,14 +86,3 @@ void mavlink_stream_flush(mavlink_stream_t* mavlink_stream)
 		stream->flush(stream->data);	
 	}
 }
-
-
-// static void mavlink_stream_receive_handler() 
-// {
-// 	mavlink_received_t rec;
-	
-// 	if(mavlink_stream_receive((byte_stream_t*)mavlink_in_stream, &rec)) 
-// 	{
-// 		mavlink_message_handler_receive(&rec);
-// 	}
-// }

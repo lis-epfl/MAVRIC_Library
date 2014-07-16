@@ -28,18 +28,23 @@ void central_data_init()
 	{	
 		.mavlink_stream_config = 
 		{
-			.up_stream = centralData.telemetry_up_stream,
+			.up_stream   = centralData.telemetry_up_stream,
 			.down_stream = centralData.telemetry_down_stream,
-			.sysid = MAVLINK_SYS_ID,
-			.compid = 50
+			.sysid       = MAVLINK_SYS_ID,
+			.compid      = 50
 		},
 		.message_handler_config = 
 		{
-			.max_msg_callback_count=10,
-			.max_cmd_callback_count=10,
-			.debug=true
+			.max_msg_callback_count = 10,
+			.max_cmd_callback_count = 10,
+			.debug                  = true
+		},
+		.onboard_parameters_config =
+		{
+			.max_param_count = MAX_ONBOARD_PARAM_COUNT,
+			.debug           = true
 		}
-	};												
+	};
 	mavlink_communication_init(&centralData.mavlink_communication, &mavlink_config);
 	
 	// Init servos

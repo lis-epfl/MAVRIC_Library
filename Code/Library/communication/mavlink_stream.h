@@ -28,10 +28,6 @@ extern "C" {
 #include "streams.h"
 #include "mavlink_bridge.h"
 #include "mavlink/include/maveric/mavlink.h"
-// #include "scheduler.h"
-
-
-// TODO update documentation
 
 
 /**
@@ -39,35 +35,40 @@ extern "C" {
  */
 typedef struct 
 {
-	mavlink_message_t msg;
-	mavlink_status_t status;
+	mavlink_message_t msg;			///< Mavlink message
+	mavlink_status_t status;		///< Status on the message
 } mavlink_received_t;
 
 
+/**
+ * \brief 	Main structure for the mavlink stream module
+ */
 typedef struct
 {
-	byte_stream_t* out_stream;
-	byte_stream_t* in_stream;
-	mavlink_received_t rec;
-	bool message_available;
+	byte_stream_t* out_stream;		///< Output stream
+	byte_stream_t* in_stream;		///< Input stream
+	mavlink_received_t rec;			///< Last received message
+	bool message_available;			///< Inidicates if a new message is available and not handled yet
 } mavlink_stream_t;
 
 
+/**
+ * \brief 	Configuration structure for the module mavlink stream
+ */
 typedef struct 
 {
-	byte_stream_t* up_stream;
-	byte_stream_t* down_stream;
-	int32_t sysid;
-	int32_t compid;
+	byte_stream_t* up_stream;		///< Output stream
+	byte_stream_t* down_stream;		///< Input stream
+	int32_t sysid;					///< System ID
+	int32_t compid;					///< System Component ID
 } mavlink_stream_conf_t;
 
 
 /**
  * \brief					Initialization of mavlink sysid, compid and scheduler to send messages
  *
- * \param transmit_stream	Pointer to the mavlink transmit stream structure
- * \param receive_stream	Pointer to the mavlink receive stream structure
- * \param sysid				System ID (1-255)
+ * \param 	mavlink_stream		Pointer to the mavlink stream structure
+ * \param 	config				Configuration
  */
 void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config);
 
@@ -87,9 +88,6 @@ void mavlink_stream_receive(mavlink_stream_t* mavlink_stream);
  * \brief	Flushing mavlink stream
  */
 void mavlink_stream_flush(mavlink_stream_t* mavlink_stream);
-
-
-
 
 
 #ifdef __cplusplus
