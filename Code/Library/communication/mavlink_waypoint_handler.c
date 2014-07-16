@@ -22,7 +22,7 @@
 #include "time_keeper.h"
 #include "maths.h"
 
-void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, Quat_Attitude_t* attitude_estimation, state_structure_t* state_structure, mavlink_communication_t* mavlink_communication)
+void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, AHRS_t* attitude_estimation, state_structure_t* state_structure, mavlink_communication_t* mavlink_communication)
 {
 	waypoint_handler->start_timeout = time_keeper_get_millis();
 	waypoint_handler->timeout_max_waypoint = 10000;
@@ -833,7 +833,7 @@ void waypoint_handler_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_ha
 	
 	waypoint_handler->waypoint_hold_coordinates = localPos;
 	
-	//waypoint_handler->waypoint_hold_coordinates.heading = coord_conventions_get_yaw(waypoint_handler->imu1.attitude.qe);
+	//waypoint_handler->waypoint_hold_coordinates.heading = coord_conventions_get_yaw(waypoint_handler->attitude_estimation->qe);
 	//waypoint_handler->waypoint_hold_coordinates.heading = localPos.heading;
 	
 	print_util_dbg_print("Position hold at: (");

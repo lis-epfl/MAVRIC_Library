@@ -182,7 +182,7 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est, pres
 		}	
 }
 
-void position_estimation_position_integration(position_estimator_t *pos_est, Quat_Attitude_t *attitude, float dt)
+void position_estimation_position_integration(position_estimator_t *pos_est, qfilter_t *attitude_filter, float dt)
 {
 	int32_t i;
 	
@@ -193,19 +193,19 @@ void position_estimation_position_integration(position_estimator_t *pos_est, Qua
 	{
 		qvel.v[i] = pos_est->vel[i];
 	}
-	qvel_bf = quaternions_global_to_local(attitude->qe, qvel);
+	qvel_bf = quaternions_global_to_local(attitude_filter->attitude_estimation->qe, qvel);
 	for (i = 0; i < 3; i++)
 	{
 		pos_est->vel_bf[i] = qvel_bf.v[i];
 		// clean acceleration estimate without gravity:
-		attitude->acc_bf[i] = GRAVITY * (attitude->a[i] - attitude->up_vec.v[i]) ;							// TODO: review this line!
-		pos_est->vel_bf[i] = pos_est->vel_bf[i] * (1.0f - (VEL_DECAY * dt)) + attitude->acc_bf[i]  * dt;
+		attitude_filter->acc_bf[i] = GRAVITY * (attitude_filter->imu1->scaled_accelero.data[i] - attitude_filter->attitude_estimation->up_vec.v[i]) ;							// TODO: review this line!
+		pos_est->vel_bf[i] = pos_est->vel_bf[i] * (1.0f - (VEL_DECAY * dt)) + attitude_filter->acc_bf[i]  * dt;
 	}
 	
 	// calculate velocity in global frame
 	// vel = qe *vel_bf * qe - 1
 	qvel_bf.s = 0.0f; qvel_bf.v[0] = pos_est->vel_bf[0]; qvel_bf.v[1] = pos_est->vel_bf[1]; qvel_bf.v[2] = pos_est->vel_bf[2];
-	qvel = quaternions_local_to_global(attitude->qe, qvel_bf);
+	qvel = quaternions_local_to_global(attitude_filter->attitude_estimation->qe, qvel_bf);
 	pos_est->vel[0] = qvel.v[0]; pos_est->vel[1] = qvel.v[1]; pos_est->vel[2] = qvel.v[2];
 	
 	for (i = 0; i < 3; i++)
@@ -213,7 +213,7 @@ void position_estimation_position_integration(position_estimator_t *pos_est, Qua
 		// clean position estimate without gravity:
 		//prev_pos[i] = attitude->localPosition.pos[i];
 		pos_est->localPosition.pos[i] = pos_est->localPosition.pos[i] * (1.0f - (POS_DECAY * dt)) + pos_est->vel[i] * dt;
-		pos_est->localPosition.heading = coord_conventions_get_yaw(attitude->qe);
+		pos_est->localPosition.heading = coord_conventions_get_yaw(attitude_filter->attitude_estimation->qe);
 	}
 	
 }

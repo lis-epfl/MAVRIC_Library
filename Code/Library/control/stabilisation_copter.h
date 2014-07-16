@@ -24,6 +24,7 @@ extern "C" {
 #endif
 
 #include "stabilisation.h"
+#include "position_estimation.h"
 
 typedef struct 
 {
@@ -54,7 +55,7 @@ void stabilisation_copter_get_velocity_vector_from_remote(float tvel[]);
  * \param	pos_est				Pointer to position estimator
  * \param	control_input		Pointer to the controlling inputs
  */
-void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input);
+void stabilisation_copter_cascade_stabilise(Imu_Data_t *imu, AHRS_t *attitude_estimation, position_estimator_t *pos_est, Control_Command_t *control_input);
 
 /**
  * \brief						Mix to servo for quad configuration diagonal

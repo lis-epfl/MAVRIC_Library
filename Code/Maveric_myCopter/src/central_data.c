@@ -49,17 +49,17 @@ void central_data_init()
 
 	// TODO change names! XXX_init()
 	//imu_init((Imu_Data_t*)&(centralData.imu1));
-	qfilter_init((Quat_Attitude_t*)&(centralData.imu1.attitude), (float*)(centralData.imu1.raw_scale), (float*)(centralData.imu1.raw_bias));
+	qfilter_init((qfilter_t*)&(centralData.attitude_filter), (Imu_Data_t*)&centralData.imu1, (AHRS_t*)&centralData.attitude_estimation);
 		
 	position_estimation_init((position_estimator_t*)&(centralData.position_estimator), (pressure_data_t*)&centralData.pressure, (gps_Data_type_t*)&centralData.GPS_data);
 	
-	qfilter_init_quaternion((Quat_Attitude_t*)&(centralData.imu1.attitude));
+	qfilter_init_quaternion((qfilter_t*)&(centralData.attitude_filter));
 		
 	navigation_init();
-	waypoint_handler_init(&centralData.waypoint_handler,&centralData.position_estimator,&centralData.imu1.attitude,&centralData.state_structure,&centralData.mavlink_communication);// ((waypoint_handler_t*)&centralData.waypoint_handler);
+	waypoint_handler_init(&centralData.waypoint_handler,&centralData.position_estimator,&centralData.attitude_estimation,&centralData.state_structure,&centralData.mavlink_communication);// ((waypoint_handler_t*)&centralData.waypoint_handler);
 		
 	neighbors_selection_init((neighbor_t*)&(centralData.neighborData), (position_estimator_t*)&(centralData.position_estimator));
-	orca_init((orca_t*)&(centralData.orcaData),(neighbor_t*)&(centralData.neighborData),(position_estimator_t*)&(centralData.position_estimator),(Imu_Data_t*)&(centralData.imu1));
+	orca_init((orca_t*)&(centralData.orcaData),(neighbor_t*)&(centralData.neighborData),(position_estimator_t*)&(centralData.position_estimator),(Imu_Data_t*)&(centralData.imu1),(AHRS_t*)&centralData.attitude_estimation);
 
 	// init stabilisers
 	stabilisation_copter_init((Stabiliser_Stack_copter_t*)&centralData.stabiliser_stack);
@@ -68,7 +68,7 @@ void central_data_init()
 	centralData.simulation_mode_previous = 0;
 
 	// init simulation (should be done after position_estimator)
-	simulation_init((simulation_model_t*)&(centralData.sim_model), (Imu_Data_t*)&(centralData.imu1), (local_coordinates_t)centralData.position_estimator.localPosition);		
+	simulation_init((simulation_model_t*)&(centralData.sim_model), (qfilter_t*)&centralData.attitude_filter, (local_coordinates_t)centralData.position_estimator.localPosition);		
 
 
 	//centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
