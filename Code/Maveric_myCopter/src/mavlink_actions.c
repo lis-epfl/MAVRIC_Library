@@ -285,19 +285,6 @@ void mavlink_actions_receive_message_long(mavlink_received_t* rec)
 	// 	print_util_dbg_print("\n");
 		
 	// 	switch(packet.command) {
-	// 		case MAV_CMD_NAV_RETURN_TO_LAUNCH:
-	// 			/* Return to launch location 
-	// 			| Empty
-	// 			| Empty
-	// 			| Empty
-	// 			| Empty
-	// 			| Empty
-	// 			| Empty
-	// 			| Empty
-	// 			| */
-	// 			print_util_dbg_print("All MAVs: Return to first waypoint. \n");
-	// 			waypoint_handler_set_current_waypoint_from_parameter(centralData->waypoint_list,centralData->number_of_waypoints,0);
-	// 			break;
 
 	// 		case MAV_CMD_NAV_LAND:
 	// 			/* Land at location 
@@ -311,24 +298,6 @@ void mavlink_actions_receive_message_long(mavlink_received_t* rec)
 	// 			| */
 	// 			print_util_dbg_print("All MAVs: Auto-landing");
 	// 			break;
-
-	// 		case MAV_CMD_MISSION_START:
-	// 			/* start running a mission 
-	// 			| first_item: the first mission item to run
-	// 			| last_item:  the last mission item to run (after this item is run, the mission ends)
-	// 			| */
-	// 			print_util_dbg_print("All vehicles: Navigating to next waypoint. \n");
-	// 			waypoint_handler_continueToNextWaypoint();
-	// 			break;
-
-	// 		case MAV_CMD_CONDITION_LAST:
-	// 			/*
-	// 			| */
-	// 			print_util_dbg_print("All MAVs: setting circle scenario!\n");
-	// 			waypoint_handler_set_circle_scenario(centralData->waypoint_list, &(centralData->number_of_waypoints), packet.param1, packet.param2);
-	// 			break;			
-	// 	}
-	// }
 	
 }
 

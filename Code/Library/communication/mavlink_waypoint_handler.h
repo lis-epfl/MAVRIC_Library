@@ -209,11 +209,10 @@ void waypoint_handler_set_current_waypoint(mavlink_waypoint_handler_t* waypoint_
 /**
  * \brief						Set the current waypoint to new_current
  *
- * \param waypoint_list			The waypoint list of all onboard waypoints
- * \param num_of_waypoint		The number of onboard waypoints	
- * \param new_current			The waypoint to be set as current
+ * \param waypoint_handler		The pointer to the waypoint handler
+ * \param packet				The pointer to the decoded mavlink message long
  */
-void waypoint_handler_set_current_waypoint_from_parameter(mavlink_waypoint_handler_t* waypoint_handler, uint16_t new_current);
+void waypoint_handler_set_current_waypoint_from_parameter(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
 
 /**
  * \brief						Clears the waypoint list
@@ -289,7 +288,7 @@ void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_handler)
 /**
  * \brief						Set the next waypoint as current waypoint
  */
-void waypoint_handler_continueToNextWaypoint(mavlink_waypoint_handler_t* waypoint_handler);
+void waypoint_handler_continueToNextWaypoint(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
 //---------------------------------------------------------------------------------------------------------------------------------------//
 
 /**

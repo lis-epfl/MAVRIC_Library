@@ -108,6 +108,14 @@ void position_estimation_position_correction(position_estimator_t *pos_est);
  */
 void position_estimation_update(position_estimator_t *pos_est);
 
+/**
+ * \brief	Position estimation update step, performing position estimation then position correction (function to be used)
+ *
+ * \param	pos_est					The pointer to the position estimation structure
+ * \param	packet					The pointer to the decoded mavlink command long message
+ */
+void position_estimation_set_new_home_position(position_estimator_t *pos_est, mavlink_command_long_t* packet);
+
 #ifdef __cplusplus
 }
 #endif

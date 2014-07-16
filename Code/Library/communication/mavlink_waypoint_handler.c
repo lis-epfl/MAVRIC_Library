@@ -122,6 +122,34 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	callback.function 		= (mavlink_msg_callback_function_t)	&waypoint_handler_set_home;
 	callback.module_struct 	= (handling_module_struct_t)		waypoint_handler;
 	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	
+	mavlink_message_handler_cmd_callback_t callbackcmd;
+	
+	callbackcmd.command_id = MAV_CMD_NAV_RETURN_TO_LAUNCH; // 20
+	callbackcmd.sysid_filter = MAV_SYS_ID_ALL;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER;
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_set_current_waypoint_from_parameter;
+	callbackcmd.module_struct =									waypoint_handler;
+	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	
+	callbackcmd.command_id = MAV_CMD_MISSION_START; // 300
+	callbackcmd.sysid_filter = MAV_SYS_ID_ALL;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER;
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_continueToNextWaypoint;
+	callbackcmd.module_struct =									waypoint_handler;
+	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	
+	callbackcmd.command_id = MAV_CMD_CONDITION_LAST; // 159
+	callbackcmd.sysid_filter = MAV_SYS_ID_ALL;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER;
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_set_circle_scenario;
+	callbackcmd.module_struct =									waypoint_handler;
+	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	
+	waypoint_handler_set_current_waypoint_from_parameter(centralData->waypoint_list,centralData->number_of_waypoints,0);
 }
 
 void waypoint_handler_waypoint_init(mavlink_waypoint_handler_t* waypoint_handler)
@@ -560,9 +588,13 @@ void waypoint_handler_set_current_waypoint(mavlink_waypoint_handler_t* waypoint_
 	}
 }
 
-void waypoint_handler_set_current_waypoint_from_parameter(mavlink_waypoint_handler_t* waypoint_handler, uint16_t new_current)
+void waypoint_handler_set_current_waypoint_from_parameter(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
 {
 	uint8_t i;
+	
+	uint16_t new_current = 0;
+	
+	print_util_dbg_print("All MAVs: Return to first waypoint. \n");
 	
 	if (new_current < waypoint_handler->number_of_waypoints)
 	{
@@ -972,8 +1004,10 @@ void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_handler)
 	}
 }
 
-void waypoint_handler_continueToNextWaypoint(mavlink_waypoint_handler_t* waypoint_handler)
+void waypoint_handler_continueToNextWaypoint(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
 {
+	print_util_dbg_print("All vehicles: Navigating to next waypoint. \n");
+	
 	if ((waypoint_handler->number_of_waypoints>0)&&(!waypoint_handler->waypoint_set))
 	{
 		waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count].current = 0;
@@ -1004,8 +1038,11 @@ void waypoint_handler_continueToNextWaypoint(mavlink_waypoint_handler_t* waypoin
 	}
 }
 
-void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* waypoint_handler, float circle_radius, float num_of_vhc)
+void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
 {
+	float circle_radius = packet->param1; 
+	float num_of_vhc = packet->param2;
+	
 	float angle_step = 2.0 * PI / num_of_vhc;
 	
 	waypoint_struct waypoint;
@@ -1083,6 +1120,12 @@ void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* waypoint_h
 	
 	waypoint_handler->waypoint_set = false;
 }
+
+void mavlink_waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t *waypoint_handler, mavlink_command_long_t* packet)
+{
+	waypoint_handler->automatic_take_off = true;
+}
+
 /*
 void set_stream_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc)
 {

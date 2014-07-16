@@ -80,15 +80,15 @@ void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *ba
 	
 	gps_position_init(pos_est);
 	
-	mavlink_message_handler_cmd_callback_t callback;
+	mavlink_message_handler_cmd_callback_t callbackcmd;
 	
-	callback.command_id = ;
-	callback.sysid_filter = MAV_SYS_ID_ALL;
-	callback.compid_filter = MAV_COMP_ID_ALL;
-	callback.compid_target = MAV_COMP_ID_ALL;
-	callback.function = (mavlink_cmd_callback_function_t)	&position_estimation_set_new_home_position;
-	callback.module_struct =								pos_est;
-	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callback)
+	callbackcmd.command_id = MAV_CMD_DO_SET_HOME; // 179
+	callbackcmd.sysid_filter = MAV_SYS_ID_ALL;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER;
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&position_estimation_set_new_home_position;
+	callbackcmd.module_struct =								pos_est;
+	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 }
 void gps_position_init(position_estimator_t *pos_est)
 {
