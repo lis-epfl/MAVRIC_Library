@@ -63,6 +63,7 @@ void central_data_init()
 								&centralData.GPS_data,
 								&centralData.attitude_estimation,
 								&centralData.sim_model.localPosition,
+								&centralData.waypoint_handler.waypoint_set,
 								HOME_LATITUDE,
 								HOME_LONGITUDE,
 								HOME_ALTITUDE);
@@ -107,9 +108,9 @@ void central_data_init()
 					&centralData.pressure,
 					&centralData.GPS_data,
 					&centralData.state_structure,
-					HOME_LATITUDE,
-					HOME_LONGITUDE,
-					HOME_ALTITUDE,
+					centralData.position_estimator.localPosition.origin.latitude,
+					centralData.position_estimator.localPosition.origin.longitude,
+					centralData.position_estimator.localPosition.origin.altitude,
 					GRAVITY);		
 
 
