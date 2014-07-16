@@ -1036,6 +1036,9 @@
     <Compile Include="src\central_data.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\conf_constants.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
