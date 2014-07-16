@@ -36,7 +36,7 @@ void central_data_init()
 	qfilter_init_quaternion((Quat_Attitude_t*)&(centralData.imu1.attitude));
 		
 	navigation_init();
-	waypoint_handler_init();// ((waypoint_handler_t*)&centralData.waypoint_handler);
+	waypoint_handler_init(&centralData.waypoint_handler,&centralData.position_estimator,&centralData.imu1.attitude,&centralData.state_structure,&centralData.mavlink_communication);// ((waypoint_handler_t*)&centralData.waypoint_handler);
 		
 	neighbors_selection_init((neighbor_t*)&(centralData.neighborData), (position_estimator_t*)&(centralData.position_estimator));
 	orca_init((orca_t*)&(centralData.orcaData),(neighbor_t*)&(centralData.neighborData),(position_estimator_t*)&(centralData.position_estimator),(Imu_Data_t*)&(centralData.imu1));
