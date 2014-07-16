@@ -27,13 +27,14 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 	scheduler_init(&mavlink_communication->task_set);
 
 	// Init mavlink stream
-	mavlink_stream_init(&mavlink_communication->mavlink_stream, config->down_stream, config->up_stream, config->sysid, config->compid);
+	mavlink_stream_init(&mavlink_communication->mavlink_stream, &config->mavlink_stream_config);
 
 	// Init message handler
-	mavlink_message_handler_conf_t message_handler_config= {	.max_msg_callback_count=10,
-																.max_cmd_callback_count=10,
-															};
-	mavlink_message_handler_init(&mavlink_communication->message_handler, &message_handler_config);
+	// mavlink_message_handler_conf_t message_handler_config= {	.max_msg_callback_count=10,
+	// 															.max_cmd_callback_count=10,
+	// 															.debug=true
+	// 														};
+	mavlink_message_handler_init(&mavlink_communication->message_handler, &config->message_handler_config);
 
 	// Init onboard parameters
 	onboard_parameters_init(&mavlink_communication->onboard_parameters, &mavlink_communication->task_set, &mavlink_communication->message_handler); 

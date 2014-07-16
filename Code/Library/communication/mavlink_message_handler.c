@@ -107,8 +107,10 @@ static bool match_cmd(mavlink_message_handler_cmd_callback_t* cmd_callback, mavl
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void mavlink_message_handler_init(mavlink_message_handler_t* message_handler, mavlink_message_handler_conf_t* config)
+void mavlink_message_handler_init(mavlink_message_handler_t* message_handler, const mavlink_message_handler_conf_t* config)
 {
+	message_handler->debug = config->debug;
+
 	// Allocate memory for msg handling
 	message_handler->msg_callback_set = malloc( sizeof(mavlink_message_handler_msg_callback_set_t) + sizeof(mavlink_message_handler_msg_callback_t[config->max_msg_callback_count]) );
     message_handler->msg_callback_set->max_callback_count = config->max_msg_callback_count;
