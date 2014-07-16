@@ -233,7 +233,7 @@ task_return_t mavlink_telemetry_send_gps_raw(void* arg)
 	if (centralData->GPS_data.status == GPS_OK)
 	{
 		mavlink_msg_gps_raw_int_send(	MAVLINK_COMM_0,
-		1000 * centralData->GPS_data.timeLastMsg,
+		1000 * centralData->GPS_data.time_last_msg,
 		centralData->GPS_data.status,
 		centralData->GPS_data.latitude * 10000000.0f,
 		centralData->GPS_data.longitude * 10000000.0f,
