@@ -57,11 +57,11 @@ void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motor
 	
 	if ((remote_dsm2_rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0f)
 	{
-		centralData->collision_avoidance = true;
+		centralData->waypoint_handler.collision_avoidance = true;
 	}
 	else
 	{
-		centralData->collision_avoidance = false;
+		centralData->waypoint_handler.collision_avoidance = false;
 	}
 	
 	if((remote_controller_get_thrust_from_remote() < -0.95f) && (remote_controller_get_yaw_from_remote() > 0.9f))
@@ -99,7 +99,7 @@ void switch_off_motors(void)
 	centralData->mav_state = MAV_STATE_STANDBY;
 	centralData->mav_mode = MAV_MODE_MANUAL_DISARMED;
 	
-	centralData->in_the_air = false;
+	centralData->waypoint_handler.in_the_air = false;
 }
 
 void tasks_relevel_imu(void)
@@ -170,7 +170,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 														&centralData->pressure, 
 														&centralData->GPS_data,
 														&centralData->sim_model.localPosition);
-						centralData->waypoint_set = false;
+						centralData->waypoint_handler.waypoint_set = false;
 						centralData->run_mode = MOTORS_ON;
 						centralData->mav_mode = MAV_MODE_MANUAL_ARMED;
 						break;
@@ -201,20 +201,20 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 						break;
 
 					case 2:
-						if (centralData->in_the_air)
+						if (centralData->waypoint_handler.in_the_air)
 						{
 							centralData->mav_mode = MAV_MODE_GUIDED_ARMED;
 							
 							// Automatic take-off mode
 							if (centralData->mav_mode_previous != MAV_MODE_GUIDED_ARMED)
 							{
-								centralData->automatic_take_off = true;
+								centralData->waypoint_handler.automatic_take_off = true;
 							}
 						}
 						break;
 
 					case 3:
-						if (centralData->in_the_air)
+						if (centralData->waypoint_handler.in_the_air)
 						{
 							//centralData->mav_state = MAV_STATE_ACTIVE;
 							centralData->mav_mode = MAV_MODE_AUTO_ARMED;
@@ -222,7 +222,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 							// Automatic take-off mode
 							if (centralData->mav_mode_previous != MAV_MODE_AUTO_ARMED)
 							{
-								centralData->automatic_take_off = true;
+								centralData->waypoint_handler.automatic_take_off = true;
 							}
 						}
 						break;
@@ -231,14 +231,14 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 				switch (centralData->mav_mode)
 				{
 					case MAV_MODE_MANUAL_ARMED:
-						if (centralData->in_the_air)
+						if (centralData->waypoint_handler.in_the_air)
 						{
 							centralData->mav_state = MAV_STATE_ACTIVE;
 						}
 						break;
 
 					case MAV_MODE_STABILIZE_ARMED:
-						if (centralData->in_the_air)
+						if (centralData->waypoint_handler.in_the_air)
 						{
 							centralData->mav_state = MAV_STATE_ACTIVE;
 						}
@@ -246,14 +246,16 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 
 					case MAV_MODE_GUIDED_ARMED:
 						// Automatic take-off mode
-						if(centralData->automatic_take_off)
+						if(centralData->waypoint_handler.automatic_take_off)
 						{
-							centralData->automatic_take_off = false;
+							centralData->waypoint_handler.automatic_take_off = false;
 							waypoint_handler_waypoint_take_off(&centralData->waypoint_handler);
 						}
 						
-						distFromHomeSqr = SQR(centralData->position_estimator.localPosition.pos[X] - centralData->waypoint_hold_coordinates.pos[X]) + SQR(centralData->position_estimator.localPosition.pos[Y] - centralData->waypoint_hold_coordinates.pos[Y]) + SQR(centralData->position_estimator.localPosition.pos[Z] - centralData->waypoint_hold_coordinates.pos[Z]);
-						if ((centralData->dist2wp_sqr <= 16.0f)&&(!centralData->automatic_take_off))
+						distFromHomeSqr =	SQR(centralData->position_estimator.localPosition.pos[X] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[X]) + 
+											SQR(centralData->position_estimator.localPosition.pos[Y] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[Y]) + 
+											SQR(centralData->position_estimator.localPosition.pos[Z] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[Z]);
+						if ((centralData->waypoint_handler.dist2wp_sqr <= 16.0f)&&(!centralData->waypoint_handler.automatic_take_off))
 						{
 							centralData->mav_state = MAV_STATE_ACTIVE;
 							print_util_dbg_print("Automatic take-off finised, distFromHomeSqr (10x):");
@@ -263,20 +265,22 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 						break;
 
 					case MAV_MODE_AUTO_ARMED:
-						if(centralData->automatic_take_off)
+						if(centralData->waypoint_handler.automatic_take_off)
 						{
-							centralData->automatic_take_off = false;
+							centralData->waypoint_handler.automatic_take_off = false;
 							waypoint_handler_waypoint_take_off(&centralData->waypoint_handler);
 						}
 
-						if (!centralData->waypoint_set)
+						if (!centralData->waypoint_handler.waypoint_set)
 						{
 							waypoint_handler_waypoint_init(&centralData->waypoint_handler);
 						}
 
-						distFromHomeSqr = SQR(centralData->position_estimator.localPosition.pos[X] - centralData->waypoint_hold_coordinates.pos[X]) + SQR(centralData->position_estimator.localPosition.pos[Y] - centralData->waypoint_hold_coordinates.pos[Y]) + SQR(centralData->position_estimator.localPosition.pos[Z] - centralData->waypoint_hold_coordinates.pos[Z]);
+						distFromHomeSqr =	SQR(centralData->position_estimator.localPosition.pos[X] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[X]) + 
+											SQR(centralData->position_estimator.localPosition.pos[Y] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[Y]) + 
+											SQR(centralData->position_estimator.localPosition.pos[Z] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[Z]);
 						
-						if ((centralData->dist2wp_sqr <= 16.0f)&&(!centralData->automatic_take_off))
+						if ((centralData->waypoint_handler.dist2wp_sqr <= 16.0f)&&(!centralData->waypoint_handler.automatic_take_off))
 						{
 							centralData->mav_state = MAV_STATE_ACTIVE;
 							print_util_dbg_print("Automatic take-off finised, distFromHomeSqr (10x):");
@@ -300,7 +304,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 				}
 				if (remote_controller_get_thrust_from_remote() > -0.7f)
 				{
-					centralData->in_the_air = true;
+					centralData->waypoint_handler.in_the_air = true;
 				}
 			}
 
@@ -353,7 +357,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 						waypoint_handler_waypoint_hold_init(&centralData->waypoint_handler,centralData->position_estimator.localPosition);
 					}
 
-					if (!centralData->waypoint_set)
+					if (!centralData->waypoint_handler.waypoint_set)
 					{
 						waypoint_handler_waypoint_init(&centralData->waypoint_handler);
 					}
@@ -416,7 +420,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 					if (centralData->mav_state_previous != MAV_STATE_CRITICAL)
 					{
 						centralData->critical_behavior = CLIMB_TO_SAFE_ALT;
-						centralData->critical_next_state = false;
+						centralData->waypoint_handler.critical_next_state = false;
 					}
 					
 					waypoint_handler_waypoint_critical_handler(&centralData->waypoint_handler);
@@ -429,14 +433,14 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 					// !! only if receivers are back, switch into appropriate mode
 					centralData->mav_state = MAV_STATE_ACTIVE;
 					centralData->critical_behavior = CLIMB_TO_SAFE_ALT;
-					centralData->critical_next_state = false;
+					centralData->waypoint_handler.critical_next_state = false;
 					break;
 
 				case -1:
 					break;
 
 				case -2:
-					if (centralData->critical_landing)
+					if (centralData->waypoint_handler.critical_landing)
 					{
 						centralData->mav_state = MAV_STATE_EMERGENCY;
 					}
@@ -573,7 +577,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			
 			// if no waypoints are set, we do position hold therefore the yaw mode is absolute
-			if (((centralData->waypoint_set&&(centralData->mav_state != MAV_STATE_STANDBY)))||((centralData->mav_state == MAV_STATE_CRITICAL)&&(centralData->critical_behavior == FLY_TO_HOME_WP)))
+			if (((centralData->waypoint_handler.waypoint_set&&(centralData->mav_state != MAV_STATE_STANDBY)))||((centralData->mav_state == MAV_STATE_CRITICAL)&&(centralData->critical_behavior == FLY_TO_HOME_WP)))
 			{
 				centralData->controls.yaw_mode = YAW_COORDINATED;
 			}
@@ -647,9 +651,9 @@ task_return_t tasks_run_navigation_update(void* arg)
 	switch (centralData->mav_state)
 	{
 		case MAV_STATE_STANDBY:
-			if (((centralData->mav_mode == MAV_MODE_GUIDED_ARMED)||(centralData->mav_mode == MAV_MODE_AUTO_ARMED)) && !centralData->automatic_take_off)
+			if (((centralData->mav_mode == MAV_MODE_GUIDED_ARMED)||(centralData->mav_mode == MAV_MODE_AUTO_ARMED)) && !centralData->waypoint_handler.automatic_take_off)
 			{
-				navigation_run(centralData->waypoint_hold_coordinates);
+				navigation_run(centralData->waypoint_handler.waypoint_hold_coordinates);
 			}
 			break;
 
@@ -657,18 +661,18 @@ task_return_t tasks_run_navigation_update(void* arg)
 			switch (centralData->mav_mode)
 			{
 				case MAV_MODE_AUTO_ARMED:
-					if (centralData->waypoint_set)
+					if (centralData->waypoint_handler.waypoint_set)
 					{
-						navigation_run(centralData->waypoint_coordinates);
+						navigation_run(centralData->waypoint_handler.waypoint_coordinates);
 					}
 					else
 					{
-						navigation_run(centralData->waypoint_hold_coordinates);
+						navigation_run(centralData->waypoint_handler.waypoint_hold_coordinates);
 					}
 					break;
 
 				case MAV_MODE_GUIDED_ARMED:
-					navigation_run(centralData->waypoint_hold_coordinates);
+					navigation_run(centralData->waypoint_handler.waypoint_hold_coordinates);
 					break;
 			}
 			break;
@@ -676,7 +680,7 @@ task_return_t tasks_run_navigation_update(void* arg)
 		case MAV_STATE_CRITICAL:
 			if ((centralData->mav_mode == MAV_MODE_GUIDED_ARMED)||(centralData->mav_mode == MAV_MODE_AUTO_ARMED))
 			{
-				navigation_run(centralData->waypoint_critical_coordinates);
+				navigation_run(centralData->waypoint_handler.waypoint_critical_coordinates);
 			}
 			break;
 	}

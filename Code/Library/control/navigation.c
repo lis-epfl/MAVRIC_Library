@@ -139,7 +139,7 @@ static void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
 	{
 		new_velocity[i] = dir_desired_bf[i];
 	}
-	if (centralData->collision_avoidance)
+	if (centralData->waypoint_handler.collision_avoidance)
 	{
 		orca_computeNewVelocity(&(centralData->orcaData),dir_desired_bf,new_velocity);
 	}
@@ -186,8 +186,8 @@ void navigation_run(local_coordinates_t waypoint_input)
 	float rel_pos[3]; 
 	
 	// Control in translational speed of the platform
-	centralData->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos, rel_pos);
-	navigation_set_speed_command(rel_pos,centralData->dist2wp_sqr);
+	centralData->waypoint_handler.dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos, rel_pos);
+	navigation_set_speed_command(rel_pos,centralData->waypoint_handler.dist2wp_sqr);
 	
 	centralData->controls_nav.theading=waypoint_input.heading;
 }
