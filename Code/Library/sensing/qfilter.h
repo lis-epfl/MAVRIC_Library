@@ -53,8 +53,6 @@ typedef struct
 	float kp_mag;					///< The proportional gain for the magnetometer correction of the angular rates
 	float ki_mag;					///< The integral gain for the magnetometer correction of the angular rates
 	
-	float raw_mag_mean[3];			///< The raw magnetometer values to compute the initial heading of the platform
-	
 	uint8_t calibration_level;		///< The level of calibration
 	float acc_bf[3];				///< The 3D acceleration vector in body frame
 } qfilter_t;

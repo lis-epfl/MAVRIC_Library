@@ -104,31 +104,13 @@ void switch_off_motors(void)
 
 void tasks_relevel_imu(void)
 {
-	uint32_t i,j;
-
 	centralData->attitude_filter.calibration_level = LEVELING;
 	centralData->mav_state = MAV_STATE_CALIBRATING;
 	centralData->mav_mode = MAV_MODE_PREFLIGHT;
 
 	print_util_dbg_print("calibrating IMU...\n");
 
-	for (j = 0;j < 3;j++)
-	{
-		centralData->attitude_filter.raw_mag_mean[j] = (float)centralData->imu1.oriented_compass.data[j];
-	}
-
-	for (i = 1000; i > 0; i--) 
-	{
-		tasks_run_imu_update(0);
-		//mavlink_communication_update(&centralData->mavlink_communication);
-		
-		for (j = 0;j < 3;j++)
-		{
-			centralData->attitude_filter.raw_mag_mean[j] = (1.0f - MAG_LPF) * centralData->attitude_filter.raw_mag_mean[j] + MAG_LPF * ((float)centralData->imu1.oriented_compass.data[j]);
-		}
-
-		delay_ms(5);
-	}
+	imu_relevel(&centralData->imu1);
 	
 	centralData->attitude_filter.calibration_level = OFF;
 	centralData->mav_state = MAV_STATE_STANDBY;

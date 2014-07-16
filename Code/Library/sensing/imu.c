@@ -24,7 +24,7 @@
 #include "time_keeper.h"
 #include "print_util.h"
 #include "mavlink_stream.h"
-
+#include "tasks.h"
 
 int32_t ic;
 
@@ -149,5 +149,33 @@ void imu_oriented2scale(Imu_Data_t *imu1)
 		imu1->scaled_gyro.data[i]  = (1.0f - GYRO_LPF) * imu1->scaled_gyro.data[i] + GYRO_LPF * (((float)imu1->oriented_gyro.data[i] - imu1->calib_gyro.bias[i]) * imu1->calib_gyro.scale_factor[i]);
 		imu1->scaled_accelero.data[i]   = (1.0f - ACC_LPF) * imu1->scaled_accelero.data[i] + ACC_LPF * (((float)imu1->oriented_accelero.data[i] - imu1->calib_accelero.bias[i]) * imu1->calib_accelero.scale_factor[i]);
 		imu1->scaled_compass.data[i] = (1.0f - MAG_LPF) * imu1->scaled_compass.data[i] + MAG_LPF * (((float)imu1->oriented_compass.data[i] - imu1->calib_compass.bias[i]) * imu1->calib_compass.scale_factor[i]);
+	}
+}
+
+void imu_relevel(Imu_Data_t *imu1)
+{
+	uint32_t i,j;
+	float raw_mag_mean[3];			///< The raw magnetometer values to compute the initial heading of the platform
+
+	for (j = 0;j < 3;j++)
+	{
+		raw_mag_mean[j] = (float)imu1->oriented_compass.data[j];
+	}
+
+	for (i = 1000; i > 0; i--)
+	{
+		tasks_run_imu_update(0);
+		
+		for (j = 0;j < 3;j++)
+		{
+			raw_mag_mean[j] = (1.0f - MAG_LPF) * raw_mag_mean[j] + MAG_LPF * ((float)imu1->oriented_compass.data[j]);
+		}
+
+		delay_ms(5);
+	}
+	
+	for(i = 0; i < 3; i++)
+	{
+		imu1->scaled_compass.data[i] = (raw_mag_mean[i] - imu1->calib_compass.bias[i]) * imu1->calib_compass.scale_factor[i];
 	}
 }

@@ -63,13 +63,7 @@ void qfilter_init(qfilter_t *attitude_filter, Imu_Data_t *imu1, AHRS_t *attitude
 
 void qfilter_init_quaternion(qfilter_t *attitude_filter)
 {
-	uint8_t i;
 	float init_angle;
-	
-	for(i = 0; i < 3; i++)
-	{
-		attitude_filter->imu1->scaled_compass.data[i] = ((float)attitude_filter->raw_mag_mean[i] - attitude_filter->imu1->calib_compass.bias[i]) * attitude_filter->imu1->calib_compass.scale_factor[i];
-	}
 	
 	init_angle = atan2( -attitude_filter->imu1->scaled_compass.data[1],attitude_filter->imu1->scaled_compass.data[0]);
 
