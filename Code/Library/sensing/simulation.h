@@ -75,7 +75,7 @@ typedef struct
 	
 	float home_coordinates[3];
 	
-	//AHRS_t *attitude_estimation;								///< The pointer to the attitude estimation structure
+	//AHRS_t *attitude_estimation;							///< The pointer to the attitude estimation structure
 	Quat_Attitude_t attitude_filter;
 	Imu_Data_t* imu;
 	position_estimator_t* pos_est;

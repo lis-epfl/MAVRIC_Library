@@ -59,7 +59,12 @@ void central_data_init()
 	//imu_init((Imu_Data_t*)&(centralData.imu1));
 	qfilter_init((Quat_Attitude_t*)&(centralData.imu1.attitude), (float*)(centralData.imu1.raw_scale), (float*)(centralData.imu1.raw_bias));
 		
-	position_estimation_init((position_estimator_t*)&(centralData.position_estimator), (pressure_data_t*)&centralData.pressure, (gps_Data_type_t*)&centralData.GPS_data);
+	position_estimation_init(   &(centralData.position_estimator),
+								&centralData.pressure,
+								&centralData.GPS_data,
+								HOME_LATITUDE,
+								HOME_LONGITUDE,
+								HOME_ALTITUDE);
 	
 	qfilter_init_quaternion((Quat_Attitude_t*)&(centralData.imu1.attitude));
 		
@@ -74,7 +79,7 @@ void central_data_init()
 								&centralData.stabiliser_stack,
 								&centralData.controls,
 								&centralData.run_mode,
-								&centralData.imu,
+								&centralData.imu1,
 								&centralData.attitude_estimation,
 								&centralData.position_estimator 	);
 

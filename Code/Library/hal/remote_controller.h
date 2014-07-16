@@ -123,6 +123,27 @@ static inline void remote_controller_get_channel_mode(uint8_t* chanSwitch)
 	{
 		*chanSwitch |= 0x02;
 	}
+	
+	/**
+	 * \brief return the motor state to switch on/off the motors
+	 *
+	 * \param	motor_state		The pointer to the motor state
+	 */
+	static inline void remote_controller_get_motor_state(int8_t *motor_state)
+	{
+		if((remote_controller_get_thrust_from_remote() < -0.95f) && (remote_controller_get_yaw_from_remote() > 0.9f))
+		{
+			*motor_state = 1;
+		}
+		else if((remote_controller_get_thrust_from_remote() < -0.95f) && (remote_controller_get_yaw_from_remote() < -0.9f))
+		{
+			*motor_state = -1;
+		}
+		else
+		{
+			*motor_state = 0;
+		}
+	}
 }
 #endif
 
@@ -149,6 +170,27 @@ static inline void remote_controller_get_channel_mode(uint8_t* chanSwitch)
 		else
 		{
 			*chanSwitch |= 0x02;
+		}
+	}
+	
+	/**
+	 * \brief return the motor state to switch on/off the motors
+	 *
+	 * \param	motor_state		The pointer to the motor state
+	 */
+	static inline void remote_controller_get_motor_state(int8_t *motor_state)
+	{
+		if((remote_controller_get_thrust_from_remote() < -0.95f) && (remote_controller_get_yaw_from_remote() > 0.9f))
+		{
+			*motor_state = 1;
+		}
+		else if((remote_controller_get_thrust_from_remote() < -0.95f) && (remote_controller_get_yaw_from_remote() < -0.9f))
+		{
+			*motor_state = -1;
+		}
+		else
+		{
+			*motor_state = 0;
 		}
 	}
 #endif

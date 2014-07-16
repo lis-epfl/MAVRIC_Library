@@ -36,11 +36,6 @@ NEW_TASK_SET(main_tasks, 10)
 central_data_t *centralData;
 
 /**
- * \brief	Gives a fake gps value
- */
-void fake_gps_fix(void);
-
-/**
  * \brief	Function to call when the motors should be switched off
  */
 void switch_off_motors(void);
@@ -493,7 +488,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			centralData->controls.yaw_mode=YAW_RELATIVE;
 			
-			stabilisation_copter_cascade_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter, centralData->servos);
 			break;
 
 		case MAV_MODE_STABILIZE_ARMED:
@@ -501,9 +496,9 @@ task_return_t tasks_run_stabilisation(void* arg)
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			centralData->controls.yaw_mode = YAW_RELATIVE;
 			
-			stabilisation_copter_get_velocity_vector_from_remote(centralData->controls.tvel);
+			stabilisation_copter_get_velocity_vector_from_remote(centralData->controls.tvel,&centralData->stabilisation_copter);
 			
-			stabilisation_copter_cascade_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter, centralData->servos);
 			
 			break;
 
@@ -520,7 +515,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 				centralData->controls.yaw_mode = YAW_ABSOLUTE;
 			}
 			
-			stabilisation_copter_cascade_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter, centralData->servos);
 			
 			break;
 
@@ -538,7 +533,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 				centralData->controls.yaw_mode = YAW_ABSOLUTE;
 			}
 			
-			stabilisation_copter_cascade_stabilise(&(centralData->imu1), &centralData->position_estimator, &(centralData->controls));
+			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter, centralData->servos);
 			break;
 		
 		case MAV_MODE_PREFLIGHT:
@@ -559,29 +554,6 @@ task_return_t tasks_run_stabilisation(void* arg)
 	
 	return TASK_RUN_SUCCESS;
 }
-
-
-void fake_gps_fix()
-{
-	local_coordinates_t fake_pos;
-	
-	fake_pos.pos[X] = 10.0f;
-	fake_pos.pos[Y] = 10.0f;
-	fake_pos.pos[Z] = 0.0f;
-	fake_pos.origin.latitude = HOME_LATITUDE;
-	fake_pos.origin.longitude = HOME_LONGITUDE;
-	fake_pos.origin.altitude = HOME_ALTITUDE;
-	fake_pos.timestamp_ms = centralData->position_estimator.localPosition.timestamp_ms;
-
-	global_position_t gpos = coord_conventions_local_to_global_position(fake_pos);
-	
-	centralData->GPS_data.latitude = gpos.latitude;
-	centralData->GPS_data.longitude = gpos.longitude;
-	centralData->GPS_data.altitude = gpos.altitude;	
-	centralData->GPS_data.timeLastMsg = time_keeper_get_millis();
-	centralData->GPS_data.status = GPS_OK;
-}
-
 
 task_return_t tasks_run_gps_update(void* arg) 
 {
