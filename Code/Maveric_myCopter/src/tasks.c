@@ -505,10 +505,14 @@ void tasks_run_imu_update(void* arg) {
 					&(centralData->imu1), 
 					&centralData->position_estimator);
 		
-		imu_update(	&(centralData->imu1), 
-					&(centralData->position_estimator), 
-					&centralData->pressure, 
-					&centralData->GPS_data);
+		imu_update(	&(centralData->imu1));
+		//was done in imu_update
+		qfilter_attitude_estimation(&centralData->imu1.attitude, centralData->imu1.dt);
+		if (centralData->imu1.attitude.calibration_level == OFF)
+		{
+			position_estimation_position_integration(&centralData->position_estimator, &centralData->imu1.attitude, centralData->imu1.dt);
+			position_estimation_position_correction(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, centralData->imu1.dt);
+		}
 	} 
 	else 
 	{
@@ -518,10 +522,14 @@ void tasks_run_imu_update(void* arg) {
 		
 		imu_get_raw_data(&(centralData->imu1));
 
-		imu_update(	&(centralData->imu1), 
-					&centralData->position_estimator, 
-					&centralData->pressure, 
-					&centralData->GPS_data);
+		imu_update(	&(centralData->imu1));
+		//was done in imu_update
+		qfilter_attitude_estimation(&centralData->imu1.attitude, centralData->imu1.dt);
+		if (centralData->imu1.attitude.calibration_level == OFF)
+		{
+			position_estimation_position_integration(&centralData->position_estimator, &centralData->imu1.attitude, centralData->imu1.dt);
+			position_estimation_position_correction(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, centralData->imu1.dt);
+		}
 	}
 }	
 

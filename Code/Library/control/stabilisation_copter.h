@@ -24,6 +24,7 @@ extern "C" {
 #endif
 
 #include "stabilisation.h"
+#include "position_estimation.h"
 
 typedef struct 
 {
