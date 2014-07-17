@@ -79,7 +79,7 @@ void central_data_init()
 				REAL_MODE,// SIMULATION_MODE
 				&centralData.mavlink_communication); 
 	
-	imu_init(&(centralData.imu), &centralData.attitude_estimation);
+	imu_init(&(centralData.imu));
 	
 	// Init servos
 	servo_pwm_init(centralData.servos);

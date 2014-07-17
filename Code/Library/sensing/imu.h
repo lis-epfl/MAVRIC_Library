@@ -89,7 +89,7 @@ typedef struct
  *
  * \param	imu		the pointer to the IMU structure
  */
-void imu_init (imu_t *imu, ahrs_t *attitude_estimation);
+void imu_init (imu_t *imu);
 
 
 /**

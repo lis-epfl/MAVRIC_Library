@@ -75,7 +75,7 @@ static void imu_oriented2scale(imu_t *imu)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void imu_init (imu_t *imu, ahrs_t *attitude_estimation)
+void imu_init (imu_t *imu)
 {	
 	//imu_calibrate_Gyros(imu);
 	
@@ -111,22 +111,6 @@ void imu_init (imu_t *imu, ahrs_t *attitude_estimation)
 	imu->calib_compass.orientation[X] = MAG_AXIS_X;
 	imu->calib_compass.orientation[Y] = MAG_AXIS_Y;
 	imu->calib_compass.orientation[Z] = MAG_AXIS_Z;
-	
-	//init ahrs_t attitude_estimation
-	attitude_estimation->qe.s		= 1.0f;
-	attitude_estimation->qe.v[X]	= 0.0f;
-	attitude_estimation->qe.v[Y]	= 0.0f;
-	attitude_estimation->qe.v[Z]	= 0.0f;
-	
-	attitude_estimation->last_update = 0.0f;
-	attitude_estimation->dt = 0.0f;
-	
-	attitude_estimation->angular_speed[X] = 0.0f;
-	attitude_estimation->angular_speed[Y] = 0.0f;
-	attitude_estimation->angular_speed[Z] = 0.0f;
-	attitude_estimation->linear_acc[X] = 0.0f;
-	attitude_estimation->linear_acc[Y] = 0.0f;
-	attitude_estimation->linear_acc[Z] = 0.0f;
 }
 
 
