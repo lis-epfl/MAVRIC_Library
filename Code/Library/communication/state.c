@@ -48,7 +48,7 @@ void state_init(state_structure_t *state_structure, uint8_t autopilot_type, uint
 	print_util_dbg_print("State initialized.\n");
 }
 
-task_return_t mavlink_telemetry_send_heartbeat(state_structure_t* state_structure)
+task_return_t state_send_heartbeat(state_structure_t* state_structure)
 {
 	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, state_structure->autopilot_type, state_structure->autopilot_name, state_structure->mav_mode, state_structure->simulation_mode, state_structure->mav_state);
 	
@@ -71,7 +71,7 @@ void state_set_mav_mode(state_structure_t* state_structure, mavlink_received_t* 
 		print_util_dbg_print_num(packet.custom_mode,10);
 		print_util_dbg_print("\n");
 
-		if (state_structure->simulation_mode == 0)
+		if (state_structure->simulation_mode == REAL_MODE)
 		{
 			switch(packet.base_mode)
 			{
