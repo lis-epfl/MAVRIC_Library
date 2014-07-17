@@ -428,13 +428,13 @@ void tasks_run_imu_update(void* arg)
 	} 
 	else 
 	{
-		lsm330dlc_gyro_update(&(centralData->imu1.raw_gyro));
-		lsm330dlc_acc_update(&(centralData->imu1.raw_accelero));
-		compass_hmc58831l_update(&(centralData->imu1.raw_compass));
+		lsm330dlc_gyro_update(&(centralData->imu.raw_gyro));
+		lsm330dlc_acc_update(&(centralData->imu.raw_accelero));
+		compass_hmc58831l_update(&(centralData->imu.raw_compass));
 	}
 	
-	qfilter_attitude_estimation(&centralData->attitude_filter, centralData->imu1.dt);
-	imu_update(	&centralData->imu1);
+	qfilter_update(&centralData->attitude_filter, centralData->imu.dt);
+	imu_update(	&centralData->imu);
 	
 	if (centralData->attitude_filter.imu1->calibration_level == OFF)
 	{

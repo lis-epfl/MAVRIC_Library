@@ -24,28 +24,26 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include "coord_conventions.h"
 #include "imu.h"
 
-
-#define GRAVITY 9.81f				///< The gravity constant
 
 /**
  * \brief The calibration level of the filter
  */
-enum calibration_mode
+typedef enum
 {
 	OFF,							///< Calibration level: No calibration 
 	LEVELING,						///< Calibration level: leveling 
 	LEVEL_PLUS_ACCEL				///< Calibration level: leveling plus acceleration
-}; 
+} calibration_mode_t;
+
 
 /**
  * \brief The structure for the quaternion-based attitude estimation
  */
 typedef struct
 {
-	Imu_Data_t *imu1;
+	Imu_Data_t *imu;
 	AHRS_t *attitude_estimation;
 	
 	float kp;						///< The proportional gain for the acceleration correction of the angular rates
@@ -54,6 +52,7 @@ typedef struct
 	float ki_mag;					///< The integral gain for the magnetometer correction of the angular rates
 } qfilter_t;
 
+
 /**
  * \brief	Initialize the attitude estimation module
  *
@@ -61,14 +60,8 @@ typedef struct
  * \param	scalefactor		The pointer to the scale factors structure of the IMU
  * \param	biais			The pointer to the biaises structure of the IMU
  */
-void qfilter_init(qfilter_t *attitude_filter, Imu_Data_t *imu1, AHRS_t *attitude_estimation);
+void qfilter_init(qfilter_t *attitude_filter, Imu_Data_t *imu, AHRS_t *attitude_estimation);
 
-/**
- * \brief	Initialize the quaternion for the attitude estimation
- *
- * \param	attitude		The pointer to the attitude structure
- */
-void qfilter_init_quaternion(qfilter_t *attitude_filter);
 
 /**
  * \brief	Performs the attitude estimation via a complementary filter
@@ -76,7 +69,8 @@ void qfilter_init_quaternion(qfilter_t *attitude_filter);
  * \param	attitude		The pointer to the attitude structure
  * \param	dt				The time interval between two estimation loops
  */
-void qfilter_attitude_estimation(qfilter_t *attitude_filter, float dt);
+void qfilter_update(qfilter_t *attitude_filter, float dt);
+
 
 #ifdef __cplusplus
 }

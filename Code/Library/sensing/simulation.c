@@ -18,6 +18,7 @@
 
 
 #include "conf_sim_model.h"
+#include "conf_constants.h"
 #include "time_keeper.h"
 #include "coord_conventions.h"
 #include "quaternions.h"
@@ -317,10 +318,10 @@ void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands)
 		sim->vel_bf[i] = qvel_bf.v[i];
 		
 		// following the convention in the IMU, this is the acceleration due to force, as measured
-		sim->attitude_filter.imu1->scaled_accelero.data[i] = sim->lin_forces_bf[i] / sim->total_mass;
+		sim->attitude_filter.imu->scaled_accelero.data[i] = sim->lin_forces_bf[i] / sim->total_mass;
 		
 		// this is the "clean" acceleration without gravity
-		sim->attitude_filter.attitude_estimation->linear_acc[i] = sim->attitude_filter.imu1->scaled_accelero.data[i] - sim->attitude_filter.attitude_estimation->up_vec.v[i] * GRAVITY;
+		sim->attitude_filter.attitude_estimation->linear_acc[i] = sim->attitude_filter.imu->scaled_accelero.data[i] - sim->attitude_filter.attitude_estimation->up_vec.v[i] * GRAVITY;
 		
 		sim->vel_bf[i] = sim->vel_bf[i] + sim->attitude_filter.attitude_estimation->linear_acc[i] * sim->dt;
 	}
