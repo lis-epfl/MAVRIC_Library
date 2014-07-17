@@ -77,24 +77,6 @@ void switch_off_motors(void)
 	centralData->waypoint_handler.in_the_air = false;
 }
 
-void tasks_relevel_imu(void)
-{
-	centralData->attitude_filter.calibration_level = LEVELING;
-	centralData->state_structure.mav_state = MAV_STATE_CALIBRATING;
-	centralData->state_structure.mav_mode = MAV_MODE_PREFLIGHT;
-
-	print_util_dbg_print("calibrating IMU...\n");
-
-	//imu_relevel(&centralData->imu);
-	
-	centralData->attitude_filter.calibration_level = OFF;
-	centralData->state_structure.mav_state = MAV_STATE_STANDBY;
-	centralData->state_structure.mav_mode = MAV_MODE_MANUAL_DISARMED;
-	
-	print_util_dbg_print("IMU calibration done.\n");
-}
-
-
 task_return_t tasks_set_mav_mode_n_state(void* arg)
 {
 	uint8_t channelSwitches = 0;
@@ -308,7 +290,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 				case MAV_MODE_AUTO_ARMED:
 					if (centralData->state_structure.mav_mode_previous != MAV_MODE_AUTO_ARMED)
 					{
-						centralData->auto_landing_enum = DESCENT_TO_SMALL_ALTITUDE;
+						centralData->waypoint_handler.auto_landing_enum = DESCENT_TO_SMALL_ALTITUDE;
 						waypoint_handler_waypoint_hold_init(&centralData->waypoint_handler,centralData->position_estimator.localPosition);
 					}
 
@@ -374,7 +356,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 				case MAV_MODE_AUTO_ARMED:
 					if (centralData->state_structure.mav_state_previous != MAV_STATE_CRITICAL)
 					{
-						centralData->critical_behavior = CLIMB_TO_SAFE_ALT;
+						centralData->waypoint_handler.critical_behavior = CLIMB_TO_SAFE_ALT;
 						centralData->waypoint_handler.critical_next_state = false;
 					}
 					
@@ -387,7 +369,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 				case 1:  
 					// !! only if receivers are back, switch into appropriate mode
 					centralData->state_structure.mav_state = MAV_STATE_ACTIVE;
-					centralData->critical_behavior = CLIMB_TO_SAFE_ALT;
+					centralData->waypoint_handler.critical_behavior = CLIMB_TO_SAFE_ALT;
 					centralData->waypoint_handler.critical_next_state = false;
 					break;
 
@@ -456,7 +438,7 @@ void tasks_run_imu_update(void* arg)
 	qfilter_update(&centralData->attitude_filter, centralData->imu.dt);
 	imu_update(	&centralData->imu);
 	
-	if (centralData->attitude_filter.calibration_level == OFF)
+	if (centralData->attitude_filter.imu->calibration_level == OFF)
 	{
 		position_estimation_update(&centralData->position_estimator);
 	}
@@ -492,7 +474,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 			centralData->controls = centralData->controls_nav;
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			
-			if ((centralData->state_structure.mav_state == MAV_STATE_CRITICAL) && (centralData->critical_behavior == FLY_TO_HOME_WP))
+			if ((centralData->state_structure.mav_state == MAV_STATE_CRITICAL) && (centralData->waypoint_handler.critical_behavior == FLY_TO_HOME_WP))
 			{
 				centralData->controls.yaw_mode = YAW_COORDINATED;
 			}
@@ -510,7 +492,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			
 			// if no waypoints are set, we do position hold therefore the yaw mode is absolute
-			if (((centralData->waypoint_handler.waypoint_set&&(centralData->state_structure.mav_state != MAV_STATE_STANDBY)))||((centralData->state_structure.mav_state == MAV_STATE_CRITICAL)&&(centralData->critical_behavior == FLY_TO_HOME_WP)))
+			if (((centralData->waypoint_handler.waypoint_set&&(centralData->state_structure.mav_state != MAV_STATE_STANDBY)))||((centralData->state_structure.mav_state == MAV_STATE_CRITICAL)&&(centralData->waypoint_handler.critical_behavior == FLY_TO_HOME_WP)))
 			{
 				centralData->controls.yaw_mode = YAW_COORDINATED;
 			}

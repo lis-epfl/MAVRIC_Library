@@ -50,7 +50,7 @@ void state_init(state_structure_t *state_structure, uint8_t autopilot_type, uint
 
 task_return_t mavlink_telemetry_send_heartbeat(state_structure_t* state_structure)
 {
-	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, state_structure->autopilot_type, state_structure->autopilot_name, state_structure->mav_mode, 0, state_structure->mav_state);
+	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, state_structure->autopilot_type, state_structure->autopilot_name, state_structure->mav_mode, state_structure->simulation_mode, state_structure->mav_state);
 	
 	return TASK_RUN_SUCCESS;
 }

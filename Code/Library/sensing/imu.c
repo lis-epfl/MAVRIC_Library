@@ -38,10 +38,8 @@ void imu_raw2oriented(Imu_Data_t *imu);
  */
 void imu_oriented2scale(Imu_Data_t *imu);
 
-void imu_init (Imu_Data_t *imu)
+void imu_init (Imu_Data_t *imu, AHRS_t *attitude_estimation)
 {
-	//itg3200_driver_init_slow();
-	//adxl345_driver_init_slow();
 	lsm330dlc_driver_init();
 	print_util_dbg_print("LSM330 initialised \r");	
 	
@@ -84,6 +82,22 @@ void imu_init (Imu_Data_t *imu)
 	imu->calib_compass.orientation[Z] = MAG_AXIS_Z;
 		
 	imu_last_update_init = false;
+	
+	//init AHRS_t attitude_estimation
+	attitude_estimation->qe.s		= 1.0f;
+	attitude_estimation->qe.v[X]	= 0.0f;
+	attitude_estimation->qe.v[Y]	= 0.0f;
+	attitude_estimation->qe.v[Z]	= 0.0f;
+	
+	attitude_estimation->last_update = 0.0f;
+	attitude_estimation->dt = 0.0f;
+	
+	attitude_estimation->angular_speed[X] = 0.0f;
+	attitude_estimation->angular_speed[Y] = 0.0f;
+	attitude_estimation->angular_speed[Z] = 0.0f;
+	attitude_estimation->linear_acc[X] = 0.0f;
+	attitude_estimation->linear_acc[Y] = 0.0f;
+	attitude_estimation->linear_acc[Z] = 0.0f;
 }
 
 void imu_calibrate_gyros(Imu_Data_t *imu)
@@ -151,29 +165,4 @@ void imu_oriented2scale(Imu_Data_t *imu)
 		imu->scaled_accelero.data[i]   = (1.0f - ACC_LPF) * imu->scaled_accelero.data[i] + ACC_LPF * (((float)imu->oriented_accelero.data[i] - imu->calib_accelero.bias[i]) * imu->calib_accelero.scale_factor[i]);
 		imu->scaled_compass.data[i] = (1.0f - MAG_LPF) * imu->scaled_compass.data[i] + MAG_LPF * (((float)imu->oriented_compass.data[i] - imu->calib_compass.bias[i]) * imu->calib_compass.scale_factor[i]);
 	}
-}
-
-void imu_relevel(Imu_Data_t *imu)
-{
-	float raw_mag_mean[3];			///< The raw magnetometer values to compute the initial heading of the platform
-
-	tasks_run_imu_update(0);
-	raw_mag_mean[X] = imu->oriented_compass.data[X];
-	raw_mag_mean[Y] = imu->oriented_compass.data[Y];
-	raw_mag_mean[Z] = imu->oriented_compass.data[Z];
-
-	for (uint32_t i = 1000; i > 0; i--)
-	{
-		tasks_run_imu_update(0);
-		
-		raw_mag_mean[X] = (1.0f - MAG_LPF) * raw_mag_mean[X] + MAG_LPF * imu->oriented_compass.data[X];
-		raw_mag_mean[Y] = (1.0f - MAG_LPF) * raw_mag_mean[Y] + MAG_LPF * imu->oriented_compass.data[Y];
-		raw_mag_mean[Z] = (1.0f - MAG_LPF) * raw_mag_mean[Z] + MAG_LPF * imu->oriented_compass.data[Z];
-
-		delay_ms(5);
-	}
-	
-	imu->scaled_compass.data[X] = (raw_mag_mean[X] - imu->calib_compass.bias[X]) * imu->calib_compass.scale_factor[X];
-	imu->scaled_compass.data[Y] = (raw_mag_mean[Y] - imu->calib_compass.bias[Y]) * imu->calib_compass.scale_factor[Y];
-	imu->scaled_compass.data[Z] = (raw_mag_mean[Z] - imu->calib_compass.bias[Z]) * imu->calib_compass.scale_factor[Z];
 }

@@ -88,6 +88,7 @@ void boardsupport_init(central_data_t *centralData) {
 	
 	// init debug output
 	print_util_dbg_print_init(centralData->debug_out_stream);
+	print_util_dbg_print("Debug stream initialised\n");
 
 	// Bind RC receiver with remote
 	//remote_dsm2_rc_activate_bind_mode();
@@ -110,7 +111,7 @@ void boardsupport_init(central_data_t *centralData) {
 	
 	// init imu & compass
 	i2c_driver_init(I2C0);
-	imu_init(&(centralData->imu));
+	imu_init(&(centralData->imu), &centralData->attitude_estimation);
 	bmp085_init(&(centralData->pressure));
 	
 	// init radar or ultrasound (not implemented yet)

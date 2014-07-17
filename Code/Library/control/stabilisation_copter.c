@@ -22,6 +22,8 @@
 
 void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, run_mode_t* run_mode, Imu_Data_t* imu, AHRS_t* attitude_estimation, position_estimator_t* pos_est)
 {
+	*stabiliser_stack = stabiliser_defaults_copter;
+	
 	stabilisation_copter->stabiliser_stack = stabiliser_stack;
 	stabilisation_copter->controls = controls;
 	stabilisation_copter->run_mode = run_mode;
@@ -41,8 +43,6 @@ void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabili
 	controls->tvel[Z] = 0.0f;
 	controls->theading = 0.0f;
 	controls->thrust = -1.0f;
-	
-	*stabiliser_stack = stabiliser_defaults_copter;
 	
 	print_util_dbg_print("Stabilisation copter init.\n");
 }

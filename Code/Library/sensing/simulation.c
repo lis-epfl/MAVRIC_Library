@@ -49,6 +49,8 @@ void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Da
 {
 	int32_t i;
 	
+	(*sim) = vehicle_model_parameters;
+	
 	sim->imu = imu;
 	sim->pos_est = pos_est;
 	sim->pressure = pressure;
@@ -60,8 +62,6 @@ void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Da
 	sim->home_coordinates[2] = home_alt;
 	
 	sim->sim_gravity = gravity;
-	
-	(*sim) = vehicle_model_parameters;
 	
 	// set initial conditions to a given attitude_filter
 	//TODO: do not copy the whole structure! Otherwise the two AHRS pointers are equal!!
