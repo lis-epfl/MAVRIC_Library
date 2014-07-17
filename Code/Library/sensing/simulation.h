@@ -120,9 +120,8 @@ void simulation_update(simulation_model_t *sim);
  * \brief	Simulates barometer outputs
  *
  * \param	sim				The pointer to the simulation model structure
- * \param	pressure		The pointer to the "real" barometer structure to update the belief of the barometer value
  */
-void simulation_simulate_barometer(simulation_model_t *sim, pressure_data_t *pressure);
+void simulation_simulate_barometer(simulation_model_t *sim);
 
 /**
  * \brief	Simulates GPS outputs

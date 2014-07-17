@@ -605,7 +605,7 @@ task_return_t tasks_run_barometer_update(void* arg)
 	
 	if (central_data->state_structure.simulation_mode == 1) 
 	{
-		simulation_simulate_barometer(&centralData->sim_model, &(central_data->pressure));
+		simulation_simulate_barometer(&centralData->sim_model);
 	} 
 
 	return TASK_RUN_SUCCESS;

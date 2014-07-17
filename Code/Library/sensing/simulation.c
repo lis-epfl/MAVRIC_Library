@@ -362,12 +362,12 @@ void simulation_update(simulation_model_t *sim)
 	//sim->pos_est->localPosition = sim->localPosition;
 }
 
-void simulation_simulate_barometer(simulation_model_t *sim, pressure_data_t *pressure)
+void simulation_simulate_barometer(simulation_model_t *sim)
 {
-	pressure->altitude = sim->localPosition.origin.altitude - sim->localPosition.pos[Z];
-	pressure->vario_vz = sim->vel[Z];
-	pressure->last_update = time_keeper_get_millis();
-	pressure->altitude_offset = 0;
+	sim->pressure->altitude = sim->localPosition.origin.altitude - sim->localPosition.pos[Z];
+	sim->pressure->vario_vz = sim->vel[Z];
+	sim->pressure->last_update = time_keeper_get_millis();
+	sim->pressure->altitude_offset = 0;
 }
 	
 void simulation_simulate_gps(simulation_model_t *sim)
