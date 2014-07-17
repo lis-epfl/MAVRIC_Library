@@ -35,8 +35,8 @@ void central_data_init()
 		},
 		.message_handler_config = 
 		{
-			.max_msg_callback_count = 10,
-			.max_cmd_callback_count = 10,
+			.max_msg_callback_count = 20,
+			.max_cmd_callback_count = 20,
 			.debug                  = true
 		},
 		.onboard_parameters_config =
@@ -58,9 +58,10 @@ void central_data_init()
 	// Init servos
 	servo_pwm_init((servo_output_t*)centralData.servos);
 	
-	//imu_init((Imu_Data_t*)&(centralData.imu1));
-	qfilter_init((qfilter_t*)&(centralData.attitude_filter), (Imu_Data_t*)&centralData.imu1, (AHRS_t*)&centralData.attitude_estimation);
-		
+	qfilter_init(   &(centralData.attitude_filter), 
+					&centralData.imu1, 
+					&centralData.attitude_estimation);
+	
 	position_estimation_init(   &centralData.position_estimator,
 								&centralData.pressure,
 								&centralData.GPS_data,
@@ -75,20 +76,20 @@ void central_data_init()
 								GRAVITY);
 	
 	qfilter_init_quaternion(&centralData.attitude_filter);
-		
+	
 	navigation_init(&centralData.navigationData,
 					&centralData.controls_nav,
 					&centralData.attitude_estimation.qe,
 					&centralData.waypoint_handler,
 					&centralData.position_estimator,
 					&centralData.orcaData);
-					
+	
 	waypoint_handler_init(  &centralData.waypoint_handler,
 							&centralData.position_estimator,
 							&centralData.attitude_estimation,
 							&centralData.state_structure,
 							&centralData.mavlink_communication);// ((waypoint_handler_t*)&centralData.waypoint_handler);
-		
+	
 	neighbors_selection_init(   &centralData.neighborData, 
 								&centralData.position_estimator,
 								&centralData.mavlink_communication);
@@ -98,7 +99,7 @@ void central_data_init()
 				&centralData.position_estimator,
 				&centralData.imu1,
 				&centralData.attitude_estimation);
-
+	
 	// init stabilisers
 	stabilisation_copter_init(	&centralData.stabilisation_copter,
 								&centralData.stabiliser_stack,
@@ -107,7 +108,7 @@ void central_data_init()
 								&centralData.imu1,
 								&centralData.attitude_estimation,
 								&centralData.position_estimator 	);
-
+	
 	// init simulation (should be done after position_estimator)
 	simulation_init(&centralData.sim_model,
 					&centralData.attitude_filter,

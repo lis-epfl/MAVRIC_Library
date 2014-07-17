@@ -30,11 +30,6 @@ void initialisation()
 	centralData = central_data_get_pointer_to_struct();
 	boardsupport_init(centralData);
 	central_data_init();
-	
-	print_util_dbg_print("Debug stream initialised\n");
-	
-	servo_pwm_failsafe(centralData->servos);
-	servo_pwm_set(centralData->servos);
 		
 	mavlink_actions_init(); // TODO: move read from flash elsewhere
 	mavlink_telemetry_init();
@@ -49,12 +44,6 @@ void initialisation()
 	}
 	 *
 	 */
-
-	tasks_relevel_imu(); // TODO: MOVE	
-
-	delay_ms(10);
-	print_util_dbg_print("Reset home position...\n");
-	position_estimation_reset_home_altitude(&centralData->position_estimator);
 	
 	LED_On(LED1);
 	for (i = 1; i < 8; i++)
