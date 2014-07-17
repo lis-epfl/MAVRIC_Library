@@ -433,10 +433,10 @@ void tasks_run_imu_update(void* arg)
 		compass_hmc58831l_update(&(centralData->imu.raw_compass));
 	}
 	
-	qfilter_update(&centralData->attitude_filter, centralData->imu.dt);
 	imu_update(	&centralData->imu);
+	qfilter_update(&centralData->attitude_filter, centralData->imu.dt);
 	
-	if (centralData->attitude_filter.imu->calibration_level == OFF)
+	if (centralData->imu->calibration_level == OFF)
 	{
 		position_estimation_update(&centralData->position_estimator);
 	}
@@ -446,7 +446,7 @@ void tasks_run_imu_update(void* arg)
 task_return_t tasks_run_stabilisation(void* arg) 
 {
 	tasks_run_imu_update(0);
-
+	
 	switch(centralData->state_structure.mav_mode)
 	{		
 		case MAV_MODE_MANUAL_ARMED:
