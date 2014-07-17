@@ -43,8 +43,8 @@ typedef enum
  */
 typedef struct
 {
-	Imu_Data_t *imu;				///< Pointer to inertial sensors readout
-	AHRS_t *attitude_estimation;	///< Pointer to estimated attiude
+	imu_t *imu;				///< Pointer to inertial sensors readout
+	ahrs_t *attitude_estimation;	///< Pointer to estimated attiude
 	
 	float kp;						///< The proportional gain for the acceleration correction of the angular rates
 	float ki;						///< The integral gain for the acceleration correction of the biais
@@ -60,7 +60,7 @@ typedef struct
  * \param	scalefactor		The pointer to the scale factors structure of the IMU
  * \param	biais			The pointer to the biaises structure of the IMU
  */
-void qfilter_init(qfilter_t *attitude_filter, Imu_Data_t *imu, AHRS_t *attitude_estimation);
+void qfilter_init(qfilter_t *attitude_filter, imu_t *imu, ahrs_t *attitude_estimation);
 
 
 /**

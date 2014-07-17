@@ -24,19 +24,58 @@
 #include "mavlink_stream.h"
 #include "tasks.h"
 
-int32_t ic;
 
-void imu_raw2oriented(Imu_Data_t *imu);
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
 
 /**
- * \brief	Computes the transition from raw values to scaled values
+ * \brief	Computes the oriented sensors values from the raw sensor values
  *
- * \param	attitude	the pointer structure of the attitude
- * \param	rates		the array of angular rates (IMU), accelerations and magnetometer
+ * \param	imu		Pointer structure of the imu
  */
-void imu_oriented2scale(Imu_Data_t *imu);
+static void imu_raw2oriented(imu_t *imu);
 
-void imu_init (Imu_Data_t *imu, AHRS_t *attitude_estimation)
+
+/**
+ * \brief	Computes the scaled sensors values from the oriented sensor values
+ * 
+ * \param	imu		Pointer structure of the imu
+ */
+static void imu_oriented2scale(imu_t *imu);
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+static void imu_raw2oriented(imu_t *imu)
+{
+	for (uint16_t i=0; i<3; i++)
+	{
+		imu->oriented_gyro.data[i]		= imu->raw_gyro.data[i]     * imu->calib_gyro.orientation[i];
+		imu->oriented_accelero.data[i]  = imu->raw_accelero.data[i] * imu->calib_accelero.orientation[i];
+		imu->oriented_compass.data[i]	= imu->raw_compass.data[i]  * imu->calib_compass.orientation[i];
+	}
+}
+
+
+static void imu_oriented2scale(imu_t *imu)
+{
+	for (int16_t i = 0; i < 3; i++)
+	{
+		imu->scaled_gyro.data[i]  		= (1.0f - GYRO_LPF) * imu->scaled_gyro.data[i] 		+ GYRO_LPF * ( ( imu->oriented_gyro.data[i]     - imu->calib_gyro.bias[i]     ) * imu->calib_gyro.scale_factor[i]     );
+		imu->scaled_accelero.data[i]   	= (1.0f - ACC_LPF)  * imu->scaled_accelero.data[i] 	+ ACC_LPF  * ( ( imu->oriented_accelero.data[i] - imu->calib_accelero.bias[i] ) * imu->calib_accelero.scale_factor[i] );
+		imu->scaled_compass.data[i] 	= (1.0f - MAG_LPF)  * imu->scaled_compass.data[i] 	+ MAG_LPF  * ( ( imu->oriented_compass.data[i]  - imu->calib_compass.bias[i]  ) * imu->calib_compass.scale_factor[i]  );
+	}
+}
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void imu_init (imu_t *imu)
 {	
 	//imu_calibrate_Gyros(imu);
 	
@@ -72,30 +111,12 @@ void imu_init (Imu_Data_t *imu, AHRS_t *attitude_estimation)
 	imu->calib_compass.orientation[X] = MAG_AXIS_X;
 	imu->calib_compass.orientation[Y] = MAG_AXIS_Y;
 	imu->calib_compass.orientation[Z] = MAG_AXIS_Z;
-		
-	imu_last_update_init = false;
-	
-	//init AHRS_t attitude_estimation
-	attitude_estimation->qe.s		= 1.0f;
-	attitude_estimation->qe.v[X]	= 0.0f;
-	attitude_estimation->qe.v[Y]	= 0.0f;
-	attitude_estimation->qe.v[Z]	= 0.0f;
-	
-	attitude_estimation->last_update = 0.0f;
-	attitude_estimation->dt = 0.0f;
-	
-	attitude_estimation->angular_speed[X] = 0.0f;
-	attitude_estimation->angular_speed[Y] = 0.0f;
-	attitude_estimation->angular_speed[Z] = 0.0f;
-	attitude_estimation->linear_acc[X] = 0.0f;
-	attitude_estimation->linear_acc[Y] = 0.0f;
-	attitude_estimation->linear_acc[Z] = 0.0f;
 }
 
-void imu_calibrate_gyros(Imu_Data_t *imu)
+
+void imu_calibrate_gyros(imu_t *imu)
 {
 	int32_t i,j;
-	//imu_get_raw_data(imu);
 	tasks_run_imu_update(0);
 	
 	for (j = 0; j < 3; j++)
@@ -105,7 +126,6 @@ void imu_calibrate_gyros(Imu_Data_t *imu)
 	
 	for (i = 0; i < 100; i++)
 	{
-		//imu_get_raw_data(imu);
 		tasks_run_imu_update(0);
 
 		//imu->imu->calib_sensor.bias[0 + ACC_OFFSET] = (0.9f * imu->imu->calib_accelero.bias[0] + 0.1f * (float)imu->oriented_accelero.data[0]);
@@ -121,45 +141,20 @@ void imu_calibrate_gyros(Imu_Data_t *imu)
 	}
 }
 
-void imu_update(Imu_Data_t *imu)
+
+void imu_update(imu_t *imu)
 {
 	uint32_t t = time_keeper_get_time_ticks();
 	
-	if (!imu_last_update_init)
-	{
-		imu->last_update = t;
-		imu_last_update_init = true;
-	}
-	else
-	{
-		imu->dt = time_keeper_ticks_to_seconds(t - imu->last_update);
-		imu->last_update = t;
-		imu_raw2oriented(imu);
-		imu_oriented2scale(imu);
-	}
+	imu->dt = time_keeper_ticks_to_seconds(t - imu->last_update);
+	imu->last_update = t;
+
+	imu_raw2oriented(imu);
+	imu_oriented2scale(imu);	
 }
 
-void imu_raw2oriented(Imu_Data_t *imu)
-{
-	for (uint16_t i=0; i<3; i++)
-	{
-		imu->oriented_gyro.data[i]		= imu->raw_gyro.data[i] * imu->calib_gyro.orientation[i];
-		imu->oriented_accelero.data[i] = imu->raw_accelero.data[i] * imu->calib_accelero.orientation[i];
-		imu->oriented_compass.data[i]	= imu->raw_compass.data[i] * imu->calib_compass.orientation[i];
-	}
-}
 
-void imu_oriented2scale(Imu_Data_t *imu)
-{
-	for (int16_t i = 0; i < 3; i++)
-	{
-		imu->scaled_gyro.data[i]  = (1.0f - GYRO_LPF) * imu->scaled_gyro.data[i] + GYRO_LPF * (((float)imu->oriented_gyro.data[i] - imu->calib_gyro.bias[i]) * imu->calib_gyro.scale_factor[i]);
-		imu->scaled_accelero.data[i]   = (1.0f - ACC_LPF) * imu->scaled_accelero.data[i] + ACC_LPF * (((float)imu->oriented_accelero.data[i] - imu->calib_accelero.bias[i]) * imu->calib_accelero.scale_factor[i]);
-		imu->scaled_compass.data[i] = (1.0f - MAG_LPF) * imu->scaled_compass.data[i] + MAG_LPF * (((float)imu->oriented_compass.data[i] - imu->calib_compass.bias[i]) * imu->calib_compass.scale_factor[i]);
-	}
-}
-
-task_return_t mavlink_telemetry_send_scaled_imu(Imu_Data_t* imu)
+task_return_t mavlink_telemetry_send_scaled_imu(imu_t* imu)
 {
 	mavlink_msg_scaled_imu_send(MAVLINK_COMM_0,
 								time_keeper_get_millis(),
@@ -177,7 +172,7 @@ task_return_t mavlink_telemetry_send_scaled_imu(Imu_Data_t* imu)
 }
 
 
-task_return_t mavlink_telemetry_send_raw_imu(Imu_Data_t* imu)
+task_return_t mavlink_telemetry_send_raw_imu(imu_t* imu)
 {
 	mavlink_msg_raw_imu_send(	MAVLINK_COMM_0,
 								time_keeper_get_micros(),

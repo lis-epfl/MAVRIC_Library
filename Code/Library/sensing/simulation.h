@@ -89,7 +89,7 @@ typedef struct
 	uint32_t last_update;									///< The last update in system ticks
 	float dt;												///< The time base of current update
 	
-	Imu_Data_t* imu;
+	imu_t* imu;
 	position_estimator_t* pos_est;
 	pressure_data_t* pressure;
 	gps_Data_type_t* gps;
@@ -106,7 +106,7 @@ typedef struct
  * \param	imu				The pointer to the real IMU structure to match the simulated IMU
  * \param	localPos		The pointer to the structure of the real local position estimation of the vehicle
  */
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos);
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, qfilter_t* attitude_filter, imu_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos);
 
 /**
  * \brief	Sets the calibration to the "real" IMU values
