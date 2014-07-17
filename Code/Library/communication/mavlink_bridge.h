@@ -32,7 +32,6 @@ extern "C" {
 
 // Structures that stores the communication settings of this system: DO NOT (re)move
 extern mavlink_system_t mavlink_system;
-extern mavlink_system_t mavlink_mission_planner;
 
 /**
  * \brief Send one char (uint8_t) over a communication channel

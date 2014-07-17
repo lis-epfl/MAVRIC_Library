@@ -28,7 +28,7 @@ central_data_t *centralData;
 
 
 void mavlink_actions_add_onboard_parameters(void) {
-	onboard_parameter_set_t* onboard_parameters = &centralData->mavlink_communication.onboard_parameters;
+	onboard_parameters_t* onboard_parameters = &centralData->mavlink_communication.onboard_parameters;
 
 	Stabiliser_t* rate_stabiliser = &centralData->stabiliser_stack.rate_stabiliser;
 	Stabiliser_t* attitude_stabiliser = &centralData->stabiliser_stack.attitude_stabiliser;
