@@ -135,7 +135,7 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 	int32_t i;
 
 	if (pos_est->init_barometer)
-	{
+	{		
 		// altimeter correction
 		if (bmp085_newValidBarometer(pos_est->barometer, &pos_est->time_last_barometer_msg))
 		{
