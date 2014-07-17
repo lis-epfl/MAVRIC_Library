@@ -436,7 +436,7 @@ void tasks_run_imu_update(void* arg)
 	imu_update(	&centralData->imu);
 	qfilter_update(&centralData->attitude_filter);
 	
-	if (centralData->imu->calibration_level == OFF)
+	if (centralData->imu.calibration_level == OFF)
 	{
 		position_estimation_update(&centralData->position_estimator);
 	}
