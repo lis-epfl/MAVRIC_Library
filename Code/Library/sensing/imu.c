@@ -24,7 +24,7 @@
 #include "time_keeper.h"
 #include "print_util.h"
 #include "mavlink_stream.h"
-
+#include "tasks.h"
 
 int32_t ic;
 
@@ -90,7 +90,7 @@ void imu_calibrate_gyros(Imu_Data_t *imu1)
 {
 	int32_t i,j;
 	//imu_get_raw_data(imu1);
-	imu_raw2oriented(imu1);
+	tasks_run_imu_update(0);
 	
 	for (j = 0; j < 3; j++)
 	{
@@ -100,6 +100,7 @@ void imu_calibrate_gyros(Imu_Data_t *imu1)
 	for (i = 0; i < 100; i++)
 	{
 		//imu_get_raw_data(imu1);
+		tasks_run_imu_update(0);
 
 		//imu1->imu1->calib_sensor.bias[0 + ACC_OFFSET] = (0.9f * imu1->imu1->calib_accelero.bias[0] + 0.1f * (float)imu1->oriented_accelero.data[0]);
 		//imu1->imu1->calib_sensor.bias[1 + ACC_OFFSET] = (0.9f * imu1->imu1->calib_accelero.bias[1] + 0.1f * (float)imu1->oriented_accelero.data[1]);
@@ -150,4 +151,29 @@ void imu_oriented2scale(Imu_Data_t *imu1)
 		imu1->scaled_accelero.data[i]   = (1.0f - ACC_LPF) * imu1->scaled_accelero.data[i] + ACC_LPF * (((float)imu1->oriented_accelero.data[i] - imu1->calib_accelero.bias[i]) * imu1->calib_accelero.scale_factor[i]);
 		imu1->scaled_compass.data[i] = (1.0f - MAG_LPF) * imu1->scaled_compass.data[i] + MAG_LPF * (((float)imu1->oriented_compass.data[i] - imu1->calib_compass.bias[i]) * imu1->calib_compass.scale_factor[i]);
 	}
+}
+
+void imu_relevel(Imu_Data_t *imu1)
+{
+	float raw_mag_mean[3];			///< The raw magnetometer values to compute the initial heading of the platform
+
+	tasks_run_imu_update(0);
+	raw_mag_mean[X] = imu1->oriented_compass.data[X];
+	raw_mag_mean[Y] = imu1->oriented_compass.data[Y];
+	raw_mag_mean[Z] = imu1->oriented_compass.data[Z];
+
+	for (uint32_t i = 1000; i > 0; i--)
+	{
+		tasks_run_imu_update(0);
+		
+		raw_mag_mean[X] = (1.0f - MAG_LPF) * raw_mag_mean[X] + MAG_LPF * imu1->oriented_compass.data[X];
+		raw_mag_mean[Y] = (1.0f - MAG_LPF) * raw_mag_mean[Y] + MAG_LPF * imu1->oriented_compass.data[Y];
+		raw_mag_mean[Z] = (1.0f - MAG_LPF) * raw_mag_mean[Z] + MAG_LPF * imu1->oriented_compass.data[Z];
+
+		delay_ms(5);
+	}
+	
+	imu1->scaled_compass.data[X] = (raw_mag_mean[X] - imu1->calib_compass.bias[X]) * imu1->calib_compass.scale_factor[X];
+	imu1->scaled_compass.data[Y] = (raw_mag_mean[Y] - imu1->calib_compass.bias[Y]) * imu1->calib_compass.scale_factor[Y];
+	imu1->scaled_compass.data[Z] = (raw_mag_mean[Z] - imu1->calib_compass.bias[Z]) * imu1->calib_compass.scale_factor[Z];
 }

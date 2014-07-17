@@ -17,13 +17,11 @@
 
 
 #include "position_estimation.h"
-#include "qfilter.h"
 #include "print_util.h"
 #include "math_util.h"
 #include "time_keeper.h"
 #include "conf_constants.h"
 #include "conf_platform.h"
-#include "mavlink_communication.h"
 
 
 //------------------------------------------------------------------------------
@@ -347,7 +345,7 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
 
 void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, AHRS_t *attitude_estimation, Imu_Data_t *imu, local_coordinates_t *sim_local_position, bool* waypoint_set, mavlink_communication_t *mavlink_communication, float home_lat, float home_lon, float home_alt, float gravity)
 {
-	pos_est->barometer = pos_est->barometer;
+	pos_est->barometer = barometer;
 	pos_est->gps = gps;
 	pos_est->attitude_estimation = attitude_estimation;
 	pos_est->imu = imu;

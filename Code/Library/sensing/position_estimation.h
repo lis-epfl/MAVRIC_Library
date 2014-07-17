@@ -28,6 +28,7 @@ extern "C" {
 #include "bmp085.h"
 #include "gps_ublox.h"
 #include "coord_conventions.h"
+#include "mavlink_communication.h"
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
 #define VEL_DECAY 0.0f

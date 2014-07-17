@@ -113,6 +113,8 @@ void imu_calibrate_gyros(Imu_Data_t *imu1);
  */
 void imu_update(Imu_Data_t *imu1);
 
+void imu_relevel(Imu_Data_t *imu1);
+
 #ifdef __cplusplus
 }
 #endif
