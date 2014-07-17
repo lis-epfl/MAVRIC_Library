@@ -59,7 +59,7 @@ void central_data_init()
 	servo_pwm_init((servo_output_t*)centralData.servos);
 	
 	//imu_init((Imu_Data_t*)&(centralData.imu), (AHRS_t*)&centralData.attitude_estimation);
-	qfilter_init((qfilter_t*)&(centralData.attitude_filter), (Imu_Data_t*)&centralData.imu1, (AHRS_t*)&centralData.attitude_estimation);
+	qfilter_init((qfilter_t*)&(centralData.attitude_filter), (Imu_Data_t*)&centralData.imu, (AHRS_t*)&centralData.attitude_estimation);
 		
 	position_estimation_init(   &centralData.position_estimator,
 								&centralData.pressure,
