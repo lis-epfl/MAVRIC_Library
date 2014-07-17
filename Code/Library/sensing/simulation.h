@@ -81,6 +81,7 @@ typedef struct
 	pressure_data_t* pressure;
 	gps_Data_type_t* gps;
 	state_structure_t* state_structure;
+	servo_output_t* servos;
 	
 } simulation_model_t;
 
@@ -92,7 +93,7 @@ typedef struct
  * \param	imu				The pointer to the real IMU structure to match the simulated IMU
  * \param	localPos		The pointer to the structure of the real local position estimation of the vehicle
  */
-void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, float home_lat, float home_lon, float home_alt, float gravity);
+void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos, float home_lat, float home_lon, float home_alt, float gravity);
 
 /**
  * \brief	Sets the calibration to the "real" IMU values
@@ -148,7 +149,7 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms);
  * \param	sim				The pointer to the simulation model structure
  * \param	servos			The array of the servos
  */
-void simulation_switch_between_reality_n_simulation(simulation_model_t *sim, servo_output_t servos[]);
+void simulation_switch_between_reality_n_simulation(simulation_model_t *sim);
 
 #ifdef __cplusplus
 }

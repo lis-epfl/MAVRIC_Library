@@ -430,7 +430,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 		print_util_dbg_print_num(centralData->state_structure.simulation_mode_previous,10);
 		print_util_dbg_print("\n");
 		
-		simulation_switch_between_reality_n_simulation(&centralData->sim_model,centralData->servos);
+		simulation_switch_between_reality_n_simulation(&centralData->sim_model);
 	}
 	centralData->state_structure.simulation_mode_previous = centralData->state_structure.simulation_mode;
 	

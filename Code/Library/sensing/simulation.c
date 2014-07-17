@@ -45,7 +45,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *serv
  */
 void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servos);
 
-void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, float home_lat, float home_lon, float home_alt, float gravity)
+void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos, float home_lat, float home_lon, float home_alt, float gravity)
 {
 	int32_t i;
 	
@@ -56,6 +56,7 @@ void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Da
 	sim->pressure = pressure;
 	sim->gps = gps;
 	sim->state_structure = state_structure;
+	sim->servos = servos;
 	
 	sim->home_coordinates[0] = home_lat;
 	sim->home_coordinates[1] = home_lon;
@@ -401,7 +402,7 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 	sim->gps->status = GPS_OK;
 }
 
-void simulation_switch_between_reality_n_simulation(simulation_model_t *sim, servo_output_t servos[])
+void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 {
 	uint32_t i;
 	
@@ -424,7 +425,7 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim, ser
 		sim->pos_est->init_gps_position = false;
 		sim->state_structure->mav_state = MAV_STATE_STANDBY;
 		sim->state_structure->mav_mode = MAV_MODE_MANUAL_DISARMED;
-		servo_pwm_failsafe(servos);
+		servo_pwm_failsafe(sim->servos);
 	}
 
 	// From reality to simulation
