@@ -36,7 +36,7 @@
 #define RAW_MAG_Z 1					///< Define the index for the magnetometer raw values array
 
 // from datasheet: FS 2000dps --> 70 mdps/digit
-// scale = 1/(0.07 * PI / 180.0) = 818.5111
+// scale = 1/(0.07 * PI / 180.0) = 818.5111f
 #define RAW_GYRO_X_SCALE 818.5111f		///< Define the scale factor for the gyroscope raw values
 #define RAW_GYRO_Y_SCALE 818.5111f		///< Define the scale factor for the gyroscope raw values
 #define RAW_GYRO_Z_SCALE 818.5111f		///< Define the scale factor for the gyroscope raw values
