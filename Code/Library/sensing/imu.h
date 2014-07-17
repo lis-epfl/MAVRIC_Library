@@ -85,35 +85,35 @@ bool imu_last_update_init;				///< Variable to initialize the IMU
 /** 
  * \brief	Initialize the IMU module
  *
- * \param	imu1		the pointer to the IMU structure
+ * \param	imu		the pointer to the IMU structure
  */
-void imu_init(Imu_Data_t *imu1);
+void imu_init(Imu_Data_t *imu);
 
 /**
  * \brief	The function to be called to access the raw data of the IMU
  *
- * \param	imu1		the pointer to the IMU structure
+ * \param	imu		the pointer to the IMU structure
  */
-void imu_get_raw_data(Imu_Data_t *imu1);
+void imu_get_raw_data(Imu_Data_t *imu);
 
 /**
  * \brief	To calibrate the gyros at startup (not used know)
  *
- * \param	imu1		the pointer to the IMU structure
+ * \param	imu		the pointer to the IMU structure
  */
-void imu_calibrate_gyros(Imu_Data_t *imu1);
+void imu_calibrate_gyros(Imu_Data_t *imu);
 
 /**
  * \brief	Computes the attitude estimation, do the position estimation and the position correction
  *
- * \param	imu1		the pointer structure of the IMU
+ * \param	imu		the pointer structure of the IMU
  * \param	pos_est		the pointer to the position estimation structure
  * \param	barometer	the pointer to the barometer structure
  * \param	gps			the pointer to the GPS structure
  */
-void imu_update(Imu_Data_t *imu1);
+void imu_update(Imu_Data_t *imu);
 
-void imu_relevel(Imu_Data_t *imu1);
+void imu_relevel(Imu_Data_t *imu);
 
 #ifdef __cplusplus
 }

@@ -77,7 +77,7 @@ void stabilisation_hybrid_cascade_stabilise_hybrid(Imu_Data_t *imu, position_est
 		rpyt_errors[3]= input.thrust;       // no feedback for thrust at this level
 		
 		// run PID update on all attitude controllers
-		stabilisation_run(&centralData->stabiliser_stack.attitude_stabiliser, centralData->imu1.dt, &rpyt_errors);
+		stabilisation_run(&centralData->stabiliser_stack.attitude_stabiliser, centralData->imu.dt, &rpyt_errors);
 		
 		// use output of attitude controller to set rate setpoints for rate controller 
 		input = centralData->stabiliser_stack.attitude_stabiliser.output;
@@ -92,7 +92,7 @@ void stabilisation_hybrid_cascade_stabilise_hybrid(Imu_Data_t *imu, position_est
 		rpyt_errors[3] = input.thrust ;  // no feedback for thrust at this level
 		
 		// run PID update on all rate controllers
-		stabilisation_run(&centralData->stabiliser_stack.rate_stabiliser, centralData->imu1.dt, &rpyt_errors );
+		stabilisation_run(&centralData->stabiliser_stack.rate_stabiliser, centralData->imu.dt, &rpyt_errors );
 	}
 
 	// mix to servos 

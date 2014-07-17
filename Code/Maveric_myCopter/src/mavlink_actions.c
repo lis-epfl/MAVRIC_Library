@@ -124,30 +124,30 @@ void mavlink_actions_add_onboard_parameters(void) {
 	// onboard_parameters_add_parameter_float ( onboard_parameters , &attitude_stabiliser->rpy_controller[YAW].differentiator.gain         , "YawAPid_D_Gain"   );
 	
 	// Biaises
-	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_gyro.bias[X]                       , "Bias_Gyro_X"      );
-	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_gyro.bias[Y]                       , "Bias_Gyro_Y"      );
-	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_gyro.bias[Z]                       , "Bias_Gyro_Z"      );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_gyro.bias[X]                       , "Bias_Gyro_X"      );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_gyro.bias[Y]                       , "Bias_Gyro_Y"      );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_gyro.bias[Z]                       , "Bias_Gyro_Z"      );
 	
-	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_accelero.bias[X]                        , "Bias_Acc_X"       );
-	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_accelero.bias[Y]                        , "Bias_Acc_Y"       );
-	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_accelero.bias[Z]                        , "Bias_Acc_Z"       );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_accelero.bias[X]                        , "Bias_Acc_X"       );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_accelero.bias[Y]                        , "Bias_Acc_Y"       );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_accelero.bias[Z]                        , "Bias_Acc_Z"       );
 	
-	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_compass.bias[X]                        , "Bias_Mag_X"       );
-	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_compass.bias[Y]                        , "Bias_Mag_Y"       );
-	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu1.calib_compass.bias[Z]                        , "Bias_Mag_Z"       );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_compass.bias[X]                        , "Bias_Mag_X"       );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_compass.bias[Y]                        , "Bias_Mag_Y"       );
+	 onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_compass.bias[Z]                        , "Bias_Mag_Z"       );
 	
 	// Scale factor
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_gyro.scale_factor[X]                         , "Scale_Gyro_X"     );
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_gyro.scale_factor[Y]                         , "Scale_Gyro_Y"     );
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_gyro.scale_factor[Z]                         , "Scale_Gyro_Z"     );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_gyro.scale_factor[X]                         , "Scale_Gyro_X"     );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_gyro.scale_factor[Y]                         , "Scale_Gyro_Y"     );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_gyro.scale_factor[Z]                         , "Scale_Gyro_Z"     );
 	
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_accelero.scale_factor[X]                          , "Scale_Acc_X"      );
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_accelero.scale_factor[Y]                          , "Scale_Acc_Y"      );
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_accelero.scale_factor[Z]                          , "Scale_Acc_Z"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_accelero.scale_factor[X]                          , "Scale_Acc_X"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_accelero.scale_factor[Y]                          , "Scale_Acc_Y"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_accelero.scale_factor[Z]                          , "Scale_Acc_Z"      );
 	
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_compass.scale_factor[X]                          , "Scale_Mag_X"      );
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_compass.scale_factor[Y]                          , "Scale_Mag_Y"      );
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu1.calib_compass.scale_factor[Z]                          , "Scale_Mag_Z"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_compass.scale_factor[X]                          , "Scale_Mag_X"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_compass.scale_factor[Y]                          , "Scale_Mag_Y"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_compass.scale_factor[Z]                          , "Scale_Mag_Z"      );
 
 	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_alt                               , "Pos_kp_alt"       );
 	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_vel_baro                          , "Pos_kp_velb"      );

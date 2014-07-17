@@ -51,7 +51,7 @@ enum CRITICAL_BEHAVIOR_ENUM{
 };
 
 typedef struct  {
-	Imu_Data_t imu1;
+	Imu_Data_t imu;
 	Control_Command_t controls;
 	Control_Command_t controls_nav;
 

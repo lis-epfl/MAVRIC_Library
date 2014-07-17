@@ -123,7 +123,7 @@ void boardsupport_init(central_data_t *centralData) {
 		// init debug output
 		print_util_dbg_print_init(centralData->debug_out_stream);
 		
-		imu_init(&centralData->imu1);
+		imu_init(&centralData->imu);
 
 		remote_dsm2_rc_init();
 		servo_pwm_init();
@@ -144,7 +144,7 @@ void boardsupport_init(central_data_t *centralData) {
 		centralData->position_estimator.localPosition.origin.altitude =   HOME_ALTITUDE;
 		centralData->position_estimator.localPosition.pos[0]=0;	centralData->position_estimator.localPosition.pos[1]=0; centralData->position_estimator.localPosition.pos[2]=0;
 		
-		simulation_init(&centralData->sim_model, &centralData->imu1.attitude);
+		simulation_init(&centralData->sim_model, &centralData->imu.attitude);
 		centralData->sim_model.localPosition=centralData->position_estimator.localPosition;
 
 
