@@ -55,8 +55,8 @@ typedef struct
 {
 	UQuat_t		qe;						///< quaternion defining the Attitude estimation of the platform
 	
-	float		angular_speed[3];					///< Gyro rates
-	float		linear_acc[3];					///< Acceleration WITHOUT gravity
+	float		angular_speed[3];		///< Gyro rates
+	float		linear_acc[3];			///< Acceleration WITHOUT gravity
 	
 	float		heading;				///< The heading of the platform
 	UQuat_t		up_vec;					///< The quaternion of the up vector
@@ -71,12 +71,22 @@ typedef struct
  * \brief The IMU structure
  */
 typedef struct
-{
-	gyro_data_t raw_gyro, oriented_gyro, scaled_gyro;
-	accelero_data_t raw_accelero, oriented_accelero, scaled_accelero;
-	compass_data_t raw_compass, oriented_compass, scaled_compass;
+{	
+	sensor_calib_t 	 calib_gyro;
+	sensor_calib_t   calib_accelero;
+	sensor_calib_t   calib_compass;
+
+	gyro_data_t      raw_gyro;
+	gyro_data_t      oriented_gyro;
+	gyro_data_t      scaled_gyro;
 	
-	sensor_calib_t calib_gyro, calib_accelero, calib_compass;
+	accelero_data_t  raw_accelero;
+	accelero_data_t  oriented_accelero;
+	accelero_data_t  scaled_accelero;
+	
+	compass_data_t   raw_compass;
+	compass_data_t   oriented_compass;
+	compass_data_t   scaled_compass;
 	
 	float dt;							///< The time interval between two IMU updates
 	uint32_t last_update;				///< The time of the last IMU update in ms

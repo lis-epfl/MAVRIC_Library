@@ -53,9 +53,9 @@ static void imu_raw2oriented(imu_t *imu)
 {
 	for (uint16_t i=0; i<3; i++)
 	{
-		imu->oriented_gyro.data[i]		= imu->raw_gyro.data[i] * imu->calib_gyro.orientation[i];
-		imu->oriented_accelero.data[i] = imu->raw_accelero.data[i] * imu->calib_accelero.orientation[i];
-		imu->oriented_compass.data[i]	= imu->raw_compass.data[i] * imu->calib_compass.orientation[i];
+		imu->oriented_gyro.data[i]		= imu->raw_gyro.data[i]     * imu->calib_gyro.orientation[i];
+		imu->oriented_accelero.data[i]  = imu->raw_accelero.data[i] * imu->calib_accelero.orientation[i];
+		imu->oriented_compass.data[i]	= imu->raw_compass.data[i]  * imu->calib_compass.orientation[i];
 	}
 }
 
