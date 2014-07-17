@@ -433,7 +433,7 @@ void tasks_run_imu_update(void* arg)
 		compass_hmc58831l_update(&(centralData->imu.raw_compass));
 	}
 	
-	qfilter_update(&centralData->attitude_filter, centralData->imu.dt);
+	qfilter_update(&centralData->attitude_filter);
 	imu_update(	&centralData->imu);
 	
 	if (centralData->attitude_filter.imu->calibration_level == OFF)
