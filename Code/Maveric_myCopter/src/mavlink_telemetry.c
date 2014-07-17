@@ -673,7 +673,7 @@ void mavlink_telemetry_init(void)
 	scheduler_add_task(&centralData->mavlink_communication.task_set,  200000,   RUN_NEVER,    (task_function_t)&mavlink_telemetry_send_rpy_speed_thrust_setpoint,	&centralData->stabiliser_stack.rate_stabiliser,	MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT	);	// ID 59
 	scheduler_add_task(&centralData->mavlink_communication.task_set,  500000,   RUN_REGULAR,  (task_function_t)&mavlink_telemetry_send_hud,							0, 												MAVLINK_MSG_ID_VFR_HUD	);								// ID 74
 	scheduler_add_task(&centralData->mavlink_communication.task_set,  200000,   RUN_NEVER,    (task_function_t)&mavlink_telemetry_send_rpy_rates_error,				&centralData->stabiliser_stack.rate_stabiliser,	MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT	);	// ID 80
-	scheduler_add_task(&centralData->mavlink_communication.task_set,  500000,   RUN_REGULAR,  (task_function_t)&mavlink_telemetry_send_simulation,					0, 												MAVLINK_MSG_ID_HIL_STATE	);							// ID 90
+	scheduler_add_task(&centralData->mavlink_communication.task_set,  500000,   RUN_NEVER,    (task_function_t)&mavlink_telemetry_send_simulation,					0, 												MAVLINK_MSG_ID_HIL_STATE	);							// ID 90
 	scheduler_add_task(&centralData->mavlink_communication.task_set,  250000,   RUN_REGULAR,  (task_function_t)&mavlink_telemetry_send_rt_stats,					0, 												MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
 	//scheduler_add_task(&centralData->mavlink_communication.task_set,  100000,   RUN_REGULAR,  (task_function_t)&mavlink_telemetry_send_sonar,&centralData->i2cxl_sonar, 	MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
 
