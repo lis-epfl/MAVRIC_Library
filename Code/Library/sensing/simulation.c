@@ -45,7 +45,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *serv
  */
 void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servos);
 
-void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, float home_lat, float home_lon, float home_alt, float gravity)
+void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos, float home_lat, float home_lon, float home_alt, float gravity)
 {
 	int32_t i;
 	
@@ -56,6 +56,7 @@ void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Da
 	sim->pressure = pressure;
 	sim->gps = gps;
 	sim->state_structure = state_structure;
+	sim->servos = servos;
 	
 	sim->home_coordinates[0] = home_lat;
 	sim->home_coordinates[1] = home_lon;
@@ -65,7 +66,7 @@ void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Da
 	
 	// set initial conditions to a given attitude_filter
 	//TODO: do not copy the whole structure! Otherwise the two AHRS pointers are equal!!
-	sim->attitude_filter = *attitude_filter;
+	//sim->attitude_filter = *attitude_filter;
 
 	for (i = 0; i < ROTORCOUNT; i++)
 	{
@@ -227,7 +228,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *serv
 	*/
 }
 
-void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands)
+void simulation_update(simulation_model_t *sim)
 {
 	int32_t i;
 	UQuat_t qtmp1, qvel_bf,  qed;
@@ -245,10 +246,10 @@ void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands)
 	sim->last_update = now;
 	// compute torques and forces based on servo commands
 	#ifdef CONF_DIAG
-	forces_from_servos_diag_quad(sim, servo_commands);
+	forces_from_servos_diag_quad(sim, sim->servos);
 	#endif
 	#ifdef CONF_CROSS
-	forces_from_servos_cross_quad(sim, servo_commands);
+	forces_from_servos_cross_quad(sim, sim->servos);
 	#endif
 	
 	// pid_control_integrate torques to get simulated gyro rates (with some damping)
@@ -339,21 +340,21 @@ void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands)
 
 	// fill in simulated IMU values
 	
-	sim->imu->oriented_gyro.data[IMU_X] = sim->rates_bf[0] * sim->simu_raw_scale[GYRO_OFFSET + IMU_X] + sim->simu_raw_biais[GYRO_OFFSET + IMU_X];
-	sim->imu->oriented_gyro.data[IMU_Y] = sim->rates_bf[1] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Y] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Y];
-	sim->imu->oriented_gyro.data[IMU_Z] = sim->rates_bf[2] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Z] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Z];
+	sim->imu->raw_gyro.data[IMU_X] = sim->rates_bf[0] * sim->simu_raw_scale[GYRO_OFFSET + IMU_X] + sim->simu_raw_biais[GYRO_OFFSET + IMU_X];
+	sim->imu->raw_gyro.data[IMU_Y] = sim->rates_bf[1] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Y] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Y];
+	sim->imu->raw_gyro.data[IMU_Z] = sim->rates_bf[2] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Z] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Z];
 
-	sim->imu->oriented_accelero.data[IMU_X] = (sim->lin_forces_bf[0] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_X] + sim->simu_raw_biais[ACC_OFFSET + IMU_X];
-	sim->imu->oriented_accelero.data[IMU_Y] = (sim->lin_forces_bf[1] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_Y] + sim->simu_raw_biais[ACC_OFFSET + IMU_Y];
-	sim->imu->oriented_accelero.data[IMU_Z] = (sim->lin_forces_bf[2] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_Z] + sim->simu_raw_biais[ACC_OFFSET + IMU_Z];
+	sim->imu->raw_accelero.data[IMU_X] = (sim->lin_forces_bf[0] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_X] + sim->simu_raw_biais[ACC_OFFSET + IMU_X];
+	sim->imu->raw_accelero.data[IMU_Y] = (sim->lin_forces_bf[1] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_Y] + sim->simu_raw_biais[ACC_OFFSET + IMU_Y];
+	sim->imu->raw_accelero.data[IMU_Z] = (sim->lin_forces_bf[2] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_Z] + sim->simu_raw_biais[ACC_OFFSET + IMU_Z];
 	// cheating... provide true upvector instead of simulated forces
-	//sim->imu->oriented_accelero.data[IMU_X] = sim->attitude_filter.attitude_estimation->up_vec.v[0] * imu->calib_accelero.scale_factor[IMU_X] + imu->calib_accelero.bias[IMU_X];
-	//sim->imu->oriented_accelero.data[IMU_Y] = sim->attitude_filter.attitude_estimation->up_vec.v[1] * imu->calib_accelero.scale_factor[IMU_Y] + imu->calib_accelero.bias[IMU_Y];
-	//sim->imu->oriented_accelero.data[IMU_Z] = sim->attitude_filter.attitude_estimation->up_vec.v[2] * imu->calib_accelero.scale_factor[IMU_Z] + imu->calib_accelero.bias[IMU_Z];
+	//sim->imu->raw_compass.data[IMU_X] = sim->attitude_filter.attitude_estimation->up_vec.v[0] * imu->calib_accelero.scale_factor[IMU_X] + imu->calib_accelero.bias[IMU_X];
+	//sim->imu->raw_compass.data[IMU_Y] = sim->attitude_filter.attitude_estimation->up_vec.v[1] * imu->calib_accelero.scale_factor[IMU_Y] + imu->calib_accelero.bias[IMU_Y];
+	//sim->imu->raw_compass.data[IMU_Z] = sim->attitude_filter.attitude_estimation->up_vec.v[2] * imu->calib_accelero.scale_factor[IMU_Z] + imu->calib_accelero.bias[IMU_Z];
 	
-	sim->imu->oriented_compass.data[IMU_X] = (sim->attitude_filter.attitude_estimation->north_vec.v[0] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_X] + sim->simu_raw_biais[MAG_OFFSET + IMU_X];
-	sim->imu->oriented_compass.data[IMU_Y] = (sim->attitude_filter.attitude_estimation->north_vec.v[1] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_Y] + sim->simu_raw_biais[MAG_OFFSET + IMU_Y];
-	sim->imu->oriented_compass.data[IMU_Z] = (sim->attitude_filter.attitude_estimation->north_vec.v[2] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_Z] + sim->simu_raw_biais[MAG_OFFSET + IMU_Z];
+	sim->imu->raw_compass.data[IMU_X] = (sim->attitude_filter.attitude_estimation->north_vec.v[0] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_X] + sim->simu_raw_biais[MAG_OFFSET + IMU_X];
+	sim->imu->raw_compass.data[IMU_Y] = (sim->attitude_filter.attitude_estimation->north_vec.v[1] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_Y] + sim->simu_raw_biais[MAG_OFFSET + IMU_Y];
+	sim->imu->raw_compass.data[IMU_Z] = (sim->attitude_filter.attitude_estimation->north_vec.v[2] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_Z] + sim->simu_raw_biais[MAG_OFFSET + IMU_Z];
 	
 	//sim->imu->dt = sim->dt;
 
@@ -361,23 +362,23 @@ void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands)
 	//sim->pos_est->localPosition = sim->localPosition;
 }
 
-void simulation_simulate_barometer(simulation_model_t *sim, pressure_data_t *pressure)
+void simulation_simulate_barometer(simulation_model_t *sim)
 {
-	pressure->altitude = sim->localPosition.origin.altitude - sim->localPosition.pos[Z];
-	pressure->vario_vz = sim->vel[Z];
-	pressure->last_update = time_keeper_get_millis();
-	pressure->altitude_offset = 0;
+	sim->pressure->altitude = sim->localPosition.origin.altitude - sim->localPosition.pos[Z];
+	sim->pressure->vario_vz = sim->vel[Z];
+	sim->pressure->last_update = time_keeper_get_millis();
+	sim->pressure->altitude_offset = 0;
 }
 	
-void simulation_simulate_gps(simulation_model_t *sim, gps_Data_type_t *gps)
+void simulation_simulate_gps(simulation_model_t *sim)
 {
 	global_position_t gpos = coord_conventions_local_to_global_position(sim->localPosition);
 	
-	gps->altitude = gpos.altitude;
-	gps->latitude = gpos.latitude;
-	gps->longitude = gpos.longitude;
-	gps->time_last_msg = time_keeper_get_millis();
-	gps->status = GPS_OK;
+	sim->gps->altitude = gpos.altitude;
+	sim->gps->latitude = gpos.latitude;
+	sim->gps->longitude = gpos.longitude;
+	sim->gps->time_last_msg = time_keeper_get_millis();
+	sim->gps->status = GPS_OK;
 }
 
 void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
@@ -401,7 +402,7 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 	sim->gps->status = GPS_OK;
 }
 
-void simulation_switch_between_reality_n_simulation(simulation_model_t *sim, servo_output_t servos[])
+void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 {
 	uint32_t i;
 	
@@ -424,7 +425,7 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim, ser
 		sim->pos_est->init_gps_position = false;
 		sim->state_structure->mav_state = MAV_STATE_STANDBY;
 		sim->state_structure->mav_mode = MAV_MODE_MANUAL_DISARMED;
-		servo_pwm_failsafe(servos);
+		servo_pwm_failsafe(sim->servos);
 	}
 
 	// From reality to simulation

@@ -68,7 +68,7 @@ void central_data_init()
 				&centralData.mavlink_communication); 
 	
 	// Init servos
-	servo_pwm_init((servo_output_t*)centralData.servos);
+	servo_pwm_init(centralData.servos);
 	
 	qfilter_init(   &(centralData.attitude_filter), 
 					&centralData.imu, 
@@ -117,7 +117,8 @@ void central_data_init()
 								&centralData.run_mode,
 								&centralData.imu,
 								&centralData.attitude_estimation,
-								&centralData.position_estimator 	);
+								&centralData.position_estimator,
+								centralData.servos 	);
 	
 	// init simulation (should be done after position_estimator)
 	simulation_init(&centralData.sim_model,
@@ -127,6 +128,7 @@ void central_data_init()
 					&centralData.pressure,
 					&centralData.GPS_data,
 					&centralData.state_structure,
+					centralData.servos,
 					centralData.position_estimator.localPosition.origin.latitude,
 					centralData.position_estimator.localPosition.origin.longitude,
 					centralData.position_estimator.localPosition.origin.altitude,

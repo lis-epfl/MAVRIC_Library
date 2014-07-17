@@ -51,6 +51,7 @@ typedef struct
 	Imu_Data_t *imu;											///< The pointer to the IMU structure
 	AHRS_t *attitude_estimation;								///< The pointer to the attitude estimation structure
 	position_estimator_t *pos_est;								///< The pointer to the position estimation structure
+	servo_output_t* servos;										///< The pointer to the servos structure
 } stabilise_copter_t;
 
 /**
@@ -64,7 +65,7 @@ typedef struct
  * \param	attitude_estimation		The pointer to the attitude estimation structure
  * \param	pos_est					The pointer to the position estimation structure
  */
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, run_mode_t* run_mode, Imu_Data_t* imu, AHRS_t* attitude_estimation, position_estimator_t* pos_est);
+void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, run_mode_t* run_mode, Imu_Data_t* imu, AHRS_t* attitude_estimation, position_estimator_t* pos_est, servo_output_t* servos);
 
 /**
  * \brief							Gets the velocity vector from the remote
@@ -78,9 +79,8 @@ void stabilisation_copter_get_velocity_vector_from_remote(float tvel[], stabilis
  * \brief							Main Controller for controlling and stabilizing the quad
  *
  * \param	stabilisationParam		The stabilisation structure
- * \param	servos					The array of servos structure
  */
-void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_copter, servo_output_t servos[]);
+void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_copter);
 
 /**
  * \brief							Mix to servo for quad configuration diagonal

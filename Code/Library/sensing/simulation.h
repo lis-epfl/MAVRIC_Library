@@ -81,6 +81,7 @@ typedef struct
 	pressure_data_t* pressure;
 	gps_Data_type_t* gps;
 	state_structure_t* state_structure;
+	servo_output_t* servos;
 	
 } simulation_model_t;
 
@@ -92,7 +93,7 @@ typedef struct
  * \param	imu				The pointer to the real IMU structure to match the simulated IMU
  * \param	localPos		The pointer to the structure of the real local position estimation of the vehicle
  */
-void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, float home_lat, float home_lon, float home_alt, float gravity);
+void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos, float home_lat, float home_lon, float home_alt, float gravity);
 
 /**
  * \brief	Sets the calibration to the "real" IMU values
@@ -112,26 +113,22 @@ void simulation_reset_simulation(simulation_model_t *sim);
  * \brief	Computes artificial gyro and accelerometer values based on motor commands
  *
  * \param	sim				The pointer to the simulation model structure
- * \param	servo_commands	The pointer to the commands that would be sent to the servo (i.e. brushless motors)
- * \param	imu				The pointer to the "real" IMU structure to update the belief of the attitude
- * \param	localPos		The pointer to the structure of the "real" local position of the vehicle to update the belief of the position and velocity
  */
-void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands);
+void simulation_update(simulation_model_t *sim);
 
 /**
  * \brief	Simulates barometer outputs
  *
  * \param	sim				The pointer to the simulation model structure
- * \param	pressure		The pointer to the "real" barometer structure to update the belief of the barometer value
  */
-void simulation_simulate_barometer(simulation_model_t *sim, pressure_data_t *pressure);
+void simulation_simulate_barometer(simulation_model_t *sim);
 
 /**
  * \brief	Simulates GPS outputs
  *
  * \param	sim				The pointer to the simulation model structure
  */
-void simulation_simulate_gps(simulation_model_t *sim, gps_Data_type_t *gps);
+void simulation_simulate_gps(simulation_model_t *sim);
 
 
 /**
@@ -146,9 +143,8 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms);
  * \brief	Changes between simulation to and from reality
  *
  * \param	sim				The pointer to the simulation model structure
- * \param	servos			The array of the servos
  */
-void simulation_switch_between_reality_n_simulation(simulation_model_t *sim, servo_output_t servos[]);
+void simulation_switch_between_reality_n_simulation(simulation_model_t *sim);
 
 #ifdef __cplusplus
 }

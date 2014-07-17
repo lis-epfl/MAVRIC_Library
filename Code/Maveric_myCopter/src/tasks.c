@@ -413,7 +413,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 		print_util_dbg_print_num(centralData->state_structure.simulation_mode_previous,10);
 		print_util_dbg_print("\n");
 		
-		simulation_switch_between_reality_n_simulation(&centralData->sim_model,centralData->servos);
+		simulation_switch_between_reality_n_simulation(&centralData->sim_model);
 	}
 	centralData->state_structure.simulation_mode_previous = centralData->state_structure.simulation_mode;
 	
@@ -425,7 +425,7 @@ void tasks_run_imu_update(void* arg)
 {
 	if (centralData->state_structure.simulation_mode == 1) 
 	{
-		simulation_update(&centralData->sim_model,centralData->servos);
+		simulation_update(&centralData->sim_model);
 	} 
 	else 
 	{
@@ -434,7 +434,7 @@ void tasks_run_imu_update(void* arg)
 		compass_hmc58831l_update(&(centralData->imu.raw_compass));
 	}
 	
-	qfilter_update(&centralData->attitude_filter, centralData->imu.dt);
+	qfilter_update(&centralData->attitude_filter);
 	imu_update(	&centralData->imu);
 	
 	if (centralData->attitude_filter.imu->calibration_level == OFF)
@@ -455,7 +455,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			centralData->controls.yaw_mode=YAW_RELATIVE;
 			
-			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter, centralData->servos);
+			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter);
 			break;
 
 		case MAV_MODE_STABILIZE_ARMED:
@@ -465,7 +465,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 			
 			stabilisation_copter_get_velocity_vector_from_remote(centralData->controls.tvel,&centralData->stabilisation_copter);
 			
-			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter, centralData->servos);
+			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter);
 			
 			break;
 
@@ -482,7 +482,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 				centralData->controls.yaw_mode = YAW_ABSOLUTE;
 			}
 			
-			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter, centralData->servos);
+			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter);
 			
 			break;
 
@@ -500,7 +500,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 				centralData->controls.yaw_mode = YAW_ABSOLUTE;
 			}
 			
-			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter, centralData->servos);
+			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter);
 			break;
 		
 		case MAV_MODE_PREFLIGHT:
@@ -514,7 +514,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 	}
 	
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
-	if (centralData->state_structure.simulation_mode != 1) 
+	if (centralData->state_structure.simulation_mode == REAL_MODE) 
 	{
 		servo_pwm_set(centralData->servos);
 	}
@@ -526,7 +526,7 @@ task_return_t tasks_run_gps_update(void* arg)
 {
 	if (centralData->state_structure.simulation_mode == 1) 
 	{
-		simulation_simulate_gps(&centralData->sim_model, &centralData->GPS_data);
+		simulation_simulate_gps(&centralData->sim_model);
 	} 
 	else 
 	{
@@ -588,7 +588,7 @@ task_return_t tasks_run_barometer_update(void* arg)
 	
 	if (central_data->state_structure.simulation_mode == 1) 
 	{
-		simulation_simulate_barometer(&centralData->sim_model, &(central_data->pressure));
+		simulation_simulate_barometer(&centralData->sim_model);
 	} 
 
 	return TASK_RUN_SUCCESS;

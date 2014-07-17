@@ -20,6 +20,7 @@
 #include "conf_platform.h"
 #include "coord_conventions.h"
 #include "print_util.h"
+ #include "time_keeper.h"
 #include <math.h>
 #include "maths.h"
 
@@ -57,7 +58,8 @@ void qfilter_init(qfilter_t* qf, Imu_Data_t* imu, AHRS_t* attitude_estimation)
 }
 
 
-void qfilter_update(qfilter_t *qf, float dt){
+void qfilter_update(qfilter_t *qf)
+{
 	uint8_t i;
 	float  omc[3], omc_mag[3] , tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
 	UQuat_t qed, qtmp1, up, up_bf;
@@ -69,6 +71,12 @@ void qfilter_update(qfilter_t *qf, float dt){
 	};
 
 	float kp, kp_mag;
+
+	// Update time
+	uint32_t t = time_keeper_get_time_ticks();
+	float dt = time_keeper_ticks_to_seconds(t - qf->attitude_estimation->last_update);
+	qf->attitude_estimation->dt = dt;
+	qf->attitude_estimation->last_update = t;
 
 	// up_bf = qe^-1 *(0,0,0,-1) * qe
 	up.s = 0; up.v[0] = UPVECTOR_X; up.v[1] = UPVECTOR_Y; up.v[2] = UPVECTOR_Z;
