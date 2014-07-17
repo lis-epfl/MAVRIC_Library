@@ -75,24 +75,6 @@ void switch_off_motors(void)
 	centralData->waypoint_handler.in_the_air = false;
 }
 
-void tasks_relevel_imu(void)
-{
-	centralData->attitude_filter.calibration_level = LEVELING;
-	centralData->state_structure.mav_state = MAV_STATE_CALIBRATING;
-	centralData->state_structure.mav_mode = MAV_MODE_PREFLIGHT;
-
-	print_util_dbg_print("calibrating IMU...\n");
-
-	//imu_relevel(&centralData->imu1);
-	
-	centralData->attitude_filter.calibration_level = OFF;
-	centralData->state_structure.mav_state = MAV_STATE_STANDBY;
-	centralData->state_structure.mav_mode = MAV_MODE_MANUAL_DISARMED;
-	
-	print_util_dbg_print("IMU calibration done.\n");
-}
-
-
 task_return_t tasks_set_mav_mode_n_state(void* arg)
 {
 	uint8_t channelSwitches = 0;
@@ -454,7 +436,7 @@ void tasks_run_imu_update(void* arg)
 	qfilter_attitude_estimation(&centralData->attitude_filter, centralData->imu1.dt);
 	imu_update(	&centralData->imu1);
 	
-	if (centralData->attitude_filter.calibration_level == OFF)
+	if (centralData->attitude_filter.imu1->calibration_level == OFF)
 	{
 		position_estimation_update(&centralData->position_estimator);
 	}

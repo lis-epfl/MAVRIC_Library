@@ -34,7 +34,9 @@ void qfilter_init(qfilter_t *attitude_filter, Imu_Data_t *imu1, AHRS_t *attitude
 	
 	attitude_filter->imu1 = imu1;
 	attitude_filter->attitude_estimation = attitude_estimation;
-
+	
+	attitude_filter->imu1->calibration_level = LEVELING;
+	
 	/*for (i = 0; i < 9; i++)
 	{
 		attitude->sf[i] = 1.0f / (float)scalefactor[i];
@@ -152,7 +154,7 @@ void qfilter_attitude_estimation(qfilter_t *attitude_filter, float dt){
 
 
 	// get error correction gains depending on mode
-	switch (attitude_filter->calibration_level)
+	switch (attitude_filter->imu1->calibration_level)
 	{
 		case OFF:
 			kp = attitude_filter->kp;//*(0.1f / (0.1f + s_acc_norm - 1.0f));
@@ -243,4 +245,9 @@ void qfilter_attitude_estimation(qfilter_t *attitude_filter, float dt){
 	attitude_filter->attitude_estimation->up_vec.v[0] = up_bf.v[0];
 	attitude_filter->attitude_estimation->up_vec.v[1] = up_bf.v[1];
 	attitude_filter->attitude_estimation->up_vec.v[2] = up_bf.v[2];
+	
+	//update angular_speed.
+	attitude_filter->attitude_estimation->angular_speed[X] = attitude_filter->imu1->scaled_gyro.data[X];
+	attitude_filter->attitude_estimation->angular_speed[Y] = attitude_filter->imu1->scaled_gyro.data[Y];
+	attitude_filter->attitude_estimation->angular_speed[Z] = attitude_filter->imu1->scaled_gyro.data[Z];
 }

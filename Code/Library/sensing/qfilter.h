@@ -52,8 +52,6 @@ typedef struct
 	float ki;						///< The integral gain for the acceleration correction of the biais
 	float kp_mag;					///< The proportional gain for the magnetometer correction of the angular rates
 	float ki_mag;					///< The integral gain for the magnetometer correction of the angular rates
-	
-	uint8_t calibration_level;		///< The level of calibration
 } qfilter_t;
 
 /**

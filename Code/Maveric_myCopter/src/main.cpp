@@ -50,8 +50,6 @@ void initialisation()
 	 *
 	 */
 
-	tasks_relevel_imu(); // TODO: MOVE	
-
 	delay_ms(10);
 	print_util_dbg_print("Reset home position...\n");
 	position_estimation_reset_home_altitude(&centralData->position_estimator);
@@ -66,6 +64,8 @@ void initialisation()
 	
 	centralData->state_structure.mav_state = MAV_STATE_STANDBY;
 	centralData->state_structure.mav_state_previous = centralData->state_structure.mav_state;
+	
+	centralData->imu1.calibration_level = OFF;
 }
 
 int main (void)

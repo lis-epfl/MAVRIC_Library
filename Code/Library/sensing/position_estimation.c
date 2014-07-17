@@ -364,7 +364,7 @@ void position_estimation_position_correction(position_estimator_t *pos_est)
 
 void position_estimation_update(position_estimator_t *pos_est)
 {
-	//if (attitude_filter->calibration_level == OFF)
+	//if (attitude_filter->imu1->calibration_level == OFF)
 	{
 		position_estimation_position_integration(pos_est);
 		position_estimation_position_correction(pos_est);
