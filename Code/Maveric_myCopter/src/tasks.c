@@ -427,10 +427,10 @@ void tasks_run_imu_update(void* arg)
 		compass_hmc58831l_update(&(centralData->imu.raw_compass));
 	}
 	
-	qfilter_update(&centralData->attitude_filter);
 	imu_update(	&centralData->imu);
+	qfilter_update(&centralData->attitude_filter);
 	
-	if (centralData->attitude_filter.imu->calibration_level == OFF)
+	if (centralData->imu.calibration_level == OFF)
 	{
 		position_estimation_update(&centralData->position_estimator);
 	}
@@ -440,7 +440,7 @@ void tasks_run_imu_update(void* arg)
 task_return_t tasks_run_stabilisation(void* arg) 
 {
 	tasks_run_imu_update(0);
-
+	
 	switch(centralData->state_structure.mav_mode)
 	{		
 		case MAV_MODE_MANUAL_ARMED:
@@ -588,7 +588,6 @@ void tasks_create_tasks()
 	main_tasks.tasks[1].timing_mode = PERIODIC_RELATIVE;
 
 	scheduler_register_task(&main_tasks, 2, 100000, RUN_REGULAR, &tasks_run_gps_update, 0);
-	//scheduler_register_task(&main_tasks, , 100000, RUN_REGULAR, &radar_module_read, 0);
 
 	scheduler_register_task(&main_tasks, 3, ORCA_TIME_STEP_MILLIS * 1000.0f, RUN_REGULAR, (task_function_t)&navigation_update, (task_argument_t)&centralData->navigationData);
 

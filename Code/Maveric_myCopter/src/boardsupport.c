@@ -45,11 +45,8 @@
 #include "xbee.h"
 #include "console.h"
 
-void boardsupport_init(central_data_t *centralData) {
-	// int32_t i;
-	// enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
-	
-
+void boardsupport_init(central_data_t *centralData) 
+{
 	irq_initialize_vectors();
 	cpu_irq_enable();
 	Disable_global_interrupt();

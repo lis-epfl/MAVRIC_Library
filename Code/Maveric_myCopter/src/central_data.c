@@ -77,10 +77,10 @@ void central_data_init()
 				MAV_AUTOPILOT_GENERIC,
 				MAV_STATE_BOOT,
 				MAV_MODE_PREFLIGHT,
-				SIMULATION_MODE, //REAL_MODE 
+				REAL_MODE, // SIMULATION_MODE
 				&centralData.mavlink_communication); 
 	
-	imu_init(&(centralData.imu), &centralData.attitude_estimation);
+	imu_init(&(centralData.imu));
 	
 	// Init servos
 	servo_pwm_init(centralData.servos);
@@ -135,8 +135,6 @@ void central_data_init()
 								&centralData.attitude_estimation,
 								&centralData.position_estimator,
 								centralData.servos 	);
-	
-	delay_ms(750);
 	
 	// init simulation (should be done after position_estimator)
 	simulation_init(&centralData.sim_model,

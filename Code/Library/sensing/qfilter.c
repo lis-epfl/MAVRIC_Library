@@ -29,7 +29,7 @@ float front_mag_vect_z;
 
 uint8_t counter = 0;
 
-void qfilter_init(qfilter_t* qf, Imu_Data_t* imu, AHRS_t* attitude_estimation) 
+void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* attitude_estimation) 
 {
 	uint8_t i;
 	
@@ -47,6 +47,12 @@ void qfilter_init(qfilter_t* qf, Imu_Data_t* imu, AHRS_t* attitude_estimation)
 	qf->attitude_estimation->qe.v[0] = 0.0f;
 	qf->attitude_estimation->qe.v[1] = 0.0f;
 	qf->attitude_estimation->qe.v[2] = 0.0f;
+	qf->attitude_estimation->angular_speed[X] = 0.0f;
+	qf->attitude_estimation->angular_speed[Y] = 0.0f;
+	qf->attitude_estimation->angular_speed[Z] = 0.0f;
+	qf->attitude_estimation->linear_acc[X] = 0.0f;
+	qf->attitude_estimation->linear_acc[Y] = 0.0f;
+	qf->attitude_estimation->linear_acc[Z] = 0.0f;
 	
 	qf->kp = 0.07f;
 	qf->ki = qf->kp / 15.0f;
@@ -54,7 +60,7 @@ void qfilter_init(qfilter_t* qf, Imu_Data_t* imu, AHRS_t* attitude_estimation)
 	qf->kp_mag = 0.1f;
 	qf->ki_mag = qf->kp_mag / 15.0f;
 	
-	print_util_dbg_print("qfilter initialized.\n");
+	print_util_dbg_print("[QFILTER] Initialized.\n");
 }
 
 
