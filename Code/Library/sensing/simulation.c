@@ -66,7 +66,7 @@ void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Da
 	
 	// set initial conditions to a given attitude_filter
 	//TODO: do not copy the whole structure! Otherwise the two AHRS pointers are equal!!
-	sim->attitude_filter = *attitude_filter;
+	//sim->attitude_filter = *attitude_filter;
 
 	for (i = 0; i < ROTORCOUNT; i++)
 	{
@@ -340,21 +340,21 @@ void simulation_update(simulation_model_t *sim)
 
 	// fill in simulated IMU values
 	
-	sim->imu->oriented_gyro.data[IMU_X] = sim->rates_bf[0] * sim->simu_raw_scale[GYRO_OFFSET + IMU_X] + sim->simu_raw_biais[GYRO_OFFSET + IMU_X];
-	sim->imu->oriented_gyro.data[IMU_Y] = sim->rates_bf[1] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Y] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Y];
-	sim->imu->oriented_gyro.data[IMU_Z] = sim->rates_bf[2] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Z] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Z];
+	sim->imu->raw_gyro.data[IMU_X] = sim->rates_bf[0] * sim->simu_raw_scale[GYRO_OFFSET + IMU_X] + sim->simu_raw_biais[GYRO_OFFSET + IMU_X];
+	sim->imu->raw_gyro.data[IMU_Y] = sim->rates_bf[1] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Y] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Y];
+	sim->imu->raw_gyro.data[IMU_Z] = sim->rates_bf[2] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Z] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Z];
 
-	sim->imu->oriented_accelero.data[IMU_X] = (sim->lin_forces_bf[0] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_X] + sim->simu_raw_biais[ACC_OFFSET + IMU_X];
-	sim->imu->oriented_accelero.data[IMU_Y] = (sim->lin_forces_bf[1] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_Y] + sim->simu_raw_biais[ACC_OFFSET + IMU_Y];
-	sim->imu->oriented_accelero.data[IMU_Z] = (sim->lin_forces_bf[2] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_Z] + sim->simu_raw_biais[ACC_OFFSET + IMU_Z];
+	sim->imu->raw_accelero.data[IMU_X] = (sim->lin_forces_bf[0] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_X] + sim->simu_raw_biais[ACC_OFFSET + IMU_X];
+	sim->imu->raw_accelero.data[IMU_Y] = (sim->lin_forces_bf[1] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_Y] + sim->simu_raw_biais[ACC_OFFSET + IMU_Y];
+	sim->imu->raw_accelero.data[IMU_Z] = (sim->lin_forces_bf[2] / sim->total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_Z] + sim->simu_raw_biais[ACC_OFFSET + IMU_Z];
 	// cheating... provide true upvector instead of simulated forces
-	//sim->imu->oriented_accelero.data[IMU_X] = sim->attitude_filter.attitude_estimation->up_vec.v[0] * imu->calib_accelero.scale_factor[IMU_X] + imu->calib_accelero.bias[IMU_X];
-	//sim->imu->oriented_accelero.data[IMU_Y] = sim->attitude_filter.attitude_estimation->up_vec.v[1] * imu->calib_accelero.scale_factor[IMU_Y] + imu->calib_accelero.bias[IMU_Y];
-	//sim->imu->oriented_accelero.data[IMU_Z] = sim->attitude_filter.attitude_estimation->up_vec.v[2] * imu->calib_accelero.scale_factor[IMU_Z] + imu->calib_accelero.bias[IMU_Z];
+	//sim->imu->raw_compass.data[IMU_X] = sim->attitude_filter.attitude_estimation->up_vec.v[0] * imu->calib_accelero.scale_factor[IMU_X] + imu->calib_accelero.bias[IMU_X];
+	//sim->imu->raw_compass.data[IMU_Y] = sim->attitude_filter.attitude_estimation->up_vec.v[1] * imu->calib_accelero.scale_factor[IMU_Y] + imu->calib_accelero.bias[IMU_Y];
+	//sim->imu->raw_compass.data[IMU_Z] = sim->attitude_filter.attitude_estimation->up_vec.v[2] * imu->calib_accelero.scale_factor[IMU_Z] + imu->calib_accelero.bias[IMU_Z];
 	
-	sim->imu->oriented_compass.data[IMU_X] = (sim->attitude_filter.attitude_estimation->north_vec.v[0] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_X] + sim->simu_raw_biais[MAG_OFFSET + IMU_X];
-	sim->imu->oriented_compass.data[IMU_Y] = (sim->attitude_filter.attitude_estimation->north_vec.v[1] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_Y] + sim->simu_raw_biais[MAG_OFFSET + IMU_Y];
-	sim->imu->oriented_compass.data[IMU_Z] = (sim->attitude_filter.attitude_estimation->north_vec.v[2] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_Z] + sim->simu_raw_biais[MAG_OFFSET + IMU_Z];
+	sim->imu->raw_compass.data[IMU_X] = (sim->attitude_filter.attitude_estimation->north_vec.v[0] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_X] + sim->simu_raw_biais[MAG_OFFSET + IMU_X];
+	sim->imu->raw_compass.data[IMU_Y] = (sim->attitude_filter.attitude_estimation->north_vec.v[1] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_Y] + sim->simu_raw_biais[MAG_OFFSET + IMU_Y];
+	sim->imu->raw_compass.data[IMU_Z] = (sim->attitude_filter.attitude_estimation->north_vec.v[2] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_Z] + sim->simu_raw_biais[MAG_OFFSET + IMU_Z];
 	
 	//sim->imu->dt = sim->dt;
 
