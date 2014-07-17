@@ -452,7 +452,7 @@ task_return_t  mavlink_telemetry_send_rpy_rates_error(Stabiliser_t* rate_stabili
 task_return_t mavlink_telemetry_send_simulation(void* arg) 
 {
 	Aero_Attitude_t aero_attitude;
-	aero_attitude = coord_conventions_quat_to_aero(centralData->sim_model.attitude_filter->attitude_estimation->qe);
+	aero_attitude = coord_conventions_quat_to_aero(centralData->sim_model.attitude_filter.attitude_estimation->qe);
 
 	global_position_t gpos = coord_conventions_local_to_global_position(centralData->sim_model.localPosition);
 	
@@ -476,7 +476,7 @@ task_return_t mavlink_telemetry_send_simulation(void* arg)
 	
 	mavlink_msg_hil_state_quaternion_send(	MAVLINK_COMM_0,
 											time_keeper_get_micros(),
-											(float*) &centralData->sim_model.attitude_filter->attitude_estimation->qe,
+											(float*) &centralData->sim_model.attitude_filter.attitude_estimation->qe,
 											aero_attitude.rpy[ROLL],
 											aero_attitude.rpy[PITCH],
 											aero_attitude.rpy[YAW],
@@ -488,9 +488,9 @@ task_return_t mavlink_telemetry_send_simulation(void* arg)
 											100 * centralData->sim_model.vel[Z],
 											100 * vectors_norm(centralData->sim_model.vel),
 											0.0f,
-											centralData->sim_model.attitude_filter->attitude_estimation->linear_acc[X],
-											centralData->sim_model.attitude_filter->attitude_estimation->linear_acc[Y],
-											centralData->sim_model.attitude_filter->attitude_estimation->linear_acc[Z]	);
+											centralData->sim_model.attitude_filter.attitude_estimation->linear_acc[X],
+											centralData->sim_model.attitude_filter.attitude_estimation->linear_acc[Y],
+											centralData->sim_model.attitude_filter.attitude_estimation->linear_acc[Z]	);
 	
 	mavlink_msg_named_value_int_send(	MAVLINK_COMM_0, 
 										time_keeper_get_millis(), 
