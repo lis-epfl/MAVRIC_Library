@@ -29,6 +29,7 @@ extern "C" {
 #include "mavlink_waypoint_handler.h"
 #include "position_estimation.h"
 #include "orca.h"
+#include "tasks.h"
 #include <stdbool.h>
 
 /**
@@ -49,6 +50,7 @@ typedef struct
 	mavlink_waypoint_handler_t *waypoint_handler;		///< The pointer to the waypoint handler structure
 	position_estimator_t *position_estimator;			///< The pointer to the position estimation structure in centralData
 	orca_t *orcaData;									///< The pointer to the ORCA structure in centralData
+	state_structure_t* state_structure;					///< The pointer to the state structure in centralData
 }navigation_t;
 
 /**
@@ -61,17 +63,14 @@ typedef struct
  * \param	position_estimator	The pointer to the position estimation structure in centralData
  * \param	orcaData			The pointer to the ORCA structure in centralData
  */
-void navigation_init(navigation_t* navigationData, Control_Command_t* controls_nav, UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, orca_t* orcaData);
-
+void navigation_init(navigation_t* navigationData, Control_Command_t* controls_nav, UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, orca_t* orcaData, state_structure_t* state_structure);
 
 /**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
  *
- * \param	waypoint_input		Destination waypoint in local coordinate system
- * \param	navigationData		The navigation structure
+ * \param	navigationData		The pointer to the navigation structure in centralData
  */
-void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigationData);
-
+task_return_t navigation_update(navigation_t* navigationData);
 
 #ifdef __cplusplus
 }

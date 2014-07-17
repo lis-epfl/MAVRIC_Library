@@ -406,12 +406,6 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 	
 	if (centralData->state_structure.simulation_mode_previous != centralData->state_structure.simulation_mode)
 	{
-		print_util_dbg_print("Changing mode!");
-		print_util_dbg_print_num(centralData->state_structure.simulation_mode,10);
-		print_util_dbg_print(", prev:");
-		print_util_dbg_print_num(centralData->state_structure.simulation_mode_previous,10);
-		print_util_dbg_print("\n");
-		
 		simulation_switch_between_reality_n_simulation(&centralData->sim_model);
 	}
 	centralData->state_structure.simulation_mode_previous = centralData->state_structure.simulation_mode;
@@ -422,7 +416,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 
 void tasks_run_imu_update(void* arg)
 {
-	if (centralData->state_structure.simulation_mode == 1) 
+	if (centralData->state_structure.simulation_mode == SIMULATION_MODE) 
 	{
 		simulation_update(&centralData->sim_model);
 	} 
@@ -523,7 +517,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 
 task_return_t tasks_run_gps_update(void* arg) 
 {
-	if (centralData->state_structure.simulation_mode == 1) 
+	if (centralData->state_structure.simulation_mode == SIMULATION_MODE) 
 	{
 		simulation_simulate_gps(&centralData->sim_model);
 	} 
@@ -536,56 +530,13 @@ task_return_t tasks_run_gps_update(void* arg)
 }
 
 
-task_return_t tasks_run_navigation_update(void* arg)
-{	
-	switch (centralData->state_structure.mav_state)
-	{
-		case MAV_STATE_STANDBY:
-			if (((centralData->state_structure.mav_mode == MAV_MODE_GUIDED_ARMED)||(centralData->state_structure.mav_mode == MAV_MODE_AUTO_ARMED)) && !centralData->waypoint_handler.automatic_take_off)
-			{
-				navigation_run(centralData->waypoint_handler.waypoint_hold_coordinates,&centralData->navigationData);
-			}
-			break;
-
-		case MAV_STATE_ACTIVE:
-			switch (centralData->state_structure.mav_mode)
-			{
-				case MAV_MODE_AUTO_ARMED:
-					if (centralData->waypoint_handler.waypoint_set)
-					{
-						navigation_run(centralData->waypoint_handler.waypoint_coordinates,&centralData->navigationData);
-					}
-					else
-					{
-						navigation_run(centralData->waypoint_handler.waypoint_hold_coordinates,&centralData->navigationData);
-					}
-					break;
-
-				case MAV_MODE_GUIDED_ARMED:
-					navigation_run(centralData->waypoint_handler.waypoint_hold_coordinates,&centralData->navigationData);
-					break;
-			}
-			break;
-
-		case MAV_STATE_CRITICAL:
-			if ((centralData->state_structure.mav_mode == MAV_MODE_GUIDED_ARMED)||(centralData->state_structure.mav_mode == MAV_MODE_AUTO_ARMED))
-			{
-				navigation_run(centralData->waypoint_handler.waypoint_critical_coordinates,&centralData->navigationData);
-			}
-			break;
-	}
-	
-	return TASK_RUN_SUCCESS;
-}
-
-
 task_return_t tasks_run_barometer_update(void* arg)
 {
 	central_data_t *central_data = central_data_get_pointer_to_struct();
 	
 	bmp085_get_pressure_data_slow(&(central_data->pressure));
 	
-	if (central_data->state_structure.simulation_mode == 1) 
+	if (central_data->state_structure.simulation_mode == SIMULATION_MODE) 
 	{
 		simulation_simulate_barometer(&centralData->sim_model);
 	} 
@@ -639,7 +590,7 @@ void tasks_create_tasks()
 	scheduler_register_task(&main_tasks, 2, 100000, RUN_REGULAR, &tasks_run_gps_update, 0);
 	//scheduler_register_task(&main_tasks, , 100000, RUN_REGULAR, &radar_module_read, 0);
 
-	scheduler_register_task(&main_tasks, 3, ORCA_TIME_STEP_MILLIS * 1000.0f, RUN_REGULAR, &tasks_run_navigation_update, 0);
+	scheduler_register_task(&main_tasks, 3, ORCA_TIME_STEP_MILLIS * 1000.0f, RUN_REGULAR, (task_function_t)&navigation_update, (task_argument_t)&centralData->navigationData);
 
 	scheduler_register_task(&main_tasks, 4, 200000, RUN_REGULAR, &tasks_set_mav_mode_n_state, 0);
 	
