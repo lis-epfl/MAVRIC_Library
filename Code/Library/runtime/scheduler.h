@@ -28,10 +28,7 @@ extern "C"
 #include "stdint.h"
 #include <stdbool.h>
 
-#define GET_TIME time_keeper_get_micros()
 #define SCHEDULER_TIMEBASE 1000000
-#define MAX_NUMBER_OF_TASKS 30
-
 
 typedef uint8_t task_handle_t;
 
@@ -91,7 +88,7 @@ typedef struct
 {	
 	task_function_t call_function;		///<	Function to be called
 	task_argument_t function_argument;
-	uint16_t task_id;					///<	Unique task identifier
+	uint32_t task_id;					///<	Unique task identifier
 	task_run_mode_t  run_mode;			///<	Run mode
 	task_timing_mode_t timing_mode;		///<	Timing mode
 	uint32_t repeat_period;   			///<	Period between two calls (us)
@@ -111,7 +108,7 @@ typedef struct task_set_t
 {
 	uint32_t task_count;				///<	Number_of_tasks
 	uint32_t max_task_count;			///<	Maximum number of tasks
-	int32_t current_schedule_slot;		///<	Slot of the task being executed
+	uint32_t current_schedule_slot;		///<	Slot of the task being executed
 	task_entry_t tasks[];				///<	Array of tasks_entry to be executed
 } task_set_t;
 
@@ -130,15 +127,6 @@ typedef struct
 	uint32_t max_task_count;
 	bool debug;
 } scheduler_conf_t;
-
-
-/**
- * @brief Macro to instantiate a new task-set
- * 
- * @param NAME 		Name of the task-set
- * @param NUMBER 	Number of tasks in the task-set
- */
-#define NEW_TASK_SET(NAME,NUMBER) task_set_t NAME = {.task_count = MAX_NUMBER_OF_TASKS};
 
 
 /**

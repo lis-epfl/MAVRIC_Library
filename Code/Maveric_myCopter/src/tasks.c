@@ -31,7 +31,6 @@
 #include "lsm330dlc_driver.h"
 #include "compass_hmc5883l.h"
 
-// NEW_TASK_SET(main_tasks, 10)
 
 central_data_t* centralData;
 

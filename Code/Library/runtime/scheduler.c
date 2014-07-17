@@ -23,10 +23,6 @@
 #include "piezo_speaker.h"
 
 
-// TODO: change behaviour of task_set_t.task_count (ie: initialised at 0 and incremented each time a task is added)
-// currently it is dangerous because the task_set_t can be iterated between 0 and number_of_task even if 
-// number_of_task is superior to the actual number of tasks stored in the structure (risk of empty pointers)
-
 void scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config) 
 {
 	task_set_t* ts = scheduler->task_set;
@@ -57,7 +53,7 @@ void scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config)
 // 	ts->tasks[task_slot].function_argument = function_argument;
 // 	ts->tasks[task_slot].run_mode = run_mode;
 // 	ts->tasks[task_slot].repeat_period = repeat_period;
-// 	ts->tasks[task_slot].next_run = GET_TIME;
+// 	ts->tasks[task_slot].next_run = time_keeper_get_micros();
 // 	ts->tasks[task_slot].execution_time = 0;
 // 	ts->tasks[task_slot].timing_mode = PERIODIC_ABSOLUTE;
 
@@ -84,7 +80,7 @@ bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run
 		new_task->run_mode          = run_mode;
 		new_task->timing_mode       = timing_mode;	
 		new_task->repeat_period     = repeat_period;
-		new_task->next_run          = GET_TIME;
+		new_task->next_run          = time_keeper_get_micros();
 		new_task->execution_time    = 0;
 		new_task->delay_max         = 0;
 		new_task->delay_avg         = 0;
@@ -168,7 +164,7 @@ int32_t scheduler_update(scheduler_t* scheduler, uint8_t schedule_strategy)
 	// Iterate through registered tasks
 	for (i = ts->current_schedule_slot; i < ts->task_count; i++) 
 	{
-		uint32_t current_time = GET_TIME;
+		uint32_t current_time = time_keeper_get_micros();
 
 		// If the task is active and has waited long enough...
 		if ( (ts->tasks[i].run_mode != RUN_NEVER) && (current_time >= ts->tasks[i].next_run) ) 
@@ -176,7 +172,7 @@ int32_t scheduler_update(scheduler_t* scheduler, uint8_t schedule_strategy)
 			uint32_t delay = current_time - (ts->tasks[i].next_run);
 			uint32_t task_start_time;
 
-		    task_start_time = GET_TIME;
+		    task_start_time = time_keeper_get_micros();
 
 		    // Get function pointer and function argument
 		    call_task = ts->tasks[i].call_function;
@@ -195,7 +191,7 @@ int32_t scheduler_update(scheduler_t* scheduler, uint8_t schedule_strategy)
 
 				case PERIODIC_RELATIVE:
 					// Take delays into account
-					ts->tasks[i].next_run = GET_TIME + ts->tasks[i].repeat_period;
+					ts->tasks[i].next_run = time_keeper_get_micros() + ts->tasks[i].repeat_period;
 				break;
 			}
 			
@@ -220,7 +216,7 @@ int32_t scheduler_update(scheduler_t* scheduler, uint8_t schedule_strategy)
 				ts->tasks[i].delay_max = delay;
 			}
 			ts->tasks[i].delay_var_squared = (15 * ts->tasks[i].delay_var_squared + (delay - ts->tasks[i].delay_avg) * (delay - ts->tasks[i].delay_avg)) / 16;
-			ts->tasks[i].execution_time = (7 * ts->tasks[i].execution_time + (GET_TIME - task_start_time)) / 8;
+			ts->tasks[i].execution_time = (7 * ts->tasks[i].execution_time + (time_keeper_get_micros() - task_start_time)) / 8;
 				
 			// Depending on shceduling strategy, select next task slot	
 			switch (schedule_strategy) 
@@ -296,7 +292,7 @@ void scheduler_change_task_period(task_entry_t *te, uint32_t repeat_period)
 
 void scheduler_suspend_task(task_entry_t *te, uint32_t delay) 
 {
-	te->next_run = GET_TIME + delay;
+	te->next_run = time_keeper_get_micros() + delay;
 }
 
 
@@ -307,6 +303,6 @@ void scheduler_run_task_now(task_entry_t *te)
 		te->run_mode = RUN_ONCE;
 	} 
 
-	te->next_run = GET_TIME;
+	te->next_run = time_keeper_get_micros();
 }
 
