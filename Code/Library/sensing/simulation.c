@@ -228,7 +228,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *serv
 	*/
 }
 
-void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands)
+void simulation_update(simulation_model_t *sim)
 {
 	int32_t i;
 	UQuat_t qtmp1, qvel_bf,  qed;
@@ -246,10 +246,10 @@ void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands)
 	sim->last_update = now;
 	// compute torques and forces based on servo commands
 	#ifdef CONF_DIAG
-	forces_from_servos_diag_quad(sim, servo_commands);
+	forces_from_servos_diag_quad(sim, sim->servos);
 	#endif
 	#ifdef CONF_CROSS
-	forces_from_servos_cross_quad(sim, servo_commands);
+	forces_from_servos_cross_quad(sim, sim->servos);
 	#endif
 	
 	// pid_control_integrate torques to get simulated gyro rates (with some damping)

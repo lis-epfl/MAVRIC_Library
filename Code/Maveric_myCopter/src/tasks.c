@@ -442,7 +442,7 @@ void tasks_run_imu_update(void* arg)
 {
 	if (centralData->state_structure.simulation_mode == 1) 
 	{
-		simulation_update(&centralData->sim_model,centralData->servos);
+		simulation_update(&centralData->sim_model);
 	} 
 	else 
 	{

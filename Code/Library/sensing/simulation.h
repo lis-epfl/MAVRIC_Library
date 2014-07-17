@@ -113,11 +113,8 @@ void simulation_reset_simulation(simulation_model_t *sim);
  * \brief	Computes artificial gyro and accelerometer values based on motor commands
  *
  * \param	sim				The pointer to the simulation model structure
- * \param	servo_commands	The pointer to the commands that would be sent to the servo (i.e. brushless motors)
- * \param	imu				The pointer to the "real" IMU structure to update the belief of the attitude
- * \param	localPos		The pointer to the structure of the "real" local position of the vehicle to update the belief of the position and velocity
  */
-void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands);
+void simulation_update(simulation_model_t *sim);
 
 /**
  * \brief	Simulates barometer outputs
@@ -147,7 +144,6 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms);
  * \brief	Changes between simulation to and from reality
  *
  * \param	sim				The pointer to the simulation model structure
- * \param	servos			The array of the servos
  */
 void simulation_switch_between_reality_n_simulation(simulation_model_t *sim);
 
