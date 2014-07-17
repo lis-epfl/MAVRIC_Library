@@ -424,8 +424,14 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 	
 	if (centralData->state_structure.simulation_mode_previous != centralData->state_structure.simulation_mode)
 	{
+		print_util_dbg_print("Changing mode!");
+		print_util_dbg_print_num(centralData->state_structure.simulation_mode,10);
+		print_util_dbg_print(", prev:");
+		print_util_dbg_print_num(centralData->state_structure.simulation_mode_previous,10);
+		print_util_dbg_print("\n");
+		
 		simulation_switch_between_reality_n_simulation(&centralData->sim_model,centralData->servos);
-			}
+	}
 	centralData->state_structure.simulation_mode_previous = centralData->state_structure.simulation_mode;
 	
 	return TASK_RUN_SUCCESS;
@@ -436,10 +442,7 @@ void tasks_run_imu_update(void* arg)
 {
 	if (centralData->state_structure.simulation_mode == 1) 
 	{
-		simulation_update(&centralData->sim_model, 
-					centralData->servos, 
-					&(centralData->imu1), 
-					&centralData->position_estimator);
+		simulation_update(&centralData->sim_model,centralData->servos);
 	} 
 	else 
 	{

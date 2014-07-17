@@ -44,7 +44,7 @@ void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabili
 	
 	*stabiliser_stack = stabiliser_defaults_copter;
 	
-	print_util_dbg_print("stabilisation copter init.\n");
+	print_util_dbg_print("Stabilisation copter init.\n");
 }
 
 void stabilisation_copter_get_velocity_vector_from_remote(float tvel[], stabilise_copter_t* stabilisation_copter)

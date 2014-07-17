@@ -35,9 +35,7 @@ void initialisation()
 	
 	servo_pwm_failsafe(centralData->servos);
 	servo_pwm_set(centralData->servos);
-	
-//	onboard_parameters_init(&centralData->onboard_parameters);	// TODO: remove
-	
+		
 	mavlink_actions_init(); // TODO: move read from flash elsewhere
 	mavlink_telemetry_init();
 	

@@ -116,7 +116,7 @@ void simulation_reset_simulation(simulation_model_t *sim);
  * \param	imu				The pointer to the "real" IMU structure to update the belief of the attitude
  * \param	localPos		The pointer to the structure of the "real" local position of the vehicle to update the belief of the position and velocity
  */
-void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands, Imu_Data_t *imu, position_estimator_t *pos_est);
+void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands);
 
 /**
  * \brief	Simulates barometer outputs
