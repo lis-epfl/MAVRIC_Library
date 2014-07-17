@@ -29,7 +29,7 @@ float front_mag_vect_z;
 
 uint8_t counter = 0;
 
-void qfilter_init(qfilter_t* qf, Imu_Data_t* imu, AHRS_t* attitude_estimation) 
+void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* attitude_estimation) 
 {
 	uint8_t i;
 	

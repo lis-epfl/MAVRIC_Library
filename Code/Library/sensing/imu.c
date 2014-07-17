@@ -24,8 +24,6 @@
 #include "mavlink_stream.h"
 #include "tasks.h"
 
-int32_t ic;
-
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -36,7 +34,7 @@ int32_t ic;
  *
  * \param	imu		Pointer structure of the imu
  */
-static void imu_raw2oriented(Imu_Data_t *imu);
+static void imu_raw2oriented(imu_t *imu);
 
 
 /**
@@ -44,14 +42,14 @@ static void imu_raw2oriented(Imu_Data_t *imu);
  * 
  * \param	imu		Pointer structure of the imu
  */
-static void imu_oriented2scale(Imu_Data_t *imu);
+static void imu_oriented2scale(imu_t *imu);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void imu_raw2oriented(Imu_Data_t *imu)
+static void imu_raw2oriented(imu_t *imu)
 {
 	for (uint16_t i=0; i<3; i++)
 	{
@@ -62,13 +60,13 @@ static void imu_raw2oriented(Imu_Data_t *imu)
 }
 
 
-static void imu_oriented2scale(Imu_Data_t *imu)
+static void imu_oriented2scale(imu_t *imu)
 {
 	for (int16_t i = 0; i < 3; i++)
 	{
-		imu->scaled_gyro.data[i]  = (1.0f - GYRO_LPF) * imu->scaled_gyro.data[i] + GYRO_LPF * (((float)imu->oriented_gyro.data[i] - imu->calib_gyro.bias[i]) * imu->calib_gyro.scale_factor[i]);
-		imu->scaled_accelero.data[i]   = (1.0f - ACC_LPF) * imu->scaled_accelero.data[i] + ACC_LPF * (((float)imu->oriented_accelero.data[i] - imu->calib_accelero.bias[i]) * imu->calib_accelero.scale_factor[i]);
-		imu->scaled_compass.data[i] = (1.0f - MAG_LPF) * imu->scaled_compass.data[i] + MAG_LPF * (((float)imu->oriented_compass.data[i] - imu->calib_compass.bias[i]) * imu->calib_compass.scale_factor[i]);
+		imu->scaled_gyro.data[i]  		= (1.0f - GYRO_LPF) * imu->scaled_gyro.data[i] 		+ GYRO_LPF * ( ( imu->oriented_gyro.data[i]     - imu->calib_gyro.bias[i]     ) * imu->calib_gyro.scale_factor[i]     );
+		imu->scaled_accelero.data[i]   	= (1.0f - ACC_LPF)  * imu->scaled_accelero.data[i] 	+ ACC_LPF  * ( ( imu->oriented_accelero.data[i] - imu->calib_accelero.bias[i] ) * imu->calib_accelero.scale_factor[i] );
+		imu->scaled_compass.data[i] 	= (1.0f - MAG_LPF)  * imu->scaled_compass.data[i] 	+ MAG_LPF  * ( ( imu->oriented_compass.data[i]  - imu->calib_compass.bias[i]  ) * imu->calib_compass.scale_factor[i]  );
 	}
 }
 
@@ -77,7 +75,7 @@ static void imu_oriented2scale(Imu_Data_t *imu)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void imu_init (Imu_Data_t *imu, AHRS_t *attitude_estimation)
+void imu_init (imu_t *imu, ahrs_t *attitude_estimation)
 {	
 	//imu_calibrate_Gyros(imu);
 	
@@ -113,10 +111,8 @@ void imu_init (Imu_Data_t *imu, AHRS_t *attitude_estimation)
 	imu->calib_compass.orientation[X] = MAG_AXIS_X;
 	imu->calib_compass.orientation[Y] = MAG_AXIS_Y;
 	imu->calib_compass.orientation[Z] = MAG_AXIS_Z;
-		
-	imu_last_update_init = false;
 	
-	//init AHRS_t attitude_estimation
+	//init ahrs_t attitude_estimation
 	attitude_estimation->qe.s		= 1.0f;
 	attitude_estimation->qe.v[X]	= 0.0f;
 	attitude_estimation->qe.v[Y]	= 0.0f;
@@ -134,7 +130,7 @@ void imu_init (Imu_Data_t *imu, AHRS_t *attitude_estimation)
 }
 
 
-void imu_calibrate_gyros(Imu_Data_t *imu)
+void imu_calibrate_gyros(imu_t *imu)
 {
 	int32_t i,j;
 	tasks_run_imu_update(0);
@@ -162,26 +158,19 @@ void imu_calibrate_gyros(Imu_Data_t *imu)
 }
 
 
-void imu_update(Imu_Data_t *imu)
+void imu_update(imu_t *imu)
 {
 	uint32_t t = time_keeper_get_time_ticks();
 	
-	if (!imu_last_update_init)
-	{
-		imu->last_update = t;
-		imu_last_update_init = true;
-	}
-	else
-	{
-		imu->dt = time_keeper_ticks_to_seconds(t - imu->last_update);
-		imu->last_update = t;
-		imu_raw2oriented(imu);
-		imu_oriented2scale(imu);
-	}
+	imu->dt = time_keeper_ticks_to_seconds(t - imu->last_update);
+	imu->last_update = t;
+
+	imu_raw2oriented(imu);
+	imu_oriented2scale(imu);	
 }
 
 
-task_return_t mavlink_telemetry_send_scaled_imu(Imu_Data_t* imu)
+task_return_t mavlink_telemetry_send_scaled_imu(imu_t* imu)
 {
 	mavlink_msg_scaled_imu_send(MAVLINK_COMM_0,
 								time_keeper_get_millis(),
@@ -199,7 +188,7 @@ task_return_t mavlink_telemetry_send_scaled_imu(Imu_Data_t* imu)
 }
 
 
-task_return_t mavlink_telemetry_send_raw_imu(Imu_Data_t* imu)
+task_return_t mavlink_telemetry_send_raw_imu(imu_t* imu)
 {
 	mavlink_msg_raw_imu_send(	MAVLINK_COMM_0,
 								time_keeper_get_micros(),

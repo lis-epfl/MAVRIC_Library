@@ -32,14 +32,9 @@ extern "C" {
 #include "quaternions.h"
 #include "scheduler.h"
 
-#define GYRO_LPF 0.1f					///< The gyroscope linear particle filter gain
-#define ACC_LPF 0.05f					///< The accelerometer linear particle filter gain
-#define MAG_LPF 0.1f					///< The magnetometer linear particle filter gain
-
-#define IMU_AXES 6						///< The number of axis of the device
-
-
-bool imu_last_update_init;				///< Variable to initialize the IMU
+#define GYRO_LPF 0.1f					///< The gyroscope linear pass filter gain
+#define ACC_LPF 0.05f					///< The accelerometer linear pass filter gain
+#define MAG_LPF 0.1f					///< The magnetometer linear pass filter gain
 
 
 /**
@@ -50,7 +45,7 @@ typedef struct
 	float bias[3];
 	float scale_factor[3];
 	float orientation[3];
-}sensor_calib_t;
+} sensor_calib_t;
 
 
 /**
@@ -69,7 +64,7 @@ typedef struct
 	
 	uint32_t	last_update;			///< The time of the last IMU update in ms
 	float		dt;						///< The time interval between two IMU updates
-}AHRS_t;
+} ahrs_t;
 
 
 /**
@@ -86,7 +81,7 @@ typedef struct
 	float dt;							///< The time interval between two IMU updates
 	uint32_t last_update;				///< The time of the last IMU update in ms
 	uint8_t calibration_level;		///< The level of calibration
-} Imu_Data_t;
+} imu_t;
 
 
 /** 
@@ -94,7 +89,7 @@ typedef struct
  *
  * \param	imu		the pointer to the IMU structure
  */
-void imu_init (Imu_Data_t *imu, AHRS_t *attitude_estimation);
+void imu_init (imu_t *imu, ahrs_t *attitude_estimation);
 
 
 /**
@@ -102,7 +97,7 @@ void imu_init (Imu_Data_t *imu, AHRS_t *attitude_estimation);
  *
  * \param	imu		the pointer to the IMU structure
  */
-void imu_calibrate_gyros(Imu_Data_t *imu);
+void imu_calibrate_gyros(imu_t *imu);
 
 
 /**
@@ -110,7 +105,7 @@ void imu_calibrate_gyros(Imu_Data_t *imu);
  *
  * \param	imu		the pointer structure of the IMU
  */
-void imu_update(Imu_Data_t *imu);
+void imu_update(imu_t *imu);
 
 
 /**
@@ -118,7 +113,7 @@ void imu_update(Imu_Data_t *imu);
  *
  * \param	imu		the pointer structure of the IMU
  */
-void imu_relevel(Imu_Data_t *imu);
+void imu_relevel(imu_t *imu);
 
 
 /**
@@ -126,7 +121,7 @@ void imu_relevel(Imu_Data_t *imu);
  * 
  * \return	The status of execution of the task
  */
-task_return_t mavlink_telemetry_send_scaled_imu(Imu_Data_t* imu);
+task_return_t mavlink_telemetry_send_scaled_imu(imu_t* imu);
 
 
 /**
@@ -134,7 +129,7 @@ task_return_t mavlink_telemetry_send_scaled_imu(Imu_Data_t* imu);
  * 
  * \return	The status of execution of the task
  */
-task_return_t mavlink_telemetry_send_raw_imu(Imu_Data_t* imu);
+task_return_t mavlink_telemetry_send_raw_imu(imu_t* imu);
 
 
 #ifdef __cplusplus
