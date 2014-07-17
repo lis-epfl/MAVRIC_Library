@@ -531,7 +531,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 	}
 	
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
-	if (centralData->state_structure.simulation_mode != 1) 
+	if (centralData->state_structure.simulation_mode == REAL_MODE) 
 	{
 		servo_pwm_set(centralData->servos);
 	}
