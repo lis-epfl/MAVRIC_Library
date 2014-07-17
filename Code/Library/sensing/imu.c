@@ -121,7 +121,7 @@ void imu_calibrate_gyros(imu_t *imu)
 	
 	for (j = 0; j < 3; j++)
 	{
-		imu->calib_gyro.bias[j] = (float)imu->oriented_gyro.data[j];
+		imu->calib_gyro.bias[j] = imu->oriented_gyro.data[j];
 	}
 	
 	for (i = 0; i < 100; i++)
@@ -133,7 +133,8 @@ void imu_calibrate_gyros(imu_t *imu)
 		//imu->imu->calib_sensor.bias[2 + ACC_OFFSET] = (0.9f * imu->imu->calib_accelero.bias[2] + 0.1f * ((float)imu->oriented_accelero.data[2] - imu->calib_accelero.scale_factor[2]));
 		for (j = 0; j < 3; j++)
 		{
-			imu->calib_gyro.bias[j] = (0.9f * imu->calib_gyro.bias[j] + 0.1f * (float)imu->oriented_gyro.data[j]);
+			imu->calib_gyro.bias[j] = 0.9f * imu->calib_gyro.bias[j] + 0.1f * imu->oriented_gyro.data[j]
+			;
 			//imu->attitude.raw_mag_mean[j] = (1.0 - fMAG_LPF) * imu->attitude.raw_mag_mean[j] + MAG_LPF * ((float)imu->oriented_compass.data[j]);
 		}
 	

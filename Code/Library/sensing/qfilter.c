@@ -190,22 +190,6 @@ void qfilter_update(qfilter_t *qf)
 	qf->attitude_estimation->qe.v[1] += qed.v[1] * dt;
 	qf->attitude_estimation->qe.v[2] += qed.v[2] * dt;
 
-/*
-	float wx = qf->imu->scaled_gyro.data[X] + kp * omc[X] + kp_mag * omc_mag[X];
-	float wy = qf->imu->scaled_gyro.data[Y] + kp * omc[Y] + kp_mag * omc_mag[Y];
-	float wz = qf->imu->scaled_gyro.data[Z] + kp * omc[Z] + kp_mag * omc_mag[Z];
-
-	float q0 = qf->attitude_estimation->qe.s;
-	float q1 = qf->attitude_estimation->qe.v[0];
-	float q2 = qf->attitude_estimation->qe.v[1];
-	float q3 = qf->attitude_estimation->qe.v[2];
-
-	qf->attitude_estimation->qe.s = q0 + dt / 2 * ( - q1 * wx - q2 * wy - q3 * wz);
-	qf->attitude_estimation->qe.v[0] = q1 + dt / 2 * ( q0 * wx - q3 * wy + q2 * wz);
-	qf->attitude_estimation->qe.v[1] = q2 + dt / 2 * ( q3 * wx + q0 * wy - q1 * wz);
-	qf->attitude_estimation->qe.v[2] = q3 + dt / 2 * ( - q2 * wx + q1 * wy + q0 * wz);
-*/
-
 	snorm = qf->attitude_estimation->qe.s * qf->attitude_estimation->qe.s + qf->attitude_estimation->qe.v[0] * qf->attitude_estimation->qe.v[0] + qf->attitude_estimation->qe.v[1] * qf->attitude_estimation->qe.v[1] + qf->attitude_estimation->qe.v[2] * qf->attitude_estimation->qe.v[2];
 	if (snorm < 0.0001f)
 	{
@@ -226,16 +210,16 @@ void qfilter_update(qfilter_t *qf)
 	qf->imu->calib_gyro.bias[1] += - dt * qf->ki * omc[1] / qf->imu->calib_gyro.scale_factor[1];
 	qf->imu->calib_gyro.bias[2] += - dt * qf->ki * omc[2] / qf->imu->calib_gyro.scale_factor[2];
 
-	// bias estimate update
-	//qf->imu->calib_sensor.bias[6] += - dt * qf->ki_mag * omc[0];
-	//qf->imu->calib_sensor.bias[7] += - dt * qf->ki_mag * omc[1];
-	//qf->imu->calib_sensor.bias[8] += - dt * qf->ki_mag * omc[2];
-
 	// set up-vector (bodyframe) in attitude
 	qf->attitude_estimation->up_vec.v[0] = up_bf.v[0];
 	qf->attitude_estimation->up_vec.v[1] = up_bf.v[1];
 	qf->attitude_estimation->up_vec.v[2] = up_bf.v[2];
-	
+
+	// Update linear acceleration
+	qf->attitude_estimation->linear_acc[0] = 9.81f * (qf->imu->scaled_accelero.data[0] - qf->attitude_estimation->up_vec.v[0]) ;							// TODO: review this line!
+	qf->attitude_estimation->linear_acc[1] = 9.81f * (qf->imu->scaled_accelero.data[1] - qf->attitude_estimation->up_vec.v[1]) ;							// TODO: review this line!
+	qf->attitude_estimation->linear_acc[2] = 9.81f * (qf->imu->scaled_accelero.data[2] - qf->attitude_estimation->up_vec.v[2]) ;							// TODO: review this line!
+
 	//update angular_speed.
 	qf->attitude_estimation->angular_speed[X] = qf->imu->scaled_gyro.data[X];
 	qf->attitude_estimation->angular_speed[Y] = qf->imu->scaled_gyro.data[Y];
