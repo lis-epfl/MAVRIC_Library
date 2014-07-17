@@ -25,6 +25,7 @@ extern "C" {
 
 #include "mavlink_stream.h"
 #include "position_estimation.h"
+#include "mavlink_communication.h"
 
 #define MAX_NUM_NEIGHBORS 15
 
@@ -61,7 +62,7 @@ typedef struct
  * \param neighborData pointer to the neighbor struct
  * \param positionData pointer to the position estimator struct
  */
-void neighbors_selection_init(neighbor_t *neighborData, position_estimator_t *positionData);
+void neighbors_selection_init(neighbor_t *neighborData, position_estimator_t *positionData, mavlink_communication_t *mavlink_communication);
 
 /**
  * \brief	Decode the message and parse to the neighbor array

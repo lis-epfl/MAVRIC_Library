@@ -32,7 +32,7 @@
 typedef struct
 {
 	//int16_t axes[3];				///< Define an array containing the 3 axis of the accelerometer
-	accelero_data_t *acceleroData;
+	accelero_data_t *raw_accelero;
 } lsm_acc_data_t;
 
 /**
@@ -40,7 +40,7 @@ typedef struct
 */
 typedef struct
 {
-	gyro_data_t *gyroData;
+	gyro_data_t *raw_gyro;
 } lsm_gyro_data_t;
 
 

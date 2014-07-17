@@ -38,25 +38,23 @@ void initialisation()
 		
 	mavlink_actions_init(); // TODO: move read from flash elsewhere
 	mavlink_telemetry_init();
-
-	// TODO: this second simulation init is required because we have to wait for the parameters stored on flash
-	simulation_init(&(centralData->sim_model),&(centralData->imu1),centralData->position_estimator.localPosition); // TODO: init only once
+	
+		/*	
+	 * Use this to store or read or reset parameters on flash memory
+	 *
+	onboard_parameters_write_parameters_to_flashc();
+	if(onboard_parameters_read_parameters_from_flashc())
+	{
+		simulation_calib_set(&(centralData->sim_model));
+	}
+	 *
+	 */
 
 	tasks_relevel_imu(); // TODO: MOVE	
 
-	//reset position estimate
-	for (i = 0; i < 3; i++) 
-	{
-		// clean acceleration estimate without gravity:
-		centralData->position_estimator.vel_bf[i] = 0.0f;
-		centralData->position_estimator.vel[i] = 0.0f;
-		centralData->position_estimator.localPosition.pos[i] = 0.0f;
-	} // TODO: move to module
-
 	delay_ms(10);
 	print_util_dbg_print("Reset home position...\n");
-	position_estimation_reset_home_altitude(&centralData->position_estimator, &centralData->pressure, &centralData->GPS_data, &centralData->sim_model.localPosition);
-	// TODO: move to module
+	position_estimation_reset_home_altitude(&centralData->position_estimator);
 	
 	LED_On(LED1);
 	for (i = 1; i < 8; i++)
@@ -65,6 +63,9 @@ void initialisation()
 		delay_ms(2);
 	}
 	print_util_dbg_print("OK. Starting up.\n");
+	
+	centralData->state_structure.mav_state = MAV_STATE_STANDBY;
+	centralData->state_structure.mav_state_previous = centralData->state_structure.mav_state;
 }
 
 int main (void)

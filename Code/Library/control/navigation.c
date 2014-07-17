@@ -17,15 +17,10 @@
 
 
 #include "navigation.h"
-#include "central_data.h"			// TODO: remove this dependency to central_data
+#include "conf_platform.h"
+#include "print_util.h"
 
 #define KP_YAW 0.2f
-
-central_data_t *centralData;		// TODO: remove this dependency to central_data
-
-float alt_integrator;				// TODO: move this into a struct in central_data
-uint8_t loopCount = 0;
-
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -36,31 +31,39 @@ uint8_t loopCount = 0;
  *
  * \param	waypointPos		Local coordinates of the waypoint
  * \param	rel_pos			Array to store the relative 3D position of the waypoint
+ * \param	localPos		The 3D array of the actual position
  *
  * \return					Distance to waypoint squared
  */
-static float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[]);
+static float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[], float localPos[3]);
 
 
 /**
  * \brief					Sets the Robot speed to reach waypoint
  *
  * \param	rel_pos			Relative position of the waypoint
- * \param	dist2wpSqr		Squared of distance to waypoint
+ * \param	navigationData	The structure of navigation data
  */
-static void navigation_set_speed_command(float rel_pos[], float dist2wpSqr);
+static void navigation_set_speed_command(float rel_pos[], navigation_t* navigationData);
+
+/**
+ * \brief					Performs velocity-based collision avoidance strategy
+ *
+ * \param	navigationData	The structure of navigation data
+ */
+static void navigation_collision_avoidance(navigation_t* navigationData);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[])
+static float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[], float localPos[3])
 {
 	float dist2wp_sqr;
 	
-	rel_pos[X] = (float)(waypointPos[X] - centralData->position_estimator.localPosition.pos[X]);
-	rel_pos[Y] = (float)(waypointPos[Y] - centralData->position_estimator.localPosition.pos[Y]);
-	rel_pos[Z] = (float)(waypointPos[Z] - centralData->position_estimator.localPosition.pos[Z]);
+	rel_pos[X] = (float)(waypointPos[X] - localPos[X]);
+	rel_pos[Y] = (float)(waypointPos[Y] - localPos[Y]);
+	rel_pos[Z] = (float)(waypointPos[Z] - localPos[Z]);
 	
 	dist2wp_sqr = vectors_norm_sqr(rel_pos);
 	
@@ -68,18 +71,17 @@ static float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos
 }
 
 
-static void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
+static void navigation_set_speed_command(float rel_pos[], navigation_t* navigationData)
 {
-	uint8_t i;
 	float  norm_rel_dist, v_desired;
 	UQuat_t qtmp1, qtmp2;
 	
-	float dir_desired_bf[3], new_velocity[3];
+	float dir_desired_bf[3];
 	// dir_desired[3],
 	
 	float rel_heading;
 	
-	norm_rel_dist = sqrt(dist2wpSqr);
+	norm_rel_dist = sqrt(navigationData->waypoint_handler->dist2wp_sqr);
 	
 	if (norm_rel_dist < 0.0005f)
 	{
@@ -89,7 +91,7 @@ static void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
 	// calculate dir_desired in local frame
 	// vel = qe-1 * rel_pos * qe
 	qtmp1 = quaternions_create_from_vector(rel_pos);
-	qtmp2 = quaternions_global_to_local(centralData->imu1.attitude.qe,qtmp1);
+	qtmp2 = quaternions_global_to_local(*navigationData->qe,qtmp1);
 	dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
 	
 	dir_desired_bf[2] = rel_pos[2];
@@ -97,14 +99,16 @@ static void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
 	if (((maths_f_abs(rel_pos[X])<=1.0f)&&(maths_f_abs(rel_pos[Y])<=1.0f))||((maths_f_abs(rel_pos[X])<=5.0f)&&(maths_f_abs(rel_pos[Y])<=5.0f)&&(maths_f_abs(rel_pos[Z])>=3.0f)))
 	{
 		rel_heading = 0.0f;
-	}else{
-		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - centralData->position_estimator.localPosition.heading);
+	}
+	else
+	{
+		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigationData->position_estimator->localPosition.heading);
 	}
 	
-	v_desired = maths_f_min(centralData->cruise_speed,(maths_center_window_2(4.0f * rel_heading) * centralData->dist2vel_gain * maths_soft_zone(norm_rel_dist,centralData->softZoneSize)));
+	v_desired = maths_f_min(navigationData->cruise_speed,(maths_center_window_2(4.0f * rel_heading) * navigationData->dist2vel_gain * maths_soft_zone(norm_rel_dist,navigationData->softZoneSize)));
 	
-	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > centralData->max_climb_rate * norm_rel_dist ) {
-		v_desired = centralData->max_climb_rate * norm_rel_dist /maths_f_abs(dir_desired_bf[Z]);
+	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigationData->max_climb_rate * norm_rel_dist ) {
+		v_desired = navigationData->max_climb_rate * norm_rel_dist /maths_f_abs(dir_desired_bf[Z]);
 	}
 	
 	dir_desired_bf[X] = v_desired * dir_desired_bf[X] / norm_rel_dist;
@@ -116,78 +120,101 @@ static void navigation_set_speed_command(float rel_pos[], float dist2wpSqr)
 	if (loopCount == 0)
 	{
 		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"v_desired",v_desired*100);
-		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"act_vel",vector_norm(centralData->position_estimator.vel_bf)*100);
+		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"act_vel",vector_norm(navigationData->position_estimator->vel_bf)*100);
 		print_util_dbg_print("Desired_vel_Bf(x100): (");
 		print_util_dbg_print_num(dir_desired_bf[X] * 100,10);
 		print_util_dbg_print_num(dir_desired_bf[Y] * 100,10);
 		print_util_dbg_print_num(dir_desired_bf[Z] * 100,10);
 		print_util_dbg_print("). \n");
 		print_util_dbg_print("Actual_vel_bf(x100): (");
-		print_util_dbg_print_num(centralData->position_estimator.vel_bf[X] * 100,10);
-		print_util_dbg_print_num(centralData->position_estimator.vel_bf[Y] * 100,10);
-		print_util_dbg_print_num(centralData->position_estimator.vel_bf[Z] * 100,10);
+		print_util_dbg_print_num(navigationData->position_estimator->vel_bf[X] * 100,10);
+		print_util_dbg_print_num(navigationData->position_estimator->vel_bf[Y] * 100,10);
+		print_util_dbg_print_num(navigationData->position_estimator->vel_bf[Z] * 100,10);
 		print_util_dbg_print("). \n");
 		print_util_dbg_print("Actual_pos(x100): (");
-		print_util_dbg_print_num(centralData->position_estimator.localPosition.pos[X] * 100,10);
-		print_util_dbg_print_num(centralData->position_estimator.localPosition.pos[Y] * 100,10);
-		print_util_dbg_print_num(centralData->position_estimator.localPosition.pos[Z] * 100,10);
+		print_util_dbg_print_num(navigationData->position_estimator->localPosition.pos[X] * 100,10);
+		print_util_dbg_print_num(navigationData->position_estimator->localPosition.pos[Y] * 100,10);
+		print_util_dbg_print_num(navigationData->position_estimator->localPosition.pos[Z] * 100,10);
 		print_util_dbg_print("). \n");
 	}
 	*/
-	
-	for (i=0;i<3;i++)
-	{
-		new_velocity[i] = dir_desired_bf[i];
-	}
-	if (centralData->collision_avoidance)
-	{
-		orca_computeNewVelocity(&(centralData->orcaData),dir_desired_bf,new_velocity);
-	}
 
-	//rel_heading= atan2(new_velocity[Y],new_velocity[X]);
-	//if (maths_f_abs(new_velocity[X])<0.001f && maths_f_abs(new_velocity[Y])<0.001f || centralData->controls.yaw_mode == YAW_ABSOLUTE || !centralData->waypoint_set)
-	//{
-		//rel_heading = 0.0f;
-	//}else{
-		//rel_heading = atan2(new_velocity[Y],new_velocity[X]);
-	//}
-
-	centralData->controls_nav.tvel[X] = new_velocity[X];
-	centralData->controls_nav.tvel[Y] = new_velocity[Y];
-	centralData->controls_nav.tvel[Z] = new_velocity[Z];		
-	centralData->controls_nav.rpy[YAW] = KP_YAW * rel_heading;
+	navigationData->controls_nav->tvel[X] = dir_desired_bf[X];
+	navigationData->controls_nav->tvel[Y] = dir_desired_bf[Y];
+	navigationData->controls_nav->tvel[Z] = dir_desired_bf[Z];		
+	navigationData->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
 }
 
+static void navigation_collision_avoidance(navigation_t* navigationData)
+{
+	float new_velocity[3];
+	float rel_heading;
+	
+	// Implement other velocity-based collision avoidance strategy here
+	orca_computeNewVelocity(navigationData->orcaData, navigationData->controls_nav->tvel, new_velocity);
+	
+	if (((maths_f_abs(new_velocity[X])<=1.0f)&&(maths_f_abs(new_velocity[Y])<=1.0f))||((maths_f_abs(new_velocity[X])<=5.0f)&&(maths_f_abs(new_velocity[Y])<=5.0f)&&(maths_f_abs(new_velocity[Z])>=3.0f)))
+	{
+		rel_heading = 0.0f;
+	}
+	if (navigationData->waypoint_handler->collision_avoidance)
+	{
+		rel_heading = maths_calc_smaller_angle(atan2(new_velocity[Y],new_velocity[X]) - navigationData->position_estimator->localPosition.heading);
+	}
+	
+	navigationData->controls_nav->tvel[X] = new_velocity[X];
+	navigationData->controls_nav->tvel[Y] = new_velocity[Y];
+	navigationData->controls_nav->tvel[Z] = new_velocity[Z];
+	navigationData->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
+}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(void)
+void navigation_init(navigation_t* navigationData, Control_Command_t* controls_nav, UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, orca_t* orcaData)
 {
-	centralData = central_data_get_pointer_to_struct();
 	
-	centralData->controls_nav.tvel[X] = 0.0f;
-	centralData->controls_nav.tvel[Y] = 0.0f;
-	centralData->controls_nav.rpy[YAW] = 0.0f;
-	centralData->controls_nav.tvel[Z] = 0.0f;
+	navigationData->controls_nav = controls_nav;
+	navigationData->qe = qe;
+	navigationData->waypoint_handler = waypoint_handler;
+	navigationData->position_estimator = position_estimator;
+	navigationData->orcaData = orcaData;
 	
-	centralData->dist2vel_gain = 0.7f;
-	centralData->cruise_speed = 3.0f;
-	centralData->max_climb_rate = 1.0f;
-	centralData->softZoneSize = 0.0f;
+	navigationData->controls_nav->rpy[ROLL] = 0.0f;
+	navigationData->controls_nav->rpy[PITCH] = 0.0f;
+	navigationData->controls_nav->rpy[YAW] = 0.0f;
+	navigationData->controls_nav->tvel[X] = 0.0f;
+	navigationData->controls_nav->tvel[Y] = 0.0f;
+	navigationData->controls_nav->tvel[Z] = 0.0f;
+	navigationData->controls_nav->theading = 0.0f;
+	navigationData->controls_nav->thrust = -1.0f;
 	
-	alt_integrator = 0.0f;
+	navigationData->dist2vel_gain = 0.7f;
+	navigationData->cruise_speed = 3.0f;
+	navigationData->max_climb_rate = 1.0f;
+	navigationData->softZoneSize = 0.0f;
+	
+	navigationData->loopCount = 0;
+	
+	print_util_dbg_print("Navigation initialized.\n");
 }
 
 
-void navigation_run(local_coordinates_t waypoint_input)
+void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigationData)
 {
 	float rel_pos[3]; 
 	
 	// Control in translational speed of the platform
-	centralData->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos, rel_pos);
-	navigation_set_speed_command(rel_pos,centralData->dist2wp_sqr);
+	navigationData->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos, 
+																		rel_pos, 
+																		navigationData->position_estimator->localPosition.pos);
+	navigation_set_speed_command(rel_pos, navigationData);
 	
-	centralData->controls_nav.theading=waypoint_input.heading;
+	if (navigationData->waypoint_handler->collision_avoidance)
+	{
+		navigation_collision_avoidance(navigationData);
+	}
+	
+	navigationData->controls_nav->theading=waypoint_input.heading;
 }

@@ -591,6 +591,12 @@
     <Compile Include="Library\communication\mavlink_waypoint_handler.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\communication\state.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\state.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\control\adaptive_parameter.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1028,6 +1034,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\central_data.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\conf_constants.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\conf_imu_rev4.h">

@@ -59,6 +59,12 @@
 #include "MAVsettings/MAV010_conf_imu_rev4.h"
 #elif MAVLINK_SYS_ID == 101
 #include "MAVsettings/MAV101_conf_imu_rev4.h"
+#elif MAVLINK_SYS_ID == 102
+#include "MAVsettings/MAV102_conf_imu_rev4.h"
+#elif MAVLINK_SYS_ID == 202
+#include "MAVsettings/MAV202_conf_imu_rev4.h"
+#elif MAVLINK_SYS_ID == 203
+#include "MAVsettings/MAV203_conf_imu_rev4.h"
 #else
 #include "conf_imu_rev4.h"
 #endif
@@ -77,7 +83,7 @@
 
 #define GYRO_OFFSET 0		///< Define the index for the IMU array
 #define ACC_OFFSET 3		///< Define the index for the IMU array
-#define MAG_OFFSET 6	///< Define the index for the IMU array
+#define MAG_OFFSET 6		///< Define the index for the IMU array
 							
 #define UPVECTOR_X  0		///< Define the index for the IMU array
 #define UPVECTOR_Y  0		///< Define the index for the IMU array
@@ -88,7 +94,7 @@
 #define FRONTVECTOR_Z 0		///< Define the index for the IMU array
 
 //#define FRONTVECTOR_Z -1.3846f	///< Inside value
-//#define FRONTVECTOR_Z -0.8985f ///< Outside value
+//#define FRONTVECTOR_Z -0.8985f	///< Outside value
 
 ///< Definitions of Platform configuration
 #define ROTORCOUNT 4		///< Define number of motors
@@ -113,7 +119,7 @@
 #define M_REAR_DIR  ( 1)	///< Define the direction of control
 #define M_LEFT_DIR  (-1)	///< Define the direction of control
 
-#define MIN_THRUST -0.9f		///< Define the minimum thrust to apply
+#define MIN_THRUST -0.9f	///< Define the minimum thrust to apply
 #define MAX_THRUST 1.0f		///< Define the maximum thrust to apply
 #define SERVO_SCALE 500		///< Define the scale factor for the servos
 

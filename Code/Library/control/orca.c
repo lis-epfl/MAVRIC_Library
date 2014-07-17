@@ -27,11 +27,12 @@ int8_t loop_count_collisions = 0;
 
 float min_coll_dist;
 
-void orca_init(orca_t *orcaData, neighbor_t *neighborData, position_estimator_t *positionData, Imu_Data_t *imuData)
+void orca_init(orca_t *orcaData, neighbor_t *neighborData, position_estimator_t *positionData, Imu_Data_t *imuData, AHRS_t *attitude_estimation)
 {
 	orcaData->neighborData = neighborData;
 	orcaData->positionData = positionData;
 	orcaData->imuData = imuData;
+	orcaData->attitude_estimation = attitude_estimation;
 	
 	orcaData->neighborData->safe_size = SIZE_VHC_ORCA;
 		
@@ -39,6 +40,8 @@ void orca_init(orca_t *orcaData, neighbor_t *neighborData, position_estimator_t 
 	invTimeHorizon = 1.0f / timeHorizon;
 
 	min_coll_dist = 2.0f * SIZE_VHC_ORCA + 1.0f;
+	
+	print_util_dbg_print("Orca initialized.\n");
 }
 
 void orca_computeNewVelocity(orca_t *orcaData, float OptimalVelocity[], float NewVelocity[])
@@ -75,7 +78,7 @@ void orca_computeNewVelocity(orca_t *orcaData, float OptimalVelocity[], float Ne
 		q_neighbor.v[0] = relativeVelocity[0];
 		q_neighbor.v[1] = relativeVelocity[1];
 		q_neighbor.v[2] = relativeVelocity[2];
-		q_neighbor_bf = quaternions_global_to_local(orcaData->imuData->attitude.qe,q_neighbor);
+		q_neighbor_bf = quaternions_global_to_local(orcaData->attitude_estimation->qe,q_neighbor);
 		
 		neighor_bf[0] = q_neighbor_bf.v[0];
 		neighor_bf[1] = q_neighbor_bf.v[1];
@@ -90,7 +93,7 @@ void orca_computeNewVelocity(orca_t *orcaData, float OptimalVelocity[], float Ne
 		q_neighbor.v[0] = relativePosition[0];
 		q_neighbor.v[1] = relativePosition[1];
 		q_neighbor.v[2] = relativePosition[2];
-		q_neighbor_bf = quaternions_global_to_local(orcaData->imuData->attitude.qe,q_neighbor);
+		q_neighbor_bf = quaternions_global_to_local(orcaData->attitude_estimation->qe,q_neighbor);
 		
 		neighor_bf[0] = q_neighbor_bf.v[0];
 		neighor_bf[1] = q_neighbor_bf.v[1];

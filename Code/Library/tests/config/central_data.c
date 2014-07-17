@@ -50,7 +50,7 @@ void central_data_init(){
 		centralData.position_estimator.localPosition.pos[2]=0;
 
 		// init simulation
-		simulation_init(&(centralData.sim_model),&(centralData.imu1.attitude));
+		simulation_init(&(centralData.sim_model),&(centralData.imu.attitude));
 		centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
 
 }
@@ -69,7 +69,7 @@ byte_stream_t* get_telemetry_downstream() {
 
 
 Imu_Data_t* get_imu_data() {
-	return &centralData.imu1;
+	return &centralData.imu;
 }
 Control_Command_t* get_control_inputs_data() {
 	return &centralData.controls;

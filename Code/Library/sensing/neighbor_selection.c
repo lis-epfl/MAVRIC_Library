@@ -23,14 +23,40 @@
 #include "time_keeper.h"
 #include <stdbool.h>
 
-void neighbors_selection_init(neighbor_t *neighborData, position_estimator_t *positionData)
+void neighbors_selection_init(neighbor_t *neighborData, position_estimator_t *positionData, mavlink_communication_t *mavlink_communication)
 {
 	neighborData->number_of_neighbors = 0;
 	neighborData->positionData = positionData;
+	
+	// Add callbacks for onboard parameters requests
+	mavlink_message_handler_msg_callback_t callback;
+
+	callback.message_id 	= MAVLINK_MSG_ID_GLOBAL_POSITION_INT; // 39
+	callback.sysid_filter 	= MAV_SYS_ID_ALL;
+	callback.compid_filter 	= MAV_COMP_ID_ALL;
+	callback.function 		= (mavlink_msg_callback_function_t)	&neighbors_selection_read_message_from_neighbors;
+	callback.module_struct 	= (handling_module_struct_t)		neighborData;
+	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	
+		
+	print_util_dbg_print("Neighbor selection initialized.\n");
 }
 
 void neighbors_selection_read_message_from_neighbors(neighbor_t *neighborData, mavlink_received_t* rec)
 {
+	
+	 
+	//Use this block for message debugging
+	/*
+	print_util_dbg_print("\n Received message with ID");
+	print_util_dbg_print_num(rec->msg.msgid, 10);
+	print_util_dbg_print(" from system");
+	print_util_dbg_print_num(rec->msg.sysid, 10);
+	print_util_dbg_print(" for component");
+	print_util_dbg_print_num(rec->msg.compid,10);
+	print_util_dbg_print( "\n");
+	*/
+	
 	uint8_t i;
 	
 	mavlink_global_position_int_t packet;

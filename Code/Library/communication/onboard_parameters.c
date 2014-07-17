@@ -198,7 +198,7 @@ void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&onboard_parameters_receive_parameter;
 	callback.module_struct 	= (handling_module_struct_t)		onboard_parameters;
-	mavlink_message_handler_add_msg_callback( message_handler, &callback );	
+	mavlink_message_handler_add_msg_callback( message_handler, &callback );
 
 	print_util_dbg_print("Onboard parameters initialised.\n");	
 }
@@ -336,7 +336,7 @@ void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_paramete
 }
 
 
-void onboard_parameters_read_parameters_from_flashc(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg)
+bool onboard_parameters_read_parameters_from_flashc(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg)
 {
 	uint8_t i;
 	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
@@ -348,7 +348,9 @@ void onboard_parameters_read_parameters_from_flashc(onboard_parameters_t* onboar
 	cksum1 = 0;
 	cksum2 = 0;
 
-	for (i = 0; i < (param_set->param_count + 1); i++)
+	bool flash_read_successful = false;
+
+	for (i = 0; i < (param_set->param_count +1);i++)
 	{
 		local_array.values[i] = nvram_array->values[i];
 		cksum1 += local_array.values[i];
@@ -365,15 +367,18 @@ void onboard_parameters_read_parameters_from_flashc(onboard_parameters_t* onboar
 			*(param_set->parameters[i-1].param) = local_array.values[i];
 			// onboard_parameters_update_parameter(onboard_parameters, i-1, local_array.values[i]);
 		}
+		flash_read_successful = true;
 	}
 	else
 	{
 		print_util_dbg_print("Flash memory corrupted! Hardcoded values taken.\n");
 	}
+	
+	return flash_read_successful;
 }
 
 
-void onboard_parameters_write_parameters_from_flashc(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg)
+void onboard_parameters_write_parameters_to_flashc(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg)
 {
 	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
 
