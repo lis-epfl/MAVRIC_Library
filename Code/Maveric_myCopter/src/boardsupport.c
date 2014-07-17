@@ -88,6 +88,7 @@ void boardsupport_init(central_data_t *centralData) {
 	
 	// init debug output
 	print_util_dbg_print_init(centralData->debug_out_stream);
+	print_util_dbg_print("Debug stream initialised\n");
 
 	// Bind RC receiver with remote
 	//remote_dsm2_rc_activate_bind_mode();

@@ -56,6 +56,8 @@ extern "C" {
 #include "i2cxl_sonar.h"
 #include "orca.h"
 #include "navigation.h"
+#include "state.h"
+#include "stabilisation.h"
 
 // TODO : update documentation
 
@@ -103,9 +105,6 @@ typedef struct  {
 	
 	orca_t orcaData;
 	neighbor_t neighborData;
-	
-	critical_behavior_enum critical_behavior;					///< The critical behavior enum
-	auto_landing_enum_t auto_landing_enum;						///< The autolanding enum
 
 	i2cxl_sonar_t i2cxl_sonar;									///< The i2cxl sonar structure
 } central_data_t;
