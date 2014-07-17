@@ -1555,9 +1555,6 @@
     <Compile Include="src\config\conf_clock.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\config\conf_sim_model.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\config\conf_sleepmgr.h">
       <SubType>compile</SubType>
     </Compile>

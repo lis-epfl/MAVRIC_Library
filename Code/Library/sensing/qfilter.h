@@ -43,8 +43,8 @@ typedef enum
  */
 typedef struct
 {
-	Imu_Data_t *imu;
-	AHRS_t *attitude_estimation;
+	Imu_Data_t *imu;				///< Pointer to inertial sensors readout
+	AHRS_t *attitude_estimation;	///< Pointer to estimated attiude
 	
 	float kp;						///< The proportional gain for the acceleration correction of the angular rates
 	float ki;						///< The integral gain for the acceleration correction of the biais
@@ -66,10 +66,9 @@ void qfilter_init(qfilter_t *attitude_filter, Imu_Data_t *imu, AHRS_t *attitude_
 /**
  * \brief	Performs the attitude estimation via a complementary filter
  *
- * \param	attitude		The pointer to the attitude structure
- * \param	dt				The time interval between two estimation loops
+ * \param	qf		The pointer to the qfilter structure
  */
-void qfilter_update(qfilter_t *attitude_filter, float dt);
+void qfilter_update(qfilter_t *qf);
 
 
 #ifdef __cplusplus

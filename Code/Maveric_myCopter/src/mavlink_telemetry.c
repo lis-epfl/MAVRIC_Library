@@ -55,22 +55,6 @@ task_return_t mavlink_telemetry_send_gps_raw(gps_Data_type_t* GPS_data);
 
 
 /**
- * \brief	Task to send the mavlink scaled IMU message
- * 
- * \return	The status of execution of the task
- */
-task_return_t mavlink_telemetry_send_scaled_imu(Imu_Data_t* imu);
-
-
-/**
- * \brief	Task to send the mavlink raw IMU message
- * 
- * \return	The status of execution of the task
- */
-task_return_t mavlink_telemetry_send_raw_imu(Imu_Data_t* imu);
-
-
-/**
  * \brief	Task to send the mavlink scaled pressure message
  * 
  * \return	The status of execution of the task
@@ -244,40 +228,6 @@ task_return_t mavlink_telemetry_send_gps_raw(gps_Data_type_t* GPS_data)
 		GPS_data->num_sats);		// TODO: return TASK_RUN_ERROR here? 
 	}
 
-	return TASK_RUN_SUCCESS;
-}
-
-
-task_return_t mavlink_telemetry_send_scaled_imu(Imu_Data_t* imu)
-{
-	mavlink_msg_scaled_imu_send(MAVLINK_COMM_0,
-								time_keeper_get_millis(),
-								1000 * imu->scaled_accelero.data[IMU_X],
-								1000 * imu->scaled_accelero.data[IMU_Y],
-								1000 * imu->scaled_accelero.data[IMU_Z],
-								1000 * imu->scaled_gyro.data[IMU_X],
-								1000 * imu->scaled_gyro.data[IMU_Y],
-								1000 * imu->scaled_gyro.data[IMU_Z],
-								1000 * imu->scaled_compass.data[IMU_X],
-								1000 * imu->scaled_compass.data[IMU_Y],
-								1000 * imu->scaled_compass.data[IMU_Z]);
-	return TASK_RUN_SUCCESS;
-}
-
-
-task_return_t mavlink_telemetry_send_raw_imu(Imu_Data_t* imu) 
-{
-	mavlink_msg_raw_imu_send(	MAVLINK_COMM_0, 
-								time_keeper_get_micros(), 
-								imu->oriented_accelero.data[IMU_X], 
-								imu->oriented_accelero.data[IMU_Y], 
-								imu->oriented_accelero.data[IMU_Z], 
-								imu->oriented_gyro.data[IMU_X], 
-								imu->oriented_gyro.data[IMU_Y], 
-								imu->oriented_gyro.data[IMU_Z], 
-								imu->oriented_compass.data[IMU_X], 
-								imu->oriented_compass.data[IMU_Y], 
-								imu->oriented_compass.data[IMU_Z]);
 	return TASK_RUN_SUCCESS;
 }
 
@@ -659,8 +609,8 @@ void mavlink_telemetry_init(void)
 	scheduler_add_task(&centralData->mavlink_communication.task_set,  1000000,  RUN_REGULAR,  (task_function_t)&mavlink_telemetry_send_heartbeat,					&centralData->state_structure, 												MAVLINK_MSG_ID_HEARTBEAT	);							// ID 0
 	scheduler_add_task(&centralData->mavlink_communication.task_set,  1000000,	RUN_REGULAR,  (task_function_t)&mavlink_telemetry_send_status,						&centralData->adc,								MAVLINK_MSG_ID_SYS_STATUS	);							// ID 1
 	scheduler_add_task(&centralData->mavlink_communication.task_set,  1000000,  RUN_NEVER,    (task_function_t)&mavlink_telemetry_send_gps_raw,						&centralData->GPS_data,							MAVLINK_MSG_ID_GPS_RAW_INT	);							// ID 24
-	scheduler_add_task(&centralData->mavlink_communication.task_set,  250000,   RUN_REGULAR,  (task_function_t)&mavlink_telemetry_send_scaled_imu,					&centralData->imu, 							MAVLINK_MSG_ID_SCALED_IMU	);							// ID 26
-	scheduler_add_task(&centralData->mavlink_communication.task_set,  100000,   RUN_REGULAR,  (task_function_t)&mavlink_telemetry_send_raw_imu,						&centralData->imu, 							MAVLINK_MSG_ID_RAW_IMU	);								// ID 27
+	scheduler_add_task(&centralData->mavlink_communication.task_set,  250000,   RUN_REGULAR,  (task_function_t)&mavlink_telemetry_send_scaled_imu,					&centralData->imu, 								MAVLINK_MSG_ID_SCALED_IMU	);							// ID 26
+	scheduler_add_task(&centralData->mavlink_communication.task_set,  100000,   RUN_REGULAR,  (task_function_t)&mavlink_telemetry_send_raw_imu,						&centralData->imu, 								MAVLINK_MSG_ID_RAW_IMU	);								// ID 27
 	scheduler_add_task(&centralData->mavlink_communication.task_set,  500000,   RUN_NEVER,    (task_function_t)&mavlink_telemetry_send_pressure,					&centralData->pressure,							MAVLINK_MSG_ID_SCALED_PRESSURE	);						// ID 29
 	scheduler_add_task(&centralData->mavlink_communication.task_set,  200000,   RUN_REGULAR,  (task_function_t)&mavlink_telemetry_send_attitude,					0, 												MAVLINK_MSG_ID_ATTITUDE	);								// ID 30
 	scheduler_add_task(&centralData->mavlink_communication.task_set,  500000,   RUN_REGULAR,  (task_function_t)&mavlink_telemetry_send_attitude_quaternion,			0, 												MAVLINK_MSG_ID_ATTITUDE_QUATERNION	);					// ID 31

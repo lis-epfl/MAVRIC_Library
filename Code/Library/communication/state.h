@@ -32,8 +32,8 @@ extern "C" {
  */
 typedef enum
 {
-	REAL_MODE,											///< HIL off, runs in real mode
-	SIMULATION_MODE										///< HIL on, runs in simulation mode
+	REAL_MODE,												///< HIL off, runs in real mode
+	SIMULATION_MODE = MAV_MODE_FLAG_HIL_ENABLED				///< HIL on, runs in simulation mode
 } HIL_mode;
 
 /**

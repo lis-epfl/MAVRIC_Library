@@ -20,7 +20,7 @@
 #include "conf_stabilisation_copter.h"
 #include "print_util.h"
 
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, run_mode_t* run_mode, Imu_Data_t* imu, AHRS_t* attitude_estimation, position_estimator_t* pos_est)
+void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, run_mode_t* run_mode, Imu_Data_t* imu, AHRS_t* attitude_estimation, position_estimator_t* pos_est,servo_output_t* servos)
 {
 	*stabiliser_stack = stabiliser_defaults_copter;
 	
@@ -30,6 +30,7 @@ void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabili
 	stabilisation_copter->imu = imu;
 	stabilisation_copter->attitude_estimation = attitude_estimation;
 	stabilisation_copter->pos_est = pos_est;
+	stabilisation_copter->servos = servos;
 	
 	*run_mode = MOTORS_OFF;
 	controls->control_mode = ATTITUDE_COMMAND_MODE;
@@ -54,7 +55,7 @@ void stabilisation_copter_get_velocity_vector_from_remote(float tvel[], stabilis
 	tvel[Z]=- 1.5f * stabilisation_copter->controls->thrust;
 }
 
-void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_copter, servo_output_t servos[])
+void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_copter)
 {
 	float rpyt_errors[4];
 	Control_Command_t input;
@@ -147,10 +148,10 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 	
 	// mix to servo outputs depending on configuration
 	#ifdef CONF_DIAG
-	stabilisation_copter_mix_to_servos_diag_quad(&stabilisation_copter->stabiliser_stack->rate_stabiliser.output, servos);
+	stabilisation_copter_mix_to_servos_diag_quad(&stabilisation_copter->stabiliser_stack->rate_stabiliser.output, stabilisation_copter->servos);
 	#else
 	#ifdef CONF_CROSS
-	stabilisation_copter_mix_to_servos_cross_quad(&stabilisation_copter->stabiliser_stack->rate_stabiliser.output, servos);
+	stabilisation_copter_mix_to_servos_cross_quad(&stabilisation_copter->stabiliser_stack->rate_stabiliser.output, stabilisation_copter->servos);
 	#endif
 	#endif
 }

@@ -30,6 +30,7 @@ extern "C" {
 #include "accelero.h"
 #include "compass.h"
 #include "quaternions.h"
+#include "scheduler.h"
 
 #define GYRO_LPF 0.1f					///< The gyroscope linear particle filter gain
 #define ACC_LPF 0.05f					///< The accelerometer linear particle filter gain
@@ -115,6 +116,21 @@ void imu_calibrate_gyros(Imu_Data_t *imu);
 void imu_update(Imu_Data_t *imu);
 
 void imu_relevel(Imu_Data_t *imu);
+
+/**
+ * \brief	Task to send the mavlink scaled IMU message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_telemetry_send_scaled_imu(Imu_Data_t* imu);
+
+
+/**
+ * \brief	Task to send the mavlink raw IMU message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_telemetry_send_raw_imu(Imu_Data_t* imu);
 
 #ifdef __cplusplus
 }

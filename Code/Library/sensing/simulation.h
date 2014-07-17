@@ -34,23 +34,13 @@ extern "C" {
 #include "position_estimation.h"
 #include "state.h"
 
+#define AIR_DENSITY 1.2								///< The air density
+
 /**
- * \brief The simulation model structure definition
+ * \brief The vehicle simulation model structure definition
  */
 typedef struct
 {
-	float torques_bf[3];									///< The 3D torques vector applied on the vehicle
-	float rates_bf[3];										///< The 3D angular rates vector
-	float lin_forces_bf[3];									///< The 3D linear forces vector in body frame
-	float vel_bf[3];										///< The 3D velocity vector in body frame
-	float vel[3];											///< The 3D velocity vector in NED frame
-	qfilter_t attitude_filter;								///< The simulated attitude estimation
-	local_coordinates_t localPosition;						///< The simulated local position
-	
-	float simu_raw_scale[9];								///< The raw scales of the simulated IMU
-	float simu_raw_biais[9];								///< The raw biaises of the simulated IMU
-	
-	float rotorspeeds[ROTORCOUNT];                          ///< The estimated rotor speeds
 	float rotor_lpf;										///< The low-pass filtered response of the rotors to simulate inertia and lag
 	float rotor_rpm_gain;									///< The gain linking the command to rpm
 	float rotor_rpm_offset;									///< The offset to convert servo commands to rpm
@@ -68,19 +58,43 @@ typedef struct
 	
 	float rotor_momentum;									///< The angular momentum of the rotor (for rotor inertia)
 	float rotor_arm_length;									///< The distance between CoG and motor (in meter)
-	uint32_t last_update;									///< The last update in system ticks
-	float dt;												///< The time base of current update
+	
 	float wind_x;											///< The x component of wind in global frame in m/s
 	float wind_y;											///< The y component of wind in global frame in m/s
 	
 	float home_coordinates[3];
 	float sim_gravity;
+}simulation_config_t;
+
+/**
+ * \brief The simulation model structure definition
+ */
+typedef struct
+{
+	float torques_bf[3];									///< The 3D torques vector applied on the vehicle
+	float rates_bf[3];										///< The 3D angular rates vector
+	float lin_forces_bf[3];									///< The 3D linear forces vector in body frame
+	float vel_bf[3];										///< The 3D velocity vector in body frame
+	float vel[3];											///< The 3D velocity vector in NED frame
+	qfilter_t attitude_filter;								///< The simulated attitude estimation
+	local_coordinates_t localPosition;						///< The simulated local position
+	
+	float simu_raw_scale[9];								///< The raw scales of the simulated IMU
+	float simu_raw_biais[9];								///< The raw biaises of the simulated IMU
+	
+	float rotorspeeds[ROTORCOUNT];                          ///< The estimated rotor speeds
+
+	simulation_config_t vehicle_config;
+
+	uint32_t last_update;									///< The last update in system ticks
+	float dt;												///< The time base of current update
 	
 	Imu_Data_t* imu;
 	position_estimator_t* pos_est;
 	pressure_data_t* pressure;
 	gps_Data_type_t* gps;
 	state_structure_t* state_structure;
+	servo_output_t* servos;
 	
 } simulation_model_t;
 
@@ -92,7 +106,7 @@ typedef struct
  * \param	imu				The pointer to the real IMU structure to match the simulated IMU
  * \param	localPos		The pointer to the structure of the real local position estimation of the vehicle
  */
-void simulation_init(simulation_model_t* sim, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, float home_lat, float home_lon, float home_alt, float gravity);
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos);
 
 /**
  * \brief	Sets the calibration to the "real" IMU values
@@ -112,26 +126,22 @@ void simulation_reset_simulation(simulation_model_t *sim);
  * \brief	Computes artificial gyro and accelerometer values based on motor commands
  *
  * \param	sim				The pointer to the simulation model structure
- * \param	servo_commands	The pointer to the commands that would be sent to the servo (i.e. brushless motors)
- * \param	imu				The pointer to the "real" IMU structure to update the belief of the attitude
- * \param	localPos		The pointer to the structure of the "real" local position of the vehicle to update the belief of the position and velocity
  */
-void simulation_update(simulation_model_t *sim, servo_output_t *servo_commands);
+void simulation_update(simulation_model_t *sim);
 
 /**
  * \brief	Simulates barometer outputs
  *
  * \param	sim				The pointer to the simulation model structure
- * \param	pressure		The pointer to the "real" barometer structure to update the belief of the barometer value
  */
-void simulation_simulate_barometer(simulation_model_t *sim, pressure_data_t *pressure);
+void simulation_simulate_barometer(simulation_model_t *sim);
 
 /**
  * \brief	Simulates GPS outputs
  *
  * \param	sim				The pointer to the simulation model structure
  */
-void simulation_simulate_gps(simulation_model_t *sim, gps_Data_type_t *gps);
+void simulation_simulate_gps(simulation_model_t *sim);
 
 
 /**
@@ -146,9 +156,8 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms);
  * \brief	Changes between simulation to and from reality
  *
  * \param	sim				The pointer to the simulation model structure
- * \param	servos			The array of the servos
  */
-void simulation_switch_between_reality_n_simulation(simulation_model_t *sim, servo_output_t servos[]);
+void simulation_switch_between_reality_n_simulation(simulation_model_t *sim);
 
 #ifdef __cplusplus
 }
