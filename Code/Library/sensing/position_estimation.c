@@ -90,6 +90,8 @@ void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *ba
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&position_estimation_set_new_home_position;
 	callbackcmd.module_struct =								pos_est;
 	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	
+	print_util_dbg_print("Position estimation initialized.\n");
 }
 void gps_position_init(position_estimator_t *pos_est)
 {
@@ -118,7 +120,7 @@ void gps_position_init(position_estimator_t *pos_est)
 		print_util_dbg_print("GPS position initialized!\n");
 		
 		// Resets the simulated position and velocities
-		*pos_est->sim_local_position = pos_est->localPosition;
+		//*pos_est->sim_local_position = pos_est->localPosition;
 	}
 }
 
@@ -159,9 +161,9 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est)
 		pos_est->localPosition.timestamp_ms = pos_est->gps->time_last_msg;
 
 		pos_est->lastGpsPos = pos_est->localPosition;
-			
+		
 		// Resets the simulated position and velocities
-		*pos_est->sim_local_position = pos_est->localPosition;
+		//*pos_est->sim_local_position = pos_est->localPosition;
 			
 	//}
 	//else
