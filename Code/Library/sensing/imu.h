@@ -38,6 +38,10 @@ extern "C" {
 
 #define IMU_AXES 6						///< The number of axis of the device
 
+
+bool imu_last_update_init;				///< Variable to initialize the IMU
+
+
 /**
  * \brief Structure containing the accelero, gyro and magnetometer sensors' gains
  */
@@ -47,6 +51,7 @@ typedef struct
 	float scale_factor[3];
 	float orientation[3];
 }sensor_calib_t;
+
 
 /**
  * \brief Structure containing the Attitude and Heading Reference System
@@ -66,6 +71,7 @@ typedef struct
 	float		dt;						///< The time interval between two IMU updates
 }AHRS_t;
 
+
 /**
  * \brief The IMU structure
  */
@@ -82,7 +88,6 @@ typedef struct
 	uint8_t calibration_level;		///< The level of calibration
 } Imu_Data_t;
 
-bool imu_last_update_init;				///< Variable to initialize the IMU
 
 /** 
  * \brief	Initialize the IMU module
@@ -91,12 +96,6 @@ bool imu_last_update_init;				///< Variable to initialize the IMU
  */
 void imu_init (Imu_Data_t *imu, AHRS_t *attitude_estimation);
 
-/**
- * \brief	The function to be called to access the raw data of the IMU
- *
- * \param	imu		the pointer to the IMU structure
- */
-void imu_get_raw_data(Imu_Data_t *imu);
 
 /**
  * \brief	To calibrate the gyros at startup (not used know)
@@ -105,17 +104,22 @@ void imu_get_raw_data(Imu_Data_t *imu);
  */
 void imu_calibrate_gyros(Imu_Data_t *imu);
 
+
 /**
- * \brief	Computes the attitude estimation, do the position estimation and the position correction
+ * \brief	Updates the scaled sensors values from raw measurements
  *
  * \param	imu		the pointer structure of the IMU
- * \param	pos_est		the pointer to the position estimation structure
- * \param	barometer	the pointer to the barometer structure
- * \param	gps			the pointer to the GPS structure
  */
 void imu_update(Imu_Data_t *imu);
 
+
+/**
+ * \brief	Relevels the imu
+ *
+ * \param	imu		the pointer structure of the IMU
+ */
 void imu_relevel(Imu_Data_t *imu);
+
 
 /**
  * \brief	Task to send the mavlink scaled IMU message
@@ -131,6 +135,7 @@ task_return_t mavlink_telemetry_send_scaled_imu(Imu_Data_t* imu);
  * \return	The status of execution of the task
  */
 task_return_t mavlink_telemetry_send_raw_imu(Imu_Data_t* imu);
+
 
 #ifdef __cplusplus
 }
