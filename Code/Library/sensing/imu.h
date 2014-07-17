@@ -78,6 +78,7 @@ typedef struct
 	
 	float dt;							///< The time interval between two IMU updates
 	uint32_t last_update;				///< The time of the last IMU update in ms
+	uint8_t calibration_level;		///< The level of calibration
 } Imu_Data_t;
 
 bool imu_last_update_init;				///< Variable to initialize the IMU
@@ -87,7 +88,7 @@ bool imu_last_update_init;				///< Variable to initialize the IMU
  *
  * \param	imu		the pointer to the IMU structure
  */
-void imu_init(Imu_Data_t *imu);
+void imu_init (Imu_Data_t *imu, AHRS_t *attitude_estimation);
 
 /**
  * \brief	The function to be called to access the raw data of the IMU

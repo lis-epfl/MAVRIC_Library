@@ -44,12 +44,6 @@ task_set_t* tasks_get_main_taskset(void);
 
 
 /**
- * \brief            Relevel the imu
- */
-void tasks_relevel_imu(void);
-
-
-/**
  * \brief            Updates the IMU
  */
 void tasks_run_imu_update(void* arg);
