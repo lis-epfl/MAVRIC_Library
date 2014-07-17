@@ -46,6 +46,8 @@ void barometer_offset_init(position_estimator_t *pos_est);
 
 void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, AHRS_t *attitude_estimation, Imu_Data_t *imu, local_coordinates_t *sim_local_position, bool* waypoint_set, mavlink_communication_t *mavlink_communication, float home_lat, float home_lon, float home_alt, float gravity)
 {
+	int32_t i;
+	
 	pos_est->barometer = pos_est->barometer;
 	pos_est->gps = gps;
 	pos_est->attitude_estimation = attitude_estimation;
@@ -61,6 +63,16 @@ void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *ba
 	pos_est->localPosition.pos[Y] = 0;
 	pos_est->localPosition.pos[Z] = 0;
 	
+	// reset position estimator
+	pos_est->last_alt = 0;
+	for(i = 0;i < 3;i++)
+	{
+		pos_est->pos_correction[i] = 0.0f;
+		pos_est->last_vel[i] = 0.0f;
+		pos_est->vel[i] = 0.0f;
+		pos_est->vel_bf[i] = 0.0f;
+	}
+	
 	pos_est->gravity = gravity;
 	
 	pos_est->init_gps_position = false;
@@ -68,13 +80,13 @@ void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *ba
 	pos_est->time_last_gps_msg = 0;
 	pos_est->time_last_barometer_msg = 0;
 	
-	pos_est->kp_pos[0] = 2.0f;
-	pos_est->kp_pos[1] = 2.0f;
-	pos_est->kp_pos[2] = 1.0f;
+	pos_est->kp_pos[X] = 2.0f;
+	pos_est->kp_pos[Y] = 2.0f;
+	pos_est->kp_pos[Z] = 1.0f;
 	
-	pos_est->kp_vel[0] = 1.0f;
-	pos_est->kp_vel[1] = 1.0f;
-	pos_est->kp_vel[2] = 0.5f;
+	pos_est->kp_vel[X] = 1.0f;
+	pos_est->kp_vel[Y] = 1.0f;
+	pos_est->kp_vel[Z] = 0.5f;
 	
 	pos_est->kp_alt = 2.0f;
 	pos_est->kp_vel_baro = 1.0f;
