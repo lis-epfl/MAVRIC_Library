@@ -122,7 +122,7 @@ void imu_relevel(Imu_Data_t *imu);
  * 
  * \return	The status of execution of the task
  */
-task_return_t mavlink_telemetry_send_scaled_imu(Imu_Data_t* imu);
+task_return_t imu_send_scaled(Imu_Data_t* imu);
 
 
 /**
@@ -130,7 +130,21 @@ task_return_t mavlink_telemetry_send_scaled_imu(Imu_Data_t* imu);
  * 
  * \return	The status of execution of the task
  */
-task_return_t mavlink_telemetry_send_raw_imu(Imu_Data_t* imu);
+task_return_t imu_send_raw(Imu_Data_t* imu);
+
+/**
+ * \brief	Task to send the mavlink attitude message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t imu_send_attitude(AHRS_t* attitude_estimation);
+
+/**
+ * \brief	Task to send the mavlink quaternion attitude message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t imu_send_attitude_quaternion(AHRS_t* attitude_estimation);
 
 #ifdef __cplusplus
 }

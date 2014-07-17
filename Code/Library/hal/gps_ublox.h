@@ -28,6 +28,7 @@ extern "C" {
 #include "maths.h"
 #include "streams.h"
 #include "buffer.h"
+#include "tasks.h"
 
 /*
  *  try to put a UBlox into binary mode. This is in two parts. First we
@@ -710,6 +711,12 @@ void gps_ublox_update(gps_Data_type_t *GPS_data);
  */
 bool gps_ublox_newValidGpsMsg(gps_Data_type_t *GPS_data, uint32_t *prevGpsMsgTime);
 
+/**
+ * \brief	Task to send the mavlink gps raw message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t gps_ublox_send_raw(gps_Data_type_t* GPS_data);
 
 #ifdef __cplusplus
 }

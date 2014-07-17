@@ -23,6 +23,7 @@
 #include "print_util.h"
 #include "mavlink_stream.h"
 #include "tasks.h"
+#include "coord_conventions.h"
 
 int32_t ic;
 
@@ -159,7 +160,7 @@ void imu_oriented2scale(Imu_Data_t *imu)
 	}
 }
 
-task_return_t mavlink_telemetry_send_scaled_imu(Imu_Data_t* imu)
+task_return_t imu_send_scaled(Imu_Data_t* imu)
 {
 	mavlink_msg_scaled_imu_send(MAVLINK_COMM_0,
 								time_keeper_get_millis(),
@@ -177,7 +178,7 @@ task_return_t mavlink_telemetry_send_scaled_imu(Imu_Data_t* imu)
 }
 
 
-task_return_t mavlink_telemetry_send_raw_imu(Imu_Data_t* imu)
+task_return_t imu_send_raw(Imu_Data_t* imu)
 {
 	mavlink_msg_raw_imu_send(	MAVLINK_COMM_0,
 								time_keeper_get_micros(),
@@ -191,5 +192,39 @@ task_return_t mavlink_telemetry_send_raw_imu(Imu_Data_t* imu)
 								imu->oriented_compass.data[IMU_Y],
 								imu->oriented_compass.data[IMU_Z]);
 	
+	return TASK_RUN_SUCCESS;
+}
+
+
+task_return_t imu_send_attitude(AHRS_t* attitude_estimation)
+{
+	// ATTITUDE
+	Aero_Attitude_t aero_attitude;
+	aero_attitude = coord_conventions_quat_to_aero(attitude_estimation->qe);
+
+	mavlink_msg_attitude_send(	MAVLINK_COMM_0,
+								time_keeper_get_millis(),
+								aero_attitude.rpy[0],
+								aero_attitude.rpy[1],
+								aero_attitude.rpy[2],
+								attitude_estimation->angular_speed[0],
+								attitude_estimation->angular_speed[1],
+								attitude_estimation->angular_speed[2]);
+	
+	return TASK_RUN_SUCCESS;
+}
+
+task_return_t imu_send_attitude_quaternion(AHRS_t* attitude_estimation)
+{
+	// ATTITUDE QUATERNION
+	mavlink_msg_attitude_quaternion_send(	MAVLINK_COMM_0,
+											time_keeper_get_millis(),
+											attitude_estimation->qe.s,
+											attitude_estimation->qe.v[0],
+											attitude_estimation->qe.v[1],
+											attitude_estimation->qe.v[2],
+											attitude_estimation->angular_speed[0],
+											attitude_estimation->angular_speed[1],
+											attitude_estimation->angular_speed[2]	);
 	return TASK_RUN_SUCCESS;
 }
