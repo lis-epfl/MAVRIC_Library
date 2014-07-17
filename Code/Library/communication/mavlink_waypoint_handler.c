@@ -62,8 +62,6 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	//waypoint_handler_init_homing_waypoint(waypoint_handler);
 	waypoint_handler_waypoint_init(waypoint_handler);
 	
-	print_util_dbg_print("Waypoint handler init.\n");
-	
 	// Add callbacks for onboard parameters requests
 	mavlink_message_handler_msg_callback_t callback;
 
@@ -148,6 +146,9 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_set_circle_scenario;
 	callbackcmd.module_struct =									waypoint_handler;
 	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	
+		
+	print_util_dbg_print("Waypoint handler initialized.\n");
 }
 
 void waypoint_handler_waypoint_init(mavlink_waypoint_handler_t* waypoint_handler)
@@ -156,7 +157,7 @@ void waypoint_handler_waypoint_init(mavlink_waypoint_handler_t* waypoint_handler
 	float rel_pos[3];
 	
 	if ((waypoint_handler->number_of_waypoints > 0)
-	&& (waypoint_handler->position_estimator->init_gps_position || waypoint_handler->simulation_mode)
+	&& (waypoint_handler->position_estimator->init_gps_position || (*waypoint_handler->simulation_mode==SIMULATION_MODE))
 	&& (waypoint_handler->waypoint_receiving == false))
 	{
 		for (i=0;i<waypoint_handler->number_of_waypoints;i++)

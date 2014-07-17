@@ -24,7 +24,6 @@
 #include "mavlink_waypoint_handler.h"
 #include "neighbor_selection.h"
 
-
 central_data_t *centralData;
 
 
