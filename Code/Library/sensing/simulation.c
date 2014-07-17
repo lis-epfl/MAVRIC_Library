@@ -282,6 +282,7 @@ void simulation_update(simulation_model_t *sim)
 	// apply step rotation 
 	qed = quaternions_multiply(sim->attitude_estimation.qe,qtmp1);
 
+	// TODO: correct this formulas when using the right scales
 	sim->attitude_estimation.qe.s = sim->attitude_estimation.qe.s + qed.s * sim->dt;
 	sim->attitude_estimation.qe.v[0] += qed.v[0] * sim->dt;
 	sim->attitude_estimation.qe.v[1] += qed.v[1] * sim->dt;
@@ -358,9 +359,9 @@ void simulation_update(simulation_model_t *sim)
 	
 	for (i = 0;i < 3; i++)
 	{
-		sim->imu->raw_gyro.data[i] = sim->rates_bf[i] * sim->calib_gyro.scale_factor[i] * sim->calib_gyro.orientation[i] + sim->calib_gyro.bias[i];
-		sim->imu->raw_accelero.data[i] = (sim->lin_forces_bf[i] / sim->vehicle_config.total_mass / sim->vehicle_config.sim_gravity) * sim->calib_accelero.scale_factor[i] * sim->calib_accelero.orientation[i] + sim->calib_accelero.bias[i];
-		sim->imu->raw_compass.data[i] = (sim->attitude_estimation.north_vec.v[i] ) * sim->calib_compass.scale_factor[i] * sim->calib_compass.orientation[i] + sim->calib_compass.bias[i];
+		sim->imu->raw_gyro.data[i] = (sim->rates_bf[i] * sim->calib_gyro.scale_factor[i] + sim->calib_gyro.bias[i]) * sim->calib_gyro.orientation[i];
+		sim->imu->raw_accelero.data[i] = ((sim->lin_forces_bf[i] / sim->vehicle_config.total_mass / sim->vehicle_config.sim_gravity) * sim->calib_accelero.scale_factor[i] + sim->calib_accelero.bias[i]) * sim->calib_accelero.orientation[i];
+		sim->imu->raw_compass.data[i] = ((sim->attitude_estimation.north_vec.v[i] ) * sim->calib_compass.scale_factor[i] + sim->calib_compass.bias[i])* sim->calib_compass.orientation[i];
 	}
 	
 	//sim->imu->raw_gyro.data[IMU_X] = sim->rates_bf[0] * sim->simu_raw_scale[GYRO_OFFSET + IMU_X] + sim->simu_raw_biais[GYRO_OFFSET + IMU_X];
@@ -435,7 +436,7 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 		sim->pos_est->localPosition.origin = sim->localPosition.origin;
 		for (i = 0;i < 3;i++)
 		{
-			sim->pos_est->localPosition.pos[i] = sim->localPosition.pos[i];
+			sim->pos_est->localPosition.pos[i] = 0.0f;
 		}
 		sim->pos_est->init_gps_position = false;
 		sim->state_structure->mav_state = MAV_STATE_STANDBY;

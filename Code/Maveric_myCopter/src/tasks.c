@@ -416,7 +416,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 
 void tasks_run_imu_update(void* arg)
 {
-	if (centralData->state_structure.simulation_mode == SIMULATION_MODE) 
+	if (centralData->state_structure.simulation_mode_previous == SIMULATION_MODE) 
 	{
 		simulation_update(&centralData->sim_model);
 	} 
@@ -507,7 +507,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 	}
 	
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
-	if (centralData->state_structure.simulation_mode == REAL_MODE) 
+	if (centralData->state_structure.simulation_mode_previous == REAL_MODE) 
 	{
 		servo_pwm_set(centralData->servos);
 	}
@@ -517,7 +517,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 
 task_return_t tasks_run_gps_update(void* arg) 
 {
-	if (centralData->state_structure.simulation_mode == SIMULATION_MODE) 
+	if (centralData->state_structure.simulation_mode_previous == SIMULATION_MODE) 
 	{
 		simulation_simulate_gps(&centralData->sim_model);
 	} 
@@ -532,7 +532,7 @@ task_return_t tasks_run_gps_update(void* arg)
 
 task_return_t tasks_run_barometer_update(void* arg)
 {
-	if (centralData->state_structure.simulation_mode == SIMULATION_MODE) 
+	if (centralData->state_structure.simulation_mode_previous == SIMULATION_MODE) 
 	{
 		simulation_simulate_barometer(&centralData->sim_model);
 	} 
