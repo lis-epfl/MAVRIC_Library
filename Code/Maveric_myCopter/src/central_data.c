@@ -18,6 +18,7 @@
 
 #include "central_data.h"
 #include "conf_constants.h"
+#include "delay.h"
 
 static central_data_t centralData;
 
@@ -76,7 +77,7 @@ void central_data_init()
 				MAV_AUTOPILOT_GENERIC,
 				MAV_STATE_BOOT,
 				MAV_MODE_PREFLIGHT,
-				REAL_MODE,// SIMULATION_MODE
+				SIMULATION_MODE, //REAL_MODE 
 				&centralData.mavlink_communication); 
 	
 	imu_init(&(centralData.imu), &centralData.attitude_estimation);
@@ -106,7 +107,8 @@ void central_data_init()
 					&centralData.attitude_estimation.qe,
 					&centralData.waypoint_handler,
 					&centralData.position_estimator,
-					&centralData.orcaData);
+					&centralData.orcaData,
+					&centralData.state_structure);
 	
 	waypoint_handler_init(  &centralData.waypoint_handler,
 							&centralData.position_estimator,
@@ -134,10 +136,12 @@ void central_data_init()
 								&centralData.position_estimator,
 								centralData.servos 	);
 	
+	delay_ms(750);
+	
 	// init simulation (should be done after position_estimator)
 	simulation_init(&centralData.sim_model,
 					&vehicle_model_parameters,
-					&centralData.attitude_filter,
+					&centralData.attitude_estimation,
 					&centralData.imu,
 					&centralData.position_estimator,
 					&centralData.pressure,

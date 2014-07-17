@@ -33,6 +33,7 @@ extern "C" {
 #include "bmp085.h"
 #include "position_estimation.h"
 #include "state.h"
+#include "scheduler.h"
 
 #define AIR_DENSITY 1.2								///< The air density
 
@@ -76,11 +77,12 @@ typedef struct
 	float lin_forces_bf[3];									///< The 3D linear forces vector in body frame
 	float vel_bf[3];										///< The 3D velocity vector in body frame
 	float vel[3];											///< The 3D velocity vector in NED frame
-	qfilter_t attitude_filter;								///< The simulated attitude estimation
-	local_coordinates_t localPosition;						///< The simulated local position
+	AHRS_t attitude_estimation;								///< The simulated attitude estimation
+	local_coordinates_t localPosition;						///< The simulated local position								
 	
-	float simu_raw_scale[9];								///< The raw scales of the simulated IMU
-	float simu_raw_biais[9];								///< The raw biaises of the simulated IMU
+	sensor_calib_t calib_gyro;								///< The calibration values of the gyroscope
+	sensor_calib_t calib_accelero;							///< The calibration values of the accelerometer
+	sensor_calib_t calib_compass;							///< The calibration values of the compass
 	
 	float rotorspeeds[ROTORCOUNT];                          ///< The estimated rotor speeds
 
@@ -106,7 +108,7 @@ typedef struct
  * \param	imu				The pointer to the real IMU structure to match the simulated IMU
  * \param	localPos		The pointer to the structure of the real local position estimation of the vehicle
  */
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, qfilter_t* attitude_filter, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos);
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, AHRS_t* attitude_estimation, Imu_Data_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos);
 
 /**
  * \brief	Sets the calibration to the "real" IMU values
@@ -158,6 +160,13 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms);
  * \param	sim				The pointer to the simulation model structure
  */
 void simulation_switch_between_reality_n_simulation(simulation_model_t *sim);
+
+/**
+ * \brief	Task to send the mavlink HIL simulation message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t simulation_send_data(simulation_model_t *sim);
 
 #ifdef __cplusplus
 }
