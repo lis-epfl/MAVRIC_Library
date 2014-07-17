@@ -422,7 +422,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 
 void tasks_run_imu_update(void* arg)
 {
-	if (centralData->state_structure.simulation_mode == 1) 
+	if (centralData->state_structure.simulation_mode == SIMULATION_MODE) 
 	{
 		simulation_update(&centralData->sim_model);
 	} 
@@ -434,7 +434,7 @@ void tasks_run_imu_update(void* arg)
 	}
 	
 	imu_update(	&centralData->imu);
-	qfilter_update(&centralData->attitude_filter);
+	//qfilter_update(&centralData->attitude_filter);
 	
 	if (centralData->imu.calibration_level == OFF)
 	{
@@ -523,7 +523,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 
 task_return_t tasks_run_gps_update(void* arg) 
 {
-	if (centralData->state_structure.simulation_mode == 1) 
+	if (centralData->state_structure.simulation_mode == SIMULATION_MODE) 
 	{
 		simulation_simulate_gps(&centralData->sim_model);
 	} 
@@ -581,14 +581,14 @@ task_return_t tasks_run_navigation_update(void* arg)
 
 task_return_t tasks_run_barometer_update(void* arg)
 {
-	central_data_t *central_data = central_data_get_pointer_to_struct();
-	
-	bmp085_get_pressure_data_slow(&(central_data->pressure));
-	
-	if (central_data->state_structure.simulation_mode == 1) 
+	if (centralData->state_structure.simulation_mode == SIMULATION_MODE) 
 	{
 		simulation_simulate_barometer(&centralData->sim_model);
-	} 
+	}
+	else
+	{
+		bmp085_get_pressure_data_slow(&(centralData->pressure));
+	}
 
 	return TASK_RUN_SUCCESS;
 }

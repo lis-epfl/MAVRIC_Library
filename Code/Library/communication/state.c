@@ -71,7 +71,7 @@ void state_set_mav_mode(state_structure_t* state_structure, mavlink_received_t* 
 		print_util_dbg_print_num(packet.custom_mode,10);
 		print_util_dbg_print("\n");
 
-		if (state_structure->simulation_mode == 0)
+		if (state_structure->simulation_mode == REAL_MODE)
 		{
 			switch(packet.base_mode)
 			{
