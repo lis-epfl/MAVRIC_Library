@@ -543,7 +543,7 @@ task_return_t tasks_run_gps_update(void* arg)
 {
 	if (centralData->state_structure.simulation_mode == 1) 
 	{
-		simulation_simulate_gps(&centralData->sim_model, &centralData->GPS_data);
+		simulation_simulate_gps(&centralData->sim_model);
 	} 
 	else 
 	{

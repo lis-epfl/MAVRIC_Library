@@ -129,7 +129,7 @@ void simulation_simulate_barometer(simulation_model_t *sim, pressure_data_t *pre
  *
  * \param	sim				The pointer to the simulation model structure
  */
-void simulation_simulate_gps(simulation_model_t *sim, gps_Data_type_t *gps);
+void simulation_simulate_gps(simulation_model_t *sim);
 
 
 /**

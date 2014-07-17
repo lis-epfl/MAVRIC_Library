@@ -370,15 +370,15 @@ void simulation_simulate_barometer(simulation_model_t *sim, pressure_data_t *pre
 	pressure->altitude_offset = 0;
 }
 	
-void simulation_simulate_gps(simulation_model_t *sim, gps_Data_type_t *gps)
+void simulation_simulate_gps(simulation_model_t *sim)
 {
 	global_position_t gpos = coord_conventions_local_to_global_position(sim->localPosition);
 	
-	gps->altitude = gpos.altitude;
-	gps->latitude = gpos.latitude;
-	gps->longitude = gpos.longitude;
-	gps->time_last_msg = time_keeper_get_millis();
-	gps->status = GPS_OK;
+	sim->gps->altitude = gpos.altitude;
+	sim->gps->latitude = gpos.latitude;
+	sim->gps->longitude = gpos.longitude;
+	sim->gps->time_last_msg = time_keeper_get_millis();
+	sim->gps->status = GPS_OK;
 }
 
 void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
