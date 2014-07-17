@@ -105,7 +105,8 @@ void central_data_init()
 								&centralData.run_mode,
 								&centralData.imu,
 								&centralData.attitude_estimation,
-								&centralData.position_estimator 	);
+								&centralData.position_estimator,
+								centralData.servos 	);
 	
 	// init simulation (should be done after position_estimator)
 	simulation_init(&centralData.sim_model,

@@ -472,7 +472,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			centralData->controls.yaw_mode=YAW_RELATIVE;
 			
-			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter, centralData->servos);
+			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter);
 			break;
 
 		case MAV_MODE_STABILIZE_ARMED:
@@ -482,7 +482,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 			
 			stabilisation_copter_get_velocity_vector_from_remote(centralData->controls.tvel,&centralData->stabilisation_copter);
 			
-			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter, centralData->servos);
+			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter);
 			
 			break;
 
@@ -499,7 +499,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 				centralData->controls.yaw_mode = YAW_ABSOLUTE;
 			}
 			
-			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter, centralData->servos);
+			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter);
 			
 			break;
 
@@ -517,7 +517,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 				centralData->controls.yaw_mode = YAW_ABSOLUTE;
 			}
 			
-			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter, centralData->servos);
+			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter);
 			break;
 		
 		case MAV_MODE_PREFLIGHT:
