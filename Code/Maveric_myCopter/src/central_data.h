@@ -69,7 +69,7 @@ typedef struct  {
 
 	analog_monitor_t adc;										///< The analog to digital converter structure
 
-	Imu_Data_t imu1;											///< The IMU structure
+	Imu_Data_t imu;											///< The IMU structure
 	qfilter_t attitude_filter;									///< The qfilter structure
 	AHRS_t attitude_estimation;									///< The attitude estimation structure
 	Control_Command_t controls;									///< The control structure used for rate and attitude modes

@@ -77,31 +77,13 @@ void switch_off_motors(void)
 
 void tasks_relevel_imu(void)
 {
-	uint32_t i,j;
-
 	centralData->attitude_filter.calibration_level = LEVELING;
 	centralData->state_structure.mav_state = MAV_STATE_CALIBRATING;
 	centralData->state_structure.mav_mode = MAV_MODE_PREFLIGHT;
 
 	print_util_dbg_print("calibrating IMU...\n");
 
-	for (j = 0;j < 3;j++)
-	{
-		centralData->attitude_filter.raw_mag_mean[j] = (float)centralData->imu1.oriented_compass.data[j];
-	}
-
-	for (i = 1000; i > 0; i--) 
-	{
-		tasks_run_imu_update(0);
-		//mavlink_communication_update(&centralData->mavlink_communication);
-		
-		for (j = 0;j < 3;j++)
-		{
-			centralData->attitude_filter.raw_mag_mean[j] = (1.0f - MAG_LPF) * centralData->attitude_filter.raw_mag_mean[j] + MAG_LPF * ((float)centralData->imu1.oriented_compass.data[j]);
-		}
-
-		delay_ms(5);
-	}
+	//imu_relevel(&centralData->imu);
 	
 	centralData->attitude_filter.calibration_level = OFF;
 	centralData->state_structure.mav_state = MAV_STATE_STANDBY;
@@ -464,13 +446,13 @@ void tasks_run_imu_update(void* arg)
 	} 
 	else 
 	{
-		lsm330dlc_gyro_update(&(centralData->imu1.raw_gyro));
-		lsm330dlc_acc_update(&(centralData->imu1.raw_accelero));
-		compass_hmc58831l_update(&(centralData->imu1.raw_compass));
+		lsm330dlc_gyro_update(&(centralData->imu.raw_gyro));
+		lsm330dlc_acc_update(&(centralData->imu.raw_accelero));
+		compass_hmc58831l_update(&(centralData->imu.raw_compass));
 	}
 	
-	qfilter_attitude_estimation(&centralData->attitude_filter, centralData->imu1.dt);
-	imu_update(	&centralData->imu1);
+	qfilter_update(&centralData->attitude_filter, centralData->imu.dt);
+	imu_update(	&centralData->imu);
 	
 	if (centralData->attitude_filter.calibration_level == OFF)
 	{

@@ -111,7 +111,7 @@ void boardsupport_init(central_data_t *centralData) {
 	
 	// init imu & compass
 	i2c_driver_init(I2C0);
-	imu_init(&(centralData->imu1));
+	imu_init(&(centralData->imu));
 	bmp085_init(&(centralData->pressure));
 	
 	// init radar or ultrasound (not implemented yet)

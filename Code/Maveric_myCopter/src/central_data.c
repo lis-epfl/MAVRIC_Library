@@ -59,14 +59,14 @@ void central_data_init()
 	servo_pwm_init((servo_output_t*)centralData.servos);
 	
 	qfilter_init(   &(centralData.attitude_filter), 
-					&centralData.imu1, 
+					&centralData.imu, 
 					&centralData.attitude_estimation);
 	
 	position_estimation_init(   &centralData.position_estimator,
 								&centralData.pressure,
 								&centralData.GPS_data,
 								&centralData.attitude_estimation,
-								&centralData.imu1,
+								&centralData.imu,
 								&centralData.sim_model.localPosition,
 								&centralData.waypoint_handler.waypoint_set,
 								&centralData.mavlink_communication,
@@ -74,8 +74,6 @@ void central_data_init()
 								HOME_LONGITUDE,
 								HOME_ALTITUDE,
 								GRAVITY);
-	
-	qfilter_init_quaternion(&centralData.attitude_filter);
 	
 	navigation_init(&centralData.navigationData,
 					&centralData.controls_nav,
@@ -97,7 +95,7 @@ void central_data_init()
 	orca_init(  &centralData.orcaData,
 				&centralData.neighborData,
 				&centralData.position_estimator,
-				&centralData.imu1,
+				&centralData.imu,
 				&centralData.attitude_estimation);
 	
 	// init stabilisers
@@ -105,14 +103,14 @@ void central_data_init()
 								&centralData.stabiliser_stack,
 								&centralData.controls,
 								&centralData.run_mode,
-								&centralData.imu1,
+								&centralData.imu,
 								&centralData.attitude_estimation,
 								&centralData.position_estimator 	);
 	
 	// init simulation (should be done after position_estimator)
 	simulation_init(&centralData.sim_model,
 					&centralData.attitude_filter,
-					&centralData.imu1,
+					&centralData.imu,
 					&centralData.position_estimator,
 					&centralData.pressure,
 					&centralData.GPS_data,
