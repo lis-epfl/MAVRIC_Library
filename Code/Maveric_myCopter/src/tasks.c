@@ -532,14 +532,14 @@ task_return_t tasks_run_gps_update(void* arg)
 
 task_return_t tasks_run_barometer_update(void* arg)
 {
-	central_data_t *central_data = central_data_get_pointer_to_struct();
-	
-	bmp085_get_pressure_data_slow(&(central_data->pressure));
-	
-	if (central_data->state_structure.simulation_mode == SIMULATION_MODE) 
+	if (centralData->state_structure.simulation_mode == SIMULATION_MODE) 
 	{
 		simulation_simulate_barometer(&centralData->sim_model);
 	} 
+	else
+	{
+		bmp085_get_pressure_data_slow(&(centralData->pressure));
+	}
 
 	return TASK_RUN_SUCCESS;
 }

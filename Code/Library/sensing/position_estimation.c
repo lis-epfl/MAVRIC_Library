@@ -93,8 +93,6 @@ static void position_estimation_position_integration(position_estimator_t *pos_e
 	for (i = 0; i < 3; i++)
 	{
 		pos_est->vel_bf[i] = qvel_bf.v[i];
-		// clean acceleration estimate without gravity:
-		pos_est->attitude_estimation->linear_acc[i] = pos_est->gravity * (pos_est->imu->scaled_accelero.data[i] - pos_est->attitude_estimation->up_vec.v[i]) ;							// TODO: review this line!
 		pos_est->vel_bf[i] = pos_est->vel_bf[i] * (1.0f - (VEL_DECAY * dt)) + pos_est->attitude_estimation->linear_acc[i]  * dt;
 	}
 	
