@@ -22,8 +22,6 @@
 
 void scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config) 
 {
-	task_set_t* ts = scheduler->task_set;
-
 	// Init schedule strategy
 	scheduler->schedule_strategy = config->schedule_strategy;
 
@@ -31,11 +29,11 @@ void scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config)
 	scheduler->debug = config->debug;
 
 	// Allocate memory for the task set
-	ts = malloc( sizeof(task_set_t) + sizeof(task_entry_t[config->max_task_count]) );
-	ts->max_task_count = config->max_task_count;
+	scheduler->task_set = malloc( sizeof(task_set_t) + sizeof(task_entry_t[config->max_task_count]) );
+	scheduler->task_set->max_task_count = config->max_task_count;
 
-	ts->task_count = 0;
-	ts->current_schedule_slot = 0;
+	scheduler->task_set->task_count = 0;
+	scheduler->task_set->current_schedule_slot = 0;
 }
 
 
