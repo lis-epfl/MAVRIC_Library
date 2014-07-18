@@ -20,12 +20,12 @@
 #include "time_keeper.h"
 #include "print_util.h"
 
-#include "piezo_speaker.h"
-
-
 void scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config) 
 {
 	task_set_t* ts = scheduler->task_set;
+
+	// Init schedule strategy
+	scheduler->schedule_strategy = config->schedule_strategy;
 
 	// Init debug mode
 	scheduler->debug = config->debug;
@@ -37,33 +37,6 @@ void scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config)
 	ts->task_count = 0;
 	ts->current_schedule_slot = 0;
 }
-
-
-// task_handle_t scheduler_register_task(scheduler_t* scheduler, int32_t task_slot, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, task_argument_t function_argument) 
-// {
-// 	task_set_t* ts = scheduler->task_set;
-	
-// 	if ((task_slot < 0) || (task_slot >= ts->max_task_count)) 
-// 	{
-// 		return -1;
-// 	}
-
-// 	ts->tasks[task_slot].task_id = task_slot;
-// 	ts->tasks[task_slot].call_function = call_function;
-// 	ts->tasks[task_slot].function_argument = function_argument;
-// 	ts->tasks[task_slot].run_mode = run_mode;
-// 	ts->tasks[task_slot].repeat_period = repeat_period;
-// 	ts->tasks[task_slot].next_run = time_keeper_get_micros();
-// 	ts->tasks[task_slot].execution_time = 0;
-// 	ts->tasks[task_slot].timing_mode = PERIODIC_ABSOLUTE;
-
-// 	ts->tasks[task_slot].delay_max = 0;
-// 	ts->tasks[task_slot].delay_avg = 0;
-// 	ts->tasks[task_slot].delay_var_squared = 0;
-// 	ts->tasks[task_slot].rt_violations = 0;
-
-// 	return task_slot;
-// }
 
 
 bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_function_t call_function, task_argument_t function_argument, uint32_t task_id) 
@@ -150,7 +123,7 @@ void scheduler_sort_taskset_by_period(scheduler_t* scheduler)
 }
 
 
-int32_t scheduler_update(scheduler_t* scheduler, uint8_t schedule_strategy) 
+int32_t scheduler_update(scheduler_t* scheduler) 
 {
 	int32_t i;
 	int32_t realtime_violation = 0;
@@ -219,7 +192,7 @@ int32_t scheduler_update(scheduler_t* scheduler, uint8_t schedule_strategy)
 			ts->tasks[i].execution_time = (7 * ts->tasks[i].execution_time + (time_keeper_get_micros() - task_start_time)) / 8;
 				
 			// Depending on shceduling strategy, select next task slot	
-			switch (schedule_strategy) 
+			switch (scheduler->schedule_strategy) 
 			{
 				case FIXED_PRIORITY: 
 					// Fixed priority scheme - scheduler will start over with tasks with the highest priority

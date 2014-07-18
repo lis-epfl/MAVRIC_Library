@@ -117,6 +117,7 @@ typedef struct task_set_t
 typedef struct
 {
 	bool debug;
+	schedule_strategy_t schedule_strategy;
 	task_set_t* task_set;
 } scheduler_t;
 
@@ -125,6 +126,7 @@ typedef struct
 typedef struct
 {
 	uint32_t max_task_count;
+	schedule_strategy_t schedule_strategy;
 	bool debug;
 } scheduler_conf_t;
 
@@ -184,7 +186,7 @@ void scheduler_sort_taskset_by_period(scheduler_t* scheduler);
  * 
  * \return                  	Number of realtime violations
  */
-int32_t scheduler_update(scheduler_t* scheduler, uint8_t schedule_strategy);
+int32_t scheduler_update(scheduler_t* scheduler);
 // int32_t scheduler_update(task_set_t *ts, uint8_t schedule_strategy);
 
 

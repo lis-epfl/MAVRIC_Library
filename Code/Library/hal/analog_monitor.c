@@ -19,8 +19,6 @@
 #include "analog_monitor.h"
 #include "adc_int.h"
 
-#include "piezo_speaker.h"
-
 #define CONV_FACTOR_2 1.0f				///< Conversion factor for the analog channel 2
 #define CONV_FACTOR_3 1.0f				///< Conversion factor for the analog channel 3
 #define CONV_FACTOR_4 1.0f				///< Conversion factor for the analog channel 4

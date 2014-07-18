@@ -31,10 +31,6 @@
 #include "lsm330dlc_driver.h"
 #include "compass_hmc5883l.h"
 
-
-#include "piezo_speaker.h"
-
-
 central_data_t* centralData;
 
 /**
@@ -577,20 +573,6 @@ void tasks_create_tasks()
 {	
 	centralData = central_data_get_pointer_to_struct();
 	
-	// scheduler_register_task(&main_tasks, 0, 4000, RUN_REGULAR, &tasks_run_stabilisation, 0);
-	// scheduler_register_task(&main_tasks, 1, 15000, RUN_REGULAR, &tasks_run_barometer_update, 0);
-	// main_tasks.tasks[1].timing_mode = PERIODIC_RELATIVE;
-	// scheduler_register_task(&main_tasks, 2, 100000, RUN_REGULAR, &tasks_run_gps_update, 0);
-	// scheduler_register_task(&main_tasks, 3, ORCA_TIME_STEP_MILLIS * 1000.0f, RUN_REGULAR, (task_function_t)&navigation_update, (task_argument_t)&centralData->navigationData);
-	// scheduler_register_task(&main_tasks, 4, 200000, RUN_REGULAR, &tasks_set_mav_mode_n_state, 0);
-	// scheduler_register_task(&main_tasks, 5, 4000, RUN_REGULAR, (task_function_t)&mavlink_communication_update, (task_argument_t)&centralData->mavlink_communication);
-	// scheduler_register_task(&main_tasks, 6, 100000, RUN_REGULAR, &adc_update, 0);	
-
-	// for (uint32_t i = 1; i < 8; i++)
-	// {
-	// 	piezo_speaker_beep(100, 500 * i);
-	// }
-
 	scheduler_t* scheduler = &centralData->scheduler;
 
 	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, &tasks_run_stabilisation                       , 0                                                    , 0);

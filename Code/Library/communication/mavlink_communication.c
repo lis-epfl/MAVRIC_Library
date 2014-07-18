@@ -61,7 +61,7 @@ task_return_t mavlink_communication_update(mavlink_communication_t* mavlink_comm
 	// Send messages
 	if (mavlink_stream->out_stream->buffer_empty(mavlink_stream->out_stream->data) == true) 
 	{
-		result = scheduler_update(&mavlink_communication->scheduler, ROUND_ROBIN);
+		result = scheduler_update(&mavlink_communication->scheduler);
 	}
 	
 	return result;
