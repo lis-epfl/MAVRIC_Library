@@ -102,6 +102,38 @@ bool printNavOnDebug = false;
 uint8_t loopPosllh = 0, loopVelned = 0, loopStatus = 0, loopSolution = 0, loopTimTp = 0, loopTimVrfy = 0;
 uint8_t numSkippedMsg = 10;
 
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+/**
+ * \brief	Reset the gps U-Blox module
+ *
+ * \param	_engine_nav_setting		the GPS Nav settings 
+ */
+void gps_ublox_reset(gps_Data_type_t *GPS_data, GPS_Engine_Setting _engine_nav_setting);
+
+/**
+ * \brief	Process bytes available from the stream
+ *
+ * The stream is assumed to contain only messages we recognise.  If it
+ * contains other messages, and those messages contain the preamble
+ * bytes, it is possible for this code to fail to synchronise to the
+ * stream immediately.  Without buffering the entire message and
+ * re-processing it from the top, this is unavoidable. The parser
+ * attempts to avoid this when possible.
+ *
+ * \return	true if new velocity and new position message
+ */
+bool gps_ublox_message_decode(gps_Data_type_t *GPS_data);
+
+/**
+ * \brief	Process the new received message, class by class
+ *
+ * \return	true if new velocity and new position message
+ */
+bool gps_ublox_process_data(gps_Data_type_t *GPS_data);
+
 /**
  * \brief	Checksum update
  *
@@ -315,31 +347,9 @@ ubx_tim_vrfy_t * ubx_GetTimVRFY(void);
 */
 float ToRad(float numdeg);
 
-void gps_ublox_init(gps_Data_type_t *GPS_data, int32_t UID)
-{
-	// uart setting
-	usart_config_t usart_conf_gps =
-	{
-		.mode=UART_IN_OUT,
-		.uart_device.uart=(avr32_usart_t *)&AVR32_USART3,
-		.uart_device.IRQ=AVR32_USART3_IRQ,
-		.uart_device.receive_stream=NULL,
-		.options={
-			.baudrate     = 38400,
-			.charlength   = 8,
-			.paritytype   = USART_NO_PARITY,
-			.stopbits     = USART_1_STOPBIT,
-			.channelmode  = USART_NORMAL_CHMODE },
-		.rx_pin_map= {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION},
-		.tx_pin_map= {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION}
-	};
-	uart_int_set_usart_conf(UID, &usart_conf_gps);
-	
-	uart_int_init(UID);
-	buffer_make_buffered_stream(&(GPS_data->gps_buffer), &(GPS_data->gps_stream_in));
-	uart_int_register_read_stream(uart_int_get_uart_handle(UID), &(GPS_data->gps_stream_in));
-	uart_int_register_write_stream(uart_int_get_uart_handle(UID), &(GPS_data->gps_stream_out));
-}
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
 void gps_ublox_reset(gps_Data_type_t *GPS_data, GPS_Engine_Setting _engine_nav_setting)
 {
@@ -387,14 +397,14 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 			// likely that we will be fooled by the preamble appearing
 			// as data in some other message.
 			//
-		case 1:
+			case 1:
 			if (data == UBX_PREAMBLE2)
 			{
 				step++;
 				break;
 			}
 			step = 0;
-		case 0:
+			case 0:
 			if (data == UBX_PREAMBLE1)
 			{
 				step++;
@@ -402,37 +412,37 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 			}
 			step = 0;
 			break;
-		// Message header processing
-		//
-		// We sniff the class and message ID to decide whether we
-		// are going to gather the message bytes or just discard
-		// them.
-		//
-		// We always collect the length so that we can avoid being
-		// fooled by preamble bytes in messages.
-		//
-		case 2:
+			// Message header processing
+			//
+			// We sniff the class and message ID to decide whether we
+			// are going to gather the message bytes or just discard
+			// them.
+			//
+			// We always collect the length so that we can avoid being
+			// fooled by preamble bytes in messages.
+			//
+			case 2:
 			step++;
 			ubxclass = data;
 			cksum_a = data;
 			cksum_b = cksum_a; // reset the checksum accumulators
 			break;
 			
-		case 3:
+			case 3:
 			step++;
 			cksum_a += data;
 			cksum_b += cksum_a; // checksum byte
 			msg_id = data;
 			break;
 			
-		case 4:
+			case 4:
 			step++;
 			cksum_a += data;
 			cksum_b += cksum_a; // checksum byte
 			payload_length = data;
 			break;
 			
-		case 5:
+			case 5:
 			step++;
 			payload_length |= data<<8;
 			cksum_a += data;
@@ -454,7 +464,7 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 			{
 				switch(msg_id)
 				{
-				case MSG_NAV_POSLLH:
+					case MSG_NAV_POSLLH:
 					if(payload_length == UBX_SIZE_NAV_POSLLH)
 					{
 						ubx_currentMessage = (uint8_t **)&ubx_currentPosllhMessage;
@@ -477,7 +487,7 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 					}
 					break;
 					
-				case MSG_NAV_STATUS:
+					case MSG_NAV_STATUS:
 					if(payload_length == UBX_SIZE_NAV_STATUS)
 					{
 						ubx_currentMessage = (uint8_t **)&ubx_currentStatusMessage;
@@ -500,7 +510,7 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 					}
 					break;
 					
-				case MSG_NAV_SOL:
+					case MSG_NAV_SOL:
 					if(payload_length == UBX_SIZE_NAV_SOL)
 					{
 						ubx_currentMessage = (uint8_t **)&ubx_currentSolutionMessage;
@@ -523,7 +533,7 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 					}
 					break;
 					
-				case MSG_NAV_VELNED:
+					case MSG_NAV_VELNED:
 					if(payload_length == UBX_SIZE_NAV_VELNED)
 					{
 						ubx_currentMessage = (uint8_t **)&ubx_currentVelnedMessage;
@@ -546,7 +556,7 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 					}
 					break;
 					
-				case MSG_NAV_SVINFO:
+					case MSG_NAV_SVINFO:
 					if(payload_length == UBX_SIZE_NAV_SVINFO)
 					{
 						ubx_currentMessage = (uint8_t **)&ubx_currentSVInfoMessage;
@@ -569,7 +579,7 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 					}
 					break;
 					
-				default:
+					default:
 					step = 0;
 					print_util_dbg_print("Unexpected NAV message, Class: 0x");
 					print_util_dbg_print_num(ubxclass,16);
@@ -579,14 +589,14 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 					print_util_dbg_print_num(payload_length,10);
 					print_util_dbg_print("\n");
 					goto reset;
-				}	
+				}
 			}
 			else if(ubxclass == UBX_CLASS_CFG)
 			{
 				
 				switch(msg_id)
-				{			
-				case MSG_CFG_NAV_SETTINGS:
+				{
+					case MSG_CFG_NAV_SETTINGS:
 					if(payload_length == UBX_SIZE_NAV_SETTINGS)
 					{
 						ubx_currentMessage = (uint8_t **)&ubx_currentNavSettingsMessage;
@@ -608,8 +618,8 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 						goto reset;
 					}
 					break;
-						
-				case MSG_CFG_RATE:
+					
+					case MSG_CFG_RATE:
 					if(payload_length == UBX_SIZE_CFG_RATE)
 					{
 						ubx_currentMessage = (uint8_t **)&ubx_currentCFGRateMessage;
@@ -632,7 +642,7 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 					}
 					break;
 					
-				case MSG_CFG_SET_RATE:
+					case MSG_CFG_SET_RATE:
 					if (payload_length == UBX_SIZE_CFG_GETSET_RATE)
 					{
 						ubx_currentMessage = (uint8_t **)&ubx_currentCFGSetGetRateMessage;
@@ -655,7 +665,7 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 					}
 					break;
 					
-				default:
+					default:
 					step = 0;
 					print_util_dbg_print("Unexpected CFG message, Class: 0x");
 					print_util_dbg_print_num(ubxclass,16);
@@ -668,51 +678,51 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 				}
 			} else if (ubxclass == UBX_CLASS_MON)
 			{
- 				switch (msg_id)
- 				{
- 				case MSG_MON_RXR:
- 					if(payload_length == UBX_SIZE_MON_RXR)
- 					{
- 						ubx_currentMessage = (uint8_t **)&ubx_currentMONRXRMessage;
+				switch (msg_id)
+				{
+					case MSG_MON_RXR:
+					if(payload_length == UBX_SIZE_MON_RXR)
+					{
+						ubx_currentMessage = (uint8_t **)&ubx_currentMONRXRMessage;
 						ubx_lastMessage = (uint8_t **)&ubx_lastMONRXRMessage;
 						ubx_validMessage = &ubx_numberOfValidMONRXRMessage;
- 					}
-					 else
-					 {
- 						print_util_dbg_print("Wrong MON RXR message 0x");
- 						print_util_dbg_print_num(ubxclass,16);
- 						print_util_dbg_print(" Msg id: 0x");
- 						print_util_dbg_print_num(msg_id,16);
- 						print_util_dbg_print(" Received size:");
- 						print_util_dbg_print_num(payload_length,10);
- 						print_util_dbg_print(" should be:");
- 						print_util_dbg_print_num(UBX_SIZE_MON_RXR,10);
- 						print_util_dbg_print("\n");
- 						step = 0;
- 						goto reset;
- 					}
+					}
+					else
+					{
+						print_util_dbg_print("Wrong MON RXR message 0x");
+						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print(" Msg id: 0x");
+						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print(" Received size:");
+						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print(" should be:");
+						print_util_dbg_print_num(UBX_SIZE_MON_RXR,10);
+						print_util_dbg_print("\n");
+						step = 0;
+						goto reset;
+					}
 					break;
 					
- 				default:
- 					step = 0;
- 					print_util_dbg_print("Unexpected TIM message, Class: 0x");
- 					print_util_dbg_print_num(ubxclass,16);
- 					print_util_dbg_print(", msg id: 0x");
- 					print_util_dbg_print_num(msg_id,16);
- 					print_util_dbg_print(" of size ");
- 					print_util_dbg_print_num(payload_length,10);
+					default:
+					step = 0;
+					print_util_dbg_print("Unexpected TIM message, Class: 0x");
+					print_util_dbg_print_num(ubxclass,16);
+					print_util_dbg_print(", msg id: 0x");
+					print_util_dbg_print_num(msg_id,16);
+					print_util_dbg_print(" of size ");
+					print_util_dbg_print_num(payload_length,10);
 					print_util_dbg_print(" should be :");
 					print_util_dbg_print_num(MSG_MON_RXR,16);
- 					print_util_dbg_print("\n");
- 					goto reset;
- 				}
+					print_util_dbg_print("\n");
+					goto reset;
+				}
 				
 			}
 			else if(ubxclass == UBX_CLASS_TIM)
 			{
 				switch(msg_id)
 				{
-				case MSG_TIM_TP:
+					case MSG_TIM_TP:
 					if (payload_length == UBX_SIZE_TIM_TP)
 					{
 						ubx_currentMessage = (uint8_t **)&ubx_currentTimTPMessage;
@@ -735,15 +745,15 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 					}
 					break;
 					
-				case MSG_TIM_VRFY:
+					case MSG_TIM_VRFY:
 					if (payload_length == UBX_SIZE_TIM_VRFY)
 					{
 						ubx_currentMessage = (uint8_t **)&ubx_currentTimVRFYMessage;
 						ubx_lastMessage = (uint8_t **)&ubx_lastTimVRFYMessage;
 						ubx_validMessage = &ubx_numberOfValidTimVRFYMessage;
-						}
-						else
-						{
+					}
+					else
+					{
 						print_util_dbg_print("Wrong TIM VRFY message 0x");
 						print_util_dbg_print_num(ubxclass,16);
 						print_util_dbg_print(" Msg id: 0x");
@@ -758,7 +768,7 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 					}
 					break;
 					
-				default:
+					default:
 					step = 0;
 					print_util_dbg_print("Unexpected TIM message, Class: 0x");
 					print_util_dbg_print_num(ubxclass,16);
@@ -782,18 +792,18 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 				print_util_dbg_print(" of size ");
 				print_util_dbg_print_num(payload_length,10);
 				print_util_dbg_print("\n");
-				goto reset;	
-			}		
+				goto reset;
+			}
 			break;
 			
-		case 6:
+			case 6:
 			cksum_a += data;
 			cksum_b += cksum_a; // checksum byte
 			
 			#ifdef BIG_ENDIAN
-				(*ubx_currentMessage)[payload_length - 1 - payload_counter] = data;
+			(*ubx_currentMessage)[payload_length - 1 - payload_counter] = data;
 			#else
-				(*ubx_currentMessage)[payload_counter] = data;
+			(*ubx_currentMessage)[payload_counter] = data;
 			#endif
 			
 			payload_counter++;
@@ -804,7 +814,7 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 			}
 			break;
 			
-		case 7:
+			case 7:
 			step++;
 			if (cksum_a != data)
 			{
@@ -822,7 +832,7 @@ bool gps_ublox_message_decode(gps_Data_type_t *GPS_data)
 			}
 			break;
 			
-		case 8:
+			case 8:
 			step = 0;
 			if (cksum_b != data)
 			{
@@ -1434,6 +1444,162 @@ void ubx_configure_message_rate(gps_Data_type_t *GPS_data, uint8_t msg_class, ui
 	ubx_send_cksum(GPS_data, ck_a,ck_b);
 }
 
+ubx_nav_posllh_t * ubx_GetPosllh()
+{
+	if (ubx_numberOfValidPosllhMessage)
+	{
+		return ubx_lastPosllhMessage;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+ubx_nav_status_t * ubx_GetStatus()
+{
+	if (ubx_numberOfValidStatusMessage)
+	{
+		return ubx_lastStatusMessage;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+ubx_nav_solution_t * ubx_GetSolution()
+{
+	if (ubx_numberOfValidSolutionMessage)
+	{
+		return ubx_lastSolutionMessage;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+ubx_nav_velned_t * ubx_GetVelned()
+{
+	if (ubx_numberOfValidVelnedMessage)
+	{
+		return ubx_lastVelnedMessage;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+ubx_nav_SVInfo_t * ubx_GetSVInfo()
+{
+	if (ubx_numberOfValidSVInfoMessage)
+	{
+		return ubx_lastSVInfoMessage;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+ubx_cfg_nav_settings_t * ubx_GetNavSettings()
+{
+	if (ubx_numberOfValidNavSettingsMessage)
+	{
+		return ubx_lastNavSettingsMessage;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+ubx_cfg_msg_rate_t * ubx_GetMsgRate()
+{
+	if (ubx_numberOfValidCFGSetGetRateMessage)
+	{
+		return ubx_lastCFGSetGetRateMessage;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+ubx_mon_rxr_struct_t * ubx_GetMonRXR()
+{
+	if (ubx_numberOfValidMONRXRMessage)
+	{
+		return ubx_lastMONRXRMessage;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+ubx_tim_tp_t * ubx_GetTimTP()
+{
+	if(ubx_numberOfValidTimTPMessage)
+	{
+		return ubx_lastTimTPMessage;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+ubx_tim_vrfy_t * ubx_GetTimVRFY()
+{
+	if(ubx_numberOfValidTimVRFYMessage)
+	{
+		return ubx_lastTimVRFYMessage;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+float ToRad(float numdeg)
+{
+	return numdeg * DEG2RAD;
+}
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void gps_ublox_init(gps_Data_type_t *GPS_data, int32_t UID)
+{
+	// uart setting
+	usart_config_t usart_conf_gps =
+	{
+		.mode=UART_IN_OUT,
+		.uart_device.uart=(avr32_usart_t *)&AVR32_USART3,
+		.uart_device.IRQ=AVR32_USART3_IRQ,
+		.uart_device.receive_stream=NULL,
+		.options={
+			.baudrate     = 38400,
+			.charlength   = 8,
+			.paritytype   = USART_NO_PARITY,
+			.stopbits     = USART_1_STOPBIT,
+			.channelmode  = USART_NORMAL_CHMODE },
+		.rx_pin_map= {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION},
+		.tx_pin_map= {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION}
+	};
+	uart_int_set_usart_conf(UID, &usart_conf_gps);
+	
+	uart_int_init(UID);
+	buffer_make_buffered_stream(&(GPS_data->gps_buffer), &(GPS_data->gps_stream_in));
+	uart_int_register_read_stream(uart_int_get_uart_handle(UID), &(GPS_data->gps_stream_in));
+	uart_int_register_write_stream(uart_int_get_uart_handle(UID), &(GPS_data->gps_stream_out));
+}
+
+
 void gps_ublox_configure_gps(gps_Data_type_t *GPS_data)
 {
 	ubx_cfg_nav_rate_send_t msg;
@@ -1616,129 +1782,4 @@ task_return_t gps_ublox_send_raw(gps_Data_type_t* GPS_data)
 	}
 
 	return TASK_RUN_SUCCESS;
-}
-
-ubx_nav_posllh_t * ubx_GetPosllh()
-{
-	if (ubx_numberOfValidPosllhMessage)
-	{
-		return ubx_lastPosllhMessage;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-ubx_nav_status_t * ubx_GetStatus()
-{
-	if (ubx_numberOfValidStatusMessage)
-	{
-		return ubx_lastStatusMessage;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-ubx_nav_solution_t * ubx_GetSolution()
-{
-	if (ubx_numberOfValidSolutionMessage)
-	{
-		return ubx_lastSolutionMessage;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-ubx_nav_velned_t * ubx_GetVelned()
-{
-	if (ubx_numberOfValidVelnedMessage)
-	{
-		return ubx_lastVelnedMessage;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-ubx_nav_SVInfo_t * ubx_GetSVInfo()
-{
-	if (ubx_numberOfValidSVInfoMessage)
-	{
-		return ubx_lastSVInfoMessage;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-ubx_cfg_nav_settings_t * ubx_GetNavSettings()
-{
-	if (ubx_numberOfValidNavSettingsMessage)
-	{
-		return ubx_lastNavSettingsMessage;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-ubx_cfg_msg_rate_t * ubx_GetMsgRate()
-{
-	if (ubx_numberOfValidCFGSetGetRateMessage)
-	{
-		return ubx_lastCFGSetGetRateMessage;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-ubx_mon_rxr_struct_t * ubx_GetMonRXR()
-{
-	if (ubx_numberOfValidMONRXRMessage)
-	{
-		return ubx_lastMONRXRMessage;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-ubx_tim_tp_t * ubx_GetTimTP()
-{
-	if(ubx_numberOfValidTimTPMessage)
-	{
-		return ubx_lastTimTPMessage;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-ubx_tim_vrfy_t * ubx_GetTimVRFY()
-{
-	if(ubx_numberOfValidTimVRFYMessage)
-	{
-		return ubx_lastTimVRFYMessage;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-float ToRad(float numdeg)
-{
-	return numdeg * DEG2RAD;
 }

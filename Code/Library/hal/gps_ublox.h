@@ -660,34 +660,6 @@ uint32_t last_fix_time;						///< Last fix time
 void gps_ublox_init(gps_Data_type_t *GPS_data, int32_t UID);
 
 /**
- * \brief	Reset the gps U-Blox module
- *
- * \param	_engine_nav_setting		the GPS Nav settings 
- */
-void gps_ublox_reset(gps_Data_type_t *GPS_data, GPS_Engine_Setting _engine_nav_setting);
-
-/**
- * \brief	Process bytes available from the stream
- *
- * The stream is assumed to contain only messages we recognise.  If it
- * contains other messages, and those messages contain the preamble
- * bytes, it is possible for this code to fail to synchronise to the
- * stream immediately.  Without buffering the entire message and
- * re-processing it from the top, this is unavoidable. The parser
- * attempts to avoid this when possible.
- *
- * \return	true if new velocity and new position message
- */
-bool gps_ublox_message_decode(gps_Data_type_t *GPS_data);
-
-/**
- * \brief	Process the new received message, class by class
- *
- * \return	true if new velocity and new position message
- */
-bool gps_ublox_process_data(gps_Data_type_t *GPS_data);
-
-/**
  * \brief	To configure the GPS in binary mode and the Navigation messages we want
  *
  * The GPS and UART channel should already be configured in the good baudrate 38400U
@@ -695,7 +667,6 @@ bool gps_ublox_process_data(gps_Data_type_t *GPS_data);
  * \param	void
  */
 void gps_ublox_configure_gps(gps_Data_type_t *GPS_data);
-
 
 /**
  * \brief	The function that needs to be called to get the GPS information
