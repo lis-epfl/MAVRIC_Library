@@ -23,7 +23,7 @@
 #include "time_keeper.h"
 #include <stdbool.h>
 
-void neighbors_selection_init(neighbor_t *neighborData, position_estimator_t *positionData, mavlink_communication_t *mavlink_communication)
+void neighbors_selection_init(neighbor_t *neighborData, position_estimator_t *positionData, mavlink_message_handler_t *message_handler)
 {
 	neighborData->number_of_neighbors = 0;
 	neighborData->positionData = positionData;
@@ -36,7 +36,7 @@ void neighbors_selection_init(neighbor_t *neighborData, position_estimator_t *po
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&neighbors_selection_read_message_from_neighbors;
 	callback.module_struct 	= (handling_module_struct_t)		neighborData;
-	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	mavlink_message_handler_add_msg_callback( message_handler, &callback );
 	
 		
 	print_util_dbg_print("Neighbor selection initialized.\n");

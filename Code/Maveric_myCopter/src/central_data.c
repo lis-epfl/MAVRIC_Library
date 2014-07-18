@@ -78,7 +78,7 @@ void central_data_init()
 				MAV_STATE_BOOT,
 				MAV_MODE_PREFLIGHT,
 				REAL_MODE, // SIMULATION_MODE
-				&centralData.mavlink_communication); 
+				&centralData.mavlink_communication.message_handler); 
 	
 	imu_init(&(centralData.imu));
 	
@@ -96,7 +96,7 @@ void central_data_init()
 								&centralData.imu,
 								&centralData.sim_model.localPosition,
 								&centralData.waypoint_handler.waypoint_set,
-								&centralData.mavlink_communication,
+								&centralData.mavlink_communication.message_handler,
 								HOME_LATITUDE,
 								HOME_LONGITUDE,
 								HOME_ALTITUDE,
@@ -114,11 +114,11 @@ void central_data_init()
 							&centralData.position_estimator,
 							&centralData.attitude_estimation,
 							&centralData.state_structure,
-							&centralData.mavlink_communication);// ((waypoint_handler_t*)&centralData.waypoint_handler);
+							&centralData.mavlink_communication);
 	
 	neighbors_selection_init(   &centralData.neighborData, 
 								&centralData.position_estimator,
-								&centralData.mavlink_communication);
+								&centralData.mavlink_communication.message_handler);
 	
 	orca_init(  &centralData.orcaData,
 				&centralData.neighborData,

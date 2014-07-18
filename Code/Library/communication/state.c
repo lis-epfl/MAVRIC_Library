@@ -20,7 +20,7 @@
 #include "print_util.h"
 #include "mavlink/include/maveric/mavlink.h"
 
-void state_init(state_structure_t *state_structure, uint8_t autopilot_type, uint8_t autopilot_name, uint8_t mav_state, uint8_t mav_mode, HIL_mode simu_mode, mavlink_communication_t *mavlink_communication)
+void state_init(state_structure_t *state_structure, uint8_t autopilot_type, uint8_t autopilot_name, uint8_t mav_state, uint8_t mav_mode, HIL_mode simu_mode, mavlink_message_handler_t *message_handler)
 {
 	state_structure->autopilot_type = autopilot_type;
 	state_structure->autopilot_name = autopilot_name;
@@ -43,7 +43,7 @@ void state_init(state_structure_t *state_structure, uint8_t autopilot_type, uint
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&state_set_mav_mode;
 	callback.module_struct 	= (handling_module_struct_t)		state_structure;
-	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	mavlink_message_handler_add_msg_callback( message_handler, &callback );
 	
 	print_util_dbg_print("State initialized.\n");
 }

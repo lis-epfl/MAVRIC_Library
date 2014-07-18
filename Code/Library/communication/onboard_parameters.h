@@ -136,25 +136,30 @@ void onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parame
  */
 void onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parameters, float* val, const char* param_name);
 
+/**
+ * \brief	Read/Write from/to flash depending on the parameters of the mavlink command message
+ *
+ * \param   onboard_parameters		Pointer to module structure
+ * \param   msg 					Incoming mavlink message
+ */
+void onboard_parameters_preflight_storage(onboard_parameters_t* onboard_parameters, mavlink_command_long_t* msg);
 
 /**
  * \brief	Read onboard parameters from the user page in the flash memory to the RAM memory
  *
  * \param   onboard_parameters		Pointer to module structure
- * \param   msg 					Incoming mavlink message
  *
  * \return	The result of the flash read procedure
  */
-bool onboard_parameters_read_parameters_from_flashc(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg);
+bool onboard_parameters_read_parameters_from_flashc(onboard_parameters_t* onboard_parameters);
 
 
 /**
  * \brief	Write onboard parameters to the RAM memory from the user page in the flash memory
  * 
  * \param   onboard_parameters		Pointer to module structure
- * \param   msg 					Incoming mavlink message
  */
-void onboard_parameters_write_parameters_to_flashc(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg);
+void onboard_parameters_write_parameters_to_flashc(onboard_parameters_t* onboard_parameters);
 
 #ifdef __cplusplus
 }

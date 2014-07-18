@@ -199,20 +199,6 @@ void mavlink_actions_receive_message_long(mavlink_received_t* rec)
 
 
 
-	// 		case MAV_CMD_NAV_TAKEOFF:
-	// 			/* Takeoff from ground / hand 
-	// 			| Minimum pitch (if airspeed sensor present), desired pitch without sensor
-	// 			| Empty
-	// 			| Empty
-	// 			| Yaw angle (if magnetometer present), ignored without magnetometer
-	// 			| Latitude
-	// 			| Longitude
-	// 			| Altitude
-	// 			| */
-	// 			centralData->in_the_air = true;
-	// 			print_util_dbg_print("Starting automatic take-off from button\n");
-	// 			break;
-
 	// 		case MAV_CMD_PREFLIGHT_STORAGE:
 	// 			/* Request storage of different parameter values and logs. This command will be only accepted if in pre-flight mode. 
 	// 			| Parameter storage: 0: READ FROM FLASH/EEPROM, 1: WRITE CURRENT TO FLASH/EEPROM
@@ -252,40 +238,6 @@ void mavlink_actions_receive_message_long(mavlink_received_t* rec)
 	// 				// write mission to flash
 	// 			}
 	// 			break;
-
-
-	// if((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER)		// TODO: this part needs comments
-	// {
-	// 	// print packet command and parameters for debug
-	// 	print_util_dbg_print("All vehicles parameters:");
-	// 	print_util_dbg_print_num(packet.param1,10);
-	// 	print_util_dbg_print_num(packet.param2,10);
-	// 	print_util_dbg_print_num(packet.param3,10);
-	// 	print_util_dbg_print_num(packet.param4,10);
-	// 	print_util_dbg_print_num(packet.param5,10);
-	// 	print_util_dbg_print_num(packet.param6,10);
-	// 	print_util_dbg_print_num(packet.param7,10);
-	// 	print_util_dbg_print(", command id:");
-	// 	print_util_dbg_print_num(packet.command,10);
-	// 	print_util_dbg_print(", confirmation:");
-	// 	print_util_dbg_print_num(packet.confirmation,10);
-	// 	print_util_dbg_print("\n");
-		
-	// 	switch(packet.command) {
-
-	// 		case MAV_CMD_NAV_LAND:
-	// 			/* Land at location 
-	// 			| Empty
-	// 			| Empty
-	// 			| Empty
-	// 			| Desired yaw angle.
-	// 			| Latitude
-	// 			| Longitude
-	// 			| Altitude
-	// 			| */
-	// 			print_util_dbg_print("All MAVs: Auto-landing");
-	// 			break;
-	
 }
 
 void mavlink_actions_init(void) {

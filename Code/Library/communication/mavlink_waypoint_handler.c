@@ -38,9 +38,6 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	waypoint_handler->critical_next_state = false;
 
 	// init waypoint navigation
-	// TODO: move to
-	// waypoint_handler_init(&waypoint_handler->waypoint_handler);
-	// waypoint_handler->waypoint_handler.number_of_waypoints= ...
 	waypoint_handler->number_of_waypoints = 0;
 	waypoint_handler->num_waypoint_onboard = 0;
 	
@@ -59,10 +56,10 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	waypoint_handler->in_the_air = false;
 	
 	//waypoint_handler_init_waypoint_list(waypoint_handler);
-	//waypoint_handler_init_homing_waypoint(waypoint_handler);
+	waypoint_handler_init_homing_waypoint(waypoint_handler);
 	waypoint_handler_waypoint_init(waypoint_handler);
 	
-	// Add callbacks for onboard parameters requests
+	// Add callbacks for waypoint handler messages requests
 	mavlink_message_handler_msg_callback_t callback;
 
 	callback.message_id 	= MAVLINK_MSG_ID_MISSION_ITEM; // 39
@@ -121,10 +118,11 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	callback.module_struct 	= (handling_module_struct_t)		waypoint_handler;
 	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
 	
+	// Add callbacks for waypoint handler commands requests
 	mavlink_message_handler_cmd_callback_t callbackcmd;
 	
 	callbackcmd.command_id = MAV_CMD_NAV_RETURN_TO_LAUNCH; // 20
-	callbackcmd.sysid_filter = MAV_SYS_ID_ALL;
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER;
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_set_current_waypoint_from_parameter;
@@ -132,7 +130,7 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 	
 	callbackcmd.command_id = MAV_CMD_MISSION_START; // 300
-	callbackcmd.sysid_filter = MAV_SYS_ID_ALL;
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER;
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_continueToNextWaypoint;
@@ -140,14 +138,29 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 	
 	callbackcmd.command_id = MAV_CMD_CONDITION_LAST; // 159
-	callbackcmd.sysid_filter = MAV_SYS_ID_ALL;
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER;
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_set_circle_scenario;
 	callbackcmd.module_struct =									waypoint_handler;
 	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 	
-		
+	callbackcmd.command_id = MAV_CMD_NAV_TAKEOFF; // 22
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_ALL;
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_set_auto_takeoff;
+	callbackcmd.module_struct =									waypoint_handler;
+	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	
+	callbackcmd.command_id = MAV_CMD_NAV_TAKEOFF; // 22
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER;
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_auto_landing;
+	callbackcmd.module_struct =									waypoint_handler;
+	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	
 	print_util_dbg_print("Waypoint handler initialized.\n");
 }
 
@@ -959,7 +972,7 @@ void waypoint_handler_waypoint_critical_handler(mavlink_waypoint_handler_t* wayp
 	}
 }
 
-void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_handler)
+void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
 {
 	float rel_pos[3];
 	uint8_t i;
@@ -1120,9 +1133,20 @@ void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* waypoint_h
 	waypoint_handler->waypoint_set = false;
 }
 
-void mavlink_waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t *waypoint_handler, mavlink_command_long_t* packet)
+void waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t *waypoint_handler, mavlink_command_long_t* packet)
 {
+	print_util_dbg_print("Starting automatic take-off from button\n");
 	waypoint_handler->automatic_take_off = true;
+}
+
+task_return_t waypoint_handler_send_collision_avoidance_status(mavlink_waypoint_handler_t *waypoint_handler)
+{
+	mavlink_msg_named_value_int_send(	MAVLINK_COMM_0,
+										time_keeper_get_millis(),
+										"Coll_Avoidance",
+										waypoint_handler->collision_avoidance	);
+	
+	return TASK_RUN_SUCCESS;
 }
 
 /*

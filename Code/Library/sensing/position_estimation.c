@@ -338,7 +338,7 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, ahrs_t *attitude_estimation, imu_t *imu, local_coordinates_t *sim_local_position, bool* waypoint_set, mavlink_communication_t *mavlink_communication, float home_lat, float home_lon, float home_alt, float gravity)
+void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, ahrs_t *attitude_estimation, imu_t *imu, local_coordinates_t *sim_local_position, bool* waypoint_set, mavlink_message_handler_t *message_handler, float home_lat, float home_lon, float home_alt, float gravity)
 {
     int32_t i;
 
@@ -395,7 +395,7 @@ void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *ba
 	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER;
 	callbackcmd.function      = (mavlink_cmd_callback_function_t)	&position_estimation_set_new_home_position;
 	callbackcmd.module_struct = pos_est;
-	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
 	
 	print_util_dbg_print("Position estimation initialized.\n");
 }

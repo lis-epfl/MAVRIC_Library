@@ -58,13 +58,14 @@ typedef struct
  * \brief						Initialise the state of the MAV
  *
  * \param	state_structure		The pointer to the state structure
- * \param	autopilot_type		The autopilot type, MAV_TYPE enum
- * \param	autopilot_name		The autopilot name, MAV_AUTOPILOT enum
- * \param	mav_state			The mav state, MAV_STATE enum
- * \param	mav_mode			The mav mode, MAV_MODE enum
- * \param	simu_mode			The simulation mode, HIL_Mode enum
+ * \param	autopilot_type		The pointer to the autopilot type, MAV_TYPE enum
+ * \param	autopilot_name		The pointer to the autopilot name, MAV_AUTOPILOT enum
+ * \param	mav_state			The pointer to the mav state, MAV_STATE enum
+ * \param	mav_mode			The pointer to the mav mode, MAV_MODE enum
+ * \param	simu_mode			The pointer to the simulation mode, HIL_Mode enum
+ * \param	message_handler		The pointer to the message handler
  */
-void state_init(state_structure_t *state_structure, uint8_t autopilot_type, uint8_t autopilot_name, uint8_t mav_state, uint8_t mav_mode, HIL_mode simu_mode, mavlink_communication_t *mavlink_communication);
+void state_init(state_structure_t *state_structure, uint8_t autopilot_type, uint8_t autopilot_name, uint8_t mav_state, uint8_t mav_mode, HIL_mode simu_mode, mavlink_message_handler_t *message_handler);
 
 /**
  * \brief	Task to send the mavlink heartbeat message

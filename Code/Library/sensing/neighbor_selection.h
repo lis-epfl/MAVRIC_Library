@@ -37,7 +37,7 @@ extern "C" {
 #define NEIGHBOR_TIMEOUT_LIMIT_MS 2000
 
 /**
- * \brief The neighbor structure
+ * \brief The track neighbor structure
  */
 typedef struct
 {
@@ -49,32 +49,38 @@ typedef struct
 	float extrapolatedPosition[3];		///< The 3D position of the neighbor
 }track_neighbor_t;						///< The structure of information about a neighbor 
 
+/**
+ * \brief The neighbor structure
+ */
 typedef struct
 {
 		uint8_t number_of_neighbors;								///< The actual number of neighbors at a given time step
 		float safe_size;											///< The safe size for collision avoidance
-		track_neighbor_t listNeighbors[MAX_NUM_NEIGHBORS];
-		position_estimator_t *positionData;
+		track_neighbor_t listNeighbors[MAX_NUM_NEIGHBORS];			///< The list of neighbors structure
+		position_estimator_t *positionData;							///< The pointer to the position estimator structure
 }neighbor_t;
+
 /**
  * \brief	Initialize the neighbor selection module
  *
- * \param neighborData pointer to the neighbor struct
- * \param positionData pointer to the position estimator struct
+ * \param neighborData			The pointer to the neighbor struct
+ * \param positionData			The pointer to the position estimator struct
+ * \param message_handler		The pointer to the message handler structure
  */
-void neighbors_selection_init(neighbor_t *neighborData, position_estimator_t *positionData, mavlink_communication_t *mavlink_communication);
+void neighbors_selection_init(neighbor_t *neighborData, position_estimator_t *positionData, mavlink_message_handler_t *message_handler);
 
 /**
  * \brief	Decode the message and parse to the neighbor array
  *
- * \param	rec		the pointer to the mavlink message
+ * \param	neighborData		The pointer to the neighbors struct
+ * \param	rec					The pointer to the mavlink message
  */
 void neighbors_selection_read_message_from_neighbors(neighbor_t *neighborData, mavlink_received_t* rec);
 
 /**
  * \brief	Extrapolate the position of each UAS between two messages, deletes the message if time elapsed too long from last message
  *
- * \param	neighborData		the pointer to the neighbors struct
+ * \param	neighborData		The pointer to the neighbors struct
  */
 void neighbors_selection_extrapolate_or_delete_position(neighbor_t *neighborData);
 

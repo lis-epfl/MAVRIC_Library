@@ -225,7 +225,7 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 		if (cmd.command >= 0 && cmd.command < MAV_CMD_ENUM_END)
 		{
 			// The command has valid command ID 
-			if(	cmd.target_system == mavlink_system.sysid )
+			if(	(cmd.target_system == mavlink_system.sysid)||(cmd.target_system == MAV_SYS_ID_ALL) )
 			{
 				// The command is for this system
 				for (uint32_t i = 0; i < message_handler->cmd_callback_set->callback_count; ++i)

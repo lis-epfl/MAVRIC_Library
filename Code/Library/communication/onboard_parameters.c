@@ -19,6 +19,7 @@
 #include "onboard_parameters.h"
 #include "print_util.h"
 #include "flashc.h"
+#include "mavlink_communication.h"
 #include <stdlib.h>
 
 
@@ -200,6 +201,18 @@ void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 	callback.module_struct 	= (handling_module_struct_t)		onboard_parameters;
 	mavlink_message_handler_add_msg_callback( message_handler, &callback );
 
+	// Add callbacks for waypoint handler commands requests
+	mavlink_message_handler_cmd_callback_t callbackcmd;
+	
+	callbackcmd.command_id = MAV_CMD_PREFLIGHT_STORAGE; // 20
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_ALL;
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&onboard_parameters_preflight_storage;
+	callbackcmd.module_struct =									onboard_parameters;
+	mavlink_message_handler_add_cmd_callback( message_handler, &callbackcmd);
+	
+
 	print_util_dbg_print("Onboard parameters initialised.\n");	
 }
 
@@ -335,8 +348,30 @@ void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_paramete
 	}
 }
 
+void onboard_parameters_preflight_storage(onboard_parameters_t* onboard_parameters, mavlink_command_long_t* msg)
+{
+	// Onboard parameters storage
+	if (msg->param1 == 0)
+	{
+	 	// read parameters from flash
+	 	print_util_dbg_print("Reading from flashc...\n");
+		if(onboard_parameters_read_parameters_from_flashc(onboard_parameters))
+		{
+			// TODO: update simulation calibration values
+			//simulation_calib_set(&sim_model);
+	 	}
+	}
+	else if (msg->param1 == 1)
+	{
+	 	// write parameters to flash
+	 	//print_util_dbg_print("No Writing to flashc\n");
+	 	print_util_dbg_print("Writing to flashc\n");
+	 	onboard_parameters_write_parameters_to_flashc(onboard_parameters);
+	}
+}
 
-bool onboard_parameters_read_parameters_from_flashc(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg)
+
+bool onboard_parameters_read_parameters_from_flashc(onboard_parameters_t* onboard_parameters)
 {
 	uint8_t i;
 	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
@@ -378,7 +413,7 @@ bool onboard_parameters_read_parameters_from_flashc(onboard_parameters_t* onboar
 }
 
 
-void onboard_parameters_write_parameters_to_flashc(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg)
+void onboard_parameters_write_parameters_to_flashc(onboard_parameters_t* onboard_parameters)
 {
 	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
 
