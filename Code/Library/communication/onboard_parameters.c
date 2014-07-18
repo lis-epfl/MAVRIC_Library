@@ -368,6 +368,17 @@ void onboard_parameters_preflight_storage(onboard_parameters_t* onboard_paramete
 	 	print_util_dbg_print("Writing to flashc\n");
 	 	onboard_parameters_write_parameters_to_flashc(onboard_parameters);
 	}
+	
+	//// Mission parameters storage
+	//if (packet.param2 == 0)
+	//{
+	 	//// read mission from flash
+	//}
+	//else if (packet.param2 == 1)
+	//{
+	 	//// write mission to flash
+	//}
+	//break;
 }
 
 

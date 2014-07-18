@@ -164,94 +164,10 @@ void mavlink_actions_add_onboard_parameters(void) {
 
 }
 
-void mavlink_actions_handle_specific_messages (mavlink_received_t* rec) 
-{
-
-}
-
-
-void mavlink_actions_receive_message_long(mavlink_received_t* rec)
-{
-	// mavlink_command_long_t packet;
-	
-	// mavlink_msg_command_long_decode(&rec->msg, &packet);
-
-	// // Check if this message is for this system and subsystem
-	// if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid) && ((uint8_t)packet.target_component == (uint8_t)0))		// TODO check this 0
-	// {
-	// 	// print packet command and parameters for debug
-	// 	print_util_dbg_print("parameters:");
-	// 	print_util_dbg_print_num(packet.param1,10);
-	// 	print_util_dbg_print_num(packet.param2,10);
-	// 	print_util_dbg_print_num(packet.param3,10);
-	// 	print_util_dbg_print_num(packet.param4,10);
-	// 	print_util_dbg_print_num(packet.param5,10);
-	// 	print_util_dbg_print_num(packet.param6,10);
-	// 	print_util_dbg_print_num(packet.param7,10);
-	// 	print_util_dbg_print(", command id:");
-	// 	print_util_dbg_print_num(packet.command,10);
-	// 	print_util_dbg_print(", confirmation:");
-	// 	print_util_dbg_print_num(packet.confirmation,10);
-	// 	print_util_dbg_print("\n");
-		
-	// 	switch(packet.command) 
-	// 	{
-
-
-
-	// 		case MAV_CMD_PREFLIGHT_STORAGE:
-	// 			/* Request storage of different parameter values and logs. This command will be only accepted if in pre-flight mode. 
-	// 			| Parameter storage: 0: READ FROM FLASH/EEPROM, 1: WRITE CURRENT TO FLASH/EEPROM
-	// 			| Mission storage: 0: READ FROM FLASH/EEPROM, 1: WRITE CURRENT TO FLASH/EEPROM
-	// 			| Reserved
-	// 			| Reserved
-	// 			| Empty
-	// 			| Empty
-	// 			| Empty
-	// 			|  */
-				
-	// 			// Onboard parameters storage
-	// 			if (packet.param1 == 0) 
-	// 			{
-	// 				// read parameters from flash
-	// 				print_util_dbg_print("Reading from flashc...\n");
-	//				if(onboard_parameters_read_parameters_from_flashc())
-	//				{
-	//					simulation_calib_set(&(centralData->sim_model));
-	// 				}
-	// 			}
-	// 			else if (packet.param1 == 1) 
-	// 			{
-	// 				// write parameters to flash
-	// 				//print_util_dbg_print("No Writing to flashc\n");
-	// 				print_util_dbg_print("Writing to flashc\n");
-	// 				onboard_parameters_write_parameters_to_flashc();
-	// 			}
-				
-	// 			// Mission parameters storage
-	// 			if (packet.param2 == 0) 
-	// 			{
-	// 				// read mission from flash
-	// 			}
-	// 			else if (packet.param2 == 1) 
-	// 			{
-	// 				// write mission to flash
-	// 			}
-	// 			break;
-}
-
 void mavlink_actions_init(void) {
 	
 	centralData = central_data_get_pointer_to_struct();
 	mavlink_actions_add_onboard_parameters();
-	
-	/*	
-	 * Use this to store or read or reset parameters on flash memory
-	 *
-	onboard_parameters_write_parameters_to_flashc();
-	onboard_parameters_read_parameters_from_flashc();
-	 *
-	 */
 
 	print_util_dbg_print("MAVlink actions initialiased\n");
 }
