@@ -23,8 +23,8 @@
 void mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config)
 {
 	// Init mavlink schedule
-	mavlink_communication->task_set.number_of_tasks=30;
-	scheduler_init(&mavlink_communication->task_set);
+	scheduler_init(	&mavlink_communication->scheduler, 
+					&config->scheduler_config	);
 
 	// Init mavlink stream
 	mavlink_stream_init(	&mavlink_communication->mavlink_stream, 
@@ -36,7 +36,7 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 	// Init onboard parameters
 	onboard_parameters_init(	&mavlink_communication->onboard_parameters, 
 								&config->onboard_parameters_config, 
-								&mavlink_communication->task_set, 
+								&mavlink_communication->scheduler, 
 								&mavlink_communication->message_handler ); 
 }
 
@@ -61,7 +61,7 @@ task_return_t mavlink_communication_update(mavlink_communication_t* mavlink_comm
 	// Send messages
 	if (mavlink_stream->out_stream->buffer_empty(mavlink_stream->out_stream->data) == true) 
 	{
-		result = scheduler_update(&mavlink_communication->task_set, ROUND_ROBIN);
+		result = scheduler_update(&mavlink_communication->scheduler);
 	}
 	
 	return result;
@@ -71,8 +71,8 @@ task_return_t mavlink_communication_update(mavlink_communication_t* mavlink_comm
 void mavlink_communication_suspend_downstream(mavlink_communication_t* mavlink_communication, uint32_t delay) 
 {
 	int32_t i;
-	for (i = 0; i < mavlink_communication->task_set.number_of_tasks; i++) 
+	for (i = 0; i < mavlink_communication->scheduler.task_set->task_count; i++) 
 	{
-		scheduler_suspend_task(&mavlink_communication->task_set.tasks[i], delay);
+		scheduler_suspend_task(&mavlink_communication->scheduler.task_set->tasks[i], delay);
 	}	
 }

@@ -106,7 +106,7 @@ void position_estimation_update(position_estimator_t *pos_est);
  * 
  * \return	The status of execution of the task
  */
-task_return_t postition_estimation_send_position(position_estimator_t* pos_est);
+task_return_t position_estimation_send_position(position_estimator_t* pos_est);
 
 /**
  * \brief	Task to send the mavlink GPS global position message

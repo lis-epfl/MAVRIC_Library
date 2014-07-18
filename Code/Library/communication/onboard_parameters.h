@@ -104,7 +104,7 @@ typedef struct
 * \param 	task_set 				Pointer to mavlink scheduler task set
 * \param 	message_handler 		Pointer to mavlink message handler
 */
-void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, task_set_t* task_set, mavlink_message_handler_t* message_handler);
+void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler);
 
 
 /**

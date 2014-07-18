@@ -31,9 +31,7 @@
 #include "lsm330dlc_driver.h"
 #include "compass_hmc5883l.h"
 
-NEW_TASK_SET(main_tasks, 10)
-
-central_data_t *centralData;
+central_data_t* centralData;
 
 /**
  * \brief	Function to call when the motors should be switched off
@@ -42,7 +40,9 @@ void switch_off_motors(void);
 
 task_set_t* tasks_get_main_taskset() 
 {
-	return &main_tasks;
+	centralData = central_data_get_pointer_to_struct();
+
+	return centralData->scheduler.task_set;
 }
 
 void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motor_state)
@@ -553,13 +553,6 @@ task_return_t tasks_run_barometer_update(void* arg)
 	//return TASK_RUN_SUCCESS;
 //}
 
-task_return_t adc_update(void* arg)
-{
-	central_data_t* central_data = central_data_get_pointer_to_struct();
-	analog_monitor_update(&central_data->adc);
-	
-	return TASK_RUN_SUCCESS;
-}
 
 /**
  * \brief	Task to check if the time overpass the timer limit
@@ -577,26 +570,21 @@ task_return_t control_waypoint_timeout (void* arg)
 
 
 void tasks_create_tasks() 
-{
-	scheduler_init(&main_tasks);
-	
+{	
 	centralData = central_data_get_pointer_to_struct();
 	
-	scheduler_register_task(&main_tasks, 0, 4000, RUN_REGULAR, &tasks_run_stabilisation, 0);
-	
-	scheduler_register_task(&main_tasks, 1, 15000, RUN_REGULAR, &tasks_run_barometer_update, 0);
-	main_tasks.tasks[1].timing_mode = PERIODIC_RELATIVE;
+	scheduler_t* scheduler = &centralData->scheduler;
 
-	scheduler_register_task(&main_tasks, 2, 100000, RUN_REGULAR, &tasks_run_gps_update, 0);
+	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, &tasks_run_stabilisation                       , 0                                                    , 0);
+	scheduler_add_task(scheduler    , 15000                           , RUN_REGULAR , PERIODIC_RELATIVE, &tasks_run_barometer_update                    , 0                                                    , 1);
+	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, &tasks_run_gps_update                          , 0                                                    , 2);
+	scheduler_add_task(scheduler    , ORCA_TIME_STEP_MILLIS * 1000.0f , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&navigation_update            , (task_argument_t)&centralData->navigationData		   , 3);
+	scheduler_add_task(scheduler    , 200000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, &tasks_set_mav_mode_n_state                    , 0                                                    , 4);
+	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&mavlink_communication_update , (task_argument_t)&centralData->mavlink_communication , 5);
+	
+	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&analog_monitor_update        , (task_argument_t)&centralData->adc                  , 6);
 
-	scheduler_register_task(&main_tasks, 3, ORCA_TIME_STEP_MILLIS * 1000.0f, RUN_REGULAR, (task_function_t)&navigation_update, (task_argument_t)&centralData->navigationData);
+	scheduler_add_task(scheduler    , 10000                           , RUN_REGULAR , PERIODIC_ABSOLUTE, &control_waypoint_timeout                      , 0                                                    , 7);
+	// scheduler_add_task(scheduler , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, &sonar_update                                  , 0                                                    , 0);
 
-	scheduler_register_task(&main_tasks, 4, 200000, RUN_REGULAR, &tasks_set_mav_mode_n_state, 0);
-	
-	scheduler_register_task(&main_tasks, 5, 4000, RUN_REGULAR, (task_function_t)&mavlink_communication_update, (task_argument_t)&centralData->mavlink_communication);
-	
-	// scheduler_register_task(&main_tasks, 6, 100000, RUN_REGULAR, &sonar_update, 0);
-	scheduler_register_task(&main_tasks, 6, 100000, RUN_REGULAR, &adc_update, 0);
-	
-	scheduler_register_task(&main_tasks, 7, 10000, RUN_REGULAR, &control_waypoint_timeout, 0);
 }
