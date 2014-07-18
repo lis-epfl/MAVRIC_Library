@@ -31,18 +31,7 @@ void initialisation()
 		
 	mavlink_actions_init(); // TODO: move read from flash elsewhere
 	mavlink_telemetry_init();
-	
-		/*	
-	 * Use this to store or read or reset parameters on flash memory
-	 *
-	onboard_parameters_write_parameters_to_flashc();
-	if(onboard_parameters_read_parameters_from_flashc())
-	{
-		simulation_calib_set(&(centralData->sim_model));
-	}
-	 *
-	 */
-	
+		
 	LED_On(LED1);
 
 	piezo_speaker_mario_melody();

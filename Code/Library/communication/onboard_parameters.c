@@ -371,17 +371,6 @@ void onboard_parameters_preflight_storage(onboard_parameters_t* onboard_paramete
 	}
 
 	mavlink_msg_command_ack_send(MAVLINK_COMM_0, MAV_CMD_PREFLIGHT_STORAGE, MAV_RESULT_ACCEPTED);
-	
-	//// Mission parameters storage
-	//if (packet.param2 == 0)
-	//{
-	 	//// read mission from flash
-	//}
-	//else if (packet.param2 == 1)
-	//{
-	 	//// write mission to flash
-	//}
-	//break;
 }
 
 
