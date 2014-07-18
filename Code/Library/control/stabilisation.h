@@ -26,6 +26,7 @@ extern "C" {
 #include <stdint.h>
 #include "imu.h"
 #include "pid_control.h"
+#include "scheduler.h"
  
 typedef enum 
 {
@@ -72,6 +73,24 @@ typedef struct {
  * \param	errors		Array containing the errors of the controlling variables
  */
 void stabilisation_run(Stabiliser_t *stabiliser, float dt, float errors[]);
+
+/**
+ * \brief	Task to send the mavlink roll, pitch, yaw angular speeds and thrust setpoints message
+ *
+ * \param	stabiliser	Pointer to the structure containing the PID controllers
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t stabilisation_send_rpy_speed_thrust_setpoint(Stabiliser_t* rate_stabiliser);
+
+/**
+ * \brief	Task to send the mavlink roll, pitch and yaw errors message
+ * 
+ * \param	stabiliser	Pointer to the structure containing the PID controllers
+ *
+ * \return	The status of execution of the task
+ */
+task_return_t stabilisation_send_rpy_rates_error(Stabiliser_t* rate_stabiliser);
 
 #ifdef __cplusplus
 }

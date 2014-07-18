@@ -24,6 +24,7 @@
 #endif
 
 #include "conf_platform.h"
+#include "scheduler.h"
 #include <stdint.h>
 
 #define SERVO_TIMER_FREQ 1000000					///< Define the timer frequency for the servos
@@ -72,6 +73,13 @@ void servo_pwm_set(const servo_output_t *servo_outputs);
  * \param servo_outputs pointer to a structure containing the servos' data
  */
 void servo_pwm_failsafe(servo_output_t *servo_outputs);
+
+/**
+ * \brief	Task to send the mavlink servo output message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t servo_pwm_send_servo_output(servo_output_t* servos);
 
 #ifdef __cplusplus
 	}

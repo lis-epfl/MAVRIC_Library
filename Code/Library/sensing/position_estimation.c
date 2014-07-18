@@ -477,3 +477,22 @@ task_return_t postition_estimation_send_position(position_estimator_t* pos_est)
 											pos_est->vel[2]);
 	return TASK_RUN_SUCCESS;
 }
+
+task_return_t position_estimation_send_global_position(position_estimator_t* pos_est)
+{
+	// send integrated position (for now there is no GPS error correction...!!!)
+	global_position_t gpos = coord_conventions_local_to_global_position(pos_est->localPosition);
+	
+	//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
+	mavlink_msg_global_position_int_send(	MAVLINK_COMM_0,
+										time_keeper_get_millis(),
+										gpos.latitude * 10000000,
+										gpos.longitude * 10000000,
+										gpos.altitude * 1000.0f,
+										gpos.altitude+pos_est->localPosition.pos[2],
+										pos_est->vel[0] * 100.0f,
+										pos_est->vel[1] * 100.0f,
+										pos_est->vel[2] * 100.0f,
+										pos_est->localPosition.heading);
+	return TASK_RUN_SUCCESS;
+}
