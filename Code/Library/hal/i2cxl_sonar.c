@@ -20,6 +20,8 @@
 #include "twim.h"
 #include "delay.h"
 #include "print_util.h"
+#include "mavlink_communication.h"
+#include "time_keeper.h"
 
 const uint8_t I2CXL_DEFAULT_ADDRESS				= 0x70;		///< Address of the device
 const uint8_t I2CXL_RANGE_COMMAND				= 0x51;		///< Address of the Range Command Register
@@ -81,4 +83,13 @@ void i2cxl_get_last_measure(i2cxl_sonar_t* i2cxl_sonar)
 	twim_read(&AVR32_TWIM1, buf, 2, i2cxl_sonar->i2c_address, false);
 	i2cxl_sonar->distance_cm = (buf[0] << 8) + buf[1];
 	i2cxl_sonar->distance_m  = ((float)i2cxl_sonar->distance_cm) / 100;
+}
+
+task_return_t i2cxl_send_sonar(i2cxl_sonar_t* i2cxl_sonar)
+{
+	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
+										time_keeper_get_millis(),
+										"sonar(m)",
+										i2cxl_sonar->distance_m);
+	return TASK_RUN_SUCCESS;
 }
