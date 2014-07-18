@@ -158,6 +158,7 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
+
 void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler) 
 {
 	// Init debug mode
@@ -368,6 +369,8 @@ void onboard_parameters_preflight_storage(onboard_parameters_t* onboard_paramete
 	 	print_util_dbg_print("Writing to flashc\n");
 	 	onboard_parameters_write_parameters_to_flashc(onboard_parameters);
 	}
+
+	mavlink_msg_command_ack_send(MAVLINK_COMM_0, MAV_CMD_PREFLIGHT_STORAGE, MAV_RESULT_ACCEPTED);
 	
 	//// Mission parameters storage
 	//if (packet.param2 == 0)
