@@ -171,7 +171,9 @@ void central_data_init()
 					&centralData.pressure,
 					&centralData.GPS_data,
 					&centralData.state_structure,
-					centralData.servos);
+					centralData.servos,
+					&centralData.waypoint_handler.waypoint_set,
+					&centralData.mavlink_communication.message_handler);
 
 	delay_ms(100);//add delay to be able to print on console init message for the following modul
 	// Init sonar
