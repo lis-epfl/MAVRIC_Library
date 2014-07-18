@@ -581,9 +581,7 @@ void tasks_create_tasks()
 	scheduler_add_task(scheduler    , ORCA_TIME_STEP_MILLIS * 1000.0f , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&navigation_update            , (task_argument_t)&centralData->navigationData		   , 3);
 	scheduler_add_task(scheduler    , 200000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, &tasks_set_mav_mode_n_state                    , 0                                                    , 4);
 	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&mavlink_communication_update , (task_argument_t)&centralData->mavlink_communication , 5);
-	
-	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&analog_monitor_update        , (task_argument_t)&centralData->adc                  , 6);
-
+	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&analog_monitor_update        , (task_argument_t)&centralData->adc                   , 6);
 	scheduler_add_task(scheduler    , 10000                           , RUN_REGULAR , PERIODIC_ABSOLUTE, &control_waypoint_timeout                      , 0                                                    , 7);
 	// scheduler_add_task(scheduler , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, &sonar_update                                  , 0                                                    , 0);
 
