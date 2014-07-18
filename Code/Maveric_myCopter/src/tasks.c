@@ -32,6 +32,9 @@
 #include "compass_hmc5883l.h"
 
 
+#include "piezo_speaker.h"
+
+
 central_data_t* centralData;
 
 /**
@@ -407,12 +410,6 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 	
 	if (centralData->state_structure.simulation_mode_previous != centralData->state_structure.simulation_mode)
 	{
-		print_util_dbg_print("Changing mode!");
-		print_util_dbg_print_num(centralData->state_structure.simulation_mode,10);
-		print_util_dbg_print(", prev:");
-		print_util_dbg_print_num(centralData->state_structure.simulation_mode_previous,10);
-		print_util_dbg_print("\n");
-		
 		simulation_switch_between_reality_n_simulation(&centralData->sim_model);
 	}
 	centralData->state_structure.simulation_mode_previous = centralData->state_structure.simulation_mode;
@@ -423,7 +420,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 
 void tasks_run_imu_update(void* arg)
 {
-	if (centralData->state_structure.simulation_mode == 1) 
+	if (centralData->state_structure.simulation_mode_previous == SIMULATION_MODE) 
 	{
 		simulation_update(&centralData->sim_model);
 	} 
@@ -434,10 +431,10 @@ void tasks_run_imu_update(void* arg)
 		compass_hmc58831l_update(&(centralData->imu.raw_compass));
 	}
 	
-	qfilter_update(&centralData->attitude_filter);
 	imu_update(	&centralData->imu);
+	qfilter_update(&centralData->attitude_filter);
 	
-	if (centralData->attitude_filter.imu->calibration_level == OFF)
+	if (centralData->imu.calibration_level == OFF)
 	{
 		position_estimation_update(&centralData->position_estimator);
 	}
@@ -447,7 +444,7 @@ void tasks_run_imu_update(void* arg)
 task_return_t tasks_run_stabilisation(void* arg) 
 {
 	tasks_run_imu_update(0);
-
+	
 	switch(centralData->state_structure.mav_mode)
 	{		
 		case MAV_MODE_MANUAL_ARMED:
@@ -514,7 +511,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 	}
 	
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
-	if (centralData->state_structure.simulation_mode == REAL_MODE) 
+	if (centralData->state_structure.simulation_mode_previous == REAL_MODE) 
 	{
 		servo_pwm_set(centralData->servos);
 	}
@@ -524,7 +521,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 
 task_return_t tasks_run_gps_update(void* arg) 
 {
-	if (centralData->state_structure.simulation_mode == 1) 
+	if (centralData->state_structure.simulation_mode_previous == SIMULATION_MODE) 
 	{
 		simulation_simulate_gps(&centralData->sim_model);
 	} 
@@ -537,59 +534,16 @@ task_return_t tasks_run_gps_update(void* arg)
 }
 
 
-task_return_t tasks_run_navigation_update(void* arg)
-{	
-	switch (centralData->state_structure.mav_state)
-	{
-		case MAV_STATE_STANDBY:
-			if (((centralData->state_structure.mav_mode == MAV_MODE_GUIDED_ARMED)||(centralData->state_structure.mav_mode == MAV_MODE_AUTO_ARMED)) && !centralData->waypoint_handler.automatic_take_off)
-			{
-				navigation_run(centralData->waypoint_handler.waypoint_hold_coordinates,&centralData->navigationData);
-			}
-			break;
-
-		case MAV_STATE_ACTIVE:
-			switch (centralData->state_structure.mav_mode)
-			{
-				case MAV_MODE_AUTO_ARMED:
-					if (centralData->waypoint_handler.waypoint_set)
-					{
-						navigation_run(centralData->waypoint_handler.waypoint_coordinates,&centralData->navigationData);
-					}
-					else
-					{
-						navigation_run(centralData->waypoint_handler.waypoint_hold_coordinates,&centralData->navigationData);
-					}
-					break;
-
-				case MAV_MODE_GUIDED_ARMED:
-					navigation_run(centralData->waypoint_handler.waypoint_hold_coordinates,&centralData->navigationData);
-					break;
-			}
-			break;
-
-		case MAV_STATE_CRITICAL:
-			if ((centralData->state_structure.mav_mode == MAV_MODE_GUIDED_ARMED)||(centralData->state_structure.mav_mode == MAV_MODE_AUTO_ARMED))
-			{
-				navigation_run(centralData->waypoint_handler.waypoint_critical_coordinates,&centralData->navigationData);
-			}
-			break;
-	}
-	
-	return TASK_RUN_SUCCESS;
-}
-
-
 task_return_t tasks_run_barometer_update(void* arg)
 {
-	central_data_t *central_data = central_data_get_pointer_to_struct();
-	
-	bmp085_get_pressure_data_slow(&(central_data->pressure));
-	
-	if (central_data->state_structure.simulation_mode == 1) 
+	if (centralData->state_structure.simulation_mode_previous == SIMULATION_MODE) 
 	{
 		simulation_simulate_barometer(&centralData->sim_model);
 	} 
+	else
+	{
+		bmp085_get_pressure_data_slow(&(centralData->pressure));
+	}
 
 	return TASK_RUN_SUCCESS;
 }
@@ -603,13 +557,6 @@ task_return_t tasks_run_barometer_update(void* arg)
 	//return TASK_RUN_SUCCESS;
 //}
 
-task_return_t adc_update(void* arg)
-{
-	central_data_t* central_data = central_data_get_pointer_to_struct();
-	analog_monitor_update(&central_data->adc);
-	
-	return TASK_RUN_SUCCESS;
-}
 
 /**
  * \brief	Task to check if the time overpass the timer limit
@@ -630,35 +577,32 @@ void tasks_create_tasks()
 {	
 	centralData = central_data_get_pointer_to_struct();
 	
+	// scheduler_register_task(&main_tasks, 0, 4000, RUN_REGULAR, &tasks_run_stabilisation, 0);
+	// scheduler_register_task(&main_tasks, 1, 15000, RUN_REGULAR, &tasks_run_barometer_update, 0);
+	// main_tasks.tasks[1].timing_mode = PERIODIC_RELATIVE;
+	// scheduler_register_task(&main_tasks, 2, 100000, RUN_REGULAR, &tasks_run_gps_update, 0);
+	// scheduler_register_task(&main_tasks, 3, ORCA_TIME_STEP_MILLIS * 1000.0f, RUN_REGULAR, (task_function_t)&navigation_update, (task_argument_t)&centralData->navigationData);
+	// scheduler_register_task(&main_tasks, 4, 200000, RUN_REGULAR, &tasks_set_mav_mode_n_state, 0);
+	// scheduler_register_task(&main_tasks, 5, 4000, RUN_REGULAR, (task_function_t)&mavlink_communication_update, (task_argument_t)&centralData->mavlink_communication);
+	// scheduler_register_task(&main_tasks, 6, 100000, RUN_REGULAR, &adc_update, 0);	
+
+	// for (uint32_t i = 1; i < 8; i++)
+	// {
+	// 	piezo_speaker_beep(100, 500 * i);
+	// }
+
 	scheduler_t* scheduler = &centralData->scheduler;
-	
-	// scheduler_register_task(scheduler, 0, 4000, RUN_REGULAR, &tasks_run_stabilisation, 0);
-	
-	// scheduler_register_task(scheduler, 1, 15000, RUN_REGULAR, &tasks_run_barometer_update, 0);
-	// scheduler->task_set->tasks[1].timing_mode = PERIODIC_RELATIVE;
-
-	// scheduler_register_task(scheduler, 2, 100000, RUN_REGULAR, &tasks_run_gps_update, 0);
-	// //scheduler_register_task(scheduler, , 100000, RUN_REGULAR, &radar_module_read, 0);
-
-	// scheduler_register_task(scheduler, 3, ORCA_TIME_STEP_MILLIS * 1000.0f, RUN_REGULAR, &tasks_run_navigation_update, 0);
-
-	// scheduler_register_task(scheduler, 4, 200000, RUN_REGULAR, &tasks_set_mav_mode_n_state, 0);
-	
-	// scheduler_register_task(scheduler, 5, 4000, RUN_REGULAR, (task_function_t)&mavlink_communication_update, (task_argument_t)&centralData->mavlink_communication);
-	
-	// // scheduler_register_task(scheduler, 6, 100000, RUN_REGULAR, &sonar_update, 0);
-	// scheduler_register_task(scheduler, 6, 100000, RUN_REGULAR, &adc_update, 0);
-	
-	// scheduler_register_task(scheduler, 7, 10000, RUN_REGULAR, &control_waypoint_timeout, 0);
-
 
 	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, &tasks_run_stabilisation                       , 0                                                    , 0);
 	scheduler_add_task(scheduler    , 15000                           , RUN_REGULAR , PERIODIC_RELATIVE, &tasks_run_barometer_update                    , 0                                                    , 1);
 	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, &tasks_run_gps_update                          , 0                                                    , 2);
-	scheduler_add_task(scheduler    , ORCA_TIME_STEP_MILLIS * 1000.0f , RUN_REGULAR , PERIODIC_ABSOLUTE, &tasks_run_navigation_update                   , 0                                                    , 3);
+	scheduler_add_task(scheduler    , ORCA_TIME_STEP_MILLIS * 1000.0f , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&navigation_update            , (task_argument_t)&centralData->navigationData		   , 3);
 	scheduler_add_task(scheduler    , 200000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, &tasks_set_mav_mode_n_state                    , 0                                                    , 4);
 	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&mavlink_communication_update , (task_argument_t)&centralData->mavlink_communication , 5);
-	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, &adc_update                                    , 0                                                    , 6);
+	
+	// bug
+	// scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&analog_monitor_update        , (task_argument_t)&centralData->adc                  , 6);
+
 	scheduler_add_task(scheduler    , 10000                           , RUN_REGULAR , PERIODIC_ABSOLUTE, &control_waypoint_timeout                      , 0                                                    , 7);
 	// scheduler_add_task(scheduler , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, &sonar_update                                  , 0                                                    , 0);
 

@@ -27,7 +27,7 @@ int8_t loop_count_collisions = 0;
 
 float min_coll_dist;
 
-void orca_init(orca_t *orcaData, neighbor_t *neighborData, position_estimator_t *positionData, Imu_Data_t *imuData, AHRS_t *attitude_estimation)
+void orca_init(orca_t *orcaData, neighbor_t *neighborData, position_estimator_t *positionData, imu_t *imuData, ahrs_t *attitude_estimation)
 {
 	orcaData->neighborData = neighborData;
 	orcaData->positionData = positionData;

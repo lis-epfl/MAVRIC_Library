@@ -53,6 +53,14 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
  */
 static void navigation_collision_avoidance(navigation_t* navigationData);
 
+/**
+ * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
+ *
+ * \param	waypoint_input		Destination waypoint in local coordinate system
+ * \param	navigationData		The navigation structure
+ */
+void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigationData);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -168,11 +176,29 @@ static void navigation_collision_avoidance(navigation_t* navigationData)
 	navigationData->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
 }
 
+void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigationData)
+{
+	float rel_pos[3];
+	
+	// Control in translational speed of the platform
+	navigationData->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos,
+	rel_pos,
+	navigationData->position_estimator->localPosition.pos);
+	navigation_set_speed_command(rel_pos, navigationData);
+	
+	if (navigationData->waypoint_handler->collision_avoidance)
+	{
+		navigation_collision_avoidance(navigationData);
+	}
+	
+	navigationData->controls_nav->theading=waypoint_input.heading;
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigationData, Control_Command_t* controls_nav, UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, orca_t* orcaData)
+void navigation_init(navigation_t* navigationData, Control_Command_t* controls_nav, UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, orca_t* orcaData, state_structure_t* state_structure)
 {
 	
 	navigationData->controls_nav = controls_nav;
@@ -180,6 +206,7 @@ void navigation_init(navigation_t* navigationData, Control_Command_t* controls_n
 	navigationData->waypoint_handler = waypoint_handler;
 	navigationData->position_estimator = position_estimator;
 	navigationData->orcaData = orcaData;
+	navigationData->state_structure = state_structure;
 	
 	navigationData->controls_nav->rpy[ROLL] = 0.0f;
 	navigationData->controls_nav->rpy[PITCH] = 0.0f;
@@ -200,21 +227,44 @@ void navigation_init(navigation_t* navigationData, Control_Command_t* controls_n
 	print_util_dbg_print("Navigation initialized.\n");
 }
 
-
-void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigationData)
+task_return_t navigation_update(navigation_t* navigationData)
 {
-	float rel_pos[3]; 
-	
-	// Control in translational speed of the platform
-	navigationData->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos, 
-																		rel_pos, 
-																		navigationData->position_estimator->localPosition.pos);
-	navigation_set_speed_command(rel_pos, navigationData);
-	
-	if (navigationData->waypoint_handler->collision_avoidance)
+	switch (navigationData->state_structure->mav_state)
 	{
-		navigation_collision_avoidance(navigationData);
+		case MAV_STATE_STANDBY:
+		if (((navigationData->state_structure->mav_mode == MAV_MODE_GUIDED_ARMED)||(navigationData->state_structure->mav_mode == MAV_MODE_AUTO_ARMED)) && !navigationData->waypoint_handler->automatic_take_off)
+		{
+			navigation_run(navigationData->waypoint_handler->waypoint_hold_coordinates,navigationData);
+		}
+		break;
+
+		case MAV_STATE_ACTIVE:
+		switch (navigationData->state_structure->mav_mode)
+		{
+			case MAV_MODE_AUTO_ARMED:
+			if (navigationData->waypoint_handler->waypoint_set)
+			{
+				navigation_run(navigationData->waypoint_handler->waypoint_coordinates,navigationData);
+			}
+			else
+			{
+				navigation_run(navigationData->waypoint_handler->waypoint_hold_coordinates,navigationData);
+			}
+			break;
+
+			case MAV_MODE_GUIDED_ARMED:
+			navigation_run(navigationData->waypoint_handler->waypoint_hold_coordinates,navigationData);
+			break;
+		}
+		break;
+
+		case MAV_STATE_CRITICAL:
+		if ((navigationData->state_structure->mav_mode == MAV_MODE_GUIDED_ARMED)||(navigationData->state_structure->mav_mode == MAV_MODE_AUTO_ARMED))
+		{
+			navigation_run(navigationData->waypoint_handler->waypoint_critical_coordinates,navigationData);
+		}
+		break;
 	}
 	
-	navigationData->controls_nav->theading=waypoint_input.heading;
+	return TASK_RUN_SUCCESS;
 }

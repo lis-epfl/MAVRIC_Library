@@ -68,7 +68,7 @@ byte_stream_t* get_telemetry_downstream() {
 }
 
 
-Imu_Data_t* get_imu_data() {
+imu_t* get_imu_data() {
 	return &centralData.imu;
 }
 Control_Command_t* get_control_inputs_data() {

@@ -93,8 +93,6 @@ static void position_estimation_position_integration(position_estimator_t *pos_e
 	for (i = 0; i < 3; i++)
 	{
 		pos_est->vel_bf[i] = qvel_bf.v[i];
-		// clean acceleration estimate without gravity:
-		pos_est->attitude_estimation->linear_acc[i] = pos_est->gravity * (pos_est->imu->scaled_accelero.data[i] - pos_est->attitude_estimation->up_vec.v[i]) ;							// TODO: review this line!
 		pos_est->vel_bf[i] = pos_est->vel_bf[i] * (1.0f - (VEL_DECAY * dt)) + pos_est->attitude_estimation->linear_acc[i]  * dt;
 	}
 	
@@ -340,7 +338,7 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, AHRS_t *attitude_estimation, Imu_Data_t *imu, local_coordinates_t *sim_local_position, bool* waypoint_set, mavlink_communication_t *mavlink_communication, float home_lat, float home_lon, float home_alt, float gravity)
+void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, ahrs_t *attitude_estimation, imu_t *imu, local_coordinates_t *sim_local_position, bool* waypoint_set, mavlink_communication_t *mavlink_communication, float home_lat, float home_lon, float home_alt, float gravity)
 {
     int32_t i;
 
@@ -465,4 +463,17 @@ void position_estimation_update(position_estimator_t *pos_est)
 		position_estimation_position_integration(pos_est);
 		position_estimation_position_correction(pos_est);
 	}
+}
+
+task_return_t postition_estimation_send_position(position_estimator_t* pos_est)
+{
+	mavlink_msg_local_position_ned_send(	MAVLINK_COMM_0,
+											time_keeper_get_millis(),
+											pos_est->localPosition.pos[0],
+											pos_est->localPosition.pos[1],
+											pos_est->localPosition.pos[2],
+											pos_est->vel[0],
+											pos_est->vel[1],
+											pos_est->vel[2]);
+	return TASK_RUN_SUCCESS;
 }

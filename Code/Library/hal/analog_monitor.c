@@ -19,6 +19,8 @@
 #include "analog_monitor.h"
 #include "adc_int.h"
 
+#include "piezo_speaker.h"
+
 #define CONV_FACTOR_2 1.0f				///< Conversion factor for the analog channel 2
 #define CONV_FACTOR_3 1.0f				///< Conversion factor for the analog channel 3
 #define CONV_FACTOR_4 1.0f				///< Conversion factor for the analog channel 4
@@ -147,8 +149,9 @@ void analog_monitor_init(analog_monitor_t* analog_monitor)
 	}
 }
 
-void analog_monitor_update(analog_monitor_t* analog_monitor)
+task_return_t analog_monitor_update(analog_monitor_t* analog_monitor)
 {
+
 	for (int32_t i = 0; i < MONITOR_CHANNELS; ++i)
 	{
 		if(analog_monitor->enable[i])
@@ -156,7 +159,10 @@ void analog_monitor_update(analog_monitor_t* analog_monitor)
 			analog_monitor->avg[i] = analog_compute_avg(analog_monitor, i) * CONV_FACTOR[i];
 		}
 	}
+
 	trigger_analog_monitor();
+
+	return TASK_RUN_SUCCESS;
 }
 
 void trigger_analog_monitor(void) 

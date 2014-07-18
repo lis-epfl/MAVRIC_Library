@@ -29,6 +29,7 @@ extern "C" {
 #include "gps_ublox.h"
 #include "coord_conventions.h"
 #include "mavlink_communication.h"
+#include "tasks.h"
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
 #define VEL_DECAY 0.0f
@@ -63,8 +64,8 @@ typedef struct
 	
 	pressure_data_t *barometer;
 	gps_Data_type_t *gps;
-	AHRS_t *attitude_estimation;
-	Imu_Data_t* imu;
+	ahrs_t *attitude_estimation;
+	imu_t* imu;
 	local_coordinates_t *sim_local_position;
 	bool *waypoint_set;
 
@@ -80,7 +81,7 @@ typedef struct
  * \param	attitude_estimation		The pointer to the attitude estimation structure
  * \param	sim_local_position		The local position of the simulator
  */
-void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, AHRS_t *attitude_estimation, Imu_Data_t *imu, local_coordinates_t *sim_local_position, bool* waypoint_set, mavlink_communication_t *mavlink_communication, float home_lat, float home_lon, float home_alt, float gravity);
+void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, ahrs_t *attitude_estimation, imu_t *imu, local_coordinates_t *sim_local_position, bool* waypoint_set, mavlink_communication_t *mavlink_communication, float home_lat, float home_lon, float home_alt, float gravity);
 
 
 /**
@@ -98,6 +99,14 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est);
  */
 void position_estimation_update(position_estimator_t *pos_est);
 
+/**
+ * \brief	Task to send the mavlink position estimation message
+ *
+ * \param	pos_est					The pointer to the position estimation structure
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t postition_estimation_send_position(position_estimator_t* pos_est);
 
 #ifdef __cplusplus
 }

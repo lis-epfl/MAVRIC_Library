@@ -27,15 +27,16 @@
 
 #include "time_keeper.h"
 #include "i2c_driver_int.h"
-#include "imu.h"
 #include "remote_controller.h"
 #include "print_util.h"
 
 // #include "mavlink_stream.h"
 #include "servo_pwm.h"
 
-#include "simulation.h"
+//#include "simulation.h"
 #include "bmp085.h"
+#include "lsm330dlc_driver.h"
+#include "compass_hmc5883l.h"
 #include "analog_monitor.h"
 #include "piezo_speaker.h"
 #include "gpio.h"
@@ -44,11 +45,8 @@
 #include "xbee.h"
 #include "console.h"
 
-void boardsupport_init(central_data_t *centralData) {
-	// int32_t i;
-	// enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
-	
-
+void boardsupport_init(central_data_t *centralData) 
+{
 	irq_initialize_vectors();
 	cpu_irq_enable();
 	Disable_global_interrupt();
@@ -111,7 +109,13 @@ void boardsupport_init(central_data_t *centralData) {
 	
 	// init imu & compass
 	i2c_driver_init(I2C0);
-	imu_init(&(centralData->imu), &centralData->attitude_estimation);
+	
+	lsm330dlc_driver_init();
+	print_util_dbg_print("LSM330 initialised \r");
+		
+	compass_hmc58831l_init_slow();
+	print_util_dbg_print("HMC5883 initialised \r");
+	
 	bmp085_init(&(centralData->pressure));
 	
 	// init radar or ultrasound (not implemented yet)

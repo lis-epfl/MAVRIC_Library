@@ -32,8 +32,8 @@ extern "C" {
  */
 typedef enum
 {
-	REAL_MODE,											///< HIL off, runs in real mode
-	SIMULATION_MODE										///< HIL on, runs in simulation mode
+	REAL_MODE,												///< HIL off, runs in real mode
+	SIMULATION_MODE = MAV_MODE_FLAG_HIL_ENABLED				///< HIL on, runs in simulation mode
 } HIL_mode;
 
 /**
@@ -71,7 +71,7 @@ void state_init(state_structure_t *state_structure, uint8_t autopilot_type, uint
  * 
  * \return	The status of execution of the task
  */
-task_return_t mavlink_telemetry_send_heartbeat(state_structure_t* state_structure);
+task_return_t state_send_heartbeat(state_structure_t* state_structure);
 
 /**
  * \brief						Set the state and the mode of the vehicle
