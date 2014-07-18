@@ -300,7 +300,6 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
  		// Set new home position to actual position
  		print_util_dbg_print("Set new home location to actual position.\n");
  		pos_est->localPosition.origin = coord_conventions_local_to_global_position(pos_est->localPosition);
- 		pos_est->sim_local_position->origin = pos_est->localPosition.origin;
 
  		print_util_dbg_print("New Home location: (");
  		print_util_dbg_print_num(pos_est->localPosition.origin.latitude * 10000000.0f,10);
@@ -318,8 +317,6 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
  		pos_est->localPosition.origin.latitude = packet->param5;
  		pos_est->localPosition.origin.longitude = packet->param6;
  		pos_est->localPosition.origin.altitude = packet->param7;
-		
-		pos_est->sim_local_position->origin = pos_est->localPosition.origin;
 
  		print_util_dbg_print("New Home location: (");
  		print_util_dbg_print_num(pos_est->localPosition.origin.latitude * 10000000.0f,10);
@@ -394,7 +391,7 @@ void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *ba
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER;
 	callbackcmd.function      = (mavlink_cmd_callback_function_t)	&position_estimation_set_new_home_position;
-	callbackcmd.module_struct = pos_est;
+	callbackcmd.module_struct =										pos_est;
 	mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
 	
 	print_util_dbg_print("Position estimation initialized.\n");

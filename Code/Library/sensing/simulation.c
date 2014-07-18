@@ -25,6 +25,13 @@
 #include "central_data.h"
 #include "maths.h"
 
+/**
+ * \brief	Changes between simulation to and from reality
+ *
+ * \param	sim				The pointer to the simulation model structure
+ * \param	packet			The pointer to the decoded mavlink command long message
+ */
+static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_command_long_t* packet);
 
 /**
  * \brief	Computes the forces in the local frame of a "cross" quadrotor configuration
@@ -44,7 +51,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *serv
  */
 void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servos);
 
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* attitude_estimation, imu_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos)
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* attitude_estimation, imu_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler)
 {
 	int32_t i;
 	
@@ -56,8 +63,10 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	sim->gps = gps;
 	sim->state_structure = state_structure;
 	sim->servos = servos;
+	sim->waypoint_set = waypoint_set;
 	
 	// set initial conditions to a given attitude_filter
+	sim->estimated_attitude = attitude_estimation;
 	sim->attitude_estimation = *attitude_estimation;
 
 	print_util_dbg_print("Attitude:");
@@ -81,6 +90,16 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	simulation_reset_simulation(sim);
 	simulation_calib_set(sim);
 	
+	mavlink_message_handler_cmd_callback_t callbackcmd;
+	
+	callbackcmd.command_id    = MAV_CMD_DO_SET_HOME; // 179
+	callbackcmd.sysid_filter  = MAV_SYS_ID_ALL;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER;
+	callbackcmd.function      = (mavlink_cmd_callback_function_t)	&simulation_set_new_home_position;
+	callbackcmd.module_struct =										sim;
+	mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+	
 	print_util_dbg_print("HIL simulation initialized. \n");
 }
 
@@ -100,9 +119,9 @@ void simulation_calib_set(simulation_model_t *sim)
 		sim->calib_accelero.bias[i]				= sim->imu->calib_accelero.bias[i];
 		sim->calib_compass.bias[i]				= sim->imu->calib_compass.bias[i];
 		
-		sim->calib_gyro.orientation[i]			= - sim->imu->calib_gyro.orientation[i];
-		sim->calib_accelero.orientation[i]		= - sim->imu->calib_accelero.orientation[i];
-		sim->calib_compass.orientation[i]		= - sim->imu->calib_compass.orientation[i];
+		sim->calib_gyro.orientation[i]			= sim->imu->calib_gyro.orientation[i];
+		sim->calib_accelero.orientation[i]		= sim->imu->calib_accelero.orientation[i];
+		sim->calib_compass.orientation[i]		= sim->imu->calib_compass.orientation[i];
 	}
 	
 	//reset the simulated attitude_estimation
@@ -127,6 +146,8 @@ void simulation_reset_simulation(simulation_model_t *sim)
 	}
 	
 	sim->localPosition = sim->pos_est->localPosition;
+	
+	sim->attitude_estimation = *sim->estimated_attitude;
 	
 	print_util_dbg_print("(Re)setting simulation. Origin: (");
 	print_util_dbg_print_num(sim->pos_est->localPosition.origin.latitude*10000000,10);
@@ -459,6 +480,43 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 		simulation_calib_set(sim);
 		sim->pos_est->init_gps_position = false;
 	}
+}
+
+static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_command_long_t* packet)
+{
+	if (packet->param1 == 1)
+	{
+		// Set new home position to actual position
+		print_util_dbg_print("Set new home location to actual position.\n");
+		sim->localPosition.origin = coord_conventions_local_to_global_position(sim->localPosition);
+
+		print_util_dbg_print("New Home location: (");
+		print_util_dbg_print_num(sim->localPosition.origin.latitude * 10000000.0f,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(sim->localPosition.origin.longitude * 10000000.0f,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(sim->localPosition.origin.altitude * 1000.0f,10);
+		print_util_dbg_print(")\n");
+	}
+	else
+	{
+		// Set new home position from msg
+		print_util_dbg_print("Set new home location. \n");
+
+		sim->localPosition.origin.latitude = packet->param5;
+		sim->localPosition.origin.longitude = packet->param6;
+		sim->localPosition.origin.altitude = packet->param7;
+
+		print_util_dbg_print("New Home location: (");
+		print_util_dbg_print_num(sim->localPosition.origin.latitude * 10000000.0f,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(sim->localPosition.origin.longitude * 10000000.0f,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(sim->localPosition.origin.altitude * 1000.0f,10);
+		print_util_dbg_print(")\n");
+	}
+
+	*sim->waypoint_set = false;
 }
 
 task_return_t simulation_send_data(simulation_model_t* sim_model)
