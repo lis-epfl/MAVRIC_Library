@@ -69,7 +69,7 @@ void central_data_init()
 				MAV_AUTOPILOT_GENERIC,
 				MAV_STATE_BOOT,
 				MAV_MODE_PREFLIGHT,
-				REAL_MODE, // SIMULATION_MODE
+				SIMULATION_MODE, //REAL_MODE 
 				&centralData.mavlink_communication.message_handler); 
 	
 	imu_init(&(centralData.imu));
