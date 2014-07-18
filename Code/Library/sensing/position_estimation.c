@@ -88,15 +88,22 @@ static void position_estimation_position_integration(position_estimator_t *pos_e
 	
 	// calculate velocity in global frame
 	// vel = qe *vel_bf * qe - 1
-	qvel_bf.s = 0.0f; qvel_bf.v[0] = pos_est->vel_bf[0]; qvel_bf.v[1] = pos_est->vel_bf[1]; qvel_bf.v[2] = pos_est->vel_bf[2];
+	
+	qvel_bf.s = 0.0f; 
+	qvel_bf.v[0] = pos_est->vel_bf[0]; 	// TODO: replace this by quat_rotate_vector()
+	qvel_bf.v[1] = pos_est->vel_bf[1]; 
+	qvel_bf.v[2] = pos_est->vel_bf[2];
+	
 	qvel = quaternions_local_to_global(pos_est->attitude_estimation->qe, qvel_bf);
-	pos_est->vel[0] = qvel.v[0]; pos_est->vel[1] = qvel.v[1]; pos_est->vel[2] = qvel.v[2];
+	
+	pos_est->vel[0] = qvel.v[0]; 
+	pos_est->vel[1] = qvel.v[1]; 
+	pos_est->vel[2] = qvel.v[2];	// TODO: replace this by quat_rotate_vector()
 	
 	for (i = 0; i < 3; i++)
 	{
-		// clean position estimate without gravity:
-		//prev_pos[i] = localPosition.pos[i];
 		pos_est->localPosition.pos[i] = pos_est->localPosition.pos[i] * (1.0f - (POS_DECAY * dt)) + pos_est->vel[i] * dt;
+
 		pos_est->localPosition.heading = coord_conventions_get_yaw(pos_est->attitude_estimation->qe);
 	}
 	
@@ -111,14 +118,37 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 	float dt = pos_est->attitude_estimation->dt;
 	
 	// UQuat_t bias_correction = {.s = 0, .v = {0.0f, 0.0f, 1.0f}};
-	UQuat_t vel_correction = {.s = 0, .v = {0.0f, 0.0f, 1.0f}};
-	float pos_error[3] = {0.0f,0.0f,0.0f};
+	UQuat_t vel_correction = 
+	{
+		.s = 0, 
+		.v = 
+		{
+			0.0f, 
+			0.0f, 
+			1.0f
+		}
+	};
+
+	float pos_error[3] = 
+	{
+		0.0f,
+		0.0f,
+		0.0f
+	};
+	
 	float baro_alt_error = 0.0f;
 	float baro_vel_error = 0.0f;
 	float baro_gain = 0.0f;
 	float gps_gain = 0.0f;
 	float gps_dt = 0.0f;
-	float vel_error[3] = {0.0f,0.0f,0.0f};
+	
+	float vel_error[3] = 
+	{
+		0.0f,
+		0.0f,
+		0.0f
+	};
+
 	uint32_t tinterGps, tinterBaro;
 	int32_t i;
 
@@ -151,14 +181,17 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 	
 	if (pos_est->init_gps_position)
 	{
-		if (gps_ublox_newValidGpsMsg(pos_est->gps, &pos_est->time_last_gps_msg))
+		if ( (pos_est->time_last_gps_msg < pos_est->gps->time_last_msg) && (pos_est->gps->status == GPS_OK) )
 		{
+			pos_est->time_last_gps_msg = pos_est->gps->time_last_msg;
+
 			global_gps_position.longitude = pos_est->gps->longitude;
 			global_gps_position.latitude = pos_est->gps->latitude;
 			global_gps_position.altitude = pos_est->gps->altitude;
 			global_gps_position.heading = 0.0f;
 			local_coordinates = coord_conventions_global_to_local_position(global_gps_position,pos_est->localPosition.origin);
 			local_coordinates.timestamp_ms = pos_est->gps->time_last_msg;
+			
 			// compute GPS velocity estimate
 			gps_dt = (local_coordinates.timestamp_ms - pos_est->lastGpsPos.timestamp_ms) / 1000.0f;
 			if (gps_dt > 0.001f)
@@ -220,27 +253,31 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 static void gps_position_init(position_estimator_t *pos_est)
 {
 	int32_t i;
-	
-	if (gps_ublox_newValidGpsMsg(pos_est->gps, &pos_est->time_last_gps_msg) && (!(pos_est->init_gps_position)))
+	if ( pos_est->init_gps_position == false )
 	{
-		pos_est->init_gps_position = true;
-		
-		pos_est->localPosition.origin.longitude = pos_est->gps->longitude;
-		pos_est->localPosition.origin.latitude = pos_est->gps->latitude;
-		pos_est->localPosition.origin.altitude = pos_est->gps->altitude;
-		pos_est->localPosition.timestamp_ms = pos_est->gps->time_last_msg;
-
-		pos_est->lastGpsPos = pos_est->localPosition;
-		
-		pos_est->last_alt = 0;
-		for(i = 0;i < 3;i++)
+		if ( pos_est->time_last_gps_msg < pos_est->gps->time_last_msg )
 		{
-			pos_est->last_vel[i] = 0.0f;
-			pos_est->localPosition.pos[i] = 0.0f;
-			pos_est->vel[i] = 0.0f;
-		}
+			pos_est->time_last_gps_msg = pos_est->gps->time_last_msg;
 		
-		print_util_dbg_print("GPS position initialized!\n");
+			pos_est->init_gps_position = true;
+			
+			pos_est->localPosition.origin.longitude = pos_est->gps->longitude;
+			pos_est->localPosition.origin.latitude = pos_est->gps->latitude;
+			pos_est->localPosition.origin.altitude = pos_est->gps->altitude;
+			pos_est->localPosition.timestamp_ms = pos_est->gps->time_last_msg;
+
+			pos_est->lastGpsPos = pos_est->localPosition;
+			
+			pos_est->last_alt = 0;
+			for(i = 0;i < 3;i++)
+			{
+				pos_est->last_vel[i] = 0.0f;
+				pos_est->localPosition.pos[i] = 0.0f;
+				pos_est->vel[i] = 0.0f;
+			}
+			
+			print_util_dbg_print("GPS position initialized!\n");
+		}
 	}
 }
 
