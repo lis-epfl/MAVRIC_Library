@@ -175,3 +175,4 @@ float analog_compute_avg(analog_monitor_t* analog_monitor, analog_rails_t rail)
 	out = out / MONITOR_SAMPLES;
 	return out;
 }
+

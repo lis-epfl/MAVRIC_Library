@@ -23,6 +23,7 @@
 	extern "C" {
 #endif
 
+#include "scheduler.h"
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -115,6 +116,15 @@ void bmp085_get_pressure_data_slow(pressure_data_t *pressure_outputs);
  * \return a boolean: true if a new valid measure is ready
 */
 bool bmp085_newValidBarometer(pressure_data_t *pressure_outputs, uint32_t *timePrevBarometer);
+
+/**
+ * \brief	Task to send the mavlink scaled pressure message
+ * 
+ * \param	pressure	The pointer to the pressure structure
+ *
+ * \return	The status of execution of the task
+ */
+task_return_t bmp085_send_pressure(pressure_data_t* pressure);
 
 #ifdef __cplusplus
 }

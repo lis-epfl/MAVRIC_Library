@@ -50,7 +50,18 @@ typedef struct
 	float avg[MONITOR_CHANNELS];
 } analog_monitor_t;
 
+/**
+ * \brief	Initialisation of the analog monitor
+ * 
+ * \param	analog_monitor	The pointer to the analog monitor structure
+ */
 void analog_monitor_init(analog_monitor_t* analog_monitor);
+
+/**
+ * \brief	Update of the analog monitor
+ * 
+ * \param	analog_monitor	The pointer to the analog monitor structure
+ */
 void analog_monitor_update(analog_monitor_t* analog_monitor);
 
 #ifdef __cplusplus

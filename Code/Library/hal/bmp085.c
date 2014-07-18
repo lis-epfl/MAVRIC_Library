@@ -25,6 +25,7 @@
 #include "maths.h"
 #include "time_keeper.h"
 #include "print_util.h"
+#include "mavlink_communication.h"
 
 //pressure_data_t pressure_outputs;		///< declare an object containing the barometer's data
 
@@ -223,4 +224,29 @@ bool bmp085_newValidBarometer(pressure_data_t *pressure_outputs, uint32_t *timeP
 	{
 		return false;
 	}
+}
+
+task_return_t bmp085_send_pressure(pressure_data_t* pressure)
+{
+	mavlink_msg_scaled_pressure_send(	MAVLINK_COMM_0,
+										time_keeper_get_millis(),
+										pressure->pressure / 100.0f,
+										pressure->vario_vz,
+										pressure->temperature * 100.0f);
+
+	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
+										time_keeper_get_millis(),
+										"pressAlt",
+										pressure->altitude);
+
+	//mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
+										//time_keeper_get_millis(),
+										//"lastAlt",
+										//pressure->last_altitudes[0]);
+
+	//mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
+										//time_keeper_get_millis(),
+										//"baro_dt",
+										//pressure->dt);
+	return TASK_RUN_SUCCESS;
 }

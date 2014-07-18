@@ -117,6 +117,22 @@ float remote_dsm2_get_thrust_from_spektrum();
 void remote_dsm2_get_channel_mode_spektrum(uint8_t *chanSwitch);
 */
 
+/**
+ * \brief	Task to send the mavlink RC scaled message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t mavlink_telemetry_send_scaled_rc_channels(void* arg);
+
+
+/**
+ * \brief	Task to send the mavlink RC raw message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t remote_dsm2_send_raw_rc_channels(void* arg);
+
+
 #ifdef __cplusplus
 	}
 #endif

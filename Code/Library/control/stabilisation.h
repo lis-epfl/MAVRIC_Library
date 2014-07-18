@@ -92,6 +92,15 @@ task_return_t stabilisation_send_rpy_speed_thrust_setpoint(Stabiliser_t* rate_st
  */
 task_return_t stabilisation_send_rpy_rates_error(Stabiliser_t* rate_stabiliser);
 
+/**
+ * \brief	Task to send the mavlink roll, pitch, yaw and thrust setpoints message
+ *
+ * \param	stabiliser	Pointer to the structure containing the PID controllers
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t stabilisation_send_rpy_thrust_setpoint(Control_Command_t* controls);
+
 #ifdef __cplusplus
 }
 #endif

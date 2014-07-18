@@ -17,6 +17,8 @@
 
 
 #include "stabilisation.h"
+#include "time_keeper.h"
+#include "mavlink_communication.h"
 
 void stabilisation_run(Stabiliser_t *stabiliser, float dt, float errors[]) 
 {
@@ -31,21 +33,33 @@ void stabilisation_run(Stabiliser_t *stabiliser, float dt, float errors[])
 task_return_t  stabilisation_send_rpy_speed_thrust_setpoint(Stabiliser_t* rate_stabiliser)
 {
 	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_send(	MAVLINK_COMM_0,
-	time_keeper_get_millis(),
-	rate_stabiliser->rpy_controller[0].output,
-	rate_stabiliser->rpy_controller[1].output,
-	rate_stabiliser->rpy_controller[2].output,
-	0 );
+															time_keeper_get_millis(),
+															rate_stabiliser->rpy_controller[0].output,
+															rate_stabiliser->rpy_controller[1].output,
+															rate_stabiliser->rpy_controller[2].output,
+															0 );
 	return TASK_RUN_SUCCESS;
 }
 
 task_return_t  stabilisation_send_rpy_rates_error(Stabiliser_t* rate_stabiliser)
 {
 	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_send(	MAVLINK_COMM_0,
-	time_keeper_get_millis(),
-	rate_stabiliser->rpy_controller[0].error,
-	rate_stabiliser->rpy_controller[1].error,
-	rate_stabiliser->rpy_controller[2].error,
-	0 );
+															time_keeper_get_millis(),
+															rate_stabiliser->rpy_controller[0].error,
+															rate_stabiliser->rpy_controller[1].error,
+															rate_stabiliser->rpy_controller[2].error,
+															0 );
+	return TASK_RUN_SUCCESS;
+}
+
+task_return_t stabilisation_send_rpy_thrust_setpoint(Control_Command_t* controls)
+{
+	// Controls output
+	mavlink_msg_roll_pitch_yaw_thrust_setpoint_send(	MAVLINK_COMM_0,
+														time_keeper_get_millis(),
+														controls->rpy[ROLL],
+														controls->rpy[PITCH],
+														controls->rpy[YAW],
+														controls->thrust);
 	return TASK_RUN_SUCCESS;
 }

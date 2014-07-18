@@ -24,6 +24,7 @@
 #include "sysclk.h"
 #include "print_util.h"
 #include "delay.h"
+#include "mavlink_communication.h"
 
 static volatile uint8_t packet_byte_counter = 0;			///< Declare a counter of bytes in a packet 
 
@@ -325,3 +326,35 @@ ISR(USARTD0_RXC_vect) {
 }
 */
 
+task_return_t mavlink_telemetry_send_scaled_rc_channels(void* arg)
+{
+	mavlink_msg_rc_channels_scaled_send(	MAVLINK_COMM_0,time_keeper_get_millis(),
+											1,
+											remote_dsm2_rc_get_channel(0) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(1) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(2) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(3) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(4) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(5) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(6) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(7) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_check_receivers()	);
+	return TASK_RUN_SUCCESS;
+}
+
+
+task_return_t remote_dsm2_send_raw_rc_channels(void* arg)
+{
+	mavlink_msg_rc_channels_raw_send(	MAVLINK_COMM_0,time_keeper_get_millis(),
+										1,
+										remote_dsm2_rc_get_channel(0) + 1000,
+										remote_dsm2_rc_get_channel(1) + 1000,
+										remote_dsm2_rc_get_channel(2) + 1000,
+										remote_dsm2_rc_get_channel(3) + 1000,
+										remote_dsm2_rc_get_channel(4) + 1000,
+										remote_dsm2_rc_get_channel(5) + 1000,
+										remote_dsm2_rc_get_channel(6) + 1000,
+										remote_dsm2_rc_get_channel(7) + 1000,
+										remote_dsm2_rc_check_receivers()	);
+	return TASK_RUN_SUCCESS;
+}

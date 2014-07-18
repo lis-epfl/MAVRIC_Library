@@ -19,6 +19,8 @@
 #include "servo_pwm.h"
 #include "gpio.h"
 #include "print_util.h"
+#include "time_keeper.h"
+#include "mavlink_communication.h"
 
 #include <stdint.h>
 
