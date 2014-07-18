@@ -90,6 +90,8 @@ void simulation_calib_set(simulation_model_t *sim)
 	
 	for (i = 0;i < 3;i++)
 	{
+		//we take in sim the inverse of the imu scale_factor to limit number of division
+		//while feeding raw_sensor.data[i]
 		sim->calib_gyro.scale_factor[i]			= 1.0f/sim->imu->calib_gyro.scale_factor[i];
 		sim->calib_accelero.scale_factor[i]		= 1.0f/sim->imu->calib_accelero.scale_factor[i];
 		sim->calib_compass.scale_factor[i]		= 1.0f/sim->imu->calib_compass.scale_factor[i];
@@ -314,7 +316,7 @@ void simulation_update(simulation_model_t *sim)
 		}
 		
 		//upright
-		sim->rates_bf[0] =  - (-sim->attitude_estimation.up_vec.v[1] ); 
+		sim->rates_bf[0] =  sim->attitude_estimation.up_vec.v[1]; 
 		sim->rates_bf[1] =  - sim->attitude_estimation.up_vec.v[0];
 		sim->rates_bf[2] = 0;
 	}

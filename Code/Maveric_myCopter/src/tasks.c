@@ -407,8 +407,8 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 	if (centralData->state_structure.simulation_mode_previous != centralData->state_structure.simulation_mode)
 	{
 		simulation_switch_between_reality_n_simulation(&centralData->sim_model);
+		centralData->state_structure.simulation_mode_previous = centralData->state_structure.simulation_mode;
 	}
-	centralData->state_structure.simulation_mode_previous = centralData->state_structure.simulation_mode;
 	
 	return TASK_RUN_SUCCESS;
 }

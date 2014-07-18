@@ -64,6 +64,7 @@ void central_data_init()
 	};
 	mavlink_communication_init(&centralData.mavlink_communication, &mavlink_config);
 	
+	delay_ms(100); //add delay to be able to print on console init message for the following modul
 	state_init(	&centralData.state_structure,
 				MAV_TYPE_QUADROTOR,
 				MAV_AUTOPILOT_GENERIC,
@@ -72,15 +73,19 @@ void central_data_init()
 				SIMULATION_MODE, //REAL_MODE 
 				&centralData.mavlink_communication.message_handler); 
 	
+	delay_ms(100);//add delay to be able to print on console init message for the following modul
 	imu_init(&(centralData.imu));
 	
+	delay_ms(100);//add delay to be able to print on console init message for the following modul
 	// Init servos
 	servo_pwm_init(centralData.servos);
 	
+	delay_ms(100);//add delay to be able to print on console init message for the following modul
 	qfilter_init(   &(centralData.attitude_filter), 
 					&centralData.imu, 
 					&centralData.attitude_estimation);
 	
+	delay_ms(100);//add delay to be able to print on console init message for the following modul
 	position_estimation_init(   &centralData.position_estimator,
 								&centralData.pressure,
 								&centralData.GPS_data,
@@ -94,6 +99,7 @@ void central_data_init()
 								HOME_ALTITUDE,
 								GRAVITY				);
 	
+	delay_ms(100);//add delay to be able to print on console init message for the following modul
 	navigation_init(&centralData.navigationData,
 					&centralData.controls_nav,
 					&centralData.attitude_estimation.qe,
@@ -102,22 +108,26 @@ void central_data_init()
 					&centralData.orcaData,
 					&centralData.state_structure);
 	
+	delay_ms(100);//add delay to be able to print on console init message for the following modul
 	waypoint_handler_init(  &centralData.waypoint_handler,
 							&centralData.position_estimator,
 							&centralData.attitude_estimation,
 							&centralData.state_structure,
 							&centralData.mavlink_communication);
 	
+	delay_ms(100);//add delay to be able to print on console init message for the following modul
 	neighbors_selection_init(   &centralData.neighborData, 
 								&centralData.position_estimator,
 								&centralData.mavlink_communication.message_handler);
 	
+	delay_ms(100);//add delay to be able to print on console init message for the following modul
 	orca_init(  &centralData.orcaData,
 				&centralData.neighborData,
 				&centralData.position_estimator,
 				&centralData.imu,
 				&centralData.attitude_estimation);
 	
+	delay_ms(100);//add delay to be able to print on console init message for the following modul
 	// init stabilisers
 	stabilisation_copter_init(	&centralData.stabilisation_copter,
 								&centralData.stabiliser_stack,
@@ -128,6 +138,7 @@ void central_data_init()
 								&centralData.position_estimator,
 								centralData.servos 	);
 	
+	delay_ms(100);//add delay to be able to print on console init message for the following modul
 	// init simulation (should be done after position_estimator)
 	simulation_config_t vehicle_model_parameters= 
 	{
@@ -162,6 +173,7 @@ void central_data_init()
 					&centralData.state_structure,
 					centralData.servos);
 
+	delay_ms(100);//add delay to be able to print on console init message for the following modul
 	// Init sonar
 	// i2cxl_sonar_init(&centralData.i2cxl_sonar);
 }
