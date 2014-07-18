@@ -56,16 +56,6 @@ static void gps_position_init(position_estimator_t *pos_est);
 
 
 /**
- * \brief	Initialization of the pos_est->barometer offset
- *
- * \param	pos_est			The pointer to the position estimation structure
- * \param	pos_est->barometer		The pointer to the pos_est->barometer structure
- *
- * \return	void
- */
-static void barometer_offset_init(position_estimator_t *pos_est);
-
-/**
  * \brief	Position estimation update step, performing position estimation then position correction (function to be used)
  *
  * \param	pos_est					The pointer to the position estimation structure
@@ -165,7 +155,7 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 	}
 	else
 	{
-		barometer_offset_init(pos_est);
+		pos_est->init_barometer = bmp085_offset_init(pos_est->barometer, pos_est->localPosition.origin.altitude);
 	}
 	
 	if (pos_est->init_gps_position)
@@ -263,32 +253,6 @@ static void gps_position_init(position_estimator_t *pos_est)
 		
 		// Resets the simulated position and velocities
 		//*pos_est->sim_local_position = pos_est->localPosition;
-	}
-}
-
-
-static void barometer_offset_init(position_estimator_t *pos_est)
-{
-	bool boolNewBaro = bmp085_newValidBarometer(pos_est->barometer, &pos_est->time_last_barometer_msg);
-
-		
-	//if ((centralData->init_gps_position)&&(boolNewBaro))
-	if ((boolNewBaro))
-	{
-		
-		pos_est->barometer->altitude_offset = -(pos_est->barometer->altitude - pos_est->localPosition.origin.altitude);
-		//pos_est->barometer->altitude_offset = -pos_est->barometer->altitude - pos_est->localPosition.pos[2] + pos_est->localPosition.origin.altitude;
-		pos_est->init_barometer = true;
-		
-		print_util_dbg_print("Offset of the barometer set to the GPS altitude, offset value of:");
-		print_util_dbg_print_num(pos_est->barometer->altitude_offset,10);
-		print_util_dbg_print(" = -");
-		print_util_dbg_print_num(pos_est->barometer->altitude,10);
-		print_util_dbg_print(" - ");
-		print_util_dbg_print_num(pos_est->localPosition.pos[2],10);
-		print_util_dbg_print(" + ");
-		print_util_dbg_print_num(pos_est->localPosition.origin.altitude,10);
-		print_util_dbg_print("\n");
 	}
 }
 
@@ -428,8 +392,10 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est)
 		//pos_est->simLocalPos->origin.altitude = HOME_ALTITUDE;
 		//
 	}
+
 	// reset barometer offset
-	pos_est->barometer->altitude_offset = -(pos_est->barometer->altitude - pos_est->barometer->altitude_offset - pos_est->localPosition.origin.altitude);
+	bmp085_offset_init(pos_est->barometer, pos_est->localPosition.origin.altitude);
+
 	//pos_est->barometer->altitude_offset = -pos_est->barometer->altitude - pos_est->localPosition.pos[2] + pos_est->localPosition.origin.altitude;
 	pos_est->init_barometer = true;
 		

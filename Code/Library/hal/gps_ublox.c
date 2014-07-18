@@ -1734,12 +1734,11 @@ void gps_ublox_update(gps_Data_type_t *GPS_data)
 	}
 }
 
-bool gps_ublox_newValidGpsMsg(gps_Data_type_t *GPS_data, uint32_t *prevGpsMsgTime)
+bool gps_ublox_newValidGpsMsg(const gps_Data_type_t *GPS_data, uint32_t *prevGpsMsgTime)
 {
 	
 	
-	if((*prevGpsMsgTime != GPS_data->time_last_msg)&&(GPS_data->status == GPS_OK)//&&(GPS_data->accuracyStatus == 1)
-	)
+	if( (*prevGpsMsgTime != GPS_data->time_last_msg) && (GPS_data->status == GPS_OK) )
 	{
 		*prevGpsMsgTime = GPS_data->time_last_msg;
 		return true;

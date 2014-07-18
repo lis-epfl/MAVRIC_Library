@@ -680,7 +680,7 @@ void gps_ublox_update(gps_Data_type_t *GPS_data);
  *
  * \return	if the latest GPS message is arrived at tnow
  */
-bool gps_ublox_newValidGpsMsg(gps_Data_type_t *GPS_data, uint32_t *prevGpsMsgTime);
+bool gps_ublox_newValidGpsMsg(const gps_Data_type_t *GPS_data, uint32_t *prevGpsMsgTime);
 
 /**
  * \brief	Task to send the mavlink gps raw message

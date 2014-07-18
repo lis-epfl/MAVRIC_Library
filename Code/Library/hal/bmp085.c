@@ -226,6 +226,24 @@ bool bmp085_newValidBarometer(pressure_data_t *pressure_outputs, uint32_t *timeP
 	}
 }
 
+
+bool bmp085_offset_init(pressure_data_t* pressure, float origin_altitude)
+{
+	bool new_baro_available = bmp085_newValidBarometer(pressure, &pressure->last_update);
+		
+	if ( new_baro_available )
+	{
+		pressure->altitude_offset = - ( pressure->altitude - pressure->altitude_offset - origin_altitude );
+
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
 task_return_t bmp085_send_pressure(pressure_data_t* pressure)
 {
 	mavlink_msg_scaled_pressure_send(	MAVLINK_COMM_0,

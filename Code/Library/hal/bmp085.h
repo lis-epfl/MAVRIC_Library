@@ -117,6 +117,17 @@ void bmp085_get_pressure_data_slow(pressure_data_t *pressure_outputs);
 */
 bool bmp085_newValidBarometer(pressure_data_t *pressure_outputs, uint32_t *timePrevBarometer);
 
+
+/**
+ * \brief	Initialization of the pos_est->barometer offset
+ *
+ * \param	pos_est			The pointer to the position estimation structure
+ * \param	pos_est->barometer		The pointer to the pos_est->barometer structure
+ *
+ * \return	void
+ */
+bool bmp085_offset_init(pressure_data_t* pressure, float origin_altitude);
+
 /**
  * \brief	Task to send the mavlink scaled pressure message
  * 

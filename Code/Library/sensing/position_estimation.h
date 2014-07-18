@@ -62,13 +62,14 @@ typedef struct
 	
 	float gravity;
 	
-	pressure_data_t *barometer;
-	gps_Data_type_t *gps;
-	ahrs_t *attitude_estimation;
-	imu_t* imu;
-	local_coordinates_t *sim_local_position;
-	bool *waypoint_set;
+	pressure_data_t*  	 	barometer;
+	const gps_Data_type_t* 	gps;
+	const ahrs_t* 		 	attitude_estimation;
+	const imu_t* 		 	imu;
 
+	local_coordinates_t* sim_local_position;		// TODO : move to simulation
+
+	bool* waypoint_set;
 } position_estimator_t;
 
 
