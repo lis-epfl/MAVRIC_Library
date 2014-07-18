@@ -63,14 +63,6 @@ task_return_t mavlink_telemetry_send_hud(void* arg);
 task_return_t mavlink_telemetry_send_rt_stats(void* arg);
 
 
-/**
- * \brief	Task to send the mavlink sonar message
- * 
- * \return	The status of execution of the task
- */
-task_return_t mavlink_telemetry_send_sonar(i2cxl_sonar_t* i2cxl_sonar);
-
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -85,7 +77,7 @@ task_return_t mavlink_telemetry_send_status(analog_monitor_t* adc)
 								0b1111110000100111, 									// sensors enabled
 								0b1111110000100111, 									// sensors health
 								0,                  									// load
-								(int32_t)(1000.0f * battery_voltage), 						// bat voltage (mV)
+								(int32_t)(1000.0f * battery_voltage), 					// bat voltage (mV)
 								0,               										// current (mA)
 								battery_remaining,										// battery remaining
 								0, 0,  													// comms drop, comms errors
@@ -178,16 +170,6 @@ task_return_t mavlink_telemetry_send_rt_stats(void* arg)
 }
 
 
-task_return_t mavlink_telemetry_send_sonar(i2cxl_sonar_t* i2cxl_sonar)
-{
-	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										time_keeper_get_millis(),
-										"sonar(m)", 
-										i2cxl_sonar->distance_m);
-	return TASK_RUN_SUCCESS;
-}
-
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -208,7 +190,7 @@ void mavlink_telemetry_init(void)
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, (task_function_t)&imu_send_attitude_quaternion,						&centralData->attitude_estimation, 				MAVLINK_MSG_ID_ATTITUDE_QUATERNION	);					// ID 31
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_NEVER,    PERIODIC_ABSOLUTE, (task_function_t)&position_estimation_send_position,					&centralData->position_estimator, 				MAVLINK_MSG_ID_LOCAL_POSITION_NED	);					// ID 32
 	scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, (task_function_t)&position_estimation_send_global_position,			&centralData->position_estimator, 				MAVLINK_MSG_ID_GLOBAL_POSITION_INT	);					// ID 33
-	scheduler_add_task(mavlink_scheduler,  500000,   RUN_NEVER,    PERIODIC_ABSOLUTE, (task_function_t)&mavlink_telemetry_send_scaled_rc_channels,			0, 												MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);					// ID 34
+	scheduler_add_task(mavlink_scheduler,  500000,   RUN_NEVER,    PERIODIC_ABSOLUTE, (task_function_t)&remote_dsm2_send_scaled_rc_channels,				0, 												MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);					// ID 34
 	scheduler_add_task(mavlink_scheduler,  250000,   RUN_NEVER,    PERIODIC_ABSOLUTE, (task_function_t)&remote_dsm2_send_raw_rc_channels,					0, 												MAVLINK_MSG_ID_RC_CHANNELS_RAW	);						// ID 35
 	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_NEVER,    PERIODIC_ABSOLUTE, (task_function_t)&servo_pwm_send_servo_output,						&centralData->servos, 							MAVLINK_MSG_ID_SERVO_OUTPUT_RAW	);						// ID 36
 	scheduler_add_task(mavlink_scheduler,  200000,   RUN_NEVER,    PERIODIC_ABSOLUTE, (task_function_t)&stabilisation_send_rpy_thrust_setpoint,				&centralData->controls, 						MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT	);		// ID 58

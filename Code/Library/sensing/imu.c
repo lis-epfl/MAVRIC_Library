@@ -112,6 +112,9 @@ void imu_init (imu_t *imu)
 	imu->calib_compass.orientation[X] = MAG_AXIS_X;
 	imu->calib_compass.orientation[Y] = MAG_AXIS_Y;
 	imu->calib_compass.orientation[Z] = MAG_AXIS_Z;
+	
+	imu->last_update = time_keeper_get_time_ticks();
+	imu->dt = 0.004;
 }
 		
 	
@@ -148,11 +151,11 @@ void imu_update(imu_t *imu)
 {
 	uint32_t t = time_keeper_get_time_ticks();
 	
-		imu->dt = time_keeper_ticks_to_seconds(t - imu->last_update);
-		imu->last_update = t;
+	imu->dt = time_keeper_ticks_to_seconds(t - imu->last_update);
+	imu->last_update = t;
 
-		imu_raw2oriented(imu);
-		imu_oriented2scale(imu);
+	imu_raw2oriented(imu);
+	imu_oriented2scale(imu);
 }
 
 task_return_t imu_send_scaled(imu_t* imu)

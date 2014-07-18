@@ -31,28 +31,33 @@ uint8_t counter = 0;
 
 void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* attitude_estimation) 
 {
-	uint8_t i;
-	
 	qf->imu = imu;
 	qf->attitude_estimation = attitude_estimation;
 	
 	qf->imu->calibration_level = LEVELING;
-	
-	for (i = 0; i < 3; i++)
-	{
-		qf->attitude_estimation->linear_acc[i] = 0.0f;
-	}
 
 	qf->attitude_estimation->qe.s = 1.0f;
 	qf->attitude_estimation->qe.v[0] = 0.0f;
 	qf->attitude_estimation->qe.v[1] = 0.0f;
 	qf->attitude_estimation->qe.v[2] = 0.0f;
+	
 	qf->attitude_estimation->angular_speed[X] = 0.0f;
 	qf->attitude_estimation->angular_speed[Y] = 0.0f;
 	qf->attitude_estimation->angular_speed[Z] = 0.0f;
+	
 	qf->attitude_estimation->linear_acc[X] = 0.0f;
 	qf->attitude_estimation->linear_acc[Y] = 0.0f;
 	qf->attitude_estimation->linear_acc[Z] = 0.0f;
+	
+	qf->attitude_estimation->north_vec.s    = 0.0f;
+	qf->attitude_estimation->north_vec.v[0] = 1.0f;
+	qf->attitude_estimation->north_vec.v[1] = 0.0f;
+	qf->attitude_estimation->north_vec.v[2] = 0.0f;
+	
+	qf->attitude_estimation->up_vec.s    = 0.0f;
+	qf->attitude_estimation->up_vec.v[0] = 0.0f;
+	qf->attitude_estimation->up_vec.v[1] = 0.0f;
+	qf->attitude_estimation->up_vec.v[2] = -1.0f;
 	
 	qf->kp = 0.07f;
 	qf->ki = qf->kp / 15.0f;

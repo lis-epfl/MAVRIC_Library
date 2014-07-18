@@ -518,12 +518,7 @@ task_return_t simulation_send_data(simulation_model_t* sim_model)
 										//time_keeper_get_millis(),
 										//"yawtorque",
 										//sim_model->torques_bf[2]);
-//
-	//mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										//time_keeper_get_millis(),
-										//"thrust",
-										//sim_model->lin_forces_bf[2]);
-//
+
 	//mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
 										//time_keeper_get_millis(),
 										//"rpm1",

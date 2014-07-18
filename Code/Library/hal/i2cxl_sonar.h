@@ -23,6 +23,7 @@
 	extern "C" {
 #endif
 
+#include "scheduler.h"
 #include <stdint.h>
 
 /**
@@ -49,6 +50,16 @@ void i2cxl_sonar_init(i2cxl_sonar_t* i2c_sonar);
  * \param i2c_sonar Data struct
  */
 void i2cxl_sonar_update(i2cxl_sonar_t* i2c_sonar);
+
+
+/**
+ * \brief	Task to send the mavlink sonar message
+ * 
+ * \param i2c_sonar Data struct
+ *
+ * \return	The status of execution of the task
+ */
+task_return_t i2cxl_send_sonar(i2cxl_sonar_t* i2cxl_sonar);
 
 #ifdef __cplusplus
 	}

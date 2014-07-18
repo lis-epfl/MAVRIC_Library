@@ -122,7 +122,7 @@ void remote_dsm2_get_channel_mode_spektrum(uint8_t *chanSwitch);
  * 
  * \return	The status of execution of the task
  */
-task_return_t mavlink_telemetry_send_scaled_rc_channels(void* arg);
+task_return_t remote_dsm2_send_scaled_rc_channels(void* arg);
 
 
 /**

@@ -326,7 +326,7 @@ ISR(USARTD0_RXC_vect) {
 }
 */
 
-task_return_t mavlink_telemetry_send_scaled_rc_channels(void* arg)
+task_return_t remote_dsm2_send_scaled_rc_channels(void* arg)
 {
 	mavlink_msg_rc_channels_scaled_send(	MAVLINK_COMM_0,time_keeper_get_millis(),
 											1,
