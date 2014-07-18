@@ -103,7 +103,7 @@ task_return_t mavlink_telemetry_send_hud(void* arg)
 	int16_t heading;
 	if(aero_attitude.rpy[2] < 0)
 	{
-		heading = (int16_t)(360.0f - 180.0f * aero_attitude.rpy[2] / PI);
+		heading = (int16_t)(360.0f + 180.0f * aero_attitude.rpy[2] / PI); //you want to normalize between 0 and 360°
 	}
 	else
 	{
