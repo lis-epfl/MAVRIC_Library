@@ -40,10 +40,10 @@ extern "C" {
  */
 typedef struct
 {
-	float kp_vel[3];					///< The gain to correct the velocity estimation from the GPS
-	float kp_pos[3];					///< The gain to correct the position estimation from the GPS
-	float kp_alt;						///< The gain to correct the Z position estimation from the GPS
-	float kp_vel_baro;					///< The gain to correct the position estimation from the barometer
+	float kp_vel_gps[3];					///< The gain to correct the velocity estimation from the GPS
+	float kp_pos_gps[3];					///< The gain to correct the position estimation from the GPS
+	float kp_alt_baro;						///< The gain to correct the Z position estimation from the barometer
+	float kp_vel_baro;						///< The gain to correct the position estimation from the barometer
 
 	uint32_t time_last_gps_msg;			///< The time at which we received the last GPS message in ms
 	uint32_t time_last_barometer_msg;	///< The time at which we received the last barometer message in ms
@@ -53,7 +53,6 @@ typedef struct
 	float vel_bf[3];					///< The 3D velocity in body frame
 	float vel[3];						///< The 3D velocity in global frame
 
-	float pos_correction[3];			///< The 3D array to store the difference between the position estimation and the GPS estimated position
 	float last_alt;						///< The value of the last altitude estimation
 	float last_vel[3];					///< The last 3D velocity
 
@@ -62,13 +61,12 @@ typedef struct
 	
 	float gravity;
 	
-	pressure_data_t *barometer;
-	gps_Data_type_t *gps;
-	ahrs_t *attitude_estimation;
-	imu_t* imu;
-	local_coordinates_t *sim_local_position;
-	bool *waypoint_set;
+	pressure_data_t*  	 	barometer;
+	const gps_Data_type_t* 	gps;
+	const ahrs_t* 		 	attitude_estimation;
+	const imu_t* 		 	imu;
 
+	bool* waypoint_set;
 } position_estimator_t;
 
 
@@ -79,9 +77,8 @@ typedef struct
  * \param	barometer				The pointer to the barometer structure
  * \param	gps						The pointer to the GPS structure
  * \param	attitude_estimation		The pointer to the attitude estimation structure
- * \param	sim_local_position		The local position of the simulator
  */
-void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, ahrs_t *attitude_estimation, imu_t *imu, local_coordinates_t *sim_local_position, bool* waypoint_set, mavlink_message_handler_t *mavlink_handler, float home_lat, float home_lon, float home_alt, float gravity);
+void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, ahrs_t *attitude_estimation, imu_t *imu, bool* waypoint_set, mavlink_message_handler_t *mavlink_handler, float home_lat, float home_lon, float home_alt, float gravity);
 
 
 /**
@@ -99,6 +96,7 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est);
  */
 void position_estimation_update(position_estimator_t *pos_est);
 
+
 /**
  * \brief	Task to send the mavlink position estimation message
  *
@@ -108,12 +106,14 @@ void position_estimation_update(position_estimator_t *pos_est);
  */
 task_return_t position_estimation_send_position(position_estimator_t* pos_est);
 
+
 /**
  * \brief	Task to send the mavlink GPS global position message
  * 
  * \return	The status of execution of the task
  */
 task_return_t position_estimation_send_global_position(position_estimator_t* pos_est);
+
 
 #ifdef __cplusplus
 }

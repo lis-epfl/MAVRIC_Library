@@ -149,11 +149,11 @@ void mavlink_actions_add_onboard_parameters(void) {
 	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_compass.scale_factor[Y]                          , "Scale_Mag_Y"      );
 	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_compass.scale_factor[Z]                          , "Scale_Mag_Z"      );
 
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_alt                               , "Pos_kp_alt"       );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_alt_baro                               , "Pos_kp_alt_baro"       );
 	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_vel_baro                          , "Pos_kp_velb"      );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_pos[0]                            , "Pos_kp_pos0"      );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_pos[1]                            , "Pos_kp_pos1"      );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_pos[2]                            , "Pos_kp_pos2"      );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_pos_gps[0]                            , "Pos_kp_pos0"      );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_pos_gps[1]                            , "Pos_kp_pos1"      );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_pos_gps[2]                            , "Pos_kp_pos2"      );
 	
 
 

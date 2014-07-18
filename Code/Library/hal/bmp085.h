@@ -27,35 +27,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define BARO_ALT_LPF 0.95f						///< low pass filter factor for altitude measured by the barometer
-#define VARIO_LPF 0.95f							///< low pass filter factor for the Vario altitude speed
-
-#define BMP085_SLAVE_ADDRESS 0x77				///< Address of the barometer sensor on the i2c bus
-
-#define BMP085_ULTRALOWPOWER 0					///< Ultra low power mode
-#define BMP085_STANDARD 1						///< standard mode
-#define BMP085_HIGHRES 2						///< high resolution mode
-#define BMP085_ULTRAHIGHRES 3					///< ultra high resolution mode
-
-#define BMP085_CAL_AC1 0xAA						///< R Calibration data (16 bits)
-#define BMP085_CAL_AC2 0xAC						///< R Calibration data (16 bits)
-#define BMP085_CAL_AC3 0xAE						///< R Calibration data (16 bits)
-#define BMP085_CAL_AC4 0xB0						///< R Calibration data (16 bits)
-#define BMP085_CAL_AC5 0xB2						///< R Calibration data (16 bits)
-#define BMP085_CAL_AC6 0xB4						///< R Calibration data (16 bits)
-#define BMP085_CAL_B1 0xB6						///< R Calibration data (16 bits)
-#define BMP085_CAL_B2 0xB8						///< R Calibration data (16 bits)
-#define BMP085_CAL_MB 0xBA						///< R Calibration data (16 bits)
-#define BMP085_CAL_MC 0xBC						///< R Calibration data (16 bits)
-#define BMP085_CAL_MD 0xBE						///< R Calibration data (16 bits)
-
-#define BMP085_CONTROL 0xF4						///< Control register of the barometer sensor 
-#define BMP085_TEMPDATA 0xF6					///< Temperature register of the barometer sensor 
-#define BMP085_PRESSUREDATA 0xF6				///< Pressure Data register of the barometer sensor 
-#define BMP085_READTEMPCMD 0x2E					///< Read temperature Command register of the barometer sensor 
-#define BMP085_READPRESSURECMD 0x34				///< Read Pressure Command register of the barometer sensor 
-
-#define BMP085_OVERSAMPLING_MODE BMP085_HIGHRES	///< Set oversampling mode of the barometer sensor to high resolution mode
 
 /**
  * \brief pressure_sensor_state_t can get three different state: Idle, get Temperature or get Pressure
@@ -66,6 +37,7 @@ typedef enum pressure_sensor_state_t
 	GET_TEMP,			///< Getting temperature state
 	GET_PRESSURE		///< Getting pressure state
 } pressure_sensor_state_t;
+
 
 /**
  * \brief structure containing all the barometer's data
@@ -86,20 +58,29 @@ typedef struct pressure_data_t
 	float dt;						///< Time step for the derivative
 } pressure_data_t;
 
+
 /**
  * \brief Initialize the barometer sensor
 */
-void bmp085_init(pressure_data_t *pressure_outputs);
+void bmp085_init(pressure_data_t *baro);
+
 
 /**
  * \brief Initialize the barometer sensor in slow mode
 */
 void bmp085_init_slow(void);
 
+
 /**
- * \brief Start the pressure measurement
-*/
-void bmp085_start_pressure_measurement(pressure_data_t *pressure_outputs);
+ * \brief	Initialization of the pos_est->barometer offset
+ *
+ * \param	pos_est			The pointer to the position estimation structure
+ * \param	pos_est->barometer		The pointer to the pos_est->barometer structure
+ *
+ * \return	void
+ */
+void bmp085_reset_origin_altitude(pressure_data_t* baro, float origin_altitude);
+
 
 /**
  * \brief Get the pressure data n slow mode
@@ -108,14 +89,8 @@ void bmp085_start_pressure_measurement(pressure_data_t *pressure_outputs);
  *
  * \return a pointer to the pressure data structure
 */
-void bmp085_get_pressure_data_slow(pressure_data_t *pressure_outputs);
+void bmp085_update(pressure_data_t *baro);
 
-/**
- * \brief Returns whether a new valid measure is ready
- *
- * \return a boolean: true if a new valid measure is ready
-*/
-bool bmp085_newValidBarometer(pressure_data_t *pressure_outputs, uint32_t *timePrevBarometer);
 
 /**
  * \brief	Task to send the mavlink scaled pressure message
@@ -124,7 +99,8 @@ bool bmp085_newValidBarometer(pressure_data_t *pressure_outputs, uint32_t *timeP
  *
  * \return	The status of execution of the task
  */
-task_return_t bmp085_send_pressure(pressure_data_t* pressure);
+task_return_t bmp085_send_pressure(pressure_data_t* baro);
+
 
 #ifdef __cplusplus
 }

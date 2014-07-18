@@ -652,12 +652,14 @@ uint32_t idleTimer;							///< Last time that the GPS driver got a good packet f
 uint32_t idleTimeout;						///< Time in milliseconds after which we will assume the GPS is no longer sending us updates and attempt a re-init. 1200ms allows a small amount of slack over the worst-case 1Hz update rate.
 uint32_t last_fix_time;						///< Last fix time
 
+
 /**
  * \brief	Initialize the gps U-Blox module
  *
  * \param	UID the uart ID
  */
 void gps_ublox_init(gps_Data_type_t *GPS_data, int32_t UID);
+
 
 /**
  * \brief	To configure the GPS in binary mode and the Navigation messages we want
@@ -668,19 +670,12 @@ void gps_ublox_init(gps_Data_type_t *GPS_data, int32_t UID);
  */
 void gps_ublox_configure_gps(gps_Data_type_t *GPS_data);
 
+
 /**
  * \brief	The function that needs to be called to get the GPS information
  */
 void gps_ublox_update(gps_Data_type_t *GPS_data);
 
-/**
- * \brief	The function that tells if a message is arrived at time tnow
- *
- * \param	prevGpsMsgTime		the time of the previous GPS message
- *
- * \return	if the latest GPS message is arrived at tnow
- */
-bool gps_ublox_newValidGpsMsg(gps_Data_type_t *GPS_data, uint32_t *prevGpsMsgTime);
 
 /**
  * \brief	Task to send the mavlink gps raw message
