@@ -25,6 +25,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "scheduler.h"
 
 #define MONITOR_CHANNELS 10
 #define MONITOR_SAMPLES  10
@@ -57,12 +58,13 @@ typedef struct
  */
 void analog_monitor_init(analog_monitor_t* analog_monitor);
 
+
 /**
  * \brief	Update of the analog monitor
  * 
  * \param	analog_monitor	The pointer to the analog monitor structure
  */
-void analog_monitor_update(analog_monitor_t* analog_monitor);
+task_return_t analog_monitor_update(analog_monitor_t* analog_monitor);
 
 #ifdef __cplusplus
 	}

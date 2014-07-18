@@ -159,10 +159,10 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, task_set_t* task_set, mavlink_message_handler_t* message_handler) 
+void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler) 
 {
 	// Init debug mode
-	onboard_parameters->debug       = config->debug;
+	onboard_parameters->debug = config->debug;
 
 	// Allocate memory for the onboard parameters
 	onboard_parameters->param_set = malloc( sizeof(onboard_parameters_set_t) + sizeof(onboard_parameters_entry_t[config->max_param_count]) );
@@ -170,9 +170,10 @@ void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 	onboard_parameters->param_set->param_count = 0;
 
 	// Add onboard parameter telemetry to the scheduler
-	scheduler_add_task(	task_set, 
+	scheduler_add_task(	scheduler, 
 						100000, 
 						RUN_REGULAR, 
+						PERIODIC_ABSOLUTE,
 						(task_function_t)&onboard_parameters_send_scheduled_parameters, 
 						(task_argument_t)onboard_parameters, 
 						MAVLINK_MSG_ID_PARAM_VALUE);
@@ -368,17 +369,8 @@ void onboard_parameters_preflight_storage(onboard_parameters_t* onboard_paramete
 	 	print_util_dbg_print("Writing to flashc\n");
 	 	onboard_parameters_write_parameters_to_flashc(onboard_parameters);
 	}
-	
-	//// Mission parameters storage
-	//if (packet.param2 == 0)
-	//{
-	 	//// read mission from flash
-	//}
-	//else if (packet.param2 == 1)
-	//{
-	 	//// write mission to flash
-	//}
-	//break;
+
+	mavlink_msg_command_ack_send(MAVLINK_COMM_0, MAV_CMD_PREFLIGHT_STORAGE, MAV_RESULT_ACCEPTED);
 }
 
 

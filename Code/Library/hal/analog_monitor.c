@@ -147,8 +147,9 @@ void analog_monitor_init(analog_monitor_t* analog_monitor)
 	}
 }
 
-void analog_monitor_update(analog_monitor_t* analog_monitor)
+task_return_t analog_monitor_update(analog_monitor_t* analog_monitor)
 {
+
 	for (int32_t i = 0; i < MONITOR_CHANNELS; ++i)
 	{
 		if(analog_monitor->enable[i])
@@ -156,7 +157,10 @@ void analog_monitor_update(analog_monitor_t* analog_monitor)
 			analog_monitor->avg[i] = analog_compute_avg(analog_monitor, i) * CONV_FACTOR[i];
 		}
 	}
+
 	trigger_analog_monitor();
+
+	return TASK_RUN_SUCCESS;
 }
 
 void trigger_analog_monitor(void) 

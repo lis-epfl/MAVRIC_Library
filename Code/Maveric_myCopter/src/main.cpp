@@ -24,33 +24,18 @@ extern "C" {
 central_data_t *centralData;
 
 void initialisation() 
-{
-	int32_t i;
-	
+{	
 	centralData = central_data_get_pointer_to_struct();
 	boardsupport_init(centralData);
 	central_data_init();
 		
 	mavlink_actions_init(); // TODO: move read from flash elsewhere
 	mavlink_telemetry_init();
-	
-		/*	
-	 * Use this to store or read or reset parameters on flash memory
-	 *
-	onboard_parameters_write_parameters_to_flashc();
-	if(onboard_parameters_read_parameters_from_flashc())
-	{
-		simulation_calib_set(&(centralData->sim_model));
-	}
-	 *
-	 */
-	
+		
 	LED_On(LED1);
-	for (i = 1; i < 8; i++)
-	{
-		piezo_speaker_beep(100, 500 * i);
-		delay_ms(2);
-	}
+
+	piezo_speaker_mario_melody();
+
 	print_util_dbg_print("OK. Starting up.\n");
 	
 	centralData->state_structure.mav_state = MAV_STATE_STANDBY;
@@ -66,7 +51,7 @@ int main (void)
 	
 	while (1 == 1) 
 	{
-		scheduler_update(tasks_get_main_taskset(), ROUND_ROBIN);
+		scheduler_update(&centralData->scheduler);
 	}
 
 	return 0;

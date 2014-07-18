@@ -65,6 +65,8 @@ extern "C" {
  * \brief The central data structure
  */
 typedef struct  {
+	scheduler_t	scheduler;
+
 	mavlink_communication_t mavlink_communication;
 
 	analog_monitor_t adc;										///< The analog to digital converter structure

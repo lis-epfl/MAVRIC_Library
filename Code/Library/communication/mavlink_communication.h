@@ -34,7 +34,7 @@ extern "C" {
  */
 typedef struct 
 {
-	task_set_t 						task_set;					///<	Task set for scheduling of down messages
+	scheduler_t 					scheduler;					///<	Task set for scheduling of down messages
 	mavlink_stream_t 				mavlink_stream;				///< 	Mavlink interface using streams
 	mavlink_message_handler_t 		message_handler;			///< 	Message handler
 	onboard_parameters_t 			onboard_parameters;			///< 	Onboard parameters
@@ -46,6 +46,7 @@ typedef struct
  */
 typedef struct
 {
+	scheduler_conf_t				scheduler_config;
 	mavlink_stream_conf_t 			mavlink_stream_config;		///< 	Configuration for the module mavlink stream
 	mavlink_message_handler_conf_t	message_handler_config;		///< 	Configuration for the module message handler
 	onboard_parameters_conf_t		onboard_parameters_config;	///< 	Configuration for the module onboard parameters
