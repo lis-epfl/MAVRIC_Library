@@ -158,11 +158,10 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-
-void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, task_set_t* task_set, mavlink_message_handler_t* message_handler) 
+void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler) 
 {
 	// Init debug mode
-	onboard_parameters->debug       = config->debug;
+	onboard_parameters->debug = config->debug;
 
 	// Allocate memory for the onboard parameters
 	onboard_parameters->param_set = malloc( sizeof(onboard_parameters_set_t) + sizeof(onboard_parameters_entry_t[config->max_param_count]) );
@@ -170,9 +169,10 @@ void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 	onboard_parameters->param_set->param_count = 0;
 
 	// Add onboard parameter telemetry to the scheduler
-	scheduler_add_task(	task_set, 
+	scheduler_add_task(	scheduler, 
 						100000, 
 						RUN_REGULAR, 
+						PERIODIC_ABSOLUTE,
 						(task_function_t)&onboard_parameters_send_scheduled_parameters, 
 						(task_argument_t)onboard_parameters, 
 						MAVLINK_MSG_ID_PARAM_VALUE);

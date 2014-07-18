@@ -465,7 +465,7 @@ void position_estimation_update(position_estimator_t *pos_est)
 	}
 }
 
-task_return_t postition_estimation_send_position(position_estimator_t* pos_est)
+task_return_t position_estimation_send_position(position_estimator_t* pos_est)
 {
 	mavlink_msg_local_position_ned_send(	MAVLINK_COMM_0,
 											time_keeper_get_millis(),

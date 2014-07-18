@@ -298,7 +298,7 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 // 					int32_t i;
 // 					print_util_dbg_print("send all\n");
 // 					// send full list of streams
-// 					for (i = 0; i < mavlink_task_set.number_of_tasks; i++) 
+// 					for (i = 0; i < mavlink_task_set.task_count; i++) 
 // 					{
 // 						task_entry_t *task=scheduler_get_task_by_index(&mavlink_task_set, i);
 // 						scheduler_run_task_now(task);

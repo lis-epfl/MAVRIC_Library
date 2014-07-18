@@ -66,7 +66,7 @@ int main (void)
 	
 	while (1 == 1) 
 	{
-		scheduler_update(tasks_get_main_taskset(), ROUND_ROBIN);
+		scheduler_update(&centralData->scheduler);
 	}
 
 	return 0;
