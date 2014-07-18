@@ -89,7 +89,7 @@ static bool match_cmd(mavlink_message_handler_cmd_callback_t* cmd_callback, mavl
 			{
 				if ( cmd_callback->compid_filter == MAV_COMP_ID_ALL || cmd_callback->compid_filter == msg->compid )						// The system is from the good component 
 				{
-					if ( cmd_callback->compid_target == MAV_COMP_ID_ALL || cmd_callback->compid_target == mavlink_system.compid )		// This system is the target of the command
+					if ( cmd_callback->compid_target == MAV_COMP_ID_ALL || cmd_callback->compid_target == cmd->target_component )		// This system is the target of the command
 					{				
 						match = true;
 					}
@@ -159,6 +159,7 @@ void mavlink_message_handler_add_cmd_callback(	mavlink_message_handler_t* 				me
 		new_callback->command_id = cmd_callback->command_id;
 		new_callback->sysid_filter = cmd_callback->sysid_filter;
 	 	new_callback->compid_filter = cmd_callback->compid_filter;
+		new_callback->compid_target = cmd_callback->compid_target;
 		new_callback->function = cmd_callback->function;
 		new_callback->module_struct = cmd_callback->module_struct;
 
@@ -222,10 +223,29 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 		mavlink_command_long_t cmd;
 		mavlink_msg_command_long_decode(msg, &cmd);
 		
+		 //print packet command and parameters for debug
+		 print_util_dbg_print("target sysID:");
+		 print_util_dbg_print_num(cmd.target_system,10);
+		 print_util_dbg_print("target compID:");
+		 print_util_dbg_print_num(cmd.target_component,10);
+		 print_util_dbg_print("parameters:");
+		 print_util_dbg_print_num(cmd.param1,10);
+		 print_util_dbg_print_num(cmd.param2,10);
+		 print_util_dbg_print_num(cmd.param3,10);
+		 print_util_dbg_print_num(cmd.param4,10);
+		 print_util_dbg_print_num(cmd.param5,10);
+		 print_util_dbg_print_num(cmd.param6,10);
+		 print_util_dbg_print_num(cmd.param7,10);
+		 print_util_dbg_print(", command id:");
+		 print_util_dbg_print_num(cmd.command,10);
+		 print_util_dbg_print(", confirmation:");
+		 print_util_dbg_print_num(cmd.confirmation,10);
+		 print_util_dbg_print("\n");
+		
 		if (cmd.command >= 0 && cmd.command < MAV_CMD_ENUM_END)
 		{
 			// The command has valid command ID 
-			if(	(cmd.target_system == mavlink_system.sysid)||(cmd.target_system == MAV_SYS_ID_ALL) )
+			if(	(cmd.target_system == mavlink_system.sysid)||(cmd.target_system == 255) ) //TODO: modfiy to MAV_SYS_ID_ALL when QGroundControl modified
 			{
 				// The command is for this system
 				for (uint32_t i = 0; i < message_handler->cmd_callback_set->callback_count; ++i)
