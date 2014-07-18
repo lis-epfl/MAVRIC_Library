@@ -538,7 +538,7 @@ task_return_t tasks_run_barometer_update(void* arg)
 	} 
 	else
 	{
-		bmp085_get_pressure_data_slow(&(centralData->pressure));
+		bmp085_update(&(centralData->pressure));
 	}
 
 	return TASK_RUN_SUCCESS;
