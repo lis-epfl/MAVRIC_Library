@@ -30,7 +30,15 @@ void scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config)
 
 	// Allocate memory for the task set
 	scheduler->task_set = malloc( sizeof(task_set_t) + sizeof(task_entry_t[config->max_task_count]) );
-	scheduler->task_set->max_task_count = config->max_task_count;
+	if ( scheduler->task_set != NULL ) 
+	{
+		scheduler->task_set->max_task_count = config->max_task_count;
+	}
+	else
+	{
+		print_util_dbg_print("[SCHEDULER] ERROR ! Bad memory allocation");
+		scheduler->task_set->max_task_count = 0;		
+	}
 
 	scheduler->task_set->task_count = 0;
 	scheduler->task_set->current_schedule_slot = 0;
@@ -66,28 +74,6 @@ bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run
 
 	return true;
 }
-
-// bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, task_argument_t function_argument, uint32_t task_id) 
-// {
-// 	task_set_t* ts = scheduler->task_set;
-
-// 	int32_t task_slot = 0;
-	
-// 	while ((task_slot < ts->max_task_count) && (ts->tasks[task_slot].call_function != NULL)) 
-// 	{
-// 		task_slot++;
-// 	}
-
-// 	if (task_slot >= ts->max_task_count) 
-// 	{
-// 		return false;
-// 	}
-
-// 	scheduler_register_task(scheduler,  task_slot,   repeat_period, run_mode,  call_function, function_argument);
-// 	ts->tasks[task_slot].task_id = task_id;
-
-// 	return true;
-// }
 
 
 void scheduler_sort_taskset_by_period(scheduler_t* scheduler)

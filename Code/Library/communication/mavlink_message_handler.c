@@ -19,6 +19,7 @@
 
 #include "mavlink_message_handler.h"
 #include "print_util.h"
+#include "piezo_speaker.h"
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -113,13 +114,34 @@ void mavlink_message_handler_init(mavlink_message_handler_t* message_handler, co
 
 	// Allocate memory for msg handling
 	message_handler->msg_callback_set = malloc( sizeof(mavlink_message_handler_msg_callback_set_t) + sizeof(mavlink_message_handler_msg_callback_t[config->max_msg_callback_count]) );
-    message_handler->msg_callback_set->max_callback_count = config->max_msg_callback_count;
-	message_handler->msg_callback_set->callback_count = 0;
+    
+    if ( message_handler->msg_callback_set != NULL )
+    {
+	    message_handler->msg_callback_set->max_callback_count = config->max_msg_callback_count;
+		message_handler->msg_callback_set->callback_count = 0;
+	}
+	else
+	{
+		print_util_dbg_print("[MESSAGE HANDLER] ERROR ! Bad memory allocation");
+
+		message_handler->msg_callback_set->max_callback_count = 0;
+		message_handler->msg_callback_set->callback_count = 0;	
+	}
+
 
 	// Allocate memory for msg handling
-	message_handler->cmd_callback_set = malloc( sizeof(mavlink_message_handler_cmd_callback_set_t) + sizeof(mavlink_message_handler_cmd_callback_t[config->max_cmd_callback_count]) );
-    message_handler->cmd_callback_set->max_callback_count = config->max_cmd_callback_count;
-	message_handler->cmd_callback_set->callback_count = 0;	
+	message_handler->cmd_callback_set = malloc( sizeof(mavlink_message_handler_cmd_callback_set_t) + sizeof(mavlink_message_handler_cmd_callback_t[config->max_cmd_callback_count]) ); 
+    if ( message_handler->cmd_callback_set != NULL )
+    {
+	    message_handler->cmd_callback_set->max_callback_count = config->max_cmd_callback_count;
+		message_handler->cmd_callback_set->callback_count = 0;	
+	}
+	else
+	{
+		print_util_dbg_print("[COMMAND HANDLER] ERROR ! Bad memory allocation");
+		message_handler->cmd_callback_set->max_callback_count = 0;
+		message_handler->cmd_callback_set->callback_count = 0;		
+	}
 }
 
 
