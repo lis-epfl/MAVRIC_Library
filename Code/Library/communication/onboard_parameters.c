@@ -184,6 +184,7 @@ void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 						100000, 
 						RUN_REGULAR, 
 						PERIODIC_ABSOLUTE,
+						PRIORITY_NORMAL,
 						(task_function_t)&onboard_parameters_send_scheduled_parameters, 
 						(task_argument_t)onboard_parameters, 
 						MAVLINK_MSG_ID_PARAM_VALUE);

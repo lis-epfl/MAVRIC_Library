@@ -60,7 +60,7 @@ typedef struct
 {
 	uint32_t param_count;										///< Number of onboard parameter effectively in the array
 	uint32_t max_param_count; 									///< Maximum number of parameters
-	onboard_parameters_entry_t parameters[];						///< Onboard parameters array
+	onboard_parameters_entry_t parameters[];					///< Onboard parameters array, needs memory allocation
 } onboard_parameters_set_t;
 
 
@@ -73,7 +73,7 @@ typedef struct
 typedef struct 
 {
 	bool debug;												///< Indicates if debug messages should be printed for each param change
-	onboard_parameters_set_t* param_set;					///< Pointer to a set of parameters
+	onboard_parameters_set_t* param_set;					///< Pointer to a set of parameters, needs memory allocation
 } onboard_parameters_t;											
 
 
