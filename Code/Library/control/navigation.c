@@ -239,27 +239,31 @@ task_return_t navigation_update(navigation_t* navigationData)
 		break;
 
 		case MAV_STATE_ACTIVE:
-		switch (navigationData->state_structure->mav_mode)
-		{
-			case MAV_MODE_AUTO_ARMED:
-			if (navigationData->waypoint_handler->waypoint_set)
+			switch (navigationData->state_structure->mav_mode)
 			{
-				navigation_run(navigationData->waypoint_handler->waypoint_coordinates,navigationData);
-			}
-			else
-			{
-				navigation_run(navigationData->waypoint_handler->waypoint_hold_coordinates,navigationData);
-			}
-			break;
+				case MAV_MODE_GPS_NAVIGATION:
+				case MAV_MODE_COLLISION_AVOIDANCE:
+					if (navigationData->waypoint_handler->waypoint_set)
+					{
+						navigation_run(navigationData->waypoint_handler->waypoint_coordinates,navigationData);
+					}
+					else
+					{
+						navigation_run(navigationData->waypoint_handler->waypoint_hold_coordinates,navigationData);
+					}
+					break;
 
-			case MAV_MODE_GUIDED_ARMED:
-			navigation_run(navigationData->waypoint_handler->waypoint_hold_coordinates,navigationData);
+				case MAV_MODE_POSITION_HOLD:
+					navigation_run(navigationData->waypoint_handler->waypoint_hold_coordinates,navigationData);
+					break;
+			
+				default:
+					break;
+			}
 			break;
-		}
-		break;
 
 		case MAV_STATE_CRITICAL:
-		if ((navigationData->state_structure->mav_mode == MAV_MODE_GUIDED_ARMED)||(navigationData->state_structure->mav_mode == MAV_MODE_AUTO_ARMED))
+		if ((navigationData->state_structure->mav_mode == MAV_MODE_POSITION_HOLD)||(navigationData->state_structure->mav_mode == MAV_MODE_GPS_NAVIGATION))
 		{
 			navigation_run(navigationData->waypoint_handler->waypoint_critical_coordinates,navigationData);
 		}

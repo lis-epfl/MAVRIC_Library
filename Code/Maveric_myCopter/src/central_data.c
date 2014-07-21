@@ -69,7 +69,7 @@ void central_data_init()
 				MAV_TYPE_QUADROTOR,
 				MAV_AUTOPILOT_GENERIC,
 				MAV_STATE_BOOT,
-				MAV_MODE_PREFLIGHT,
+				MAV_MODE_SAFE,
 				REAL_MODE, // SIMULATION_MODE
 				&centralData.mavlink_communication.message_handler); 
 	
@@ -131,7 +131,6 @@ void central_data_init()
 	stabilisation_copter_init(	&centralData.stabilisation_copter,
 								&centralData.stabiliser_stack,
 								&centralData.controls,
-								&centralData.run_mode,
 								&centralData.imu,
 								&centralData.attitude_estimation,
 								&centralData.position_estimator,

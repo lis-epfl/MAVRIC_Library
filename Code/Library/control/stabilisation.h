@@ -42,13 +42,6 @@ typedef enum
 	YAW_COORDINATED
 } yaw_mode_t;
 
-typedef enum
-{
-	MOTORS_OFF, 
-	MOTORS_ON, 
-	SIMULATE
-} run_mode_t;
-
 typedef struct 
 {
 	float rpy[3];						///< roll pitch yaw rates/angles

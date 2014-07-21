@@ -20,19 +20,17 @@
 #include "conf_stabilisation_copter.h"
 #include "print_util.h"
 
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, run_mode_t* run_mode, imu_t* imu, ahrs_t* attitude_estimation, position_estimator_t* pos_est,servo_output_t* servos)
+void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, imu_t* imu, ahrs_t* attitude_estimation, position_estimator_t* pos_est,servo_output_t* servos)
 {
 	*stabiliser_stack = stabiliser_defaults_copter;
 	
 	stabilisation_copter->stabiliser_stack = stabiliser_stack;
 	stabilisation_copter->controls = controls;
-	stabilisation_copter->run_mode = run_mode;
 	stabilisation_copter->imu = imu;
 	stabilisation_copter->attitude_estimation = attitude_estimation;
 	stabilisation_copter->pos_est = pos_est;
 	stabilisation_copter->servos = servos;
 	
-	*run_mode = MOTORS_OFF;
 	controls->control_mode = ATTITUDE_COMMAND_MODE;
 	controls->yaw_mode = YAW_RELATIVE;
 	

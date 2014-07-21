@@ -76,7 +76,6 @@ typedef struct  {
 	ahrs_t attitude_estimation;									///< The attitude estimation structure
 	Control_Command_t controls;									///< The control structure used for rate and attitude modes
 	Control_Command_t controls_nav;								///< The control nav structure used for velocity modes
-	run_mode_t run_mode;										///< The mode of the motors (MOTORS_ON, MOTORS_OFF
 
 	stabilise_copter_t stabilisation_copter;					///< The stabilisation structure for copter
 	Stabiliser_Stack_copter_t stabiliser_stack;					///< The stabilisation stack structure (rates, attitude, velocity, thrust)
