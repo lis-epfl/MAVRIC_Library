@@ -51,7 +51,6 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	waypoint_handler->critical_landing = false;
 			
 	waypoint_handler->collision_avoidance = false;
-	waypoint_handler->automatic_take_off = false;
 	waypoint_handler->automatic_landing = false;
 	waypoint_handler->in_the_air = false;
 	
@@ -629,7 +628,7 @@ void waypoint_handler_set_current_waypoint_from_parameter(mavlink_waypoint_handl
 	}
 	else
 	{
-		mavlink_msg_command_ack_send(MAVLINK_COMM_0, MAV_CMD_NAV_RETURN_TO_LAUNCH, MAV_RESULT_TEMPORARILY_REJECTED);
+		mavlink_msg_command_ack_send(MAVLINK_COMM_0, MAV_CMD_NAV_RETURN_TO_LAUNCH, MAV_RESULT_ACCEPTED);
 		// mavlink_msg_mission_ack_send(MAVLINK_COMM_0,mavlink_system.sysid,MAV_COMP_ID_MISSIONPLANNER,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
 	}
 }
@@ -683,7 +682,7 @@ void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handler, mav
 	}
 }
 
-void waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_handler_t* waypoint_handler)
+task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_handler_t* waypoint_handler)
 {
 	if (waypoint_handler->waypoint_sending || waypoint_handler->waypoint_receiving)
 	{
@@ -707,6 +706,7 @@ void waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_handler_t* 
 			}
 		}
 	}
+	return TASK_RUN_SUCCESS;
 }
 
 local_coordinates_t waypoint_handler_set_waypoint_from_frame(mavlink_waypoint_handler_t* waypoint_handler, global_position_t origin)
@@ -823,7 +823,7 @@ void waypoint_handler_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_ha
 
 void waypoint_handler_waypoint_take_off(mavlink_waypoint_handler_t* waypoint_handler)
 {
-	print_util_dbg_print("Automatic take-off. Position hold at: (");
+	print_util_dbg_print("Automatic take-off, will hold position at: (");
 	print_util_dbg_print_num(waypoint_handler->position_estimator->localPosition.pos[X],10);
 	print_util_dbg_print(", ");
 	print_util_dbg_print_num(waypoint_handler->position_estimator->localPosition.pos[Y],10);
@@ -1148,7 +1148,7 @@ void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* waypoint_h
 void waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t *waypoint_handler, mavlink_command_long_t* packet)
 {
 	print_util_dbg_print("Starting automatic take-off from button\n");
-	waypoint_handler->automatic_take_off = true;
+	waypoint_handler->in_the_air = true;
 
 	mavlink_msg_command_ack_send(MAVLINK_COMM_0, MAV_CMD_NAV_TAKEOFF, MAV_RESULT_ACCEPTED);	
 }

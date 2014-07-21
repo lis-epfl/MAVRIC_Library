@@ -232,7 +232,7 @@ task_return_t navigation_update(navigation_t* navigationData)
 	switch (navigationData->state_structure->mav_state)
 	{
 		case MAV_STATE_STANDBY:
-		if (((navigationData->state_structure->mav_mode == MAV_MODE_GUIDED_ARMED)||(navigationData->state_structure->mav_mode == MAV_MODE_AUTO_ARMED)) && !navigationData->waypoint_handler->automatic_take_off)
+		if ((navigationData->state_structure->mav_mode == MAV_MODE_GUIDED_ARMED)||(navigationData->state_structure->mav_mode == MAV_MODE_AUTO_ARMED))
 		{
 			navigation_run(navigationData->waypoint_handler->waypoint_hold_coordinates,navigationData);
 		}

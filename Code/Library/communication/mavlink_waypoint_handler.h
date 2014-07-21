@@ -95,7 +95,6 @@ typedef struct
 	bool critical_next_state;									///< Flag to change critical state in its dedicated state machine
 	
 	bool collision_avoidance;									///< Flag to tell whether the collision avoidance is active or not
-	bool automatic_take_off;									///< Flag to initiate the auto takeoff procedure
 	bool automatic_landing;										///< Flag to initiate the auto landing procedure
 	bool in_the_air;											///< Flag to tell whether the vehicle is airborne or not
 	
@@ -233,11 +232,11 @@ void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handler, mav
 /**
  * \brief						Control if time is over timeout and change sending/receiving flags to false
  *
- * \param num_of_waypoint		The pointer to the number of waypoints
- * \param waypoint_receiving	Flag that is true when we are receiving waypoints, false otherwise
- * \param waypoint_sending		Flag that is true when we are sending waypoints, false otherwise
+ * \param waypoint_handler		The pointer to the waypoint handler structure
+ *
+ * \return	The task status
  */
-void waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_handler_t* waypoint_handler);
+task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_handler_t* waypoint_handler);
 //---------------------------------------------------------------------------------------------------------------------------------------//
 
 /**

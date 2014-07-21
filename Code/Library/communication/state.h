@@ -130,23 +130,23 @@ void state_disable_mode(state_structure_t *state_structure, mav_flag_t mav_mode_
  *
  * \return	The boolean value of the test
  */
-bool state_test_if_in_mode(state_structure_t *state_structure, mav_flag_t mav_mode_flag);
+bool state_test_if_in_flag_mode(state_structure_t *state_structure, mav_flag_t mav_mode_flag);
 
 /**
  * \brief						Test if the mode has the mode flag in it
  *
  * \param	state_structure		The pointer to the state structure
- * \param	mav_mode			The flag of the MAV mode
+ * \param	mav_mode			The MAV mode
  *
  * \return	The boolean value of the test
  */
-bool state_test_if_first_time_in_mode(state_structure_t *state_structure, mav_flag_t mav_mode);
+bool state_test_if_first_time_in_mode(state_structure_t *state_structure, mav_mode_t mav_mode);
 
 /**
  * \brief						Test if the mode has the mode flag in it
  *
  * \param	state_structure		The pointer to the state structure
- * \param	mav_mode			The flag of the MAV mode
+ * \param	mav_mode			The MAV mode
  */
 void state_set_new_mode(state_structure_t *state_structure, mav_mode_t mav_mode);
 

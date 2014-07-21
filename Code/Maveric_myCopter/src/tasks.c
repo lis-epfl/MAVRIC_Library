@@ -70,7 +70,7 @@ void switch_off_motors(void)
 
 	centralData->state_structure.mav_state = MAV_STATE_STANDBY;
 	state_disable_mode(&centralData->state_structure,MAV_MODE_FLAG_SAFETY_ARMED);
-	centralData->state_structure.mav_mode = MAV_MODE_SAFE;
+	state_set_new_mode(&centralData->state_structure,MAV_MODE_SAFE);
 	
 	centralData->waypoint_handler.in_the_air = false;
 }
@@ -114,7 +114,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 						break;
 				}
 			}
-			if (state_test_if_in_mode(&centralData->state_structure,MAV_MODE_FLAG_SAFETY_ARMED))
+			if (state_test_if_in_flag_mode(&centralData->state_structure,MAV_MODE_FLAG_SAFETY_ARMED))
 			{
 				switch (channelSwitches)
 				{
@@ -140,28 +140,22 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 							state_set_new_mode(&centralData->state_structure,MAV_MODE_POSITION_HOLD);
 							
 							// Activate automatic take-off mode
-							//if (centralData->state_structure.mav_mode_previous != MAV_MODE_POSITION_HOLD)
 							if (state_test_if_first_time_in_mode(&centralData->state_structure,MAV_MODE_POSITION_HOLD))
 							{
-								centralData->waypoint_handler.automatic_take_off = true;
+								waypoint_handler_waypoint_take_off(&centralData->waypoint_handler);
 							}
-						}
-						// Automatic take-off mode
-						if(centralData->waypoint_handler.automatic_take_off)
-						{
-							centralData->waypoint_handler.automatic_take_off = false;
-							waypoint_handler_waypoint_take_off(&centralData->waypoint_handler);
-						}
 							
-						distFromHomeSqr =	SQR(centralData->position_estimator.localPosition.pos[X] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[X]) +
-						SQR(centralData->position_estimator.localPosition.pos[Y] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[Y]) +
-						SQR(centralData->position_estimator.localPosition.pos[Z] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[Z]);
-						if ((centralData->waypoint_handler.dist2wp_sqr <= 16.0f)&&(!centralData->waypoint_handler.automatic_take_off))
-						{
-							centralData->state_structure.mav_state = MAV_STATE_ACTIVE;
-							print_util_dbg_print("Automatic take-off finised, distFromHomeSqr (10x):");
-							print_util_dbg_print_num(distFromHomeSqr * 10.0f,10);
-							print_util_dbg_print(".\n");
+							distFromHomeSqr =	SQR(centralData->position_estimator.localPosition.pos[X] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[X]) +
+							SQR(centralData->position_estimator.localPosition.pos[Y] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[Y]) +
+							SQR(centralData->position_estimator.localPosition.pos[Z] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[Z]);
+						
+							if (centralData->waypoint_handler.dist2wp_sqr <= 16.0f)
+							{
+								centralData->state_structure.mav_state = MAV_STATE_ACTIVE;
+								print_util_dbg_print("Automatic take-off finised, distFromHomeSqr (10x):");
+								print_util_dbg_print_num(distFromHomeSqr * 10.0f,10);
+								print_util_dbg_print(".\n");
+							}
 						}
 						break;
 
@@ -172,33 +166,27 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 							state_set_new_mode(&centralData->state_structure,MAV_MODE_GPS_NAVIGATION);
 							
 							// Automatic take-off mode
-							//if (centralData->state_structure.mav_mode_previous != MAV_MODE_GPS_NAVIGATION)
 							if(state_test_if_first_time_in_mode(&centralData->state_structure,MAV_MODE_GPS_NAVIGATION))
 							{
-								centralData->waypoint_handler.automatic_take_off = true;
+								waypoint_handler_waypoint_take_off(&centralData->waypoint_handler);
 							}
-						}
-						if(centralData->waypoint_handler.automatic_take_off)
-						{
-							centralData->waypoint_handler.automatic_take_off = false;
-							waypoint_handler_waypoint_take_off(&centralData->waypoint_handler);
-						}
 
-						if (!centralData->waypoint_handler.waypoint_set)
-						{
-							waypoint_handler_waypoint_init(&centralData->waypoint_handler);
-						}
+							if (!centralData->waypoint_handler.waypoint_set)
+							{
+								waypoint_handler_waypoint_init(&centralData->waypoint_handler);
+							}
 
-						distFromHomeSqr =	SQR(centralData->position_estimator.localPosition.pos[X] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[X]) +
-						SQR(centralData->position_estimator.localPosition.pos[Y] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[Y]) +
-						SQR(centralData->position_estimator.localPosition.pos[Z] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[Z]);
+							distFromHomeSqr =	SQR(centralData->position_estimator.localPosition.pos[X] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[X]) +
+							SQR(centralData->position_estimator.localPosition.pos[Y] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[Y]) +
+							SQR(centralData->position_estimator.localPosition.pos[Z] - centralData->waypoint_handler.waypoint_hold_coordinates.pos[Z]);
 						
-						if ((centralData->waypoint_handler.dist2wp_sqr <= 16.0f)&&(!centralData->waypoint_handler.automatic_take_off))
-						{
-							centralData->state_structure.mav_state = MAV_STATE_ACTIVE;
-							print_util_dbg_print("Automatic take-off finised, distFromHomeSqr (10x):");
-							print_util_dbg_print_num(distFromHomeSqr * 10.0f,10);
-							print_util_dbg_print(".\n");
+							if (centralData->waypoint_handler.dist2wp_sqr <= 16.0f)
+							{
+								centralData->state_structure.mav_state = MAV_STATE_ACTIVE;
+								print_util_dbg_print("Automatic take-off finised, distFromHomeSqr (10x):");
+								print_util_dbg_print_num(distFromHomeSqr * 10.0f,10);
+								print_util_dbg_print(".\n");
+							}
 						}
 						break;
 				}
@@ -242,7 +230,6 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 
 				case 2:
 					state_set_new_mode(&centralData->state_structure,MAV_MODE_POSITION_HOLD);
-					//if (centralData->state_structure.mav_mode_previous != MAV_MODE_POSITION_HOLD)
 					if (state_test_if_first_time_in_mode(&centralData->state_structure,MAV_MODE_POSITION_HOLD))
 					{
 						waypoint_handler_waypoint_hold_init(&centralData->waypoint_handler,centralData->position_estimator.localPosition);
@@ -251,7 +238,6 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 
 				case 3:
 					state_set_new_mode(&centralData->state_structure,MAV_MODE_GPS_NAVIGATION);
-					//if (centralData->state_structure.mav_mode_previous != MAV_MODE_GPS_NAVIGATION)
 					if (state_test_if_first_time_in_mode(&centralData->state_structure,MAV_MODE_GPS_NAVIGATION))
 					{
 						centralData->waypoint_handler.auto_landing_enum = DESCENT_TO_SMALL_ALTITUDE;
@@ -260,7 +246,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 					break;
 			}
 			
-			if (state_test_if_in_mode(&centralData->state_structure,MAV_MODE_FLAG_AUTO_ENABLED))
+			if (state_test_if_in_flag_mode(&centralData->state_structure,MAV_MODE_FLAG_AUTO_ENABLED))
 			{
 				if (!centralData->waypoint_handler.waypoint_set)
 				{
@@ -316,7 +302,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 			}
 			
 			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD, MAV_MODE_GPS_NAVIGATION and MAV_MODE_COLLISION_AVOIDANCE
-			if (state_test_if_in_mode(&centralData->state_structure,MAV_MODE_FLAG_STABILIZE_ENABLED))
+			if (state_test_if_in_flag_mode(&centralData->state_structure,MAV_MODE_FLAG_STABILIZE_ENABLED))
 			{
 				if (centralData->state_structure.mav_state_previous != MAV_STATE_CRITICAL)
 				{
@@ -406,7 +392,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 {
 	tasks_run_imu_update(0);
 	
-	switch(centralData->state_structure.mav_mode)
+	switch(centralData->state_structure.mav_mode - (centralData->state_structure.mav_mode & MAV_MODE_FLAG_DECODE_POSITION_HIL))
 	{
 		case MAV_MODE_ATTITUDE_CONTROL:
 			centralData->controls = remote_controller_get_command_from_remote();
@@ -467,12 +453,11 @@ task_return_t tasks_run_stabilisation(void* arg)
 	}
 	
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
-	if (centralData->state_structure.simulation_mode_previous == REAL_MODE)
+	//if (centralData->state_structure.simulation_mode_previous == REAL_MODE)
+	if (!state_test_if_in_flag_mode(&centralData->state_structure,MAV_MODE_FLAG_HIL_ENABLED))
 	{
 		servo_pwm_set(centralData->servos);
 	}
-	
-	return TASK_RUN_SUCCESS;
 	
 	return TASK_RUN_SUCCESS;
 }
@@ -515,36 +500,20 @@ task_return_t tasks_run_barometer_update(void* arg)
 	//return TASK_RUN_SUCCESS;
 //}
 
-
-/**
- * \brief	Task to check if the time overpass the timer limit
- * 
- * \return	The status of execution of the task
- */
-task_return_t control_waypoint_timeout (void* arg);
-
-task_return_t control_waypoint_timeout (void* arg)
-{
-	waypoint_handler_control_time_out_waypoint_msg(&centralData->waypoint_handler);
-	
-	return TASK_RUN_SUCCESS;
-}
-
-
 void tasks_create_tasks() 
 {	
 	centralData = central_data_get_pointer_to_struct();
 	
 	scheduler_t* scheduler = &centralData->scheduler;
 
-	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, &tasks_run_stabilisation                       , 0                                                    , 0);
-	scheduler_add_task(scheduler    , 15000                           , RUN_REGULAR , PERIODIC_RELATIVE, &tasks_run_barometer_update                    , 0                                                    , 1);
-	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, &tasks_run_gps_update                          , 0                                                    , 2);
-	scheduler_add_task(scheduler    , ORCA_TIME_STEP_MILLIS * 1000.0f , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&navigation_update            , (task_argument_t)&centralData->navigationData		   , 3);
-	scheduler_add_task(scheduler    , 200000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, &tasks_set_mav_mode_n_state                    , 0                                                    , 4);
-	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&mavlink_communication_update , (task_argument_t)&centralData->mavlink_communication , 5);
-	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&analog_monitor_update        , (task_argument_t)&centralData->adc                   , 6);
-	scheduler_add_task(scheduler    , 10000                           , RUN_REGULAR , PERIODIC_ABSOLUTE, &control_waypoint_timeout                      , 0                                                    , 7);
-	// scheduler_add_task(scheduler , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, &sonar_update                                  , 0                                                    , 0);
+	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, &tasks_run_stabilisation											, 0														, 0);
+	scheduler_add_task(scheduler    , 15000                           , RUN_REGULAR , PERIODIC_RELATIVE, &tasks_run_barometer_update										, 0														, 1);
+	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, &tasks_run_gps_update												, 0														, 2);
+	scheduler_add_task(scheduler    , ORCA_TIME_STEP_MILLIS * 1000.0f , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&navigation_update								, (task_argument_t)&centralData->navigationData			, 3);
+	scheduler_add_task(scheduler    , 200000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, &tasks_set_mav_mode_n_state										, 0														, 4);
+	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&mavlink_communication_update						, (task_argument_t)&centralData->mavlink_communication	, 5);
+	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&analog_monitor_update							, (task_argument_t)&centralData->adc					, 6);
+	scheduler_add_task(scheduler    , 10000                           , RUN_REGULAR , PERIODIC_ABSOLUTE, (task_function_t)&waypoint_handler_control_time_out_waypoint_msg   , (task_argument_t)&centralData->waypoint_handler		, 7);
+	// scheduler_add_task(scheduler , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, &sonar_update														, 0														, 8);
 
 }
