@@ -19,6 +19,7 @@
 
 #include "mavlink_message_handler.h"
 #include "print_util.h"
+#include "piezo_speaker.h"
 
 #include <stdlib.h>
 #include <stdbool.h>
@@ -113,13 +114,34 @@ void mavlink_message_handler_init(mavlink_message_handler_t* message_handler, co
 
 	// Allocate memory for msg handling
 	message_handler->msg_callback_set = malloc( sizeof(mavlink_message_handler_msg_callback_set_t) + sizeof(mavlink_message_handler_msg_callback_t[config->max_msg_callback_count]) );
-    message_handler->msg_callback_set->max_callback_count = config->max_msg_callback_count;
-	message_handler->msg_callback_set->callback_count = 0;
+    
+    if ( message_handler->msg_callback_set != NULL )
+    {
+	    message_handler->msg_callback_set->max_callback_count = config->max_msg_callback_count;
+		message_handler->msg_callback_set->callback_count = 0;
+	}
+	else
+	{
+		print_util_dbg_print("[MESSAGE HANDLER] ERROR ! Bad memory allocation");
+
+		message_handler->msg_callback_set->max_callback_count = 0;
+		message_handler->msg_callback_set->callback_count = 0;	
+	}
+
 
 	// Allocate memory for msg handling
-	message_handler->cmd_callback_set = malloc( sizeof(mavlink_message_handler_cmd_callback_set_t) + sizeof(mavlink_message_handler_cmd_callback_t[config->max_cmd_callback_count]) );
-    message_handler->cmd_callback_set->max_callback_count = config->max_cmd_callback_count;
-	message_handler->cmd_callback_set->callback_count = 0;	
+	message_handler->cmd_callback_set = malloc( sizeof(mavlink_message_handler_cmd_callback_set_t) + sizeof(mavlink_message_handler_cmd_callback_t[config->max_cmd_callback_count]) ); 
+    if ( message_handler->cmd_callback_set != NULL )
+    {
+	    message_handler->cmd_callback_set->max_callback_count = config->max_cmd_callback_count;
+		message_handler->cmd_callback_set->callback_count = 0;	
+	}
+	else
+	{
+		print_util_dbg_print("[COMMAND HANDLER] ERROR ! Bad memory allocation");
+		message_handler->cmd_callback_set->max_callback_count = 0;
+		message_handler->cmd_callback_set->callback_count = 0;		
+	}
 }
 
 
@@ -278,58 +300,3 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 		}
 	}
 }
-
-
-// ################
-// TODO : add this (move to mavlink_communication ?)
-// ##############
-// 		case MAVLINK_MSG_ID_REQUEST_DATA_STREAM: 
-// 		{ // 66
-// 			volatile mavlink_request_data_stream_t request;
-// 			mavlink_msg_request_data_stream_decode(&rec->msg, (mavlink_request_data_stream_t*) &request);
-// 			// TODO: control target_component == compid!
-// 			if ((uint8_t)request.target_system == (uint8_t)mavlink_system.sysid)
-// 			//&& (uint8_t)request.target_component == (uint8_t)mavlink_system.compid)
-// 			{
-// 				print_util_dbg_print("stream request:");
-// 				print_util_dbg_print_num(request.target_component,10);
-// 				if (request.req_stream_id==255) 
-// 				{
-// 					int32_t i;
-// 					print_util_dbg_print("send all\n");
-// 					// send full list of streams
-// 					for (i = 0; i < mavlink_task_set.task_count; i++) 
-// 					{
-// 						task_entry_t *task=scheduler_get_task_by_index(&mavlink_task_set, i);
-// 						scheduler_run_task_now(task);
-// 					}					
-// 				} 
-// 				else 
-// 				{
-// 					task_entry_t *task =scheduler_get_task_by_id(&mavlink_task_set, request.req_stream_id);
-// 					print_util_dbg_print(" stream="); print_util_dbg_print_num(request.req_stream_id, 10);
-// 					print_util_dbg_print(" start_stop=");print_util_dbg_print_num(request.start_stop, 10);
-// 					print_util_dbg_print(" rate=");print_util_dbg_print_num(request.req_message_rate,10);
-// 					print_util_dbg_print("\n");
-// 					print_util_dbg_print("\n");
-// 					if (request.start_stop) 
-// 					{
-// 						scheduler_change_run_mode(task, RUN_REGULAR);
-// 					}
-// 					else 
-// 					{
-// 						scheduler_change_run_mode(task, RUN_NEVER);
-// 					}
-// 					if (request.req_message_rate>0) 
-// 					{
-// 						scheduler_change_task_period(task, SCHEDULER_TIMEBASE / (uint32_t)request.req_message_rate);
-// 					}
-// 				}
-// 			}
-// 		}	
-// 		break;
-// 	}
-// }
-
-// // handle all platform-specific messages in mavlink-actions:
-// mavlink_actions_handle_specific_messages(rec);

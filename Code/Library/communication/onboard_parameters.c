@@ -166,14 +166,25 @@ void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 
 	// Allocate memory for the onboard parameters
 	onboard_parameters->param_set = malloc( sizeof(onboard_parameters_set_t) + sizeof(onboard_parameters_entry_t[config->max_param_count]) );
-	onboard_parameters->param_set->max_param_count = config->max_param_count;
-	onboard_parameters->param_set->param_count = 0;
+	
+	if ( onboard_parameters->param_set != NULL )
+	{
+		onboard_parameters->param_set->max_param_count = config->max_param_count;
+		onboard_parameters->param_set->param_count = 0;
+	}
+	else
+	{
+		print_util_dbg_print("[ONBOARD PARAMETERS] ERROR ! Bad memory allocation");
+		onboard_parameters->param_set->max_param_count = 0;
+		onboard_parameters->param_set->param_count = 0;	
+	}
 
 	// Add onboard parameter telemetry to the scheduler
 	scheduler_add_task(	scheduler, 
 						100000, 
 						RUN_REGULAR, 
 						PERIODIC_ABSOLUTE,
+						PRIORITY_NORMAL,
 						(task_function_t)&onboard_parameters_send_scheduled_parameters, 
 						(task_argument_t)onboard_parameters, 
 						MAVLINK_MSG_ID_PARAM_VALUE);

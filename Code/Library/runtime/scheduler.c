@@ -30,67 +30,79 @@ void scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config)
 
 	// Allocate memory for the task set
 	scheduler->task_set = malloc( sizeof(task_set_t) + sizeof(task_entry_t[config->max_task_count]) );
-	scheduler->task_set->max_task_count = config->max_task_count;
+	if ( scheduler->task_set != NULL ) 
+	{
+		scheduler->task_set->max_task_count = config->max_task_count;
+	}
+	else
+	{
+		print_util_dbg_print("[SCHEDULER] ERROR ! Bad memory allocation");
+		scheduler->task_set->max_task_count = 0;		
+	}
 
 	scheduler->task_set->task_count = 0;
 	scheduler->task_set->current_schedule_slot = 0;
 }
 
 
-bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_function_t call_function, task_argument_t function_argument, uint32_t task_id) 
+bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, task_function_t call_function, task_argument_t function_argument, uint32_t task_id) 
 {
+	bool task_successfully_added = false;
 	task_set_t* ts = scheduler->task_set;
 
-	if (ts->task_count < ts->max_task_count) 
+	// Check if the scheduler is not full
+	if ( ts->task_count < ts->max_task_count ) 
 	{
-		task_entry_t* new_task = &ts->tasks[ts->task_count];
+		// Check if there is already a task with this ID
+		bool id_is_unique = true;
+		for (uint32_t i = 0; i < ts->task_count; ++i)
+		{
+			if ( ts->tasks[i].task_id == task_id )
+			{
+				id_is_unique = false;
+				break;
+			}
+		}
 
-		new_task->call_function     = call_function;
-		new_task->function_argument = function_argument;
-		new_task->task_id           = task_id;		
-		new_task->run_mode          = run_mode;
-		new_task->timing_mode       = timing_mode;	
-		new_task->repeat_period     = repeat_period;
-		new_task->next_run          = time_keeper_get_micros();
-		new_task->execution_time    = 0;
-		new_task->delay_max         = 0;
-		new_task->delay_avg         = 0;
-		new_task->delay_var_squared = 0;
+		// Add new task
+		if ( id_is_unique == true )
+		{
+			task_entry_t* new_task = &ts->tasks[ts->task_count];
 
-		ts->task_count += 1;
+			new_task->call_function     = call_function;
+			new_task->function_argument = function_argument;
+			new_task->task_id           = task_id;		
+			new_task->run_mode          = run_mode;
+			new_task->timing_mode       = timing_mode;	
+			new_task->priority          = priority;	
+			new_task->repeat_period     = repeat_period;
+			new_task->next_run          = time_keeper_get_micros();
+			new_task->execution_time    = 0;
+			new_task->delay_max         = 0;
+			new_task->delay_avg         = 0;
+			new_task->delay_var_squared = 0;
+
+			ts->task_count += 1;
+
+			task_successfully_added = true;
+		}
+		else
+		{
+			print_util_dbg_print("[SCHEDULER] Error: There is already a task with this ID");
+			task_successfully_added = false;
+		}
 	}
 	else
 	{
 		print_util_dbg_print("[SCHEDULER] Error: Cannot add more task");
+		task_successfully_added = false;
 	}
 
-	return true;
+	return task_successfully_added;
 }
 
-// bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run_mode_t run_mode, task_function_t call_function, task_argument_t function_argument, uint32_t task_id) 
-// {
-// 	task_set_t* ts = scheduler->task_set;
 
-// 	int32_t task_slot = 0;
-	
-// 	while ((task_slot < ts->max_task_count) && (ts->tasks[task_slot].call_function != NULL)) 
-// 	{
-// 		task_slot++;
-// 	}
-
-// 	if (task_slot >= ts->max_task_count) 
-// 	{
-// 		return false;
-// 	}
-
-// 	scheduler_register_task(scheduler,  task_slot,   repeat_period, run_mode,  call_function, function_argument);
-// 	ts->tasks[task_slot].task_id = task_id;
-
-// 	return true;
-// }
-
-
-void scheduler_sort_taskset_by_period(scheduler_t* scheduler)
+void scheduler_sort_tasks(scheduler_t* scheduler)
 {
 	int32_t i;
 	bool sorted = false;
@@ -103,13 +115,30 @@ void scheduler_sort_taskset_by_period(scheduler_t* scheduler)
 		return;
 	}
 
-	while (!sorted) 
+	while ( sorted == false ) 
 	{
 		sorted = true;
-	
+		
+		// Iterate through registered tasks
 		for (i = 0; i < (ts->task_count - 1); i++) 
 		{
-			if ( ts->tasks[i].repeat_period > ts->tasks[i + 1].repeat_period )
+			if ( ts->tasks[i].priority < ts->tasks[i + 1].priority )
+			{
+				// Task i has lower priority than task i+1 -> need swap
+				sorted = false;
+			}
+			else if ( ts->tasks[i].priority == ts->tasks[i + 1].priority )
+			{
+				if ( ts->tasks[i].repeat_period > ts->tasks[i + 1].repeat_period )
+				{
+					// Tasks i and i+1 have equal priority, but task i has higher
+					// repeat period than task i+1 -> need swap
+					sorted = false;
+				}
+			}
+			
+			// Swap tasks i and i+1 if necessary
+			if ( sorted == false )
 			{
 				tmp = ts->tasks[i];
 				ts->tasks[i] = ts->tasks[i + 1];
@@ -117,7 +146,7 @@ void scheduler_sort_taskset_by_period(scheduler_t* scheduler)
 				sorted = false;
 			}
 		}
-	}
+	}	
 }
 
 

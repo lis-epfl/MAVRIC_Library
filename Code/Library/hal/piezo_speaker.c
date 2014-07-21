@@ -130,6 +130,14 @@ void piezo_speaker_startup_melody(void)
 }
 
 
+void piezo_speaker_critical_error_melody(void)
+{
+	piezo_speaker_beep(200, 700);
+	piezo_speaker_beep(200, 650);
+	piezo_speaker_beep(200, 500);
+}
+
+
 void piezo_speaker_mario_melody(void)
 {
 	uint32_t frequency;
