@@ -91,7 +91,6 @@ void central_data_init()
 								&centralData.GPS_data,
 								&centralData.attitude_estimation,
 								&centralData.imu,
-								&centralData.sim_model.localPosition,
 								&centralData.waypoint_handler.waypoint_set,
 								&centralData.mavlink_communication.message_handler,
 								HOME_LATITUDE,

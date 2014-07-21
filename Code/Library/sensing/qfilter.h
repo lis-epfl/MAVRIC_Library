@@ -43,7 +43,7 @@ typedef enum
  */
 typedef struct
 {
-	imu_t *imu;				///< Pointer to inertial sensors readout
+	imu_t *imu;						///< Pointer to inertial sensors readout
 	ahrs_t *attitude_estimation;	///< Pointer to estimated attiude
 	
 	float kp;						///< The proportional gain for the acceleration correction of the angular rates

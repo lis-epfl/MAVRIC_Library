@@ -123,6 +123,13 @@ void simulation_calib_set(simulation_model_t *sim)
 		sim->calib_accelero.orientation[i]		= sim->imu->calib_accelero.orientation[i];
 		sim->calib_compass.orientation[i]		= sim->imu->calib_compass.orientation[i];
 	}
+	
+	//reset the simulated attitude_estimation
+	sim->attitude_estimation.qe.s = 1.0f;
+	sim->attitude_estimation.qe.v[0] = 0.0f;
+	sim->attitude_estimation.qe.v[1] = 0.0f;	
+	sim->attitude_estimation.qe.v[2] = 0.0f;
+	
 }
 
 void simulation_reset_simulation(simulation_model_t *sim)
@@ -379,7 +386,6 @@ void simulation_update(simulation_model_t *sim)
 	}
 
 	// fill in simulated IMU values
-	
 	for (i = 0;i < 3; i++)
 	{
 		sim->imu->raw_gyro.data[i] = (sim->rates_bf[i] * sim->calib_gyro.scale_factor[i] + sim->calib_gyro.bias[i]) * sim->calib_gyro.orientation[i];
