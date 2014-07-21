@@ -64,28 +64,28 @@ void central_data_init()
 	};
 	mavlink_communication_init(&centralData.mavlink_communication, &mavlink_config);
 	
-	delay_ms(100); //add delay to be able to print on console init message for the following modul
+	delay_ms(100); //add delay to be able to print on console init message for the following module
 	state_init(	&centralData.state_structure,
 				MAV_TYPE_QUADROTOR,
 				MAV_AUTOPILOT_GENERIC,
 				MAV_STATE_BOOT,
 				MAV_MODE_PREFLIGHT,
-				SIMULATION_MODE, //REAL_MODE 
+				REAL_MODE, // SIMULATION_MODE
 				&centralData.mavlink_communication.message_handler); 
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following modul
+	delay_ms(100);//add delay to be able to print on console init message for the following module
 	imu_init(&(centralData.imu));
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following modul
+	delay_ms(100);//add delay to be able to print on console init message for the following module
 	// Init servos
 	servo_pwm_init(centralData.servos);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following modul
+	delay_ms(100);//add delay to be able to print on console init message for the following module
 	qfilter_init(   &(centralData.attitude_filter), 
 					&centralData.imu, 
 					&centralData.attitude_estimation);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following modul
+	delay_ms(100);//add delay to be able to print on console init message for the following module
 	position_estimation_init(   &centralData.position_estimator,
 								&centralData.pressure,
 								&centralData.GPS_data,
@@ -99,7 +99,7 @@ void central_data_init()
 								HOME_ALTITUDE,
 								GRAVITY				);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following modul
+	delay_ms(100);//add delay to be able to print on console init message for the following module
 	navigation_init(&centralData.navigationData,
 					&centralData.controls_nav,
 					&centralData.attitude_estimation.qe,
@@ -108,26 +108,26 @@ void central_data_init()
 					&centralData.orcaData,
 					&centralData.state_structure);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following modul
+	delay_ms(100);//add delay to be able to print on console init message for the following module
 	waypoint_handler_init(  &centralData.waypoint_handler,
 							&centralData.position_estimator,
 							&centralData.attitude_estimation,
 							&centralData.state_structure,
 							&centralData.mavlink_communication);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following modul
+	delay_ms(100);//add delay to be able to print on console init message for the following module
 	neighbors_selection_init(   &centralData.neighborData, 
 								&centralData.position_estimator,
 								&centralData.mavlink_communication.message_handler);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following modul
+	delay_ms(100);//add delay to be able to print on console init message for the following module
 	orca_init(  &centralData.orcaData,
 				&centralData.neighborData,
 				&centralData.position_estimator,
 				&centralData.imu,
 				&centralData.attitude_estimation);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following modul
+	delay_ms(100);//add delay to be able to print on console init message for the following module
 	// init stabilisers
 	stabilisation_copter_init(	&centralData.stabilisation_copter,
 								&centralData.stabiliser_stack,
@@ -138,7 +138,7 @@ void central_data_init()
 								&centralData.position_estimator,
 								centralData.servos 	);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following modul
+	delay_ms(100);//add delay to be able to print on console init message for the following module
 	// init simulation (should be done after position_estimator)
 	simulation_config_t vehicle_model_parameters= 
 	{
@@ -175,7 +175,7 @@ void central_data_init()
 					&centralData.waypoint_handler.waypoint_set,
 					&centralData.mavlink_communication.message_handler);
 
-	delay_ms(100);//add delay to be able to print on console init message for the following modul
+	delay_ms(100);//add delay to be able to print on console init message for the following module
 	// Init sonar
 	// i2cxl_sonar_init(&centralData.i2cxl_sonar);
 }
