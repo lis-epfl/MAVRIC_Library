@@ -121,6 +121,9 @@ void central_data_init()
 							&centralData.attitude_estimation,
 							&centralData.state_structure,
 							&centralData.mavlink_communication);
+	//waypoint_handler_init_waypoint_list(&centralData.waypoint_handler);
+	waypoint_handler_init_homing_waypoint(&centralData.waypoint_handler);
+	waypoint_handler_waypoint_init(&centralData.waypoint_handler);
 	
 	delay_ms(100);//add delay to be able to print on console init message for the following module
 	neighbors_selection_init(   &centralData.neighborData, 

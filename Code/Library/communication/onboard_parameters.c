@@ -29,6 +29,8 @@
 
 /**
  * \brief	Sends all parameters that have been scheduled via MAVlink
+ *
+ * \param	onboard_parameters		The pointer to the onboard parameter structure
  */
 static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parameters_t* onboard_parameters);
 

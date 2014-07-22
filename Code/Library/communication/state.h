@@ -81,7 +81,7 @@ typedef struct
  * \param	state_config		The pointer to the state configuration structure
  * \param	message_handler		The pointer to the message handler
  */
-void state_init(state_structure_t *state_structure, state_structure_t* state_config, analog_monitor_t* adc, mavlink_message_handler_t *message_handler);
+void state_init(state_structure_t *state_structure, state_structure_t* state_config, const analog_monitor_t* adc, mavlink_message_handler_t *message_handler);
 
 /**
  * \brief	Task to send the mavlink heartbeat message

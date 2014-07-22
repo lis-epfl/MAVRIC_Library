@@ -25,7 +25,6 @@ extern "C" {
 
 #include "mavlink_stream.h"
 #include "stdbool.h"
-#include "coord_conventions.h"
 #include "position_estimation.h"
 #include "imu.h"
 #include "mavlink_message_handler.h"
@@ -33,7 +32,7 @@ extern "C" {
 #include "state.h"
 #include "qfilter.h"
 
-#define MAX_WAYPOINTS 10
+#define MAX_WAYPOINTS 10		///< The maximal size of the waypoint list
 
 /*
  * N.B.: Reference Frames and MAV_CMD_NAV are defined in "maveric.h"
@@ -44,36 +43,36 @@ extern "C" {
  */
 typedef struct
 {
-	uint8_t frame;				///< The reference frame of the waypoint
-	uint16_t waypoint_id;		///< The MAV_CMD_NAV id of the waypoint
-	uint8_t current;			///< Flag to tell whether the waypoint is the current one or not
-	uint8_t autocontinue;		///< Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
-	float param1;				///< Parameter depending on the MAV_CMD_NAV id
-	float param2;				///< Parameter depending on the MAV_CMD_NAV id
-	float param3;				///< Parameter depending on the MAV_CMD_NAV id
-	float param4;				///< Parameter depending on the MAV_CMD_NAV id
-	double x;					///< The value on the x axis (depends on the reference frame)
-	double y;					///< The value on the y axis (depends on the reference frame)
-	double z;					///< The value on the z axis (depends on the reference frame)
+	uint8_t frame;												///< The reference frame of the waypoint
+	uint16_t waypoint_id;										///< The MAV_CMD_NAV id of the waypoint
+	uint8_t current;											///< Flag to tell whether the waypoint is the current one or not
+	uint8_t autocontinue;										///< Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
+	float param1;												///< Parameter depending on the MAV_CMD_NAV id
+	float param2;												///< Parameter depending on the MAV_CMD_NAV id
+	float param3;												///< Parameter depending on the MAV_CMD_NAV id
+	float param4;												///< Parameter depending on the MAV_CMD_NAV id
+	double x;													///< The value on the x axis (depends on the reference frame)
+	double y;													///< The value on the y axis (depends on the reference frame)
+	double z;													///< The value on the z axis (depends on the reference frame)
 } waypoint_struct;
 
 /**
- * \brief	
+ * \brief	The critical behavior enum
  */
 typedef enum
 {
-	CLIMB_TO_SAFE_ALT,			///< First critical behavior
-	FLY_TO_HOME_WP,				///< Second critical behavior, comes after CLIMB_TO_SAFE_ALT
-	CRITICAL_LAND				///< Third critical behavior, comes after FLY_TO_HOME_WP
+	CLIMB_TO_SAFE_ALT,											///< First critical behavior
+	FLY_TO_HOME_WP,												///< Second critical behavior, comes after CLIMB_TO_SAFE_ALT
+	CRITICAL_LAND												///< Third critical behavior, comes after FLY_TO_HOME_WP
 } critical_behavior_enum;
 
 /**
- * \brief	
+ * \brief	The auto-landing enum
  */
 typedef enum
 {
-	DESCENT_TO_SMALL_ALTITUDE,	///< First auto landing behavior
-	DESCENT_TO_GND				///< Second auto landing behavior, comes after DESCENT_TO_SMAL_ALTITUDE
+	DESCENT_TO_SMALL_ALTITUDE,									///< First auto landing behavior
+	DESCENT_TO_GND												///< Second auto landing behavior, comes after DESCENT_TO_SMAL_ALTITUDE
 } auto_landing_enum_t;
 
 typedef struct
@@ -98,234 +97,114 @@ typedef struct
 	bool automatic_landing;										///< Flag to initiate the auto landing procedure
 	bool in_the_air;											///< Flag to tell whether the vehicle is airborne or not
 	
-	int32_t sending_waypoint_num;
-	int32_t waypoint_request_number;
+	int32_t sending_waypoint_num;								///< The ID number of the sending waypoint
+	int32_t waypoint_request_number;							///< The ID number of the requested waypoint
 
-	uint16_t num_waypoint_onboard;
+	uint16_t num_waypoint_onboard;								///< The number of waypoint onboard
 
-	uint32_t start_timeout;
-	uint32_t timeout_max_waypoint;
+	uint32_t start_timeout;										///< The start time for the waypoint timeout
+	uint32_t timeout_max_waypoint;								///< The max waiting time for communication
 	
 	critical_behavior_enum critical_behavior;					///< The critical behavior enum
 	auto_landing_enum_t auto_landing_enum;						///< The autolanding enum
 
-	position_estimator_t* position_estimator;
-	HIL_mode* simulation_mode;
-	ahrs_t* attitude_estimation;
-	state_structure_t* state_structure;
-	mavlink_communication_t* mavlink_communication;
+	position_estimator_t* position_estimator;					///< The pointer to the position estimation structure
+	const HIL_mode* simulation_mode;							///< The pointer to the simulation mode structure
+	const ahrs_t* attitude_estimation;							///< The pointer to the attitude estimation structure
+	const state_structure_t* state_structure;					///< The pointer to the state structure
+	mavlink_communication_t* mavlink_communication;				///< The pointer to the mavlink communication structure
 
 }mavlink_waypoint_handler_t;
 
-
 /**
- * \brief						Initialize the waypoint handler
- */
-void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, ahrs_t* attitude_estimation, state_structure_t* state_structure, mavlink_communication_t* mavlink_communication);
-
-/**
- * \brief						Initialize a first waypoint if a flight plan is set
- */
-void waypoint_handler_waypoint_init(mavlink_waypoint_handler_t* waypoint_handler);
-
-/**
- * \brief						Initialize a home waypoint at (0,0,0) at start up
+ * \brief	Initialize a home waypoint at (0,0,0) at start up
  *
- * \param waypoint_list			The array of all waypoints (here only the home waypoint)
- * \param number_of_waypoints	The pointer to the number of waypoints (here 1)
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
  */
 void waypoint_handler_init_homing_waypoint(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
- * \brief						Initialize a list of hardcoded waypoints
+ * \brief	Initialize a list of hardcoded waypoints
  *
- * \param waypoint_list			The array of all waypoints are stored
- * \param number_of_waypoints	The pointer to the number of waypoints
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
  */
 void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_handler);
-//---------------------------------------------------------------------------------------------------------------------------------------//
 
 /**
- * \brief						Sends the number of onboard waypoint to mavlink when asked by ground station
+ * \brief	Initialize the waypoint handler
  *
- * \param rec					The received mavlink message structure
- * \param num_of_waypoint		The number of onboard waypoints
- * \param waypoint_receiving	Flag that is true when we are receiving waypoints, false otherwise
- * \param waypoint_sending		Flag that is true when we are sending waypoints, false otherwise
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ * \param	position_estimator		The pointer to the position estimator structure
+ * \param	attitude_estimation		The pointer to the attitude estimation structure
+ * \param	state_structure			The pointer to the state structure
+ * \param	mavlink_communication	The pointer to the mavlink communication structure
  */
-void waypoint_handler_send_count(mavlink_waypoint_handler_t* waypoint_handler, mavlink_received_t* rec);
+void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* attitude_estimation, const state_structure_t* state_structure, mavlink_communication_t* mavlink_communication);
 
 /**
- * \brief						Sends a given waypoint via a mavlink message
+ * \brief	Initialize a first waypoint if a flight plan is set
  *
- * \param rec					The received mavlink message structure asking for a waypoint
- * \param waypoint				The waypoint list of all onboard waypoints
- * \param num_of_waypoint		The number of onboard waypoints
- * \param waypoint_sending		Flag that is true when we are sending waypoints, false otherwise
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
  */
-void waypoint_handler_send_waypoint(mavlink_waypoint_handler_t* waypoint_handler, mavlink_received_t* rec);
+void waypoint_handler_waypoint_init(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
- * \brief						Receives a acknoledge message from mavlink
+ * \brief	Control if time is over timeout and change sending/receiving flags to false
  *
- * \param rec					The received mavlink message structure
- * \param waypoint_sending		Flag that is true when we are sending waypoints, false otherwise
- */
-void waypoint_handler_receive_ack_msg(mavlink_waypoint_handler_t* waypoint_handler, mavlink_received_t* rec);
-//---------------------------------------------------------------------------------------------------------------------------------------//
-
-/**
- * \brief						Receives the number of waypoints that the ground station is sending
- *
- * \param rec					The received mavlink message structure with the total number of waypoint
- * \param number_of_waypoints	The pointer to the number of waypoints
- * \param waypoint_receiving	Flag that is true when we are receiving waypoints, false otherwise
- * \param waypoint_sending		Flag that is true when we are sending waypoints, false otherwise
- */
-void waypoint_handler_receive_count(mavlink_waypoint_handler_t* waypoint_handler, mavlink_received_t* rec);
-
-/**
- * \brief						Receives a given waypoint and stores it in the local structure
- *
- * \param rec					The received mavlink message structure with the waypoint
- * \param waypoint_list			The waypoint list of all onboard waypoints
- * \param number_of_waypoints	The number of onboard waypoints	
- * \param waypoint_receiving	Flag that is true when we are receiving waypoints, false otherwise
- */
-void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoint_handler, mavlink_received_t* rec);
-//---------------------------------------------------------------------------------------------------------------------------------------//
-
-/**
- * \brief						Sets the current waypoint to num_of_waypoint
- *
- * \param rec					The received mavlink message structure with the number of the current waypoint
- * \param waypoint_list			The waypoint list of all onboard waypoints
- * \param num_of_waypoint		The waypoint to be set as current
- */
-void waypoint_handler_set_current_waypoint(mavlink_waypoint_handler_t* waypoint_handler, mavlink_received_t* rec);
-
-/**
- * \brief						Set the current waypoint to new_current
- *
- * \param waypoint_handler		The pointer to the waypoint handler
- * \param packet				The pointer to the decoded mavlink message long
- */
-void waypoint_handler_set_current_waypoint_from_parameter(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
-
-/**
- * \brief						Clears the waypoint list
- *
- * \param rec					The received mavlink message structure with the clear command
- * \param number_of_waypoints	The pointer to the number of waypoints
- * \param waypoint_set			Flag telling whether a flight plan (true) is set or not (false)
- */
-void waypoint_handler_clear_waypoint_list(mavlink_waypoint_handler_t* waypoint_handler, mavlink_received_t* rec);
-
-/**
- * \brief						Set a new home position, origin of the local frame
- *
- * \param rec					The received mavlink message structure with the new home position
- */
-void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handler, mavlink_received_t* rec);
-//---------------------------------------------------------------------------------------------------------------------------------------//
-
-/**
- * \brief						Control if time is over timeout and change sending/receiving flags to false
- *
- * \param waypoint_handler		The pointer to the waypoint handler structure
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
  *
  * \return	The task status
  */
 task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_handler_t* waypoint_handler);
-//---------------------------------------------------------------------------------------------------------------------------------------//
+
+
 
 /**
- * \brief						Set the waypoint depending on the reference frame defined in the current_waypoint structure
+ * \brief	Initialise the position hold mode
  *
- * \param current_waypoint		The waypoint from which the reference frame is taken
- * \param origin				The coordinates (latitude, longitude and altitude in global frame) of the local frame's origin
- *
- * \return						The waypoint in local coordinate frame
- */
-local_coordinates_t waypoint_handler_set_waypoint_from_frame(mavlink_waypoint_handler_t* waypoint_handler, global_position_t origin);
-
-/**
- * \brief						Initialise the position hold mode
- *
- * \param localPos				The position where the position will be held
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ * \param	localPos				The position where the position will be held
  */
 void waypoint_handler_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t localPos);
 
 /**
- * \brief						Sets the automatic takeoff waypoint
+ * \brief	Sets the automatic takeoff waypoint
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
  */
 void waypoint_handler_waypoint_take_off(mavlink_waypoint_handler_t* waypoint_handler);
-//---------------------------------------------------------------------------------------------------------------------------------------//
 
 /**
- * \brief						Drives the hold position procedure
+ * \brief	Drives the hold position procedure
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
  */
 void waypoint_handler_waypoint_hold_position_handler(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
- * \brief						Drives the GPS navigation procedure
+ * \brief	Drives the GPS navigation procedure
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
  */
 void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
- * \brief						Drives the critical navigation behavior
+ * \brief	Drives the critical navigation behavior
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
  */
 void waypoint_handler_waypoint_critical_handler(mavlink_waypoint_handler_t* waypoint_handler);
-//---------------------------------------------------------------------------------------------------------------------------------------//
 
 /**
- * \brief						Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
+ * \brief	Sets a circle scenario, where two waypoints are set at opposite side of the circle
  *
- * \param waypoint_handler		The pointer to the structure of the mavlink waypoint handler
- * \param packet				The pointer to the structure of the mavlink command message long
- */
-void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
-
-/**
- * \brief						Set the next waypoint as current waypoint
- *
- * \param waypoint_handler		The pointer to the structure of the mavlink waypoint handler
- * \param packet				The pointer to the structure of the mavlink command message long
- */
-void waypoint_handler_continueToNextWaypoint(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
-//---------------------------------------------------------------------------------------------------------------------------------------//
-
-/**
- * \brief						Sets a circle scenario, where two waypoints are set at opposite side of the circle
- *
- * \param waypoint_handler		The pointer to the structure of the mavlink waypoint handler
- * \param packet				The pointer to the structure of the mavlink command message long
- */
-void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
-
-/**
- * \brief						Sets auto-takeoff procedure from a mavlink command message MAV_CMD_NAV_TAKEOFF
- *
- * \param waypoint_handler		The pointer to the structure of the mavlink waypoint handler
- * \param packet				The pointer to the structure of the mavlink command message long
- */
-void waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t *waypoint_handler, mavlink_command_long_t* packet);
-
-/**
- * \brief						Sets a circle scenario, where two waypoints are set at opposite side of the circle
- *
- * \param waypoint_list			The waypoint list of all onboard waypoints
- * \param packet				The structure of the mavlink command message long
+ * \param	waypoint_list			The waypoint list of all onboard waypoints
+ * \param	packet					The structure of the mavlink command message long
  */
 task_return_t waypoint_handler_send_collision_avoidance_status(mavlink_waypoint_handler_t *waypoint_handler);
-
-// TODO: Add code in the function :)
-//void set_stream_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc);
 
 #ifdef __cplusplus
 }
 #endif
-
-
 
 #endif // MAVLINK_WAYPOINT_HANDLER__

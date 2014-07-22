@@ -25,8 +25,6 @@ extern "C" {
 #endif
 
 #include "scheduler.h"
-#include "mavlink_actions.h"
-#include "radar_module_driver.h"
 
 
 /**

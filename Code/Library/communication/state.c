@@ -20,7 +20,7 @@
 #include "print_util.h"
 #include "mavlink/include/maveric/mavlink.h"
 
-void state_init(state_structure_t *state_structure, state_structure_t* state_config, analog_monitor_t* adc, mavlink_message_handler_t *message_handler)
+void state_init(state_structure_t *state_structure, state_structure_t* state_config, const analog_monitor_t* adc, mavlink_message_handler_t *message_handler)
 {
 	state_structure->adc = adc;
 	

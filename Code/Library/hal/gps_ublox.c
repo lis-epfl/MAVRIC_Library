@@ -22,6 +22,7 @@
 #include "uart_int.h"
 #include "buffer.h"
 #include "time_keeper.h"
+#include "mavlink_communication.h"
 
 uint8_t  **ubx_currentMessage = 0;		///<  The pointer to the pointer to the structure of the current message to fill
 uint8_t  ** ubx_lastMessage = 0;		///<  The pointer to the pointer to the structure of the last message received of the same type than the current one being received (for exchange at the end)
@@ -1779,30 +1780,30 @@ task_return_t gps_ublox_send_raw(gps_Data_type_t* GPS_data)
 	if (GPS_data->status == GPS_OK)
 	{
 		mavlink_msg_gps_raw_int_send(	MAVLINK_COMM_0,
-		1000 * GPS_data->time_last_msg,
-		GPS_data->status,
-		GPS_data->latitude * 10000000.0f,
-		GPS_data->longitude * 10000000.0f,
-		GPS_data->altitude * 1000.0f,
-		GPS_data->hdop * 100.0f,
-		GPS_data->speedAccuracy * 100.0f,
-		GPS_data->groundSpeed * 100.0f,
-		GPS_data->course,
-		GPS_data->num_sats	);
+										1000 * GPS_data->time_last_msg,
+										GPS_data->status,
+										GPS_data->latitude * 10000000.0f,
+										GPS_data->longitude * 10000000.0f,
+										GPS_data->altitude * 1000.0f,
+										GPS_data->hdop * 100.0f,
+										GPS_data->speedAccuracy * 100.0f,
+										GPS_data->groundSpeed * 100.0f,
+										GPS_data->course,
+										GPS_data->num_sats	);
 	}
 	else
 	{
 		mavlink_msg_gps_raw_int_send(	MAVLINK_COMM_0,
-		time_keeper_get_micros(),
-		GPS_data->status,
-		46.5193f * 10000000,
-		6.56507f * 10000000,
-		400 * 1000,
-		0,
-		0,
-		0,
-		0,
-		GPS_data->num_sats);		// TODO: return TASK_RUN_ERROR here?
+										time_keeper_get_micros(),
+										GPS_data->status,
+										46.5193f * 10000000,
+										6.56507f * 10000000,
+										400 * 1000,
+										0,
+										0,
+										0,
+										0,
+										GPS_data->num_sats);		// TODO: return TASK_RUN_ERROR here?
 	}
 
 	return TASK_RUN_SUCCESS;
