@@ -73,7 +73,7 @@ void boardsupport_init(central_data_t *centralData)
 	xbee_init(UART0);
 				
 	// Init UART 3 for GPS communication
-	gps_ublox_init(&(centralData->GPS_data), UART3);
+	gps_ublox_init(&(centralData->GPS_data), UART3, &centralData->mavlink_communication.mavlink_stream);
 	
 	// Init UART 4 for wired communication
 	console_init(UART4);
@@ -116,7 +116,7 @@ void boardsupport_init(central_data_t *centralData)
 	compass_hmc58831l_init_slow();
 	print_util_dbg_print("HMC5883 initialised \r");
 	
-	bmp085_init(&(centralData->pressure));
+	bmp085_init(&centralData->pressure,&centralData->mavlink_communication.mavlink_stream);
 	
 	// init radar or ultrasound (not implemented yet)
 	//i2c_driver_init(I2C1);

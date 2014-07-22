@@ -85,7 +85,8 @@ void central_data_init()
 				&centralData.mavlink_communication.message_handler); 
 	
 	delay_ms(100);//add delay to be able to print on console init message for the following module
-	imu_init(&(centralData.imu));
+	imu_init(	&centralData.imu,
+				&centralData.mavlink_communication.mavlink_stream);
 	
 	delay_ms(100);//add delay to be able to print on console init message for the following module
 	// Init servos
@@ -94,7 +95,8 @@ void central_data_init()
 	delay_ms(100);//add delay to be able to print on console init message for the following module
 	qfilter_init(   &(centralData.attitude_filter), 
 					&centralData.imu, 
-					&centralData.attitude_estimation);
+					&centralData.attitude_estimation,
+					&centralData.mavlink_communication.mavlink_stream);
 	
 	delay_ms(100);//add delay to be able to print on console init message for the following module
 	position_estimation_init(   &centralData.position_estimator,

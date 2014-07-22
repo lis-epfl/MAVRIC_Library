@@ -204,13 +204,13 @@ void mavlink_telemetry_init(void)
 
 	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&state_send_heartbeat,								&centralData->state_structure, 					MAVLINK_MSG_ID_HEARTBEAT	);							// ID 0
 	scheduler_add_task(mavlink_scheduler,  1000000,	 RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&state_send_status,									&centralData->state_structure,					MAVLINK_MSG_ID_SYS_STATUS	);							// ID 1
-	
 	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&gps_ublox_send_raw,								&centralData->GPS_data,							MAVLINK_MSG_ID_GPS_RAW_INT	);							// ID 24
 	scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&imu_send_scaled,									&centralData->imu, 								MAVLINK_MSG_ID_SCALED_IMU	);							// ID 26
 	scheduler_add_task(mavlink_scheduler,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&imu_send_raw,										&centralData->imu, 								MAVLINK_MSG_ID_RAW_IMU	);								// ID 27
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&bmp085_send_pressure,								&centralData->pressure,							MAVLINK_MSG_ID_SCALED_PRESSURE	);						// ID 29
-	scheduler_add_task(mavlink_scheduler,  200000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&imu_send_attitude,									&centralData->attitude_estimation, 				MAVLINK_MSG_ID_ATTITUDE	);								// ID 30
-	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&imu_send_attitude_quaternion,						&centralData->attitude_estimation, 				MAVLINK_MSG_ID_ATTITUDE_QUATERNION	);					// ID 31
+	
+	scheduler_add_task(mavlink_scheduler,  200000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&qfilter_send_attitude,								&centralData->attitude_estimation, 				MAVLINK_MSG_ID_ATTITUDE	);								// ID 30
+	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&qfilter_send_attitude_quaternion,					&centralData->attitude_estimation, 				MAVLINK_MSG_ID_ATTITUDE_QUATERNION	);					// ID 31
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&position_estimation_send_position,					&centralData->position_estimator, 				MAVLINK_MSG_ID_LOCAL_POSITION_NED	);					// ID 32
 	scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&position_estimation_send_global_position,			&centralData->position_estimator, 				MAVLINK_MSG_ID_GLOBAL_POSITION_INT	);					// ID 33
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&remote_dsm2_send_scaled_rc_channels,				0, 												MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);					// ID 34

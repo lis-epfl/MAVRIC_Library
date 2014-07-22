@@ -76,8 +76,10 @@ static void imu_oriented2scale(imu_t *imu)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void imu_init (imu_t *imu)
-{	
+void imu_init (imu_t *imu, const mavlink_stream_t* mavlink_stream)
+{
+	imu->mavlink_stream = mavlink_stream;
+	
 	//imu_calibrate_Gyros(imu);
 	
 	//init gyro
@@ -160,7 +162,11 @@ void imu_update(imu_t *imu)
 
 task_return_t imu_send_scaled(imu_t* imu)
 {
-	mavlink_msg_scaled_imu_send(MAVLINK_COMM_0,
+	mavlink_message_t msg;
+	
+	mavlink_msg_scaled_imu_pack(imu->mavlink_stream->sysid,
+								imu->mavlink_stream->compid,
+								&msg,
 								time_keeper_get_millis(),
 								1000 * imu->scaled_accelero.data[IMU_X],
 								1000 * imu->scaled_accelero.data[IMU_Y],
@@ -172,13 +178,18 @@ task_return_t imu_send_scaled(imu_t* imu)
 								1000 * imu->scaled_compass.data[IMU_Y],
 								1000 * imu->scaled_compass.data[IMU_Z]);
 	
+	mavlink_stream_send(imu->mavlink_stream,&msg);
+	
 	return TASK_RUN_SUCCESS;
 }
 
 
 task_return_t imu_send_raw(imu_t* imu)
 {
-	mavlink_msg_raw_imu_send(	MAVLINK_COMM_0,
+	mavlink_message_t msg;
+	mavlink_msg_raw_imu_pack(	imu->mavlink_stream->sysid,
+								imu->mavlink_stream->compid,
+								&msg,
 								time_keeper_get_micros(),
 								imu->oriented_accelero.data[IMU_X],
 								imu->oriented_accelero.data[IMU_Y],
@@ -190,39 +201,7 @@ task_return_t imu_send_raw(imu_t* imu)
 								imu->oriented_compass.data[IMU_Y],
 								imu->oriented_compass.data[IMU_Z]);
 	
-	return TASK_RUN_SUCCESS;
-}
-
-
-task_return_t imu_send_attitude(ahrs_t* attitude_estimation)
-{
-	// ATTITUDE
-	Aero_Attitude_t aero_attitude;
-	aero_attitude = coord_conventions_quat_to_aero(attitude_estimation->qe);
-
-	mavlink_msg_attitude_send(	MAVLINK_COMM_0,
-								time_keeper_get_millis(),
-								aero_attitude.rpy[0],
-								aero_attitude.rpy[1],
-								aero_attitude.rpy[2],
-								attitude_estimation->angular_speed[0],
-								attitude_estimation->angular_speed[1],
-								attitude_estimation->angular_speed[2]);
+	mavlink_stream_send(imu->mavlink_stream,&msg);
 	
-	return TASK_RUN_SUCCESS;
-}
-
-task_return_t imu_send_attitude_quaternion(ahrs_t* attitude_estimation)
-{
-	// ATTITUDE QUATERNION
-	mavlink_msg_attitude_quaternion_send(	MAVLINK_COMM_0,
-											time_keeper_get_millis(),
-											attitude_estimation->qe.s,
-											attitude_estimation->qe.v[0],
-											attitude_estimation->qe.v[1],
-											attitude_estimation->qe.v[2],
-											attitude_estimation->angular_speed[0],
-											attitude_estimation->angular_speed[1],
-											attitude_estimation->angular_speed[2]	);
 	return TASK_RUN_SUCCESS;
 }

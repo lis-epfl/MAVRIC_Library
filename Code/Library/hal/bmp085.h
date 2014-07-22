@@ -56,13 +56,15 @@ typedef struct pressure_data_t
 	uint32_t last_state_update;		///< Time of the last state update
 	pressure_sensor_state_t state;	///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
 	float dt;						///< Time step for the derivative
+	
+	const mavlink_stream_t* mavlink_stream;			///< The pointer to the mavlink stream structure
 } pressure_data_t;
 
 
 /**
  * \brief Initialize the barometer sensor
 */
-void bmp085_init(pressure_data_t *baro);
+void bmp085_init(pressure_data_t *baro, const mavlink_stream_t * mavlink_stream);
 
 
 /**
