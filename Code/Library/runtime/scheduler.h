@@ -149,7 +149,7 @@ typedef struct
 	bool debug;									///<	Indicates whether the scheduler should print debug messages
 	schedule_strategy_t schedule_strategy;		///<	Scheduling strategy
 	task_set_t* task_set;						///<	Pointer to task set, needs memory allocation
-	mavlink_stream_t* mavlink_stream;			///<	Pointer to mavlink stream
+	const mavlink_stream_t* mavlink_stream;		///<	Pointer to mavlink stream
 } scheduler_t;
 
 
@@ -170,7 +170,7 @@ typedef struct
  * \param 	scheduler 	Pointer to scheduler
  * \param 	config		Configuration
  */
-void scheduler_init( scheduler_t* scheduler, const scheduler_conf_t* config);
+void scheduler_init( scheduler_t* scheduler, const scheduler_conf_t* config, const mavlink_stream_t* mavlink_stream);
 
 
 /**

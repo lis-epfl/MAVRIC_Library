@@ -249,10 +249,12 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *serv
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* attitude_estimation, imu_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler)
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* attitude_estimation, imu_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
 {
 	int32_t i;
 	
+	sim->mavlink_stream = mavlink_stream;
+
 	sim->vehicle_config = *sim_config;
 	
 	sim->imu = imu;
@@ -530,7 +532,11 @@ task_return_t simulation_send_state(simulation_model_t* sim_model)
 
 	global_position_t gpos = coord_conventions_local_to_global_position(sim_model->localPosition);
 	
-	mavlink_msg_hil_state_send(	MAVLINK_COMM_0,
+	mavlink_message_t msg;
+	const mavlink_stream_t* mavlink_stream = sim_model->mavlink_stream;
+	mavlink_msg_hil_state_pack(	mavlink_stream->sysid,
+								mavlink_stream->compid,
+								&msg,
 								time_keeper_get_micros(),
 								aero_attitude.rpy[0],
 								aero_attitude.rpy[1],
@@ -547,43 +553,8 @@ task_return_t simulation_send_state(simulation_model_t* sim_model)
 								1000 * sim_model->lin_forces_bf[0],
 								1000 * sim_model->lin_forces_bf[1],
 								1000 * sim_model->lin_forces_bf[2] 	);
-	
+	mavlink_stream_send(mavlink_stream, &msg);
 
-	
-	//mavlink_msg_named_value_int_send(	MAVLINK_COMM_0,
-										//time_keeper_get_millis(),
-										//"rolltorque",
-										//sim_model->torques_bf[0]	);
-//
-	//mavlink_msg_named_value_int_send(	MAVLINK_COMM_0,
-										//time_keeper_get_millis(),
-										//"pitchtorque",
-										//sim_model->torques_bf[1]	);
-//
-	//mavlink_msg_named_value_int_send(	MAVLINK_COMM_0,
-										//time_keeper_get_millis(),
-										//"yawtorque",
-										//sim_model->torques_bf[2]);
-
-	//mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										//time_keeper_get_millis(),
-										//"rpm1",
-										//sim_model->rotorspeeds[0]);
-//
-	//mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										//time_keeper_get_millis(),
-										//"rpm2",
-										//sim_model->rotorspeeds[1]);
-//
-	//mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										//time_keeper_get_millis(),
-										//"rpm3",
-										//sim_model->rotorspeeds[2]);
-//
-	//mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										//time_keeper_get_millis(),
-										//"rpm4",
-										//sim_model->rotorspeeds[3]);
 	return TASK_RUN_SUCCESS;
 }
 
@@ -593,8 +564,11 @@ task_return_t simulation_send_quaternions(simulation_model_t *sim_model)
 	aero_attitude = coord_conventions_quat_to_aero(sim_model->attitude_estimation.qe);
 
 	global_position_t gpos = coord_conventions_local_to_global_position(sim_model->localPosition);
-	
-	mavlink_msg_hil_state_quaternion_send(	MAVLINK_COMM_0,
+	mavlink_message_t msg;
+	const mavlink_stream_t* mavlink_stream = sim_model->mavlink_stream;
+	mavlink_msg_hil_state_quaternion_pack(	mavlink_stream->sysid,
+											mavlink_stream->compid,
+											&msg,
 											time_keeper_get_micros(),
 											(float*) &sim_model->attitude_estimation.qe,
 											aero_attitude.rpy[ROLL],
@@ -611,5 +585,7 @@ task_return_t simulation_send_quaternions(simulation_model_t *sim_model)
 											sim_model->attitude_estimation.linear_acc[X],
 											sim_model->attitude_estimation.linear_acc[Y],
 											sim_model->attitude_estimation.linear_acc[Z]	);
+	mavlink_stream_send(mavlink_stream, &msg);
+
 	return TASK_RUN_SUCCESS;
 }

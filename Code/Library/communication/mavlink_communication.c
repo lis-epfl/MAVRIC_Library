@@ -95,7 +95,8 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 {
 	// Init mavlink schedule
 	scheduler_init(	&mavlink_communication->scheduler, 
-					&config->scheduler_config	);
+					&config->scheduler_config,
+					&mavlink_communication->mavlink_stream);
 
 	// Init mavlink stream
 	mavlink_stream_init(	&mavlink_communication->mavlink_stream, 

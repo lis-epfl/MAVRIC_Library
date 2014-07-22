@@ -31,7 +31,7 @@ void central_data_init()
 		.schedule_strategy = ROUND_ROBIN,
 		.debug = true
 	};
-	scheduler_init(&centralData.scheduler, &scheduler_config);
+	scheduler_init(&centralData.scheduler, &scheduler_config, &centralData.mavlink_communication.mavlink_stream);
 	
 	delay_ms(100); //add delay to be able to print on console init message for the following module
 	// Init mavlink communication
