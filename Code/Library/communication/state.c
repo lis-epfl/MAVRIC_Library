@@ -3,7 +3,7 @@
  *
  * The MAV'RIC Framework
  *
- * Copyright © 2011-2014
+ * Copyright Â© 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
  */
@@ -18,11 +18,11 @@
 
 #include "state.h"
 #include "print_util.h"
-#include "mavlink/include/maveric/mavlink.h"
 
-void state_init(state_structure_t *state_structure, state_structure_t* state_config, const analog_monitor_t* adc, mavlink_message_handler_t *message_handler)
+void state_init(state_structure_t *state_structure, state_structure_t* state_config, const analog_monitor_t* adc, mavlink_communication_t* mavlink_communication) //mavlink_message_handler_t *message_handler);
 {
 	state_structure->adc = adc;
+	state_structure->mavlink_communication = mavlink_communication;
 	
 	state_structure->autopilot_type = state_config->autopilot_type;
 	state_structure->autopilot_name = state_config->autopilot_name;
@@ -54,14 +54,24 @@ void state_init(state_structure_t *state_structure, state_structure_t* state_con
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&state_set_mav_mode;
 	callback.module_struct 	= (handling_module_struct_t)		state_structure;
-	mavlink_message_handler_add_msg_callback( message_handler, &callback );
+	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
 	
 	print_util_dbg_print("State initialized.\n");
 }
 
 task_return_t state_send_heartbeat(state_structure_t* state_structure)
 {
-	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, state_structure->autopilot_type, state_structure->autopilot_name, state_structure->mav_mode, state_structure->simulation_mode, state_structure->mav_state);
+	mavlink_message_t msg;
+	mavlink_stream_t* mavlink_stream = &state_structure->mavlink_communication->mavlink_stream;
+	mavlink_msg_heartbeat_pack(	mavlink_stream->sysid,
+								mavlink_stream->compid,
+								&msg,
+								state_structure->autopilot_type, 
+								state_structure->autopilot_name, 
+								state_structure->mav_mode, 
+								state_structure->simulation_mode, 
+								state_structure->mav_state);
+	mavlink_stream_send(mavlink_stream, &msg);
 	
 	return TASK_RUN_SUCCESS;
 }
@@ -71,7 +81,11 @@ task_return_t state_send_status(state_structure_t* state_structure)
 	float battery_voltage = state_structure->adc->avg[ANALOG_RAIL_10];		// bat voltage (mV), actual battery pack plugged to the board
 	float battery_remaining = state_structure->adc->avg[ANALOG_RAIL_11] / 12.4f * 100.0f;
 	
-	mavlink_msg_sys_status_send(MAVLINK_COMM_0, 
+	mavlink_stream_t* mavlink_stream = &state_structure->mavlink_communication->mavlink_stream;
+	mavlink_message_t msg;
+	mavlink_msg_sys_status_pack(mavlink_stream->sysid,
+								mavlink_stream->compid,
+								&msg, 
 								state_structure->sensor_present, 						// sensors present
 								state_structure->sensor_enabled, 						// sensors enabled
 								state_structure->sensor_health, 						// sensors health
@@ -81,6 +95,8 @@ task_return_t state_send_status(state_structure_t* state_structure)
 								battery_remaining,										// battery remaining
 								0, 0,  													// comms drop, comms errors
 								0, 0, 0, 0);        									// autopilot specific errors
+	mavlink_stream_send(mavlink_stream, &msg);
+
 	return TASK_RUN_SUCCESS;
 }
 

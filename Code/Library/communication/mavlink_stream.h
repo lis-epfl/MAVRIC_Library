@@ -45,10 +45,13 @@ typedef struct
  */
 typedef struct
 {
-	byte_stream_t* out_stream;		///< Output stream
-	byte_stream_t* in_stream;		///< Input stream
-	mavlink_received_t rec;			///< Last received message
-	bool message_available;			///< Inidicates if a new message is available and not handled yet
+	byte_stream_t* tx;		///< Output stream
+	byte_stream_t* rx;		///< Input stream
+	uint32_t sysid;			///< System ID
+	uint32_t compid;		///< System Component ID
+	mavlink_received_t rec;	///< Last received message
+	bool msg_available;		///< Indicates if a new message is available and not handled yet
+	bool use_dma;			///< Indicates whether tx transfer should use dma
 } mavlink_stream_t;
 
 
@@ -57,10 +60,11 @@ typedef struct
  */
 typedef struct 
 {
-	byte_stream_t* up_stream;		///< Output stream
-	byte_stream_t* down_stream;		///< Input stream
-	int32_t sysid;					///< System ID
-	int32_t compid;					///< System Component ID
+	byte_stream_t* rx_stream;		///< Output stream
+	byte_stream_t* tx_stream;		///< Input stream
+	uint32_t sysid;					///< System ID
+	uint32_t compid;					///< System Component ID
+	bool use_dma;
 } mavlink_stream_conf_t;
 
 
@@ -71,6 +75,9 @@ typedef struct
  * \param 	config				Configuration
  */
 void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config);
+
+
+void mavlink_stream_send(mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
 /**

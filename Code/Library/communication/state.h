@@ -72,6 +72,7 @@ typedef struct
 	uint16_t sensor_health;						///< The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
 	
 	const analog_monitor_t* adc;				///< The pointer to the analog monitor structure
+	mavlink_communication_t* mavlink_communication;
 } state_structure_t;
 
 /**
@@ -81,7 +82,7 @@ typedef struct
  * \param	state_config		The pointer to the state configuration structure
  * \param	message_handler		The pointer to the message handler
  */
-void state_init(state_structure_t *state_structure, state_structure_t* state_config, const analog_monitor_t* adc, mavlink_message_handler_t *message_handler);
+void state_init(state_structure_t *state_structure, state_structure_t* state_config, const analog_monitor_t* adc, mavlink_communication_t* mavlink_communication); //mavlink_message_handler_t *message_handler);
 
 /**
  * \brief	Task to send the mavlink heartbeat message

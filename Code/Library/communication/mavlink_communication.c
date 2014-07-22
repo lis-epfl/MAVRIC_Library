@@ -133,14 +133,14 @@ task_return_t mavlink_communication_update(mavlink_communication_t* mavlink_comm
 	mavlink_stream_receive(mavlink_stream);
 
 	// Handle message
-	if (mavlink_stream->message_available == true)
+	if (mavlink_stream->msg_available == true)
 	{
 		mavlink_message_handler_receive(handler, &mavlink_stream->rec);
-		mavlink_stream->message_available = false;
+		mavlink_stream->msg_available = false;
 	}
 	
 	// Send messages
-	if (mavlink_stream->out_stream->buffer_empty(mavlink_stream->out_stream->data) == true) 
+	if (mavlink_stream->tx->buffer_empty(mavlink_stream->tx->data) == true) 
 	{
 		result = scheduler_update(&mavlink_communication->scheduler);
 	}

@@ -45,10 +45,11 @@ void central_data_init()
 		},
 		.mavlink_stream_config = 
 		{
-			.up_stream   = centralData.telemetry_up_stream,
-			.down_stream = centralData.telemetry_down_stream,
+			.rx_stream   = centralData.telemetry_up_stream,
+			.tx_stream   = centralData.telemetry_down_stream,
 			.sysid       = MAVLINK_SYS_ID,
-			.compid      = 50
+			.compid      = 50,
+			.use_dma     = false
 		},
 		.message_handler_config = 
 		{
@@ -76,10 +77,11 @@ void central_data_init()
 		.sensor_enabled = 0b1111110000100111,
 		.sensor_health = 0b1111110000100111
 	};
+
 	state_init(	&centralData.state_structure,
 				&state_config,
 				&centralData.adc,
-				&centralData.mavlink_communication.message_handler); 
+				&centralData.mavlink_communication); 
 	
 	delay_ms(100);//add delay to be able to print on console init message for the following module
 	imu_init(&(centralData.imu));
