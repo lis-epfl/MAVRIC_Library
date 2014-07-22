@@ -175,7 +175,7 @@ void state_disable_mode(state_structure_t *state_structure, mav_flag_t mav_mode_
 	state_structure->mav_mode_previous = state_structure->mav_mode;
 }
 
-bool state_test_if_in_flag_mode(state_structure_t *state_structure, mav_flag_t mav_mode_flag)
+bool state_test_if_in_flag_mode(const state_structure_t *state_structure, mav_flag_t mav_mode_flag)
 {
 	return (state_structure->mav_mode & mav_mode_flag);
 }

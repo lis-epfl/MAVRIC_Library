@@ -35,7 +35,7 @@
  *
  * \return					Distance to waypoint squared
  */
-static float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[], float localPos[3]);
+static float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[], const float localPos[3]);
 
 
 /**
@@ -59,13 +59,13 @@ static void navigation_collision_avoidance(navigation_t* navigationData);
  * \param	waypoint_input		Destination waypoint in local coordinate system
  * \param	navigationData		The navigation structure
  */
-void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigationData);
+static void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigationData);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[], float localPos[3])
+static float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[], const float localPos[3])
 {
 	float dist2wp_sqr;
 	
@@ -176,7 +176,7 @@ static void navigation_collision_avoidance(navigation_t* navigationData)
 	navigationData->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
 }
 
-void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigationData)
+static void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigationData)
 {
 	float rel_pos[3];
 	
@@ -198,7 +198,7 @@ void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigation
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigationData, Control_Command_t* controls_nav, UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, orca_t* orcaData, state_structure_t* state_structure)
+void navigation_init(navigation_t* navigationData, Control_Command_t* controls_nav, const UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orcaData, const state_structure_t* state_structure)
 {
 	
 	navigationData->controls_nav = controls_nav;
