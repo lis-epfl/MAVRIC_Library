@@ -89,7 +89,7 @@ void static inline vectors_cross_product(const float u[3], const float v[3], flo
  * \param 	u 	Input vector
  * \return 		Squared norm
  */
-float static inline vectors_norm_sqr(float u[3]) //maths_vector_norm_sqr(float u[3])
+float static inline vectors_norm_sqr(const float u[3]) //maths_vector_norm_sqr(float u[3])
 {
 	float norm = vectors_scalar_product(u, u);
 	return norm;
@@ -102,7 +102,7 @@ float static inline vectors_norm_sqr(float u[3]) //maths_vector_norm_sqr(float u
  * \param 	u 	Input vector (dim 3)
  * \return 		Norm of the vector
  */
-float static inline vectors_norm(float u[3]) //maths_vector_norm(float u[3])
+float static inline vectors_norm(const float u[3]) //maths_vector_norm(float u[3])
 {
 	return maths_fast_sqrt(vectors_norm_sqr(u));
 }
@@ -114,7 +114,7 @@ float static inline vectors_norm(float u[3]) //maths_vector_norm(float u[3])
  * \param 	v 	Input vector (dim 3)
  * \param 	u 	Output vector (dim 3)
  */
-void static inline vectors_normalize(float v[3], float u[3]) //maths_vector_normalize(float v[3], float u[3])
+void static inline vectors_normalize(const float v[3], float u[3]) //maths_vector_normalize(float v[3], float u[3])
 {
 	int32_t i;
 	float norm = vectors_norm(v);

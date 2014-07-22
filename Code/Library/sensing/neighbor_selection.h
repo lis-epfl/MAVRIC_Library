@@ -27,27 +27,26 @@ extern "C" {
 #include "position_estimation.h"
 #include "mavlink_communication.h"
 
-#define MAX_NUM_NEIGHBORS 15
+#define MAX_NUM_NEIGHBORS 15										///< The maximum number of neighbors
 
-#define SIZE_VHC_ORCA 5.0f
+#define SIZE_VHC_ORCA 5.0f											///< The safety size for the collision avoidance strategy
 
-#define ORCA_TIME_STEP_MILLIS 10.0f
+#define ORCA_TIME_STEP_MILLIS 10.0f									///< The time step for the task
 
-//2 seconds timeout limit
-#define NEIGHBOR_TIMEOUT_LIMIT_MS 2000
+#define NEIGHBOR_TIMEOUT_LIMIT_MS 2000								///< 2 seconds timeout limit
 
 /**
  * \brief The track neighbor structure
  */
 typedef struct
 {
-	uint8_t neighborID;					///< The mavlink ID of the vehicle
-	float position[3];					///< The 3D position of the neighbor in m
-	float velocity[3];					///< The 3D velocity of the neighbor in m/s
-	float size;							///< The physical size of the neighbor in m
-	uint32_t time_msg_received;			///< The time at which the message was received in ms
-	float extrapolatedPosition[3];		///< The 3D position of the neighbor
-}track_neighbor_t;						///< The structure of information about a neighbor 
+	uint8_t neighborID;												///< The mavlink ID of the vehicle
+	float position[3];												///< The 3D position of the neighbor in m
+	float velocity[3];												///< The 3D velocity of the neighbor in m/s
+	float size;														///< The physical size of the neighbor in m
+	uint32_t time_msg_received;										///< The time at which the message was received in ms
+	float extrapolatedPosition[3];									///< The 3D position of the neighbor
+}track_neighbor_t;													///< The structure of information about a neighbor 
 
 /**
  * \brief The neighbor structure

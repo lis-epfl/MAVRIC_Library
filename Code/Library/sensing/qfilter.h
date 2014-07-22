@@ -56,9 +56,9 @@ typedef struct
 /**
  * \brief	Initialize the attitude estimation module
  *
- * \param	attitude		The pointer to the attitude structure
- * \param	scalefactor		The pointer to the scale factors structure of the IMU
- * \param	biais			The pointer to the biaises structure of the IMU
+ * \param	attitude_filter		The pointer to the attitude structure
+ * \param	imu					The pointer to the IMU structure
+ * \param	attitude_estimation	The pointer to the attitude estimation structure
  */
 void qfilter_init(qfilter_t *attitude_filter, imu_t *imu, ahrs_t *attitude_estimation);
 

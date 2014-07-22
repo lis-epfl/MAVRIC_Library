@@ -21,7 +21,95 @@
 #include "pid_control.h"
 #include "maths.h"
 
-PID_Controller_t pid_control_passthroughController() 
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+/**
+ * \brief	Integrating
+ *
+ * \param	integrator	Pointer to integrator parameters
+ * \param	input
+ * \param	dt			Timestep
+ *
+ * \return	Result
+ */
+static float pid_control_integrate(Integrator_t *integrator, float input, float dt);
+
+/**
+ * \brief	Initialize integrator parameters
+ *
+ * \param	integrator	Pointer to an integrator structure
+ * \param	pregain		The gain of the integrator
+ * \param	postgain	The gain of the returned value
+ * \param	clip_val	Clipping value
+ */
+static void pid_control_init_integrator(Integrator_t *integrator, float pregain, float postgain, float clip_val);
+
+/**
+ * \brief				Initialize Differentiator parameters
+ *
+ * \param	diff		Pointer to differentiator structure
+ * \param	gain		The differential gain
+ * \param	LPF			Low pass filter
+ * \param	clip_val	Clipping value
+ */
+static void pid_control_init_differenciator(Differentiator_t *diff, float gain, float LPF, float clip_val);
+
+/**
+ * \brief Differentiating
+ *
+ * \param	diff		Pointer to differentiator parameters
+ * \param	input		The new value to differentiate
+ * \param	dt			Timestep
+ *
+ * \return				Result
+ */
+static float pid_control_differentiate(Differentiator_t *diff, float input,  float dt);
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+static float pid_control_integrate(Integrator_t *integrator, float input, float dt)
+{
+	integrator->accumulator=maths_clip(integrator->accumulator + dt* integrator->pregain * input, integrator->maths_clip);
+	return integrator->postgain* integrator->accumulator;
+}
+
+static void pid_control_init_integrator(Integrator_t *integrator, float pregain, float postgain, float clip_val)
+{
+	integrator->pregain=pregain;
+	integrator->postgain=postgain;
+	integrator->maths_clip=clip_val;
+	integrator->accumulator=0.0f;
+}
+
+static void pid_control_init_differenciator(Differentiator_t *diff, float gain, float LPF, float clip_val)
+{
+	diff->gain=gain;
+	diff->LPF=LPF;
+	diff->maths_clip=clip_val;
+}
+
+static float pid_control_differentiate(Differentiator_t *diff, float input, float dt)
+{
+	float output=0.0f;
+	if (dt<0.000001f) {
+		output=0.0f;
+		} else {
+		output=maths_clip(diff->gain * (input - diff->previous) / dt, diff->maths_clip);
+	}
+	//diff->previous=(1.0f - (diff->LPF)) * input + (diff->LPF) * (diff->previous);
+	diff->previous=input;
+	return output;
+}
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+PID_Controller_t pid_control_passthroughController()
 {
 	PID_Controller_t out;
 	uint32_t t= time_keeper_get_time_ticks();
@@ -29,7 +117,7 @@ PID_Controller_t pid_control_passthroughController()
 	out.dt = 0.0f;
 	out.last_update = t;
 	
-	out.p_gain = 1.0f;	
+	out.p_gain = 1.0f;
 	out.clip_min = -10000.0f;
 	out.clip_max = 10000.0f;
 	out.error = 0.0f;
@@ -44,43 +132,9 @@ PID_Controller_t pid_control_passthroughController()
 	return out;
 }
 
-float pid_control_integrate(Integrator_t *integrator, float input, float dt)
-{
-	integrator->accumulator=maths_clip(integrator->accumulator + dt* integrator->pregain * input, integrator->maths_clip);
-	return integrator->postgain* integrator->accumulator;
-}
-
-void pid_control_init_integrator(Integrator_t *integrator, float pregain, float postgain, float clip_val) 
-{
-	integrator->pregain=pregain;
-	integrator->postgain=postgain;
-	integrator->maths_clip=clip_val;
-	integrator->accumulator=0.0f;
-}
-
 void pid_control_reset_integrator(Integrator_t *integrator)
 {
 	integrator->accumulator=0.0f;
-}
-
-void pid_control_init_differenciator(Differentiator_t *diff, float gain, float LPF, float clip_val) 
-{
-	diff->gain=gain;
-	diff->LPF=LPF;
-	diff->maths_clip=clip_val;
-}
-
-float pid_control_differentiate(Differentiator_t *diff, float input, float dt) 
-{
-	float output=0.0f;
-	if (dt<0.000001f) {
-		output=0.0f; 
-	} else {
-		output=maths_clip(diff->gain * (input - diff->previous) / dt, diff->maths_clip);
-	}	
-	//diff->previous=(1.0f - (diff->LPF)) * input + (diff->LPF) * (diff->previous);
-	diff->previous=input;
-	return output;
 }
 
 float pid_control_update(PID_Controller_t* controller, float error)

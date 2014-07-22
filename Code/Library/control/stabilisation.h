@@ -28,6 +28,9 @@ extern "C" {
 #include "pid_control.h"
 #include "scheduler.h"
  
+/**
+ * \brief	The control mode enum
+ */
 typedef enum 
 {
 	VELOCITY_COMMAND_MODE, 
@@ -35,6 +38,9 @@ typedef enum
 	RATE_COMMAND_MODE
 } control_mode_t;
 
+/**
+ * \brief	The yaw control mode enum
+ */
 typedef enum     
 {
 	YAW_RELATIVE, 
@@ -42,6 +48,9 @@ typedef enum
 	YAW_COORDINATED
 } yaw_mode_t;
 
+/**
+ * \brief	The control command typedef
+ */
 typedef struct 
 {
 	float rpy[3];						///< roll pitch yaw rates/angles
@@ -52,6 +61,9 @@ typedef struct
 	yaw_mode_t     yaw_mode;			///< yaw mode
 } Control_Command_t;
 
+/**
+ * \brief	The structure used to control the vehicle with 4 PIDs
+ */
 typedef struct {
 	PID_Controller_t rpy_controller[3];	 ///< roll pitch yaw  controllers
 	PID_Controller_t thrust_controller;  ///< thrust controller

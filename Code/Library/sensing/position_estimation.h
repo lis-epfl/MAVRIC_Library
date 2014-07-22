@@ -40,33 +40,33 @@ extern "C" {
  */
 typedef struct
 {
-	float kp_vel_gps[3];					///< The gain to correct the velocity estimation from the GPS
-	float kp_pos_gps[3];					///< The gain to correct the position estimation from the GPS
-	float kp_alt_baro;						///< The gain to correct the Z position estimation from the barometer
-	float kp_vel_baro;						///< The gain to correct the position estimation from the barometer
+	float kp_vel_gps[3];							///< The gain to correct the velocity estimation from the GPS
+	float kp_pos_gps[3];							///< The gain to correct the position estimation from the GPS
+	float kp_alt_baro;								///< The gain to correct the Z position estimation from the barometer
+	float kp_vel_baro;								///< The gain to correct the position estimation from the barometer
 
-	uint32_t time_last_gps_msg;			///< The time at which we received the last GPS message in ms
-	uint32_t time_last_barometer_msg;	///< The time at which we received the last barometer message in ms
-	bool init_gps_position;				///< The boolean flag ensuring that the GPS was initialized
-	bool init_barometer;				///< The boolean flag ensuring that the barometer was initialized
+	uint32_t time_last_gps_msg;						///< The time at which we received the last GPS message in ms
+	uint32_t time_last_barometer_msg;				///< The time at which we received the last barometer message in ms
+	bool init_gps_position;							///< The boolean flag ensuring that the GPS was initialized
+	bool init_barometer;							///< The boolean flag ensuring that the barometer was initialized
 	
-	float vel_bf[3];					///< The 3D velocity in body frame
-	float vel[3];						///< The 3D velocity in global frame
+	float vel_bf[3];								///< The 3D velocity in body frame
+	float vel[3];									///< The 3D velocity in global frame
 
-	float last_alt;						///< The value of the last altitude estimation
-	float last_vel[3];					///< The last 3D velocity
+	float last_alt;									///< The value of the last altitude estimation
+	float last_vel[3];								///< The last 3D velocity
 
-	local_coordinates_t localPosition;	///< The local position
-	local_coordinates_t lastGpsPos;		///< The coordinates of the last GPS position
+	local_coordinates_t localPosition;				///< The local position
+	local_coordinates_t lastGpsPos;					///< The coordinates of the last GPS position
 	
 	float gravity;
 	
-	pressure_data_t*  	 	barometer;
-	const gps_Data_type_t* 	gps;
-	const ahrs_t* 		 	attitude_estimation;
-	const imu_t* 		 	imu;
+	pressure_data_t*  	 	barometer;				///< The pointer to the barometer structure
+	const gps_Data_type_t* 	gps;					///< The pointer to the GPS structure
+	const ahrs_t* 		 	attitude_estimation;	///< The pointer to the attitude estimation structure
+	const imu_t* 		 	imu;					///< The pointer to the IMU structure
 
-	bool* waypoint_set;
+	bool* waypoint_set;								///< The pointer to the waypoint set flag
 } position_estimator_t;
 
 
@@ -77,6 +77,13 @@ typedef struct
  * \param	barometer				The pointer to the barometer structure
  * \param	gps						The pointer to the GPS structure
  * \param	attitude_estimation		The pointer to the attitude estimation structure
+ * \param	imu						The pointer to the IMU structure
+ * \param	waypoint_set			The pointer to the flag telling if there is a flight plan loaded
+ * \param	mavlink_handler			The pointer to the mavlink message handler
+ * \param	home_lat				The value of the hard coded home latitude position
+ * \param	home_lon				The value of the hard coded home longitude position
+ * \param	home_alt				The value of the hard coded home altitude position
+ * \param	gravity					The value of the gravity
  */
 void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, ahrs_t *attitude_estimation, imu_t *imu, bool* waypoint_set, mavlink_message_handler_t *mavlink_handler, float home_lat, float home_lon, float home_alt, float gravity);
 
@@ -110,6 +117,8 @@ task_return_t position_estimation_send_position(position_estimator_t* pos_est);
 /**
  * \brief	Task to send the mavlink GPS global position message
  * 
+ * \param	pos_est					The pointer to the position estimation structure
+ *
  * \return	The status of execution of the task
  */
 task_return_t position_estimation_send_global_position(position_estimator_t* pos_est);
