@@ -25,6 +25,9 @@
 extern "C" {
 #endif
 
+/**
+ * \brief     Initialise all the mavlink streams and call the onboard parameters register
+ */
 void mavlink_telemetry_init(void);
 
 #ifdef __cplusplus

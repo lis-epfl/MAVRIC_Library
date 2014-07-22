@@ -35,77 +35,156 @@
 
 central_data_t *centralData;
 
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
-
 /**
- * \brief	Task to send the mavlink real time statistics message
- * 
- * \return	The status of execution of the task
+ * \brief     Add all onboard parameters to the parameter list
  */
-task_return_t mavlink_telemetry_send_rt_stats(void* arg);
+void mavlink_telemetry_add_onboard_parameters(void);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
+void mavlink_telemetry_add_onboard_parameters(void) {
+	onboard_parameters_t* onboard_parameters = &centralData->mavlink_communication.onboard_parameters;
 
-task_return_t mavlink_telemetry_send_rt_stats(void* arg) 
-{
-	task_set_t* main_tasks = tasks_get_main_taskset();
+	Stabiliser_t* rate_stabiliser = &centralData->stabiliser_stack.rate_stabiliser;
+	Stabiliser_t* attitude_stabiliser = &centralData->stabiliser_stack.attitude_stabiliser;
+	Stabiliser_t* velocity_stabiliser= &centralData->stabiliser_stack.velocity_stabiliser;
 	
-	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										time_keeper_get_millis(), 
-										"stabAvgDelay", 
-										main_tasks->tasks[0].delay_avg);
-
-	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										time_keeper_get_millis(), 
-										"stabDelayVar", 
-										sqrt(main_tasks->tasks[0].delay_var_squared));
-
-	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										time_keeper_get_millis(), 
-										"stabMaxDelay", 
-										main_tasks->tasks[0].delay_max);
-
-	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										time_keeper_get_millis(), 
-										"stabRTvio", 
-										main_tasks->tasks[0].rt_violations);
-
-	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										time_keeper_get_millis(), 
-										"baroAvgDelay", 
-										main_tasks->tasks[1].delay_avg);
-
-
-	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										time_keeper_get_millis(), 
-										"imuExTime", 
-										main_tasks->tasks[0].execution_time);
-
-	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										time_keeper_get_millis(), 
-										"navExTime", 
-										main_tasks->tasks[3].execution_time);
-
-	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0, 
-										time_keeper_get_millis(), 
-										"imu_dt", 
-										central_data_get_pointer_to_struct()->imu.dt);
-
+	// Simulation mode
+	onboard_parameters_add_parameter_int32    ( onboard_parameters , ( int32_t*)&centralData->state_structure.simulation_mode                              , "Sim_mode"         );
 	
-	main_tasks->tasks[1].rt_violations = 0;
-	main_tasks->tasks[1].delay_max = 0;
+	// Roll rate PID
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].p_gain                         , "RollRPid_P_G"     );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].integrator.maths_clip          , "RollRPid_I_CLip"  );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].integrator.postgain            , "RollRPid_I_PstG"  );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].integrator.pregain             , "RollRPid_I_PreG"  );
+	// onboard_parameters_add_parameter_float ( onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].differentiator.maths_clip      , "RollRPid_D_Clip"  );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].differentiator.gain            , "RollRPid_D_Gain"  );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].differentiator.LPF             , "RollRPid_D_LPF"   );
+	
+	// Roll attitude PID
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &attitude_stabiliser->rpy_controller[ROLL].p_gain                     , "RollAPid_P_G"     );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &attitude_stabiliser->rpy_controller[ROLL].integrator.maths_clip      , "RollAPid_I_CLip"  );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &attitude_stabiliser->rpy_controller[ROLL].integrator.postgain        , "RollAPid_I_PstG"  );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &attitude_stabiliser->rpy_controller[ROLL].integrator.pregain         , "RollAPid_I_PreG"  );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &attitude_stabiliser->rpy_controller[ROLL].differentiator.maths_clip  , "RollAPid_D_Clip"  );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &attitude_stabiliser->rpy_controller[ROLL].differentiator.gain        , "RollAPid_D_Gain"  );
+	// onboard_parameters_add_parameter_float ( onboard_parameters , &attitude_stabiliser->rpy_controller[ROLL].differentiator.LPF         , "RollAPid_D_LPF"   );
 
-	return TASK_RUN_SUCCESS;
+	// Pitch rate PID
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &rate_stabiliser->rpy_controller[PITCH].p_gain                        , "PitchRPid_P_G"    );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &rate_stabiliser->rpy_controller[PITCH].integrator.maths_clip         , "PitchRPid_I_CLip" );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &rate_stabiliser->rpy_controller[PITCH].integrator.postgain           , "PitchRPid_I_PstG" );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &rate_stabiliser->rpy_controller[PITCH].integrator.pregain            , "PitchRPid_I_PreG" );
+	// onboard_parameters_add_parameter_float ( onboard_parameters , &rate_stabiliser->rpy_controller[PITCH].differentiator.maths_clip     , "PitchRPid_D_Clip" );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &rate_stabiliser->rpy_controller[PITCH].differentiator.gain           , "PitchRPid_D_Gain" );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &rate_stabiliser->rpy_controller[PITCH].differentiator.LPF            , "PitchRPid_D_LPF"  );
+	
+	// Pitch attitude PID
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &attitude_stabiliser->rpy_controller[PITCH].p_gain                    , "PitchAPid_P_G"    );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &attitude_stabiliser->rpy_controller[PITCH].integrator.maths_clip     , "PitchAPid_I_CLip" );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &attitude_stabiliser->rpy_controller[PITCH].integrator.postgain       , "PitchAPid_I_PstG" );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &attitude_stabiliser->rpy_controller[PITCH].integrator.pregain        , "PitchAPid_I_PreG" );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &attitude_stabiliser->rpy_controller[PITCH].differentiator.maths_clip , "PitchAPid_D_Clip" );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &attitude_stabiliser->rpy_controller[PITCH].differentiator.gain       , "PitchAPid_D_Gain" );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &attitude_stabiliser->rpy_controller[PITCH].differentiator.LPF        , "PitchAPid_D_LPF"  );
+
+	// Yaw rate PID
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &rate_stabiliser->rpy_controller[YAW].p_gain                          , "YawRPid_P_G"      );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &rate_stabiliser->rpy_controller[YAW].clip_max                        , "YawRPid_P_CLmx"   );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &rate_stabiliser->rpy_controller[YAW].clip_min                        , "YawRPid_P_CLmn"   );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &rate_stabiliser->rpy_controller[YAW].integrator.maths_clip           , "YawRPid_I_CLip"   );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &rate_stabiliser->rpy_controller[YAW].integrator.postgain             , "YawRPid_I_PstG"   );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &rate_stabiliser->rpy_controller[YAW].integrator.pregain              , "YawRPid_I_PreG"   );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &rate_stabiliser->rpy_controller[YAW].differentiator.maths_clip       , "YawRPid_D_Clip"   );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &rate_stabiliser->rpy_controller[YAW].differentiator.gain             , "YawRPid_D_Gain"   );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &rate_stabiliser->rpy_controller[YAW].differentiator.LPF              , "YawRPid_D_LPF"    );
+	
+	// Yaw attitude PID
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &attitude_stabiliser->rpy_controller[YAW].p_gain                      , "YawAPid_P_G"      );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &attitude_stabiliser->rpy_controller[YAW].clip_max                    , "YawAPid_P_CLmx"   );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &attitude_stabiliser->rpy_controller[YAW].clip_min                    , "YawAPid_P_CLmn"   );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &attitude_stabiliser->rpy_controller[YAW].integrator.maths_clip       , "YawAPid_I_CLip"   );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &attitude_stabiliser->rpy_controller[YAW].integrator.postgain         , "YawAPid_I_PstG"   );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &attitude_stabiliser->rpy_controller[YAW].integrator.pregain          , "YawAPid_I_PreG"   );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &attitude_stabiliser->rpy_controller[YAW].differentiator.maths_clip   , "YawAPid_D_Clip"   );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &attitude_stabiliser->rpy_controller[YAW].differentiator.gain         , "YawAPid_D_Gain"   );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &attitude_stabiliser->rpy_controller[YAW].differentiator.LPF          , "YawAPid_D_LPF"    );
+
+
+	// Roll velocity PID
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &velocity_stabiliser->rpy_controller[ROLL].p_gain                     , "RollVPid_P_G"     );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &velocity_stabiliser->rpy_controller[ROLL].integrator.postgain        , "RollVPid_I_PstG"  );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &velocity_stabiliser->rpy_controller[ROLL].integrator.pregain         , "RollVPid_I_PreG"  );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &velocity_stabiliser->rpy_controller[ROLL].differentiator.gain        , "RollVPid_D_Gain"  );
+
+	// Pitch velocity PID
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &velocity_stabiliser->rpy_controller[PITCH].p_gain                    , "PitchVPid_P_G"    );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &velocity_stabiliser->rpy_controller[PITCH].integrator.postgain       , "PitchVPid_I_PstG" );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &velocity_stabiliser->rpy_controller[PITCH].integrator.pregain        , "PitchVPid_I_PreG" );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &velocity_stabiliser->rpy_controller[PITCH].differentiator.gain       , "PitchVPid_D_Gain" );
+
+	// Thrust velocity PID
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &velocity_stabiliser->thrust_controller.p_gain                        , "ThrVPid_P_G"      );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &velocity_stabiliser->thrust_controller.integrator.postgain           , "ThrVPid_I_PstG"   );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &velocity_stabiliser->thrust_controller.integrator.pregain            , "ThrVPid_I_PreG"   );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &velocity_stabiliser->thrust_controller.differentiator.gain           , "ThrVPid_D_Gain"   );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &velocity_stabiliser->thrust_controller.differentiator.LPF            , "ThrVPid_D_LPF"    );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &velocity_stabiliser->thrust_controller.soft_zone_width               , "ThrVPid_soft"     );
+
+
+
+	// qfilter
+	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->attitude_filter.kp                                        , "QF_kp_acc"        );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->attitude_filter.kp_mag                                    , "QF_kp_mag"        );
+	// onboard_parameters_add_parameter_float ( onboard_parameters , &attitude_stabiliser->rpy_controller[YAW].differentiator.gain         , "YawAPid_D_Gain"   );
+	
+	// Biaises
+	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_gyro.bias[X]                       , "Bias_Gyro_X"      );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_gyro.bias[Y]                       , "Bias_Gyro_Y"      );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_gyro.bias[Z]                       , "Bias_Gyro_Z"      );
+	
+	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_accelero.bias[X]                        , "Bias_Acc_X"       );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_accelero.bias[Y]                        , "Bias_Acc_Y"       );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_accelero.bias[Z]                        , "Bias_Acc_Z"       );
+	
+	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_compass.bias[X]                        , "Bias_Mag_X"       );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_compass.bias[Y]                        , "Bias_Mag_Y"       );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_compass.bias[Z]                        , "Bias_Mag_Z"       );
+	
+	// Scale factor
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_gyro.scale_factor[X]                         , "Scale_Gyro_X"     );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_gyro.scale_factor[Y]                         , "Scale_Gyro_Y"     );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_gyro.scale_factor[Z]                         , "Scale_Gyro_Z"     );
+	
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_accelero.scale_factor[X]                          , "Scale_Acc_X"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_accelero.scale_factor[Y]                          , "Scale_Acc_Y"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_accelero.scale_factor[Z]                          , "Scale_Acc_Z"      );
+	
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_compass.scale_factor[X]                          , "Scale_Mag_X"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_compass.scale_factor[Y]                          , "Scale_Mag_Y"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_compass.scale_factor[Z]                          , "Scale_Mag_Z"      );
+
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_alt_baro                               , "Pos_kp_alt_baro"       );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_vel_baro                          , "Pos_kp_velb"      );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_pos_gps[0]                            , "Pos_kp_pos0"      );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_pos_gps[1]                            , "Pos_kp_pos1"      );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_pos_gps[2]                            , "Pos_kp_pos2"      );
+	
+
+
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &centralData->navigationData.cruise_speed                                   , "vel_dist2Vel"     );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &centralData->navigationData.cruise_speed                                       , "vel_cruiseSpeed"  );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &centralData->navigationData.max_climb_rate                                          , "vel_climbRate"    );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &centralData->navigationData.softZoneSize                                            , "vel_softZone"     );
+
 }
-
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -114,6 +193,8 @@ task_return_t mavlink_telemetry_send_rt_stats(void* arg)
 void mavlink_telemetry_init(void)
 {
 	centralData = central_data_get_pointer_to_struct();
+	
+	mavlink_telemetry_add_onboard_parameters();
 
 	scheduler_t* mavlink_scheduler = &centralData->mavlink_communication.scheduler; 
 
@@ -135,10 +216,10 @@ void mavlink_telemetry_init(void)
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&hud_send_message,									&centralData->hud_structure, 					MAVLINK_MSG_ID_VFR_HUD	);								// ID 74
 	scheduler_add_task(mavlink_scheduler,  200000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&stabilisation_send_rpy_rates_error,				&centralData->stabiliser_stack.rate_stabiliser,	MAVLINK_MSG_ID_ROLL_PITCH_YAW_RATES_THRUST_SETPOINT	);	// ID 80
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&simulation_send_data,								&centralData->sim_model, 						MAVLINK_MSG_ID_HIL_STATE	);							// ID 90
-	scheduler_add_task(mavlink_scheduler,  250000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&mavlink_telemetry_send_rt_stats,					0, 												MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
+	scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&scheduler_send_rt_stats,							&centralData->scheduler, 						MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
 	//scheduler_add_task(mavlink_scheduler,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&mavlink_telemetry_send_sonar,						&centralData->i2cxl_sonar, 						MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
 
 	scheduler_sort_tasks(mavlink_scheduler);
 	
-	print_util_dbg_print("MAVlink actions initialiased\n");
+	print_util_dbg_print("MAVlink telemetry initialiased\n");
 }

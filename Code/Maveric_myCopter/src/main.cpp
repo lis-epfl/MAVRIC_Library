@@ -28,8 +28,7 @@ void initialisation()
 	centralData = central_data_get_pointer_to_struct();
 	boardsupport_init(centralData);
 	central_data_init();
-		
-	mavlink_actions_init(); // TODO: move read from flash elsewhere
+	
 	mavlink_telemetry_init();
 		
 	LED_On(LED1);

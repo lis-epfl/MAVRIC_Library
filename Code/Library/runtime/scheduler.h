@@ -263,6 +263,15 @@ void scheduler_suspend_task(task_entry_t *te, uint32_t delay);
 void scheduler_run_task_now(task_entry_t *te);
 
 
+/**
+ * \brief	Task to send real time statistics
+ * 
+ * \param  scheduler  Pointer to the scheduler
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t scheduler_send_rt_stats(scheduler_t* scheduler); 
+
 #ifdef __cplusplus
 }
 #endif

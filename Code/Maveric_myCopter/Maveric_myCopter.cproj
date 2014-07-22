@@ -1093,12 +1093,6 @@
     <Compile Include="src\config\MAVsettings\MAV203_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\mavlink_actions.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\mavlink_actions.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\mavlink_telemetry.c">
       <SubType>compile</SubType>
     </Compile>
