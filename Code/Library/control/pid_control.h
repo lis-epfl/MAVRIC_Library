@@ -53,56 +53,18 @@ typedef struct {
 }PID_Controller_t;						///< PID controller parameters
 
 /**
- * \brief				Passing through the controller
+ * \brief	Passing through the controller
+ *
+ * \return	A PID controller structure
  */
 PID_Controller_t pid_control_passthroughController(void);
 
 /**
- * \brief				Initialize integrator parameters
+ * \brief	Reset integrator
  *
- * \param	integrator	Pointer to an integrator structure
- * \param	pregain
- * \param	postgain
- * \param	clip_val	Clipping value
- */
-void pid_control_init_integrator(Integrator_t *integrator, float pregain, float postgain, float clip_val);
-
-/**
- * \brief				Reset integrator
+ * \param	integrator	The pointer to the integrator structure
  */
 void pid_control_reset_integrator(Integrator_t *integrator);
-
-/**
- * \brief				Initialize Differentiator parameters
- *
- * \param	diff		Pointer to differentiator structure
- * \param	gain
- * \param	LPF			Low pass filter
- * \param	clip_val	Clipping value
- */
-void pid_control_init_differenciator(Differentiator_t *diff, float gain, float LPF, float clip_val);
-
-/**
- * \brief				Integrating
- *
- * \param	integrator	Pointer to integrator parameters
- * \param	input
- * \param	dt			Timestep
- *
- * \return				Result
- */
-float pid_control_integrate(Integrator_t *integrator, float input, float dt);
-
-/**
- * \brief Differentiating
- *
- * \param	diff		Pointer to differentiator parameters
- * \param	input
- * \param	dt			Timestep
- *
- * \return				Result
- */
-float pid_control_differentiate(Differentiator_t *diff, float input,  float dt);
 
 /**
  * \brief				Update the PID controller
@@ -110,7 +72,7 @@ float pid_control_differentiate(Differentiator_t *diff, float input,  float dt);
  * \param	controller	Pointer to the PID controller structure
  * \param	error		Error in the controlled variable
  *
- * \return				Controller output
+ * \return				The controller output
  */
 float pid_control_update(PID_Controller_t* controller, float error);
 
@@ -121,7 +83,7 @@ float pid_control_update(PID_Controller_t* controller, float error);
  * \param	error		Error in the controlled variable
  * \param	dt			Timestep
  *
- * \return				Controller output
+ * \return				The controller output
  */
 float pid_control_update_dt(PID_Controller_t* controller, float error, float dt);
 

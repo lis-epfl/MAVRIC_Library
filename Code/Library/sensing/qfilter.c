@@ -190,6 +190,7 @@ void qfilter_update(qfilter_t *qf)
 	// apply step rotation with corrections
 	qed = quaternions_multiply(qf->attitude_estimation->qe,qtmp1);
 
+	// TODO: correct this formulas! 
 	qf->attitude_estimation->qe.s = qf->attitude_estimation->qe.s + qed.s * dt;
 	qf->attitude_estimation->qe.v[0] += qed.v[0] * dt;
 	qf->attitude_estimation->qe.v[1] += qed.v[1] * dt;

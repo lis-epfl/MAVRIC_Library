@@ -41,6 +41,10 @@
 #define RAW_GYRO_Y_SCALE 818.5111f		///< Define the scale factor for the gyroscope raw values
 #define RAW_GYRO_Z_SCALE 818.5111f		///< Define the scale factor for the gyroscope raw values
 
+#define GYRO_BIAIS_X 0.0f								///< Gyroscope x biais
+#define GYRO_BIAIS_Y 0.0f								///< Gyroscope y biais
+#define GYRO_BIAIS_Z 0.0f								///< Gyroscope z biais
+
 #define GYRO_AXIS_X  1.0f				///< Define the gyroscope axis direction (according to sensor-autopilot orientation)
 #define GYRO_AXIS_Y -1.0f				///< Define the gyroscope axis direction (according to sensor-autopilot orientation)
 #define GYRO_AXIS_Z -1.0f				///< Define the gyroscope axis direction (according to sensor-autopilot orientation)

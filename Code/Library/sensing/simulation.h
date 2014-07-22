@@ -64,8 +64,8 @@ typedef struct
 	float wind_x;											///< The x component of wind in global frame in m/s
 	float wind_y;											///< The y component of wind in global frame in m/s
 	
-	float home_coordinates[3];
-	float sim_gravity;
+	float home_coordinates[3];								///< The home coordinates in global frame (GPS, latitude, longitude, altitude in degrees and meters)
+	float sim_gravity;										///< The value of gravity for the simulated forces
 }simulation_config_t;
 
 /**
@@ -87,19 +87,19 @@ typedef struct
 	
 	float rotorspeeds[ROTORCOUNT];                          ///< The estimated rotor speeds
 
-	simulation_config_t vehicle_config;
+	simulation_config_t vehicle_config;						///< The vehicle configuration variables
 
 	uint32_t last_update;									///< The last update in system ticks
 	float dt;												///< The time base of current update
 	
-	imu_t* imu;
-	position_estimator_t* pos_est;
-	pressure_data_t* pressure;
-	gps_Data_type_t* gps;
-	state_structure_t* state_structure;
-	servo_output_t* servos;
-	ahrs_t *estimated_attitude;
-	bool* waypoint_set;
+	imu_t* imu;												///< The pointer to the IMU structure
+	position_estimator_t* pos_est;							///< The pointer to the position estimation structure
+	pressure_data_t* pressure;								///< The pointer to the barometer structure
+	gps_Data_type_t* gps;									///< The pointer to the GPS structure
+	state_structure_t* state_structure;						///< The pointer to the state structure
+	servo_output_t* servos;									///< The pointer to the servos structure
+	const ahrs_t *estimated_attitude;						///< The pointer to the attitude estimation structure
+	bool* waypoint_set;										///< The pointer to the waypoint set flag
 	
 } simulation_model_t;
 
@@ -119,13 +119,6 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
  * \param	sim				The pointer to the simulation model structure
  */
 void simulation_calib_set(simulation_model_t *sim);
-
-/**
- * \brief	Resets the simulation towards the "real" estimated position
- *
- * \param	sim				The pointer to the simulation model structure
- */
-void simulation_reset_simulation(simulation_model_t *sim);
 
 /**
  * \brief	Computes artificial gyro and accelerometer values based on motor commands
@@ -165,11 +158,19 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms);
 void simulation_switch_between_reality_n_simulation(simulation_model_t *sim);
 
 /**
- * \brief	Task to send the mavlink HIL simulation message
+ * \brief	Task to send the mavlink HIL state simulation message
  * 
  * \return	The status of execution of the task
  */
-task_return_t simulation_send_data(simulation_model_t *sim);
+task_return_t simulation_send_state(simulation_model_t *sim);
+
+
+/**
+ * \brief	Task to send the mavlink HIL quaternion simulation message
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t simulation_send_quaternions(simulation_model_t *sim_model);
 
 #ifdef __cplusplus
 }

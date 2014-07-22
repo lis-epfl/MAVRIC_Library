@@ -38,34 +38,38 @@ extern "C" {
  * \brief The 3D plane structure
  */
 typedef struct{
-	float normal[3];	///< The normal vector to the plane
-	float point[3];		///< A point of the plane
+	float normal[3];							///< The normal vector to the plane
+	float point[3];								///< A point of the plane
 }plane_t;
 
 /**
  * \brief The 3D line structure
  */
 typedef struct{
-	float direction[3];	///< The direction vector of a line
-	float point[3];		///< A point of the line
+	float direction[3];							///< The direction vector of a line
+	float point[3];								///< A point of the line
 }line_t;
 
 typedef struct
 {
-	neighbor_t				*neighborData;
-	position_estimator_t	*positionData;
-	imu_t				*imuData;
-	ahrs_t					*attitude_estimation;
+	neighbor_t *neighborData;					///< The pointer to the neighbor structure
+	const position_estimator_t *positionData;	///< The pointer to the position estimation structure
+	const imu_t *imuData;						///< The pointer to the IMU structure
+	const ahrs_t *attitude_estimation;			///< The pointer to the attitude estimation structure
 }orca_t;
 
 /**
  * \brief	Initialize the ORCA module
  *
- * \param neighborData pointer to the neighbor data structure
+ * \param	neighborData			The pointer to the neighbor data structure
+ * \param	positionData			The pointer to the position structure
+ * \param	imuData					The pointer to the IMU structure
+ * \param	attitude_estimation		The pointer to the attitude estimation structure
  */
-void orca_init(orca_t *orcaData, neighbor_t *neighborData, position_estimator_t *positionData, imu_t *imuData, ahrs_t *attitude_estimation);
+void orca_init(orca_t *orcaData, neighbor_t *neighborData, const position_estimator_t *positionData, const imu_t *imuData, const ahrs_t *attitude_estimation);
+
 /**
- * \brief	Initialize the ORCA module
+ * \brief	Computes the new collision-free velocity
  *
  * \param	orcaData			pointer to the orca_t struct
  * \param	OptimalVelocity		a 3D array

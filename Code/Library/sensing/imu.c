@@ -84,9 +84,9 @@ void imu_init (imu_t *imu)
 	imu->calib_gyro.scale_factor[X] =  1.0f / RAW_GYRO_X_SCALE;
 	imu->calib_gyro.scale_factor[Y] =  1.0f / RAW_GYRO_Y_SCALE;
 	imu->calib_gyro.scale_factor[Z] =  1.0f / RAW_GYRO_Z_SCALE;
-	imu->calib_gyro.bias[X] = 0.0f;
-	imu->calib_gyro.bias[Y] = 0.0f;
-	imu->calib_gyro.bias[Z] = 0.0f;
+	imu->calib_gyro.bias[X] = GYRO_BIAIS_X;
+	imu->calib_gyro.bias[Y] = GYRO_BIAIS_Y;
+	imu->calib_gyro.bias[Z] = GYRO_BIAIS_Z;
 	imu->calib_gyro.orientation[X] = GYRO_AXIS_X;
 	imu->calib_gyro.orientation[Y] = GYRO_AXIS_Y;
 	imu->calib_gyro.orientation[Z] = GYRO_AXIS_Z;

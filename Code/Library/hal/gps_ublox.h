@@ -556,53 +556,53 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 
 #endif
 
-ubx_cfg_nav_settings_t nav_settings;			///< CFG-NAV settings structure
+ubx_cfg_nav_settings_t nav_settings;		///< CFG-NAV settings structure
 
 uint8_t cksum_a;							///< Checksum a
 uint8_t cksum_b;							///< Checksum b
 
 // State machine state
-uint8_t         step;							///< Variable defining the state machine in the U-Blox decoding function
-uint8_t         msg_id;							///< The U-Blox message ID
-uint16_t        payload_length;					///< The length of the message
-uint16_t        payload_counter;				///< The incremental counter to receive bytes of data
+uint8_t         step;						///< Variable defining the state machine in the U-Blox decoding function
+uint8_t         msg_id;						///< The U-Blox message ID
+uint16_t        payload_length;				///< The length of the message
+uint16_t        payload_counter;			///< The incremental counter to receive bytes of data
 
-uint8_t         ubxclass;						///< The U-Blox message class
+uint8_t         ubxclass;///< The U-Blox message class
 
 // do we have new position and speed information?
-bool new_position;								///< Boolean value to check if we received new position message
-bool new_speed;									///< Boolean value to check if we received new velocity message
+bool new_position;							///< Boolean value to check if we received new position message
+bool new_speed;								///< Boolean value to check if we received new velocity message
 
-uint8_t         disable_counter;				///< Counter used to deactivate unwanted messages
+uint8_t disable_counter;					///< Counter used to deactivate unwanted messages
 
-bool next_fix;									///< Boolean variable to get whether we have a correct GPS fix or not
-bool have_raw_velocity;							///< Boolean variable that could be used to get a speed approximate with heading and 2D velocity
+bool next_fix;								///< Boolean variable to get whether we have a correct GPS fix or not
+bool have_raw_velocity;						///< Boolean variable that could be used to get a speed approximate with heading and 2D velocity
 
-#define NO_GPS 0						///< No GPS
-#define NO_FIX 1						///< No GPS fix
-#define GPS_OK 2						///< GPS ok
+#define NO_GPS 0							///< No GPS
+#define NO_FIX 1							///< No GPS fix
+#define GPS_OK 2							///< GPS ok
 
 typedef enum {
-	GPS_ENGINE_NONE        = -1,		///< None
-	GPS_ENGINE_PORTABLE    = 0,			///< Portable
-	GPS_ENGINE_STATIONARY  = 2,			///< Stationary
-	GPS_ENGINE_PEDESTRIAN  = 3,			///< Pedestrian
-	GPS_ENGINE_AUTOMOTIVE  = 4,			///< Automotive
-	GPS_ENGINE_SEA         = 5,			///< Sea
-	GPS_ENGINE_AIRBORNE_1G = 6,			///< Airborne with <1g acceleration
-	GPS_ENGINE_AIRBORNE_2G = 7,			///< Airborne with <2g acceleration
-	GPS_ENGINE_AIRBORNE_4G = 8			///< Airborne with <4g acceleration
+	GPS_ENGINE_NONE        = -1,			///< None
+	GPS_ENGINE_PORTABLE    = 0,				///< Portable
+	GPS_ENGINE_STATIONARY  = 2,				///< Stationary
+	GPS_ENGINE_PEDESTRIAN  = 3,				///< Pedestrian
+	GPS_ENGINE_AUTOMOTIVE  = 4,				///< Automotive
+	GPS_ENGINE_SEA         = 5,				///< Sea
+	GPS_ENGINE_AIRBORNE_1G = 6,				///< Airborne with <1g acceleration
+	GPS_ENGINE_AIRBORNE_2G = 7,				///< Airborne with <2g acceleration
+	GPS_ENGINE_AIRBORNE_4G = 8				///< Airborne with <4g acceleration
 }GPS_Engine_Setting;
 
 GPS_Engine_Setting engine_nav_setting;		///< Enum GPS engine setting
 
 
-#define UBX_TIMEOUT_CYCLES 2			///< Number of times ubx_CheckTimeout() must be called without response from GPS before it is considered as timed out
-#define UBX_POSITION_PRECISION 20		///< The minimum precision to consider a position as correct (in m)
-#define UBX_ALTITUDE_PRECISION 20		///< The minimum precision to consider an altitude as correct (in m)
-#define UBX_SPEED_PRECISION 5			///< The minimum precision to consider a speed as correct (in m/s)
+#define UBX_TIMEOUT_CYCLES 2				///< Number of times ubx_CheckTimeout() must be called without response from GPS before it is considered as timed out
+#define UBX_POSITION_PRECISION 20			///< The minimum precision to consider a position as correct (in m)
+#define UBX_ALTITUDE_PRECISION 20			///< The minimum precision to consider an altitude as correct (in m)
+#define UBX_SPEED_PRECISION 5				///< The minimum precision to consider a speed as correct (in m/s)
 
-#define UBX_HEADING_PRECISION 5000000	///< The minimum precision to consider a heading as correct (in deg*10^5)
+#define UBX_HEADING_PRECISION 5000000		///< The minimum precision to consider a heading as correct (in deg*10^5)
 
 
 /**
@@ -633,18 +633,18 @@ typedef struct
 	uint32_t time_last_msg;					///< Time reference in ms of microcontroller
 	uint32_t timegps;						///< Time reference in ms of gps
 	
-	uint8_t  status;					///< GPS status
+	uint8_t  status;						///< GPS status
 	
-	uint8_t  horizontalStatus;			///< Horizontal status
+	uint8_t  horizontalStatus;				///< Horizontal status
 	
- 	uint8_t  altitudeStatus;			///< Altitude status
- 	uint8_t  speedStatus;				///< Speed status
- 	uint8_t  courseStatus;				///< Course status
-	uint8_t  accuracyStatus;			///< Accuracy status
+ 	uint8_t  altitudeStatus;				///< Altitude status
+ 	uint8_t  speedStatus;					///< Speed status
+ 	uint8_t  courseStatus;					///< Course status
+ 	uint8_t  accuracyStatus;				///< Accuracy status
 	
-	Buffer_t gps_buffer;										///< The GPS buffer
-	byte_stream_t gps_stream_in;								///< The incoming GPS byte stream
-	byte_stream_t gps_stream_out;								///< The outgoing GPS byte stream
+	Buffer_t gps_buffer;					///< The GPS buffer
+	byte_stream_t gps_stream_in;			///< The incoming GPS byte stream
+	byte_stream_t gps_stream_out;			///< The outgoing GPS byte stream
 } gps_Data_type_t;
 
 
@@ -656,7 +656,8 @@ uint32_t last_fix_time;						///< Last fix time
 /**
  * \brief	Initialize the gps U-Blox module
  *
- * \param	UID the uart ID
+ * \param	GPS_data			The pointer to the GPS structure
+ * \param	UID					The uart ID
  */
 void gps_ublox_init(gps_Data_type_t *GPS_data, int32_t UID);
 
@@ -666,13 +667,15 @@ void gps_ublox_init(gps_Data_type_t *GPS_data, int32_t UID);
  *
  * The GPS and UART channel should already be configured in the good baudrate 38400U
  *
- * \param	void
+ * \param	GPS_data			The pointer to the GPS structure
  */
 void gps_ublox_configure_gps(gps_Data_type_t *GPS_data);
 
 
 /**
  * \brief	The function that needs to be called to get the GPS information
+ *
+ * \param	GPS_data			The pointer to the GPS structure
  */
 void gps_ublox_update(gps_Data_type_t *GPS_data);
 
@@ -680,6 +683,8 @@ void gps_ublox_update(gps_Data_type_t *GPS_data);
 /**
  * \brief	Task to send the mavlink gps raw message
  * 
+ * \param	GPS_data			The pointer to the GPS structure
+ *
  * \return	The status of execution of the task
  */
 task_return_t gps_ublox_send_raw(gps_Data_type_t* GPS_data);

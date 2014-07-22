@@ -25,6 +25,10 @@
 #include "central_data.h"
 #include "maths.h"
 
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
 /**
  * \brief	Changes between simulation to and from reality
  *
@@ -34,22 +38,216 @@
 static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_command_long_t* packet);
 
 /**
+ * \brief	Computer the forces in the local frame for a "diagonal" quadrotor configuration
+ *
+ * \param	sim				The pointer to the simulation structure
+ * \param	servos			The pointer to the servos structure
+ */
+void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servos);
+
+/**
  * \brief	Computes the forces in the local frame of a "cross" quadrotor configuration
  *
  * \warning	This function is not implemented
  *
- * \param	sim		The pointer to the simulation structure
- * \param	servos	The pointer to the servos structure
+ * \param	sim				The pointer to the simulation structure
+ * \param	servos			The pointer to the servos structure
  */
 void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *servos);
 
 /**
- * \brief	Computer the forces in the local frame for a "diagonal" quadrotor configuration
+ * \brief	Resets the simulation towards the "real" estimated position
  *
- * \param	sim		The pointer to the simulation structure
- * \param	servos	The pointer to the servos structure
+ * \param	sim				The pointer to the simulation model structure
  */
-void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servos);
+static void simulation_reset_simulation(simulation_model_t *sim);
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_command_long_t* packet)
+{
+	if (packet->param1 == 1)
+	{
+		// Set new home position to actual position
+		print_util_dbg_print("Set new home location to actual position.\n");
+		sim->localPosition.origin = coord_conventions_local_to_global_position(sim->localPosition);
+
+		print_util_dbg_print("New Home location: (");
+		print_util_dbg_print_num(sim->localPosition.origin.latitude * 10000000.0f,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(sim->localPosition.origin.longitude * 10000000.0f,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(sim->localPosition.origin.altitude * 1000.0f,10);
+		print_util_dbg_print(")\n");
+	}
+	else
+	{
+		// Set new home position from msg
+		print_util_dbg_print("Set new home location. \n");
+
+		sim->localPosition.origin.latitude = packet->param5;
+		sim->localPosition.origin.longitude = packet->param6;
+		sim->localPosition.origin.altitude = packet->param7;
+
+		print_util_dbg_print("New Home location: (");
+		print_util_dbg_print_num(sim->localPosition.origin.latitude * 10000000.0f,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(sim->localPosition.origin.longitude * 10000000.0f,10);
+		print_util_dbg_print(", ");
+		print_util_dbg_print_num(sim->localPosition.origin.altitude * 1000.0f,10);
+		print_util_dbg_print(")\n");
+	}
+
+	*sim->waypoint_set = false;
+}
+
+/** 
+ * \brief Inverse function of mix_to_servos in stabilization to recover torques and forces
+ *
+ * \param	sim					The pointer to the simulation model structure
+ * \param	rpm					The rotation per minute of the rotor
+ * \param	sqr_lat_airspeed	The square of the lateral airspeed
+ * \param	axial_airspeed		The axial airspeed
+ *
+ * \return The value of the lift / drag value without the lift / drag coefficient
+ */
+static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr_lat_airspeed, float axial_airspeed) {
+	if (rpm < 0.1f)
+	{
+		return 0.0f;
+	}
+	float mean_vel = sim->vehicle_config.rotor_diameter *PI * rpm / 60.0f;
+	float exit_vel = rpm / 60.0f *sim->vehicle_config.rotor_pitch;
+	           
+	return (0.5f * AIR_DENSITY * (mean_vel * mean_vel +sqr_lat_airspeed) * sim->vehicle_config.rotor_foil_area  * (1.0f - (axial_airspeed / exit_vel)));
+}
+
+static void simulation_reset_simulation(simulation_model_t *sim)
+{
+	int32_t i;
+	
+	for (i = 0; i < 3; i++)
+	{
+		sim->rates_bf[i] = 0.0f;
+		sim->torques_bf[i] = 0.0f;
+		sim->lin_forces_bf[i] = 0.0f;
+		sim->vel_bf[i] = 0.0f;
+		sim->vel[i] = 0.0f;
+	}
+	
+	sim->localPosition = sim->pos_est->localPosition;
+	
+	sim->attitude_estimation = *sim->estimated_attitude;
+	
+	print_util_dbg_print("(Re)setting simulation. Origin: (");
+	print_util_dbg_print_num(sim->pos_est->localPosition.origin.latitude*10000000,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(sim->pos_est->localPosition.origin.longitude*10000000,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(sim->pos_est->localPosition.origin.altitude*1000,10);
+	print_util_dbg_print("), Position: (x1000) (");
+	print_util_dbg_print_num(sim->pos_est->localPosition.pos[0]*1000,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(sim->pos_est->localPosition.pos[1]*1000,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(sim->pos_est->localPosition.pos[2]*1000,10);
+	print_util_dbg_print(")\n");
+	
+	//sim->localPosition.origin.latitude = HOME_LATITUDE;
+	//sim->localPosition.origin.longitude = HOME_LONGITUDE;
+	//sim->localPosition.origin.altitude = HOME_ALTITUDE;
+	
+	//sim->localPosition.origin = sim->pos_est->localPosition.origin;
+	//sim->localPosition.heading = sim->pos_est->localPosition.heading;
+}
+
+void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servos){
+	int32_t i;
+	float motor_command[4];
+	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4];
+	float ldb;
+	UQuat_t wind_gf = {.s = 0, .v = {sim->vehicle_config.wind_x, sim->vehicle_config.wind_y, 0.0f}};
+	UQuat_t wind_bf = quaternions_global_to_local(sim->attitude_estimation.qe, wind_gf);
+	
+	float sqr_lateral_airspeed = SQR(sim->vel_bf[0] + wind_bf.v[0]) + SQR(sim->vel_bf[1] + wind_bf.v[1]);
+	float lateral_airspeed = sqrt(sqr_lateral_airspeed);
+	
+	float old_rotor_speed;
+	for (i = 0; i < 4; i++)
+	{
+		motor_command[i] = (float)servos[i].value / SERVO_SCALE - sim->vehicle_config.rotor_rpm_offset;
+		if (motor_command[i] < 0.0f) 
+		{
+			motor_command[i] = 0;
+		}
+		
+		// temporarily save old rotor speeds
+		old_rotor_speed = sim->rotorspeeds[i];
+		// estimate rotor speeds by low - pass filtering
+		//sim->rotorspeeds[i] = (sim->vehicle_config.rotor_lpf) * sim->rotorspeeds[i] + (1.0f - sim->vehicle_config.rotor_lpf) * (motor_command[i] * sim->vehicle_config.rotor_rpm_gain);
+		sim->rotorspeeds[i] = (motor_command[i] * sim->vehicle_config.rotor_rpm_gain);
+		
+		// calculate torque created by rotor inertia
+		rotor_inertia[i] = (sim->rotorspeeds[i] - old_rotor_speed) / sim->dt * sim->vehicle_config.rotor_momentum;
+		
+		ldb = lift_drag_base(sim, sim->rotorspeeds[i], sqr_lateral_airspeed, -sim->vel_bf[Z]);
+		//ldb = lift_drag_base(sim, sim->rotorspeeds[i], sqr_lateral_airspeed, 0.0f);
+		
+		rotor_lifts[i] = ldb * sim->vehicle_config.rotor_cl;
+		rotor_drags[i] = ldb * sim->vehicle_config.rotor_cd;
+	}
+	
+	float mpos_x = sim->vehicle_config.rotor_arm_length / 1.4142f;
+	float mpos_y = sim->vehicle_config.rotor_arm_length / 1.4142f;
+	
+	// torque around x axis (roll)
+	sim->torques_bf[ROLL]  = ((rotor_lifts[M_FRONT_LEFT]  + rotor_lifts[M_REAR_LEFT]  ) 
+						    - (rotor_lifts[M_FRONT_RIGHT] + rotor_lifts[M_REAR_RIGHT] )) * mpos_y;;
+
+	// torque around y axis (pitch)
+	sim->torques_bf[PITCH] = ((rotor_lifts[M_FRONT_LEFT]  + rotor_lifts[M_FRONT_RIGHT] )
+							- (rotor_lifts[M_REAR_LEFT]   + rotor_lifts[M_REAR_RIGHT] ))*  mpos_x;
+
+	sim->torques_bf[YAW]   = (M_FL_DIR * (10.0f * rotor_drags[M_FRONT_LEFT] + rotor_inertia[M_FRONT_LEFT])  + M_FR_DIR * (10.0f * rotor_drags[M_FRONT_RIGHT] + rotor_inertia[M_FRONT_RIGHT])
+							+ M_RL_DIR * (10.0f * rotor_drags[M_REAR_LEFT] + rotor_inertia[M_REAR_LEFT])   + M_RR_DIR * (10.0f * rotor_drags[M_REAR_RIGHT] + rotor_inertia[M_REAR_RIGHT] ))*  sim->vehicle_config.rotor_diameter;
+	
+
+	
+	sim->lin_forces_bf[X] = -(sim->vel_bf[X] - wind_bf.v[0]) * lateral_airspeed * sim->vehicle_config.vehicle_drag;  
+	sim->lin_forces_bf[Y] = -(sim->vel_bf[Y] - wind_bf.v[1]) * lateral_airspeed * sim->vehicle_config.vehicle_drag;
+	sim->lin_forces_bf[Z] = -(rotor_lifts[M_FRONT_LEFT]+ rotor_lifts[M_FRONT_RIGHT] +rotor_lifts[M_REAR_LEFT] +rotor_lifts[M_REAR_RIGHT]);
+
+}
+
+
+void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *servos)
+{
+	//int32_t i;
+	//float motor_command[4];
+	
+	//TODO: implement the correct forces
+/*	motor_command[M_FRONT] = control->thrust + control->rpy[PITCH] + M_FRONT_DIR * control->rpy[YAW];
+	motor_command[M_RIGHT] = control->thrust - control->rpy[ROLL] + M_RIGHT_DIR * control->rpy[YAW];
+	motor_command[M_REAR]  = control->thrust - control->rpy[PITCH] + M_REAR_DIR * control->rpy[YAW];
+	motor_command[M_LEFT]  = control->thrust + control->rpy[ROLL] + M_LEFT_DIR * control->rpy[YAW];
+	for (i = 0; i < 4; i++)
+	{
+		if (motor_command[i] < MIN_THRUST) motor_command[i] = MIN_THRUST;
+		if (motor_command[i] > MAX_THRUST) motor_command[i] = MAX_THRUST;
+	}
+
+	for (i = 0; i < 4; i++)
+	{
+		centralData->servos[i].value = SERVO_SCALE * motor_command[i];
+	}
+	*/
+}
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
 void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* attitude_estimation, imu_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler)
 {
@@ -132,146 +330,6 @@ void simulation_calib_set(simulation_model_t *sim)
 	
 }
 
-void simulation_reset_simulation(simulation_model_t *sim)
-{
-	int32_t i;
-	
-	for (i = 0; i < 3; i++)
-	{
-		sim->rates_bf[i] = 0.0f;
-		sim->torques_bf[i] = 0.0f;
-		sim->lin_forces_bf[i] = 0.0f;
-		sim->vel_bf[i] = 0.0f;
-		sim->vel[i] = 0.0f;
-	}
-	
-	sim->localPosition = sim->pos_est->localPosition;
-	
-	sim->attitude_estimation = *sim->estimated_attitude;
-	
-	print_util_dbg_print("(Re)setting simulation. Origin: (");
-	print_util_dbg_print_num(sim->pos_est->localPosition.origin.latitude*10000000,10);
-	print_util_dbg_print(", ");
-	print_util_dbg_print_num(sim->pos_est->localPosition.origin.longitude*10000000,10);
-	print_util_dbg_print(", ");
-	print_util_dbg_print_num(sim->pos_est->localPosition.origin.altitude*1000,10);
-	print_util_dbg_print("), Position: (x1000) (");
-	print_util_dbg_print_num(sim->pos_est->localPosition.pos[0]*1000,10);
-	print_util_dbg_print(", ");
-	print_util_dbg_print_num(sim->pos_est->localPosition.pos[1]*1000,10);
-	print_util_dbg_print(", ");
-	print_util_dbg_print_num(sim->pos_est->localPosition.pos[2]*1000,10);
-	print_util_dbg_print(")\n");
-	
-	//sim->localPosition.origin.latitude = HOME_LATITUDE;
-	//sim->localPosition.origin.longitude = HOME_LONGITUDE;
-	//sim->localPosition.origin.altitude = HOME_ALTITUDE;
-	
-	//sim->localPosition.origin = sim->pos_est->localPosition.origin;
-	//sim->localPosition.heading = sim->pos_est->localPosition.heading;
-}
-
-/** 
- * \brief Inverse function of mix_to_servos in stabilization to recover torques and forces
- *
- * \param	sim					The pointer to the simulation model structure
- * \param	rpm					The rotation per minute of the rotor
- * \param	sqr_lat_airspeed	The square of the lateral airspeed
- * \param	axial_airspeed		The axial airspeed
- *
- * \return The value of the lift / drag value without the lift / drag coefficient
- */
-static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr_lat_airspeed, float axial_airspeed) {
-	if (rpm < 0.1f)
-	{
-		return 0.0f;
-	}
-	float mean_vel = sim->vehicle_config.rotor_diameter *PI * rpm / 60.0f;
-	float exit_vel = rpm / 60.0f *sim->vehicle_config.rotor_pitch;
-	           
-	return (0.5f * AIR_DENSITY * (mean_vel * mean_vel +sqr_lat_airspeed) * sim->vehicle_config.rotor_foil_area  * (1.0f - (axial_airspeed / exit_vel)));
-}
-
-
-void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servos){
-	int32_t i;
-	float motor_command[4];
-	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4];
-	float ldb;
-	UQuat_t wind_gf = {.s = 0, .v = {sim->vehicle_config.wind_x, sim->vehicle_config.wind_y, 0.0f}};
-	UQuat_t wind_bf = quaternions_global_to_local(sim->attitude_estimation.qe, wind_gf);
-	
-	float sqr_lateral_airspeed = SQR(sim->vel_bf[0] + wind_bf.v[0]) + SQR(sim->vel_bf[1] + wind_bf.v[1]);
-	float lateral_airspeed = sqrt(sqr_lateral_airspeed);
-	
-	float old_rotor_speed;
-	for (i = 0; i < 4; i++)
-	{
-		motor_command[i] = (float)servos[i].value / SERVO_SCALE - sim->vehicle_config.rotor_rpm_offset;
-		if (motor_command[i] < 0.0f) 
-		{
-			motor_command[i] = 0;
-		}
-		
-		// temporarily save old rotor speeds
-		old_rotor_speed = sim->rotorspeeds[i];
-		// estimate rotor speeds by low - pass filtering
-		//sim->rotorspeeds[i] = (sim->vehicle_config.rotor_lpf) * sim->rotorspeeds[i] + (1.0f - sim->vehicle_config.rotor_lpf) * (motor_command[i] * sim->vehicle_config.rotor_rpm_gain);
-		sim->rotorspeeds[i] = (motor_command[i] * sim->vehicle_config.rotor_rpm_gain);
-		
-		// calculate torque created by rotor inertia
-		rotor_inertia[i] = (sim->rotorspeeds[i] - old_rotor_speed) / sim->dt * sim->vehicle_config.rotor_momentum;
-		
-		ldb = lift_drag_base(sim, sim->rotorspeeds[i], sqr_lateral_airspeed, -sim->vel_bf[Z]);
-		//ldb = lift_drag_base(sim, sim->rotorspeeds[i], sqr_lateral_airspeed, 0.0f);
-		
-		rotor_lifts[i] = ldb * sim->vehicle_config.rotor_cl;
-		rotor_drags[i] = ldb * sim->vehicle_config.rotor_cd;
-	}
-	
-	float mpos_x = sim->vehicle_config.rotor_arm_length / 1.4142f;
-	float mpos_y = sim->vehicle_config.rotor_arm_length / 1.4142f;
-	
-	// torque around x axis (roll)
-	sim->torques_bf[ROLL]  = ((rotor_lifts[M_FRONT_LEFT]  + rotor_lifts[M_REAR_LEFT]  ) 
-						    - (rotor_lifts[M_FRONT_RIGHT] + rotor_lifts[M_REAR_RIGHT] )) * mpos_y;;
-
-	// torque around y axis (pitch)
-	sim->torques_bf[PITCH] = ((rotor_lifts[M_FRONT_LEFT]  + rotor_lifts[M_FRONT_RIGHT] )
-							- (rotor_lifts[M_REAR_LEFT]   + rotor_lifts[M_REAR_RIGHT] ))*  mpos_x;
-
-	sim->torques_bf[YAW]   = (M_FL_DIR * (10.0f * rotor_drags[M_FRONT_LEFT] + rotor_inertia[M_FRONT_LEFT])  + M_FR_DIR * (10.0f * rotor_drags[M_FRONT_RIGHT] + rotor_inertia[M_FRONT_RIGHT])
-							+ M_RL_DIR * (10.0f * rotor_drags[M_REAR_LEFT] + rotor_inertia[M_REAR_LEFT])   + M_RR_DIR * (10.0f * rotor_drags[M_REAR_RIGHT] + rotor_inertia[M_REAR_RIGHT] ))*  sim->vehicle_config.rotor_diameter;
-	
-
-	
-	sim->lin_forces_bf[X] = -(sim->vel_bf[X] - wind_bf.v[0]) * lateral_airspeed * sim->vehicle_config.vehicle_drag;  
-	sim->lin_forces_bf[Y] = -(sim->vel_bf[Y] - wind_bf.v[1]) * lateral_airspeed * sim->vehicle_config.vehicle_drag;
-	sim->lin_forces_bf[Z] = -(rotor_lifts[M_FRONT_LEFT]+ rotor_lifts[M_FRONT_RIGHT] +rotor_lifts[M_REAR_LEFT] +rotor_lifts[M_REAR_RIGHT]);
-
-}
-
-
-void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *servos){
-	//int32_t i;
-	//float motor_command[4];
-	
-	//TODO: implement the correct forces
-/*	motor_command[M_FRONT] = control->thrust + control->rpy[PITCH] + M_FRONT_DIR * control->rpy[YAW];
-	motor_command[M_RIGHT] = control->thrust - control->rpy[ROLL] + M_RIGHT_DIR * control->rpy[YAW];
-	motor_command[M_REAR]  = control->thrust - control->rpy[PITCH] + M_REAR_DIR * control->rpy[YAW];
-	motor_command[M_LEFT]  = control->thrust + control->rpy[ROLL] + M_LEFT_DIR * control->rpy[YAW];
-	for (i = 0; i < 4; i++) {
-		if (motor_command[i] < MIN_THRUST) motor_command[i] = MIN_THRUST;
-		if (motor_command[i] > MAX_THRUST) motor_command[i] = MAX_THRUST;
-	}
-
-	for (i = 0; i < 4; i++) {
-		centralData->servos[i].value = SERVO_SCALE * motor_command[i];
-	}
-	*/
-}
-
 void simulation_update(simulation_model_t *sim)
 {
 	int32_t i;
@@ -296,7 +354,7 @@ void simulation_update(simulation_model_t *sim)
 	forces_from_servos_cross_quad(sim, sim->servos);
 	#endif
 	
-	// pid_control_integrate torques to get simulated gyro rates (with some damping)
+	// integrate torques to get simulated gyro rates (with some damping)
 	sim->rates_bf[0] = maths_clip((1.0f - 0.1f * sim->dt) * sim->rates_bf[0] + sim->dt * sim->torques_bf[0] / sim->vehicle_config.roll_pitch_momentum, 10.0f);
 	sim->rates_bf[1] = maths_clip((1.0f - 0.1f * sim->dt) * sim->rates_bf[1] + sim->dt * sim->torques_bf[1] / sim->vehicle_config.roll_pitch_momentum, 10.0f);
 	sim->rates_bf[2] = maths_clip((1.0f - 0.1f * sim->dt) * sim->rates_bf[2] + sim->dt * sim->torques_bf[2] / sim->vehicle_config.yaw_momentum, 10.0f);
@@ -392,27 +450,8 @@ void simulation_update(simulation_model_t *sim)
 		sim->imu->raw_accelero.data[i] = ((sim->lin_forces_bf[i] / sim->vehicle_config.total_mass / sim->vehicle_config.sim_gravity) * sim->calib_accelero.scale_factor[i] + sim->calib_accelero.bias[i]) * sim->calib_accelero.orientation[i];
 		sim->imu->raw_compass.data[i] = ((sim->attitude_estimation.north_vec.v[i] ) * sim->calib_compass.scale_factor[i] + sim->calib_compass.bias[i])* sim->calib_compass.orientation[i];
 	}
-	
-	//sim->imu->raw_gyro.data[IMU_X] = sim->rates_bf[0] * sim->simu_raw_scale[GYRO_OFFSET + IMU_X] + sim->simu_raw_biais[GYRO_OFFSET + IMU_X];
-	//sim->imu->raw_gyro.data[IMU_Y] = sim->rates_bf[1] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Y] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Y];
-	//sim->imu->raw_gyro.data[IMU_Z] = sim->rates_bf[2] * sim->simu_raw_scale[GYRO_OFFSET + IMU_Z] + sim->simu_raw_biais[GYRO_OFFSET + IMU_Z];
-
-	//sim->imu->raw_accelero.data[IMU_X] = (sim->lin_forces_bf[0] / sim->vehicle_config.total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_X] + sim->simu_raw_biais[ACC_OFFSET + IMU_X];
-	//sim->imu->raw_accelero.data[IMU_Y] = (sim->lin_forces_bf[1] / sim->vehicle_config.total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_Y] + sim->simu_raw_biais[ACC_OFFSET + IMU_Y];
-	//sim->imu->raw_accelero.data[IMU_Z] = (sim->lin_forces_bf[2] / sim->vehicle_config.total_mass / GRAVITY) * sim->simu_raw_scale[ACC_OFFSET + IMU_Z] + sim->simu_raw_biais[ACC_OFFSET + IMU_Z];
-	//// cheating... provide true upvector instead of simulated forces
-	////sim->imu->raw_compass.data[IMU_X] = sim->attitude_estimation.up_vec.v[0] * imu->calib_accelero.scale_factor[IMU_X] + imu->calib_accelero.bias[IMU_X];
-	////sim->imu->raw_compass.data[IMU_Y] = sim->attitude_estimation.up_vec.v[1] * imu->calib_accelero.scale_factor[IMU_Y] + imu->calib_accelero.bias[IMU_Y];
-	////sim->imu->raw_compass.data[IMU_Z] = sim->attitude_estimation.up_vec.v[2] * imu->calib_accelero.scale_factor[IMU_Z] + imu->calib_accelero.bias[IMU_Z];
-	
-	//sim->imu->raw_compass.data[IMU_X] = (sim->attitude_estimation.north_vec.v[0] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_X] + sim->simu_raw_biais[MAG_OFFSET + IMU_X];
-	//sim->imu->raw_compass.data[IMU_Y] = (sim->attitude_estimation.north_vec.v[1] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_Y] + sim->simu_raw_biais[MAG_OFFSET + IMU_Y];
-	//sim->imu->raw_compass.data[IMU_Z] = (sim->attitude_estimation.north_vec.v[2] ) * sim->simu_raw_scale[MAG_OFFSET + IMU_Z] + sim->simu_raw_biais[MAG_OFFSET + IMU_Z];
-	
-	//sim->imu->dt = sim->dt;
 
 	sim->localPosition.heading = coord_conventions_get_yaw(sim->attitude_estimation.qe);
-	//sim->pos_est->localPosition = sim->localPosition;
 }
 
 void simulation_simulate_barometer(simulation_model_t *sim)
@@ -484,44 +523,7 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 	}
 }
 
-static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_command_long_t* packet)
-{
-	if (packet->param1 == 1)
-	{
-		// Set new home position to actual position
-		print_util_dbg_print("Set new home location to actual position.\n");
-		sim->localPosition.origin = coord_conventions_local_to_global_position(sim->localPosition);
-
-		print_util_dbg_print("New Home location: (");
-		print_util_dbg_print_num(sim->localPosition.origin.latitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->localPosition.origin.longitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->localPosition.origin.altitude * 1000.0f,10);
-		print_util_dbg_print(")\n");
-	}
-	else
-	{
-		// Set new home position from msg
-		print_util_dbg_print("Set new home location. \n");
-
-		sim->localPosition.origin.latitude = packet->param5;
-		sim->localPosition.origin.longitude = packet->param6;
-		sim->localPosition.origin.altitude = packet->param7;
-
-		print_util_dbg_print("New Home location: (");
-		print_util_dbg_print_num(sim->localPosition.origin.latitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->localPosition.origin.longitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->localPosition.origin.altitude * 1000.0f,10);
-		print_util_dbg_print(")\n");
-	}
-
-	*sim->waypoint_set = false;
-}
-
-task_return_t simulation_send_data(simulation_model_t* sim_model)
+task_return_t simulation_send_state(simulation_model_t* sim_model)
 {
 	Aero_Attitude_t aero_attitude;
 	aero_attitude = coord_conventions_quat_to_aero(sim_model->attitude_estimation.qe);
@@ -546,23 +548,7 @@ task_return_t simulation_send_data(simulation_model_t* sim_model)
 								1000 * sim_model->lin_forces_bf[1],
 								1000 * sim_model->lin_forces_bf[2] 	);
 	
-	mavlink_msg_hil_state_quaternion_send(	MAVLINK_COMM_0,
-											time_keeper_get_micros(),
-											(float*) &sim_model->attitude_estimation.qe,
-											aero_attitude.rpy[ROLL],
-											aero_attitude.rpy[PITCH],
-											aero_attitude.rpy[YAW],
-											gpos.latitude * 10000000,
-											gpos.longitude * 10000000,
-											gpos.altitude * 1000.0f,
-											100 * sim_model->vel[X],
-											100 * sim_model->vel[Y],
-											100 * sim_model->vel[Z],
-											100 * vectors_norm(sim_model->vel),
-											0.0f,
-											sim_model->attitude_estimation.linear_acc[X],
-											sim_model->attitude_estimation.linear_acc[Y],
-											sim_model->attitude_estimation.linear_acc[Z]	);
+
 	
 	//mavlink_msg_named_value_int_send(	MAVLINK_COMM_0,
 										//time_keeper_get_millis(),
@@ -598,5 +584,32 @@ task_return_t simulation_send_data(simulation_model_t* sim_model)
 										//time_keeper_get_millis(),
 										//"rpm4",
 										//sim_model->rotorspeeds[3]);
+	return TASK_RUN_SUCCESS;
+}
+
+task_return_t simulation_send_quaternions(simulation_model_t *sim_model)
+{
+	Aero_Attitude_t aero_attitude;
+	aero_attitude = coord_conventions_quat_to_aero(sim_model->attitude_estimation.qe);
+
+	global_position_t gpos = coord_conventions_local_to_global_position(sim_model->localPosition);
+	
+	mavlink_msg_hil_state_quaternion_send(	MAVLINK_COMM_0,
+											time_keeper_get_micros(),
+											(float*) &sim_model->attitude_estimation.qe,
+											aero_attitude.rpy[ROLL],
+											aero_attitude.rpy[PITCH],
+											aero_attitude.rpy[YAW],
+											gpos.latitude * 10000000,
+											gpos.longitude * 10000000,
+											gpos.altitude * 1000.0f,
+											100 * sim_model->vel[X],
+											100 * sim_model->vel[Y],
+											100 * sim_model->vel[Z],
+											100 * vectors_norm(sim_model->vel),
+											0.0f,
+											sim_model->attitude_estimation.linear_acc[X],
+											sim_model->attitude_estimation.linear_acc[Y],
+											sim_model->attitude_estimation.linear_acc[Z]	);
 	return TASK_RUN_SUCCESS;
 }
