@@ -113,7 +113,7 @@
         <files>
           <file path="src/asf/avr32/utils/preprocessor/stringz.h" framework="com.atmel.avr32.sf.uc3c" version="2.5.1-17860" source="avr32/utils/preprocessor/stringz.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/asf/avr32/utils/startup/trampoline_uc3.S" framework="com.atmel.avr32.sf.uc3c" version="2.5.1-17860" source="avr32/utils/startup/trampoline_uc3.S" changed="False" content-id="Atmel.ASF" />
-          <file path="src/main.c" framework="com.atmel.avr32.sf.uc3c" version="2.5.1-17860" source="common/applications/user_application/main.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/main.cpp" framework="com.atmel.avr32.sf.uc3c" version="2.5.1-17860" source="common/applications/user_application/main.cpp" changed="False" content-id="Atmel.ASF" />
           <file path="src/asf/avr32/utils/parts.h" framework="com.atmel.avr32.sf.uc3c" version="2.5.1-17860" source="avr32/utils/parts.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/asf/avr32/utils/preprocessor/tpaste.h" framework="com.atmel.avr32.sf.uc3c" version="2.5.1-17860" source="avr32/utils/preprocessor/tpaste.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/asf/avr32/utils/preprocessor/preprocessor.h" framework="com.atmel.avr32.sf.uc3c" version="2.5.1-17860" source="avr32/utils/preprocessor/preprocessor.h" changed="False" content-id="Atmel.ASF" />
@@ -571,6 +571,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\communication\console.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\hud.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\hud.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\communication\mavlink_communication.c">
