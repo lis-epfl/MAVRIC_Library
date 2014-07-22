@@ -77,7 +77,7 @@ typedef struct
 void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config);
 
 
-void mavlink_stream_send(mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
 /**

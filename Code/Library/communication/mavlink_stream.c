@@ -56,7 +56,7 @@ void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_
 }
 
 
-void mavlink_stream_send(mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
 	uint8_t buf[MAVLINK_MAX_PACKET_LEN];
 

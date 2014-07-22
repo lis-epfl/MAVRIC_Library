@@ -72,17 +72,20 @@ typedef struct
 	uint16_t sensor_health;						///< The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
 	
 	const analog_monitor_t* adc;				///< The pointer to the analog monitor structure
-	mavlink_communication_t* mavlink_communication;
+	const mavlink_stream_t* mavlink_stream;			///< Pointer to the mavlin kstream structure
 } state_structure_t;
+
 
 /**
  * \brief						Initialise the state of the MAV
  *
  * \param	state_structure		The pointer to the state structure
  * \param	state_config		The pointer to the state configuration structure
+ * \param   mavlink_stream		The pointer to the mavlink stream structure
  * \param	message_handler		The pointer to the message handler
  */
-void state_init(state_structure_t *state_structure, state_structure_t* state_config, const analog_monitor_t* adc, mavlink_communication_t* mavlink_communication); //mavlink_message_handler_t *message_handler);
+void state_init(state_structure_t *state_structure, state_structure_t* state_config, const analog_monitor_t* adc, mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *message_handler);
+
 
 /**
  * \brief	Task to send the mavlink heartbeat message
@@ -93,6 +96,7 @@ void state_init(state_structure_t *state_structure, state_structure_t* state_con
  */
 task_return_t state_send_heartbeat(state_structure_t* state_structure);
 
+
 /**
  * \brief	Task to send the mavlink system status message, project specific message!
  * 
@@ -102,6 +106,7 @@ task_return_t state_send_heartbeat(state_structure_t* state_structure);
  */
 task_return_t state_send_status(state_structure_t* state_structure);
 
+
 /**
  * \brief						Set the state and the mode of the vehicle
  *
@@ -109,6 +114,7 @@ task_return_t state_send_status(state_structure_t* state_structure);
  * \param	rec					The received mavlink message structure
  */
 void state_set_mav_mode(state_structure_t* state_structure, mavlink_received_t* rec);
+
 
 /**
  * \brief						Test if the mode has the mode flag in it
@@ -120,6 +126,7 @@ void state_set_mav_mode(state_structure_t* state_structure, mavlink_received_t* 
  */
 bool state_test_flag_mode(uint8_t mode, mav_flag_t test_flag);
 
+
 /**
  * \brief						Enable the mode
  *
@@ -128,6 +135,7 @@ bool state_test_flag_mode(uint8_t mode, mav_flag_t test_flag);
  */
 void state_enable_mode(state_structure_t *state_structure, mav_flag_t mav_mode_flag);
 
+
 /**
  * \brief						Disable the mode
  *
@@ -135,6 +143,7 @@ void state_enable_mode(state_structure_t *state_structure, mav_flag_t mav_mode_f
  * \param	mav_mode_flag		The flag of the MAV mode
  */
 void state_disable_mode(state_structure_t *state_structure, mav_flag_t mav_mode_flag);
+
 
 /**
  * \brief						Test if the mode has the mode flag in it
@@ -146,6 +155,7 @@ void state_disable_mode(state_structure_t *state_structure, mav_flag_t mav_mode_
  */
 bool state_test_if_in_flag_mode(const state_structure_t *state_structure, mav_flag_t mav_mode_flag);
 
+
 /**
  * \brief						Test if the mode has the mode flag in it
  *
@@ -155,6 +165,7 @@ bool state_test_if_in_flag_mode(const state_structure_t *state_structure, mav_fl
  * \return	The boolean value of the test
  */
 bool state_test_if_first_time_in_mode(state_structure_t *state_structure, mav_mode_t mav_mode);
+
 
 /**
  * \brief						Test if the mode has the mode flag in it

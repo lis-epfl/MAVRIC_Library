@@ -27,6 +27,7 @@ extern "C"
 
 #include "stdint.h"
 #include <stdbool.h>
+#include "mavlink_stream.h"
 
 #define SCHEDULER_TIMEBASE 1000000
 
@@ -148,6 +149,7 @@ typedef struct
 	bool debug;									///<	Indicates whether the scheduler should print debug messages
 	schedule_strategy_t schedule_strategy;		///<	Scheduling strategy
 	task_set_t* task_set;						///<	Pointer to task set, needs memory allocation
+	mavlink_stream_t* mavlink_stream;			///<	Pointer to mavlink stream
 } scheduler_t;
 
 

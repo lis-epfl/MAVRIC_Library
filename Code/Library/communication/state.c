@@ -19,10 +19,10 @@
 #include "state.h"
 #include "print_util.h"
 
-void state_init(state_structure_t *state_structure, state_structure_t* state_config, const analog_monitor_t* adc, mavlink_communication_t* mavlink_communication) //mavlink_message_handler_t *message_handler);
+void state_init(state_structure_t *state_structure, state_structure_t* state_config, const analog_monitor_t* adc, mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *message_handler)
 {
 	state_structure->adc = adc;
-	state_structure->mavlink_communication = mavlink_communication;
+	state_structure->mavlink_stream = mavlink_stream;
 	
 	state_structure->autopilot_type = state_config->autopilot_type;
 	state_structure->autopilot_name = state_config->autopilot_name;
@@ -54,7 +54,7 @@ void state_init(state_structure_t *state_structure, state_structure_t* state_con
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&state_set_mav_mode;
 	callback.module_struct 	= (handling_module_struct_t)		state_structure;
-	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	mavlink_message_handler_add_msg_callback( message_handler, &callback );
 	
 	print_util_dbg_print("State initialized.\n");
 }
@@ -62,7 +62,7 @@ void state_init(state_structure_t *state_structure, state_structure_t* state_con
 task_return_t state_send_heartbeat(state_structure_t* state_structure)
 {
 	mavlink_message_t msg;
-	mavlink_stream_t* mavlink_stream = &state_structure->mavlink_communication->mavlink_stream;
+	const mavlink_stream_t* mavlink_stream = state_structure->mavlink_stream;
 	mavlink_msg_heartbeat_pack(	mavlink_stream->sysid,
 								mavlink_stream->compid,
 								&msg,
@@ -81,7 +81,7 @@ task_return_t state_send_status(state_structure_t* state_structure)
 	float battery_voltage = state_structure->adc->avg[ANALOG_RAIL_10];		// bat voltage (mV), actual battery pack plugged to the board
 	float battery_remaining = state_structure->adc->avg[ANALOG_RAIL_11] / 12.4f * 100.0f;
 	
-	mavlink_stream_t* mavlink_stream = &state_structure->mavlink_communication->mavlink_stream;
+	const mavlink_stream_t* mavlink_stream = state_structure->mavlink_stream;
 	mavlink_message_t msg;
 	mavlink_msg_sys_status_pack(mavlink_stream->sysid,
 								mavlink_stream->compid,

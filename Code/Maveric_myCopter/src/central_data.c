@@ -81,7 +81,8 @@ void central_data_init()
 	state_init(	&centralData.state_structure,
 				&state_config,
 				&centralData.adc,
-				&centralData.mavlink_communication); 
+				&centralData.mavlink_communication.mavlink_stream,
+				&centralData.mavlink_communication.message_handler); 
 	
 	delay_ms(100);//add delay to be able to print on console init message for the following module
 	imu_init(&(centralData.imu));
