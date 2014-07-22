@@ -58,6 +58,7 @@ extern "C" {
 #include "navigation.h"
 #include "state.h"
 #include "stabilisation.h"
+#include "hud.h"
 
 // TODO : update documentation
 
@@ -104,8 +105,10 @@ typedef struct  {
 	//float pressure_filtered;									///< The filtered pressure
 	//float altitude_filtered;									///< The filtered altitude
 	
-	orca_t orcaData;
-	neighbor_t neighborData;
+	orca_t orcaData;											///< The ORCA collision avoidance structure
+	neighbor_t neighborData;									///< The neighbor structure
+	
+	hud_structure_t hud_structure;								///< The HUD structure
 
 	i2cxl_sonar_t i2cxl_sonar;									///< The i2cxl sonar structure
 } central_data_t;

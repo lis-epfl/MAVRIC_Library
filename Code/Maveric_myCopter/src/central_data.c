@@ -65,12 +65,20 @@ void central_data_init()
 	mavlink_communication_init(&centralData.mavlink_communication, &mavlink_config);
 	
 	delay_ms(100); //add delay to be able to print on console init message for the following module
+	state_structure_t state_config =
+	{
+		.mav_mode = MAV_MODE_SAFE,
+		.mav_state = MAV_STATE_BOOT,
+		.simulation_mode = SIMULATION_MODE, //REAL_MODE
+		.autopilot_type = MAV_TYPE_QUADROTOR,
+		.autopilot_name = MAV_AUTOPILOT_GENERIC,
+		.sensor_present = 0b1111110000100111,
+		.sensor_enabled = 0b1111110000100111,
+		.sensor_health = 0b1111110000100111
+	};
 	state_init(	&centralData.state_structure,
-				MAV_TYPE_QUADROTOR,
-				MAV_AUTOPILOT_GENERIC,
-				MAV_STATE_BOOT,
-				MAV_MODE_SAFE,
-				SIMULATION_MODE, //REAL_MODE 
+				&state_config,
+				&centralData.adc,
 				&centralData.mavlink_communication.message_handler); 
 	
 	delay_ms(100);//add delay to be able to print on console init message for the following module
@@ -173,6 +181,14 @@ void central_data_init()
 					&centralData.waypoint_handler.waypoint_set,
 					&centralData.mavlink_communication.message_handler);
 
+	delay_ms(100);//add delay to be able to print on console init message for the following module
+	
+	
+	hud_init(	&centralData.hud_structure, 
+				&centralData.position_estimator, 
+				&centralData.controls, 
+				&centralData.attitude_estimation);
+	
 	delay_ms(100);//add delay to be able to print on console init message for the following module
 	// Init sonar
 	// i2cxl_sonar_init(&centralData.i2cxl_sonar);

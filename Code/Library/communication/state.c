@@ -20,15 +20,17 @@
 #include "print_util.h"
 #include "mavlink/include/maveric/mavlink.h"
 
-void state_init(state_structure_t *state_structure, uint8_t autopilot_type, uint8_t autopilot_name, uint8_t mav_state, uint8_t mav_mode, HIL_mode simu_mode, mavlink_message_handler_t *message_handler)
+void state_init(state_structure_t *state_structure, state_structure_t* state_config, analog_monitor_t* adc, mavlink_message_handler_t *message_handler)
 {
-	state_structure->autopilot_type = autopilot_type;
-	state_structure->autopilot_name = autopilot_name;
+	state_structure->adc = adc;
 	
-	state_structure->mav_state = mav_state;
-	state_structure->mav_mode = mav_mode;
+	state_structure->autopilot_type = state_config->autopilot_type;
+	state_structure->autopilot_name = state_config->autopilot_name;
 	
-	state_structure->simulation_mode = simu_mode;
+	state_structure->mav_state = state_config->mav_state;
+	state_structure->mav_mode = state_config->mav_mode;
+	
+	state_structure->simulation_mode = state_config->simulation_mode;
 	
 	state_structure->mav_mode_previous = state_structure->mav_mode;
 	state_structure->mav_state_previous = state_structure->mav_state;
@@ -61,6 +63,24 @@ task_return_t state_send_heartbeat(state_structure_t* state_structure)
 {
 	mavlink_msg_heartbeat_send(MAVLINK_COMM_0, state_structure->autopilot_type, state_structure->autopilot_name, state_structure->mav_mode, state_structure->simulation_mode, state_structure->mav_state);
 	
+	return TASK_RUN_SUCCESS;
+}
+
+task_return_t state_send_status(state_structure_t* state_structure)
+{
+	float battery_voltage = state_structure->adc->avg[ANALOG_RAIL_10];		// bat voltage (mV), actual battery pack plugged to the board
+	float battery_remaining = state_structure->adc->avg[ANALOG_RAIL_11] / 12.4f * 100.0f;
+	
+	mavlink_msg_sys_status_send(MAVLINK_COMM_0, 
+								state_structure->sensor_present, 						// sensors present
+								state_structure->sensor_enabled, 						// sensors enabled
+								state_structure->sensor_health, 						// sensors health
+								0,                  									// load
+								(int32_t)(1000.0f * battery_voltage), 					// bat voltage (mV)
+								0,               										// current (mA)
+								battery_remaining,										// battery remaining
+								0, 0,  													// comms drop, comms errors
+								0, 0, 0, 0);        									// autopilot specific errors
 	return TASK_RUN_SUCCESS;
 }
 

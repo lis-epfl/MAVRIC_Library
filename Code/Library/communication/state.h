@@ -26,6 +26,7 @@ extern "C" {
 #include "stdint.h"
 #include "scheduler.h"
 #include "mavlink_communication.h"
+#include "analog_monitor.h"
 #include <stdbool.h>
 
 /**
@@ -44,8 +45,7 @@ typedef enum
 	MAV_MODE_ATTITUDE_CONTROL = 192,
 	MAV_MODE_VELOCITY_CONTROL = 208,
 	MAV_MODE_POSITION_HOLD = 216,
-	MAV_MODE_GPS_NAVIGATION = 148,
-	MAV_MODE_COLLISION_AVOIDANCE = 149	
+	MAV_MODE_GPS_NAVIGATION = 148
 } mav_mode_t;
 
 typedef enum MAV_MODE_FLAG mav_flag_t;
@@ -55,38 +55,51 @@ typedef enum MAV_MODE_FLAG mav_flag_t;
  */
 typedef struct  
 {
-	uint8_t mav_mode;						///< The value of the MAV mode (MAV_MODE enum in common.h)
+	uint8_t mav_mode;							///< The value of the MAV mode (MAV_MODE enum in common.h)
 	uint8_t mav_state;							///< The value of the MAV state (MAV_STATE enum in common.h)
 		
-	uint8_t mav_mode_previous;				///< The value of the MAV mode at previous time step
+	uint8_t mav_mode_previous;					///< The value of the MAV mode at previous time step
 	uint8_t mav_state_previous;					///< The value of the MAV state at previous time step
 		
 	HIL_mode simulation_mode;					///< The value of the simulation_mode (0: real, 1: simulation)
 	HIL_mode simulation_mode_previous;			///< The value of the simulation_mode at previous time step
 	
-	uint8_t autopilot_type;
-	uint8_t autopilot_name;
+	uint8_t autopilot_type;						///< The type of the autopilot (MAV_TYPE enum in common.h)
+	uint8_t autopilot_name;						///< The name of the autopilot (MAV_AUTOPILOT enum in common.h)
+	
+	uint16_t sensor_present;					///< The type of sensors that are present on the autopilot (Value of 0: not present. Value of 1: present. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
+	uint16_t sensor_enabled;					///< The sensors enabled on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
+	uint16_t sensor_health;						///< The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
+	
+	const analog_monitor_t* adc;				///< The pointer to the analog monitor structure
 } state_structure_t;
 
 /**
  * \brief						Initialise the state of the MAV
  *
  * \param	state_structure		The pointer to the state structure
- * \param	autopilot_type		The pointer to the autopilot type, MAV_TYPE enum
- * \param	autopilot_name		The pointer to the autopilot name, MAV_AUTOPILOT enum
- * \param	mav_state			The pointer to the mav state, MAV_STATE enum
- * \param	mav_mode			The pointer to the mav mode, MAV_MODE enum
- * \param	simu_mode			The pointer to the simulation mode, HIL_Mode enum
+ * \param	state_config		The pointer to the state configuration structure
  * \param	message_handler		The pointer to the message handler
  */
-void state_init(state_structure_t *state_structure, uint8_t autopilot_type, uint8_t autopilot_name, uint8_t mav_state, uint8_t mav_mode, HIL_mode simu_mode, mavlink_message_handler_t *message_handler);
+void state_init(state_structure_t *state_structure, state_structure_t* state_config, analog_monitor_t* adc, mavlink_message_handler_t *message_handler);
 
 /**
  * \brief	Task to send the mavlink heartbeat message
  * 
+ * \param	state_structure		The pointer to the state structure
+ *
  * \return	The status of execution of the task
  */
 task_return_t state_send_heartbeat(state_structure_t* state_structure);
+
+/**
+ * \brief	Task to send the mavlink system status message, project specific message!
+ * 
+ * \param	state_structure		The pointer to the state structure
+ *
+ * \return	The status of execution of the task
+ */
+task_return_t state_send_status(state_structure_t* state_structure);
 
 /**
  * \brief						Set the state and the mode of the vehicle
