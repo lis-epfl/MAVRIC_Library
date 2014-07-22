@@ -67,14 +67,6 @@ typedef struct
 void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, imu_t* imu, ahrs_t* attitude_estimation, position_estimator_t* pos_est, servo_output_t* servos);
 
 /**
- * \brief							Gets the velocity vector from the remote
- *
- * \param	tvel					The pointer to array for storing the velocity vector 
- * \param	stabilisation_copter	The pointer to the stabilisation copter structure
- */
-void stabilisation_copter_get_velocity_vector_from_remote(float tvel[], stabilise_copter_t* stabilisation_copter);
-
-/**
  * \brief							Main Controller for controlling and stabilizing the quad
  *
  * \param	stabilisationParam		The stabilisation structure

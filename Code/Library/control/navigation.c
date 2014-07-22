@@ -182,8 +182,8 @@ void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigation
 	
 	// Control in translational speed of the platform
 	navigationData->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos,
-	rel_pos,
-	navigationData->position_estimator->localPosition.pos);
+																					rel_pos,
+																					navigationData->position_estimator->localPosition.pos);
 	navigation_set_speed_command(rel_pos, navigationData);
 	
 	if (navigationData->waypoint_handler->collision_avoidance)
@@ -232,17 +232,16 @@ task_return_t navigation_update(navigation_t* navigationData)
 	switch (navigationData->state_structure->mav_state)
 	{
 		case MAV_STATE_STANDBY:
-		if ((navigationData->state_structure->mav_mode == MAV_MODE_GUIDED_ARMED)||(navigationData->state_structure->mav_mode == MAV_MODE_AUTO_ARMED))
-		{
-			navigation_run(navigationData->waypoint_handler->waypoint_hold_coordinates,navigationData);
-		}
-		break;
+			if (state_test_if_in_flag_mode(navigationData->state_structure,MAV_MODE_FLAG_GUIDED_ENABLED)||state_test_if_in_flag_mode(navigationData->state_structure,MAV_MODE_FLAG_AUTO_ENABLED))
+			{
+				navigation_run(navigationData->waypoint_handler->waypoint_hold_coordinates,navigationData);
+			}
+			break;
 
 		case MAV_STATE_ACTIVE:
-			switch (navigationData->state_structure->mav_mode)
+			switch (navigationData->state_structure->mav_mode - (navigationData->state_structure->mav_mode & MAV_MODE_FLAG_DECODE_POSITION_HIL))
 			{
 				case MAV_MODE_GPS_NAVIGATION:
-				case MAV_MODE_COLLISION_AVOIDANCE:
 					if (navigationData->waypoint_handler->waypoint_set)
 					{
 						navigation_run(navigationData->waypoint_handler->waypoint_coordinates,navigationData);
@@ -263,11 +262,12 @@ task_return_t navigation_update(navigation_t* navigationData)
 			break;
 
 		case MAV_STATE_CRITICAL:
-		if ((navigationData->state_structure->mav_mode == MAV_MODE_POSITION_HOLD)||(navigationData->state_structure->mav_mode == MAV_MODE_GPS_NAVIGATION))
-		{
-			navigation_run(navigationData->waypoint_handler->waypoint_critical_coordinates,navigationData);
-		}
-		break;
+			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
+			if (state_test_if_in_flag_mode(navigationData->state_structure,MAV_MODE_FLAG_STABILIZE_ENABLED))
+			{
+				navigation_run(navigationData->waypoint_handler->waypoint_critical_coordinates,navigationData);
+			}
+			break;
 	}
 	
 	return TASK_RUN_SUCCESS;

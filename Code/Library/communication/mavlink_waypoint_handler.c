@@ -930,21 +930,22 @@ void waypoint_handler_waypoint_critical_handler(mavlink_waypoint_handler_t* wayp
 		switch (waypoint_handler->critical_behavior)
 		{
 			case CLIMB_TO_SAFE_ALT:
-			waypoint_handler->waypoint_critical_coordinates.pos[X] = waypoint_handler->position_estimator->localPosition.pos[X];
-			waypoint_handler->waypoint_critical_coordinates.pos[Y] = waypoint_handler->position_estimator->localPosition.pos[Y];
-			waypoint_handler->waypoint_critical_coordinates.pos[Z] = -30.0f;
-			
-			break;
+				waypoint_handler->waypoint_critical_coordinates.pos[X] = waypoint_handler->position_estimator->localPosition.pos[X];
+				waypoint_handler->waypoint_critical_coordinates.pos[Y] = waypoint_handler->position_estimator->localPosition.pos[Y];
+				waypoint_handler->waypoint_critical_coordinates.pos[Z] = -30.0f;
+				break;
+				
 			case FLY_TO_HOME_WP:
-			waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
-			waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
-			waypoint_handler->waypoint_critical_coordinates.pos[Z] = -30.0f;
-			break;
+				waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
+				waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
+				waypoint_handler->waypoint_critical_coordinates.pos[Z] = -30.0f;
+				break;
+				
 			case CRITICAL_LAND:
-			waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
-			waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
-			waypoint_handler->waypoint_critical_coordinates.pos[Z] = 0.0f;
-			break;
+				waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
+				waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
+				waypoint_handler->waypoint_critical_coordinates.pos[Z] = 0.0f;
+				break;
 		}
 		
 		for (i=0;i<3;i++)
@@ -960,17 +961,19 @@ void waypoint_handler_waypoint_critical_handler(mavlink_waypoint_handler_t* wayp
 		switch (waypoint_handler->critical_behavior)
 		{
 			case CLIMB_TO_SAFE_ALT:
-			print_util_dbg_print("Critical State! Flying to home waypoint.\n");
-			waypoint_handler->critical_behavior = FLY_TO_HOME_WP;
-			break;
+				print_util_dbg_print("Critical State! Flying to home waypoint.\n");
+				waypoint_handler->critical_behavior = FLY_TO_HOME_WP;
+				break;
+				
 			case FLY_TO_HOME_WP:
-			print_util_dbg_print("Critical State! Performing critical landing.\n");
-			waypoint_handler->critical_behavior = CRITICAL_LAND;
-			break;
+				print_util_dbg_print("Critical State! Performing critical landing.\n");
+				waypoint_handler->critical_behavior = CRITICAL_LAND;
+				break;
+				
 			case CRITICAL_LAND:
-			print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\n");
-			waypoint_handler->critical_landing = true;
-			break;
+				print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\n");
+				waypoint_handler->critical_landing = true;
+				break;
 		}
 	}
 }

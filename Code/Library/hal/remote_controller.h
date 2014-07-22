@@ -85,15 +85,47 @@ static float inline remote_controller_get_thrust_from_remote(void)
  *
  * \return an object containing the stick position of the remote (roll, pitch, yaw and thrust)
  */
-static inline Control_Command_t remote_controller_get_command_from_remote(void)
+static inline void remote_controller_get_command_from_remote(Control_Command_t * controls)
 {
-	Control_Command_t controls;
-	controls.rpy[ROLL]= remote_controller_get_roll_from_remote() * RC_INPUT_SCALE;
-	controls.rpy[PITCH]= remote_controller_get_pitch_from_remote() * RC_INPUT_SCALE;
-	controls.rpy[YAW]= remote_controller_get_yaw_from_remote() * RC_INPUT_SCALE;
-	controls.thrust = remote_controller_get_thrust_from_remote();
+	controls->rpy[ROLL]= remote_controller_get_roll_from_remote() * RC_INPUT_SCALE;
+	controls->rpy[PITCH]= remote_controller_get_pitch_from_remote() * RC_INPUT_SCALE;
+	controls->rpy[YAW]= remote_controller_get_yaw_from_remote() * RC_INPUT_SCALE;
+	controls->thrust = remote_controller_get_thrust_from_remote();
+}
+
+/**
+ * \brief return the motor state to switch on/off the motors
+ *
+ * \param	motor_state		The pointer to the motor state
+ */
+static inline void remote_controller_get_motor_state(int8_t *motor_state)
+{
+	if((remote_controller_get_thrust_from_remote() < -0.95f) && (remote_controller_get_yaw_from_remote() > 0.9f))
+	{
+		*motor_state = 1;
+	}
+	else if((remote_controller_get_thrust_from_remote() < -0.95f) && (remote_controller_get_yaw_from_remote() < -0.9f))
+	{
+		*motor_state = -1;
+	}
+	else
+	{
+		*motor_state = 0;
+	}
+}
+
+/**
+ * \brief							Gets the velocity vector from the remote
+ *
+ * \param	controls				The pointer to the control structure 
+ */
+static inline void remote_controller_get_velocity_vector_from_remote(Control_Command_t* controls)
+{
 	
-	return controls;
+	controls->tvel[X]= - 10.0f * remote_controller_get_pitch_from_remote() * RC_INPUT_SCALE;
+	controls->tvel[Y]= 10.0f * remote_controller_get_roll_from_remote() * RC_INPUT_SCALE;
+	controls->tvel[Z]=- 1.5f * remote_controller_get_thrust_from_remote();
+	controls->rpy[YAW] = remote_controller_get_yaw_from_remote() * RC_INPUT_SCALE;
 }
 
 #ifdef SPEKTRUM_REMOTE
@@ -123,27 +155,6 @@ static inline void remote_controller_get_channel_mode(uint8_t* chanSwitch)
 	{
 		*chanSwitch |= 0x02;
 	}
-	
-	/**
-	 * \brief return the motor state to switch on/off the motors
-	 *
-	 * \param	motor_state		The pointer to the motor state
-	 */
-	static inline void remote_controller_get_motor_state(int8_t *motor_state)
-	{
-		if((remote_controller_get_thrust_from_remote() < -0.95f) && (remote_controller_get_yaw_from_remote() > 0.9f))
-		{
-			*motor_state = 1;
-		}
-		else if((remote_controller_get_thrust_from_remote() < -0.95f) && (remote_controller_get_yaw_from_remote() < -0.9f))
-		{
-			*motor_state = -1;
-		}
-		else
-		{
-			*motor_state = 0;
-		}
-	}
 }
 #endif
 
@@ -170,27 +181,6 @@ static inline void remote_controller_get_channel_mode(uint8_t* chanSwitch)
 		else
 		{
 			*chanSwitch |= 0x02;
-		}
-	}
-	
-	/**
-	 * \brief return the motor state to switch on/off the motors
-	 *
-	 * \param	motor_state		The pointer to the motor state
-	 */
-	static inline void remote_controller_get_motor_state(int8_t *motor_state)
-	{
-		if((remote_controller_get_thrust_from_remote() < -0.95f) && (remote_controller_get_yaw_from_remote() > 0.9f))
-		{
-			*motor_state = 1;
-		}
-		else if((remote_controller_get_thrust_from_remote() < -0.95f) && (remote_controller_get_yaw_from_remote() < -0.9f))
-		{
-			*motor_state = -1;
-		}
-		else
-		{
-			*motor_state = 0;
 		}
 	}
 #endif

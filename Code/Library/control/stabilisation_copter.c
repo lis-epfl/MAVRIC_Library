@@ -46,13 +46,6 @@ void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabili
 	print_util_dbg_print("Stabilisation copter init.\n");
 }
 
-void stabilisation_copter_get_velocity_vector_from_remote(float tvel[], stabilise_copter_t* stabilisation_copter)
-{
-	tvel[X]= - 10.0f * stabilisation_copter->controls->rpy[PITCH];
-	tvel[Y]= 10.0f * stabilisation_copter->controls->rpy[ROLL];
-	tvel[Z]=- 1.5f * stabilisation_copter->controls->thrust;
-}
-
 void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_copter)
 {
 	float rpyt_errors[4];

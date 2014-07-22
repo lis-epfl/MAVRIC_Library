@@ -472,5 +472,6 @@ task_return_t position_estimation_send_global_position(position_estimator_t* pos
 										pos_est->vel[1] * 100.0f,
 										pos_est->vel[2] * 100.0f,
 										pos_est->localPosition.heading);
+	
 	return TASK_RUN_SUCCESS;
 }

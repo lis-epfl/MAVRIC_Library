@@ -301,15 +301,9 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 				switch_off_motors();
 			}
 			
-			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD, MAV_MODE_GPS_NAVIGATION and MAV_MODE_COLLISION_AVOIDANCE
+			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
 			if (state_test_if_in_flag_mode(&centralData->state_structure,MAV_MODE_FLAG_STABILIZE_ENABLED))
 			{
-				if (centralData->state_structure.mav_state_previous != MAV_STATE_CRITICAL)
-				{
-					centralData->waypoint_handler.critical_behavior = CLIMB_TO_SAFE_ALT;
-					centralData->waypoint_handler.critical_next_state = false;
-				}
-				
 				waypoint_handler_waypoint_critical_handler(&centralData->waypoint_handler);
 			}
 			
@@ -367,7 +361,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 
 void tasks_run_imu_update(void* arg)
 {
-	if (centralData->state_structure.simulation_mode_previous == SIMULATION_MODE) 
+	if (state_test_if_in_flag_mode(&centralData->state_structure,MAV_MODE_FLAG_HIL_ENABLED))
 	{
 		simulation_update(&centralData->sim_model);
 	} 
@@ -395,7 +389,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 	switch(centralData->state_structure.mav_mode - (centralData->state_structure.mav_mode & MAV_MODE_FLAG_DECODE_POSITION_HIL))
 	{
 		case MAV_MODE_ATTITUDE_CONTROL:
-			centralData->controls = remote_controller_get_command_from_remote();
+			remote_controller_get_command_from_remote(&centralData->controls);
 			centralData->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			centralData->controls.yaw_mode=YAW_RELATIVE;
 		
@@ -403,12 +397,11 @@ task_return_t tasks_run_stabilisation(void* arg)
 			break;
 		
 		case MAV_MODE_VELOCITY_CONTROL:
-			//centralData->controls = remote_controller_get_command_from_remote();
+			remote_controller_get_velocity_vector_from_remote(&centralData->controls);
+			
 			centralData->controls.control_mode = VELOCITY_COMMAND_MODE;
 			centralData->controls.yaw_mode = YAW_RELATIVE;
-		
-			stabilisation_copter_get_velocity_vector_from_remote(centralData->controls.tvel,&centralData->stabilisation_copter);
-		
+			
 			stabilisation_copter_cascade_stabilise(&centralData->stabilisation_copter);
 		
 			break;
@@ -453,7 +446,6 @@ task_return_t tasks_run_stabilisation(void* arg)
 	}
 	
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
-	//if (centralData->state_structure.simulation_mode_previous == REAL_MODE)
 	if (!state_test_if_in_flag_mode(&centralData->state_structure,MAV_MODE_FLAG_HIL_ENABLED))
 	{
 		servo_pwm_set(centralData->servos);
@@ -464,7 +456,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 
 task_return_t tasks_run_gps_update(void* arg) 
 {
-	if (centralData->state_structure.simulation_mode_previous == SIMULATION_MODE) 
+	if (state_test_if_in_flag_mode(&centralData->state_structure,MAV_MODE_FLAG_HIL_ENABLED))
 	{
 		simulation_simulate_gps(&centralData->sim_model);
 	} 
@@ -479,7 +471,7 @@ task_return_t tasks_run_gps_update(void* arg)
 
 task_return_t tasks_run_barometer_update(void* arg)
 {
-	if (centralData->state_structure.simulation_mode_previous == SIMULATION_MODE) 
+	if (state_test_if_in_flag_mode(&centralData->state_structure,MAV_MODE_FLAG_HIL_ENABLED))
 	{
 		simulation_simulate_barometer(&centralData->sim_model);
 	} 
@@ -494,6 +486,7 @@ task_return_t tasks_run_barometer_update(void* arg)
 
 //task_return_t sonar_update(void* arg)
 //{
+	// TODO: add the simulation sonar task
 	//central_data_t* central_data = central_data_get_pointer_to_struct();
 	//i2cxl_sonar_update(&central_data->i2cxl_sonar);
 	//
