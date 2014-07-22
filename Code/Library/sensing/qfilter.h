@@ -59,8 +59,9 @@ typedef struct
  * \param	attitude_filter		The pointer to the attitude structure
  * \param	imu					The pointer to the IMU structure
  * \param	attitude_estimation	The pointer to the attitude estimation structure
+ * \param	mavlink_stream		The pointer to the mavlink stream
  */
-void qfilter_init(qfilter_t *attitude_filter, imu_t *imu, ahrs_t *attitude_estimation);
+void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* attitude_estimation, const mavlink_stream_t* mavlink_stream);
 
 
 /**
@@ -70,6 +71,23 @@ void qfilter_init(qfilter_t *attitude_filter, imu_t *imu, ahrs_t *attitude_estim
  */
 void qfilter_update(qfilter_t *qf);
 
+/**
+ * \brief	Task to send the mavlink attitude message
+ * 
+ * \param	attitude_estimation		The pointer to the attitude estimation
+ *
+ * \return	The status of execution of the task
+ */
+task_return_t qfilter_send_attitude(ahrs_t* attitude_estimation);
+
+/**
+ * \brief	Task to send the mavlink quaternion attitude message
+ * 
+ * \param	attitude_estimation		The pointer to the attitude estimation
+ *
+ * \return	The status of execution of the task
+ */
+task_return_t qfilter_send_attitude_quaternion(ahrs_t* attitude_estimation);
 
 #ifdef __cplusplus
 }

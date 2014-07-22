@@ -64,6 +64,8 @@ typedef struct
 	
 	uint32_t	last_update;				///< The time of the last IMU update in ms
 	float		dt;							///< The time interval between two IMU updates
+	
+	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
 } ahrs_t;
 
 
@@ -91,6 +93,8 @@ typedef struct
 	float dt;								///< The time interval between two IMU updates
 	uint32_t last_update;					///< The time of the last IMU update in ms
 	uint8_t calibration_level;				///< The level of calibration
+	
+	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
 } imu_t;
 
 
@@ -99,7 +103,7 @@ typedef struct
  *
  * \param	imu						The pointer to the IMU structure
  */
-void imu_init (imu_t *imu);
+void imu_init (imu_t *imu, const mavlink_stream_t* mavlink_stream);
 
 /**
  * \brief	To calibrate the gyros at startup (not used know)
@@ -140,24 +144,6 @@ task_return_t imu_send_scaled(imu_t* imu);
  * \return	The status of execution of the task
  */
 task_return_t imu_send_raw(imu_t* imu);
-
-/**
- * \brief	Task to send the mavlink attitude message
- * 
- * \param	attitude_estimation		The pointer to the attitude estimation
- *
- * \return	The status of execution of the task
- */
-task_return_t imu_send_attitude(ahrs_t* attitude_estimation);
-
-/**
- * \brief	Task to send the mavlink quaternion attitude message
- * 
- * \param	attitude_estimation		The pointer to the attitude estimation
- *
- * \return	The status of execution of the task
- */
-task_return_t imu_send_attitude_quaternion(ahrs_t* attitude_estimation);
 
 #ifdef __cplusplus
 }

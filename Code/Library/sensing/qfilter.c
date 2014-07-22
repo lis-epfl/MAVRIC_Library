@@ -29,10 +29,11 @@ float front_mag_vect_z;
 
 uint8_t counter = 0;
 
-void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* attitude_estimation) 
+void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* attitude_estimation, const mavlink_stream_t* mavlink_stream)
 {
 	qf->imu = imu;
 	qf->attitude_estimation = attitude_estimation;
+	qf->attitude_estimation->mavlink_stream = mavlink_stream;
 	
 	qf->imu->calibration_level = LEVELING;
 
@@ -230,4 +231,49 @@ void qfilter_update(qfilter_t *qf)
 	qf->attitude_estimation->angular_speed[X] = qf->imu->scaled_gyro.data[X];
 	qf->attitude_estimation->angular_speed[Y] = qf->imu->scaled_gyro.data[Y];
 	qf->attitude_estimation->angular_speed[Z] = qf->imu->scaled_gyro.data[Z];
+}
+
+task_return_t qfilter_send_attitude(ahrs_t* attitude_estimation)
+{
+	// ATTITUDE
+	Aero_Attitude_t aero_attitude;
+	aero_attitude = coord_conventions_quat_to_aero(attitude_estimation->qe);
+
+	mavlink_message_t msg;
+
+	mavlink_msg_attitude_pack(	attitude_estimation->mavlink_stream->sysid,
+								attitude_estimation->mavlink_stream->compid,
+								&msg,
+								time_keeper_get_millis(),
+								aero_attitude.rpy[0],
+								aero_attitude.rpy[1],
+								aero_attitude.rpy[2],
+								attitude_estimation->angular_speed[0],
+								attitude_estimation->angular_speed[1],
+								attitude_estimation->angular_speed[2]);
+	
+	mavlink_stream_send(attitude_estimation->mavlink_stream,&msg);
+	
+	return TASK_RUN_SUCCESS;
+}
+
+task_return_t qfilter_send_attitude_quaternion(ahrs_t* attitude_estimation)
+{
+	mavlink_message_t msg;
+	
+	// ATTITUDE QUATERNION
+	mavlink_msg_attitude_quaternion_pack(	attitude_estimation->mavlink_stream->sysid,
+											attitude_estimation->mavlink_stream->compid,
+											&msg,
+											time_keeper_get_millis(),
+											attitude_estimation->qe.s,
+											attitude_estimation->qe.v[0],
+											attitude_estimation->qe.v[1],
+											attitude_estimation->qe.v[2],
+											attitude_estimation->angular_speed[0],
+											attitude_estimation->angular_speed[1],
+											attitude_estimation->angular_speed[2]	);
+	mavlink_stream_send(attitude_estimation->mavlink_stream,&msg);
+	
+	return TASK_RUN_SUCCESS;
 }

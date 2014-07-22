@@ -1612,7 +1612,7 @@ static ubx_tim_vrfy_t * ubx_GetTimVRFY()
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void gps_ublox_init(gps_Data_type_t *GPS_data, int32_t UID)
+void gps_ublox_init(gps_Data_type_t *GPS_data, int32_t UID, mavlink_stream_t* mavlink_stream)
 {
 	// uart setting
 	usart_config_t usart_conf_gps =
@@ -1636,6 +1636,8 @@ void gps_ublox_init(gps_Data_type_t *GPS_data, int32_t UID)
 	buffer_make_buffered_stream(&(GPS_data->gps_buffer), &(GPS_data->gps_stream_in));
 	uart_int_register_read_stream(uart_int_get_uart_handle(UID), &(GPS_data->gps_stream_in));
 	uart_int_register_write_stream(uart_int_get_uart_handle(UID), &(GPS_data->gps_stream_out));
+	
+	GPS_data->mavlink_stream = mavlink_stream;
 }
 
 
@@ -1777,9 +1779,12 @@ void gps_ublox_update(gps_Data_type_t *GPS_data)
 
 task_return_t gps_ublox_send_raw(gps_Data_type_t* GPS_data)
 {
+	mavlink_message_t msg;
 	if (GPS_data->status == GPS_OK)
 	{
-		mavlink_msg_gps_raw_int_send(	MAVLINK_COMM_0,
+		mavlink_msg_gps_raw_int_pack(	GPS_data->mavlink_stream->sysid,
+										GPS_data->mavlink_stream->compid,
+										&msg,
 										1000 * GPS_data->time_last_msg,
 										GPS_data->status,
 										GPS_data->latitude * 10000000.0f,
@@ -1790,10 +1795,13 @@ task_return_t gps_ublox_send_raw(gps_Data_type_t* GPS_data)
 										GPS_data->groundSpeed * 100.0f,
 										GPS_data->course,
 										GPS_data->num_sats	);
+		mavlink_stream_send(GPS_data->mavlink_stream,&msg);
 	}
 	else
 	{
-		mavlink_msg_gps_raw_int_send(	MAVLINK_COMM_0,
+		mavlink_msg_gps_raw_int_pack(	GPS_data->mavlink_stream->sysid,
+										GPS_data->mavlink_stream->compid,
+										&msg,
 										time_keeper_get_micros(),
 										GPS_data->status,
 										46.5193f * 10000000,
@@ -1804,6 +1812,7 @@ task_return_t gps_ublox_send_raw(gps_Data_type_t* GPS_data)
 										0,
 										0,
 										GPS_data->num_sats);		// TODO: return TASK_RUN_ERROR here?
+		mavlink_stream_send(GPS_data->mavlink_stream,&msg);
 	}
 
 	return TASK_RUN_SUCCESS;
