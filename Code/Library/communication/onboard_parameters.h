@@ -31,7 +31,7 @@ extern "C" {
 
 #define MAX_ONBOARD_PARAM_COUNT 120	// should be < 122 to fit on user page on AT32UC3C1512
 
-#define MAVERIC_FLASHC_USER_PAGE_START_ADDRESS AVR32_FLASHC_USER_PAGE_ADDRESS + 0x04	// +4bytes for unknown reason
+#define MAVERIC_FLASHC_USER_PAGE_START_ADDRESS (AVR32_FLASHC_USER_PAGE_ADDRESS + 0x04)	// +4bytes for unknown reason
 #define MAVERIC_FLASHC_USER_PAGE_FREE_SPACE 500	// 	512bytes user page, 
 												//	-4bytes at the start, 
 												//  -8bytes for the protected fuses at the end of the user page
@@ -92,7 +92,8 @@ typedef struct
  */															
 typedef struct												
 {
-	float values[MAVERIC_FLASHC_USER_PAGE_FREE_SPACE];
+	//float values[MAVERIC_FLASHC_USER_PAGE_FREE_SPACE];
+	float values[MAX_ONBOARD_PARAM_COUNT];
 } nvram_data_t;
 
 

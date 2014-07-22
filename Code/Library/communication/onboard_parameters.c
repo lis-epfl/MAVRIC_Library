@@ -451,7 +451,7 @@ void onboard_parameters_write_parameters_to_flashc(onboard_parameters_t* onboard
 	{
 		// local_array.values[i] = onboard_parameters_read_parameter(onboard_parameters, i-1);
 		local_array.values[i] = *(param_set->parameters[i-1].param);
-
+		
 		cksum1 += local_array.values[i];
 		cksum2 += cksum1;
 	}
