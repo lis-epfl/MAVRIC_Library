@@ -92,6 +92,9 @@ void imu_init (imu_t *imu, const mavlink_stream_t* mavlink_stream)
 	imu->calib_gyro.orientation[X] = GYRO_AXIS_X;
 	imu->calib_gyro.orientation[Y] = GYRO_AXIS_Y;
 	imu->calib_gyro.orientation[Z] = GYRO_AXIS_Z;
+	imu->calib_gyro.axis[X] = RAW_GYRO_X;
+	imu->calib_gyro.axis[Y] = RAW_GYRO_Y;
+	imu->calib_gyro.axis[Z] = RAW_GYRO_Z;
 	
 	//init accelero
 	imu->calib_accelero.scale_factor[X] =  1.0f / RAW_ACC_X_SCALE;
@@ -103,6 +106,9 @@ void imu_init (imu_t *imu, const mavlink_stream_t* mavlink_stream)
 	imu->calib_accelero.orientation[X] = ACC_AXIS_X;
 	imu->calib_accelero.orientation[Y] = ACC_AXIS_Y;
 	imu->calib_accelero.orientation[Z] = ACC_AXIS_Z;
+	imu->calib_accelero.axis[X] = RAW_ACC_X;
+	imu->calib_accelero.axis[Y] = RAW_ACC_Y;
+	imu->calib_accelero.axis[Z] = RAW_ACC_Z;
 	
 	//init compass
 	imu->calib_compass.scale_factor[X] =  1.0f / RAW_MAG_X_SCALE;
@@ -114,6 +120,9 @@ void imu_init (imu_t *imu, const mavlink_stream_t* mavlink_stream)
 	imu->calib_compass.orientation[X] = MAG_AXIS_X;
 	imu->calib_compass.orientation[Y] = MAG_AXIS_Y;
 	imu->calib_compass.orientation[Z] = MAG_AXIS_Z;
+	imu->calib_compass.axis[X] = RAW_MAG_X;
+	imu->calib_compass.axis[Y] = RAW_MAG_Y;
+	imu->calib_compass.axis[Z] = RAW_MAG_Z;
 	
 	imu->last_update = time_keeper_get_time_ticks();
 	imu->dt = 0.004;
