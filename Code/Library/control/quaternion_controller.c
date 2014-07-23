@@ -20,7 +20,7 @@
 #include "quaternion_controller.h"
 #include "coord_conventions.h"
 
-void quaternion_controler_init(Quaternion_Controller_t* controller, UQuat_t* quat_attitude)
+void quaternion_controler_init(quaternion_controller_t* controller, UQuat_t* quat_attitude)
 {
 	// Init ref to quat_attitude
 	controller->quat_attitude = quat_attitude;
@@ -38,19 +38,19 @@ void quaternion_controler_init(Quaternion_Controller_t* controller, UQuat_t* qua
 }
 
 
-void quaternion_controller_set_quat_ref(Quaternion_Controller_t* controller, UQuat_t quat_ref)
+void quaternion_controller_set_quat_ref(quaternion_controller_t* controller, UQuat_t quat_ref)
 {
 	controller->quat_ref = quat_ref;
 }
 
 
-void quaternion_controller_set_quat_ref_from_aero(Quaternion_Controller_t* controller, Aero_Attitude_t aero)
+void quaternion_controller_set_quat_ref_from_aero(quaternion_controller_t* controller, Aero_Attitude_t aero)
 {
 	controller->quat_ref = coord_conventions_quaternion_from_aero(aero);
 }
 
 
-void quaternion_controller_set_quat_ref_from_rpy(Quaternion_Controller_t* controller, float rpy[3])
+void quaternion_controller_set_quat_ref_from_rpy(quaternion_controller_t* controller, float rpy[3])
 {
 	Aero_Attitude_t aero;
 	aero.rpy[0] = rpy[0];
@@ -61,7 +61,7 @@ void quaternion_controller_set_quat_ref_from_rpy(Quaternion_Controller_t* contro
 }
 
 
-void quaternion_controller_update(Quaternion_Controller_t* controller)
+void quaternion_controller_update(quaternion_controller_t* controller)
 {
 	UQuat_t quat_attitude = *controller->quat_attitude;
 	UQuat_t quat_ref = controller->quat_ref;

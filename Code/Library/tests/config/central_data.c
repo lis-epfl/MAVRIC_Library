@@ -42,16 +42,16 @@ void central_data_init(){
 		central_data.automatic_take_off = false;
 		
 		// default GPS home position
-		central_data.position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;
-		central_data.position_estimator.localPosition.origin.latitude =   HOME_LATITUDE;
-		central_data.position_estimator.localPosition.origin.altitude =   HOME_ALTITUDE;
-		central_data.position_estimator.localPosition.pos[0]=0;
-		central_data.position_estimator.localPosition.pos[1]=0;
-		central_data.position_estimator.localPosition.pos[2]=0;
+		central_data.position_estimator.local_position.origin.longitude=   HOME_LONGITUDE;
+		central_data.position_estimator.local_position.origin.latitude =   HOME_LATITUDE;
+		central_data.position_estimator.local_position.origin.altitude =   HOME_ALTITUDE;
+		central_data.position_estimator.local_position.pos[0]=0;
+		central_data.position_estimator.local_position.pos[1]=0;
+		central_data.position_estimator.local_position.pos[2]=0;
 
 		// init simulation
 		simulation_init(&(central_data.sim_model),&(central_data.imu.attitude));
-		central_data.sim_model.localPosition = central_data.position_estimator.localPosition;
+		central_data.sim_model.local_position = central_data.position_estimator.local_position;
 
 }
 
@@ -71,6 +71,6 @@ byte_stream_t* get_telemetry_downstream() {
 imu_t* get_imu_data() {
 	return &central_data.imu;
 }
-Control_Command_t* get_control_inputs_data() {
+control_command_t* get_control_inputs_data() {
 	return &central_data.controls;
 }

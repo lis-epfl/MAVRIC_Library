@@ -34,7 +34,7 @@
  *
  * \return	Result
  */
-static float pid_control_integrate(Integrator_t *integrator, float input, float dt);
+static float pid_control_integrate(integrator_t *integrator, float input, float dt);
 
 /**
  * \brief	Initialize integrator parameters
@@ -44,7 +44,7 @@ static float pid_control_integrate(Integrator_t *integrator, float input, float 
  * \param	postgain	The gain of the returned value
  * \param	clip_val	Clipping value
  */
-static void pid_control_init_integrator(Integrator_t *integrator, float pregain, float postgain, float clip_val);
+static void pid_control_init_integrator(integrator_t *integrator, float pregain, float postgain, float clip_val);
 
 /**
  * \brief				Initialize Differentiator parameters
@@ -54,7 +54,7 @@ static void pid_control_init_integrator(Integrator_t *integrator, float pregain,
  * \param	LPF			Low pass filter
  * \param	clip_val	Clipping value
  */
-static void pid_control_init_differenciator(Differentiator_t *diff, float gain, float LPF, float clip_val);
+static void pid_control_init_differenciator(differentiator_t *diff, float gain, float LPF, float clip_val);
 
 /**
  * \brief Differentiating
@@ -65,19 +65,19 @@ static void pid_control_init_differenciator(Differentiator_t *diff, float gain, 
  *
  * \return				Result
  */
-static float pid_control_differentiate(Differentiator_t *diff, float input,  float dt);
+static float pid_control_differentiate(differentiator_t *diff, float input,  float dt);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static float pid_control_integrate(Integrator_t *integrator, float input, float dt)
+static float pid_control_integrate(integrator_t *integrator, float input, float dt)
 {
 	integrator->accumulator=maths_clip(integrator->accumulator + dt* integrator->pregain * input, integrator->maths_clip);
 	return integrator->postgain* integrator->accumulator;
 }
 
-static void pid_control_init_integrator(Integrator_t *integrator, float pregain, float postgain, float clip_val)
+static void pid_control_init_integrator(integrator_t *integrator, float pregain, float postgain, float clip_val)
 {
 	integrator->pregain=pregain;
 	integrator->postgain=postgain;
@@ -85,14 +85,14 @@ static void pid_control_init_integrator(Integrator_t *integrator, float pregain,
 	integrator->accumulator=0.0f;
 }
 
-static void pid_control_init_differenciator(Differentiator_t *diff, float gain, float LPF, float clip_val)
+static void pid_control_init_differenciator(differentiator_t *diff, float gain, float LPF, float clip_val)
 {
 	diff->gain=gain;
 	diff->LPF=LPF;
 	diff->maths_clip=clip_val;
 }
 
-static float pid_control_differentiate(Differentiator_t *diff, float input, float dt)
+static float pid_control_differentiate(differentiator_t *diff, float input, float dt)
 {
 	float output=0.0f;
 	if (dt<0.000001f) {
@@ -109,9 +109,9 @@ static float pid_control_differentiate(Differentiator_t *diff, float input, floa
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-PID_Controller_t pid_control_passthroughController()
+pid_controller_t pid_control_pass_through_controller()
 {
-	PID_Controller_t out;
+	pid_controller_t out;
 	uint32_t t= time_keeper_get_time_ticks();
 
 	out.dt = 0.0f;
@@ -132,12 +132,12 @@ PID_Controller_t pid_control_passthroughController()
 	return out;
 }
 
-void pid_control_reset_integrator(Integrator_t *integrator)
+void pid_control_reset_integrator(integrator_t *integrator)
 {
 	integrator->accumulator=0.0f;
 }
 
-float pid_control_update(PID_Controller_t* controller, float error)
+float pid_control_update(pid_controller_t* controller, float error)
 {
 	uint32_t t= time_keeper_get_time_ticks();
 	controller->error=maths_soft_zone(error, controller->soft_zone_width);
@@ -149,7 +149,7 @@ float pid_control_update(PID_Controller_t* controller, float error)
 	return controller->output;	
 }
 
-float pid_control_update_dt(PID_Controller_t* controller, float error, float dt) 
+float pid_control_update_dt(pid_controller_t* controller, float error, float dt) 
 {
 	controller->error=error;
 	controller->dt=dt;

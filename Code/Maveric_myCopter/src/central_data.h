@@ -71,20 +71,20 @@ typedef struct  {
 
 	mavlink_communication_t mavlink_communication;
 
-	analog_monitor_t adc;										///< The analog to digital converter structure
+	analog_monitor_t analog_monitor;										///< The analog to digital converter structure
 
 	imu_t imu;													///< The IMU structure
 	qfilter_t attitude_filter;									///< The qfilter structure
 	ahrs_t ahrs;												///< The attitude estimation structure
-	Control_Command_t controls;									///< The control structure used for rate and attitude modes
-	Control_Command_t controls_nav;								///< The control nav structure used for velocity modes
+	control_command_t controls;									///< The control structure used for rate and attitude modes
+	control_command_t controls_nav;								///< The control nav structure used for velocity modes
 
 	stabilise_copter_t stabilisation_copter;					///< The stabilisation structure for copter
 	Stabiliser_Stack_copter_t stabiliser_stack;					///< The stabilisation stack structure (rates, attitude, velocity, thrust)
 
 	servo_output_t servos[NUMBER_OF_SERVO_OUTPUTS];				///< The array of servos (size NUMBER_OF_SERVO_OUTPUTS)
 	
-	gps_Data_type_t GPS_data;									///< The GPS structure
+	gps_t gps;									///< The GPS structure
 	
 	simulation_model_t sim_model;								///< The simulation model structure
 	
@@ -98,16 +98,16 @@ typedef struct  {
 	
 	mavlink_waypoint_handler_t waypoint_handler;
 	
-	navigation_t navigationData;								///< The structure to perform GPS navigation
+	navigation_t navigation_data;								///< The structure to perform GPS navigation
 	
-	state_structure_t state_structure;							///< The structure with all state information
+	state_t state;							///< The structure with all state information
 	
 	pressure_data_t pressure;									///< The pressure structure
 	//float pressure_filtered;									///< The filtered pressure
 	//float altitude_filtered;									///< The filtered altitude
 	
-	orca_t orcaData;											///< The ORCA collision avoidance structure
-	neighbor_t neighborData;									///< The neighbor structure
+	orca_t orca;											///< The ORCA collision avoidance structure
+	neighbors_t neighbors;									///< The neighbor structure
 	
 	hud_structure_t hud_structure;								///< The HUD structure
 

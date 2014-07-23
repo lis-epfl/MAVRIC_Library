@@ -72,14 +72,14 @@ static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_co
 	{
 		// Set new home position to actual position
 		print_util_dbg_print("Set new home location to actual position.\n");
-		sim->localPosition.origin = coord_conventions_local_to_global_position(sim->localPosition);
+		sim->local_position.origin = coord_conventions_local_to_global_position(sim->local_position);
 
 		print_util_dbg_print("New Home location: (");
-		print_util_dbg_print_num(sim->localPosition.origin.latitude * 10000000.0f,10);
+		print_util_dbg_print_num(sim->local_position.origin.latitude * 10000000.0f,10);
 		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->localPosition.origin.longitude * 10000000.0f,10);
+		print_util_dbg_print_num(sim->local_position.origin.longitude * 10000000.0f,10);
 		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->localPosition.origin.altitude * 1000.0f,10);
+		print_util_dbg_print_num(sim->local_position.origin.altitude * 1000.0f,10);
 		print_util_dbg_print(")\n");
 	}
 	else
@@ -87,16 +87,16 @@ static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_co
 		// Set new home position from msg
 		print_util_dbg_print("Set new home location. \n");
 
-		sim->localPosition.origin.latitude = packet->param5;
-		sim->localPosition.origin.longitude = packet->param6;
-		sim->localPosition.origin.altitude = packet->param7;
+		sim->local_position.origin.latitude = packet->param5;
+		sim->local_position.origin.longitude = packet->param6;
+		sim->local_position.origin.altitude = packet->param7;
 
 		print_util_dbg_print("New Home location: (");
-		print_util_dbg_print_num(sim->localPosition.origin.latitude * 10000000.0f,10);
+		print_util_dbg_print_num(sim->local_position.origin.latitude * 10000000.0f,10);
 		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->localPosition.origin.longitude * 10000000.0f,10);
+		print_util_dbg_print_num(sim->local_position.origin.longitude * 10000000.0f,10);
 		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->localPosition.origin.altitude * 1000.0f,10);
+		print_util_dbg_print_num(sim->local_position.origin.altitude * 1000.0f,10);
 		print_util_dbg_print(")\n");
 	}
 
@@ -137,30 +137,30 @@ static void simulation_reset_simulation(simulation_model_t *sim)
 		sim->vel[i] = 0.0f;
 	}
 	
-	sim->localPosition = sim->pos_est->localPosition;
+	sim->local_position = sim->pos_est->local_position;
 	
 	sim->ahrs = *sim->estimated_attitude;
 	
 	print_util_dbg_print("(Re)setting simulation. Origin: (");
-	print_util_dbg_print_num(sim->pos_est->localPosition.origin.latitude*10000000,10);
+	print_util_dbg_print_num(sim->pos_est->local_position.origin.latitude*10000000,10);
 	print_util_dbg_print(", ");
-	print_util_dbg_print_num(sim->pos_est->localPosition.origin.longitude*10000000,10);
+	print_util_dbg_print_num(sim->pos_est->local_position.origin.longitude*10000000,10);
 	print_util_dbg_print(", ");
-	print_util_dbg_print_num(sim->pos_est->localPosition.origin.altitude*1000,10);
+	print_util_dbg_print_num(sim->pos_est->local_position.origin.altitude*1000,10);
 	print_util_dbg_print("), Position: (x1000) (");
-	print_util_dbg_print_num(sim->pos_est->localPosition.pos[0]*1000,10);
+	print_util_dbg_print_num(sim->pos_est->local_position.pos[0]*1000,10);
 	print_util_dbg_print(", ");
-	print_util_dbg_print_num(sim->pos_est->localPosition.pos[1]*1000,10);
+	print_util_dbg_print_num(sim->pos_est->local_position.pos[1]*1000,10);
 	print_util_dbg_print(", ");
-	print_util_dbg_print_num(sim->pos_est->localPosition.pos[2]*1000,10);
+	print_util_dbg_print_num(sim->pos_est->local_position.pos[2]*1000,10);
 	print_util_dbg_print(")\n");
 	
-	//sim->localPosition.origin.latitude = HOME_LATITUDE;
-	//sim->localPosition.origin.longitude = HOME_LONGITUDE;
-	//sim->localPosition.origin.altitude = HOME_ALTITUDE;
+	//sim->local_position.origin.latitude = HOME_LATITUDE;
+	//sim->local_position.origin.longitude = HOME_LONGITUDE;
+	//sim->local_position.origin.altitude = HOME_ALTITUDE;
 	
-	//sim->localPosition.origin = sim->pos_est->localPosition.origin;
-	//sim->localPosition.heading = sim->pos_est->localPosition.heading;
+	//sim->local_position.origin = sim->pos_est->local_position.origin;
+	//sim->local_position.heading = sim->pos_est->local_position.heading;
 }
 
 void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servos){
@@ -249,7 +249,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *serv
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_t* gps, state_t* state, servo_output_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
 {
 	int32_t i;
 	
@@ -261,7 +261,7 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	sim->pos_est = pos_est;
 	sim->pressure = pressure;
 	sim->gps = gps;
-	sim->state_structure = state_structure;
+	sim->state = state;
 	sim->servos = servos;
 	sim->waypoint_set = waypoint_set;
 	
@@ -386,10 +386,10 @@ void simulation_update(simulation_model_t *sim)
 	// velocity and position integration
 	
 	// check altitude - if it is lower than 0, clamp everything (this is in NED, assuming negative altitude)
-	if (sim->localPosition.pos[Z] >0)
+	if (sim->local_position.pos[Z] >0)
 	{
 		sim->vel[Z] = 0.0f;
-		sim->localPosition.pos[Z] = 0.0f;
+		sim->local_position.pos[Z] = 0.0f;
 
 		// simulate "acceleration" caused by contact force with ground, compensating gravity
 		for (i = 0; i < 3; i++)
@@ -442,7 +442,7 @@ void simulation_update(simulation_model_t *sim)
 	
 	for (i = 0; i < 3; i++)
 	{
-		sim->localPosition.pos[i] = sim->localPosition.pos[i] + sim->vel[i] * sim->dt;
+		sim->local_position.pos[i] = sim->local_position.pos[i] + sim->vel[i] * sim->dt;
 	}
 
 	// fill in simulated IMU values
@@ -453,12 +453,12 @@ void simulation_update(simulation_model_t *sim)
 		sim->imu->raw_compass.data[i] = ((sim->ahrs.north_vec.v[i] ) * sim->calib_compass.scale_factor[i] + sim->calib_compass.bias[i])* sim->calib_compass.orientation[i];
 	}
 
-	sim->localPosition.heading = coord_conventions_get_yaw(sim->ahrs.qe);
+	sim->local_position.heading = coord_conventions_get_yaw(sim->ahrs.qe);
 }
 
 void simulation_simulate_barometer(simulation_model_t *sim)
 {
-	sim->pressure->altitude = sim->localPosition.origin.altitude - sim->localPosition.pos[Z];
+	sim->pressure->altitude = sim->local_position.origin.altitude - sim->local_position.pos[Z];
 	sim->pressure->vario_vz = sim->vel[Z];
 	sim->pressure->last_update = time_keeper_get_millis();
 	sim->pressure->altitude_offset = 0;
@@ -466,7 +466,7 @@ void simulation_simulate_barometer(simulation_model_t *sim)
 	
 void simulation_simulate_gps(simulation_model_t *sim)
 {
-	global_position_t gpos = coord_conventions_local_to_global_position(sim->localPosition);
+	global_position_t gpos = coord_conventions_local_to_global_position(sim->local_position);
 	
 	sim->gps->altitude = gpos.altitude;
 	sim->gps->latitude = gpos.latitude;
@@ -501,28 +501,28 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 	uint32_t i;
 	
 	// From simulation to reality
-	//if (sim->state_structure->simulation_mode == REAL_MODE)
-	if (state_test_if_in_flag_mode(sim->state_structure,MAV_MODE_FLAG_HIL_ENABLED))
+	//if (sim->state->simulation_mode == REAL_MODE)
+	if (state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
 	{
-		sim->pos_est->localPosition.origin = sim->localPosition.origin;
+		sim->pos_est->local_position.origin = sim->local_position.origin;
 		for (i = 0;i < 3;i++)
 		{
-			sim->pos_est->localPosition.pos[i] = 0.0f;
+			sim->pos_est->local_position.pos[i] = 0.0f;
 		}
 		sim->pos_est->init_gps_position = false;
-		sim->state_structure->mav_state = MAV_STATE_STANDBY;
-		sim->state_structure->mav_mode = MAV_MODE_MANUAL_DISARMED;
-		state_disable_mode(sim->state_structure,MAV_MODE_FLAG_HIL_ENABLED);
+		sim->state->mav_state = MAV_STATE_STANDBY;
+		sim->state->mav_mode = MAV_MODE_MANUAL_DISARMED;
+		state_disable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
 		servo_pwm_failsafe(sim->servos);
 	}
 
 	// From reality to simulation
-	//if (sim->state_structure->simulation_mode == SIMULATION_MODE)
-	if (!state_test_if_in_flag_mode(sim->state_structure,MAV_MODE_FLAG_HIL_ENABLED))
+	//if (sim->state->simulation_mode == SIMULATION_MODE)
+	if (!state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
 	{	
 		simulation_reset_simulation(sim);
 		simulation_calib_set(sim);
-		state_enable_mode(sim->state_structure,MAV_MODE_FLAG_HIL_ENABLED);
+		state_enable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
 		sim->pos_est->init_gps_position = false;
 	}
 }
@@ -532,7 +532,7 @@ task_return_t simulation_send_state(simulation_model_t* sim_model)
 	Aero_Attitude_t aero_attitude;
 	aero_attitude = coord_conventions_quat_to_aero(sim_model->ahrs.qe);
 
-	global_position_t gpos = coord_conventions_local_to_global_position(sim_model->localPosition);
+	global_position_t gpos = coord_conventions_local_to_global_position(sim_model->local_position);
 	
 	mavlink_message_t msg;
 	const mavlink_stream_t* mavlink_stream = sim_model->mavlink_stream;
@@ -565,7 +565,7 @@ task_return_t simulation_send_quaternions(simulation_model_t *sim_model)
 	Aero_Attitude_t aero_attitude;
 	aero_attitude = coord_conventions_quat_to_aero(sim_model->ahrs.qe);
 
-	global_position_t gpos = coord_conventions_local_to_global_position(sim_model->localPosition);
+	global_position_t gpos = coord_conventions_local_to_global_position(sim_model->local_position);
 	mavlink_message_t msg;
 	const mavlink_stream_t* mavlink_stream = sim_model->mavlink_stream;
 	mavlink_msg_hil_state_quaternion_pack(	mavlink_stream->sysid,

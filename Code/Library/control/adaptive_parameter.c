@@ -19,14 +19,14 @@
 #include "adaptive_parameter.h"
 #include "maths.h"
 
-Adaptive_Parameter_Set_t adapt_param_set;
+adaptive_parameter_set_t adapt_param_set;
 
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Adaptive_Parameter_Set_t* adaptive_parameter_get_param_set(void)
+adaptive_parameter_set_t* adaptive_parameter_get_param_set(void)
 {
 	return &adapt_param_set;
 }
@@ -46,7 +46,7 @@ int32_t adaptive_parameter_add(float* control_variable, float* parameter,
 	}
 	else
 	{			
-		Adaptive_Parameter_t new_param;
+		adaptive_parameter_t new_param;
 		new_param.control_variable = control_variable;
 		new_param.parameter = parameter;
 		new_param.nb_setpoints = nb_setpoints;
@@ -64,7 +64,7 @@ int32_t adaptive_parameter_add(float* control_variable, float* parameter,
 }
 
 
-void adaptive_parameter_update(Adaptive_Parameter_t param)
+void adaptive_parameter_update(adaptive_parameter_t param)
 {
 	if (*param.control_variable <= param.setpoints[0])
 	{

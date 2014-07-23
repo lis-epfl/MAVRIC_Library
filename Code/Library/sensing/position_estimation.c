@@ -102,9 +102,9 @@ static void position_estimation_position_integration(position_estimator_t *pos_e
 	
 	for (i = 0; i < 3; i++)
 	{
-		pos_est->localPosition.pos[i] = pos_est->localPosition.pos[i] * (1.0f - (POS_DECAY * dt)) + pos_est->vel[i] * dt;
+		pos_est->local_position.pos[i] = pos_est->local_position.pos[i] * (1.0f - (POS_DECAY * dt)) + pos_est->vel[i] * dt;
 
-		pos_est->localPosition.heading = coord_conventions_get_yaw(pos_est->ahrs->qe);
+		pos_est->local_position.heading = coord_conventions_get_yaw(pos_est->ahrs->qe);
 	}
 	
 }
@@ -157,8 +157,8 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 		// altimeter correction
 		if ( pos_est->time_last_barometer_msg < pos_est->barometer->last_update )
 		{
-			pos_est->last_alt = -(pos_est->barometer->altitude ) + pos_est->localPosition.origin.altitude;
-			baro_alt_error = -(pos_est->barometer->altitude ) - pos_est->localPosition.pos[2] + pos_est->localPosition.origin.altitude;
+			pos_est->last_alt = -(pos_est->barometer->altitude ) + pos_est->local_position.origin.altitude;
+			baro_alt_error = -(pos_est->barometer->altitude ) - pos_est->local_position.pos[2] + pos_est->local_position.origin.altitude;
 
 			pos_est->time_last_barometer_msg = pos_est->barometer->last_update;
 		}
@@ -166,8 +166,8 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 		tinterBaro = (time_keeper_get_micros() - pos_est->barometer->last_update) / 1000.0f;
 		baro_gain = 1.0f; //math_util_fmax(1.0f - tinterBaro / 1000.0f, 0.0f);
 			
-		//pos_est->localPosition.pos[2] += kp_alt_baro / ((float)(tinterBaro / 2.5f + 1.0f)) * alt_error;
-		baro_alt_error = pos_est->last_alt  - pos_est->localPosition.pos[2];
+		//pos_est->local_position.pos[2] += kp_alt_baro / ((float)(tinterBaro / 2.5f + 1.0f)) * alt_error;
+		baro_alt_error = pos_est->last_alt  - pos_est->local_position.pos[2];
 		baro_vel_error = pos_est->barometer->vario_vz - pos_est->vel[2];
 		//vel_error[2] = 0.1f * pos_error[2];
 		//pos_est->vel[2] += kp_alt_baro_v * vel_error[2];
@@ -175,7 +175,7 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 	}
 	else
 	{
-		bmp085_reset_origin_altitude(pos_est->barometer, pos_est->localPosition.origin.altitude);
+		bmp085_reset_origin_altitude(pos_est->barometer, pos_est->local_position.origin.altitude);
 		pos_est->init_barometer = true;
 	}
 	
@@ -189,7 +189,7 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 			global_gps_position.latitude = pos_est->gps->latitude;
 			global_gps_position.altitude = pos_est->gps->altitude;
 			global_gps_position.heading = 0.0f;
-			local_coordinates = coord_conventions_global_to_local_position(global_gps_position,pos_est->localPosition.origin);
+			local_coordinates = coord_conventions_global_to_local_position(global_gps_position,pos_est->local_position.origin);
 			local_coordinates.timestamp_ms = pos_est->gps->time_last_msg;
 			
 			// compute GPS velocity estimate
@@ -214,7 +214,7 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 			
 		for (i = 0;i < 3;i++)
 		{
-			pos_error[i] = pos_est->lastGpsPos.pos[i] - pos_est->localPosition.pos[i];
+			pos_error[i] = pos_est->lastGpsPos.pos[i] - pos_est->local_position.pos[i];
 			vel_error[i] = pos_est->last_vel[i]       - pos_est->vel[i]; 
 		}
 	}
@@ -232,9 +232,9 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 	// Apply error correction to velocity and position estimates
 	for (i = 0;i < 3;i++)
 	{
-		pos_est->localPosition.pos[i] += pos_est->kp_pos_gps[i] * gps_gain * pos_error[i]* dt;
+		pos_est->local_position.pos[i] += pos_est->kp_pos_gps[i] * gps_gain * pos_error[i]* dt;
 	}
-	pos_est->localPosition.pos[2] += pos_est->kp_alt_baro * baro_gain * baro_alt_error* dt;
+	pos_est->local_position.pos[2] += pos_est->kp_alt_baro * baro_gain * baro_alt_error* dt;
 
 
 	for (i = 0; i < 3; i++)
@@ -261,18 +261,18 @@ static void gps_position_init(position_estimator_t *pos_est)
 		
 			pos_est->init_gps_position = true;
 			
-			pos_est->localPosition.origin.longitude = pos_est->gps->longitude;
-			pos_est->localPosition.origin.latitude = pos_est->gps->latitude;
-			pos_est->localPosition.origin.altitude = pos_est->gps->altitude;
-			pos_est->localPosition.timestamp_ms = pos_est->gps->time_last_msg;
+			pos_est->local_position.origin.longitude = pos_est->gps->longitude;
+			pos_est->local_position.origin.latitude = pos_est->gps->latitude;
+			pos_est->local_position.origin.altitude = pos_est->gps->altitude;
+			pos_est->local_position.timestamp_ms = pos_est->gps->time_last_msg;
 
-			pos_est->lastGpsPos = pos_est->localPosition;
+			pos_est->lastGpsPos = pos_est->local_position;
 			
 			pos_est->last_alt = 0;
 			for(i = 0;i < 3;i++)
 			{
 				pos_est->last_vel[i] = 0.0f;
-				pos_est->localPosition.pos[i] = 0.0f;
+				pos_est->local_position.pos[i] = 0.0f;
 				pos_est->vel[i] = 0.0f;
 			}
 			
@@ -288,14 +288,14 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
  	{
  		// Set new home position to actual position
  		print_util_dbg_print("Set new home location to actual position.\n");
- 		pos_est->localPosition.origin = coord_conventions_local_to_global_position(pos_est->localPosition);
+ 		pos_est->local_position.origin = coord_conventions_local_to_global_position(pos_est->local_position);
 
  		print_util_dbg_print("New Home location: (");
- 		print_util_dbg_print_num(pos_est->localPosition.origin.latitude * 10000000.0f,10);
+ 		print_util_dbg_print_num(pos_est->local_position.origin.latitude * 10000000.0f,10);
  		print_util_dbg_print(", ");
- 		print_util_dbg_print_num(pos_est->localPosition.origin.longitude * 10000000.0f,10);
+ 		print_util_dbg_print_num(pos_est->local_position.origin.longitude * 10000000.0f,10);
  		print_util_dbg_print(", ");
- 		print_util_dbg_print_num(pos_est->localPosition.origin.altitude * 1000.0f,10);
+ 		print_util_dbg_print_num(pos_est->local_position.origin.altitude * 1000.0f,10);
  		print_util_dbg_print(")\n");
  	}
  	else
@@ -303,16 +303,16 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
  		// Set new home position from msg
  		print_util_dbg_print("Set new home location. \n");
 
- 		pos_est->localPosition.origin.latitude = packet->param5;
- 		pos_est->localPosition.origin.longitude = packet->param6;
- 		pos_est->localPosition.origin.altitude = packet->param7;
+ 		pos_est->local_position.origin.latitude = packet->param5;
+ 		pos_est->local_position.origin.longitude = packet->param6;
+ 		pos_est->local_position.origin.altitude = packet->param7;
 
  		print_util_dbg_print("New Home location: (");
- 		print_util_dbg_print_num(pos_est->localPosition.origin.latitude * 10000000.0f,10);
+ 		print_util_dbg_print_num(pos_est->local_position.origin.latitude * 10000000.0f,10);
  		print_util_dbg_print(", ");
- 		print_util_dbg_print_num(pos_est->localPosition.origin.longitude * 10000000.0f,10);
+ 		print_util_dbg_print_num(pos_est->local_position.origin.longitude * 10000000.0f,10);
  		print_util_dbg_print(", ");
- 		print_util_dbg_print_num(pos_est->localPosition.origin.altitude * 1000.0f,10);
+ 		print_util_dbg_print_num(pos_est->local_position.origin.altitude * 1000.0f,10);
  		print_util_dbg_print(")\n");
  	}
 
@@ -324,7 +324,7 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, ahrs_t *ahrs, imu_t *imu, const mavlink_stream_t* mavlink_stream, bool* waypoint_set, mavlink_message_handler_t *message_handler, float home_lat, float home_lon, float home_alt, float gravity)
+void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_t *gps, ahrs_t *ahrs, imu_t *imu, const mavlink_stream_t* mavlink_stream, bool* waypoint_set, mavlink_message_handler_t *message_handler, float home_lat, float home_lon, float home_alt, float gravity)
 {
     int32_t i;
 
@@ -336,12 +336,12 @@ void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *ba
 	pos_est->waypoint_set = waypoint_set;
 	
 	// default GPS home position
-	pos_est->localPosition.origin.longitude =   home_lon;
-	pos_est->localPosition.origin.latitude =   home_lat;
-	pos_est->localPosition.origin.altitude =   home_alt;
-	pos_est->localPosition.pos[X] = 0;
-	pos_est->localPosition.pos[Y] = 0;
-	pos_est->localPosition.pos[Z] = 0;
+	pos_est->local_position.origin.longitude =   home_lon;
+	pos_est->local_position.origin.latitude =   home_lat;
+	pos_est->local_position.origin.altitude =   home_alt;
+	pos_est->local_position.pos[X] = 0;
+	pos_est->local_position.pos[Y] = 0;
+	pos_est->local_position.pos[Z] = 0;
 	
     // reset position estimator
     pos_est->last_alt = 0;
@@ -392,24 +392,24 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est)
 	// reset origin to position where quad is armed if we have GPS
 	if (pos_est->init_gps_position)
 	{
-		pos_est->localPosition.origin.longitude = pos_est->gps->longitude;
-		pos_est->localPosition.origin.latitude = pos_est->gps->latitude;
-		pos_est->localPosition.origin.altitude = pos_est->gps->altitude;
-		pos_est->localPosition.timestamp_ms = pos_est->gps->time_last_msg;
+		pos_est->local_position.origin.longitude = pos_est->gps->longitude;
+		pos_est->local_position.origin.latitude = pos_est->gps->latitude;
+		pos_est->local_position.origin.altitude = pos_est->gps->altitude;
+		pos_est->local_position.timestamp_ms = pos_est->gps->time_last_msg;
 
-		pos_est->lastGpsPos = pos_est->localPosition;
+		pos_est->lastGpsPos = pos_est->local_position;
 	//}
 	//else
 	//{
-		//pos_est->localPosition.origin.longitude = HOME_LONGITUDE;
-		//pos_est->localPosition.origin.latitude = HOME_LATITUDE;
-		//pos_est->localPosition.origin.altitude = HOME_ALTITUDE;
+		//pos_est->local_position.origin.longitude = HOME_LONGITUDE;
+		//pos_est->local_position.origin.latitude = HOME_LATITUDE;
+		//pos_est->local_position.origin.altitude = HOME_ALTITUDE;
 	}
 
 	// reset barometer offset
-	bmp085_reset_origin_altitude(pos_est->barometer, pos_est->localPosition.origin.altitude);
+	bmp085_reset_origin_altitude(pos_est->barometer, pos_est->local_position.origin.altitude);
 
-	//pos_est->barometer->altitude_offset = -pos_est->barometer->altitude - pos_est->localPosition.pos[2] + pos_est->localPosition.origin.altitude;
+	//pos_est->barometer->altitude_offset = -pos_est->barometer->altitude - pos_est->local_position.pos[2] + pos_est->local_position.origin.altitude;
 	pos_est->init_barometer = true;
 		
 	print_util_dbg_print("Offset of the barometer set to the GPS altitude, offset value of:");
@@ -417,9 +417,9 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est)
 	print_util_dbg_print(" = -");
 	print_util_dbg_print_num(pos_est->barometer->altitude,10);
 	print_util_dbg_print(" - ");
-	print_util_dbg_print_num(pos_est->localPosition.pos[2],10);
+	print_util_dbg_print_num(pos_est->local_position.pos[2],10);
 	print_util_dbg_print(" + ");
-	print_util_dbg_print_num(pos_est->localPosition.origin.altitude,10);
+	print_util_dbg_print_num(pos_est->local_position.origin.altitude,10);
 	print_util_dbg_print("\n");
 
 	// reset position estimator
@@ -427,7 +427,7 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est)
 	for(i = 0;i < 3;i++)
 	{
 		pos_est->last_vel[i] = 0.0f;
-		pos_est->localPosition.pos[i] = 0.0f;
+		pos_est->local_position.pos[i] = 0.0f;
 		pos_est->vel[i] = 0.0f;
 		pos_est->vel_bf[i] = 0.0f;
 	}
@@ -451,9 +451,9 @@ task_return_t position_estimation_send_position(position_estimator_t* pos_est)
 											pos_est->mavlink_stream->compid,
 											&msg,
 											time_keeper_get_millis(),
-											pos_est->localPosition.pos[0],
-											pos_est->localPosition.pos[1],
-											pos_est->localPosition.pos[2],
+											pos_est->local_position.pos[0],
+											pos_est->local_position.pos[1],
+											pos_est->local_position.pos[2],
 											pos_est->vel[0],
 											pos_est->vel[1],
 											pos_est->vel[2]);
@@ -465,7 +465,7 @@ task_return_t position_estimation_send_position(position_estimator_t* pos_est)
 task_return_t position_estimation_send_global_position(position_estimator_t* pos_est)
 {
 	// send integrated position (for now there is no GPS error correction...!!!)
-	global_position_t gpos = coord_conventions_local_to_global_position(pos_est->localPosition);
+	global_position_t gpos = coord_conventions_local_to_global_position(pos_est->local_position);
 	
 	//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
 	mavlink_message_t msg;
@@ -476,11 +476,11 @@ task_return_t position_estimation_send_global_position(position_estimator_t* pos
 											gpos.latitude * 10000000,
 											gpos.longitude * 10000000,
 											gpos.altitude * 1000.0f,
-											gpos.altitude+pos_est->localPosition.pos[2],
+											-pos_est->local_position.pos[2] * 1000,
 											pos_est->vel[0] * 100.0f,
 											pos_est->vel[1] * 100.0f,
 											pos_est->vel[2] * 100.0f,
-											pos_est->localPosition.heading);
+											pos_est->local_position.heading);
 	mavlink_stream_send(pos_est->mavlink_stream, &msg);
 	
 	return TASK_RUN_SUCCESS;

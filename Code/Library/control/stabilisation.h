@@ -62,18 +62,18 @@ typedef struct
 	yaw_mode_t     yaw_mode;					///< yaw mode
 	
 	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
-} Control_Command_t;
+} control_command_t;
 
 /**
  * \brief	The structure used to control the vehicle with 4 PIDs
  */
 typedef struct {
-	PID_Controller_t rpy_controller[3];			///< roll pitch yaw  controllers
-	PID_Controller_t thrust_controller;			///< thrust controller
-	Control_Command_t output;					///< output
+	pid_controller_t rpy_controller[3];			///< roll pitch yaw  controllers
+	pid_controller_t thrust_controller;			///< thrust controller
+	control_command_t output;					///< output
 	
 	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
-} Stabiliser_t;
+} stabiliser_t;
 
 /**
  * \brief	Initialisation of the stabilisation module
@@ -81,7 +81,7 @@ typedef struct {
  * \param	command				The pointer to the command structure
  * \param	mavlink_stream		The pointer to the mavlink stream
  */
-void stabilisation_init(Stabiliser_t * stabiliser, Control_Command_t *command, const mavlink_stream_t* mavlink_stream);
+void stabilisation_init(stabiliser_t * stabiliser, control_command_t *command, const mavlink_stream_t* mavlink_stream);
 
 /**
  * \brief				Execute the PID controllers used for stabilization
@@ -90,7 +90,7 @@ void stabilisation_init(Stabiliser_t * stabiliser, Control_Command_t *command, c
  * \param	dt			Timestep
  * \param	errors		Array containing the errors of the controlling variables
  */
-void stabilisation_run(Stabiliser_t *stabiliser, float dt, float errors[]);
+void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[]);
 
 /**
  * \brief	Task to send the mavlink roll, pitch, yaw angular speeds and thrust setpoints message
@@ -99,7 +99,7 @@ void stabilisation_run(Stabiliser_t *stabiliser, float dt, float errors[]);
  * 
  * \return	The status of execution of the task
  */
-task_return_t stabilisation_send_rpy_speed_thrust_setpoint(Stabiliser_t* rate_stabiliser);
+task_return_t stabilisation_send_rpy_speed_thrust_setpoint(stabiliser_t* rate_stabiliser);
 
 /**
  * \brief	Task to send the mavlink roll, pitch and yaw errors message
@@ -108,7 +108,7 @@ task_return_t stabilisation_send_rpy_speed_thrust_setpoint(Stabiliser_t* rate_st
  *
  * \return	The status of execution of the task
  */
-task_return_t stabilisation_send_rpy_rates_error(Stabiliser_t* rate_stabiliser);
+task_return_t stabilisation_send_rpy_rates_error(stabiliser_t* rate_stabiliser);
 
 /**
  * \brief	Task to send the mavlink roll, pitch, yaw and thrust setpoints message
@@ -117,7 +117,7 @@ task_return_t stabilisation_send_rpy_rates_error(Stabiliser_t* rate_stabiliser);
  * 
  * \return	The status of execution of the task
  */
-task_return_t stabilisation_send_rpy_thrust_setpoint(Control_Command_t* controls);
+task_return_t stabilisation_send_rpy_thrust_setpoint(control_command_t* controls);
 
 #ifdef __cplusplus
 }

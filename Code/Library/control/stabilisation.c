@@ -21,7 +21,7 @@
 #include "mavlink_communication.h"
 #include "print_util.h"
 
-void stabilisation_init(Stabiliser_t * stabiliser, Control_Command_t *command, const mavlink_stream_t* mavlink_stream)
+void stabilisation_init(stabiliser_t * stabiliser, control_command_t *command, const mavlink_stream_t* mavlink_stream)
 {
 	stabiliser->mavlink_stream = mavlink_stream;
 	command->mavlink_stream = mavlink_stream;
@@ -29,7 +29,7 @@ void stabilisation_init(Stabiliser_t * stabiliser, Control_Command_t *command, c
 	print_util_dbg_print("Stabilisation init.\n");
 }
 
-void stabilisation_run(Stabiliser_t *stabiliser, float dt, float errors[]) 
+void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[]) 
 {
 	int32_t i;
 	for (i = 0; i < 3; i++) 
@@ -39,7 +39,7 @@ void stabilisation_run(Stabiliser_t *stabiliser, float dt, float errors[])
 	stabiliser->output.thrust= pid_control_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
 }
 
-task_return_t  stabilisation_send_rpy_speed_thrust_setpoint(Stabiliser_t* rate_stabiliser)
+task_return_t  stabilisation_send_rpy_speed_thrust_setpoint(stabiliser_t* rate_stabiliser)
 {
 	mavlink_message_t msg;
 	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_pack(	rate_stabiliser->mavlink_stream->sysid,
@@ -56,7 +56,7 @@ task_return_t  stabilisation_send_rpy_speed_thrust_setpoint(Stabiliser_t* rate_s
 	return TASK_RUN_SUCCESS;
 }
 
-task_return_t  stabilisation_send_rpy_rates_error(Stabiliser_t* rate_stabiliser)
+task_return_t  stabilisation_send_rpy_rates_error(stabiliser_t* rate_stabiliser)
 {
 	mavlink_message_t msg;
 	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_pack(	rate_stabiliser->mavlink_stream->sysid,
@@ -73,7 +73,7 @@ task_return_t  stabilisation_send_rpy_rates_error(Stabiliser_t* rate_stabiliser)
 	return TASK_RUN_SUCCESS;
 }
 
-task_return_t stabilisation_send_rpy_thrust_setpoint(Control_Command_t* controls)
+task_return_t stabilisation_send_rpy_thrust_setpoint(control_command_t* controls)
 {
 	// Controls output
 	mavlink_message_t msg;
