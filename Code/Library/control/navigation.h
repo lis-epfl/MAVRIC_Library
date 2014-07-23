@@ -43,7 +43,7 @@ typedef struct
 	float max_climb_rate;								///< Max climb rate in m/s
 	float soft_zone_size;								///< Soft zone of the velocity controller
 	
-	uint8_t loopCount;									///< A counter for sending mavlink messages at a lower rate than the function
+	uint8_t loop_count;									///< A counter for sending mavlink messages at a lower rate than the function
 	
 	bool collision_avoidance;							///< Flag to tell whether the collision avoidance is active or not
 	

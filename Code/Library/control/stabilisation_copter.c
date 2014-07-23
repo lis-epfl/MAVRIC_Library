@@ -59,11 +59,11 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 	case VELOCITY_COMMAND_MODE:
 		
 		qtmp=quaternions_create_from_vector(input.tvel);
-		UQuat_t inputLocal = quaternions_local_to_global(stabilisation_copter->ahrs->qe, qtmp);
+		UQuat_t input_local = quaternions_local_to_global(stabilisation_copter->ahrs->qe, qtmp);
 		
-		input.tvel[X] = inputLocal.v[X];
-		input.tvel[Y] = inputLocal.v[Y];
-		input.tvel[Z] = inputLocal.v[Z];
+		input.tvel[X] = input_local.v[X];
+		input.tvel[Y] = input_local.v[Y];
+		input.tvel[Z] = input_local.v[Z];
 		
 		rpyt_errors[X] = input.tvel[X] - stabilisation_copter->pos_est->vel[X];
 		rpyt_errors[Y] = input.tvel[Y] - stabilisation_copter->pos_est->vel[Y];
@@ -90,16 +90,16 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 		// run PID update on all velocity controllers
 		stabilisation_run(&stabilisation_copter->stabiliser_stack->velocity_stabiliser, stabilisation_copter->imu->dt, rpyt_errors);
 		
-		//velocity_stabiliser.output.thrust = maths_f_min(velocity_stabiliser.output.thrust,stabilisationParam.controls->thrust);
+		//velocity_stabiliser.output.thrust = maths_f_min(velocity_stabiliser.output.thrust,stabilisation_param.controls->thrust);
 		stabilisation_copter->stabiliser_stack->velocity_stabiliser.output.thrust += THRUST_HOVER_POINT;
 		stabilisation_copter->stabiliser_stack->velocity_stabiliser.output.theading = input.theading;
 		input = stabilisation_copter->stabiliser_stack->velocity_stabiliser.output;
 		
 		qtmp=quaternions_create_from_vector(stabilisation_copter->stabiliser_stack->velocity_stabiliser.output.rpy);
-		UQuat_t rpyLocal = quaternions_global_to_local(stabilisation_copter->ahrs->qe, qtmp);
+		UQuat_t rpy_local = quaternions_global_to_local(stabilisation_copter->ahrs->qe, qtmp);
 		
-		input.rpy[ROLL] = rpyLocal.v[Y];
-		input.rpy[PITCH] = -rpyLocal.v[X];
+		input.rpy[ROLL] = rpy_local.v[Y];
+		input.rpy[PITCH] = -rpy_local.v[X];
 		
 	// -- no break here  - we want to run the lower level modes as well! -- 
 	

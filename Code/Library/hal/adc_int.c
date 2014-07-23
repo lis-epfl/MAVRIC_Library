@@ -103,7 +103,7 @@ adcifa_sequencer_opt_t adcifa_sequence_opt = {
 adcifa_sequencer_conversion_opt_t adcifa_sequencer0_conversion_opt[SLOTS_PER_SEQUENCER];
 	
 __attribute__((__interrupt__))
-static void processData(void) 
+static void process_data(void) 
 {
 	int32_t ch;
 	volatile int16_t value;
@@ -210,8 +210,8 @@ void adc_int_init(uint32_t adc_frequency, uint8_t reference_source)
 	//adcifa_configure_sequencer(adcifa, 1, &adcifa_sequence_opt, adcifa_sequencer1_conversion_opt);
 		
 	adcifa_disable_interrupt(adcifa, 0xffffffff);
-	INTC_register_interrupt( (__int_handler) &processData, AVR32_ADCIFA_SEQUENCER0_IRQ, AVR32_INTC_INT1);
-	//INTC_register_interrupt( (__int_handler) &processData, AVR32_ADCIFA_SEQUENCER1_IRQ, AVR32_INTC_INT1);
+	INTC_register_interrupt( (__int_handler) &process_data, AVR32_ADCIFA_SEQUENCER0_IRQ, AVR32_INTC_INT1);
+	//INTC_register_interrupt( (__int_handler) &process_data, AVR32_ADCIFA_SEQUENCER1_IRQ, AVR32_INTC_INT1);
 	//int32_t period_us=1000000 / samplingrate;
 }
 

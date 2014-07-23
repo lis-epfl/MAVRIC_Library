@@ -21,9 +21,9 @@ z -100
 #define ACC_BIAIS_Y  344.74;
 #define ACC_BIAIS_Z  -36.14;
 
-#define ACC_AXIS_X  1.0
-#define ACC_AXIS_Y -1.0
-#define ACC_AXIS_Z -1.0
+#define ACC_ORIENTATION_X  1.0
+#define ACC_ORIENTATION_Y -1.0
+#define ACC_ORIENTATION_Z -1.0
 
 #define RAW_MAG_X_SCALE 614.51
 #define RAW_MAG_Y_SCALE 584.28
@@ -33,9 +33,9 @@ z -100
 #define MAG_BIAIS_Y -107.51
 #define MAG_BIAIS_Z    2.47
 
-#define MAG_AXIS_X -1.0
-#define MAG_AXIS_Y -1.0
-#define MAG_AXIS_Z  1.0
+#define MAG_ORIENTATION_X -1.0
+#define MAG_ORIENTATION_Y -1.0
+#define MAG_ORIENTATION_Z  1.0
 
 14-02-19: damping frame broken
 14-02-25: foam frame inserted
