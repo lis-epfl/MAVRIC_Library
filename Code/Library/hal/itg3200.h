@@ -10,13 +10,13 @@
 
 
 /**
-* \file itg3200_driver.h
+* \file itg3200.h
 *
 * This file is the driver for the integrated triple axis gyroscope ITG3200
 */
 
-#ifndef ITG3200_DRIVER_H_
-#define ITG3200_DRIVER_H_
+#ifndef ITG3200_H_
+#define ITG3200_H_
 
 #ifdef __cplusplus
 	extern "C" {
@@ -44,12 +44,12 @@ typedef struct
  * \brief Initialize the gyroscope sensor
  * not implemented yet
 */
-void itg3200_driver_init(void);
+void itg3200_init(void);
 
 /**
  * \brief Reconfigure the gyroscope sensor
 */
-void itg3200_driver_reconfigure_gyro(void);
+void itg3200_reconfigure_gyro(void);
 
 /**
  * \brief Return the gyroscope's data in normal mode
@@ -57,22 +57,22 @@ void itg3200_driver_reconfigure_gyro(void);
  *
  * \return a pointer to the gyroscope data
 */
-gyroscope_t* itg3200_driver_get_gyro_data(void);
+gyroscope_t* itg3200_get_gyro_data(void);
 
 /**
  * \brief Initialize the gyroscope sensor in slow mode
 */
-void itg3200_driver_init_slow(void);
+void itg3200_init_slow(void);
 
 /**
  * \brief Return the gyroscope's data in slow mode
  *
  * \return a pointer to the gyroscope data
 */
-gyroscope_t* itg3200_driver_get_data_slow(void);
+gyroscope_t* itg3200_get_data_slow(void);
 
 #ifdef __cplusplus
 	}
 #endif
 
-#endif /* ITG3200_DRIVER_H_ */
+#endif /* ITG3200_H_ */

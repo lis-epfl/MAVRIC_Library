@@ -10,13 +10,13 @@
 
 
 /**
-* \file lsm330dlc_driver.h
+* \file lsm330dlc.h
 *
 * This file is the driver for the integrated 3axis gyroscope and accelerometer LSM330DLC
 */
 
-#ifndef LSM330DLC_DRIVER_H_
-#define LSM330DLC_DRIVER_H_
+#ifndef LSM330DLC_H_
+#define LSM330DLC_H_
 
 #ifdef __cplusplus
 	extern "C" {
@@ -47,7 +47,7 @@ typedef struct
 /**
  * \brief	Initialize the LSM330 accelerometer+gyroscope sensor
 */
-void lsm330dlc_driver_init(void);
+void lsm330dlc_init(void);
 
 /**
  * \brief	Return the gyroscope's data

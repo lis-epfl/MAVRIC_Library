@@ -10,13 +10,13 @@
 
 
 /**
-* \file itg3200_driver.c
+* \file itg3200.c
 *
 * This file is the driver for the integrated triple axis gyroscope ITG3200
 */
 
 
-#include "itg3200_driver.h"
+#include "itg3200.h"
 #include "i2c_driver_int.h"
 #include "print_util.h"
 
@@ -47,7 +47,7 @@ static volatile gyroscope_t gyro_outputs;		///< Create an object containing the 
 gyro_config default_configuration;			///< Declare the object containing the gyroscope configuration structure
 uint8_t read_preamble=SENSOR_REG_ADDRESS;	///< Declare the address of the sensor
 
-void itg3200_driver_init_slow(void) 
+void itg3200_init_slow(void) 
 {
 	static twim_options_t twi_opt= 
 	{
@@ -60,7 +60,7 @@ void itg3200_driver_init_slow(void)
 	twim_write(&AVR32_TWIM0, (uint8_t*)&default_configuration, 4, ITG3200_SLAVE_ADDRESS, false);
 }
 
-gyroscope_t* itg3200_driver_get_data_slow(void) 
+gyroscope_t* itg3200_get_data_slow(void) 
 {
 	uint8_t write_then_read_preamble=SENSOR_REG_ADDRESS;
 	

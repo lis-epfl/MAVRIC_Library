@@ -1,13 +1,13 @@
 /*
- * itg3200_driver.h
+ * itg3200.h
  *
  * Created: 18/05/2012 17:51:08
  *  Author: sfx
  */ 
 
 
-#ifndef LSM330DLC_DRIVER_H_
-#define LSM330DLC_DRIVER_H_
+#ifndef LSM330DLC_H_
+#define LSM330DLC_H_
 #include "compiler.h"
 
 #define GY_X 0
@@ -191,7 +191,7 @@ typedef struct{
 } lsm_acc_t;
 
 
-void lsm330dlc_driver_init(void);
+void lsm330dlc_init(void);
 
 lsm_gyro_t* lsm330dlc_driver_get_gyro_data(void);
 lsm_acc_t* lsm330dlc_driver_get_acc_data(void);

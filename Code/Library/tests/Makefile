@@ -159,13 +159,13 @@ $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(DependSuffix): ../hal_emu/com
 $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(PreprocessSuffix): ../hal_emu/compass_hmc5883l.c
 	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_compass_hmc5883l$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/hal_emu/compass_hmc5883l.c"
 
-$(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix): ../hal_emu/itg3200_driver.c $(IntermediateDirectory)/hal_emu_itg3200_driver$(DependSuffix)
-	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/itg3200_driver.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/hal_emu_itg3200_driver$(DependSuffix): ../hal_emu/itg3200_driver.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_itg3200_driver$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/hal_emu/itg3200_driver.c"
+$(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix): ../hal_emu/itg3200.c $(IntermediateDirectory)/hal_emu_itg3200_driver$(DependSuffix)
+	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/itg3200.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/hal_emu_itg3200_driver$(DependSuffix): ../hal_emu/itg3200.c
+	@$(C_CompilerName) $(CmpOptions) $(IncludePath) -MT$(IntermediateDirectory)/hal_emu_itg3200_driver$(ObjectSuffix) -MF$(IntermediateDirectory)/hal_emu_itg3200_driver$(DependSuffix) -MM "/home/felix/Projects/maveric/Code/Library/hal_emu/itg3200.c"
 
-$(IntermediateDirectory)/hal_emu_itg3200_driver$(PreprocessSuffix): ../hal_emu/itg3200_driver.c
-	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_itg3200_driver$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/hal_emu/itg3200_driver.c"
+$(IntermediateDirectory)/hal_emu_itg3200_driver$(PreprocessSuffix): ../hal_emu/itg3200.c
+	@$(C_CompilerName) $(CmpOptions) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/hal_emu_itg3200_driver$(PreprocessSuffix) "/home/felix/Projects/maveric/Code/Library/hal_emu/itg3200.c"
 
 $(IntermediateDirectory)/hal_emu_led$(ObjectSuffix): ../hal_emu/led.c $(IntermediateDirectory)/hal_emu_led$(DependSuffix)
 	$(C_CompilerName) $(SourceSwitch) "/home/felix/Projects/maveric/Code/Library/hal_emu/led.c" $(CmpOptions) $(ObjectSwitch)$(IntermediateDirectory)/hal_emu_led$(ObjectSuffix) $(IncludePath)

@@ -35,8 +35,8 @@
 
 //#include "simulation.h"
 #include "bmp085.h"
-#include "lsm330dlc_driver.h"
-#include "compass_hmc5883l.h"
+#include "lsm330dlc.h"
+#include "hmc5883l.h"
 #include "analog_monitor.h"
 #include "piezo_speaker.h"
 #include "gpio.h"
@@ -110,10 +110,10 @@ void boardsupport_init(central_data_t *central_data)
 	// init imu & compass
 	i2c_driver_init(I2C0);
 	
-	lsm330dlc_driver_init();
+	lsm330dlc_init();
 	print_util_dbg_print("LSM330 initialised \r");
 		
-	compass_hmc58831l_init_slow();
+	hmc5883l_init_slow();
 	print_util_dbg_print("HMC5883 initialised \r");
 	
 	bmp085_init(&central_data->pressure,&central_data->mavlink_communication.mavlink_stream);

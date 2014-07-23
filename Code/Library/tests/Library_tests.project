@@ -327,7 +327,7 @@
     <File Name="../hal_emu/analog_monitor.h"/>
     <File Name="../hal_emu/radar_module_driver.c"/>
     <File Name="../hal_emu/analog_monitor.c"/>
-    <File Name="../hal_emu/itg3200_driver.h"/>
+    <File Name="../hal_emu/itg3200.h"/>
     <File Name="../hal_emu/servo_pwm.h"/>
     <File Name="../hal_emu/udp_stream.h"/>
     <File Name="../hal_emu/#include <stdbool.h>"/>
@@ -340,12 +340,12 @@
     <File Name="../hal_emu/servo_pwm.c"/>
     <File Name="../hal_emu/compass_hmc5883l.c"/>
     <File Name="../hal_emu/joystick.h"/>
-    <File Name="../hal_emu/compass_hmc5883l.h"/>
+    <File Name="../hal_emu/hmc5883l.h"/>
     <File Name="../hal_emu/delay.h"/>
-    <File Name="../hal_emu/itg3200_driver.c"/>
+    <File Name="../hal_emu/itg3200.c"/>
     <File Name="../hal_emu/adxl345_driver.h"/>
     <File Name="../hal_emu/led.c"/>
-    <File Name="../hal_emu/lsm330dlc_driver.h"/>
+    <File Name="../hal_emu/lsm330dlc.h"/>
     <File Name="../hal_emu/lsm330dlc_driver.c"/>
     <File Name="../hal_emu/adxl345_driver.c"/>
     <File Name="../hal_emu/joystick_rc.c"/>

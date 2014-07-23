@@ -10,14 +10,14 @@
 
 
 /**
-* \file compass_hmc58831l.h
+* \file hmc5883l.h
 *
 * This file is the driver for the magnetometer HMC58831
 */
 
 
-#ifndef COMPASS_HMC5883L_H_
-#define COMPASS_HMC5883L_H_
+#ifndef HMC5883L_H_
+#define HMC5883L_H_
 
 #ifdef __cplusplus
 	extern "C" {
@@ -33,19 +33,19 @@
 typedef struct
 {
 	magnetometer_t *raw_compass;
-} compass_hmc58831l_data_t;
+} hmc5883l_t;
 
 
 /**
  * \brief Initializes the magnetometer sensor
 */
-void compass_hmc58831l_init(void);
+void hmc5883l_init(void);
 
 
 /**
  * \brief Initializes the magnetometer sensor in slow mode
 */
-void compass_hmc58831l_init_slow(void);
+void hmc5883l_init_slow(void);
 
 
 /**
@@ -53,7 +53,7 @@ void compass_hmc58831l_init_slow(void);
  *
  * \return a pointer to the magnetometer's data in slow mode
 */
-void compass_hmc58831l_update(magnetometer_t *compass_outputs);
+void hmc5883l_update(magnetometer_t *compass_outputs);
 
 
 #ifdef __cplusplus

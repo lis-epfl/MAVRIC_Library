@@ -1,12 +1,12 @@
 /*
- * itg3200_driver.c
+ * itg3200.c
  *
  * Created: 18/05/2012 17:57:46
  *  Author: sfx
  */ 
 
 
-#include "lsm330dlc_driver.h"
+#include "lsm330dlc.h"
 #include "print_util.h"
 //#include "twim.h"
 
@@ -31,7 +31,7 @@ lsm_get_gyro_config() {
 }
 
 
-void lsm330dlc_driver_init(void) {
+void lsm330dlc_init(void) {
 
 }
 

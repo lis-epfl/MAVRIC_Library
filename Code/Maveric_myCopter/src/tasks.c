@@ -28,8 +28,8 @@
 #include "delay.h"
 #include "i2cxl_sonar.h"
 #include "analog_monitor.h"
-#include "lsm330dlc_driver.h"
-#include "compass_hmc5883l.h"
+#include "lsm330dlc.h"
+#include "hmc5883l.h"
 
 central_data_t* central_data;
 
@@ -368,7 +368,7 @@ void tasks_run_imu_update(void* arg)
 	{
 		lsm330dlc_gyro_update(&(central_data->imu.raw_gyro));
 		lsm330dlc_acc_update(&(central_data->imu.raw_accelero));
-		compass_hmc58831l_update(&(central_data->imu.raw_compass));
+		hmc5883l_update(&(central_data->imu.raw_compass));
 	}
 	
 	imu_update(	&central_data->imu);

@@ -10,12 +10,12 @@
 
 
 /**
-* \file compass_hmc58831l.c
+* \file hmc5883l.c
 *
 * This file is the driver for the magnetometer HMC58831
 */
 
-#include "compass_hmc5883l.h"
+#include "hmc5883l.h"
 #include "twim.h"
 #include "print_util.h"
 
@@ -103,7 +103,7 @@ enum
 };
 
 
-void compass_hmc58831l_init_slow() 
+void hmc5883l_init_slow() 
 {
 	if(twim_probe(&AVR32_TWIM0, HMC5883_SLAVE_ADDRESS) == STATUS_OK)
 	{
@@ -127,7 +127,7 @@ void compass_hmc58831l_init_slow()
 }
 
 
-void compass_hmc58831l_update(magnetometer_t *compass_outputs) 
+void hmc5883l_update(magnetometer_t *compass_outputs) 
 {
 	uint8_t start_address = DataRegBegin;
 	uint16_t data[3];

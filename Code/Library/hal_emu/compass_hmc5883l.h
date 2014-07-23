@@ -6,8 +6,8 @@
  */ 
 
 
-#ifndef COMPASS_HMC5883L_H_
-#define COMPASS_HMC5883L_H_
+#ifndef HMC5883L_H_
+#define HMC5883L_H_
 
 #include "compiler.h"
 
@@ -74,9 +74,9 @@ typedef struct{
 
 
 
-void compass_hmc58831l_init();
+void hmc5883l_init();
 
-void compass_hmc58831l_init_slow();
+void hmc5883l_init_slow();
 
 magnetometer_t* compass_hmc58831l_get_data_slow();
 

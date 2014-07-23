@@ -1,12 +1,12 @@
 /*
- * itg3200_driver.c
+ * itg3200.c
  *
  * Created: 18/05/2012 17:57:46
  *  Author: sfx
  */ 
 
 
-#include "itg3200_driver.h"
+#include "itg3200.h"
 
 //#include "i2c_driver_int.h"
 #include "print_util.h"
@@ -39,24 +39,24 @@ typedef struct {
 gyro_config default_configuration;
 uint8_t read_preamble=SENSOR_REG_ADDRESS;
 
-void itg3200_driver_init(void) {
+void itg3200_init(void) {
 
 }
 
-void itg3200_driver_reconfigure_gyro(void) {
+void itg3200_reconfigure_gyro(void) {
 	
 }
 
-void itg3200_driver_init_slow(void) {
+void itg3200_init_slow(void) {
 
 }
 
-gyroscope_t* itg3200_driver_get_gyro_data(void) {
+gyroscope_t* itg3200_get_gyro_data(void) {
 	
 	return &gyro_outputs;
 }
 
-gyroscope_t* itg3200_driver_get_data_slow(void) {
+gyroscope_t* itg3200_get_data_slow(void) {
 	
 	
 	

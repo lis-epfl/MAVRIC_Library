@@ -609,12 +609,8 @@
     <VirtualDirectory Name="hal">
       <File Name="Library/hal/uart_int.h"/>
       <File Name="Library/hal/time_keeper.h"/>
-      <File Name="Library/hal/lsm330dlc_driver.c"/>
-      <File Name="Library/hal/compass_hmc5883l.h"/>
-      <File Name="Library/hal/itg3200_driver.h"/>
       <File Name="Library/hal/adxl345_driver.c"/>
       <File Name="Library/hal/adxl345_driver.h"/>
-      <File Name="Library/hal/compass_hmc5883l.c"/>
       <File Name="Library/hal/bmp085.c"/>
       <File Name="Library/hal/time_keeper.c"/>
       <File Name="Library/hal/uart_int.c"/>
@@ -623,14 +619,12 @@
       <File Name="Library/hal/radar_module_driver.h"/>
       <File Name="Library/hal/radar_module_driver.c"/>
       <File Name="Library/hal/remote_controller.h"/>
-      <File Name="Library/hal/lsm330dlc_driver.h"/>
       <File Name="Library/hal/led.c"/>
       <File Name="Library/hal/bmp085.h"/>
       <File Name="Library/hal/radar_driver.h"/>
       <File Name="Library/hal/led.h"/>
       <File Name="Library/hal/spi_buffered.h"/>
       <File Name="Library/hal/spi_buffered.c"/>
-      <File Name="Library/hal/itg3200_driver.c"/>
       <File Name="Library/hal/adc_int.c"/>
       <File Name="Library/hal/dac_dma.c"/>
       <File Name="Library/hal/dac_dma.h"/>
@@ -658,6 +652,12 @@
       <File Name="Library/hal/xbee.c"/>
       <File Name="Library/hal/accelerometer.h"/>
       <File Name="Library/hal/gyroscope.h"/>
+      <File Name="Library/hal/hmc5883l.c"/>
+      <File Name="Library/hal/hmc5883l.h"/>
+      <File Name="Library/hal/itg3200.c"/>
+      <File Name="Library/hal/itg3200.h"/>
+      <File Name="Library/hal/lsm330dlc.c"/>
+      <File Name="Library/hal/lsm330dlc.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>
