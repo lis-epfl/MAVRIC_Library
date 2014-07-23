@@ -82,7 +82,7 @@ void central_data_init()
 	};
 	state_init(	&central_data.state_structure,
 				&state_config,
-				&central_data.adc,
+				&central_data.analog_monitor,
 				&central_data.mavlink_communication.mavlink_stream,
 				&central_data.mavlink_communication.message_handler); 
 	
@@ -115,7 +115,7 @@ void central_data_init()
 	// Init position_estimation_init
 	position_estimation_init(   &central_data.position_estimator,
 								&central_data.pressure,
-								&central_data.GPS_data,
+								&central_data.gps,
 								&central_data.ahrs,
 								&central_data.imu,
 								&central_data.mavlink_communication.mavlink_stream,
@@ -213,7 +213,7 @@ void central_data_init()
 					&central_data.imu,
 					&central_data.position_estimator,
 					&central_data.pressure,
-					&central_data.GPS_data,
+					&central_data.gps,
 					&central_data.state_structure,
 					central_data.servos,
 					&central_data.waypoint_handler.waypoint_set,

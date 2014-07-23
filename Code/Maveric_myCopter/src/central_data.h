@@ -71,7 +71,7 @@ typedef struct  {
 
 	mavlink_communication_t mavlink_communication;
 
-	analog_monitor_t adc;										///< The analog to digital converter structure
+	analog_monitor_t analog_monitor;										///< The analog to digital converter structure
 
 	imu_t imu;													///< The IMU structure
 	qfilter_t attitude_filter;									///< The qfilter structure
@@ -84,7 +84,7 @@ typedef struct  {
 
 	servo_output_t servos[NUMBER_OF_SERVO_OUTPUTS];				///< The array of servos (size NUMBER_OF_SERVO_OUTPUTS)
 	
-	gps_Data_type_t GPS_data;									///< The GPS structure
+	gps_t gps;									///< The GPS structure
 	
 	simulation_model_t sim_model;								///< The simulation model structure
 	

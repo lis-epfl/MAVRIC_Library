@@ -324,7 +324,7 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, ahrs_t *ahrs, imu_t *imu, const mavlink_stream_t* mavlink_stream, bool* waypoint_set, mavlink_message_handler_t *message_handler, float home_lat, float home_lon, float home_alt, float gravity)
+void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_t *gps, ahrs_t *ahrs, imu_t *imu, const mavlink_stream_t* mavlink_stream, bool* waypoint_set, mavlink_message_handler_t *message_handler, float home_lat, float home_lon, float home_alt, float gravity)
 {
     int32_t i;
 

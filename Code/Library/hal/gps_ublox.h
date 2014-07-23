@@ -648,7 +648,7 @@ typedef struct
 	byte_stream_t gps_stream_out;			///< The outgoing GPS byte stream
 	
 	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
-} gps_Data_type_t;
+} gps_t;
 
 
 uint32_t idleTimer;							///< Last time that the GPS driver got a good packet from the GPS
@@ -659,11 +659,11 @@ uint32_t last_fix_time;						///< Last fix time
 /**
  * \brief	Initialize the gps U-Blox module
  *
- * \param	GPS_data			The pointer to the GPS structure
+ * \param	gps			The pointer to the GPS structure
  * \param	UID					The uart ID
  * \param	mavlink_stream		The pointer to the mavlink stream
  */
-void gps_ublox_init(gps_Data_type_t *GPS_data, int32_t UID, mavlink_stream_t* mavlink_stream);
+void gps_ublox_init(gps_t *gps, int32_t UID, mavlink_stream_t* mavlink_stream);
 
 
 /**
@@ -671,27 +671,27 @@ void gps_ublox_init(gps_Data_type_t *GPS_data, int32_t UID, mavlink_stream_t* ma
  *
  * The GPS and UART channel should already be configured in the good baudrate 38400U
  *
- * \param	GPS_data			The pointer to the GPS structure
+ * \param	gps			The pointer to the GPS structure
  */
-void gps_ublox_configure_gps(gps_Data_type_t *GPS_data);
+void gps_ublox_configure_gps(gps_t *gps);
 
 
 /**
  * \brief	The function that needs to be called to get the GPS information
  *
- * \param	GPS_data			The pointer to the GPS structure
+ * \param	gps			The pointer to the GPS structure
  */
-void gps_ublox_update(gps_Data_type_t *GPS_data);
+void gps_ublox_update(gps_t *gps);
 
 
 /**
  * \brief	Task to send the mavlink gps raw message
  * 
- * \param	GPS_data			The pointer to the GPS structure
+ * \param	gps			The pointer to the GPS structure
  *
  * \return	The status of execution of the task
  */
-task_return_t gps_ublox_send_raw(gps_Data_type_t* GPS_data);
+task_return_t gps_ublox_send_raw(gps_t* gps);
 
 #ifdef __cplusplus
 }

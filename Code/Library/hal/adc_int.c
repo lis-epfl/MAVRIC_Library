@@ -32,7 +32,7 @@
 #define ADC_INT_SEOC0 2			///< Define the Analog to Digital interrupt (?)
 #define ADC_INT_SEOC1 32		///< Define the Analog to Digital interrupt (?)
 
-///< GPIO pin/adc-function map.
+///< GPIO pin/analog_monitor-function map.
 static const gpio_map_t ADCIFA_GPIO_MAP = {
 	{AVR32_ADCREF0_PIN,AVR32_ADCREF0_FUNCTION},
 	{AVR32_ADCREFP_PIN,AVR32_ADCREFP_FUNCTION},

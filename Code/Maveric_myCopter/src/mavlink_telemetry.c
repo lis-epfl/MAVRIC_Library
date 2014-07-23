@@ -205,7 +205,7 @@ void mavlink_telemetry_init(void)
 
 	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&state_send_heartbeat,								&central_data->state_structure, 					MAVLINK_MSG_ID_HEARTBEAT	);							// ID 0
 	scheduler_add_task(mavlink_scheduler,  1000000,	 RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&state_send_status,									&central_data->state_structure,					MAVLINK_MSG_ID_SYS_STATUS	);							// ID 1
-	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&gps_ublox_send_raw,								&central_data->GPS_data,							MAVLINK_MSG_ID_GPS_RAW_INT	);							// ID 24
+	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&gps_ublox_send_raw,								&central_data->gps,							MAVLINK_MSG_ID_GPS_RAW_INT	);							// ID 24
 	scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&imu_send_scaled,									&central_data->imu, 								MAVLINK_MSG_ID_SCALED_IMU	);							// ID 26
 	scheduler_add_task(mavlink_scheduler,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&imu_send_raw,										&central_data->imu, 								MAVLINK_MSG_ID_RAW_IMU	);								// ID 27
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&bmp085_send_pressure,								&central_data->pressure,							MAVLINK_MSG_ID_SCALED_PRESSURE	);						// ID 29

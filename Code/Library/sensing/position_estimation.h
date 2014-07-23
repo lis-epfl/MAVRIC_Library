@@ -63,7 +63,7 @@ typedef struct
 	float gravity;
 	
 	pressure_data_t*  	 	barometer;				///< The pointer to the barometer structure
-	const gps_Data_type_t* 	gps;					///< The pointer to the GPS structure
+	const gps_t* 	gps;					///< The pointer to the GPS structure
 	const ahrs_t* 		 	ahrs;					///< The pointer to the attitude estimation structure
 	const imu_t* 		 	imu;					///< The pointer to the IMU structure
 	const mavlink_stream_t* mavlink_stream;			///< The pointer to the mavlink stream structure
@@ -88,7 +88,7 @@ typedef struct
  * \param	home_alt				The value of the hard coded home altitude position
  * \param	gravity					The value of the gravity
  */
-void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, ahrs_t *ahrs, imu_t *imu, const mavlink_stream_t* mavlink_stream, bool* waypoint_set, mavlink_message_handler_t *mavlink_handler, float home_lat, float home_lon, float home_alt, float gravity);
+void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_t *gps, ahrs_t *ahrs, imu_t *imu, const mavlink_stream_t* mavlink_stream, bool* waypoint_set, mavlink_message_handler_t *mavlink_handler, float home_lat, float home_lon, float home_alt, float gravity);
 
 
 /**

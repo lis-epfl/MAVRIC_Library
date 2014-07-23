@@ -67,7 +67,7 @@ typedef struct  {
 	Buffer_t gps_buffer;
 	byte_stream_t gps_stream_in;
 	byte_stream_t gps_stream_out;
-	gps_Data_type_t GPS_data;
+	gps_t gps;
 	
 	simulation_model_t sim_model;
 	

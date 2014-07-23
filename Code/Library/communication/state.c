@@ -19,9 +19,9 @@
 #include "state.h"
 #include "print_util.h"
 
-void state_init(state_structure_t *state_structure, state_structure_t* state_config, const analog_monitor_t* adc, mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *message_handler)
+void state_init(state_structure_t *state_structure, state_structure_t* state_config, const analog_monitor_t* analog_monitor, mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *message_handler)
 {
-	state_structure->adc = adc;
+	state_structure->analog_monitor = analog_monitor;
 	state_structure->mavlink_stream = mavlink_stream;
 	
 	state_structure->autopilot_type = state_config->autopilot_type;
@@ -77,8 +77,8 @@ task_return_t state_send_heartbeat(state_structure_t* state_structure)
 
 task_return_t state_send_status(state_structure_t* state_structure)
 {
-	float battery_voltage = state_structure->adc->avg[ANALOG_RAIL_10];		// bat voltage (mV), actual battery pack plugged to the board
-	float battery_remaining = state_structure->adc->avg[ANALOG_RAIL_11] / 12.4f * 100.0f;
+	float battery_voltage = state_structure->analog_monitor->avg[ANALOG_RAIL_10];		// bat voltage (mV), actual battery pack plugged to the board
+	float battery_remaining = state_structure->analog_monitor->avg[ANALOG_RAIL_11] / 12.4f * 100.0f;
 	
 	const mavlink_stream_t* mavlink_stream = state_structure->mavlink_stream;
 	mavlink_message_t msg;

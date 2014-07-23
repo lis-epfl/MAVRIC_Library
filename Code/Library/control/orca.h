@@ -89,7 +89,7 @@ void orca_computeNewVelocity(orca_t* orca, float optimal_velocity[], float new_v
  *
  * \return	whether the linear program has a solution or not
  */
-bool orca_linearProgram1(plane_t planes[], uint8_t index, line_t line, float max_speed, float optimal_velocity[], float new_velocity[], bool direction_opt);
+bool orca_linear_program1(plane_t planes[], uint8_t index, line_t line, float max_speed, float optimal_velocity[], float new_velocity[], bool direction_opt);
 
 /**
  * \brief	computes the solution of a 2D linear program
@@ -103,7 +103,7 @@ bool orca_linearProgram1(plane_t planes[], uint8_t index, line_t line, float max
  *
  * \return	whether the linear program has a solution or not
  */
-bool orca_linearProgram2(plane_t planes[], uint8_t ind, float max_speed, float optimal_velocity[], float new_velocity[], bool direction_opt);
+bool orca_linear_program2(plane_t planes[], uint8_t ind, float max_speed, float optimal_velocity[], float new_velocity[], bool direction_opt);
 
 /**
  * \brief	computes the solution of a 3D linear program
@@ -117,7 +117,7 @@ bool orca_linearProgram2(plane_t planes[], uint8_t ind, float max_speed, float o
  *
  * \return the number of the last plane to be evaluated, if smaller than the number of planes, linear program is infeasible
  */
-float orca_linearProgram3(plane_t planes[], uint8_t plane_size, float optimal_velocity[], float max_speed, float new_velocity[], bool direction_opt);
+float orca_linear_program3(plane_t planes[], uint8_t plane_size, float optimal_velocity[], float max_speed, float new_velocity[], bool direction_opt);
 
 /**
  * \brief	computes the solution of a 3D linear program

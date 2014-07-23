@@ -73,7 +73,7 @@ void boardsupport_init(central_data_t *central_data)
 	xbee_init(UART0);
 				
 	// Init UART 3 for GPS communication
-	gps_ublox_init(&(central_data->GPS_data), UART3, &central_data->mavlink_communication.mavlink_stream);
+	gps_ublox_init(&(central_data->gps), UART3, &central_data->mavlink_communication.mavlink_stream);
 	
 	// Init UART 4 for wired communication
 	console_init(UART4);
@@ -95,17 +95,17 @@ void boardsupport_init(central_data_t *central_data)
 	remote_dsm2_rc_init();
 
 	// Init analog rails
-	central_data->adc.enable[ANALOG_RAIL_2]  = false;
-	central_data->adc.enable[ANALOG_RAIL_3]  = false;
-	central_data->adc.enable[ANALOG_RAIL_4]  = false;
-	central_data->adc.enable[ANALOG_RAIL_5]  = false;
-	central_data->adc.enable[ANALOG_RAIL_6]  = false;
-	central_data->adc.enable[ANALOG_RAIL_7]  = false;
-	central_data->adc.enable[ANALOG_RAIL_10] = true;		// Battery filtered
-	central_data->adc.enable[ANALOG_RAIL_11] = true;		// Battery 
-	central_data->adc.enable[ANALOG_RAIL_12] = true;		// sonar
-	central_data->adc.enable[ANALOG_RAIL_13] = false;    // pitot
-	analog_monitor_init(&central_data->adc);
+	central_data->analog_monitor.enable[ANALOG_RAIL_2]  = false;
+	central_data->analog_monitor.enable[ANALOG_RAIL_3]  = false;
+	central_data->analog_monitor.enable[ANALOG_RAIL_4]  = false;
+	central_data->analog_monitor.enable[ANALOG_RAIL_5]  = false;
+	central_data->analog_monitor.enable[ANALOG_RAIL_6]  = false;
+	central_data->analog_monitor.enable[ANALOG_RAIL_7]  = false;
+	central_data->analog_monitor.enable[ANALOG_RAIL_10] = true;		// Battery filtered
+	central_data->analog_monitor.enable[ANALOG_RAIL_11] = true;		// Battery 
+	central_data->analog_monitor.enable[ANALOG_RAIL_12] = true;		// sonar
+	central_data->analog_monitor.enable[ANALOG_RAIL_13] = false;    // pitot
+	analog_monitor_init(&central_data->analog_monitor);
 	
 	// init imu & compass
 	i2c_driver_init(I2C0);
