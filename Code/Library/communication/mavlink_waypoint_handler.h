@@ -109,8 +109,9 @@ typedef struct
 
 	position_estimator_t* position_estimator;					///< The pointer to the position estimation structure
 	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
-	const state_t* state;					///< The pointer to the state structure
+	const state_t* state;										///< The pointer to the state structure
 	mavlink_communication_t* mavlink_communication;				///< The pointer to the mavlink communication structure
+	const mavlink_stream_t* mavlink_stream;						///< Pointer to mavlink stream
 
 }mavlink_waypoint_handler_t;
 
@@ -137,7 +138,7 @@ void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_ha
  * \param	state			The pointer to the state structure
  * \param	mavlink_communication	The pointer to the mavlink communication structure
  */
-void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* ahrs, const state_t* state, mavlink_communication_t* mavlink_communication);
+void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* ahrs, const state_t* state, mavlink_communication_t* mavlink_communication, const mavlink_stream_t* mavlink_stream);
 
 /**
  * \brief	Initialize a first waypoint if a flight plan is set

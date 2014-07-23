@@ -165,8 +165,8 @@ static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* way
 	waypoint_transfo.origin = waypoint_handler->position_estimator->local_position.origin;
 	
 	// Start waypoint
-	waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (mavlink_system.sysid-1));
-	waypoint_transfo.pos[Y] = circle_radius * sin(angle_step * (mavlink_system.sysid-1));
+	waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (waypoint_handler->mavlink_stream->sysid-1));
+	waypoint_transfo.pos[Y] = circle_radius * sin(angle_step * (waypoint_handler->mavlink_stream->sysid-1));
 	waypoint_transfo.pos[Z] = -20.0f;
 	waypoint_global = coord_conventions_local_to_global_position(waypoint_transfo);
 	
@@ -177,7 +177,7 @@ static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* way
 	print_util_dbg_print(", ");
 	print_util_dbg_print_num(waypoint_transfo.pos[Z]*100.0f,10);
 	print_util_dbg_print("). For system:");
-	print_util_dbg_print_num(mavlink_system.sysid,10);
+	print_util_dbg_print_num(waypoint_handler->mavlink_stream->sysid,10);
 	print_util_dbg_print(".\n");
 	waypoint.x = waypoint_global.latitude;
 	waypoint.y = waypoint_global.longitude;
@@ -191,13 +191,13 @@ static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* way
 	waypoint.param1 = 10; // Hold time in decimal seconds
 	waypoint.param2 = 4; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-	waypoint.param4 = rad_to_deg(maths_calc_smaller_angle(PI + angle_step * (mavlink_system.sysid-1))); // Desired yaw angle at MISSION (rotary wing)
+	waypoint.param4 = rad_to_deg(maths_calc_smaller_angle(PI + angle_step * (waypoint_handler->mavlink_stream->sysid-1))); // Desired yaw angle at MISSION (rotary wing)
 	
 	waypoint_handler->waypoint_list[0] = waypoint;
 	
 	// End waypoint
-	waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (mavlink_system.sysid-1) + PI);
-	waypoint_transfo.pos[Y] = circle_radius * sin(angle_step * (mavlink_system.sysid-1) + PI);
+	waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (waypoint_handler->mavlink_stream->sysid-1) + PI);
+	waypoint_transfo.pos[Y] = circle_radius * sin(angle_step * (waypoint_handler->mavlink_stream->sysid-1) + PI);
 	waypoint_transfo.pos[Z] = -20.0f;
 	waypoint_global = coord_conventions_local_to_global_position(waypoint_transfo);
 	
@@ -208,7 +208,7 @@ static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* way
 	print_util_dbg_print(", ");
 	print_util_dbg_print_num(waypoint_transfo.pos[Z]*100.0f,10);
 	print_util_dbg_print("). For system:");
-	print_util_dbg_print_num(mavlink_system.sysid,10);
+	print_util_dbg_print_num(waypoint_handler->mavlink_stream->sysid,10);
 	print_util_dbg_print(".\n");
 	
 	waypoint.x = waypoint_global.latitude;
@@ -223,13 +223,19 @@ static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* way
 	waypoint.param1 = 10; // Hold time in decimal seconds
 	waypoint.param2 = 4; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-	waypoint.param4 = rad_to_deg(angle_step * (mavlink_system.sysid-1)); // Desired yaw angle at MISSION (rotary wing)
+	waypoint.param4 = rad_to_deg(angle_step * (waypoint_handler->mavlink_stream->sysid-1)); // Desired yaw angle at MISSION (rotary wing)
 	
 	waypoint_handler->waypoint_list[1] = waypoint;
 	
 	waypoint_handler->waypoint_set = false;
 
-	mavlink_msg_command_ack_send(MAVLINK_COMM_0, MAV_CMD_CONDITION_LAST, MAV_RESULT_ACCEPTED);
+	mavlink_message_t msg;
+	mavlink_msg_command_ack_pack(waypoint_handler->mavlink_stream->sysid,
+								waypoint_handler->mavlink_stream->compid,
+								&msg, 
+								MAV_CMD_CONDITION_LAST, 
+								MAV_RESULT_ACCEPTED);
+	mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 }
 
 /*
@@ -250,10 +256,17 @@ static void waypoint_handler_send_count(mavlink_waypoint_handler_t* waypoint_han
 	mavlink_msg_mission_request_list_decode(&rec->msg,&packet);
 	
 	// Check if this message is for this system and subsystem
-	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
+	if (((uint8_t)packet.target_system == (uint8_t)waypoint_handler->mavlink_stream->sysid)
 	&& ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
 	{
-		mavlink_msg_mission_count_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid, waypoint_handler->number_of_waypoints);
+		mavlink_message_t msg;
+		mavlink_msg_mission_count_pack(	waypoint_handler->mavlink_stream->sysid,
+										waypoint_handler->mavlink_stream->compid,
+										&msg,
+										rec->msg.sysid,
+										rec->msg.compid, 
+										waypoint_handler->number_of_waypoints);
+		mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 		
 		if (waypoint_handler->number_of_waypoints != 0)
 		{
@@ -282,7 +295,7 @@ static void waypoint_handler_send_waypoint(mavlink_waypoint_handler_t* waypoint_
 		print_util_dbg_print("\n");
 		
 		// Check if this message is for this system and subsystem
-		if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
+		if (((uint8_t)packet.target_system == (uint8_t)waypoint_handler->mavlink_stream->sysid)
 		&& ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
 		{
 			waypoint_handler->sending_waypoint_num = packet.seq;
@@ -292,14 +305,26 @@ static void waypoint_handler_send_waypoint(mavlink_waypoint_handler_t* waypoint_
 				// mavlink_msg_mission_item_send (	mavlink_channel_t chan, uint8_t target_system, uint8_t target_component, uint16_t seq,
 				//									uint8_t frame, uint16_t command, uint8_t current, uint8_t autocontinue, float param1,
 				//									float param2, float param3, float param4, float x, float y, float z)
-				mavlink_msg_mission_item_send(MAVLINK_COMM_0, rec->msg.sysid, rec->msg.compid, packet.seq,
-				waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].frame,	waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].waypoint_id,
-				waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].current,	waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].autocontinue,
-				waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].param1,	waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].param2,
-				waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].param3,	waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].param4,
-				waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].x,		waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].y,
-				waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].z);
-				
+				mavlink_message_t msg;
+				mavlink_msg_mission_item_pack(	waypoint_handler->mavlink_stream->sysid,
+												waypoint_handler->mavlink_stream->compid,
+												&msg,
+												rec->msg.sysid, 
+												rec->msg.compid, 
+												packet.seq,
+												waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].frame,	
+												waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].waypoint_id,
+												waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].current,	
+												waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].autocontinue,
+												waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].param1,	
+												waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].param2,
+												waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].param3,	
+												waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].param4,
+												waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].x,		
+												waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].y,
+												waypoint_handler->waypoint_list[waypoint_handler->sending_waypoint_num].z);
+				mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
+										
 				print_util_dbg_print("Sending waypoint ");
 				print_util_dbg_print_num(waypoint_handler->sending_waypoint_num, 10);
 				print_util_dbg_print("\n");
@@ -317,7 +342,7 @@ static void waypoint_handler_receive_ack_msg(mavlink_waypoint_handler_t* waypoin
 	mavlink_msg_mission_ack_decode(&rec->msg, &packet);
 	
 	// Check if this message is for this system and subsystem
-	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
+	if (((uint8_t)packet.target_system == (uint8_t)waypoint_handler->mavlink_stream->sysid)
 	&& ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
 	{
 		waypoint_handler->waypoint_sending = false;
@@ -339,7 +364,7 @@ static void waypoint_handler_receive_count(mavlink_waypoint_handler_t* waypoint_
 	print_util_dbg_print("\n");
 	
 	// Check if this message is for this system and subsystem
-	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
+	if (((uint8_t)packet.target_system == (uint8_t)waypoint_handler->mavlink_stream->sysid)
 	&& ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
 	{
 		if (waypoint_handler->waypoint_receiving == false)
@@ -369,7 +394,14 @@ static void waypoint_handler_receive_count(mavlink_waypoint_handler_t* waypoint_
 			waypoint_handler->start_timeout = time_keeper_get_millis();
 		}
 		
-		mavlink_msg_mission_request_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,waypoint_handler->waypoint_request_number);
+		mavlink_message_t msg;
+		mavlink_msg_mission_request_pack(	waypoint_handler->mavlink_stream->sysid,
+											waypoint_handler->mavlink_stream->compid, 
+											&msg,
+											rec->msg.sysid,
+											rec->msg.compid,
+											waypoint_handler->waypoint_request_number);
+		mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 		
 		print_util_dbg_print("Asking for waypoint ");
 		print_util_dbg_print_num(waypoint_handler->waypoint_request_number,10);
@@ -387,7 +419,7 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 	mavlink_msg_mission_item_decode(&rec->msg,&packet);
 	
 	// Check if this message is for this system and subsystem
-	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
+	if (((uint8_t)packet.target_system == (uint8_t)waypoint_handler->mavlink_stream->sysid)
 	&& ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
 	{
 		waypoint_handler->start_timeout = time_keeper_get_millis();
@@ -438,8 +470,15 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 		//current = 2 is a flag to tell us this is a "guided mode" waypoint and not for the mission
 		if(packet.current == 2)
 		{
-			// verify we received the command
-			mavlink_msg_mission_ack_send(MAVLINK_COMM_0, rec->msg.sysid,rec->msg.compid, MAV_CMD_ACK_ERR_NOT_SUPPORTED);
+			// verify we received the command;
+			mavlink_message_t msg;
+			mavlink_msg_mission_ack_pack(	waypoint_handler->mavlink_stream->sysid,
+											waypoint_handler->mavlink_stream->compid,
+											&msg,
+											rec->msg.sysid,
+											rec->msg.compid,
+											MAV_CMD_ACK_ERR_NOT_SUPPORTED);
+			mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 		}
 		else
 		{
@@ -447,7 +486,14 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 			if(packet.current == 3)
 			{
 				// verify we received the command
-				mavlink_msg_mission_ack_send(MAVLINK_COMM_0, rec->msg.sysid,rec->msg.compid, MAV_CMD_ACK_ERR_NOT_SUPPORTED);
+				mavlink_message_t msg;
+				mavlink_msg_mission_ack_pack(	waypoint_handler->mavlink_stream->sysid,
+												waypoint_handler->mavlink_stream->compid,
+												&msg,
+												rec->msg.sysid,
+												rec->msg.compid, 
+												MAV_CMD_ACK_ERR_NOT_SUPPORTED);
+				mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 			}
 			else
 			{
@@ -472,7 +518,13 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 							
 							uint8_t type = MAV_CMD_ACK_OK;	//MAV_CMD_ACK_ERR_FAIL;
 							
-							mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,type);
+							mavlink_message_t msg;
+							mavlink_msg_mission_ack_pack( waypoint_handler->mavlink_stream->sysid,
+															waypoint_handler->mavlink_stream->compid,
+															&msg,
+															rec->msg.sysid,
+															rec->msg.compid,type);
+							mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 							
 							print_util_dbg_print("flight plan received!\n");
 							waypoint_handler->waypoint_receiving = false;
@@ -482,7 +534,14 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 						}
 						else
 						{
-							mavlink_msg_mission_request_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,waypoint_handler->waypoint_request_number);
+							mavlink_message_t msg;
+							mavlink_msg_mission_request_pack( 	waypoint_handler->mavlink_stream->sysid,
+																waypoint_handler->mavlink_stream->compid,
+																&msg,
+																rec->msg.sysid,
+																rec->msg.compid,
+																waypoint_handler->waypoint_request_number);
+							mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 							
 							print_util_dbg_print("Asking for waypoint ");
 							print_util_dbg_print_num(waypoint_handler->waypoint_request_number,10);
@@ -494,7 +553,15 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 				{
 					uint8_t type = MAV_CMD_ACK_OK;	//MAV_CMD_ACK_ERR_FAIL;
 					print_util_dbg_print("Ack not received!");
-					mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,type);
+					
+					mavlink_message_t msg;
+					mavlink_msg_mission_ack_pack(	waypoint_handler->mavlink_stream->sysid,
+													waypoint_handler->mavlink_stream->compid,
+													&msg,
+													rec->msg.sysid,
+													rec->msg.compid,
+													type	);
+					mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 				}
 			}
 		}
@@ -508,7 +575,7 @@ static void waypoint_handler_set_current_waypoint(mavlink_waypoint_handler_t* wa
 	mavlink_msg_mission_set_current_decode(&rec->msg,&packet);
 	
 	// Check if this message is for this system and subsystem
-	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
+	if (((uint8_t)packet.target_system == (uint8_t)waypoint_handler->mavlink_stream->sysid)
 	&& ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
 	{
 		if (packet.seq < waypoint_handler->number_of_waypoints)
@@ -520,7 +587,13 @@ static void waypoint_handler_set_current_waypoint(mavlink_waypoint_handler_t* wa
 			}
 			
 			waypoint_handler->waypoint_list[packet.seq].current = 1;
-			mavlink_msg_mission_current_send(MAVLINK_COMM_0,packet.seq);
+			
+			mavlink_message_t msg;
+			mavlink_msg_mission_current_pack( 	waypoint_handler->mavlink_stream->sysid,
+												waypoint_handler->mavlink_stream->compid,
+												&msg,
+												packet.seq);
+			mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 			
 			print_util_dbg_print("Set current waypoint to number");
 			print_util_dbg_print_num(packet.seq,10);
@@ -531,7 +604,14 @@ static void waypoint_handler_set_current_waypoint(mavlink_waypoint_handler_t* wa
 		}
 		else
 		{
-			mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_ACCESS_DENIED);
+			mavlink_message_t msg;
+			mavlink_msg_mission_ack_pack(	waypoint_handler->mavlink_stream->sysid,
+											waypoint_handler->mavlink_stream->compid,
+											&msg,
+											rec->msg.sysid,
+											rec->msg.compid,
+											MAV_CMD_ACK_ERR_ACCESS_DENIED);
+			mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 		}
 	}
 }
@@ -552,7 +632,13 @@ static void waypoint_handler_set_current_waypoint_from_parameter(mavlink_waypoin
 			waypoint_handler->waypoint_list[i].current = 0;
 		}
 		waypoint_handler->waypoint_list[new_current].current = 1;
-		mavlink_msg_mission_current_send(MAVLINK_COMM_0,new_current);
+		
+		mavlink_message_t msg;
+		mavlink_msg_mission_current_pack( 	waypoint_handler->mavlink_stream->sysid,
+											waypoint_handler->mavlink_stream->compid,
+											&msg,
+											new_current);
+		mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 		
 		print_util_dbg_print("Set current waypoint to number");
 		print_util_dbg_print_num(new_current,10);
@@ -561,11 +647,22 @@ static void waypoint_handler_set_current_waypoint_from_parameter(mavlink_waypoin
 		waypoint_handler->waypoint_set = false;
 		waypoint_handler_waypoint_init(waypoint_handler);
 
-		mavlink_msg_command_ack_send(MAVLINK_COMM_0, MAV_CMD_NAV_RETURN_TO_LAUNCH, MAV_RESULT_ACCEPTED);
+		mavlink_msg_command_ack_pack( 		waypoint_handler->mavlink_stream->sysid,
+											waypoint_handler->mavlink_stream->compid,
+											&msg, 
+											MAV_CMD_NAV_RETURN_TO_LAUNCH,
+											MAV_RESULT_ACCEPTED);
+		mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 	}
 	else
 	{
-		mavlink_msg_command_ack_send(MAVLINK_COMM_0, MAV_CMD_NAV_RETURN_TO_LAUNCH, MAV_RESULT_DENIED);
+		mavlink_message_t msg;
+		mavlink_msg_command_ack_pack( 	waypoint_handler->mavlink_stream->sysid,
+										waypoint_handler->mavlink_stream->compid,
+										&msg, 
+										MAV_CMD_NAV_RETURN_TO_LAUNCH, 
+										MAV_RESULT_DENIED);
+		mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 		// mavlink_msg_mission_ack_send(MAVLINK_COMM_0,mavlink_system.sysid,MAV_COMP_ID_MISSIONPLANNER,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
 	}
 }
@@ -577,14 +674,23 @@ static void waypoint_handler_clear_waypoint_list(mavlink_waypoint_handler_t* way
 	mavlink_msg_mission_clear_all_decode(&rec->msg,&packet);
 	
 	// Check if this message is for this system and subsystem
-	if (((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
+	if (((uint8_t)packet.target_system == (uint8_t)waypoint_handler->mavlink_stream->sysid)
 	&& ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
 	{
 		waypoint_handler->number_of_waypoints = 0;
 		waypoint_handler->num_waypoint_onboard = 0;
 		waypoint_handler->waypoint_set = 0;
 		waypoint_handler_waypoint_hold_init(waypoint_handler, waypoint_handler->position_estimator->local_position);
-		mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_OK);
+		
+		mavlink_message_t msg;
+		mavlink_msg_mission_ack_pack( 	waypoint_handler->mavlink_stream->sysid,
+										waypoint_handler->mavlink_stream->compid,
+										&msg,
+										rec->msg.sysid,
+										rec->msg.compid,
+										MAV_CMD_ACK_OK);
+		mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
+								
 		print_util_dbg_print("Cleared Waypoint list.\n");
 	}
 }
@@ -597,7 +703,7 @@ static void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handl
 	
 	// Check if this message is for this system and subsystem
 	// Due to possible bug from QGroundControl, no check of target_component and compid
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
+	if ((uint8_t)packet.target_system == (uint8_t)waypoint_handler->mavlink_stream->sysid)
 	{
 		print_util_dbg_print("Set new home location.\n");
 		waypoint_handler->position_estimator->local_position.origin.latitude = (double) packet.latitude / 10000000.0f;
@@ -612,10 +718,14 @@ static void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handl
 		print_util_dbg_print_num(waypoint_handler->position_estimator->local_position.origin.altitude*1000.0f,10);
 		print_util_dbg_print(")\n");
 		
-		mavlink_msg_gps_global_origin_send(MAVLINK_COMM_0,
-		waypoint_handler->position_estimator->local_position.origin.latitude*10000000.0f,
-		waypoint_handler->position_estimator->local_position.origin.longitude*10000000.0f,
-		waypoint_handler->position_estimator->local_position.origin.altitude*1000.0f);
+		mavlink_message_t msg;
+		mavlink_msg_gps_global_origin_pack( waypoint_handler->mavlink_stream->sysid,
+											waypoint_handler->mavlink_stream->compid,
+											&msg,
+											waypoint_handler->position_estimator->local_position.origin.latitude*10000000.0f,
+											waypoint_handler->position_estimator->local_position.origin.longitude*10000000.0f,
+											waypoint_handler->position_estimator->local_position.origin.altitude*1000.0f);
+		mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 	}
 }
 
@@ -757,8 +867,14 @@ static void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_h
 				break;
 		}
 	}
-
-	mavlink_msg_command_ack_send(MAVLINK_COMM_0, MAV_CMD_NAV_LAND, MAV_RESULT_ACCEPTED);
+	
+	mavlink_message_t msg;
+	mavlink_msg_command_ack_pack( 	waypoint_handler->mavlink_stream->sysid,
+									waypoint_handler->mavlink_stream->compid,
+									&msg, 
+									MAV_CMD_NAV_LAND, 
+									MAV_RESULT_ACCEPTED);
+	mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 }
 
 static void waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
@@ -784,16 +900,33 @@ static void waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_handler_
 		waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count].current = 1;
 		waypoint_handler->current_waypoint = waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count];
 		waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(waypoint_handler, waypoint_handler->position_estimator->local_position.origin);
-		
-		mavlink_msg_mission_current_send(MAVLINK_COMM_0,waypoint_handler->current_waypoint_count);
+			
+		mavlink_message_t msg;
+		mavlink_msg_mission_current_pack( 	waypoint_handler->mavlink_stream->sysid,
+											waypoint_handler->mavlink_stream->compid,
+											&msg, 
+											waypoint_handler->current_waypoint_count);
+		mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 		
 		waypoint_handler->waypoint_set = true;
 
-		mavlink_msg_command_ack_send(MAVLINK_COMM_0, MAV_CMD_MISSION_START, MAV_RESULT_ACCEPTED);
+		mavlink_msg_command_ack_pack( 	waypoint_handler->mavlink_stream->sysid,
+										waypoint_handler->mavlink_stream->compid,
+										&msg,  
+										MAV_CMD_MISSION_START, 
+										MAV_RESULT_ACCEPTED);
+		mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 	}
 	else
 	{
-		mavlink_msg_command_ack_send(MAVLINK_COMM_0, MAV_CMD_MISSION_START, MAV_RESULT_TEMPORARILY_REJECTED);
+		mavlink_message_t msg;
+		mavlink_msg_command_ack_pack( 	waypoint_handler->mavlink_stream->sysid,
+										waypoint_handler->mavlink_stream->compid,
+										&msg,  
+										MAV_CMD_MISSION_START, 
+										MAV_RESULT_TEMPORARILY_REJECTED);
+		mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
+		
 		print_util_dbg_print("Not ready to switch to next waypoint. Either no waypoint loaded or flying towards one\n");
 	}
 }
@@ -803,14 +936,20 @@ void waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t *waypoint_hand
 	print_util_dbg_print("Starting automatic take-off from button\n");
 	waypoint_handler->in_the_air = true;
 
-	mavlink_msg_command_ack_send(MAVLINK_COMM_0, MAV_CMD_NAV_TAKEOFF, MAV_RESULT_ACCEPTED);
+	mavlink_message_t msg;
+	mavlink_msg_command_ack_pack( 	waypoint_handler->mavlink_stream->sysid,
+									waypoint_handler->mavlink_stream->compid,
+									&msg, 
+									MAV_CMD_NAV_TAKEOFF, 
+									MAV_RESULT_ACCEPTED);
+	mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 }
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* ahrs, const state_t* state, mavlink_communication_t* mavlink_communication)
+void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* ahrs, const state_t* state, mavlink_communication_t* mavlink_communication, const mavlink_stream_t* mavlink_stream)
 {
 	waypoint_handler->start_timeout = time_keeper_get_millis();
 	waypoint_handler->timeout_max_waypoint = 10000;
@@ -820,6 +959,7 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	waypoint_handler->state = state;
 	
 	waypoint_handler->mavlink_communication = mavlink_communication;
+	waypoint_handler->mavlink_stream = mavlink_stream;
 	
 	waypoint_handler->critical_behavior = CLIMB_TO_SAFE_ALT;
 	waypoint_handler->critical_next_state = false;
@@ -1188,7 +1328,13 @@ void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handler_t* wa
 			print_util_dbg_print(" less than :");
 			print_util_dbg_print_num(waypoint_handler->current_waypoint.param2,10);
 			print_util_dbg_print(".\n");
-			mavlink_msg_mission_item_reached_send(MAVLINK_COMM_0,waypoint_handler->current_waypoint_count);
+			
+			mavlink_message_t msg;
+			mavlink_msg_mission_item_reached_pack( 	waypoint_handler->mavlink_stream->sysid,
+													waypoint_handler->mavlink_stream->compid,
+													&msg,
+													waypoint_handler->current_waypoint_count);
+			mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 			
 			waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count].current = 0;
 			if((waypoint_handler->current_waypoint.autocontinue == 1)&&(waypoint_handler->number_of_waypoints>1))
@@ -1209,7 +1355,12 @@ void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handler_t* wa
 				waypoint_handler->current_waypoint = waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count];
 				waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(waypoint_handler, waypoint_handler->position_estimator->local_position.origin);
 				
-				mavlink_msg_mission_current_send(MAVLINK_COMM_0,waypoint_handler->current_waypoint_count);
+				mavlink_message_t msg;
+				mavlink_msg_mission_current_pack( 	waypoint_handler->mavlink_stream->sysid,
+													waypoint_handler->mavlink_stream->compid,
+													&msg,
+													waypoint_handler->current_waypoint_count);
+				mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 				
 			}
 			else

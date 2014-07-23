@@ -141,16 +141,18 @@ void servo_pwm_failsafe(servo_output_t *servo_outputs)
 
 task_return_t servo_pwm_send_servo_output(servo_output_t* servos)
 {
-	mavlink_msg_servo_output_raw_send(	MAVLINK_COMM_0,
-										time_keeper_get_micros(),
-										0,
-										(uint16_t)(servos[0].value + 1500),
-										(uint16_t)(servos[1].value + 1500),
-										(uint16_t)(servos[2].value + 1500),
-										(uint16_t)(servos[3].value + 1500),
-										(uint16_t)(servos[4].value + 1500),
-										(uint16_t)(servos[5].value + 1500),
-										(uint16_t)(servos[6].value + 1500),
-										(uint16_t)(servos[7].value + 1500)	);
+	// TODO, add proper structure to this module and add a pointer to mavlink stream
+
+	// mavlink_msg_servo_output_raw_send(	MAVLINK_COMM_0,
+	// 									time_keeper_get_micros(),
+	// 									0,
+	// 									(uint16_t)(servos[0].value + 1500),
+	// 									(uint16_t)(servos[1].value + 1500),
+	// 									(uint16_t)(servos[2].value + 1500),
+	// 									(uint16_t)(servos[3].value + 1500),
+	// 									(uint16_t)(servos[4].value + 1500),
+	// 									(uint16_t)(servos[5].value + 1500),
+	// 									(uint16_t)(servos[6].value + 1500),
+	// 									(uint16_t)(servos[7].value + 1500)	);
 	return TASK_RUN_SUCCESS;
 }

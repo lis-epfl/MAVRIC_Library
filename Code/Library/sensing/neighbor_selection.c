@@ -23,10 +23,11 @@
 #include "time_keeper.h"
 #include <stdbool.h>
 
-void neighbors_selection_init(neighbors_t *neighbors, position_estimator_t *position_estimator, mavlink_message_handler_t *message_handler)
+void neighbors_selection_init(neighbors_t *neighbors, position_estimator_t *position_estimator, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
 {
 	neighbors->number_of_neighbors = 0;
 	neighbors->position_estimator = position_estimator;
+	neighbors->mavlink_stream = mavlink_stream;
 	
 	// Add callbacks for onboard parameters requests
 	mavlink_message_handler_msg_callback_t callback;
@@ -63,7 +64,7 @@ void neighbors_selection_read_message_from_neighbors(neighbors_t *neighbors, mav
 	mavlink_msg_global_position_int_decode(&rec->msg,&packet);
 	//Check if coming from a neighbor
 	
-	if (rec->msg.sysid != mavlink_system.sysid)
+	if (rec->msg.sysid != neighbors->mavlink_stream->sysid)
 	{
 		global_position_t global_pos_neighbor;
 		local_coordinates_t local_pos_neighbor;

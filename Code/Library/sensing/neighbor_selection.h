@@ -56,7 +56,8 @@ typedef struct
 		uint8_t number_of_neighbors;								///< The actual number of neighbors at a given time step
 		float safe_size;											///< The safe size for collision avoidance
 		track_neighbor_t neighbors_list[MAX_NUM_NEIGHBORS];			///< The list of neighbors structure
-		position_estimator_t* position_estimator;							///< The pointer to the position estimator structure
+		position_estimator_t* position_estimator;					///< The pointer to the position estimator structure
+		const mavlink_stream_t* mavlink_stream;
 } neighbors_t;
 
 /**
@@ -66,7 +67,7 @@ typedef struct
  * \param position_estimator			The pointer to the position estimator struct
  * \param message_handler		The pointer to the message handler structure
  */
-void neighbors_selection_init(neighbors_t* neighbors, position_estimator_t *position_estimator, mavlink_message_handler_t *message_handler);
+void neighbors_selection_init(neighbors_t* neighbors, position_estimator_t *position_estimator, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream);
 
 /**
  * \brief	Decode the message and parse to the neighbor array

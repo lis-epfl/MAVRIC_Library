@@ -575,7 +575,6 @@
       <File Name="Library/communication/mavlink_stream.c"/>
       <File Name="Library/communication/onboard_parameters.h"/>
       <File Name="Library/communication/mavlink_stream.h"/>
-      <File Name="Library/communication/mavlink_bridge.h"/>
       <File Name="Library/communication/mavlink_waypoint_handler.c"/>
       <File Name="Library/communication/mavlink_waypoint_handler.h"/>
       <File Name="Library/communication/onboard_parameters.c"/>

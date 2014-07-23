@@ -74,13 +74,17 @@ static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parame
 	{
 		if (param_set->parameters[i].schedule_for_transmission) 
 		{
-			mavlink_msg_param_value_send(	MAVLINK_COMM_0,
+			mavlink_message_t msg;
+			mavlink_msg_param_value_pack(	onboard_parameters->mavlink_stream->sysid,
+											onboard_parameters->mavlink_stream->compid,
+											&msg,
 											(char*)param_set->parameters[i].param_name,
 											*(param_set->parameters[i].param),
 											// onboard_parameters_read_parameter(onboard_parameters, i),
 											param_set->parameters[i].data_type,
 											param_set->param_count,
 											i 	);
+			mavlink_stream_send(onboard_parameters->mavlink_stream, &msg);
 										
 			param_set->parameters[i].schedule_for_transmission=false;
 		}			
@@ -161,8 +165,11 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler) 
+void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream) 
 {
+	// Init dependencies
+	onboard_parameters->mavlink_stream = mavlink_stream; 
+
 	// Init debug mode
 	onboard_parameters->debug = config->debug;
 
@@ -308,8 +315,8 @@ void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_paramete
 	mavlink_msg_param_set_decode(msg, &set);
  
 	// Check if this message is for this system and subsystem
-	if ( 	set.target_system 	 == mavlink_system.sysid 
-		 &&	set.target_component == mavlink_system.compid	)
+	if ( 	set.target_system 	 == onboard_parameters->mavlink_stream->sysid 
+		 &&	set.target_component == onboard_parameters->mavlink_stream->compid	)
 	{
 		char* key = (char*) set.param_id;
 		onboard_parameters_entry_t* param;
@@ -383,7 +390,13 @@ void onboard_parameters_preflight_storage(onboard_parameters_t* onboard_paramete
 	 	onboard_parameters_write_parameters_to_flashc(onboard_parameters);
 	}
 
-	mavlink_msg_command_ack_send(MAVLINK_COMM_0, MAV_CMD_PREFLIGHT_STORAGE, MAV_RESULT_ACCEPTED);
+	mavlink_message_t ack_msg;
+	mavlink_msg_command_ack_pack(	onboard_parameters->mavlink_stream->sysid,
+									onboard_parameters->mavlink_stream->compid, 
+									&ack_msg,
+									MAV_CMD_PREFLIGHT_STORAGE, 
+									MAV_RESULT_ACCEPTED	);
+	mavlink_stream_send(onboard_parameters->mavlink_stream, &ack_msg);
 }
 
 
