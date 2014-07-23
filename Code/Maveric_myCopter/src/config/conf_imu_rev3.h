@@ -10,17 +10,17 @@
 #define CONF_IMU_REV3_H_
 
 
-#define RAW_GYRO_X 1
-#define RAW_GYRO_Y 0
-#define RAW_GYRO_Z 2
+#define GYRO_AXIS_X 1
+#define GYRO_AXIS_Y 0
+#define GYRO_AXIS_Z 2
 
 #define RAW_GYRO_X_SCALE   12600.0f
 #define RAW_GYRO_Y_SCALE  -12600.0f
 #define RAW_GYRO_Z_SCALE   12600.0f
 
-#define RAW_ACC_X 0
-#define RAW_ACC_Y 1
-#define RAW_ACC_Z 2
+#define ACC_AXIS_X 0
+#define ACC_AXIS_Y 1
+#define ACC_AXIS_Z 2
 
 //#define RAW_ACC_X_SCALE  261.5f
 //#define RAW_ACC_Y_SCALE  262.5f
@@ -34,9 +34,9 @@
 #define RAW_ACC_Y_SCALE  258.9853f
 #define RAW_ACC_Z_SCALE  258.0829f
 
-#define RAW_MAG_X 2
-#define RAW_MAG_Y 0
-#define RAW_MAG_Z 1
+#define MAG_AXIS_X 2
+#define MAG_AXIS_Y 0
+#define MAG_AXIS_Z 1
 
 // Inside values
 //#define RAW_MAG_X_SCALE 579.41f
