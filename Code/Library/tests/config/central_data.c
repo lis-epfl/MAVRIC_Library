@@ -12,65 +12,65 @@
 #include "conf_sim_model.h"
 
 
-static volatile central_data_t centralData;
+static volatile central_data_t central_data;
 
 void central_data_init(){
 		
 		// init controls
-		centralData.controls.rpy[ROLL]=0;
-		centralData.controls.rpy[PITCH]=0;
-		centralData.controls.rpy[YAW]=0;
-		centralData.controls.thrust=-1.0;
+		central_data.controls.rpy[ROLL]=0;
+		central_data.controls.rpy[PITCH]=0;
+		central_data.controls.rpy[YAW]=0;
+		central_data.controls.thrust=-1.0;
 		
-		centralData.controls.run_mode = MOTORS_OFF;
+		central_data.controls.run_mode = MOTORS_OFF;
 		
 		// init stabilisers
-		stabilisation_copter_init(&centralData.stabiliser_stack);
-		// centralData.stabilisers_stack = 
+		stabilisation_copter_init(&central_data.stabiliser_stack);
+		// central_data.stabilisers_stack = 
 
-		centralData.simulation_mode=0;
+		central_data.simulation_mode=0;
 
 		// init waypoint navigation
-		centralData.number_of_waypoints = 0;		
-		centralData.waypoint_set = false;
-		centralData.waypoint_sending = false;
-		centralData.waypoint_receiving = false;
+		central_data.number_of_waypoints = 0;		
+		central_data.waypoint_set = false;
+		central_data.waypoint_sending = false;
+		central_data.waypoint_receiving = false;
 		
-		centralData.critical_landing = false;
+		central_data.critical_landing = false;
 		
-		centralData.collision_avoidance = false;
-		centralData.automatic_take_off = false;
+		central_data.collision_avoidance = false;
+		central_data.automatic_take_off = false;
 		
 		// default GPS home position
-		centralData.position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;
-		centralData.position_estimator.localPosition.origin.latitude =   HOME_LATITUDE;
-		centralData.position_estimator.localPosition.origin.altitude =   HOME_ALTITUDE;
-		centralData.position_estimator.localPosition.pos[0]=0;
-		centralData.position_estimator.localPosition.pos[1]=0;
-		centralData.position_estimator.localPosition.pos[2]=0;
+		central_data.position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;
+		central_data.position_estimator.localPosition.origin.latitude =   HOME_LATITUDE;
+		central_data.position_estimator.localPosition.origin.altitude =   HOME_ALTITUDE;
+		central_data.position_estimator.localPosition.pos[0]=0;
+		central_data.position_estimator.localPosition.pos[1]=0;
+		central_data.position_estimator.localPosition.pos[2]=0;
 
 		// init simulation
-		simulation_init(&(centralData.sim_model),&(centralData.imu.attitude));
-		centralData.sim_model.localPosition = centralData.position_estimator.localPosition;
+		simulation_init(&(central_data.sim_model),&(central_data.imu.attitude));
+		central_data.sim_model.localPosition = central_data.position_estimator.localPosition;
 
 }
 
 central_data_t* central_data_get_pointer_to_struct(void)
 {
-	return &centralData;
+	return &central_data;
 }
 
 byte_stream_t* get_telemetry_upstream() {
-	return centralData.telemetry_up_stream;
+	return central_data.telemetry_up_stream;
 }
 byte_stream_t* get_telemetry_downstream() {
-	return centralData.telemetry_down_stream;
+	return central_data.telemetry_down_stream;
 }
 
 
 imu_t* get_imu_data() {
-	return &centralData.imu;
+	return &central_data.imu;
 }
 Control_Command_t* get_control_inputs_data() {
-	return &centralData.controls;
+	return &central_data.controls;
 }

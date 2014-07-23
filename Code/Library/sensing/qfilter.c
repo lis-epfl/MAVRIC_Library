@@ -19,17 +19,13 @@
 #include "qfilter.h"
 #include "conf_platform.h"
 #include "coord_conventions.h"
-#include "print_util.h"
- #include "time_keeper.h"
+#include "print_util.h" 
+#include "time_keeper.h"
 #include <math.h>
 #include "maths.h"
 
 
-float front_mag_vect_z;
-
-uint8_t counter = 0;
-
-void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* ahrs, const mavlink_stream_t* mavlink_stream)
+void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* ahrs)
 {
 	qf->imu = imu;
 	qf->ahrs = ahrs;

@@ -44,14 +44,13 @@ typedef enum
  */
 typedef struct
 {
-	imu_t* 					imu;			///< Pointer to inertial sensors readout
-	ahrs_t* 				ahrs;			///< Pointer to estimated attiude
-	const mavlink_stream_t* mavlink_stream; ///< Pointer to mavlink stream
+	imu_t* 	imu;			///< Pointer to inertial sensors readout
+	ahrs_t* ahrs;			///< Pointer to estimated attiude
 	
-	float kp;								///< The proportional gain for the acceleration correction of the angular rates
-	float ki;								///< The integral gain for the acceleration correction of the biais
-	float kp_mag;							///< The proportional gain for the magnetometer correction of the angular rates
-	float ki_mag;							///< The integral gain for the magnetometer correction of the angular rates
+	float   kp;				///< The proportional gain for the acceleration correction of the angular rates
+	float   ki;				///< The integral gain for the acceleration correction of the biais
+	float   kp_mag;			///< The proportional gain for the magnetometer correction of the angular rates
+	float   ki_mag;			///< The integral gain for the magnetometer correction of the angular rates
 } qfilter_t;
 
 
@@ -61,9 +60,8 @@ typedef struct
  * \param	attitude_filter		The pointer to the attitude structure
  * \param	imu					The pointer to the IMU structure
  * \param	ahrs	The pointer to the attitude estimation structure
- * \param	mavlink_stream		The pointer to the mavlink stream
  */
-void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* ahrs, const mavlink_stream_t* mavlink_stream);
+void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* ahrs);
 
 
 /**

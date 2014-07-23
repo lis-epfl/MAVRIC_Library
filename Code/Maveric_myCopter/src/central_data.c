@@ -20,7 +20,7 @@
 #include "conf_constants.h"
 #include "delay.h"
 
-static central_data_t centralData;
+static central_data_t central_data;
 
 void central_data_init()
 {	
@@ -31,7 +31,7 @@ void central_data_init()
 		.schedule_strategy = ROUND_ROBIN,
 		.debug = true
 	};
-	scheduler_init(&centralData.scheduler, &scheduler_config, &centralData.mavlink_communication.mavlink_stream);
+	scheduler_init(&central_data.scheduler, &scheduler_config, &central_data.mavlink_communication.mavlink_stream);
 	
 	delay_ms(100); 
 
@@ -46,8 +46,8 @@ void central_data_init()
 		},
 		.mavlink_stream_config = 
 		{
-			.rx_stream   = centralData.telemetry_up_stream,
-			.tx_stream   = centralData.telemetry_down_stream,
+			.rx_stream   = central_data.telemetry_up_stream,
+			.tx_stream   = central_data.telemetry_down_stream,
 			.sysid       = MAVLINK_SYS_ID,
 			.compid      = 50,
 			.use_dma     = false
@@ -64,7 +64,7 @@ void central_data_init()
 			.debug           = true
 		}
 	};
-	mavlink_communication_init(&centralData.mavlink_communication, &mavlink_config);
+	mavlink_communication_init(&central_data.mavlink_communication, &mavlink_config);
 	
 	delay_ms(100); 
 
@@ -80,48 +80,47 @@ void central_data_init()
 		.sensor_enabled = 0b1111110000100111,
 		.sensor_health = 0b1111110000100111
 	};
-	state_init(	&centralData.state_structure,
+	state_init(	&central_data.state_structure,
 				&state_config,
-				&centralData.adc,
-				&centralData.mavlink_communication.mavlink_stream,
-				&centralData.mavlink_communication.message_handler); 
+				&central_data.adc,
+				&central_data.mavlink_communication.mavlink_stream,
+				&central_data.mavlink_communication.message_handler); 
 	
 	delay_ms(100);
 
 	// Init imu
-	imu_init(	&centralData.imu,
-				&centralData.mavlink_communication.mavlink_stream);
+	imu_init(	&central_data.imu,
+				&central_data.mavlink_communication.mavlink_stream);
 	
 	delay_ms(100);
 
 	// Init ahrs
-	ahrs_init(	&centralData.ahrs,
-				&centralData.mavlink_communication.mavlink_stream);
+	ahrs_init(	&central_data.ahrs,
+				&central_data.mavlink_communication.mavlink_stream);
 
 	delay_ms(100);
 
 	// Init ahrs
-	servo_pwm_init(centralData.servos);
+	servo_pwm_init(central_data.servos);
 	
 	delay_ms(100);
 	
 	// Init qfilter
-	qfilter_init(   &(centralData.attitude_filter), 
-					&centralData.imu, 
-					&centralData.ahrs,
-					&centralData.mavlink_communication.mavlink_stream);
+	qfilter_init(   &(central_data.attitude_filter), 
+					&central_data.imu, 
+					&central_data.ahrs);
 	
 	delay_ms(100);
 	
 	// Init position_estimation_init
-	position_estimation_init(   &centralData.position_estimator,
-								&centralData.pressure,
-								&centralData.GPS_data,
-								&centralData.ahrs,
-								&centralData.imu,
-								&centralData.mavlink_communication.mavlink_stream,
-								&centralData.waypoint_handler.waypoint_set,
-								&centralData.mavlink_communication.message_handler,
+	position_estimation_init(   &central_data.position_estimator,
+								&central_data.pressure,
+								&central_data.GPS_data,
+								&central_data.ahrs,
+								&central_data.imu,
+								&central_data.mavlink_communication.mavlink_stream,
+								&central_data.waypoint_handler.waypoint_set,
+								&central_data.mavlink_communication.message_handler,
 								HOME_LATITUDE,
 								HOME_LONGITUDE,
 								HOME_ALTITUDE,
@@ -130,57 +129,57 @@ void central_data_init()
 	delay_ms(100);
 
 	// Init navigation
-	navigation_init(&centralData.navigationData,
-					&centralData.controls_nav,
-					&centralData.ahrs.qe,
-					&centralData.waypoint_handler,
-					&centralData.position_estimator,
-					&centralData.orcaData,
-					&centralData.state_structure);
+	navigation_init(&central_data.navigationData,
+					&central_data.controls_nav,
+					&central_data.ahrs.qe,
+					&central_data.waypoint_handler,
+					&central_data.position_estimator,
+					&central_data.orcaData,
+					&central_data.state_structure);
 	
 	delay_ms(100);
 
 	// Init waypont handler
-	waypoint_handler_init(  &centralData.waypoint_handler,
-							&centralData.position_estimator,
-							&centralData.ahrs,
-							&centralData.state_structure,
-							&centralData.mavlink_communication);
-	waypoint_handler_init_homing_waypoint(&centralData.waypoint_handler);
-	waypoint_handler_waypoint_init(&centralData.waypoint_handler);
+	waypoint_handler_init(  &central_data.waypoint_handler,
+							&central_data.position_estimator,
+							&central_data.ahrs,
+							&central_data.state_structure,
+							&central_data.mavlink_communication);
+	waypoint_handler_init_homing_waypoint(&central_data.waypoint_handler);
+	waypoint_handler_waypoint_init(&central_data.waypoint_handler);
 	
 	delay_ms(100);
 
 	// Init neighbor selection
-	neighbors_selection_init(   &centralData.neighborData, 
-								&centralData.position_estimator,
-								&centralData.mavlink_communication.message_handler);
+	neighbors_selection_init(   &central_data.neighborData, 
+								&central_data.position_estimator,
+								&central_data.mavlink_communication.message_handler);
 	
 	delay_ms(100);
 
 	// Init orca
-	orca_init(  &centralData.orcaData,
-				&centralData.neighborData,
-				&centralData.position_estimator,
-				&centralData.imu,
-				&centralData.ahrs);
+	orca_init(  &central_data.orcaData,
+				&central_data.neighborData,
+				&central_data.position_estimator,
+				&central_data.imu,
+				&central_data.ahrs);
 	
 	delay_ms(100);
 
 	// Init stabilisers
-	stabilisation_copter_init(	&centralData.stabilisation_copter,
-								&centralData.stabiliser_stack,
-								&centralData.controls,
-								&centralData.imu,
-								&centralData.ahrs,
-								&centralData.position_estimator,
-								centralData.servos 	);
+	stabilisation_copter_init(	&central_data.stabilisation_copter,
+								&central_data.stabiliser_stack,
+								&central_data.controls,
+								&central_data.imu,
+								&central_data.ahrs,
+								&central_data.position_estimator,
+								central_data.servos 	);
 	
 	delay_ms(100);
 
-	stabilisation_init( &centralData.stabilisation_copter.stabiliser_stack->rate_stabiliser, 
-						&centralData.controls,
-						&centralData.mavlink_communication.mavlink_stream);
+	stabilisation_init( &central_data.stabilisation_copter.stabiliser_stack->rate_stabiliser, 
+						&central_data.controls,
+						&central_data.mavlink_communication.mavlink_stream);
 	
 	delay_ms(100);
 
@@ -208,35 +207,35 @@ void central_data_init()
 		.home_coordinates[Z] =  HOME_ALTITUDE,			///< Altitude coordinate of the home position
 		.sim_gravity		 =  GRAVITY					///< Simulation gravity
 	};
-	simulation_init(&centralData.sim_model,
+	simulation_init(&central_data.sim_model,
 					&vehicle_model_parameters,
-					&centralData.ahrs,
-					&centralData.imu,
-					&centralData.position_estimator,
-					&centralData.pressure,
-					&centralData.GPS_data,
-					&centralData.state_structure,
-					centralData.servos,
-					&centralData.waypoint_handler.waypoint_set,
-					&centralData.mavlink_communication.message_handler,
-					&centralData.mavlink_communication.mavlink_stream);
+					&central_data.ahrs,
+					&central_data.imu,
+					&central_data.position_estimator,
+					&central_data.pressure,
+					&central_data.GPS_data,
+					&central_data.state_structure,
+					central_data.servos,
+					&central_data.waypoint_handler.waypoint_set,
+					&central_data.mavlink_communication.message_handler,
+					&central_data.mavlink_communication.mavlink_stream);
 
 	delay_ms(100);//add delay to be able to print on console init message for the following module
 	
 	// Init hud	
-	hud_init(	&centralData.hud_structure, 
-				&centralData.position_estimator, 
-				&centralData.controls, 
-				&centralData.ahrs,
-				&centralData.mavlink_communication.mavlink_stream);
+	hud_init(	&central_data.hud_structure, 
+				&central_data.position_estimator, 
+				&central_data.controls, 
+				&central_data.ahrs,
+				&central_data.mavlink_communication.mavlink_stream);
 	
 	delay_ms(100);
 	
 	// Init sonar
-	// i2cxl_sonar_init(&centralData.i2cxl_sonar);
+	// i2cxl_sonar_init(&central_data.i2cxl_sonar);
 }
 
 central_data_t* central_data_get_pointer_to_struct(void)
 {
-	return (central_data_t*)&centralData;
+	return (central_data_t*)&central_data;
 }

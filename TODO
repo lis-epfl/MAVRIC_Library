@@ -1,7 +1,6 @@
 TODO
 
 TODO scheduler:
-
 x add priorities, and function to filter by priorities
 - add run after
 - add module to switch on/off tasks based on mav state

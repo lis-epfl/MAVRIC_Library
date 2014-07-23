@@ -10,13 +10,13 @@
 #include "conf_stabilisation_hybrid.h"
 #include "quick_trig.h"
 
-central_data_t *centralData;
+central_data_t *central_data;
 
 void stabilisation_hybrid_init(Stabiliser_Stack_hybrid_t* stabiliser_stack)
 {
-	centralData = central_data_get_pointer_to_struct();
-	centralData->run_mode = MOTORS_OFF;
-	centralData->controls.control_mode = RATE_COMMAND_MODE;
+	central_data = central_data_get_pointer_to_struct();
+	central_data->run_mode = MOTORS_OFF;
+	central_data->controls.control_mode = RATE_COMMAND_MODE;
 
 	*stabiliser_stack = stabiliser_defaults_hybrid;
 }
@@ -77,10 +77,10 @@ void stabilisation_hybrid_cascade_stabilise_hybrid(imu_t *imu, position_estimato
 		rpyt_errors[3]= input.thrust;       // no feedback for thrust at this level
 		
 		// run PID update on all attitude controllers
-		stabilisation_run(&centralData->stabiliser_stack.attitude_stabiliser, centralData->imu.dt, &rpyt_errors);
+		stabilisation_run(&central_data->stabiliser_stack.attitude_stabiliser, central_data->imu.dt, &rpyt_errors);
 		
 		// use output of attitude controller to set rate setpoints for rate controller 
-		input = centralData->stabiliser_stack.attitude_stabiliser.output;
+		input = central_data->stabiliser_stack.attitude_stabiliser.output;
 		
 	// -- no break here  - we want to run the lower level modes as well! -- 
 	
@@ -92,11 +92,11 @@ void stabilisation_hybrid_cascade_stabilise_hybrid(imu_t *imu, position_estimato
 		rpyt_errors[3] = input.thrust ;  // no feedback for thrust at this level
 		
 		// run PID update on all rate controllers
-		stabilisation_run(&centralData->stabiliser_stack.rate_stabiliser, centralData->imu.dt, &rpyt_errors );
+		stabilisation_run(&central_data->stabiliser_stack.rate_stabiliser, central_data->imu.dt, &rpyt_errors );
 	}
 
 	// mix to servos 
-	stabilisation_hybrid_mix_to_servos_xwing(&centralData->stabiliser_stack.rate_stabiliser.output);
+	stabilisation_hybrid_mix_to_servos_xwing(&central_data->stabiliser_stack.rate_stabiliser.output);
 }
 
 void stabilisation_hybrid_mix_to_servos_xwing(Control_Command_t *control)
@@ -126,9 +126,9 @@ void stabilisation_hybrid_mix_to_servos_xwing(Control_Command_t *control)
 	}
 
 	// scale and write values
-	centralData->servos[FLAP_FRONT].value = SERVO_NEUTRAL + SERVO_AMPLITUDE * servo_command[FLAP_FRONT];
-	centralData->servos[FLAP_RIGHT].value = SERVO_NEUTRAL + SERVO_AMPLITUDE * servo_command[FLAP_RIGHT];
-	centralData->servos[FLAP_REAR].value = SERVO_NEUTRAL + SERVO_AMPLITUDE * servo_command[FLAP_REAR];
-	centralData->servos[FLAP_LEFT].value = SERVO_NEUTRAL + SERVO_AMPLITUDE * servo_command[FLAP_LEFT];
-	centralData->servos[MAIN_ENGINE].value = SERVO_SCALE * motor_command;
+	central_data->servos[FLAP_FRONT].value = SERVO_NEUTRAL + SERVO_AMPLITUDE * servo_command[FLAP_FRONT];
+	central_data->servos[FLAP_RIGHT].value = SERVO_NEUTRAL + SERVO_AMPLITUDE * servo_command[FLAP_RIGHT];
+	central_data->servos[FLAP_REAR].value = SERVO_NEUTRAL + SERVO_AMPLITUDE * servo_command[FLAP_REAR];
+	central_data->servos[FLAP_LEFT].value = SERVO_NEUTRAL + SERVO_AMPLITUDE * servo_command[FLAP_LEFT];
+	central_data->servos[MAIN_ENGINE].value = SERVO_SCALE * motor_command;
 }

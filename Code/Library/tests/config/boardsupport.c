@@ -16,7 +16,7 @@
 
 udp_connection_t udp_out, udp_in;
 
-static volatile central_data_t centralData;
+static volatile central_data_t central_data;
 
 static inline void stdout_send_byte(void* options, char data) {
 	//printf("%c", data);
@@ -74,81 +74,81 @@ void register_read_stream_stdin( byte_stream_t *stream) {
 
 
 
-void boardsupport_init(central_data_t *centralData) {
+void boardsupport_init(central_data_t *central_data) {
 //		uart_int_init(0);
 
-		buffer_make_buffered_stream(&centralData->xbee_in_buffer, &centralData->xbee_in_stream);
+		buffer_make_buffered_stream(&central_data->xbee_in_buffer, &central_data->xbee_in_stream);
 
-		//register_read_stream_stdin( &centralData->xbee_in_stream);
+		//register_read_stream_stdin( &central_data->xbee_in_stream);
 		
-		//register_read_stream_udp( &centralData->xbee_in_stream, &udp_in, 14551);
+		//register_read_stream_udp( &central_data->xbee_in_stream, &udp_in, 14551);
 		//udp_out.sock=udp_in.sock;
 
-//		uart_int_register_write_stream(uart_int_get_uart_handle(0), &centralData->xbee_out_stream);
-		//register_write_stream_stdout( &centralData->xbee_out_stream);		
-		//register_write_stream_udp(&centralData->xbee_out_stream, &udp_out, "127.0.0.1",14550);
+//		uart_int_register_write_stream(uart_int_get_uart_handle(0), &central_data->xbee_out_stream);
+		//register_write_stream_stdout( &central_data->xbee_out_stream);		
+		//register_write_stream_udp(&central_data->xbee_out_stream, &udp_out, "127.0.0.1",14550);
 		
 //		uart_int_init(3);
-		buffer_make_buffered_stream(&(centralData->gps_buffer), &centralData->gps_stream_in);
-//		uart_int_register_read_stream(uart_int_get_uart_handle(3), &centralData->gps_stream_in);
-//		uart_int_register_write_stream(uart_int_get_uart_handle(3), &centralData->gps_stream_out);
+		buffer_make_buffered_stream(&(central_data->gps_buffer), &central_data->gps_stream_in);
+//		uart_int_register_read_stream(uart_int_get_uart_handle(3), &central_data->gps_stream_in);
+//		uart_int_register_write_stream(uart_int_get_uart_handle(3), &central_data->gps_stream_out);
 		
 //		uart_int_init(4);
 
-//		uart_int_register_write_stream(uart_int_get_uart_handle(4), &centralData->wired_out_stream);
-		register_write_stream_stdout( &centralData->wired_out_stream);
+//		uart_int_register_write_stream(uart_int_get_uart_handle(4), &central_data->wired_out_stream);
+		register_write_stream_stdout( &central_data->wired_out_stream);
 		
 		// connect abstracted aliases to hardware ports
 
 
-		centralData->telemetry_down_stream=&centralData->xbee_out_stream;
-		centralData->telemetry_up_stream=&centralData->xbee_in_stream;
-		centralData->debug_out_stream=&centralData->wired_out_stream;
-		//centralData->debug_out_stream=NULL;
-		//centralData->debug_in_stream=&centralData->wired_in_stream;
+		central_data->telemetry_down_stream=&central_data->xbee_out_stream;
+		central_data->telemetry_up_stream=&central_data->xbee_in_stream;
+		central_data->debug_out_stream=&central_data->wired_out_stream;
+		//central_data->debug_out_stream=NULL;
+		//central_data->debug_in_stream=&central_data->wired_in_stream;
 /*
-		centralData->telemetry_down_stream=&centralData->wired_out_stream;
-		centralData->telemetry_up_stream  =&centralData->wired_in_stream;		
-		centralData->debug_out_stream     =&centralData->xbee_out_stream;
-		centralData->debug_in_stream      =&centralData->xbee_in_stream;
+		central_data->telemetry_down_stream=&central_data->wired_out_stream;
+		central_data->telemetry_up_stream  =&central_data->wired_in_stream;		
+		central_data->debug_out_stream     =&central_data->xbee_out_stream;
+		central_data->debug_in_stream      =&central_data->xbee_in_stream;
 */
 		// init mavlink
-		mavlink_stream_init(centralData->telemetry_down_stream, centralData->telemetry_up_stream, 42);
+		mavlink_stream_init(central_data->telemetry_down_stream, central_data->telemetry_up_stream, 42);
 		
-//		uart_int_register_read_stream(uart_int_get_uart_handle(4), &centralData->wired_in_stream);
-//		uart_int_register_read_stream(uart_int_get_uart_handle(0), &centralData->xbee_in_stream);
+//		uart_int_register_read_stream(uart_int_get_uart_handle(4), &central_data->wired_in_stream);
+//		uart_int_register_read_stream(uart_int_get_uart_handle(0), &central_data->xbee_in_stream);
 		
 		
 
 		// init debug output
-		print_util_dbg_print_init(centralData->debug_out_stream);
+		print_util_dbg_print_init(central_data->debug_out_stream);
 		
-		imu_init(&centralData->imu);
+		imu_init(&central_data->imu);
 
 		remote_dsm2_rc_init();
 		servo_pwm_init();
 		
 		
-		centralData->controls.rpy[ROLL]=0;
-		centralData->controls.rpy[PITCH]=0;
-		centralData->controls.rpy[YAW]=0;
-		centralData->controls.thrust=-1.0;
+		central_data->controls.rpy[ROLL]=0;
+		central_data->controls.rpy[PITCH]=0;
+		central_data->controls.rpy[YAW]=0;
+		central_data->controls.thrust=-1.0;
 		
-		centralData->number_of_waypoints = 0;
-		centralData->waypoint_handler_waypoint_hold_init=false;
-		centralData->simulation_mode=0;
+		central_data->number_of_waypoints = 0;
+		central_data->waypoint_handler_waypoint_hold_init=false;
+		central_data->simulation_mode=0;
 		
 		// default GPS home position
-		centralData->position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;
-		centralData->position_estimator.localPosition.origin.latitude =   HOME_LATITUDE;
-		centralData->position_estimator.localPosition.origin.altitude =   HOME_ALTITUDE;
-		centralData->position_estimator.localPosition.pos[0]=0;	centralData->position_estimator.localPosition.pos[1]=0; centralData->position_estimator.localPosition.pos[2]=0;
+		central_data->position_estimator.localPosition.origin.longitude=   HOME_LONGITUDE;
+		central_data->position_estimator.localPosition.origin.latitude =   HOME_LATITUDE;
+		central_data->position_estimator.localPosition.origin.altitude =   HOME_ALTITUDE;
+		central_data->position_estimator.localPosition.pos[0]=0;	central_data->position_estimator.localPosition.pos[1]=0; central_data->position_estimator.localPosition.pos[2]=0;
 		
-		simulation_init(&centralData->sim_model, &centralData->imu.attitude);
-		centralData->sim_model.localPosition=centralData->position_estimator.localPosition;
+		simulation_init(&central_data->sim_model, &central_data->imu.attitude);
+		central_data->sim_model.localPosition=central_data->position_estimator.localPosition;
 
 
-		return &centralData;
+		return &central_data;
 }
 
 

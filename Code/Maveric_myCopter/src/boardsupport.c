@@ -45,7 +45,7 @@
 #include "xbee.h"
 #include "console.h"
 
-void boardsupport_init(central_data_t *centralData) 
+void boardsupport_init(central_data_t *central_data) 
 {
 	irq_initialize_vectors();
 	cpu_irq_enable();
@@ -73,19 +73,19 @@ void boardsupport_init(central_data_t *centralData)
 	xbee_init(UART0);
 				
 	// Init UART 3 for GPS communication
-	gps_ublox_init(&(centralData->GPS_data), UART3, &centralData->mavlink_communication.mavlink_stream);
+	gps_ublox_init(&(central_data->GPS_data), UART3, &central_data->mavlink_communication.mavlink_stream);
 	
 	// Init UART 4 for wired communication
 	console_init(UART4);
 		
 	// connect abstracted aliases to hardware ports
-	centralData->telemetry_down_stream = xbee_get_out_stream();
-	centralData->telemetry_up_stream = xbee_get_in_stream();
-	centralData->debug_out_stream = console_get_out_stream();
-	centralData->debug_in_stream = console_get_out_stream();
+	central_data->telemetry_down_stream = xbee_get_out_stream();
+	central_data->telemetry_up_stream = xbee_get_in_stream();
+	central_data->debug_out_stream = console_get_out_stream();
+	central_data->debug_in_stream = console_get_out_stream();
 	
 	// init debug output
-	print_util_dbg_print_init(centralData->debug_out_stream);
+	print_util_dbg_print_init(central_data->debug_out_stream);
 	print_util_dbg_print("Debug stream initialised\n");
 
 	// Bind RC receiver with remote
@@ -95,17 +95,17 @@ void boardsupport_init(central_data_t *centralData)
 	remote_dsm2_rc_init();
 
 	// Init analog rails
-	centralData->adc.enable[ANALOG_RAIL_2]  = false;
-	centralData->adc.enable[ANALOG_RAIL_3]  = false;
-	centralData->adc.enable[ANALOG_RAIL_4]  = false;
-	centralData->adc.enable[ANALOG_RAIL_5]  = false;
-	centralData->adc.enable[ANALOG_RAIL_6]  = false;
-	centralData->adc.enable[ANALOG_RAIL_7]  = false;
-	centralData->adc.enable[ANALOG_RAIL_10] = true;		// Battery filtered
-	centralData->adc.enable[ANALOG_RAIL_11] = true;		// Battery 
-	centralData->adc.enable[ANALOG_RAIL_12] = true;		// sonar
-	centralData->adc.enable[ANALOG_RAIL_13] = false;    // pitot
-	analog_monitor_init(&centralData->adc);
+	central_data->adc.enable[ANALOG_RAIL_2]  = false;
+	central_data->adc.enable[ANALOG_RAIL_3]  = false;
+	central_data->adc.enable[ANALOG_RAIL_4]  = false;
+	central_data->adc.enable[ANALOG_RAIL_5]  = false;
+	central_data->adc.enable[ANALOG_RAIL_6]  = false;
+	central_data->adc.enable[ANALOG_RAIL_7]  = false;
+	central_data->adc.enable[ANALOG_RAIL_10] = true;		// Battery filtered
+	central_data->adc.enable[ANALOG_RAIL_11] = true;		// Battery 
+	central_data->adc.enable[ANALOG_RAIL_12] = true;		// sonar
+	central_data->adc.enable[ANALOG_RAIL_13] = false;    // pitot
+	analog_monitor_init(&central_data->adc);
 	
 	// init imu & compass
 	i2c_driver_init(I2C0);
@@ -116,7 +116,7 @@ void boardsupport_init(central_data_t *centralData)
 	compass_hmc58831l_init_slow();
 	print_util_dbg_print("HMC5883 initialised \r");
 	
-	bmp085_init(&centralData->pressure,&centralData->mavlink_communication.mavlink_stream);
+	bmp085_init(&central_data->pressure,&central_data->mavlink_communication.mavlink_stream);
 	
 	// init radar or ultrasound (not implemented yet)
 	//i2c_driver_init(I2C1);

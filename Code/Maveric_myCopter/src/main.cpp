@@ -21,12 +21,12 @@ extern "C" {
 	#include "piezo_speaker.h"
 }
  
-central_data_t *centralData;
+central_data_t *central_data;
 
 void initialisation() 
 {	
-	centralData = central_data_get_pointer_to_struct();
-	boardsupport_init(centralData);
+	central_data = central_data_get_pointer_to_struct();
+	boardsupport_init(central_data);
 	central_data_init();
 	
 	mavlink_telemetry_init();
@@ -37,10 +37,10 @@ void initialisation()
 
 	print_util_dbg_print("OK. Starting up.\n");
 	
-	centralData->state_structure.mav_state = MAV_STATE_STANDBY;
-	centralData->state_structure.mav_state_previous = centralData->state_structure.mav_state;
+	central_data->state_structure.mav_state = MAV_STATE_STANDBY;
+	central_data->state_structure.mav_state_previous = central_data->state_structure.mav_state;
 	
-	centralData->imu.calibration_level = OFF;
+	central_data->imu.calibration_level = OFF;
 }
 
 int main (void)
@@ -50,7 +50,7 @@ int main (void)
 	
 	while (1 == 1) 
 	{
-		scheduler_update(&centralData->scheduler);
+		scheduler_update(&central_data->scheduler);
 	}
 
 	return 0;

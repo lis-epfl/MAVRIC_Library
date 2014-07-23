@@ -33,7 +33,7 @@
 #include "hud.h"
 #include "ahrs.h"
 
-central_data_t *centralData;
+central_data_t *central_data;
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -54,15 +54,15 @@ void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_par
 void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_parameters)
 {
 
-	Stabiliser_t* rate_stabiliser = &centralData->stabiliser_stack.rate_stabiliser;
-	Stabiliser_t* attitude_stabiliser = &centralData->stabiliser_stack.attitude_stabiliser;
-	Stabiliser_t* velocity_stabiliser= &centralData->stabiliser_stack.velocity_stabiliser;
+	Stabiliser_t* rate_stabiliser = &central_data->stabiliser_stack.rate_stabiliser;
+	Stabiliser_t* attitude_stabiliser = &central_data->stabiliser_stack.attitude_stabiliser;
+	Stabiliser_t* velocity_stabiliser= &central_data->stabiliser_stack.velocity_stabiliser;
 	
 	// System ID	
-	onboard_parameters_add_parameter_int32    ( onboard_parameters , (int32_t*)&centralData->mavlink_communication.mavlink_stream.sysid              , "ID_SYSID"         );
+	onboard_parameters_add_parameter_int32    ( onboard_parameters , (int32_t*)&central_data->mavlink_communication.mavlink_stream.sysid              , "ID_SYSID"         );
 
 	// Simulation mode
-	onboard_parameters_add_parameter_int32    ( onboard_parameters , ( int32_t*)&centralData->state_structure.simulation_mode              , "Sim_mode"         );
+	onboard_parameters_add_parameter_int32    ( onboard_parameters , ( int32_t*)&central_data->state_structure.simulation_mode              , "Sim_mode"         );
 	
 	// Roll rate PID
 	onboard_parameters_add_parameter_float    ( onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].p_gain                         , "RollRPid_P_G"     );
@@ -146,48 +146,48 @@ void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_par
 
 
 	// qfilter
-	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->attitude_filter.kp                                        , "QF_kp_acc"        );
-	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->attitude_filter.kp_mag                                    , "QF_kp_mag"        );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &central_data->attitude_filter.kp                                        , "QF_kp_acc"        );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &central_data->attitude_filter.kp_mag                                    , "QF_kp_mag"        );
 	// onboard_parameters_add_parameter_float ( onboard_parameters , &attitude_stabiliser->rpy_controller[YAW].differentiator.gain         , "YawAPid_D_Gain"   );
 	
 	// Biaises
-	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_gyro.bias[X]									  , "Bias_Gyro_X"      );
-	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_gyro.bias[Y]									  , "Bias_Gyro_Y"      );
-	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_gyro.bias[Z]									  , "Bias_Gyro_Z"      );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &central_data->imu.calib_gyro.bias[X]									  , "Bias_Gyro_X"      );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &central_data->imu.calib_gyro.bias[Y]									  , "Bias_Gyro_Y"      );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &central_data->imu.calib_gyro.bias[Z]									  , "Bias_Gyro_Z"      );
 	
-	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_accelero.bias[X]								  , "Bias_Acc_X"       );
-	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_accelero.bias[Y]								  , "Bias_Acc_Y"       );
-	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_accelero.bias[Z]								  , "Bias_Acc_Z"       );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &central_data->imu.calib_accelero.bias[X]								  , "Bias_Acc_X"       );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &central_data->imu.calib_accelero.bias[Y]								  , "Bias_Acc_Y"       );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &central_data->imu.calib_accelero.bias[Z]								  , "Bias_Acc_Z"       );
 	
-	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_compass.bias[X]								  , "Bias_Mag_X"       );
-	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_compass.bias[Y]								  , "Bias_Mag_Y"       );
-	onboard_parameters_add_parameter_float ( onboard_parameters , &centralData->imu.calib_compass.bias[Z]								  , "Bias_Mag_Z"       );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &central_data->imu.calib_compass.bias[X]								  , "Bias_Mag_X"       );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &central_data->imu.calib_compass.bias[Y]								  , "Bias_Mag_Y"       );
+	onboard_parameters_add_parameter_float ( onboard_parameters , &central_data->imu.calib_compass.bias[Z]								  , "Bias_Mag_Z"       );
 	
 	// Scale factor
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_gyro.scale_factor[X]							  , "Scale_Gyro_X"     );
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_gyro.scale_factor[Y]							  , "Scale_Gyro_Y"     );
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_gyro.scale_factor[Z]							  , "Scale_Gyro_Z"     );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->imu.calib_gyro.scale_factor[X]							  , "Scale_Gyro_X"     );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->imu.calib_gyro.scale_factor[Y]							  , "Scale_Gyro_Y"     );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->imu.calib_gyro.scale_factor[Z]							  , "Scale_Gyro_Z"     );
 	
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_accelero.scale_factor[X]                       , "Scale_Acc_X"      );
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_accelero.scale_factor[Y]                       , "Scale_Acc_Y"      );
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_accelero.scale_factor[Z]                       , "Scale_Acc_Z"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->imu.calib_accelero.scale_factor[X]                       , "Scale_Acc_X"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->imu.calib_accelero.scale_factor[Y]                       , "Scale_Acc_Y"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->imu.calib_accelero.scale_factor[Z]                       , "Scale_Acc_Z"      );
 	
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_compass.scale_factor[X]                        , "Scale_Mag_X"      );
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_compass.scale_factor[Y]                        , "Scale_Mag_Y"      );
-	onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->imu.calib_compass.scale_factor[Z]                        , "Scale_Mag_Z"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->imu.calib_compass.scale_factor[X]                        , "Scale_Mag_X"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->imu.calib_compass.scale_factor[Y]                        , "Scale_Mag_Y"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->imu.calib_compass.scale_factor[Z]                        , "Scale_Mag_Z"      );
 
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_alt_baro                              , "Pos_kp_alt_baro"       );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_vel_baro                              , "Pos_kp_velb"      );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_pos_gps[0]                            , "Pos_kp_pos0"      );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_pos_gps[1]                            , "Pos_kp_pos1"      );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &centralData->position_estimator.kp_pos_gps[2]                            , "Pos_kp_pos2"      );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->position_estimator.kp_alt_baro                              , "Pos_kp_alt_baro"       );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->position_estimator.kp_vel_baro                              , "Pos_kp_velb"      );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->position_estimator.kp_pos_gps[0]                            , "Pos_kp_pos0"      );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->position_estimator.kp_pos_gps[1]                            , "Pos_kp_pos1"      );
+	//onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->position_estimator.kp_pos_gps[2]                            , "Pos_kp_pos2"      );
 	
 
 
-	onboard_parameters_add_parameter_float    ( onboard_parameters , &centralData->navigationData.cruise_speed                            , "vel_dist2Vel"     );
-	onboard_parameters_add_parameter_float    ( onboard_parameters , &centralData->navigationData.cruise_speed                            , "vel_cruiseSpeed"  );
-	onboard_parameters_add_parameter_float    ( onboard_parameters , &centralData->navigationData.max_climb_rate                          , "vel_climbRate"    );
-	onboard_parameters_add_parameter_float    ( onboard_parameters , &centralData->navigationData.softZoneSize							  , "vel_softZone"     );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigationData.cruise_speed                            , "vel_dist2Vel"     );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigationData.cruise_speed                            , "vel_cruiseSpeed"  );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigationData.max_climb_rate                          , "vel_climbRate"    );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigationData.softZoneSize							  , "vel_softZone"     );
 
 }
 
@@ -197,34 +197,34 @@ void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_par
 
 void mavlink_telemetry_init(void)
 {
-	centralData = central_data_get_pointer_to_struct();
+	central_data = central_data_get_pointer_to_struct();
 	
-	mavlink_telemetry_add_onboard_parameters(&centralData->mavlink_communication.onboard_parameters);
+	mavlink_telemetry_add_onboard_parameters(&central_data->mavlink_communication.onboard_parameters);
 
-	scheduler_t* mavlink_scheduler = &centralData->mavlink_communication.scheduler; 
+	scheduler_t* mavlink_scheduler = &central_data->mavlink_communication.scheduler; 
 
-	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&state_send_heartbeat,								&centralData->state_structure, 					MAVLINK_MSG_ID_HEARTBEAT	);							// ID 0
-	scheduler_add_task(mavlink_scheduler,  1000000,	 RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&state_send_status,									&centralData->state_structure,					MAVLINK_MSG_ID_SYS_STATUS	);							// ID 1
-	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&gps_ublox_send_raw,								&centralData->GPS_data,							MAVLINK_MSG_ID_GPS_RAW_INT	);							// ID 24
-	scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&imu_send_scaled,									&centralData->imu, 								MAVLINK_MSG_ID_SCALED_IMU	);							// ID 26
-	scheduler_add_task(mavlink_scheduler,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&imu_send_raw,										&centralData->imu, 								MAVLINK_MSG_ID_RAW_IMU	);								// ID 27
-	scheduler_add_task(mavlink_scheduler,  500000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&bmp085_send_pressure,								&centralData->pressure,							MAVLINK_MSG_ID_SCALED_PRESSURE	);						// ID 29
+	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&state_send_heartbeat,								&central_data->state_structure, 					MAVLINK_MSG_ID_HEARTBEAT	);							// ID 0
+	scheduler_add_task(mavlink_scheduler,  1000000,	 RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&state_send_status,									&central_data->state_structure,					MAVLINK_MSG_ID_SYS_STATUS	);							// ID 1
+	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&gps_ublox_send_raw,								&central_data->GPS_data,							MAVLINK_MSG_ID_GPS_RAW_INT	);							// ID 24
+	scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&imu_send_scaled,									&central_data->imu, 								MAVLINK_MSG_ID_SCALED_IMU	);							// ID 26
+	scheduler_add_task(mavlink_scheduler,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&imu_send_raw,										&central_data->imu, 								MAVLINK_MSG_ID_RAW_IMU	);								// ID 27
+	scheduler_add_task(mavlink_scheduler,  500000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&bmp085_send_pressure,								&central_data->pressure,							MAVLINK_MSG_ID_SCALED_PRESSURE	);						// ID 29
 	
-	scheduler_add_task(mavlink_scheduler,  200000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&ahrs_send_attitude,								&centralData->ahrs,				 				MAVLINK_MSG_ID_ATTITUDE	);								// ID 30
-	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&ahrs_send_attitude_quaternion,						&centralData->ahrs,				 				MAVLINK_MSG_ID_ATTITUDE_QUATERNION	);					// ID 31
-	scheduler_add_task(mavlink_scheduler,  500000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&position_estimation_send_position,					&centralData->position_estimator, 				MAVLINK_MSG_ID_LOCAL_POSITION_NED	);					// ID 32
-	scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&position_estimation_send_global_position,			&centralData->position_estimator, 				MAVLINK_MSG_ID_GLOBAL_POSITION_INT	);					// ID 33
-	scheduler_add_task(mavlink_scheduler,  500000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&remote_controller_send_scaled_rc_channels,			&centralData->controls,							MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);					// ID 34
-	scheduler_add_task(mavlink_scheduler,  250000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&remote_controller_send_raw_rc_channels,			&centralData->controls,							MAVLINK_MSG_ID_RC_CHANNELS_RAW	);						// ID 35
-	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&servo_pwm_send_servo_output,						&centralData->servos, 							MAVLINK_MSG_ID_SERVO_OUTPUT_RAW	);						// ID 36
-	scheduler_add_task(mavlink_scheduler,  200000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&stabilisation_send_rpy_thrust_setpoint,			&centralData->controls, 						MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT	);		// ID 58
-	scheduler_add_task(mavlink_scheduler,  200000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&stabilisation_send_rpy_speed_thrust_setpoint,		&centralData->stabiliser_stack.rate_stabiliser,	MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT	);	// ID 59
-	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&hud_send_message,									&centralData->hud_structure, 					MAVLINK_MSG_ID_VFR_HUD	);								// ID 74
-	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&simulation_send_state,								&centralData->sim_model, 						MAVLINK_MSG_ID_HIL_STATE	);							// ID 90
-	scheduler_add_task(mavlink_scheduler,  500000,	 RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&simulation_send_quaternions,						&centralData->sim_model,						MAVLINK_MSG_ID_HIL_STATE_QUATERNION	);					// ID 115
-	scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&scheduler_send_rt_stats,							&centralData->scheduler, 						MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
+	scheduler_add_task(mavlink_scheduler,  200000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&ahrs_send_attitude,								&central_data->ahrs,				 				MAVLINK_MSG_ID_ATTITUDE	);								// ID 30
+	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&ahrs_send_attitude_quaternion,						&central_data->ahrs,				 				MAVLINK_MSG_ID_ATTITUDE_QUATERNION	);					// ID 31
+	scheduler_add_task(mavlink_scheduler,  500000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&position_estimation_send_position,					&central_data->position_estimator, 				MAVLINK_MSG_ID_LOCAL_POSITION_NED	);					// ID 32
+	scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&position_estimation_send_global_position,			&central_data->position_estimator, 				MAVLINK_MSG_ID_GLOBAL_POSITION_INT	);					// ID 33
+	scheduler_add_task(mavlink_scheduler,  500000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&remote_controller_send_scaled_rc_channels,			&central_data->controls,							MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);					// ID 34
+	scheduler_add_task(mavlink_scheduler,  250000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&remote_controller_send_raw_rc_channels,			&central_data->controls,							MAVLINK_MSG_ID_RC_CHANNELS_RAW	);						// ID 35
+	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&servo_pwm_send_servo_output,						&central_data->servos, 							MAVLINK_MSG_ID_SERVO_OUTPUT_RAW	);						// ID 36
+	scheduler_add_task(mavlink_scheduler,  200000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&stabilisation_send_rpy_thrust_setpoint,			&central_data->controls, 						MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT	);		// ID 58
+	scheduler_add_task(mavlink_scheduler,  200000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&stabilisation_send_rpy_speed_thrust_setpoint,		&central_data->stabiliser_stack.rate_stabiliser,	MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT	);	// ID 59
+	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&hud_send_message,									&central_data->hud_structure, 					MAVLINK_MSG_ID_VFR_HUD	);								// ID 74
+	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&simulation_send_state,								&central_data->sim_model, 						MAVLINK_MSG_ID_HIL_STATE	);							// ID 90
+	scheduler_add_task(mavlink_scheduler,  500000,	 RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&simulation_send_quaternions,						&central_data->sim_model,						MAVLINK_MSG_ID_HIL_STATE_QUATERNION	);					// ID 115
+	scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&scheduler_send_rt_stats,							&central_data->scheduler, 						MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
 
-	// scheduler_add_task(mavlink_scheduler,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&mavlink_telemetry_send_sonar,						&centralData->i2cxl_sonar, 						MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
+	// scheduler_add_task(mavlink_scheduler,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&mavlink_telemetry_send_sonar,						&central_data->i2cxl_sonar, 						MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
 
 	scheduler_sort_tasks(mavlink_scheduler);
 	

@@ -30,9 +30,9 @@ extern "C" {
 /**
  * \brief	Initialize the hardware related elements (communication lines, sensors devices, etc)
  *
- * \param	centralData		The pointer to the structure where all central data is stored
+ * \param	central_data		The pointer to the structure where all central data is stored
  */
-void boardsupport_init(central_data_t* centralData);
+void boardsupport_init(central_data_t* central_data);
 
 #ifdef __cplusplus
 }
