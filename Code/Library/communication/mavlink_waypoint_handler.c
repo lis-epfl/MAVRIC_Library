@@ -637,75 +637,77 @@ static local_coordinates_t waypoint_handler_set_waypoint_from_frame(mavlink_wayp
 	switch(waypoint_handler->current_waypoint.frame)
 	{
 		case MAV_FRAME_GLOBAL:
-		waypoint_global.latitude = waypoint_handler->current_waypoint.x;
-		waypoint_global.longitude = waypoint_handler->current_waypoint.y;
-		waypoint_global.altitude = waypoint_handler->current_waypoint.z;
-		waypoint_coor = coord_conventions_global_to_local_position(waypoint_global,origin);
+			waypoint_global.latitude = waypoint_handler->current_waypoint.x;
+			waypoint_global.longitude = waypoint_handler->current_waypoint.y;
+			waypoint_global.altitude = waypoint_handler->current_waypoint.z;
+			waypoint_coor = coord_conventions_global_to_local_position(waypoint_global,origin);
 		
-		waypoint_coor.heading = deg_to_rad(waypoint_handler->current_waypoint.param4);
+			waypoint_coor.heading = deg_to_rad(waypoint_handler->current_waypoint.param4);
 		
-		print_util_dbg_print("waypoint_global: lat (x1e7):");
-		print_util_dbg_print_num(waypoint_global.latitude*10000000,10);
-		print_util_dbg_print(" long (x1e7):");
-		print_util_dbg_print_num(waypoint_global.longitude*10000000,10);
-		print_util_dbg_print(" alt (x1000):");
-		print_util_dbg_print_num(waypoint_global.altitude*1000,10);
-		print_util_dbg_print(" waypoint_coor: x (x100):");
-		print_util_dbg_print_num(waypoint_coor.pos[X]*100,10);
-		print_util_dbg_print(", y (x100):");
-		print_util_dbg_print_num(waypoint_coor.pos[Y]*100,10);
-		print_util_dbg_print(", z (x100):");
-		print_util_dbg_print_num(waypoint_coor.pos[Z]*100,10);
-		print_util_dbg_print(" localOrigin lat (x1e7):");
-		print_util_dbg_print_num(origin.latitude*10000000,10);
-		print_util_dbg_print(" long (x1e7):");
-		print_util_dbg_print_num(origin.longitude*10000000,10);
-		print_util_dbg_print(" alt (x1000):");
-		print_util_dbg_print_num(origin.altitude*1000,10);
-		print_util_dbg_print("\n");
+			print_util_dbg_print("waypoint_global: lat (x1e7):");
+			print_util_dbg_print_num(waypoint_global.latitude*10000000,10);
+			print_util_dbg_print(" long (x1e7):");
+			print_util_dbg_print_num(waypoint_global.longitude*10000000,10);
+			print_util_dbg_print(" alt (x1000):");
+			print_util_dbg_print_num(waypoint_global.altitude*1000,10);
+			print_util_dbg_print(" waypoint_coor: x (x100):");
+			print_util_dbg_print_num(waypoint_coor.pos[X]*100,10);
+			print_util_dbg_print(", y (x100):");
+			print_util_dbg_print_num(waypoint_coor.pos[Y]*100,10);
+			print_util_dbg_print(", z (x100):");
+			print_util_dbg_print_num(waypoint_coor.pos[Z]*100,10);
+			print_util_dbg_print(" localOrigin lat (x1e7):");
+			print_util_dbg_print_num(origin.latitude*10000000,10);
+			print_util_dbg_print(" long (x1e7):");
+			print_util_dbg_print_num(origin.longitude*10000000,10);
+			print_util_dbg_print(" alt (x1000):");
+			print_util_dbg_print_num(origin.altitude*1000,10);
+			print_util_dbg_print("\n");
+			break;
 		
-		break;
 		case MAV_FRAME_LOCAL_NED:
-		waypoint_coor.pos[X] = waypoint_handler->current_waypoint.x;
-		waypoint_coor.pos[Y] = waypoint_handler->current_waypoint.y;
-		waypoint_coor.pos[Z] = waypoint_handler->current_waypoint.z;
-		waypoint_coor.heading= deg_to_rad(waypoint_handler->current_waypoint.param4);
-		waypoint_coor.origin = coord_conventions_local_to_global_position(waypoint_coor);
-		break;
+			waypoint_coor.pos[X] = waypoint_handler->current_waypoint.x;
+			waypoint_coor.pos[Y] = waypoint_handler->current_waypoint.y;
+			waypoint_coor.pos[Z] = waypoint_handler->current_waypoint.z;
+			waypoint_coor.heading= deg_to_rad(waypoint_handler->current_waypoint.param4);
+			waypoint_coor.origin = coord_conventions_local_to_global_position(waypoint_coor);
+			break;
+			
 		case MAV_FRAME_MISSION:
-		// Problem here: rec is not defined here
-		//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
-		break;
+			// Problem here: rec is not defined here
+			//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
+			break;
 		case MAV_FRAME_GLOBAL_RELATIVE_ALT:
-		waypoint_global.latitude = waypoint_handler->current_waypoint.x;
-		waypoint_global.longitude = waypoint_handler->current_waypoint.y;
-		waypoint_global.altitude = waypoint_handler->current_waypoint.z;
+			waypoint_global.latitude = waypoint_handler->current_waypoint.x;
+			waypoint_global.longitude = waypoint_handler->current_waypoint.y;
+			waypoint_global.altitude = waypoint_handler->current_waypoint.z;
 		
-		global_position_t origin_relative_alt = origin;
-		origin_relative_alt.altitude = 0.0f;
-		waypoint_coor = coord_conventions_global_to_local_position(waypoint_global,origin_relative_alt);
+			global_position_t origin_relative_alt = origin;
+			origin_relative_alt.altitude = 0.0f;
+			waypoint_coor = coord_conventions_global_to_local_position(waypoint_global,origin_relative_alt);
 		
-		waypoint_coor.heading = deg_to_rad(waypoint_handler->current_waypoint.param4);
+			waypoint_coor.heading = deg_to_rad(waypoint_handler->current_waypoint.param4);
 		
-		print_util_dbg_print("LocalOrigin: lat (x1e7):");
-		print_util_dbg_print_num(origin_relative_alt.latitude * 10000000,10);
-		print_util_dbg_print(" long (x1e7):");
-		print_util_dbg_print_num(origin_relative_alt.longitude * 10000000,10);
-		print_util_dbg_print(" global alt (x1000):");
-		print_util_dbg_print_num(origin.altitude*1000,10);
-		print_util_dbg_print(" waypoint_coor: x (x100):");
-		print_util_dbg_print_num(waypoint_coor.pos[X]*100,10);
-		print_util_dbg_print(", y (x100):");
-		print_util_dbg_print_num(waypoint_coor.pos[Y]*100,10);
-		print_util_dbg_print(", z (x100):");
-		print_util_dbg_print_num(waypoint_coor.pos[Z]*100,10);
-		print_util_dbg_print("\n");
+			print_util_dbg_print("LocalOrigin: lat (x1e7):");
+			print_util_dbg_print_num(origin_relative_alt.latitude * 10000000,10);
+			print_util_dbg_print(" long (x1e7):");
+			print_util_dbg_print_num(origin_relative_alt.longitude * 10000000,10);
+			print_util_dbg_print(" global alt (x1000):");
+			print_util_dbg_print_num(origin.altitude*1000,10);
+			print_util_dbg_print(" waypoint_coor: x (x100):");
+			print_util_dbg_print_num(waypoint_coor.pos[X]*100,10);
+			print_util_dbg_print(", y (x100):");
+			print_util_dbg_print_num(waypoint_coor.pos[Y]*100,10);
+			print_util_dbg_print(", z (x100):");
+			print_util_dbg_print_num(waypoint_coor.pos[Z]*100,10);
+			print_util_dbg_print("\n");
 		
-		break;
+			break;
 		case MAV_FRAME_LOCAL_ENU:
-		// Problem here: rec is not defined here
-		//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
-		break;
+			// Problem here: rec is not defined here
+			//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
+			break;
+		
 	}
 	
 	return waypoint_coor;
@@ -720,20 +722,20 @@ static void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_h
 	
 	print_util_dbg_print("Auto-landing procedure initialised.\n");
 	
-	switch(waypoint_handler->auto_landing_enum)
+	switch(waypoint_handler->auto_landing_behavior)
 	{
 		case DESCENT_TO_SMALL_ALTITUDE:
-		local_position = waypoint_handler->position_estimator->localPosition;
-		local_position.pos[Z] = -2.0f;
-		
-		waypoint_handler_waypoint_hold_init(waypoint_handler, local_position);
-		break;
+			local_position = waypoint_handler->position_estimator->localPosition;
+			local_position.pos[Z] = -2.0f;
+			
+			waypoint_handler_waypoint_hold_init(waypoint_handler, local_position);
+			break;
 		case DESCENT_TO_GND:
-		local_position = waypoint_handler->position_estimator->localPosition;
-		local_position.pos[Z] = 0.0f;
+			local_position = waypoint_handler->position_estimator->localPosition;
+			local_position.pos[Z] = 0.0f;
 		
-		waypoint_handler_waypoint_hold_init(waypoint_handler, local_position);
-		break;
+			waypoint_handler_waypoint_hold_init(waypoint_handler, local_position);
+			break;
 	}
 	
 	for (i=0;i<3;i++)
@@ -744,15 +746,15 @@ static void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_h
 	
 	if (waypoint_handler->dist2wp_sqr < 0.5f)
 	{
-		switch(waypoint_handler->auto_landing_enum)
+		switch(waypoint_handler->auto_landing_behavior)
 		{
 			case DESCENT_TO_SMALL_ALTITUDE:
-			print_util_dbg_print("Automatic-landing: descent_to_GND\n");
-			waypoint_handler->critical_behavior = FLY_TO_HOME_WP;
-			break;
+				print_util_dbg_print("Automatic-landing: descent_to_GND\n");
+				waypoint_handler->critical_behavior = FLY_TO_HOME_WP;
+				break;
 			case DESCENT_TO_GND:
-			
-			break;
+				
+				break;
 		}
 	}
 
@@ -834,8 +836,7 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	waypoint_handler->waypoint_receiving = false;
 			
 	waypoint_handler->critical_landing = false;
-			
-	waypoint_handler->collision_avoidance = false;
+	
 	waypoint_handler->automatic_landing = false;
 	waypoint_handler->in_the_air = false;
 	
@@ -1288,14 +1289,4 @@ void waypoint_handler_waypoint_critical_handler(mavlink_waypoint_handler_t* wayp
 				break;
 		}
 	}
-}
-
-task_return_t waypoint_handler_send_collision_avoidance_status(mavlink_waypoint_handler_t *waypoint_handler)
-{
-	mavlink_msg_named_value_int_send(	MAVLINK_COMM_0,
-										time_keeper_get_millis(),
-										"Coll_Avoidance",
-										waypoint_handler->collision_avoidance	);
-	
-	return TASK_RUN_SUCCESS;
 }

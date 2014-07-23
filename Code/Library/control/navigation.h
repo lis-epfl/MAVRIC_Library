@@ -30,6 +30,7 @@ extern "C" {
 #include "position_estimation.h"
 #include "orca.h"
 #include "tasks.h"
+#include "mavlink_communication.h"
 #include <stdbool.h>
 
 /**
@@ -44,13 +45,15 @@ typedef struct
 	
 	uint8_t loopCount;									///< A counter for sending mavlink messages at a lower rate than the function
 	
+	bool collision_avoidance;							///< Flag to tell whether the collision avoidance is active or not
 	
 	Control_Command_t *controls_nav;					///< The pointer to the navigation control structure
 	const UQuat_t *qe;									///< The pointer to the attitude quaternion structure
 	mavlink_waypoint_handler_t *waypoint_handler;		///< The pointer to the waypoint handler structure
-	const position_estimator_t *position_estimator;		///< The pointer to the position estimation structure in central_data
-	orca_t *orcaData;									///< The pointer to the ORCA structure in central_data
-	const state_structure_t* state_structure;			///< The pointer to the state structure in central_data
+	const position_estimator_t *position_estimator;		///< The pointer to the position estimation structure
+	orca_t *orcaData;									///< The pointer to the ORCA structure
+	const state_structure_t* state_structure;			///< The pointer to the state structure
+	const mavlink_stream_t* mavlink_stream;				///< The pointer to the mavlink stream structure
 }navigation_t;
 
 /**
@@ -62,9 +65,10 @@ typedef struct
  * \param	waypoint_handler	The pointer to the waypoint handler structure
  * \param	position_estimator	The pointer to the position estimation structure
  * \param	orcaData			The pointer to the ORCA structure
- * \param	state_structure		The pointer to the state structure 
+ * \param	state_structure		The pointer to the state structure
+ * \param	mavlink_stream		The pointer to the mavlink stream structure
  */
-void navigation_init(navigation_t* navigationData, Control_Command_t* controls_nav, const UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orcaData, const state_structure_t* state_structure);
+void navigation_init(navigation_t* navigationData, Control_Command_t* controls_nav, const UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orcaData, const state_structure_t* state_structure, const mavlink_stream_t* mavlink_stream);
 
 /**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
@@ -72,6 +76,14 @@ void navigation_init(navigation_t* navigationData, Control_Command_t* controls_n
  * \param	navigationData		The pointer to the navigation structure in central_data
  */
 task_return_t navigation_update(navigation_t* navigationData);
+
+/**
+ * \brief	Sets a circle scenario, where two waypoints are set at opposite side of the circle
+ *
+ * \param	navigationData			The pointer to the navigation data structure
+ * \param	packet					The structure of the mavlink command message long
+ */
+task_return_t navigation_send_collision_avoidance_status(navigation_t *navigationData);
 
 #ifdef __cplusplus
 }

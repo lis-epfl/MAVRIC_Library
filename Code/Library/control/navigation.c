@@ -19,6 +19,7 @@
 #include "navigation.h"
 #include "conf_platform.h"
 #include "print_util.h"
+#include "time_keeper.h"
 
 #define KP_YAW 0.2f
 
@@ -165,10 +166,8 @@ static void navigation_collision_avoidance(navigation_t* navigationData)
 	{
 		rel_heading = 0.0f;
 	}
-	if (navigationData->waypoint_handler->collision_avoidance)
-	{
-		rel_heading = maths_calc_smaller_angle(atan2(new_velocity[Y],new_velocity[X]) - navigationData->position_estimator->localPosition.heading);
-	}
+	
+	rel_heading = maths_calc_smaller_angle(atan2(new_velocity[Y],new_velocity[X]) - navigationData->position_estimator->localPosition.heading);
 	
 	navigationData->controls_nav->tvel[X] = new_velocity[X];
 	navigationData->controls_nav->tvel[Y] = new_velocity[Y];
@@ -186,7 +185,7 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 																					navigationData->position_estimator->localPosition.pos);
 	navigation_set_speed_command(rel_pos, navigationData);
 	
-	if (navigationData->waypoint_handler->collision_avoidance)
+	if (navigationData->collision_avoidance)
 	{
 		navigation_collision_avoidance(navigationData);
 	}
@@ -198,7 +197,7 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigationData, Control_Command_t* controls_nav, const UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orcaData, const state_structure_t* state_structure)
+void navigation_init(navigation_t* navigationData, Control_Command_t* controls_nav, const UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orcaData, const state_structure_t* state_structure, const mavlink_stream_t* mavlink_stream)
 {
 	
 	navigationData->controls_nav = controls_nav;
@@ -207,6 +206,7 @@ void navigation_init(navigation_t* navigationData, Control_Command_t* controls_n
 	navigationData->position_estimator = position_estimator;
 	navigationData->orcaData = orcaData;
 	navigationData->state_structure = state_structure;
+	navigationData->mavlink_stream = mavlink_stream;
 	
 	navigationData->controls_nav->rpy[ROLL] = 0.0f;
 	navigationData->controls_nav->rpy[PITCH] = 0.0f;
@@ -223,6 +223,8 @@ void navigation_init(navigation_t* navigationData, Control_Command_t* controls_n
 	navigationData->softZoneSize = 0.0f;
 	
 	navigationData->loopCount = 0;
+	
+	navigationData->collision_avoidance = false;
 	
 	print_util_dbg_print("Navigation initialized.\n");
 }
@@ -269,6 +271,22 @@ task_return_t navigation_update(navigation_t* navigationData)
 			}
 			break;
 	}
+	
+	return TASK_RUN_SUCCESS;
+}
+
+task_return_t navigation_send_collision_avoidance_status(navigation_t *navigationData)
+{
+	mavlink_message_t msg;
+	
+	mavlink_msg_named_value_int_pack(	navigationData->mavlink_stream->sysid,
+										navigationData->mavlink_stream->compid,
+										&msg,
+										time_keeper_get_millis(),
+										"Coll_Avoidance",
+										navigationData->collision_avoidance	);
+	
+	mavlink_stream_send(navigationData->mavlink_stream,&msg);
 	
 	return TASK_RUN_SUCCESS;
 }

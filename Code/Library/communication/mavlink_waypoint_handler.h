@@ -73,7 +73,7 @@ typedef enum
 {
 	DESCENT_TO_SMALL_ALTITUDE,									///< First auto landing behavior
 	DESCENT_TO_GND												///< Second auto landing behavior, comes after DESCENT_TO_SMAL_ALTITUDE
-} auto_landing_enum_t;
+} auto_landing_behavior_t;
 
 typedef struct
 {
@@ -93,7 +93,6 @@ typedef struct
 	bool critical_landing;										///< Flag to execute critical landing (switching motors off)
 	bool critical_next_state;									///< Flag to change critical state in its dedicated state machine
 	
-	bool collision_avoidance;									///< Flag to tell whether the collision avoidance is active or not
 	bool automatic_landing;										///< Flag to initiate the auto landing procedure
 	bool in_the_air;											///< Flag to tell whether the vehicle is airborne or not
 	
@@ -106,10 +105,10 @@ typedef struct
 	uint32_t timeout_max_waypoint;								///< The max waiting time for communication
 	
 	critical_behavior_enum critical_behavior;					///< The critical behavior enum
-	auto_landing_enum_t auto_landing_enum;						///< The autolanding enum
+	auto_landing_behavior_t auto_landing_behavior;				///< The autolanding behavior enum
 
 	position_estimator_t* position_estimator;					///< The pointer to the position estimation structure
-	const ahrs_t* ahrs;							///< The pointer to the attitude estimation structure
+	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
 	const state_structure_t* state_structure;					///< The pointer to the state structure
 	mavlink_communication_t* mavlink_communication;				///< The pointer to the mavlink communication structure
 
@@ -193,14 +192,6 @@ void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handler_t* wa
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  */
 void waypoint_handler_waypoint_critical_handler(mavlink_waypoint_handler_t* waypoint_handler);
-
-/**
- * \brief	Sets a circle scenario, where two waypoints are set at opposite side of the circle
- *
- * \param	waypoint_list			The waypoint list of all onboard waypoints
- * \param	packet					The structure of the mavlink command message long
- */
-task_return_t waypoint_handler_send_collision_avoidance_status(mavlink_waypoint_handler_t *waypoint_handler);
 
 #ifdef __cplusplus
 }
