@@ -3,7 +3,7 @@
  *
  * The MAV'RIC Framework
  *
- * Copyright © 2011-2014
+ * Copyright Â© 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
  */
@@ -21,11 +21,12 @@
 #include "coord_conventions.h"
 #include "mavlink_communication.h"
 
-void hud_init(hud_structure_t *hud_structure, position_estimator_t *pos_est, Control_Command_t *controls, ahrs_t *attitude_estimation)
+void hud_init(hud_structure_t *hud_structure, const position_estimator_t *pos_est, const Control_Command_t *controls, const ahrs_t *attitude_estimation, const mavlink_stream_t* mavlink_stream)
 {
 	hud_structure->attitude_estimation = attitude_estimation;
-	hud_structure->controls = controls;
-	hud_structure->pos_est = pos_est;
+	hud_structure->controls            = controls;
+	hud_structure->pos_est             = pos_est;
+	hud_structure->mavlink_stream      = mavlink_stream;
 	
 	print_util_dbg_print("HUD structure initialised.\n");
 }
@@ -41,7 +42,7 @@ task_return_t hud_send_message(hud_structure_t* hud_structure)
 	int16_t heading;
 	if(aero_attitude.rpy[2] < 0)
 	{
-		heading = (int16_t)(360.0f + 180.0f * aero_attitude.rpy[2] / PI); //you want to normalize between 0 and 360°
+		heading = (int16_t)(360.0f + 180.0f * aero_attitude.rpy[2] / PI); //you want to normalize between 0 and 360Â°
 	}
 	else
 	{
@@ -49,15 +50,17 @@ task_return_t hud_send_message(hud_structure_t* hud_structure)
 	}
 	
 	
-	
-	// mavlink_msg_vfr_hud_send(mavlink_channel_t chan, float airspeed, float groundspeed, int16_t heading, uint16_t throttle, float alt, float climb)
-	mavlink_msg_vfr_hud_send(	MAVLINK_COMM_0, 
+	mavlink_message_t msg;	
+	mavlink_msg_vfr_hud_pack(	hud_structure->mavlink_stream->sysid, 
+								hud_structure->mavlink_stream->sysid,
+								&msg,
 								airspeed, 
 								groundspeed, 
 								heading, 
 								(int32_t)((hud_structure->controls->thrust + 1.0f) * 50), 
 								-hud_structure->pos_est->localPosition.pos[2] + hud_structure->pos_est->localPosition.origin.altitude, 
 								-hud_structure->pos_est->vel[2]	);
-	
+	mavlink_stream_send(hud_structure->mavlink_stream, &msg);
+
 	return TASK_RUN_SUCCESS;
 }

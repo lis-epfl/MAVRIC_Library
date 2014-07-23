@@ -36,6 +36,7 @@ typedef struct
 	const position_estimator_t* pos_est;						///< The pointer to the position estimator structure
 	const Control_Command_t* controls;							///< The pointer to the control structure
 	const ahrs_t* attitude_estimation;							///< The pointer to the attitude estimation structure
+	const mavlink_stream_t* mavlink_stream;						///< The pointer to the mavlink stream structure
 }hud_structure_t;
 
 /**
@@ -45,8 +46,9 @@ typedef struct
  * \param	pos_est						///< The pointer to the position estimation structure
  * \param	controls					///< The pointer to the controls structure
  * \param	attitude_estimation			///< The pointer to the attitude estimation structure
+ * \param 	mavlink_stream				///< The pointer to the mavlink stream structure
  */
-void hud_init(hud_structure_t *hud_structure, position_estimator_t *pos_est, Control_Command_t *controls, ahrs_t *attitude_estimation);
+void hud_init(hud_structure_t *hud_structure, const position_estimator_t *pos_est, const Control_Command_t *controls, const ahrs_t *attitude_estimation, const mavlink_stream_t* mavlink_stream);
 
 /**
  * \brief	Task to send the mavlink HUD message

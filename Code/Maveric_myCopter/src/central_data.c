@@ -187,7 +187,8 @@ void central_data_init()
 					&centralData.state_structure,
 					centralData.servos,
 					&centralData.waypoint_handler.waypoint_set,
-					&centralData.mavlink_communication.message_handler);
+					&centralData.mavlink_communication.message_handler,
+					&centralData.mavlink_communication.mavlink_stream);
 
 	delay_ms(100);//add delay to be able to print on console init message for the following module
 	
@@ -195,7 +196,8 @@ void central_data_init()
 	hud_init(	&centralData.hud_structure, 
 				&centralData.position_estimator, 
 				&centralData.controls, 
-				&centralData.attitude_estimation);
+				&centralData.attitude_estimation,
+				&centralData.mavlink_communication.mavlink_stream);
 	
 	delay_ms(100);//add delay to be able to print on console init message for the following module
 	// Init sonar
