@@ -45,17 +45,17 @@ static inline control_command_t remote_controller_get_command_from_remote()
 	return controls;
 }
 
-static inline void remote_controller_get_channel_mode(uint8_t* chanSwitch)
+static inline void remote_controller_get_channel_mode(uint8_t* chan_switch)
 {
 	if (remote_dsm2_rc_get_channel(RC_SAFETY)<0)
 	{
-		*chanSwitch |= 0x00;
+		*chan_switch |= 0x00;
 		}else if(remote_dsm2_rc_get_channel(RC_SAFETY)>0 && remote_dsm2_rc_get_channel(RC_ID_MODE)<0){
-		*chanSwitch |= 0x01;
+		*chan_switch |= 0x01;
 		}else if (remote_dsm2_rc_get_channel(RC_SAFETY)>0 && remote_dsm2_rc_get_channel(RC_ID_MODE)>20){
-		*chanSwitch |= 0x03;
+		*chan_switch |= 0x03;
 		}else{
-		*chanSwitch |= 0x02;
+		*chan_switch |= 0x02;
 	}
 }
 

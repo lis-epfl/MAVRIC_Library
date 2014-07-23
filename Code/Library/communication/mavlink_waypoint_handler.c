@@ -808,14 +808,14 @@ void waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t *waypoint_hand
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* ahrs, const state_structure_t* state_structure, mavlink_communication_t* mavlink_communication)
+void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* ahrs, const state_t* state, mavlink_communication_t* mavlink_communication)
 {
 	waypoint_handler->start_timeout = time_keeper_get_millis();
 	waypoint_handler->timeout_max_waypoint = 10000;
 	
 	waypoint_handler->position_estimator = position_estimator;
 	waypoint_handler->ahrs = ahrs;
-	waypoint_handler->state_structure = state_structure;
+	waypoint_handler->state = state;
 	
 	waypoint_handler->mavlink_communication = mavlink_communication;
 	
@@ -1059,7 +1059,7 @@ void waypoint_handler_waypoint_init(mavlink_waypoint_handler_t* waypoint_handler
 	
 	if ((waypoint_handler->number_of_waypoints > 0)
 	//&& (waypoint_handler->position_estimator->init_gps_position || (*waypoint_handler->simulation_mode==SIMULATION_MODE))
-	&& (waypoint_handler->position_estimator->init_gps_position || state_test_if_in_flag_mode(waypoint_handler->state_structure,MAV_MODE_FLAG_HIL_ENABLED))
+	&& (waypoint_handler->position_estimator->init_gps_position || state_test_if_in_flag_mode(waypoint_handler->state,MAV_MODE_FLAG_HIL_ENABLED))
 	&& (waypoint_handler->waypoint_receiving == false))
 	{
 		for (i=0;i<waypoint_handler->number_of_waypoints;i++)

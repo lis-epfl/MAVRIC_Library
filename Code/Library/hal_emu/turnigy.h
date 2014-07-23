@@ -60,6 +60,6 @@ float get_pitch_from_turnigy();
 float get_yaw_from_turnigy();
 float get_thrust_from_turnigy();
 
-void get_channel_mode_turnigy(uint8_t* chanSwitch);
+void get_channel_mode_turnigy(uint8_t* chan_switch);
 */
 #endif //TURNIGY_H_

@@ -53,11 +53,11 @@ void tasks_run_imu_update(void* arg);
  * 						2) Switch on/off the motor
  * 						3) Check the receivers
  * 
- * \param	chanSwitch	The pointer to set the switch mode
+ * \param	chan_switch	The pointer to set the switch mode
  * \param	rc_check	The pointer to the state of the remote
  * \param	motorstate	The pointer to the motor state
  */
-void tasks_rc_user_channels(uint8_t *chanSwitch, int8_t *rc_check, int8_t *motor_state);
+void tasks_rc_user_channels(uint8_t *chan_switch, int8_t *rc_check, int8_t *motor_state);
 
 
 /**

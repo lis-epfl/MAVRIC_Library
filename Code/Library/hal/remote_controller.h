@@ -192,28 +192,28 @@ static inline task_return_t remote_controller_send_raw_rc_channels(control_comma
 /**
  * \brief return a switch state of the remote
  *
- * \param chanSwitch pointer to a channel switch
+ * \param chan_switch pointer to a channel switch
  */
-static inline void remote_controller_get_channel_mode(uint8_t* chanSwitch)
+static inline void remote_controller_get_channel_mode(uint8_t* chan_switch)
 {
 	//TODO: remap with remote!
-	*chanSwitch |= 0x00;
+	*chan_switch |= 0x00;
 	
 	if (remote_dsm2_rc_get_channel(RC_SAFETY) < 0)
 	{
-		*chanSwitch |= 0x00;
+		*chan_switch |= 0x00;
 	}
 	else if(remote_dsm2_rc_get_channel(RC_SAFETY) > 0 && remote_dsm2_rc_get_channel(RC_ID_MODE) < 0)
 	{
-		*chanSwitch |= 0x01;
+		*chan_switch |= 0x01;
 	}
 	// else if (remote_dsm2_rc_get_channel(RC_SAFETY) > 0 && remote_dsm2_rc_get_channel(RC_ID_MODE) > 20)
 	// {
-	// 	*chanSwitch |= 0x03;
+	// 	*chan_switch |= 0x03;
 	// }
 	else
 	{
-		*chanSwitch |= 0x02;
+		*chan_switch |= 0x02;
 	}
 }
 #endif
@@ -222,25 +222,25 @@ static inline void remote_controller_get_channel_mode(uint8_t* chanSwitch)
 	/**
 	 * \brief return a switch state of the remote
 	 *
-	 * \param chanSwitch pointer to a channel switch
+	 * \param chan_switch pointer to a channel switch
 	 */
-	static inline void remote_controller_get_channel_mode(uint8_t* chanSwitch)
+	static inline void remote_controller_get_channel_mode(uint8_t* chan_switch)
 	{
 		if (remote_dsm2_rc_get_channel(RC_SAFETY) < 0)
 		{
-			*chanSwitch |= 0x00;
+			*chan_switch |= 0x00;
 		}
 		else if(remote_dsm2_rc_get_channel(RC_SAFETY) > 0 && remote_dsm2_rc_get_channel(RC_ID_MODE) < 0)
 		{
-			*chanSwitch |= 0x01;
+			*chan_switch |= 0x01;
 		}
 		else if (remote_dsm2_rc_get_channel(RC_SAFETY) > 0 && remote_dsm2_rc_get_channel(RC_ID_MODE) > 20)
 		{
-			*chanSwitch |= 0x03;
+			*chan_switch |= 0x03;
 		}
 		else
 		{
-			*chanSwitch |= 0x02;
+			*chan_switch |= 0x02;
 		}
 	}
 #endif
@@ -249,25 +249,25 @@ static inline void remote_controller_get_channel_mode(uint8_t* chanSwitch)
 	/**
 	 * \brief return a switch state of the joystick
 	 *
-	 * \param chanSwitch pointer to a channel switch
+	 * \param chan_switch pointer to a channel switch
 	 */
-	static inline void remote_controller_get_channel_mode(uint8_t* chanSwitch)
+	static inline void remote_controller_get_channel_mode(uint8_t* chan_switch)
 	{
 		if (remote_dsm2_rc_get_channel(RC_SAFETY) < 0)
 		{
-			*chanSwitch |= 0x00;
+			*chan_switch |= 0x00;
 		}
 		else if(remote_dsm2_rc_get_channel(RC_SAFETY) > 0 && remote_dsm2_rc_get_channel(RC_ID_MODE) < 0)
 		{
-			*chanSwitch |= 0x01;
+			*chan_switch |= 0x01;
 		}
 		else if (remote_dsm2_rc_get_channel(RC_SAFETY) > 0 && remote_dsm2_rc_get_channel(RC_ID_MODE) > 20)
 		{
-			*chanSwitch |= 0x03;
+			*chan_switch |= 0x03;
 		}
 		else
 		{
-			*chanSwitch |= 0x02;
+			*chan_switch |= 0x02;
 		}
 	}
 #endif

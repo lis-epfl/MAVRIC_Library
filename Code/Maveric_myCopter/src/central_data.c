@@ -69,7 +69,7 @@ void central_data_init()
 	delay_ms(100); 
 
 	// Init state structure
-	state_structure_t state_config =
+	state_t state_config =
 	{
 		.mav_mode = MAV_MODE_SAFE,
 		.mav_state = MAV_STATE_BOOT,
@@ -80,7 +80,7 @@ void central_data_init()
 		.sensor_enabled = 0b1111110000100111,
 		.sensor_health = 0b1111110000100111
 	};
-	state_init(	&central_data.state_structure,
+	state_init(	&central_data.state,
 				&state_config,
 				&central_data.analog_monitor,
 				&central_data.mavlink_communication.mavlink_stream,
@@ -129,13 +129,13 @@ void central_data_init()
 	delay_ms(100);
 
 	// Init navigation
-	navigation_init(&central_data.navigationData,
+	navigation_init(&central_data.navigation_data,
 					&central_data.controls_nav,
 					&central_data.ahrs.qe,
 					&central_data.waypoint_handler,
 					&central_data.position_estimator,
 					&central_data.orca,
-					&central_data.state_structure);
+					&central_data.state);
 	
 	delay_ms(100);
 
@@ -143,7 +143,7 @@ void central_data_init()
 	waypoint_handler_init(  &central_data.waypoint_handler,
 							&central_data.position_estimator,
 							&central_data.ahrs,
-							&central_data.state_structure,
+							&central_data.state,
 							&central_data.mavlink_communication);
 	waypoint_handler_init_homing_waypoint(&central_data.waypoint_handler);
 	waypoint_handler_waypoint_init(&central_data.waypoint_handler);
@@ -214,7 +214,7 @@ void central_data_init()
 					&central_data.position_estimator,
 					&central_data.pressure,
 					&central_data.gps,
-					&central_data.state_structure,
+					&central_data.state,
 					central_data.servos,
 					&central_data.waypoint_handler.waypoint_set,
 					&central_data.mavlink_communication.message_handler,

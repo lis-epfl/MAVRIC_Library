@@ -113,7 +113,7 @@ float remote_dsm2_get_pitch_from_spektrum();
 float remote_dsm2_get_yaw_from_spektrum();
 float remote_dsm2_get_thrust_from_spektrum();
 
-void remote_dsm2_get_channel_mode_spektrum(uint8_t *chanSwitch);
+void remote_dsm2_get_channel_mode_spektrum(uint8_t *chan_switch);
 */
 
 #ifdef __cplusplus

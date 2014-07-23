@@ -249,7 +249,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *serv
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_t* gps, state_structure_t* state_structure, servo_output_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_t* gps, state_t* state, servo_output_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
 {
 	int32_t i;
 	
@@ -261,7 +261,7 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	sim->pos_est = pos_est;
 	sim->pressure = pressure;
 	sim->gps = gps;
-	sim->state_structure = state_structure;
+	sim->state = state;
 	sim->servos = servos;
 	sim->waypoint_set = waypoint_set;
 	
@@ -501,8 +501,8 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 	uint32_t i;
 	
 	// From simulation to reality
-	//if (sim->state_structure->simulation_mode == REAL_MODE)
-	if (state_test_if_in_flag_mode(sim->state_structure,MAV_MODE_FLAG_HIL_ENABLED))
+	//if (sim->state->simulation_mode == REAL_MODE)
+	if (state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
 	{
 		sim->pos_est->local_position.origin = sim->local_position.origin;
 		for (i = 0;i < 3;i++)
@@ -510,19 +510,19 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 			sim->pos_est->local_position.pos[i] = 0.0f;
 		}
 		sim->pos_est->init_gps_position = false;
-		sim->state_structure->mav_state = MAV_STATE_STANDBY;
-		sim->state_structure->mav_mode = MAV_MODE_MANUAL_DISARMED;
-		state_disable_mode(sim->state_structure,MAV_MODE_FLAG_HIL_ENABLED);
+		sim->state->mav_state = MAV_STATE_STANDBY;
+		sim->state->mav_mode = MAV_MODE_MANUAL_DISARMED;
+		state_disable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
 		servo_pwm_failsafe(sim->servos);
 	}
 
 	// From reality to simulation
-	//if (sim->state_structure->simulation_mode == SIMULATION_MODE)
-	if (!state_test_if_in_flag_mode(sim->state_structure,MAV_MODE_FLAG_HIL_ENABLED))
+	//if (sim->state->simulation_mode == SIMULATION_MODE)
+	if (!state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
 	{	
 		simulation_reset_simulation(sim);
 		simulation_calib_set(sim);
-		state_enable_mode(sim->state_structure,MAV_MODE_FLAG_HIL_ENABLED);
+		state_enable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
 		sim->pos_est->init_gps_position = false;
 	}
 }

@@ -98,9 +98,9 @@ typedef struct  {
 	
 	mavlink_waypoint_handler_t waypoint_handler;
 	
-	navigation_t navigationData;								///< The structure to perform GPS navigation
+	navigation_t navigation_data;								///< The structure to perform GPS navigation
 	
-	state_structure_t state_structure;							///< The structure with all state information
+	state_t state;							///< The structure with all state information
 	
 	pressure_data_t pressure;									///< The pressure structure
 	//float pressure_filtered;									///< The filtered pressure
