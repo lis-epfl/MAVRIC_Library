@@ -27,7 +27,8 @@ extern "C" {
 #include "imu.h"
 #include "pid_control.h"
 #include "scheduler.h"
- 
+#include "mavlink_communication.h"
+
 /**
  * \brief	The control mode enum
  */
@@ -53,22 +54,34 @@ typedef enum
  */
 typedef struct 
 {
-	float rpy[3];						///< roll pitch yaw rates/angles
-	float thrust;						///< thrust
-	float tvel[3];						///< target velocity in m/s
-	float theading;						///< absolute target heading	
-	control_mode_t control_mode;		///< control mode
-	yaw_mode_t     yaw_mode;			///< yaw mode
+	float rpy[3];								///< roll pitch yaw rates/angles
+	float thrust;								///< thrust
+	float tvel[3];								///< target velocity in m/s
+	float theading;								///< absolute target heading	
+	control_mode_t control_mode;				///< control mode
+	yaw_mode_t     yaw_mode;					///< yaw mode
+	
+	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
 } Control_Command_t;
 
 /**
  * \brief	The structure used to control the vehicle with 4 PIDs
  */
 typedef struct {
-	PID_Controller_t rpy_controller[3];	 ///< roll pitch yaw  controllers
-	PID_Controller_t thrust_controller;  ///< thrust controller
-	Control_Command_t output;			 ///< output
+	PID_Controller_t rpy_controller[3];			///< roll pitch yaw  controllers
+	PID_Controller_t thrust_controller;			///< thrust controller
+	Control_Command_t output;					///< output
+	
+	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
 } Stabiliser_t;
+
+/**
+ * \brief	Initialisation of the stabilisation module
+ * \param	stabiliser			The pointer to the stabiliser structure
+ * \param	command				The pointer to the command structure
+ * \param	mavlink_stream		The pointer to the mavlink stream
+ */
+void stabilisation_init(Stabiliser_t * stabiliser, Control_Command_t *command, const mavlink_stream_t* mavlink_stream);
 
 /**
  * \brief				Execute the PID controllers used for stabilization

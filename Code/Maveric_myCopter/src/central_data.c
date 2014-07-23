@@ -178,6 +178,12 @@ void central_data_init()
 	
 	delay_ms(100);
 
+	stabilisation_init( &centralData.stabilisation_copter.stabiliser_stack->rate_stabiliser, 
+						&centralData.controls,
+						&centralData.mavlink_communication.mavlink_stream);
+	
+	delay_ms(100);
+
 	// Init simulation (should be done after position_estimator)
 	simulation_config_t vehicle_model_parameters= 
 	{
