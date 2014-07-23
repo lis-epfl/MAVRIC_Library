@@ -398,13 +398,13 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est)
 		pos_est->local_position.timestamp_ms = pos_est->gps->time_last_msg;
 
 		pos_est->lastGpsPos = pos_est->local_position;
-	//}
+	}
 	//else
 	//{
 		//pos_est->local_position.origin.longitude = HOME_LONGITUDE;
 		//pos_est->local_position.origin.latitude = HOME_LATITUDE;
 		//pos_est->local_position.origin.altitude = HOME_ALTITUDE;
-	}
+	//}
 
 	// reset barometer offset
 	bmp085_reset_origin_altitude(pos_est->barometer, pos_est->local_position.origin.altitude);

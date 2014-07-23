@@ -238,6 +238,8 @@ task_return_t navigation_update(navigation_t* navigation)
 		case MAV_STATE_STANDBY:
 			if (state_test_if_in_flag_mode(navigation->state,MAV_MODE_FLAG_GUIDED_ENABLED)||state_test_if_in_flag_mode(navigation->state,MAV_MODE_FLAG_AUTO_ENABLED))
 			{
+				waypoint_handler_waypoint_take_off_handler(navigation->waypoint_handler);
+				
 				navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
 			}
 			break;
@@ -246,6 +248,8 @@ task_return_t navigation_update(navigation_t* navigation)
 			switch (navigation->state->mav_mode - (navigation->state->mav_mode & MAV_MODE_FLAG_DECODE_POSITION_HIL))
 			{
 				case MAV_MODE_GPS_NAVIGATION:
+					waypoint_handler_waypoint_navigation_handler(navigation->waypoint_handler);
+					
 					if (navigation->waypoint_handler->waypoint_set)
 					{
 						navigation_run(navigation->waypoint_handler->waypoint_coordinates,navigation);
@@ -257,6 +261,8 @@ task_return_t navigation_update(navigation_t* navigation)
 					break;
 
 				case MAV_MODE_POSITION_HOLD:
+					waypoint_handler_waypoint_hold_position_handler(navigation->waypoint_handler);
+					
 					navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
 					break;
 			
@@ -269,6 +275,7 @@ task_return_t navigation_update(navigation_t* navigation)
 			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
 			if (state_test_if_in_flag_mode(navigation->state,MAV_MODE_FLAG_STABILIZE_ENABLED))
 			{
+				waypoint_handler_waypoint_critical_handler(navigation->waypoint_handler);
 				navigation_run(navigation->waypoint_handler->waypoint_critical_coordinates,navigation);
 			}
 			break;

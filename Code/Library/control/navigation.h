@@ -41,7 +41,7 @@ typedef struct
 	float dist2vel_gain;								///< The gain linking the distance to the goal to the actual speed
 	float cruise_speed;									///< The cruise speed in m/s
 	float max_climb_rate;								///< Max climb rate in m/s
-	float soft_zone_size;									///< Soft zone of the velocity controller
+	float soft_zone_size;								///< Soft zone of the velocity controller
 	
 	uint8_t loopCount;									///< A counter for sending mavlink messages at a lower rate than the function
 	

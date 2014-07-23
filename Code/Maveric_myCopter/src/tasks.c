@@ -81,8 +81,6 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 	int8_t RC_check = 0;
 	int8_t motor_switch = 0;
 	
-	float dist_from_home_sqr;
-	
 	LED_Toggle(LED1);
 	
 	tasks_rc_user_channels(&channel_switches,&RC_check, &motor_switch);
@@ -142,18 +140,14 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 							// Activate automatic take-off mode
 							if (state_test_if_first_time_in_mode(&central_data->state,MAV_MODE_POSITION_HOLD))
 							{
-								waypoint_handler_waypoint_take_off(&central_data->waypoint_handler);
+								waypoint_handler_waypoint_take_off_init(&central_data->waypoint_handler);
 							}
 							
-							dist_from_home_sqr =	SQR(central_data->position_estimator.local_position.pos[X] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[X]) +
-							SQR(central_data->position_estimator.local_position.pos[Y] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[Y]) +
-							SQR(central_data->position_estimator.local_position.pos[Z] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[Z]);
-						
 							if (central_data->waypoint_handler.dist2wp_sqr <= 16.0f)
 							{
 								central_data->state.mav_state = MAV_STATE_ACTIVE;
-								print_util_dbg_print("Automatic take-off finised, dist_from_home_sqr (10x):");
-								print_util_dbg_print_num(dist_from_home_sqr * 10.0f,10);
+								print_util_dbg_print("Automatic take-off finised, dist2wp_sqr (10x):");
+								print_util_dbg_print_num(central_data->waypoint_handler.dist2wp_sqr * 10.0f,10);
 								print_util_dbg_print(".\n");
 							}
 						}
@@ -168,7 +162,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 							// Automatic take-off mode
 							if(state_test_if_first_time_in_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION))
 							{
-								waypoint_handler_waypoint_take_off(&central_data->waypoint_handler);
+								waypoint_handler_waypoint_take_off_init(&central_data->waypoint_handler);
 							}
 
 							if (!central_data->waypoint_handler.waypoint_set)
@@ -176,15 +170,11 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 								waypoint_handler_waypoint_init(&central_data->waypoint_handler);
 							}
 
-							dist_from_home_sqr =	SQR(central_data->position_estimator.local_position.pos[X] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[X]) +
-							SQR(central_data->position_estimator.local_position.pos[Y] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[Y]) +
-							SQR(central_data->position_estimator.local_position.pos[Z] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[Z]);
-						
 							if (central_data->waypoint_handler.dist2wp_sqr <= 16.0f)
 							{
 								central_data->state.mav_state = MAV_STATE_ACTIVE;
-								print_util_dbg_print("Automatic take-off finised, dist_from_home_sqr (10x):");
-								print_util_dbg_print_num(dist_from_home_sqr * 10.0f,10);
+								print_util_dbg_print("Automatic take-off finised, dist2wp_sqr (10x):");
+								print_util_dbg_print_num(central_data->waypoint_handler.dist2wp_sqr * 10.0f,10);
 								print_util_dbg_print(".\n");
 							}
 						}
@@ -498,14 +488,14 @@ void tasks_create_tasks()
 	
 	scheduler_t* scheduler = &central_data->scheduler;
 
-	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation                                          , 0                                                    , 0);
-	scheduler_add_task(scheduler    , 15000                           , RUN_REGULAR , PERIODIC_RELATIVE, PRIORITY_HIGH   , &tasks_run_barometer_update                                       , 0                                                    , 1);
-	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGH   , &tasks_run_gps_update                                             , 0                                                    , 2);
-	scheduler_add_task(scheduler    , ORCA_TIME_STEP_MILLIS * 1000.0f , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update                               , (task_argument_t)&central_data->navigation		 , 3);
-	scheduler_add_task(scheduler    , 200000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_NORMAL , &tasks_set_mav_mode_n_state                                       , 0                                                    , 4);
+	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation                                          , 0                                                     , 0);
+	scheduler_add_task(scheduler    , 15000                           , RUN_REGULAR , PERIODIC_RELATIVE, PRIORITY_HIGH   , &tasks_run_barometer_update                                       , 0                                                     , 1);
+	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGH   , &tasks_run_gps_update                                             , 0                                                     , 2);
+	scheduler_add_task(scheduler    , ORCA_TIME_STEP_MILLIS * 1000.0f , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update                               , (task_argument_t)&central_data->navigation		     , 3);
+	scheduler_add_task(scheduler    , 200000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&tasks_set_mav_mode_n_state                      , (task_argument_t)&central_data->state_machine         , 4);
 	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&mavlink_communication_update                    , (task_argument_t)&central_data->mavlink_communication , 5);
-	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&analog_monitor_update                           , (task_argument_t)&central_data->analog_monitor                   , 6);
-	scheduler_add_task(scheduler    , 10000                           , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&waypoint_handler_control_time_out_waypoint_msg  , (task_argument_t)&central_data->waypoint_handler                                                    , 7);
+	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&analog_monitor_update                           , (task_argument_t)&central_data->analog_monitor        , 6);
+	scheduler_add_task(scheduler    , 10000                           , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&waypoint_handler_control_time_out_waypoint_msg  , (task_argument_t)&central_data->waypoint_handler      , 7);
 	// scheduler_add_task(scheduler , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_NORMAL , &sonar_update                                                     , 0                                                    , 0);
 
 	scheduler_sort_tasks(scheduler);

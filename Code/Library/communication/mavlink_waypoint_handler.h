@@ -171,7 +171,14 @@ void waypoint_handler_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_ha
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  */
-void waypoint_handler_waypoint_take_off(mavlink_waypoint_handler_t* waypoint_handler);
+void waypoint_handler_waypoint_take_off_init(mavlink_waypoint_handler_t* waypoint_handler);
+
+/**
+ * \brief	Drives the automatic takeoff procedure
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ */
+void waypoint_handler_waypoint_take_off_handler(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
  * \brief	Drives the hold position procedure

@@ -832,12 +832,14 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	waypoint_handler->waypoint_request_number = 0;
 	
 	waypoint_handler->waypoint_set = false;
+	waypoint_handler->hold_waypoint_set = false;
 	waypoint_handler->waypoint_sending = false;
 	waypoint_handler->waypoint_receiving = false;
 			
 	waypoint_handler->critical_landing = false;
 	
 	waypoint_handler->automatic_landing = false;
+	waypoint_handler->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
 	waypoint_handler->in_the_air = false;
 	
 	// Add callbacks for waypoint handler messages requests
@@ -1116,6 +1118,7 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
 
 void waypoint_handler_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t local_pos)
 {
+	waypoint_handler->hold_waypoint_set = true;
 	
 	waypoint_handler->waypoint_hold_coordinates = local_pos;
 	
@@ -1134,7 +1137,7 @@ void waypoint_handler_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_ha
 	
 }
 
-void waypoint_handler_waypoint_take_off(mavlink_waypoint_handler_t* waypoint_handler)
+void waypoint_handler_waypoint_take_off_init(mavlink_waypoint_handler_t* waypoint_handler)
 {
 	print_util_dbg_print("Automatic take-off, will hold position at: (");
 	print_util_dbg_print_num(waypoint_handler->position_estimator->local_position.pos[X],10);
@@ -1156,18 +1159,33 @@ void waypoint_handler_waypoint_take_off(mavlink_waypoint_handler_t* waypoint_han
 	waypoint_handler->dist2wp_sqr = 100.0f; // same position, 10m above => distSqr = 100.0f
 }
 
+void waypoint_handler_waypoint_take_off_handler(mavlink_waypoint_handler_t* waypoint_handler)
+{
+	if (!waypoint_handler->hold_waypoint_set)
+	{
+		waypoint_handler_waypoint_take_off_init(waypoint_handler);
+	}
+	if (!waypoint_handler->waypoint_set)
+	{
+		waypoint_handler_waypoint_init(waypoint_handler);
+	}
+}
+
+
 void waypoint_handler_waypoint_hold_position_handler(mavlink_waypoint_handler_t* waypoint_handler)
 {
 	if (!waypoint_handler->waypoint_set)
 	{
 		waypoint_handler_waypoint_init(waypoint_handler);
 	}
-	waypoint_handler_waypoint_hold_init(waypoint_handler, waypoint_handler->position_estimator->local_position);
+	if (!waypoint_handler->hold_waypoint_set)
+	{
+		waypoint_handler_waypoint_hold_init(waypoint_handler, waypoint_handler->position_estimator->local_position);
+	}
 }
 
 void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handler_t* waypoint_handler)
 {
-
 	if (waypoint_handler->waypoint_set)
 	{
 		uint8_t i;
@@ -1223,6 +1241,10 @@ void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handler_t* wa
 	}
 	else
 	{
+		if (!waypoint_handler->hold_waypoint_set)
+		{
+			waypoint_handler_waypoint_hold_init(waypoint_handler, waypoint_handler->position_estimator->local_position);
+		}
 		waypoint_handler_waypoint_init(waypoint_handler);
 	}
 }

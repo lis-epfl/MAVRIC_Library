@@ -73,7 +73,7 @@ void central_data_init()
 	{
 		.mav_mode = MAV_MODE_SAFE,
 		.mav_state = MAV_STATE_BOOT,
-		.simulation_mode = REAL_MODE, //SIMULATION_MODE
+		.simulation_mode = SIMULATION_MODE, //REAL_MODE
 		.autopilot_type = MAV_TYPE_QUADROTOR,
 		.autopilot_name = MAV_AUTOPILOT_GENERIC,
 		.sensor_present = 0b1111110000100111,
@@ -86,6 +86,14 @@ void central_data_init()
 				&central_data.mavlink_communication.mavlink_stream,
 				&central_data.mavlink_communication.message_handler); 
 	
+	delay_ms(100);
+
+	state_machine_init( &central_data.state_machine,
+						&central_data.state,
+						&central_data.waypoint_handler,
+						&central_data.navigation,
+						&central_data.position_estimator,
+						&central_data.sim_model);
 	delay_ms(100);
 
 	// Init imu
