@@ -10,20 +10,20 @@
 
 
 /**
- * \file compass.h
+ * \file gyroscope.h
  *
- * This file define the compass's data type
+ * This file define the gyroscope's data type
  */
 
 
-#ifndef COMPASS_H_
-#define COMPASS_H_
+#ifndef GYRO_H_
+#define GYRO_H_
 
 typedef struct
 {
 	float data[3];
 	float temperature;
 	float last_update;
-} compass_data_t;
+} gyroscope_t;
 
-#endif /* COMPASS_H_ */
+#endif /* GYRO_H_ */

@@ -157,7 +157,7 @@ static void processData(void)
 				return;
 			}
 			//if (function_generator!= NULL) {
-			//	dac_dma_set_value((*function_generator)(sampleCounter));
+			//	dac_dma_set_value((*function_generator)(sample_counter));
 			//}
 			oversampling_counter++;
 	

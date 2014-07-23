@@ -89,7 +89,7 @@ static int16_t bmp085_read_int(uint8_t address)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void bmp085_init(pressure_data_t *baro, const mavlink_stream_t* mavlink_stream)
+void bmp085_init(barometer_t *baro, const mavlink_stream_t* mavlink_stream)
 {
 	baro->mavlink_stream = mavlink_stream;
 	baro->altitude_offset = 0.0f;
@@ -145,13 +145,13 @@ void bmp085_init_slow()
 }
 
 
-void bmp085_reset_origin_altitude(pressure_data_t* baro, float origin_altitude)
+void bmp085_reset_origin_altitude(barometer_t* baro, float origin_altitude)
 {
 	baro->altitude_offset = - ( baro->altitude - baro->altitude_offset - origin_altitude );
 }
 
  
-void bmp085_update(pressure_data_t *baro) 
+void bmp085_update(barometer_t *baro) 
 {
 	int32_t i;
 	float altitude, vertical_speed;
@@ -278,7 +278,7 @@ void bmp085_update(pressure_data_t *baro)
 }
 
 
-task_return_t bmp085_send_pressure(pressure_data_t* baro)
+task_return_t bmp085_send_pressure(barometer_t* baro)
 {
 	mavlink_message_t msg;
 	

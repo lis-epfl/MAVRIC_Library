@@ -603,12 +603,6 @@
     <Compile Include="Library\communication\state.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\communication\state_machine.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\communication\state_machine.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\control\adaptive_parameter.c">
       <SubType>compile</SubType>
     </Compile>
@@ -633,7 +627,7 @@
     <Compile Include="Library\control\stabilisation_copter.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\accelero.h">
+    <Compile Include="Library\hal\accelerometer.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\analog_monitor.h">
@@ -642,16 +636,19 @@
     <Compile Include="Library\hal\analog_monitor.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\compass.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\hal\gps_ublox.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\gps_ublox.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\gyro.h">
+    <Compile Include="Library\hal\gyroscope.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\hmc5883l.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\hmc5883l.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\i2cxl_sonar.c">
@@ -666,10 +663,13 @@
     <Compile Include="Library\hal\i2c_driver_int.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\lsm330dlc_driver.c">
+    <Compile Include="Library\hal\lsm330dlc.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\lsm330dlc_driver.h">
+    <Compile Include="Library\hal\lsm330dlc.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\magnetometer.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\piezo_speaker.c">
@@ -1166,12 +1166,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\bmp085.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\compass_hmc5883l.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\compass_hmc5883l.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\dac_dma.c">

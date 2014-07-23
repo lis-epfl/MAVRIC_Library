@@ -129,7 +129,7 @@ void central_data_init()
 	delay_ms(100);
 
 	// Init navigation
-	navigation_init(&central_data.navigation_data,
+	navigation_init(&central_data.navigation,
 					&central_data.controls_nav,
 					&central_data.ahrs.qe,
 					&central_data.waypoint_handler,

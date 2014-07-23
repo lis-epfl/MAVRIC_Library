@@ -10,20 +10,20 @@
 
 
 /**
- * \file accelero.h
+ * \file magnetometer.h
  *
- * This file define the accelerometer's data type
+ * This file define the compass's data type
  */
 
 
-#ifndef ACCEL_H_
-#define ACCEL_H_
+#ifndef MAGNETOMETER_H_
+#define MAGNETOMETER_H_
 
 typedef struct
 {
 	float data[3];
 	float temperature;
 	float last_update;
-} accelero_data_t;
+} magnetometer_t;
 
-#endif /* ACCEL_H_ */
+#endif /* MAGNETOMETER_H_ */

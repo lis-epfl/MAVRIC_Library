@@ -28,8 +28,8 @@
 #include "delay.h"
 #include "i2cxl_sonar.h"
 #include "analog_monitor.h"
-#include "lsm330dlc_driver.h"
-#include "compass_hmc5883l.h"
+#include "lsm330dlc.h"
+#include "hmc5883l.h"
 
 central_data_t* central_data;
 
@@ -52,11 +52,11 @@ void tasks_rc_user_channels(uint8_t *chan_switch, int8_t *rc_check, int8_t *moto
 	
 	if ((remote_dsm2_rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0f)
 	{
-		central_data->navigation_data.collision_avoidance = true;
+		central_data->navigation.collision_avoidance = true;
 	}
 	else
 	{
-		central_data->navigation_data.collision_avoidance = false;
+		central_data->navigation.collision_avoidance = false;
 	}
 	
 	remote_controller_get_motor_state(motor_state);
@@ -368,7 +368,7 @@ void tasks_run_imu_update(void* arg)
 	{
 		lsm330dlc_gyro_update(&(central_data->imu.raw_gyro));
 		lsm330dlc_acc_update(&(central_data->imu.raw_accelero));
-		compass_hmc58831l_update(&(central_data->imu.raw_compass));
+		hmc5883l_update(&(central_data->imu.raw_compass));
 	}
 	
 	imu_update(	&central_data->imu);
@@ -501,7 +501,7 @@ void tasks_create_tasks()
 	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation                                          , 0                                                    , 0);
 	scheduler_add_task(scheduler    , 15000                           , RUN_REGULAR , PERIODIC_RELATIVE, PRIORITY_HIGH   , &tasks_run_barometer_update                                       , 0                                                    , 1);
 	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGH   , &tasks_run_gps_update                                             , 0                                                    , 2);
-	scheduler_add_task(scheduler    , ORCA_TIME_STEP_MILLIS * 1000.0f , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update                               , (task_argument_t)&central_data->navigation_data		 , 3);
+	scheduler_add_task(scheduler    , ORCA_TIME_STEP_MILLIS * 1000.0f , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update                               , (task_argument_t)&central_data->navigation		 , 3);
 	scheduler_add_task(scheduler    , 200000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_NORMAL , &tasks_set_mav_mode_n_state                                       , 0                                                    , 4);
 	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&mavlink_communication_update                    , (task_argument_t)&central_data->mavlink_communication , 5);
 	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&analog_monitor_update                           , (task_argument_t)&central_data->analog_monitor                   , 6);

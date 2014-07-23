@@ -1,13 +1,13 @@
 /*
- * itg3200_driver.h
+ * itg3200.h
  *
  * Created: 18/05/2012 17:51:08
  *  Author: sfx
  */ 
 
 
-#ifndef ITG3200_DRIVER_H_
-#define ITG3200_DRIVER_H_
+#ifndef ITG3200_H_
+#define ITG3200_H_
 #include "compiler.h"
 
 #define GY_X 0
@@ -19,18 +19,18 @@
 typedef struct{
 	int16_t temperature;
 	int16_t axes[3];
-} gyro_data_t; 
+} gyroscope_t; 
 
 
 
-void itg3200_driver_init(void);
-void itg3200_driver_reconfigure_gyro(void);
+void itg3200_init(void);
+void itg3200_reconfigure_gyro(void);
 
-gyro_data_t* itg3200_driver_get_gyro_data(void);
+gyroscope_t* itg3200_get_gyro_data(void);
 
-void itg3200_driver_init_slow(void);
+void itg3200_init_slow(void);
 
-gyro_data_t* itg3200_driver_get_data_slow(void);
+gyroscope_t* itg3200_get_data_slow(void);
 
 
-#endif /* ITG3200_DRIVER_H_ */
+#endif /* ITG3200_H_ */

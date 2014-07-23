@@ -10,13 +10,13 @@
 
 
 /**
-* \file lsm330dlc_driver.c
+* \file lsm330dlc.c
 *
 * This file is the driver for the integrated 3axis gyroscope and accelerometer LSM330DLC
 */
 
 
-#include "lsm330dlc_driver.h"
+#include "lsm330dlc.h"
 #include "gpio.h"
 #include "i2c_driver_int.h"
 #include "print_util.h"
@@ -383,7 +383,7 @@ static void lsm330dlc_get_gyro_config(void)
 	}*/
 }
 
-void lsm330dlc_driver_init(void) 
+void lsm330dlc_init(void) 
 {
 	if(twim_probe(&AVR32_TWIM0, LSM330_ACC_SLAVE_ADDRESS) == STATUS_OK)
 	{
@@ -401,7 +401,7 @@ void lsm330dlc_driver_init(void)
 	lsm330dlc_get_gyro_config();
 }
 
-void lsm330dlc_acc_update(accelero_data_t *lsm_acc_outputs) 
+void lsm330dlc_acc_update(accelerometer_t *lsm_acc_outputs) 
 {
 	lsm_acc_read_t fifo_values;
 	float axes[3] = {0.0f, 0.0f, 0.0f};
@@ -441,7 +441,7 @@ void lsm330dlc_acc_update(accelero_data_t *lsm_acc_outputs)
 	}
 }
 
-void lsm330dlc_gyro_update(gyro_data_t *lsm_gyro_outputs) 
+void lsm330dlc_gyro_update(gyroscope_t *lsm_gyro_outputs) 
 {
 	lsm_gyro_read_t fifo_values;
 	int16_t temperature = 0;

@@ -10,20 +10,20 @@
 
 
 /**
- * \file gyro.h
+ * \file accelerometer.h
  *
- * This file define the gyroscope's data type
+ * This file define the accelerometer's data type
  */
 
 
-#ifndef GYRO_H_
-#define GYRO_H_
+#ifndef ACCELEROMETER_H_
+#define ACCELEROMETER_H_
 
 typedef struct
 {
 	float data[3];
 	float temperature;
 	float last_update;
-} gyro_data_t;
+} accelerometer_t;
 
-#endif /* GYRO_H_ */
+#endif /* ACCELEROMETER_H_ */
