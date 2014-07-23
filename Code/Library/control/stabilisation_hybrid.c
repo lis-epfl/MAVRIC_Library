@@ -21,10 +21,10 @@ void stabilisation_hybrid_init(Stabiliser_Stack_hybrid_t* stabiliser_stack)
 	*stabiliser_stack = stabiliser_defaults_hybrid;
 }
 
-void stabilisation_hybrid_cascade_stabilise_hybrid(imu_t *imu, position_estimator_t *pos_est, Control_Command_t *control_input)
+void stabilisation_hybrid_cascade_stabilise_hybrid(imu_t *imu, position_estimator_t *pos_est, control_command_t *control_input)
 {
 	float rpyt_errors[4];
-	Control_Command_t input;
+	control_command_t input;
 	int32_t i;
 	
 	// set the controller input
@@ -99,7 +99,7 @@ void stabilisation_hybrid_cascade_stabilise_hybrid(imu_t *imu, position_estimato
 	stabilisation_hybrid_mix_to_servos_xwing(&central_data->stabiliser_stack.rate_stabiliser.output);
 }
 
-void stabilisation_hybrid_mix_to_servos_xwing(Control_Command_t *control)
+void stabilisation_hybrid_mix_to_servos_xwing(control_command_t *control)
 {
 	int32_t i;
 	float motor_command;

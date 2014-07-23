@@ -34,9 +34,9 @@ static float inline remote_controller_get_yaw_from_remote()	{return remote_dsm2_
 static float inline remote_controller_get_thrust_from_remote(){return remote_dsm2_rc_get_channel(RC_THROTTLE)*RC_THROTTLE_DIR*RC_SCALEFACTOR; };
 
 
-static inline Control_Command_t remote_controller_get_command_from_remote()
+static inline control_command_t remote_controller_get_command_from_remote()
 {
-	Control_Command_t controls;
+	control_command_t controls;
 	controls.rpy[ROLL]= remote_controller_get_roll_from_remote()*RC_INPUT_SCALE;
 	controls.rpy[PITCH]= remote_controller_get_pitch_from_remote()*RC_INPUT_SCALE;
 	controls.rpy[YAW]= remote_controller_get_yaw_from_remote()*RC_INPUT_SCALE;

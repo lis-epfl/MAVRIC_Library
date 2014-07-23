@@ -57,7 +57,7 @@ typedef struct
 	float last_alt;									///< The value of the last altitude estimation
 	float last_vel[3];								///< The last 3D velocity
 
-	local_coordinates_t localPosition;				///< The local position
+	local_coordinates_t local_position;				///< The local position
 	local_coordinates_t lastGpsPos;					///< The coordinates of the last GPS position
 	
 	float gravity;

@@ -20,7 +20,7 @@
 #include "conf_stabilisation_copter.h"
 #include "print_util.h"
 
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servo_output_t* servos)
+void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servo_output_t* servos)
 {
 	*stabiliser_stack = stabiliser_defaults_copter;
 	
@@ -49,7 +49,7 @@ void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabili
 void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_copter)
 {
 	float rpyt_errors[4];
-	Control_Command_t input;
+	control_command_t input;
 	int32_t i;
 	UQuat_t qtmp;
 	
@@ -109,7 +109,7 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 		rpyt_errors[1]= input.rpy[1] - stabilisation_copter->ahrs->up_vec.v[0];
 		
 		if ((stabilisation_copter->controls->yaw_mode == YAW_ABSOLUTE) ) {
-			rpyt_errors[2] =maths_calc_smaller_angle(input.theading- stabilisation_copter->pos_est->localPosition.heading);
+			rpyt_errors[2] =maths_calc_smaller_angle(input.theading- stabilisation_copter->pos_est->local_position.heading);
 		}
 		else
 		{ // relative yaw
@@ -147,7 +147,7 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 	#endif
 }
 
-void stabilisation_copter_mix_to_servos_diag_quad(Control_Command_t *control, servo_output_t servos[4])
+void stabilisation_copter_mix_to_servos_diag_quad(control_command_t *control, servo_output_t servos[4])
 {
 	int32_t i;
 	float motor_command[4];
@@ -175,7 +175,7 @@ void stabilisation_copter_mix_to_servos_diag_quad(Control_Command_t *control, se
 	}
 }
 
-void stabilisation_copter_mix_to_servos_cross_quad(Control_Command_t *control, servo_output_t servos[4])
+void stabilisation_copter_mix_to_servos_cross_quad(control_command_t *control, servo_output_t servos[4])
 {
 	int32_t i;
 	float motor_command[4];

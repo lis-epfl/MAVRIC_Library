@@ -134,7 +134,7 @@ void central_data_init()
 					&central_data.ahrs.qe,
 					&central_data.waypoint_handler,
 					&central_data.position_estimator,
-					&central_data.orcaData,
+					&central_data.orca,
 					&central_data.state_structure);
 	
 	delay_ms(100);
@@ -151,15 +151,15 @@ void central_data_init()
 	delay_ms(100);
 
 	// Init neighbor selection
-	neighbors_selection_init(   &central_data.neighborData, 
+	neighbors_selection_init(   &central_data.neighbors, 
 								&central_data.position_estimator,
 								&central_data.mavlink_communication.message_handler);
 	
 	delay_ms(100);
 
 	// Init orca
-	orca_init(  &central_data.orcaData,
-				&central_data.neighborData,
+	orca_init(  &central_data.orca,
+				&central_data.neighbors,
 				&central_data.position_estimator,
 				&central_data.imu,
 				&central_data.ahrs);

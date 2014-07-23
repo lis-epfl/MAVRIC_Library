@@ -110,7 +110,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	}
 	else
 	{
-		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigationData->position_estimator->localPosition.heading);
+		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigationData->position_estimator->local_position.heading);
 	}
 	
 	v_desired = maths_f_min(navigationData->cruise_speed,(maths_center_window_2(4.0f * rel_heading) * navigationData->dist2vel_gain * maths_soft_zone(norm_rel_dist,navigationData->softZoneSize)));
@@ -140,9 +140,9 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		print_util_dbg_print_num(navigationData->position_estimator->vel_bf[Z] * 100,10);
 		print_util_dbg_print("). \n");
 		print_util_dbg_print("Actual_pos(x100): (");
-		print_util_dbg_print_num(navigationData->position_estimator->localPosition.pos[X] * 100,10);
-		print_util_dbg_print_num(navigationData->position_estimator->localPosition.pos[Y] * 100,10);
-		print_util_dbg_print_num(navigationData->position_estimator->localPosition.pos[Z] * 100,10);
+		print_util_dbg_print_num(navigationData->position_estimator->local_position.pos[X] * 100,10);
+		print_util_dbg_print_num(navigationData->position_estimator->local_position.pos[Y] * 100,10);
+		print_util_dbg_print_num(navigationData->position_estimator->local_position.pos[Z] * 100,10);
 		print_util_dbg_print("). \n");
 	}
 	*/
@@ -159,7 +159,7 @@ static void navigation_collision_avoidance(navigation_t* navigationData)
 	float rel_heading;
 	
 	// Implement other velocity-based collision avoidance strategy here
-	orca_computeNewVelocity(navigationData->orcaData, navigationData->controls_nav->tvel, new_velocity);
+	orca_computeNewVelocity(navigationData->orca, navigationData->controls_nav->tvel, new_velocity);
 	
 	if (((maths_f_abs(new_velocity[X])<=1.0f)&&(maths_f_abs(new_velocity[Y])<=1.0f))||((maths_f_abs(new_velocity[X])<=5.0f)&&(maths_f_abs(new_velocity[Y])<=5.0f)&&(maths_f_abs(new_velocity[Z])>=3.0f)))
 	{
@@ -167,7 +167,7 @@ static void navigation_collision_avoidance(navigation_t* navigationData)
 	}
 	if (navigationData->waypoint_handler->collision_avoidance)
 	{
-		rel_heading = maths_calc_smaller_angle(atan2(new_velocity[Y],new_velocity[X]) - navigationData->position_estimator->localPosition.heading);
+		rel_heading = maths_calc_smaller_angle(atan2(new_velocity[Y],new_velocity[X]) - navigationData->position_estimator->local_position.heading);
 	}
 	
 	navigationData->controls_nav->tvel[X] = new_velocity[X];
@@ -183,7 +183,7 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 	// Control in translational speed of the platform
 	navigationData->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos,
 																					rel_pos,
-																					navigationData->position_estimator->localPosition.pos);
+																					navigationData->position_estimator->local_position.pos);
 	navigation_set_speed_command(rel_pos, navigationData);
 	
 	if (navigationData->waypoint_handler->collision_avoidance)
@@ -198,14 +198,14 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigationData, Control_Command_t* controls_nav, const UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orcaData, const state_structure_t* state_structure)
+void navigation_init(navigation_t* navigationData, control_command_t* controls_nav, const UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, const state_structure_t* state_structure)
 {
 	
 	navigationData->controls_nav = controls_nav;
 	navigationData->qe = qe;
 	navigationData->waypoint_handler = waypoint_handler;
 	navigationData->position_estimator = position_estimator;
-	navigationData->orcaData = orcaData;
+	navigationData->orca = orca;
 	navigationData->state_structure = state_structure;
 	
 	navigationData->controls_nav->rpy[ROLL] = 0.0f;

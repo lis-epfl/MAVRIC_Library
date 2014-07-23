@@ -21,7 +21,7 @@
 #include "coord_conventions.h"
 #include "mavlink_communication.h"
 
-void hud_init(hud_structure_t* hud_structure, const position_estimator_t* pos_est, const Control_Command_t* controls, const ahrs_t* ahrs, const mavlink_stream_t* mavlink_stream)
+void hud_init(hud_structure_t* hud_structure, const position_estimator_t* pos_est, const control_command_t* controls, const ahrs_t* ahrs, const mavlink_stream_t* mavlink_stream)
 {
 	hud_structure->ahrs = ahrs;
 	hud_structure->controls            = controls;
@@ -58,7 +58,7 @@ task_return_t hud_send_message(hud_structure_t* hud_structure)
 								groundspeed, 
 								heading, 
 								(int32_t)((hud_structure->controls->thrust + 1.0f) * 50), 
-								-hud_structure->pos_est->localPosition.pos[2] + hud_structure->pos_est->localPosition.origin.altitude, 
+								-hud_structure->pos_est->local_position.pos[2] + hud_structure->pos_est->local_position.origin.altitude, 
 								-hud_structure->pos_est->vel[2]	);
 	mavlink_stream_send(hud_structure->mavlink_stream, &msg);
 

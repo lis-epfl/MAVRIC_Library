@@ -79,7 +79,7 @@ typedef struct
 	float vel_bf[3];										///< The 3D velocity vector in body frame
 	float vel[3];											///< The 3D velocity vector in NED frame
 	ahrs_t ahrs;											///< The simulated attitude estimation
-	local_coordinates_t localPosition;						///< The simulated local position								
+	local_coordinates_t local_position;						///< The simulated local position								
 	
 	sensor_calib_t calib_gyro;								///< The calibration values of the gyroscope
 	sensor_calib_t calib_accelero;							///< The calibration values of the accelerometer

@@ -54,7 +54,7 @@ int8_t checkReceiver1_turnigy(void);
 int8_t checkReceiver2_turnigy(void);
 int8_t checkReceivers_turnigy(void);
 
-Control_Command_t get_command_from_turnigy();
+control_command_t get_command_from_turnigy();
 float get_roll_from_turnigy();
 float get_pitch_from_turnigy();
 float get_yaw_from_turnigy();

@@ -107,7 +107,7 @@ int8_t  remote_dsm2_rc_check_receivers(void);
 
 
 /*
-Control_Command_t remote_dsm2_get_command_from_spektrum();
+control_command_t remote_dsm2_get_command_from_spektrum();
 float remote_dsm2_get_roll_from_spektrum();
 float remote_dsm2_get_pitch_from_spektrum();
 float remote_dsm2_get_yaw_from_spektrum();

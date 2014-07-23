@@ -40,13 +40,13 @@ extern "C" {
  */
 typedef struct
 {
-	uint8_t neighborID;												///< The mavlink ID of the vehicle
+	uint8_t neighbor_ID;											///< The mavlink ID of the vehicle
 	float position[3];												///< The 3D position of the neighbor in m
 	float velocity[3];												///< The 3D velocity of the neighbor in m/s
 	float size;														///< The physical size of the neighbor in m
 	uint32_t time_msg_received;										///< The time at which the message was received in ms
-	float extrapolatedPosition[3];									///< The 3D position of the neighbor
-}track_neighbor_t;													///< The structure of information about a neighbor 
+	float extrapolated_position[3];									///< The 3D position of the neighbor
+} track_neighbor_t;													///< The structure of information about a neighbor 
 
 /**
  * \brief The neighbor structure
@@ -55,33 +55,33 @@ typedef struct
 {
 		uint8_t number_of_neighbors;								///< The actual number of neighbors at a given time step
 		float safe_size;											///< The safe size for collision avoidance
-		track_neighbor_t listNeighbors[MAX_NUM_NEIGHBORS];			///< The list of neighbors structure
-		position_estimator_t *positionData;							///< The pointer to the position estimator structure
-}neighbor_t;
+		track_neighbor_t neighbors_list[MAX_NUM_NEIGHBORS];			///< The list of neighbors structure
+		position_estimator_t* position_estimator;							///< The pointer to the position estimator structure
+} neighbors_t;
 
 /**
  * \brief	Initialize the neighbor selection module
  *
- * \param neighborData			The pointer to the neighbor struct
- * \param positionData			The pointer to the position estimator struct
+ * \param neighbors			The pointer to the neighbor struct
+ * \param position_estimator			The pointer to the position estimator struct
  * \param message_handler		The pointer to the message handler structure
  */
-void neighbors_selection_init(neighbor_t *neighborData, position_estimator_t *positionData, mavlink_message_handler_t *message_handler);
+void neighbors_selection_init(neighbors_t* neighbors, position_estimator_t *position_estimator, mavlink_message_handler_t *message_handler);
 
 /**
  * \brief	Decode the message and parse to the neighbor array
  *
- * \param	neighborData		The pointer to the neighbors struct
+ * \param	neighbors		The pointer to the neighbors struct
  * \param	rec					The pointer to the mavlink message
  */
-void neighbors_selection_read_message_from_neighbors(neighbor_t *neighborData, mavlink_received_t* rec);
+void neighbors_selection_read_message_from_neighbors(neighbors_t *neighbors, mavlink_received_t* rec);
 
 /**
  * \brief	Extrapolate the position of each UAS between two messages, deletes the message if time elapsed too long from last message
  *
- * \param	neighborData		The pointer to the neighbors struct
+ * \param	neighbors		The pointer to the neighbors struct
  */
-void neighbors_selection_extrapolate_or_delete_position(neighbor_t *neighborData);
+void neighbors_selection_extrapolate_or_delete_position(neighbors_t *neighbors);
 
 #ifdef __cplusplus
 }

@@ -52,8 +52,8 @@ enum CRITICAL_BEHAVIOR_ENUM{
 
 typedef struct  {
 	imu_t imu;
-	Control_Command_t controls;
-	Control_Command_t controls_nav;
+	control_command_t controls;
+	control_command_t controls_nav;
 
 	Stabiliser_Stack_copter_t stabiliser_stack;
 
@@ -121,7 +121,7 @@ byte_stream_t* get_telemetry_upstream(void);
 byte_stream_t* get_telemetry_downstream(void);
 
 imu_t* get_imu_data();
-Control_Command_t* get_control_inputs_data();
+control_command_t* get_control_inputs_data();
 
 #define STDOUT &print_util_get_debug_stream()
 

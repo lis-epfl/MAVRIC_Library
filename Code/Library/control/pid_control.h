@@ -31,40 +31,40 @@ typedef struct {
 	float accumulator;					///< accumulator
 	float maths_clip;							///< clipping value
 	float leakiness;					///< leakiness
-} Integrator_t;							///< integrator parameters
+} integrator_t;							///< integrator parameters
 
 typedef struct {
 	float gain;							///< gain 
 	float previous;						///< Previous input to the differentiator 
 	float LPF;							///< Low pass filter
 	float maths_clip;							///< clipping value
-} Differentiator_t;						///< differentiator parameters
+} differentiator_t;						///< differentiator parameters
 
 typedef struct {
 	float p_gain;						///< proportional gain
 	float clip_min, clip_max;			///< min and max clipping values
-	Integrator_t integrator;			///< integrator parameters
-	Differentiator_t differentiator;	///< differentiator parameters
+	integrator_t integrator;			///< integrator parameters
+	differentiator_t differentiator;	///< differentiator parameters
 	float output;						///< output
 	float error;						///< error
 	uint32_t last_update;				///< last update time in timer tick
 	float dt;							///< time step
 	float soft_zone_width;				///< approximate width of a "soft zone" on the error input, i.e. a region of low gain around the target point. Value 0 -> switched off
-}PID_Controller_t;						///< PID controller parameters
+} pid_controller_t;						///< PID controller parameters
 
 /**
  * \brief	Passing through the controller
  *
  * \return	A PID controller structure
  */
-PID_Controller_t pid_control_passthroughController(void);
+pid_controller_t pid_control_passthroughController(void);
 
 /**
  * \brief	Reset integrator
  *
  * \param	integrator	The pointer to the integrator structure
  */
-void pid_control_reset_integrator(Integrator_t *integrator);
+void pid_control_reset_integrator(integrator_t *integrator);
 
 /**
  * \brief				Update the PID controller
@@ -74,7 +74,7 @@ void pid_control_reset_integrator(Integrator_t *integrator);
  *
  * \return				The controller output
  */
-float pid_control_update(PID_Controller_t* controller, float error);
+float pid_control_update(pid_controller_t* controller, float error);
 
 /**
  * \brief				Update the PID controller for a given time step
@@ -85,7 +85,7 @@ float pid_control_update(PID_Controller_t* controller, float error);
  *
  * \return				The controller output
  */
-float pid_control_update_dt(PID_Controller_t* controller, float error, float dt);
+float pid_control_update_dt(pid_controller_t* controller, float error, float dt);
 
 #ifdef __cplusplus
 }

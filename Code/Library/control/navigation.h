@@ -45,11 +45,11 @@ typedef struct
 	uint8_t loopCount;									///< A counter for sending mavlink messages at a lower rate than the function
 	
 	
-	Control_Command_t *controls_nav;					///< The pointer to the navigation control structure
+	control_command_t *controls_nav;					///< The pointer to the navigation control structure
 	const UQuat_t *qe;									///< The pointer to the attitude quaternion structure
 	mavlink_waypoint_handler_t *waypoint_handler;		///< The pointer to the waypoint handler structure
 	const position_estimator_t *position_estimator;		///< The pointer to the position estimation structure in central_data
-	orca_t *orcaData;									///< The pointer to the ORCA structure in central_data
+	orca_t *orca;									///< The pointer to the ORCA structure in central_data
 	const state_structure_t* state_structure;			///< The pointer to the state structure in central_data
 }navigation_t;
 
@@ -61,10 +61,10 @@ typedef struct
  * \param	qe					The pointer to the attitude quaternion structure
  * \param	waypoint_handler	The pointer to the waypoint handler structure
  * \param	position_estimator	The pointer to the position estimation structure
- * \param	orcaData			The pointer to the ORCA structure
+ * \param	orca			The pointer to the ORCA structure
  * \param	state_structure		The pointer to the state structure 
  */
-void navigation_init(navigation_t* navigationData, Control_Command_t* controls_nav, const UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orcaData, const state_structure_t* state_structure);
+void navigation_init(navigation_t* navigationData, control_command_t* controls_nav, const UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, const state_structure_t* state_structure);
 
 /**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode

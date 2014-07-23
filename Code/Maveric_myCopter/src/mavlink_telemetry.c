@@ -54,9 +54,9 @@ void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_par
 void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_parameters)
 {
 
-	Stabiliser_t* rate_stabiliser = &central_data->stabiliser_stack.rate_stabiliser;
-	Stabiliser_t* attitude_stabiliser = &central_data->stabiliser_stack.attitude_stabiliser;
-	Stabiliser_t* velocity_stabiliser= &central_data->stabiliser_stack.velocity_stabiliser;
+	stabiliser_t* rate_stabiliser = &central_data->stabiliser_stack.rate_stabiliser;
+	stabiliser_t* attitude_stabiliser = &central_data->stabiliser_stack.attitude_stabiliser;
+	stabiliser_t* velocity_stabiliser= &central_data->stabiliser_stack.velocity_stabiliser;
 	
 	// System ID	
 	onboard_parameters_add_parameter_int32    ( onboard_parameters , (int32_t*)&central_data->mavlink_communication.mavlink_stream.sysid              , "ID_SYSID"         );

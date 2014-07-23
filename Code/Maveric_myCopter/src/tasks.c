@@ -145,9 +145,9 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 								waypoint_handler_waypoint_take_off(&central_data->waypoint_handler);
 							}
 							
-							distFromHomeSqr =	SQR(central_data->position_estimator.localPosition.pos[X] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[X]) +
-							SQR(central_data->position_estimator.localPosition.pos[Y] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[Y]) +
-							SQR(central_data->position_estimator.localPosition.pos[Z] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[Z]);
+							distFromHomeSqr =	SQR(central_data->position_estimator.local_position.pos[X] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[X]) +
+							SQR(central_data->position_estimator.local_position.pos[Y] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[Y]) +
+							SQR(central_data->position_estimator.local_position.pos[Z] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[Z]);
 						
 							if (central_data->waypoint_handler.dist2wp_sqr <= 16.0f)
 							{
@@ -176,9 +176,9 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 								waypoint_handler_waypoint_init(&central_data->waypoint_handler);
 							}
 
-							distFromHomeSqr =	SQR(central_data->position_estimator.localPosition.pos[X] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[X]) +
-							SQR(central_data->position_estimator.localPosition.pos[Y] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[Y]) +
-							SQR(central_data->position_estimator.localPosition.pos[Z] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[Z]);
+							distFromHomeSqr =	SQR(central_data->position_estimator.local_position.pos[X] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[X]) +
+							SQR(central_data->position_estimator.local_position.pos[Y] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[Y]) +
+							SQR(central_data->position_estimator.local_position.pos[Z] - central_data->waypoint_handler.waypoint_hold_coordinates.pos[Z]);
 						
 							if (central_data->waypoint_handler.dist2wp_sqr <= 16.0f)
 							{
@@ -232,7 +232,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 					state_set_new_mode(&central_data->state_structure,MAV_MODE_POSITION_HOLD);
 					if (state_test_if_first_time_in_mode(&central_data->state_structure,MAV_MODE_POSITION_HOLD))
 					{
-						waypoint_handler_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.localPosition);
+						waypoint_handler_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.local_position);
 					}
 					break;
 
@@ -241,7 +241,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 					if (state_test_if_first_time_in_mode(&central_data->state_structure,MAV_MODE_GPS_NAVIGATION))
 					{
 						central_data->waypoint_handler.auto_landing_enum = DESCENT_TO_SMALL_ALTITUDE;
-						waypoint_handler_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.localPosition);
+						waypoint_handler_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.local_position);
 					}
 					break;
 			}

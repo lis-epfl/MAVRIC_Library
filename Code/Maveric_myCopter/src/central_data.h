@@ -76,8 +76,8 @@ typedef struct  {
 	imu_t imu;													///< The IMU structure
 	qfilter_t attitude_filter;									///< The qfilter structure
 	ahrs_t ahrs;												///< The attitude estimation structure
-	Control_Command_t controls;									///< The control structure used for rate and attitude modes
-	Control_Command_t controls_nav;								///< The control nav structure used for velocity modes
+	control_command_t controls;									///< The control structure used for rate and attitude modes
+	control_command_t controls_nav;								///< The control nav structure used for velocity modes
 
 	stabilise_copter_t stabilisation_copter;					///< The stabilisation structure for copter
 	Stabiliser_Stack_copter_t stabiliser_stack;					///< The stabilisation stack structure (rates, attitude, velocity, thrust)
@@ -106,8 +106,8 @@ typedef struct  {
 	//float pressure_filtered;									///< The filtered pressure
 	//float altitude_filtered;									///< The filtered altitude
 	
-	orca_t orcaData;											///< The ORCA collision avoidance structure
-	neighbor_t neighborData;									///< The neighbor structure
+	orca_t orca;											///< The ORCA collision avoidance structure
+	neighbors_t neighbors;									///< The neighbor structure
 	
 	hud_structure_t hud_structure;								///< The HUD structure
 
