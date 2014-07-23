@@ -1,0 +1,20 @@
+TODO
+
+TODO scheduler:
+
+x add priorities, and function to filter by priorities
+- add run after
+- add module to switch on/off tasks based on mav state
+
+TODO: stabilisation
+- move stabiliser_stack to stabiliser copter
+- split in rate/attitude/velocity modules
+- correct telemetry
+
+TODO: servos
+- set proper structure
+- correct telemetry
+
+TODO: remote dsm2
+- set proper structure
+- correct telemetry

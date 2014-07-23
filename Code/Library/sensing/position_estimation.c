@@ -70,7 +70,7 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
 static void position_estimation_position_integration(position_estimator_t *pos_est)
 {
 	int32_t i;
-	float dt = pos_est->attitude_estimation->dt;
+	float dt = pos_est->ahrs->dt;
 	
 	UQuat_t qvel_bf,qvel; 
 
@@ -79,11 +79,11 @@ static void position_estimation_position_integration(position_estimator_t *pos_e
 	{
 		qvel.v[i] = pos_est->vel[i];
 	}
-	qvel_bf = quaternions_global_to_local(pos_est->attitude_estimation->qe, qvel);
+	qvel_bf = quaternions_global_to_local(pos_est->ahrs->qe, qvel);
 	for (i = 0; i < 3; i++)
 	{
 		pos_est->vel_bf[i] = qvel_bf.v[i];
-		pos_est->vel_bf[i] = pos_est->vel_bf[i] * (1.0f - (VEL_DECAY * dt)) + pos_est->attitude_estimation->linear_acc[i]  * dt;
+		pos_est->vel_bf[i] = pos_est->vel_bf[i] * (1.0f - (VEL_DECAY * dt)) + pos_est->ahrs->linear_acc[i]  * dt;
 	}
 	
 	// calculate velocity in global frame
@@ -94,7 +94,7 @@ static void position_estimation_position_integration(position_estimator_t *pos_e
 	qvel_bf.v[1] = pos_est->vel_bf[1]; 
 	qvel_bf.v[2] = pos_est->vel_bf[2];
 	
-	qvel = quaternions_local_to_global(pos_est->attitude_estimation->qe, qvel_bf);
+	qvel = quaternions_local_to_global(pos_est->ahrs->qe, qvel_bf);
 	
 	pos_est->vel[0] = qvel.v[0]; 
 	pos_est->vel[1] = qvel.v[1]; 
@@ -104,7 +104,7 @@ static void position_estimation_position_integration(position_estimator_t *pos_e
 	{
 		pos_est->localPosition.pos[i] = pos_est->localPosition.pos[i] * (1.0f - (POS_DECAY * dt)) + pos_est->vel[i] * dt;
 
-		pos_est->localPosition.heading = coord_conventions_get_yaw(pos_est->attitude_estimation->qe);
+		pos_est->localPosition.heading = coord_conventions_get_yaw(pos_est->ahrs->qe);
 	}
 	
 }
@@ -115,7 +115,7 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 	global_position_t global_gps_position;
 	local_coordinates_t local_coordinates;
 	
-	float dt = pos_est->attitude_estimation->dt;
+	float dt = pos_est->ahrs->dt;
 	
 	// UQuat_t bias_correction = {.s = 0, .v = {0.0f, 0.0f, 1.0f}};
 	UQuat_t vel_correction = 
@@ -324,14 +324,15 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, ahrs_t *attitude_estimation, imu_t *imu, bool* waypoint_set, mavlink_message_handler_t *message_handler, float home_lat, float home_lon, float home_alt, float gravity)
+void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, ahrs_t *ahrs, imu_t *imu, const mavlink_stream_t* mavlink_stream, bool* waypoint_set, mavlink_message_handler_t *message_handler, float home_lat, float home_lon, float home_alt, float gravity)
 {
     int32_t i;
 
 	pos_est->barometer = barometer;
 	pos_est->gps = gps;
-	pos_est->attitude_estimation = attitude_estimation;
+	pos_est->ahrs = ahrs;
 	pos_est->imu = imu;
+	pos_est->mavlink_stream = mavlink_stream;
 	pos_est->waypoint_set = waypoint_set;
 	
 	// default GPS home position
@@ -445,7 +446,10 @@ void position_estimation_update(position_estimator_t *pos_est)
 
 task_return_t position_estimation_send_position(position_estimator_t* pos_est)
 {
-	mavlink_msg_local_position_ned_send(	MAVLINK_COMM_0,
+	mavlink_message_t msg;
+	mavlink_msg_local_position_ned_pack(	pos_est->mavlink_stream->sysid,
+											pos_est->mavlink_stream->compid,
+											&msg,
 											time_keeper_get_millis(),
 											pos_est->localPosition.pos[0],
 											pos_est->localPosition.pos[1],
@@ -453,6 +457,8 @@ task_return_t position_estimation_send_position(position_estimator_t* pos_est)
 											pos_est->vel[0],
 											pos_est->vel[1],
 											pos_est->vel[2]);
+	mavlink_stream_send(pos_est->mavlink_stream, &msg);
+
 	return TASK_RUN_SUCCESS;
 }
 
@@ -462,16 +468,20 @@ task_return_t position_estimation_send_global_position(position_estimator_t* pos
 	global_position_t gpos = coord_conventions_local_to_global_position(pos_est->localPosition);
 	
 	//mavlink_msg_global_position_int_send(mavlink_channel_t chan, uint32_t time_boot_ms, int32_t lat, int32_t lon, int32_t alt, int32_t relative_alt, int16_t vx, int16_t vy, int16_t vz, uint16_t hdg)
-	mavlink_msg_global_position_int_send(	MAVLINK_COMM_0,
-										time_keeper_get_millis(),
-										gpos.latitude * 10000000,
-										gpos.longitude * 10000000,
-										gpos.altitude * 1000.0f,
-										gpos.altitude+pos_est->localPosition.pos[2],
-										pos_est->vel[0] * 100.0f,
-										pos_est->vel[1] * 100.0f,
-										pos_est->vel[2] * 100.0f,
-										pos_est->localPosition.heading);
+	mavlink_message_t msg;
+	mavlink_msg_global_position_int_pack(	pos_est->mavlink_stream->sysid,
+											pos_est->mavlink_stream->compid,
+											&msg,
+											time_keeper_get_millis(),
+											gpos.latitude * 10000000,
+											gpos.longitude * 10000000,
+											gpos.altitude * 1000.0f,
+											gpos.altitude+pos_est->localPosition.pos[2],
+											pos_est->vel[0] * 100.0f,
+											pos_est->vel[1] * 100.0f,
+											pos_est->vel[2] * 100.0f,
+											pos_est->localPosition.heading);
+	mavlink_stream_send(pos_est->mavlink_stream, &msg);
 	
 	return TASK_RUN_SUCCESS;
 }

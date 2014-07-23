@@ -25,6 +25,7 @@ extern "C" {
 
 #include <stdbool.h>
 #include "imu.h"
+#include "ahrs.h"
 #include "bmp085.h"
 #include "gps_ublox.h"
 #include "coord_conventions.h"
@@ -63,8 +64,9 @@ typedef struct
 	
 	pressure_data_t*  	 	barometer;				///< The pointer to the barometer structure
 	const gps_Data_type_t* 	gps;					///< The pointer to the GPS structure
-	const ahrs_t* 		 	attitude_estimation;	///< The pointer to the attitude estimation structure
+	const ahrs_t* 		 	ahrs;					///< The pointer to the attitude estimation structure
 	const imu_t* 		 	imu;					///< The pointer to the IMU structure
+	const mavlink_stream_t* mavlink_stream;			///< The pointer to the mavlink stream structure
 
 	bool* waypoint_set;								///< The pointer to the waypoint set flag
 } position_estimator_t;
@@ -76,8 +78,9 @@ typedef struct
  * \param	pos_est					The pointer to the position estimation structure
  * \param	barometer				The pointer to the barometer structure
  * \param	gps						The pointer to the GPS structure
- * \param	attitude_estimation		The pointer to the attitude estimation structure
+ * \param	ahrs		The pointer to the attitude estimation structure
  * \param	imu						The pointer to the IMU structure
+ * \param   mavlink_stream			The pointer to the mavlink stream structure
  * \param	waypoint_set			The pointer to the flag telling if there is a flight plan loaded
  * \param	mavlink_handler			The pointer to the mavlink message handler
  * \param	home_lat				The value of the hard coded home latitude position
@@ -85,7 +88,7 @@ typedef struct
  * \param	home_alt				The value of the hard coded home altitude position
  * \param	gravity					The value of the gravity
  */
-void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, ahrs_t *attitude_estimation, imu_t *imu, bool* waypoint_set, mavlink_message_handler_t *mavlink_handler, float home_lat, float home_lon, float home_alt, float gravity);
+void position_estimation_init(position_estimator_t *pos_est, pressure_data_t *barometer, gps_Data_type_t *gps, ahrs_t *ahrs, imu_t *imu, const mavlink_stream_t* mavlink_stream, bool* waypoint_set, mavlink_message_handler_t *mavlink_handler, float home_lat, float home_lon, float home_alt, float gravity);
 
 
 /**

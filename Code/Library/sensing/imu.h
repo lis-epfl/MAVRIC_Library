@@ -12,7 +12,7 @@
 /**
  * \file imu.h
  *
- * This file implements the code to read the IMU data
+ * This file implements the IMU data structure
  */
 
 
@@ -46,27 +46,6 @@ typedef struct
 	float scale_factor[3];					///< The scale factors of the sensor
 	float orientation[3];					///< The orientation of the sensor
 }sensor_calib_t;
-
-
-/**
- * \brief Structure containing the Attitude and Heading Reference System
- */
-typedef struct
-{
-	UQuat_t		qe;							///< quaternion defining the Attitude estimation of the platform
-	
-	float		angular_speed[3];			///< Gyro rates
-	float		linear_acc[3];				///< Acceleration WITHOUT gravity
-	
-	float		heading;					///< The heading of the platform
-	UQuat_t		up_vec;						///< The quaternion of the up vector
-	UQuat_t		north_vec;					///< The quaternion of the north vector
-	
-	uint32_t	last_update;				///< The time of the last IMU update in ms
-	float		dt;							///< The time interval between two IMU updates
-	
-	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
-} ahrs_t;
 
 
 /**
@@ -144,6 +123,7 @@ task_return_t imu_send_scaled(imu_t* imu);
  * \return	The status of execution of the task
  */
 task_return_t imu_send_raw(imu_t* imu);
+
 
 #ifdef __cplusplus
 }

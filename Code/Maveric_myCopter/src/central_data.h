@@ -31,6 +31,7 @@ extern "C" {
 #include "time_keeper.h"
 #include "qfilter.h"
 #include "imu.h"
+#include "ahrs.h"
 #include "stabilisation_copter.h"
 
 #include "remote_controller.h"
@@ -72,9 +73,9 @@ typedef struct  {
 
 	analog_monitor_t adc;										///< The analog to digital converter structure
 
-	imu_t imu;											///< The IMU structure
+	imu_t imu;													///< The IMU structure
 	qfilter_t attitude_filter;									///< The qfilter structure
-	ahrs_t attitude_estimation;									///< The attitude estimation structure
+	ahrs_t ahrs;												///< The attitude estimation structure
 	Control_Command_t controls;									///< The control structure used for rate and attitude modes
 	Control_Command_t controls_nav;								///< The control nav structure used for velocity modes
 
@@ -83,7 +84,7 @@ typedef struct  {
 
 	servo_output_t servos[NUMBER_OF_SERVO_OUTPUTS];				///< The array of servos (size NUMBER_OF_SERVO_OUTPUTS)
 	
-	gps_Data_type_t GPS_data;										///< The GPS structure
+	gps_Data_type_t GPS_data;									///< The GPS structure
 	
 	simulation_model_t sim_model;								///< The simulation model structure
 	
@@ -118,6 +119,7 @@ typedef struct  {
  * \brief	Initialization of the central data structure
  */
 void central_data_init(void);
+
 
 /**
  * \brief	Get a pointer to the central data

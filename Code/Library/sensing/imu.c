@@ -12,7 +12,7 @@
 /**
  * \file imu.c
  *
- * This file implements the code to read the IMU data
+ * This file implements the IMU data structure
  */
 
 

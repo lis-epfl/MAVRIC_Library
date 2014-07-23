@@ -139,7 +139,7 @@ static void simulation_reset_simulation(simulation_model_t *sim)
 	
 	sim->localPosition = sim->pos_est->localPosition;
 	
-	sim->attitude_estimation = *sim->estimated_attitude;
+	sim->ahrs = *sim->estimated_attitude;
 	
 	print_util_dbg_print("(Re)setting simulation. Origin: (");
 	print_util_dbg_print_num(sim->pos_est->localPosition.origin.latitude*10000000,10);
@@ -169,7 +169,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servo
 	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4];
 	float ldb;
 	UQuat_t wind_gf = {.s = 0, .v = {sim->vehicle_config.wind_x, sim->vehicle_config.wind_y, 0.0f}};
-	UQuat_t wind_bf = quaternions_global_to_local(sim->attitude_estimation.qe, wind_gf);
+	UQuat_t wind_bf = quaternions_global_to_local(sim->ahrs.qe, wind_gf);
 	
 	float sqr_lateral_airspeed = SQR(sim->vel_bf[0] + wind_bf.v[0]) + SQR(sim->vel_bf[1] + wind_bf.v[1]);
 	float lateral_airspeed = sqrt(sqr_lateral_airspeed);
@@ -249,7 +249,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *serv
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* attitude_estimation, imu_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, pressure_data_t* pressure, gps_Data_type_t* gps, state_structure_t* state_structure, servo_output_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
 {
 	int32_t i;
 	
@@ -266,17 +266,17 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	sim->waypoint_set = waypoint_set;
 	
 	// set initial conditions to a given attitude_filter
-	sim->estimated_attitude = attitude_estimation;
-	sim->attitude_estimation = *attitude_estimation;
+	sim->estimated_attitude = ahrs;
+	sim->ahrs = *ahrs;
 
 	print_util_dbg_print("Attitude:");
-	print_util_dbg_print_num(sim->attitude_estimation.qe.s*100,10);
+	print_util_dbg_print_num(sim->ahrs.qe.s*100,10);
 	print_util_dbg_print(", ");
-	print_util_dbg_print_num(sim->attitude_estimation.qe.v[0]*100,10);
+	print_util_dbg_print_num(sim->ahrs.qe.v[0]*100,10);
 	print_util_dbg_print(", ");
-	print_util_dbg_print_num(sim->attitude_estimation.qe.v[1]*100,10);
+	print_util_dbg_print_num(sim->ahrs.qe.v[1]*100,10);
 	print_util_dbg_print(", ");
-	print_util_dbg_print_num(sim->attitude_estimation.qe.v[2]*100,10);
+	print_util_dbg_print_num(sim->ahrs.qe.v[2]*100,10);
 	print_util_dbg_print(")\r");
 	
 
@@ -324,11 +324,11 @@ void simulation_calib_set(simulation_model_t *sim)
 		sim->calib_compass.orientation[i]		= sim->imu->calib_compass.orientation[i];
 	}
 	
-	//reset the simulated attitude_estimation
-	sim->attitude_estimation.qe.s = 1.0f;
-	sim->attitude_estimation.qe.v[0] = 0.0f;
-	sim->attitude_estimation.qe.v[1] = 0.0f;	
-	sim->attitude_estimation.qe.v[2] = 0.0f;
+	//reset the simulated ahrs
+	sim->ahrs.qe.s = 1.0f;
+	sim->ahrs.qe.v[0] = 0.0f;
+	sim->ahrs.qe.v[1] = 0.0f;	
+	sim->ahrs.qe.v[2] = 0.0f;
 	
 }
 
@@ -370,18 +370,18 @@ void simulation_update(simulation_model_t *sim)
 	qtmp1.s = 0;
 
 	// apply step rotation 
-	qed = quaternions_multiply(sim->attitude_estimation.qe,qtmp1);
+	qed = quaternions_multiply(sim->ahrs.qe,qtmp1);
 
 	// TODO: correct this formulas when using the right scales
-	sim->attitude_estimation.qe.s = sim->attitude_estimation.qe.s + qed.s * sim->dt;
-	sim->attitude_estimation.qe.v[0] += qed.v[0] * sim->dt;
-	sim->attitude_estimation.qe.v[1] += qed.v[1] * sim->dt;
-	sim->attitude_estimation.qe.v[2] += qed.v[2] * sim->dt;
+	sim->ahrs.qe.s = sim->ahrs.qe.s + qed.s * sim->dt;
+	sim->ahrs.qe.v[0] += qed.v[0] * sim->dt;
+	sim->ahrs.qe.v[1] += qed.v[1] * sim->dt;
+	sim->ahrs.qe.v[2] += qed.v[2] * sim->dt;
 
-	sim->attitude_estimation.qe = quaternions_normalise(sim->attitude_estimation.qe);
-	sim->attitude_estimation.up_vec = quaternions_global_to_local(sim->attitude_estimation.qe, up);
+	sim->ahrs.qe = quaternions_normalise(sim->ahrs.qe);
+	sim->ahrs.up_vec = quaternions_global_to_local(sim->ahrs.qe, up);
 	
-	sim->attitude_estimation.north_vec = quaternions_global_to_local(sim->attitude_estimation.qe, front);	
+	sim->ahrs.north_vec = quaternions_global_to_local(sim->ahrs.qe, front);	
 
 	// velocity and position integration
 	
@@ -394,7 +394,7 @@ void simulation_update(simulation_model_t *sim)
 		// simulate "acceleration" caused by contact force with ground, compensating gravity
 		for (i = 0; i < 3; i++)
 		{
-			sim->lin_forces_bf[i] = sim->attitude_estimation.up_vec.v[i] * sim->vehicle_config.total_mass * sim->vehicle_config.sim_gravity;
+			sim->lin_forces_bf[i] = sim->ahrs.up_vec.v[i] * sim->vehicle_config.total_mass * sim->vehicle_config.sim_gravity;
 		}
 				
 		// slow down... (will make velocity slightly inconsistent until next update cycle, but shouldn't matter much)
@@ -404,21 +404,21 @@ void simulation_update(simulation_model_t *sim)
 		}
 		
 		//upright
-		sim->rates_bf[0] =  sim->attitude_estimation.up_vec.v[1]; 
-		sim->rates_bf[1] =  - sim->attitude_estimation.up_vec.v[0];
+		sim->rates_bf[0] =  sim->ahrs.up_vec.v[1]; 
+		sim->rates_bf[1] =  - sim->ahrs.up_vec.v[0];
 		sim->rates_bf[2] = 0;
 	}
 	
-	sim->attitude_estimation.qe = quaternions_normalise(sim->attitude_estimation.qe);
-	sim->attitude_estimation.up_vec = quaternions_global_to_local(sim->attitude_estimation.qe, up);
+	sim->ahrs.qe = quaternions_normalise(sim->ahrs.qe);
+	sim->ahrs.up_vec = quaternions_global_to_local(sim->ahrs.qe, up);
 	
-	sim->attitude_estimation.north_vec = quaternions_global_to_local(sim->attitude_estimation.qe, front);	
+	sim->ahrs.north_vec = quaternions_global_to_local(sim->ahrs.qe, front);	
 	for (i = 0; i < 3; i++)
 	{
 			qtmp1.v[i] = sim->vel[i];
 	}
 	qtmp1.s = 0.0f;
-	qvel_bf = quaternions_global_to_local(sim->attitude_estimation.qe, qtmp1);
+	qvel_bf = quaternions_global_to_local(sim->ahrs.qe, qtmp1);
 	
 	float acc_bf[3];
 	for (i = 0; i < 3; i++)
@@ -426,10 +426,10 @@ void simulation_update(simulation_model_t *sim)
 		sim->vel_bf[i] = qvel_bf.v[i];
 		
 		// following the convention in the IMU, this is the acceleration due to force, as measured
-		sim->attitude_estimation.linear_acc[i] = sim->lin_forces_bf[i] / sim->vehicle_config.total_mass;
+		sim->ahrs.linear_acc[i] = sim->lin_forces_bf[i] / sim->vehicle_config.total_mass;
 		
 		// this is the "clean" acceleration without gravity
-		acc_bf[i] = sim->attitude_estimation.linear_acc[i] - sim->attitude_estimation.up_vec.v[i] * sim->vehicle_config.sim_gravity;
+		acc_bf[i] = sim->ahrs.linear_acc[i] - sim->ahrs.up_vec.v[i] * sim->vehicle_config.sim_gravity;
 		
 		sim->vel_bf[i] = sim->vel_bf[i] + acc_bf[i] * sim->dt;
 	}
@@ -437,7 +437,7 @@ void simulation_update(simulation_model_t *sim)
 	// calculate velocity in global frame
 	// vel = qe *vel_bf * qe - 1
 	qvel_bf.s = 0.0f; qvel_bf.v[0] = sim->vel_bf[0]; qvel_bf.v[1] = sim->vel_bf[1]; qvel_bf.v[2] = sim->vel_bf[2];
-	qtmp1 = quaternions_local_to_global(sim->attitude_estimation.qe, qvel_bf);
+	qtmp1 = quaternions_local_to_global(sim->ahrs.qe, qvel_bf);
 	sim->vel[0] = qtmp1.v[0]; sim->vel[1] = qtmp1.v[1]; sim->vel[2] = qtmp1.v[2];
 	
 	for (i = 0; i < 3; i++)
@@ -450,10 +450,10 @@ void simulation_update(simulation_model_t *sim)
 	{
 		sim->imu->raw_gyro.data[i] = (sim->rates_bf[i] * sim->calib_gyro.scale_factor[i] + sim->calib_gyro.bias[i]) * sim->calib_gyro.orientation[i];
 		sim->imu->raw_accelero.data[i] = ((sim->lin_forces_bf[i] / sim->vehicle_config.total_mass / sim->vehicle_config.sim_gravity) * sim->calib_accelero.scale_factor[i] + sim->calib_accelero.bias[i]) * sim->calib_accelero.orientation[i];
-		sim->imu->raw_compass.data[i] = ((sim->attitude_estimation.north_vec.v[i] ) * sim->calib_compass.scale_factor[i] + sim->calib_compass.bias[i])* sim->calib_compass.orientation[i];
+		sim->imu->raw_compass.data[i] = ((sim->ahrs.north_vec.v[i] ) * sim->calib_compass.scale_factor[i] + sim->calib_compass.bias[i])* sim->calib_compass.orientation[i];
 	}
 
-	sim->localPosition.heading = coord_conventions_get_yaw(sim->attitude_estimation.qe);
+	sim->localPosition.heading = coord_conventions_get_yaw(sim->ahrs.qe);
 }
 
 void simulation_simulate_barometer(simulation_model_t *sim)
@@ -528,7 +528,7 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 task_return_t simulation_send_state(simulation_model_t* sim_model)
 {
 	Aero_Attitude_t aero_attitude;
-	aero_attitude = coord_conventions_quat_to_aero(sim_model->attitude_estimation.qe);
+	aero_attitude = coord_conventions_quat_to_aero(sim_model->ahrs.qe);
 
 	global_position_t gpos = coord_conventions_local_to_global_position(sim_model->localPosition);
 	
@@ -561,7 +561,7 @@ task_return_t simulation_send_state(simulation_model_t* sim_model)
 task_return_t simulation_send_quaternions(simulation_model_t *sim_model)
 {
 	Aero_Attitude_t aero_attitude;
-	aero_attitude = coord_conventions_quat_to_aero(sim_model->attitude_estimation.qe);
+	aero_attitude = coord_conventions_quat_to_aero(sim_model->ahrs.qe);
 
 	global_position_t gpos = coord_conventions_local_to_global_position(sim_model->localPosition);
 	mavlink_message_t msg;
@@ -570,7 +570,7 @@ task_return_t simulation_send_quaternions(simulation_model_t *sim_model)
 											mavlink_stream->compid,
 											&msg,
 											time_keeper_get_micros(),
-											(float*) &sim_model->attitude_estimation.qe,
+											(float*) &sim_model->ahrs.qe,
 											aero_attitude.rpy[ROLL],
 											aero_attitude.rpy[PITCH],
 											aero_attitude.rpy[YAW],
@@ -582,9 +582,9 @@ task_return_t simulation_send_quaternions(simulation_model_t *sim_model)
 											100 * sim_model->vel[Z],
 											100 * vectors_norm(sim_model->vel),
 											0.0f,
-											sim_model->attitude_estimation.linear_acc[X],
-											sim_model->attitude_estimation.linear_acc[Y],
-											sim_model->attitude_estimation.linear_acc[Z]	);
+											sim_model->ahrs.linear_acc[X],
+											sim_model->ahrs.linear_acc[Y],
+											sim_model->ahrs.linear_acc[Z]	);
 	mavlink_stream_send(mavlink_stream, &msg);
 
 	return TASK_RUN_SUCCESS;

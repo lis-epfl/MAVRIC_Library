@@ -33,7 +33,8 @@ void central_data_init()
 	};
 	scheduler_init(&centralData.scheduler, &scheduler_config, &centralData.mavlink_communication.mavlink_stream);
 	
-	delay_ms(100); //add delay to be able to print on console init message for the following module
+	delay_ms(100); 
+
 	// Init mavlink communication
 	mavlink_communication_conf_t mavlink_config = 
 	{	
@@ -65,7 +66,9 @@ void central_data_init()
 	};
 	mavlink_communication_init(&centralData.mavlink_communication, &mavlink_config);
 	
-	delay_ms(100); //add delay to be able to print on console init message for the following module
+	delay_ms(100); 
+
+	// Init state structure
 	state_structure_t state_config =
 	{
 		.mav_mode = MAV_MODE_SAFE,
@@ -77,33 +80,46 @@ void central_data_init()
 		.sensor_enabled = 0b1111110000100111,
 		.sensor_health = 0b1111110000100111
 	};
-
 	state_init(	&centralData.state_structure,
 				&state_config,
 				&centralData.adc,
 				&centralData.mavlink_communication.mavlink_stream,
 				&centralData.mavlink_communication.message_handler); 
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following module
+	delay_ms(100);
+
+	// Init imu
 	imu_init(	&centralData.imu,
 				&centralData.mavlink_communication.mavlink_stream);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following module
-	// Init servos
+	delay_ms(100);
+
+	// Init ahrs
+	ahrs_init(	&centralData.ahrs,
+				&centralData.mavlink_communication.mavlink_stream);
+
+	delay_ms(100);
+
+	// Init ahrs
 	servo_pwm_init(centralData.servos);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following module
+	delay_ms(100);
+	
+	// Init qfilter
 	qfilter_init(   &(centralData.attitude_filter), 
 					&centralData.imu, 
-					&centralData.attitude_estimation,
+					&centralData.ahrs,
 					&centralData.mavlink_communication.mavlink_stream);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following module
+	delay_ms(100);
+	
+	// Init position_estimation_init
 	position_estimation_init(   &centralData.position_estimator,
 								&centralData.pressure,
 								&centralData.GPS_data,
-								&centralData.attitude_estimation,
+								&centralData.ahrs,
 								&centralData.imu,
+								&centralData.mavlink_communication.mavlink_stream,
 								&centralData.waypoint_handler.waypoint_set,
 								&centralData.mavlink_communication.message_handler,
 								HOME_LATITUDE,
@@ -111,49 +127,58 @@ void central_data_init()
 								HOME_ALTITUDE,
 								GRAVITY				);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following module
+	delay_ms(100);
+
+	// Init navigation
 	navigation_init(&centralData.navigationData,
 					&centralData.controls_nav,
-					&centralData.attitude_estimation.qe,
+					&centralData.ahrs.qe,
 					&centralData.waypoint_handler,
 					&centralData.position_estimator,
 					&centralData.orcaData,
 					&centralData.state_structure);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following module
+	delay_ms(100);
+
+	// Init waypont handler
 	waypoint_handler_init(  &centralData.waypoint_handler,
 							&centralData.position_estimator,
-							&centralData.attitude_estimation,
+							&centralData.ahrs,
 							&centralData.state_structure,
 							&centralData.mavlink_communication);
-	//waypoint_handler_init_waypoint_list(&centralData.waypoint_handler);
 	waypoint_handler_init_homing_waypoint(&centralData.waypoint_handler);
 	waypoint_handler_waypoint_init(&centralData.waypoint_handler);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following module
+	delay_ms(100);
+
+	// Init neighbor selection
 	neighbors_selection_init(   &centralData.neighborData, 
 								&centralData.position_estimator,
 								&centralData.mavlink_communication.message_handler);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following module
+	delay_ms(100);
+
+	// Init orca
 	orca_init(  &centralData.orcaData,
 				&centralData.neighborData,
 				&centralData.position_estimator,
 				&centralData.imu,
-				&centralData.attitude_estimation);
+				&centralData.ahrs);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following module
-	// init stabilisers
+	delay_ms(100);
+
+	// Init stabilisers
 	stabilisation_copter_init(	&centralData.stabilisation_copter,
 								&centralData.stabiliser_stack,
 								&centralData.controls,
 								&centralData.imu,
-								&centralData.attitude_estimation,
+								&centralData.ahrs,
 								&centralData.position_estimator,
 								centralData.servos 	);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following module
-	// init simulation (should be done after position_estimator)
+	delay_ms(100);
+
+	// Init simulation (should be done after position_estimator)
 	simulation_config_t vehicle_model_parameters= 
 	{
 		.rotor_lpf			 =  0.1f, 					///< Low pass filter constant (adjusted for time) to express rotor inertia/lag. 1.0=no inertia, 0.0=infinite inertia
@@ -179,7 +204,7 @@ void central_data_init()
 	};
 	simulation_init(&centralData.sim_model,
 					&vehicle_model_parameters,
-					&centralData.attitude_estimation,
+					&centralData.ahrs,
 					&centralData.imu,
 					&centralData.position_estimator,
 					&centralData.pressure,
@@ -192,14 +217,15 @@ void central_data_init()
 
 	delay_ms(100);//add delay to be able to print on console init message for the following module
 	
-	
+	// Init hud	
 	hud_init(	&centralData.hud_structure, 
 				&centralData.position_estimator, 
 				&centralData.controls, 
-				&centralData.attitude_estimation,
+				&centralData.ahrs,
 				&centralData.mavlink_communication.mavlink_stream);
 	
-	delay_ms(100);//add delay to be able to print on console init message for the following module
+	delay_ms(100);
+	
 	// Init sonar
 	// i2cxl_sonar_init(&centralData.i2cxl_sonar);
 }

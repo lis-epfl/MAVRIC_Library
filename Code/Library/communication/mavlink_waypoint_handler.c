@@ -808,14 +808,14 @@ void waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t *waypoint_hand
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* attitude_estimation, const state_structure_t* state_structure, mavlink_communication_t* mavlink_communication)
+void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* ahrs, const state_structure_t* state_structure, mavlink_communication_t* mavlink_communication)
 {
 	waypoint_handler->start_timeout = time_keeper_get_millis();
 	waypoint_handler->timeout_max_waypoint = 10000;
 	
 	waypoint_handler->position_estimator = position_estimator;
 	waypoint_handler->simulation_mode = &state_structure->simulation_mode;
-	waypoint_handler->attitude_estimation = attitude_estimation;
+	waypoint_handler->ahrs = ahrs;
 	waypoint_handler->state_structure = state_structure;
 	
 	waypoint_handler->mavlink_communication = mavlink_communication;
@@ -1118,7 +1118,7 @@ void waypoint_handler_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_ha
 	
 	waypoint_handler->waypoint_hold_coordinates = localPos;
 	
-	//waypoint_handler->waypoint_hold_coordinates.heading = coord_conventions_get_yaw(waypoint_handler->attitude_estimation->qe);
+	//waypoint_handler->waypoint_hold_coordinates.heading = coord_conventions_get_yaw(waypoint_handler->ahrs->qe);
 	//waypoint_handler->waypoint_hold_coordinates.heading = localPos.heading;
 	
 	print_util_dbg_print("Position hold at: (");
@@ -1149,7 +1149,7 @@ void waypoint_handler_waypoint_take_off(mavlink_waypoint_handler_t* waypoint_han
 	waypoint_handler->waypoint_hold_coordinates.pos[Z] = -10.0f;
 	
 	Aero_Attitude_t aero_attitude;
-	aero_attitude=coord_conventions_quat_to_aero(waypoint_handler->attitude_estimation->qe);
+	aero_attitude=coord_conventions_quat_to_aero(waypoint_handler->ahrs->qe);
 	waypoint_handler->waypoint_hold_coordinates.heading = aero_attitude.rpy[2];
 	
 	waypoint_handler->dist2wp_sqr = 100.0f; // same position, 10m above => distSqr = 100.0f
@@ -1236,7 +1236,7 @@ void waypoint_handler_waypoint_critical_handler(mavlink_waypoint_handler_t* wayp
 		waypoint_handler->critical_next_state = true;
 		
 		Aero_Attitude_t aero_attitude;
-		aero_attitude=coord_conventions_quat_to_aero(waypoint_handler->attitude_estimation->qe);
+		aero_attitude=coord_conventions_quat_to_aero(waypoint_handler->ahrs->qe);
 		waypoint_handler->waypoint_critical_coordinates.heading = aero_attitude.rpy[2];
 		
 		switch (waypoint_handler->critical_behavior)

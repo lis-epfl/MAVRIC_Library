@@ -20,14 +20,14 @@
 #include "conf_stabilisation_copter.h"
 #include "print_util.h"
 
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, const imu_t* imu, const ahrs_t* attitude_estimation, const position_estimator_t* pos_est,servo_output_t* servos)
+void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servo_output_t* servos)
 {
 	*stabiliser_stack = stabiliser_defaults_copter;
 	
 	stabilisation_copter->stabiliser_stack = stabiliser_stack;
 	stabilisation_copter->controls = controls;
 	stabilisation_copter->imu = imu;
-	stabilisation_copter->attitude_estimation = attitude_estimation;
+	stabilisation_copter->ahrs = ahrs;
 	stabilisation_copter->pos_est = pos_est;
 	stabilisation_copter->servos = servos;
 	
@@ -59,7 +59,7 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 	case VELOCITY_COMMAND_MODE:
 		
 		qtmp=quaternions_create_from_vector(input.tvel);
-		UQuat_t inputLocal = quaternions_local_to_global(stabilisation_copter->attitude_estimation->qe, qtmp);
+		UQuat_t inputLocal = quaternions_local_to_global(stabilisation_copter->ahrs->qe, qtmp);
 		
 		input.tvel[X] = inputLocal.v[X];
 		input.tvel[Y] = inputLocal.v[Y];
@@ -96,7 +96,7 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 		input = stabilisation_copter->stabiliser_stack->velocity_stabiliser.output;
 		
 		qtmp=quaternions_create_from_vector(stabilisation_copter->stabiliser_stack->velocity_stabiliser.output.rpy);
-		UQuat_t rpyLocal = quaternions_global_to_local(stabilisation_copter->attitude_estimation->qe, qtmp);
+		UQuat_t rpyLocal = quaternions_global_to_local(stabilisation_copter->ahrs->qe, qtmp);
 		
 		input.rpy[ROLL] = rpyLocal.v[Y];
 		input.rpy[PITCH] = -rpyLocal.v[X];
@@ -105,8 +105,8 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 	
 	case ATTITUDE_COMMAND_MODE:
 		// run absolute attitude_filter controller
-		rpyt_errors[0]= input.rpy[0] - ( - stabilisation_copter->attitude_estimation->up_vec.v[1] ); 
-		rpyt_errors[1]= input.rpy[1] - stabilisation_copter->attitude_estimation->up_vec.v[0];
+		rpyt_errors[0]= input.rpy[0] - ( - stabilisation_copter->ahrs->up_vec.v[1] ); 
+		rpyt_errors[1]= input.rpy[1] - stabilisation_copter->ahrs->up_vec.v[0];
 		
 		if ((stabilisation_copter->controls->yaw_mode == YAW_ABSOLUTE) ) {
 			rpyt_errors[2] =maths_calc_smaller_angle(input.theading- stabilisation_copter->pos_est->localPosition.heading);
@@ -129,7 +129,7 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 	case RATE_COMMAND_MODE: // this level is always run
 		// get rate measurements from IMU (filtered angular rates)
 		for (i=0; i<3; i++) {
-			rpyt_errors[i]= input.rpy[i]- stabilisation_copter->attitude_estimation->angular_speed[i];
+			rpyt_errors[i]= input.rpy[i]- stabilisation_copter->ahrs->angular_speed[i];
 		}
 		rpyt_errors[3] = input.thrust ;  // no feedback for thrust at this level
 		

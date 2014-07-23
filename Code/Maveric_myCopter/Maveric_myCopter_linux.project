@@ -672,6 +672,8 @@
       <File Name="Library/sensing/neighbor_selection.h"/>
       <File Name="Library/sensing/simulation.h"/>
       <File Name="Library/sensing/simulation.c"/>
+      <File Name="Library/sensing/ahrs.h"/>
+      <File Name="Library/sensing/ahrs.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="util">
       <File Name="Library/util/linear_algebra.c"/>

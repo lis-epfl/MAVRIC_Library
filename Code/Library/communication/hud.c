@@ -21,9 +21,9 @@
 #include "coord_conventions.h"
 #include "mavlink_communication.h"
 
-void hud_init(hud_structure_t *hud_structure, const position_estimator_t *pos_est, const Control_Command_t *controls, const ahrs_t *attitude_estimation, const mavlink_stream_t* mavlink_stream)
+void hud_init(hud_structure_t* hud_structure, const position_estimator_t* pos_est, const Control_Command_t* controls, const ahrs_t* ahrs, const mavlink_stream_t* mavlink_stream)
 {
-	hud_structure->attitude_estimation = attitude_estimation;
+	hud_structure->ahrs = ahrs;
 	hud_structure->controls            = controls;
 	hud_structure->pos_est             = pos_est;
 	hud_structure->mavlink_stream      = mavlink_stream;
@@ -37,7 +37,7 @@ task_return_t hud_send_message(hud_structure_t* hud_structure)
 	float airspeed=groundspeed;
 
 	Aero_Attitude_t aero_attitude;
-	aero_attitude = coord_conventions_quat_to_aero(hud_structure->attitude_estimation->qe);
+	aero_attitude = coord_conventions_quat_to_aero(hud_structure->ahrs->qe);
 	
 	int16_t heading;
 	if(aero_attitude.rpy[2] < 0)
