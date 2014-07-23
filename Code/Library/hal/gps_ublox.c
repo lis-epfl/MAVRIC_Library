@@ -24,84 +24,84 @@
 #include "time_keeper.h"
 #include "mavlink_communication.h"
 
-uint8_t  **ubx_currentMessage = 0;		///<  The pointer to the pointer to the structure of the current message to fill
-uint8_t  ** ubx_lastMessage = 0;		///<  The pointer to the pointer to the structure of the last message received of the same type than the current one being received (for exchange at the end)
-uint16_t * ubx_validMessage = 0;		///<  The pointer to the number to increment when a message of the type has been received
+uint8_t  **ubx_current_message = 0;		///<  The pointer to the pointer to the structure of the current message to fill
+uint8_t  ** ubx_last_message = 0;		///<  The pointer to the pointer to the structure of the last message received of the same type than the current one being received (for exchange at the end)
+uint16_t * ubx_valid_message = 0;		///<  The pointer to the number to increment when a message of the type has been received
 
 // We are using two buffers for each message, one for the last message received, the other for the message being received (not complete)
-ubx_nav_posllh_t ubx_posllhMessage[2];			///<  The Posllh message buffer
-ubx_nav_status_t ubx_statusMessage[2];			///<  The Status message buffer
-ubx_nav_solution_t ubx_solutionMessage[2];		///<  The Solution message buffer
-ubx_nav_velned_t ubx_velnedMessage[2];			///<  The Velned message buffer
-ubx_nav_SVInfo_t ubx_svInfoMessage[2];			///<  The SVInfo message buffer
-ubx_cfg_nav_settings_t ubx_NavSettingsMessage[2]; ///<  The Nav Settings message buffer
-ubx_cfg_nav_rate_t ubx_CFGRateMessage[2];			///<  The CFG Rate message buffer
-ubx_cfg_msg_rate_t ubx_CFGSetGetRateMessage[2];	///<  The CFG Set/get Rate message buffer
-ubx_mon_rxr_struct_t ubx_MONRXRMessage[2];		///<  The MON RXR message buffer
-ubx_tim_tp_t ubx_TimTPMessage[2];					///<  The TIM TP message buffer
-ubx_tim_vrfy_t ubx_TimVRFYMessage[2];				///<  The TIM VRFY message buffer
+ubx_nav_pos_llh_t ubx_pos_llh_message[2];			///<  The Posllh message buffer
+ubx_nav_status_t ubx_status_message[2];			///<  The Status message buffer
+ubx_nav_solution_t ubx_solution_message[2];		///<  The Solution message buffer
+ubx_nav_vel_ned_t ubx_vel_ned_message[2];			///<  The Velned message buffer
+ubx_nav_sv_info_t ubx_sv_info_message[2];			///<  The SVInfo message buffer
+ubx_cfg_nav_settings_t ubx_nav_settings_message[2]; ///<  The Nav Settings message buffer
+ubx_cfg_nav_rate_t ubx_cfg_rate_message[2];			///<  The CFG Rate message buffer
+ubx_cfg_msg_rate_t ubx_cfg_set_get_rate_message[2];	///<  The CFG Set/get Rate message buffer
+ubx_mon_rxr_struct_t ubx_mon_rxr_message[2];		///<  The MON RXR message buffer
+ubx_tim_tp_t ubx_tim_tp_message[2];					///<  The TIM TP message buffer
+ubx_tim_vrfy_t ubx_tim_vrfy_message[2];				///<  The TIM VRFY message buffer
 
 // NAV-POSLLH
-ubx_nav_posllh_t * ubx_currentPosllhMessage = &ubx_posllhMessage[0];	///<  The pointer to the Posllh message that is being filled (not usable)
-ubx_nav_posllh_t * ubx_lastPosllhMessage = &ubx_posllhMessage[1];		///<  The pointer to the last Posllh message that was completed
-uint16_t ubx_numberOfValidPosllhMessage = 0;					///<  Number of valid Posllh message received
+ubx_nav_pos_llh_t * ubx_current_pos_llh_message = &ubx_pos_llh_message[0];	///<  The pointer to the Posllh message that is being filled (not usable)
+ubx_nav_pos_llh_t * ubx_last_pos_llh_message = &ubx_pos_llh_message[1];		///<  The pointer to the last Posllh message that was completed
+uint16_t ubx_number_of_valid_pos_llh_message = 0;					///<  Number of valid Posllh message received
 
 // NAV-STATUS
-ubx_nav_status_t *ubx_currentStatusMessage = &ubx_statusMessage[0];	///<  The pointer to the Status message that is being filled (not usable)
-ubx_nav_status_t *ubx_lastStatusMessage = &ubx_statusMessage[1];		///<  The pointer to the last Status message that was completed
-uint16_t ubx_numberOfValidStatusMessage = 0;					///<  Number of valid Status message received
+ubx_nav_status_t *ubx_current_status_message = &ubx_status_message[0];	///<  The pointer to the Status message that is being filled (not usable)
+ubx_nav_status_t *ubx_last_status_message = &ubx_status_message[1];		///<  The pointer to the last Status message that was completed
+uint16_t ubx_number_of_valid_status_message = 0;					///<  Number of valid Status message received
 
 // NAV-Sol
-ubx_nav_solution_t *ubx_currentSolutionMessage = &ubx_solutionMessage[0]; ///<  The pointer to the Solution message that is being filled (not usable)
-ubx_nav_solution_t *ubx_lastSolutionMessage = &ubx_solutionMessage[1];	///<  The pointer to the last Status message that was completed
-uint16_t ubx_numberOfValidSolutionMessage = 0;					///<  Number of valid Status message received
+ubx_nav_solution_t *ubx_current_solution_message = &ubx_solution_message[0]; ///<  The pointer to the Solution message that is being filled (not usable)
+ubx_nav_solution_t *ubx_last_solution_message = &ubx_solution_message[1];	///<  The pointer to the last Status message that was completed
+uint16_t ubx_number_of_valid_solution_message = 0;					///<  Number of valid Status message received
 
 // NAV-VELNED
-ubx_nav_velned_t *ubx_currentVelnedMessage = &ubx_velnedMessage[0];	///<  The pointer to the Velned message that is being filled (not usable)
-ubx_nav_velned_t *ubx_lastVelnedMessage = &ubx_velnedMessage[1];		///<  The pointer to the last Velned message that was completed
-uint16_t ubx_numberOfValidVelnedMessage = 0;					///<  Number of valid Velned message received
+ubx_nav_vel_ned_t *ubx_current_vel_ned_message = &ubx_vel_ned_message[0];	///<  The pointer to the Velned message that is being filled (not usable)
+ubx_nav_vel_ned_t *ubx_last_vel_ned_message = &ubx_vel_ned_message[1];		///<  The pointer to the last Velned message that was completed
+uint16_t ubx_number_of_valid_vel_ned_message = 0;					///<  Number of valid Velned message received
 
 // NAV-SVINFO
-ubx_nav_SVInfo_t *ubx_currentSVInfoMessage = &ubx_svInfoMessage[0];	///<  The pointer to the Status message that is being filled (not usable)
-ubx_nav_SVInfo_t *ubx_lastSVInfoMessage = &ubx_svInfoMessage[1];		///<  The pointer to the last Status message that was completed
-uint16_t ubx_numberOfValidSVInfoMessage = 0;					///<  Number of valid Status message received
+ubx_nav_sv_info_t *ubx_current_sv_info_message = &ubx_sv_info_message[0];	///<  The pointer to the Status message that is being filled (not usable)
+ubx_nav_sv_info_t *ubx_last_sv_info_message = &ubx_sv_info_message[1];		///<  The pointer to the last Status message that was completed
+uint16_t ubx_number_of_valid_sv_info_message = 0;					///<  Number of valid Status message received
 
 // NAV-Settings
-ubx_cfg_nav_settings_t *ubx_currentNavSettingsMessage = &ubx_NavSettingsMessage[0];	///<  The pointer to the Nav Settings message that is being filled (not usable)
-ubx_cfg_nav_settings_t *ubx_lastNavSettingsMessage = &ubx_NavSettingsMessage[1];		///<  The pointer to the last Nav Settings message that was completed
-uint16_t ubx_numberOfValidNavSettingsMessage = 0;								///<  Number of valid Nav Settings message received
+ubx_cfg_nav_settings_t *ubx_current_nav_settings_message = &ubx_nav_settings_message[0];	///<  The pointer to the Nav Settings message that is being filled (not usable)
+ubx_cfg_nav_settings_t *ubx_last_nav_settings_message = &ubx_nav_settings_message[1];		///<  The pointer to the last Nav Settings message that was completed
+uint16_t ubx_number_of_valid_nav_settings_message = 0;								///<  Number of valid Nav Settings message received
 
 // CFG message rate
-ubx_cfg_nav_rate_t *ubx_currentCFGRateMessage = &ubx_CFGRateMessage[0];	///<  The pointer to the CFG Rate message that is being filled (not usable)
-ubx_cfg_nav_rate_t *ubx_lastCFGRateMessage = &ubx_CFGRateMessage[1];		///<  The pointer to the last CFG Rate message that was completed
-uint16_t ubx_numberOfValidCFGRateMessage = 0;						///<  Number of valid CFG Rate message received
+ubx_cfg_nav_rate_t *ubx_current_cfg_rate_message = &ubx_cfg_rate_message[0];	///<  The pointer to the CFG Rate message that is being filled (not usable)
+ubx_cfg_nav_rate_t *ubx_last_cfg_rate_message = &ubx_cfg_rate_message[1];		///<  The pointer to the last CFG Rate message that was completed
+uint16_t ubx_number_of_valid_cfg_rate_message = 0;						///<  Number of valid CFG Rate message received
 
 // CFG Set/Get message rate
-ubx_cfg_msg_rate_t *ubx_currentCFGSetGetRateMessage = &ubx_CFGSetGetRateMessage[0];	///<  The pointer to the CFG Set/get Rate message that is being filled (not usable)
-ubx_cfg_msg_rate_t *ubx_lastCFGSetGetRateMessage = &ubx_CFGSetGetRateMessage[1];		///<  The pointer to the last CFG Set/get Rate message that was completed
-uint16_t ubx_numberOfValidCFGSetGetRateMessage = 0;							///<  Number of valid CFG Set/get Rate message received
+ubx_cfg_msg_rate_t *ubx_current_cfg_set_get_rate_message = &ubx_cfg_set_get_rate_message[0];	///<  The pointer to the CFG Set/get Rate message that is being filled (not usable)
+ubx_cfg_msg_rate_t *ubx_last_cfg_set_get_rate_message = &ubx_cfg_set_get_rate_message[1];		///<  The pointer to the last CFG Set/get Rate message that was completed
+uint16_t ubx_number_of_valid_cfg_set_get_rate_message = 0;							///<  Number of valid CFG Set/get Rate message received
 
 // MON RXR message
-ubx_mon_rxr_struct_t *ubx_currentMONRXRMessage = &ubx_MONRXRMessage[0];	///<  The pointer to the MON RXR message that is being filled (not usable)
-ubx_mon_rxr_struct_t *ubx_lastMONRXRMessage = &ubx_MONRXRMessage[1];		///<  The pointer to the last MON RXR message that was completed
-uint16_t ubx_numberOfValidMONRXRMessage = 0;						///<  Number of valid MON RXR message received
+ubx_mon_rxr_struct_t *ubx_current_mon_rxr_message = &ubx_mon_rxr_message[0];	///<  The pointer to the MON RXR message that is being filled (not usable)
+ubx_mon_rxr_struct_t *ubx_last_mon_rxr_message = &ubx_mon_rxr_message[1];		///<  The pointer to the last MON RXR message that was completed
+uint16_t ubx_number_of_valid_mon_rxr_message = 0;						///<  Number of valid MON RXR message received
 
 // TIM TP message
-ubx_tim_tp_t *ubx_currentTimTPMessage = &ubx_TimTPMessage[0];		///<  The pointer to the MON RXR message that is being filled (not usable)
-ubx_tim_tp_t *ubx_lastTimTPMessage = &ubx_TimTPMessage[1];		///<  The pointer to the last TIM TP message that was completed
-uint16_t ubx_numberOfValidTimTPMessage = 0;				///<  Number of valid TIM TP message received
+ubx_tim_tp_t *ubx_current_tim_tp_message = &ubx_tim_tp_message[0];		///<  The pointer to the MON RXR message that is being filled (not usable)
+ubx_tim_tp_t *ubx_last_tim_tp_message = &ubx_tim_tp_message[1];		///<  The pointer to the last TIM TP message that was completed
+uint16_t ubx_number_of_valid_tim_tp_message = 0;				///<  Number of valid TIM TP message received
 
 
 // TIM VRFY message
-ubx_tim_vrfy_t *ubx_currentTimVRFYMessage = &ubx_TimVRFYMessage[0];	///<  The pointer to the TIM VRFY message that is being filled (not usable)
-ubx_tim_vrfy_t *ubx_lastTimVRFYMessage = &ubx_TimVRFYMessage[1];		///<  The pointer to the last TIM VRFY message that was completed
-uint16_t ubx_numberOfValidTimVRFYMessage = 0;					///<  Number of valid TIM VRFY message received
+ubx_tim_vrfy_t *ubx_current_tim_vrfy_message = &ubx_tim_vrfy_message[0];	///<  The pointer to the TIM VRFY message that is being filled (not usable)
+ubx_tim_vrfy_t *ubx_last_tim_vrfy_message = &ubx_tim_vrfy_message[1];		///<  The pointer to the last TIM VRFY message that was completed
+uint16_t ubx_number_of_valid_tim_vrfy_message = 0;					///<  Number of valid TIM VRFY message received
 
 // Set to true to print all data
-bool printNavOnDebug = false;
+bool print_nav_on_debug = false;
 
-uint8_t loopPosllh = 0, loopVelned = 0, loopStatus = 0, loopSolution = 0, loopTimTp = 0, loopTimVrfy = 0;
-uint8_t numSkippedMsg = 10;
+uint8_t loop_pos_llh = 0, loop_vel_ned = 0, loop_status = 0, loop_solution = 0, loop_tim_tp = 0, loop_tim_vrfy = 0;
+uint8_t num_skipped_msg = 10;
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -112,7 +112,7 @@ uint8_t numSkippedMsg = 10;
  *
  * \param	_engine_nav_setting		the GPS Nav settings 
  */
-static void gps_ublox_reset(gps_t *gps, GPS_Engine_Setting _engine_nav_setting);
+static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t _engine_nav_setting);
 
 
 /**
@@ -281,7 +281,7 @@ static void ubx_configure_message_rate(gps_t *gps, uint8_t msg_class, uint8_t ms
  *
  * \return	A pointer to the last valid posllh message, or 0.
  */
-static ubx_nav_posllh_t * ubx_GetPosllh(void);
+static ubx_nav_pos_llh_t * ubx_get_pos_llh(void);
 
 
 /**
@@ -291,7 +291,7 @@ static ubx_nav_posllh_t * ubx_GetPosllh(void);
  *
  * \return	A pointer to the last valid status message, or 0.
  */
-static ubx_nav_status_t * ubx_GetStatus(void);
+static ubx_nav_status_t * ubx_get_status(void);
 
 
 /**
@@ -301,7 +301,7 @@ static ubx_nav_status_t * ubx_GetStatus(void);
  *
  * \return	A pointer to the last valid NAV-SOL message, or 0.
  */
-static ubx_nav_solution_t * ubx_GetSolution(void);
+static ubx_nav_solution_t * ubx_get_solution(void);
 
 
 /**
@@ -310,7 +310,7 @@ static ubx_nav_solution_t * ubx_GetSolution(void);
 *
 * \return	A pointer to the last valid velned message, or 0.
 */
-static ubx_nav_velned_t * ubx_GetVelned(void);
+static ubx_nav_vel_ned_t * ubx_get_vel_ned(void);
 
 
 /**
@@ -319,7 +319,7 @@ static ubx_nav_velned_t * ubx_GetVelned(void);
 *
 * \return	A pointer to the last valid status message, or 0.
 */
-static ubx_nav_SVInfo_t * ubx_GetSVInfo(void);
+static ubx_nav_sv_info_t * ubx_get_sv_info(void);
 
 
 /**
@@ -328,7 +328,7 @@ static ubx_nav_SVInfo_t * ubx_GetSVInfo(void);
 *
 * \return	A pointer to the last valid status message, or 0.
 */
-static ubx_cfg_nav_settings_t * ubx_GetNavSettings(void);
+static ubx_cfg_nav_settings_t * ubx_get_nav_settings(void);
 
 
 /**
@@ -337,7 +337,7 @@ static ubx_cfg_nav_settings_t * ubx_GetNavSettings(void);
 *
 * \return	A pointer to the last valid status message, or 0.
 */
-static ubx_cfg_msg_rate_t * ubx_GetMsgRate(void);
+static ubx_cfg_msg_rate_t * ubx_get_msg_rate(void);
 
 
 /**
@@ -346,7 +346,7 @@ static ubx_cfg_msg_rate_t * ubx_GetMsgRate(void);
 *
 * \return	A pointer to the last valid status message, or 0.
 */
-static ubx_mon_rxr_struct_t * ubx_GetMonRXR(void);
+static ubx_mon_rxr_struct_t * ubx_get_mon_rxr(void);
 
 
 /**
@@ -355,7 +355,7 @@ static ubx_mon_rxr_struct_t * ubx_GetMonRXR(void);
 *
 * \return	A pointer to the last valid status message, or 0.
 */
-static ubx_tim_tp_t * ubx_GetTimTP(void);
+static ubx_tim_tp_t * ubx_get_tim_tp(void);
 
 
 /**
@@ -364,17 +364,17 @@ static ubx_tim_tp_t * ubx_GetTimTP(void);
 *
 * \return	A pointer to the last valid status message, or 0.
 */
-static ubx_tim_vrfy_t * ubx_GetTimVRFY(void);
+static ubx_tim_vrfy_t * ubx_get_tim_vrfy(void);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void gps_ublox_reset(gps_t *gps, GPS_Engine_Setting _engine_nav_setting)
+static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t _engine_nav_setting)
 {
 	// uint8_t epoch = TIME_OF_WEEK;
-	idleTimeout = 1200;
+	idle_timeout = 1200;
 	
 	gps_ublox_configure_gps(gps);
 	
@@ -400,7 +400,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 	uint8_t data;
 	bool msg_ok = false;
 	
-	uint8_t  * temporaryMessageForSwaping;
+	uint8_t  * temporary_message_for_swaping;
 	
 	while(buffer_bytes_available(&(gps->gps_buffer)))
 	{
@@ -444,7 +444,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			//
 			case 2:
 			step++;
-			ubxclass = data;
+			ubx_class = data;
 			cksum_a = data;
 			cksum_b = cksum_a; // reset the checksum accumulators
 			break;
@@ -481,21 +481,21 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			}
 			payload_counter = 0; // prepare to receive payload
 			
-			if(ubxclass == UBX_CLASS_NAV)
+			if(ubx_class == UBX_CLASS_NAV)
 			{
 				switch(msg_id)
 				{
 					case MSG_NAV_POSLLH:
 					if(payload_length == UBX_SIZE_NAV_POSLLH)
 					{
-						ubx_currentMessage = (uint8_t **)&ubx_currentPosllhMessage;
-						ubx_lastMessage = (uint8_t **)&ubx_lastPosllhMessage;
-						ubx_validMessage = &ubx_numberOfValidPosllhMessage;
+						ubx_current_message = (uint8_t **)&ubx_current_pos_llh_message;
+						ubx_last_message = (uint8_t **)&ubx_last_pos_llh_message;
+						ubx_valid_message = &ubx_number_of_valid_pos_llh_message;
 					}
 					else
 					{
 						print_util_dbg_print("Wrong Posllh message 0x");
-						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print_num(ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
 						print_util_dbg_print_num(msg_id,16);
 						print_util_dbg_print(" Received size:");
@@ -511,14 +511,14 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					case MSG_NAV_STATUS:
 					if(payload_length == UBX_SIZE_NAV_STATUS)
 					{
-						ubx_currentMessage = (uint8_t **)&ubx_currentStatusMessage;
-						ubx_lastMessage = (uint8_t **)&ubx_lastStatusMessage;
-						ubx_validMessage = &ubx_numberOfValidStatusMessage;
+						ubx_current_message = (uint8_t **)&ubx_current_status_message;
+						ubx_last_message = (uint8_t **)&ubx_last_status_message;
+						ubx_valid_message = &ubx_number_of_valid_status_message;
 					}
 					else
 					{
 						print_util_dbg_print("Wrong Nav Status message 0x");
-						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print_num(ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
 						print_util_dbg_print_num(msg_id,16);
 						print_util_dbg_print(" Received size:");
@@ -534,14 +534,14 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					case MSG_NAV_SOL:
 					if(payload_length == UBX_SIZE_NAV_SOL)
 					{
-						ubx_currentMessage = (uint8_t **)&ubx_currentSolutionMessage;
-						ubx_lastMessage = (uint8_t **)&ubx_lastSolutionMessage;
-						ubx_validMessage = &ubx_numberOfValidSolutionMessage;;
+						ubx_current_message = (uint8_t **)&ubx_current_solution_message;
+						ubx_last_message = (uint8_t **)&ubx_last_solution_message;
+						ubx_valid_message = &ubx_number_of_valid_solution_message;;
 					}
 					else
 					{
 						print_util_dbg_print("Wrong Solution message 0x");
-						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print_num(ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
 						print_util_dbg_print_num(msg_id,16);
 						print_util_dbg_print(" Received size:");
@@ -557,14 +557,14 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					case MSG_NAV_VELNED:
 					if(payload_length == UBX_SIZE_NAV_VELNED)
 					{
-						ubx_currentMessage = (uint8_t **)&ubx_currentVelnedMessage;
-						ubx_lastMessage = (uint8_t **)&ubx_lastVelnedMessage;
-						ubx_validMessage = &ubx_numberOfValidVelnedMessage;
+						ubx_current_message = (uint8_t **)&ubx_current_vel_ned_message;
+						ubx_last_message = (uint8_t **)&ubx_last_vel_ned_message;
+						ubx_valid_message = &ubx_number_of_valid_vel_ned_message;
 					}
 					else
 					{
 						print_util_dbg_print("Wrong Velned message 0x");
-						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print_num(ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
 						print_util_dbg_print_num(msg_id,16);
 						print_util_dbg_print(" Received size:");
@@ -580,14 +580,14 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					case MSG_NAV_SVINFO:
 					if(payload_length == UBX_SIZE_NAV_SVINFO)
 					{
-						ubx_currentMessage = (uint8_t **)&ubx_currentSVInfoMessage;
-						ubx_lastMessage = (uint8_t **)&ubx_lastSVInfoMessage;
-						ubx_validMessage = &ubx_numberOfValidSVInfoMessage;
+						ubx_current_message = (uint8_t **)&ubx_current_sv_info_message;
+						ubx_last_message = (uint8_t **)&ubx_last_sv_info_message;
+						ubx_valid_message = &ubx_number_of_valid_sv_info_message;
 					}
 					else
 					{
 						print_util_dbg_print("Wrong SV Info message 0x");
-						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print_num(ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
 						print_util_dbg_print_num(msg_id,16);
 						print_util_dbg_print(" Received size:");
@@ -603,7 +603,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					default:
 					step = 0;
 					print_util_dbg_print("Unexpected NAV message, Class: 0x");
-					print_util_dbg_print_num(ubxclass,16);
+					print_util_dbg_print_num(ubx_class,16);
 					print_util_dbg_print(", msg id: 0x");
 					print_util_dbg_print_num(msg_id,16);
 					print_util_dbg_print(" of size ");
@@ -612,7 +612,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					goto reset;
 				}
 			}
-			else if(ubxclass == UBX_CLASS_CFG)
+			else if(ubx_class == UBX_CLASS_CFG)
 			{
 				
 				switch(msg_id)
@@ -620,14 +620,14 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					case MSG_CFG_NAV_SETTINGS:
 					if(payload_length == UBX_SIZE_NAV_SETTINGS)
 					{
-						ubx_currentMessage = (uint8_t **)&ubx_currentNavSettingsMessage;
-						ubx_lastMessage = (uint8_t **)&ubx_lastNavSettingsMessage;
-						ubx_validMessage = &ubx_numberOfValidNavSettingsMessage;
+						ubx_current_message = (uint8_t **)&ubx_current_nav_settings_message;
+						ubx_last_message = (uint8_t **)&ubx_last_nav_settings_message;
+						ubx_valid_message = &ubx_number_of_valid_nav_settings_message;
 					}
 					else
 					{
 						print_util_dbg_print("Wrong Nav Settings message 0x");
-						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print_num(ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
 						print_util_dbg_print_num(msg_id,16);
 						print_util_dbg_print(" Received size:");
@@ -643,14 +643,14 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					case MSG_CFG_RATE:
 					if(payload_length == UBX_SIZE_CFG_RATE)
 					{
-						ubx_currentMessage = (uint8_t **)&ubx_currentCFGRateMessage;
-						ubx_lastMessage = (uint8_t **)&ubx_lastCFGRateMessage;
-						ubx_validMessage = &ubx_numberOfValidCFGRateMessage;
+						ubx_current_message = (uint8_t **)&ubx_current_cfg_rate_message;
+						ubx_last_message = (uint8_t **)&ubx_last_cfg_rate_message;
+						ubx_valid_message = &ubx_number_of_valid_cfg_rate_message;
 					}
 					else
 					{
 						print_util_dbg_print("Wrong CFG Rate message 0x");
-						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print_num(ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
 						print_util_dbg_print_num(msg_id,16);
 						print_util_dbg_print(" Received size:");
@@ -666,14 +666,14 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					case MSG_CFG_SET_RATE:
 					if (payload_length == UBX_SIZE_CFG_GETSET_RATE)
 					{
-						ubx_currentMessage = (uint8_t **)&ubx_currentCFGSetGetRateMessage;
-						ubx_lastMessage = (uint8_t **)&ubx_lastCFGSetGetRateMessage;
-						ubx_validMessage = &ubx_numberOfValidCFGSetGetRateMessage;
+						ubx_current_message = (uint8_t **)&ubx_current_cfg_set_get_rate_message;
+						ubx_last_message = (uint8_t **)&ubx_last_cfg_set_get_rate_message;
+						ubx_valid_message = &ubx_number_of_valid_cfg_set_get_rate_message;
 					}
 					else
 					{
 						print_util_dbg_print("Wrong CFG Set/get message 0x");
-						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print_num(ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
 						print_util_dbg_print_num(msg_id,16);
 						print_util_dbg_print(" Received size:");
@@ -689,7 +689,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					default:
 					step = 0;
 					print_util_dbg_print("Unexpected CFG message, Class: 0x");
-					print_util_dbg_print_num(ubxclass,16);
+					print_util_dbg_print_num(ubx_class,16);
 					print_util_dbg_print(", msg id: 0x");
 					print_util_dbg_print_num(msg_id,16);
 					print_util_dbg_print(" of size ");
@@ -697,21 +697,21 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					print_util_dbg_print("\n");
 					goto reset;
 				}
-			} else if (ubxclass == UBX_CLASS_MON)
+			} else if (ubx_class == UBX_CLASS_MON)
 			{
 				switch (msg_id)
 				{
 					case MSG_MON_RXR:
 					if(payload_length == UBX_SIZE_MON_RXR)
 					{
-						ubx_currentMessage = (uint8_t **)&ubx_currentMONRXRMessage;
-						ubx_lastMessage = (uint8_t **)&ubx_lastMONRXRMessage;
-						ubx_validMessage = &ubx_numberOfValidMONRXRMessage;
+						ubx_current_message = (uint8_t **)&ubx_current_mon_rxr_message;
+						ubx_last_message = (uint8_t **)&ubx_last_mon_rxr_message;
+						ubx_valid_message = &ubx_number_of_valid_mon_rxr_message;
 					}
 					else
 					{
 						print_util_dbg_print("Wrong MON RXR message 0x");
-						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print_num(ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
 						print_util_dbg_print_num(msg_id,16);
 						print_util_dbg_print(" Received size:");
@@ -727,7 +727,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					default:
 					step = 0;
 					print_util_dbg_print("Unexpected TIM message, Class: 0x");
-					print_util_dbg_print_num(ubxclass,16);
+					print_util_dbg_print_num(ubx_class,16);
 					print_util_dbg_print(", msg id: 0x");
 					print_util_dbg_print_num(msg_id,16);
 					print_util_dbg_print(" of size ");
@@ -739,21 +739,21 @@ static bool gps_ublox_message_decode(gps_t *gps)
 				}
 				
 			}
-			else if(ubxclass == UBX_CLASS_TIM)
+			else if(ubx_class == UBX_CLASS_TIM)
 			{
 				switch(msg_id)
 				{
 					case MSG_TIM_TP:
 					if (payload_length == UBX_SIZE_TIM_TP)
 					{
-						ubx_currentMessage = (uint8_t **)&ubx_currentTimTPMessage;
-						ubx_lastMessage = (uint8_t **)&ubx_lastTimTPMessage;
-						ubx_validMessage = &ubx_numberOfValidTimTPMessage;
+						ubx_current_message = (uint8_t **)&ubx_current_tim_tp_message;
+						ubx_last_message = (uint8_t **)&ubx_last_tim_tp_message;
+						ubx_valid_message = &ubx_number_of_valid_tim_tp_message;
 					}
 					else
 					{
 						print_util_dbg_print("Wrong TIM TP message 0x");
-						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print_num(ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
 						print_util_dbg_print_num(msg_id,16);
 						print_util_dbg_print(" Received size:");
@@ -769,14 +769,14 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					case MSG_TIM_VRFY:
 					if (payload_length == UBX_SIZE_TIM_VRFY)
 					{
-						ubx_currentMessage = (uint8_t **)&ubx_currentTimVRFYMessage;
-						ubx_lastMessage = (uint8_t **)&ubx_lastTimVRFYMessage;
-						ubx_validMessage = &ubx_numberOfValidTimVRFYMessage;
+						ubx_current_message = (uint8_t **)&ubx_current_tim_vrfy_message;
+						ubx_last_message = (uint8_t **)&ubx_last_tim_vrfy_message;
+						ubx_valid_message = &ubx_number_of_valid_tim_vrfy_message;
 					}
 					else
 					{
 						print_util_dbg_print("Wrong TIM VRFY message 0x");
-						print_util_dbg_print_num(ubxclass,16);
+						print_util_dbg_print_num(ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
 						print_util_dbg_print_num(msg_id,16);
 						print_util_dbg_print(" Received size:");
@@ -792,7 +792,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					default:
 					step = 0;
 					print_util_dbg_print("Unexpected TIM message, Class: 0x");
-					print_util_dbg_print_num(ubxclass,16);
+					print_util_dbg_print_num(ubx_class,16);
 					print_util_dbg_print(", msg id: 0x");
 					print_util_dbg_print_num(msg_id,16);
 					print_util_dbg_print(" of size ");
@@ -807,7 +807,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			{
 				step = 0;
 				print_util_dbg_print("Unexpected message, Class: 0x");
-				print_util_dbg_print_num(ubxclass,16);
+				print_util_dbg_print_num(ubx_class,16);
 				print_util_dbg_print(", msg id: 0x");
 				print_util_dbg_print_num(msg_id,16);
 				print_util_dbg_print(" of size ");
@@ -822,9 +822,9 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			cksum_b += cksum_a; // checksum byte
 			
 			#ifdef BIG_ENDIAN
-			(*ubx_currentMessage)[payload_length - 1 - payload_counter] = data;
+			(*ubx_current_message)[payload_length - 1 - payload_counter] = data;
 			#else
-			(*ubx_currentMessage)[payload_counter] = data;
+			(*ubx_current_message)[payload_counter] = data;
 			#endif
 			
 			payload_counter++;
@@ -844,7 +844,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 				print_util_dbg_print(" should be ");
 				print_util_dbg_print_num(cksum_a,16);
 				print_util_dbg_print(" class : 0x");
-				print_util_dbg_print_num(ubxclass,16);
+				print_util_dbg_print_num(ubx_class,16);
 				print_util_dbg_print(" msg_id : 0x");
 				print_util_dbg_print_num(msg_id,16);
 				print_util_dbg_print("\n");
@@ -864,13 +864,13 @@ static bool gps_ublox_message_decode(gps_t *gps)
 				print_util_dbg_print("\n");
 				break;
 			}
-			++(*ubx_validMessage);
+			++(*ubx_valid_message);
 			//print_util_dbg_print("Valid message");
 			
 			// swap message buffers, old message is discarded and becomes incoming buffer, new message become valid message (=old)
-			temporaryMessageForSwaping = *ubx_currentMessage;
-			*ubx_currentMessage = *ubx_lastMessage;
-			*ubx_lastMessage = temporaryMessageForSwaping;
+			temporary_message_for_swaping = *ubx_current_message;
+			*ubx_current_message = *ubx_last_message;
+			*ubx_last_message = temporary_message_for_swaping;
 			
 			if (gps_ublox_process_data(gps))
 			{
@@ -884,63 +884,63 @@ static bool gps_ublox_message_decode(gps_t *gps)
 
 static bool gps_ublox_process_data(gps_t *gps)
 {
-	ubx_nav_posllh_t *gpsPosllh; 
-	ubx_nav_status_t *gpsStatus;
-	ubx_nav_solution_t *gpsSolution;
-	ubx_nav_velned_t *gpsVelned;
-	ubx_nav_SVInfo_t *gpsSVInfo;
+	ubx_nav_pos_llh_t *gps_pos_llh; 
+	ubx_nav_status_t *gps_status;
+	ubx_nav_solution_t *gps_solution;
+	ubx_nav_vel_ned_t *gps_vel_ned;
+	ubx_nav_sv_info_t *gps_sv_info;
 	
-	if (ubxclass == UBX_CLASS_ACK)
+	if (ubx_class == UBX_CLASS_ACK)
 	{
 		print_util_dbg_print_num(msg_id,10);
 		print_util_dbg_print("\n");
 		return false;
 	}
- 	if (ubxclass == UBX_CLASS_MON)
+ 	if (ubx_class == UBX_CLASS_MON)
  	{
- 		ubx_mon_rxr_struct_t *gpsRXR = ubx_GetMonRXR();
- 		if (gpsRXR)
+ 		ubx_mon_rxr_struct_t *gps_rxr = ubx_get_mon_rxr();
+ 		if (gps_rxr)
  		{
  			print_util_dbg_print("MSG_MON GPS awake\n");
  		}
 		 return false;
  	}
-	if (ubxclass == UBX_CLASS_TIM)
+	if (ubx_class == UBX_CLASS_TIM)
 	{
-		ubx_tim_tp_t *gpsTimTP = ubx_GetTimTP();
-		if (gpsTimTP)
+		ubx_tim_tp_t *gps_tim_tp = ubx_get_tim_tp();
+		if (gps_tim_tp)
 		{
-			++loopTimTp;
-			loopTimTp %= numSkippedMsg;
-			if((printNavOnDebug)&&(loopTimTp == 0))
+			++loop_tim_tp;
+			loop_tim_tp %= num_skipped_msg;
+			if((print_nav_on_debug)&&(loop_tim_tp == 0))
 			{
 				print_util_dbg_print("MSG_TIM_TP GPS awake\n");
 			}
 		}
-		ubx_tim_vrfy_t *gpsTimVrfy = ubx_GetTimVRFY();
-		if (gpsTimVrfy)
+		ubx_tim_vrfy_t *gps_tim_vrfy = ubx_get_tim_vrfy();
+		if (gps_tim_vrfy)
 		{
-			++loopTimVrfy;
-			loopTimVrfy %= numSkippedMsg;
-			if((printNavOnDebug)&&(loopTimVrfy == 0))
+			++loop_tim_vrfy;
+			loop_tim_vrfy %= num_skipped_msg;
+			if((print_nav_on_debug)&&(loop_tim_vrfy == 0))
 			{
 				print_util_dbg_print("MSG_TIM_VRFY");
 				print_util_dbg_print(" itow :");
-				print_util_dbg_print_num(gpsTimVrfy->itow,10);
+				print_util_dbg_print_num(gps_tim_vrfy->itow,10);
 				print_util_dbg_print(" frac :");
-				print_util_dbg_print_num(gpsTimVrfy->frac,10);
-				print_util_dbg_print(" deltaMs :");
-				print_util_dbg_print_num(gpsTimVrfy->deltaMs,10);
-				print_util_dbg_print(" deltaNs :");
-				print_util_dbg_print_num(gpsTimVrfy->deltaNs,10);
+				print_util_dbg_print_num(gps_tim_vrfy->frac,10);
+				print_util_dbg_print(" delta_ms :");
+				print_util_dbg_print_num(gps_tim_vrfy->delta_ms,10);
+				print_util_dbg_print(" delta_ns :");
+				print_util_dbg_print_num(gps_tim_vrfy->delta_ns,10);
 			}
 		}
 		return false;
 	}
 	 
-	if (ubxclass == UBX_CLASS_CFG && msg_id == MSG_CFG_NAV_SETTINGS)
+	if (ubx_class == UBX_CLASS_CFG && msg_id == MSG_CFG_NAV_SETTINGS)
 	{
-		ubx_cfg_nav_settings_t *gpsNavSettings = ubx_GetNavSettings();
+		ubx_cfg_nav_settings_t *gps_nav_settings = ubx_get_nav_settings();
 		
 		/*
 		Dynamic Platform model:
@@ -953,19 +953,19 @@ static bool gps_ublox_process_data(gps_t *gps)
 		- 7 Airborne with <2g Acceleration
 		- 8 Airborne with <4g Acceleration
 		*/
-		if(gpsNavSettings)
+		if(gps_nav_settings)
 		{
 			print_util_dbg_print("Got engine settings ");
-			print_util_dbg_print_num(gpsNavSettings->dynModel,16);
+			print_util_dbg_print_num(gps_nav_settings->dyn_model,16);
 			print_util_dbg_print("\n");
 		}
 		else
 		{
-			if (engine_nav_setting != GPS_ENGINE_NONE && !gpsNavSettings)
+			if (engine_nav_setting != GPS_ENGINE_NONE && !gps_nav_settings)
 			{
-				if(gpsNavSettings->dynModel != engine_nav_setting)
+				if(gps_nav_settings->dyn_model != engine_nav_setting)
 				{
-					nav_settings.dynModel = engine_nav_setting;
+					nav_settings.dyn_model = engine_nav_setting;
 					print_util_dbg_print("Send Nav settings");
 					ubx_send_message_nav_settings(gps, UBX_CLASS_CFG, MSG_CFG_NAV_SETTINGS, &nav_settings, sizeof(nav_settings));
 				}				
@@ -977,26 +977,26 @@ static bool gps_ublox_process_data(gps_t *gps)
 		return false;
 	}
 	
-	if (ubxclass == UBX_CLASS_CFG && msg_id == MSG_CFG_SET_RATE)
+	if (ubx_class == UBX_CLASS_CFG && msg_id == MSG_CFG_SET_RATE)
 	{
-		ubx_cfg_msg_rate_t *gpsMsgRate;
-		gpsMsgRate = ubx_GetMsgRate();
+		ubx_cfg_msg_rate_t *gps_msg_rate;
+		gps_msg_rate = ubx_get_msg_rate();
 		
-		if (gpsMsgRate)
+		if (gps_msg_rate)
 		{
 			print_util_dbg_print("Message CFG Rate 0x");
-			print_util_dbg_print_num(gpsMsgRate->msg_class,16);
-			print_util_dbg_print_num(gpsMsgRate->msg_id_rate,16);
-			print_util_dbg_print_num(gpsMsgRate->rate,10);
+			print_util_dbg_print_num(gps_msg_rate->msg_class,16);
+			print_util_dbg_print_num(gps_msg_rate->msg_id_rate,16);
+			print_util_dbg_print_num(gps_msg_rate->rate,10);
 			print_util_dbg_print("\n");
 		}		
 		return false;
 	}
 	
-	if (ubxclass != UBX_CLASS_NAV)
+	if (ubx_class != UBX_CLASS_NAV)
 	{
 		print_util_dbg_print("Unexpected message 0x");
-		print_util_dbg_print_num(ubxclass,16);
+		print_util_dbg_print_num(ubx_class,16);
 		print_util_dbg_print("02x 0x");
 		print_util_dbg_print_num(msg_id,10);
 		print_util_dbg_print("02x\n");
@@ -1008,11 +1008,11 @@ static bool gps_ublox_process_data(gps_t *gps)
 			// want to get into an ack war
 			
 			print_util_dbg_print("Disabling message 0x");
-			print_util_dbg_print_num(ubxclass,16);
+			print_util_dbg_print_num(ubx_class,16);
 			print_util_dbg_print("02x 0x");
 			print_util_dbg_print_num(msg_id,16);
 			print_util_dbg_print("02x\n");
-			ubx_configure_message_rate(gps,ubxclass, msg_id, 0);
+			ubx_configure_message_rate(gps,ubx_class, msg_id, 0);
 		}
 		return false;
 	}
@@ -1021,59 +1021,59 @@ static bool gps_ublox_process_data(gps_t *gps)
 	switch (msg_id)
 	{
 	case MSG_NAV_POSLLH:
-		gpsPosllh = ubx_GetPosllh();
-		if (gpsPosllh)
+		gps_pos_llh = ubx_get_pos_llh();
+		if (gps_pos_llh)
 		{
-			++loopPosllh;
-			loopPosllh %= numSkippedMsg;
-			if (printNavOnDebug && (loopPosllh == 0))
+			++loop_pos_llh;
+			loop_pos_llh %= num_skipped_msg;
+			if (print_nav_on_debug && (loop_pos_llh == 0))
 			{
 				print_util_dbg_print("MSG_NAV_POSLLH");
 				print_util_dbg_print(" itow :");
-				print_util_dbg_print_num(gpsPosllh->itow,10);
+				print_util_dbg_print_num(gps_pos_llh->itow,10);
 				print_util_dbg_print(" longitude :");
-				print_util_dbg_print_num(gpsPosllh->longitude,10);
+				print_util_dbg_print_num(gps_pos_llh->longitude,10);
 				print_util_dbg_print(" latitude :");
-				print_util_dbg_print_num(gpsPosllh->latitude,10);
+				print_util_dbg_print_num(gps_pos_llh->latitude,10);
 				print_util_dbg_print(" alt_ellips :");
-				print_util_dbg_print_num(gpsPosllh->altitude_ellipsoid,10);
+				print_util_dbg_print_num(gps_pos_llh->altitude_ellipsoid,10);
 				print_util_dbg_print(" alt_msl :");
-				print_util_dbg_print_num(gpsPosllh->altitude_msl,10);
+				print_util_dbg_print_num(gps_pos_llh->altitude_msl,10);
 				print_util_dbg_print(" horz_acc :");
-				print_util_dbg_print_num(gpsPosllh->horizontal_accuracy,10);
+				print_util_dbg_print_num(gps_pos_llh->horizontal_accuracy,10);
 				print_util_dbg_print(" vert_acc :");
-				print_util_dbg_print_num(gpsPosllh->vertical_accuracy,10);
+				print_util_dbg_print_num(gps_pos_llh->vertical_accuracy,10);
 				print_util_dbg_print("\n");
 			}
 			
-			gps->timegps = gpsPosllh->itow;
-			gps->longitude = gpsPosllh->longitude / 10000000.0f;
-			gps->latitude = gpsPosllh->latitude / 10000000.0f;
-			gps->alt_elips = ((float)gpsPosllh->altitude_ellipsoid) / 1000.0f;
-			gps->altitude = ((float)gpsPosllh->altitude_msl) / 1000.0f;
-			gps->horizontalAccuracy = ((float)gpsPosllh->horizontal_accuracy) / 1000.0f;
-			gps->verticalAccuracy = ((float)gpsPosllh->vertical_accuracy) / 1000.0f;
+			gps->timegps = gps_pos_llh->itow;
+			gps->longitude = gps_pos_llh->longitude / 10000000.0f;
+			gps->latitude = gps_pos_llh->latitude / 10000000.0f;
+			gps->alt_elips = ((float)gps_pos_llh->altitude_ellipsoid) / 1000.0f;
+			gps->altitude = ((float)gps_pos_llh->altitude_msl) / 1000.0f;
+			gps->horizontal_accuracy = ((float)gps_pos_llh->horizontal_accuracy) / 1000.0f;
+			gps->vertical_accuracy = ((float)gps_pos_llh->vertical_accuracy) / 1000.0f;
 			
 			new_position = true;
 		}
 		break;
 		
 	case MSG_NAV_STATUS:
-		gpsStatus = ubx_GetStatus();
+		gps_status = ubx_get_status();
 		
-		if (gpsStatus)
+		if (gps_status)
 		{
-			++loopStatus;
-			loopStatus %= numSkippedMsg;
-			if (printNavOnDebug && (loopStatus == 0))
+			++loop_status;
+			loop_status %= num_skipped_msg;
+			if (print_nav_on_debug && (loop_status == 0))
 			{
 				print_util_dbg_print("MSG_STATUS fix_type = 0x");
-				print_util_dbg_print_num(gpsStatus->fix_type,16);
+				print_util_dbg_print_num(gps_status->fix_type,16);
 				print_util_dbg_print(", uptime =");
-				print_util_dbg_print_num(gpsStatus->uptime,10);
+				print_util_dbg_print_num(gps_status->uptime,10);
 				print_util_dbg_print("\n");
 			}
-			next_fix = (gpsStatus->fix_type == GPS_FIX_TYPE_3DFIX);
+			next_fix = (gps_status->fix_type == GPS_FIX_TYPE_3DFIX);
 			if (!next_fix)
 			{
 				gps->status = NO_FIX;
@@ -1086,36 +1086,36 @@ static bool gps_ublox_process_data(gps_t *gps)
 		break;
 		
 	case MSG_NAV_SOL:
-		gpsSolution = ubx_GetSolution();
+		gps_solution = ubx_get_solution();
 		
-		if (gpsSolution)
+		if (gps_solution)
 		{
-			++loopSolution;
-			loopSolution %= numSkippedMsg;
-			if (printNavOnDebug && (loopSolution == 0))
+			++loop_solution;
+			loop_solution %= num_skipped_msg;
+			if (print_nav_on_debug && (loop_solution == 0))
 			{
 				print_util_dbg_print("MSG_SOL ");
 				print_util_dbg_print("itow :");
-				print_util_dbg_print_num(gpsSolution->itow,10);
+				print_util_dbg_print_num(gps_solution->itow,10);
 				print_util_dbg_print(" week :");
-				print_util_dbg_print_num(gpsSolution->week,10);
+				print_util_dbg_print_num(gps_solution->week,10);
 				print_util_dbg_print(" fix_type = 0x0");
-				print_util_dbg_print_num(gpsSolution->fix_type,16);
+				print_util_dbg_print_num(gps_solution->fix_type,16);
 				print_util_dbg_print(" pos_acc_3d :");
-				print_util_dbg_print_num(gpsSolution->position_accuracy_3d,10);
+				print_util_dbg_print_num(gps_solution->position_accuracy_3d,10);
 				print_util_dbg_print(" ecefx :");
-				print_util_dbg_print_num(gpsSolution->ecef_x,10);
+				print_util_dbg_print_num(gps_solution->ecef_x,10);
 				print_util_dbg_print(" ecefy :");
-				print_util_dbg_print_num(gpsSolution->ecef_y,10);
+				print_util_dbg_print_num(gps_solution->ecef_y,10);
 				print_util_dbg_print(" ecefz :");
-				print_util_dbg_print_num(gpsSolution->ecef_z,10);
+				print_util_dbg_print_num(gps_solution->ecef_z,10);
 				print_util_dbg_print(" pos_DOP :");
-				print_util_dbg_print_num(gpsSolution->position_DOP,10);
+				print_util_dbg_print_num(gps_solution->position_DOP,10);
 				print_util_dbg_print(" num sat :");
-				print_util_dbg_print_num(gpsSolution->satellites,10);
+				print_util_dbg_print_num(gps_solution->satellites,10);
 				print_util_dbg_print("\n");
 			}
-			next_fix = (gpsSolution->fix_type == GPS_FIX_TYPE_3DFIX);
+			next_fix = (gps_solution->fix_type == GPS_FIX_TYPE_3DFIX);
 			if (!next_fix)
 			{
 				gps->status = NO_FIX;
@@ -1125,64 +1125,64 @@ static bool gps_ublox_process_data(gps_t *gps)
 				gps->status = GPS_OK;
 			}
 		
-			gps->num_sats = gpsSolution->satellites;
-			gps->hdop = gpsSolution->position_DOP;
+			gps->num_sats = gps_solution->satellites;
+			gps->hdop = gps_solution->position_DOP;
 		}
 		break;
 		
 	case MSG_NAV_VELNED:
-		gpsVelned = ubx_GetVelned();
+		gps_vel_ned = ubx_get_vel_ned();
 		
-		if (gpsVelned)
+		if (gps_vel_ned)
 		{
-			++loopVelned;
-			loopVelned %= numSkippedMsg;
-			if (printNavOnDebug && (loopVelned == 0))
+			++loop_vel_ned;
+			loop_vel_ned %= num_skipped_msg;
+			if (print_nav_on_debug && (loop_vel_ned == 0))
 			{
 			
 				print_util_dbg_print("MSG_NAV_VELNED ");
 		
 				print_util_dbg_print("itow :");
-				print_util_dbg_print_num(gpsVelned->itow,10);
+				print_util_dbg_print_num(gps_vel_ned->itow,10);
 				print_util_dbg_print(" ned_north :");
-				print_util_dbg_print_num(gpsVelned->ned_north,10);
+				print_util_dbg_print_num(gps_vel_ned->ned_north,10);
 				print_util_dbg_print(" ned_east :");
-				print_util_dbg_print_num(gpsVelned->ned_east,10);
+				print_util_dbg_print_num(gps_vel_ned->ned_east,10);
 				print_util_dbg_print(" ned_down :");
-				print_util_dbg_print_num(gpsVelned->ned_down,10);
+				print_util_dbg_print_num(gps_vel_ned->ned_down,10);
 				print_util_dbg_print(" speed_3d :");
-				print_util_dbg_print_num(gpsVelned->speed_3d,10);
+				print_util_dbg_print_num(gps_vel_ned->speed_3d,10);
 				print_util_dbg_print(" heading_2d :");
-				print_util_dbg_print_num(gpsVelned->heading_2d,10);
+				print_util_dbg_print_num(gps_vel_ned->heading_2d,10);
 				print_util_dbg_print(" speed_accuracy :");
-				print_util_dbg_print_num(gpsVelned->speed_accuracy,10);
+				print_util_dbg_print_num(gps_vel_ned->speed_accuracy,10);
 				print_util_dbg_print(" heading_accuracy :");
-				print_util_dbg_print_num(gpsVelned->heading_accuracy,10);
+				print_util_dbg_print_num(gps_vel_ned->heading_accuracy,10);
 				print_util_dbg_print("\n");
 			}
-			gps->timegps = gpsVelned->itow;
-			gps->speed        = ((float)gpsVelned->speed_3d) / 100.; // m/s
-			gps->groundSpeed = ((float)gpsVelned->groundSpeed_2d) / 100.; // m/s
-			gps->course = ((float)gpsVelned->heading_2d) / 100000.; // Heading 2D deg * 100000 rescaled to deg * 100
-			have_raw_velocity = true;
-			gps->northSpeed  = ((float)gpsVelned->ned_north) / 100.0f;
-			gps->eastSpeed   = ((float)gpsVelned->ned_east) / 100.;
-			gps->verticalSpeed   = ((float)gpsVelned->ned_down) / 100.;
-			gps->speedAccuracy = ((float)gpsVelned->speed_accuracy) / 100.;
-			gps->headingAccuracy = gpsVelned->heading_accuracy;
-			new_speed = true;
+			gps->timegps         = gps_vel_ned->itow;
+			gps->speed           = ((float)gps_vel_ned->speed_3d) / 100.; // m/s
+			gps->groundSpeed     = ((float)gps_vel_ned->ground_speed_2d) / 100.; // m/s
+			gps->course          = ((float)gps_vel_ned->heading_2d) / 100000.; // Heading 2D deg * 100000 rescaled to deg * 100
+			have_raw_velocity    = true;
+			gps->northSpeed      = ((float)gps_vel_ned->ned_north) / 100.0f;
+			gps->eastSpeed       = ((float)gps_vel_ned->ned_east) / 100.;
+			gps->verticalSpeed   = ((float)gps_vel_ned->ned_down) / 100.;
+			gps->speed_accuracy   = ((float)gps_vel_ned->speed_accuracy) / 100.;
+			gps->heading_accuracy = gps_vel_ned->heading_accuracy;
+			new_speed            = true;
 		}
 		break;
 		
 	case MSG_NAV_SVINFO:
-		gpsSVInfo = ubx_GetSVInfo();
+		gps_sv_info = ubx_get_sv_info();
 		
-		if (gpsSVInfo)
+		if (gps_sv_info)
 		{
-			if (printNavOnDebug)
+			if (print_nav_on_debug)
 			{
 				print_util_dbg_print("MSG_NAV_SVINFO, numChannel:");
-				print_util_dbg_print_num(gpsSVInfo->numCh,10);
+				print_util_dbg_print_num(gps_sv_info->numCh,10);
 				print_util_dbg_print("\n");
 			}
 		}
@@ -1345,7 +1345,7 @@ static void ubx_send_message_nav_settings(gps_t *gps, uint8_t msg_class, uint8_t
 		data = endian_higher_bytes_uint16(engine_settings->mask);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = engine_settings->dynModel;
+		data = engine_settings->dyn_model;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
 		data = engine_settings->fixMode;
@@ -1479,11 +1479,11 @@ static void ubx_configure_message_rate(gps_t *gps, uint8_t msg_class, uint8_t _m
 }
 
 
-static ubx_nav_posllh_t * ubx_GetPosllh()
+static ubx_nav_pos_llh_t * ubx_get_pos_llh()
 {
-	if (ubx_numberOfValidPosllhMessage)
+	if (ubx_number_of_valid_pos_llh_message)
 	{
-		return ubx_lastPosllhMessage;
+		return ubx_last_pos_llh_message;
 	}
 	else
 	{
@@ -1492,11 +1492,11 @@ static ubx_nav_posllh_t * ubx_GetPosllh()
 }
 
 
-static ubx_nav_status_t * ubx_GetStatus()
+static ubx_nav_status_t * ubx_get_status()
 {
-	if (ubx_numberOfValidStatusMessage)
+	if (ubx_number_of_valid_status_message)
 	{
-		return ubx_lastStatusMessage;
+		return ubx_last_status_message;
 	}
 	else
 	{
@@ -1505,11 +1505,11 @@ static ubx_nav_status_t * ubx_GetStatus()
 }
 
 
-static ubx_nav_solution_t * ubx_GetSolution()
+static ubx_nav_solution_t * ubx_get_solution()
 {
-	if (ubx_numberOfValidSolutionMessage)
+	if (ubx_number_of_valid_solution_message)
 	{
-		return ubx_lastSolutionMessage;
+		return ubx_last_solution_message;
 	}
 	else
 	{
@@ -1517,11 +1517,11 @@ static ubx_nav_solution_t * ubx_GetSolution()
 	}
 }
 
-static ubx_nav_velned_t * ubx_GetVelned()
+static ubx_nav_vel_ned_t * ubx_get_vel_ned()
  {
-	if (ubx_numberOfValidVelnedMessage)
+	if (ubx_number_of_valid_vel_ned_message)
 	{
-		return ubx_lastVelnedMessage;
+		return ubx_last_vel_ned_message;
 	}
 	else
 	{
@@ -1530,11 +1530,11 @@ static ubx_nav_velned_t * ubx_GetVelned()
 }
 
 
-static ubx_nav_SVInfo_t * ubx_GetSVInfo()
+static ubx_nav_sv_info_t * ubx_get_sv_info()
 {
-	if (ubx_numberOfValidSVInfoMessage)
+	if (ubx_number_of_valid_sv_info_message)
 	{
-		return ubx_lastSVInfoMessage;
+		return ubx_last_sv_info_message;
 	}
 	else
 	{
@@ -1543,11 +1543,11 @@ static ubx_nav_SVInfo_t * ubx_GetSVInfo()
 }
 
 
-static ubx_cfg_nav_settings_t * ubx_GetNavSettings()
+static ubx_cfg_nav_settings_t * ubx_get_nav_settings()
 {
-	if (ubx_numberOfValidNavSettingsMessage)
+	if (ubx_number_of_valid_nav_settings_message)
 	{
-		return ubx_lastNavSettingsMessage;
+		return ubx_last_nav_settings_message;
 	}
 	else
 	{
@@ -1556,11 +1556,11 @@ static ubx_cfg_nav_settings_t * ubx_GetNavSettings()
 }
 
 
-static ubx_cfg_msg_rate_t * ubx_GetMsgRate()
+static ubx_cfg_msg_rate_t * ubx_get_msg_rate()
 {
-	if (ubx_numberOfValidCFGSetGetRateMessage)
+	if (ubx_number_of_valid_cfg_set_get_rate_message)
 	{
-		return ubx_lastCFGSetGetRateMessage;
+		return ubx_last_cfg_set_get_rate_message;
 	}
 	else
 	{
@@ -1569,11 +1569,11 @@ static ubx_cfg_msg_rate_t * ubx_GetMsgRate()
 }
 
 
-static ubx_mon_rxr_struct_t * ubx_GetMonRXR()
+static ubx_mon_rxr_struct_t * ubx_get_mon_rxr()
 {
-	if (ubx_numberOfValidMONRXRMessage)
+	if (ubx_number_of_valid_mon_rxr_message)
 	{
-		return ubx_lastMONRXRMessage;
+		return ubx_last_mon_rxr_message;
 	}
 	else
 	{
@@ -1582,11 +1582,11 @@ static ubx_mon_rxr_struct_t * ubx_GetMonRXR()
 }
 
 
-static ubx_tim_tp_t * ubx_GetTimTP()
+static ubx_tim_tp_t * ubx_get_tim_tp()
 {
-	if(ubx_numberOfValidTimTPMessage)
+	if(ubx_number_of_valid_tim_tp_message)
 	{
-		return ubx_lastTimTPMessage;
+		return ubx_last_tim_tp_message;
 	}
 	else
 	{
@@ -1595,11 +1595,11 @@ static ubx_tim_tp_t * ubx_GetTimTP()
 }
 
 
-static ubx_tim_vrfy_t * ubx_GetTimVRFY()
+static ubx_tim_vrfy_t * ubx_get_tim_vrfy()
 {
-	if(ubx_numberOfValidTimVRFYMessage)
+	if(ubx_number_of_valid_tim_vrfy_message)
 	{
-		return ubx_lastTimVRFYMessage;
+		return ubx_last_tim_vrfy_message;
 	}
 	else
 	{
@@ -1691,67 +1691,67 @@ void gps_ublox_update(gps_t *gps)
 	
 	if (! result)
 	{
-		if ((tnow - idleTimer) > idleTimeout)
+		if ((tnow - idle_timer) > idle_timeout)
 		{
 			gps->status = NO_GPS;
 			
 			gps_ublox_reset(gps, engine_nav_setting);
-			idleTimer = tnow;
+			idle_timer = tnow;
 		}
 		
 	}
 	else
 	{
 		// reset the idle timer
-		idleTimer = tnow;
+		idle_timer = tnow;
 		
 		gps->time_last_msg = tnow;
 		
 		if(gps->status == GPS_OK)
 		{
 			// Check for horizontal accuracy
-			if (gps->horizontalAccuracy < UBX_POSITION_PRECISION)
+			if (gps->horizontal_accuracy < UBX_POSITION_PRECISION)
 			{
-				gps->horizontalStatus = 1;
+				gps->horizontal_status = 1;
 			}
 			else
 			{  
-				gps->horizontalStatus = 0;
+				gps->horizontal_status = 0;
 			}
 			// Check for vertical accuracy
-			if (gps->verticalAccuracy < UBX_ALTITUDE_PRECISION)
+			if (gps->vertical_accuracy < UBX_ALTITUDE_PRECISION)
 			{
-				gps->altitudeStatus = 1;
+				gps->altitude_status = 1;
 			}
 			else
 			{
-				gps->altitudeStatus = 0;
+				gps->altitude_status = 0;
 			}
 			// Check for speed accuracy
-			if (gps->speedAccuracy < UBX_SPEED_PRECISION)
+			if (gps->speed_accuracy < UBX_SPEED_PRECISION)
 			{
-				gps->speedStatus = 1;
+				gps->speed_status = 1;
 			}
 			else
 			{
-				gps->speedStatus = 0;
+				gps->speed_status = 0;
 			}
 			// Check for heading accuracy
-			if (gps->headingAccuracy < UBX_HEADING_PRECISION)
+			if (gps->heading_accuracy < UBX_HEADING_PRECISION)
 			{
-				gps->courseStatus = 1;
+				gps->course_status = 1;
 			}
 			else
 			{
-				gps->courseStatus = 0;
+				gps->course_status = 0;
 			}
 			
-			gps->accuracyStatus = gps->horizontalStatus & gps->altitudeStatus & gps->speedStatus & gps->courseStatus;
+			gps->accuracy_status = gps->horizontal_status & gps->altitude_status & gps->speed_status & gps->course_status;
 			
 			// speed approximation with the 
 // 			if (!have_raw_velocity)
 // 			{
-// 				float gps_heading = ToRad(gps->course);
+// 				float gps_heading = to_rad(gps->course);
 // 				float cos_heading,sin_heading;
 // 				
 // 				cos_heading = cosf(gps_heading);
@@ -1766,12 +1766,12 @@ void gps_ublox_update(gps_t *gps)
 		}
 		else
 		{
-			gps->horizontalStatus = 0;
-			gps->altitudeStatus = 0;
-			gps->speedStatus = 0;
-			gps->courseStatus = 0;
+			gps->horizontal_status = 0;
+			gps->altitude_status = 0;
+			gps->speed_status = 0;
+			gps->course_status = 0;
 			
-			gps->accuracyStatus = 0;
+			gps->accuracy_status = 0;
 		}
 	}
 }
@@ -1791,7 +1791,7 @@ task_return_t gps_ublox_send_raw(gps_t* gps)
 										gps->longitude * 10000000.0f,
 										gps->altitude * 1000.0f,
 										gps->hdop * 100.0f,
-										gps->speedAccuracy * 100.0f,
+										gps->speed_accuracy * 100.0f,
 										gps->groundSpeed * 100.0f,
 										gps->course,
 										gps->num_sats	);

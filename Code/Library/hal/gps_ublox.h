@@ -236,7 +236,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint32_t fixedAltVar;				///< Fixed altitude variance in 2D mode in m^2
 		int32_t fixedAlt;					///< Fixed altitude for 2D fix mode in m
 		uint8_t fixMode;					///< Fixing mode, 1:2D, 2:3D, 3:auto 2D/3D
-		uint8_t dynModel;					///< UBX_PLATFORM_... type
+		uint8_t dyn_model;					///< UBX_PLATFORM_... type
 		uint16_t mask;						///< Bitmask, see U-Blox 6 documentation
 	}ubx_cfg_nav_settings_t;
 
@@ -252,7 +252,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int32_t latitude;					///< Latitude in deg 1e-7
 		int32_t longitude;					///< Longitude in deg 1e-7
 		uint32_t itow;						///< GPS msToW
-	}ubx_nav_posllh_t;
+	}ubx_nav_pos_llh_t;
 
 	/**
 	 * \brief The U-Blox NAV-STATUS message structure definition
@@ -300,13 +300,13 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint32_t heading_accuracy;			///< Course/heading estimate accuracy in deg 1e-5
 		uint32_t speed_accuracy;			///< Speed accuracy estimate cm/s
 		int32_t heading_2d;					///< Heading of motion in deg 1e-5
-		uint32_t groundSpeed_2d;			///< Ground speed in cm/s
+		uint32_t ground_speed_2d;			///< Ground speed in cm/s
 		uint32_t speed_3d;					///< 3D speed in cm/s
 		int32_t ned_down;					///< NED Down velocity in cm/s
 		int32_t ned_east;					///< NED East velocity in cm/s
 		int32_t ned_north;					///< NED North velocity in cm/s
 		uint32_t itow;						///< GPS msToW
-	}ubx_nav_velned_t;
+	}ubx_nav_vel_ned_t;
 
 	/**
 	 * \brief The U-Blox NAV-SVINFO message structure definition
@@ -332,7 +332,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t globalFlags;				///< Bitmask, 0:antaris, 1:u-blox 5, 2:u-blox 6
 		uint8_t numCh;						///< Number of channels
 		uint32_t itow;						///< GPS msToW
-	}ubx_nav_SVInfo_t;
+	}ubx_nav_sv_info_t;
 
 	/**
 	 * \brief The U-Blox MON-RXR message structure definition
@@ -363,8 +363,8 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t res;						///< Reserved slot
 		uint8_t flags;						///< Aiding time source, 0:no time aiding done, 2:source was RTC, 3:source was AID-INI
 		uint16_t wno;						///< Week number
-		int32_t deltaNs;					///< Sub-millisecond part of delta time
-		int32_t deltaMs;					///< Inter ms of delta time
+		int32_t delta_ns;					///< Sub-millisecond part of delta time
+		int32_t delta_ms;					///< Inter ms of delta time
 		int32_t frac;						///< Sub-millisecond part of ToW in ns
 		int32_t itow;						///< Integer ms ToW received by source
 	}ubx_tim_vrfy_t;
@@ -409,7 +409,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	typedef struct
 	{
 		uint16_t mask;						///< Bitmask, see U-Blox 6 documentation
-		uint8_t dynModel;					///< UBX_PLATFORM_... type
+		uint8_t dyn_model;					///< UBX_PLATFORM_... type
 		uint8_t fixMode;					///< Fixing mode, 1:2D, 2:3D, 3:auto 2D/3D
 		int32_t fixedAlt;					///< Fixed altitude for 2D fix mode in m
 		uint32_t fixedAltVar;				///< Fixed altitude variance in 2D mode in m^2
@@ -438,7 +438,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int32_t altitude_msl;				///< Height above mean sea level in mm
 		uint32_t horizontal_accuracy;		///< Horizontal accuracy in mm
 		uint32_t vertical_accuracy;			///< Vertical accuracy in mm
-	}ubx_nav_posllh_t;
+	}ubx_nav_pos_llh_t;
 
 	/**
 	 * \brief The U-Blox NAV-STATUS message structure definition
@@ -488,11 +488,11 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int32_t ned_east;					///< NED East velocity in cm/s
 		int32_t ned_down;					///< NED Down velocity in cm/s
 		uint32_t speed_3d;					///< 3D speed in cm/s
-		uint32_t groundSpeed_2d;			///< Ground speed in cm/s
+		uint32_t ground_speed_2d;			///< Ground speed in cm/s
 		int32_t heading_2d;					///< Heading of motion in deg 1e-5
 		uint32_t speed_accuracy;			///< Speed accuracy estimate cm/s
 		uint32_t heading_accuracy;			///< Course/heading estimate accuracy in deg 1e-5
-	}ubx_nav_velned_t;
+	}ubx_nav_vel_ned_t;
 
 	/**
 	 * \brief The U-Blox NAV-SVINFO message structure definition
@@ -518,7 +518,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 			int16_t azim;					///< Azimuth in integer degrees
 			int32_t prRes;					///< Pseudo range in residual in centimeters
 		} channelData[16];
-	}ubx_nav_SVInfo_t;
+	}ubx_nav_sv_info_t;
 
 	/**
 	 * \brief The U-Blox MON-RXR message structure definition
@@ -548,8 +548,8 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	{
 		int32_t itow;						///< Integer ms ToW received by source
 		int32_t frac;						///< Sub-millisecond part of ToW in ns
-		int32_t deltaMs;					///< Inter ms of delta time
-		int32_t deltaNs;					///< Sub-millisecond part of delta time
+		int32_t delta_ms;					///< Inter ms of delta time
+		int32_t delta_ns;					///< Sub-millisecond part of delta time
 		uint16_t wno;						///< Week number
 		uint8_t flags;						///< Aiding time source, 0:no time aiding done, 2:source was RTC, 3:source was AID-INI
 		uint8_t res;						///< Reserved slot
@@ -568,7 +568,7 @@ uint8_t         msg_id;						///< The U-Blox message ID
 uint16_t        payload_length;				///< The length of the message
 uint16_t        payload_counter;			///< The incremental counter to receive bytes of data
 
-uint8_t         ubxclass;///< The U-Blox message class
+uint8_t         ubx_class;///< The U-Blox message class
 
 // do we have new position and speed information?
 bool new_position;							///< Boolean value to check if we received new position message
@@ -593,9 +593,9 @@ typedef enum {
 	GPS_ENGINE_AIRBORNE_1G = 6,				///< Airborne with <1g acceleration
 	GPS_ENGINE_AIRBORNE_2G = 7,				///< Airborne with <2g acceleration
 	GPS_ENGINE_AIRBORNE_4G = 8				///< Airborne with <4g acceleration
-}GPS_Engine_Setting;
+}gps_engine_setting_t;
 
-GPS_Engine_Setting engine_nav_setting;		///< Enum GPS engine setting
+gps_engine_setting_t engine_nav_setting;		///< Enum GPS engine setting
 
 
 #define UBX_TIMEOUT_CYCLES 2				///< Number of times ubx_CheckTimeout() must be called without response from GPS before it is considered as timed out
@@ -622,11 +622,11 @@ typedef struct
 	float verticalSpeed;					///< The vertical speed in m/s
 	float course;							///< Heading in degree * 100
 	
-	float horizontalAccuracy;				///< Horizontal accuracy in m
-	float verticalAccuracy;					///< Vertical accuracy in m
+	float horizontal_accuracy;				///< Horizontal accuracy in m
+	float vertical_accuracy;					///< Vertical accuracy in m
 	
-	float speedAccuracy;					///< Speed accuracy in m
-	float headingAccuracy;					///< Heading accuracy in m
+	float speed_accuracy;					///< Speed accuracy in m
+	float heading_accuracy;					///< Heading accuracy in m
 	
 	uint8_t num_sats;						///< Number of visible satellites
 	uint16_t hdop;							///< Height DOP
@@ -636,12 +636,12 @@ typedef struct
 	
 	uint8_t  status;						///< GPS status
 	
-	uint8_t  horizontalStatus;				///< Horizontal status
+	uint8_t  horizontal_status;				///< Horizontal status
 	
- 	uint8_t  altitudeStatus;				///< Altitude status
- 	uint8_t  speedStatus;					///< Speed status
- 	uint8_t  courseStatus;					///< Course status
- 	uint8_t  accuracyStatus;				///< Accuracy status
+ 	uint8_t  altitude_status;				///< Altitude status
+ 	uint8_t  speed_status;					///< Speed status
+ 	uint8_t  course_status;					///< Course status
+ 	uint8_t  accuracy_status;				///< Accuracy status
 	
 	Buffer_t gps_buffer;					///< The GPS buffer
 	byte_stream_t gps_stream_in;			///< The incoming GPS byte stream
@@ -651,8 +651,8 @@ typedef struct
 } gps_t;
 
 
-uint32_t idleTimer;							///< Last time that the GPS driver got a good packet from the GPS
-uint32_t idleTimeout;						///< Time in milliseconds after which we will assume the GPS is no longer sending us updates and attempt a re-init. 1200ms allows a small amount of slack over the worst-case 1Hz update rate.
+uint32_t idle_timer;							///< Last time that the GPS driver got a good packet from the GPS
+uint32_t idle_timeout;						///< Time in milliseconds after which we will assume the GPS is no longer sending us updates and attempt a re-init. 1200ms allows a small amount of slack over the worst-case 1Hz update rate.
 uint32_t last_fix_time;						///< Last fix time
 
 

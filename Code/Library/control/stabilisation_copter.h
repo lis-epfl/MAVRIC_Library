@@ -69,7 +69,7 @@ void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabili
 /**
  * \brief							Main Controller for controlling and stabilizing the quad
  *
- * \param	stabilisationParam		The stabilisation structure
+ * \param	stabilisation_copter	The stabilisation structure
  */
 void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_copter);
 

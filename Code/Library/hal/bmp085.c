@@ -172,7 +172,7 @@ void bmp085_update(barometer_t *baro)
 		BMP085_READPRESSURECMD + (BMP085_OVERSAMPLING_MODE << 6) 
 	};
 
-	int32_t sealevelPressure=101325;
+	int32_t sea_level_pressure=101325;
 	float dt;
 
 	switch (baro->state) 
@@ -240,7 +240,7 @@ void bmp085_update(barometer_t *baro)
 			baro->pressure = p;
 	
 			vertical_speed = baro->altitude;
-			altitude = 44330.0f * (1.0f - pow(baro->pressure /sealevelPressure,0.190295f)) + baro->altitude_offset;
+			altitude = 44330.0f * (1.0f - pow(baro->pressure /sea_level_pressure,0.190295f)) + baro->altitude_offset;
 		
 			for (i = 0; i < 2; i++) 
 			{

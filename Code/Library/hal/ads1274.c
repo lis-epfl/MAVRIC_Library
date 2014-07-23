@@ -91,7 +91,7 @@ static volatile generatorfunction function_generator;
 eic_options_t eic_options[EXT_INT_LINES];  
 
 ///< Function prototype definitions
-void processData(void);
+void process_data(void);
 __attribute__((__naked__)) void eic_nmi_handler( void );
 
 int32_t get_interrupt_counter(void) 
@@ -100,7 +100,7 @@ int32_t get_interrupt_counter(void)
 }
 
 
-void processData(void) 
+void process_data(void) 
 {
 	int32_t ch;
 	int32_t value;
@@ -192,7 +192,7 @@ void ads1274_init_DAC(void)
 	///< initialize SPI0 interface
 	spi_buffered_init(&AVR32_SPI0, ADC_SPI_INDEX);
 	spi_buffered_init_DMA(0, 12);
-	spi_buffered_set_callback(ADC_SPI_INDEX, &processData);
+	spi_buffered_set_callback(ADC_SPI_INDEX, &process_data);
 	
 	///< Register the EIC interrupt handlers to the interrupt controller.
 	//INTC_register_interrupt(&eic_int_handler1, AVR32_EIC_IRQ_1, AVR32_INTC_INT1);

@@ -125,8 +125,8 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	dir_desired_bf[Z] = v_desired * dir_desired_bf[Z] / norm_rel_dist;
 	
 	/*
-	loopCount = loopCount++ %50;
-	if (loopCount == 0)
+	loop_count = loop_count++ %50;
+	if (loop_count == 0)
 	{
 		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"v_desired",v_desired*100);
 		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"act_vel",vector_norm(navigation->position_estimator->vel_bf)*100);
@@ -224,7 +224,7 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->max_climb_rate = 1.0f;
 	navigation->soft_zone_size = 0.0f;
 	
-	navigation->loopCount = 0;
+	navigation->loop_count = 0;
 	
 	navigation->collision_avoidance = false;
 	

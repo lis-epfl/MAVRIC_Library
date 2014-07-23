@@ -506,10 +506,10 @@ float orca_linear_program3(plane_t planes[], uint8_t plane_size, float optimal_v
 	if (direction_opt)
 	{
 		/* Optimize direction. Note that the optimization velocity is of unit length in this case. */
-		float normOptimalVelocity = vectors_norm(optimal_velocity);
+		float norm_optimal_velocity = vectors_norm(optimal_velocity);
 		for(i=0;i<3;i++)
 		{
-			new_velocity[i] = optimal_velocity[i] / normOptimalVelocity * max_speed;
+			new_velocity[i] = optimal_velocity[i] / norm_optimal_velocity * max_speed;
 		}
 	}
 	else
@@ -517,10 +517,10 @@ float orca_linear_program3(plane_t planes[], uint8_t plane_size, float optimal_v
 		if (vectors_norm_sqr(optimal_velocity) > SQR(max_speed))
 		{
 			/* Optimize closest point and outside circle. */
-			float normOptimalVelocity = vectors_norm(optimal_velocity);
+			float norm_optimal_velocity = vectors_norm(optimal_velocity);
 			for(i=0;i<3;i++)
 			{
-				new_velocity[i] = optimal_velocity[i] / normOptimalVelocity * max_speed;
+				new_velocity[i] = optimal_velocity[i] / norm_optimal_velocity * max_speed;
 			}
 		}
 		else
@@ -630,10 +630,10 @@ void orca_linearProgram4(plane_t planes[], uint8_t plane_size, uint8_t ind, floa
 				{
 					plane.normal[i] = planes[index2].normal[i] - planes[index].normal[i];
 				}
-				float normNormal = vectors_norm(plane.normal);
+				float norm_normal = vectors_norm(plane.normal);
 				for(i=0;i<3;i++)
 				{
-					plane.normal[i] = plane.normal[i] / normNormal;
+					plane.normal[i] = plane.normal[i] / norm_normal;
 				}
 				
 				proj_planes[index2] = plane;

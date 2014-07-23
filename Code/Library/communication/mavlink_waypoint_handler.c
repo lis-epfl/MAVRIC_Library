@@ -1153,7 +1153,7 @@ void waypoint_handler_waypoint_take_off(mavlink_waypoint_handler_t* waypoint_han
 	aero_attitude=coord_conventions_quat_to_aero(waypoint_handler->ahrs->qe);
 	waypoint_handler->waypoint_hold_coordinates.heading = aero_attitude.rpy[2];
 	
-	waypoint_handler->dist2wp_sqr = 100.0f; // same position, 10m above => distSqr = 100.0f
+	waypoint_handler->dist2wp_sqr = 100.0f; // same position, 10m above => dist_sqr = 100.0f
 }
 
 void waypoint_handler_waypoint_hold_position_handler(mavlink_waypoint_handler_t* waypoint_handler)
