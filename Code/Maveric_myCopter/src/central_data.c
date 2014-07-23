@@ -73,7 +73,7 @@ void central_data_init()
 	{
 		.mav_mode = MAV_MODE_SAFE,
 		.mav_state = MAV_STATE_BOOT,
-		.simulation_mode = SIMULATION_MODE, //REAL_MODE
+		.simulation_mode = REAL_MODE, //SIMULATION_MODE
 		.autopilot_type = MAV_TYPE_QUADROTOR,
 		.autopilot_name = MAV_AUTOPILOT_GENERIC,
 		.sensor_present = 0b1111110000100111,
@@ -129,13 +129,14 @@ void central_data_init()
 	delay_ms(100);
 
 	// Init navigation
-	navigation_init(&central_data.navigation_data,
+	navigation_init(&central_data.navigation,
 					&central_data.controls_nav,
 					&central_data.ahrs.qe,
 					&central_data.waypoint_handler,
 					&central_data.position_estimator,
 					&central_data.orca,
-					&central_data.state);
+					&central_data.state,
+					&central_data.mavlink_communication.mavlink_stream);
 	
 	delay_ms(100);
 

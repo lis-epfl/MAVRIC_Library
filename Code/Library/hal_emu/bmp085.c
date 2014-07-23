@@ -11,7 +11,7 @@
 
 #include "math.h"
 
-pressure_data_t pressure_outputs;
+barometer_t pressure_outputs;
 
 void bmp085_init(){
 	bmp085_init_slow();
@@ -23,7 +23,7 @@ void bmp085_init_slow(){
 
 
 
-pressure_data_t* bmp085_update(float offset){
+barometer_t* bmp085_update(float offset){
 		
 		return &pressure_outputs;
 }

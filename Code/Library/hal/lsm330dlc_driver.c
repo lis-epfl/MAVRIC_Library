@@ -401,7 +401,7 @@ void lsm330dlc_driver_init(void)
 	lsm330dlc_get_gyro_config();
 }
 
-void lsm330dlc_acc_update(accelero_data_t *lsm_acc_outputs) 
+void lsm330dlc_acc_update(accelerometer_t *lsm_acc_outputs) 
 {
 	lsm_acc_read_t fifo_values;
 	float axes[3] = {0.0f, 0.0f, 0.0f};
@@ -441,7 +441,7 @@ void lsm330dlc_acc_update(accelero_data_t *lsm_acc_outputs)
 	}
 }
 
-void lsm330dlc_gyro_update(gyro_data_t *lsm_gyro_outputs) 
+void lsm330dlc_gyro_update(gyroscope_t *lsm_gyro_outputs) 
 {
 	lsm_gyro_read_t fifo_values;
 	int16_t temperature = 0;

@@ -7,7 +7,7 @@
 #include "compass_hmc5883l.h"
 //#include "twim.h"
 
-static volatile compass_data_t compass_outputs;
+static volatile magnetometer_t compass_outputs;
 
 
 
@@ -17,7 +17,7 @@ void compass_hmc58831l_init_slow() {
 }
 
 
-compass_data_t* compass_hmc58831l_get_data_slow() {
+magnetometer_t* compass_hmc58831l_get_data_slow() {
 	return &compass_outputs;
 
 }

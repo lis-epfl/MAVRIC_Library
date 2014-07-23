@@ -183,18 +183,18 @@ typedef struct{
 	int8_t temperature;
 	uint8_t status_register;
 	int16_t axes[3];
-} lsm_gyro_data_t;
+} lsm_gyro_t;
 
 typedef struct{
 	uint8_t status_register;
 	int16_t axes[3];
-} lsm_acc_data_t;
+} lsm_acc_t;
 
 
 void lsm330dlc_driver_init(void);
 
-lsm_gyro_data_t* lsm330dlc_driver_get_gyro_data(void);
-lsm_acc_data_t* lsm330dlc_driver_get_acc_data(void);
+lsm_gyro_t* lsm330dlc_driver_get_gyro_data(void);
+lsm_acc_t* lsm330dlc_driver_get_acc_data(void);
 
 
 #endif 

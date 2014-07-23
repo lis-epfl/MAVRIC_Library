@@ -103,7 +103,7 @@ typedef struct  {
 	
 	uint32_t simulation_mode;
 	
-	pressure_data_t pressure;
+	barometer_t pressure;
 	//float pressure_filtered;
 	//float altitude_filtered;
 	

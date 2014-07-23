@@ -656,6 +656,8 @@
       <File Name="Library/hal/gps_ublox.c"/>
       <File Name="Library/hal/xbee.h"/>
       <File Name="Library/hal/xbee.c"/>
+      <File Name="Library/hal/accelerometer.h"/>
+      <File Name="Library/hal/gyroscope.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>

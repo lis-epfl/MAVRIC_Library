@@ -26,9 +26,9 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include "conf_platform.h"
-#include "gyro.h"
-#include "accelero.h"
-#include "compass.h"
+#include "gyroscope.h"
+#include "accelerometer.h"
+#include "magnetometer.h"
 #include "quaternions.h"
 #include "scheduler.h"
 
@@ -46,7 +46,7 @@ typedef struct
 	float scale_factor[3];					///< The scale factors of the sensor
 	float orientation[3];					///< The orientation of the sensor
 	float axis[3];							///< The axis number (X,Y,Z) referring to the sensor datasheet
-}sensor_calib_t;
+} sensor_calib_t;
 
 
 /**
@@ -58,17 +58,17 @@ typedef struct
 	sensor_calib_t   calib_accelero;		///< The accelerometer calibration structure
 	sensor_calib_t   calib_compass;			///< The compass calibration structure
 	
-	gyro_data_t      raw_gyro;				///< The gyroscope raw values structure
-	gyro_data_t      oriented_gyro;			///< The gyroscope oriented values structure
-	gyro_data_t      scaled_gyro;			///< The gyroscope scaled values structure
+	gyroscope_t      raw_gyro;				///< The gyroscope raw values structure
+	gyroscope_t      oriented_gyro;			///< The gyroscope oriented values structure
+	gyroscope_t      scaled_gyro;			///< The gyroscope scaled values structure
 	
-	accelero_data_t  raw_accelero;			///< The accelerometer raw values structure
-	accelero_data_t  oriented_accelero;		///< The accelerometer oriented values structure
-	accelero_data_t  scaled_accelero;		///< The accelerometer scaled values structure
+	accelerometer_t  raw_accelero;			///< The accelerometer raw values structure
+	accelerometer_t  oriented_accelero;		///< The accelerometer oriented values structure
+	accelerometer_t  scaled_accelero;		///< The accelerometer scaled values structure
 	
-	compass_data_t   raw_compass;			///< The compass raw values structure
-	compass_data_t   oriented_compass;		///< The compass oriented values structure
-	compass_data_t   scaled_compass;		///< The compass scaled values structure
+	magnetometer_t   raw_compass;			///< The compass raw values structure
+	magnetometer_t   oriented_compass;		///< The compass oriented values structure
+	magnetometer_t   scaled_compass;		///< The compass scaled values structure
 	
 	float dt;								///< The time interval between two IMU updates
 	uint32_t last_update;					///< The time of the last IMU update in ms

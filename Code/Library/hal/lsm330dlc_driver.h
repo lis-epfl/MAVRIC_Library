@@ -23,8 +23,8 @@
 #endif
 
 #include <stdint.h>
-#include "gyro.h"
-#include "accelero.h"		
+#include "gyroscope.h"
+#include "accelerometer.h"		
 
 /**
  * \brief	Structure containing the accelerometer's data
@@ -32,16 +32,16 @@
 typedef struct
 {
 	//int16_t axes[3];				///< Define an array containing the 3 axis of the accelerometer
-	accelero_data_t *raw_accelero;
-} lsm_acc_data_t;
+	accelerometer_t *raw_accelero;
+} lsm_acc_t;
 
 /**
  * \brief	Structure containing the gyroscope's data
 */
 typedef struct
 {
-	gyro_data_t *raw_gyro;
-} lsm_gyro_data_t;
+	gyroscope_t *raw_gyro;
+} lsm_gyro_t;
 
 
 /**
@@ -54,14 +54,14 @@ void lsm330dlc_driver_init(void);
  *
  * \return	A pointer to the gyroscope data structure
 */
-void lsm330dlc_gyro_update(gyro_data_t *lsm_gyro_outputs);
+void lsm330dlc_gyro_update(gyroscope_t *lsm_gyro_outputs);
 
 /**
  * \brief	Return the accelerometer's data
  *
  * \return	A pointer to the accelerometer data structure
 */
-void lsm330dlc_acc_update(accelero_data_t *lsm_acc_outputs);
+void lsm330dlc_acc_update(accelerometer_t *lsm_acc_outputs);
 
 #ifdef __cplusplus
 	}
