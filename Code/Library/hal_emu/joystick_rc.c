@@ -34,14 +34,14 @@ struct joystick_event {
 
 int32_t joystick_filedescriptor;
 
-Spektrum_Receiver_t spRec1;
+Spektrum_Receiver_t sp_rec1;
 
 
 int32_t joystick_axes[16];
 int32_t joystick_buttons[16];
 
-int16_t channelCenter[16];
-int32_t joyMax[16], joyMin[16];
+int16_t channel_center[16];
+int32_t joy_max[16], joy_min[16];
 uint32_t last_update;
 
 int32_t open_joystick(char* device_name)
@@ -170,15 +170,15 @@ void remote_dsm2_rc_init (void) {
 	
 	int32_t i;
 	for (i=0; i<16; i++) {
-		spRec1.channels[i]=-500;
-		channelCenter[i]=0;
+		sp_rec1.channels[i]=-500;
+		channel_center[i]=0;
 		joystick_axes[i]=0;
 		joystick_buttons[i]=0;
-		joyMax[i]=32700;
-		joyMin[i]=-32700;
+		joy_max[i]=32700;
+		joy_min[i]=-32700;
 	}
-	spRec1.channels[RC_THROTTLE]=0;
-	channelCenter[RC_YAW]=0;
+	sp_rec1.channels[RC_THROTTLE]=0;
+	channel_center[RC_YAW]=0;
 	joystick_filedescriptor=open_joystick(JOYSTICK_DEVICE);
 	last_update=time_keeper_get_millis();
 	
@@ -250,41 +250,41 @@ int16_t remote_dsm2_rc_get_channel(uint8_t index) {
 		
 		get_joystick_status(joystick_filedescriptor, &joystick_axes, &joystick_buttons, 16, 16);
 		for (i=0; i<16; i++) {
-			if (joystick_axes[i]>joyMax[i]) joyMax[i]=joystick_axes[i];
-			if (joystick_axes[i]<joyMin[i]) joyMin[i]=joystick_axes[i];
+			if (joystick_axes[i]>joy_max[i]) joy_max[i]=joystick_axes[i];
+			if (joystick_axes[i]<joy_min[i]) joy_min[i]=joystick_axes[i];
 			
 		}
 		
-		spRec1.channels[RC_ROLL] = joystick_axes[JOY_ROLL]*J_GAIN/ (joyMax[JOY_ROLL]-joyMin[JOY_ROLL]);
-		spRec1.channels[RC_PITCH] = joystick_axes[JOY_PITCH]*J_GAIN/ (joyMax[JOY_PITCH]-joyMin[JOY_PITCH]);
-		spRec1.channels[RC_YAW] = joystick_axes[JOY_YAW]*J_GAIN/ (joyMax[JOY_YAW]-joyMin[JOY_YAW]);
-		spRec1.channels[RC_THROTTLE] = -joystick_axes[JOY_THROTTLE]*J_GAIN/ (joyMax[JOY_THROTTLE]-joyMin[JOY_THROTTLE]);
-		spRec1.channels[RC_SAFETY] = joystick_axes[JOY_SAFETY] *J_GAIN/ (joyMax[JOY_SAFETY]-joyMin[JOY_SAFETY]);
-		spRec1.channels[RC_ID_MODE] =joystick_axes[JOY_ID_MODE]*J_GAIN/ (joyMax[JOY_ID_MODE]-joyMin[JOY_ID_MODE]);
+		sp_rec1.channels[RC_ROLL] = joystick_axes[JOY_ROLL]*J_GAIN/ (joy_max[JOY_ROLL]-joy_min[JOY_ROLL]);
+		sp_rec1.channels[RC_PITCH] = joystick_axes[JOY_PITCH]*J_GAIN/ (joy_max[JOY_PITCH]-joy_min[JOY_PITCH]);
+		sp_rec1.channels[RC_YAW] = joystick_axes[JOY_YAW]*J_GAIN/ (joy_max[JOY_YAW]-joy_min[JOY_YAW]);
+		sp_rec1.channels[RC_THROTTLE] = -joystick_axes[JOY_THROTTLE]*J_GAIN/ (joy_max[JOY_THROTTLE]-joy_min[JOY_THROTTLE]);
+		sp_rec1.channels[RC_SAFETY] = joystick_axes[JOY_SAFETY] *J_GAIN/ (joy_max[JOY_SAFETY]-joy_min[JOY_SAFETY]);
+		sp_rec1.channels[RC_ID_MODE] =joystick_axes[JOY_ID_MODE]*J_GAIN/ (joy_max[JOY_ID_MODE]-joy_min[JOY_ID_MODE]);
 		last_update=time_keeper_get_millis();
 	}	
-	return spRec1.channels[index];
+	return sp_rec1.channels[index];
 }
 
 int16_t remote_dsm2_rc_get_channel_neutral(uint8_t index) {
-	int16_t value=remote_dsm2_rc_get_channel(index)-channelCenter[index];
+	int16_t value=remote_dsm2_rc_get_channel(index)-channel_center[index];
 	// clamp to dead zone
 	if ((value>-DEADZONE)&&(value<DEADZONE)) value=0;
 	return value;
 }
 
 void remote_dsm2_rc_center_channel(uint8_t index){
-	channelCenter[index]=remote_dsm2_rc_get_channel(index);
+	channel_center[index]=remote_dsm2_rc_get_channel(index);
 }
 
-int8_t checkReceiver1() {
+int8_t check_receiver1() {
 	return (joystick_filedescriptor>0);
 
 }
 
 
 int8_t remote_dsm2_rc_check_receivers() {
-	return checkReceiver1();// + checkReceiver2();
+	return check_receiver1();// + check_receiver2();
 }
 
 

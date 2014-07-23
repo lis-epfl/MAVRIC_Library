@@ -65,16 +65,16 @@ void neighbors_selection_read_message_from_neighbors(neighbors_t *neighbors, mav
 	
 	if (rec->msg.sysid != mavlink_system.sysid)
 	{
-		global_position_t globalPosNeighbor;
-		local_coordinates_t localPosNeighbor;
-		uint8_t actualNeighbor;
+		global_position_t global_pos_neighbor;
+		local_coordinates_t local_pos_neighbor;
+		uint8_t actual_neighbor;
 		
-		globalPosNeighbor.longitude = (double)packet.lon / 10000000.0f;
-		globalPosNeighbor.latitude = (double)packet.lat / 10000000.0f;
-		globalPosNeighbor.altitude = (float)packet.alt / 1000.0f;
-		globalPosNeighbor.heading = (float)packet.hdg;
+		global_pos_neighbor.longitude = (double)packet.lon / 10000000.0f;
+		global_pos_neighbor.latitude = (double)packet.lat / 10000000.0f;
+		global_pos_neighbor.altitude = (float)packet.alt / 1000.0f;
+		global_pos_neighbor.heading = (float)packet.hdg;
 		
-		localPosNeighbor = coord_conventions_global_to_local_position(globalPosNeighbor,neighbors->position_estimator->local_position.origin);
+		local_pos_neighbor = coord_conventions_global_to_local_position(global_pos_neighbor,neighbors->position_estimator->local_position.origin);
 		
 		bool ID_found = false;
 		i = 0;
@@ -94,49 +94,49 @@ void neighbors_selection_read_message_from_neighbors(neighbors_t *neighbors, mav
 		{
 			if (neighbors->number_of_neighbors < MAX_NUM_NEIGHBORS)
 			{
-				actualNeighbor = neighbors->number_of_neighbors;
+				actual_neighbor = neighbors->number_of_neighbors;
 				neighbors->number_of_neighbors++;
 			}
 			else
 			{
 				// This case shouldn't happen
 				print_util_dbg_print("Error! There is more neighbors than planned!\n");
-				actualNeighbor = neighbors->number_of_neighbors - 1;
+				actual_neighbor = neighbors->number_of_neighbors - 1;
 			}
 		}
 		else
 		{
-			actualNeighbor = i;
+			actual_neighbor = i;
 		}
 		
 		
 		
-		neighbors->neighbors_list[actualNeighbor].neighbor_ID = rec->msg.sysid;
+		neighbors->neighbors_list[actual_neighbor].neighbor_ID = rec->msg.sysid;
 		
 		for (i = 0; i < 3; i++)
 		{
-			neighbors->neighbors_list[actualNeighbor].position[i] = localPosNeighbor.pos[i];
+			neighbors->neighbors_list[actual_neighbor].position[i] = local_pos_neighbor.pos[i];
 		}
-		neighbors->neighbors_list[actualNeighbor].velocity[X] = packet.vx / 100.0f;
-		neighbors->neighbors_list[actualNeighbor].velocity[Y] = packet.vy / 100.0f;
-		neighbors->neighbors_list[actualNeighbor].velocity[Z] = packet.vz / 100.0f;
+		neighbors->neighbors_list[actual_neighbor].velocity[X] = packet.vx / 100.0f;
+		neighbors->neighbors_list[actual_neighbor].velocity[Y] = packet.vy / 100.0f;
+		neighbors->neighbors_list[actual_neighbor].velocity[Z] = packet.vz / 100.0f;
 		
-		neighbors->neighbors_list[actualNeighbor].size = SIZE_VHC_ORCA;
+		neighbors->neighbors_list[actual_neighbor].size = SIZE_VHC_ORCA;
 		
-		neighbors->neighbors_list[actualNeighbor].time_msg_received = time_keeper_get_millis();
+		neighbors->neighbors_list[actual_neighbor].time_msg_received = time_keeper_get_millis();
 		
 		//print_util_dbg_print("Neighbor with ID ");
-		//print_util_dbg_print_num(neighbors->neighbors_list[actualNeighbor].neighbor_ID,10);
+		//print_util_dbg_print_num(neighbors->neighbors_list[actual_neighbor].neighbor_ID,10);
 		//print_util_dbg_print(" at position ");
-		//print_util_dbg_print_vector(neighbors->neighbors_list[actualNeighbor].position,3);
+		//print_util_dbg_print_vector(neighbors->neighbors_list[actual_neighbor].position,3);
 		//print_util_dbg_print(" with velocity ");
-		//print_util_dbg_print_vector(neighbors->neighbors_list[actualNeighbor].velocity,3);
+		//print_util_dbg_print_vector(neighbors->neighbors_list[actual_neighbor].velocity,3);
 		//print_util_dbg_print(" with relative position ");
 		//float rel_pos[3];
 		//uint8_t i;
 		//for (i = 0; i < 3; i++)
 		//{
-			//rel_pos[i] = neighbors->neighbors_list[actualNeighbor].position[i] - neighbors->position_estimator.local_position.pos[i];
+			//rel_pos[i] = neighbors->neighbors_list[actual_neighbor].position[i] - neighbors->position_estimator.local_position.pos[i];
 		//}
 		//print_util_dbg_print_vector(rel_pos,3);
 		//print_util_dbg_print("\n");
@@ -146,21 +146,21 @@ void neighbors_selection_read_message_from_neighbors(neighbors_t *neighbors, mav
 
 void neighbors_selection_extrapolate_or_delete_position(neighbors_t *neighbors)
 {
-	int32_t i, ind, indSup;
+	int32_t i, ind, ind_sup;
 	uint32_t delta_t;
 	
-	uint32_t actualTime = time_keeper_get_millis();
+	uint32_t actual_time = time_keeper_get_millis();
 	
 	for (ind = 0; ind < neighbors->number_of_neighbors; ind++)
 	{
-		delta_t = actualTime- neighbors->neighbors_list[ind].time_msg_received;
+		delta_t = actual_time- neighbors->neighbors_list[ind].time_msg_received;
 
 		if (delta_t >= NEIGHBOR_TIMEOUT_LIMIT_MS)
 		{
 			// suppressing element ind
-			for (indSup = ind; indSup < (neighbors->number_of_neighbors - 1); indSup++)
+			for (ind_sup = ind; ind_sup < (neighbors->number_of_neighbors - 1); ind_sup++)
 			{
-				neighbors->neighbors_list[indSup] = neighbors->neighbors_list[indSup + 1];
+				neighbors->neighbors_list[ind_sup] = neighbors->neighbors_list[ind_sup + 1];
 			}
 			(neighbors->number_of_neighbors)--;
 			

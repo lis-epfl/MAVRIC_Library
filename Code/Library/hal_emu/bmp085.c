@@ -28,10 +28,10 @@ barometer_t* bmp085_update(float offset){
 		return &pressure_outputs;
 }
 
-bool bmp085_newValidBarometer(uint32_t *timePrevBarometer) {
-		if (*timePrevBarometer < pressure_outputs.last_update) 
+bool bmp085_new_valid_barometer(uint32_t *time_prev_barometer) {
+		if (*time_prev_barometer < pressure_outputs.last_update) 
 	{
-		*timePrevBarometer = pressure_outputs.last_update;
+		*time_prev_barometer = pressure_outputs.last_update;
 		return true;
 	}else{
 		return false;

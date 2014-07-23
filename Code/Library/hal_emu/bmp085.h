@@ -67,6 +67,6 @@ void bmp085_start_pressure_measurement(void);
 
 barometer_t* bmp085_update(float offset);
 
-bool bmp085_newValidBarometer(uint32_t *timePrevBarometer);
+bool bmp085_new_valid_barometer(uint32_t *time_prev_barometer);
 
 #endif /* BMP085_H_ */

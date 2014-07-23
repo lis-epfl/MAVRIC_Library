@@ -28,14 +28,14 @@
 
 static volatile uint8_t packet_byte_counter = 0;			///< Declare a counter of bytes in a packet 
 
-Spektrum_Receiver_t spRec1;									///< Declare an object containing the receiver structure for receiver 1
-Spektrum_Receiver_t spRec2;									///< Declare an object containing the receiver structure for receiver 2
+Spektrum_Receiver_t sp_rec1;									///< Declare an object containing the receiver structure for receiver 1
+Spektrum_Receiver_t sp_rec2;									///< Declare an object containing the receiver structure for receiver 2
 
-int16_t channelCenter[16];								///< Declare an array to store the central position of each channel
+int16_t channel_center[16];								///< Declare an array to store the central position of each channel
 
 ///< Function prototype definitions
-int8_t checkReceiver1(void);
-int8_t checkReceiver2(void);
+int8_t check_receiver1(void);
+int8_t check_receiver2(void);
 
 
 /**
@@ -51,25 +51,25 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 
 	if (REMOTE_UART.csr & AVR32_USART_CSR_RXRDY_MASK) 
 	{
-		spRec1.duration  = now - spRec1.last_time;
-		spRec1.last_time = now;
+		sp_rec1.duration  = now - sp_rec1.last_time;
+		sp_rec1.last_time = now;
 
 		//print_util_dbg_print("!");
-		//receiveInterruptHandler(&spRec1.receiver);
+		//receive_interrupt_handler(&sp_rec1.receiver);
 
-		if ((spRec1.duration > 2500)) 
+		if ((sp_rec1.duration > 2500)) 
 		{
-			buffer_clear(&spRec1.receiver);
+			buffer_clear(&sp_rec1.receiver);
 		}
 		c1 = (uint8_t)REMOTE_UART.rhr;
-		buffer_put(&spRec1.receiver, c1);
+		buffer_put(&sp_rec1.receiver, c1);
 		
 
-		if ( buffer_bytes_available(&spRec1.receiver) == 16 ) 
+		if ( buffer_bytes_available(&sp_rec1.receiver) == 16 ) 
 		{
 			// first two bytes are status info
-			c1 = buffer_get(&spRec1.receiver);
-			c2 = buffer_get(&spRec1.receiver);
+			c1 = buffer_get(&sp_rec1.receiver);
+			c2 = buffer_get(&sp_rec1.receiver);
 			
 			channel_encoding = (c2 & 0x10) >> 4; 	/* 0 = 11bit, 1 = 10 bit */
 			frame_number     = c2 & 0x03; 			/* 1 = 1 frame contains all channels */
@@ -78,8 +78,8 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 			//print_util_dbg_print("!");
 			for (i = 1; i < 8; i++) 
 			{
-				c1 = buffer_get(&spRec1.receiver);
-				c2 = buffer_get(&spRec1.receiver);
+				c1 = buffer_get(&sp_rec1.receiver);
+				c2 = buffer_get(&sp_rec1.receiver);
 				sw = (uint16_t)c1 << 8 | ((uint16_t)c2);
 				
 				//if (c1 & 0x80 == 0)
@@ -89,23 +89,23 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 					// highest bit is frame 0/1, bits 2-6 are channel number
 					channel = ((c1&0x80) * 8 + (c1 >> 2))&0x0f;
 					// 10 bits per channel
-					spRec1.channels[channel] = ((int16_t)(sw&0x3ff) - 512) * 2;
+					sp_rec1.channels[channel] = ((int16_t)(sw&0x3ff) - 512) * 2;
 				} 
 				else if ( channel_encoding == 0 ) 
 				{
 					// highest bit is frame 0/1, bits 3-7 are channel number
 					channel = ((c1&0x80) * 8 + (c1 >> 3))&0x0f;
 					// 11 bits per channel
-					spRec1.channels[channel] = ((int16_t)(sw&0x7ff) -1024);
+					sp_rec1.channels[channel] = ((int16_t)(sw&0x7ff) -1024);
 				} 
 				else 
 				{
 					// shouldn't happen!
 				}
 				
-				//spRec1.channels[i] = sw&0x3ff;
-				spRec1.valid 		= 1;
-				spRec1.last_update 	= now;
+				//sp_rec1.channels[i] = sw&0x3ff;
+				sp_rec1.valid 		= 1;
+				sp_rec1.last_update 	= now;
 			}
 		}
 	}		
@@ -167,13 +167,13 @@ void remote_dsm2_rc_init (void)
 	
 	for (i = 0; i < 16; i++) 
 	{
-		spRec1.channels[i] = 0;
-		spRec2.channels[i] = 0;
-		channelCenter[i] = 0;
+		sp_rec1.channels[i] = 0;
+		sp_rec2.channels[i] = 0;
+		channel_center[i] = 0;
 	}
 	
-	spRec1.channels[RC_THROTTLE] = 0;
-	spRec2.channels[RC_THROTTLE] = 0;
+	sp_rec1.channels[RC_THROTTLE] = 0;
+	sp_rec2.channels[RC_THROTTLE] = 0;
 	 // USART options.
 	 
     // Assign GPIO pins to USART_0.
@@ -185,8 +185,8 @@ void remote_dsm2_rc_init (void)
 	INTC_register_interrupt( (__int_handler) &spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INT1 );
 	REMOTE_UART.ier = AVR32_USART_IER_RXRDY_MASK;
 
-	//initUART_RX(&spRec1.receiver,  &USARTC1, USART_RXCINTLVL_LO_gc, BSEL_SPEKTRUM);
-	//initUART_RX(&spRec2.receiver,  &USARTD0, USART_RXCINTLVL_LO_gc, BSEL_SPEKTRUM);
+	//initUART_RX(&sp_rec1.receiver,  &USARTC1, USART_RXCINTLVL_LO_gc, BSEL_SPEKTRUM);
+	//initUART_RX(&sp_rec2.receiver,  &USARTD0, USART_RXCINTLVL_LO_gc, BSEL_SPEKTRUM);
 	
 	remote_dsm2_rc_switch_power(true);
 }
@@ -194,19 +194,19 @@ void remote_dsm2_rc_init (void)
 
 int16_t remote_dsm2_rc_get_channel(uint8_t index) 
 {
-	//if (checkReceiver1() < checkReceiver2()) {
+	//if (check_receiver1() < check_receiver2()) {
 	
-	return spRec1.channels[index];
+	return sp_rec1.channels[index];
 	
 	//} else {
-	//	return spRec2.channels[index] - 500;
+	//	return sp_rec2.channels[index] - 500;
 	//}
 }
 
 
 int16_t remote_dsm2_rc_get_channel_neutral(uint8_t index) 
 {
-	int16_t value = remote_dsm2_rc_get_channel(index) - channelCenter[index];
+	int16_t value = remote_dsm2_rc_get_channel(index) - channel_center[index];
 
 	// clamp to dead zone
 	if ( (value > -DEADZONE) && (value < DEADZONE) )
@@ -220,17 +220,17 @@ int16_t remote_dsm2_rc_get_channel_neutral(uint8_t index)
 
 void remote_dsm2_rc_center_channel(uint8_t index)
 {
-	channelCenter[index] = remote_dsm2_rc_get_channel(index);
+	channel_center[index] = remote_dsm2_rc_get_channel(index);
 }
 
 
-int8_t checkReceiver1(void) 
+int8_t check_receiver1(void) 
 {
 	int8_t i;
 	uint32_t now = time_keeper_get_time_ticks();
-	uint32_t duration = now - spRec1.last_update;
+	uint32_t duration = now - sp_rec1.last_update;
 	
-	if (spRec1.valid == 0)
+	if (sp_rec1.valid == 0)
 	{
 		return - 2;
 	}
@@ -240,31 +240,31 @@ int8_t checkReceiver1(void)
 	} 
 	else if (duration < 1500000) 
 	{
-		spRec1.channels[RC_ROLL] = 0;	
-		spRec1.channels[RC_PITCH] = 0;	
-		spRec1.channels[RC_YAW] = 0;	
+		sp_rec1.channels[RC_ROLL] = 0;	
+		sp_rec1.channels[RC_PITCH] = 0;	
+		sp_rec1.channels[RC_YAW] = 0;	
 		return -1; // brief drop out - hold pattern
 	} 
 	else 
 	{
-		spRec1.valid = 0;
+		sp_rec1.valid = 0;
 		for (i = 1; i < 8; i++) 
 		{
-			spRec1.channels[i] = 0;			
+			sp_rec1.channels[i] = 0;			
 		}
-		spRec1.channels[RC_THROTTLE] = -1000;
+		sp_rec1.channels[RC_THROTTLE] = -1000;
 		return -2; // fade - fail safe
 	}
 }
 
 
-int8_t checkReceiver2(void)
+int8_t check_receiver2(void)
 {
 	int8_t i;
 	uint32_t now = 0; //TCC0.CNT;
-	uint32_t duration = now - spRec2.last_update;
+	uint32_t duration = now - sp_rec2.last_update;
 
-	if (spRec2.valid == 0) 
+	if (sp_rec2.valid == 0) 
 	{
 		return -2;
 	}
@@ -279,12 +279,12 @@ int8_t checkReceiver2(void)
 	} 
 	else 
 	{
-		spRec2.valid = 0;
+		sp_rec2.valid = 0;
 		for (i = 1; i < 8; i++) 
 		{
-			spRec2.channels[i] = 0;
+			sp_rec2.channels[i] = 0;
 		}
-		spRec2.channels[RC_THROTTLE] = -1000;
+		sp_rec2.channels[RC_THROTTLE] = -1000;
 		return -2; // fade - fail safe
 	}
 }
@@ -292,7 +292,7 @@ int8_t checkReceiver2(void)
 
 int8_t remote_dsm2_rc_check_receivers(void) 
 {
-	return checkReceiver1();// + checkReceiver2();
+	return check_receiver1();// + check_receiver2();
 }
 
 
@@ -302,25 +302,25 @@ ISR(USARTD0_RXC_vect) {
 	uint8_t c1, c2, i;
 	uint16_t sw;
 	uint16_t now =TCC0.CNT ;
-	spRec2.duration=now-spRec2.last_time;
-	spRec2.last_time=now;
-	receiveInterruptHandler(&spRec2.receiver);
+	sp_rec2.duration=now-sp_rec2.last_time;
+	sp_rec2.last_time=now;
+	receive_interrupt_handler(&sp_rec2.receiver);
 
-	if ((spRec2.duration>600)&& (spRec2.duration<660)) {
-		while (UARTBytesAvailable(&spRec2.receiver)>1) readUARTNonblock(&spRec2.receiver);
+	if ((sp_rec2.duration>600)&& (sp_rec2.duration<660)) {
+		while (UARTBytesAvailable(&sp_rec2.receiver)>1) read_uart_non_block(&sp_rec2.receiver);
 	}
 
-	if (UARTBytesAvailable(&spRec2.receiver)==16) {
+	if (UARTBytesAvailable(&sp_rec2.receiver)==16) {
 		//PORTC.OUT = _BV(5);
 		for (i=0; i<8; i++) {
-			c1=readUARTNonblock(&spRec2.receiver);
-			c2=readUARTNonblock(&spRec2.receiver);
+			c1=read_uart_non_block(&sp_rec2.receiver);
+			c2=read_uart_non_block(&sp_rec2.receiver);
 			sw=((uint16_t)c1)*256 +((uint16_t)c2);
 			//if (c1 & 0x80==0)
-			spRec2.channels[(c1 & 0x3c)>>2]=sw&0x3ff;
-			//spRec1.channels[i]=sw&0x3ff;
-			spRec2.valid=1;
-			spRec2.last_update=now;
+			sp_rec2.channels[(c1 & 0x3c)>>2]=sw&0x3ff;
+			//sp_rec1.channels[i]=sw&0x3ff;
+			sp_rec2.valid=1;
+			sp_rec2.last_update=now;
 		}
 	}
 }
