@@ -45,12 +45,12 @@ typedef struct
  */
 typedef struct
 {
-	Stabiliser_Stack_copter_t *stabiliser_stack;				///< The pointer to the PID parameters values for the stacked controller 
-	Control_Command_t *controls;								///< The pointer to the control structure
-	const imu_t *imu;											///< The pointer to the IMU structure
-	const ahrs_t *attitude_estimation;							///< The pointer to the attitude estimation structure
-	const position_estimator_t *pos_est;						///< The pointer to the position estimation structure
-	servo_output_t* servos;										///< The pointer to the servos structure
+	Stabiliser_Stack_copter_t* stabiliser_stack;	///< The pointer to the PID parameters values for the stacked controller 
+	Control_Command_t* controls;					///< The pointer to the control structure
+	const imu_t* imu;								///< The pointer to the IMU structure
+	const ahrs_t* ahrs;								///< The pointer to the attitude estimation structure
+	const position_estimator_t* pos_est;			///< The pointer to the position estimation structure
+	servo_output_t* servos;							///< The pointer to the servos structure
 } stabilise_copter_t;
 
 /**
@@ -60,11 +60,11 @@ typedef struct
  * \param	stabiliser_stack		The pointer to structure with all controllers
  * \param	control_input			The pointer to the controlling inputs
  * \param	imu						The pointer to the IMU structure
- * \param	attitude_estimation		The pointer to the attitude estimation structure
+ * \param	ahrs		The pointer to the attitude estimation structure
  * \param	pos_est					The pointer to the position estimation structure
  * \param	servos					The pointer to the array of servos command values
  */
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, const imu_t* imu, const ahrs_t* attitude_estimation, const position_estimator_t* pos_est,servo_output_t* servos);
+void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, Control_Command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servo_output_t* servos);
 
 /**
  * \brief							Main Controller for controlling and stabilizing the quad

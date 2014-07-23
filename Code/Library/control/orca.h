@@ -52,10 +52,10 @@ typedef struct{
 
 typedef struct
 {
-	neighbor_t *neighborData;					///< The pointer to the neighbor structure
-	const position_estimator_t *positionData;	///< The pointer to the position estimation structure
-	const imu_t *imuData;						///< The pointer to the IMU structure
-	const ahrs_t *attitude_estimation;			///< The pointer to the attitude estimation structure
+	neighbor_t* 				neighborData;	///< The pointer to the neighbor structure
+	const position_estimator_t* positionData;	///< The pointer to the position estimation structure
+	const imu_t* 				imuData;		///< The pointer to the IMU structure
+	const ahrs_t* 				ahrs;			///< The pointer to the attitude estimation structure
 }orca_t;
 
 /**
@@ -64,9 +64,9 @@ typedef struct
  * \param	neighborData			The pointer to the neighbor data structure
  * \param	positionData			The pointer to the position structure
  * \param	imuData					The pointer to the IMU structure
- * \param	attitude_estimation		The pointer to the attitude estimation structure
+ * \param	ahrs		The pointer to the attitude estimation structure
  */
-void orca_init(orca_t *orcaData, neighbor_t *neighborData, const position_estimator_t *positionData, const imu_t *imuData, const ahrs_t *attitude_estimation);
+void orca_init(orca_t *orcaData, neighbor_t *neighborData, const position_estimator_t *positionData, const imu_t *imuData, const ahrs_t *ahrs);
 
 /**
  * \brief	Computes the new collision-free velocity

@@ -988,6 +988,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\mavlink\include\maveric\version.h" />
+    <Compile Include="Library\sensing\ahrs.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\sensing\ahrs.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\sensing\neighbor_selection.c">
       <SubType>compile</SubType>
     </Compile>
