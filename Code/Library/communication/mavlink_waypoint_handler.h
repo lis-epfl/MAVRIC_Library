@@ -162,9 +162,9 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
  * \brief	Initialise the position hold mode
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
- * \param	localPos				The position where the position will be held
+ * \param	local_pos				The position where the position will be held
  */
-void waypoint_handler_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t localPos);
+void waypoint_handler_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t local_pos);
 
 /**
  * \brief	Sets the automatic takeoff waypoint

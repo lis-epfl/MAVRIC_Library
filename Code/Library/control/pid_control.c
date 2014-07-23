@@ -109,7 +109,7 @@ static float pid_control_differentiate(differentiator_t *diff, float input, floa
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-pid_controller_t pid_control_passthroughController()
+pid_controller_t pid_control_pass_through_controller()
 {
 	pid_controller_t out;
 	uint32_t t= time_keeper_get_time_ticks();

@@ -60,19 +60,19 @@ typedef struct
 	int32_t nb_setpoints;						///< Number of setpoints
 	float setpoints[MAX_ADAPT_PARAM_SETPOINTS];	///< set points
 	float setvalues[MAX_ADAPT_PARAM_SETPOINTS];	///< set values
-} Adaptive_Parameter_t;
+} adaptive_parameter_t;
 
 
 typedef struct
 {
 	int32_t param_count;										///< Number of Parameters
-	Adaptive_Parameter_t parameters[MAX_ADAPT_PARAM_COUNT];		///< Parameter set
-} Adaptive_Parameter_Set_t;
+	adaptive_parameter_t parameters[MAX_ADAPT_PARAM_COUNT];		///< Parameter set
+} adaptive_parameter_set_t;
 
 /**
  * \brief					Returns a pointer to the adaptive parameter set
  */
-Adaptive_Parameter_Set_t* adaptive_parameter_get_param_set(void);
+adaptive_parameter_set_t* adaptive_parameter_get_param_set(void);
 
 /**
  * \brief					Initializes the adaptive parameter set
@@ -97,7 +97,7 @@ int32_t adaptive_parameter_add(float* control_variable, float* parameter,
  *
  * \param	param			Adaptive parameter to be updated  
  */							
-void adaptive_parameter_update(Adaptive_Parameter_t param);
+void adaptive_parameter_update(adaptive_parameter_t param);
 
 /**
  * \brief					Update all adaptive parameters

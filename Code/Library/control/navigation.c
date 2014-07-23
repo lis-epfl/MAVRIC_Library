@@ -29,13 +29,13 @@
 /**
  * \brief					Computes the relative position and distance to the given way point
  *
- * \param	waypointPos		Local coordinates of the waypoint
+ * \param	waypoint_pos		Local coordinates of the waypoint
  * \param	rel_pos			Array to store the relative 3D position of the waypoint
- * \param	localPos		The 3D array of the actual position
+ * \param	local_pos		The 3D array of the actual position
  *
  * \return					Distance to waypoint squared
  */
-static float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[], const float localPos[3]);
+static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_pos[], const float local_pos[3]);
 
 
 /**
@@ -65,13 +65,13 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static float navigation_set_rel_pos_n_dist2wp(float waypointPos[], float rel_pos[], const float localPos[3])
+static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_pos[], const float local_pos[3])
 {
 	float dist2wp_sqr;
 	
-	rel_pos[X] = (float)(waypointPos[X] - localPos[X]);
-	rel_pos[Y] = (float)(waypointPos[Y] - localPos[Y]);
-	rel_pos[Z] = (float)(waypointPos[Z] - localPos[Z]);
+	rel_pos[X] = (float)(waypoint_pos[X] - local_pos[X]);
+	rel_pos[Y] = (float)(waypoint_pos[Y] - local_pos[Y]);
+	rel_pos[Z] = (float)(waypoint_pos[Z] - local_pos[Z]);
 	
 	dist2wp_sqr = vectors_norm_sqr(rel_pos);
 	
@@ -113,7 +113,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation_data->position_estimator->local_position.heading);
 	}
 	
-	v_desired = maths_f_min(navigation_data->cruise_speed,(maths_center_window_2(4.0f * rel_heading) * navigation_data->dist2vel_gain * maths_soft_zone(norm_rel_dist,navigation_data->softZoneSize)));
+	v_desired = maths_f_min(navigation_data->cruise_speed,(maths_center_window_2(4.0f * rel_heading) * navigation_data->dist2vel_gain * maths_soft_zone(norm_rel_dist,navigation_data->soft_zone_size)));
 	
 	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigation_data->max_climb_rate * norm_rel_dist ) {
 		v_desired = navigation_data->max_climb_rate * norm_rel_dist /maths_f_abs(dir_desired_bf[Z]);
@@ -220,7 +220,7 @@ void navigation_init(navigation_t* navigation_data, control_command_t* controls_
 	navigation_data->dist2vel_gain = 0.7f;
 	navigation_data->cruise_speed = 3.0f;
 	navigation_data->max_climb_rate = 1.0f;
-	navigation_data->softZoneSize = 0.0f;
+	navigation_data->soft_zone_size = 0.0f;
 	
 	navigation_data->loopCount = 0;
 	

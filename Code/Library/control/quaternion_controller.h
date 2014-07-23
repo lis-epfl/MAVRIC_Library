@@ -34,7 +34,7 @@ typedef struct {
 	UQuat_t* quat_attitude;	 	///<	Pointer to attitude, must be updated externally (imu)
 	UQuat_t quat_ref;			///<	Reference attitude, the errors in roll pitch and yaw will be computed relative to this reference
 	float rpy_errors[3];		///<	Local errors in roll, pitch and yaw
-} Quaternion_Controller_t;
+} quaternion_controller_t;
 
 
 /**
@@ -43,7 +43,7 @@ typedef struct {
  * \param 	controller    	Pointer to data structure
  * \param 	quat_attitude 	Pointer to the quaternion attitude used as input
  */
-void quaternion_controler_init(Quaternion_Controller_t* controller, UQuat_t* quat_attitude);
+void quaternion_controler_init(quaternion_controller_t* controller, UQuat_t* quat_attitude);
 
 
 /**
@@ -52,7 +52,7 @@ void quaternion_controler_init(Quaternion_Controller_t* controller, UQuat_t* qua
  * \param 	controller    	Pointer to data structure
  * \param 	quat_ref      	New attitude quaternion to be used as reference
  */
-void quaternion_controller_set_quat_ref(Quaternion_Controller_t* controller, UQuat_t quat_ref);
+void quaternion_controller_set_quat_ref(quaternion_controller_t* controller, UQuat_t quat_ref);
 
 
 /**
@@ -61,7 +61,7 @@ void quaternion_controller_set_quat_ref(Quaternion_Controller_t* controller, UQu
  * \param 	controller    	Pointer to data structure
  * \param 	aero          	Roll, pitch and yaw angle given in aero_attitude_t structure (radians)
  */
-void quaternion_controller_set_quat_ref_from_aero(Quaternion_Controller_t* controller, Aero_Attitude_t aero);
+void quaternion_controller_set_quat_ref_from_aero(quaternion_controller_t* controller, Aero_Attitude_t aero);
 
 
 /**
@@ -70,7 +70,7 @@ void quaternion_controller_set_quat_ref_from_aero(Quaternion_Controller_t* contr
  * \param 	controller    	Pointer to data structure
  * \param 	rpy           	Roll, pitch and yaw angle
  */
-void quaternion_controller_set_quat_ref_from_rpy(Quaternion_Controller_t* controller, float rpy[3]);
+void quaternion_controller_set_quat_ref_from_rpy(quaternion_controller_t* controller, float rpy[3]);
 
 
 /**
@@ -78,7 +78,7 @@ void quaternion_controller_set_quat_ref_from_rpy(Quaternion_Controller_t* contro
  * 
  * \param 	controller    	Pointer to data structure (radians)
  */
-void quaternion_controller_update(Quaternion_Controller_t* controller);
+void quaternion_controller_update(quaternion_controller_t* controller);
 
 
 #ifdef __cplusplus

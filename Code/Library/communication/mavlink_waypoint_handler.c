@@ -1113,13 +1113,13 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
 	return TASK_RUN_SUCCESS;
 }
 
-void waypoint_handler_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t localPos)
+void waypoint_handler_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t local_pos)
 {
 	
-	waypoint_handler->waypoint_hold_coordinates = localPos;
+	waypoint_handler->waypoint_hold_coordinates = local_pos;
 	
 	//waypoint_handler->waypoint_hold_coordinates.heading = coord_conventions_get_yaw(waypoint_handler->ahrs->qe);
-	//waypoint_handler->waypoint_hold_coordinates.heading = localPos.heading;
+	//waypoint_handler->waypoint_hold_coordinates.heading = local_pos.heading;
 	
 	print_util_dbg_print("Position hold at: (");
 	print_util_dbg_print_num(waypoint_handler->waypoint_hold_coordinates.pos[X],10);

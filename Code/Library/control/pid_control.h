@@ -57,7 +57,7 @@ typedef struct {
  *
  * \return	A PID controller structure
  */
-pid_controller_t pid_control_passthroughController(void);
+pid_controller_t pid_control_pass_through_controller(void);
 
 /**
  * \brief	Reset integrator
