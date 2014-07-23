@@ -476,7 +476,7 @@ task_return_t position_estimation_send_global_position(position_estimator_t* pos
 											gpos.latitude * 10000000,
 											gpos.longitude * 10000000,
 											gpos.altitude * 1000.0f,
-											gpos.altitude+pos_est->localPosition.pos[2],
+											-pos_est->localPosition.pos[2] * 1000,
 											pos_est->vel[0] * 100.0f,
 											pos_est->vel[1] * 100.0f,
 											pos_est->vel[2] * 100.0f,
