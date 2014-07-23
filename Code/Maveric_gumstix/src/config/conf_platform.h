@@ -36,17 +36,17 @@
 #define Y			1
 #define Z			2
 
-#define RAW_GYRO_X 1
-#define RAW_GYRO_Y 0
-#define RAW_GYRO_Z 2
+#define GYRO_AXIS_X 1
+#define GYRO_AXIS_Y 0
+#define GYRO_AXIS_Z 2
 
 #define RAW_GYRO_X_SCALE   12600.0
 #define RAW_GYRO_Y_SCALE  -12600.0
 #define RAW_GYRO_Z_SCALE   12600.0
 
-#define RAW_ACC_X 0
-#define RAW_ACC_Y 1
-#define RAW_ACC_Z 2
+#define ACC_AXIS_X 0
+#define ACC_AXIS_Y 1
+#define ACC_AXIS_Z 2
 
 //#define RAW_ACC_X_SCALE  261.5
 //#define RAW_ACC_Y_SCALE  262.5
@@ -60,9 +60,9 @@
 #define RAW_ACC_Y_SCALE  258.9853
 #define RAW_ACC_Z_SCALE  258.0829
 
-#define RAW_COMPASS_X 2
-#define RAW_COMPASS_Y 0
-#define RAW_COMPASS_Z 1
+#define MAG_AXIS_X 2
+#define MAG_AXIS_Y 0
+#define MAG_AXIS_Z 1
 
 // Inside values
 //#define RAW_MAG_X_SCALE 579.41

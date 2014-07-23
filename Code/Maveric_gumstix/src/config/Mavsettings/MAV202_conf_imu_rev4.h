@@ -10,17 +10,17 @@
 #define CONF_IMU_REV4_H_
 
 
-#define RAW_GYRO_X 0
-#define RAW_GYRO_Y 1
-#define RAW_GYRO_Z 2
+#define GYRO_AXIS_X 0
+#define GYRO_AXIS_Y 1
+#define GYRO_AXIS_Z 2
 
-#define RAW_ACC_X 0
-#define RAW_ACC_Y 1
-#define RAW_ACC_Z 2
+#define ACC_AXIS_X 0
+#define ACC_AXIS_Y 1
+#define ACC_AXIS_Z 2
 
-#define RAW_COMPASS_X 2
-#define RAW_COMPASS_Y 0
-#define RAW_COMPASS_Z 1
+#define MAG_AXIS_X 2
+#define MAG_AXIS_Y 0
+#define MAG_AXIS_Z 1
 
 // from datasheet: FS 2000dps --> 70 mdps/digit
 // scale = 1/(0.07 * PI / 180.0) = 818.5111
@@ -28,9 +28,9 @@
 #define RAW_GYRO_Y_SCALE  818.5111
 #define RAW_GYRO_Z_SCALE  818.5111
 
-#define GYRO_AXIS_X  1.0
-#define GYRO_AXIS_Y -1.0
-#define GYRO_AXIS_Z -1.0
+#define GYRO_ORIENTATION_X  1.0
+#define GYRO_ORIENTATION_Y -1.0
+#define GYRO_ORIENTATION_Z -1.0
 
 #define RAW_ACC_X_SCALE  4145.7462 //3924.0
 #define RAW_ACC_Y_SCALE  4071.6653 //3844.8
@@ -40,9 +40,9 @@
 #define ACC_BIAIS_Y  130.0 //50.00//124.35;
 #define ACC_BIAIS_Z  230.00 //240.00//-40.73;
 
-#define ACC_AXIS_X  1.0
-#define ACC_AXIS_Y -1.0
-#define ACC_AXIS_Z -1.0
+#define ACC_ORIENTATION_X  1.0
+#define ACC_ORIENTATION_Y -1.0
+#define ACC_ORIENTATION_Z -1.0
 
 #define RAW_MAG_X_SCALE 671.1324 //601.3117//624.11
 #define RAW_MAG_Y_SCALE 699.7155 //580.3974//590.77
@@ -52,8 +52,8 @@
 #define MAG_BIAIS_Y 53.48 //-251.5//-138.32
 #define MAG_BIAIS_Z -357.72 //83.0//-79.38
 
-#define MAG_AXIS_X -1.0
-#define MAG_AXIS_Y -1.0
-#define MAG_AXIS_Z -1.0
+#define MAG_ORIENTATION_X -1.0
+#define MAG_ORIENTATION_Y -1.0
+#define MAG_ORIENTATION_Z -1.0
 
 #endif /* CONF_IMU_REV4_H_ */
