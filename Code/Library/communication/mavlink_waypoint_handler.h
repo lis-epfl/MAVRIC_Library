@@ -88,6 +88,7 @@ typedef struct
 	float dist2wp_sqr;											///< The square of the distance to the waypoint
 	
 	bool waypoint_set;											///< Flag to tell that a flight plan (min 1 waypoint) is active
+	bool hold_waypoint_set;										///< Flag to tell if the hold position waypoin is set
 	bool waypoint_sending;										///< Flag to tell whether waypoint are being sent
 	bool waypoint_receiving;									///< Flag to tell whether waypoint are being received or not
 	bool critical_landing;										///< Flag to execute critical landing (switching motors off)
