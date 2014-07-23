@@ -19,18 +19,18 @@
 typedef struct{
 	int16_t temperature;
 	int16_t axes[3];
-} gyro_data_t; 
+} gyroscope_t; 
 
 
 
 void itg3200_driver_init(void);
 void itg3200_driver_reconfigure_gyro(void);
 
-gyro_data_t* itg3200_driver_get_gyro_data(void);
+gyroscope_t* itg3200_driver_get_gyro_data(void);
 
 void itg3200_driver_init_slow(void);
 
-gyro_data_t* itg3200_driver_get_data_slow(void);
+gyroscope_t* itg3200_driver_get_data_slow(void);
 
 
 #endif /* ITG3200_DRIVER_H_ */

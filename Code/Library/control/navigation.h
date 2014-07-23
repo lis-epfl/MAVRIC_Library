@@ -56,7 +56,7 @@ typedef struct
 /**
  * \brief						Initialization
  *
- * \param	navigation_data		The pointer to the navigation structure
+ * \param	navigation		The pointer to the navigation structure
  * \param	controls_nav		The pointer to the control structure
  * \param	qe					The pointer to the attitude quaternion structure
  * \param	waypoint_handler	The pointer to the waypoint handler structure
@@ -64,14 +64,14 @@ typedef struct
  * \param	orca			The pointer to the ORCA structure
  * \param	state		The pointer to the state structure 
  */
-void navigation_init(navigation_t* navigation_data, control_command_t* controls_nav, const UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, const state_t* state);
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, const state_t* state);
 
 /**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
  *
- * \param	navigation_data		The pointer to the navigation structure in central_data
+ * \param	navigation		The pointer to the navigation structure in central_data
  */
-task_return_t navigation_update(navigation_t* navigation_data);
+task_return_t navigation_update(navigation_t* navigation);
 
 #ifdef __cplusplus
 }

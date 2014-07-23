@@ -10,8 +10,8 @@
 #include "print_util.h"
 //#include "twim.h"
 
-static volatile lsm_gyro_data_t lsm_gyro_outputs;
-static volatile lsm_acc_data_t  lsm_acc_outputs;
+static volatile lsm_gyro_t lsm_gyro_outputs;
+static volatile lsm_acc_t  lsm_acc_outputs;
 
 
 
@@ -39,12 +39,12 @@ void lsm330dlc_driver_init(void) {
 
 
 
-lsm_acc_data_t* lsm330dlc_driver_get_acc_data(void) {
+lsm_acc_t* lsm330dlc_driver_get_acc_data(void) {
 	
 	return &lsm_acc_outputs;
 }
 
 
-lsm_gyro_data_t* lsm330dlc_driver_get_gyro_data(void) {
+lsm_gyro_t* lsm330dlc_driver_get_gyro_data(void) {
 	return &lsm_gyro_outputs;
 }

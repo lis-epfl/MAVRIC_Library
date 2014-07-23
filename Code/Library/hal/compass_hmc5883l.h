@@ -24,7 +24,7 @@
 #endif
 
 #include <stdint.h>
-#include "compass.h"
+#include "magnetometer.h"
 
 
 /**
@@ -32,7 +32,7 @@
 */
 typedef struct
 {
-	compass_data_t *raw_compass;
+	magnetometer_t *raw_compass;
 } compass_hmc58831l_data_t;
 
 
@@ -53,7 +53,7 @@ void compass_hmc58831l_init_slow(void);
  *
  * \return a pointer to the magnetometer's data in slow mode
 */
-void compass_hmc58831l_update(compass_data_t *compass_outputs);
+void compass_hmc58831l_update(magnetometer_t *compass_outputs);
 
 
 #ifdef __cplusplus

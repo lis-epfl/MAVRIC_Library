@@ -41,7 +41,7 @@
 
 #define BMP085_OVERSAMPLING_MODE BMP085_HIGHRES
 
-typedef enum  pressure_sensor_state_t{IDLE, GET_TEMP, GET_PRESSURE} pressure_sensor_state_t;
+typedef enum  bmp085_state_t{IDLE, GET_TEMP, GET_PRESSURE} bmp085_state_t;
 
 typedef struct{
 	uint8_t raw_pressure[3];
@@ -54,9 +54,9 @@ typedef struct{
 	float vario_vz;
 	uint32_t last_update;
 	uint32_t last_state_update;
-	pressure_sensor_state_t state;
+	bmp085_state_t state;
 	float dt;
-} pressure_data_t;
+} barometer_t;
 
 
 void bmp085_init(void);
@@ -65,7 +65,7 @@ void bmp085_init_slow(void);
 
 void bmp085_start_pressure_measurement(void);
 
-pressure_data_t* bmp085_update(float offset);
+barometer_t* bmp085_update(float offset);
 
 bool bmp085_newValidBarometer(uint32_t *timePrevBarometer);
 

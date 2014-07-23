@@ -12,7 +12,7 @@
 #include "print_util.h"
 //#include "twim.h"
 
-static volatile gyro_data_t gyro_outputs;
+static volatile gyroscope_t gyro_outputs;
 
 //static  i2c_schedule_event_t gyro_event;
 
@@ -51,12 +51,12 @@ void itg3200_driver_init_slow(void) {
 
 }
 
-gyro_data_t* itg3200_driver_get_gyro_data(void) {
+gyroscope_t* itg3200_driver_get_gyro_data(void) {
 	
 	return &gyro_outputs;
 }
 
-gyro_data_t* itg3200_driver_get_data_slow(void) {
+gyroscope_t* itg3200_driver_get_data_slow(void) {
 	
 	
 	

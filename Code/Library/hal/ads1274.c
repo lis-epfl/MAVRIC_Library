@@ -83,7 +83,7 @@
 volatile avr32_tc_t *tc = EXAMPLE_TC;
 struct genclk_config gcfg;
 static volatile int32_t adc_buffer[ADC_INPUT_CHANNELS][ADC_BUFFER_SIZE];
-static volatile int32_t sampleCounter;
+static volatile int32_t sample_counter;
 static volatile int32_t interrupt_counter;
 static volatile generatorfunction function_generator;
 
@@ -104,7 +104,7 @@ void processData(void)
 {
 	int32_t ch;
 	int32_t value;
-	if (sampleCounter >= ADC_BUFFER_SIZE) 
+	if (sample_counter >= ADC_BUFFER_SIZE) 
 	{
 		return;
 	}	
@@ -112,15 +112,15 @@ void processData(void)
 	for (ch = 0; ch < 4; ch++) 
 	{
 		value = (buffer[3 * ch] << 24) + (buffer[3 * ch + 1] << 16) + (buffer[3 * ch + 2] << 8);
-		adc_buffer[ch][sampleCounter] = (value/256);
+		adc_buffer[ch][sample_counter] = (value/256);
 		
 	}
 	
 	if (function_generator != NULL) 
 	{
-		dac_dma_set_value((*function_generator)(sampleCounter));
+		dac_dma_set_value((*function_generator)(sample_counter));
 	}		
-	sampleCounter++;
+	sample_counter++;
 }  
 
 void ads1274_set_DAC_generator_function(generatorfunction new_function_generator ) 
@@ -135,7 +135,7 @@ float get_sample(int32_t channel, int32_t sample)
 
 int32_t get_sampling_status(void) 
 {
-	return sampleCounter;
+	return sample_counter;
 }
 
 ///< Initializes ADC (configures Pins, starts Clock, sets defaults)
@@ -246,7 +246,7 @@ void ads1274_ADC_start_oneshot(void)
 {
 	//Disable_global_interrupt();
 	//eic_enable_interrupt_line(&AVR32_EIC, eic_options[0].eic_line);
-	sampleCounter = 0;
+	sample_counter = 0;
 	//Enable_global_interrupt();
 }
 
@@ -268,7 +268,7 @@ void eic_nmi_handler( void )
 			);
 	//interrupt_counter++;
 	
-	if (sampleCounter < ADC_BUFFER_SIZE) 
+	if (sample_counter < ADC_BUFFER_SIZE) 
 	{
 		spi_buffered_trigger_DMA(0, 12);
 	} 

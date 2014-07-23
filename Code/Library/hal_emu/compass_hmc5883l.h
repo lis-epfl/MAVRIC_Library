@@ -70,7 +70,7 @@ enum
 typedef struct{
 	uint8_t raw_data[6];
 	int16_t axes[3];
-} compass_data_t;
+} magnetometer_t;
 
 
 
@@ -78,7 +78,7 @@ void compass_hmc58831l_init();
 
 void compass_hmc58831l_init_slow();
 
-compass_data_t* compass_hmc58831l_get_data_slow();
+magnetometer_t* compass_hmc58831l_get_data_slow();
 
 
 

@@ -127,7 +127,7 @@ void compass_hmc58831l_init_slow()
 }
 
 
-void compass_hmc58831l_update(compass_data_t *compass_outputs) 
+void compass_hmc58831l_update(magnetometer_t *compass_outputs) 
 {
 	uint8_t start_address = DataRegBegin;
 	uint16_t data[3];
