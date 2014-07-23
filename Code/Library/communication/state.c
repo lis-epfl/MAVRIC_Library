@@ -33,7 +33,6 @@ void state_init(state_structure_t *state_structure, state_structure_t* state_con
 	state_structure->simulation_mode = state_config->simulation_mode;
 	
 	state_structure->mav_mode_previous = state_structure->mav_mode;
-	state_structure->mav_state_previous = state_structure->mav_state;
 	
 	state_structure->simulation_mode_previous = state_structure->simulation_mode;
 	

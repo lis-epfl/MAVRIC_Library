@@ -38,7 +38,6 @@ void initialisation()
 	print_util_dbg_print("OK. Starting up.\n");
 	
 	central_data->state_structure.mav_state = MAV_STATE_STANDBY;
-	central_data->state_structure.mav_state_previous = central_data->state_structure.mav_state;
 	
 	central_data->imu.calibration_level = OFF;
 }
