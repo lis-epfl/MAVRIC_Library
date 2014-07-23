@@ -102,7 +102,7 @@ local_coordinates_t coord_conventions_global_to_local_position(global_position_t
  *
  * \return     Aero attitude
  */
-Aero_Attitude_t coord_conventions_quat_to_aero(UQuat_t qe);
+Aero_Attitude_t coord_conventions_quat_to_aero(quat_t qe);
 
 
 /**
@@ -112,7 +112,7 @@ Aero_Attitude_t coord_conventions_quat_to_aero(UQuat_t qe);
  * 
  * \return     	Attitude quaternion
  */
-UQuat_t coord_conventions_quaternion_from_aero(Aero_Attitude_t aero);
+quat_t coord_conventions_quaternion_from_aero(Aero_Attitude_t aero);
 
 
 /**
@@ -122,7 +122,7 @@ UQuat_t coord_conventions_quaternion_from_aero(Aero_Attitude_t aero);
  * 
  * \return     Yaw angle in radians
  */
-float coord_conventions_get_yaw(UQuat_t qe);
+float coord_conventions_get_yaw(quat_t qe);
 
 
 #ifdef __cplusplus

@@ -307,10 +307,10 @@ ISR(USARTD0_RXC_vect) {
 	receive_interrupt_handler(&sp_rec2.receiver);
 
 	if ((sp_rec2.duration>600)&& (sp_rec2.duration<660)) {
-		while (UARTBytesAvailable(&sp_rec2.receiver)>1) read_uart_non_block(&sp_rec2.receiver);
+		while (uart_bytes_available(&sp_rec2.receiver)>1) read_uart_non_block(&sp_rec2.receiver);
 	}
 
-	if (UARTBytesAvailable(&sp_rec2.receiver)==16) {
+	if (uart_bytes_available(&sp_rec2.receiver)==16) {
 		//PORTC.OUT = _BV(5);
 		for (i=0; i<8; i++) {
 			c1=read_uart_non_block(&sp_rec2.receiver);

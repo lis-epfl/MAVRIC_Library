@@ -48,7 +48,7 @@ typedef struct
 	bool collision_avoidance;							///< Flag to tell whether the collision avoidance is active or not
 	
 	control_command_t *controls_nav;					///< The pointer to the navigation control structure
-	const UQuat_t *qe;									///< The pointer to the attitude quaternion structure
+	const quat_t *qe;									///< The pointer to the attitude quaternion structure
 	mavlink_waypoint_handler_t *waypoint_handler;		///< The pointer to the waypoint handler structure
 	const position_estimator_t *position_estimator;		///< The pointer to the position estimation structure in central_data
 	orca_t *orca;										///< The pointer to the ORCA structure in central_data
@@ -68,7 +68,7 @@ typedef struct
  * \param	state		The pointer to the state structure 
  * \param	mavlink_stream		The pointer to the mavlink stream structure
  */
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, const state_t* state, const mavlink_stream_t* mavlink_stream);
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, const state_t* state, const mavlink_stream_t* mavlink_stream);
 
 /**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode

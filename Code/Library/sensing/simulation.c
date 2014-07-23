@@ -168,8 +168,8 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servo
 	float motor_command[4];
 	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4];
 	float ldb;
-	UQuat_t wind_gf = {.s = 0, .v = {sim->vehicle_config.wind_x, sim->vehicle_config.wind_y, 0.0f}};
-	UQuat_t wind_bf = quaternions_global_to_local(sim->ahrs.qe, wind_gf);
+	quat_t wind_gf = {.s = 0, .v = {sim->vehicle_config.wind_x, sim->vehicle_config.wind_y, 0.0f}};
+	quat_t wind_bf = quaternions_global_to_local(sim->ahrs.qe, wind_gf);
 	
 	float sqr_lateral_airspeed = SQR(sim->vel_bf[0] + wind_bf.v[0]) + SQR(sim->vel_bf[1] + wind_bf.v[1]);
 	float lateral_airspeed = sqrt(sqr_lateral_airspeed);
@@ -335,9 +335,9 @@ void simulation_calib_set(simulation_model_t *sim)
 void simulation_update(simulation_model_t *sim)
 {
 	int32_t i;
-	UQuat_t qtmp1, qvel_bf,  qed;
-	const UQuat_t front = {.s = 0.0f, .v = {1.0f, 0.0f, 0.0f}};
-	const UQuat_t up = {.s = 0.0f, .v = {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}};
+	quat_t qtmp1, qvel_bf,  qed;
+	const quat_t front = {.s = 0.0f, .v = {1.0f, 0.0f, 0.0f}};
+	const quat_t up = {.s = 0.0f, .v = {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}};
 	
 	
 	uint32_t now = time_keeper_get_micros();

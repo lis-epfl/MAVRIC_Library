@@ -31,8 +31,8 @@ extern "C" {
  * \brief Quaternion controller data structure
  */
 typedef struct {
-	UQuat_t* quat_attitude;	 	///<	Pointer to attitude, must be updated externally (imu)
-	UQuat_t quat_ref;			///<	Reference attitude, the errors in roll pitch and yaw will be computed relative to this reference
+	quat_t* quat_attitude;	 	///<	Pointer to attitude, must be updated externally (imu)
+	quat_t quat_ref;			///<	Reference attitude, the errors in roll pitch and yaw will be computed relative to this reference
 	float rpy_errors[3];		///<	Local errors in roll, pitch and yaw
 } quaternion_controller_t;
 
@@ -43,7 +43,7 @@ typedef struct {
  * \param 	controller    	Pointer to data structure
  * \param 	quat_attitude 	Pointer to the quaternion attitude used as input
  */
-void quaternion_controler_init(quaternion_controller_t* controller, UQuat_t* quat_attitude);
+void quaternion_controler_init(quaternion_controller_t* controller, quat_t* quat_attitude);
 
 
 /**
@@ -52,7 +52,7 @@ void quaternion_controler_init(quaternion_controller_t* controller, UQuat_t* qua
  * \param 	controller    	Pointer to data structure
  * \param 	quat_ref      	New attitude quaternion to be used as reference
  */
-void quaternion_controller_set_quat_ref(quaternion_controller_t* controller, UQuat_t quat_ref);
+void quaternion_controller_set_quat_ref(quaternion_controller_t* controller, quat_t quat_ref);
 
 
 /**

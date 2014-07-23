@@ -22,25 +22,25 @@
 
 uint8_t buffer_full(Buffer_t * buffer) 
 {
-	return (((buffer->BufferHead + 1)&BUFFER_MASK) == buffer->BufferTail);
+	return (((buffer->buffer_head + 1)&BUFFER_MASK) == buffer->buffer_tail);
 }
 
 
 uint8_t buffer_put_lossy(Buffer_t * buffer, uint8_t byte) 
 {
 	uint8_t tmp;
-	tmp = (buffer->BufferHead + 1)&BUFFER_MASK;
+	tmp = (buffer->buffer_head + 1)&BUFFER_MASK;
 
-	if (tmp==buffer->BufferTail) 
+	if (tmp==buffer->buffer_tail) 
 	{
 		// error: receive buffer overflow!!
 		// lose old incoming data at the end of the buffer
-		buffer->BufferTail=(buffer->BufferTail + 1)&BUFFER_MASK;
+		buffer->buffer_tail=(buffer->buffer_tail + 1)&BUFFER_MASK;
 	}
 
 	// store incoming data in buffer
-	buffer->Buffer[buffer->BufferHead] = byte;
-	buffer->BufferHead=tmp;
+	buffer->Buffer[buffer->buffer_head] = byte;
+	buffer->buffer_head=tmp;
 	
 	if (buffer_full(buffer)) 
 	{
@@ -58,9 +58,9 @@ uint8_t buffer_put_lossy(Buffer_t * buffer, uint8_t byte)
 uint8_t buffer_put(Buffer_t * buffer, uint8_t byte) 
 {
 	uint8_t tmp;
-	tmp = (buffer->BufferHead + 1)&BUFFER_MASK;
+	tmp = (buffer->buffer_head + 1)&BUFFER_MASK;
 
-	if (tmp==buffer->BufferTail) 
+	if (tmp==buffer->buffer_tail) 
 	{
 		//error: buffer full! return 1
 		return 1;
@@ -68,8 +68,8 @@ uint8_t buffer_put(Buffer_t * buffer, uint8_t byte)
 	else
 	{
 		// store incoming data in buffer
-		buffer->Buffer[buffer->BufferHead] = byte;
-		buffer->BufferHead=tmp;
+		buffer->Buffer[buffer->buffer_head] = byte;
+		buffer->buffer_head=tmp;
 	
 		if (buffer_full(buffer)) 
 		{
@@ -89,10 +89,10 @@ uint8_t buffer_get(Buffer_t * buffer)
 {
 	uint8_t ret=0;
 	
-	if (buffer->BufferHead!=buffer->BufferTail)
+	if (buffer->buffer_head!=buffer->buffer_tail)
 	{
-		ret = buffer->Buffer[buffer->BufferTail];
-		buffer->BufferTail =  (buffer->BufferTail + 1)&BUFFER_MASK;
+		ret = buffer->Buffer[buffer->buffer_tail];
+		buffer->buffer_tail =  (buffer->buffer_tail + 1)&BUFFER_MASK;
 		buffer->full = 0;
 	}
 
@@ -102,28 +102,28 @@ uint8_t buffer_get(Buffer_t * buffer)
 
 int8_t buffer_empty(Buffer_t * buffer) 
 {
-	return (buffer->BufferHead==buffer->BufferTail);
+	return (buffer->buffer_head==buffer->buffer_tail);
 }
 
 
 uint32_t buffer_bytes_available(Buffer_t * buffer) 
 {
-	return (BUFFER_SIZE + buffer->BufferHead - buffer->BufferTail)&BUFFER_MASK;
+	return (BUFFER_SIZE + buffer->buffer_head - buffer->buffer_tail)&BUFFER_MASK;
 }
 
 
 void buffer_init(Buffer_t * buffer) 
 {
-	buffer->BufferHead = 0;
-	buffer->BufferTail = 0;
+	buffer->buffer_head = 0;
+	buffer->buffer_tail = 0;
 	buffer->full = 0;
 }
 
 
 void buffer_clear(Buffer_t * buffer) 
 {
-	buffer->BufferHead = 0;
-	buffer->BufferTail = 0;
+	buffer->buffer_head = 0;
+	buffer->buffer_tail = 0;
 	buffer->full = 0;
 }
 

@@ -20,7 +20,7 @@
 #include "quaternion_controller.h"
 #include "coord_conventions.h"
 
-void quaternion_controler_init(quaternion_controller_t* controller, UQuat_t* quat_attitude)
+void quaternion_controler_init(quaternion_controller_t* controller, quat_t* quat_attitude)
 {
 	// Init ref to quat_attitude
 	controller->quat_attitude = quat_attitude;
@@ -38,7 +38,7 @@ void quaternion_controler_init(quaternion_controller_t* controller, UQuat_t* qua
 }
 
 
-void quaternion_controller_set_quat_ref(quaternion_controller_t* controller, UQuat_t quat_ref)
+void quaternion_controller_set_quat_ref(quaternion_controller_t* controller, quat_t quat_ref)
 {
 	controller->quat_ref = quat_ref;
 }
@@ -63,9 +63,9 @@ void quaternion_controller_set_quat_ref_from_rpy(quaternion_controller_t* contro
 
 void quaternion_controller_update(quaternion_controller_t* controller)
 {
-	UQuat_t quat_attitude = *controller->quat_attitude;
-	UQuat_t quat_ref = controller->quat_ref;
-	UQuat_t quat_error;
+	quat_t quat_attitude = *controller->quat_attitude;
+	quat_t quat_ref = controller->quat_ref;
+	quat_t quat_error;
 
 	// Compute quaternioin error in global frame
 	quat_error = quaternions_multiply(quat_ref, quaternions_inverse(quat_attitude));

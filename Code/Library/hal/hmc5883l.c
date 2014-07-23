@@ -19,14 +19,14 @@
 #include "twim.h"
 #include "print_util.h"
 
-#define ConfRegA 0x00					///< Configuration Register A
-#define ConfRegB 0x01					///< Configuration Register B
-#define ModeReg 0x02					///< Mode register
-#define DataRegBegin 0x03				///< Data Register Begin Command
+#define CONF_REG_A 0x00					///< Configuration Register A
+#define CONF_REG_B 0x01					///< Configuration Register B
+#define MODE_REG 0x02					///< Mode register
+#define DATA_REG_BEGIN 0x03				///< Data Register Begin Command
 
-#define Measurement_Continuous 0x00		///< Continuous measurement Mode
-#define Measurement_SingleShot 0x01		///< Single Shot measurement Mode
-#define Measurement_Idle 0x03			///< Idle Mode
+#define MEASUREMENT_CONTINUOUS 0x00		///< Continuous measurement Mode
+#define MEASUREMENT_SINGLE_SHOT 0x01		///< Single Shot measurement Mode
+#define MEASUREMENT_IDLE 0x03			///< Idle Mode
 
 #define HMC5883_SLAVE_ADDRESS 0x1E		///< HMC5883L
 
@@ -117,7 +117,7 @@ void hmc5883l_init_slow()
 	
 	static uint8_t compass_default_configuration[4] =
 	{
-		ConfRegA,
+		CONF_REG_A,
 		(HMC_SAMPLE_AVG) << 5 | (HMC_RATE) << 2 | HMC_MODE,
 		(HMC_RANGE) << 5,
 		(HMC_MODE)
@@ -129,7 +129,7 @@ void hmc5883l_init_slow()
 
 void hmc5883l_update(magnetometer_t *compass_outputs) 
 {
-	uint8_t start_address = DataRegBegin;
+	uint8_t start_address = DATA_REG_BEGIN;
 	uint16_t data[3];
 		
 	twim_write(&AVR32_TWIM0, (uint8_t*) &start_address, 1, HMC5883_SLAVE_ADDRESS, false);

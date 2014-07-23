@@ -34,10 +34,11 @@ extern "C"
  * 
  * \details  	The quaternions are in the form q = [s, v_1, v_2, v_3]
  */
-typedef struct UQuat {
+typedef struct 
+{
 	float s;			///<	Scalar component
 	float v[3];			///<	Vector component
-} UQuat_t;
+} quat_t;
 
 
 /**
@@ -77,9 +78,9 @@ typedef struct UQuat {
  * 
  * \return 		Unit quaternion
  */
-UQuat_t static inline quaternions_create_from_vector(float v[4]) //maths_quat_from_vector(float v[4]) 
+quat_t static inline quaternions_create_from_vector(float v[4]) //maths_quat_from_vector(float v[4]) 
 {
-	UQuat_t q;	
+	quat_t q;	
 	q.s = 0; 
 	q.v[0] = v[0]; 
 	q.v[1] = v[1]; 
@@ -113,10 +114,10 @@ UQuat_t static inline quaternions_create_from_vector(float v[4]) //maths_quat_fr
  * 
  * \return 			Output quaternion
  */
-UQuat_t static inline quaternions_multiply(const UQuat_t q1, const UQuat_t q2) //maths_quat_multi(const UQuat_t q1, const UQuat_t q2)
+quat_t static inline quaternions_multiply(const quat_t q1, const quat_t q2) //maths_quat_multi(const quat_t q1, const quat_t q2)
 {
 	float tmp[3];
-	UQuat_t out;
+	quat_t out;
 
 	tmp[0] = q1.v[1] * q2.v[2] - q1.v[2] * q2.v[1];
 	tmp[1] = q1.v[2] * q2.v[0] - q1.v[0] * q2.v[2];
@@ -137,11 +138,11 @@ UQuat_t static inline quaternions_multiply(const UQuat_t q1, const UQuat_t q2) /
  * \param 	q 	Input quaternion
  * \return 		Output quaternion
  */
-UQuat_t static inline quaternions_inverse(const UQuat_t q) //maths_quat_inv(const UQuat_t q)
+quat_t static inline quaternions_inverse(const quat_t q) //maths_quat_inv(const quat_t q)
 {
 	int32_t i;
 	
-	UQuat_t qinv;
+	quat_t qinv;
 	qinv.s = q.s;
 	
 	for (i=0;i<3;i++)
@@ -163,9 +164,9 @@ UQuat_t static inline quaternions_inverse(const UQuat_t q) //maths_quat_inv(cons
  * 
  * \return 			Output quaternion
  */
-UQuat_t static inline quaternions_global_to_local(const UQuat_t qe, const UQuat_t qvect) //maths_quat_global_to_local(const UQuat_t qe, const UQuat_t qvect)
+quat_t static inline quaternions_global_to_local(const quat_t qe, const quat_t qvect) //maths_quat_global_to_local(const quat_t qe, const quat_t qvect)
 {
-	UQuat_t qinv, qtmp;
+	quat_t qinv, qtmp;
 	
 	qinv = quaternions_inverse(qe);
 	qtmp = quaternions_multiply(qinv,qvect);
@@ -185,9 +186,9 @@ UQuat_t static inline quaternions_global_to_local(const UQuat_t qe, const UQuat_
  * 
  * \return 			Output quaternion
  */
-UQuat_t static inline quaternions_local_to_global(const UQuat_t qe, const UQuat_t qvect) //maths_quat_local_to_global(const UQuat_t qe, const UQuat_t qvect)
+quat_t static inline quaternions_local_to_global(const quat_t qe, const quat_t qvect) //maths_quat_local_to_global(const quat_t qe, const quat_t qvect)
 {
-	UQuat_t qinv, qtmp;
+	quat_t qinv, qtmp;
 	
 	qinv = quaternions_inverse(qe);
 	qtmp = quaternions_multiply(qe, qvect);
@@ -208,7 +209,7 @@ UQuat_t static inline quaternions_local_to_global(const UQuat_t qe, const UQuat_
  * \param 	v 		rotated vector (output)
  * 
  */
-void static inline quaternions_rotate_vector(const UQuat_t q, const float u[3], float v[3]) //maths_quat_rotate_vector(const UQuat_t q, const float u[3], float v[3])
+void static inline quaternions_rotate_vector(const quat_t q, const float u[3], float v[3]) //maths_quat_rotate_vector(const quat_t q, const float u[3], float v[3])
 {
 	float tmp1[3], tmp2[3];
 
@@ -231,9 +232,9 @@ void static inline quaternions_rotate_vector(const UQuat_t q, const float u[3], 
  * \param 	q 	Input quaternion
  * \return 		Unit quaternion
  */
-static inline UQuat_t quaternions_normalise(const UQuat_t q) //maths_quat_normalise(const UQuat_t q) 
+static inline quat_t quaternions_normalise(const quat_t q) //maths_quat_normalise(const quat_t q) 
 {
-	UQuat_t result;
+	quat_t result;
 	
 	float snorm= SQR(q.s) + SQR(q.v[0]) + SQR(q.v[1]) + SQR(q.v[2]);
 

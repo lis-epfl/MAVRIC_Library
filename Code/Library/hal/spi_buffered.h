@@ -44,8 +44,8 @@ typedef void (function_pointer_t)(void);
  */
 typedef struct {
 	volatile avr32_spi_t *spi;							///< The pointer to the avr32 spi structure
-	volatile uint8_t SPIOutBuffer[SPI_BUFFER_SIZE];		///< The SPI outgoing buffer of size SPI_BUFFER_SIZE
-	volatile uint8_t SPIInBuffer[SPI_BUFFER_SIZE];		///< The SPI ingoing buffer of size SPI_BUFFER_SIZE
+	volatile uint8_t spi_out_buffer[SPI_BUFFER_SIZE];		///< The SPI outgoing buffer of size SPI_BUFFER_SIZE
+	volatile uint8_t spi_in_buffer[SPI_BUFFER_SIZE];		///< The SPI ingoing buffer of size SPI_BUFFER_SIZE
 	volatile uint8_t spi_in_buffer_head;					///< The head of the SPI ingoing buffer
 	volatile uint8_t spi_in_buffer_tail;					///< The tail of the SPI ingoing buffer
 	volatile uint8_t spi_out_buffer_head;					///< The head of the SPI outgoing buffer

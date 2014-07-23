@@ -34,14 +34,14 @@ extern "C" {
  */
 typedef struct
 {
-	UQuat_t		qe;							///< quaternion defining the Attitude estimation of the platform
+	quat_t		qe;							///< quaternion defining the Attitude estimation of the platform
 	
 	float		angular_speed[3];			///< Gyro rates
 	float		linear_acc[3];				///< Acceleration WITHOUT gravity
 	
 	float		heading;					///< The heading of the platform
-	UQuat_t		up_vec;						///< The quaternion of the up vector
-	UQuat_t		north_vec;					///< The quaternion of the north vector
+	quat_t		up_vec;						///< The quaternion of the up vector
+	quat_t		north_vec;					///< The quaternion of the north vector
 	
 	uint32_t	last_update;				///< The time of the last IMU update in ms
 	float		dt;							///< The time interval between two IMU updates

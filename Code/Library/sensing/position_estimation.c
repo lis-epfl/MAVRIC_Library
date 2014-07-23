@@ -72,7 +72,7 @@ static void position_estimation_position_integration(position_estimator_t *pos_e
 	int32_t i;
 	float dt = pos_est->ahrs->dt;
 	
-	UQuat_t qvel_bf,qvel; 
+	quat_t qvel_bf,qvel; 
 
 	qvel.s = 0;
 	for (i = 0; i < 3; i++)
@@ -117,8 +117,8 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 	
 	float dt = pos_est->ahrs->dt;
 	
-	// UQuat_t bias_correction = {.s = 0, .v = {0.0f, 0.0f, 1.0f}};
-	UQuat_t vel_correction = 
+	// quat_t bias_correction = {.s = 0, .v = {0.0f, 0.0f, 1.0f}};
+	quat_t vel_correction = 
 	{
 		.s = 0, 
 		.v = 

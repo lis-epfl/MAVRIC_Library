@@ -109,7 +109,7 @@ void spi_buffered_init(volatile avr32_spi_t *spi, int32_t spi_index)
 
 uint8_t* spi_buffered_get_spi_in_buffer(int32_t spi_index)
 {
-	return (uint8_t*)spi_buffers[spi_index].SPIInBuffer;
+	return (uint8_t*)spi_buffers[spi_index].spi_in_buffer;
 }
 
 void spi_buffered_init_DMA(int32_t spi_index, int32_t block_size)
@@ -133,8 +133,8 @@ void spi_buffered_init_DMA(int32_t spi_index, int32_t block_size)
 		.transfer_size = PDCA_TRANSFER_SIZE_BYTE  // select size of the transfer
 	};
 	
-	PDCA_TX_OPTIONS.addr = (void *) spi_buffers[spi_index].SPIOutBuffer;
-	PDCA_RX_OPTIONS.addr = (void *) spi_buffers[spi_index].SPIInBuffer;
+	PDCA_TX_OPTIONS.addr = (void *) spi_buffers[spi_index].spi_out_buffer;
+	PDCA_RX_OPTIONS.addr = (void *) spi_buffers[spi_index].spi_in_buffer;
 	
 	// Init PDCA channel with the pdca_options.
 	pdca_init_channel(SPI0_DMA_CH_TRANSMIT, &PDCA_TX_OPTIONS); // init PDCA channel with options.
@@ -151,12 +151,12 @@ void spi_buffered_trigger_DMA(int32_t spi_index, int32_t block_size)
 	//spi_buffers[spi_index].spi_out_buffer_head = 0;
 	//spi_buffers[spi_index].spi_out_buffer_tail = 0;
 	//spi_buffers[spi_index].transmission_in_progress = block_size;
-	//spi_buffers[spi_index].SPIInBuffer[0] = 42;
-	//spi_buffers[spi_index].SPIInBuffer[3] = 42;
-	//spi_buffers[spi_index].SPIInBuffer[6] = 42;
-	//spi_buffers[spi_index].SPIInBuffer[9] = 42;
-	pdca_load_channel(SPI0_DMA_CH_TRANSMIT, (void *)spi_buffers[spi_index].SPIOutBuffer, block_size);
-	pdca_load_channel(SPI0_DMA_CH_RECEIVE,  (void *)(spi_buffers[spi_index].SPIInBuffer), block_size);
+	//spi_buffers[spi_index].spi_in_buffer[0] = 42;
+	//spi_buffers[spi_index].spi_in_buffer[3] = 42;
+	//spi_buffers[spi_index].spi_in_buffer[6] = 42;
+	//spi_buffers[spi_index].spi_in_buffer[9] = 42;
+	pdca_load_channel(SPI0_DMA_CH_TRANSMIT, (void *)spi_buffers[spi_index].spi_out_buffer, block_size);
+	pdca_load_channel(SPI0_DMA_CH_RECEIVE,  (void *)(spi_buffers[spi_index].spi_in_buffer), block_size);
 
 	
 	spi_select_device(spi_buffers[spi_index].spi, (struct spi_device *)&spi_buffers[spi_index].adc_spi);
@@ -238,7 +238,7 @@ uint8_t spi_buffered_read(int32_t spi_index)
 	uint8_t byte;
 	// if buffer empty, wait for incoming data
 	while (spi_buffers[spi_index].spi_in_buffer_head == spi_buffers[spi_index].spi_in_buffer_tail);
-	byte=spi_buffers[spi_index].SPIInBuffer[spi_buffers[spi_index].spi_in_buffer_tail];
+	byte=spi_buffers[spi_index].spi_in_buffer[spi_buffers[spi_index].spi_in_buffer_tail];
 	spi_buffers[spi_index].spi_in_buffer_tail=  (spi_buffers[spi_index].spi_in_buffer_tail + 1)&SPI_BUFFER_MASK;
 	return byte;
 }
@@ -253,7 +253,7 @@ void spi_buffered_write(int32_t spi_index, uint8_t value)
 	//{
 	//if (spi_buffers[spi_index].automatic == 0) spi_buffered_resume(spi_index);
 	//}
-	spi_buffers[spi_index].SPIOutBuffer[(spi_buffers[spi_index].spi_out_buffer_head)] = value;
+	spi_buffers[spi_index].spi_out_buffer[(spi_buffers[spi_index].spi_out_buffer_head)] = value;
 	spi_buffers[spi_index].spi_out_buffer_head = new_index;
 
 
@@ -265,7 +265,7 @@ void spi_buffered_transmit(int32_t spi_index)
 	if (spi_buffers[spi_index].spi_out_buffer_head != spi_buffers[spi_index].spi_out_buffer_tail) 
 	{
 		// read data from buffer and copy it to SPI unit
-		spi_buffers[spi_index].spi->tdr = spi_buffers[spi_index].SPIOutBuffer[spi_buffers[spi_index].spi_out_buffer_tail];
+		spi_buffers[spi_index].spi->tdr = spi_buffers[spi_index].spi_out_buffer[spi_buffers[spi_index].spi_out_buffer_tail];
 		spi_buffers[spi_index].transmission_in_progress = 1;    
 		// update buffer index
 		spi_buffers[spi_index].spi_out_buffer_tail=  (spi_buffers[spi_index].spi_out_buffer_tail + 1)&SPI_BUFFER_MASK;
@@ -319,7 +319,7 @@ void spi_handler(int32_t spi_index)
 		spi_buffers[spi_index].spi_in_buffer_tail=(spi_buffers[spi_index].spi_in_buffer_tail+1)&SPI_BUFFER_MASK;
 	} 
 	// store incoming data in buffer
-	spi_buffers[spi_index].SPIInBuffer[spi_buffers[spi_index].spi_in_buffer_head] = in_data;
+	spi_buffers[spi_index].spi_in_buffer[spi_buffers[spi_index].spi_in_buffer_head] = in_data;
 	// move head pointer forward
 	spi_buffers[spi_index].spi_in_buffer_head=tmp;
 	}
