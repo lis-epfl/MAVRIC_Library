@@ -814,7 +814,6 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	waypoint_handler->timeout_max_waypoint = 10000;
 	
 	waypoint_handler->position_estimator = position_estimator;
-	waypoint_handler->simulation_mode = &state_structure->simulation_mode;
 	waypoint_handler->attitude_estimation = attitude_estimation;
 	waypoint_handler->state_structure = state_structure;
 	
@@ -1059,7 +1058,8 @@ void waypoint_handler_waypoint_init(mavlink_waypoint_handler_t* waypoint_handler
 	float rel_pos[3];
 	
 	if ((waypoint_handler->number_of_waypoints > 0)
-	&& (waypoint_handler->position_estimator->init_gps_position || (*waypoint_handler->simulation_mode==SIMULATION_MODE))
+	//&& (waypoint_handler->position_estimator->init_gps_position || (*waypoint_handler->simulation_mode==SIMULATION_MODE))
+	&& (waypoint_handler->position_estimator->init_gps_position || state_test_if_in_flag_mode(waypoint_handler->state_structure,MAV_MODE_FLAG_HIL_ENABLED))
 	&& (waypoint_handler->waypoint_receiving == false))
 	{
 		for (i=0;i<waypoint_handler->number_of_waypoints;i++)

@@ -347,7 +347,6 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 	}
 	
 	centralData->state_structure.mav_mode_previous = centralData->state_structure.mav_mode;
-	centralData->state_structure.mav_state_previous = centralData->state_structure.mav_state;
 	
 	if (centralData->state_structure.simulation_mode_previous != centralData->state_structure.simulation_mode)
 	{

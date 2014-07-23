@@ -109,7 +109,6 @@ typedef struct
 	auto_landing_enum_t auto_landing_enum;						///< The autolanding enum
 
 	position_estimator_t* position_estimator;					///< The pointer to the position estimation structure
-	const HIL_mode* simulation_mode;							///< The pointer to the simulation mode structure
 	const ahrs_t* attitude_estimation;							///< The pointer to the attitude estimation structure
 	const state_structure_t* state_structure;					///< The pointer to the state structure
 	mavlink_communication_t* mavlink_communication;				///< The pointer to the mavlink communication structure

@@ -59,7 +59,6 @@ typedef struct
 	uint8_t mav_state;							///< The value of the MAV state (MAV_STATE enum in common.h)
 		
 	uint8_t mav_mode_previous;					///< The value of the MAV mode at previous time step
-	uint8_t mav_state_previous;					///< The value of the MAV state at previous time step
 		
 	HIL_mode simulation_mode;					///< The value of the simulation_mode (0: real, 1: simulation)
 	HIL_mode simulation_mode_previous;			///< The value of the simulation_mode at previous time step
