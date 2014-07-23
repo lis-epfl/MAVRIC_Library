@@ -19,6 +19,7 @@
 #include "navigation.h"
 #include "conf_platform.h"
 #include "print_util.h"
+#include "time_keeper.h"
 
 #define KP_YAW 0.2f
 
@@ -165,8 +166,9 @@ static void navigation_collision_avoidance(navigation_t* navigation)
 	{
 		rel_heading = 0.0f;
 	}
-	if (navigation->waypoint_handler->collision_avoidance)
-	{
+	
+	if (navigation->collision_avoidance)
+	{		
 		rel_heading = maths_calc_smaller_angle(atan2(new_velocity[Y],new_velocity[X]) - navigation->position_estimator->local_position.heading);
 	}
 	
@@ -186,8 +188,7 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 																					navigation->position_estimator->local_position.pos);
 	navigation_set_speed_command(rel_pos, navigation);
 	
-	if (navigation->waypoint_handler->collision_avoidance)
-	{
+	if (navigation->collision_avoidance)	{
 		navigation_collision_avoidance(navigation);
 	}
 	
@@ -198,7 +199,7 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, const state_t* state)
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, const state_t* state, const mavlink_stream_t* mavlink_stream)
 {
 	
 	navigation->controls_nav = controls_nav;
@@ -207,6 +208,7 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->position_estimator = position_estimator;
 	navigation->orca = orca;
 	navigation->state = state;
+	navigation->mavlink_stream = mavlink_stream;
 	
 	navigation->controls_nav->rpy[ROLL] = 0.0f;
 	navigation->controls_nav->rpy[PITCH] = 0.0f;
@@ -223,6 +225,8 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->soft_zone_size = 0.0f;
 	
 	navigation->loopCount = 0;
+	
+	navigation->collision_avoidance = false;
 	
 	print_util_dbg_print("Navigation initialized.\n");
 }
@@ -269,6 +273,22 @@ task_return_t navigation_update(navigation_t* navigation)
 			}
 			break;
 	}
+	
+	return TASK_RUN_SUCCESS;
+}
+
+task_return_t navigation_send_collision_avoidance_status(navigation_t *navigation_data)
+{
+	mavlink_message_t msg;
+	
+	mavlink_msg_named_value_int_pack(	navigation_data->mavlink_stream->sysid,
+										navigation_data->mavlink_stream->compid,
+										&msg,
+										time_keeper_get_millis(),
+										"Coll_Avoidance",
+										navigation_data->collision_avoidance	);
+	
+	mavlink_stream_send(navigation_data->mavlink_stream,&msg);
 	
 	return TASK_RUN_SUCCESS;
 }

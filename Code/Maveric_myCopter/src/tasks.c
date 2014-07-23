@@ -52,11 +52,11 @@ void tasks_rc_user_channels(uint8_t *chan_switch, int8_t *rc_check, int8_t *moto
 	
 	if ((remote_dsm2_rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0f)
 	{
-		central_data->waypoint_handler.collision_avoidance = true;
+		central_data->navigation.collision_avoidance = true;
 	}
 	else
 	{
-		central_data->waypoint_handler.collision_avoidance = false;
+		central_data->navigation.collision_avoidance = false;
 	}
 	
 	remote_controller_get_motor_state(motor_state);
@@ -240,7 +240,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 					state_set_new_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION);
 					if (state_test_if_first_time_in_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION))
 					{
-						central_data->waypoint_handler.auto_landing_enum = DESCENT_TO_SMALL_ALTITUDE;
+						central_data->waypoint_handler.auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
 						waypoint_handler_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.local_position);
 					}
 					break;
