@@ -52,12 +52,25 @@ static void imu_oriented2scale(imu_t *imu);
 
 static void imu_raw2oriented(imu_t *imu)
 {	
-	for (uint16_t i=0; i<3; i++)
-	{
-		imu->oriented_gyro.data[i]		= imu->raw_gyro.data[i]     * imu->calib_gyro.orientation[i];
-		imu->oriented_accelero.data[i]  = imu->raw_accelero.data[i] * imu->calib_accelero.orientation[i];
-		imu->oriented_compass.data[i]	= imu->raw_compass.data[i]  * imu->calib_compass.orientation[i];
-	}
+	//for (uint16_t i=0; i<3; i++)
+	//{
+		//imu->oriented_gyro.data[i]		= imu->raw_gyro.data[i]     * imu->calib_gyro.orientation[i];
+		//imu->oriented_accelero.data[i]  = imu->raw_accelero.data[i] * imu->calib_accelero.orientation[i];
+		//imu->oriented_compass.data[i]	= imu->raw_compass.data[i]  * imu->calib_compass.orientation[i];
+	//}
+	
+	imu->oriented_gyro.data[IMU_X] = imu->raw_gyro.data[RAW_GYRO_X] * imu->calib_gyro.orientation[IMU_X];
+	imu->oriented_gyro.data[IMU_Y] = imu->raw_gyro.data[RAW_GYRO_Y] * imu->calib_gyro.orientation[IMU_Y];
+	imu->oriented_gyro.data[IMU_Z] = imu->raw_gyro.data[RAW_GYRO_Z] * imu->calib_gyro.orientation[IMU_Z];
+	
+	imu->oriented_accelero.data[IMU_X] = imu->raw_accelero.data[RAW_ACC_X] * imu->calib_accelero.orientation[IMU_X];
+	imu->oriented_accelero.data[IMU_Y] = imu->raw_accelero.data[RAW_ACC_Y] * imu->calib_accelero.orientation[IMU_Y];
+	imu->oriented_accelero.data[IMU_Z] = imu->raw_accelero.data[RAW_ACC_Z] * imu->calib_accelero.orientation[IMU_Z];
+	
+	imu->oriented_compass.data[IMU_X] = imu->raw_compass.data[RAW_MAG_X] * imu->calib_compass.orientation[IMU_X];
+	imu->oriented_compass.data[IMU_Y] = imu->raw_compass.data[RAW_MAG_Y] * imu->calib_compass.orientation[IMU_Y];
+	imu->oriented_compass.data[IMU_Z] = imu->raw_compass.data[RAW_MAG_Z] * imu->calib_compass.orientation[IMU_Z];
+	
 }
 
 

@@ -54,12 +54,12 @@ int8_t checkReceiver1_turnigy(void);
 int8_t checkReceiver2_turnigy(void);
 int8_t checkReceivers_turnigy(void);
 
-Control_Command_t get_command_from_turnigy();
+control_command_t get_command_from_turnigy();
 float get_roll_from_turnigy();
 float get_pitch_from_turnigy();
 float get_yaw_from_turnigy();
 float get_thrust_from_turnigy();
 
-void get_channel_mode_turnigy(uint8_t* chanSwitch);
+void get_channel_mode_turnigy(uint8_t* chan_switch);
 */
 #endif //TURNIGY_H_

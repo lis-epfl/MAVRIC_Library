@@ -292,14 +292,14 @@ task_return_t bmp085_send_pressure(pressure_data_t* baro)
 	
 	mavlink_stream_send(baro->mavlink_stream,&msg);
 
-	mavlink_msg_named_value_float_pack(	baro->mavlink_stream->sysid,
-										baro->mavlink_stream->compid,
-										&msg,
-										time_keeper_get_millis(),
-										"pressAlt",
-										baro->altitude);
+	// mavlink_msg_named_value_float_pack(	baro->mavlink_stream->sysid,
+	// 									baro->mavlink_stream->compid,
+	// 									&msg,
+	// 									time_keeper_get_millis(),
+	// 									"pressAlt",
+	// 									baro->altitude);
 
-	mavlink_stream_send(baro->mavlink_stream,&msg);
+	// mavlink_stream_send(baro->mavlink_stream,&msg);
 
 	//mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
 										//time_keeper_get_millis(),

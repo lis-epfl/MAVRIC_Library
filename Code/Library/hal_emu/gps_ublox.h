@@ -540,7 +540,7 @@ typedef struct
 // 	unsigned char verticalSpeedStatus;
  	unsigned char courseStatus;
 	unsigned char accuracyStatus;
-} gps_Data_type_t;
+} gps_t;
 
 /// Last time that the GPS driver got a good packet from the GPS
 uint32_t idleTimer;

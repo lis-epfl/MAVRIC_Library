@@ -109,7 +109,7 @@ typedef struct
 
 	position_estimator_t* position_estimator;					///< The pointer to the position estimation structure
 	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
-	const state_structure_t* state_structure;					///< The pointer to the state structure
+	const state_t* state;					///< The pointer to the state structure
 	mavlink_communication_t* mavlink_communication;				///< The pointer to the mavlink communication structure
 
 }mavlink_waypoint_handler_t;
@@ -134,10 +134,10 @@ void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_ha
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  * \param	position_estimator		The pointer to the position estimator structure
  * \param	ahrs					The pointer to the attitude estimation structure
- * \param	state_structure			The pointer to the state structure
+ * \param	state			The pointer to the state structure
  * \param	mavlink_communication	The pointer to the mavlink communication structure
  */
-void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* ahrs, const state_structure_t* state_structure, mavlink_communication_t* mavlink_communication);
+void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* ahrs, const state_t* state, mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief	Initialize a first waypoint if a flight plan is set
@@ -161,9 +161,9 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
  * \brief	Initialise the position hold mode
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
- * \param	localPos				The position where the position will be held
+ * \param	local_pos				The position where the position will be held
  */
-void waypoint_handler_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t localPos);
+void waypoint_handler_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t local_pos);
 
 /**
  * \brief	Sets the automatic takeoff waypoint
