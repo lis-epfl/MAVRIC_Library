@@ -57,7 +57,7 @@ void tasks_run_imu_update(void* arg);
  * \param	rc_check	The pointer to the state of the remote
  * \param	motorstate	The pointer to the motor state
  */
-void tasks_rc_user_channels(uint8_t *chan_switch, int8_t *rc_check, int8_t *motor_state);
+void tasks_rc_user_channels(int8_t *chan_switch, int8_t *rc_check, int8_t *motor_state);
 
 
 /**

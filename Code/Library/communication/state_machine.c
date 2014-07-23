@@ -31,7 +31,7 @@
  * \param	rc_check	The pointer to the state of the remote
  * \param	motorstate	The pointer to the motor state
  */
-void state_machine_rc_user_channels(state_machine_t* state_machine, uint8_t *chanSwitch, int8_t *rc_check, int8_t *motor_state);
+void state_machine_rc_user_channels(state_machine_t* state_machine, int8_t *chanSwitch, int8_t *rc_check, int8_t *motor_state);
 
 /**
  * \brief	Function to call when the motors should be switched off
@@ -49,10 +49,14 @@ void state_machine_init(state_machine_t *state_machine, state_t* state, mavlink_
 	print_util_dbg_print("State machine initialise.\r");
 }
 
-void state_machine_rc_user_channels(state_machine_t* state_machine, uint8_t *chanSwitch, int8_t *rc_check, int8_t *motor_state)
+void state_machine_rc_user_channels(state_machine_t* state_machine, int8_t *chanSwitch, int8_t *rc_check, int8_t *motor_state)
 {
+	*rc_check = remote_dsm2_rc_check_receivers();
 	
-	remote_controller_get_channel_mode(chanSwitch);
+	if (*rc_check == 1)
+	{
+		remote_controller_get_channel_mode(chanSwitch);
+	}
 	
 	if ((remote_dsm2_rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0f)
 	{
@@ -65,7 +69,7 @@ void state_machine_rc_user_channels(state_machine_t* state_machine, uint8_t *cha
 	
 	remote_controller_get_motor_state(motor_state);
 	
-	*rc_check = remote_dsm2_rc_check_receivers();
+	
 }
 
 void state_machine_switch_off_motors(state_machine_t* state_machine)
@@ -84,7 +88,7 @@ void state_machine_switch_off_motors(state_machine_t* state_machine)
 
 task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 {
-	uint8_t channelSwitches = 0;
+	int8_t channelSwitches = 0;
 	int8_t RC_check = 0;
 	int8_t motor_switch = 0;
 	
@@ -95,10 +99,10 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 	switch(state_machine->state->mav_state)
 	{
 		case MAV_STATE_BOOT:
-		break;
+			break;
 
 		case MAV_STATE_CALIBRATING:
-		break;
+			break;
 
 		case MAV_STATE_STANDBY:
 			if (motor_switch == 1)
@@ -270,10 +274,11 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 					break;
 			}
 			
-			if (!state_test_if_in_flag_mode(state_machine->state,MAV_MODE_FLAG_STABILIZE_ENABLED))
-			{
-				state_machine->state->mav_state = MAV_STATE_EMERGENCY;
-			}
+			// TODO: switch to emergency if in attitude control mode
+			//if (state_test_if_in_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL))
+			//{
+				//state_machine->state->mav_state = MAV_STATE_EMERGENCY;
+			//}
 			
 			switch (RC_check)
 			{
@@ -298,7 +303,8 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 			break;
 
 		case MAV_STATE_EMERGENCY:
-			state_set_new_mode(state_machine->state,MAV_MODE_SAFE);
+			state_machine_switch_off_motors(state_machine);
+			state_machine->state->mav_state = MAV_STATE_EMERGENCY;
 			switch (RC_check)
 			{
 				case 1:

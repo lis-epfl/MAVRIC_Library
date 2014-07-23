@@ -45,7 +45,7 @@ task_set_t* tasks_get_main_taskset()
 	return central_data->scheduler.task_set;
 }
 
-void tasks_rc_user_channels(uint8_t *chan_switch, int8_t *rc_check, int8_t *motor_state)
+void tasks_rc_user_channels(int8_t *chan_switch, int8_t *rc_check, int8_t *motor_state)
 {
 	
 	remote_controller_get_channel_mode(chan_switch);
@@ -77,7 +77,7 @@ void switch_off_motors(void)
 
 task_return_t tasks_set_mav_mode_n_state(void* arg)
 {
-	uint8_t channel_switches = 0;
+	int8_t channel_switches = 0;
 	int8_t RC_check = 0;
 	int8_t motor_switch = 0;
 	

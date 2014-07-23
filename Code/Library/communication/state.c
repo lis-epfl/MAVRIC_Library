@@ -166,16 +166,9 @@ void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
 	}
 }
 
-bool state_test_flag_mode(uint8_t mode, mav_flag_t test_flag)
+bool state_test_if_in_mode(state_t *state, uint8_t mav_mode)
 {
-	bool result = false;
-	
-	if ((mode & test_flag))
-	{
-		result = true;
-	}
-	
-	return result;
+	return (state->mav_mode == (mav_mode + (state->mav_mode & MAV_MODE_FLAG_HIL_ENABLED)));
 }
 
 void state_enable_mode(state_t *state, mav_flag_t mav_mode_flag)

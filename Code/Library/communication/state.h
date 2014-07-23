@@ -118,18 +118,18 @@ void state_set_mav_mode(state_t* state, mavlink_received_t* rec);
 /**
  * \brief						Test if the mode has the mode flag in it
  *
- * \param	mode				The mode of the vehicle
- * \param	test_flag			The mode flag to test against
+ * \param	state				The pointer to the state structure
+ * \param	mav_mode			The mode to test against
  *
  * \return	The boolean value of the test
  */
-bool state_test_flag_mode(uint8_t mode, mav_flag_t test_flag);
+bool state_test_if_in_mode(state_t *state, uint8_t mav_mode);
 
 
 /**
  * \brief						Enable the mode
  *
- * \param	state		The pointer to the state structure
+ * \param	state				The pointer to the state structure
  * \param	mav_mode_flag		The flag of the MAV mode
  */
 void state_enable_mode(state_t *state, mav_flag_t mav_mode_flag);
@@ -138,7 +138,7 @@ void state_enable_mode(state_t *state, mav_flag_t mav_mode_flag);
 /**
  * \brief						Disable the mode
  *
- * \param	state		The pointer to the state structure
+ * \param	state				The pointer to the state structure
  * \param	mav_mode_flag		The flag of the MAV mode
  */
 void state_disable_mode(state_t *state, mav_flag_t mav_mode_flag);
@@ -147,7 +147,7 @@ void state_disable_mode(state_t *state, mav_flag_t mav_mode_flag);
 /**
  * \brief						Test if the mode has the mode flag in it
  *
- * \param	state		The pointer to the state structure
+ * \param	state				The pointer to the state structure
  * \param	mav_mode_flag		The flag of the MAV mode
  *
  * \return	The boolean value of the test
@@ -158,7 +158,7 @@ bool state_test_if_in_flag_mode(const state_t *state, mav_flag_t mav_mode_flag);
 /**
  * \brief						Test if the mode has the mode flag in it
  *
- * \param	state		The pointer to the state structure
+ * \param	state				The pointer to the state structure
  * \param	mav_mode			The MAV mode
  *
  * \return	The boolean value of the test
@@ -169,7 +169,7 @@ bool state_test_if_first_time_in_mode(state_t *state, mav_mode_t mav_mode);
 /**
  * \brief						Test if the mode has the mode flag in it
  *
- * \param	state		The pointer to the state structure
+ * \param	state				The pointer to the state structure
  * \param	mav_mode			The MAV mode
  */
 void state_set_new_mode(state_t *state, mav_mode_t mav_mode);

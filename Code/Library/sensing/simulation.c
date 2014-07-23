@@ -448,9 +448,9 @@ void simulation_update(simulation_model_t *sim)
 	// fill in simulated IMU values
 	for (i = 0;i < 3; i++)
 	{
-		sim->imu->raw_gyro.data[i] = (sim->rates_bf[i] * sim->calib_gyro.scale_factor[i] + sim->calib_gyro.bias[i]) * sim->calib_gyro.orientation[i];
-		sim->imu->raw_accelero.data[i] = ((sim->lin_forces_bf[i] / sim->vehicle_config.total_mass / sim->vehicle_config.sim_gravity) * sim->calib_accelero.scale_factor[i] + sim->calib_accelero.bias[i]) * sim->calib_accelero.orientation[i];
-		sim->imu->raw_compass.data[i] = ((sim->ahrs.north_vec.v[i] ) * sim->calib_compass.scale_factor[i] + sim->calib_compass.bias[i])* sim->calib_compass.orientation[i];
+		sim->imu->raw_gyro.data[sim->imu->calib_gyro.axis[i]] = (sim->rates_bf[i] * sim->calib_gyro.scale_factor[i] + sim->calib_gyro.bias[i]) * sim->calib_gyro.orientation[i];
+		sim->imu->raw_accelero.data[sim->imu->calib_accelero.axis[i]] = ((sim->lin_forces_bf[i] / sim->vehicle_config.total_mass / sim->vehicle_config.sim_gravity) * sim->calib_accelero.scale_factor[i] + sim->calib_accelero.bias[i]) * sim->calib_accelero.orientation[i];
+		sim->imu->raw_compass.data[sim->imu->calib_compass.axis[i]] = ((sim->ahrs.north_vec.v[i] ) * sim->calib_compass.scale_factor[i] + sim->calib_compass.bias[i])* sim->calib_compass.orientation[i];
 	}
 
 	sim->local_position.heading = coord_conventions_get_yaw(sim->ahrs.qe);
