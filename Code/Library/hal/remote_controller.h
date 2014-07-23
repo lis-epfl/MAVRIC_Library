@@ -24,6 +24,8 @@
 #endif
 
 #include "conf_platform.h"
+#include "mavlink_communication.h"
+#include "time_keeper.h"
 
 #ifdef SPEKTRUM_REMOTE				///< If you use the SPEKTRUM remote
 	#include "spektrum.h"
@@ -126,6 +128,64 @@ static inline void remote_controller_get_velocity_vector_from_remote(Control_Com
 	controls->tvel[Y]= 10.0f * remote_controller_get_roll_from_remote() * RC_INPUT_SCALE;
 	controls->tvel[Z]=- 1.5f * remote_controller_get_thrust_from_remote();
 	controls->rpy[YAW] = remote_controller_get_yaw_from_remote() * RC_INPUT_SCALE;
+}
+
+/**
+ * \brief	Task to send the mavlink RC scaled message
+ * 
+ * \return	The status of execution of the task
+ */
+static inline task_return_t remote_controller_send_scaled_rc_channels(Control_Command_t* controls)
+{
+	mavlink_message_t msg;
+	
+	mavlink_msg_rc_channels_scaled_pack(	controls->mavlink_stream->sysid,
+											controls->mavlink_stream->compid,
+											&msg,
+											time_keeper_get_millis(),
+											1,
+											remote_dsm2_rc_get_channel(0) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(1) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(2) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(3) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(4) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(5) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(6) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_get_channel(7) * 1000.0f * RC_SCALEFACTOR,
+											remote_dsm2_rc_check_receivers()	);
+	
+	mavlink_stream_send(controls->mavlink_stream,&msg);
+	
+	return TASK_RUN_SUCCESS;
+}
+
+/**
+ * \brief	Task to send the mavlink RC raw message
+ * 
+ * \return	The status of execution of the task
+ */
+static inline task_return_t remote_controller_send_raw_rc_channels(Control_Command_t* controls)
+{
+	mavlink_message_t msg;
+	
+	mavlink_msg_rc_channels_raw_pack(	controls->mavlink_stream->sysid,
+										controls->mavlink_stream->compid,
+										&msg,
+										time_keeper_get_millis(),
+										1,
+										remote_dsm2_rc_get_channel(0) + 1000,
+										remote_dsm2_rc_get_channel(1) + 1000,
+										remote_dsm2_rc_get_channel(2) + 1000,
+										remote_dsm2_rc_get_channel(3) + 1000,
+										remote_dsm2_rc_get_channel(4) + 1000,
+										remote_dsm2_rc_get_channel(5) + 1000,
+										remote_dsm2_rc_get_channel(6) + 1000,
+										remote_dsm2_rc_get_channel(7) + 1000,
+										remote_dsm2_rc_check_receivers()	);
+	
+	mavlink_stream_send(controls->mavlink_stream,&msg);
+	
+	return TASK_RUN_SUCCESS;
 }
 
 #ifdef SPEKTRUM_REMOTE

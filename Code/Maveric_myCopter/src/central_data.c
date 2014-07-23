@@ -153,6 +153,11 @@ void central_data_init()
 								centralData.servos 	);
 	
 	delay_ms(100);//add delay to be able to print on console init message for the following module
+	stabilisation_init( &centralData.stabilisation_copter.stabiliser_stack->rate_stabiliser, 
+						&centralData.controls,
+						&centralData.mavlink_communication.mavlink_stream);
+	
+	delay_ms(100);//add delay to be able to print on console init message for the following module
 	// init simulation (should be done after position_estimator)
 	simulation_config_t vehicle_model_parameters= 
 	{

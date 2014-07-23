@@ -26,7 +26,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "buffer.h"
-#include "stabilisation.h"
 
 #define REMOTE_UART AVR32_USART1						///< Define the microcontroller pin map with the remote UART
 #define DSM_RECEIVER_PIN AVR32_PIN_PD12					///< Define the microcontroller pin map with the receiver pin
@@ -39,12 +38,12 @@
  */
 typedef struct 
 {
-	Buffer_t receiver;				///< Define a buffer for the receiver
-	int16_t channels[16];			///< Define an array to contain the 16 remote channels availbale
-	uint32_t last_update;			///< Define the last update time 
-	uint8_t valid;					///< Define whether a data is valid or not
-	uint32_t last_time;				///< Define last time
-	uint32_t duration;				///< Define the duration
+	Buffer_t receiver;							///< Define a buffer for the receiver
+	int16_t channels[16];						///< Define an array to contain the 16 remote channels availbale
+	uint32_t last_update;						///< Define the last update time 
+	uint8_t valid;								///< Define whether a data is valid or not
+	uint32_t last_time;							///< Define last time
+	uint32_t duration;							///< Define the duration
 } Spektrum_Receiver_t;
 
 
@@ -116,22 +115,6 @@ float remote_dsm2_get_thrust_from_spektrum();
 
 void remote_dsm2_get_channel_mode_spektrum(uint8_t *chanSwitch);
 */
-
-/**
- * \brief	Task to send the mavlink RC scaled message
- * 
- * \return	The status of execution of the task
- */
-task_return_t remote_dsm2_send_scaled_rc_channels(void* arg);
-
-
-/**
- * \brief	Task to send the mavlink RC raw message
- * 
- * \return	The status of execution of the task
- */
-task_return_t remote_dsm2_send_raw_rc_channels(void* arg);
-
 
 #ifdef __cplusplus
 	}
