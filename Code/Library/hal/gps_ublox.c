@@ -1046,7 +1046,7 @@ static bool gps_ublox_process_data(gps_t *gps)
 				print_util_dbg_print("\n");
 			}
 			
-			gps->timegps = gps_pos_llh->itow;
+			gps->time_gps = gps_pos_llh->itow;
 			gps->longitude = gps_pos_llh->longitude / 10000000.0f;
 			gps->latitude = gps_pos_llh->latitude / 10000000.0f;
 			gps->alt_elips = ((float)gps_pos_llh->altitude_ellipsoid) / 1000.0f;
@@ -1160,14 +1160,14 @@ static bool gps_ublox_process_data(gps_t *gps)
 				print_util_dbg_print_num(gps_vel_ned->heading_accuracy,10);
 				print_util_dbg_print("\n");
 			}
-			gps->timegps         = gps_vel_ned->itow;
+			gps->time_gps         = gps_vel_ned->itow;
 			gps->speed           = ((float)gps_vel_ned->speed_3d) / 100.; // m/s
-			gps->groundSpeed     = ((float)gps_vel_ned->ground_speed_2d) / 100.; // m/s
+			gps->ground_speed     = ((float)gps_vel_ned->ground_speed_2d) / 100.; // m/s
 			gps->course          = ((float)gps_vel_ned->heading_2d) / 100000.; // Heading 2D deg * 100000 rescaled to deg * 100
 			have_raw_velocity    = true;
-			gps->northSpeed      = ((float)gps_vel_ned->ned_north) / 100.0f;
-			gps->eastSpeed       = ((float)gps_vel_ned->ned_east) / 100.;
-			gps->verticalSpeed   = ((float)gps_vel_ned->ned_down) / 100.;
+			gps->north_speed      = ((float)gps_vel_ned->ned_north) / 100.0f;
+			gps->east_speed       = ((float)gps_vel_ned->ned_east) / 100.;
+			gps->vertical_speed   = ((float)gps_vel_ned->ned_down) / 100.;
 			gps->speed_accuracy   = ((float)gps_vel_ned->speed_accuracy) / 100.;
 			gps->heading_accuracy = gps_vel_ned->heading_accuracy;
 			new_speed            = true;
@@ -1181,8 +1181,8 @@ static bool gps_ublox_process_data(gps_t *gps)
 		{
 			if (print_nav_on_debug)
 			{
-				print_util_dbg_print("MSG_NAV_SVINFO, numChannel:");
-				print_util_dbg_print_num(gps_sv_info->numCh,10);
+				print_util_dbg_print("MSG_NAV_SVINFO, num_channel:");
+				print_util_dbg_print_num(gps_sv_info->num_ch,10);
 				print_util_dbg_print("\n");
 			}
 		}
@@ -1348,67 +1348,67 @@ static void ubx_send_message_nav_settings(gps_t *gps, uint8_t msg_class, uint8_t
 		data = engine_settings->dyn_model;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = engine_settings->fixMode;
+		data = engine_settings->fix_mode;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = endian_lower_bytes_uint32(engine_settings->fixedAlt);
+		data = endian_lower_bytes_uint32(engine_settings->fixed_alt);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = endian_mid_lower_bytes_uint32(engine_settings->fixedAlt);
+		data = endian_mid_lower_bytes_uint32(engine_settings->fixed_alt);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = endian_mid_higher_bytes_uint32(engine_settings->fixedAlt);
+		data = endian_mid_higher_bytes_uint32(engine_settings->fixed_alt);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = endian_higher_bytes_uint32(engine_settings->fixedAlt);
+		data = endian_higher_bytes_uint32(engine_settings->fixed_alt);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = endian_lower_bytes_uint32(engine_settings->fixedAltVar);
+		data = endian_lower_bytes_uint32(engine_settings->fixed_alt_var);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = endian_mid_lower_bytes_uint32(engine_settings->fixedAltVar);
+		data = endian_mid_lower_bytes_uint32(engine_settings->fixed_alt_var);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = endian_mid_higher_bytes_uint32(engine_settings->fixedAltVar);
+		data = endian_mid_higher_bytes_uint32(engine_settings->fixed_alt_var);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = endian_higher_bytes_uint32(engine_settings->fixedAltVar);
+		data = endian_higher_bytes_uint32(engine_settings->fixed_alt_var);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = engine_settings->minElev;
+		data = engine_settings->min_elev;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = engine_settings->drLimit;
+		data = engine_settings->dr_limit;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = endian_lower_bytes_uint16(engine_settings->pDop);
+		data = endian_lower_bytes_uint16(engine_settings->p_dop);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = endian_higher_bytes_uint16(engine_settings->pDop);
+		data = endian_higher_bytes_uint16(engine_settings->p_dop);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = endian_lower_bytes_uint16(engine_settings->tDop);
+		data = endian_lower_bytes_uint16(engine_settings->t_dop);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = endian_higher_bytes_uint16(engine_settings->tDop);
+		data = endian_higher_bytes_uint16(engine_settings->t_dop);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = endian_lower_bytes_uint16(engine_settings->pAcc);
+		data = endian_lower_bytes_uint16(engine_settings->p_acc);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = endian_higher_bytes_uint16(engine_settings->pAcc);
+		data = endian_higher_bytes_uint16(engine_settings->p_acc);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = endian_lower_bytes_uint16(engine_settings->tAcc);
+		data = endian_lower_bytes_uint16(engine_settings->t_acc);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = endian_higher_bytes_uint16(engine_settings->tAcc);
+		data = endian_higher_bytes_uint16(engine_settings->t_acc);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = engine_settings->staticHoldThresh;
+		data = engine_settings->static_hold_thresh;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
-		data = engine_settings->dgpsTimeOut;
+		data = engine_settings->dgps_timeout;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		print_util_putnum(&gps->gps_stream_out, data, 16);
 		data = endian_lower_bytes_uint32(engine_settings->res2);
@@ -1757,11 +1757,11 @@ void gps_ublox_update(gps_t *gps)
 // 				cos_heading = cosf(gps_heading);
 // 				sin_heading = sinf(gps_heading);
 // 				
-// 				gps->northspeed = gps->groundSpeed * cos_heading;
-// 				gps->eastspeed = gps->groundSpeed * sin_heading;
+// 				gps->northspeed = gps->ground_speed * cos_heading;
+// 				gps->eastspeed = gps->ground_speed * sin_heading;
 // 				
 // 				// no good way to get descent rate
-// 				gps->verticalSpeed = 0;
+// 				gps->vertical_speed = 0;
 // 			}
 		}
 		else
@@ -1792,7 +1792,7 @@ task_return_t gps_ublox_send_raw(gps_t* gps)
 										gps->altitude * 1000.0f,
 										gps->hdop * 100.0f,
 										gps->speed_accuracy * 100.0f,
-										gps->groundSpeed * 100.0f,
+										gps->ground_speed * 100.0f,
 										gps->course,
 										gps->num_sats	);
 		mavlink_stream_send(gps->mavlink_stream,&msg);

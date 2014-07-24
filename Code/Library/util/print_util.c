@@ -196,7 +196,7 @@ void print_util_print_vector(byte_stream_t *out_stream, float v[], int32_t after
 }
 
 
-void print_util_print_quaternion(byte_stream_t *out_stream, UQuat_t *quat, int32_t after_digits) 
+void print_util_print_quaternion(byte_stream_t *out_stream, quat_t *quat, int32_t after_digits) 
 {
 	print_util_putstring(out_stream, "(");
 	print_util_putfloat(out_stream, quat->s, after_digits);
@@ -252,7 +252,7 @@ void print_util_dbg_print_vector(float v[], int32_t after_digits)
 }
 
 
-void print_util_dbg_print_quaternion(UQuat_t *quat, int32_t after_digits) 
+void print_util_dbg_print_quaternion(quat_t *quat, int32_t after_digits) 
 {
 	print_util_print_quaternion(deb_stream, quat, after_digits);
 }

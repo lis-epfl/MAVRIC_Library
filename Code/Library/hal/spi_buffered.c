@@ -58,11 +58,11 @@ static void pdca_int_handler_spi0(void)
 	spi_deselect_device(spi_buffers[0].spi, (struct spi_device *)&spi_buffers[0].adc_spi);
 	// call callback function to process data, at end of transfer
 	// to process data, and maybe add some more data
-	spi_buffers[0].SPIinBufferTail = spi_buffers[0].transmission_in_progress;
+	spi_buffers[0].spi_in_buffer_tail = spi_buffers[0].transmission_in_progress;
 	spi_buffers[0].transmission_in_progress = 0;
 	//spi_buffers[0].traffic++;
    
-	if ((spi_buffers[0].callbackFunction)) spi_buffers[0].callbackFunction();
+	if ((spi_buffers[0].callback_function)) spi_buffers[0].callback_function();
 }
 
 void spi_buffered_init(volatile avr32_spi_t *spi, int32_t spi_index)
@@ -85,14 +85,14 @@ void spi_buffered_init(volatile avr32_spi_t *spi, int32_t spi_index)
 	gpio_enable_module_pin(AVR32_SPI0_MISO_0_0_PIN, AVR32_SPI0_MISO_0_0_FUNCTION);
 	gpio_enable_module_pin(AVR32_SPI0_SCK_0_0_PIN, AVR32_SPI0_SCK_0_0_FUNCTION);
 
-	spi_buffers[spi_index].SPIinBufferHead = 0;
-	spi_buffers[spi_index].SPIinBufferTail = 0;
-	spi_buffers[spi_index].SPIoutBufferHead = 0;
-	spi_buffers[spi_index].SPIoutBufferTail = 0;
-	spi_buffers[spi_index].spiReceiverOn = 1;
+	spi_buffers[spi_index].spi_in_buffer_head = 0;
+	spi_buffers[spi_index].spi_in_buffer_tail = 0;
+	spi_buffers[spi_index].spi_out_buffer_head = 0;
+	spi_buffers[spi_index].spi_out_buffer_tail = 0;
+	spi_buffers[spi_index].spi_receiver_on = 1;
 	spi_buffers[spi_index].traffic = 0;
 	spi_buffers[spi_index].automatic = 1;
-	spi_buffers[spi_index].callbackFunction = 0;
+	spi_buffers[spi_index].callback_function = 0;
 	spi_buffers[spi_index].transmission_in_progress = 0;
 	
 	//set up interrupt
@@ -109,7 +109,7 @@ void spi_buffered_init(volatile avr32_spi_t *spi, int32_t spi_index)
 
 uint8_t* spi_buffered_get_spi_in_buffer(int32_t spi_index)
 {
-	return (uint8_t*)spi_buffers[spi_index].SPIInBuffer;
+	return (uint8_t*)spi_buffers[spi_index].spi_in_buffer;
 }
 
 void spi_buffered_init_DMA(int32_t spi_index, int32_t block_size)
@@ -133,8 +133,8 @@ void spi_buffered_init_DMA(int32_t spi_index, int32_t block_size)
 		.transfer_size = PDCA_TRANSFER_SIZE_BYTE  // select size of the transfer
 	};
 	
-	PDCA_TX_OPTIONS.addr = (void *) spi_buffers[spi_index].SPIOutBuffer;
-	PDCA_RX_OPTIONS.addr = (void *) spi_buffers[spi_index].SPIInBuffer;
+	PDCA_TX_OPTIONS.addr = (void *) spi_buffers[spi_index].spi_out_buffer;
+	PDCA_RX_OPTIONS.addr = (void *) spi_buffers[spi_index].spi_in_buffer;
 	
 	// Init PDCA channel with the pdca_options.
 	pdca_init_channel(SPI0_DMA_CH_TRANSMIT, &PDCA_TX_OPTIONS); // init PDCA channel with options.
@@ -146,17 +146,17 @@ void spi_buffered_init_DMA(int32_t spi_index, int32_t block_size)
 
 void spi_buffered_trigger_DMA(int32_t spi_index, int32_t block_size)
 {
-	//spi_buffers[spi_index].SPIinBufferHead = 0;
-	//spi_buffers[spi_index].SPIinBufferTail = 0;
-	//spi_buffers[spi_index].SPIoutBufferHead = 0;
-	//spi_buffers[spi_index].SPIoutBufferTail = 0;
+	//spi_buffers[spi_index].spi_in_buffer_head = 0;
+	//spi_buffers[spi_index].spi_in_buffer_tail = 0;
+	//spi_buffers[spi_index].spi_out_buffer_head = 0;
+	//spi_buffers[spi_index].spi_out_buffer_tail = 0;
 	//spi_buffers[spi_index].transmission_in_progress = block_size;
-	//spi_buffers[spi_index].SPIInBuffer[0] = 42;
-	//spi_buffers[spi_index].SPIInBuffer[3] = 42;
-	//spi_buffers[spi_index].SPIInBuffer[6] = 42;
-	//spi_buffers[spi_index].SPIInBuffer[9] = 42;
-	pdca_load_channel(SPI0_DMA_CH_TRANSMIT, (void *)spi_buffers[spi_index].SPIOutBuffer, block_size);
-	pdca_load_channel(SPI0_DMA_CH_RECEIVE,  (void *)(spi_buffers[spi_index].SPIInBuffer), block_size);
+	//spi_buffers[spi_index].spi_in_buffer[0] = 42;
+	//spi_buffers[spi_index].spi_in_buffer[3] = 42;
+	//spi_buffers[spi_index].spi_in_buffer[6] = 42;
+	//spi_buffers[spi_index].spi_in_buffer[9] = 42;
+	pdca_load_channel(SPI0_DMA_CH_TRANSMIT, (void *)spi_buffers[spi_index].spi_out_buffer, block_size);
+	pdca_load_channel(SPI0_DMA_CH_RECEIVE,  (void *)(spi_buffers[spi_index].spi_in_buffer), block_size);
 
 	
 	spi_select_device(spi_buffers[spi_index].spi, (struct spi_device *)&spi_buffers[spi_index].adc_spi);
@@ -168,9 +168,9 @@ void spi_buffered_trigger_DMA(int32_t spi_index, int32_t block_size)
 	pdca_enable(SPI0_DMA_CH_TRANSMIT);
 }
 
-void spi_buffered_set_callback(int32_t spi_index, functionpointer* functionPointer)
+void spi_buffered_set_callback(int32_t spi_index, function_pointer_t* function_pointer)
 {
-	spi_buffers[spi_index].callbackFunction = (volatile functionpointer*)functionPointer;
+	spi_buffers[spi_index].callback_function = (volatile function_pointer_t*)function_pointer;
 }
 
 void spi_buffered_enable(int32_t spi_index)
@@ -198,7 +198,7 @@ void spi_buffered_start(int32_t spi_index)
 {
 	// check flag if transmission is in progress
 	if ((spi_buffers[spi_index].transmission_in_progress == 0)
-	&&(spi_buffers[spi_index].SPIoutBufferHead != spi_buffers[spi_index].SPIoutBufferTail))
+	&&(spi_buffers[spi_index].spi_out_buffer_head != spi_buffers[spi_index].spi_out_buffer_tail))
 	{
 		// if not, initiate transmission by sending first byte
 		//!!!!PORTB &= ~_BV(SPI_CS);	// pull chip select low to start transmission
@@ -215,17 +215,17 @@ void spi_buffered_start(int32_t spi_index)
 
 void spi_buffered_activate_receive(int32_t spi_index)
 {
-	spi_buffers[spi_index].spiReceiverOn = 1;
+	spi_buffers[spi_index].spi_receiver_on = 1;
 }
 
 void spi_buffered_deactivate_receive(int32_t spi_index)
 {
-	spi_buffers[spi_index].spiReceiverOn = 0;
+	spi_buffers[spi_index].spi_receiver_on = 0;
 }
 
 void spi_buffered_clear_read_buffer(int32_t spi_index)
 {
-	spi_buffers[spi_index].SPIinBufferTail = spi_buffers[spi_index].SPIinBufferHead;
+	spi_buffers[spi_index].spi_in_buffer_tail = spi_buffers[spi_index].spi_in_buffer_head;
 }
 
 uint8_t spi_buffered_get_traffic(int32_t spi_index)
@@ -237,24 +237,24 @@ uint8_t spi_buffered_read(int32_t spi_index)
 {
 	uint8_t byte;
 	// if buffer empty, wait for incoming data
-	while (spi_buffers[spi_index].SPIinBufferHead == spi_buffers[spi_index].SPIinBufferTail);
-	byte=spi_buffers[spi_index].SPIInBuffer[spi_buffers[spi_index].SPIinBufferTail];
-	spi_buffers[spi_index].SPIinBufferTail=  (spi_buffers[spi_index].SPIinBufferTail + 1)&SPI_BUFFER_MASK;
+	while (spi_buffers[spi_index].spi_in_buffer_head == spi_buffers[spi_index].spi_in_buffer_tail);
+	byte=spi_buffers[spi_index].spi_in_buffer[spi_buffers[spi_index].spi_in_buffer_tail];
+	spi_buffers[spi_index].spi_in_buffer_tail=  (spi_buffers[spi_index].spi_in_buffer_tail + 1)&SPI_BUFFER_MASK;
 	return byte;
 }
 
 void spi_buffered_write(int32_t spi_index, uint8_t value)
 {
-	uint8_t newIndex;
+	uint8_t new_index;
 
-	newIndex = (spi_buffers[spi_index].SPIoutBufferHead + 1)&SPI_BUFFER_MASK;
+	new_index = (spi_buffers[spi_index].spi_out_buffer_head + 1)&SPI_BUFFER_MASK;
 	// check if buffer is already full and wait
-	//while (newIndex == spi_buffers[spi_index].SPIoutBufferTail) 
+	//while (new_index == spi_buffers[spi_index].spi_out_buffer_tail) 
 	//{
 	//if (spi_buffers[spi_index].automatic == 0) spi_buffered_resume(spi_index);
 	//}
-	spi_buffers[spi_index].SPIOutBuffer[(spi_buffers[spi_index].SPIoutBufferHead)] = value;
-	spi_buffers[spi_index].SPIoutBufferHead = newIndex;
+	spi_buffers[spi_index].spi_out_buffer[(spi_buffers[spi_index].spi_out_buffer_head)] = value;
+	spi_buffers[spi_index].spi_out_buffer_head = new_index;
 
 
 	if (spi_buffers[spi_index].automatic == 1) spi_buffered_start(spi_index);
@@ -262,16 +262,16 @@ void spi_buffered_write(int32_t spi_index, uint8_t value)
 
 void spi_buffered_transmit(int32_t spi_index)
 {
-	if (spi_buffers[spi_index].SPIoutBufferHead != spi_buffers[spi_index].SPIoutBufferTail) 
+	if (spi_buffers[spi_index].spi_out_buffer_head != spi_buffers[spi_index].spi_out_buffer_tail) 
 	{
 		// read data from buffer and copy it to SPI unit
-		spi_buffers[spi_index].spi->tdr = spi_buffers[spi_index].SPIOutBuffer[spi_buffers[spi_index].SPIoutBufferTail];
+		spi_buffers[spi_index].spi->tdr = spi_buffers[spi_index].spi_out_buffer[spi_buffers[spi_index].spi_out_buffer_tail];
 		spi_buffers[spi_index].transmission_in_progress = 1;    
 		// update buffer index
-		spi_buffers[spi_index].SPIoutBufferTail=  (spi_buffers[spi_index].SPIoutBufferTail + 1)&SPI_BUFFER_MASK;
+		spi_buffers[spi_index].spi_out_buffer_tail=  (spi_buffers[spi_index].spi_out_buffer_tail + 1)&SPI_BUFFER_MASK;
 		//spi_enable(spi_buffers[spi_index].spi);
 	} else {
-		spi_buffers[spi_index].SPIoutBufferTail=spi_buffers[spi_index].SPIoutBufferHead;
+		spi_buffers[spi_index].spi_out_buffer_tail=spi_buffers[spi_index].spi_out_buffer_head;
 		//PORTB |= _BV(SPI_CS);	// pull chip select high to end transmission
 		spi_deselect_device(spi_buffers[spi_index].spi, (struct spi_device *)&spi_buffers[spi_index].adc_spi);
 		spi_buffers[spi_index].transmission_in_progress=0;
@@ -282,45 +282,45 @@ void spi_buffered_transmit(int32_t spi_index)
 
 int8_t spi_buffered_is_transfered_finished(int32_t spi_index) 
 {
-	return (spi_buffers[spi_index].SPIoutBufferHead==spi_buffers[spi_index].SPIoutBufferTail);
+	return (spi_buffers[spi_index].spi_out_buffer_head==spi_buffers[spi_index].spi_out_buffer_tail);
 }
 
 void spi_buffered_flush_buffer(int32_t spi_index)
 {
 	spi_buffered_resume(spi_index);
-	while (spi_buffers[spi_index].SPIoutBufferHead!=spi_buffers[spi_index].SPIoutBufferTail);
+	while (spi_buffers[spi_index].spi_out_buffer_head!=spi_buffers[spi_index].spi_out_buffer_tail);
 }
 
 uint8_t spi_buffered_bytes_available(int32_t spi_index)
 {
-  return (SPI_BUFFER_SIZE + spi_buffers[spi_index].SPIinBufferHead - spi_buffers[spi_index].SPIinBufferTail)&SPI_BUFFER_MASK;
+  return (SPI_BUFFER_SIZE + spi_buffers[spi_index].spi_in_buffer_head - spi_buffers[spi_index].spi_in_buffer_tail)&SPI_BUFFER_MASK;
 }
 
 void spi_handler(int32_t spi_index)
 {
-	uint8_t inData;
+	uint8_t in_data;
 	uint8_t tmp;
-	inData=spi_buffers[spi_index].spi->rdr;
+	in_data=spi_buffers[spi_index].spi->rdr;
 
 	if ((spi_buffers[spi_index].spi->sr & AVR32_SPI_SR_TDRE_MASK)!=0) {
 	// initiate transfer if necessary
 	spi_buffered_transmit(spi_index);
 	}	
 	// only process received data when receiver is activated
-	if ((spi_buffers[spi_index].spiReceiverOn==1)&& ((spi_buffers[spi_index].spi->sr & AVR32_SPI_SR_RDRF_MASK)!=0)) {
+	if ((spi_buffers[spi_index].spi_receiver_on==1)&& ((spi_buffers[spi_index].spi->sr & AVR32_SPI_SR_RDRF_MASK)!=0)) {
 		// read incoming data from SPI port
 	spi_buffers[spi_index].traffic++;
 
-	tmp=(spi_buffers[spi_index].SPIinBufferHead+1)&SPI_BUFFER_MASK;
+	tmp=(spi_buffers[spi_index].spi_in_buffer_head+1)&SPI_BUFFER_MASK;
     
-	if (tmp==spi_buffers[spi_index].SPIinBufferTail) {
+	if (tmp==spi_buffers[spi_index].spi_in_buffer_tail) {
 		//error: receive buffer overflow!!
 		// lose old incoming data at the end of the buffer
-		spi_buffers[spi_index].SPIinBufferTail=(spi_buffers[spi_index].SPIinBufferTail+1)&SPI_BUFFER_MASK;
+		spi_buffers[spi_index].spi_in_buffer_tail=(spi_buffers[spi_index].spi_in_buffer_tail+1)&SPI_BUFFER_MASK;
 	} 
 	// store incoming data in buffer
-	spi_buffers[spi_index].SPIInBuffer[spi_buffers[spi_index].SPIinBufferHead] = inData;
+	spi_buffers[spi_index].spi_in_buffer[spi_buffers[spi_index].spi_in_buffer_head] = in_data;
 	// move head pointer forward
-	spi_buffers[spi_index].SPIinBufferHead=tmp;
+	spi_buffers[spi_index].spi_in_buffer_head=tmp;
 	}
 }

@@ -72,7 +72,7 @@ static void position_estimation_position_integration(position_estimator_t *pos_e
 	int32_t i;
 	float dt = pos_est->ahrs->dt;
 	
-	UQuat_t qvel_bf,qvel; 
+	quat_t qvel_bf,qvel; 
 
 	qvel.s = 0;
 	for (i = 0; i < 3; i++)
@@ -117,8 +117,8 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 	
 	float dt = pos_est->ahrs->dt;
 	
-	// UQuat_t bias_correction = {.s = 0, .v = {0.0f, 0.0f, 1.0f}};
-	UQuat_t vel_correction = 
+	// quat_t bias_correction = {.s = 0, .v = {0.0f, 0.0f, 1.0f}};
+	quat_t vel_correction = 
 	{
 		.s = 0, 
 		.v = 
@@ -149,7 +149,7 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 		0.0f
 	};
 
-	uint32_t tinterGps, tinterBaro;
+	uint32_t t_inter_gps, t_inter_baro;
 	int32_t i;
 
 	if (pos_est->init_barometer)
@@ -163,10 +163,10 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 			pos_est->time_last_barometer_msg = pos_est->barometer->last_update;
 		}
 
-		tinterBaro = (time_keeper_get_micros() - pos_est->barometer->last_update) / 1000.0f;
-		baro_gain = 1.0f; //math_util_fmax(1.0f - tinterBaro / 1000.0f, 0.0f);
+		t_inter_baro = (time_keeper_get_micros() - pos_est->barometer->last_update) / 1000.0f;
+		baro_gain = 1.0f; //math_util_fmax(1.0f - t_inter_baro / 1000.0f, 0.0f);
 			
-		//pos_est->local_position.pos[2] += kp_alt_baro / ((float)(tinterBaro / 2.5f + 1.0f)) * alt_error;
+		//pos_est->local_position.pos[2] += kp_alt_baro / ((float)(t_inter_baro / 2.5f + 1.0f)) * alt_error;
 		baro_alt_error = pos_est->last_alt  - pos_est->local_position.pos[2];
 		baro_vel_error = pos_est->barometer->vario_vz - pos_est->vel[2];
 		//vel_error[2] = 0.1f * pos_error[2];
@@ -193,28 +193,28 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 			local_coordinates.timestamp_ms = pos_est->gps->time_last_msg;
 			
 			// compute GPS velocity estimate
-			gps_dt = (local_coordinates.timestamp_ms - pos_est->lastGpsPos.timestamp_ms) / 1000.0f;
+			gps_dt = (local_coordinates.timestamp_ms - pos_est->last_gps_pos.timestamp_ms) / 1000.0f;
 			if (gps_dt > 0.001f)
 			{
 				for (i = 0; i < 3; i++)
 				{
-					pos_est->last_vel[i] = (local_coordinates.pos[i] - pos_est->lastGpsPos.pos[i]) / gps_dt;
+					pos_est->last_vel[i] = (local_coordinates.pos[i] - pos_est->last_gps_pos.pos[i]) / gps_dt;
 				}
-				pos_est->lastGpsPos = local_coordinates;
+				pos_est->last_gps_pos = local_coordinates;
 			}
 			else
 			{
 				print_util_dbg_print("GPS dt is too small!");
 			}
 		}
-		tinterGps = time_keeper_get_millis() - pos_est->gps->time_last_msg;
+		t_inter_gps = time_keeper_get_millis() - pos_est->gps->time_last_msg;
 			
-		//gps_gain = math_util_fmax(1.0f - tinterGps / 1000.0f, 0.0f);
+		//gps_gain = math_util_fmax(1.0f - t_inter_gps / 1000.0f, 0.0f);
 		gps_gain = 1.0f;
 			
 		for (i = 0;i < 3;i++)
 		{
-			pos_error[i] = pos_est->lastGpsPos.pos[i] - pos_est->local_position.pos[i];
+			pos_error[i] = pos_est->last_gps_pos.pos[i] - pos_est->local_position.pos[i];
 			vel_error[i] = pos_est->last_vel[i]       - pos_est->vel[i]; 
 		}
 	}
@@ -266,7 +266,7 @@ static void gps_position_init(position_estimator_t *pos_est)
 			pos_est->local_position.origin.altitude = pos_est->gps->altitude;
 			pos_est->local_position.timestamp_ms = pos_est->gps->time_last_msg;
 
-			pos_est->lastGpsPos = pos_est->local_position;
+			pos_est->last_gps_pos = pos_est->local_position;
 			
 			pos_est->last_alt = 0;
 			for(i = 0;i < 3;i++)
@@ -397,7 +397,7 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est)
 		pos_est->local_position.origin.altitude = pos_est->gps->altitude;
 		pos_est->local_position.timestamp_ms = pos_est->gps->time_last_msg;
 
-		pos_est->lastGpsPos = pos_est->local_position;
+		pos_est->last_gps_pos = pos_est->local_position;
 	}
 	//else
 	//{

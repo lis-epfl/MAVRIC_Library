@@ -26,9 +26,8 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include "streams.h"
-#include "mavlink_bridge.h"
+#include "conf_platform.h"
 #include "mavlink/include/maveric/mavlink.h"
-
 
 /**
  * \brief	Mavlink structures for the receive message and its status

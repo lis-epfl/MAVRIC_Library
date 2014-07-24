@@ -50,7 +50,7 @@ void orca_computeNewVelocity(orca_t *orca, float optimal_velocity[], float new_v
 	
 	plane_t planes[MAX_NUM_NEIGHBORS];
 	
-	UQuat_t q_neighbor, q_neighbor_bf;
+	quat_t q_neighbor, q_neighbor_bf;
 	
 	float relative_position[3], relative_velocity[3];
 	float combined_radius, dist_sq, combined_radius_sq, dot_product, w_length, w_length_sq;

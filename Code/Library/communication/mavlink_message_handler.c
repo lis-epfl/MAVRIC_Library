@@ -37,7 +37,7 @@
  * 
  * \return 					Boolean (true if the message matches, false if not)
  */
-static bool match_msg(mavlink_message_handler_msg_callback_t* msg_callback, mavlink_message_t* msg);
+static bool match_msg(mavlink_message_handler_t* message_handler, mavlink_message_handler_msg_callback_t* msg_callback, mavlink_message_t* msg);
 
 
 /**
@@ -49,18 +49,20 @@ static bool match_msg(mavlink_message_handler_msg_callback_t* msg_callback, mavl
  * 
  * \return 					Boolean (true if the message matches, false if not)
  */
-static bool match_cmd(mavlink_message_handler_cmd_callback_t* cmd_callback, mavlink_message_t* msg, mavlink_command_long_t* cmd);
+static bool match_cmd(mavlink_message_handler_t* message_handler, mavlink_message_handler_cmd_callback_t* cmd_callback, mavlink_message_t* msg, mavlink_command_long_t* cmd);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static bool match_msg(mavlink_message_handler_msg_callback_t* msg_callback, mavlink_message_t* msg)
+static bool match_msg(mavlink_message_handler_t* message_handler, mavlink_message_handler_msg_callback_t* msg_callback, mavlink_message_t* msg)
 {
 	bool match = false;
 
-	if ( msg->sysid != mavlink_system.sysid )																		// This message is not from this system
+	uint8_t sysid = message_handler->mavlink_stream->sysid;
+
+	if ( msg->sysid != sysid )																		// This message is not from this system
 	{
 		if ( msg_callback->message_id == msg->msgid )																// The message has the good ID
 		{
@@ -78,11 +80,13 @@ static bool match_msg(mavlink_message_handler_msg_callback_t* msg_callback, mavl
 }
 
 
-static bool match_cmd(mavlink_message_handler_cmd_callback_t* cmd_callback, mavlink_message_t* msg, mavlink_command_long_t* cmd)
+static bool match_cmd(mavlink_message_handler_t* message_handler, mavlink_message_handler_cmd_callback_t* cmd_callback, mavlink_message_t* msg, mavlink_command_long_t* cmd)
 {
 	bool match = false;
 	
-	if ( msg->sysid != mavlink_system.sysid )																							// This message is not from this system
+	uint8_t sysid = message_handler->mavlink_stream->sysid;
+
+	if ( msg->sysid != sysid )																							// This message is not from this system
 	{
 		if ( cmd_callback->command_id == cmd->command )																					// The message has the good ID
 		{
@@ -107,8 +111,11 @@ static bool match_cmd(mavlink_message_handler_cmd_callback_t* cmd_callback, mavl
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void mavlink_message_handler_init(mavlink_message_handler_t* message_handler, const mavlink_message_handler_conf_t* config)
+void mavlink_message_handler_init(mavlink_message_handler_t* message_handler, const mavlink_message_handler_conf_t* config, const mavlink_stream_t* mavlink_stream)
 {
+	// Init dependencies
+	message_handler->mavlink_stream = mavlink_stream;
+
 	// Init debug mode
 	message_handler->debug = config->debug;
 
@@ -267,12 +274,12 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 		if (cmd.command >= 0 && cmd.command < MAV_CMD_ENUM_END)
 		{
 			// The command has valid command ID 
-			if(	(cmd.target_system == mavlink_system.sysid)||(cmd.target_system == 255) ) //TODO: modfiy to MAV_SYS_ID_ALL when QGroundControl modified
+			if(	(cmd.target_system == message_handler->mavlink_stream->sysid)||(cmd.target_system == 255) ) //TODO: modfiy to MAV_SYS_ID_ALL when QGroundControl modified
 			{
 				// The command is for this system
 				for (uint32_t i = 0; i < message_handler->cmd_callback_set->callback_count; ++i)
 				{
-					if ( match_cmd(&message_handler->cmd_callback_set->callback_list[i], msg, &cmd) )
+					if ( match_cmd(message_handler, &message_handler->cmd_callback_set->callback_list[i], msg, &cmd) )
 					{
 						mavlink_cmd_callback_function_t function 		= message_handler->cmd_callback_set->callback_list[i].function;
 						handling_module_struct_t 		module_struct 	= message_handler->cmd_callback_set->callback_list[i].module_struct;
@@ -289,7 +296,7 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 		// The message has a valid message ID, and is not a command
 		for (uint32_t i = 0; i < message_handler->msg_callback_set->callback_count; ++i)
 		{
-			if ( match_msg(&message_handler->msg_callback_set->callback_list[i], msg) )
+			if ( match_msg(message_handler, &message_handler->msg_callback_set->callback_list[i], msg) )
 			{
 				mavlink_msg_callback_function_t function 		= message_handler->msg_callback_set->callback_list[i].function;
 				handling_module_struct_t 		module_struct 	= message_handler->msg_callback_set->callback_list[i].module_struct;

@@ -153,7 +153,8 @@ void central_data_init()
 							&central_data.position_estimator,
 							&central_data.ahrs,
 							&central_data.state,
-							&central_data.mavlink_communication);
+							&central_data.mavlink_communication,
+							&central_data.mavlink_communication.mavlink_stream);
 	waypoint_handler_init_homing_waypoint(&central_data.waypoint_handler);
 	waypoint_handler_waypoint_init(&central_data.waypoint_handler);
 	
@@ -162,7 +163,8 @@ void central_data_init()
 	// Init neighbor selection
 	neighbors_selection_init(   &central_data.neighbors, 
 								&central_data.position_estimator,
-								&central_data.mavlink_communication.message_handler);
+								&central_data.mavlink_communication.message_handler,
+								&central_data.mavlink_communication.mavlink_stream);
 	
 	delay_ms(100);
 

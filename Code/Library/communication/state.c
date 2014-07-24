@@ -107,7 +107,7 @@ void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
 	
 	// Check if this message is for this system and subsystem
 	// No component ID in mavlink_set_mode_t so no control
-	if ((uint8_t)packet.target_system == (uint8_t)mavlink_system.sysid)
+	if ((uint8_t)packet.target_system == (uint8_t)state->mavlink_stream->sysid)
 	{
 		print_util_dbg_print("base_mode:");
 		print_util_dbg_print_num(packet.base_mode,10);

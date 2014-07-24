@@ -136,7 +136,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_NAV_STATUS 16
 #define UBX_SIZE_NAV_SOL 52
 #define UBX_SIZE_NAV_VELNED 36
-#define UBX_SIZE_NAV_SVINFO 30 //8 + 12*numChannel
+#define UBX_SIZE_NAV_SVINFO 30 //8 + 12*num_channel
 #define UBX_SIZE_NAV_SETTINGS 36
 
 #define UBX_SIZE_CFG_RATE 6
@@ -225,17 +225,17 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint32_t res4;						///< Reserved slot
 		uint32_t res3;						///< Reserved slot
 		uint32_t res2;						///< Reserved slot
-		uint8_t dgpsTimeOut;				///< DGPS timeout in sec
-		uint8_t staticHoldThresh;			///< Static hold threshold cm/s
-		uint16_t tAcc;						///< Time accuracy mask in m
-		uint16_t pAcc;						///< Position accuracy mask in m
-		uint16_t tDop;						///< Time DOP mask to use
-		uint16_t pDop;						///< Position DOP mask to use
-		uint8_t drLimit;					///< Maximum time to perform dead reckoning in case of GPS signal loos, in sec
-		int8_t minElev;						///< Minimum elevation for a GNSS satellite to be used in NAV in deg
-		uint32_t fixedAltVar;				///< Fixed altitude variance in 2D mode in m^2
-		int32_t fixedAlt;					///< Fixed altitude for 2D fix mode in m
-		uint8_t fixMode;					///< Fixing mode, 1:2D, 2:3D, 3:auto 2D/3D
+		uint8_t dgps_timeout;				///< DGPS timeout in sec
+		uint8_t static_hold_thresh;			///< Static hold threshold cm/s
+		uint16_t t_acc;						///< Time accuracy mask in m
+		uint16_t p_acc;						///< Position accuracy mask in m
+		uint16_t t_dop;						///< Time DOP mask to use
+		uint16_t p_dop;						///< Position DOP mask to use
+		uint8_t dr_limit;					///< Maximum time to perform dead reckoning in case of GPS signal loos, in sec
+		int8_t min_elev;						///< Minimum elevation for a GNSS satellite to be used in NAV in deg
+		uint32_t fixed_alt_var;				///< Fixed altitude variance in 2D mode in m^2
+		int32_t fixed_alt;					///< Fixed altitude for 2D fix mode in m
+		uint8_t fix_mode;					///< Fixing mode, 1:2D, 2:3D, 3:auto 2D/3D
 		uint8_t dyn_model;					///< UBX_PLATFORM_... type
 		uint16_t mask;						///< Bitmask, see U-Blox 6 documentation
 	}ubx_cfg_nav_settings_t;
@@ -318,7 +318,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		*/
 		struct
 		{
-			int32_t prRes;					///< Pseudo range in residual in centimeters
+			int32_t pr_res;					///< Pseudo range in residual in centimeters
 			int16_t azim;					///< Azimuth in integer degrees
 			int8_t elev;					///< Elevation in integer degrees
 			uint8_t cno;					///< Carrier to Noise ratio in dbHz
@@ -326,11 +326,11 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 			uint8_t flags;					///< Bitmask, see U-Blox 6 documentation
 			uint8_t svid;					///< Satellite ID
 			uint8_t chn;					///< GPS msToW
-		} channelData[16];
+		} channel_data[16];
 		
 		uint16_t reserved;					///< Reserved slot
-		uint8_t globalFlags;				///< Bitmask, 0:antaris, 1:u-blox 5, 2:u-blox 6
-		uint8_t numCh;						///< Number of channels
+		uint8_t global_flags;				///< Bitmask, 0:antaris, 1:u-blox 5, 2:u-blox 6
+		uint8_t num_ch;						///< Number of channels
 		uint32_t itow;						///< GPS msToW
 	}ubx_nav_sv_info_t;
 
@@ -350,9 +350,9 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t res;						///< Unused
 		uint8_t flags;						///< Bitmask, 0,1:gps timebase, UTC not available, 2,3:UTC timebase, UTC available
 		uint16_t week;						///< Timepulse week number according to timebase
-		int32_t qErr;						///< Quantization error of timepulse
-		uint32_t towSubMS;					///< Sumbmillisecond part of ToWms scaling: 2^-32
-		uint32_t towMS;						///< Timepulse time of week according to time base in ms
+		int32_t q_err;						///< Quantization error of timepulse
+		uint32_t tow_sub_ms;					///< Sumbmillisecond part of ToWms scaling: 2^-32
+		uint32_t tow_ms;						///< Timepulse time of week according to time base in ms
 	}ubx_tim_tp_t;
 
 	/**
@@ -410,17 +410,17 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	{
 		uint16_t mask;						///< Bitmask, see U-Blox 6 documentation
 		uint8_t dyn_model;					///< UBX_PLATFORM_... type
-		uint8_t fixMode;					///< Fixing mode, 1:2D, 2:3D, 3:auto 2D/3D
-		int32_t fixedAlt;					///< Fixed altitude for 2D fix mode in m
-		uint32_t fixedAltVar;				///< Fixed altitude variance in 2D mode in m^2
-		int8_t minElev;						///< Minimum elevation for a GNSS satellite to be used in NAV in deg
-		uint8_t drLimit;					///< Maximum time to perform dead reckoning in case of GPS signal loos, in sec
-		uint16_t pDop;						///< Position DOP mask to use
-		uint16_t tDop;						///< Time DOP mask to use
-		uint16_t pAcc;						///< Position accuracy mask in m
-		uint16_t tAcc;						///< Time accuracy mask in m
-		uint8_t staticHoldThresh;			///< Static hold threshold cm/s
-		uint8_t dgpsTimeOut;				///< DGPS timeout in sec
+		uint8_t fix_mode;					///< Fixing mode, 1:2D, 2:3D, 3:auto 2D/3D
+		int32_t fixed_alt;					///< Fixed altitude for 2D fix mode in m
+		uint32_t fixed_alt_var;				///< Fixed altitude variance in 2D mode in m^2
+		int8_t min_elev;						///< Minimum elevation for a GNSS satellite to be used in NAV in deg
+		uint8_t dr_limit;					///< Maximum time to perform dead reckoning in case of GPS signal loos, in sec
+		uint16_t p_dop;						///< Position DOP mask to use
+		uint16_t t_dop;						///< Time DOP mask to use
+		uint16_t p_acc;						///< Position accuracy mask in m
+		uint16_t t_acc;						///< Time accuracy mask in m
+		uint8_t static_hold_thresh;			///< Static hold threshold cm/s
+		uint8_t dgps_timeout;				///< DGPS timeout in sec
 		uint32_t res2;						///< Reserved slot
 		uint32_t res3;						///< Reserved slot
 		uint32_t res4;						///< Reserved slot
@@ -500,8 +500,8 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	typedef struct
 	{
 		uint32_t itow;						///< GPS msToW
-		uint8_t numCh;						///< Number of channels
-		uint8_t globalFlags;				///< Bitmask, 0:antaris, 1:u-blox 5, 2:u-blox 6
+		uint8_t num_ch;						///< Number of channels
+		uint8_t global_flags;				///< Bitmask, 0:antaris, 1:u-blox 5, 2:u-blox 6
 		uint16_t reserved;					///< Reserved slot
 	
 		/**
@@ -516,8 +516,8 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 			uint8_t cno;					///< Carrier to Noise ratio in dbHz
 			int8_t elev;					///< Elevation in integer degrees
 			int16_t azim;					///< Azimuth in integer degrees
-			int32_t prRes;					///< Pseudo range in residual in centimeters
-		} channelData[16];
+			int32_t pr_res;					///< Pseudo range in residual in centimeters
+		} channel_data[16];
 	}ubx_nav_sv_info_t;
 
 	/**
@@ -533,9 +533,9 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	 */
 	typedef struct  
 	{
-		uint32_t towMS;						///< Timepulse time of week according to time base in ms
-		uint32_t towSubMS;					///< Sumbmillisecond part of ToWms scaling: 2^-32
-		int32_t qErr;						///< Quantization error of timepulse
+		uint32_t tow_ms;						///< Timepulse time of week according to time base in ms
+		uint32_t tow_sub_ms;					///< Sumbmillisecond part of ToWms scaling: 2^-32
+		int32_t q_err;						///< Quantization error of timepulse
 		uint16_t week;						///< Timepulse week number according to timebase
 		uint8_t flags;						///< Bitmask, 0,1:gps timebase, UTC not available, 2,3:UTC timebase, UTC available
 		uint8_t res;						///< Unused
@@ -616,10 +616,10 @@ typedef struct
 	float altitude;							///< Altitude in m
 	float alt_elips;						///< Altitude above ellipsoid in m
 	float speed;							///< 3D speed in m/s
-	float groundSpeed;						///< 2D ground speed in m/s
-	float northSpeed;						///< The speed to the north in m/s
-	float eastSpeed;						///< The speed to the east in m/s
-	float verticalSpeed;					///< The vertical speed in m/s
+	float ground_speed;						///< 2D ground speed in m/s
+	float north_speed;						///< The speed to the north in m/s
+	float east_speed;						///< The speed to the east in m/s
+	float vertical_speed;					///< The vertical speed in m/s
 	float course;							///< Heading in degree * 100
 	
 	float horizontal_accuracy;				///< Horizontal accuracy in m
@@ -632,7 +632,7 @@ typedef struct
 	uint16_t hdop;							///< Height DOP
 	
 	uint32_t time_last_msg;					///< Time reference in ms of microcontroller
-	uint32_t timegps;						///< Time reference in ms of gps
+	uint32_t time_gps;						///< Time reference in ms of gps
 	
 	uint8_t  status;						///< GPS status
 	

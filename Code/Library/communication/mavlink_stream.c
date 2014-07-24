@@ -24,7 +24,7 @@
 #include "mavlink_message_handler.h"
 
 
-mavlink_system_t mavlink_system;
+// mavlink_system_t mavlink_system;
 byte_stream_t* mavlink_tx_stream;
 
 
@@ -32,13 +32,13 @@ byte_stream_t* mavlink_tx_stream;
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void mavlink_comm_send_ch(mavlink_channel_t chan, uint8_t ch)
-{
-	if (chan == MAVLINK_COMM_0)
-	{
-		mavlink_tx_stream->put(mavlink_tx_stream->data, ch);
-	}
-}
+//void mavlink_comm_send_ch(mavlink_channel_t chan, uint8_t ch)
+//{
+//	if (chan == MAVLINK_COMM_0)
+//	{
+////		mavlink_tx_stream->put(mavlink_tx_stream->data, ch);
+//	}
+//}
 
 
 void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config)
@@ -51,8 +51,8 @@ void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_
 	mavlink_stream->use_dma			  = config->use_dma;
 	mavlink_stream->msg_available     = false;
 	
-	mavlink_system.sysid              = config->sysid;  // System ID, 1-255
-	mavlink_system.compid             = config->compid; // Component/Subsystem ID, 1-255
+//	mavlink_system.sysid              = config->sysid;  // System ID, 1-255
+//	mavlink_system.compid             = config->compid; // Component/Subsystem ID, 1-255
 }
 
 

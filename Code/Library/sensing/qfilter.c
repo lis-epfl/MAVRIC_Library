@@ -46,9 +46,9 @@ void qfilter_update(qfilter_t *qf)
 {
 	uint8_t i;
 	float  omc[3], omc_mag[3] , tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
-	UQuat_t qed, qtmp1, up, up_bf;
-	UQuat_t mag_global, mag_corrected_local;
-	UQuat_t front_vec_global = 
+	quat_t qed, qtmp1, up, up_bf;
+	quat_t mag_global, mag_corrected_local;
+	quat_t front_vec_global = 
 	{
 		.s = 0.0f, 
 		.v = {1.0f, 0.0f, 0.0f}

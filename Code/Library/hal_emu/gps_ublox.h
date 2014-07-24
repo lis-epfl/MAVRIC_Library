@@ -120,7 +120,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_NAV_STATUS 16
 #define UBX_SIZE_NAV_SOL 52
 #define UBX_SIZE_NAV_VELNED 36
-#define UBX_SIZE_NAV_SVINFO 30 //8 + 12*numChannel
+#define UBX_SIZE_NAV_SVINFO 30 //8 + 12*num_channel
 #define UBX_SIZE_NAV_SETTINGS 36
 
 #define UBX_SIZE_CFG_RATE 6
@@ -189,17 +189,17 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint32_t res4;
 		uint32_t res3;
 		uint32_t res2;
-		uint8_t dgpsTimeOut;							// s
-		uint8_t staticHoldThresh;						// cm/s
-		uint16_t tAcc;									// m
-		uint16_t pAcc;									// m
-		uint16_t tDop;
-		uint16_t pDop;
-		uint8_t drLimit;								// s
-		int8_t minElev;									// deg
-		uint32_t fixedAltVar;							// m^2
-		int32_t fixedAlt;								// m
-		uint8_t fixMode;
+		uint8_t dgps_timeout;							// s
+		uint8_t static_hold_thresh;						// cm/s
+		uint16_t t_acc;									// m
+		uint16_t p_acc;									// m
+		uint16_t t_dop;
+		uint16_t p_dop;
+		uint8_t dr_limit;								// s
+		int8_t min_elev;									// deg
+		uint32_t fixed_alt_var;							// m^2
+		int32_t fixed_alt;								// m
+		uint8_t fix_mode;
 		uint8_t dyn_model;								// UBX_PLATFORM_... type
 		uint16_t mask;
 	}ubx_cfg_nav_settings_t;
@@ -260,7 +260,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	{
 		struct
 		{
-			int32_t prRes;
+			int32_t pr_res;
 			int16_t azim;
 			int8_t elev;
 			uint8_t cno;
@@ -268,11 +268,11 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 			uint8_t flags;
 			uint8_t svid;
 			uint8_t chn;
-		} channelData[16];
+		} channel_data[16];
 		
 		uint16_t reserved;
-		uint8_t globalFlags;
-		uint8_t numCh;
+		uint8_t global_flags;
+		uint8_t num_ch;
 		uint32_t itow;
 	}ubx_nav_sv_info_t;
 	
@@ -284,9 +284,9 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t res;
 		uint8_t flags;
 		uint16_t week;
-		int32_t qErr;
-		uint32_t towSubMS;				// ms scaling: 2^-32
-		uint32_t towMS;					// ms
+		int32_t q_err;
+		uint32_t tow_sub_ms;				// ms scaling: 2^-32
+		uint32_t tow_ms;					// ms
 	}ubx_tim_tp_t;
 
 	typedef struct
@@ -325,17 +325,17 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	typedef struct {
 		uint16_t mask;
 		uint8_t dyn_model;								// UBX_PLATFORM_... type
-		uint8_t fixMode;
-		int32_t fixedAlt;								// m
-		uint32_t fixedAltVar;							// m^2
-		int8_t minElev;									// deg
-		uint8_t drLimit;								// s
-		uint16_t pDop;
-		uint16_t tDop;
-		uint16_t pAcc;									// m
-		uint16_t tAcc;									// m
-		uint8_t staticHoldThresh;						// cm/s
-		uint8_t dgpsTimeOut;							// s
+		uint8_t fix_mode;
+		int32_t fixed_alt;								// m
+		uint32_t fixed_alt_var;							// m^2
+		int8_t min_elev;									// deg
+		uint8_t dr_limit;								// s
+		uint16_t p_dop;
+		uint16_t t_dop;
+		uint16_t p_acc;									// m
+		uint16_t t_acc;									// m
+		uint8_t static_hold_thresh;						// cm/s
+		uint8_t dgps_timeout;							// s
 		uint32_t res2;
 		uint32_t res3;
 		uint32_t res4;
@@ -396,8 +396,8 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	typedef struct
 	{
 		uint32_t itow;
-		uint8_t numCh;
-		uint8_t globalFlags;
+		uint8_t num_ch;
+		uint8_t global_flags;
 		uint16_t reserved;
 	
 		struct
@@ -409,8 +409,8 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 			uint8_t cno;
 			int8_t elev;
 			int16_t azim;
-			int32_t prRes;
-		} channelData[16];
+			int32_t pr_res;
+		} channel_data[16];
 	}ubx_nav_sv_info_t;
 	
 	typedef struct{
@@ -419,9 +419,9 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 
 	typedef struct  
 	{
-		uint32_t towMS;					// ms
-		uint32_t towSubMS;				// ms scaling: 2^-32
-		int32_t qErr;
+		uint32_t tow_ms;					// ms
+		uint32_t tow_sub_ms;				// ms scaling: 2^-32
+		int32_t q_err;
 		uint16_t week;
 		uint8_t flags;
 		uint8_t res;
@@ -508,10 +508,10 @@ typedef struct
 	float altitude; //!< altitude in m
 	float alt_elips; //!< altitude above ellipsoid in m
 	float speed; //!< 3D speed in m/s
-	float groundSpeed; //!< 2D ground speed in m/s
-	float northSpeed; //!< the speed to the north in m/s
-	float eastSpeed; //!< the speed to the east in m/s
-	float verticalSpeed; //!< the vertical speed in m/s
+	float ground_speed; //!< 2D ground speed in m/s
+	float north_speed; //!< the speed to the north in m/s
+	float east_speed; //!< the speed to the east in m/s
+	float vertical_speed; //!< the vertical speed in m/s
 	float course; //!< heading in degree * 100
 	
 	float horizontal_accuracy; //!< horizontal accuracy in m
@@ -523,21 +523,21 @@ typedef struct
 	uint8_t num_sats;
 	uint16_t hdop;
 	
-	unsigned long timeLastMsg; //!< time reference in ms of microcontroller
-	unsigned long timegps; //!< time reference in ms of gps
+	unsigned long time_last_msg; //!< time reference in ms of microcontroller
+	unsigned long time_gps; //!< time reference in ms of gps
 	
 	unsigned char status;
 	
 	unsigned char horizontal_status;
 	
-// 	unsigned char latitudeStatus;
-// 	unsigned char longitudeStatus;
+// 	unsigned char latitude_status;
+// 	unsigned char longitude_status;
  	unsigned char altitude_status;
  	unsigned char speed_status;
-// 	unsigned char groundSpeedStatus;
-// 	unsigned char northSpeedStatus;
-// 	unsigned char eastSpeedStatus;
-// 	unsigned char verticalSpeedStatus;
+// 	unsigned char ground_speed_status;
+// 	unsigned char north_speed_status;
+// 	unsigned char east_speed_status;
+// 	unsigned char vertical_speed_status;
  	unsigned char course_status;
 	unsigned char accuracy_status;
 } gps_t;
@@ -579,7 +579,7 @@ void ubx_configure_message_rate(uint8_t msg_class, uint8_t msg_id, uint8_t rate)
 void gps_ublox_configure_gps(void);
 
 void gps_ublox_update(void);
-bool gps_ublox_newValidGpsMsg(uint32_t *prevGpsMsgTime);
+bool gps_ublox_newValidGpsMsg(uint32_t *prev_gps_msg_time);
 
 ubx_nav_pos_llh_t * ubx_get_pos_llh(void);
 ubx_nav_status_t * ubx_get_status(void);

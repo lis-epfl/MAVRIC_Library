@@ -24,6 +24,7 @@
 #endif
 
 #include "scheduler.h"
+#include "mavlink_stream.h"
 #include <stdint.h>
 
 /**
@@ -34,6 +35,7 @@ typedef struct
 	uint8_t i2c_address;		///< address of the sonar module
 	uint16_t distance_cm;		///< measured distance in centimeters
 	float distance_m;			///< measured distance in meters
+	const mavlink_stream_t* mavlink_stream;  ///< Pointer to mavlink stream
 } i2cxl_sonar_t;
 
 /**
@@ -41,7 +43,7 @@ typedef struct
  * 
  * \param i2c_sonar pointer to the i2c_sonar Data structure
  */
-void i2cxl_sonar_init(i2cxl_sonar_t* i2c_sonar);
+void i2cxl_sonar_init(i2cxl_sonar_t* i2c_sonar, const mavlink_stream_t* mavlink_stream);
 
 /**
  * \brief Reads last value from sensor and start new recording

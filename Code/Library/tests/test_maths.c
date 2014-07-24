@@ -21,8 +21,8 @@
 #include "maths.h"
 #include "print_util.h"
 
-UQuat_t quat1= {.s=0.0, .v={0.0, 0.0, 0.0} };
-UQuat_t quat2, quat3, quat4; 
+quat_t quat1= {.s=0.0, .v={0.0, 0.0, 0.0} };
+quat_t quat2, quat3, quat4; 
 
 float v[3];
 

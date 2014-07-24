@@ -12,14 +12,14 @@
 #include "compiler.h"
 
 
-#define ConfRegA 0x00
-#define ConfRegB 0x01
-#define ModeReg 0x02
-#define DataRegBegin 0x03
+#define CONF_REG_A 0x00
+#define CONF_REG_B 0x01
+#define MODE_REG 0x02
+#define DATA_REG_BEGIN 0x03
 
-#define Measurement_Continuous 0x00
-#define Measurement_SingleShot 0x01
-#define Measurement_Idle 0x03
+#define MEASUREMENT_CONTINUOUS 0x00
+#define MEASUREMENT_SINGLE_SHOT 0x01
+#define MEASUREMENT_IDLE 0x03
 
 #define HMC5883_SLAVE_ADDRESS 0x1E  ///HMC5883L
 

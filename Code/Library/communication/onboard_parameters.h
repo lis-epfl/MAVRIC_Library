@@ -72,6 +72,7 @@ typedef struct
  */
 typedef struct 
 {
+	const mavlink_stream_t* mavlink_stream;					///< Pointer to mavlink_stream
 	bool debug;												///< Indicates if debug messages should be printed for each param change
 	onboard_parameters_set_t* param_set;					///< Pointer to a set of parameters, needs memory allocation
 } onboard_parameters_t;											
@@ -105,7 +106,7 @@ typedef struct
 * \param 	scheduler 				Pointer to mavlink scheduler
 * \param 	message_handler 		Pointer to mavlink message handler
 */
-void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler);
+void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream);
 
 
 /**

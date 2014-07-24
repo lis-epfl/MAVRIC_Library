@@ -43,8 +43,11 @@ void i2cxl_send_range_command(i2cxl_sonar_t* i2c_sonar);
 void i2cxl_get_last_measure(i2cxl_sonar_t* i2c_sonar);
 
 
-void i2cxl_sonar_init(i2cxl_sonar_t* i2cxl_sonar)
+void i2cxl_sonar_init(i2cxl_sonar_t* i2cxl_sonar, const mavlink_stream_t* mavlink_stream)
 {
+	// Init dependencies
+	i2cxl_sonar->mavlink_stream = mavlink_stream;
+
 	///< Init data_struct
 	i2cxl_sonar->i2c_address = I2CXL_DEFAULT_ADDRESS;
 	i2cxl_sonar->distance_cm = 0;
@@ -87,9 +90,13 @@ void i2cxl_get_last_measure(i2cxl_sonar_t* i2cxl_sonar)
 
 task_return_t i2cxl_send_sonar(i2cxl_sonar_t* i2cxl_sonar)
 {
-	mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
+	mavlink_message_t msg;
+	mavlink_msg_named_value_float_pack(	i2cxl_sonar->mavlink_stream->sysid,
+										i2cxl_sonar->mavlink_stream->compid,
+										&msg,
 										time_keeper_get_millis(),
 										"sonar(m)",
 										i2cxl_sonar->distance_m);
+	mavlink_stream_send(i2cxl_sonar->mavlink_stream, &msg);
 	return TASK_RUN_SUCCESS;
 }

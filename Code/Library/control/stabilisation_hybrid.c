@@ -53,7 +53,7 @@ void stabilisation_hybrid_cascade_stabilise_hybrid(imu_t *imu, position_estimato
 		target_global[2] = -1;
 
 		// target vector in local frame
-		UQuat_t qtarget = maths_quat_from_vector(&target_global);
+		quat_t qtarget = maths_quat_from_vector(&target_global);
 		qtarget = maths_quat_global_to_local(imu->attitude.qe, qtarget);
 		target_loc[0] = qtarget.v[0];
 		target_loc[1] = qtarget.v[1];

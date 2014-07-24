@@ -83,7 +83,7 @@ static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_po
 static void navigation_set_speed_command(float rel_pos[], navigation_t* navigation)
 {
 	float  norm_rel_dist, v_desired;
-	UQuat_t qtmp1, qtmp2;
+	quat_t qtmp1, qtmp2;
 	
 	float dir_desired_bf[3];
 	// dir_desired[3],
@@ -199,7 +199,7 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const UQuat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, const state_t* state, const mavlink_stream_t* mavlink_stream)
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, const state_t* state, const mavlink_stream_t* mavlink_stream)
 {
 	
 	navigation->controls_nav = controls_nav;

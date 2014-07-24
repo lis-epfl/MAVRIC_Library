@@ -51,7 +51,7 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 	float rpyt_errors[4];
 	control_command_t input;
 	int32_t i;
-	UQuat_t qtmp;
+	quat_t qtmp;
 	
 	// set the controller input
 	input= *stabilisation_copter->controls;
@@ -59,7 +59,7 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 	case VELOCITY_COMMAND_MODE:
 		
 		qtmp=quaternions_create_from_vector(input.tvel);
-		UQuat_t input_local = quaternions_local_to_global(stabilisation_copter->ahrs->qe, qtmp);
+		quat_t input_local = quaternions_local_to_global(stabilisation_copter->ahrs->qe, qtmp);
 		
 		input.tvel[X] = input_local.v[X];
 		input.tvel[Y] = input_local.v[Y];
@@ -96,7 +96,7 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 		input = stabilisation_copter->stabiliser_stack->velocity_stabiliser.output;
 		
 		qtmp=quaternions_create_from_vector(stabilisation_copter->stabiliser_stack->velocity_stabiliser.output.rpy);
-		UQuat_t rpy_local = quaternions_global_to_local(stabilisation_copter->ahrs->qe, qtmp);
+		quat_t rpy_local = quaternions_global_to_local(stabilisation_copter->ahrs->qe, qtmp);
 		
 		input.rpy[ROLL] = rpy_local.v[Y];
 		input.rpy[PITCH] = -rpy_local.v[X];

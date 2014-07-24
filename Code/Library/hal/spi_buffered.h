@@ -30,7 +30,7 @@ extern "C" {
 #include "user_board.h"
 #include "spi_master.h"
 #include "dma_channel_config.h"
-typedef void (functionpointer)(void);
+typedef void (function_pointer_t)(void);
 
 #define SPI_BUFFER_SIZE 32								///< The SPI buffer size, this has to be a power of 2
 
@@ -44,17 +44,17 @@ typedef void (functionpointer)(void);
  */
 typedef struct {
 	volatile avr32_spi_t *spi;							///< The pointer to the avr32 spi structure
-	volatile uint8_t SPIOutBuffer[SPI_BUFFER_SIZE];		///< The SPI outgoing buffer of size SPI_BUFFER_SIZE
-	volatile uint8_t SPIInBuffer[SPI_BUFFER_SIZE];		///< The SPI ingoing buffer of size SPI_BUFFER_SIZE
-	volatile uint8_t SPIinBufferHead;					///< The head of the SPI ingoing buffer
-	volatile uint8_t SPIinBufferTail;					///< The tail of the SPI ingoing buffer
-	volatile uint8_t SPIoutBufferHead;					///< The head of the SPI outgoing buffer
-	volatile uint8_t SPIoutBufferTail;					///< The tail of the SPI outgoing buffer
-	volatile uint8_t spiReceiverOn;						///< Flag to activate or not the SPI reception
+	volatile uint8_t spi_out_buffer[SPI_BUFFER_SIZE];		///< The SPI outgoing buffer of size SPI_BUFFER_SIZE
+	volatile uint8_t spi_in_buffer[SPI_BUFFER_SIZE];		///< The SPI ingoing buffer of size SPI_BUFFER_SIZE
+	volatile uint8_t spi_in_buffer_head;					///< The head of the SPI ingoing buffer
+	volatile uint8_t spi_in_buffer_tail;					///< The tail of the SPI ingoing buffer
+	volatile uint8_t spi_out_buffer_head;					///< The head of the SPI outgoing buffer
+	volatile uint8_t spi_out_buffer_tail;					///< The tail of the SPI outgoing buffer
+	volatile uint8_t spi_receiver_on;						///< Flag to activate or not the SPI reception
 	volatile uint8_t traffic;							///< Read incoming data from SPI port
 	volatile uint8_t transmission_in_progress;			///< Flag to know if there is a transmission going on
 	volatile uint8_t automatic;							///< Flag to send automatically over SPI or pause/stop transmission
-	volatile functionpointer* callbackFunction;			///< The callback function that gets called when the buffer is empty
+	volatile function_pointer_t* callback_function;			///< The callback function that gets called when the buffer is empty
 	struct spi_device adc_spi;							///< The SPI device
 } spi_buffer_t;
 
@@ -99,9 +99,9 @@ void spi_buffered_trigger_DMA(int32_t spi_index, int32_t block_size);
  * \brief	Specify a callback function, that gets called when the SPI buffer is empty
  *
  * \param	spi_index			The index of the SPI
- * \param	functionPointer		The pointer to the callback function
+ * \param	function_pointer		The pointer to the callback function
  */
-void spi_buffered_set_callback(int32_t spi_index, functionpointer* functionPointer);
+void spi_buffered_set_callback(int32_t spi_index, function_pointer_t* function_pointer);
 
 /**
  * \brief	Enables SPI communication

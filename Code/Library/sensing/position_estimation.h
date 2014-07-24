@@ -58,7 +58,7 @@ typedef struct
 	float last_vel[3];								///< The last 3D velocity
 
 	local_coordinates_t local_position;				///< The local position
-	local_coordinates_t lastGpsPos;					///< The coordinates of the last GPS position
+	local_coordinates_t last_gps_pos;					///< The coordinates of the last GPS position
 	
 	float gravity;
 	

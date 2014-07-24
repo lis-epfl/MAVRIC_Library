@@ -103,13 +103,15 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 							&config->mavlink_stream_config	);
 
 	mavlink_message_handler_init(	&mavlink_communication->message_handler, 
-									&config->message_handler_config	);
+									&config->message_handler_config,
+									&mavlink_communication->mavlink_stream);
 
 	// Init onboard parameters
 	onboard_parameters_init(	&mavlink_communication->onboard_parameters, 
 								&config->onboard_parameters_config, 
 								&mavlink_communication->scheduler, 
-								&mavlink_communication->message_handler ); 
+								&mavlink_communication->message_handler,
+								&mavlink_communication->mavlink_stream); 
 
 	// Add callback to activate / disactivate streams
 	mavlink_message_handler_msg_callback_t callback;
