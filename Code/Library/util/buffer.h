@@ -27,7 +27,7 @@ extern "C"
 #include <stdint.h>
 #include "streams.h"
 
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 512
 #define BUFFER_MASK (BUFFER_SIZE-1)
 
 
@@ -37,8 +37,8 @@ extern "C"
 typedef struct 
 {
 	uint8_t Buffer[BUFFER_SIZE];		///<	Array of bytes containing the data
-	uint8_t buffer_head;					///<	Head of the buffer (newest byte)
-	uint8_t buffer_tail;					///<	Tail of the buffer (oldest byte)
+	uint16_t buffer_head;					///<	Head of the buffer (newest byte)
+	uint16_t buffer_tail;					///<	Tail of the buffer (oldest byte)
 	uint8_t full;						///<	Boolean, 1 if full, 0 if not
 } Buffer_t;
 
