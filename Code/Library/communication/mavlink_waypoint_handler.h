@@ -129,7 +129,7 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  */
-void waypoint_handler_waypoint_init(mavlink_waypoint_handler_t* waypoint_handler);
+void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
  * \brief	Control if time is over timeout and change sending/receiving flags to false
@@ -140,50 +140,15 @@ void waypoint_handler_waypoint_init(mavlink_waypoint_handler_t* waypoint_handler
  */
 task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_handler_t* waypoint_handler);
 
-
-
 /**
- * \brief	Initialise the position hold mode
+ * \brief	Set the waypoint depending on the reference frame defined in the current_waypoint structure
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
- * \param	local_pos				The position where the position will be held
- */
-void waypoint_handler_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t local_pos);
-
-/**
- * \brief	Sets the automatic takeoff waypoint
+ * \param	origin					The coordinates (latitude, longitude and altitude in global frame) of the local frame's origin
  *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
+ * \return	The waypoint in local coordinate frame
  */
-void waypoint_handler_waypoint_take_off_init(mavlink_waypoint_handler_t* waypoint_handler);
-
-/**
- * \brief	Drives the automatic takeoff procedure
- *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- */
-void waypoint_handler_waypoint_take_off_handler(mavlink_waypoint_handler_t* waypoint_handler);
-
-/**
- * \brief	Drives the hold position procedure
- *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- */
-void waypoint_handler_waypoint_hold_position_handler(mavlink_waypoint_handler_t* waypoint_handler);
-
-/**
- * \brief	Drives the GPS navigation procedure
- *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- */
-void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handler_t* waypoint_handler);
-
-/**
- * \brief	Drives the critical navigation behavior
- *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- */
-void waypoint_handler_waypoint_critical_handler(mavlink_waypoint_handler_t* waypoint_handler);
+local_coordinates_t waypoint_handler_set_waypoint_from_frame(mavlink_waypoint_handler_t* waypoint_handler, global_position_t origin);
 
 #ifdef __cplusplus
 }

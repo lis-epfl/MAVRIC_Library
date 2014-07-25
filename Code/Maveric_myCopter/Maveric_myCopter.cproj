@@ -1111,6 +1111,9 @@
     <Compile Include="src\config\MAVsettings\MAV203_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\main.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\mavlink_telemetry.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1577,9 +1580,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\dma_channel_config.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\main.cpp">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>

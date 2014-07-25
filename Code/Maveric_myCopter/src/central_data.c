@@ -155,7 +155,7 @@ void central_data_init()
 							&central_data.mavlink_communication,
 							&central_data.mavlink_communication.mavlink_stream);
 	waypoint_handler_init_homing_waypoint(&central_data.waypoint_handler);
-	waypoint_handler_waypoint_init(&central_data.waypoint_handler);
+	waypoint_handler_nav_plan_init(&central_data.waypoint_handler);
 	
 	delay_ms(100);
 

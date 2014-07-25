@@ -140,7 +140,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 							// Activate automatic take-off mode
 							if (state_test_if_first_time_in_mode(&central_data->state,MAV_MODE_POSITION_HOLD))
 							{
-								waypoint_handler_waypoint_take_off_init(&central_data->waypoint_handler);
+								navigation_waypoint_take_off_init(&central_data->waypoint_handler);
 							}
 							
 							if (central_data->waypoint_handler.dist2wp_sqr <= 16.0f)
@@ -162,12 +162,12 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 							// Automatic take-off mode
 							if(state_test_if_first_time_in_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION))
 							{
-								waypoint_handler_waypoint_take_off_init(&central_data->waypoint_handler);
+								navigation_waypoint_take_off_init(&central_data->waypoint_handler);
 							}
 
 							if (!central_data->state.nav_plan_active)
 							{
-								waypoint_handler_waypoint_init(&central_data->waypoint_handler);
+								waypoint_handler_nav_plan_init(&central_data->waypoint_handler);
 							}
 
 							if (central_data->waypoint_handler.dist2wp_sqr <= 16.0f)
@@ -222,7 +222,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 					state_set_new_mode(&central_data->state,MAV_MODE_POSITION_HOLD);
 					if (state_test_if_first_time_in_mode(&central_data->state,MAV_MODE_POSITION_HOLD))
 					{
-						waypoint_handler_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.local_position);
+						navigation_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.local_position);
 					}
 					break;
 
@@ -231,7 +231,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 					if (state_test_if_first_time_in_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION))
 					{
 						central_data->waypoint_handler.auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
-						waypoint_handler_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.local_position);
+						navigation_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.local_position);
 					}
 					break;
 			}
@@ -240,10 +240,10 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 			{
 				if (!central_data->state.nav_plan_active)
 				{
-					waypoint_handler_waypoint_init(&central_data->waypoint_handler);
+					waypoint_handler_nav_plan_init(&central_data->waypoint_handler);
 				}
 
-				waypoint_handler_waypoint_navigation_handler(&central_data->waypoint_handler);
+				navigation_waypoint_navigation_handler(&central_data->waypoint_handler);
 			}
 			
 			if (motor_switch == -1)
@@ -294,7 +294,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
 			if (state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_STABILIZE_ENABLED))
 			{
-				waypoint_handler_waypoint_critical_handler(&central_data->waypoint_handler);
+				navigation_waypoint_critical_handler(&central_data->waypoint_handler);
 			}
 			
 			switch (rc_check)
