@@ -100,7 +100,7 @@ static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_co
 		print_util_dbg_print(")\n");
 	}
 
-	*sim->waypoint_set = false;
+	*sim->nav_plan_active = false;
 }
 
 /** 
@@ -249,7 +249,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *serv
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, servo_output_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, servo_output_t* servos, bool* nav_plan_active, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
 {
 	int32_t i;
 	
@@ -263,7 +263,7 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	sim->gps = gps;
 	sim->state = state;
 	sim->servos = servos;
-	sim->waypoint_set = waypoint_set;
+	sim->nav_plan_active = nav_plan_active;
 	
 	// set initial conditions to a given attitude_filter
 	sim->estimated_attitude = ahrs;

@@ -45,18 +45,18 @@ task_set_t* tasks_get_main_taskset()
 	return central_data->scheduler.task_set;
 }
 
-void tasks_rc_user_channels(int8_t *chan_switch, int8_t *rc_check, int8_t *motor_state)
+void tasks_rc_user_channels(uint8_t *chan_switch, int8_t *rc_check, int8_t *motor_state)
 {
 	
 	remote_controller_get_channel_mode(chan_switch);
 	
 	if ((remote_dsm2_rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0f)
 	{
-		central_data->navigation.collision_avoidance = true;
+		central_data->state.collision_avoidance = true;
 	}
 	else
 	{
-		central_data->navigation.collision_avoidance = false;
+		central_data->state.collision_avoidance = false;
 	}
 	
 	remote_controller_get_motor_state(motor_state);
@@ -72,18 +72,18 @@ void switch_off_motors(void)
 	state_disable_mode(&central_data->state,MAV_MODE_FLAG_SAFETY_ARMED);
 	state_set_new_mode(&central_data->state,MAV_MODE_SAFE);
 	
-	central_data->waypoint_handler.in_the_air = false;
+	central_data->state.in_the_air = false;
 }
 
 task_return_t tasks_set_mav_mode_n_state(void* arg)
 {
-	int8_t channel_switches = 0;
-	int8_t RC_check = 0;
+	uint8_t channel_switches = 0;
+	int8_t rc_check = 0;
 	int8_t motor_switch = 0;
 	
 	LED_Toggle(LED1);
 	
-	tasks_rc_user_channels(&channel_switches,&RC_check, &motor_switch);
+	tasks_rc_user_channels(&channel_switches,&rc_check, &motor_switch);
 	
 	switch(central_data->state.mav_state)
 	{
@@ -103,7 +103,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 
 						position_estimation_reset_home_altitude(&central_data->position_estimator);
 						
-						central_data->waypoint_handler.waypoint_set = false;
+						central_data->state.nav_plan_active = false;
 						state_set_new_mode(&central_data->state,MAV_MODE_ATTITUDE_CONTROL);
 						break;
 
@@ -118,7 +118,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 				{
 					case 0:
 						state_set_new_mode(&central_data->state,MAV_MODE_ATTITUDE_CONTROL);
-						if (central_data->waypoint_handler.in_the_air)
+						if (central_data->state.in_the_air)
 						{
 							central_data->state.mav_state = MAV_STATE_ACTIVE;
 						}
@@ -126,14 +126,14 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 
 					case 1:
 						state_set_new_mode(&central_data->state,MAV_MODE_VELOCITY_CONTROL);
-						if (central_data->waypoint_handler.in_the_air)
+						if (central_data->state.in_the_air)
 						{
 							central_data->state.mav_state = MAV_STATE_ACTIVE;
 						}
 						break;
 
 					case 2:
-						if (central_data->waypoint_handler.in_the_air)
+						if (central_data->state.in_the_air)
 						{
 							state_set_new_mode(&central_data->state,MAV_MODE_POSITION_HOLD);
 							
@@ -154,7 +154,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 						break;
 
 					case 3:
-						if (central_data->waypoint_handler.in_the_air)
+						if (central_data->state.in_the_air)
 						{
 							//central_data->state.mav_state = MAV_STATE_ACTIVE;
 							state_set_new_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION);
@@ -165,7 +165,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 								waypoint_handler_waypoint_take_off_init(&central_data->waypoint_handler);
 							}
 
-							if (!central_data->waypoint_handler.waypoint_set)
+							if (!central_data->state.nav_plan_active)
 							{
 								waypoint_handler_waypoint_init(&central_data->waypoint_handler);
 							}
@@ -181,7 +181,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 						break;
 				}
 				
-				switch (RC_check)
+				switch (rc_check)
 				{
 					case 1:
 						break;
@@ -196,7 +196,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 				}
 				if (remote_controller_get_thrust_from_remote() > -0.7f)
 				{
-					central_data->waypoint_handler.in_the_air = true;
+					central_data->state.in_the_air = true;
 				}
 			}
 
@@ -230,7 +230,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 					state_set_new_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION);
 					if (state_test_if_first_time_in_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION))
 					{
-						central_data->waypoint_handler.auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
+						central_data->state.auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
 						waypoint_handler_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.local_position);
 					}
 					break;
@@ -238,7 +238,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 			
 			if (state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_AUTO_ENABLED))
 			{
-				if (!central_data->waypoint_handler.waypoint_set)
+				if (!central_data->state.nav_plan_active)
 				{
 					waypoint_handler_waypoint_init(&central_data->waypoint_handler);
 				}
@@ -251,7 +251,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 				switch_off_motors();
 			}
 		
-			switch (RC_check)
+			switch (rc_check)
 			{
 				case 1:
 					break;
@@ -297,20 +297,20 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 				waypoint_handler_waypoint_critical_handler(&central_data->waypoint_handler);
 			}
 			
-			switch (RC_check)
+			switch (rc_check)
 			{
 				case 1:  
 					// !! only if receivers are back, switch into appropriate mode
 					central_data->state.mav_state = MAV_STATE_ACTIVE;
-					central_data->waypoint_handler.critical_behavior = CLIMB_TO_SAFE_ALT;
-					central_data->waypoint_handler.critical_next_state = false;
+					central_data->state.critical_behavior = CLIMB_TO_SAFE_ALT;
+					central_data->state.critical_next_state = false;
 					break;
 
 				case -1:
 					break;
 
 				case -2:
-					if (central_data->waypoint_handler.critical_landing)
+					if (central_data->state.critical_landing)
 					{
 						central_data->state.mav_state = MAV_STATE_EMERGENCY;
 					}
@@ -321,7 +321,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 
 		case MAV_STATE_EMERGENCY:
 			state_set_new_mode(&central_data->state,MAV_MODE_SAFE);
-			switch (RC_check)
+			switch (rc_check)
 			{
 				case 1:
 					central_data->state.mav_state = MAV_STATE_STANDBY;
@@ -399,7 +399,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 			central_data->controls = central_data->controls_nav;
 			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
 		
-			if ((central_data->state.mav_state == MAV_STATE_CRITICAL) && (central_data->waypoint_handler.critical_behavior == FLY_TO_HOME_WP))
+			if ((central_data->state.mav_state == MAV_STATE_CRITICAL) && (central_data->state.critical_behavior == FLY_TO_HOME_WP))
 			{
 				central_data->controls.yaw_mode = YAW_COORDINATED;
 			}
@@ -417,7 +417,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
 			
 			// if no waypoints are set, we do position hold therefore the yaw mode is absolute
-			if (((central_data->waypoint_handler.waypoint_set&&(central_data->state.mav_state != MAV_STATE_STANDBY)))||((central_data->state.mav_state == MAV_STATE_CRITICAL)&&(central_data->waypoint_handler.critical_behavior == FLY_TO_HOME_WP)))
+			if (((central_data->state.nav_plan_active&&(central_data->state.mav_state != MAV_STATE_STANDBY)))||((central_data->state.mav_state == MAV_STATE_CRITICAL)&&(central_data->state.critical_behavior == FLY_TO_HOME_WP)))
 			{
 				central_data->controls.yaw_mode = YAW_COORDINATED;
 			}
@@ -492,7 +492,7 @@ void tasks_create_tasks()
 	scheduler_add_task(scheduler    , 15000                           , RUN_REGULAR , PERIODIC_RELATIVE, PRIORITY_HIGH   , &tasks_run_barometer_update                                       , 0                                                     , 1);
 	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGH   , &tasks_run_gps_update                                             , 0                                                     , 2);
 	scheduler_add_task(scheduler    , ORCA_TIME_STEP_MILLIS * 1000.0f , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update                               , (task_argument_t)&central_data->navigation		     , 3);
-	scheduler_add_task(scheduler    , 200000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&tasks_set_mav_mode_n_state                      , (task_argument_t)&central_data->state_machine         , 4);
+	scheduler_add_task(scheduler    , 200000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&state_machine_set_mav_mode_n_state              , (task_argument_t)&central_data->state_machine         , 4);
 	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&mavlink_communication_update                    , (task_argument_t)&central_data->mavlink_communication , 5);
 	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&analog_monitor_update                           , (task_argument_t)&central_data->analog_monitor        , 6);
 	scheduler_add_task(scheduler    , 10000                           , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&waypoint_handler_control_time_out_waypoint_msg  , (task_argument_t)&central_data->waypoint_handler      , 7);

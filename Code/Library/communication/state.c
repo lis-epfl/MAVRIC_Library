@@ -45,6 +45,25 @@ void state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 		state->mav_mode |= !MAV_MODE_FLAG_HIL_ENABLED;
 	}
 	
+	state->nav_plan_active = false;
+	state->hold_waypoint_set = false;
+	
+	state->critical_behavior = CLIMB_TO_SAFE_ALT;
+	state->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
+	state->critical_landing = false;
+	state->automatic_landing = false;
+	
+	state->automatic_landing = false;
+	state->in_the_air = false;
+	
+	state->collision_avoidance = false;
+	
+	state->reset_position = false;
+	
+	state->channel_switches = 0;
+	state->rc_check = 0;
+	state->motor_state = 0;
+	
 	// Add callbacks for onboard parameters requests
 	mavlink_message_handler_msg_callback_t callback;
 	

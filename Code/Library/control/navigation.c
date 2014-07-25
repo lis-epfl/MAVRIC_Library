@@ -166,11 +166,8 @@ static void navigation_collision_avoidance(navigation_t* navigation)
 	{
 		rel_heading = 0.0f;
 	}
-	
-	if (navigation->collision_avoidance)
-	{		
-		rel_heading = maths_calc_smaller_angle(atan2(new_velocity[Y],new_velocity[X]) - navigation->position_estimator->local_position.heading);
-	}
+		
+	rel_heading = maths_calc_smaller_angle(atan2(new_velocity[Y],new_velocity[X]) - navigation->position_estimator->local_position.heading);
 	
 	navigation->controls_nav->tvel[X] = new_velocity[X];
 	navigation->controls_nav->tvel[Y] = new_velocity[Y];
@@ -188,7 +185,8 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 																					navigation->position_estimator->local_position.pos);
 	navigation_set_speed_command(rel_pos, navigation);
 	
-	if (navigation->collision_avoidance)	{
+	if (navigation->state->collision_avoidance)
+	{
 		navigation_collision_avoidance(navigation);
 	}
 	
@@ -226,8 +224,6 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	
 	navigation->loop_count = 0;
 	
-	navigation->collision_avoidance = false;
-	
 	print_util_dbg_print("Navigation initialized.\n");
 }
 
@@ -250,7 +246,7 @@ task_return_t navigation_update(navigation_t* navigation)
 				case MAV_MODE_GPS_NAVIGATION:
 					waypoint_handler_waypoint_navigation_handler(navigation->waypoint_handler);
 					
-					if (navigation->waypoint_handler->waypoint_set)
+					if (navigation->state->nav_plan_active)
 					{
 						navigation_run(navigation->waypoint_handler->waypoint_coordinates,navigation);
 					}
@@ -293,7 +289,7 @@ task_return_t navigation_send_collision_avoidance_status(navigation_t *navigatio
 										&msg,
 										time_keeper_get_millis(),
 										"Coll_Avoidance",
-										navigation_data->collision_avoidance	);
+										navigation_data->state->collision_avoidance	);
 	
 	mavlink_stream_send(navigation_data->mavlink_stream,&msg);
 	

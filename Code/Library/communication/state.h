@@ -48,6 +48,25 @@ typedef enum
 	MAV_MODE_GPS_NAVIGATION = 148
 } mav_mode_t;
 
+/**
+ * \brief	The critical behavior enum
+ */
+typedef enum
+{
+	CLIMB_TO_SAFE_ALT,											///< First critical behavior
+	FLY_TO_HOME_WP,												///< Second critical behavior, comes after CLIMB_TO_SAFE_ALT
+	CRITICAL_LAND												///< Third critical behavior, comes after FLY_TO_HOME_WP
+} critical_behavior_enum;
+
+/**
+ * \brief	The auto-landing enum
+ */
+typedef enum
+{
+	DESCENT_TO_SMALL_ALTITUDE,									///< First auto landing behavior
+	DESCENT_TO_GND												///< Second auto landing behavior, comes after DESCENT_TO_SMAL_ALTITUDE
+} auto_landing_behavior_t;
+
 typedef enum MAV_MODE_FLAG mav_flag_t;
 
 /**
@@ -69,8 +88,27 @@ typedef struct
 	uint16_t sensor_present;					///< The type of sensors that are present on the autopilot (Value of 0: not present. Value of 1: present. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
 	uint16_t sensor_enabled;					///< The sensors enabled on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
 	uint16_t sensor_health;						///< The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
+
+	bool nav_plan_active;											///< Flag to tell that a flight plan (min 1 waypoint) is active
+	bool hold_waypoint_set;										///< Flag to tell if the hold position waypoin is set
 	
-	const analog_monitor_t* analog_monitor;				///< The pointer to the analog monitor structure
+	critical_behavior_enum critical_behavior;					///< The critical behavior enum
+	auto_landing_behavior_t auto_landing_behavior;				///< The autolanding behavior enum
+	
+	bool automatic_landing;										///< Flag to initiate the auto landing procedure
+	bool in_the_air;											///< Flag to tell whether the vehicle is airborne or not
+	bool critical_landing;										///< Flag to execute critical landing (switching motors off)
+	bool critical_next_state;									///< Flag to change critical state in its dedicated state machine
+	
+	uint8_t channel_switches;
+	int8_t rc_check;
+	int8_t motor_state;
+	
+	bool collision_avoidance;							///< Flag to tell whether the collision avoidance is active or not
+	
+	bool reset_position;								///< Flag to reset the position
+	
+	const analog_monitor_t* analog_monitor;			///< The pointer to the analog monitor structure
 	const mavlink_stream_t* mavlink_stream;		///< Pointer to the mavlin kstream structure
 } state_t;
 

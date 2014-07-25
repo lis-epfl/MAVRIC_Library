@@ -228,19 +228,19 @@ static inline void remote_controller_get_channel_mode(uint8_t* chan_switch)
 	{
 		if (remote_dsm2_rc_get_channel(RC_SAFETY) < 0)
 		{
-			*chan_switch |= 0x00;
+			*chan_switch = 0;
 		}
 		else if(remote_dsm2_rc_get_channel(RC_SAFETY) > 0 && remote_dsm2_rc_get_channel(RC_ID_MODE) < 0)
 		{
-			*chan_switch |= 0x01;
+			*chan_switch = 1;
 		}
 		else if (remote_dsm2_rc_get_channel(RC_SAFETY) > 0 && remote_dsm2_rc_get_channel(RC_ID_MODE) > 20)
 		{
-			*chan_switch |= 0x03;
+			*chan_switch = 3;
 		}
 		else
 		{
-			*chan_switch |= 0x02;
+			*chan_switch = 2;
 		}
 	}
 #endif

@@ -31,6 +31,7 @@ extern "C" {
 #include "orca.h"
 #include "tasks.h"
 #include "mavlink_communication.h"
+#include "state.h"
 #include <stdbool.h>
 
 /**
@@ -44,8 +45,6 @@ typedef struct
 	float soft_zone_size;								///< Soft zone of the velocity controller
 	
 	uint8_t loop_count;									///< A counter for sending mavlink messages at a lower rate than the function
-	
-	bool collision_avoidance;							///< Flag to tell whether the collision avoidance is active or not
 	
 	control_command_t *controls_nav;					///< The pointer to the navigation control structure
 	const quat_t *qe;									///< The pointer to the attitude quaternion structure

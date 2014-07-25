@@ -1129,9 +1129,6 @@
     <None Include="src\asf.h">
       <SubType>compile</SubType>
     </None>
-    <Compile Include="Library\communication\mavlink_bridge.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\communication\mavlink_stream.c">
       <SubType>compile</SubType>
     </Compile>
