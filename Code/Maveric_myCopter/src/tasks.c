@@ -230,7 +230,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 					state_set_new_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION);
 					if (state_test_if_first_time_in_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION))
 					{
-						central_data->state.auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
+						central_data->waypoint_handler.auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
 						waypoint_handler_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.local_position);
 					}
 					break;
@@ -302,15 +302,15 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 				case 1:  
 					// !! only if receivers are back, switch into appropriate mode
 					central_data->state.mav_state = MAV_STATE_ACTIVE;
-					central_data->state.critical_behavior = CLIMB_TO_SAFE_ALT;
-					central_data->state.critical_next_state = false;
+					central_data->waypoint_handler.critical_behavior = CLIMB_TO_SAFE_ALT;
+					central_data->waypoint_handler.critical_next_state = false;
 					break;
 
 				case -1:
 					break;
 
 				case -2:
-					if (central_data->state.critical_landing)
+					if (central_data->waypoint_handler.critical_landing)
 					{
 						central_data->state.mav_state = MAV_STATE_EMERGENCY;
 					}
@@ -399,7 +399,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 			central_data->controls = central_data->controls_nav;
 			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
 		
-			if ((central_data->state.mav_state == MAV_STATE_CRITICAL) && (central_data->state.critical_behavior == FLY_TO_HOME_WP))
+			if ((central_data->state.mav_state == MAV_STATE_CRITICAL) && (central_data->waypoint_handler.critical_behavior == FLY_TO_HOME_WP))
 			{
 				central_data->controls.yaw_mode = YAW_COORDINATED;
 			}
@@ -417,7 +417,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
 			
 			// if no waypoints are set, we do position hold therefore the yaw mode is absolute
-			if (((central_data->state.nav_plan_active&&(central_data->state.mav_state != MAV_STATE_STANDBY)))||((central_data->state.mav_state == MAV_STATE_CRITICAL)&&(central_data->state.critical_behavior == FLY_TO_HOME_WP)))
+			if (((central_data->state.nav_plan_active&&(central_data->state.mav_state != MAV_STATE_STANDBY)))||((central_data->state.mav_state == MAV_STATE_CRITICAL)&&(central_data->waypoint_handler.critical_behavior == FLY_TO_HOME_WP)))
 			{
 				central_data->controls.yaw_mode = YAW_COORDINATED;
 			}

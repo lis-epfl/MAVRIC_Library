@@ -677,21 +677,24 @@ static void waypoint_handler_clear_waypoint_list(mavlink_waypoint_handler_t* way
 	if (((uint8_t)packet.target_system == (uint8_t)waypoint_handler->mavlink_stream->sysid)
 	&& ((uint8_t)packet.target_component == (uint8_t)MAV_COMP_ID_MISSIONPLANNER))
 	{
-		waypoint_handler->number_of_waypoints = 0;
-		waypoint_handler->num_waypoint_onboard = 0;
-		waypoint_handler->state->nav_plan_active = 0;
-		waypoint_handler_waypoint_hold_init(waypoint_handler, waypoint_handler->position_estimator->local_position);
+		if (waypoint_handler->number_of_waypoints > 0)
+		{
+			waypoint_handler->number_of_waypoints = 0;
+			waypoint_handler->num_waypoint_onboard = 0;
+			waypoint_handler->state->nav_plan_active = 0;
+			waypoint_handler_waypoint_hold_init(waypoint_handler, waypoint_handler->position_estimator->local_position);
 		
-		mavlink_message_t msg;
-		mavlink_msg_mission_ack_pack( 	waypoint_handler->mavlink_stream->sysid,
-										waypoint_handler->mavlink_stream->compid,
-										&msg,
-										rec->msg.sysid,
-										rec->msg.compid,
-										MAV_CMD_ACK_OK);
-		mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
+			mavlink_message_t msg;
+			mavlink_msg_mission_ack_pack( 	waypoint_handler->mavlink_stream->sysid,
+											waypoint_handler->mavlink_stream->compid,
+											&msg,
+											rec->msg.sysid,
+											rec->msg.compid,
+											MAV_CMD_ACK_OK);
+			mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 								
-		print_util_dbg_print("Cleared Waypoint list.\n");
+			print_util_dbg_print("Cleared Waypoint list.\n");
+		}
 	}
 }
 
@@ -832,7 +835,7 @@ static void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_h
 	
 	print_util_dbg_print("Auto-landing procedure initialised.\n");
 	
-	switch(waypoint_handler->state->auto_landing_behavior)
+	switch(waypoint_handler->auto_landing_behavior)
 	{
 		case DESCENT_TO_SMALL_ALTITUDE:
 		local_position = waypoint_handler->position_estimator->local_position;
@@ -856,11 +859,11 @@ static void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_h
 	
 	if (waypoint_handler->dist2wp_sqr < 0.5f)
 	{
-		switch(waypoint_handler->state->auto_landing_behavior)
+		switch(waypoint_handler->auto_landing_behavior)
 		{
 			case DESCENT_TO_SMALL_ALTITUDE:
 				print_util_dbg_print("Automatic-landing: descent_to_GND\n");
-				waypoint_handler->state->critical_behavior = FLY_TO_HOME_WP;
+				waypoint_handler->critical_behavior = FLY_TO_HOME_WP;
 				break;
 			case DESCENT_TO_GND:
 				
@@ -967,6 +970,13 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	
 	waypoint_handler->sending_waypoint_num = 0;
 	waypoint_handler->waypoint_request_number = 0;
+	
+	waypoint_handler->hold_waypoint_set = false;
+	
+	waypoint_handler->critical_behavior = CLIMB_TO_SAFE_ALT;
+	waypoint_handler->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
+	waypoint_handler->critical_landing = false;
+	waypoint_handler->automatic_landing = false;
 	
 	waypoint_handler->waypoint_sending = false;
 	waypoint_handler->waypoint_receiving = false;
@@ -1247,7 +1257,7 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
 
 void waypoint_handler_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t local_pos)
 {
-	waypoint_handler->state->hold_waypoint_set = true;
+	waypoint_handler->hold_waypoint_set = true;
 	
 	waypoint_handler->waypoint_hold_coordinates = local_pos;
 	
@@ -1287,12 +1297,12 @@ void waypoint_handler_waypoint_take_off_init(mavlink_waypoint_handler_t* waypoin
 	
 	waypoint_handler->dist2wp_sqr = 100.0f; // same position, 10m above => dist_sqr = 100.0f
 	
-	waypoint_handler->state->hold_waypoint_set = true;
+	waypoint_handler->hold_waypoint_set = true;
 }
 
 void waypoint_handler_waypoint_take_off_handler(mavlink_waypoint_handler_t* waypoint_handler)
 {
-	if (!waypoint_handler->state->hold_waypoint_set)
+	if (!waypoint_handler->hold_waypoint_set)
 	{
 		waypoint_handler_waypoint_take_off_init(waypoint_handler);
 	}
@@ -1305,11 +1315,15 @@ void waypoint_handler_waypoint_take_off_handler(mavlink_waypoint_handler_t* wayp
 
 void waypoint_handler_waypoint_hold_position_handler(mavlink_waypoint_handler_t* waypoint_handler)
 {
+	if (waypoint_handler->mode != waypoint_handler->state->mav_mode)
+	{
+		waypoint_handler->hold_waypoint_set = false;
+	}
 	if (!waypoint_handler->state->nav_plan_active)
 	{
 		waypoint_handler_waypoint_init(waypoint_handler);
 	}
-	if (!waypoint_handler->state->hold_waypoint_set)
+	if (!waypoint_handler->hold_waypoint_set)
 	{
 		waypoint_handler_waypoint_hold_init(waypoint_handler, waypoint_handler->position_estimator->local_position);
 	}
@@ -1317,6 +1331,12 @@ void waypoint_handler_waypoint_hold_position_handler(mavlink_waypoint_handler_t*
 
 void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handler_t* waypoint_handler)
 {
+	if (waypoint_handler->mode != waypoint_handler->state->mav_mode)
+	{
+		waypoint_handler->hold_waypoint_set = false;
+	}
+	
+	
 	if (waypoint_handler->state->nav_plan_active)
 	{
 		uint8_t i;
@@ -1383,7 +1403,7 @@ void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handler_t* wa
 	}
 	else
 	{
-		if (!waypoint_handler->state->hold_waypoint_set)
+		if (!waypoint_handler->hold_waypoint_set)
 		{
 			waypoint_handler_waypoint_hold_init(waypoint_handler, waypoint_handler->position_estimator->local_position);
 		}
@@ -1396,15 +1416,15 @@ void waypoint_handler_waypoint_critical_handler(mavlink_waypoint_handler_t* wayp
 	float rel_pos[3];
 	uint8_t i;
 	
-	if (!(waypoint_handler->state->critical_next_state))
+	if (!(waypoint_handler->critical_next_state))
 	{
-		waypoint_handler->state->critical_next_state = true;
+		waypoint_handler->critical_next_state = true;
 		
 		Aero_Attitude_t aero_attitude;
 		aero_attitude=coord_conventions_quat_to_aero(waypoint_handler->ahrs->qe);
 		waypoint_handler->waypoint_critical_coordinates.heading = aero_attitude.rpy[2];
 		
-		switch (waypoint_handler->state->critical_behavior)
+		switch (waypoint_handler->critical_behavior)
 		{
 			case CLIMB_TO_SAFE_ALT:
 				waypoint_handler->waypoint_critical_coordinates.pos[X] = waypoint_handler->position_estimator->local_position.pos[X];
@@ -1434,22 +1454,22 @@ void waypoint_handler_waypoint_critical_handler(mavlink_waypoint_handler_t* wayp
 	
 	if (waypoint_handler->dist2wp_sqr < 3.0f)
 	{
-		waypoint_handler->state->critical_next_state = false;
-		switch (waypoint_handler->state->critical_behavior)
+		waypoint_handler->critical_next_state = false;
+		switch (waypoint_handler->critical_behavior)
 		{
 			case CLIMB_TO_SAFE_ALT:
 				print_util_dbg_print("Critical State! Flying to home waypoint.\n");
-				waypoint_handler->state->critical_behavior = FLY_TO_HOME_WP;
+				waypoint_handler->critical_behavior = FLY_TO_HOME_WP;
 				break;
 				
 			case FLY_TO_HOME_WP:
 				print_util_dbg_print("Critical State! Performing critical landing.\n");
-				waypoint_handler->state->critical_behavior = CRITICAL_LAND;
+				waypoint_handler->critical_behavior = CRITICAL_LAND;
 				break;
 				
 			case CRITICAL_LAND:
 				print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\n");
-				waypoint_handler->state->critical_landing = true;
+				waypoint_handler->critical_landing = true;
 				break;
 		}
 	}

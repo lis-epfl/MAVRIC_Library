@@ -281,6 +281,8 @@ task_return_t navigation_update(navigation_t* navigation)
 			break;
 	}
 	
+	navigation->waypoint_handler->mode = navigation->state->mav_mode;
+	
 	return TASK_RUN_SUCCESS;
 }
 

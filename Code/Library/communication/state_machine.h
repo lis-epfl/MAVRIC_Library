@@ -30,6 +30,10 @@ extern "C" {
 
 typedef struct 
 {
+	uint8_t channel_switches;							///< State of the switches of the remote
+	int8_t rc_check;									///< State of the remote (receiving signal or not)
+	int8_t motor_state;									///< State of the motors to switch on and off
+	
 	mavlink_waypoint_handler_t* waypoint_handler;
 	state_t* state;
 	simulation_model_t *sim_model;

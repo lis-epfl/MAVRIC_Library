@@ -43,17 +43,21 @@ void state_machine_init(state_machine_t *state_machine, state_t* state, mavlink_
 	state_machine->waypoint_handler = waypoint_handler;
 	state_machine->state = state;
 	state_machine->sim_model = sim_model;
+		
+	state_machine->channel_switches = 0;
+	state_machine->rc_check = 0;
+	state_machine->motor_state = 0;
 	
 	print_util_dbg_print("State machine initialise.\r");
 }
 
 void state_machine_rc_user_channels(state_machine_t* state_machine)
 {
-	state_machine->state->rc_check = remote_dsm2_rc_check_receivers();
+	state_machine->rc_check = remote_dsm2_rc_check_receivers();
 	
-	if (state_machine->state->rc_check == 1)
+	if (state_machine->rc_check == 1)
 	{
-		remote_controller_get_channel_mode(&state_machine->state->channel_switches);
+		remote_controller_get_channel_mode(&state_machine->channel_switches);
 	}
 	
 	if ((remote_dsm2_rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0f)
@@ -65,7 +69,7 @@ void state_machine_rc_user_channels(state_machine_t* state_machine)
 		state_machine->state->collision_avoidance = false;
 	}
 	
-	remote_controller_get_motor_state(&state_machine->state->motor_state);
+	remote_controller_get_motor_state(&state_machine->motor_state);
 }
 
 void state_machine_switch_off_motors(state_machine_t* state_machine)
@@ -78,8 +82,8 @@ void state_machine_switch_off_motors(state_machine_t* state_machine)
 	
 	state_machine->state->in_the_air = false;
 	
-	state_machine->state->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
-	state_machine->state->critical_behavior = CLIMB_TO_SAFE_ALT;
+	state_machine->waypoint_handler->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
+	state_machine->waypoint_handler->critical_behavior = CLIMB_TO_SAFE_ALT;
 }
 
 task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
@@ -98,9 +102,9 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 			break;
 
 		case MAV_STATE_STANDBY:
-			if (state_machine->state->motor_state == 1)
+			if (state_machine->motor_state == 1)
 			{
-				switch(state_machine->state->channel_switches)
+				switch(state_machine->channel_switches)
 				{
 					case 0:
 						print_util_dbg_print("Switching on the motors!\n");
@@ -118,7 +122,7 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 			}
 			if (state_test_if_in_flag_mode(state_machine->state,MAV_MODE_FLAG_SAFETY_ARMED))
 			{
-				switch (state_machine->state->channel_switches)
+				switch (state_machine->channel_switches)
 				{
 					case 0:
 						state_set_new_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL);
@@ -142,11 +146,7 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 							state_set_new_mode(state_machine->state,MAV_MODE_POSITION_HOLD);
 					
 							// Activate automatic take-off mode
-							if (state_test_if_first_time_in_mode(state_machine->state,MAV_MODE_POSITION_HOLD))
-							{
-								state_machine->state->hold_waypoint_set = false;
-							}
-							else
+							if (!state_test_if_first_time_in_mode(state_machine->state,MAV_MODE_POSITION_HOLD))
 							{
 								if (state_machine->waypoint_handler->dist2wp_sqr <= 16.0f)
 								{
@@ -166,11 +166,7 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 							state_set_new_mode(state_machine->state,MAV_MODE_GPS_NAVIGATION);
 					
 							// Automatic take-off mode
-							if(state_test_if_first_time_in_mode(state_machine->state,MAV_MODE_GPS_NAVIGATION))
-							{
-								state_machine->state->hold_waypoint_set = false;
-							}
-							else
+							if(!state_test_if_first_time_in_mode(state_machine->state,MAV_MODE_GPS_NAVIGATION))
 							{
 								if (state_machine->waypoint_handler->dist2wp_sqr <= 16.0f)
 								{
@@ -184,7 +180,7 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 						break;
 				}
 			
-				switch (state_machine->state->rc_check)
+				switch (state_machine->rc_check)
 				{
 					case 1:
 						break;
@@ -205,7 +201,7 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 			break;
 
 		case MAV_STATE_ACTIVE:
-			switch(state_machine->state->channel_switches)
+			switch(state_machine->channel_switches)
 			{
 				case 0:
 					state_set_new_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL);
@@ -217,22 +213,14 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 
 				case 2:
 					state_set_new_mode(state_machine->state,MAV_MODE_POSITION_HOLD);
-					if (state_test_if_first_time_in_mode(state_machine->state,MAV_MODE_POSITION_HOLD))
-					{
-						state_machine->state->hold_waypoint_set = false;
-					}
 					break;
 
 				case 3:
 					state_set_new_mode(state_machine->state,MAV_MODE_GPS_NAVIGATION);
-					if (state_test_if_first_time_in_mode(state_machine->state,MAV_MODE_GPS_NAVIGATION))
-					{
-						state_machine->state->hold_waypoint_set = false;
-					}
 					break;
 			}
 		
-			switch (state_machine->state->rc_check)
+			switch (state_machine->rc_check)
 			{
 				case 1:
 					break;
@@ -248,7 +236,7 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 			break;
 
 		case MAV_STATE_CRITICAL:
-			switch(state_machine->state->channel_switches)
+			switch(state_machine->channel_switches)
 			{
 				case 0:
 					state_set_new_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL);
@@ -267,13 +255,13 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 					break;
 			}
 			
-			switch (state_machine->state->rc_check)
+			switch (state_machine->rc_check)
 			{
 				case 1:
 					// !! only if receivers are back, switch into appropriate mode
 					state_machine->state->mav_state = MAV_STATE_ACTIVE;
-					state_machine->state->critical_behavior = CLIMB_TO_SAFE_ALT;
-					state_machine->state->critical_next_state = false;
+					state_machine->waypoint_handler->critical_behavior = CLIMB_TO_SAFE_ALT;
+					state_machine->waypoint_handler->critical_next_state = false;
 					break;
 
 				case -1:
@@ -290,7 +278,7 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 						print_util_dbg_print("Attitude mode, direct to Emergency state_machine->state.\r");
 						state_machine->state->mav_state = MAV_STATE_EMERGENCY;
 					}
-					if (state_machine->state->critical_landing)
+					if (state_machine->waypoint_handler->critical_landing)
 					{
 						state_machine->state->mav_state = MAV_STATE_EMERGENCY;
 					}
@@ -306,7 +294,7 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 				state_machine->state->mav_state = MAV_STATE_EMERGENCY;
 			}
 
-			switch (state_machine->state->rc_check)
+			switch (state_machine->rc_check)
 			{
 				case 1:
 					state_machine->state->mav_state = MAV_STATE_STANDBY;
@@ -321,7 +309,7 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 			break;
 	}
 	
-	if (state_machine->state->motor_state == -1)
+	if (state_machine->motor_state == -1)
 	{
 		state_machine_switch_off_motors(state_machine);
 	}

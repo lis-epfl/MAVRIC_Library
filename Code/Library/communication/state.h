@@ -90,19 +90,8 @@ typedef struct
 	uint16_t sensor_health;								///< The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
 
 	bool nav_plan_active;								///< Flag to tell that a flight plan (min 1 waypoint) is active
-	bool hold_waypoint_set;								///< Flag to tell if the hold position waypoin is set
 	
-	critical_behavior_enum critical_behavior;			///< The critical behavior enum
-	auto_landing_behavior_t auto_landing_behavior;		///< The autolanding behavior enum
-	
-	bool automatic_landing;								///< Flag to initiate the auto landing procedure
 	bool in_the_air;									///< Flag to tell whether the vehicle is airborne or not
-	bool critical_landing;								///< Flag to execute critical landing (switching motors off)
-	bool critical_next_state;							///< Flag to change critical state in its dedicated state machine
-	
-	uint8_t channel_switches;							///< State of the switches of the remote
-	int8_t rc_check;									///< State of the remote (receiving signal or not)
-	int8_t motor_state;									///< State of the motors to switch on and off
 	
 	bool collision_avoidance;							///< Flag to tell whether the collision avoidance is active or not
 	
