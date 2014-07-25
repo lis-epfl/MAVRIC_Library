@@ -164,18 +164,22 @@ void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
 					state->mav_state = MAV_STATE_STANDBY;
 					state->mav_mode = MAV_MODE_MANUAL_DISARMED;
 					break;
+					
 				case MAV_MODE_MANUAL_ARMED:
 					state->mav_state = MAV_STATE_ACTIVE;
 					state->mav_mode = MAV_MODE_MANUAL_ARMED;
 					break;
+					
 				case MAV_MODE_STABILIZE_ARMED:
 					state->mav_state = MAV_STATE_ACTIVE;
 					state->mav_mode = MAV_MODE_STABILIZE_ARMED;
 					break;
+					
 				case MAV_MODE_GUIDED_ARMED:
 					state->mav_state = MAV_STATE_ACTIVE;
 					state->mav_mode = MAV_MODE_GUIDED_ARMED;
 					break;
+					
 				case MAV_MODE_AUTO_ARMED:
 					state->mav_state = MAV_STATE_ACTIVE;
 					state->mav_mode = MAV_MODE_AUTO_ARMED;
