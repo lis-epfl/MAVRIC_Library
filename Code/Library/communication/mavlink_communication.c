@@ -86,6 +86,10 @@ static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler
 					scheduler_change_task_period(task, SCHEDULER_TIMEBASE / (uint32_t)request.req_message_rate);
 				}
 			}
+			else
+			{
+				print_util_dbg_print("This stream ID is not registred and cannot be activated.\r");
+			}
 		}
 	}	
 }

@@ -46,7 +46,7 @@ typedef struct
 typedef struct
 {
 	Stabiliser_Stack_copter_t* stabiliser_stack;	///< The pointer to the PID parameters values for the stacked controller 
-	control_command_t* controls;					///< The pointer to the control structure
+	const control_command_t* controls;					///< The pointer to the control structure
 	const imu_t* imu;								///< The pointer to the IMU structure
 	const ahrs_t* ahrs;								///< The pointer to the attitude estimation structure
 	const position_estimator_t* pos_est;			///< The pointer to the position estimation structure
@@ -64,7 +64,7 @@ typedef struct
  * \param	pos_est					The pointer to the position estimation structure
  * \param	servos					The pointer to the array of servos command values
  */
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servo_output_t* servos);
+void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, const control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servo_output_t* servos);
 
 /**
  * \brief							Main Controller for controlling and stabilizing the quad
