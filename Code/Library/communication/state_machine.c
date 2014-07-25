@@ -41,7 +41,7 @@ void state_machine_switch_off_motors(state_machine_t* state_machine);
 void state_machine_init(state_machine_t *state_machine, state_t* state, mavlink_waypoint_handler_t* waypoint_handler, simulation_model_t *sim_model)
 {
 	state_machine->waypoint_handler = waypoint_handler;
-	state_machine->state = state_machine->state;
+	state_machine->state = state;
 	state_machine->sim_model = sim_model;
 	
 	print_util_dbg_print("State machine initialise.\r");
@@ -53,7 +53,6 @@ void state_machine_rc_user_channels(state_machine_t* state_machine)
 	
 	if (state_machine->state->rc_check == 1)
 	{
-		print_util_dbg_print("Updating channel switch, ");
 		remote_controller_get_channel_mode(&state_machine->state->channel_switches);
 	}
 	
