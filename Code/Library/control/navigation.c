@@ -160,7 +160,7 @@ static void navigation_collision_avoidance(navigation_t* navigation)
 	float rel_heading;
 	
 	// Implement other velocity-based collision avoidance strategy here
-	orca_computeNewVelocity(navigation->orca, navigation->controls_nav->tvel, new_velocity);
+	orca_compute_new_velocity(navigation->orca, navigation->controls_nav->tvel, new_velocity);
 	
 	if (((maths_f_abs(new_velocity[X])<=1.0f)&&(maths_f_abs(new_velocity[Y])<=1.0f))||((maths_f_abs(new_velocity[X])<=5.0f)&&(maths_f_abs(new_velocity[Y])<=5.0f)&&(maths_f_abs(new_velocity[Z])>=3.0f)))
 	{
