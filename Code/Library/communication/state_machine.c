@@ -28,8 +28,8 @@
  * 						3) Check the receivers
  * 
  * \param	chanSwitch	The pointer to set the switch mode
- * \param	rc_check	The pointer to the state of the remote
- * \param	motorstate	The pointer to the motor state
+ * \param	rc_check	The pointer to the state_machine->state of the remote
+ * \param	motorstate	The pointer to the motor state_machine->state
  */
 void state_machine_rc_user_channels(state_machine_t* state_machine);
 
@@ -40,8 +40,8 @@ void state_machine_switch_off_motors(state_machine_t* state_machine);
 
 void state_machine_init(state_machine_t *state_machine, state_t* state, mavlink_waypoint_handler_t* waypoint_handler, simulation_model_t *sim_model)
 {
-	state_machine->state = state;
 	state_machine->waypoint_handler = waypoint_handler;
+	state_machine->state = state_machine->state;
 	state_machine->sim_model = sim_model;
 	
 	print_util_dbg_print("State machine initialise.\r");
@@ -89,14 +89,6 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 	LED_Toggle(LED1);
 	
 	state_machine_rc_user_channels(state_machine);
-	
-	print_util_dbg_print("mode:");
-	print_util_dbg_print_num(state_machine->state->mav_mode,10);
-	print_util_dbg_print(", channel_switches :");
-	print_util_dbg_print_num(state_machine->state->channel_switches,10);
-	print_util_dbg_print(", rc_check:");
-	print_util_dbg_print_num(state_machine->state->rc_check,10);
-	print_util_dbg_print("\r");
 	
 	switch(state_machine->state->mav_state)
 	{
@@ -288,7 +280,7 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 				case -1:
 					if (state_test_if_in_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL))
 					{
-						print_util_dbg_print("Attitude mode, direct to Emergency state.\r");
+						print_util_dbg_print("Attitude mode, direct to Emergency state_machine->state.\r");
 						state_machine->state->mav_state = MAV_STATE_EMERGENCY;
 					}
 					break;
@@ -296,7 +288,7 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 				case -2:
 					if (state_test_if_in_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL))
 					{
-						print_util_dbg_print("Attitude mode, direct to Emergency state.\r");
+						print_util_dbg_print("Attitude mode, direct to Emergency state_machine->state.\r");
 						state_machine->state->mav_state = MAV_STATE_EMERGENCY;
 					}
 					if (state_machine->state->critical_landing)

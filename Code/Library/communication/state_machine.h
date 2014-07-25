@@ -30,8 +30,8 @@ extern "C" {
 
 typedef struct 
 {
-	state_t* state;
 	mavlink_waypoint_handler_t* waypoint_handler;
+	state_t* state;
 	simulation_model_t *sim_model;
 }state_machine_t;
 

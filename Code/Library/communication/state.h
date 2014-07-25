@@ -63,8 +63,8 @@ typedef enum
  */
 typedef enum
 {
-	DESCENT_TO_SMALL_ALTITUDE,									///< First auto landing behavior
-	DESCENT_TO_GND												///< Second auto landing behavior, comes after DESCENT_TO_SMAL_ALTITUDE
+	DESCENT_TO_SMALL_ALTITUDE,							///< First auto landing behavior
+	DESCENT_TO_GND										///< Second auto landing behavior, comes after DESCENT_TO_SMAL_ALTITUDE
 } auto_landing_behavior_t;
 
 typedef enum MAV_MODE_FLAG mav_flag_t;
@@ -74,42 +74,42 @@ typedef enum MAV_MODE_FLAG mav_flag_t;
  */
 typedef struct  
 {
-	uint8_t mav_mode;							///< The value of the MAV mode (MAV_MODE enum in common.h)
-	uint8_t mav_state;							///< The value of the MAV state (MAV_STATE enum in common.h)
+	uint8_t mav_mode;									///< The value of the MAV mode (MAV_MODE enum in common.h)
+	uint8_t mav_state;									///< The value of the MAV state (MAV_STATE enum in common.h)
 		
-	uint8_t mav_mode_previous;					///< The value of the MAV mode at previous time step
+	uint8_t mav_mode_previous;							///< The value of the MAV mode at previous time step
 		
-	HIL_mode simulation_mode;					///< The value of the simulation_mode (0: real, 1: simulation)
-	HIL_mode simulation_mode_previous;			///< The value of the simulation_mode at previous time step
+	HIL_mode simulation_mode;							///< The value of the simulation_mode (0: real, 1: simulation)
+	HIL_mode simulation_mode_previous;					///< The value of the simulation_mode at previous time step
 	
-	uint8_t autopilot_type;						///< The type of the autopilot (MAV_TYPE enum in common.h)
-	uint8_t autopilot_name;						///< The name of the autopilot (MAV_AUTOPILOT enum in common.h)
+	uint8_t autopilot_type;								///< The type of the autopilot (MAV_TYPE enum in common.h)
+	uint8_t autopilot_name;								///< The name of the autopilot (MAV_AUTOPILOT enum in common.h)
 	
-	uint16_t sensor_present;					///< The type of sensors that are present on the autopilot (Value of 0: not present. Value of 1: present. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
-	uint16_t sensor_enabled;					///< The sensors enabled on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
-	uint16_t sensor_health;						///< The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
+	uint16_t sensor_present;							///< The type of sensors that are present on the autopilot (Value of 0: not present. Value of 1: present. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
+	uint16_t sensor_enabled;							///< The sensors enabled on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
+	uint16_t sensor_health;								///< The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
 
-	bool nav_plan_active;											///< Flag to tell that a flight plan (min 1 waypoint) is active
-	bool hold_waypoint_set;										///< Flag to tell if the hold position waypoin is set
+	bool nav_plan_active;								///< Flag to tell that a flight plan (min 1 waypoint) is active
+	bool hold_waypoint_set;								///< Flag to tell if the hold position waypoin is set
 	
-	critical_behavior_enum critical_behavior;					///< The critical behavior enum
-	auto_landing_behavior_t auto_landing_behavior;				///< The autolanding behavior enum
+	critical_behavior_enum critical_behavior;			///< The critical behavior enum
+	auto_landing_behavior_t auto_landing_behavior;		///< The autolanding behavior enum
 	
-	bool automatic_landing;										///< Flag to initiate the auto landing procedure
-	bool in_the_air;											///< Flag to tell whether the vehicle is airborne or not
-	bool critical_landing;										///< Flag to execute critical landing (switching motors off)
-	bool critical_next_state;									///< Flag to change critical state in its dedicated state machine
+	bool automatic_landing;								///< Flag to initiate the auto landing procedure
+	bool in_the_air;									///< Flag to tell whether the vehicle is airborne or not
+	bool critical_landing;								///< Flag to execute critical landing (switching motors off)
+	bool critical_next_state;							///< Flag to change critical state in its dedicated state machine
 	
-	uint8_t channel_switches;
-	int8_t rc_check;
-	int8_t motor_state;
+	uint8_t channel_switches;							///< State of the switches of the remote
+	int8_t rc_check;									///< State of the remote (receiving signal or not)
+	int8_t motor_state;									///< State of the motors to switch on and off
 	
 	bool collision_avoidance;							///< Flag to tell whether the collision avoidance is active or not
 	
 	bool reset_position;								///< Flag to reset the position
 	
-	const analog_monitor_t* analog_monitor;			///< The pointer to the analog monitor structure
-	const mavlink_stream_t* mavlink_stream;		///< Pointer to the mavlin kstream structure
+	const analog_monitor_t* analog_monitor;				///< The pointer to the analog monitor structure
+	const mavlink_stream_t* mavlink_stream;				///< Pointer to the mavlin kstream structure
 } state_t;
 
 
