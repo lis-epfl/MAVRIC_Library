@@ -21,10 +21,22 @@
 #include "mavlink_communication.h"
 #include "print_util.h"
 
-void stabilisation_init(stabiliser_t * stabiliser, control_command_t *command, const mavlink_stream_t* mavlink_stream)
+void stabilisation_init(stabiliser_t * stabiliser, control_command_t *controls, const mavlink_stream_t* mavlink_stream)
 {
 	stabiliser->mavlink_stream = mavlink_stream;
-	command->mavlink_stream = mavlink_stream;
+	controls->mavlink_stream = mavlink_stream;
+	
+	controls->control_mode = ATTITUDE_COMMAND_MODE;
+	controls->yaw_mode = YAW_RELATIVE;
+	
+	controls->rpy[ROLL] = 0.0f;
+	controls->rpy[PITCH] = 0.0f;
+	controls->rpy[YAW] = 0.0f;
+	controls->tvel[X] = 0.0f;
+	controls->tvel[Y] = 0.0f;
+	controls->tvel[Z] = 0.0f;
+	controls->theading = 0.0f;
+	controls->thrust = -1.0f;	
 	
 	print_util_dbg_print("Stabilisation init.\n");
 }
