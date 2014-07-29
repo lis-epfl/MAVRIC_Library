@@ -219,6 +219,8 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->controls_nav->theading = 0.0f;
 	navigation->controls_nav->thrust = -1.0f;
 	
+	navigation->controls_nav->mavlink_stream = mavlink_stream;
+	
 	navigation->dist2vel_gain = 0.7f;
 	navigation->cruise_speed = 3.0f;
 	navigation->max_climb_rate = 1.0f;
