@@ -236,6 +236,24 @@ void central_data_init()
 	
 	// Init sonar
 	// i2cxl_sonar_init(&central_data.i2cxl_sonar);
+
+	// Init P^2 attitude controller
+	attitude_controller_p2_conf_t attitude_controller_p2_config =
+	{
+		.p_gain_angle =
+		{
+			1.0f, 1.0f, 1.0f
+		},
+		.p_gain_rate =
+		{
+			0.5f, 0.5f, 0.5f
+		}
+	};
+	attitude_controller_p2_init( 	&central_data.attitude_controller,
+									&attitude_controller_p2_config,
+									&central_data.attitude_command,
+									&central_data.ahrs );
+
 }
 
 central_data_t* central_data_get_pointer_to_struct(void)

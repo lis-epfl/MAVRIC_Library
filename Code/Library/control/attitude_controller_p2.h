@@ -20,7 +20,7 @@
  * 
  * in short:
  * \f$  
- * 			output = - (P_{q} . qerror) - (P_{g} . gyro)  
+ * 			output = (P_{q} . qerror) - (P_{g} . gyro)  
  * \f$
  */
 

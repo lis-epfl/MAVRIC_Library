@@ -20,7 +20,7 @@
  * 
  * in short:
  * \f$  
- * 			output = - (P_{q} . qerror) - (P_{g} . gyro)  
+ * 			output = (P_{q} . qerror) - (P_{g} . gyro)  
  * \f$
  */
 
@@ -32,7 +32,7 @@ void attitude_controller_p2_init(attitude_controller_p2_t* controller, const att
 	// Init dependencies
 	controller->attitude_command = attitude_command;
 	controller->ahrs 			 = ahrs;
-	
+
 	// Init attitude error estimator
 	attitude_error_estimator_init(&controller->attitude_error_estimator, ahrs);
 
@@ -82,7 +82,7 @@ void attitude_controller_p2_update(attitude_controller_p2_t* controller)
 	rates[2] = controller->ahrs->angular_speed[2];
 
 	// Compute outputs
-	controller->output[0] = - controller->p_gain_angle[0] * errors[0] - controller->p_gain_rate[0] * rates[0];
-	controller->output[1] = - controller->p_gain_angle[1] * errors[1] - controller->p_gain_rate[1] * rates[1];
-	controller->output[2] = - controller->p_gain_angle[2] * errors[2] - controller->p_gain_rate[2] * rates[2];
+	controller->output[0] = controller->p_gain_angle[0] * errors[0] - controller->p_gain_rate[0] * rates[0];
+	controller->output[1] = controller->p_gain_angle[1] * errors[1] - controller->p_gain_rate[1] * rates[1];
+	controller->output[2] = controller->p_gain_angle[2] * errors[2] - controller->p_gain_rate[2] * rates[2];
 }

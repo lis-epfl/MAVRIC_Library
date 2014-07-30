@@ -61,6 +61,8 @@ extern "C" {
 #include "stabilisation.h"
 #include "hud.h"
 
+#include "attitude_controller_p2.h"
+
 // TODO : update documentation
 
 /**
@@ -71,7 +73,10 @@ typedef struct  {
 
 	mavlink_communication_t mavlink_communication;
 
-	analog_monitor_t analog_monitor;										///< The analog to digital converter structure
+	attitude_controller_p2_t attitude_controller;
+	attitude_command_t attitude_command;
+
+	analog_monitor_t analog_monitor;							///< The analog to digital converter structure
 
 	imu_t imu;													///< The IMU structure
 	qfilter_t attitude_filter;									///< The qfilter structure

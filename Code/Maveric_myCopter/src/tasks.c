@@ -31,6 +31,8 @@
 #include "lsm330dlc.h"
 #include "hmc5883l.h"
 
+#include "attitude_controller_p2.h"
+
 central_data_t* central_data;
 
 /**
@@ -453,6 +455,52 @@ task_return_t tasks_run_stabilisation(void* arg)
 	return TASK_RUN_SUCCESS;
 }
 
+// new task to test P^2 attutude controller
+task_return_t tasks_run_stabilisation_test(void* arg);
+task_return_t tasks_run_stabilisation_test(void* arg)
+{
+	tasks_run_imu_update(0);
+	
+	switch(central_data->state.mav_mode - (central_data->state.mav_mode & MAV_MODE_FLAG_DECODE_POSITION_HIL))
+	{
+		case MAV_MODE_ATTITUDE_CONTROL:
+		case MAV_MODE_VELOCITY_CONTROL:
+		case MAV_MODE_POSITION_HOLD:
+		case MAV_MODE_GPS_NAVIGATION:
+			remote_controller_get_command_from_remote(&central_data->controls);
+			
+			central_data->attitude_command.rpy[0] = central_data->controls.rpy[0];
+			central_data->attitude_command.rpy[1] = central_data->controls.rpy[1];
+			central_data->attitude_command.rpy[2] = central_data->controls.rpy[2];
+			central_data->attitude_command.mode = ATTITUDE_COMMAND_MODE_RPY;
+		
+			attitude_controller_p2_update(&central_data->attitude_controller);
+			control_command_t output;
+			output.rpy[0] = central_data->attitude_controller.output[0];
+			output.rpy[1] = central_data->attitude_controller.output[1];
+			output.rpy[2] = central_data->attitude_controller.output[2];
+			output.thrust = central_data->controls.thrust;
+			stabilisation_copter_mix_to_servos_diag_quad( 	&output, 
+															central_data->servos);
+
+			break;
+		
+		default:
+			servo_pwm_failsafe(central_data->servos);
+			break;
+	}
+
+	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
+	if (!state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_HIL_ENABLED))
+	{
+		servo_pwm_set(central_data->servos);
+	}
+	
+	return TASK_RUN_SUCCESS;
+} 
+
+
+
 task_return_t tasks_run_gps_update(void* arg) 
 {
 	if (state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_HIL_ENABLED))
@@ -498,7 +546,8 @@ void tasks_create_tasks()
 	
 	scheduler_t* scheduler = &central_data->scheduler;
 
-	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation                                          , 0                                                    , 0);
+	// scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation                                          , 0                                                    , 0);
+	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation_test                                          , 0                                                    , 0);
 	scheduler_add_task(scheduler    , 15000                           , RUN_REGULAR , PERIODIC_RELATIVE, PRIORITY_HIGH   , &tasks_run_barometer_update                                       , 0                                                    , 1);
 	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGH   , &tasks_run_gps_update                                             , 0                                                    , 2);
 	scheduler_add_task(scheduler    , ORCA_TIME_STEP_MILLIS * 1000.0f , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update                               , (task_argument_t)&central_data->navigation		 , 3);
