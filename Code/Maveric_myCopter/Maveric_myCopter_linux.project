@@ -604,6 +604,9 @@
       <File Name="Library/control/orca.h"/>
       <File Name="Library/control/attitude_error_estimator.c"/>
       <File Name="Library/control/attitude_error_estimator.h"/>
+      <File Name="Library/control/attitude_controller_p2.c"/>
+      <File Name="Library/control/attitude_controller_p2.h"/>
+      <File Name="Library/control/attitude_command.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="hal">
       <File Name="Library/hal/uart_int.h"/>

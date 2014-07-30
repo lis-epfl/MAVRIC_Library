@@ -38,21 +38,21 @@ void attitude_error_estimator_init(attitude_error_estimator_t* estimator, const 
 }
 
 
-void attitude_error_estimator_set_quat_ref(attitude_error_estimator_t* estimator, quat_t quat_ref)
+void attitude_error_estimator_set_quat_ref(attitude_error_estimator_t* estimator, const quat_t quat_ref)
 {
 	estimator->quat_ref = quat_ref;
 }
 
 
-void attitude_error_estimator_set_quat_ref_from_aero(attitude_error_estimator_t* estimator, Aero_Attitude_t aero)
+void attitude_error_estimator_set_quat_ref_from_aero(attitude_error_estimator_t* estimator, const aero_attitude_t aero)
 {
 	estimator->quat_ref = coord_conventions_quaternion_from_aero(aero);
 }
 
 
-void attitude_error_estimator_set_quat_ref_from_rpy(attitude_error_estimator_t* estimator, float rpy[3])
+void attitude_error_estimator_set_quat_ref_from_rpy(attitude_error_estimator_t* estimator, const float rpy[3])
 {
-	Aero_Attitude_t aero;
+	aero_attitude_t aero;
 	aero.rpy[0] = rpy[0];
 	aero.rpy[1] = rpy[1];
 	aero.rpy[2] = rpy[2];
