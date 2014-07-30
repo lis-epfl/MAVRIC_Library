@@ -10,9 +10,9 @@
  
  
 /**
- * \file quaternion_controler.c
+ * \file attitude_error_estimator.h
  *
- * A quaternion-based attitude controller, takes a reference quaternion as input
+ * A quaternion-based attitude-error estimator, takes a reference quaternion as input
  * and provides angular errors for roll, pitch and yaw in the local frame.
  */
 
@@ -24,61 +24,62 @@
 extern "C" {
 #endif
 
-#include "maths.h"
+#include "quaternions.h"
 #include "coord_conventions.h"
+#include "ahrs.h"
 
 /**
- * \brief Quaternion controller data structure
+ * \brief Quaternion attitude error estimator data structure
  */
 typedef struct {
-	quat_t* quat_attitude;	 	///<	Pointer to attitude, must be updated externally (imu)
 	quat_t quat_ref;			///<	Reference attitude, the errors in roll pitch and yaw will be computed relative to this reference
 	float rpy_errors[3];		///<	Local errors in roll, pitch and yaw
-} quaternion_controller_t;
+	const ahrs_t* ahrs;			///<	Pointer to AHRS (current attitude), must be updated externally
+} attitude_error_estimator_t;
 
 
 /**
- * \brief               	Initialises the Uqternion controller structure
+ * \brief               	Initialises the Uqternion estimator structure
  * 
- * \param 	controller    	Pointer to data structure
- * \param 	quat_attitude 	Pointer to the quaternion attitude used as input
+ * \param 	estimator    	Pointer to data structure
+ * \param 	ahrs		 	Pointer to the estimated attitude
  */
-void quaternion_controler_init(quaternion_controller_t* controller, quat_t* quat_attitude);
+void attitude_error_estimator_init(attitude_error_estimator_t* estimator, const ahrs_t* ahrs);
 
 
 /**
  * \brief               	Updates the reference attitude
  * 
- * \param 	controller    	Pointer to data structure
+ * \param 	estimator    	Pointer to data structure
  * \param 	quat_ref      	New attitude quaternion to be used as reference
  */
-void quaternion_controller_set_quat_ref(quaternion_controller_t* controller, quat_t quat_ref);
+void attitude_error_estimator_set_quat_ref(attitude_error_estimator_t* estimator, quat_t quat_ref);
 
 
 /**
  * \brief               	Function to update the reference attitude from Euler angles
  * 
- * \param 	controller    	Pointer to data structure
+ * \param 	estimator    	Pointer to data structure
  * \param 	aero          	Roll, pitch and yaw angle given in aero_attitude_t structure (radians)
  */
-void quaternion_controller_set_quat_ref_from_aero(quaternion_controller_t* controller, Aero_Attitude_t aero);
+void attitude_error_estimator_set_quat_ref_from_aero(attitude_error_estimator_t* estimator, Aero_Attitude_t aero);
 
 
 /**
  * \brief               	Function to update the reference attitude from Euler angles
  * 
- * \param 	controller    	Pointer to data structure
+ * \param 	estimator    	Pointer to data structure
  * \param 	rpy           	Roll, pitch and yaw angle
  */
-void quaternion_controller_set_quat_ref_from_rpy(quaternion_controller_t* controller, float rpy[3]);
+void attitude_error_estimator_set_quat_ref_from_rpy(attitude_error_estimator_t* estimator, float rpy[3]);
 
 
 /**
  * \brief               	Main update function, computes the local angular errors is roll, pitch and yaw
  * 
- * \param 	controller    	Pointer to data structure (radians)
+ * \param 	estimator    	Pointer to data structure (radians)
  */
-void quaternion_controller_update(quaternion_controller_t* controller);
+void attitude_error_estimator_update(attitude_error_estimator_t* estimator);
 
 
 #ifdef __cplusplus
