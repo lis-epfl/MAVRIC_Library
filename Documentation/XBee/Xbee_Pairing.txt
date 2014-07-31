@@ -1,0 +1,30 @@
+XBee pairing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+This document describes the necessary steps to pare two XBees. 
+
+
+1) Download X-CTU from Digi:  http://www.digi.com/support/productdetail?pid=3352&type=utilities
+2) Install X-CTU.
+3) Plug Xbee ground station in USB port.
+4) Open X-CTU.
+5) In "PC Settings" tab select the corresponding COM Port (E.g: "USB Serial Port (COM78)").
+6) In "Modem Configuration" tab click "Read" to check if the reading works.
+7) In "Modem Configuration" tab click "Load" and load the file "<...>/maveric/Documentation/Xbee/Xbee-Configuration.pro".
+8) Under "Networking & Security -> PAN ID" change the ID to whatever number of 4 digits (E.g: "1234").
+9) Click "Save".
+10) Click "Write".
+11) In "PC Setings" tab and change the baud to "57600".
+12) In "Modem Configuration" tab click "Read" to check the settings.
+13) Unplug the Xbee ground station.
+14) Change  Xbee module and plug it in.
+15) Restart X-CTU.
+16) In "PC Settings" tab select the corresponding COM Port.
+17) In "PC Setings" tab and change the baud to "9600".
+18) In "Modem Configuration" tab click "Read".
+19) In "Modem Configuration" tab click "Load" and select the file that you saved before.
+20) In "Modem Configuration" tab click "Write".
+21) In "PC Setings" tab and change the baud to "57600".
+22) In "Modem Configuration" tab click "Read" to check the settings.
+23) Done. Enjoy your hobby!
