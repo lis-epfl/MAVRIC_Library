@@ -1,0 +1,14 @@
+Connect to QGroundControl
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+This document describes the necessary steps to connect to QGroundControl. 
+
+1) Download QGroundControl from "http://www.qgroundcontrol.org/downloads".
+2) Install.
+3) Open.
+4) Select "Serial link" (Plane icon).
+5) Plug in the Xbee ground station in USB port and power up the Maveric autopilot.
+6) Select Xbee ground station COM port (E.g: "COM78").
+7) Click on "Connect".
+8) Done. Enjoy your hobby!
