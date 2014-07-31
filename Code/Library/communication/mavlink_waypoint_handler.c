@@ -1289,7 +1289,7 @@ void waypoint_handler_waypoint_take_off(mavlink_waypoint_handler_t* waypoint_han
 	waypoint_handler->waypoint_hold_coordinates = waypoint_handler->position_estimator->local_position;
 	waypoint_handler->waypoint_hold_coordinates.pos[Z] = -10.0f;
 	
-	Aero_Attitude_t aero_attitude;
+	aero_attitude_t aero_attitude;
 	aero_attitude=coord_conventions_quat_to_aero(waypoint_handler->ahrs->qe);
 	waypoint_handler->waypoint_hold_coordinates.heading = aero_attitude.rpy[2];
 	
@@ -1387,7 +1387,7 @@ void waypoint_handler_waypoint_critical_handler(mavlink_waypoint_handler_t* wayp
 	{
 		waypoint_handler->critical_next_state = true;
 		
-		Aero_Attitude_t aero_attitude;
+		aero_attitude_t aero_attitude;
 		aero_attitude=coord_conventions_quat_to_aero(waypoint_handler->ahrs->qe);
 		waypoint_handler->waypoint_critical_coordinates.heading = aero_attitude.rpy[2];
 		

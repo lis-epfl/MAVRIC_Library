@@ -54,9 +54,9 @@ local_coordinates_t coord_conventions_global_to_local_position(global_position_t
 }
 
 
-Aero_Attitude_t coord_conventions_quat_to_aero(quat_t qe) 
+aero_attitude_t coord_conventions_quat_to_aero(quat_t qe) 
 {
-	Aero_Attitude_t aero;
+	aero_attitude_t aero;
 
 	aero.rpy[0] = atan2(2*(qe.s*qe.v[0] + qe.v[1]*qe.v[2]) , (qe.s*qe.s - qe.v[0]*qe.v[0] - qe.v[1]*qe.v[1] + qe.v[2]*qe.v[2])); 
 	aero.rpy[1] = -asin(2*(qe.v[0]*qe.v[2] - qe.s*qe.v[1]));
@@ -66,7 +66,7 @@ Aero_Attitude_t coord_conventions_quat_to_aero(quat_t qe)
 }
 
 
-quat_t coord_conventions_quaternion_from_aero(Aero_Attitude_t aero)
+quat_t coord_conventions_quaternion_from_aero(aero_attitude_t aero)
 {
 	quat_t quat;
 

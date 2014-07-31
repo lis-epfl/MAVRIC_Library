@@ -36,7 +36,7 @@ task_return_t hud_send_message(hud_structure_t* hud_structure)
 	float groundspeed = sqrt(hud_structure->pos_est->vel[0] * hud_structure->pos_est->vel[0] + hud_structure->pos_est->vel[1] * hud_structure->pos_est->vel[1]);
 	float airspeed=groundspeed;
 
-	Aero_Attitude_t aero_attitude;
+	aero_attitude_t aero_attitude;
 	aero_attitude = coord_conventions_quat_to_aero(hud_structure->ahrs->qe);
 	
 	int16_t heading;

@@ -68,7 +68,7 @@ void ahrs_init(ahrs_t* ahrs, mavlink_stream_t* mavlink_stream)
 
 task_return_t ahrs_send_attitude(ahrs_t* ahrs)
 {
-	Aero_Attitude_t aero_attitude;
+	aero_attitude_t aero_attitude;
 	aero_attitude = coord_conventions_quat_to_aero(ahrs->qe);
 
 	mavlink_message_t msg;
