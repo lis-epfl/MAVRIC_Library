@@ -638,8 +638,6 @@
       <File Name="Library/hal/analog_monitor.c"/>
       <File Name="Library/hal/turnigy.h"/>
       <File Name="Library/hal/ads1274.h"/>
-      <File Name="Library/hal/remote_dsm2.h"/>
-      <File Name="Library/hal/remote_dsm2.c"/>
       <File Name="Library/hal/i2c_driver_int.h"/>
       <File Name="Library/hal/i2c_driver_int.c"/>
       <File Name="Library/hal/piezo_speaker.h"/>
@@ -660,6 +658,8 @@
       <File Name="Library/hal/itg3200.h"/>
       <File Name="Library/hal/lsm330dlc.c"/>
       <File Name="Library/hal/lsm330dlc.h"/>
+      <File Name="Library/hal/spektrum_satellite.h"/>
+      <File Name="Library/hal/spektrum_satellite.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>

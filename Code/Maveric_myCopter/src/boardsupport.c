@@ -89,10 +89,10 @@ void boardsupport_init(central_data_t *central_data)
 	print_util_dbg_print("Debug stream initialised\n");
 
 	// Bind RC receiver with remote
-	//remote_dsm2_rc_activate_bind_mode();
+	//spektrum_satellite_bind();
 
 	// RC receiver initialization
-	remote_dsm2_rc_init();
+	spektrum_satellite_init();
 
 	// Init analog rails
 	central_data->analog_monitor.enable[ANALOG_RAIL_2]  = false;

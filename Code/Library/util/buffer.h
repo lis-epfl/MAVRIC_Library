@@ -40,7 +40,7 @@ typedef struct
 	uint16_t buffer_head;					///<	Head of the buffer (newest byte)
 	uint16_t buffer_tail;					///<	Tail of the buffer (oldest byte)
 	uint8_t full;						///<	Boolean, 1 if full, 0 if not
-} Buffer_t;
+} buffer_t;
 
 
 /**
@@ -48,7 +48,7 @@ typedef struct
  * 
  * @param buffer 	Pointer to buffer
  */
-void buffer_init(Buffer_t * buffer);
+void buffer_init(buffer_t * buffer);
 
 
 /**
@@ -57,7 +57,7 @@ void buffer_init(Buffer_t * buffer);
  * @param buffer 	Pointer to buffer
  * @param byte   	Byte to write
  */
-uint8_t buffer_put_lossy(Buffer_t * buffer, uint8_t byte);
+uint8_t buffer_put_lossy(buffer_t * buffer, uint8_t byte);
 
 
 /**
@@ -68,7 +68,7 @@ uint8_t buffer_put_lossy(Buffer_t * buffer, uint8_t byte);
  * 
  * @return       	Boolean, 0 if successfully added, 1 if not
  */
-uint8_t buffer_put(Buffer_t * buffer, uint8_t byte);
+uint8_t buffer_put(buffer_t * buffer, uint8_t byte);
 
 
 /**
@@ -78,7 +78,7 @@ uint8_t buffer_put(Buffer_t * buffer, uint8_t byte);
  * 
  * @return       	Oldest byte in buffer
  */
-uint8_t buffer_get(Buffer_t * buffer);
+uint8_t buffer_get(buffer_t * buffer);
 
 
 /**
@@ -87,7 +87,7 @@ uint8_t buffer_get(Buffer_t * buffer);
  * 
  * @param buffer 	Pointer to buffer
  */
-void buffer_clear(Buffer_t * buffer);
+void buffer_clear(buffer_t * buffer);
 
 
 /**
@@ -96,7 +96,7 @@ void buffer_clear(Buffer_t * buffer);
  * @param buffer 	Pointer to buffer
  * @return       	Number of available bytes
  */
-uint32_t buffer_bytes_available(Buffer_t * buffer);
+uint32_t buffer_bytes_available(buffer_t * buffer);
 
 
 /**
@@ -105,7 +105,7 @@ uint32_t buffer_bytes_available(Buffer_t * buffer);
  * @param buffer 	Pointer to buffer
  * @return       	Boolean, 1 if full, 0 if not
  */
-uint8_t buffer_full(Buffer_t * buffer);
+uint8_t buffer_full(buffer_t * buffer);
 
 
 /**
@@ -114,7 +114,7 @@ uint8_t buffer_full(Buffer_t * buffer);
  * @param buffer 	Pointer to buffer
  * @return       	Boolean, 1 if empty, 0 if not
  */
-int8_t buffer_empty(Buffer_t * buffer);
+int8_t buffer_empty(buffer_t * buffer);
 
 
 /**
@@ -124,7 +124,7 @@ int8_t buffer_empty(Buffer_t * buffer);
  * @param buffer 	Pointer to buffer
  * @param stream 	Pointer to stream
  */
-void buffer_make_buffered_stream(Buffer_t *buffer, byte_stream_t *stream);
+void buffer_make_buffered_stream(buffer_t *buffer, byte_stream_t *stream);
 
 
 /**
@@ -134,7 +134,7 @@ void buffer_make_buffered_stream(Buffer_t *buffer, byte_stream_t *stream);
  * @param buffer 	Pointer to buffer
  * @param stream 	Pointer to stream
  */
-void buffer_make_buffered_stream_lossy(Buffer_t *buffer, byte_stream_t *stream);
+void buffer_make_buffered_stream_lossy(buffer_t *buffer, byte_stream_t *stream);
 
 
 #ifdef __cplusplus

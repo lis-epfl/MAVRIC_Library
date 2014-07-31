@@ -31,6 +31,9 @@
 #include "lsm330dlc.h"
 #include "hmc5883l.h"
 
+#include "spektrum_satellite.h"
+#include "remote_controller.h"
+
 #include "attitude_controller_p2.h"
 
 central_data_t* central_data;
@@ -52,7 +55,7 @@ void tasks_rc_user_channels(uint8_t *chan_switch, int8_t *rc_check, int8_t *moto
 	
 	remote_controller_get_channel_mode(chan_switch);
 	
-	if ((remote_dsm2_rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0f)
+	if ((spektrum_satellite_get_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0f)
 	{
 		central_data->navigation.collision_avoidance = true;
 	}
@@ -63,7 +66,7 @@ void tasks_rc_user_channels(uint8_t *chan_switch, int8_t *rc_check, int8_t *moto
 	
 	remote_controller_get_motor_state(motor_state);
 	
-	*rc_check = remote_dsm2_rc_check_receivers();
+	*rc_check = spektrum_satellite_check();
 	}
 
 void switch_off_motors(void)

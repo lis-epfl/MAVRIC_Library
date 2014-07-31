@@ -10,7 +10,7 @@
 
 
 /**
-* \file remote_dsm2.h
+* \file spektrum_satellite.h
 *
 * This file is the driver for the remote control
 */
@@ -27,45 +27,44 @@
 #include <stdbool.h>
 #include "buffer.h"
 
-#define REMOTE_UART AVR32_USART1						///< Define the microcontroller pin map with the remote UART
-#define DSM_RECEIVER_PIN AVR32_PIN_PD12					///< Define the microcontroller pin map with the receiver pin
-#define RECEIVER_POWER_ENABLE_PIN AVR32_PIN_PC01		///< Define the microcontroller pin map with the receiver power enable pin
-//#define SPEKTRUM_10BIT
-
 
 /**
  * \brief Structure containing the Spektrum receiver's data
  */
 typedef struct 
 {
-	Buffer_t receiver;							///< Define a buffer for the receiver
+	buffer_t receiver;							///< Define a buffer for the receiver
 	int16_t channels[16];						///< Define an array to contain the 16 remote channels availbale
 	uint32_t last_update;						///< Define the last update time 
 	uint8_t valid;								///< Define whether a data is valid or not
 	uint32_t last_time;							///< Define last time
 	uint32_t duration;							///< Define the duration
-} Spektrum_Receiver_t;
+} spektrum_satellite_t;
 
 
 /**
- * \brief Power-on/off the receiver
- *
- * \param on if true power-on the receiver, false not implemented yet
+ * \brief Power-on the receiver
  */
-void remote_dsm2_rc_switch_power(bool on);
+void spektrum_satellite_switch_on(void);
+
+
+/**
+ * \brief Power-off the receiver
+ */
+void spektrum_satellite_switch_off(void);
 
 
 /**
  * \brief set slave receiver into bind mode. 
  * has to be called 100ms after power-up
  */
-void remote_dsm2_rc_activate_bind_mode(void);
+void spektrum_satellite_bind(void);
 
 
 /**
  * \brief Initialize UART receiver for Spektrum/DSM2 slave receivers
  */
-void remote_dsm2_rc_init (void);
+void spektrum_satellite_init(void);
 
 
 /**
@@ -75,7 +74,7 @@ void remote_dsm2_rc_init (void);
  *
  * \return the remote channel value
  */
-int16_t remote_dsm2_rc_get_channel(uint8_t index);
+int16_t spektrum_satellite_get_channel(uint8_t index);
 
 
 /**
@@ -84,18 +83,17 @@ int16_t remote_dsm2_rc_get_channel(uint8_t index);
  *
  * \param index Specify which channel we are interested in
  */
-void remote_dsm2_rc_center_channel(uint8_t index);
+void spektrum_satellite_calibrate_center(uint8_t index);
 
 
 /**
- * \brief Return the neutral position of a remote channel
- * Warning: you should ensure first that the remote has the stick in their neutral position first
+ * \brief 	Return the a remote channel taking neutral into account
  *
- * \param index Specify which channel we are interested in
+ * \param 	index 		Specify which channel we are interested in
  *
- * \return the neutral position of this remote channel
+ * \return 				
  */
-int16_t remote_dsm2_rc_get_channel_neutral(uint8_t index);
+int16_t spektrum_satellite_get_neutral(uint8_t index);
 
 
 /**
@@ -103,18 +101,8 @@ int16_t remote_dsm2_rc_get_channel_neutral(uint8_t index);
  *
  * \return the error value of receivers' checks: 0 for no error
  */
-int8_t  remote_dsm2_rc_check_receivers(void);
+int8_t  spektrum_satellite_check(void);
 
-
-/*
-control_command_t remote_dsm2_get_command_from_spektrum();
-float remote_dsm2_get_roll_from_spektrum();
-float remote_dsm2_get_pitch_from_spektrum();
-float remote_dsm2_get_yaw_from_spektrum();
-float remote_dsm2_get_thrust_from_spektrum();
-
-void remote_dsm2_get_channel_mode_spektrum(uint8_t *chan_switch);
-*/
 
 #ifdef __cplusplus
 	}
