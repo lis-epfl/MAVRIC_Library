@@ -26,6 +26,7 @@
 #include "conf_platform.h"
 #include "mavlink_communication.h"
 #include "time_keeper.h"
+#include "stabilisation.h"
 
 #ifdef SPEKTRUM_REMOTE				///< If you use the SPEKTRUM remote
 	#include "spektrum.h"

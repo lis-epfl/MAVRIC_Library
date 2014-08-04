@@ -242,11 +242,11 @@ void central_data_init()
 	{
 		.p_gain_angle =
 		{
-			0.1f, 0.1f, 0.3f
+			0.11f, 0.12f, 0.3f
 		},
 		.p_gain_rate =
 		{
-			0.07f, 0.07f, 0.3f
+			0.08f, 0.07f, 0.2f
 		}
 	};
 	attitude_controller_p2_init( 	&central_data.attitude_controller,

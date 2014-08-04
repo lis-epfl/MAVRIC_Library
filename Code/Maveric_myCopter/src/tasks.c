@@ -472,9 +472,9 @@ task_return_t tasks_run_stabilisation_test(void* arg)
 		case MAV_MODE_GPS_NAVIGATION:
 			remote_controller_get_command_from_remote(&central_data->controls);
 			
-			central_data->attitude_command.rpy[0] = central_data->controls.rpy[0];
-			central_data->attitude_command.rpy[1] = central_data->controls.rpy[1];
-			central_data->attitude_command.rpy[2] = central_data->controls.rpy[2];
+			central_data->attitude_command.rpy[0] = 2 * central_data->controls.rpy[0];
+			central_data->attitude_command.rpy[1] = 2 * central_data->controls.rpy[1];
+			central_data->attitude_command.rpy[2] = 2 * central_data->controls.rpy[2];
 			central_data->attitude_command.mode = ATTITUDE_COMMAND_MODE_RPY;
 		
 			attitude_controller_p2_update(&central_data->attitude_controller);
