@@ -33,7 +33,7 @@ extern "C" {
 #endif
 
 #include "attitude_error_estimator.h"
-#include "attitude_command.h"
+#include "control_command.h"
 #include "ahrs.h"
 
 

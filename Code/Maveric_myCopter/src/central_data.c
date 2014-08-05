@@ -100,7 +100,7 @@ void central_data_init()
 
 	delay_ms(100);
 
-	// Init ahrs
+	// Init servos
 	servo_pwm_init(central_data.servos);
 	
 	delay_ms(100);

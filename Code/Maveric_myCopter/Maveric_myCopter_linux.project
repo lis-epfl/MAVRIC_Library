@@ -607,6 +607,11 @@
       <File Name="Library/control/attitude_controller_p2.c"/>
       <File Name="Library/control/attitude_controller_p2.h"/>
       <File Name="Library/control/attitude_command.h"/>
+      <File Name="Library/control/servos_mix_quadcopter_cross.h"/>
+      <File Name="Library/control/servos_mix_quadcopter_cross.c"/>
+      <File Name="Library/control/control_command.h"/>
+      <File Name="Library/control/servos_mix_quadcopter_diag.h"/>
+      <File Name="Library/control/servos_mix_quadcopter_diag.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="hal">
       <File Name="Library/hal/uart_int.h"/>
@@ -660,6 +665,8 @@
       <File Name="Library/hal/lsm330dlc.h"/>
       <File Name="Library/hal/spektrum_satellite.h"/>
       <File Name="Library/hal/spektrum_satellite.c"/>
+      <File Name="Library/hal/servos.h"/>
+      <File Name="Library/hal/servos.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>

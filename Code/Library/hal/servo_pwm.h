@@ -12,7 +12,7 @@
 /**
 * \file servo_pwm.h
 *
-* This file is the driver for the remote control
+* This file is the driver for pwm servos
 */
 
 
