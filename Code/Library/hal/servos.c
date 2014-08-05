@@ -89,17 +89,19 @@ void servos_set_value(servos_t* servos, uint32_t servo_id, float value)
 {
 	if ( servo_id <= servos->servos_count )
 	{
-		if ( value < servos->servo[servo_id].min )
+		float trimmed_value = value + servos->servo[servo_id].trim;
+
+		if ( trimmed_value < servos->servo[servo_id].min )
 		{
 			servos->servo[servo_id].value = servos->servo[servo_id].min;
 		}
-		else if ( value > servos->servo[servo_id].max )
+		else if ( trimmed_value > servos->servo[servo_id].max )
 		{
 			servos->servo[servo_id].value = servos->servo[servo_id].max;
 		}
 		else
 		{
-			servos->servo[servo_id].value = value;
+			servos->servo[servo_id].value = trimmed_value;
 		}
 	}
 }
@@ -121,13 +123,15 @@ task_return_t servos_mavlink_send(servos_t* servos)
 										&msg,
 										time_keeper_get_micros(),
 										0,
-										(uint16_t)( 500 * servos->servo[0].value + 1500 ),
-										(uint16_t)( 500 * servos->servo[1].value + 1500 ),
-										(uint16_t)( 500 * servos->servo[2].value + 1500 ),
-										(uint16_t)( 500 * servos->servo[3].value + 1500 ),
-										(uint16_t)( 500 * servos->servo[4].value + 1500 ),
-										(uint16_t)( 500 * servos->servo[5].value + 1500 ),
-										(uint16_t)( 500 * servos->servo[6].value + 1500 ),
-										(uint16_t)( 500 * servos->servo[7].value + 1500 )	);
+										(uint16_t)( 1500 + 500 * servos->servo[0].value ),
+										(uint16_t)( 1500 + 500 * servos->servo[1].value ),
+										(uint16_t)( 1500 + 500 * servos->servo[2].value ),
+										(uint16_t)( 1500 + 500 * servos->servo[3].value ),
+										(uint16_t)( 1500 + 500 * servos->servo[4].value ),
+										(uint16_t)( 1500 + 500 * servos->servo[5].value ),
+										(uint16_t)( 1500 + 500 * servos->servo[6].value ),
+										(uint16_t)( 1500 + 500 * servos->servo[7].value )	);
+	mavlink_stream_send( servos->mavlink_stream, &msg );
+
 	return TASK_RUN_SUCCESS;
 }

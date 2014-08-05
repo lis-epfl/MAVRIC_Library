@@ -55,7 +55,7 @@ typedef struct  {
 	control_command_t controls;
 	control_command_t controls_nav;
 
-	Stabiliser_Stack_copter_t stabiliser_stack;
+	stabiliser_stack_copter_t stabiliser_stack;
 
 	simulation_model_t uav_model;
 	servo_output_t servos[NUMBER_OF_SERVO_OUTPUTS];

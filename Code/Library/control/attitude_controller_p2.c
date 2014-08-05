@@ -27,10 +27,11 @@
 
 #include "attitude_controller_p2.h"
 
-void attitude_controller_p2_init(attitude_controller_p2_t* controller, const attitude_controller_p2_conf_t* config, const attitude_command_t* attitude_command, const ahrs_t* ahrs)
+void attitude_controller_p2_init(attitude_controller_p2_t* controller, const attitude_controller_p2_conf_t* config, const attitude_command_t* attitude_command, torque_command_t* torque_command, const ahrs_t* ahrs)
 {
 	// Init dependencies
 	controller->attitude_command = attitude_command;
+	controller->torque_command   = torque_command;
 	controller->ahrs 			 = ahrs;
 
 	// Init attitude error estimator
@@ -45,9 +46,9 @@ void attitude_controller_p2_init(attitude_controller_p2_t* controller, const att
 	controller->p_gain_rate[2]  = config->p_gain_rate[2];
 
 	// Init ouput
-	controller->output[0] = 0.0f;
-	controller->output[1] = 0.0f;
-	controller->output[2] = 0.0f;
+	// controller->output[0] = 0.0f;
+	// controller->output[1] = 0.0f;
+	// controller->output[2] = 0.0f;
 }
 
 
@@ -82,7 +83,7 @@ void attitude_controller_p2_update(attitude_controller_p2_t* controller)
 	rates[2] = controller->ahrs->angular_speed[2];
 
 	// Compute outputs
-	controller->output[0] = controller->p_gain_angle[0] * errors[0] - controller->p_gain_rate[0] * rates[0];
-	controller->output[1] = controller->p_gain_angle[1] * errors[1] - controller->p_gain_rate[1] * rates[1];
-	controller->output[2] = controller->p_gain_angle[2] * errors[2] - controller->p_gain_rate[2] * rates[2];
+	controller->torque_command->xyz[0] = controller->p_gain_angle[0] * errors[0] - controller->p_gain_rate[0] * rates[0];
+	controller->torque_command->xyz[1] = controller->p_gain_angle[1] * errors[1] - controller->p_gain_rate[1] * rates[1];
+	controller->torque_command->xyz[2] = controller->p_gain_angle[2] * errors[2] - controller->p_gain_rate[2] * rates[2];
 }

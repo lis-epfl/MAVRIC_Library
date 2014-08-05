@@ -24,26 +24,14 @@
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
 #include "servos.h"
-
-#define SERVO_TIMER_FREQ 1000000					///< Define the timer frequency for the servos
-#define SERVO_CENTER_DUTY_MICROSEC 1500				///< Define the center of the duty cycle(?) in micro second
-#define SERVO_REPEAT_FREQ 200						///< Define the period
-
-#ifndef CS_ON_SERVO_7_8								///< to be able to use servo 7 and 8 as a normal GPIO
-	#define NUMBER_OF_SERVO_OUTPUTS 8				///< use all servo pins for PWM
-#else
-	#define NUMBER_OF_SERVO_OUTPUTS 6				///< free 2 last servo pin for GPIO usage
-#endif
-
-
-
 
 
 /**
  * \brief Initialize the hardware line for servos
  */
-void pwm_servos_init(void);
+void pwm_servos_init(bool use_servos_7_8);
 
 
 /**

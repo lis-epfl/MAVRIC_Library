@@ -29,10 +29,7 @@
 #include "i2c_driver_int.h"
 #include "remote_controller.h"
 #include "print_util.h"
-
 // #include "mavlink_stream.h"
-#include "servo_pwm.h"
-
 //#include "simulation.h"
 #include "bmp085.h"
 #include "lsm330dlc.h"
@@ -44,6 +41,8 @@
 #include "gps_ublox.h"
 #include "xbee.h"
 #include "console.h"
+
+#include "pwm_servos.h"
 
 void boardsupport_init(central_data_t *central_data) 
 {
@@ -67,7 +66,8 @@ void boardsupport_init(central_data_t *central_data)
 	//gpio_configure_pin(LED0_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
 	//gpio_configure_pin(LED1_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
 
-	servo_pwm_hardware_init();
+	// servo_pwm_hardware_init();
+	pwm_servos_init( CS_ON_SERVO_7_8 );
 	
 	// Init UART 0 for XBEE communication
 	xbee_init(UART0);

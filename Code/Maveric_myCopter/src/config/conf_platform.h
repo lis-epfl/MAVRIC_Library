@@ -127,7 +127,7 @@
 #define GPS_TYPE_UBX
 
 ///< GLE: define CS for SPI
-// #define CS_ON_SERVO_7_8
+#define CS_ON_SERVO_7_8 false
 
 ///< define type of remote controller
 //#define SPEKTRUM_REMOTE

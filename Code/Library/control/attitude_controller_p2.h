@@ -42,12 +42,13 @@ extern "C" {
  */
 typedef struct 
 {
-	const attitude_command_t* 	attitude_command;				///< Pointer to attitude command
-	const ahrs_t* 				ahrs; 							///< Pointer to attitude estimation
+	const ahrs_t* 				ahrs; 							///< Pointer to attitude estimation (input)
+	const attitude_command_t* 	attitude_command;				///< Pointer to attitude command (input)
+	torque_command_t*			torque_command;					///< Pointer to torque command (output)
 	attitude_error_estimator_t  attitude_error_estimator;		///< Attitude error estimator
 	float 						p_gain_angle[3];				///< Proportionnal gain for angular errors
 	float 						p_gain_rate[3];					///< Proportionnal gain applied to gyros rates
-	float 						output[3];						///< Output of the controller on the 3 axes
+	// float 						output[3];						///< Output of the controller on the 3 axes
 } attitude_controller_p2_t;
 
 
@@ -69,7 +70,7 @@ typedef struct
  * \param 	attitude_command 	Pointer to attitude command
  * \param 	ahrs		 		Pointer to the estimated attitude
  */
-void attitude_controller_p2_init(attitude_controller_p2_t* controller, const attitude_controller_p2_conf_t* config, const attitude_command_t* attitude_command, const ahrs_t* ahrs);
+void attitude_controller_p2_init(attitude_controller_p2_t* controller, const attitude_controller_p2_conf_t* config, const attitude_command_t* attitude_command, torque_command_t* torque_command, const ahrs_t* ahrs);
 
 
 /**

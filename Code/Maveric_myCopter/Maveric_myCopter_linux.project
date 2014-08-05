@@ -637,9 +637,7 @@
       <File Name="Library/hal/dac_dma.h"/>
       <File Name="Library/hal/ads1274.c"/>
       <File Name="Library/hal/spektrum.h"/>
-      <File Name="Library/hal/servo_pwm.h"/>
       <File Name="Library/hal/analog_monitor.h"/>
-      <File Name="Library/hal/servo_pwm.c"/>
       <File Name="Library/hal/analog_monitor.c"/>
       <File Name="Library/hal/turnigy.h"/>
       <File Name="Library/hal/ads1274.h"/>

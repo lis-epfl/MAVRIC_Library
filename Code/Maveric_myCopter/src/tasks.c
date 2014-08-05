@@ -31,6 +31,8 @@
 #include "lsm330dlc.h"
 #include "hmc5883l.h"
 
+#include "pwm_servos.h"
+
 #include "spektrum_satellite.h"
 #include "remote_controller.h"
 
@@ -445,14 +447,14 @@ task_return_t tasks_run_stabilisation(void* arg)
 			break;
 		
 		default:
-			servo_pwm_failsafe(central_data->servos_array);
+			servos_set_value_failsafe( &central_data->servos );
 			break;
 	}
 	
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
 	if (!state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_HIL_ENABLED))
 	{
-		servo_pwm_set(central_data->servos_array);
+		pwm_servos_write_to_hardware( &central_data->servos );
 	}
 	
 	return TASK_RUN_SUCCESS;
@@ -472,31 +474,25 @@ task_return_t tasks_run_stabilisation_test(void* arg)
 		case MAV_MODE_GPS_NAVIGATION:
 			remote_controller_get_command_from_remote(&central_data->controls);
 			
-			central_data->attitude_command.rpy[0] = 2 * central_data->controls.rpy[0];
-			central_data->attitude_command.rpy[1] = 2 * central_data->controls.rpy[1];
-			central_data->attitude_command.rpy[2] = 2 * central_data->controls.rpy[2];
-			central_data->attitude_command.mode = ATTITUDE_COMMAND_MODE_RPY;
+			central_data->command.attitude.rpy[0] 	= 2 * central_data->controls.rpy[0];
+			central_data->command.attitude.rpy[1] 	= 2 * central_data->controls.rpy[1];
+			central_data->command.attitude.rpy[2] 	= 2 * central_data->controls.rpy[2];
+			central_data->command.attitude.mode 	= ATTITUDE_COMMAND_MODE_RPY;
+			central_data->command.thrust.thrust 	= central_data->controls.thrust;
 		
-			attitude_controller_p2_update(&central_data->attitude_controller);
-			control_command_t output;
-			output.rpy[0] = central_data->attitude_controller.output[0];
-			output.rpy[1] = central_data->attitude_controller.output[1];
-			output.rpy[2] = central_data->attitude_controller.output[2];
-			output.thrust = central_data->controls.thrust;
-			stabilisation_copter_mix_to_servos_diag_quad( 	&output, 
-															central_data->servos_array);
-
+			attitude_controller_p2_update( &central_data->attitude_controller );			
+			servos_mix_quadcopter_diag_update( &central_data->servo_mix );
 			break;
 		
 		default:
-			servo_pwm_failsafe(central_data->servos_array);
+			servos_set_value_failsafe( &central_data->servos );
 			break;
 	}
 
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
 	if (!state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_HIL_ENABLED))
 	{
-		servo_pwm_set(central_data->servos_array);
+		pwm_servos_write_to_hardware( &central_data->servos );
 	}
 	
 	return TASK_RUN_SUCCESS;

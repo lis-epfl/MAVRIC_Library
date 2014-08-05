@@ -101,7 +101,7 @@ void central_data_init()
 	delay_ms(100);
 
 	// Init servos_array
-	servo_pwm_init_old(central_data.servos_array);
+	// servo_pwm_init_old(central_data.servos_array);
 	
 	servos_conf_t servos_config =
 	{
@@ -115,6 +115,8 @@ void central_data_init()
 		},
 	};
 	servos_init( &central_data.servos, &servos_config, &central_data.mavlink_communication.mavlink_stream);
+	servos_set_value_failsafe( &central_data.servos );
+	pwm_servos_write_to_hardware( &central_data.servos );
 
 	delay_ms(100);
 	
@@ -183,13 +185,13 @@ void central_data_init()
 	delay_ms(100);
 
 	// Init stabilisers
-	stabilisation_copter_init(	&central_data.stabilisation_copter,
-								&central_data.stabiliser_stack,
-								&central_data.controls,
-								&central_data.imu,
-								&central_data.ahrs,
-								&central_data.position_estimator,
-								central_data.servos_array 	);
+	// stabilisation_copter_init(	&central_data.stabilisation_copter,
+	// 							&central_data.stabiliser_stack,
+	// 							&central_data.controls,
+	// 							&central_data.imu,
+	// 							&central_data.ahrs,
+	// 							&central_data.position_estimator,
+	// 							central_data.servos_array 	);
 	
 	delay_ms(100);
 
@@ -231,7 +233,7 @@ void central_data_init()
 					&central_data.pressure,
 					&central_data.gps,
 					&central_data.state,
-					central_data.servos_array,
+					&central_data.servos,
 					&central_data.waypoint_handler.waypoint_set,
 					&central_data.mavlink_communication.message_handler,
 					&central_data.mavlink_communication.mavlink_stream);
@@ -264,8 +266,30 @@ void central_data_init()
 	};
 	attitude_controller_p2_init( 	&central_data.attitude_controller,
 									&attitude_controller_p2_config,
-									&central_data.attitude_command,
+									&central_data.command.attitude,
+									&central_data.command.torque,
 									&central_data.ahrs );
+
+	// Init servo mixing
+	servo_mix_quadcopter_diag_conf_t servo_mix_config =
+	{
+		.motor_front_right		= M_FRONT_RIGHT,
+		.motor_front_left		= M_FRONT_LEFT,
+		.motor_rear_right		= M_REAR_RIGHT,
+		.motor_rear_left		= M_REAR_LEFT,
+		.motor_front_right_dir	= M_FR_DIR,
+		.motor_front_left_dir	= M_FL_DIR,
+		.motor_rear_right_dir	= M_RR_DIR,
+		.motor_rear_left_dir	= M_RL_DIR,
+		.min_thrust				= MIN_THRUST,
+		.max_thrust				= MAX_THRUST
+	};
+	servo_mix_quadcotper_diag_init( &central_data.servo_mix, 
+									&servo_mix_config, 
+									&central_data.command.torque, 
+									&central_data.command.thrust, 
+									&central_data.servos);
+
 
 }
 

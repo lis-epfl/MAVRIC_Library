@@ -17,6 +17,14 @@
 
 #include "quaternions.h"
 
+#ifndef CONTROL_COMMAND_H_
+#define CONTROL_COMMAND_H_
+
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
+
 /**
  * \brief 	Control command mode enum
  */
@@ -109,3 +117,10 @@ typedef struct
 	attitude_command_t      attitude;
 	velocity_command_t      velocity;
 } command_t;
+
+
+#ifdef __cplusplus
+	}
+#endif
+
+#endif
