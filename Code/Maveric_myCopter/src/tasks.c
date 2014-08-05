@@ -445,14 +445,14 @@ task_return_t tasks_run_stabilisation(void* arg)
 			break;
 		
 		default:
-			servo_pwm_failsafe(central_data->servos);
+			servo_pwm_failsafe(central_data->servos_array);
 			break;
 	}
 	
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
 	if (!state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_HIL_ENABLED))
 	{
-		servo_pwm_set(central_data->servos);
+		servo_pwm_set(central_data->servos_array);
 	}
 	
 	return TASK_RUN_SUCCESS;
@@ -484,19 +484,19 @@ task_return_t tasks_run_stabilisation_test(void* arg)
 			output.rpy[2] = central_data->attitude_controller.output[2];
 			output.thrust = central_data->controls.thrust;
 			stabilisation_copter_mix_to_servos_diag_quad( 	&output, 
-															central_data->servos);
+															central_data->servos_array);
 
 			break;
 		
 		default:
-			servo_pwm_failsafe(central_data->servos);
+			servo_pwm_failsafe(central_data->servos_array);
 			break;
 	}
 
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
 	if (!state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_HIL_ENABLED))
 	{
-		servo_pwm_set(central_data->servos);
+		servo_pwm_set(central_data->servos_array);
 	}
 	
 	return TASK_RUN_SUCCESS;

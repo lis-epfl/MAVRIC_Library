@@ -126,7 +126,7 @@ void boardsupport_init(central_data_t *central_data) {
 		imu_init(&central_data->imu);
 
 		spektrum_satellite_init();
-		servo_pwm_init();
+		servo_pwm_init_old();
 		
 		
 		central_data->controls.rpy[ROLL]=0;

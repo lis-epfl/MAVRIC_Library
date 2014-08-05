@@ -19,10 +19,14 @@
 
 #include "servos.h"
 #include "print_util.h"
+#include "time_keeper.h"
 
-
-void servos_init(servos_t* servos, const servos_conf_t* config)
+void servos_init(servos_t* servos, const servos_conf_t* config, const mavlink_stream_t* mavlink_stream)
 {
+	// Init dependencies
+	servos->mavlink_stream = mavlink_stream;
+
+	// Init servo array
 	if ( config->servos_count <= MAX_SERVO_COUNT )
 	{
 		servos->servos_count = config->servos_count;
@@ -37,8 +41,7 @@ void servos_init(servos_t* servos, const servos_conf_t* config)
 					servos->servo[i].min           = -1.0f;
 					servos->servo[i].max           = 1.0f;
 					servos->servo[i].failsafe      = 0.0f;
-					servos->servo[i].pwm_neutral   = 1000;
-					servos->servo[i].pwm_amplitude = 500;
+					servos->servo[i].repeat_freq   = 50;
 					servos->servo[i].type 		   = STANDARD_SERVO;
 					break;
 
@@ -47,8 +50,7 @@ void servos_init(servos_t* servos, const servos_conf_t* config)
 					servos->servo[i].min           = -0.9f;
 					servos->servo[i].max           = 1.0f;
 					servos->servo[i].failsafe      = -1.0f;
-					servos->servo[i].pwm_neutral   = 1000;
-					servos->servo[i].pwm_amplitude = 500;
+					servos->servo[i].repeat_freq   = 200;
 					servos->servo[i].type 		   = MOTOR_CONTROLLER;
 					break;
 
@@ -57,10 +59,17 @@ void servos_init(servos_t* servos, const servos_conf_t* config)
 					servos->servo[i].min           = -0.0f;
 					servos->servo[i].max           = 0.0f;
 					servos->servo[i].failsafe      = 0.0f;
-					servos->servo[i].pwm_neutral   = 1000;
-					servos->servo[i].pwm_amplitude = 0;
+					servos->servo[i].repeat_freq   = 50;
 					servos->servo[i].type 		   = CUSTOM_SERVO;
+					break;
 
+				default:
+					servos->servo[i].trim          = 0.0f;
+					servos->servo[i].min           = -1.0f;
+					servos->servo[i].max           = 1.0f;
+					servos->servo[i].failsafe      = 0.0f;
+					servos->servo[i].repeat_freq   = 50;
+					servos->servo[i].type 		   = STANDARD_SERVO;
 					break;
 			}
 
@@ -96,10 +105,29 @@ void servos_set_value(servos_t* servos, uint32_t servo_id, float value)
 }
 
 
-void servos_failsafe(servos_t* servos)
+void servos_set_value_failsafe(servos_t* servos)
 {
 	for (int i = 0; i < servos->servos_count; ++i)
 	{
 		servos->servo[i].value = servos->servo[i].failsafe;
 	}
+}
+
+task_return_t servos_mavlink_send(servos_t* servos)
+{
+	mavlink_message_t msg;
+	mavlink_msg_servo_output_raw_pack(	servos->mavlink_stream->sysid,
+										servos->mavlink_stream->compid,
+										&msg,
+										time_keeper_get_micros(),
+										0,
+										(uint16_t)( 500 * servos->servo[0].value + 1500 ),
+										(uint16_t)( 500 * servos->servo[1].value + 1500 ),
+										(uint16_t)( 500 * servos->servo[2].value + 1500 ),
+										(uint16_t)( 500 * servos->servo[3].value + 1500 ),
+										(uint16_t)( 500 * servos->servo[4].value + 1500 ),
+										(uint16_t)( 500 * servos->servo[5].value + 1500 ),
+										(uint16_t)( 500 * servos->servo[6].value + 1500 ),
+										(uint16_t)( 500 * servos->servo[7].value + 1500 )	);
+	return TASK_RUN_SUCCESS;
 }

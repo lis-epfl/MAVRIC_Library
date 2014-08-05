@@ -62,6 +62,7 @@ extern "C" {
 #include "hud.h"
 
 #include "attitude_controller_p2.h"
+#include "servos.h"
 
 // TODO : update documentation
 
@@ -87,9 +88,10 @@ typedef struct  {
 	stabilise_copter_t stabilisation_copter;					///< The stabilisation structure for copter
 	Stabiliser_Stack_copter_t stabiliser_stack;					///< The stabilisation stack structure (rates, attitude, velocity, thrust)
 
-	servo_output_t servos[NUMBER_OF_SERVO_OUTPUTS];				///< The array of servos (size NUMBER_OF_SERVO_OUTPUTS)
-	
-	gps_t gps;									///< The GPS structure
+	servo_output_t servos_array[NUMBER_OF_SERVO_OUTPUTS];				///< The array of servos (size NUMBER_OF_SERVO_OUTPUTS)
+	servos_t servos;
+
+	gps_t gps;													///< The GPS structure
 	
 	simulation_model_t sim_model;								///< The simulation model structure
 	

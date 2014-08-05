@@ -25,6 +25,8 @@
 #endif
 
 #include <stdint.h>
+#include "mavlink_stream.h"
+#include "scheduler.h"
 
 #define MAX_SERVO_COUNT 8
 
@@ -49,9 +51,8 @@ typedef struct
 	float trim;				///< Trim value (between -1 and 1)
 	float min;				///< Minimum value (between -1 and 1)
 	float max;				///< Max value (between -1 and 1)
-	float failsafe;			///< Failsafe position of the servo (between -1 and 1)	
-	uint32_t pwm_neutral;	///< Neutral PWM signal (ex: PWM between 550 and 1450 => pwm_neutral = 1000)
-	uint32_t pwm_amplitude;	///< Amplitude of PWM signal (ex: between 550 and 1450 => pwm_magnitude = 450)
+	float failsafe;			///< Failsafe position of the servo (between -1 and 1)
+	uint32_t repeat_freq;	///< Update frequency of the servo (in Hz)
 	servo_type_t type;		///< Type of servo
 } servo_entry_t;
 
@@ -60,16 +61,20 @@ typedef struct
 {
 	uint32_t servos_count;
 	servo_entry_t servo[MAX_SERVO_COUNT];
+	const mavlink_stream_t* mavlink_stream;
 } servos_t;
 
 
-void servos_init(servos_t* servos, const servos_conf_t* config);
+void servos_init(servos_t* servos, const servos_conf_t* config, const mavlink_stream_t* mavlink_stream);
 
 
 void servos_set_value(servos_t* servos, uint32_t servo_id, float value);
 
 
-void servos_failsafe(servos_t* servos);
+void servos_set_value_failsafe(servos_t* servos);
+
+
+task_return_t servos_mavlink_send(servos_t* servos);
 
 
 #ifdef __cplusplus

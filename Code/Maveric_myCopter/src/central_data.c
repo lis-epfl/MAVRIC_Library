@@ -100,9 +100,22 @@ void central_data_init()
 
 	delay_ms(100);
 
-	// Init servos
-	servo_pwm_init(central_data.servos);
+	// Init servos_array
+	servo_pwm_init_old(central_data.servos_array);
 	
+	servos_conf_t servos_config =
+	{
+		.servos_count = 4,
+		.types =
+		{
+			MOTOR_CONTROLLER,
+			MOTOR_CONTROLLER,
+			MOTOR_CONTROLLER,
+			MOTOR_CONTROLLER
+		},
+	};
+	servos_init( &central_data.servos, &servos_config, &central_data.mavlink_communication.mavlink_stream);
+
 	delay_ms(100);
 	
 	// Init qfilter
@@ -176,7 +189,7 @@ void central_data_init()
 								&central_data.imu,
 								&central_data.ahrs,
 								&central_data.position_estimator,
-								central_data.servos 	);
+								central_data.servos_array 	);
 	
 	delay_ms(100);
 
@@ -218,7 +231,7 @@ void central_data_init()
 					&central_data.pressure,
 					&central_data.gps,
 					&central_data.state,
-					central_data.servos,
+					central_data.servos_array,
 					&central_data.waypoint_handler.waypoint_set,
 					&central_data.mavlink_communication.message_handler,
 					&central_data.mavlink_communication.mavlink_stream);
