@@ -185,13 +185,13 @@ void central_data_init()
 	delay_ms(100);
 
 	// Init stabilisers
-	// stabilisation_copter_init(	&central_data.stabilisation_copter,
-	// 							&central_data.stabiliser_stack,
-	// 							&central_data.controls,
-	// 							&central_data.imu,
-	// 							&central_data.ahrs,
-	// 							&central_data.position_estimator,
-	// 							central_data.servos_array 	);
+	stabilisation_copter_init(	&central_data.stabilisation_copter,
+								&central_data.stabiliser_stack,
+								&central_data.controls,
+								&central_data.imu,
+								&central_data.ahrs,
+								&central_data.position_estimator,
+								&central_data.servos 	);
 	
 	delay_ms(100);
 
