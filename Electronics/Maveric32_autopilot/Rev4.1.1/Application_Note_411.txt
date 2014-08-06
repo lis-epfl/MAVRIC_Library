@@ -1,0 +1,5 @@
+Changes from 4.1 to 4.1.1
+- Inversion of TX and RX on GPS connector to allow the use of MOLEX PICOBLADE connector
+- Add a push button to ground SDA1 in order to launch the DFU-programming bootloader
+- Change resistor value for 5V output instead of 6V
+- Change connectors from HIROSE to PICOBLADE
