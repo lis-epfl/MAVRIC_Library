@@ -2071,13 +2071,13 @@ Push-push type uSD socket. Schematic element and footprint production proven. Sp
 <technologies>
 <technology name="">
 <attribute name="DISTRIBUTOR" value="Mouser" constant="no"/>
-<attribute name="ORDER_CODE" value="2x 855-M22-7131042" constant="no"/>
+<attribute name="ORDER_CODE" value="855-M22-7131042" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="2.46" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="1.914" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="2.02" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="2.02" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="1.914" constant="no"/>
+<attribute name="UNIT_PRICE" value="1.23" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="0.957" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="1.01" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="1.01" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="1.01" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -3373,6 +3373,7 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <smd name="P$6" x="1.175" y="0" dx="1.3" dy="0.42" layer="1" rot="R180"/>
 <smd name="P$7" x="1.175" y="0.65" dx="1.3" dy="0.42" layer="1" rot="R180"/>
 <smd name="P$8" x="1.175" y="1.3" dx="1.3" dy="0.42" layer="1" rot="R180"/>
+<circle x="-1.15" y="2.15" radius="0.22360625" width="0.127" layer="21"/>
 </package>
 </packages>
 <symbols>
@@ -18519,6 +18520,7 @@ Source: www.kingbright.com</description>
 <attribute name="PLACE_PART" value="YES"/>
 </part>
 <part name="LD1" library="LEDs" deviceset="LED" device="CHIPLED_0805_GREEN" value="green">
+<attribute name="ORDER_CODE" value="754-1131-1-ND"/>
 <attribute name="PLACE_PART" value="YES"/>
 <attribute name="UNIT_PRICE" value="0.25"/>
 <attribute name="UNIT_PRICE_100X" value="0.1365"/>
