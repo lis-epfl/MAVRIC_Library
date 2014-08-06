@@ -82,7 +82,9 @@ static void pdca_int_handler(void)
   // Disable interrupt channel.
   pdca_disable_interrupt_transfer_complete(AVR32_PDCA_CHANNEL_SPI_RX);
 
-  //sd_mmc_spi_read_close_PDCA();//unselects the SD/MMC memory.
+  //TODO we should have it, but i did not find a way to get sd_spi argument here
+  //sd_mmc_spi_read_close_PDCA(sd_spi); //unselects the SD/MMC memory.
+  
   delay_ms(100);
   // Disable unnecessary channel
   pdca_disable(AVR32_PDCA_CHANNEL_SPI_TX);
@@ -418,6 +420,8 @@ static int sd_spi_get_card_type(sd_spi_t *sd_spi)
 		}
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
 	}
+	
+	return sd_spi->card_type;
 }
 
 void sd_spi_get_capacity(sd_spi_t *sd_spi)
@@ -777,48 +781,49 @@ bool sd_spi_init(sd_spi_t *sd_spi)
 bool sd_mmc_spi_read_open_PDCA (uint32_t pos, sd_spi_t *sd_spi)
 {
 	uint8_t r1; //card response
-	uint16_t read_time_out;
 
 	// Set the global memory ptr at a Byte address.
-	gl_ptr_mem = pos << 9;                    // gl_ptr_mem = pos * 512
+	gl_ptr_mem = pos << 9; // gl_ptr_mem = pos * 512
 
 	// wait for MMC not busy
 	if (false == sd_spi_wait_not_busy())
-	{
+	{print_util_dbg_print("card busy");
 		return false;
 	}
 
-	spi_selectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);          // select SD_MMC_SPI
+	spi_selectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // select SD_MMC_SPI
 
 	// issue command
-	if(sd_spi->card_type == SD_CARD_2_SDHC) {
+	if(sd_spi->card_type == SD_CARD_2_SDHC) 
+	{
 		r1 = sd_spi_command(MMC_READ_SINGLE_BLOCK, gl_ptr_mem>>9);
-		} else {
+	} 
+	else 
+	{
 		r1 = sd_spi_command(MMC_READ_SINGLE_BLOCK, gl_ptr_mem);
 	}
 
-	// check for valid response
-	if (r1 != 0x00)
-	{
+	if (r1 != 0x00) //if response not valid
+	{print_util_dbg_print("not received valid response");
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
 		return false;
 	}
 
 	// wait for token (may be a datablock start token OR a data error token !)
-	read_time_out = 30000;
+	uint16_t read_time_out = 0;
 	while((r1 = sd_spi_send_and_read(0xFF)) == 0xFF)
 	{
-		read_time_out--;
-		if (read_time_out == 0)   // TIME-OUT
-		{
+		if (read_time_out == 30000)   // TIME-OUT
+		{print_util_dbg_print("timed-out");
 			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS); // unselect SD_MMC_SPI
 			return false;
 		}
+		read_time_out++;
 	}
 
 	// check token
 	if (r1 != MMC_STARTBLOCK_READ)
-	{
+	{print_util_dbg_print("did not receive startblock_read");
 		spi_write(SD_MMC_SPI,0xFF);
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
 		return false;
@@ -831,58 +836,60 @@ bool sd_mmc_spi_read_sector_to_ram(void *ram, sd_spi_t *sd_spi)
 {
 	uint8_t r1; //card response
 	uint8_t *_ram = ram;
-	uint16_t  i;
-	uint16_t  read_time_out;
 	unsigned short data_read;
 	
 	// wait for MMC not busy
 	if (false == sd_spi_wait_not_busy())
-	return false;
-
+	{
+		return false;
+	}
+	
 	spi_selectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);    // select SD_MMC_SPI
 
 	// issue command
-	if(sd_spi->card_type == SD_CARD_2_SDHC) {
+	if(sd_spi->card_type == SD_CARD_2_SDHC) 
+	{
 		r1 = sd_spi_command(MMC_READ_SINGLE_BLOCK, gl_ptr_mem>>9);
-		} else {
+	} 
+	else 
+	{
 		r1 = sd_spi_command(MMC_READ_SINGLE_BLOCK, gl_ptr_mem);
 	}
 
-	// check for valid response
-	if (r1 != 0x00)
+	if (r1 != 0x00) //if response not valid
 	{
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
 		return false;
 	}
 
 	// wait for token (may be a datablock start token OR a data error token !)
-	read_time_out = 30000;
+	uint16_t  read_time_out = 0;
 	while((r1 = sd_spi_send_and_read(0xFF)) == 0xFF)
 	{
-		read_time_out--;
-		if (read_time_out == 0)   // TIME-OUT
+		if (read_time_out == 30000)   // TIME-OUT
 		{
 			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS); // unselect SD_MMC_SPI
-			return false;
+			return false; //card timed-out
 		}
+		read_time_out++;
 	}
 
 	// check token
 	if (r1 != MMC_STARTBLOCK_READ)
 	{
 		spi_write(SD_MMC_SPI,0xFF);
-		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
+		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS); // unselect SD_MMC_SPI
 		return false;
 	}
 
 	// store datablock
-	for(i=0;i<MMC_SECTOR_SIZE;i++)
+	for(uint16_t  i = 0; i < MMC_SECTOR_SIZE; i++)
 	{
 		spi_write(SD_MMC_SPI,0xFF);
 		spi_read(SD_MMC_SPI,&data_read);
-		*_ram++=data_read;
+		*_ram++ = data_read;
 	}
-	gl_ptr_mem += 512;     // Update the memory pointer.
+	gl_ptr_mem += 512; // Update the memory pointer.
 
 	// load 16-bit CRC (ignored)
 	spi_write(SD_MMC_SPI,0xFF);
@@ -893,9 +900,9 @@ bool sd_mmc_spi_read_sector_to_ram(void *ram, sd_spi_t *sd_spi)
 	spi_write(SD_MMC_SPI,0xFF);
 
 	// release chip select
-	spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
+	spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS); // unselect SD_MMC_SPI
 
-	return true;   // Read done.
+	return true; // Read done.
 }
 
 
@@ -907,45 +914,49 @@ bool sd_spi_write_sector_from_ram(const void *ram, sd_spi_t *sd_spi)
 
 	// wait for MMC not busy
 	if (false == sd_spi_wait_not_busy())
-	return false;
+	{
+		return false;
+	}
+	
+	spi_selectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS); // select SD_MMC_SPI
 
-	spi_selectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);    // select SD_MMC_SPI
-
-	// issue command
-	if(sd_spi->card_type == SD_CARD_2_SDHC) {
+	// send write command
+	if(sd_spi->card_type == SD_CARD_2_SDHC) 
+	{
 		r1 = sd_spi_command(MMC_WRITE_BLOCK, gl_ptr_mem>>9);
-		} else {
+	} 
+	else 
+	{
 		r1 = sd_spi_command(MMC_WRITE_BLOCK, gl_ptr_mem);
 	}
 
-	// check for valid response
-	if(r1 != 0x00)
+	if(r1 != 0x00) //if response not valid
 	{
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);
 		return false;
 	}
-	// send dummy
-	spi_write(SD_MMC_SPI,0xFF);   // give clock again to end transaction
+	
+	spi_write(SD_MMC_SPI,0xFF); // send dummy to give clock again to end transaction
 
 	// send data start token
 	spi_write(SD_MMC_SPI,MMC_STARTBLOCK_WRITE);
 	// write data
-	for(i=0;i<MMC_SECTOR_SIZE;i++)
+	for(i = 0; i < MMC_SECTOR_SIZE; i++)
 	{
 		spi_write(SD_MMC_SPI,*_ram++);
 	}
 
-	spi_write(SD_MMC_SPI,0xFF);    // send CRC (field required but value ignored)
+	spi_write(SD_MMC_SPI,0xFF); // send CRC (field required but value ignored)
 	spi_write(SD_MMC_SPI,0xFF);
 
 	// read data response token
 	r1 = sd_spi_send_and_read(0xFF);
 	if( (r1&MMC_DR_MASK) != MMC_DR_ACCEPT)
 	{
-		spi_write(SD_MMC_SPI,0xFF);    // send dummy bytes
+		spi_write(SD_MMC_SPI,0xFF); // send dummy bytes
 		spi_write(SD_MMC_SPI,0xFF);
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);
-		return false;         // return ERROR byte
+		return false; // return ERROR byte
 	}
 
 	spi_write(SD_MMC_SPI,0xFF);    // send dummy bytes
@@ -956,15 +967,17 @@ bool sd_spi_write_sector_from_ram(const void *ram, sd_spi_t *sd_spi)
 	gl_ptr_mem += 512;        // Update the memory pointer.
 
 	// wait card not busy after last programming operation
-	i=0;
+	uint8_t retry = 0;
 	while (false == sd_spi_wait_not_busy())
 	{
-		i++;
-		if (i == 10)
-		return false;
+		if (retry == 10) //timed-out
+		{
+			return false; //card still busy
+		}
+		retry++; //increment retry counter
 	}
 
-	return true;                  // Write done
+	return true; // Write done
 }
 
 void sd_spi_test(sd_spi_t *sd_spi)
