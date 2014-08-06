@@ -32,11 +32,11 @@ void initialisation()
 	mavlink_telemetry_init();
 	onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
 	
-	
-	LED_On(LED1);
-
 	piezo_speaker_startup_melody();
 
+	// Switch off red LED
+	LED_Off(LED2);
+	
 	print_util_dbg_print("OK. Starting up.\n");
 	
 	central_data->state.mav_state = MAV_STATE_STANDBY;

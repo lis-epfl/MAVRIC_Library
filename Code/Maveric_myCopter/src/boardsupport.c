@@ -60,11 +60,8 @@ void boardsupport_init(central_data_t *central_data)
 		
 	INTC_init_interrupts();
 
-	LED_On(LED1);
-	// Configure the pins connected to LEDs as output and set their default
-	// initial state to high (LEDs off).
-	//gpio_configure_pin(LED0_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
-	//gpio_configure_pin(LED1_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+	// Switch on the red LED
+	LED_On(LED2);
 
 	// servo_pwm_hardware_init();
 	pwm_servos_init( CS_ON_SERVO_7_8 );
