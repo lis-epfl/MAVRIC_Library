@@ -636,9 +636,6 @@
     <Compile Include="Library\hal\analog_monitor.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\dummy.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\hal\gps_ublox.c">
       <SubType>compile</SubType>
     </Compile>

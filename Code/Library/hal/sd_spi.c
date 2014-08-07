@@ -52,9 +52,7 @@ volatile bool end_of_transfer;
 volatile char ram_buffer[1000];
 
 // Dummy char table
-const char dummy_data[] =
-#include "dummy.h"
-;
+const char dummy_data[] = "0123456789xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
 // Prototype functions
 static void local_pdca_init(void);
@@ -68,7 +66,9 @@ static uint8_t sd_spi_command(uint8_t command, uint32_t arg);
 static uint8_t sd_spi_send_and_read(uint8_t data_to_send);
 static void sd_spi_resources_init(spi_options_t spiOptions);
 static bool sd_spi_get_csd(uint8_t *buffer, sd_spi_t *sd_spi);
-static bool sd_spi_get_cid(uint8_t *buffer, sd_spi_t *sd_spi);
+#if (defined SD_MMC_READ_CID) && (SD_MMC_READ_CID == true)
+	static bool sd_spi_get_cid(uint8_t *buffer, sd_spi_t *sd_spi);
+#endif
 
 /* interrupt handler to notify if the Data reception from flash is
  * over, in this case lunch the Memory(ram_buffer) to USART transfer and
@@ -250,54 +250,56 @@ static bool sd_spi_get_csd(uint8_t *buffer, sd_spi_t *sd_spi)
 	return true; //successfully received CSD data block
 }
 
-static bool sd_spi_get_cid(uint8_t *buffer, sd_spi_t *sd_spi)
-{
-	uint8_t r1; //card command response
-	uint16_t r2; //card response
-	uint8_t retry = 0; //retry counter
-	unsigned short data_read;
-	
-	// wait for MMC not busy
-	if (false == sd_spi_wait_not_busy())
+#if (defined SD_MMC_READ_CID) && (SD_MMC_READ_CID == true)
+	static bool sd_spi_get_cid(uint8_t *buffer, sd_spi_t *sd_spi)
 	{
-		return false;
-	}
+		uint8_t r1; //card command response
+		uint16_t r2; //card response
+		uint8_t retry = 0; //retry counter
+		unsigned short data_read;
 	
-	spi_selectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // select SD_MMC_SPI
-	
-	r1 = sd_spi_command(MMC_SEND_CID, 0); //send command to get card CID
-	if(r1 != 0x00) //if response is not valid
-	{
-		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
-		sd_spi->init_done = false;
-		return false; //card did not accept the command
-	}
-	
-	// wait for data block start
-	while((r2 = sd_spi_send_and_read(0xFF)) != MMC_STARTBLOCK_READ)
-	{
-		if (retry > 8) //card timed-out
+		// wait for MMC not busy
+		if (false == sd_spi_wait_not_busy())
 		{
-			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
 			return false;
 		}
-		retry++; //increment retry counter
-	}
 	
-	// store valid data block
-	for (uint8_t i = 0; i <16; retry++)
-	{
-		spi_write(SD_MMC_SPI,0xFF); //write dummy Byte
-		spi_read(SD_MMC_SPI,&data_read); //read Byte of the CID data block
-		buffer[i] = data_read;
-	}
-	spi_write(SD_MMC_SPI,0xFF);   // load CRC (not used)
-	spi_write(SD_MMC_SPI,0xFF);
-	spi_write(SD_MMC_SPI,0xFF);   // give clock again to end transaction
-	spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
+		spi_selectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // select SD_MMC_SPI
 	
-	return true; //successfully received the CID data block
-}
+		r1 = sd_spi_command(MMC_SEND_CID, 0); //send command to get card CID
+		if(r1 != 0x00) //if response is not valid
+		{
+			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
+			sd_spi->init_done = false;
+			return false; //card did not accept the command
+		}
+	
+		// wait for data block start
+		while((r2 = sd_spi_send_and_read(0xFF)) != MMC_STARTBLOCK_READ)
+		{
+			if (retry > 8) //card timed-out
+			{
+				spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
+				return false;
+			}
+			retry++; //increment retry counter
+		}
+	
+		// store valid data block
+		for (uint8_t i = 0; i <16; retry++)
+		{
+			spi_write(SD_MMC_SPI,0xFF); //write dummy Byte
+			spi_read(SD_MMC_SPI,&data_read); //read Byte of the CID data block
+			buffer[i] = data_read;
+		}
+		spi_write(SD_MMC_SPI,0xFF);   // load CRC (not used)
+		spi_write(SD_MMC_SPI,0xFF);
+		spi_write(SD_MMC_SPI,0xFF);   // give clock again to end transaction
+		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
+	
+		return true; //successfully received the CID data block
+	}
+#endif
 
 static int sd_spi_check_hc(void)
 {
@@ -641,6 +643,14 @@ static void sd_spi_resources_init(spi_options_t spiOptions)
 		{SD_MMC_SPI_MOSI_PIN, SD_MMC_SPI_MOSI_FUNCTION},  // MOSI.
 		{SD_MMC_SPI_NPCS_PIN, SD_MMC_SPI_NPCS_FUNCTION}   // Chip Select NPCS.
 	};
+	
+	//try to power down SD_SPI
+	gpio_configure_pin(SD_MMC_SPI_SCK_PIN,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+	gpio_configure_pin(SD_MMC_SPI_MISO_PIN,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+	gpio_configure_pin(SD_MMC_SPI_MOSI_PIN,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+	gpio_configure_pin(SD_MMC_SPI_NPCS_PIN,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+	
+	delay_ms(500);
 
 	// Assign I/Os to SPI.
 	gpio_enable_module(SD_MMC_SPI_GPIO_MAP,
@@ -659,7 +669,7 @@ static void sd_spi_resources_init(spi_options_t spiOptions)
 bool sd_spi_init(sd_spi_t *sd_spi)
 {
 	uint32_t retry = 0; //retry counter
-	uint8_t r1; //card response
+	uint8_t r1 = 0; //card response
 	
 	//initialize sd_spi_t struct
 	sd_spi->init_done		= false;
@@ -704,7 +714,7 @@ bool sd_spi_init(sd_spi_t *sd_spi)
 	// RESET THE MEMORY CARD
 	if(false == sd_spi_reset_card(sd_spi))
 	{
-		print_util_dbg_print("sd_card FAILURE \n");
+		print_util_dbg_print("sd_card FAILED reset \n");
 		return false; //did not manage to reset the card
 	}
 	
@@ -736,7 +746,7 @@ bool sd_spi_init(sd_spi_t *sd_spi)
 		
 		if(retry == 50000) // measured approx. 500 on several cards
 		{
-			print_util_dbg_print("sd_card FAILURE \n");
+			print_util_dbg_print("sd_card FAILED timed-out \n");
 			return false; //card timed-out
 		}
 		retry++; //increment retry counter
@@ -749,7 +759,7 @@ bool sd_spi_init(sd_spi_t *sd_spi)
 		if (is_high_capacity == -1)
 		{
 			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
-			print_util_dbg_print("sd_card FAILURE \n");
+			print_util_dbg_print("sd_card FAILED check high capa \n");
 			return false;
 		}
 		else if (is_high_capacity == 1)
@@ -767,14 +777,14 @@ bool sd_spi_init(sd_spi_t *sd_spi)
 	spi_write(SD_MMC_SPI,0xFF);            // write dummy byte
 	if (r1 != 0x00) //if card did not accept command SET_BLOCKLEN
 	{
-		print_util_dbg_print("sd_card FAILURE \n");
+		print_util_dbg_print("sd_card FAILED set block length \n");
 		return false;    // card unsupported block length
 	}
 	
 	// GET CARD SPECIFIC DATA
 	if (false ==  sd_spi_get_csd(sd_spi->csd, sd_spi))
 	{
-		print_util_dbg_print("sd_card FAILURE \n");
+		print_util_dbg_print("sd_card FAILED get CSD \n");
 		return false;
 	}
 
@@ -785,7 +795,7 @@ bool sd_spi_init(sd_spi_t *sd_spi)
 	#if (defined SD_MMC_READ_CID) && (SD_MMC_READ_CID == true)
 		if (false ==  sd_spi_get_cid(cid))
 		{
-			print_util_dbg_print("sd_card FAILURE \n");
+			print_util_dbg_print("sd_card FAILED get CID \n");
 			return false;
 		}
 	#endif
@@ -1027,7 +1037,12 @@ void sd_spi_test(sd_spi_t *sd_spi)
 	print_util_dbg_print_num(sd_spi_write_sector_from_ram((void *)&dummy_data, sd_spi),10);
 
 	// Enable all interrupts.
-	Enable_global_interrupt();
+	bool global_interrupt_enabled = cpu_irq_is_enabled ();
+	if (!global_interrupt_enabled)
+	{
+		cpu_irq_enable ();
+	}
+	
 
 	// Read the first sectors number 1, 2, 3 of the card
 	for(uint16_t j = 1; j <= 3; j++)
@@ -1068,6 +1083,10 @@ void sd_spi_test(sd_spi_t *sd_spi)
 		{
 			print_util_dbg_print("\r\n! Unable to open memory \r\n");
 		}
+	}
+	if (!global_interrupt_enabled)
+	{
+		cpu_irq_disable ();
 	}
 	print_util_dbg_print("\r\nEnd of the example.\r\n");
 }
