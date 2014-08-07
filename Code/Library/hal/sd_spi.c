@@ -378,6 +378,9 @@ static int sd_spi_get_card_type(sd_spi_t *sd_spi)
 	}
 	else
 	{
+		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
+		sd_spi->card_type = MMC_CARD;
+		
 		// IDENTIFICATION OF THE CARD TYPE (SD or MMC)
 		// Both cards will accept CMD55 command but only the SD card will respond to ACMD41
 	 
@@ -405,7 +408,7 @@ static int sd_spi_get_card_type(sd_spi_t *sd_spi)
 		 }
 	 
 		 // CHECK FOR SDHC
-		if(sd_spi->card_type == SD_CARD_2) 
+		/*if(sd_spi->card_type == SD_CARD_2) 
 		{
 			int is_high_capacity = sd_spi_check_hc();
 			if (is_high_capacity == -1)
@@ -417,7 +420,7 @@ static int sd_spi_get_card_type(sd_spi_t *sd_spi)
 			{
 				sd_spi->card_type = SD_CARD_2_SDHC;
 			}
-		}
+		}*/
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
 	}
 	
@@ -701,6 +704,7 @@ bool sd_spi_init(sd_spi_t *sd_spi)
 	// RESET THE MEMORY CARD
 	if(false == sd_spi_reset_card(sd_spi))
 	{
+		print_util_dbg_print("sd_card FAILURE \n");
 		return false; //did not manage to reset the card
 	}
 	
@@ -732,10 +736,27 @@ bool sd_spi_init(sd_spi_t *sd_spi)
 		
 		if(retry == 50000) // measured approx. 500 on several cards
 		{
+			print_util_dbg_print("sd_card FAILURE \n");
 			return false; //card timed-out
 		}
 		retry++; //increment retry counter
 	} while (r1);
+	
+	// CHECK FOR SDHC
+	if(sd_spi->card_type == SD_CARD_2) 
+	{
+		int is_high_capacity = sd_spi_check_hc();
+		if (is_high_capacity == -1)
+		{
+			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
+			print_util_dbg_print("sd_card FAILURE \n");
+			return false;
+		}
+		else if (is_high_capacity == 1)
+		{
+			sd_spi->card_type = SD_CARD_2_SDHC;
+		}
+	}
 	
 	// DISABLE CRC TO SIMPLIFY AND SPEED UP COMMUNICATIONS
 	r1 = sd_spi_send_command(MMC_CRC_ON_OFF, 0);  // disable CRC (should be already initialized on SPI init)
@@ -746,12 +767,14 @@ bool sd_spi_init(sd_spi_t *sd_spi)
 	spi_write(SD_MMC_SPI,0xFF);            // write dummy byte
 	if (r1 != 0x00) //if card did not accept command SET_BLOCKLEN
 	{
+		print_util_dbg_print("sd_card FAILURE \n");
 		return false;    // card unsupported block length
 	}
 	
 	// GET CARD SPECIFIC DATA
 	if (false ==  sd_spi_get_csd(sd_spi->csd, sd_spi))
 	{
+		print_util_dbg_print("sd_card FAILURE \n");
 		return false;
 	}
 
@@ -762,6 +785,7 @@ bool sd_spi_init(sd_spi_t *sd_spi)
 	#if (defined SD_MMC_READ_CID) && (SD_MMC_READ_CID == true)
 		if (false ==  sd_spi_get_cid(cid))
 		{
+			print_util_dbg_print("sd_card FAILURE \n");
 			return false;
 		}
 	#endif
@@ -775,6 +799,7 @@ bool sd_spi_init(sd_spi_t *sd_spi)
 	// Initialize PDCA controller for the sd_spi driver
 	local_pdca_init();
 	
+	print_util_dbg_print("Sd_card initialized \n");
 	return true; //successfully initialize the sd card
 }
 
