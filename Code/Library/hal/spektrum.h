@@ -23,7 +23,6 @@
 	extern "C" {
 #endif
 
-#define BAUD_REMOTE  115200			///< Define the remote baudrate
 
 #define RC_THROTTLE		0			///< Define the remote channel number for the throttle
 #define RC_THROTTLE_DIR 1			///< Define the remote channel direction for the throttle

@@ -63,6 +63,7 @@ extern "C" {
 #include "servos.h"
 #include "pwm_servos.h"
 #include "servos_mix_quadcopter_diag.h"
+#include "remote.h"
 
 // TODO : update documentation
 
@@ -71,13 +72,12 @@ extern "C" {
  */
 typedef struct  {
 	scheduler_t	scheduler;
-
 	mavlink_communication_t mavlink_communication;
-
 	attitude_controller_p2_t attitude_controller;
 	command_t command;
 	servo_mix_quadcotper_diag_t servo_mix;
 	servos_t servos;
+	remote_t remote;
 
 	analog_monitor_t analog_monitor;							///< The analog to digital converter structure
 

@@ -19,24 +19,117 @@
 #include "state.h"
 #include "print_util.h"
 
-void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor, mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *message_handler)
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+/**
+ * \brief						Set the state and the mode of the vehicle
+ *
+ * \param	state		The pointer to the state structure
+ * \param	rec					The received mavlink message structure
+ */
+static void state_set_mav_mode(state_t* state, mavlink_received_t* rec);
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+static void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
 {
-	state->analog_monitor = analog_monitor;
-	state->mavlink_stream = mavlink_stream;
+	mavlink_set_mode_t packet;
 	
-	state->autopilot_type = state_config->autopilot_type;
-	state->autopilot_name = state_config->autopilot_name;
+	mavlink_msg_set_mode_decode(&rec->msg,&packet);
 	
-	state->mav_state = state_config->mav_state;
-	state->mav_mode = state_config->mav_mode;
+	// Check if this message is for this system and subsystem
+	// No component ID in mavlink_set_mode_t so no control
+	if ((uint8_t)packet.target_system == (uint8_t)state->mavlink_stream->sysid)
+	{
+		print_util_dbg_print("base_mode:");
+		print_util_dbg_print_num(packet.base_mode,10);
+		print_util_dbg_print(", custom mode:");
+		print_util_dbg_print_num(packet.custom_mode,10);
+		print_util_dbg_print("\n");
+
+		if (state->simulation_mode == HIL_OFF)
+		{
+			switch(packet.base_mode)
+			{
+				case MAV_MODE_STABILIZE_DISARMED:
+				case MAV_MODE_GUIDED_DISARMED:
+				case MAV_MODE_AUTO_DISARMED:
+					state->mav_state = MAV_STATE_STANDBY;
+					state->mav_mode = MAV_MODE_MANUAL_DISARMED;
+					break;
+				
+				case MAV_MODE_MANUAL_ARMED:
+					//if (remote_controller_get_thrust_from_remote()<-0.95f)
+					{
+						state->mav_state = MAV_STATE_ACTIVE;
+						state->mav_mode = MAV_MODE_MANUAL_ARMED;
+					}
+					break;
+			}
+		}
+		else
+		{
+			switch(packet.base_mode)
+			{
+				case MAV_MODE_STABILIZE_DISARMED:
+				case MAV_MODE_GUIDED_DISARMED:
+				case MAV_MODE_AUTO_DISARMED:
+					state->mav_state = MAV_STATE_STANDBY;
+					state->mav_mode = MAV_MODE_MANUAL_DISARMED;
+					break;
+				case MAV_MODE_MANUAL_ARMED:
+					state->mav_state = MAV_STATE_ACTIVE;
+					state->mav_mode = MAV_MODE_MANUAL_ARMED;
+					break;
+				case MAV_MODE_STABILIZE_ARMED:
+					state->mav_state = MAV_STATE_ACTIVE;
+					state->mav_mode = MAV_MODE_STABILIZE_ARMED;
+					break;
+				case MAV_MODE_GUIDED_ARMED:
+					state->mav_state = MAV_STATE_ACTIVE;
+					state->mav_mode = MAV_MODE_GUIDED_ARMED;
+					break;
+				case MAV_MODE_AUTO_ARMED:
+					state->mav_state = MAV_STATE_ACTIVE;
+					state->mav_mode = MAV_MODE_AUTO_ARMED;
+					break;
+			}
+		}
+	}
+}
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, const remote_t* remote, mavlink_message_handler_t *message_handler)
+{
+	// Init dependencies
+	state->analog_monitor 	= analog_monitor;
+	state->mavlink_stream 	= mavlink_stream;
+	state->remote 			= remote;
+
+	// Init parameters
+	state->autopilot_type 	= state_config->autopilot_type;
+	state->autopilot_name 	= state_config->autopilot_name;
 	
-	state->simulation_mode = state_config->simulation_mode;
+	state->mav_state 		= state_config->mav_state;
+	state->mav_mode 		= state_config->mav_mode;
+	
+	state->simulation_mode 	= state_config->simulation_mode;
 	
 	state->mav_mode_previous = state->mav_mode;
 	
 	state->simulation_mode_previous = state->simulation_mode;
 	
-	if (state->simulation_mode == SIMULATION_MODE)
+	if (state->simulation_mode == HIL_ON)
 	{
 		state->mav_mode |= MAV_MODE_FLAG_HIL_ENABLED;
 	}
@@ -97,73 +190,6 @@ task_return_t state_send_status(state_t* state)
 	mavlink_stream_send(mavlink_stream, &msg);
 
 	return TASK_RUN_SUCCESS;
-}
-
-void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
-{
-	mavlink_set_mode_t packet;
-	
-	mavlink_msg_set_mode_decode(&rec->msg,&packet);
-	
-	// Check if this message is for this system and subsystem
-	// No component ID in mavlink_set_mode_t so no control
-	if ((uint8_t)packet.target_system == (uint8_t)state->mavlink_stream->sysid)
-	{
-		print_util_dbg_print("base_mode:");
-		print_util_dbg_print_num(packet.base_mode,10);
-		print_util_dbg_print(", custom mode:");
-		print_util_dbg_print_num(packet.custom_mode,10);
-		print_util_dbg_print("\n");
-
-		if (state->simulation_mode == REAL_MODE)
-		{
-			switch(packet.base_mode)
-			{
-				case MAV_MODE_STABILIZE_DISARMED:
-				case MAV_MODE_GUIDED_DISARMED:
-				case MAV_MODE_AUTO_DISARMED:
-					state->mav_state = MAV_STATE_STANDBY;
-					state->mav_mode = MAV_MODE_MANUAL_DISARMED;
-					break;
-				
-				case MAV_MODE_MANUAL_ARMED:
-					//if (remote_controller_get_thrust_from_remote()<-0.95f)
-					{
-						state->mav_state = MAV_STATE_ACTIVE;
-						state->mav_mode = MAV_MODE_MANUAL_ARMED;
-					}
-					break;
-			}
-		}
-		else
-		{
-			switch(packet.base_mode)
-			{
-				case MAV_MODE_STABILIZE_DISARMED:
-				case MAV_MODE_GUIDED_DISARMED:
-				case MAV_MODE_AUTO_DISARMED:
-					state->mav_state = MAV_STATE_STANDBY;
-					state->mav_mode = MAV_MODE_MANUAL_DISARMED;
-					break;
-				case MAV_MODE_MANUAL_ARMED:
-					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode = MAV_MODE_MANUAL_ARMED;
-					break;
-				case MAV_MODE_STABILIZE_ARMED:
-					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode = MAV_MODE_STABILIZE_ARMED;
-					break;
-				case MAV_MODE_GUIDED_ARMED:
-					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode = MAV_MODE_GUIDED_ARMED;
-					break;
-				case MAV_MODE_AUTO_ARMED:
-					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode = MAV_MODE_AUTO_ARMED;
-					break;
-			}
-		}
-	}
 }
 
 bool state_test_flag_mode(uint8_t mode, mav_flag_t test_flag)

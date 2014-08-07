@@ -26,8 +26,6 @@
           <VirtualDirectory Name="user_board">
             <File Name="src/asf/common/boards/user_board/init.c"/>
             <File Name="src/asf/common/boards/user_board/user_board.h"/>
-            <File Name="src/asf/common/boards/user_board/led.c" ExcludeProjConfig="Debug"/>
-            <File Name="src/asf/common/boards/user_board/led.h" ExcludeProjConfig="Debug"/>
           </VirtualDirectory>
           <File Name="src/asf/common/boards/board.h"/>
         </VirtualDirectory>
@@ -588,6 +586,10 @@
       <File Name="Library/communication/state.c"/>
       <File Name="Library/communication/hud.h"/>
       <File Name="Library/communication/hud.c"/>
+      <File Name="Library/communication/state_from_remote.c"/>
+      <File Name="Library/communication/state_from_remote.h"/>
+      <File Name="Library/communication/remote.h"/>
+      <File Name="Library/communication/remote.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="control">
       <File Name="Library/control/pid_control.h"/>

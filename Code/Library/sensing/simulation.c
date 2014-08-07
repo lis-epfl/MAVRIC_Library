@@ -501,7 +501,7 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 	uint32_t i;
 	
 	// From simulation to reality
-	//if (sim->state->simulation_mode == REAL_MODE)
+	//if (sim->state->simulation_mode == HIL_OFF)
 	if (state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
 	{
 		sim->pos_est->local_position.origin = sim->local_position.origin;
@@ -517,7 +517,7 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 	}
 
 	// From reality to simulation
-	//if (sim->state->simulation_mode == SIMULATION_MODE)
+	//if (sim->state->simulation_mode == HIL_ON)
 	if (!state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
 	{	
 		simulation_reset_simulation(sim);

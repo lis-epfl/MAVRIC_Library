@@ -170,29 +170,29 @@ static inline void remote_controller_get_channel_mode(uint8_t* chan_switch)
  * 
  * \return	The status of execution of the task
  */
-static inline task_return_t remote_controller_send_scaled_rc_channels(control_command_t* controls)
-{
-	mavlink_message_t msg;
+// static inline task_return_t remote_controller_send_scaled_rc_channels(control_command_t* controls)
+// {
+// 	mavlink_message_t msg;
 	
-	mavlink_msg_rc_channels_scaled_pack(	controls->mavlink_stream->sysid,
-											controls->mavlink_stream->compid,
-											&msg,
-											time_keeper_get_millis(),
-											1,
-											spektrum_satellite_get_channel(0) * 1000.0f * RC_SCALEFACTOR,
-											spektrum_satellite_get_channel(1) * 1000.0f * RC_SCALEFACTOR,
-											spektrum_satellite_get_channel(2) * 1000.0f * RC_SCALEFACTOR,
-											spektrum_satellite_get_channel(3) * 1000.0f * RC_SCALEFACTOR,
-											spektrum_satellite_get_channel(4) * 1000.0f * RC_SCALEFACTOR,
-											spektrum_satellite_get_channel(5) * 1000.0f * RC_SCALEFACTOR,
-											spektrum_satellite_get_channel(6) * 1000.0f * RC_SCALEFACTOR,
-											spektrum_satellite_get_channel(7) * 1000.0f * RC_SCALEFACTOR,
-											spektrum_satellite_check()	);
+// 	mavlink_msg_rc_channels_scaled_pack(	controls->mavlink_stream->sysid,
+// 											controls->mavlink_stream->compid,
+// 											&msg,
+// 											time_keeper_get_millis(),
+// 											1,
+// 											spektrum_satellite_get_channel(0) * 1000.0f * RC_SCALEFACTOR,
+// 											spektrum_satellite_get_channel(1) * 1000.0f * RC_SCALEFACTOR,
+// 											spektrum_satellite_get_channel(2) * 1000.0f * RC_SCALEFACTOR,
+// 											spektrum_satellite_get_channel(3) * 1000.0f * RC_SCALEFACTOR,
+// 											spektrum_satellite_get_channel(4) * 1000.0f * RC_SCALEFACTOR,
+// 											spektrum_satellite_get_channel(5) * 1000.0f * RC_SCALEFACTOR,
+// 											spektrum_satellite_get_channel(6) * 1000.0f * RC_SCALEFACTOR,
+// 											spektrum_satellite_get_channel(7) * 1000.0f * RC_SCALEFACTOR,
+// 											0	);
 	
-	mavlink_stream_send(controls->mavlink_stream,&msg);
+// 	mavlink_stream_send(controls->mavlink_stream,&msg);
 	
-	return TASK_RUN_SUCCESS;
-}
+// 	return TASK_RUN_SUCCESS;
+// }
 
 
 /**
@@ -200,29 +200,29 @@ static inline task_return_t remote_controller_send_scaled_rc_channels(control_co
  * 
  * \return	The status of execution of the task
  */
-static inline task_return_t remote_controller_send_raw_rc_channels(control_command_t* controls)
-{
-	mavlink_message_t msg;
+// static inline task_return_t remote_controller_send_raw_rc_channels(control_command_t* controls)
+// {
+// 	// mavlink_message_t msg;
 	
-	mavlink_msg_rc_channels_raw_pack(	controls->mavlink_stream->sysid,
-										controls->mavlink_stream->compid,
-										&msg,
-										time_keeper_get_millis(),
-										1,
-										spektrum_satellite_get_channel(0) + 1000,
-										spektrum_satellite_get_channel(1) + 1000,
-										spektrum_satellite_get_channel(2) + 1000,
-										spektrum_satellite_get_channel(3) + 1000,
-										spektrum_satellite_get_channel(4) + 1000,
-										spektrum_satellite_get_channel(5) + 1000,
-										spektrum_satellite_get_channel(6) + 1000,
-										spektrum_satellite_get_channel(7) + 1000,
-										spektrum_satellite_check()	);
+// 	// mavlink_msg_rc_channels_raw_pack(	controls->mavlink_stream->sysid,
+// 	// 									controls->mavlink_stream->compid,
+// 	// 									&msg,
+// 	// 									time_keeper_get_millis(),
+// 	// 									1,
+// 	// 									spektrum_satellite_get_channel(0) + 1000,
+// 	// 									spektrum_satellite_get_channel(1) + 1000,
+// 	// 									spektrum_satellite_get_channel(2) + 1000,
+// 	// 									spektrum_satellite_get_channel(3) + 1000,
+// 	// 									spektrum_satellite_get_channel(4) + 1000,
+// 	// 									spektrum_satellite_get_channel(5) + 1000,
+// 	// 									spektrum_satellite_get_channel(6) + 1000,
+// 	// 									spektrum_satellite_get_channel(7) + 1000,
+// 	// 									spektrum_satellite_check()	);
 	
-	mavlink_stream_send(controls->mavlink_stream,&msg);
+// 	// mavlink_stream_send(controls->mavlink_stream,&msg);
 	
-	return TASK_RUN_SUCCESS;
-}
+// 	return TASK_RUN_SUCCESS;
+// }
 
 
 #ifdef __cplusplus

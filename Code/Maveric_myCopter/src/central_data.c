@@ -73,7 +73,7 @@ void central_data_init()
 	{
 		.mav_mode = MAV_MODE_SAFE,
 		.mav_state = MAV_STATE_BOOT,
-		.simulation_mode = REAL_MODE, //SIMULATION_MODE
+		.simulation_mode = HIL_OFF, //HIL_ON
 		.autopilot_type = MAV_TYPE_QUADROTOR,
 		.autopilot_name = MAV_AUTOPILOT_GENERIC,
 		.sensor_present = 0b1111110000100111,
@@ -84,6 +84,7 @@ void central_data_init()
 				&state_config,
 				&central_data.analog_monitor,
 				&central_data.mavlink_communication.mavlink_stream,
+				&central_data.remote,
 				&central_data.mavlink_communication.message_handler); 
 	
 	delay_ms(100);
@@ -290,6 +291,10 @@ void central_data_init()
 									&central_data.command.thrust, 
 									&central_data.servos);
 
+	// Init remote
+	remote_init( 	&central_data.remote, 
+					REMOTE_TURNIGY, 
+					&central_data.mavlink_communication.mavlink_stream );
 
 }
 
