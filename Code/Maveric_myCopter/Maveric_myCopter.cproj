@@ -274,7 +274,7 @@
         <InterfaceName>JTAG</InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.jtagice3plus</ToolType>
-      <ToolNumber>J30200015895</ToolNumber>
+      <ToolNumber>J30200030913</ToolNumber>
       <ToolName>JTAGICE3</ToolName>
     </com_atmel_avrdbg_tool_jtagice3plus>
   </PropertyGroup>
@@ -636,6 +636,9 @@
     <Compile Include="Library\hal\analog_monitor.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\hal\dummy.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\hal\gps_ublox.c">
       <SubType>compile</SubType>
     </Compile>
@@ -679,6 +682,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\remote_controller.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\sd_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\sd_spi.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\spektrum.h">
