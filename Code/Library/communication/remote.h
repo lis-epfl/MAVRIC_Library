@@ -96,16 +96,16 @@ signal_quality_t remote_check(remote_t* remote);
 void remote_calibrate(remote_t* remote, remote_channel_t channel);
 
 
-float remote_get_throttle(remote_t* remote);
+float remote_get_throttle(const remote_t* remote);
 
 
-float remote_get_roll(remote_t* remote);
+float remote_get_roll(const remote_t* remote);
 
 
-float remote_get_pitch(remote_t* remote);
+float remote_get_pitch(const remote_t* remote);
 
 
-float remote_get_yaw(remote_t* remote);
+float remote_get_yaw(const remote_t* remote);
 
 
 task_return_t remote_send_raw(remote_t* remote);

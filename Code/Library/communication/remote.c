@@ -37,8 +37,8 @@ void remote_init(remote_t* remote, remote_type_t type, const mavlink_stream_t* m
 			remote->channel_inv[CHANNEL_ROLL]     = NORMAL;
 			remote->channel_inv[CHANNEL_PITCH]    = INVERTED;
 			remote->channel_inv[CHANNEL_YAW]      = NORMAL;
-			remote->channel_inv[CHANNEL_GEAR]     = NORMAL;
-			remote->channel_inv[CHANNEL_FLAPS]    = NORMAL;
+			remote->channel_inv[CHANNEL_GEAR]     = INVERTED;
+			remote->channel_inv[CHANNEL_FLAPS]    = INVERTED;
 			remote->channel_inv[CHANNEL_AUX1]     = NORMAL;
 			remote->channel_inv[CHANNEL_AUX2]     = NORMAL;
 			break;
@@ -97,7 +97,7 @@ task_return_t remote_update(remote_t* remote)
 			}
 			else
 			{
-				remote->channels[i] = raw * remote->scale - remote->trims[i];		
+				remote->channels[i] = raw * remote->scale * remote->channel_inv[i] - remote->trims[i];		
 			}
 		}
 
@@ -136,25 +136,25 @@ void remote_calibrate(remote_t* remote, remote_channel_t channel)
 }
 
 
-float remote_get_throttle(remote_t* remote)
+float remote_get_throttle(const remote_t* remote)
 {
 	return remote->channels[CHANNEL_THROTTLE];
 }
 
 
-float remote_get_roll(remote_t* remote)
+float remote_get_roll(const remote_t* remote)
 {
 	return remote->channels[CHANNEL_ROLL];
 }
 
 
-float remote_get_pitch(remote_t* remote)
+float remote_get_pitch(const remote_t* remote)
 {
 	return remote->channels[CHANNEL_PITCH];
 }
 
 
-float remote_get_yaw(remote_t* remote)
+float remote_get_yaw(const remote_t* remote)
 {
 	return remote->channels[CHANNEL_YAW];
 }
