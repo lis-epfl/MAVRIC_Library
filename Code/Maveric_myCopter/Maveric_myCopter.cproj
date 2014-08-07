@@ -1123,6 +1123,9 @@
     <Compile Include="src\tasks.h">
       <SubType>compile</SubType>
     </Compile>
+    <None Include="Library\License.txt">
+      <SubType>compile</SubType>
+    </None>
     <None Include="Library\mavlink\include\mavlink_protobuf_manager.hpp">
       <SubType>compile</SubType>
     </None>
