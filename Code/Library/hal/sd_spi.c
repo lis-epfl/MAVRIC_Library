@@ -429,7 +429,7 @@ static int sd_spi_get_card_type(sd_spi_t *sd_spi)
 
 void sd_spi_get_capacity(sd_spi_t *sd_spi)
 {
-	uint32_t c_size;
+	uint64_t c_size;
 	uint8_t  c_size_mult;
 	uint8_t  read_bl_len;
 	uint8_t  erase_grp_size;

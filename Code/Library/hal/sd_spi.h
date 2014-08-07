@@ -118,7 +118,7 @@ typedef struct
 	bool				init_done;
 	uint8_t				csd[16];                    // stores the Card Specific Data
 	uint8_t				card_type;                   // stores SD_CARD or MMC_CARD type card
-	uint32_t			capacity;                   // stores the capacity in bytes
+	uint64_t			capacity;                   // stores the capacity in bytes
 	uint16_t			capacity_mult;
 	uint32_t			clock;
 	uint32_t			last_block_address;

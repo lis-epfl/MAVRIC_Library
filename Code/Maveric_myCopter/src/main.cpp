@@ -51,7 +51,6 @@ void initialisation()
 int main (void)
 {
 	initialisation();
-	sd_spi_test(&central_data->sd_spi);
 	tasks_create_tasks();
 	
 	while (1 == 1) 
