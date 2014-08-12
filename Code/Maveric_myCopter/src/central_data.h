@@ -57,6 +57,7 @@ extern "C" {
 #include "navigation.h"
 #include "state.h"
 #include "stabilisation.h"
+
 #include "hud.h"
 #include "sd_spi.h"
 
@@ -65,6 +66,8 @@ extern "C" {
 #include "pwm_servos.h"
 #include "servos_mix_quadcopter_diag.h"
 #include "remote.h"
+
+#include "state_machine.h"
 
 // TODO : update documentation
 
@@ -107,16 +110,17 @@ typedef struct  {
 	
 	mavlink_waypoint_handler_t waypoint_handler;
 	
-	navigation_t navigation;								///< The structure to perform GPS navigation
+	navigation_t navigation;									///< The structure to perform GPS navigation
 	
-	state_t state;							///< The structure with all state information
+	state_t state;												///< The structure with all state information
+	state_machine_t state_machine;								///< The structure for the state machine
 	
-	barometer_t pressure;									///< The pressure structure
+	barometer_t pressure;										///< The pressure structure
 	//float pressure_filtered;									///< The filtered pressure
 	//float altitude_filtered;									///< The filtered altitude
 	
-	orca_t orca;											///< The ORCA collision avoidance structure
-	neighbors_t neighbors;									///< The neighbor structure
+	orca_t orca;												///< The ORCA collision avoidance structure
+	neighbors_t neighbors;										///< The neighbor structure
 	
 	hud_structure_t hud_structure;								///< The HUD structure
 

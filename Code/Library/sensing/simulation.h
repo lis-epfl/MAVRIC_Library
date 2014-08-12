@@ -100,7 +100,7 @@ typedef struct
 	state_t* state;											///< The pointer to the state structure
 	servos_t* servos;										///< The pointer to the servos structure
 	const ahrs_t *estimated_attitude;						///< The pointer to the attitude estimation structure
-	bool* waypoint_set;										///< The pointer to the waypoint set flag
+	bool* nav_plan_active;										///< The pointer to the waypoint set flag
 	const mavlink_stream_t* mavlink_stream;					///< The pointer to the mavlink stream structure
 } simulation_model_t;
 

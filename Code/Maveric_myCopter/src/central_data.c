@@ -110,6 +110,13 @@ void central_data_init()
 	
 	delay_ms(100);
 
+	state_machine_init( &central_data.state_machine,
+						&central_data.state,
+						&central_data.waypoint_handler,
+						&central_data.sim_model,
+						&central_data.remote);
+	delay_ms(100);
+
 	// Init imu
 	imu_init(	&central_data.imu,
 				&central_data.mavlink_communication.mavlink_stream);
@@ -132,12 +139,13 @@ void central_data_init()
 	
 	// Init position_estimation_init
 	position_estimation_init(   &central_data.position_estimator,
+								&central_data.state,
 								&central_data.pressure,
 								&central_data.gps,
 								&central_data.ahrs,
 								&central_data.imu,
 								&central_data.mavlink_communication.mavlink_stream,
-								&central_data.waypoint_handler.waypoint_set,
+								&central_data.state.nav_plan_active,
 								&central_data.mavlink_communication.message_handler,
 								HOME_LATITUDE,
 								HOME_LONGITUDE,
@@ -166,7 +174,7 @@ void central_data_init()
 							&central_data.mavlink_communication,
 							&central_data.mavlink_communication.mavlink_stream);
 	waypoint_handler_init_homing_waypoint(&central_data.waypoint_handler);
-	waypoint_handler_waypoint_init(&central_data.waypoint_handler);
+	waypoint_handler_nav_plan_init(&central_data.waypoint_handler);
 	
 	delay_ms(100);
 
@@ -237,7 +245,7 @@ void central_data_init()
 					&central_data.gps,
 					&central_data.state,
 					&central_data.servos,
-					&central_data.waypoint_handler.waypoint_set,
+					&central_data.state.nav_plan_active,
 					&central_data.mavlink_communication.message_handler,
 					&central_data.mavlink_communication.mavlink_stream);
 

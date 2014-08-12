@@ -28,7 +28,7 @@ uint8_t buffer_full(buffer_t * buffer)
 
 uint8_t buffer_put_lossy(buffer_t * buffer, uint8_t byte) 
 {
-	uint16_t tmp;
+	uint8_t tmp;
 	tmp = (buffer->buffer_head + 1)&BUFFER_MASK;
 
 	if (tmp==buffer->buffer_tail) 
@@ -57,7 +57,7 @@ uint8_t buffer_put_lossy(buffer_t * buffer, uint8_t byte)
 
 uint8_t buffer_put(buffer_t * buffer, uint8_t byte) 
 {
-	uint16_t tmp;
+	uint8_t tmp;
 	tmp = (buffer->buffer_head + 1)&BUFFER_MASK;
 
 	if (tmp==buffer->buffer_tail) 

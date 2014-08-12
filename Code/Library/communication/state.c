@@ -139,6 +139,14 @@ void state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 		state->mav_mode.flags.HIL = HIL_OFF;
 	}
 	
+	state->nav_plan_active = false;
+	
+	state->in_the_air = false;
+	
+	state->collision_avoidance = false;
+	
+	state->reset_position = false;
+	
 	// Add callbacks for onboard parameters requests
 	mavlink_message_handler_msg_callback_t callback;
 	
@@ -247,4 +255,23 @@ void state_set_new_mode(state_t *state, uint8_t mode)
 	// Keep current hil flag
 	mav_mode.flags.HIL = state->mav_mode.flags.HIL;
 	state->mav_mode = mav_mode;
+}
+
+
+bool state_test_if_in_mode(state_t *state, uint8_t mav_mode)
+{
+	// get modes without HIL flag
+	mav_mode_t current_mode = state->mav_mode;
+	current_mode.flags.HIL = HIL_OFF;
+	mav_mode_t mode = { .byte=mav_mode };
+	mode.flags.HIL = HIL_OFF;
+	
+	if ( current_mode.byte == mode.byte )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

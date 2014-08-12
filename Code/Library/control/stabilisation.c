@@ -36,7 +36,7 @@ void stabilisation_init(stabiliser_t * stabiliser, control_command_t *controls, 
 	controls->tvel[Y] = 0.0f;
 	controls->tvel[Z] = 0.0f;
 	controls->theading = 0.0f;
-	controls->thrust = -1.0f;	
+	controls->thrust = -1.0f;
 	
 	print_util_dbg_print("Stabilisation init.\n");
 }

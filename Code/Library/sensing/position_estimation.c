@@ -316,7 +316,7 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
  		print_util_dbg_print(")\n");
  	}
 
-	*pos_est->waypoint_set = false;
+	*pos_est->nav_plan_active = false;
 }
 
 
@@ -324,7 +324,7 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void position_estimation_init(position_estimator_t *pos_est, barometer_t *barometer, gps_t *gps, ahrs_t *ahrs, imu_t *imu, const mavlink_stream_t* mavlink_stream, bool* waypoint_set, mavlink_message_handler_t *message_handler, float home_lat, float home_lon, float home_alt, float gravity)
+void position_estimation_init(position_estimator_t *pos_est, state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, const mavlink_stream_t* mavlink_stream, bool* nav_plan_active, mavlink_message_handler_t *mavlink_handler, float home_lat, float home_lon, float home_alt, float gravity)
 {
     int32_t i;
 
@@ -333,7 +333,8 @@ void position_estimation_init(position_estimator_t *pos_est, barometer_t *barome
 	pos_est->ahrs = ahrs;
 	pos_est->imu = imu;
 	pos_est->mavlink_stream = mavlink_stream;
-	pos_est->waypoint_set = waypoint_set;
+	pos_est->state = state;
+	pos_est->nav_plan_active = nav_plan_active;
 	
 	// default GPS home position
 	pos_est->local_position.origin.longitude =   home_lon;
@@ -380,7 +381,7 @@ void position_estimation_init(position_estimator_t *pos_est, barometer_t *barome
 	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER;
 	callbackcmd.function      = (mavlink_cmd_callback_function_t)	&position_estimation_set_new_home_position;
 	callbackcmd.module_struct =										pos_est;
-	mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+	mavlink_message_handler_add_cmd_callback(mavlink_handler, &callbackcmd);
 	
 	print_util_dbg_print("Position estimation initialized.\n");
 }
@@ -398,13 +399,13 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est)
 		pos_est->local_position.timestamp_ms = pos_est->gps->time_last_msg;
 
 		pos_est->last_gps_pos = pos_est->local_position;
-	//}
+	}
 	//else
 	//{
 		//pos_est->local_position.origin.longitude = HOME_LONGITUDE;
 		//pos_est->local_position.origin.latitude = HOME_LATITUDE;
 		//pos_est->local_position.origin.altitude = HOME_ALTITUDE;
-	}
+	//}
 
 	// reset barometer offset
 	bmp085_reset_origin_altitude(pos_est->barometer, pos_est->local_position.origin.altitude);
@@ -436,6 +437,11 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est)
 
 void position_estimation_update(position_estimator_t *pos_est)
 {
+	if (pos_est->state->reset_position)
+	{
+		pos_est->state->reset_position = false;
+		position_estimation_reset_home_altitude(pos_est);
+	}
 	//if (attitude_filter->calibration_level == OFF)
 	{
 		position_estimation_position_integration(pos_est);

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
@@ -708,17 +708,14 @@
     <Compile Include="Library\hal\remote_controller.h">
       <SubType>compile</SubType>
     </Compile>
-<<<<<<< HEAD
     <Compile Include="Library\hal\sd_spi.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\sd_spi.h">
-=======
     <Compile Include="Library\hal\servos.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\servos.h">
->>>>>>> cleaning
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\spektrum.h">
@@ -1680,4 +1677,3 @@
     <Folder Include="src\config\MAVsettings\" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\AvrGCC32.targets" />
-</Project>
