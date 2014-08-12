@@ -511,7 +511,7 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 		}
 		sim->pos_est->init_gps_position = false;
 		sim->state->mav_state = MAV_STATE_STANDBY;
-		sim->state->mav_mode = MAV_MODE_MANUAL_DISARMED;
+		sim->state->mav_mode.byte = MAV_MODE_MANUAL_DISARMED;
 		state_disable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
 		servos_set_value_failsafe(sim->servos);
 	}

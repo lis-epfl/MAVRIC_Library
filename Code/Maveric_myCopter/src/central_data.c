@@ -71,7 +71,7 @@ void central_data_init()
 	// Init state structure
 	state_t state_config =
 	{
-		.mav_mode = MAV_MODE_SAFE,
+		.mav_mode = { .byte = MAV_MODE_SAFE },
 		.mav_state = MAV_STATE_BOOT,
 		.simulation_mode = HIL_OFF, //HIL_ON
 		.autopilot_type = MAV_TYPE_QUADROTOR,
@@ -292,8 +292,41 @@ void central_data_init()
 									&central_data.servos);
 
 	// Init remote
+	remote_conf_t remote_config =
+	{
+		.type = REMOTE_TURNIGY,
+		.mode_config =
+		{
+			.safety_channel = CHANNEL_GEAR,
+			.safety_mode = 
+			{
+				// .byte = MAV_MODE_ATTITUDE_CONTROL
+				.byte = 0
+			},
+			.mode_switch_channel = CHANNEL_FLAPS,
+			.mode_switch_up = 
+			{
+				// .byte = MAV_MODE_VELOCITY_CONTROL 
+				.byte = 2 
+			},
+			.mode_switch_middle = 
+			{
+				// .byte = MAV_MODE_POSITION_HOLD 
+				.byte = 4 
+			},
+			.mode_switch_down = 
+			{
+				// .byte = MAV_MODE_GPS_NAVIGATION 
+				.byte = 8 
+			},
+			.use_custom_switch = false,
+			.custom_switch_channel = CHANNEL_AUX1,
+			.use_test_switch = false,
+			.test_switch_channel = CHANNEL_AUX2,
+		}
+	};
 	remote_init( 	&central_data.remote, 
-					REMOTE_TURNIGY, 
+					&remote_config, 
 					&central_data.mavlink_communication.mavlink_stream );
 
 }

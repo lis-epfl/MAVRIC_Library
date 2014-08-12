@@ -61,14 +61,14 @@ static void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
 				case MAV_MODE_GUIDED_DISARMED:
 				case MAV_MODE_AUTO_DISARMED:
 					state->mav_state = MAV_STATE_STANDBY;
-					state->mav_mode = MAV_MODE_MANUAL_DISARMED;
+					state->mav_mode.byte = MAV_MODE_MANUAL_DISARMED;
 					break;
 				
 				case MAV_MODE_MANUAL_ARMED:
 					//if (remote_controller_get_thrust_from_remote()<-0.95f)
 					{
 						state->mav_state = MAV_STATE_ACTIVE;
-						state->mav_mode = MAV_MODE_MANUAL_ARMED;
+						state->mav_mode.byte = MAV_MODE_MANUAL_ARMED;
 					}
 					break;
 			}
@@ -81,23 +81,23 @@ static void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
 				case MAV_MODE_GUIDED_DISARMED:
 				case MAV_MODE_AUTO_DISARMED:
 					state->mav_state = MAV_STATE_STANDBY;
-					state->mav_mode = MAV_MODE_MANUAL_DISARMED;
+					state->mav_mode.byte = MAV_MODE_MANUAL_DISARMED;
 					break;
 				case MAV_MODE_MANUAL_ARMED:
 					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode = MAV_MODE_MANUAL_ARMED;
+					state->mav_mode.byte = MAV_MODE_MANUAL_ARMED;
 					break;
 				case MAV_MODE_STABILIZE_ARMED:
 					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode = MAV_MODE_STABILIZE_ARMED;
+					state->mav_mode.byte = MAV_MODE_STABILIZE_ARMED;
 					break;
 				case MAV_MODE_GUIDED_ARMED:
 					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode = MAV_MODE_GUIDED_ARMED;
+					state->mav_mode.byte = MAV_MODE_GUIDED_ARMED;
 					break;
 				case MAV_MODE_AUTO_ARMED:
 					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode = MAV_MODE_AUTO_ARMED;
+					state->mav_mode.byte = MAV_MODE_AUTO_ARMED;
 					break;
 			}
 		}
@@ -110,6 +110,7 @@ static void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
 //------------------------------------------------------------------------------
 
 void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, const remote_t* remote, mavlink_message_handler_t *message_handler)
+// void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *message_handler)
 {
 	// Init dependencies
 	state->analog_monitor 	= analog_monitor;
@@ -127,15 +128,15 @@ void state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	
 	state->mav_mode_previous = state->mav_mode;
 	
-	state->simulation_mode_previous = state->simulation_mode;
-	
 	if (state->simulation_mode == HIL_ON)
 	{
-		state->mav_mode |= MAV_MODE_FLAG_HIL_ENABLED;
+		// state->mav_mode |= MAV_MODE_FLAG_HIL_ENABLED;
+		state->mav_mode.flags.HIL = HIL_ON;
 	}
 	else
 	{
-		state->mav_mode |= !MAV_MODE_FLAG_HIL_ENABLED;
+		// state->mav_mode |= !MAV_MODE_FLAG_HIL_ENABLED;
+		state->mav_mode.flags.HIL = HIL_OFF;
 	}
 	
 	// Add callbacks for onboard parameters requests
@@ -151,7 +152,8 @@ void state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	print_util_dbg_print("State initialized.\n");
 }
 
-task_return_t state_send_heartbeat(state_t* state)
+
+task_return_t state_send_heartbeat(const state_t* state)
 {
 	mavlink_message_t msg;
 	const mavlink_stream_t* mavlink_stream = state->mavlink_stream;
@@ -160,7 +162,7 @@ task_return_t state_send_heartbeat(state_t* state)
 								&msg,
 								state->autopilot_type, 
 								state->autopilot_name, 
-								state->mav_mode, 
+								state->mav_mode.byte, 
 								state->simulation_mode, 
 								state->mav_state);
 	mavlink_stream_send(mavlink_stream, &msg);
@@ -168,7 +170,8 @@ task_return_t state_send_heartbeat(state_t* state)
 	return TASK_RUN_SUCCESS;
 }
 
-task_return_t state_send_status(state_t* state)
+
+task_return_t state_send_status(const state_t* state)
 {
 	float battery_voltage = state->analog_monitor->avg[ANALOG_RAIL_10];		// bat voltage (mV), actual battery pack plugged to the board
 	float battery_remaining = state->analog_monitor->avg[ANALOG_RAIL_11] / 12.4f * 100.0f;
@@ -192,7 +195,8 @@ task_return_t state_send_status(state_t* state)
 	return TASK_RUN_SUCCESS;
 }
 
-bool state_test_flag_mode(uint8_t mode, mav_flag_t test_flag)
+
+bool state_test_flag_mode(uint8_t mode, mav_flag_mask_t test_flag)
 {
 	bool result = false;
 	
@@ -204,29 +208,43 @@ bool state_test_flag_mode(uint8_t mode, mav_flag_t test_flag)
 	return result;
 }
 
-void state_enable_mode(state_t *state, mav_flag_t mav_mode_flag)
+
+void state_enable_mode(state_t *state, mav_flag_mask_t mav_mode_flag)
 {
-	state->mav_mode |= mav_mode_flag;
+	state->mav_mode.byte |= mav_mode_flag;
 	state->mav_mode_previous = state->mav_mode;
 }
 
-void state_disable_mode(state_t *state, mav_flag_t mav_mode_flag)
+
+void state_disable_mode(state_t *state, mav_flag_mask_t mav_mode_flag)
 {
-	state->mav_mode |= !mav_mode_flag;
+	// state->mav_mode |= !mav_mode_flag;
+	state->mav_mode.byte &= ~mav_mode_flag;
 	state->mav_mode_previous = state->mav_mode;
 }
 
-bool state_test_if_in_flag_mode(const state_t *state, mav_flag_t mav_mode_flag)
+
+bool state_test_if_in_flag_mode(const state_t *state, mav_flag_mask_t mav_mode_flag)
 {
-	return (state->mav_mode & mav_mode_flag);
+	return (state->mav_mode.byte & mav_mode_flag);
 }
 
-bool state_test_if_first_time_in_mode(state_t *state, mav_mode_t mav_mode)
+
+bool state_test_if_first_time_in_mode(state_t *state)
 {
-	return !(state->mav_mode_previous == state->mav_mode);
+	return !(state->mav_mode_previous.byte == state->mav_mode.byte);
 }
 
-void state_set_new_mode(state_t *state, mav_mode_t mav_mode)
+
+void state_set_new_mode(state_t *state, uint8_t mode)
 {
-	state->mav_mode = mav_mode + (state->mav_mode & MAV_MODE_FLAG_HIL_ENABLED);
+
+	// state->mav_mode = mav_mode + (state->mav_mode & MAV_MODE_FLAG_HIL_ENABLED);
+
+	mav_mode_t mav_mode;
+	mav_mode.byte = mode;
+
+	// Keep current hil flag
+	mav_mode.flags.HIL = state->mav_mode.flags.HIL;
+	state->mav_mode = mav_mode;
 }
