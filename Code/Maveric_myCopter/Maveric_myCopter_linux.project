@@ -662,6 +662,8 @@
       <File Name="Library/hal/itg3200.h"/>
       <File Name="Library/hal/lsm330dlc.c"/>
       <File Name="Library/hal/lsm330dlc.h"/>
+      <File Name="Library/hal/sd_spi.h"/>
+      <File Name="Library/hal/sd_spi.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>
