@@ -112,71 +112,12 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 						state_machine->state->reset_position = true;
 				
 						state_machine->state->nav_plan_active = false;
+						state_machine->state->mav_state = MAV_STATE_ACTIVE;
 						state_set_new_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL);
 						break;
 
 					default:
 						print_util_dbg_print("Switches not ready, both should be pushed!\n");
-						break;
-				}
-			}
-			if (state_test_if_in_flag_mode(state_machine->state,MAV_MODE_FLAG_SAFETY_ARMED))
-			{
-				switch (state_machine->channel_switches)
-				{
-					case 0:
-						state_set_new_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL);
-						if (state_machine->state->in_the_air)
-						{
-							state_machine->state->mav_state = MAV_STATE_ACTIVE;
-						}
-						break;
-
-					case 1:
-						state_set_new_mode(state_machine->state,MAV_MODE_VELOCITY_CONTROL);
-						if (state_machine->state->in_the_air)
-						{
-							state_machine->state->mav_state = MAV_STATE_ACTIVE;
-						}
-						break;
-
-					case 2:
-						if (state_machine->state->in_the_air)
-						{
-							state_set_new_mode(state_machine->state,MAV_MODE_POSITION_HOLD);
-					
-							// Activate automatic take-off mode
-							if (!state_test_if_first_time_in_mode(state_machine->state,MAV_MODE_POSITION_HOLD))
-							{
-								if (state_machine->waypoint_handler->dist2wp_sqr <= 16.0f)
-								{
-									state_machine->state->mav_state = MAV_STATE_ACTIVE;
-									print_util_dbg_print("Automatic take-off finised, dist2wp_sqr (10x):");
-									print_util_dbg_print_num(state_machine->waypoint_handler->dist2wp_sqr * 10.0f,10);
-									print_util_dbg_print(".\n");
-								}
-							}
-						}
-						break;
-
-					case 3:
-						if (state_machine->state->in_the_air)
-						{
-							//state_machine->state->mav_state = MAV_STATE_ACTIVE;
-							state_set_new_mode(state_machine->state,MAV_MODE_GPS_NAVIGATION);
-					
-							// Automatic take-off mode
-							if(!state_test_if_first_time_in_mode(state_machine->state,MAV_MODE_GPS_NAVIGATION))
-							{
-								if (state_machine->waypoint_handler->dist2wp_sqr <= 16.0f)
-								{
-									state_machine->state->mav_state = MAV_STATE_ACTIVE;
-									print_util_dbg_print("Automatic take-off finised, dist2wp_sqr (10x):");
-									print_util_dbg_print_num(state_machine->waypoint_handler->dist2wp_sqr * 10.0f,10);
-									print_util_dbg_print(".\n");
-								}
-							}
-						}
 						break;
 				}
 			
@@ -192,10 +133,6 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 					case -2:
 						state_machine->state->mav_state = MAV_STATE_CRITICAL;
 						break;
-				}
-				if (remote_controller_get_thrust_from_remote() > -0.7f)
-				{
-					state_machine->state->in_the_air = true;
 				}
 			}
 			break;
@@ -282,7 +219,6 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 					{
 						state_machine->state->mav_state = MAV_STATE_EMERGENCY;
 					}
-
 				break;
 			}
 			break;

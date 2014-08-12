@@ -391,8 +391,10 @@ task_return_t tasks_run_stabilisation(void* arg)
 			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
 			central_data->controls.yaw_mode = YAW_RELATIVE;
 			
-			stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
-		
+			if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+			{
+				stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
+			}
 			break;
 		
 		case MAV_MODE_POSITION_HOLD:
@@ -408,8 +410,10 @@ task_return_t tasks_run_stabilisation(void* arg)
 				central_data->controls.yaw_mode = YAW_ABSOLUTE;
 			}
 		
-			stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
-		
+			if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+			{
+				stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
+			}
 			break;
 		
 		case MAV_MODE_GPS_NAVIGATION:
@@ -426,7 +430,10 @@ task_return_t tasks_run_stabilisation(void* arg)
 				central_data->controls.yaw_mode = YAW_ABSOLUTE;
 			}
 		
-			stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
+			if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+			{
+				stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
+			}
 			break;
 		
 		default:

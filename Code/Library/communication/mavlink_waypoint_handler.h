@@ -89,8 +89,6 @@ typedef struct
 	uint32_t start_timeout;										///< The start time for the waypoint timeout
 	uint32_t timeout_max_waypoint;								///< The max waiting time for communication
 
-	uint8_t mode;
-
 	position_estimator_t* position_estimator;					///< The pointer to the position estimation structure
 	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
 	state_t* state;												///< The pointer to the state structure

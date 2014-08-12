@@ -191,7 +191,7 @@ void state_enable_mode(state_t *state, mav_flag_t mav_mode_flag)
 
 void state_disable_mode(state_t *state, mav_flag_t mav_mode_flag)
 {
-	state->mav_mode |= !mav_mode_flag;
+	state->mav_mode &= ~mav_mode_flag;
 	state->mav_mode_previous = state->mav_mode;
 }
 
