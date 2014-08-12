@@ -27,7 +27,7 @@ extern "C" {
 #include "scheduler.h"
 #include "mavlink_communication.h"
 #include "analog_monitor.h"
-#include "remote.h"
+#include "remote_mode.h"
 #include <stdbool.h>
 #include "mav_modes.h"
 
@@ -36,12 +36,12 @@ extern "C" {
  */
 typedef struct  
 {
-	// uint8_t mav_mode;							///< The value of the MAV mode (MAV_MODE enum in common.h)
-	mav_mode_t mav_mode;							///< The value of the MAV mode (MAV_MODE enum in common.h)
+	// uint8_t mav_mode;						///< The value of the MAV mode (MAV_MODE enum in common.h)
+	mav_mode_t mav_mode;						///< The value of the MAV mode (MAV_MODE enum in common.h)
 	uint8_t mav_state;							///< The value of the MAV state (MAV_STATE enum in common.h)
 		
-	// uint8_t mav_mode_previous;					///< The value of the MAV mode at previous time step
-	mav_mode_t mav_mode_previous;					///< The value of the MAV mode at previous time step
+	// uint8_t mav_mode_previous;				///< The value of the MAV mode at previous time step
+	mav_mode_t mav_mode_previous;				///< The value of the MAV mode at previous time step
 		
 	mode_flag_hil_t simulation_mode;			///< The value of the simulation_mode (0: real, 1: simulation)
 	
@@ -54,14 +54,14 @@ typedef struct
 	
 	const analog_monitor_t* analog_monitor;		///< The pointer to the analog monitor structure
 	const mavlink_stream_t* mavlink_stream;		///< Pointer to the mavlin kstream structure
-	const remote_t* remote;						///< Pointer to remote controller
+	const remote_mode_t remote_mode;			///< Pointer to remote controller
 } state_t;
 
 
 /**
  * \brief						Initialise the state of the MAV
  *
- * \param	state		The pointer to the state structure
+ * \param	state				The pointer to the state structure
  * \param	state_config		The pointer to the state configuration structure
  * \param   mavlink_stream		The pointer to the mavlink stream structure
  * \param	message_handler		The pointer to the message handler

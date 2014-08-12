@@ -295,35 +295,39 @@ void central_data_init()
 	remote_conf_t remote_config =
 	{
 		.type = REMOTE_TURNIGY,
-		.mode_config =
-		{
-			.safety_channel = CHANNEL_GEAR,
-			.safety_mode = 
-			{
-				// .byte = MAV_MODE_ATTITUDE_CONTROL
-				.byte = 0
-			},
-			.mode_switch_channel = CHANNEL_FLAPS,
-			.mode_switch_up = 
-			{
-				// .byte = MAV_MODE_VELOCITY_CONTROL 
-				.byte = 2 
-			},
-			.mode_switch_middle = 
-			{
-				// .byte = MAV_MODE_POSITION_HOLD 
-				.byte = 4 
-			},
-			.mode_switch_down = 
-			{
-				// .byte = MAV_MODE_GPS_NAVIGATION 
-				.byte = 8 
-			},
-			.use_custom_switch = false,
-			.custom_switch_channel = CHANNEL_AUX1,
-			.use_test_switch = false,
-			.test_switch_channel = CHANNEL_AUX2,
-		}
+//		.mode_config =
+//		{
+//			.safety_channel = CHANNEL_GEAR,
+//			.safety_mode = 
+//			{
+//				// .byte = MAV_MODE_ATTITUDE_CONTROL
+//				.flags = 
+//				{
+//					.ARMED = ARMED_OFF,
+//					.MANUAL = MANUAL_ON
+//				}
+//			},
+//			.mode_switch_channel = CHANNEL_FLAPS,
+//			.mode_switch_up = 
+//			{
+//				// .byte = MAV_MODE_VELOCITY_CONTROL 
+//				.byte = 2 
+//			},
+//			.mode_switch_middle = 
+//			{
+//				// .byte = MAV_MODE_POSITION_HOLD 
+//				.byte = 4 
+//			},
+//			.mode_switch_down = 
+//			{
+//				// .byte = MAV_MODE_GPS_NAVIGATION 
+//				.byte = 8 
+//			},
+//			.use_custom_switch = false,
+//			.custom_switch_channel = CHANNEL_AUX1,
+//			.use_test_switch = false,
+//			.test_switch_channel = CHANNEL_AUX2,
+//		}
 	};
 	remote_init( 	&central_data.remote, 
 					&remote_config, 

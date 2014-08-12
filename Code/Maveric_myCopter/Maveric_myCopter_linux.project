@@ -223,7 +223,6 @@
             <File Name="src/asf/avr32/services/delay/delay.c"/>
           </VirtualDirectory>
         </VirtualDirectory>
-        <File Name="src/central_data.c"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="config">
@@ -263,6 +262,7 @@
     <File Name="src/boardsupport.c"/>
     <File Name="src/mavlink_telemetry.h"/>
     <File Name="src/mavlink_telemetry.c"/>
+    <File Name="src/central_data.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Library">
     <VirtualDirectory Name="mavlink">
@@ -588,6 +588,8 @@
       <File Name="Library/communication/hud.c"/>
       <File Name="Library/communication/remote.h"/>
       <File Name="Library/communication/remote.c"/>
+      <File Name="Library/communication/remote_mode.c"/>
+      <File Name="Library/communication/remote_mode.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="control">
       <File Name="Library/control/pid_control.h"/>

@@ -68,39 +68,8 @@ typedef enum
 
 typedef struct
 {
-	remote_channel_t 	safety_channel;				///< See remote_mode_t for documentation
-	mav_mode_t			safety_mode;				///< 
-	remote_channel_t 	mode_switch_channel;		///< 
-	mav_mode_t 			mode_switch_up;				///< 
-	mav_mode_t 			mode_switch_middle;			///< 
-	mav_mode_t 			mode_switch_down;			///< 
-	bool				use_custom_switch;			///< 
-	remote_channel_t 	custom_switch_channel;		///< 
-	bool				use_test_switch;			///< 
-	remote_channel_t 	test_switch_channel;		///< 	
-} remote_mode_conf_t;
-
-
-typedef struct
-{
-	remote_channel_t 	safety_channel;				///< Channel to use as 2-way "safety" switch. When 100%: safety mode, When -100%: normal mode (defined by mode_switch_channel)
-	mav_mode_t			safety_mode;				///< Mode when the safety channel is at 100% (ARMED and HIL bit flags are ignored)
-	remote_channel_t 	mode_switch_channel;		///< Channel to use as 3-way mode switch. The 3 corresponding modes are used when the safety channel is at -100%
-	mav_mode_t 			mode_switch_up;				///< Mode when the mode switch is UP (ARMED and HIL bit flags are ignored)
-	mav_mode_t 			mode_switch_middle;			///< Mode when the mode switch is MIDDLE (ARMED and HIL bit flags are ignored)
-	mav_mode_t 			mode_switch_down;			///< Mode when the mode switch is DOWN (ARMED and HIL bit flags are ignored)
-	bool				use_custom_switch;			///< Indicates whether a switch to activate the custom flag should be used
-	remote_channel_t 	custom_switch_channel;		///< Channel to use as 2-way custom switch. If not in safety, the custom bit flag is added to the current mode 
-	bool				use_test_switch;			///< Indicates whether a switch to activate the test flag should be used
-	remote_channel_t 	test_switch_channel;		///< Channel to use as 2-way test switch. If not in safety, the switch overrides the test bit flag: 0 when switch is UP, 1 when switch is DOWN
-	mav_mode_t			current_desired_mode;		///< Mav mode indicated by the remote
-} remote_mode_t;
-
-
-typedef struct
-{
 	remote_type_t type;
-	remote_mode_conf_t mode_config;
+	// remote_mode_conf_t mode_config;
 } remote_conf_t;
 
 
@@ -114,7 +83,7 @@ typedef struct
 	int16_t deadzone;
 	signal_quality_t signal_quality;
 	remote_type_t type;
-	remote_mode_t mode;
+	// remote_mode_t mode;
 	const mavlink_stream_t* mavlink_stream;
 } remote_t;
 
@@ -147,15 +116,6 @@ float remote_get_pitch(const remote_t* remote);
 
 
 float remote_get_yaw(const remote_t* remote);
-
-
-void remote_mode_init(remote_mode_t* mode_from_remote, const remote_mode_conf_t* config);
-
-
-void remote_mode_update(remote_t* remote);
-
-
-mav_mode_t remote_mode_get(remote_t* remote);
 
 
 task_return_t remote_send_raw(const remote_t* remote);
