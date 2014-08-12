@@ -123,12 +123,15 @@ void remote_dsm2_rc_activate_bind_mode()
 {
 	int32_t i = 0;
 	uint32_t cpu_freq = sysclk_get_cpu_hz();
+	
+	remote_dsm2_rc_switch_power(true);
+	
 	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_DOWN);	
 	delay_ms(1);
 	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT| GPIO_INIT_LOW);
 
-	//delay_ms(10);
-	//wait 10 seconds for spektrum to be plugged in
+	delay_ms(10);
+	//wait for spektrum to be plugged in
 
 	while ((gpio_get_pin_value(DSM_RECEIVER_PIN) == 0) && (i < 10000)) 
 	{

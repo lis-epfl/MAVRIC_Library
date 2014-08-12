@@ -2071,13 +2071,13 @@ Push-push type uSD socket. Schematic element and footprint production proven. Sp
 <technologies>
 <technology name="">
 <attribute name="DISTRIBUTOR" value="Mouser" constant="no"/>
-<attribute name="ORDER_CODE" value="2x 855-M22-7131042" constant="no"/>
+<attribute name="ORDER_CODE" value="855-M22-7131042" constant="no"/>
 <attribute name="PLACE_PART" value="YES" constant="no"/>
-<attribute name="UNIT_PRICE" value="2.46" constant="no"/>
-<attribute name="UNIT_PRICE_100X" value="1.914" constant="no"/>
-<attribute name="UNIT_PRICE_10X" value="2.02" constant="no"/>
-<attribute name="UNIT_PRICE_25X" value="2.02" constant="no"/>
-<attribute name="UNIT_PRICE_50X" value="1.914" constant="no"/>
+<attribute name="UNIT_PRICE" value="1.23" constant="no"/>
+<attribute name="UNIT_PRICE_100X" value="0.957" constant="no"/>
+<attribute name="UNIT_PRICE_10X" value="1.01" constant="no"/>
+<attribute name="UNIT_PRICE_25X" value="1.01" constant="no"/>
+<attribute name="UNIT_PRICE_50X" value="1.01" constant="no"/>
 </technology>
 </technologies>
 </device>
@@ -3373,6 +3373,7 @@ These are standard reverse protection diodes and small signal diodes. SMA packag
 <smd name="P$6" x="1.175" y="0" dx="1.3" dy="0.42" layer="1" rot="R180"/>
 <smd name="P$7" x="1.175" y="0.65" dx="1.3" dy="0.42" layer="1" rot="R180"/>
 <smd name="P$8" x="1.175" y="1.3" dx="1.3" dy="0.42" layer="1" rot="R180"/>
+<circle x="-1.15" y="2.15" radius="0.22360625" width="0.127" layer="21"/>
 </package>
 </packages>
 <symbols>
@@ -18519,6 +18520,7 @@ Source: www.kingbright.com</description>
 <attribute name="PLACE_PART" value="YES"/>
 </part>
 <part name="LD1" library="LEDs" deviceset="LED" device="CHIPLED_0805_GREEN" value="green">
+<attribute name="ORDER_CODE" value="754-1131-1-ND"/>
 <attribute name="PLACE_PART" value="YES"/>
 <attribute name="UNIT_PRICE" value="0.25"/>
 <attribute name="UNIT_PRICE_100X" value="0.1365"/>
@@ -21032,28 +21034,6 @@ Source: www.kingbright.com</description>
 </net>
 <net name="+6V" class="1">
 <segment>
-<wire x1="-81.28" y1="-15.24" x2="-81.28" y2="-10.16" width="0.1524" layer="91"/>
-<wire x1="-88.9" y1="-20.32" x2="-81.28" y2="-10.16" width="0.1524" layer="91"/>
-<junction x="-81.28" y="-10.16"/>
-<pinref part="C5" gate="G$1" pin="2"/>
-<pinref part="L2" gate="G$1" pin="2"/>
-<pinref part="R7" gate="G$1" pin="1"/>
-<wire x1="-81.28" y1="-2.54" x2="-81.28" y2="-10.16" width="0.1524" layer="91"/>
-<wire x1="-101.6" y1="-2.54" x2="-81.28" y2="-2.54" width="0.1524" layer="91"/>
-<junction x="-81.28" y="-2.54"/>
-<pinref part="D6" gate="G$1" pin="A"/>
-<label x="-76.2" y="0" size="1.778" layer="95"/>
-<wire x1="-81.28" y1="-2.54" x2="-71.12" y2="-2.54" width="0.1524" layer="91"/>
-<label x="-78.74" y="-5.08" size="1.778" layer="95"/>
-<wire x1="-71.12" y1="-2.54" x2="-71.12" y2="2.54" width="0.1524" layer="91"/>
-<wire x1="-12.7" y1="-35.56" x2="-12.7" y2="-25.4" width="0.1524" layer="91"/>
-<label x="-12.7" y="-27.94" size="1.778" layer="95"/>
-<pinref part="J3" gate="G$1" pin="P$2"/>
-<wire x1="317.5" y1="48.26" x2="304.8" y2="48.26" width="0.1524" layer="91"/>
-<label x="304.8" y="48.26" size="1.778" layer="95"/>
-<pinref part="J1" gate="G$1" pin="P$2"/>
-</segment>
-<segment>
 <wire x1="93.98" y1="5.08" x2="76.2" y2="5.08" width="0.1524" layer="91"/>
 <label x="78.74" y="5.08" size="1.778" layer="95"/>
 <pinref part="R20" gate="G$1" pin="2"/>
@@ -21392,6 +21372,30 @@ Source: www.kingbright.com</description>
 <segment>
 <pinref part="R24" gate="G$1" pin="1"/>
 <pinref part="SOT1" gate="G$1" pin="RS"/>
+</segment>
+</net>
+<net name="+5V" class="1">
+<segment>
+<wire x1="-81.28" y1="-15.24" x2="-81.28" y2="-10.16" width="0.1524" layer="91"/>
+<wire x1="-88.9" y1="-20.32" x2="-81.28" y2="-10.16" width="0.1524" layer="91"/>
+<junction x="-81.28" y="-10.16"/>
+<pinref part="C5" gate="G$1" pin="2"/>
+<pinref part="L2" gate="G$1" pin="2"/>
+<pinref part="R7" gate="G$1" pin="1"/>
+<wire x1="-81.28" y1="-2.54" x2="-81.28" y2="-10.16" width="0.1524" layer="91"/>
+<wire x1="-101.6" y1="-2.54" x2="-81.28" y2="-2.54" width="0.1524" layer="91"/>
+<junction x="-81.28" y="-2.54"/>
+<pinref part="D6" gate="G$1" pin="A"/>
+<label x="-76.2" y="0" size="1.778" layer="95"/>
+<wire x1="-81.28" y1="-2.54" x2="-71.12" y2="-2.54" width="0.1524" layer="91"/>
+<label x="-78.74" y="-5.08" size="1.778" layer="95"/>
+<wire x1="-71.12" y1="-2.54" x2="-71.12" y2="2.54" width="0.1524" layer="91"/>
+<wire x1="-12.7" y1="-35.56" x2="-12.7" y2="-25.4" width="0.1524" layer="91"/>
+<label x="-12.7" y="-27.94" size="1.778" layer="95"/>
+<pinref part="J3" gate="G$1" pin="P$2"/>
+<wire x1="317.5" y1="48.26" x2="304.8" y2="48.26" width="0.1524" layer="91"/>
+<label x="304.8" y="48.26" size="1.778" layer="95"/>
+<pinref part="J1" gate="G$1" pin="P$2"/>
 </segment>
 </net>
 </nets>

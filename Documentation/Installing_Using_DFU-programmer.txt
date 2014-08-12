@@ -49,11 +49,11 @@ WINDOWS instructions
 a) Install driver
 ~~~~~~~~~~~~~~~~~
 
-- connect the usb cable to a maveric board WITH THE BOOTLOADER FLASHED (If it's not the case, read the documentation related to the bootloader)
+- connect a USB cable to a maveric board WITH THE BOOTLOADER FLASHED (If it's not the case, read the documentation related to the bootloader) (WARNING: Some cellphone cables are only for charging through USB, DO NOT USE ONE OF THEM)
 - install the driver: (DO NOT let windows search for the driver) Specify the path to the .inf file found in the folder Code\Library\DFU-programmer\DFU\dfu-prog-usb-1.2.2 
 
 
-c) A typical flashing sequence:
+b) A typical flashing sequence:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 dfu-programmer at32uc3c1512 erase

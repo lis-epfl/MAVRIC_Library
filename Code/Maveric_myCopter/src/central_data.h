@@ -61,7 +61,7 @@ extern "C" {
 #include "stabilisation.h"
 #include "hud.h"
 #include "state_machine.h"
-
+#include "sd_spi.h"
 // TODO : update documentation
 
 /**
@@ -114,6 +114,8 @@ typedef struct  {
 	hud_structure_t hud_structure;								///< The HUD structure
 
 	i2cxl_sonar_t i2cxl_sonar;									///< The i2cxl sonar structure
+	
+	sd_spi_t sd_spi;											///< The sd_SPI driver structure
 } central_data_t;
 
 

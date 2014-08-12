@@ -70,7 +70,7 @@ typedef struct
 typedef struct 
 {
 	float rpy[3];	///<	Roll pitch and yaw angles in radians
-} Aero_Attitude_t;
+} aero_attitude_t;
 
 
 /**
@@ -102,7 +102,7 @@ local_coordinates_t coord_conventions_global_to_local_position(global_position_t
  *
  * \return     Aero attitude
  */
-Aero_Attitude_t coord_conventions_quat_to_aero(quat_t qe);
+aero_attitude_t coord_conventions_quat_to_aero(quat_t qe);
 
 
 /**
@@ -112,7 +112,7 @@ Aero_Attitude_t coord_conventions_quat_to_aero(quat_t qe);
  * 
  * \return     	Attitude quaternion
  */
-quat_t coord_conventions_quaternion_from_aero(Aero_Attitude_t aero);
+quat_t coord_conventions_quaternion_from_aero(aero_attitude_t aero);
 
 
 /**

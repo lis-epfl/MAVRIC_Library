@@ -24,6 +24,9 @@ static central_data_t central_data;
 
 void central_data_init()
 {	
+	// Init ahrs
+	servo_pwm_init(central_data.servos);
+	
 	// Init main sheduler
 	scheduler_conf_t scheduler_config =
 	{
@@ -106,8 +109,7 @@ void central_data_init()
 
 	delay_ms(100);
 
-	// Init ahrs
-	servo_pwm_init(central_data.servos);
+	
 	
 	delay_ms(100);
 	
@@ -243,6 +245,9 @@ void central_data_init()
 	
 	// Init sonar
 	// i2cxl_sonar_init(&central_data.i2cxl_sonar);
+	
+	// Initialize SD/MMC driver with SPI clock (PBA).
+	sd_spi_init(&central_data.sd_spi);
 }
 
 central_data_t* central_data_get_pointer_to_struct(void)

@@ -529,7 +529,7 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 
 task_return_t simulation_send_state(simulation_model_t* sim_model)
 {
-	Aero_Attitude_t aero_attitude;
+	aero_attitude_t aero_attitude;
 	aero_attitude = coord_conventions_quat_to_aero(sim_model->ahrs.qe);
 
 	global_position_t gpos = coord_conventions_local_to_global_position(sim_model->local_position);
@@ -562,7 +562,7 @@ task_return_t simulation_send_state(simulation_model_t* sim_model)
 
 task_return_t simulation_send_quaternions(simulation_model_t *sim_model)
 {
-	Aero_Attitude_t aero_attitude;
+	aero_attitude_t aero_attitude;
 	aero_attitude = coord_conventions_quat_to_aero(sim_model->ahrs.qe);
 
 	global_position_t gpos = coord_conventions_local_to_global_position(sim_model->local_position);

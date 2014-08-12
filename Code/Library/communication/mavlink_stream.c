@@ -25,7 +25,7 @@
 
 
 // mavlink_system_t mavlink_system;
-byte_stream_t* mavlink_tx_stream;
+// byte_stream_t* mavlink_tx_stream;
 
 
 //------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ byte_stream_t* mavlink_tx_stream;
 
 void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config)
 {	
-	mavlink_tx_stream                 = config->tx_stream;
+	// mavlink_tx_stream                 = config->tx_stream;
 	mavlink_stream->tx         		  = config->tx_stream;
 	mavlink_stream->rx                = config->rx_stream;
 	mavlink_stream->sysid             = config->sysid;
@@ -68,7 +68,7 @@ void mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message
 		// Send byte per byte
 		for (int i = 0; i < len; ++i)
 		{
-			mavlink_stream->tx->put(mavlink_tx_stream->data, buf[i]);
+			mavlink_stream->tx->put(mavlink_stream->tx->data, buf[i]);
 		}
 	}
 	else
@@ -77,7 +77,7 @@ void mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message
 
 		// for (int i = 0; i < len; ++i)
 		// {
-		// 	mavlink_tx_stream->put(mavlink_tx_stream->data, buf[i]);
+		// 	mavlink_stream->tx->put(mavlink_stream->tx->data, buf[i]);
 		// }
 		// bytestream_start_transmission(mavlink_tx_stream);		
 	}
