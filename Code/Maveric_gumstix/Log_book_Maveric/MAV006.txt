@@ -1,0 +1,17 @@
+*************************************************************
+***************** MAV006 Log book ***************************
+*************************************************************
+status: not fly ready
+
+
+13-11-21: ID flashed
+13-11-21: need calibration
+14-02-18: motors setpoint set
+14-02-18: calibration done
+
+14-02-18: ID & parameters flashed
+14-02-18: missing GPS cable
+14-02-25: GPS cable set
+14-02-25: handed tuned calibration
+14-02-28: hand-calibration, created .h file in config/MAVsettings and updated flash
+
