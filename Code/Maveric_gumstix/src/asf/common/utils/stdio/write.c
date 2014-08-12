@@ -50,6 +50,11 @@
 volatile void *volatile stdio_base;
 int (*ptr_put)(void volatile*,int);
 
+#if ( defined(__ICCAVR32__) || defined(__ICCAVR__))
+	//No function_prototype_definition there
+#elif (defined(__GNUC__) && !defined(XMEGA))
+	int __attribute__((weak)) _write (int file, char * ptr, int len);
+#endif
 
 #if ( defined(__ICCAVR32__) || defined(__ICCAVR__))
 

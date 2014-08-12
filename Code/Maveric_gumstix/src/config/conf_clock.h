@@ -1,5 +1,5 @@
 /**
- * \file
+ * \file conf_clock.h
  *
  * \brief Chip-specific system clock manager configuration
  *
@@ -35,6 +35,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
+
+
 #ifndef CONF_CLOCK_H_INCLUDED
 #define CONF_CLOCK_H_INCLUDED
 
