@@ -77,7 +77,7 @@ void state_machine_switch_off_motors(state_machine_t* state_machine)
 	print_util_dbg_print("Switching off motors!\n");
 
 	state_machine->state->mav_state = MAV_STATE_STANDBY;
-	state_disable_mode(state_machine->state, MAV_MODE_FLAG_SAFETY_ARMED);
+	//state_disable_mode(state_machine->state, MAV_MODE_FLAG_SAFETY_ARMED);
 	state_set_new_mode(state_machine->state, MAV_MODE_SAFE);
 	
 	state_machine->state->in_the_air = false;

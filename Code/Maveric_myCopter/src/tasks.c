@@ -294,7 +294,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
 			if (state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_STABILIZE_ENABLED))
 			{
-				navigation_waypoint_critical_handler(&central_data->waypoint_handler);
+				navigation_critical_handler(&central_data->waypoint_handler);
 			}
 			
 			switch (rc_check)

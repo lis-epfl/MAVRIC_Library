@@ -1111,7 +1111,7 @@
     <Compile Include="src\config\MAVsettings\MAV203_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\main.c">
+    <Compile Include="src\main.cpp">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\mavlink_telemetry.c">

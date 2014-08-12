@@ -111,7 +111,7 @@ void navigation_waypoint_take_off_handler(mavlink_waypoint_handler_t* waypoint_h
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  */
-void navigation_waypoint_hold_position_handler(mavlink_waypoint_handler_t* waypoint_handler);
+void navigation_hold_position_handler(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
  * \brief	Drives the GPS navigation procedure
@@ -125,7 +125,7 @@ void navigation_waypoint_navigation_handler(mavlink_waypoint_handler_t* waypoint
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  */
-void navigation_waypoint_critical_handler(mavlink_waypoint_handler_t* waypoint_handler);
+void navigation_critical_handler(mavlink_waypoint_handler_t* waypoint_handler);
 
 #ifdef __cplusplus
 }
