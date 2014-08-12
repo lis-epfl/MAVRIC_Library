@@ -687,6 +687,12 @@
     <Compile Include="Library\hal\remote_controller.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\hal\sd_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\sd_spi.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\hal\spektrum.h">
       <SubType>compile</SubType>
     </Compile>
