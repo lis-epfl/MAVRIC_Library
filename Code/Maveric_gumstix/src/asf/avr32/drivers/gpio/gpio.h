@@ -49,6 +49,10 @@
 #include <avr32/io.h>
 #include "compiler.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif 
+
 /*! \name Return Values of the GPIO API
  */
 //! @{
@@ -676,5 +680,8 @@ extern int gpio_configure_pin_periph_event_mode(uint32_t pin, uint32_t mode, uin
 //! @}
 #endif
 
+#ifdef __cplusplus
+}
+#endif 
 
 #endif  // _GPIO_H_
