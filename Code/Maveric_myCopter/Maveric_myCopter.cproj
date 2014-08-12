@@ -609,6 +609,21 @@
     <Compile Include="Library\control\adaptive_parameter.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\control\attitude_controller_p2.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\control\attitude_controller_p2.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\control\attitude_error_estimator.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\control\attitude_error_estimator.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\control\control_command.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\control\orca.c">
       <SubType>compile</SubType>
     </Compile>
@@ -619,6 +634,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\control\pid_control.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\control\servos_mix_quadcopter_diag.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\control\servos_mix_quadcopter_diag.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\control\stabilisation_copter.c">
@@ -678,16 +699,35 @@
     <Compile Include="Library\hal\piezo_speaker.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\hal\pwm_servos.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\pwm_servos.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\hal\remote_controller.h">
       <SubType>compile</SubType>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="Library\hal\sd_spi.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\sd_spi.h">
+=======
+    <Compile Include="Library\hal\servos.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\servos.h">
+>>>>>>> cleaning
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\spektrum.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\spektrum_satellite.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\spektrum_satellite.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\time_keeper.c">
@@ -1184,18 +1224,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\led.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\servo_pwm.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\servo_pwm.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\remote_dsm2.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\remote_dsm2.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\spi_buffered.c">

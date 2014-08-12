@@ -247,7 +247,7 @@ task_return_t navigation_update(navigation_t* navigation)
 			break;
 
 		case MAV_STATE_ACTIVE:
-			switch (navigation->state->mav_mode - (navigation->state->mav_mode & MAV_MODE_FLAG_DECODE_POSITION_HIL))
+			switch (navigation->state->mav_mode.byte - (navigation->state->mav_mode.byte & MAV_MODE_FLAG_DECODE_POSITION_HIL))
 			{
 				case MAV_MODE_GPS_NAVIGATION:
 					if (navigation->waypoint_handler->waypoint_set)

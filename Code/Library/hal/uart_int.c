@@ -193,7 +193,7 @@ void uart_int_register_write_stream(usart_config_t *usart_conf, byte_stream_t *s
 	//stream->get = &uart_int_get_byte;
 	stream->put = (uint8_t(*)(stream_data_t*, uint8_t))&uart_int_send_byte;			// Here we need to explicitly cast the function to match the prototype
 	stream->flush = (void(*)(stream_data_t*))&uart_int_flush;						// stream->get and stream->put expect stream_data_t* as first argument
-	stream->buffer_empty = (int32_t(*)(stream_data_t*))&uart_out_buffer_empty;			// but buffer_get and buffer_put take Buffer_t* as first argument
+	stream->buffer_empty = (int32_t(*)(stream_data_t*))&uart_out_buffer_empty;			// but buffer_get and buffer_put take buffer_t* as first argument
 	stream->data = usart_conf;
 }
 

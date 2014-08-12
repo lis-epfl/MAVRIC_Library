@@ -31,6 +31,13 @@
 #include "lsm330dlc.h"
 #include "hmc5883l.h"
 
+#include "pwm_servos.h"
+
+
+#include "remote_controller.h"
+#include "remote.h"
+#include "attitude_controller_p2.h"
+
 central_data_t* central_data;
 
 /**
@@ -45,12 +52,13 @@ task_set_t* tasks_get_main_taskset()
 	return central_data->scheduler.task_set;
 }
 
-void tasks_rc_user_channels(uint8_t *chan_switch, int8_t *rc_check, int8_t *motor_state)
+void tasks_rc_user_channels(uint8_t *chan_switch, signal_quality_t* rc_check, int8_t *motor_state)
 {
 	
 	remote_controller_get_channel_mode(chan_switch);
 	
-	if ((remote_dsm2_rc_get_channel_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0f)
+	// if ((spektrum_satellite_get_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0f)
+	if ( central_data->remote.channels[CHANNEL_AUX1] > 0.0f )
 	{
 		central_data->navigation.collision_avoidance = true;
 	}
@@ -61,16 +69,16 @@ void tasks_rc_user_channels(uint8_t *chan_switch, int8_t *rc_check, int8_t *moto
 	
 	remote_controller_get_motor_state(motor_state);
 	
-	*rc_check = remote_dsm2_rc_check_receivers();
-	}
+	*rc_check = remote_check( &central_data->remote );
+}
 
 void switch_off_motors(void)
 {
 	print_util_dbg_print("Switching off motors!\n");
 
 	central_data->state.mav_state = MAV_STATE_STANDBY;
-	state_disable_mode(&central_data->state,MAV_MODE_FLAG_SAFETY_ARMED);
-	state_set_new_mode(&central_data->state,MAV_MODE_SAFE);
+	state_disable_mode(&central_data->state, MAV_MODE_FLAG_SAFETY_ARMED);
+	state_set_new_mode(&central_data->state, MAV_MODE_SAFE);
 	
 	central_data->waypoint_handler.in_the_air = false;
 }
@@ -78,12 +86,13 @@ void switch_off_motors(void)
 task_return_t tasks_set_mav_mode_n_state(void* arg)
 {
 	uint8_t channel_switches = 0;
-	int8_t RC_check = 0;
+	signal_quality_t RC_check = SIGNAL_GOOD;
 	int8_t motor_switch = 0;
 	
 	float dist_from_home_sqr;
 	
 	LED_Toggle(LED1);
+	// LED_Toggle(LED2);
 	
 	tasks_rc_user_channels(&channel_switches,&RC_check, &motor_switch);
 	
@@ -140,7 +149,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 							state_set_new_mode(&central_data->state,MAV_MODE_POSITION_HOLD);
 							
 							// Activate automatic take-off mode
-							if (state_test_if_first_time_in_mode(&central_data->state,MAV_MODE_POSITION_HOLD))
+							if (state_test_if_first_time_in_mode(&central_data->state) )
 							{
 								waypoint_handler_waypoint_take_off(&central_data->waypoint_handler);
 							}
@@ -166,7 +175,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 							state_set_new_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION);
 							
 							// Automatic take-off mode
-							if(state_test_if_first_time_in_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION))
+							if(state_test_if_first_time_in_mode(&central_data->state) )
 							{
 								waypoint_handler_waypoint_take_off(&central_data->waypoint_handler);
 							}
@@ -193,18 +202,18 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 				
 				switch (RC_check)
 				{
-					case 1:
+					case SIGNAL_GOOD:
 						break;
 
-					case -1:
+					case SIGNAL_BAD:
 						central_data->state.mav_state = MAV_STATE_CRITICAL;
 						break;
 
-					case -2:
+					case SIGNAL_LOST:
 						central_data->state.mav_state = MAV_STATE_CRITICAL;
 						break;
 				}
-				if (remote_controller_get_thrust_from_remote() > -0.7f)
+				if (remote_get_throttle( &central_data->remote ) > -0.7f)
 				{
 					central_data->waypoint_handler.in_the_air = true;
 				}
@@ -230,7 +239,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 
 				case 2:
 					state_set_new_mode(&central_data->state,MAV_MODE_POSITION_HOLD);
-					if (state_test_if_first_time_in_mode(&central_data->state,MAV_MODE_POSITION_HOLD))
+					if (state_test_if_first_time_in_mode(&central_data->state) )
 					{
 						waypoint_handler_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.local_position);
 					}
@@ -238,7 +247,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 
 				case 3:
 					state_set_new_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION);
-					if (state_test_if_first_time_in_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION))
+					if (state_test_if_first_time_in_mode(&central_data->state) )
 					{
 						central_data->waypoint_handler.auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
 						waypoint_handler_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.local_position);
@@ -263,14 +272,14 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 		
 			switch (RC_check)
 			{
-				case 1:
+				case SIGNAL_GOOD:
 					break;
 
-				case -1:
+				case SIGNAL_BAD:
 					central_data->state.mav_state = MAV_STATE_CRITICAL;
 					break;
 
-				case -2:
+				case SIGNAL_LOST:
 					central_data->state.mav_state = MAV_STATE_CRITICAL;
 					break;
 			}
@@ -309,17 +318,17 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 			
 			switch (RC_check)
 			{
-				case 1:  
+				case SIGNAL_GOOD:  
 					// !! only if receivers are back, switch into appropriate mode
 					central_data->state.mav_state = MAV_STATE_ACTIVE;
 					central_data->waypoint_handler.critical_behavior = CLIMB_TO_SAFE_ALT;
 					central_data->waypoint_handler.critical_next_state = false;
 					break;
 
-				case -1:
+				case SIGNAL_BAD:
 					break;
 
-				case -2:
+				case SIGNAL_LOST:
 					if (central_data->waypoint_handler.critical_landing)
 					{
 						central_data->state.mav_state = MAV_STATE_EMERGENCY;
@@ -333,14 +342,14 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 			state_set_new_mode(&central_data->state,MAV_MODE_SAFE);
 			switch (RC_check)
 			{
-				case 1:
+				case SIGNAL_GOOD:
 					central_data->state.mav_state = MAV_STATE_STANDBY;
 					break;
 
-				case -1:
+				case SIGNAL_BAD:
 					break;
 
-				case -2:
+				case SIGNAL_LOST:
 					break;
 			}
 			break;
@@ -348,11 +357,11 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 	
 	central_data->state.mav_mode_previous = central_data->state.mav_mode;
 	
-	if (central_data->state.simulation_mode_previous != central_data->state.simulation_mode)
-	{
-		simulation_switch_between_reality_n_simulation(&central_data->sim_model);
-		central_data->state.simulation_mode_previous = central_data->state.simulation_mode;
-	}
+	// if (central_data->state.simulation_mode_previous != central_data->state.simulation_mode)
+	// {
+	// 	simulation_switch_between_reality_n_simulation(&central_data->sim_model);
+	// 	central_data->state.simulation_mode_previous = central_data->state.simulation_mode;
+	// }
 	
 	return TASK_RUN_SUCCESS;
 }
@@ -385,7 +394,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 {
 	tasks_run_imu_update(0);
 	
-	switch(central_data->state.mav_mode - (central_data->state.mav_mode & MAV_MODE_FLAG_DECODE_POSITION_HIL))
+	switch(central_data->state.mav_mode.byte - (central_data->state.mav_mode.byte & MAV_MODE_FLAG_DECODE_POSITION_HIL))
 	{
 		case MAV_MODE_ATTITUDE_CONTROL:
 			remote_controller_get_command_from_remote(&central_data->controls);
@@ -440,18 +449,58 @@ task_return_t tasks_run_stabilisation(void* arg)
 			break;
 		
 		default:
-			servo_pwm_failsafe(central_data->servos);
+			servos_set_value_failsafe( &central_data->servos );
 			break;
 	}
 	
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
 	if (!state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_HIL_ENABLED))
 	{
-		servo_pwm_set(central_data->servos);
+		pwm_servos_write_to_hardware( &central_data->servos );
 	}
 	
 	return TASK_RUN_SUCCESS;
 }
+
+// new task to test P^2 attutude controller
+task_return_t tasks_run_stabilisation_quaternion(void* arg);
+task_return_t tasks_run_stabilisation_quaternion(void* arg)
+{
+	tasks_run_imu_update(0);
+	
+	switch(central_data->state.mav_mode.byte - (central_data->state.mav_mode.byte & MAV_MODE_FLAG_DECODE_POSITION_HIL))
+	{
+		case MAV_MODE_ATTITUDE_CONTROL:
+		case MAV_MODE_VELOCITY_CONTROL:
+		case MAV_MODE_POSITION_HOLD:
+		case MAV_MODE_GPS_NAVIGATION:
+			remote_controller_get_command_from_remote(&central_data->controls);
+			
+			central_data->command.attitude.rpy[0] 	= 2 * central_data->controls.rpy[0];
+			central_data->command.attitude.rpy[1] 	= 2 * central_data->controls.rpy[1];
+			central_data->command.attitude.rpy[2] 	= 2 * central_data->controls.rpy[2];
+			central_data->command.attitude.mode 	= ATTITUDE_COMMAND_MODE_RPY;
+			central_data->command.thrust.thrust 	= central_data->controls.thrust;
+		
+			attitude_controller_p2_update( &central_data->attitude_controller );			
+			servos_mix_quadcopter_diag_update( &central_data->servo_mix );
+			break;
+		
+		default:
+			servos_set_value_failsafe( &central_data->servos );
+			break;
+	}
+
+	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
+	if (!state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_HIL_ENABLED))
+	{
+		pwm_servos_write_to_hardware( &central_data->servos );
+	}
+	
+	return TASK_RUN_SUCCESS;
+} 
+
+
 
 task_return_t tasks_run_gps_update(void* arg) 
 {
@@ -498,15 +547,19 @@ void tasks_create_tasks()
 	
 	scheduler_t* scheduler = &central_data->scheduler;
 
-	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation                                          , 0                                                    , 0);
-	scheduler_add_task(scheduler    , 15000                           , RUN_REGULAR , PERIODIC_RELATIVE, PRIORITY_HIGH   , &tasks_run_barometer_update                                       , 0                                                    , 1);
-	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGH   , &tasks_run_gps_update                                             , 0                                                    , 2);
-	scheduler_add_task(scheduler    , ORCA_TIME_STEP_MILLIS * 1000.0f , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update                               , (task_argument_t)&central_data->navigation		 , 3);
-	scheduler_add_task(scheduler    , 200000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_NORMAL , &tasks_set_mav_mode_n_state                                       , 0                                                    , 4);
-	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&mavlink_communication_update                    , (task_argument_t)&central_data->mavlink_communication , 5);
-	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&analog_monitor_update                           , (task_argument_t)&central_data->analog_monitor                   , 6);
-	scheduler_add_task(scheduler    , 10000                           , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&waypoint_handler_control_time_out_waypoint_msg  , (task_argument_t)&central_data->waypoint_handler                                                    , 7);
-	// scheduler_add_task(scheduler , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_NORMAL , &sonar_update                                                     , 0                                                    , 0);
+	// scheduler_add_task(scheduler, 4000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation                                          , 0                                                    , 0);
+	scheduler_add_task(scheduler, 4000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation_quaternion                               , 0 													, 0);
+
+	scheduler_add_task(scheduler, 20000, 	RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_HIGH   , (task_function_t)&remote_update 									, (task_argument_t)&central_data->remote 				, 1);
+//	scheduler_add_task(scheduler, 200000, 	RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_NORMAL , (task_function_t)&remote_mode_update 								, (task_argument_t)&central_data->remote 				, 2);
+	
+	scheduler_add_task(scheduler, 15000, 	RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_HIGH   , &tasks_run_barometer_update                                       , 0 													, 3);
+	scheduler_add_task(scheduler, 100000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , &tasks_run_gps_update                                             , 0 													, 4);
+	scheduler_add_task(scheduler, 10000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update                               , (task_argument_t)&central_data->navigation 			, 5);
+	scheduler_add_task(scheduler, 200000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , &tasks_set_mav_mode_n_state                                       , 0  													, 6);
+	scheduler_add_task(scheduler, 4000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&mavlink_communication_update                    , (task_argument_t)&central_data->mavlink_communication , 7);
+	scheduler_add_task(scheduler, 100000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&analog_monitor_update                           , (task_argument_t)&central_data->analog_monitor 		, 8);
+	scheduler_add_task(scheduler, 10000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&waypoint_handler_control_time_out_waypoint_msg  , (task_argument_t)&central_data->waypoint_handler 		, 9);
 
 	scheduler_sort_tasks(scheduler);
 }

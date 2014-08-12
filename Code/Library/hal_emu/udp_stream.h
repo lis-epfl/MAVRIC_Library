@@ -7,7 +7,7 @@
 #include "streams.h"
 #include "buffer.h"
 typedef struct udp_connection_t {
-	Buffer_t udp_buffer;
+	buffer_t udp_buffer;
 	struct sockaddr_in Addr; 
 	int32_t sock;
 } udp_connection_t;

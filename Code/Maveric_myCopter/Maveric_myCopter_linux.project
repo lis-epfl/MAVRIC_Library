@@ -26,8 +26,6 @@
           <VirtualDirectory Name="user_board">
             <File Name="src/asf/common/boards/user_board/init.c"/>
             <File Name="src/asf/common/boards/user_board/user_board.h"/>
-            <File Name="src/asf/common/boards/user_board/led.c" ExcludeProjConfig="Debug"/>
-            <File Name="src/asf/common/boards/user_board/led.h" ExcludeProjConfig="Debug"/>
           </VirtualDirectory>
           <File Name="src/asf/common/boards/board.h"/>
         </VirtualDirectory>
@@ -260,11 +258,11 @@
     <File Name="src/tasks.h"/>
     <File Name="src/tasks.c"/>
     <File Name="src/main.cpp"/>
-    <File Name="src/central_data.c"/>
     <File Name="Library/Makefile"/>
     <File Name="src/boardsupport.c"/>
     <File Name="src/mavlink_telemetry.h"/>
     <File Name="src/mavlink_telemetry.c"/>
+    <File Name="src/central_data.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Library">
     <VirtualDirectory Name="mavlink">
@@ -588,6 +586,10 @@
       <File Name="Library/communication/state.c"/>
       <File Name="Library/communication/hud.h"/>
       <File Name="Library/communication/hud.c"/>
+      <File Name="Library/communication/remote.h"/>
+      <File Name="Library/communication/remote.c"/>
+      <File Name="Library/communication/remote_mode.c"/>
+      <File Name="Library/communication/remote_mode.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="control">
       <File Name="Library/control/pid_control.h"/>
@@ -607,6 +609,11 @@
       <File Name="Library/control/attitude_controller_p2.c"/>
       <File Name="Library/control/attitude_controller_p2.h"/>
       <File Name="Library/control/attitude_command.h"/>
+      <File Name="Library/control/servos_mix_quadcopter_cross.h"/>
+      <File Name="Library/control/servos_mix_quadcopter_cross.c"/>
+      <File Name="Library/control/control_command.h"/>
+      <File Name="Library/control/servos_mix_quadcopter_diag.h"/>
+      <File Name="Library/control/servos_mix_quadcopter_diag.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="hal">
       <File Name="Library/hal/uart_int.h"/>
@@ -632,14 +639,10 @@
       <File Name="Library/hal/dac_dma.h"/>
       <File Name="Library/hal/ads1274.c"/>
       <File Name="Library/hal/spektrum.h"/>
-      <File Name="Library/hal/servo_pwm.h"/>
       <File Name="Library/hal/analog_monitor.h"/>
-      <File Name="Library/hal/servo_pwm.c"/>
       <File Name="Library/hal/analog_monitor.c"/>
       <File Name="Library/hal/turnigy.h"/>
       <File Name="Library/hal/ads1274.h"/>
-      <File Name="Library/hal/remote_dsm2.h"/>
-      <File Name="Library/hal/remote_dsm2.c"/>
       <File Name="Library/hal/i2c_driver_int.h"/>
       <File Name="Library/hal/i2c_driver_int.c"/>
       <File Name="Library/hal/piezo_speaker.h"/>
@@ -660,6 +663,14 @@
       <File Name="Library/hal/itg3200.h"/>
       <File Name="Library/hal/lsm330dlc.c"/>
       <File Name="Library/hal/lsm330dlc.h"/>
+      <File Name="Library/hal/spektrum_satellite.h"/>
+      <File Name="Library/hal/spektrum_satellite.c"/>
+      <File Name="Library/hal/servos.h"/>
+      <File Name="Library/hal/servos.c"/>
+      <File Name="Library/hal/pwm_servos.c"/>
+      <File Name="Library/hal/pwm_servos.h"/>
+      <File Name="Library/hal/sd_spi.h"/>
+      <File Name="Library/hal/sd_spi.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>

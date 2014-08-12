@@ -12,7 +12,7 @@
 
 #include "stabilisation_copter.h"
 
-static Stabiliser_Stack_copter_t stabiliser_defaults_copter = 
+static stabiliser_stack_copter_t stabiliser_defaults_copter = 
 {
 // #############################################################################
 // ######  RATE CONTROL  #######################################################

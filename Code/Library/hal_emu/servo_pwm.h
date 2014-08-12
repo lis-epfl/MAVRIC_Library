@@ -25,7 +25,7 @@ typedef struct {
 } servo_output_t;
 
 
-void servo_pwm_init(void);
+void servo_pwm_init_old(void);
 
 
 void servo_pwm_set(servo_output_t *servo_outputs);

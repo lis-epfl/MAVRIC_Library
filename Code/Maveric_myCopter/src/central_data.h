@@ -44,8 +44,6 @@ extern "C" {
 #include "mavlink_communication.h"
 #include "coord_conventions.h"
 #include "onboard_parameters.h"
-#include "servo_pwm.h"
-
 #include "gps_ublox.h"
 #include "mavlink_waypoint_handler.h"
 #include "simulation.h"
@@ -61,6 +59,13 @@ extern "C" {
 #include "stabilisation.h"
 #include "hud.h"
 #include "sd_spi.h"
+
+#include "attitude_controller_p2.h"
+#include "servos.h"
+#include "pwm_servos.h"
+#include "servos_mix_quadcopter_diag.h"
+#include "remote.h"
+
 // TODO : update documentation
 
 /**
@@ -68,10 +73,14 @@ extern "C" {
  */
 typedef struct  {
 	scheduler_t	scheduler;
-
 	mavlink_communication_t mavlink_communication;
+	attitude_controller_p2_t attitude_controller;
+	command_t command;
+	servo_mix_quadcotper_diag_t servo_mix;
+	servos_t servos;
+	remote_t remote;
 
-	analog_monitor_t analog_monitor;										///< The analog to digital converter structure
+	analog_monitor_t analog_monitor;							///< The analog to digital converter structure
 
 	imu_t imu;													///< The IMU structure
 	qfilter_t attitude_filter;									///< The qfilter structure
@@ -80,11 +89,11 @@ typedef struct  {
 	control_command_t controls_nav;								///< The control nav structure used for velocity modes
 
 	stabilise_copter_t stabilisation_copter;					///< The stabilisation structure for copter
-	Stabiliser_Stack_copter_t stabiliser_stack;					///< The stabilisation stack structure (rates, attitude, velocity, thrust)
+	stabiliser_stack_copter_t stabiliser_stack;					///< The stabilisation stack structure (rates, attitude, velocity, thrust)
 
-	servo_output_t servos[NUMBER_OF_SERVO_OUTPUTS];				///< The array of servos (size NUMBER_OF_SERVO_OUTPUTS)
-	
-	gps_t gps;									///< The GPS structure
+	// servo_output_t servos_array[NUMBER_OF_SERVO_OUTPUTS];		///< The array of servos (size NUMBER_OF_SERVO_OUTPUTS)
+
+	gps_t gps;													///< The GPS structure
 	
 	simulation_model_t sim_model;								///< The simulation model structure
 	

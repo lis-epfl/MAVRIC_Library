@@ -22,12 +22,7 @@
 #ifdef __cplusplus
 	extern "C" {
 #endif
-	
-#include <stdint.h>
-#include "buffer.h"
-#include "stabilisation.h"
 
-#define BAUD_REMOTE  115200			///< Define the remote baudrate
 
 #define RC_THROTTLE		0			///< Define the remote channel number for the throttle
 #define RC_THROTTLE_DIR 1			///< Define the remote channel direction for the throttle
@@ -49,32 +44,6 @@
 
 #define RC_SCALEFACTOR 1.0f / 700.0f	///< Define the scale factor to apply on a channel value
 
-/*
-typedef struct Turnigy_Receiver {
-	Buffer_t receiver;
-	uint16_t channels[16];
-	uint32_t last_update;
-	uint8_t valid;
-	uint32_t last_time;
-	uint32_t duration;
-} Turnigy_Receiver_t;
-
-void turnigy_init (void);
-int16_t getChannel_turnigy(uint8_t index);
-void centerChannel_turnigy(uint8_t index);
-int16_t getChannelNeutral_turnigy(uint8_t index);
-int8_t checkReceiver1_turnigy(void);
-int8_t checkReceiver2_turnigy(void);
-int8_t checkReceivers_turnigy(void);
-
-control_command_t get_command_from_turnigy();
-float get_roll_from_turnigy();
-float get_pitch_from_turnigy();
-float get_yaw_from_turnigy();
-float get_thrust_from_turnigy();
-
-void get_channel_mode_turnigy(uint8_t* chan_switch);
-*/
 
 #ifdef __cplusplus
 	}
