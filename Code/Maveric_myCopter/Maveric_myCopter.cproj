@@ -699,6 +699,12 @@
     <Compile Include="Library\hal\turnigy.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\hal\usb_int.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\usb_int.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\hal\xbee.c">
       <SubType>compile</SubType>
     </Compile>

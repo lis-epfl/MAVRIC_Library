@@ -44,6 +44,7 @@
 #include "gps_ublox.h"
 #include "xbee.h"
 #include "console.h"
+#include "stdio_usb.h"
 
 void boardsupport_init(central_data_t *central_data) 
 {

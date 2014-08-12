@@ -30,6 +30,7 @@
 #include "analog_monitor.h"
 #include "lsm330dlc.h"
 #include "hmc5883l.h"
+#include "stdio_usb.h"
 
 central_data_t* central_data;
 
@@ -83,6 +84,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 	
 	float dist_from_home_sqr;
 	
+	print_util_dbg_print("Printing a default debug message\n");
 	LED_Toggle(LED1);
 	
 	tasks_rc_user_channels(&channel_switches,&RC_check, &motor_switch);
