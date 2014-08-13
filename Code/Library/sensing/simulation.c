@@ -500,10 +500,9 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 {
 	uint32_t i;
 	
-	// From simulation to reality
-	//if (sim->state->simulation_mode == REAL_MODE)
 	if (state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
 	{
+		// From simulation to reality
 		sim->pos_est->local_position.origin = sim->local_position.origin;
 		for (i = 0;i < 3;i++)
 		{
@@ -512,18 +511,20 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 		sim->pos_est->init_gps_position = false;
 		sim->state->mav_state = MAV_STATE_STANDBY;
 		sim->state->mav_mode = MAV_MODE_MANUAL_DISARMED;
-		state_disable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
+		//state_disable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
 		servo_pwm_failsafe(sim->servos);
+		
+		print_util_dbg_print("Switching from simulation to reality.\r");
 	}
-
-	// From reality to simulation
-	//if (sim->state->simulation_mode == SIMULATION_MODE)
-	if (!state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
-	{	
+	else
+	{
+		// From reality to simulation
 		simulation_reset_simulation(sim);
 		simulation_calib_set(sim);
 		state_enable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
 		sim->pos_est->init_gps_position = false;
+		
+		print_util_dbg_print("Switching from reality to simulation.\r");
 	}
 }
 

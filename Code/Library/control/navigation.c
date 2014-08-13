@@ -20,6 +20,7 @@
 #include "conf_platform.h"
 #include "print_util.h"
 #include "time_keeper.h"
+#include "remote_controller.h"
 
 #define KP_YAW 0.2f
 
@@ -197,7 +198,7 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, const state_t* state, const mavlink_stream_t* mavlink_stream)
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, state_t* state, const mavlink_stream_t* mavlink_stream)
 {
 	
 	navigation->controls_nav = controls_nav;
@@ -219,6 +220,10 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->controls_nav->control_mode = VELOCITY_COMMAND_MODE;
 	navigation->controls_nav->yaw_mode = YAW_ABSOLUTE;
 	
+	navigation->mode = state->mav_mode;
+	
+	navigation->auto_takeoff = false;
+	
 	navigation->controls_nav->mavlink_stream = mavlink_stream;
 	
 	navigation->dist2vel_gain = 0.7f;
@@ -235,39 +240,56 @@ task_return_t navigation_update(navigation_t* navigation)
 {
 	switch (navigation->state->mav_state)
 	{
-		case MAV_STATE_STANDBY:
-			if (state_test_if_in_flag_mode(navigation->state,MAV_MODE_FLAG_GUIDED_ENABLED)||state_test_if_in_flag_mode(navigation->state,MAV_MODE_FLAG_AUTO_ENABLED))
-			{
-				navigation_waypoint_take_off_handler(navigation->waypoint_handler);
-				
-				navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
-			}
-			break;
-
 		case MAV_STATE_ACTIVE:
-			switch (navigation->state->mav_mode - (navigation->state->mav_mode & MAV_MODE_FLAG_DECODE_POSITION_HIL))
+			if (navigation->state->in_the_air)
 			{
-				case MAV_MODE_GPS_NAVIGATION:
-					navigation_waypoint_navigation_handler(navigation->waypoint_handler);
+				switch (navigation->state->mav_mode - (navigation->state->mav_mode & MAV_MODE_FLAG_DECODE_POSITION_HIL))
+				{
+					case MAV_MODE_GPS_NAVIGATION:
+						navigation_waypoint_navigation_handler(navigation);
 					
-					if (navigation->state->nav_plan_active)
+						if (navigation->state->nav_plan_active)
+						{
+							navigation_run(navigation->waypoint_handler->waypoint_coordinates,navigation);
+						}
+						else
+						{
+							navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+						}
+						break;
+
+					case MAV_MODE_POSITION_HOLD:
+						navigation_hold_position_handler(navigation);
+					
+						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+						break;
+			
+					default:
+						break;
+				}
+			}
+			else
+			{
+				if (remote_controller_get_thrust_from_remote() > -0.7f)
+				{
+					if (state_test_if_in_flag_mode(navigation->state,MAV_MODE_FLAG_GUIDED_ENABLED)||state_test_if_in_flag_mode(navigation->state,MAV_MODE_FLAG_AUTO_ENABLED))
 					{
-						navigation_run(navigation->waypoint_handler->waypoint_coordinates,navigation);
+						navigation->auto_takeoff = true;
 					}
 					else
 					{
+						navigation->state->in_the_air = true;
+					}
+				}
+				if (state_test_if_in_flag_mode(navigation->state,MAV_MODE_FLAG_GUIDED_ENABLED)||state_test_if_in_flag_mode(navigation->state,MAV_MODE_FLAG_AUTO_ENABLED))
+				{
+					if (navigation->auto_takeoff)
+					{
+						navigation_waypoint_take_off_handler(navigation);
+						
 						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
 					}
-					break;
-
-				case MAV_MODE_POSITION_HOLD:
-					navigation_hold_position_handler(navigation->waypoint_handler);
-					
-					navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
-					break;
-			
-				default:
-					break;
+				}
 			}
 			break;
 
@@ -281,7 +303,7 @@ task_return_t navigation_update(navigation_t* navigation)
 			break;
 	}
 	
-	navigation->waypoint_handler->mode = navigation->state->mav_mode;
+	navigation->mode = navigation->state->mav_mode;
 	
 	return TASK_RUN_SUCCESS;
 }
@@ -347,114 +369,128 @@ void navigation_waypoint_take_off_init(mavlink_waypoint_handler_t* waypoint_hand
 	waypoint_handler->hold_waypoint_set = true;
 }
 
-void navigation_waypoint_take_off_handler(mavlink_waypoint_handler_t* waypoint_handler)
+void navigation_waypoint_take_off_handler(navigation_t* navigation)
 {
-	if (!waypoint_handler->hold_waypoint_set)
+	if (!navigation->waypoint_handler->hold_waypoint_set)
 	{
-		navigation_waypoint_take_off_init(waypoint_handler);
+		navigation_waypoint_take_off_init(navigation->waypoint_handler);
 	}
-	if (!waypoint_handler->state->nav_plan_active)
+	if (!navigation->state->nav_plan_active)
 	{
-		waypoint_handler_nav_plan_init(waypoint_handler);
+		waypoint_handler_nav_plan_init(navigation->waypoint_handler);
+	}
+	
+	if (navigation->mode == navigation->state->mav_mode)
+	{
+		if (navigation->waypoint_handler->dist2wp_sqr <= 16.0f)
+		{
+			//state_machine->state->mav_state = MAV_STATE_ACTIVE;
+			navigation->state->in_the_air = true;
+			navigation->auto_takeoff = false;
+			print_util_dbg_print("Automatic take-off finised, dist2wp_sqr (10x):");
+			print_util_dbg_print_num(navigation->waypoint_handler->dist2wp_sqr * 10.0f,10);
+			print_util_dbg_print(".\n");
+		}
 	}
 }
 
 
-void navigation_hold_position_handler(mavlink_waypoint_handler_t* waypoint_handler)
+void navigation_hold_position_handler(navigation_t* navigation)
 {
-	if (waypoint_handler->mode != waypoint_handler->state->mav_mode)
+	if (navigation->mode != navigation->state->mav_mode)
 	{
-		waypoint_handler->hold_waypoint_set = false;
+		navigation->waypoint_handler->hold_waypoint_set = false;
 	}
-	if (!waypoint_handler->state->nav_plan_active)
+	
+	if (!navigation->state->nav_plan_active)
 	{
-		waypoint_handler_nav_plan_init(waypoint_handler);
+		waypoint_handler_nav_plan_init(navigation->waypoint_handler);
 	}
-	if (!waypoint_handler->hold_waypoint_set)
+	
+	if (!navigation->waypoint_handler->hold_waypoint_set)
 	{
-		navigation_waypoint_hold_init(waypoint_handler, waypoint_handler->position_estimator->local_position);
+		navigation_waypoint_hold_init(navigation->waypoint_handler, navigation->waypoint_handler->position_estimator->local_position);
 	}
 }
 
-void navigation_waypoint_navigation_handler(mavlink_waypoint_handler_t* waypoint_handler)
+void navigation_waypoint_navigation_handler(navigation_t* navigation)
 {
-	if (waypoint_handler->mode != waypoint_handler->state->mav_mode)
+	if (navigation->mode != navigation->state->mav_mode)
 	{
-		waypoint_handler->hold_waypoint_set = false;
+		navigation->waypoint_handler->hold_waypoint_set = false;
 	}
 	
-	
-	if (waypoint_handler->state->nav_plan_active)
+	if (navigation->state->nav_plan_active)
 	{
 		uint8_t i;
 		float rel_pos[3];
 		
 		for (i=0;i<3;i++)
 		{
-			rel_pos[i] = waypoint_handler->waypoint_coordinates.pos[i]-waypoint_handler->position_estimator->local_position.pos[i];
+			rel_pos[i] = navigation->waypoint_handler->waypoint_coordinates.pos[i]-navigation->waypoint_handler->position_estimator->local_position.pos[i];
 		}
-		waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
+		navigation->waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 		
-		if (waypoint_handler->dist2wp_sqr < (waypoint_handler->current_waypoint.param2*waypoint_handler->current_waypoint.param2))
+		if (navigation->waypoint_handler->dist2wp_sqr < (navigation->waypoint_handler->current_waypoint.param2*navigation->waypoint_handler->current_waypoint.param2))
 		{
 			print_util_dbg_print("Waypoint Nr");
-			print_util_dbg_print_num(waypoint_handler->current_waypoint_count,10);
+			print_util_dbg_print_num(navigation->waypoint_handler->current_waypoint_count,10);
 			print_util_dbg_print(" reached, distance:");
-			print_util_dbg_print_num(sqrt(waypoint_handler->dist2wp_sqr),10);
+			print_util_dbg_print_num(sqrt(navigation->waypoint_handler->dist2wp_sqr),10);
 			print_util_dbg_print(" less than :");
-			print_util_dbg_print_num(waypoint_handler->current_waypoint.param2,10);
+			print_util_dbg_print_num(navigation->waypoint_handler->current_waypoint.param2,10);
 			print_util_dbg_print(".\n");
 			
 			mavlink_message_t msg;
-			mavlink_msg_mission_item_reached_pack( 	waypoint_handler->mavlink_stream->sysid,
-													waypoint_handler->mavlink_stream->compid,
+			mavlink_msg_mission_item_reached_pack( 	navigation->mavlink_stream->sysid,
+													navigation->mavlink_stream->compid,
 													&msg,
-													waypoint_handler->current_waypoint_count);
-			mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
+													navigation->waypoint_handler->current_waypoint_count);
+			mavlink_stream_send(navigation->mavlink_stream, &msg);
 			
-			waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count].current = 0;
-			if((waypoint_handler->current_waypoint.autocontinue == 1)&&(waypoint_handler->number_of_waypoints>1))
+			navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count].current = 0;
+			if((navigation->waypoint_handler->current_waypoint.autocontinue == 1)&&(navigation->waypoint_handler->number_of_waypoints>1))
 			{
 				print_util_dbg_print("Autocontinue towards waypoint Nr");
 				
-				if (waypoint_handler->current_waypoint_count == (waypoint_handler->number_of_waypoints-1))
+				if (navigation->waypoint_handler->current_waypoint_count == (navigation->waypoint_handler->number_of_waypoints-1))
 				{
-					waypoint_handler->current_waypoint_count = 0;
+					navigation->waypoint_handler->current_waypoint_count = 0;
 				}
 				else
 				{
-					waypoint_handler->current_waypoint_count++;
+					navigation->waypoint_handler->current_waypoint_count++;
 				}
-				print_util_dbg_print_num(waypoint_handler->current_waypoint_count,10);
+				print_util_dbg_print_num(navigation->waypoint_handler->current_waypoint_count,10);
 				print_util_dbg_print("\n");
-				waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count].current = 1;
-				waypoint_handler->current_waypoint = waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count];
-				waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(waypoint_handler, waypoint_handler->position_estimator->local_position.origin);
+				navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count].current = 1;
+				navigation->waypoint_handler->current_waypoint = navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count];
+				navigation->waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(navigation->waypoint_handler, navigation->waypoint_handler->position_estimator->local_position.origin);
 				
 				mavlink_message_t msg;
-				mavlink_msg_mission_current_pack( 	waypoint_handler->mavlink_stream->sysid,
-													waypoint_handler->mavlink_stream->compid,
+				mavlink_msg_mission_current_pack( 	navigation->mavlink_stream->sysid,
+													navigation->mavlink_stream->compid,
 													&msg,
-													waypoint_handler->current_waypoint_count);
-				mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
+													navigation->waypoint_handler->current_waypoint_count);
+				mavlink_stream_send(navigation->mavlink_stream, &msg);
 				
 			}
 			else
 			{
-				waypoint_handler->state->nav_plan_active = false;
+				navigation->state->nav_plan_active = false;
 				print_util_dbg_print("Stop\n");
 				
-				navigation_waypoint_hold_init(waypoint_handler, waypoint_handler->waypoint_coordinates);
+				navigation_waypoint_hold_init(navigation->waypoint_handler, navigation->waypoint_handler->waypoint_coordinates);
 			}
 		}
 	}
 	else
 	{
-		if (!waypoint_handler->hold_waypoint_set)
+		if (!navigation->waypoint_handler->hold_waypoint_set)
 		{
-			navigation_waypoint_hold_init(waypoint_handler, waypoint_handler->position_estimator->local_position);
+			navigation_waypoint_hold_init(navigation->waypoint_handler, navigation->waypoint_handler->position_estimator->local_position);
 		}
-		waypoint_handler_nav_plan_init(waypoint_handler);
+		waypoint_handler_nav_plan_init(navigation->waypoint_handler);
 	}
 }
 
