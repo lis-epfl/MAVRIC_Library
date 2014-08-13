@@ -83,7 +83,7 @@ void boardsupport_init(central_data_t *central_data)
 	central_data->telemetry_down_stream = xbee_get_out_stream();
 	central_data->telemetry_up_stream = xbee_get_in_stream();
 	central_data->debug_out_stream = console_get_out_stream();
-	central_data->debug_in_stream = console_get_out_stream();
+	central_data->debug_in_stream = console_get_in_stream();
 	
 	// init debug output
 	print_util_dbg_print_init(central_data->debug_out_stream);

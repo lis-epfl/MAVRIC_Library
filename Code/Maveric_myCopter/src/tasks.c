@@ -82,7 +82,6 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 	int8_t rc_check = 0;
 	int8_t motor_switch = 0;
 	
-	print_util_dbg_print("Debug message\n");
 	LED_Toggle(LED1);
 	
 	tasks_rc_user_channels(&channel_switches,&rc_check, &motor_switch);
