@@ -98,7 +98,7 @@ typedef struct
 	barometer_t* pressure;									///< The pointer to the barometer structure
 	gps_t* gps;												///< The pointer to the GPS structure
 	state_t* state;											///< The pointer to the state structure
-	servos_t* servos;										///< The pointer to the servos structure
+	const servos_t* servos;										///< The pointer to the servos structure
 	const ahrs_t *estimated_attitude;						///< The pointer to the attitude estimation structure
 	bool* nav_plan_active;										///< The pointer to the waypoint set flag
 	const mavlink_stream_t* mavlink_stream;					///< The pointer to the mavlink stream structure
@@ -112,7 +112,7 @@ typedef struct
  * \param	imu				The pointer to the real IMU structure to match the simulated IMU
  * \param	local_pos		The pointer to the structure of the real local position estimation of the vehicle
  */
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, servos_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream);
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, const servos_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream);
 
 /**
  * \brief	Sets the calibration to the "real" IMU values

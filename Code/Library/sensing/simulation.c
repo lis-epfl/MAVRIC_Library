@@ -43,7 +43,7 @@ static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_co
  * \param	sim				The pointer to the simulation structure
  * \param	servos			The pointer to the servos structure
  */
-void forces_from_servos_diag_quad(simulation_model_t *sim, servos_t *servos);
+void forces_from_servos_diag_quad(simulation_model_t *sim);
 
 /**
  * \brief	Computes the forces in the local frame of a "cross" quadrotor configuration
@@ -53,7 +53,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servos_t *servos);
  * \param	sim				The pointer to the simulation structure
  * \param	servos			The pointer to the servos structure
  */
-void forces_from_servos_cross_quad(simulation_model_t *sim, servos_t *servos);
+void forces_from_servos_cross_quad(simulation_model_t *sim);
 
 /**
  * \brief	Resets the simulation towards the "real" estimated position
@@ -163,7 +163,8 @@ static void simulation_reset_simulation(simulation_model_t *sim)
 	//sim->local_position.heading = sim->pos_est->local_position.heading;
 }
 
-void forces_from_servos_diag_quad(simulation_model_t *sim, servos_t *servos){
+void forces_from_servos_diag_quad(simulation_model_t* sim)
+{
 	int32_t i;
 	float motor_command[4];
 	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4];
@@ -177,7 +178,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servos_t *servos){
 	float old_rotor_speed;
 	for (i = 0; i < 4; i++)
 	{
-		motor_command[i] = (float)servos->servo[i].value - sim->vehicle_config.rotor_rpm_offset;
+		motor_command[i] = (float)sim->servos->servo[i].value - sim->vehicle_config.rotor_rpm_offset;
 		if (motor_command[i] < 0.0f) 
 		{
 			motor_command[i] = 0;
@@ -222,7 +223,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servos_t *servos){
 }
 
 
-void forces_from_servos_cross_quad(simulation_model_t *sim, servos_t *servos)
+void forces_from_servos_cross_quad(simulation_model_t* sim)
 {
 	//int32_t i;
 	//float motor_command[4];
@@ -245,11 +246,12 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servos_t *servos)
 	*/
 }
 
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, servos_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, const servos_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
 {
 	int32_t i;
 	
@@ -350,10 +352,10 @@ void simulation_update(simulation_model_t *sim)
 	sim->last_update = now;
 	// compute torques and forces based on servo commands
 	#ifdef CONF_DIAG
-	forces_from_servos_diag_quad(sim, sim->servos);
+	forces_from_servos_diag_quad(sim);
 	#endif
 	#ifdef CONF_CROSS
-	forces_from_servos_cross_quad(sim, sim->servos);
+	forces_from_servos_cross_quad(sim);
 	#endif
 	
 	// integrate torques to get simulated gyro rates (with some damping)
@@ -513,7 +515,7 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 		sim->state->mav_state = MAV_STATE_STANDBY;
 		sim->state->mav_mode.byte = MAV_MODE_MANUAL_DISARMED;
 		state_disable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
-		servos_set_value_failsafe(sim->servos);
+//		servos_set_value_failsafe(sim->servos);
 	}
 
 	// From reality to simulation
@@ -524,6 +526,8 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 		simulation_calib_set(sim);
 		state_enable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
 		sim->pos_est->init_gps_position = false;
+		
+		print_util_dbg_print("Switching from reality to simulation.\r");
 	}
 }
 

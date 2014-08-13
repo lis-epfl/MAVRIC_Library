@@ -251,7 +251,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 					waypoint_handler_nav_plan_init(&central_data->waypoint_handler);
 				}
 
-				navigation_waypoint_navigation_handler(&central_data->waypoint_handler);
+				navigation_waypoint_navigation_handler(&central_data->navigation);
 			}
 			
 			if (motor_switch == -1)
@@ -399,8 +399,10 @@ task_return_t tasks_run_stabilisation(void* arg)
 			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
 			central_data->controls.yaw_mode = YAW_RELATIVE;
 			
-			stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
-		
+			if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+			{
+				stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
+			}
 			break;
 		
 		case MAV_MODE_POSITION_HOLD:
@@ -416,8 +418,10 @@ task_return_t tasks_run_stabilisation(void* arg)
 				central_data->controls.yaw_mode = YAW_ABSOLUTE;
 			}
 		
-			stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
-		
+			if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+			{
+				stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
+			}
 			break;
 		
 		case MAV_MODE_GPS_NAVIGATION:
@@ -434,7 +438,10 @@ task_return_t tasks_run_stabilisation(void* arg)
 				central_data->controls.yaw_mode = YAW_ABSOLUTE;
 			}
 		
-			stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
+			if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+			{
+				stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
+			}
 			break;
 		
 		default:
@@ -546,8 +553,8 @@ void tasks_create_tasks()
 	scheduler_add_task(scheduler, 100000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , &tasks_run_gps_update                                             , 0 													, 4);
 	scheduler_add_task(scheduler, 10000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update                               , (task_argument_t)&central_data->navigation 			, 5);
 	
-	//scheduler_add_task(scheduler, 200000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , &tasks_set_mav_mode_n_state                                       , 0  													, 6);
-	scheduler_add_task(scheduler, 200000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&state_machine_set_mav_mode_n_state              , (task_argument_t)&central_data->state_machine         , 6);
+	scheduler_add_task(scheduler, 200000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , &tasks_set_mav_mode_n_state                                       , 0  													, 6);
+	// scheduler_add_task(scheduler, 200000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&state_machine_set_mav_mode_n_state              , (task_argument_t)&central_data->state_machine         , 6);
 	
 
 	scheduler_add_task(scheduler, 4000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&mavlink_communication_update                    , (task_argument_t)&central_data->mavlink_communication , 7);

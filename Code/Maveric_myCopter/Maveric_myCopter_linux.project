@@ -256,6 +256,7 @@
     <File Name="src/central_data.h"/>
     <File Name="src/boardsupport.h"/>
     <File Name="src/tasks.h"/>
+    <File Name="src/tasks.c"/>
     <File Name="src/main.cpp"/>
     <File Name="Library/Makefile"/>
     <File Name="src/boardsupport.c"/>
@@ -672,7 +673,6 @@
       <File Name="Library/hal/pwm_servos.h"/>
       <File Name="Library/hal/sd_spi.h"/>
       <File Name="Library/hal/sd_spi.c"/>
-      <File Name="src/tasks.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>
