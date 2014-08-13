@@ -243,7 +243,7 @@ task_return_t tasks_set_mav_mode_n_state(void* arg)
 					waypoint_handler_nav_plan_init(&central_data->waypoint_handler);
 				}
 
-				navigation_waypoint_navigation_handler(&central_data->waypoint_handler);
+				navigation_waypoint_navigation_handler(&central_data->navigation);
 			}
 			
 			if (motor_switch == -1)
