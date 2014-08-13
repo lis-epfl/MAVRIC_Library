@@ -36,7 +36,6 @@ void initialisation()
 	mavlink_telemetry_init();
 	onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
 
-
 	LED_On(LED1);
 
 	piezo_speaker_startup_melody();
