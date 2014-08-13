@@ -1,13 +1,27 @@
-/*
- * central_data.h
+/**
+ * \page The MAV'RIC License
  *
- * Created: 16/09/2013 12:18:00
- *  Author: sfx
- */ 
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+ 
+
+/**
+ * \file central_data.h
+ *
+ *  Place where the central data is stored and initialized
+ */
 
 
 #ifndef CENTRAL_DATA_H_
 #define CENTRAL_DATA_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -15,124 +29,109 @@
 #include "stdbool.h"
 
 #include "time_keeper.h"
-//#include "i2c_driver_int.h"
 #include "qfilter.h"
 #include "imu.h"
-
-// #include "stabilisation.h"
+#include "ahrs.h"
 #include "stabilisation_copter.h"
-// #include "stabilisation_hybrid.h"
 
 #include "remote_controller.h"
 #include "pid_control.h"
 #include "streams.h"
-//#include "uart_int.h"
+#include "buffer.h"
 #include "print_util.h"
 
-#include "bmp085.h"
 #include "mavlink_stream.h"
+#include "mavlink_communication.h"
 #include "coord_conventions.h"
 #include "onboard_parameters.h"
 #include "servo_pwm.h"
 
 #include "gps_ublox.h"
 #include "mavlink_waypoint_handler.h"
-#include "estimator.h"
 #include "simulation.h"
 #include "bmp085.h"
-#include "conf_sim_model.h"
 #include "neighbor_selection.h"
 #include "position_estimation.h"
 
-static const servo_output_t servo_failsafe[NUMBER_OF_SERVO_OUTPUTS]={{.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}, {.value=-600}};
+#include "analog_monitor.h"
+#include "i2cxl_sonar.h"
+#include "orca.h"
+#include "navigation.h"
+#include "state.h"
+#include "stabilisation.h"
+#include "hud.h"
+#include "sd_spi.h"
+// TODO : update documentation
 
-enum CRITICAL_BEHAVIOR_ENUM{
-	CLIMB_TO_SAFE_ALT = 1,
-	FLY_TO_HOME_WP = 2,
-	CRITICAL_LAND = 3,
-};
-
+/**
+ * \brief The central data structure
+ */
 typedef struct  {
-	Imu_Data_t imu1;
-	Control_Command_t controls;
-	Control_Command_t controls_nav;
+	scheduler_t	scheduler;
 
-	Stabiliser_Stack_copter_t stabiliser_stack;
+	mavlink_communication_t mavlink_communication;
 
-	simulation_model_t uav_model;
-	servo_output_t servos[NUMBER_OF_SERVO_OUTPUTS];
-	Buffer_t xbee_in_buffer, wired_in_buffer;
-	byte_stream_t xbee_out_stream;
-	byte_stream_t xbee_in_stream;
-	byte_stream_t wired_out_stream, wired_in_stream;
+	analog_monitor_t analog_monitor;										///< The analog to digital converter structure
+
+	imu_t imu;													///< The IMU structure
+	qfilter_t attitude_filter;									///< The qfilter structure
+	ahrs_t ahrs;												///< The attitude estimation structure
+	control_command_t controls;									///< The control structure used for rate and attitude modes
+	control_command_t controls_nav;								///< The control nav structure used for velocity modes
+
+	stabilise_copter_t stabilisation_copter;					///< The stabilisation structure for copter
+	Stabiliser_Stack_copter_t stabiliser_stack;					///< The stabilisation stack structure (rates, attitude, velocity, thrust)
+
+	servo_output_t servos[NUMBER_OF_SERVO_OUTPUTS];				///< The array of servos (size NUMBER_OF_SERVO_OUTPUTS)
 	
-	Buffer_t gps_buffer;
-	byte_stream_t gps_stream_in;
-	byte_stream_t gps_stream_out;
-	gps_Data_type_t GPS_data;
+	gps_t gps;									///< The GPS structure
 	
-	Buffer_t gumstix_buffer;
-	byte_stream_t gumstix_stream_in;
-	byte_stream_t gumstix_stream_out;
-	//gumstix_Data_type GUMSTIX_data;
+	simulation_model_t sim_model;								///< The simulation model structure
 	
-	Estimator_Data_t estimation;
-	simulation_model_t sim_model;
-	
-	position_estimator_t position_estimator;
+	position_estimator_t position_estimator;					///< The position estimaton structure
 	
 	// aliases
-	byte_stream_t *telemetry_down_stream, *telemetry_up_stream;
-	byte_stream_t *debug_out_stream, *debug_in_stream;
+	byte_stream_t *telemetry_down_stream;						///< The pointer to the downcoming telemetry byte stream
+	byte_stream_t *telemetry_up_stream;							///< The pointer to the upcoming telemetry byte stream
+	byte_stream_t *debug_out_stream;							///< The pointer to the outgoing debug byte stream
+	byte_stream_t *debug_in_stream;								///< The pointer to the incoming debug byte stream
 	
-	waypoint_struct waypoint_list[MAX_WAYPOINTS];
-	waypoint_struct current_waypoint;
-	uint16_t number_of_waypoints;
-	int8_t current_wp_count;
+	mavlink_waypoint_handler_t waypoint_handler;
 	
-	local_coordinates_t waypoint_coordinates, waypoint_hold_coordinates, waypoint_critical_coordinates;
-	float dist2wp_sqr;
+	navigation_t navigation;								///< The structure to perform GPS navigation
 	
-	bool waypoint_set;
-	bool waypoint_sending;
-	bool waypoint_receiving;
-	bool critical_landing;
-	bool critical_next_state;
+	state_t state;							///< The structure with all state information
 	
-	bool collision_avoidance;
-	bool automatic_take_off;
+	barometer_t pressure;									///< The pressure structure
+	//float pressure_filtered;									///< The filtered pressure
+	//float altitude_filtered;									///< The filtered altitude
 	
-	uint8_t mav_mode;
-	uint8_t mav_state;
+	orca_t orca;											///< The ORCA collision avoidance structure
+	neighbors_t neighbors;									///< The neighbor structure
 	
-	uint8_t mav_mode_previous;
-	uint8_t mav_state_previous;
+	hud_structure_t hud_structure;								///< The HUD structure
+
+	i2cxl_sonar_t i2cxl_sonar;									///< The i2cxl sonar structure
 	
-	uint32_t simulation_mode;
-	
-	pressure_data_t pressure;
-	//float pressure_filtered;
-	//float altitude_filtered;
-	
-	uint8_t number_of_neighbors;
-	float safe_size;
-	track_neighbor_t listNeighbors[MAX_NUM_NEIGHBORS];
-	
-	enum CRITICAL_BEHAVIOR_ENUM critical_behavior;
-	
+	sd_spi_t sd_spi;											///< The sd_SPI driver structure
 } central_data_t;
 
 
+/**
+ * \brief	Initialization of the central data structure
+ */
 void central_data_init(void);
 
+
+/**
+ * \brief	Get a pointer to the central data
+ *
+ * \return	A pointer to the structure central data
+*/
 central_data_t* central_data_get_pointer_to_struct(void);
 
-byte_stream_t* get_telemetry_upstream(void);
-byte_stream_t* get_telemetry_downstream(void);
-
-Imu_Data_t* get_imu_data();
-Control_Command_t* get_control_inputs_data();
-
-#define STDOUT &print_util_get_debug_stream()
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CENTRAL_DATA_H_ */

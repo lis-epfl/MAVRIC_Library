@@ -31,6 +31,7 @@ extern "C" {
 #include "orca.h"
 #include "tasks.h"
 #include "mavlink_communication.h"
+#include "state.h"
 #include <stdbool.h>
 
 /**
@@ -41,11 +42,9 @@ typedef struct
 	float dist2vel_gain;								///< The gain linking the distance to the goal to the actual speed
 	float cruise_speed;									///< The cruise speed in m/s
 	float max_climb_rate;								///< Max climb rate in m/s
-	float soft_zone_size;									///< Soft zone of the velocity controller
+	float soft_zone_size;								///< Soft zone of the velocity controller
 	
 	uint8_t loop_count;									///< A counter for sending mavlink messages at a lower rate than the function
-	
-	bool collision_avoidance;							///< Flag to tell whether the collision avoidance is active or not
 	
 	control_command_t *controls_nav;					///< The pointer to the navigation control structure
 	const quat_t *qe;									///< The pointer to the attitude quaternion structure
@@ -80,10 +79,53 @@ task_return_t navigation_update(navigation_t* navigation);
 /**
  * \brief	Sets a circle scenario, where two waypoints are set at opposite side of the circle
  *
- * \param	navigation_data			The pointer to the navigation data structure
+ * \param	navigation				The pointer to the navigation data structure
  * \param	packet					The structure of the mavlink command message long
  */
-task_return_t navigation_send_collision_avoidance_status(navigation_t *navigation_data);
+task_return_t navigation_send_collision_avoidance_status(navigation_t *navigation);
+
+/**
+ * \brief	Initialise the position hold mode
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ * \param	local_pos				The position where the position will be held
+ */
+void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t local_pos);
+
+/**
+ * \brief	Sets the automatic takeoff waypoint
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ */
+void navigation_waypoint_take_off_init(mavlink_waypoint_handler_t* waypoint_handler);
+
+/**
+ * \brief	Drives the automatic takeoff procedure
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ */
+void navigation_waypoint_take_off_handler(mavlink_waypoint_handler_t* waypoint_handler);
+
+/**
+ * \brief	Drives the hold position procedure
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ */
+void navigation_hold_position_handler(mavlink_waypoint_handler_t* waypoint_handler);
+
+/**
+ * \brief	Drives the GPS navigation procedure
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ */
+void navigation_waypoint_navigation_handler(mavlink_waypoint_handler_t* waypoint_handler);
+
+/**
+ * \brief	Drives the critical navigation behavior
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ */
+void navigation_critical_handler(mavlink_waypoint_handler_t* waypoint_handler);
 
 #ifdef __cplusplus
 }

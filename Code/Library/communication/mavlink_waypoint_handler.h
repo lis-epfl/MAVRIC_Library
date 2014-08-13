@@ -56,25 +56,6 @@ typedef struct
 	double z;													///< The value on the z axis (depends on the reference frame)
 } waypoint_struct;
 
-/**
- * \brief	The critical behavior enum
- */
-typedef enum
-{
-	CLIMB_TO_SAFE_ALT,											///< First critical behavior
-	FLY_TO_HOME_WP,												///< Second critical behavior, comes after CLIMB_TO_SAFE_ALT
-	CRITICAL_LAND												///< Third critical behavior, comes after FLY_TO_HOME_WP
-} critical_behavior_enum;
-
-/**
- * \brief	The auto-landing enum
- */
-typedef enum
-{
-	DESCENT_TO_SMALL_ALTITUDE,									///< First auto landing behavior
-	DESCENT_TO_GND												///< Second auto landing behavior, comes after DESCENT_TO_SMAL_ALTITUDE
-} auto_landing_behavior_t;
-
 typedef struct
 {
 	waypoint_struct waypoint_list[MAX_WAYPOINTS];				///< The array of all waypoints (max MAX_WAYPOINTS)
@@ -87,14 +68,18 @@ typedef struct
 	local_coordinates_t waypoint_critical_coordinates;			///< The coordinates of the waypoint in critical state
 	float dist2wp_sqr;											///< The square of the distance to the waypoint
 	
-	bool waypoint_set;											///< Flag to tell that a flight plan (min 1 waypoint) is active
-	bool waypoint_sending;										///< Flag to tell whether waypoint are being sent
-	bool waypoint_receiving;									///< Flag to tell whether waypoint are being received or not
+	bool hold_waypoint_set;										///< Flag to tell if the hold position waypoint is set
+
 	bool critical_landing;										///< Flag to execute critical landing (switching motors off)
 	bool critical_next_state;									///< Flag to change critical state in its dedicated state machine
-	
+
 	bool automatic_landing;										///< Flag to initiate the auto landing procedure
-	bool in_the_air;											///< Flag to tell whether the vehicle is airborne or not
+
+	bool waypoint_sending;										///< Flag to tell whether waypoint are being sent
+	bool waypoint_receiving;									///< Flag to tell whether waypoint are being received or not
+	
+	critical_behavior_enum critical_behavior;					///< The critical behavior enum
+	auto_landing_behavior_t auto_landing_behavior;				///< The autolanding behavior enum
 	
 	int32_t sending_waypoint_num;								///< The ID number of the sending waypoint
 	int32_t waypoint_request_number;							///< The ID number of the requested waypoint
@@ -103,13 +88,12 @@ typedef struct
 
 	uint32_t start_timeout;										///< The start time for the waypoint timeout
 	uint32_t timeout_max_waypoint;								///< The max waiting time for communication
-	
-	critical_behavior_enum critical_behavior;					///< The critical behavior enum
-	auto_landing_behavior_t auto_landing_behavior;				///< The autolanding behavior enum
+
+	uint8_t mode;
 
 	position_estimator_t* position_estimator;					///< The pointer to the position estimation structure
 	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
-	const state_t* state;										///< The pointer to the state structure
+	state_t* state;												///< The pointer to the state structure
 	mavlink_communication_t* mavlink_communication;				///< The pointer to the mavlink communication structure
 	const mavlink_stream_t* mavlink_stream;						///< Pointer to mavlink stream
 
@@ -138,14 +122,14 @@ void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_ha
  * \param	state			The pointer to the state structure
  * \param	mavlink_communication	The pointer to the mavlink communication structure
  */
-void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* ahrs, const state_t* state, mavlink_communication_t* mavlink_communication, const mavlink_stream_t* mavlink_stream);
+void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* ahrs, state_t* state, mavlink_communication_t* mavlink_communication, const mavlink_stream_t* mavlink_stream);
 
 /**
  * \brief	Initialize a first waypoint if a flight plan is set
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  */
-void waypoint_handler_waypoint_init(mavlink_waypoint_handler_t* waypoint_handler);
+void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
  * \brief	Control if time is over timeout and change sending/receiving flags to false
@@ -156,43 +140,15 @@ void waypoint_handler_waypoint_init(mavlink_waypoint_handler_t* waypoint_handler
  */
 task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_handler_t* waypoint_handler);
 
-
-
 /**
- * \brief	Initialise the position hold mode
+ * \brief	Set the waypoint depending on the reference frame defined in the current_waypoint structure
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
- * \param	local_pos				The position where the position will be held
- */
-void waypoint_handler_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t local_pos);
-
-/**
- * \brief	Sets the automatic takeoff waypoint
+ * \param	origin					The coordinates (latitude, longitude and altitude in global frame) of the local frame's origin
  *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
+ * \return	The waypoint in local coordinate frame
  */
-void waypoint_handler_waypoint_take_off(mavlink_waypoint_handler_t* waypoint_handler);
-
-/**
- * \brief	Drives the hold position procedure
- *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- */
-void waypoint_handler_waypoint_hold_position_handler(mavlink_waypoint_handler_t* waypoint_handler);
-
-/**
- * \brief	Drives the GPS navigation procedure
- *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- */
-void waypoint_handler_waypoint_navigation_handler(mavlink_waypoint_handler_t* waypoint_handler);
-
-/**
- * \brief	Drives the critical navigation behavior
- *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- */
-void waypoint_handler_waypoint_critical_handler(mavlink_waypoint_handler_t* waypoint_handler);
+local_coordinates_t waypoint_handler_set_waypoint_from_frame(mavlink_waypoint_handler_t* waypoint_handler, global_position_t origin);
 
 #ifdef __cplusplus
 }

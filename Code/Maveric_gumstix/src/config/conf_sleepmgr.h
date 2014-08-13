@@ -1,5 +1,5 @@
 /**
- * \file
+ * \file conf_sleepmgr.h
  *
  * \brief Chip-specific sleep manager configuration
  *
@@ -38,7 +38,15 @@
 #ifndef CONF_SLEEPMGR_H
 #define CONF_SLEEPMGR_H
 
-// Sleep manager options
-#define CONFIG_SLEEPMGR_ENABLE
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
+
+#define CONFIG_SLEEPMGR_ENABLE ///< Sleep manager options
+
+#ifdef __cplusplus
+	}
+#endif
 
 #endif /* CONF_SLEEPMGR_H */

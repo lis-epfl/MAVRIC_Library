@@ -45,6 +45,14 @@ void state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 		state->mav_mode |= !MAV_MODE_FLAG_HIL_ENABLED;
 	}
 	
+	state->nav_plan_active = false;
+	
+	state->in_the_air = false;
+	
+	state->collision_avoidance = false;
+	
+	state->reset_position = false;
+	
 	// Add callbacks for onboard parameters requests
 	mavlink_message_handler_msg_callback_t callback;
 	
@@ -145,18 +153,22 @@ void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
 					state->mav_state = MAV_STATE_STANDBY;
 					state->mav_mode = MAV_MODE_MANUAL_DISARMED;
 					break;
+					
 				case MAV_MODE_MANUAL_ARMED:
 					state->mav_state = MAV_STATE_ACTIVE;
 					state->mav_mode = MAV_MODE_MANUAL_ARMED;
 					break;
+					
 				case MAV_MODE_STABILIZE_ARMED:
 					state->mav_state = MAV_STATE_ACTIVE;
 					state->mav_mode = MAV_MODE_STABILIZE_ARMED;
 					break;
+					
 				case MAV_MODE_GUIDED_ARMED:
 					state->mav_state = MAV_STATE_ACTIVE;
 					state->mav_mode = MAV_MODE_GUIDED_ARMED;
 					break;
+					
 				case MAV_MODE_AUTO_ARMED:
 					state->mav_state = MAV_STATE_ACTIVE;
 					state->mav_mode = MAV_MODE_AUTO_ARMED;
@@ -166,16 +178,9 @@ void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
 	}
 }
 
-bool state_test_flag_mode(uint8_t mode, mav_flag_t test_flag)
+bool state_test_if_in_mode(state_t *state, uint8_t mav_mode)
 {
-	bool result = false;
-	
-	if ((mode & test_flag))
-	{
-		result = true;
-	}
-	
-	return result;
+	return (state->mav_mode == (mav_mode + (state->mav_mode & MAV_MODE_FLAG_HIL_ENABLED)));
 }
 
 void state_enable_mode(state_t *state, mav_flag_t mav_mode_flag)

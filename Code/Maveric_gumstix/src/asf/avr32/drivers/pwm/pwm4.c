@@ -370,25 +370,25 @@ int pwm_synchronous_prepare_update(unsigned int channel_id, const avr32_pwm_chan
   return PWM_SUCCESS;
 }
 
-int pwm_update_manual_write_manual_update()                                     
+int pwm_update_manual_write_manual_update(void)                                     
 {
   AVR32_PWM.scuc = (1<<AVR32_PWM_SCUC_UPDULOCK_OFFSET);
   return PWM_SUCCESS;  
 }
 
-int pwm_update_manual_write_auto_update()                                     
+int pwm_update_manual_write_auto_update(void)                                     
 {
   while(!AVR32_PWM.ISR2.wrdy);
   return PWM_SUCCESS;  
 }
 
-int pwm_update_auto_write_auto_update_check_ready()
+int pwm_update_auto_write_auto_update_check_ready(void)
 {
   while(!AVR32_PWM.ISR2.wrdy);
   return PWM_SUCCESS;    
 }
 
-int pwm_update_auto_write_auto_update_check_eot()
+int pwm_update_auto_write_auto_update_check_eot(void)
 {
   while(!AVR32_PWM.ISR2.endtx);
   return PWM_SUCCESS;   
@@ -459,12 +459,12 @@ int pwm_fault_lines_enable(U8 line,
   return PWM_SUCCESS;
 }
 
-int pwm_get_fault_status()
+int pwm_get_fault_status(void)
 {  
   return AVR32_PWM.fsr;
 }
 
-void pwm_clr_fault_status()
+void pwm_clr_fault_status(void)
 {  
   AVR32_PWM.fcr = 0xffff;
 }

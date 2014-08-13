@@ -30,6 +30,7 @@ extern "C" {
 #include "gps_ublox.h"
 #include "coord_conventions.h"
 #include "mavlink_communication.h"
+#include "state.h"
 #include "tasks.h"
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
@@ -58,17 +59,18 @@ typedef struct
 	float last_vel[3];								///< The last 3D velocity
 
 	local_coordinates_t local_position;				///< The local position
-	local_coordinates_t last_gps_pos;					///< The coordinates of the last GPS position
+	local_coordinates_t last_gps_pos;				///< The coordinates of the last GPS position
 	
 	float gravity;
 	
-	barometer_t*  	 	barometer;				///< The pointer to the barometer structure
-	const gps_t* 	gps;					///< The pointer to the GPS structure
-	const ahrs_t* 		 	ahrs;					///< The pointer to the attitude estimation structure
-	const imu_t* 		 	imu;					///< The pointer to the IMU structure
+	barometer_t* barometer;							///< The pointer to the barometer structure
+	const gps_t* gps;								///< The pointer to the GPS structure
+	const ahrs_t* ahrs;								///< The pointer to the attitude estimation structure
+	const imu_t* imu;								///< The pointer to the IMU structure
 	const mavlink_stream_t* mavlink_stream;			///< The pointer to the mavlink stream structure
+	state_t* state;									///< The pointer to the state structure
 
-	bool* waypoint_set;								///< The pointer to the waypoint set flag
+	bool* nav_plan_active;							///< The pointer to the waypoint set flag
 } position_estimator_t;
 
 
@@ -76,19 +78,20 @@ typedef struct
  * \brief	Initialize the position estimation module
  *
  * \param	pos_est					The pointer to the position estimation structure
+ * \param	state					The pointer to the state structure
  * \param	barometer				The pointer to the barometer structure
  * \param	gps						The pointer to the GPS structure
- * \param	ahrs		The pointer to the attitude estimation structure
+ * \param	ahrs					The pointer to the attitude estimation structure
  * \param	imu						The pointer to the IMU structure
  * \param   mavlink_stream			The pointer to the mavlink stream structure
- * \param	waypoint_set			The pointer to the flag telling if there is a flight plan loaded
+ * \param	nav_plan_active			The pointer to the flag telling if there is a flight plan loaded
  * \param	mavlink_handler			The pointer to the mavlink message handler
  * \param	home_lat				The value of the hard coded home latitude position
  * \param	home_lon				The value of the hard coded home longitude position
  * \param	home_alt				The value of the hard coded home altitude position
  * \param	gravity					The value of the gravity
  */
-void position_estimation_init(position_estimator_t *pos_est, barometer_t *barometer, gps_t *gps, ahrs_t *ahrs, imu_t *imu, const mavlink_stream_t* mavlink_stream, bool* waypoint_set, mavlink_message_handler_t *mavlink_handler, float home_lat, float home_lon, float home_alt, float gravity);
+void position_estimation_init(position_estimator_t *pos_est,state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, const mavlink_stream_t* mavlink_stream, bool* nav_plan_active, mavlink_message_handler_t *mavlink_handler, float home_lat, float home_lon, float home_alt, float gravity);
 
 
 /**

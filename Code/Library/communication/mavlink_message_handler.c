@@ -203,13 +203,16 @@ void mavlink_message_handler_add_cmd_callback(	mavlink_message_handler_t* 				me
 
 void mavlink_message_handler_msg_default_dbg(mavlink_message_t* msg)
 {
-	print_util_dbg_print("\n Received message with ID");
-	print_util_dbg_print_num(msg->msgid, 10);
-	print_util_dbg_print(" from system");
-	print_util_dbg_print_num(msg->sysid, 10);
-	print_util_dbg_print(" from component");
-	print_util_dbg_print_num(msg->compid,10);
-	print_util_dbg_print( "\n");
+	if (msg->sysid == MAVLINK_BASE_STATION_ID)
+	{
+		print_util_dbg_print("\n Received message with ID");
+		print_util_dbg_print_num(msg->msgid, 10);
+		print_util_dbg_print(" from system");
+		print_util_dbg_print_num(msg->sysid, 10);
+		print_util_dbg_print(" from component");
+		print_util_dbg_print_num(msg->compid,10);
+		print_util_dbg_print( "\n");
+	}
 }
 
 

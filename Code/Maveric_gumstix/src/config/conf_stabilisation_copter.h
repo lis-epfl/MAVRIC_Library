@@ -1,14 +1,24 @@
-/*
- * conf_stabilisation_copter.h
+/* The MAV'RIC Framework
  *
- * Default values for stabilisation
- * 
- * Created: 13/11/2013 17:46:00
- *  Author: Julien
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
  */
+ 
+
+/**
+ * \file conf_stabilisation_copter.h
+ *
+ *  Default values for cascade PID controller 
+ */
+
 
 #ifndef CONF_STABILISATION_COPTER_H_
 #define CONF_STABILISATION_COPTER_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "stabilisation_copter.h"
 
@@ -23,118 +33,119 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ ROLL PID -------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.15,
-				.clip_min = -0.9, 
-				.clip_max = 0.9,
+				.p_gain = 0.14f,
+				.clip_min = -0.9f, 
+				.clip_max = 0.9f,
 				.integrator={
-					.pregain = 0.5, 
-					.postgain = 1.0,
-					.accumulator = 0.0,
-					.maths_clip = 0.65,
-					.leakiness = 0.0
+					.pregain = 0.5f, 
+					.postgain = 1.0f,
+					.accumulator = 0.0f,
+					.maths_clip = 0.65f,
+					.leakiness = 0.0f
 				},
 				.differentiator={
-					.gain = 0.2,
-					.previous = 0.0,
-					.LPF = 0.4,
-					.maths_clip = 0.65
+					.gain = 0.15f,
+					.previous = 0.0f,
+					.LPF = 0.5f,
+					.maths_clip = 0.65f
 				},
-				.output = 0.0,
-				.error = 0.0,
-				.last_update = 0.0, 
+				.output = 0.0f,
+				.error = 0.0f,
+				.last_update = 0.0f, 
 				.dt = 1,
-				.soft_zone_width = 0.0
+				.soft_zone_width = 0.0f
 			},
 			// -----------------------------------------------------------------
 			// ------ PITCH PID ------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.15,
-				.clip_min = -0.9, 
-				.clip_max = 0.9,
+				.p_gain = 0.14f,
+				.clip_min = -0.9f, 
+				.clip_max = 0.9f,
 				.integrator={
-					.pregain = 0.5, 
-					.postgain = 1.0,
-					.accumulator = 0.0,
-					.maths_clip = 0.65,
-					.leakiness = 0.0
+					.pregain = 0.5f, 
+					.postgain = 1.0f,
+					.accumulator = 0.0f,
+					.maths_clip = 0.65f,
+					.leakiness = 0.0f
 				},
 				.differentiator={
-					.gain = 0.2,
-					.previous = 0.0,
-					.LPF = 0.4,
-					.maths_clip = 0.65
+					.gain = 0.15f,
+					.previous = 0.0f,
+					.LPF = 0.5f,
+					.maths_clip = 0.65f
 				},
-				.output = 0.0,
-				.error = 0.0,
-				.last_update = 0.0, 
+				.output = 0.0f,
+				.error = 0.0f,
+				.last_update = 0.0f, 
 				.dt = 1,
-				.soft_zone_width = 0.0
+				.soft_zone_width = 0.0f
 			},
 			// -----------------------------------------------------------------
 			// ------ YAW PID --------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.4,
-				.clip_min = -0.9, 
-				.clip_max = 0.9,
+				.p_gain = 0.6f,
+				.clip_min = -0.3f, 
+				.clip_max = 0.3f,
 				.integrator={
-					.pregain = 0.5, 
-					.postgain = 0.2,
-					.accumulator = 0.0,
-					.maths_clip = 0.1,
-					.leakiness = 0.0
+					.pregain = 0.5f, 
+					.postgain = 0.5f,
+					.accumulator = 0.0f,
+					.maths_clip = 0.3f,
+					.leakiness = 0.0f
 				},
 				.differentiator={
-					.gain = 0.0,
-					.previous = 0.0,
-					.LPF = 0.4,
-					.maths_clip = 0.5
+					.gain = 0.0f,
+					.previous = 0.0f,
+					.LPF = 0.4f,
+					.maths_clip = 0.5f
 				},
-				.output = 0.0,
-				.error = 0.0,
-				.last_update = 0.0, 
+				.output = 0.0f,
+				.error = 0.0f,
+				.last_update = 0.0f, 
 				.dt = 1,
-				.soft_zone_width = 0.0
+				.soft_zone_width = 0.0f
 			}
 		},
 		// ---------------------------------------------------------------------
 		// ------ THRUST PID ---------------------------------------------------
 		// ---------------------------------------------------------------------
 		.thrust_controller={
-				.p_gain = 1.0,
+				.p_gain = 1.0f,
 				.clip_min = -1000, 
 				.clip_max = 1000,
 				.integrator={
-					.pregain = 0.0, 
-					.postgain = 0.0,
-					.accumulator = 0.0,
-					.maths_clip = 0.0,
-					.leakiness = 0.0
+					.pregain = 0.0f, 
+					.postgain = 0.0f,
+					.accumulator = 0.0f,
+					.maths_clip = 0.0f,
+					.leakiness = 0.0f
 				},
 				.differentiator={
-					.gain = 0.0,
-					.previous = 0.0,
-					.LPF = 0.0,
-					.maths_clip = 0.0
+					.gain = 0.0f,
+					.previous = 0.0f,
+					.LPF = 0.0f,
+					.maths_clip = 0.0f
 				},
-				.output = 0.0,
-				.error = 0.0,
-				.last_update = 0.0, 
+				.output = 0.0f,
+				.error = 0.0f,
+				.last_update = 0.0f, 
 				.dt = 1,
-				.soft_zone_width = 0.0
+				.soft_zone_width = 0.0f
 		},
 		// ---------------------------------------------------------------------
 		// ------ OUTPUT -------------------------------------------------------
 		// ---------------------------------------------------------------------
 		.output = {
-			.rpy = {0.0, 0.0, 0.0},
-			.thrust = 0.0,
-			.tvel = {0.0, 0.0, 0.0},
-			.theading = 0.0,
+			.rpy = {0.0f, 0.0f, 0.0f},
+			.thrust = 0.0f,
+			.tvel = {0.0f, 0.0f, 0.0f},
+			.theading = 0.0f,
 			.control_mode =  RATE_COMMAND_MODE,
-			.yaw_mode = YAW_RELATIVE,
-			.run_mode = MOTORS_OFF
+			.yaw_mode = YAW_RELATIVE
+			//.yaw_mode = YAW_RELATIVE,
+			//.run_mode = MOTORS_OFF
 		},
 	},
 // #############################################################################
@@ -146,118 +157,119 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ ROLL PID -------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 1.5,
-				.clip_min = -1.2, 
-				.clip_max = 1.2,
+				.p_gain = 2.0f,
+				.clip_min = -1.2f, 
+				.clip_max = 1.2f,
 				.integrator={
-					.pregain = 0.0, 
-					.postgain = 0.0,
-					.accumulator = 0.0,
-					.maths_clip = 0.0,
-					.leakiness = 0.0
+					.pregain = 0.0f, 
+					.postgain = 0.0f,
+					.accumulator = 0.0f,
+					.maths_clip = 0.0f,
+					.leakiness = 0.0f
 				},
 				.differentiator={
-					.gain = 0.0,
-					.previous = 0.0,
-					.LPF = 0.5,
-					.maths_clip = 0.1
+					.gain = 0.0f,
+					.previous = 0.0f,
+					.LPF = 0.5f,
+					.maths_clip = 0.1f
 				},
-				.output = 0.0,
-				.error = 0.0,
-				.last_update = 0.0, 
+				.output = 0.0f,
+				.error = 0.0f,
+				.last_update = 0.0f, 
 				.dt = 1,
-				.soft_zone_width = 0.0
+				.soft_zone_width = 0.0f
 			},
 			// -----------------------------------------------------------------
 			// ------ PITCH PID ------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 1.5,
-				.clip_min = -1.2, 
-				.clip_max = 1.2,
+				.p_gain = 2.0f,
+				.clip_min = -1.2f, 
+				.clip_max = 1.2f,
 				.integrator={
-					.pregain = 0.0, 
-					.postgain = 0.0,
-					.accumulator = 0.0,
-					.maths_clip = 0.0,
-					.leakiness = 0.0
+					.pregain = 0.0f, 
+					.postgain = 0.0f,
+					.accumulator = 0.0f,
+					.maths_clip = 0.0f,
+					.leakiness = 0.0f
 				},
 				.differentiator={
-					.gain = 0.0,
-					.previous = 0.0,
-					.LPF = 0.5,
-					.maths_clip = 0.1
+					.gain = 0.0f,
+					.previous = 0.0f,
+					.LPF = 0.5f,
+					.maths_clip = 0.1f
 				},
-				.output = 0.0,
-				.error = 0.0,
-				.last_update = 0.0, 
+				.output = 0.0f,
+				.error = 0.0f,
+				.last_update = 0.0f, 
 				.dt = 1,
-				.soft_zone_width = 0.0
+				.soft_zone_width = 0.0f
 			},
 			// -----------------------------------------------------------------
 			// ------ YAW PID --------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 1.5,
-				.clip_min = -1.5, 
-				.clip_max = 1.5,
+				.p_gain = 1.5f,
+				.clip_min = -1.5f, 
+				.clip_max = 1.5f,
 				.integrator={
-					.pregain = 0.0, 
-					.postgain = 0.0,
-					.accumulator = 0.0,
-					.maths_clip = 0.0,
-					.leakiness = 0.0
+					.pregain = 0.0f, 
+					.postgain = 0.0f,
+					.accumulator = 0.0f,
+					.maths_clip = 0.0f,
+					.leakiness = 0.0f
 				},
 				.differentiator={
-					.gain = 0.0,
-					.previous = 0.0,
-					.LPF = 0.5,
-					.maths_clip = 0.5
+					.gain = 0.0f,
+					.previous = 0.0f,
+					.LPF = 0.5f,
+					.maths_clip = 0.5f
 				},
-				.output = 0.0,
-				.error = 0.0,
-				.last_update = 0.0, 
+				.output = 0.0f,
+				.error = 0.0f,
+				.last_update = 0.0f, 
 				.dt = 1,
-				.soft_zone_width = 0.0
+				.soft_zone_width = 0.0f
 			}
 		},
 		// ---------------------------------------------------------------------
 		// ------ THRUST PID ---------------------------------------------------
 		// ---------------------------------------------------------------------
 		.thrust_controller={
-				.p_gain = 1.0,
+				.p_gain = 1.0f,
 				.clip_min = -1, 
 				.clip_max = 1,
 				.integrator={
-					.pregain = 0.0, 
-					.postgain = 0.0,
-					.accumulator = 0.0,
-					.maths_clip = 0.0,
-					.leakiness = 0.0
+					.pregain = 0.0f, 
+					.postgain = 0.0f,
+					.accumulator = 0.0f,
+					.maths_clip = 0.0f,
+					.leakiness = 0.0f
 				},
 				.differentiator={
-					.gain = 0.0,
-					.previous = 0.0,
-					.LPF = 0.0,
-					.maths_clip = 0.0
+					.gain = 0.0f,
+					.previous = 0.0f,
+					.LPF = 0.0f,
+					.maths_clip = 0.0f
 				},
-				.output = 0.0,
-				.error = 0.0,
-				.last_update = 0.0, 
+				.output = 0.0f,
+				.error = 0.0f,
+				.last_update = 0.0f, 
 				.dt = 1,
-				.soft_zone_width = 0.0
+				.soft_zone_width = 0.0f
 		},
 		// ---------------------------------------------------------------------
 		// ------ OUTPUT -------------------------------------------------------
 		// ---------------------------------------------------------------------
 		.output = {
-			.rpy = {0.0, 0.0, 0.0},
-			.thrust = 0.0,
-			.tvel = {0.0, 0.0, 0.0},
-			.theading = 0.0,
+			.rpy = {0.0f, 0.0f, 0.0f},
+			.thrust = 0.0f,
+			.tvel = {0.0f, 0.0f, 0.0f},
+			.theading = 0.0f,
 			.control_mode =  RATE_COMMAND_MODE,
-			.yaw_mode = YAW_RELATIVE,
-			.run_mode = MOTORS_OFF
+			.yaw_mode = YAW_RELATIVE
+			//.yaw_mode = YAW_RELATIVE,
+			//.run_mode = MOTORS_OFF
 		},
 	},
 // #############################################################################
@@ -269,125 +281,129 @@ static Stabiliser_Stack_copter_t stabiliser_defaults_copter =
 			// ------ ROLL PID -------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.2,
-				.clip_min = -0.5, 
-				.clip_max = 0.5,
+				.p_gain = 0.2f,
+				.clip_min = -0.5f, 
+				.clip_max = 0.5f,
 				.integrator={
-					.pregain = 0.0, 
-					.postgain = 0.0,
-					.accumulator = 0.0,
-					.maths_clip = 0.3,
-					.leakiness = 0.0
+					.pregain = 1.0f, 
+					.postgain = 0.5f,
+					.accumulator = 0.0f,
+					.maths_clip = 0.5f,
+					.leakiness = 0.0f
 				},
 				.differentiator={
-					.gain = 0.0,
-					.previous = 0.0,
-					.LPF = 0.5,
-					.maths_clip = 0.5
+					.gain = 0.0f,
+					.previous = 0.0f,
+					.LPF = 0.5f,
+					.maths_clip = 0.5f
 				},
-				.output = 0.0,
-				.error = 0.0,
-				.last_update = 0.0, 
+				.output = 0.0f,
+				.error = 0.0f,
+				.last_update = 0.0f, 
 				.dt = 1,
-				.soft_zone_width = 0.3
+				.soft_zone_width = 0.2f
 			},
 			// -----------------------------------------------------------------
 			// ------ PITCH PID ------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.2,
-				.clip_min = -0.5, 
-				.clip_max = 0.5,
+				.p_gain = 0.2f,
+				.clip_min = -0.5f, 
+				.clip_max = 0.5f,
 				.integrator={
-					.pregain = 0.0, 
-					.postgain = 0.0,
-					.accumulator = 0.0,
-					.maths_clip = 0.3,
-					.leakiness = 0.0
+					.pregain = 1.0f, 
+					.postgain = 0.5f,
+					.accumulator = 0.0f,
+					.maths_clip = 0.5f,
+					.leakiness = 0.0f
 				},
 				.differentiator={
-					.gain = 0.0,
-					.previous = 0.0,
-					.LPF = 0.5,
-					.maths_clip = 0.5
+					.gain = 0.0f,
+					.previous = 0.0f,
+					.LPF = 0.5f,
+					.maths_clip = 0.5f
 				},
-				.output = 0.0,
-				.error = 0.0,
-				.last_update = 0.0, 
+				.output = 0.0f,
+				.error = 0.0f,
+				.last_update = 0.0f, 
 				.dt = 1,
-				.soft_zone_width = 0.3
+				.soft_zone_width = 0.2f
 			},
 			// -----------------------------------------------------------------
 			// ------ YAW PID --------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 1.0,
+				.p_gain = 1.0f,
 				.clip_min = -1, 
 				.clip_max = 1,
 				.integrator={
-					.pregain = 0.0, 
-					.postgain = 0.0,
-					.accumulator = 0.0,
-					.maths_clip = 0.0,
-					.leakiness = 0.0
+					.pregain = 0.0f, 
+					.postgain = 0.0f,
+					.accumulator = 0.0f,
+					.maths_clip = 0.0f,
+					.leakiness = 0.0f
 				},
 				.differentiator={
-					.gain = 0.0,
-					.previous = 0.0,
-					.LPF = 0.0,
-					.maths_clip = 0.0
+					.gain = 0.0f,
+					.previous = 0.0f,
+					.LPF = 0.0f,
+					.maths_clip = 0.0f
 				},
-				.output = 0.0,
-				.error = 0.0,
-				.last_update = 0.0, 
+				.output = 0.0f,
+				.error = 0.0f,
+				.last_update = 0.0f, 
 				.dt = 1,
-				.soft_zone_width = 0.0
+				.soft_zone_width = 0.0f
 			}
 		},
 		// ---------------------------------------------------------------------
 		// ------ THRUST PID ---------------------------------------------------
 		// ---------------------------------------------------------------------
 		.thrust_controller={
-				.p_gain = 0.4,
-				.clip_min = -0.9, 
-				.clip_max = 0.65,
+				.p_gain = 0.25f,
+				.clip_min = -0.9f, 
+				.clip_max = 0.65f,
 				.integrator={
-					.pregain = 1.5, 
-					.postgain = 1.0,
-					.accumulator = 0.0,
-					.maths_clip = 1.0,
-					.leakiness = 0.0
+					.pregain = 1.5f, 
+					.postgain = 1.0f,
+					.accumulator = 0.0f,
+					.maths_clip = 1.0f,
+					.leakiness = 0.0f
 				},
 				.differentiator={
-					.gain = 0.5,
-					.previous = 0.0,
-					.LPF = 0.95,
-					.maths_clip = 1.0
+					.gain = 0.4f,
+					.previous = 0.0f,
+					.LPF = 0.97f,
+					.maths_clip = 0.2f
 				},
-				.output = 0.0,
-				.error = 0.0,
-				.last_update = 0.0, 
+				.output = 0.0f,
+				.error = 0.0f,
+				.last_update = 0.0f, 
 				.dt = 1,
-				.soft_zone_width = 0.2
+				.soft_zone_width = 0.2f
 		},
 		// ---------------------------------------------------------------------
 		// ------ OUTPUT -------------------------------------------------------
 		// ---------------------------------------------------------------------
 		.output = {
-			.rpy = {0.0, 0.0, 0.0},
-			.thrust = 0.0,
-			.tvel = {0.0, 0.0, 0.0},
-			.theading = 0.0,
+			.rpy = {0.0f, 0.0f, 0.0f},
+			.thrust = 0.0f,
+			.tvel = {0.0f, 0.0f, 0.0f},
+			.theading = 0.0f,
 			.control_mode =  RATE_COMMAND_MODE,
-			.yaw_mode = YAW_RELATIVE,
-			.run_mode = MOTORS_OFF
+			.yaw_mode = YAW_RELATIVE
+			//.yaw_mode = YAW_RELATIVE,
+			//.run_mode = MOTORS_OFF
 		},
 	},
 // #############################################################################
 // ######  MISC  ###############################################################
 // #############################################################################
-	.yaw_coordination_velocity=1.5
+	.yaw_coordination_velocity=1.5f
 };
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CONF_STABILISATION_COPTER_H_ */

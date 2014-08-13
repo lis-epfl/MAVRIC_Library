@@ -10,10 +10,10 @@
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
     <AvrGccProjectExtensions />
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
-    <Name>Maveric_gumstix</Name>
+    <Name>Maveric_myCopter</Name>
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
     <OutputType>Executable</OutputType>
-    <Language>C</Language>
+    <Language>CPP</Language>
     <avrtool>com.atmel.avrdbg.tool.jtagice3plus</avrtool>
     <avrtoolinterface>JTAG</avrtoolinterface>
     <com_atmel_avrdbg_tool_jtagicemkii>
@@ -68,7 +68,7 @@
         </InterfaceProperties>
       </ToolOptions>
     </com_atmel_avrdbg_tool_avrdragon>
-    <ToolchainName>com.Atmel.AVRGCC32.C</ToolchainName>
+    <ToolchainName>com.Atmel.AVRGCC32.CPP</ToolchainName>
     <ToolchainFlavour>Native</ToolchainFlavour>
     <AsfFrameworkConfig>
       <framework-data>
@@ -113,7 +113,7 @@
         <files>
           <file path="src/asf/avr32/utils/preprocessor/stringz.h" framework="com.atmel.avr32.sf.uc3c" version="2.5.1-17860" source="avr32/utils/preprocessor/stringz.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/asf/avr32/utils/startup/trampoline_uc3.S" framework="com.atmel.avr32.sf.uc3c" version="2.5.1-17860" source="avr32/utils/startup/trampoline_uc3.S" changed="False" content-id="Atmel.ASF" />
-          <file path="src/main.c" framework="com.atmel.avr32.sf.uc3c" version="2.5.1-17860" source="common/applications/user_application/main.c" changed="False" content-id="Atmel.ASF" />
+          <file path="src/main.cpp" framework="com.atmel.avr32.sf.uc3c" version="2.5.1-17860" source="common/applications/user_application/main.cpp" changed="False" content-id="Atmel.ASF" />
           <file path="src/asf/avr32/utils/parts.h" framework="com.atmel.avr32.sf.uc3c" version="2.5.1-17860" source="avr32/utils/parts.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/asf/avr32/utils/preprocessor/tpaste.h" framework="com.atmel.avr32.sf.uc3c" version="2.5.1-17860" source="avr32/utils/preprocessor/tpaste.h" changed="False" content-id="Atmel.ASF" />
           <file path="src/asf/avr32/utils/preprocessor/preprocessor.h" framework="com.atmel.avr32.sf.uc3c" version="2.5.1-17860" source="avr32/utils/preprocessor/preprocessor.h" changed="False" content-id="Atmel.ASF" />
@@ -230,11 +230,11 @@
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
     <OverrideVtorValue>exception_table</OverrideVtorValue>
-    <eraseonlaunchrule>0</eraseonlaunchrule>
+    <eraseonlaunchrule>1</eraseonlaunchrule>
     <com_atmel_avrdbg_tool_jtagicemk3>
       <ToolType>com.atmel.avrdbg.tool.jtagicemk3</ToolType>
       <ToolName>JTAGICE3</ToolName>
-      <ToolNumber>J30200015895</ToolNumber>
+      <ToolNumber>J30200014870</ToolNumber>
       <Channel>
         <host>127.0.0.1</host>
         <port>49558</port>
@@ -274,7 +274,7 @@
         <InterfaceName>JTAG</InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.jtagice3plus</ToolType>
-      <ToolNumber>J30200016182</ToolNumber>
+      <ToolNumber>J30200030913</ToolNumber>
       <ToolName>JTAGICE3</ToolName>
     </com_atmel_avrdbg_tool_jtagice3plus>
   </PropertyGroup>
@@ -282,7 +282,7 @@
     <OutputFileName>MegaFly2</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
     <ToolchainSettings>
-      <Avr32Gcc xmlns="">
+      <Avr32GccCpp>
         <avr32gcc.common.outputfiles.hex>True</avr32gcc.common.outputfiles.hex>
         <avr32gcc.common.outputfiles.lss>True</avr32gcc.common.outputfiles.lss>
         <avr32gcc.common.outputfiles.eep>True</avr32gcc.common.outputfiles.eep>
@@ -346,21 +346,17 @@
           </ListValues>
         </avr32gcc.compiler.directories.IncludePaths>
         <avr32gcc.compiler.optimization.level>Optimize (-O1)</avr32gcc.compiler.optimization.level>
-        <avr32gcc.compiler.optimization.OtherFlags>-fdata-sections -mhard_float</avr32gcc.compiler.optimization.OtherFlags>
+        <avr32gcc.compiler.optimization.OtherFlags>-fdata-sections  -mhard-float</avr32gcc.compiler.optimization.OtherFlags>
         <avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
         <avr32gcc.compiler.optimization.GeneratePositionIndependentCode>True</avr32gcc.compiler.optimization.GeneratePositionIndependentCode>
         <avr32gcc.compiler.warnings.AllWarnings>True</avr32gcc.compiler.warnings.AllWarnings>
         <avr32gcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax</avr32gcc.compiler.miscellaneous.OtherFlags>
-        <avr32gcc.linker.general.DoNotUseStandardStartFiles>True</avr32gcc.linker.general.DoNotUseStandardStartFiles>
-        <avr32gcc.linker.libraries.Libraries>
+        <avr32gcccpp.compiler.symbols.DefSymbols>
           <ListValues>
-            <Value>libm</Value>
+            <Value>BOARD=USER_BOARD</Value>
           </ListValues>
-        </avr32gcc.linker.libraries.Libraries>
-        <avr32gcc.linker.optimization.GarbageCollectUnusedSections>True</avr32gcc.linker.optimization.GarbageCollectUnusedSections>
-        <avr32gcc.linker.miscellaneous.LinkerFlags>-Wl,--relax -Wl,-e,_trampoline</avr32gcc.linker.miscellaneous.LinkerFlags>
-        <avr32gcc.assembler.general.AssemblerFlags>-mrelax</avr32gcc.assembler.general.AssemblerFlags>
-        <avr32gcc.assembler.general.IncludePaths>
+        </avr32gcccpp.compiler.symbols.DefSymbols>
+        <avr32gcccpp.compiler.directories.IncludePaths>
           <ListValues>
             <Value>../src</Value>
             <Value>../src/asf/avr32/drivers/intc</Value>
@@ -398,52 +394,31 @@
             <Value>../src/asf/avr32/drivers/pdca</Value>
             <Value>../src/asf/common/utils/stdio/stdio_serial</Value>
             <Value>../src/asf/avr32/drivers/pwm</Value>
+            <Value>../src/asf/avr32/drivers/twim</Value>
             <Value>../src/asf/avr32/drivers/ast</Value>
+            <Value>../src/asf/avr32/drivers/twis</Value>
+            <Value>../src/asf/common/services/twi</Value>
+            <Value>../src/asf/common/services/twi/uc3_twim</Value>
+            <Value>../Library/communication</Value>
+            <Value>../Library/actuation</Value>
+            <Value>../Library/control</Value>
+            <Value>../Library/hal</Value>
+            <Value>../Library/runtime</Value>
+            <Value>../Library/sensing</Value>
+            <Value>../Library/util</Value>
+            <Value>../Library</Value>
           </ListValues>
-        </avr32gcc.assembler.general.IncludePaths>
-        <avr32gcc.preprocessingassembler.general.AssemblerFlags>-mrelax</avr32gcc.preprocessingassembler.general.AssemblerFlags>
-        <avr32gcc.preprocessingassembler.general.IncludePaths>
-          <ListValues>
-            <Value>../src</Value>
-            <Value>../src/asf/avr32/drivers/intc</Value>
-            <Value>../src/asf/avr32/utils</Value>
-            <Value>../src/asf/avr32/utils/preprocessor</Value>
-            <Value>../src/asf/common/applications/user_application/user_board</Value>
-            <Value>../src/asf/common/boards</Value>
-            <Value>../src/asf/common/boards/user_board</Value>
-            <Value>../src/asf/common/utils</Value>
-            <Value>../src/config</Value>
-            <Value>../src/asf/avr32/drivers/gpio</Value>
-            <Value>../src/asf/avr32/drivers/scif</Value>
-            <Value>../src/asf/avr32/drivers/pm</Value>
-            <Value>../src/asf/avr32/drivers/flashc</Value>
-            <Value>../src/asf/common/services/sleepmgr</Value>
-            <Value>../src/asf/common/services/clock</Value>
-            <Value>../src/asf/avr32/drivers/cpu/cycle_counter</Value>
-            <Value>../src/asf/avr32/services/delay</Value>
-            <Value>../src/asf/avr32/drivers/usbc</Value>
-            <Value>../src/asf/common/utils/stdio/stdio_usb</Value>
-            <Value>../src/asf/common/services/usb/class/cdc/device</Value>
-            <Value>../src/asf/common/services/usb/class/cdc</Value>
-            <Value>../src/asf/common/services/usb/udc</Value>
-            <Value>../src/asf/common/services/usb</Value>
-            <Value>../src/asf/avr32/drivers/usart</Value>
-            <Value>../src/asf/common/services/serial</Value>
-            <Value>../src/asf/avr32/drivers/adcifa</Value>
-            <Value>../src/asf/avr32/drivers/dacifb</Value>
-            <Value>../src/asf/avr32/drivers/pevc</Value>
-            <Value>../src/asf/avr32/drivers/spi</Value>
-            <Value>../src/asf/avr32/drivers/tc</Value>
-            <Value>../src/asf/avr32/drivers/eic</Value>
-            <Value>../src/asf/common/services/spi</Value>
-            <Value>../src/asf/common/services/spi/uc3_spi</Value>
-            <Value>../src/asf/avr32/drivers/pdca</Value>
-            <Value>../src/asf/common/utils/stdio/stdio_serial</Value>
-            <Value>../src/asf/avr32/drivers/pwm</Value>
-            <Value>../src/asf/avr32/drivers/ast</Value>
-          </ListValues>
-        </avr32gcc.preprocessingassembler.general.IncludePaths>
-      </Avr32Gcc>
+        </avr32gcccpp.compiler.directories.IncludePaths>
+        <avr32gcccpp.compiler.optimization.level>Optimize (-O1)</avr32gcccpp.compiler.optimization.level>
+        <avr32gcccpp.compiler.optimization.OtherFlags>-fdata-sections -mhard-float</avr32gcccpp.compiler.optimization.OtherFlags>
+        <avr32gcccpp.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcccpp.compiler.optimization.PrepareFunctionsForGarbageCollection>
+        <avr32gcccpp.compiler.optimization.GeneratePositionIndependentCode>True</avr32gcccpp.compiler.optimization.GeneratePositionIndependentCode>
+        <avr32gcccpp.compiler.warnings.AllWarnings>True</avr32gcccpp.compiler.warnings.AllWarnings>
+        <avr32gcccpp.compiler.miscellaneous.OtherFlags>-std=gnu++0x -Wpointer-arith -mrelax</avr32gcccpp.compiler.miscellaneous.OtherFlags>
+        <avr32gcccpp.linker.general.DoNotUseStandardStartFiles>True</avr32gcccpp.linker.general.DoNotUseStandardStartFiles>
+        <avr32gcccpp.linker.optimization.EnableFastFloatingPointLibrary>True</avr32gcccpp.linker.optimization.EnableFastFloatingPointLibrary>
+        <avr32gcccpp.linker.optimization.EnableFastMath>True</avr32gcccpp.linker.optimization.EnableFastMath>
+      </Avr32GccCpp>
     </ToolchainSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -451,7 +426,7 @@
     <OutputFileName>MegaFly2</OutputFileName>
     <OutputFileExtension>.elf</OutputFileExtension>
     <ToolchainSettings>
-      <Avr32Gcc>
+      <Avr32GccCpp>
         <avr32gcc.common.outputfiles.hex>True</avr32gcc.common.outputfiles.hex>
         <avr32gcc.common.outputfiles.lss>True</avr32gcc.common.outputfiles.lss>
         <avr32gcc.common.outputfiles.eep>True</avr32gcc.common.outputfiles.eep>
@@ -514,26 +489,20 @@
             <Value>../Library</Value>
           </ListValues>
         </avr32gcc.compiler.directories.IncludePaths>
+        <avr32gcc.compiler.optimization.level>Optimize most (-O3)</avr32gcc.compiler.optimization.level>
         <avr32gcc.compiler.optimization.OtherFlags>-mhard-float</avr32gcc.compiler.optimization.OtherFlags>
-        <avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareFunctionsForGarbageCollection>
-        <avr32gcc.compiler.optimization.PrepareDataForGarbageCollection>True</avr32gcc.compiler.optimization.PrepareDataForGarbageCollection>
         <avr32gcc.compiler.optimization.GeneratePositionIndependentCode>True</avr32gcc.compiler.optimization.GeneratePositionIndependentCode>
         <avr32gcc.compiler.optimization.DebugLevel>Default (-g2)</avr32gcc.compiler.optimization.DebugLevel>
         <avr32gcc.compiler.optimization.GenerateGprofInformation>True</avr32gcc.compiler.optimization.GenerateGprofInformation>
         <avr32gcc.compiler.optimization.GenerateProfInformation>True</avr32gcc.compiler.optimization.GenerateProfInformation>
         <avr32gcc.compiler.warnings.AllWarnings>True</avr32gcc.compiler.warnings.AllWarnings>
         <avr32gcc.compiler.miscellaneous.OtherFlags>-std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -march=ucr3fp</avr32gcc.compiler.miscellaneous.OtherFlags>
-        <avr32gcc.linker.general.DoNotUseStandardStartFiles>True</avr32gcc.linker.general.DoNotUseStandardStartFiles>
-        <avr32gcc.linker.libraries.Libraries>
+        <avr32gcccpp.compiler.symbols.DefSymbols>
           <ListValues>
-            <Value>libm</Value>
+            <Value>BOARD=USER_BOARD</Value>
           </ListValues>
-        </avr32gcc.linker.libraries.Libraries>
-        <avr32gcc.linker.optimization.GarbageCollectUnusedSections>True</avr32gcc.linker.optimization.GarbageCollectUnusedSections>
-        <avr32gcc.linker.optimization.GeneratePositionIndependentCode>True</avr32gcc.linker.optimization.GeneratePositionIndependentCode>
-        <avr32gcc.linker.miscellaneous.LinkerFlags>-Wl,--relax -Wl,-e,_trampoline</avr32gcc.linker.miscellaneous.LinkerFlags>
-        <avr32gcc.assembler.general.AssemblerFlags>-mrelax</avr32gcc.assembler.general.AssemblerFlags>
-        <avr32gcc.assembler.general.IncludePaths>
+        </avr32gcccpp.compiler.symbols.DefSymbols>
+        <avr32gcccpp.compiler.directories.IncludePaths>
           <ListValues>
             <Value>../src</Value>
             <Value>../src/asf/avr32/drivers/intc</Value>
@@ -571,67 +540,67 @@
             <Value>../src/asf/avr32/drivers/pdca</Value>
             <Value>../src/asf/common/utils/stdio/stdio_serial</Value>
             <Value>../src/asf/avr32/drivers/pwm</Value>
+            <Value>../src/asf/avr32/drivers/twim</Value>
             <Value>../src/asf/avr32/drivers/ast</Value>
+            <Value>../src/asf/avr32/drivers/twis</Value>
+            <Value>../src/asf/common/services/twi</Value>
+            <Value>../src/asf/common/services/twi/uc3_twim</Value>
+            <Value>../Library/communication</Value>
+            <Value>../Library/actuation</Value>
+            <Value>../Library/control</Value>
+            <Value>../Library/hal</Value>
+            <Value>../Library/runtime</Value>
+            <Value>../Library/sensing</Value>
+            <Value>../Library/util</Value>
+            <Value>../Library</Value>
           </ListValues>
-        </avr32gcc.assembler.general.IncludePaths>
-        <avr32gcc.assembler.debugging.DebugLevel>Default (-g)</avr32gcc.assembler.debugging.DebugLevel>
-        <avr32gcc.preprocessingassembler.general.AssemblerFlags>-mrelax</avr32gcc.preprocessingassembler.general.AssemblerFlags>
-        <avr32gcc.preprocessingassembler.general.IncludePaths>
-          <ListValues>
-            <Value>../src</Value>
-            <Value>../src/asf/avr32/drivers/intc</Value>
-            <Value>../src/asf/avr32/utils</Value>
-            <Value>../src/asf/avr32/utils/preprocessor</Value>
-            <Value>../src/asf/common/applications/user_application/user_board</Value>
-            <Value>../src/asf/common/boards</Value>
-            <Value>../src/asf/common/boards/user_board</Value>
-            <Value>../src/asf/common/utils</Value>
-            <Value>../src/config</Value>
-            <Value>../src/asf/avr32/drivers/gpio</Value>
-            <Value>../src/asf/avr32/drivers/scif</Value>
-            <Value>../src/asf/avr32/drivers/pm</Value>
-            <Value>../src/asf/avr32/drivers/flashc</Value>
-            <Value>../src/asf/common/services/sleepmgr</Value>
-            <Value>../src/asf/common/services/clock</Value>
-            <Value>../src/asf/avr32/drivers/cpu/cycle_counter</Value>
-            <Value>../src/asf/avr32/services/delay</Value>
-            <Value>../src/asf/avr32/drivers/usbc</Value>
-            <Value>../src/asf/common/utils/stdio/stdio_usb</Value>
-            <Value>../src/asf/common/services/usb/class/cdc/device</Value>
-            <Value>../src/asf/common/services/usb/class/cdc</Value>
-            <Value>../src/asf/common/services/usb/udc</Value>
-            <Value>../src/asf/common/services/usb</Value>
-            <Value>../src/asf/avr32/drivers/usart</Value>
-            <Value>../src/asf/common/services/serial</Value>
-            <Value>../src/asf/avr32/drivers/adcifa</Value>
-            <Value>../src/asf/avr32/drivers/dacifb</Value>
-            <Value>../src/asf/avr32/drivers/pevc</Value>
-            <Value>../src/asf/avr32/drivers/spi</Value>
-            <Value>../src/asf/avr32/drivers/tc</Value>
-            <Value>../src/asf/avr32/drivers/eic</Value>
-            <Value>../src/asf/common/services/spi</Value>
-            <Value>../src/asf/common/services/spi/uc3_spi</Value>
-            <Value>../src/asf/avr32/drivers/pdca</Value>
-            <Value>../src/asf/common/utils/stdio/stdio_serial</Value>
-            <Value>../src/asf/avr32/drivers/pwm</Value>
-            <Value>../src/asf/avr32/drivers/ast</Value>
-          </ListValues>
-        </avr32gcc.preprocessingassembler.general.IncludePaths>
-        <avr32gcc.preprocessingassembler.debugging.DebugLevel>Default (-Wa,-g)</avr32gcc.preprocessingassembler.debugging.DebugLevel>
-      </Avr32Gcc>
+        </avr32gcccpp.compiler.directories.IncludePaths>
+        <avr32gcccpp.compiler.optimization.level>Optimize most (-O3)</avr32gcccpp.compiler.optimization.level>
+        <avr32gcccpp.compiler.optimization.OtherFlags>-mhard-float</avr32gcccpp.compiler.optimization.OtherFlags>
+        <avr32gcccpp.compiler.optimization.GeneratePositionIndependentCode>True</avr32gcccpp.compiler.optimization.GeneratePositionIndependentCode>
+        <avr32gcccpp.compiler.optimization.DebugLevel>Default (-g2)</avr32gcccpp.compiler.optimization.DebugLevel>
+        <avr32gcccpp.compiler.optimization.GenerateGprofInformation>True</avr32gcccpp.compiler.optimization.GenerateGprofInformation>
+        <avr32gcccpp.compiler.optimization.GenerateProfInformation>True</avr32gcccpp.compiler.optimization.GenerateProfInformation>
+        <avr32gcccpp.compiler.warnings.AllWarnings>True</avr32gcccpp.compiler.warnings.AllWarnings>
+        <avr32gcccpp.linker.general.DoNotUseStandardStartFiles>True</avr32gcccpp.linker.general.DoNotUseStandardStartFiles>
+      </Avr32GccCpp>
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Library\communication\console.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\console.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\hud.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\hud.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\mavlink_communication.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\mavlink_communication.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\mavlink_message_handler.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\mavlink_message_handler.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\communication\mavlink_waypoint_handler.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\communication\mavlink_waypoint_handler.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\communication\neighbor_selection.c">
+    <Compile Include="Library\communication\state.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\communication\neighbor_selection.h">
+    <Compile Include="Library\communication\state.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\control\adaptive_parameter.c">
@@ -658,10 +627,7 @@
     <Compile Include="Library\control\stabilisation_copter.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\control\stabilisation_hybrid.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\control\stabilisation_hybrid.h">
+    <Compile Include="Library\hal\accelerometer.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\analog_monitor.h">
@@ -670,19 +636,55 @@
     <Compile Include="Library\hal\analog_monitor.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\hal\gps_ublox.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\gps_ublox.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\gyroscope.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\hmc5883l.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\hmc5883l.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\i2cxl_sonar.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\i2cxl_sonar.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\hal\i2c_driver_int.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\i2c_driver_int.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\lsm330dlc_driver.c">
+    <Compile Include="Library\hal\lsm330dlc.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\lsm330dlc_driver.h">
+    <Compile Include="Library\hal\lsm330dlc.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\magnetometer.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\piezo_speaker.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\piezo_speaker.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\remote_controller.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\sd_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\sd_spi.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\spektrum.h">
@@ -695,6 +697,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\turnigy.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\xbee.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\xbee.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\mavlink\include\maveric\maveric2.h">
@@ -992,10 +1000,16 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\mavlink\include\maveric\version.h" />
-    <Compile Include="Library\sensing\estimator.c">
+    <Compile Include="Library\sensing\ahrs.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\sensing\estimator.h">
+    <Compile Include="Library\sensing\ahrs.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\sensing\neighbor_selection.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\sensing\neighbor_selection.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\sensing\position_estimation.c">
@@ -1007,10 +1021,25 @@
     <Compile Include="Library\sensing\qfilter.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\util\linear_algebra.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\util\linear_algebra.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\util\maths.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\util\math_util.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\util\matrixlib_float.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\util\matrixlib_float.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\util\quaternions.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\util\quick_trig.c">
@@ -1019,7 +1048,10 @@
     <Compile Include="Library\util\quick_trig.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\advanced_gapi.h">
+    <Compile Include="Library\util\small_matrix.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\util\vectors.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\central_data.c">
@@ -1028,49 +1060,64 @@
     <Compile Include="src\central_data.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\conf_constants.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\conf_platform.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\conf_stabilisation_copter.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\config\conf_stabilisation_hybrid.h">
+    <Compile Include="src\config\MAVsettings\MAV001_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\gapi.h">
+    <Compile Include="src\config\MAVsettings\MAV002_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\gumstix.c">
+    <Compile Include="src\config\MAVsettings\MAV003_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\gumstix.h">
+    <Compile Include="src\config\MAVsettings\MAV004_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\uart_hub.c">
+    <Compile Include="src\config\MAVsettings\MAV006_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\uart_hub.h">
+    <Compile Include="src\config\MAVsettings\MAV007_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\gumstix_api.c">
+    <Compile Include="src\config\MAVsettings\MAV008_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\gumstix_api.h">
+    <Compile Include="src\config\MAVsettings\MAV009_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\mavlink_actions.c">
+    <Compile Include="src\config\MAVsettings\MAV010_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\mavlink_actions.h">
+    <Compile Include="src\config\MAVsettings\MAV101_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\sensor_hub.c">
+    <Compile Include="src\config\MAVsettings\MAV102_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\sensor_hub.h">
+    <Compile Include="src\config\MAVsettings\MAV202_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\sipp.c">
+    <Compile Include="src\config\MAVsettings\MAV203_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\sipp.h">
+    <Compile Include="src\config\MAVsettings\MAV204_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\mavlink_telemetry.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\mavlink_telemetry.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\tasks.c">
@@ -1079,30 +1126,15 @@
     <Compile Include="src\tasks.h">
       <SubType>compile</SubType>
     </Compile>
+    <None Include="Library\License.txt">
+      <SubType>compile</SubType>
+    </None>
     <None Include="Library\mavlink\include\mavlink_protobuf_manager.hpp">
       <SubType>compile</SubType>
     </None>
     <None Include="src\asf.h">
       <SubType>compile</SubType>
     </None>
-    <Compile Include="Library\communication\ishtar.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\communication\ishtar.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\communication\ishtar_def.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\communication\ishtar_stream.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\communication\ishtar_stream.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\communication\mavlink_bridge.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\communication\mavlink_stream.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1139,28 +1171,10 @@
     <Compile Include="Library\hal\ads1274.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\adxl345_driver.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\adxl345_driver.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\amplifiers.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\amplifiers.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\hal\bmp085.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\bmp085.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\compass_hmc5883l.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\compass_hmc5883l.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\dac_dma.c">
@@ -1169,22 +1183,10 @@
     <Compile Include="Library\hal\dac_dma.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\itg3200_driver.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\itg3200_driver.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\hal\led.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\led.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\radar_module_driver.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\radar_module_driver.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\servo_pwm.c">
@@ -1227,12 +1229,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\runtime\scheduler.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\gps_ublox.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\gps_ublox.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\sensing\imu.c">
@@ -1571,22 +1567,10 @@
     <Compile Include="src\boardsupport.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\config\conf_board.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\config\conf_clock.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\config\conf_platform.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\config\conf_sim_model.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\config\conf_sleepmgr.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\config\conf_spi_master.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\conf_twim.h">
@@ -1595,22 +1579,18 @@
     <Compile Include="src\config\conf_twis.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\config\conf_usart_serial.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="src\config\conf_usb.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\dma_channel_config.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="src\main.c">
+    <Compile Include="src\main.cpp">
       <SubType>compile</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Library\" />
-    <Folder Include="Library\actuation\" />
     <Folder Include="Library\communication\" />
     <Folder Include="Library\control\" />
     <Folder Include="Library\hal\" />
@@ -1672,6 +1652,7 @@
     <Folder Include="src\asf\common\utils\stdio\stdio_serial\" />
     <Folder Include="src\asf\common\utils\stdio\stdio_usb\" />
     <Folder Include="src\config\" />
+    <Folder Include="src\config\MAVsettings\" />
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\AvrGCC32.targets" />
 </Project>
