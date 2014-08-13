@@ -50,6 +50,7 @@ volatile bool end_of_transfer;
 
 // Local RAM buffer for the example to store data received from the SD/MMC card
 volatile char ram_buffer[1000];
+volatile char ram_buffer2[1000];
 
 // Dummy char table
 const char dummy_data[] = "0123456789xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
@@ -822,7 +823,8 @@ bool sd_mmc_spi_read_open_PDCA (uint32_t pos, sd_spi_t *sd_spi)
 
 	// wait for MMC not busy
 	if (false == sd_spi_wait_not_busy())
-	{print_util_dbg_print("card busy");
+	{
+		print_util_dbg_print("card busy");
 		return false;
 	}
 
@@ -839,7 +841,8 @@ bool sd_mmc_spi_read_open_PDCA (uint32_t pos, sd_spi_t *sd_spi)
 	}
 
 	if (r1 != 0x00) //if response not valid
-	{print_util_dbg_print("not received valid response");
+	{
+		print_util_dbg_print("not received valid response");
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
 		return false;
 	}
@@ -849,7 +852,8 @@ bool sd_mmc_spi_read_open_PDCA (uint32_t pos, sd_spi_t *sd_spi)
 	while((r1 = sd_spi_send_and_read(0xFF)) == 0xFF)
 	{
 		if (read_time_out == 30000)   // TIME-OUT
-		{print_util_dbg_print("timed-out");
+		{
+			print_util_dbg_print("timed-out");
 			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS); // unselect SD_MMC_SPI
 			return false;
 		}
@@ -858,7 +862,8 @@ bool sd_mmc_spi_read_open_PDCA (uint32_t pos, sd_spi_t *sd_spi)
 
 	// check token
 	if (r1 != MMC_STARTBLOCK_READ)
-	{print_util_dbg_print("did not receive startblock_read");
+	{
+		print_util_dbg_print("did not receive startblock_read");
 		spi_write(SD_MMC_SPI,0xFF);
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
 		return false;
@@ -1036,6 +1041,14 @@ void sd_spi_test(sd_spi_t *sd_spi)
 	print_util_dbg_print("write succeed ? ");
 	print_util_dbg_print_num(sd_spi_write_sector_from_ram((void *)&dummy_data, sd_spi),10);
 
+	bool as = sd_mmc_spi_read_sector_to_ram((void*)ram_buffer2,sd_spi);
+	if (sd_mmc_spi_read_sector_to_ram((void*)ram_buffer2,sd_spi))
+	{
+		print_util_dbg_print("Read successful\r");
+	}
+	
+
+
 	// Enable all interrupts.
 	bool global_interrupt_enabled = cpu_irq_is_enabled ();
 	if (!global_interrupt_enabled)
@@ -1048,13 +1061,13 @@ void sd_spi_test(sd_spi_t *sd_spi)
 	for(uint16_t j = 1; j <= 3; j++)
 	{
 		// Configure the PDCA channel: the adddress of memory ram_buffer to receive the data at sector address j
-		pdca_load_channel( AVR32_PDCA_CHANNEL_SPI_RX,
-		&ram_buffer,
-		512);
+		pdca_load_channel(  AVR32_PDCA_CHANNEL_SPI_RX,
+							&ram_buffer,
+							512);
 
-		pdca_load_channel( AVR32_PDCA_CHANNEL_SPI_TX,
-		(void *)&dummy_data,
-		512); //send dummy to activate the clock
+		pdca_load_channel(  AVR32_PDCA_CHANNEL_SPI_TX,
+							(void *)&dummy_data,
+							512); //send dummy to activate the clock
 
 		end_of_transfer = false;
 		// open sector number j
@@ -1076,8 +1089,13 @@ void sd_spi_test(sd_spi_t *sd_spi)
 			// Display the first 2O bytes of the ram_buffer content
 			for( uint16_t i = 0; i < 20; i++)
 			{
-				print_util_dbg_print_num( (U8)(*(ram_buffer + i)), 16);
+				
+				//print_util_dbg_print_num( atoi(&(*(ram_buffer + i))), 10); // prints the decimal value of the ascii
+				// Print the ASCII value of the ram_buffer
+				print_util_dbg_print_num((U8)*(ram_buffer + i), 10);
+				//print_util_dbg_print_num( (U8)atoi(&(*(ram_buffer2 + i))), 10);
 			}
+			delay_ms(250);
 		}
 		else
 		{

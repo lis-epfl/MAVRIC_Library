@@ -642,6 +642,30 @@
     <Compile Include="Library\hal\analog_monitor.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\hal\FatFs\diskio.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\FatFs\diskio.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\FatFs\ff.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\FatFs\ff.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\FatFs\ffconf.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\FatFs\integer.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\FatFs\option\syscall.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\FatFs\option\unicode.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\hal\gps_ublox.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1132,6 +1156,9 @@
     <Compile Include="src\tasks.h">
       <SubType>compile</SubType>
     </Compile>
+    <None Include="Library\hal\FatFs\00readme.txt">
+      <SubType>compile</SubType>
+    </None>
     <None Include="Library\mavlink\include\mavlink_protobuf_manager.hpp">
       <SubType>compile</SubType>
     </None>
@@ -1594,6 +1621,8 @@
     <Folder Include="Library\communication\" />
     <Folder Include="Library\control\" />
     <Folder Include="Library\hal\" />
+    <Folder Include="Library\hal\FatFs\" />
+    <Folder Include="Library\hal\FatFs\option\" />
     <Folder Include="Library\mavlink\" />
     <Folder Include="Library\mavlink\include\" />
     <Folder Include="Library\mavlink\include\maveric\" />

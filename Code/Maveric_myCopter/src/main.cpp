@@ -23,6 +23,8 @@ extern "C" {
 	#include "gpio.h"
 	#include "spi.h"
 	#include "sd_spi.h"
+	
+	#include "FatFs/ff.h"
 }
  
 central_data_t *central_data;
@@ -36,13 +38,13 @@ void initialisation()
 	mavlink_telemetry_init();
 	onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
 
-	sd_spi_test(&central_data->sd_spi);
-
 	LED_On(LED1);
 
 	piezo_speaker_startup_melody();
 
 	print_util_dbg_print("OK. Starting up.\n");
+
+	sd_spi_test(&central_data->sd_spi);
 
 	central_data->state.mav_state = MAV_STATE_STANDBY;
 
