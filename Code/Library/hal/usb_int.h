@@ -25,8 +25,8 @@ extern "C" {
 
 #include <stdint.h>
 #include "stdio_usb.h"
-#include "buffer.h"
 #include "streams.h"
+#include "uart_int.h"
 
 typedef struct {
 	int32_t IRQ;
@@ -40,7 +40,6 @@ typedef struct {
 	usb_interface_t usb_device;
 } usb_config_t;
 
-
 enum USB_MODE 
 {
 	USB_OFF, 
@@ -49,11 +48,15 @@ enum USB_MODE
 	USB_IN_OUT
 };
 
+enum AVAILABLE_USB
+{
+	USB = -1
+};
 
 /**
  * \brief	Initialize the USB config
  *
- * \param	usb_config					Structure with the config defined
+ * \param	usb_config	Structure with the config defined
  */
 void usb_int_set_usb_conf(usb_config_t* usb_config);
 
