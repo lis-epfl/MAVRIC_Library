@@ -5,7 +5,7 @@
 %filename = 'front_direction_log.txt';
 %filename = 'felix_quad_calibration_2013_09_23.txt'
 %filename = '131121-Calibration/131121-calibration_mav003.txt';
-filename = '140604_Calibration_MAV003_ludo_system.txt';
+filename = '12_08_2014_51_compressed.txt';
 
 fileid = fopen(filename);
 textFromFile = textscan(fileid,'%s');%,'HeaderLines',2,'Delimiter','\t');
@@ -24,8 +24,8 @@ accrawy = 4;
 accrawz = 6;
 
 %accrawinter = 1:size(A,1);
-indexmax = find(A(:,1)>360000);
-accrawinter = 1:indexmax(1);
+indexmax = find(A(:,1)>1000);
+accrawinter = indexmax;
 
 figure
 hold on
@@ -77,8 +77,8 @@ magrawy = 5;
 magrawz = 7;
 
 %magrawinter = 1:size(A,1);
-indexmax = find(A(:,1)>360000);
-magrawinter = 1:indexmax(1);
+indexmax = find(A(:,1)>600);
+magrawinter = indexmax;
 
 figure
 hold on
