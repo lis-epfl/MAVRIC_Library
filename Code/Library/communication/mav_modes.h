@@ -15,10 +15,12 @@
  *  Place where the mav modes and flags aredefined
  */
 
+
 #ifndef MAV_MODE_H
 #define MAV_MODE_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 
 typedef enum
@@ -79,14 +81,14 @@ typedef enum
 
 typedef struct 
 {
-    mode_flag_custom_t 	CUSTOM       : 1;
-    mode_flag_test_t 	TEST         : 1;
-    mode_flag_auto_t 	AUTO         : 1;
-    mode_flag_guided_t 	GUIDED       : 1;
-    mode_flag_stabilise_t STABILISE  : 1;
-    mode_flag_hil_t 	HIL          : 1;
-    mode_flag_manual_t 	MANUAL       : 1;
-    mode_flag_armed_t 	ARMED        : 1;
+    mode_flag_custom_t 	  CUSTOM       : 1;
+    mode_flag_test_t 	  TEST         : 1;
+    mode_flag_auto_t 	  AUTO         : 1;
+    mode_flag_guided_t 	  GUIDED       : 1;
+    mode_flag_stabilise_t STABILISE    : 1;
+    mode_flag_hil_t 	  HIL          : 1;
+    mode_flag_manual_t 	  MANUAL       : 1;
+    mode_flag_armed_t 	  ARMED        : 1;
 } mav_mode_bitfield_t; 
 
 
@@ -95,9 +97,6 @@ typedef union
 	uint8_t byte;
 	mav_mode_bitfield_t flags;
 } mav_mode_t;
-
-
-// typedef uint8_t mav_mode_t;
 
 
 typedef enum
@@ -125,5 +124,177 @@ typedef enum
 	MAV_MODE_POSITION_HOLD = 216,
 	MAV_MODE_GPS_NAVIGATION = 148
 } mav_mode_predefined_t;
+
+
+static inline bool mav_modes_is_armed(const mav_mode_t mav_mode)
+{
+	if ( mav_mode.flags.ARMED == ARMED_ON )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+static inline bool mav_modes_is_hil(const mav_mode_t mav_mode)
+{
+	if ( mav_mode.flags.HIL == HIL_ON )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+static inline bool mav_modes_is_manual(const mav_mode_t mav_mode)
+{
+	if ( mav_mode.flags.MANUAL == MANUAL_ON )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+static inline bool mav_modes_is_stabilise(const mav_mode_t mav_mode)
+{
+	if ( mav_mode.flags.STABILISE == STABILISE_ON )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+static inline bool mav_modes_is_guided(const mav_mode_t mav_mode)
+{
+	if ( mav_mode.flags.GUIDED == GUIDED_ON )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+static inline bool mav_modes_is_auto(const mav_mode_t mav_mode)
+{
+	if ( mav_mode.flags.AUTO == AUTO_ON )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+static inline bool mav_modes_is_test(const mav_mode_t mav_mode)
+{
+	if ( mav_mode.flags.TEST == TEST_ON )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+static inline bool mav_modes_is_custom(const mav_mode_t mav_mode)
+{
+	if ( mav_mode.flags.CUSTOM == CUSTOM_ON )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+static inline bool mav_modes_are_equal(const mav_mode_t mode1, const mav_mode_t mode2)
+{
+	if ( mode1.byte == mode2.byte )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+static inline bool mav_modes_are_equal_wo_hil(const mav_mode_t mode1, const mav_mode_t mode2)
+{
+	mav_mode_t mode1_ = mode1;
+	mav_mode_t mode2_ = mode2;
+	
+	mode1_.flags.HIL = HIL_OFF;
+	mode2_.flags.HIL = HIL_OFF;
+	
+	return mav_modes_are_equal(mode1_, mode2_);
+}
+
+
+static inline bool mav_modes_are_equal_wo_armed(const mav_mode_t mode1, const mav_mode_t mode2)
+{
+	mav_mode_t mode1_ = mode1;
+	mav_mode_t mode2_ = mode2;
+	
+	mode1_.flags.ARMED = ARMED_OFF;
+	mode2_.flags.ARMED = ARMED_OFF;
+	
+	return mav_modes_are_equal(mode1_, mode2_);
+}
+
+
+static inline bool mav_modes_are_equal_wo_hil_and_armed(const mav_mode_t mode1, const mav_mode_t mode2)
+{
+	mav_mode_t mode1_ = mode1;
+	mav_mode_t mode2_ = mode2;
+	
+	mode1_.flags.HIL = HIL_OFF;
+	mode2_.flags.HIL = HIL_OFF;
+	mode1_.flags.ARMED = ARMED_OFF;
+	mode2_.flags.ARMED = ARMED_OFF;
+	
+	return mav_modes_are_equal(mode1_, mode2_);
+}
+
+
+static inline mav_mode_t mav_modes_get_from_flags(const mode_flag_armed_t armed, const mode_flag_hil_t hil, const mode_flag_manual_t manual, const mode_flag_stabilise_t stabilise, const mode_flag_guided_t guided, const mode_flag_auto_t autoo, const mode_flag_test_t test, const mode_flag_custom_t custom)
+{
+	mav_mode_t mode;
+
+	mode.flags.ARMED     = armed;
+	mode.flags.HIL       = hil;
+	mode.flags.MANUAL    = manual;
+	mode.flags.STABILISE = stabilise;
+	mode.flags.GUIDED    = guided;
+	mode.flags.AUTO      = autoo;
+	mode.flags.TEST      = test;
+	mode.flags.CUSTOM    = custom;
+
+	return mode;
+}
 
 #endif

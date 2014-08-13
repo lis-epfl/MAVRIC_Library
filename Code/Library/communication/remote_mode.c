@@ -81,6 +81,8 @@ void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t* conf
 	remote_mode->custom_switch_channel 	= config->custom_switch_channel;		 
 	remote_mode->use_test_switch		= config->use_test_switch;			 
 	remote_mode->test_switch_channel	= config->test_switch_channel;
+	remote_mode->use_override_switch	= config->use_override_switch;			 
+	remote_mode->override_channel	= config->override_channel;
 
 	// Init state to safety state, disarmed
 	remote_mode->current_desired_mode 	= remote_mode->safety_mode;	

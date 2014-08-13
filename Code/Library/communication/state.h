@@ -75,10 +75,10 @@ typedef struct
 	bool nav_plan_active;						///< Flag to tell that a flight plan (min 1 waypoint) is active
 	bool in_the_air;							///< Flag to tell whether the vehicle is airborne or not
 	bool collision_avoidance;					///< Flag to tell whether the collision avoidance is active or not
-	
 	bool reset_position;
+	
 	const analog_monitor_t* analog_monitor;		///< The pointer to the analog monitor structure
-	const mavlink_stream_t* mavlink_stream;		///< Pointer to the mavlin kstream structure
+	const mavlink_stream_t* mavlink_stream;		///< Pointer to the mavlink stream structure
 	const remote_mode_t remote_mode;			///< Pointer to remote controller
 } state_t;
 
@@ -92,7 +92,6 @@ typedef struct
  * \param	message_handler		The pointer to the message handler
  */
 void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, const remote_t* remote, mavlink_message_handler_t *message_handler);
-// void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *message_handler);
 
 
 /**

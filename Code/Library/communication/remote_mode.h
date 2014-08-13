@@ -39,7 +39,9 @@ typedef struct
 	bool				use_custom_switch;			///< 
 	remote_channel_t 	custom_switch_channel;		///< 
 	bool				use_test_switch;			///< 
-	remote_channel_t 	test_switch_channel;		///< 	
+	remote_channel_t 	test_switch_channel;		///< 
+	bool				use_override_switch;		///<
+	remote_channel_t	override_channel;			///<
 } remote_mode_conf_t;
 
 
@@ -52,9 +54,11 @@ typedef struct
 	mav_mode_t 			mode_switch_middle;			///< Mode when the mode switch is MIDDLE (ARMED and HIL bit flags are ignored)
 	mav_mode_t 			mode_switch_down;			///< Mode when the mode switch is DOWN (ARMED and HIL bit flags are ignored)
 	bool				use_custom_switch;			///< Indicates whether a switch to activate the custom flag should be used
-	remote_channel_t 	custom_switch_channel;		///< Channel to use as 2-way custom switch. If not in safety, the custom bit flag is added to the current mode 
+	remote_channel_t 	custom_switch_channel;		///< Channel to use as 2-way custom switch. If not in safety, the switch overrides the custom bit flag: 0 when switch is -100%, 1 when switch is 100%
 	bool				use_test_switch;			///< Indicates whether a switch to activate the test flag should be used
-	remote_channel_t 	test_switch_channel;		///< Channel to use as 2-way test switch. If not in safety, the switch overrides the test bit flag: 0 when switch is UP, 1 when switch is DOWN
+	remote_channel_t 	test_switch_channel;		///< Channel to use as 2-way test switch. If not in safety, the switch overrides the test bit flag: 0 when switch is -100%, 1 when switch is 100%
+	bool				use_override_switch;		///< Indicates whether a switch should be used to use/override the mode indicated by the remote
+	remote_channel_t	override_channel;			///< Channel to use as 2-way switch. When 100%: follow mode indicated by the remote, when -100%: override what the remote indicates
 	mav_mode_t			current_desired_mode;		///< Mav mode indicated by the remote
 	const remote_t* 	remote;						///< Pointer to remote
 } remote_mode_t;
