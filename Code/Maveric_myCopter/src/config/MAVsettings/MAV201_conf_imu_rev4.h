@@ -48,8 +48,8 @@
 #define RAW_ACC_Z_SCALE 4137.07f						///< Accelerometer z axis scale
 
 #define ACC_BIAIS_X	  42.0f								///< Accelerometer x axis biais
-#define ACC_BIAIS_Y   20.0f								///< Accelerometer y axis biais
-#define ACC_BIAIS_Z  230.0f								///< Accelerometer z axis biais
+#define ACC_BIAIS_Y  220.0f								///< Accelerometer y axis biais
+#define ACC_BIAIS_Z   50.0f								///< Accelerometer z axis biais
 
 #define ACC_ORIENTATION_X  1.0f									///< Accelerometer x axis direction
 #define ACC_ORIENTATION_Y -1.0f								///< Accelerometer y axis direction
