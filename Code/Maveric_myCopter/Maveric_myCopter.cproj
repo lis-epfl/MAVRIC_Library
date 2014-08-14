@@ -1111,10 +1111,16 @@
     <Compile Include="src\config\MAVsettings\MAV102_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\MAVsettings\MAV201_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\MAVsettings\MAV202_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\MAVsettings\MAV203_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\MAVsettings\MAV204_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\main.cpp">
