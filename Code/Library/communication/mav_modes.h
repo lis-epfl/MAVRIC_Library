@@ -81,15 +81,15 @@ typedef enum
 
 typedef struct 
 {
-    mode_flag_custom_t 	  CUSTOM       : 1;
-    mode_flag_test_t 	  TEST         : 1;
-    mode_flag_auto_t 	  AUTO         : 1;
-    mode_flag_guided_t 	  GUIDED       : 1;
-    mode_flag_stabilise_t STABILISE    : 1;
-    mode_flag_hil_t 	  HIL          : 1;
-    mode_flag_manual_t 	  MANUAL       : 1;
     mode_flag_armed_t 	  ARMED        : 1;
-} mav_mode_bitfield_t; 
+    mode_flag_manual_t 	  MANUAL       : 1;
+    mode_flag_hil_t 	  HIL          : 1;
+    mode_flag_stabilise_t STABILISE    : 1;
+    mode_flag_guided_t 	  GUIDED       : 1;
+    mode_flag_auto_t 	  AUTO         : 1;
+    mode_flag_test_t 	  TEST         : 1;
+    mode_flag_custom_t 	  CUSTOM       : 1;
+} mav_mode_bitfield_t;
 
 
 typedef union

@@ -592,6 +592,7 @@
       <File Name="Library/communication/remote_mode.h"/>
       <File Name="Library/communication/state_machine.c"/>
       <File Name="Library/communication/state_machine.h"/>
+      <File Name="Library/communication/mav_modes.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="control">
       <File Name="Library/control/pid_control.h"/>

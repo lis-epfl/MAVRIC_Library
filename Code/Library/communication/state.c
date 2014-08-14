@@ -170,7 +170,7 @@ task_return_t state_send_heartbeat(const state_t* state)
 								&msg,
 								state->autopilot_type, 
 								state->autopilot_name, 
-								state->mav_mode.byte, 
+								state->mav_mode.byte | MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, 
 								state->simulation_mode, 
 								state->mav_state);
 	mavlink_stream_send(mavlink_stream, &msg);
