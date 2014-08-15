@@ -1,11 +1,5 @@
-% filename = 'data_log_compressed_square_walking.txt';
 
-%filename = 'mag_acc_compressed.txt';
-%filename = 'mag_acc_compressed_middle_esplanade_20130821.txt'
-%filename = 'front_direction_log.txt';
-%filename = 'felix_quad_calibration_2013_09_23.txt'
-%filename = '131121-Calibration/131121-calibration_mav003.txt';
-filename = '12_08_2014_51_compressed.txt';
+filename = '14_08_2014_MAV051_compressed.txt';
 
 fileid = fopen(filename);
 textFromFile = textscan(fileid,'%s');%,'HeaderLines',2,'Delimiter','\t');
@@ -56,8 +50,9 @@ ylabel('Intensity')
 legend('X', 'Y', 'Z')
 hold off
 
-display(g./diag(D_acc))
-display(b_acc)
+scale_acc = g./diag(D_acc);
+display(scale_acc)
+% display(b_acc)
 
 % accx = D(1,1)*(accx_raw - b(1));
 
@@ -108,8 +103,10 @@ ylabel('Intensity')
 legend('X', 'Y', 'Z')
 hold off
 
-display(1./diag(D_mag))
-display(b_mag)
+
+scale_mag = 1./diag(D_mag);
+display(scale_mag)
+% display(b_mag)
 
 %frontdirz = mean(magscaledz(A(:,1)>0&A(:,1)<3900));
 %display(frontdirz)
