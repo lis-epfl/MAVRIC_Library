@@ -47,21 +47,21 @@
 #define GYRO_ORIENTATION_Y -1.0f								///< Gyroscope y axis direction
 #define GYRO_ORIENTATION_Z -1.0f								///< Gyroscope z axis direction
 
-#define RAW_ACC_X_SCALE 4145.1f							///< Accelerometer x axis scale
-#define RAW_ACC_Y_SCALE 4155.2f							///< Accelerometer y axis scale
-#define RAW_ACC_Z_SCALE 4351.2f							///< Accelerometer z axis scale
+#define RAW_ACC_X_SCALE 3936.4f							///< Accelerometer x axis scale
+#define RAW_ACC_Y_SCALE 4080.8f							///< Accelerometer y axis scale
+#define RAW_ACC_Z_SCALE 4307.7f							///< Accelerometer z axis scale
 
-#define ACC_BIAIS_X	 -190.0f 								///< Accelerometer x axis biais
-#define ACC_BIAIS_Y  -70.0f									///< Accelerometer y axis biais
-#define ACC_BIAIS_Z  60.0f									///< Accelerometer z axis biais
+#define ACC_BIAIS_X	 -205.0f 								///< Accelerometer x axis biais
+#define ACC_BIAIS_Y  -90.0f									///< Accelerometer y axis biais
+#define ACC_BIAIS_Z  -15.0f									///< Accelerometer z axis biais
 
 #define ACC_ORIENTATION_X  1.0f									///< Accelerometer x axis direction
 #define ACC_ORIENTATION_Y -1.0f									///< Accelerometer y axis direction
 #define ACC_ORIENTATION_Z -1.0f									///< Accelerometer z axis direction
 
-#define RAW_MAG_X_SCALE 527.87f							///< Compass x axis scale
-#define RAW_MAG_Y_SCALE 529.86f							///< Compass y axis scale
-#define RAW_MAG_Z_SCALE 486.64f							///< Compass z axis scale
+#define RAW_MAG_X_SCALE 528.61f							///< Compass x axis scale
+#define RAW_MAG_Y_SCALE 534.27f							///< Compass y axis scale
+#define RAW_MAG_Z_SCALE 495.42f							///< Compass z axis scale
 
 #define MAG_BIAIS_X  -263.0f								///< Compass x axis biais
 #define MAG_BIAIS_Y  -185.0f								///< Compass y axis biais
