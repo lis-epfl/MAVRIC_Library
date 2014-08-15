@@ -1,0 +1,31 @@
+Logbook for Mycopter Swarm - Notes affecting all vehicles
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+24. 2. 2014 (Felix Schill)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+Tuned the PID control parameters (using MAV09) to rev4 autopilot and new motors/frame. Reason: the old gains from rev3 were too high for the new motors and had to be reduced; however the initial reduction was too much and lead to worse stability (sluggish uprighting, unstable on fast drops, sensitive to wind). The new gains have been entered into conf_stabilisation_copter.h and should be verified on all vehicles.
+
+Step 1: new Rate controller gains:
+Roll/Pitch Rate:
+P-gain 0.14  (old: 0.08)
+I-Pre  0.5
+I-Post 1.0
+D      0.1   (old: 0.2)
+
+Yaw: P 0.6 (old 0.5)
+I-Pre  0.5
+I-Post 0.5
+D      0.0   
+
+Step 2: new attitude gain (uprighting)
+Roll/Pitch 
+P-gain 2.0 (old 1.5)
+all others 0.0
+
+Step 3: new velocity gains to prevent drift in wind (adding integrator)
+
+
+
+
+

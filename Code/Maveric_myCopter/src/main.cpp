@@ -19,6 +19,10 @@ extern "C" {
 	#include "tasks.h"
 	#include "mavlink_telemetry.h"
 	#include "piezo_speaker.h"
+	
+	#include "gpio.h"
+	#include "spi.h"
+	#include "sd_spi.h"
 }
  
 central_data_t *central_data;
@@ -28,19 +32,18 @@ void initialisation()
 	central_data = central_data_get_pointer_to_struct();
 	boardsupport_init(central_data);
 	central_data_init();
-	
+
 	mavlink_telemetry_init();
 	onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
-	
-	
+
 	LED_On(LED1);
 
 	piezo_speaker_startup_melody();
 
 	print_util_dbg_print("OK. Starting up.\n");
-	
+
 	central_data->state.mav_state = MAV_STATE_STANDBY;
-	
+
 	central_data->imu.calibration_level = OFF;
 }
 

@@ -44,7 +44,7 @@ void orca_init(orca_t *orca, neighbors_t *neighbors, const position_estimator_t 
 	print_util_dbg_print("Orca initialized.\n");
 }
 
-void orca_computeNewVelocity(orca_t *orca, float optimal_velocity[], float new_velocity[])
+void orca_compute_new_velocity(orca_t *orca, float optimal_velocity[], float new_velocity[])
 {
 	uint8_t ind, i;
 	

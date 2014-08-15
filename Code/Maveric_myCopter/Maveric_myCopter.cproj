@@ -274,7 +274,7 @@
         <InterfaceName>JTAG</InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.jtagice3plus</ToolType>
-      <ToolNumber>J30200015895</ToolNumber>
+      <ToolNumber>J30200014870</ToolNumber>
       <ToolName>JTAGICE3</ToolName>
     </com_atmel_avrdbg_tool_jtagice3plus>
   </PropertyGroup>
@@ -603,6 +603,12 @@
     <Compile Include="Library\communication\state.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\communication\state_machine.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\state_machine.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\control\adaptive_parameter.c">
       <SubType>compile</SubType>
     </Compile>
@@ -681,6 +687,12 @@
     <Compile Include="Library\hal\remote_controller.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\hal\sd_spi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\sd_spi.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\hal\spektrum.h">
       <SubType>compile</SubType>
     </Compile>
@@ -691,6 +703,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\turnigy.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\usb_int.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\usb_int.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\xbee.c">
@@ -1093,10 +1111,16 @@
     <Compile Include="src\config\MAVsettings\MAV010_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\MAVsettings\MAV051_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\MAVsettings\MAV101_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\MAVsettings\MAV102_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\MAVsettings\MAV201_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\MAVsettings\MAV202_conf_imu_rev4.h">

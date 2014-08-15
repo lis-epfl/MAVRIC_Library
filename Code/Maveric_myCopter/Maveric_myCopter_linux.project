@@ -588,6 +588,8 @@
       <File Name="Library/communication/state.c"/>
       <File Name="Library/communication/hud.h"/>
       <File Name="Library/communication/hud.c"/>
+      <File Name="Library/communication/state_machine.c"/>
+      <File Name="Library/communication/state_machine.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="control">
       <File Name="Library/control/pid_control.h"/>
@@ -660,6 +662,8 @@
       <File Name="Library/hal/itg3200.h"/>
       <File Name="Library/hal/lsm330dlc.c"/>
       <File Name="Library/hal/lsm330dlc.h"/>
+      <File Name="Library/hal/sd_spi.h"/>
+      <File Name="Library/hal/sd_spi.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>

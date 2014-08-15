@@ -1,12 +1,23 @@
-/*
- * boardsupport.c
+/**
+ * \page The MAV'RIC License
  *
- * Created: 20/03/2013 12:14:18
- *  Author: sfx
- */ 
+ * The MAV'RIC Framework
+ *
+ * Copyright © 2011-2014
+ *
+ * Laboratory of Intelligent Systems, EPFL
+ */
+ 
+
+/**
+ * \file boardsupport.c
+ *
+ *  Initialization of all hardware related elements (communication lines, sensors devices, etc)
+ */
+
 
 #include "boardsupport.h"
-#include "conf_sim_model.h"
+#include "uart_int.h"
 #include "sysclk.h"
 #include "sleepmgr.h"
 #include "led.h"
@@ -16,25 +27,26 @@
 
 #include "time_keeper.h"
 #include "i2c_driver_int.h"
-#include "imu.h"
 #include "remote_controller.h"
-#include "uart_int.h"
 #include "print_util.h"
 
-#include "mavlink_stream.h"
+// #include "mavlink_stream.h"
 #include "servo_pwm.h"
 
-#include "simulation.h"
+//#include "simulation.h"
 #include "bmp085.h"
+#include "lsm330dlc.h"
+#include "hmc5883l.h"
 #include "analog_monitor.h"
+#include "piezo_speaker.h"
+#include "gpio.h"
 
-//static volatile board_hardware_t board_hardware;
+#include "gps_ublox.h"
+#include "xbee.h"
+#include "console.h"
 
-void boardsupport_init(central_data_t *centralData) {
-	int i;
-	enum GPS_Engine_Setting engine_nav_settings = GPS_ENGINE_AIRBORNE_4G;
-	
-
+void boardsupport_init(central_data_t *central_data) 
+{
 	irq_initialize_vectors();
 	cpu_irq_enable();
 	Disable_global_interrupt();
@@ -48,23 +60,6 @@ void boardsupport_init(central_data_t *centralData) {
 	time_keeper_init();
 		
 	INTC_init_interrupts();
-		
-	
-
-		
-	if (i2c_driver_init(0)!=STATUS_OK) {
-		//print_util_putstring(STDOUT, "Error initialising I2C\n");
-		while (1==1);
-		} else {
-		//print_util_putstring(STDOUT, "initialised I2C.\n");
-	};
-	/* Remove ic1 which was for the radar interface to activate uart2 for the gumstix interface
-	if (i2c_driver_init(1)!=STATUS_OK) {
-		//print_util_putstring(STDOUT, "Error initialising I2C\n");
-		while (1==1);
-		} else {
-		//print_util_putstring(STDOUT, "initialised I2C.\n");
-	};*/
 
 	LED_On(LED1);
 	// Configure the pins connected to LEDs as output and set their default
@@ -72,86 +67,68 @@ void boardsupport_init(central_data_t *centralData) {
 	//gpio_configure_pin(LED0_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
 	//gpio_configure_pin(LED1_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
 
-	servo_pwm_init();
-	servo_pwm_set(&servo_failsafe);
+	servo_pwm_hardware_init();
 	
-		
-	uart_int_init(0);
-	uart_int_register_write_stream(uart_int_get_uart_handle(0), &(centralData->xbee_out_stream));
+	// Init UART 0 for XBEE communication
+	xbee_init(UART0);
 				
-	//gumstix interface
-	uart_int_init(2);
-	buffer_make_buffered_stream(&(centralData->gumstix_buffer), &(centralData->gumstix_stream_in));
-	uart_int_register_read_stream(uart_int_get_uart_handle(3), &(centralData->gumstix_stream_in));
-	uart_int_register_write_stream(uart_int_get_uart_handle(3), &(centralData->gumstix_stream_out));
-		
-	uart_int_init(3);
-	buffer_make_buffered_stream(&(centralData->gps_buffer), &(centralData->gps_stream_in));
-	uart_int_register_read_stream(uart_int_get_uart_handle(3), &(centralData->gps_stream_in));
-	uart_int_register_write_stream(uart_int_get_uart_handle(3), &(centralData->gps_stream_out));
-		
-	uart_int_init(4);
-	uart_int_register_write_stream(uart_int_get_uart_handle(4), &(centralData->wired_out_stream));
-
-
-	buffer_make_buffered_stream_lossy(&(centralData->xbee_in_buffer), &(centralData->xbee_in_stream));
-	buffer_make_buffered_stream_lossy(&(centralData->wired_in_buffer), &(centralData->wired_in_stream));
-	uart_int_register_read_stream(uart_int_get_uart_handle(4), &(centralData->wired_in_stream));
-	uart_int_register_read_stream(uart_int_get_uart_handle(0), &(centralData->xbee_in_stream));
-
+	// Init UART 3 for GPS communication
+	gps_ublox_init(&(central_data->gps), UART3, &central_data->mavlink_communication.mavlink_stream);
+	
+	// Init UART 4 for wired communication
+	console_init(UART4);
 		
 	// connect abstracted aliases to hardware ports
+	central_data->telemetry_down_stream = xbee_get_out_stream();
+	central_data->telemetry_up_stream = xbee_get_in_stream();
+	central_data->debug_out_stream = console_get_out_stream();
+	central_data->debug_in_stream = console_get_out_stream();
+	
+	// init debug output
+	print_util_dbg_print_init(central_data->debug_out_stream);
+	print_util_dbg_print("Debug stream initialised\n");
 
-
-	centralData->telemetry_down_stream=&(centralData->xbee_out_stream);
-	centralData->telemetry_up_stream=&(centralData->xbee_in_stream);
-	centralData->debug_out_stream=&(centralData->wired_out_stream);
-	centralData->debug_in_stream=&(centralData->wired_in_stream);
-/*
-	centralData->telemetry_down_stream=&(centralData->wired_out_stream);
-	centralData->telemetry_up_stream  =&(centralData->wired_in_stream);		
-	centralData->debug_out_stream     =&(centralData->xbee_out_stream);
-	centralData->debug_in_stream      =&(centralData->xbee_in_stream);
-*/
-
+	// Bind RC receiver with remote
 	//remote_dsm2_rc_activate_bind_mode();
 
+	// RC receiver initialization
 	remote_dsm2_rc_init();
 
-	analog_monitor_init();
-	// init mavlink
-	mavlink_stream_init(centralData->telemetry_down_stream, centralData->telemetry_up_stream, MAVLINK_SYS_ID);
+	// Init analog rails
+	central_data->analog_monitor.enable[ANALOG_RAIL_2]  = false;
+	central_data->analog_monitor.enable[ANALOG_RAIL_3]  = false;
+	central_data->analog_monitor.enable[ANALOG_RAIL_4]  = false;
+	central_data->analog_monitor.enable[ANALOG_RAIL_5]  = false;
+	central_data->analog_monitor.enable[ANALOG_RAIL_6]  = false;
+	central_data->analog_monitor.enable[ANALOG_RAIL_7]  = false;
+	central_data->analog_monitor.enable[ANALOG_RAIL_10] = true;		// Battery filtered
+	central_data->analog_monitor.enable[ANALOG_RAIL_11] = true;		// Battery 
+	central_data->analog_monitor.enable[ANALOG_RAIL_12] = true;		// sonar
+	central_data->analog_monitor.enable[ANALOG_RAIL_13] = false;    // pitot
+	analog_monitor_init(&central_data->analog_monitor);
+	
+	// init imu & compass
+	i2c_driver_init(I2C0);
+	
+	lsm330dlc_init();
+	print_util_dbg_print("LSM330 initialised \r");
 		
-	// init debug output
-	print_util_dbg_print_init(centralData->debug_out_stream);
-		
-	imu_init(&(centralData->imu1));
-	bmp085_init();
-
-
-
+	hmc5883l_init_slow();
+	print_util_dbg_print("HMC5883 initialised \r");
+	
+	bmp085_init(&central_data->pressure,&central_data->mavlink_communication.mavlink_stream);
+	
+	// init radar or ultrasound (not implemented yet)
+	//i2c_driver_init(I2C1);
+	
+	// init 6V enable
+	gpio_enable_gpio_pin(AVR32_PIN_PA04);
+	gpio_set_gpio_pin(AVR32_PIN_PA04);
+	
 	Enable_global_interrupt();
+
+	// Init piezo speaker
+	piezo_speaker_init_binary();
+	
 	print_util_dbg_print("Board initialised.\n");
 }
-
-//board_hardware_t* get_board_hardware() {
-	//return &board_hardware;
-//}
-
-
-//byte_stream_t* get_telemetry_upstream() {
-	//return board_hardware.telemetry_up_stream;
-//}
-//byte_stream_t* get_telemetry_downstream() {
-	//return board_hardware.telemetry_down_stream;
-//}
-//byte_stream_t* print_util_get_debug_stream() {
-	//return board_hardware.debug_out_stream;
-//}
-//
-//Imu_Data_t* get_imu() {
-	//return &board_hardware.imu1;
-//}
-//Control_Command_t* get_control_inputs() {
-	//return &board_hardware.controls;
-//}

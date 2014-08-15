@@ -40,50 +40,58 @@ static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler
 	mavlink_request_data_stream_t request;
 	mavlink_msg_request_data_stream_decode(msg, &request);
 	
-	if ( scheduler->debug )
+	if ((request.target_system == scheduler->mavlink_stream->sysid)
+		&&(request.target_component == 0))
 	{
-		print_util_dbg_print("stream request:");
-		print_util_dbg_print_num(request.target_component, 10);
-		print_util_dbg_print(" stream="); 
-		print_util_dbg_print_num(request.req_stream_id, 10);
-		print_util_dbg_print(" start_stop=");
-		print_util_dbg_print_num(request.start_stop, 10);
-		print_util_dbg_print(" rate=");
-		print_util_dbg_print_num(request.req_message_rate, 10);
-		print_util_dbg_print("\n");
-		print_util_dbg_print("\n");	
-	}
-
-	if ( request.req_stream_id==255 ) 
-	{
-		// send full list of streams
-		for (int32_t i = 0; i < mavlink_task_set->task_count; i++) 
+		if ( scheduler->debug )
 		{
-			task_entry_t* task = scheduler_get_task_by_index(scheduler, i);
-			scheduler_run_task_now(task);
-		}					
-	} 
-	else 
-	{
-		task_entry_t* task = scheduler_get_task_by_id(scheduler, request.req_stream_id);
+			print_util_dbg_print("stream request:");
+			print_util_dbg_print_num(request.target_component, 10);
+			print_util_dbg_print(" stream="); 
+			print_util_dbg_print_num(request.req_stream_id, 10);
+			print_util_dbg_print(" start_stop=");
+			print_util_dbg_print_num(request.start_stop, 10);
+			print_util_dbg_print(" rate=");
+			print_util_dbg_print_num(request.req_message_rate, 10);
+			print_util_dbg_print("\n");
+			print_util_dbg_print("\n");	
+		}
+
+		if ( request.req_stream_id==255 ) 
+		{
+			// send full list of streams
+			for (int32_t i = 0; i < mavlink_task_set->task_count; i++) 
+			{
+				task_entry_t* task = scheduler_get_task_by_index(scheduler, i);
+				scheduler_run_task_now(task);
+			}					
+		} 
+		else 
+		{
+			task_entry_t* task = scheduler_get_task_by_id(scheduler, request.req_stream_id);
 		
-		if ( task != NULL )
-		{
-			if (request.start_stop) 
+			if ( task != NULL )
 			{
-				scheduler_change_run_mode(task, RUN_REGULAR);
-			}
-			else 
-			{
-				scheduler_change_run_mode(task, RUN_NEVER);
-			}
+				if (request.start_stop) 
+				{
+					scheduler_change_run_mode(task, RUN_REGULAR);
+				}
+				else 
+				{
+					scheduler_change_run_mode(task, RUN_NEVER);
+				}
 
-			if (request.req_message_rate > 0) 
+				if (request.req_message_rate > 0) 
+				{
+					scheduler_change_task_period(task, SCHEDULER_TIMEBASE / (uint32_t)request.req_message_rate);
+				}
+			}
+			else
 			{
-				scheduler_change_task_period(task, SCHEDULER_TIMEBASE / (uint32_t)request.req_message_rate);
+				print_util_dbg_print("This stream ID is not registred and cannot be activated.\r");
 			}
 		}
-	}
+	}	
 }
 
 
@@ -116,7 +124,7 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 	// Add callback to activate / disactivate streams
 	mavlink_message_handler_msg_callback_t callback;
 
-	callback.message_id 	= MAVLINK_MSG_ID_REQUEST_DATA_STREAM;
+	callback.message_id 	= MAVLINK_MSG_ID_REQUEST_DATA_STREAM; // 66
 	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&mavlink_communication_toggle_telemetry_stream;

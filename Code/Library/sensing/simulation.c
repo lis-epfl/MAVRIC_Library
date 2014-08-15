@@ -100,7 +100,7 @@ static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_co
 		print_util_dbg_print(")\n");
 	}
 
-	*sim->waypoint_set = false;
+	*sim->nav_plan_active = false;
 }
 
 /** 
@@ -249,7 +249,7 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *serv
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, servo_output_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, servo_output_t* servos, bool* nav_plan_active, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
 {
 	int32_t i;
 	
@@ -263,7 +263,7 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	sim->gps = gps;
 	sim->state = state;
 	sim->servos = servos;
-	sim->waypoint_set = waypoint_set;
+	sim->nav_plan_active = nav_plan_active;
 	
 	// set initial conditions to a given attitude_filter
 	sim->estimated_attitude = ahrs;
@@ -448,9 +448,9 @@ void simulation_update(simulation_model_t *sim)
 	// fill in simulated IMU values
 	for (i = 0;i < 3; i++)
 	{
-		sim->imu->raw_gyro.data[i] = (sim->rates_bf[i] * sim->calib_gyro.scale_factor[i] + sim->calib_gyro.bias[i]) * sim->calib_gyro.orientation[i];
-		sim->imu->raw_accelero.data[i] = ((sim->lin_forces_bf[i] / sim->vehicle_config.total_mass / sim->vehicle_config.sim_gravity) * sim->calib_accelero.scale_factor[i] + sim->calib_accelero.bias[i]) * sim->calib_accelero.orientation[i];
-		sim->imu->raw_compass.data[i] = ((sim->ahrs.north_vec.v[i] ) * sim->calib_compass.scale_factor[i] + sim->calib_compass.bias[i])* sim->calib_compass.orientation[i];
+		sim->imu->raw_gyro.data[sim->imu->calib_gyro.axis[i]] = (sim->rates_bf[i] * sim->calib_gyro.scale_factor[i] + sim->calib_gyro.bias[i]) * sim->calib_gyro.orientation[i];
+		sim->imu->raw_accelero.data[sim->imu->calib_accelero.axis[i]] = ((sim->lin_forces_bf[i] / sim->vehicle_config.total_mass / sim->vehicle_config.sim_gravity) * sim->calib_accelero.scale_factor[i] + sim->calib_accelero.bias[i]) * sim->calib_accelero.orientation[i];
+		sim->imu->raw_compass.data[sim->imu->calib_compass.axis[i]] = ((sim->ahrs.north_vec.v[i] ) * sim->calib_compass.scale_factor[i] + sim->calib_compass.bias[i])* sim->calib_compass.orientation[i];
 	}
 
 	sim->local_position.heading = coord_conventions_get_yaw(sim->ahrs.qe);
@@ -500,10 +500,9 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 {
 	uint32_t i;
 	
-	// From simulation to reality
-	//if (sim->state->simulation_mode == REAL_MODE)
 	if (state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
 	{
+		// From simulation to reality
 		sim->pos_est->local_position.origin = sim->local_position.origin;
 		for (i = 0;i < 3;i++)
 		{
@@ -512,18 +511,20 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 		sim->pos_est->init_gps_position = false;
 		sim->state->mav_state = MAV_STATE_STANDBY;
 		sim->state->mav_mode = MAV_MODE_MANUAL_DISARMED;
-		state_disable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
+		//state_disable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
 		servo_pwm_failsafe(sim->servos);
+		
+		print_util_dbg_print("Switching from simulation to reality.\r");
 	}
-
-	// From reality to simulation
-	//if (sim->state->simulation_mode == SIMULATION_MODE)
-	if (!state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
-	{	
+	else
+	{
+		// From reality to simulation
 		simulation_reset_simulation(sim);
 		simulation_calib_set(sim);
 		state_enable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
 		sim->pos_est->init_gps_position = false;
+		
+		print_util_dbg_print("Switching from reality to simulation.\r");
 	}
 }
 

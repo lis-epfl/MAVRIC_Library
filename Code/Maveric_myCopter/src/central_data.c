@@ -24,6 +24,9 @@ static central_data_t central_data;
 
 void central_data_init()
 {	
+	// Init ahrs
+	servo_pwm_init(central_data.servos);
+	
 	// Init main sheduler
 	scheduler_conf_t scheduler_config =
 	{
@@ -73,7 +76,7 @@ void central_data_init()
 	{
 		.mav_mode = MAV_MODE_SAFE,
 		.mav_state = MAV_STATE_BOOT,
-		.simulation_mode = REAL_MODE, //SIMULATION_MODE
+		.simulation_mode = SIMULATION_MODE, //REAL_MODE
 		.autopilot_type = MAV_TYPE_QUADROTOR,
 		.autopilot_name = MAV_AUTOPILOT_GENERIC,
 		.sensor_present = 0b1111110000100111,
@@ -88,6 +91,12 @@ void central_data_init()
 	
 	delay_ms(100);
 
+	state_machine_init( &central_data.state_machine,
+						&central_data.state,
+						&central_data.waypoint_handler,
+						&central_data.sim_model);
+	delay_ms(100);
+
 	// Init imu
 	imu_init(	&central_data.imu,
 				&central_data.mavlink_communication.mavlink_stream);
@@ -100,8 +109,7 @@ void central_data_init()
 
 	delay_ms(100);
 
-	// Init ahrs
-	servo_pwm_init(central_data.servos);
+	
 	
 	delay_ms(100);
 	
@@ -114,12 +122,13 @@ void central_data_init()
 	
 	// Init position_estimation_init
 	position_estimation_init(   &central_data.position_estimator,
+								&central_data.state,
 								&central_data.pressure,
 								&central_data.gps,
 								&central_data.ahrs,
 								&central_data.imu,
 								&central_data.mavlink_communication.mavlink_stream,
-								&central_data.waypoint_handler.waypoint_set,
+								&central_data.state.nav_plan_active,
 								&central_data.mavlink_communication.message_handler,
 								HOME_LATITUDE,
 								HOME_LONGITUDE,
@@ -148,7 +157,7 @@ void central_data_init()
 							&central_data.mavlink_communication,
 							&central_data.mavlink_communication.mavlink_stream);
 	waypoint_handler_init_homing_waypoint(&central_data.waypoint_handler);
-	waypoint_handler_waypoint_init(&central_data.waypoint_handler);
+	waypoint_handler_nav_plan_init(&central_data.waypoint_handler);
 	
 	delay_ms(100);
 
@@ -219,7 +228,7 @@ void central_data_init()
 					&central_data.gps,
 					&central_data.state,
 					central_data.servos,
-					&central_data.waypoint_handler.waypoint_set,
+					&central_data.state.nav_plan_active,
 					&central_data.mavlink_communication.message_handler,
 					&central_data.mavlink_communication.mavlink_stream);
 
@@ -236,6 +245,9 @@ void central_data_init()
 	
 	// Init sonar
 	// i2cxl_sonar_init(&central_data.i2cxl_sonar);
+	
+	// Initialize SD/MMC driver with SPI clock (PBA).
+	sd_spi_init(&central_data.sd_spi);
 }
 
 central_data_t* central_data_get_pointer_to_struct(void)
