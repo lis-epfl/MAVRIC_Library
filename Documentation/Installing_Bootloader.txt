@@ -23,6 +23,7 @@ This document describes the necessary steps to flash a DFU bootloader onto the A
 - Go to Tab "Fuses"
    - verify that "Auto Read" is enabled, or "Read" fuses from the AVR
    - for BOOTPROT, select BOOTAREA_8KB
+   - Click "Program" again
 
 
 To flash the chip via the bootloader, one needs dfu-programmer (in Linux and windows). To find informations about DFU-programmer, read the related documentation.
