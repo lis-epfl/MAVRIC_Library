@@ -1,3 +1,6 @@
 [submodule "Documentation/wiki"]
 	path = Documentation/wiki
 	url = https://github.com/lis-epfl/maveric.wiki.git
+[submodule "Documentation/html"]
+	path = Documentation/html
+	url = git@github.com:lis-epfl/maveric.git
