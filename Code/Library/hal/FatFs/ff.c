@@ -842,7 +842,7 @@ FRESULT sync_fs (	/* FR_OK: successful, FR_DISK_ERR: failed */
 /*-----------------------------------------------------------------------*/
 /* Get sector# from cluster#                                             */
 /*-----------------------------------------------------------------------*/
-
+DWORD clust2sect(FATFS* fs, DWORD clst);
 
 DWORD clust2sect (	/* !=0: Sector number, 0: Failed - invalid cluster# */
 	FATFS* fs,		/* File system object */
@@ -860,7 +860,7 @@ DWORD clust2sect (	/* !=0: Sector number, 0: Failed - invalid cluster# */
 /*-----------------------------------------------------------------------*/
 /* FAT access - Read value of a FAT entry                                */
 /*-----------------------------------------------------------------------*/
-
+DWORD get_fat(FATFS* fs, DWORD clst);
 
 DWORD get_fat (	/* 0xFFFFFFFF:Disk error, 1:Internal error, Else:Cluster status */
 	FATFS* fs,	/* File system object */
@@ -907,6 +907,8 @@ DWORD get_fat (	/* 0xFFFFFFFF:Disk error, 1:Internal error, Else:Cluster status 
 /* FAT access - Change value of a FAT entry                              */
 /*-----------------------------------------------------------------------*/
 #if !_FS_READONLY
+
+FRESULT put_fat(FATFS* fs, DWORD clst, DWORD val);
 
 FRESULT put_fat (
 	FATFS* fs,	/* File system object */

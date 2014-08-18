@@ -13,7 +13,10 @@
 //#include "sdcard.h"		/* Example: MMC/SDC contorl */
 
 #include "sd_spi.h"
+#include "print_util.h"
 
+#include "time_keeper.h"
+#include <maths.h>
 /* Definitions of physical drive number for each media */
 #define ATA		0
 #define MMC		1
@@ -25,7 +28,7 @@
 /*-----------------------------------------------------------------------*/
 
 DSTATUS disk_initialize (
-	BYTE pdrv				/* Physical drive nmuber (0..) */
+	BYTE pdrv				/* Physical drive number (0..) */
 )
 {
 	DSTATUS stat;
@@ -35,22 +38,37 @@ DSTATUS disk_initialize (
 	case ATA :
 		//result = ATA_disk_initialize();
 
-		// translate the reslut code here
+		// translate the result code here
+		result = RES_ERROR;
+		stat = STA_NODISK;
 
 		return stat;
 
 	case MMC :
 		//result = MMC_disk_initialize();
-
-		// translate the reslut code here
+		
+		result = sd_spi_init();
+		
+		if (result)
+		{
+			stat = 0;
+		}
+		else
+		{
+			stat = STA_NOINIT;
+		}
+		
+		// translate the result code here
 
 		return stat;
 
 	case USB :
 		//result = USB_disk_initialize();
 
-		// translate the reslut code here
-
+		// translate the result code here
+		result = RES_ERROR;
+		stat = STA_NODISK;
+		
 		return stat;
 	}
 	return STA_NOINIT;
@@ -73,21 +91,38 @@ DSTATUS disk_status (
 	case ATA :
 		//result = ATA_disk_status();
 
-		// translate the reslut code here
+		// translate the result code here
+		
+		result = RES_ERROR;
+		stat = STA_NODISK;
 
 		return stat;
 
 	case MMC :
 		//result = MMC_disk_status();
 
-		// translate the reslut code here
+		// translate the result code here
 
+		result = sd_spi_status();
+		
+		if (result)
+		{
+			stat = 0;
+		}
+		else
+		{
+			stat = STA_NODISK;
+		}
+		
 		return stat;
 
 	case USB :
 		//result = USB_disk_status();
 
-		// translate the reslut code here
+		// translate the result code here
+		
+		result = RES_ERROR;
+		stat = STA_NODISK;
 
 		return stat;
 	}
@@ -108,7 +143,7 @@ DRESULT disk_read (
 )
 {
 	DRESULT res;
-	int result;
+	int result = RES_ERROR;
 
 	switch (pdrv) {
 	case ATA :
@@ -116,7 +151,16 @@ DRESULT disk_read (
 
 		//result = ATA_disk_read(buff, sector, count);
 
-		// translate the reslut code here
+		// translate the result code here
+
+		if (result)
+		{
+			res = RES_OK;
+		}
+		else
+		{
+			res = RES_ERROR;
+		}
 
 		return res;
 
@@ -124,8 +168,18 @@ DRESULT disk_read (
 		// translate the arguments here
 
 		//result = MMC_disk_read(buff, sector, count);
+		result = sd_spi_read_given_sector_to_ram(buff,sector,count);
 
-		// translate the reslut code here
+		if (result)
+		{
+			res = RES_OK;
+		}
+		else
+		{
+			res = RES_ERROR;
+		}
+
+		// translate the result code here
 
 		return res;
 
@@ -133,8 +187,16 @@ DRESULT disk_read (
 		// translate the arguments here
 
 		//result = USB_disk_read(buff, sector, count);
-
-		// translate the reslut code here
+		
+		if (result)
+		{
+			res = RES_OK;
+		}
+		else
+		{
+			res = RES_ERROR;
+		}
+		// translate the result code here
 
 		return res;
 	}
@@ -156,7 +218,7 @@ DRESULT disk_write (
 )
 {
 	DRESULT res;
-	int result;
+	int result = RES_ERROR;
 
 	switch (pdrv) {
 	case ATA :
@@ -164,7 +226,16 @@ DRESULT disk_write (
 
 		//result = ATA_disk_write(buff, sector, count);
 
-		// translate the reslut code here
+		if (result)
+		{
+			res = RES_OK;
+		}
+		else
+		{
+			res = RES_ERROR;
+		}
+
+		// translate the result code here
 
 		return res;
 
@@ -172,8 +243,18 @@ DRESULT disk_write (
 		// translate the arguments here
 
 		//result = MMC_disk_write(buff, sector, count);
-
-		// translate the reslut code here
+		result = sd_spi_write_given_sector_from_ram(buff, sector, count);
+		
+		if (result)
+		{
+			res = RES_OK;
+		}
+		else
+		{
+			res = RES_ERROR;
+		}
+		
+		// translate the result code here
 
 		return res;
 
@@ -182,7 +263,16 @@ DRESULT disk_write (
 
 		//result = USB_disk_write(buff, sector, count);
 
-		// translate the reslut code here
+		if (result)
+		{
+			res = RES_OK;
+		}
+		else
+		{
+			res = RES_ERROR;
+		}
+
+		// translate the result code here
 
 		return res;
 	}
@@ -203,7 +293,7 @@ DRESULT disk_ioctl (
 )
 {
 	DRESULT res;
-	int result;
+	int result = RES_ERROR;
 
 	switch (pdrv) {
 	case ATA :
@@ -220,6 +310,33 @@ DRESULT disk_ioctl (
 
 		//result = MMC_disk_ioctl(cmd, buff);
 
+		print_util_dbg_print("use MMC\r");
+
+		switch(cmd)
+		{
+			case CTRL_SYNC:
+				while (!sd_spi_wait_not_busy());
+				break;
+			
+			case GET_SECTOR_COUNT:
+				sd_spi_get_sector_count(buff);
+				break;
+			
+			case GET_SECTOR_SIZE:
+				sd_spi_get_sector_size(buff);
+				break;
+			
+			case GET_BLOCK_SIZE:
+				sd_spi_get_block_size(buff);
+				break;
+			
+			case CTRL_ERASE_SECTOR:
+			break;
+		}
+		
+		
+		res = RES_OK;
+
 		// post-process here
 
 		return res;
@@ -235,4 +352,40 @@ DRESULT disk_ioctl (
 	}
 	return RES_PARERR;
 }
+
+DWORD get_fattime(void)
+{
+	uint32_t time = 0;
+	
+	double time_in_seconds;
+	
+	time_in_seconds = time_keeper_get_time();
+	
+	uint8_t seconds;
+	uint8_t minutes;
+	uint8_t hours;
+	
+	minutes = (uint8_t) floor(((float)time_in_seconds) / 60.0f);
+	
+	seconds = (uint8_t) ((((uint32_t)time_in_seconds) % 60)/2);
+	
+	hours = (uint8_t) floor(((float)minutes) / 60.0f);
+	
+	minutes = (uint8_t) (minutes % 60);
+	
+	uint8_t day = 13;
+	uint8_t month = 8;
+	uint8_t year = 34;
+	
+	time += seconds		& 0b00000000000000000000000000011111;
+	time += minutes		& 0b00000000000000000000011111100000;
+	time += hours		& 0b00000000000000001111100000000000;
+	time += day			& 0b00000000000111110000000000000000;
+	time += month		& 0b00000001111000000000000000000000;
+	time += year		& 0b11111110000000000000000000000000;
+	
+	return time;
+}
+
+
 #endif

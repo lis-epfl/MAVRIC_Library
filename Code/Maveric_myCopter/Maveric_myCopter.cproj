@@ -1156,9 +1156,6 @@
     <Compile Include="src\tasks.h">
       <SubType>compile</SubType>
     </Compile>
-    <None Include="Library\hal\FatFs\00readme.txt">
-      <SubType>compile</SubType>
-    </None>
     <None Include="Library\mavlink\include\mavlink_protobuf_manager.hpp">
       <SubType>compile</SubType>
     </None>
