@@ -1,5 +1,0 @@
-<map id="position_estimation_init" name="position_estimation_init">
-<area shape="rect" id="node2" href="$mavlink__message__handler_8c.html#a12cf0a1c7920e3771d84a1d6e1130a78" title="Registers a new callback for a command. " alt="" coords="212,5,388,47"/>
-<area shape="rect" id="node3" href="$print__util_8c.html#a1b15f576d0bc830fc09c11d034077c43" title="Writes a character string to the debug stream. " alt="" coords="436,42,567,69"/>
-<area shape="rect" id="node4" href="$print__util_8c.html#ae0e520f47e2bfa8e497d3e656e5a9144" title="Writes string of character to a stream. " alt="" coords="615,42,743,69"/>
-</map>

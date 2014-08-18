@@ -1,8 +1,0 @@
-<map id="waypoint_handler_nav_plan_init" name="waypoint_handler_nav_plan_init">
-<area shape="rect" id="node2" href="$navigation_8h.html#ab3aa816251fea36305526225b4f4889d" title="Drives the automatic takeoff procedure. " alt="" coords="216,5,356,47"/>
-<area shape="rect" id="node5" href="$navigation_8h.html#a02ce7ec34ea269ade7a9ad0eda6fca13" title="Drives the hold position procedure. " alt="" coords="204,71,368,112"/>
-<area shape="rect" id="node6" href="$navigation_8h.html#af2c74e770198edb11975c57885ddf171" title="Drives the GPS navigation procedure. " alt="" coords="216,136,356,177"/>
-<area shape="rect" id="node7" href="$tasks_8h.html#a417b414354ec97dfdd0743a526e16bf0" title="Updates the state and mode of the UAV. " alt="" coords="416,165,567,207"/>
-<area shape="rect" id="node3" href="$navigation_8h.html#afb6120977e160b65322f554a8c5fc7ad" title="Navigates the robot towards waypoint waypoint_input in 3D velocity command mode. " alt="" coords="428,78,555,105"/>
-<area shape="rect" id="node4" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="615,78,751,105"/>
-</map>

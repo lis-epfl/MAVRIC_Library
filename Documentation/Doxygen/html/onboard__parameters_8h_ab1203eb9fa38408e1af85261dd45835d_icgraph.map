@@ -1,5 +1,0 @@
-<map id="onboard_parameters_write_parameters_to_flashc" name="onboard_parameters_write_parameters_to_flashc">
-<area shape="rect" id="node2" href="$onboard__parameters_8h.html#a3bcfdc153958f7a73de616c967631bb6" title="Read/Write from/to flash depending on the parameters of the mavlink command message. " alt="" coords="200,13,340,54"/>
-<area shape="rect" id="node3" href="$onboard__parameters_8h.html#a24a0e3302dce0d6bf857f271b0b0e5a2" title="Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0..." alt="" coords="388,20,552,47"/>
-<area shape="rect" id="node4" href="$mavlink__communication_8h.html#ab7e6b45cdb27b39e81c60cc716d0613e" title="Initialisation of the module mavlink communication. " alt="" coords="600,20,787,47"/>
-</map>

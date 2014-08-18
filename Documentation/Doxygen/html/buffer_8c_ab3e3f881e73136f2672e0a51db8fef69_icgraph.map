@@ -1,9 +1,0 @@
-<map id="buffer_bytes_available" name="buffer_bytes_available">
-<area shape="rect" id="node2" href="$remote__dsm2_8c.html#a9358c30751baa7ee18813d6cb73878a9" title="Define the service routine for the spektrum handler interruption. " alt="" coords="264,5,309,32"/>
-<area shape="rect" id="node3" href="$uart__int_8h.html#a982c8ed26ae9b9b41b166ea03c5df30f" title="returns number of received bytes in the receive buffer " alt="" coords="205,56,368,83"/>
-<area shape="rect" id="node4" href="$uart__int_8h.html#a9a18a1029d0aacc59742cf56783d9e47" title="Non&#45;blocking operation to append a byte to the uart send buffer if buffer is full, the command has no effect (returns &#45;1). " alt="" coords="221,107,353,133"/>
-<area shape="rect" id="node7" href="$buffer_8h.html#a9dd4d9fb1d6b95ca58ee6281bdc49ce3" title="Creates a buffered stream. " alt="" coords="213,158,361,199"/>
-<area shape="rect" id="node8" href="$buffer_8h.html#ad68253b5c555f3dbace83c426c4c2cb6" title="Creates a buffered stream. " alt="" coords="417,191,565,233"/>
-<area shape="rect" id="node5" href="$uart__int_8h.html#ab1cca5f5e627b0d3526a7ca3bc425e75" title="Registers a stream interface with the UART transmitter (data put into the stream will be sent)..." alt="" coords="416,113,567,154"/>
-<area shape="rect" id="node6" href="$console_8h.html#a2d508d92a343b8b93c79d1fec30af394" title="Initialize the console module. " alt="" coords="615,160,705,187"/>
-</map>

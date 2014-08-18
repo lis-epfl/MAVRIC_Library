@@ -1,5 +1,0 @@
-<map id="i2cxl_get_last_measure" name="i2cxl_get_last_measure">
-<area shape="rect" id="node2" href="$twim_8c.html#a21e795e5daf90f7d1296c639944bd572" title="Read multiple bytes from a TWI compatible slave device. " alt="" coords="212,31,295,57"/>
-<area shape="rect" id="node3" href="$twim_8c.html#ac2aa557dd4843af848081c10049cf29f" title="Disable the TWI interrupts and clear its status register. " alt="" coords="343,5,495,32"/>
-<area shape="rect" id="node4" href="$twim_8c.html#a62690e0414009d7ce7ab472a27c7726d" title="Information about the current status of the TWI Bus. " alt="" coords="372,56,465,83"/>
-</map>

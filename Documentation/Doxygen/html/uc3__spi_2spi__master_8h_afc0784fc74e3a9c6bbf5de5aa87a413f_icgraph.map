@@ -1,4 +1,0 @@
-<map id="spi_is_tx_ready" name="spi_is_tx_ready">
-<area shape="rect" id="node2" href="$uc3__spi_2spi__master_8h.html#aafdacdffa212b9880873c82b0fb6d8e7" title="Receive a sequence of bytes from a SPI device. " alt="" coords="168,5,285,32"/>
-<area shape="rect" id="node3" href="$uc3__spi_2spi__master_8h.html#a5eea18b25801b83f702f8ff49cfebc54" title="Send a sequence of bytes to a SPI device. " alt="" coords="167,56,287,83"/>
-</map>

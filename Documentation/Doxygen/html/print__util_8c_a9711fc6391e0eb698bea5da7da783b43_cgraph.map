@@ -1,7 +1,0 @@
-<map id="print_util_dbg_log_value" name="print_util_dbg_log_value">
-<area shape="rect" id="node2" href="$print__util_8c.html#a1b15f576d0bc830fc09c11d034077c43" title="Writes a character string to the debug stream. " alt="" coords="192,5,323,32"/>
-<area shape="rect" id="node4" href="$print__util_8c.html#a025d6572ba94f96eb7af0631e2957fbd" title="Writes a number in any base to the debug stream. " alt="" coords="176,56,339,83"/>
-<area shape="rect" id="node3" href="$print__util_8c.html#ae0e520f47e2bfa8e497d3e656e5a9144" title="Writes string of character to a stream. " alt="" coords="387,5,515,32"/>
-<area shape="rect" id="node5" href="$print__util_8c.html#a3f6c96ce9559fb6c4d1d07480da77117" title="Writes a number in any base to a stream. " alt="" coords="390,56,511,83"/>
-<area shape="rect" id="node6" href="$print__util_8c.html#a1ae199e97454e1a94871ab360218629d" title="Writes an alphabet character to a stream,. " alt="" coords="563,56,683,83"/>
-</map>

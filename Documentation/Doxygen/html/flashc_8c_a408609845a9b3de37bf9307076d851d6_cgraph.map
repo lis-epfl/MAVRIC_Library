@@ -1,4 +1,0 @@
-<map id="flashc_write_all_gp_fuses" name="flashc_write_all_gp_fuses">
-<area shape="rect" id="node2" href="$flashc_8c.html#a7670e69d41fe6a985ad898be25044caf" title="Writes a general&#45;purpose fuse byte. " alt="" coords="187,13,364,39"/>
-<area shape="rect" id="node3" href="$flashc_8c.html#a8045c427c32cf3617e861067d76c9c11" title="Issues a FLASHC command. " alt="" coords="412,13,571,39"/>
-</map>

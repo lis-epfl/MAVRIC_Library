@@ -1,7 +1,0 @@
-<map id="pdca_disable_interrupt_reload_counter_zero" name="pdca_disable_interrupt_reload_counter_zero">
-<area shape="rect" id="node2" href="$pdca_8h.html#a08b3c4c7240ee1915d54e6a3b33268b8" title="Set the channel configuration. " alt="" coords="205,64,332,91"/>
-<area shape="rect" id="node3" href="$dac__dma_8h.html#a87a82dcdbaed6a0e7f6395e42ba3e939" title="get the DAC sampling buffer " alt="" coords="384,5,531,32"/>
-<area shape="rect" id="node4" href="$i2c__driver__dma_8h.html#a3c3fff50b273a1bfc78cbc40bc78d8c3" title="Trigger an i2c request. " alt="" coords="397,57,518,98"/>
-<area shape="rect" id="node5" href="$spi__buffered_8h.html#a47b12734c1fe0382a4fd45a65e87bb2c" title="InitialiZe DMA&#45;based SPI transfer mode. " alt="" coords="380,123,535,149"/>
-<area shape="rect" id="node6" href="$ads1274_8h.html#a0176eb0c9771c53fff490bae17e5b227" title="Initializes ADC (configures Pins, starts Clock, sets defaults) " alt="" coords="583,123,713,149"/>
-</map>

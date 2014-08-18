@@ -1,7 +1,0 @@
-<map id="usart_config_t" name="usart_config_t">
-<area shape="rect" id="node2" href="$structuart__gpio__map__t.html" title="{uart_gpio_map_t\n|+ pin\l+ function\l|}" alt="" coords="5,255,124,347"/>
-<area shape="rect" id="node3" href="$structusart__options__t.html" title="Input parameters when initializing RS232 and similar modes. " alt="" coords="148,233,259,369"/>
-<area shape="rect" id="node4" href="$structuart__interface__t.html" title="{uart_interface_t\n|+ uart\l+ IRQ\l|}" alt="" coords="283,255,395,347"/>
-<area shape="rect" id="node5" href="$structBuffer__t.html" title="Buffer structure. " alt="" coords="219,20,321,141"/>
-<area shape="rect" id="node6" href="$structbyte__stream__t.html" title="Byte stream. " alt="" coords="345,5,469,156"/>
-</map>

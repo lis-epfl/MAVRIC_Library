@@ -1,6 +1,0 @@
-<map id="Clock Management" name="Clock Management">
-<area shape="rect" id="node1" href="$group__pll__group.html" title="PLL Management" alt="" coords="218,5,342,32"/>
-<area shape="rect" id="node3" href="$group__sysclk__group.html" title="System Clock Management" alt="" coords="188,56,372,83"/>
-<area shape="rect" id="node4" href="$group__osc__group.html" title="Oscillator Management" alt="" coords="202,107,358,133"/>
-<area shape="rect" id="node5" href="$group__genclk__group.html" title="Generic Clock Management" alt="" coords="188,157,372,184"/>
-</map>

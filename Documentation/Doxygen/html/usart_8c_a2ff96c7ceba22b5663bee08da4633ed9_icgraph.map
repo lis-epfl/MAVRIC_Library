@@ -1,4 +1,0 @@
-<map id="usart_putchar" name="usart_putchar">
-<area shape="rect" id="node2" href="$usart_8h.html#a2090c77f008cbbde81b5047b91a9826d" title="Writes one character string to the USART. " alt="" coords="155,5,268,32"/>
-<area shape="rect" id="node3" href="$usart_8h.html#ac11b2593b4bd1950ccbd35fe07e582f8" title="Gets and echoes characters until end of line (detected by a CR character). " alt="" coords="316,31,455,57"/>
-</map>

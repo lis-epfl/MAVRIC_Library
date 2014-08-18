@@ -1,4 +1,0 @@
-<map id="onboard_parameters_add_parameter_int32" name="onboard_parameters_add_parameter_int32">
-<area shape="rect" id="node2" href="$mavlink__telemetry_8c.html#abd811abcaaee53afcdf8cd96e7737929" title="Add all onboard parameters to the parameter list. " alt="" coords="204,5,360,47"/>
-<area shape="rect" id="node3" href="$mavlink__telemetry_8h.html#ab2e783bf88048c3d5a256968b2fad042" title="Initialise all the mavlink streams and call the onboard parameters register. " alt="" coords="408,13,560,39"/>
-</map>

@@ -1,4 +1,0 @@
-<map id="adcifa_disable_interrupt" name="adcifa_disable_interrupt">
-<area shape="rect" id="node2" href="$adc__int_8c.html#a5c3eda656384c3976ce643501a2bf1a4" title="Initializes ADC (configures Pins, starts Clock, sets defaults) " alt="" coords="212,5,309,32"/>
-<area shape="rect" id="node3" href="$adc__int_8h.html#a2c1617986d66967f06ec981ed270e370" title="Initializes ADC (configures Pins, starts Clock, sets defaults) " alt="" coords="217,56,305,83"/>
-</map>

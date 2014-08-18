@@ -1,4 +1,0 @@
-<map id="buffer_init" name="buffer_init">
-<area shape="rect" id="node2" href="$uart__int_8h.html#ad6d446e237b1255a2fc7e52e78eb0213" title="Initialize the UART line. " alt="" coords="132,5,221,32"/>
-<area shape="rect" id="node3" href="$console_8h.html#a2d508d92a343b8b93c79d1fec30af394" title="Initialize the console module. " alt="" coords="269,5,360,32"/>
-</map>

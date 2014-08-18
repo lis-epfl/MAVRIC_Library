@@ -1,5 +1,0 @@
-<map id="adc_int_start_sampling" name="adc_int_start_sampling">
-<area shape="rect" id="node2" href="$adcifa_8c.html#afdf7aaf4bda16240facc63278bb6ab8d" title="Configure ADCIFA specific sequencer. " alt="" coords="209,5,393,32"/>
-<area shape="rect" id="node3" href="$adcifa_8c.html#aebb90144d79644583e5fed04bf125024" title="Enable any ADCIFA interrupt. " alt="" coords="223,56,379,83"/>
-<area shape="rect" id="node4" href="$adcifa_8c.html#a6da97f581d064ec3d9fffec2a7244f80" title="Enable any ADCIFA interrupt. " alt="" coords="237,107,366,133"/>
-</map>

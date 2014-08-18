@@ -1,7 +1,0 @@
-<map id="buffer_get" name="buffer_get">
-<area shape="rect" id="node2" href="$remote__dsm2_8c.html#a9358c30751baa7ee18813d6cb73878a9" title="Define the service routine for the spektrum handler interruption. " alt="" coords="185,5,230,32"/>
-<area shape="rect" id="node3" href="$uart__int_8h.html#af2112bdab740042baeaa66893cfceb85" title="Blocking operation to retrieve a received byte from uart. " alt="" coords="146,56,269,83"/>
-<area shape="rect" id="node4" href="$buffer_8h.html#a9dd4d9fb1d6b95ca58ee6281bdc49ce3" title="Creates a buffered stream. " alt="" coords="133,107,281,149"/>
-<area shape="rect" id="node5" href="$buffer_8h.html#ad68253b5c555f3dbace83c426c4c2cb6" title="Creates a buffered stream. " alt="" coords="133,173,281,214"/>
-<area shape="rect" id="node6" href="$console_8h.html#a2d508d92a343b8b93c79d1fec30af394" title="Initialize the console module. " alt="" coords="329,180,420,207"/>
-</map>

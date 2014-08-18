@@ -1,8 +1,0 @@
-<map id="udi_cdc_comm_desc_t" name="udi_cdc_comm_desc_t">
-<area shape="rect" id="node2" href="$structusb__cdc__union__desc__t.html" title="CDC Union Functional Descriptor. " alt="" coords="5,35,160,171"/>
-<area shape="rect" id="node3" href="$structusb__ep__desc__t.html" title="Standard USB endpoint descriptor stcuture. " alt="" coords="185,27,325,178"/>
-<area shape="rect" id="node4" href="$structusb__cdc__acm__desc__t.html" title="CDC ACM Functional Descriptor. " alt="" coords="349,42,499,163"/>
-<area shape="rect" id="node5" href="$structusb__iface__desc__t.html" title="Standard USB interface descriptor structure. " alt="" coords="523,5,672,200"/>
-<area shape="rect" id="node6" href="$structusb__cdc__hdr__desc__t.html" title="CDC Header Functional Descriptor. " alt="" coords="696,42,845,163"/>
-<area shape="rect" id="node7" href="$structusb__cdc__call__mgmt__desc__t.html" title="CDC Call Management Functional Descriptor. " alt="" coords="869,35,1053,171"/>
-</map>

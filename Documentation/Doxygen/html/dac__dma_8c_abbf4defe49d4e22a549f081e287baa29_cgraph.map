@@ -1,9 +1,0 @@
-<map id="dac_dma_init" name="dac_dma_init">
-<area shape="rect" id="node2" href="$gpio_8c.html#af8e9d12ce235497e93a945d244ffcb1d" title="Enables specific module modes for a set of pins. " alt="" coords="167,5,307,32"/>
-<area shape="rect" id="node4" href="$dacifb_8c.html#af3d6756bb18f3dc15ee8133060275b55" title="Configure DACIFB. Mandatory to call. If not called, DACIFB channels will have side effects..." alt="" coords="178,56,295,83"/>
-<area shape="rect" id="node5" href="$print__util_8c.html#a1b15f576d0bc830fc09c11d034077c43" title="Writes a character string to the debug stream. " alt="" coords="171,107,302,133"/>
-<area shape="rect" id="node7" href="$dacifb_8c.html#a6c1d32db8c1c87b891eec2a7f2852836" title="Configure DACIFB specific channel. " alt="" coords="152,157,321,184"/>
-<area shape="rect" id="node8" href="$dacifb_8c.html#a8301869f34d58cac5b608873a5660d39" title="Start analog to digital conversion. " alt="" coords="165,208,308,235"/>
-<area shape="rect" id="node3" href="$gpio_8c.html#af9f1a0613d0095efbcd451aea19aad61" title="Enables a specific module mode for a pin. " alt="" coords="369,5,533,32"/>
-<area shape="rect" id="node6" href="$print__util_8c.html#ae0e520f47e2bfa8e497d3e656e5a9144" title="Writes string of character to a stream. " alt="" coords="387,107,515,133"/>
-</map>

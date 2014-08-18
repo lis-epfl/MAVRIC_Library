@@ -1,4 +1,0 @@
-<map id="navigation_hold_position_handler" name="navigation_hold_position_handler">
-<area shape="rect" id="node2" href="$navigation_8h.html#afb6120977e160b65322f554a8c5fc7ad" title="Navigates the robot towards waypoint waypoint_input in 3D velocity command mode. " alt="" coords="217,13,344,39"/>
-<area shape="rect" id="node3" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="392,13,528,39"/>
-</map>

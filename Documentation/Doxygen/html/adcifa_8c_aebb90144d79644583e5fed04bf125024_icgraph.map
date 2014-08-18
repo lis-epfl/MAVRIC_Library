@@ -1,3 +1,0 @@
-<map id="adcifa_enable_interrupt" name="adcifa_enable_interrupt">
-<area shape="rect" id="node2" href="$adc__int_8h.html#a63cf530f5a528ad07dc0bbdb34479aa9" title="Start the sampling of the ADC, captures one buffer length and then stops. " alt="" coords="209,5,365,32"/>
-</map>

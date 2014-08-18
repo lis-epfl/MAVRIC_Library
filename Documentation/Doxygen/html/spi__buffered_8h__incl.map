@@ -1,8 +1,0 @@
-<map id="/home/julien/Desktop/tmp/maveric/Code/Library/hal/spi_buffered.h" name="/home/julien/Desktop/tmp/maveric/Code/Library/hal/spi_buffered.h">
-<area shape="rect" id="node3" href="$preprocessor_8h.html" title="Preprocessor utils. " alt="" coords="131,109,239,136"/>
-<area shape="rect" id="node8" href="$user__board_8h.html" title="User board definition template. " alt="" coords="353,109,450,136"/>
-<area shape="rect" id="node10" href="$dma__channel__config_8h.html" title="dma_channel_config.h" alt="" coords="596,109,748,136"/>
-<area shape="rect" id="node4" href="$tpaste_8h.html" title="Preprocessor token pasting utils. " alt="" coords="5,184,75,211"/>
-<area shape="rect" id="node5" href="$stringz_8h.html" title="Preprocessor stringizing utils. " alt="" coords="99,184,171,211"/>
-<area shape="rect" id="node6" href="$mrepeat_8h.html" title="Preprocessor macro repeating utils. " alt="" coords="195,184,275,211"/>
-</map>

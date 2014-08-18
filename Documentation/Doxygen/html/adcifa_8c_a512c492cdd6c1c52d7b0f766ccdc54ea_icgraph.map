@@ -1,4 +1,0 @@
-<map id="adcifa_stop_itimer" name="adcifa_stop_itimer">
-<area shape="rect" id="node2" href="$adc__int_8c.html#a5c3eda656384c3976ce643501a2bf1a4" title="Initializes ADC (configures Pins, starts Clock, sets defaults) " alt="" coords="210,5,307,32"/>
-<area shape="rect" id="node3" href="$adc__int_8h.html#a693e4fd73a5465e7539e61b411dda99d" title="stops sampling immediately " alt="" coords="181,56,336,83"/>
-</map>

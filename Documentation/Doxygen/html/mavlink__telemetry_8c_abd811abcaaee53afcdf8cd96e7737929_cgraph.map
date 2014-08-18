@@ -1,6 +1,0 @@
-<map id="mavlink_telemetry_add_onboard_parameters" name="mavlink_telemetry_add_onboard_parameters">
-<area shape="rect" id="node2" href="$onboard__parameters_8c.html#a165cd154a2a98302c93b82e51223e2c9" title="Register parameter in the internal parameter list that gets published to MAVlink. ..." alt="" coords="209,5,360,47"/>
-<area shape="rect" id="node5" href="$onboard__parameters_8c.html#a5e145c7937af4ce5be3a507275ba7d1e" title="Registers parameter in the internal parameter list that gets published to MAVlink. " alt="" coords="211,71,358,112"/>
-<area shape="rect" id="node3" href="$print__util_8c.html#a1b15f576d0bc830fc09c11d034077c43" title="Writes a character string to the debug stream. " alt="" coords="408,46,539,73"/>
-<area shape="rect" id="node4" href="$print__util_8c.html#ae0e520f47e2bfa8e497d3e656e5a9144" title="Writes string of character to a stream. " alt="" coords="587,46,715,73"/>
-</map>

@@ -1,4 +1,0 @@
-<map id="scheduler_sort_tasks" name="scheduler_sort_tasks">
-<area shape="rect" id="node2" href="$mavlink__telemetry_8h.html#ab2e783bf88048c3d5a256968b2fad042" title="Initialise all the mavlink streams and call the onboard parameters register. " alt="" coords="200,5,352,32"/>
-<area shape="rect" id="node3" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="208,56,344,83"/>
-</map>

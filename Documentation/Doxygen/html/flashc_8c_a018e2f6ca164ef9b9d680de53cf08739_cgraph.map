@@ -1,4 +1,0 @@
-<map id="flashc_write_gp_fuse_bitfield" name="flashc_write_gp_fuse_bitfield">
-<area shape="rect" id="node2" href="$flashc_8c.html#a70af318e71334255931a6638d2fa693c" title="Writes a general&#45;purpose fuse bit. " alt="" coords="199,13,365,39"/>
-<area shape="rect" id="node3" href="$flashc_8c.html#a8045c427c32cf3617e861067d76c9c11" title="Issues a FLASHC command. " alt="" coords="413,13,572,39"/>
-</map>

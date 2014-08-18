@@ -1,4 +1,0 @@
-<map id="spi_buffered_enable" name="spi_buffered_enable">
-<area shape="rect" id="node2" href="$spi__buffered_8h.html#ae4ba5d5b188c9d61b6dc487f0003ad9b" title="Initialize SPI interface: this interface uses internal buffers and interrupts. Bytes in the outgoing ..." alt="" coords="192,5,309,32"/>
-<area shape="rect" id="node3" href="$ads1274_8h.html#a0176eb0c9771c53fff490bae17e5b227" title="Initializes ADC (configures Pins, starts Clock, sets defaults) " alt="" coords="357,5,488,32"/>
-</map>

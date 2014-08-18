@@ -1,5 +1,0 @@
-<map id="attitude_error_estimator_set_quat_ref_from_rpy" name="attitude_error_estimator_set_quat_ref_from_rpy">
-<area shape="rect" id="node2" href="$coord__conventions_8c.html#aebe85ccad5c6518ec57354c11dc3d687" title="Converts roll, pitch and yaw angles (with the aeronautics conventions) to an attitude quaternion..." alt="" coords="212,23,411,65"/>
-<area shape="rect" id="node3" href="$quick__trig_8c.html#a2ab13f452c4d3da2a81b517b27b8d464" title="Quick implementation of the cosinus function. " alt="" coords="459,5,565,32"/>
-<area shape="rect" id="node4" href="$quick__trig_8c.html#a2b47f8f6c24701d74b6ca885b568ecaa" title="Quick implementation of the sinus function. " alt="" coords="613,31,716,57"/>
-</map>

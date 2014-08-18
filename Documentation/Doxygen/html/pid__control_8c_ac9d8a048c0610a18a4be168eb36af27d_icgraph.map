@@ -1,6 +1,0 @@
-<map id="pid_control_update_dt" name="pid_control_update_dt">
-<area shape="rect" id="node2" href="$stabilisation_8h.html#afb44ca4187a7fa2813690fe420ea32f2" title="Execute the PID controllers used for stabilization. " alt="" coords="203,13,319,39"/>
-<area shape="rect" id="node3" href="$stabilisation__copter_8h.html#aa9601162807fb374b9f64bbfef8f06bb" title="Main Controller for controlling and stabilizing the quad. " alt="" coords="367,5,501,47"/>
-<area shape="rect" id="node4" href="$tasks_8h.html#a4067c810c5e22c2e7c019c48c865d525" title="Run the main stabilisation loop. " alt="" coords="549,13,704,39"/>
-<area shape="rect" id="node5" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="752,13,888,39"/>
-</map>

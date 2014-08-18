@@ -1,6 +1,0 @@
-<map id="stabilisation_copter_cascade_stabilise" name="stabilisation_copter_cascade_stabilise">
-<area shape="rect" id="node2" href="$stabilisation_8c.html#afb44ca4187a7fa2813690fe420ea32f2" title="Execute the PID controllers used for stabilization. " alt="" coords="224,5,340,32"/>
-<area shape="rect" id="node4" href="$stabilisation__copter_8h.html#a9cddf34ccbdbc26092d127c1446e4ea3" title="Mix to servo for quad configuration diagonal. " alt="" coords="192,57,372,98"/>
-<area shape="rect" id="node5" href="$stabilisation__copter_8h.html#ad9c58683a778bf64ba63b9f5d1ce90a0" title="Mix to servo for quad configuration cross. " alt="" coords="188,122,376,163"/>
-<area shape="rect" id="node3" href="$pid__control_8c.html#ac9d8a048c0610a18a4be168eb36af27d" title="Update the PID controller for a given time step. " alt="" coords="424,5,573,32"/>
-</map>

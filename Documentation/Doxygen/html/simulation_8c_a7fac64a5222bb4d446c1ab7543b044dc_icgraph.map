@@ -1,5 +1,0 @@
-<map id="simulation_switch_between_reality_n_simulation" name="simulation_switch_between_reality_n_simulation">
-<area shape="rect" id="node2" href="$state__machine_8h.html#ad0c95f6de016ef868650783464a99183" title="Updates the state and mode of the UAV. " alt="" coords="236,5,400,47"/>
-<area shape="rect" id="node4" href="$tasks_8h.html#a417b414354ec97dfdd0743a526e16bf0" title="Updates the state and mode of the UAV. " alt="" coords="243,71,393,112"/>
-<area shape="rect" id="node3" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="448,13,584,39"/>
-</map>

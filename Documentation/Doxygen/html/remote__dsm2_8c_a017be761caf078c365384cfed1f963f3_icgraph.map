@@ -1,4 +1,0 @@
-<map id="remote_dsm2_rc_switch_power" name="remote_dsm2_rc_switch_power">
-<area shape="rect" id="node2" href="$remote__dsm2_8h.html#a089c29fb52690547e75040644e243441" title="set slave receiver into bind mode. has to be called 100ms after power&#45;up " alt="" coords="217,5,389,47"/>
-<area shape="rect" id="node3" href="$remote__dsm2_8h.html#afb1f0b64454e3a9e4b9750a30043e08b" title="Initialize UART receiver for Spektrum/DSM2 slave receivers. " alt="" coords="232,71,375,98"/>
-</map>

@@ -1,6 +1,0 @@
-<map id="state_set_new_mode" name="state_set_new_mode">
-<area shape="rect" id="node2" href="$state__machine_8h.html#ad0c95f6de016ef868650783464a99183" title="Updates the state and mode of the UAV. " alt="" coords="200,5,364,47"/>
-<area shape="rect" id="node4" href="$tasks_8c.html#aab10a16cc21516badb79dc42e7cc6e8d" title="Function to call when the motors should be switched off. " alt="" coords="217,71,347,98"/>
-<area shape="rect" id="node5" href="$tasks_8h.html#a417b414354ec97dfdd0743a526e16bf0" title="Updates the state and mode of the UAV. " alt="" coords="412,89,563,131"/>
-<area shape="rect" id="node3" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="419,13,555,39"/>
-</map>

@@ -1,6 +1,0 @@
-<map id="spi_buffered_trigger_DMA" name="spi_buffered_trigger_DMA">
-<area shape="rect" id="node2" href="$pdca_8c.html#a1b44de71879c40ba72dd8ca858d6ad82" title="Set PDCA channel load values. " alt="" coords="235,5,368,32"/>
-<area shape="rect" id="node4" href="$pdca_8c.html#ace9a1468f53a4c5e400fc6dd15383c1c" title="Enable PDCA transfer interrupt when completed (ie TCR and TCRR are both zero) " alt="" coords="227,57,376,98"/>
-<area shape="rect" id="node5" href="$pdca_8c.html#a79864b51af1b9b61ad32427ab200c489" title="Enable the PDCA for the given channel. " alt="" coords="254,123,349,149"/>
-<area shape="rect" id="node3" href="$pdca_8c.html#ab50a6b2763b5097fc0561dbf515658bb" title="Get PDCA channel handler. " alt="" coords="424,64,548,91"/>
-</map>

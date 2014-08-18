@@ -1,8 +1,0 @@
-<map id="flashc_lock_external_privileged_fetch" name="flashc_lock_external_privileged_fetch">
-<area shape="rect" id="node2" href="$flashc_8c.html#a63c172f89cfe0f3e3cf1c6eadc62f5f5" title="Sets a general&#45;purpose fuse bit with the appropriate erase and write operations. " alt="" coords="195,31,351,57"/>
-<area shape="rect" id="node3" href="$flashc_8c.html#ac5454efcadb99899bfe075b463a2e6dd" title="Erases a general&#45;purpose fuse bit. " alt="" coords="399,56,569,83"/>
-<area shape="rect" id="node7" href="$flashc_8c.html#a70af318e71334255931a6638d2fa693c" title="Writes a general&#45;purpose fuse bit. " alt="" coords="401,5,567,32"/>
-<area shape="rect" id="node4" href="$flashc_8c.html#a8045c427c32cf3617e861067d76c9c11" title="Issues a FLASHC command. " alt="" coords="619,5,778,32"/>
-<area shape="rect" id="node5" href="$flashc_8c.html#a41488c15448086169266af4936ea7926" title="Reads a general&#45;purpose fuse bit. " alt="" coords="617,56,780,83"/>
-<area shape="rect" id="node6" href="$flashc_8c.html#a08124caa02942b5fa1d370a81a84dfb5" title="Reads all general&#45;purpose fuses. " alt="" coords="828,49,959,90"/>
-</map>

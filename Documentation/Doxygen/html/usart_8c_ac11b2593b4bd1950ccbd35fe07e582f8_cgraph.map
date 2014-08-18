@@ -1,7 +1,0 @@
-<map id="usart_get_echo_line" name="usart_get_echo_line">
-<area shape="rect" id="node2" href="$usart_8c.html#aa751e180b091943b684b48c581aaef3e" title="Waits until a character is received, and returns it. " alt="" coords="198,5,299,32"/>
-<area shape="rect" id="node4" href="$usart_8c.html#a2090c77f008cbbde81b5047b91a9826d" title="Writes one character string to the USART. " alt="" coords="192,56,305,83"/>
-<area shape="rect" id="node5" href="$usart_8c.html#a2ff96c7ceba22b5663bee08da4633ed9" title="Sends a character with the USART. " alt="" coords="360,81,461,108"/>
-<area shape="rect" id="node3" href="$usart_8c.html#ab73fc2f42bd6fe66c03d598b0158436d" title="Checks the RX buffer for a received character, and stores it at the given memory location. " alt="" coords="353,5,468,32"/>
-<area shape="rect" id="node6" href="$usart_8c.html#a0c36f4b2ec5445212642ee7f94672805" title="Writes the given character to the TX buffer if the transmitter is ready. " alt="" coords="516,81,635,108"/>
-</map>

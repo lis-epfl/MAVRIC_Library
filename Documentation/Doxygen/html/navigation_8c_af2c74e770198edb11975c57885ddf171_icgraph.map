@@ -1,5 +1,0 @@
-<map id="navigation_waypoint_navigation_handler" name="navigation_waypoint_navigation_handler">
-<area shape="rect" id="node2" href="$navigation_8h.html#afb6120977e160b65322f554a8c5fc7ad" title="Navigates the robot towards waypoint waypoint_input in 3D velocity command mode. " alt="" coords="205,5,332,32"/>
-<area shape="rect" id="node4" href="$tasks_8h.html#a417b414354ec97dfdd0743a526e16bf0" title="Updates the state and mode of the UAV. " alt="" coords="193,57,344,98"/>
-<area shape="rect" id="node3" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="392,5,528,32"/>
-</map>

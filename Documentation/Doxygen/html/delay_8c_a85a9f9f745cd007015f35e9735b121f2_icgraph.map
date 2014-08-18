@@ -1,4 +1,0 @@
-<map id="delay_ms" name="delay_ms">
-<area shape="rect" id="node2" href="$remote__dsm2_8h.html#a089c29fb52690547e75040644e243441" title="set slave receiver into bind mode. has to be called 100ms after power&#45;up " alt="" coords="132,5,304,47"/>
-<area shape="rect" id="node3" href="$imu_8h.html#ad26e4a8057f844098be0f8a47985b379" title="To calibrate the gyros at startup (not used know) " alt="" coords="149,71,287,98"/>
-</map>

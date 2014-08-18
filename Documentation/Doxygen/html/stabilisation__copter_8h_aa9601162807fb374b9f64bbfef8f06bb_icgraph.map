@@ -1,4 +1,0 @@
-<map id="stabilisation_copter_cascade_stabilise" name="stabilisation_copter_cascade_stabilise">
-<area shape="rect" id="node2" href="$tasks_8h.html#a4067c810c5e22c2e7c019c48c865d525" title="Run the main stabilisation loop. " alt="" coords="188,13,343,39"/>
-<area shape="rect" id="node3" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="391,13,527,39"/>
-</map>

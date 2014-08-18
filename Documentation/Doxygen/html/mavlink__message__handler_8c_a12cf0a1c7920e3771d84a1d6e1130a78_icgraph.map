@@ -1,7 +1,0 @@
-<map id="mavlink_message_handler_add_cmd_callback" name="mavlink_message_handler_add_cmd_callback">
-<area shape="rect" id="node2" href="$mavlink__waypoint__handler_8h.html#a3786e3382ae7eb92b654c1aa3918a8a4" title="Initialize the waypoint handler. " alt="" coords="238,5,385,32"/>
-<area shape="rect" id="node3" href="$onboard__parameters_8h.html#a24a0e3302dce0d6bf857f271b0b0e5a2" title="Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0..." alt="" coords="229,56,393,83"/>
-<area shape="rect" id="node5" href="$position__estimation_8h.html#a99209349bebef46a37c379524cd33d97" title="Initialize the position estimation module. " alt="" coords="232,107,391,133"/>
-<area shape="rect" id="node6" href="$simulation_8h.html#aabd70706588c351964edb55e236d4a1a" title="Initialize the simulation module. " alt="" coords="259,157,364,184"/>
-<area shape="rect" id="node4" href="$mavlink__communication_8h.html#ab7e6b45cdb27b39e81c60cc716d0613e" title="Initialisation of the module mavlink communication. " alt="" coords="441,56,628,83"/>
-</map>

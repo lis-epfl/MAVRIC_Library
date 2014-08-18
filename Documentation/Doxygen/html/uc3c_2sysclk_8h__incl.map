@@ -1,7 +1,0 @@
-<map id="/home/julien/Desktop/tmp/maveric/Code/Maveric_myCopter/src/asf/common/services/clock/uc3c/sysclk.h" name="/home/julien/Desktop/tmp/maveric/Code/Maveric_myCopter/src/asf/common/services/clock/uc3c/sysclk.h">
-<area shape="rect" id="node2" href="$board_8h.html" title="Standard board header file. " alt="" coords="71,273,137,300"/>
-<area shape="rect" id="node6" href="$uc3c_2osc_8h.html" title="Chip&#45;specific oscillator management functions. " alt="" coords="142,199,197,225"/>
-<area shape="rect" id="node9" href="$uc3c_2pll_8h.html" title="Chip&#45;specific PLL definitions. " alt="" coords="237,124,283,151"/>
-<area shape="rect" id="node10" href="$uc3c_2genclk_8h.html" title="Chip&#45;specific generic clock management. " alt="" coords="374,199,445,225"/>
-<area shape="rect" id="node4" href="$conf__board_8h.html" title="User board configuration template. " alt="" coords="113,348,210,375"/>
-</map>

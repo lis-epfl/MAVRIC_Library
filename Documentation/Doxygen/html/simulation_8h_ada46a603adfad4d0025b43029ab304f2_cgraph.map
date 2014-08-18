@@ -1,5 +1,0 @@
-<map id="simulation_update" name="simulation_update">
-<area shape="rect" id="node2" href="$simulation_8c.html#a9a3c92b5474996702b0dc0aece9199e6" title="Computer the forces in the local frame for a &quot;diagonal&quot; quadrotor configuration. " alt="" coords="205,5,342,47"/>
-<area shape="rect" id="node3" href="$simulation_8c.html#a01c4734c9b81802ab83314464df29193" title="Computes the forces in the local frame of a &quot;cross&quot; quadrotor configuration. " alt="" coords="205,71,342,112"/>
-<area shape="rect" id="node4" href="$coord__conventions_8c.html#a6b81d9d3ff39822cf068c1ac30806e41" title="Computes the yaw angle from an attitude quaternion. " alt="" coords="180,137,367,163"/>
-</map>

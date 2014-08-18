@@ -1,6 +1,0 @@
-<map id="board_init" name="board_init">
-<area shape="rect" id="node2" href="$intc_8c.html#a3f26ae8340f75e7955132319e4846c7b" title="MREPEAT" alt="" coords="159,5,245,32"/>
-<area shape="rect" id="node3" href="$gpio_8c.html#af8e9d12ce235497e93a945d244ffcb1d" title="Enables specific module modes for a set of pins. " alt="" coords="132,56,272,83"/>
-<area shape="rect" id="node5" href="$gpio_8c.html#aa1efc8ea580cc2ac1dd4f2b7694753a1" title="Configuration functionality on a pin. " alt="" coords="137,107,267,133"/>
-<area shape="rect" id="node4" href="$gpio_8c.html#af9f1a0613d0095efbcd451aea19aad61" title="Enables a specific module mode for a pin. " alt="" coords="320,56,484,83"/>
-</map>

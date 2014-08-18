@@ -1,9 +1,0 @@
-<map id="flashc_read_gp_fuse_bit" name="flashc_read_gp_fuse_bit">
-<area shape="rect" id="node2" href="$Maveric__myCopter_2src_2asf_2avr32_2drivers_2flashc_2flashc_8h.html#ae5d2a26e4f0666cc2ed260feb528a560" title="Tells whether external privileged fetch is locked. " alt="" coords="219,5,384,47"/>
-<area shape="rect" id="node3" href="$Maveric__myCopter_2src_2asf_2avr32_2drivers_2flashc_2flashc_8h.html#ac5454efcadb99899bfe075b463a2e6dd" title="Erases a general&#45;purpose fuse bit. " alt="" coords="216,71,387,98"/>
-<area shape="rect" id="node4" href="$Maveric__myCopter_2src_2asf_2avr32_2drivers_2flashc_2flashc_8h.html#a840a6f529e33adbd3759f276a0255aee" title="Erases a general&#45;purpose fuse bit&#45;field. " alt="" coords="438,35,587,76"/>
-<area shape="rect" id="node5" href="$Maveric__myCopter_2src_2asf_2avr32_2drivers_2flashc_2flashc_8h.html#a63c172f89cfe0f3e3cf1c6eadc62f5f5" title="Sets a general&#45;purpose fuse bit with the appropriate erase and write operations. " alt="" coords="435,101,591,127"/>
-<area shape="rect" id="node6" href="$Maveric__myCopter_2src_2asf_2avr32_2drivers_2flashc_2flashc_8h.html#a97c8b9ed8f952803a3911af33ba8d553" title="Locks or unlocks external privileged fetch. " alt="" coords="639,60,780,101"/>
-<area shape="rect" id="node7" href="$Maveric__myCopter_2src_2asf_2avr32_2drivers_2flashc_2flashc_8h.html#a8969b973563adb568121db44768a2246" title="Sets a general&#45;purpose fuse bit&#45;field with the appropriate erase and write operations. " alt="" coords="642,125,777,167"/>
-<area shape="rect" id="node8" href="$Maveric__myCopter_2src_2asf_2avr32_2drivers_2flashc_2flashc_8h.html#a076a1b22c9f3e6dad1739f0398f89b37" title="Sets the bootloader protected size. " alt="" coords="828,125,977,167"/>
-</map>

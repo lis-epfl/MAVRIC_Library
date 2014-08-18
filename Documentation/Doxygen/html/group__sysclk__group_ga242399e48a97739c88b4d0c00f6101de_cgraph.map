@@ -1,5 +1,0 @@
-<map id="sysclk_init" name="sysclk_init">
-<area shape="rect" id="node2" href="$group__sysclk__group.html#ga9e93d93c137135fee8a1a7102367042e" title="Set system clock prescaler configuration. " alt="" coords="137,5,289,32"/>
-<area shape="rect" id="node3" href="$group__pll__group.html#gaede6e280289cb0759af0f5a34f5a627f" title="Activate the configuration cfg and enable PLL pll_id. " alt="" coords="173,56,253,83"/>
-<area shape="rect" id="node4" href="$group__sysclk__group.html#ga222a121dfaac21b0c0af9d4dcb39496c" title="Change the source of the main system clock. " alt="" coords="148,107,279,133"/>
-</map>

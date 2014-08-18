@@ -1,7 +1,0 @@
-<map id="neighbors_selection_init" name="neighbors_selection_init">
-<area shape="rect" id="node2" href="$neighbor__selection_8c.html#a3b5dc9707d6266ba6ced48aa0c0786bb" title="Decode the message and parse to the neighbor array. " alt="" coords="215,5,425,47"/>
-<area shape="rect" id="node4" href="$print__util_8c.html#a1b15f576d0bc830fc09c11d034077c43" title="Writes a character string to the debug stream. " alt="" coords="494,71,625,98"/>
-<area shape="rect" id="node6" href="$mavlink__message__handler_8c.html#afa96770432682d3400c99db2e9453b1e" title="Registers a new callback for a message. " alt="" coords="232,123,408,164"/>
-<area shape="rect" id="node3" href="$coord__conventions_8c.html#a9393fdffdf7eb0ba82cec66460e2f56d" title="Convert global GPS coordinates to local NED coordinate. " alt="" coords="473,5,645,47"/>
-<area shape="rect" id="node5" href="$print__util_8c.html#ae0e520f47e2bfa8e497d3e656e5a9144" title="Writes string of character to a stream. " alt="" coords="693,71,821,98"/>
-</map>

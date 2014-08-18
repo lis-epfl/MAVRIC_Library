@@ -1,4 +1,0 @@
-<map id="usart_write_line" name="usart_write_line">
-<area shape="rect" id="node2" href="$usart_8c.html#a2ff96c7ceba22b5663bee08da4633ed9" title="Sends a character with the USART. " alt="" coords="167,5,268,32"/>
-<area shape="rect" id="node3" href="$usart_8c.html#a0c36f4b2ec5445212642ee7f94672805" title="Writes the given character to the TX buffer if the transmitter is ready. " alt="" coords="316,5,435,32"/>
-</map>

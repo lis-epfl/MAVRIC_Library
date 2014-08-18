@@ -1,7 +1,0 @@
-<map id="/home/julien/Desktop/tmp/maveric/Code/Library/hal/led.h" name="/home/julien/Desktop/tmp/maveric/Code/Library/hal/led.h">
-<area shape="rect" id="node2" href="$adc__int_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/hal/adc_int.c" alt="" coords="5,109,181,165"/>
-<area shape="rect" id="node3" href="$ads1274_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/hal/ads1274.c" alt="" coords="205,109,381,165"/>
-<area shape="rect" id="node4" href="$Library_2hal_2led_8c.html" title="AT32UC3C UC3C_EK board LEDs support package. " alt="" coords="405,109,581,165"/>
-<area shape="rect" id="node5" href="$sd__spi_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/hal/sd_spi.c" alt="" coords="605,109,781,165"/>
-<area shape="rect" id="node6" href="$spi__buffered_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/hal/spi_buffered.c" alt="" coords="805,109,981,165"/>
-</map>

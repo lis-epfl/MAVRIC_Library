@@ -1,9 +1,0 @@
-<map id="gpio_configure_pin" name="gpio_configure_pin">
-<area shape="rect" id="node2" href="$ads1274_8h.html#a0176eb0c9771c53fff490bae17e5b227" title="Initializes ADC (configures Pins, starts Clock, sets defaults) " alt="" coords="417,18,547,45"/>
-<area shape="rect" id="node3" href="$ads1274_8h.html#a6638970be589fd687e4f6eaa192d9bb5" title="Enable/Disable the clock to the ADC. " alt="" coords="190,40,342,82"/>
-<area shape="rect" id="node4" href="$radar__driver_8h.html#a807c7c13ab1b8f4ba6a87fcc1ba9cfe7" title="Initialize the radar driver. " alt="" coords="209,106,323,133"/>
-<area shape="rect" id="node5" href="$remote__dsm2_8h.html#a017be761caf078c365384cfed1f963f3" title="Power&#45;on/off the receiver. " alt="" coords="184,208,348,250"/>
-<area shape="rect" id="node6" href="$remote__dsm2_8h.html#a089c29fb52690547e75040644e243441" title="set slave receiver into bind mode. has to be called 100ms after power&#45;up " alt="" coords="396,150,568,191"/>
-<area shape="rect" id="node8" href="$init_8c.html#a916f2adc2080b4fe88034086d107a8dc" title="This function initializes the board target resources. " alt="" coords="227,274,305,301"/>
-<area shape="rect" id="node7" href="$remote__dsm2_8h.html#afb1f0b64454e3a9e4b9750a30043e08b" title="Initialize UART receiver for Spektrum/DSM2 slave receivers. " alt="" coords="411,216,553,242"/>
-</map>

@@ -1,4 +1,0 @@
-<map id="usart_read_char" name="usart_read_char">
-<area shape="rect" id="node2" href="$usart_8h.html#aa751e180b091943b684b48c581aaef3e" title="Waits until a character is received, and returns it. " alt="" coords="168,5,269,32"/>
-<area shape="rect" id="node3" href="$usart_8h.html#ac11b2593b4bd1950ccbd35fe07e582f8" title="Gets and echoes characters until end of line (detected by a CR character). " alt="" coords="317,5,456,32"/>
-</map>

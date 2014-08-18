@@ -1,7 +1,0 @@
-<map id="coord_conventions_get_yaw" name="coord_conventions_get_yaw">
-<area shape="rect" id="node2" href="$simulation_8h.html#ada46a603adfad4d0025b43029ab304f2" title="Computes artificial gyro and accelerometer values based on motor commands. " alt="" coords="240,31,367,57"/>
-<area shape="rect" id="node3" href="$tasks_8h.html#afc72040c3820b1b8f3336c205ebcba14" title="Updates the IMU. " alt="" coords="415,31,568,57"/>
-<area shape="rect" id="node4" href="$imu_8h.html#ad26e4a8057f844098be0f8a47985b379" title="To calibrate the gyros at startup (not used know) " alt="" coords="624,5,763,32"/>
-<area shape="rect" id="node5" href="$tasks_8h.html#a4067c810c5e22c2e7c019c48c865d525" title="Run the main stabilisation loop. " alt="" coords="616,56,771,83"/>
-<area shape="rect" id="node6" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="819,56,955,83"/>
-</map>

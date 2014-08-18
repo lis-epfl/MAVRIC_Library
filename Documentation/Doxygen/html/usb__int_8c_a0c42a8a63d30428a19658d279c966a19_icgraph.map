@@ -1,3 +1,0 @@
-<map id="usb_int_send_byte" name="usb_int_send_byte">
-<area shape="rect" id="node2" href="$usb__int_8h.html#ac8a0884c5fd73b4b727e24d244ef8a42" title="Blocking operation to flush the uart buffer. Returns once the last byte has been passed to hardware f..." alt="" coords="184,5,333,47"/>
-</map>

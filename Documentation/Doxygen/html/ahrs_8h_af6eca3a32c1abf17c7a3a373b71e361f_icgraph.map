@@ -1,3 +1,0 @@
-<map id="ahrs_send_attitude_quaternion" name="ahrs_send_attitude_quaternion">
-<area shape="rect" id="node2" href="$mavlink__telemetry_8h.html#ab2e783bf88048c3d5a256968b2fad042" title="Initialise all the mavlink streams and call the onboard parameters register. " alt="" coords="185,13,337,39"/>
-</map>

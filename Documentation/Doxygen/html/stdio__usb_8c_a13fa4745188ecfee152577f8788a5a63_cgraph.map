@@ -1,8 +1,0 @@
-<map id="stdio_usb_init" name="stdio_usb_init">
-<area shape="rect" id="node2" href="$stdio__usb_8c.html#a07c3b80d140391730f02f0e2207f8d43" title="Sends a character with the USART. " alt="" coords="168,5,296,32"/>
-<area shape="rect" id="node5" href="$stdio__usb_8c.html#a5669221bd4dda10e7cc9ffa5d3bd1c43" title="Waits until a character is received, and returns it. " alt="" coords="168,56,296,83"/>
-<area shape="rect" id="node7" href="$stdio__usb_8c.html#a57739cb2ee24180fff3c8244f90c9372" title="Callback for VBUS level change event. " alt="" coords="156,107,308,133"/>
-<area shape="rect" id="node3" href="$group__udi__cdc__group.html#ga8faae3fcf4911017c0fcf0aa127179f6" title="Puts a byte on CDC line The type int is used to support printf redirection from compiler LIB..." alt="" coords="356,5,455,32"/>
-<area shape="rect" id="node4" href="$group__udi__cdc__group.html#ga7d0d458a5731da95dd05f30714c42dde" title="This function checks if a new character sent is possible The type int is used to support scanf redire..." alt="" coords="503,5,644,32"/>
-<area shape="rect" id="node6" href="$group__udi__cdc__group.html#ga202f3fd7b153f6e1a41601735e0febb6" title="Waits and gets a value on CDC line. " alt="" coords="356,56,455,83"/>
-</map>

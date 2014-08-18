@@ -1,5 +1,0 @@
-<map id="usb_desc_table_t" name="usb_desc_table_t">
-<area shape="rect" id="node2" href="$structavr32__usbc__udesc__ep__ctrl__stat__t.html" title="{avr32_usbc_udesc_ep\l_ctrl_stat_t\n|+ res\l+ pipe_error_status\l+ pipe_error_number_max\l+ pep_num\l+ res2\l+ uhaddr\l|}" alt="" coords="5,5,179,171"/>
-<area shape="rect" id="node3" href="$structavr32__usbc__udesc__bk__ctrl__stat__t.html" title="{avr32_usbc_udesc_bk\l_ctrl_stat_t\n|+ res\l+ underfi\l+ overfi\l+ crc\l+ res2\l|}" alt="" coords="203,13,355,163"/>
-<area shape="rect" id="node4" href="$structavr32__usbc__udesc__sizes__t.html" title="{avr32_usbc_udesc_sizes_t\n|+ auto_zlp\l+ multi_packet_size\l+ res\l+ byte_count\l|}" alt="" coords="379,27,559,149"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="mavlink_message_handler_msg_default_dbg" name="mavlink_message_handler_msg_default_dbg">
-<area shape="rect" id="node2" href="$mavlink__message__handler_8h.html#a1d3a01dee89b7d9635fe0ba59338e721" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="229,5,405,47"/>
-<area shape="rect" id="node3" href="$mavlink__communication_8h.html#a96b84def01059bd867200755c7ab651e" title="Run task scheduler update if the buffer is empty. " alt="" coords="453,5,616,47"/>
-<area shape="rect" id="node4" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="664,13,800,39"/>
-</map>

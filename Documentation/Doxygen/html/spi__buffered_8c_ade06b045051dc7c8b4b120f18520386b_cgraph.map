@@ -1,4 +1,0 @@
-<map id="spi_buffered_resume" name="spi_buffered_resume">
-<area shape="rect" id="node2" href="$spi__buffered_8c.html#aa6f9a5b9b37bcf89eb56fe90578928ef" title="Initiates pending transmissions by sending first byte, if in paused or non&#45;automatic mode..." alt="" coords="196,5,323,32"/>
-<area shape="rect" id="node3" href="$spi__buffered_8c.html#ad650facef5a4598a0fcab9c8f7ea773c" title="Read data from buffer index and copy it to SPI unit. " alt="" coords="371,5,517,32"/>
-</map>

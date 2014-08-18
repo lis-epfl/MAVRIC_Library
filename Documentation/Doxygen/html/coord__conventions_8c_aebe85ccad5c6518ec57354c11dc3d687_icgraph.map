@@ -1,5 +1,0 @@
-<map id="coord_conventions_quaternion_from_aero" name="coord_conventions_quaternion_from_aero">
-<area shape="rect" id="node2" href="$attitude__error__estimator_8h.html#af6047c0274d06c9ba8b10a8cb048c90b" title="Function to update the reference attitude from Euler angles. " alt="" coords="252,5,419,47"/>
-<area shape="rect" id="node3" href="$attitude__error__estimator_8h.html#a411773f49b69b8f93abbe65baa3b1c0a" title="Function to update the reference attitude from Euler angles. " alt="" coords="256,71,415,112"/>
-<area shape="rect" id="node4" href="$attitude__controller__p2_8h.html#a21fd9ccbc0ce0eace2cf092631a02b90" title="Main update function. " alt="" coords="467,71,592,112"/>
-</map>

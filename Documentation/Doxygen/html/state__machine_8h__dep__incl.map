@@ -1,9 +1,0 @@
-<map id="/home/julien/Desktop/tmp/maveric/Code/Library/communication/state_machine.h" name="/home/julien/Desktop/tmp/maveric/Code/Library/communication/state_machine.h">
-<area shape="rect" id="node2" href="$Maveric__myCopter_2src_2central__data_8h_source.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/central_data.h" alt="" coords="325,109,520,165"/>
-<area shape="rect" id="node3" href="$simulation_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/sensing/simulation.c" alt="" coords="5,213,181,269"/>
-<area shape="rect" id="node4" href="$main_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/tests/main.c" alt="" coords="148,317,324,373"/>
-<area shape="rect" id="node5" href="$Maveric__myCopter_2src_2boardsupport_8h_source.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/boardsupport.h" alt="" coords="255,213,454,269"/>
-<area shape="rect" id="node6" href="$main_8cpp.html" title="Empty user application template. " alt="" coords="382,317,565,373"/>
-<area shape="rect" id="node7" href="$mavlink__telemetry_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/mavlink_telemetry.c" alt="" coords="528,213,757,269"/>
-<area shape="rect" id="node8" href="$tasks_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/tasks.c" alt="" coords="782,213,965,269"/>
-</map>

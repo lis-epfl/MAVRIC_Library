@@ -1,6 +1,0 @@
-<map id="USB Stack Devices" name="USB Stack Devices">
-<area shape="rect" id="node1" href="$group__udi__group.html" title="USB Device Interface\l (UDI)" alt="" coords="342,5,493,47"/>
-<area shape="rect" id="node2" href="$group__udd__group.html" title="USB Device Driver (UDD)" alt="" coords="329,71,505,98"/>
-<area shape="rect" id="node3" href="$group__usb__group.html" title="USB Stack" alt="" coords="5,71,93,98"/>
-<area shape="rect" id="node5" href="$group__udc__group.html" title="USB Device Controller\l (UDC)" alt="" coords="340,123,495,164"/>
-</map>

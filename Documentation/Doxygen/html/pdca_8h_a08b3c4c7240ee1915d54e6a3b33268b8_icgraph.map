@@ -1,6 +1,0 @@
-<map id="pdca_init_channel" name="pdca_init_channel">
-<area shape="rect" id="node2" href="$dac__dma_8h.html#a87a82dcdbaed6a0e7f6395e42ba3e939" title="get the DAC sampling buffer " alt="" coords="184,5,331,32"/>
-<area shape="rect" id="node3" href="$i2c__driver__dma_8h.html#a3c3fff50b273a1bfc78cbc40bc78d8c3" title="Trigger an i2c request. " alt="" coords="197,57,318,98"/>
-<area shape="rect" id="node4" href="$spi__buffered_8h.html#a47b12734c1fe0382a4fd45a65e87bb2c" title="InitialiZe DMA&#45;based SPI transfer mode. " alt="" coords="180,123,335,149"/>
-<area shape="rect" id="node5" href="$ads1274_8h.html#a0176eb0c9771c53fff490bae17e5b227" title="Initializes ADC (configures Pins, starts Clock, sets defaults) " alt="" coords="383,123,513,149"/>
-</map>
