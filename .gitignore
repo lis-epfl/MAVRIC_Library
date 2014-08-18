@@ -3,6 +3,7 @@
 *.codelite
 
 html/
+latex/
 
 Code/Maveric_myCopter/Maveric_myCopter_linux.txt
 Code/Maveric_myCopter/-DBOARD=USER_BOARD
