@@ -302,6 +302,9 @@ DRESULT disk_ioctl (
 		//result = ATA_disk_ioctl(cmd, buff);
 
 		// post-process here
+		
+		result = RES_ERROR;
+		res = result;
 
 		return res;
 
@@ -345,6 +348,9 @@ DRESULT disk_ioctl (
 		// pre-process here
 
 		//result = USB_disk_ioctl(cmd, buff);
+		
+		result = RES_ERROR;
+		res = result;
 
 		// post-process here
 

@@ -1372,7 +1372,7 @@ void sd_spi_test(void)
 	print_util_dbg_print("write succeed ? ");
 	print_util_dbg_print_num(sd_spi_write_sector_from_ram((void *)&dummy_data),10);
 
-	bool as = sd_mmc_spi_read_sector_to_ram((void*)ram_buffer2);
+	//bool as = sd_mmc_spi_read_sector_to_ram((void*)ram_buffer2);
 	if (sd_mmc_spi_read_sector_to_ram((void*)ram_buffer2))
 	{
 		print_util_dbg_print("Read successful\r");
