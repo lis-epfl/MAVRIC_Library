@@ -1,0 +1,5 @@
+<map id="pcl_switch_to_osc" name="pcl_switch_to_osc">
+<area shape="rect" id="node2" href="$scif__uc3c_8c.html#a07a99c5e193620b3d4a6825bcd054e37" title="Configure an oscillator in crystal mode. " alt="" coords="192,5,323,47"/>
+<area shape="rect" id="node3" href="$scif__uc3c_8c.html#ae6a41bbff30ad3544abd620bb8b50612" title="Enable an oscillator with a given startup time. " alt="" coords="199,71,315,98"/>
+<area shape="rect" id="node4" href="$pm__uc3c_8c.html#ae8ae9d9b5af1bbd592f7dce6e11677b0" title="Set the main clock. " alt="" coords="184,122,331,149"/>
+</map>

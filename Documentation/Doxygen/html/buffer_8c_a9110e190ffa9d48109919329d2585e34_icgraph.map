@@ -1,0 +1,5 @@
+<map id="buffer_empty" name="buffer_empty">
+<area shape="rect" id="node2" href="$uart__int_8h.html#a7ac10882675f0a59956e5cba5246235c" title="Blocking operation to flush the uart buffer. Returns once the last byte has been passed to hardware f..." alt="" coords="152,13,252,39"/>
+<area shape="rect" id="node3" href="$uart__int_8h.html#ab1cca5f5e627b0d3526a7ca3bc425e75" title="Registers a stream interface with the UART transmitter (data put into the stream will be sent)..." alt="" coords="300,5,451,47"/>
+<area shape="rect" id="node4" href="$console_8h.html#a2d508d92a343b8b93c79d1fec30af394" title="Initialize the console module. " alt="" coords="499,13,589,39"/>
+</map>

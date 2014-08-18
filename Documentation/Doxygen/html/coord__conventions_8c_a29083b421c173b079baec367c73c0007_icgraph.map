@@ -1,0 +1,17 @@
+<map id="coord_conventions_local_to_global_position" name="coord_conventions_local_to_global_position">
+<area shape="rect" id="node2" href="$mavlink__waypoint__handler_8h.html#a6b75b16911048bb83e8dd4476f54d103" title="Set the waypoint depending on the reference frame defined in the current_waypoint structure..." alt="" coords="237,57,391,98"/>
+<area shape="rect" id="node10" href="$position__estimation_8h.html#aa8a7df43a21495b0dcd7c5117ca2626d" title="Task to send the mavlink GPS global position message. " alt="" coords="239,122,389,163"/>
+<area shape="rect" id="node12" href="$simulation_8h.html#aecf6e71a4fde3cbfbfcaccabec7258f4" title="Simulates GPS outputs. " alt="" coords="457,5,623,32"/>
+<area shape="rect" id="node14" href="$simulation_8h.html#a6c1f0586764d047f9781b2dd65248963" title="Gives a fake gps value. " alt="" coords="233,289,395,316"/>
+<area shape="rect" id="node15" href="$simulation_8h.html#a46720308df6753613af1c812a965b1db" title="Task to send the mavlink HIL state simulation message. " alt="" coords="238,188,390,215"/>
+<area shape="rect" id="node16" href="$simulation_8h.html#a76af9685559cf8c3c0dcb081bf180cb4" title="Task to send the mavlink HIL quaternion simulation message. " alt="" coords="219,239,409,265"/>
+<area shape="rect" id="node3" href="$mavlink__waypoint__handler_8h.html#af44ebd0e018d792019f377952ddc05e1" title="Initialize a first waypoint if a flight plan is set. " alt="" coords="465,115,615,157"/>
+<area shape="rect" id="node8" href="$navigation_8h.html#af2c74e770198edb11975c57885ddf171" title="Drives the GPS navigation procedure. " alt="" coords="683,57,823,98"/>
+<area shape="rect" id="node4" href="$navigation_8h.html#ab3aa816251fea36305526225b4f4889d" title="Drives the automatic takeoff procedure. " alt="" coords="683,239,823,281"/>
+<area shape="rect" id="node7" href="$navigation_8h.html#a02ce7ec34ea269ade7a9ad0eda6fca13" title="Drives the hold position procedure. " alt="" coords="671,174,835,215"/>
+<area shape="rect" id="node9" href="$tasks_8h.html#a417b414354ec97dfdd0743a526e16bf0" title="Updates the state and mode of the UAV. " alt="" coords="884,79,1035,121"/>
+<area shape="rect" id="node5" href="$navigation_8h.html#afb6120977e160b65322f554a8c5fc7ad" title="Navigates the robot towards waypoint waypoint_input in 3D velocity command mode. " alt="" coords="896,175,1023,201"/>
+<area shape="rect" id="node6" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="1084,95,1220,121"/>
+<area shape="rect" id="node11" href="$mavlink__telemetry_8h.html#ab2e783bf88048c3d5a256968b2fad042" title="Initialise all the mavlink streams and call the onboard parameters register. " alt="" coords="464,188,616,215"/>
+<area shape="rect" id="node13" href="$tasks_8h.html#a28c75dbd310d9365d1fd551871d6491c" title="Run GPS update. " alt="" coords="883,13,1036,40"/>
+</map>

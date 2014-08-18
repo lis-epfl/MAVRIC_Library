@@ -1,0 +1,7 @@
+<map id="spi_buffered_init" name="spi_buffered_init">
+<area shape="rect" id="node2" href="$spi__master_8c.html#adb8e173ada01040ae56a5f5868b50449" title="Setup a SPI device. " alt="" coords="171,5,341,32"/>
+<area shape="rect" id="node4" href="$gpio_8c.html#af9f1a0613d0095efbcd451aea19aad61" title="Enables a specific module mode for a pin. " alt="" coords="174,56,338,83"/>
+<area shape="rect" id="node5" href="$spi__buffered_8c.html#ad29e1b0896e6acb292fe522c57c7e97f" title="Enables SPI communication. " alt="" coords="187,107,325,133"/>
+<area shape="rect" id="node3" href="$spi_8c.html#ac4f834a88c24447093521628ed16a72b" title="Calculates the baudrate divider. " alt="" coords="389,5,480,32"/>
+<area shape="rect" id="node6" href="$spi_8c.html#ac93e5990e8abc811f4ba2fb65e10e94d" title="Enables the SPI. " alt="" coords="393,107,477,133"/>
+</map>

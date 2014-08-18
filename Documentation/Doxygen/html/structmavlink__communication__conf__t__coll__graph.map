@@ -1,0 +1,7 @@
+<map id="mavlink_communication_conf_t" name="mavlink_communication_conf_t">
+<area shape="rect" id="node2" href="$structmavlink__message__handler__conf__t.html" title="Structure used to hold parameters during initialisation. " alt="" coords="5,233,191,355"/>
+<area shape="rect" id="node3" href="$structonboard__parameters__conf__t.html" title="Configuration for the module onboard parameters. " alt="" coords="215,241,357,347"/>
+<area shape="rect" id="node4" href="$structmavlink__stream__conf__t.html" title="Configuration structure for the module mavlink stream. " alt="" coords="381,241,538,347"/>
+<area shape="rect" id="node5" href="$structbyte__stream__t.html" title="Byte stream. " alt="" coords="397,5,521,156"/>
+<area shape="rect" id="node6" href="$structscheduler__conf__t.html" title="Scheduler configuration. " alt="" coords="563,241,703,347"/>
+</map>

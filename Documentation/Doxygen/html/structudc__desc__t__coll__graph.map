@@ -1,0 +1,11 @@
+<map id="udc_desc_t" name="udc_desc_t">
+<area shape="rect" id="node2" href="$structudi__cdc__comm__desc__t.html" title="Communication Class interface descriptor. " alt="" coords="462,329,618,406"/>
+<area shape="rect" id="node3" href="$structusb__cdc__union__desc__t.html" title="CDC Union Functional Descriptor. " alt="" coords="552,35,707,171"/>
+<area shape="rect" id="node4" href="$structusb__ep__desc__t.html" title="Standard USB endpoint descriptor stcuture. " alt="" coords="387,27,527,178"/>
+<area shape="rect" id="node9" href="$structudi__cdc__data__desc__t.html" title="Data Class interface descriptor. " alt="" coords="293,329,438,406"/>
+<area shape="rect" id="node5" href="$structusb__cdc__acm__desc__t.html" title="CDC ACM Functional Descriptor. " alt="" coords="731,42,880,163"/>
+<area shape="rect" id="node6" href="$structusb__iface__desc__t.html" title="Standard USB interface descriptor structure. " alt="" coords="5,5,155,200"/>
+<area shape="rect" id="node7" href="$structusb__cdc__hdr__desc__t.html" title="CDC Header Functional Descriptor. " alt="" coords="904,42,1053,163"/>
+<area shape="rect" id="node8" href="$structusb__cdc__call__mgmt__desc__t.html" title="CDC Call Management Functional Descriptor. " alt="" coords="179,35,363,171"/>
+<area shape="rect" id="node10" href="$structusb__conf__desc__t.html" title="Standard USB configuration descriptor structure. " alt="" coords="642,277,793,457"/>
+</map>

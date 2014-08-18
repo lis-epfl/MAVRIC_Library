@@ -1,0 +1,4 @@
+<map id="mavlink_message_handler_cmd_callback_set_t" name="mavlink_message_handler_cmd_callback_set_t">
+<area shape="rect" id="node2" href="$structmavlink__message__handler__cmd__callback__t.html" title="Command callback. " alt="" coords="11,292,187,443"/>
+<area shape="rect" id="node3" href="$struct____mavlink__command__long__t.html" title="{__mavlink_command_long_t\n|+ param1\l+ param2\l+ param3\l+ param4\l+ param5\l+ param6\l+ param7\l+ command\l+ target_system\l+ target_component\l+ confirmation\l|}" alt="" coords="5,5,192,229"/>
+</map>

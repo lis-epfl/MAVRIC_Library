@@ -1,0 +1,4 @@
+<map id="remote_dsm2_rc_get_channel" name="remote_dsm2_rc_get_channel">
+<area shape="rect" id="node2" href="$remote__dsm2_8h.html#a2808764a356a2969a59d3fe20911e5ba" title="Return the neutral position of a remote channel Warning: you should ensure first that the remote has ..." alt="" coords="207,5,351,47"/>
+<area shape="rect" id="node3" href="$remote__dsm2_8h.html#a1ef8d19b6561147d48b146842512f146" title="Update the remote channel central position array stored in .c file Warning: you should ensure first t..." alt="" coords="197,71,360,112"/>
+</map>

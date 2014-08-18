@@ -1,0 +1,45 @@
+<map id="/home/julien/Desktop/tmp/maveric/Code/Library/hal/lsm330dlc.c" name="/home/julien/Desktop/tmp/maveric/Code/Library/hal/lsm330dlc.c">
+<area shape="rect" id="node2" href="$lsm330dlc_8h.html" title="lsm330dlc.h" alt="" coords="2165,109,2257,136"/>
+<area shape="rect" id="node6" href="$gpio_8h.html" title="GPIO software driver interface for AVR UC3. " alt="" coords="1286,184,1343,211"/>
+<area shape="rect" id="node9" href="$i2c__driver__int_8h.html" title="i2c_driver_int.h" alt="" coords="1835,109,1946,136"/>
+<area shape="rect" id="node46" href="$print__util_8h.html" title="print_util.h" alt="" coords="2332,109,2415,136"/>
+<area shape="rect" id="node4" href="$gyroscope_8h.html" title="gyroscope.h" alt="" coords="2243,184,2336,211"/>
+<area shape="rect" id="node5" href="$accelerometer_8h.html" title="accelerometer.h" alt="" coords="2104,184,2219,211"/>
+<area shape="rect" id="node10" href="$twim_8h.html" title="TWIM driver for AVR32 UC3. " alt="" coords="1517,184,1579,211"/>
+<area shape="rect" id="node15" href="$dma__channel__config_8h.html" title="dma_channel_config.h" alt="" coords="1928,184,2080,211"/>
+<area shape="rect" id="node16" href="$scheduler_8h.html" title="scheduler.h" alt="" coords="1763,184,1853,211"/>
+<area shape="rect" id="node11" href="$status__codes_8h.html" title="Status code definitions. " alt="" coords="1430,259,1541,285"/>
+<area shape="rect" id="node12" href="$conf__twim_8h.html" title="TWIM Configuration File for AVR32 UC3. " alt="" coords="1565,259,1659,285"/>
+<area shape="rect" id="node13" href="$board_8h.html" title="Standard board header file. " alt="" coords="1527,341,1593,367"/>
+<area shape="rect" id="node14" href="$conf__board_8h.html" title="User board configuration template. " alt="" coords="1511,423,1609,449"/>
+<area shape="rect" id="node18" href="$mavlink__stream_8h.html" title="mavlink_stream.h" alt="" coords="1931,259,2056,285"/>
+<area shape="rect" id="node19" href="$streams_8h.html" title="streams.h" alt="" coords="2205,341,2285,367"/>
+<area shape="rect" id="node21" href="$maveric_2mavlink_8h.html" title="MAVLink comm protocol built from maveric2.xml. " alt="" coords="1832,333,1995,375"/>
+<area shape="rect" id="node22" href="$maveric_2version_8h.html" title="MAVLink comm protocol built from maveric2.xml. " alt="" coords="1823,423,1897,449"/>
+<area shape="rect" id="node23" href="$maveric2_8h.html" title="MAVLink comm protocol generated from maveric2.xml. " alt="" coords="1922,423,2009,449"/>
+<area shape="rect" id="node24" href="$protocol_8h_source.html" title="../protocol.h" alt="" coords="5,505,96,531"/>
+<area shape="rect" id="node25" href="$maveric_2mavlink__msg__heartbeat_8h_source.html" title="./mavlink_msg_heartbeat.h" alt="" coords="120,505,299,531"/>
+<area shape="rect" id="node26" href="$maveric_2mavlink__msg__sys__status_8h_source.html" title="./mavlink_msg_sys_status.h" alt="" coords="323,505,512,531"/>
+<area shape="rect" id="node27" href="$maveric_2mavlink__msg__system__time_8h_source.html" title="./mavlink_msg_system\l_time.h" alt="" coords="536,497,693,539"/>
+<area shape="rect" id="node28" href="$maveric_2mavlink__msg__ping_8h_source.html" title="./mavlink_msg_ping.h" alt="" coords="717,505,867,531"/>
+<area shape="rect" id="node29" href="$maveric_2mavlink__msg__change__operator__control_8h_source.html" title="./mavlink_msg_change\l_operator_control.h" alt="" coords="891,497,1047,539"/>
+<area shape="rect" id="node30" href="$maveric_2mavlink__msg__change__operator__control__ack_8h_source.html" title="./mavlink_msg_change\l_operator_control_ack.h" alt="" coords="1071,497,1233,539"/>
+<area shape="rect" id="node31" href="$maveric_2mavlink__msg__auth__key_8h_source.html" title="./mavlink_msg_auth\l_key.h" alt="" coords="1257,497,1396,539"/>
+<area shape="rect" id="node32" href="$maveric_2mavlink__msg__set__mode_8h_source.html" title="./mavlink_msg_set_mode.h" alt="" coords="1421,505,1603,531"/>
+<area shape="rect" id="node33" href="$maveric_2mavlink__msg__param__request__read_8h_source.html" title="./mavlink_msg_param\l_request_read.h" alt="" coords="1627,497,1778,539"/>
+<area shape="rect" id="node34" href="$maveric_2mavlink__msg__param__request__list_8h_source.html" title="./mavlink_msg_param\l_request_list.h" alt="" coords="1802,497,1953,539"/>
+<area shape="rect" id="node35" href="$maveric_2mavlink__msg__param__value_8h_source.html" title="./mavlink_msg_param\l_value.h" alt="" coords="1977,497,2127,539"/>
+<area shape="rect" id="node36" href="$maveric_2mavlink__msg__param__set_8h_source.html" title="./mavlink_msg_param\l_set.h" alt="" coords="2151,497,2302,539"/>
+<area shape="rect" id="node37" href="$maveric_2mavlink__msg__gps__raw__int_8h_source.html" title="./mavlink_msg_gps_raw\l_int.h" alt="" coords="2327,497,2489,539"/>
+<area shape="rect" id="node38" href="$maveric_2mavlink__msg__gps__status_8h_source.html" title="./mavlink_msg_gps_status.h" alt="" coords="2513,505,2703,531"/>
+<area shape="rect" id="node39" href="$maveric_2mavlink__msg__scaled__imu_8h_source.html" title="./mavlink_msg_scaled\l_imu.h" alt="" coords="2727,497,2879,539"/>
+<area shape="rect" id="node40" href="$maveric_2mavlink__msg__raw__imu_8h_source.html" title="./mavlink_msg_raw_imu.h" alt="" coords="2903,505,3078,531"/>
+<area shape="rect" id="node41" href="$maveric_2mavlink__msg__raw__pressure_8h_source.html" title="./mavlink_msg_raw_pressure.h" alt="" coords="3103,505,3305,531"/>
+<area shape="rect" id="node42" href="$maveric_2mavlink__msg__scaled__pressure_8h_source.html" title="./mavlink_msg_scaled\l_pressure.h" alt="" coords="3329,497,3481,539"/>
+<area shape="rect" id="node43" href="$maveric_2mavlink__msg__attitude_8h_source.html" title="./mavlink_msg_attitude.h" alt="" coords="3505,505,3673,531"/>
+<area shape="rect" id="node44" href="$maveric_2mavlink__msg__attitude__quaternion_8h_source.html" title="./mavlink_msg_attitude\l_quaternion.h" alt="" coords="3697,497,3855,539"/>
+<area shape="rect" id="node45" href="$maveric_2mavlink__msg__local__position__ned_8h_source.html" title="./mavlink_msg_local\l_position_ned.h" alt="" coords="3879,497,4020,539"/>
+<area shape="rect" id="node47" href="$quaternions_8h.html" title="quaternions.h" alt="" coords="2481,184,2581,211"/>
+<area shape="rect" id="node48" href="$maths_8h.html" title="maths.h" alt="" coords="2563,341,2632,367"/>
+<area shape="rect" id="node50" href="$vectors_8h_source.html" title="vectors.h" alt="" coords="2513,259,2589,285"/>
+</map>

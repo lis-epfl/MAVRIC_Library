@@ -1,0 +1,6 @@
+<map id="scheduler_add_task" name="scheduler_add_task">
+<area shape="rect" id="node2" href="$onboard__parameters_8h.html#a24a0e3302dce0d6bf857f271b0b0e5a2" title="Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0..." alt="" coords="192,5,356,32"/>
+<area shape="rect" id="node4" href="$mavlink__telemetry_8h.html#ab2e783bf88048c3d5a256968b2fad042" title="Initialise all the mavlink streams and call the onboard parameters register. " alt="" coords="198,56,350,83"/>
+<area shape="rect" id="node5" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="206,107,342,133"/>
+<area shape="rect" id="node3" href="$mavlink__communication_8h.html#ab7e6b45cdb27b39e81c60cc716d0613e" title="Initialisation of the module mavlink communication. " alt="" coords="404,5,591,32"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="buffer_make_buffered_stream_lossy" name="buffer_make_buffered_stream_lossy">
+<area shape="rect" id="node2" href="$buffer_8c.html#af9b556533e13f09649c7c3b5ce02cccb" title="Get the oldest element in the buffer. " alt="" coords="237,5,317,32"/>
+<area shape="rect" id="node3" href="$buffer_8c.html#add44caeb2f793acec02cf886da81a36a" title="Stores data in the buffer even of it overwrites existing data. " alt="" coords="218,56,337,83"/>
+<area shape="rect" id="node5" href="$buffer_8c.html#ab3e3f881e73136f2672e0a51db8fef69" title="Returns the number of available bytes in the buffer. " alt="" coords="201,107,353,133"/>
+<area shape="rect" id="node4" href="$buffer_8c.html#aae9c1b06882ae095a3d7955c0ece8387" title="Tests whether the buffer is full. " alt="" coords="401,56,480,83"/>
+</map>

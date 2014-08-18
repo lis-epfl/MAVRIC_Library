@@ -1,0 +1,11 @@
+<map id="flashc_set_bootloader_protected_size" name="flashc_set_bootloader_protected_size">
+<area shape="rect" id="node2" href="$flashc_8c.html#a8969b973563adb568121db44768a2246" title="Sets a general&#45;purpose fuse bit&#45;field with the appropriate erase and write operations. " alt="" coords="210,34,345,75"/>
+<area shape="rect" id="node9" href="$flashc_8c.html#a83ed88a41076163bd29ca80d30cb094f" title="Gets the bootloader protected size. " alt="" coords="203,99,352,141"/>
+<area shape="rect" id="node3" href="$flashc_8c.html#a63c172f89cfe0f3e3cf1c6eadc62f5f5" title="Sets a general&#45;purpose fuse bit with the appropriate erase and write operations. " alt="" coords="400,41,556,68"/>
+<area shape="rect" id="node4" href="$flashc_8c.html#ac5454efcadb99899bfe075b463a2e6dd" title="Erases a general&#45;purpose fuse bit. " alt="" coords="604,56,775,83"/>
+<area shape="rect" id="node8" href="$flashc_8c.html#a70af318e71334255931a6638d2fa693c" title="Writes a general&#45;purpose fuse bit. " alt="" coords="606,5,773,32"/>
+<area shape="rect" id="node5" href="$flashc_8c.html#a8045c427c32cf3617e861067d76c9c11" title="Issues a FLASHC command. " alt="" coords="825,5,983,32"/>
+<area shape="rect" id="node6" href="$flashc_8c.html#a41488c15448086169266af4936ea7926" title="Reads a general&#45;purpose fuse bit. " alt="" coords="823,56,985,83"/>
+<area shape="rect" id="node7" href="$flashc_8c.html#a08124caa02942b5fa1d370a81a84dfb5" title="Reads all general&#45;purpose fuses. " alt="" coords="1033,74,1164,115"/>
+<area shape="rect" id="node10" href="$flashc_8c.html#a0a0ce2691a31e0d529ec1143d61c4a86" title="Reads a general&#45;purpose fuse bit&#45;field. " alt="" coords="407,99,549,141"/>
+</map>

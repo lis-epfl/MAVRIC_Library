@@ -1,0 +1,18 @@
+<map id="/home/julien/Desktop/tmp/maveric/Code/Library/hal/ads1274.c" name="/home/julien/Desktop/tmp/maveric/Code/Library/hal/ads1274.c">
+<area shape="rect" id="node2" href="$ads1274_8h.html" title="ads1274.h" alt="" coords="683,109,766,136"/>
+<area shape="rect" id="node11" href="$gpio_8h.html" title="GPIO software driver interface for AVR UC3. " alt="" coords="281,184,339,211"/>
+<area shape="rect" id="node13" href="$tc_8h.html" title="Timer/Counter driver for AVR32 UC3. " alt="" coords="447,109,491,136"/>
+<area shape="rect" id="node14" href="$scif__uc3c_8h.html" title="System Control InterFace(SCIF) driver interface. " alt="" coords="116,184,205,211"/>
+<area shape="rect" id="node16" href="$eic_8h.html" title="EIC driver for AVR32 UC3. " alt="" coords="245,109,295,136"/>
+<area shape="rect" id="node17" href="$intc_8h.html" title="INTC driver for AVR32 UC3. " alt="" coords="5,109,60,136"/>
+<area shape="rect" id="node18" href="$Library_2hal_2led_8h.html" title="AT32UC3C UC3C_EK board LEDs support package. " alt="" coords="90,109,141,136"/>
+<area shape="rect" id="node20" href="$spi__buffered_8h.html" title="spi_buffered.h" alt="" coords="805,109,909,136"/>
+<area shape="rect" id="node22" href="$dac__dma_8h.html" title="dac_dma.h" alt="" coords="541,109,628,136"/>
+<area shape="rect" id="node4" href="$preprocessor_8h.html" title="Preprocessor utils. " alt="" coords="971,184,1079,211"/>
+<area shape="rect" id="node10" href="$user__board_8h.html" title="User board definition template. " alt="" coords="797,184,895,211"/>
+<area shape="rect" id="node5" href="$tpaste_8h.html" title="Preprocessor token pasting utils. " alt="" coords="845,259,914,285"/>
+<area shape="rect" id="node6" href="$stringz_8h.html" title="Preprocessor stringizing utils. " alt="" coords="938,259,1010,285"/>
+<area shape="rect" id="node7" href="$mrepeat_8h.html" title="Preprocessor macro repeating utils. " alt="" coords="1034,259,1114,285"/>
+<area shape="rect" id="node21" href="$dma__channel__config_8h.html" title="dma_channel_config.h" alt="" coords="1103,184,1255,211"/>
+<area shape="rect" id="node23" href="$dacifb_8h.html" title="DACIFB header for AVR32 UC3. " alt="" coords="363,184,431,211"/>
+</map>

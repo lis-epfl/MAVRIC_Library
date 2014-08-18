@@ -1,0 +1,8 @@
+<map id="i2cxl_sonar_update" name="i2cxl_sonar_update">
+<area shape="rect" id="node2" href="$i2cxl__sonar_8c.html#afa2608fdf1c5616a1b6383e518a48648" title="Get the last measurement. " alt="" coords="202,5,361,32"/>
+<area shape="rect" id="node6" href="$i2cxl__sonar_8c.html#aa6d25cf1d4be349e5fdeea49331962db" title="Send range Command for the i2cxl_sonar. " alt="" coords="188,56,375,83"/>
+<area shape="rect" id="node3" href="$twim_8c.html#a21e795e5daf90f7d1296c639944bd572" title="Read multiple bytes from a TWI compatible slave device. " alt="" coords="424,5,507,32"/>
+<area shape="rect" id="node4" href="$twim_8c.html#ac2aa557dd4843af848081c10049cf29f" title="Disable the TWI interrupts and clear its status register. " alt="" coords="556,5,708,32"/>
+<area shape="rect" id="node5" href="$twim_8c.html#a62690e0414009d7ce7ab472a27c7726d" title="Information about the current status of the TWI Bus. " alt="" coords="585,56,679,83"/>
+<area shape="rect" id="node7" href="$twim_8c.html#a90a8d6459c3b882882a47ae614c1764f" title="Write multiple bytes to a TWI compatible slave device. " alt="" coords="423,56,508,83"/>
+</map>

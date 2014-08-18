@@ -1,0 +1,9 @@
+<map id="attitude_error_estimator_t" name="attitude_error_estimator_t">
+<area shape="rect" id="node2" href="$structquat__t.html" title="Unit quaternion. " alt="" coords="109,505,168,597"/>
+<area shape="rect" id="node3" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System. " alt="" coords="210,704,329,840"/>
+<area shape="rect" id="node4" href="$structmavlink__stream__t.html" title="Main structure for the mavlink stream module. " alt="" coords="207,491,332,612"/>
+<area shape="rect" id="node5" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status. " alt="" coords="102,299,237,377"/>
+<area shape="rect" id="node6" href="$struct____mavlink__message.html" title="{__mavlink_message\n|+ checksum\l+ magic\l+ len\l+ seq\l+ sysid\l+ compid\l+ msgid\l+ payload64\l|}" alt="" coords="5,13,147,193"/>
+<area shape="rect" id="node7" href="$struct____mavlink__status.html" title="{__mavlink_status\n|+ msg_received\l+ buffer_overrun\l+ parse_error\l+ parse_state\l+ packet_idx\l+ current_rx_seq\l+ current_tx_seq\l+ packet_rx_success_count\l+ packet_rx_drop_count\l|}" alt="" coords="171,5,357,200"/>
+<area shape="rect" id="node8" href="$structbyte__stream__t.html" title="Byte stream. " alt="" coords="261,263,385,413"/>
+</map>

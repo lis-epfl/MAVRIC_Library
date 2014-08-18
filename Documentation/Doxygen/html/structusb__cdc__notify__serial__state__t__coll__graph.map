@@ -1,0 +1,3 @@
+<map id="usb_cdc_notify_serial_state_t" name="usb_cdc_notify_serial_state_t">
+<area shape="rect" id="node2" href="$structusb__cdc__notify__msg__t.html" title="{usb_cdc_notify_msg_t\n|+ bmRequestType\l+ bNotification\l+ wValue\l+ wIndex\l+ wLength\l|}" alt="" coords="5,5,159,141"/>
+</map>

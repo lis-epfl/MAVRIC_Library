@@ -1,0 +1,3 @@
+<map id="imu_send_scaled" name="imu_send_scaled">
+<area shape="rect" id="node2" href="$mavlink__telemetry_8h.html#ab2e783bf88048c3d5a256968b2fad042" title="Initialise all the mavlink streams and call the onboard parameters register. " alt="" coords="176,5,328,32"/>
+</map>

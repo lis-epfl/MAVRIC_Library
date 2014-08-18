@@ -1,0 +1,4 @@
+<map id="spi_read_packet" name="spi_read_packet">
+<area shape="rect" id="node2" href="$uc3__spi_2spi__master_8h.html#afc0784fc74e3a9c6bbf5de5aa87a413f" title="Checks if all transmissions is ready. " alt="" coords="171,5,284,32"/>
+<area shape="rect" id="node3" href="$uc3__spi_2spi__master_8h.html#aa137d54c8ea3799cf6f2b2c710569be6" title="Checks if all reception is ready. " alt="" coords="171,56,284,83"/>
+</map>

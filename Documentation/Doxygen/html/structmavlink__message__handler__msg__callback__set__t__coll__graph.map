@@ -1,0 +1,4 @@
+<map id="mavlink_message_handler_msg_callback_set_t" name="mavlink_message_handler_msg_callback_set_t">
+<area shape="rect" id="node2" href="$structmavlink__message__handler__msg__callback__t.html" title="Message callback. " alt="" coords="5,248,181,384"/>
+<area shape="rect" id="node3" href="$struct____mavlink__message.html" title="{__mavlink_message\n|+ checksum\l+ magic\l+ len\l+ seq\l+ sysid\l+ compid\l+ msgid\l+ payload64\l|}" alt="" coords="23,5,164,185"/>
+</map>

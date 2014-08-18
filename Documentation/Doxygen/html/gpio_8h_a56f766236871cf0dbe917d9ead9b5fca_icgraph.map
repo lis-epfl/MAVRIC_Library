@@ -1,0 +1,4 @@
+<map id="gpio_set_pin_high" name="gpio_set_pin_high">
+<area shape="rect" id="node2" href="$radar__driver_8h.html#a7a2c0948c83362472a505e0463bfd246" title="Switch the radar power to high or low. " alt="" coords="180,5,315,47"/>
+<area shape="rect" id="node3" href="$radar__driver_8h.html#a807c7c13ab1b8f4ba6a87fcc1ba9cfe7" title="Initialize the radar driver. " alt="" coords="363,13,477,39"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="twim_probe" name="twim_probe">
+<area shape="rect" id="node2" href="$hmc5883l_8h.html#a358a6d5c63bc570c625b882e17ce60ce" title="Initializes the magnetometer sensor in slow mode. " alt="" coords="143,5,279,32"/>
+<area shape="rect" id="node3" href="$lsm330dlc_8h.html#aac449e37e20cd1bc6cab8034bf9f21e1" title="Initialize the LSM330 accelerometer+gyroscope sensor. " alt="" coords="158,56,263,83"/>
+<area shape="rect" id="node4" href="$twim_8h.html#ae9f6873316c684d6d0b0ed2e9b584352" title="Initialize the twi master module. " alt="" coords="150,107,271,133"/>
+<area shape="rect" id="node5" href="$i2c__driver__int_8c.html#ab89cf2aa9741bf7d6ef45bd531cd1324" title="Initialize the i2c driver. " alt="" coords="337,81,439,108"/>
+<area shape="rect" id="node6" href="$itg3200_8h.html#a9e5303a8b4555d9a1537c586f86aeedf" title="Initialize the gyroscope sensor in slow mode. " alt="" coords="327,132,449,159"/>
+</map>

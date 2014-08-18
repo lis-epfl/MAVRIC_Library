@@ -1,0 +1,4 @@
+<map id="scheduler_update" name="scheduler_update">
+<area shape="rect" id="node2" href="$mavlink__communication_8h.html#a96b84def01059bd867200755c7ab651e" title="Run task scheduler update if the buffer is empty. " alt="" coords="177,5,340,47"/>
+<area shape="rect" id="node3" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="388,13,524,39"/>
+</map>

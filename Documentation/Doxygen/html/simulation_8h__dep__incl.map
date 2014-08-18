@@ -1,0 +1,13 @@
+<map id="/home/julien/Desktop/tmp/maveric/Code/Library/sensing/simulation.h" name="/home/julien/Desktop/tmp/maveric/Code/Library/sensing/simulation.h">
+<area shape="rect" id="node2" href="$state__machine_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/communication/state_machine.h" alt="" coords="383,109,598,165"/>
+<area shape="rect" id="node3" href="$Maveric__myCopter_2src_2central__data_8h_source.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/central_data.h" alt="" coords="393,213,588,269"/>
+<area shape="rect" id="node10" href="$Library_2tests_2config_2central__data_8h_source.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/tests/config/central_data.h" alt="" coords="737,213,917,269"/>
+<area shape="rect" id="node12" href="$conf__sim__model_8h_source.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/tests/config/conf_sim_model.h" alt="" coords="725,109,929,165"/>
+<area shape="rect" id="node4" href="$simulation_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/sensing/simulation.c" alt="" coords="5,317,181,373"/>
+<area shape="rect" id="node5" href="$main_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/tests/main.c" alt="" coords="164,421,340,477"/>
+<area shape="rect" id="node6" href="$Maveric__myCopter_2src_2boardsupport_8h_source.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/boardsupport.h" alt="" coords="255,317,454,373"/>
+<area shape="rect" id="node7" href="$main_8cpp.html" title="Empty user application template. " alt="" coords="382,421,565,477"/>
+<area shape="rect" id="node8" href="$mavlink__telemetry_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/mavlink_telemetry.c" alt="" coords="528,317,757,373"/>
+<area shape="rect" id="node9" href="$tasks_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/tasks.c" alt="" coords="782,317,965,373"/>
+<area shape="rect" id="node11" href="$Library_2tests_2config_2boardsupport_8h_source.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/tests/config/boardsupport.h" alt="" coords="989,317,1173,373"/>
+</map>

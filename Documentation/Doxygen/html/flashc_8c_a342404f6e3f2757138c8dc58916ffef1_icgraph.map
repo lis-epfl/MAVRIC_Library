@@ -1,0 +1,6 @@
+<map id="flashc_memcpy" name="flashc_memcpy">
+<area shape="rect" id="node2" href="$onboard__parameters_8h.html#ab1203eb9fa38408e1af85261dd45835d" title="Write onboard parameters to the RAM memory from the user page in the flash memory. " alt="" coords="168,5,315,61"/>
+<area shape="rect" id="node3" href="$onboard__parameters_8h.html#a3bcfdc153958f7a73de616c967631bb6" title="Read/Write from/to flash depending on the parameters of the mavlink command message. " alt="" coords="363,13,503,54"/>
+<area shape="rect" id="node4" href="$onboard__parameters_8h.html#a24a0e3302dce0d6bf857f271b0b0e5a2" title="Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0..." alt="" coords="551,20,715,47"/>
+<area shape="rect" id="node5" href="$mavlink__communication_8h.html#ab7e6b45cdb27b39e81c60cc716d0613e" title="Initialisation of the module mavlink communication. " alt="" coords="763,20,949,47"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="pid_controller_t" name="pid_controller_t">
+<area shape="rect" id="node2" href="$structdifferentiator__t.html" title="{differentiator_t\n|+ gain\l+ previous\l+ LPF\l+ maths_clip\l|}" alt="" coords="5,13,111,134"/>
+<area shape="rect" id="node3" href="$structintegrator__t.html" title="{integrator_t\n|+ pregain\l+ postgain\l+ accumulator\l+ maths_clip\l+ leakiness\l|}" alt="" coords="135,5,240,141"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="pdca_init_channel" name="pdca_init_channel">
+<area shape="rect" id="node2" href="$pdca_8c.html#ab50a6b2763b5097fc0561dbf515658bb" title="Get PDCA channel handler. " alt="" coords="380,33,504,59"/>
+<area shape="rect" id="node3" href="$pdca_8c.html#a2b696afb911759981b06da3f1edd04c4" title="Disable PDCA transfer interrupt when completed (ie TCR and TCRR are both zero) " alt="" coords="180,25,332,67"/>
+<area shape="rect" id="node4" href="$pdca_8c.html#a078d53cc63f5037fd923efc0aae9f1fc" title="Disable PDCA transfer interrupt when TCRR reaches zero. " alt="" coords="180,91,332,132"/>
+</map>

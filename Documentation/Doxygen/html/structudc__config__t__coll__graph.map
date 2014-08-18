@@ -1,0 +1,6 @@
+<map id="udc_config_t" name="udc_config_t">
+<area shape="rect" id="node2" href="$structusb__dev__desc__t.html" title="Standard USB device descriptor stucture. " alt="" coords="5,248,159,516"/>
+<area shape="rect" id="node3" href="$structudc__config__speed__t.html" title="Configuration descriptor and UDI link for one USB speed. " alt="" coords="183,343,322,421"/>
+<area shape="rect" id="node4" href="$structusb__conf__desc__t.html" title="Standard USB configuration descriptor structure. " alt="" coords="104,5,255,185"/>
+<area shape="rect" id="node5" href="$structudi__api__t.html" title="UDI API. " alt="" coords="279,27,370,163"/>
+</map>

@@ -1,0 +1,3 @@
+<map id="stabilisation_send_rpy_speed_thrust_setpoint" name="stabilisation_send_rpy_speed_thrust_setpoint">
+<area shape="rect" id="node2" href="$mavlink__telemetry_8h.html#ab2e783bf88048c3d5a256968b2fad042" title="Initialise all the mavlink streams and call the onboard parameters register. " alt="" coords="236,13,388,39"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="usart_init_rs232" name="usart_init_rs232">
+<area shape="rect" id="node2" href="$remote__dsm2_8h.html#afb1f0b64454e3a9e4b9750a30043e08b" title="Initialize UART receiver for Spektrum/DSM2 slave receivers. " alt="" coords="186,5,329,32"/>
+<area shape="rect" id="node3" href="$uart__int_8h.html#ad6d446e237b1255a2fc7e52e78eb0213" title="Initialize the UART line. " alt="" coords="213,56,302,83"/>
+<area shape="rect" id="node5" href="$usart_8h.html#adfacf6f496aa8131fbb5587ff4a2594c" title="Sets up the USART to use hardware handshaking. " alt="" coords="168,107,347,133"/>
+<area shape="rect" id="node6" href="$usart_8h.html#a528f0115991d4e9e15b4ccb44e7bf225" title="Sets up the USART to use the modem protocol, activating dedicated inputs/outputs. ..." alt="" coords="195,157,320,184"/>
+<area shape="rect" id="node7" href="$usart_8h.html#a31249a0033e1c21e42271f482ab81e22" title="Sets up the USART to use the RS485 protocol. " alt="" coords="200,208,315,235"/>
+<area shape="rect" id="node8" href="$usart_8h.html#a91b8eae5a6df18a73c16f86fe4109a61" title="Sets up the USART to use the IrDA protocol. " alt="" coords="203,259,312,285"/>
+<area shape="rect" id="node4" href="$console_8h.html#a2d508d92a343b8b93c79d1fec30af394" title="Initialize the console module. " alt="" coords="395,56,485,83"/>
+</map>

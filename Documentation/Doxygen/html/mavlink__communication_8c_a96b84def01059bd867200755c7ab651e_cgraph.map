@@ -1,0 +1,11 @@
+<map id="mavlink_communication_update" name="mavlink_communication_update">
+<area shape="rect" id="node2" href="$mavlink__stream_8c.html#ab8d6587551e9d250cf4fd2b7d0616569" title="Mavlink parsing of message. " alt="" coords="223,5,385,32"/>
+<area shape="rect" id="node3" href="$mavlink__message__handler_8c.html#a1d3a01dee89b7d9635fe0ba59338e721" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="216,57,392,98"/>
+<area shape="rect" id="node10" href="$scheduler_8c.html#a808b0315e166878a3c0524950a624e24" title="Run update (check for tasks ready for execution and execute them) " alt="" coords="242,123,366,149"/>
+<area shape="rect" id="node4" href="$mavlink__message__handler_8c.html#a50e84ea014e579b8091c67fc4c741024" title="Dummy message callback for debug purpose. " alt="" coords="440,57,616,98"/>
+<area shape="rect" id="node5" href="$print__util_8c.html#a1b15f576d0bc830fc09c11d034077c43" title="Writes a character string to the debug stream. " alt="" coords="680,39,811,65"/>
+<area shape="rect" id="node7" href="$print__util_8c.html#a025d6572ba94f96eb7af0631e2957fbd" title="Writes a number in any base to the debug stream. " alt="" coords="664,105,827,132"/>
+<area shape="rect" id="node6" href="$print__util_8c.html#ae0e520f47e2bfa8e497d3e656e5a9144" title="Writes string of character to a stream. " alt="" coords="875,39,1003,65"/>
+<area shape="rect" id="node8" href="$print__util_8c.html#a3f6c96ce9559fb6c4d1d07480da77117" title="Writes a number in any base to a stream. " alt="" coords="878,105,999,132"/>
+<area shape="rect" id="node9" href="$print__util_8c.html#a1ae199e97454e1a94871ab360218629d" title="Writes an alphabet character to a stream,. " alt="" coords="1051,105,1171,132"/>
+</map>

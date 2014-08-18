@@ -1,0 +1,4 @@
+<map id="twim_read" name="twim_read">
+<area shape="rect" id="node2" href="$twim_8c.html#ac2aa557dd4843af848081c10049cf29f" title="Disable the TWI interrupts and clear its status register. " alt="" coords="136,5,288,32"/>
+<area shape="rect" id="node3" href="$twim_8c.html#a62690e0414009d7ce7ab472a27c7726d" title="Information about the current status of the TWI Bus. " alt="" coords="165,56,259,83"/>
+</map>

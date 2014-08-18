@@ -1,0 +1,9 @@
+<map id="onboard_parameters_t" name="onboard_parameters_t">
+<area shape="rect" id="node2" href="$structonboard__parameters__set__t.html" title="Set of onboard parameters. " alt="" coords="44,513,185,619"/>
+<area shape="rect" id="node3" href="$structonboard__parameters__entry__t.html" title="Structure of onboard parameter. " alt="" coords="5,263,195,428"/>
+<area shape="rect" id="node4" href="$structmavlink__stream__t.html" title="Main structure for the mavlink stream module. " alt="" coords="224,505,349,627"/>
+<area shape="rect" id="node5" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status. " alt="" coords="219,307,354,384"/>
+<area shape="rect" id="node6" href="$struct____mavlink__message.html" title="{__mavlink_message\n|+ checksum\l+ magic\l+ len\l+ seq\l+ sysid\l+ compid\l+ msgid\l+ payload64\l|}" alt="" coords="121,13,263,193"/>
+<area shape="rect" id="node7" href="$struct____mavlink__status.html" title="{__mavlink_status\n|+ msg_received\l+ buffer_overrun\l+ parse_error\l+ parse_state\l+ packet_idx\l+ current_rx_seq\l+ current_tx_seq\l+ packet_rx_success_count\l+ packet_rx_drop_count\l|}" alt="" coords="287,5,473,200"/>
+<area shape="rect" id="node8" href="$structbyte__stream__t.html" title="Byte stream. " alt="" coords="378,270,502,421"/>
+</map>

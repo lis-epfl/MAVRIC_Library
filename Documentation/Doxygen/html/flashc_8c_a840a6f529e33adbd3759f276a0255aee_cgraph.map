@@ -1,0 +1,7 @@
+<map id="flashc_erase_gp_fuse_bitfield" name="flashc_erase_gp_fuse_bitfield">
+<area shape="rect" id="node2" href="$flashc_8c.html#ac5454efcadb99899bfe075b463a2e6dd" title="Erases a general&#45;purpose fuse bit. " alt="" coords="203,48,373,75"/>
+<area shape="rect" id="node6" href="$flashc_8c.html#a0a0ce2691a31e0d529ec1143d61c4a86" title="Reads a general&#45;purpose fuse bit&#45;field. " alt="" coords="217,99,359,141"/>
+<area shape="rect" id="node3" href="$flashc_8c.html#a8045c427c32cf3617e861067d76c9c11" title="Issues a FLASHC command. " alt="" coords="423,5,582,32"/>
+<area shape="rect" id="node4" href="$flashc_8c.html#a41488c15448086169266af4936ea7926" title="Reads a general&#45;purpose fuse bit. " alt="" coords="421,56,584,83"/>
+<area shape="rect" id="node5" href="$flashc_8c.html#a08124caa02942b5fa1d370a81a84dfb5" title="Reads all general&#45;purpose fuses. " alt="" coords="632,74,763,115"/>
+</map>

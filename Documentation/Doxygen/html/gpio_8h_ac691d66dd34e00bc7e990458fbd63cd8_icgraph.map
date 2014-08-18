@@ -1,0 +1,7 @@
+<map id="gpio_set_pin_low" name="gpio_set_pin_low">
+<area shape="rect" id="node2" href="$radar__driver_8h.html#a7a2c0948c83362472a505e0463bfd246" title="Switch the radar power to high or low. " alt="" coords="191,5,325,47"/>
+<area shape="rect" id="node4" href="$remote__dsm2_8h.html#a017be761caf078c365384cfed1f963f3" title="Power&#45;on/off the receiver. " alt="" coords="176,71,340,112"/>
+<area shape="rect" id="node3" href="$radar__driver_8h.html#a807c7c13ab1b8f4ba6a87fcc1ba9cfe7" title="Initialize the radar driver. " alt="" coords="417,13,531,39"/>
+<area shape="rect" id="node5" href="$remote__dsm2_8h.html#a089c29fb52690547e75040644e243441" title="set slave receiver into bind mode. has to be called 100ms after power&#45;up " alt="" coords="388,67,560,108"/>
+<area shape="rect" id="node6" href="$remote__dsm2_8h.html#afb1f0b64454e3a9e4b9750a30043e08b" title="Initialize UART receiver for Spektrum/DSM2 slave receivers. " alt="" coords="403,133,545,159"/>
+</map>

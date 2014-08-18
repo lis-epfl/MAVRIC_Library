@@ -1,0 +1,7 @@
+<map id="twim_master_init" name="twim_master_init">
+<area shape="rect" id="node2" href="$twim_8c.html#ad866d124a926d7c51f91e50448ca2c02" title="Set the twim bus speed in cojunction with the clock frequency. " alt="" coords="175,5,292,32"/>
+<area shape="rect" id="node3" href="$twim_8c.html#aa9d1a4b6781713c05f04fdee5b26524b" title="Test if a chip answers for a given twi address. " alt="" coords="189,56,278,83"/>
+<area shape="rect" id="node4" href="$twim_8c.html#a90a8d6459c3b882882a47ae614c1764f" title="Write multiple bytes to a TWI compatible slave device. " alt="" coords="340,56,425,83"/>
+<area shape="rect" id="node5" href="$twim_8c.html#ac2aa557dd4843af848081c10049cf29f" title="Disable the TWI interrupts and clear its status register. " alt="" coords="473,31,625,57"/>
+<area shape="rect" id="node6" href="$twim_8c.html#a62690e0414009d7ce7ab472a27c7726d" title="Information about the current status of the TWI Bus. " alt="" coords="503,81,596,108"/>
+</map>

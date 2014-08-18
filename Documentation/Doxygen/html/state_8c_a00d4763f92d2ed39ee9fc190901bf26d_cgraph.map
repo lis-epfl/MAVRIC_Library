@@ -1,0 +1,9 @@
+<map id="state_init" name="state_init">
+<area shape="rect" id="node2" href="$state_8c.html#a76c89f023f7b49201d712f3c5ab15291" title="Set the state and the mode of the vehicle. " alt="" coords="143,94,289,120"/>
+<area shape="rect" id="node3" href="$print__util_8c.html#a1b15f576d0bc830fc09c11d034077c43" title="Writes a character string to the debug stream. " alt="" coords="368,35,499,62"/>
+<area shape="rect" id="node8" href="$mavlink__message__handler_8c.html#afa96770432682d3400c99db2e9453b1e" title="Registers a new callback for a message. " alt="" coords="128,28,304,69"/>
+<area shape="rect" id="node5" href="$print__util_8c.html#a025d6572ba94f96eb7af0631e2957fbd" title="Writes a number in any base to the debug stream. " alt="" coords="352,94,515,120"/>
+<area shape="rect" id="node4" href="$print__util_8c.html#ae0e520f47e2bfa8e497d3e656e5a9144" title="Writes string of character to a stream. " alt="" coords="563,35,691,62"/>
+<area shape="rect" id="node6" href="$print__util_8c.html#a3f6c96ce9559fb6c4d1d07480da77117" title="Writes a number in any base to a stream. " alt="" coords="566,94,687,120"/>
+<area shape="rect" id="node7" href="$print__util_8c.html#a1ae199e97454e1a94871ab360218629d" title="Writes an alphabet character to a stream,. " alt="" coords="739,94,859,120"/>
+</map>

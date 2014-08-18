@@ -1,0 +1,9 @@
+<map id="udi_cdc_is_tx_ready" name="udi_cdc_is_tx_ready">
+<area shape="rect" id="node2" href="$group__udi__cdc__group.html#ga8faae3fcf4911017c0fcf0aa127179f6" title="Puts a byte on CDC line The type int is used to support printf redirection from compiler LIB..." alt="" coords="209,42,307,69"/>
+<area shape="rect" id="node8" href="$group__udi__cdc__group.html#ga88f09b3f954620d37bf882e6d1874c42" title="Writes a RAM buffer on CDC line. " alt="" coords="195,93,321,119"/>
+<area shape="rect" id="node3" href="$stdio__usb_8h.html#a07c3b80d140391730f02f0e2207f8d43" title="Sends a character with the USART. " alt="" coords="369,42,497,69"/>
+<area shape="rect" id="node4" href="$usb__int_8h.html#a0c42a8a63d30428a19658d279c966a19" title="Blocking operation to retrieve a received byte from uart. " alt="" coords="545,15,676,42"/>
+<area shape="rect" id="node6" href="$stdio__usb_8h.html#a13fa4745188ecfee152577f8788a5a63" title="Initializes the stdio in USB Serial Mode. " alt="" coords="559,67,662,94"/>
+<area shape="rect" id="node5" href="$usb__int_8h.html#ac8a0884c5fd73b4b727e24d244ef8a42" title="Blocking operation to flush the uart buffer. Returns once the last byte has been passed to hardware f..." alt="" coords="724,5,873,47"/>
+<area shape="rect" id="node7" href="$usb__int_8h.html#a74807cf258f255fd79322c09e5de8b39" title="Initialize the USB line. " alt="" coords="755,71,843,98"/>
+</map>

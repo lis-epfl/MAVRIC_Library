@@ -1,0 +1,6 @@
+<map id="gpio_enable_module" name="gpio_enable_module">
+<area shape="rect" id="node2" href="$adc__int_8h.html#a2c1617986d66967f06ec981ed270e370" title="Initializes ADC (configures Pins, starts Clock, sets defaults) " alt="" coords="221,5,309,32"/>
+<area shape="rect" id="node3" href="$dac__dma_8h.html#abbf4defe49d4e22a549f081e287baa29" title="Initialize the DAC module. " alt="" coords="215,56,314,83"/>
+<area shape="rect" id="node4" href="$remote__dsm2_8h.html#afb1f0b64454e3a9e4b9750a30043e08b" title="Initialize UART receiver for Spektrum/DSM2 slave receivers. " alt="" coords="193,107,336,133"/>
+<area shape="rect" id="node5" href="$init_8c.html#a916f2adc2080b4fe88034086d107a8dc" title="This function initializes the board target resources. " alt="" coords="225,157,304,184"/>
+</map>

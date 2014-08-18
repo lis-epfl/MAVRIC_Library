@@ -1,0 +1,4 @@
+<map id="usart_init_modem" name="usart_init_modem">
+<area shape="rect" id="node2" href="$usart_8c.html#af8b81384234af455b491c44447d896f1" title="Sets up the USART to use the standard RS232 protocol. " alt="" coords="179,5,293,32"/>
+<area shape="rect" id="node3" href="$usart_8c.html#a31cf4d67fd204fb4684fff9d7994cb4c" title="Resets the USART and disables TX and RX. " alt="" coords="341,5,428,32"/>
+</map>

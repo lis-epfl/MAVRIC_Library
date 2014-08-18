@@ -1,0 +1,40 @@
+<map id="print_util_putdigit" name="print_util_putdigit">
+<area shape="rect" id="node2" href="$print__util_8h.html#a3f6c96ce9559fb6c4d1d07480da77117" title="Writes a number in any base to a stream. " alt="" coords="173,700,295,727"/>
+<area shape="rect" id="node29" href="$print__util_8c.html#a3aaeefe21337ee19dc1ea049d8f07cec" title="putnum_tight" alt="" coords="185,978,283,1004"/>
+<area shape="rect" id="node30" href="$print__util_8h.html#a3f1691d3142531df49b02662a036f28e" title="Writes a float to a stream. " alt="" coords="363,1028,485,1055"/>
+<area shape="rect" id="node3" href="$print__util_8h.html#a025d6572ba94f96eb7af0631e2957fbd" title="Writes a number in any base to the debug stream. " alt="" coords="343,474,505,500"/>
+<area shape="rect" id="node4" href="$mavlink__message__handler_8h.html#a50e84ea014e579b8091c67fc4c741024" title="Dummy message callback for debug purpose. " alt="" coords="553,109,729,150"/>
+<area shape="rect" id="node5" href="$mavlink__message__handler_8h.html#a1d3a01dee89b7d9635fe0ba59338e721" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="777,109,953,150"/>
+<area shape="rect" id="node8" href="$mavlink__message__handler_8h.html#a30c7e3e36ff65b47536cc78ce159d0b9" title="Dummy command callback for debug purpose. " alt="" coords="553,342,729,384"/>
+<area shape="rect" id="node9" href="$mavlink__waypoint__handler_8h.html#adf09a736bd708631e05706a92d3c3c8b" title="Initialize a list of hardcoded waypoints. " alt="" coords="568,408,715,449"/>
+<area shape="rect" id="node10" href="$mavlink__waypoint__handler_8h.html#af44ebd0e018d792019f377952ddc05e1" title="Initialize a first waypoint if a flight plan is set. " alt="" coords="790,309,941,350"/>
+<area shape="rect" id="node11" href="$navigation_8h.html#ab3aa816251fea36305526225b4f4889d" title="Drives the automatic takeoff procedure. " alt="" coords="1025,229,1165,270"/>
+<area shape="rect" id="node14" href="$navigation_8h.html#af2c74e770198edb11975c57885ddf171" title="Drives the GPS navigation procedure. " alt="" coords="1025,462,1165,504"/>
+<area shape="rect" id="node15" href="$tasks_8h.html#a417b414354ec97dfdd0743a526e16bf0" title="Updates the state and mode of the UAV. " alt="" coords="1242,492,1393,533"/>
+<area shape="rect" id="node16" href="$mavlink__waypoint__handler_8h.html#a6b75b16911048bb83e8dd4476f54d103" title="Set the waypoint depending on the reference frame defined in the current_waypoint structure..." alt="" coords="564,277,719,318"/>
+<area shape="rect" id="node17" href="$state_8h.html#a76c89f023f7b49201d712f3c5ab15291" title="Set the state and the mode of the vehicle. " alt="" coords="568,692,715,719"/>
+<area shape="rect" id="node19" href="$navigation_8h.html#afa7cb8f034b5868959749e10cff3c010" title="Initialise the position hold mode. " alt="" coords="795,521,935,562"/>
+<area shape="rect" id="node20" href="$navigation_8h.html#a409b5ccf09fc416d0aac4dcfc5a33bba" title="Sets the automatic takeoff waypoint. " alt="" coords="795,229,935,270"/>
+<area shape="rect" id="node21" href="$orca_8h.html#afad4b42886910d4dba0d6c33ff96df28" title="Computes the new collision&#45;free velocity. " alt="" coords="1001,890,1188,916"/>
+<area shape="rect" id="node22" href="$position__estimation_8h.html#a58dfc2a384eed682d8cbf5c8fdf3db52" title="Reset the home position and altitude. " alt="" coords="568,794,715,836"/>
+<area shape="rect" id="node27" href="$simulation_8h.html#aabd70706588c351964edb55e236d4a1a" title="Initialize the simulation module. " alt="" coords="589,575,694,602"/>
+<area shape="rect" id="node28" href="$print__util_8h.html#a9711fc6391e0eb698bea5da7da783b43" title="Writes a log&#45;like message to the debug stream. " alt="" coords="580,626,703,668"/>
+<area shape="rect" id="node6" href="$mavlink__communication_8h.html#a96b84def01059bd867200755c7ab651e" title="Run task scheduler update if the buffer is empty. " alt="" coords="1236,240,1399,281"/>
+<area shape="rect" id="node7" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="1447,404,1583,431"/>
+<area shape="rect" id="node13" href="$navigation_8h.html#a02ce7ec34ea269ade7a9ad0eda6fca13" title="Drives the hold position procedure. " alt="" coords="1013,397,1177,438"/>
+<area shape="rect" id="node12" href="$navigation_8h.html#afb6120977e160b65322f554a8c5fc7ad" title="Navigates the robot towards waypoint waypoint_input in 3D velocity command mode. " alt="" coords="1254,404,1381,431"/>
+<area shape="rect" id="node18" href="$state_8h.html#a00d4763f92d2ed39ee9fc190901bf26d" title="Initialise the state of the MAV. " alt="" coords="828,667,903,694"/>
+<area shape="rect" id="node23" href="$position__estimation_8h.html#a574c95eef66368875c97b912a3eea5cb" title="Position estimation update step, performing position estimation then position correction (function to..." alt="" coords="798,820,933,861"/>
+<area shape="rect" id="node24" href="$tasks_8h.html#afc72040c3820b1b8f3336c205ebcba14" title="Updates the IMU. " alt="" coords="1018,823,1171,850"/>
+<area shape="rect" id="node25" href="$imu_8h.html#ad26e4a8057f844098be0f8a47985b379" title="To calibrate the gyros at startup (not used know) " alt="" coords="1248,823,1387,850"/>
+<area shape="rect" id="node26" href="$tasks_8h.html#a4067c810c5e22c2e7c019c48c865d525" title="Run the main stabilisation loop. " alt="" coords="1240,679,1395,706"/>
+<area shape="rect" id="node31" href="$print__util_8h.html#af85106cd60048fae03e21f72e5b1f113" title="Writes a vector to a stream. " alt="" coords="568,978,715,1004"/>
+<area shape="rect" id="node32" href="$print__util_8h.html#af9366433217ab476e39350282b11f2fc" title="Writes a quaternion to stream. " alt="" coords="780,1003,951,1030"/>
+<area shape="rect" id="node36" href="$print__util_8h.html#ada50a613fe76d39ee8d18b6878fef47d" title="Writes a matrix to a stream. " alt="" coords="568,1130,715,1156"/>
+<area shape="rect" id="node38" href="$print__util_8h.html#ae1dacc373cab24a458bbd0ca7188a91e" title="Writes a floating point value to the debug stream. " alt="" coords="567,1079,716,1106"/>
+<area shape="rect" id="node35" href="$print__util_8h.html#a9c0b06395fb401006db851ba885e8763" title="Writes a vector to the debug stream. " alt="" coords="800,937,931,978"/>
+<area shape="rect" id="node33" href="$print__util_8h.html#a54434ddcf4d0ed8aac66449c0afdfde6" title="Writes a quaternion to the debug stream. " alt="" coords="1029,993,1160,1034"/>
+<area shape="rect" id="node34" href="$test__maths_8h.html#a00c7ea31e5e57dd2bc7547dbc392c39f" title="run the math functions " alt="" coords="1261,1000,1373,1027"/>
+<area shape="rect" id="node37" href="$test__small__matrix_8h.html#ac1d86ad36da7a5d98f59a4a1bee58f85" title="Run tests on matrix. " alt="" coords="806,1160,925,1187"/>
+<area shape="rect" id="node39" href="$test__quick__trig_8c.html#a9bb63804820df5df883d660569a32e19" title="Show the simplyfied trigonometric functions profile. " alt="" coords="805,1110,925,1136"/>
+</map>

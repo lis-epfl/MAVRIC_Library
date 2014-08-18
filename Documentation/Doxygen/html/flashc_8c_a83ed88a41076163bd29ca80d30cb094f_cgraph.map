@@ -1,0 +1,4 @@
+<map id="flashc_get_bootloader_protected_size" name="flashc_get_bootloader_protected_size">
+<area shape="rect" id="node2" href="$flashc_8c.html#a0a0ce2691a31e0d529ec1143d61c4a86" title="Reads a general&#45;purpose fuse bit&#45;field. " alt="" coords="203,5,345,47"/>
+<area shape="rect" id="node3" href="$flashc_8c.html#a08124caa02942b5fa1d370a81a84dfb5" title="Reads all general&#45;purpose fuses. " alt="" coords="393,5,524,47"/>
+</map>

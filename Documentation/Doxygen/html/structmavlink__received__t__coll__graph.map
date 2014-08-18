@@ -1,0 +1,4 @@
+<map id="mavlink_received_t" name="mavlink_received_t">
+<area shape="rect" id="node2" href="$struct____mavlink__message.html" title="{__mavlink_message\n|+ checksum\l+ magic\l+ len\l+ seq\l+ sysid\l+ compid\l+ msgid\l+ payload64\l|}" alt="" coords="5,13,147,193"/>
+<area shape="rect" id="node3" href="$struct____mavlink__status.html" title="{__mavlink_status\n|+ msg_received\l+ buffer_overrun\l+ parse_error\l+ parse_state\l+ packet_idx\l+ current_rx_seq\l+ current_tx_seq\l+ packet_rx_success_count\l+ packet_rx_drop_count\l|}" alt="" coords="171,5,357,200"/>
+</map>

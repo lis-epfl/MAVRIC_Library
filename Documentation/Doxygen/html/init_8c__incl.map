@@ -1,0 +1,5 @@
+<map id="/home/julien/Desktop/tmp/maveric/Code/Maveric_myCopter/src/asf/common/boards/user_board/init.c" name="/home/julien/Desktop/tmp/maveric/Code/Maveric_myCopter/src/asf/common/boards/user_board/init.c">
+<area shape="rect" id="node2" href="$board_8h.html" title="Standard board header file. " alt="" coords="181,124,247,151"/>
+<area shape="rect" id="node4" href="$conf__board_8h.html" title="User board configuration template. " alt="" coords="223,199,320,225"/>
+<area shape="rect" id="node5" href="$gpio_8h.html" title="GPIO software driver interface for AVR UC3. " alt="" coords="48,124,105,151"/>
+</map>

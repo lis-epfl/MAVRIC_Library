@@ -1,0 +1,6 @@
+<map id="getBaudDiv" name="getBaudDiv">
+<area shape="rect" id="node2" href="$spi_8h.html#a5487ca1d63a13d055c803a6c96067a6f" title="Sets options for a specific slave chip. " alt="" coords="165,5,294,32"/>
+<area shape="rect" id="node3" href="$uc3__spi_2spi__master_8h.html#adb8e173ada01040ae56a5f5868b50449" title="Setup a SPI device. " alt="" coords="144,56,315,83"/>
+<area shape="rect" id="node4" href="$spi__buffered_8h.html#ae4ba5d5b188c9d61b6dc487f0003ad9b" title="Initialize SPI interface: this interface uses internal buffers and interrupts. Bytes in the outgoing ..." alt="" coords="363,56,480,83"/>
+<area shape="rect" id="node5" href="$ads1274_8h.html#a0176eb0c9771c53fff490bae17e5b227" title="Initializes ADC (configures Pins, starts Clock, sets defaults) " alt="" coords="528,56,659,83"/>
+</map>

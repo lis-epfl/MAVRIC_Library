@@ -1,0 +1,8 @@
+<map id="flashc_is_page_region_locked" name="flashc_is_page_region_locked">
+<area shape="rect" id="node2" href="$flashc_8c.html#a152b45f38eafcf708e52df5a814d048e" title="Tells whether a region is locked. " alt="" coords="204,5,365,32"/>
+<area shape="rect" id="node3" href="$flashc_8c.html#ac5871dc98c8812b0413efd6456508999" title="Gets the region number of a page. " alt="" coords="205,56,364,83"/>
+<area shape="rect" id="node4" href="$flashc_8c.html#adb51a37e3153c24e5dd6cf06daac0e21" title="Gets the current FLASHC page number. " alt="" coords="413,27,580,53"/>
+<area shape="rect" id="node5" href="$flashc_8c.html#a8910bcde3235e2af0770fbd2412b05bc" title="Gets the number of pages in each flash region. " alt="" coords="419,78,575,119"/>
+<area shape="rect" id="node6" href="$flashc_8c.html#aafad0dcf645cc65acb5bc879558dac23" title="Gets the total number of pages in the flash array. " alt="" coords="628,85,784,112"/>
+<area shape="rect" id="node7" href="$flashc_8c.html#a8071c315b02d038c49fa0bf89a40ba1b" title="Gets the size of the whole flash array. " alt="" coords="832,85,980,112"/>
+</map>

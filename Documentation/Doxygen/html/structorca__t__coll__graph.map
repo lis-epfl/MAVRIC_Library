@@ -1,0 +1,24 @@
+<map id="orca_t" name="orca_t">
+<area shape="rect" id="node2" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System. " alt="" coords="1094,785,1213,921"/>
+<area shape="rect" id="node9" href="$structposition__estimator__t.html" title="The position estimator structure. " alt="" coords="639,1064,823,1332"/>
+<area shape="rect" id="node3" href="$structmavlink__stream__t.html" title="Main structure for the mavlink stream module. " alt="" coords="775,498,900,619"/>
+<area shape="rect" id="node10" href="$structgps__t.html" title="Type definition for GPS data. " alt="" coords="163,741,282,965"/>
+<area shape="rect" id="node12" href="$structbarometer__t.html" title="structure containing all the barometer&#39;s data " alt="" coords="706,733,843,972"/>
+<area shape="rect" id="node13" href="$structstate__t.html" title="The state structure. " alt="" coords="335,719,523,987"/>
+<area shape="rect" id="node17" href="$structimu__t.html" title="The IMU structure. " alt="" coords="1286,799,1413,906"/>
+<area shape="rect" id="node22" href="$structneighbors__t.html" title="The neighbor structure. " alt="" coords="918,1395,1077,1487"/>
+<area shape="rect" id="node4" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status. " alt="" coords="770,299,905,377"/>
+<area shape="rect" id="node5" href="$struct____mavlink__message.html" title="{__mavlink_message\n|+ checksum\l+ magic\l+ len\l+ seq\l+ sysid\l+ compid\l+ msgid\l+ payload64\l|}" alt="" coords="673,13,815,193"/>
+<area shape="rect" id="node6" href="$struct____mavlink__status.html" title="{__mavlink_status\n|+ msg_received\l+ buffer_overrun\l+ parse_error\l+ parse_state\l+ packet_idx\l+ current_rx_seq\l+ current_tx_seq\l+ packet_rx_success_count\l+ packet_rx_drop_count\l|}" alt="" coords="839,5,1025,200"/>
+<area shape="rect" id="node7" href="$structbyte__stream__t.html" title="Byte stream. " alt="" coords="319,263,443,413"/>
+<area shape="rect" id="node8" href="$structquat__t.html" title="Unit quaternion. " alt="" coords="1213,513,1272,605"/>
+<area shape="rect" id="node11" href="$structBuffer__t.html" title="Buffer structure. " alt="" coords="141,498,243,619"/>
+<area shape="rect" id="node14" href="$structanalog__monitor__t.html" title="{analog_monitor_t\n|+ enable\l+ buffer\l+ avg\l|}" alt="" coords="267,505,389,612"/>
+<area shape="rect" id="node15" href="$structlocal__coordinates__t.html" title="Local coordinates. " alt="" coords="547,799,682,906"/>
+<area shape="rect" id="node16" href="$structglobal__position__t.html" title="Global position. " alt="" coords="504,491,624,627"/>
+<area shape="rect" id="node18" href="$structsensor__calib__t.html" title="Structure containing the accelero, gyro and magnetometer sensors&#39; gains. " alt="" coords="1296,498,1403,619"/>
+<area shape="rect" id="node19" href="$structgyroscope__t.html" title="structure for the gyroscope&#39;s data " alt="" coords="1427,491,1530,627"/>
+<area shape="rect" id="node20" href="$structmagnetometer__t.html" title="{magnetometer_t\n|+ data\l+ temperature\l+ last_update\l+ raw_data\l+ axes\l|}" alt="" coords="1554,491,1670,627"/>
+<area shape="rect" id="node21" href="$structaccelerometer__t.html" title="{accelerometer_t\n|+ data\l+ temperature\l+ last_update\l|}" alt="" coords="1697,505,1812,612"/>
+<area shape="rect" id="node23" href="$structtrack__neighbor__t.html" title="The track neighbor structure. " alt="" coords="847,1123,1004,1273"/>
+</map>

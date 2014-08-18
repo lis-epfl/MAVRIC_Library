@@ -1,0 +1,7 @@
+<map id="simulation_switch_between_reality_n_simulation" name="simulation_switch_between_reality_n_simulation">
+<area shape="rect" id="node2" href="$state_8c.html#af4ad3685b7fc334db6c5b700f68bc096" title="Test if the mode has the mode flag in it. " alt="" coords="236,5,415,32"/>
+<area shape="rect" id="node3" href="$print__util_8c.html#a1b15f576d0bc830fc09c11d034077c43" title="Writes a character string to the debug stream. " alt="" coords="260,56,391,83"/>
+<area shape="rect" id="node5" href="$simulation_8c.html#aa8c3091c7212f8211c9de811ce383b95" title="Sets the calibration to the &quot;real&quot; IMU values. " alt="" coords="255,107,395,133"/>
+<area shape="rect" id="node6" href="$state_8c.html#ac8a340fc0b37c9992b8302814dc3bec5" title="Enable the mode. " alt="" coords="258,157,393,184"/>
+<area shape="rect" id="node4" href="$print__util_8c.html#ae0e520f47e2bfa8e497d3e656e5a9144" title="Writes string of character to a stream. " alt="" coords="463,56,591,83"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="usb_config_t" name="usb_config_t">
+<area shape="rect" id="node2" href="$structusb__interface__t.html" title="{usb_interface_t\n|+ IRQ\l|}" alt="" coords="12,219,123,296"/>
+<area shape="rect" id="node3" href="$structbyte__stream__t.html" title="Byte stream. " alt="" coords="5,5,129,156"/>
+</map>

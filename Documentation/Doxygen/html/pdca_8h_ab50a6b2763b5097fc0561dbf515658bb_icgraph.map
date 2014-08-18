@@ -1,0 +1,26 @@
+<map id="pdca_get_handler" name="pdca_get_handler">
+<area shape="rect" id="node2" href="$pdca_8h.html#a08b3c4c7240ee1915d54e6a3b33268b8" title="Set the channel configuration. " alt="" coords="419,37,546,63"/>
+<area shape="rect" id="node7" href="$pdca_8h.html#a7a5d59faa50ddd35de674da51865ae0f" title="Get the PDCA channel transfer enable status. " alt="" coords="177,509,348,535"/>
+<area shape="rect" id="node8" href="$pdca_8h.html#a02f178a71a43989509d6dfa675a63ec6" title="Disable the PDCA for the given channel. " alt="" coords="213,458,312,485"/>
+<area shape="rect" id="node11" href="$pdca_8h.html#a79864b51af1b9b61ad32427ab200c489" title="Enable the PDCA for the given channel. " alt="" coords="215,357,310,383"/>
+<area shape="rect" id="node13" href="$pdca_8h.html#aee2e087a368cf392dc7569a13688bdf4" title="Get PDCA channel load size (or remaining size if transfer started) " alt="" coords="194,559,331,586"/>
+<area shape="rect" id="node14" href="$pdca_8h.html#a1b44de71879c40ba72dd8ca858d6ad82" title="Set PDCA channel load values. " alt="" coords="196,306,329,333"/>
+<area shape="rect" id="node15" href="$pdca_8h.html#aeca3cd93d9724fffb34a7bbcd0fd32d9" title="Get PDCA channel reload size. " alt="" coords="189,610,337,637"/>
+<area shape="rect" id="node16" href="$pdca_8h.html#aa26ab24eb4d11c2d27297d04fecbeeed" title="Set PDCA channel reload values. " alt="" coords="191,407,335,434"/>
+<area shape="rect" id="node17" href="$pdca_8h.html#ab50817daf1c7fe8177a9c39e83e1114e" title="Set the peripheral function to use with the PDCA channel. " alt="" coords="193,661,332,703"/>
+<area shape="rect" id="node18" href="$pdca_8h.html#ae7c5695da7326b49339cac224c344eec" title="Set the size of the transfer. " alt="" coords="184,727,341,754"/>
+<area shape="rect" id="node19" href="$pdca_8h.html#a0571a6e760357232492f8a3aee5ad8d4" title="Disable PDCA transfer error interrupt. " alt="" coords="187,779,339,820"/>
+<area shape="rect" id="node20" href="$pdca_8h.html#a8621d809bdd5f6747a5a302939277831" title="Enable PDCA transfer error interrupt. " alt="" coords="408,139,557,180"/>
+<area shape="rect" id="node21" href="$pdca_8h.html#a2b696afb911759981b06da3f1edd04c4" title="Disable PDCA transfer interrupt when completed (ie TCR and TCRR are both zero) " alt="" coords="187,123,339,164"/>
+<area shape="rect" id="node22" href="$pdca_8h.html#ace9a1468f53a4c5e400fc6dd15383c1c" title="Enable PDCA transfer interrupt when completed (ie TCR and TCRR are both zero) " alt="" coords="188,240,337,281"/>
+<area shape="rect" id="node23" href="$pdca_8h.html#a078d53cc63f5037fd923efc0aae9f1fc" title="Disable PDCA transfer interrupt when TCRR reaches zero. " alt="" coords="187,5,339,47"/>
+<area shape="rect" id="node24" href="$pdca_8h.html#a5c4287acf78b3dc7d2c851c3c39b5306" title="Enable PDCA transfer interrupt when TCRR reaches zero. " alt="" coords="188,844,337,885"/>
+<area shape="rect" id="node25" href="$pdca_8h.html#a752a5bd5c74cb4130c65ab7e574635f7" title="Get PDCA channel transfer status. " alt="" coords="178,910,347,937"/>
+<area shape="rect" id="node3" href="$dac__dma_8h.html#a87a82dcdbaed6a0e7f6395e42ba3e939" title="get the DAC sampling buffer " alt="" coords="621,87,768,114"/>
+<area shape="rect" id="node4" href="$i2c__driver__dma_8h.html#a3c3fff50b273a1bfc78cbc40bc78d8c3" title="Trigger an i2c request. " alt="" coords="634,197,755,239"/>
+<area shape="rect" id="node5" href="$spi__buffered_8h.html#a47b12734c1fe0382a4fd45a65e87bb2c" title="InitialiZe DMA&#45;based SPI transfer mode. " alt="" coords="617,37,772,63"/>
+<area shape="rect" id="node6" href="$ads1274_8h.html#a0176eb0c9771c53fff490bae17e5b227" title="Initializes ADC (configures Pins, starts Clock, sets defaults) " alt="" coords="820,37,951,63"/>
+<area shape="rect" id="node9" href="$dac__dma_8c.html#a5c3eda656384c3976ce643501a2bf1a4" title="intterupt handler for the DAC " alt="" coords="434,407,531,434"/>
+<area shape="rect" id="node10" href="$dac__dma_8h.html#a09d864dbda97751219b2729dc452e09b" title="Play a sound using the DAC. " alt="" coords="429,458,536,485"/>
+<area shape="rect" id="node12" href="$spi__buffered_8h.html#ab41d317e32ec06b116d581e76d56653f" title="specify a callback function, that gets called when a DMA transfer completes. start a DMA&#45;based transf..." alt="" coords="396,255,569,282"/>
+</map>

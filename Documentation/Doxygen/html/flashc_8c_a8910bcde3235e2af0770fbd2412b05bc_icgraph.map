@@ -1,0 +1,7 @@
+<map id="flashc_get_page_count_per_region" name="flashc_get_page_count_per_region">
+<area shape="rect" id="node2" href="$Maveric__myCopter_2src_2asf_2avr32_2drivers_2flashc_2flashc_8h.html#ac5871dc98c8812b0413efd6456508999" title="Gets the region number of a page. " alt="" coords="209,13,368,39"/>
+<area shape="rect" id="node4" href="$Maveric__myCopter_2src_2asf_2avr32_2drivers_2flashc_2flashc_8h.html#a43b14107d406ea9025f8947490c9ddcd" title="Gets the number of the first page of a region. " alt="" coords="212,64,365,105"/>
+<area shape="rect" id="node3" href="$Maveric__myCopter_2src_2asf_2avr32_2drivers_2flashc_2flashc_8h.html#a50d3b06a3a82ba1e7c56193c3c24f7ef" title="Tells whether the region of a page is locked. " alt="" coords="416,5,567,47"/>
+<area shape="rect" id="node5" href="$Maveric__myCopter_2src_2asf_2avr32_2drivers_2flashc_2flashc_8h.html#aefc77ff29ddc03fa5e605acd7f9eeb7c" title="Locks or unlocks a region. " alt="" coords="426,71,557,98"/>
+<area shape="rect" id="node6" href="$Maveric__myCopter_2src_2asf_2avr32_2drivers_2flashc_2flashc_8h.html#a8ec3c05f8b1a620a5014e2c066b7f0bf" title="Locks or unlocks all regions. " alt="" coords="615,71,772,98"/>
+</map>

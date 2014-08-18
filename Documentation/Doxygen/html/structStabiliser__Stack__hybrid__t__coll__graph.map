@@ -1,0 +1,12 @@
+<map id="Stabiliser_Stack_hybrid_t" name="Stabiliser_Stack_hybrid_t">
+<area shape="rect" id="node2" href="$structstabiliser__t.html" title="The structure used to control the vehicle with 4 PIDs. " alt="" coords="397,947,483,1024"/>
+<area shape="rect" id="node3" href="$structcontrol__command__t.html" title="The control command typedef. " alt="" coords="372,704,508,855"/>
+<area shape="rect" id="node4" href="$structmavlink__stream__t.html" title="Main structure for the mavlink stream module. " alt="" coords="221,498,347,619"/>
+<area shape="rect" id="node5" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status. " alt="" coords="102,299,237,377"/>
+<area shape="rect" id="node6" href="$struct____mavlink__message.html" title="{__mavlink_message\n|+ checksum\l+ magic\l+ len\l+ seq\l+ sysid\l+ compid\l+ msgid\l+ payload64\l|}" alt="" coords="5,13,147,193"/>
+<area shape="rect" id="node7" href="$struct____mavlink__status.html" title="{__mavlink_status\n|+ msg_received\l+ buffer_overrun\l+ parse_error\l+ parse_state\l+ packet_idx\l+ current_rx_seq\l+ current_tx_seq\l+ packet_rx_success_count\l+ packet_rx_drop_count\l|}" alt="" coords="171,5,357,200"/>
+<area shape="rect" id="node8" href="$structbyte__stream__t.html" title="Byte stream. " alt="" coords="261,263,385,413"/>
+<area shape="rect" id="node9" href="$structpid__controller__t.html" title="{pid_controller_t\n|+ p_gain\l+ clip_min\l+ clip_max\l+ output\l+ error\l+ last_update\l+ dt\l+ soft_zone_width\l|}" alt="" coords="531,689,661,869"/>
+<area shape="rect" id="node10" href="$structdifferentiator__t.html" title="{differentiator_t\n|+ gain\l+ previous\l+ LPF\l+ maths_clip\l|}" alt="" coords="478,498,583,619"/>
+<area shape="rect" id="node11" href="$structintegrator__t.html" title="{integrator_t\n|+ pregain\l+ postgain\l+ accumulator\l+ maths_clip\l+ leakiness\l|}" alt="" coords="607,491,713,627"/>
+</map>

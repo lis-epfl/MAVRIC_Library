@@ -1,0 +1,12 @@
+<map id="mavlink_message_handler_t" name="mavlink_message_handler_t">
+<area shape="rect" id="node2" href="$structmavlink__message__handler__msg__callback__set__t.html" title="Set of message callbacks. " alt="" coords="23,527,199,634"/>
+<area shape="rect" id="node3" href="$structmavlink__message__handler__msg__callback__t.html" title="Message callback. " alt="" coords="5,299,181,435"/>
+<area shape="rect" id="node4" href="$struct____mavlink__message.html" title="{__mavlink_message\n|+ checksum\l+ magic\l+ len\l+ seq\l+ sysid\l+ compid\l+ msgid\l+ payload64\l|}" alt="" coords="23,27,164,207"/>
+<area shape="rect" id="node9" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status. " alt="" coords="206,329,341,406"/>
+<area shape="rect" id="node5" href="$structmavlink__message__handler__cmd__callback__set__t.html" title="Set of command callbacks. " alt="" coords="383,527,559,634"/>
+<area shape="rect" id="node6" href="$structmavlink__message__handler__cmd__callback__t.html" title="Command callback. " alt="" coords="513,292,689,443"/>
+<area shape="rect" id="node7" href="$struct____mavlink__command__long__t.html" title="{__mavlink_command_long_t\n|+ param1\l+ param2\l+ param3\l+ param4\l+ param5\l+ param6\l+ param7\l+ command\l+ target_system\l+ target_component\l+ confirmation\l|}" alt="" coords="508,5,695,229"/>
+<area shape="rect" id="node8" href="$structmavlink__stream__t.html" title="Main structure for the mavlink stream module. " alt="" coords="229,520,355,641"/>
+<area shape="rect" id="node10" href="$struct____mavlink__status.html" title="{__mavlink_status\n|+ msg_received\l+ buffer_overrun\l+ parse_error\l+ parse_state\l+ packet_idx\l+ current_rx_seq\l+ current_tx_seq\l+ packet_rx_success_count\l+ packet_rx_drop_count\l|}" alt="" coords="188,20,375,215"/>
+<area shape="rect" id="node11" href="$structbyte__stream__t.html" title="Byte stream. " alt="" coords="365,292,489,443"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="navigation_waypoint_take_off_handler" name="navigation_waypoint_take_off_handler">
+<area shape="rect" id="node2" href="$navigation_8h.html#afb6120977e160b65322f554a8c5fc7ad" title="Navigates the robot towards waypoint waypoint_input in 3D velocity command mode. " alt="" coords="193,13,320,39"/>
+<area shape="rect" id="node3" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="368,13,504,39"/>
+</map>

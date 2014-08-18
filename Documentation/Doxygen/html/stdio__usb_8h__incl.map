@@ -1,0 +1,12 @@
+<map id="/home/julien/Desktop/tmp/maveric/Code/Maveric_myCopter/src/asf/common/utils/stdio/stdio_usb/stdio_usb.h" name="/home/julien/Desktop/tmp/maveric/Code/Maveric_myCopter/src/asf/common/utils/stdio/stdio_usb/stdio_usb.h">
+<area shape="rect" id="node4" href="$udc_8h.html" title="Interface of the USB Device Controller (UDC) " alt="" coords="158,124,213,151"/>
+<area shape="rect" id="node13" href="$udi__cdc_8h.html" title="USB Device Communication Device Class (CDC) interface definitions. " alt="" coords="266,124,345,151"/>
+<area shape="rect" id="node5" href="$conf__usb_8h.html" title="USB configuration file for CDC application. " alt="" coords="153,423,239,449"/>
+<area shape="rect" id="node8" href="$usb__protocol_8h.html" title="USB protocol definitions. " alt="" coords="369,423,476,449"/>
+<area shape="rect" id="node10" href="$udc__desc_8h.html" title="Common API for USB Device Interface. " alt="" coords="239,273,329,300"/>
+<area shape="rect" id="node12" href="$udd_8h.html" title="Common API for USB Device Drivers (UDD) " alt="" coords="246,199,301,225"/>
+<area shape="rect" id="node6" href="$udi__cdc__conf_8h.html" title="Default CDC configuration for a USB Device with a single interface. " alt="" coords="190,497,301,524"/>
+<area shape="rect" id="node7" href="$usb__protocol__cdc_8h.html" title="USB Communication Device Class (CDC) protocol definitions. " alt="" coords="342,572,477,599"/>
+<area shape="rect" id="node9" href="$usb__atmel_8h.html" title="All USB VIDs and PIDs from Atmel AVR applications. " alt="" coords="376,497,469,524"/>
+<area shape="rect" id="node11" href="$udi_8h.html" title="Common API for USB Device Interface. " alt="" coords="284,348,335,375"/>
+</map>

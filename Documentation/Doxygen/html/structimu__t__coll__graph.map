@@ -1,0 +1,11 @@
+<map id="imu_t" name="imu_t">
+<area shape="rect" id="node2" href="$structsensor__calib__t.html" title="Structure containing the accelero, gyro and magnetometer sensors&#39; gains. " alt="" coords="5,498,112,619"/>
+<area shape="rect" id="node3" href="$structgyroscope__t.html" title="structure for the gyroscope&#39;s data " alt="" coords="137,491,239,627"/>
+<area shape="rect" id="node4" href="$structmavlink__stream__t.html" title="Main structure for the mavlink stream module. " alt="" coords="264,498,389,619"/>
+<area shape="rect" id="node5" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status. " alt="" coords="145,299,279,377"/>
+<area shape="rect" id="node6" href="$struct____mavlink__message.html" title="{__mavlink_message\n|+ checksum\l+ magic\l+ len\l+ seq\l+ sysid\l+ compid\l+ msgid\l+ payload64\l|}" alt="" coords="48,13,189,193"/>
+<area shape="rect" id="node7" href="$struct____mavlink__status.html" title="{__mavlink_status\n|+ msg_received\l+ buffer_overrun\l+ parse_error\l+ parse_state\l+ packet_idx\l+ current_rx_seq\l+ current_tx_seq\l+ packet_rx_success_count\l+ packet_rx_drop_count\l|}" alt="" coords="213,5,400,200"/>
+<area shape="rect" id="node8" href="$structbyte__stream__t.html" title="Byte stream. " alt="" coords="303,263,427,413"/>
+<area shape="rect" id="node9" href="$structmagnetometer__t.html" title="{magnetometer_t\n|+ data\l+ temperature\l+ last_update\l+ raw_data\l+ axes\l|}" alt="" coords="414,491,530,627"/>
+<area shape="rect" id="node10" href="$structaccelerometer__t.html" title="{accelerometer_t\n|+ data\l+ temperature\l+ last_update\l|}" alt="" coords="557,505,672,612"/>
+</map>

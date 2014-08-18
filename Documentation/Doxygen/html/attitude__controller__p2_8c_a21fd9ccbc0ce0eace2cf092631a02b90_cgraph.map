@@ -1,0 +1,8 @@
+<map id="attitude_controller_p2_update" name="attitude_controller_p2_update">
+<area shape="rect" id="node2" href="$attitude__error__estimator_8c.html#af483d41b13b72775036cb7437e24f30a" title="Updates the reference attitude. " alt="" coords="179,5,337,47"/>
+<area shape="rect" id="node3" href="$attitude__error__estimator_8c.html#a411773f49b69b8f93abbe65baa3b1c0a" title="Function to update the reference attitude from Euler angles. " alt="" coords="179,71,337,112"/>
+<area shape="rect" id="node7" href="$attitude__error__estimator_8c.html#a1bee4668b8f879121bfc044e484069a2" title="Main update function, computes the local angular errors is roll, pitch and yaw. " alt="" coords="179,136,337,177"/>
+<area shape="rect" id="node4" href="$coord__conventions_8c.html#aebe85ccad5c6518ec57354c11dc3d687" title="Converts roll, pitch and yaw angles (with the aeronautics conventions) to an attitude quaternion..." alt="" coords="385,71,584,112"/>
+<area shape="rect" id="node5" href="$quick__trig_8c.html#a2ab13f452c4d3da2a81b517b27b8d464" title="Quick implementation of the cosinus function. " alt="" coords="632,53,739,79"/>
+<area shape="rect" id="node6" href="$quick__trig_8c.html#a2b47f8f6c24701d74b6ca885b568ecaa" title="Quick implementation of the sinus function. " alt="" coords="787,78,889,105"/>
+</map>

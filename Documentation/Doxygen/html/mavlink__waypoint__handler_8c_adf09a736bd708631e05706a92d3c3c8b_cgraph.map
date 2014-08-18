@@ -1,0 +1,7 @@
+<map id="waypoint_handler_init_waypoint_list" name="waypoint_handler_init_waypoint_list">
+<area shape="rect" id="node2" href="$print__util_8c.html#a1b15f576d0bc830fc09c11d034077c43" title="Writes a character string to the debug stream. " alt="" coords="216,5,347,32"/>
+<area shape="rect" id="node4" href="$print__util_8c.html#a025d6572ba94f96eb7af0631e2957fbd" title="Writes a number in any base to the debug stream. " alt="" coords="200,56,363,83"/>
+<area shape="rect" id="node3" href="$print__util_8c.html#ae0e520f47e2bfa8e497d3e656e5a9144" title="Writes string of character to a stream. " alt="" coords="411,5,539,32"/>
+<area shape="rect" id="node5" href="$print__util_8c.html#a3f6c96ce9559fb6c4d1d07480da77117" title="Writes a number in any base to a stream. " alt="" coords="414,56,535,83"/>
+<area shape="rect" id="node6" href="$print__util_8c.html#a1ae199e97454e1a94871ab360218629d" title="Writes an alphabet character to a stream,. " alt="" coords="587,56,707,83"/>
+</map>

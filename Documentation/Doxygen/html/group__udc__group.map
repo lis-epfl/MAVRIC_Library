@@ -1,0 +1,4 @@
+<map id="USB Device Controller (UDC)" name="USB Device Controller (UDC)">
+<area shape="rect" id="node1" href="$group__udc__desc__group.html" title="USB Device Descriptor" alt="" coords="396,13,555,39"/>
+<area shape="rect" id="node2" href="$group__usb__device__group.html" title="USB Stack Devices" alt="" coords="5,13,145,39"/>
+</map>

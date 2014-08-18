@@ -1,0 +1,6 @@
+<map id="waypoint_handler_init" name="waypoint_handler_init">
+<area shape="rect" id="node2" href="$mavlink__message__handler_8c.html#afa96770432682d3400c99db2e9453b1e" title="Registers a new callback for a message. " alt="" coords="200,5,376,47"/>
+<area shape="rect" id="node3" href="$print__util_8c.html#a1b15f576d0bc830fc09c11d034077c43" title="Writes a character string to the debug stream. " alt="" coords="424,71,555,98"/>
+<area shape="rect" id="node5" href="$mavlink__message__handler_8c.html#a12cf0a1c7920e3771d84a1d6e1130a78" title="Registers a new callback for a command. " alt="" coords="200,123,376,164"/>
+<area shape="rect" id="node4" href="$print__util_8c.html#ae0e520f47e2bfa8e497d3e656e5a9144" title="Writes string of character to a stream. " alt="" coords="603,71,731,98"/>
+</map>

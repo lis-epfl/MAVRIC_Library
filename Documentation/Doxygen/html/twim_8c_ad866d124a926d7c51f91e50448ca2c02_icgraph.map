@@ -1,0 +1,7 @@
+<map id="twim_set_speed" name="twim_set_speed">
+<area shape="rect" id="node2" href="$i2c__driver__int_8h.html#ab89cf2aa9741bf7d6ef45bd531cd1324" title="Initialize the I2C communication. " alt="" coords="180,5,283,32"/>
+<area shape="rect" id="node3" href="$i2c__driver__int_8c.html#a935a956465f1254f80e58c6dacde33ed" title="Trigger a request on the i2c driver. " alt="" coords="171,57,292,98"/>
+<area shape="rect" id="node4" href="$twim_8h.html#ae9f6873316c684d6d0b0ed2e9b584352" title="Initialize the twi master module. " alt="" coords="171,123,292,149"/>
+<area shape="rect" id="node5" href="$i2c__driver__int_8c.html#ab89cf2aa9741bf7d6ef45bd531cd1324" title="Initialize the i2c driver. " alt="" coords="350,97,453,124"/>
+<area shape="rect" id="node6" href="$itg3200_8h.html#a9e5303a8b4555d9a1537c586f86aeedf" title="Initialize the gyroscope sensor in slow mode. " alt="" coords="340,148,463,175"/>
+</map>

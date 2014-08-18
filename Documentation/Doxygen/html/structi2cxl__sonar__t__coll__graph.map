@@ -1,0 +1,7 @@
+<map id="i2cxl_sonar_t" name="i2cxl_sonar_t">
+<area shape="rect" id="node2" href="$structmavlink__stream__t.html" title="Main structure for the mavlink stream module. " alt="" coords="221,491,347,612"/>
+<area shape="rect" id="node3" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status. " alt="" coords="102,299,237,377"/>
+<area shape="rect" id="node4" href="$struct____mavlink__message.html" title="{__mavlink_message\n|+ checksum\l+ magic\l+ len\l+ seq\l+ sysid\l+ compid\l+ msgid\l+ payload64\l|}" alt="" coords="5,13,147,193"/>
+<area shape="rect" id="node5" href="$struct____mavlink__status.html" title="{__mavlink_status\n|+ msg_received\l+ buffer_overrun\l+ parse_error\l+ parse_state\l+ packet_idx\l+ current_rx_seq\l+ current_tx_seq\l+ packet_rx_success_count\l+ packet_rx_drop_count\l|}" alt="" coords="171,5,357,200"/>
+<area shape="rect" id="node6" href="$structbyte__stream__t.html" title="Byte stream. " alt="" coords="261,263,385,413"/>
+</map>

@@ -1,0 +1,13 @@
+<map id="navigation_waypoint_navigation_handler" name="navigation_waypoint_navigation_handler">
+<area shape="rect" id="node2" href="$print__util_8c.html#a1b15f576d0bc830fc09c11d034077c43" title="Writes a character string to the debug stream. " alt="" coords="639,41,770,67"/>
+<area shape="rect" id="node4" href="$print__util_8c.html#a025d6572ba94f96eb7af0631e2957fbd" title="Writes a number in any base to the debug stream. " alt="" coords="623,255,786,282"/>
+<area shape="rect" id="node7" href="$mavlink__waypoint__handler_8c.html#a6b75b16911048bb83e8dd4476f54d103" title="Set the waypoint depending on the reference frame defined in the current_waypoint structure..." alt="" coords="404,144,559,185"/>
+<area shape="rect" id="node10" href="$navigation_8c.html#afa7cb8f034b5868959749e10cff3c010" title="Initialise the position hold mode. " alt="" coords="411,27,551,68"/>
+<area shape="rect" id="node11" href="$mavlink__waypoint__handler_8c.html#af44ebd0e018d792019f377952ddc05e1" title="Initialize a first waypoint if a flight plan is set. " alt="" coords="193,173,344,215"/>
+<area shape="rect" id="node3" href="$print__util_8c.html#ae0e520f47e2bfa8e497d3e656e5a9144" title="Writes string of character to a stream. " alt="" coords="839,41,967,67"/>
+<area shape="rect" id="node5" href="$print__util_8c.html#a3f6c96ce9559fb6c4d1d07480da77117" title="Writes a number in any base to a stream. " alt="" coords="842,255,963,282"/>
+<area shape="rect" id="node6" href="$print__util_8c.html#a1ae199e97454e1a94871ab360218629d" title="Writes an alphabet character to a stream,. " alt="" coords="1015,255,1135,282"/>
+<area shape="rect" id="node8" href="$coord__conventions_8c.html#a9393fdffdf7eb0ba82cec66460e2f56d" title="Convert global GPS coordinates to local NED coordinate. " alt="" coords="619,103,791,144"/>
+<area shape="rect" id="node9" href="$coord__conventions_8c.html#a29083b421c173b079baec367c73c0007" title="Convert local NED coordinates to global GPS coordinates. " alt="" coords="622,168,787,209"/>
+<area shape="rect" id="node12" href="$state_8c.html#af4ad3685b7fc334db6c5b700f68bc096" title="Test if the mode has the mode flag in it. " alt="" coords="392,210,571,237"/>
+</map>

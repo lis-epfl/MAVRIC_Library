@@ -1,0 +1,7 @@
+<map id="flashc_erase_gp_fuse_byte" name="flashc_erase_gp_fuse_byte">
+<area shape="rect" id="node2" href="$flashc_8c.html#a08124caa02942b5fa1d370a81a84dfb5" title="Reads all general&#45;purpose fuses. " alt="" coords="474,18,605,59"/>
+<area shape="rect" id="node3" href="$flashc_8c.html#a59b9644a7f13bc4e510bdac498b27fb5" title="Erases all general&#45;purpose fuses. " alt="" coords="255,76,392,118"/>
+<area shape="rect" id="node5" href="$flashc_8c.html#a7670e69d41fe6a985ad898be25044caf" title="Writes a general&#45;purpose fuse byte. " alt="" coords="235,142,412,169"/>
+<area shape="rect" id="node6" href="$flashc_8c.html#a1ad2aab294e528795bbd835539b0b14e" title="Reads a general&#45;purpose fuse byte. " alt="" coords="236,25,411,52"/>
+<area shape="rect" id="node4" href="$flashc_8c.html#a8045c427c32cf3617e861067d76c9c11" title="Issues a FLASHC command. " alt="" coords="460,113,619,140"/>
+</map>

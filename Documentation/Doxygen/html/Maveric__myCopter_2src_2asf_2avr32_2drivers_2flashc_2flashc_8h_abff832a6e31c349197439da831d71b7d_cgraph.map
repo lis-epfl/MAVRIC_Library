@@ -1,0 +1,8 @@
+<map id="flashc_erase_all_pages" name="flashc_erase_all_pages">
+<area shape="rect" id="node2" href="$flashc_8c.html#aafad0dcf645cc65acb5bc879558dac23" title="Gets the total number of pages in the flash array. " alt="" coords="212,5,368,32"/>
+<area shape="rect" id="node4" href="$flashc_8c.html#a8bd196144d3485a9b50b7c5fffc9fab2" title="Erases a page. " alt="" coords="225,56,355,83"/>
+<area shape="rect" id="node3" href="$flashc_8c.html#a8071c315b02d038c49fa0bf89a40ba1b" title="Gets the size of the whole flash array. " alt="" coords="423,5,571,32"/>
+<area shape="rect" id="node5" href="$flashc_8c.html#a8045c427c32cf3617e861067d76c9c11" title="Issues a FLASHC command. " alt="" coords="627,56,785,83"/>
+<area shape="rect" id="node6" href="$flashc_8c.html#a078a084303b02d665fe3779bc096a150" title="Applies the Quick Page Read command to a page. " alt="" coords="416,107,579,133"/>
+<area shape="rect" id="node7" href="$flashc_8c.html#a05a9c2063e643943bae09f0786bcc063" title="Tells whether the page to which the last Quick Page Read or Quick Page Read User Page command was app..." alt="" coords="629,107,783,133"/>
+</map>

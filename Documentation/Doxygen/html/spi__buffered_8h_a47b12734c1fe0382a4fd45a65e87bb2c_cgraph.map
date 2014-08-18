@@ -1,0 +1,6 @@
+<map id="spi_buffered_init_DMA" name="spi_buffered_init_DMA">
+<area shape="rect" id="node2" href="$pdca_8c.html#a08b3c4c7240ee1915d54e6a3b33268b8" title="Set the channel configuration. " alt="" coords="208,33,335,59"/>
+<area shape="rect" id="node3" href="$pdca_8c.html#ab50a6b2763b5097fc0561dbf515658bb" title="Get PDCA channel handler. " alt="" coords="583,33,707,59"/>
+<area shape="rect" id="node4" href="$pdca_8c.html#a2b696afb911759981b06da3f1edd04c4" title="Disable PDCA transfer interrupt when completed (ie TCR and TCRR are both zero) " alt="" coords="383,25,535,67"/>
+<area shape="rect" id="node5" href="$pdca_8c.html#a078d53cc63f5037fd923efc0aae9f1fc" title="Disable PDCA transfer interrupt when TCRR reaches zero. " alt="" coords="383,91,535,132"/>
+</map>

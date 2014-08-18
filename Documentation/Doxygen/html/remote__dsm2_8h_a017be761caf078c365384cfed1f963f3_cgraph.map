@@ -1,0 +1,4 @@
+<map id="remote_dsm2_rc_switch_power" name="remote_dsm2_rc_switch_power">
+<area shape="rect" id="node2" href="$gpio_8c.html#aa1efc8ea580cc2ac1dd4f2b7694753a1" title="Configuration functionality on a pin. " alt="" coords="217,5,348,32"/>
+<area shape="rect" id="node3" href="$gpio_8c.html#ac691d66dd34e00bc7e990458fbd63cd8" title="Drives a GPIO pin to 0. " alt="" coords="221,56,344,83"/>
+</map>

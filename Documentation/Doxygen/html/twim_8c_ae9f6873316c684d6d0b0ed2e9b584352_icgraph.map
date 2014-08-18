@@ -1,0 +1,4 @@
+<map id="twim_master_init" name="twim_master_init">
+<area shape="rect" id="node2" href="$i2c__driver__int_8c.html#ab89cf2aa9741bf7d6ef45bd531cd1324" title="Initialize the i2c driver. " alt="" coords="185,5,287,32"/>
+<area shape="rect" id="node3" href="$itg3200_8h.html#a9e5303a8b4555d9a1537c586f86aeedf" title="Initialize the gyroscope sensor in slow mode. " alt="" coords="175,56,297,83"/>
+</map>

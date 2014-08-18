@@ -1,0 +1,24 @@
+<map id="simulation_model_t" name="simulation_model_t">
+<area shape="rect" id="node2" href="$structsensor__calib__t.html" title="Structure containing the accelero, gyro and magnetometer sensors&#39; gains. " alt="" coords="1807,498,1914,619"/>
+<area shape="rect" id="node19" href="$structimu__t.html" title="The IMU structure. " alt="" coords="1359,799,1485,906"/>
+<area shape="rect" id="node3" href="$structservo__output__t.html" title="Structure containing the servo output&#39;s data. " alt="" coords="275,1152,403,1273"/>
+<area shape="rect" id="node4" href="$structgps__t.html" title="Type definition for GPS data. " alt="" coords="159,741,277,965"/>
+<area shape="rect" id="node18" href="$structposition__estimator__t.html" title="The position estimator structure. " alt="" coords="737,1079,921,1347"/>
+<area shape="rect" id="node5" href="$structBuffer__t.html" title="Buffer structure. " alt="" coords="5,498,108,619"/>
+<area shape="rect" id="node6" href="$structmavlink__stream__t.html" title="Main structure for the mavlink stream module. " alt="" coords="769,498,894,619"/>
+<area shape="rect" id="node11" href="$structbarometer__t.html" title="structure containing all the barometer&#39;s data " alt="" coords="1057,733,1195,972"/>
+<area shape="rect" id="node12" href="$structstate__t.html" title="The state structure. " alt="" coords="548,719,736,987"/>
+<area shape="rect" id="node14" href="$structahrs__t.html" title="Structure containing the Attitude and Heading Reference System. " alt="" coords="915,785,1033,921"/>
+<area shape="rect" id="node7" href="$structmavlink__received__t.html" title="Mavlink structures for the receive message and its status. " alt="" coords="764,299,899,377"/>
+<area shape="rect" id="node8" href="$struct____mavlink__message.html" title="{__mavlink_message\n|+ checksum\l+ magic\l+ len\l+ seq\l+ sysid\l+ compid\l+ msgid\l+ payload64\l|}" alt="" coords="667,13,809,193"/>
+<area shape="rect" id="node9" href="$struct____mavlink__status.html" title="{__mavlink_status\n|+ msg_received\l+ buffer_overrun\l+ parse_error\l+ parse_state\l+ packet_idx\l+ current_rx_seq\l+ current_tx_seq\l+ packet_rx_success_count\l+ packet_rx_drop_count\l|}" alt="" coords="833,5,1019,200"/>
+<area shape="rect" id="node10" href="$structbyte__stream__t.html" title="Byte stream. " alt="" coords="356,263,480,413"/>
+<area shape="rect" id="node13" href="$structanalog__monitor__t.html" title="{analog_monitor_t\n|+ enable\l+ buffer\l+ avg\l|}" alt="" coords="427,505,548,612"/>
+<area shape="rect" id="node15" href="$structquat__t.html" title="Unit quaternion. " alt="" coords="1255,513,1314,605"/>
+<area shape="rect" id="node16" href="$structlocal__coordinates__t.html" title="Local coordinates. " alt="" coords="384,799,519,906"/>
+<area shape="rect" id="node17" href="$structglobal__position__t.html" title="Global position. " alt="" coords="282,491,402,627"/>
+<area shape="rect" id="node20" href="$structgyroscope__t.html" title="structure for the gyroscope&#39;s data " alt="" coords="1339,491,1441,627"/>
+<area shape="rect" id="node21" href="$structmagnetometer__t.html" title="{magnetometer_t\n|+ data\l+ temperature\l+ last_update\l+ raw_data\l+ axes\l|}" alt="" coords="1465,491,1581,627"/>
+<area shape="rect" id="node22" href="$structaccelerometer__t.html" title="{accelerometer_t\n|+ data\l+ temperature\l+ last_update\l|}" alt="" coords="1606,505,1721,612"/>
+<area shape="rect" id="node23" href="$structsimulation__config__t.html" title="The vehicle simulation model structure definition. " alt="" coords="1957,1101,2092,1325"/>
+</map>

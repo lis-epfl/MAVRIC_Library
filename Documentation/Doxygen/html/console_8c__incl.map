@@ -1,0 +1,19 @@
+<map id="/home/julien/Desktop/tmp/maveric/Code/Library/communication/console.c" name="/home/julien/Desktop/tmp/maveric/Code/Library/communication/console.c">
+<area shape="rect" id="node2" href="$console_8h.html" title="console.h" alt="" coords="693,109,772,136"/>
+<area shape="rect" id="node6" href="$uart__int_8h.html" title="uart_int.h" alt="" coords="724,259,800,285"/>
+<area shape="rect" id="node10" href="$usb__int_8h.html" title="usb_int.h" alt="" coords="574,184,648,211"/>
+<area shape="rect" id="node3" href="$streams_8h.html" title="streams.h" alt="" coords="670,408,750,435"/>
+<area shape="rect" id="node5" href="$buffer_8h.html" title="buffer.h" alt="" coords="824,333,891,360"/>
+<area shape="rect" id="node7" href="$usart_8h.html" title="USART driver for AVR32 UC3. " alt="" coords="916,333,978,360"/>
+<area shape="rect" id="node11" href="$stdio__usb_8h.html" title="USB Standard I/O Serial Management. " alt="" coords="405,259,494,285"/>
+<area shape="rect" id="node13" href="$udc_8h.html" title="Interface of the USB Device Controller (UDC) " alt="" coords="97,333,152,360"/>
+<area shape="rect" id="node22" href="$udi__cdc_8h.html" title="USB Device Communication Device Class (CDC) interface definitions. " alt="" coords="281,333,360,360"/>
+<area shape="rect" id="node14" href="$conf__usb_8h.html" title="USB configuration file for CDC application. " alt="" coords="338,632,425,659"/>
+<area shape="rect" id="node17" href="$usb__protocol_8h.html" title="USB protocol definitions. " alt="" coords="51,632,158,659"/>
+<area shape="rect" id="node19" href="$udc__desc_8h.html" title="Common API for USB Device Interface. " alt="" coords="94,483,184,509"/>
+<area shape="rect" id="node21" href="$udd_8h.html" title="Common API for USB Device Drivers (UDD) " alt="" coords="32,408,86,435"/>
+<area shape="rect" id="node15" href="$udi__cdc__conf_8h.html" title="Default CDC configuration for a USB Device with a single interface. " alt="" coords="330,707,441,733"/>
+<area shape="rect" id="node16" href="$usb__protocol__cdc_8h.html" title="USB Communication Device Class (CDC) protocol definitions. " alt="" coords="366,781,501,808"/>
+<area shape="rect" id="node18" href="$usb__atmel_8h.html" title="All USB VIDs and PIDs from Atmel AVR applications. " alt="" coords="58,707,151,733"/>
+<area shape="rect" id="node20" href="$udi_8h.html" title="Common API for USB Device Interface. " alt="" coords="243,557,294,584"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="state_disable_mode" name="state_disable_mode">
+<area shape="rect" id="node2" href="$tasks_8c.html#aab10a16cc21516badb79dc42e7cc6e8d" title="Function to call when the motors should be switched off. " alt="" coords="192,13,321,39"/>
+<area shape="rect" id="node3" href="$tasks_8h.html#a417b414354ec97dfdd0743a526e16bf0" title="Updates the state and mode of the UAV. " alt="" coords="369,5,520,47"/>
+</map>

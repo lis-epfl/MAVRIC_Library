@@ -1,0 +1,8 @@
+<map id="adc_int_init" name="adc_int_init">
+<area shape="rect" id="node2" href="$gpio_8c.html#af8e9d12ce235497e93a945d244ffcb1d" title="Enables specific module modes for a set of pins. " alt="" coords="161,5,301,32"/>
+<area shape="rect" id="node4" href="$adcifa_8c.html#afa5e71a30bf8b6d763e12230a800edd0" title="Get ADCIFA Calibration Data. Mandatory to call if factory calibration data are wanted to be used..." alt="" coords="141,56,321,83"/>
+<area shape="rect" id="node5" href="$adcifa_8c.html#a379b6ae7284b595f3862aa5905bdb81c" title="Configure ADCIFA. Mandatory to call. If not called, ADC channels will have side effects. " alt="" coords="173,107,290,133"/>
+<area shape="rect" id="node6" href="$adc__int_8c.html#a68a1532c15406cbd5142dcee9045093b" title="Clear the ADC sequencer. " alt="" coords="148,157,315,184"/>
+<area shape="rect" id="node7" href="$adcifa_8c.html#a6cb76e1d11639b3f1656690aadd2d5c7" title="Disable any ADCIFA interrupt. " alt="" coords="152,208,311,235"/>
+<area shape="rect" id="node3" href="$gpio_8c.html#af9f1a0613d0095efbcd451aea19aad61" title="Enables a specific module mode for a pin. " alt="" coords="369,5,533,32"/>
+</map>

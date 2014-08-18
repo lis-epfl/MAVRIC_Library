@@ -1,0 +1,6 @@
+<map id="USB Stack" name="USB Stack">
+<area shape="rect" id="node2" href="$group__usb__atmel__ids__group.html" title="Atmel USB Identifiers" alt="" coords="151,5,300,32"/>
+<area shape="rect" id="node3" href="$group__usb__device__group.html" title="USB Stack Devices" alt="" coords="155,56,295,83"/>
+<area shape="rect" id="node4" href="$group__otg__group.html" title="USB OTG Driver (OTG)" alt="" coords="145,107,306,133"/>
+<area shape="rect" id="node5" href="$group__usb__protocol__group.html" title="USB Protocol Definitions" alt="" coords="141,157,309,184"/>
+</map>

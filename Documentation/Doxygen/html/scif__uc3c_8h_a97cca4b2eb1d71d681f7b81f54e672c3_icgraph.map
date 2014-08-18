@@ -1,0 +1,5 @@
+<map id="scif_gc_enable" name="scif_gc_enable">
+<area shape="rect" id="node2" href="$dac__dma_8c.html#abc13c2ea79da2ea354bc72f2f5bba4a5" title="init_gclk" alt="" coords="210,5,281,32"/>
+<area shape="rect" id="node4" href="$power__clocks__lib_8h.html#a8c02993a038be7348f0363675e6e836a" title="Configure the USB Clock. " alt="" coords="163,56,328,83"/>
+<area shape="rect" id="node3" href="$dac__dma_8h.html#a87a82dcdbaed6a0e7f6395e42ba3e939" title="get the DAC sampling buffer " alt="" coords="376,5,523,32"/>
+</map>

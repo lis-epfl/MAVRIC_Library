@@ -1,0 +1,44 @@
+<map id="/home/julien/Desktop/tmp/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers" name="/home/julien/Desktop/tmp/maveric/Code/Maveric_myCopter/src/asf/avr32/drivers">
+<area shape="rect" id="node23" href="dir_21e68be31b17162ce779b4c865f56865.html" title="utils" alt="" coords="1869,207,1941,255"/>
+<area shape="rect" id="edge18-headlabel" href="dir_000016_000013.html" title="9" alt="" coords="1850,191,1858,205"/>
+<area shape="rect" id="node2" href="dir_8ba164a69308c9f2f8e43e0ef1b0815a.html" title="adcifa" alt="" coords="1669,111,1741,159"/>
+<area shape="rect" id="node3" href="dir_3b1b63b58a920d05e9f4caf960630a98.html" title="ast" alt="" coords="1573,111,1645,159"/>
+<area shape="rect" id="node4" href="dir_c145b6542ce4bf1842192e29b9fdc3fc.html" title="cpu" alt="" coords="133,207,205,255"/>
+<area shape="rect" id="node5" href="dir_bd11973017b80b1a531bd6edb6b1fb41.html" title="dacifb" alt="" coords="133,111,205,159"/>
+<area shape="rect" id="edge13-headlabel" href="dir_000033_000031.html" title="1" alt="" coords="174,181,182,196"/>
+<area shape="rect" id="node6" href="dir_686db7ffc424ab641f558288198ea1be.html" title="eic" alt="" coords="517,111,589,159"/>
+<area shape="rect" id="edge1-headlabel" href="dir_000034_000013.html" title="1" alt="" coords="1850,191,1858,205"/>
+<area shape="rect" id="node7" href="dir_790551a7e810946bd9a3ef68df86389e.html" title="flashc" alt="" coords="1285,111,1357,159"/>
+<area shape="rect" id="node8" href="dir_6330f38d0c9b7e0ef5530754cdc25968.html" title="gpio" alt="" coords="325,111,397,159"/>
+<area shape="rect" id="node9" href="dir_34b3aa7ca1435ea56d03c657ea2e3167.html" title="intc" alt="" coords="1093,111,1165,159"/>
+<area shape="rect" id="edge4-headlabel" href="dir_000036_000013.html" title="1" alt="" coords="1850,191,1858,205"/>
+<area shape="rect" id="node10" href="dir_d380e73c03803c63871fed40c69559c1.html" title="pdca" alt="" coords="997,111,1069,159"/>
+<area shape="rect" id="node11" href="dir_c923a9772e6aa7f9e8150cfee785689f.html" title="pevc" alt="" coords="901,111,973,159"/>
+<area shape="rect" id="node12" href="dir_9524a2367f6191196a140c62313d5ad4.html" title="pm" alt="" coords="37,111,109,159"/>
+<area shape="rect" id="node13" href="dir_28749d7504f0dac26eb48a5f075e51c8.html" title="pwm" alt="" coords="709,111,781,159"/>
+<area shape="rect" id="node14" href="dir_42e418a5f56c348d0781fd19a57b3b22.html" title="scif" alt="" coords="613,111,685,159"/>
+<area shape="rect" id="node15" href="dir_b9f5db71101173bcda36879b6d2a851c.html" title="spi" alt="" coords="1765,111,1837,159"/>
+<area shape="rect" id="node16" href="dir_07a269ed4f3bc227a2f4b2149f26c590.html" title="tc" alt="" coords="421,111,493,159"/>
+<area shape="rect" id="node17" href="dir_66706f92c4dfb653e1e81994dd45c0c0.html" title="twim" alt="" coords="1381,111,1453,159"/>
+<area shape="rect" id="node22" href="dir_946989102c15ffb61239b6a643bf5bc9.html" title="config" alt="" coords="1965,207,2037,255"/>
+<area shape="rect" id="edge2-headlabel" href="dir_000044_000027.html" title="1" alt="" coords="1946,190,1954,205"/>
+<area shape="rect" id="edge3-headlabel" href="dir_000044_000013.html" title="1" alt="" coords="1851,191,1859,205"/>
+<area shape="rect" id="node18" href="dir_379712f3e7389455964d6e552e0af7f0.html" title="twis" alt="" coords="229,111,301,159"/>
+<area shape="rect" id="edge14-headlabel" href="dir_000045_000013.html" title="2" alt="" coords="1850,191,1858,205"/>
+<area shape="rect" id="node19" href="dir_b5c0e1b56d82dc05292c93618d984e6d.html" title="usart" alt="" coords="1477,111,1549,159"/>
+<area shape="rect" id="node20" href="dir_20ff8b57afc61a8c73debee6e48d4d25.html" title="usbc" alt="" coords="1189,111,1261,159"/>
+<area shape="rect" id="node21" href="dir_345994497ab60e72c380692bd9fb720a.html" title="common" alt="" coords="1477,5,1549,53"/>
+<area shape="rect" id="edge15-headlabel" href="dir_000047_000009.html" title="1" alt="" coords="1455,17,1463,32"/>
+<area shape="rect" id="edge16-headlabel" href="dir_000047_000027.html" title="1" alt="" coords="1946,191,1954,205"/>
+<area shape="rect" id="edge17-headlabel" href="dir_000047_000013.html" title="2" alt="" coords="1850,191,1858,205"/>
+<area shape="rect" id="edge6-headlabel" href="dir_000009_000035.html" title="1" alt="" coords="382,91,390,106"/>
+<area shape="rect" id="edge5-headlabel" href="dir_000009_000039.html" title="2" alt="" coords="94,91,102,106"/>
+<area shape="rect" id="edge10-headlabel" href="dir_000009_000042.html" title="1" alt="" coords="1786,83,1794,98"/>
+<area shape="rect" id="edge7-headlabel" href="dir_000009_000044.html" title="1" alt="" coords="1443,92,1451,107"/>
+<area shape="rect" id="edge8-headlabel" href="dir_000009_000046.html" title="1" alt="" coords="1518,85,1526,100"/>
+<area shape="rect" id="edge9-headlabel" href="dir_000009_000027.html" title="14" alt="" coords="1979,179,1994,194"/>
+<area shape="rect" id="edge11-headlabel" href="dir_000009_000013.html" title="14" alt="" coords="1906,180,1920,195"/>
+<area shape="rect" id="edge12-headlabel" href="dir_000027_000009.html" title="3" alt="" coords="1564,31,1572,45"/>
+<area shape="rect" id="clust2" href="dir_343d0262a8b14353a086ac8fa2a8c319.html" alt="" coords="27,100,1848,265"/>
+<area shape="rect" id="clust1" href="dir_282c6a066e740cacc0849dedafd651a0.html" title="avr32" alt="" coords="16,64,1859,276"/>
+</map>

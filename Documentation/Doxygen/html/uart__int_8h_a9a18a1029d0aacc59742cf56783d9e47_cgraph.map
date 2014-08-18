@@ -1,0 +1,5 @@
+<map id="uart_int_send_byte" name="uart_int_send_byte">
+<area shape="rect" id="node2" href="$buffer_8c.html#aaaa7a42957c8ed37237e054814550e42" title="Stores data in the buffer, until the buffer is full. " alt="" coords="221,5,301,32"/>
+<area shape="rect" id="node4" href="$buffer_8c.html#ab3e3f881e73136f2672e0a51db8fef69" title="Returns the number of available bytes in the buffer. " alt="" coords="185,56,337,83"/>
+<area shape="rect" id="node3" href="$buffer_8c.html#aae9c1b06882ae095a3d7955c0ece8387" title="Tests whether the buffer is full. " alt="" coords="385,5,464,32"/>
+</map>

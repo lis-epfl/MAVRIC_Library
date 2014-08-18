@@ -1,0 +1,6 @@
+<map id="flashc_get_page_region" name="flashc_get_page_region">
+<area shape="rect" id="node2" href="$flashc_8c.html#adb51a37e3153c24e5dd6cf06daac0e21" title="Gets the current FLASHC page number. " alt="" coords="212,5,379,32"/>
+<area shape="rect" id="node3" href="$flashc_8c.html#a8910bcde3235e2af0770fbd2412b05bc" title="Gets the number of pages in each flash region. " alt="" coords="217,57,373,98"/>
+<area shape="rect" id="node4" href="$flashc_8c.html#aafad0dcf645cc65acb5bc879558dac23" title="Gets the total number of pages in the flash array. " alt="" coords="427,64,583,91"/>
+<area shape="rect" id="node5" href="$flashc_8c.html#a8071c315b02d038c49fa0bf89a40ba1b" title="Gets the size of the whole flash array. " alt="" coords="631,64,779,91"/>
+</map>

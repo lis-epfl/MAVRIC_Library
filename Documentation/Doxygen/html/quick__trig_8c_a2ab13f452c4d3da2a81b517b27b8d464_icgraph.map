@@ -1,0 +1,8 @@
+<map id="quick_trig_cos" name="quick_trig_cos">
+<area shape="rect" id="node2" href="$test__quick__trig_8c.html#aab195a193bafc00f614b26a180b66ad9" title="Run tests on the simplyfied trigonometric functions. " alt="" coords="190,5,329,32"/>
+<area shape="rect" id="node3" href="$test__quick__trig_8c.html#a9bb63804820df5df883d660569a32e19" title="Show the simplyfied trigonometric functions profile. " alt="" coords="199,56,319,83"/>
+<area shape="rect" id="node4" href="$coord__conventions_8h.html#aebe85ccad5c6518ec57354c11dc3d687" title="Converts roll, pitch and yaw angles (with the aeronautics conventions) to an attitude quaternion..." alt="" coords="160,107,359,149"/>
+<area shape="rect" id="node5" href="$attitude__error__estimator_8h.html#af6047c0274d06c9ba8b10a8cb048c90b" title="Function to update the reference attitude from Euler angles. " alt="" coords="407,74,573,115"/>
+<area shape="rect" id="node6" href="$attitude__error__estimator_8h.html#a411773f49b69b8f93abbe65baa3b1c0a" title="Function to update the reference attitude from Euler angles. " alt="" coords="411,139,569,181"/>
+<area shape="rect" id="node7" href="$attitude__controller__p2_8h.html#a21fd9ccbc0ce0eace2cf092631a02b90" title="Main update function. " alt="" coords="621,139,747,181"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="uart_int_send_byte" name="uart_int_send_byte">
+<area shape="rect" id="node2" href="$uart__int_8h.html#ab1cca5f5e627b0d3526a7ca3bc425e75" title="Registers a stream interface with the UART transmitter (data put into the stream will be sent)..." alt="" coords="185,5,336,47"/>
+<area shape="rect" id="node3" href="$console_8h.html#a2d508d92a343b8b93c79d1fec30af394" title="Initialize the console module. " alt="" coords="384,13,475,39"/>
+</map>

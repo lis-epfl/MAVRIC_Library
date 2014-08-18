@@ -1,0 +1,5 @@
+<map id="spi_buffered_start" name="spi_buffered_start">
+<area shape="rect" id="node2" href="$spi__buffered_8h.html#ade06b045051dc7c8b4b120f18520386b" title="Resumes the SPI automatic sending. " alt="" coords="180,13,323,39"/>
+<area shape="rect" id="node4" href="$spi__buffered_8h.html#ad19d8982200870d6c11aede182c02d2d" title="Writes one byte to the outgoing SPI buffer if buffer is full, this method blocks. ..." alt="" coords="187,63,315,90"/>
+<area shape="rect" id="node3" href="$spi__buffered_8h.html#a8900be6487dc2eaafffb74227ae8b1c5" title="Waits until whole buffer is written to SPI bus automatically resumes sending if SPI interface was pau..." alt="" coords="371,5,499,47"/>
+</map>

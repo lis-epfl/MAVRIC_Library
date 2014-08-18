@@ -1,0 +1,23 @@
+<map id="/home/julien/Desktop/tmp/maveric/Code/Maveric_myCopter/src/asf/common/boards/user_board/user_board.h" name="/home/julien/Desktop/tmp/maveric/Code/Maveric_myCopter/src/asf/common/boards/user_board/user_board.h">
+<area shape="rect" id="node2" href="$adc__int_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/hal/adc_int.h" alt="" coords="205,124,381,180"/>
+<area shape="rect" id="node6" href="$dac__dma_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/hal/dac_dma.h" alt="" coords="405,124,581,180"/>
+<area shape="rect" id="node9" href="$ads1274_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/hal/ads1274.h" alt="" coords="605,124,781,180"/>
+<area shape="rect" id="node11" href="$spi__buffered_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/hal/spi_buffered.h" alt="" coords="805,124,981,180"/>
+<area shape="rect" id="node13" href="$Library_2hal_2led_8c.html" title="AT32UC3C UC3C_EK board LEDs support package. " alt="" coords="1005,124,1181,180"/>
+<area shape="rect" id="node14" href="$sd__spi_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/hal/sd_spi.h" alt="" coords="1268,124,1444,180"/>
+<area shape="rect" id="node3" href="$adc__int_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/hal/adc_int.c" alt="" coords="205,228,381,284"/>
+<area shape="rect" id="node4" href="$doppler__radar_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/sensing/doppler_radar.h" alt="" coords="5,228,181,284"/>
+<area shape="rect" id="node5" href="$doppler__radar_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/sensing/doppler_radar.c" alt="" coords="5,332,181,388"/>
+<area shape="rect" id="node7" href="$ads1274_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/hal/ads1274.c" alt="" coords="805,228,981,284"/>
+<area shape="rect" id="node8" href="$dac__dma_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/hal/dac_dma.c" alt="" coords="405,228,581,284"/>
+<area shape="rect" id="node10" href="$generator_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/util/generator.c" alt="" coords="605,228,781,284"/>
+<area shape="rect" id="node12" href="$spi__buffered_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/hal/spi_buffered.c" alt="" coords="1005,228,1181,284"/>
+<area shape="rect" id="node15" href="$sd__spi_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/hal/sd_spi.c" alt="" coords="1205,228,1381,284"/>
+<area shape="rect" id="node16" href="$Maveric__myCopter_2src_2central__data_8h_source.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/central_data.h" alt="" coords="1644,228,1839,284"/>
+<area shape="rect" id="node20" href="$main_8cpp.html" title="Empty user application template. " alt="" coords="1378,436,1561,492"/>
+<area shape="rect" id="node17" href="$simulation_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/sensing/simulation.c" alt="" coords="2240,332,2416,388"/>
+<area shape="rect" id="node18" href="$main_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/tests/main.c" alt="" coords="1619,436,1795,492"/>
+<area shape="rect" id="node19" href="$Maveric__myCopter_2src_2boardsupport_8h_source.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/boardsupport.h" alt="" coords="1506,332,1705,388"/>
+<area shape="rect" id="node21" href="$mavlink__telemetry_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/mavlink_telemetry.c" alt="" coords="1779,332,2008,388"/>
+<area shape="rect" id="node22" href="$tasks_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/tasks.c" alt="" coords="2033,332,2215,388"/>
+</map>

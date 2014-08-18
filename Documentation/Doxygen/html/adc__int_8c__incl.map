@@ -1,0 +1,17 @@
+<map id="/home/julien/Desktop/tmp/maveric/Code/Library/hal/adc_int.c" name="/home/julien/Desktop/tmp/maveric/Code/Library/hal/adc_int.c">
+<area shape="rect" id="node2" href="$adc__int_8h.html" title="adc_int.h" alt="" coords="584,109,659,136"/>
+<area shape="rect" id="node10" href="$adcifa_8h.html" title="ADCIFA header for AVR UC3. " alt="" coords="843,184,911,211"/>
+<area shape="rect" id="node13" href="$gpio_8h.html" title="GPIO software driver interface for AVR UC3. " alt="" coords="935,184,993,211"/>
+<area shape="rect" id="node14" href="$tc_8h.html" title="Timer/Counter driver for AVR32 UC3. " alt="" coords="298,109,342,136"/>
+<area shape="rect" id="node15" href="$intc_8h.html" title="INTC driver for AVR32 UC3. " alt="" coords="969,109,1023,136"/>
+<area shape="rect" id="node16" href="$Library_2hal_2led_8h.html" title="AT32UC3C UC3C_EK board LEDs support package. " alt="" coords="1048,109,1099,136"/>
+<area shape="rect" id="node17" href="$time__keeper_8h_source.html" title="time_keeper.h" alt="" coords="739,109,843,136"/>
+<area shape="rect" id="node19" href="$dac__dma_8h.html" title="dac_dma.h" alt="" coords="409,109,495,136"/>
+<area shape="rect" id="node3" href="$preprocessor_8h.html" title="Preprocessor utils. " alt="" coords="130,184,238,211"/>
+<area shape="rect" id="node9" href="$user__board_8h.html" title="User board definition template. " alt="" coords="457,184,554,211"/>
+<area shape="rect" id="node4" href="$tpaste_8h.html" title="Preprocessor token pasting utils. " alt="" coords="5,259,75,285"/>
+<area shape="rect" id="node5" href="$stringz_8h.html" title="Preprocessor stringizing utils. " alt="" coords="99,259,171,285"/>
+<area shape="rect" id="node6" href="$mrepeat_8h.html" title="Preprocessor macro repeating utils. " alt="" coords="195,259,275,285"/>
+<area shape="rect" id="node18" href="$ast_8h.html" title="AST driver for AVR32 UC3. " alt="" coords="768,184,819,211"/>
+<area shape="rect" id="node20" href="$dacifb_8h.html" title="DACIFB header for AVR32 UC3. " alt="" coords="365,184,433,211"/>
+</map>

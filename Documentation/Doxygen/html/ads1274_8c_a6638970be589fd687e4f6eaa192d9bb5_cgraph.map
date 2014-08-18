@@ -1,0 +1,4 @@
+<map id="ads1274_ADC_switch_clock" name="ads1274_ADC_switch_clock">
+<area shape="rect" id="node2" href="$gpio_8c.html#af9f1a0613d0095efbcd451aea19aad61" title="Enables a specific module mode for a pin. " alt="" coords="205,5,369,32"/>
+<area shape="rect" id="node3" href="$gpio_8c.html#aa1efc8ea580cc2ac1dd4f2b7694753a1" title="Configuration functionality on a pin. " alt="" coords="222,56,353,83"/>
+</map>

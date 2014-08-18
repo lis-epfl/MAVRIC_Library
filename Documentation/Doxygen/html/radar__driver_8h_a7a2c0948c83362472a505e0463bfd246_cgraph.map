@@ -1,0 +1,4 @@
+<map id="radar_driver_switch_power" name="radar_driver_switch_power">
+<area shape="rect" id="node2" href="$gpio_8c.html#ac691d66dd34e00bc7e990458fbd63cd8" title="Drives a GPIO pin to 0. " alt="" coords="190,5,313,32"/>
+<area shape="rect" id="node3" href="$gpio_8c.html#a56f766236871cf0dbe917d9ead9b5fca" title="Drives a GPIO pin to 1. " alt="" coords="188,56,315,83"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="mavlink_message_handler_add_msg_callback" name="mavlink_message_handler_add_msg_callback">
+<area shape="rect" id="node2" href="$mavlink__communication_8h.html#ab7e6b45cdb27b39e81c60cc716d0613e" title="Initialisation of the module mavlink communication. " alt="" coords="441,29,628,55"/>
+<area shape="rect" id="node3" href="$mavlink__waypoint__handler_8h.html#a3786e3382ae7eb92b654c1aa3918a8a4" title="Initialize the waypoint handler. " alt="" coords="238,29,385,55"/>
+<area shape="rect" id="node4" href="$onboard__parameters_8h.html#a24a0e3302dce0d6bf857f271b0b0e5a2" title="Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0..." alt="" coords="229,79,393,106"/>
+<area shape="rect" id="node5" href="$state_8h.html#a00d4763f92d2ed39ee9fc190901bf26d" title="Initialise the state of the MAV. " alt="" coords="274,130,349,157"/>
+<area shape="rect" id="node6" href="$neighbor__selection_8h.html#ab4dd2ab3f0d7f5b5e506ac8ea1244447" title="Initialize the neighbor selection module. " alt="" coords="231,181,392,207"/>
+</map>

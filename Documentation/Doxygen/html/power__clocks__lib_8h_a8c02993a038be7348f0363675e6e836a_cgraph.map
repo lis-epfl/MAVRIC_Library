@@ -1,0 +1,8 @@
+<map id="pcl_configure_usb_clock" name="pcl_configure_usb_clock">
+<area shape="rect" id="node2" href="$scif__uc3c_8c.html#a0762c326026298131479b2eb6c66966e" title="This function will setup a PLL. " alt="" coords="248,5,351,32"/>
+<area shape="rect" id="node3" href="$scif__uc3c_8c.html#afb379ef54174ea12680afe48a82c14b9" title="This function will enable a PLL. " alt="" coords="245,56,353,83"/>
+<area shape="rect" id="node4" href="$scif__uc3c_8c.html#a8d9f1c5f02e409cac54b5e518eb6b717" title="This function will wait for PLL locked. " alt="" coords="219,107,380,133"/>
+<area shape="rect" id="node5" href="$scif__uc3c_8c.html#ac355443257f05c78943fdd41d8b8fb90" title="Setup a generic clock. " alt="" coords="248,157,351,184"/>
+<area shape="rect" id="node7" href="$scif__uc3c_8c.html#a97cca4b2eb1d71d681f7b81f54e672c3" title="Enable a generic clock. " alt="" coords="245,208,354,235"/>
+<area shape="rect" id="node6" href="$scif__uc3c_8c.html#a703046a65be951d33d8907ca284d963a" title="Stop a generic clock. " alt="" coords="428,157,535,184"/>
+</map>

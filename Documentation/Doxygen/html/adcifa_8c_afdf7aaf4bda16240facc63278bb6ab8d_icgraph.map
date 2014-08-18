@@ -1,0 +1,3 @@
+<map id="adcifa_configure_sequencer" name="adcifa_configure_sequencer">
+<area shape="rect" id="node2" href="$adc__int_8h.html#a63cf530f5a528ad07dc0bbdb34479aa9" title="Start the sampling of the ADC, captures one buffer length and then stops. " alt="" coords="237,5,393,32"/>
+</map>

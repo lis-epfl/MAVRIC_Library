@@ -1,0 +1,5 @@
+<map id="flashc_erase_page" name="flashc_erase_page">
+<area shape="rect" id="node2" href="$flashc_8c.html#a8045c427c32cf3617e861067d76c9c11" title="Issues a FLASHC command. " alt="" coords="395,5,553,32"/>
+<area shape="rect" id="node3" href="$flashc_8c.html#a078a084303b02d665fe3779bc096a150" title="Applies the Quick Page Read command to a page. " alt="" coords="184,56,347,83"/>
+<area shape="rect" id="node4" href="$flashc_8c.html#a05a9c2063e643943bae09f0786bcc063" title="Tells whether the page to which the last Quick Page Read or Quick Page Read User Page command was app..." alt="" coords="397,56,551,83"/>
+</map>

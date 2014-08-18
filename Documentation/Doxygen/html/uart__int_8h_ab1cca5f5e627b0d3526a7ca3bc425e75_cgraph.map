@@ -1,0 +1,8 @@
+<map id="uart_int_register_write_stream" name="uart_int_register_write_stream">
+<area shape="rect" id="node2" href="$uart__int_8c.html#a9a18a1029d0aacc59742cf56783d9e47" title="Non&#45;blocking operation to append a byte to the uart send buffer if buffer is full, the command has no effect (returns &#45;1). " alt="" coords="204,56,336,83"/>
+<area shape="rect" id="node6" href="$uart__int_8c.html#a7ac10882675f0a59956e5cba5246235c" title="Blocking operation to flush the uart buffer. Returns once the last byte has been passed to hardware f..." alt="" coords="220,107,320,133"/>
+<area shape="rect" id="node3" href="$buffer_8c.html#aaaa7a42957c8ed37237e054814550e42" title="Stores data in the buffer, until the buffer is full. " alt="" coords="420,5,500,32"/>
+<area shape="rect" id="node5" href="$buffer_8c.html#ab3e3f881e73136f2672e0a51db8fef69" title="Returns the number of available bytes in the buffer. " alt="" coords="384,56,536,83"/>
+<area shape="rect" id="node4" href="$buffer_8c.html#aae9c1b06882ae095a3d7955c0ece8387" title="Tests whether the buffer is full. " alt="" coords="584,5,663,32"/>
+<area shape="rect" id="node7" href="$buffer_8c.html#a9110e190ffa9d48109919329d2585e34" title="Tests whether the buffer is empty. " alt="" coords="411,107,509,133"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="spi_enable" name="spi_enable">
+<area shape="rect" id="node2" href="$spi__buffered_8h.html#ad29e1b0896e6acb292fe522c57c7e97f" title="Enables SPI communication. " alt="" coords="137,5,276,32"/>
+<area shape="rect" id="node3" href="$spi__buffered_8h.html#ae4ba5d5b188c9d61b6dc487f0003ad9b" title="Initialize SPI interface: this interface uses internal buffers and interrupts. Bytes in the outgoing ..." alt="" coords="324,5,441,32"/>
+<area shape="rect" id="node4" href="$ads1274_8h.html#a0176eb0c9771c53fff490bae17e5b227" title="Initializes ADC (configures Pins, starts Clock, sets defaults) " alt="" coords="489,5,620,32"/>
+</map>

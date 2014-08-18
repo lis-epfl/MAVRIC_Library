@@ -1,0 +1,13 @@
+<map id="flashc_memset32" name="flashc_memset32">
+<area shape="rect" id="node2" href="$flashc_8c.html#a945f2d797d4f4e1710b5baaa88154c4f" title="Copies nbytes bytes to the flash destination pointed to by dst from the repeated src big&#45;endian sourc..." alt="" coords="179,183,304,209"/>
+<area shape="rect" id="node3" href="$flashc_8c.html#a8071c315b02d038c49fa0bf89a40ba1b" title="Gets the size of the whole flash array. " alt="" coords="359,31,507,57"/>
+<area shape="rect" id="node4" href="$flashc_8c.html#affafe9cb74731d817b721d2a52093412" title="Clears the page buffer. " alt="" coords="577,157,743,184"/>
+<area shape="rect" id="node6" href="$flashc_8c.html#a8bd196144d3485a9b50b7c5fffc9fab2" title="Erases a page. " alt="" coords="368,208,499,235"/>
+<area shape="rect" id="node9" href="$flashc_8c.html#aa10438433246139bee71da6db2bb5bd5" title="Writes a page from the page buffer. " alt="" coords="597,259,723,285"/>
+<area shape="rect" id="node10" href="$flashc_8c.html#a7160c001cada0a9a0162cac2305a9038" title="Erases the User page. " alt="" coords="352,81,515,108"/>
+<area shape="rect" id="node12" href="$flashc_8c.html#ad04374b721dca9c534d7cd041ae24712" title="Writes the User page from the page buffer. " alt="" coords="354,309,513,336"/>
+<area shape="rect" id="node5" href="$flashc_8c.html#a8045c427c32cf3617e861067d76c9c11" title="Issues a FLASHC command. " alt="" coords="805,157,964,184"/>
+<area shape="rect" id="node7" href="$flashc_8c.html#a078a084303b02d665fe3779bc096a150" title="Applies the Quick Page Read command to a page. " alt="" coords="579,107,741,133"/>
+<area shape="rect" id="node8" href="$flashc_8c.html#a05a9c2063e643943bae09f0786bcc063" title="Tells whether the page to which the last Quick Page Read or Quick Page Read User Page command was app..." alt="" coords="807,56,962,83"/>
+<area shape="rect" id="node11" href="$flashc_8c.html#a1921803f9ba1d21a7926d9dafc400f36" title="Issues a Quick Page Read User Page command to the FLASHC. " alt="" coords="563,5,757,32"/>
+</map>

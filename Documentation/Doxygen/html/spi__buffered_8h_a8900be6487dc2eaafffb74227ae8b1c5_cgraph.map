@@ -1,0 +1,5 @@
+<map id="spi_buffered_flush_buffer" name="spi_buffered_flush_buffer">
+<area shape="rect" id="node2" href="$spi__buffered_8c.html#ade06b045051dc7c8b4b120f18520386b" title="Resumes the SPI automatic sending. " alt="" coords="181,13,324,39"/>
+<area shape="rect" id="node3" href="$spi__buffered_8c.html#aa6f9a5b9b37bcf89eb56fe90578928ef" title="Initiates pending transmissions by sending first byte, if in paused or non&#45;automatic mode..." alt="" coords="372,13,499,39"/>
+<area shape="rect" id="node4" href="$spi__buffered_8c.html#ad650facef5a4598a0fcab9c8f7ea773c" title="Read data from buffer index and copy it to SPI unit. " alt="" coords="547,13,693,39"/>
+</map>

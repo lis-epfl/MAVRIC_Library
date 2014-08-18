@@ -1,0 +1,6 @@
+<map id="flashc_write_gp_fuse_byte" name="flashc_write_gp_fuse_byte">
+<area shape="rect" id="node2" href="$Maveric__myCopter_2src_2asf_2avr32_2drivers_2flashc_2flashc_8h.html#acb14ac40b939a0804e8e72a8d58f5f68" title="Erases a general&#45;purpose fuse byte. " alt="" coords="231,5,412,32"/>
+<area shape="rect" id="node3" href="$Maveric__myCopter_2src_2asf_2avr32_2drivers_2flashc_2flashc_8h.html#acda1125f62193f69c24c0e4975e95b4d" title="Sets a general&#45;purpose fuse byte with the appropriate erase and write operations. ..." alt="" coords="460,31,627,57"/>
+<area shape="rect" id="node4" href="$Maveric__myCopter_2src_2asf_2avr32_2drivers_2flashc_2flashc_8h.html#a408609845a9b3de37bf9307076d851d6" title="Writes all general&#45;purpose fuses. " alt="" coords="255,107,388,149"/>
+<area shape="rect" id="node5" href="$Maveric__myCopter_2src_2asf_2avr32_2drivers_2flashc_2flashc_8h.html#ac00d0edaa152b6d107c5cdb9350ba97d" title="Sets all general&#45;purpose fuses with the appropriate erase and write operations. " alt="" coords="462,115,625,141"/>
+</map>

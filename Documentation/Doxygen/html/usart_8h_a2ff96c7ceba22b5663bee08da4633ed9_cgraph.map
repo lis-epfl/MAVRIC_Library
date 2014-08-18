@@ -1,0 +1,3 @@
+<map id="usart_putchar" name="usart_putchar">
+<area shape="rect" id="node2" href="$usart_8c.html#a0c36f4b2ec5445212642ee7f94672805" title="Writes the given character to the TX buffer if the transmitter is ready. " alt="" coords="155,5,273,32"/>
+</map>

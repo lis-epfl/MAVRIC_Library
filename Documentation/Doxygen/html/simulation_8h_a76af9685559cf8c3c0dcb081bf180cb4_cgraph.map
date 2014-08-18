@@ -1,0 +1,4 @@
+<map id="simulation_send_quaternions" name="simulation_send_quaternions">
+<area shape="rect" id="node2" href="$coord__conventions_8c.html#a42a9e55729d5e95b80749cb23ecb9c07" title="Converts an attitude quaternion to roll, pitch and yaw angles with the aeronautics conventions..." alt="" coords="245,5,408,47"/>
+<area shape="rect" id="node3" href="$coord__conventions_8c.html#a29083b421c173b079baec367c73c0007" title="Convert local NED coordinates to global GPS coordinates. " alt="" coords="244,71,409,112"/>
+</map>

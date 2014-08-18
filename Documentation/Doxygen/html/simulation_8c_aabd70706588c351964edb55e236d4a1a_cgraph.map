@@ -1,0 +1,9 @@
+<map id="simulation_init" name="simulation_init">
+<area shape="rect" id="node2" href="$print__util_8c.html#a1b15f576d0bc830fc09c11d034077c43" title="Writes a character string to the debug stream. " alt="" coords="383,111,513,137"/>
+<area shape="rect" id="node4" href="$print__util_8c.html#a025d6572ba94f96eb7af0631e2957fbd" title="Writes a number in any base to the debug stream. " alt="" coords="165,5,328,32"/>
+<area shape="rect" id="node7" href="$simulation_8c.html#aa8c3091c7212f8211c9de811ce383b95" title="Sets the calibration to the &quot;real&quot; IMU values. " alt="" coords="177,107,317,133"/>
+<area shape="rect" id="node8" href="$mavlink__message__handler_8c.html#a12cf0a1c7920e3771d84a1d6e1130a78" title="Registers a new callback for a command. " alt="" coords="159,158,335,199"/>
+<area shape="rect" id="node3" href="$print__util_8c.html#ae0e520f47e2bfa8e497d3e656e5a9144" title="Writes string of character to a stream. " alt="" coords="561,111,689,137"/>
+<area shape="rect" id="node5" href="$print__util_8c.html#a3f6c96ce9559fb6c4d1d07480da77117" title="Writes a number in any base to a stream. " alt="" coords="387,5,509,32"/>
+<area shape="rect" id="node6" href="$print__util_8c.html#a1ae199e97454e1a94871ab360218629d" title="Writes an alphabet character to a stream,. " alt="" coords="565,5,685,32"/>
+</map>

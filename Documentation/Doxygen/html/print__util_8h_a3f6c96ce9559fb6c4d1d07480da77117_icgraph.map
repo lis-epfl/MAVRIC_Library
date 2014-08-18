@@ -1,0 +1,28 @@
+<map id="print_util_putnum" name="print_util_putnum">
+<area shape="rect" id="node2" href="$print__util_8h.html#a025d6572ba94f96eb7af0631e2957fbd" title="Writes a number in any base to the debug stream. " alt="" coords="175,455,337,482"/>
+<area shape="rect" id="node3" href="$mavlink__message__handler_8h.html#a50e84ea014e579b8091c67fc4c741024" title="Dummy message callback for debug purpose. " alt="" coords="391,536,567,577"/>
+<area shape="rect" id="node4" href="$mavlink__message__handler_8h.html#a1d3a01dee89b7d9635fe0ba59338e721" title="Main update function, handles the incoming message according to the registered message and command ca..." alt="" coords="620,534,796,576"/>
+<area shape="rect" id="node7" href="$mavlink__message__handler_8h.html#a30c7e3e36ff65b47536cc78ce159d0b9" title="Dummy command callback for debug purpose. " alt="" coords="391,601,567,642"/>
+<area shape="rect" id="node8" href="$mavlink__waypoint__handler_8h.html#adf09a736bd708631e05706a92d3c3c8b" title="Initialize a list of hardcoded waypoints. " alt="" coords="405,666,552,708"/>
+<area shape="rect" id="node9" href="$mavlink__waypoint__handler_8h.html#af44ebd0e018d792019f377952ddc05e1" title="Initialize a first waypoint if a flight plan is set. " alt="" coords="633,133,783,174"/>
+<area shape="rect" id="node10" href="$navigation_8h.html#ab3aa816251fea36305526225b4f4889d" title="Drives the automatic takeoff procedure. " alt="" coords="856,17,996,58"/>
+<area shape="rect" id="node13" href="$navigation_8h.html#af2c74e770198edb11975c57885ddf171" title="Drives the GPS navigation procedure. " alt="" coords="856,250,996,292"/>
+<area shape="rect" id="node14" href="$tasks_8h.html#a417b414354ec97dfdd0743a526e16bf0" title="Updates the state and mode of the UAV. " alt="" coords="1062,293,1213,334"/>
+<area shape="rect" id="node15" href="$mavlink__waypoint__handler_8h.html#a6b75b16911048bb83e8dd4476f54d103" title="Set the waypoint depending on the reference frame defined in the current_waypoint structure..." alt="" coords="401,192,556,233"/>
+<area shape="rect" id="node16" href="$state_8h.html#a76c89f023f7b49201d712f3c5ab15291" title="Set the state and the mode of the vehicle. " alt="" coords="405,732,552,759"/>
+<area shape="rect" id="node18" href="$navigation_8h.html#afa7cb8f034b5868959749e10cff3c010" title="Initialise the position hold mode. " alt="" coords="638,250,778,292"/>
+<area shape="rect" id="node19" href="$navigation_8h.html#a409b5ccf09fc416d0aac4dcfc5a33bba" title="Sets the automatic takeoff waypoint. " alt="" coords="638,68,778,109"/>
+<area shape="rect" id="node20" href="$orca_8h.html#afad4b42886910d4dba0d6c33ff96df28" title="Computes the new collision&#45;free velocity. " alt="" coords="385,783,572,810"/>
+<area shape="rect" id="node21" href="$position__estimation_8h.html#a58dfc2a384eed682d8cbf5c8fdf3db52" title="Reset the home position and altitude. " alt="" coords="405,418,552,460"/>
+<area shape="rect" id="node26" href="$simulation_8h.html#aabd70706588c351964edb55e236d4a1a" title="Initialize the simulation module. " alt="" coords="426,834,531,860"/>
+<area shape="rect" id="node27" href="$print__util_8h.html#a9711fc6391e0eb698bea5da7da783b43" title="Writes a log&#45;like message to the debug stream. " alt="" coords="417,885,540,926"/>
+<area shape="rect" id="node5" href="$mavlink__communication_8h.html#a96b84def01059bd867200755c7ab651e" title="Run task scheduler update if the buffer is empty. " alt="" coords="1056,532,1219,573"/>
+<area shape="rect" id="node6" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="1267,479,1403,506"/>
+<area shape="rect" id="node12" href="$navigation_8h.html#a02ce7ec34ea269ade7a9ad0eda6fca13" title="Drives the hold position procedure. " alt="" coords="844,185,1008,226"/>
+<area shape="rect" id="node11" href="$navigation_8h.html#afb6120977e160b65322f554a8c5fc7ad" title="Navigates the robot towards waypoint waypoint_input in 3D velocity command mode. " alt="" coords="1074,210,1201,236"/>
+<area shape="rect" id="node17" href="$state_8h.html#a00d4763f92d2ed39ee9fc190901bf26d" title="Initialise the state of the MAV. " alt="" coords="671,732,745,759"/>
+<area shape="rect" id="node22" href="$position__estimation_8h.html#a574c95eef66368875c97b912a3eea5cb" title="Position estimation update step, performing position estimation then position correction (function to..." alt="" coords="641,469,775,510"/>
+<area shape="rect" id="node23" href="$tasks_8h.html#afc72040c3820b1b8f3336c205ebcba14" title="Updates the IMU. " alt="" coords="849,476,1003,503"/>
+<area shape="rect" id="node24" href="$imu_8h.html#ad26e4a8057f844098be0f8a47985b379" title="To calibrate the gyros at startup (not used know) " alt="" coords="1068,428,1207,455"/>
+<area shape="rect" id="node25" href="$tasks_8h.html#a4067c810c5e22c2e7c019c48c865d525" title="Run the main stabilisation loop. " alt="" coords="1060,479,1215,506"/>
+</map>

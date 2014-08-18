@@ -1,0 +1,4 @@
+<map id="onboard_parameters_add_parameter_float" name="onboard_parameters_add_parameter_float">
+<area shape="rect" id="node2" href="$mavlink__telemetry_8c.html#abd811abcaaee53afcdf8cd96e7737929" title="Add all onboard parameters to the parameter list. " alt="" coords="200,5,356,47"/>
+<area shape="rect" id="node3" href="$mavlink__telemetry_8h.html#ab2e783bf88048c3d5a256968b2fad042" title="Initialise all the mavlink streams and call the onboard parameters register. " alt="" coords="404,13,556,39"/>
+</map>

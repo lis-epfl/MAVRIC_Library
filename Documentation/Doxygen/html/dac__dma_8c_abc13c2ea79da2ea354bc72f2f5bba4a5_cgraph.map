@@ -1,0 +1,5 @@
+<map id="init_gclk" name="init_gclk">
+<area shape="rect" id="node2" href="$scif__uc3c_8c.html#ac355443257f05c78943fdd41d8b8fb90" title="Setup a generic clock. " alt="" coords="127,5,230,32"/>
+<area shape="rect" id="node4" href="$scif__uc3c_8c.html#a97cca4b2eb1d71d681f7b81f54e672c3" title="Enable a generic clock. " alt="" coords="124,56,233,83"/>
+<area shape="rect" id="node3" href="$scif__uc3c_8c.html#a703046a65be951d33d8907ca284d963a" title="Stop a generic clock. " alt="" coords="281,5,388,32"/>
+</map>

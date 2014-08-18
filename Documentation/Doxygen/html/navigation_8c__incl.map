@@ -1,0 +1,42 @@
+<map id="/home/julien/Desktop/tmp/maveric/Code/Library/control/navigation.c" name="/home/julien/Desktop/tmp/maveric/Code/Library/control/navigation.c">
+<area shape="rect" id="node2" href="$navigation_8h.html" title="navigation.h" alt="" coords="1983,109,2075,136"/>
+<area shape="rect" id="node48" href="$print__util_8h.html" title="print_util.h" alt="" coords="3079,557,3161,584"/>
+<area shape="rect" id="node3" href="$mavlink__waypoint__handler_8h.html" title="mavlink_waypoint_handler.h" alt="" coords="1493,259,1680,285"/>
+<area shape="rect" id="node23" href="$position__estimation_8h.html" title="position_estimation.h" alt="" coords="2165,333,2310,360"/>
+<area shape="rect" id="node28" href="$quaternions_8h.html" title="quaternions.h" alt="" coords="2939,632,3039,659"/>
+<area shape="rect" id="node37" href="$mavlink__communication_8h.html" title="mavlink_communication.h" alt="" coords="1628,483,1801,509"/>
+<area shape="rect" id="node40" href="$state_8h.html" title="state.h" alt="" coords="1374,408,1437,435"/>
+<area shape="rect" id="node42" href="$tasks_8h.html" title="tasks.h" alt="" coords="1905,408,1970,435"/>
+<area shape="rect" id="node44" href="$stabilisation_8h.html" title="stabilisation.h" alt="" coords="2671,408,2774,435"/>
+<area shape="rect" id="node46" href="$orca_8h.html" title="orca.h" alt="" coords="2119,184,2177,211"/>
+<area shape="rect" id="node4" href="$mavlink__stream_8h.html" title="mavlink_stream.h" alt="" coords="1733,707,1859,733"/>
+<area shape="rect" id="node24" href="$imu_8h.html" title="imu.h" alt="" coords="2454,557,2509,584"/>
+<area shape="rect" id="node38" href="$mavlink__message__handler_8h.html" title="mavlink_message_handler.h" alt="" coords="1429,632,1616,659"/>
+<area shape="rect" id="node43" href="$qfilter_8h.html" title="qfilter.h" alt="" coords="2299,483,2365,509"/>
+<area shape="rect" id="node7" href="$streams_8h.html" title="streams.h" alt="" coords="2663,789,2743,815"/>
+<area shape="rect" id="node9" href="$maveric_2mavlink_8h.html" title="MAVLink comm protocol built from maveric2.xml. " alt="" coords="940,781,1103,823"/>
+<area shape="rect" id="node10" href="$maveric_2version_8h.html" title="MAVLink comm protocol built from maveric2.xml. " alt="" coords="1037,871,1112,897"/>
+<area shape="rect" id="node11" href="$maveric2_8h.html" title="MAVLink comm protocol generated from maveric2.xml. " alt="" coords="926,871,1013,897"/>
+<area shape="rect" id="node12" href="$protocol_8h_source.html" title="../protocol.h" alt="" coords="5,953,96,979"/>
+<area shape="rect" id="node13" href="$maveric_2mavlink__msg__heartbeat_8h_source.html" title="./mavlink_msg_heartbeat.h" alt="" coords="120,953,299,979"/>
+<area shape="rect" id="node14" href="$maveric_2mavlink__msg__sys__status_8h_source.html" title="./mavlink_msg_sys_status.h" alt="" coords="323,953,512,979"/>
+<area shape="rect" id="node15" href="$maveric_2mavlink__msg__system__time_8h_source.html" title="./mavlink_msg_system\l_time.h" alt="" coords="536,945,693,987"/>
+<area shape="rect" id="node16" href="$maveric_2mavlink__msg__ping_8h_source.html" title="./mavlink_msg_ping.h" alt="" coords="717,953,867,979"/>
+<area shape="rect" id="node17" href="$maveric_2mavlink__msg__change__operator__control_8h_source.html" title="./mavlink_msg_change\l_operator_control.h" alt="" coords="891,945,1047,987"/>
+<area shape="rect" id="node18" href="$maveric_2mavlink__msg__change__operator__control__ack_8h_source.html" title="./mavlink_msg_change\l_operator_control_ack.h" alt="" coords="1071,945,1233,987"/>
+<area shape="rect" id="node19" href="$maveric_2mavlink__msg__auth__key_8h_source.html" title="./mavlink_msg_auth\l_key.h" alt="" coords="1257,945,1396,987"/>
+<area shape="rect" id="node20" href="$maveric_2mavlink__msg__set__mode_8h_source.html" title="./mavlink_msg_set_mode.h" alt="" coords="1421,953,1603,979"/>
+<area shape="rect" id="node21" href="$maveric_2mavlink__msg__param__request__read_8h_source.html" title="./mavlink_msg_param\l_request_read.h" alt="" coords="1627,945,1778,987"/>
+<area shape="rect" id="node22" href="$maveric_2mavlink__msg__param__request__list_8h_source.html" title="./mavlink_msg_param\l_request_list.h" alt="" coords="1802,945,1953,987"/>
+<area shape="rect" id="node33" href="$ahrs_8h.html" title="ahrs.h" alt="" coords="2197,557,2256,584"/>
+<area shape="rect" id="node36" href="$coord__conventions_8h.html" title="coord_conventions.h" alt="" coords="2861,557,3003,584"/>
+<area shape="rect" id="node25" href="$gyroscope_8h.html" title="gyroscope.h" alt="" coords="2531,632,2624,659"/>
+<area shape="rect" id="node26" href="$accelerometer_8h.html" title="accelerometer.h" alt="" coords="2648,632,2763,659"/>
+<area shape="rect" id="node27" href="$magnetometer_8h.html" title="magnetometer.h" alt="" coords="2390,632,2506,659"/>
+<area shape="rect" id="node32" href="$scheduler_8h.html" title="scheduler.h" alt="" coords="1870,632,1959,659"/>
+<area shape="rect" id="node29" href="$maths_8h.html" title="maths.h" alt="" coords="3089,789,3159,815"/>
+<area shape="rect" id="node31" href="$vectors_8h_source.html" title="vectors.h" alt="" coords="3034,707,3110,733"/>
+<area shape="rect" id="node39" href="$onboard__parameters_8h.html" title="onboard_parameters.h" alt="" coords="1566,557,1717,584"/>
+<area shape="rect" id="node45" href="$pid__control_8h.html" title="pid_control.h" alt="" coords="3235,789,3331,815"/>
+<area shape="rect" id="node47" href="$neighbor__selection_8h.html" title="neighbor_selection.h" alt="" coords="1948,259,2089,285"/>
+</map>

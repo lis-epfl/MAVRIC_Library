@@ -1,0 +1,13 @@
+<map id="gpio_enable_module_pin" name="gpio_enable_module_pin">
+<area shape="rect" id="node2" href="$ads1274_8h.html#a0176eb0c9771c53fff490bae17e5b227" title="Initializes ADC (configures Pins, starts Clock, sets defaults) " alt="" coords="423,40,554,66"/>
+<area shape="rect" id="node3" href="$ads1274_8h.html#a6638970be589fd687e4f6eaa192d9bb5" title="Enable/Disable the clock to the ADC. " alt="" coords="217,32,369,74"/>
+<area shape="rect" id="node4" href="$i2c__driver__int_8h.html#ab89cf2aa9741bf7d6ef45bd531cd1324" title="Initialize the I2C communication. " alt="" coords="242,98,345,125"/>
+<area shape="rect" id="node5" href="$spi__buffered_8h.html#ae4ba5d5b188c9d61b6dc487f0003ad9b" title="Initialize SPI interface: this interface uses internal buffers and interrupts. Bytes in the outgoing ..." alt="" coords="235,149,352,176"/>
+<area shape="rect" id="node6" href="$uart__int_8h.html#ad6d446e237b1255a2fc7e52e78eb0213" title="Initialize the UART line. " alt="" coords="249,200,338,226"/>
+<area shape="rect" id="node8" href="$gpio_8h.html#af8e9d12ce235497e93a945d244ffcb1d" title="Enables specific module modes for a set of pins. " alt="" coords="223,276,363,302"/>
+<area shape="rect" id="node7" href="$console_8h.html#a2d508d92a343b8b93c79d1fec30af394" title="Initialize the console module. " alt="" coords="443,174,534,201"/>
+<area shape="rect" id="node9" href="$adc__int_8h.html#a2c1617986d66967f06ec981ed270e370" title="Initializes ADC (configures Pins, starts Clock, sets defaults) " alt="" coords="445,225,533,252"/>
+<area shape="rect" id="node10" href="$dac__dma_8h.html#abbf4defe49d4e22a549f081e287baa29" title="Initialize the DAC module. " alt="" coords="439,276,538,302"/>
+<area shape="rect" id="node11" href="$remote__dsm2_8h.html#afb1f0b64454e3a9e4b9750a30043e08b" title="Initialize UART receiver for Spektrum/DSM2 slave receivers. " alt="" coords="417,326,560,353"/>
+<area shape="rect" id="node12" href="$init_8c.html#a916f2adc2080b4fe88034086d107a8dc" title="This function initializes the board target resources. " alt="" coords="449,377,528,404"/>
+</map>

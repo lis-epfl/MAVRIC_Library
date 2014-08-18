@@ -1,0 +1,12 @@
+<map id="coord_conventions_global_to_local_position" name="coord_conventions_global_to_local_position">
+<area shape="rect" id="node2" href="$mavlink__waypoint__handler_8h.html#a6b75b16911048bb83e8dd4476f54d103" title="Set the waypoint depending on the reference frame defined in the current_waypoint structure..." alt="" coords="253,180,408,221"/>
+<area shape="rect" id="node10" href="$neighbor__selection_8h.html#a3b5dc9707d6266ba6ced48aa0c0786bb" title="Decode the message and parse to the neighbor array. " alt="" coords="225,245,436,287"/>
+<area shape="rect" id="node3" href="$mavlink__waypoint__handler_8h.html#af44ebd0e018d792019f377952ddc05e1" title="Initialize a first waypoint if a flight plan is set. " alt="" coords="489,129,640,171"/>
+<area shape="rect" id="node8" href="$navigation_8h.html#af2c74e770198edb11975c57885ddf171" title="Drives the GPS navigation procedure. " alt="" coords="705,188,845,229"/>
+<area shape="rect" id="node4" href="$navigation_8h.html#ab3aa816251fea36305526225b4f4889d" title="Drives the automatic takeoff procedure. " alt="" coords="705,5,845,47"/>
+<area shape="rect" id="node7" href="$navigation_8h.html#a02ce7ec34ea269ade7a9ad0eda6fca13" title="Drives the hold position procedure. " alt="" coords="693,71,857,112"/>
+<area shape="rect" id="node9" href="$tasks_8h.html#a417b414354ec97dfdd0743a526e16bf0" title="Updates the state and mode of the UAV. " alt="" coords="905,159,1056,200"/>
+<area shape="rect" id="node5" href="$navigation_8h.html#afb6120977e160b65322f554a8c5fc7ad" title="Navigates the robot towards waypoint waypoint_input in 3D velocity command mode. " alt="" coords="917,78,1044,105"/>
+<area shape="rect" id="node6" href="$tasks_8h.html#ac3bbbc0615ef446b047e4edc9b461e46" title="Initialises all the tasks. " alt="" coords="1104,78,1240,105"/>
+<area shape="rect" id="node11" href="$neighbor__selection_8h.html#ab4dd2ab3f0d7f5b5e506ac8ea1244447" title="Initialize the neighbor selection module. " alt="" coords="484,253,645,279"/>
+</map>

@@ -1,0 +1,37 @@
+<map id="/home/julien/Desktop/tmp/maveric/Code/Library/util/coord_conventions.h" name="/home/julien/Desktop/tmp/maveric/Code/Library/util/coord_conventions.h">
+<area shape="rect" id="node2" href="$hud_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/communication/hud.c" alt="" coords="892,354,1068,410"/>
+<area shape="rect" id="node3" href="$attitude__error__estimator_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/control/attitude_error\l_estimator.h" alt="" coords="2103,109,2279,180"/>
+<area shape="rect" id="node6" href="$attitude__error__estimator_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/control/attitude_error\l_estimator.c" alt="" coords="2451,228,2627,299"/>
+<area shape="rect" id="node7" href="$ahrs_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/sensing/ahrs.c" alt="" coords="2353,117,2529,173"/>
+<area shape="rect" id="node8" href="$imu_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/sensing/imu.c" alt="" coords="2553,117,2729,173"/>
+<area shape="rect" id="node9" href="$position__estimation_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/sensing/position_estimation.h" alt="" coords="1314,117,1513,173"/>
+<area shape="rect" id="node11" href="$Maveric__myCopter_2src_2central__data_8h_source.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/central_data.h" alt="" coords="1256,584,1451,640"/>
+<area shape="rect" id="node12" href="$simulation_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/sensing/simulation.c" alt="" coords="433,688,609,744"/>
+<area shape="rect" id="node23" href="$Library_2tests_2config_2central__data_8h_source.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/tests/config/central_data.h" alt="" coords="94,473,274,529"/>
+<area shape="rect" id="node31" href="$neighbor__selection_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/sensing/neighbor_selection.c" alt="" coords="1901,354,2096,410"/>
+<area shape="rect" id="node35" href="$qfilter_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/sensing/qfilter.c" alt="" coords="2753,117,2929,173"/>
+<area shape="rect" id="node36" href="$coord__conventions_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/util/coord_conventions.c" alt="" coords="2953,117,3129,173"/>
+<area shape="rect" id="node4" href="$attitude__controller__p2_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/control/attitude_controller_p2.h" alt="" coords="2222,235,2426,291"/>
+<area shape="rect" id="node5" href="$attitude__controller__p2_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/control/attitude_controller_p2.c" alt="" coords="2222,354,2426,410"/>
+<area shape="rect" id="node10" href="$hud_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/communication/hud.h" alt="" coords="1263,235,1439,291"/>
+<area shape="rect" id="node16" href="$mavlink__telemetry_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/mavlink_telemetry.c" alt="" coords="1968,688,2197,744"/>
+<area shape="rect" id="node18" href="$mavlink__waypoint__handler_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/communication/mavlink_waypoint\l_handler.h" alt="" coords="1114,347,1337,417"/>
+<area shape="rect" id="node21" href="$navigation_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/control/navigation.h" alt="" coords="1568,473,1744,529"/>
+<area shape="rect" id="node25" href="$orca_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/control/orca.h" alt="" coords="1571,354,1747,410"/>
+<area shape="rect" id="node27" href="$stabilisation__copter_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/control/stabilisation_copter.h" alt="" coords="567,354,759,410"/>
+<area shape="rect" id="node30" href="$neighbor__selection_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/sensing/neighbor_selection.h" alt="" coords="1564,235,1759,291"/>
+<area shape="rect" id="node32" href="$position__estimation_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/sensing/position_estimation.c" alt="" coords="939,235,1138,291"/>
+<area shape="rect" id="node33" href="$simulation_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/sensing/simulation.h" alt="" coords="413,235,589,291"/>
+<area shape="rect" id="node13" href="$main_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/tests/main.c" alt="" coords="1328,792,1504,848"/>
+<area shape="rect" id="node14" href="$Maveric__myCopter_2src_2boardsupport_8h_source.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/boardsupport.h" alt="" coords="1198,688,1397,744"/>
+<area shape="rect" id="node15" href="$main_8cpp.html" title="Empty user application template. " alt="" coords="1103,792,1286,848"/>
+<area shape="rect" id="node17" href="$tasks_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/tasks.c" alt="" coords="1471,688,1654,744"/>
+<area shape="rect" id="node19" href="$mavlink__waypoint__handler_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/communication/mavlink_waypoint\l_handler.c" alt="" coords="1069,465,1291,536"/>
+<area shape="rect" id="node20" href="$state__machine_8h.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/communication/state_machine.h" alt="" coords="830,473,1045,529"/>
+<area shape="rect" id="node22" href="$navigation_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/control/navigation.c" alt="" coords="1568,584,1744,640"/>
+<area shape="rect" id="node24" href="$Library_2tests_2config_2boardsupport_8h_source.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/tests/config/boardsupport.h" alt="" coords="92,584,276,640"/>
+<area shape="rect" id="node26" href="$orca_8c.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/control/orca.c" alt="" coords="1819,473,1995,529"/>
+<area shape="rect" id="node28" href="$Library_2tests_2config_2conf__stabilisation__copter_8h_source.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/tests/config/conf_stabilisation\l_copter.h" alt="" coords="349,465,547,536"/>
+<area shape="rect" id="node29" href="$Maveric__myCopter_2src_2config_2conf__stabilisation__copter_8h_source.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Maveric\l_myCopter/src/config/conf\l_stabilisation_copter.h" alt="" coords="571,465,754,536"/>
+<area shape="rect" id="node34" href="$conf__sim__model_8h_source.html" title="/home/julien/Desktop\l/tmp/maveric/Code/Library\l/tests/config/conf_sim_model.h" alt="" coords="259,354,463,410"/>
+</map>

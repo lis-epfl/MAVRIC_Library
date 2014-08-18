@@ -1,0 +1,6 @@
+<map id="usb_int_register_write_stream" name="usb_int_register_write_stream">
+<area shape="rect" id="node2" href="$usb__int_8c.html#a0c42a8a63d30428a19658d279c966a19" title="Blocking operation to retrieve a received byte from uart. " alt="" coords="203,13,333,39"/>
+<area shape="rect" id="node3" href="$stdio__usb_8c.html#a07c3b80d140391730f02f0e2207f8d43" title="Sends a character with the USART. " alt="" coords="381,13,509,39"/>
+<area shape="rect" id="node4" href="$group__udi__cdc__group.html#ga8faae3fcf4911017c0fcf0aa127179f6" title="Puts a byte on CDC line The type int is used to support printf redirection from compiler LIB..." alt="" coords="557,13,656,39"/>
+<area shape="rect" id="node5" href="$group__udi__cdc__group.html#ga7d0d458a5731da95dd05f30714c42dde" title="This function checks if a new character sent is possible The type int is used to support scanf redire..." alt="" coords="704,13,845,39"/>
+</map>
