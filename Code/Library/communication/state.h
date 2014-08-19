@@ -45,7 +45,7 @@ typedef enum
 	MAV_MODE_ATTITUDE_CONTROL = 192,
 	MAV_MODE_VELOCITY_CONTROL = 208,
 	MAV_MODE_POSITION_HOLD = 216,
-	MAV_MODE_GPS_NAVIGATION = 148
+	MAV_MODE_GPS_NAVIGATION = 156
 } mav_mode_t;
 
 /**
@@ -96,6 +96,8 @@ typedef struct
 	bool collision_avoidance;							///< Flag to tell whether the collision avoidance is active or not
 	
 	bool reset_position;								///< Flag to reset the position
+	
+	bool remote_active;									///< Flag to tell whether the remote is active
 	
 	const analog_monitor_t* analog_monitor;				///< The pointer to the analog monitor structure
 	const mavlink_stream_t* mavlink_stream;				///< Pointer to the mavlin kstream structure

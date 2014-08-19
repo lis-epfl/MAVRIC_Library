@@ -18,6 +18,9 @@
 
 #include "state.h"
 #include "print_util.h"
+#include "delay.h"
+
+void state_enable_mode_from_msg(state_t *state, uint8_t base_mode, mav_flag_t mav_mode_flag);
 
 void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor, mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *message_handler)
 {
@@ -52,6 +55,8 @@ void state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	state->collision_avoidance = false;
 	
 	state->reset_position = false;
+	
+	state->remote_active = state_config->remote_active;
 	
 	// Add callbacks for onboard parameters requests
 	mavlink_message_handler_msg_callback_t callback;
@@ -121,59 +126,26 @@ void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
 		print_util_dbg_print_num(packet.base_mode,10);
 		print_util_dbg_print(", custom mode:");
 		print_util_dbg_print_num(packet.custom_mode,10);
-		print_util_dbg_print("\n");
+		print_util_dbg_print("\r");
 
-		if (state->simulation_mode == REAL_MODE)
+		state_enable_mode_from_msg(state, packet.base_mode, MAV_MODE_FLAG_SAFETY_ARMED);
+		state_enable_mode_from_msg(state, packet.base_mode, MAV_MODE_FLAG_MANUAL_INPUT_ENABLED);
+		// Deliberately not included the MAV_MODE_FLAG_HIL_ENABLED. QGroundControl do not modify directly the HIL flag (at least not with the set_mode message). 
+		state_enable_mode_from_msg(state, packet.base_mode, MAV_MODE_FLAG_STABILIZE_ENABLED);
+		state_enable_mode_from_msg(state, packet.base_mode, MAV_MODE_FLAG_GUIDED_ENABLED);
+		state_enable_mode_from_msg(state, packet.base_mode, MAV_MODE_FLAG_AUTO_ENABLED);
+
+		print_util_dbg_print("New mav mode:");
+		print_util_dbg_print_num(state->mav_mode,10);
+		print_util_dbg_print("\r");
+
+		if (state_test_if_in_flag_mode(state,MAV_MODE_FLAG_SAFETY_ARMED))
 		{
-			switch(packet.base_mode)
-			{
-				case MAV_MODE_STABILIZE_DISARMED:
-				case MAV_MODE_GUIDED_DISARMED:
-				case MAV_MODE_AUTO_DISARMED:
-					state->mav_state = MAV_STATE_STANDBY;
-					state->mav_mode = MAV_MODE_MANUAL_DISARMED;
-					break;
-				
-				case MAV_MODE_MANUAL_ARMED:
-					//if (remote_controller_get_thrust_from_remote()<-0.95f)
-					{
-						state->mav_state = MAV_STATE_ACTIVE;
-						state->mav_mode = MAV_MODE_MANUAL_ARMED;
-					}
-					break;
-			}
+			state->mav_state = MAV_STATE_ACTIVE;
 		}
 		else
 		{
-			switch(packet.base_mode)
-			{
-				case MAV_MODE_STABILIZE_DISARMED:
-				case MAV_MODE_GUIDED_DISARMED:
-				case MAV_MODE_AUTO_DISARMED:
-					state->mav_state = MAV_STATE_STANDBY;
-					state->mav_mode = MAV_MODE_MANUAL_DISARMED & MAV_MODE_FLAG_HIL_ENABLED;
-					break;
-					
-				case MAV_MODE_MANUAL_ARMED:
-					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode = MAV_MODE_MANUAL_ARMED & MAV_MODE_FLAG_HIL_ENABLED;
-					break;
-					
-				case MAV_MODE_STABILIZE_ARMED:
-					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode = MAV_MODE_STABILIZE_ARMED & MAV_MODE_FLAG_HIL_ENABLED;
-					break;
-					
-				case MAV_MODE_GUIDED_ARMED:
-					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode = MAV_MODE_GUIDED_ARMED & MAV_MODE_FLAG_HIL_ENABLED;
-					break;
-					
-				case MAV_MODE_AUTO_ARMED:
-					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode = MAV_MODE_AUTO_ARMED & MAV_MODE_FLAG_HIL_ENABLED;
-					break;
-			}
+			state->mav_state = MAV_STATE_STANDBY;
 		}
 	}
 }
@@ -208,4 +180,22 @@ bool state_test_if_first_time_in_mode(state_t *state, mav_mode_t mav_mode)
 void state_set_new_mode(state_t *state, mav_mode_t mav_mode)
 {
 	state->mav_mode = mav_mode + (state->mav_mode & MAV_MODE_FLAG_HIL_ENABLED);
+}
+
+void state_enable_mode_from_msg(state_t *state, uint8_t base_mode, mav_flag_t mav_mode_flag)
+{
+	if (base_mode & mav_mode_flag)
+	{
+		if (!(state->mav_mode & mav_mode_flag))
+		{
+			state->mav_mode += mav_mode_flag;
+		}
+	}
+	else
+	{
+		if (state->mav_mode & mav_mode_flag)
+		{
+			state->mav_mode += -mav_mode_flag;
+		}
+	}
 }

@@ -211,14 +211,14 @@ void mavlink_message_handler_msg_default_dbg(mavlink_message_t* msg)
 		print_util_dbg_print_num(msg->sysid, 10);
 		print_util_dbg_print(" from component");
 		print_util_dbg_print_num(msg->compid,10);
-		print_util_dbg_print( "\n");
+		print_util_dbg_print( ".\r");
 	}
 }
 
 
 void mavlink_message_handler_cmd_default_dbg(mavlink_command_long_t* cmd)
 {
-	print_util_dbg_print("\n Received command with ID");
+	print_util_dbg_print("Received command with ID");
 	print_util_dbg_print_num(cmd->command,10);
 	print_util_dbg_print(" with parameters: [");
 	print_util_dbg_print_num(cmd->param1,10);
@@ -236,7 +236,7 @@ void mavlink_message_handler_cmd_default_dbg(mavlink_command_long_t* cmd)
 	print_util_dbg_print_num(cmd->param7,10);
 	print_util_dbg_print("] confirmation: ");
 	print_util_dbg_print_num(cmd->confirmation,10);
-	print_util_dbg_print("\n");
+	print_util_dbg_print("\r");
 }
 
 

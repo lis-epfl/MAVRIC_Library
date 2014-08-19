@@ -81,7 +81,8 @@ void central_data_init()
 		.autopilot_name = MAV_AUTOPILOT_GENERIC,
 		.sensor_present = 0b1111110000100111,
 		.sensor_enabled = 0b1111110000100111,
-		.sensor_health = 0b1111110000100111
+		.sensor_health = 0b1111110000100111,
+		.remote_active = true
 	};
 	state_init(	&central_data.state,
 				&state_config,

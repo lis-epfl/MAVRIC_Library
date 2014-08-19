@@ -380,6 +380,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 	{
 		case MAV_MODE_ATTITUDE_CONTROL:
 			remote_controller_get_command_from_remote(&central_data->controls);
+			
 			central_data->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			central_data->controls.yaw_mode=YAW_RELATIVE;
 		
