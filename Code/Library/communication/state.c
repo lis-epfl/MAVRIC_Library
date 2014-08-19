@@ -151,27 +151,27 @@ void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
 				case MAV_MODE_GUIDED_DISARMED:
 				case MAV_MODE_AUTO_DISARMED:
 					state->mav_state = MAV_STATE_STANDBY;
-					state->mav_mode = MAV_MODE_MANUAL_DISARMED;
+					state->mav_mode = MAV_MODE_MANUAL_DISARMED & MAV_MODE_FLAG_HIL_ENABLED;
 					break;
 					
 				case MAV_MODE_MANUAL_ARMED:
 					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode = MAV_MODE_MANUAL_ARMED;
+					state->mav_mode = MAV_MODE_MANUAL_ARMED & MAV_MODE_FLAG_HIL_ENABLED;
 					break;
 					
 				case MAV_MODE_STABILIZE_ARMED:
 					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode = MAV_MODE_STABILIZE_ARMED;
+					state->mav_mode = MAV_MODE_STABILIZE_ARMED & MAV_MODE_FLAG_HIL_ENABLED;
 					break;
 					
 				case MAV_MODE_GUIDED_ARMED:
 					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode = MAV_MODE_GUIDED_ARMED;
+					state->mav_mode = MAV_MODE_GUIDED_ARMED & MAV_MODE_FLAG_HIL_ENABLED;
 					break;
 					
 				case MAV_MODE_AUTO_ARMED:
 					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode = MAV_MODE_AUTO_ARMED;
+					state->mav_mode = MAV_MODE_AUTO_ARMED & MAV_MODE_FLAG_HIL_ENABLED;
 					break;
 			}
 		}
