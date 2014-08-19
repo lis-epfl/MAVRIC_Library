@@ -379,7 +379,14 @@ task_return_t tasks_run_stabilisation(void* arg)
 	switch(central_data->state.mav_mode - (central_data->state.mav_mode & MAV_MODE_FLAG_DECODE_POSITION_HIL))
 	{
 		case MAV_MODE_ATTITUDE_CONTROL:
-			remote_controller_get_command_from_remote(&central_data->controls);
+			if(central_data->state.remote_active)
+			{
+				remote_controller_get_command_from_remote(&central_data->controls);
+			}
+			else
+			{
+				central_data->controls = central_data->controls_joystick;
+			}
 			
 			central_data->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			central_data->controls.yaw_mode=YAW_RELATIVE;
@@ -388,7 +395,14 @@ task_return_t tasks_run_stabilisation(void* arg)
 			break;
 		
 		case MAV_MODE_VELOCITY_CONTROL:
-			remote_controller_get_velocity_vector_from_remote(&central_data->controls);
+			if(central_data->state.remote_active)
+			{
+				remote_controller_get_velocity_vector_from_remote(&central_data->controls);
+			}
+			else
+			{
+				joystick_parsing_get_velocity_vector_from_joystick(&central_data->joystick_parsing,&central_data->controls);
+			}
 			
 			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
 			central_data->controls.yaw_mode = YAW_RELATIVE;

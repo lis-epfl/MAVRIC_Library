@@ -82,7 +82,7 @@ void central_data_init()
 		.sensor_present = 0b1111110000100111,
 		.sensor_enabled = 0b1111110000100111,
 		.sensor_health = 0b1111110000100111,
-		.remote_active = true
+		.remote_active = false
 	};
 	state_init(	&central_data.state,
 				&state_config,
@@ -186,8 +186,7 @@ void central_data_init()
 								&central_data.imu,
 								&central_data.ahrs,
 								&central_data.position_estimator,
-								central_data.servos ,
-								&central_data.mavlink_communication);
+								central_data.servos);
 	
 	delay_ms(100);
 
@@ -243,6 +242,11 @@ void central_data_init()
 				&central_data.ahrs,
 				&central_data.mavlink_communication.mavlink_stream);
 	
+	delay_ms(100);
+	
+	joystick_parsing_init(	&central_data.joystick_parsing,
+								&central_data.controls_joystick,
+								&central_data.mavlink_communication);
 	delay_ms(100);
 	
 	// Init sonar
