@@ -36,7 +36,7 @@ void initialisation()
 	mavlink_telemetry_init();
 	onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
 
-	sd_spi_test(&central_data->sd_spi);
+	//sd_spi_test(&central_data->sd_spi);
 
 	LED_On(LED1);
 
