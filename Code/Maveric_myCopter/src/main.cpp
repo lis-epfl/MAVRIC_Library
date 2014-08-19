@@ -684,9 +684,6 @@ void initialisation()
 	mavlink_telemetry_init();
 	onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
 
-	//sd_spi_test(&central_data->sd_spi);
-
-
 	LED_On(LED1);
 
 	piezo_speaker_startup_melody();
@@ -697,7 +694,7 @@ void initialisation()
 
 	//test_sd_spi();
 	
-	test_fatfs();
+	//test_fatfs();
 
 	central_data->state.mav_state = MAV_STATE_STANDBY;
 
