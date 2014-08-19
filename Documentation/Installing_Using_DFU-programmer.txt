@@ -1,4 +1,4 @@
-Installing and using DFU-programmer with the maveric board
+﻿Installing and using DFU-programmer with the maveric board
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ##################################
@@ -63,7 +63,7 @@ a) Install driver
 ~~~~~~~~~~~~~~~~~
 
 - connect a USB cable to a maveric board WITH THE BOOTLOADER FLASHED (If it's not the case, read the documentation related to the bootloader) (WARNING: Some cellphone cables are only for charging through USB, DO NOT USE ONE OF THEM)
-- install the driver: (DO NOT let windows search for the driver) Specify the path to the .inf file found in the folder Code\Library\DFU-programmer\DFU\dfu-prog-usb-1.2.2 
+- install the driver: (DO NOT let windows search for the driver), go to "Control panel", "Device manager", select the DFU programmer, Specify the path to the .inf file found in the folder Code\Library\DFU-programmer\DFU\dfu-prog-usb-1.2.2 
 
 
 b) A typical flashing sequence:

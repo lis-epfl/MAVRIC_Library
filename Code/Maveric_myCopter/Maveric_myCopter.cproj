@@ -274,7 +274,7 @@
         <InterfaceName>JTAG</InterfaceName>
       </ToolOptions>
       <ToolType>com.atmel.avrdbg.tool.jtagice3plus</ToolType>
-      <ToolNumber>J30200015895</ToolNumber>
+      <ToolNumber>J30200014870</ToolNumber>
       <ToolName>JTAGICE3</ToolName>
     </com_atmel_avrdbg_tool_jtagice3plus>
   </PropertyGroup>
@@ -642,6 +642,30 @@
     <Compile Include="Library\hal\analog_monitor.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\hal\FatFs\diskio.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\FatFs\diskio.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\FatFs\ff.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\FatFs\ff.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\FatFs\ffconf.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\FatFs\integer.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\FatFs\option\syscall.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\FatFs\option\unicode.c">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\hal\gps_ublox.c">
       <SubType>compile</SubType>
     </Compile>
@@ -703,6 +727,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\turnigy.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\usb_int.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\usb_int.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\xbee.c">
@@ -1105,19 +1135,22 @@
     <Compile Include="src\config\MAVsettings\MAV010_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\MAVsettings\MAV051_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\MAVsettings\MAV101_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\MAVsettings\MAV102_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\MAVsettings\MAV201_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\MAVsettings\MAV202_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\MAVsettings\MAV203_conf_imu_rev4.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\main.cpp">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\mavlink_telemetry.c">
@@ -1588,12 +1621,17 @@
     <Compile Include="src\config\dma_channel_config.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\main.cpp">
+      <SubType>compile</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Library\" />
     <Folder Include="Library\communication\" />
     <Folder Include="Library\control\" />
     <Folder Include="Library\hal\" />
+    <Folder Include="Library\hal\FatFs\" />
+    <Folder Include="Library\hal\FatFs\option\" />
     <Folder Include="Library\mavlink\" />
     <Folder Include="Library\mavlink\include\" />
     <Folder Include="Library\mavlink\include\maveric\" />

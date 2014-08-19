@@ -126,16 +126,24 @@ typedef struct
 }sd_spi_t;
 
 //Functions definitions
-bool sd_spi_mem_check(sd_spi_t *sd_spi);
-void sd_spi_get_capacity(sd_spi_t *sd_spi);
-bool sd_spi_reset_card(sd_spi_t *sd_spi);
-bool is_sd_spi_write_pwd_locked(sd_spi_t *sd_spi);
-bool sd_spi_init(sd_spi_t *sd_spi);
+bool sd_spi_mem_check(void);
+void sd_spi_get_capacity(void);
+bool sd_spi_reset_card(void);
+void sd_spi_get_sector_count(void* res);
+void sd_spi_get_sector_size(void* res);
+void sd_spi_get_block_size(void* res);
+bool is_sd_spi_write_pwd_locked(void);
+bool sd_spi_init(void);
+bool sd_spi_status(void);
 
-bool sd_spi_write_sector_from_ram(const void *ram, sd_spi_t *sd_spi);
-bool sd_mmc_spi_read_sector_to_ram(void *ram, sd_spi_t *sd_spi);
-bool sd_mmc_spi_read_open_PDCA (uint32_t pos, sd_spi_t *sd_spi);
+bool sd_spi_wait_not_busy(void);
 
-void sd_spi_test(sd_spi_t *sd_spi);
+bool sd_spi_write_sector_from_ram(const void *ram);
+bool sd_spi_read_sector_to_ram_pcda(void* ram, uint32_t beginning_sector, uint8_t count);
+bool sd_mmc_spi_read_sector_to_ram(void *ram);
+bool sd_spi_read_given_sector_to_ram(void* ram, uint32_t beginning_sector, uint8_t count);
+bool sd_mmc_spi_read_open_PDCA (uint32_t pos);
+bool sd_spi_write_given_sector_from_ram(const void *ram, uint32_t beginning_sector, uint8_t count);
+void sd_spi_test(void);
 
-#endif
+#endif // SD_SPI_H_

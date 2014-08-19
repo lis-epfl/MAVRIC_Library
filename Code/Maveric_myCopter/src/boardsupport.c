@@ -44,6 +44,7 @@
 #include "gps_ublox.h"
 #include "xbee.h"
 #include "console.h"
+#include "stdio_usb.h"
 
 void boardsupport_init(central_data_t *central_data) 
 {
@@ -78,13 +79,15 @@ void boardsupport_init(central_data_t *central_data)
 	gps_ublox_init(&(central_data->gps), UART3, &central_data->mavlink_communication.mavlink_stream);
 	
 	// Init UART 4 for wired communication
-	console_init(UART4);
+	//console_init(CONSOLE_UART4);
+	// Init USB for wired communication
+	console_init(CONSOLE_USB);
 		
 	// connect abstracted aliases to hardware ports
 	central_data->telemetry_down_stream = xbee_get_out_stream();
 	central_data->telemetry_up_stream = xbee_get_in_stream();
 	central_data->debug_out_stream = console_get_out_stream();
-	central_data->debug_in_stream = console_get_out_stream();
+	central_data->debug_in_stream = console_get_in_stream();
 	
 	// init debug output
 	print_util_dbg_print_init(central_data->debug_out_stream);
