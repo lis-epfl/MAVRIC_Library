@@ -521,6 +521,8 @@ void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
 		// From reality to simulation
 		simulation_reset_simulation(sim);
 		simulation_calib_set(sim);
+		sim->state->mav_state = MAV_STATE_STANDBY;
+		sim->state->mav_mode = MAV_MODE_MANUAL_DISARMED;
 		state_enable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
 		sim->pos_est->init_gps_position = false;
 		
