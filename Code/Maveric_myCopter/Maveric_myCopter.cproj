@@ -660,12 +660,6 @@
     <Compile Include="Library\hal\FatFs\integer.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\FatFs\option\syscall.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\hal\FatFs\option\unicode.c">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\hal\gps_ublox.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1637,7 +1631,6 @@
     <Folder Include="Library\control\" />
     <Folder Include="Library\hal\" />
     <Folder Include="Library\hal\FatFs\" />
-    <Folder Include="Library\hal\FatFs\option\" />
     <Folder Include="Library\mavlink\" />
     <Folder Include="Library\mavlink\include\" />
     <Folder Include="Library\mavlink\include\maveric\" />
