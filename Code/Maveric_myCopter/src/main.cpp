@@ -22,7 +22,6 @@ extern "C" {
 	
 	#include "gpio.h"
 	
-	#include "FatFs/ff.h"
 	#include "FatFs/diskio.h"
 }
  
@@ -45,12 +44,10 @@ void initialisation()
 	print_util_dbg_print("OK. Starting up.\r");
 
 	//sd_spi_test();
-
-	//test_sd_spi();
 	
-	//test_diskio_low_layer();
+	//diskio_test_low_layer();
 	
-	test_fatfs();
+	//diskio_test_fatfs();
 
 	central_data->state.mav_state = MAV_STATE_STANDBY;
 
