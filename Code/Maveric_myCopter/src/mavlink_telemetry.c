@@ -189,6 +189,9 @@ void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_par
 	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigation.max_climb_rate                          , "vel_climbRate"    );
 	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigation.soft_zone_size							  , "vel_softZone"     );
 
+
+	//onboard_parameters_add_parameter_int32(onboard_parameters,(int32_t*)&central_data->data_logging.continue_writing, "Log_continue");
+
 }
 
 //------------------------------------------------------------------------------

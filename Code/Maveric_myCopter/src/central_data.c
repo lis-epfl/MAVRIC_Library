@@ -245,9 +245,11 @@ void central_data_init()
 	
 	// Init sonar
 	// i2cxl_sonar_init(&central_data.i2cxl_sonar);
+	// delay_ms(100);
 	
-	// Initialize SD/MMC driver with SPI clock (PBA).
-	//sd_spi_init();
+	data_logging_init(  &central_data.data_logging,
+						&central_data.imu);
+	
 }
 
 central_data_t* central_data_get_pointer_to_struct(void)
