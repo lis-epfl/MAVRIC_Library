@@ -34,6 +34,8 @@ void initialisation()
 	central_data_init();
 
 	mavlink_telemetry_init();
+	
+	//onboard_parameters_write_parameters_to_flashc(&central_data->mavlink_communication.onboard_parameters);
 	onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
 
 	LED_On(LED1);
