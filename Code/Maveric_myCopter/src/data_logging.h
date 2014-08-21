@@ -26,6 +26,7 @@ extern "C" {
 #include "FatFs/ff.h"
 #include "tasks.h"
 #include "imu.h"
+#include "gps_ublox.h"
 
 typedef struct  
 {	
@@ -38,11 +39,12 @@ typedef struct
 	bool continue_writing;
 	
 	const imu_t* imu;
+	const gps_t* gps;
 	
 }data_logging_t;
 
 
-void data_logging_init(data_logging_t* data_logging, const imu_t* imu);
+void data_logging_init(data_logging_t* data_logging, const imu_t* imu, const gps_t* gps);
 
 task_return_t data_logging_run(data_logging_t* data_logging);
 

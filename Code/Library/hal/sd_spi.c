@@ -312,6 +312,7 @@ static int sd_spi_check_hc(void)
 	// check if MMC not busy
 	if (false == sd_spi_wait_not_busy())
 	{
+		print_util_dbg_print("check hc failed, SD card busy\r");
 		return SD_FAILURE; //card is still busy
 	}
 
@@ -320,6 +321,9 @@ static int sd_spi_check_hc(void)
 	r1 = sd_spi_command(SD_READ_OCR, 0);
 	if(r1 != 0) // if response not valid
 	{
+		print_util_dbg_print("check hc FAILED, response not valid:");
+		print_util_dbg_print_num(r1,10);
+		print_util_dbg_print("\r");
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
 		return SD_FAILURE; //card did not received the command properly
 	}
@@ -510,7 +514,7 @@ void sd_spi_get_block_size(void* res)
 
 bool sd_spi_reset_card(void)
 {
-	uint8_t retry = 0;
+	uint16_t retry = 0;
 	uint8_t r1; //card command response
 	
 	sd_spi.init_done = false;
@@ -522,8 +526,11 @@ bool sd_spi_reset_card(void)
 		spi_write(SD_MMC_SPI,0xFF); // write dummy byte
 		
 		retry++; //increment retry counter
-		if(retry > 100)
+		if(retry > 1000)
 		{
+			print_util_dbg_print("Did not manage to set card in iddle state:");
+			print_util_dbg_print_num(r1,10);
+			print_util_dbg_print("\r");
 			return false; //did not manage to set card in iddle_state
 		}
 		
@@ -793,7 +800,7 @@ bool sd_spi_init(void)
 		if (is_high_capacity == -1)
 		{
 			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
-			print_util_dbg_print("sd_card FAILED check high capa \r");
+			print_util_dbg_print("sd_card FAILED check high capacity \r");
 			return false;
 		}
 		else if (is_high_capacity == 1)

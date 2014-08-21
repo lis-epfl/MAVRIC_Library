@@ -1032,12 +1032,12 @@ void diskio_test_low_layer(void)
 	}
 }
 
-FRESULT diskio_open_append (FIL* fp, const char* path)
+FRESULT diskio_open_append (FIL* fp, const char* path, BYTE opening_opt)
 {
 	FRESULT fr;
 
 	/* Opens an existing file. If not exist, creates a new file. */
-	fr = f_open(fp, path, FA_WRITE | FA_OPEN_ALWAYS);
+	fr = f_open(fp, path, opening_opt);
 	if (fr == FR_OK)
 	{
 		/* Seek to end of the file to append data */
@@ -1062,7 +1062,7 @@ void diskio_test_fatfs(void)
 	print_util_dbg_print_num(fr,10);
 	print_util_dbg_print("\r");
 	
-	fr = diskio_open_append(&fil,"License.txt");
+	fr = diskio_open_append(&fil,"License.txt",FA_WRITE | FA_OPEN_ALWAYS);
 	print_util_dbg_print("Result opening:");
 	print_util_dbg_print_num(fr,10);
 	print_util_dbg_print("\r");

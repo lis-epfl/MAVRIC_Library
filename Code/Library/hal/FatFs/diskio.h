@@ -134,10 +134,11 @@ DWORD get_fattime(void);
  *
  * \param	fp			[OUT] File object to create
  * \param	path		[IN]  File name to be opened
+ * \param	opening_opt	The opening file options
  *
  * \result	The result of the process, a FRESULT enum (defined in ff.h)
  */
-FRESULT diskio_open_append (FIL* fp,const char* path);
+FRESULT diskio_open_append (FIL* fp, const char* path, BYTE opening_opt);
 
 /**
  * \brief	A function to test the low layer (read/write bytes to the SD card)

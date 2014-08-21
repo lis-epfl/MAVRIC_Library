@@ -27,11 +27,12 @@ static const char alphabet[36] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 uint32_t loop_count;
 
-void data_logging_init(data_logging_t* data_logging, const imu_t* imu)
+void data_logging_init(data_logging_t* data_logging, const imu_t* imu, const gps_t* gps)
 {
 	loop_count = 0;
 	
 	data_logging->imu = imu;
+	data_logging->gps = gps;
 	
 	data_logging->file_init = false;
 	data_logging->continue_writing = true;
@@ -43,7 +44,7 @@ void data_logging_init(data_logging_t* data_logging, const imu_t* imu)
 		print_util_dbg_print("SD card mounted\r");
 	}
 	
-	data_logging->fr = diskio_open_append(&data_logging->fil,"test.txt");
+	//data_logging->fr = diskio_open_append(&data_logging->fil,"test.txt",FA_WRITE | FA_OPEN_ALWAYS);
 	
 	if (data_logging->fr == FR_OK)
 	{
@@ -86,7 +87,13 @@ void data_logging_file_init(data_logging_t* data_logging)
 		
 		init = data_logging_add_header_name(&data_logging->fil,"accy\t");
 		
-		init = data_logging_add_header_name(&data_logging->fil,"accz\n");
+		init = data_logging_add_header_name(&data_logging->fil,"accz\t");
+		
+		init = data_logging_add_header_name(&data_logging->fil,"latitude\t");
+		
+		init = data_logging_add_header_name(&data_logging->fil,"longitude\t");
+		
+		init = data_logging_add_header_name(&data_logging->fil,"altitude\t");
 		
 		
 		data_logging->file_init = init;
@@ -131,13 +138,28 @@ task_return_t data_logging_run(data_logging_t* data_logging)
 				data_logging->continue_writing = false;
 			}
 			
-			f_printf(&data_logging->fil, "%d", time_keeper_get_millis());
+			uint32_t time = time_keeper_get_millis();
+			f_printf(&data_logging->fil, "%d", time);
+			print_util_dbg_print_num(time,10);
+			print_util_dbg_print(", ");
 			f_puts("\t",&data_logging->fil);
 			data_logging_put_float(&data_logging->fil,data_logging->imu->scaled_accelero.data[X],5);
+			print_util_dbg_putfloat(data_logging->imu->scaled_accelero.data[X],5);
+			print_util_dbg_print("x10 = ");
+			print_util_dbg_print_num(data_logging->imu->scaled_accelero.data[X]*10,10);
+			print_util_dbg_print(", ");
 			f_puts("\t",&data_logging->fil);
 			data_logging_put_float(&data_logging->fil,data_logging->imu->scaled_accelero.data[Y],5);
+			print_util_dbg_putfloat(data_logging->imu->scaled_accelero.data[Y],5);
+			print_util_dbg_print("x10 = ");
+			print_util_dbg_print_num(data_logging->imu->scaled_accelero.data[Y]*10,10);
+			print_util_dbg_print(", ");
 			f_puts("\t",&data_logging->fil);
 			data_logging_put_float(&data_logging->fil,data_logging->imu->scaled_accelero.data[Z],5);
+			print_util_dbg_putfloat(data_logging->imu->scaled_accelero.data[Z],5);
+			print_util_dbg_print("x10 = ");
+			print_util_dbg_print_num(data_logging->imu->scaled_accelero.data[Z]*10,10);
+			print_util_dbg_print("\r");
 			f_puts("\n",&data_logging->fil);
 		}
 		else

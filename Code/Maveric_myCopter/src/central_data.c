@@ -76,7 +76,7 @@ void central_data_init()
 	{
 		.mav_mode = MAV_MODE_SAFE,
 		.mav_state = MAV_STATE_BOOT,
-		.simulation_mode = SIMULATION_MODE, //REAL_MODE
+		.simulation_mode = REAL_MODE , //SIMULATION_MODE
 		.autopilot_type = MAV_TYPE_QUADROTOR,
 		.autopilot_name = MAV_AUTOPILOT_GENERIC,
 		.sensor_present = 0b1111110000100111,
@@ -248,7 +248,8 @@ void central_data_init()
 	// delay_ms(100);
 	
 	data_logging_init(  &central_data.data_logging,
-						&central_data.imu);
+						&central_data.imu,
+						&central_data.gps);
 	
 }
 
