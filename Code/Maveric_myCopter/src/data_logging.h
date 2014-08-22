@@ -34,7 +34,16 @@ extern "C" {
  */
 typedef struct
 {
-	double* param;												///< Pointer to the parameter value
+	uint8_t* param_uint8;										///< Pointer to the uint8_t parameter value
+	int8_t* param_int8;											///< Pointer to the int8_t parameter value
+	uint16_t* param_uint16;										///< Pointer to the uint16_t parameter value
+	int16_t* param_int16;										///< Pointer to the int16_t parameter value
+	uint32_t* param_uint32;										///< Pointer to the uint32_t parameter value
+	int32_t* param_int32;										///< Pointer to the int32_t parameter value
+	uint64_t* param_uint64;										///< Pointer to the uint64_t parameter value
+	int64_t* param_int64;										///< Pointer to the int64_t parameter value
+	float* param_float;											///< Pointer to the float parameter value
+	double* param_double;										///< Pointer to the double parameter value
 	char param_name[MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN];	///< Parameter name composed of 16 characters
 	mavlink_message_type_t data_type;							///< Parameter type
 	uint8_t param_name_length;									///< Length of the parameter name
@@ -99,6 +108,14 @@ typedef struct
 void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config);
 
 /**
+ * \brief	Create and open a new file
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ * \param	file_name				The name of the file to create
+ */
+void data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name);
+
+/**
  * \brief	The task to log the data to the SD card
  *
  * \param	data_logging			The pointer to the data logging structure
@@ -107,16 +124,95 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
  */
 task_return_t data_logging_run(data_logging_t* data_logging);
 
-void data_logging_add_parameter_uint8(data_logging_t* data_logging, uint8_t* val, const char* param_name, bool schedule_for_logging);
-void data_logging_add_parameter_int8(data_logging_t* data_logging, int8_t* val, const char* param_name, bool schedule_for_logging);
-void data_logging_add_parameter_uint16(data_logging_t* data_logging, uint16_t* val, const char* param_name, bool schedule_for_logging);
-void data_logging_add_parameter_int16(data_logging_t* data_logging, int16_t* val, const char* param_name, bool schedule_for_logging);
-void data_logging_add_parameter_uint32(data_logging_t* data_logging, uint32_t* val, const char* param_name, bool schedule_for_logging);
-void data_logging_add_parameter_int32(data_logging_t* data_logging, int32_t* val, const char* param_name, bool schedule_for_logging);
-void data_logging_add_parameter_uint64(data_logging_t* data_logging, uint64_t* val, const char* param_name, bool schedule_for_logging);
-void data_logging_add_parameter_int64(data_logging_t* data_logging, int64_t* val, const char* param_name, bool schedule_for_logging);
-void data_logging_add_parameter_float(data_logging_t* data_logging, float* val, const char* param_name, bool schedule_for_logging);
-void data_logging_add_parameter_double(data_logging_t* data_logging, double* val, const char* param_name, bool schedule_for_logging);
+/**
+ * \brief	Registers parameter to log on the SD card
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ * \param 	val						The parameter value
+ * \param 	param_name				Name of the parameter
+ */
+void data_logging_add_parameter_uint8(data_logging_t* data_logging, uint8_t* val, const char* param_name);
+
+/**
+ * \brief	Registers parameter to log on the SD card
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ * \param 	val						The parameter value
+ * \param 	param_name				Name of the parameter
+ */
+void data_logging_add_parameter_int8(data_logging_t* data_logging, int8_t* val, const char* param_name);
+
+/**
+ * \brief	Registers parameter to log on the SD card
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ * \param 	val						The parameter value
+ * \param 	param_name				Name of the parameter
+ */
+void data_logging_add_parameter_uint16(data_logging_t* data_logging, uint16_t* val, const char* param_name);
+
+/**
+ * \brief	Registers parameter to log on the SD card
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ * \param 	val						The parameter value
+ * \param 	param_name				Name of the parameter
+ */
+void data_logging_add_parameter_int16(data_logging_t* data_logging, int16_t* val, const char* param_name);
+
+/**
+ * \brief	Registers parameter to log on the SD card
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ * \param 	val						The parameter value
+ * \param 	param_name				Name of the parameter
+ */
+void data_logging_add_parameter_uint32(data_logging_t* data_logging, uint32_t* val, const char* param_name);
+
+/**
+ * \brief	Registers parameter to log on the SD card
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ * \param 	val						The parameter value
+ * \param 	param_name				Name of the parameter
+ */
+void data_logging_add_parameter_int32(data_logging_t* data_logging, int32_t* val, const char* param_name);
+
+/**
+ * \brief	Registers parameter to log on the SD card
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ * \param 	val						The parameter value
+ * \param 	param_name				Name of the parameter
+ */
+void data_logging_add_parameter_uint64(data_logging_t* data_logging, uint64_t* val, const char* param_name);
+
+/**
+ * \brief	Registers parameter to log on the SD card
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ * \param 	val						The parameter value
+ * \param 	param_name				Name of the parameter
+ */
+void data_logging_add_parameter_int64(data_logging_t* data_logging, int64_t* val, const char* param_name);
+
+/**
+ * \brief	Registers parameter to log on the SD card
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ * \param 	val						The parameter value
+ * \param 	param_name				Name of the parameter
+ */
+void data_logging_add_parameter_float(data_logging_t* data_logging, float* val, const char* param_name);
+
+/**
+ * \brief	Registers parameter to log on the SD card
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ * \param 	val						The parameter value
+ * \param 	param_name				Name of the parameter
+ */
+void data_logging_add_parameter_double(data_logging_t* data_logging, double* val, const char* param_name);
 
 
 #ifdef __cplusplus

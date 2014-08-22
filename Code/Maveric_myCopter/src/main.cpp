@@ -41,7 +41,7 @@ void initialisation()
 	LED_On(LED1);
 
 	//piezo_speaker_startup_melody();
-	piezo_speaker_mario_melody();
+	//piezo_speaker_mario_melody();
 
 	print_util_dbg_print("OK. Starting up.\r");
 

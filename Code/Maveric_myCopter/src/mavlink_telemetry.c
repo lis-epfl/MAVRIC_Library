@@ -197,18 +197,21 @@ void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_par
 
 void mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging)
 {
-	data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[X], "acc_x", true);
-	data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[Y], "acc_y", true);
-	data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[Z], "acc_z", true);
 	
-	data_logging_add_parameter_double(data_logging, &central_data->gps.latitude, "latitude", true);
-	data_logging_add_parameter_double(data_logging, &central_data->gps.longitude, "longitude", true);
-	data_logging_add_parameter_float(data_logging, &central_data->gps.altitude, "altitude", true);
+	data_logging_create_new_log_file(data_logging, "newfile");
 	
-	data_logging_add_parameter_int8(data_logging, &central_data->state_machine.rc_check, "rc_check", true);
+	data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[X], "acc_x");
+	data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[Y], "acc_y");
+	data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[Z], "acc_z");
 	
-	data_logging_add_parameter_uint8(data_logging, &central_data->state.mav_state, "mav_state", true);
-	data_logging_add_parameter_uint8(data_logging, &central_data->state.mav_mode, "mav_mode", true);
+	data_logging_add_parameter_double(data_logging, &central_data->gps.latitude, "latitude");
+	data_logging_add_parameter_double(data_logging, &central_data->gps.longitude, "longitude");
+	data_logging_add_parameter_float(data_logging, &central_data->gps.altitude, "altitude");
+	
+	data_logging_add_parameter_int8(data_logging, &central_data->state_machine.rc_check, "rc_check");
+	
+	data_logging_add_parameter_uint8(data_logging, &central_data->state.mav_state, "mav_state");
+	data_logging_add_parameter_uint8(data_logging, &central_data->state.mav_mode, "mav_mode");
 	
 };
 

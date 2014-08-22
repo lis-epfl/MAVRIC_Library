@@ -255,7 +255,6 @@ void central_data_init()
 	
 	data_logging_init(  &central_data.data_logging,
 						&data_logging_conf);
-	
 }
 
 central_data_t* central_data_get_pointer_to_struct(void)
