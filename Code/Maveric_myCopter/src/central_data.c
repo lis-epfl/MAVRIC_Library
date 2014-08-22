@@ -247,9 +247,14 @@ void central_data_init()
 	// i2cxl_sonar_init(&central_data.i2cxl_sonar);
 	// delay_ms(100);
 	
+	data_logging_conf_t data_logging_conf = 
+	{
+		.debug = true,
+		.max_data_logging_count = MAX_DATA_LOGGING_COUNT
+	};
+	
 	data_logging_init(  &central_data.data_logging,
-						&central_data.imu,
-						&central_data.gps);
+						&data_logging_conf);
 	
 }
 
