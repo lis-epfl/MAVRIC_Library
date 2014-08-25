@@ -22,7 +22,7 @@ extern "C" {
 	
 	#include "gpio.h"
 	
-	#include "FatFs/diskio.h"
+	//#include "FatFs/diskio.h"
 }
  
 central_data_t *central_data;

@@ -197,8 +197,11 @@ void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_par
 
 void mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging)
 {
+	// if _USE_LFN == 0: Name: max 8 characters + 3 for extension; if _USE_LFN != 0: Name: max 255 characters + more flexible extension type
+	data_logging_create_new_log_file(data_logging, "NewFile");
 	
-	data_logging_create_new_log_file(data_logging, "newfile");
+	// Add your logging parameters here, name length max = MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN = 16
+	// Supported type: all numeric types included in mavlink_message_type_t (i.e. all except MAVLINK_TYPE_CHAR)
 	
 	data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[X], "acc_x");
 	data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[Y], "acc_y");

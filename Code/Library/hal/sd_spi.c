@@ -522,16 +522,16 @@ bool sd_spi_reset_card(void)
 	
 	do 
 	{
-		r1 = sd_spi_send_command(MMC_GO_IDLE_STATE, 0); //card will answer 0x01 if entered in Iddle_State
+		r1 = sd_spi_send_command(MMC_GO_IDLE_STATE, 0); //card will answer 0x01 if entered in Idle_State
 		spi_write(SD_MMC_SPI,0xFF); // write dummy byte
 		
 		retry++; //increment retry counter
 		if(retry > 1000)
 		{
-			print_util_dbg_print("Did not manage to set card in iddle state:");
+			print_util_dbg_print("Did not manage to set card in idle state:");
 			print_util_dbg_print_num(r1,10);
 			print_util_dbg_print("\r");
-			return false; //did not manage to set card in iddle_state
+			return false; //did not manage to set card in idle_state
 		}
 		
 	}while(r1 != 0x01); // check memory enters iddle_state

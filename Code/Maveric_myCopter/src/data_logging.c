@@ -17,7 +17,6 @@
 
 
 #include "data_logging.h"
-#include "FatFs/diskio.h"
 #include "print_util.h"
 #include "time_keeper.h"
 #include "delay.h"
@@ -93,6 +92,13 @@ static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param
  */
 static void data_logging_log_parameters(data_logging_t* data_logging);
 
+/**
+ * \brief	Prints on debug port the result's value of the fatfs operation
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ */
+static void data_logging_print_error_signification(data_logging_t* data_logging);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -103,11 +109,6 @@ static void data_logging_add_header_name(data_logging_t* data_logging)
 	
 	uint16_t i;
 	data_logging_set_t* data_set = data_logging->data_logging_set;
-	
-	if (data_logging->debug)
-	{
-		print_util_dbg_print("header: returns:");
-	}
 	
 	for (i = 0; i < data_set->data_logging_count; i++)
 	{
@@ -127,12 +128,6 @@ static void data_logging_add_header_name(data_logging_t* data_logging)
 			init = true;
 			data_logging_put_r_or_n(data_logging, i);
 		}
-	}
-	
-	if (data_logging->debug)
-	{
-		print_util_dbg_print_num(init,10);
-		print_util_dbg_print("\r");
 	}
 	data_logging->file_init = init;
 }
@@ -284,7 +279,10 @@ static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param
 	{
 		if (data_logging->debug)
 		{
-			print_util_dbg_print("Error putting tab or new line character!\r");
+			data_logging->fr = f_stat(data_logging->name_n_extension,NULL);
+			print_util_dbg_print("Error putting tab or new line character!");
+			data_logging_print_error_signification(data_logging);
+			print_util_dbg_print("\r");
 		}
 	}
 }
@@ -298,65 +296,160 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 	for (i = 0; i < data_set->data_logging_count; i++)
 	{
 		data_logging_entry_t* param = &data_set->data_log[i];
-		
-		if (param->schedule_for_logging)
+		switch(param->data_type)
 		{
-			switch(param->data_type)
+			case MAV_PARAM_TYPE_UINT8:
+				res = f_printf(&data_logging->fil, "%d", *((uint8_t*)param->param));
+				data_logging_put_r_or_n(data_logging,i);
+				break;
+				
+			case MAV_PARAM_TYPE_INT8:
+				res = f_printf(&data_logging->fil, "%d", *((int8_t*)param->param));
+				data_logging_put_r_or_n(data_logging,i);
+				break;
+				
+			case MAV_PARAM_TYPE_UINT16:
+				res = f_printf(&data_logging->fil, "%d", *((uint16_t*)param->param));
+				data_logging_put_r_or_n(data_logging,i);
+				break;
+				
+			case MAV_PARAM_TYPE_INT16:
+				res = f_printf(&data_logging->fil, "%d", *((int16_t*)param->param));
+				data_logging_put_r_or_n(data_logging,i);
+				break;
+					
+			case MAV_PARAM_TYPE_UINT32:
+				res = f_printf(&data_logging->fil, "%d", *((uint32_t*)param->param));
+				data_logging_put_r_or_n(data_logging,i);
+				break;
+				
+			case MAV_PARAM_TYPE_INT32:
+				res = f_printf(&data_logging->fil, "%d", *((int32_t*)param->param));
+				data_logging_put_r_or_n(data_logging,i);
+				break;
+				
+			case MAV_PARAM_TYPE_UINT64:
+				res = data_logging_put_uint64_t(&data_logging->fil,*((uint64_t*)param->param));
+				data_logging_put_r_or_n(data_logging,i);
+				break;
+				
+			case MAV_PARAM_TYPE_INT64:
+				res = data_logging_put_int64_t(&data_logging->fil,*((int64_t*)param->param));
+				data_logging_put_r_or_n(data_logging,i);
+				break;
+					
+			case MAV_PARAM_TYPE_REAL32:
+				res = data_logging_put_float(&data_logging->fil,*((float*)param->param),10);
+				data_logging_put_r_or_n(data_logging,i);
+				break;
+					
+			case MAV_PARAM_TYPE_REAL64:
+				res = data_logging_put_double(&data_logging->fil,*((double*)param->param),10);
+				data_logging_put_r_or_n(data_logging,i);
+				break;
+			default:
+				print_util_dbg_print("Data type not supported!\r");
+		}
+		if (res == EOF)
+		{
+			if (data_logging->debug)
 			{
-				case MAV_PARAM_TYPE_UINT8:
-					res = f_printf(&data_logging->fil, "%d", *param->param_uint8);
-					data_logging_put_r_or_n(data_logging,i);
-					break;
-				case MAV_PARAM_TYPE_INT8:
-					res = f_printf(&data_logging->fil, "%d", *param->param_int8);
-					data_logging_put_r_or_n(data_logging,i);
-					break;
-				case MAV_PARAM_TYPE_UINT16:
-					res = f_printf(&data_logging->fil, "%d", *param->param_uint16);
-					data_logging_put_r_or_n(data_logging,i);
-					break;
-				case MAV_PARAM_TYPE_INT16:
-					res = f_printf(&data_logging->fil, "%d", *param->param_int16);
-					data_logging_put_r_or_n(data_logging,i);
-					break;
-					
-				case MAV_PARAM_TYPE_UINT32:
-					res = f_printf(&data_logging->fil, "%ld", *param->param_uint32);
-					data_logging_put_r_or_n(data_logging,i);
-					break;
-				case MAV_PARAM_TYPE_INT32:
-					res = f_printf(&data_logging->fil, "%ld", *param->param_int32);
-					data_logging_put_r_or_n(data_logging,i);
-					break;
-				case MAV_PARAM_TYPE_UINT64:
-					res = data_logging_put_uint64_t(&data_logging->fil,*param->param_uint64);
-					data_logging_put_r_or_n(data_logging,i);
-					break;
-				case MAV_PARAM_TYPE_INT64:
-					res = data_logging_put_int64_t(&data_logging->fil,*param->param_int64);
-					data_logging_put_r_or_n(data_logging,i);
-					break;
-					
-				case MAV_PARAM_TYPE_REAL32:
-					res = data_logging_put_float(&data_logging->fil,*param->param_float,10);
-					data_logging_put_r_or_n(data_logging,i);
-					break;
-					
-				case MAV_PARAM_TYPE_REAL64:
-					res = data_logging_put_double(&data_logging->fil,*param->param_double,10);
-					data_logging_put_r_or_n(data_logging,i);
-					break;
-				default:
-					print_util_dbg_print("Data type not supported!\r");
-			}
-			if (res == EOF)
-			{
-				if (data_logging->debug)
-				{
-					print_util_dbg_print("Error appending parameter!\r");
-				}
+				data_logging->fr = f_stat(data_logging->name_n_extension,NULL);
+				print_util_dbg_print("Error appending parameter! Erro:");
+				data_logging_print_error_signification(data_logging);
+				print_util_dbg_print("\r");
 			}
 		}
+	}
+}
+
+static void data_logging_print_error_signification(data_logging_t* data_logging)
+{
+	switch(data_logging->fr)
+	{
+		case FR_OK:
+			print_util_dbg_print("FR_OK");
+			break;
+			
+		case FR_DISK_ERR:
+			print_util_dbg_print("FR_DISK_ERR");
+			break;
+			
+		case FR_INT_ERR:
+			print_util_dbg_print("FR_INT_ERR");
+			break;
+			
+		case FR_NOT_READY:
+			print_util_dbg_print("FR_NOT_READY");
+			break;
+			
+		case FR_NO_FILE:
+			print_util_dbg_print("FR_NO_FILE");
+			break;
+			
+		case FR_NO_PATH:
+			print_util_dbg_print("FR_NO_PATH");
+			break;
+			
+		case FR_INVALID_NAME:
+			print_util_dbg_print("FR_INVALID_NAME");
+			break;
+			
+		case FR_DENIED:
+			print_util_dbg_print("FR_DENIED");
+			break;
+			
+		case FR_EXIST:
+			print_util_dbg_print("FR_EXIST");
+			break;
+			
+		case FR_INVALID_OBJECT:
+			print_util_dbg_print("FR_INVALID_OBJECT");
+			break;
+			
+		case FR_WRITE_PROTECTED:
+			print_util_dbg_print("FR_WRITE_PROTECTED");
+			break;
+			
+		case FR_INVALID_DRIVE:
+			print_util_dbg_print("FR_INVALID_DRIVE");
+			break;
+			
+		case FR_NOT_ENABLED:
+			print_util_dbg_print("FR_NOT_ENABLED");
+			break;
+			
+		case FR_NO_FILESYSTEM:
+			print_util_dbg_print("FR_NO_FILESYSTEM");
+			break;
+			
+		case FR_MKFS_ABORTED:
+			print_util_dbg_print("FR_MKFS_ABORTED");
+			break;
+			
+		case FR_TIMEOUT:
+			print_util_dbg_print("FR_TIMEOUT");
+			break;
+			
+		case FR_LOCKED:
+			print_util_dbg_print("FR_LOCKED");
+			break;
+			
+		case FR_NOT_ENOUGH_CORE:
+			print_util_dbg_print("FR_NOT_ENOUGH_CORE");
+			break;
+			
+		case FR_TOO_MANY_OPEN_FILES:
+			print_util_dbg_print("FR_TOO_MANY_OPEN_FILES");
+			break;
+			
+		case FR_INVALID_PARAMETER:
+			print_util_dbg_print("FR_INVALID_PARAMETER");
+			break;
+			
+		default:
+			print_util_dbg_print("Error unknown");
+			break;
 	}
 }
 
@@ -392,13 +485,29 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	data_logging->file_init = false;
 	data_logging->continue_writing = true;
 	
+	#if _USE_LFN
+	data_logging->buffer_name_size = _MAX_LFN;
+	data_logging->buffer_add_size = _MAX_LFN;
+	#else
+	data_logging->buffer_name_size = 8;
+	data_logging->buffer_add_size = 8;
+	#endif
+	
+	data_logging->name_n_extension = malloc(data_logging->buffer_add_size);
+	
 	data_logging->fr = f_mount(&data_logging->fs, "", 1);
 	
-	if (data_logging->fr == FR_OK)
+	if (data_logging->debug)
 	{
-		if (data_logging->debug)
+		if (data_logging->fr == FR_OK)
 		{
 			print_util_dbg_print("SD card mounted\r");
+		}
+		else
+		{
+			print_util_dbg_print("Mounting error:");
+			data_logging_print_error_signification(data_logging);
+			print_util_dbg_print("\r");
 		}
 	}
 }
@@ -407,22 +516,69 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 {
 	int32_t i = 0;
 	
-	char *file_add = "";
-	char *name_n_extension = "";
+	char *file_add = malloc(data_logging->buffer_name_size);
 	
 	do 
 	{
-		sprintf(name_n_extension, "%s%s.txt", file_name,file_add);
-		print_util_dbg_print(name_n_extension);
+		if (i > 0)
+		{
+			//while (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s%s.txt", file_name, data_logging->file_add) >= data_logging->buffer_name_size)
+			//{
+				//data_logging->buffer_name_size *= 2;
+				//free(data_logging->name_n_extension);
+				//data_logging->name_n_extension = malloc(data_logging->buffer_name_size);
+			//}
+			
+			if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s%s.txt", file_name, file_add) >= data_logging->buffer_name_size)
+			{
+				print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
+				print_util_dbg_print_num(data_logging->buffer_name_size,10);
+				print_util_dbg_print(" and it is ");
+				print_util_dbg_print_num(sizeof(file_name),10);
+				print_util_dbg_print("\r");
+			}
+		}
+		else
+		{
+			//while (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s.txt", file_name) >= data_logging->buffer_name_size)
+			//{
+				//data_logging->buffer_name_size *= 2;
+				//free(data_logging->name_n_extension);
+				//data_logging->name_n_extension = malloc(data_logging->buffer_name_size);
+			//}
+			
+			if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s.txt", file_name) >= data_logging->buffer_name_size)
+			{
+				print_util_dbg_print("Name error: The name is too long! It should be maximum ");
+				print_util_dbg_print_num(data_logging->buffer_name_size,10);
+				print_util_dbg_print(" and it is ");
+				print_util_dbg_print_num(sizeof(file_name),10);
+				print_util_dbg_print("\r");
+			}
+		}
+		
+		data_logging->fr = f_open(&data_logging->fil, data_logging->name_n_extension, FA_WRITE | FA_CREATE_NEW);
+		
+		print_util_dbg_print("f_open result:");
+		data_logging_print_error_signification(data_logging);
 		print_util_dbg_print("\r");
-		data_logging->fr = f_open(&data_logging->fil, name_n_extension, FA_WRITE | FA_CREATE_NEW);
+		
 		if (data_logging->fr == FR_EXIST)
 		{
-			//file_add = "";
-			sprintf(file_add,"_%ld",i);
+			print_util_dbg_print("File already existing, adding extension.\r");
+			//while(snprintf(file_add,data_logging->buffer_add_size,"_%ld",i) >= data_logging->buffer_add_size)
+			//{
+				//data_logging->buffer_add_size *= 2;
+				//free(file_add);
+				//name_n_extension = malloc(data_logging->buffer_add_size);
+			//}
+			if(snprintf(file_add,data_logging->buffer_add_size,"_%ld",i) >= data_logging->buffer_add_size)
+			{
+				print_util_dbg_print("Error file extension! Extension too long.");
+			}
 		}
-		i++;
-	}while((i<50)&&(data_logging->fr != FR_OK));
+		++i;
+	}while((i < MAX_NUMBER_OF_LOGGED_FILE)&&(data_logging->fr != FR_OK)&&(data_logging->fr != FR_NOT_READY));
 	
 	
 	if (data_logging->fr == FR_OK)
@@ -431,29 +587,34 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 		data_logging->fr = f_lseek(&data_logging->fil, f_size(&data_logging->fil));
 		if (data_logging->fr != FR_OK)
 		{
+			if (data_logging->debug)
+			{
+				print_util_dbg_print("lseek error:");
+				data_logging_print_error_signification(data_logging);
+			}
 			f_close(&data_logging->fil);
 		}
 	}
-	
-	//data_logging->fr = diskio_open_append(&data_logging->fil,"test.txt",FA_WRITE | FA_CREATE_NEW);
 	
 	if (data_logging->fr == FR_OK)
 	{
 		if (data_logging->debug)
 		{
-			print_util_dbg_print("File opened\r");
+			print_util_dbg_print("File ");
+			print_util_dbg_print(data_logging->name_n_extension);
+			print_util_dbg_print(" opened. \r");
 		}
 	}
 }
 
 task_return_t data_logging_run(data_logging_t* data_logging)
 {
-	if (data_logging->continue_writing)
+	if (data_logging->continue_writing == 1)
 	{
 		if (data_logging->file_init)
 		{
 			loop_count++;
-			if (loop_count == 5)
+			if (loop_count == 100)
 			{
 				data_logging->continue_writing = false;
 				loop_count = 0;
@@ -473,13 +634,30 @@ task_return_t data_logging_run(data_logging_t* data_logging)
 	}
 	else
 	{
-		if (loop_count < 10)
+		if (loop_count < 1)
 		{
-			loop_count++;
-			print_util_dbg_print("File closed\r");
+			if (data_logging->fr != FR_NO_FILE)
+			{
+				if (data_logging->debug)
+				{
+					print_util_dbg_print("Attempt to close file\r");
+				}
+				
+				data_logging->fr = f_close(&data_logging->fil);
+				loop_count++;
+				if ((data_logging->fr != FR_OK))
+				{
+					loop_count = 0;
+				}
+				else
+				{
+					if (data_logging->debug)
+					{
+						print_util_dbg_print("File closed\r");
+					}
+				}
+			}
 		}
-		
-		data_logging->fr = f_close(&data_logging->fil);
 	}
 	return TASK_RUN_SUCCESS;
 }
@@ -492,11 +670,9 @@ void data_logging_add_parameter_uint8(data_logging_t* data_logging, uint8_t* val
 	{
 		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-		new_param->param_uint8               = val;
+		new_param->param					 = (double*) val;
 		strcpy( new_param->param_name, 		 param_name );
 		new_param->data_type                 = MAV_PARAM_TYPE_UINT8;
-		new_param->param_name_length         = strlen(param_name);
-		new_param->schedule_for_logging      = true;
 		
 		data_logging_set->data_logging_count += 1;
 	}
@@ -514,11 +690,9 @@ void data_logging_add_parameter_int8(data_logging_t* data_logging, int8_t* val, 
 	{
 		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-		new_param->param_int8                = val;
+		new_param->param					 = (double*) val;
 		strcpy( new_param->param_name, 		 param_name );
 		new_param->data_type                 = MAV_PARAM_TYPE_INT8;
-		new_param->param_name_length         = strlen(param_name);
-		new_param->schedule_for_logging      = true;
 		
 		data_logging_set->data_logging_count += 1;
 	}
@@ -536,11 +710,9 @@ void data_logging_add_parameter_uint16(data_logging_t* data_logging, uint16_t* v
 	{
 		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-		new_param->param_uint16              = val;
+		new_param->param					 = (double*) val;
 		strcpy( new_param->param_name, 		 param_name );
 		new_param->data_type                 = MAV_PARAM_TYPE_UINT16;
-		new_param->param_name_length         = strlen(param_name);
-		new_param->schedule_for_logging      = true;
 		
 		data_logging_set->data_logging_count += 1;
 	}
@@ -558,11 +730,9 @@ void data_logging_add_parameter_int16(data_logging_t* data_logging, int16_t* val
 	{
 		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-		new_param->param_int16               = val;
+		new_param->param					 = (double*) val;
 		strcpy( new_param->param_name, 		 param_name );
 		new_param->data_type                 = MAV_PARAM_TYPE_INT16;
-		new_param->param_name_length         = strlen(param_name);
-		new_param->schedule_for_logging      = true;
 		
 		data_logging_set->data_logging_count += 1;
 	}
@@ -580,11 +750,9 @@ void data_logging_add_parameter_uint32(data_logging_t* data_logging, uint32_t* v
 	{
 		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-		new_param->param_uint32              = val;
+		new_param->param					 = (double*) val;
 		strcpy( new_param->param_name, 		 param_name );
 		new_param->data_type                 = MAV_PARAM_TYPE_UINT32;
-		new_param->param_name_length         = strlen(param_name);
-		new_param->schedule_for_logging      = true;
 		
 		data_logging_set->data_logging_count += 1;
 	}
@@ -602,11 +770,9 @@ void data_logging_add_parameter_int32(data_logging_t* data_logging, int32_t* val
 	{
 		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-		new_param->param_int32               = val;
+		new_param->param					 = (double*) val;
 		strcpy( new_param->param_name, 		 param_name );
 		new_param->data_type                 = MAV_PARAM_TYPE_INT32;
-		new_param->param_name_length         = strlen(param_name);
-		new_param->schedule_for_logging      = true;
 		
 		data_logging_set->data_logging_count += 1;
 	}
@@ -624,11 +790,9 @@ void data_logging_add_parameter_uint64(data_logging_t* data_logging, uint64_t* v
 	{
 		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-		new_param->param_uint64              = val;
+		new_param->param					 = (double*) val;
 		strcpy( new_param->param_name, 		 param_name );
 		new_param->data_type                 = MAV_PARAM_TYPE_UINT64;
-		new_param->param_name_length         = strlen(param_name);
-		new_param->schedule_for_logging      = true;
 		
 		data_logging_set->data_logging_count += 1;
 	}
@@ -646,11 +810,9 @@ void data_logging_add_parameter_int64(data_logging_t* data_logging, int64_t* val
 	{
 		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-		new_param->param_int64               = val;
+		new_param->param					 = (double*) val;
 		strcpy( new_param->param_name, 		 param_name );
 		new_param->data_type                 = MAV_PARAM_TYPE_INT64;
-		new_param->param_name_length         = strlen(param_name);
-		new_param->schedule_for_logging      = true;
 		
 		data_logging_set->data_logging_count += 1;
 	}
@@ -668,11 +830,9 @@ void data_logging_add_parameter_float(data_logging_t* data_logging, float* val, 
 	{
 		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-		new_param->param_float               = val;
+		new_param->param					 = (double*) val;
 		strcpy( new_param->param_name, 		 param_name );
 		new_param->data_type                 = MAV_PARAM_TYPE_REAL32;
-		new_param->param_name_length         = strlen(param_name);
-		new_param->schedule_for_logging      = true;
 		
 		data_logging_set->data_logging_count += 1;
 	}
@@ -690,11 +850,9 @@ void data_logging_add_parameter_double(data_logging_t* data_logging, double* val
 	{
 		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
 
-		new_param->param_double              = val;
+		new_param->param					 = val;
 		strcpy( new_param->param_name, 		 param_name );
 		new_param->data_type                 = MAV_PARAM_TYPE_REAL64;
-		new_param->param_name_length         = strlen(param_name);
-		new_param->schedule_for_logging      = true;
 		
 		data_logging_set->data_logging_count += 1;
 	}
