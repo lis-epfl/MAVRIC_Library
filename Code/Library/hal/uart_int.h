@@ -71,6 +71,12 @@ enum AVAILABLE_UARTS
 	UART_COUNT
 };
 
+/**
+ * \brief	Initialize the UART config
+ *
+ * \param	UID							The UART ID line
+ * \param	usart_config				Structure with the config defined
+ */
 void uart_int_set_usart_conf(int32_t UID, usart_config_t* usart_config);
 
 /**

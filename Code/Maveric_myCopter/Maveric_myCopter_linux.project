@@ -674,6 +674,8 @@
       <File Name="Library/hal/pwm_servos.h"/>
       <File Name="Library/hal/sd_spi.h"/>
       <File Name="Library/hal/sd_spi.c"/>
+      <File Name="Library/hal/usb_int.h"/>
+      <File Name="Library/hal/usb_int.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>

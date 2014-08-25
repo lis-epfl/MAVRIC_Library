@@ -30,6 +30,7 @@
 #include "analog_monitor.h"
 #include "lsm330dlc.h"
 #include "hmc5883l.h"
+#include "stdio_usb.h"
 
 #include "pwm_servos.h"
 
