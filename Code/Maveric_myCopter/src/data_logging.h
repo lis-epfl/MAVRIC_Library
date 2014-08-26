@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 
-#include "FatFs/ff.h"
+#include "fat_fs/ff.h"
 #include "tasks.h"
 
 
