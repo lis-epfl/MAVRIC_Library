@@ -70,8 +70,10 @@ void boardsupport_init(central_data_t *central_data)
 
 	servo_pwm_hardware_init();
 	
-	// Init UART 0 for XBEE communication
-	xbee_init(UART0);
+	// Init UART 4 for wired communication
+	//console_init(CONSOLE_UART4);
+	// Init USB for wired communication
+	console_init(CONSOLE_USB);
 				
 	// Init UART 3 for GPS communication
 	gps_ublox_init(&(central_data->gps), UART3, &central_data->mavlink_communication.mavlink_stream);

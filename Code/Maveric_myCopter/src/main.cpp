@@ -38,6 +38,9 @@ void initialisation()
 	//onboard_parameters_write_parameters_to_flashc(&central_data->mavlink_communication.onboard_parameters);
 	onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
 
+	//sd_spi_test(&central_data->sd_spi);
+
+
 	LED_On(LED1);
 
 	//piezo_speaker_startup_melody();

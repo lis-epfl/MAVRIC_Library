@@ -12,9 +12,8 @@ LINUX instructions
 a) Install dfu-programmer
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- download tar-ball from Sourceforge
-ENFAITE IL S'AGIT PLUTOT DE DFU-PROGRAMMER
 
+- download dfu-programmer (tar-ball file) from Sourceforge
 - unzip somewhere, enter directory, follow build instructions: 
 COMME C'EST UN TAR, IL FAUT PAS FAIRE UNZIP
 
@@ -27,6 +26,14 @@ sudo cp src/dfu-programmer /usr/local/bin
 to get instructions:
 dfu-programmer -h 
 
+or
+
+- install libusb-1.0-0-dev as proposed in the README from dfu-programmer
+follow build instructions:
+
+./configure
+make
+sudo cp src/dfu-programmer /usr/local/bin
 
 b) Allow standard users to access the board via usb:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
