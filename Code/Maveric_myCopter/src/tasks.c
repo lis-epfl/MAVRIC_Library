@@ -380,7 +380,14 @@ task_return_t tasks_run_stabilisation(void* arg)
 	switch(central_data->state.mav_mode - (central_data->state.mav_mode & MAV_MODE_FLAG_DECODE_POSITION_HIL))
 	{
 		case MAV_MODE_ATTITUDE_CONTROL:
-			remote_controller_get_command_from_remote(&central_data->controls);
+			if(central_data->state.remote_active)
+			{
+				remote_controller_get_command_from_remote(&central_data->controls);
+			}
+			else
+			{
+				central_data->controls = central_data->controls_joystick;
+			}
 			
 			central_data->controls.control_mode = ATTITUDE_COMMAND_MODE;
 			central_data->controls.yaw_mode=YAW_RELATIVE;
@@ -389,7 +396,14 @@ task_return_t tasks_run_stabilisation(void* arg)
 			break;
 		
 		case MAV_MODE_VELOCITY_CONTROL:
-			remote_controller_get_velocity_vector_from_remote(&central_data->controls);
+			if(central_data->state.remote_active)
+			{
+				remote_controller_get_velocity_vector_from_remote(&central_data->controls);
+			}
+			else
+			{
+				joystick_parsing_get_velocity_vector_from_joystick(&central_data->joystick_parsing,&central_data->controls);
+			}
 			
 			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
 			central_data->controls.yaw_mode = YAW_RELATIVE;
@@ -506,7 +520,7 @@ void tasks_create_tasks()
 	scheduler_add_task(scheduler    , 4000                            , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&mavlink_communication_update                    , (task_argument_t)&central_data->mavlink_communication , 5);
 	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&analog_monitor_update                           , (task_argument_t)&central_data->analog_monitor        , 6);
 	scheduler_add_task(scheduler    , 10000                           , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&waypoint_handler_control_time_out_waypoint_msg  , (task_argument_t)&central_data->waypoint_handler      , 7);
-	scheduler_add_task(scheduler	, 100000						  , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_LOW	 , (task_function_t)&data_logging_run								 , (task_argument_t)&central_data->data_logging			 , 8);
+	scheduler_add_task(scheduler	, 100000						  , RUN_NEVER , PERIODIC_ABSOLUTE, PRIORITY_LOW	 , (task_function_t)&data_logging_run								 , (task_argument_t)&central_data->data_logging			 , 8);
 	// scheduler_add_task(scheduler , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_NORMAL , &sonar_update                                                     , 0                                                    , 0);
 
 	scheduler_sort_tasks(scheduler);

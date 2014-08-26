@@ -203,7 +203,7 @@ void mavlink_message_handler_add_cmd_callback(	mavlink_message_handler_t* 				me
 
 void mavlink_message_handler_msg_default_dbg(mavlink_message_t* msg)
 {
-	if (msg->sysid == MAVLINK_BASE_STATION_ID)
+	if ((msg->sysid == MAVLINK_BASE_STATION_ID)&&(msg->msgid != MAVLINK_MSG_ID_MANUAL_CONTROL))
 	{
 		print_util_dbg_print("\n Received message with ID");
 		print_util_dbg_print_num(msg->msgid, 10);

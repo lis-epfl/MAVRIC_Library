@@ -615,6 +615,12 @@
     <Compile Include="Library\control\adaptive_parameter.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\control\joystick_parsing.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\control\joystick_parsing.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\control\orca.c">
       <SubType>compile</SubType>
     </Compile>

@@ -26,8 +26,6 @@
           <VirtualDirectory Name="user_board">
             <File Name="src/asf/common/boards/user_board/init.c"/>
             <File Name="src/asf/common/boards/user_board/user_board.h"/>
-            <File Name="src/asf/common/boards/user_board/led.c" ExcludeProjConfig="Debug"/>
-            <File Name="src/asf/common/boards/user_board/led.h" ExcludeProjConfig="Debug"/>
           </VirtualDirectory>
           <File Name="src/asf/common/boards/board.h"/>
         </VirtualDirectory>
@@ -261,7 +259,6 @@
     <File Name="src/tasks.c"/>
     <File Name="src/main.cpp"/>
     <File Name="src/central_data.c"/>
-    <File Name="Library/Makefile"/>
     <File Name="src/boardsupport.c"/>
     <File Name="src/mavlink_telemetry.h"/>
     <File Name="src/mavlink_telemetry.c"/>
@@ -609,6 +606,8 @@
       <File Name="Library/control/attitude_controller_p2.c"/>
       <File Name="Library/control/attitude_controller_p2.h"/>
       <File Name="Library/control/attitude_command.h"/>
+      <File Name="Library/control/joystick_parsing.c"/>
+      <File Name="Library/control/joystick_parsing.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="hal">
       <File Name="Library/hal/uart_int.h"/>
@@ -664,8 +663,21 @@
       <File Name="Library/hal/lsm330dlc.h"/>
       <File Name="Library/hal/sd_spi.h"/>
       <File Name="Library/hal/sd_spi.c"/>
-      <File Name="Library/hal/usb_int.h"/>
+      <VirtualDirectory Name="fat_fs">
+        <VirtualDirectory Name="option">
+         <File Name="Library/hal/fat_fs/option/cc932.h"/>
+         <File Name="Library/hal/fat_fs/option/syscall.h"/>
+         <File Name="Library/hal/fat_fs/option/unicode.h"/>
+        </VirtualDirectory>
+        <File Name="Library/hal/fat_fs/diskio.c"/>
+        <File Name="Library/hal/fat_fs/diskio.h"/>
+        <File Name="Library/hal/fat_fs/ff.c"/>
+        <File Name="Library/hal/fat_fs/ff.h"/>
+        <File Name="Library/hal/fat_fs/ffconf.h"/>
+        <File Name="Library/hal/fat_fs/integer.h"/>
+      </VirtualDirectory>
       <File Name="Library/hal/usb_int.c"/>
+      <File Name="Library/hal/usb_int.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>
@@ -725,7 +737,7 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="avr32-g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-O3 -std=gnu++0x -mhard-float -fdata-sections -muse-rodata-section -g2 -pg -p -Wall -mpart=uc3c1512c -c  -Wpointer-arith -mrelax -MD -MP -MF" C_Options="-O3 -mhard-float -fdata-sections -muse-rodata-section -g2 -pg -p -Wall -mpart=uc3c1512c -c -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -MD -MP -MF" Assembler=" -x assembler-with-cpp -c -mpart=uc3c1512c -mrelax " Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
+      <Compiler Options="-O3 -std=gnu++0x -mhard-float -fdata-sections -muse-rodata-section -g2 -pg -p -Wall -mpart=uc3c1512c -c  -Wpointer-arith -mrelax -MD -MP -MF" C_Options="-O3 -mhard-float -fdata-sections -muse-rodata-section -g2 -pg -p -Wall -mpart=uc3c1512c -c  -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -MD -MP -MF" Assembler="-x assembler-with-cpp -c -mpart=uc3c1512c -mrelax" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
         <IncludePath Value="src"/>
         <IncludePath Value="src/config"/>
         <IncludePath Value="src/asf"/>

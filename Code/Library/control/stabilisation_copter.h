@@ -28,7 +28,6 @@ extern "C" {
 #include "position_estimation.h"
 #include "imu.h"
 #include "servo_pwm.h"
-#include "mavlink_communication.h"
 
 /**
  * \brief Structure containing the stacked controller
@@ -64,9 +63,8 @@ typedef struct
  * \param	ahrs		The pointer to the attitude estimation structure
  * \param	pos_est					The pointer to the position estimation structure
  * \param	servos					The pointer to the array of servos command values
- * \param	mavlink_communication	The pointer to the mavlink communication structure
  */
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, const control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servo_output_t* servos, mavlink_communication_t* mavlink_communication);
+void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, const control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servo_output_t* servos);
 
 /**
  * \brief							Main Controller for controlling and stabilizing the quad
@@ -90,8 +88,6 @@ void stabilisation_copter_mix_to_servos_diag_quad(control_command_t *control, se
  * \param	servos					The array of servos structure
  */
 void stabilisation_copter_mix_to_servos_cross_quad(control_command_t *control, servo_output_t servos[4]);
-
-void stabilisation_copter_joystick_input(control_command_t *control, mavlink_received_t* rec);
 
 #ifdef __cplusplus
 }
