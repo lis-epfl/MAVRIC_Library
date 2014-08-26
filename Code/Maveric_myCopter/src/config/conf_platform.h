@@ -65,10 +65,14 @@
 #include "MAVsettings/MAV101_conf_imu_rev4.h"
 #elif MAVLINK_SYS_ID == 102
 #include "MAVsettings/MAV102_conf_imu_rev4.h"
+#elif MAVLINK_SYS_ID == 201
+#include "MAVsettings/MAV201_conf_imu_rev4.h"
 #elif MAVLINK_SYS_ID == 202
 #include "MAVsettings/MAV202_conf_imu_rev4.h"
 #elif MAVLINK_SYS_ID == 203
 #include "MAVsettings/MAV203_conf_imu_rev4.h"
+#elif MAVLINK_SYS_ID == 204
+#include "MAVsettings/MAV204_conf_imu_rev4.h"
 #else
 #include "conf_imu_rev4.h"
 #endif
