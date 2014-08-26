@@ -587,6 +587,8 @@
       <File Name="Library/communication/hud.c"/>
       <File Name="Library/communication/state_machine.c"/>
       <File Name="Library/communication/state_machine.h"/>
+      <File Name="Library/communication/data_logging.c"/>
+      <File Name="Library/communication/data_logging.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="control">
       <File Name="Library/control/pid_control.h"/>
@@ -665,9 +667,9 @@
       <File Name="Library/hal/sd_spi.c"/>
       <VirtualDirectory Name="fat_fs">
         <VirtualDirectory Name="option">
-         <File Name="Library/hal/fat_fs/option/cc932.h"/>
-         <File Name="Library/hal/fat_fs/option/syscall.h"/>
-         <File Name="Library/hal/fat_fs/option/unicode.h"/>
+          <File Name="Library/hal/fat_fs/option/cc932.c"/>
+          <File Name="Library/hal/fat_fs/option/syscall.c"/>
+          <File Name="Library/hal/fat_fs/option/unicode.c"/>
         </VirtualDirectory>
         <File Name="Library/hal/fat_fs/diskio.c"/>
         <File Name="Library/hal/fat_fs/diskio.h"/>
