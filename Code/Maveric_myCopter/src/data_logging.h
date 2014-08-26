@@ -27,7 +27,7 @@ extern "C" {
 #include "tasks.h"
 
 
-#define MAX_DATA_LOGGING_COUNT 5								///< The max number of data logging parameters
+#define MAX_DATA_LOGGING_COUNT 50								///< The max number of data logging parameters
 
 #define MAX_NUMBER_OF_LOGGED_FILE 500							///< The max number of logged files with the same name on the SD card
 
@@ -64,6 +64,7 @@ typedef struct
 {
 	uint32_t max_data_logging_count;							///< Maximum number of parameters
 	bool debug;													///< Indicates if debug messages should be printed for each param change
+	uint32_t log_data;											///< The initial state of writing a file
 } data_logging_conf_t;
 
 
@@ -87,12 +88,13 @@ typedef struct
 	int buffer_name_size;										///< The buffer for the size of the file's name
 	int buffer_add_size;										///< The buffer for the size of the file's extension char*
 
-	
+	char *file_name;											///< The file name
 	char *name_n_extension;										///< Stores the name of the file
 
 	bool file_init;												///< A flag to tell whether a file is init or not
+	bool file_opened;											///< A flag to tell whether a file is opened or not
 	
-	uint32_t continue_writing;										///< A flag to stop/start writing to file	
+	uint32_t log_data;											///< A flag to stop/start writing to file	
 }data_logging_t;
 
 

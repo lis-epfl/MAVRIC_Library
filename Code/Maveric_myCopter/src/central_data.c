@@ -250,7 +250,8 @@ void central_data_init()
 	data_logging_conf_t data_logging_conf = 
 	{
 		.debug = true,
-		.max_data_logging_count = MAX_DATA_LOGGING_COUNT
+		.max_data_logging_count = MAX_DATA_LOGGING_COUNT,
+		.log_data = 0 // 1: log data, 0: no log data
 	};
 	
 	data_logging_init(  &central_data.data_logging,

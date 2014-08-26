@@ -19,22 +19,15 @@
 #include "data_logging.h"
 #include "print_util.h"
 #include "time_keeper.h"
-#include "delay.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 
-static const char alphabet[36] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-uint32_t loop_count;
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
-
-
 
 /**
  * \brief	Add in the file fp the first line with the name of the parameter
@@ -480,10 +473,9 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	// Automaticly add the time as first logging parameter
 	data_logging_add_parameter_uint32(data_logging,&data_logging->time_ms,"time");
 	
-	loop_count = 0;
-	
 	data_logging->file_init = false;
-	data_logging->continue_writing = true;
+	data_logging->file_opened = false;
+	data_logging->log_data = config->log_data;
 	
 	#if _USE_LFN
 	data_logging->buffer_name_size = _MAX_LFN;
@@ -493,7 +485,8 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	data_logging->buffer_add_size = 8;
 	#endif
 	
-	data_logging->name_n_extension = malloc(data_logging->buffer_add_size);
+	data_logging->file_name = malloc(data_logging->buffer_name_size);
+	data_logging->name_n_extension = malloc(data_logging->buffer_name_size);
 	
 	data_logging->fr = f_mount(&data_logging->fs, "", 1);
 	
@@ -516,125 +509,115 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 {
 	int32_t i = 0;
 	
-	char *file_add = malloc(data_logging->buffer_name_size);
+	char *file_add = malloc(data_logging->buffer_add_size);
 	
-	do 
+	snprintf(data_logging->file_name, data_logging->buffer_name_size, "%s", file_name);
+	
+	if (data_logging->log_data)
 	{
-		if (i > 0)
+		do 
 		{
-			//while (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s%s.txt", file_name, data_logging->file_add) >= data_logging->buffer_name_size)
-			//{
-				//data_logging->buffer_name_size *= 2;
-				//free(data_logging->name_n_extension);
-				//data_logging->name_n_extension = malloc(data_logging->buffer_name_size);
-			//}
-			
-			if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s%s.txt", file_name, file_add) >= data_logging->buffer_name_size)
+			if (i > 0)
 			{
-				print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
-				print_util_dbg_print_num(data_logging->buffer_name_size,10);
-				print_util_dbg_print(" and it is ");
-				print_util_dbg_print_num(sizeof(file_name),10);
-				print_util_dbg_print("\r");
+				if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s%s.txt", file_name, file_add) >= data_logging->buffer_name_size)
+				{
+					print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
+					print_util_dbg_print_num(data_logging->buffer_name_size,10);
+					print_util_dbg_print(" and it is ");
+					print_util_dbg_print_num(sizeof(file_name),10);
+					print_util_dbg_print("\r");
+				}
 			}
-		}
-		else
-		{
-			//while (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s.txt", file_name) >= data_logging->buffer_name_size)
-			//{
-				//data_logging->buffer_name_size *= 2;
-				//free(data_logging->name_n_extension);
-				//data_logging->name_n_extension = malloc(data_logging->buffer_name_size);
-			//}
-			
-			if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s.txt", file_name) >= data_logging->buffer_name_size)
+			else
 			{
-				print_util_dbg_print("Name error: The name is too long! It should be maximum ");
-				print_util_dbg_print_num(data_logging->buffer_name_size,10);
-				print_util_dbg_print(" and it is ");
-				print_util_dbg_print_num(sizeof(file_name),10);
-				print_util_dbg_print("\r");
+				if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s.txt", file_name) >= data_logging->buffer_name_size)
+				{
+					print_util_dbg_print("Name error: The name is too long! It should be maximum ");
+					print_util_dbg_print_num(data_logging->buffer_name_size,10);
+					print_util_dbg_print(" characters and it is ");
+					print_util_dbg_print_num(sizeof(file_name),10);
+					print_util_dbg_print(" characters.\r");
+				}
 			}
-		}
 		
-		data_logging->fr = f_open(&data_logging->fil, data_logging->name_n_extension, FA_WRITE | FA_CREATE_NEW);
+			data_logging->fr = f_open(&data_logging->fil, data_logging->name_n_extension, FA_WRITE | FA_CREATE_NEW);
 		
-		print_util_dbg_print("f_open result:");
-		data_logging_print_error_signification(data_logging);
-		print_util_dbg_print("\r");
+			print_util_dbg_print("f_open result:");
+			data_logging_print_error_signification(data_logging);
+			print_util_dbg_print("\r");
 		
-		if (data_logging->fr == FR_EXIST)
-		{
-			print_util_dbg_print("File already existing, adding extension.\r");
-			//while(snprintf(file_add,data_logging->buffer_add_size,"_%ld",i) >= data_logging->buffer_add_size)
-			//{
-				//data_logging->buffer_add_size *= 2;
-				//free(file_add);
-				//name_n_extension = malloc(data_logging->buffer_add_size);
-			//}
-			if(snprintf(file_add,data_logging->buffer_add_size,"_%ld",i) >= data_logging->buffer_add_size)
+			++i;
+		
+			if (data_logging->fr == FR_EXIST)
 			{
-				print_util_dbg_print("Error file extension! Extension too long.");
+				print_util_dbg_print("File already existing, adding extension.\r");
+
+				if(snprintf(file_add,data_logging->buffer_add_size,"_%ld",i) >= data_logging->buffer_add_size)
+				{
+					print_util_dbg_print("Error file extension! Extension too long.");
+				}
 			}
-		}
-		++i;
-	}while((i < MAX_NUMBER_OF_LOGGED_FILE)&&(data_logging->fr != FR_OK)&&(data_logging->fr != FR_NOT_READY));
+		
+		//}while((i < MAX_NUMBER_OF_LOGGED_FILE)&&(data_logging->fr != FR_OK)&&(data_logging->fr != FR_NOT_READY));
+		}while((i < MAX_NUMBER_OF_LOGGED_FILE)&&(data_logging->fr == FR_EXIST));
 	
-	
-	if (data_logging->fr == FR_OK)
-	{
-		/* Seek to end of the file to append data */
-		data_logging->fr = f_lseek(&data_logging->fil, f_size(&data_logging->fil));
-		if (data_logging->fr != FR_OK)
+		if (data_logging->fr == FR_OK)
 		{
+			/* Seek to end of the file to append data */
+			data_logging->fr = f_lseek(&data_logging->fil, f_size(&data_logging->fil));
+			if (data_logging->fr != FR_OK)
+			{
+				if (data_logging->debug)
+				{
+					print_util_dbg_print("lseek error:");
+					data_logging_print_error_signification(data_logging);
+				}
+				f_close(&data_logging->fil);
+			}
+		}
+	
+		if (data_logging->fr == FR_OK)
+		{
+			data_logging->file_opened = true;
+		
 			if (data_logging->debug)
 			{
-				print_util_dbg_print("lseek error:");
-				data_logging_print_error_signification(data_logging);
+				print_util_dbg_print("File ");
+				print_util_dbg_print(data_logging->name_n_extension);
+				print_util_dbg_print(" opened. \r");
 			}
-			f_close(&data_logging->fil);
-		}
-	}
-	
-	if (data_logging->fr == FR_OK)
-	{
-		if (data_logging->debug)
-		{
-			print_util_dbg_print("File ");
-			print_util_dbg_print(data_logging->name_n_extension);
-			print_util_dbg_print(" opened. \r");
 		}
 	}
 }
 
 task_return_t data_logging_run(data_logging_t* data_logging)
 {
-	if (data_logging->continue_writing == 1)
+	if (data_logging->log_data == 1)
 	{
-		if (data_logging->file_init)
+		if (data_logging->file_opened)
 		{
-			loop_count++;
-			if (loop_count == 100)
+			if (data_logging->file_init)
 			{
-				data_logging->continue_writing = false;
-				loop_count = 0;
+				data_logging->time_ms = time_keeper_get_millis();
+				
+				data_logging_log_parameters(data_logging);
 			}
-			
-			data_logging->time_ms = time_keeper_get_millis();
-			
-			data_logging_log_parameters(data_logging);
+			else
+			{
+				if (data_logging->fr == FR_OK)
+				{
+					data_logging_add_header_name(data_logging);
+				}
+			}
 		}
 		else
 		{
-			if (data_logging->fr == FR_OK)
-			{
-				data_logging_add_header_name(data_logging);
-			}
+			data_logging_create_new_log_file(data_logging,data_logging->file_name);
 		}
 	}
 	else
 	{
-		if (loop_count < 1)
+		if (data_logging->file_opened)
 		{
 			if (data_logging->fr != FR_NO_FILE)
 			{
@@ -644,18 +627,22 @@ task_return_t data_logging_run(data_logging_t* data_logging)
 				}
 				
 				data_logging->fr = f_close(&data_logging->fil);
-				loop_count++;
 				if ((data_logging->fr != FR_OK))
 				{
-					loop_count = 0;
+					data_logging->file_opened = true;
 				}
 				else
 				{
 					if (data_logging->debug)
 					{
+						data_logging->file_opened = false;
 						print_util_dbg_print("File closed\r");
 					}
 				}
+			}
+			else
+			{
+				data_logging->file_opened = false;
 			}
 		}
 	}
