@@ -77,7 +77,7 @@ void boardsupport_init(central_data_t *central_data)
 	gps_ublox_init(&(central_data->gps), UART3, &central_data->mavlink_communication.mavlink_stream);
 	
 	// Init UART 4 for wired communication
-	// console_init(CONSOLE_UART4);
+	//console_init(CONSOLE_UART4);
 	// Init USB for wired communication
 	console_init(CONSOLE_USB);
 		

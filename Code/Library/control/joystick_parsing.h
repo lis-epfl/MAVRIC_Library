@@ -26,6 +26,8 @@
 #include "mavlink_communication.h"
 #include "stabilisation.h"
 
+#define MAX_JOYSTICK_RANGE 0.8
+
 /**
  * \brief	The structure for the joystick parsing
  */

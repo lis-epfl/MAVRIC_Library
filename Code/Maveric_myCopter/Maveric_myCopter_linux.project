@@ -663,13 +663,18 @@
       <File Name="Library/hal/lsm330dlc.h"/>
       <File Name="Library/hal/sd_spi.h"/>
       <File Name="Library/hal/sd_spi.c"/>
-      <VirtualDirectory Name="FatFs">
-        <File Name="Library/hal/FatFs/diskio.c"/>
-        <File Name="Library/hal/FatFs/diskio.h"/>
-        <File Name="Library/hal/FatFs/ff.c"/>
-        <File Name="Library/hal/FatFs/ff.h"/>
-        <File Name="Library/hal/FatFs/ffconf.h"/>
-        <File Name="Library/hal/FatFs/integer.h"/>
+      <VirtualDirectory Name="fat_fs">
+        <VirtualDirectory Name="option">
+         <File Name="Library/hal/fat_fs/option/cc932.h"/>
+         <File Name="Library/hal/fat_fs/option/syscall.h"/>
+         <File Name="Library/hal/fat_fs/option/unicode.h"/>
+        </VirtualDirectory>
+        <File Name="Library/hal/fat_fs/diskio.c"/>
+        <File Name="Library/hal/fat_fs/diskio.h"/>
+        <File Name="Library/hal/fat_fs/ff.c"/>
+        <File Name="Library/hal/fat_fs/ff.h"/>
+        <File Name="Library/hal/fat_fs/ffconf.h"/>
+        <File Name="Library/hal/fat_fs/integer.h"/>
       </VirtualDirectory>
       <File Name="Library/hal/usb_int.c"/>
       <File Name="Library/hal/usb_int.h"/>

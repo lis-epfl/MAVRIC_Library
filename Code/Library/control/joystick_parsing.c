@@ -58,22 +58,22 @@ void joystick_parsing_parse_msg(joystick_parsing_t *joystick_parsing, mavlink_re
 	
 	if ((uint8_t)packet.target == (uint8_t)joystick_parsing->controls->mavlink_stream->sysid)
 	{
-		/*print_util_dbg_print("Joystick command: (");
-		print_util_dbg_print_num(packet.x,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(packet.y,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(packet.z,10);
-		print_util_dbg_print("), ");
-		print_util_dbg_print_num(packet.buttons,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(packet.r,10);
-		print_util_dbg_print("\r");*/
+		//print_util_dbg_print("Joystick command: (");
+		//print_util_dbg_print_num(packet.x,10);
+		//print_util_dbg_print(", ");
+		//print_util_dbg_print_num(packet.y,10);
+		//print_util_dbg_print(", ");
+		//print_util_dbg_print_num(packet.z,10);
+		//print_util_dbg_print("), ");
+		//print_util_dbg_print_num(packet.buttons,10);
+		//print_util_dbg_print(", ");
+		//print_util_dbg_print_num(packet.r,10);
+		//print_util_dbg_print("\r");
 		
-		joystick_parsing->controls->rpy[PITCH] = packet.x / 1000.0f;
-		joystick_parsing->controls->rpy[ROLL] = packet.y / 1000.0f;
-		joystick_parsing->controls->rpy[YAW] = packet.r / 1000.0f;
-		joystick_parsing->controls->thrust = packet.z / 1000.0f;
+		joystick_parsing->controls->rpy[PITCH] = MAX_JOYSTICK_RANGE * packet.x / 1000.0f;
+		joystick_parsing->controls->rpy[ROLL] = MAX_JOYSTICK_RANGE * packet.y / 1000.0f;
+		joystick_parsing->controls->rpy[YAW] = MAX_JOYSTICK_RANGE * packet.r / 1000.0f;
+		joystick_parsing->controls->thrust = MAX_JOYSTICK_RANGE * packet.z / 1000.0f;
 		
 		mavlink_message_t msg;
 		mavlink_msg_manual_control_pack(joystick_parsing->controls->mavlink_stream->sysid,joystick_parsing->controls->mavlink_stream->compid,&msg,rec->msg.sysid,packet.x,packet.y,packet.z,packet.r,packet.buttons);

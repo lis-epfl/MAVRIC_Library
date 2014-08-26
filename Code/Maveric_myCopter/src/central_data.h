@@ -82,7 +82,7 @@ typedef struct  {
 	control_command_t controls;									///< The control structure used for rate and attitude modes
 	control_command_t controls_nav;								///< The control nav structure used for velocity modes
 	control_command_t controls_joystick;						///< The control structure for the joystick
-	
+
 	joystick_parsing_t joystick_parsing;						///< The joystick parsing structure
 	
 	stabilise_copter_t stabilisation_copter;					///< The stabilisation structure for copter

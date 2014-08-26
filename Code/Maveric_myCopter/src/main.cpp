@@ -46,7 +46,7 @@ void initialisation()
 	print_util_dbg_print("OK. Starting up.\r");
 
 	//sd_spi_test();
-	
+
 	//diskio_test_low_layer();
 	
 	//diskio_test_fatfs();

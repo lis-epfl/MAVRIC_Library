@@ -45,7 +45,7 @@ void state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	}
 	else
 	{
-		state->mav_mode |= !MAV_MODE_FLAG_HIL_ENABLED;
+		state->mav_mode |= ~MAV_MODE_FLAG_HIL_ENABLED;
 	}
 	
 	state->nav_plan_active = false;

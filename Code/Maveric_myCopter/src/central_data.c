@@ -82,7 +82,7 @@ void central_data_init()
 		.sensor_present = 0b1111110000100111,
 		.sensor_enabled = 0b1111110000100111,
 		.sensor_health = 0b1111110000100111,
-		.remote_active = false
+		.remote_active = 1
 	};
 	state_init(	&central_data.state,
 				&state_config,
