@@ -156,7 +156,7 @@ void qfilter_update(qfilter_t *qf)
 
 	for (i = 0; i < 3; i++)
 	{
-		qtmp1.v[i] = (qf->imu->scaled_gyro.data[i] + kp * omc[i] + kp_mag * omc_mag[i]);//0.5f*
+		qtmp1.v[i] = 0.5f * (qf->imu->scaled_gyro.data[i] + kp * omc[i] + kp_mag * omc_mag[i]);
 	}
 	qtmp1.s = 0;
 
