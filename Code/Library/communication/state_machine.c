@@ -93,7 +93,7 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
 	
 	state_machine_rc_user_channels(state_machine);
 	
-	if (state_machine->state->remote_active)
+	if (state_machine->state->remote_active == 1)
 	{
 		switch(state_machine->state->mav_state)
 		{

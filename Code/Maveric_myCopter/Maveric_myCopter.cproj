@@ -642,28 +642,31 @@
     <Compile Include="Library\hal\analog_monitor.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\FatFs\diskio.c">
+    <Compile Include="Library\hal\fat_fs\diskio.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\FatFs\diskio.h">
+    <Compile Include="Library\hal\fat_fs\diskio.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\FatFs\ff.c">
+    <Compile Include="Library\hal\fat_fs\ff.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\FatFs\ff.h">
+    <Compile Include="Library\hal\fat_fs\ff.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\FatFs\ffconf.h">
+    <Compile Include="Library\hal\fat_fs\ffconf.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\FatFs\integer.h">
+    <Compile Include="Library\hal\fat_fs\integer.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\FatFs\option\syscall.c">
+    <Compile Include="Library\hal\fat_fs\option\cc932.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\FatFs\option\unicode.c">
+    <Compile Include="Library\hal\fat_fs\option\syscall.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\fat_fs\option\unicode.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\gps_ublox.c">
@@ -1120,6 +1123,9 @@
     <Compile Include="src\config\MAVsettings\MAV004_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\config\MAVsettings\MAV005_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\config\MAVsettings\MAV006_conf_imu_rev4.h">
       <SubType>compile</SubType>
     </Compile>
@@ -1151,6 +1157,15 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\MAVsettings\MAV203_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\config\MAVsettings\MAV204_conf_imu_rev4.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\data_logging.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\data_logging.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\mavlink_telemetry.c">
@@ -1630,8 +1645,8 @@
     <Folder Include="Library\communication\" />
     <Folder Include="Library\control\" />
     <Folder Include="Library\hal\" />
-    <Folder Include="Library\hal\FatFs\" />
-    <Folder Include="Library\hal\FatFs\option\" />
+    <Folder Include="Library\hal\fat_fs\" />
+    <Folder Include="Library\hal\fat_fs\option\" />
     <Folder Include="Library\mavlink\" />
     <Folder Include="Library\mavlink\include\" />
     <Folder Include="Library\mavlink\include\maveric\" />

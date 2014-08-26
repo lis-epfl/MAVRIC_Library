@@ -112,6 +112,42 @@ void print_util_putnum(byte_stream_t *out_stream, int32_t c, char base)
 	}
 }
 
+void print_util_putlong(byte_stream_t *out_stream, int64_t c, char base)
+{
+	char storage[MAX_DIGITS_LONG];
+	int32_t i = MAX_DIGITS_LONG;
+
+	if ((out_stream==NULL) || (out_stream->put==NULL))
+	{
+		return;
+	}
+
+	/* Take Care of the sign */
+	if(c < 0)
+	{
+		out_stream->put(out_stream->data,   '-');
+		c = c*-1;
+	}
+	else
+	{
+		out_stream->put(out_stream->data,  ' ');
+	}
+
+	do
+	{
+		i--;
+		storage[i] = c % base;
+		c = c / base;
+	} while((i >= 0) && (c > 0) );
+
+	/* i is the index of the last digit calculated */
+
+	/* Hence, there is no need to initialize i */
+	for( ; i<MAX_DIGITS_LONG; i++)
+	{
+		print_util_putdigit(out_stream, storage[i]);
+	}
+}
 
 void putnum_tight(byte_stream_t *out_stream, int32_t c, char base)
 {
@@ -268,4 +304,9 @@ void print_util_dbg_log_value(const char* msg, int32_t value, char base)
 	}
 	
 	print_util_dbg_print("\n");
+}
+
+void print_util_dbg_print_long(int64_t c, char base)
+{
+	print_util_putlong(deb_stream, c, base);
 }

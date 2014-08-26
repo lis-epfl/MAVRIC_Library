@@ -97,7 +97,7 @@ typedef struct
 	
 	bool reset_position;								///< Flag to reset the position
 	
-	bool remote_active;									///< Flag to tell whether the remote is active
+	uint32_t remote_active;								///< Flag to tell whether the remote is active or not
 	
 	const analog_monitor_t* analog_monitor;				///< The pointer to the analog monitor structure
 	const mavlink_stream_t* mavlink_stream;				///< Pointer to the mavlin kstream structure

@@ -76,13 +76,13 @@ void central_data_init()
 	{
 		.mav_mode = MAV_MODE_SAFE,
 		.mav_state = MAV_STATE_BOOT,
-		.simulation_mode = SIMULATION_MODE, //REAL_MODE
+		.simulation_mode = REAL_MODE , //SIMULATION_MODE
 		.autopilot_type = MAV_TYPE_QUADROTOR,
 		.autopilot_name = MAV_AUTOPILOT_GENERIC,
 		.sensor_present = 0b1111110000100111,
 		.sensor_enabled = 0b1111110000100111,
 		.sensor_health = 0b1111110000100111,
-		.remote_active = true
+		.remote_active = 1
 	};
 	state_init(	&central_data.state,
 				&state_config,
@@ -247,9 +247,17 @@ void central_data_init()
 	
 	// Init sonar
 	// i2cxl_sonar_init(&central_data.i2cxl_sonar);
+	// delay_ms(100);
 	
-	// Initialize SD/MMC driver with SPI clock (PBA).
-	//sd_spi_init();
+	data_logging_conf_t data_logging_conf = 
+	{
+		.debug = true,
+		.max_data_logging_count = MAX_DATA_LOGGING_COUNT,
+		.log_data = 0 // 1: log data, 0: no log data
+	};
+	
+	data_logging_init(  &central_data.data_logging,
+						&data_logging_conf);
 }
 
 central_data_t* central_data_get_pointer_to_struct(void)
