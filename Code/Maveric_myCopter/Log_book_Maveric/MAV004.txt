@@ -12,6 +12,7 @@ status: not fly ready
 14-02-18: no GPS cable
 14-02-28: IMU seems to work now, but x gyro bias is way off - careful with this MAV. Calibrated manually.
 14-04-11: calibratoion
+14-08-21: no SD-card holder
 
 #define RAW_ACC_X_SCALE  4101
 #define RAW_ACC_Y_SCALE  3900.6
