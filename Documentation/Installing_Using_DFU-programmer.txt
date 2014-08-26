@@ -13,10 +13,14 @@ a) Install dfu-programmer
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 - download dfu-programmer (tar-ball file) from Sourceforge
-- unzip somewhere, enter directory, follow build instructions: 
 
+- unzip somewhere, enter directory, follow build instructions: 
+COMME C'EST UN TAR, IL FAUT PAS FAIRE UNZIP
+
+ALLER DANS LE FICHIER
 ./configure --disable-libusb_1_0
 make
+CRASH! HERE
 sudo cp src/dfu-programmer /usr/local/bin
 
 to get instructions:

@@ -573,6 +573,12 @@
     <Compile Include="Library\communication\console.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\communication\data_logging.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\communication\data_logging.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\communication\hud.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1166,12 +1172,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\config\MAVsettings\MAV204_conf_imu_rev4.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\data_logging.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="src\data_logging.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="src\mavlink_telemetry.c">
