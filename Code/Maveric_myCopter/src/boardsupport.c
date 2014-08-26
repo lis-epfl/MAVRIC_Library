@@ -62,7 +62,7 @@ void boardsupport_init(central_data_t *central_data)
 		
 	INTC_init_interrupts();
 
-	LED_On(LED1);
+	LED_Off(LED1);
 	// Configure the pins connected to LEDs as output and set their default
 	// initial state to high (LEDs off).
 	//gpio_configure_pin(LED0_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
@@ -77,9 +77,9 @@ void boardsupport_init(central_data_t *central_data)
 	gps_ublox_init(&(central_data->gps), UART3, &central_data->mavlink_communication.mavlink_stream);
 	
 	// Init UART 4 for wired communication
-	//console_init(CONSOLE_UART4);
+	console_init(CONSOLE_UART4);
 	// Init USB for wired communication
-	console_init(CONSOLE_USB);
+	//console_init(CONSOLE_USB);
 		
 	// connect abstracted aliases to hardware ports
 	central_data->telemetry_down_stream = xbee_get_out_stream();
