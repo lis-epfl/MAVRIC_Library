@@ -84,277 +84,277 @@ void switch_off_motors(void)
 	central_data->state.in_the_air = false;
 }
 
-task_return_t tasks_set_mav_mode_n_state(void* arg)
-{
-	uint8_t channel_switches = 0;
-	signal_quality_t rc_check = SIGNAL_GOOD;
-	int8_t motor_switch = 0;
+// task_return_t tasks_set_mav_mode_n_state(void* arg)
+// {
+// 	uint8_t channel_switches = 0;
+// 	signal_quality_t rc_check = SIGNAL_GOOD;
+// 	int8_t motor_switch = 0;
 	
-	LED_Toggle(LED1);
+// 	LED_Toggle(LED1);
 	
-	tasks_rc_user_channels(&channel_switches,&rc_check, &motor_switch);
+// 	tasks_rc_user_channels(&channel_switches,&rc_check, &motor_switch);
 	
-	switch(central_data->state.mav_state)
-	{
-		case MAV_STATE_BOOT:
-			break;
+// 	switch(central_data->state.mav_state)
+// 	{
+// 		case MAV_STATE_BOOT:
+// 			break;
 
-		case MAV_STATE_CALIBRATING:
-			break;
+// 		case MAV_STATE_CALIBRATING:
+// 			break;
 
-		case MAV_STATE_STANDBY:
-			if (motor_switch == 1)
-			{
-				switch(channel_switches)
-				{
-					case 0:
-						print_util_dbg_print("Switching on the motors!\n");
+// 		case MAV_STATE_STANDBY:
+// 			if (motor_switch == 1)
+// 			{
+// 				switch(channel_switches)
+// 				{
+// 					case 0:
+// 						print_util_dbg_print("Switching on the motors!\n");
 
-						position_estimation_reset_home_altitude(&central_data->position_estimator);
+// 						position_estimation_reset_home_altitude(&central_data->position_estimator);
 						
-						central_data->state.nav_plan_active = false;
-						state_set_new_mode(&central_data->state,MAV_MODE_ATTITUDE_CONTROL);
-						break;
+// 						central_data->state.nav_plan_active = false;
+// 						state_set_new_mode(&central_data->state,MAV_MODE_ATTITUDE_CONTROL);
+// 						break;
 
-					default:
-						print_util_dbg_print("Switches not ready, both should be pushed!\n");
-						break;
-				}
-			}
-			if (state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_SAFETY_ARMED))
-			{
-				switch (channel_switches)
-				{
-					case 0:
-						state_set_new_mode(&central_data->state,MAV_MODE_ATTITUDE_CONTROL);
-						if (central_data->state.in_the_air)
-						{
-							central_data->state.mav_state = MAV_STATE_ACTIVE;
-						}
-						break;
+// 					default:
+// 						print_util_dbg_print("Switches not ready, both should be pushed!\n");
+// 						break;
+// 				}
+// 			}
+// 			if (state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_SAFETY_ARMED))
+// 			{
+// 				switch (channel_switches)
+// 				{
+// 					case 0:
+// 						state_set_new_mode(&central_data->state,MAV_MODE_ATTITUDE_CONTROL);
+// 						if (central_data->state.in_the_air)
+// 						{
+// 							central_data->state.mav_state = MAV_STATE_ACTIVE;
+// 						}
+// 						break;
 
-					case 1:
-						state_set_new_mode(&central_data->state,MAV_MODE_VELOCITY_CONTROL);
-						if (central_data->state.in_the_air)
-						{
-							central_data->state.mav_state = MAV_STATE_ACTIVE;
-						}
-						break;
+// 					case 1:
+// 						state_set_new_mode(&central_data->state,MAV_MODE_VELOCITY_CONTROL);
+// 						if (central_data->state.in_the_air)
+// 						{
+// 							central_data->state.mav_state = MAV_STATE_ACTIVE;
+// 						}
+// 						break;
 
-					case 2:
-						if (central_data->state.in_the_air)
-						{
-							state_set_new_mode(&central_data->state,MAV_MODE_POSITION_HOLD);
+// 					case 2:
+// 						if (central_data->state.in_the_air)
+// 						{
+// 							state_set_new_mode(&central_data->state,MAV_MODE_POSITION_HOLD);
 							
-							// Activate automatic take-off mode
-							if (state_test_if_first_time_in_mode(&central_data->state) )
-							{
-								navigation_waypoint_take_off_init(&central_data->waypoint_handler);
-							}
+// 							// Activate automatic take-off mode
+// 							if (state_test_if_first_time_in_mode(&central_data->state) )
+// 							{
+// 								navigation_waypoint_take_off_init(&central_data->waypoint_handler);
+// 							}
 							
-							if (central_data->waypoint_handler.dist2wp_sqr <= 16.0f)
-							{
-								central_data->state.mav_state = MAV_STATE_ACTIVE;
-								print_util_dbg_print("Automatic take-off finised, dist2wp_sqr (10x):");
-								print_util_dbg_print_num(central_data->waypoint_handler.dist2wp_sqr * 10.0f,10);
-								print_util_dbg_print(".\n");
-							}
-						}
-						break;
+// 							if (central_data->waypoint_handler.dist2wp_sqr <= 16.0f)
+// 							{
+// 								central_data->state.mav_state = MAV_STATE_ACTIVE;
+// 								print_util_dbg_print("Automatic take-off finised, dist2wp_sqr (10x):");
+// 								print_util_dbg_print_num(central_data->waypoint_handler.dist2wp_sqr * 10.0f,10);
+// 								print_util_dbg_print(".\n");
+// 							}
+// 						}
+// 						break;
 
-					case 3:
-						if (central_data->state.in_the_air)
-						{
-							//central_data->state.mav_state = MAV_STATE_ACTIVE;
-							state_set_new_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION);
+// 					case 3:
+// 						if (central_data->state.in_the_air)
+// 						{
+// 							//central_data->state.mav_state = MAV_STATE_ACTIVE;
+// 							state_set_new_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION);
 							
-							// Automatic take-off mode
-							if(state_test_if_first_time_in_mode(&central_data->state) )
-							{
-								navigation_waypoint_take_off_init(&central_data->waypoint_handler);
-							}
+// 							// Automatic take-off mode
+// 							if(state_test_if_first_time_in_mode(&central_data->state) )
+// 							{
+// 								navigation_waypoint_take_off_init(&central_data->waypoint_handler);
+// 							}
 
-							if (!central_data->state.nav_plan_active)
-							{
-								waypoint_handler_nav_plan_init(&central_data->waypoint_handler);
-							}
+// 							if (!central_data->state.nav_plan_active)
+// 							{
+// 								waypoint_handler_nav_plan_init(&central_data->waypoint_handler);
+// 							}
 
-							if (central_data->waypoint_handler.dist2wp_sqr <= 16.0f)
-							{
-								central_data->state.mav_state = MAV_STATE_ACTIVE;
-								print_util_dbg_print("Automatic take-off finised, dist2wp_sqr (10x):");
-								print_util_dbg_print_num(central_data->waypoint_handler.dist2wp_sqr * 10.0f,10);
-								print_util_dbg_print(".\n");
-							}
-						}
-						break;
-				}
+// 							if (central_data->waypoint_handler.dist2wp_sqr <= 16.0f)
+// 							{
+// 								central_data->state.mav_state = MAV_STATE_ACTIVE;
+// 								print_util_dbg_print("Automatic take-off finised, dist2wp_sqr (10x):");
+// 								print_util_dbg_print_num(central_data->waypoint_handler.dist2wp_sqr * 10.0f,10);
+// 								print_util_dbg_print(".\n");
+// 							}
+// 						}
+// 						break;
+// 				}
 				
-				switch (rc_check)
-				{
-					case SIGNAL_GOOD:
-						break;
+// 				switch (rc_check)
+// 				{
+// 					case SIGNAL_GOOD:
+// 						break;
 
-					case SIGNAL_BAD:
-						central_data->state.mav_state = MAV_STATE_CRITICAL;
-						break;
+// 					case SIGNAL_BAD:
+// 						central_data->state.mav_state = MAV_STATE_CRITICAL;
+// 						break;
 
-					case SIGNAL_LOST:
-						central_data->state.mav_state = MAV_STATE_CRITICAL;
-						break;
-				}
-				if (remote_get_throttle( &central_data->remote ) > -0.7f)
-				{
-					central_data->state.in_the_air = true;
-				}
-			}
+// 					case SIGNAL_LOST:
+// 						central_data->state.mav_state = MAV_STATE_CRITICAL;
+// 						break;
+// 				}
+// 				if (remote_get_throttle( &central_data->remote ) > -0.7f)
+// 				{
+// 					central_data->state.in_the_air = true;
+// 				}
+// 			}
 
-			if (motor_switch == -1)
-			{
-				switch_off_motors();
-			}
+// 			if (motor_switch == -1)
+// 			{
+// 				switch_off_motors();
+// 			}
 			
-			break;
+// 			break;
 
-		case MAV_STATE_ACTIVE:
-			switch(channel_switches)
-			{
-				case 0:
-					state_set_new_mode(&central_data->state,MAV_MODE_ATTITUDE_CONTROL);
-					break;
+// 		case MAV_STATE_ACTIVE:
+// 			switch(channel_switches)
+// 			{
+// 				case 0:
+// 					state_set_new_mode(&central_data->state,MAV_MODE_ATTITUDE_CONTROL);
+// 					break;
 
-				case 1:
-					state_set_new_mode(&central_data->state,MAV_MODE_VELOCITY_CONTROL);
-					break;
+// 				case 1:
+// 					state_set_new_mode(&central_data->state,MAV_MODE_VELOCITY_CONTROL);
+// 					break;
 
-				case 2:
-					state_set_new_mode(&central_data->state,MAV_MODE_POSITION_HOLD);
-					if (state_test_if_first_time_in_mode(&central_data->state) )
-					{
-						navigation_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.local_position);
-					}
-					break;
+// 				case 2:
+// 					state_set_new_mode(&central_data->state,MAV_MODE_POSITION_HOLD);
+// 					if (state_test_if_first_time_in_mode(&central_data->state) )
+// 					{
+// 						navigation_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.local_position);
+// 					}
+// 					break;
 
-				case 3:
-					state_set_new_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION);
-					if (state_test_if_first_time_in_mode(&central_data->state) )
-					{
-						central_data->waypoint_handler.auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
-						navigation_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.local_position);
-					}
-					break;
-			}
+// 				case 3:
+// 					state_set_new_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION);
+// 					if (state_test_if_first_time_in_mode(&central_data->state) )
+// 					{
+// 						central_data->waypoint_handler.auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
+// 						navigation_waypoint_hold_init(&central_data->waypoint_handler,central_data->position_estimator.local_position);
+// 					}
+// 					break;
+// 			}
 			
-			if (state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_AUTO_ENABLED))
-			{
-				if (!central_data->state.nav_plan_active)
-				{
-					waypoint_handler_nav_plan_init(&central_data->waypoint_handler);
-				}
+// 			if (state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_AUTO_ENABLED))
+// 			{
+// 				if (!central_data->state.nav_plan_active)
+// 				{
+// 					waypoint_handler_nav_plan_init(&central_data->waypoint_handler);
+// 				}
 
-				navigation_waypoint_navigation_handler(&central_data->navigation);
-			}
+// 				navigation_waypoint_navigation_handler(&central_data->navigation);
+// 			}
 			
-			if (motor_switch == -1)
-			{
-				switch_off_motors();
-			}
+// 			if (motor_switch == -1)
+// 			{
+// 				switch_off_motors();
+// 			}
 		
-			switch (rc_check)
-			{
-				case SIGNAL_GOOD:
-					break;
+// 			switch (rc_check)
+// 			{
+// 				case SIGNAL_GOOD:
+// 					break;
 
-				case SIGNAL_BAD:
-					central_data->state.mav_state = MAV_STATE_CRITICAL;
-					break;
+// 				case SIGNAL_BAD:
+// 					central_data->state.mav_state = MAV_STATE_CRITICAL;
+// 					break;
 
-				case SIGNAL_LOST:
-					central_data->state.mav_state = MAV_STATE_CRITICAL;
-					break;
-			}
-			break;
+// 				case SIGNAL_LOST:
+// 					central_data->state.mav_state = MAV_STATE_CRITICAL;
+// 					break;
+// 			}
+// 			break;
 
-		case MAV_STATE_CRITICAL:
-			switch(channel_switches)
-			{
-				case 0:
-					state_set_new_mode(&central_data->state,MAV_MODE_ATTITUDE_CONTROL);
-					break;
+// 		case MAV_STATE_CRITICAL:
+// 			switch(channel_switches)
+// 			{
+// 				case 0:
+// 					state_set_new_mode(&central_data->state,MAV_MODE_ATTITUDE_CONTROL);
+// 					break;
 
-				case 1:
-					state_set_new_mode(&central_data->state,MAV_MODE_VELOCITY_CONTROL);
-					break;
+// 				case 1:
+// 					state_set_new_mode(&central_data->state,MAV_MODE_VELOCITY_CONTROL);
+// 					break;
 
-				case 2:
-					state_set_new_mode(&central_data->state,MAV_MODE_POSITION_HOLD);
-					break;
+// 				case 2:
+// 					state_set_new_mode(&central_data->state,MAV_MODE_POSITION_HOLD);
+// 					break;
 
-				case 3:
-					state_set_new_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION);
-					break;
-			}
+// 				case 3:
+// 					state_set_new_mode(&central_data->state,MAV_MODE_GPS_NAVIGATION);
+// 					break;
+// 			}
 
-			if (motor_switch == -1)
-			{
-				switch_off_motors();
-			}
+// 			if (motor_switch == -1)
+// 			{
+// 				switch_off_motors();
+// 			}
 			
-			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-			if (state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_STABILIZE_ENABLED))
-			{
-				navigation_critical_handler(&central_data->waypoint_handler);
-			}
+// 			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
+// 			if (state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_STABILIZE_ENABLED))
+// 			{
+// 				navigation_critical_handler(&central_data->waypoint_handler);
+// 			}
 			
-			switch (rc_check)
-			{
-				case SIGNAL_GOOD:  
-					// !! only if receivers are back, switch into appropriate mode
-					central_data->state.mav_state = MAV_STATE_ACTIVE;
-					central_data->waypoint_handler.critical_behavior = CLIMB_TO_SAFE_ALT;
-					central_data->waypoint_handler.critical_next_state = false;
-					break;
+// 			switch (rc_check)
+// 			{
+// 				case SIGNAL_GOOD:  
+// 					// !! only if receivers are back, switch into appropriate mode
+// 					central_data->state.mav_state = MAV_STATE_ACTIVE;
+// 					central_data->waypoint_handler.critical_behavior = CLIMB_TO_SAFE_ALT;
+// 					central_data->waypoint_handler.critical_next_state = false;
+// 					break;
 
-				case SIGNAL_BAD:
-					break;
+// 				case SIGNAL_BAD:
+// 					break;
 
-				case SIGNAL_LOST:
-					if (central_data->waypoint_handler.critical_landing)
-					{
-						central_data->state.mav_state = MAV_STATE_EMERGENCY;
-					}
+// 				case SIGNAL_LOST:
+// 					if (central_data->waypoint_handler.critical_landing)
+// 					{
+// 						central_data->state.mav_state = MAV_STATE_EMERGENCY;
+// 					}
 
-					break;
-			}
-			break;
+// 					break;
+// 			}
+// 			break;
 
-		case MAV_STATE_EMERGENCY:
-			state_set_new_mode(&central_data->state,MAV_MODE_SAFE);
-			switch (rc_check)
-			{
-				case SIGNAL_GOOD:
-					central_data->state.mav_state = MAV_STATE_STANDBY;
-					break;
+// 		case MAV_STATE_EMERGENCY:
+// 			state_set_new_mode(&central_data->state,MAV_MODE_SAFE);
+// 			switch (rc_check)
+// 			{
+// 				case SIGNAL_GOOD:
+// 					central_data->state.mav_state = MAV_STATE_STANDBY;
+// 					break;
 
-				case SIGNAL_BAD:
-					break;
+// 				case SIGNAL_BAD:
+// 					break;
 
-				case SIGNAL_LOST:
-					break;
-			}
-			break;
-	}
+// 				case SIGNAL_LOST:
+// 					break;
+// 			}
+// 			break;
+// 	}
 	
-	central_data->state.mav_mode_previous = central_data->state.mav_mode;
+// 	central_data->state.mav_mode_previous = central_data->state.mav_mode;
 	
-	// if (central_data->state.simulation_mode_previous != central_data->state.simulation_mode)
-	// {
-	// 	simulation_switch_between_reality_n_simulation(&central_data->sim_model);
-	// 	central_data->state.simulation_mode_previous = central_data->state.simulation_mode;
-	// }
+// 	// if (central_data->state.simulation_mode_previous != central_data->state.simulation_mode)
+// 	// {
+// 	// 	simulation_switch_between_reality_n_simulation(&central_data->sim_model);
+// 	// 	central_data->state.simulation_mode_previous = central_data->state.simulation_mode;
+// 	// }
 	
-	return TASK_RUN_SUCCESS;
-}
+// 	return TASK_RUN_SUCCESS;
+// }
 
 
 void tasks_run_imu_update(void* arg)
@@ -380,7 +380,8 @@ void tasks_run_imu_update(void* arg)
 }
 
 
-task_return_t tasks_run_stabilisation(void* arg) 
+task_return_t tasks_run_stabilisation_old(void* arg);
+task_return_t tasks_run_stabilisation_old(void* arg) 
 {
 	tasks_run_imu_update(0);
 	
@@ -458,6 +459,157 @@ task_return_t tasks_run_stabilisation(void* arg)
 	
 	return TASK_RUN_SUCCESS;
 }
+
+
+task_return_t tasks_run_stabilisation(void* arg) 
+{
+	tasks_run_imu_update(0);
+	
+	mav_mode_t mode = central_data->state.mav_mode;
+
+	if ( mode.AUTO == AUTO_ON )
+	{
+			central_data->controls = central_data->controls_nav;
+			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
+			
+			// if no waypoints are set, we do position hold therefore the yaw mode is absolute
+			if (((central_data->state.nav_plan_active&&(central_data->state.mav_state != MAV_STATE_STANDBY)))||((central_data->state.mav_state == MAV_STATE_CRITICAL)&&(central_data->waypoint_handler.critical_behavior == FLY_TO_HOME_WP)))
+			{
+				central_data->controls.yaw_mode = YAW_COORDINATED;
+			}
+			else
+			{
+				central_data->controls.yaw_mode = YAW_ABSOLUTE;
+			}
+		
+			if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+			{
+				stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
+			}
+	}
+	else if ( mode.GUIDED == GUIDED_ON )
+	{
+			central_data->controls = central_data->controls_nav;
+			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
+		
+			if ((central_data->state.mav_state == MAV_STATE_CRITICAL) && (central_data->waypoint_handler.critical_behavior == FLY_TO_HOME_WP))
+			{
+				central_data->controls.yaw_mode = YAW_COORDINATED;
+			}
+			else
+			{
+				central_data->controls.yaw_mode = YAW_ABSOLUTE;
+			}
+		
+			if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+			{
+				stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
+			}
+	}
+	else if ( mode.STABILISE == STABILISE_ON )
+	{
+			remote_controller_get_velocity_vector_from_remote(&central_data->controls);
+			
+			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
+			central_data->controls.yaw_mode = YAW_RELATIVE;
+			
+			// if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+			// {
+				stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
+			// }		
+	}
+	else if ( mode.MANUAL == MANUAL_ON )
+	{
+			remote_controller_get_command_from_remote(&central_data->controls);
+			central_data->controls.control_mode = ATTITUDE_COMMAND_MODE;
+			central_data->controls.yaw_mode=YAW_RELATIVE;
+		
+			stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);		
+	}
+	else
+	{
+			remote_controller_get_command_from_remote(&central_data->controls);
+			central_data->controls.control_mode = ATTITUDE_COMMAND_MODE;
+			central_data->controls.yaw_mode=YAW_RELATIVE;
+		
+			stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);		
+	}
+
+	// switch(central_data->state.mav_mode.byte - (central_data->state.mav_mode.byte & MAV_MODE_FLAG_DECODE_POSITION_HIL))
+	// {
+	// 	case MAV_MODE_ATTITUDE_CONTROL:
+	// 		remote_controller_get_command_from_remote(&central_data->controls);
+	// 		central_data->controls.control_mode = ATTITUDE_COMMAND_MODE;
+	// 		central_data->controls.yaw_mode=YAW_RELATIVE;
+		
+	// 		stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
+	// 		break;
+		
+	// 	case MAV_MODE_VELOCITY_CONTROL:
+	// 		remote_controller_get_velocity_vector_from_remote(&central_data->controls);
+			
+	// 		central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
+	// 		central_data->controls.yaw_mode = YAW_RELATIVE;
+			
+	// 		if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+	// 		{
+	// 			stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
+	// 		}
+	// 		break;
+		
+	// 	case MAV_MODE_POSITION_HOLD:
+	// 		central_data->controls = central_data->controls_nav;
+	// 		central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
+		
+	// 		if ((central_data->state.mav_state == MAV_STATE_CRITICAL) && (central_data->waypoint_handler.critical_behavior == FLY_TO_HOME_WP))
+	// 		{
+	// 			central_data->controls.yaw_mode = YAW_COORDINATED;
+	// 		}
+	// 		else
+	// 		{
+	// 			central_data->controls.yaw_mode = YAW_ABSOLUTE;
+	// 		}
+		
+	// 		if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+	// 		{
+	// 			stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
+	// 		}
+	// 		break;
+		
+	// 	case MAV_MODE_GPS_NAVIGATION:
+	// 		central_data->controls = central_data->controls_nav;
+	// 		central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
+			
+	// 		// if no waypoints are set, we do position hold therefore the yaw mode is absolute
+	// 		if (((central_data->state.nav_plan_active&&(central_data->state.mav_state != MAV_STATE_STANDBY)))||((central_data->state.mav_state == MAV_STATE_CRITICAL)&&(central_data->waypoint_handler.critical_behavior == FLY_TO_HOME_WP)))
+	// 		{
+	// 			central_data->controls.yaw_mode = YAW_COORDINATED;
+	// 		}
+	// 		else
+	// 		{
+	// 			central_data->controls.yaw_mode = YAW_ABSOLUTE;
+	// 		}
+		
+	// 		if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
+	// 		{
+	// 			stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
+	// 		}
+	// 		break;
+		
+	// 	default:
+	// 		servos_set_value_failsafe( &central_data->servos );
+	// 		break;
+	// }
+	
+	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
+	if ( mode.HIL == HIL_OFF )
+	{
+		pwm_servos_write_to_hardware( &central_data->servos );
+	}
+	
+	return TASK_RUN_SUCCESS;
+}
+
 
 // new task to test P^2 attutude controller
 task_return_t tasks_run_stabilisation_quaternion(void* arg);
@@ -544,19 +696,19 @@ void tasks_create_tasks()
 	
 	scheduler_t* scheduler = &central_data->scheduler;
 
-	// scheduler_add_task(scheduler, 4000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation                                          , 0                                                    , 0);
-	scheduler_add_task(scheduler, 4000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation_quaternion                               , 0 													, 0);
+	scheduler_add_task(scheduler, 4000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation                                          , 0                                                    , 0);
+	// scheduler_add_task(scheduler, 4000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation_quaternion                               , 0 													, 0);
 
 	scheduler_add_task(scheduler, 20000, 	RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_HIGH   , (task_function_t)&remote_update 									, (task_argument_t)&central_data->remote 				, 1);
-//	scheduler_add_task(scheduler, 200000, 	RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_NORMAL , (task_function_t)&remote_mode_update 								, (task_argument_t)&central_data->remote 				, 2);
+	scheduler_add_task(scheduler, 200000, 	RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_NORMAL , (task_function_t)&remote_mode_update 								, (task_argument_t)&central_data->remote 				, 2);
 	
 	scheduler_add_task(scheduler, 15000, 	RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_HIGH   , &tasks_run_barometer_update                                       , 0 													, 3);
 	scheduler_add_task(scheduler, 100000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , &tasks_run_gps_update                                             , 0 													, 4);
 	scheduler_add_task(scheduler, 10000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGH   , (task_function_t)&navigation_update                               , (task_argument_t)&central_data->navigation 			, 5);
 	
-	scheduler_add_task(scheduler, 200000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , &tasks_set_mav_mode_n_state                                       , 0  													, 6);
+	// scheduler_add_task(scheduler, 200000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , &tasks_set_mav_mode_n_state                                       , 0  													, 6);
 	// scheduler_add_task(scheduler, 200000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&state_machine_set_mav_mode_n_state              , (task_argument_t)&central_data->state_machine         , 6);
-	
+	scheduler_add_task(scheduler, 200000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&state_machine_update              				, (task_argument_t)&central_data->state_machine         , 6);
 
 	scheduler_add_task(scheduler, 4000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&mavlink_communication_update                    , (task_argument_t)&central_data->mavlink_communication , 7);
 	scheduler_add_task(scheduler, 100000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&analog_monitor_update                           , (task_argument_t)&central_data->analog_monitor 		, 8);

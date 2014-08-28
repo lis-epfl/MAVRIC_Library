@@ -97,7 +97,7 @@ typedef struct
 	position_estimator_t* pos_est;							///< The pointer to the position estimation structure
 	barometer_t* pressure;									///< The pointer to the barometer structure
 	gps_t* gps;												///< The pointer to the GPS structure
-	state_t* state;											///< The pointer to the state structure
+	state_t* state;
 	const servos_t* servos;										///< The pointer to the servos structure
 	const ahrs_t *estimated_attitude;						///< The pointer to the attitude estimation structure
 	bool* nav_plan_active;										///< The pointer to the waypoint set flag
@@ -156,7 +156,10 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms);
  *
  * \param	sim				The pointer to the simulation model structure
  */
-void simulation_switch_between_reality_n_simulation(simulation_model_t *sim);
+// void simulation_switch_between_reality_n_simulation(simulation_model_t *sim);
+void simulation_switch_from_reality_to_simulation(simulation_model_t *sim);
+void simulation_switch_from_simulation_to_reality(simulation_model_t *sim);
+
 
 /**
  * \brief	Task to send the mavlink HIL state simulation message

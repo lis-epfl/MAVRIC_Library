@@ -63,7 +63,7 @@ void tasks_rc_user_channels(uint8_t* chan_switch, signal_quality_t* rc_check, in
 /**
  * \brief            Updates the state and mode of the UAV
  */
-task_return_t tasks_set_mav_mode_n_state(void* arg);
+// task_return_t tasks_set_mav_mode_n_state(void* arg);
 
 
 /**

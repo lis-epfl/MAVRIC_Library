@@ -82,6 +82,7 @@ typedef struct  {
 	servo_mix_quadcotper_diag_t servo_mix;
 	servos_t servos;
 	remote_t remote;
+	remote_mode_t remote_mode;
 
 	analog_monitor_t analog_monitor;							///< The analog to digital converter structure
 

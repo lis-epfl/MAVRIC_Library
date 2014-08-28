@@ -498,38 +498,62 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 	sim->gps->status = GPS_OK;
 }
 
-void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
-{
-	uint32_t i;
+// void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
+// {
+// 	uint32_t i;
 	
-	// From simulation to reality
-	//if (sim->state->simulation_mode == HIL_OFF)
-	if (state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
-	{
-		sim->pos_est->local_position.origin = sim->local_position.origin;
-		for (i = 0;i < 3;i++)
-		{
-			sim->pos_est->local_position.pos[i] = 0.0f;
-		}
-		sim->pos_est->init_gps_position = false;
-		sim->state->mav_state = MAV_STATE_STANDBY;
-		sim->state->mav_mode.byte = MAV_MODE_MANUAL_DISARMED;
-		state_disable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
-//		servos_set_value_failsafe(sim->servos);
-	}
+// 	// From simulation to reality
+// 	//if (sim->state->simulation_mode == HIL_OFF)
+// 	if (state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
+// 	{
+// 		sim->pos_est->local_position.origin = sim->local_position.origin;
+// 		for (i = 0;i < 3;i++)
+// 		{
+// 			sim->pos_est->local_position.pos[i] = 0.0f;
+// 		}
+// 		sim->pos_est->init_gps_position = false;
+// 		sim->state->mav_state = MAV_STATE_STANDBY;
+// 		sim->state->mav_mode.byte = MAV_MODE_MANUAL_DISARMED;
+// 		state_disable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
+// //		servos_set_value_failsafe(sim->servos);
+// 	}
 
-	// From reality to simulation
-	//if (sim->state->simulation_mode == HIL_ON)
-	if (!state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
-	{	
-		simulation_reset_simulation(sim);
-		simulation_calib_set(sim);
-		state_enable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
-		sim->pos_est->init_gps_position = false;
+// 	// From reality to simulation
+// 	//if (sim->state->simulation_mode == HIL_ON)
+// 	if (!state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
+// 	{	
+// 		simulation_reset_simulation(sim);
+// 		simulation_calib_set(sim);
+// 		state_enable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
+// 		sim->pos_est->init_gps_position = false;
 		
-		print_util_dbg_print("Switching from reality to simulation.\r");
-	}
+// 		print_util_dbg_print("Switching from reality to simulation.\r");
+// 	}
+// }
+
+
+void simulation_switch_from_reality_to_simulation(simulation_model_t *sim)
+{
+	print_util_dbg_print("Switching from reality to simulation.\n");
+
+	simulation_reset_simulation(sim);
+	simulation_calib_set(sim);
+	sim->pos_est->init_gps_position = false;
 }
+
+
+void simulation_switch_from_simulation_to_reality(simulation_model_t *sim)
+{
+	print_util_dbg_print("Switching from simulation to reality.\n");
+	
+	sim->pos_est->local_position.origin = sim->local_position.origin;
+	for (uint32_t i = 0; i < 3; i++)
+	{
+		sim->pos_est->local_position.pos[i] = 0.0f;
+	}
+	sim->pos_est->init_gps_position = false;
+}
+
 
 task_return_t simulation_send_state(simulation_model_t* sim_model)
 {

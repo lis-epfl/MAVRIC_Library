@@ -27,7 +27,6 @@ extern "C" {
 #include "scheduler.h"
 #include "mavlink_communication.h"
 #include "analog_monitor.h"
-#include "remote_mode.h"
 #include <stdbool.h>
 #include "mav_modes.h"
 
@@ -58,7 +57,7 @@ typedef enum MAV_MODE_FLAG mav_flag_t;
 typedef struct  
 {
 	mav_mode_t mav_mode;						///< The value of the MAV mode (MAV_MODE enum in common.h)
-	uint8_t mav_state;							///< The value of the MAV state (MAV_STATE enum in common.h)
+	mav_state_t mav_state;							///< The value of the MAV state (MAV_STATE enum in common.h)
 		
 	mav_mode_t mav_mode_previous;				///< The value of the MAV mode at previous time step
 		
@@ -79,7 +78,6 @@ typedef struct
 	
 	const analog_monitor_t* analog_monitor;		///< The pointer to the analog monitor structure
 	const mavlink_stream_t* mavlink_stream;		///< Pointer to the mavlink stream structure
-	const remote_mode_t remote_mode;			///< Pointer to remote controller
 } state_t;
 
 
@@ -91,7 +89,7 @@ typedef struct
  * \param   mavlink_stream		The pointer to the mavlink stream structure
  * \param	message_handler		The pointer to the message handler
  */
-void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, const remote_t* remote, mavlink_message_handler_t *message_handler);
+void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *message_handler);
 
 
 /**

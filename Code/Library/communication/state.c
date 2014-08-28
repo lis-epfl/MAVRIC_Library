@@ -109,13 +109,12 @@ static void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, const remote_t* remote, mavlink_message_handler_t *message_handler)
+void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *message_handler)
 // void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *message_handler)
 {
 	// Init dependencies
 	state->analog_monitor 	= analog_monitor;
 	state->mavlink_stream 	= mavlink_stream;
-	//state->remote 			= remote;
 
 	// Init parameters
 	state->autopilot_type 	= state_config->autopilot_type;
@@ -131,12 +130,12 @@ void state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	if (state->simulation_mode == HIL_ON)
 	{
 		// state->mav_mode |= MAV_MODE_FLAG_HIL_ENABLED;
-		state->mav_mode.flags.HIL = HIL_ON;
+		state->mav_mode.HIL = HIL_ON;
 	}
 	else
 	{
 		// state->mav_mode |= !MAV_MODE_FLAG_HIL_ENABLED;
-		state->mav_mode.flags.HIL = HIL_OFF;
+		state->mav_mode.HIL = HIL_OFF;
 	}
 	
 	state->nav_plan_active = false;
@@ -170,7 +169,7 @@ task_return_t state_send_heartbeat(const state_t* state)
 								&msg,
 								state->autopilot_type, 
 								state->autopilot_name, 
-								state->mav_mode.byte | MAV_MODE_FLAG_CUSTOM_MODE_ENABLED, 
+								state->mav_mode.byte, 
 								state->simulation_mode, 
 								state->mav_state);
 	mavlink_stream_send(mavlink_stream, &msg);
@@ -253,7 +252,7 @@ void state_set_new_mode(state_t *state, uint8_t mode)
 	mav_mode.byte = mode;
 
 	// Keep current hil flag
-	mav_mode.flags.HIL = state->mav_mode.flags.HIL;
+	mav_mode.HIL = state->mav_mode.HIL;
 	state->mav_mode = mav_mode;
 }
 
@@ -262,9 +261,9 @@ bool state_test_if_in_mode(state_t *state, uint8_t mav_mode)
 {
 	// get modes without HIL flag
 	mav_mode_t current_mode = state->mav_mode;
-	current_mode.flags.HIL = HIL_OFF;
+	current_mode.HIL = HIL_OFF;
 	mav_mode_t mode = { .byte=mav_mode };
-	mode.flags.HIL = HIL_OFF;
+	mode.HIL = HIL_OFF;
 	
 	if ( current_mode.byte == mode.byte )
 	{

@@ -301,6 +301,9 @@ task_return_t navigation_update(navigation_t* navigation)
 				navigation_run(navigation->waypoint_handler->waypoint_critical_coordinates,navigation);
 			}
 			break;
+			
+		default:
+			break;
 	}
 	
 	navigation->mode = navigation->state->mav_mode.byte;

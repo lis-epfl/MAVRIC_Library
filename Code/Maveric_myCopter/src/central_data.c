@@ -94,11 +94,10 @@ void central_data_init()
 	{
 		.mav_mode = { .byte = MAV_MODE_SAFE },
 		.mav_state = MAV_STATE_BOOT,
-		.simulation_mode = HIL_OFF, //HIL_ON
-		// .autopilot_type = MAV_TYPE_QUADROTOR,
+		// .simulation_mode = HIL_OFF, //HIL_ON
+		.simulation_mode = HIL_ON,
 		.autopilot_type = MAV_TYPE_QUADROTOR,
-		// .autopilot_name = MAV_AUTOPILOT_GENERIC,
-		.autopilot_name = MAV_AUTOPILOT_PX4,
+		.autopilot_name = MAV_AUTOPILOT_GENERIC,
 		.sensor_present = 0b1111110000100111,
 		.sensor_enabled = 0b1111110000100111,
 		.sensor_health = 0b1111110000100111
@@ -107,7 +106,6 @@ void central_data_init()
 				&state_config,
 				&central_data.analog_monitor,
 				&central_data.mavlink_communication.mavlink_stream,
-				&central_data.remote,
 				&central_data.mavlink_communication.message_handler); 
 	
 	delay_ms(100);
@@ -307,43 +305,80 @@ void central_data_init()
 	remote_conf_t remote_config =
 	{
 		.type = REMOTE_TURNIGY,
-//		.mode_config =
-//		{
-//			.safety_channel = CHANNEL_GEAR,
-//			.safety_mode = 
-//			{
-//				// .byte = MAV_MODE_ATTITUDE_CONTROL
-//				.flags = 
-//				{
+		.mode_config =
+		{
+			.safety_channel = CHANNEL_GEAR,
+			.safety_mode = 
+			{
+//				.byte = MAV_MODE_ATTITUDE_CONTROL,
+				// .flags = 
+				// {
+//				{	
 //					.ARMED = ARMED_OFF,
-//					.MANUAL = MANUAL_ON
-//				}
-//			},
-//			.mode_switch_channel = CHANNEL_FLAPS,
-//			.mode_switch_up = 
-//			{
-//				// .byte = MAV_MODE_VELOCITY_CONTROL 
-//				.byte = 2 
-//			},
-//			.mode_switch_middle = 
-//			{
-//				// .byte = MAV_MODE_POSITION_HOLD 
-//				.byte = 4 
-//			},
-//			.mode_switch_down = 
-//			{
-//				// .byte = MAV_MODE_GPS_NAVIGATION 
-//				.byte = 8 
-//			},
-//			.use_custom_switch = false,
-//			.custom_switch_channel = CHANNEL_AUX1,
-//			.use_test_switch = false,
-//			.test_switch_channel = CHANNEL_AUX2,
-//		}
+//					.MANUAL = MANUAL_ON,
+//				},
+				// }
+				.flags =
+				{
+				.ARMED = ARMED_OFF,
+				.MANUAL = MANUAL_ON,
+				}
+			},
+			.mode_switch_channel = CHANNEL_FLAPS,
+			.mode_switch_up = 
+			{
+				.byte = MAV_MODE_VELOCITY_CONTROL 
+			},
+			.mode_switch_middle = 
+			{
+				.byte = MAV_MODE_POSITION_HOLD 
+			},
+			.mode_switch_down = 
+			{
+				.byte = MAV_MODE_GPS_NAVIGATION 
+			},
+			.use_custom_switch = false,
+			.custom_switch_channel = CHANNEL_AUX1,
+			.use_test_switch = false,
+			.test_switch_channel = CHANNEL_AUX2,
+		},
 	};
 	remote_init( 	&central_data.remote, 
 					&remote_config, 
 					&central_data.mavlink_communication.mavlink_stream );
+
+	// // Init modes from remote
+	// remote_mode_conf_t remote_mode_config = 
+	// {
+	// 	.safety_channel = CHANNEL_GEAR,
+	// 	.safety_mode = 
+	// 	{
+	// 		.byte = MAV_MODE_ATTITUDE_CONTROL
+	// 		// .flags = 
+	// 		// {
+	// 		// 	.ARMED = ARMED_OFF,
+	// 		// 	.MANUAL = MANUAL_ON
+	// 		// }
+	// 	},
+	// 	.mode_switch_channel = CHANNEL_FLAPS,
+	// 	.mode_switch_up = 
+	// 	{
+	// 		.byte = MAV_MODE_VELOCITY_CONTROL 
+	// 	},
+	// 	.mode_switch_middle = 
+	// 	{
+	// 		.byte = MAV_MODE_POSITION_HOLD 
+	// 	},
+	// 	.mode_switch_down = 
+	// 	{
+	// 		.byte = MAV_MODE_GPS_NAVIGATION 
+	// 	},
+	// 	.use_custom_switch = false,
+	// 	.custom_switch_channel = CHANNEL_AUX1,
+	// 	.use_test_switch = false,
+	// 	.test_switch_channel = CHANNEL_AUX2,
+	// };
+	// remote_mode_init(&central_data.remote_mode, &remote_mode_config, &central_data.remote);
 
 	// Initialize SD/MMC driver with SPI clock (PBA).
 	sd_spi_init(&central_data.sd_spi);
