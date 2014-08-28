@@ -38,21 +38,12 @@ void initialisation()
 	//onboard_parameters_write_parameters_to_flashc(&central_data->mavlink_communication.onboard_parameters);
 	onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
 
-	sd_spi_test(&central_data->sd_spi);
-
-
 	LED_On(LED1);
 
 	//piezo_speaker_startup_melody();
 	//piezo_speaker_mario_melody();
 
 	print_util_dbg_print("OK. Starting up.\r");
-
-	//sd_spi_test();
-	
-	//diskio_test_low_layer();
-	
-	//diskio_test_fatfs();
 
 	central_data->state.mav_state = MAV_STATE_STANDBY;
 
