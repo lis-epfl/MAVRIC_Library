@@ -588,8 +588,6 @@
       <File Name="Library/communication/hud.c"/>
       <File Name="Library/communication/remote.h"/>
       <File Name="Library/communication/remote.c"/>
-      <File Name="Library/communication/remote_mode.c"/>
-      <File Name="Library/communication/remote_mode.h"/>
       <File Name="Library/communication/state_machine.c"/>
       <File Name="Library/communication/state_machine.h"/>
       <File Name="Library/communication/mav_modes.h"/>

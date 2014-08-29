@@ -310,36 +310,44 @@ void central_data_init()
 			.safety_channel = CHANNEL_GEAR,
 			.safety_mode = 
 			{
-//				.byte = MAV_MODE_ATTITUDE_CONTROL,
-				// .flags = 
+				.byte = MAV_MODE_ATTITUDE_CONTROL,
+				// .flags =
 				// {
-//				{	
-//					.ARMED = ARMED_OFF,
-//					.MANUAL = MANUAL_ON,
-//				},
+				// .MANUAL = MANUAL_ON,
 				// }
-				.flags =
-				{
-				.ARMED = ARMED_OFF,
-				.MANUAL = MANUAL_ON,
-				}
 			},
 			.mode_switch_channel = CHANNEL_FLAPS,
 			.mode_switch_up = 
 			{
 				.byte = MAV_MODE_VELOCITY_CONTROL 
+				// .flags =
+				// {
+				// .MANUAL = MANUAL_ON,
+				// .STABILISE = STABILISE_ON,
+				// }
 			},
 			.mode_switch_middle = 
 			{
-				.byte = MAV_MODE_POSITION_HOLD 
+				.byte = MAV_MODE_POSITION_HOLD,
+				// .flags =
+				// {
+				// .MANUAL = MANUAL_ON,
+				// .GUIDED = GUIDED_ON,
+				// }
 			},
 			.mode_switch_down = 
 			{
-				.byte = MAV_MODE_GPS_NAVIGATION 
+				.byte = MAV_MODE_GPS_NAVIGATION
+				// .flags =
+				// {
+				// .AUTO = AUTO_ON,
+				// } 
 			},
 			.use_custom_switch = false,
 			.custom_switch_channel = CHANNEL_AUX1,
 			.use_test_switch = false,
+			.test_switch_channel = CHANNEL_AUX2,
+			.use_disable_remote_mode_switch = false,
 			.test_switch_channel = CHANNEL_AUX2,
 		},
 	};
@@ -347,38 +355,6 @@ void central_data_init()
 					&remote_config, 
 					&central_data.mavlink_communication.mavlink_stream );
 
-	// // Init modes from remote
-	// remote_mode_conf_t remote_mode_config = 
-	// {
-	// 	.safety_channel = CHANNEL_GEAR,
-	// 	.safety_mode = 
-	// 	{
-	// 		.byte = MAV_MODE_ATTITUDE_CONTROL
-	// 		// .flags = 
-	// 		// {
-	// 		// 	.ARMED = ARMED_OFF,
-	// 		// 	.MANUAL = MANUAL_ON
-	// 		// }
-	// 	},
-	// 	.mode_switch_channel = CHANNEL_FLAPS,
-	// 	.mode_switch_up = 
-	// 	{
-	// 		.byte = MAV_MODE_VELOCITY_CONTROL 
-	// 	},
-	// 	.mode_switch_middle = 
-	// 	{
-	// 		.byte = MAV_MODE_POSITION_HOLD 
-	// 	},
-	// 	.mode_switch_down = 
-	// 	{
-	// 		.byte = MAV_MODE_GPS_NAVIGATION 
-	// 	},
-	// 	.use_custom_switch = false,
-	// 	.custom_switch_channel = CHANNEL_AUX1,
-	// 	.use_test_switch = false,
-	// 	.test_switch_channel = CHANNEL_AUX2,
-	// };
-	// remote_mode_init(&central_data.remote_mode, &remote_mode_config, &central_data.remote);
 
 	// Initialize SD/MMC driver with SPI clock (PBA).
 	sd_spi_init(&central_data.sd_spi);
