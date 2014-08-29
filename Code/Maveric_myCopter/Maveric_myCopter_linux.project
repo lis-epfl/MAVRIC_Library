@@ -591,6 +591,8 @@
       <File Name="Library/communication/state_machine.c"/>
       <File Name="Library/communication/state_machine.h"/>
       <File Name="Library/communication/mav_modes.h"/>
+      <File Name="Library/communication/data_logging.h"/>
+      <File Name="Library/communication/data_logging.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="control">
       <File Name="Library/control/pid_control.h"/>
@@ -674,6 +676,15 @@
       <File Name="Library/hal/sd_spi.c"/>
       <File Name="Library/hal/usb_int.h"/>
       <File Name="Library/hal/usb_int.c"/>
+      <File Name="Library/hal/fat_fs/integer.h"/>
+      <File Name="Library/hal/fat_fs/ffconf.h"/>
+      <File Name="Library/hal/fat_fs/ff.h"/>
+      <File Name="Library/hal/fat_fs/ff.c"/>
+      <File Name="Library/hal/fat_fs/diskio.h"/>
+      <File Name="Library/hal/fat_fs/diskio.c"/>
+      <File Name="Library/hal/fat_fs/option/unicode.c"/>
+      <File Name="Library/hal/fat_fs/option/syscall.c"/>
+      <File Name="Library/hal/fat_fs/option/cc932.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>

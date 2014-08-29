@@ -30,6 +30,7 @@
 
 //to remove
 static uint32_t  gl_ptr_mem;                       // Memory data pointer
+sd_spi_t sd_spi;
 
 #define PBA_HZ                16000000
 #define BUFFERSIZE            64
@@ -50,24 +51,24 @@ volatile bool end_of_transfer;
 
 // Local RAM buffer for the example to store data received from the SD/MMC card
 volatile char ram_buffer[1000];
+volatile char ram_buffer2[1000];
 
 // Dummy char table
 const char dummy_data[] = "0123456789xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
 // Prototype functions
 static void local_pdca_init(void);
-static bool sd_spi_check_presence(sd_spi_t *sd_spi);
-static bool sd_spi_wait_not_busy(void);
+static bool sd_spi_check_presence(void);
 static int sd_spi_check_hc(void);
-static int sd_spi_get_card_type(sd_spi_t *sd_spi);
+static int sd_spi_get_card_type(void);
 static bool sd_spi_get_status(uint16_t *r2);
 static uint8_t sd_spi_send_command(uint8_t command, uint32_t arg); 
 static uint8_t sd_spi_command(uint8_t command, uint32_t arg);
 static uint8_t sd_spi_send_and_read(uint8_t data_to_send);
 static void sd_spi_resources_init(spi_options_t spiOptions);
-static bool sd_spi_get_csd(uint8_t *buffer, sd_spi_t *sd_spi);
+static bool sd_spi_get_csd(uint8_t *buffer);
 #if (defined SD_MMC_READ_CID) && (SD_MMC_READ_CID == true)
-	static bool sd_spi_get_cid(uint8_t *buffer, sd_spi_t *sd_spi);
+	static bool sd_spi_get_cid(uint8_t *buffer);
 #endif
 
 /* interrupt handler to notify if the Data reception from flash is
@@ -83,7 +84,7 @@ static void pdca_int_handler(void)
   pdca_disable_interrupt_transfer_complete(AVR32_PDCA_CHANNEL_SPI_RX);
 
   //TODO we should have it, but i did not find a way to get sd_spi argument here
-  //sd_mmc_spi_read_close_PDCA(sd_spi); //unselects the SD/MMC memory.
+  //sd_mmc_spi_read_close_PDCA(); //unselects the SD/MMC memory.
   
   delay_ms(100);
   // Disable unnecessary channel
@@ -131,12 +132,12 @@ static void local_pdca_init(void)
 
 }
 
-static bool sd_spi_check_presence(sd_spi_t *sd_spi)
+static bool sd_spi_check_presence(void)
 {
 	uint8_t r1; //card command response
 	uint16_t retry = 0;
 	
-	if (sd_spi->init_done == false)
+	if (sd_spi.init_done == false)
 	{
 		// If memory is not initialized, try to initialize it sending CMD0
 		// If no valid response, there is no card
@@ -160,19 +161,19 @@ static bool sd_spi_check_presence(sd_spi_t *sd_spi)
 		}
 		else
 		{
-			sd_spi->init_done = false;
+			sd_spi.init_done = false;
 			return false; //card timed-out => no card
 		}
 	}
 }
 
-bool sd_spi_mem_check(sd_spi_t *sd_spi)
+bool sd_spi_mem_check(void)
 {
-	if (sd_spi_check_presence(sd_spi))
+	if (sd_spi_check_presence())
 	{
-		if (sd_spi->init_done == false)
+		if (sd_spi.init_done == false)
 		{
-			return sd_spi_init(sd_spi);
+			return sd_spi_init();
 		}
 		else
 		{
@@ -182,7 +183,7 @@ bool sd_spi_mem_check(sd_spi_t *sd_spi)
 	return false;
 }
 
-static bool sd_spi_wait_not_busy(void)
+bool sd_spi_wait_not_busy(void)
 {
 	uint8_t r1; //card response
 	uint32_t retry = 0;
@@ -195,15 +196,17 @@ static bool sd_spi_wait_not_busy(void)
 		if (retry == 200000) //card timed-out
 		{
 			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);
+			print_util_dbg_print("card timed-out\r");
 			return false; //card is still busy
 		}
 		retry++;
 	}
 	spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);
+	
 	return true; //card is not busy anymore
 }
 
-static bool sd_spi_get_csd(uint8_t *buffer, sd_spi_t *sd_spi)
+static bool sd_spi_get_csd(uint8_t *buffer)
 {
 	uint8_t r1; //card command response
 	uint8_t retry = 0; //retry counter
@@ -220,7 +223,7 @@ static bool sd_spi_get_csd(uint8_t *buffer, sd_spi_t *sd_spi)
 	if(r1 != 0x00)// if response is not valid
 	{
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
-		sd_spi->init_done = false;
+		sd_spi.init_done = false;
 		return false; //card failed to send CSD
 	}
 	
@@ -236,7 +239,7 @@ static bool sd_spi_get_csd(uint8_t *buffer, sd_spi_t *sd_spi)
 	}
 	
 	// store valid data block
-	for (uint8_t i = 0; i <16; i++)
+	for (uint16_t i = 0;i < 16; i++)
 	{
 		spi_write(SD_MMC_SPI,0xFF);
 		spi_read(SD_MMC_SPI,&data_read);
@@ -251,7 +254,7 @@ static bool sd_spi_get_csd(uint8_t *buffer, sd_spi_t *sd_spi)
 }
 
 #if (defined SD_MMC_READ_CID) && (SD_MMC_READ_CID == true)
-	static bool sd_spi_get_cid(uint8_t *buffer, sd_spi_t *sd_spi)
+	static bool sd_spi_get_cid(uint8_t *buffer, void)
 	{
 		uint8_t r1; //card command response
 		uint16_t r2; //card response
@@ -270,7 +273,7 @@ static bool sd_spi_get_csd(uint8_t *buffer, sd_spi_t *sd_spi)
 		if(r1 != 0x00) //if response is not valid
 		{
 			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
-			sd_spi->init_done = false;
+			sd_spi.init_done = false;
 			return false; //card did not accept the command
 		}
 	
@@ -309,6 +312,7 @@ static int sd_spi_check_hc(void)
 	// check if MMC not busy
 	if (false == sd_spi_wait_not_busy())
 	{
+		print_util_dbg_print("check hc failed, SD card busy\r");
 		return SD_FAILURE; //card is still busy
 	}
 
@@ -317,6 +321,9 @@ static int sd_spi_check_hc(void)
 	r1 = sd_spi_command(SD_READ_OCR, 0);
 	if(r1 != 0) // if response not valid
 	{
+		print_util_dbg_print("check hc FAILED, response not valid:");
+		print_util_dbg_print_num(r1,10);
+		print_util_dbg_print("\r");
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
 		return SD_FAILURE; //card did not received the command properly
 	}
@@ -331,12 +338,13 @@ static int sd_spi_check_hc(void)
 	
 	if(hc_bit & 0x40) //check high capacity bit
 	{
+		print_util_dbg_print("High capacity sd card.\r");
 		return SDHC_CARD; //is a high capacity card
 	}
 	return 0; //is not a high capacity card
 }
 
-static int sd_spi_get_card_type(sd_spi_t *sd_spi)
+static int sd_spi_get_card_type(void)
 {
 	uint8_t	r1; //card command response
 	
@@ -374,14 +382,15 @@ static int sd_spi_get_card_type(sd_spi_t *sd_spi)
 			else
 			{
 				spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
-				sd_spi->card_type = SD_CARD_2;
+				print_util_dbg_print("Card type: SD_CARD_2\r");
+				sd_spi.card_type = SD_CARD_2;
 			}
 		}
 	}
 	else
 	{
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
-		sd_spi->card_type = MMC_CARD;
+		sd_spi.card_type = MMC_CARD;
 		
 		// IDENTIFICATION OF THE CARD TYPE (SD or MMC)
 		// Both cards will accept CMD55 command but only the SD card will respond to ACMD41
@@ -395,22 +404,24 @@ static int sd_spi_get_card_type(sd_spi_t *sd_spi)
 		if ((r1&0xFE) == 0) 
 		{   
 			// ignore "in_idle_state" flag bit
-			sd_spi->card_type = SD_CARD;    // card has accepted the command, this is a SD card
+			print_util_dbg_print("Card type: SD_CARD\r");
+			sd_spi.card_type = SD_CARD;    // card has accepted the command, this is a SD card
 		} 
 		else 
 		{
-			 sd_spi->card_type = MMC_CARD;   // card has not responded, this is a MMC card
+			print_util_dbg_print("Card type: MMC_CARD\r");
+			sd_spi.card_type = MMC_CARD;   // card has not responded, this is a MMC card
 		 
-			 // reset card again
-			 if(false == sd_spi_reset_card(sd_spi))
-			 {
-				 spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
-				 return false; //did not manage to reset the card
-			 }
+			// reset card again
+			if(false == sd_spi_reset_card())
+			{
+				spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
+				return false; //did not manage to reset the card
+			}
 		 }
 	 
 		 // CHECK FOR SDHC
-		/*if(sd_spi->card_type == SD_CARD_2) 
+		/*if(sd_spi.card_type == SD_CARD_2) 
 		{
 			int is_high_capacity = sd_spi_check_hc();
 			if (is_high_capacity == -1)
@@ -420,16 +431,17 @@ static int sd_spi_get_card_type(sd_spi_t *sd_spi)
 			}
 			else if (is_high_capacity == 1)
 			{
-				sd_spi->card_type = SD_CARD_2_SDHC;
+				print_util_dbg_print("Card type: SDHC");
+				sd_spi.card_type = SD_CARD_2_SDHC;
 			}
 		}*/
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
 	}
 	
-	return sd_spi->card_type;
+	return sd_spi.card_type;
 }
 
-void sd_spi_get_capacity(sd_spi_t *sd_spi)
+void sd_spi_get_capacity(void)
 {
 	uint64_t c_size;
 	uint8_t  c_size_mult;
@@ -438,59 +450,88 @@ void sd_spi_get_capacity(sd_spi_t *sd_spi)
 	uint8_t  erase_grp_mult;
 
 	// extract variables from CSD array
-	read_bl_len = sd_spi->csd[5] & 0x0F;
+	read_bl_len = sd_spi.csd[5] & 0x0F;
 	
-	if (sd_spi->card_type == SD_CARD_2_SDHC) 
+	if (sd_spi.card_type == SD_CARD_2_SDHC) 
 	{
-		c_size = ((sd_spi->csd[7] & 0x3F) << 16) | (sd_spi->csd[8] << 8) | sd_spi->csd[9];
+		c_size = ((sd_spi.csd[7] & 0x3F) << 16) | (sd_spi.csd[8] << 8) | sd_spi.csd[9];
 		++c_size;
-		sd_spi->capacity = c_size << 19;
-		sd_spi->capacity_mult = (c_size >> 13) & 0x01FF;
-		sd_spi->last_block_address = (sd_spi->capacity >> 9) + (sd_spi->capacity_mult << 23) - 1;
+
+		sd_spi.capacity = c_size << 19;
+		sd_spi.capacity_mult = (c_size >> 13) & 0x01FF;
+		sd_spi.last_block_address = (sd_spi.capacity >> 9) + (sd_spi.capacity_mult << 23) - 1;
 	} 
 	else 
 	{
-		c_size      = ((sd_spi->csd[6] & 0x03) << 10) + (sd_spi->csd[7] << 2) + ((sd_spi->csd[8] & 0xC0) >> 6);
-		c_size_mult = ((sd_spi->csd[9] & 0x03) << 1) + ((sd_spi->csd[10] & 0x80) >> 7);
-		sd_spi->last_block_address = ((uint32_t)(c_size + 1) * (uint32_t)((1 << (c_size_mult + 2)))) - 1;
-		sd_spi->capacity = (1 << read_bl_len) * (sd_spi->last_block_address + 1);
-		sd_spi->capacity_mult = 0;
+		c_size      = ((sd_spi.csd[6] & 0x03) << 10) + (sd_spi.csd[7] << 2) + ((sd_spi.csd[8] & 0xC0) >> 6);
+		c_size_mult = ((sd_spi.csd[9] & 0x03) << 1) + ((sd_spi.csd[10] & 0x80) >> 7);
+		sd_spi.last_block_address = ((uint32_t)(c_size + 1) * (uint32_t)((1 << (c_size_mult + 2)))) - 1;
+		sd_spi.capacity = (1 << read_bl_len) * (sd_spi.last_block_address + 1);
+		sd_spi.capacity_mult = 0;
 		if (read_bl_len > 9)   // 9 means 2^9 = 512b
 		{	
-			sd_spi->last_block_address <<= (read_bl_len - 9);
+			sd_spi.last_block_address <<= (read_bl_len - 9);
 		}
 	}
 	
-	if (sd_spi->card_type == MMC_CARD)
+	if (sd_spi.card_type == MMC_CARD)
 	{
-		erase_grp_size = ((sd_spi->csd[10] & 0x7C) >> 2);
-		erase_grp_mult = ((sd_spi->csd[10] & 0x03) << 3) | ((sd_spi->csd[11] & 0xE0) >> 5);
+		erase_grp_size = ((sd_spi.csd[10] & 0x7C) >> 2);
+		erase_grp_mult = ((sd_spi.csd[10] & 0x03) << 3) | ((sd_spi.csd[11] & 0xE0) >> 5);
 	}
 	else
 	{
-		erase_grp_size = ((sd_spi->csd[10] & 0x3F) << 1) + ((sd_spi->csd[11] & 0x80) >> 7);
+		erase_grp_size = ((sd_spi.csd[10] & 0x3F) << 1) + ((sd_spi.csd[11] & 0x80) >> 7);
 		erase_grp_mult = 0;
 	}
-	sd_spi->erase_group_size = (erase_grp_size + 1) * (erase_grp_mult + 1);
+	sd_spi.erase_group_size = (erase_grp_size + 1) * (erase_grp_mult + 1);
+	
+	print_util_dbg_print("Card capacity:");
+	print_util_dbg_print_long(sd_spi.capacity,10);
+	print_util_dbg_print(", erase group size:");
+	print_util_dbg_print_num(sd_spi.erase_group_size,10);
+	print_util_dbg_print(".\r");
+	
 }
 
-bool sd_spi_reset_card(sd_spi_t *sd_spi)
+void sd_spi_get_sector_count(void* res)
 {
-	uint8_t retry = 0;
+	uint32_t *_res = res;
+	*_res = sd_spi.capacity / MMC_SECTOR_SIZE;
+}
+
+void sd_spi_get_sector_size(void* res)
+{
+	uint32_t *_res = res;
+	*_res = (uint32_t)MMC_SECTOR_SIZE;
+}
+
+void sd_spi_get_block_size(void* res)
+{
+	uint16_t *_res = res;
+	*_res = sd_spi.erase_group_size;
+}
+
+bool sd_spi_reset_card(void)
+{
+	uint16_t retry = 0;
 	uint8_t r1; //card command response
 	
-	sd_spi->init_done = false;
-	sd_spi->card_type = MMC_CARD; //by default
+	sd_spi.init_done = false;
+	sd_spi.card_type = MMC_CARD; //by default
 	
 	do 
 	{
-		r1 = sd_spi_send_command(MMC_GO_IDLE_STATE, 0); //card will answer 0x01 if entered in Iddle_State
+		r1 = sd_spi_send_command(MMC_GO_IDLE_STATE, 0); //card will answer 0x01 if entered in Idle_State
 		spi_write(SD_MMC_SPI,0xFF); // write dummy byte
 		
 		retry++; //increment retry counter
-		if(retry > 100)
+		if(retry > 1000)
 		{
-			return false; //did not manage to set card in iddle_state
+			print_util_dbg_print("Did not manage to set card in idle state:");
+			print_util_dbg_print_num(r1,10);
+			print_util_dbg_print("\r");
+			return false; //did not manage to set card in idle_state
 		}
 		
 	}while(r1 != 0x01); // check memory enters iddle_state
@@ -498,13 +539,13 @@ bool sd_spi_reset_card(sd_spi_t *sd_spi)
 	return true; //successfully entered in idlle_state
 }
 
-bool is_sd_spi_write_pwd_locked(sd_spi_t *sd_spi)
+bool is_sd_spi_write_pwd_locked(void)
 {
 	uint16_t r2;
 	
-	if (sd_spi->card_type == MMC_CARD)
+	if (sd_spi.card_type == MMC_CARD)
 	{
-		if (((sd_spi->csd[0] >> 2) & 0x0F) < 2) // lock feature is not present on the card since the MMC is v1.x released !
+		if (((sd_spi.csd[0] >> 2) & 0x0F) < 2) // lock feature is not present on the card since the MMC is v1.x released !
 		{
 			return false; //card is not locked
 		}
@@ -666,30 +707,30 @@ static void sd_spi_resources_init(spi_options_t spiOptions)
 	spi_enable(SD_MMC_SPI);
 }
 
-bool sd_spi_init(sd_spi_t *sd_spi)
+bool sd_spi_init(void)
 {
 	uint32_t retry = 0; //retry counter
 	uint8_t r1 = 0; //card response
 	
 	//initialize sd_spi_t struct
-	sd_spi->init_done		= false;
+	sd_spi.init_done		= false;
 	for (uint8_t i = 0; i < 16; i++)
 	{
-		sd_spi->csd[i]		= 0; 
+		sd_spi.csd[i]		= 0; 
 	}
-	sd_spi->card_type		= MMC_CARD;
-	sd_spi->capacity		= 0;
-	sd_spi->capacity_mult	= 0;
-	sd_spi->clock			= FOSC0;
-	sd_spi->last_block_address = 0;
-	sd_spi->erase_group_size = 0;
+	sd_spi.card_type			= MMC_CARD;
+	sd_spi.capacity				= 0;
+	sd_spi.capacity_mult		= 0;
+	sd_spi.clock				= FOSC0;
+	sd_spi.last_block_address	= 0;
+	sd_spi.erase_group_size		= 0;
 	
 	// SPI options.
 	spi_options_t spiOptions =
 	{
 		.reg          = SD_MMC_SPI_NPCS,
 		.baudrate     = SPI_LOW_SPEED,			// Start at low frequency
-		.bits         = SD_MMC_SPI_BITS,        // Defined in conf_sd_mmc_spi.h.
+		.bits         = SD_MMC_SPI_BITS,        // Defined in sd_spi.h.
 		.spck_delay   = 0,
 		.trans_delay  = 0,
 		.stay_act     = 1,
@@ -701,7 +742,7 @@ bool sd_spi_init(sd_spi_t *sd_spi)
 	sd_spi_resources_init(spiOptions);
 	
 	//init SPI for sd card usage
-	spi_setupChipReg(SD_MMC_SPI, &spiOptions, sd_spi->clock);
+	spi_setupChipReg(SD_MMC_SPI, &spiOptions, sd_spi.clock);
 	
 	/* card needs 74 cycles minimum to start up */
 	spi_selectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);    // select SD_MMC_SPI
@@ -712,18 +753,18 @@ bool sd_spi_init(sd_spi_t *sd_spi)
 	spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
 
 	// RESET THE MEMORY CARD
-	if(false == sd_spi_reset_card(sd_spi))
+	if(false == sd_spi_reset_card())
 	{
-		print_util_dbg_print("sd_card FAILED reset \n");
+		print_util_dbg_print("sd_card FAILED reset \r");
 		return false; //did not manage to reset the card
 	}
 	
-	sd_spi_get_card_type(sd_spi);
+	sd_spi_get_card_type();
 	
 	// CONTINUE INTERNAL INITIALIZATION OF THE CARD
 	// Continue sending CMD1 while memory card is in idle state
 	do {
-		switch(sd_spi->card_type) 
+		switch(sd_spi.card_type) 
 		{
 			case MMC_CARD:
 				r1 = sd_spi_send_command(MMC_SEND_OP_COND, 0);
@@ -746,25 +787,26 @@ bool sd_spi_init(sd_spi_t *sd_spi)
 		
 		if(retry == 50000) // measured approx. 500 on several cards
 		{
-			print_util_dbg_print("sd_card FAILED timed-out \n");
+			print_util_dbg_print("sd_card FAILED timed-out \r");
 			return false; //card timed-out
 		}
 		retry++; //increment retry counter
 	} while (r1);
 	
 	// CHECK FOR SDHC
-	if(sd_spi->card_type == SD_CARD_2) 
+	if(sd_spi.card_type == SD_CARD_2) 
 	{
 		int is_high_capacity = sd_spi_check_hc();
 		if (is_high_capacity == -1)
 		{
 			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
-			print_util_dbg_print("sd_card FAILED check high capa \n");
+			print_util_dbg_print("sd_card FAILED check high capacity \r");
 			return false;
 		}
 		else if (is_high_capacity == 1)
 		{
-			sd_spi->card_type = SD_CARD_2_SDHC;
+			print_util_dbg_print("Init check Card type: SDHC\r");
+			sd_spi.card_type = SD_CARD_2_SDHC;
 		}
 	}
 	
@@ -777,30 +819,30 @@ bool sd_spi_init(sd_spi_t *sd_spi)
 	spi_write(SD_MMC_SPI,0xFF);            // write dummy byte
 	if (r1 != 0x00) //if card did not accept command SET_BLOCKLEN
 	{
-		print_util_dbg_print("sd_card FAILED set block length \n");
+		print_util_dbg_print("sd_card FAILED set block length \r");
 		return false;    // card unsupported block length
 	}
 	
 	// GET CARD SPECIFIC DATA
-	if (false ==  sd_spi_get_csd(sd_spi->csd, sd_spi))
+	if (false ==  sd_spi_get_csd(sd_spi.csd))
 	{
-		print_util_dbg_print("sd_card FAILED get CSD \n");
+		print_util_dbg_print("sd_card FAILED get CSD \r");
 		return false;
 	}
 
 	// GET CARD CAPACITY and NUMBER OF SECTORS
-	sd_spi_get_capacity(sd_spi);
+	sd_spi_get_capacity();
 
 	// GET CARD IDENTIFICATION DATA IF REQUIRED
 	#if (defined SD_MMC_READ_CID) && (SD_MMC_READ_CID == true)
 		if (false ==  sd_spi_get_cid(cid))
 		{
-			print_util_dbg_print("sd_card FAILED get CID \n");
+			print_util_dbg_print("sd_card FAILED get CID \r");
 			return false;
 		}
 	#endif
 
-	sd_spi->init_done = true;
+	sd_spi.init_done = true;
 
 	// Set SPI Speed to MAX
 	spiOptions.baudrate = SPI_HIGH_SPEED;
@@ -809,37 +851,82 @@ bool sd_spi_init(sd_spi_t *sd_spi)
 	// Initialize PDCA controller for the sd_spi driver
 	local_pdca_init();
 	
-	print_util_dbg_print("Sd_card initialized \n");
+	print_util_dbg_print("Sd_card initialized \r");
 	return true; //successfully initialize the sd card
 }
 
-bool sd_mmc_spi_read_open_PDCA (uint32_t pos, sd_spi_t *sd_spi)
+bool sd_spi_status(void)
+{
+	uint8_t retry = 0;
+	uint8_t spireg;
+
+	// wait for MMC not busy
+	if (false == sd_spi_wait_not_busy())
+	{
+		return false;
+	}
+	
+	spi_selectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);    // select SD_MMC_SPI
+
+	// send command
+	spi_write(SD_MMC_SPI,MMC_SEND_STATUS | 0x40);  // send command
+	spi_write(SD_MMC_SPI,0);                       // send parameter
+	spi_write(SD_MMC_SPI,0);
+	spi_write(SD_MMC_SPI,0);
+	spi_write(SD_MMC_SPI,0);
+	spi_write(SD_MMC_SPI,0x95);            // correct CRC for first command in SPI (CMD0)
+	// after, the CRC is ignored
+	
+	// end command
+	// wait for response
+	uint16_t r2 = 0xFFFF; //necessary ?
+	spireg = 0xFF;
+	while((spireg = sd_spi_send_and_read(0xFF)) == 0xFF)
+	{
+		if(retry > 10) //card timed-out
+		{
+			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);
+			return false; //card timed-out
+		}
+		retry++; //increment retry counter
+	}
+	r2 = ((uint16_t)(spireg) << 8) + sd_spi_send_and_read(0xFF);    // first byte is MSb
+
+	spi_write(SD_MMC_SPI,0xFF);   // give clock again to end transaction
+	spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
+
+	return true;
+}
+
+bool sd_mmc_spi_read_open_PDCA (uint32_t pos)
 {
 	uint8_t r1; //card response
 
 	// Set the global memory ptr at a Byte address.
-	gl_ptr_mem = pos << 9; // gl_ptr_mem = pos * 512
+	uint32_t address = pos << 9; // address = pos * 512
 
 	// wait for MMC not busy
 	if (false == sd_spi_wait_not_busy())
-	{print_util_dbg_print("card busy");
+	{
+		print_util_dbg_print("card busy");
 		return false;
 	}
 
 	spi_selectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // select SD_MMC_SPI
 
 	// issue command
-	if(sd_spi->card_type == SD_CARD_2_SDHC) 
+	if(sd_spi.card_type == SD_CARD_2_SDHC) 
 	{
-		r1 = sd_spi_command(MMC_READ_SINGLE_BLOCK, gl_ptr_mem>>9);
+		r1 = sd_spi_command(MMC_READ_SINGLE_BLOCK, address>>9);
 	} 
 	else 
 	{
-		r1 = sd_spi_command(MMC_READ_SINGLE_BLOCK, gl_ptr_mem);
+		r1 = sd_spi_command(MMC_READ_SINGLE_BLOCK, address);
 	}
 
 	if (r1 != 0x00) //if response not valid
-	{print_util_dbg_print("not received valid response");
+	{
+		print_util_dbg_print("not received valid response");
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
 		return false;
 	}
@@ -849,7 +936,8 @@ bool sd_mmc_spi_read_open_PDCA (uint32_t pos, sd_spi_t *sd_spi)
 	while((r1 = sd_spi_send_and_read(0xFF)) == 0xFF)
 	{
 		if (read_time_out == 30000)   // TIME-OUT
-		{print_util_dbg_print("timed-out");
+		{
+			print_util_dbg_print("timed-out");
 			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS); // unselect SD_MMC_SPI
 			return false;
 		}
@@ -858,7 +946,8 @@ bool sd_mmc_spi_read_open_PDCA (uint32_t pos, sd_spi_t *sd_spi)
 
 	// check token
 	if (r1 != MMC_STARTBLOCK_READ)
-	{print_util_dbg_print("did not receive startblock_read");
+	{
+		print_util_dbg_print("did not receive startblock_read");
 		spi_write(SD_MMC_SPI,0xFF);
 		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
 		return false;
@@ -867,7 +956,7 @@ bool sd_mmc_spi_read_open_PDCA (uint32_t pos, sd_spi_t *sd_spi)
 }
 
 
-bool sd_mmc_spi_read_sector_to_ram(void *ram, sd_spi_t *sd_spi)
+bool sd_mmc_spi_read_sector_to_ram(void *ram)
 {
 	uint8_t r1; //card response
 	uint8_t *_ram = ram;
@@ -882,7 +971,7 @@ bool sd_mmc_spi_read_sector_to_ram(void *ram, sd_spi_t *sd_spi)
 	spi_selectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);    // select SD_MMC_SPI
 
 	// issue command
-	if(sd_spi->card_type == SD_CARD_2_SDHC) 
+	if(sd_spi.card_type == SD_CARD_2_SDHC) 
 	{
 		r1 = sd_spi_command(MMC_READ_SINGLE_BLOCK, gl_ptr_mem>>9);
 	} 
@@ -940,8 +1029,157 @@ bool sd_mmc_spi_read_sector_to_ram(void *ram, sd_spi_t *sd_spi)
 	return true; // Read done.
 }
 
+bool sd_spi_read_given_sector_to_ram(void* ram, uint32_t beginning_sector, uint8_t count)
+{
+	uint8_t r1; //card response
+	uint8_t *_ram = ram;
+	unsigned short data_read;
+	
+	uint32_t sector = beginning_sector;
+	
+	uint16_t read_time_out;
+	uint16_t  i,j;
+	
+	// wait for MMC not busy
+	if (false == sd_spi_wait_not_busy())
+	{
+		return false;
+	}
+	
+	spi_selectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);    // select SD_MMC_SPI
 
-bool sd_spi_write_sector_from_ram(const void *ram, sd_spi_t *sd_spi)
+	for (j = 0;j < count; j++)
+	{
+		// issue command
+		if(sd_spi.card_type == SD_CARD_2_SDHC)
+		{
+			r1 = sd_spi_command(MMC_READ_SINGLE_BLOCK, sector);
+		}
+		else
+		{
+			r1 = sd_spi_command(MMC_READ_SINGLE_BLOCK, sector << 9); // address = pos * 512
+		}
+
+		if (r1 != 0x00) //if response not valid
+		{
+			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
+			return false;
+		}
+
+		// wait for token (may be a datablock start token OR a data error token !)
+		read_time_out = 0;
+		while((r1 = sd_spi_send_and_read(0xFF)) == 0xFF)
+		{
+			if (read_time_out == 30000)   // TIME-OUT
+			{
+				spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS); // unselect SD_MMC_SPI
+				return false; //card timed-out
+			}
+			read_time_out++;
+		}
+
+		// check token
+		if (r1 != MMC_STARTBLOCK_READ)
+		{
+			spi_write(SD_MMC_SPI,0xFF);
+			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS); // unselect SD_MMC_SPI
+			return false;
+		}
+
+		// store datablock
+		for(i = 0; i < MMC_SECTOR_SIZE; i++)
+		{
+			spi_write(SD_MMC_SPI,0xFF);
+			spi_read(SD_MMC_SPI,&data_read);
+			*_ram++ = data_read;
+		}
+		sector += 1; // Update the memory pointer.
+
+		// load 16-bit CRC (ignored)
+		spi_write(SD_MMC_SPI,0xFF);
+		spi_write(SD_MMC_SPI,0xFF);
+
+		// continue delivering some clock cycles
+		spi_write(SD_MMC_SPI,0xFF);
+		spi_write(SD_MMC_SPI,0xFF);
+	}
+	
+	// release chip select
+	spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS); // unselect SD_MMC_SPI
+
+	return true; // Read done.
+}
+
+bool sd_spi_read_sector_to_ram_pcda(void* ram, uint32_t beginning_sector, uint8_t count)
+{
+	
+	uint16_t j;
+	
+	char buffer[1000];
+	
+	// Enable all interrupts.
+	bool global_interrupt_enabled = cpu_irq_is_enabled ();
+	if (!global_interrupt_enabled)
+	{
+		cpu_irq_enable ();
+	}
+	
+	for (j=beginning_sector;j<count;j++)
+	{
+		// Configure the PDCA channel: the address of memory ram_buffer to receive the data at sector address j
+		pdca_load_channel(  AVR32_PDCA_CHANNEL_SPI_RX,
+							&buffer,
+							512);
+
+		pdca_load_channel(  AVR32_PDCA_CHANNEL_SPI_TX,
+							(void *)&dummy_data,
+							512); //send dummy to activate the clock
+
+		end_of_transfer = false;
+		// open sector number j
+		if(sd_mmc_spi_read_open_PDCA (j))
+		{
+			print_util_dbg_print("\r\rFirst 512 Bytes of Transfer number ");
+			print_util_dbg_print_num(j,10);
+			print_util_dbg_print(" :\r\r");
+
+			spi_write(SD_MMC_SPI,0xFF); // Write a first dummy data to synchronise transfer
+			pdca_enable_interrupt_transfer_complete(AVR32_PDCA_CHANNEL_SPI_RX);
+			pdca_channelrx =(volatile avr32_pdca_channel_t*) pdca_get_handler(AVR32_PDCA_CHANNEL_SPI_RX); // get the correct PDCA channel pointer
+			pdca_channeltx =(volatile avr32_pdca_channel_t*) pdca_get_handler(AVR32_PDCA_CHANNEL_SPI_TX); // get the correct PDCA channel pointer
+			pdca_channelrx->cr = AVR32_PDCA_TEN_MASK; // Enable RX PDCA transfer first
+			pdca_channeltx->cr = AVR32_PDCA_TEN_MASK; // and TX PDCA transfer
+
+			while(!end_of_transfer);
+
+			// Display the first 2O bytes of the ram_buffer content
+			for( uint16_t i = 0; i < 20; i++)
+			{
+				// Print the ASCII value of the buffer
+				print_util_dbg_print_num((U8)*(buffer + i), 10);
+			}
+			delay_ms(250);
+		}
+		else
+		{
+			print_util_dbg_print("\r\r! Unable to open memory \r\r");
+			if (!global_interrupt_enabled)
+			{
+				cpu_irq_disable ();
+			}
+			return false;
+		}
+	}
+	
+	if (!global_interrupt_enabled)
+	{
+		cpu_irq_disable ();
+	}
+	
+	return true;
+}
+
+bool sd_spi_write_sector_from_ram(const void *ram)
 {
 	uint8_t r1; //card response
 	const uint8_t *_ram = ram;
@@ -956,7 +1194,7 @@ bool sd_spi_write_sector_from_ram(const void *ram, sd_spi_t *sd_spi)
 	spi_selectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS); // select SD_MMC_SPI
 
 	// send write command
-	if(sd_spi->card_type == SD_CARD_2_SDHC) 
+	if(sd_spi.card_type == SD_CARD_2_SDHC) 
 	{
 		r1 = sd_spi_command(MMC_WRITE_BLOCK, gl_ptr_mem>>9);
 	} 
@@ -1015,26 +1253,128 @@ bool sd_spi_write_sector_from_ram(const void *ram, sd_spi_t *sd_spi)
 	return true; // Write done
 }
 
-void sd_spi_test(sd_spi_t *sd_spi)
+bool sd_spi_write_given_sector_from_ram(const void *ram, uint32_t beginning_sector, uint8_t count)
+{
+	uint8_t r1; //card response
+	const uint8_t *_ram = ram;
+	uint16_t i,j;
+
+	uint32_t sector = beginning_sector;
+
+	for (j = 0;j < count; j++)
+	{
+		// wait for MMC not busy
+		if (false == sd_spi_wait_not_busy())
+		{
+			print_util_dbg_print("SD SPI busy.\r");
+			return false;
+		}
+		
+		spi_selectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS); // select SD_MMC_SPI
+
+	
+		// send write command
+		if(sd_spi.card_type == SD_CARD_2_SDHC)
+		{
+			r1 = sd_spi_command(MMC_WRITE_BLOCK, sector);
+		}
+		else
+		{
+			r1 = sd_spi_command(MMC_WRITE_BLOCK, sector << 9); // address = pos * 512
+		}
+
+		if(r1 != 0x00) //if response not valid
+		{
+			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);
+			print_util_dbg_print("Response not valid\r");
+			return false;
+		}
+	
+		spi_write(SD_MMC_SPI,0xFF); // send dummy to give clock again to end transaction
+
+		// send data start token
+		spi_write(SD_MMC_SPI,MMC_STARTBLOCK_WRITE);
+		// write data
+		for(i = 0; i < MMC_SECTOR_SIZE; i++)
+		{
+			if (_ram!=NULL)
+			{
+				spi_write(SD_MMC_SPI,*_ram);
+				_ram++;
+			}
+			else
+			{
+				spi_write(SD_MMC_SPI,0);
+			}
+		}
+
+		spi_write(SD_MMC_SPI,0xFF); // send CRC (field required but value ignored)
+		spi_write(SD_MMC_SPI,0xFF);
+
+		// read data response token
+		r1 = sd_spi_send_and_read(0xFF);
+		if( (r1&MMC_DR_MASK) != MMC_DR_ACCEPT)
+		{
+			spi_write(SD_MMC_SPI,0xFF); // send dummy bytes
+			spi_write(SD_MMC_SPI,0xFF);
+			spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);
+			
+			print_util_dbg_print("wrong response token");
+			return false; // return ERROR byte
+		}
+
+		spi_write(SD_MMC_SPI,0xFF);    // send dummy bytes
+		spi_write(SD_MMC_SPI,0xFF);
+
+		sector += 1;        // Update the memory pointer.
+		
+		// release chip select
+		spi_unselectChip(SD_MMC_SPI, SD_MMC_SPI_NPCS);  // unselect SD_MMC_SPI
+	}
+
+
+	// wait card not busy after last programming operation
+	uint8_t retry = 0;
+	while (false == sd_spi_wait_not_busy())
+	{
+		if (retry == 10) //timed-out
+		{
+			return false; //card still busy
+		}
+		retry++; //increment retry counter
+	}
+
+	return true; // Write done
+}
+
+void sd_spi_test(void)
 {
 	// Wait for a card to be inserted
-	while (!sd_spi_mem_check(sd_spi));
+	while (!sd_spi_mem_check());
 	
-	print_util_dbg_print("\r\nCard detected!");
+	print_util_dbg_print("\r\rCard detected!");
 
 	// Read Card capacity
-	sd_spi_get_capacity(sd_spi);
+	sd_spi_get_capacity();
 	print_util_dbg_print("Capacity = ");
-	print_util_dbg_print_num(sd_spi->capacity >> 20,10); //>>20 to round capacity to MegaBytes
-	print_util_dbg_print(" MBytes \r\n");
+	print_util_dbg_print_num(sd_spi.capacity >> 20,10); //>>20 to round capacity to MegaBytes
+	print_util_dbg_print(" MBytes \r\r");
 	
 	//try to write something on the sd_card
 	print_util_dbg_print("write succeed ? ");
-	print_util_dbg_print_num(sd_spi_write_sector_from_ram((void *)&dummy_data, sd_spi),10);
+	print_util_dbg_print_num(sd_spi_write_sector_from_ram((void *)&dummy_data),10);
 	print_util_dbg_print("write succeed ? ");
-	print_util_dbg_print_num(sd_spi_write_sector_from_ram((void *)&dummy_data, sd_spi),10);
+	print_util_dbg_print_num(sd_spi_write_sector_from_ram((void *)&dummy_data),10);
 	print_util_dbg_print("write succeed ? ");
-	print_util_dbg_print_num(sd_spi_write_sector_from_ram((void *)&dummy_data, sd_spi),10);
+	print_util_dbg_print_num(sd_spi_write_sector_from_ram((void *)&dummy_data),10);
+
+	//bool as = sd_mmc_spi_read_sector_to_ram((void*)ram_buffer2);
+	if (sd_mmc_spi_read_sector_to_ram((void*)ram_buffer2))
+	{
+		print_util_dbg_print("Read successful\r");
+	}
+	
+
 
 	// Enable all interrupts.
 	bool global_interrupt_enabled = cpu_irq_is_enabled ();
@@ -1047,22 +1387,22 @@ void sd_spi_test(sd_spi_t *sd_spi)
 	// Read the first sectors number 1, 2, 3 of the card
 	for(uint16_t j = 1; j <= 3; j++)
 	{
-		// Configure the PDCA channel: the adddress of memory ram_buffer to receive the data at sector address j
-		pdca_load_channel( AVR32_PDCA_CHANNEL_SPI_RX,
-		&ram_buffer,
-		512);
+		// Configure the PDCA channel: the address of memory ram_buffer to receive the data at sector address j
+		pdca_load_channel(  AVR32_PDCA_CHANNEL_SPI_RX,
+							&ram_buffer,
+							512);
 
-		pdca_load_channel( AVR32_PDCA_CHANNEL_SPI_TX,
-		(void *)&dummy_data,
-		512); //send dummy to activate the clock
+		pdca_load_channel(  AVR32_PDCA_CHANNEL_SPI_TX,
+							(void *)&dummy_data,
+							512); //send dummy to activate the clock
 
 		end_of_transfer = false;
 		// open sector number j
-		if(sd_mmc_spi_read_open_PDCA (j, sd_spi))
+		if(sd_mmc_spi_read_open_PDCA (j))
 		{
-			print_util_dbg_print("\r\nFirst 512 Bytes of Transfer number ");
+			print_util_dbg_print("\r\rFirst 512 Bytes of Transfer number ");
 			print_util_dbg_print_num(j,10);
-			print_util_dbg_print(" :\r\n");
+			print_util_dbg_print(" :\r\r");
 
 			spi_write(SD_MMC_SPI,0xFF); // Write a first dummy data to synchronise transfer
 			pdca_enable_interrupt_transfer_complete(AVR32_PDCA_CHANNEL_SPI_RX);
@@ -1076,17 +1416,22 @@ void sd_spi_test(sd_spi_t *sd_spi)
 			// Display the first 2O bytes of the ram_buffer content
 			for( uint16_t i = 0; i < 20; i++)
 			{
-				print_util_dbg_print_num( (U8)(*(ram_buffer + i)), 16);
+				
+				//print_util_dbg_print_num( atoi(&(*(ram_buffer + i))), 10); // prints the decimal value of the ascii
+				// Print the ASCII value of the ram_buffer
+				print_util_dbg_print_num((U8)*(ram_buffer + i), 10);
+				//print_util_dbg_print_num( (U8)atoi(&(*(ram_buffer2 + i))), 10);
 			}
+			delay_ms(250);
 		}
 		else
 		{
-			print_util_dbg_print("\r\n! Unable to open memory \r\n");
+			print_util_dbg_print("\r\r! Unable to open memory \r\r");
 		}
 	}
 	if (!global_interrupt_enabled)
 	{
 		cpu_irq_disable ();
 	}
-	print_util_dbg_print("\r\nEnd of the example.\r\n");
+	print_util_dbg_print("\r\rEnd of the example.\r\r");
 }

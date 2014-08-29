@@ -68,7 +68,7 @@ extern "C" {
 #include "remote.h"
 
 #include "state_machine.h"
-
+// #include "data_logging.h"
 // TODO : update documentation
 
 /**
@@ -95,8 +95,6 @@ typedef struct  {
 	stabilise_copter_t stabilisation_copter;					///< The stabilisation structure for copter
 	stabiliser_stack_copter_t stabiliser_stack;					///< The stabilisation stack structure (rates, attitude, velocity, thrust)
 
-	// servo_output_t servos_array[NUMBER_OF_SERVO_OUTPUTS];		///< The array of servos (size NUMBER_OF_SERVO_OUTPUTS)
-
 	gps_t gps;													///< The GPS structure
 	
 	simulation_model_t sim_model;								///< The simulation model structure
@@ -117,8 +115,6 @@ typedef struct  {
 	state_machine_t state_machine;								///< The structure for the state machine
 	
 	barometer_t pressure;										///< The pressure structure
-	//float pressure_filtered;									///< The filtered pressure
-	//float altitude_filtered;									///< The filtered altitude
 	
 	orca_t orca;												///< The ORCA collision avoidance structure
 	neighbors_t neighbors;										///< The neighbor structure
@@ -128,6 +124,9 @@ typedef struct  {
 	i2cxl_sonar_t i2cxl_sonar;									///< The i2cxl sonar structure
 	
 	sd_spi_t sd_spi;											///< The sd_SPI driver structure
+	
+	// data_logging_t data_logging;								///< The log data structure
+	
 } central_data_t;
 
 

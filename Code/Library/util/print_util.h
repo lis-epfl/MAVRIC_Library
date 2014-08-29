@@ -28,6 +28,7 @@ extern "C"
 #include "quaternions.h"
 
 #define MAX_DIGITS 10
+#define MAX_DIGITS_LONG 20
 
 
 /**
@@ -76,6 +77,14 @@ void print_util_putdigit(byte_stream_t *out_stream, uint32_t  c);
  */
 void print_util_putnum(byte_stream_t *out_stream, int32_t c, char base);
 
+/**
+ * \brief              Writes a long number in any base to a stream
+ * 
+ * \param out_stream   Pointer to output stream
+ * \param c            Number
+ * \param base         Base in which the number should be printed
+ */
+void print_util_putlong(byte_stream_t *out_stream, int64_t c, char base);
 
 /**
  * \brief              		Writes a float to a stream
@@ -175,6 +184,13 @@ void print_util_dbg_print_vector(float v[], int32_t after_digits);
  */
 void print_util_dbg_print_quaternion(quat_t *quat, int32_t after_digits); 
 
+/**
+ * \brief              Writes a number in any base to the debug stream
+ * 
+ * \param c            Number
+ * \param base         Base in which the number should be printed
+ */
+void print_util_dbg_print_long(int64_t c, char base);
 
 #ifdef __cplusplus
 }
