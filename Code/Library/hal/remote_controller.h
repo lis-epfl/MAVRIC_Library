@@ -127,6 +127,7 @@ static inline void remote_controller_get_velocity_vector_from_remote(control_com
 	controls->tvel[X]= - 10.0f * remote_controller_get_pitch_from_remote() * RC_INPUT_SCALE;
 	controls->tvel[Y]= 10.0f * remote_controller_get_roll_from_remote() * RC_INPUT_SCALE;
 	controls->tvel[Z]=- 1.5f * remote_controller_get_thrust_from_remote();
+	//controls->tvel[Z] = remote_controller_get_thrust_from_remote();
 	controls->rpy[YAW] = remote_controller_get_yaw_from_remote() * RC_INPUT_SCALE;
 }
 
