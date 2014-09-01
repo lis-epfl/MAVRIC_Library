@@ -47,7 +47,7 @@ void servos_init(servos_t* servos, const servos_conf_t* config, const mavlink_st
 
 				case MOTOR_CONTROLLER:
 					servos->servo[i].trim          = 0.0f;
-					servos->servo[i].min           = -1.0f;
+					servos->servo[i].min           = -0.9f;
 					servos->servo[i].max           = 1.0f;
 					servos->servo[i].failsafe      = -1.2f;
 					servos->servo[i].repeat_freq   = 200;
