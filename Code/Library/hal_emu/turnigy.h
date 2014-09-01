@@ -38,7 +38,7 @@
 
 /*
 typedef struct Turnigy_Receiver {
-	Buffer_t receiver;
+	buffer_t receiver;
 	uint16_t channels[16];
 	uint32_t last_update;
 	uint8_t valid;

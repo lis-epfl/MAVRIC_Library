@@ -220,7 +220,7 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->controls_nav->control_mode = VELOCITY_COMMAND_MODE;
 	navigation->controls_nav->yaw_mode = YAW_ABSOLUTE;
 	
-	navigation->mode = state->mav_mode;
+	navigation->mode = state->mav_mode.byte;
 	
 	navigation->auto_takeoff = false;
 	
@@ -244,7 +244,7 @@ task_return_t navigation_update(navigation_t* navigation)
 		case MAV_STATE_ACTIVE:
 			if (navigation->state->in_the_air)
 			{
-				switch (navigation->state->mav_mode - (navigation->state->mav_mode & MAV_MODE_FLAG_DECODE_POSITION_HIL))
+				switch (navigation->state->mav_mode.byte - (navigation->state->mav_mode.byte & MAV_MODE_FLAG_DECODE_POSITION_HIL))
 				{
 					case MAV_MODE_GPS_NAVIGATION:
 						navigation_waypoint_navigation_handler(navigation);
@@ -302,9 +302,12 @@ task_return_t navigation_update(navigation_t* navigation)
 				navigation_run(navigation->waypoint_handler->waypoint_critical_coordinates,navigation);
 			}
 			break;
+			
+		default:
+			break;
 	}
 	
-	navigation->mode = navigation->state->mav_mode;
+	navigation->mode = navigation->state->mav_mode.byte;
 	
 	return TASK_RUN_SUCCESS;
 }
@@ -381,7 +384,7 @@ void navigation_waypoint_take_off_handler(navigation_t* navigation)
 		waypoint_handler_nav_plan_init(navigation->waypoint_handler);
 	}
 	
-	if (navigation->mode == navigation->state->mav_mode)
+	if (navigation->mode == navigation->state->mav_mode.byte)
 	{
 		if (navigation->waypoint_handler->dist2wp_sqr <= 16.0f)
 		{
@@ -398,7 +401,7 @@ void navigation_waypoint_take_off_handler(navigation_t* navigation)
 
 void navigation_hold_position_handler(navigation_t* navigation)
 {
-	if (navigation->mode != navigation->state->mav_mode)
+	if (navigation->mode != navigation->state->mav_mode.byte)
 	{
 		navigation->waypoint_handler->hold_waypoint_set = false;
 	}
@@ -416,7 +419,7 @@ void navigation_hold_position_handler(navigation_t* navigation)
 
 void navigation_waypoint_navigation_handler(navigation_t* navigation)
 {
-	if (navigation->mode != navigation->state->mav_mode)
+	if (navigation->mode != navigation->state->mav_mode.byte)
 	{
 		navigation->waypoint_handler->hold_waypoint_set = false;
 	}

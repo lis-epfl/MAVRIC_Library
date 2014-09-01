@@ -20,7 +20,7 @@
 #include "uart_int.h"
 #include "usb_int.h"
 
-Buffer_t console_in_buffer;				///< The console incoming buffer
+buffer_t console_in_buffer;				///< The console incoming buffer
 byte_stream_t console_out_stream;		///< The console outgoing byte stream
 byte_stream_t console_in_stream;		///< The console incoming byte stream
 

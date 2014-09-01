@@ -29,10 +29,7 @@
 #include "i2c_driver_int.h"
 #include "remote_controller.h"
 #include "print_util.h"
-
 // #include "mavlink_stream.h"
-#include "servo_pwm.h"
-
 //#include "simulation.h"
 #include "bmp085.h"
 #include "lsm330dlc.h"
@@ -45,6 +42,8 @@
 #include "xbee.h"
 #include "console.h"
 #include "stdio_usb.h"
+
+#include "pwm_servos.h"
 
 void boardsupport_init(central_data_t *central_data) 
 {
@@ -62,13 +61,11 @@ void boardsupport_init(central_data_t *central_data)
 		
 	INTC_init_interrupts();
 
-	LED_On(LED1);
-	// Configure the pins connected to LEDs as output and set their default
-	// initial state to high (LEDs off).
-	//gpio_configure_pin(LED0_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
-	//gpio_configure_pin(LED1_GPIO,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+	// Switch on the red LED
+	LED_On(LED2);
 
-	servo_pwm_hardware_init();
+	// servo_pwm_hardware_init();
+	pwm_servos_init( CS_ON_SERVO_7_8 );
 	
 	// Init UART 0 for XBEE communication
 	xbee_init(UART0);
@@ -77,9 +74,9 @@ void boardsupport_init(central_data_t *central_data)
 	gps_ublox_init(&(central_data->gps), UART3, &central_data->mavlink_communication.mavlink_stream);
 	
 	// Init UART 4 for wired communication
-	// console_init(CONSOLE_UART4);
+	console_init(CONSOLE_UART4);
 	// Init USB for wired communication
-	console_init(CONSOLE_USB);
+	// console_init(CONSOLE_USB);
 		
 	// connect abstracted aliases to hardware ports
 	central_data->telemetry_down_stream = xbee_get_out_stream();
@@ -92,10 +89,10 @@ void boardsupport_init(central_data_t *central_data)
 	print_util_dbg_print("Debug stream initialised\n");
 
 	// Bind RC receiver with remote
-	//remote_dsm2_rc_activate_bind_mode();
+	// spektrum_satellite_bind();
 
 	// RC receiver initialization
-	remote_dsm2_rc_init();
+	spektrum_satellite_init();
 
 	// Init analog rails
 	central_data->analog_monitor.enable[ANALOG_RAIL_2]  = false;

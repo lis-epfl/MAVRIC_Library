@@ -643,7 +643,7 @@ typedef struct
  	uint8_t  course_status;					///< Course status
  	uint8_t  accuracy_status;				///< Accuracy status
 	
-	Buffer_t gps_buffer;					///< The GPS buffer
+	buffer_t gps_buffer;					///< The GPS buffer
 	byte_stream_t gps_stream_in;			///< The incoming GPS byte stream
 	byte_stream_t gps_stream_out;			///< The outgoing GPS byte stream
 	
