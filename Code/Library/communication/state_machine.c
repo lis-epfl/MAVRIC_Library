@@ -95,182 +95,182 @@ void state_machine_switch_off_motors(state_machine_t* state_machine)
 }
 
 
-task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
-{
+// task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
+// {
 	
-	LED_Toggle(LED1);
+// 	LED_Toggle(LED1);
 	
-	state_machine_rc_user_channels(state_machine);
+// 	state_machine_rc_user_channels(state_machine);
 	
-	switch(state_machine->state->mav_state)
-	{
-		case MAV_STATE_UNINIT:
-		case MAV_STATE_BOOT:
-		case MAV_STATE_CALIBRATING:
-		case MAV_STATE_POWEROFF:
-		case MAV_STATE_ENUM_END:
-			break;
+// 	switch(state_machine->state->mav_state)
+// 	{
+// 		case MAV_STATE_UNINIT:
+// 		case MAV_STATE_BOOT:
+// 		case MAV_STATE_CALIBRATING:
+// 		case MAV_STATE_POWEROFF:
+// 		case MAV_STATE_ENUM_END:
+// 			break;
 
-		case MAV_STATE_STANDBY:
-			if (state_machine->motor_state == 1)
-			{
-				switch(state_machine->channel_switches)
-				{
-					case 0:
-						print_util_dbg_print("Switching on the motors!\n");
+// 		case MAV_STATE_STANDBY:
+// 			if (state_machine->motor_state == 1)
+// 			{
+// 				switch(state_machine->channel_switches)
+// 				{
+// 					case 0:
+// 						print_util_dbg_print("Switching on the motors!\n");
 
-						state_machine->state->reset_position = true;
+// 						state_machine->state->reset_position = true;
 				
-						state_machine->state->nav_plan_active = false;
-						state_machine->state->mav_state = MAV_STATE_ACTIVE;
-						state_set_new_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL);
-						break;
+// 						state_machine->state->nav_plan_active = false;
+// 						state_machine->state->mav_state = MAV_STATE_ACTIVE;
+// 						state_set_new_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL);
+// 						break;
 
-					default:
-						print_util_dbg_print("Switches not ready, both should be pushed!\n");
-						break;
-				}
+// 					default:
+// 						print_util_dbg_print("Switches not ready, both should be pushed!\n");
+// 						break;
+// 				}
 			
-				switch (state_machine->rc_check)
-				{
-					case SIGNAL_GOOD:
-						break;
+// 				switch (state_machine->rc_check)
+// 				{
+// 					case SIGNAL_GOOD:
+// 						break;
 
-					case SIGNAL_BAD:
-						state_machine->state->mav_state = MAV_STATE_CRITICAL;
-						break;
+// 					case SIGNAL_BAD:
+// 						state_machine->state->mav_state = MAV_STATE_CRITICAL;
+// 						break;
 
-					case SIGNAL_LOST:
-						state_machine->state->mav_state = MAV_STATE_CRITICAL;
-						break;
-				}
-			}
-			break;
+// 					case SIGNAL_LOST:
+// 						state_machine->state->mav_state = MAV_STATE_CRITICAL;
+// 						break;
+// 				}
+// 			}
+// 			break;
 
-		case MAV_STATE_ACTIVE:
-			switch(state_machine->channel_switches)
-			{
-				case 0:
-					state_set_new_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL);
-					break;
+// 		case MAV_STATE_ACTIVE:
+// 			switch(state_machine->channel_switches)
+// 			{
+// 				case 0:
+// 					state_set_new_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL);
+// 					break;
 
-				case 1:
-					state_set_new_mode(state_machine->state,MAV_MODE_VELOCITY_CONTROL);
-					break;
+// 				case 1:
+// 					state_set_new_mode(state_machine->state,MAV_MODE_VELOCITY_CONTROL);
+// 					break;
 
-				case 2:
-					state_set_new_mode(state_machine->state,MAV_MODE_POSITION_HOLD);
-					break;
+// 				case 2:
+// 					state_set_new_mode(state_machine->state,MAV_MODE_POSITION_HOLD);
+// 					break;
 
-				case 3:
-					state_set_new_mode(state_machine->state,MAV_MODE_GPS_NAVIGATION);
-					break;
-			}
+// 				case 3:
+// 					state_set_new_mode(state_machine->state,MAV_MODE_GPS_NAVIGATION);
+// 					break;
+// 			}
 		
-			switch (state_machine->rc_check)
-			{
-				case SIGNAL_GOOD:
-					break;
+// 			switch (state_machine->rc_check)
+// 			{
+// 				case SIGNAL_GOOD:
+// 					break;
 
-				case SIGNAL_BAD:
-					state_machine->state->mav_state = MAV_STATE_CRITICAL;
-					break;
+// 				case SIGNAL_BAD:
+// 					state_machine->state->mav_state = MAV_STATE_CRITICAL;
+// 					break;
 
-				case SIGNAL_LOST:
-					state_machine->state->mav_state = MAV_STATE_CRITICAL;
-					break;
-			}
-			break;
+// 				case SIGNAL_LOST:
+// 					state_machine->state->mav_state = MAV_STATE_CRITICAL;
+// 					break;
+// 			}
+// 			break;
 
-		case MAV_STATE_CRITICAL:
-			switch(state_machine->channel_switches)
-			{
-				case 0:
-					state_set_new_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL);
-					break;
+// 		case MAV_STATE_CRITICAL:
+// 			switch(state_machine->channel_switches)
+// 			{
+// 				case 0:
+// 					state_set_new_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL);
+// 					break;
 
-				case 1:
-					state_set_new_mode(state_machine->state,MAV_MODE_VELOCITY_CONTROL);
-					break;
+// 				case 1:
+// 					state_set_new_mode(state_machine->state,MAV_MODE_VELOCITY_CONTROL);
+// 					break;
 
-				case 2:
-					state_set_new_mode(state_machine->state,MAV_MODE_POSITION_HOLD);
-					break;
+// 				case 2:
+// 					state_set_new_mode(state_machine->state,MAV_MODE_POSITION_HOLD);
+// 					break;
 
-				case 3:
-					state_set_new_mode(state_machine->state,MAV_MODE_GPS_NAVIGATION);
-					break;
-			}
+// 				case 3:
+// 					state_set_new_mode(state_machine->state,MAV_MODE_GPS_NAVIGATION);
+// 					break;
+// 			}
 			
-			switch (state_machine->rc_check)
-			{
-				case SIGNAL_GOOD:
-					// !! only if receivers are back, switch into appropriate mode
-					state_machine->state->mav_state = MAV_STATE_ACTIVE;
-					state_machine->waypoint_handler->critical_behavior = CLIMB_TO_SAFE_ALT;
-					state_machine->waypoint_handler->critical_next_state = false;
-					break;
+// 			switch (state_machine->rc_check)
+// 			{
+// 				case SIGNAL_GOOD:
+// 					// !! only if receivers are back, switch into appropriate mode
+// 					state_machine->state->mav_state = MAV_STATE_ACTIVE;
+// 					state_machine->waypoint_handler->critical_behavior = CLIMB_TO_SAFE_ALT;
+// 					state_machine->waypoint_handler->critical_next_state = false;
+// 					break;
 
-				case SIGNAL_BAD:
-					if (state_test_if_in_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL))
-					{
-						print_util_dbg_print("Attitude mode, direct to Emergency state_machine->state.\r");
-						state_machine->state->mav_state = MAV_STATE_EMERGENCY;
-					}
-					break;
+// 				case SIGNAL_BAD:
+// 					if (state_test_if_in_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL))
+// 					{
+// 						print_util_dbg_print("Attitude mode, direct to Emergency state_machine->state.\r");
+// 						state_machine->state->mav_state = MAV_STATE_EMERGENCY;
+// 					}
+// 					break;
 
-				case SIGNAL_LOST:
-					if (state_test_if_in_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL))
-					{
-						print_util_dbg_print("Attitude mode, direct to Emergency state_machine->state.\r");
-						state_machine->state->mav_state = MAV_STATE_EMERGENCY;
-					}
-					if (state_machine->waypoint_handler->critical_landing)
-					{
-						state_machine->state->mav_state = MAV_STATE_EMERGENCY;
-					}
-					break;
-			}
-			break;
+// 				case SIGNAL_LOST:
+// 					if (state_test_if_in_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL))
+// 					{
+// 						print_util_dbg_print("Attitude mode, direct to Emergency state_machine->state.\r");
+// 						state_machine->state->mav_state = MAV_STATE_EMERGENCY;
+// 					}
+// 					if (state_machine->waypoint_handler->critical_landing)
+// 					{
+// 						state_machine->state->mav_state = MAV_STATE_EMERGENCY;
+// 					}
+// 					break;
+// 			}
+// 			break;
 
-		case MAV_STATE_EMERGENCY:
-			if (state_test_if_in_flag_mode(state_machine->state,MAV_MODE_FLAG_SAFETY_ARMED))
-			{
-				state_machine_switch_off_motors(state_machine);
-				state_machine->state->mav_state = MAV_STATE_EMERGENCY;
-			}
+// 		case MAV_STATE_EMERGENCY:
+// 			if (state_test_if_in_flag_mode(state_machine->state,MAV_MODE_FLAG_SAFETY_ARMED))
+// 			{
+// 				state_machine_switch_off_motors(state_machine);
+// 				state_machine->state->mav_state = MAV_STATE_EMERGENCY;
+// 			}
 
-			switch (state_machine->rc_check)
-			{
-				case SIGNAL_GOOD:
-					state_machine->state->mav_state = MAV_STATE_STANDBY;
-					break;
+// 			switch (state_machine->rc_check)
+// 			{
+// 				case SIGNAL_GOOD:
+// 					state_machine->state->mav_state = MAV_STATE_STANDBY;
+// 					break;
 
-				case SIGNAL_BAD:
-					break;
+// 				case SIGNAL_BAD:
+// 					break;
 
-				case SIGNAL_LOST:
-					break;
-			}
-			break;
-	}
+// 				case SIGNAL_LOST:
+// 					break;
+// 			}
+// 			break;
+// 	}
 	
-	if (state_machine->motor_state == -1)
-	{
-		state_machine_switch_off_motors(state_machine);
-	}
+// 	if (state_machine->motor_state == -1)
+// 	{
+// 		state_machine_switch_off_motors(state_machine);
+// 	}
 	
-	state_machine->state->mav_mode_previous = state_machine->state->mav_mode;
+// 	state_machine->state->mav_mode_previous = state_machine->state->mav_mode;
 	
-	if (state_machine->state->simulation_mode_previous != state_machine->state->simulation_mode)
-	{
-		//simulation_switch_between_reality_n_simulation(state_machine->sim_model);
-		state_machine->state->simulation_mode_previous = state_machine->state->simulation_mode;
-		state_machine->state->mav_mode.HIL = state_machine->state->simulation_mode;
-	}
+// 	if (state_machine->state->simulation_mode_previous != state_machine->state->simulation_mode)
+// 	{
+// 		//simulation_switch_between_reality_n_simulation(state_machine->sim_model);
+// 		state_machine->state->simulation_mode_previous = state_machine->state->simulation_mode;
+// 		state_machine->state->mav_mode.HIL = state_machine->state->simulation_mode;
+// 	}
 	
-	return TASK_RUN_SUCCESS;
-}
+// 	return TASK_RUN_SUCCESS;
+// }
 
 
 void state_machine_update(state_machine_t* state_machine)
@@ -321,6 +321,10 @@ void state_machine_update(state_machine_t* state_machine)
 			if ( mode_new.ARMED == ARMED_ON )
 			{
 				state_new = MAV_STATE_ACTIVE;
+			
+				// Tell other modules to reset position and re-compute waypoints
+				state_machine->state->reset_position = true;
+				state_machine->state->nav_plan_active = false;
 			}
 		break;
 		

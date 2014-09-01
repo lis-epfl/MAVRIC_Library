@@ -37,6 +37,8 @@ void initialisation()
 	
 	piezo_speaker_startup_melody();
 
+	onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
+
 	// Switch off red LED
 	LED_Off(LED2);
 	

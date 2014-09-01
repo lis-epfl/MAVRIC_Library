@@ -61,8 +61,8 @@ typedef struct
 		
 	mav_mode_t mav_mode_previous;				///< The value of the MAV mode at previous time step
 		
-	mode_flag_hil_t simulation_mode;			///< The value of the simulation_mode (0: real, 1: simulation)
-	mode_flag_hil_t simulation_mode_previous;	///< The value of the simulation_mode (0: real, 1: simulation)
+	int32_t simulation_mode;			///< The value of the simulation_mode (0: real, 1: simulation)
+	int32_t simulation_mode_previous;	///< The value of the simulation_mode (0: real, 1: simulation)
 	
 	uint8_t autopilot_type;						///< The type of the autopilot (MAV_TYPE enum in common.h)
 	uint8_t autopilot_name;						///< The name of the autopilot (MAV_AUTOPILOT enum in common.h)
