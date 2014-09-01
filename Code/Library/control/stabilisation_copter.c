@@ -246,6 +246,6 @@ void stabilisation_copter_joystick_input(control_command_t *control, mavlink_rec
 		print_util_dbg_print_num(packet.buttons,10);
 		print_util_dbg_print(", ");
 		print_util_dbg_print_num(packet.r,10);
-		print_util_dbg_print("\r");
+		print_util_dbg_print("\r\n");
 	}
 }

@@ -279,7 +279,7 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	print_util_dbg_print_num(sim->ahrs.qe.v[1]*100,10);
 	print_util_dbg_print(", ");
 	print_util_dbg_print_num(sim->ahrs.qe.v[2]*100,10);
-	print_util_dbg_print(")\r");
+	print_util_dbg_print("\r\n");
 	
 
 	for (i = 0; i < ROTORCOUNT; i++)
@@ -527,7 +527,7 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 // 		state_enable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
 // 		sim->pos_est->init_gps_position = false;
 		
-// 		print_util_dbg_print("Switching from reality to simulation.\r");
+// 		print_util_dbg_print("Switching from reality to simulation.\r\n");
 // 	}
 // }
 
