@@ -72,20 +72,29 @@ void joystick_parsing_parse_msg(joystick_parsing_t *joystick_parsing, mavlink_re
 		//print_util_dbg_print_num(packet.r,10);
 		//print_util_dbg_print("\r");
 		
-		joystick_parsing->controls->rpy[PITCH] = MAX_JOYSTICK_RANGE * packet.x / 1000.0f;
-		joystick_parsing->controls->rpy[ROLL] = MAX_JOYSTICK_RANGE * packet.y / 1000.0f;
-		joystick_parsing->controls->rpy[YAW] = MAX_JOYSTICK_RANGE * packet.r / 1000.0f;
-		joystick_parsing->controls->thrust = MAX_JOYSTICK_RANGE * packet.z / 1000.0f;
+		joystick_parsing->controls->rpy[PITCH] = packet.x / 1000.0f;
+		joystick_parsing->controls->rpy[ROLL] = packet.y / 1000.0f;
+		joystick_parsing->controls->rpy[YAW] = packet.r / 1000.0f;
+		joystick_parsing->controls->thrust = packet.z / 1000.0f;
 	}
 }
 
 void joystick_parsing_get_velocity_vector_from_joystick(joystick_parsing_t* joystick_parsing, control_command_t* controls)
 {
-	controls->tvel[X] = - 10.0f * joystick_parsing->controls->rpy[PITCH];
-	controls->tvel[Y] = 10.0f * joystick_parsing->controls->rpy[ROLL];
+	controls->tvel[X] = - 10.0f * joystick_parsing->controls->rpy[PITCH] * MAX_JOYSTICK_RANGE;
+	controls->tvel[Y] = 10.0f * joystick_parsing->controls->rpy[ROLL] * MAX_JOYSTICK_RANGE;
 	controls->tvel[Z] = - 1.5f * joystick_parsing->controls->thrust;
 	
-	controls->rpy[YAW] = joystick_parsing->controls->rpy[YAW];
+	controls->rpy[YAW] = joystick_parsing->controls->rpy[YAW] * MAX_JOYSTICK_RANGE;
+}
+
+void joystick_parsing_get_attitude_command_from_joystick(joystick_parsing_t* joystick_parsing, control_command_t* controls)
+{
+	controls->rpy[ROLL] = joystick_parsing->controls->rpy[ROLL] * MAX_JOYSTICK_RANGE;
+	controls->rpy[PITCH] = joystick_parsing->controls->rpy[PITCH] * MAX_JOYSTICK_RANGE;
+	controls->rpy[YAW] = joystick_parsing->controls->rpy[YAW] * MAX_JOYSTICK_RANGE;
+	
+	controls->thrust = joystick_parsing->controls->thrust;
 }
 
 task_return_t joystick_parsing_send_manual_ctrl_msg(joystick_parsing_t* joystick_parsing)

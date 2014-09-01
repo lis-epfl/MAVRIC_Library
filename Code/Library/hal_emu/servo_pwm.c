@@ -15,7 +15,7 @@
 
 
 
-void servo_pwm_init(void){
+void servo_pwm_init_old(void){
       int32_t i;
 /*	  // unlock registers
 	  AVR32_PWM.wpcr = (AVR32_PWM_WPCR_WPKEY_KEY   << AVR32_PWM_WPCR_WPKEY) |

@@ -32,6 +32,7 @@
 #include "position_estimation.h"
 #include "hud.h"
 #include "ahrs.h"
+#include "remote.h"
 
 central_data_t *central_data;
 
@@ -46,7 +47,7 @@ central_data_t *central_data;
  */
 void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_parameters);
 
-void mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging);
+//void mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -65,6 +66,14 @@ void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_par
 	// Simulation mode
 	onboard_parameters_add_parameter_int32    ( onboard_parameters , ( int32_t*)&central_data->state.simulation_mode              , "Sim_mode"         );
 	
+	// Test attitude controller gains
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->attitude_controller.p_gain_angle[ROLL]  , "gainA_Roll"     );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->attitude_controller.p_gain_angle[PITCH] , "gainA_Pitch"     );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->attitude_controller.p_gain_angle[YAW]   , "gainA_Yaw"     );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->attitude_controller.p_gain_rate[ROLL]   , "gainR_Roll"     );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->attitude_controller.p_gain_rate[PITCH]  , "gainR_Pitch"     );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->attitude_controller.p_gain_rate[YAW]    , "gainR_Yaw"     );
+
 	// Roll rate PID
 	onboard_parameters_add_parameter_float    ( onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].p_gain                         , "RollRPid_P_G"     );
 	//onboard_parameters_add_parameter_float  ( onboard_parameters , &rate_stabiliser->rpy_controller[ROLL].integrator.maths_clip          , "RollRPid_I_CLip"  );
@@ -197,29 +206,30 @@ void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_par
 
 }
 
-void mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging)
-{
-	// if _USE_LFN == 0: Name: max 8 characters + 3 for extension; if _USE_LFN != 0: Name: max 255 characters + more flexible extension type
-	data_logging_create_new_log_file(data_logging, "NewFile");
+//void mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging)
+//{
+//	// if _USE_LFN == 0: Name: max 8 characters + 3 for extension; if _USE_LFN != 0: Name: max 255 characters + more flexible extension type
+//	data_logging_create_new_log_file(data_logging, "NewFile");
+//	
+//	// Add your logging parameters here, name length max = MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN = 16
+//	// Supported type: all numeric types included in mavlink_message_type_t (i.e. all except MAVLINK_TYPE_CHAR)
+//	
+//	data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[X], "acc_x");
+//	data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[Y], "acc_y");
+//	data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[Z], "acc_z");
+//	
+//	data_logging_add_parameter_double(data_logging, &central_data->gps.latitude, "latitude");
+//	data_logging_add_parameter_double(data_logging, &central_data->gps.longitude, "longitude");
+//	data_logging_add_parameter_float(data_logging, &central_data->gps.altitude, "altitude");
+//	
+//	// data_logging_add_parameter_int8(data_logging, &central_data->state_machine.rc_check, "rc_check");
+//	//data_logging_add_parameter_uint32(data_logging, (uint32_t*)&central_data->state_machine.rc_check, "rc_check");
+//	
+//	//data_logging_add_parameter_uint32(data_logging, (uint32_t*)&central_data->state.mav_state, "mav_state");
+//	data_logging_add_parameter_uint8(data_logging, &central_data->state.mav_mode.byte, "mav_mode");
+//	
+//};
 	
-	// Add your logging parameters here, name length max = MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN = 16
-	// Supported type: all numeric types included in mavlink_message_type_t (i.e. all except MAVLINK_TYPE_CHAR)
-	
-	data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[X], "acc_x");
-	data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[Y], "acc_y");
-	data_logging_add_parameter_float(data_logging, &central_data->imu.scaled_accelero.data[Z], "acc_z");
-	
-	data_logging_add_parameter_double(data_logging, &central_data->gps.latitude, "latitude");
-	data_logging_add_parameter_double(data_logging, &central_data->gps.longitude, "longitude");
-	data_logging_add_parameter_float(data_logging, &central_data->gps.altitude, "altitude");
-	
-	data_logging_add_parameter_int8(data_logging, &central_data->state_machine.rc_check, "rc_check");
-	
-	data_logging_add_parameter_uint8(data_logging, &central_data->state.mav_state, "mav_state");
-	data_logging_add_parameter_uint8(data_logging, &central_data->state.mav_mode, "mav_mode");
-	
-};
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -230,7 +240,7 @@ void mavlink_telemetry_init(void)
 	
 	mavlink_telemetry_add_onboard_parameters(&central_data->mavlink_communication.onboard_parameters);
 
-	mavlink_telemetry_add_data_logging_parameters(&central_data->data_logging);
+//	mavlink_telemetry_add_data_logging_parameters(&central_data->data_logging);
 
 	scheduler_t* mavlink_scheduler = &central_data->mavlink_communication.scheduler; 
 
@@ -240,14 +250,16 @@ void mavlink_telemetry_init(void)
 	scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&imu_send_scaled,									&central_data->imu, 								MAVLINK_MSG_ID_SCALED_IMU	);							// ID 26
 	scheduler_add_task(mavlink_scheduler,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&imu_send_raw,										&central_data->imu, 								MAVLINK_MSG_ID_RAW_IMU	);								// ID 27
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&bmp085_send_pressure,								&central_data->pressure,							MAVLINK_MSG_ID_SCALED_PRESSURE	);						// ID 29
-	
 	scheduler_add_task(mavlink_scheduler,  200000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&ahrs_send_attitude,								&central_data->ahrs,				 				MAVLINK_MSG_ID_ATTITUDE	);								// ID 30
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&ahrs_send_attitude_quaternion,						&central_data->ahrs,				 				MAVLINK_MSG_ID_ATTITUDE_QUATERNION	);					// ID 31
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&position_estimation_send_position,					&central_data->position_estimator, 				MAVLINK_MSG_ID_LOCAL_POSITION_NED	);					// ID 32
 	scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&position_estimation_send_global_position,			&central_data->position_estimator, 				MAVLINK_MSG_ID_GLOBAL_POSITION_INT	);					// ID 33
-	scheduler_add_task(mavlink_scheduler,  500000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&remote_controller_send_scaled_rc_channels,			&central_data->controls,							MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);					// ID 34
-	scheduler_add_task(mavlink_scheduler,  250000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&remote_controller_send_raw_rc_channels,			&central_data->controls,							MAVLINK_MSG_ID_RC_CHANNELS_RAW	);						// ID 35
-	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&servo_pwm_send_servo_output,						&central_data->servos, 							MAVLINK_MSG_ID_SERVO_OUTPUT_RAW	);						// ID 36
+	
+	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&remote_send_scaled,								&central_data->remote,								MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);					// ID 34
+	// scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&remote_controller_send_scaled_rc_channels,			&central_data->controls,								MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);					// ID 34
+
+	scheduler_add_task(mavlink_scheduler,  250000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&remote_send_raw,									&central_data->remote,								MAVLINK_MSG_ID_RC_CHANNELS_RAW	);						// ID 35
+	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&servos_mavlink_send,								&central_data->servos, 								MAVLINK_MSG_ID_SERVO_OUTPUT_RAW	);						// ID 36
 	scheduler_add_task(mavlink_scheduler,  200000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&stabilisation_send_rpy_thrust_setpoint,			&central_data->controls, 						MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT	);		// ID 58
 	scheduler_add_task(mavlink_scheduler,  200000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&stabilisation_send_rpy_speed_thrust_setpoint,		&central_data->stabiliser_stack.rate_stabiliser,	MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT	);	// ID 59
 	scheduler_add_task(mavlink_scheduler,  250000,	 RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&joystick_parsing_send_manual_ctrl_msg,				&central_data->joystick_parsing,					MAVLINK_MSG_ID_MANUAL_CONTROL);	// ID 69
@@ -255,7 +267,6 @@ void mavlink_telemetry_init(void)
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&simulation_send_state,								&central_data->sim_model, 						MAVLINK_MSG_ID_HIL_STATE	);							// ID 90
 	scheduler_add_task(mavlink_scheduler,  500000,	 RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&simulation_send_quaternions,						&central_data->sim_model,						MAVLINK_MSG_ID_HIL_STATE_QUATERNION	);					// ID 115
 	scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&scheduler_send_rt_stats,							&central_data->scheduler, 						MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
-
 	// scheduler_add_task(mavlink_scheduler,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&mavlink_telemetry_send_sonar,						&central_data->i2cxl_sonar, 						MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
 
 	scheduler_sort_tasks(mavlink_scheduler);

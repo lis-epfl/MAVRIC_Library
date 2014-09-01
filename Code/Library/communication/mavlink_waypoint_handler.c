@@ -727,6 +727,12 @@ static void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handl
 static void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
 {
 	// TODO: implement this! Separate message receiving from handling auto-landing procedure
+	
+	if (waypoint_handler->state->mav_state == MAV_STATE_STANDBY)
+	{
+		waypoint_handler->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
+	}
+	
 	float rel_pos[3];
 	uint8_t i;
 	
@@ -1099,7 +1105,7 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 	float rel_pos[3];
 	
 	if ((waypoint_handler->number_of_waypoints > 0)
-	//&& (waypoint_handler->position_estimator->init_gps_position || (*waypoint_handler->simulation_mode==SIMULATION_MODE))
+	//&& (waypoint_handler->position_estimator->init_gps_position || (*waypoint_handler->simulation_mode==HIL_ON))
 	&& (waypoint_handler->position_estimator->init_gps_position || state_test_if_in_flag_mode(waypoint_handler->state,MAV_MODE_FLAG_HIL_ENABLED))
 	&& (waypoint_handler->waypoint_receiving == false))
 	{

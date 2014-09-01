@@ -19,7 +19,7 @@
 #include "stabilisation_copter.h"
 #include "print_util.h"
 
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabilise_copter_conf_t* stabiliser_conf, const control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servo_output_t* servos, const mavlink_stream_t* mavlink_stream)
+void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabilise_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servos_t* servos, const mavlink_stream_t* mavlink_stream)
 {
 	
 	stabilisation_copter->stabiliser_stack = stabiliser_conf->stabiliser_stack;
@@ -29,9 +29,22 @@ void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabili
 	stabilisation_copter->pos_est = pos_est;
 	stabilisation_copter->servos = servos;
 	
+	controls->control_mode = ATTITUDE_COMMAND_MODE;
+	controls->yaw_mode = YAW_RELATIVE;
+	
+	controls->rpy[ROLL] = 0.0f;
+	controls->rpy[PITCH] = 0.0f;
+	controls->rpy[YAW] = 0.0f;
+	controls->tvel[X] = 0.0f;
+	controls->tvel[Y] = 0.0f;
+	controls->tvel[Z] = 0.0f;
+	controls->theading = 0.0f;
+	controls->thrust = -1.0f;
+
 	stabilisation_copter->stabiliser_stack.rate_stabiliser.mavlink_stream = mavlink_stream;
 	stabilisation_copter->stabiliser_stack.attitude_stabiliser.mavlink_stream = mavlink_stream;
 	stabilisation_copter->stabiliser_stack.velocity_stabiliser.mavlink_stream = mavlink_stream;
+	
 	
 	print_util_dbg_print("Stabilisation copter init.\n");
 }
@@ -153,7 +166,7 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 	#endif
 }
 
-void stabilisation_copter_mix_to_servos_diag_quad(control_command_t *control, servo_output_t servos[4])
+void stabilisation_copter_mix_to_servos_diag_quad(control_command_t *control, servos_t* servos)
 {
 	int32_t i;
 	float motor_command[4];
@@ -177,11 +190,11 @@ void stabilisation_copter_mix_to_servos_diag_quad(control_command_t *control, se
 
 	for (i=0; i<4; i++) 
 	{
-		servos[i].value=SERVO_SCALE * motor_command[i];
+		servos_set_value( servos, i, motor_command[i]);
 	}
 }
 
-void stabilisation_copter_mix_to_servos_cross_quad(control_command_t *control, servo_output_t servos[4])
+void stabilisation_copter_mix_to_servos_cross_quad(control_command_t *control, servos_t* servos)
 {
 	int32_t i;
 	float motor_command[4];
@@ -203,6 +216,6 @@ void stabilisation_copter_mix_to_servos_cross_quad(control_command_t *control, s
 	}
 	for (i=0; i<4; i++) 
 	{
-		servos[i].value=SERVO_SCALE * motor_command[i];
+		servos_set_value( servos, i, motor_command[i]);
 	}
 }

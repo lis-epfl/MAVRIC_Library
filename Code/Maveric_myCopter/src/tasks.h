@@ -25,7 +25,7 @@ extern "C" {
 #endif
 
 #include "scheduler.h"
-
+#include "remote.h"
 
 /**
  * \brief 			Initialises all the tasks
@@ -57,13 +57,13 @@ void tasks_run_imu_update(void* arg);
  * \param	rc_check	The pointer to the state of the remote
  * \param	motorstate	The pointer to the motor state
  */
-void tasks_rc_user_channels(uint8_t *chan_switch, int8_t *rc_check, int8_t *motor_state);
+void tasks_rc_user_channels(uint8_t* chan_switch, signal_quality_t* rc_check, int8_t* motor_state);
 
 
 /**
  * \brief            Updates the state and mode of the UAV
  */
-task_return_t tasks_set_mav_mode_n_state(void* arg);
+// task_return_t tasks_set_mav_mode_n_state(void* arg);
 
 
 /**

@@ -49,19 +49,19 @@
 #define DEADZONE 5
 
 typedef struct Spektrum_Receiver {
-	Buffer_t receiver;
+	buffer_t receiver;
 	uint32_t channels[16];
 	uint32_t last_update;
 	uint8_t valid;
 	uint32_t last_time;
 	uint32_t duration;
-} Spektrum_Receiver_t;
+} spektrum_satellite_t;
 
 
-void remote_dsm2_rc_init (void);
-int16_t remote_dsm2_rc_get_channel(uint8_t index);
-void remote_dsm2_rc_center_channel(uint8_t index);
-int16_t remote_dsm2_rc_get_channel_neutral(uint8_t index);
-int8_t remote_dsm2_rc_check_receivers(void);
+void spektrum_satellite_init (void);
+int16_t spektrum_satellite_get_channel(uint8_t index);
+void spektrum_satellite_calibrate_center(uint8_t index);
+int16_t spektrum_satellite_get_neutral(uint8_t index);
+int8_t spektrum_satellite_check(void);
 
 #endif 

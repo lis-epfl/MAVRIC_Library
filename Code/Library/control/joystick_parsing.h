@@ -55,11 +55,18 @@ void joystick_parsing_init(joystick_parsing_t* joystick_parsing, control_command
 void joystick_parsing_parse_msg(joystick_parsing_t *joystick_parsing, mavlink_received_t* rec);
 
 /** 
- * \brief	Parse joystick to velocity vector
+ * \brief	Parse joystick to velocity vector command
  * \param	joystick_parsing		The poiner to the joystick parsing structure
  * \param	controls				The pointer to the control structure
  */
 void joystick_parsing_get_velocity_vector_from_joystick(joystick_parsing_t* joystick_parsing, control_command_t* controls);
+
+/** 
+ * \brief	Parse joystick to attitude command
+ * \param	joystick_parsing		The poiner to the joystick parsing structure
+ * \param	controls				The pointer to the control structure
+ */
+void joystick_parsing_get_attitude_command_from_joystick(joystick_parsing_t* joystick_parsing, control_command_t* controls);
 
 /** 
  * \brief	Parse received mavlink message in structure

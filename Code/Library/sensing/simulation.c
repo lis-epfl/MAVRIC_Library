@@ -43,7 +43,7 @@ static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_co
  * \param	sim				The pointer to the simulation structure
  * \param	servos			The pointer to the servos structure
  */
-void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servos);
+void forces_from_servos_diag_quad(simulation_model_t *sim);
 
 /**
  * \brief	Computes the forces in the local frame of a "cross" quadrotor configuration
@@ -53,7 +53,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servo
  * \param	sim				The pointer to the simulation structure
  * \param	servos			The pointer to the servos structure
  */
-void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *servos);
+void forces_from_servos_cross_quad(simulation_model_t *sim);
 
 /**
  * \brief	Resets the simulation towards the "real" estimated position
@@ -163,7 +163,8 @@ static void simulation_reset_simulation(simulation_model_t *sim)
 	//sim->local_position.heading = sim->pos_est->local_position.heading;
 }
 
-void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servos){
+void forces_from_servos_diag_quad(simulation_model_t* sim)
+{
 	int32_t i;
 	float motor_command[4];
 	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4];
@@ -177,7 +178,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servo
 	float old_rotor_speed;
 	for (i = 0; i < 4; i++)
 	{
-		motor_command[i] = (float)servos[i].value / SERVO_SCALE - sim->vehicle_config.rotor_rpm_offset;
+		motor_command[i] = (float)sim->servos->servo[i].value - sim->vehicle_config.rotor_rpm_offset;
 		if (motor_command[i] < 0.0f) 
 		{
 			motor_command[i] = 0;
@@ -222,7 +223,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim, servo_output_t *servo
 }
 
 
-void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *servos)
+void forces_from_servos_cross_quad(simulation_model_t* sim)
 {
 	//int32_t i;
 	//float motor_command[4];
@@ -245,11 +246,12 @@ void forces_from_servos_cross_quad(simulation_model_t *sim, servo_output_t *serv
 	*/
 }
 
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, servo_output_t* servos, bool* nav_plan_active, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, const servos_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
 {
 	int32_t i;
 	
@@ -261,9 +263,8 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	sim->pos_est = pos_est;
 	sim->pressure = pressure;
 	sim->gps = gps;
-	sim->state = state;
 	sim->servos = servos;
-	sim->nav_plan_active = nav_plan_active;
+	sim->nav_plan_active = &state->nav_plan_active;
 	
 	// set initial conditions to a given attitude_filter
 	sim->estimated_attitude = ahrs;
@@ -350,10 +351,10 @@ void simulation_update(simulation_model_t *sim)
 	sim->last_update = now;
 	// compute torques and forces based on servo commands
 	#ifdef CONF_DIAG
-	forces_from_servos_diag_quad(sim, sim->servos);
+	forces_from_servos_diag_quad(sim);
 	#endif
 	#ifdef CONF_CROSS
-	forces_from_servos_cross_quad(sim, sim->servos);
+	forces_from_servos_cross_quad(sim);
 	#endif
 	
 	// integrate torques to get simulated gyro rates (with some damping)
@@ -496,39 +497,29 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 	sim->gps->status = GPS_OK;
 }
 
-void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
+
+void simulation_switch_from_reality_to_simulation(simulation_model_t *sim)
 {
-	uint32_t i;
-	
-	if (state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
-	{
-		// From simulation to reality
-		sim->pos_est->local_position.origin = sim->local_position.origin;
-		for (i = 0;i < 3;i++)
-		{
-			sim->pos_est->local_position.pos[i] = 0.0f;
-		}
-		sim->pos_est->init_gps_position = false;
-		sim->state->mav_state = MAV_STATE_STANDBY;
-		sim->state->mav_mode = MAV_MODE_MANUAL_DISARMED;
-		//state_disable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
-		servo_pwm_failsafe(sim->servos);
-		
-		print_util_dbg_print("Switching from simulation to reality.\r");
-	}
-	else
-	{
-		// From reality to simulation
-		simulation_reset_simulation(sim);
-		simulation_calib_set(sim);
-		sim->state->mav_state = MAV_STATE_STANDBY;
-		sim->state->mav_mode = MAV_MODE_MANUAL_DISARMED;
-		state_enable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
-		sim->pos_est->init_gps_position = false;
-		
-		print_util_dbg_print("Switching from reality to simulation.\r");
-	}
+	print_util_dbg_print("Switching from reality to simulation.\n");
+
+	simulation_reset_simulation(sim);
+	simulation_calib_set(sim);
+	sim->pos_est->init_gps_position = false;
 }
+		
+
+void simulation_switch_from_simulation_to_reality(simulation_model_t *sim)
+{
+	print_util_dbg_print("Switching from simulation to reality.\n");
+	
+	sim->pos_est->local_position.origin = sim->local_position.origin;
+	for (uint32_t i = 0; i < 3; i++)
+	{
+		sim->pos_est->local_position.pos[i] = 0.0f;
+	}
+	sim->pos_est->init_gps_position = false;
+}
+
 
 task_return_t simulation_send_state(simulation_model_t* sim_model)
 {
