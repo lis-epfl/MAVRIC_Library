@@ -13,12 +13,12 @@
 
 #ifdef SPEKTRUM_REMOTE
 	#include "spektrum.h"
-	#include "remote_dsm2.h"
+	#include "spektrum_satellite.h"
 #endif
 
 #ifdef TURNIGY_REMOTE
 	#include "turnigy.h"
-	#include "remote_dsm2.h"
+	#include "spektrum_satellite.h"
 #endif
 
 #ifdef JOYSTICK_REMOTE
@@ -28,10 +28,10 @@
 
 
 
-static float inline remote_controller_get_roll_from_remote()	{return remote_dsm2_rc_get_channel(RC_ROLL)*RC_ROLL_DIR * RC_SCALEFACTOR; };
-static float inline remote_controller_get_pitch_from_remote()	{return remote_dsm2_rc_get_channel(RC_PITCH)*RC_PITCH_DIR * RC_SCALEFACTOR; };
-static float inline remote_controller_get_yaw_from_remote()	{return remote_dsm2_rc_get_channel(RC_YAW)*RC_YAW_DIR * RC_SCALEFACTOR; };
-static float inline remote_controller_get_thrust_from_remote(){return remote_dsm2_rc_get_channel(RC_THROTTLE)*RC_THROTTLE_DIR*RC_SCALEFACTOR; };
+static float inline remote_controller_get_roll_from_remote()	{return spektrum_satellite_get_channel(RC_ROLL)*RC_ROLL_DIR * RC_SCALEFACTOR; };
+static float inline remote_controller_get_pitch_from_remote()	{return spektrum_satellite_get_channel(RC_PITCH)*RC_PITCH_DIR * RC_SCALEFACTOR; };
+static float inline remote_controller_get_yaw_from_remote()	{return spektrum_satellite_get_channel(RC_YAW)*RC_YAW_DIR * RC_SCALEFACTOR; };
+static float inline remote_controller_get_thrust_from_remote(){return spektrum_satellite_get_channel(RC_THROTTLE)*RC_THROTTLE_DIR*RC_SCALEFACTOR; };
 
 
 static inline control_command_t remote_controller_get_command_from_remote()
@@ -47,12 +47,12 @@ static inline control_command_t remote_controller_get_command_from_remote()
 
 static inline void remote_controller_get_channel_mode(uint8_t* chan_switch)
 {
-	if (remote_dsm2_rc_get_channel(RC_SAFETY)<0)
+	if (spektrum_satellite_get_channel(RC_SAFETY)<0)
 	{
 		*chan_switch |= 0x00;
-		}else if(remote_dsm2_rc_get_channel(RC_SAFETY)>0 && remote_dsm2_rc_get_channel(RC_ID_MODE)<0){
+		}else if(spektrum_satellite_get_channel(RC_SAFETY)>0 && spektrum_satellite_get_channel(RC_ID_MODE)<0){
 		*chan_switch |= 0x01;
-		}else if (remote_dsm2_rc_get_channel(RC_SAFETY)>0 && remote_dsm2_rc_get_channel(RC_ID_MODE)>20){
+		}else if (spektrum_satellite_get_channel(RC_SAFETY)>0 && spektrum_satellite_get_channel(RC_ID_MODE)>20){
 		*chan_switch |= 0x03;
 		}else{
 		*chan_switch |= 0x02;

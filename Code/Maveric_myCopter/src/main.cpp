@@ -21,8 +21,8 @@ extern "C" {
 	#include "piezo_speaker.h"
 	
 	#include "gpio.h"
-	
-	//#include "fat_fs/diskio.h"
+	#include "spi.h"
+	#include "sd_spi.h"
 }
  
 central_data_t *central_data;
@@ -35,19 +35,17 @@ void initialisation()
 
 	mavlink_telemetry_init();
 	
-	//onboard_parameters_write_parameters_to_flashc(&central_data->mavlink_communication.onboard_parameters);
 	onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
-
-	LED_On(LED1);
+	
+	central_data->state.mav_state = MAV_STATE_STANDBY;	
+	central_data->imu.calibration_level = OFF;	
 
 	piezo_speaker_startup_melody();
-	//piezo_speaker_mario_melody();
+	
+	// Switch off red LED
+	LED_Off(LED2);
 
 	print_util_dbg_print("OK. Starting up.\r\n");
-
-	central_data->state.mav_state = MAV_STATE_STANDBY;
-
-	central_data->imu.calibration_level = OFF;
 }
 
 int main (void)

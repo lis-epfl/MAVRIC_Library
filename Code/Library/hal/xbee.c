@@ -20,7 +20,7 @@
 #include "uart_int.h"
 
 
-Buffer_t xbee_in_buffer;									///< The XBEE incoming buffer
+buffer_t xbee_in_buffer;									///< The XBEE incoming buffer
 byte_stream_t xbee_out_stream;								///< The XBEE outgoing byte stream
 byte_stream_t xbee_in_stream;								///< The XBEE incoming byte stream
 
