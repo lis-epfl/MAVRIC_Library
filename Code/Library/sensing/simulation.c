@@ -71,7 +71,7 @@ static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_co
 	if (packet->param1 == 1)
 	{
 		// Set new home position to actual position
-		print_util_dbg_print("Set new home location to actual position.\n");
+		print_util_dbg_print("Set new home location to actual position.\r\n");
 		sim->local_position.origin = coord_conventions_local_to_global_position(sim->local_position);
 
 		print_util_dbg_print("New Home location: (");
@@ -80,12 +80,12 @@ static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_co
 		print_util_dbg_print_num(sim->local_position.origin.longitude * 10000000.0f,10);
 		print_util_dbg_print(", ");
 		print_util_dbg_print_num(sim->local_position.origin.altitude * 1000.0f,10);
-		print_util_dbg_print(")\n");
+		print_util_dbg_print(")\r\n");
 	}
 	else
 	{
 		// Set new home position from msg
-		print_util_dbg_print("Set new home location. \n");
+		print_util_dbg_print("Set new home location.\r\n");
 
 		sim->local_position.origin.latitude = packet->param5;
 		sim->local_position.origin.longitude = packet->param6;
@@ -97,7 +97,7 @@ static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_co
 		print_util_dbg_print_num(sim->local_position.origin.longitude * 10000000.0f,10);
 		print_util_dbg_print(", ");
 		print_util_dbg_print_num(sim->local_position.origin.altitude * 1000.0f,10);
-		print_util_dbg_print(")\n");
+		print_util_dbg_print(")\r\n");
 	}
 
 	*sim->nav_plan_active = false;
@@ -153,7 +153,7 @@ static void simulation_reset_simulation(simulation_model_t *sim)
 	print_util_dbg_print_num(sim->pos_est->local_position.pos[1]*1000,10);
 	print_util_dbg_print(", ");
 	print_util_dbg_print_num(sim->pos_est->local_position.pos[2]*1000,10);
-	print_util_dbg_print(")\n");
+	print_util_dbg_print(")\r\n");
 	
 	//sim->local_position.origin.latitude = HOME_LATITUDE;
 	//sim->local_position.origin.longitude = HOME_LONGITUDE;
@@ -279,7 +279,7 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	print_util_dbg_print_num(sim->ahrs.qe.v[1]*100,10);
 	print_util_dbg_print(", ");
 	print_util_dbg_print_num(sim->ahrs.qe.v[2]*100,10);
-	print_util_dbg_print(")\r");
+	print_util_dbg_print("\r\n");
 	
 
 	for (i = 0; i < ROTORCOUNT; i++)
@@ -302,7 +302,7 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	callbackcmd.module_struct =										sim;
 	mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
 	
-	print_util_dbg_print("HIL simulation initialized. \n");
+	print_util_dbg_print("HIL simulation initialized.\r\n");
 }
 
 void simulation_calib_set(simulation_model_t *sim)
@@ -527,14 +527,14 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 // 		state_enable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
 // 		sim->pos_est->init_gps_position = false;
 		
-// 		print_util_dbg_print("Switching from reality to simulation.\r");
+// 		print_util_dbg_print("Switching from reality to simulation.\r\n");
 // 	}
 // }
 
 
 void simulation_switch_from_reality_to_simulation(simulation_model_t *sim)
 {
-	print_util_dbg_print("Switching from reality to simulation.\n");
+	print_util_dbg_print("Switching from reality to simulation.\r\n");
 
 	simulation_reset_simulation(sim);
 	simulation_calib_set(sim);
@@ -544,7 +544,7 @@ void simulation_switch_from_reality_to_simulation(simulation_model_t *sim)
 
 void simulation_switch_from_simulation_to_reality(simulation_model_t *sim)
 {
-	print_util_dbg_print("Switching from simulation to reality.\n");
+	print_util_dbg_print("Switching from simulation to reality.\r\n");
 	
 	sim->pos_est->local_position.origin = sim->local_position.origin;
 	for (uint32_t i = 0; i < 3; i++)

@@ -37,7 +37,7 @@ void stabilisation_init(control_command_t *controls, const mavlink_stream_t* mav
 	controls->theading = 0.0f;
 	controls->thrust = -1.0f;
 	
-	print_util_dbg_print("Stabilisation init.\n");
+	print_util_dbg_print("Stabilisation init.\r\n");
 }
 
 void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[]) 

@@ -3,7 +3,7 @@
  *
  * The MAV'RIC Framework
  *
- * Copyright © 2011-2014
+ * Copyright Â© 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
  */
@@ -34,7 +34,7 @@ void radar_module_init()
 	};
 
 	twim_master_init(&AVR32_TWIM1, &twi_opt);
-	print_util_dbg_print("Radar modules initialised.\n");
+	print_util_dbg_print("Radar modules initialised.\r\n");;
 }
 
 
@@ -47,7 +47,7 @@ void radar_module_read()
 	
 	print_util_dbg_print_num(main_target.velocity * 100.0f,10);
 	print_util_dbg_print_num(main_target.amplitude,10);
-	print_util_dbg_print("\n");
+	print_util_dbg_print("\r\n");;
 }
 
 mavlink_radar_tracked_target_t* radar_module_get_main_target() 

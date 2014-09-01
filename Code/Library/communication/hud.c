@@ -28,7 +28,7 @@ void hud_init(hud_structure_t* hud_structure, const position_estimator_t* pos_es
 	hud_structure->pos_est             = pos_est;
 	hud_structure->mavlink_stream      = mavlink_stream;
 	
-	print_util_dbg_print("HUD structure initialised.\n");
+	print_util_dbg_print("HUD structure initialised.\r\n");
 }
 
 task_return_t hud_send_message(hud_structure_t* hud_structure) 

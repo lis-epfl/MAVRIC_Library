@@ -51,7 +51,7 @@ static void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
 		print_util_dbg_print_num(packet.base_mode,10);
 		print_util_dbg_print(", custom mode:");
 		print_util_dbg_print_num(packet.custom_mode,10);
-		print_util_dbg_print("\n");
+		print_util_dbg_print("\r\n");
 
 		if (state->simulation_mode == HIL_OFF)
 		{
@@ -156,7 +156,7 @@ void state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	callback.module_struct 	= (handling_module_struct_t)		state;
 	mavlink_message_handler_add_msg_callback( message_handler, &callback );
 	
-	print_util_dbg_print("State initialized.\n");
+	print_util_dbg_print("State initialized.\r\n");
 }
 
 

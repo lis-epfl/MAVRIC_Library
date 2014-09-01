@@ -269,5 +269,5 @@ void mavlink_telemetry_init(void)
 
 	scheduler_sort_tasks(mavlink_scheduler);
 	
-	print_util_dbg_print("MAVlink telemetry initialiased\n");
+	print_util_dbg_print("MAVlink telemetry initialiased\r\n");
 }

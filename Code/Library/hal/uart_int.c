@@ -130,7 +130,7 @@ void uart_int_init(int32_t UID) {
 	}
 
 	usart_init_rs232( usart_conf[UID].uart_device.uart, &(usart_conf[UID].options), sysclk_get_cpu_hz()); 
-	//usart_write_line(usart_conf[UID].uart_device.uart, "UART initialised");
+	//usart_write_line(usart_conf[UID].uart_device.uart, "UART initialised\r\n");
 	
 	register_UART_handler(UID);
 	

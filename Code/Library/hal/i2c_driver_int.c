@@ -156,17 +156,17 @@ void i2c_driver_init(uint8_t  i2c_device)
 	
 	status_code_t ret_twim_init = twim_master_init(twim, &twi_opt);
 	
-	print_util_dbg_print("\r");
+	print_util_dbg_print("\r\n");
 	
 	switch(ret_twim_init)
 	{
 		case ERR_IO_ERROR :
-			print_util_dbg_print("NO Twim probe here \r");
+			print_util_dbg_print("NO Twim probe here \r\n");
 		case STATUS_OK :
-			print_util_dbg_print("I2C initialised \r");
+			print_util_dbg_print("I2C initialised \r\n");
 			break;
 		default :
-			print_util_dbg_print("Error initialising I2C \r");
+			print_util_dbg_print("Error initialising I2C \r\n");
 			break;
 	}
 }
