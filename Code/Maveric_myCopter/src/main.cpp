@@ -40,10 +40,10 @@ void initialisation()
 
 	LED_On(LED1);
 
-	//piezo_speaker_startup_melody();
+	piezo_speaker_startup_melody();
 	//piezo_speaker_mario_melody();
 
-	print_util_dbg_print("OK. Starting up.\r");
+	print_util_dbg_print("OK. Starting up.\r\n");
 
 	central_data->state.mav_state = MAV_STATE_STANDBY;
 
