@@ -173,7 +173,7 @@ task_return_t tasks_run_stabilisation_old(void* arg)
 	}
 	
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
-	if (!state_test_if_in_flag_mode(&central_data->state,MAV_MODE_FLAG_HIL_ENABLED))
+	if ( mode.HIL == HIL_OFF )
 	{
 		pwm_servos_write_to_hardware( &central_data->servos );
 	}
@@ -261,7 +261,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 
 		
 	// !!! -- for safety, this should remain the only place where values are written to the servo outputs! --- !!!
-	if ( mode.ARMED == ARMED_ON && mode.HIL == HIL_OFF )
+	if ( mode.HIL == HIL_OFF )
 	{
 		pwm_servos_write_to_hardware( &central_data->servos );
 	}
