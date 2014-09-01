@@ -27,7 +27,7 @@ extern "C" {
 #include "tasks.h"
 
 
-#define MAX_DATA_LOGGING_COUNT 50								///< The max number of data logging parameters
+#define MAX_DATA_LOGGING_COUNT 5								///< The max number of data logging parameters
 
 #define MAX_NUMBER_OF_LOGGED_FILE 500							///< The max number of logged files with the same name on the SD card
 

@@ -272,7 +272,7 @@ static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param
 	{
 		if (data_logging->debug)
 		{
-			data_logging->fr = f_stat(data_logging->name_n_extension,NULL);
+			//data_logging->fr = f_stat(data_logging->name_n_extension,NULL);
 			print_util_dbg_print("Error putting tab or new line character!\r\n");
 			data_logging_print_error_signification(data_logging);
 			print_util_dbg_print("\r\n");
@@ -347,7 +347,7 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 		{
 			if (data_logging->debug)
 			{
-				data_logging->fr = f_stat(data_logging->name_n_extension,NULL);
+				//data_logging->fr = f_stat(data_logging->name_n_extension,NULL);
 				print_util_dbg_print("Error appending parameter! Erro:");
 				data_logging_print_error_signification(data_logging);
 				print_util_dbg_print("\r\n");

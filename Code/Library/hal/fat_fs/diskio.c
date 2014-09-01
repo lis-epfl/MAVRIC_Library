@@ -1082,10 +1082,10 @@ void diskio_test_fatfs(void)
 	print_util_dbg_print_num(fr,10);
 	print_util_dbg_print("\r\n");
 	
-	fr = f_mkdir("Nicolas");
-	print_util_dbg_print("Result mkdir:");
-	print_util_dbg_print_num(fr,10);
-	print_util_dbg_print("\r\n");
+	//fr = f_mkdir("Nicolas");
+	//print_util_dbg_print("Result mkdir:");
+	//print_util_dbg_print_num(fr,10);
+	//print_util_dbg_print("\r\n");
 	
 	
 	print_util_dbg_print("Yeah!");
