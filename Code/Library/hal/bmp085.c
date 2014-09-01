@@ -89,17 +89,17 @@ static int16_t bmp085_read_int(uint8_t address)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void bmp085_init(barometer_t *baro, const mavlink_stream_t* mavlink_stream)
+void bmp085_init(barometer_t *bmp085, const mavlink_stream_t* mavlink_stream)
 {
-	baro->mavlink_stream = mavlink_stream;
-	baro->altitude_offset = 0.0f;
+	bmp085->mavlink_stream = mavlink_stream;
+	bmp085->altitude_offset = 0.0f;
 
 	for (int32_t i = 0; i < 3; i++) 
 	{
-		baro->last_altitudes[i] = 0.0f;
+		bmp085->last_altitudes[i] = 0.0f;
 	}
 	
-	baro->vario_vz = 0.0f;
+	bmp085->vario_vz = 0.0f;
 	bmp085_init_slow();
 }
 
@@ -145,13 +145,13 @@ void bmp085_init_slow()
 }
 
 
-void bmp085_reset_origin_altitude(barometer_t* baro, float origin_altitude)
+void bmp085_reset_origin_altitude(barometer_t* bmp085, float origin_altitude)
 {
-	baro->altitude_offset = - ( baro->altitude - baro->altitude_offset - origin_altitude );
+	bmp085->altitude_offset = - ( bmp085->altitude - bmp085->altitude_offset - origin_altitude );
 }
 
  
-void bmp085_update(barometer_t *baro) 
+void bmp085_update(barometer_t *bmp085) 
 {
 	int32_t i;
 	float altitude, vertical_speed;
@@ -175,37 +175,37 @@ void bmp085_update(barometer_t *baro)
 	int32_t sea_level_pressure=101325;
 	float dt;
 
-	switch (baro->state) 
+	switch (bmp085->state) 
 	{
 		case IDLE:
 			twim_write(&AVR32_TWIM0, (uint8_t*) &start_command_temp, 2, BMP085_SLAVE_ADDRESS, false);
-			baro->state=GET_TEMP;
+			bmp085->state=GET_TEMP;
 			break;
 
 		case GET_TEMP:
 			start_address = BMP085_TEMPDATA;
 			twim_write(&AVR32_TWIM0, (uint8_t*) &start_address, 1, BMP085_SLAVE_ADDRESS, false);
-			twim_read(&AVR32_TWIM0, (uint8_t*)&(baro->raw_temperature), 2, BMP085_SLAVE_ADDRESS, false);
+			twim_read(&AVR32_TWIM0, (uint8_t*)&(bmp085->raw_temperature), 2, BMP085_SLAVE_ADDRESS, false);
 	
 			twim_write(&AVR32_TWIM0, (uint8_t*) &start_command_pressure, 2, BMP085_SLAVE_ADDRESS, false);
-			baro->state=GET_PRESSURE;
+			bmp085->state=GET_PRESSURE;
 			break;
 
 		case GET_PRESSURE:
 			start_address = BMP085_PRESSUREDATA;
 			twim_write(&AVR32_TWIM0, (uint8_t*) &start_address, 1, BMP085_SLAVE_ADDRESS, false);
-			twim_read(&AVR32_TWIM0, (uint8_t*)&(baro->raw_pressure), 3, BMP085_SLAVE_ADDRESS, false);
+			twim_read(&AVR32_TWIM0, (uint8_t*)&(bmp085->raw_pressure), 3, BMP085_SLAVE_ADDRESS, false);
 	
-			UP= ((uint32_t)baro->raw_pressure[0] << 16 |(uint32_t)baro->raw_pressure[1] << 8 | (uint32_t)baro->raw_pressure[2]) >> (8 - BMP085_OVERSAMPLING_MODE);
+			UP= ((uint32_t)bmp085->raw_pressure[0] << 16 |(uint32_t)bmp085->raw_pressure[1] << 8 | (uint32_t)bmp085->raw_pressure[2]) >> (8 - BMP085_OVERSAMPLING_MODE);
 
-			UT = baro->raw_temperature[0] << 8 |baro->raw_temperature[1];
+			UT = bmp085->raw_temperature[0] << 8 |bmp085->raw_temperature[1];
 			
 			///< step 1
 			X1 = (UT - (int32_t)ac6) * ((int32_t)ac5) / pow(2,15);
 			X2 = ((int32_t)mc * pow(2,11)) / (X1 + (int32_t)md);
 			B5 = X1 + X2;
-			baro->temperature = (B5 + 8) / pow(2,4);
-			baro->temperature /= 10;
+			bmp085->temperature = (B5 + 8) / pow(2,4);
+			bmp085->temperature /= 10;
 
 			///< do pressure calcs
 			B6 = B5 - 4000;
@@ -237,78 +237,79 @@ void bmp085_update(barometer_t *baro)
 
 			p = p + ((X1 + X2 + (int32_t)3791) >> 4);
 
-			baro->pressure = p;
+			bmp085->pressure = p;
 	
-			vertical_speed = baro->altitude;
-			altitude = 44330.0f * (1.0f - pow(baro->pressure /sea_level_pressure,0.190295f)) + baro->altitude_offset;
+			vertical_speed = bmp085->altitude;
+			altitude = 44330.0f * (1.0f - pow(bmp085->pressure /sea_level_pressure,0.190295f)) + bmp085->altitude_offset;
 		
 			for (i = 0; i < 2; i++) 
 			{
-				baro->last_altitudes[i] = baro->last_altitudes[i + 1];
+				bmp085->last_altitudes[i] = bmp085->last_altitudes[i + 1];
 			}
-			baro->last_altitudes[2] = altitude;
-			altitude = maths_median_filter_3x(baro->last_altitudes[0], baro->last_altitudes[1], baro->last_altitudes[2]);
+			bmp085->last_altitudes[2] = altitude;
+			altitude = maths_median_filter_3x(bmp085->last_altitudes[0], bmp085->last_altitudes[1], bmp085->last_altitudes[2]);
 		
-			if (maths_f_abs(altitude-baro->altitude) < 15.0f) 
+			if (maths_f_abs(altitude-bmp085->altitude) < 15.0f) 
 			{
-				baro->altitude = (BARO_ALT_LPF * baro->altitude) + (1.0f - BARO_ALT_LPF) * altitude;
+				bmp085->altitude = (BARO_ALT_LPF * bmp085->altitude) + (1.0f - BARO_ALT_LPF) * altitude;
 			}
 			else 
 			{
-				baro->altitude = altitude;
+				bmp085->altitude = altitude;
 			}
 		
-			dt = (time_keeper_get_micros()-baro->last_update) / 1000000.0f;
-			baro->dt = dt;
-			vertical_speed = -(baro->altitude-vertical_speed) / dt;
+			dt = (time_keeper_get_micros()-bmp085->last_update) / 1000000.0f;
+			bmp085->dt = dt;
+			vertical_speed = -(bmp085->altitude-vertical_speed) / dt;
 		
 			if (abs(vertical_speed) > 20) 
 			{
 				vertical_speed = 0.0f;
 			}
 
-			baro->vario_vz = (VARIO_LPF) * baro->vario_vz + (1.0f - VARIO_LPF) * (vertical_speed);
+			bmp085->vario_vz = (VARIO_LPF) * bmp085->vario_vz + (1.0f - VARIO_LPF) * (vertical_speed);
 		
-			baro->last_update = time_keeper_get_micros();
-			baro->state = IDLE;
+			bmp085->last_update = time_keeper_get_micros();
+			bmp085->last_update = bmp085->last_update;
+			bmp085->state = IDLE;
 			break;
 	}
 
-	baro->last_state_update = time_keeper_get_micros();
+	bmp085->last_state_update = time_keeper_get_micros();
 }
 
 
-task_return_t bmp085_send_pressure(barometer_t* baro)
+task_return_t bmp085_send_pressure(barometer_t* bmp085)
 {
 	mavlink_message_t msg;
 	
-	mavlink_msg_scaled_pressure_pack(	baro->mavlink_stream->sysid,
-										baro->mavlink_stream->compid,
+	mavlink_msg_scaled_pressure_pack(	bmp085->mavlink_stream->sysid,
+										bmp085->mavlink_stream->compid,
 										&msg,
 										time_keeper_get_millis(),
-										baro->pressure / 100.0f,
-										baro->vario_vz,
-										baro->temperature * 100.0f);
+										bmp085->pressure / 100.0f,
+										bmp085->vario_vz,
+										bmp085->temperature * 100.0f);
 	
-	mavlink_stream_send(baro->mavlink_stream,&msg);
+	mavlink_stream_send(bmp085->mavlink_stream,&msg);
 
-	// mavlink_msg_named_value_float_pack(	baro->mavlink_stream->sysid,
-	// 									baro->mavlink_stream->compid,
+	// mavlink_msg_named_value_float_pack(	bmp085->mavlink_stream->sysid,
+	// 									bmp085->mavlink_stream->compid,
 	// 									&msg,
 	// 									time_keeper_get_millis(),
 	// 									"pressAlt",
-	// 									baro->altitude);
+	// 									bmp085->altitude);
 
-	// mavlink_stream_send(baro->mavlink_stream,&msg);
+	// mavlink_stream_send(bmp085->mavlink_stream,&msg);
 
 	//mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
 										//time_keeper_get_millis(),
 										//"lastAlt",
-										//baro->last_altitudes[0]);
+										//bmp085->last_altitudes[0]);
 
 	//mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
 										//time_keeper_get_millis(),
 										//"baro_dt",
-										//baro->dt);
+										//bmp085->dt);
 	return TASK_RUN_SUCCESS;
 }
