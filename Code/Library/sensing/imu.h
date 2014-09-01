@@ -85,6 +85,7 @@ typedef struct
  */
 void imu_init (imu_t *imu, const mavlink_stream_t* mavlink_stream);
 
+
 /**
  * \brief	To calibrate the gyros at startup (not used know)
  *
@@ -92,19 +93,13 @@ void imu_init (imu_t *imu, const mavlink_stream_t* mavlink_stream);
  */
 void imu_calibrate_gyros(imu_t *imu);
 
+
 /**
  * \brief	Updates the scaled sensors values from raw measurements
  *
  * \param	imu						The pointer to the IMU structure
  */
 void imu_update(imu_t *imu);
-
-/**
- * \brief	Relevels the imu
- *
- * \param	imu						The pointer to the IMU structure
- */
-void imu_relevel(imu_t *imu);
 
 
 /**
@@ -115,6 +110,7 @@ void imu_relevel(imu_t *imu);
  * \return	The status of execution of the task
  */
 task_return_t imu_send_scaled(imu_t* imu);
+
 
 /**
  * \brief	Task to send the mavlink raw IMU message

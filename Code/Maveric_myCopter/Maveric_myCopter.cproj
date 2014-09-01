@@ -603,6 +603,9 @@
     <Compile Include="Library\communication\mavlink_waypoint_handler.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Library\communication\mav_modes.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Library\communication\remote.c">
       <SubType>compile</SubType>
     </Compile>
