@@ -34,6 +34,7 @@
 typedef struct
 {
 	control_command_t* controls;									///< The pointer to the controls structure
+	uint16_t buttons;												///< The bit mask of the button pressed
 }joystick_parsing_t;
 
 
@@ -59,6 +60,14 @@ void joystick_parsing_parse_msg(joystick_parsing_t *joystick_parsing, mavlink_re
  * \param	controls				The pointer to the control structure
  */
 void joystick_parsing_get_velocity_vector_from_joystick(joystick_parsing_t* joystick_parsing, control_command_t* controls);
+
+/** 
+ * \brief	Parse received mavlink message in structure
+ * \param	joystick_parsing		The poiner to the joystick parsing structure
+ *
+ * \return	The result of the task execution
+ */
+task_return_t joystick_parsing_send_manual_ctrl_msg(joystick_parsing_t* joystick_parsing);
 
 #ifdef __cplusplus
 }

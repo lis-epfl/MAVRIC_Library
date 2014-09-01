@@ -35,6 +35,8 @@ void joystick_parsing_init(joystick_parsing_t* joystick_parsing, control_command
 	joystick_parsing->controls->control_mode = ATTITUDE_COMMAND_MODE;
 	joystick_parsing->controls->yaw_mode = YAW_ABSOLUTE;
 	
+	joystick_parsing->buttons = 0;
+	
 	joystick_parsing->controls->mavlink_stream = &mavlink_communication->mavlink_stream;
 	
 		// Add callbacks for waypoint handler messages requests
@@ -74,10 +76,6 @@ void joystick_parsing_parse_msg(joystick_parsing_t *joystick_parsing, mavlink_re
 		joystick_parsing->controls->rpy[ROLL] = MAX_JOYSTICK_RANGE * packet.y / 1000.0f;
 		joystick_parsing->controls->rpy[YAW] = MAX_JOYSTICK_RANGE * packet.r / 1000.0f;
 		joystick_parsing->controls->thrust = MAX_JOYSTICK_RANGE * packet.z / 1000.0f;
-		
-		mavlink_message_t msg;
-		mavlink_msg_manual_control_pack(joystick_parsing->controls->mavlink_stream->sysid,joystick_parsing->controls->mavlink_stream->compid,&msg,rec->msg.sysid,packet.x,packet.y,packet.z,packet.r,packet.buttons);
-		mavlink_stream_send(joystick_parsing->controls->mavlink_stream, &msg);
 	}
 }
 
@@ -88,4 +86,22 @@ void joystick_parsing_get_velocity_vector_from_joystick(joystick_parsing_t* joys
 	controls->tvel[Z] = - 1.5f * joystick_parsing->controls->thrust;
 	
 	controls->rpy[YAW] = joystick_parsing->controls->rpy[YAW];
+}
+
+task_return_t joystick_parsing_send_manual_ctrl_msg(joystick_parsing_t* joystick_parsing)
+{
+	mavlink_message_t msg;
+	mavlink_msg_manual_control_pack(joystick_parsing->controls->mavlink_stream->sysid,
+									joystick_parsing->controls->mavlink_stream->compid,
+									&msg,
+									joystick_parsing->controls->mavlink_stream->sysid,
+									joystick_parsing->controls->rpy[PITCH] * 1000,
+									joystick_parsing->controls->rpy[ROLL] * 1000,
+									joystick_parsing->controls->thrust* 1000, 
+									joystick_parsing->controls->rpy[YAW] * 1000,
+									joystick_parsing->buttons);
+	
+	mavlink_stream_send(joystick_parsing->controls->mavlink_stream, &msg);
+	
+	return TASK_RUN_SUCCESS;
 }
