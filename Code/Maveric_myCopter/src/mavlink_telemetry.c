@@ -56,9 +56,9 @@ void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_par
 void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_parameters)
 {
 
-	stabiliser_t* rate_stabiliser = &central_data->stabiliser_stack.rate_stabiliser;
-	stabiliser_t* attitude_stabiliser = &central_data->stabiliser_stack.attitude_stabiliser;
-	stabiliser_t* velocity_stabiliser= &central_data->stabiliser_stack.velocity_stabiliser;
+	stabiliser_t* rate_stabiliser = &central_data->stabilisation_copter.stabiliser_stack.rate_stabiliser;
+	stabiliser_t* attitude_stabiliser = &central_data->stabilisation_copter.stabiliser_stack.attitude_stabiliser;
+	stabiliser_t* velocity_stabiliser= &central_data->stabilisation_copter.stabiliser_stack.velocity_stabiliser;
 	
 	// System ID	
 	onboard_parameters_add_parameter_int32    ( onboard_parameters , (int32_t*)&central_data->mavlink_communication.mavlink_stream.sysid              , "ID_SYSID"         );
@@ -259,7 +259,7 @@ void mavlink_telemetry_init(void)
 	scheduler_add_task(mavlink_scheduler,  250000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&remote_send_raw,									&central_data->remote,								MAVLINK_MSG_ID_RC_CHANNELS_RAW	);						// ID 35
 	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&servos_mavlink_send,								&central_data->servos, 								MAVLINK_MSG_ID_SERVO_OUTPUT_RAW	);						// ID 36
 	scheduler_add_task(mavlink_scheduler,  200000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&stabilisation_send_rpy_thrust_setpoint,			&central_data->controls, 							MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT	);		// ID 58
-	scheduler_add_task(mavlink_scheduler,  200000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&stabilisation_send_rpy_speed_thrust_setpoint,		&central_data->stabiliser_stack.rate_stabiliser,	MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT	);	// ID 59
+//	scheduler_add_task(mavlink_scheduler,  200000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&stabilisation_send_rpy_speed_thrust_setpoint,		&central_data->stabiliser_stack.rate_stabiliser,	MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT	);	// ID 59
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&hud_send_message,									&central_data->hud_structure, 						MAVLINK_MSG_ID_VFR_HUD	);								// ID 74
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&simulation_send_state,								&central_data->sim_model, 							MAVLINK_MSG_ID_HIL_STATE	);							// ID 90
 	scheduler_add_task(mavlink_scheduler,  500000,	 RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&simulation_send_quaternions,						&central_data->sim_model,							MAVLINK_MSG_ID_HIL_STATE_QUATERNION	);					// ID 115
