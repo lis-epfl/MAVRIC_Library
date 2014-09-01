@@ -86,7 +86,7 @@ typedef struct  {
 	joystick_parsing_t joystick_parsing;						///< The joystick parsing structure
 	
 	stabilise_copter_t stabilisation_copter;					///< The stabilisation structure for copter
-	Stabiliser_Stack_copter_t stabiliser_stack;					///< The stabilisation stack structure (rates, attitude, velocity, thrust)
+	stabiliser_stack_copter_t stabiliser_stack;					///< The stabilisation stack structure (rates, attitude, velocity, thrust)
 
 	servo_output_t servos[NUMBER_OF_SERVO_OUTPUTS];				///< The array of servos (size NUMBER_OF_SERVO_OUTPUTS)
 	
