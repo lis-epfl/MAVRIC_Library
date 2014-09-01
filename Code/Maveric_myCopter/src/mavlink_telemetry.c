@@ -186,18 +186,20 @@ void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_par
 	onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->imu.calib_compass.scale_factor[Y]                        , "Scale_Mag_Y"      );
 	onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->imu.calib_compass.scale_factor[Z]                        , "Scale_Mag_Z"      );
 
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->position_estimator.kp_alt_baro                              , "Pos_kp_alt_baro"       );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->position_estimator.kp_vel_baro                              , "Pos_kp_velb"      );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->position_estimator.kp_pos_gps[0]                            , "Pos_kp_pos0"      );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->position_estimator.kp_pos_gps[1]                            , "Pos_kp_pos1"      );
-	//onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->position_estimator.kp_pos_gps[2]                            , "Pos_kp_pos2"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->position_estimator.kp_alt_baro                              , "Pos_kp_alt_baro"       );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->position_estimator.kp_vel_baro                              , "Pos_kp_velb"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->position_estimator.kp_pos_gps[0]                            , "Pos_kp_pos0"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->position_estimator.kp_pos_gps[1]                            , "Pos_kp_pos1"      );
+	onboard_parameters_add_parameter_float  ( onboard_parameters , &central_data->position_estimator.kp_pos_gps[2]                            , "Pos_kp_pos2"      );
 	
 
 
-	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigation.cruise_speed                            , "vel_dist2Vel"     );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigation.dist2vel_gain                            , "vel_dist2Vel"     );
 	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigation.cruise_speed                            , "vel_cruiseSpeed"  );
 	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigation.max_climb_rate                          , "vel_climbRate"    );
-	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigation.soft_zone_size							  , "vel_softZone"     );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigation.soft_zone_size_x							  , "vel_softZone_x"     );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigation.soft_zone_size_y							  , "vel_softZone_y"     );
+	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigation.soft_zone_size_z							  , "vel_softZone_z"     );
 
 
 //	onboard_parameters_add_parameter_int32(onboard_parameters,(int32_t*)&central_data->data_logging.log_data, "Log_continue");
