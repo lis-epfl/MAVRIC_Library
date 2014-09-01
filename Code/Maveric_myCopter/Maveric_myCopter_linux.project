@@ -6,15 +6,15 @@
     </Plugin>
     <Plugin Name="CMakePlugin">
       <![CDATA[[{
-		"name":	"Debug",
-		"enabled":	false,
-		"buildDirectory":	"build",
-		"sourceDirectory":	"$(ProjectPath)",
-		"generator":	"",
-		"buildType":	"",
-		"arguments":	[],
-		"parentProject":	""
-	}]]]>
+  "name": "Debug",
+  "enabled": false,
+  "buildDirectory": "build",
+  "sourceDirectory": "$(ProjectPath)",
+  "generator": "",
+  "buildType": "",
+  "arguments": [],
+  "parentProject": ""
+ }]]]>
     </Plugin>
   </Plugins>
   <Description/>
@@ -26,8 +26,6 @@
           <VirtualDirectory Name="user_board">
             <File Name="src/asf/common/boards/user_board/init.c"/>
             <File Name="src/asf/common/boards/user_board/user_board.h"/>
-            <File Name="src/asf/common/boards/user_board/led.c" ExcludeProjConfig="Debug"/>
-            <File Name="src/asf/common/boards/user_board/led.h" ExcludeProjConfig="Debug"/>
           </VirtualDirectory>
           <File Name="src/asf/common/boards/board.h"/>
         </VirtualDirectory>
@@ -260,11 +258,11 @@
     <File Name="src/tasks.h"/>
     <File Name="src/tasks.c"/>
     <File Name="src/main.cpp"/>
-    <File Name="src/central_data.c"/>
     <File Name="Library/Makefile"/>
     <File Name="src/boardsupport.c"/>
     <File Name="src/mavlink_telemetry.h"/>
     <File Name="src/mavlink_telemetry.c"/>
+    <File Name="src/central_data.c"/>
   </VirtualDirectory>
   <VirtualDirectory Name="Library">
     <VirtualDirectory Name="mavlink">
@@ -588,8 +586,13 @@
       <File Name="Library/communication/state.c"/>
       <File Name="Library/communication/hud.h"/>
       <File Name="Library/communication/hud.c"/>
+      <File Name="Library/communication/remote.h"/>
+      <File Name="Library/communication/remote.c"/>
       <File Name="Library/communication/state_machine.c"/>
       <File Name="Library/communication/state_machine.h"/>
+      <File Name="Library/communication/mav_modes.h"/>
+      <File Name="Library/communication/data_logging.h"/>
+      <File Name="Library/communication/data_logging.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="control">
       <File Name="Library/control/pid_control.h"/>
@@ -609,6 +612,11 @@
       <File Name="Library/control/attitude_controller_p2.c"/>
       <File Name="Library/control/attitude_controller_p2.h"/>
       <File Name="Library/control/attitude_command.h"/>
+      <File Name="Library/control/servos_mix_quadcopter_cross.h"/>
+      <File Name="Library/control/servos_mix_quadcopter_cross.c"/>
+      <File Name="Library/control/control_command.h"/>
+      <File Name="Library/control/servos_mix_quadcopter_diag.h"/>
+      <File Name="Library/control/servos_mix_quadcopter_diag.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="hal">
       <File Name="Library/hal/uart_int.h"/>
@@ -634,14 +642,10 @@
       <File Name="Library/hal/dac_dma.h"/>
       <File Name="Library/hal/ads1274.c"/>
       <File Name="Library/hal/spektrum.h"/>
-      <File Name="Library/hal/servo_pwm.h"/>
       <File Name="Library/hal/analog_monitor.h"/>
-      <File Name="Library/hal/servo_pwm.c"/>
       <File Name="Library/hal/analog_monitor.c"/>
       <File Name="Library/hal/turnigy.h"/>
       <File Name="Library/hal/ads1274.h"/>
-      <File Name="Library/hal/remote_dsm2.h"/>
-      <File Name="Library/hal/remote_dsm2.c"/>
       <File Name="Library/hal/i2c_driver_int.h"/>
       <File Name="Library/hal/i2c_driver_int.c"/>
       <File Name="Library/hal/piezo_speaker.h"/>
@@ -662,10 +666,25 @@
       <File Name="Library/hal/itg3200.h"/>
       <File Name="Library/hal/lsm330dlc.c"/>
       <File Name="Library/hal/lsm330dlc.h"/>
+      <File Name="Library/hal/spektrum_satellite.h"/>
+      <File Name="Library/hal/spektrum_satellite.c"/>
+      <File Name="Library/hal/servos.h"/>
+      <File Name="Library/hal/servos.c"/>
+      <File Name="Library/hal/pwm_servos.c"/>
+      <File Name="Library/hal/pwm_servos.h"/>
       <File Name="Library/hal/sd_spi.h"/>
       <File Name="Library/hal/sd_spi.c"/>
       <File Name="Library/hal/usb_int.h"/>
       <File Name="Library/hal/usb_int.c"/>
+      <File Name="Library/hal/fat_fs/integer.h"/>
+      <File Name="Library/hal/fat_fs/ffconf.h"/>
+      <File Name="Library/hal/fat_fs/ff.h"/>
+      <File Name="Library/hal/fat_fs/ff.c"/>
+      <File Name="Library/hal/fat_fs/diskio.h"/>
+      <File Name="Library/hal/fat_fs/diskio.c"/>
+      <File Name="Library/hal/fat_fs/option/unicode.c"/>
+      <File Name="Library/hal/fat_fs/option/syscall.c"/>
+      <File Name="Library/hal/fat_fs/option/cc932.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>
@@ -725,7 +744,7 @@
       <ResourceCompiler Options=""/>
     </GlobalSettings>
     <Configuration Name="Debug" CompilerType="avr32-g++" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-O3 -std=gnu++0x -mhard-float -fdata-sections -muse-rodata-section -g2 -pg -p -Wall -mpart=uc3c1512c -c  -Wpointer-arith -mrelax -MD -MP -MF" C_Options="-O3 -mhard-float -fdata-sections -muse-rodata-section -g2 -pg -p -Wall -mpart=uc3c1512c -c -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -MD -MP -MF" Assembler=" -x assembler-with-cpp -c -mpart=uc3c1512c -mrelax " Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
+      <Compiler Options="-O3 -std=gnu++0x -mhard-float -fdata-sections -muse-rodata-section -g2 -pg -p -Wall -mpart=uc3c1512c -c  -Wpointer-arith -mrelax -MD -MP -MF" C_Options="-O3 -mhard-float -fdata-sections -muse-rodata-section -g2 -pg -p -Wall -mpart=uc3c1512c -c -std=gnu99 -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -mrelax -MD -MP -MF" Assembler=" -x assembler-with-cpp -c -mpart=uc3c1512c -mrelax " Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="src"/>
         <IncludePath Value="src/config"/>
         <IncludePath Value="src/asf"/>
@@ -856,13 +875,13 @@
         <Preprocessor Value="DSP_WINDOWING"/>
         <Preprocessor Value="UDD_ENABLE"/>
       </Compiler>
-      <Linker Options="-nostartfiles -Wl,-Map=&quot;DualRadar.map&quot; -Wl,--start-group -lm  -Wl,--end-group -L&quot;src/asf/avr32/utils/libs/dsplib/at32ucr3fp/gcc&quot;  -Wl,--gc-sections -mpart=uc3c1512c -Wl,--relax -Wl,-e,_trampoline" Required="yes"/>
+      <Linker Options="-nostartfiles -Wl,-Map=&quot;mavric.map&quot; -Wl,--start-group -lm  -Wl,--end-group -L&quot;src/asf/avr32/utils/libs/dsplib/at32ucr3fp/gcc&quot;  -Wl,--gc-sections -mpart=uc3c1512c -Wl,--relax -Wl,-e,_trampoline" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
       <General OutputFile="$(IntermediateDirectory)/../$(ProjectName).elf" IntermediateDirectory="./Debug_Linux/obj" Command="bash ./dfu_program at32uc3c1512 $(ProjectName).hex" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)/.." PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>
-      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
         <DebuggerSearchPaths/>
         <PostConnectCommands/>
         <StartupCommands/>
@@ -895,7 +914,7 @@
       </Completion>
     </Configuration>
     <Configuration Name="Release" CompilerType="gnu gcc" DebuggerType="GNU gdb debugger" Type="" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
-      <Compiler Options="-O2;-Wall" C_Options="-O2;-Wall" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" UseDifferentPCHFlags="no" PCHFlags="">
+      <Compiler Options="-O2;-Wall" C_Options="-O2;-Wall" Assembler="" Required="yes" PreCompiledHeader="" PCHInCommandLine="no" PCHFlags="" PCHFlagsPolicy="0">
         <IncludePath Value="."/>
         <Preprocessor Value="NDEBUG"/>
       </Compiler>
@@ -905,7 +924,7 @@
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>
-      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="" IsExtended="no">
         <DebuggerSearchPaths/>
         <PostConnectCommands/>
         <StartupCommands/>

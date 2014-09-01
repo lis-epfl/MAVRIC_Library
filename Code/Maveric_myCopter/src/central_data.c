@@ -19,14 +19,33 @@
 #include "central_data.h"
 #include "conf_constants.h"
 #include "delay.h"
+#include "conf_stabilisation_copter.h"
 
 static central_data_t central_data;
 
 void central_data_init()
 {	
-	// Init ahrs
-	servo_pwm_init(central_data.servos);
+	// Init servos
+	//servo_pwm_init(central_data.servos);
 	
+	servos_conf_t servos_config =
+	{
+		.servos_count = 4,
+		.types =
+		{
+			MOTOR_CONTROLLER,
+			MOTOR_CONTROLLER,
+			MOTOR_CONTROLLER,
+			MOTOR_CONTROLLER
+		},
+	};
+	servos_init( &central_data.servos, &servos_config, &central_data.mavlink_communication.mavlink_stream);
+	servos_set_value_failsafe( &central_data.servos );
+	pwm_servos_write_to_hardware( &central_data.servos );
+
+	delay_ms(100);	
+
+
 	// Init main sheduler
 	scheduler_conf_t scheduler_config =
 	{
@@ -74,9 +93,10 @@ void central_data_init()
 	// Init state structure
 	state_t state_config =
 	{
-		.mav_mode = MAV_MODE_SAFE,
+		.mav_mode = { .byte = MAV_MODE_SAFE },
 		.mav_state = MAV_STATE_BOOT,
-		.simulation_mode = REAL_MODE , // SIMULATION_MODE
+		 .simulation_mode = HIL_OFF,
+		//.simulation_mode = HIL_ON,
 		.autopilot_type = MAV_TYPE_QUADROTOR,
 		.autopilot_name = MAV_AUTOPILOT_GENERIC,
 		.sensor_present = 0b1111110000100111,
@@ -94,7 +114,8 @@ void central_data_init()
 	state_machine_init( &central_data.state_machine,
 						&central_data.state,
 						&central_data.waypoint_handler,
-						&central_data.sim_model);
+						&central_data.sim_model,
+						&central_data.remote);
 	delay_ms(100);
 
 	// Init imu
@@ -109,9 +130,6 @@ void central_data_init()
 
 	delay_ms(100);
 
-	
-	
-	delay_ms(100);
 	
 	// Init qfilter
 	qfilter_init(   &(central_data.attitude_filter), 
@@ -178,20 +196,24 @@ void central_data_init()
 	
 	delay_ms(100);
 
+	stabilise_copter_conf_t stabilise_conf = 
+	{
+		.stabiliser_stack = stabiliser_defaults_copter
+	};
+
 	// Init stabilisers
 	stabilisation_copter_init(	&central_data.stabilisation_copter,
-								&central_data.stabiliser_stack,
+								&stabilise_conf,
 								&central_data.controls,
 								&central_data.imu,
 								&central_data.ahrs,
 								&central_data.position_estimator,
-								central_data.servos ,
+								&central_data.servos,
 								&central_data.mavlink_communication);
 	
 	delay_ms(100);
 
-	stabilisation_init( &central_data.stabilisation_copter.stabiliser_stack->rate_stabiliser, 
-						&central_data.controls,
+	stabilisation_init( &central_data.controls,
 						&central_data.mavlink_communication.mavlink_stream);
 	
 	delay_ms(100);
@@ -228,7 +250,7 @@ void central_data_init()
 					&central_data.pressure,
 					&central_data.gps,
 					&central_data.state,
-					central_data.servos,
+					&central_data.servos,
 					&central_data.state.nav_plan_active,
 					&central_data.mavlink_communication.message_handler,
 					&central_data.mavlink_communication.mavlink_stream);
@@ -246,17 +268,108 @@ void central_data_init()
 	
 	// Init sonar
 	// i2cxl_sonar_init(&central_data.i2cxl_sonar);
-	// delay_ms(100);
-	
-	data_logging_conf_t data_logging_conf = 
+
+	// Init P^2 attitude controller
+	attitude_controller_p2_conf_t attitude_controller_p2_config =
 	{
-		.debug = true,
-		.max_data_logging_count = MAX_DATA_LOGGING_COUNT,
-		.log_data = 0 // 1: log data, 0: no log data
+		.p_gain_angle =
+		{
+			0.11f, 0.12f, 0.3f
+		},
+		.p_gain_rate =
+		{
+			0.08f, 0.07f, 0.2f
+		}
 	};
+	attitude_controller_p2_init( 	&central_data.attitude_controller,
+									&attitude_controller_p2_config,
+									&central_data.command.attitude,
+									&central_data.command.torque,
+									&central_data.ahrs );
+
+	// Init servo mixing
+	servo_mix_quadcopter_diag_conf_t servo_mix_config =
+	{
+		.motor_front_right		= M_FRONT_RIGHT,
+		.motor_front_left		= M_FRONT_LEFT,
+		.motor_rear_right		= M_REAR_RIGHT,
+		.motor_rear_left		= M_REAR_LEFT,
+		.motor_front_right_dir	= M_FR_DIR,
+		.motor_front_left_dir	= M_FL_DIR,
+		.motor_rear_right_dir	= M_RR_DIR,
+		.motor_rear_left_dir	= M_RL_DIR,
+		.min_thrust				= MIN_THRUST,
+		.max_thrust				= MAX_THRUST
+	};
+	servo_mix_quadcotper_diag_init( &central_data.servo_mix, 
+									&servo_mix_config, 
+									&central_data.command.torque, 
+									&central_data.command.thrust, 
+									&central_data.servos);
+
+	// Init remote
+	remote_conf_t remote_config =
+	{
+		.type = REMOTE_TURNIGY,
+		.mode_config =
+		{
+			.safety_channel = CHANNEL_GEAR,
+			.safety_mode = 
+			{
+				.byte = MAV_MODE_ATTITUDE_CONTROL,
+				// .flags =
+				// {
+				// .MANUAL = MANUAL_ON,
+				// }
+			},
+			.mode_switch_channel = CHANNEL_FLAPS,
+			.mode_switch_up = 
+			{
+				.byte = MAV_MODE_VELOCITY_CONTROL 
+				// .flags =
+				// {
+				// .MANUAL = MANUAL_ON,
+				// .STABILISE = STABILISE_ON,
+				// }
+			},
+			.mode_switch_middle = 
+			{
+				.byte = MAV_MODE_POSITION_HOLD,
+				// .flags =
+				// {
+				// .MANUAL = MANUAL_ON,
+				// .GUIDED = GUIDED_ON,
+				// }
+			},
+			.mode_switch_down = 
+			{
+				.byte = MAV_MODE_GPS_NAVIGATION
+				// .flags =
+				// {
+				// .AUTO = AUTO_ON,
+				// } 
+			},
+			.use_custom_switch = false,
+			.custom_switch_channel = CHANNEL_AUX1,
+			.use_test_switch = false,
+			.test_switch_channel = CHANNEL_AUX2,
+			.use_disable_remote_mode_switch = false,
+			.test_switch_channel = CHANNEL_AUX2,
+		},
+	};
+	remote_init( 	&central_data.remote, 
+					&remote_config, 
+					&central_data.mavlink_communication.mavlink_stream );
+
+	// data_logging_conf_t data_logging_conf = 
+	// {
+	// 	.debug = true,
+	// 	.max_data_logging_count = MAX_DATA_LOGGING_COUNT,
+	// 	.log_data = 0 // 1: log data, 0: no log data
+	// };
 	
-	data_logging_init(  &central_data.data_logging,
-						&data_logging_conf);
+	// data_logging_init(  &central_data.data_logging,
+	// 					&data_logging_conf);
 }
 
 central_data_t* central_data_get_pointer_to_struct(void)

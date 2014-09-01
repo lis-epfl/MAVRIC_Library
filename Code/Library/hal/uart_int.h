@@ -31,8 +31,8 @@ extern "C" {
 typedef struct {
 avr32_usart_t *uart;
 int32_t IRQ;
-Buffer_t transmit_buffer;
-Buffer_t receive_buffer;
+buffer_t transmit_buffer;
+buffer_t receive_buffer;
 byte_stream_t *receive_stream;
 } uart_interface_t;
 

@@ -56,7 +56,7 @@ bool inputAvailable()
   return (FD_ISSET(0, &fds));
 }
 
-bool fill_input_buffer(Buffer_t *buffer) {
+bool fill_input_buffer(buffer_t *buffer) {
 	char buf;
 	int32_t n;
 	if (inputAvailable()){
@@ -125,8 +125,8 @@ void boardsupport_init(central_data_t *central_data) {
 		
 		imu_init(&central_data->imu);
 
-		remote_dsm2_rc_init();
-		servo_pwm_init();
+		spektrum_satellite_init();
+		servo_pwm_init_old();
 		
 		
 		central_data->controls.rpy[ROLL]=0;

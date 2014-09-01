@@ -115,15 +115,15 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimator->local_position.heading);
 	}
 	
-	v_desired = maths_f_min(navigation->cruise_speed,(maths_center_window_2(4.0f * rel_heading) * navigation->dist2vel_gain));
+	v_desired = maths_f_min(navigation->cruise_speed,(maths_center_window_2(4.0f * rel_heading) * navigation->dist2vel_gain)* maths_soft_zone(norm_rel_dist,navigation->soft_zone_size));
 	
 	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigation->max_climb_rate * norm_rel_dist ) {
 		v_desired = navigation->max_climb_rate * norm_rel_dist /maths_f_abs(dir_desired_bf[Z]);
 	}
 	
-	dir_desired_bf[X] = v_desired * dir_desired_bf[X] / norm_rel_dist * maths_soft_zone(norm_rel_dist,navigation->soft_zone_size_x);
-	dir_desired_bf[Y] = v_desired * dir_desired_bf[Y] / norm_rel_dist * maths_soft_zone(norm_rel_dist,navigation->soft_zone_size_y);
-	dir_desired_bf[Z] = v_desired * dir_desired_bf[Z] / norm_rel_dist * maths_soft_zone(norm_rel_dist,navigation->soft_zone_size_z);
+	dir_desired_bf[X] = v_desired * dir_desired_bf[X] / norm_rel_dist;
+	dir_desired_bf[Y] = v_desired * dir_desired_bf[Y] / norm_rel_dist;
+	dir_desired_bf[Z] = v_desired * dir_desired_bf[Z] / norm_rel_dist;
 	
 	/*
 	loop_count = loop_count++ %50;
@@ -220,7 +220,7 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->controls_nav->control_mode = VELOCITY_COMMAND_MODE;
 	navigation->controls_nav->yaw_mode = YAW_ABSOLUTE;
 	
-	navigation->mode = state->mav_mode;
+	navigation->mode = state->mav_mode.byte;
 	
 	navigation->auto_takeoff = false;
 	
@@ -230,9 +230,7 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->cruise_speed = 3.0f;
 	navigation->max_climb_rate = 1.0f;
 	
-	navigation->soft_zone_size_x = 0.0f;
-	navigation->soft_zone_size_y = 0.0f;
-	navigation->soft_zone_size_z = 0.0f;
+	navigation->soft_zone_size = 0.0f;
 	
 	navigation->loop_count = 0;
 	
@@ -246,7 +244,7 @@ task_return_t navigation_update(navigation_t* navigation)
 		case MAV_STATE_ACTIVE:
 			if (navigation->state->in_the_air)
 			{
-				switch (navigation->state->mav_mode - (navigation->state->mav_mode & MAV_MODE_FLAG_DECODE_POSITION_HIL))
+				switch (navigation->state->mav_mode.byte - (navigation->state->mav_mode.byte & MAV_MODE_FLAG_DECODE_POSITION_HIL))
 				{
 					case MAV_MODE_GPS_NAVIGATION:
 						navigation_waypoint_navigation_handler(navigation);
@@ -304,9 +302,12 @@ task_return_t navigation_update(navigation_t* navigation)
 				navigation_run(navigation->waypoint_handler->waypoint_critical_coordinates,navigation);
 			}
 			break;
+			
+		default:
+			break;
 	}
 	
-	navigation->mode = navigation->state->mav_mode;
+	navigation->mode = navigation->state->mav_mode.byte;
 	
 	return TASK_RUN_SUCCESS;
 }
@@ -383,7 +384,7 @@ void navigation_waypoint_take_off_handler(navigation_t* navigation)
 		waypoint_handler_nav_plan_init(navigation->waypoint_handler);
 	}
 	
-	if (navigation->mode == navigation->state->mav_mode)
+	if (navigation->mode == navigation->state->mav_mode.byte)
 	{
 		if (navigation->waypoint_handler->dist2wp_sqr <= 16.0f)
 		{
@@ -400,7 +401,7 @@ void navigation_waypoint_take_off_handler(navigation_t* navigation)
 
 void navigation_hold_position_handler(navigation_t* navigation)
 {
-	if (navigation->mode != navigation->state->mav_mode)
+	if (navigation->mode != navigation->state->mav_mode.byte)
 	{
 		navigation->waypoint_handler->hold_waypoint_set = false;
 	}
@@ -418,7 +419,7 @@ void navigation_hold_position_handler(navigation_t* navigation)
 
 void navigation_waypoint_navigation_handler(navigation_t* navigation)
 {
-	if (navigation->mode != navigation->state->mav_mode)
+	if (navigation->mode != navigation->state->mav_mode.byte)
 	{
 		navigation->waypoint_handler->hold_waypoint_set = false;
 	}
