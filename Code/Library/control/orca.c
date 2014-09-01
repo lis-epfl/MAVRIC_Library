@@ -41,7 +41,7 @@ void orca_init(orca_t *orca, neighbors_t *neighbors, const position_estimator_t 
 
 	min_coll_dist = 2.0f * SIZE_VHC_ORCA + 1.0f;
 	
-	print_util_dbg_print("Orca initialized.\n");
+	print_util_dbg_print("Orca initialized.\r\n");
 }
 
 void orca_compute_new_velocity(orca_t *orca, float optimal_velocity[], float new_velocity[])
@@ -169,7 +169,7 @@ void orca_compute_new_velocity(orca_t *orca, float optimal_velocity[], float new
 				print_util_dbg_print_num(sqrt(dist_sq) * 100.0f,10);
 				print_util_dbg_print(", min dist:");
 				print_util_dbg_print_num(min_coll_dist * 100.0f,10);
-				print_util_dbg_print("\n");
+				print_util_dbg_print("\r\n");
 			}
 			
 			float inv_time_step = 1.0f / ORCA_TIME_STEP_MILLIS; //PROBLEM wrong time step
@@ -220,7 +220,7 @@ void orca_compute_new_velocity(orca_t *orca, float optimal_velocity[], float new
 		print_util_dbg_print_vector(optimal_velocity,2);
 		print_util_dbg_print(", New:");
 		print_util_dbg_print_vector(new_velocity,2);
-		print_util_dbg_print("\n");
+		print_util_dbg_print("\r\n");
 	/*}
 	else
 	{

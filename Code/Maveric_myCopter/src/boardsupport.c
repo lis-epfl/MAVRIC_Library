@@ -74,9 +74,9 @@ void boardsupport_init(central_data_t *central_data)
 	gps_ublox_init(&(central_data->gps), UART3, &central_data->mavlink_communication.mavlink_stream);
 	
 	// Init UART 4 for wired communication
-	console_init(CONSOLE_UART4);
+	//console_init(CONSOLE_UART4);
 	// Init USB for wired communication
-	// console_init(CONSOLE_USB);
+	console_init(CONSOLE_USB);
 		
 	// connect abstracted aliases to hardware ports
 	central_data->telemetry_down_stream = xbee_get_out_stream();
@@ -86,7 +86,7 @@ void boardsupport_init(central_data_t *central_data)
 	
 	// init debug output
 	print_util_dbg_print_init(central_data->debug_out_stream);
-	print_util_dbg_print("Debug stream initialised\n");
+	print_util_dbg_print("Debug stream initialised\r\n");
 
 	// Bind RC receiver with remote
 	// spektrum_satellite_bind();
@@ -111,10 +111,10 @@ void boardsupport_init(central_data_t *central_data)
 	i2c_driver_init(I2C0);
 	
 	lsm330dlc_init();
-	print_util_dbg_print("LSM330 initialised \r");
+	print_util_dbg_print("LSM330 initialised \r\n");
 		
 	hmc5883l_init_slow();
-	print_util_dbg_print("HMC5883 initialised \r");
+	print_util_dbg_print("HMC5883 initialised \r\n");
 	
 	bmp085_init(&central_data->pressure,&central_data->mavlink_communication.mavlink_stream);
 	
@@ -130,5 +130,5 @@ void boardsupport_init(central_data_t *central_data)
 	// Init piezo speaker
 	piezo_speaker_init_binary();
 	
-	print_util_dbg_print("Board initialised.\n");
+	print_util_dbg_print("Board initialised\r\n");
 }

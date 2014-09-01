@@ -356,13 +356,13 @@ static void lsm330dlc_get_acc_config(void)
 	
 	lsm330dlc_acc_read_register((uint8_t*)&lsm_acc_get_config.start_address, (uint8_t*)&lsm_acc_get_config.ctrl_reg_a[0], 5);
 	/*
-	print_util_dbg_print("lsm acc config:\r");
+	print_util_dbg_print("lsm acc config:\r\n");
 	for (uint8_t i = 0; i < 5; i++) 
 	{
 		print_util_dbg_print_num(lsm_acc_get_config.ctrl_reg_a[i], 16);
-		print_util_dbg_print(" (");
+		print_util_dbg_print(" ");
 		print_util_dbg_print_num(lsm_acc_default_config.ctrl_reg_a[i], 16);
-		print_util_dbg_print(" )\r");
+		print_util_dbg_print(" \r\n");
 	}*/
 }
 
@@ -373,13 +373,13 @@ static void lsm330dlc_get_gyro_config(void)
 	
 	lsm330dlc_gyro_read_register((uint8_t*)&lsm_gyro_get_config.start_address, (uint8_t*)&lsm_gyro_get_config.ctrl_reg_g[0], 5);
 	/*
-	print_util_dbg_print("lsm gyro config:\r");
+	print_util_dbg_print("lsm gyro config:\r\n");
 	for (uint8_t i = 0; i < 5; i++)
 	{
 		print_util_dbg_print_num(lsm_gyro_get_config.ctrl_reg_g[i], 16);
 		print_util_dbg_print(" (");
 		print_util_dbg_print_num(lsm_gyro_default_config.ctrl_reg_g[i], 16);
-		print_util_dbg_print(" )\r");
+		print_util_dbg_print(" )\r\n");
 	}*/
 }
 
@@ -387,11 +387,11 @@ void lsm330dlc_init(void)
 {
 	if(twim_probe(&AVR32_TWIM0, LSM330_ACC_SLAVE_ADDRESS) == STATUS_OK)
 	{
-		print_util_dbg_print("LSM330 sensor found (0x18) \r");
+		print_util_dbg_print("LSM330 sensor found (0x18) \r\n");
 	}
 	else
 	{
-		print_util_dbg_print("LSM330 sensor not responding (0x18) \r");
+		print_util_dbg_print("LSM330 sensor not responding (0x18) \r\n");
 		return;
 	} 
 	

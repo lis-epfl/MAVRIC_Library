@@ -35,18 +35,17 @@ void initialisation()
 
 	mavlink_telemetry_init();
 	
-	piezo_speaker_startup_melody();
+	onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
+	
+	central_data->state.mav_state = MAV_STATE_STANDBY;	
+	central_data->imu.calibration_level = OFF;	
 
-	//onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
-
+	piezo_speaker_mario_melody();
+	
 	// Switch off red LED
 	LED_Off(LED2);
-	
-	print_util_dbg_print("OK. Starting up.\n");
 
-	central_data->state.mav_state = MAV_STATE_STANDBY;
-
-	central_data->imu.calibration_level = OFF;
+	print_util_dbg_print("OK. Starting up.\r\n");
 }
 
 int main (void)

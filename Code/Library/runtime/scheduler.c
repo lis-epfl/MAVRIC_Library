@@ -40,7 +40,7 @@ void scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config, cons
 	}
 	else
 	{
-		print_util_dbg_print("[SCHEDULER] ERROR ! Bad memory allocation");
+		print_util_dbg_print("[SCHEDULER] ERROR ! Bad memory allocation\r\n");
 		scheduler->task_set->max_task_count = 0;		
 	}
 
@@ -92,13 +92,13 @@ bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run
 		}
 		else
 		{
-			print_util_dbg_print("[SCHEDULER] Error: There is already a task with this ID");
+			print_util_dbg_print("[SCHEDULER] Error: There is already a task with this ID\r\n");
 			task_successfully_added = false;
 		}
 	}
 	else
 	{
-		print_util_dbg_print("[SCHEDULER] Error: Cannot add more task");
+		print_util_dbg_print("[SCHEDULER] Error: Cannot add more task\r\n");
 		task_successfully_added = false;
 	}
 

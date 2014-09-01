@@ -183,7 +183,7 @@ void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 	}
 	else
 	{
-		print_util_dbg_print("[ONBOARD PARAMETERS] ERROR ! Bad memory allocation");
+		print_util_dbg_print("[ONBOARD PARAMETERS] ERROR ! Bad memory allocation\r\n");
 		onboard_parameters->param_set->max_param_count = 0;
 		onboard_parameters->param_set->param_count = 0;	
 	}
@@ -234,7 +234,7 @@ void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 	mavlink_message_handler_add_cmd_callback( message_handler, &callbackcmd);
 	
 
-	print_util_dbg_print("Onboard parameters initialised.\n");	
+	print_util_dbg_print("Onboard parameters initialised.\r\n");	
 }
 
 
@@ -256,7 +256,7 @@ void onboard_parameters_add_parameter_uint32(onboard_parameters_t* onboard_param
 	}
 	else
 	{
-		print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param");
+		print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param\r\n");
 	}
 }
 
@@ -279,7 +279,7 @@ void onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parame
 	}
 	else
 	{
-		print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param");
+		print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param\r\n");
 	}
 }
 
@@ -302,7 +302,7 @@ void onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parame
 	}
 	else
 	{
-		print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param");
+		print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param\r\n");
 	}
 }
 
@@ -327,7 +327,7 @@ void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_paramete
 			print_util_dbg_print(set.param_id);
 			print_util_dbg_print(" to ");
 			print_util_dbg_putfloat(set.param_value, 2);
-			print_util_dbg_print("\n");
+			print_util_dbg_print("\r\n");
 		}
 				
 		for (uint16_t i = 0; i < onboard_parameters->param_set->param_count; i++) 
@@ -375,7 +375,7 @@ void onboard_parameters_preflight_storage(onboard_parameters_t* onboard_paramete
 	if (msg->param1 == 0)
 	{
 	 	// read parameters from flash
-	 	print_util_dbg_print("Reading from flashc...\n");
+	 	print_util_dbg_print("Reading from flashc...\r\n");
 		if(onboard_parameters_read_parameters_from_flashc(onboard_parameters))
 		{
 			// TODO: update simulation calibration values
@@ -386,7 +386,7 @@ void onboard_parameters_preflight_storage(onboard_parameters_t* onboard_paramete
 	{
 	 	// write parameters to flash
 	 	//print_util_dbg_print("No Writing to flashc\n");
-	 	print_util_dbg_print("Writing to flashc\n");
+	 	print_util_dbg_print("Writing to flashc\r\n");
 	 	onboard_parameters_write_parameters_to_flashc(onboard_parameters);
 	}
 
@@ -425,7 +425,7 @@ bool onboard_parameters_read_parameters_from_flashc(onboard_parameters_t* onboar
 		&&	(cksum1 == nvram_array->values[param_set->param_count + 1])
 		&&	(cksum2 == nvram_array->values[param_set->param_count + 2]) )
 	{
-		print_util_dbg_print("Flash read successful! New Parameters inserted. \n");
+		print_util_dbg_print("Flash read successful! New Parameters inserted.\r\n");
 		for (i = 1; i < (param_set->param_count + 1); i++)
 		{
 			*(param_set->parameters[i-1].param) = local_array.values[i];
@@ -435,7 +435,7 @@ bool onboard_parameters_read_parameters_from_flashc(onboard_parameters_t* onboar
 	}
 	else
 	{
-		print_util_dbg_print("Flash memory corrupted! Hardcoded values taken.\n");
+		print_util_dbg_print("Flash memory corrupted! Hardcoded values taken.\r\n");
 	}
 	
 	return flash_read_successful;
@@ -460,7 +460,7 @@ void onboard_parameters_write_parameters_to_flashc(onboard_parameters_t* onboard
 	cksum1 += local_array.values[0];
 	cksum2 += cksum1;
 	
-	print_util_dbg_print("Begin write to flashc...\n");
+	print_util_dbg_print("Begin write to flashc...\r\n");
 	
 	for (i = 1; i <= param_set->param_count; i++)
 	{
@@ -478,10 +478,10 @@ void onboard_parameters_write_parameters_to_flashc(onboard_parameters_t* onboard
 	if(bytes_to_write < MAVERIC_FLASHC_USER_PAGE_FREE_SPACE)
 	{
 		flashc_memcpy((void *)nvram_array, &local_array, bytes_to_write, true);
-		print_util_dbg_print("Write to flashc completed.\n");
+		print_util_dbg_print("Write to flashc completed.\r\n");
 	}
 	else
 	{
-		print_util_dbg_print("Attempted to write too many parameters on flash user page, aborted.\n");
+		print_util_dbg_print("Attempted to write too many parameters on flash user page, aborted.\r\n");
 	}
 }
