@@ -33,7 +33,7 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 			// ------ ROLL PID -------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.14f,
+				.p_gain = 0.07f,
 				.clip_min = -0.9f, 
 				.clip_max = 0.9f,
 				.integrator={
@@ -59,7 +59,7 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 			// ------ PITCH PID ------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.14f,
+				.p_gain = 0.07f,
 				.clip_min = -0.9f, 
 				.clip_max = 0.9f,
 				.integrator={
@@ -85,7 +85,7 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 			// ------ YAW PID --------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.6f,
+				.p_gain = 0.3f,
 				.clip_min = -0.3f, 
 				.clip_max = 0.3f,
 				.integrator={
@@ -157,7 +157,7 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 			// ------ ROLL PID -------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 2.0f,
+				.p_gain = 4.0f,
 				.clip_min = -1.2f, 
 				.clip_max = 1.2f,
 				.integrator={
@@ -183,7 +183,7 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 			// ------ PITCH PID ------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 2.0f,
+				.p_gain = 4.0f,
 				.clip_min = -1.2f, 
 				.clip_max = 1.2f,
 				.integrator={
@@ -209,7 +209,7 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 			// ------ YAW PID --------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 1.5f,
+				.p_gain = 3.0f,
 				.clip_min = -1.5f, 
 				.clip_max = 1.5f,
 				.integrator={

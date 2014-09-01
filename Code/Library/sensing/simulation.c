@@ -366,7 +366,7 @@ void simulation_update(simulation_model_t *sim)
 	
 	for (i = 0; i < 3; i++)
 	{
-			qtmp1.v[i] = sim->rates_bf[i];
+			qtmp1.v[i] = 0.5f * sim->rates_bf[i];
 	}
 	
 	qtmp1.s = 0;

@@ -93,7 +93,6 @@ typedef struct  {
 	control_command_t controls_nav;								///< The control nav structure used for velocity modes
 
 	stabilise_copter_t stabilisation_copter;					///< The stabilisation structure for copter
-	stabiliser_stack_copter_t stabiliser_stack;					///< The stabilisation stack structure (rates, attitude, velocity, thrust)
 
 	gps_t gps;													///< The GPS structure
 	
