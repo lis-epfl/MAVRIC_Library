@@ -3,7 +3,7 @@
  *
  * The MAV'RIC Framework
  *
- * Copyright © 2011-2014
+ * Copyright Â© 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
  */
@@ -28,7 +28,7 @@
 
 #define NATIVE_BIG_ENDIAN  
 
-#define MAVLINK_SYS_ID 8
+#define MAVLINK_SYS_ID 201
 #define MAVLINK_BASE_STATION_ID 255
 
 #define CONF_DIAG
