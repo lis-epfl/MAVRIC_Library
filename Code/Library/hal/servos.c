@@ -80,7 +80,7 @@ void servos_init(servos_t* servos, const servos_conf_t* config, const mavlink_st
 	else
 	{
 		servos->servos_count = 0;
-		print_util_dbg_print("[SERVOS] ERROR! Too many servos");
+		print_util_dbg_print("[SERVOS] ERROR! Too many servos\r\n");
 	}
 }
 

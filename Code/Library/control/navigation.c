@@ -234,7 +234,7 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	
 	navigation->loop_count = 0;
 	
-	print_util_dbg_print("Navigation initialized.\n");
+	print_util_dbg_print("Navigation initialized.\r\n");
 }
 
 task_return_t navigation_update(navigation_t* navigation)
@@ -345,7 +345,7 @@ void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler,
 	print_util_dbg_print_num(waypoint_handler->waypoint_hold_coordinates.pos[Z],10);
 	print_util_dbg_print(", ");
 	print_util_dbg_print_num((int32_t)(waypoint_handler->waypoint_hold_coordinates.heading*180.0f/3.14f),10);
-	print_util_dbg_print(")\n");
+	print_util_dbg_print(")\r\n");
 	
 }
 
@@ -359,7 +359,7 @@ void navigation_waypoint_take_off_init(mavlink_waypoint_handler_t* waypoint_hand
 	print_util_dbg_print_num(-10.0f,10);
 	print_util_dbg_print("), with heading of: ");
 	print_util_dbg_print_num((int32_t)(waypoint_handler->position_estimator->local_position.heading*180.0f/3.14f),10);
-	print_util_dbg_print("\n");
+	print_util_dbg_print("\r\n");
 
 	waypoint_handler->waypoint_hold_coordinates = waypoint_handler->position_estimator->local_position;
 	waypoint_handler->waypoint_hold_coordinates.pos[Z] = -10.0f;
@@ -393,7 +393,7 @@ void navigation_waypoint_take_off_handler(navigation_t* navigation)
 			navigation->auto_takeoff = false;
 			print_util_dbg_print("Automatic take-off finised, dist2wp_sqr (10x):");
 			print_util_dbg_print_num(navigation->waypoint_handler->dist2wp_sqr * 10.0f,10);
-			print_util_dbg_print(".\n");
+			print_util_dbg_print(".\r\n");
 		}
 	}
 }
@@ -443,7 +443,7 @@ void navigation_waypoint_navigation_handler(navigation_t* navigation)
 			print_util_dbg_print_num(sqrt(navigation->waypoint_handler->dist2wp_sqr),10);
 			print_util_dbg_print(" less than :");
 			print_util_dbg_print_num(navigation->waypoint_handler->current_waypoint.param2,10);
-			print_util_dbg_print(".\n");
+			print_util_dbg_print(".\r\n");
 			
 			mavlink_message_t msg;
 			mavlink_msg_mission_item_reached_pack( 	navigation->mavlink_stream->sysid,
@@ -466,7 +466,7 @@ void navigation_waypoint_navigation_handler(navigation_t* navigation)
 					navigation->waypoint_handler->current_waypoint_count++;
 				}
 				print_util_dbg_print_num(navigation->waypoint_handler->current_waypoint_count,10);
-				print_util_dbg_print("\n");
+				print_util_dbg_print("\r\n");
 				navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count].current = 1;
 				navigation->waypoint_handler->current_waypoint = navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count];
 				navigation->waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(navigation->waypoint_handler, navigation->waypoint_handler->position_estimator->local_position.origin);
@@ -482,7 +482,7 @@ void navigation_waypoint_navigation_handler(navigation_t* navigation)
 			else
 			{
 				navigation->state->nav_plan_active = false;
-				print_util_dbg_print("Stop\n");
+				print_util_dbg_print("Stop\r\n");
 				
 				navigation_waypoint_hold_init(navigation->waypoint_handler, navigation->waypoint_handler->waypoint_coordinates);
 			}
@@ -545,17 +545,17 @@ void navigation_critical_handler(mavlink_waypoint_handler_t* waypoint_handler)
 		switch (waypoint_handler->critical_behavior)
 		{
 			case CLIMB_TO_SAFE_ALT:
-				print_util_dbg_print("Critical State! Flying to home waypoint.\n");
+				print_util_dbg_print("Critical State! Flying to home waypoint.\r\n");
 				waypoint_handler->critical_behavior = FLY_TO_HOME_WP;
 				break;
 			
 			case FLY_TO_HOME_WP:
-				print_util_dbg_print("Critical State! Performing critical landing.\n");
+				print_util_dbg_print("Critical State! Performing critical landing.\r\n");
 				waypoint_handler->critical_behavior = CRITICAL_LAND;
 				break;
 			
 			case CRITICAL_LAND:
-				print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\n");
+				print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\r\n");
 				waypoint_handler->critical_landing = true;
 				break;
 		}

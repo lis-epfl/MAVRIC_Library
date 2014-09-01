@@ -107,11 +107,11 @@ void hmc5883l_init_slow()
 {
 	if(twim_probe(&AVR32_TWIM0, HMC5883_SLAVE_ADDRESS) == STATUS_OK)
 	{
-		print_util_dbg_print("HMC5883 compass sensor found (0x1E) \r");
+		print_util_dbg_print("HMC5883 compass sensor found (0x1E) \r\n");
 	}
 	else
 	{
-		print_util_dbg_print("HMC5883 compass sensor not responding (0x1E) \r");
+		print_util_dbg_print("HMC5883 compass sensor not responding (0x1E) \r\n");
 		return;
 	}
 	

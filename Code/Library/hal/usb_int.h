@@ -25,6 +25,7 @@ extern "C" {
 
 #include <stdint.h>
 #include "stdio_usb.h"
+#include "udi_cdc.h"
 #include "streams.h"
 #include "uart_int.h"
 

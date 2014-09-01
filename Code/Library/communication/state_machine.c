@@ -54,7 +54,7 @@ void state_machine_init(state_machine_t *state_machine, state_t* state, mavlink_
 
 	state_machine->use_mode_from_remote = true;
 	
-	print_util_dbg_print("State machine initialise.\r");
+	print_util_dbg_print("State machine initialise.\r\n");
 }
 
 
@@ -82,7 +82,7 @@ void state_machine_rc_user_channels(state_machine_t* state_machine)
 
 void state_machine_switch_off_motors(state_machine_t* state_machine)
 {
-	print_util_dbg_print("Switching off motors!\n");
+	print_util_dbg_print("Switching off motors!\r\n");
 
 	state_machine->state->mav_state = MAV_STATE_STANDBY;
 	//state_disable_mode(state_machine->state, MAV_MODE_FLAG_SAFETY_ARMED);
@@ -214,7 +214,7 @@ void state_machine_switch_off_motors(state_machine_t* state_machine)
 // 				case SIGNAL_BAD:
 // 					if (state_test_if_in_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL))
 // 					{
-// 						print_util_dbg_print("Attitude mode, direct to Emergency state_machine->state.\r");
+// 						print_util_dbg_print("Attitude mode, direct to Emergency state_machine->state.\r\n");
 // 						state_machine->state->mav_state = MAV_STATE_EMERGENCY;
 // 					}
 // 					break;
@@ -222,7 +222,7 @@ void state_machine_switch_off_motors(state_machine_t* state_machine)
 // 				case SIGNAL_LOST:
 // 					if (state_test_if_in_mode(state_machine->state,MAV_MODE_ATTITUDE_CONTROL))
 // 					{
-// 						print_util_dbg_print("Attitude mode, direct to Emergency state_machine->state.\r");
+// 						print_util_dbg_print("Attitude mode, direct to Emergency state_machine->state.\r\n");
 // 						state_machine->state->mav_state = MAV_STATE_EMERGENCY;
 // 					}
 // 					if (state_machine->waypoint_handler->critical_landing)

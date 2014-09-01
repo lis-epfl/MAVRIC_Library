@@ -108,11 +108,11 @@ void bmp085_init_slow()
 {	
 	if (twim_probe(&AVR32_TWIM0, BMP085_SLAVE_ADDRESS) == STATUS_OK)
 	{
-		print_util_dbg_print("BMP85 pressure sensor found (0x77) \r");
+		print_util_dbg_print("BMP85 pressure sensor found (0x77) \r\n");
 	}
 	else
 	{
-		print_util_dbg_print("BMP85 pressure sensor not responding (0x77) \r");
+		print_util_dbg_print("BMP85 pressure sensor not responding (0x77) \r\n");
 		return;
 	}
 	
@@ -141,7 +141,7 @@ void bmp085_init_slow()
 	mc = bmp085_read_int(0xBC);
 	md = bmp085_read_int(0xBE);
 	
-	print_util_dbg_print("BMP085 initialised \r");
+	print_util_dbg_print("BMP085 initialised \r\n");
 }
 
 
