@@ -45,12 +45,6 @@ void initialisation()
 
 	print_util_dbg_print("OK. Starting up.\r");
 
-	//sd_spi_test();
-	
-	//diskio_test_low_layer();
-	
-	//diskio_test_fatfs();
-
 	central_data->state.mav_state = MAV_STATE_STANDBY;
 
 	central_data->imu.calibration_level = OFF;

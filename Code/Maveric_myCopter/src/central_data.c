@@ -185,7 +185,8 @@ void central_data_init()
 								&central_data.imu,
 								&central_data.ahrs,
 								&central_data.position_estimator,
-								central_data.servos 	);
+								central_data.servos ,
+								&central_data.mavlink_communication);
 	
 	delay_ms(100);
 
