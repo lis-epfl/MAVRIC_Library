@@ -17,19 +17,33 @@
 
 
 #include "stabilisation_copter.h"
-#include "conf_stabilisation_copter.h"
 #include "print_util.h"
 
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, const control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servo_output_t* servos, mavlink_communication_t* mavlink_communication)
+void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabilise_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est, servos_t* servos, mavlink_communication_t* mavlink_communication)
 {
-	*stabiliser_stack = stabiliser_defaults_copter;
 	
-	stabilisation_copter->stabiliser_stack = stabiliser_stack;
+	stabilisation_copter->stabiliser_stack = stabiliser_conf->stabiliser_stack;
 	stabilisation_copter->controls = controls;
 	stabilisation_copter->imu = imu;
 	stabilisation_copter->ahrs = ahrs;
 	stabilisation_copter->pos_est = pos_est;
 	stabilisation_copter->servos = servos;
+	
+	controls->control_mode = ATTITUDE_COMMAND_MODE;
+	controls->yaw_mode = YAW_RELATIVE;
+	
+	controls->rpy[ROLL] = 0.0f;
+	controls->rpy[PITCH] = 0.0f;
+	controls->rpy[YAW] = 0.0f;
+	controls->tvel[X] = 0.0f;
+	controls->tvel[Y] = 0.0f;
+	controls->tvel[Z] = 0.0f;
+	controls->theading = 0.0f;
+	controls->thrust = -1.0f;
+
+	stabilisation_copter->stabiliser_stack.rate_stabiliser.mavlink_stream = &mavlink_communication->mavlink_stream;
+	stabilisation_copter->stabiliser_stack.attitude_stabiliser.mavlink_stream = &mavlink_communication->mavlink_stream;
+	stabilisation_copter->stabiliser_stack.velocity_stabiliser.mavlink_stream = &mavlink_communication->mavlink_stream;
 	
 	// Add callbacks for waypoint handler messages requests
 	mavlink_message_handler_msg_callback_t callback;
@@ -40,8 +54,7 @@ void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabili
 	callback.function 		= (mavlink_msg_callback_function_t)	&stabilisation_copter_joystick_input;
 	callback.module_struct 	= (handling_module_struct_t)		stabilisation_copter->controls;
 	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
-	
-	
+
 	print_util_dbg_print("Stabilisation copter init.\n");
 }
 
@@ -91,21 +104,21 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 				rel_heading_coordinated = atan2(stabilisation_copter->pos_est->vel_bf[Y], stabilisation_copter->pos_est->vel_bf[X]);
 			}
 			
-			float w = 0.5f * (maths_sigmoid(vectors_norm(stabilisation_copter->pos_est->vel_bf)-stabilisation_copter->stabiliser_stack->yaw_coordination_velocity) + 1.0f);
+			float w = 0.5f * (maths_sigmoid(vectors_norm(stabilisation_copter->pos_est->vel_bf)-stabilisation_copter->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
 			input.rpy[YAW] = (1.0f - w) * input.rpy[YAW] + w * rel_heading_coordinated;
 		}
 
 		rpyt_errors[YAW]= input.rpy[YAW];
 		
 		// run PID update on all velocity controllers
-		stabilisation_run(&stabilisation_copter->stabiliser_stack->velocity_stabiliser, stabilisation_copter->imu->dt, rpyt_errors);
+		stabilisation_run(&stabilisation_copter->stabiliser_stack.velocity_stabiliser, stabilisation_copter->imu->dt, rpyt_errors);
 		
 		//velocity_stabiliser.output.thrust = maths_f_min(velocity_stabiliser.output.thrust,stabilisation_param.controls->thrust);
-		stabilisation_copter->stabiliser_stack->velocity_stabiliser.output.thrust += THRUST_HOVER_POINT;
-		stabilisation_copter->stabiliser_stack->velocity_stabiliser.output.theading = input.theading;
-		input = stabilisation_copter->stabiliser_stack->velocity_stabiliser.output;
+		stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.thrust += THRUST_HOVER_POINT;
+		stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.theading = input.theading;
+		input = stabilisation_copter->stabiliser_stack.velocity_stabiliser.output;
 		
-		qtmp=quaternions_create_from_vector(stabilisation_copter->stabiliser_stack->velocity_stabiliser.output.rpy);
+		qtmp=quaternions_create_from_vector(stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy);
 		//quat_t rpy_local = quaternions_global_to_local(stabilisation_copter->ahrs->qe, qtmp);
 		
 		quat_t rpy_local;
@@ -133,35 +146,36 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 		rpyt_errors[3]= input.thrust;       // no feedback for thrust at this level
 		
 		// run PID update on all attitude_filter controllers
-		stabilisation_run(&stabilisation_copter->stabiliser_stack->attitude_stabiliser, stabilisation_copter->imu->dt, rpyt_errors);
+		stabilisation_run(&stabilisation_copter->stabiliser_stack.attitude_stabiliser, stabilisation_copter->imu->dt, rpyt_errors);
 		
 		// use output of attitude_filter controller to set rate setpoints for rate controller 
-		input = stabilisation_copter->stabiliser_stack->attitude_stabiliser.output;
+		input = stabilisation_copter->stabiliser_stack.attitude_stabiliser.output;
 	
 	// -- no break here  - we want to run the lower level modes as well! -- 
 	
 	case RATE_COMMAND_MODE: // this level is always run
 		// get rate measurements from IMU (filtered angular rates)
-		for (i=0; i<3; i++) {
+		for (i=0; i<3; i++)
+		{
 			rpyt_errors[i]= input.rpy[i]- stabilisation_copter->ahrs->angular_speed[i];
 		}
 		rpyt_errors[3] = input.thrust ;  // no feedback for thrust at this level
 		
 		// run PID update on all rate controllers
-		stabilisation_run(&stabilisation_copter->stabiliser_stack->rate_stabiliser, stabilisation_copter->imu->dt, rpyt_errors);
+		stabilisation_run(&stabilisation_copter->stabiliser_stack.rate_stabiliser, stabilisation_copter->imu->dt, rpyt_errors);
 	}
 	
 	// mix to servo outputs depending on configuration
 	#ifdef CONF_DIAG
-	stabilisation_copter_mix_to_servos_diag_quad(&stabilisation_copter->stabiliser_stack->rate_stabiliser.output, stabilisation_copter->servos);
+	stabilisation_copter_mix_to_servos_diag_quad(&stabilisation_copter->stabiliser_stack.rate_stabiliser.output, stabilisation_copter->servos);
 	#else
 	#ifdef CONF_CROSS
-	stabilisation_copter_mix_to_servos_cross_quad(&stabilisation_copter->stabiliser_stack->rate_stabiliser.output, stabilisation_copter->servos);
+	stabilisation_copter_mix_to_servos_cross_quad(&stabilisation_copter->stabiliser_stack.rate_stabiliser.output, stabilisation_copter->servos);
 	#endif
 	#endif
 }
 
-void stabilisation_copter_mix_to_servos_diag_quad(control_command_t *control, servo_output_t servos[4])
+void stabilisation_copter_mix_to_servos_diag_quad(control_command_t *control, servos_t* servos)
 {
 	int32_t i;
 	float motor_command[4];
@@ -185,11 +199,11 @@ void stabilisation_copter_mix_to_servos_diag_quad(control_command_t *control, se
 
 	for (i=0; i<4; i++) 
 	{
-		servos[i].value=SERVO_SCALE * motor_command[i];
+		servos_set_value( servos, i, motor_command[i]);
 	}
 }
 
-void stabilisation_copter_mix_to_servos_cross_quad(control_command_t *control, servo_output_t servos[4])
+void stabilisation_copter_mix_to_servos_cross_quad(control_command_t *control, servos_t* servos)
 {
 	int32_t i;
 	float motor_command[4];
@@ -211,7 +225,7 @@ void stabilisation_copter_mix_to_servos_cross_quad(control_command_t *control, s
 	}
 	for (i=0; i<4; i++) 
 	{
-		servos[i].value=SERVO_SCALE * motor_command[i];
+		servos_set_value( servos, i, motor_command[i]);
 	}
 }
 

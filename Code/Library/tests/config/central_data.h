@@ -55,16 +55,16 @@ typedef struct  {
 	control_command_t controls;
 	control_command_t controls_nav;
 
-	Stabiliser_Stack_copter_t stabiliser_stack;
+	stabiliser_stack_copter_t stabiliser_stack;
 
 	simulation_model_t uav_model;
 	servo_output_t servos[NUMBER_OF_SERVO_OUTPUTS];
-	Buffer_t xbee_in_buffer, wired_in_buffer;
+	buffer_t xbee_in_buffer, wired_in_buffer;
 	byte_stream_t xbee_out_stream;
 	byte_stream_t xbee_in_stream;
 	byte_stream_t wired_out_stream, wired_in_stream;
 	
-	Buffer_t gps_buffer;
+	buffer_t gps_buffer;
 	byte_stream_t gps_stream_in;
 	byte_stream_t gps_stream_out;
 	gps_t gps;
