@@ -55,7 +55,7 @@ void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabili
 	callback.module_struct 	= (handling_module_struct_t)		stabilisation_copter->controls;
 	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
 
-	print_util_dbg_print("Stabilisation copter init.\n");
+	print_util_dbg_print("Stabilisation copter init.\r\n");
 }
 
 void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_copter)

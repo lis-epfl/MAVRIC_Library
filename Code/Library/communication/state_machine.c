@@ -82,7 +82,7 @@ void state_machine_rc_user_channels(state_machine_t* state_machine)
 
 void state_machine_switch_off_motors(state_machine_t* state_machine)
 {
-	print_util_dbg_print("Switching off motors!\n");
+	print_util_dbg_print("Switching off motors!\r\n");
 
 	state_machine->state->mav_state = MAV_STATE_STANDBY;
 	//state_disable_mode(state_machine->state, MAV_MODE_FLAG_SAFETY_ARMED);

@@ -53,8 +53,7 @@ static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler
 			print_util_dbg_print_num(request.start_stop, 10);
 			print_util_dbg_print(" rate=");
 			print_util_dbg_print_num(request.req_message_rate, 10);
-			print_util_dbg_print("\n");
-			print_util_dbg_print("\n");	
+			print_util_dbg_print("\r\n");
 		}
 
 		if ( request.req_stream_id==255 ) 

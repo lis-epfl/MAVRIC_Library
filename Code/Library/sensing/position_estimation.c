@@ -204,7 +204,7 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 			}
 			else
 			{
-				print_util_dbg_print("GPS dt is too small!");
+				print_util_dbg_print("GPS dt is too small!\r\n");
 			}
 		}
 		t_inter_gps = time_keeper_get_millis() - pos_est->gps->time_last_msg;
@@ -276,7 +276,7 @@ static void gps_position_init(position_estimator_t *pos_est)
 				pos_est->vel[i] = 0.0f;
 			}
 			
-			print_util_dbg_print("GPS position initialized!\n");
+			print_util_dbg_print("GPS position initialized!\r\n");
 		}
 	}
 }
@@ -287,7 +287,7 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
 	if (packet->param1 == 1)
  	{
  		// Set new home position to actual position
- 		print_util_dbg_print("Set new home location to actual position.\n");
+ 		print_util_dbg_print("Set new home location to actual position.\r\n");
  		pos_est->local_position.origin = coord_conventions_local_to_global_position(pos_est->local_position);
 
  		print_util_dbg_print("New Home location: (");
@@ -296,12 +296,12 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
  		print_util_dbg_print_num(pos_est->local_position.origin.longitude * 10000000.0f,10);
  		print_util_dbg_print(", ");
  		print_util_dbg_print_num(pos_est->local_position.origin.altitude * 1000.0f,10);
- 		print_util_dbg_print(")\n");
+ 		print_util_dbg_print(")\r\n");
  	}
  	else
  	{
  		// Set new home position from msg
- 		print_util_dbg_print("Set new home location. \n");
+ 		print_util_dbg_print("Set new home location. \r\n");
 
  		pos_est->local_position.origin.latitude = packet->param5;
  		pos_est->local_position.origin.longitude = packet->param6;
@@ -313,7 +313,7 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
  		print_util_dbg_print_num(pos_est->local_position.origin.longitude * 10000000.0f,10);
  		print_util_dbg_print(", ");
  		print_util_dbg_print_num(pos_est->local_position.origin.altitude * 1000.0f,10);
- 		print_util_dbg_print(")\n");
+ 		print_util_dbg_print(")\r\n");
  	}
 
 	*pos_est->nav_plan_active = false;
@@ -383,7 +383,7 @@ void position_estimation_init(position_estimator_t *pos_est, state_t* state, bar
 	callbackcmd.module_struct =										pos_est;
 	mavlink_message_handler_add_cmd_callback(mavlink_handler, &callbackcmd);
 	
-	print_util_dbg_print("Position estimation initialized.\n");
+	print_util_dbg_print("Position estimation initialized.\r\n");
 }
 
 
@@ -421,7 +421,7 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est)
 	print_util_dbg_print_num(pos_est->local_position.pos[2],10);
 	print_util_dbg_print(" + ");
 	print_util_dbg_print_num(pos_est->local_position.origin.altitude,10);
-	print_util_dbg_print("\n");
+	print_util_dbg_print("\r\n");
 
 	// reset position estimator
 	pos_est->last_alt = 0;

@@ -38,7 +38,7 @@ void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* ahrs)
 	qf->kp_mag = 0.1f;
 	qf->ki_mag = qf->kp_mag / 15.0f;
 	
-	print_util_dbg_print("[QFILTER] Initialized.\n");
+	print_util_dbg_print("[QFILTER] Initialized.\r\n");
 }
 
 

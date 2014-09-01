@@ -86,7 +86,7 @@ void boardsupport_init(central_data_t *central_data)
 	
 	// init debug output
 	print_util_dbg_print_init(central_data->debug_out_stream);
-	print_util_dbg_print("Debug stream initialised\n");
+	print_util_dbg_print("Debug stream initialised\r\n");
 
 	// Bind RC receiver with remote
 	// spektrum_satellite_bind();
@@ -130,5 +130,5 @@ void boardsupport_init(central_data_t *central_data)
 	// Init piezo speaker
 	piezo_speaker_init_binary();
 	
-	print_util_dbg_print("Board initialised.\n");
+	print_util_dbg_print("Board initialised\r\n");
 }
