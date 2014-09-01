@@ -475,6 +475,7 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	
 	data_logging->file_init = false;
 	data_logging->file_opened = false;
+	data_logging->file_name_init = false;
 	data_logging->log_data = config->log_data;
 	
 	#if _USE_LFN
@@ -512,6 +513,7 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	char *file_add = malloc(data_logging->buffer_add_size);
 	
 	snprintf(data_logging->file_name, data_logging->buffer_name_size, "%s", file_name);
+	data_logging->file_name_init = true;
 	
 	if (data_logging->log_data)
 	{
@@ -612,6 +614,10 @@ task_return_t data_logging_run(data_logging_t* data_logging)
 		}
 		else
 		{
+			if (!data_logging->file_name_init)
+			{
+				data_logging->file_name = "Default_name";
+			}
 			data_logging_create_new_log_file(data_logging,data_logging->file_name);
 		}
 	}

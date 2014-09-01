@@ -93,6 +93,7 @@ typedef struct
 
 	bool file_init;												///< A flag to tell whether a file is init or not
 	bool file_opened;											///< A flag to tell whether a file is opened or not
+	bool file_name_init;										///< A flag to tell whether a valid name was proposed
 	
 	uint32_t log_data;											///< A flag to stop/start writing to file	
 }data_logging_t;
