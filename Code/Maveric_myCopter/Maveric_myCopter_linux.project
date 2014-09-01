@@ -690,15 +690,6 @@
       </VirtualDirectory>
       <File Name="Library/hal/usb_int.c"/>
       <File Name="Library/hal/usb_int.h"/>
-      <File Name="Library/hal/fat_fs/integer.h"/>
-      <File Name="Library/hal/fat_fs/ffconf.h"/>
-      <File Name="Library/hal/fat_fs/ff.h"/>
-      <File Name="Library/hal/fat_fs/ff.c"/>
-      <File Name="Library/hal/fat_fs/diskio.h"/>
-      <File Name="Library/hal/fat_fs/diskio.c"/>
-      <File Name="Library/hal/fat_fs/option/unicode.c"/>
-      <File Name="Library/hal/fat_fs/option/syscall.c"/>
-      <File Name="Library/hal/fat_fs/option/cc932.c"/>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>
