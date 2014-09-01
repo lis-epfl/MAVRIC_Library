@@ -117,7 +117,7 @@ void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_ha
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  * \param	position_estimator		The pointer to the position estimator structure
  * \param	ahrs					The pointer to the attitude estimation structure
- * \param	state			The pointer to the state structure
+ * \param	state					The pointer to the state structure
  * \param	mavlink_communication	The pointer to the mavlink communication structure
  */
 void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* ahrs, state_t* state, mavlink_communication_t* mavlink_communication, const mavlink_stream_t* mavlink_stream);

@@ -49,7 +49,7 @@ void central_data_init()
 	// Init main sheduler
 	scheduler_conf_t scheduler_config =
 	{
-		.max_task_count = 10,
+		.max_task_count = 15,
 		.schedule_strategy = ROUND_ROBIN,
 		.debug = true
 	};
@@ -170,7 +170,7 @@ void central_data_init()
 					&central_data.position_estimator,
 					&central_data.orca,
 					&central_data.state,
-					&central_data.mavlink_communication.mavlink_stream);
+					&central_data.mavlink_communication);
 	
 	delay_ms(100);
 

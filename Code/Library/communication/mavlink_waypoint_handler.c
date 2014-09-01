@@ -122,14 +122,6 @@ static void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_h
  */
 static void waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
 
-/**
- * \brief	Sets auto-takeoff procedure from a mavlink command message MAV_CMD_NAV_TAKEOFF
- *
- * \param	waypoint_handler		The pointer to the structure of the mavlink waypoint handler
- * \param	packet					The pointer to the structure of the mavlink command message long
- */
-static void waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t *waypoint_handler, mavlink_command_long_t* packet);
-
 // TODO: Add code in the function :)
 //static void set_stream_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc);
 
@@ -839,20 +831,6 @@ static void waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_handler_
 	}
 }
 
-void waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t *waypoint_handler, mavlink_command_long_t* packet)
-{
-	print_util_dbg_print("Starting automatic take-off from button\n");
-	waypoint_handler->state->in_the_air = true;
-
-	mavlink_message_t msg;
-	mavlink_msg_command_ack_pack( 	waypoint_handler->mavlink_stream->sysid,
-									waypoint_handler->mavlink_stream->compid,
-									&msg, 
-									MAV_CMD_NAV_TAKEOFF, 
-									MAV_RESULT_ACCEPTED);
-	mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
-}
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -969,14 +947,6 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_set_circle_scenario;
-	callbackcmd.module_struct =									waypoint_handler;
-	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
-	
-	callbackcmd.command_id = MAV_CMD_NAV_TAKEOFF; // 22
-	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_set_auto_takeoff;
 	callbackcmd.module_struct =									waypoint_handler;
 	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 	
@@ -1106,7 +1076,7 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 	
 	if ((waypoint_handler->number_of_waypoints > 0)
 	//&& (waypoint_handler->position_estimator->init_gps_position || (*waypoint_handler->simulation_mode==HIL_ON))
-	&& (waypoint_handler->position_estimator->init_gps_position || state_test_if_in_flag_mode(waypoint_handler->state,MAV_MODE_FLAG_HIL_ENABLED))
+	&& (waypoint_handler->position_estimator->init_gps_position || (waypoint_handler->state->mav_mode.HIL == HIL_ON))
 	&& (waypoint_handler->waypoint_receiving == false))
 	{
 		for (i=0;i<waypoint_handler->number_of_waypoints;i++)

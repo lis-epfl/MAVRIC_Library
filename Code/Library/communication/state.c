@@ -33,15 +33,6 @@
  */
 static void state_set_mav_mode(state_t* state, mavlink_received_t* rec);
 
-/**
- * \brief						Set the state and the mode of the vehicle
- *
- * \param	state				The pointer to the state structure
- * \param	base_mode			The base mode from the message
- * \param	mav_mode_flag		The flag to test the base_mode against
- */
-void state_enable_mode_from_msg(state_t *state, uint8_t base_mode, mav_flag_mask_t mav_mode_flag);
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -73,19 +64,12 @@ void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
 		state->mav_mode.AUTO = new_mode.AUTO;
 		state->mav_mode.TEST = new_mode.TEST;
 		state->mav_mode.CUSTOM = new_mode.CUSTOM;
-		
-		//state_enable_mode_from_msg(state, packet.base_mode, MAV_MODE_FLAG_SAFETY_ARMED);
-		//state_enable_mode_from_msg(state, packet.base_mode, MAV_MODE_FLAG_MANUAL_INPUT_ENABLED);
-		//// Deliberately not included the MAV_MODE_FLAG_HIL_ENABLED. QGroundControl do not modify directly the HIL flag (at least not with the set_mode message).
-		//state_enable_mode_from_msg(state, packet.base_mode, MAV_MODE_FLAG_STABILIZE_ENABLED);
-		//state_enable_mode_from_msg(state, packet.base_mode, MAV_MODE_FLAG_GUIDED_ENABLED);
-		//state_enable_mode_from_msg(state, packet.base_mode, MAV_MODE_FLAG_AUTO_ENABLED);
 
 		print_util_dbg_print("New mav mode:");
 		print_util_dbg_print_num(state->mav_mode.byte,10);
 		print_util_dbg_print("\r");
 
-		if (state_test_if_in_flag_mode(state,MAV_MODE_FLAG_SAFETY_ARMED))
+		if (state->mav_mode.ARMED == ARMED_ON)
 		{
 			state->mav_state = MAV_STATE_ACTIVE;
 		}
@@ -194,94 +178,4 @@ task_return_t state_send_status(const state_t* state)
 	mavlink_stream_send(mavlink_stream, &msg);
 
 	return TASK_RUN_SUCCESS;
-}
-
-	
-bool state_test_flag_mode(uint8_t mode, mav_flag_mask_t test_flag)
-{
-	bool result = false;
-	
-	if ((mode & test_flag))
-	{
-		result = true;
-	}
-	
-	return result;
-}
-
-void state_enable_mode(state_t *state, mav_flag_mask_t mav_mode_flag)
-{
-	state->mav_mode.byte |= mav_mode_flag;
-	state->mav_mode_previous = state->mav_mode;
-}
-
-
-void state_disable_mode(state_t *state, mav_flag_mask_t mav_mode_flag)
-{
-	// state->mav_mode |= !mav_mode_flag;
-	state->mav_mode.byte &= ~mav_mode_flag;
-	state->mav_mode_previous = state->mav_mode;
-}
-
-
-bool state_test_if_in_flag_mode(const state_t *state, mav_flag_mask_t mav_mode_flag)
-{
-	return (state->mav_mode.byte & mav_mode_flag);
-}
-
-
-bool state_test_if_first_time_in_mode(state_t *state)
-{
-	return !(state->mav_mode_previous.byte == state->mav_mode.byte);
-}
-
-
-void state_set_new_mode(state_t *state, uint8_t mode)
-{
-
-	// state->mav_mode = mav_mode + (state->mav_mode & MAV_MODE_FLAG_HIL_ENABLED);
-
-	mav_mode_t mav_mode;
-	mav_mode.byte = mode;
-
-	// Keep current hil flag
-	mav_mode.HIL = state->mav_mode.HIL;
-	state->mav_mode = mav_mode;
-}
-
-
-bool state_test_if_in_mode(state_t *state, uint8_t mav_mode)
-{
-	// get modes without HIL flag
-	mav_mode_t current_mode = state->mav_mode;
-	current_mode.HIL = HIL_OFF;
-	mav_mode_t mode = { .byte=mav_mode };
-	mode.HIL = HIL_OFF;
-
-	if ( current_mode.byte == mode.byte )
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-void state_enable_mode_from_msg(state_t *state, uint8_t base_mode, mav_flag_mask_t mav_mode_flag)
-{
-	if (base_mode & mav_mode_flag)
-	{
-		if (!(state->mav_mode.byte & mav_mode_flag))
-		{
-			state->mav_mode.byte += mav_mode_flag;
-		}
-	}
-	else
-	{
-		if (state->mav_mode.byte & mav_mode_flag)
-		{
-			state->mav_mode.byte += -mav_mode_flag;
-		}
-	}
 }

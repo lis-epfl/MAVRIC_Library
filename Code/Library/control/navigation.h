@@ -55,23 +55,23 @@ typedef struct
 	mavlink_waypoint_handler_t *waypoint_handler;		///< The pointer to the waypoint handler structure
 	const position_estimator_t *position_estimator;		///< The pointer to the position estimation structure in central_data
 	orca_t *orca;										///< The pointer to the ORCA structure in central_data
-	state_t* state;								///< The pointer to the state structure in central_data
+	state_t* state;										///< The pointer to the state structure in central_data
 	const mavlink_stream_t* mavlink_stream;				///< The pointer to the mavlink stream structure
 }navigation_t;
 
 /**
- * \brief						Initialization
+ * \brief	Initialization
  *
- * \param	navigation		The pointer to the navigation structure
- * \param	controls_nav		The pointer to the control structure
- * \param	qe					The pointer to the attitude quaternion structure
- * \param	waypoint_handler	The pointer to the waypoint handler structure
- * \param	position_estimator	The pointer to the position estimation structure
- * \param	orca			The pointer to the ORCA structure
- * \param	state		The pointer to the state structure 
- * \param	mavlink_stream		The pointer to the mavlink stream structure
+ * \param	navigation				The pointer to the navigation structure
+ * \param	controls_nav			The pointer to the control structure
+ * \param	qe						The pointer to the attitude quaternion structure
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ * \param	position_estimator		The pointer to the position estimation structure
+ * \param	orca					The pointer to the ORCA structure
+ * \param	state					The pointer to the state structure 
+ * \param	mavlink_communication	The pointer to the mavlink communication structure
  */
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, state_t* state, const mavlink_stream_t* mavlink_stream);
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, state_t* state, mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
