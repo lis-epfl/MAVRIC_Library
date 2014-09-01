@@ -21,9 +21,8 @@
 #include "mavlink_communication.h"
 #include "print_util.h"
 
-void stabilisation_init(stabiliser_t * stabiliser, control_command_t *controls, const mavlink_stream_t* mavlink_stream)
+void stabilisation_init(control_command_t *controls, const mavlink_stream_t* mavlink_stream)
 {
-	stabiliser->mavlink_stream = mavlink_stream;
 	controls->mavlink_stream = mavlink_stream;
 	
 	controls->control_mode = ATTITUDE_COMMAND_MODE;
@@ -51,36 +50,36 @@ void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[])
 	stabiliser->output.thrust= pid_control_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
 }
 
-task_return_t  stabilisation_send_rpy_speed_thrust_setpoint(stabiliser_t* rate_stabiliser)
+task_return_t  stabilisation_send_rpy_speed_thrust_setpoint(stabiliser_t* stabiliser)
 {
 	mavlink_message_t msg;
-	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_pack(	rate_stabiliser->mavlink_stream->sysid,
-															rate_stabiliser->mavlink_stream->compid,
+	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_pack(	stabiliser->mavlink_stream->sysid,
+															stabiliser->mavlink_stream->compid,
 															&msg,
 															time_keeper_get_millis(),
-															rate_stabiliser->rpy_controller[0].output,
-															rate_stabiliser->rpy_controller[1].output,
-															rate_stabiliser->rpy_controller[2].output,
-															0 );
+															stabiliser->rpy_controller[0].output,
+															stabiliser->rpy_controller[1].output,
+															stabiliser->rpy_controller[2].output,
+															stabiliser->thrust_controller.output );
 	
-	mavlink_stream_send(rate_stabiliser->mavlink_stream,&msg);
+	mavlink_stream_send(stabiliser->mavlink_stream,&msg);
 	
 	return TASK_RUN_SUCCESS;
 }
 
-task_return_t  stabilisation_send_rpy_rates_error(stabiliser_t* rate_stabiliser)
+task_return_t  stabilisation_send_rpy_rates_error(stabiliser_t* stabiliser)
 {
 	mavlink_message_t msg;
-	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_pack(	rate_stabiliser->mavlink_stream->sysid,
-															rate_stabiliser->mavlink_stream->compid,
+	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_pack(	stabiliser->mavlink_stream->sysid,
+															stabiliser->mavlink_stream->compid,
 															&msg,
 															time_keeper_get_millis(),
-															rate_stabiliser->rpy_controller[0].error,
-															rate_stabiliser->rpy_controller[1].error,
-															rate_stabiliser->rpy_controller[2].error,
-															0 );
+															stabiliser->rpy_controller[0].error,
+															stabiliser->rpy_controller[1].error,
+															stabiliser->rpy_controller[2].error,
+															stabiliser->thrust_controller.error );
 	
-	mavlink_stream_send(rate_stabiliser->mavlink_stream,&msg);
+	mavlink_stream_send(stabiliser->mavlink_stream,&msg);
 	
 	return TASK_RUN_SUCCESS;
 }

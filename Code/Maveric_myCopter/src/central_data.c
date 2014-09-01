@@ -19,6 +19,7 @@
 #include "central_data.h"
 #include "conf_constants.h"
 #include "delay.h"
+#include "conf_stabilisation_copter.h"
 
 static central_data_t central_data;
 
@@ -178,9 +179,14 @@ void central_data_init()
 	
 	delay_ms(100);
 
+	stabilise_copter_conf_t stabilise_conf = 
+	{
+		.stabiliser_stack = stabiliser_defaults_copter
+	};
+
 	// Init stabilisers
 	stabilisation_copter_init(	&central_data.stabilisation_copter,
-								&central_data.stabiliser_stack,
+								&stabilise_conf,
 								&central_data.controls,
 								&central_data.imu,
 								&central_data.ahrs,
@@ -190,8 +196,7 @@ void central_data_init()
 	
 	delay_ms(100);
 
-	stabilisation_init( &central_data.stabilisation_copter.stabiliser_stack->rate_stabiliser, 
-						&central_data.controls,
+	stabilisation_init( &central_data.controls,
 						&central_data.mavlink_communication.mavlink_stream);
 	
 	delay_ms(100);

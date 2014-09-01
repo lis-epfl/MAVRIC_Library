@@ -39,34 +39,42 @@ typedef struct
 	stabiliser_t attitude_stabiliser;							///< The attitude controller structure
 	stabiliser_t velocity_stabiliser;							///< The velocity controller structure
 	float yaw_coordination_velocity;							///< the yaw coordination value in velocity control mode
-} Stabiliser_Stack_copter_t;
+} stabiliser_stack_copter_t;
 
 /**
  * \brief Structure containing the pointers to the data needed in this module
  */
 typedef struct
 {
-	Stabiliser_Stack_copter_t* stabiliser_stack;	///< The pointer to the PID parameters values for the stacked controller 
-	const control_command_t* controls;					///< The pointer to the control structure
-	const imu_t* imu;								///< The pointer to the IMU structure
-	const ahrs_t* ahrs;								///< The pointer to the attitude estimation structure
-	const position_estimator_t* pos_est;			///< The pointer to the position estimation structure
-	servo_output_t* servos;							///< The pointer to the servos structure
+	stabiliser_stack_copter_t stabiliser_stack;					///< The PID parameters values and output for the stacked controller 
+	const control_command_t* controls;							///< The pointer to the control structure
+	const imu_t* imu;											///< The pointer to the IMU structure
+	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
+	const position_estimator_t* pos_est;						///< The pointer to the position estimation structure
+	servo_output_t* servos;										///< The pointer to the servos structure
 } stabilise_copter_t;
+
+/**
+ * \brief Structure containing the configuration data
+ */
+typedef struct  
+{
+	stabiliser_stack_copter_t stabiliser_stack;					///< The pointer to the PID parameters values and output for the stacked controller
+}stabilise_copter_conf_t;
 
 /**
  * \brief							Initialize module stabilization
  *
  * \param	stabilisation_copter	The pointer to the stabilisation copter structure
- * \param	stabiliser_stack		The pointer to structure with all controllers
+ * \param	stabiliser_conf			The pointer to structure with all PID controllers
  * \param	control_input			The pointer to the controlling inputs
  * \param	imu						The pointer to the IMU structure
- * \param	ahrs		The pointer to the attitude estimation structure
+ * \param	ahrs					The pointer to the attitude estimation structure
  * \param	pos_est					The pointer to the position estimation structure
  * \param	servos					The pointer to the array of servos command values
  * \param	mavlink_communication	The pointer to the mavlink communication structure
  */
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, Stabiliser_Stack_copter_t* stabiliser_stack, const control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servo_output_t* servos, mavlink_communication_t* mavlink_communication);
+void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter,stabilise_copter_conf_t* stabiliser_conf, const control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servo_output_t* servos, mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief							Main Controller for controlling and stabilizing the quad
