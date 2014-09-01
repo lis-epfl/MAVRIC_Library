@@ -115,15 +115,15 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimator->local_position.heading);
 	}
 	
-	v_desired = maths_f_min(navigation->cruise_speed,(maths_center_window_2(4.0f * rel_heading) * navigation->dist2vel_gain));
+	v_desired = maths_f_min(navigation->cruise_speed,(maths_center_window_2(4.0f * rel_heading) * navigation->dist2vel_gain)* maths_soft_zone(norm_rel_dist,navigation->soft_zone_size));
 	
 	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigation->max_climb_rate * norm_rel_dist ) {
 		v_desired = navigation->max_climb_rate * norm_rel_dist /maths_f_abs(dir_desired_bf[Z]);
 	}
 	
-	dir_desired_bf[X] = v_desired * dir_desired_bf[X] / norm_rel_dist * maths_soft_zone(norm_rel_dist,navigation->soft_zone_size_x);
-	dir_desired_bf[Y] = v_desired * dir_desired_bf[Y] / norm_rel_dist * maths_soft_zone(norm_rel_dist,navigation->soft_zone_size_y);
-	dir_desired_bf[Z] = v_desired * dir_desired_bf[Z] / norm_rel_dist * maths_soft_zone(norm_rel_dist,navigation->soft_zone_size_z);
+	dir_desired_bf[X] = v_desired * dir_desired_bf[X] / norm_rel_dist;
+	dir_desired_bf[Y] = v_desired * dir_desired_bf[Y] / norm_rel_dist;
+	dir_desired_bf[Z] = v_desired * dir_desired_bf[Z] / norm_rel_dist;
 	
 	/*
 	loop_count = loop_count++ %50;
@@ -230,9 +230,7 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->cruise_speed = 3.0f;
 	navigation->max_climb_rate = 1.0f;
 	
-	navigation->soft_zone_size_x = 0.0f;
-	navigation->soft_zone_size_y = 0.0f;
-	navigation->soft_zone_size_z = 0.0f;
+	navigation->soft_zone_size = 0.0f;
 	
 	navigation->loop_count = 0;
 	
