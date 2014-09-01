@@ -481,16 +481,6 @@ task_return_t tasks_run_barometer_update(void* arg)
 	return TASK_RUN_SUCCESS;
 }
 
-
-//task_return_t sonar_update(void* arg)
-//{
-	// TODO: add the simulation sonar task
-	//central_data_t* central_data = central_data_get_pointer_to_struct();
-	//i2cxl_sonar_update(&central_data->i2cxl_sonar);
-	//
-	//return TASK_RUN_SUCCESS;
-//}
-
 void tasks_create_tasks() 
 {	
 	central_data = central_data_get_pointer_to_struct();
@@ -506,7 +496,6 @@ void tasks_create_tasks()
 	scheduler_add_task(scheduler    , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&analog_monitor_update                           , (task_argument_t)&central_data->analog_monitor        , 6);
 	scheduler_add_task(scheduler    , 10000                           , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&waypoint_handler_control_time_out_waypoint_msg  , (task_argument_t)&central_data->waypoint_handler      , 7);
 	scheduler_add_task(scheduler	, 100000						  , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_LOW	 , (task_function_t)&data_logging_run								 , (task_argument_t)&central_data->data_logging			 , 8);
-	// scheduler_add_task(scheduler , 100000                          , RUN_REGULAR , PERIODIC_ABSOLUTE, PRIORITY_NORMAL , &sonar_update                                                     , 0                                                    , 0);
-
+	
 	scheduler_sort_tasks(scheduler);
 }
