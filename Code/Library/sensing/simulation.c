@@ -1,20 +1,46 @@
-/** 
- * \page The MAV'RIC license
- *
- * The MAV'RIC Framework
- *
- * Copyright © 2011-2014
- *
- * Laboratory of Intelligent Systems, EPFL
- */
+/*******************************************************************************
+ * Copyright (c) 2009-2014, MAV'RIC Development Team
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
+ * and/or other materials provided with the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
 
-
-/** 
+/*******************************************************************************
  * \file simulation.c
- *  
- * This file is an onboard Hardware-in-the-loop simulation. 
- * Simulates quad-copter dynamics based on simple aerodynamics/physics model and generates simulated raw IMU measurements
- */
+ * 
+ * \author MAV'RIC Team
+ * \author Felix Schill
+ *   
+ * \brief This file is an onboard Hardware-in-the-loop simulation. 
+ * 
+ * \detail Simulates quad-copter dynamics based on simple aerodynamics/physics 
+ * model and generates simulated raw IMU measurements
+ *
+ ******************************************************************************/
 
 
 #include "conf_constants.h"
@@ -263,7 +289,6 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	sim->pos_est = pos_est;
 	sim->pressure = pressure;
 	sim->gps = gps;
-	sim->state = state;
 	sim->servos = servos;
 	sim->nav_plan_active = &state->nav_plan_active;
 	
@@ -498,39 +523,6 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 	sim->gps->status = GPS_OK;
 }
 
-// void simulation_switch_between_reality_n_simulation(simulation_model_t *sim)
-// {
-// 	uint32_t i;
-	
-// 	// From simulation to reality
-// 	//if (sim->state->simulation_mode == HIL_OFF)
-// 	if (state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
-// 	{
-// 		sim->pos_est->local_position.origin = sim->local_position.origin;
-// 		for (i = 0;i < 3;i++)
-// 		{
-// 			sim->pos_est->local_position.pos[i] = 0.0f;
-// 		}
-// 		sim->pos_est->init_gps_position = false;
-// 		sim->state->mav_state = MAV_STATE_STANDBY;
-// 		sim->state->mav_mode.byte = MAV_MODE_MANUAL_DISARMED;
-// 		state_disable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
-// //		servos_set_value_failsafe(sim->servos);
-// 	}
-
-// 	// From reality to simulation
-// 	//if (sim->state->simulation_mode == HIL_ON)
-// 	if (!state_test_if_in_flag_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED))
-// 	{	
-// 		simulation_reset_simulation(sim);
-// 		simulation_calib_set(sim);
-// 		state_enable_mode(sim->state,MAV_MODE_FLAG_HIL_ENABLED);
-// 		sim->pos_est->init_gps_position = false;
-		
-// 		print_util_dbg_print("Switching from reality to simulation.\r\n");
-// 	}
-// }
-
 
 void simulation_switch_from_reality_to_simulation(simulation_model_t *sim)
 {
@@ -540,7 +532,7 @@ void simulation_switch_from_reality_to_simulation(simulation_model_t *sim)
 	simulation_calib_set(sim);
 	sim->pos_est->init_gps_position = false;
 }
-
+		
 
 void simulation_switch_from_simulation_to_reality(simulation_model_t *sim)
 {

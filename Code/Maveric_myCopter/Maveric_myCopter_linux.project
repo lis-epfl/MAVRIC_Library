@@ -6,15 +6,15 @@
     </Plugin>
     <Plugin Name="CMakePlugin">
       <![CDATA[[{
-  "name": "Debug",
-  "enabled": false,
-  "buildDirectory": "build",
-  "sourceDirectory": "$(ProjectPath)",
-  "generator": "",
-  "buildType": "",
-  "arguments": [],
-  "parentProject": ""
- }]]]>
+		"name":	"Debug",
+		"enabled":	false,
+		"buildDirectory":	"build",
+		"sourceDirectory":	"$(ProjectPath)",
+		"generator":	"",
+		"buildType":	"",
+		"arguments":	[],
+		"parentProject":	""
+	}]]]>
     </Plugin>
   </Plugins>
   <Description/>
@@ -266,7 +266,6 @@
     <File Name="src/tasks.h"/>
     <File Name="src/tasks.c"/>
     <File Name="src/main.cpp"/>
-    <File Name="Library/Makefile"/>
     <File Name="src/boardsupport.c"/>
     <File Name="src/mavlink_telemetry.h"/>
     <File Name="src/mavlink_telemetry.c"/>
@@ -595,7 +594,6 @@
     <VirtualDirectory Name="control">
       <File Name="Library/control/pid_control.h"/>
       <File Name="Library/control/pid_control.c"/>
-      <File Name="Library/control/orca.c"/>
       <File Name="Library/control/stabilisation.h"/>
       <File Name="Library/control/navigation.h"/>
       <File Name="Library/control/navigation.c"/>
@@ -604,7 +602,6 @@
       <File Name="Library/control/adaptive_parameter.c"/>
       <File Name="Library/control/stabilisation.c"/>
       <File Name="Library/control/adaptive_parameter.h"/>
-      <File Name="Library/control/orca.h"/>
       <File Name="Library/control/attitude_error_estimator.c"/>
       <File Name="Library/control/attitude_error_estimator.h"/>
       <File Name="Library/control/attitude_controller_p2.c"/>
@@ -612,6 +609,8 @@
       <File Name="Library/control/attitude_command.h"/>
       <File Name="Library/control/servos_mix_quadcopter_cross.h"/>
       <File Name="Library/control/servos_mix_quadcopter_cross.c"/>
+      <File Name="Library/control/joystick_parsing.c"/>
+      <File Name="Library/control/joystick_parsing.h"/>
       <File Name="Library/control/control_command.h"/>
       <File Name="Library/control/servos_mix_quadcopter_diag.h"/>
       <File Name="Library/control/servos_mix_quadcopter_diag.c"/>
@@ -672,8 +671,8 @@
       <File Name="Library/hal/pwm_servos.h"/>
       <File Name="Library/hal/sd_spi.h"/>
       <File Name="Library/hal/sd_spi.c"/>
-      <File Name="Library/hal/usb_int.h"/>
       <File Name="Library/hal/usb_int.c"/>
+      <File Name="Library/hal/usb_int.h"/>
       <VirtualDirectory Name="fat_fs">
         <File Name="Library/hal/fat_fs/diskio.c"/>
         <File Name="Library/hal/fat_fs/diskio.h"/>
@@ -699,8 +698,6 @@
       <File Name="Library/sensing/position_estimation.c"/>
       <File Name="Library/sensing/qfilter.c"/>
       <File Name="Library/sensing/imu.h"/>
-      <File Name="Library/sensing/neighbor_selection.c"/>
-      <File Name="Library/sensing/neighbor_selection.h"/>
       <File Name="Library/sensing/simulation.h"/>
       <File Name="Library/sensing/simulation.c"/>
       <File Name="Library/sensing/ahrs.h"/>

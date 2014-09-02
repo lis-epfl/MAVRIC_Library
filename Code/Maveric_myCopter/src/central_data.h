@@ -1,19 +1,42 @@
-/**
- * \page The MAV'RIC License
+/*******************************************************************************
+ * Copyright (c) 2009-2014, MAV'RIC Development Team
+ * All rights reserved.
  *
- * The MAV'RIC Framework
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
  *
- * Copyright © 2011-2014
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
  *
- * Laboratory of Intelligent Systems, EPFL
- */
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
+ * and/or other materials provided with the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
  
-
-/**
+/*******************************************************************************
  * \file central_data.h
  *
- *  Place where the central data is stored and initialized
- */
+ * \author MAV'RIC Team
+ *   
+ * \brief Place where the central data is stored and initialized
+ *
+ ******************************************************************************/
 
 
 #ifndef CENTRAL_DATA_H_
@@ -48,12 +71,10 @@ extern "C" {
 #include "mavlink_waypoint_handler.h"
 #include "simulation.h"
 #include "bmp085.h"
-#include "neighbor_selection.h"
 #include "position_estimation.h"
 
 #include "analog_monitor.h"
 #include "i2cxl_sonar.h"
-#include "orca.h"
 #include "navigation.h"
 #include "state.h"
 #include "stabilisation.h"
@@ -68,6 +89,8 @@ extern "C" {
 #include "remote.h"
 
 #include "state_machine.h"
+#include "sd_spi.h"
+#include "joystick_parsing.h"
 #include "data_logging.h"
 
 // TODO : update documentation
@@ -92,7 +115,10 @@ typedef struct  {
 	ahrs_t ahrs;												///< The attitude estimation structure
 	control_command_t controls;									///< The control structure used for rate and attitude modes
 	control_command_t controls_nav;								///< The control nav structure used for velocity modes
+	control_command_t controls_joystick;						///< The control structure for the joystick
 
+	joystick_parsing_t joystick_parsing;						///< The joystick parsing structure
+	
 	stabilise_copter_t stabilisation_copter;					///< The stabilisation structure for copter
 
 	gps_t gps;													///< The GPS structure
@@ -115,9 +141,6 @@ typedef struct  {
 	state_machine_t state_machine;								///< The structure for the state machine
 	
 	barometer_t pressure;										///< The pressure structure
-	
-	orca_t orca;												///< The ORCA collision avoidance structure
-	neighbors_t neighbors;										///< The neighbor structure
 	
 	hud_structure_t hud_structure;								///< The HUD structure
 

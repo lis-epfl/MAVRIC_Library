@@ -1,19 +1,43 @@
-/**
- * \page The MAV'RIC License
- *
- * The MAV'RIC Framework
- *
- * Copyright © 2011-2014
- *
- * Laboratory of Intelligent Systems, EPFL
- */
+/*******************************************************************************
+ * Copyright (c) 2009-2014, MAV'RIC Development Team
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
+ * and/or other materials provided with the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
 
-
-/**
+/*******************************************************************************
  * \file mavlink_waypoint_handler.c
  * 
- * The mavlink waypoint handler
- */
+ * \author MAV'RIC Team
+ * \author Nicolas Dousse
+ *   
+ * \brief The mavlink waypoint handler
+ *
+ ******************************************************************************/
 
 
 #include "mavlink_waypoint_handler.h"
@@ -121,14 +145,6 @@ static void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_h
  * \param	packet					The pointer to the structure of the mavlink command message long
  */
 static void waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
-
-/**
- * \brief	Sets auto-takeoff procedure from a mavlink command message MAV_CMD_NAV_TAKEOFF
- *
- * \param	waypoint_handler		The pointer to the structure of the mavlink waypoint handler
- * \param	packet					The pointer to the structure of the mavlink command message long
- */
-static void waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t *waypoint_handler, mavlink_command_long_t* packet);
 
 // TODO: Add code in the function :)
 //static void set_stream_scenario(waypoint_struct waypoint_list[], uint16_t* number_of_waypoints, float circle_radius, float num_of_vhc);
@@ -727,6 +743,12 @@ static void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handl
 static void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
 {
 	// TODO: implement this! Separate message receiving from handling auto-landing procedure
+	
+	if (waypoint_handler->state->mav_state == MAV_STATE_STANDBY)
+	{
+		waypoint_handler->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
+	}
+	
 	float rel_pos[3];
 	uint8_t i;
 	
@@ -831,20 +853,6 @@ static void waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_handler_
 		
 		print_util_dbg_print("Not ready to switch to next waypoint. Either no waypoint loaded or flying towards one\r\n");
 	}
-}
-
-void waypoint_handler_set_auto_takeoff(mavlink_waypoint_handler_t *waypoint_handler, mavlink_command_long_t* packet)
-{
-	print_util_dbg_print("Starting automatic take-off from button\r\n");
-	waypoint_handler->state->in_the_air = true;
-
-	mavlink_message_t msg;
-	mavlink_msg_command_ack_pack( 	waypoint_handler->mavlink_stream->sysid,
-									waypoint_handler->mavlink_stream->compid,
-									&msg, 
-									MAV_CMD_NAV_TAKEOFF, 
-									MAV_RESULT_ACCEPTED);
-	mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 }
 
 //------------------------------------------------------------------------------
@@ -963,14 +971,6 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_set_circle_scenario;
-	callbackcmd.module_struct =									waypoint_handler;
-	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
-	
-	callbackcmd.command_id = MAV_CMD_NAV_TAKEOFF; // 22
-	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_set_auto_takeoff;
 	callbackcmd.module_struct =									waypoint_handler;
 	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 	
@@ -1100,7 +1100,7 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 	
 	if ((waypoint_handler->number_of_waypoints > 0)
 	//&& (waypoint_handler->position_estimator->init_gps_position || (*waypoint_handler->simulation_mode==HIL_ON))
-	&& (waypoint_handler->position_estimator->init_gps_position || state_test_if_in_flag_mode(waypoint_handler->state,MAV_MODE_FLAG_HIL_ENABLED))
+	&& (waypoint_handler->position_estimator->init_gps_position || (waypoint_handler->state->mav_mode.HIL == HIL_ON))
 	&& (waypoint_handler->waypoint_receiving == false))
 	{
 		for (i=0;i<waypoint_handler->number_of_waypoints;i++)

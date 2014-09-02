@@ -1,19 +1,44 @@
-/** 
- * \page The MAV'RIC license
- *
- * The MAV'RIC Framework
- *
- * Copyright © 2011-2014
- *
- * Laboratory of Intelligent Systems, EPFL
- */
- 
- 
-/**
+/*******************************************************************************
+ * Copyright (c) 2009-2014, MAV'RIC Development Team
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
+ * and/or other materials provided with the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
+
+/*******************************************************************************
  * \file stabilisation_copter.h
+ * 
+ * \author MAV'RIC Team
+ * \author Felix Schill
+ * \author Nicolas Dousse
+ *   
+ * \brief This file handles the stabilization of the platform
  *
- * This file handles the stabilization of the platform
- */
+ ******************************************************************************/
 
 
 #ifndef STABILISATION_COPTER_H_
@@ -28,7 +53,6 @@ extern "C" {
 #include "position_estimation.h"
 #include "imu.h"
 #include "servos.h"
-#include "mavlink_communication.h"
 
 /**
  * \brief Structure containing the stacked controller
@@ -46,8 +70,8 @@ typedef struct
  */
 typedef struct
 {
-	stabiliser_stack_copter_t stabiliser_stack;	///< The pointer to the PID parameters values for the stacked controller 
-	const control_command_t* controls;					///< The pointer to the control structure
+	stabiliser_stack_copter_t stabiliser_stack;		///< The pointer to the PID parameters values for the stacked controller 
+	control_command_t* controls;					///< The pointer to the control structure
 	const imu_t* imu;								///< The pointer to the IMU structure
 	const ahrs_t* ahrs;								///< The pointer to the attitude estimation structure
 	const position_estimator_t* pos_est;			///< The pointer to the position estimation structure
@@ -69,12 +93,12 @@ typedef struct
  * \param	stabiliser_conf			The pointer to structure with all PID controllers
  * \param	control_input			The pointer to the controlling inputs
  * \param	imu						The pointer to the IMU structure
- * \param	ahrs					The pointer to the attitude estimation structure
+ * \param	ahrs		The pointer to the attitude estimation structure
  * \param	pos_est					The pointer to the position estimation structure
  * \param	servos					The pointer to the array of servos command values
- * \param	mavlink_communication	The pointer to the mavlink communication structure
+ * \param	mavlink_stream			The pointer to the mavlink stream
  */
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabilise_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servos_t* servos, mavlink_communication_t* mavlink_communication);
+void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabilise_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servos_t* servos, const mavlink_stream_t* mavlink_stream);
 
 /**
  * \brief							Main Controller for controlling and stabilizing the quad
@@ -98,8 +122,6 @@ void stabilisation_copter_mix_to_servos_diag_quad(control_command_t *control, se
  * \param	servos					The array of servos structure
  */
 void stabilisation_copter_mix_to_servos_cross_quad(control_command_t *control, servos_t* servos);
-
-void stabilisation_copter_joystick_input(control_command_t *control, mavlink_received_t* rec);
 
 #ifdef __cplusplus
 }

@@ -1,25 +1,49 @@
-/** 
- * \page The MAV'RIC license
+/*******************************************************************************
+ * Copyright (c) 2009-2014, MAV'RIC Development Team
+ * All rights reserved.
  *
- * The MAV'RIC Framework
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
  *
- * Copyright © 2011-2014
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
  *
- * Laboratory of Intelligent Systems, EPFL
- */
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
+ * and/or other materials provided with the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
  
- 
-/**
- * \file stabilisation_copter->c
+/*******************************************************************************
+ * \file stabilisation_copter.c *
+ * \author MAV'RIC Team
+ * \author Felix Schill
+ * \author Nicolas Dousse
+ *   
+ * \brief This file handles the stabilization of the platform
  *
- * This file handles the stabilization of the platform
- */
+ ******************************************************************************/
 
 
 #include "stabilisation_copter.h"
 #include "print_util.h"
 
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabilise_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est, servos_t* servos, mavlink_communication_t* mavlink_communication)
+void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabilise_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servos_t* servos, const mavlink_stream_t* mavlink_stream)
 {
 	
 	stabilisation_copter->stabiliser_stack = stabiliser_conf->stabiliser_stack;
@@ -41,20 +65,11 @@ void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabili
 	controls->theading = 0.0f;
 	controls->thrust = -1.0f;
 
-	stabilisation_copter->stabiliser_stack.rate_stabiliser.mavlink_stream = &mavlink_communication->mavlink_stream;
-	stabilisation_copter->stabiliser_stack.attitude_stabiliser.mavlink_stream = &mavlink_communication->mavlink_stream;
-	stabilisation_copter->stabiliser_stack.velocity_stabiliser.mavlink_stream = &mavlink_communication->mavlink_stream;
+	stabilisation_copter->stabiliser_stack.rate_stabiliser.mavlink_stream = mavlink_stream;
+	stabilisation_copter->stabiliser_stack.attitude_stabiliser.mavlink_stream = mavlink_stream;
+	stabilisation_copter->stabiliser_stack.velocity_stabiliser.mavlink_stream = mavlink_stream;
 	
-	// Add callbacks for waypoint handler messages requests
-	mavlink_message_handler_msg_callback_t callback;
-
-	callback.message_id 	= MAVLINK_MSG_ID_MANUAL_CONTROL; // 69
-	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
-	callback.compid_filter 	= MAV_COMP_ID_ALL;
-	callback.function 		= (mavlink_msg_callback_function_t)	&stabilisation_copter_joystick_input;
-	callback.module_struct 	= (handling_module_struct_t)		stabilisation_copter->controls;
-	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
-
+	
 	print_util_dbg_print("Stabilisation copter init.\r\n");
 }
 
@@ -226,26 +241,5 @@ void stabilisation_copter_mix_to_servos_cross_quad(control_command_t *control, s
 	for (i=0; i<4; i++) 
 	{
 		servos_set_value( servos, i, motor_command[i]);
-	}
-}
-
-void stabilisation_copter_joystick_input(control_command_t *control, mavlink_received_t* rec)
-{
-	mavlink_manual_control_t packet;
-	mavlink_msg_manual_control_decode(&rec->msg,&packet);
-	
-	if ((uint8_t)packet.target == (uint8_t)control->mavlink_stream->sysid)
-	{
-		print_util_dbg_print("Joystick command: (");
-		print_util_dbg_print_num(packet.x,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(packet.y,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(packet.z,10);
-		print_util_dbg_print("), ");
-		print_util_dbg_print_num(packet.buttons,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(packet.r,10);
-		print_util_dbg_print("\r\n");
 	}
 }

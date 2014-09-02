@@ -1,19 +1,42 @@
-/**
- * \page The MAV'RIC License
+/*******************************************************************************
+ * Copyright (c) 2009-2014, MAV'RIC Development Team
+ * All rights reserved.
  *
- * The MAV'RIC Framework
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
  *
- * Copyright © 2011-2014
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
  * 
- * Laboratory of Intelligent Systems, EPFL
- */
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
+ * and/or other materials provided with the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
 
-
-/**
+/*******************************************************************************
  * \file mavlink_telemetry.c
  *
- * Definition of the messages sent by the autopilot to the ground station
- */ 
+ * \author MAV'RIC Team
+ *   
+ * \brief Definition of the messages sent by the autopilot to the ground station
+ *
+ ******************************************************************************/
 
 
 #include "mavlink_telemetry.h"
@@ -26,7 +49,6 @@
 #include "analog_monitor.h"
 #include "tasks.h"
 #include "mavlink_waypoint_handler.h"
-#include "neighbor_selection.h"
 #include "analog_monitor.h"
 #include "state.h"
 #include "position_estimation.h"
@@ -43,10 +65,15 @@ central_data_t *central_data;
 /**
  * \brief   Add all onboard parameters to the parameter list
  *
- * \param	The pointer to the onboard parameters structure
+ * \param	onboard_parameters		The pointer to the onboard parameters structure
  */
 void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_parameters);
 
+/**
+ * \brief	Add onboard logging parameters
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ */
 void mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging);
 
 //------------------------------------------------------------------------------
@@ -199,6 +226,8 @@ void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_par
 	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigation.max_climb_rate                          , "vel_climbRate"    );
 	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigation.soft_zone_size							  , "vel_softZone"     );
 
+	onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->state.remote_active,"Remote_Active");
+	onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->state_machine.use_mode_from_remote, "Remote_Use_Mode");
 
 	onboard_parameters_add_parameter_int32(onboard_parameters,(int32_t*)&central_data->data_logging.log_data, "Log_continue");
 
@@ -238,7 +267,7 @@ void mavlink_telemetry_init(void)
 	
 	mavlink_telemetry_add_onboard_parameters(&central_data->mavlink_communication.onboard_parameters);
 
-//	mavlink_telemetry_add_data_logging_parameters(&central_data->data_logging);
+	mavlink_telemetry_add_data_logging_parameters(&central_data->data_logging);
 
 	scheduler_t* mavlink_scheduler = &central_data->mavlink_communication.scheduler; 
 
@@ -261,10 +290,11 @@ void mavlink_telemetry_init(void)
 	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&servos_mavlink_send,								&central_data->servos, 					MAVLINK_MSG_ID_SERVO_OUTPUT_RAW	);						// ID 36
 	scheduler_add_task(mavlink_scheduler,  200000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&stabilisation_send_rpy_thrust_setpoint,			&central_data->controls, 				MAVLINK_MSG_ID_ROLL_PITCH_YAW_THRUST_SETPOINT	);		// ID 58
 	scheduler_add_task(mavlink_scheduler,  200000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&stabilisation_send_rpy_speed_thrust_setpoint,		stabiliser_show,						MAVLINK_MSG_ID_ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT	);	// ID 59
+	scheduler_add_task(mavlink_scheduler,  250000,	 RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&joystick_parsing_send_manual_ctrl_msg,				&central_data->joystick_parsing,					MAVLINK_MSG_ID_MANUAL_CONTROL);	// ID 69
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&hud_send_message,									&central_data->hud_structure, 			MAVLINK_MSG_ID_VFR_HUD	);								// ID 74
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&simulation_send_state,								&central_data->sim_model, 				MAVLINK_MSG_ID_HIL_STATE	);							// ID 90
 	scheduler_add_task(mavlink_scheduler,  500000,	 RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&simulation_send_quaternions,						&central_data->sim_model,				MAVLINK_MSG_ID_HIL_STATE_QUATERNION	);					// ID 115
-	scheduler_add_task(mavlink_scheduler,  250000,   RUN_NEVER,	   PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&scheduler_send_rt_stats,							&central_data->scheduler, 				MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
+	scheduler_add_task(mavlink_scheduler,  250000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&scheduler_send_rt_stats,							&central_data->scheduler, 				MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
 	// scheduler_add_task(mavlink_scheduler,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&mavlink_telemetry_send_sonar,						&central_data->i2cxl_sonar, 			MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
 
 	scheduler_sort_tasks(mavlink_scheduler);
