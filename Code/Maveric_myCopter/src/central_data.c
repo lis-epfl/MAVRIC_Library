@@ -49,7 +49,7 @@ void central_data_init()
 	// Init main sheduler
 	scheduler_conf_t scheduler_config =
 	{
-		.max_task_count = 10,
+		.max_task_count = 15,
 		.schedule_strategy = ROUND_ROBIN,
 		.debug = true
 	};
@@ -361,15 +361,15 @@ void central_data_init()
 					&remote_config, 
 					&central_data.mavlink_communication.mavlink_stream );
 
-	// data_logging_conf_t data_logging_conf = 
-	// {
-	// 	.debug = true,
-	// 	.max_data_logging_count = MAX_DATA_LOGGING_COUNT,
-	// 	.log_data = 0 // 1: log data, 0: no log data
-	// };
+	 data_logging_conf_t data_logging_conf = 
+	 {
+	 	.debug = true,
+	 	.max_data_logging_count = MAX_DATA_LOGGING_COUNT,
+	 	.log_data = 0 // 1: log data, 0: no log data
+	 };
 	
-	// data_logging_init(  &central_data.data_logging,
-	// 					&data_logging_conf);
+	 data_logging_init(  &central_data.data_logging,
+	 					&data_logging_conf);
 }
 
 central_data_t* central_data_get_pointer_to_struct(void)

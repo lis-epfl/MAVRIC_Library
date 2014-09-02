@@ -702,7 +702,7 @@
     <Compile Include="Library\hal\fat_fs\integer.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\hal\fat_fs\option\cc932.c">
+    <Compile Include="Library\hal\fat_fs\option\ccsbcs.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\fat_fs\option\syscall.c">

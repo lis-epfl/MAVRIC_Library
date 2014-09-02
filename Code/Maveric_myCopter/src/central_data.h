@@ -68,7 +68,8 @@ extern "C" {
 #include "remote.h"
 
 #include "state_machine.h"
-// #include "data_logging.h"
+#include "data_logging.h"
+
 // TODO : update documentation
 
 /**
@@ -124,7 +125,7 @@ typedef struct  {
 	
 	sd_spi_t sd_spi;											///< The sd_SPI driver structure
 	
-	// data_logging_t data_logging;								///< The log data structure
+	data_logging_t data_logging;								///< The log data structure
 	
 } central_data_t;
 

@@ -366,6 +366,15 @@ void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_paramete
 				break;
 			}
 		}
+		if (!match)
+		{
+			if ( onboard_parameters->debug == true )
+			{
+				print_util_dbg_print("Set parameter error! Parameter ");
+				print_util_dbg_print(set.param_id);
+				print_util_dbg_print(" not registred!\r\n");
+			}
+		}
 	}
 }
 

@@ -19,10 +19,6 @@ extern "C" {
 	#include "tasks.h"
 	#include "mavlink_telemetry.h"
 	#include "piezo_speaker.h"
-	
-	#include "gpio.h"
-	#include "spi.h"
-	#include "sd_spi.h"
 }
  
 central_data_t *central_data;
