@@ -475,7 +475,10 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	
 	data_logging->file_init = false;
 	data_logging->file_opened = false;
+	data_logging->file_name_init = false;
 	data_logging->log_data = config->log_data;
+	
+	data_logging->loop_count = 0;
 	
 	#if _USE_LFN
 	data_logging->buffer_name_size = _MAX_LFN;
@@ -590,7 +593,7 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	}
 }
 
-task_return_t data_logging_run(data_logging_t* data_logging)
+task_return_t data_logging_update(data_logging_t* data_logging)
 {
 	if (data_logging->log_data == 1)
 	{
@@ -612,7 +615,19 @@ task_return_t data_logging_run(data_logging_t* data_logging)
 		}
 		else
 		{
-			data_logging_create_new_log_file(data_logging,data_logging->file_name);
+			if (!data_logging->file_name_init)
+			{
+				data_logging->file_name = "Default";
+			}
+			if ((data_logging->fr == FR_NOT_READY)&&(data_logging->loop_count < 10))
+			{
+				data_logging->loop_count += 1;
+			}
+			
+			if (data_logging->loop_count < 10)
+			{
+				data_logging_create_new_log_file(data_logging,data_logging->file_name);
+			}
 		}
 	}
 	else

@@ -365,7 +365,7 @@ void central_data_init()
 	 {
 	 	.debug = true,
 	 	.max_data_logging_count = MAX_DATA_LOGGING_COUNT,
-	 	.log_data = 0 // 1: log data, 0: no log data
+	 	.log_data = 1 // 1: log data, 0: no log data
 	 };
 	
 	 data_logging_init(  &central_data.data_logging,

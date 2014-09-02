@@ -93,6 +93,9 @@ typedef struct
 
 	bool file_init;												///< A flag to tell whether a file is init or not
 	bool file_opened;											///< A flag to tell whether a file is opened or not
+	bool file_name_init;										///< A flag to tell whether a valid name was proposed
+	
+	uint32_t loop_count;										///< Counter to try to mount the SD card many times
 	
 	uint32_t log_data;											///< A flag to stop/start writing to file	
 }data_logging_t;
@@ -122,7 +125,7 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
  *
  * \return	The result of the task execution
  */
-task_return_t data_logging_run(data_logging_t* data_logging);
+task_return_t data_logging_update(data_logging_t* data_logging);
 
 /**
  * \brief	Registers parameter to log on the SD card
