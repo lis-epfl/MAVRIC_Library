@@ -71,12 +71,10 @@ extern "C" {
 #include "mavlink_waypoint_handler.h"
 #include "simulation.h"
 #include "bmp085.h"
-#include "neighbor_selection.h"
 #include "position_estimation.h"
 
 #include "analog_monitor.h"
 #include "i2cxl_sonar.h"
-#include "orca.h"
 #include "navigation.h"
 #include "state.h"
 #include "stabilisation.h"
@@ -137,9 +135,6 @@ typedef struct  {
 	state_machine_t state_machine;								///< The structure for the state machine
 	
 	barometer_t pressure;										///< The pressure structure
-	
-	orca_t orca;												///< The ORCA collision avoidance structure
-	neighbors_t neighbors;										///< The neighbor structure
 	
 	hud_structure_t hud_structure;								///< The HUD structure
 

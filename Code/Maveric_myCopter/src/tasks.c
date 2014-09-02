@@ -47,7 +47,6 @@
 #include "navigation.h"
 #include "led.h"
 #include "imu.h"
-#include "orca.h"
 #include "delay.h"
 #include "i2cxl_sonar.h"
 #include "analog_monitor.h"
@@ -78,16 +77,6 @@ void tasks_rc_user_channels(uint8_t *chan_switch, signal_quality_t* rc_check, in
 {
 	
 	remote_controller_get_channel_mode(chan_switch);
-	
-	// if ((spektrum_satellite_get_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0f)
-	if ( central_data->remote.channels[CHANNEL_AUX1] > 0.0f )
-	{
-		central_data->state.collision_avoidance = true;
-	}
-	else
-	{
-		central_data->state.collision_avoidance = false;
-	}
 	
 	remote_controller_get_motor_state(motor_state);
 	

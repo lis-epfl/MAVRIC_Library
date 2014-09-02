@@ -51,9 +51,8 @@
 
 /**
  * \brief            	This function does bullshit
- * \details  			1) Switch on/off collision avoidance
- * 						2) Switch on/off the motor
- * 						3) Check the receivers
+ * \details  			1) Switch on/off the motor
+ * 						2) Check the receivers
  * 
  * \param	chanSwitch	The pointer to set the switch mode
  * \param	rc_check	The pointer to the state_machine->state of the remote
@@ -91,15 +90,6 @@ void state_machine_rc_user_channels(state_machine_t* state_machine)
 	if (state_machine->rc_check == 1)
 	{
 		remote_controller_get_channel_mode(&state_machine->channel_switches);
-	}
-	
-	if ((spektrum_satellite_get_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0f)
-	{
-		state_machine->state->collision_avoidance = true;
-	}
-	else
-	{
-		state_machine->state->collision_avoidance = false;
 	}
 	
 	remote_controller_get_motor_state(&state_machine->motor_state);

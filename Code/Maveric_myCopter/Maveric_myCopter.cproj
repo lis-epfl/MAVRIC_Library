@@ -645,12 +645,6 @@
     <Compile Include="Library\control\control_command.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\control\orca.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\control\orca.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Library\control\pid_control.c">
       <SubType>compile</SubType>
     </Compile>
@@ -1106,12 +1100,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\sensing\ahrs.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\neighbor_selection.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\neighbor_selection.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\sensing\position_estimation.c">

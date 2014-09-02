@@ -97,8 +97,7 @@ typedef struct
 
 	bool nav_plan_active;						///< Flag to tell that a flight plan (min 1 waypoint) is active
 	bool in_the_air;							///< Flag to tell whether the vehicle is airborne or not
-	bool collision_avoidance;					///< Flag to tell whether the collision avoidance is active or not
-	bool reset_position;
+	bool reset_position;						///< Flag to enable the reset of the position estimation
 	
 	const analog_monitor_t* analog_monitor;		///< The pointer to the analog monitor structure
 	const mavlink_stream_t* mavlink_stream;		///< Pointer to the mavlink stream structure

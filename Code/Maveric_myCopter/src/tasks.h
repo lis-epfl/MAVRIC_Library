@@ -72,9 +72,8 @@ void tasks_run_imu_update(void* arg);
 
 /**
  * \brief            	This function does bullshit
- * \details  			1) Switch on/off collision avoidance
- * 						2) Switch on/off the motor
- * 						3) Check the receivers
+ * \details  			1) Switch on/off the motor
+ * 						2) Check the receivers
  * 
  * \param	chan_switch	The pointer to set the switch mode
  * \param	rc_check	The pointer to the state of the remote

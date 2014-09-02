@@ -184,7 +184,6 @@ void central_data_init()
 					&central_data.ahrs.qe,
 					&central_data.waypoint_handler,
 					&central_data.position_estimator,
-					&central_data.orca,
 					&central_data.state,
 					&central_data.mavlink_communication.mavlink_stream);
 	
@@ -199,23 +198,6 @@ void central_data_init()
 							&central_data.mavlink_communication.mavlink_stream);
 	waypoint_handler_init_homing_waypoint(&central_data.waypoint_handler);
 	waypoint_handler_nav_plan_init(&central_data.waypoint_handler);
-	
-	delay_ms(100);
-
-	// Init neighbor selection
-	neighbors_selection_init(   &central_data.neighbors, 
-								&central_data.position_estimator,
-								&central_data.mavlink_communication.message_handler,
-								&central_data.mavlink_communication.mavlink_stream);
-	
-	delay_ms(100);
-
-	// Init orca
-	orca_init(  &central_data.orca,
-				&central_data.neighbors,
-				&central_data.position_estimator,
-				&central_data.imu,
-				&central_data.ahrs);
 	
 	delay_ms(100);
 
