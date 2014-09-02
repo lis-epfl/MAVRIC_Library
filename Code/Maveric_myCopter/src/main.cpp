@@ -34,14 +34,13 @@ void initialisation()
 	central_data_init();
 
 	mavlink_telemetry_init();
-	
 
 	onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
 
 	central_data->state.mav_state = MAV_STATE_STANDBY;	
 	central_data->imu.calibration_level = OFF;	
 
-	piezo_speaker_mario_melody();
+	piezo_speaker_startup_melody();
 	
 	// Switch off red LED
 	LED_Off(LED2);
