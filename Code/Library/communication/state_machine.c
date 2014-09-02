@@ -53,8 +53,18 @@ void state_machine_update(state_machine_t* state_machine)
 	// Get current mode
 	mode_current = state_machine->state->mav_mode;
 
+	// Get remote signal strength
+	if (state_machine->state->remote_active == 1)
+	{
+		rc_check = remote_check(state_machine->remote);
+	}
+	else
+	{
+		rc_check = SIGNAL_GOOD;
+	}
+
 	// Get new mode
-	if ( state_machine->use_mode_from_remote == true )
+	if ( (state_machine->use_mode_from_remote == 1)&&(rc_check != SIGNAL_LOST) )
 	{
 		// Update mode from remote
 		remote_mode_update(state_machine->remote);
@@ -64,16 +74,6 @@ void state_machine_update(state_machine_t* state_machine)
 	{
 		// By default, set new mode equal to current mode
 		mode_new = mode_current;
-	}
-	
-	// Get remote signal strength
-	if (state_machine->state->remote_active)
-	{
-		rc_check = remote_check(state_machine->remote);
-	}
-	else
-	{
-		rc_check = SIGNAL_GOOD;
 	}
 	
 
