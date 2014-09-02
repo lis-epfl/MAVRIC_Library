@@ -645,7 +645,12 @@
     <Compile Include="Library\control\control_command.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\control\pid_control.c">
+    <Compile Include="Library\control\joystick_parsing.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\control\joystick_parsing.h">
+      <SubType>compile</SubType>
+    </Compile>    <Compile Include="Library\control\pid_control.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\control\pid_control.h">

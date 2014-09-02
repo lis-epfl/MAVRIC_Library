@@ -1,13 +1,13 @@
 /*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, 
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, 
  * this list of conditions and the following disclaimer in the documentation 
  * and/or other materials provided with the distribution.
@@ -74,6 +74,7 @@ typedef struct
 	bool auto_takeoff;									///< The flag for the end of the auto takeoff procedure
 	
 	control_command_t *controls_nav;					///< The pointer to the navigation control structure
+	const control_command_t* control_joystick;			///< The pointer to the joystick control structure
 	const quat_t *qe;									///< The pointer to the attitude quaternion structure
 	mavlink_waypoint_handler_t *waypoint_handler;		///< The pointer to the waypoint handler structure
 	const position_estimator_t *position_estimator;		///< The pointer to the position estimation structure in central_data
@@ -82,17 +83,17 @@ typedef struct
 }navigation_t;
 
 /**
- * \brief						Initialization
+ * \brief	Initialization
  *
- * \param	navigation			The pointer to the navigation structure
- * \param	controls_nav		The pointer to the control structure
- * \param	qe					The pointer to the attitude quaternion structure
- * \param	waypoint_handler	The pointer to the waypoint handler structure
- * \param	position_estimator	The pointer to the position estimation structure
- * \param	state				The pointer to the state structure 
- * \param	mavlink_stream		The pointer to the mavlink stream structure
+ * \param	navigation				The pointer to the navigation structure
+ * \param	controls_nav			The pointer to the control structure
+ * \param	qe						The pointer to the attitude quaternion structure
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ * \param	position_estimator		The pointer to the position estimation structure
+ * \param	state					The pointer to the state structure 
+ * \param	mavlink_communication	The pointer to the mavlink communication structure
  */
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const mavlink_stream_t* mavlink_stream);
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
