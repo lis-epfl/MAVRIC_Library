@@ -34,7 +34,7 @@
  * 
  * \author MAV'RIC Team
  * \author Felix Schill
- * \author Geraud LEplattenier
+ * \author Geraud L'Eplattenier
  *   
  * \brief Useful functions for quaternions
  *

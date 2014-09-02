@@ -33,7 +33,7 @@
  * \file usb_int.c
  * 
  * \author MAV'RIC Team
- * \author Geraud LEplattenier
+ * \author Geraud L'Eplattenier
  *   
  * \brief This file implements the USB communication protocol
  * 

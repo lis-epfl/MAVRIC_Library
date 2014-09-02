@@ -34,6 +34,7 @@
  * 
  * \author MAV'RIC Team
  * \author Felix Schill
+ * \author Geraud L'Eplattenier
  *   
  * \brief Useful math functions
  *

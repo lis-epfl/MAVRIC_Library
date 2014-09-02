@@ -34,6 +34,7 @@
  * 
  * \author MAV'RIC Team
  * \author Felix Schill
+ * \author Geraud L'Eplattenier
  *   
  * \brief This file is the driver for the integrated 3axis gyroscope and 
  * accelerometer LSM330DLC

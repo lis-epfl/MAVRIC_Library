@@ -34,6 +34,7 @@
  * 
  * \author MAV'RIC Team
  * \author Gregoire Heitz
+ * \author Geraud L'Eplattenier
  *   
  * \brief This file configures the console UART communication
  *
