@@ -19,10 +19,102 @@
 #include "joystick_parsing.h"
 #include "print_util.h"
 
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
 
-void joystick_parsing_init(joystick_parsing_t* joystick_parsing, control_command_t* controls, mavlink_communication_t* mavlink_communication)
+/**
+ * \brief						Do operations when buttons are pressed
+ *
+ * \param	joystick_parsing	The pointer to the joystick parsing structure
+ * \param	buttons				The bit mask of the buttons
+ */
+void joystick_parsing_button_mask(joystick_parsing_t* joystick_parsing, uint16_t buttons);
+
+/**
+ * \brief						Arming/Disarming the motors when button 1 is pressed
+ *
+ * \param	joystick_parsing	The pointer to the joystick parsing structure
+ * \param	button_1			The button 1 value
+ */
+void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, button_pressed_t button_1);
+
+/**
+ * \brief						Do operations when a button is pressed
+ *
+ * \param	joystick_parsing	The pointer to the joystick parsing structure
+ * \param	button				The value of the button pressed
+ * \param	mode_predefined		The predefined mode to be set
+ */
+void joystick_parsing_button(joystick_parsing_t* joystick_parsing, button_pressed_t button, mav_mode_predefined_t mode_predefined);
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void joystick_parsing_button_mask(joystick_parsing_t* joystick_parsing, uint16_t buttons)
+{	
+	button_t button_local;
+	button_local.button_mask = buttons;
+	
+	joystick_parsing_button_1(joystick_parsing, button_local.button_1);
+	
+	joystick_parsing_button(joystick_parsing, button_local.button_2, MAV_MODE_POSITION_HOLD);
+	joystick_parsing_button(joystick_parsing, button_local.button_3, MAV_MODE_VELOCITY_CONTROL);
+	joystick_parsing_button(joystick_parsing, button_local.button_4, MAV_MODE_GPS_NAVIGATION);
+	joystick_parsing_button(joystick_parsing, button_local.button_5, MAV_MODE_ATTITUDE_CONTROL);
+	
+	joystick_parsing->buttons.button_mask = buttons;
+	
+}
+
+void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, button_pressed_t button_1)
+{
+	if (button_1 == BUTTON_PRESSED)
+	{
+		if (joystick_parsing->buttons.button_1 == BUTTON_UNPRESSED)
+		{
+			if (joystick_parsing->state->mav_mode.ARMED == ARMED_ON)
+			{
+				print_util_dbg_print("Disarming\r");
+				joystick_parsing->state->mav_mode.byte = MAV_MODE_SAFE;
+			}
+			else
+			{
+				print_util_dbg_print("Arming\r");
+				joystick_parsing->state->mav_mode.ARMED = ARMED_ON;
+			}
+			joystick_parsing->buttons.button_1 = BUTTON_PRESSED;
+		}
+	}
+	else
+	{
+		if (button_1 == BUTTON_UNPRESSED )
+		{
+			if (joystick_parsing->buttons.button_1 == BUTTON_PRESSED)
+			{
+				joystick_parsing->buttons.button_1 = BUTTON_UNPRESSED;
+			}
+		}
+	}
+}
+
+void joystick_parsing_button(joystick_parsing_t* joystick_parsing, button_pressed_t button, mav_mode_predefined_t mode_predefined)
+{
+	if (button == BUTTON_PRESSED)
+	{
+		joystick_parsing->state->mav_mode.byte = mode_predefined + MAV_MODE_FLAG_HIL_ENABLED * joystick_parsing->state->mav_mode.HIL;
+	}
+}
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void joystick_parsing_init(joystick_parsing_t* joystick_parsing, control_command_t* controls, state_t* state, mavlink_communication_t* mavlink_communication)
 {
 	joystick_parsing->controls = controls;
+	joystick_parsing->state = state;
 	
 	joystick_parsing->controls->rpy[ROLL] = 0.0f;
 	joystick_parsing->controls->rpy[PITCH] = 0.0f;
@@ -35,11 +127,11 @@ void joystick_parsing_init(joystick_parsing_t* joystick_parsing, control_command
 	joystick_parsing->controls->control_mode = ATTITUDE_COMMAND_MODE;
 	joystick_parsing->controls->yaw_mode = YAW_ABSOLUTE;
 	
-	joystick_parsing->buttons = 0;
+	joystick_parsing->buttons.button_mask = 0;
 	
 	joystick_parsing->controls->mavlink_stream = &mavlink_communication->mavlink_stream;
 	
-		// Add callbacks for waypoint handler messages requests
+	// Add callbacks for waypoint handler messages requests
 	mavlink_message_handler_msg_callback_t callback;
 
 	callback.message_id 	= MAVLINK_MSG_ID_MANUAL_CONTROL; // 69
@@ -76,6 +168,8 @@ void joystick_parsing_parse_msg(joystick_parsing_t *joystick_parsing, mavlink_re
 		joystick_parsing->controls->rpy[ROLL] = packet.y / 1000.0f;
 		joystick_parsing->controls->rpy[YAW] = packet.r / 1000.0f;
 		joystick_parsing->controls->thrust = packet.z / 1000.0f;
+		
+		joystick_parsing_button_mask(joystick_parsing,packet.buttons);
 	}
 }
 
@@ -108,7 +202,7 @@ task_return_t joystick_parsing_send_manual_ctrl_msg(joystick_parsing_t* joystick
 									joystick_parsing->controls->rpy[ROLL] * 1000,
 									joystick_parsing->controls->thrust* 1000, 
 									joystick_parsing->controls->rpy[YAW] * 1000,
-									joystick_parsing->buttons);
+									joystick_parsing->buttons.button_mask);
 	
 	mavlink_stream_send(joystick_parsing->controls->mavlink_stream, &msg);
 	
