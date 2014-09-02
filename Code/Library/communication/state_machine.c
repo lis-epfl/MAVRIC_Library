@@ -51,9 +51,8 @@
 
 /**
  * \brief            	This function does bullshit
- * \details  			1) Switch on/off collision avoidance
- * 						2) Switch on/off the motor
- * 						3) Check the receivers
+ * \details  			1) Switch on/off the motor
+ * 						2) Check the receivers
  * 
  * \param	chanSwitch	The pointer to set the switch mode
  * \param	rc_check	The pointer to the state_machine->state of the remote
