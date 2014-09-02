@@ -336,16 +336,6 @@ task_return_t tasks_run_barometer_update(void* arg)
 	return TASK_RUN_SUCCESS;
 }
 
-
-//task_return_t sonar_update(void* arg)
-//{
-	// TODO: add the simulation sonar task
-	//central_data_t* central_data = central_data_get_pointer_to_struct();
-	//i2cxl_sonar_update(&central_data->i2cxl_sonar);
-	//
-	//return TASK_RUN_SUCCESS;
-//}
-
 void tasks_create_tasks() 
 {	
 	central_data = central_data_get_pointer_to_struct();
@@ -354,7 +344,7 @@ void tasks_create_tasks()
 
 	scheduler_add_task(scheduler, 4000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation                                          , 0                                                    , 0);
 	// scheduler_add_task(scheduler, 4000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation_quaternion                               , 0 													, 0);
-
+	
 	scheduler_add_task(scheduler, 20000, 	RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_HIGH   , (task_function_t)&remote_update 									, (task_argument_t)&central_data->remote 				, 1);
 	// scheduler_add_task(scheduler, 200000, 	RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_NORMAL , (task_function_t)&remote_mode_update 								, (task_argument_t)&central_data->remote 				, 2);
 	
