@@ -673,19 +673,6 @@
       <File Name="Library/hal/pwm_servos.h"/>
       <File Name="Library/hal/sd_spi.h"/>
       <File Name="Library/hal/sd_spi.c"/>
-      <VirtualDirectory Name="fat_fs">
-        <VirtualDirectory Name="option">
-          <File Name="Library/hal/fat_fs/option/cc932.c"/>
-          <File Name="Library/hal/fat_fs/option/syscall.c"/>
-          <File Name="Library/hal/fat_fs/option/unicode.c"/>
-        </VirtualDirectory>
-        <File Name="Library/hal/fat_fs/diskio.c"/>
-        <File Name="Library/hal/fat_fs/diskio.h"/>
-        <File Name="Library/hal/fat_fs/ff.c"/>
-        <File Name="Library/hal/fat_fs/ff.h"/>
-        <File Name="Library/hal/fat_fs/ffconf.h"/>
-        <File Name="Library/hal/fat_fs/integer.h"/>
-      </VirtualDirectory>
       <File Name="Library/hal/usb_int.c"/>
       <File Name="Library/hal/usb_int.h"/>
       <VirtualDirectory Name="fat_fs">
@@ -694,12 +681,12 @@
         <File Name="Library/hal/fat_fs/ff.c"/>
         <File Name="Library/hal/fat_fs/ff.h"/>
         <File Name="Library/hal/fat_fs/ffconf.h"/>
-      <File Name="Library/hal/fat_fs/integer.h"/>
+        <File Name="Library/hal/fat_fs/integer.h"/>
         <VirtualDirectory Name="option">
           <File Name="Library/hal/fat_fs/option/cc932.c"/>
           <File Name="Library/hal/fat_fs/option/syscall.c"/>
-      <File Name="Library/hal/fat_fs/option/unicode.c"/>
-    </VirtualDirectory>
+          <File Name="Library/hal/fat_fs/option/unicode.c"/>
+        </VirtualDirectory>
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
