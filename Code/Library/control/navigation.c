@@ -1,19 +1,43 @@
-/**
- * \page The MAV'RIC License
+/*******************************************************************************
+ * Copyright (c) 2009-2014, MAV'RIC Development Team
+ * All rights reserved.
  *
- * The MAV'RIC Framework
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
  *
- * Copyright © 2011-2014
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
  *
- * Laboratory of Intelligent Systems, EPFL
- */
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
+ * and/or other materials provided with the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
 
-
-/**
+/*******************************************************************************
  * \file navigation.c
  * 
- * Waypoint navigation controller 
- */
+ * \author MAV'RIC Team
+ * \author Nicolas Dousse
+ *   
+ * \brief Waypoint navigation controller
+ *
+ ******************************************************************************/
 
 
 #include "navigation.h"
@@ -47,13 +71,6 @@ static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_po
  * \param	navigation	The structure of navigation data
  */
 static void navigation_set_speed_command(float rel_pos[], navigation_t* navigation);
-
-/**
- * \brief					Performs velocity-based collision avoidance strategy
- *
- * \param	navigation	The structure of navigation data
- */
-static void navigation_collision_avoidance(navigation_t* navigation);
 
 /**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
@@ -164,27 +181,6 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
 }
 
-static void navigation_collision_avoidance(navigation_t* navigation)
-{
-	float new_velocity[3];
-	float rel_heading;
-	
-	// Implement other velocity-based collision avoidance strategy here
-	orca_compute_new_velocity(navigation->orca, navigation->controls_nav->tvel, new_velocity);
-	
-	if (((maths_f_abs(new_velocity[X])<=1.0f)&&(maths_f_abs(new_velocity[Y])<=1.0f))||((maths_f_abs(new_velocity[X])<=5.0f)&&(maths_f_abs(new_velocity[Y])<=5.0f)&&(maths_f_abs(new_velocity[Z])>=3.0f)))
-	{
-		rel_heading = 0.0f;
-	}
-		
-	rel_heading = maths_calc_smaller_angle(atan2(new_velocity[Y],new_velocity[X]) - navigation->position_estimator->local_position.heading);
-	
-	navigation->controls_nav->tvel[X] = new_velocity[X];
-	navigation->controls_nav->tvel[Y] = new_velocity[Y];
-	navigation->controls_nav->tvel[Z] = new_velocity[Z];
-	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
-}
-
 static void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigation)
 {
 	float rel_pos[3];
@@ -194,11 +190,6 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 																					rel_pos,
 																					navigation->position_estimator->local_position.pos);
 	navigation_set_speed_command(rel_pos, navigation);
-	
-	if (navigation->state->collision_avoidance)
-	{
-		navigation_collision_avoidance(navigation);
-	}
 	
 	navigation->controls_nav->theading=waypoint_input.heading;
 }
@@ -222,14 +213,13 @@ static void navigation_set_auto_takeoff(navigation_t *navigation, mavlink_comman
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, state_t* state, const control_command_t* control_joystick, mavlink_communication_t* mavlink_communication)
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, mavlink_communication_t* mavlink_communication)
 {
 	
 	navigation->controls_nav = controls_nav;
 	navigation->qe = qe;
 	navigation->waypoint_handler = waypoint_handler;
 	navigation->position_estimator = position_estimator;
-	navigation->orca = orca;
 	navigation->state = state;
 	navigation->mavlink_stream = &mavlink_communication->mavlink_stream;
 	navigation->control_joystick = control_joystick;
@@ -363,22 +353,6 @@ task_return_t navigation_update(navigation_t* navigation)
 	}
 	
 	navigation->mode = navigation->state->mav_mode.byte;
-	
-	return TASK_RUN_SUCCESS;
-}
-
-task_return_t navigation_send_collision_avoidance_status(navigation_t *navigation)
-{
-	mavlink_message_t msg;
-	
-	mavlink_msg_named_value_int_pack(	navigation->mavlink_stream->sysid,
-										navigation->mavlink_stream->compid,
-										&msg,
-										time_keeper_get_millis(),
-										"Coll_Avoidance",
-										navigation->state->collision_avoidance	);
-	
-	mavlink_stream_send(navigation->mavlink_stream,&msg);
 	
 	return TASK_RUN_SUCCESS;
 }

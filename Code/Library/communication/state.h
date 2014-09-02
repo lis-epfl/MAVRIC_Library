@@ -1,19 +1,43 @@
-/**
- * \page The MAV'RIC License
+/*******************************************************************************
+ * Copyright (c) 2009-2014, MAV'RIC Development Team
+ * All rights reserved.
  *
- * The MAV'RIC Framework
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
  *
- * Copyright © 2011-2014
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
  *
- * Laboratory of Intelligent Systems, EPFL
- */
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
+ * and/or other materials provided with the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
  
-
-/**
+/*******************************************************************************
  * \file state.h
  *
- *  Place where the state structure is defined
- */
+ * \author MAV'RIC Team
+ * \author Nicolas Dousse
+ *   
+ * \brief Holds the current status of the MAV
+ *
+ ******************************************************************************/
 
 
 #ifndef STATE_H_
@@ -72,8 +96,7 @@ typedef struct
 
 	bool nav_plan_active;								///< Flag to tell that a flight plan (min 1 waypoint) is active
 	bool in_the_air;									///< Flag to tell whether the vehicle is airborne or not
-	bool collision_avoidance;							///< Flag to tell whether the collision avoidance is active or not
-	bool reset_position;
+	bool reset_position;						///< Flag to enable the reset of the position estimation
 	
 	uint32_t remote_active;								///< Flag to tell whether the remote is active or not
 	

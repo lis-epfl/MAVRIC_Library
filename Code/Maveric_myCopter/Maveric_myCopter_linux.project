@@ -594,7 +594,6 @@
     <VirtualDirectory Name="control">
       <File Name="Library/control/pid_control.h"/>
       <File Name="Library/control/pid_control.c"/>
-      <File Name="Library/control/orca.c"/>
       <File Name="Library/control/stabilisation.h"/>
       <File Name="Library/control/navigation.h"/>
       <File Name="Library/control/navigation.c"/>
@@ -603,7 +602,6 @@
       <File Name="Library/control/adaptive_parameter.c"/>
       <File Name="Library/control/stabilisation.c"/>
       <File Name="Library/control/adaptive_parameter.h"/>
-      <File Name="Library/control/orca.h"/>
       <File Name="Library/control/attitude_error_estimator.c"/>
       <File Name="Library/control/attitude_error_estimator.h"/>
       <File Name="Library/control/attitude_controller_p2.c"/>
@@ -700,8 +698,6 @@
       <File Name="Library/sensing/position_estimation.c"/>
       <File Name="Library/sensing/qfilter.c"/>
       <File Name="Library/sensing/imu.h"/>
-      <File Name="Library/sensing/neighbor_selection.c"/>
-      <File Name="Library/sensing/neighbor_selection.h"/>
       <File Name="Library/sensing/simulation.h"/>
       <File Name="Library/sensing/simulation.c"/>
       <File Name="Library/sensing/ahrs.h"/>

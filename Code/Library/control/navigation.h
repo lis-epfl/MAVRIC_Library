@@ -1,19 +1,43 @@
-/**
- * \page The MAV'RIC License
+/*******************************************************************************
+ * Copyright (c) 2009-2014, MAV'RIC Development Team
+ * All rights reserved.
  *
- * The MAV'RIC Framework
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
  *
- * Copyright © 2011-2014
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
  *
- * Laboratory of Intelligent Systems, EPFL
- */
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
+ * and/or other materials provided with the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
 
-
-/**
+/*******************************************************************************
  * \file navigation.h
  * 
- * Waypoint navigation controller 
- */
+ * \author MAV'RIC Team
+ * \author Nicolas Dousse
+ *   
+ * \brief Waypoint navigation controller
+ *
+ ******************************************************************************/
 
 
 #ifndef NAVIGATION_H_
@@ -28,7 +52,6 @@ extern "C" {
 #include "quaternions.h"
 #include "mavlink_waypoint_handler.h"
 #include "position_estimation.h"
-#include "orca.h"
 #include "tasks.h"
 #include "mavlink_communication.h"
 #include "state.h"
@@ -55,7 +78,6 @@ typedef struct
 	const quat_t *qe;									///< The pointer to the attitude quaternion structure
 	mavlink_waypoint_handler_t *waypoint_handler;		///< The pointer to the waypoint handler structure
 	const position_estimator_t *position_estimator;		///< The pointer to the position estimation structure in central_data
-	orca_t *orca;										///< The pointer to the ORCA structure in central_data
 	state_t* state;										///< The pointer to the state structure in central_data
 	const mavlink_stream_t* mavlink_stream;				///< The pointer to the mavlink stream structure
 }navigation_t;
@@ -68,11 +90,10 @@ typedef struct
  * \param	qe						The pointer to the attitude quaternion structure
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  * \param	position_estimator		The pointer to the position estimation structure
- * \param	orca					The pointer to the ORCA structure
  * \param	state					The pointer to the state structure 
  * \param	mavlink_communication	The pointer to the mavlink communication structure
  */
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, state_t* state, const control_command_t* control_joystick, mavlink_communication_t* mavlink_communication);
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
@@ -80,14 +101,6 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
  * \param	navigation		The pointer to the navigation structure in central_data
  */
 task_return_t navigation_update(navigation_t* navigation);
-
-/**
- * \brief	Sets a circle scenario, where two waypoints are set at opposite side of the circle
- *
- * \param	navigation				The pointer to the navigation data structure
- * \param	packet					The structure of the mavlink command message long
- */
-task_return_t navigation_send_collision_avoidance_status(navigation_t *navigation);
 
 /**
  * \brief	Initialise the position hold mode

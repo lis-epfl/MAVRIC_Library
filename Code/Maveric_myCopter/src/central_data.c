@@ -1,19 +1,42 @@
-/**
- * \page The MAV'RIC License
- *
- * The MAV'RIC Framework
- *
- * Copyright © 2011-2014
- *
- * Laboratory of Intelligent Systems, EPFL
- */
- 
+/*******************************************************************************
+ * Copyright (c) 2009-2014, MAV'RIC Development Team
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
+ * and/or other materials provided with the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
 
-/**
+/*******************************************************************************
  * \file central_data.c
+ * 
+ * \author MAV'RIC Team
+ *   
+ * \brief Place where the central data is stored and initialized
  *
- *  Place where the central data is stored and initialized
- */
+ ******************************************************************************/
 
 
 #include "central_data.h"
@@ -168,7 +191,6 @@ void central_data_init()
 					&central_data.ahrs.qe,
 					&central_data.waypoint_handler,
 					&central_data.position_estimator,
-					&central_data.orca,
 					&central_data.state,
 					&central_data.controls_joystick,
 					&central_data.mavlink_communication);
@@ -184,23 +206,6 @@ void central_data_init()
 							&central_data.mavlink_communication.mavlink_stream);
 	waypoint_handler_init_homing_waypoint(&central_data.waypoint_handler);
 	waypoint_handler_nav_plan_init(&central_data.waypoint_handler);
-	
-	delay_ms(100);
-
-	// Init neighbor selection
-	neighbors_selection_init(   &central_data.neighbors, 
-								&central_data.position_estimator,
-								&central_data.mavlink_communication.message_handler,
-								&central_data.mavlink_communication.mavlink_stream);
-	
-	delay_ms(100);
-
-	// Init orca
-	orca_init(  &central_data.orca,
-				&central_data.neighbors,
-				&central_data.position_estimator,
-				&central_data.imu,
-				&central_data.ahrs);
 	
 	delay_ms(100);
 
