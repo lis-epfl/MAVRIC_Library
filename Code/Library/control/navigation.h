@@ -51,6 +51,7 @@ typedef struct
 	bool auto_takeoff;									///< The flag for the end of the auto takeoff procedure
 	
 	control_command_t *controls_nav;					///< The pointer to the navigation control structure
+	const control_command_t* control_joystick;			///< The pointer to the joystick control structure
 	const quat_t *qe;									///< The pointer to the attitude quaternion structure
 	mavlink_waypoint_handler_t *waypoint_handler;		///< The pointer to the waypoint handler structure
 	const position_estimator_t *position_estimator;		///< The pointer to the position estimation structure in central_data
@@ -71,7 +72,7 @@ typedef struct
  * \param	state					The pointer to the state structure 
  * \param	mavlink_communication	The pointer to the mavlink communication structure
  */
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, state_t* state, mavlink_communication_t* mavlink_communication);
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, state_t* state, const control_command_t* control_joystick, mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode

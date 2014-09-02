@@ -102,7 +102,7 @@ void central_data_init()
 		.sensor_present = 0b1111110000100111,
 		.sensor_enabled = 0b1111110000100111,
 		.sensor_health = 0b1111110000100111,
-		.remote_active = 1
+		.remote_active = 0
 	};
 	state_init(	&central_data.state,
 				&state_config,
@@ -114,7 +114,7 @@ void central_data_init()
 
 	state_machine_conf_t state_machine_conf =
 	{
-		.state_machine.use_mode_from_remote = true
+		.state_machine.use_mode_from_remote = 0
 	};
 	
 	state_machine_init( &central_data.state_machine,
@@ -170,6 +170,7 @@ void central_data_init()
 					&central_data.position_estimator,
 					&central_data.orca,
 					&central_data.state,
+					&central_data.controls_joystick,
 					&central_data.mavlink_communication);
 	
 	delay_ms(100);
@@ -275,6 +276,7 @@ void central_data_init()
 	
 	joystick_parsing_init(	&central_data.joystick_parsing,
 								&central_data.controls_joystick,
+								&central_data.state,
 								&central_data.mavlink_communication);
 	delay_ms(100);
 	

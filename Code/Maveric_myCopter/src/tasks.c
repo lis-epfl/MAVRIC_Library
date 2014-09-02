@@ -86,7 +86,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
 			
 			// if no waypoints are set, we do position hold therefore the yaw mode is absolute
-			if (((central_data->state.nav_plan_active&&(central_data->state.mav_state != MAV_STATE_STANDBY)))||((central_data->state.mav_state == MAV_STATE_CRITICAL)&&(central_data->waypoint_handler.critical_behavior == FLY_TO_HOME_WP)))
+			if (((central_data->state.nav_plan_active&&(!central_data->navigation.auto_takeoff)))||((central_data->state.mav_state == MAV_STATE_CRITICAL)&&(central_data->waypoint_handler.critical_behavior == FLY_TO_HOME_WP)))
 			{
 				central_data->controls.yaw_mode = YAW_COORDINATED;
 			}
@@ -121,7 +121,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 		}
 		else if ( mode.STABILISE == STABILISE_ON )
 		{
-			if (central_data->state.remote_active)
+			if (central_data->state.remote_active == 1)
 			{
 				remote_controller_get_velocity_vector_from_remote(&central_data->controls);
 			}
@@ -141,7 +141,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 		}
 		else if ( mode.MANUAL == MANUAL_ON )
 		{
-			if (central_data->state.remote_active)
+			if (central_data->state.remote_active == 1)
 			{
 				remote_controller_get_command_from_remote(&central_data->controls);
 			}

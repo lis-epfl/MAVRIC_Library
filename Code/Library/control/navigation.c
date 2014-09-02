@@ -222,7 +222,7 @@ static void navigation_set_auto_takeoff(navigation_t *navigation, mavlink_comman
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, state_t* state, mavlink_communication_t* mavlink_communication)
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, state_t* state, const control_command_t* control_joystick, mavlink_communication_t* mavlink_communication)
 {
 	
 	navigation->controls_nav = controls_nav;
@@ -232,6 +232,7 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->orca = orca;
 	navigation->state = state;
 	navigation->mavlink_stream = &mavlink_communication->mavlink_stream;
+	navigation->control_joystick = control_joystick;
 	
 	navigation->controls_nav->rpy[ROLL] = 0.0f;
 	navigation->controls_nav->rpy[PITCH] = 0.0f;
@@ -277,6 +278,8 @@ task_return_t navigation_update(navigation_t* navigation)
 	mav_mode_t mode_local = navigation->state->mav_mode;
 	mode_local.HIL = HIL_OFF;
 	
+	float thrust;
+	
 	switch (navigation->state->mav_state)
 	{
 		case MAV_STATE_ACTIVE:
@@ -286,7 +289,7 @@ task_return_t navigation_update(navigation_t* navigation)
 				{
 					case MAV_MODE_GPS_NAVIGATION:
 						navigation_waypoint_navigation_handler(navigation);
-					
+						
 						if (navigation->state->nav_plan_active)
 						{
 							navigation_run(navigation->waypoint_handler->waypoint_coordinates,navigation);
@@ -299,7 +302,7 @@ task_return_t navigation_update(navigation_t* navigation)
 
 					case MAV_MODE_POSITION_HOLD:
 						navigation_hold_position_handler(navigation);
-					
+						
 						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
 						break;
 			
@@ -309,7 +312,16 @@ task_return_t navigation_update(navigation_t* navigation)
 			}
 			else
 			{
-				if (remote_controller_get_thrust_from_remote() > -0.7f)
+				if (navigation->state->remote_active == 1)
+				{
+					thrust = remote_controller_get_thrust_from_remote();
+				}
+				else
+				{
+					thrust = navigation->control_joystick->thrust;
+				}
+				
+				if (thrust > -0.7f)
 				{
 					if ((navigation->state->mav_mode.GUIDED == GUIDED_ON)||(navigation->state->mav_mode.AUTO == AUTO_ON))
 					{
