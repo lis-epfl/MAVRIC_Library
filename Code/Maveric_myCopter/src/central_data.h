@@ -98,7 +98,6 @@ typedef struct  {
 	joystick_parsing_t joystick_parsing;						///< The joystick parsing structure
 	
 	stabilise_copter_t stabilisation_copter;					///< The stabilisation structure for copter
-	stabiliser_stack_copter_t stabiliser_stack;					///< The stabilisation stack structure (rates, attitude, velocity, thrust)
 
 	gps_t gps;									///< The GPS structure
 	

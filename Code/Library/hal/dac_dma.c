@@ -133,14 +133,14 @@ void dac_dma_init(int32_t trigger_mode) {
 	///< configure DACIFB
 	if (dacifb_configure(dacifb, &dacifb_opt, FOSC0) == 0) 
 	{
-		print_util_dbg_print("error configuring DAC");
+		print_util_dbg_print("error configuring DAC\r\n");
 		return;
 	}
 	
 	///< Enable and configure channel DACIFB
 	if (dacifb_configure_channel(dacifb, dac_channel_audio, &dacifb_channel_opt, DAC_PRESCALER_CLOCK) ==0) 
 	{
-		print_util_dbg_print("error configuring DAC channel");
+		print_util_dbg_print("error configuring DAC channel\r\n");
 		return;
 	}
   

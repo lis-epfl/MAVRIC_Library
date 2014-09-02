@@ -47,9 +47,9 @@ void servos_init(servos_t* servos, const servos_conf_t* config, const mavlink_st
 
 				case MOTOR_CONTROLLER:
 					servos->servo[i].trim          = 0.0f;
-					servos->servo[i].min           = -1.0f;
+					servos->servo[i].min           = -0.9f;
 					servos->servo[i].max           = 1.0f;
-					servos->servo[i].failsafe      = -1.1f;
+					servos->servo[i].failsafe      = -1.2f;
 					servos->servo[i].repeat_freq   = 200;
 					servos->servo[i].type 		   = MOTOR_CONTROLLER;
 					break;
@@ -80,7 +80,7 @@ void servos_init(servos_t* servos, const servos_conf_t* config, const mavlink_st
 	else
 	{
 		servos->servos_count = 0;
-		print_util_dbg_print("[SERVOS] ERROR! Too many servos");
+		print_util_dbg_print("[SERVOS] ERROR! Too many servos\r\n");
 	}
 }
 

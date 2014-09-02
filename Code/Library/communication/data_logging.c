@@ -3,7 +3,7 @@
  *
  * The MAV'RIC Framework
  *
- * Copyright © 2011-2014
+ * Copyright Â© 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
  */
@@ -112,7 +112,7 @@ static void data_logging_add_header_name(data_logging_t* data_logging)
 		{
 			if (data_logging->debug)
 			{
-				print_util_dbg_print("Error appending header!\r");
+				print_util_dbg_print("Error appending header!\r\n");
 			}
 			init = false;
 		}
@@ -273,9 +273,9 @@ static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param
 		if (data_logging->debug)
 		{
 			data_logging->fr = f_stat(data_logging->name_n_extension,NULL);
-			print_util_dbg_print("Error putting tab or new line character!");
+			print_util_dbg_print("Error putting tab or new line character!\r\n");
 			data_logging_print_error_signification(data_logging);
-			print_util_dbg_print("\r");
+			print_util_dbg_print("\r\n");
 		}
 	}
 }
@@ -341,7 +341,7 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 			default:
-				print_util_dbg_print("Data type not supported!\r");
+				print_util_dbg_print("Data type not supported!\r\n");
 		}
 		if (res == EOF)
 		{
@@ -350,7 +350,7 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 				data_logging->fr = f_stat(data_logging->name_n_extension,NULL);
 				print_util_dbg_print("Error appending parameter! Erro:");
 				data_logging_print_error_signification(data_logging);
-				print_util_dbg_print("\r");
+				print_util_dbg_print("\r\n");
 			}
 		}
 	}
@@ -361,87 +361,87 @@ static void data_logging_print_error_signification(data_logging_t* data_logging)
 	switch(data_logging->fr)
 	{
 		case FR_OK:
-			print_util_dbg_print("FR_OK");
+			print_util_dbg_print("FR_OK\r\n");
 			break;
 			
 		case FR_DISK_ERR:
-			print_util_dbg_print("FR_DISK_ERR");
+			print_util_dbg_print("FR_DISK_ERR\r\n");
 			break;
 			
 		case FR_INT_ERR:
-			print_util_dbg_print("FR_INT_ERR");
+			print_util_dbg_print("FR_INT_ERR\r\n");
 			break;
 			
 		case FR_NOT_READY:
-			print_util_dbg_print("FR_NOT_READY");
+			print_util_dbg_print("FR_NOT_READY\r\n");
 			break;
 			
 		case FR_NO_FILE:
-			print_util_dbg_print("FR_NO_FILE");
+			print_util_dbg_print("FR_NO_FILE\r\n");
 			break;
 			
 		case FR_NO_PATH:
-			print_util_dbg_print("FR_NO_PATH");
+			print_util_dbg_print("FR_NO_PATH\r\n");
 			break;
 			
 		case FR_INVALID_NAME:
-			print_util_dbg_print("FR_INVALID_NAME");
+			print_util_dbg_print("FR_INVALID_NAME\r\n");
 			break;
 			
 		case FR_DENIED:
-			print_util_dbg_print("FR_DENIED");
+			print_util_dbg_print("FR_DENIED\r\n");
 			break;
 			
 		case FR_EXIST:
-			print_util_dbg_print("FR_EXIST");
+			print_util_dbg_print("FR_EXIST\r\n");
 			break;
 			
 		case FR_INVALID_OBJECT:
-			print_util_dbg_print("FR_INVALID_OBJECT");
+			print_util_dbg_print("FR_INVALID_OBJECT\r\n");
 			break;
 			
 		case FR_WRITE_PROTECTED:
-			print_util_dbg_print("FR_WRITE_PROTECTED");
+			print_util_dbg_print("FR_WRITE_PROTECTED\r\n");
 			break;
 			
 		case FR_INVALID_DRIVE:
-			print_util_dbg_print("FR_INVALID_DRIVE");
+			print_util_dbg_print("FR_INVALID_DRIVE\r\n");
 			break;
 			
 		case FR_NOT_ENABLED:
-			print_util_dbg_print("FR_NOT_ENABLED");
+			print_util_dbg_print("FR_NOT_ENABLED\r\n");
 			break;
 			
 		case FR_NO_FILESYSTEM:
-			print_util_dbg_print("FR_NO_FILESYSTEM");
+			print_util_dbg_print("FR_NO_FILESYSTEM\r\n");
 			break;
 			
 		case FR_MKFS_ABORTED:
-			print_util_dbg_print("FR_MKFS_ABORTED");
+			print_util_dbg_print("FR_MKFS_ABORTED\r\n");
 			break;
 			
 		case FR_TIMEOUT:
-			print_util_dbg_print("FR_TIMEOUT");
+			print_util_dbg_print("FR_TIMEOUT\r\n");
 			break;
 			
 		case FR_LOCKED:
-			print_util_dbg_print("FR_LOCKED");
+			print_util_dbg_print("FR_LOCKED\r\n");
 			break;
 			
 		case FR_NOT_ENOUGH_CORE:
-			print_util_dbg_print("FR_NOT_ENOUGH_CORE");
+			print_util_dbg_print("FR_NOT_ENOUGH_CORE\r\n");
 			break;
 			
 		case FR_TOO_MANY_OPEN_FILES:
-			print_util_dbg_print("FR_TOO_MANY_OPEN_FILES");
+			print_util_dbg_print("FR_TOO_MANY_OPEN_FILES\r\n");
 			break;
 			
 		case FR_INVALID_PARAMETER:
-			print_util_dbg_print("FR_INVALID_PARAMETER");
+			print_util_dbg_print("FR_INVALID_PARAMETER\r\n");
 			break;
 			
 		default:
-			print_util_dbg_print("Error unknown");
+			print_util_dbg_print("Error unknown\r\n");
 			break;
 	}
 }
@@ -465,7 +465,7 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] ERROR ! Bad memory allocation.\r");
+		print_util_dbg_print("[DATA LOGGING] ERROR ! Bad memory allocation.\r\n");
 		data_logging->data_logging_set->max_data_logging_count = 0;
 		data_logging->data_logging_set->data_logging_count = 0;
 	}
@@ -495,13 +495,13 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	{
 		if (data_logging->fr == FR_OK)
 		{
-			print_util_dbg_print("SD card mounted\r");
+			print_util_dbg_print("SD card mounted\r\n");
 		}
 		else
 		{
 			print_util_dbg_print("Mounting error:");
 			data_logging_print_error_signification(data_logging);
-			print_util_dbg_print("\r");
+			print_util_dbg_print("\r\n");
 		}
 	}
 }
@@ -527,7 +527,7 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 					print_util_dbg_print_num(data_logging->buffer_name_size,10);
 					print_util_dbg_print(" and it is ");
 					print_util_dbg_print_num(sizeof(file_name),10);
-					print_util_dbg_print("\r");
+					print_util_dbg_print("\r\n");
 				}
 			}
 			else
@@ -538,7 +538,7 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 					print_util_dbg_print_num(data_logging->buffer_name_size,10);
 					print_util_dbg_print(" characters and it is ");
 					print_util_dbg_print_num(sizeof(file_name),10);
-					print_util_dbg_print(" characters.\r");
+					print_util_dbg_print(" characters.\r\n");
 				}
 			}
 		
@@ -546,17 +546,17 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 		
 			print_util_dbg_print("f_open result:");
 			data_logging_print_error_signification(data_logging);
-			print_util_dbg_print("\r");
+			print_util_dbg_print("\r\n");
 		
 			++i;
 		
 			if (data_logging->fr == FR_EXIST)
 			{
-				print_util_dbg_print("File already existing, adding extension.\r");
+				print_util_dbg_print("File already existing, adding extension.\r\n");
 
 				if(snprintf(file_add,data_logging->buffer_add_size,"_%ld",i) >= data_logging->buffer_add_size)
 				{
-					print_util_dbg_print("Error file extension! Extension too long.");
+					print_util_dbg_print("Error file extension! Extension too long.\r\n");
 				}
 			}
 		
@@ -586,7 +586,7 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 			{
 				print_util_dbg_print("File ");
 				print_util_dbg_print(data_logging->name_n_extension);
-				print_util_dbg_print(" opened. \r");
+				print_util_dbg_print(" opened. \r\n");
 			}
 		}
 	}
@@ -629,7 +629,7 @@ task_return_t data_logging_run(data_logging_t* data_logging)
 			{
 				if (data_logging->debug)
 				{
-					print_util_dbg_print("Attempt to close file\r");
+					print_util_dbg_print("Attempt to close file\r\n");
 				}
 				
 				data_logging->fr = f_close(&data_logging->fil);
@@ -642,7 +642,7 @@ task_return_t data_logging_run(data_logging_t* data_logging)
 					if (data_logging->debug)
 					{
 						data_logging->file_opened = false;
-						print_util_dbg_print("File closed\r");
+						print_util_dbg_print("File closed\r\n");
 					}
 				}
 			}
@@ -671,7 +671,7 @@ void data_logging_add_parameter_uint8(data_logging_t* data_logging, uint8_t* val
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r");
+		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
 	}
 }
 
@@ -691,7 +691,7 @@ void data_logging_add_parameter_int8(data_logging_t* data_logging, int8_t* val, 
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r");
+		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
 	}
 }
 
@@ -711,7 +711,7 @@ void data_logging_add_parameter_uint16(data_logging_t* data_logging, uint16_t* v
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r");
+		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
 	}
 }
 
@@ -731,7 +731,7 @@ void data_logging_add_parameter_int16(data_logging_t* data_logging, int16_t* val
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r");
+		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
 	}
 }
 
@@ -751,7 +751,7 @@ void data_logging_add_parameter_uint32(data_logging_t* data_logging, uint32_t* v
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r");
+		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
 	}
 }
 
@@ -771,7 +771,7 @@ void data_logging_add_parameter_int32(data_logging_t* data_logging, int32_t* val
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r");
+		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
 	}
 }
 
@@ -791,7 +791,7 @@ void data_logging_add_parameter_uint64(data_logging_t* data_logging, uint64_t* v
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r");
+		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
 	}
 }
 
@@ -811,7 +811,7 @@ void data_logging_add_parameter_int64(data_logging_t* data_logging, int64_t* val
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r");
+		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
 	}
 }
 
@@ -831,7 +831,7 @@ void data_logging_add_parameter_float(data_logging_t* data_logging, float* val, 
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r");
+		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
 	}
 }
 
@@ -851,6 +851,6 @@ void data_logging_add_parameter_double(data_logging_t* data_logging, double* val
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r");
+		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
 	}
 }

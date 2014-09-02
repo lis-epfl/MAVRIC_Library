@@ -36,14 +36,7 @@ void usb_int_set_usb_conf(usb_config_t* usb_config)
 void usb_int_init(void)
 {
 	stdio_usb_init(NULL);
-	
-	//register_USB_handler();
-	
-	//buffer_init(&(usart_conf[UID].uart_device.transmit_buffer));
-	//buffer_init(&(usart_conf[UID].uart_device.receive_buffer));
-	
 	stdio_usb_enable();
-	
 } 
 
 
@@ -54,7 +47,15 @@ usb_config_t *usb_int_get_usb_handle(void)
 
 void usb_int_send_byte(usb_config_t *usb_conf, uint8_t data) 
 {
-	stdio_usb_putchar(NULL, (int)data);	
+	for(uint8_t i=0;i<3;i++)
+	{
+		if (udi_cdc_is_tx_ready())
+		{
+			stdio_usb_putchar(NULL, (int)data);
+			return;
+		}	
+	}
+	
 }
 
 

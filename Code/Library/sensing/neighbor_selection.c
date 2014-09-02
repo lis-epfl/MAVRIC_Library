@@ -40,7 +40,7 @@ void neighbors_selection_init(neighbors_t *neighbors, position_estimator_t *posi
 	mavlink_message_handler_add_msg_callback( message_handler, &callback );
 	
 		
-	print_util_dbg_print("Neighbor selection initialized.\n");
+	print_util_dbg_print("Neighbor selection initialized.\r\n");
 }
 
 void neighbors_selection_read_message_from_neighbors(neighbors_t *neighbors, mavlink_received_t* rec)

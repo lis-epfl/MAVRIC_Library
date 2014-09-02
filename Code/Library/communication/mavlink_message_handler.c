@@ -129,7 +129,7 @@ void mavlink_message_handler_init(mavlink_message_handler_t* message_handler, co
 	}
 	else
 	{
-		print_util_dbg_print("[MESSAGE HANDLER] ERROR ! Bad memory allocation");
+		print_util_dbg_print("[MESSAGE HANDLER] ERROR ! Bad memory allocation\r\n");
 
 		message_handler->msg_callback_set->max_callback_count = 0;
 		message_handler->msg_callback_set->callback_count = 0;	
@@ -145,7 +145,7 @@ void mavlink_message_handler_init(mavlink_message_handler_t* message_handler, co
 	}
 	else
 	{
-		print_util_dbg_print("[COMMAND HANDLER] ERROR ! Bad memory allocation");
+		print_util_dbg_print("[COMMAND HANDLER] ERROR ! Bad memory allocation\r\n");
 		message_handler->cmd_callback_set->max_callback_count = 0;
 		message_handler->cmd_callback_set->callback_count = 0;		
 	}
@@ -171,7 +171,7 @@ void mavlink_message_handler_add_msg_callback(	mavlink_message_handler_t* 				me
 	}
 	else
 	{
-		print_util_dbg_print("[MESSAGE HANDLER] Error: Cannot add more msg callback");
+		print_util_dbg_print("[MESSAGE HANDLER] Error: Cannot add more msg callback\r\n");
 	}
 }
 
@@ -196,7 +196,7 @@ void mavlink_message_handler_add_cmd_callback(	mavlink_message_handler_t* 				me
 	}
 	else
 	{
-		print_util_dbg_print("[MESSAGE HANDLER] Error: Cannot add more msg callback");
+		print_util_dbg_print("[MESSAGE HANDLER] Error: Cannot add more msg callback\r\n");
 	}
 }
 
@@ -205,13 +205,13 @@ void mavlink_message_handler_msg_default_dbg(mavlink_message_t* msg)
 {
 	if ((msg->sysid == MAVLINK_BASE_STATION_ID)&&(msg->msgid != MAVLINK_MSG_ID_MANUAL_CONTROL))
 	{
-		print_util_dbg_print("\n Received message with ID");
+		print_util_dbg_print("Received message with ID");
 		print_util_dbg_print_num(msg->msgid, 10);
 		print_util_dbg_print(" from system");
 		print_util_dbg_print_num(msg->sysid, 10);
 		print_util_dbg_print(" from component");
 		print_util_dbg_print_num(msg->compid,10);
-		print_util_dbg_print( ".\r");
+		print_util_dbg_print("\r\n");
 	}
 }
 
@@ -236,7 +236,7 @@ void mavlink_message_handler_cmd_default_dbg(mavlink_command_long_t* cmd)
 	print_util_dbg_print_num(cmd->param7,10);
 	print_util_dbg_print("] confirmation: ");
 	print_util_dbg_print_num(cmd->confirmation,10);
-	print_util_dbg_print("\r");
+	print_util_dbg_print("\r\n");
 }
 
 

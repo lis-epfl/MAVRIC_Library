@@ -3,7 +3,7 @@
  *
  * The MAV'RIC Framework
  *
- * Copyright © 2011-2014
+ * Copyright Â© 2011-2014
  *
  * Laboratory of Intelligent Systems, EPFL
  */
@@ -32,7 +32,7 @@ matrix_2x2_t  inv2(matrix_2x2_t m)
 	} 
 	else 
 	{
-		print_util_dbg_print("matrix inversion 2x2 failed!\n");
+		print_util_dbg_print("matrix inversion 2x2 failed!\r\n");
 		return zero_2x2;			
 	}
 }
@@ -54,7 +54,7 @@ matrix_3x3_t inv3(matrix_3x3_t m)
 	} 
 	else 
 	{
-		print_util_dbg_print("matrix inversion 3x3 failed!\n");
+		print_util_dbg_print("matrix inversion 3x3 failed!\r\n");
 		return zero_3x3;
 	}
 }
@@ -181,7 +181,7 @@ matrix_4x4_t inv4(matrix_4x4_t m)
 
     if (det == 0) 
 	{
-		print_util_dbg_print("inversion 4x4 failed");
+		print_util_dbg_print("inversion 4x4 failed\r\n");
         return zero_4x4;
 	}
 

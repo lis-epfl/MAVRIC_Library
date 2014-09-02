@@ -34,8 +34,9 @@ void state_machine_init(state_machine_t *state_machine, const state_machine_conf
 
 	state_machine->use_mode_from_remote = state_machine_conf->state_machine.use_mode_from_remote;
 	
-	print_util_dbg_print("State machine initialise.\r");
+	print_util_dbg_print("State machine initialise.\r\n");
 }
+
 
 void state_machine_update(state_machine_t* state_machine)
 {

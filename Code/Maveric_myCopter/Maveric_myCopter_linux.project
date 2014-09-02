@@ -237,7 +237,6 @@
       <File Name="src/config/conf_spi_master.h"/>
       <File Name="src/config/conf_clock.h"/>
       <File Name="src/config/conf_board.h"/>
-      <File Name="src/config/conf_imu_rev3.h"/>
       <File Name="src/config/conf_sleepmgr.h"/>
       <File Name="src/config/conf_platform.h"/>
       <File Name="src/config/conf_twim.h"/>
@@ -250,6 +249,15 @@
         <File Name="src/config/MAVsettings/MAV004_conf_imu_rev4.h"/>
         <File Name="src/config/MAVsettings/MAV002_conf_imu_rev4.h"/>
         <File Name="src/config/MAVsettings/MAV101_conf_imu_rev4.h"/>
+        <File Name="src/config/MAVsettings/MAV001_conf_imu_rev4.h"/>
+        <File Name="src/config/MAVsettings/MAV003_conf_imu_rev4.h"/>
+        <File Name="src/config/MAVsettings/MAV005_conf_imu_rev4.h"/>
+        <File Name="src/config/MAVsettings/MAV051_conf_imu_rev4.h"/>
+        <File Name="src/config/MAVsettings/MAV102_conf_imu_rev4.h"/>
+        <File Name="src/config/MAVsettings/MAV201_conf_imu_rev4.h"/>
+        <File Name="src/config/MAVsettings/MAV202_conf_imu_rev4.h"/>
+        <File Name="src/config/MAVsettings/MAV203_conf_imu_rev4.h"/>
+        <File Name="src/config/MAVsettings/MAV204_conf_imu_rev4.h"/>
       </VirtualDirectory>
     </VirtualDirectory>
     <File Name="src/asf.h"/>
@@ -558,16 +566,6 @@
         <File Name="Library/mavlink/include/protocol.h"/>
       </VirtualDirectory>
     </VirtualDirectory>
-    <VirtualDirectory Name="tests">
-      <File Name="Library/tests/test_maths.h"/>
-      <File Name="Library/tests/all_tests.h"/>
-      <File Name="Library/tests/test_small_matrix.c"/>
-      <File Name="Library/tests/test_maths.c"/>
-      <File Name="Library/tests/test_small_matrix.h"/>
-      <File Name="Library/tests/test_utils.h"/>
-      <File Name="Library/tests/test_quick_trig.c"/>
-      <File Name="Library/tests/test_quick_trig.h"/>
-    </VirtualDirectory>
     <VirtualDirectory Name="communication">
       <File Name="Library/communication/mavlink_stream.c"/>
       <File Name="Library/communication/onboard_parameters.h"/>
@@ -690,15 +688,19 @@
       </VirtualDirectory>
       <File Name="Library/hal/usb_int.c"/>
       <File Name="Library/hal/usb_int.h"/>
+      <VirtualDirectory Name="fat_fs">
+        <File Name="Library/hal/fat_fs/diskio.c"/>
+        <File Name="Library/hal/fat_fs/diskio.h"/>
+        <File Name="Library/hal/fat_fs/ff.c"/>
+        <File Name="Library/hal/fat_fs/ff.h"/>
+        <File Name="Library/hal/fat_fs/ffconf.h"/>
       <File Name="Library/hal/fat_fs/integer.h"/>
-      <File Name="Library/hal/fat_fs/ffconf.h"/>
-      <File Name="Library/hal/fat_fs/ff.h"/>
-      <File Name="Library/hal/fat_fs/ff.c"/>
-      <File Name="Library/hal/fat_fs/diskio.h"/>
-      <File Name="Library/hal/fat_fs/diskio.c"/>
+        <VirtualDirectory Name="option">
+          <File Name="Library/hal/fat_fs/option/cc932.c"/>
+          <File Name="Library/hal/fat_fs/option/syscall.c"/>
       <File Name="Library/hal/fat_fs/option/unicode.c"/>
-      <File Name="Library/hal/fat_fs/option/syscall.c"/>
-      <File Name="Library/hal/fat_fs/option/cc932.c"/>
+    </VirtualDirectory>
+      </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="runtime">
       <File Name="Library/runtime/scheduler.h"/>

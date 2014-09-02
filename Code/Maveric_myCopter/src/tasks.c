@@ -242,16 +242,6 @@ task_return_t tasks_run_barometer_update(void* arg)
 	return TASK_RUN_SUCCESS;
 }
 
-
-//task_return_t sonar_update(void* arg)
-//{
-	// TODO: add the simulation sonar task
-	//central_data_t* central_data = central_data_get_pointer_to_struct();
-	//i2cxl_sonar_update(&central_data->i2cxl_sonar);
-	//
-	//return TASK_RUN_SUCCESS;
-//}
-
 task_return_t tasks_led_toggle(void* arg)
 {
 	LED_Toggle(LED1);
