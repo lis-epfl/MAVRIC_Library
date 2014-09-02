@@ -26,7 +26,6 @@
 #include "analog_monitor.h"
 #include "tasks.h"
 #include "mavlink_waypoint_handler.h"
-#include "neighbor_selection.h"
 #include "analog_monitor.h"
 #include "state.h"
 #include "position_estimation.h"

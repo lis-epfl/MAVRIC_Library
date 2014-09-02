@@ -49,13 +49,6 @@ static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_po
 static void navigation_set_speed_command(float rel_pos[], navigation_t* navigation);
 
 /**
- * \brief					Performs velocity-based collision avoidance strategy
- *
- * \param	navigation	The structure of navigation data
- */
-static void navigation_collision_avoidance(navigation_t* navigation);
-
-/**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
  *
  * \param	waypoint_input		Destination waypoint in local coordinate system
@@ -155,41 +148,15 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
 }
 
-static void navigation_collision_avoidance(navigation_t* navigation)
-{
-	float new_velocity[3];
-	float rel_heading;
-	
-	// Implement other velocity-based collision avoidance strategy here
-	orca_compute_new_velocity(navigation->orca, navigation->controls_nav->tvel, new_velocity);
-	
-	if (((maths_f_abs(new_velocity[X])<=1.0f)&&(maths_f_abs(new_velocity[Y])<=1.0f))||((maths_f_abs(new_velocity[X])<=5.0f)&&(maths_f_abs(new_velocity[Y])<=5.0f)&&(maths_f_abs(new_velocity[Z])>=3.0f)))
-	{
-		rel_heading = 0.0f;
-	}
-		
-	rel_heading = maths_calc_smaller_angle(atan2(new_velocity[Y],new_velocity[X]) - navigation->position_estimator->local_position.heading);
-	
-	navigation->controls_nav->tvel[X] = new_velocity[X];
-	navigation->controls_nav->tvel[Y] = new_velocity[Y];
-	navigation->controls_nav->tvel[Z] = new_velocity[Z];
-	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
-}
-
 static void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigation)
 {
 	float rel_pos[3];
 	
 	// Control in translational speed of the platform
-	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos,
+	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(	waypoint_input.pos,
 																					rel_pos,
 																					navigation->position_estimator->local_position.pos);
 	navigation_set_speed_command(rel_pos, navigation);
-	
-	if (navigation->state->collision_avoidance)
-	{
-		navigation_collision_avoidance(navigation);
-	}
 	
 	navigation->controls_nav->theading=waypoint_input.heading;
 }
@@ -198,14 +165,13 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, orca_t* orca, state_t* state, const mavlink_stream_t* mavlink_stream)
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const mavlink_stream_t* mavlink_stream)
 {
 	
 	navigation->controls_nav = controls_nav;
 	navigation->qe = qe;
 	navigation->waypoint_handler = waypoint_handler;
 	navigation->position_estimator = position_estimator;
-	navigation->orca = orca;
 	navigation->state = state;
 	navigation->mavlink_stream = mavlink_stream;
 	
@@ -308,22 +274,6 @@ task_return_t navigation_update(navigation_t* navigation)
 	}
 	
 	navigation->mode = navigation->state->mav_mode.byte;
-	
-	return TASK_RUN_SUCCESS;
-}
-
-task_return_t navigation_send_collision_avoidance_status(navigation_t *navigation)
-{
-	mavlink_message_t msg;
-	
-	mavlink_msg_named_value_int_pack(	navigation->mavlink_stream->sysid,
-										navigation->mavlink_stream->compid,
-										&msg,
-										time_keeper_get_millis(),
-										"Coll_Avoidance",
-										navigation->state->collision_avoidance	);
-	
-	mavlink_stream_send(navigation->mavlink_stream,&msg);
 	
 	return TASK_RUN_SUCCESS;
 }

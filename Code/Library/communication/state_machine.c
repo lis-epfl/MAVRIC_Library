@@ -67,15 +67,6 @@ void state_machine_rc_user_channels(state_machine_t* state_machine)
 		remote_controller_get_channel_mode(&state_machine->channel_switches);
 	}
 	
-	if ((spektrum_satellite_get_neutral(RC_TRIM_P3) * RC_SCALEFACTOR) > 0.0f)
-	{
-		state_machine->state->collision_avoidance = true;
-	}
-	else
-	{
-		state_machine->state->collision_avoidance = false;
-	}
-	
 	remote_controller_get_motor_state(&state_machine->motor_state);
 }
 

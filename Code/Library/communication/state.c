@@ -142,8 +142,6 @@ void state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	
 	state->in_the_air = false;
 	
-	state->collision_avoidance = false;
-	
 	state->reset_position = false;
 	
 	// Add callbacks for onboard parameters requests
