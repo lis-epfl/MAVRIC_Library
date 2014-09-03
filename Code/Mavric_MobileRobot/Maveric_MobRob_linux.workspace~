@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeLite_Workspace Name="Maveric_MobRob_linux" Database="Maveric_MobRob_linux.tags">
+  <Project Name="Maveric_MobRob_linux" Path="Maveric_MobRob_linux.project" Active="Yes"/>
+  <BuildMatrix>
+    <WorkspaceConfiguration Name="Debug" Selected="yes">
+      <Project Name="Maveric_MobRob_linux" ConfigName="Debug"/>
+      <Project Name="Maveric_MobRob_linux" ConfigName="Debug"/>
+    </WorkspaceConfiguration>
+  </BuildMatrix>
+</CodeLite_Workspace>
