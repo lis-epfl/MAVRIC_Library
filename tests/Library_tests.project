@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CodeLite_Project Name="Library_tests" InternalType="Console">
+  <Plugins>
+    <Plugin Name="qmake">
+      <![CDATA[00010001N0005Debug000000000000]]>
+    </Plugin>
+  </Plugins>
+  <VirtualDirectory Name="mavlink">
+    <VirtualDirectory Name="include">
+      <VirtualDirectory Name="common">
+        <File Name="../mavlink/include/common/mavlink_msg_gps_raw_int.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_set_quad_swarm_roll_pitch_yaw_thrust.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_vision_speed_estimate.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_hil_controls.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_command_ack.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_vision_position_estimate.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_roll_pitch_yaw_thrust_setpoint.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_request_data_stream.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_mission_request_partial_list.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_file_transfer_dir_list.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_mission_current.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_safety_set_allowed_area.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_mission_clear_all.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_set_mode.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_omnidirectional_flow.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_manual_setpoint.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_param_value.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_scaled_pressure.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_ping.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_set_quad_swarm_led_roll_pitch_yaw_thrust.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_data_stream.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_change_operator_control_ack.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_set_gps_global_origin.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_scaled_imu.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_setpoint_6dof.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_state_correction.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_nav_controller_output.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_manual_control.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_local_position_ned_system_global_offset.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_local_position_ned.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_vicon_position_estimate.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_file_transfer_res.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_set_roll_pitch_yaw_speed_thrust.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_gps_status.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_param_request_list.h"/>
+        <File Name="../mavlink/include/common/testsuite.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_set_roll_pitch_yaw_thrust.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_local_position_setpoint.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_safety_allowed_area.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_hil_state.h"/>
+        <File Name="../mavlink/include/common/common.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_vfr_hud.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_auth_key.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_mission_count.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_heartbeat.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_debug.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_hil_rc_inputs_raw.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_named_value_int.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_set_quad_motors_setpoint.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_mission_item.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_set_global_position_setpoint_int.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_mission_set_current.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_attitude_quaternion.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_command_long.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_servo_output_raw.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_optical_flow.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_highres_imu.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_global_vision_position_estimate.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_file_transfer_start.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_raw_imu.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_change_operator_control.h"/>
+        <File Name="../mavlink/include/common/version.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_rc_channels_raw.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_param_set.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_mission_request.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_battery_status.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_mission_write_partial_list.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_statustext.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_attitude.h"/>
+        <File Name="../mavlink/include/common/mavlink.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_debug_vect.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_rc_channels_override.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_mission_request_list.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_param_request_read.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_global_position_setpoint_int.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_rc_channels_scaled.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_system_time.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_setpoint_8dof.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_mission_item_reached.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_mission_ack.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_set_local_position_setpoint.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_gps_global_origin.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_named_value_float.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_sys_status.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_memory_vect.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_raw_pressure.h"/>
+        <File Name="../mavlink/include/common/mavlink_msg_global_position_int.h"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="maveric2">
+        <File Name="../mavlink/include/maveric2/mavlink_msg_gps_raw_int.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_set_quad_swarm_roll_pitch_yaw_thrust.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_vision_speed_estimate.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_hil_controls.h"/>
+        <File Name="../mavlink/include/maveric2/maveric2.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_command_ack.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_vision_position_estimate.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_roll_pitch_yaw_thrust_setpoint.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_request_data_stream.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_mission_request_partial_list.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_file_transfer_dir_list.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_mission_current.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_safety_set_allowed_area.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_radio_status.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_mission_clear_all.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_set_mode.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_omnidirectional_flow.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_hil_state_quaternion.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_manual_setpoint.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_radar_tracked_target.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_param_value.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_scaled_pressure.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_ping.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_set_quad_swarm_led_roll_pitch_yaw_thrust.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_data_stream.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_change_operator_control_ack.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_set_gps_global_origin.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_scaled_imu.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_setpoint_6dof.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_state_correction.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_nav_controller_output.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_manual_control.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_local_position_ned_system_global_offset.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_local_position_ned.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_vicon_position_estimate.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_file_transfer_res.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_set_roll_pitch_yaw_speed_thrust.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_gps_status.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_raw_data_stream.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_param_request_list.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_hil_gps.h"/>
+        <File Name="../mavlink/include/maveric2/testsuite.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_set_roll_pitch_yaw_thrust.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_local_position_setpoint.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_hil_sensor.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_safety_allowed_area.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_hil_state.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_radar_velocity_hist.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_vfr_hud.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_auth_key.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_mission_count.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_heartbeat.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_debug.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_hil_rc_inputs_raw.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_named_value_int.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_set_quad_motors_setpoint.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_mission_item.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_set_global_position_setpoint_int.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_mission_set_current.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_attitude_quaternion.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_command_long.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_servo_output_raw.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_optical_flow.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_highres_imu.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_global_vision_position_estimate.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_file_transfer_start.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_raw_imu.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_change_operator_control.h"/>
+        <File Name="../mavlink/include/maveric2/version.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_rc_channels_raw.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_param_set.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_mission_request.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_battery_status.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_mission_write_partial_list.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_statustext.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_attitude.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_debug_vect.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_rc_channels_override.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_mission_request_list.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_param_request_read.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_global_position_setpoint_int.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_rc_channels_scaled.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_system_time.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_setpoint_8dof.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_sim_state.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_hil_optical_flow.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_mission_item_reached.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_mission_ack.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_raw_data_stream_descriptor.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_set_local_position_setpoint.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_gps_global_origin.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_named_value_float.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_sys_status.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_memory_vect.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_raw_pressure.h"/>
+        <File Name="../mavlink/include/maveric2/mavlink_msg_global_position_int.h"/>
+      </VirtualDirectory>
+      <VirtualDirectory Name="maveric_old">
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_gps_raw_int.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_set_quad_swarm_roll_pitch_yaw_thrust.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_vision_speed_estimate.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_hil_controls.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_command_ack.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_vision_position_estimate.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_roll_pitch_yaw_thrust_setpoint.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_request_data_stream.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_mission_request_partial_list.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_file_transfer_dir_list.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_mission_current.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_safety_set_allowed_area.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_mission_clear_all.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_set_mode.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_omnidirectional_flow.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_manual_setpoint.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_radar_tracked_target.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_param_value.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_scaled_pressure.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_ping.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_set_quad_swarm_led_roll_pitch_yaw_thrust.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_data_stream.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_change_operator_control_ack.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_set_gps_global_origin.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_scaled_imu.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_setpoint_6dof.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_state_correction.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_nav_controller_output.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_manual_control.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_local_position_ned_system_global_offset.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_local_position_ned.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_vicon_position_estimate.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_file_transfer_res.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_set_roll_pitch_yaw_speed_thrust.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_gps_status.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_param_request_list.h"/>
+        <File Name="../mavlink/include/maveric_old/testsuite.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_set_roll_pitch_yaw_thrust.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_local_position_setpoint.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_safety_allowed_area.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_hil_state.h"/>
+        <File Name="../mavlink/include/maveric_old/maveric.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_radar_velocity_hist.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_vfr_hud.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_auth_key.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_mission_count.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_heartbeat.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_debug.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_hil_rc_inputs_raw.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_named_value_int.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_set_quad_motors_setpoint.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_mission_item.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_set_global_position_setpoint_int.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_mission_set_current.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_attitude_quaternion.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_radar_raw_data.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_command_long.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_servo_output_raw.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_optical_flow.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_highres_imu.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_global_vision_position_estimate.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_file_transfer_start.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_raw_imu.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_change_operator_control.h"/>
+        <File Name="../mavlink/include/maveric_old/version.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_rc_channels_raw.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_param_set.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_mission_request.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_battery_status.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_mission_write_partial_list.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_statustext.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_attitude.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_debug_vect.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_rc_channels_override.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_mission_request_list.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_param_request_read.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_global_position_setpoint_int.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_rc_channels_scaled.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_system_time.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_setpoint_8dof.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_mission_item_reached.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_mission_ack.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_set_local_position_setpoint.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_gps_global_origin.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_named_value_float.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_sys_status.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_memory_vect.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_raw_pressure.h"/>
+        <File Name="../mavlink/include/maveric_old/mavlink_msg_global_position_int.h"/>
+      </VirtualDirectory>
+      <File Name="../mavlink/include/checksum.h"/>
+      <File Name="../mavlink/include/mavlink_types.h"/>
+      <File Name="../mavlink/include/mavlink_helpers.h"/>
+      <File Name="../mavlink/include/protocol.h"/>
+    </VirtualDirectory>
+  </VirtualDirectory>
+  <Description/>
+  <Dependencies/>
+  <VirtualDirectory Name="util">
+    <File Name="../util/buffer.c"/>
+    <File Name="../util/coord_conventions.c"/>
+    <File Name="../util/sinus.c"/>
+    <File Name="../util/sinus.h"/>
+    <File Name="../util/buffer.h"/>
+    <File Name="../util/quick_trig.h"/>
+    <File Name="../util/print_util.c"/>
+    <File Name="../util/linear_algebra.h"/>
+    <File Name="../util/quick_trig.c"/>
+    <File Name="../util/print_util.h"/>
+    <File Name="../util/streams.h"/>
+    <File Name="../util/maths.h"/>
+    <File Name="../util/math_util.h"/>
+    <File Name="../util/small_matrix.h"/>
+    <File Name="../util/coord_conventions.h"/>
+    <File Name="../util/print_util_print_matrix.h"/>
+    <File Name="../util/linear_algebra.c"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="hal_emu">
+    <File Name="../hal_emu/bmp085.h"/>
+    <File Name="../hal_emu/radar_module_driver.h"/>
+    <File Name="../hal_emu/remote_controller.h"/>
+    <File Name="../hal_emu/analog_monitor.h"/>
+    <File Name="../hal_emu/radar_module_driver.c"/>
+    <File Name="../hal_emu/analog_monitor.c"/>
+    <File Name="../hal_emu/itg3200.h"/>
+    <File Name="../hal_emu/servo_pwm.h"/>
+    <File Name="../hal_emu/udp_stream.h"/>
+    <File Name="../hal_emu/#include <stdbool.h>"/>
+    <File Name="../hal_emu/gps_ublox.h"/>
+    <File Name="../hal_emu/time_keeper.c"/>
+    <File Name="../hal_emu/led.h"/>
+    <File Name="../hal_emu/bmp085.c"/>
+    <File Name="../hal_emu/joystick_rc.h"/>
+    <File Name="../hal_emu/flashc.h"/>
+    <File Name="../hal_emu/servo_pwm.c"/>
+    <File Name="../hal_emu/compass_hmc5883l.c"/>
+    <File Name="../hal_emu/joystick.h"/>
+    <File Name="../hal_emu/hmc5883l.h"/>
+    <File Name="../hal_emu/delay.h"/>
+    <File Name="../hal_emu/itg3200.c"/>
+    <File Name="../hal_emu/adxl345_driver.h"/>
+    <File Name="../hal_emu/led.c"/>
+    <File Name="../hal_emu/lsm330dlc.h"/>
+    <File Name="../hal_emu/lsm330dlc_driver.c"/>
+    <File Name="../hal_emu/adxl345_driver.c"/>
+    <File Name="../hal_emu/joystick_rc.c"/>
+    <File Name="../hal_emu/joystick.c"/>
+    <File Name="../hal_emu/time_keeper.h"/>
+    <File Name="../hal_emu/udp_stream.c"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="communication">
+    <File Name="../communication/mavlink_stream.h"/>
+    <File Name="../communication/mavlink_bridge.h"/>
+    <File Name="../communication/onboard_parameters.h"/>
+    <File Name="../communication/mavlink_stream.c"/>
+    <File Name="../communication/onboard_parameters.c"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="tests">
+    <File Name="all_tests.h"/>
+    <File Name="test_maths.c"/>
+    <File Name="test_maths.h"/>
+    <File Name="main.c"/>
+    <VirtualDirectory Name="config">
+      <File Name="config/conf_sim_model.h"/>
+      <File Name="config/conf_stabilisation_copter.h"/>
+      <File Name="config/conf_platform.h"/>
+      <File Name="config/mavlink_actions.h"/>
+      <File Name="config/central_data.c"/>
+      <File Name="config/central_data.h"/>
+      <File Name="config/boardsupport.h"/>
+      <File Name="config/conf_stabilisation_hybrid.h"/>
+      <File Name="config/boardsupport.c"/>
+      <File Name="test_small_matrix.h"/>
+    </VirtualDirectory>
+    <File Name="test_small_matrix.c"/>
+    <File Name="test_quick_trig.c"/>
+    <File Name="test_quick_trig.h"/>
+    <File Name="test_utils.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="sensing">
+    <File Name="../sensing/simulation.h"/>
+    <File Name="../sensing/qfilter.h"/>
+    <File Name="../sensing/qfilter.c"/>
+    <File Name="../sensing/position_estimation.c"/>
+    <File Name="../sensing/position_estimation.h"/>
+    <File Name="../sensing/simulation.c"/>
+    <File Name="../sensing/imu.h"/>
+    <File Name="../sensing/imu.c"/>
+    <File Name="../sensing/gps_ublox.c"/>
+    <File Name="../sensing/gps_ublox.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="control">
+    <File Name="../control/adaptive_parameter.h"/>
+    <File Name="../control/stabilisation_copter.h"/>
+    <File Name="../control/stabilisation_copter.c"/>
+    <File Name="../control/stabilisation_hybrid.h"/>
+    <File Name="../control/adaptive_parameter.c"/>
+    <File Name="../control/stabilisation.h"/>
+    <File Name="../control/stabilisation.c"/>
+    <File Name="../control/stabilisation_hybrid.c"/>
+    <File Name="../control/pid_control.c"/>
+    <File Name="../control/pid_control.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="runtime">
+    <File Name="../runtime/scheduler.h"/>
+    <File Name="../runtime/scheduler.c"/>
+  </VirtualDirectory>
+  <Settings Type="Executable">
+    <Configuration Name="Debug" CompilerType="gnu gcc" DebuggerType="GNU gdb debugger" Type="Executable" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="-g -std=c99 -lm" Required="yes" PreCompiledHeader="">
+        <IncludePath Value="."/>
+        <IncludePath Value="../util"/>
+        <IncludePath Value="../communication"/>
+        <IncludePath Value="../control"/>
+        <IncludePath Value="../hal_emu"/>
+        <IncludePath Value="../mavlink"/>
+        <IncludePath Value="../runtime"/>
+        <IncludePath Value="../sensing"/>
+        <IncludePath Value="config"/>
+        <IncludePath Value=".."/>
+      </Compiler>
+      <Linker Options="-lm" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" WorkingDirectory="." PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <Configuration Name="Release" CompilerType="gnu gcc" DebuggerType="GNU gdb debugger" Type="" BuildCmpWithGlobalSettings="append" BuildLnkWithGlobalSettings="append" BuildResWithGlobalSettings="append">
+      <Compiler Options="" Required="yes" PreCompiledHeader="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="-O2" Required="yes"/>
+      <ResourceCompiler Options="" Required="no"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes"/>
+      <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;"/>
+      <Debugger IsRemote="no" RemoteHostName="" RemoteHostPort="" DebuggerPath="">
+        <PostConnectCommands/>
+        <StartupCommands/>
+      </Debugger>
+      <PreBuild/>
+      <PostBuild/>
+      <CustomBuild Enabled="no">
+        <RebuildCommand/>
+        <CleanCommand/>
+        <BuildCommand/>
+        <PreprocessFileCommand/>
+        <SingleFileCommand/>
+        <MakefileGenerationCommand/>
+        <ThirdPartyToolName>None</ThirdPartyToolName>
+        <WorkingDirectory/>
+      </CustomBuild>
+      <AdditionalRules>
+        <CustomPostBuild/>
+        <CustomPreBuild/>
+      </AdditionalRules>
+    </Configuration>
+    <GlobalSettings>
+      <Compiler Options="">
+        <IncludePath Value="."/>
+      </Compiler>
+      <Linker Options="">
+        <LibraryPath Value="."/>
+      </Linker>
+      <ResourceCompiler Options=""/>
+    </GlobalSettings>
+  </Settings>
+</CodeLite_Project>
