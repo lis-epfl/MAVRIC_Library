@@ -364,7 +364,8 @@ void central_data_init()
 	};
 	remote_init( 	&central_data.remote, 
 					&remote_config, 
-					&central_data.mavlink_communication.mavlink_stream );
+					&central_data.mavlink_communication.mavlink_stream,
+					&central_data.mavlink_communication.message_handler );
 
 	// data_logging_conf_t data_logging_conf = 
 	// {
