@@ -117,13 +117,6 @@ static void data_logging_log_parameters(data_logging_t* data_logging);
 static void data_logging_print_error_signification(data_logging_t* data_logging);
 
 /**
- * \brief	Close and reopen a file each LOGGING_INTERVAL_SEC seconds to save what was already recorded
- *
- * \param	data_logging			The pointer to the data logging structure
- */
-static void data_logging_close_n_reopen(data_logging_t* data_logging);
-
-/**
  * \brief	Seek the end of an open file to append
  *
  * \param	data_logging			The pointer to the data logging structure
@@ -483,33 +476,6 @@ static void data_logging_print_error_signification(data_logging_t* data_logging)
 	}
 }
 
-static void data_logging_close_n_reopen(data_logging_t* data_logging)
-{
-	uint32_t time_diff = data_logging->time_ms - data_logging->logging_time;
-	
-	if (time_diff >= (LOGGING_INTERVAL_SEC * 1000))
-	{
-		data_logging->logging_time = data_logging->time_ms;
-		
-		print_util_dbg_print("Closing the file.\r\n");
-		print_util_dbg_print_num(time_keeper_get_millis(),10);
-		f_close(&data_logging->fil);
-		data_logging->fr = f_open(&data_logging->fil, data_logging->name_n_extension, FA_WRITE | FA_OPEN_EXISTING);
-		print_util_dbg_print_num(time_keeper_get_millis(),10);
-		print_util_dbg_print("Reopening the file.\r\n");
-		
-		if (data_logging->fr == FR_OK)
-		{
-			data_logging_f_seek(data_logging);
-		}
-		else
-		{
-			print_util_dbg_print("Error closing n reopening! Error:");
-			data_logging_print_error_signification(data_logging);
-		}
-	}
-}
-
 static void data_logging_f_seek(data_logging_t* data_logging)
 {
 	/* Seek to end of the file to append data */
@@ -673,8 +639,6 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 			if (data_logging->file_init)
 			{
 				data_logging->time_ms = time_keeper_get_millis();
-				
-				data_logging_close_n_reopen(data_logging);
 				
 				data_logging_log_parameters(data_logging);
 			}

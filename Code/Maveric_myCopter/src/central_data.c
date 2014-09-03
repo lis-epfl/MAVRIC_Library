@@ -125,7 +125,7 @@ void central_data_init()
 		.sensor_present = 0b1111110000100111,
 		.sensor_enabled = 0b1111110000100111,
 		.sensor_health = 0b1111110000100111,
-		.remote_active = 1
+		.remote_active = 0
 	};
 	state_init(	&central_data.state,
 				&state_config,
@@ -137,7 +137,7 @@ void central_data_init()
 
 	state_machine_conf_t state_machine_conf =
 	{
-		.state_machine.use_mode_from_remote = 1
+		.state_machine.use_mode_from_remote = 0
 	};
 	
 	state_machine_init( &central_data.state_machine,
