@@ -116,13 +116,6 @@ typedef struct
 } mav_mode_bitfield_t;
 
 
-// typedef union
-// {
-// 	uint8_t byte;
-// 	mav_mode_bitfield_t flags;
-// } mav_mode_t;
-
-
 typedef union
 {
 	uint8_t byte;
@@ -177,7 +170,7 @@ typedef enum
 	MAV_MODE_ATTITUDE_CONTROL = 192,
 	MAV_MODE_VELOCITY_CONTROL = 208,
 	MAV_MODE_POSITION_HOLD = 216,
-	MAV_MODE_GPS_NAVIGATION = 148
+	MAV_MODE_GPS_NAVIGATION = 156
 } mav_mode_predefined_t;
 
 

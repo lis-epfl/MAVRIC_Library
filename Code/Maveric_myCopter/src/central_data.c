@@ -72,7 +72,7 @@ void central_data_init()
 	// Init main sheduler
 	scheduler_conf_t scheduler_config =
 	{
-		.max_task_count = 10,
+		.max_task_count = 15,
 		.schedule_strategy = ROUND_ROBIN,
 		.debug = true
 	};
@@ -118,13 +118,14 @@ void central_data_init()
 	{
 		.mav_mode = { .byte = MAV_MODE_SAFE },
 		.mav_state = MAV_STATE_BOOT,
-		 .simulation_mode = HIL_OFF,
-		//.simulation_mode = HIL_ON,
+		// .simulation_mode = HIL_OFF,
+		.simulation_mode = HIL_ON,
 		.autopilot_type = MAV_TYPE_QUADROTOR,
 		.autopilot_name = MAV_AUTOPILOT_GENERIC,
 		.sensor_present = 0b1111110000100111,
 		.sensor_enabled = 0b1111110000100111,
-		.sensor_health = 0b1111110000100111
+		.sensor_health = 0b1111110000100111,
+		.remote_active = 0
 	};
 	state_init(	&central_data.state,
 				&state_config,
@@ -134,7 +135,13 @@ void central_data_init()
 	
 	delay_ms(100);
 
+	state_machine_conf_t state_machine_conf =
+	{
+		.state_machine.use_mode_from_remote = 0
+	};
+	
 	state_machine_init( &central_data.state_machine,
+						&state_machine_conf,
 						&central_data.state,
 						&central_data.waypoint_handler,
 						&central_data.sim_model,
@@ -185,7 +192,8 @@ void central_data_init()
 					&central_data.waypoint_handler,
 					&central_data.position_estimator,
 					&central_data.state,
-					&central_data.mavlink_communication.mavlink_stream);
+					&central_data.controls_joystick,
+					&central_data.mavlink_communication);
 	
 	delay_ms(100);
 
@@ -214,7 +222,7 @@ void central_data_init()
 								&central_data.ahrs,
 								&central_data.position_estimator,
 								&central_data.servos,
-								&central_data.mavlink_communication);
+								&central_data.mavlink_communication.mavlink_stream);
 	
 	delay_ms(100);
 
@@ -271,9 +279,15 @@ void central_data_init()
 	
 	delay_ms(100);
 	
+	joystick_parsing_init(	&central_data.joystick_parsing,
+								&central_data.controls_joystick,
+								&central_data.state,
+								&central_data.mavlink_communication);
+	delay_ms(100);
+	
 	// Init sonar
 	// i2cxl_sonar_init(&central_data.i2cxl_sonar);
-
+	
 	// Init P^2 attitude controller
 	attitude_controller_p2_conf_t attitude_controller_p2_config =
 	{
@@ -291,7 +305,7 @@ void central_data_init()
 									&central_data.command.attitude,
 									&central_data.command.torque,
 									&central_data.ahrs );
-
+	
 	// Init servo mixing
 	servo_mix_quadcopter_diag_conf_t servo_mix_config =
 	{
@@ -367,15 +381,15 @@ void central_data_init()
 					&central_data.mavlink_communication.mavlink_stream,
 					&central_data.mavlink_communication.message_handler );
 
-	// data_logging_conf_t data_logging_conf = 
-	// {
-	// 	.debug = true,
-	// 	.max_data_logging_count = MAX_DATA_LOGGING_COUNT,
-	// 	.log_data = 0 // 1: log data, 0: no log data
-	// };
+	data_logging_conf_t data_logging_conf = 
+	{
+		.debug = true,
+		.max_data_logging_count = MAX_DATA_LOGGING_COUNT,
+		.log_data = 0 // 1: log data, 0: no log data
+	};
 	
-	// data_logging_init(  &central_data.data_logging,
-	// 					&data_logging_conf);
+	data_logging_init(  &central_data.data_logging,
+						&data_logging_conf);
 }
 
 central_data_t* central_data_get_pointer_to_struct(void)

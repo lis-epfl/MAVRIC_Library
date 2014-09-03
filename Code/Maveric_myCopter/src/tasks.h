@@ -121,6 +121,11 @@ task_return_t sonar_update(void* arg);
  */
 task_return_t adc_update(void* arg);
 
+/**
+ * \brief            Run the LED toggle task
+ */
+task_return_t tasks_led_toggle(void* arg);
+
 #ifdef __cplusplus
 }
 #endif

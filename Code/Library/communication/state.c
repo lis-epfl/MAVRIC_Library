@@ -42,6 +42,7 @@
 
 #include "state.h"
 #include "print_util.h"
+#include "delay.h"
 
 
 //------------------------------------------------------------------------------
@@ -51,17 +52,16 @@
 /**
  * \brief						Set the state and the mode of the vehicle
  *
- * \param	state		The pointer to the state structure
+ * \param	state				The pointer to the state structure
  * \param	rec					The received mavlink message structure
  */
 static void state_set_mav_mode(state_t* state, mavlink_received_t* rec);
-
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
+void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
 {
 	mavlink_set_mode_t packet;
 	
@@ -77,53 +77,29 @@ static void state_set_mav_mode(state_t* state, mavlink_received_t* rec)
 		print_util_dbg_print_num(packet.custom_mode,10);
 		print_util_dbg_print("\r\n");
 
-		if (state->simulation_mode == HIL_OFF)
+		mav_mode_t new_mode;
+		new_mode.byte = packet.base_mode;
+		
+		state->mav_mode.ARMED = new_mode.ARMED;
+		state->mav_mode.MANUAL = new_mode.MANUAL;
+		//state->mav_mode.HIL = new_mode.HIL;
+		state->mav_mode.STABILISE = new_mode.STABILISE;
+		state->mav_mode.GUIDED = new_mode.GUIDED;
+		state->mav_mode.AUTO = new_mode.AUTO;
+		state->mav_mode.TEST = new_mode.TEST;
+		state->mav_mode.CUSTOM = new_mode.CUSTOM;
+
+		print_util_dbg_print("New mav mode:");
+		print_util_dbg_print_num(state->mav_mode.byte,10);
+		print_util_dbg_print("\r");
+
+		if (state->mav_mode.ARMED == ARMED_ON)
 		{
-			switch(packet.base_mode)
-			{
-				case MAV_MODE_STABILIZE_DISARMED:
-				case MAV_MODE_GUIDED_DISARMED:
-				case MAV_MODE_AUTO_DISARMED:
-					state->mav_state = MAV_STATE_STANDBY;
-					state->mav_mode.byte = MAV_MODE_MANUAL_DISARMED;
-					break;
-				
-				case MAV_MODE_MANUAL_ARMED:
-					//if (remote_controller_get_thrust_from_remote()<-0.95f)
-					{
-						state->mav_state = MAV_STATE_ACTIVE;
-						state->mav_mode.byte = MAV_MODE_MANUAL_ARMED;
-					}
-					break;
-			}
+			state->mav_state = MAV_STATE_ACTIVE;
 		}
 		else
 		{
-			switch(packet.base_mode)
-			{
-				case MAV_MODE_STABILIZE_DISARMED:
-				case MAV_MODE_GUIDED_DISARMED:
-				case MAV_MODE_AUTO_DISARMED:
-					state->mav_state = MAV_STATE_STANDBY;
-					state->mav_mode.byte = MAV_MODE_MANUAL_DISARMED;
-					break;
-				case MAV_MODE_MANUAL_ARMED:
-					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode.byte = MAV_MODE_MANUAL_ARMED;
-					break;
-				case MAV_MODE_STABILIZE_ARMED:
-					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode.byte = MAV_MODE_STABILIZE_ARMED;
-					break;
-				case MAV_MODE_GUIDED_ARMED:
-					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode.byte = MAV_MODE_GUIDED_ARMED;
-					break;
-				case MAV_MODE_AUTO_ARMED:
-					state->mav_state = MAV_STATE_ACTIVE;
-					state->mav_mode.byte = MAV_MODE_AUTO_ARMED;
-					break;
-			}
+			state->mav_state = MAV_STATE_STANDBY;
 		}
 	}
 }
@@ -137,17 +113,17 @@ void state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 // void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *message_handler)
 {
 	// Init dependencies
-	state->analog_monitor 	= analog_monitor;
-	state->mavlink_stream 	= mavlink_stream;
-
+	state->analog_monitor = analog_monitor;
+	state->mavlink_stream = mavlink_stream;
+	
 	// Init parameters
-	state->autopilot_type 	= state_config->autopilot_type;
-	state->autopilot_name 	= state_config->autopilot_name;
+	state->autopilot_type = state_config->autopilot_type;
+	state->autopilot_name = state_config->autopilot_name;
 	
-	state->mav_state 		= state_config->mav_state;
-	state->mav_mode 		= state_config->mav_mode;
+	state->mav_state = state_config->mav_state;
+	state->mav_mode = state_config->mav_mode;
 	
-	state->simulation_mode 	= state_config->simulation_mode;
+	state->simulation_mode = state_config->simulation_mode;
 	
 	state->mav_mode_previous = state->mav_mode;
 	
@@ -167,6 +143,8 @@ void state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	state->in_the_air = false;
 	
 	state->reset_position = false;
+	
+	state->remote_active = state_config->remote_active;
 	
 	// Add callbacks for onboard parameters requests
 	mavlink_message_handler_msg_callback_t callback;
@@ -222,77 +200,4 @@ task_return_t state_send_status(const state_t* state)
 	mavlink_stream_send(mavlink_stream, &msg);
 
 	return TASK_RUN_SUCCESS;
-}
-
-
-bool state_test_flag_mode(uint8_t mode, mav_flag_mask_t test_flag)
-{
-	bool result = false;
-	
-	if ((mode & test_flag))
-	{
-		result = true;
-	}
-	
-	return result;
-}
-
-
-void state_enable_mode(state_t *state, mav_flag_mask_t mav_mode_flag)
-{
-	state->mav_mode.byte |= mav_mode_flag;
-	state->mav_mode_previous = state->mav_mode;
-}
-
-
-void state_disable_mode(state_t *state, mav_flag_mask_t mav_mode_flag)
-{
-	// state->mav_mode |= !mav_mode_flag;
-	state->mav_mode.byte &= ~mav_mode_flag;
-	state->mav_mode_previous = state->mav_mode;
-}
-
-
-bool state_test_if_in_flag_mode(const state_t *state, mav_flag_mask_t mav_mode_flag)
-{
-	return (state->mav_mode.byte & mav_mode_flag);
-}
-
-
-bool state_test_if_first_time_in_mode(state_t *state)
-{
-	return !(state->mav_mode_previous.byte == state->mav_mode.byte);
-}
-
-
-void state_set_new_mode(state_t *state, uint8_t mode)
-{
-
-	// state->mav_mode = mav_mode + (state->mav_mode & MAV_MODE_FLAG_HIL_ENABLED);
-
-	mav_mode_t mav_mode;
-	mav_mode.byte = mode;
-
-	// Keep current hil flag
-	mav_mode.HIL = state->mav_mode.HIL;
-	state->mav_mode = mav_mode;
-}
-
-
-bool state_test_if_in_mode(state_t *state, uint8_t mav_mode)
-{
-	// get modes without HIL flag
-	mav_mode_t current_mode = state->mav_mode;
-	current_mode.HIL = HIL_OFF;
-	mav_mode_t mode = { .byte=mav_mode };
-	mode.HIL = HIL_OFF;
-	
-	if ( current_mode.byte == mode.byte )
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
 }

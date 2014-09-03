@@ -58,7 +58,7 @@ typedef struct
 	uint8_t channel_switches;							///< State of the switches of the remote
 	signal_quality_t rc_check;							///< State of the remote (receiving signal or not)
 	int8_t motor_state;									///< State of the motors to switch on and off
-	bool use_mode_from_remote;
+	uint32_t use_mode_from_remote;
 
 	mavlink_waypoint_handler_t* waypoint_handler;
 	state_t* state;
@@ -66,8 +66,12 @@ typedef struct
 	remote_t* remote;
 } state_machine_t;
 
+typedef struct  
+{
+	state_machine_t state_machine;
+}state_machine_conf_t;
 
-void state_machine_init(state_machine_t *state_machine, state_t* state, mavlink_waypoint_handler_t* waypoint_handler, simulation_model_t *sim_model, remote_t* remote);
+void state_machine_init(state_machine_t *state_machine, const state_machine_conf_t* state_machine_conf, state_t* state, mavlink_waypoint_handler_t* waypoint_handler, simulation_model_t *sim_model, remote_t* remote);
 
 
 /**

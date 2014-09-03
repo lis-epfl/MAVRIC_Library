@@ -1,13 +1,13 @@
 /*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, 
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, 
  * this list of conditions and the following disclaimer in the documentation 
  * and/or other materials provided with the distribution.
@@ -76,9 +76,18 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
  *
  * \param	waypoint_input		Destination waypoint in local coordinate system
- * \param	navigation		The navigation structure
+ * \param	navigation			The navigation structure
  */
 static void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigation);
+
+/**
+ * \brief	Sets auto-takeoff procedure from a mavlink command message MAV_CMD_NAV_TAKEOFF
+ *
+ * \param	navigation			The pointer to the navigation structure
+ * \param	packet				The pointer to the structure of the mavlink command message long
+ */
+static void navigation_set_auto_takeoff(navigation_t *navigation, mavlink_command_long_t* packet);
+
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -123,7 +132,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	
 	dir_desired_bf[2] = rel_pos[2];
 	
-	if (state_test_if_in_flag_mode(navigation->state,MAV_MODE_FLAG_GUIDED_ENABLED)||((maths_f_abs(rel_pos[X])<=1.0f)&&(maths_f_abs(rel_pos[Y])<=1.0f))||((maths_f_abs(rel_pos[X])<=5.0f)&&(maths_f_abs(rel_pos[Y])<=5.0f)&&(maths_f_abs(rel_pos[Z])>=3.0f)))
+	if ((navigation->state->mav_mode.GUIDED == GUIDED_ON)||((maths_f_abs(rel_pos[X])<=1.0f)&&(maths_f_abs(rel_pos[Y])<=1.0f))||((maths_f_abs(rel_pos[X])<=5.0f)&&(maths_f_abs(rel_pos[Y])<=5.0f)&&(maths_f_abs(rel_pos[Z])>=3.0f)))
 	{
 		rel_heading = 0.0f;
 	}
@@ -177,7 +186,7 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 	float rel_pos[3];
 	
 	// Control in translational speed of the platform
-	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(	waypoint_input.pos,
+	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos,
 																					rel_pos,
 																					navigation->position_estimator->local_position.pos);
 	navigation_set_speed_command(rel_pos, navigation);
@@ -185,11 +194,26 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 	navigation->controls_nav->theading=waypoint_input.heading;
 }
 
+static void navigation_set_auto_takeoff(navigation_t *navigation, mavlink_command_long_t* packet)
+{
+	print_util_dbg_print("Starting automatic take-off from button\n");
+	navigation->auto_takeoff = true;
+
+	mavlink_message_t msg;
+	mavlink_msg_command_ack_pack( 	navigation->mavlink_stream->sysid,
+									navigation->mavlink_stream->compid,
+									&msg,
+									MAV_CMD_NAV_TAKEOFF,
+									MAV_RESULT_ACCEPTED);
+	
+	mavlink_stream_send(navigation->mavlink_stream, &msg);
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const mavlink_stream_t* mavlink_stream)
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, mavlink_communication_t* mavlink_communication)
 {
 	
 	navigation->controls_nav = controls_nav;
@@ -197,7 +221,8 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->waypoint_handler = waypoint_handler;
 	navigation->position_estimator = position_estimator;
 	navigation->state = state;
-	navigation->mavlink_stream = mavlink_stream;
+	navigation->mavlink_stream = &mavlink_communication->mavlink_stream;
+	navigation->control_joystick = control_joystick;
 	
 	navigation->controls_nav->rpy[ROLL] = 0.0f;
 	navigation->controls_nav->rpy[PITCH] = 0.0f;
@@ -214,7 +239,7 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	
 	navigation->auto_takeoff = false;
 	
-	navigation->controls_nav->mavlink_stream = mavlink_stream;
+	navigation->controls_nav->mavlink_stream = &mavlink_communication->mavlink_stream;
 	
 	navigation->dist2vel_gain = 0.7f;
 	navigation->cruise_speed = 3.0f;
@@ -224,21 +249,37 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	
 	navigation->loop_count = 0;
 	
+	// Add callbacks for waypoint handler commands requests
+	mavlink_message_handler_cmd_callback_t callbackcmd;
+	
+	callbackcmd.command_id = MAV_CMD_NAV_TAKEOFF; // 22
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&navigation_set_auto_takeoff;
+	callbackcmd.module_struct =									navigation;
+	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	
 	print_util_dbg_print("Navigation initialized.\r\n");
 }
 
 task_return_t navigation_update(navigation_t* navigation)
 {
+	mav_mode_t mode_local = navigation->state->mav_mode;
+	mode_local.HIL = HIL_OFF;
+	
+	float thrust;
+	
 	switch (navigation->state->mav_state)
 	{
 		case MAV_STATE_ACTIVE:
 			if (navigation->state->in_the_air)
 			{
-				switch (navigation->state->mav_mode.byte - (navigation->state->mav_mode.byte & MAV_MODE_FLAG_DECODE_POSITION_HIL))
+				switch (mode_local.byte)
 				{
 					case MAV_MODE_GPS_NAVIGATION:
 						navigation_waypoint_navigation_handler(navigation);
-					
+						
 						if (navigation->state->nav_plan_active)
 						{
 							navigation_run(navigation->waypoint_handler->waypoint_coordinates,navigation);
@@ -251,7 +292,7 @@ task_return_t navigation_update(navigation_t* navigation)
 
 					case MAV_MODE_POSITION_HOLD:
 						navigation_hold_position_handler(navigation);
-					
+						
 						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
 						break;
 			
@@ -261,10 +302,23 @@ task_return_t navigation_update(navigation_t* navigation)
 			}
 			else
 			{
-				if (remote_controller_get_thrust_from_remote() > -0.7f)
+				if (navigation->state->remote_active == 1)
 				{
-					if (state_test_if_in_flag_mode(navigation->state,MAV_MODE_FLAG_GUIDED_ENABLED)||state_test_if_in_flag_mode(navigation->state,MAV_MODE_FLAG_AUTO_ENABLED))
+					thrust = remote_controller_get_thrust_from_remote();
+				}
+				else
+				{
+					thrust = navigation->control_joystick->thrust;
+				}
+				
+				if (thrust > -0.7f)
+				{
+					if ((navigation->state->mav_mode.GUIDED == GUIDED_ON)||(navigation->state->mav_mode.AUTO == AUTO_ON))
 					{
+						if (!navigation->auto_takeoff)
+						{
+							navigation->waypoint_handler->hold_waypoint_set = false;
+						}
 						navigation->auto_takeoff = true;
 					}
 					else
@@ -272,7 +326,8 @@ task_return_t navigation_update(navigation_t* navigation)
 						navigation->state->in_the_air = true;
 					}
 				}
-				if (state_test_if_in_flag_mode(navigation->state,MAV_MODE_FLAG_GUIDED_ENABLED)||state_test_if_in_flag_mode(navigation->state,MAV_MODE_FLAG_AUTO_ENABLED))
+				
+				if ((navigation->state->mav_mode.GUIDED == GUIDED_ON)||(navigation->state->mav_mode.AUTO == AUTO_ON))
 				{
 					if (navigation->auto_takeoff)
 					{
@@ -286,7 +341,7 @@ task_return_t navigation_update(navigation_t* navigation)
 
 		case MAV_STATE_CRITICAL:
 			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-			if (state_test_if_in_flag_mode(navigation->state,MAV_MODE_FLAG_STABILIZE_ENABLED))
+			if (navigation->state->mav_mode.STABILISE == STABILISE_ON)
 			{
 				navigation_critical_handler(navigation->waypoint_handler);
 				navigation_run(navigation->waypoint_handler->waypoint_critical_coordinates,navigation);
@@ -476,6 +531,11 @@ void navigation_critical_handler(mavlink_waypoint_handler_t* waypoint_handler)
 {
 	float rel_pos[3];
 	uint8_t i;
+	
+	if (waypoint_handler->state->mav_state == MAV_STATE_STANDBY)
+	{
+		waypoint_handler->critical_behavior = CLIMB_TO_SAFE_ALT;
+	}
 	
 	if (!(waypoint_handler->critical_next_state))
 	{

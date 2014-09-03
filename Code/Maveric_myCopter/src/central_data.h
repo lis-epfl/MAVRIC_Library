@@ -89,7 +89,9 @@ extern "C" {
 #include "remote.h"
 
 #include "state_machine.h"
-// #include "data_logging.h"
+#include "sd_spi.h"
+#include "joystick_parsing.h"
+#include "data_logging.h"
 // TODO : update documentation
 
 /**
@@ -105,17 +107,20 @@ typedef struct  {
 	remote_t remote;
 	remote_mode_t remote_mode;
 
-	analog_monitor_t analog_monitor;							///< The analog to digital converter structure
+	analog_monitor_t analog_monitor;										///< The analog to digital converter structure
 
 	imu_t imu;													///< The IMU structure
 	qfilter_t attitude_filter;									///< The qfilter structure
 	ahrs_t ahrs;												///< The attitude estimation structure
 	control_command_t controls;									///< The control structure used for rate and attitude modes
 	control_command_t controls_nav;								///< The control nav structure used for velocity modes
+	control_command_t controls_joystick;						///< The control structure for the joystick
 
+	joystick_parsing_t joystick_parsing;						///< The joystick parsing structure
+	
 	stabilise_copter_t stabilisation_copter;					///< The stabilisation structure for copter
 
-	gps_t gps;													///< The GPS structure
+	gps_t gps;									///< The GPS structure
 	
 	simulation_model_t sim_model;								///< The simulation model structure
 	
@@ -142,7 +147,7 @@ typedef struct  {
 	
 	sd_spi_t sd_spi;											///< The sd_SPI driver structure
 	
-	// data_logging_t data_logging;								///< The log data structure
+	data_logging_t data_logging;								///< The log data structure
 	
 } central_data_t;
 
