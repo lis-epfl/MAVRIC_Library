@@ -30,62 +30,31 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file main.cpp
+ * \file mavlink_telemetry.h
  * 
  * \author MAV'RIC Team
  *   
- * \brief Main file
+ * \brief Definition of the messages sent by the autopilot to the ground station
  *
  ******************************************************************************/
- 
 
+
+#ifndef MAVLINK_TELEMETRY_H_
+#define MAVLINK_TELEMETRY_H_
+
+#include "mavlink_stream.h"
+
+#ifdef __cplusplus
 extern "C" {
-	#include "led.h"
-	#include "delay.h"
-	#include "print_util.h"
-	#include "central_data.h"
-	#include "boardsupport.h"
-	#include "tasks.h"
-	#include "mavlink_telemetry.h"
-	#include "piezo_speaker.h"
-	
-	#include "gpio.h"
-	#include "spi.h"
-	#include "sd_spi.h"
+#endif
+
+/**
+ * \brief     Initialise all the mavlink streams and call the onboard parameters register
+ */
+void mavlink_telemetry_init(void);
+
+#ifdef __cplusplus
 }
- 
-central_data_t *central_data;
+#endif
 
-void initialisation() 
-{	
-	central_data = central_data_get_pointer_to_struct();
-	boardsupport_init(central_data);
-	central_data_init();
-
-	mavlink_telemetry_init();
-	
-	onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
-
-	central_data->state.mav_state = MAV_STATE_STANDBY;	
-	central_data->imu.calibration_level = OFF;	
-
-	piezo_speaker_quick_startup();
-	
-	// Switch off red LED
-	LED_Off(LED2);
-
-	print_util_dbg_print("OK. Starting up.\r\n");
-}
-
-int main (void)
-{
-	initialisation();
-	tasks_create_tasks();
-	
-	while (1 == 1) 
-	{
-		scheduler_update(&central_data->scheduler);
-	}
-
-	return 0;
-}
+#endif /* MAVLINK_DOWN_TELEMETRY_H_ */

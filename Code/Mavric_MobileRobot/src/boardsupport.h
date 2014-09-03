@@ -30,62 +30,36 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file main.cpp
+ * \file boardsupport.h
  * 
  * \author MAV'RIC Team
  *   
- * \brief Main file
+ * \brief Initialization of all hardware related elements (communication lines, 
+ * sensors devices, etc)
  *
  ******************************************************************************/
- 
 
+
+#ifndef BOARDSUPPORT_H_
+#define BOARDSUPPORT_H_
+
+#ifdef __cplusplus
 extern "C" {
-	#include "led.h"
-	#include "delay.h"
-	#include "print_util.h"
-	#include "central_data.h"
-	#include "boardsupport.h"
-	#include "tasks.h"
-	#include "mavlink_telemetry.h"
-	#include "piezo_speaker.h"
-	
-	#include "gpio.h"
-	#include "spi.h"
-	#include "sd_spi.h"
+#endif
+
+#include "central_data.h"
+
+#define BOARD USER_BOARD
+
+/**
+ * \brief	Initialize the hardware related elements (communication lines, sensors devices, etc)
+ *
+ * \param	central_data		The pointer to the structure where all central data is stored
+ */
+void boardsupport_init(central_data_t* central_data);
+
+#ifdef __cplusplus
 }
- 
-central_data_t *central_data;
+#endif
 
-void initialisation() 
-{	
-	central_data = central_data_get_pointer_to_struct();
-	boardsupport_init(central_data);
-	central_data_init();
-
-	mavlink_telemetry_init();
-	
-	onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
-
-	central_data->state.mav_state = MAV_STATE_STANDBY;	
-	central_data->imu.calibration_level = OFF;	
-
-	piezo_speaker_quick_startup();
-	
-	// Switch off red LED
-	LED_Off(LED2);
-
-	print_util_dbg_print("OK. Starting up.\r\n");
-}
-
-int main (void)
-{
-	initialisation();
-	tasks_create_tasks();
-	
-	while (1 == 1) 
-	{
-		scheduler_update(&central_data->scheduler);
-	}
-
-	return 0;
-}
+#endif /* BOARDSUPPORT_H_ */

@@ -30,62 +30,32 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file main.cpp
+ * \file conf_constants.h
  * 
  * \author MAV'RIC Team
  *   
- * \brief Main file
- *
+ * \brief This file defines global constants
+ * 
  ******************************************************************************/
- 
 
+
+#ifndef CONF_CONSTANT_H__
+#define CONF_CONSTANT_H__
+
+#ifdef __cplusplus
 extern "C" {
-	#include "led.h"
-	#include "delay.h"
-	#include "print_util.h"
-	#include "central_data.h"
-	#include "boardsupport.h"
-	#include "tasks.h"
-	#include "mavlink_telemetry.h"
-	#include "piezo_speaker.h"
-	
-	#include "gpio.h"
-	#include "spi.h"
-	#include "sd_spi.h"
+#endif
+
+// default home location (EFPL Esplanade)
+#define HOME_LONGITUDE 6.566044801857777f					///< Latitude of home location
+#define HOME_LATITUDE 46.51852236174565f 					///< Longitude of home location
+#define HOME_ALTITUDE 400.0f								///< Altitude of home location
+
+#define GRAVITY 9.81f				///< The gravity constant
+
+
+#ifdef __cplusplus
 }
- 
-central_data_t *central_data;
+#endif
 
-void initialisation() 
-{	
-	central_data = central_data_get_pointer_to_struct();
-	boardsupport_init(central_data);
-	central_data_init();
-
-	mavlink_telemetry_init();
-	
-	onboard_parameters_read_parameters_from_flashc(&central_data->mavlink_communication.onboard_parameters);
-
-	central_data->state.mav_state = MAV_STATE_STANDBY;	
-	central_data->imu.calibration_level = OFF;	
-
-	piezo_speaker_quick_startup();
-	
-	// Switch off red LED
-	LED_Off(LED2);
-
-	print_util_dbg_print("OK. Starting up.\r\n");
-}
-
-int main (void)
-{
-	initialisation();
-	tasks_create_tasks();
-	
-	while (1 == 1) 
-	{
-		scheduler_update(&central_data->scheduler);
-	}
-
-	return 0;
-}
+#endif // CONF_CONSTANT_H__

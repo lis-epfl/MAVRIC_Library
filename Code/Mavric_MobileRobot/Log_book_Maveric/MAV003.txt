@@ -1,0 +1,13 @@
+*************************************************************
+***************** MAV003 Log book ***************************
+*************************************************************
+status: not fly ready
+
+
+13-11-21: frame with foam build
+13-11-21: need calibration
+13-11-21: no speed controller mounted
+13-11-21: no motors mounted
+13-11-21: no autopilot mounted
+14-03-17: missing two motors mounts, 1 carbone beam
+14-08-21: no SD card holder
