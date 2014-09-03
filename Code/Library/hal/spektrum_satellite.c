@@ -220,39 +220,50 @@ void spektrum_satellite_init (void)
 }
 
 
-void spektrum_satellite_bind() 
+void spektrum_satellite_bind(spektrum_satellite_t *satellite, mavlink_command_long_t* packet) 
 {
-	int32_t i = 0;
-	uint32_t cpu_freq = sysclk_get_cpu_hz();
-	
-	// Switch off satellite
-	spektrum_satellite_switch_off();
-	delay_ms(100);
-	spektrum_satellite_switch_on();
-	
-	// Send one first pulse
-	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_DOWN);	
-	delay_ms(1);
-	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT| GPIO_INIT_LOW);
-	delay_ms(10);
-
-	// Wait for startup signal
-	while ((gpio_get_pin_value(DSM_RECEIVER_PIN) == 0) && (i < 10000)) 
+	if (packet->param2 == 1)
 	{
-		i++;
+		int32_t i = 0;
+		uint32_t cpu_freq = sysclk_get_cpu_hz();
+	
+		print_util_dbg_print(" \n receive bind CMD \n");
+		
+		// Switch off satellite
+		spektrum_satellite_switch_off();
+		delay_ms(100);
+		spektrum_satellite_switch_on();
+	
+		// Send one first pulse
+		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_DOWN);	
 		delay_ms(1);
+		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT| GPIO_INIT_LOW);
+		delay_ms(10);
+
+		// Wait for startup signal
+		while ((gpio_get_pin_value(DSM_RECEIVER_PIN) == 0) && (i < 10000)) 
+		{
+			i++;
+			delay_ms(1);
+		}
+
+		// Wait 100ms after receiver startup
+		delay_ms(100);
+
+		// create 4 pulses with 126us to set receiver to bind mode
+		for (i = 0; i < 3; i++) 
+		{
+			gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+			cpu_delay_us(113, cpu_freq); 
+			gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_UP);	
+			cpu_delay_us(118, cpu_freq);
+		}
 	}
-
-	// Wait 100ms after receiver startup
-	delay_ms(100);
-
-	// create 4 pulses with 126us to set receiver to bind mode
-	for (i = 0; i < 3; i++) 
+	
+	else if (packet->param3 == 1)
 	{
-		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
-		cpu_delay_us(113, cpu_freq); 
-		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_UP);	
-		cpu_delay_us(118, cpu_freq);
+		print_util_dbg_print("\n reset satellite receiver \r\n");
+		spektrum_satellite_init();
 	}
 }
 

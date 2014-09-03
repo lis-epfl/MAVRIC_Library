@@ -51,6 +51,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "buffer.h"
+#include "mavlink_message_handler.h"
 
 
 /**
@@ -71,7 +72,7 @@ typedef struct
  * \brief set slave receiver into bind mode. 
  * has to be called 100ms after power-up
  */
-void spektrum_satellite_bind(void);
+void spektrum_satellite_bind(spektrum_satellite_t *satellite, mavlink_command_long_t* packet);
 
 
 /**
