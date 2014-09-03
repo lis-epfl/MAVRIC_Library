@@ -610,7 +610,7 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 			}
 		
 		//}while((i < MAX_NUMBER_OF_LOGGED_FILE)&&(data_logging->fr != FR_OK)&&(data_logging->fr != FR_NOT_READY));
-		}while((i < MAX_NUMBER_OF_LOGGED_FILE)&&(data_logging->fr == FR_EXIST));
+		} while( (i < MAX_NUMBER_OF_LOGGED_FILE) && (data_logging->fr == FR_EXIST) );
 	
 		if (data_logging->fr == FR_OK)
 		{
@@ -677,22 +677,35 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 		{
 			if (data_logging->fr != FR_NO_FILE)
 			{
-				if (data_logging->debug)
-				{
-					print_util_dbg_print("Attempt to close file\r\n");
-				}
-				
-				data_logging->fr = f_close(&data_logging->fil);
-				if ((data_logging->fr != FR_OK))
-				{
-					data_logging->file_opened = true;
-				}
-				else
+				bool succeed = false;
+				for (uint8_t i = 0; i < 5; ++i)
 				{
 					if (data_logging->debug)
 					{
-						data_logging->file_opened = false;
+						print_util_dbg_print("Attempt to close file\r\n");
+					}
+
+					data_logging->fr = f_close(&data_logging->fil);
+
+					if ( data_logging->fr == FR_OK )
+					{
+						succeed = true;
+						break;
+					}
+				}
+					
+				data_logging->file_opened = false;
+
+				
+				if (data_logging->debug)
+				{
+					if ( succeed )
+					{
 						print_util_dbg_print("File closed\r\n");
+					}
+					else
+					{
+						print_util_dbg_print("Error closing file\r\n");	
 					}
 				}
 			}
