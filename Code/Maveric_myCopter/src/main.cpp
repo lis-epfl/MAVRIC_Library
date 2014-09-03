@@ -65,7 +65,7 @@ void initialisation()
 	central_data->state.mav_state = MAV_STATE_STANDBY;	
 	central_data->imu.calibration_level = OFF;	
 
-	piezo_speaker_startup_melody();
+	piezo_speaker_quick_startup();
 	
 	// Switch off red LED
 	LED_Off(LED2);
