@@ -148,7 +148,7 @@ typedef struct
 } remote_t;
 
 
-void remote_init(remote_t* remote, const remote_conf_t* config, const mavlink_stream_t* mavlink_stream);
+void remote_init(remote_t* remote, const remote_conf_t* config, const mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *mavlink_handler);
 
 
 task_return_t remote_update(remote_t* remote);
