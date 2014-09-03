@@ -91,7 +91,7 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 //------------------------------------------------------------------------------
 
 
-void remote_init(remote_t* remote, const remote_conf_t* config, const mavlink_stream_t* mavlink_stream)
+void remote_init(remote_t* remote, const remote_conf_t* config, const mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *mavlink_handler)
 {
 	// Init dependencies
 	remote->mavlink_stream = mavlink_stream;
@@ -140,6 +140,16 @@ void remote_init(remote_t* remote, const remote_conf_t* config, const mavlink_st
 		remote->channels[i] = 0.0f;
 		remote->trims[i] = 0.0f;
 	}
+	
+	mavlink_message_handler_cmd_callback_t callbackcmd;
+	
+	callbackcmd.command_id    = MAV_CMD_DO_JUMP;//MAV_CMD_START_RX_PAIR; // 500
+	callbackcmd.sysid_filter  = MAV_SYS_ID_ALL;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_ALL;
+	callbackcmd.function      = (mavlink_cmd_callback_function_t)	&spektrum_satellite_bind;
+	callbackcmd.module_struct =										remote->sat;
+	mavlink_message_handler_add_cmd_callback(mavlink_handler, &callbackcmd);
 }
 
 

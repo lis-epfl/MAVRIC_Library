@@ -82,6 +82,9 @@ void piezo_speaker_startup_melody(void);
 
 void piezo_speaker_critical_error_melody(void);
 
+void piezo_speaker_quick_startup(void);
+
+void piezo_speaker_star_wars(void);
 
 void piezo_speaker_mario_melody(void);
 

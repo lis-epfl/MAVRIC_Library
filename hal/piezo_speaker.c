@@ -154,11 +154,91 @@ void piezo_speaker_startup_melody(void)
 }
 
 
+void piezo_speaker_quick_startup(void)
+{
+	piezo_speaker_beep(100, 440);
+	delay_ms(50);
+	piezo_speaker_beep(100, 880);
+}
+
+
 void piezo_speaker_critical_error_melody(void)
 {
 	piezo_speaker_beep(200, 700);
 	piezo_speaker_beep(200, 650);
 	piezo_speaker_beep(200, 500);
+}
+
+
+void piezo_speaker_star_wars(void)
+{
+	//3x beep(a, 500);
+	piezo_speaker_beep(150, 440);
+	delay_ms(100);
+	piezo_speaker_beep(150, 440);
+	delay_ms(100);
+	piezo_speaker_beep(150, 440);
+	delay_ms(100);
+	
+	//beep(f, 350);
+	piezo_speaker_beep(105, 349);
+	delay_ms(70);
+	
+	//beep(cH, 150);
+	piezo_speaker_beep(45, 523);
+	delay_ms(30);
+	
+	//beep(a, 500);
+	piezo_speaker_beep(150, 440);
+	delay_ms(100);
+	
+	//beep(f, 350);
+	piezo_speaker_beep(105, 349);
+	delay_ms(70);
+	
+	//beep(cH, 150);
+	piezo_speaker_beep(45, 523);
+	delay_ms(30);
+	
+	//beep(a, 650);
+	piezo_speaker_beep(195, 440);
+	delay_ms(130);
+	
+	//delay(500);
+	delay_ms(250);
+	
+	//3x beep(eH, 500);
+	piezo_speaker_beep(150, 659);
+	delay_ms(100);
+	piezo_speaker_beep(150, 659);
+	delay_ms(100);
+	piezo_speaker_beep(150, 659);
+	delay_ms(100);
+	
+	//beep(fH, 350);
+	piezo_speaker_beep(105, 698);
+	delay_ms(70);
+	
+	//beep(cH, 150);
+	piezo_speaker_beep(45, 523);
+	delay_ms(30);
+	
+	//beep(gS, 500);
+	piezo_speaker_beep(150, 415);
+	delay_ms(100);
+	
+	//beep(f, 350);
+	piezo_speaker_beep(105, 349);
+	delay_ms(70);
+	
+	//beep(cH, 150);
+	piezo_speaker_beep(45, 523);
+	delay_ms(30);
+	
+	//beep(a, 650);
+	piezo_speaker_beep(195, 440);
+	delay_ms(130);
+	
 }
 
 
