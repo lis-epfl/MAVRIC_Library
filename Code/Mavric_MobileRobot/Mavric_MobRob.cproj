@@ -10,7 +10,7 @@
     <OutputDirectory>$(MSBuildProjectDirectory)\$(Configuration)</OutputDirectory>
     <AvrGccProjectExtensions />
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
-    <Name>Maveric_myCopter</Name>
+    <Name>Mavric_MobRob</Name>
     <RootNamespace>$(MSBuildProjectName)</RootNamespace>
     <OutputType>Executable</OutputType>
     <Language>CPP</Language>
@@ -650,7 +650,8 @@
     </Compile>
     <Compile Include="Library\control\joystick_parsing.h">
       <SubType>compile</SubType>
-    </Compile>    <Compile Include="Library\control\pid_control.c">
+    </Compile>
+    <Compile Include="Library\control\pid_control.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\control\pid_control.h">
