@@ -381,7 +381,6 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 				data_logging->fr = f_stat(data_logging->name_n_extension,NULL);
 				print_util_dbg_print("Error appending parameter! Error:");
 				data_logging_print_error_signification(data_logging);
-				break;
 			}
 			break;
 		}
@@ -679,21 +678,18 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 			}
 			
 			if (data_logging->loop_count < 10)
-			{
-				print_util_dbg_print("Trying to create a new file\r\n");
-				
+			{	
 				data_logging->fr = f_mount(&data_logging->fs,"",1);
 				
 				if (data_logging->fr == FR_OK)
 				{
 					data_logging->sys_mounted = true;
+					data_logging_create_new_log_file(data_logging,data_logging->file_name);
 				}
 				else
 				{
 					data_logging->sys_mounted = false;
 				}
-				
-				data_logging_create_new_log_file(data_logging,data_logging->file_name);
 			}
 		}
 	}
@@ -714,9 +710,13 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 
 					data_logging->fr = f_close(&data_logging->fil);
 
-					if ( data_logging->fr == FR_OK )
+					if ( data_logging->fr == FR_OK)
 					{
 						succeed = true;
+						break;
+					}
+					if(data_logging->fr == FR_NO_FILE)
+					{
 						break;
 					}
 				}
@@ -726,7 +726,7 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 				
 				if (data_logging->debug)
 				{
-					if ( succeed )
+					if ( succeed)
 					{
 						print_util_dbg_print("File closed\r\n");
 					}
