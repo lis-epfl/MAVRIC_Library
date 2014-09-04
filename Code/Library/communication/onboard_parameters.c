@@ -288,22 +288,29 @@ void onboard_parameters_add_parameter_uint32(onboard_parameters_t* onboard_param
 void onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parameters, int32_t* val, const char* param_name) 
 {
 	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
-
-	if( param_set->param_count < param_set->max_param_count )
+	
+	if( val == NULL )
 	{
-		onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
-
-		new_param->param                     = (float*) val;
-		strcpy( new_param->param_name, 		param_name );
-		new_param->data_type                 = MAV_PARAM_TYPE_INT32;
-		new_param->param_name_length         = strlen(param_name);
-		new_param->schedule_for_transmission = true;
-		
-		param_set->param_count += 1;
+		print_util_dbg_print("[ONBOARD PARAMETER] Error: Null pointer!");
 	}
 	else
 	{
-		print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param\r\n");
+		if( param_set->param_count < param_set->max_param_count )
+		{
+			onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
+
+			new_param->param                     = (float*) val;
+			strcpy( new_param->param_name, 		param_name );
+			new_param->data_type                 = MAV_PARAM_TYPE_INT32;
+			new_param->param_name_length         = strlen(param_name);
+			new_param->schedule_for_transmission = true;
+			
+			param_set->param_count += 1;
+		}
+		else
+		{
+			print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param\r\n");
+		}
 	}
 }
 
@@ -311,22 +318,29 @@ void onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parame
 void onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parameters, float* val, const char* param_name) 
 {
 	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
-
-	if( param_set->param_count < param_set->max_param_count )
+	
+	if( val == NULL )
 	{
-		onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
-
-		new_param->param                     = val;
-		strcpy( new_param->param_name, 		param_name );
-		new_param->data_type                 = MAV_PARAM_TYPE_REAL32;
-		new_param->param_name_length         = strlen(param_name);
-		new_param->schedule_for_transmission = true;
-		
-		param_set->param_count += 1;
+		print_util_dbg_print("[ONBOARD PARAMETER] Error: Null pointer!");
 	}
 	else
 	{
-		print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param\r\n");
+		if( param_set->param_count < param_set->max_param_count )
+		{
+			onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
+
+			new_param->param                     = val;
+			strcpy( new_param->param_name, 		param_name );
+			new_param->data_type                 = MAV_PARAM_TYPE_REAL32;
+			new_param->param_name_length         = strlen(param_name);
+			new_param->schedule_for_transmission = true;
+			
+			param_set->param_count += 1;
+		}
+		else
+		{
+			print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param\r\n");
+		}
 	}
 }
 

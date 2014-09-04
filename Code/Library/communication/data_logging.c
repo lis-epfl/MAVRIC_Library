@@ -381,6 +381,7 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 				data_logging->fr = f_stat(data_logging->name_n_extension,NULL);
 				print_util_dbg_print("Error appending parameter! Error:");
 				data_logging_print_error_signification(data_logging);
+				break;
 			}
 			break;
 		}
@@ -621,7 +622,7 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 			}
 		
 		//}while((i < MAX_NUMBER_OF_LOGGED_FILE)&&(data_logging->fr != FR_OK)&&(data_logging->fr != FR_NOT_READY));
-		}while((i < MAX_NUMBER_OF_LOGGED_FILE)&&(data_logging->fr == FR_EXIST));
+		} while( (i < MAX_NUMBER_OF_LOGGED_FILE) && (data_logging->fr == FR_EXIST) );
 	
 		if (data_logging->fr == FR_OK)
 		{
@@ -703,22 +704,35 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 		{
 			if (data_logging->fr != FR_NO_FILE)
 			{
-				if (data_logging->debug)
-				{
-					print_util_dbg_print("Attempt to close file\r\n");
-				}
-				
-				data_logging->fr = f_close(&data_logging->fil);
-				if ((data_logging->fr != FR_OK))
-				{
-					data_logging->file_opened = true;
-				}
-				else
+				bool succeed = false;
+				for (uint8_t i = 0; i < 5; ++i)
 				{
 					if (data_logging->debug)
 					{
-						data_logging->file_opened = false;
+						print_util_dbg_print("Attempt to close file\r\n");
+					}
+
+					data_logging->fr = f_close(&data_logging->fil);
+
+					if ( data_logging->fr == FR_OK )
+					{
+						succeed = true;
+						break;
+					}
+				}
+					
+				data_logging->file_opened = false;
+
+				
+				if (data_logging->debug)
+				{
+					if ( succeed )
+					{
 						print_util_dbg_print("File closed\r\n");
+					}
+					else
+					{
+						print_util_dbg_print("Error closing file\r\n");	
 					}
 				}
 			}
@@ -749,199 +763,268 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 void data_logging_add_parameter_uint8(data_logging_t* data_logging, uint8_t* val, const char* param_name)
 {
 	data_logging_set_t* data_logging_set = data_logging->data_logging_set;
-
-	if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+	
+	if( val == NULL )
 	{
-		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
-
-		new_param->param					 = (double*) val;
-		strcpy( new_param->param_name, 		 param_name );
-		new_param->data_type                 = MAV_PARAM_TYPE_UINT8;
-		
-		data_logging_set->data_logging_count += 1;
+		print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+		{
+			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+
+			new_param->param					 = (double*) val;
+			strcpy( new_param->param_name, 		 param_name );
+			new_param->data_type                 = MAV_PARAM_TYPE_UINT8;
+			
+			data_logging_set->data_logging_count += 1;
+		}
+		else
+		{
+			print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		}
 	}
 }
 
 void data_logging_add_parameter_int8(data_logging_t* data_logging, int8_t* val, const char* param_name)
 {
 	data_logging_set_t* data_logging_set = data_logging->data_logging_set;
-
-	if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+	
+	if( val == NULL )
 	{
-		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
-
-		new_param->param					 = (double*) val;
-		strcpy( new_param->param_name, 		 param_name );
-		new_param->data_type                 = MAV_PARAM_TYPE_INT8;
-		
-		data_logging_set->data_logging_count += 1;
+		print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+		{
+			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+
+			new_param->param					 = (double*) val;
+			strcpy( new_param->param_name, 		 param_name );
+			new_param->data_type                 = MAV_PARAM_TYPE_INT8;
+			
+			data_logging_set->data_logging_count += 1;
+		}
+		else
+		{
+			print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		}
 	}
 }
 
 void data_logging_add_parameter_uint16(data_logging_t* data_logging, uint16_t* val, const char* param_name)
 {
 	data_logging_set_t* data_logging_set = data_logging->data_logging_set;
-
-	if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+	
+	if( val == NULL )
 	{
-		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
-
-		new_param->param					 = (double*) val;
-		strcpy( new_param->param_name, 		 param_name );
-		new_param->data_type                 = MAV_PARAM_TYPE_UINT16;
-		
-		data_logging_set->data_logging_count += 1;
+		print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+		{
+			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+
+			new_param->param					 = (double*) val;
+			strcpy( new_param->param_name, 		 param_name );
+			new_param->data_type                 = MAV_PARAM_TYPE_UINT16;
+			
+			data_logging_set->data_logging_count += 1;
+		}
+		else
+		{
+			print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		}
 	}
 }
 
 void data_logging_add_parameter_int16(data_logging_t* data_logging, int16_t* val, const char* param_name)
 {
 	data_logging_set_t* data_logging_set = data_logging->data_logging_set;
-
-	if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+	
+	if( val == NULL )
 	{
-		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
-
-		new_param->param					 = (double*) val;
-		strcpy( new_param->param_name, 		 param_name );
-		new_param->data_type                 = MAV_PARAM_TYPE_INT16;
-		
-		data_logging_set->data_logging_count += 1;
+		print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+		{
+			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+
+			new_param->param					 = (double*) val;
+			strcpy( new_param->param_name, 		 param_name );
+			new_param->data_type                 = MAV_PARAM_TYPE_INT16;
+			
+			data_logging_set->data_logging_count += 1;
+		}
+		else
+		{
+			print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		}
 	}
 }
 
 void data_logging_add_parameter_uint32(data_logging_t* data_logging, uint32_t* val, const char* param_name)
 {
 	data_logging_set_t* data_logging_set = data_logging->data_logging_set;
-
-	if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+	
+	if( val == NULL )
 	{
-		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
-
-		new_param->param					 = (double*) val;
-		strcpy( new_param->param_name, 		 param_name );
-		new_param->data_type                 = MAV_PARAM_TYPE_UINT32;
-		
-		data_logging_set->data_logging_count += 1;
+		print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+		{
+			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+
+			new_param->param					 = (double*) val;
+			strcpy( new_param->param_name, 		 param_name );
+			new_param->data_type                 = MAV_PARAM_TYPE_UINT32;
+			
+			data_logging_set->data_logging_count += 1;
+		}
+		else
+		{
+			print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		}
 	}
 }
 
 void data_logging_add_parameter_int32(data_logging_t* data_logging, int32_t* val, const char* param_name)
 {
 	data_logging_set_t* data_logging_set = data_logging->data_logging_set;
-
-	if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+	if( val == NULL )
 	{
-		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
-
-		new_param->param					 = (double*) val;
-		strcpy( new_param->param_name, 		 param_name );
-		new_param->data_type                 = MAV_PARAM_TYPE_INT32;
-		
-		data_logging_set->data_logging_count += 1;
+		print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+		{
+			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+
+			new_param->param					 = (double*) val;
+			strcpy( new_param->param_name, 		 param_name );
+			new_param->data_type                 = MAV_PARAM_TYPE_INT32;
+			
+			data_logging_set->data_logging_count += 1;
+		}
+		else
+		{
+			print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		}
 	}
 }
 
 void data_logging_add_parameter_uint64(data_logging_t* data_logging, uint64_t* val, const char* param_name)
 {
 	data_logging_set_t* data_logging_set = data_logging->data_logging_set;
-
-	if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+	
+	if( val == NULL )
 	{
-		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
-
-		new_param->param					 = (double*) val;
-		strcpy( new_param->param_name, 		 param_name );
-		new_param->data_type                 = MAV_PARAM_TYPE_UINT64;
-		
-		data_logging_set->data_logging_count += 1;
+		print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+		{
+			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+
+			new_param->param					 = (double*) val;
+			strcpy( new_param->param_name, 		 param_name );
+			new_param->data_type                 = MAV_PARAM_TYPE_UINT64;
+			
+			data_logging_set->data_logging_count += 1;
+		}
+		else
+		{
+			print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		}
 	}
 }
 
 void data_logging_add_parameter_int64(data_logging_t* data_logging, int64_t* val, const char* param_name)
 {
 	data_logging_set_t* data_logging_set = data_logging->data_logging_set;
-
-	if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+	
+	if( val == NULL )
 	{
-		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
-
-		new_param->param					 = (double*) val;
-		strcpy( new_param->param_name, 		 param_name );
-		new_param->data_type                 = MAV_PARAM_TYPE_INT64;
-		
-		data_logging_set->data_logging_count += 1;
+		print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+		{
+			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+
+			new_param->param					 = (double*) val;
+			strcpy( new_param->param_name, 		 param_name );
+			new_param->data_type                 = MAV_PARAM_TYPE_INT64;
+			
+			data_logging_set->data_logging_count += 1;
+		}
+		else
+		{
+			print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		}
 	}
 }
 
 void data_logging_add_parameter_float(data_logging_t* data_logging, float* val, const char* param_name)
 {
 	data_logging_set_t* data_logging_set = data_logging->data_logging_set;
-
-	if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+	
+	if( val == NULL )
 	{
-		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
-
-		new_param->param					 = (double*) val;
-		strcpy( new_param->param_name, 		 param_name );
-		new_param->data_type                 = MAV_PARAM_TYPE_REAL32;
-		
-		data_logging_set->data_logging_count += 1;
+		print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+		{
+			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+
+			new_param->param					 = (double*) val;
+			strcpy( new_param->param_name, 		 param_name );
+			new_param->data_type                 = MAV_PARAM_TYPE_REAL32;
+			
+			data_logging_set->data_logging_count += 1;
+		}
+		else
+		{
+			print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		}
 	}
 }
 
 void data_logging_add_parameter_double(data_logging_t* data_logging, double* val, const char* param_name)
 {
 	data_logging_set_t* data_logging_set = data_logging->data_logging_set;
-
-	if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+	
+	if( val == NULL )
 	{
-		data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
-
-		new_param->param					 = val;
-		strcpy( new_param->param_name, 		 param_name );
-		new_param->data_type                 = MAV_PARAM_TYPE_REAL64;
-		
-		data_logging_set->data_logging_count += 1;
+		print_util_dbg_print("[DATA LOGGING] Error: Null pointer!");
 	}
 	else
 	{
-		print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		if( data_logging_set->data_logging_count < data_logging_set->max_data_logging_count )
+		{
+			data_logging_entry_t* new_param = &data_logging_set->data_log[data_logging_set->data_logging_count];
+
+			new_param->param					 = val;
+			strcpy( new_param->param_name, 		 param_name );
+			new_param->data_type                 = MAV_PARAM_TYPE_REAL64;
+			
+			data_logging_set->data_logging_count += 1;
+		}
+		else
+		{
+			print_util_dbg_print("[DATA LOGGING] Error: Cannot add more logging param.\r\n");
+		}
 	}
 }
