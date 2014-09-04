@@ -120,6 +120,7 @@ typedef struct
 	bool file_init;												///< A flag to tell whether a file is init or not
 	bool file_opened;											///< A flag to tell whether a file is opened or not
 	bool file_name_init;										///< A flag to tell whether a valid name was proposed
+	bool sys_mounted;											///< A flag to tell whether the file system is mounted
 	
 	uint32_t loop_count;										///< Counter to try to mount the SD card many times
 	

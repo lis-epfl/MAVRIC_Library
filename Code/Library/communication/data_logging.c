@@ -382,6 +382,7 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 				print_util_dbg_print("Error appending parameter! Error:");
 				data_logging_print_error_signification(data_logging);
 			}
+			break;
 		}
 	}
 }
@@ -538,6 +539,15 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	
 	data_logging->fr = f_mount(&data_logging->fs, "", 1);
 	
+	if (data_logging->fr == FR_OK)
+	{
+		data_logging->sys_mounted = true;
+	}
+	else
+	{
+		data_logging->sys_mounted = false;
+	}
+	
 	if (data_logging->debug)
 	{
 		if (data_logging->fr == FR_OK)
@@ -592,15 +602,17 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 			}
 		
 			data_logging->fr = f_open(&data_logging->fil, data_logging->name_n_extension, FA_WRITE | FA_CREATE_NEW);
-		
-			print_util_dbg_print("f_open result:");
-			data_logging_print_error_signification(data_logging);
+			
+			if (data_logging->debug)
+			{
+				print_util_dbg_print("f_open result:");
+				data_logging_print_error_signification(data_logging);
+			}
 		
 			++i;
 		
 			if (data_logging->fr == FR_EXIST)
 			{
-				print_util_dbg_print("File already existing, adding extension.\r\n");
 
 				if(snprintf(file_add,data_logging->buffer_add_size,"_%ld",i) >= data_logging->buffer_add_size)
 				{
@@ -640,7 +652,10 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 			{
 				data_logging->time_ms = time_keeper_get_millis();
 				
-				data_logging_log_parameters(data_logging);
+				if (data_logging->fr == FR_OK)
+				{
+					data_logging_log_parameters(data_logging);
+				}
 			}
 			else
 			{
@@ -656,19 +671,34 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 			{
 				data_logging->file_name = "Default";
 			}
-			if ((data_logging->fr == FR_NOT_READY)&&(data_logging->loop_count < 10))
+			
+			if ((data_logging->fr != FR_OK)&&(data_logging->loop_count < 10))
 			{
 				data_logging->loop_count += 1;
 			}
 			
 			if (data_logging->loop_count < 10)
 			{
+				print_util_dbg_print("Trying to create a new file\r\n");
+				
+				data_logging->fr = f_mount(&data_logging->fs,"",1);
+				
+				if (data_logging->fr == FR_OK)
+				{
+					data_logging->sys_mounted = true;
+				}
+				else
+				{
+					data_logging->sys_mounted = false;
+				}
+				
 				data_logging_create_new_log_file(data_logging,data_logging->file_name);
 			}
 		}
 	}
 	else
 	{
+		data_logging->loop_count = 0;
 		if (data_logging->file_opened)
 		{
 			if (data_logging->fr != FR_NO_FILE)
@@ -697,6 +727,21 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 				data_logging->file_opened = false;
 			}
 		}
+		if (data_logging->sys_mounted)
+		{
+			data_logging->fr = f_mount(&data_logging->fs,"",0);
+			if (data_logging->debug)
+			{
+				print_util_dbg_print("f_(un)mount result:");
+				data_logging_print_error_signification(data_logging);
+			}
+			if (data_logging->fr == FR_OK)
+			{
+				data_logging->file_opened = false;
+				data_logging->sys_mounted = false;
+			}
+		}
+		
 	}
 	return TASK_RUN_SUCCESS;
 }
