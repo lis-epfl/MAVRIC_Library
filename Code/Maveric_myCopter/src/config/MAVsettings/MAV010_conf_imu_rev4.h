@@ -86,8 +86,8 @@
 #define RAW_MAG_Y_SCALE 589.89f					  		///< Compass y axis scale
 #define RAW_MAG_Z_SCALE 522.41f					  		///< Compass z axis scale
 
-#define MAG_BIAIS_X -274.0f						  		///< Compass x axis biais
-#define MAG_BIAIS_Y  -76.0f						  		///< Compass y axis biais
+#define MAG_BIAIS_X  150 //-274.0f						  		///< Compass x axis biais
+#define MAG_BIAIS_Y  -12//-76.0f						  		///< Compass y axis biais
 #define MAG_BIAIS_Z  23.97f						  		///< Compass z axis biais
 
 #define MAG_ORIENTATION_X -1.0f							  		///< Compass x axis direction
