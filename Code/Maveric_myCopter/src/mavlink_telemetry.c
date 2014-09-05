@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, 
  * this list of conditions and the following disclaimer.
  * 
@@ -31,7 +31,7 @@
 
 /*******************************************************************************
  * \file mavlink_telemetry.c
- * 
+ *
  * \author MAV'RIC Team
  *   
  * \brief Definition of the messages sent by the autopilot to the ground station
@@ -245,7 +245,7 @@ void mavlink_telemetry_add_onboard_parameters(onboard_parameters_t * onboard_par
 	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigation.cruise_speed                            , "vel_cruiseSpeed"  );
 	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigation.max_climb_rate                          , "vel_climbRate"    );
 	onboard_parameters_add_parameter_float    ( onboard_parameters , &central_data->navigation.soft_zone_size							  , "vel_softZone"     );
-	
+
 	onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->state.remote_active,"Remote_Active");
 	onboard_parameters_add_parameter_int32(onboard_parameters, (int32_t*) &central_data->state_machine.use_mode_from_remote, "Remote_Use_Mode");
 
@@ -276,7 +276,7 @@ void mavlink_telemetry_add_data_logging_parameters(data_logging_t* data_logging)
 	data_logging_add_parameter_uint8(data_logging, &central_data->state.mav_mode.byte, "mav_mode");
 	
 };
-	
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -304,7 +304,7 @@ void mavlink_telemetry_init(void)
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&position_estimation_send_position,					&central_data->position_estimator, 				MAVLINK_MSG_ID_LOCAL_POSITION_NED	);					// ID 32
 	scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&position_estimation_send_global_position,			&central_data->position_estimator, 				MAVLINK_MSG_ID_GLOBAL_POSITION_INT	);					// ID 33
 	
-	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&remote_send_scaled,								&central_data->remote,								MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);					// ID 34
+	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&remote_send_scaled,								&central_data->remote,					MAVLINK_MSG_ID_RC_CHANNELS_SCALED	);					// ID 34
 
 	scheduler_add_task(mavlink_scheduler,  250000,   RUN_NEVER,    PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&remote_send_raw,									&central_data->remote,								MAVLINK_MSG_ID_RC_CHANNELS_RAW	);						// ID 35
 	scheduler_add_task(mavlink_scheduler,  1000000,  RUN_NEVER,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&servos_mavlink_send,								&central_data->servos, 								MAVLINK_MSG_ID_SERVO_OUTPUT_RAW	);						// ID 36

@@ -112,9 +112,6 @@ void boardsupport_init(central_data_t *central_data)
 	print_util_dbg_print_init(central_data->debug_out_stream);
 	print_util_dbg_print("Debug stream initialised\r\n");
 
-	// Bind RC receiver with remote
-	// spektrum_satellite_bind();
-
 	// RC receiver initialization
 	spektrum_satellite_init();
 
