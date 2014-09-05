@@ -645,13 +645,12 @@
     <Compile Include="Library\control\control_command.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\control\orca.c">
+    <Compile Include="Library\control\joystick_parsing.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Library\control\orca.h">
+    <Compile Include="Library\control\joystick_parsing.h">
       <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\control\pid_control.c">
+    </Compile>    <Compile Include="Library\control\pid_control.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\control\pid_control.h">
@@ -676,6 +675,9 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\accelerometer.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Library\hal\barometer.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\hal\analog_monitor.h">
@@ -1103,12 +1105,6 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\sensing\ahrs.h">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\neighbor_selection.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Library\sensing\neighbor_selection.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Library\sensing\position_estimation.c">

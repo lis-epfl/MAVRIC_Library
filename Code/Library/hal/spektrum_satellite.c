@@ -1,19 +1,44 @@
-/**
- * \page The MAV'RIC License
- *
- * The MAV'RIC Framework
- *
- * Copyright © 2011-2014
- *
- * Laboratory of Intelligent Systems, EPFL
- */
+/*******************************************************************************
+ * Copyright (c) 2009-2014, MAV'RIC Development Team
+ * All rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without 
+ * modification, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of source code must retain the above copyright notice, 
+ * this list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright notice, 
+ * this list of conditions and the following disclaimer in the documentation 
+ * and/or other materials provided with the distribution.
+ * 
+ * 3. Neither the name of the copyright holder nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ * 
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" 
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
+ * POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
 
-
-/**
-* \file remote_dsm2.c
-*
-* This file is the driver for the remote control
-*/
+/*******************************************************************************
+ * \file spektrum_satellite.c
+ * 
+ * \author MAV'RIC Team
+ * \author Felix Schill
+ * \author Julien Lecoeur
+ *   
+ * \brief This file is the driver for the remote control
+ * 
+ ******************************************************************************/
 
 
 #include "spektrum_satellite.h"
@@ -195,39 +220,50 @@ void spektrum_satellite_init (void)
 }
 
 
-void spektrum_satellite_bind() 
+void spektrum_satellite_bind(spektrum_satellite_t *satellite, mavlink_command_long_t* packet) 
 {
-	int32_t i = 0;
-	uint32_t cpu_freq = sysclk_get_cpu_hz();
-	
-	// Switch off satellite
-	spektrum_satellite_switch_off();
-	delay_ms(100);
-	spektrum_satellite_switch_on();
-	
-	// Send one first pulse
-	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_DOWN);	
-	delay_ms(1);
-	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT| GPIO_INIT_LOW);
-	delay_ms(10);
-
-	// Wait for startup signal
-	while ((gpio_get_pin_value(DSM_RECEIVER_PIN) == 0) && (i < 10000)) 
+	if (packet->param2 == 1)
 	{
-		i++;
+		int32_t i = 0;
+		uint32_t cpu_freq = sysclk_get_cpu_hz();
+	
+		print_util_dbg_print(" \n receive bind CMD \n");
+		
+		// Switch off satellite
+		spektrum_satellite_switch_off();
+		delay_ms(100);
+		spektrum_satellite_switch_on();
+	
+		// Send one first pulse
+		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_DOWN);	
 		delay_ms(1);
+		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT| GPIO_INIT_LOW);
+		delay_ms(10);
+
+		// Wait for startup signal
+		while ((gpio_get_pin_value(DSM_RECEIVER_PIN) == 0) && (i < 10000)) 
+		{
+			i++;
+			delay_ms(1);
+		}
+
+		// Wait 100ms after receiver startup
+		delay_ms(100);
+
+		// create 4 pulses with 126us to set receiver to bind mode
+		for (i = 0; i < 3; i++) 
+		{
+			gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+			cpu_delay_us(113, cpu_freq); 
+			gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_UP);	
+			cpu_delay_us(118, cpu_freq);
+		}
 	}
-
-	// Wait 100ms after receiver startup
-	delay_ms(100);
-
-	// create 4 pulses with 126us to set receiver to bind mode
-	for (i = 0; i < 3; i++) 
+	
+	else if (packet->param3 == 1)
 	{
-		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
-		cpu_delay_us(113, cpu_freq); 
-		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_UP);	
-		cpu_delay_us(118, cpu_freq);
+		print_util_dbg_print("\n reset satellite receiver \r\n");
+		spektrum_satellite_init();
 	}
 }
 
