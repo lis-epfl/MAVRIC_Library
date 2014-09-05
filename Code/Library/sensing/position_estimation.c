@@ -392,7 +392,7 @@ void position_estimation_init(position_estimator_t *pos_est, state_t* state, bar
     pos_est->kp_vel_gps[Y] = 1.0f;
     pos_est->kp_vel_gps[Z] = 0.5f;
 	
-	pos_est->kp_alt_baro = 2.0f;
+	pos_est->kp_alt_baro = 0.0f; //until we improve it
 	pos_est->kp_vel_baro = 1.0f;
 	
 	gps_position_init(pos_est);
