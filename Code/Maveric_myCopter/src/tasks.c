@@ -53,7 +53,7 @@
 #include "lsm330dlc.h"
 #include "hmc5883l.h"
 #include "stdio_usb.h"
-#include "data_logging.h"
+//#include "data_logging.h"
 
 #include "pwm_servos.h"
 
@@ -145,7 +145,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 		{
 			if (central_data->state.remote_active == 1)
 			{
-				remote_controller_get_velocity_vector_from_remote(&central_data->controls);
+			remote_controller_get_velocity_vector_from_remote(&central_data->controls);
 			}
 			else
 			{
@@ -165,7 +165,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 		{
 			if (central_data->state.remote_active == 1)
 			{
-				remote_controller_get_command_from_remote(&central_data->controls);
+			remote_controller_get_command_from_remote(&central_data->controls);
 			}
 			else
 			{
@@ -267,7 +267,7 @@ task_return_t tasks_run_barometer_update(void* arg)
 task_return_t tasks_led_toggle(void* arg)
 {
 	LED_Toggle(LED1);
-	
+
 	return TASK_RUN_SUCCESS;
 }
 
@@ -278,7 +278,7 @@ void tasks_create_tasks()
 	
 	scheduler_t* scheduler = &central_data->scheduler;
 
-	scheduler_add_task(scheduler, 4000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation                                          , 0															, 0);
+	scheduler_add_task(scheduler, 4000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation                                          , 0                                                    , 0);
 	// scheduler_add_task(scheduler, 4000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_HIGHEST, &tasks_run_stabilisation_quaternion                               , 0 													, 0);
 
 	scheduler_add_task(scheduler, 20000, 	RUN_REGULAR, PERIODIC_RELATIVE, PRIORITY_HIGH   , (task_function_t)&remote_update 									, (task_argument_t)&central_data->remote 				, 1);
@@ -293,9 +293,9 @@ void tasks_create_tasks()
 	scheduler_add_task(scheduler, 100000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&analog_monitor_update                           , (task_argument_t)&central_data->analog_monitor 		, 7);
 	scheduler_add_task(scheduler, 10000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&waypoint_handler_control_time_out_waypoint_msg  , (task_argument_t)&central_data->waypoint_handler 		, 8);
 	
-	scheduler_add_task(scheduler, 100000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW	, (task_function_t)&data_logging_run								, (task_argument_t)&central_data->data_logging			, 9);
+	scheduler_add_task(scheduler, 100000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW	, (task_function_t)&data_logging_update								, (task_argument_t)&central_data->data_logging		, 10);
 	
-	scheduler_add_task(scheduler, 500000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOWEST , &tasks_led_toggle													, 0														, 10);
+	scheduler_add_task(scheduler, 500000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOWEST , &tasks_led_toggle													, 0														, 11);
 
 	scheduler_sort_tasks(scheduler);
 }

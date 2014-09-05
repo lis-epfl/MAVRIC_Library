@@ -17,7 +17,7 @@ extern "C" {
 #endif
 
 #define _USE_WRITE	1							///< 1: Enable disk_write function
-#define _USE_IOCTL	1							///< 1: Enable disk_ioctl fucntion
+#define _USE_IOCTL	1							///< 1: Enable disk_ioctl function
 
 #include "integer.h"
 #include "ff.h"
@@ -128,27 +128,6 @@ DRESULT disk_ioctl (BYTE pdrv, BYTE cmd, void* buff);
  * \result	The time under a bit mask form
  */
 DWORD get_fattime(void);
-
-/** 
- * \brief	Open the file path and seek the end to append
- *
- * \param	fp			[OUT] File object to create
- * \param	path		[IN]  File name to be opened
- * \param	opening_opt	The opening file options
- *
- * \result	The result of the process, a FRESULT enum (defined in ff.h)
- */
-FRESULT diskio_open_append (FIL* fp, const char* path, BYTE opening_opt);
-
-/**
- * \brief	A function to test the low layer (read/write bytes to the SD card)
- */
-void diskio_test_low_layer(void);
-
-/**
- * \brief	A function to test the mounting and writing process on the SD card
- */
-void diskio_test_fatfs(void);
 
 #ifdef __cplusplus
 }

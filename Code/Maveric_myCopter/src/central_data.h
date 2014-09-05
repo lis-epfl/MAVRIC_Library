@@ -107,7 +107,7 @@ typedef struct  {
 	remote_t remote;
 	remote_mode_t remote_mode;
 
-	analog_monitor_t analog_monitor;										///< The analog to digital converter structure
+	analog_monitor_t analog_monitor;							///< The analog to digital converter structure
 
 	imu_t imu;													///< The IMU structure
 	qfilter_t attitude_filter;									///< The qfilter structure
@@ -120,7 +120,7 @@ typedef struct  {
 	
 	stabilise_copter_t stabilisation_copter;					///< The stabilisation structure for copter
 
-	gps_t gps;									///< The GPS structure
+	gps_t gps;													///< The GPS structure
 	
 	simulation_model_t sim_model;								///< The simulation model structure
 	
