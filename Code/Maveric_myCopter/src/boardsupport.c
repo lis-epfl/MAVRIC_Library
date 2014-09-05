@@ -129,7 +129,7 @@ void boardsupport_init(central_data_t *central_data)
 	central_data->analog_monitor.enable[ANALOG_RAIL_11] = true;		// Battery 
 	central_data->analog_monitor.enable[ANALOG_RAIL_12] = true;		// sonar
 	central_data->analog_monitor.enable[ANALOG_RAIL_13] = false;    // pitot
-	analog_monitor_init(&central_data->analog_monitor);
+	analog_monitor_init(&central_data->analog_monitor, &central_data->mavlink_communication.mavlink_stream);
 	
 	// init imu & compass
 	i2c_driver_init(I2C0);

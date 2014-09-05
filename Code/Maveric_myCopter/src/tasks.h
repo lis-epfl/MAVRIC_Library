@@ -126,6 +126,11 @@ task_return_t adc_update(void* arg);
  */
 task_return_t tasks_led_toggle(void* arg);
 
+/**
+ * \brief            Run the send message
+ */
+task_return_t  task_send_position_error(void);
+
 #ifdef __cplusplus
 }
 #endif

@@ -68,6 +68,7 @@ void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabili
 	stabilisation_copter->stabiliser_stack.rate_stabiliser.mavlink_stream = mavlink_stream;
 	stabilisation_copter->stabiliser_stack.attitude_stabiliser.mavlink_stream = mavlink_stream;
 	stabilisation_copter->stabiliser_stack.velocity_stabiliser.mavlink_stream = mavlink_stream;
+	stabilisation_copter->stabiliser_stack.position_stabiliser.mavlink_stream = mavlink_stream;
 	
 	
 	print_util_dbg_print("Stabilisation copter init.\r\n");
