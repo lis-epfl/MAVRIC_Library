@@ -1,13 +1,13 @@
 /*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, 
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, 
  * this list of conditions and the following disclaimer in the documentation 
  * and/or other materials provided with the distribution.
@@ -28,10 +28,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-
+ 
 /*******************************************************************************
  * \file central_data.c
- * 
+ *
  * \author MAV'RIC Team
  *   
  * \brief Place where the central data is stored and initialized
@@ -287,7 +287,7 @@ void central_data_init()
 	
 	// Init sonar
 	// i2cxl_sonar_init(&central_data.i2cxl_sonar);
-	
+
 	// Init P^2 attitude controller
 	attitude_controller_p2_conf_t attitude_controller_p2_config =
 	{
@@ -305,7 +305,7 @@ void central_data_init()
 									&central_data.command.attitude,
 									&central_data.command.torque,
 									&central_data.ahrs );
-	
+
 	// Init servo mixing
 	servo_mix_quadcopter_diag_conf_t servo_mix_config =
 	{
