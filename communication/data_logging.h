@@ -1,13 +1,13 @@
 /*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, 
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, 
  * this list of conditions and the following disclaimer in the documentation 
  * and/or other materials provided with the distribution.
@@ -28,10 +28,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-
+ 
 /*******************************************************************************
  * \file data_logging.h
- * 
+ *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  * 
@@ -54,6 +54,8 @@ extern "C" {
 #define MAX_DATA_LOGGING_COUNT 50								///< The max number of data logging parameters
 
 #define MAX_NUMBER_OF_LOGGED_FILE 500							///< The max number of logged files with the same name on the SD card
+
+#define LOGGING_INTERVAL_SEC 10
 
 /**
  * \brief	Structure of data logging parameter.
@@ -118,6 +120,11 @@ typedef struct
 	bool file_init;												///< A flag to tell whether a file is init or not
 	bool file_opened;											///< A flag to tell whether a file is opened or not
 	bool file_name_init;										///< A flag to tell whether a valid name was proposed
+	bool sys_mounted;											///< A flag to tell whether the file system is mounted
+	
+	uint32_t loop_count;										///< Counter to try to mount the SD card many times
+	
+	uint32_t logging_time;										///< The time that we've passed logging since the last f_close
 	
 	uint32_t log_data;											///< A flag to stop/start writing to file	
 }data_logging_t;
@@ -147,7 +154,7 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
  *
  * \return	The result of the task execution
  */
-task_return_t data_logging_run(data_logging_t* data_logging);
+task_return_t data_logging_update(data_logging_t* data_logging);
 
 /**
  * \brief	Registers parameter to log on the SD card
