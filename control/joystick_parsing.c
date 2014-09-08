@@ -60,9 +60,9 @@ void joystick_parsing_button_mask(joystick_parsing_t* joystick_parsing, uint16_t
 	joystick_parsing_button_1(joystick_parsing, button_local.button_1);
 	
 	joystick_parsing_button(joystick_parsing, button_local.button_2, MAV_MODE_POSITION_HOLD);
-	joystick_parsing_button(joystick_parsing, button_local.button_3, MAV_MODE_VELOCITY_CONTROL);
-	joystick_parsing_button(joystick_parsing, button_local.button_4, MAV_MODE_GPS_NAVIGATION);
-	joystick_parsing_button(joystick_parsing, button_local.button_5, MAV_MODE_ATTITUDE_CONTROL);
+	joystick_parsing_button(joystick_parsing, button_local.button_5, MAV_MODE_VELOCITY_CONTROL);
+	joystick_parsing_button(joystick_parsing, button_local.button_6, MAV_MODE_GPS_NAVIGATION);
+	joystick_parsing_button(joystick_parsing, button_local.button_3, MAV_MODE_ATTITUDE_CONTROL);
 	
 	joystick_parsing->buttons.button_mask = buttons;
 	
