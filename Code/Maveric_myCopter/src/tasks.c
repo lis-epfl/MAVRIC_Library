@@ -66,7 +66,6 @@
 #include "quaternions.h"
 
 central_data_t* central_data;
-float pos_error[4];
 
 task_set_t* tasks_get_main_taskset() 
 {
@@ -127,51 +126,11 @@ task_return_t tasks_run_stabilisation(void* arg)
 		}
 		else if ( mode.GUIDED == GUIDED_ON )
 		{
-			pos_error[X] = 0.0f;
-			pos_error[Y] = 0.0f;
-			pos_error[2] = 0.0f;
-			pos_error[3] = 0.0f;
-			
-			//central_data->controls.rpy = change_to_intermediate_frame(central_data->controls_nav.tvel;
-			central_data->controls.control_mode = ATTITUDE_COMMAND_MODE;//VELOCITY_COMMAND_MODE;
-			
-			aero_attitude_t attitude_yaw_inverse;
-			quat_t q_rot;
-			control_command_t input = central_data->controls_nav;
-			
-			attitude_yaw_inverse = coord_conventions_quat_to_aero(central_data->stabilisation_copter.ahrs->qe);
-			attitude_yaw_inverse.rpy[0] = 0.0f;
-			attitude_yaw_inverse.rpy[1] = 0.0f;
-			attitude_yaw_inverse.rpy[2] = -attitude_yaw_inverse.rpy[2];
-			
-			//qtmp=quaternions_create_from_vector(input.tvel);
-			//quat_t input_global = quaternions_local_to_global(stabilisation_copter->ahrs->qe, qtmp);
-			
-			q_rot = coord_conventions_quaternion_from_aero(attitude_yaw_inverse);
-			
-			//float pos_error[4];
-			pos_error[X] = central_data->waypoint_handler.waypoint_hold_coordinates.pos[X] - central_data->position_estimator.local_position.pos[X];
-			pos_error[Y] = central_data->waypoint_handler.waypoint_hold_coordinates.pos[Y] - central_data->position_estimator.local_position.pos[Y];
-			pos_error[3] = -(central_data->waypoint_handler.waypoint_hold_coordinates.pos[Z] - central_data->position_estimator.local_position.pos[Z]);
-			
-			pos_error[YAW]= input.rpy[YAW];
-			
-			// run PID update on all velocity controllers
-			stabilisation_run(&central_data->stabilisation_copter.stabiliser_stack.position_stabiliser, central_data->stabilisation_copter.imu->dt, pos_error);
-			
-			float pid_output_global[3];
-			
-			pid_output_global[0] = central_data->stabilisation_copter.stabiliser_stack.position_stabiliser.output.rpy[0];
-			pid_output_global[1] = central_data->stabilisation_copter.stabiliser_stack.position_stabiliser.output.rpy[1];
-			pid_output_global[2] = central_data->stabilisation_copter.stabiliser_stack.position_stabiliser.output.thrust + THRUST_HOVER_POINT;
-			
-			float pid_output_local[3];
-			quaternions_rotate_vector(q_rot, pid_output_global, pid_output_local);
-			
-			central_data->controls = input;
-			central_data->controls.rpy[ROLL] = pid_output_local[Y];
-			central_data->controls.rpy[PITCH] = -pid_output_local[X];
-			central_data->controls.thrust = pid_output_local[2];
+			//position hold stuff
+			stabilisation_copter_position_hold(	&central_data->stabilisation_copter, 
+												&central_data->controls_nav, 
+												&central_data->waypoint_handler, 
+												&central_data->position_estimator);
 			
 			if ((central_data->state.mav_state == MAV_STATE_CRITICAL) && (central_data->waypoint_handler.critical_behavior == FLY_TO_HOME_WP))
 			{
@@ -344,46 +303,4 @@ void tasks_create_tasks()
 	scheduler_add_task(scheduler, 500000,	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOWEST , &tasks_led_toggle													, 0														, 11);
 
 	scheduler_sort_tasks(scheduler);
-}
-
-task_return_t  task_send_position_error(void)
-{
-	mavlink_message_t msg;
-	/*mavlink_msg_named_value_float_pack(	central_data->analog_monitor.mavlink_stream->sysid,
-	central_data->analog_monitor.mavlink_stream->compid,
-	&msg,
-	time_keeper_get_millis(),
-	"sonar_1",
-	central_data->analog_monitor.sonar);
-	
-	mavlink_stream_send(central_data->analog_monitor.mavlink_stream,&msg);
-	*/
-	mavlink_msg_named_value_float_pack(	central_data->analog_monitor.mavlink_stream->sysid,
-	central_data->analog_monitor.mavlink_stream->compid,
-	&msg,
-	time_keeper_get_millis(),
-	"sonar_x",
-	pos_error[X]*100.0f);
-	
-	mavlink_stream_send(central_data->analog_monitor.mavlink_stream,&msg);
-	
-	mavlink_msg_named_value_float_pack(	central_data->analog_monitor.mavlink_stream->sysid,
-	central_data->analog_monitor.mavlink_stream->compid,
-	&msg,
-	time_keeper_get_millis(),
-	"sonar_y",
-	pos_error[Y]*100.0f);
-	
-	mavlink_stream_send(central_data->analog_monitor.mavlink_stream,&msg);
-	
-	mavlink_msg_named_value_float_pack(	central_data->analog_monitor.mavlink_stream->sysid,
-	central_data->analog_monitor.mavlink_stream->compid,
-	&msg,
-	time_keeper_get_millis(),
-	"sonar_z",
-	pos_error[3]*100.0f);
-	
-	mavlink_stream_send(central_data->analog_monitor.mavlink_stream,&msg);
-	
-	return TASK_RUN_SUCCESS;
 }

@@ -53,6 +53,7 @@ extern "C" {
 #include "position_estimation.h"
 #include "imu.h"
 #include "servos.h"
+#include "mavlink_waypoint_handler.h"
 
 /**
  * \brief Structure containing the stacked controller
@@ -100,6 +101,16 @@ typedef struct
  * \param	mavlink_stream			The pointer to the mavlink stream
  */
 void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabilise_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servos_t* servos, const mavlink_stream_t* mavlink_stream);
+
+/**
+ * \brief							Main Controller for controlling and stabilizing the quad in position (not using velocity control)
+ *
+ * \param	stabilisation_copter	The stabilisation structure
+ * \param	input					The control command structure
+ * \param	waypoint_handler		The waypoint handler structure, to get hold_position coordinates
+ * \param	position_estimator		The position estimator structure to compute position error
+ */
+void stabilisation_copter_position_hold(stabilise_copter_t* stabilisation_copter, const control_command_t* input, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator);
 
 /**
  * \brief							Main Controller for controlling and stabilizing the quad

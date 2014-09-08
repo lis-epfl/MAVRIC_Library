@@ -314,11 +314,10 @@ void mavlink_telemetry_init(void)
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&hud_send_message,									&central_data->hud_structure, 					MAVLINK_MSG_ID_VFR_HUD	);								// ID 74
 	scheduler_add_task(mavlink_scheduler,  500000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&simulation_send_state,								&central_data->sim_model, 						MAVLINK_MSG_ID_HIL_STATE	);							// ID 90
 	scheduler_add_task(mavlink_scheduler,  500000,	 RUN_NEVER,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&simulation_send_quaternions,						&central_data->sim_model,						MAVLINK_MSG_ID_HIL_STATE_QUATERNION	);					// ID 115
-	//scheduler_add_task(mavlink_scheduler,  250000,   RUN_NEVER,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&scheduler_send_rt_stats,							&central_data->scheduler, 						MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
+	scheduler_add_task(mavlink_scheduler,  250000,   RUN_NEVER,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&scheduler_send_rt_stats,							&central_data->scheduler, 						MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
 	// scheduler_add_task(mavlink_scheduler,  100000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&mavlink_telemetry_send_sonar,						&central_data->i2cxl_sonar, 						MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
 
 	//scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&analog_monitor_send_sonar,							&central_data->analog_monitor, 						MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 251
-	scheduler_add_task(mavlink_scheduler,  250000,   RUN_REGULAR,  PERIODIC_ABSOLUTE, PRIORITY_NORMAL, (task_function_t)&task_send_position_error,							NULL, 												MAVLINK_MSG_ID_NAMED_VALUE_FLOAT	);					// ID 250
 	
 	scheduler_sort_tasks(mavlink_scheduler);
 	

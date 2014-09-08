@@ -51,7 +51,7 @@
 
 #define NATIVE_BIG_ENDIAN  
 
-#define MAVLINK_SYS_ID 201
+#define MAVLINK_SYS_ID 204
 #define MAVLINK_BASE_STATION_ID 255
 
 #define CONF_DIAG
@@ -59,7 +59,7 @@
 
 #define RC_INPUT_SCALE 0.8
 ///< Thrust compensation for hover (relative to center position)
-#define THRUST_HOVER_POINT (-0.3f)
+#define THRUST_HOVER_POINT (-0.47f)
 
 ///< Define which configuration of the imu to use, depending on the autopilot ID
 #if MAVLINK_SYS_ID == 1

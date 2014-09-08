@@ -59,7 +59,7 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 			// ------ ROLL PID -------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.07f,
+				.p_gain = 0.05f,
 				.clip_min = -0.9f, 
 				.clip_max = 0.9f,
 				.integrator={
@@ -85,7 +85,7 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 			// ------ PITCH PID ------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.07f,
+				.p_gain = 0.05f,
 				.clip_min = -0.9f, 
 				.clip_max = 0.9f,
 				.integrator={
@@ -431,7 +431,7 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 			// ------ ROLL PID -------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.05f,
+				.p_gain = 0.1f,
 				.clip_min = -0.5f,
 				.clip_max = 0.5f,
 				.integrator={
@@ -457,7 +457,7 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 			// ------ PITCH PID ------------------------------------------------
 			// -----------------------------------------------------------------
 			{
-				.p_gain = 0.05f,
+				.p_gain = 0.1f,
 				.clip_min = -0.5f,
 				.clip_max = 0.5f,
 				.integrator={
@@ -510,18 +510,18 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 		// ------ THRUST PID ---------------------------------------------------
 		// ---------------------------------------------------------------------
 		.thrust_controller={
-			.p_gain = 0.1f,
+			.p_gain = 0.05f,
 			.clip_min = -0.9f,
 			.clip_max = 0.65f,
 			.integrator={
-				.pregain = 0.1f,
-				.postgain = 0.0f,
+				.pregain = 0.001f,
+				.postgain = 1.0f,
 				.accumulator = 0.0f,
-				.maths_clip = 1.0f,
+				.maths_clip = 0.5f,
 				.leakiness = 0.0f
 			},
 			.differentiator={
-				.gain = 0.05f,
+				.gain = 0.1f,
 				.previous = 0.0f,
 				.LPF = 0.97f,
 				.maths_clip = 0.2f
