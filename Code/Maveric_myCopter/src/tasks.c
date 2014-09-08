@@ -126,7 +126,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 		{
 			central_data->controls = central_data->controls_nav;
 			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
-		
+			
 			if ((central_data->state.mav_state == MAV_STATE_CRITICAL) && (central_data->waypoint_handler.critical_behavior == FLY_TO_HOME_WP))
 			{
 				central_data->controls.yaw_mode = YAW_COORDINATED;
@@ -135,7 +135,7 @@ task_return_t tasks_run_stabilisation(void* arg)
 			{
 				central_data->controls.yaw_mode = YAW_ABSOLUTE;
 			}
-		
+			
 			if (central_data->state.in_the_air || central_data->navigation.auto_takeoff)
 			{
 				stabilisation_copter_cascade_stabilise(&central_data->stabilisation_copter);
@@ -290,7 +290,7 @@ void tasks_create_tasks()
 	scheduler_add_task(scheduler, 200000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&state_machine_update              				, (task_argument_t)&central_data->state_machine         , 5);
 
 	scheduler_add_task(scheduler, 4000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_NORMAL , (task_function_t)&mavlink_communication_update                    , (task_argument_t)&central_data->mavlink_communication , 6);
-	scheduler_add_task(scheduler, 100000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&analog_monitor_update                           , (task_argument_t)&central_data->analog_monitor 		, 7);
+	scheduler_add_task(scheduler, 300000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&analog_monitor_update                           , (task_argument_t)&central_data->analog_monitor 		, 7);
 	scheduler_add_task(scheduler, 10000, 	RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW    , (task_function_t)&waypoint_handler_control_time_out_waypoint_msg  , (task_argument_t)&central_data->waypoint_handler 		, 8);
 	
 	scheduler_add_task(scheduler, 100000,   RUN_REGULAR, PERIODIC_ABSOLUTE, PRIORITY_LOW	, (task_function_t)&data_logging_update								, (task_argument_t)&central_data->data_logging		, 10);

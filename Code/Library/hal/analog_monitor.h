@@ -74,6 +74,8 @@ typedef struct
 	bool enable[MONITOR_CHANNELS];
 	int16_t buffer[MONITOR_CHANNELS][MONITOR_SAMPLES];
 	float avg[MONITOR_CHANNELS];
+	
+	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
 } analog_monitor_t;
 
 /**
@@ -81,7 +83,7 @@ typedef struct
  * 
  * \param	analog_monitor	The pointer to the analog monitor structure
  */
-void analog_monitor_init(analog_monitor_t* analog_monitor);
+void analog_monitor_init(analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream);
 
 
 /**
@@ -90,6 +92,13 @@ void analog_monitor_init(analog_monitor_t* analog_monitor);
  * \param	analog_monitor	The pointer to the analog monitor structure
  */
 task_return_t analog_monitor_update(analog_monitor_t* analog_monitor);
+
+/**
+ * \brief	send 3 float from the analog monitor
+ * 
+ * \param	analog_monitor	The pointer to the analog monitor structure
+ */
+task_return_t  analog_monitor_send_sonar(analog_monitor_t* analog_monitor);
 
 #ifdef __cplusplus
 	}

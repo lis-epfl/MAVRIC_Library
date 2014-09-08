@@ -62,8 +62,8 @@
 #define RAW_GYRO_Y_SCALE 818.5111f						///< Gyroscope y axis scale
 #define RAW_GYRO_Z_SCALE 818.5111f						///< Gyroscope z axis scale
  
-#define GYRO_BIAIS_X 0.0f								///< Gyroscope x biais
-#define GYRO_BIAIS_Y 0.0f								///< Gyroscope y biais
+#define GYRO_BIAIS_X 13.0f								///< Gyroscope x biais
+#define GYRO_BIAIS_Y 8.4f								///< Gyroscope y biais
 #define GYRO_BIAIS_Z 0.0f								///< Gyroscope z biais
 
 #define GYRO_ORIENTATION_X  1.0f						///< Gyroscope x axis direction
@@ -75,7 +75,7 @@
 #define RAW_ACC_Z_SCALE 4137.07f						///< Accelerometer z axis scale
 
 #define ACC_BIAIS_X	  37.0f								///< Accelerometer x axis biais
-#define ACC_BIAIS_Y  200.0f								///< Accelerometer y axis biais
+#define ACC_BIAIS_Y  165.0f								///< Accelerometer y axis biais
 #define ACC_BIAIS_Z  -150.0f								///< Accelerometer z axis biais
 
 #define ACC_ORIENTATION_X  1.0f									///< Accelerometer x axis direction
