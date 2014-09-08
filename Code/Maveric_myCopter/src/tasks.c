@@ -62,10 +62,8 @@
 #include "remote.h"
 #include "attitude_controller_p2.h"
 
-#include "coord_conventions.h"
-#include "quaternions.h"
-
 central_data_t* central_data;
+
 
 task_set_t* tasks_get_main_taskset() 
 {
@@ -126,11 +124,8 @@ task_return_t tasks_run_stabilisation(void* arg)
 		}
 		else if ( mode.GUIDED == GUIDED_ON )
 		{
-			//position hold stuff
-			stabilisation_copter_position_hold(	&central_data->stabilisation_copter, 
-												&central_data->controls_nav, 
-												&central_data->waypoint_handler, 
-												&central_data->position_estimator);
+			central_data->controls = central_data->controls_nav;
+			central_data->controls.control_mode = VELOCITY_COMMAND_MODE;
 			
 			if ((central_data->state.mav_state == MAV_STATE_CRITICAL) && (central_data->waypoint_handler.critical_behavior == FLY_TO_HOME_WP))
 			{

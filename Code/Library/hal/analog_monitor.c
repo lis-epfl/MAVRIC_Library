@@ -49,10 +49,10 @@
 #define CONV_FACTOR_3 1.0f				///< Conversion factor for the analog channel 3
 #define CONV_FACTOR_4 1.0f				///< Conversion factor for the analog channel 4
 #define CONV_FACTOR_5 1.0f				///< Conversion factor for the analog channel 5
-#define CONV_FACTOR_6 0.00155f*1.43f	///< Conversion factor for the analog channel 6: 6V
-#define CONV_FACTOR_7 0.00155f*1.43f	///< Conversion factor for the analog channel 7: 5V_ANA
-#define CONV_FACTOR_10 -0.00265f*2.091f		///< Conversion factor for the analog channel 10: Input
-#define CONV_FACTOR_11 -0.00265f*2.091f		///< Conversion factor for the analog channel 11: Battery
+#define CONV_FACTOR_6 0.00155f			///< Conversion factor for the analog channel 6: 6V
+#define CONV_FACTOR_7 0.00155f			///< Conversion factor for the analog channel 7: 5V_ANA
+#define CONV_FACTOR_10 -0.00265f		///< Conversion factor for the analog channel 10: Input
+#define CONV_FACTOR_11 -0.00265f		///< Conversion factor for the analog channel 11: Battery
 #define CONV_FACTOR_12 -0.00025f		///< Conversion factor for the analog channel 12: Sonar
 #define CONV_FACTOR_13 -1.0f			///< Conversion factor for the analog channel 13
 
