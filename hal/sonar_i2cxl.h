@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file i2cxl_sonar.h
+ * \file sonar_i2cxl.h
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -52,7 +52,7 @@
 #include <stdint.h>
 
 /**
- * \brief structure of the i2cxl_sonar module
+ * \brief structure of the sonar_i2cxl module
 */
 typedef struct 
 {
@@ -60,32 +60,32 @@ typedef struct
 	uint16_t distance_cm;		///< measured distance in centimeters
 	float distance_m;			///< measured distance in meters
 	const mavlink_stream_t* mavlink_stream;  ///< Pointer to mavlink stream
-} i2cxl_sonar_t;
+} sonar_i2cxl_t;
 
 /**
  * \brief Initializes the I2CXL sonar data struct and the i2c bus
  * 
- * \param i2c_sonar pointer to the i2c_sonar Data structure
+ * \param sonar pointer to the sonar Data structure
  */
-void i2cxl_sonar_init(i2cxl_sonar_t* i2c_sonar, const mavlink_stream_t* mavlink_stream);
+void sonar_i2cxl_init(sonar_i2cxl_t* sonar, const mavlink_stream_t* mavlink_stream);
 
 /**
  * \brief Reads last value from sensor and start new recording
  * \details This function should be called at a frequency lower than 10Hz
  * 
- * \param i2c_sonar Data struct
+ * \param sonar Data struct
  */
-void i2cxl_sonar_update(i2cxl_sonar_t* i2c_sonar);
+void sonar_i2cxl_update(sonar_i2cxl_t* sonar);
 
 
 /**
  * \brief	Task to send the mavlink sonar message
  * 
- * \param i2c_sonar Data struct
+ * \param sonar Data struct
  *
  * \return	The status of execution of the task
  */
-task_return_t i2cxl_send_sonar(i2cxl_sonar_t* i2cxl_sonar);
+task_return_t sonar_i2cxl_send_telemetry(sonar_i2cxl_t* sonar_i2cxl);
 
 #ifdef __cplusplus
 	}
