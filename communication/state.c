@@ -180,8 +180,8 @@ task_return_t state_send_heartbeat(const state_t* state)
 
 task_return_t state_send_status(const state_t* state)
 {
-	float battery_voltage = state->analog_monitor->avg[ANALOG_RAIL_10];		// bat voltage (mV), actual battery pack plugged to the board
-	float battery_remaining = state->analog_monitor->avg[ANALOG_RAIL_11] / 12.4f * 100.0f;
+	float battery_voltage = state->analog_monitor->avg[ANALOG_RAIL_11];		// bat voltage (mV), actual battery pack plugged to the board
+	float battery_remaining = state->analog_monitor->avg[ANALOG_RAIL_10] / 12.4f * 100.0f;
 	
 	const mavlink_stream_t* mavlink_stream = state->mavlink_stream;
 	mavlink_message_t msg;
