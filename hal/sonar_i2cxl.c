@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file i2cxl_sonar.c
+ * \file sonar_i2cxl.c
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -40,42 +40,72 @@
  ******************************************************************************/
 
 
-#include "i2cxl_sonar.h"
+#include "sonar_i2cxl.h"
 #include "twim.h"
 #include "delay.h"
 #include "print_util.h"
 #include "mavlink_communication.h"
 #include "time_keeper.h"
 
-const uint8_t I2CXL_DEFAULT_ADDRESS				= 0x70;		///< Address of the device
-const uint8_t I2CXL_RANGE_COMMAND				= 0x51;		///< Address of the Range Command Register
-const uint8_t I2CXL_CHANGE_ADDRESS_COMMAND_1	= 0xAA;		///< Address of the Change Command address Register 1
-const uint8_t I2CXL_CHANGE_ADDRESS_COMMAND_2	= 0xA5;		///< Address of the Change Command address Register 2
+const uint8_t SONAR_I2CXL_DEFAULT_ADDRESS			= 0x70;		///< Address of the device
+const uint8_t SONAR_I2CXL_RANGE_COMMAND				= 0x51;		///< Address of the Range Command Register
+const uint8_t SONAR_I2CXL_CHANGE_ADDRESS_COMMAND_1	= 0xAA;		///< Address of the Change Command address Register 1
+const uint8_t SONAR_I2CXL_CHANGE_ADDRESS_COMMAND_2	= 0xA5;		///< Address of the Change Command address Register 2
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
 
 /**
- * \brief Send range Command for the i2cxl_sonar
+ * \brief Send range Command for the sonar_i2cxl
  *
- * \param i2c_sonar pointer to an object containing the i2cxl_sonar's data
+ * \param sonar pointer to an object containing the sonar_i2cxl's data
  */
-void i2cxl_send_range_command(i2cxl_sonar_t* i2c_sonar);
+void sonar_i2cxl_send_range_command(sonar_i2cxl_t* sonar);
+
 
 /**
  * \brief Get the last measurement
  *
- * \param i2c_sonar pointer to an object containing the i2cxl_sonar's data
+ * \param sonar pointer to an object containing the sonar_i2cxl's data
  */
-void i2cxl_get_last_measure(i2cxl_sonar_t* i2c_sonar);
+void sonar_i2cxl_get_last_measure(sonar_i2cxl_t* sonar);
 
 
-void i2cxl_sonar_init(i2cxl_sonar_t* i2cxl_sonar, const mavlink_stream_t* mavlink_stream)
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void sonar_i2cxl_send_range_command(sonar_i2cxl_t* sonar_i2cxl)
+{
+	uint8_t buff = SONAR_I2CXL_RANGE_COMMAND;
+	twim_write(&AVR32_TWIM1, &buff, 1, sonar_i2cxl->i2c_address, false);
+}
+
+
+void sonar_i2cxl_get_last_measure(sonar_i2cxl_t* sonar_i2cxl)
+{
+	uint8_t buf[2];
+	twim_read(&AVR32_TWIM1, buf, 2, sonar_i2cxl->i2c_address, false);
+	sonar_i2cxl->distance_cm = (buf[0] << 8) + buf[1];
+	sonar_i2cxl->distance_m  = ((float)sonar_i2cxl->distance_cm) / 100;
+}
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void sonar_i2cxl_init(sonar_i2cxl_t* sonar_i2cxl, const mavlink_stream_t* mavlink_stream)
 {
 	// Init dependencies
-	i2cxl_sonar->mavlink_stream = mavlink_stream;
+	sonar_i2cxl->mavlink_stream = mavlink_stream;
 
 	///< Init data_struct
-	i2cxl_sonar->i2c_address = I2CXL_DEFAULT_ADDRESS;
-	i2cxl_sonar->distance_cm = 0;
-	i2cxl_sonar->distance_m  = 0;
+	sonar_i2cxl->i2c_address = SONAR_I2CXL_DEFAULT_ADDRESS;
+	sonar_i2cxl->distance_cm = 0;
+	sonar_i2cxl->distance_m  = 0;
 
 	///< Init I2C bus
 	static twi_options_t twi_opt = 
@@ -91,36 +121,22 @@ void i2cxl_sonar_init(i2cxl_sonar_t* i2cxl_sonar, const mavlink_stream_t* mavlin
 }
 
 
-void i2cxl_sonar_update(i2cxl_sonar_t* i2cxl_sonar)
+void sonar_i2cxl_update(sonar_i2cxl_t* sonar_i2cxl)
 {
-	i2cxl_get_last_measure(i2cxl_sonar);
-	i2cxl_send_range_command(i2cxl_sonar);
-}
-
-void i2cxl_send_range_command(i2cxl_sonar_t* i2cxl_sonar)
-{
-	uint8_t buff = I2CXL_RANGE_COMMAND;
-	twim_write(&AVR32_TWIM1, &buff, 1, i2cxl_sonar->i2c_address, false);
+	sonar_i2cxl_get_last_measure(sonar_i2cxl);
+	sonar_i2cxl_send_range_command(sonar_i2cxl);
 }
 
 
-void i2cxl_get_last_measure(i2cxl_sonar_t* i2cxl_sonar)
-{
-	uint8_t buf[2];
-	twim_read(&AVR32_TWIM1, buf, 2, i2cxl_sonar->i2c_address, false);
-	i2cxl_sonar->distance_cm = (buf[0] << 8) + buf[1];
-	i2cxl_sonar->distance_m  = ((float)i2cxl_sonar->distance_cm) / 100;
-}
-
-task_return_t i2cxl_send_sonar(i2cxl_sonar_t* i2cxl_sonar)
+task_return_t sonar_i2cxl_send_telemetry(sonar_i2cxl_t* sonar_i2cxl)
 {
 	mavlink_message_t msg;
-	mavlink_msg_named_value_float_pack(	i2cxl_sonar->mavlink_stream->sysid,
-										i2cxl_sonar->mavlink_stream->compid,
+	mavlink_msg_named_value_float_pack(	sonar_i2cxl->mavlink_stream->sysid,
+										sonar_i2cxl->mavlink_stream->compid,
 										&msg,
 										time_keeper_get_millis(),
 										"sonar(m)",
-										i2cxl_sonar->distance_m);
-	mavlink_stream_send(i2cxl_sonar->mavlink_stream, &msg);
+										sonar_i2cxl->distance_m);
+	mavlink_stream_send(sonar_i2cxl->mavlink_stream, &msg);
 	return TASK_RUN_SUCCESS;
 }
