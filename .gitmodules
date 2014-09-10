@@ -1,3 +1,0 @@
-[submodule "mavlink"]
-	path = mavlink
-	url = git@github.com:lis-epfl/mavlink.git
