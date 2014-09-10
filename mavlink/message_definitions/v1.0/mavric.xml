@@ -142,6 +142,19 @@
 			<field type="float" name="yaw_rate">Desired yaw rate in radians per second</field>
 			<field type="float" name="thrust">Collective thrust, normalized to 0 .. 1</field>
 		</message>
+		<message id="166" name="SPHERICAL_OPTIC_FLOW">
+			<description>Optical flow from multiple spherical optic flow sensors (e.g. semi-cylindrical CurvACE)</description>
+			<field type="uint64_t" name="time_usec">Timestamp (microseconds since UNIX epoch or microseconds since system boot)</field>
+			<field type="uint8_t" name="id_sensor">Sensor ID</field>
+			<field type="uint8_t" name="nb_sensors">Number of sensors sending data, this can also be used to indicate in how many messages the data from a single sensor was splitted</field>
+			<field type="uint8_t" name="nb_of">Number of Optic Flow vectors sent in this message (between 0 and 27)</field>
+			<field type="uint8_t" name="status">Status of the sensor</field>
+			<field type="int16_t[27]" name="of_azimuth">Azimuthal component of optic flow vectors, in millirad /sec</field>
+			<field type="int16_t[27]" name="of_elevation">Elevation component of optic flow vectors, in millirad /sec</field>
+			<field type="int16_t[27]" name="azimuth">Azimuth of regions used for optic flow computation, in millirad</field>
+			<field type="int16_t[27]" name="elevation">Elevation of regions used for optic flow computation, in millirad</field>
+			<field type="uint8_t[27]" name="of_info">Information on the optic flow vectors</field>
+		</message>
 	</messages>
 </mavlink>
 

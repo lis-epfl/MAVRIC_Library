@@ -786,6 +786,58 @@ static void mavlink_test_roll_pitch_yaw_rates_thrust_setpoint(uint8_t system_id,
         MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
 }
 
+static void mavlink_test_spherical_optic_flow(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
+{
+	mavlink_message_t msg;
+        uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
+        uint16_t i;
+	mavlink_spherical_optic_flow_t packet_in = {
+		93372036854775807ULL,{ 17651, 17652, 17653, 17654, 17655, 17656, 17657, 17658, 17659, 17660, 17661, 17662, 17663, 17664, 17665, 17666, 17667, 17668, 17669, 17670, 17671, 17672, 17673, 17674, 17675, 17676, 17677 },{ 20459, 20460, 20461, 20462, 20463, 20464, 20465, 20466, 20467, 20468, 20469, 20470, 20471, 20472, 20473, 20474, 20475, 20476, 20477, 20478, 20479, 20480, 20481, 20482, 20483, 20484, 20485 },{ 23267, 23268, 23269, 23270, 23271, 23272, 23273, 23274, 23275, 23276, 23277, 23278, 23279, 23280, 23281, 23282, 23283, 23284, 23285, 23286, 23287, 23288, 23289, 23290, 23291, 23292, 23293 },{ 26075, 26076, 26077, 26078, 26079, 26080, 26081, 26082, 26083, 26084, 26085, 26086, 26087, 26088, 26089, 26090, 26091, 26092, 26093, 26094, 26095, 26096, 26097, 26098, 26099, 26100, 26101 },165,232,43,110,{ 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203 }
+    };
+	mavlink_spherical_optic_flow_t packet1, packet2;
+        memset(&packet1, 0, sizeof(packet1));
+        	packet1.time_usec = packet_in.time_usec;
+        	packet1.id_sensor = packet_in.id_sensor;
+        	packet1.nb_sensors = packet_in.nb_sensors;
+        	packet1.nb_of = packet_in.nb_of;
+        	packet1.status = packet_in.status;
+        
+        	mav_array_memcpy(packet1.of_azimuth, packet_in.of_azimuth, sizeof(int16_t)*27);
+        	mav_array_memcpy(packet1.of_elevation, packet_in.of_elevation, sizeof(int16_t)*27);
+        	mav_array_memcpy(packet1.azimuth, packet_in.azimuth, sizeof(int16_t)*27);
+        	mav_array_memcpy(packet1.elevation, packet_in.elevation, sizeof(int16_t)*27);
+        	mav_array_memcpy(packet1.of_info, packet_in.of_info, sizeof(uint8_t)*27);
+        
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_spherical_optic_flow_encode(system_id, component_id, &msg, &packet1);
+	mavlink_msg_spherical_optic_flow_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_spherical_optic_flow_pack(system_id, component_id, &msg , packet1.time_usec , packet1.id_sensor , packet1.nb_sensors , packet1.nb_of , packet1.status , packet1.of_azimuth , packet1.of_elevation , packet1.azimuth , packet1.elevation , packet1.of_info );
+	mavlink_msg_spherical_optic_flow_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_spherical_optic_flow_pack_chan(system_id, component_id, MAVLINK_COMM_0, &msg , packet1.time_usec , packet1.id_sensor , packet1.nb_sensors , packet1.nb_of , packet1.status , packet1.of_azimuth , packet1.of_elevation , packet1.azimuth , packet1.elevation , packet1.of_info );
+	mavlink_msg_spherical_optic_flow_decode(&msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+
+        memset(&packet2, 0, sizeof(packet2));
+        mavlink_msg_to_send_buffer(buffer, &msg);
+        for (i=0; i<mavlink_msg_get_send_buffer_length(&msg); i++) {
+        	comm_send_ch(MAVLINK_COMM_0, buffer[i]);
+        }
+	mavlink_msg_spherical_optic_flow_decode(last_msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+        
+        memset(&packet2, 0, sizeof(packet2));
+	mavlink_msg_spherical_optic_flow_send(MAVLINK_COMM_1 , packet1.time_usec , packet1.id_sensor , packet1.nb_sensors , packet1.nb_of , packet1.status , packet1.of_azimuth , packet1.of_elevation , packet1.azimuth , packet1.elevation , packet1.of_info );
+	mavlink_msg_spherical_optic_flow_decode(last_msg, &packet2);
+        MAVLINK_ASSERT(memcmp(&packet1, &packet2, sizeof(packet1)) == 0);
+}
+
 static void mavlink_test_mavric(uint8_t system_id, uint8_t component_id, mavlink_message_t *last_msg)
 {
 	mavlink_test_radar_tracked_target(system_id, component_id, last_msg);
@@ -804,6 +856,7 @@ static void mavlink_test_mavric(uint8_t system_id, uint8_t component_id, mavlink
 	mavlink_test_set_quad_swarm_led_roll_pitch_yaw_thrust(system_id, component_id, last_msg);
 	mavlink_test_state_correction(system_id, component_id, last_msg);
 	mavlink_test_roll_pitch_yaw_rates_thrust_setpoint(system_id, component_id, last_msg);
+	mavlink_test_spherical_optic_flow(system_id, component_id, last_msg);
 }
 
 #ifdef __cplusplus
