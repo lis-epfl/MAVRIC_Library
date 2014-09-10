@@ -58,13 +58,13 @@ extern "C"
 /**
  * \brief Conversion from degrees to radians
  */
-#define MATH_DEG_TO_RAD (PI/180.)
+#define MATH_DEG_TO_RAD (PI/180.0f)
 
 
 /**
  * \brief Conversion from radians to degrees
  */
-#define MATH_RAD_TO_DEG (180./PI)
+#define MATH_RAD_TO_DEG (180.0f/PI)
 
 
 /**
@@ -78,13 +78,38 @@ extern "C"
 
 
 /**
+ * \brief 		Converts a float from degrees to radians
+ * 
+ * \param 	i 	Value in degrees
+ * \return 		Value in radians
+ */
+float static inline maths_deg_to_rad(float i)
+{
+	return MATH_DEG_TO_RAD * i;
+}
+
+
+/**
+ * \brief 		Converts a float from radians to degrees
+ * 
+ * \param 	i 	Value in radians
+ * \return 		Value in degrees
+ */
+float static inline maths_rad_to_deg(float i)
+{
+	return MATH_RAD_TO_DEG * i;
+}
+
+
+/**
  * \brief 			For any given angle, computes an equivalent angle between -2pi and 2pi 
  * 
  * \param 	angle 	Input angle
  * 
  * \return 			Output angle
  */
-float static inline maths_calc_smaller_angle(float angle) {
+float static inline maths_calc_smaller_angle(float angle) 
+{
 	float out=angle;
 	while (out<-PI) out += 2.0f * PI;
 	while (out>=PI) out -= 2.0f * PI;
