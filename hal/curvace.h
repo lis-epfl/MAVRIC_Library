@@ -63,12 +63,15 @@ typedef struct
 
 typedef union
 {
-
 	int16_t data[2 * CURVACE_NB_OF];
 	struct
 	{
 		curvace_raw_of_vector_t left_hemisphere[ CURVACE_NB_OF / 2 ];
 		curvace_raw_of_vector_t right_hemisphere[ CURVACE_NB_OF / 2 ];
+	};
+	struct
+	{
+		curvace_raw_of_vector_t all[ CURVACE_NB_OF ];
 	};
 } curvace_raw_data_t;
 
@@ -88,7 +91,46 @@ typedef union
 		curvace_of_vector_t left_hemisphere[ CURVACE_NB_OF / 2 ];
 		curvace_of_vector_t right_hemisphere[ CURVACE_NB_OF / 2 ];
 	};
+	struct
+	{
+		curvace_of_vector_t all[ CURVACE_NB_OF ];
+	};
 } curvace_data_t;
+
+
+/**
+ * \brief Pixels coordinates top left is (0, 0), bottom right is (41, 14)
+ */
+typedef struct
+{
+	uint8_t x;		///< x coordinate
+	uint8_t y;		///< y coordinate
+} curvace_pixel_coordinates_t;
+
+
+/**
+ * \brief Direction at which a ROI is pointed
+ */
+typedef struct
+{
+	float azimuth;		///< azimuth in radians
+	float elevation;	///< elevation in radians
+} curvace_viewing_direction_t;
+
+
+/**
+ * \brief List of viewing direction for each Region of interest (ROI)
+ */
+ typedef union
+ {
+ 	float data[ CURVACE_NB_OF * 2 ];
+ 	struct
+ 	{
+ 		curvace_viewing_direction_t left_hemisphere[ CURVACE_NB_OF / 2 ];
+ 		curvace_viewing_direction_t right_hemisphere[ CURVACE_NB_OF / 2 ];
+ 	};
+ 	curvace_viewing_direction_t all[ CURVACE_NB_OF ];
+ } curvace_roi_coord_t;
 
 
 /**
@@ -119,6 +161,7 @@ typedef union
 		derotation_matrix_t left_hemisphere[ CURVACE_NB_OF / 2 ];
 		derotation_matrix_t right_hemisphere[ CURVACE_NB_OF / 2 ];
 	};
+	derotation_matrix_t all[ CURVACE_NB_OF ];
 } curvace_calibration_t;
 
 
@@ -126,6 +169,7 @@ typedef struct
 {
 	curvace_data_t 			of;
 	curvace_raw_data_t 		raw_of;
+	curvace_roi_coord_t		roi_coord;
 	curvace_calibration_t 	calib;
 	float					scale_factor;
 	quat_t 					orientation; 	///< unused

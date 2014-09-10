@@ -38,8 +38,9 @@
  *
  ******************************************************************************/
 
- #include "curvace.h"
-
+#include "curvace.h"
+#include "maths.h"
+ #include "quick_trig.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -101,32 +102,182 @@ void curvace_init(curvace_t* curvace, const ahrs_t* ahrs)
 									// TODO: check this
 
 	float inter_ommatidia = 4.2;	// 4.2 degrees between each ommatidia
-	curvace->scale_factor = 200 * ( inter_ommatidia * 3.14 / 180)  / range;
+	curvace->scale_factor = 200 * maths_deg_to_rad(inter_ommatidia) / range;
+
+	// Init viewing directions
+	curvace_pixel_coordinates_t pix_coord[CURVACE_NB_OF] =
+	{
+		// Left hemisphere
+		// Column 2
+		{ .x = 2, .y = 2 },
+		{ .x = 2, .y = 4 },
+		{ .x = 2, .y = 6 },
+		{ .x = 2, .y = 8 },
+		{ .x = 2, .y = 10 },
+		{ .x = 2, .y = 12 },
+
+		// Column 4
+		{ .x = 4, .y = 2 },
+		{ .x = 4, .y = 4 },
+		{ .x = 4, .y = 6 },
+		{ .x = 4, .y = 8 },
+		{ .x = 4, .y = 10 },
+		{ .x = 4, .y = 12 },
+
+		// Column 6
+		{ .x = 6, .y = 2 },
+		{ .x = 6, .y = 4 },
+		{ .x = 6, .y = 6 },
+		{ .x = 6, .y = 8 },
+		{ .x = 6, .y = 10 },
+		{ .x = 6, .y = 12 },
+
+		// Column 8
+		{ .x = 8, .y = 2 },
+		{ .x = 8, .y = 4 },
+		{ .x = 8, .y = 6 },
+		{ .x = 8, .y = 8 },
+		{ .x = 8, .y = 10 },
+		{ .x = 8, .y = 12 },
+
+		// Column 10
+		{ .x = 10, .y = 2 },
+		{ .x = 10, .y = 4 },
+		{ .x = 10, .y = 6 },
+		{ .x = 10, .y = 8 },
+		{ .x = 10, .y = 10 },
+		{ .x = 10, .y = 12 },
+
+		// Column 12
+		{ .x = 12, .y = 2 },
+		{ .x = 12, .y = 4 },
+		{ .x = 12, .y = 6 },
+		{ .x = 12, .y = 8 },
+		{ .x = 12, .y = 10 },
+		{ .x = 12, .y = 12 },
+
+		// Column 14
+		{ .x = 14, .y = 2 },
+		{ .x = 14, .y = 4 },
+		{ .x = 14, .y = 6 },
+		{ .x = 14, .y = 8 },
+		{ .x = 14, .y = 10 },
+		{ .x = 14, .y = 12 },
+
+		// Column 16
+		{ .x = 16, .y = 2 },
+		{ .x = 16, .y = 4 },
+		{ .x = 16, .y = 6 },
+		{ .x = 16, .y = 8 },
+		{ .x = 16, .y = 10 },
+		{ .x = 16, .y = 12 },
+
+		// Column 18
+		{ .x = 18, .y = 2 },
+		{ .x = 18, .y = 4 },
+		{ .x = 18, .y = 6 },
+		{ .x = 18, .y = 8 },
+		{ .x = 18, .y = 10 },
+		{ .x = 18, .y = 12 },
+
+		// Right hemisphere
+		// Column 3 (right hemisphere starts at pixel 20)
+		{ .x = 23, .y = 2 },
+		{ .x = 23, .y = 4 },
+		{ .x = 23, .y = 6 },
+		{ .x = 23, .y = 8 },
+		{ .x = 23, .y = 10 },
+		{ .x = 23, .y = 12 },
+
+		// Column 5 (right hemisphere starts at pixel 20)
+		{ .x = 25, .y = 2 },
+		{ .x = 25, .y = 4 },
+		{ .x = 25, .y = 6 },
+		{ .x = 25, .y = 8 },
+		{ .x = 25, .y = 10 },
+		{ .x = 25, .y = 12 },
+
+		// Column 7 (right hemisphere starts at pixel 20)
+		{ .x = 27, .y = 2 },
+		{ .x = 27, .y = 4 },
+		{ .x = 27, .y = 6 },
+		{ .x = 27, .y = 8 },
+		{ .x = 27, .y = 10 },
+		{ .x = 27, .y = 12 },
+
+		// Column 9 (right hemisphere starts at pixel 20)
+		{ .x = 29, .y = 2 },
+		{ .x = 29, .y = 4 },
+		{ .x = 29, .y = 6 },
+		{ .x = 29, .y = 8 },
+		{ .x = 29, .y = 10 },
+		{ .x = 29, .y = 12 },
+
+		// Column 11 (right hemisphere starts at pixel 20)
+		{ .x = 31, .y = 2 },
+		{ .x = 31, .y = 4 },
+		{ .x = 31, .y = 6 },
+		{ .x = 31, .y = 8 },
+		{ .x = 31, .y = 10 },
+		{ .x = 31, .y = 12 },
+
+		// Column 13 (right hemisphere starts at pixel 20)
+		{ .x = 33, .y = 2 },
+		{ .x = 33, .y = 4 },
+		{ .x = 33, .y = 6 },
+		{ .x = 33, .y = 8 },
+		{ .x = 33, .y = 10 },
+		{ .x = 33, .y = 12 },
+
+		// Column 15 (right hemisphere starts at pixel 20)
+		{ .x = 35, .y = 2 },
+		{ .x = 35, .y = 4 },
+		{ .x = 35, .y = 6 },
+		{ .x = 35, .y = 8 },
+		{ .x = 35, .y = 10 },
+		{ .x = 35, .y = 12 },
+
+		// Column 17 (right hemisphere starts at pixel 20)
+		{ .x = 37, .y = 2 },
+		{ .x = 37, .y = 4 },
+		{ .x = 37, .y = 6 },
+		{ .x = 37, .y = 8 },
+		{ .x = 37, .y = 10 },
+		{ .x = 37, .y = 12 },
+
+		// Column 19 (right hemisphere starts at pixel 20)
+		{ .x = 39, .y = 2 },
+		{ .x = 39, .y = 4 },
+		{ .x = 39, .y = 6 },
+		{ .x = 39, .y = 8 },
+		{ .x = 39, .y = 10 },
+		{ .x = 39, .y = 12 },
+	};
+	for (uint8_t i = 0; i < CURVACE_NB_OF; ++i)
+	{
+		curvace->roi_coord.all[i].azimuth 		= maths_deg_to_rad( -180 + inter_ommatidia * pix_coord[i].x );
+		curvace->roi_coord.all[i].elevation 	= maths_deg_to_rad( + 30 - inter_ommatidia * pix_coord[i].y );	// +30 because we consider positive elevation for positive pitch in NED
+	}
 
 	// Init calib
-	for (uint8_t i = 0; i < CURVACE_NB_OF / 2; ++i)
+	for (uint8_t i = 0; i < CURVACE_NB_OF; ++i)
 	{
-		curvace->calib.left_hemisphere[i].Arx = 1.0f;
-		curvace->calib.left_hemisphere[i].Apx = 2.0f;
-		curvace->calib.left_hemisphere[i].Ayx = 3.0f;
-		curvace->calib.left_hemisphere[i].Ary = 4.0f;
-		curvace->calib.left_hemisphere[i].Apy = 5.0f;
-		curvace->calib.left_hemisphere[i].Ayy = 6.0f;		// TODO: correct this 
-															// and do not forget to multiply each term by scale_factor
+		float azimuth = curvace->roi_coord.all[i].azimuth;
+		float elevation = curvace->roi_coord.all[i].elevation;
 
-		curvace->calib.right_hemisphere[i].Arx = 1.0f;
-		curvace->calib.right_hemisphere[i].Apx = 2.0f;
-		curvace->calib.right_hemisphere[i].Ayx = 3.0f;
-		curvace->calib.right_hemisphere[i].Ary = 4.0f;
-		curvace->calib.right_hemisphere[i].Apy = 5.0f;
-		curvace->calib.right_hemisphere[i].Ayy = 6.0f;		// TODO: correct this
+		curvace->calib.all[i].Arx = curvace->scale_factor * ( - quick_trig_cos(azimuth	) 	* quick_trig_sin(elevation) );
+		curvace->calib.all[i].Apx = curvace->scale_factor * ( - quick_trig_sin(elevation) 	* quick_trig_sin(azimuth)	);
+		curvace->calib.all[i].Ayx = curvace->scale_factor * ( - quick_trig_cos(elevation)	);
+		curvace->calib.all[i].Ary = curvace->scale_factor * (   quick_trig_sin(azimuth	) 	);
+		curvace->calib.all[i].Apy = curvace->scale_factor * ( - quick_trig_cos(azimuth	)	);
+		curvace->calib.all[i].Ayy = 0.0f; 
 	}
 }
 
 
 void curvace_update(curvace_t* curvace)
 {
-	// curvace_read_spi(curvace);
+	curvace_read_spi(curvace);
 
 	curvace_derotate_all(curvace);
 }
