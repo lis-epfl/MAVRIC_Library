@@ -76,34 +76,34 @@ void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[])
 
 task_return_t  stabilisation_send_rpy_speed_thrust_setpoint(stabiliser_t* stabiliser)
 {
-//	mavlink_message_t msg;
-//	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_pack(	stabiliser->mavlink_stream->sysid,
-//															stabiliser->mavlink_stream->compid,
-//															&msg,
-//															time_keeper_get_millis(),
-//															stabiliser->rpy_controller[0].output,
-//															stabiliser->rpy_controller[1].output,
-//															stabiliser->rpy_controller[2].output,
-//															stabiliser->thrust_controller.output );
-//	
-//	mavlink_stream_send(stabiliser->mavlink_stream,&msg);
+	mavlink_message_t msg;
+	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_pack(	stabiliser->mavlink_stream->sysid,
+															stabiliser->mavlink_stream->compid,
+															&msg,
+															time_keeper_get_millis(),
+															stabiliser->rpy_controller[0].output,
+															stabiliser->rpy_controller[1].output,
+															stabiliser->rpy_controller[2].output,
+															stabiliser->thrust_controller.output );
+	
+	mavlink_stream_send(stabiliser->mavlink_stream,&msg);
 	
 	return TASK_RUN_SUCCESS;
 }
 
 task_return_t  stabilisation_send_rpy_rates_error(stabiliser_t* stabiliser)
 {
-//	mavlink_message_t msg;
-//	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_pack(	stabiliser->mavlink_stream->sysid,
-//															stabiliser->mavlink_stream->compid,
-//															&msg,
-//															time_keeper_get_millis(),
-//															stabiliser->rpy_controller[0].error,
-//															stabiliser->rpy_controller[1].error,
-//															stabiliser->rpy_controller[2].error,
-//															stabiliser->thrust_controller.error );
-//	
-//	mavlink_stream_send(stabiliser->mavlink_stream,&msg);
+	mavlink_message_t msg;
+	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_pack(	stabiliser->mavlink_stream->sysid,
+															stabiliser->mavlink_stream->compid,
+															&msg,
+															time_keeper_get_millis(),
+															stabiliser->rpy_controller[0].error,
+															stabiliser->rpy_controller[1].error,
+															stabiliser->rpy_controller[2].error,
+															stabiliser->thrust_controller.error );
+	
+	mavlink_stream_send(stabiliser->mavlink_stream,&msg);
 	
 	return TASK_RUN_SUCCESS;
 }
@@ -111,17 +111,17 @@ task_return_t  stabilisation_send_rpy_rates_error(stabiliser_t* stabiliser)
 task_return_t stabilisation_send_rpy_thrust_setpoint(control_command_t* controls)
 {
 	// Controls output
-//	mavlink_message_t msg;
-//	mavlink_msg_roll_pitch_yaw_thrust_setpoint_pack(	controls->mavlink_stream->sysid,
-//														controls->mavlink_stream->compid,
-//														&msg,
-//														time_keeper_get_millis(),
-//														controls->rpy[ROLL],
-//														controls->rpy[PITCH],
-//														controls->rpy[YAW],
-//														controls->thrust);
-//	
-//	mavlink_stream_send(controls->mavlink_stream,&msg);
+	mavlink_message_t msg;
+	mavlink_msg_roll_pitch_yaw_thrust_setpoint_pack(	controls->mavlink_stream->sysid,
+														controls->mavlink_stream->compid,
+														&msg,
+														time_keeper_get_millis(),
+														controls->rpy[ROLL],
+														controls->rpy[PITCH],
+														controls->rpy[YAW],
+														controls->thrust);
+	
+	mavlink_stream_send(controls->mavlink_stream,&msg);
 	
 	return TASK_RUN_SUCCESS;
 }
