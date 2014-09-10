@@ -338,13 +338,10 @@ void scheduler_run_task_now(task_entry_t *te)
 
 task_return_t scheduler_send_rt_stats(scheduler_t* scheduler) 
 {	
-	task_set_t* ts = scheduler->task_set;
-	mavlink_message_t msg;
 	const mavlink_stream_t* mavlink_stream = scheduler->mavlink_stream;
-
 	task_entry_t* stab_task = scheduler_get_task_by_id(scheduler,0);
-	task_entry_t* curvace_task = scheduler_get_task_by_id(scheduler,12);
 
+	mavlink_message_t msg;
 	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										&msg, 
@@ -384,18 +381,9 @@ task_return_t scheduler_send_rt_stats(scheduler_t* scheduler)
 										"stabExTime", 
 										stab_task->execution_time);
 	mavlink_stream_send(mavlink_stream, &msg);
-
-
-	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
-										mavlink_stream->compid,
-										&msg, 
-										time_keeper_get_millis(), 
-										"CurvaceTime", 
-										curvace_task->execution_time);
-	mavlink_stream_send(mavlink_stream, &msg);
 	
-	ts->tasks[1].rt_violations = 0;
-	ts->tasks[1].delay_max = 0;
+	stab_task->rt_violations = 0;
+	stab_task->delay_max = 0;
 
 	return TASK_RUN_SUCCESS;
 }
