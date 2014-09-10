@@ -50,6 +50,7 @@
 #include <stdint.h>
 #include "quaternions.h"
 #include "ahrs.h"
+#include "mavlink_stream.h"
 
 #define CURVACE_NB_OF 108
 
@@ -174,15 +175,18 @@ typedef struct
 	float					scale_factor;
 	quat_t 					orientation; 	///< unused
 	const ahrs_t* 			ahrs;
+	const mavlink_stream_t* mavlink_stream;
 } curvace_t;
 
 
 
-void curvace_init(curvace_t* curvace, const ahrs_t* ahrs);
+void curvace_init(curvace_t* curvace, const ahrs_t* ahrs, const mavlink_stream_t* mavlink_stream);
 
 
 void curvace_update(curvace_t* curvace);
 
+
+void curvace_send_telemetry(const curvace_t* curvace);
 
 #ifdef __cplusplus
 	}

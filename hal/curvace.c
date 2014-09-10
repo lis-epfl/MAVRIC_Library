@@ -40,7 +40,8 @@
 
 #include "curvace.h"
 #include "maths.h"
- #include "quick_trig.h"
+#include "quick_trig.h"
+#include "time_keeper.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -92,10 +93,11 @@ static void curvace_derotate_all(curvace_t* curvace)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void curvace_init(curvace_t* curvace, const ahrs_t* ahrs)
+void curvace_init(curvace_t* curvace, const ahrs_t* ahrs, const mavlink_stream_t* mavlink_stream)
 {
 	// Init dependencies
-	curvace->ahrs = ahrs;
+	curvace->ahrs 			= ahrs;
+	curvace->mavlink_stream = mavlink_stream;
 
 	// Init scale factor
 	float range = 32768;			// if OF vectors are encoded using full int16_t: -1..1 maps to -32767..32768  
@@ -280,4 +282,113 @@ void curvace_update(curvace_t* curvace)
 	curvace_read_spi(curvace);
 
 	curvace_derotate_all(curvace);
+}
+
+
+void curvace_send_telemetry(const curvace_t* curvace)
+{
+	mavlink_message_t msg;
+	
+	int16_t of_azimuth[27];
+	int16_t of_elevation[27];
+	int16_t azimuth[27];
+	int16_t elevation[27];
+	uint8_t info[27];
+	uint8_t sensor_id;
+
+	sensor_id = 0;
+	for (uint8_t i = 0; i < 27; ++i)
+	{
+		of_azimuth[i] 	= curvace->of.all[i].x;
+		of_elevation[i] = curvace->of.all[i].y;
+		azimuth[i] 		= curvace->roi_coord.all[i].azimuth;
+		elevation[i] 	= curvace->roi_coord.all[i].elevation;
+		info[i] 		= 0;
+	}
+	mavlink_msg_spherical_optic_flow_pack(	curvace->mavlink_stream->sysid,
+											curvace->mavlink_stream->compid,
+											&msg,
+											time_keeper_get_millis(),
+											sensor_id,
+											4,
+											27,
+											0,
+											of_azimuth,
+											of_elevation,
+											azimuth,
+											elevation,
+											info);
+	mavlink_stream_send(curvace->mavlink_stream,&msg);
+
+	sensor_id = 1;
+	for (uint8_t i = 0; i < 27; ++i)
+	{
+		of_azimuth[i] 	= curvace->of.all[i].x;
+		of_elevation[i] = curvace->of.all[i].y;
+		azimuth[i] 		= curvace->roi_coord.all[i].azimuth;
+		elevation[i] 	= curvace->roi_coord.all[i].elevation;
+		info[i] 		= 0;
+	}
+	mavlink_msg_spherical_optic_flow_pack(	curvace->mavlink_stream->sysid,
+											curvace->mavlink_stream->compid,
+											&msg,
+											time_keeper_get_millis(),
+											sensor_id,
+											4,
+											27,
+											0,
+											of_azimuth,
+											of_elevation,
+											azimuth,
+											elevation,
+											info);
+	mavlink_stream_send(curvace->mavlink_stream,&msg);
+
+	sensor_id = 2;
+	for (uint8_t i = 0; i < 27; ++i)
+	{
+		of_azimuth[i] 	= curvace->of.all[i + sensor_id * 27].x;
+		of_elevation[i] = curvace->of.all[i + sensor_id * 27].y;
+		azimuth[i] 		= curvace->roi_coord.all[i + sensor_id * 27].azimuth;
+		elevation[i] 	= curvace->roi_coord.all[i + sensor_id * 27].elevation;
+		info[i] 		= 0;
+	}
+	mavlink_msg_spherical_optic_flow_pack(	curvace->mavlink_stream->sysid,
+											curvace->mavlink_stream->compid,
+											&msg,
+											time_keeper_get_millis(),
+											sensor_id,
+											4,
+											27,
+											0,
+											of_azimuth,
+											of_elevation,
+											azimuth,
+											elevation,
+											info);
+	mavlink_stream_send(curvace->mavlink_stream,&msg);
+
+	sensor_id = 3;
+	for (uint8_t i = 0; i < 27; ++i)
+	{
+		of_azimuth[i] 	= curvace->of.all[i + sensor_id * 27].x;
+		of_elevation[i] = curvace->of.all[i + sensor_id * 27].y;
+		azimuth[i] 		= curvace->roi_coord.all[i + sensor_id * 27].azimuth;
+		elevation[i] 	= curvace->roi_coord.all[i + sensor_id * 27].elevation;
+		info[i] 		= 0;
+	}
+	mavlink_msg_spherical_optic_flow_pack(	curvace->mavlink_stream->sysid,
+											curvace->mavlink_stream->compid,
+											&msg,
+											time_keeper_get_millis(),
+											sensor_id,
+											4,
+											27,
+											0,
+											of_azimuth,
+											of_elevation,
+											azimuth,
+											elevation,
+											info);
+	mavlink_stream_send(curvace->mavlink_stream,&msg);
 }
