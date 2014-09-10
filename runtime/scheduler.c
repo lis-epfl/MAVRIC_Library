@@ -342,12 +342,15 @@ task_return_t scheduler_send_rt_stats(scheduler_t* scheduler)
 	mavlink_message_t msg;
 	const mavlink_stream_t* mavlink_stream = scheduler->mavlink_stream;
 
+	task_entry_t* stab_task = scheduler_get_task_by_id(scheduler,0);
+	task_entry_t* curvace_task = scheduler_get_task_by_id(scheduler,12);
+
 	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										&msg, 
 										time_keeper_get_millis(), 
 										"stabAvgDelay", 
-										ts->tasks[0].delay_avg);
+										stab_task->delay_avg);
 	mavlink_stream_send(mavlink_stream, &msg);
 
 	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
@@ -355,7 +358,7 @@ task_return_t scheduler_send_rt_stats(scheduler_t* scheduler)
 										&msg, 
 										time_keeper_get_millis(), 
 										"stabDelayVar", 
-										sqrt(ts->tasks[0].delay_var_squared));
+										sqrt(stab_task->delay_var_squared));
 	mavlink_stream_send(mavlink_stream, &msg);
 
 	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
@@ -363,7 +366,7 @@ task_return_t scheduler_send_rt_stats(scheduler_t* scheduler)
 										&msg, 
 										time_keeper_get_millis(), 
 										"stabMaxDelay", 
-										ts->tasks[0].delay_max);
+										stab_task->delay_max);
 	mavlink_stream_send(mavlink_stream, &msg);
 
 	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
@@ -371,31 +374,24 @@ task_return_t scheduler_send_rt_stats(scheduler_t* scheduler)
 										&msg, 
 										time_keeper_get_millis(), 
 										"stabRTvio", 
-										ts->tasks[0].rt_violations);
-	mavlink_stream_send(mavlink_stream, &msg);
-
-	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
-										mavlink_stream->compid,
-										&msg, 
-										time_keeper_get_millis(), 
-										"baroAvgDelay", 
-										ts->tasks[1].delay_avg);
+										stab_task->rt_violations);
 	mavlink_stream_send(mavlink_stream, &msg);
 
 	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										&msg,
 										time_keeper_get_millis(), 
-										"imuExTime", 
-										ts->tasks[0].execution_time);
+										"stabExTime", 
+										stab_task->execution_time);
 	mavlink_stream_send(mavlink_stream, &msg);
+
 
 	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										&msg, 
 										time_keeper_get_millis(), 
-										"navExTime", 
-										ts->tasks[3].execution_time);
+										"CurvaceTime", 
+										curvace_task->execution_time);
 	mavlink_stream_send(mavlink_stream, &msg);
 	
 	ts->tasks[1].rt_violations = 0;
