@@ -42,7 +42,7 @@
 
 #include "mavlink_waypoint_handler.h"
 #include "print_util.h"
-#include "remote_controller.h"
+//#include "remote_controller.h"
 #include "time_keeper.h"
 #include "maths.h"
 
