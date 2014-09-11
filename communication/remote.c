@@ -43,13 +43,18 @@
 #include "remote.h"
 #include "time_keeper.h"
 
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
+/**
+ * \brief	Returns the value of the ARMED flag
+ *
+ * \param	remote			The pointer to the remote structure
+ *
+ * \return	The value of the ARMED flag
+ */
 static mode_flag_armed_t get_armed_flag(remote_t* remote);
-
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -153,7 +158,7 @@ void remote_init(remote_t* remote, const remote_conf_t* config, const mavlink_st
 }
 
 
-task_return_t remote_update(remote_t* remote)
+void remote_update(remote_t* remote)
 {
 	uint32_t now = time_keeper_get_time_ticks() ;
 	float raw;
@@ -204,8 +209,6 @@ task_return_t remote_update(remote_t* remote)
 			remote->signal_quality = SIGNAL_LOST;
 		}
 	}
-	
-	return TASK_RUN_SUCCESS;
 }
 
 
@@ -272,6 +275,7 @@ void remote_mode_update(remote_t* remote)
 	remote_mode_t* remote_mode = &remote->mode;
 	bool do_update = false;
 
+	remote_update(remote);
 
 	// Check whether modes should be updated
 	if ( remote_mode->use_disable_remote_mode_switch == true )
@@ -385,6 +389,25 @@ mav_mode_t remote_mode_get(const remote_t* remote)
 	return remote->mode.current_desired_mode;
 }
 
+void remote_get_command_from_remote(remote_t* remote, control_command_t* controls)
+{
+	remote_update(remote);
+	
+	controls->rpy[ROLL]= remote_get_roll(remote) * RC_INPUT_SCALE;
+	controls->rpy[PITCH]= remote_get_pitch(remote) * RC_INPUT_SCALE;
+	controls->rpy[YAW]= remote_get_yaw(remote) * RC_INPUT_SCALE;
+	controls->thrust = remote_get_throttle(remote);
+}
+
+void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t* controls)
+{
+	remote_update(remote);
+	
+	controls->tvel[X]= - 10.0f * remote_get_pitch(remote) * RC_INPUT_SCALE;
+	controls->tvel[Y]= 10.0f * remote_get_roll(remote) * RC_INPUT_SCALE;
+	controls->tvel[Z]= - 1.5f * remote_get_throttle(remote);
+	controls->rpy[YAW] = remote_get_yaw(remote) * RC_INPUT_SCALE;
+}
 
 task_return_t remote_send_raw(const remote_t* remote)
 {
@@ -409,7 +432,6 @@ task_return_t remote_send_raw(const remote_t* remote)
 	
 	return TASK_RUN_SUCCESS;
 }
-
 
 task_return_t remote_send_scaled(const remote_t* remote)
 {
