@@ -266,7 +266,6 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 task_return_t navigation_update(navigation_t* navigation)
 {
 	mav_mode_t mode_local = navigation->state->mav_mode;
-	mode_local.HIL = HIL_OFF;
 	
 	float thrust;
 	
@@ -275,29 +274,25 @@ task_return_t navigation_update(navigation_t* navigation)
 		case MAV_STATE_ACTIVE:
 			if (navigation->state->in_the_air)
 			{
-				switch (mode_local.byte)
+				if(mode_local.AUTO == AUTO_ON)
 				{
-					case MAV_MODE_GPS_NAVIGATION:
-						navigation_waypoint_navigation_handler(navigation);
+					navigation_waypoint_navigation_handler(navigation);
 						
-						if (navigation->state->nav_plan_active)
-						{
-							navigation_run(navigation->waypoint_handler->waypoint_coordinates,navigation);
-						}
-						else
-						{
-							navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
-						}
-						break;
-
-					case MAV_MODE_POSITION_HOLD:
-						navigation_hold_position_handler(navigation);
-						
+					if (navigation->state->nav_plan_active)
+					{
+						navigation_run(navigation->waypoint_handler->waypoint_coordinates,navigation);
+					}
+					else
+					{
 						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
-						break;
-			
-					default:
-						break;
+					}
+				}
+				else if(mode_local.GUIDED == GUIDED_ON)
+				{
+					navigation_hold_position_handler(navigation);
+						
+					navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+					break;
 				}
 			}
 			else
@@ -313,7 +308,7 @@ task_return_t navigation_update(navigation_t* navigation)
 				
 				if (thrust > -0.7f)
 				{
-					if ((navigation->state->mav_mode.GUIDED == GUIDED_ON)||(navigation->state->mav_mode.AUTO == AUTO_ON))
+					if ((mode_local.GUIDED == GUIDED_ON)||(mode_local.AUTO == AUTO_ON))
 					{
 						if (!navigation->auto_takeoff)
 						{
@@ -327,7 +322,7 @@ task_return_t navigation_update(navigation_t* navigation)
 					}
 				}
 				
-				if ((navigation->state->mav_mode.GUIDED == GUIDED_ON)||(navigation->state->mav_mode.AUTO == AUTO_ON))
+				if ((mode_local.GUIDED == GUIDED_ON)||(mode_local.AUTO == AUTO_ON))
 				{
 					if (navigation->auto_takeoff)
 					{
@@ -341,7 +336,7 @@ task_return_t navigation_update(navigation_t* navigation)
 
 		case MAV_STATE_CRITICAL:
 			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
-			if (navigation->state->mav_mode.STABILISE == STABILISE_ON)
+			if (mode_local.STABILISE == STABILISE_ON)
 			{
 				navigation_critical_handler(navigation->waypoint_handler);
 				navigation_run(navigation->waypoint_handler->waypoint_critical_coordinates,navigation);
