@@ -42,7 +42,7 @@
 
 
 #include "state_machine.h"
-#include "remote_controller.h"
+//#include "remote_controller.h"
 #include "spektrum_satellite.h"
 #include "led.h"
 #include "print_util.h"
