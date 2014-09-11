@@ -792,7 +792,7 @@ static void mavlink_test_spherical_optic_flow(uint8_t system_id, uint8_t compone
         uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
         uint16_t i;
 	mavlink_spherical_optic_flow_t packet_in = {
-		93372036854775807ULL,{ 17651, 17652, 17653, 17654, 17655, 17656, 17657, 17658, 17659, 17660, 17661, 17662, 17663, 17664, 17665, 17666, 17667, 17668, 17669, 17670, 17671, 17672, 17673, 17674, 17675, 17676, 17677 },{ 20459, 20460, 20461, 20462, 20463, 20464, 20465, 20466, 20467, 20468, 20469, 20470, 20471, 20472, 20473, 20474, 20475, 20476, 20477, 20478, 20479, 20480, 20481, 20482, 20483, 20484, 20485 },{ 23267, 23268, 23269, 23270, 23271, 23272, 23273, 23274, 23275, 23276, 23277, 23278, 23279, 23280, 23281, 23282, 23283, 23284, 23285, 23286, 23287, 23288, 23289, 23290, 23291, 23292, 23293 },{ 26075, 26076, 26077, 26078, 26079, 26080, 26081, 26082, 26083, 26084, 26085, 26086, 26087, 26088, 26089, 26090, 26091, 26092, 26093, 26094, 26095, 26096, 26097, 26098, 26099, 26100, 26101 },165,232,43,110,{ 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203 }
+		93372036854775807ULL,{ 17651, 17652, 17653, 17654, 17655, 17656, 17657, 17658, 17659, 17660, 17661, 17662, 17663, 17664, 17665, 17666, 17667, 17668 },{ 19523, 19524, 19525, 19526, 19527, 19528, 19529, 19530, 19531, 19532, 19533, 19534, 19535, 19536, 19537, 19538, 19539, 19540 },{ 21395, 21396, 21397, 21398, 21399, 21400, 21401, 21402, 21403, 21404, 21405, 21406, 21407, 21408, 21409, 21410, 21411, 21412 },{ 23267, 23268, 23269, 23270, 23271, 23272, 23273, 23274, 23275, 23276, 23277, 23278, 23279, 23280, 23281, 23282, 23283, 23284 },205,16,83,150,{ 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234 }
     };
 	mavlink_spherical_optic_flow_t packet1, packet2;
         memset(&packet1, 0, sizeof(packet1));
@@ -802,11 +802,11 @@ static void mavlink_test_spherical_optic_flow(uint8_t system_id, uint8_t compone
         	packet1.nb_of = packet_in.nb_of;
         	packet1.status = packet_in.status;
         
-        	mav_array_memcpy(packet1.of_azimuth, packet_in.of_azimuth, sizeof(int16_t)*27);
-        	mav_array_memcpy(packet1.of_elevation, packet_in.of_elevation, sizeof(int16_t)*27);
-        	mav_array_memcpy(packet1.azimuth, packet_in.azimuth, sizeof(int16_t)*27);
-        	mav_array_memcpy(packet1.elevation, packet_in.elevation, sizeof(int16_t)*27);
-        	mav_array_memcpy(packet1.of_info, packet_in.of_info, sizeof(uint8_t)*27);
+        	mav_array_memcpy(packet1.of_azimuth, packet_in.of_azimuth, sizeof(int16_t)*18);
+        	mav_array_memcpy(packet1.of_elevation, packet_in.of_elevation, sizeof(int16_t)*18);
+        	mav_array_memcpy(packet1.azimuth, packet_in.azimuth, sizeof(int16_t)*18);
+        	mav_array_memcpy(packet1.elevation, packet_in.elevation, sizeof(int16_t)*18);
+        	mav_array_memcpy(packet1.of_info, packet_in.of_info, sizeof(uint8_t)*18);
         
 
         memset(&packet2, 0, sizeof(packet2));

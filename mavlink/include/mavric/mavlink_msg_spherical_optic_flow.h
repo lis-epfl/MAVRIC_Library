@@ -5,42 +5,42 @@
 typedef struct __mavlink_spherical_optic_flow_t
 {
  uint64_t time_usec; ///< Timestamp (microseconds since UNIX epoch or microseconds since system boot)
- int16_t of_azimuth[27]; ///< Azimuthal component of optic flow vectors, in millirad /sec
- int16_t of_elevation[27]; ///< Elevation component of optic flow vectors, in millirad /sec
- int16_t azimuth[27]; ///< Azimuth of regions used for optic flow computation, in millirad
- int16_t elevation[27]; ///< Elevation of regions used for optic flow computation, in millirad
+ int16_t of_azimuth[18]; ///< Azimuthal component of optic flow vectors, in millirad /sec
+ int16_t of_elevation[18]; ///< Elevation component of optic flow vectors, in millirad /sec
+ int16_t azimuth[18]; ///< Azimuth of regions used for optic flow computation, in millirad
+ int16_t elevation[18]; ///< Elevation of regions used for optic flow computation, in millirad
  uint8_t id_sensor; ///< Sensor ID
  uint8_t nb_sensors; ///< Number of sensors sending data, this can also be used to indicate in how many messages the data from a single sensor was splitted
- uint8_t nb_of; ///< Number of Optic Flow vectors sent in this message (between 0 and 27)
+ uint8_t nb_of; ///< Number of Optic Flow vectors sent in this message (between 0 and 16)
  uint8_t status; ///< Status of the sensor
- uint8_t of_info[27]; ///< Information on the optic flow vectors
+ uint8_t of_info[18]; ///< Information on the optic flow vectors
 } mavlink_spherical_optic_flow_t;
 
-#define MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_LEN 255
-#define MAVLINK_MSG_ID_166_LEN 255
+#define MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_LEN 174
+#define MAVLINK_MSG_ID_166_LEN 174
 
-#define MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_CRC 78
-#define MAVLINK_MSG_ID_166_CRC 78
+#define MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_CRC 23
+#define MAVLINK_MSG_ID_166_CRC 23
 
-#define MAVLINK_MSG_SPHERICAL_OPTIC_FLOW_FIELD_OF_AZIMUTH_LEN 27
-#define MAVLINK_MSG_SPHERICAL_OPTIC_FLOW_FIELD_OF_ELEVATION_LEN 27
-#define MAVLINK_MSG_SPHERICAL_OPTIC_FLOW_FIELD_AZIMUTH_LEN 27
-#define MAVLINK_MSG_SPHERICAL_OPTIC_FLOW_FIELD_ELEVATION_LEN 27
-#define MAVLINK_MSG_SPHERICAL_OPTIC_FLOW_FIELD_OF_INFO_LEN 27
+#define MAVLINK_MSG_SPHERICAL_OPTIC_FLOW_FIELD_OF_AZIMUTH_LEN 18
+#define MAVLINK_MSG_SPHERICAL_OPTIC_FLOW_FIELD_OF_ELEVATION_LEN 18
+#define MAVLINK_MSG_SPHERICAL_OPTIC_FLOW_FIELD_AZIMUTH_LEN 18
+#define MAVLINK_MSG_SPHERICAL_OPTIC_FLOW_FIELD_ELEVATION_LEN 18
+#define MAVLINK_MSG_SPHERICAL_OPTIC_FLOW_FIELD_OF_INFO_LEN 18
 
 #define MAVLINK_MESSAGE_INFO_SPHERICAL_OPTIC_FLOW { \
 	"SPHERICAL_OPTIC_FLOW", \
 	10, \
 	{  { "time_usec", NULL, MAVLINK_TYPE_UINT64_T, 0, 0, offsetof(mavlink_spherical_optic_flow_t, time_usec) }, \
-         { "of_azimuth", NULL, MAVLINK_TYPE_INT16_T, 27, 8, offsetof(mavlink_spherical_optic_flow_t, of_azimuth) }, \
-         { "of_elevation", NULL, MAVLINK_TYPE_INT16_T, 27, 62, offsetof(mavlink_spherical_optic_flow_t, of_elevation) }, \
-         { "azimuth", NULL, MAVLINK_TYPE_INT16_T, 27, 116, offsetof(mavlink_spherical_optic_flow_t, azimuth) }, \
-         { "elevation", NULL, MAVLINK_TYPE_INT16_T, 27, 170, offsetof(mavlink_spherical_optic_flow_t, elevation) }, \
-         { "id_sensor", NULL, MAVLINK_TYPE_UINT8_T, 0, 224, offsetof(mavlink_spherical_optic_flow_t, id_sensor) }, \
-         { "nb_sensors", NULL, MAVLINK_TYPE_UINT8_T, 0, 225, offsetof(mavlink_spherical_optic_flow_t, nb_sensors) }, \
-         { "nb_of", NULL, MAVLINK_TYPE_UINT8_T, 0, 226, offsetof(mavlink_spherical_optic_flow_t, nb_of) }, \
-         { "status", NULL, MAVLINK_TYPE_UINT8_T, 0, 227, offsetof(mavlink_spherical_optic_flow_t, status) }, \
-         { "of_info", NULL, MAVLINK_TYPE_UINT8_T, 27, 228, offsetof(mavlink_spherical_optic_flow_t, of_info) }, \
+         { "of_azimuth", NULL, MAVLINK_TYPE_INT16_T, 18, 8, offsetof(mavlink_spherical_optic_flow_t, of_azimuth) }, \
+         { "of_elevation", NULL, MAVLINK_TYPE_INT16_T, 18, 44, offsetof(mavlink_spherical_optic_flow_t, of_elevation) }, \
+         { "azimuth", NULL, MAVLINK_TYPE_INT16_T, 18, 80, offsetof(mavlink_spherical_optic_flow_t, azimuth) }, \
+         { "elevation", NULL, MAVLINK_TYPE_INT16_T, 18, 116, offsetof(mavlink_spherical_optic_flow_t, elevation) }, \
+         { "id_sensor", NULL, MAVLINK_TYPE_UINT8_T, 0, 152, offsetof(mavlink_spherical_optic_flow_t, id_sensor) }, \
+         { "nb_sensors", NULL, MAVLINK_TYPE_UINT8_T, 0, 153, offsetof(mavlink_spherical_optic_flow_t, nb_sensors) }, \
+         { "nb_of", NULL, MAVLINK_TYPE_UINT8_T, 0, 154, offsetof(mavlink_spherical_optic_flow_t, nb_of) }, \
+         { "status", NULL, MAVLINK_TYPE_UINT8_T, 0, 155, offsetof(mavlink_spherical_optic_flow_t, status) }, \
+         { "of_info", NULL, MAVLINK_TYPE_UINT8_T, 18, 156, offsetof(mavlink_spherical_optic_flow_t, of_info) }, \
          } \
 }
 
@@ -54,7 +54,7 @@ typedef struct __mavlink_spherical_optic_flow_t
  * @param time_usec Timestamp (microseconds since UNIX epoch or microseconds since system boot)
  * @param id_sensor Sensor ID
  * @param nb_sensors Number of sensors sending data, this can also be used to indicate in how many messages the data from a single sensor was splitted
- * @param nb_of Number of Optic Flow vectors sent in this message (between 0 and 27)
+ * @param nb_of Number of Optic Flow vectors sent in this message (between 0 and 16)
  * @param status Status of the sensor
  * @param of_azimuth Azimuthal component of optic flow vectors, in millirad /sec
  * @param of_elevation Elevation component of optic flow vectors, in millirad /sec
@@ -69,15 +69,15 @@ static inline uint16_t mavlink_msg_spherical_optic_flow_pack(uint8_t system_id, 
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	char buf[MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_LEN];
 	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint8_t(buf, 224, id_sensor);
-	_mav_put_uint8_t(buf, 225, nb_sensors);
-	_mav_put_uint8_t(buf, 226, nb_of);
-	_mav_put_uint8_t(buf, 227, status);
-	_mav_put_int16_t_array(buf, 8, of_azimuth, 27);
-	_mav_put_int16_t_array(buf, 62, of_elevation, 27);
-	_mav_put_int16_t_array(buf, 116, azimuth, 27);
-	_mav_put_int16_t_array(buf, 170, elevation, 27);
-	_mav_put_uint8_t_array(buf, 228, of_info, 27);
+	_mav_put_uint8_t(buf, 152, id_sensor);
+	_mav_put_uint8_t(buf, 153, nb_sensors);
+	_mav_put_uint8_t(buf, 154, nb_of);
+	_mav_put_uint8_t(buf, 155, status);
+	_mav_put_int16_t_array(buf, 8, of_azimuth, 18);
+	_mav_put_int16_t_array(buf, 44, of_elevation, 18);
+	_mav_put_int16_t_array(buf, 80, azimuth, 18);
+	_mav_put_int16_t_array(buf, 116, elevation, 18);
+	_mav_put_uint8_t_array(buf, 156, of_info, 18);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_LEN);
 #else
 	mavlink_spherical_optic_flow_t packet;
@@ -86,11 +86,11 @@ static inline uint16_t mavlink_msg_spherical_optic_flow_pack(uint8_t system_id, 
 	packet.nb_sensors = nb_sensors;
 	packet.nb_of = nb_of;
 	packet.status = status;
-	mav_array_memcpy(packet.of_azimuth, of_azimuth, sizeof(int16_t)*27);
-	mav_array_memcpy(packet.of_elevation, of_elevation, sizeof(int16_t)*27);
-	mav_array_memcpy(packet.azimuth, azimuth, sizeof(int16_t)*27);
-	mav_array_memcpy(packet.elevation, elevation, sizeof(int16_t)*27);
-	mav_array_memcpy(packet.of_info, of_info, sizeof(uint8_t)*27);
+	mav_array_memcpy(packet.of_azimuth, of_azimuth, sizeof(int16_t)*18);
+	mav_array_memcpy(packet.of_elevation, of_elevation, sizeof(int16_t)*18);
+	mav_array_memcpy(packet.azimuth, azimuth, sizeof(int16_t)*18);
+	mav_array_memcpy(packet.elevation, elevation, sizeof(int16_t)*18);
+	mav_array_memcpy(packet.of_info, of_info, sizeof(uint8_t)*18);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_LEN);
 #endif
 
@@ -111,7 +111,7 @@ static inline uint16_t mavlink_msg_spherical_optic_flow_pack(uint8_t system_id, 
  * @param time_usec Timestamp (microseconds since UNIX epoch or microseconds since system boot)
  * @param id_sensor Sensor ID
  * @param nb_sensors Number of sensors sending data, this can also be used to indicate in how many messages the data from a single sensor was splitted
- * @param nb_of Number of Optic Flow vectors sent in this message (between 0 and 27)
+ * @param nb_of Number of Optic Flow vectors sent in this message (between 0 and 16)
  * @param status Status of the sensor
  * @param of_azimuth Azimuthal component of optic flow vectors, in millirad /sec
  * @param of_elevation Elevation component of optic flow vectors, in millirad /sec
@@ -127,15 +127,15 @@ static inline uint16_t mavlink_msg_spherical_optic_flow_pack_chan(uint8_t system
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	char buf[MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_LEN];
 	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint8_t(buf, 224, id_sensor);
-	_mav_put_uint8_t(buf, 225, nb_sensors);
-	_mav_put_uint8_t(buf, 226, nb_of);
-	_mav_put_uint8_t(buf, 227, status);
-	_mav_put_int16_t_array(buf, 8, of_azimuth, 27);
-	_mav_put_int16_t_array(buf, 62, of_elevation, 27);
-	_mav_put_int16_t_array(buf, 116, azimuth, 27);
-	_mav_put_int16_t_array(buf, 170, elevation, 27);
-	_mav_put_uint8_t_array(buf, 228, of_info, 27);
+	_mav_put_uint8_t(buf, 152, id_sensor);
+	_mav_put_uint8_t(buf, 153, nb_sensors);
+	_mav_put_uint8_t(buf, 154, nb_of);
+	_mav_put_uint8_t(buf, 155, status);
+	_mav_put_int16_t_array(buf, 8, of_azimuth, 18);
+	_mav_put_int16_t_array(buf, 44, of_elevation, 18);
+	_mav_put_int16_t_array(buf, 80, azimuth, 18);
+	_mav_put_int16_t_array(buf, 116, elevation, 18);
+	_mav_put_uint8_t_array(buf, 156, of_info, 18);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), buf, MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_LEN);
 #else
 	mavlink_spherical_optic_flow_t packet;
@@ -144,11 +144,11 @@ static inline uint16_t mavlink_msg_spherical_optic_flow_pack_chan(uint8_t system
 	packet.nb_sensors = nb_sensors;
 	packet.nb_of = nb_of;
 	packet.status = status;
-	mav_array_memcpy(packet.of_azimuth, of_azimuth, sizeof(int16_t)*27);
-	mav_array_memcpy(packet.of_elevation, of_elevation, sizeof(int16_t)*27);
-	mav_array_memcpy(packet.azimuth, azimuth, sizeof(int16_t)*27);
-	mav_array_memcpy(packet.elevation, elevation, sizeof(int16_t)*27);
-	mav_array_memcpy(packet.of_info, of_info, sizeof(uint8_t)*27);
+	mav_array_memcpy(packet.of_azimuth, of_azimuth, sizeof(int16_t)*18);
+	mav_array_memcpy(packet.of_elevation, of_elevation, sizeof(int16_t)*18);
+	mav_array_memcpy(packet.azimuth, azimuth, sizeof(int16_t)*18);
+	mav_array_memcpy(packet.elevation, elevation, sizeof(int16_t)*18);
+	mav_array_memcpy(packet.of_info, of_info, sizeof(uint8_t)*18);
         memcpy(_MAV_PAYLOAD_NON_CONST(msg), &packet, MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_LEN);
 #endif
 
@@ -194,7 +194,7 @@ static inline uint16_t mavlink_msg_spherical_optic_flow_encode_chan(uint8_t syst
  * @param time_usec Timestamp (microseconds since UNIX epoch or microseconds since system boot)
  * @param id_sensor Sensor ID
  * @param nb_sensors Number of sensors sending data, this can also be used to indicate in how many messages the data from a single sensor was splitted
- * @param nb_of Number of Optic Flow vectors sent in this message (between 0 and 27)
+ * @param nb_of Number of Optic Flow vectors sent in this message (between 0 and 16)
  * @param status Status of the sensor
  * @param of_azimuth Azimuthal component of optic flow vectors, in millirad /sec
  * @param of_elevation Elevation component of optic flow vectors, in millirad /sec
@@ -209,15 +209,15 @@ static inline void mavlink_msg_spherical_optic_flow_send(mavlink_channel_t chan,
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	char buf[MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_LEN];
 	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint8_t(buf, 224, id_sensor);
-	_mav_put_uint8_t(buf, 225, nb_sensors);
-	_mav_put_uint8_t(buf, 226, nb_of);
-	_mav_put_uint8_t(buf, 227, status);
-	_mav_put_int16_t_array(buf, 8, of_azimuth, 27);
-	_mav_put_int16_t_array(buf, 62, of_elevation, 27);
-	_mav_put_int16_t_array(buf, 116, azimuth, 27);
-	_mav_put_int16_t_array(buf, 170, elevation, 27);
-	_mav_put_uint8_t_array(buf, 228, of_info, 27);
+	_mav_put_uint8_t(buf, 152, id_sensor);
+	_mav_put_uint8_t(buf, 153, nb_sensors);
+	_mav_put_uint8_t(buf, 154, nb_of);
+	_mav_put_uint8_t(buf, 155, status);
+	_mav_put_int16_t_array(buf, 8, of_azimuth, 18);
+	_mav_put_int16_t_array(buf, 44, of_elevation, 18);
+	_mav_put_int16_t_array(buf, 80, azimuth, 18);
+	_mav_put_int16_t_array(buf, 116, elevation, 18);
+	_mav_put_uint8_t_array(buf, 156, of_info, 18);
 #if MAVLINK_CRC_EXTRA
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW, buf, MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_LEN, MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_CRC);
 #else
@@ -230,11 +230,11 @@ static inline void mavlink_msg_spherical_optic_flow_send(mavlink_channel_t chan,
 	packet.nb_sensors = nb_sensors;
 	packet.nb_of = nb_of;
 	packet.status = status;
-	mav_array_memcpy(packet.of_azimuth, of_azimuth, sizeof(int16_t)*27);
-	mav_array_memcpy(packet.of_elevation, of_elevation, sizeof(int16_t)*27);
-	mav_array_memcpy(packet.azimuth, azimuth, sizeof(int16_t)*27);
-	mav_array_memcpy(packet.elevation, elevation, sizeof(int16_t)*27);
-	mav_array_memcpy(packet.of_info, of_info, sizeof(uint8_t)*27);
+	mav_array_memcpy(packet.of_azimuth, of_azimuth, sizeof(int16_t)*18);
+	mav_array_memcpy(packet.of_elevation, of_elevation, sizeof(int16_t)*18);
+	mav_array_memcpy(packet.azimuth, azimuth, sizeof(int16_t)*18);
+	mav_array_memcpy(packet.elevation, elevation, sizeof(int16_t)*18);
+	mav_array_memcpy(packet.of_info, of_info, sizeof(uint8_t)*18);
 #if MAVLINK_CRC_EXTRA
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW, (const char *)&packet, MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_LEN, MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_CRC);
 #else
@@ -256,15 +256,15 @@ static inline void mavlink_msg_spherical_optic_flow_send_buf(mavlink_message_t *
 #if MAVLINK_NEED_BYTE_SWAP || !MAVLINK_ALIGNED_FIELDS
 	char *buf = (char *)msgbuf;
 	_mav_put_uint64_t(buf, 0, time_usec);
-	_mav_put_uint8_t(buf, 224, id_sensor);
-	_mav_put_uint8_t(buf, 225, nb_sensors);
-	_mav_put_uint8_t(buf, 226, nb_of);
-	_mav_put_uint8_t(buf, 227, status);
-	_mav_put_int16_t_array(buf, 8, of_azimuth, 27);
-	_mav_put_int16_t_array(buf, 62, of_elevation, 27);
-	_mav_put_int16_t_array(buf, 116, azimuth, 27);
-	_mav_put_int16_t_array(buf, 170, elevation, 27);
-	_mav_put_uint8_t_array(buf, 228, of_info, 27);
+	_mav_put_uint8_t(buf, 152, id_sensor);
+	_mav_put_uint8_t(buf, 153, nb_sensors);
+	_mav_put_uint8_t(buf, 154, nb_of);
+	_mav_put_uint8_t(buf, 155, status);
+	_mav_put_int16_t_array(buf, 8, of_azimuth, 18);
+	_mav_put_int16_t_array(buf, 44, of_elevation, 18);
+	_mav_put_int16_t_array(buf, 80, azimuth, 18);
+	_mav_put_int16_t_array(buf, 116, elevation, 18);
+	_mav_put_uint8_t_array(buf, 156, of_info, 18);
 #if MAVLINK_CRC_EXTRA
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW, buf, MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_LEN, MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_CRC);
 #else
@@ -277,11 +277,11 @@ static inline void mavlink_msg_spherical_optic_flow_send_buf(mavlink_message_t *
 	packet->nb_sensors = nb_sensors;
 	packet->nb_of = nb_of;
 	packet->status = status;
-	mav_array_memcpy(packet->of_azimuth, of_azimuth, sizeof(int16_t)*27);
-	mav_array_memcpy(packet->of_elevation, of_elevation, sizeof(int16_t)*27);
-	mav_array_memcpy(packet->azimuth, azimuth, sizeof(int16_t)*27);
-	mav_array_memcpy(packet->elevation, elevation, sizeof(int16_t)*27);
-	mav_array_memcpy(packet->of_info, of_info, sizeof(uint8_t)*27);
+	mav_array_memcpy(packet->of_azimuth, of_azimuth, sizeof(int16_t)*18);
+	mav_array_memcpy(packet->of_elevation, of_elevation, sizeof(int16_t)*18);
+	mav_array_memcpy(packet->azimuth, azimuth, sizeof(int16_t)*18);
+	mav_array_memcpy(packet->elevation, elevation, sizeof(int16_t)*18);
+	mav_array_memcpy(packet->of_info, of_info, sizeof(uint8_t)*18);
 #if MAVLINK_CRC_EXTRA
     _mav_finalize_message_chan_send(chan, MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW, (const char *)packet, MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_LEN, MAVLINK_MSG_ID_SPHERICAL_OPTIC_FLOW_CRC);
 #else
@@ -313,7 +313,7 @@ static inline uint64_t mavlink_msg_spherical_optic_flow_get_time_usec(const mavl
  */
 static inline uint8_t mavlink_msg_spherical_optic_flow_get_id_sensor(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint8_t(msg,  224);
+	return _MAV_RETURN_uint8_t(msg,  152);
 }
 
 /**
@@ -323,17 +323,17 @@ static inline uint8_t mavlink_msg_spherical_optic_flow_get_id_sensor(const mavli
  */
 static inline uint8_t mavlink_msg_spherical_optic_flow_get_nb_sensors(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint8_t(msg,  225);
+	return _MAV_RETURN_uint8_t(msg,  153);
 }
 
 /**
  * @brief Get field nb_of from spherical_optic_flow message
  *
- * @return Number of Optic Flow vectors sent in this message (between 0 and 27)
+ * @return Number of Optic Flow vectors sent in this message (between 0 and 16)
  */
 static inline uint8_t mavlink_msg_spherical_optic_flow_get_nb_of(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint8_t(msg,  226);
+	return _MAV_RETURN_uint8_t(msg,  154);
 }
 
 /**
@@ -343,7 +343,7 @@ static inline uint8_t mavlink_msg_spherical_optic_flow_get_nb_of(const mavlink_m
  */
 static inline uint8_t mavlink_msg_spherical_optic_flow_get_status(const mavlink_message_t* msg)
 {
-	return _MAV_RETURN_uint8_t(msg,  227);
+	return _MAV_RETURN_uint8_t(msg,  155);
 }
 
 /**
@@ -353,7 +353,7 @@ static inline uint8_t mavlink_msg_spherical_optic_flow_get_status(const mavlink_
  */
 static inline uint16_t mavlink_msg_spherical_optic_flow_get_of_azimuth(const mavlink_message_t* msg, int16_t *of_azimuth)
 {
-	return _MAV_RETURN_int16_t_array(msg, of_azimuth, 27,  8);
+	return _MAV_RETURN_int16_t_array(msg, of_azimuth, 18,  8);
 }
 
 /**
@@ -363,7 +363,7 @@ static inline uint16_t mavlink_msg_spherical_optic_flow_get_of_azimuth(const mav
  */
 static inline uint16_t mavlink_msg_spherical_optic_flow_get_of_elevation(const mavlink_message_t* msg, int16_t *of_elevation)
 {
-	return _MAV_RETURN_int16_t_array(msg, of_elevation, 27,  62);
+	return _MAV_RETURN_int16_t_array(msg, of_elevation, 18,  44);
 }
 
 /**
@@ -373,7 +373,7 @@ static inline uint16_t mavlink_msg_spherical_optic_flow_get_of_elevation(const m
  */
 static inline uint16_t mavlink_msg_spherical_optic_flow_get_azimuth(const mavlink_message_t* msg, int16_t *azimuth)
 {
-	return _MAV_RETURN_int16_t_array(msg, azimuth, 27,  116);
+	return _MAV_RETURN_int16_t_array(msg, azimuth, 18,  80);
 }
 
 /**
@@ -383,7 +383,7 @@ static inline uint16_t mavlink_msg_spherical_optic_flow_get_azimuth(const mavlin
  */
 static inline uint16_t mavlink_msg_spherical_optic_flow_get_elevation(const mavlink_message_t* msg, int16_t *elevation)
 {
-	return _MAV_RETURN_int16_t_array(msg, elevation, 27,  170);
+	return _MAV_RETURN_int16_t_array(msg, elevation, 18,  116);
 }
 
 /**
@@ -393,7 +393,7 @@ static inline uint16_t mavlink_msg_spherical_optic_flow_get_elevation(const mavl
  */
 static inline uint16_t mavlink_msg_spherical_optic_flow_get_of_info(const mavlink_message_t* msg, uint8_t *of_info)
 {
-	return _MAV_RETURN_uint8_t_array(msg, of_info, 27,  228);
+	return _MAV_RETURN_uint8_t_array(msg, of_info, 18,  156);
 }
 
 /**

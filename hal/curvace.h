@@ -154,6 +154,19 @@ typedef struct
 } derotation_matrix_t;
 
 
+typedef struct
+{
+	float elevation;
+	float azimuth;
+} curvace_scale_factor_t;
+
+typedef union
+{
+	float data[ 2 * CURVACE_NB_OF ];
+	curvace_scale_factor_t  scale[ CURVACE_NB_OF ];
+} curvace_calibration_factor_t;
+
+
 typedef union
 {
 	float data[ CURVACE_NB_OF * 6 ];
@@ -163,19 +176,19 @@ typedef union
 		derotation_matrix_t right_hemisphere[ CURVACE_NB_OF / 2 ];
 	};
 	derotation_matrix_t all[ CURVACE_NB_OF ];
-} curvace_calibration_t;
+} curvace_calibration_matrix_t;
 
 
 typedef struct
 {
-	curvace_data_t 			of;
-	curvace_raw_data_t 		raw_of;
-	curvace_roi_coord_t		roi_coord;
-	curvace_calibration_t 	calib;
-	float					scale_factor;
-	quat_t 					orientation; 	///< unused
-	const ahrs_t* 			ahrs;
-	const mavlink_stream_t* mavlink_stream;
+	curvace_data_t 					of;
+	curvace_raw_data_t 				raw_of;
+	curvace_roi_coord_t				roi_coord;
+	curvace_calibration_matrix_t 	calib_matrix;
+	curvace_calibration_factor_t	calib_factor;
+	quat_t 							orientation; 	///< unused
+	const ahrs_t* 					ahrs;
+	const mavlink_stream_t* 		mavlink_stream;
 } curvace_t;
 
 

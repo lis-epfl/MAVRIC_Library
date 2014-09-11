@@ -80,10 +80,10 @@ static void curvace_derotate_all(curvace_t* curvace)
 	uint32_t j = 0;
 	for (uint8_t i = 0; i < 2 * CURVACE_NB_OF; ++i)
 	{
-		curvace->of.data[i] = 	curvace->scale_factor * curvace->raw_of.data[i] 
-								- curvace->calib.data[j] * curvace->ahrs->angular_speed[0]
-								- curvace->calib.data[j + 1] * curvace->ahrs->angular_speed[1]
-								- curvace->calib.data[j + 2] * curvace->ahrs->angular_speed[2];
+		curvace->of.data[i] = 	+ curvace->calib_factor.data[i] 	* curvace->raw_of.data[i] 
+								- curvace->calib_matrix.data[j] 	* curvace->ahrs->angular_speed[0]
+								- curvace->calib_matrix.data[j + 1] * curvace->ahrs->angular_speed[1]
+								- curvace->calib_matrix.data[j + 2] * curvace->ahrs->angular_speed[2];
 		j += 3;
 	}
 }
@@ -99,12 +99,9 @@ void curvace_init(curvace_t* curvace, const ahrs_t* ahrs, const mavlink_stream_t
 	curvace->ahrs 			= ahrs;
 	curvace->mavlink_stream = mavlink_stream;
 
-	// Init scale factor
-	float range = 32768;			// if OF vectors are encoded using full int16_t: -1..1 maps to -32767..32768  
-									// TODO: check this
-
-	float inter_ommatidia = 4.2;	// 4.2 degrees between each ommatidia
-	curvace->scale_factor = 200 * maths_deg_to_rad(inter_ommatidia) / range;
+	// inter ommatidial angles
+	float inter_ommatidia_vertical 		= 4.26;	// 4.2 degrees between each ommatidia
+	float inter_ommatidia_horizontal 	= 4.2;	// 4.2 degrees between each ommatidia on middle row
 
 	// Init viewing directions
 	curvace_pixel_coordinates_t pix_coord[CURVACE_NB_OF] =
@@ -257,22 +254,35 @@ void curvace_init(curvace_t* curvace, const ahrs_t* ahrs, const mavlink_stream_t
 	};
 	for (uint8_t i = 0; i < CURVACE_NB_OF; ++i)
 	{
-		curvace->roi_coord.all[i].azimuth 		= maths_deg_to_rad( -180 + inter_ommatidia * pix_coord[i].x );
-		curvace->roi_coord.all[i].elevation 	= maths_deg_to_rad( + 30 - inter_ommatidia * pix_coord[i].y );	// +30 because we consider positive elevation for positive pitch in NED
+		curvace->roi_coord.all[i].azimuth 		= maths_deg_to_rad( + inter_ommatidia_horizontal * (( pix_coord[i].x -20 ) - 0.5 ) 	);
+		curvace->roi_coord.all[i].elevation 	= maths_deg_to_rad( - inter_ommatidia_vertical 	 * ( pix_coord[i].y - 7  ) 			); // - because we consider positive elevation for positive pitch in NED
 	}
 
 	// Init calib
 	for (uint8_t i = 0; i < CURVACE_NB_OF; ++i)
 	{
-		float azimuth = curvace->roi_coord.all[i].azimuth;
+		float azimuth 	= curvace->roi_coord.all[i].azimuth;
 		float elevation = curvace->roi_coord.all[i].elevation;
+	
+		curvace->calib_matrix.all[i].Arx = - quick_trig_cos(azimuth) 	* quick_trig_sin(elevation);
+		curvace->calib_matrix.all[i].Apx = - quick_trig_sin(elevation) * quick_trig_sin(azimuth);
+		curvace->calib_matrix.all[i].Ayx = - quick_trig_cos(elevation);
+		curvace->calib_matrix.all[i].Ary =   quick_trig_sin(azimuth);
+		curvace->calib_matrix.all[i].Apy = - quick_trig_cos(azimuth);
+		curvace->calib_matrix.all[i].Ayy = 0.0f; 
+	}
 
-		curvace->calib.all[i].Arx = curvace->scale_factor * ( - quick_trig_cos(azimuth	) 	* quick_trig_sin(elevation) );
-		curvace->calib.all[i].Apx = curvace->scale_factor * ( - quick_trig_sin(elevation) 	* quick_trig_sin(azimuth)	);
-		curvace->calib.all[i].Ayx = curvace->scale_factor * ( - quick_trig_cos(elevation)	);
-		curvace->calib.all[i].Ary = curvace->scale_factor * (   quick_trig_sin(azimuth	) 	);
-		curvace->calib.all[i].Apy = curvace->scale_factor * ( - quick_trig_cos(azimuth	)	);
-		curvace->calib.all[i].Ayy = 0.0f; 
+	// Init scale factor
+	float range = 32768;			// if OF vectors are encoded using full int16_t: -1..1 maps to -32767..32768  
+									// TODO: check this
+
+	float frame_rate = 200; // Hz
+	for (uint8_t i = 0; i < CURVACE_NB_OF; ++i)
+	{
+		curvace->calib_factor.scale[i].elevation = frame_rate * maths_deg_to_rad( inter_ommatidia_vertical ) / range;
+		curvace->calib_factor.scale[i].azimuth   = frame_rate * maths_deg_to_rad( inter_ommatidia_horizontal 
+																				 * quick_trig_cos( curvace->roi_coord.all[i].elevation ) 
+																				) / range;
 	}
 }
 
@@ -288,107 +298,47 @@ void curvace_update(curvace_t* curvace)
 void curvace_send_telemetry(const curvace_t* curvace)
 {
 	mavlink_message_t msg;
+	static uint8_t sensor_id = 0;
 	
-	int16_t of_azimuth[27];
-	int16_t of_elevation[27];
-	int16_t azimuth[27];
-	int16_t elevation[27];
-	uint8_t info[27];
-	uint8_t sensor_id;
+	int16_t of_azimuth[CURVACE_NB_OF];
+	int16_t of_elevation[CURVACE_NB_OF];
+	int16_t azimuth[CURVACE_NB_OF];
+	int16_t elevation[CURVACE_NB_OF];
 
-	sensor_id = 0;
-	for (uint8_t i = 0; i < 27; ++i)
+	uint8_t info[CURVACE_NB_OF];
+	uint8_t offset;
+
+	uint8_t nb_of_per_message = 18;
+
+
+	// fill data in 16bits
+	for (uint8_t i = 0; i < CURVACE_NB_OF; ++i)
 	{
-		of_azimuth[i] 	= curvace->of.all[i].x;
-		of_elevation[i] = curvace->of.all[i].y;
-		azimuth[i] 		= curvace->roi_coord.all[i].azimuth;
-		elevation[i] 	= curvace->roi_coord.all[i].elevation;
+		of_azimuth[i] 	= 1000 * curvace->of.all[i].x;
+		of_elevation[i] = 1000 * curvace->of.all[i].y;
+		azimuth[i] 		= 1000 * curvace->roi_coord.all[i].azimuth;
+		elevation[i] 	= 1000 * curvace->roi_coord.all[i].elevation;
 		info[i] 		= 0;
 	}
+	
+	// Send in 6 chunks
+	offset = sensor_id * nb_of_per_message;
 	mavlink_msg_spherical_optic_flow_pack(	curvace->mavlink_stream->sysid,
 											curvace->mavlink_stream->compid,
 											&msg,
 											time_keeper_get_millis(),
 											sensor_id,
 											4,
-											27,
+											nb_of_per_message,
 											0,
-											of_azimuth,
-											of_elevation,
-											azimuth,
-											elevation,
-											info);
+											of_azimuth   + offset,
+											of_elevation + offset,
+											azimuth 	 + offset,
+											elevation 	 + offset,
+											info 		 + offset);
+	
 	mavlink_stream_send(curvace->mavlink_stream,&msg);
 
-	sensor_id = 1;
-	for (uint8_t i = 0; i < 27; ++i)
-	{
-		of_azimuth[i] 	= curvace->of.all[i].x;
-		of_elevation[i] = curvace->of.all[i].y;
-		azimuth[i] 		= curvace->roi_coord.all[i].azimuth;
-		elevation[i] 	= curvace->roi_coord.all[i].elevation;
-		info[i] 		= 0;
-	}
-	mavlink_msg_spherical_optic_flow_pack(	curvace->mavlink_stream->sysid,
-											curvace->mavlink_stream->compid,
-											&msg,
-											time_keeper_get_millis(),
-											sensor_id,
-											4,
-											27,
-											0,
-											of_azimuth,
-											of_elevation,
-											azimuth,
-											elevation,
-											info);
-	mavlink_stream_send(curvace->mavlink_stream,&msg);
-
-	sensor_id = 2;
-	for (uint8_t i = 0; i < 27; ++i)
-	{
-		of_azimuth[i] 	= curvace->of.all[i + sensor_id * 27].x;
-		of_elevation[i] = curvace->of.all[i + sensor_id * 27].y;
-		azimuth[i] 		= curvace->roi_coord.all[i + sensor_id * 27].azimuth;
-		elevation[i] 	= curvace->roi_coord.all[i + sensor_id * 27].elevation;
-		info[i] 		= 0;
-	}
-	mavlink_msg_spherical_optic_flow_pack(	curvace->mavlink_stream->sysid,
-											curvace->mavlink_stream->compid,
-											&msg,
-											time_keeper_get_millis(),
-											sensor_id,
-											4,
-											27,
-											0,
-											of_azimuth,
-											of_elevation,
-											azimuth,
-											elevation,
-											info);
-	mavlink_stream_send(curvace->mavlink_stream,&msg);
-
-	sensor_id = 3;
-	for (uint8_t i = 0; i < 27; ++i)
-	{
-		of_azimuth[i] 	= curvace->of.all[i + sensor_id * 27].x;
-		of_elevation[i] = curvace->of.all[i + sensor_id * 27].y;
-		azimuth[i] 		= curvace->roi_coord.all[i + sensor_id * 27].azimuth;
-		elevation[i] 	= curvace->roi_coord.all[i + sensor_id * 27].elevation;
-		info[i] 		= 0;
-	}
-	mavlink_msg_spherical_optic_flow_pack(	curvace->mavlink_stream->sysid,
-											curvace->mavlink_stream->compid,
-											&msg,
-											time_keeper_get_millis(),
-											sensor_id,
-											4,
-											27,
-											0,
-											of_azimuth,
-											of_elevation,
-											azimuth,
-											elevation,
-											info);
-	mavlink_stream_send(curvace->mavlink_stream,&msg);
+	// Increment sensor id
+	sensor_id = ( sensor_id + 1 ) % 6;
 }
