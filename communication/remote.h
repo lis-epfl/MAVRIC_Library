@@ -49,7 +49,6 @@
 
 #include "spektrum_satellite.h"
 #include "scheduler.h"
-#include "mavlink_stream.h" 
 #include "stabilisation.h"
 #include "mav_modes.h"
 
@@ -160,7 +159,6 @@ typedef struct
 	signal_quality_t signal_quality;						///< The quality of signal
 	remote_type_t type;										///< The type of remote
 	remote_mode_t mode;										///< The remote mode structure
-	const mavlink_stream_t* mavlink_stream;					///< The pointer to the mavlink stream structure
 } remote_t;
 
 /**
@@ -171,7 +169,7 @@ typedef struct
  * \param	mavlink_stream		The pointer to the mavlink stream structure
  * \param	message_handler		The pointer to the message handler structure
  */
-void remote_init(remote_t* remote, const remote_conf_t* config, const mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *mavlink_handler);
+void remote_init(remote_t* remote, const remote_conf_t* config);
 
 /**
  * \brief	Returns the throttle value from the remote
@@ -273,24 +271,6 @@ void remote_get_command_from_remote(remote_t* remote, control_command_t * contro
  * \param	controls			The pointer to the controls structure
  */
 void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t* controls);
-
-/**
- * \brief	Sends the raw remote values via MAVLink
- * 
- * \param	remote				The pointer to the remote structure
- *
- * \return	The result of the task
- */
-task_return_t remote_send_raw(const remote_t* remote);
-
-/**
- * \brief	Sends the scaled remote values via MAVLink
- * 
- * \param	remote				The pointer to the remote structure
- *
- * \return	The result of the task
- */
-task_return_t remote_send_scaled(const remote_t* remote);
 
 
 #ifdef __cplusplus
