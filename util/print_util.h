@@ -86,7 +86,7 @@ void print_util_putstring(byte_stream_t *out_stream, const char* s);
  * \param 	s            	Character string
  * \param	len				length of the given string
  */
-void print_util_putstring_gumstix(byte_stream_t *out_stream, const char* s, unsigned long len);
+void print_util_putstring_length(byte_stream_t *out_stream, const char* s, unsigned long len);
 
 /**
  * \brief              		Writes an alphabet character to a stream,

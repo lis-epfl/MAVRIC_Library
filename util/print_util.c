@@ -82,7 +82,7 @@ void print_util_putstring(byte_stream_t *out_stream, const char* s)
 	}
 }
 
-void print_util_putstring_gumstix(byte_stream_t *out_stream, const char* s, unsigned long len) 
+void print_util_putstring_length(byte_stream_t *out_stream, const char* s, unsigned long len) 
 {
 	if ((out_stream==NULL) || (out_stream->put==NULL)) 
 	{
