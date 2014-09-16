@@ -79,6 +79,17 @@ byte_stream_t* print_util_get_debug_stream(void);
  */
 void print_util_putstring(byte_stream_t *out_stream, const char* s);
 
+/**
+ * \brief              		Writes string of character to a stream
+ * 
+ * \details               The character string does not need to end with a specific character,
+ *                        its length is set by the len parameter
+ * 
+ * \param 	out_stream   	Pointer to ouput stream
+ * \param 	s            	Character string
+ * \param	len				      length of the given string
+ */
+void print_util_putstring_length(byte_stream_t *out_stream, const char* s, unsigned long len);
 
 /**
  * \brief              		Writes an alphabet character to a stream,

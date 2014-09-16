@@ -82,6 +82,19 @@ void print_util_putstring(byte_stream_t *out_stream, const char* s)
 	}
 }
 
+void print_util_putstring_length(byte_stream_t *out_stream, const char* s, unsigned long len) 
+{
+	if ((out_stream==NULL) || (out_stream->put==NULL)) 
+	{
+		return;
+	}
+	while (len--) 
+	{
+		out_stream->put(out_stream->data, *s);
+		s++;
+	}
+}
+
 
 void print_util_putdigit(byte_stream_t *out_stream, uint32_t  c)
 {
