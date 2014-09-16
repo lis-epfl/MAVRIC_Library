@@ -51,7 +51,7 @@ extern "C" {
 #include <stdbool.h>
 #include "streams.h"
 #include "conf_platform.h"
-#include "mavlink/include/maveric/mavlink.h"
+#include "mavlink/include/mavric/mavlink.h"
 
 /**
  * \brief	Mavlink structures for the receive message and its status

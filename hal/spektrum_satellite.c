@@ -42,7 +42,7 @@
 
 
 #include "spektrum_satellite.h"
-#include "remote_controller.h"
+#include "spektrum.h"
 
 #include "usart.h"
 

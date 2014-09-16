@@ -64,7 +64,7 @@ static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler
 	mavlink_request_data_stream_t request;
 	mavlink_msg_request_data_stream_decode(msg, &request);
 	
-	if ((request.target_system == scheduler->mavlink_stream->sysid)
+	if (((request.target_system == scheduler->mavlink_stream->sysid)||(request.target_system == MAV_SYS_ID_ALL))
 		&&(request.target_component == 0))
 	{
 		if ( scheduler->debug )

@@ -131,12 +131,19 @@ void sonar_i2cxl_update(sonar_i2cxl_t* sonar_i2cxl)
 task_return_t sonar_i2cxl_send_telemetry(sonar_i2cxl_t* sonar_i2cxl)
 {
 	mavlink_message_t msg;
-	mavlink_msg_named_value_float_pack(	sonar_i2cxl->mavlink_stream->sysid,
+
+	mavlink_msg_distance_sensor_pack(	sonar_i2cxl->mavlink_stream->sysid,
 										sonar_i2cxl->mavlink_stream->compid,
 										&msg,
-										time_keeper_get_millis(),
-										"sonar(m)",
-										sonar_i2cxl->distance_m);
+						       			time_keeper_get_millis(), 
+						       			20,								// min 20cm 
+						       			760,							// max 7.6m 
+						       			sonar_i2cxl->distance_m * 100, 
+						       			MAV_DISTANCE_SENSOR_ULTRASOUND, 
+						       			0, 								// id 0
+						       			0, 								// orientation 0
+						       			1);								// covariance (!=0)
+
 	mavlink_stream_send(sonar_i2cxl->mavlink_stream, &msg);
 	return TASK_RUN_SUCCESS;
 }
