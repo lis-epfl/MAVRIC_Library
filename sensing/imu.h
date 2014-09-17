@@ -55,7 +55,6 @@ extern "C" {
 #include "accelerometer.h"
 #include "magnetometer.h"
 #include "quaternions.h"
-#include "scheduler.h"
 
 #define GYRO_LPF 0.1f						///< The gyroscope linear pass filter gain
 #define ACC_LPF 0.05f						///< The accelerometer linear pass filter gain
@@ -99,7 +98,6 @@ typedef struct
 	uint32_t last_update;					///< The time of the last IMU update in ms
 	uint8_t calibration_level;				///< The level of calibration
 	
-	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
 } imu_t;
 
 
@@ -108,7 +106,7 @@ typedef struct
  *
  * \param	imu						The pointer to the IMU structure
  */
-void imu_init (imu_t *imu, const mavlink_stream_t* mavlink_stream);
+void imu_init (imu_t *imu);
 
 
 /**
@@ -125,27 +123,6 @@ void imu_calibrate_gyros(imu_t *imu);
  * \param	imu						The pointer to the IMU structure
  */
 void imu_update(imu_t *imu);
-
-
-/**
- * \brief	Task to send the mavlink scaled IMU message
- * 
- * \param	imu						The pointer to the IMU structure
- *
- * \return	The status of execution of the task
- */
-task_return_t imu_send_scaled(imu_t* imu);
-
-
-/**
- * \brief	Task to send the mavlink raw IMU message
- * 
- * \param	imu						The pointer to the IMU structure
- *
- * \return	The status of execution of the task
- */
-task_return_t imu_send_raw(imu_t* imu);
-
 
 #ifdef __cplusplus
 }

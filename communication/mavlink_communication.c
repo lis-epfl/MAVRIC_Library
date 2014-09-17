@@ -144,7 +144,7 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 								&mavlink_communication->message_handler,
 								&mavlink_communication->mavlink_stream); 
 
-	mavlink_communication->send_msg_handler_set = malloc( sizeof(mavlink_send_handler_set_t) + sizeof(mavlink_send_handler_t[config->max_msg_sending_count]) );
+	mavlink_communication->send_msg_handler_set = malloc( sizeof(mavlink_send_msg_handler_set_t) + sizeof(mavlink_send_msg_handler_t[config->max_msg_sending_count]) );
 
 
 	if ( mavlink_communication->send_msg_handler_set != NULL )
@@ -213,14 +213,14 @@ void mavlink_communication_suspend_downstream(mavlink_communication_t* mavlink_c
 }
 
 
-void mavlink_commnication_add_msg_send(	mavlink_communication_t* mavlink_communication, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_callback_function_t function, handling_com_module_struct_t module_structure, uint32_t task_id)
+void mavlink_commnication_add_msg_send(	mavlink_communication_t* mavlink_communication, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id)
 {
-	mavlink_send_handler_set_t* send_handler = mavlink_communication->send_msg_handler_set;
+	mavlink_send_msg_handler_set_t* send_handler = mavlink_communication->send_msg_handler_set;
 	
 	
 	if ( send_handler->msg_sending_count <  send_handler->max_msg_sending_count )
 	{
-		mavlink_send_handler_t* new_msg_send = &send_handler->msg_send_list[send_handler->msg_sending_count];
+		mavlink_send_msg_handler_t* new_msg_send = &send_handler->msg_send_list[send_handler->msg_sending_count];
 		
 		new_msg_send->mavlink_stream = &mavlink_communication->mavlink_stream;
 		new_msg_send->function = function;
@@ -244,10 +244,10 @@ void mavlink_commnication_add_msg_send(	mavlink_communication_t* mavlink_communi
 }
 
 
-task_return_t mavlink_communication_send_message(mavlink_send_handler_t* msg_send)
+task_return_t mavlink_communication_send_message(mavlink_send_msg_handler_t* msg_send)
 {
-	mavlink_send_callback_function_t function = msg_send->function;
-	handling_com_module_struct_t module_struct = msg_send->module_struct;
+	mavlink_send_msg_function_t function = msg_send->function;
+	handling_telemetry_module_struct_t module_struct = msg_send->module_struct;
 	
 	mavlink_message_t msg;
 	function(module_struct, msg_send->mavlink_stream, &msg);

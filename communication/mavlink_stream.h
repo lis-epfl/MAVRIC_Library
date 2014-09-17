@@ -86,7 +86,7 @@ typedef struct
 	byte_stream_t* rx_stream;		///< Output stream
 	byte_stream_t* tx_stream;		///< Input stream
 	uint32_t sysid;					///< System ID
-	uint32_t compid;					///< System Component ID
+	uint32_t compid;				///< System Component ID
 	bool use_dma;
 } mavlink_stream_conf_t;
 

@@ -30,61 +30,56 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs.c
+ * \file remote_telemetry.h
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Nicolas Dousse
  *   
- * \brief This file implements data structure for attitude estimate
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the remote controller
  *
  ******************************************************************************/
- 
-
-#include "ahrs.h"
-#include "conf_platform.h"
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-void ahrs_init(ahrs_t* ahrs, ahrs_config_t* config)
-{
-	// Init dependencies
-
-	int32_t x = config->x;
-	int32_t y = config->y;
-	int32_t z = config->z;
 
 
-	// Init structure
-	ahrs->qe.s = 1.0f;
-	ahrs->qe.v[0] = 0.0f;
-	ahrs->qe.v[1] = 0.0f;
-	ahrs->qe.v[2] = 0.0f;
-	
-	ahrs->angular_speed[x] = 0.0f;
-	ahrs->angular_speed[y] = 0.0f;
-	ahrs->angular_speed[z] = 0.0f;
-	
-	ahrs->linear_acc[x] = 0.0f;
-	ahrs->linear_acc[y] = 0.0f;
-	ahrs->linear_acc[z] = 0.0f;
-	
-	ahrs->north_vec.s    = 0.0f;
-	ahrs->north_vec.v[0] = 1.0f;
-	ahrs->north_vec.v[1] = 0.0f;
-	ahrs->north_vec.v[2] = 0.0f;
-	
-	ahrs->up_vec.s    = 0.0f;
-	ahrs->up_vec.v[0] = 0.0f;
-	ahrs->up_vec.v[1] = 0.0f;
-	ahrs->up_vec.v[2] = -1.0f;
+#ifndef REMOTE_TELEMETRY_H_
+#define REMOTE_TELEMETRY_H_
+
+#include "mavlink_stream.h"
+#include "mavlink_message_handler.h"
+#include "remote.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**
+ * \brief	Initialize the MAVLink communication module for the remote
+ * 
+ * \param	remote					The pointer to the remote structure
+ * \param	mavlink_handler			The pointer to the MAVLink message handler
+ */
+void remote_telemetry_init(remote_t* remote, mavlink_message_handler_t *mavlink_handler);
+
+/**
+ * \brief	Sends the raw remote values via MAVLink
+ * 
+ * \param	remote					The pointer to the remote structure
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param	msg						The pointer to the MAVLink message
+ */
+void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
+/**
+ * \brief	Sends the scaled remote values via MAVLink
+ * 
+ * \param	remote					The pointer to the remote structure
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param	msg						The pointer to the MAVLink message
+ */
+void remote_telemetry_send_scaled_new(const remote_t* remote, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif /* REMOTE_TELEMETRY_H_ */

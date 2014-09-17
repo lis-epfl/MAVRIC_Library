@@ -30,61 +30,40 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs.c
+ * \file servos_telemetry.h
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Nicolas Dousse
  *   
- * \brief This file implements data structure for attitude estimate
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the servos
  *
  ******************************************************************************/
- 
-
-#include "ahrs.h"
-#include "conf_platform.h"
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-void ahrs_init(ahrs_t* ahrs, ahrs_config_t* config)
-{
-	// Init dependencies
-
-	int32_t x = config->x;
-	int32_t y = config->y;
-	int32_t z = config->z;
 
 
-	// Init structure
-	ahrs->qe.s = 1.0f;
-	ahrs->qe.v[0] = 0.0f;
-	ahrs->qe.v[1] = 0.0f;
-	ahrs->qe.v[2] = 0.0f;
-	
-	ahrs->angular_speed[x] = 0.0f;
-	ahrs->angular_speed[y] = 0.0f;
-	ahrs->angular_speed[z] = 0.0f;
-	
-	ahrs->linear_acc[x] = 0.0f;
-	ahrs->linear_acc[y] = 0.0f;
-	ahrs->linear_acc[z] = 0.0f;
-	
-	ahrs->north_vec.s    = 0.0f;
-	ahrs->north_vec.v[0] = 1.0f;
-	ahrs->north_vec.v[1] = 0.0f;
-	ahrs->north_vec.v[2] = 0.0f;
-	
-	ahrs->up_vec.s    = 0.0f;
-	ahrs->up_vec.v[0] = 0.0f;
-	ahrs->up_vec.v[1] = 0.0f;
-	ahrs->up_vec.v[2] = -1.0f;
+#ifndef SERVOS_TELEMETRY_H_
+#define SERVOS_TELEMETRY_H_
+
+#include "servos.h"
+#include "mavlink_stream.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+/**
+ * \brief	Sends the MAVLink message for the servos
+ * 
+ * \param	servos					The pointer to the servos structure
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param	msg						The pointer to the MAVLink message
+ */
+void servos_telemetry_mavlink_send(servos_t* servos, mavlink_stream_t* mavlink_stream_t, mavlink_message_t* msg);
+
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif /* SERVOS_TELEMETRY_H_ */

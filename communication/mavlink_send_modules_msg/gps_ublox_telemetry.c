@@ -30,61 +30,53 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs.c
+ * \file gps_ublox_telemetry.c
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Nicolas Dousse
  *   
- * \brief This file implements data structure for attitude estimate
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the GPS UBlox
  *
  ******************************************************************************/
- 
 
-#include "ahrs.h"
-#include "conf_platform.h"
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
+#include "gps_ublox_telemetry.h"
+#include "time_keeper.h"
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-void ahrs_init(ahrs_t* ahrs, ahrs_config_t* config)
+void gps_ublox_telemetry_send_raw(const gps_t* gps, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
-	// Init dependencies
-
-	int32_t x = config->x;
-	int32_t y = config->y;
-	int32_t z = config->z;
-
-
-	// Init structure
-	ahrs->qe.s = 1.0f;
-	ahrs->qe.v[0] = 0.0f;
-	ahrs->qe.v[1] = 0.0f;
-	ahrs->qe.v[2] = 0.0f;
-	
-	ahrs->angular_speed[x] = 0.0f;
-	ahrs->angular_speed[y] = 0.0f;
-	ahrs->angular_speed[z] = 0.0f;
-	
-	ahrs->linear_acc[x] = 0.0f;
-	ahrs->linear_acc[y] = 0.0f;
-	ahrs->linear_acc[z] = 0.0f;
-	
-	ahrs->north_vec.s    = 0.0f;
-	ahrs->north_vec.v[0] = 1.0f;
-	ahrs->north_vec.v[1] = 0.0f;
-	ahrs->north_vec.v[2] = 0.0f;
-	
-	ahrs->up_vec.s    = 0.0f;
-	ahrs->up_vec.v[0] = 0.0f;
-	ahrs->up_vec.v[1] = 0.0f;
-	ahrs->up_vec.v[2] = -1.0f;
+	if (gps->status == GPS_OK)
+	{
+		mavlink_msg_gps_raw_int_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										1000 * gps->time_last_msg,
+										gps->status,
+										gps->latitude * 10000000.0f,
+										gps->longitude * 10000000.0f,
+										gps->altitude * 1000.0f,
+										gps->hdop * 100.0f,
+										gps->speed_accuracy * 100.0f,
+										gps->ground_speed * 100.0f,
+										gps->course,
+										gps->num_sats	);
+	}
+	else
+	{
+		mavlink_msg_gps_raw_int_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										time_keeper_get_micros(),
+										gps->status,
+										46.5193f * 10000000,
+										6.56507f * 10000000,
+										400 * 1000,
+										0,
+										0,
+										0,
+										0,
+										gps->num_sats);
+	}
 }

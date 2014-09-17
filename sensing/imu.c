@@ -101,10 +101,8 @@ static void imu_oriented2scale(imu_t *imu)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void imu_init (imu_t *imu, const mavlink_stream_t* mavlink_stream)
-{
-	imu->mavlink_stream = mavlink_stream;
-	
+void imu_init (imu_t *imu)
+{	
 	//imu_calibrate_Gyros(imu);
 	
 	//init gyro
@@ -191,50 +189,4 @@ void imu_update(imu_t *imu)
 
 	imu_raw2oriented(imu);
 	imu_oriented2scale(imu);
-}
-
-task_return_t imu_send_scaled(imu_t* imu)
-{
-	mavlink_message_t msg;
-	
-	mavlink_msg_scaled_imu_pack(imu->mavlink_stream->sysid,
-								imu->mavlink_stream->compid,
-								&msg,
-								time_keeper_get_millis(),
-								1000 * imu->scaled_accelero.data[IMU_X],
-								1000 * imu->scaled_accelero.data[IMU_Y],
-								1000 * imu->scaled_accelero.data[IMU_Z],
-								1000 * imu->scaled_gyro.data[IMU_X],
-								1000 * imu->scaled_gyro.data[IMU_Y],
-								1000 * imu->scaled_gyro.data[IMU_Z],
-								1000 * imu->scaled_compass.data[IMU_X],
-								1000 * imu->scaled_compass.data[IMU_Y],
-								1000 * imu->scaled_compass.data[IMU_Z]);
-	
-	mavlink_stream_send(imu->mavlink_stream,&msg);
-	
-	return TASK_RUN_SUCCESS;
-}
-
-
-task_return_t imu_send_raw(imu_t* imu)
-{
-	mavlink_message_t msg;
-	mavlink_msg_raw_imu_pack(	imu->mavlink_stream->sysid,
-								imu->mavlink_stream->compid,
-								&msg,
-								time_keeper_get_micros(),
-								imu->oriented_accelero.data[IMU_X],
-								imu->oriented_accelero.data[IMU_Y],
-								imu->oriented_accelero.data[IMU_Z],
-								imu->oriented_gyro.data[IMU_X],
-								imu->oriented_gyro.data[IMU_Y],
-								imu->oriented_gyro.data[IMU_Z],
-								imu->oriented_compass.data[IMU_X],
-								imu->oriented_compass.data[IMU_Y],
-								imu->oriented_compass.data[IMU_Z]);
-	
-	mavlink_stream_send(imu->mavlink_stream,&msg);
-	
-	return TASK_RUN_SUCCESS;
 }

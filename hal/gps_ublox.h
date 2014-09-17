@@ -52,8 +52,6 @@ extern "C" {
 #include "maths.h"
 #include "streams.h"
 #include "buffer.h"
-#include "tasks.h"
-#include "mavlink_stream.h"
 
 /*
  *  try to put a UBlox into binary mode. This is in two parts. First we
@@ -670,8 +668,6 @@ typedef struct
 	buffer_t gps_buffer;					///< The GPS buffer
 	byte_stream_t gps_stream_in;			///< The incoming GPS byte stream
 	byte_stream_t gps_stream_out;			///< The outgoing GPS byte stream
-	
-	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
 } gps_t;
 
 
@@ -687,7 +683,7 @@ uint32_t last_fix_time;						///< Last fix time
  * \param	UID					The uart ID
  * \param	mavlink_stream		The pointer to the mavlink stream
  */
-void gps_ublox_init(gps_t *gps, int32_t UID, mavlink_stream_t* mavlink_stream);
+void gps_ublox_init(gps_t *gps, int32_t UID);
 
 
 /**
@@ -706,16 +702,6 @@ void gps_ublox_configure_gps(gps_t *gps);
  * \param	gps			The pointer to the GPS structure
  */
 void gps_ublox_update(gps_t *gps);
-
-
-/**
- * \brief	Task to send the mavlink gps raw message
- * 
- * \param	gps			The pointer to the GPS structure
- *
- * \return	The status of execution of the task
- */
-task_return_t gps_ublox_send_raw(gps_t* gps);
 
 #ifdef __cplusplus
 }

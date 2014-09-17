@@ -48,8 +48,6 @@ extern "C" {
 #endif
 
 #include "stdint.h"
-#include "scheduler.h"
-#include "mavlink_communication.h"
 #include "analog_monitor.h"
 #include <stdbool.h>
 #include "mav_modes.h"
@@ -101,7 +99,6 @@ typedef struct
 	uint32_t remote_active;								///< Flag to tell whether the remote is active or not
 	
 	const analog_monitor_t* analog_monitor;				///< The pointer to the analog monitor structure
-	const mavlink_stream_t* mavlink_stream;				///< Pointer to the mavlin kstream structure
 } state_t;
 
 
@@ -110,30 +107,8 @@ typedef struct
  *
  * \param	state		The pointer to the state structure
  * \param	state_config		The pointer to the state configuration structure
- * \param   mavlink_stream		The pointer to the mavlink stream structure
- * \param	message_handler		The pointer to the message handler
  */
-void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *message_handler);
-
-/**
- * \brief	Task to send the mavlink heartbeat message
- * 
- * \param	state		The pointer to the state structure
- *
- * \return	The status of execution of the task
- */
-task_return_t state_send_heartbeat(const state_t* state);
-
-
-/**
- * \brief	Task to send the mavlink system status message, project specific message!
- * 
- * \param	state		The pointer to the state structure
- *
- * \return	The status of execution of the task
- */
-task_return_t state_send_status(const state_t* state);
-
+void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor);
 
 #ifdef __cplusplus
 }

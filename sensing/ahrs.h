@@ -50,7 +50,6 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include "quaternions.h"
-#include "scheduler.h"
 
 
 /**
@@ -69,38 +68,25 @@ typedef struct
 	
 	uint32_t	last_update;				///< The time of the last IMU update in ms
 	float		dt;							///< The time interval between two IMU updates
-	
-	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
 } ahrs_t;
 
+/**
+ * \brief Configuration for the AHRS structure
+ */
+typedef struct  
+{
+	int32_t x;								///< The mapping for the X axis
+	int32_t y;								///< The mapping for the Y axis
+	int32_t z;								///< The mapping for the Z axis
+}ahrs_config_t;
 
 /**
  * \brief   Initialiases the ahrs structure
  * 
- * \param  ahrs 				Pointer to ahrs structure
- * \param  mavlink_stream 	Pointer to mavlin kstream structure
+ * \param	ahrs 				Pointer to ahrs structure
+ * \param	config				Pointer to the config structure
  */
-void ahrs_init(ahrs_t* ahrs, mavlink_stream_t* mavlink_stream);
-
-
-/**
- * \brief	Task to send the mavlink attitude message
- * 
- * \param	ahrs		The pointer to the attitude estimation
- *
- * \return	The status of execution of the task
- */
-task_return_t ahrs_send_attitude(ahrs_t* ahrs);
-
-
-/**
- * \brief	Task to send the mavlink quaternion attitude message
- * 
- * \param	ahrs		The pointer to the attitude estimation
- *
- * \return	The status of execution of the task
- */
-task_return_t ahrs_send_attitude_quaternion(ahrs_t* ahrs);
+void ahrs_init(ahrs_t* ahrs, ahrs_config_t* config);
 
 
 #ifdef __cplusplus

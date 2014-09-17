@@ -48,7 +48,6 @@
 #endif
 
 #include "spektrum_satellite.h"
-#include "scheduler.h"
 #include "stabilisation.h"
 #include "mav_modes.h"
 
@@ -186,7 +185,7 @@ void remote_update(remote_t* remote);
  *
  * \return	The quality of the signal
  */
-signal_quality_t remote_check(const remote_t* remote);
+signal_quality_t remote_check(remote_t* remote);
 
 /**
  * \brief	Update the remote channel central position array stored in .c file

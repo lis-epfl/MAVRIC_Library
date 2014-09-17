@@ -30,61 +30,50 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs.c
+ * \file imu_telemetry.c
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Nicolas Dousse
  *   
- * \brief This file implements data structure for attitude estimate
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the IMU
  *
  ******************************************************************************/
- 
 
-#include "ahrs.h"
-#include "conf_platform.h"
+#include "imu_telemetry.h"
+#include "time_keeper.h"
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
+void imu_telemetry_send_scaled(const imu_t* imu, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{	
+	mavlink_msg_scaled_imu_pack(mavlink_stream->sysid,
+								mavlink_stream->compid,
+								msg,
+								time_keeper_get_millis(),
+								1000 * imu->scaled_accelero.data[IMU_X],
+								1000 * imu->scaled_accelero.data[IMU_Y],
+								1000 * imu->scaled_accelero.data[IMU_Z],
+								1000 * imu->scaled_gyro.data[IMU_X],
+								1000 * imu->scaled_gyro.data[IMU_Y],
+								1000 * imu->scaled_gyro.data[IMU_Z],
+								1000 * imu->scaled_compass.data[IMU_X],
+								1000 * imu->scaled_compass.data[IMU_Y],
+								1000 * imu->scaled_compass.data[IMU_Z]);
+}
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-void ahrs_init(ahrs_t* ahrs, ahrs_config_t* config)
+void imu_telemetry_send_raw(const imu_t* imu, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
-	// Init dependencies
-
-	int32_t x = config->x;
-	int32_t y = config->y;
-	int32_t z = config->z;
-
-
-	// Init structure
-	ahrs->qe.s = 1.0f;
-	ahrs->qe.v[0] = 0.0f;
-	ahrs->qe.v[1] = 0.0f;
-	ahrs->qe.v[2] = 0.0f;
-	
-	ahrs->angular_speed[x] = 0.0f;
-	ahrs->angular_speed[y] = 0.0f;
-	ahrs->angular_speed[z] = 0.0f;
-	
-	ahrs->linear_acc[x] = 0.0f;
-	ahrs->linear_acc[y] = 0.0f;
-	ahrs->linear_acc[z] = 0.0f;
-	
-	ahrs->north_vec.s    = 0.0f;
-	ahrs->north_vec.v[0] = 1.0f;
-	ahrs->north_vec.v[1] = 0.0f;
-	ahrs->north_vec.v[2] = 0.0f;
-	
-	ahrs->up_vec.s    = 0.0f;
-	ahrs->up_vec.v[0] = 0.0f;
-	ahrs->up_vec.v[1] = 0.0f;
-	ahrs->up_vec.v[2] = -1.0f;
+	mavlink_msg_raw_imu_pack(	mavlink_stream->sysid,
+								mavlink_stream->compid,
+								msg,
+								time_keeper_get_micros(),
+								imu->oriented_accelero.data[IMU_X],
+								imu->oriented_accelero.data[IMU_Y],
+								imu->oriented_accelero.data[IMU_Z],
+								imu->oriented_gyro.data[IMU_X],
+								imu->oriented_gyro.data[IMU_Y],
+								imu->oriented_gyro.data[IMU_Z],
+								imu->oriented_compass.data[IMU_X],
+								imu->oriented_compass.data[IMU_Y],
+								imu->oriented_compass.data[IMU_Z]);
 }

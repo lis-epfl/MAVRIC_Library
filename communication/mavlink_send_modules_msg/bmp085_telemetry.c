@@ -30,61 +30,38 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs.c
+ * \file bmp085_telemetry.c
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Nicolas Dousse
  *   
- * \brief This file implements data structure for attitude estimate
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the pressure sensor
  *
  ******************************************************************************/
- 
 
-#include "ahrs.h"
-#include "conf_platform.h"
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
+#include "bmp085_telemetry.h"
+#include "time_keeper.h"
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-void ahrs_init(ahrs_t* ahrs, ahrs_config_t* config)
+void bmp085_telemetry_send_pressure(const barometer_t* bmp085, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
-	// Init dependencies
+	mavlink_msg_scaled_pressure_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										time_keeper_get_millis(),
+										bmp085->pressure / 100.0f,
+										bmp085->vario_vz,
+										bmp085->temperature * 100.0f);
 
-	int32_t x = config->x;
-	int32_t y = config->y;
-	int32_t z = config->z;
+	// mavlink_msg_named_value_float_pack(	bmp085->mavlink_stream->sysid,
+	// 									bmp085->mavlink_stream->compid,
+	// 									&msg,
+	// 									time_keeper_get_millis(),
+	// 									"pressAlt",
+	// 									bmp085->altitude);
 
+	// mavlink_stream_send(bmp085->mavlink_stream,&msg);
 
-	// Init structure
-	ahrs->qe.s = 1.0f;
-	ahrs->qe.v[0] = 0.0f;
-	ahrs->qe.v[1] = 0.0f;
-	ahrs->qe.v[2] = 0.0f;
-	
-	ahrs->angular_speed[x] = 0.0f;
-	ahrs->angular_speed[y] = 0.0f;
-	ahrs->angular_speed[z] = 0.0f;
-	
-	ahrs->linear_acc[x] = 0.0f;
-	ahrs->linear_acc[y] = 0.0f;
-	ahrs->linear_acc[z] = 0.0f;
-	
-	ahrs->north_vec.s    = 0.0f;
-	ahrs->north_vec.v[0] = 1.0f;
-	ahrs->north_vec.v[1] = 0.0f;
-	ahrs->north_vec.v[2] = 0.0f;
-	
-	ahrs->up_vec.s    = 0.0f;
-	ahrs->up_vec.v[0] = 0.0f;
-	ahrs->up_vec.v[1] = 0.0f;
-	ahrs->up_vec.v[2] = -1.0f;
 }

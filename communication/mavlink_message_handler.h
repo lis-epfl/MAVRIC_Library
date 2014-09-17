@@ -66,13 +66,13 @@ typedef void* handling_module_struct_t;
 /**
  * \brief  		Prototype of callback functions for mavlink messages
  */
-typedef void (*mavlink_msg_callback_function_t) (handling_module_struct_t, mavlink_message_t*);
+typedef void (*mavlink_msg_callback_function_t) (handling_module_struct_t, uint32_t sysid, mavlink_message_t*);
 
 
 /**
  * \brief  		Prototype of callback functions for mavlink commands
  */
-typedef void (*mavlink_cmd_callback_function_t) (handling_module_struct_t, mavlink_command_long_t*);
+typedef void (*mavlink_cmd_callback_function_t) (handling_module_struct_t, uint32_t sysid, mavlink_command_long_t*);
 
 
 /**
@@ -87,6 +87,7 @@ typedef enum MAV_COMPONENT mav_component_t;
  */
 typedef struct
 {
+	uint32_t*						sys_id;							///<	Pointer to the system ID
 	uint8_t 						message_id;						///<	The function will be called only for messages with ID message_id
 	uint8_t					 		sysid_filter;					///<	The function will be called only for messages coming from MAVs with ID sysid_filter (0 for all)
 	mav_component_t 				compid_filter;					///<	The function will be called only for messages coming from component compid_filter (0 for all)
@@ -100,6 +101,7 @@ typedef struct
  */
 typedef struct
 {
+	uint32_t*						sys_id;							///<	Pointer to the system ID
 	uint16_t 						command_id;						///< 	The function will be called only for commands with ID command_id
 	uint8_t					 		sysid_filter;					///<	The function will be called only for commands coming from MAVs with ID sysid_filter (0 for all)
 	mav_component_t 				compid_filter;					///<	The function will be called only for commands coming from component compid_filter (0 for all)
