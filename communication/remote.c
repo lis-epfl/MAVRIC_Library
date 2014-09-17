@@ -212,8 +212,10 @@ void remote_update(remote_t* remote)
 }
 
 
-signal_quality_t remote_check(const remote_t* remote)
+signal_quality_t remote_check(remote_t* remote)
 {
+	remote_update(remote);
+	
 	return remote->signal_quality;
 }
 
