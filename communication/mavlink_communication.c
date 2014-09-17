@@ -43,6 +43,7 @@
 
 #include "mavlink_communication.h"
 #include "print_util.h"
+#include <stdlib.h>
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -117,7 +118,6 @@ static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler
 	}	
 }
 
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -144,6 +144,24 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 								&mavlink_communication->message_handler,
 								&mavlink_communication->mavlink_stream); 
 
+	mavlink_communication->send_msg_handler_set = malloc( sizeof(mavlink_send_handler_set_t) + sizeof(mavlink_send_handler_t[config->max_msg_sending_count]) );
+
+
+	if ( mavlink_communication->send_msg_handler_set != NULL )
+	{
+		mavlink_communication->send_msg_handler_set->max_msg_sending_count = config->max_msg_sending_count;
+		mavlink_communication->send_msg_handler_set->msg_sending_count = 0;
+	}
+	else
+	{
+		print_util_dbg_print("[MAVLINK COMMUNICATION] ERROR ! Bad memory allocation\r\n");
+
+		mavlink_communication->send_msg_handler_set->max_msg_sending_count = 0;
+		mavlink_communication->send_msg_handler_set->msg_sending_count = 0;
+	}
+
+	mavlink_communication->send_msg_handler_set->max_msg_sending_count = config->max_msg_sending_count;
+
 	// Add callback to activate / disactivate streams
 	mavlink_message_handler_msg_callback_t callback;
 
@@ -153,6 +171,8 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 	callback.function 		= (mavlink_msg_callback_function_t)	&mavlink_communication_toggle_telemetry_stream;
 	callback.module_struct 	= (handling_module_struct_t)		&mavlink_communication->scheduler;
 	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	
+	print_util_dbg_print("[MAVLINK COMMUNICATION] Initialised\r\n");
 }
 
 
@@ -190,4 +210,49 @@ void mavlink_communication_suspend_downstream(mavlink_communication_t* mavlink_c
 	{
 		scheduler_suspend_task(&mavlink_communication->scheduler.task_set->tasks[i], delay);
 	}	
+}
+
+
+void mavlink_commnication_add_msg_send(	mavlink_communication_t* mavlink_communication, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_callback_function_t function, handling_com_module_struct_t module_structure, uint32_t task_id)
+{
+	mavlink_send_handler_set_t* send_handler = mavlink_communication->send_msg_handler_set;
+	
+	
+	if ( send_handler->msg_sending_count <  send_handler->max_msg_sending_count )
+	{
+		mavlink_send_handler_t* new_msg_send = &send_handler->msg_send_list[send_handler->msg_sending_count];
+		
+		new_msg_send->mavlink_stream = &mavlink_communication->mavlink_stream;
+		new_msg_send->function = function;
+		new_msg_send->module_struct = module_structure;
+
+		send_handler->msg_sending_count += 1;
+		
+		scheduler_add_task(	&mavlink_communication->scheduler,
+							repeat_period,
+							run_mode,
+							timing_mode,
+							priority,
+							(task_function_t)&mavlink_communication_send_message,
+							(task_argument_t)new_msg_send,
+							task_id	);
+	}
+	else
+	{
+		print_util_dbg_print("[MAVLINK COMMUNICATION] Error: Cannot add more send msg\r\n");
+	}
+}
+
+
+task_return_t mavlink_communication_send_message(mavlink_send_handler_t* msg_send)
+{
+	mavlink_send_callback_function_t function = msg_send->function;
+	handling_com_module_struct_t module_struct = msg_send->module_struct;
+	
+	mavlink_message_t msg;
+	function(module_struct, msg_send->mavlink_stream, &msg);
+	
+	mavlink_stream_send(msg_send->mavlink_stream,&msg);
+	
+	return TASK_RUN_SUCCESS;
 }
