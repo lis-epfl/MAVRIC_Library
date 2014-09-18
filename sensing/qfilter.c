@@ -56,12 +56,12 @@ void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* ahrs)
 	
 	qf->imu->calibration_level = LEVELING;
 	
-	//qf->kp = 0.07f;
-	qf->kp = 0.0f;
+	qf->kp = 0.07f;
+	//qf->kp = 0.0f;
 	qf->ki = qf->kp / 15.0f;
 	
-	//qf->kp_mag = 0.1f;
-	qf->kp_mag = 0.0f;
+	qf->kp_mag = 0.1f;
+	//qf->kp_mag = 0.0f;
 	qf->ki_mag = qf->kp_mag / 15.0f;
 	
 	print_util_dbg_print("[QFILTER] Initialized.\r\n");
