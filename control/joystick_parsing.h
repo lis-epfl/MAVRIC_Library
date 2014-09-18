@@ -99,6 +99,7 @@ typedef struct
  * \brief	Initialisation of the joystick parsing module
  * \param	joystick_parsing		The pointer to the joystick parsing structure
  * \param	controls				The pointer to the control structure
+ * \param	state					The pointer to the state structure
  */
 void joystick_parsing_init(joystick_parsing_t* joystick_parsing, control_command_t* controls, state_t* state);
 
