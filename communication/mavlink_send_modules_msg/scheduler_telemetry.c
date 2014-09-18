@@ -30,77 +30,63 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos.h
+ * \file scheduler_telemetry.c
  * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Nicolas Dousse
  *   
- * \brief Abstraction layer for servomotors. This module does not write to 
- * hardware, it just holds data and configuration for servos.
- * 
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the scheduler module
+ *
  ******************************************************************************/
 
+#include "scheduler_telemetry.h"
+#include "time_keeper.h"
 
-#ifndef SERVOS_H_
-#define SERVOS_H_
-
-#ifdef __cplusplus
-	extern "C" {
-#endif
-
-#include <stdint.h>
-#include "scheduler.h"
-
-#define MAX_SERVO_COUNT 8
-
-typedef enum
+void scheduler_telemetry_send_rt_stats(const scheduler_t* scheduler, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
-	STANDARD_SERVO 	 = 0,
-	MOTOR_CONTROLLER = 1,
-	CUSTOM_SERVO     = 2
-} servo_type_t;
+	task_entry_t* stab_task = scheduler_get_task_by_id(scheduler,0);
 
+	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										time_keeper_get_millis(),
+										"stabAvgDelay",
+										stab_task->delay_avg);
+	mavlink_stream_send(mavlink_stream, msg);
 
-typedef struct
-{
-	uint32_t servos_count;
-	servo_type_t types[MAX_SERVO_COUNT];
-} servos_conf_t;
+	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										time_keeper_get_millis(),
+										"stabDelayVar",
+										sqrt(stab_task->delay_var_squared));
+	mavlink_stream_send(mavlink_stream, msg);
 
+	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										time_keeper_get_millis(),
+										"stabMaxDelay",
+										stab_task->delay_max);
+	mavlink_stream_send(mavlink_stream, msg);
 
-typedef struct
-{
-	float value;			///< Normalized value of the servo (between -1 and 1)
-	float trim;				///< Trim value (between -1 and 1)
-	float min;				///< Minimum value (between -1 and 1)
-	float max;				///< Max value (between -1 and 1)
-	float failsafe;			///< Failsafe position of the servo (between -1 and 1)
-	uint32_t repeat_freq;	///< Update frequency of the servo (in Hz)
-	servo_type_t type;		///< Type of servo
-} servo_entry_t;
+	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										time_keeper_get_millis(),
+										"stabRTvio",
+										stab_task->rt_violations);
+	mavlink_stream_send(mavlink_stream, msg);
 
-
-typedef struct 
-{
-	uint32_t servos_count;
-	servo_entry_t servo[MAX_SERVO_COUNT];
-} servos_t;
-
-
-void servos_init(servos_t* servos, const servos_conf_t* config);
-
-
-void servos_set_value(servos_t* servos, uint32_t servo_id, float value);
-
-
-void servos_set_value_failsafe(servos_t* servos);
-
-
-
-
-
-#ifdef __cplusplus
-	}
-#endif
-
-#endif
+	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										time_keeper_get_millis(),
+										"stabExTime",
+										stab_task->execution_time);
+	mavlink_stream_send(mavlink_stream, msg);
+	
+	stab_task->rt_violations = 0;
+	stab_task->delay_max = 0;
+}

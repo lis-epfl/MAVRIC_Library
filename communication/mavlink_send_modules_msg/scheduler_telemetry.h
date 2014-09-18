@@ -30,77 +30,41 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos.h
+ * \file scheduler_telemetry.h
  * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Nicolas Dousse
  *   
- * \brief Abstraction layer for servomotors. This module does not write to 
- * hardware, it just holds data and configuration for servos.
- * 
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the scheduler module
+ *
  ******************************************************************************/
 
 
-#ifndef SERVOS_H_
-#define SERVOS_H_
+#ifndef SCHEDULER_TELEMETRY_H_
+#define SCHEDULER_TELEMETRY_H_
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
-
-#include <stdint.h>
+#include "mavlink_stream.h"
+#include "mavlink_message_handler.h"
 #include "scheduler.h"
 
-#define MAX_SERVO_COUNT 8
-
-typedef enum
-{
-	STANDARD_SERVO 	 = 0,
-	MOTOR_CONTROLLER = 1,
-	CUSTOM_SERVO     = 2
-} servo_type_t;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
-typedef struct
-{
-	uint32_t servos_count;
-	servo_type_t types[MAX_SERVO_COUNT];
-} servos_conf_t;
-
-
-typedef struct
-{
-	float value;			///< Normalized value of the servo (between -1 and 1)
-	float trim;				///< Trim value (between -1 and 1)
-	float min;				///< Minimum value (between -1 and 1)
-	float max;				///< Max value (between -1 and 1)
-	float failsafe;			///< Failsafe position of the servo (between -1 and 1)
-	uint32_t repeat_freq;	///< Update frequency of the servo (in Hz)
-	servo_type_t type;		///< Type of servo
-} servo_entry_t;
-
-
-typedef struct 
-{
-	uint32_t servos_count;
-	servo_entry_t servo[MAX_SERVO_COUNT];
-} servos_t;
-
-
-void servos_init(servos_t* servos, const servos_conf_t* config);
-
-
-void servos_set_value(servos_t* servos, uint32_t servo_id, float value);
-
-
-void servos_set_value_failsafe(servos_t* servos);
-
-
-
+/**
+ * \brief	Function to send real time statistics
+ * 
+ * \param	scheduler				The pointer to the scheduler
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param	msg						The pointer to the MAVLink message
+ */
+void scheduler_telemetry_send_rt_stats(const scheduler_t* scheduler, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
 #ifdef __cplusplus
-	}
+}
 #endif
 
-#endif
+#endif /* SCHEDULER_TELEMETRY_H_ */
