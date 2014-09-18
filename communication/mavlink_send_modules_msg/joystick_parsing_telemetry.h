@@ -54,6 +54,7 @@ extern "C" {
 
 /** 
  * \brief	Initialisation of the joystick parsing telemetry module
+ *
  * \param	joystick_parsing		The pointer to the joystick parsing structure
  * \param	mavlink_communication	The pointer to the mavlink communication structure
  */
@@ -61,6 +62,7 @@ void joystick_parsing_telemetry_init(joystick_parsing_t* joystick_parsing, mavli
 
 /** 
  * \brief	Parse received mavlink message in structure
+ *
  * \param	joystick_parsing		The pointer to the joystick parsing structure
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
