@@ -63,27 +63,30 @@ static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parame
  * \brief	Marks all parameters to be scheduled for transmission
  * 
  * \param   onboard_parameters		Pointer to module structure
+ * \param	sysid					The system ID
  * \param   msg 					Incoming mavlink message
  */
-static void onboard_parameters_send_all_parameters(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg);
+static void onboard_parameters_send_all_parameters(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg);
 
 
 /**
  * \brief	Callback to a MAVlink parameter request
  *
  * \param   onboard_parameters		Pointer to module structure
+ * \param	sysid					The system ID
  * \param   msg 					Incoming mavlink message
  */
-static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg);
+static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg);
 
 
 /**
  * \brief	Callback to a MAVlink parameter set
  *
  * \param   onboard_parameters		Pointer to module structure
+ * \param	sysid					The system ID
  * \param   msg 					Incoming mavlink message
  */
-static void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg);
+static void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg);
 
 
 //------------------------------------------------------------------------------
@@ -118,68 +121,77 @@ static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parame
 }
 
 
-static void onboard_parameters_send_all_parameters(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg) 
-{	
-	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
-
-	// schedule all parameters for transmission
-	for (uint8_t i = 0; i < param_set->param_count; i++)
+static void onboard_parameters_send_all_parameters(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg) 
+{
+	mavlink_param_request_list_t packet;
+	mavlink_msg_param_request_list_decode(msg, &packet);
+	
+	if ((uint8_t)packet.target_system == (uint8_t)sysid)
 	{
-		param_set->parameters[i].schedule_for_transmission=true;
-	}		
+		onboard_parameters_set_t* param_set = onboard_parameters->param_set;
+
+		// schedule all parameters for transmission
+		for (uint8_t i = 0; i < param_set->param_count; i++)
+		{
+			param_set->parameters[i].schedule_for_transmission=true;
+		}
+	}
 }
 
 
-static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg) 
+static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg) 
 {
-	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
-
 	mavlink_param_request_read_t request;
 	mavlink_msg_param_request_read_decode(msg, &request);
-
-	// Check param_index to determine if the request is made by name (== -1) or by index (!= -1)
-	if(request.param_index != -1) 
-	{	
-		// Control if the index is in the range of existing parameters and schedule it for transmission
-		if ( request.param_index <= param_set->param_count)
-		{
-			param_set->parameters[request.param_index].schedule_for_transmission = true;
-		}
-	}
-	else 
+	
+	if ((uint8_t)request.target_system == (uint8_t)sysid)
 	{
-		char* key = (char*) request.param_id;
-		for (uint16_t i = 0; i < param_set->param_count; i++) 
-		{
-			bool match = true;
+		onboard_parameters_set_t* param_set = onboard_parameters->param_set;
 
-			// Get pointer to parameter number i
-			onboard_parameters_entry_t* param = &param_set->parameters[i];
-
-			for (uint16_t j = 0; j < param->param_name_length; j++) 
+		// Check param_index to determine if the request is made by name (== -1) or by index (!= -1)
+		if(request.param_index != -1) 
+		{	
+			// Control if the index is in the range of existing parameters and schedule it for transmission
+			if ( request.param_index <= param_set->param_count)
 			{
-				// Compare
-				if ( (char)param->param_name[j] != (char)key[j] ) 
-				{
-					match = false;
-				}
- 
-				// End matching if null termination is reached
-				if ( ((char)param->param_name[j]) == '\0' ) 
-				{
-					// Exit internal (j) for() loop
-					break;
-				}
+				param_set->parameters[request.param_index].schedule_for_transmission = true;
 			}
- 
-			// Check if matched
-			if ( match ) 
+		}
+		else 
+		{
+			char* key = (char*) request.param_id;
+			for (uint16_t i = 0; i < param_set->param_count; i++) 
 			{
-				param->schedule_for_transmission = true;
+				bool match = true;
 
-				// Exit external (i) for() loop
-				break;
-			}					
+				// Get pointer to parameter number i
+				onboard_parameters_entry_t* param = &param_set->parameters[i];
+
+				for (uint16_t j = 0; j < param->param_name_length; j++) 
+				{
+					// Compare
+					if ( (char)param->param_name[j] != (char)key[j] ) 
+					{
+						match = false;
+					}
+ 
+					// End matching if null termination is reached
+					if ( ((char)param->param_name[j]) == '\0' ) 
+					{
+						// Exit internal (j) for() loop
+						break;
+					}
+				}
+ 
+				// Check if matched
+				if ( match ) 
+				{
+					param->schedule_for_transmission = true;
+
+					// Exit external (i) for() loop
+					break;
+				}					
+			}
 		}
 	}
 }
@@ -345,7 +357,7 @@ void onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parame
 }
 
 
-void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_parameters, mavlink_message_t* msg) 
+void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg) 
 {
 	bool match = true;
 	
@@ -353,8 +365,8 @@ void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_paramete
 	mavlink_msg_param_set_decode(msg, &set);
  
 	// Check if this message is for this system and subsystem
-	if ( 	set.target_system 	 == onboard_parameters->mavlink_stream->sysid 
-		 &&	set.target_component == onboard_parameters->mavlink_stream->compid	)
+	if ( ((uint8_t)set.target_system 	  == (uint8_t)sysid )
+			  &&	(set.target_component == onboard_parameters->mavlink_stream->compid)	)
 	{
 		char* key = (char*) set.param_id;
 		onboard_parameters_entry_t* param;
