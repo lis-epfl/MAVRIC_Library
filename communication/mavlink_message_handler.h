@@ -87,7 +87,7 @@ typedef enum MAV_COMPONENT mav_component_t;
  */
 typedef struct
 {
-	uint32_t*						sys_id;							///<	Pointer to the system ID
+	const uint32_t*						sys_id;						///<	Pointer to the system ID
 	uint8_t 						message_id;						///<	The function will be called only for messages with ID message_id
 	uint8_t					 		sysid_filter;					///<	The function will be called only for messages coming from MAVs with ID sysid_filter (0 for all)
 	mav_component_t 				compid_filter;					///<	The function will be called only for messages coming from component compid_filter (0 for all)
