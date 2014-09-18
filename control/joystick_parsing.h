@@ -99,17 +99,9 @@ typedef struct
  * \brief	Initialisation of the joystick parsing module
  * \param	joystick_parsing		The pointer to the joystick parsing structure
  * \param	controls				The pointer to the control structure
- * \param	mavlink_communication	The pointer to the mavlink communication structure
  */
-void joystick_parsing_init(joystick_parsing_t* joystick_parsing, control_command_t* controls, state_t* state, mavlink_communication_t* mavlink_communication);
+void joystick_parsing_init(joystick_parsing_t* joystick_parsing, control_command_t* controls, state_t* state);
 
-
-/** 
- * \brief	Parse received mavlink message in structure
- * \param	joystick_parsing		The pointer to the joystick parsing structure
- * \param	rec						The pointer to the mavlink message received
- */
-void joystick_parsing_parse_msg(joystick_parsing_t *joystick_parsing, mavlink_received_t* rec);
 
 /** 
  * \brief	Parse joystick to velocity vector command
@@ -125,13 +117,13 @@ void joystick_parsing_get_velocity_vector_from_joystick(joystick_parsing_t* joys
  */
 void joystick_parsing_get_attitude_command_from_joystick(joystick_parsing_t* joystick_parsing, control_command_t* controls);
 
-/** 
- * \brief	Parse received mavlink message in structure
- * \param	joystick_parsing		The pointer to the joystick parsing structure
+/**
+ * \brief						Do operations when buttons are pressed
  *
- * \return	The result of the task execution
+ * \param	joystick_parsing	The pointer to the joystick parsing structure
+ * \param	buttons				The bit mask of the buttons
  */
-task_return_t joystick_parsing_send_manual_ctrl_msg(joystick_parsing_t* joystick_parsing);
+void joystick_parsing_button_mask(joystick_parsing_t* joystick_parsing, uint16_t buttons);
 
 #ifdef __cplusplus
 }

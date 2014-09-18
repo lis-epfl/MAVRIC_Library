@@ -30,43 +30,54 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation.c
+ * \file stabilisation_telemetry.c
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Nicolas Dousse
  *   
- * \brief Executing the PID controllers for stabilization
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the stabilisation module
  *
  ******************************************************************************/
 
 
-#include "stabilisation.h"
-#include "print_util.h"
+#include "stabilisation_telemetry.h"
+#include "time_keeper.h"
 
-void stabilisation_init(control_command_t *controls)
+
+void  stabilisation_telemetry_send_rpy_speed_thrust_setpoint(const stabiliser_t* stabiliser, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
-	
-	controls->control_mode = ATTITUDE_COMMAND_MODE;
-	controls->yaw_mode = YAW_RELATIVE;
-	
-	controls->rpy[ROLL] = 0.0f;
-	controls->rpy[PITCH] = 0.0f;
-	controls->rpy[YAW] = 0.0f;
-	controls->tvel[X] = 0.0f;
-	controls->tvel[Y] = 0.0f;
-	controls->tvel[Z] = 0.0f;
-	controls->theading = 0.0f;
-	controls->thrust = -1.0f;
-	
-	print_util_dbg_print("Stabilisation init.\r\n");
+	mavlink_msg_roll_pitch_yaw_speed_thrust_setpoint_pack(	mavlink_stream->sysid,
+															mavlink_stream->compid,
+															msg,
+															time_keeper_get_millis(),
+															stabiliser->rpy_controller[0].output,
+															stabiliser->rpy_controller[1].output,
+															stabiliser->rpy_controller[2].output,
+															stabiliser->thrust_controller.output );
 }
 
-void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[]) 
+void  stabilisation_telemetry_send_rpy_rates_error(const stabiliser_t* stabiliser, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
-	int32_t i;
-	for (i = 0; i < 3; i++) 
-	{
-		stabiliser->output.rpy[i]=	pid_control_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
-	}		
-	stabiliser->output.thrust= pid_control_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
+	mavlink_msg_roll_pitch_yaw_rates_thrust_setpoint_pack(	mavlink_stream->sysid,
+															mavlink_stream->compid,
+															msg,
+															time_keeper_get_millis(),
+															stabiliser->rpy_controller[0].error,
+															stabiliser->rpy_controller[1].error,
+															stabiliser->rpy_controller[2].error,
+															stabiliser->thrust_controller.error );
+}
+
+void stabilisation_telemetry_send_rpy_thrust_setpoint(const control_command_t* controls, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{
+	// Controls output
+	mavlink_msg_roll_pitch_yaw_thrust_setpoint_pack(	mavlink_stream->sysid,
+														mavlink_stream->compid,
+														msg,
+														time_keeper_get_millis(),
+														controls->rpy[ROLL],
+														controls->rpy[PITCH],
+														controls->rpy[YAW],
+														controls->thrust);
 }

@@ -30,43 +30,56 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation.c
+ * \file stabilisation_telemetry.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Nicolas Dousse
  *   
- * \brief Executing the PID controllers for stabilization
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the stabilisation module
  *
  ******************************************************************************/
 
+#ifndef STABILISATION_TELEMETRY_H_
+#define STABILISATION_TELEMETRY_H_
 
+#include "mavlink_stream.h"
 #include "stabilisation.h"
-#include "print_util.h"
 
-void stabilisation_init(control_command_t *controls)
-{
-	
-	controls->control_mode = ATTITUDE_COMMAND_MODE;
-	controls->yaw_mode = YAW_RELATIVE;
-	
-	controls->rpy[ROLL] = 0.0f;
-	controls->rpy[PITCH] = 0.0f;
-	controls->rpy[YAW] = 0.0f;
-	controls->tvel[X] = 0.0f;
-	controls->tvel[Y] = 0.0f;
-	controls->tvel[Z] = 0.0f;
-	controls->theading = 0.0f;
-	controls->thrust = -1.0f;
-	
-	print_util_dbg_print("Stabilisation init.\r\n");
-}
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[]) 
-{
-	int32_t i;
-	for (i = 0; i < 3; i++) 
-	{
-		stabiliser->output.rpy[i]=	pid_control_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
-	}		
-	stabiliser->output.thrust= pid_control_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
+
+/**
+ * \brief	Task to send the mavlink roll, pitch, yaw angular speeds and thrust setpoints message
+ *
+ * \param	stabiliser	Pointer to the structure containing the PID controller
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param	msg						The pointer to the MAVLink message
+ */
+void stabilisation_telemetry_send_rpy_speed_thrust_setpoint(const stabiliser_t* stabiliser, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
+/**
+ * \brief	Task to send the mavlink roll, pitch and yaw errors message
+ * 
+ * \param	stabiliser	Pointer to the structure containing the PID controller
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param	msg						The pointer to the MAVLink message
+ */
+void stabilisation_telemetry_send_rpy_rates_error(const stabiliser_t* stabiliser, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
+/**
+ * \brief	Task to send the mavlink roll, pitch, yaw and thrust setpoints message
+ *
+ * \param	stabiliser	Pointer to the structure containing the PID controller
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param	msg						The pointer to the MAVLink message
+ */
+void stabilisation_telemetry_send_rpy_thrust_setpoint(const control_command_t* controls, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif /* STABILISATION_TELEMETRY_H_ */

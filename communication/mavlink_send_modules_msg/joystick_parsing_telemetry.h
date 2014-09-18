@@ -30,43 +30,47 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation.c
+ * \file joystick_parsing_telemetry.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Nicolas Dousse
  *   
- * \brief Executing the PID controllers for stabilization
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the joystick controller
  *
  ******************************************************************************/
 
+#ifndef JOYSTICK_PARSING_TELEMETRY_H_
+#define JOYSTICK_PARSING_TELEMETRY_H_
 
-#include "stabilisation.h"
-#include "print_util.h"
+#include "mavlink_stream.h"
+#include "mavlink_message_handler.h"
+#include "joystick_parsing.h"
 
-void stabilisation_init(control_command_t *controls)
-{
-	
-	controls->control_mode = ATTITUDE_COMMAND_MODE;
-	controls->yaw_mode = YAW_RELATIVE;
-	
-	controls->rpy[ROLL] = 0.0f;
-	controls->rpy[PITCH] = 0.0f;
-	controls->rpy[YAW] = 0.0f;
-	controls->tvel[X] = 0.0f;
-	controls->tvel[Y] = 0.0f;
-	controls->tvel[Z] = 0.0f;
-	controls->theading = 0.0f;
-	controls->thrust = -1.0f;
-	
-	print_util_dbg_print("Stabilisation init.\r\n");
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+/** 
+ * \brief	Initialisation of the joystick parsing telemetry module
+ * \param	joystick_parsing		The pointer to the joystick parsing structure
+ * \param	mavlink_communication	The pointer to the mavlink communication structure
+ */
+void joystick_parsing_telemetry_init(joystick_parsing_t* joystick_parsing, mavlink_communication_t* mavlink_communication);
+
+/** 
+ * \brief	Parse received mavlink message in structure
+ * \param	joystick_parsing		The pointer to the joystick parsing structure
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param	msg						The pointer to the MAVLink message
+ */
+void joystick_parsing_telemetry_send_manual_ctrl_msg(const joystick_parsing_t* joystick_parsing, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
+
+
+#ifdef __cplusplus
 }
+#endif
 
-void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[]) 
-{
-	int32_t i;
-	for (i = 0; i < 3; i++) 
-	{
-		stabiliser->output.rpy[i]=	pid_control_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
-	}		
-	stabiliser->output.thrust= pid_control_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
-}
+#endif /* JOYSTICK_PARSING_TELEMETRY_H_ */

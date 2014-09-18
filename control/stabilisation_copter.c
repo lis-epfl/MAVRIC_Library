@@ -30,7 +30,8 @@
  ******************************************************************************/
  
 /*******************************************************************************
- * \file stabilisation_copter.c *
+ * \file stabilisation_copter.c
+ *
  * \author MAV'RIC Team
  * \author Felix Schill
  * \author Nicolas Dousse
@@ -43,7 +44,7 @@
 #include "stabilisation_copter.h"
 #include "print_util.h"
 
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabilise_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servos_t* servos, const mavlink_stream_t* mavlink_stream)
+void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabilise_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servos_t* servos)
 {
 	
 	stabilisation_copter->stabiliser_stack = stabiliser_conf->stabiliser_stack;
@@ -64,12 +65,6 @@ void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabili
 	controls->tvel[Z] = 0.0f;
 	controls->theading = 0.0f;
 	controls->thrust = -1.0f;
-
-	stabilisation_copter->stabiliser_stack.rate_stabiliser.mavlink_stream = mavlink_stream;
-	stabilisation_copter->stabiliser_stack.attitude_stabiliser.mavlink_stream = mavlink_stream;
-	stabilisation_copter->stabiliser_stack.velocity_stabiliser.mavlink_stream = mavlink_stream;
-	stabilisation_copter->stabiliser_stack.position_stabiliser.mavlink_stream = mavlink_stream;
-	
 	
 	print_util_dbg_print("Stabilisation copter init.\r\n");
 }
