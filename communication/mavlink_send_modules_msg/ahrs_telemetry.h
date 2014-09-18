@@ -45,7 +45,6 @@
 #define AHRS_TELEMETRY_H_
 
 #include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
 #include "ahrs.h"
 
 #ifdef __cplusplus

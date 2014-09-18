@@ -45,7 +45,6 @@
 #define SONAR_I2CXL_TELEMETRY_H_
 
 #include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
 #include "sonar_i2cxl.h"
 
 #ifdef __cplusplus

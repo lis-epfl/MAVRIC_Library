@@ -44,7 +44,6 @@
 #define BMP085_TELEMETRY_H_
 
 #include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
 #include "bmp085.h"
 
 #ifdef __cplusplus

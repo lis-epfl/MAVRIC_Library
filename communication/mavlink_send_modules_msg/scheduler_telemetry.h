@@ -45,7 +45,6 @@
 #define SCHEDULER_TELEMETRY_H_
 
 #include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
 #include "scheduler.h"
 
 #ifdef __cplusplus

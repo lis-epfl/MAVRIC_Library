@@ -45,7 +45,6 @@
 #define IMU_TELEMETRY_H_
 
 #include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
 #include "imu.h"
 
 #ifdef __cplusplus
