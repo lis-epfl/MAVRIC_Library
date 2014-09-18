@@ -48,9 +48,9 @@ extern "C" {
 #endif
 
 #include "stdint.h"
+#include "mav_modes.h"
 #include "analog_monitor.h"
 #include <stdbool.h>
-#include "mav_modes.h"
 
 /**
  * \brief	The critical behavior enum

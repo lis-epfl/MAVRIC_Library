@@ -30,68 +30,26 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state.c
+ * \file analog_monitor_telemetry.c
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *   
- * \brief Holds the current status of the MAV
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the analog monitor module
  *
  ******************************************************************************/
 
-
-#include "state.h"
-#include "print_util.h"
-
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
+#include "analog_monitor_telemetry.h"
+#include "time_keeper.h"
 
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor)
+void  analog_monitor_telemetry_send_sonar(const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
-	// Init dependencies
-	state->analog_monitor = analog_monitor;
-	
-	// Init parameters
-	state->autopilot_type = state_config->autopilot_type;
-	state->autopilot_name = state_config->autopilot_name;
-	
-	state->mav_state = state_config->mav_state;
-	state->mav_mode = state_config->mav_mode;
-	
-	state->simulation_mode = state_config->simulation_mode;
-	
-	state->mav_mode_previous = state->mav_mode;
-	
-	if (state->simulation_mode == HIL_ON)
-	{
-		// state->mav_mode |= MAV_MODE_FLAG_HIL_ENABLED;
-		state->mav_mode.HIL = HIL_ON;
-	}
-	else
-	{
-		// state->mav_mode |= !MAV_MODE_FLAG_HIL_ENABLED;
-		state->mav_mode.HIL = HIL_OFF;
-	}
-	
-	state->nav_plan_active = false;
-	
-	state->in_the_air = false;
-	
-	state->reset_position = false;
-	
-	state->remote_active = state_config->remote_active;
-	
-	print_util_dbg_print("State initialized.\r\n");
+	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										time_keeper_get_millis(),
+										"sonar",
+										1000.0f/9.8f*2.54f*analog_monitor->avg[ANALOG_RAIL_12]);
 }

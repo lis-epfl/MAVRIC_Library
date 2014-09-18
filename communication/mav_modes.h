@@ -43,6 +43,7 @@
 #ifndef MAV_MODE_H
 #define MAV_MODE_H
 
+#include "mavlink_stream.h"
 #include <stdint.h>
 #include <stdbool.h>
 

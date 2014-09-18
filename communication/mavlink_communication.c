@@ -49,14 +49,14 @@
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
-static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler, mavlink_message_t* msg);
+static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler, uint32_t sysid, mavlink_message_t* msg);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler, mavlink_message_t* msg)
+static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler, uint32_t sysid, mavlink_message_t* msg)
 {
 	// Get task set
 	task_set_t* mavlink_task_set = scheduler->task_set;
@@ -65,7 +65,7 @@ static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler
 	mavlink_request_data_stream_t request;
 	mavlink_msg_request_data_stream_decode(msg, &request);
 	
-	if (((request.target_system == scheduler->mavlink_stream->sysid)||(request.target_system == MAV_SYS_ID_ALL))
+	if (((request.target_system == sysid)||(request.target_system == MAV_SYS_ID_ALL))
 		&&(request.target_component == 0))
 	{
 		if ( scheduler->debug )
@@ -126,8 +126,7 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 {
 	// Init mavlink schedule
 	scheduler_init(	&mavlink_communication->scheduler, 
-					&config->scheduler_config,
-					&mavlink_communication->mavlink_stream);
+					&config->scheduler_config);
 
 	// Init mavlink stream
 	mavlink_stream_init(	&mavlink_communication->mavlink_stream, 
