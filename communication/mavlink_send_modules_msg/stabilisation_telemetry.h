@@ -52,7 +52,7 @@ extern "C" {
 
 
 /**
- * \brief	Function to send the mavlink roll, pitch, yaw angular speeds and thrust setpoints message
+ * \brief	Function to send the MAVLink roll, pitch, yaw angular speeds and thrust setpoints message
  *
  * \param	stabiliser				The pointer to the structure containing the PID controller
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
@@ -61,7 +61,7 @@ extern "C" {
 void stabilisation_telemetry_send_rpy_speed_thrust_setpoint(const stabiliser_t* stabiliser, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 /**
- * \brief	Function to send the mavlink roll, pitch and yaw errors message
+ * \brief	Function to send the MAVLink roll, pitch and yaw errors message
  * 
  * \param	stabiliser	Pointer to the structure containing the PID controller
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
@@ -70,7 +70,7 @@ void stabilisation_telemetry_send_rpy_speed_thrust_setpoint(const stabiliser_t* 
 void stabilisation_telemetry_send_rpy_rates_error(const stabiliser_t* stabiliser, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 /**
- * \brief	Function to send the mavlink roll, pitch, yaw and thrust setpoints message
+ * \brief	Function to send the MAVLink roll, pitch, yaw and thrust setpoints message
  *
  * \param	stabiliser	Pointer to the structure containing the PID controller
  * \param	mavlink_stream			The pointer to the MAVLink stream structure

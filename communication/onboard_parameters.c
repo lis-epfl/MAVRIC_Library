@@ -64,7 +64,7 @@ static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parame
  * 
  * \param   onboard_parameters		Pointer to module structure
  * \param	sysid					The system ID
- * \param   msg 					Incoming mavlink message
+ * \param   msg 					Incoming MAVLink message
  */
 static void onboard_parameters_send_all_parameters(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg);
 
@@ -74,7 +74,7 @@ static void onboard_parameters_send_all_parameters(onboard_parameters_t* onboard
  *
  * \param   onboard_parameters		Pointer to module structure
  * \param	sysid					The system ID
- * \param   msg 					Incoming mavlink message
+ * \param   msg 					Incoming MAVLink message
  */
 static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg);
 
@@ -84,7 +84,7 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
  *
  * \param   onboard_parameters		Pointer to module structure
  * \param	sysid					The system ID
- * \param   msg 					Incoming mavlink message
+ * \param   msg 					Incoming MAVLink message
  */
 static void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_parameters, uint32_t sysid, mavlink_message_t* msg);
 

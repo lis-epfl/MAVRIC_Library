@@ -80,10 +80,10 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 static void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigation);
 
 /**
- * \brief	Sets auto-takeoff procedure from a mavlink command message MAV_CMD_NAV_TAKEOFF
+ * \brief	Sets auto-takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF
  *
  * \param	navigation			The pointer to the navigation structure
- * \param	packet				The pointer to the structure of the mavlink command message long
+ * \param	packet				The pointer to the structure of the MAVLink command message long
  */
 static void navigation_set_auto_takeoff(navigation_t *navigation, mavlink_command_long_t* packet);
 

@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Gregoire Heitz
  *   
- * \brief This file sends the mavlink HUD message
+ * \brief This file sends the MAVLink HUD message
  *
  ******************************************************************************/
 

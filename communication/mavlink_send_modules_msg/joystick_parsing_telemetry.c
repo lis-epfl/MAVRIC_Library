@@ -49,10 +49,10 @@
 //------------------------------------------------------------------------------
 
 /** 
- * \brief	Parse received mavlink message in structure
+ * \brief	Parse received MAVLink message in structure
  * \param	joystick_parsing		The pointer to the joystick parsing structure
  * \param	sysid					The sysid of the system
- * \param	rec						The pointer to the mavlink message received
+ * \param	rec						The pointer to the MAVLink message received
  */
 void joystick_parsing_telemetry_parse_msg(joystick_parsing_t *joystick_parsing, uint32_t sysid, mavlink_received_t* rec);
 

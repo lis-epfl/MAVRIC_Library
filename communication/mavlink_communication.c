@@ -124,11 +124,11 @@ static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler
 
 void mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config)
 {
-	// Init mavlink schedule
+	// Init MAVLink schedule
 	scheduler_init(	&mavlink_communication->scheduler, 
 					&config->scheduler_config);
 
-	// Init mavlink stream
+	// Init MAVLink stream
 	mavlink_stream_init(	&mavlink_communication->mavlink_stream, 
 							&config->mavlink_stream_config	);
 

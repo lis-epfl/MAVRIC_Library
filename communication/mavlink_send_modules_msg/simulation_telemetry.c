@@ -54,7 +54,7 @@
  * \brief	Changes between simulation to and from reality
  *
  * \param	sim				The pointer to the simulation model structure
- * \param	packet			The pointer to the decoded mavlink command long message
+ * \param	packet			The pointer to the decoded MAVLink command long message
  */
 static void simulation_telemetry_set_new_home_position(simulation_model_t *sim, mavlink_command_long_t* packet);
 

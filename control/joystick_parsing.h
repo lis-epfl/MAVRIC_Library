@@ -12,7 +12,7 @@
 /**
 * \file joystick_parsing.h
 *
-* This file is to decode the set manual command message from mavlink
+* This file is to decode the set manual command message from MAVLink
 */
 
 

@@ -53,7 +53,7 @@ extern "C" {
 
 
 /**
- * \brief	Function to send the mavlink scaled pressure message
+ * \brief	Function to send the MAVLink scaled pressure message
  * 
  * \param	pressure				The pointer to the pressure structure
  * \param	mavlink_stream			The pointer to the MAVLink stream structure

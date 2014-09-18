@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *   
- * \brief The mavlink waypoint handler
+ * \brief The MAVLink waypoint handler
  *
  ******************************************************************************/
 
@@ -53,35 +53,35 @@
 /**
  * \brief	Sets a circle scenario, where two waypoints are set at opposite side of the circle
  *
- * \param	waypoint_handler		The pointer to the structure of the mavlink waypoint handler
- * \param	packet					The pointer to the structure of the mavlink command message long
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
+ * \param	packet					The pointer to the structure of the MAVLink command message long
  */
 static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
 
 /**
- * \brief	Sends the number of onboard waypoint to mavlink when asked by ground station
+ * \brief	Sends the number of onboard waypoint to MAVLink when asked by ground station
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  * \param	sysid					The system ID
- * \param	rec						The pointer to the received mavlink message structure asking the send count
+ * \param	rec						The pointer to the received MAVLink message structure asking the send count
  */
 static void waypoint_handler_send_count(mavlink_waypoint_handler_t* waypoint_handler, uint32_t sysid, mavlink_received_t* rec);
 
 /**
- * \brief	Sends a given waypoint via a mavlink message
+ * \brief	Sends a given waypoint via a MAVLink message
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  * \param	sysid					The system ID
- * \param	rec						The pointer to the received mavlink message structure asking for a waypoint
+ * \param	rec						The pointer to the received MAVLink message structure asking for a waypoint
  */
 static void waypoint_handler_send_waypoint(mavlink_waypoint_handler_t* waypoint_handler, uint32_t sysid, mavlink_received_t* rec);
 
 /**
- * \brief	Receives a acknowledge message from mavlink
+ * \brief	Receives a acknowledge message from MAVLink
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  * \param	sysid					The system ID
- * \param	rec						The received mavlink message structure
+ * \param	rec						The received MAVLink message structure
  */
 static void waypoint_handler_receive_ack_msg(mavlink_waypoint_handler_t* waypoint_handler, uint32_t sysid, mavlink_received_t* rec);
 
@@ -90,7 +90,7 @@ static void waypoint_handler_receive_ack_msg(mavlink_waypoint_handler_t* waypoin
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  * \param	sysid					The system ID
- * \param	rec						The received mavlink message structure with the total number of waypoint
+ * \param	rec						The received MAVLink message structure with the total number of waypoint
  */
 static void waypoint_handler_receive_count(mavlink_waypoint_handler_t* waypoint_handler, uint32_t sysid, mavlink_received_t* rec);
 
@@ -99,7 +99,7 @@ static void waypoint_handler_receive_count(mavlink_waypoint_handler_t* waypoint_
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  * \param	sysid					The system ID
- * \param	rec						The received mavlink message structure with the waypoint
+ * \param	rec						The received MAVLink message structure with the waypoint
  */
 static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoint_handler, uint32_t sysid, mavlink_received_t* rec);
 
@@ -108,7 +108,7 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  * \param	sysid					The system ID
- * \param	rec						The received mavlink message structure with the number of the current waypoint
+ * \param	rec						The received MAVLink message structure with the number of the current waypoint
  */
 static void waypoint_handler_set_current_waypoint(mavlink_waypoint_handler_t* waypoint_handler, uint32_t sysid, mavlink_received_t* rec);
 
@@ -116,7 +116,7 @@ static void waypoint_handler_set_current_waypoint(mavlink_waypoint_handler_t* wa
  * \brief	Set the current waypoint to new_current
  *
  * \param	waypoint_handler		The pointer to the waypoint handler
- * \param	packet					The pointer to the decoded mavlink message long
+ * \param	packet					The pointer to the decoded MAVLink message long
  */
 static void waypoint_handler_set_current_waypoint_from_parameter(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
 
@@ -125,7 +125,7 @@ static void waypoint_handler_set_current_waypoint_from_parameter(mavlink_waypoin
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  * \param	sysid					The system ID
- * \param	rec						The received mavlink message structure with the clear command
+ * \param	rec						The received MAVLink message structure with the clear command
  */
 static void waypoint_handler_clear_waypoint_list(mavlink_waypoint_handler_t* waypoint_handler, uint32_t sysid, mavlink_received_t* rec);
 
@@ -134,23 +134,23 @@ static void waypoint_handler_clear_waypoint_list(mavlink_waypoint_handler_t* way
  *
  * \param	waypoint_handler		The pointer to the waypoint handler
  * \param	sysid					The system ID
- * \param	rec						The received mavlink message structure with the new home position
+ * \param	rec						The received MAVLink message structure with the new home position
  */
 static void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handler, uint32_t sysid, mavlink_received_t* rec);
 
 /**
  * \brief	Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
  *
- * \param	waypoint_handler		The pointer to the structure of the mavlink waypoint handler
- * \param	packet					The pointer to the structure of the mavlink command message long
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
+ * \param	packet					The pointer to the structure of the MAVLink command message long
  */
 static void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
 
 /**
  * \brief	Set the next waypoint as current waypoint
  *
- * \param	waypoint_handler		The pointer to the structure of the mavlink waypoint handler
- * \param	packet					The pointer to the structure of the mavlink command message long
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
+ * \param	packet					The pointer to the structure of the MAVLink command message long
  */
 static void waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
 

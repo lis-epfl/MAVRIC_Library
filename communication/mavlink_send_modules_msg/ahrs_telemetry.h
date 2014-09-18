@@ -54,7 +54,7 @@ extern "C" {
 
 
 /**
- * \brief	Function to send the mavlink attitude message
+ * \brief	Function to send the MAVLink attitude message
  * 
  * \param	ahrs		The pointer to the attitude estimation
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
@@ -64,7 +64,7 @@ void ahrs_telemetry_send_attitude(const ahrs_t* ahrs, const mavlink_stream_t* ma
 
 
 /**
- * \brief	Function to send the mavlink quaternion attitude message
+ * \brief	Function to send the MAVLink quaternion attitude message
  * 
  * \param	ahrs		The pointer to the attitude estimation
  * \param	mavlink_stream			The pointer to the MAVLink stream structure

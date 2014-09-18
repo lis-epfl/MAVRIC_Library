@@ -165,8 +165,6 @@ typedef struct
  * 
  * \param	remote				The pointer to the remote structure
  * \param	config				The pointer to the config structure of the remote
- * \param	mavlink_stream		The pointer to the mavlink stream structure
- * \param	message_handler		The pointer to the message handler structure
  */
 void remote_init(remote_t* remote, const remote_conf_t* config);
 

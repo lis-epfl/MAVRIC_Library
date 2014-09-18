@@ -53,7 +53,7 @@
  * \brief	Position estimation update step, performing position estimation then position correction (function to be used)
  *
  * \param	pos_est					The pointer to the position estimation structure
- * \param	packet					The pointer to the decoded mavlink command long message
+ * \param	packet					The pointer to the decoded MAVLink command long message
  */
 static void position_estimation_set_new_home_position(position_estimator_t *pos_est, mavlink_command_long_t* packet);
 

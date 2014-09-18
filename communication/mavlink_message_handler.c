@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief This module handles of all incoming mavlink message by calling the 
+ * \brief This module handles of all incoming MAVLink message by calling the 
  * appropriate functions
  *
  ******************************************************************************/

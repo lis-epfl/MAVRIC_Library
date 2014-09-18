@@ -55,13 +55,13 @@ extern "C" {
 /**
  * \brief	Initialise the state telemetry module
  *
- * \param   mavlink_stream		The pointer to the mavlink stream structure
+ * \param   mavlink_stream		The pointer to the MAVLink stream structure
  * \param	message_handler		The pointer to the message handler
  */
 void state_telemetry_init(state_t* state, mavlink_message_handler_t *message_handler);
 
 /**
- * \brief	Function to send the mavlink heartbeat message
+ * \brief	Function to send the MAVLink heartbeat message
  * 
  * \param	state		The pointer to the state structure
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
@@ -71,7 +71,7 @@ void state_telemetry_send_heartbeat(const state_t* state, const mavlink_stream_t
 
 
 /**
- * \brief	Function to send the mavlink system status message, project specific message!
+ * \brief	Function to send the MAVLink system status message, project specific message!
  * 
  * \param	state		The pointer to the state structure
  * \param	mavlink_stream			The pointer to the MAVLink stream structure

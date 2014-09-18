@@ -53,7 +53,7 @@ extern "C" {
 #endif
 
 /**
- * \brief	Task to send the mavlink sonar message
+ * \brief	Task to send the MAVLink sonar message
  * 
  * \param sonar Data struct
  * \param	mavlink_stream			The pointer to the MAVLink stream structure

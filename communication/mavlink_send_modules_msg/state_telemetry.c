@@ -53,7 +53,7 @@
  * \brief						Set the state and the mode of the vehicle
  *
  * \param	state				The pointer to the state structure
- * \param	rec					The received mavlink message structure
+ * \param	rec					The received MAVLink message structure
  */
 static void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_received_t* rec);
 

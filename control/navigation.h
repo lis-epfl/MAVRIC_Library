@@ -68,7 +68,7 @@ typedef struct
 	float max_climb_rate;								///< Max climb rate in m/s
 	float soft_zone_size;								///< Soft zone of the velocity controller
 	
-	uint8_t loop_count;									///< A counter for sending mavlink messages at a lower rate than the function
+	uint8_t loop_count;									///< A counter for sending MAVLink messages at a lower rate than the function
 	
 	mav_mode_t mode;									///< The mode of the MAV to have a memory of its evolution
 	
@@ -80,7 +80,7 @@ typedef struct
 	mavlink_waypoint_handler_t *waypoint_handler;		///< The pointer to the waypoint handler structure
 	const position_estimator_t *position_estimator;		///< The pointer to the position estimation structure in central_data
 	state_t* state;										///< The pointer to the state structure in central_data
-	const mavlink_stream_t* mavlink_stream;				///< The pointer to the mavlink stream structure
+	const mavlink_stream_t* mavlink_stream;				///< The pointer to the MAVLink stream structure
 	const remote_t* remote;								///< The pointer to the remote structure
 }navigation_t;
 
@@ -93,7 +93,7 @@ typedef struct
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  * \param	position_estimator		The pointer to the position estimation structure
  * \param	state					The pointer to the state structure 
- * \param	mavlink_communication	The pointer to the mavlink communication structure
+ * \param	mavlink_communication	The pointer to the MAVLink communication structure
  * \param	remote					The pointer to the remote structure
  */
 void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, const remote_t* remote, mavlink_communication_t* mavlink_communication);
