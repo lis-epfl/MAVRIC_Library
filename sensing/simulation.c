@@ -544,6 +544,7 @@ void simulation_switch_from_simulation_to_reality(simulation_model_t *sim)
 		sim->pos_est->local_position.pos[i] = 0.0f;
 	}
 	sim->pos_est->init_gps_position = false;
+	sim->gps->status = NO_FIX;
 }
 
 

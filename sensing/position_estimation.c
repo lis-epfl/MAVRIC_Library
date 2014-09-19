@@ -279,7 +279,7 @@ static void gps_position_init(position_estimator_t *pos_est)
 	int32_t i;
 	if ( pos_est->init_gps_position == false )
 	{
-		if ( pos_est->time_last_gps_msg < pos_est->gps->time_last_msg )
+		if ( (pos_est->time_last_gps_msg < pos_est->gps->time_last_msg) && (pos_est->gps->status == GPS_OK) )
 		{
 			pos_est->time_last_gps_msg = pos_est->gps->time_last_msg;
 		
