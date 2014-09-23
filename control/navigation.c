@@ -117,6 +117,11 @@ static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_po
 static void navigation_set_speed_command(float rel_pos[], navigation_t* navigation)
 {
 	float  norm_rel_dist, v_desired;
+	quat_t qtmp1, qtmp2;
+	
+	float dir_desired_bf[3];
+	
+	float rel_heading;
 	
 	norm_rel_dist = sqrt(navigation->waypoint_handler->dist2wp_sqr);
 	
@@ -125,16 +130,31 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		norm_rel_dist += 0.0005f;
 	}
 
-	// ?
+	if (((navigation->state->mav_mode.GUIDED == GUIDED_ON)&&(navigation->state->mav_mode.AUTO == AUTO_OFF))||((maths_f_abs(rel_pos[X])<=1.0f)&&(maths_f_abs(rel_pos[Y])<=1.0f))||((maths_f_abs(rel_pos[X])<=5.0f)&&(maths_f_abs(rel_pos[Y])<=5.0f)&&(maths_f_abs(rel_pos[Z])>=3.0f)))
+	{
+		rel_heading = 0.0f;
+	}
+	else
+	{
+		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimator->local_position.heading);
+	}
+
+	// calculate dir_desired in local frame
+	// vel = qe-1 * rel_pos * qe
+	qtmp1 = quaternions_create_from_vector(rel_pos);
+	qtmp2 = quaternions_global_to_local(*navigation->qe,qtmp1);
+	dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
 	
 	v_desired = 0.0; //?
 	
-	//?
+	dir_desired_bf[X] = 0.0; //?
+	dir_desired_bf[Y] = 0.0; //?
+	dir_desired_bf[Z] = 0.0; //?
 	
-	navigation->controls_nav->tvel[X] = 0.0; //?
-	navigation->controls_nav->tvel[Y] = 0.0; //?
-	navigation->controls_nav->tvel[Z] = 0.0; //?
-	navigation->controls_nav->rpy[YAW] = 0.0; //?
+	navigation->controls_nav->tvel[X] = dir_desired_bf[X];
+	navigation->controls_nav->tvel[Y] = dir_desired_bf[Y];
+	navigation->controls_nav->tvel[Z] = dir_desired_bf[Z];
+	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
 }
 
 static void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigation)

@@ -85,23 +85,69 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 	control_command_t input;
 	int32_t i;
 	
+	/* Uncomment this only for the optional part
+	quat_t qtmp, q_rot;
+	aero_attitude_t attitude_yaw_inverse;
+	*/
+	
 	// set the controller input
-	input= *stabilisation_copter->controls;
+	input = *stabilisation_copter->controls;
 	switch (stabilisation_copter->controls->control_mode)
 	{
 	case VELOCITY_COMMAND_MODE:
 		
-		// Empty controlle
+		// Velocity control in global frame
+		/* Uncomment this only for the optional part
+		attitude_yaw_inverse = coord_conventions_quat_to_aero(stabilisation_copter->ahrs->qe);
+		attitude_yaw_inverse.rpy[0] = 0.0f;
+		attitude_yaw_inverse.rpy[1] = 0.0f;
 		
-		rpyt_errors[X] = 0.0; // ?
-		rpyt_errors[Y] = 0.0; // ?
-		rpyt_errors[3] = 0.0; // ?
-		rpyt_errors[YAW]= 0.0; //?
+		q_rot = coord_conventions_quaternion_from_aero(attitude_yaw_inverse);
+		quat_t input_global;
+		quaternions_rotate_vector(q_rot, input.tvel, input_global.v);
+		
+		input.tvel[X] = input_global.v[X];
+		input.tvel[Y] = input_global.v[Y];
+		input.tvel[Z] = input_global.v[Z];
+		
+		rpyt_errors[X] = 0.0;
+		rpyt_errors[Y] = 0.0;
+		rpyt_errors[THRUST] = 0.0;
+		rpyt_errors[YAW]= 0.0;
+		*/
+		
+		
+		// Velocity control in local frame
+		rpyt_errors[ROLL] = 0.0;
+		rpyt_errors[PITCH] = 0.0;
+		rpyt_errors[THRUST] = 0.0;
+		rpyt_errors[YAW]= 0.0;
+		
+		
+		
+		
 		
 		// run PID update on all velocity controllers
 		//stabilisation_run(&stabilisation_copter->stabiliser_stack.velocity_stabiliser, stabilisation_copter->imu->dt, rpyt_errors);
 		
+		//stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.thrust += 0.0;
+		//stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.theading = input.theading;
 		//input = stabilisation_copter->stabiliser_stack.velocity_stabiliser.output;
+		
+		
+		
+		
+		
+		// Mapping for global frame velocity control
+		/* Uncomment this only for the optional part
+		qtmp = quaternions_create_from_vector(stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy);
+		quat_t rpy_local;
+		quaternions_rotate_vector(quaternions_inverse(q_rot), qtmp.v, rpy_local.v);
+		
+		input.rpy[ROLL] = 0.0;
+		input.rpy[PITCH] = 0.0;
+		input.thrust = 0.0;
+		*/
 		
 	// -- no break here  - we want to run the lower level modes as well! -- 
 	

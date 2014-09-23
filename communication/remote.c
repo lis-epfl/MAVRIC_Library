@@ -405,10 +405,10 @@ void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t*
 {
 	remote_update(remote);
 	
-	controls->tvel[X]= - 10.0f * remote_get_pitch(remote) * RC_INPUT_SCALE;
-	controls->tvel[Y]= 10.0f * remote_get_roll(remote) * RC_INPUT_SCALE;
-	controls->tvel[Z]= - 1.5f * remote_get_throttle(remote);
-	controls->rpy[YAW] = remote_get_yaw(remote) * RC_INPUT_SCALE;
+	controls->tvel[X]= 0.0;
+	controls->tvel[Y]= 0.0;
+	controls->tvel[Z]= 0.0;
+	controls->rpy[YAW] = 0.0;
 }
 
 task_return_t remote_send_raw(const remote_t* remote)

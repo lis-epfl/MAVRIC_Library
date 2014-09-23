@@ -175,11 +175,11 @@ void joystick_parsing_parse_msg(joystick_parsing_t *joystick_parsing, mavlink_re
 
 void joystick_parsing_get_velocity_vector_from_joystick(joystick_parsing_t* joystick_parsing, control_command_t* controls)
 {
-	controls->tvel[X] = - 10.0f * joystick_parsing->controls->rpy[PITCH] * MAX_JOYSTICK_RANGE;
-	controls->tvel[Y] = 10.0f * joystick_parsing->controls->rpy[ROLL] * MAX_JOYSTICK_RANGE;
-	controls->tvel[Z] = - 1.5f * joystick_parsing->controls->thrust;
+	controls->tvel[X] = 0.0; //?
+	controls->tvel[Y] = 0.0; //?
+	controls->tvel[Z] = 0.0; //?
 	
-	controls->rpy[YAW] = joystick_parsing->controls->rpy[YAW] * MAX_JOYSTICK_RANGE;
+	controls->rpy[YAW] = 0.0; //?
 }
 
 void joystick_parsing_get_attitude_command_from_joystick(joystick_parsing_t* joystick_parsing, control_command_t* controls)
