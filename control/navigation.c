@@ -203,15 +203,27 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 
 static void navigation_set_auto_takeoff(navigation_t *navigation, mavlink_command_long_t* packet)
 {
-	print_util_dbg_print("Starting automatic take-off from button\n");
-	navigation->auto_takeoff = true;
-
 	mavlink_message_t msg;
+	
+	MAV_RESULT result;
+	
+	if (!navigation->state->in_the_air)
+	{
+		print_util_dbg_print("Starting automatic take-off from button\n");
+		navigation->auto_takeoff = true;
+
+		result = MAV_RESULT_ACCEPTED;
+	}
+	else
+	{
+		result = MAV_RESULT_DENIED;
+	}
+	
 	mavlink_msg_command_ack_pack( 	navigation->mavlink_stream->sysid,
 									navigation->mavlink_stream->compid,
 									&msg,
 									MAV_CMD_NAV_TAKEOFF,
-									MAV_RESULT_ACCEPTED);
+									result);
 	
 	mavlink_stream_send(navigation->mavlink_stream, &msg);
 }
