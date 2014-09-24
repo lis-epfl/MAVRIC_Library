@@ -82,7 +82,10 @@ void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, button_pres
 			else
 			{
 				print_util_dbg_print("Arming\r");
-				joystick_parsing->state->mav_mode.ARMED = ARMED_ON;
+				if ((joystick_parsing->state->mav_mode.byte&0b01011100) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)
+				{
+					joystick_parsing->state->mav_mode.ARMED = ARMED_ON;
+				}
 			}
 			joystick_parsing->buttons.button_1 = BUTTON_PRESSED;
 		}
