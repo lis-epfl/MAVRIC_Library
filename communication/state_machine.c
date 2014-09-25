@@ -127,16 +127,19 @@ void state_machine_update(state_machine_t* state_machine)
 		break;
 		
 		case MAV_STATE_ACTIVE:
-			if ( rc_check != SIGNAL_GOOD )
+			if (state_machine->use_mode_from_remote == 1)
 			{
-				state_new = MAV_STATE_CRITICAL;
-			}
-			else
-			{
-				if ( mode_new.ARMED == ARMED_OFF )
+				if ( rc_check != SIGNAL_GOOD )
 				{
-					state_new = MAV_STATE_STANDBY;
-					print_util_dbg_print("Switching off motors!\n");
+					state_new = MAV_STATE_CRITICAL;
+				}
+				else
+				{
+					if ( mode_new.ARMED == ARMED_OFF )
+					{
+						state_new = MAV_STATE_STANDBY;
+						print_util_dbg_print("Switching off motors!\n");
+					}
 				}
 			}
 		break;
@@ -167,6 +170,12 @@ void state_machine_update(state_machine_t* state_machine)
 		case MAV_STATE_EMERGENCY:
 			// Recovery is not possible -> switch off motors
 			mode_new.ARMED = ARMED_OFF;
+			
+			// To get out of this state, if we are in the wrong use_mode_from_remote
+			if (state_machine->use_mode_from_remote == 0)
+			{
+				state_new = MAV_STATE_STANDBY;
+			}
 		break;
 		
 	}
