@@ -140,7 +140,7 @@ void print_util_putfloat(byte_stream_t *out_stream, float c, int32_t after_digit
  * \param 	columns			Number of columns
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void print_util_print_matrix(byte_stream_t *out_stream, float v[], int32_t rows, int32_t columns, int32_t after_digits);
+void print_util_print_matrix(byte_stream_t *out_stream, float const v[], int32_t rows, int32_t columns, int32_t after_digits);
 
 
 /**
@@ -150,7 +150,7 @@ void print_util_print_matrix(byte_stream_t *out_stream, float v[], int32_t rows,
  * \param 	v            	Array of floats containing the vector elements
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void print_util_print_vector(byte_stream_t *out_stream, float v[], int32_t after_digits); 
+void print_util_print_vector(byte_stream_t *out_stream, float const v[], int32_t after_digits); 
 
 
 /**
@@ -160,7 +160,7 @@ void print_util_print_vector(byte_stream_t *out_stream, float v[], int32_t after
  * \param 	quat         	Unit quaternion
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void print_util_print_quaternion(byte_stream_t *out_stream, quat_t *quat, int32_t after_digits); 
+void print_util_print_quaternion(byte_stream_t *out_stream, quat_t const *quat, int32_t after_digits); 
 
 
 /**
@@ -208,7 +208,7 @@ void print_util_dbg_putfloat(float c, int32_t after_digits);
  * \param 	v            	Array of float containing the vector elements
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void print_util_dbg_print_vector(float v[], int32_t after_digits); 
+void print_util_dbg_print_vector(float const v[], int32_t after_digits); 
 
 
 /*!
@@ -217,7 +217,7 @@ void print_util_dbg_print_vector(float v[], int32_t after_digits);
  * \param 	quat         	Unit quaternion
  * \param 	after_digits 	Number of digits to write after the radix point
  */
-void print_util_dbg_print_quaternion(quat_t *quat, int32_t after_digits); 
+void print_util_dbg_print_quaternion(quat_t const *quat, int32_t after_digits); 
 
 /**
  * \brief              Writes a number in any base to the debug stream
