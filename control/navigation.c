@@ -575,30 +575,35 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 	float rel_pos[3];
 	uint8_t i;
 	
-	local_coordinates_t local_position;
-	
-	switch(navigation->auto_landing_behavior)
+	if (!navigation->auto_landing_next_state)
 	{
-		case DESCENT_TO_SMALL_ALTITUDE:
+		navigation->auto_landing_next_state = true;
+		
+		switch(navigation->auto_landing_behavior)
+		{
+			case DESCENT_TO_SMALL_ALTITUDE:
 			navigation->waypoint_handler->waypoint_critical_coordinates = navigation->position_estimator->local_position;
 			navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = -2.0f;
 			break;
 			
-		case DESCENT_TO_GND:
+			case DESCENT_TO_GND:
 			navigation->waypoint_handler->waypoint_critical_coordinates = navigation->position_estimator->local_position;
 			navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = 0.0f;
 			break;
+		}
+		
+		for (i=0;i<3;i++)
+		{
+			rel_pos[i] = navigation->waypoint_handler->waypoint_critical_coordinates.pos[i] - navigation->position_estimator->local_position.pos[i];
+		}
+		
+		navigation->waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 	}
-	
-	for (i=0;i<3;i++)
-	{
-		rel_pos[i] = navigation->waypoint_handler->waypoint_critical_coordinates.pos[i] - navigation->position_estimator->local_position.pos[i];
-	}
-	
-	navigation->waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 	
 	if (navigation->waypoint_handler->dist2wp_sqr < 0.5f)
 	{
+		navigation->auto_landing_next_state = false;
+		
 		switch(navigation->auto_landing_behavior)
 		{
 			case DESCENT_TO_SMALL_ALTITUDE:
@@ -668,12 +673,16 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->mode.byte = state->mav_mode.byte;
 	
 	navigation->auto_takeoff = false;
+	
 	navigation->auto_landing = false;
 	
 	navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 	navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
 	
 	navigation->critical_landing = false;
+	
+	navigation->critical_next_state = false;
+	navigation->auto_landing_next_state = false;
 	
 	navigation->controls_nav->mavlink_stream = &mavlink_communication->mavlink_stream;
 	

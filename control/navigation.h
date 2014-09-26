@@ -87,6 +87,8 @@ typedef struct
 	bool critical_landing;								///< Flag to execute critical landing (switching motors off)
 	bool critical_next_state;							///< Flag to change critical state in its dedicated state machine
 	
+	bool auto_landing_next_state;						///< Flag to change critical state in its dedicated state machine
+	
 	control_command_t *controls_nav;					///< The pointer to the navigation control structure
 	const control_command_t* control_joystick;			///< The pointer to the joystick control structure
 	const quat_t *qe;									///< The pointer to the attitude quaternion structure
