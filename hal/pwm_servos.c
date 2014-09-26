@@ -82,10 +82,10 @@ void write_channels(int32_t channel, int32_t pulse_us_a, int32_t pulse_us_b, uin
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void pwm_servos_init(bool use_servos_7_8)
+void pwm_servos_init(bool alternate_use_servo_7_8)
 {
 	int32_t i = 0;
-	use_servos_7_8 = use_servos_7_8;
+	use_servos_7_8 = alternate_use_servo_7_8;
 
 	// To unlock registers
 	AVR32_PWM.wpcr =  	( AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY ) 	|
@@ -129,7 +129,7 @@ void pwm_servos_init(bool use_servos_7_8)
 		AVR32_PWM.channel[i].dt= 1000 << 16 | 1000;	
 	}		
 
-	if ( use_servos_7_8 == true )
+	if ( use_servos_7_8 == false )
 	{
 		static const gpio_map_t PWM_GPIO_MAP =
 		{
