@@ -151,8 +151,6 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	navigation->dist2vel_controller.clip_max = navigation->cruise_speed;
 	v_desired = pid_control_update_dt(&navigation->dist2vel_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
 	
-	//v_desired = maths_f_min(navigation->cruise_speed,(maths_center_window_2(4.0f * rel_heading) * navigation->dist2vel_gain)* maths_soft_zone(norm_rel_dist,navigation->soft_zone_size));
-	
 	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigation->max_climb_rate * norm_rel_dist ) {
 		v_desired = navigation->max_climb_rate * norm_rel_dist /maths_f_abs(dir_desired_bf[Z]);
 	}

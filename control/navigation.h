@@ -66,7 +66,7 @@ extern "C" {
 typedef struct
 {
 	float dist2vel_gain;								///< The gain linking the distance to the goal to the actual speed
-	pid_controller_t dist2vel_controller;					///< dist2vel controller
+	pid_controller_t dist2vel_controller;				///< dist2vel controller
 	float cruise_speed;									///< The cruise speed in m/s
 	float max_climb_rate;								///< Max climb rate in m/s
 	float soft_zone_size;								///< Soft zone of the velocity controller
