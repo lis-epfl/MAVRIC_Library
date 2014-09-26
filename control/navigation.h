@@ -102,7 +102,7 @@ typedef struct
  * \param	mavlink_communication	The pointer to the mavlink communication structure
  * \param	remote					The pointer to the remote structure
  */
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, const remote_t* remote, mavlink_communication_t* mavlink_communication);
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, pid_controller_t nav_pid_controller, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, const remote_t* remote, mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
