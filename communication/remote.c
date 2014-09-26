@@ -148,7 +148,7 @@ void remote_init(remote_t* remote, const remote_conf_t* config, const mavlink_st
 	
 	mavlink_message_handler_cmd_callback_t callbackcmd;
 	
-	callbackcmd.command_id    = MAV_CMD_DO_JUMP;//MAV_CMD_START_RX_PAIR; // 500
+	callbackcmd.command_id    = MAV_CMD_START_RX_PAIR; // 500
 	callbackcmd.sysid_filter  = MAV_SYS_ID_ALL;
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_ALL;

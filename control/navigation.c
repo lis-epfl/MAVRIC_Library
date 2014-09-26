@@ -620,7 +620,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, const remote_t* remote, mavlink_communication_t* mavlink_communication)
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, pid_controller_t nav_pid_controller, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, const remote_t* remote, mavlink_communication_t* mavlink_communication)
 {
 	
 	navigation->controls_nav = controls_nav;
@@ -643,32 +643,7 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->controls_nav->control_mode = VELOCITY_COMMAND_MODE;
 	navigation->controls_nav->yaw_mode = YAW_ABSOLUTE;
 	
-	static pid_controller_t nav_default_controller =
-	{
-		.p_gain = 0.2f,
-		.clip_min = 0.0f,
-		.clip_max = 3.0f,
-		.integrator={
-			.pregain = 0.5f,
-			.postgain = 0.0f,
-			.accumulator = 0.0f,
-			.maths_clip = 0.65f,
-			.leakiness = 0.0f
-		},
-		.differentiator={
-			.gain = 0.4f,
-			.previous = 0.0f,
-			.LPF = 0.5f,
-			.maths_clip = 0.65f
-		},
-		.output = 0.0f,
-		.error = 0.0f,
-		.last_update = 0.0f,
-		.dt = 1,
-		.soft_zone_width = 0.0f
-	};
-	
-	navigation->dist2vel_controller = nav_default_controller;
+	navigation->dist2vel_controller = nav_pid_controller;
 	
 	navigation->mode.byte = state->mav_mode.byte;
 	
