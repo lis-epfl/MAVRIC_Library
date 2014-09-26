@@ -580,17 +580,13 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 	switch(navigation->auto_landing_behavior)
 	{
 		case DESCENT_TO_SMALL_ALTITUDE:
-			local_position = navigation->position_estimator->local_position;
-			local_position.pos[Z] = -2.0f;
-		
-			navigation_waypoint_hold_init(navigation->waypoint_handler, local_position);
+			navigation->waypoint_handler->waypoint_critical_coordinates = navigation->position_estimator->local_position;
+			navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = -2.0f;
 			break;
 			
 		case DESCENT_TO_GND:
-			local_position = navigation->position_estimator->local_position;
-			local_position.pos[Z] = 0.0f;
-			
-			navigation_waypoint_hold_init(navigation->waypoint_handler, local_position);
+			navigation->waypoint_handler->waypoint_critical_coordinates = navigation->position_estimator->local_position;
+			navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = 0.0f;
 			break;
 	}
 	
