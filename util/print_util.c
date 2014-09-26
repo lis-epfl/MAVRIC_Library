@@ -249,7 +249,7 @@ void print_util_putfloat(byte_stream_t *out_stream, float c, int32_t after_digit
 }
 
 
-void print_util_print_vector(byte_stream_t *out_stream, float v[], int32_t after_digits) 
+void print_util_print_vector(byte_stream_t *out_stream, float const v[], int32_t after_digits)
 {
 	int32_t i;
 	print_util_putstring(out_stream, "(");
@@ -269,7 +269,7 @@ void print_util_print_vector(byte_stream_t *out_stream, float v[], int32_t after
 }
 
 
-void print_util_print_quaternion(byte_stream_t *out_stream, quat_t *quat, int32_t after_digits) 
+void print_util_print_quaternion(byte_stream_t *out_stream, quat_t const *quat, int32_t after_digits) 
 {
 	print_util_putstring(out_stream, "(");
 	print_util_putfloat(out_stream, quat->s, after_digits);
@@ -279,7 +279,7 @@ void print_util_print_quaternion(byte_stream_t *out_stream, quat_t *quat, int32_
 }
 
 
-void print_util_print_matrix(byte_stream_t *out_stream, float v[], int32_t rows, int32_t columns, int32_t after_digits) 
+void print_util_print_matrix(byte_stream_t *out_stream, float const v[], int32_t rows, int32_t columns, int32_t after_digits) 
 {
 	int32_t i, j;
 	
@@ -319,13 +319,13 @@ void print_util_dbg_putfloat(float c, int32_t after_digits)
 }
 
 
-void print_util_dbg_print_vector(float v[], int32_t after_digits) 
+void print_util_dbg_print_vector(float const v[], int32_t after_digits) 
 {
 	print_util_print_vector(deb_stream, v, after_digits);
 }
 
 
-void print_util_dbg_print_quaternion(quat_t *quat, int32_t after_digits) 
+void print_util_dbg_print_quaternion(quat_t const *quat, int32_t after_digits) 
 {
 	print_util_print_quaternion(deb_stream, quat, after_digits);
 }
