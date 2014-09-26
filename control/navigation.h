@@ -78,7 +78,14 @@ typedef struct
 	
 	mav_mode_t mode;									///< The mode of the MAV to have a memory of its evolution
 	
-	bool auto_takeoff;									///< The flag for the end of the auto takeoff procedure
+	bool auto_takeoff;									///< The flag to start and end the auto takeoff procedure
+	bool auto_landing;									///< The flag to start and end the auto landing procedure
+	
+	critical_behavior_enum critical_behavior;			///< The critical behavior enum
+	auto_landing_behavior_t auto_landing_behavior;		///< The autolanding behavior enum
+	
+	bool critical_landing;								///< Flag to execute critical landing (switching motors off)
+	bool critical_next_state;							///< Flag to change critical state in its dedicated state machine
 	
 	control_command_t *controls_nav;					///< The pointer to the navigation control structure
 	const control_command_t* control_joystick;			///< The pointer to the joystick control structure
@@ -110,49 +117,6 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
  * \param	navigation		The pointer to the navigation structure in central_data
  */
 task_return_t navigation_update(navigation_t* navigation);
-
-/**
- * \brief	Initialise the position hold mode
- *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- * \param	local_pos				The position where the position will be held
- */
-void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t local_pos);
-
-/**
- * \brief	Sets the automatic takeoff waypoint
- *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- */
-void navigation_waypoint_take_off_init(mavlink_waypoint_handler_t* waypoint_handler);
-
-/**
- * \brief	Drives the automatic takeoff procedure
- *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- */
-void navigation_waypoint_take_off_handler(navigation_t* navigation);
-
-/**
- * \brief	Drives the hold position procedure
- *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- */
-void navigation_hold_position_handler(navigation_t* navigation);
-
-/**
- * \brief	Drives the GPS navigation procedure
- *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- */
-void navigation_waypoint_navigation_handler(navigation_t* navigation);
-
-/**
- * \brief	Drives the critical navigation behavior
- *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- */
-void navigation_critical_handler(mavlink_waypoint_handler_t* waypoint_handler);
 
 #ifdef __cplusplus
 }
