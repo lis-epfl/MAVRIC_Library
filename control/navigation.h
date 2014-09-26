@@ -56,7 +56,9 @@ extern "C" {
 #include "mavlink_communication.h"
 #include "state.h"
 #include "remote.h"
+#include "pid_control.h"
 #include <stdbool.h>
+
 
 /**
  * \brief The navigation structure
@@ -64,9 +66,13 @@ extern "C" {
 typedef struct
 {
 	float dist2vel_gain;								///< The gain linking the distance to the goal to the actual speed
+	pid_controller_t dist2vel_controller;					///< dist2vel controller
 	float cruise_speed;									///< The cruise speed in m/s
 	float max_climb_rate;								///< Max climb rate in m/s
 	float soft_zone_size;								///< Soft zone of the velocity controller
+	
+	float dt;											///< The time interval between two navigation updates
+	uint32_t last_update;								///< The time of the last navigation update in ms
 	
 	uint8_t loop_count;									///< A counter for sending mavlink messages at a lower rate than the function
 	
