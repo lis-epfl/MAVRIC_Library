@@ -148,7 +148,8 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimator->local_position.heading);
 	}
 	
-	v_desired = maths_f_min(navigation->cruise_speed,(maths_center_window_2(4.0f * rel_heading) * navigation->dist2vel_gain)* maths_soft_zone(norm_rel_dist,navigation->soft_zone_size));
+	navigation->dist2vel_controller.clip_max = navigation->cruise_speed;
+	v_desired = pid_control_update_dt(&navigation->dist2vel_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
 	
 	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigation->max_climb_rate * norm_rel_dist ) {
 		v_desired = navigation->max_climb_rate * norm_rel_dist /maths_f_abs(dir_desired_bf[Z]);
@@ -270,6 +271,33 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->controls_nav->control_mode = VELOCITY_COMMAND_MODE;
 	navigation->controls_nav->yaw_mode = YAW_ABSOLUTE;
 	
+	static pid_controller_t nav_default_controller =
+	{
+		.p_gain = 0.2f,
+		.clip_min = 0.0f,
+		.clip_max = 3.0f,
+		.integrator={
+			.pregain = 0.5f,
+			.postgain = 0.0f,
+			.accumulator = 0.0f,
+			.maths_clip = 0.65f,
+			.leakiness = 0.0f
+		},
+		.differentiator={
+			.gain = 0.4f,
+			.previous = 0.0f,
+			.LPF = 0.5f,
+			.maths_clip = 0.65f
+		},
+		.output = 0.0f,
+		.error = 0.0f,
+		.last_update = 0.0f,
+		.dt = 1,
+		.soft_zone_width = 0.0f
+	};
+	
+	navigation->dist2vel_controller = nav_default_controller;
+	
 	navigation->mode.byte = state->mav_mode.byte;
 	
 	navigation->auto_takeoff = false;
@@ -283,6 +311,9 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->soft_zone_size = 0.0f;
 	
 	navigation->loop_count = 0;
+	
+	navigation->last_update = time_keeper_get_time_ticks();
+	navigation->dt = 0.004;
 	
 	// Add callbacks for waypoint handler commands requests
 	mavlink_message_handler_cmd_callback_t callbackcmd;
@@ -301,6 +332,11 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 task_return_t navigation_update(navigation_t* navigation)
 {
 	mav_mode_t mode_local = navigation->state->mav_mode;
+	
+	uint32_t t = time_keeper_get_time_ticks();
+	
+	navigation->dt = time_keeper_ticks_to_seconds(t - navigation->last_update);
+	navigation->last_update = t;
 	
 	float thrust;
 	
