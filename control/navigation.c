@@ -44,7 +44,9 @@
 #include "conf_platform.h"
 #include "print_util.h"
 #include "time_keeper.h"
-#include "conf_pid_nav.h"
+
+
+#define KP_YAW 0.2f
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -247,7 +249,7 @@ static bool navigation_mode_change(navigation_t* navigation)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, const remote_t* remote, mavlink_communication_t* mavlink_communication)
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, pid_controller_t nav_pid_controller, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, const remote_t* remote, mavlink_communication_t* mavlink_communication)
 {
 	
 	navigation->controls_nav = controls_nav;
@@ -270,7 +272,7 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->controls_nav->control_mode = VELOCITY_COMMAND_MODE;
 	navigation->controls_nav->yaw_mode = YAW_ABSOLUTE;
 	
-	navigation->dist2vel_controller = nav_default_controller;
+	navigation->dist2vel_controller = nav_pid_controller;
 	
 	navigation->mode.byte = state->mav_mode.byte;
 	
