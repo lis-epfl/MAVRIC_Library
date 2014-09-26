@@ -44,8 +44,7 @@
 #include "conf_platform.h"
 #include "print_util.h"
 #include "time_keeper.h"
-
-#define KP_YAW 0.2f
+#include "conf_pid_nav.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -270,31 +269,6 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->controls_nav->thrust = -1.0f;
 	navigation->controls_nav->control_mode = VELOCITY_COMMAND_MODE;
 	navigation->controls_nav->yaw_mode = YAW_ABSOLUTE;
-	
-	static pid_controller_t nav_default_controller =
-	{
-		.p_gain = 0.2f,
-		.clip_min = 0.0f,
-		.clip_max = 3.0f,
-		.integrator={
-			.pregain = 0.5f,
-			.postgain = 0.0f,
-			.accumulator = 0.0f,
-			.maths_clip = 0.65f,
-			.leakiness = 0.0f
-		},
-		.differentiator={
-			.gain = 0.4f,
-			.previous = 0.0f,
-			.LPF = 0.5f,
-			.maths_clip = 0.65f
-		},
-		.output = 0.0f,
-		.error = 0.0f,
-		.last_update = 0.0f,
-		.dt = 1,
-		.soft_zone_width = 0.0f
-	};
 	
 	navigation->dist2vel_controller = nav_default_controller;
 	
