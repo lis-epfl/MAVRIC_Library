@@ -77,7 +77,7 @@ void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, button_pres
 			if (joystick_parsing->state->mav_mode.ARMED == ARMED_ON)
 			{
 				print_util_dbg_print("Disarming\r");
-				joystick_parsing->state->mav_mode.byte = MAV_MODE_SAFE + MAV_MODE_FLAG_HIL_ENABLED*(joystick_parsing->state->mav_mode.HIL == HIL_ON);
+				joystick_parsing->state->mav_mode.ARMED = ARMED_OFF;
 			}
 			else
 			{
