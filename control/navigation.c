@@ -125,6 +125,8 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	
 	float rel_heading;
 	
+	mav_mode_t mode = navigation->state->mav_mode;
+	
 	norm_rel_dist = sqrt(navigation->waypoint_handler->dist2wp_sqr);
 	
 	if (norm_rel_dist < 0.0005f)
@@ -149,8 +151,16 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimator->local_position.heading);
 	}
 	
-	navigation->dist2vel_controller.clip_max = navigation->cruise_speed;
-	v_desired = pid_control_update_dt(&navigation->dist2vel_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
+	if (mode.AUTO == AUTO_OFF)
+	{
+		navigation->wpt_nav_controller.clip_max = navigation->cruise_speed;
+		v_desired = pid_control_update_dt(&navigation->wpt_nav_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
+	}
+	else if (mode.GUIDED == GUIDED_ON)
+	{
+		navigation->hovering_controller.clip_max = navigation->cruise_speed;
+		v_desired = pid_control_update_dt(&navigation->hovering_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
+	}
 	
 	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigation->max_climb_rate * norm_rel_dist ) {
 		v_desired = navigation->max_climb_rate * norm_rel_dist /maths_f_abs(dir_desired_bf[Z]);
@@ -249,7 +259,7 @@ static bool navigation_mode_change(navigation_t* navigation)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, pid_controller_t nav_pid_controller, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, const remote_t* remote, mavlink_communication_t* mavlink_communication)
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, pid_controller_t nav_pid_controller, pid_controller_t hover_pid_controller, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, const remote_t* remote, mavlink_communication_t* mavlink_communication)
 {
 	
 	navigation->controls_nav = controls_nav;
@@ -272,7 +282,8 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->controls_nav->control_mode = VELOCITY_COMMAND_MODE;
 	navigation->controls_nav->yaw_mode = YAW_ABSOLUTE;
 	
-	navigation->dist2vel_controller = nav_pid_controller;
+	navigation->wpt_nav_controller = nav_pid_controller;
+	navigation->hovering_controller = hover_pid_controller;
 	
 	navigation->mode.byte = state->mav_mode.byte;
 	
