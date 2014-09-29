@@ -74,6 +74,9 @@ typedef struct
 	float dt;											///< The time interval between two navigation updates
 	uint32_t last_update;								///< The time of the last navigation update in ms
 	
+	uint32_t landing_last_update;						///< The last time update to check when we are on the ground
+	float landing_last_alt;								///< The altitude at which the MAV was during the last time update
+	
 	uint8_t loop_count;									///< A counter for sending mavlink messages at a lower rate than the function
 	
 	mav_mode_t mode;									///< The mode of the MAV to have a memory of its evolution

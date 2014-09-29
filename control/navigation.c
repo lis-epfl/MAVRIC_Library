@@ -574,6 +574,8 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 	float rel_pos[3];
 	uint8_t i;
 	
+	bool next_state = false;
+	
 	if (!navigation->auto_landing_next_state)
 	{
 		navigation->auto_landing_next_state = true;
@@ -582,12 +584,14 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 		{
 			case DESCENT_TO_SMALL_ALTITUDE:
 				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimator->local_position;
-				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -5.0f; //-2.0f;
+				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -2.0f; //-2.0f;
 				break;
 			
 			case DESCENT_TO_GND:
 				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimator->local_position;
-				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = 0.0f;
+				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = 5.0f;
+				navigation->landing_last_update = time_keeper_get_millis();
+				navigation->landing_last_alt = navigation->position_estimator->local_position.pos[2];
 				break;
 		}
 		
@@ -599,7 +603,34 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 		navigation->waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 	}
 	
-	if (navigation->waypoint_handler->dist2wp_sqr < 0.5f)
+	uint32_t dt;
+	if (navigation->auto_landing_behavior == DESCENT_TO_GND)
+	{
+	
+		dt = time_keeper_get_millis() - navigation->landing_last_update;
+		if (dt > 5000)
+		{
+			if (maths_f_abs(navigation->position_estimator->local_position.pos[2] - navigation->landing_last_alt) >= 0.2)
+			{
+				navigation->landing_last_alt = navigation->position_estimator->local_position.pos[2];
+				navigation->landing_last_update = time_keeper_get_millis();
+			}
+			else
+			{
+				next_state = true;
+			}
+		}
+	}
+	
+	if (navigation->auto_landing_behavior == DESCENT_TO_SMALL_ALTITUDE)
+	{
+		if (navigation->waypoint_handler->dist2wp_sqr < 0.5f)
+		{
+			next_state = true;
+		}
+	}
+	
+	if (next_state)
 	{
 		navigation->auto_landing_next_state = false;
 		
@@ -719,8 +750,12 @@ task_return_t navigation_update(navigation_t* navigation)
 					if ( (mode_local.AUTO == AUTO_ON) || (mode_local.GUIDED == GUIDED_ON) )
 					{
 						navigation_auto_landing_handler(navigation);
-						
 						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+						if (navigation->auto_landing_behavior == DESCENT_TO_GND)
+						{
+							// Constant velocity to the ground
+							navigation->controls_nav->tvel[Z] = 0.3;
+						}
 					}
 				}
 				else
