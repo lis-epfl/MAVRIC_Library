@@ -343,6 +343,7 @@ static void navigation_set_auto_landing(navigation_t* navigation, mavlink_comman
 		navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
 		
 		navigation->auto_landing = true;
+		navigation->auto_landing_next_state = false;
 		print_util_dbg_print("Auto-landing procedure initialised.\r\n");
 	}
 	else
