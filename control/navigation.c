@@ -506,11 +506,6 @@ static void navigation_critical_handler(navigation_t* navigation)
 	float rel_pos[3];
 	uint8_t i;
 	
-	if (navigation->state->mav_state == MAV_STATE_STANDBY)
-	{
-		navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
-	}
-	
 	if (!(navigation->critical_next_state))
 	{
 		navigation->critical_next_state = true;
@@ -564,7 +559,11 @@ static void navigation_critical_handler(navigation_t* navigation)
 			
 			case CRITICAL_LAND:
 				print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\r\n");
-				navigation->critical_landing = true;
+				navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
+				navigation->state->in_the_air = false;
+				navigation->state->mav_mode.ARMED = ARMED_OFF;
+				navigation->remote->mode.current_desired_mode.ARMED = ARMED_OFF;
+				navigation->state->mav_state = MAV_STATE_EMERGENCY;
 				break;
 		}
 	}
@@ -582,14 +581,14 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 		switch(navigation->auto_landing_behavior)
 		{
 			case DESCENT_TO_SMALL_ALTITUDE:
-			navigation->waypoint_handler->waypoint_critical_coordinates = navigation->position_estimator->local_position;
-			navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = -2.0f;
-			break;
+				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimator->local_position;
+				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -5.0f; //-2.0f;
+				break;
 			
 			case DESCENT_TO_GND:
-			navigation->waypoint_handler->waypoint_critical_coordinates = navigation->position_estimator->local_position;
-			navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = 0.0f;
-			break;
+				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimator->local_position;
+				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = 0.0f;
+				break;
 		}
 		
 		for (i=0;i<3;i++)
@@ -610,7 +609,15 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 				print_util_dbg_print("Automatic-landing: descent_to_GND\r\n");
 				navigation->auto_landing_behavior = DESCENT_TO_GND;
 				break;
+				
 			case DESCENT_TO_GND:
+				print_util_dbg_print("Auto-landing: disarming motors \r\n");
+				navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
+				navigation->auto_landing = false;
+				navigation->state->in_the_air = false;
+				navigation->state->mav_mode.ARMED = ARMED_OFF;
+				navigation->remote->mode.current_desired_mode.ARMED = ARMED_OFF;
+				navigation->state->mav_state = MAV_STATE_STANDBY;
 				break;
 		}
 	}
@@ -620,7 +627,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, pid_controller_t nav_pid_controller, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, const remote_t* remote, mavlink_communication_t* mavlink_communication)
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, pid_controller_t nav_pid_controller, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, remote_t* remote, mavlink_communication_t* mavlink_communication)
 {
 	
 	navigation->controls_nav = controls_nav;
@@ -648,13 +655,10 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->mode.byte = state->mav_mode.byte;
 	
 	navigation->auto_takeoff = false;
-	
 	navigation->auto_landing = false;
 	
 	navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 	navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
-	
-	navigation->critical_landing = false;
 	
 	navigation->critical_next_state = false;
 	navigation->auto_landing_next_state = false;
@@ -688,7 +692,7 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&navigation_set_auto_landing;
-	callbackcmd.module_struct =									waypoint_handler;
+	callbackcmd.module_struct =									navigation;
 	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 	
 	print_util_dbg_print("Navigation initialized.\r\n");
@@ -710,25 +714,37 @@ task_return_t navigation_update(navigation_t* navigation)
 		case MAV_STATE_ACTIVE:
 			if (navigation->state->in_the_air)
 			{
-				if(mode_local.AUTO == AUTO_ON)
+				if (navigation->auto_landing)
 				{
-					navigation_waypoint_navigation_handler(navigation);
+					if ( (mode_local.AUTO == AUTO_ON) || (mode_local.GUIDED == GUIDED_ON) )
+					{
+						navigation_auto_landing_handler(navigation);
 						
-					if (navigation->state->nav_plan_active)
-					{
-						navigation_run(navigation->waypoint_handler->waypoint_coordinates,navigation);
-					}
-					else
-					{
 						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
 					}
 				}
-				else if(mode_local.GUIDED == GUIDED_ON)
+				else
 				{
-					navigation_hold_position_handler(navigation);
+					if(mode_local.AUTO == AUTO_ON)
+					{
+						navigation_waypoint_navigation_handler(navigation);
 						
-					navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
-					break;
+						if (navigation->state->nav_plan_active)
+						{
+							navigation_run(navigation->waypoint_handler->waypoint_coordinates,navigation);
+						}
+						else
+						{
+							navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+						}
+					}
+					else if(mode_local.GUIDED == GUIDED_ON)
+					{
+						navigation_hold_position_handler(navigation);
+						
+						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+						break;
+					}
 				}
 			}
 			else
@@ -766,13 +782,6 @@ task_return_t navigation_update(navigation_t* navigation)
 						
 						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
 					}
-					else
-					if (navigation->auto_landing)
-					{
-						navigation_auto_landing_handler(navigation);
-						
-						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
-					}
 				}
 			}
 			break;
@@ -781,8 +790,11 @@ task_return_t navigation_update(navigation_t* navigation)
 			// In MAV_MODE_VELOCITY_CONTROL, MAV_MODE_POSITION_HOLD and MAV_MODE_GPS_NAVIGATION
 			if (mode_local.STABILISE == STABILISE_ON)
 			{
-				navigation_critical_handler(navigation);
-				navigation_run(navigation->waypoint_handler->waypoint_critical_coordinates,navigation);
+				if (navigation->state->in_the_air)
+				{
+					navigation_critical_handler(navigation);
+					navigation_run(navigation->waypoint_handler->waypoint_critical_coordinates,navigation);
+				}
 			}
 			break;
 			
