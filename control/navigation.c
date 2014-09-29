@@ -226,6 +226,8 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	
 	float rel_heading;
 	
+	mav_mode_t mode = navigation->state->mav_mode;
+	
 	norm_rel_dist = sqrt(navigation->waypoint_handler->dist2wp_sqr);
 	
 	if (norm_rel_dist < 0.0005f)
@@ -250,8 +252,16 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimator->local_position.heading);
 	}
 	
-	navigation->dist2vel_controller.clip_max = navigation->cruise_speed;
-	v_desired = pid_control_update_dt(&navigation->dist2vel_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
+	if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->auto_takeoff))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
+	{
+		navigation->wpt_nav_controller.clip_max = navigation->cruise_speed;
+		v_desired = pid_control_update_dt(&navigation->wpt_nav_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
+	}
+	else if (mode.GUIDED == GUIDED_ON)
+	{
+		navigation->hovering_controller.clip_max = navigation->cruise_speed;
+		v_desired = pid_control_update_dt(&navigation->hovering_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
+	}
 	
 	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigation->max_climb_rate * norm_rel_dist ) {
 		v_desired = navigation->max_climb_rate * norm_rel_dist /maths_f_abs(dir_desired_bf[Z]);
@@ -341,10 +351,8 @@ static void navigation_set_auto_landing(navigation_t* navigation, mavlink_comman
 	{
 		result = MAV_RESULT_ACCEPTED;
 		navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
-		navigation->state->mav_mode_custom = CUST_DESCENT_TO_SMALL_ALTITUDE;
 		
 		navigation->auto_landing = true;
-		navigation->auto_landing_next_state = false;
 		print_util_dbg_print("Auto-landing procedure initialised.\r\n");
 	}
 	else
@@ -698,7 +706,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, pid_controller_t nav_pid_controller, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, remote_t* remote, mavlink_communication_t* mavlink_communication)
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, pid_controller_t nav_pid_controller, pid_controller_t hover_pid_controller, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, remote_t* remote, mavlink_communication_t* mavlink_communication)
 {
 	
 	navigation->controls_nav = controls_nav;
@@ -721,7 +729,8 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->controls_nav->control_mode = VELOCITY_COMMAND_MODE;
 	navigation->controls_nav->yaw_mode = YAW_ABSOLUTE;
 	
-	navigation->dist2vel_controller = nav_pid_controller;
+	navigation->wpt_nav_controller = nav_pid_controller;
+	navigation->hovering_controller = hover_pid_controller;
 	
 	navigation->mode.byte = state->mav_mode.byte;
 	
@@ -782,6 +791,14 @@ task_return_t navigation_update(navigation_t* navigation)
 	
 	switch (navigation->state->mav_state)
 	{
+		case MAV_STATE_STANDBY:
+			
+			navigation->auto_landing = false;
+			navigation->auto_takeoff = false;
+			navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
+			navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
+			
+			break;
 		case MAV_STATE_ACTIVE:
 			if (navigation->state->in_the_air)
 			{
