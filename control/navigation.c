@@ -506,6 +506,8 @@ static void navigation_critical_handler(navigation_t* navigation)
 	float rel_pos[3];
 	uint8_t i;
 	
+	bool next_state = false;
+	
 	if (!(navigation->critical_next_state))
 	{
 		navigation->critical_next_state = true;
@@ -531,7 +533,9 @@ static void navigation_critical_handler(navigation_t* navigation)
 			case CRITICAL_LAND:
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
-				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = 0.0f;
+				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = 5.0f;
+				navigation->time_last_update = time_keeper_get_millis();
+				navigation->time_last_alt = navigation->position_estimator->local_position.pos[2];
 				break;
 		}
 		
@@ -542,7 +546,34 @@ static void navigation_critical_handler(navigation_t* navigation)
 		navigation->waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 	}
 	
-	if (navigation->waypoint_handler->dist2wp_sqr < 3.0f)
+	uint32_t dt;
+	if (navigation->critical_behavior == CRITICAL_LAND)
+	{
+		
+		dt = time_keeper_get_millis() - navigation->time_last_update;
+		if (dt > 5000)
+		{
+			if (maths_f_abs(navigation->position_estimator->local_position.pos[2] - navigation->time_last_alt) >= 0.2)
+			{
+				navigation->time_last_alt = navigation->position_estimator->local_position.pos[2];
+				navigation->time_last_update = time_keeper_get_millis();
+			}
+			else
+			{
+				next_state = true;
+			}
+		}
+	}
+	
+	if ( (navigation->critical_behavior == CLIMB_TO_SAFE_ALT)||(navigation->critical_behavior == FLY_TO_HOME_WP) )
+	{
+		if (navigation->waypoint_handler->dist2wp_sqr < 3.0f)
+		{
+			next_state = true;
+		}
+	}
+	
+	if (next_state)
 	{
 		navigation->critical_next_state = false;
 		switch (navigation->critical_behavior)
@@ -590,8 +621,8 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 			case DESCENT_TO_GND:
 				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimator->local_position;
 				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = 5.0f;
-				navigation->landing_last_update = time_keeper_get_millis();
-				navigation->landing_last_alt = navigation->position_estimator->local_position.pos[2];
+				navigation->time_last_update = time_keeper_get_millis();
+				navigation->time_last_alt = navigation->position_estimator->local_position.pos[2];
 				break;
 		}
 		
@@ -607,13 +638,13 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 	if (navigation->auto_landing_behavior == DESCENT_TO_GND)
 	{
 	
-		dt = time_keeper_get_millis() - navigation->landing_last_update;
+		dt = time_keeper_get_millis() - navigation->time_last_update;
 		if (dt > 5000)
 		{
-			if (maths_f_abs(navigation->position_estimator->local_position.pos[2] - navigation->landing_last_alt) >= 0.2)
+			if (maths_f_abs(navigation->position_estimator->local_position.pos[2] - navigation->time_last_alt) >= 0.2)
 			{
-				navigation->landing_last_alt = navigation->position_estimator->local_position.pos[2];
-				navigation->landing_last_update = time_keeper_get_millis();
+				navigation->time_last_alt = navigation->position_estimator->local_position.pos[2];
+				navigation->time_last_update = time_keeper_get_millis();
 			}
 			else
 			{
