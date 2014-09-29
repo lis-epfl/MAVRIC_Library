@@ -151,7 +151,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimator->local_position.heading);
 	}
 	
-	if (mode.AUTO == AUTO_ON )//&& ((navigation->state->nav_plan_active&&(!navigation->auto_takeoff))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->waypoint_handler->critical_behavior == FLY_TO_HOME_WP))))
+	if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->auto_takeoff))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->waypoint_handler->critical_behavior == FLY_TO_HOME_WP))))
 	{
 		navigation->wpt_nav_controller.clip_max = navigation->cruise_speed;
 		v_desired = pid_control_update_dt(&navigation->wpt_nav_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
