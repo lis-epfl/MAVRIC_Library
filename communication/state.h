@@ -82,7 +82,9 @@ typedef struct
 {
 	mav_mode_t mav_mode;								///< The value of the MAV mode 
 	mav_state_t mav_state;								///< The value of the MAV state
-		
+	
+	mav_mode_custom_t mav_mode_custom;
+	
 	int32_t simulation_mode;							///< The value of the simulation_mode (0: real, 1: simulation)
 	
 	uint8_t autopilot_type;								///< The type of the autopilot (MAV_TYPE enum in common.h)
