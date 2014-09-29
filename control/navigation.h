@@ -66,7 +66,8 @@ extern "C" {
 typedef struct
 {
 	float dist2vel_gain;								///< The gain linking the distance to the goal to the actual speed
-	pid_controller_t dist2vel_controller;				///< dist2vel controller
+	pid_controller_t hovering_controller;				///< hovering controller
+	pid_controller_t wpt_nav_controller;				///< waypoint navigation controller
 	float cruise_speed;									///< The cruise speed in m/s
 	float max_climb_rate;								///< Max climb rate in m/s
 	float soft_zone_size;								///< Soft zone of the velocity controller
@@ -102,7 +103,7 @@ typedef struct
  * \param	mavlink_communication	The pointer to the mavlink communication structure
  * \param	remote					The pointer to the remote structure
  */
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, pid_controller_t nav_pid_controller, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, const remote_t* remote, mavlink_communication_t* mavlink_communication);
+void navigation_init(navigation_t* navigation, control_command_t* controls_nav, pid_controller_t nav_pid_controller, pid_controller_t hover_pid_controller, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, const remote_t* remote, mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
