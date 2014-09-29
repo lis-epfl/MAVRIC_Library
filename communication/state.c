@@ -125,8 +125,6 @@ void state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	
 	state->simulation_mode = state_config->simulation_mode;
 	
-	state->mav_mode_previous = state->mav_mode;
-	
 	if (state->simulation_mode == HIL_ON)
 	{
 		// state->mav_mode |= MAV_MODE_FLAG_HIL_ENABLED;
