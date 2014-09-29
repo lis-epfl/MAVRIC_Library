@@ -341,6 +341,7 @@ static void navigation_set_auto_landing(navigation_t* navigation, mavlink_comman
 	{
 		result = MAV_RESULT_ACCEPTED;
 		navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
+		navigation->state->mav_mode_custom = CUST_DESCENT_TO_SMALL_ALTITUDE;
 		
 		navigation->auto_landing = true;
 		navigation->auto_landing_next_state = false;
@@ -520,18 +521,21 @@ static void navigation_critical_handler(navigation_t* navigation)
 		switch (navigation->critical_behavior)
 		{
 			case CLIMB_TO_SAFE_ALT:
+				navigation->state->mav_mode_custom = CLIMB_TO_SAFE_ALT;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = navigation->position_estimator->local_position.pos[X];
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = navigation->position_estimator->local_position.pos[Y];
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = -30.0f;
 				break;
 			
 			case FLY_TO_HOME_WP:
+				navigation->state->mav_mode_custom = FLY_TO_HOME_WP;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = -30.0f;
 				break;
 			
 			case CRITICAL_LAND:
+				navigation->state->mav_mode_custom = CRITICAL_LAND;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = 5.0f;
@@ -592,6 +596,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 			case CRITICAL_LAND:
 				print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\r\n");
 				navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
+				navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
 				navigation->state->in_the_air = false;
 				navigation->state->mav_mode.ARMED = ARMED_OFF;
 				navigation->remote->mode.current_desired_mode.ARMED = ARMED_OFF;
@@ -615,13 +620,15 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 		switch(navigation->auto_landing_behavior)
 		{
 			case DESCENT_TO_SMALL_ALTITUDE:
+				navigation->state->mav_mode_custom = CUST_DESCENT_TO_SMALL_ALTITUDE;
 				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimator->local_position;
-				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -2.0f; //-2.0f;
+				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -10.0f; //-2.0f;
 				break;
 			
 			case DESCENT_TO_GND:
+				navigation->state->mav_mode_custom = CUST_DESCENT_TO_GND;
 				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimator->local_position;
-				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = 5.0f;
+				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = 0.0f;
 				navigation->time_last_update = time_keeper_get_millis();
 				navigation->time_last_alt = navigation->position_estimator->local_position.pos[2];
 				break;
@@ -642,7 +649,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 		dt = time_keeper_get_millis() - navigation->time_last_update;
 		if (dt > 5000)
 		{
-			if (maths_f_abs(navigation->position_estimator->local_position.pos[2] - navigation->time_last_alt) >= 0.2)
+			if ( (maths_f_abs(navigation->position_estimator->local_position.pos[2] - navigation->time_last_alt) >= 0.2f)||(navigation->position_estimator->local_position.pos[2]>0.2f) )
 			{
 				navigation->time_last_alt = navigation->position_estimator->local_position.pos[2];
 				navigation->time_last_update = time_keeper_get_millis();
@@ -656,7 +663,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 	
 	if (navigation->auto_landing_behavior == DESCENT_TO_SMALL_ALTITUDE)
 	{
-		if (navigation->waypoint_handler->dist2wp_sqr < 0.5f)
+		if ( (navigation->waypoint_handler->dist2wp_sqr < 3.0f)&&(abs(navigation->position_estimator->local_position.pos[2] - navigation->waypoint_handler->waypoint_hold_coordinates.pos[2]) < 0.5f) )
 		{
 			next_state = true;
 		}
@@ -676,6 +683,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 			case DESCENT_TO_GND:
 				print_util_dbg_print("Auto-landing: disarming motors \r\n");
 				navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
+				navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
 				navigation->auto_landing = false;
 				navigation->state->in_the_air = false;
 				navigation->state->mav_mode.ARMED = ARMED_OFF;
@@ -783,7 +791,8 @@ task_return_t navigation_update(navigation_t* navigation)
 					{
 						navigation_auto_landing_handler(navigation);
 						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
-						if (navigation->auto_landing_behavior == DESCENT_TO_GND)
+						
+						if ((navigation->auto_landing_behavior == DESCENT_TO_GND)&&(mode_local.CUSTOM == CUSTOM_ON))
 						{
 							// Constant velocity to the ground
 							navigation->controls_nav->tvel[Z] = 0.3;
