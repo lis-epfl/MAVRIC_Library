@@ -72,6 +72,7 @@ typedef struct
  */
 typedef struct
 {
+	float thrust_hover_point;						///< The hover point of the thrust
 	stabiliser_stack_copter_t stabiliser_stack;		///< The pointer to the PID parameters values for the stacked controller 
 	control_command_t* controls;					///< The pointer to the control structure
 	const imu_t* imu;								///< The pointer to the IMU structure
