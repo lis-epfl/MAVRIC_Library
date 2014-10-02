@@ -70,7 +70,11 @@ typedef struct
 	float bias[3];							///< The biais of the sensor
 	float scale_factor[3];					///< The scale factors of the sensor
 	float orientation[3];					///< The orientation of the sensor
-	uint8_t axis[3];							///< The axis number (X,Y,Z) referring to the sensor datasheet
+	uint8_t axis[3];						///< The axis number (X,Y,Z) referring to the sensor datasheet
+	
+	float max_oriented_values[3];
+	float min_oriented_values[3];
+	bool calibration;
 } sensor_calib_t;
 
 

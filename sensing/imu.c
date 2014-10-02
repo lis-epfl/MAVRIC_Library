@@ -70,6 +70,7 @@ static void imu_raw2oriented(imu_t *imu);
  */
 static void imu_oriented2scale(imu_t *imu);
 
+static void imu_start_calibration(imu_t* imu, mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -77,11 +78,40 @@ static void imu_oriented2scale(imu_t *imu);
 
 static void imu_raw2oriented(imu_t *imu)
 {	
-	for (uint16_t i=0; i<3; i++)
+	uint16_t i;
+	
+	for (i=0; i<3; i++)
 	{
 		imu->oriented_gyro.data[i]		= imu->raw_gyro.data[imu->calib_gyro.axis[i]]     * imu->calib_gyro.orientation[i];
 		imu->oriented_accelero.data[i]  = imu->raw_accelero.data[imu->calib_accelero.axis[i]] * imu->calib_accelero.orientation[i];
 		imu->oriented_compass.data[i]	= imu->raw_compass.data[imu->calib_compass.axis[i]]  * imu->calib_compass.orientation[i];
+	}
+	
+	if (imu->calib_gyro.calibration)
+	{
+		for (i=0; i<3; i++)
+		{
+			imu->calib_gyro.max_oriented_values[i] = maths_f_max(imu->calibration_gyro.max_oriented_values[i],imu->oriented_gyro.data[i]);
+			imu->calib_gyro.min_oriented_values[i] = maths_f_min(imu->calibration_gyro.min_oriented_values[i],imu->oriented_gyro.data[i]);
+		}
+	}
+	
+	if (imu->calib_accelero.calibration)
+	{
+		for (i=0; i<3; i++)
+		{
+			imu->calib_accelero.max_oriented_values[i] = maths_f_max(imu->calibration_gyro.max_oriented_values[i],imu->oriented_accelero.data[i]);
+			imu->calib_accelero.min_oriented_values[i] = maths_f_min(imu->calibration_gyro.min_oriented_values[i],imu->oriented_accelero.data[i]);
+		}
+	}
+	
+	if (imu->calib_compass.calibration)
+	{
+		for (i=0; i<3; i++)
+		{
+			imu->calib_compass.max_oriented_values[i] = maths_f_max(imu->calibration_gyro.max_oriented_values[i],imu->oriented_compass.data[i]);
+			imu->calib_compass.min_oriented_values[i] = maths_f_min(imu->calibration_gyro.min_oriented_values[i],imu->oriented_compass.data[i]);
+		}
 	}
 }
 
@@ -96,6 +126,54 @@ static void imu_oriented2scale(imu_t *imu)
 	}
 }
 
+static void imu_start_calibration(imu_t* imu, mavlink_command_long_t* packet)
+{
+	MAV_RESULT result;
+	
+	/* Trigger calibration. This command will be only accepted if in pre-flight mode. |Gyro calibration: 0: no, 1: yes| Magnetometer calibration: 0: no, 1: yes| Ground pressure: 0: no, 1: yes| Radio calibration: 0: no, 1: yes| Accelerometer calibration: 0: no, 1: yes| Compass/Motor interference calibration: 0: no, 1: yes| Empty|  */
+	if (packet->param1 == 1)
+	{
+		print_util_dbg_print("Starting gyro calibration\r\n");
+		imu->calib_gyro.calibration = true;
+		
+		result = MAV_RESULT_ACCEPTED;
+	}
+	
+	if (packet->param2 == 1)
+	{
+		print_util_dbg_print("Starting magnetometers calibration\r\n");
+		imu->calib_compass.calibration = true;
+		
+		result = MAV_RESULT_ACCEPTED;
+	}
+	
+	if (packet->param3 == 1)
+	{
+		print_util_dbg_print("Starting ground pressure calibration\r\n");
+	}
+	
+	if (packet->param4 == 1)
+	{
+		print_util_dbg_print("Starting radio calibration\r\n");
+	}
+	
+	if (packet->param5 == 1)
+	{
+		print_util_dbg_print("Starting accelerometers calibration\r\n");
+		imu->calib_accelero.calibration = true;
+		
+		result = MAV_RESULT_ACCEPTED;
+	}
+	
+	mavlink_msg_command_ack_pack( 	imu->mavlink_stream->sysid,
+									imu->mavlink_stream->compid,
+									&msg,
+									MAV_CMD_PREFLIGHT_CALIBRATION,
+									result);
+	
+	mavlink_stream_send(imu->mavlink_stream, &msg);
+	
+}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -120,6 +198,13 @@ void imu_init (imu_t *imu, const mavlink_stream_t* mavlink_stream)
 	imu->calib_gyro.axis[X] = GYRO_AXIS_X;
 	imu->calib_gyro.axis[Y] = GYRO_AXIS_Y;
 	imu->calib_gyro.axis[Z] = GYRO_AXIS_Z;
+	imu->calib_gyro.max_oriented_values[X] = -10000.0f;
+	imu->calib_gyro.max_oriented_values[Y] = -10000.0f;
+	imu->calib_gyro.max_oriented_values[Z] = -10000.0f;
+	imu->calib_gyro.min_oriented_values[X] =  10000.0f;
+	imu->calib_gyro.min_oriented_values[Y] =  10000.0f;
+	imu->calib_gyro.min_oriented_values[Z] =  10000.0f;
+	imu->calib_gyro.calibration = false;
 	
 	//init accelero
 	imu->calib_accelero.scale_factor[X] =  1.0f / RAW_ACC_X_SCALE;
@@ -134,6 +219,13 @@ void imu_init (imu_t *imu, const mavlink_stream_t* mavlink_stream)
 	imu->calib_accelero.axis[X] = ACC_AXIS_X;
 	imu->calib_accelero.axis[Y] = ACC_AXIS_Y;
 	imu->calib_accelero.axis[Z] = ACC_AXIS_Z;
+	imu->calib_accelero.max_oriented_values[X] = -10000.0f;
+	imu->calib_accelero.max_oriented_values[Y] = -10000.0f;
+	imu->calib_accelero.max_oriented_values[Z] = -10000.0f;
+	imu->calib_accelero.min_oriented_values[X] =  10000.0f;
+	imu->calib_accelero.min_oriented_values[Y] =  10000.0f;
+	imu->calib_accelero.min_oriented_values[Z] =  10000.0f;
+	imu->calib_accelero.calibration = false;
 	
 	//init compass
 	imu->calib_compass.scale_factor[X] =  1.0f / RAW_MAG_X_SCALE;
@@ -148,6 +240,25 @@ void imu_init (imu_t *imu, const mavlink_stream_t* mavlink_stream)
 	imu->calib_compass.axis[X] = MAG_AXIS_X;
 	imu->calib_compass.axis[Y] = MAG_AXIS_Y;
 	imu->calib_compass.axis[Z] = MAG_AXIS_Z;
+	imu->calib_compass.max_oriented_values[X] = -10000.0f;
+	imu->calib_compass.max_oriented_values[Y] = -10000.0f;
+	imu->calib_compass.max_oriented_values[Z] = -10000.0f;
+	imu->calib_compass.min_oriented_values[X] =  10000.0f;
+	imu->calib_compass.min_oriented_values[Y] =  10000.0f;
+	imu->calib_compass.min_oriented_values[Z] =  10000.0f;
+	imu->calib_compass.calibration = false;
+	
+	// Add callbacks for waypoint handler commands requests
+	mavlink_message_handler_cmd_callback_t callbackcmd;
+	
+	callbackcmd.command_id = MAV_CMD_PREFLIGHT_CALIBRATION; // 241
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_IMU; // 200
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&imu_start_calibration;
+	callbackcmd.module_struct =									imu;
+	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	
 	
 	imu->last_update = time_keeper_get_time_ticks();
 	imu->dt = 0.004;
