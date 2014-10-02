@@ -686,7 +686,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigation, control_command_t* controls_nav, pid_controller_t nav_pid_controller, pid_controller_t hover_pid_controller, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, remote_t* remote, mavlink_communication_t* mavlink_communication)
+void navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, remote_t* remote, mavlink_communication_t* mavlink_communication)
 {
 	
 	navigation->controls_nav = controls_nav;
@@ -709,8 +709,8 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	navigation->controls_nav->control_mode = VELOCITY_COMMAND_MODE;
 	navigation->controls_nav->yaw_mode = YAW_ABSOLUTE;
 	
-	navigation->wpt_nav_controller = nav_pid_controller;
-	navigation->hovering_controller = hover_pid_controller;
+	navigation->wpt_nav_controller = nav_config->wpt_nav_controller;
+	navigation->hovering_controller = nav_config->hovering_controller;
 	
 	navigation->mode.byte = state->mav_mode.byte;
 	
@@ -725,18 +725,17 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	
 	navigation->controls_nav->mavlink_stream = &mavlink_communication->mavlink_stream;
 	
-	navigation->dist2vel_gain = 0.7f;
-	navigation->cruise_speed = 3.0f;
-	navigation->max_climb_rate = 1.0f;
+	navigation->dist2vel_gain = nav_config->dist2vel_gain;
+	navigation->cruise_speed = nav_config->cruise_speed;
+	navigation->max_climb_rate = nav_config->max_climb_rate;
 	
-	navigation->soft_zone_size = 0.0f;
+	navigation->soft_zone_size = nav_config->soft_zone_size;
 	
-	navigation->alt_lpf = 0.0f;
-	navigation->LPF_gain = 0.9f;
+	navigation->alt_lpf = nav_config->alt_lpf;
+	navigation->LPF_gain = nav_config->LPF_gain;
 		
 	navigation->loop_count = 0;
 	
-	navigation->last_update = time_keeper_get_time_ticks();
 	navigation->dt = 0.004;
 	
 	// Add callbacks for waypoint handler commands requests
