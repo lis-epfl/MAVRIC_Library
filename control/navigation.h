@@ -110,7 +110,7 @@ typedef struct
 	
 	float soft_zone_size;								///< Soft zone of the velocity controller
 	
-	float alt_lpf;
+	float alt_lpf;										///< The low-pass filtered altitude for auto-landing
 	float LPF_gain;										///< The value of the low-pass filter gain
 	
 	pid_controller_t hovering_controller;				///< hovering controller
