@@ -252,7 +252,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimator->local_position.heading);
 	}
 	
-	if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->auto_takeoff))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
+	if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
 	{
 		navigation->wpt_nav_controller.clip_max = navigation->cruise_speed;
 		v_desired = pid_control_update_dt(&navigation->wpt_nav_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
@@ -547,8 +547,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = 5.0f;
-				navigation->time_last_update = time_keeper_get_millis();
-				navigation->time_last_alt = navigation->position_estimator->local_position.pos[2];
+				navigation->alt_lpf = navigation->position_estimator->local_position.pos[2];
 				break;
 		}
 		
@@ -559,22 +558,13 @@ static void navigation_critical_handler(navigation_t* navigation)
 		navigation->waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 	}
 	
-	uint32_t dt;
 	if (navigation->critical_behavior == CRITICAL_LAND)
 	{
-		
-		dt = time_keeper_get_millis() - navigation->time_last_update;
-		if (dt > 5000)
+		navigation->alt_lpf = navigation->LPF_gain * navigation->alt_lpf + (1.0f - navigation->LPF_gain) * navigation->position_estimator->local_position.pos[2];
+		if ( (navigation->position_estimator->local_position.pos[2] > -0.1f)&&(maths_f_abs(navigation->position_estimator->local_position.pos[2] - navigation->alt_lpf) <= 0.2f) )
 		{
-			if (maths_f_abs(navigation->position_estimator->local_position.pos[2] - navigation->time_last_alt) >= 0.2)
-			{
-				navigation->time_last_alt = navigation->position_estimator->local_position.pos[2];
-				navigation->time_last_update = time_keeper_get_millis();
-			}
-			else
-			{
-				next_state = true;
-			}
+			// Disarming
+			next_state = true;
 		}
 	}
 	
@@ -630,15 +620,14 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 			case DESCENT_TO_SMALL_ALTITUDE:
 				navigation->state->mav_mode_custom = CUST_DESCENT_TO_SMALL_ALTITUDE;
 				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimator->local_position;
-				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -10.0f; //-2.0f;
+				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -5.0f;
 				break;
 			
 			case DESCENT_TO_GND:
 				navigation->state->mav_mode_custom = CUST_DESCENT_TO_GND;
 				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimator->local_position;
 				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = 0.0f;
-				navigation->time_last_update = time_keeper_get_millis();
-				navigation->time_last_alt = navigation->position_estimator->local_position.pos[2];
+				navigation->alt_lpf = navigation->position_estimator->local_position.pos[2];
 				break;
 		}
 		
@@ -650,22 +639,13 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 		navigation->waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 	}
 	
-	uint32_t dt;
 	if (navigation->auto_landing_behavior == DESCENT_TO_GND)
 	{
-	
-		dt = time_keeper_get_millis() - navigation->time_last_update;
-		if (dt > 5000)
+		navigation->alt_lpf = navigation->LPF_gain * navigation->alt_lpf + (1.0f - navigation->LPF_gain) * navigation->position_estimator->local_position.pos[2];
+		if ( (navigation->position_estimator->local_position.pos[2] > -0.1f)&&(maths_f_abs(navigation->position_estimator->local_position.pos[2] - navigation->alt_lpf) <= 0.2f) )
 		{
-			if ( (maths_f_abs(navigation->position_estimator->local_position.pos[2] - navigation->time_last_alt) >= 0.2f)||(navigation->position_estimator->local_position.pos[2]>0.2f) )
-			{
-				navigation->time_last_alt = navigation->position_estimator->local_position.pos[2];
-				navigation->time_last_update = time_keeper_get_millis();
-			}
-			else
-			{
-				next_state = true;
-			}
+			// Disarming
+			next_state = true;
 		}
 	}
 	
@@ -751,6 +731,9 @@ void navigation_init(navigation_t* navigation, control_command_t* controls_nav, 
 	
 	navigation->soft_zone_size = 0.0f;
 	
+	navigation->alt_lpf = 0.0f;
+	navigation->LPF_gain = 0.9f;
+		
 	navigation->loop_count = 0;
 	
 	navigation->last_update = time_keeper_get_time_ticks();
@@ -795,11 +778,21 @@ task_return_t navigation_update(navigation_t* navigation)
 			
 			navigation->auto_landing = false;
 			navigation->auto_takeoff = false;
+			navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
 			navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 			navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
 			
 			break;
 		case MAV_STATE_ACTIVE:
+			if((mode_local.byte & 0b11011100) == MAV_MODE_ATTITUDE_CONTROL)
+			{
+				navigation->auto_landing = false;
+				navigation->auto_takeoff = false;
+				navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
+				navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
+				navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
+			}
+			
 			if (navigation->state->in_the_air)
 			{
 				if (navigation->auto_landing)
@@ -809,7 +802,7 @@ task_return_t navigation_update(navigation_t* navigation)
 						navigation_auto_landing_handler(navigation);
 						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
 						
-						if ((navigation->auto_landing_behavior == DESCENT_TO_GND)&&(mode_local.CUSTOM == CUSTOM_ON))
+						if (navigation->auto_landing_behavior == DESCENT_TO_GND)
 						{
 							// Constant velocity to the ground
 							navigation->controls_nav->tvel[Z] = 0.3;

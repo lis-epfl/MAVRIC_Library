@@ -75,8 +75,8 @@ typedef struct
 	float dt;											///< The time interval between two navigation updates
 	uint32_t last_update;								///< The time of the last navigation update in ms
 	
-	uint32_t time_last_update;						///< The last time update to check when we are on the ground
-	float time_last_alt;								///< The altitude at which the MAV was during the last time update
+	float alt_lpf;										///< The low-pass filtered altitude for auto-landing
+	float LPF_gain;										///< The value of the low-pass filter gain
 	
 	uint8_t loop_count;									///< A counter for sending mavlink messages at a lower rate than the function
 	
@@ -99,7 +99,7 @@ typedef struct
 	const position_estimator_t *position_estimator;		///< The pointer to the position estimation structure in central_data
 	state_t* state;										///< The pointer to the state structure in central_data
 	const mavlink_stream_t* mavlink_stream;				///< The pointer to the mavlink stream structure
-	remote_t* remote;								///< The pointer to the remote structure
+	remote_t* remote;									///< The pointer to the remote structure
 }navigation_t;
 
 /**
