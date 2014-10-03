@@ -134,6 +134,14 @@ typedef struct
 void navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, remote_t* remote, mavlink_communication_t* mavlink_communication);
 
 /**
+ * \brief	Initialise the position hold mode
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ * \param	local_pos				The position where the position will be held
+ */
+void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t local_pos);
+
+/**
  * \brief	Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
  *
  * \param	navigation		The pointer to the navigation structure in central_data
