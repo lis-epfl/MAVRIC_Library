@@ -52,14 +52,6 @@
 //------------------------------------------------------------------------------
 
 /**
- * \brief	Initialise the position hold mode
- *
- * \param	waypoint_handler		The pointer to the waypoint handler structure
- * \param	local_pos				The position where the position will be held
- */
-static void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t local_pos);
-
-/**
  * \brief	Sets the automatic takeoff waypoint
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
@@ -156,27 +148,6 @@ static void navigation_auto_landing_handler(navigation_t* navigation);
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-
-static void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t local_pos)
-{
-	waypoint_handler->hold_waypoint_set = true;
-	
-	waypoint_handler->waypoint_hold_coordinates = local_pos;
-	
-	//waypoint_handler->waypoint_hold_coordinates.heading = coord_conventions_get_yaw(waypoint_handler->ahrs->qe);
-	//waypoint_handler->waypoint_hold_coordinates.heading = local_pos.heading;
-	
-	print_util_dbg_print("Position hold at: (");
-	print_util_dbg_print_num(waypoint_handler->waypoint_hold_coordinates.pos[X],10);
-	print_util_dbg_print(", ");
-	print_util_dbg_print_num(waypoint_handler->waypoint_hold_coordinates.pos[Y],10);
-	print_util_dbg_print(", ");
-	print_util_dbg_print_num(waypoint_handler->waypoint_hold_coordinates.pos[Z],10);
-	print_util_dbg_print(", ");
-	print_util_dbg_print_num((int32_t)(waypoint_handler->waypoint_hold_coordinates.heading*180.0f/3.14f),10);
-	print_util_dbg_print(")\r\n");
-	
-}
 
 static void navigation_waypoint_take_off_init(mavlink_waypoint_handler_t* waypoint_handler)
 {
@@ -758,6 +729,27 @@ void navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 	
 	print_util_dbg_print("Navigation initialized.\r\n");
+}
+
+void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler, local_coordinates_t local_pos)
+{
+	waypoint_handler->hold_waypoint_set = true;
+	
+	waypoint_handler->waypoint_hold_coordinates = local_pos;
+	
+	//waypoint_handler->waypoint_hold_coordinates.heading = coord_conventions_get_yaw(waypoint_handler->ahrs->qe);
+	//waypoint_handler->waypoint_hold_coordinates.heading = local_pos.heading;
+	
+	print_util_dbg_print("Position hold at: (");
+	print_util_dbg_print_num(waypoint_handler->waypoint_hold_coordinates.pos[X],10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(waypoint_handler->waypoint_hold_coordinates.pos[Y],10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(waypoint_handler->waypoint_hold_coordinates.pos[Z],10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num((int32_t)(waypoint_handler->waypoint_hold_coordinates.heading*180.0f/3.14f),10);
+	print_util_dbg_print(")\r\n");
+	
 }
 
 task_return_t navigation_update(navigation_t* navigation)
