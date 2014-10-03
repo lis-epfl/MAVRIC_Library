@@ -386,7 +386,7 @@ void position_estimation_init(position_estimator_t *pos_est, state_t* state, bar
 	
     pos_est->kp_pos_gps[X] = 2.0f;
     pos_est->kp_pos_gps[Y] = 2.0f;
-    pos_est->kp_pos_gps[Z] = 1.0f;
+    pos_est->kp_pos_gps[Z] = 0.0f;
 
     pos_est->kp_vel_gps[X] = 1.0f;
     pos_est->kp_vel_gps[Y] = 1.0f;
@@ -484,9 +484,9 @@ task_return_t position_estimation_send_position(position_estimator_t* pos_est)
 											pos_est->local_position.pos[0],
 											pos_est->local_position.pos[1],
 											pos_est->local_position.pos[2],
-											pos_est->vel[0],
-											pos_est->vel[1],
-											pos_est->vel[2]);
+											pos_est->vel_bf[0],
+											pos_est->vel_bf[1],
+											pos_est->vel_bf[2]);
 	mavlink_stream_send(pos_est->mavlink_stream, &msg);
 
 	return TASK_RUN_SUCCESS;

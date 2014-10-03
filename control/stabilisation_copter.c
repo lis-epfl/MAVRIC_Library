@@ -65,6 +65,8 @@ void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabili
 	controls->theading = 0.0f;
 	controls->thrust = -1.0f;
 
+	stabilisation_copter->thrust_hover_point = THRUST_HOVER_POINT;
+
 	stabilisation_copter->stabiliser_stack.rate_stabiliser.mavlink_stream = mavlink_stream;
 	stabilisation_copter->stabiliser_stack.attitude_stabiliser.mavlink_stream = mavlink_stream;
 	stabilisation_copter->stabiliser_stack.velocity_stabiliser.mavlink_stream = mavlink_stream;
@@ -173,7 +175,7 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 		stabilisation_run(&stabilisation_copter->stabiliser_stack.velocity_stabiliser, stabilisation_copter->imu->dt, rpyt_errors);
 		
 		//velocity_stabiliser.output.thrust = maths_f_min(velocity_stabiliser.output.thrust,stabilisation_param.controls->thrust);
-		stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.thrust += THRUST_HOVER_POINT;
+		stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.thrust += stabilisation_copter->thrust_hover_point;
 		stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.theading = input.theading;
 		input = stabilisation_copter->stabiliser_stack.velocity_stabiliser.output;
 		

@@ -123,9 +123,9 @@ void state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	state->mav_state = state_config->mav_state;
 	state->mav_mode = state_config->mav_mode;
 	
-	state->simulation_mode = state_config->simulation_mode;
+	state->mav_mode_custom = CUSTOM_BASE_MODE;
 	
-	state->mav_mode_previous = state->mav_mode;
+	state->simulation_mode = state_config->simulation_mode;
 	
 	if (state->simulation_mode == HIL_ON)
 	{
@@ -170,7 +170,7 @@ task_return_t state_send_heartbeat(const state_t* state)
 								state->autopilot_type, 
 								state->autopilot_name, 
 								state->mav_mode.byte, 
-								state->simulation_mode, 
+								state->mav_mode_custom, 
 								state->mav_state);
 	mavlink_stream_send(mavlink_stream, &msg);
 	
