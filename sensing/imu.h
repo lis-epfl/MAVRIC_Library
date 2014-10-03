@@ -56,6 +56,7 @@ extern "C" {
 #include "magnetometer.h"
 #include "quaternions.h"
 #include "scheduler.h"
+#include "state.h"
 #include "mavlink_communication.h"
 
 #define GYRO_LPF 0.1f						///< The gyroscope linear pass filter gain
@@ -105,6 +106,7 @@ typedef struct
 	uint8_t calibration_level;				///< The level of calibration
 	
 	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
+	const state_t* state;								///< The pointer to the state structure
 } imu_t;
 
 
@@ -112,10 +114,11 @@ typedef struct
  * \brief	Initialize the IMU module
  *
  * \param	imu						The pointer to the IMU structure
+ * \param	state					The pointer to the state structure
  * \param	mavlink_stream			The pointer to the mavlink stream structure
  * \param	mavlink_communication	The pointer to the mavlink communication structure
  */
-void imu_init (imu_t *imu, const mavlink_stream_t* mavlink_stream, mavlink_communication_t* mavlink_communication);
+void imu_init (imu_t *imu, const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_communication_t* mavlink_communication);
 
 
 /**

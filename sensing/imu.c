@@ -87,23 +87,23 @@ static void imu_raw2oriented(imu_t *imu)
 		imu->oriented_compass.data[i]	= imu->raw_compass.data[imu->calib_compass.axis[i]]  * imu->calib_compass.orientation[i];
 	}
 	
-	if (imu->calib_gyro.calibration)
+	/*if (imu->calib_gyro.calibration)
 	{
 		for (i=0; i<3; i++)
 		{
 			imu->calib_gyro.max_oriented_values[i] = maths_f_max(imu->calib_gyro.max_oriented_values[i],imu->oriented_gyro.data[i]);
 			imu->calib_gyro.min_oriented_values[i] = maths_f_min(imu->calib_gyro.min_oriented_values[i],imu->oriented_gyro.data[i]);
 		}
-	}
+	}*/
 	
-	if (imu->calib_accelero.calibration)
+	/*if (imu->calib_accelero.calibration)
 	{
 		for (i=0; i<3; i++)
 		{
 			imu->calib_accelero.max_oriented_values[i] = maths_f_max(imu->calib_accelero.max_oriented_values[i],imu->oriented_accelero.data[i]);
 			imu->calib_accelero.min_oriented_values[i] = maths_f_min(imu->calib_accelero.min_oriented_values[i],imu->oriented_accelero.data[i]);
 		}
-	}
+	}*/
 	
 	if (imu->calib_compass.calibration)
 	{
@@ -131,108 +131,123 @@ static void imu_start_calibration(imu_t* imu, mavlink_command_long_t* packet)
 	MAV_RESULT result;
 	int16_t i;
 	
-	delay_ms(50);
-	
 	print_util_dbg_print("Calibration cmd received");
 	
 	/* Trigger calibration. This command will be only accepted if in pre-flight mode. |Gyro calibration: 0: no, 1: yes| Magnetometer calibration: 0: no, 1: yes| Ground pressure: 0: no, 1: yes| Radio calibration: 0: no, 1: yes| Accelerometer calibration: 0: no, 1: yes| Compass/Motor interference calibration: 0: no, 1: yes| Empty|  */
-	if (packet->param1 == 1)
+	if  (packet->param1 == 1)
 	{
-		//if (imu->calib_gyro.calibration)
-		//{
-			//print_util_dbg_print("Stopping gyro calibration\r\n");
-			//imu->calib_gyro.calibration = false;
-			//
-			//for (i = 0; i < 3; i++)
-			//{
-				//imu->.bias[i] = (imu->calib_gyro.max_oriented_values[i] + imu->calib_gyro.min_oriented_values[i])/2.0f;
-				//imu->calib_gyro.max_oriented_values[i] = -10000.0;
-				//imu->calib_gyro.min_oriented_values[i] =  10000.0;
-			//}
-			//print_util_dbg_print("New biais:");
-			//print_util_dbg_print_vector(imu->calib_gyro.bias,2);
-		//}
-		//else
-		//{
-			//print_util_dbg_print("Starting gyro calibration\r\n");
-			//imu->calib_gyro.calibration = true;
-			//print_util_dbg_print("Old biais:");
-			//print_util_dbg_print_vector(imu->calib_gyro.bias,2);
-		//}
-		//result = MAV_RESULT_ACCEPTED;
-		
-		result = MAV_RESULT_DENIED;
+		/*if( (imu->state->mav_state == MAV_STATE_STANDBY)||(imu->state->mav_state == MAV_STATE_CALIBRATING) )
+		{
+			if (imu->calib_gyro.calibration)
+			{
+				print_util_dbg_print("Stopping gyro calibration\r\n");
+				imu->calib_gyro.calibration = false;
+				
+				for (i = 0; i < 3; i++)
+				{
+					imu->.bias[i] = (imu->calib_gyro.max_oriented_values[i] + imu->calib_gyro.min_oriented_values[i])/2.0f;
+					imu->calib_gyro.max_oriented_values[i] = -10000.0;
+					imu->calib_gyro.min_oriented_values[i] =  10000.0;
+				}
+				print_util_dbg_print("New biais:");
+				print_util_dbg_print_vector(imu->calib_gyro.bias,2);
+			}
+			else
+			{
+				print_util_dbg_print("Starting gyro calibration\r\n");
+				imu->calib_gyro.calibration = true;
+				print_util_dbg_print("Old biais:");
+				print_util_dbg_print_vector(imu->calib_gyro.bias,2);
+			}
+			result = MAV_RESULT_ACCEPTED;
+		}
+		else
+		{
+			result = MAV_RESULT_TEMPORARILY_REJECTED;
+		}*/
+		result = MAV_RESULT_UNSUPPORTED;
 	}
 	
 	if (packet->param2 == 1)
 	{
-		if (imu->calib_compass.calibration)
+		if ( (imu->state->mav_state == MAV_STATE_STANDBY)||(imu->state->mav_state == MAV_STATE_CALIBRATING) )
 		{
-			print_util_dbg_print("Stopping compass calibration\r\n");
-			imu->calib_compass.calibration = false;
-			
-			for (i = 0; i < 3; i++)
+			if (imu->calib_compass.calibration)
 			{
-				imu->calib_compass.bias[i] = (imu->calib_compass.max_oriented_values[i] + imu->calib_compass.min_oriented_values[i])/2.0f;
-				imu->calib_compass.max_oriented_values[i] = -10000.0;
-				imu->calib_compass.min_oriented_values[i] =  10000.0;
+				print_util_dbg_print("Stopping compass calibration\r\n");
+				imu->calib_compass.calibration = false;
+				
+				for (i = 0; i < 3; i++)
+				{
+					imu->calib_compass.bias[i] = (imu->calib_compass.max_oriented_values[i] + imu->calib_compass.min_oriented_values[i])/2.0f;
+					imu->calib_compass.max_oriented_values[i] = -10000.0;
+					imu->calib_compass.min_oriented_values[i] =  10000.0;
+				}
+				print_util_dbg_print("New biais:");
+				print_util_dbg_print_vector(imu->calib_compass.bias,2);
 			}
-			print_util_dbg_print("New biais:");
-			print_util_dbg_print_vector(imu->calib_compass.bias,2);
+			else
+			{
+				print_util_dbg_print("Starting magnetometers calibration\r\n");
+				imu->calib_compass.calibration = true;
+				print_util_dbg_print("Old biais:");
+				print_util_dbg_print_vector(imu->calib_compass.bias,2);
+			}
+			result = MAV_RESULT_ACCEPTED;
 		}
 		else
 		{
-			print_util_dbg_print("Starting magnetometers calibration\r\n");
-			imu->calib_compass.calibration = true;
-			print_util_dbg_print("Old biais:");
-			print_util_dbg_print_vector(imu->calib_compass.bias,2);
+			result = MAV_RESULT_TEMPORARILY_REJECTED;
 		}
-		result = MAV_RESULT_ACCEPTED;
 	}
 	
 	if (packet->param3 == 1)
 	{
 		print_util_dbg_print("Starting ground pressure calibration\r\n");
 		
-		result = MAV_RESULT_DENIED;
+		result = MAV_RESULT_UNSUPPORTED;
 	}
 	
 	if (packet->param4 == 1)
 	{
 		print_util_dbg_print("Starting radio calibration\r\n");
 		
-		result = MAV_RESULT_DENIED;
+		result = MAV_RESULT_UNSUPPORTED;
 	}
 	
 	if (packet->param5 == 1)
 	{
-		if (imu->calib_accelero.calibration)
+		/*if( (imu->state->mav_state == MAV_STATE_STANDBY)||(imu->state->mav_state == MAV_STATE_CALIBRATING) )
 		{
-			print_util_dbg_print("Stopping accelerometer calibration\r\n");
-			imu->calib_accelero.calibration = false;
-			
-			for (i = 0; i < 3; i++)
+			if (imu->calib_accelero.calibration)
 			{
-				imu->calib_accelero.bias[i] = (imu->calib_accelero.max_oriented_values[i] + imu->calib_accelero.min_oriented_values[i])/2.0f;
-				imu->calib_accelero.max_oriented_values[i] = -10000.0;
-				imu->calib_accelero.min_oriented_values[i] =  10000.0;
+				print_util_dbg_print("Stopping accelerometer calibration\r\n");
+				imu->calib_accelero.calibration = false;
+				
+				for (i = 0; i < 3; i++)
+				{
+					imu->calib_accelero.bias[i] = (imu->calib_accelero.max_oriented_values[i] + imu->calib_accelero.min_oriented_values[i])/2.0f;
+					imu->calib_accelero.max_oriented_values[i] = -10000.0;
+					imu->calib_accelero.min_oriented_values[i] =  10000.0;
+				}
+				print_util_dbg_print("New biais:");
+				print_util_dbg_print_vector(imu->calib_accelero.bias,2);
 			}
-			print_util_dbg_print("New biais:");
-			print_util_dbg_print_vector(imu->calib_accelero.bias,2);
+			else
+			{
+				print_util_dbg_print("Starting accelerometers calibration\r\n");
+				imu->calib_accelero.calibration = true;
+				print_util_dbg_print("Old biais:");
+				print_util_dbg_print_vector(imu->calib_accelero.bias,2);
+			}
+			result = MAV_RESULT_ACCEPTED;
 		}
 		else
 		{
-			print_util_dbg_print("Starting accelerometers calibration\r\n");
-			imu->calib_accelero.calibration = true;
-			print_util_dbg_print("Old biais:");
-			print_util_dbg_print_vector(imu->calib_accelero.bias,2);
-		}
-		result = MAV_RESULT_ACCEPTED;
-		
-		//result = MAV_RESULT_DENIED;
+			result = MAV_RESULT_TEMPORARILY_REJECTED;
+		}*/
+		result = MAV_RESULT_UNSUPPORTED;
 	}
-	
-	delay_ms(50);
 	
 	mavlink_message_t msg;
 	mavlink_msg_command_ack_pack( 	imu->mavlink_stream->sysid,
@@ -249,9 +264,10 @@ static void imu_start_calibration(imu_t* imu, mavlink_command_long_t* packet)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void imu_init (imu_t *imu, const mavlink_stream_t* mavlink_stream, mavlink_communication_t* mavlink_communication)
+void imu_init (imu_t *imu, const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_communication_t* mavlink_communication)
 {
 	imu->mavlink_stream = mavlink_stream;
+	imu->state = state;
 	
 	//imu_calibrate_Gyros(imu);
 	
@@ -332,6 +348,8 @@ void imu_init (imu_t *imu, const mavlink_stream_t* mavlink_stream, mavlink_commu
 	
 	imu->last_update = time_keeper_get_time_ticks();
 	imu->dt = 0.004;
+	
+	print_util_dbg_print("[IMU] Initialisation\r\n");
 }
 		
 	
