@@ -123,7 +123,7 @@ void state_telemetry_init(state_t* state, mavlink_message_handler_t *message_han
 }
 
 void state_telemetry_send_heartbeat(const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
-{
+{	
 	mavlink_msg_heartbeat_pack(	mavlink_stream->sysid,
 								mavlink_stream->compid,
 								msg,

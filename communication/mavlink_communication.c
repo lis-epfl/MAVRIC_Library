@@ -212,7 +212,7 @@ void mavlink_communication_suspend_downstream(mavlink_communication_t* mavlink_c
 }
 
 
-void mavlink_commnication_add_msg_send(	mavlink_communication_t* mavlink_communication, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id)
+void mavlink_communication_add_msg_send(	mavlink_communication_t* mavlink_communication, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id)
 {
 	mavlink_send_msg_handler_set_t* send_handler = mavlink_communication->send_msg_handler_set;
 	
