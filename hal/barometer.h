@@ -57,25 +57,25 @@ typedef enum bmp085_state_t
 
 typedef struct
 {
-	uint8_t 	raw_pressure[3];		///< Raw pressure contained in 3 uint8_t
-	uint8_t 	raw_temperature[2];		///< Raw temperature contained in 2 uint8_t
+	uint8_t 	raw_pressure[3];				///< Raw pressure contained in 3 uint8_t
+	uint8_t 	raw_temperature[2];				///< Raw temperature contained in 2 uint8_t
 	
-	float 		pressure;					///< Measured pressure as the concatenation of the 3 uint8_t raw_pressure
-	float 		temperature;				///< Measured temperature as the concatenation of the 2 uint8_t raw_temperature
-	float 		altitude;					///< Measured altitude as the median filter of the 3 last_altitudes
-	float 		altitude_offset;			///< Offset of the barometer sensor for matching GPS altitude value
-	float 		vario_vz;					///< Vario altitude speed
+	float 		pressure;						///< Measured pressure as the concatenation of the 3 uint8_t raw_pressure
+	float 		temperature;					///< Measured temperature as the concatenation of the 2 uint8_t raw_temperature
+	float 		altitude;						///< Measured altitude as the median filter of the 3 last_altitudes
+	float 		altitude_offset;				///< Offset of the barometer sensor for matching GPS altitude value
+	float 		vario_vz;						///< Vario altitude speed
 	
-	float 		last_altitudes[3];		///< Array to store previous value of the altitude for low pass filtering the output
+	float 		last_altitudes[3];				///< Array to store previous value of the altitude for low pass filtering the output
 	
-	uint32_t 	last_update;			///< Time of the last update of the barometer
-	uint32_t 	last_state_update;		///< Time of the last state update
-	barometer_state_t state;	///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
-	float 		dt;						///< Time step for the derivative
+	uint32_t 	last_update;					///< Time of the last update of the barometer
+	uint32_t 	last_state_update;				///< Time of the last state update
+	barometer_state_t state;					///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
+	float 		dt;								///< Time step for the derivative
 	
-	const mavlink_stream_t* mavlink_stream;			///< The pointer to the mavlink stream structure
+	float alt_consensus_offset;					///< The altitude offset coming from a consensus with other vehicles in order to have them flying all at the same altitude before takeoff
 	
-	float alt_consensus_offset;
+	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream structure
 } barometer_t;
 
 #endif /* BAROMETER_H_ */

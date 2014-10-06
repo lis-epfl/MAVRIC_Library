@@ -647,7 +647,7 @@ typedef struct
 	float course;							///< Heading in degree * 100
 	
 	float horizontal_accuracy;				///< Horizontal accuracy in m
-	float vertical_accuracy;					///< Vertical accuracy in m
+	float vertical_accuracy;				///< Vertical accuracy in m
 	
 	float speed_accuracy;					///< Speed accuracy in m
 	float heading_accuracy;					///< Heading accuracy in m
@@ -671,13 +671,13 @@ typedef struct
 	byte_stream_t gps_stream_in;			///< The incoming GPS byte stream
 	byte_stream_t gps_stream_out;			///< The outgoing GPS byte stream
 	
-	float alt_consensus_offset;
+	float alt_consensus_offset;				///< The altitude offset coming from a consensus with other vehicles in order to have them flying all at the same altitude before takeoff
 	
-	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
+	const mavlink_stream_t* mavlink_stream;	///< The pointer to the mavlink stream
 } gps_t;
 
 
-uint32_t idle_timer;							///< Last time that the GPS driver got a good packet from the GPS
+uint32_t idle_timer;						///< Last time that the GPS driver got a good packet from the GPS
 uint32_t idle_timeout;						///< Time in milliseconds after which we will assume the GPS is no longer sending us updates and attempt a re-init. 1200ms allows a small amount of slack over the worst-case 1Hz update rate.
 uint32_t last_fix_time;						///< Last fix time
 
@@ -685,7 +685,7 @@ uint32_t last_fix_time;						///< Last fix time
 /**
  * \brief	Initialize the gps U-Blox module
  *
- * \param	gps			The pointer to the GPS structure
+ * \param	gps					The pointer to the GPS structure
  * \param	UID					The uart ID
  * \param	mavlink_stream		The pointer to the mavlink stream
  */
@@ -697,7 +697,7 @@ void gps_ublox_init(gps_t *gps, int32_t UID, mavlink_stream_t* mavlink_stream);
  *
  * The GPS and UART channel should already be configured in the good baudrate 38400U
  *
- * \param	gps			The pointer to the GPS structure
+ * \param	gps					The pointer to the GPS structure
  */
 void gps_ublox_configure_gps(gps_t *gps);
 
@@ -705,7 +705,7 @@ void gps_ublox_configure_gps(gps_t *gps);
 /**
  * \brief	The function that needs to be called to get the GPS information
  *
- * \param	gps			The pointer to the GPS structure
+ * \param	gps					The pointer to the GPS structure
  */
 void gps_ublox_update(gps_t *gps);
 
@@ -713,7 +713,7 @@ void gps_ublox_update(gps_t *gps);
 /**
  * \brief	Task to send the mavlink gps raw message
  * 
- * \param	gps			The pointer to the GPS structure
+ * \param	gps					The pointer to the GPS structure
  *
  * \return	The status of execution of the task
  */
