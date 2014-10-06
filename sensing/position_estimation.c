@@ -413,5 +413,4 @@ void position_estimation_update(position_estimator_t *pos_est)
 		position_estimation_position_integration(pos_est);
 		position_estimation_position_correction(pos_est);
 	}
-	return TASK_RUN_SUCCESS;
 }

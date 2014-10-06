@@ -147,8 +147,6 @@ void remote_init(remote_t* remote, const remote_conf_t* config)
 		remote->channels[i] = 0.0f;
 		remote->trims[i] = 0.0f;
 	}
-
-	mavlink_message_handler_add_cmd_callback(mavlink_handler, &callbackcmd);
 }
 
 

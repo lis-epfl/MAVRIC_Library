@@ -694,8 +694,6 @@ void navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	navigation->critical_next_state = false;
 	navigation->auto_landing_next_state = false;
 	
-	navigation->controls_nav->mavlink_stream = &mavlink_communication->mavlink_stream;
-	
 	navigation->dist2vel_gain = nav_config->dist2vel_gain;
 	navigation->cruise_speed = nav_config->cruise_speed;
 	navigation->max_climb_rate = nav_config->max_climb_rate;
