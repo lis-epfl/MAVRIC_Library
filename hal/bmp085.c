@@ -117,6 +117,7 @@ void bmp085_init(barometer_t *bmp085, const mavlink_stream_t* mavlink_stream)
 {
 	bmp085->mavlink_stream = mavlink_stream;
 	bmp085->altitude_offset = 0.0f;
+	bmp085->alt_consensus_offset = 0.0f;
 
 	for (int32_t i = 0; i < 3; i++) 
 	{
