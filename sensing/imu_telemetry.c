@@ -42,6 +42,175 @@
 
 #include "imu_telemetry.h"
 #include "time_keeper.h"
+#include "print_util.h"
+
+const mavlink_stream_t* mavlink_stream;	///< The pointer to the MAVLink stream
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+/**
+ * \brief	Function to start/stop the calibration
+ * 
+ * \param	imu						The pointer to the IMU structure
+ * \param	sysid					The sysid of the system
+ * \param	packet					The pointer to the MAVLink command long structure
+ */
+static void imu_telemetry_start_calibration(imu_t* imu, mavlink_command_long_t* packet);
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+static void imu_telemetry_start_calibration(imu_t* imu, mavlink_command_long_t* packet)
+{
+	MAV_RESULT result;
+	int16_t i;
+
+	print_util_dbg_print("Calibration cmd received");
+	
+	/* Trigger calibration. This command will be only accepted if in pre-flight mode. |Gyro calibration: 0: no, 1: yes| Magnetometer calibration: 0: no, 1: yes| Ground pressure: 0: no, 1: yes| Radio calibration: 0: no, 1: yes| Accelerometer calibration: 0: no, 1: yes| Compass/Motor interference calibration: 0: no, 1: yes| Empty|  */
+	
+	if ( (imu->state->mav_state == MAV_STATE_STANDBY)||(imu->state->mav_state == MAV_STATE_CALIBRATING) )
+	{
+		if  (packet->param1 == 1)
+		{
+			//if (!imu->calib_gyro.calibration)
+			//{
+			//print_util_dbg_print("Starting gyro calibration\r\n");
+			//imu->calib_gyro.calibration = true;
+			//imu->state->mav_state = MAV_STATE_CALIBRATING;
+			//print_util_dbg_print("Old biais:");
+			//print_util_dbg_print_vector(imu->calib_gyro.bias,2);
+			//}
+			//else
+			//{
+			//print_util_dbg_print("Stopping gyro calibration\r\n");
+			//imu->calib_gyro.calibration = false;
+			//imu->state->mav_state = MAV_STATE_STANDBY;
+			//
+			//for (i = 0; i < 3; i++)
+			//{
+			//imu->.bias[i] = (imu->calib_gyro.max_oriented_values[i] + imu->calib_gyro.min_oriented_values[i])/2.0f;
+			//imu->calib_gyro.max_oriented_values[i] = -10000.0;
+			//imu->calib_gyro.min_oriented_values[i] =  10000.0;
+			//}
+			//print_util_dbg_print("New biais:");
+			//print_util_dbg_print_vector(imu->calib_gyro.bias,2);
+			//}
+			//result = MAV_RESULT_ACCEPTED;
+			
+			result = MAV_RESULT_UNSUPPORTED;
+		}
+		
+		if (packet->param2 == 1)
+		{
+			if (!imu->calib_compass.calibration)
+			{
+				print_util_dbg_print("Starting magnetometers calibration\r\n");
+				imu->calib_compass.calibration = true;
+				imu->state->mav_state = MAV_STATE_CALIBRATING;
+				print_util_dbg_print("Old biais:");
+				print_util_dbg_print_vector(imu->calib_compass.bias,2);
+			}
+			else
+			{
+				print_util_dbg_print("Stopping compass calibration\r\n");
+				imu->calib_compass.calibration = false;
+				imu->state->mav_state = MAV_STATE_STANDBY;
+				
+				for (i = 0; i < 3; i++)
+				{
+					imu->calib_compass.bias[i] = (imu->calib_compass.max_oriented_values[i] + imu->calib_compass.min_oriented_values[i])/2.0f;
+					imu->calib_compass.max_oriented_values[i] = -10000.0;
+					imu->calib_compass.min_oriented_values[i] =  10000.0;
+				}
+				print_util_dbg_print("New biais:");
+				print_util_dbg_print_vector(imu->calib_compass.bias,2);
+			}
+			result = MAV_RESULT_ACCEPTED;
+		}
+		
+		if (packet->param3 == 1)
+		{
+			print_util_dbg_print("Starting ground pressure calibration\r\n");
+			
+			result = MAV_RESULT_UNSUPPORTED;
+		}
+		
+		if (packet->param4 == 1)
+		{
+			print_util_dbg_print("Starting radio calibration\r\n");
+			
+			result = MAV_RESULT_UNSUPPORTED;
+		}
+		
+		if (packet->param5 == 1)
+		{
+			//if (!imu->calib_accelero.calibration)
+			//{
+			//print_util_dbg_print("Starting accelerometers calibration\r\n");
+			//imu->calib_accelero.calibration = true;
+			//imu->state->mav_state = MAV_STATE_CALIBRATING;
+			//print_util_dbg_print("Old biais:");
+			//print_util_dbg_print_vector(imu->calib_accelero.bias,2);
+			//}
+			//else
+			//{
+			//print_util_dbg_print("Stopping accelerometer calibration\r\n");
+			//imu->calib_accelero.calibration = false;
+			//imu->state->mav_state = MAV_STATE_STANDBY;
+			//
+			//for (i = 0; i < 3; i++)
+			//{
+			//imu->calib_accelero.bias[i] = (imu->calib_accelero.max_oriented_values[i] + imu->calib_accelero.min_oriented_values[i])/2.0f;
+			//imu->calib_accelero.max_oriented_values[i] = -10000.0;
+			//imu->calib_accelero.min_oriented_values[i] =  10000.0;
+			//}
+			//print_util_dbg_print("New biais:");
+			//print_util_dbg_print_vector(imu->calib_accelero.bias,2);
+			//}
+			//result = MAV_RESULT_ACCEPTED;
+			
+			result = MAV_RESULT_UNSUPPORTED;
+		}
+	}
+	else
+	{
+		result = MAV_RESULT_TEMPORARILY_REJECTED;
+	}
+	
+	mavlink_message_t msg;
+	mavlink_msg_command_ack_pack( 	mavlink_stream->sysid,
+									mavlink_stream->compid,
+									&msg,
+									MAV_CMD_PREFLIGHT_CALIBRATION,
+									result);
+	
+	mavlink_stream_send(mavlink_stream, &msg);
+	
+}
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void imu_telemetry_init(imu_t* imu, mavlink_message_handler_t* message_handler)
+{
+	// Add callbacks for waypoint handler commands requests
+	mavlink_message_handler_cmd_callback_t callbackcmd;
+	
+	mavlink_stream = message_handler->mavlink_stream;
+	
+	callbackcmd.command_id = MAV_CMD_PREFLIGHT_CALIBRATION; // 241
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&imu_telemetry_start_calibration;
+	callbackcmd.module_struct =									imu;
+	mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+}
 
 void imu_telemetry_send_scaled(const imu_t* imu, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {	

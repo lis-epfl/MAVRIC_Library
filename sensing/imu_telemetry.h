@@ -45,12 +45,20 @@
 #define IMU_TELEMETRY_H_
 
 #include "mavlink_stream.h"
+#include "mavlink_message_handler.h"
 #include "imu.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+/**
+ * \brief	Initialise the imu telemetry module
+ * 
+ * \param	imu						The pointer to the IMU structure
+ * \param	message_handler			The pointer to the message handler structure
+ */
+void imu_telemetry_init(imu_t* imu, mavlink_message_handler_t* message_handler);
 
 /**
  * \brief	Function to send the MAVLink scaled IMU message

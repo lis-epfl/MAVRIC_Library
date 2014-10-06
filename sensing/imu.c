@@ -46,7 +46,6 @@
 #include "delay.h"
 #include "time_keeper.h"
 #include "print_util.h"
-#include "mavlink_stream.h"
 #include "tasks.h"
 #include "coord_conventions.h"
 
@@ -70,18 +69,46 @@ static void imu_raw2oriented(imu_t *imu);
  */
 static void imu_oriented2scale(imu_t *imu);
 
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
 static void imu_raw2oriented(imu_t *imu)
 {	
-	for (uint16_t i=0; i<3; i++)
+	uint16_t i;
+	
+	for (i=0; i<3; i++)
 	{
 		imu->oriented_gyro.data[i]		= imu->raw_gyro.data[imu->calib_gyro.axis[i]]     * imu->calib_gyro.orientation[i];
 		imu->oriented_accelero.data[i]  = imu->raw_accelero.data[imu->calib_accelero.axis[i]] * imu->calib_accelero.orientation[i];
 		imu->oriented_compass.data[i]	= imu->raw_compass.data[imu->calib_compass.axis[i]]  * imu->calib_compass.orientation[i];
+	}
+	
+	/*if (imu->calib_gyro.calibration)
+	{
+		for (i=0; i<3; i++)
+		{
+			imu->calib_gyro.max_oriented_values[i] = maths_f_max(imu->calib_gyro.max_oriented_values[i],imu->oriented_gyro.data[i]);
+			imu->calib_gyro.min_oriented_values[i] = maths_f_min(imu->calib_gyro.min_oriented_values[i],imu->oriented_gyro.data[i]);
+}
+	}*/
+
+	/*if (imu->calib_accelero.calibration)
+	{
+		for (i=0; i<3; i++)
+		{
+			imu->calib_accelero.max_oriented_values[i] = maths_f_max(imu->calib_accelero.max_oriented_values[i],imu->oriented_accelero.data[i]);
+			imu->calib_accelero.min_oriented_values[i] = maths_f_min(imu->calib_accelero.min_oriented_values[i],imu->oriented_accelero.data[i]);
+		}
+	}*/
+
+	if (imu->calib_compass.calibration)
+	{
+		for (i=0; i<3; i++)
+		{
+			imu->calib_compass.max_oriented_values[i] = maths_f_max(imu->calib_compass.max_oriented_values[i],imu->oriented_compass.data[i]);
+			imu->calib_compass.min_oriented_values[i] = maths_f_min(imu->calib_compass.min_oriented_values[i],imu->oriented_compass.data[i]);
+		}
 	}
 }
 
@@ -96,14 +123,15 @@ static void imu_oriented2scale(imu_t *imu)
 	}
 }
 
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void imu_init (imu_t *imu)
+void imu_init (imu_t *imu, state_t* state)
 {	
-	//imu_calibrate_Gyros(imu);
+	
+	imu->state = state;
+		//imu_calibrate_Gyros(imu);
 	
 	//init gyro
 	imu->calib_gyro.scale_factor[X] =  1.0f / RAW_GYRO_X_SCALE;
@@ -118,6 +146,13 @@ void imu_init (imu_t *imu)
 	imu->calib_gyro.axis[X] = GYRO_AXIS_X;
 	imu->calib_gyro.axis[Y] = GYRO_AXIS_Y;
 	imu->calib_gyro.axis[Z] = GYRO_AXIS_Z;
+	imu->calib_gyro.max_oriented_values[X] = -10000.0f;
+	imu->calib_gyro.max_oriented_values[Y] = -10000.0f;
+	imu->calib_gyro.max_oriented_values[Z] = -10000.0f;
+	imu->calib_gyro.min_oriented_values[X] =  10000.0f;
+	imu->calib_gyro.min_oriented_values[Y] =  10000.0f;
+	imu->calib_gyro.min_oriented_values[Z] =  10000.0f;
+	imu->calib_gyro.calibration = false;
 	
 	//init accelero
 	imu->calib_accelero.scale_factor[X] =  1.0f / RAW_ACC_X_SCALE;
@@ -132,6 +167,13 @@ void imu_init (imu_t *imu)
 	imu->calib_accelero.axis[X] = ACC_AXIS_X;
 	imu->calib_accelero.axis[Y] = ACC_AXIS_Y;
 	imu->calib_accelero.axis[Z] = ACC_AXIS_Z;
+	imu->calib_accelero.max_oriented_values[X] = -10000.0f;
+	imu->calib_accelero.max_oriented_values[Y] = -10000.0f;
+	imu->calib_accelero.max_oriented_values[Z] = -10000.0f;
+	imu->calib_accelero.min_oriented_values[X] =  10000.0f;
+	imu->calib_accelero.min_oriented_values[Y] =  10000.0f;
+	imu->calib_accelero.min_oriented_values[Z] =  10000.0f;
+	imu->calib_accelero.calibration = false;
 	
 	//init compass
 	imu->calib_compass.scale_factor[X] =  1.0f / RAW_MAG_X_SCALE;
@@ -146,9 +188,18 @@ void imu_init (imu_t *imu)
 	imu->calib_compass.axis[X] = MAG_AXIS_X;
 	imu->calib_compass.axis[Y] = MAG_AXIS_Y;
 	imu->calib_compass.axis[Z] = MAG_AXIS_Z;
+	imu->calib_compass.max_oriented_values[X] = -10000.0f;
+	imu->calib_compass.max_oriented_values[Y] = -10000.0f;
+	imu->calib_compass.max_oriented_values[Z] = -10000.0f;
+	imu->calib_compass.min_oriented_values[X] =  10000.0f;
+	imu->calib_compass.min_oriented_values[Y] =  10000.0f;
+	imu->calib_compass.min_oriented_values[Z] =  10000.0f;
+	imu->calib_compass.calibration = false;
 	
 	imu->last_update = time_keeper_get_time_ticks();
 	imu->dt = 0.004;
+	
+	print_util_dbg_print("[IMU] Initialisation\r\n");
 }
 		
 	
