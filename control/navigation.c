@@ -189,7 +189,8 @@ static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_po
 
 static void navigation_set_speed_command(float rel_pos[], navigation_t* navigation)
 {
-	float  norm_rel_dist, v_desired;
+	float  norm_rel_dist;
+	float v_desired = 0.0f;
 	quat_t qtmp1, qtmp2;
 	
 	float dir_desired_bf[3];
