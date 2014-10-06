@@ -143,6 +143,7 @@ static void imu_start_calibration(imu_t* imu, mavlink_command_long_t* packet)
 			//{
 				//print_util_dbg_print("Starting gyro calibration\r\n");
 				//imu->calib_gyro.calibration = true;
+				//imu->state->mav_state = MAV_STATE_CALIBRATING;
 				//print_util_dbg_print("Old biais:");
 				//print_util_dbg_print_vector(imu->calib_gyro.bias,2);
 			//}
@@ -150,6 +151,7 @@ static void imu_start_calibration(imu_t* imu, mavlink_command_long_t* packet)
 			//{
 				//print_util_dbg_print("Stopping gyro calibration\r\n");
 				//imu->calib_gyro.calibration = false;
+				//imu->state->mav_state = MAV_STATE_STANDBY;
 				//
 				//for (i = 0; i < 3; i++)
 				//{
@@ -171,6 +173,7 @@ static void imu_start_calibration(imu_t* imu, mavlink_command_long_t* packet)
 			{
 				print_util_dbg_print("Starting magnetometers calibration\r\n");
 				imu->calib_compass.calibration = true;
+				imu->state->mav_state = MAV_STATE_CALIBRATING;
 				print_util_dbg_print("Old biais:");
 				print_util_dbg_print_vector(imu->calib_compass.bias,2);
 			}
@@ -178,6 +181,7 @@ static void imu_start_calibration(imu_t* imu, mavlink_command_long_t* packet)
 			{
 				print_util_dbg_print("Stopping compass calibration\r\n");
 				imu->calib_compass.calibration = false;
+				imu->state->mav_state = MAV_STATE_STANDBY;
 				
 				for (i = 0; i < 3; i++)
 				{
@@ -211,6 +215,7 @@ static void imu_start_calibration(imu_t* imu, mavlink_command_long_t* packet)
 			//{
 				//print_util_dbg_print("Starting accelerometers calibration\r\n");
 				//imu->calib_accelero.calibration = true;
+				//imu->state->mav_state = MAV_STATE_CALIBRATING;
 				//print_util_dbg_print("Old biais:");
 				//print_util_dbg_print_vector(imu->calib_accelero.bias,2);
 			//}
@@ -218,6 +223,7 @@ static void imu_start_calibration(imu_t* imu, mavlink_command_long_t* packet)
 			//{
 				//print_util_dbg_print("Stopping accelerometer calibration\r\n");
 				//imu->calib_accelero.calibration = false;
+				//imu->state->mav_state = MAV_STATE_STANDBY;
 				//
 				//for (i = 0; i < 3; i++)
 				//{
@@ -253,7 +259,7 @@ static void imu_start_calibration(imu_t* imu, mavlink_command_long_t* packet)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void imu_init (imu_t *imu, const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_communication_t* mavlink_communication)
+void imu_init (imu_t *imu, state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_communication_t* mavlink_communication)
 {
 	imu->mavlink_stream = mavlink_stream;
 	imu->state = state;

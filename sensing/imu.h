@@ -106,7 +106,7 @@ typedef struct
 	uint8_t calibration_level;				///< The level of calibration
 	
 	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
-	const state_t* state;								///< The pointer to the state structure
+	state_t* state;								///< The pointer to the state structure
 } imu_t;
 
 
@@ -118,7 +118,7 @@ typedef struct
  * \param	mavlink_stream			The pointer to the mavlink stream structure
  * \param	mavlink_communication	The pointer to the mavlink communication structure
  */
-void imu_init (imu_t *imu, const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_communication_t* mavlink_communication);
+void imu_init (imu_t *imu, state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_communication_t* mavlink_communication);
 
 
 /**
