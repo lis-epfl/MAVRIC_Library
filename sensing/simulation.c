@@ -485,7 +485,7 @@ void simulation_update(simulation_model_t *sim)
 
 void simulation_simulate_barometer(simulation_model_t *sim)
 {
-	sim->pressure->altitude = sim->local_position.origin.altitude - sim->local_position.pos[Z];
+	sim->pressure->altitude = sim->local_position.origin.altitude - sim->local_position.pos[Z] + sim->pressure->alt_consensus_offset;
 	sim->pressure->vario_vz = sim->vel[Z];
 	sim->pressure->last_update = time_keeper_get_millis();
 	sim->pressure->altitude_offset = 0;
@@ -495,7 +495,7 @@ void simulation_simulate_gps(simulation_model_t *sim)
 {
 	global_position_t gpos = coord_conventions_local_to_global_position(sim->local_position);
 	
-	sim->gps->altitude = gpos.altitude;
+	sim->gps->altitude = gpos.altitude + sim->gps->alt_consensus_offset;
 	sim->gps->latitude = gpos.latitude;
 	sim->gps->longitude = gpos.longitude;
 	sim->gps->time_last_msg = time_keeper_get_millis();

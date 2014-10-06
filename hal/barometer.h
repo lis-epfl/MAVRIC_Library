@@ -74,6 +74,8 @@ typedef struct
 	float 		dt;						///< Time step for the derivative
 	
 	const mavlink_stream_t* mavlink_stream;			///< The pointer to the mavlink stream structure
+	
+	float alt_consensus_offset;
 } barometer_t;
 
 #endif /* BAROMETER_H_ */

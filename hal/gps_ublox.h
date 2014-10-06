@@ -671,6 +671,8 @@ typedef struct
 	byte_stream_t gps_stream_in;			///< The incoming GPS byte stream
 	byte_stream_t gps_stream_out;			///< The outgoing GPS byte stream
 	
+	float alt_consensus_offset;
+	
 	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
 } gps_t;
 
