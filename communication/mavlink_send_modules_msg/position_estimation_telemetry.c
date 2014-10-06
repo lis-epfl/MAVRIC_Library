@@ -125,9 +125,9 @@ void position_estimation_telemetry_send_position(const position_estimator_t* pos
 											pos_est->local_position.pos[0],
 											pos_est->local_position.pos[1],
 											pos_est->local_position.pos[2],
-											pos_est->vel[0],
-											pos_est->vel[1],
-											pos_est->vel[2]);
+											pos_est->vel_bf[0],
+											pos_est->vel_bf[1],
+											pos_est->vel_bf[2]);
 }
 
 void position_estimation_telemetry_send_global_position(const position_estimator_t* pos_est, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)

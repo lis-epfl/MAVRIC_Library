@@ -72,12 +72,13 @@ typedef struct
  */
 typedef struct
 {
-	stabiliser_stack_copter_t stabiliser_stack;		///< The pointer to the PID parameters values for the stacked controller 
-	control_command_t* controls;					///< The pointer to the control structure
-	const imu_t* imu;								///< The pointer to the IMU structure
-	const ahrs_t* ahrs;								///< The pointer to the attitude estimation structure
-	const position_estimator_t* pos_est;			///< The pointer to the position estimation structure
-	servos_t* servos;								///< The pointer to the servos structure
+	float thrust_hover_point;									///< The hover point of the thrust
+	stabiliser_stack_copter_t stabiliser_stack;					///< The pointer to the PID parameters values for the stacked controller 
+	control_command_t* controls;								///< The pointer to the control structure
+	const imu_t* imu;											///< The pointer to the IMU structure
+	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
+	const position_estimator_t* pos_est;						///< The pointer to the position estimation structure
+	servos_t* servos;											///< The pointer to the servos structure
 } stabilise_copter_t;
 
 /**
@@ -95,7 +96,7 @@ typedef struct
  * \param	stabiliser_conf			The pointer to structure with all PID controllers
  * \param	control_input			The pointer to the controlling inputs
  * \param	imu						The pointer to the IMU structure
- * \param	ahrs		The pointer to the attitude estimation structure
+ * \param	ahrs					The pointer to the attitude estimation structure
  * \param	pos_est					The pointer to the position estimation structure
  * \param	servos					The pointer to the array of servos command values
  */

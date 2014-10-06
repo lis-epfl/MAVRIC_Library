@@ -42,6 +42,7 @@
 
 #include "remote.h"
 #include "time_keeper.h"
+#include "print_util.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -72,6 +73,7 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 		remote_get_roll(remote) > 0.9f )
 	{
 		// Both sticks in bottom right corners => arm
+		print_util_dbg_print("Arming!\r\n");
 		armed = ARMED_ON;
 	}
 	else if ( remote_get_throttle(remote) < -0.95f && 
@@ -80,6 +82,7 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 			remote_get_roll(remote) < -0.9f )
 	{
 		// Both sticks in bottom left corners => disarm 
+		print_util_dbg_print("Disarming!\r\n");
 		armed = ARMED_OFF;
 	}
 	else
@@ -145,6 +148,7 @@ void remote_init(remote_t* remote, const remote_conf_t* config)
 		remote->trims[i] = 0.0f;
 	}
 
+	mavlink_message_handler_add_cmd_callback(mavlink_handler, &callbackcmd);
 }
 
 

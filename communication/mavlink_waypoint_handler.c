@@ -139,14 +139,6 @@ static void waypoint_handler_clear_waypoint_list(mavlink_waypoint_handler_t* way
 static void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handler, uint32_t sysid, mavlink_received_t* rec);
 
 /**
- * \brief	Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
- *
- * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
- * \param	packet					The pointer to the structure of the MAVLink command message long
- */
-static void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
-
-/**
  * \brief	Set the next waypoint as current waypoint
  *
  * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
@@ -696,7 +688,6 @@ static void waypoint_handler_clear_waypoint_list(mavlink_waypoint_handler_t* way
 			waypoint_handler->number_of_waypoints = 0;
 			waypoint_handler->num_waypoint_onboard = 0;
 			waypoint_handler->state->nav_plan_active = 0;
-			//navigation_waypoint_hold_init(waypoint_handler, waypoint_handler->position_estimator->local_position);
 			waypoint_handler->state->nav_plan_active = false;
 			waypoint_handler->hold_waypoint_set = false;
 		
@@ -746,67 +737,6 @@ static void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handl
 											waypoint_handler->position_estimator->local_position.origin.altitude*1000.0f);
 		mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 	}
-}
-
-static void waypoint_handler_auto_landing(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
-{
-	// TODO: implement this! Separate message receiving from handling auto-landing procedure
-	
-	if (waypoint_handler->state->mav_state == MAV_STATE_STANDBY)
-	{
-		waypoint_handler->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
-	}
-	
-	float rel_pos[3];
-	uint8_t i;
-	
-	local_coordinates_t local_position;
-	
-	print_util_dbg_print("Auto-landing procedure initialised.\r\n");
-	
-	switch(waypoint_handler->auto_landing_behavior)
-	{
-		case DESCENT_TO_SMALL_ALTITUDE:
-			local_position = waypoint_handler->position_estimator->local_position;
-			local_position.pos[Z] = -2.0f;
-			
-			//navigation_waypoint_hold_init(waypoint_handler, local_position);
-			break;
-		case DESCENT_TO_GND:
-			local_position = waypoint_handler->position_estimator->local_position;
-			local_position.pos[Z] = 0.0f;
-		
-			// TODO: replace this function
-			//navigation_waypoint_hold_init(waypoint_handler, local_position);
-			break;
-	}
-	
-	for (i=0;i<3;i++)
-	{
-		rel_pos[i] = waypoint_handler->waypoint_critical_coordinates.pos[i] - waypoint_handler->position_estimator->local_position.pos[i];
-	}
-	waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
-	
-	if (waypoint_handler->dist2wp_sqr < 0.5f)
-	{
-		switch(waypoint_handler->auto_landing_behavior)
-		{
-			case DESCENT_TO_SMALL_ALTITUDE:
-				print_util_dbg_print("Automatic-landing: descent_to_GND\r\n");
-				waypoint_handler->auto_landing_behavior = DESCENT_TO_GND;
-				break;
-			case DESCENT_TO_GND:
-				break;
-		}
-	}
-	
-	mavlink_message_t msg;
-	mavlink_msg_command_ack_pack( 	waypoint_handler->mavlink_stream->sysid,
-									waypoint_handler->mavlink_stream->compid,
-									&msg, 
-									MAV_CMD_NAV_LAND, 
-									MAV_RESULT_ACCEPTED);
-	mavlink_stream_send(waypoint_handler->mavlink_stream, &msg);
 }
 
 static void waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
@@ -887,11 +817,6 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	waypoint_handler->waypoint_request_number = 0;
 	
 	waypoint_handler->hold_waypoint_set = false;
-	
-	waypoint_handler->critical_behavior = CLIMB_TO_SAFE_ALT;
-	waypoint_handler->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
-	waypoint_handler->critical_landing = false;
-	waypoint_handler->automatic_landing = false;
 	
 	waypoint_handler->waypoint_sending = false;
 	waypoint_handler->waypoint_receiving = false;
@@ -979,14 +904,6 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_set_circle_scenario;
-	callbackcmd.module_struct =									waypoint_handler;
-	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
-	
-	callbackcmd.command_id = MAV_CMD_NAV_LAND; // 21
-	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
-	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
-	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_auto_landing;
 	callbackcmd.module_struct =									waypoint_handler;
 	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 	

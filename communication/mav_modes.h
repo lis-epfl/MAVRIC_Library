@@ -166,14 +166,26 @@ typedef enum MAV_STATE mav_state_t;
 
 typedef enum
 {
-	MAV_MODE_PRE = 0,
-	MAV_MODE_SAFE = 64,
-	MAV_MODE_ATTITUDE_CONTROL = 192,
-	MAV_MODE_VELOCITY_CONTROL = 208,
-	MAV_MODE_POSITION_HOLD = 216,
-	MAV_MODE_GPS_NAVIGATION = 156
+	MAV_MODE_PRE = 0,						///< 0b00*00000
+	MAV_MODE_SAFE = 64,						///< 0b01*00000
+	MAV_MODE_ATTITUDE_CONTROL = 192,		///< 0b11*00000
+	MAV_MODE_VELOCITY_CONTROL = 208,		///< 0b11*10000
+	MAV_MODE_POSITION_HOLD = 216,			///< 0b11*11000
+	MAV_MODE_GPS_NAVIGATION = 156			///< 0b10*11100
 } mav_mode_predefined_t;
 
+typedef enum
+{
+	CUSTOM_BASE_MODE = 0,
+	CUST_CLIMB_TO_SAFE_ALT = 1,					///< First critical behavior
+	CUST_FLY_TO_HOME_WP = 2,					///< Second critical behavior, comes after CLIMB_TO_SAFE_ALT
+	CUST_CRITICAL_LAND = 4,						///< Third critical behavior, comes after FLY_TO_HOME_WP
+
+	CUST_DESCENT_TO_SMALL_ALTITUDE = 8,			///< First auto landing behavior
+	CUST_DESCENT_TO_GND = 16,					///< Second auto landing behavior, comes after DESCENT_TO_SMAL_ALTITUDE
+	
+	CUST_COLLISION_AVOIDANCE = 32
+}mav_mode_custom_t;
 
 static inline bool mav_modes_is_armed(const mav_mode_t mav_mode)
 {

@@ -94,16 +94,8 @@ typedef struct
 	
 	bool hold_waypoint_set;										///< Flag to tell if the hold position waypoint is set
 
-	bool critical_landing;										///< Flag to execute critical landing (switching motors off)
-	bool critical_next_state;									///< Flag to change critical state in its dedicated state machine
-
-	bool automatic_landing;										///< Flag to initiate the auto landing procedure
-
 	bool waypoint_sending;										///< Flag to tell whether waypoint are being sent
 	bool waypoint_receiving;									///< Flag to tell whether waypoint are being received or not
-	
-	critical_behavior_enum critical_behavior;					///< The critical behavior enum
-	auto_landing_behavior_t auto_landing_behavior;				///< The autolanding behavior enum
 	
 	int32_t sending_waypoint_num;								///< The ID number of the sending waypoint
 	int32_t waypoint_request_number;							///< The ID number of the requested waypoint

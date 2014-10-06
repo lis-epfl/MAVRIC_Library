@@ -130,7 +130,7 @@ void state_telemetry_send_heartbeat(const state_t* state, const mavlink_stream_t
 								state->autopilot_type,
 								state->autopilot_name,
 								state->mav_mode.byte,
-								state->simulation_mode,
+								state->mav_mode_custom,
 								state->mav_state);
 }
 

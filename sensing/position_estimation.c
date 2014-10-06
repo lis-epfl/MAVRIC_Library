@@ -338,7 +338,7 @@ void position_estimation_init(position_estimator_t *pos_est, state_t* state, bar
 	
     pos_est->kp_pos_gps[X] = 2.0f;
     pos_est->kp_pos_gps[Y] = 2.0f;
-    pos_est->kp_pos_gps[Z] = 1.0f;
+    pos_est->kp_pos_gps[Z] = 0.0f;
 
     pos_est->kp_vel_gps[X] = 1.0f;
     pos_est->kp_vel_gps[Y] = 1.0f;
@@ -413,4 +413,5 @@ void position_estimation_update(position_estimator_t *pos_est)
 		position_estimation_position_integration(pos_est);
 		position_estimation_position_correction(pos_est);
 	}
+	return TASK_RUN_SUCCESS;
 }

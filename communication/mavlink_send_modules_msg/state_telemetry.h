@@ -79,7 +79,6 @@ void state_telemetry_send_heartbeat(const state_t* state, const mavlink_stream_t
  */
 void state_telemetry_send_status(const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
-
 #ifdef __cplusplus
 }
 #endif
