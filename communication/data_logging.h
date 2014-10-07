@@ -49,6 +49,7 @@ extern "C" {
 
 #include "fat_fs/ff.h"
 #include "tasks.h"
+#include "mavlink_communication.h"
 
 
 #define MAX_DATA_LOGGING_COUNT 50								///< The max number of data logging parameters
@@ -134,10 +135,10 @@ typedef struct
  * \brief	Initialise the data logging module
  *
  * \param	data_logging			The pointer to the data logging structure
- * \param	imu						The pointer to the imu structure
- * \param	gps						The pointer to the gps structure
+ * \param	config					The pointer to the configuration structure
+ * \param	mavlink_communication	The pointer to the communication structure
  */
-void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config);
+void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config, mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief	Create and open a new file

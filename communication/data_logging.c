@@ -123,6 +123,14 @@ static void data_logging_print_error_signification(data_logging_t* data_logging)
  */
 static void data_logging_f_seek(data_logging_t* data_logging);
 
+/**
+ * \brief	Toggle the data_logging
+ *
+ * \param	data_logging			The pointer to the data logging structure
+ * \param	packet					The pointer to the decoded mavlink message long
+ */
+static void data_logging_toggle_logging(data_logging_t* data_logging, mavlink_command_long_t* packet);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -492,11 +500,25 @@ static void data_logging_f_seek(data_logging_t* data_logging)
 	}
 }
 
+static void data_logging_toggle_logging(data_logging_t* data_logging, mavlink_command_long_t* packet)
+{
+	if(packet->param1 == 1)
+	{
+		print_util_dbg_print("Start logging from command message\r\n");
+	}
+	else
+	{
+		print_util_dbg_print("Stop logging from command message\r\n");
+	}
+	
+	//data_logging.log_data = packet->param1;
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config)
+void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config, mavlink_communication_t* mavlink_communication)
 {
 	// Init debug mode
 	data_logging->debug = config->debug;
@@ -561,6 +583,18 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 		}
 	}
 	data_logging->logging_time = time_keeper_get_millis();
+	
+	// Add callbacks for data_logging commands requests
+	mavlink_message_handler_cmd_callback_t callbackcmd;
+	
+	callbackcmd.command_id = MAV_CMD_DO_SET_PARAMETER; // 180
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&data_logging_toggle_logging;
+	callbackcmd.module_struct =									data_logging;
+	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	
 	
 	print_util_dbg_print("[Data logging] Data logging initialised.\r\n");
 }
