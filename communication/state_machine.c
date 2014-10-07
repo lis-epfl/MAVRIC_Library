@@ -124,22 +124,25 @@ void state_machine_update(state_machine_t* state_machine)
 				state_machine->state->reset_position = true;
 				state_machine->state->nav_plan_active = false;
 			}
-		break;
+			break;
 		
 		case MAV_STATE_ACTIVE:
-			if ( rc_check != SIGNAL_GOOD )
+			if (state_machine->use_mode_from_remote == 1)
 			{
-				state_new = MAV_STATE_CRITICAL;
-			}
-			else
-			{
-				if ( mode_new.ARMED == ARMED_OFF )
+				if ( rc_check != SIGNAL_GOOD )
 				{
-					state_new = MAV_STATE_STANDBY;
-					print_util_dbg_print("Switching off motors!\n");
+					state_new = MAV_STATE_CRITICAL;
+				}
+				else
+				{
+					if ( mode_new.ARMED == ARMED_OFF )
+					{
+						state_new = MAV_STATE_STANDBY;
+						print_util_dbg_print("Switching off motors!\n");
+					}
 				}
 			}
-		break;
+			break;
 
 		case MAV_STATE_CRITICAL:			
 			switch ( rc_check )
@@ -154,21 +157,43 @@ void state_machine_update(state_machine_t* state_machine)
 
 				case SIGNAL_LOST:
 					// If in manual mode, do emergency landing
-					if ( mode_current.MANUAL == MANUAL_ON )
+					if ( (mode_current.MANUAL == MANUAL_ON) && (mode_current.STABILISE == STABILISE_OFF) )
 					{
+						print_util_dbg_print("Switch to Emergency mode!\r\n");
 						state_new = MAV_STATE_EMERGENCY;
 					}
 					// If in another mode, stay in critical mode
 					// higher level navigation module will take care of coming back home
 				break;
 			}
-		break;
+			break;
 		
 		case MAV_STATE_EMERGENCY:
 			// Recovery is not possible -> switch off motors
 			mode_new.ARMED = ARMED_OFF;
-		break;
-		
+			state_machine->remote->mode.current_desired_mode.ARMED = ARMED_OFF;
+			
+			// To get out of this state, if we are in the wrong use_mode_from_remote
+			if (state_machine->use_mode_from_remote == 0)
+			{
+				state_new = MAV_STATE_STANDBY;
+			}
+			
+			switch ( rc_check )
+			{
+				case SIGNAL_GOOD:
+					state_new = MAV_STATE_STANDBY;
+					break;
+
+				case SIGNAL_BAD:
+					// Stay in emergency mode
+					break;
+
+				case SIGNAL_LOST:
+					// Stay in emergency mode
+					break;
+			}
+			break;
 	}
 
 

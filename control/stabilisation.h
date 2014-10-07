@@ -142,6 +142,15 @@ task_return_t stabilisation_send_rpy_rates_error(stabiliser_t* stabiliser);
  */
 task_return_t stabilisation_send_rpy_thrust_setpoint(control_command_t* controls);
 
+/**
+ * \brief	Task to send the mavlink tvel[X, Y and Z] command message
+ *
+ * \param	stabiliser	Pointer to the structure containing the PID controller
+ * 
+ * \return	The status of execution of the task
+ */
+task_return_t stabilisation_send_command(control_command_t* controls);
+
 #ifdef __cplusplus
 }
 #endif

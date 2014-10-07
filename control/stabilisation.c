@@ -125,3 +125,21 @@ task_return_t stabilisation_send_rpy_thrust_setpoint(control_command_t* controls
 	
 	return TASK_RUN_SUCCESS;
 }
+
+task_return_t stabilisation_send_command(control_command_t* controls)
+{
+	// Controls output
+	mavlink_message_t msg;
+	mavlink_msg_debug_vect_pack(	controls->mavlink_stream->sysid,
+									controls->mavlink_stream->compid,
+									&msg,
+									"Controls",
+									time_keeper_get_micros(),
+									controls->tvel[X],
+									controls->tvel[Y],
+									controls->tvel[Z]);
+	
+	mavlink_stream_send(controls->mavlink_stream,&msg);
+	
+	return TASK_RUN_SUCCESS;
+}
