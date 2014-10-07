@@ -45,6 +45,7 @@
 #include "gpio.h"
 #include "spi.h"
 #include "sysclk.h"
+#include "delay.h"
 
 #define slaveSelectTop AVR32_PIN_PC11
 #define slaveSelectBot AVR32_PIN_PC12
@@ -68,9 +69,9 @@ static void curvace_derotate_all(curvace_t* curvace);
 
 static uint16_t curvace_spi_low_level(uint16_t data)
 {
-	while (!spi_is_tx_ready(&AVR32_SPI0));
+	//while (!spi_is_tx_ready(&AVR32_SPI0));
 	spi_put(&AVR32_SPI0, data);
-	while(!spi_is_tx_empty(&AVR32_SPI0));
+	//while(!spi_is_tx_empty(&AVR32_SPI0));
 	return spi_get(&AVR32_SPI0);
 }
 
@@ -364,6 +365,24 @@ void curvace_init(curvace_t* curvace, const ahrs_t* ahrs, const mavlink_stream_t
 	
 	// Configure Chip Select even if not used.
 	spi_selectChip(&AVR32_SPI0, 0);
+	
+	// Start Bottom CurvACE controller
+	// CS ON
+	gpio_clr_gpio_pin(slaveSelectBot);
+	delay_ms(10);
+	// Write start
+	curvace_spi_low_level(0xAAAA);
+	// CS OFF
+	gpio_set_gpio_pin(slaveSelectBot);
+
+	// Start Top CurvACE controller
+	// CS ON
+	gpio_clr_gpio_pin(slaveSelectTop);
+	delay_ms(10);
+	// Write start
+	curvace_spi_low_level(0xAAAA);
+	// CS OFF
+	gpio_set_gpio_pin(slaveSelectTop);
 }
 
 
