@@ -60,11 +60,13 @@ static void curvace_derotate_all(curvace_t* curvace);
 static void curvace_read_spi(curvace_t* curvace)
 {
 	// Left hemisphere
+	//CS ON
 	for (uint8_t i = 0; i < CURVACE_NB_OF / 2; ++i)
 	{
 		curvace->raw_of.left_hemisphere[i].x =  0;  // spi_read_16_bits(...)
 		curvace->raw_of.left_hemisphere[i].y =  0;  // spi_read_16_bits(...)
 	}
+	//CS OFF
 
 	// Right hemisphere
 	for (uint8_t i = 0; i < CURVACE_NB_OF / 2; ++i)
