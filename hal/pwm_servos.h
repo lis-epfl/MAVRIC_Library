@@ -54,15 +54,17 @@
 
 
 /**
- * \brief Initialize the hardware line for servos
+ * \brief						Initialize the hardware line for servos
+ *
+ * \param use_servos_7_8_param	Definition if the line for servos 7 and 8 is used
  */
-void pwm_servos_init(bool use_servos_7_8);
+void pwm_servos_init(bool use_servos_7_8_param);
 
 
 /**
- * \brief Set servos' values
+ * \brief						Set servos' values
  *
- * \param servo_outputs pointer to a structure containing the servos' data
+ * \param servo_outputs			Pointer to a structure containing the servos' data
  */
 void pwm_servos_write_to_hardware(const servos_t* servos);
 
