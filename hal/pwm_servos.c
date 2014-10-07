@@ -35,6 +35,7 @@
  * \author MAV'RIC Team
  * \author Felix Schill
  * \author Julien Lecoeur
+ * \author Geraud L'Eplattenier
  * 
  * \brief This file is the driver for pwm servos
  *
@@ -82,10 +83,10 @@ void write_channels(int32_t channel, int32_t pulse_us_a, int32_t pulse_us_b, uin
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void pwm_servos_init(bool use_servos_7_8)
+void pwm_servos_init(bool use_servos_7_8_param)
 {
 	int32_t i = 0;
-	use_servos_7_8 = use_servos_7_8;
+	use_servos_7_8 = use_servos_7_8_param;
 
 	// To unlock registers
 	AVR32_PWM.wpcr =  	( AVR32_PWM_WPCR_WPKEY_KEY << AVR32_PWM_WPCR_WPKEY ) 	|
@@ -135,16 +136,15 @@ void pwm_servos_init(bool use_servos_7_8)
 		{
 			{ AVR32_PWM_PWML_0_0_PIN, AVR32_PWM_PWML_0_0_FUNCTION },
 			{ AVR32_PWM_PWMH_0_0_PIN, AVR32_PWM_PWMH_0_0_FUNCTION },
-
-		
-			{ AVR32_PWM_PWML_3_0_PIN, AVR32_PWM_PWML_3_0_FUNCTION },
-			{ AVR32_PWM_PWMH_3_0_PIN, AVR32_PWM_PWMH_3_0_FUNCTION },
+				
+			{ AVR32_PWM_PWML_1_0_PIN, AVR32_PWM_PWML_1_0_FUNCTION },
+			{ AVR32_PWM_PWMH_1_0_PIN, AVR32_PWM_PWMH_1_0_FUNCTION },
 			
-
 			{ AVR32_PWM_PWML_2_0_PIN, AVR32_PWM_PWML_2_0_FUNCTION },
 			{ AVR32_PWM_PWMH_2_0_PIN, AVR32_PWM_PWMH_2_0_FUNCTION },
-			{ AVR32_PWM_PWML_1_0_PIN, AVR32_PWM_PWML_1_0_FUNCTION },
-			{ AVR32_PWM_PWMH_1_0_PIN, AVR32_PWM_PWMH_1_0_FUNCTION }
+
+			{ AVR32_PWM_PWML_3_0_PIN, AVR32_PWM_PWML_3_0_FUNCTION },
+			{ AVR32_PWM_PWMH_3_0_PIN, AVR32_PWM_PWMH_3_0_FUNCTION }
 	    };			
 		gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));
 	}
@@ -154,11 +154,12 @@ void pwm_servos_init(bool use_servos_7_8)
 		{
 			{ AVR32_PWM_PWML_0_0_PIN, AVR32_PWM_PWML_0_0_FUNCTION },
 			{ AVR32_PWM_PWMH_0_0_PIN, AVR32_PWM_PWMH_0_0_FUNCTION },
+				
+			{ AVR32_PWM_PWML_1_0_PIN, AVR32_PWM_PWML_1_0_FUNCTION },
+			{ AVR32_PWM_PWMH_1_0_PIN, AVR32_PWM_PWMH_1_0_FUNCTION },
 
 			{ AVR32_PWM_PWML_2_0_PIN, AVR32_PWM_PWML_2_0_FUNCTION },
-			{ AVR32_PWM_PWMH_2_0_PIN, AVR32_PWM_PWMH_2_0_FUNCTION },
-			{ AVR32_PWM_PWML_1_0_PIN, AVR32_PWM_PWML_1_0_FUNCTION },
-			{ AVR32_PWM_PWMH_1_0_PIN, AVR32_PWM_PWMH_1_0_FUNCTION }
+			{ AVR32_PWM_PWMH_2_0_PIN, AVR32_PWM_PWMH_2_0_FUNCTION }
 	    };			
 		gpio_enable_module(PWM_GPIO_MAP, sizeof(PWM_GPIO_MAP) / sizeof(PWM_GPIO_MAP[0]));				
 	}
@@ -186,10 +187,17 @@ void pwm_servos_write_to_hardware(const servos_t* servos)
 		freq_channel[i] = min( servos->servo[2 * i].repeat_freq, servos->servo[2 * i + 1].repeat_freq );
 	}
 
-	write_channels( 0, pulse_us[0], pulse_us[1], freq_channel[0]);
-	write_channels(	1, pulse_us[2], pulse_us[3], freq_channel[1]);
-	write_channels(	2, pulse_us[4], pulse_us[5], freq_channel[2]);
-	#ifndef CS_ON_SERVO_7_8
-	write_channels(	3, pulse_us[6], pulse_us[7], freq_channel[3]);
-	#endif
+	if ( use_servos_7_8 == true )
+	{
+		write_channels( 0, pulse_us[0], pulse_us[1], freq_channel[0]);
+		write_channels(	1, pulse_us[2], pulse_us[3], freq_channel[1]);
+		write_channels(	2, pulse_us[4], pulse_us[5], freq_channel[2]);
+		write_channels(	3, pulse_us[6], pulse_us[7], freq_channel[3]);
+	}
+	else
+	{	
+		write_channels( 0, pulse_us[0], pulse_us[1], freq_channel[0]);
+		write_channels(	1, pulse_us[2], pulse_us[3], freq_channel[1]);
+		write_channels(	2, pulse_us[4], pulse_us[5], freq_channel[2]);
+	}
 }
