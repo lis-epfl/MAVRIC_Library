@@ -60,8 +60,6 @@ extern "C" {
 #include "bmp085.h"
 #include "position_estimation.h"
 #include "state.h"
-#include "scheduler.h"
-#include "mavlink_communication.h"
 
 #define AIR_DENSITY 1.2								///< The air density
 
@@ -123,10 +121,9 @@ typedef struct
 	position_estimator_t* pos_est;							///< The pointer to the position estimation structure
 	barometer_t* pressure;									///< The pointer to the barometer structure
 	gps_t* gps;												///< The pointer to the GPS structure
-	const servos_t* servos;										///< The pointer to the servos structure
+	const servos_t* servos;									///< The pointer to the servos structure
 	const ahrs_t *estimated_attitude;						///< The pointer to the attitude estimation structure
-	bool* nav_plan_active;										///< The pointer to the waypoint set flag
-	const mavlink_stream_t* mavlink_stream;					///< The pointer to the mavlink stream structure
+	bool* nav_plan_active;									///< The pointer to the waypoint set flag
 } simulation_model_t;
 
 
@@ -134,10 +131,17 @@ typedef struct
  * \brief	Initialize the simulation module
  *
  * \param	sim				The pointer to the simulation model structure
+ * \param	sim_config		The pointer to the configuration structure
+ * \param	ahrs			The pointer to the AHRS structure
  * \param	imu				The pointer to the real IMU structure to match the simulated IMU
- * \param	local_pos		The pointer to the structure of the real local position estimation of the vehicle
+ * \param	pos_est			The pointer to the position estimation structure of the vehicle
+ * \param	gps				The pointer to the GPS structure
+ * \param	state			The pointer to the state structure
+ * \param	servos			The pointer to the servos structure
+ * \param	waypoint_set	The pointer to the waypoint_set boolean value
  */
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, const servos_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream);
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, const servos_t* servos, bool* waypoint_set);
+
 
 /**
  * \brief	Sets the calibration to the "real" IMU values
@@ -146,6 +150,7 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
  */
 void simulation_calib_set(simulation_model_t *sim);
 
+
 /**
  * \brief	Computes artificial gyro and accelerometer values based on motor commands
  *
@@ -153,12 +158,14 @@ void simulation_calib_set(simulation_model_t *sim);
  */
 void simulation_update(simulation_model_t *sim);
 
+
 /**
  * \brief	Simulates barometer outputs
  *
  * \param	sim				The pointer to the simulation model structure
  */
 void simulation_simulate_barometer(simulation_model_t *sim);
+
 
 /**
  * \brief	Simulates GPS outputs
@@ -176,30 +183,22 @@ void simulation_simulate_gps(simulation_model_t *sim);
  */
 void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms);
 
+
 /**
- * \brief	Changes between simulation to and from reality
+ * \brief	Changes from reality to simulation
  *
  * \param	sim				The pointer to the simulation model structure
  */
-// void simulation_switch_between_reality_n_simulation(simulation_model_t *sim);
 void simulation_switch_from_reality_to_simulation(simulation_model_t *sim);
+
+
+/**
+ * \brief	Changes from simulation to reality
+ *
+ * \param	sim				The pointer to the simulation model structure
+ */
 void simulation_switch_from_simulation_to_reality(simulation_model_t *sim);
 
-
-/**
- * \brief	Task to send the mavlink HIL state simulation message
- * 
- * \return	The status of execution of the task
- */
-task_return_t simulation_send_state(simulation_model_t *sim);
-
-
-/**
- * \brief	Task to send the mavlink HIL quaternion simulation message
- * 
- * \return	The status of execution of the task
- */
-task_return_t simulation_send_quaternions(simulation_model_t *sim_model);
 
 #ifdef __cplusplus
 }

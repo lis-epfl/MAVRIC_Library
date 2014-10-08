@@ -46,7 +46,6 @@
 #include "uart_int.h"
 #include "buffer.h"
 #include "time_keeper.h"
-#include "mavlink_communication.h"
 
 uint8_t  **ubx_current_message = 0;		///<  The pointer to the pointer to the structure of the current message to fill
 uint8_t  ** ubx_last_message = 0;		///<  The pointer to the pointer to the structure of the last message received of the same type than the current one being received (for exchange at the end)
@@ -1636,7 +1635,7 @@ static ubx_tim_vrfy_t * ubx_get_tim_vrfy()
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void gps_ublox_init(gps_t *gps, int32_t UID, mavlink_stream_t* mavlink_stream)
+void gps_ublox_init(gps_t *gps, int32_t UID)
 {
 	// uart setting
 	usart_config_t usart_conf_gps =
@@ -1660,8 +1659,6 @@ void gps_ublox_init(gps_t *gps, int32_t UID, mavlink_stream_t* mavlink_stream)
 	buffer_make_buffered_stream(&(gps->gps_buffer), &(gps->gps_stream_in));
 	uart_int_register_read_stream(uart_int_get_uart_handle(UID), &(gps->gps_stream_in));
 	uart_int_register_write_stream(uart_int_get_uart_handle(UID), &(gps->gps_stream_out));
-	
-	gps->mavlink_stream = mavlink_stream;
 }
 
 
@@ -1798,46 +1795,4 @@ void gps_ublox_update(gps_t *gps)
 			gps->accuracy_status = 0;
 		}
 	}
-}
-
-
-task_return_t gps_ublox_send_raw(gps_t* gps)
-{
-	mavlink_message_t msg;
-	if (gps->status == GPS_OK)
-	{
-		mavlink_msg_gps_raw_int_pack(	gps->mavlink_stream->sysid,
-										gps->mavlink_stream->compid,
-										&msg,
-										1000 * gps->time_last_msg,
-										gps->status,
-										gps->latitude * 10000000.0f,
-										gps->longitude * 10000000.0f,
-										gps->altitude * 1000.0f,
-										gps->hdop * 100.0f,
-										gps->speed_accuracy * 100.0f,
-										gps->ground_speed * 100.0f,
-										gps->course,
-										gps->num_sats	);
-		mavlink_stream_send(gps->mavlink_stream,&msg);
-	}
-	else
-	{
-		mavlink_msg_gps_raw_int_pack(	gps->mavlink_stream->sysid,
-										gps->mavlink_stream->compid,
-										&msg,
-										time_keeper_get_micros(),
-										gps->status,
-										46.5193f * 10000000,
-										6.56507f * 10000000,
-										400 * 1000,
-										0,
-										0,
-										0,
-										0,
-										gps->num_sats);		// TODO: return TASK_RUN_ERROR here?
-		mavlink_stream_send(gps->mavlink_stream,&msg);
-	}
-
-	return TASK_RUN_SUCCESS;
 }
