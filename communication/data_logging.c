@@ -520,7 +520,7 @@ static void data_logging_toggle_logging(data_logging_t* data_logging, mavlink_co
 									MAV_RESULT_ACCEPTED);
 	mavlink_stream_send(data_logging->mavlink_stream, &msg);
 	
-	data_logging.log_data = packet->param1;
+	data_logging->log_data = packet->param1;
 }
 
 //------------------------------------------------------------------------------
