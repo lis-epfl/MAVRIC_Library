@@ -137,10 +137,13 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 			c1 = buffer_get(&sat.receiver);
 			c2 = buffer_get(&sat.receiver);
 			
-			channel_encoding = (c2 & 0x10) >> 4; 	// 0 = 11bit, 1 = 10 bit
-			frame_number     = c2 & 0x03; 			// 1 = 1 frame contains all channels
+			//check header Bytes, otherwise discard datas
+			if (c1 == 0x03 && c2 == 0xB2) 
+			{
+				channel_encoding = (c2 & 0x10) >> 4; 	// 0 = 11bit, 1 = 10 bit
+				frame_number     = c2 & 0x03; 			// 1 = 1 frame contains all channels
 			
-			for (i = 1; i < 8; i++) 
+			for (i = 0; i < 7; i++) //Max number of channels is 7 for our DSM module 
 			{
 				c1 = buffer_get(&sat.receiver);
 				c2 = buffer_get(&sat.receiver);
@@ -149,7 +152,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 				if ( channel_encoding == 1 ) 
 				{
 					// highest bit is frame 0/1, bits 2-6 are channel number
-					channel = ((c1&0x80) * 8 + (c1 >> 2))&0x0f;
+					channel = ((sw >> 10))&0x0f;
 					
 					// 10 bits per channel
 					sat.channels[channel] = ((int16_t)(sw&0x3ff) - 512) * 2;
@@ -157,23 +160,29 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 				else if ( channel_encoding == 0 ) 
 				{
 					// highest bit is frame 0/1, bits 3-7 are channel number
-					channel = ((c1&0x80) * 8 + (c1 >> 3))&0x0f;
+					channel = ((sw >> 11))&0x0f;
 					
-					// 11 bits per channel
-					sat.channels[channel] = ((int16_t)(sw&0x7ff) - 1024);
-				} 
-				else 
-				{
-					// shouldn't happen!
-				}
-			}	
+						// 11 bits per channel
+						sat.channels[channel] = ((int16_t)(sw&0x7ff) - 1024);
+					} 
+					else 
+					{
+						// shouldn't happen!
+					}
+				}	
 		
-			// update timing
-			sat.dt 			= now - sat.last_update;
-			sat.last_update = now;
+				// update timing
+				sat.dt 			= now - sat.last_update;
+				sat.last_update = now;
 
-			// Inidicate that new data is available
-			sat.new_data_available = true;
+				// Inidicate that new data is available
+				sat.new_data_available = true;
+			}
+			else
+			{
+				buffer_clear(&sat.receiver);
+				// LED_Toggle(LED2);
+			}
 		}
 	}		
 }
