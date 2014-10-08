@@ -496,12 +496,10 @@ static void data_logging_f_seek(data_logging_t* data_logging)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config, mavlink_communication_t* mavlink_communication)
+void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config)
 {
 	// Init debug mode
 	data_logging->debug = config->debug;
-
-	data_logging->mavlink_stream = &mavlink_communication->mavlink_stream;
 
 	// Allocate memory for the onboard data_log
 	data_logging->data_logging_set = malloc( sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config->max_data_logging_count]) );

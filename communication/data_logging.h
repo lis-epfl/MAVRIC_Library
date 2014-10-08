@@ -49,7 +49,6 @@ extern "C" {
 
 #include "fat_fs/ff.h"
 #include "tasks.h"
-#include "mavlink_communication.h"
 
 
 #define MAX_DATA_LOGGING_COUNT 50								///< The max number of data logging parameters
@@ -128,8 +127,6 @@ typedef struct
 	uint32_t logging_time;										///< The time that we've passed logging since the last f_close
 	
 	uint32_t log_data;											///< A flag to stop/start writing to file	
-	
-	const mavlink_stream_t* mavlink_stream;					///< The pointer to the MAVLink stream
 }data_logging_t;
 
 
@@ -140,7 +137,7 @@ typedef struct
  * \param	config					The pointer to the configuration structure
  * \param	mavlink_communication	The pointer to the communication structure
  */
-void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config, mavlink_communication_t* mavlink_communication);
+void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config);
 
 /**
  * \brief	Create and open a new file
