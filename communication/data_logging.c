@@ -511,7 +511,16 @@ static void data_logging_toggle_logging(data_logging_t* data_logging, mavlink_co
 		print_util_dbg_print("Stop logging from command message\r\n");
 	}
 	
-	//data_logging.log_data = packet->param1;
+	mavlink_message_t msg;
+	
+	mavlink_msg_command_ack_pack( 	data_logging->mavlink_stream->sysid,
+									data_logging->mavlink_stream->compid,
+									&msg,
+									MAV_CMD_DO_SET_PARAMETER,
+									MAV_RESULT_ACCEPTED);
+	mavlink_stream_send(data_logging->mavlink_stream, &msg);
+	
+	data_logging.log_data = packet->param1;
 }
 
 //------------------------------------------------------------------------------
@@ -522,6 +531,8 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 {
 	// Init debug mode
 	data_logging->debug = config->debug;
+
+	data_logging->mavlink_stream = &mavlink_communication->mavlink_stream;
 
 	// Allocate memory for the onboard data_log
 	data_logging->data_logging_set = malloc( sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config->max_data_logging_count]) );

@@ -128,6 +128,8 @@ typedef struct
 	uint32_t logging_time;										///< The time that we've passed logging since the last f_close
 	
 	uint32_t log_data;											///< A flag to stop/start writing to file	
+	
+	const mavlink_stream_t* mavlink_stream;					///< The pointer to the MAVLink stream
 }data_logging_t;
 
 
