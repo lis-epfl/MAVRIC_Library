@@ -53,7 +53,6 @@ extern "C" {
 #include "bmp085.h"
 #include "gps_ublox.h"
 #include "coord_conventions.h"
-#include "mavlink_communication.h"
 #include "state.h"
 #include "tasks.h"
 
@@ -91,7 +90,6 @@ typedef struct
 	const gps_t* gps;								///< The pointer to the GPS structure
 	const ahrs_t* ahrs;								///< The pointer to the attitude estimation structure
 	const imu_t* imu;								///< The pointer to the IMU structure
-	const mavlink_stream_t* mavlink_stream;			///< The pointer to the mavlink stream structure
 	state_t* state;									///< The pointer to the state structure
 
 	bool* nav_plan_active;							///< The pointer to the waypoint set flag
@@ -107,15 +105,13 @@ typedef struct
  * \param	gps						The pointer to the GPS structure
  * \param	ahrs					The pointer to the attitude estimation structure
  * \param	imu						The pointer to the IMU structure
- * \param   mavlink_stream			The pointer to the mavlink stream structure
  * \param	nav_plan_active			The pointer to the flag telling if there is a flight plan loaded
- * \param	mavlink_handler			The pointer to the mavlink message handler
  * \param	home_lat				The value of the hard coded home latitude position
  * \param	home_lon				The value of the hard coded home longitude position
  * \param	home_alt				The value of the hard coded home altitude position
  * \param	gravity					The value of the gravity
  */
-void position_estimation_init(position_estimator_t *pos_est,state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, const mavlink_stream_t* mavlink_stream, bool* nav_plan_active, mavlink_message_handler_t *mavlink_handler, float home_lat, float home_lon, float home_alt, float gravity);
+void position_estimation_init(position_estimator_t *pos_est,state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, bool* nav_plan_active, float home_lat, float home_lon, float home_alt, float gravity);
 
 
 /**
@@ -132,26 +128,6 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est);
  * \param	pos_est					The pointer to the position estimation structure
  */
 void position_estimation_update(position_estimator_t *pos_est);
-
-
-/**
- * \brief	Task to send the mavlink position estimation message
- *
- * \param	pos_est					The pointer to the position estimation structure
- * 
- * \return	The status of execution of the task
- */
-task_return_t position_estimation_send_position(position_estimator_t* pos_est);
-
-
-/**
- * \brief	Task to send the mavlink GPS global position message
- * 
- * \param	pos_est					The pointer to the position estimation structure
- *
- * \return	The status of execution of the task
- */
-task_return_t position_estimation_send_global_position(position_estimator_t* pos_est);
 
 
 #ifdef __cplusplus

@@ -52,8 +52,6 @@ extern "C" {
 #include "maths.h"
 #include "streams.h"
 #include "buffer.h"
-#include "tasks.h"
-#include "mavlink_stream.h"
 
 /*
  *  try to put a UBlox into binary mode. This is in two parts. First we
@@ -672,8 +670,6 @@ typedef struct
 	byte_stream_t gps_stream_out;			///< The outgoing GPS byte stream
 	
 	float alt_consensus_offset;				///< The altitude offset coming from a consensus with other vehicles in order to have them flying all at the same altitude before takeoff
-	
-	const mavlink_stream_t* mavlink_stream;	///< The pointer to the mavlink stream
 } gps_t;
 
 
@@ -687,9 +683,9 @@ uint32_t last_fix_time;						///< Last fix time
  *
  * \param	gps					The pointer to the GPS structure
  * \param	UID					The uart ID
- * \param	mavlink_stream		The pointer to the mavlink stream
+ * \param	mavlink_stream		The pointer to the MAVLink stream
  */
-void gps_ublox_init(gps_t *gps, int32_t UID, mavlink_stream_t* mavlink_stream);
+void gps_ublox_init(gps_t *gps, int32_t UID);
 
 
 /**
@@ -709,6 +705,7 @@ void gps_ublox_configure_gps(gps_t *gps);
  */
 void gps_ublox_update(gps_t *gps);
 
+<<<<<<< HEAD
 
 /**
  * \brief	Task to send the mavlink gps raw message
@@ -719,6 +716,8 @@ void gps_ublox_update(gps_t *gps);
  */
 task_return_t gps_ublox_send_raw(gps_t* gps);
 
+=======
+>>>>>>> master
 #ifdef __cplusplus
 }
 #endif

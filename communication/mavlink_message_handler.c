@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief This module handles of all incoming mavlink message by calling the 
+ * \brief This module handles of all incoming MAVLink message by calling the 
  * appropriate functions
  *
  ******************************************************************************/
@@ -184,6 +184,7 @@ void mavlink_message_handler_add_msg_callback(	mavlink_message_handler_t* 				me
 	{
 		mavlink_message_handler_msg_callback_t* new_callback = &msg_callback_set->callback_list[msg_callback_set->callback_count];
 
+		new_callback->sys_id		= &(message_handler->mavlink_stream->sysid);
 		new_callback->message_id 	= msg_callback->message_id;
 		new_callback->sysid_filter 	= msg_callback->sysid_filter;
 	 	new_callback->compid_filter = msg_callback->compid_filter;
@@ -311,7 +312,6 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 					{
 						mavlink_cmd_callback_function_t function 		= message_handler->cmd_callback_set->callback_list[i].function;
 						handling_module_struct_t 		module_struct 	= message_handler->cmd_callback_set->callback_list[i].module_struct;
-						
 						// Call appropriate function callback
 						function(module_struct, &cmd);
 					}
@@ -328,9 +328,10 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 			{
 				mavlink_msg_callback_function_t function 		= message_handler->msg_callback_set->callback_list[i].function;
 				handling_module_struct_t 		module_struct 	= message_handler->msg_callback_set->callback_list[i].module_struct;
+				uint32_t						sys_id			= *message_handler->msg_callback_set->callback_list[i].sys_id;
 				
 				// Call appropriate function callback
-				function(module_struct, msg);
+				function(module_struct, sys_id, msg);
 			}
 		}
 	}

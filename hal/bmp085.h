@@ -65,7 +65,7 @@ typedef struct
 /**
  * \brief Initialize the barometer sensor
 */
-void bmp085_init(barometer_t *bmp085, const mavlink_stream_t * mavlink_stream);
+void bmp085_init(barometer_t *bmp085);
 
 
 /**
@@ -93,16 +93,6 @@ void bmp085_reset_origin_altitude(barometer_t* bmp085, float origin_altitude);
  * \return a pointer to the pressure data structure
 */
 void bmp085_update(barometer_t *bmp085);
-
-
-/**
- * \brief	Task to send the mavlink scaled pressure message
- * 
- * \param	pressure	The pointer to the pressure structure
- *
- * \return	The status of execution of the task
- */
-task_return_t bmp085_send_pressure(barometer_t* bmp085);
 
 
 #ifdef __cplusplus

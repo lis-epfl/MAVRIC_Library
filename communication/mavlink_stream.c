@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief A wrapper for mavlink to use the stream interface
+ * \brief A wrapper for MAVLink to use the stream interface
  *
  ******************************************************************************/
 
