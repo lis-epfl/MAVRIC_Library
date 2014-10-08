@@ -49,7 +49,6 @@
 #endif
 
 #include <stdint.h>
-#include "mavlink_stream.h"
 #include "scheduler.h"
 
 #define MAX_SERVO_COUNT 8
@@ -85,11 +84,10 @@ typedef struct
 {
 	uint32_t servos_count;
 	servo_entry_t servo[MAX_SERVO_COUNT];
-	const mavlink_stream_t* mavlink_stream;
 } servos_t;
 
 
-void servos_init(servos_t* servos, const servos_conf_t* config, const mavlink_stream_t* mavlink_stream);
+void servos_init(servos_t* servos, const servos_conf_t* config);
 
 
 void servos_set_value(servos_t* servos, uint32_t servo_id, float value);
@@ -98,7 +96,7 @@ void servos_set_value(servos_t* servos, uint32_t servo_id, float value);
 void servos_set_value_failsafe(servos_t* servos);
 
 
-task_return_t servos_mavlink_send(servos_t* servos);
+
 
 
 #ifdef __cplusplus

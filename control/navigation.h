@@ -98,7 +98,7 @@ typedef struct
 	mavlink_waypoint_handler_t *waypoint_handler;		///< The pointer to the waypoint handler structure
 	const position_estimator_t *position_estimator;		///< The pointer to the position estimation structure in central_data
 	state_t* state;										///< The pointer to the state structure in central_data
-	const mavlink_stream_t* mavlink_stream;				///< The pointer to the mavlink stream structure
+	const mavlink_stream_t* mavlink_stream;				///< The pointer to the MAVLink stream structure
 	remote_t* remote;									///< The pointer to the remote structure
 }navigation_t;
 
