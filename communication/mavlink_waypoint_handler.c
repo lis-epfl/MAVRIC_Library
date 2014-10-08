@@ -345,7 +345,7 @@ static void waypoint_handler_receive_ack_msg(mavlink_waypoint_handler_t* waypoin
 	{
 		waypoint_handler->waypoint_sending = false;
 		waypoint_handler->sending_waypoint_num = 0;
-		print_util_dbg_print("Acknowledgment received, end of waypoint sending.\n");
+		print_util_dbg_print("Acknowledgment received, end of waypoint sending.\r\n");
 	}
 }
 
