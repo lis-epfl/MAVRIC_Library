@@ -48,7 +48,7 @@
  * \brief	Toggle the data_logging
  *
  * \param	data_logging			The pointer to the data logging structure
- * \param	packet					The pointer to the decoded mavlink message long
+ * \param	packet					The pointer to the decoded MAVLink message long
  * 
  * \return	The MAV_RESULT of the command
  */

@@ -99,7 +99,7 @@ static mav_result_t navigation_set_auto_takeoff(navigation_t *navigation, mavlin
  * \brief	Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
  *
  * \param	navigation			The pointer to the navigation structure
- * \param	packet					The pointer to the structure of the mavlink command message long
+ * \param	packet					The pointer to the structure of the MAVLink command message long
  * 
  * \return	The MAV_RESULT of the command
  */

@@ -54,8 +54,8 @@
 /**
  * \brief	Sets a scenario for multiple MAV case
  *
- * \param	waypoint_handler		The pointer to the structure of the mavlink waypoint handler
- * \param	packet					The pointer to the structure of the mavlink command message long
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
+ * \param	packet					The pointer to the structure of the MAVLink command message long
  */
 static mav_result_t waypoint_handler_set_scenario(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
 
@@ -70,16 +70,16 @@ static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* way
 /**
  * \brief	Sets a circle scenario, where n waypoints are set at random position on a circle
  *
- * \param	waypoint_handler		The pointer to the structure of the mavlink waypoint handler
- * \param	packet					The pointer to the structure of the mavlink command message long
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
+ * \param	packet					The pointer to the structure of the MAVLink command message long
  */
 static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
 
 /**
  * \brief	Sets a stream scenario, where two flows of MAVs go in opposite ways
  *
- * \param	waypoint_handler		The pointer to the structure of the mavlink waypoint handler
- * \param	packet					The pointer to the structure of the mavlink command message long
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
+ * \param	packet					The pointer to the structure of the MAVLink command message long
  */
 static void waypoint_handler_set_stream_scenario(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
 
