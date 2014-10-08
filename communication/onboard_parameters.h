@@ -167,8 +167,10 @@ void onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parame
  *
  * \param   onboard_parameters		Pointer to module structure
  * \param   msg 					Incoming MAVLink message
+ * 
+ * \return	The MAV_RESULT of the command 
  */
-void onboard_parameters_preflight_storage(onboard_parameters_t* onboard_parameters, mavlink_command_long_t* msg);
+mav_result_t onboard_parameters_preflight_storage(onboard_parameters_t* onboard_parameters, mavlink_command_long_t* msg);
 
 /**
  * \brief	Read onboard parameters from the user page in the flash memory to the RAM memory
