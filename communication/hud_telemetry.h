@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file hud.c
+ * \file hud_telemetry.h
  * 
  * \author MAV'RIC Team
  * \author Gregoire Heitz
@@ -40,45 +40,50 @@
  ******************************************************************************/
 
 
-#include "hud.h"
-#include "print_util.h"
-#include "coord_conventions.h"
-#include "mavlink_communication.h"
+#ifndef HUD_TELEMETRY_H__
+#define HUD_TELEMETRY_H__
 
-void hud_init(hud_structure_t* hud_structure, const position_estimator_t* pos_est, const control_command_t* controls, const ahrs_t* ahrs)
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "position_estimation.h"
+#include "stabilisation.h"
+#include "imu.h"
+#include "scheduler.h"
+
+/**
+ * \brief	The HUD structure to send the MAVLink HUD message
+ */ 
+typedef struct  
 {
-	hud_structure->ahrs = ahrs;
-	hud_structure->controls            = controls;
-	hud_structure->pos_est             = pos_est;
-	
-	print_util_dbg_print("HUD structure initialised.\r\n");
-}
+	const position_estimator_t* pos_est;						///< The pointer to the position estimator structure
+	const control_command_t* controls;							///< The pointer to the control structure
+	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
+	const mavlink_stream_t* mavlink_stream;					///< The pointer to the MAVLink stream structure
+}hud_telemetry_structure_t;
 
-void hud_send_message(const hud_structure_t* hud_structure, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg) 
-{
-	float groundspeed = sqrt(hud_structure->pos_est->vel[0] * hud_structure->pos_est->vel[0] + hud_structure->pos_est->vel[1] * hud_structure->pos_est->vel[1]);
-	float airspeed=groundspeed;
+/**
+ * \brief	Initialise the HUD structure
+ * 
+ * \param	hud_telemetry_structure		The pointer to the HUD structure
+ * \param	pos_est						The pointer to the position estimation structure
+ * \param	controls						The pointer to the controls structure
+ * \param	ahrs							The pointer to the attitude estimation structure
+ */
+void hud_telemetry_init(hud_telemetry_structure_t *hud_telemetry_structure, const position_estimator_t *pos_est, const control_command_t *controls, const ahrs_t *ahrs);
 
-	aero_attitude_t aero_attitude;
-	aero_attitude = coord_conventions_quat_to_aero(hud_structure->ahrs->qe);
-	
-	int16_t heading;
-	if(aero_attitude.rpy[2] < 0)
-	{
-		heading = (int16_t)(360.0f + 180.0f * aero_attitude.rpy[2] / PI); //you want to normalize between 0 and 360°
-	}
-	else
-	{
-		heading = (int16_t)(180.0f * aero_attitude.rpy[2] / PI);
-	}
-	
-	mavlink_msg_vfr_hud_pack(	mavlink_stream->sysid, 
-								mavlink_stream->sysid,
-								msg,
-								airspeed, 
-								groundspeed, 
-								heading, 
-								(int32_t)((hud_structure->controls->thrust + 1.0f) * 50), 
-								-hud_structure->pos_est->local_position.pos[2] + hud_structure->pos_est->local_position.origin.altitude, 
-								-hud_structure->pos_est->vel[2]	);
+/**
+ * \brief	Function to send the MAVLink HUD message
+ * 
+ * \param	hud_telemetry_structure		The pointer to the HUD structure
+ * \param	mavlink_stream				The pointer to the MAVLink stream structure
+ * \param	msg								The pointer to the MAVLink message
+ */
+void hud_telemetry_send_message(const hud_telemetry_structure_t* hud_telemetry_structure, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif //HUD_TELEMETRY_H__
