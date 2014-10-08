@@ -318,11 +318,11 @@ static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handle
 		waypoint_handler->number_of_waypoints++;
 		
 		x = 2.0f * PI * rand();
-		y = 2.0f * PI * rand();
+		//y = 2.0f * PI * rand();
 		
 		// Start waypoint
 		waypoint_transfo.pos[X] = circle_radius * cos(x);
-		waypoint_transfo.pos[Y] = circle_radius * sin(y);
+		waypoint_transfo.pos[Y] = circle_radius * sin(x);
 		waypoint_transfo.pos[Z] = altitude;
 		waypoint_global = coord_conventions_local_to_global_position(waypoint_transfo);
 	
