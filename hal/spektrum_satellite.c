@@ -185,6 +185,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 
 void spektrum_satellite_init (void) 
 {
+	print_util_dbg_print("Reset satellite receiver \r\n");
 	static const usart_options_t usart_opt = 
 	{
    		.baudrate     = BAUD_REMOTE,
@@ -219,54 +220,43 @@ void spektrum_satellite_init (void)
 	spektrum_satellite_switch_on();
 }
 
-
-void spektrum_satellite_bind(spektrum_satellite_t *satellite, mavlink_command_long_t* packet) 
+void spektrum_satellite_bind(void)
 {
-	if (packet->param2 == 1)
+	int32_t i = 0;
+	uint32_t cpu_freq = sysclk_get_cpu_hz();
+
+	print_util_dbg_print(" \n receive bind CMD \n");
+	
+	// Switch off satellite
+	spektrum_satellite_switch_off();
+	delay_ms(100);
+	spektrum_satellite_switch_on();
+
+	// Send one first pulse
+	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_DOWN);	
+	delay_ms(1);
+	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT| GPIO_INIT_LOW);
+	delay_ms(10);
+
+	// Wait for startup signal
+	while ((gpio_get_pin_value(DSM_RECEIVER_PIN) == 0) && (i < 10000)) 
 	{
-		int32_t i = 0;
-		uint32_t cpu_freq = sysclk_get_cpu_hz();
-	
-		print_util_dbg_print(" \n receive bind CMD \n");
-		
-		// Switch off satellite
-		spektrum_satellite_switch_off();
-		delay_ms(100);
-		spektrum_satellite_switch_on();
-	
-		// Send one first pulse
-		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_DOWN);	
+		i++;
 		delay_ms(1);
-		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT| GPIO_INIT_LOW);
-		delay_ms(10);
-
-		// Wait for startup signal
-		while ((gpio_get_pin_value(DSM_RECEIVER_PIN) == 0) && (i < 10000)) 
-		{
-			i++;
-			delay_ms(1);
-		}
-
-		// Wait 100ms after receiver startup
-		delay_ms(100);
-
-		// create 4 pulses with 126us to set receiver to bind mode
-		for (i = 0; i < 3; i++) 
-		{
-			gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
-			cpu_delay_us(113, cpu_freq); 
-			gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_UP);	
-			cpu_delay_us(118, cpu_freq);
-		}
 	}
-	
-	else if (packet->param3 == 1)
+
+	// Wait 100ms after receiver startup
+	delay_ms(100);
+
+	// create 4 pulses with 126us to set receiver to bind mode
+	for (i = 0; i < 3; i++) 
 	{
-		print_util_dbg_print("\n reset satellite receiver \r\n");
-		spektrum_satellite_init();
+		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+		cpu_delay_us(113, cpu_freq); 
+		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_UP);	
+		cpu_delay_us(118, cpu_freq);
 	}
 }
-
 
 spektrum_satellite_t* spektrum_satellite_get_pointer(void)
 {
