@@ -49,15 +49,19 @@
  *
  * \param	data_logging			The pointer to the data logging structure
  * \param	packet					The pointer to the decoded mavlink message long
+ * 
+ * \return	The MAV_RESULT of the command
  */
-static void data_logging_telemetry_toggle_logging(data_logging_t* data_logging, mavlink_command_long_t* packet);
+static mav_result_t data_logging_telemetry_toggle_logging(data_logging_t* data_logging, mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void data_logging_telemetry_toggle_logging(data_logging_t* data_logging, mavlink_command_long_t* packet)
+static mav_result_t data_logging_telemetry_toggle_logging(data_logging_t* data_logging, mavlink_command_long_t* packet)
 {
+	mav_result_t result;
+	
 	if(packet->param1 == 1)
 	{
 		print_util_dbg_print("Start logging from command message\r\n");
@@ -67,16 +71,11 @@ static void data_logging_telemetry_toggle_logging(data_logging_t* data_logging, 
 		print_util_dbg_print("Stop logging from command message\r\n");
 	}
 	
-	mavlink_message_t msg;
-	
-	mavlink_msg_command_ack_pack( 	data_logging->mavlink_stream->sysid,
-									data_logging->mavlink_stream->compid,
-									&msg,
-									MAV_CMD_DO_SET_PARAMETER,
-									MAV_RESULT_ACCEPTED);
-	mavlink_stream_send(data_logging->mavlink_stream, &msg);
+	result = MAV_RESULT_ACCEPTED;
 	
 	data_logging->log_data = packet->param1;
+	
+	return result;
 }
 
 //------------------------------------------------------------------------------
