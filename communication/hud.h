@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Gregoire Heitz
  *   
- * \brief This file sends the mavlink HUD message
+ * \brief This file sends the MAVLink HUD message
  *
  ******************************************************************************/
 
@@ -53,35 +53,34 @@ extern "C" {
 #include "scheduler.h"
 
 /**
- * \brief	The HUD structure to send the mavlink HUD message
+ * \brief	The HUD structure to send the MAVLink HUD message
  */ 
 typedef struct  
 {
 	const position_estimator_t* pos_est;						///< The pointer to the position estimator structure
 	const control_command_t* controls;							///< The pointer to the control structure
 	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
-	const mavlink_stream_t* mavlink_stream;						///< The pointer to the mavlink stream structure
+	const mavlink_stream_t* mavlink_stream;						///< The pointer to the MAVLink stream structure
 }hud_structure_t;
 
 /**
  * \brief	Initialise the HUD structure
  * 
- * \param	hud_structure				///< The pointer to the HUD structure
- * \param	pos_est						///< The pointer to the position estimation structure
- * \param	controls					///< The pointer to the controls structure
- * \param	ahrs			///< The pointer to the attitude estimation structure
- * \param 	mavlink_stream				///< The pointer to the mavlink stream structure
+ * \param	hud_structure		The pointer to the HUD structure
+ * \param	pos_est				The pointer to the position estimation structure
+ * \param	controls			The pointer to the controls structure
+ * \param	ahrs				The pointer to the attitude estimation structure
  */
-void hud_init(hud_structure_t *hud_structure, const position_estimator_t *pos_est, const control_command_t *controls, const ahrs_t *ahrs, const mavlink_stream_t* mavlink_stream);
+void hud_init(hud_structure_t *hud_structure, const position_estimator_t *pos_est, const control_command_t *controls, const ahrs_t *ahrs);
 
 /**
- * \brief	Task to send the mavlink HUD message
+ * \brief	Function to send the MAVLink HUD message
  * 
- * \param	hud_structure
- *
- * \return	The status of execution of the task
+ * \param	hud_structure		The pointer to the HUD structure
+ * \param	mavlink_stream		The pointer to the MAVLink stream structure
+ * \param	msg					The pointer to the MAVLink message
  */
-task_return_t hud_send_message(hud_structure_t* hud_structure);
+void hud_send_message(const hud_structure_t* hud_structure, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 #ifdef __cplusplus
 }

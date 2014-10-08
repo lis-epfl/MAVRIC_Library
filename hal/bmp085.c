@@ -49,7 +49,6 @@
 #include "maths.h"
 #include "time_keeper.h"
 #include "print_util.h"
-#include "mavlink_communication.h"
 
 
 #define BARO_ALT_LPF 0.95f						///< low pass filter factor for altitude measured by the barometer
@@ -113,9 +112,8 @@ static int16_t bmp085_read_int(uint8_t address)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void bmp085_init(barometer_t *bmp085, const mavlink_stream_t* mavlink_stream)
+void bmp085_init(barometer_t *bmp085)
 {
-	bmp085->mavlink_stream = mavlink_stream;
 	bmp085->altitude_offset = 0.0f;
 
 	for (int32_t i = 0; i < 3; i++) 
@@ -300,40 +298,4 @@ void bmp085_update(barometer_t *bmp085)
 	}
 
 	bmp085->last_state_update = time_keeper_get_micros();
-}
-
-
-task_return_t bmp085_send_pressure(barometer_t* bmp085)
-{
-	mavlink_message_t msg;
-	
-	mavlink_msg_scaled_pressure_pack(	bmp085->mavlink_stream->sysid,
-										bmp085->mavlink_stream->compid,
-										&msg,
-										time_keeper_get_millis(),
-										bmp085->pressure / 100.0f,
-										bmp085->vario_vz,
-										bmp085->temperature * 100.0f);
-	
-	mavlink_stream_send(bmp085->mavlink_stream,&msg);
-
-	// mavlink_msg_named_value_float_pack(	bmp085->mavlink_stream->sysid,
-	// 									bmp085->mavlink_stream->compid,
-	// 									&msg,
-	// 									time_keeper_get_millis(),
-	// 									"pressAlt",
-	// 									bmp085->altitude);
-
-	// mavlink_stream_send(bmp085->mavlink_stream,&msg);
-
-	//mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										//time_keeper_get_millis(),
-										//"lastAlt",
-										//bmp085->last_altitudes[0]);
-
-	//mavlink_msg_named_value_float_send(	MAVLINK_COMM_0,
-										//time_keeper_get_millis(),
-										//"baro_dt",
-										//bmp085->dt);
-	return TASK_RUN_SUCCESS;
 }

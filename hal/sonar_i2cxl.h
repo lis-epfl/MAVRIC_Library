@@ -47,8 +47,6 @@
 	extern "C" {
 #endif
 
-#include "scheduler.h"
-#include "mavlink_stream.h"
 #include <stdint.h>
 
 /**
@@ -59,7 +57,6 @@ typedef struct
 	uint8_t i2c_address;		///< address of the sonar module
 	uint16_t distance_cm;		///< measured distance in centimeters
 	float distance_m;			///< measured distance in meters
-	const mavlink_stream_t* mavlink_stream;  ///< Pointer to mavlink stream
 } sonar_i2cxl_t;
 
 /**
@@ -67,7 +64,7 @@ typedef struct
  * 
  * \param sonar pointer to the sonar Data structure
  */
-void sonar_i2cxl_init(sonar_i2cxl_t* sonar, const mavlink_stream_t* mavlink_stream);
+void sonar_i2cxl_init(sonar_i2cxl_t* sonar);
 
 /**
  * \brief Reads last value from sensor and start new recording
@@ -77,15 +74,6 @@ void sonar_i2cxl_init(sonar_i2cxl_t* sonar, const mavlink_stream_t* mavlink_stre
  */
 void sonar_i2cxl_update(sonar_i2cxl_t* sonar);
 
-
-/**
- * \brief	Task to send the mavlink sonar message
- * 
- * \param sonar Data struct
- *
- * \return	The status of execution of the task
- */
-task_return_t sonar_i2cxl_send_telemetry(sonar_i2cxl_t* sonar_i2cxl);
 
 #ifdef __cplusplus
 	}

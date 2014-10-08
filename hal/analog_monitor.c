@@ -43,7 +43,6 @@
 
 #include "analog_monitor.h"
 #include "adc_int.h"
-#include "time_keeper.h"
 
 #define CONV_FACTOR_2 1.0f				///< Conversion factor for the analog channel 2
 #define CONV_FACTOR_3 1.0f				///< Conversion factor for the analog channel 3
@@ -73,6 +72,11 @@ const float CONV_FACTOR[MONITOR_CHANNELS] =
 	CONV_FACTOR_13
 };
 
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
 /**
  * \brief Trigger the analog monitor
  * Start sampling
@@ -81,13 +85,40 @@ void trigger_analog_monitor(void);
 
 /**
  * \brief Compute the average of the analog channels
+ *
+ * \param	analog_monitor		The pointer to the analog monitor structure
+ * \param	rail				The rail structure
  */
 float analog_compute_avg(analog_monitor_t* analog_monitor, analog_rails_t rail);
 
-void analog_monitor_init(analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream) 
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void trigger_analog_monitor(void)
 {
-	analog_monitor->mavlink_stream = mavlink_stream;
-	
+	adc_int_start_sampling(MONITOR_SAMPLES, 100,16, 4, false);
+}
+
+float analog_compute_avg(analog_monitor_t* analog_monitor, analog_rails_t rail)
+{
+	float out = 0.0f;
+	int32_t i;
+	for (i = 0; i  <MONITOR_SAMPLES; i++)
+	{
+		out += (float)analog_monitor->buffer[rail][i];
+	}
+	out = out / MONITOR_SAMPLES;
+	return out;
+}
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void analog_monitor_init(analog_monitor_t* analog_monitor) 
+{	
 	///< Init buffer and avg outputs
 	for (int32_t i = 0; i < MONITOR_CHANNELS; ++i)
 	{
@@ -188,37 +219,5 @@ task_return_t analog_monitor_update(analog_monitor_t* analog_monitor)
 
 	trigger_analog_monitor();
 
-	return TASK_RUN_SUCCESS;
-}
-
-void trigger_analog_monitor(void) 
-{
-	adc_int_start_sampling(MONITOR_SAMPLES, 100,16, 4, false);
-}
-
-float analog_compute_avg(analog_monitor_t* analog_monitor, analog_rails_t rail)
-{
-	float out = 0.0f;
-	int32_t i;
-	for (i = 0; i  <MONITOR_SAMPLES; i++)
-	{
-		out += (float)analog_monitor->buffer[rail][i];
-	}
-	out = out / MONITOR_SAMPLES;
-	return out;
-}
-
-task_return_t  analog_monitor_send_sonar(analog_monitor_t* analog_monitor)
-{
-	mavlink_message_t msg;
-	mavlink_msg_named_value_float_pack(	analog_monitor->mavlink_stream->sysid,
-	analog_monitor->mavlink_stream->compid,
-	&msg,
-	time_keeper_get_millis(),
-	"sonar",
-	1000.0f/9.8f*2.54f*analog_monitor->avg[ANALOG_RAIL_12]);
-	
-	mavlink_stream_send(analog_monitor->mavlink_stream,&msg);
-	
 	return TASK_RUN_SUCCESS;
 }

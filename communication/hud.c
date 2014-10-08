@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Gregoire Heitz
  *   
- * \brief This file sends the mavlink HUD message
+ * \brief This file sends the MAVLink HUD message
  *
  ******************************************************************************/
 
@@ -45,17 +45,16 @@
 #include "coord_conventions.h"
 #include "mavlink_communication.h"
 
-void hud_init(hud_structure_t* hud_structure, const position_estimator_t* pos_est, const control_command_t* controls, const ahrs_t* ahrs, const mavlink_stream_t* mavlink_stream)
+void hud_init(hud_structure_t* hud_structure, const position_estimator_t* pos_est, const control_command_t* controls, const ahrs_t* ahrs)
 {
 	hud_structure->ahrs = ahrs;
 	hud_structure->controls            = controls;
 	hud_structure->pos_est             = pos_est;
-	hud_structure->mavlink_stream      = mavlink_stream;
 	
 	print_util_dbg_print("HUD structure initialised.\r\n");
 }
 
-task_return_t hud_send_message(hud_structure_t* hud_structure) 
+void hud_send_message(const hud_structure_t* hud_structure, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg) 
 {
 	float groundspeed = sqrt(hud_structure->pos_est->vel[0] * hud_structure->pos_est->vel[0] + hud_structure->pos_est->vel[1] * hud_structure->pos_est->vel[1]);
 	float airspeed=groundspeed;
@@ -73,18 +72,13 @@ task_return_t hud_send_message(hud_structure_t* hud_structure)
 		heading = (int16_t)(180.0f * aero_attitude.rpy[2] / PI);
 	}
 	
-	
-	mavlink_message_t msg;	
-	mavlink_msg_vfr_hud_pack(	hud_structure->mavlink_stream->sysid, 
-								hud_structure->mavlink_stream->sysid,
-								&msg,
+	mavlink_msg_vfr_hud_pack(	mavlink_stream->sysid, 
+								mavlink_stream->sysid,
+								msg,
 								airspeed, 
 								groundspeed, 
 								heading, 
 								(int32_t)((hud_structure->controls->thrust + 1.0f) * 50), 
 								-hud_structure->pos_est->local_position.pos[2] + hud_structure->pos_est->local_position.origin.altitude, 
 								-hud_structure->pos_est->vel[2]	);
-	mavlink_stream_send(hud_structure->mavlink_stream, &msg);
-
-	return TASK_RUN_SUCCESS;
 }
