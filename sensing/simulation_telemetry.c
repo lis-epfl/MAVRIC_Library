@@ -55,15 +55,19 @@
  *
  * \param	sim				The pointer to the simulation model structure
  * \param	packet			The pointer to the decoded MAVLink command long message
+ * 
+ * \return	The MAV_RESULT of the command
  */
-static void simulation_telemetry_set_new_home_position(simulation_model_t *sim, mavlink_command_long_t* packet);
+static mav_result_t simulation_telemetry_set_new_home_position(simulation_model_t *sim, mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void simulation_telemetry_set_new_home_position(simulation_model_t *sim, mavlink_command_long_t* packet)
+static mav_result_t simulation_telemetry_set_new_home_position(simulation_model_t *sim, mavlink_command_long_t* packet)
 {
+	mav_result_t result;
+	
 	if (packet->param1 == 1)
 	{
 		// Set new home position to actual position
@@ -97,6 +101,10 @@ static void simulation_telemetry_set_new_home_position(simulation_model_t *sim, 
 	}
 
 	*sim->nav_plan_active = false;
+	
+	result = MAV_RESULT_ACCEPTED;
+	
+	return result;
 }
 
 //------------------------------------------------------------------------------
