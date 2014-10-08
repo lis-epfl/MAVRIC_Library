@@ -313,7 +313,17 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 						mavlink_cmd_callback_function_t function 		= message_handler->cmd_callback_set->callback_list[i].function;
 						handling_module_struct_t 		module_struct 	= message_handler->cmd_callback_set->callback_list[i].module_struct;
 						// Call appropriate function callback
-						function(module_struct, &cmd);
+						mav_result_t result;
+						result = function(module_struct, &cmd);
+						
+						// Send acknowledgment message 
+						mavlink_message_t msg;
+						mavlink_msg_command_ack_pack( 	message_handler->mavlink_stream->sysid,
+														message_handler->mavlink_stream->compid,
+														&msg,
+														cmd.command,
+														result);
+						mavlink_stream_send(message_handler->mavlink_stream, &msg);
 					}
 				}
 			}
