@@ -524,7 +524,7 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 						if ((waypoint_handler->num_waypoint_onboard + waypoint_handler->waypoint_request_number) == waypoint_handler->number_of_waypoints)
 						{
 							
-							uint8_t type = MAV_CMD_ACK_OK;	//MAV_CMD_ACK_ERR_FAIL;
+							MAV_MISSION_RESULT type = MAV_MISSION_ACCEPTED;
 							
 							mavlink_message_t msg;
 							mavlink_msg_mission_ack_pack( waypoint_handler->mavlink_stream->sysid,
@@ -559,7 +559,7 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 				}
 				else
 				{
-					uint8_t type = MAV_CMD_ACK_OK;	//MAV_CMD_ACK_ERR_FAIL;
+					MAV_MISSION_RESULT type = MAV_MISSION_ACCEPTED;
 					print_util_dbg_print("Ack not received!\r\n");
 					
 					mavlink_message_t msg;
