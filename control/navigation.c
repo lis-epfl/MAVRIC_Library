@@ -311,9 +311,7 @@ static mav_result_t navigation_set_auto_takeoff(navigation_t *navigation, mavlin
 
 static mav_result_t navigation_set_auto_landing(navigation_t* navigation, mavlink_command_long_t* packet)
 {
-	mav_result_t;
-	
-	MAV_RESULT result;
+	mav_result_t result;
 
 	if (navigation->state->in_the_air)
 	{
