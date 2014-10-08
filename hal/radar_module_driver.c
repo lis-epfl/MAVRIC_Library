@@ -44,7 +44,7 @@
 #include "i2c_driver_int.h"
 #include "print_util.h"
 
-///< Declare an object containing the mavlink radar tracked target structure
+///< Declare an object containing the MAVLink radar tracked target structure
 mavlink_radar_tracked_target_t main_target;
 
 void radar_module_init() 

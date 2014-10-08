@@ -428,8 +428,10 @@ void onboard_parameters_receive_parameter(onboard_parameters_t* onboard_paramete
 	}
 }
 
-void onboard_parameters_preflight_storage(onboard_parameters_t* onboard_parameters, mavlink_command_long_t* msg)
+mav_result_t onboard_parameters_preflight_storage(onboard_parameters_t* onboard_parameters, mavlink_command_long_t* msg)
 {
+	mav_result_t result = MAV_RESULT_DENIED;
+	
 	// Onboard parameters storage
 	if (msg->param1 == 0)
 	{
@@ -437,9 +439,14 @@ void onboard_parameters_preflight_storage(onboard_parameters_t* onboard_paramete
 	 	print_util_dbg_print("Reading from flashc...\r\n");
 		if(onboard_parameters_read_parameters_from_flashc(onboard_parameters))
 		{
+			result = MAV_RESULT_ACCEPTED;
 			// TODO: update simulation calibration values
 			//simulation_calib_set(&sim_model);
 	 	}
+		else
+		{
+			result = MAV_RESULT_DENIED;
+		}
 	}
 	else if (msg->param1 == 1)
 	{
@@ -447,15 +454,11 @@ void onboard_parameters_preflight_storage(onboard_parameters_t* onboard_paramete
 	 	//print_util_dbg_print("No Writing to flashc\n");
 	 	print_util_dbg_print("Writing to flashc\r\n");
 	 	onboard_parameters_write_parameters_to_flashc(onboard_parameters);
+		
+		result = MAV_RESULT_ACCEPTED;
 	}
 
-	mavlink_message_t ack_msg;
-	mavlink_msg_command_ack_pack(	onboard_parameters->mavlink_stream->sysid,
-									onboard_parameters->mavlink_stream->compid, 
-									&ack_msg,
-									MAV_CMD_PREFLIGHT_STORAGE, 
-									MAV_RESULT_ACCEPTED	);
-	mavlink_stream_send(onboard_parameters->mavlink_stream, &ack_msg);
+	return result;
 }
 
 

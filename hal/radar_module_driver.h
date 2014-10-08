@@ -72,7 +72,7 @@ void radar_module_read(void);
 /**
  * \brief Return the main target
  *
- * \return a pointer to an object containing the mavlink radar tracked target
+ * \return a pointer to an object containing the MAVLink radar tracked target
  */
 mavlink_radar_tracked_target_t* radar_module_get_main_target(void);
 

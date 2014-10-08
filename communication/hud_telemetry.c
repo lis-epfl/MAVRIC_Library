@@ -30,49 +30,55 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file joystick_parsing_telemetry.h
+ * \file hud_telemetry.c
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Gregoire Heitz
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the joystick controller
+ * \brief This file sends the MAVLink HUD message
  *
  ******************************************************************************/
 
-#ifndef JOYSTICK_PARSING_TELEMETRY_H_
-#define JOYSTICK_PARSING_TELEMETRY_H_
 
-#include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
-#include "joystick_parsing.h"
+#include "hud_telemetry.h"
+#include "print_util.h"
+#include "coord_conventions.h"
+#include "mavlink_communication.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-/** 
- * \brief	Initialisation of the joystick parsing telemetry module
- *
- * \param	joystick_parsing		The pointer to the joystick parsing structure
- * \param	message_handler		The pointer to the MAVLink communication structure
- */
-void joystick_parsing_telemetry_init(joystick_parsing_t* joystick_parsing, mavlink_message_handler_t* message_handler);
-
-/** 
- * \brief	Parse received MAVLink message in structure
- *
- * \param	joystick_parsing		The pointer to the joystick parsing structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-void joystick_parsing_telemetry_send_manual_ctrl_msg(const joystick_parsing_t* joystick_parsing, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
-
-
-
-#ifdef __cplusplus
+void hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, const position_estimator_t* pos_est, const control_command_t* controls, const ahrs_t* ahrs)
+{
+	hud_telemetry_structure->ahrs = ahrs;
+	hud_telemetry_structure->controls            = controls;
+	hud_telemetry_structure->pos_est             = pos_est;
+	
+	print_util_dbg_print("HUD structure initialised.\r\n");
 }
-#endif
 
-#endif /* JOYSTICK_PARSING_TELEMETRY_H_ */
+void hud_telemetry_send_message(const hud_telemetry_structure_t* hud_telemetry_structure, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg) 
+{
+	float groundspeed = sqrt(hud_telemetry_structure->pos_est->vel[0] * hud_telemetry_structure->pos_est->vel[0] + hud_telemetry_structure->pos_est->vel[1] * hud_telemetry_structure->pos_est->vel[1]);
+	float airspeed=groundspeed;
+
+	aero_attitude_t aero_attitude;
+	aero_attitude = coord_conventions_quat_to_aero(hud_telemetry_structure->ahrs->qe);
+	
+	int16_t heading;
+	if(aero_attitude.rpy[2] < 0)
+	{
+		heading = (int16_t)(360.0f + 180.0f * aero_attitude.rpy[2] / PI); //you want to normalize between 0 and 360°
+	}
+	else
+	{
+		heading = (int16_t)(180.0f * aero_attitude.rpy[2] / PI);
+	}
+	
+	mavlink_msg_vfr_hud_pack(	mavlink_stream->sysid, 
+								mavlink_stream->sysid,
+								msg,
+								airspeed, 
+								groundspeed, 
+								heading, 
+								(int32_t)((hud_telemetry_structure->controls->thrust + 1.0f) * 50), 
+								-hud_telemetry_structure->pos_est->local_position.pos[2] + hud_telemetry_structure->pos_est->local_position.origin.altitude, 
+								-hud_telemetry_structure->pos_est->vel[2]	);
+}

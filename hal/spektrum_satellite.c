@@ -53,7 +53,6 @@
 #include "print_util.h"
 
 #include "delay.h"
-#include "mavlink_communication.h"
 
 #include "led.h"
 
@@ -137,10 +136,13 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 			c1 = buffer_get(&sat.receiver);
 			c2 = buffer_get(&sat.receiver);
 			
-			channel_encoding = (c2 & 0x10) >> 4; 	// 0 = 11bit, 1 = 10 bit
-			frame_number     = c2 & 0x03; 			// 1 = 1 frame contains all channels
+			//check header Bytes, otherwise discard datas
+			if (c1 == 0x03 && c2 == 0xB2) 
+			{
+				channel_encoding = (c2 & 0x10) >> 4; 	// 0 = 11bit, 1 = 10 bit
+				frame_number     = c2 & 0x03; 			// 1 = 1 frame contains all channels
 			
-			for (i = 1; i < 8; i++) 
+			for (i = 0; i < 7; i++) //Max number of channels is 7 for our DSM module 
 			{
 				c1 = buffer_get(&sat.receiver);
 				c2 = buffer_get(&sat.receiver);
@@ -149,7 +151,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 				if ( channel_encoding == 1 ) 
 				{
 					// highest bit is frame 0/1, bits 2-6 are channel number
-					channel = ((c1&0x80) * 8 + (c1 >> 2))&0x0f;
+					channel = ((sw >> 10))&0x0f;
 					
 					// 10 bits per channel
 					sat.channels[channel] = ((int16_t)(sw&0x3ff) - 512) * 2;
@@ -157,23 +159,29 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 				else if ( channel_encoding == 0 ) 
 				{
 					// highest bit is frame 0/1, bits 3-7 are channel number
-					channel = ((c1&0x80) * 8 + (c1 >> 3))&0x0f;
+					channel = ((sw >> 11))&0x0f;
 					
-					// 11 bits per channel
-					sat.channels[channel] = ((int16_t)(sw&0x7ff) - 1024);
-				} 
-				else 
-				{
-					// shouldn't happen!
-				}
-			}	
+						// 11 bits per channel
+						sat.channels[channel] = ((int16_t)(sw&0x7ff) - 1024);
+					} 
+					else 
+					{
+						// shouldn't happen!
+					}
+				}	
 		
-			// update timing
-			sat.dt 			= now - sat.last_update;
-			sat.last_update = now;
+				// update timing
+				sat.dt 			= now - sat.last_update;
+				sat.last_update = now;
 
-			// Inidicate that new data is available
-			sat.new_data_available = true;
+				// Inidicate that new data is available
+				sat.new_data_available = true;
+			}
+			else
+			{
+				buffer_clear(&sat.receiver);
+				// LED_Toggle(LED2);
+			}
 		}
 	}		
 }
@@ -185,6 +193,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 
 void spektrum_satellite_init (void) 
 {
+	print_util_dbg_print("Reset satellite receiver \r\n");
 	static const usart_options_t usart_opt = 
 	{
    		.baudrate     = BAUD_REMOTE,
@@ -219,54 +228,43 @@ void spektrum_satellite_init (void)
 	spektrum_satellite_switch_on();
 }
 
-
-void spektrum_satellite_bind(spektrum_satellite_t *satellite, mavlink_command_long_t* packet) 
+void spektrum_satellite_bind(void)
 {
-	if (packet->param2 == 1)
+	int32_t i = 0;
+	uint32_t cpu_freq = sysclk_get_cpu_hz();
+
+	print_util_dbg_print(" \n receive bind CMD \n");
+	
+	// Switch off satellite
+	spektrum_satellite_switch_off();
+	delay_ms(100);
+	spektrum_satellite_switch_on();
+
+	// Send one first pulse
+	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_DOWN);	
+	delay_ms(1);
+	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT| GPIO_INIT_LOW);
+	delay_ms(10);
+
+	// Wait for startup signal
+	while ((gpio_get_pin_value(DSM_RECEIVER_PIN) == 0) && (i < 10000)) 
 	{
-		int32_t i = 0;
-		uint32_t cpu_freq = sysclk_get_cpu_hz();
-	
-		print_util_dbg_print(" \n receive bind CMD \n");
-		
-		// Switch off satellite
-		spektrum_satellite_switch_off();
-		delay_ms(100);
-		spektrum_satellite_switch_on();
-	
-		// Send one first pulse
-		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_DOWN);	
+		i++;
 		delay_ms(1);
-		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT| GPIO_INIT_LOW);
-		delay_ms(10);
-
-		// Wait for startup signal
-		while ((gpio_get_pin_value(DSM_RECEIVER_PIN) == 0) && (i < 10000)) 
-		{
-			i++;
-			delay_ms(1);
-		}
-
-		// Wait 100ms after receiver startup
-		delay_ms(100);
-
-		// create 4 pulses with 126us to set receiver to bind mode
-		for (i = 0; i < 3; i++) 
-		{
-			gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
-			cpu_delay_us(113, cpu_freq); 
-			gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_UP);	
-			cpu_delay_us(118, cpu_freq);
-		}
 	}
-	
-	else if (packet->param3 == 1)
+
+	// Wait 100ms after receiver startup
+	delay_ms(100);
+
+	// create 4 pulses with 126us to set receiver to bind mode
+	for (i = 0; i < 3; i++) 
 	{
-		print_util_dbg_print("\n reset satellite receiver \r\n");
-		spektrum_satellite_init();
+		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+		cpu_delay_us(113, cpu_freq); 
+		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_UP);	
+		cpu_delay_us(118, cpu_freq);
 	}
 }
-
 
 spektrum_satellite_t* spektrum_satellite_get_pointer(void)
 {
