@@ -44,7 +44,6 @@
 #include "mavlink_message_handler.h"
 #include "print_util.h"
 #include "piezo_speaker.h"
-
 #include <stdlib.h>
 #include <stdbool.h>
 
@@ -282,9 +281,10 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 		 //print packet command and parameters for debug
 		 print_util_dbg_print("target sysID:");
 		 print_util_dbg_print_num(cmd.target_system,10);
-		 print_util_dbg_print("target compID:");
+		 print_util_dbg_print(", target compID:");
 		 print_util_dbg_print_num(cmd.target_component,10);
-		 print_util_dbg_print("parameters:");
+		 print_util_dbg_print("\r\n");
+		 print_util_dbg_print("parameters: ");
 		 print_util_dbg_print_num(cmd.param1,10);
 		 print_util_dbg_print_num(cmd.param2,10);
 		 print_util_dbg_print_num(cmd.param3,10);
@@ -292,11 +292,12 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 		 print_util_dbg_print_num(cmd.param5,10);
 		 print_util_dbg_print_num(cmd.param6,10);
 		 print_util_dbg_print_num(cmd.param7,10);
-		 print_util_dbg_print(", command id:");
+		 print_util_dbg_print("\r\n");
+		 print_util_dbg_print("command id:");
 		 print_util_dbg_print_num(cmd.command,10);
 		 print_util_dbg_print(", confirmation:");
 		 print_util_dbg_print_num(cmd.confirmation,10);
-		 print_util_dbg_print("\n");
+		 print_util_dbg_print("\r\n");
 		
 		if (cmd.command >= 0 && cmd.command < MAV_CMD_ENUM_END)
 		{

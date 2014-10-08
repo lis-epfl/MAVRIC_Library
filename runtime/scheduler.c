@@ -71,6 +71,8 @@ void scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config, cons
 
 	scheduler->task_set->task_count = 0;
 	scheduler->task_set->current_schedule_slot = 0;
+	
+	print_util_dbg_print("[SCHEDULER] Init\r\n");
 }
 
 
