@@ -681,7 +681,6 @@ uint32_t last_fix_time;						///< Last fix time
  *
  * \param	gps			The pointer to the GPS structure
  * \param	UID					The uart ID
- * \param	mavlink_stream		The pointer to the MAVLink stream
  */
 void gps_ublox_init(gps_t *gps, int32_t UID);
 
