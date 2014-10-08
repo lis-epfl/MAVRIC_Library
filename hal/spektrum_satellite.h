@@ -51,7 +51,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "buffer.h"
-#include "mavlink_message_handler.h"
 
 
 /**

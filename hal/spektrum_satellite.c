@@ -53,7 +53,6 @@
 #include "print_util.h"
 
 #include "delay.h"
-#include "mavlink_communication.h"
 
 #include "led.h"
 
