@@ -43,16 +43,14 @@
 #ifndef BAROMETER_H_
 #define BAROMETER_H_
 
-#include "mavlink_communication.h"
-
 /**
  * \brief bmp085_state_t can get three different state: Idle, get Temperature or get Pressure
 */
 typedef enum bmp085_state_t
 {
-	IDLE,				///< Idle state
-	GET_TEMP,			///< Getting temperature state
-	GET_PRESSURE		///< Getting pressure state
+	IDLE,								///< Idle state
+	GET_TEMP,							///< Getting temperature state
+	GET_PRESSURE						///< Getting pressure state
 } barometer_state_t;
 
 typedef struct
@@ -67,15 +65,15 @@ typedef struct
 	float 		vario_vz;						///< Vario altitude speed
 	
 	float 		last_altitudes[3];				///< Array to store previous value of the altitude for low pass filtering the output
-	
+
 	uint32_t 	last_update;					///< Time of the last update of the barometer
 	uint32_t 	last_state_update;				///< Time of the last state update
+	
 	barometer_state_t state;					///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
 	float 		dt;								///< Time step for the derivative
 	
 	float alt_consensus_offset;					///< The altitude offset coming from a consensus with other vehicles in order to have them flying all at the same altitude before takeoff
 	
-	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream structure
 } barometer_t;
 
 #endif /* BAROMETER_H_ */

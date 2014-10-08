@@ -43,13 +43,9 @@
 
 #include "servos.h"
 #include "print_util.h"
-#include "time_keeper.h"
 
-void servos_init(servos_t* servos, const servos_conf_t* config, const mavlink_stream_t* mavlink_stream)
+void servos_init(servos_t* servos, const servos_conf_t* config)
 {
-	// Init dependencies
-	servos->mavlink_stream = mavlink_stream;
-
 	// Init servo array
 	if ( config->servos_count <= MAX_SERVO_COUNT )
 	{
@@ -137,25 +133,4 @@ void servos_set_value_failsafe(servos_t* servos)
 	{
 		servos->servo[i].value = servos->servo[i].failsafe;
 	}
-}
-
-task_return_t servos_mavlink_send(servos_t* servos)
-{
-	mavlink_message_t msg;
-	mavlink_msg_servo_output_raw_pack(	servos->mavlink_stream->sysid,
-										servos->mavlink_stream->compid,
-										&msg,
-										time_keeper_get_micros(),
-										0,
-										(uint16_t)( 1500 + 500 * servos->servo[0].value ),
-										(uint16_t)( 1500 + 500 * servos->servo[1].value ),
-										(uint16_t)( 1500 + 500 * servos->servo[2].value ),
-										(uint16_t)( 1500 + 500 * servos->servo[3].value ),
-										(uint16_t)( 1500 + 500 * servos->servo[4].value ),
-										(uint16_t)( 1500 + 500 * servos->servo[5].value ),
-										(uint16_t)( 1500 + 500 * servos->servo[6].value ),
-										(uint16_t)( 1500 + 500 * servos->servo[7].value )	);
-	mavlink_stream_send( servos->mavlink_stream, &msg );
-
-	return TASK_RUN_SUCCESS;
 }

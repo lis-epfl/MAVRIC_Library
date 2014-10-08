@@ -42,10 +42,7 @@
 
 #include "sonar_i2cxl.h"
 #include "twim.h"
-#include "delay.h"
 #include "print_util.h"
-#include "mavlink_communication.h"
-#include "time_keeper.h"
 
 const uint8_t SONAR_I2CXL_DEFAULT_ADDRESS			= 0x70;		///< Address of the device
 const uint8_t SONAR_I2CXL_RANGE_COMMAND				= 0x51;		///< Address of the Range Command Register
@@ -97,11 +94,8 @@ void sonar_i2cxl_get_last_measure(sonar_i2cxl_t* sonar_i2cxl)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void sonar_i2cxl_init(sonar_i2cxl_t* sonar_i2cxl, const mavlink_stream_t* mavlink_stream)
+void sonar_i2cxl_init(sonar_i2cxl_t* sonar_i2cxl)
 {
-	// Init dependencies
-	sonar_i2cxl->mavlink_stream = mavlink_stream;
-
 	///< Init data_struct
 	sonar_i2cxl->i2c_address = SONAR_I2CXL_DEFAULT_ADDRESS;
 	sonar_i2cxl->distance_cm = 0;
@@ -125,25 +119,4 @@ void sonar_i2cxl_update(sonar_i2cxl_t* sonar_i2cxl)
 {
 	sonar_i2cxl_get_last_measure(sonar_i2cxl);
 	sonar_i2cxl_send_range_command(sonar_i2cxl);
-}
-
-
-task_return_t sonar_i2cxl_send_telemetry(sonar_i2cxl_t* sonar_i2cxl)
-{
-	mavlink_message_t msg;
-
-	mavlink_msg_distance_sensor_pack(	sonar_i2cxl->mavlink_stream->sysid,
-										sonar_i2cxl->mavlink_stream->compid,
-										&msg,
-						       			time_keeper_get_millis(), 
-						       			20,								// min 20cm 
-						       			760,							// max 7.6m 
-						       			sonar_i2cxl->distance_m * 100, 
-						       			MAV_DISTANCE_SENSOR_ULTRASOUND, 
-						       			0, 								// id 0
-						       			0, 								// orientation 0
-						       			1);								// covariance (!=0)
-
-	mavlink_stream_send(sonar_i2cxl->mavlink_stream, &msg);
-	return TASK_RUN_SUCCESS;
 }

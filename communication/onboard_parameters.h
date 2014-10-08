@@ -127,8 +127,8 @@ typedef struct
 * 
 * \param   	onboard_parameters		Pointer to module structure
 * \param 	config 					Configuration
-* \param 	scheduler 				Pointer to mavlink scheduler
-* \param 	message_handler 		Pointer to mavlink message handler
+* \param 	scheduler 				Pointer to MAVLink scheduler
+* \param 	message_handler 		Pointer to MAVLink message handler
 */
 void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream);
 
@@ -163,10 +163,10 @@ void onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parame
 void onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parameters, float* val, const char* param_name);
 
 /**
- * \brief	Read/Write from/to flash depending on the parameters of the mavlink command message
+ * \brief	Read/Write from/to flash depending on the parameters of the MAVLink command message
  *
  * \param   onboard_parameters		Pointer to module structure
- * \param   msg 					Incoming mavlink message
+ * \param   msg 					Incoming MAVLink message
  */
 void onboard_parameters_preflight_storage(onboard_parameters_t* onboard_parameters, mavlink_command_long_t* msg);
 

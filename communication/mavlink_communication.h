@@ -55,14 +55,45 @@ extern "C" {
 
 
 /**
- * \brief 	Main Mavlink Communication structure
+ * \brief 		Pointer a module's data structure
+ * 
+ * \details 	This is used as an alias to any data structure in the prototype of callback functions 
+ */
+typedef void* handling_telemetry_module_struct_t;
+
+
+/**
+ * \brief  		Prototype of callback functions for MAVLink messages
+ */
+typedef void (*mavlink_send_msg_function_t) (handling_telemetry_module_struct_t, mavlink_stream_t*, mavlink_message_t*);
+
+
+typedef struct  
+{
+	mavlink_stream_t* mavlink_stream;								///<	Pointer to the MAVLink stream structure
+	mavlink_send_msg_function_t function;							///<	Pointer to the function to be executed
+	handling_telemetry_module_struct_t 		module_struct;			///<	Pointer to module data structure to be given as argument to the function
+}mavlink_send_msg_handler_t;
+
+typedef struct  
+{
+	uint32_t msg_sending_count;										///<	Number of message callback currently registered
+	uint32_t max_msg_sending_count;									///<	Maximum number of callback that can be registered
+	mavlink_send_msg_handler_t msg_send_list[];						///<	List of message callbacks
+}mavlink_send_msg_handler_set_t;
+
+/**
+ * \brief 	Main MAVLink Communication structure
  */
 typedef struct 
 {
-	scheduler_t 					scheduler;					///<	Task set for scheduling of down messages
-	mavlink_stream_t 				mavlink_stream;				///< 	Mavlink interface using streams
-	mavlink_message_handler_t 		message_handler;			///< 	Message handler
-	onboard_parameters_t 			onboard_parameters;			///< 	Onboard parameters
+	scheduler_t 					scheduler;						///<	Task set for scheduling of down messages
+	mavlink_stream_t 				mavlink_stream;					///< 	Mavlink interface using streams
+	mavlink_message_handler_t 		message_handler;				///< 	Message handler
+	onboard_parameters_t 			onboard_parameters;				///< 	Onboard parameters
+	
+	mavlink_send_msg_handler_set_t*	send_msg_handler_set;			///<	Pointer to the sending message handler set
+
 } mavlink_communication_t;
 
 
@@ -72,36 +103,64 @@ typedef struct
 typedef struct
 {
 	scheduler_conf_t				scheduler_config;
-	mavlink_stream_conf_t 			mavlink_stream_config;		///< 	Configuration for the module mavlink stream
-	mavlink_message_handler_conf_t	message_handler_config;		///< 	Configuration for the module message handler
-	onboard_parameters_conf_t		onboard_parameters_config;	///< 	Configuration for the module onboard parameters
+	mavlink_stream_conf_t 			mavlink_stream_config;			///< 	Configuration for the module MAVLink stream
+	mavlink_message_handler_conf_t	message_handler_config;			///< 	Configuration for the module message handler
+	onboard_parameters_conf_t		onboard_parameters_config;		///< 	Configuration for the module onboard parameters
+	
+	uint32_t						max_msg_sending_count;			///<	Configuration for the sending message handler
 } mavlink_communication_conf_t;
 
 
+
 /**
- * \brief 	Initialisation of the module mavlink communication
+ * \brief 	Initialisation of the module MAVLink communication
  * 
- * \param 	mavlink_communication 	Pointer to the mavlink communication structure
+ * \param 	mavlink_communication 	Pointer to the MAVLink communication structure
  * \param 	config 					Configuration
  */
 void mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config);
 
 
 /**
- * \brief		Run task scheduler update if the buffer is empty 
+ * \brief	Run task scheduler update if the buffer is empty 
  *
- * \return		Task status return
+ * \param 	mavlink_communication 	Pointer to the MAVLink communication structure
+ *
+ * \return	Task status return
  */
 task_return_t mavlink_communication_update(mavlink_communication_t* mavlink_communication);
 
 
 /**
- * \brief			Suspending sending of messages
+ * \brief	Suspending sending of messages
  *
- * \param 	delay	Delay of suspension in microsecond
+ * \param 	mavlink_communication 	Pointer to the MAVLink communication structure
+ * \param 	delay					Delay of suspension in microsecond
  */
 void mavlink_communication_suspend_downstream(mavlink_communication_t* mavlink_communication, uint32_t delay);
 
+/**
+ * \brief	Adding new message to the MAVLink scheduler
+ *
+ * \param 	mavlink_communication 	Pointer to the MAVLink communication structure
+ * \param 	repeat_period			Repeat period (us)
+ * \param	run_mode				Run mode
+ * \param	timing_mode				Timing mode
+ * \param	priority				Priority
+ * \param	function 				Function pointer to be called
+ * \param	module_structure		Argument to be passed to the function
+ * \param	task_id			    	Unique task identifier
+ */
+void mavlink_communication_add_msg_send(	mavlink_communication_t* mavlink_communication, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id);
+
+/**
+ * \brief	Suspending sending of messages
+ *
+ * \param 	msg_send 	The MAVLink message sending handler
+ *
+ * \return	The result of execution of the task
+ */
+task_return_t mavlink_communication_send_message(mavlink_send_msg_handler_t* msg_send);
 
 #ifdef __cplusplus
 }
