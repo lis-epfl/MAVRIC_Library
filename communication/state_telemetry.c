@@ -53,19 +53,19 @@
  * \brief						Set the state and the mode of the vehicle
  *
  * \param	state				The pointer to the state structure
- * \param	rec					The received MAVLink message structure
+ * \param	msg					The received MAVLink message structure
  */
-static void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_received_t* rec);
+static void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_message_t* msg);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_received_t* rec)
+void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_message_t* msg)
 {
 	mavlink_set_mode_t packet;
 	
-	mavlink_msg_set_mode_decode(&rec->msg,&packet);
+	mavlink_msg_set_mode_decode(msg,&packet);
 	
 	// Check if this message is for this system and subsystem
 	// No component ID in mavlink_set_mode_t so no control
@@ -133,7 +133,6 @@ void state_telemetry_send_heartbeat(const state_t* state, const mavlink_stream_t
 								state->mav_mode_custom,
 								state->mav_state);
 }
-
 
 void state_telemetry_send_status(const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
