@@ -120,7 +120,7 @@ void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* m
 										remote->signal_quality	);
 }
 
-void remote_telemetry_send_scaled_new(const remote_t* remote, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void remote_telemetry_send_scaled(const remote_t* remote, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
 	mavlink_msg_rc_channels_scaled_pack(	mavlink_stream->sysid,
 											mavlink_stream->compid,
