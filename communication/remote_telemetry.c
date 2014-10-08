@@ -44,6 +44,50 @@
 #include "time_keeper.h"
 #include "spektrum.h"
 
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+/**
+ * \brief Set slave receiver into bind mode. 
+ * \details has to be called 100ms after power-up
+ * 
+ * \param	satellite				The pointer to the satellite structure
+ * \param	packet					The pointer to the MAVLink command long structure
+ * 
+ * \return	The MAV_RESULT of the command
+ */
+static mav_result_t remote_telemetry_satellite_bind(spektrum_satellite_t *satellite, mavlink_command_long_t* packet);
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+static mav_result_t remote_telemetry_satellite_bind(spektrum_satellite_t *satellite, mavlink_command_long_t* packet) 
+{
+	mav_result_t result = MAV_RESULT_DENIED;
+	
+	if (packet->param2 == 1)
+	{
+		spektrum_satellite_bind();
+		
+		result = MAV_RESULT_ACCEPTED;
+	}
+	
+	else if (packet->param3 == 1)
+	{
+		spektrum_satellite_init();
+		
+		result = MAV_RESULT_ACCEPTED;
+	}
+	
+	return result;
+}
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
 void remote_telemetry_init(remote_t* remote, mavlink_message_handler_t *mavlink_handler)
 {	
 	mavlink_message_handler_cmd_callback_t callbackcmd;
@@ -52,7 +96,7 @@ void remote_telemetry_init(remote_t* remote, mavlink_message_handler_t *mavlink_
 	callbackcmd.sysid_filter  = MAV_SYS_ID_ALL;
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_ALL;
-	callbackcmd.function      = (mavlink_cmd_callback_function_t)	&spektrum_satellite_bind;
+	callbackcmd.function      = (mavlink_cmd_callback_function_t)	&remote_telemetry_satellite_bind;
 	callbackcmd.module_struct =										remote->sat;
 	mavlink_message_handler_add_cmd_callback(mavlink_handler, &callbackcmd);
 }
@@ -76,7 +120,7 @@ void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* m
 										remote->signal_quality	);
 }
 
-void remote_telemetry_send_scaled_new(const remote_t* remote, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void remote_telemetry_send_scaled(const remote_t* remote, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
 	mavlink_msg_rc_channels_scaled_pack(	mavlink_stream->sysid,
 											mavlink_stream->compid,

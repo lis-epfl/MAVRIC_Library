@@ -562,6 +562,8 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	}
 	data_logging->logging_time = time_keeper_get_millis();
 	
+
+	
 	print_util_dbg_print("[Data logging] Data logging initialised.\r\n");
 }
 

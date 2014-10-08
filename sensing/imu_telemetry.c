@@ -44,8 +44,6 @@
 #include "time_keeper.h"
 #include "print_util.h"
 
-const mavlink_stream_t* mavlink_stream;	///< The pointer to the MAVLink stream
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
@@ -56,16 +54,18 @@ const mavlink_stream_t* mavlink_stream;	///< The pointer to the MAVLink stream
  * \param	imu						The pointer to the IMU structure
  * \param	sysid					The sysid of the system
  * \param	packet					The pointer to the MAVLink command long structure
+ * 
+ * \return	The MAV_RESULT of the command
  */
-static void imu_telemetry_start_calibration(imu_t* imu, mavlink_command_long_t* packet);
+static mav_result_t imu_telemetry_start_calibration(imu_t* imu, mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void imu_telemetry_start_calibration(imu_t* imu, mavlink_command_long_t* packet)
+static mav_result_t imu_telemetry_start_calibration(imu_t* imu, mavlink_command_long_t* packet)
 {
-	MAV_RESULT result;
+	mav_result_t result;
 	int16_t i;
 
 	print_util_dbg_print("Calibration cmd received");
@@ -181,15 +181,7 @@ static void imu_telemetry_start_calibration(imu_t* imu, mavlink_command_long_t* 
 		result = MAV_RESULT_TEMPORARILY_REJECTED;
 	}
 	
-	mavlink_message_t msg;
-	mavlink_msg_command_ack_pack( 	mavlink_stream->sysid,
-									mavlink_stream->compid,
-									&msg,
-									MAV_CMD_PREFLIGHT_CALIBRATION,
-									result);
-	
-	mavlink_stream_send(mavlink_stream, &msg);
-	
+	return result;
 }
 
 //------------------------------------------------------------------------------
@@ -200,8 +192,6 @@ void imu_telemetry_init(imu_t* imu, mavlink_message_handler_t* message_handler)
 {
 	// Add callbacks for waypoint handler commands requests
 	mavlink_message_handler_cmd_callback_t callbackcmd;
-	
-	mavlink_stream = message_handler->mavlink_stream;
 	
 	callbackcmd.command_id = MAV_CMD_PREFLIGHT_CALIBRATION; // 241
 	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;

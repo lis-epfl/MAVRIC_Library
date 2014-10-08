@@ -23,7 +23,6 @@
 	extern "C" {
 #endif
 
-#include "mavlink_communication.h"
 #include "stabilisation.h"
 #include "state.h"
 

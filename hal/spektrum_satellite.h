@@ -51,7 +51,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "buffer.h"
-#include "mavlink_message_handler.h"
 
 
 /**
@@ -67,20 +66,21 @@ typedef struct
 	bool			new_data_available; ///< Indicates if new data is  available
 } spektrum_satellite_t;
 
-
-/**
- * \brief set slave receiver into bind mode. 
- * has to be called 100ms after power-up
- */
-void spektrum_satellite_bind(spektrum_satellite_t *satellite, mavlink_command_long_t* packet);
-
-
 /**
  * \brief Initialize UART receiver for Spektrum/DSM2 slave receivers
  */
 void spektrum_satellite_init(void);
 
+/**
+ * \brief Sets the satellite in bind mode
+ */
+void spektrum_satellite_bind(void);
 
+/**
+ * \brief	Return a pointer to the satellite structure
+ *
+ * \return The pointer to the satellite structure
+ */
 spektrum_satellite_t* spektrum_satellite_get_pointer(void);
 
 

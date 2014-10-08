@@ -30,49 +30,69 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file joystick_parsing_telemetry.h
+ * \file data_logging_telemetry.c
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *   
  * \brief This module takes care of sending periodic telemetric messages for
- * the joystick controller
+ * the data_logging module
  *
  ******************************************************************************/
 
-#ifndef JOYSTICK_PARSING_TELEMETRY_H_
-#define JOYSTICK_PARSING_TELEMETRY_H_
+#include "data_logging_telemetry.h"
+#include "time_keeper.h"
+#include "print_util.h"
 
-#include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
-#include "joystick_parsing.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-/** 
- * \brief	Initialisation of the joystick parsing telemetry module
+/**
+ * \brief	Toggle the data_logging
  *
- * \param	joystick_parsing		The pointer to the joystick parsing structure
- * \param	message_handler		The pointer to the MAVLink communication structure
+ * \param	data_logging			The pointer to the data logging structure
+ * \param	packet					The pointer to the decoded MAVLink message long
+ * 
+ * \return	The MAV_RESULT of the command
  */
-void joystick_parsing_telemetry_init(joystick_parsing_t* joystick_parsing, mavlink_message_handler_t* message_handler);
+static mav_result_t data_logging_telemetry_toggle_logging(data_logging_t* data_logging, mavlink_command_long_t* packet);
 
-/** 
- * \brief	Parse received MAVLink message in structure
- *
- * \param	joystick_parsing		The pointer to the joystick parsing structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-void joystick_parsing_telemetry_send_manual_ctrl_msg(const joystick_parsing_t* joystick_parsing, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
-
-
-#ifdef __cplusplus
+static mav_result_t data_logging_telemetry_toggle_logging(data_logging_t* data_logging, mavlink_command_long_t* packet)
+{
+	mav_result_t result;
+	
+	if(packet->param1 == 1)
+	{
+		print_util_dbg_print("Start logging from command message\r\n");
+	}
+	else
+	{
+		print_util_dbg_print("Stop logging from command message\r\n");
+	}
+	
+	result = MAV_RESULT_ACCEPTED;
+	
+	data_logging->log_data = packet->param1;
+	
+	return result;
 }
-#endif
 
-#endif /* JOYSTICK_PARSING_TELEMETRY_H_ */
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_handler_t* message_handler)
+{
+	// Add callbacks for data_logging commands requests
+	mavlink_message_handler_cmd_callback_t callbackcmd;
+	
+	callbackcmd.command_id = MAV_CMD_DO_SET_PARAMETER; // 180
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&data_logging_telemetry_toggle_logging;
+	callbackcmd.module_struct =									data_logging;
+	mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+	
+}

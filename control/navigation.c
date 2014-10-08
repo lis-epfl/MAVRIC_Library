@@ -90,16 +90,20 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
  *
  * \param	navigation			The pointer to the navigation structure
  * \param	packet				The pointer to the structure of the MAVLink command message long
+ * 
+ * \return	The MAV_RESULT of the command
  */
-static void navigation_set_auto_takeoff(navigation_t *navigation, mavlink_command_long_t* packet);
+static mav_result_t navigation_set_auto_takeoff(navigation_t *navigation, mavlink_command_long_t* packet);
 
 /**
  * \brief	Drives the auto landing procedure from the MAV_CMD_NAV_LAND message long
  *
  * \param	navigation			The pointer to the navigation structure
- * \param	packet					The pointer to the structure of the mavlink command message long
+ * \param	packet					The pointer to the structure of the MAVLink command message long
+ * 
+ * \return	The MAV_RESULT of the command
  */
-static void navigation_set_auto_landing(navigation_t* navigation, mavlink_command_long_t* packet);
+static mav_result_t navigation_set_auto_landing(navigation_t* navigation, mavlink_command_long_t* packet);
 
 /**
  * \brief	Check if the nav mode is equal to the state mav mode
@@ -286,11 +290,9 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 	navigation->controls_nav->theading=waypoint_input.heading;
 }
 
-static void navigation_set_auto_takeoff(navigation_t *navigation, mavlink_command_long_t* packet)
-{
-	mavlink_message_t msg;
-	
-	MAV_RESULT result;
+static mav_result_t navigation_set_auto_takeoff(navigation_t *navigation, mavlink_command_long_t* packet)
+{	
+	mav_result_t result;
 	
 	if (!navigation->state->in_the_air)
 	{
@@ -304,20 +306,12 @@ static void navigation_set_auto_takeoff(navigation_t *navigation, mavlink_comman
 		result = MAV_RESULT_DENIED;
 	}
 	
-	mavlink_msg_command_ack_pack( 	navigation->mavlink_stream->sysid,
-									navigation->mavlink_stream->compid,
-									&msg,
-									MAV_CMD_NAV_TAKEOFF,
-									result);
-	
-	mavlink_stream_send(navigation->mavlink_stream, &msg);
+	return result;
 }
 
-static void navigation_set_auto_landing(navigation_t* navigation, mavlink_command_long_t* packet)
+static mav_result_t navigation_set_auto_landing(navigation_t* navigation, mavlink_command_long_t* packet)
 {
-	mavlink_message_t msg;
-	
-	MAV_RESULT result;
+	mav_result_t result;
 
 	if (navigation->state->in_the_air)
 	{
@@ -332,12 +326,7 @@ static void navigation_set_auto_landing(navigation_t* navigation, mavlink_comman
 		result = MAV_RESULT_DENIED;
 	}
 
-	mavlink_msg_command_ack_pack( 	navigation->mavlink_stream->sysid,
-									navigation->mavlink_stream->compid,
-									&msg,
-									MAV_CMD_NAV_LAND,
-									result);
-	mavlink_stream_send(navigation->mavlink_stream, &msg);
+	return result;
 }
 
 static bool navigation_mode_change(navigation_t* navigation)

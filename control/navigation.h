@@ -78,7 +78,7 @@ typedef struct
 	float alt_lpf;										///< The low-pass filtered altitude for auto-landing
 	float LPF_gain;										///< The value of the low-pass filter gain
 	
-	uint8_t loop_count;									///< A counter for sending mavlink messages at a lower rate than the function
+	uint8_t loop_count;									///< A counter for sending MAVLink messages at a lower rate than the function
 	
 	mav_mode_t mode;									///< The mode of the MAV to have a memory of its evolution
 	
@@ -129,7 +129,7 @@ typedef struct
  * \param	state					The pointer to the state structure 
  * \param	control_joystick		The pointer to the joystick structure
  * \param	remote					The pointer to the remote structure
- * \param	mavlink_communication	The pointer to the mavlink communication structure
+ * \param	mavlink_communication	The pointer to the MAVLink communication structure
  */
 void navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, remote_t* remote, mavlink_communication_t* mavlink_communication);
 

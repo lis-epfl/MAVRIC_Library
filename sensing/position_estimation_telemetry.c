@@ -55,14 +55,16 @@
  * \param	pos_est					The pointer to the position estimation structure
  * \param	packet					The pointer to the decoded MAVLink command long message
  */
-static void position_estimation_set_new_home_position(position_estimator_t *pos_est, mavlink_command_long_t* packet);
+static mav_result_t position_estimation_set_new_home_position(position_estimator_t *pos_est, mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void position_estimation_set_new_home_position(position_estimator_t *pos_est, mavlink_command_long_t* packet)
+static mav_result_t position_estimation_set_new_home_position(position_estimator_t *pos_est, mavlink_command_long_t* packet)
 {
+	mav_result_t result;
+	
 	if (packet->param1 == 1)
 	{
 		// Set new home position to actual position
@@ -96,6 +98,10 @@ static void position_estimation_set_new_home_position(position_estimator_t *pos_
 	}
 
 	*pos_est->nav_plan_active = false;
+	
+	result = MAV_RESULT_ACCEPTED;
+	
+	return result;
 }
 
 //------------------------------------------------------------------------------

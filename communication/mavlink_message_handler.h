@@ -62,6 +62,11 @@ extern "C" {
  */
 typedef void* handling_module_struct_t;
 
+/**
+ * \brief		Enumeration of command MAV result
+ * \details 	The enumeration MAV_RESULT is defined by MAVLink
+ */
+typedef enum MAV_RESULT mav_result_t;
 
 /**
  * \brief  		Prototype of callback functions for MAVLink messages
@@ -72,7 +77,7 @@ typedef void (*mavlink_msg_callback_function_t) (handling_module_struct_t, uint3
 /**
  * \brief  		Prototype of callback functions for MAVLink commands
  */
-typedef void (*mavlink_cmd_callback_function_t) (handling_module_struct_t, mavlink_command_long_t*);
+typedef mav_result_t (*mavlink_cmd_callback_function_t) (handling_module_struct_t, mavlink_command_long_t*);
 
 
 /**

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file hud.h
+ * \file hud_telemetry.h
  * 
  * \author MAV'RIC Team
  * \author Gregoire Heitz
@@ -40,8 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef HUD_H__
-#define HUD_H__
+#ifndef HUD_TELEMETRY_H__
+#define HUD_TELEMETRY_H__
 
 #ifdef __cplusplus
 extern "C" {
@@ -60,30 +60,30 @@ typedef struct
 	const position_estimator_t* pos_est;						///< The pointer to the position estimator structure
 	const control_command_t* controls;							///< The pointer to the control structure
 	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
-	const mavlink_stream_t* mavlink_stream;						///< The pointer to the MAVLink stream structure
-}hud_structure_t;
+	const mavlink_stream_t* mavlink_stream;					///< The pointer to the MAVLink stream structure
+}hud_telemetry_structure_t;
 
 /**
  * \brief	Initialise the HUD structure
  * 
- * \param	hud_structure		The pointer to the HUD structure
- * \param	pos_est				The pointer to the position estimation structure
- * \param	controls			The pointer to the controls structure
- * \param	ahrs				The pointer to the attitude estimation structure
+ * \param	hud_telemetry_structure		The pointer to the HUD structure
+ * \param	pos_est						The pointer to the position estimation structure
+ * \param	controls						The pointer to the controls structure
+ * \param	ahrs							The pointer to the attitude estimation structure
  */
-void hud_init(hud_structure_t *hud_structure, const position_estimator_t *pos_est, const control_command_t *controls, const ahrs_t *ahrs);
+void hud_telemetry_init(hud_telemetry_structure_t *hud_telemetry_structure, const position_estimator_t *pos_est, const control_command_t *controls, const ahrs_t *ahrs);
 
 /**
  * \brief	Function to send the MAVLink HUD message
  * 
- * \param	hud_structure		The pointer to the HUD structure
- * \param	mavlink_stream		The pointer to the MAVLink stream structure
- * \param	msg					The pointer to the MAVLink message
+ * \param	hud_telemetry_structure		The pointer to the HUD structure
+ * \param	mavlink_stream				The pointer to the MAVLink stream structure
+ * \param	msg								The pointer to the MAVLink message
  */
-void hud_send_message(const hud_structure_t* hud_structure, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void hud_telemetry_send_message(const hud_telemetry_structure_t* hud_telemetry_structure, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //HUD_H__
+#endif //HUD_TELEMETRY_H__

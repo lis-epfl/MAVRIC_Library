@@ -134,8 +134,8 @@ typedef struct
  * \brief	Initialise the data logging module
  *
  * \param	data_logging			The pointer to the data logging structure
- * \param	imu						The pointer to the imu structure
- * \param	gps						The pointer to the gps structure
+ * \param	config					The pointer to the configuration structure
+ * \param	mavlink_communication	The pointer to the communication structure
  */
 void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config);
 
