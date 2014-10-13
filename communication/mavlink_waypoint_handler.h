@@ -162,7 +162,7 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
  *
  * \return	The waypoint in local coordinate frame
  */
-local_coordinates_t waypoint_handler_set_waypoint_from_frame(mavlink_waypoint_handler_t* waypoint_handler, global_position_t origin);
+local_coordinates_t waypoint_handler_set_waypoint_from_frame(waypoint_struct* current_waypoint, global_position_t origin);
 
 #ifdef __cplusplus
 }

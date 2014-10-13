@@ -247,7 +247,7 @@ static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* way
 	waypoint.z = waypoint_global.altitude;
 	
 	waypoint.autocontinue = packet->param5;
-	waypoint.current = 0;
+	waypoint.current = (packet->param5 == 1);
 	waypoint.frame = MAV_FRAME_GLOBAL;
 	waypoint.waypoint_id = MAV_CMD_NAV_WAYPOINT;
 	
@@ -290,7 +290,21 @@ static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* way
 	
 	waypoint_handler->waypoint_list[1] = waypoint;
 	
-	waypoint_handler->state->nav_plan_active = false;
+	if (packet->param5 == 1)
+	{
+		waypoint_handler->state->nav_plan_active = true;
+		print_util_dbg_print("Auto-continue, nav plan active");
+	}
+	else
+	{
+		waypoint_handler->state->nav_plan_active = false;
+		print_util_dbg_print("nav plan inactive");
+		if (waypoint_handler->state->in_the_air)
+		{
+			print_util_dbg_print("Resetting hold waypoint");
+			waypoint_handler->hold_waypoint_set = false;
+		}
+	}
 }
 
 static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
@@ -340,7 +354,14 @@ static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handle
 		waypoint.z = waypoint_global.altitude;
 	
 		waypoint.autocontinue = packet->param5;
-		waypoint.current = 0;
+		if(i==0)
+		{	
+			waypoint.current = (packet->param5 == 1);
+		}
+		else
+		{
+			waypoint.current = 0;
+		}
 		waypoint.frame = MAV_FRAME_GLOBAL;
 		waypoint.waypoint_id = MAV_CMD_NAV_WAYPOINT;
 	
@@ -352,7 +373,21 @@ static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handle
 		waypoint_handler->waypoint_list[i] = waypoint;
 	}
 	
-	waypoint_handler->state->nav_plan_active = false;
+	if (packet->param5 == 1)
+	{
+		waypoint_handler->state->nav_plan_active = true;
+		print_util_dbg_print("Auto-continue, nav plan active");
+	}
+	else
+	{
+		waypoint_handler->state->nav_plan_active = false;
+		print_util_dbg_print("nav plan inactive");
+		if (waypoint_handler->state->in_the_air)
+		{
+			print_util_dbg_print("Resetting hold waypoint");
+			waypoint_handler->hold_waypoint_set = false;
+		}
+	}
 }
 
 static void waypoint_handler_set_stream_scenario(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
@@ -402,7 +437,7 @@ static void waypoint_handler_set_stream_scenario(mavlink_waypoint_handler_t* way
 	waypoint.z = waypoint_global.altitude;
 	
 	waypoint.autocontinue = packet->param5;
-	waypoint.current = 0;
+	waypoint.current = (packet->param5 == 1);
 	waypoint.frame = MAV_FRAME_GLOBAL;
 	waypoint.waypoint_id = MAV_CMD_NAV_WAYPOINT;
 	
@@ -453,7 +488,21 @@ static void waypoint_handler_set_stream_scenario(mavlink_waypoint_handler_t* way
 	
 	waypoint_handler->waypoint_list[1] = waypoint;
 	
-	waypoint_handler->state->nav_plan_active = false;
+	if (packet->param5 == 1)
+	{
+		waypoint_handler->state->nav_plan_active = true;
+		print_util_dbg_print("Auto-continue, nav plan active");
+	}
+	else
+	{
+		waypoint_handler->state->nav_plan_active = false;
+		print_util_dbg_print("nav plan inactive");
+		if (waypoint_handler->state->in_the_air)
+		{
+			print_util_dbg_print("Resetting hold waypoint");
+			waypoint_handler->hold_waypoint_set = false;
+		}
+	}
 }
 
 
@@ -959,7 +1008,7 @@ static mav_result_t waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_
 		print_util_dbg_print("\r\n");
 		waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count].current = 1;
 		waypoint_handler->current_waypoint = waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count];
-		waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(waypoint_handler, waypoint_handler->position_estimator->local_position.origin);
+		waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(&waypoint_handler->current_waypoint, waypoint_handler->position_estimator->local_position.origin);
 		
 		mavlink_message_t msg;
 		mavlink_msg_mission_current_pack( 	waypoint_handler->mavlink_stream->sysid,
@@ -1223,7 +1272,7 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 			{
 				waypoint_handler->current_waypoint_count = i;
 				waypoint_handler->current_waypoint = waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count];
-				waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(waypoint_handler, waypoint_handler->position_estimator->local_position.origin);
+				waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(&waypoint_handler->current_waypoint, waypoint_handler->position_estimator->local_position.origin);
 				
 				print_util_dbg_print("Waypoint Nr");
 				print_util_dbg_print_num(i,10);
@@ -1268,7 +1317,7 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
 	return TASK_RUN_SUCCESS;
 }
 
-local_coordinates_t waypoint_handler_set_waypoint_from_frame(mavlink_waypoint_handler_t* waypoint_handler, global_position_t origin)
+local_coordinates_t waypoint_handler_set_waypoint_from_frame(waypoint_struct* current_waypoint, global_position_t origin)
 {
 	uint8_t i;
 	
@@ -1280,18 +1329,18 @@ local_coordinates_t waypoint_handler_set_waypoint_from_frame(mavlink_waypoint_ha
 		waypoint_coor.pos[i] = 0.0f;
 	}
 	waypoint_coor.origin = origin;
-	waypoint_coor.heading = deg_to_rad(waypoint_handler->current_waypoint.param4);
+	waypoint_coor.heading = deg_to_rad(current_waypoint->param4);
 	waypoint_coor.timestamp_ms = time_keeper_get_millis();
 
-	switch(waypoint_handler->current_waypoint.frame)
+	switch(current_waypoint->frame)
 	{
 		case MAV_FRAME_GLOBAL:
-		waypoint_global.latitude = waypoint_handler->current_waypoint.x;
-		waypoint_global.longitude = waypoint_handler->current_waypoint.y;
-		waypoint_global.altitude = waypoint_handler->current_waypoint.z;
+		waypoint_global.latitude = current_waypoint->x;
+		waypoint_global.longitude = current_waypoint->y;
+		waypoint_global.altitude = current_waypoint->z;
 		waypoint_coor = coord_conventions_global_to_local_position(waypoint_global,origin);
 		
-		waypoint_coor.heading = deg_to_rad(waypoint_handler->current_waypoint.param4);
+		waypoint_coor.heading = deg_to_rad(current_waypoint->param4);
 		
 		print_util_dbg_print("waypoint_global: lat (x1e7):");
 		print_util_dbg_print_num(waypoint_global.latitude*10000000,10);
@@ -1315,10 +1364,10 @@ local_coordinates_t waypoint_handler_set_waypoint_from_frame(mavlink_waypoint_ha
 		break;
 		
 		case MAV_FRAME_LOCAL_NED:
-		waypoint_coor.pos[X] = waypoint_handler->current_waypoint.x;
-		waypoint_coor.pos[Y] = waypoint_handler->current_waypoint.y;
-		waypoint_coor.pos[Z] = waypoint_handler->current_waypoint.z;
-		waypoint_coor.heading= deg_to_rad(waypoint_handler->current_waypoint.param4);
+		waypoint_coor.pos[X] = current_waypoint->x;
+		waypoint_coor.pos[Y] = current_waypoint->y;
+		waypoint_coor.pos[Z] = current_waypoint->z;
+		waypoint_coor.heading= deg_to_rad(current_waypoint->param4);
 		waypoint_coor.origin = coord_conventions_local_to_global_position(waypoint_coor);
 		break;
 		
@@ -1327,15 +1376,15 @@ local_coordinates_t waypoint_handler_set_waypoint_from_frame(mavlink_waypoint_ha
 		//mavlink_msg_mission_ack_send(MAVLINK_COMM_0,rec->msg.sysid,rec->msg.compid,MAV_CMD_ACK_ERR_NOT_SUPPORTED);
 		break;
 		case MAV_FRAME_GLOBAL_RELATIVE_ALT:
-		waypoint_global.latitude = waypoint_handler->current_waypoint.x;
-		waypoint_global.longitude = waypoint_handler->current_waypoint.y;
-		waypoint_global.altitude = waypoint_handler->current_waypoint.z;
+		waypoint_global.latitude = current_waypoint->x;
+		waypoint_global.longitude = current_waypoint->y;
+		waypoint_global.altitude = current_waypoint->z;
 		
 		global_position_t origin_relative_alt = origin;
 		origin_relative_alt.altitude = 0.0f;
 		waypoint_coor = coord_conventions_global_to_local_position(waypoint_global,origin_relative_alt);
 		
-		waypoint_coor.heading = deg_to_rad(waypoint_handler->current_waypoint.param4);
+		waypoint_coor.heading = deg_to_rad(current_waypoint->param4);
 		
 		print_util_dbg_print("LocalOrigin: lat (x1e7):");
 		print_util_dbg_print_num(origin_relative_alt.latitude * 10000000,10);
