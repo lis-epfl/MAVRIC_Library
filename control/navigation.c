@@ -149,6 +149,16 @@ static void navigation_critical_handler(navigation_t* navigation);
  */
 static void navigation_auto_landing_handler(navigation_t* navigation);
 
+/**
+ * \brief	Start/Stop the navigation
+ *
+ * \param	navigation			The pointer to the navigation structure
+ * \param	packet					The pointer to the structure of the MAVLink command message long
+ * 
+ * \return	The MAV_RESULT of the command
+ */
+static mav_result_t navigation_start_stop_navigation(navigation_t* navigation, mavlink_command_long_t* packet);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -228,7 +238,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimator->local_position.heading);
 	}
 	
-	if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
+	if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
 	{
 		navigation->wpt_nav_controller.clip_max = navigation->cruise_speed;
 		v_desired = pid_control_update_dt(&navigation->wpt_nav_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
@@ -443,7 +453,7 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 				print_util_dbg_print("\r\n");
 				navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count].current = 1;
 				navigation->waypoint_handler->current_waypoint = navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count];
-				navigation->waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(navigation->waypoint_handler, navigation->waypoint_handler->position_estimator->local_position.origin);
+				navigation->waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(&navigation->waypoint_handler->current_waypoint, navigation->waypoint_handler->position_estimator->local_position.origin);
 				
 				mavlink_message_t msg;
 				mavlink_msg_mission_current_pack( 	navigation->mavlink_stream->sysid,
@@ -643,6 +653,46 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 	}
 }
 
+static mav_result_t navigation_start_stop_navigation(navigation_t* navigation, mavlink_command_long_t* packet)
+{
+	mav_result_t result = MAV_RESULT_UNSUPPORTED;
+	
+	if (packet->param1 == MAV_GOTO_DO_HOLD)
+	{
+		if (packet->param2 == MAV_GOTO_HOLD_AT_CURRENT_POSITION)
+		{
+			navigation->stop_nav = true;
+			navigation_waypoint_hold_init(navigation->waypoint_handler, navigation->position_estimator->local_position);
+			
+			result = MAV_RESULT_ACCEPTED;
+		}
+		else if (packet->param2 == MAV_GOTO_HOLD_AT_SPECIFIED_POSITION)
+		{
+			//navigation->waypoint_handler->hold_waypoint_set = false;
+			waypoint_struct waypoint;
+			
+			waypoint.frame = packet->param3;
+			waypoint.param4 = packet->param4;
+			waypoint.x = packet->param5;
+			waypoint.y = packet->param6;
+			waypoint.z = packet->param7;
+			
+			local_coordinates_t waypoint_goal = waypoint_handler_set_waypoint_from_frame(&waypoint,navigation->position_estimator->local_position.origin);
+			navigation_waypoint_hold_init(navigation->waypoint_handler, waypoint_goal);
+			
+			result = MAV_RESULT_ACCEPTED;
+		}
+	}
+	else if (packet->param1 == MAV_GOTO_DO_CONTINUE)
+	{
+		navigation->stop_nav = false;
+		
+		result = MAV_RESULT_ACCEPTED;
+	}
+	
+	return result;
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -677,6 +727,8 @@ void navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	
 	navigation->auto_takeoff = false;
 	navigation->auto_landing = false;
+	
+	navigation->stop_nav = false;
 	
 	navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 	navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
@@ -715,6 +767,15 @@ void navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&navigation_set_auto_landing;
 	callbackcmd.module_struct =									navigation;
 	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	
+	callbackcmd.command_id = MAV_CMD_OVERRIDE_GOTO; // 252
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&navigation_start_stop_navigation;
+	callbackcmd.module_struct =									navigation;
+	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	
 	
 	print_util_dbg_print("Navigation initialized.\r\n");
 }
@@ -794,7 +855,7 @@ task_return_t navigation_update(navigation_t* navigation)
 					{
 						navigation_waypoint_navigation_handler(navigation);
 						
-						if (navigation->state->nav_plan_active)
+						if ( navigation->state->nav_plan_active && !navigation->stop_nav)
 						{
 							navigation_run(navigation->waypoint_handler->waypoint_coordinates,navigation);
 						}
