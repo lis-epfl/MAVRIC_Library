@@ -496,10 +496,12 @@ static void data_logging_f_seek(data_logging_t* data_logging)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config)
+void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config, const state_t* state)
 {
 	// Init debug mode
 	data_logging->debug = config->debug;
+	
+	data_logging->state = state;
 
 	// Allocate memory for the onboard data_log
 	data_logging->data_logging_set = malloc( sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config->max_data_logging_count]) );
@@ -653,6 +655,15 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 			if (data_logging->file_init)
 			{
 				data_logging->time_ms = time_keeper_get_millis();
+				
+				if (data_logging->state->mav_mode.ARMED == ARMED_OFF)
+				{
+					if ( (data_logging->time_ms - data_logging->logging_time) > 5000)
+					{
+						data_logging->fr = f_sync(&data_logging->fil);
+						data_logging->logging_time = data_logging->time_ms;
+					}
+				}
 				
 				if (data_logging->fr == FR_OK)
 				{

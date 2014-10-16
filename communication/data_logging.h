@@ -126,7 +126,9 @@ typedef struct
 	
 	uint32_t logging_time;										///< The time that we've passed logging since the last f_close
 	
-	uint32_t log_data;											///< A flag to stop/start writing to file	
+	uint32_t log_data;											///< A flag to stop/start writing to file
+	
+	const state_t* state;										///< The pointer to the state structure	
 }data_logging_t;
 
 
@@ -135,9 +137,9 @@ typedef struct
  *
  * \param	data_logging			The pointer to the data logging structure
  * \param	config					The pointer to the configuration structure
- * \param	mavlink_communication	The pointer to the communication structure
+ * \param	state					The pointer to the state structure
  */
-void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config);
+void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config, const state_t* state);
 
 /**
  * \brief	Create and open a new file
