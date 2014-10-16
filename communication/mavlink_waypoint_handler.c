@@ -736,7 +736,7 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 											&_msg,
 											msg->sysid,
 											msg->compid,
-											MAV_CMD_ACK_ERR_NOT_SUPPORTED);
+											MAV_MISSION_UNSUPPORTED);
 			mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
 		}
 		else
@@ -751,7 +751,7 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 												&_msg,
 												msg->sysid,
 												msg->compid, 
-												MAV_CMD_ACK_ERR_NOT_SUPPORTED);
+												MAV_MISSION_UNSUPPORTED);
 				mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
 			}
 			else
