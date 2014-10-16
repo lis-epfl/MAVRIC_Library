@@ -97,6 +97,7 @@ typedef struct
 	bool reset_position;						///< Flag to enable the reset of the position estimation
 	
 	uint32_t remote_active;								///< Flag to tell whether the remote is active or not
+	uint32_t use_mode_from_remote;						///< Flag to tell whether the modes are coming from the remote or not
 	
 	const analog_monitor_t* analog_monitor;				///< The pointer to the analog monitor structure
 } state_t;
@@ -107,6 +108,7 @@ typedef struct
  *
  * \param	state		The pointer to the state structure
  * \param	state_config		The pointer to the state configuration structure
+ * \param	analog_monitor	The pointer to the analog monitor structure
  */
 void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor);
 
