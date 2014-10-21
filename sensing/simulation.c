@@ -134,11 +134,10 @@ static void simulation_reset_simulation(simulation_model_t *sim)
 	print_util_dbg_print_num(sim->pos_est->local_position.pos[2]*1000,10);
 	print_util_dbg_print(")\r\n");
 	
-	//sim->local_position.origin.latitude = HOME_LATITUDE;
-	//sim->local_position.origin.longitude = HOME_LONGITUDE;
-	//sim->local_position.origin.altitude = HOME_ALTITUDE;
+	sim->local_position.origin.latitude	 = sim->vehicle_config.home_coordinates[X];
+	sim->local_position.origin.longitude = sim->vehicle_config.home_coordinates[Y];
+	sim->local_position.origin.altitude  = sim->vehicle_config.home_coordinates[Z];
 	
-	//sim->local_position.origin = sim->pos_est->local_position.origin;
 	//sim->local_position.heading = sim->pos_est->local_position.heading;
 }
 
