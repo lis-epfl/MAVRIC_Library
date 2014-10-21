@@ -120,8 +120,6 @@ static void simulation_reset_simulation(simulation_model_t *sim)
 	
 	sim->local_position = sim->pos_est->local_position;
 	
-	sim->ahrs = *sim->estimated_attitude;
-	
 	print_util_dbg_print("(Re)setting simulation. Origin: (");
 	print_util_dbg_print_num(sim->pos_est->local_position.origin.latitude*10000000,10);
 	print_util_dbg_print(", ");
@@ -246,7 +244,6 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	sim->nav_plan_active = &state->nav_plan_active;
 	
 	// set initial conditions to a given attitude_filter
-	sim->estimated_attitude = ahrs;
 	sim->ahrs = *ahrs;
 
 	print_util_dbg_print("Attitude:");
