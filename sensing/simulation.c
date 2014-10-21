@@ -297,7 +297,7 @@ void simulation_calib_set(simulation_model_t *sim)
 	sim->ahrs.qe.s = 1.0f;
 	sim->ahrs.qe.v[0] = 0.0f;
 	sim->ahrs.qe.v[1] = 0.0f;	
-	sim->ahrs.qe.v[2] = 0.0f;
+	sim->ahrs.qe.v[2] = 1.0f;
 	
 }
 
