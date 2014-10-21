@@ -122,7 +122,6 @@ typedef struct
 	barometer_t* pressure;									///< The pointer to the barometer structure
 	gps_t* gps;												///< The pointer to the GPS structure
 	const servos_t* servos;									///< The pointer to the servos structure
-	const ahrs_t *estimated_attitude;						///< The pointer to the attitude estimation structure
 	bool* nav_plan_active;									///< The pointer to the waypoint set flag
 } simulation_model_t;
 
