@@ -191,21 +191,13 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void spektrum_satellite_init (void) 
+void spektrum_satellite_init (spektrum_satellite_t *satellite) 
 {
 	print_util_dbg_print("Reset satellite receiver \r\n");
-	static const usart_options_t usart_opt = 
-	{
-   		.baudrate     = BAUD_REMOTE,
-	    .charlength   = 8,
-	    .paritytype   = USART_NO_PARITY,
-	    .stopbits     = USART_1_STOPBIT,
-	    .channelmode  = USART_NORMAL_CHMODE
-	};
-	static const gpio_map_t USART_GPIO_MAP = 
+	gpio_map_t USART_GPIO_MAP = 
 	{	
-   		{ AVR32_USART1_RXD_0_1_PIN, AVR32_USART1_RXD_0_1_FUNCTION },
-		{ AVR32_USART1_TXD_0_1_PIN, AVR32_USART1_TXD_0_1_FUNCTION }
+   		{satellite->usart_conf_spektrum.rx_pin_map.pin, satellite->usart_conf_spektrum.rx_pin_map.function},
+   		{satellite->usart_conf_spektrum.tx_pin_map.pin, satellite->usart_conf_spektrum.tx_pin_map.function}
 	};
 	
 	for (int32_t i = 0; i < 16; i++) 
@@ -221,9 +213,9 @@ void spektrum_satellite_init (void)
                      	sizeof(USART_GPIO_MAP) / sizeof(USART_GPIO_MAP[0]) );
 	
     // Initialize the USART in RS232 mode.
-    usart_init_rs232( (&REMOTE_UART), &usart_opt, sysclk_get_cpu_hz() );
-	INTC_register_interrupt( (__int_handler) &spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INT1 );
-	REMOTE_UART.ier = AVR32_USART_IER_RXRDY_MASK;
+    usart_init_rs232( (satellite->usart_conf_spektrum.uart_device.uart), &satellite->usart_conf_spektrum.options, sysclk_get_cpu_hz() );
+	INTC_register_interrupt( (__int_handler) &spectrum_handler, satellite->usart_conf_spektrum.uart_device.IRQ, AVR32_INTC_INT1 );
+	satellite->usart_conf_spektrum.uart_device.uart->ier = AVR32_USART_IER_RXRDY_MASK;
 	
 	spektrum_satellite_switch_on();
 }

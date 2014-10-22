@@ -51,7 +51,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "buffer.h"
-
+#include "uart_int.h"
 
 /**
  * \brief Structure containing the Spektrum receiver's data
@@ -64,12 +64,15 @@ typedef struct
 	uint32_t 		last_update;		///< Last update time 
 	uint32_t 		dt;					///< Duration between two updates
 	bool			new_data_available; ///< Indicates if new data is  available
+	usart_config_t	usart_conf_spektrum;///< store UART conf for reset
 } spektrum_satellite_t;
 
 /**
  * \brief Initialize UART receiver for Spektrum/DSM2 slave receivers
+ *
+ * \param usart_conf_spektrum
  */
-void spektrum_satellite_init(void);
+void spektrum_satellite_init (spektrum_satellite_t *satellite);
 
 /**
  * \brief Sets the satellite in bind mode
