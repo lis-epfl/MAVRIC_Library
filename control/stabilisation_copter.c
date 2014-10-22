@@ -85,8 +85,8 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 	control_command_t input;
 	int32_t i;
 	
-	/* Uncomment this only for the optional part
-	quat_t qtmp, q_rot;
+	// Uncomment this only for the optional part
+	/*quat_t qtmp, q_rot;
 	aero_attitude_t attitude_yaw_inverse;
 	*/
 	
@@ -97,8 +97,8 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 	case VELOCITY_COMMAND_MODE:
 		
 		// Velocity control in global frame
-		/* Uncomment this only for the optional part
-		attitude_yaw_inverse = coord_conventions_quat_to_aero(stabilisation_copter->ahrs->qe);
+		// Uncomment this only for the optional part
+		/*attitude_yaw_inverse = coord_conventions_quat_to_aero(stabilisation_copter->ahrs->qe);
 		attitude_yaw_inverse.rpy[0] = 0.0f;
 		attitude_yaw_inverse.rpy[1] = 0.0f;
 		
@@ -139,8 +139,8 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 		
 		
 		// Mapping for global frame velocity control
-		/* Uncomment this only for the optional part
-		qtmp = quaternions_create_from_vector(stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy);
+		// Uncomment this only for the optional part
+		/* qtmp = quaternions_create_from_vector(stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy);
 		quat_t rpy_local;
 		quaternions_rotate_vector(quaternions_inverse(q_rot), qtmp.v, rpy_local.v);
 		
