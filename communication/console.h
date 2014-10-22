@@ -63,8 +63,10 @@ typedef enum
  * \brief				Initialize the console module
  *
  * \param console_port	UART or USB device number, from UART0 to UART4 for UART, otherwise USB
+ * \param usart_conf_console
+ * \param usb_conf_console
  */
-void console_init(console_port_t console_port);
+void console_init(console_port_t console_port, usart_config_t usart_conf_console, usb_config_t usb_conf_console);
 
 /**
  * \brief				Return the console in stream
