@@ -52,6 +52,7 @@ extern "C" {
 #include "maths.h"
 #include "streams.h"
 #include "buffer.h"
+#include "uart_int.h"
 
 /*
  *  try to put a UBlox into binary mode. This is in two parts. First we
@@ -682,7 +683,7 @@ uint32_t last_fix_time;						///< Last fix time
  * \param	gps			The pointer to the GPS structure
  * \param	UID					The uart ID
  */
-void gps_ublox_init(gps_t *gps, int32_t UID);
+void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps);
 
 
 /**

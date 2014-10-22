@@ -1635,24 +1635,8 @@ static ubx_tim_vrfy_t * ubx_get_tim_vrfy()
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void gps_ublox_init(gps_t *gps, int32_t UID)
+void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 {
-	// uart setting
-	usart_config_t usart_conf_gps =
-	{
-		.mode=UART_IN_OUT,
-		.uart_device.uart=(avr32_usart_t *)&AVR32_USART3,
-		.uart_device.IRQ=AVR32_USART3_IRQ,
-		.uart_device.receive_stream=NULL,
-		.options={
-			.baudrate     = 38400,
-			.charlength   = 8,
-			.paritytype   = USART_NO_PARITY,
-			.stopbits     = USART_1_STOPBIT,
-			.channelmode  = USART_NORMAL_CHMODE },
-		.rx_pin_map= {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION},
-		.tx_pin_map= {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION}
-	};
 	uart_int_set_usart_conf(UID, &usart_conf_gps);
 	
 	uart_int_init(UID);
