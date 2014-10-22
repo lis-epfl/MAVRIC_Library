@@ -57,10 +57,8 @@
 #include "led.h"
 
 
-#define REMOTE_UART AVR32_USART1						///< Define the microcontroller pin map with the remote UART
 #define DSM_RECEIVER_PIN AVR32_PIN_PD12					///< Define the microcontroller pin map with the receiver pin
 #define RECEIVER_POWER_ENABLE_PIN AVR32_PIN_PC01		///< Define the microcontroller pin map with the receiver power enable pin
-#define BAUD_REMOTE  115200								///< Define the remote baudrate
 
 spektrum_satellite_t sat;								///< Declare an object containing the receiver structure for receiver 1
 
@@ -113,7 +111,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 	uint32_t now = time_keeper_get_time_ticks() ;
 
 	// If byte received
-	if (REMOTE_UART.csr & AVR32_USART_CSR_RXRDY_MASK) 
+	if (sat.usart_conf_spektrum.uart_device.uart->csr & AVR32_USART_CSR_RXRDY_MASK) 
 	{
 		uint32_t dt_interrupt = now - sat.last_interrupt;
 		sat.last_interrupt = now;
@@ -126,7 +124,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 		}
 
 		// Add new byte to buffer
-		c1 = (uint8_t)REMOTE_UART.rhr;
+		c1 = (uint8_t)sat.usart_conf_spektrum.uart_device.uart->rhr;
 		buffer_put(&sat.receiver, c1);
 		
 		// If frame is complete, decode channels
