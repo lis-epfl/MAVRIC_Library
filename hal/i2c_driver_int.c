@@ -146,7 +146,7 @@ ISR(i2c_int_handler_i2c0,CONF_TWIM_IRQ_GROUP,CONF_TWIM_IRQ_LEVEL)
 //__attribute__((__interrupt__))
 //static void i2c_int_handler_i2c1(void) {};
 
-void i2c_driver_init(uint8_t  i2c_device) 
+void i2c_driver_init(uint8_t  i2c_device, twim_options_t twi_opt) 
 {
 	volatile avr32_twim_t *twim;
 	switch (i2c_device) {
@@ -166,15 +166,7 @@ void i2c_driver_init(uint8_t  i2c_device)
 	break;
 	default: ///< invalid device ID
 		return;
-	}		
-	
-	static twim_options_t twi_opt=
-	{
-		.pba_hz = 64000000,
-		.speed = 400000,
-		.chip = 0xff,
-		.smbus = false
-	};
+	}
 	
 	twi_opt.pba_hz = sysclk_get_pba_hz();
 	
