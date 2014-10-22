@@ -87,7 +87,7 @@ typedef struct
 } servos_t;
 
 
-void servos_init(servos_t* servos, const servos_conf_t* config);
+void servos_init(servos_t* servos, const servos_conf_t* config, servo_entry_t conf_servo_standard, servo_entry_t conf_servo_motor, servo_entry_t conf_servo_custom);
 
 
 void servos_set_value(servos_t* servos, uint32_t servo_id, float value);

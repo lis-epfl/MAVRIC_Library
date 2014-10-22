@@ -44,7 +44,7 @@
 #include "servos.h"
 #include "print_util.h"
 
-void servos_init(servos_t* servos, const servos_conf_t* config)
+void servos_init(servos_t* servos, const servos_conf_t* config, servo_entry_t conf_servo_standard, servo_entry_t conf_servo_motor, servo_entry_t conf_servo_custom)
 {
 	// Init servo array
 	if ( config->servos_count <= MAX_SERVO_COUNT )
@@ -57,39 +57,19 @@ void servos_init(servos_t* servos, const servos_conf_t* config)
 			switch ( config->types[i] )
 			{
 				case STANDARD_SERVO:
-					servos->servo[i].trim          = 0.0f;
-					servos->servo[i].min           = -1.0f;
-					servos->servo[i].max           = 1.0f;
-					servos->servo[i].failsafe      = 0.0f;
-					servos->servo[i].repeat_freq   = 50;
-					servos->servo[i].type 		   = STANDARD_SERVO;
+					servos->servo[i] = conf_servo_standard;
 					break;
 
 				case MOTOR_CONTROLLER:
-					servos->servo[i].trim          = 0.0f;
-					servos->servo[i].min           = -0.9f;
-					servos->servo[i].max           = 1.0f;
-					servos->servo[i].failsafe      = -1.2f;
-					servos->servo[i].repeat_freq   = 200;
-					servos->servo[i].type 		   = MOTOR_CONTROLLER;
+					servos->servo[i] = conf_servo_motor;
 					break;
 
 				case CUSTOM_SERVO:
-					servos->servo[i].trim          = 0.0f;
-					servos->servo[i].min           = -0.0f;
-					servos->servo[i].max           = 0.0f;
-					servos->servo[i].failsafe      = 0.0f;
-					servos->servo[i].repeat_freq   = 50;
-					servos->servo[i].type 		   = CUSTOM_SERVO;
+					servos->servo[i] = conf_servo_custom;
 					break;
 
 				default:
-					servos->servo[i].trim          = 0.0f;
-					servos->servo[i].min           = -1.0f;
-					servos->servo[i].max           = 1.0f;
-					servos->servo[i].failsafe      = 0.0f;
-					servos->servo[i].repeat_freq   = 50;
-					servos->servo[i].type 		   = STANDARD_SERVO;
+					servos->servo[i] = conf_servo_standard;
 					break;
 			}
 
