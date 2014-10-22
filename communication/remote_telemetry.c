@@ -76,7 +76,7 @@ static mav_result_t remote_telemetry_satellite_bind(spektrum_satellite_t *satell
 	
 	else if (packet->param3 == 1)
 	{
-		spektrum_satellite_init();
+		spektrum_satellite_init(satellite);
 		
 		result = MAV_RESULT_ACCEPTED;
 	}
