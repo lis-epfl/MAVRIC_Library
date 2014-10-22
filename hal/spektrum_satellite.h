@@ -72,7 +72,7 @@ typedef struct
  *
  * \param usart_conf_spektrum
  */
-void spektrum_satellite_init (spektrum_satellite_t *satellite);
+void spektrum_satellite_init (usart_config_t usart_conf_spektrum);
 
 /**
  * \brief Sets the satellite in bind mode
