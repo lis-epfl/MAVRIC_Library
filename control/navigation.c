@@ -677,6 +677,10 @@ static mav_result_t navigation_start_stop_navigation(navigation_t* navigation, m
 			waypoint.y = packet->param6;
 			waypoint.z = packet->param7;
 			
+			waypoint.param1 = 10;		// Hold time in decimal seconds
+			waypoint.param2 = 5.0f;		// Acceptance radius in meters
+			waypoint.param3 = 0;		//  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+			
 			local_coordinates_t waypoint_goal = waypoint_handler_set_waypoint_from_frame(&waypoint,navigation->position_estimator->local_position.origin);
 			navigation_waypoint_hold_init(navigation->waypoint_handler, waypoint_goal);
 			
