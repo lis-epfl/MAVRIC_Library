@@ -43,11 +43,8 @@
 
 #include "imu.h"
 
-#include "delay.h"
 #include "time_keeper.h"
 #include "print_util.h"
-#include "tasks.h"
-#include "coord_conventions.h"
 
 
 //------------------------------------------------------------------------------
@@ -131,7 +128,6 @@ void imu_init (imu_t *imu, state_t* state)
 {	
 	
 	imu->state = state;
-		//imu_calibrate_Gyros(imu);
 	
 	//init gyro
 	imu->calib_gyro.scale_factor[X] =  1.0f / RAW_GYRO_X_SCALE;
@@ -200,34 +196,6 @@ void imu_init (imu_t *imu, state_t* state)
 	imu->dt = 0.004;
 	
 	print_util_dbg_print("[IMU] Initialisation\r\n");
-}
-		
-	
-void imu_calibrate_gyros(imu_t *imu)
-{
-	int32_t i,j;
-	tasks_run_imu_update(0);
-	
-	for (j = 0; j < 3; j++)
-	{
-		imu->calib_gyro.bias[j] = imu->oriented_gyro.data[j];
-	}
-	
-	for (i = 0; i < 100; i++)
-	{
-		tasks_run_imu_update(0);
-
-		//imu->imu->calib_sensor.bias[0 + ACC_OFFSET] = (0.9f * imu->imu->calib_accelero.bias[0] + 0.1f * (float)imu->oriented_accelero.data[0]);
-		//imu->imu->calib_sensor.bias[1 + ACC_OFFSET] = (0.9f * imu->imu->calib_accelero.bias[1] + 0.1f * (float)imu->oriented_accelero.data[1]);
-		//imu->imu->calib_sensor.bias[2 + ACC_OFFSET] = (0.9f * imu->imu->calib_accelero.bias[2] + 0.1f * ((float)imu->oriented_accelero.data[2] - imu->calib_accelero.scale_factor[2]));
-		for (j = 0; j < 3; j++)
-		{
-			imu->calib_gyro.bias[j] = 0.9f * imu->calib_gyro.bias[j] + 0.1f * imu->oriented_gyro.data[j];
-			//imu->attitude.raw_mag_mean[j] = (1.0 - fMAG_LPF) * imu->attitude.raw_mag_mean[j] + MAG_LPF * ((float)imu->oriented_compass.data[j]);
-		}
-	
-		delay_ms(4);
-	}
 }
 
 
