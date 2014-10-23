@@ -49,18 +49,18 @@
 #include "maths.h"
 
 
-void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* ahrs)
+void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* ahrs, conf_qfilter_t conf_qfilter)
 {
 	qf->imu = imu;
 	qf->ahrs = ahrs;
 	
 	qf->imu->calibration_level = LEVELING;
 	
-	qf->kp = 0.07f;
-	qf->ki = qf->kp / 15.0f;
-	
-	qf->kp_mag = 0.1f;
-	qf->ki_mag = qf->kp_mag / 15.0f;
+	//init qfilter gains according to provided configuration
+	qf->kp = conf_qfilter.kp;
+	qf->ki = conf_qfilter.ki;
+	qf->kp_mag = conf_qfilter.kp_mag;
+	qf->ki_mag = conf_qfilter.ki_mag;
 	
 	print_util_dbg_print("[QFILTER] Initialized.\r\n");
 }
