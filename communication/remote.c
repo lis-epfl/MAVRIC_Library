@@ -41,7 +41,6 @@
 
 
 #include "remote.h"
-#include "spektrum_satellite.h"
 #include "time_keeper.h"
 #include "print_util.h"
 
