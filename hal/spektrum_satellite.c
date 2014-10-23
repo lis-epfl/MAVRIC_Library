@@ -60,7 +60,7 @@
 #define DSM_RECEIVER_PIN AVR32_PIN_PD12					///< Define the microcontroller pin map with the receiver pin
 #define RECEIVER_POWER_ENABLE_PIN AVR32_PIN_PC01		///< Define the microcontroller pin map with the receiver power enable pin
 
-satellite_t *spek_sat;								///< Declare an object containing the receiver structure for receiver 1
+satellite_t *spek_sat;								///< Declare a pointer to satellite struct containing the receiver structure for receiver 1
 
 int16_t channel_center[16];								///< Declare an array to store the central position of each channel
 
