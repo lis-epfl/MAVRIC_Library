@@ -108,37 +108,18 @@ void remote_init(remote_t* remote, const remote_conf_t* config)
 	remote_mode_init( &remote->mode, &config->mode_config );
 
 	// Init parameters according to remote type
-	remote->type = config->type;
-	switch ( remote->type )
-	{
-		case REMOTE_TURNIGY:
-			remote->scale = 1.0f / 880.0f;
-			remote->deadzone = 30;
+	remote->type		= config->type;
+	remote->scale		= config->scale;
+	remote->deadzone	= config->deadzone;
 
-			remote->channel_inv[CHANNEL_THROTTLE] = NORMAL;
-			remote->channel_inv[CHANNEL_ROLL]     = NORMAL;
-			remote->channel_inv[CHANNEL_PITCH]    = INVERTED;
-			remote->channel_inv[CHANNEL_YAW]      = NORMAL;
-			remote->channel_inv[CHANNEL_GEAR]     = INVERTED;
-			remote->channel_inv[CHANNEL_FLAPS]    = INVERTED;
-			remote->channel_inv[CHANNEL_AUX1]     = NORMAL;
-			remote->channel_inv[CHANNEL_AUX2]     = NORMAL;
-			break;
-
-		case REMOTE_SPEKTRUM:
-			remote->scale = 1.0f / 700.0f;
-			remote->deadzone = 30;
-
-			remote->channel_inv[CHANNEL_THROTTLE] = NORMAL;
-			remote->channel_inv[CHANNEL_ROLL]     = INVERTED;
-			remote->channel_inv[CHANNEL_PITCH]    = NORMAL;
-			remote->channel_inv[CHANNEL_YAW]      = NORMAL;
-			remote->channel_inv[CHANNEL_GEAR]     = NORMAL;
-			remote->channel_inv[CHANNEL_FLAPS]    = NORMAL;
-			remote->channel_inv[CHANNEL_AUX1]     = NORMAL;
-			remote->channel_inv[CHANNEL_AUX2]     = NORMAL;
-			break;
-	}
+	remote->channel_inv[CHANNEL_THROTTLE] = config->channel_inv[CHANNEL_THROTTLE];
+	remote->channel_inv[CHANNEL_ROLL]     = config->channel_inv[CHANNEL_ROLL];
+	remote->channel_inv[CHANNEL_PITCH]    = config->channel_inv[CHANNEL_PITCH];
+	remote->channel_inv[CHANNEL_YAW]      = config->channel_inv[CHANNEL_YAW];
+	remote->channel_inv[CHANNEL_GEAR]     = config->channel_inv[CHANNEL_GEAR];
+	remote->channel_inv[CHANNEL_FLAPS]    = config->channel_inv[CHANNEL_FLAPS];
+	remote->channel_inv[CHANNEL_AUX1]     = config->channel_inv[CHANNEL_AUX1];
+	remote->channel_inv[CHANNEL_AUX2]     = config->channel_inv[CHANNEL_AUX2];
 
 	// Init 
 	remote->signal_quality = SIGNAL_GOOD;

@@ -142,6 +142,9 @@ typedef struct
 {
 	remote_type_t type;										///< The type of remote used
 	remote_mode_conf_t mode_config;							///< The configuration structure
+	float scale;											///< The scale of the remote channels
+	int16_t deadzone;										///< The size of the deadzone
+	channel_inv_t channel_inv[REMOTE_CHANNEL_COUNT];		///< The array of direction of the channels
 } remote_conf_t;
 
 /**
