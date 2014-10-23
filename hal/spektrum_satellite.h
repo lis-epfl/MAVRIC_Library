@@ -57,7 +57,8 @@
 /**
  * \brief Initialize UART receiver for Spektrum/DSM2 slave receivers
  *
- * \param usart_conf_spektrum
+ * \param satellite				pointer to the satellite receiver struct
+ * \param usart_conf_spektrum	configuration of the satellite uart
  */
 void spektrum_satellite_init (satellite_t *satellite, usart_config_t usart_conf_spektrum);
 

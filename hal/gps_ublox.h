@@ -680,8 +680,9 @@ uint32_t last_fix_time;						///< Last fix time
 /**
  * \brief	Initialize the gps U-Blox module
  *
- * \param	gps			The pointer to the GPS structure
- * \param	UID					The uart ID
+ * \param	gps				The pointer to the GPS structure
+ * \param	UID				The uart ID
+ * \param	usart_conf_gps	The configuration of the GPS' uart
  */
 void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps);
 

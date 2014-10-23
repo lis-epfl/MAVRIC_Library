@@ -86,17 +86,32 @@ typedef struct
 	servo_entry_t servo[MAX_SERVO_COUNT];
 } servos_t;
 
-
+/**
+ * \brief Initializes the servos 
+ * 
+ * \param servos pointer to the servo_t struct
+ * \param config option to configure the servo
+ * \param conf_servo_standard
+ * \param conf_servo_motor
+ * \param conf_servo_custom
+ */
 void servos_init(servos_t* servos, const servos_conf_t* config, servo_entry_t conf_servo_standard, servo_entry_t conf_servo_motor, servo_entry_t conf_servo_custom);
 
-
+/**
+ * \brief Sets the servos to a given value
+ * 
+ * \param servos pointer to the servo_t struct
+ * \param servo_id number of the servo on the servo rail
+ * \value the servo value to be set
+ */
 void servos_set_value(servos_t* servos, uint32_t servo_id, float value);
 
-
+/**
+ * \brief Sets the servos to failsafe value
+ * 
+ * \param servos pointer to the servo_t struct
+ */
 void servos_set_value_failsafe(servos_t* servos);
-
-
-
 
 
 #ifdef __cplusplus
