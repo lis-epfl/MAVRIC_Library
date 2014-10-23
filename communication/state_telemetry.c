@@ -136,6 +136,8 @@ static mav_result_t state_telemetry_toggle_arm(state_t* state, mavlink_command_l
 	state->mav_mode.STABILISE = new_mode.STABILISE;
 	state->mav_mode.GUIDED = new_mode.GUIDED;
 	state->mav_mode.AUTO = new_mode.AUTO;
+	state->mav_mode.TEST = new_mode.TEST;
+	state->mav_mode.CUSTOM = new_mode.CUSTOM;
 	
 	if (state->mav_mode.ARMED == ARMED_ON)
 	{	
