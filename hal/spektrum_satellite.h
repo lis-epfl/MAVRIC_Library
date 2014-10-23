@@ -55,31 +55,16 @@
 #include "uart_int.h"
 
 /**
- * \brief Structure containing the Spektrum receiver's data
- */
-typedef struct 
-{
-	satellite_t satellite;	///< the satellite receiver structure
-} spektrum_satellite_t;
-
-/**
  * \brief Initialize UART receiver for Spektrum/DSM2 slave receivers
  *
  * \param usart_conf_spektrum
  */
-void spektrum_satellite_init (usart_config_t usart_conf_spektrum);
+void spektrum_satellite_init (satellite_t *satellite, usart_config_t usart_conf_spektrum);
 
 /**
  * \brief Sets the satellite in bind mode
  */
 void spektrum_satellite_bind(void);
-
-/**
- * \brief	Return a pointer to the satellite structure
- *
- * \return The pointer to the satellite structure
- */
-satellite_t* spektrum_satellite_get_pointer(void);
 
 
 /**

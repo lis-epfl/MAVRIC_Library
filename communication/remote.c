@@ -102,9 +102,6 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 
 void remote_init(remote_t* remote, const remote_conf_t* config)
 {
-	// Init dependencies
-	remote->sat = spektrum_satellite_get_pointer();
-
 	// Init mode from remote
 	remote_mode_init( &remote->mode, &config->mode_config );
 
@@ -137,15 +134,15 @@ void remote_update(remote_t* remote)
 	uint32_t now = time_keeper_get_time_ticks() ;
 	float raw;
 	
-	if ( remote->sat->new_data_available == true )
+	if ( remote->sat.new_data_available == true )
 	{
 		// Check signal quality
-		if ( remote->sat->dt < 100000) 
+		if ( remote->sat.dt < 100000) 
 		{
 			// ok
 			remote->signal_quality = SIGNAL_GOOD;
 		} 
-		else if ( remote->sat->dt < 1500000 )
+		else if ( remote->sat.dt < 1500000 )
 		{
 			// warning
 			remote->signal_quality = SIGNAL_BAD;
@@ -154,7 +151,7 @@ void remote_update(remote_t* remote)
 		// Retrieve and scale channels
 		for (uint8_t i = 0; i < REMOTE_CHANNEL_COUNT; ++i)
 		{
-			raw = remote->sat->channels[i];
+			raw = remote->sat.channels[i];
 			if ( raw < remote->deadzone && raw > -remote->deadzone )
 			{
 				remote->channels[i] = 0.0f;	
@@ -166,12 +163,12 @@ void remote_update(remote_t* remote)
 		}
 
 		// Indicate that data was handled
-		remote->sat->new_data_available = false;
+		remote->sat.new_data_available = false;
 	}
 	else
 	{
 		// Check for signal loss
-		if ( ( now - remote->sat->last_update ) > 1500000 )
+		if ( ( now - remote->sat.last_update ) > 1500000 )
 		{
 			// CRITICAL: Set all channels to failsafe
 			remote->channels[CHANNEL_THROTTLE] = -1.0f;
