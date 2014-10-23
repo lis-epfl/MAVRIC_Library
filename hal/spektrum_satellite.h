@@ -51,6 +51,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "buffer.h"
+#include "satellite.h"
 #include "uart_int.h"
 
 /**
@@ -58,13 +59,7 @@
  */
 typedef struct 
 {
-	buffer_t 		receiver;			///< Buffer for incoming data
-	int16_t 		channels[16];		///< Array to contain the 16 remote channels
-	uint32_t 		last_interrupt;		///< Last time a byte was received
-	uint32_t 		last_update;		///< Last update time 
-	uint32_t 		dt;					///< Duration between two updates
-	bool			new_data_available; ///< Indicates if new data is  available
-	usart_config_t	usart_conf_spektrum;///< store UART conf for reset
+	satellite_t satellite;	///< the satellite receiver structure
 } spektrum_satellite_t;
 
 /**
@@ -84,7 +79,7 @@ void spektrum_satellite_bind(void);
  *
  * \return The pointer to the satellite structure
  */
-spektrum_satellite_t* spektrum_satellite_get_pointer(void);
+satellite_t* spektrum_satellite_get_pointer(void);
 
 
 /**

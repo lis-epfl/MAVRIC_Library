@@ -52,31 +52,31 @@
  * \brief Set slave receiver into bind mode. 
  * \details has to be called 100ms after power-up
  * 
- * \param	satellite				The pointer to the satellite structure
+ * \param	remote					The pointer to the remote_t structure
  * \param	packet					The pointer to the MAVLink command long structure
  * 
  * \return	The MAV_RESULT of the command
  */
-static mav_result_t remote_telemetry_satellite_bind(spektrum_satellite_t *satellite, mavlink_command_long_t* packet);
+static mav_result_t remote_telemetry_satellite_bind(remote_t* remote, mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static mav_result_t remote_telemetry_satellite_bind(spektrum_satellite_t *satellite, mavlink_command_long_t* packet) 
+static mav_result_t remote_telemetry_satellite_bind(remote_t* remote, mavlink_command_long_t* packet) 
 {
 	mav_result_t result = MAV_RESULT_DENIED;
 	
 	if (packet->param2 == 1)
 	{
-		spektrum_satellite_bind();
+		satellite_bind();
 		
 		result = MAV_RESULT_ACCEPTED;
 	}
 	
 	else if (packet->param3 == 1)
 	{
-		spektrum_satellite_init(satellite->usart_conf_spektrum);
+		satellite_init(remote->sat->usart_conf_sat);
 		
 		result = MAV_RESULT_ACCEPTED;
 	}
@@ -97,7 +97,7 @@ void remote_telemetry_init(remote_t* remote, mavlink_message_handler_t *mavlink_
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_ALL;
 	callbackcmd.function      = (mavlink_cmd_callback_function_t)	&remote_telemetry_satellite_bind;
-	callbackcmd.module_struct =										remote->sat;
+	callbackcmd.module_struct =										remote;
 	mavlink_message_handler_add_cmd_callback(mavlink_handler, &callbackcmd);
 }
 
