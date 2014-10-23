@@ -43,7 +43,6 @@
  ******************************************************************************/
 
 #include "simulation.h"
-#include "conf_constants.h"
 #include "time_keeper.h"
 #include "coord_conventions.h"
 #include "quaternions.h"

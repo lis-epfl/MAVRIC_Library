@@ -65,6 +65,15 @@ extern "C" {
  */
 typedef struct
 {
+	global_position_t origin;	///<	Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
+	float gravity;				///<	value of the Gravity for position estimation correction
+}conf_position_t;
+
+/**
+ * \brief The position estimator structure
+ */
+typedef struct
+{
 	float kp_vel_gps[3];							///< The gain to correct the velocity estimation from the GPS
 	float kp_pos_gps[3];							///< The gain to correct the position estimation from the GPS
 	float kp_alt_baro;								///< The gain to correct the Z position estimation from the barometer
@@ -106,12 +115,9 @@ typedef struct
  * \param	ahrs					The pointer to the attitude estimation structure
  * \param	imu						The pointer to the IMU structure
  * \param	nav_plan_active			The pointer to the flag telling if there is a flight plan loaded
- * \param	home_lat				The value of the hard coded home latitude position
- * \param	home_lon				The value of the hard coded home longitude position
- * \param	home_alt				The value of the hard coded home altitude position
- * \param	gravity					The value of the gravity
+ * \param	conf_position			The configuration for default home position and gravity value
  */
-void position_estimation_init(position_estimator_t *pos_est,state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, bool* nav_plan_active, float home_lat, float home_lon, float home_alt, float gravity);
+void position_estimation_init(position_estimator_t *pos_est,state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, bool* nav_plan_active, conf_position_t conf_position);
 
 
 /**

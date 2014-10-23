@@ -44,7 +44,6 @@
 #include "print_util.h"
 #include "math_util.h"
 #include "time_keeper.h"
-#include "conf_constants.h"
 #include "conf_platform.h"
 
 
@@ -301,7 +300,7 @@ static void gps_position_init(position_estimator_t *pos_est)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void position_estimation_init(position_estimator_t *pos_est, state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, bool* nav_plan_active, float home_lat, float home_lon, float home_alt, float gravity)
+void position_estimation_init(position_estimator_t *pos_est, state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, bool* nav_plan_active, conf_position_t conf_position)
 {
     int32_t i;
 
@@ -313,9 +312,9 @@ void position_estimation_init(position_estimator_t *pos_est, state_t* state, bar
 	pos_est->nav_plan_active = nav_plan_active;
 	
 	// default GPS home position
-	pos_est->local_position.origin.longitude =   home_lon;
-	pos_est->local_position.origin.latitude =   home_lat;
-	pos_est->local_position.origin.altitude =   home_alt;
+	pos_est->local_position.origin.longitude =  conf_position.origin.longitude;
+	pos_est->local_position.origin.latitude =   conf_position.origin.latitude;
+	pos_est->local_position.origin.altitude =   conf_position.origin.altitude;
 	pos_est->local_position.pos[X] = 0;
 	pos_est->local_position.pos[Y] = 0;
 	pos_est->local_position.pos[Z] = 0;
@@ -329,7 +328,7 @@ void position_estimation_init(position_estimator_t *pos_est, state_t* state, bar
         pos_est->vel_bf[i] = 0.0f;
     }
 
-	pos_est->gravity = gravity;
+	pos_est->gravity = conf_position.gravity;
 	
 	pos_est->init_gps_position = false;
 	pos_est->init_barometer = false;
