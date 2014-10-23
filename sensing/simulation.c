@@ -42,14 +42,13 @@
  *
  ******************************************************************************/
 
-
+#include "simulation.h"
 #include "conf_constants.h"
 #include "time_keeper.h"
 #include "coord_conventions.h"
 #include "quaternions.h"
-
-#include "central_data.h"
 #include "maths.h"
+#include "print_util.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -269,8 +268,6 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	
 	simulation_reset_simulation(sim);
 	simulation_calib_set(sim);
-	
-
 	
 	print_util_dbg_print("HIL simulation initialized.\r\n");
 }
