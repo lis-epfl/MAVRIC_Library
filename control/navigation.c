@@ -159,6 +159,13 @@ static void navigation_auto_landing_handler(navigation_t* navigation);
  */
 static mav_result_t navigation_start_stop_navigation(navigation_t* navigation, mavlink_command_long_t* packet);
 
+/**
+ * \brief	Drives the stopping behavior
+ *
+ * \param	navigation		The pointer to the navigation structure in central_data
+ */
+static void navigation_stopping_handler(navigation_t* navigation);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -668,7 +675,8 @@ static mav_result_t navigation_start_stop_navigation(navigation_t* navigation, m
 		}
 		else if (packet->param2 == MAV_GOTO_HOLD_AT_SPECIFIED_POSITION)
 		{
-			//navigation->waypoint_handler->hold_waypoint_set = false;
+			navigation->stopping_nav = true;
+			
 			waypoint_struct waypoint;
 			
 			waypoint.frame = packet->param3;
@@ -676,10 +684,6 @@ static mav_result_t navigation_start_stop_navigation(navigation_t* navigation, m
 			waypoint.x = packet->param5;
 			waypoint.y = packet->param6;
 			waypoint.z = packet->param7;
-			
-			waypoint.param1 = 10;		// Hold time in decimal seconds
-			waypoint.param2 = 5.0f;		// Acceptance radius in meters
-			waypoint.param3 = 0;		//  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
 			
 			local_coordinates_t waypoint_goal = waypoint_handler_set_waypoint_from_frame(&waypoint,navigation->position_estimator->local_position.origin);
 			navigation_waypoint_hold_init(navigation->waypoint_handler, waypoint_goal);
@@ -690,11 +694,28 @@ static mav_result_t navigation_start_stop_navigation(navigation_t* navigation, m
 	else if (packet->param1 == MAV_GOTO_DO_CONTINUE)
 	{
 		navigation->stop_nav = false;
+		navigation->stopping_nav = false;
 		
 		result = MAV_RESULT_ACCEPTED;
 	}
 	
 	return result;
+}
+
+static void navigation_stopping_handler(navigation_t* navigation)
+{
+	float dist2wp_sqr;
+	float rel_pos[3];
+	
+	rel_pos[X] = (float)(navigation->waypoint_handler->waypoint_hold_coordinates.pos[X] - navigation->position_estimator->local_position.pos[X]);
+	rel_pos[Y] = (float)(navigation->waypoint_handler->waypoint_hold_coordinates.pos[Y] - navigation->position_estimator->local_position.pos[Y]);
+	rel_pos[Z] = (float)(navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] - navigation->position_estimator->local_position.pos[Z]);
+	
+	dist2wp_sqr = vectors_norm_sqr(rel_pos);
+	if (dist2wp_sqr < 25.0f )
+	{
+		navigation->stop_nav = true;
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -733,6 +754,7 @@ void navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	navigation->auto_landing = false;
 	
 	navigation->stop_nav = false;
+	navigation->stopping_nav = false;
 	
 	navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 	navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
@@ -861,7 +883,16 @@ task_return_t navigation_update(navigation_t* navigation)
 						
 						if ( navigation->state->nav_plan_active && !navigation->stop_nav)
 						{
-							navigation_run(navigation->waypoint_handler->waypoint_coordinates,navigation);
+							if (!navigation->stopping_nav)
+							{
+								navigation_run(navigation->waypoint_handler->waypoint_coordinates,navigation);
+							}
+							else
+							{
+								navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+								
+								navigation_stopping_handler(navigation);
+							}
 						}
 						else
 						{
