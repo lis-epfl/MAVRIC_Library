@@ -250,7 +250,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		navigation->wpt_nav_controller.clip_max = navigation->cruise_speed;
 		v_desired = pid_control_update_dt(&navigation->wpt_nav_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
 	}
-	else if (mode.GUIDED == GUIDED_ON)
+	else
 	{
 		navigation->hovering_controller.clip_max = navigation->cruise_speed;
 		v_desired = pid_control_update_dt(&navigation->hovering_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
