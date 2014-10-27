@@ -53,20 +53,6 @@
 
 #define MAX_SERVO_COUNT 8
 
-typedef enum
-{
-	STANDARD_SERVO 	 = 0,
-	MOTOR_CONTROLLER = 1,
-	CUSTOM_SERVO     = 2
-} servo_type_t;
-
-
-typedef struct
-{
-	uint32_t servos_count;
-	servo_type_t types[MAX_SERVO_COUNT];
-} servos_conf_t;
-
 
 typedef struct
 {
@@ -76,10 +62,13 @@ typedef struct
 	float max;				///< Max value (between -1 and 1)
 	float failsafe;			///< Failsafe position of the servo (between -1 and 1)
 	uint32_t repeat_freq;	///< Update frequency of the servo (in Hz)
-	servo_type_t type;		///< Type of servo
 } servo_entry_t;
 
+extern servo_entry_t conf_servos_standard;	
+extern servo_entry_t conf_servos_motor;
+extern servo_entry_t conf_servos_custom;
 
+	
 typedef struct 
 {
 	uint32_t servos_count;
@@ -95,7 +84,7 @@ typedef struct
  * \param conf_servo_motor
  * \param conf_servo_custom
  */
-void servos_init(servos_t* servos, const servos_conf_t* config, servo_entry_t conf_servo_standard, servo_entry_t conf_servo_motor, servo_entry_t conf_servo_custom);
+void servos_init(servos_t* servos, servos_t* config);
 
 /**
  * \brief Sets the servos to a given value

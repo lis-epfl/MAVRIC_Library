@@ -53,7 +53,7 @@
 
 const uint32_t servo_timer_freq 	 = 1000000;		///< Timer frequency for the servos
 const uint16_t servo_center_pulse_us = 1500;		///< Pulse width in microseconds for neutral servo position
-const uint16_t servo_magnitude 		 = 600;			///< Amplitude of variation of the pulse width
+const uint16_t servo_magnitude 		 = 500;			///< Amplitude of variation of the pulse width
 
 bool use_servos_7_8;
 

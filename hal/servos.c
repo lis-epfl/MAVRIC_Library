@@ -44,7 +44,7 @@
 #include "servos.h"
 #include "print_util.h"
 
-void servos_init(servos_t* servos, const servos_conf_t* config, servo_entry_t conf_servo_standard, servo_entry_t conf_servo_motor, servo_entry_t conf_servo_custom)
+void servos_init(servos_t* servos, servos_t* config)
 {
 	// Init servo array
 	if ( config->servos_count <= MAX_SERVO_COUNT )
@@ -54,24 +54,7 @@ void servos_init(servos_t* servos, const servos_conf_t* config, servo_entry_t co
 		for (int i = 0; i < servos->servos_count; ++i)
 		{
 			// Set default parameters for each type of servo
-			switch ( config->types[i] )
-			{
-				case STANDARD_SERVO:
-					servos->servo[i] = conf_servo_standard;
-					break;
-
-				case MOTOR_CONTROLLER:
-					servos->servo[i] = conf_servo_motor;
-					break;
-
-				case CUSTOM_SERVO:
-					servos->servo[i] = conf_servo_custom;
-					break;
-
-				default:
-					servos->servo[i] = conf_servo_standard;
-					break;
-			}
+			servos->servo[i] = config->servo[i];
 
 			// Set default value to failsafe
 			servos->servo[i].value = servos->servo[i].failsafe;
