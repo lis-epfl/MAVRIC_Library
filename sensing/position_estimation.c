@@ -173,7 +173,6 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 		if ( pos_est->time_last_barometer_msg < pos_est->barometer->last_update )
 		{
 			pos_est->last_alt = -(pos_est->barometer->altitude ) + pos_est->local_position.origin.altitude;
-			//baro_alt_error = -(pos_est->barometer->altitude ) - pos_est->local_position.pos[2] + pos_est->local_position.origin.altitude;
 
 			pos_est->time_last_barometer_msg = pos_est->barometer->last_update;
 		}
