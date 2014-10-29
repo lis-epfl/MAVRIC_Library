@@ -1073,7 +1073,7 @@ static bool gps_ublox_process_data(gps_t *gps)
 			gps->longitude = gps_pos_llh->longitude / 10000000.0f;
 			gps->latitude = gps_pos_llh->latitude / 10000000.0f;
 			gps->alt_elips = ((float)gps_pos_llh->altitude_ellipsoid) / 1000.0f;
-			gps->altitude = ((float)gps_pos_llh->altitude_msl) / 1000.0f;
+			gps->altitude = ((float)gps_pos_llh->altitude_msl) / 1000.0f + gps->alt_consensus_offset;
 			gps->horizontal_accuracy = ((float)gps_pos_llh->horizontal_accuracy) / 1000.0f;
 			gps->vertical_accuracy = ((float)gps_pos_llh->vertical_accuracy) / 1000.0f;
 			
@@ -1659,6 +1659,8 @@ void gps_ublox_init(gps_t *gps, int32_t UID)
 	buffer_make_buffered_stream(&(gps->gps_buffer), &(gps->gps_stream_in));
 	uart_int_register_read_stream(uart_int_get_uart_handle(UID), &(gps->gps_stream_in));
 	uart_int_register_write_stream(uart_int_get_uart_handle(UID), &(gps->gps_stream_out));
+	
+	gps->alt_consensus_offset = 0.0f;
 }
 
 

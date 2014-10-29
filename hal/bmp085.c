@@ -115,6 +115,7 @@ static int16_t bmp085_read_int(uint8_t address)
 void bmp085_init(barometer_t *bmp085)
 {
 	bmp085->altitude_offset = 0.0f;
+	bmp085->alt_consensus_offset = 0.0f;
 
 	for (int32_t i = 0; i < 3; i++) 
 	{
@@ -262,7 +263,7 @@ void bmp085_update(barometer_t *bmp085)
 			bmp085->pressure = p;
 	
 			vertical_speed = bmp085->altitude;
-			altitude = 44330.0f * (1.0f - pow(bmp085->pressure /sea_level_pressure,0.190295f)) + bmp085->altitude_offset;
+			altitude = 44330.0f * (1.0f - pow(bmp085->pressure /sea_level_pressure,0.190295f)) + bmp085->altitude_offset + bmp085->alt_consensus_offset;
 		
 			for (i = 0; i < 2; i++) 
 			{

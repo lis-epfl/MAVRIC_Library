@@ -138,7 +138,7 @@ void state_machine_update(state_machine_t* state_machine)
 					if ( mode_new.ARMED == ARMED_OFF )
 					{
 						state_new = MAV_STATE_STANDBY;
-						print_util_dbg_print("Switching off motors!\n");
+						print_util_dbg_print("Switching off motors!\r\n");
 					}
 				}
 			}
