@@ -76,6 +76,19 @@
 
 static analog_monitor_conf_t analog_monitor_default_config =
 {
+	.enable =
+	{
+		false,
+		false,
+		false,
+		false,
+		false,
+		false,
+		true,
+		true,
+		true,
+		false,
+	},
 	.conv_factor =
 	{
 		1.0f,									//.conv_factor_2 =

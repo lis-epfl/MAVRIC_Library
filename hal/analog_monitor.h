@@ -75,16 +75,22 @@ typedef enum
  */
 typedef struct 
 {
+	bool enable[MONITOR_CHANNELS];			///< Activation of each analog channel
 	float conv_factor[MONITOR_CHANNELS];	///< Conversion factors
 } analog_monitor_conf_t;
 
+
+/**
+ * \brief  Analog monitor
+ */
 typedef struct 
 {
-	bool enable[MONITOR_CHANNELS];
-	float conv_factor[MONITOR_CHANNELS];
-	int16_t buffer[MONITOR_CHANNELS][MONITOR_SAMPLES];
-	float avg[MONITOR_CHANNELS];
+	bool enable[MONITOR_CHANNELS];						///< Activation of each analog channel
+	float conv_factor[MONITOR_CHANNELS];				///< Conversion factors
+	int16_t buffer[MONITOR_CHANNELS][MONITOR_SAMPLES];	///< Buffer of previous data
+	float avg[MONITOR_CHANNELS];						///< Averaged voltage
 } analog_monitor_t;
+
 
 /**
  * \brief	Initialisation of the analog monitor

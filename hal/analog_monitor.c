@@ -91,19 +91,22 @@ float analog_compute_avg(analog_monitor_t* analog_monitor, analog_rails_t rail)
 
 void analog_monitor_init(analog_monitor_t* analog_monitor, const analog_monitor_conf_t* config) 
 {	
-	///< Init buffer and avg outputs
+	// Init buffer and avg outputs
 	for (int32_t i = 0; i < MONITOR_CHANNELS; ++i)
 	{
-		///< Init buffer
+		// Init buffer
 		for (int32_t j = 0; j < MONITOR_SAMPLES; ++j)
 		{
 			analog_monitor->buffer[i][j] = 0;
 		}
-		///< Init avg outputs
+		// Init avg outputs
 		analog_monitor->avg[i] = 0;
 		
-		//Init conv_factor
+		// Init conv_factor
 		analog_monitor->conv_factor[i] = config->conv_factor[i];
+
+		// Init enable flags
+		analog_monitor->enable[i] = config->enable[i];
 	}
 
 	// Init desired ADC pin
