@@ -92,7 +92,7 @@ void sonar_i2cxl_get_last_measure(sonar_i2cxl_t* sonar_i2cxl)
 	twim_read(&AVR32_TWIM1, buf, 2, sonar_i2cxl->i2c_address, false);
 	distance_cm = (buf[0] << 8) + buf[1];
 	
-	distance_m  = ((float)distance_cm) / 100;
+	distance_m  = ((float)distance_cm) / 100.0f;
 	
 	if ( distance_m > sonar_i2cxl->data.min_distance && distance_m < sonar_i2cxl->data.max_distance )
 	{
@@ -115,16 +115,16 @@ void sonar_i2cxl_init(sonar_i2cxl_t* sonar_i2cxl)
 {
 	///< Init data_struct
 	sonar_i2cxl->i2c_address = SONAR_I2CXL_DEFAULT_ADDRESS;
-	sonar_i2cxl->data.current_distance = 0.2;
-	sonar_i2cxl->data.orientation.s = 1.0f;
-	sonar_i2cxl->data.orientation.v[0] = 0.0f;
-	sonar_i2cxl->data.orientation.v[0] = 0.0f;
-	sonar_i2cxl->data.orientation.v[0] = 0.0f;
+	sonar_i2cxl->data.current_distance 	= 0.2f;
+	sonar_i2cxl->data.orientation.s 	= 1.0f;
+	sonar_i2cxl->data.orientation.v[0] 	= 0.0f;
+	sonar_i2cxl->data.orientation.v[0] 	= 0.0f;
+	sonar_i2cxl->data.orientation.v[0] 	= 0.0f;
 	
-	sonar_i2cxl->data.min_distance  = 0.22;
-	sonar_i2cxl->data.max_distance  = 5;
-	sonar_i2cxl->data.covariance 	= 0.01;
-	sonar_i2cxl->data.healthy 		= false;
+	sonar_i2cxl->data.min_distance  = 0.22f;
+	sonar_i2cxl->data.max_distance  = 5.0f;
+	sonar_i2cxl->data.covariance 	= 0.01f;
+	sonar_i2cxl->data.healthy 	= false;
 	
 	///< Init I2C bus
 	static twi_options_t twi_opt = 
