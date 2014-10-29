@@ -44,34 +44,6 @@
 #include "analog_monitor.h"
 #include "adc_int.h"
 
-#define CONV_FACTOR_2 1.0f				///< Conversion factor for the analog channel 2
-#define CONV_FACTOR_3 1.0f				///< Conversion factor for the analog channel 3
-#define CONV_FACTOR_4 1.0f				///< Conversion factor for the analog channel 4
-#define CONV_FACTOR_5 1.0f				///< Conversion factor for the analog channel 5
-#define CONV_FACTOR_6 0.00155f			///< Conversion factor for the analog channel 6: 6V
-#define CONV_FACTOR_7 0.00155f			///< Conversion factor for the analog channel 7: 5V_ANA
-#define CONV_FACTOR_10 -0.00265f		///< Conversion factor for the analog channel 10: Input
-#define CONV_FACTOR_11 -0.00265f		///< Conversion factor for the analog channel 11: Battery
-#define CONV_FACTOR_12 -0.00025f		///< Conversion factor for the analog channel 12: Sonar
-#define CONV_FACTOR_13 -1.0f			///< Conversion factor for the analog channel 13
-
-/**
- * \brief Declare an array containing the conversion factor for each analog channel 
- */
-const float CONV_FACTOR[MONITOR_CHANNELS] = 
-{
-	CONV_FACTOR_2,
-	CONV_FACTOR_3,
-	CONV_FACTOR_4,
-	CONV_FACTOR_5,
-	CONV_FACTOR_6,
-	CONV_FACTOR_7,
-	CONV_FACTOR_10,
-	CONV_FACTOR_11,
-	CONV_FACTOR_12,
-	CONV_FACTOR_13
-};
-
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -117,18 +89,24 @@ float analog_compute_avg(analog_monitor_t* analog_monitor, analog_rails_t rail)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void analog_monitor_init(analog_monitor_t* analog_monitor) 
+void analog_monitor_init(analog_monitor_t* analog_monitor, const analog_monitor_conf_t* config) 
 {	
-	///< Init buffer and avg outputs
+	// Init buffer and avg outputs
 	for (int32_t i = 0; i < MONITOR_CHANNELS; ++i)
 	{
-		///< Init buffer
+		// Init buffer
 		for (int32_t j = 0; j < MONITOR_SAMPLES; ++j)
 		{
 			analog_monitor->buffer[i][j] = 0;
 		}
-		///< Init avg outputs
+		// Init avg outputs
 		analog_monitor->avg[i] = 0;
+		
+		// Init conv_factor
+		analog_monitor->conv_factor[i] = config->conv_factor[i];
+
+		// Init enable flags
+		analog_monitor->enable[i] = config->enable[i];
 	}
 
 	// Init desired ADC pin
@@ -213,7 +191,7 @@ task_return_t analog_monitor_update(analog_monitor_t* analog_monitor)
 	{
 		if(analog_monitor->enable[i])
 		{
-			analog_monitor->avg[i] = analog_compute_avg(analog_monitor, i) * CONV_FACTOR[i];
+			analog_monitor->avg[i] = analog_compute_avg(analog_monitor, i) * analog_monitor->conv_factor[i];
 		}
 	}
 
