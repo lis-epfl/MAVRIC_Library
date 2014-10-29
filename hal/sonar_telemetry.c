@@ -30,53 +30,30 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file sonar_i2cxl.h
+ * \file sonar_telemetry.c
  * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Nicolas Dousse
  *   
- * \brief Driver for the sonar module using i2C communication protocol
+ * \brief This module takes care of sending periodic telemetric messages for sonars
  *
  ******************************************************************************/
 
 
-#ifndef I2CXL_SONAR_H_
-#define I2CXL_SONAR_H_
+#include "sonar_telemetry.h"
+#include "time_keeper.h"
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
-
-#include <stdint.h>
-#include "sonar.h"
-
-/**
- * \brief structure of the sonar_i2cxl module
-*/
-typedef struct 
+void sonar_telemetry_send(const sonar_t* sonar, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
-	uint8_t i2c_address;	///< address of the sonar module
-	sonar_t data;			///< sensor data	
-} sonar_i2cxl_t;
-
-/**
- * \brief Initializes the I2CXL sonar data struct and the i2c bus
- * 
- * \param sonar pointer to the sonar Data structure
- */
-void sonar_i2cxl_init(sonar_i2cxl_t* sonar);
-
-/**
- * \brief Reads last value from sensor and start new recording
- * \details This function should be called at a frequency lower than 10Hz
- * 
- * \param sonar Data struct
- */
-void sonar_i2cxl_update(sonar_i2cxl_t* sonar);
-
-
-#ifdef __cplusplus
-	}
-#endif
-
-#endif /* I2CXL_SONAR_H */
+	mavlink_msg_distance_sensor_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										time_keeper_get_millis(),
+										sonar->min_distance * 100,								
+										sonar->max_distance * 100,
+										sonar->current_distance * 100,
+										MAV_DISTANCE_SENSOR_ULTRASOUND,
+										0, 								// id 0
+										0, 								// orientation 0
+										sonar->covariance);				// covariance (!=0)
+}
