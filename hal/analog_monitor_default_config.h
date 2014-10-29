@@ -66,11 +66,11 @@
 #include "analog_monitor.h"
 
 
-//For board_revision 4, uncomment those 2 following lines, and comment the one for rev4_1
+//For board_revision 4.0, use these values in boardsupport.c
 //#define INV_VOLTAGE_DIVIDER_1 6.6f
 //#define INV_VOLTAGE_DIVIDER_2 11.0f
 
-//For board_revision 4_1 and following, uncomment those 2 following lines, and comment the one for rev4
+//For board_revision 4_1 and following, use these values
 #define INV_VOLTAGE_DIVIDER_1 9.1818f
 #define INV_VOLTAGE_DIVIDER_2 23.0f
 
