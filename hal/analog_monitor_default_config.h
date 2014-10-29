@@ -78,16 +78,16 @@ static analog_monitor_conf_t analog_monitor_default_config =
 {
 	.enable =
 	{
-		false,
-		false,
-		false,
-		false,
-		false,
-		false,
-		true,
-		true,
-		true,
-		false,
+		false,		//ANALOG_RAIL_2,
+		false,		//ANALOG_RAIL_3,
+		false,		//ANALOG_RAIL_4,
+		false,		//ANALOG_RAIL_5,
+		false,		//ANALOG_RAIL_6,
+		false,		//ANALOG_RAIL_7,
+		true,		//ANALOG_RAIL_10
+		true,		//ANALOG_RAIL_11
+		true,		//ANALOG_RAIL_12
+		false,		//ANALOG_RAIL_13
 	},
 	.conv_factor =
 	{
