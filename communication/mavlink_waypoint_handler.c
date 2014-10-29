@@ -807,11 +807,24 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 							print_util_dbg_print("\n");
 						}
 					}
+					else
+					{
+						MAV_MISSION_RESULT type = MAV_MISSION_INVALID_SEQUENCE;
+						
+						mavlink_message_t _msg;
+						mavlink_msg_mission_ack_pack(	waypoint_handler->mavlink_stream->sysid,
+														waypoint_handler->mavlink_stream->compid,
+														&_msg,
+														msg->sysid,
+														msg->compid,
+														type	);
+						mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
+					}
 				}
 				else
 				{
-					MAV_MISSION_RESULT type = MAV_MISSION_ACCEPTED;
-					print_util_dbg_print("Ack not received!\r\n");
+					MAV_MISSION_RESULT type = MAV_MISSION_ERROR;
+					print_util_dbg_print("Not ready to receive waypoints right now!\r\n");
 					
 					mavlink_message_t _msg;
 					mavlink_msg_mission_ack_pack(	waypoint_handler->mavlink_stream->sysid,
