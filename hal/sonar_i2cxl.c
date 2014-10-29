@@ -43,6 +43,7 @@
 #include "sonar_i2cxl.h"
 #include "twim.h"
 #include "print_util.h"
+#include "time_keeper.h"
 
 const uint8_t SONAR_I2CXL_DEFAULT_ADDRESS			= 0x70;		///< Address of the device
 const uint8_t SONAR_I2CXL_RANGE_COMMAND				= 0x51;		///< Address of the Range Command Register
@@ -84,9 +85,25 @@ void sonar_i2cxl_send_range_command(sonar_i2cxl_t* sonar_i2cxl)
 void sonar_i2cxl_get_last_measure(sonar_i2cxl_t* sonar_i2cxl)
 {
 	uint8_t buf[2];
+	uint16_t distance_cm = 0;
+	float distance_m = 0.0f;
+	uint32_t time_us = time_keeper_get_micros();
+
 	twim_read(&AVR32_TWIM1, buf, 2, sonar_i2cxl->i2c_address, false);
-	sonar_i2cxl->distance_cm = (buf[0] << 8) + buf[1];
-	sonar_i2cxl->distance_m  = ((float)sonar_i2cxl->distance_cm) / 100;
+	distance_cm = (buf[0] << 8) + buf[1];
+	
+	distance_m  = ((float)distance_cm) / 100;
+	
+	if ( distance_m > sonar_i2cxl->data.min_distance && distance_m < sonar_i2cxl->data.max_distance )
+	{
+		sonar_i2cxl->data.current_distance  = distance_m;
+		sonar_i2cxl->data.last_update = time_us;
+		sonar_i2cxl->data.healthy = true;
+	}
+	else
+	{
+		sonar_i2cxl->data.healthy = false;
+	}
 }
 
 
@@ -98,9 +115,17 @@ void sonar_i2cxl_init(sonar_i2cxl_t* sonar_i2cxl)
 {
 	///< Init data_struct
 	sonar_i2cxl->i2c_address = SONAR_I2CXL_DEFAULT_ADDRESS;
-	sonar_i2cxl->distance_cm = 0;
-	sonar_i2cxl->distance_m  = 0;
-
+	sonar_i2cxl->data.current_distance = 0.2;
+	sonar_i2cxl->data.orientation.s = 1.0f;
+	sonar_i2cxl->data.orientation.v[0] = 0.0f;
+	sonar_i2cxl->data.orientation.v[0] = 0.0f;
+	sonar_i2cxl->data.orientation.v[0] = 0.0f;
+	
+	sonar_i2cxl->data.min_distance  = 0.22;
+	sonar_i2cxl->data.max_distance  = 5;
+	sonar_i2cxl->data.covariance 	= 0.01;
+	sonar_i2cxl->data.healthy 		= false;
+	
 	///< Init I2C bus
 	static twi_options_t twi_opt = 
 	{
