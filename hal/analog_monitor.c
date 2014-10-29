@@ -44,11 +44,6 @@
 #include "analog_monitor.h"
 #include "adc_int.h"
 
-/**
- * \brief Declare an array containing the conversion factor for each analog channel 
- */
-float CONV_FACTOR[MONITOR_CHANNELS];
-
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -94,7 +89,7 @@ float analog_compute_avg(analog_monitor_t* analog_monitor, analog_rails_t rail)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void analog_monitor_init(analog_monitor_t* analog_monitor, float* config) 
+void analog_monitor_init(analog_monitor_t* analog_monitor, const analog_monitor_conf_t* config) 
 {	
 	///< Init buffer and avg outputs
 	for (int32_t i = 0; i < MONITOR_CHANNELS; ++i)
@@ -108,7 +103,7 @@ void analog_monitor_init(analog_monitor_t* analog_monitor, float* config)
 		analog_monitor->avg[i] = 0;
 		
 		//Init conv_factor
-		CONV_FACTOR[i] = config[i];
+		analog_monitor->conv_factor[i] = config->conv_factor[i];
 	}
 
 	// Init desired ADC pin
@@ -193,7 +188,7 @@ task_return_t analog_monitor_update(analog_monitor_t* analog_monitor)
 	{
 		if(analog_monitor->enable[i])
 		{
-			analog_monitor->avg[i] = analog_compute_avg(analog_monitor, i) * CONV_FACTOR[i];
+			analog_monitor->avg[i] = analog_compute_avg(analog_monitor, i) * analog_monitor->conv_factor[i];
 		}
 	}
 

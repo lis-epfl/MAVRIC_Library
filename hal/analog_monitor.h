@@ -69,9 +69,19 @@ typedef enum
 	ANALOG_RAIL_13  	// P9 connector, pin 1
 } analog_rails_t;
 
+
+/**
+ * \brief  Configuration for the module analog monitor
+ */
+typedef struct 
+{
+	float conv_factor[MONITOR_CHANNELS];	///< Conversion factors
+} analog_monitor_conf_t;
+
 typedef struct 
 {
 	bool enable[MONITOR_CHANNELS];
+	float conv_factor[MONITOR_CHANNELS];
 	int16_t buffer[MONITOR_CHANNELS][MONITOR_SAMPLES];
 	float avg[MONITOR_CHANNELS];
 } analog_monitor_t;
@@ -82,7 +92,7 @@ typedef struct
  * \param	analog_monitor	The pointer to the analog monitor structure
  * \param	config			The configuration array for CONV_FACTOR of the ADC
  */
-void analog_monitor_init(analog_monitor_t* analog_monitor, float* config);
+void analog_monitor_init(analog_monitor_t* analog_monitor, const analog_monitor_conf_t* config);
 
 
 /**
