@@ -30,86 +30,82 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file analog_monitor.h
+ * \file analog_monitor_default_config.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
  * \author Gregoire Heitz
  *   
- * \brief The driver for the analog monitor module
+ * \brief The configuration for the analog monitor module
+ *
+ * in MAVRIC autopilot we have a voltage divider on ADC_6, ADC_7, ADC_10 and ADC_11
+ * Voltage divider values change from rev_4 to rev_4_1 and followings
+ *
+ * For rev_4 the inverse of the voltage divider is
+ * 6.6f on ADC_6 and ADC_7 and 11.0f on ADC_10 and ADC_11
+ *
+ * For rev4_1 and followings
+ * 9.1818f on ADC_6 and ADC_7 and 23.0f on ADC_10 and ADC_11
+ *
+ * You can either 
+ * edit this file to change the voltage divider values
+ * or 
+ * in your project, declare float* config = conf_conv_factor; 
+ * and then edit config array to change one or few values accordingly
+ * before calling analog_monitor_init(&central_data->analog_monitor, config);
  *
  ******************************************************************************/
 
 
-#ifndef ANALOG_MONITOR_H_
-#define ANALOG_MONITOR_H_
+#ifndef ANALOG_MONITOR_DEFAULT_CONFIG_H_
+#define ANALOG_MONITOR_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
 	extern "C" {
 #endif
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "scheduler.h"
+#include "analog_monitor.h"
 
-#define MONITOR_CHANNELS 10
-#define MONITOR_SAMPLES  10
 
-typedef enum
+//For board_revision 4.0, use these values in boardsupport.c
+//#define INV_VOLTAGE_DIVIDER_1 6.6f
+//#define INV_VOLTAGE_DIVIDER_2 11.0f
+
+//For board_revision 4_1 and following, use these values
+#define INV_VOLTAGE_DIVIDER_1 9.1818f
+#define INV_VOLTAGE_DIVIDER_2 23.0f
+
+static analog_monitor_conf_t analog_monitor_default_config =
 {
-	ANALOG_RAIL_2,		// ANA connector, pin1
-	ANALOG_RAIL_3,		// ANA connector, pin2
-	ANALOG_RAIL_4,		// ANA connector, pin3
-	ANALOG_RAIL_5,		// ANA connector, pin4
-	ANALOG_RAIL_6,		// 6V
-	ANALOG_RAIL_7,		// 5V_ANA
-	ANALOG_RAIL_10,		// BATTERY_FILTERED
-	ANALOG_RAIL_11,		// BATTERY
-	ANALOG_RAIL_12,		// P8 connector, pin 1
-	ANALOG_RAIL_13  	// P9 connector, pin 1
-} analog_rails_t;
-
-
-/**
- * \brief  Configuration for the module analog monitor
- */
-typedef struct 
-{
-	bool enable[MONITOR_CHANNELS];			///< Activation of each analog channel
-	float conv_factor[MONITOR_CHANNELS];	///< Conversion factors
-} analog_monitor_conf_t;
-
-
-/**
- * \brief  Analog monitor
- */
-typedef struct 
-{
-	bool enable[MONITOR_CHANNELS];						///< Activation of each analog channel
-	float conv_factor[MONITOR_CHANNELS];				///< Conversion factors
-	int16_t buffer[MONITOR_CHANNELS][MONITOR_SAMPLES];	///< Buffer of previous data
-	float avg[MONITOR_CHANNELS];						///< Averaged voltage
-} analog_monitor_t;
-
-
-/**
- * \brief	Initialisation of the analog monitor
- * 
- * \param	analog_monitor	The pointer to the analog monitor structure
- * \param	config			The configuration array for CONV_FACTOR of the ADC
- */
-void analog_monitor_init(analog_monitor_t* analog_monitor, const analog_monitor_conf_t* config);
-
-
-/**
- * \brief	Update of the analog monitor
- * 
- * \param	analog_monitor	The pointer to the analog monitor structure
- */
-task_return_t analog_monitor_update(analog_monitor_t* analog_monitor);
+	.enable =
+	{
+		false,		//ANALOG_RAIL_2,
+		false,		//ANALOG_RAIL_3,
+		false,		//ANALOG_RAIL_4,
+		false,		//ANALOG_RAIL_5,
+		false,		//ANALOG_RAIL_6,
+		false,		//ANALOG_RAIL_7,
+		true,		//ANALOG_RAIL_10
+		true,		//ANALOG_RAIL_11
+		true,		//ANALOG_RAIL_12
+		false,		//ANALOG_RAIL_13
+	},
+	.conv_factor =
+	{
+		1.0f,									//.conv_factor_2 =
+		1.0f,									//.conv_factor_3 =
+		1.0f,									//.conv_factor_4 =
+		1.0f,									//.conv_factor_5 =
+		(0.00023485f * INV_VOLTAGE_DIVIDER_1),	//.conv_factor_6 =
+		(0.00023485f * INV_VOLTAGE_DIVIDER_1),	//.conv_factor_7 =
+		(-0.0002409f * INV_VOLTAGE_DIVIDER_2),	//.conv_factor_10 =
+		(-0.0002409f * INV_VOLTAGE_DIVIDER_2),	//.conv_factor_11 =
+		-0.00025f,								//.conv_factor_12 =
+		-1.0f									//.conv_factor_13 =
+	}
+};
 
 #ifdef __cplusplus
-	}
+}
 #endif
 
-#endif /* ANALOG_MONITOR_H_ */
+#endif /* ANALOG_MONITOR_DEFAULT_CONFIG_H_ */
