@@ -93,7 +93,7 @@ typedef struct
  * \param conf_servo_motor
  * \param conf_servo_custom
  */
-void servos_init(servos_t* servos, servos_conf_t* config);
+void servos_init(servos_t* servos, const servos_conf_t* config);
 
 
 /**

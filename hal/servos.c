@@ -44,7 +44,7 @@
 #include "servos.h"
 #include "print_util.h"
 
-void servos_init(servos_t* servos, servos_conf_t* config)
+void servos_init(servos_t* servos, const servos_conf_t* config)
 {
 	// Init servo array
 	if ( config->servos_count <= MAX_SERVO_COUNT )
