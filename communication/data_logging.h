@@ -128,6 +128,8 @@ typedef struct
 	
 	uint32_t log_data;											///< A flag to stop/start writing to file
 	
+	uint32_t sys_id;											///< the system ID
+	
 	const state_t* state;										///< The pointer to the state structure	
 }data_logging_t;
 
@@ -146,8 +148,9 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
  *
  * \param	data_logging			The pointer to the data logging structure
  * \param	file_name				The name of the file to create
+ * \param	sysid					The sysid of the MAV
  */
-void data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name);
+void data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, uint32_t sysid);
 
 /**
  * \brief	The task to log the data to the SD card
