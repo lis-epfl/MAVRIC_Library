@@ -675,7 +675,7 @@ static mav_result_t navigation_start_stop_navigation(navigation_t* navigation, m
 		}
 		else if (packet->param2 == MAV_GOTO_HOLD_AT_SPECIFIED_POSITION)
 		{
-			navigation->stopping_nav = true;
+			navigation->stop_nav_there = true;
 			
 			waypoint_struct waypoint;
 			
@@ -694,7 +694,7 @@ static mav_result_t navigation_start_stop_navigation(navigation_t* navigation, m
 	else if (packet->param1 == MAV_GOTO_DO_CONTINUE)
 	{
 		navigation->stop_nav = false;
-		navigation->stopping_nav = false;
+		navigation->stop_nav_there = false;
 		
 		result = MAV_RESULT_ACCEPTED;
 	}
@@ -754,7 +754,7 @@ void navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	navigation->auto_landing = false;
 	
 	navigation->stop_nav = false;
-	navigation->stopping_nav = false;
+	navigation->stop_nav_there = false;
 	
 	navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 	navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
@@ -883,7 +883,7 @@ task_return_t navigation_update(navigation_t* navigation)
 						
 						if ( navigation->state->nav_plan_active && !navigation->stop_nav)
 						{
-							if (!navigation->stopping_nav)
+							if (!navigation->stop_nav_there)
 							{
 								navigation_run(navigation->waypoint_handler->waypoint_coordinates,navigation);
 							}
