@@ -300,7 +300,7 @@ static void gps_position_init(position_estimator_t *pos_est)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void position_estimation_init(position_estimator_t *pos_est, position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu)
+void position_estimation_init(position_estimator_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu)
 {
     int32_t i;
 
@@ -309,7 +309,7 @@ void position_estimation_init(position_estimator_t *pos_est, position_estimation
 	pos_est->ahrs = ahrs;
 	pos_est->imu = imu;
 	pos_est->state = state;
-	pos_est->nav_plan_active = state->nav_plan_active;
+	pos_est->nav_plan_active = &state->nav_plan_active;
 	
 	// default GPS home position
 	pos_est->local_position.origin.longitude =  config->origin.longitude;
