@@ -60,6 +60,7 @@ extern "C" {
 #define VEL_DECAY 0.0f
 #define POS_DECAY 0.0f
 
+
 /**
  * \brief The position estimator structure
  */
@@ -67,7 +68,8 @@ typedef struct
 {
 	global_position_t origin;	///<	Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
 	float gravity;				///<	value of the Gravity for position estimation correction
-}conf_position_t;
+} position_estimation_conf_t;
+
 
 /**
  * \brief The position estimator structure
@@ -109,15 +111,14 @@ typedef struct
  * \brief	Initialize the position estimation module
  *
  * \param	pos_est					The pointer to the position estimation structure
+ * \param	config					The configuration for default home position and gravity value
  * \param	state					The pointer to the state structure
  * \param	barometer				The pointer to the barometer structure
  * \param	gps						The pointer to the GPS structure
  * \param	ahrs					The pointer to the attitude estimation structure
  * \param	imu						The pointer to the IMU structure
- * \param	nav_plan_active			The pointer to the flag telling if there is a flight plan loaded
- * \param	conf_position			The configuration for default home position and gravity value
  */
-void position_estimation_init(position_estimator_t *pos_est,state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, bool* nav_plan_active, conf_position_t conf_position);
+void position_estimation_init(position_estimator_t *pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu);
 
 
 /**
