@@ -30,76 +30,61 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file analog_monitor_default_config.h
+ * \file servos.h
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *   
- * \brief The configuration for the analog monitor module
- *
- * in MAVRIC autopilot we have a voltage divider on ADC_6, ADC_7, ADC_10 and ADC_11
- * Voltage divider values change from rev_4 to rev_4_1 and followings
- *
- * For rev_4 the inverse of the voltage divider is
- * 6.6f on ADC_6 and ADC_7 and 11.0f on ADC_10 and ADC_11
- *
- * For rev4_1 and followings
- * 9.1818f on ADC_6 and ADC_7 and 23.0f on ADC_10 and ADC_11
- *
- * You can either 
- * edit this file to change the voltage divider values
- * or 
- * in your project, declare float* config = conf_conv_factor; 
- * and then edit config array to change one or few values accordingly
- * before calling analog_monitor_init(&central_data->analog_monitor, config);
- *
+ * \brief Default configuration for servos
+ * 
  ******************************************************************************/
 
 
-#ifndef ANALOG_MONITOR_DEFAULT_CONFIG_H_
-#define ANALOG_MONITOR_DEFAULT_CONFIG_H_
+#ifndef SERVOS_DEFAULT_CONFIG_H_
+#define SERVOS_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
 	extern "C" {
 #endif
 
-#include "analog_monitor.h"
+#include "servos.h"
 
-#define INV_VOLTAGE_DIVIDER_1 9.1818f	// previously 6.6f for V4.0
-#define INV_VOLTAGE_DIVIDER_2 23.0f		// previously 11.0f for V4.0
 
-static const analog_monitor_conf_t analog_monitor_default_config =
+static const servo_entry_t servo_entry_default_standard =
 {
-	.enable =
-	{
-		false,		//ANALOG_RAIL_2,
-		false,		//ANALOG_RAIL_3,
-		false,		//ANALOG_RAIL_4,
-		false,		//ANALOG_RAIL_5,
-		false,		//ANALOG_RAIL_6,
-		false,		//ANALOG_RAIL_7,
-		true,		//ANALOG_RAIL_10
-		true,		//ANALOG_RAIL_11
-		true,		//ANALOG_RAIL_12
-		false,		//ANALOG_RAIL_13
-	},
-	.conv_factor =
-	{
-		1.0f,									//.conv_factor_2 =
-		1.0f,									//.conv_factor_3 =
-		1.0f,									//.conv_factor_4 =
-		1.0f,									//.conv_factor_5 =
-		(0.00023485f * INV_VOLTAGE_DIVIDER_1),	//.conv_factor_6 =
-		(0.00023485f * INV_VOLTAGE_DIVIDER_1),	//.conv_factor_7 =
-		(-0.0002409f * INV_VOLTAGE_DIVIDER_2),	//.conv_factor_10 =
-		(-0.0002409f * INV_VOLTAGE_DIVIDER_2),	//.conv_factor_11 =
-		-0.00025f,								//.conv_factor_12 =
-		-1.0f									//.conv_factor_13 =
-	}
+	.value 			= 0.0f,
+	.trim 			= 0.0f,
+	.min 			= -1.0f,
+	.max 			= 1.0f,
+	.failsafe 		= 0.0f,
+	.repeat_freq 	= 50,
 };
 
+
+static const servo_entry_t servo_entry_default_esc =
+{
+	.value 			= 0.0f,
+	.trim 			= 0.0f,
+	.min 			= -0.9f,
+	.max 			= 1.0f,
+	.failsafe 		= -1.0f,
+	.repeat_freq 	= 200,
+};
+
+
+static const servo_entry_t servo_entry_default_custom =
+{
+	.value 			= 0.0f,
+	.trim 			= 0.0f,
+	.min 			= -0.0f,
+	.max 			= 0.0f,
+	.failsafe 		= 0.0f,
+	.repeat_freq 	= 50,
+};
+
+
 #ifdef __cplusplus
-}
+	}
 #endif
 
-#endif /* ANALOG_MONITOR_DEFAULT_CONFIG_H_ */
+#endif

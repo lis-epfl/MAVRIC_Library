@@ -64,9 +64,17 @@ typedef struct
 	uint32_t repeat_freq;	///< Update frequency of the servo (in Hz)
 } servo_entry_t;
 
-extern servo_entry_t conf_servos_standard;	
-extern servo_entry_t conf_servos_motor;
-extern servo_entry_t conf_servos_custom;
+
+typedef struct
+{
+	uint32_t servos_count;
+	servo_entry_t servo[MAX_SERVO_COUNT];
+} servos_conf_t;
+
+
+// extern servo_entry_t conf_servos_standard;	
+// extern servo_entry_t conf_servos_motor;
+// extern servo_entry_t conf_servos_custom;
 
 	
 typedef struct 
@@ -74,6 +82,7 @@ typedef struct
 	uint32_t servos_count;
 	servo_entry_t servo[MAX_SERVO_COUNT];
 } servos_t;
+
 
 /**
  * \brief Initializes the servos 
@@ -84,7 +93,8 @@ typedef struct
  * \param conf_servo_motor
  * \param conf_servo_custom
  */
-void servos_init(servos_t* servos, servos_t* config);
+void servos_init(servos_t* servos, servos_conf_t* config);
+
 
 /**
  * \brief Sets the servos to a given value
@@ -94,6 +104,7 @@ void servos_init(servos_t* servos, servos_t* config);
  * \value the servo value to be set
  */
 void servos_set_value(servos_t* servos, uint32_t servo_id, float value);
+
 
 /**
  * \brief Sets the servos to failsafe value
