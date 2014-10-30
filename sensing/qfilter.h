@@ -72,7 +72,7 @@ typedef struct
 	float   ki;				///< The integral gain for the acceleration correction of the biais
 	float   kp_mag;			///< The proportional gain for the magnetometer correction of the angular rates
 	float   ki_mag;			///< The integral gain for the magnetometer correction of the angular rates
-} conf_qfilter_t;
+} qfilter_conf_t;
 
 /**
  * \brief The structure for the quaternion-based attitude estimation
@@ -93,11 +93,11 @@ typedef struct
  * \brief	Initialize the attitude estimation module
  *
  * \param	attitude_filter		The pointer to the attitude structure
+ * \param	config				The qfilter configuration gains
  * \param	imu					The pointer to the IMU structure
  * \param	ahrs				The pointer to the attitude estimation structure
- * \param	conf_qfilter		The qfilter configuration gains
  */
-void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* ahrs, conf_qfilter_t conf_qfilter);
+void qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_t* ahrs);
 
 
 /**
