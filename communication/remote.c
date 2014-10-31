@@ -385,18 +385,18 @@ void remote_get_command_from_remote(remote_t* remote, control_command_t* control
 {
 	remote_update(remote);
 	
-	controls->rpy[ROLL]= remote_get_roll(remote) * remote->scale;
-	controls->rpy[PITCH]= remote_get_pitch(remote) * remote->scale;
-	controls->rpy[YAW]= remote_get_yaw(remote) * remote->scale;
-	controls->thrust = remote_get_throttle(remote);
+	controls->rpy[ROLL] 	= remote_get_roll(remote);
+	controls->rpy[PITCH] 	= remote_get_pitch(remote);
+	controls->rpy[YAW] 		= remote_get_yaw(remote);
+	controls->thrust 		= remote_get_throttle(remote);
 }
 
 void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t* controls)
 {
 	remote_update(remote);
 	
-	controls->tvel[X]= - 10.0f * remote_get_pitch(remote) * remote->scale;
-	controls->tvel[Y]= 10.0f * remote_get_roll(remote) * remote->scale;
-	controls->tvel[Z]= - 1.5f * remote_get_throttle(remote);
-	controls->rpy[YAW] = remote_get_yaw(remote) * remote->scale;
+	controls->tvel[X] 	= - 10.0f * remote_get_pitch(remote);
+	controls->tvel[Y] 	= 10.0f * remote_get_roll(remote);
+	controls->tvel[Z] 	= - 1.5f * remote_get_throttle(remote);
+	controls->rpy[YAW] 	= remote_get_yaw(remote);
 }
