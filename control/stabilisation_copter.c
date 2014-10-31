@@ -223,13 +223,15 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 	}
 	
 	// mix to servo outputs depending on configuration
-	#ifdef CONF_DIAG
-	stabilisation_copter_mix_to_servos_diag_quad(&stabilisation_copter->stabiliser_stack.rate_stabiliser.output, stabilisation_copter->servos);
-	#else
-	#ifdef CONF_CROSS
-	stabilisation_copter_mix_to_servos_cross_quad(&stabilisation_copter->stabiliser_stack.rate_stabiliser.output, stabilisation_copter->servos);
-	#endif
-	#endif
+	if( stabilisation_copter->motor_layout == QUADCOPTER_MOTOR_LAYOUT_DIAG )
+	{
+		stabilisation_copter_mix_to_servos_diag_quad(&stabilisation_copter->stabiliser_stack.rate_stabiliser.output, stabilisation_copter->servos);
+	}
+	else if( stabilisation_copter->motor_layout == QUADCOPTER_MOTOR_LAYOUT_CROSS )
+	{
+		stabilisation_copter_mix_to_servos_cross_quad(&stabilisation_copter->stabiliser_stack.rate_stabiliser.output, stabilisation_copter->servos);
+
+	}
 }
 
 void stabilisation_copter_mix_to_servos_diag_quad(control_command_t *control, servos_t* servos)

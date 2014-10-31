@@ -53,9 +53,7 @@ extern "C" {
 #include <stdint.h>
 #include "qfilter.h"
 
-#include "conf_platform.h"
 #include "imu.h"
-// #include "servo_pwm.h"
 #include "servos.h"
 #include "bmp085.h"
 #include "position_estimation.h"
