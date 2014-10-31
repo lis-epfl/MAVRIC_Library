@@ -83,8 +83,6 @@ typedef struct
  */
 typedef struct 
 {
-	byte_stream_t* rx_stream;		///< Output stream
-	byte_stream_t* tx_stream;		///< Input stream
 	uint32_t sysid;					///< System ID
 	uint32_t compid;				///< System Component ID
 	bool use_dma;
@@ -96,8 +94,10 @@ typedef struct
  *
  * \param 	mavlink_stream		Pointer to the MAVLink stream structure
  * \param 	config				Configuration
+ * \param 	rx_stream;			Output stream
+ * \param 	tx_stream;			Input stream
  */
-void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config);
+void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream);
 
 
 void mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
