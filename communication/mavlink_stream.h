@@ -50,6 +50,21 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include "streams.h"
+
+// #if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
+	// #define NATIVE_BIG_ENDIAN
+// #endif
+
+// #define IS_BIG_ENDIAN (*(uint16_t *)"\0\xff" < 0x100)
+// #if IS_BIG_ENDIAN
+	// #define NATIVE_BIG_ENDIAN
+// #endif
+
+#ifndef __ENDIAN_LITTLE__
+	#define NATIVE_BIG_ENDIAN
+#endif
+
+
 #include "mavlink/include/mavric/mavlink.h"
 
 

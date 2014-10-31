@@ -12,8 +12,6 @@
 //#include "conf_imu_rev3.h"
 #include "conf_imu_rev4.h"
 
-#define NATIVE_BIG_ENDIAN  
-
 #define MAVLINK_SYS_ID 9
 
 
