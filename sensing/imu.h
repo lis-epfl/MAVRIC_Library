@@ -80,6 +80,30 @@ typedef struct
 
 
 /**
+ * \brief Structure containing the configuration 
+ * accelero, gyro and magnetometer sensors' gains
+ */
+typedef struct
+{
+	float bias[3];							///< The biais of the sensor
+	float scale_factor[3];					///< The scale factors of the sensor
+	float orientation[3];					///< The orientation of the sensor
+	uint8_t axis[3];						///< The axis number (X,Y,Z) referring to the sensor datasheet
+} sensor_config_t;
+
+
+/**
+ * \brief The configuration IMU structure
+ */
+typedef struct
+{
+	sensor_config_t accelerometer;		   ///< The gyroscope configuration structure
+	sensor_config_t gyroscope;			   ///< The accelerometer configuration structure
+	sensor_config_t magnetometer;		   ///< The compass configuration structure
+}imu_conf_t;
+
+
+/**
  * \brief The IMU structure
  */
 typedef struct
@@ -112,9 +136,10 @@ typedef struct
  * \brief	Initialize the IMU module
  *
  * \param	imu						The pointer to the IMU structure
+ * \param	conf_imu				The pointer to the configuration IMU structure
  * \param	state					The pointer to the state structure
  */
-void imu_init (imu_t *imu, state_t* state);
+void imu_init (imu_t *imu, imu_conf_t *conf_imu, state_t* state);
 
 
 /**
