@@ -55,6 +55,8 @@ extern "C" {
 #include "coord_conventions.h"
 #include "state.h"
 #include "tasks.h"
+#include "constants.h"
+
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
 #define VEL_DECAY 0.0f

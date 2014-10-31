@@ -43,6 +43,9 @@
 
 #include "stabilisation_copter.h"
 #include "print_util.h"
+#include "constants.h"
+
+#include "conf_platform.h" 	// TODO: remove (use the module mix_to_servo to remove dependency to conf_platform)
 
 void stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, stabilisation_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servos_t* servos)
 {

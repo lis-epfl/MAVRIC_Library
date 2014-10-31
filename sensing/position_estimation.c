@@ -44,8 +44,6 @@
 #include "print_util.h"
 #include "math_util.h"
 #include "time_keeper.h"
-#include "conf_platform.h"
-
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION

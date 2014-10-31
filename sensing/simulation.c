@@ -48,6 +48,9 @@
 #include "quaternions.h"
 #include "maths.h"
 #include "print_util.h"
+#include "constants.h"
+
+#include "conf_platform.h" 	// TODO: remove (use the module mix_to_servo to remove dependency to conf_platform)
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -199,30 +202,6 @@ void forces_from_servos_diag_quad(simulation_model_t* sim)
 	sim->lin_forces_bf[Y] = -(sim->vel_bf[Y] - wind_bf.v[1]) * lateral_airspeed * sim->vehicle_config.vehicle_drag;
 	sim->lin_forces_bf[Z] = -(rotor_lifts[M_FRONT_LEFT]+ rotor_lifts[M_FRONT_RIGHT] +rotor_lifts[M_REAR_LEFT] +rotor_lifts[M_REAR_RIGHT]);
 
-}
-
-
-void forces_from_servos_cross_quad(simulation_model_t* sim)
-{
-	//int32_t i;
-	//float motor_command[4];
-	
-	//TODO: implement the correct forces
-/*	motor_command[M_FRONT] = control->thrust + control->rpy[PITCH] + M_FRONT_DIR * control->rpy[YAW];
-	motor_command[M_RIGHT] = control->thrust - control->rpy[ROLL] + M_RIGHT_DIR * control->rpy[YAW];
-	motor_command[M_REAR]  = control->thrust - control->rpy[PITCH] + M_REAR_DIR * control->rpy[YAW];
-	motor_command[M_LEFT]  = control->thrust + control->rpy[ROLL] + M_LEFT_DIR * control->rpy[YAW];
-	for (i = 0; i < 4; i++)
-	{
-		if (motor_command[i] < MIN_THRUST) motor_command[i] = MIN_THRUST;
-		if (motor_command[i] > MAX_THRUST) motor_command[i] = MAX_THRUST;
-	}
-
-	for (i = 0; i < 4; i++)
-	{
-		central_data->servos[i].value = SERVO_SCALE * motor_command[i];
-	}
-	*/
 }
 
 

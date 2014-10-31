@@ -43,6 +43,7 @@
 #include "remote.h"
 #include "time_keeper.h"
 #include "print_util.h"
+#include "constants.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION

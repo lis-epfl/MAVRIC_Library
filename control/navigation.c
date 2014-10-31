@@ -41,9 +41,9 @@
 
 
 #include "navigation.h"
-#include "conf_platform.h"
 #include "print_util.h"
 #include "time_keeper.h"
+#include "constants.h"
 
 #define KP_YAW 0.2f
 

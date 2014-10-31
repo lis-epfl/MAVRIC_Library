@@ -42,6 +42,7 @@
 
 #include "stabilisation.h"
 #include "print_util.h"
+#include "constants.h"
 
 void stabilisation_init(control_command_t *controls)
 {

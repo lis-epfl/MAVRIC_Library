@@ -44,9 +44,8 @@
 #include <math.h>
 #include "maths.h"
 #include "print_util.h"
-#include "conf_platform.h"
 #include "quick_trig.h"
-
+#include "constants.h"
 
 global_position_t coord_conventions_local_to_global_position(local_coordinates_t input)
 {

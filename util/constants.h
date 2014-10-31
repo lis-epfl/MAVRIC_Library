@@ -30,36 +30,52 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs_default_config.h
+ * \file constants.h
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
  *   
- * \brief The configuration for the ahrs module
+ * \brief Useful constants
  *
  ******************************************************************************/
 
 
-#ifndef AHRS_DEFAULT_CONFIG_H_
-#define AHRS_DEFAULT_CONFIG_H_
+#ifndef MATH_UTIL_H_
+#define MATH_UTIL_H_
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" 
+{
 #endif
 
-#include "ahrs.h"
-#include "constants.h"
 
-ahrs_config_t ahrs_default_config =
+#define GRAVITY 9.81f										///< The gravity constant
+
+typedef enum
 {
-	.x = X,
-	.y = Y,
-	.z = Z
-};
+	X = 0,
+	Y = 1,
+	Z = 2,
+} constants_orientation_t;
+
+
+typedef enum
+{
+	ROLL 	= 0,
+	PITCH 	= 1,
+	YAW 	= 2,
+} constants_roll_pitch_yaw_t;
+
+
+typedef enum
+{
+	UPVECTOR_X = 0,
+	UPVECTOR_Y = 0,
+	UPVECTOR_Z = -1,
+} constants_upvector_t;
 
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* AHRS_DEFAULT_CONFIG_H_ */
+#endif /* MATH_UTIL_H_ */

@@ -50,7 +50,6 @@ extern "C" {
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "conf_platform.h"
 #include "gyroscope.h"
 #include "accelerometer.h"
 #include "magnetometer.h"

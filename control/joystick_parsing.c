@@ -18,6 +18,7 @@
 
 #include "joystick_parsing.h"
 #include "print_util.h"
+#include "constants.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION

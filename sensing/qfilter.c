@@ -41,12 +41,13 @@
 
 
 #include "qfilter.h"
-#include "conf_platform.h"
 #include "coord_conventions.h"
 #include "print_util.h" 
 #include "time_keeper.h"
 #include <math.h>
 #include "maths.h"
+#include "constants.h"
+
 
 
 void qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_t* ahrs)

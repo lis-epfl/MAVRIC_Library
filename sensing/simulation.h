@@ -60,6 +60,8 @@ extern "C" {
 #include "state.h"
 
 #define AIR_DENSITY 1.2								///< The air density
+#define ROTORCOUNT 4								///< Define number of motors
+
 
 /**
  * \brief The vehicle simulation model structure definition
