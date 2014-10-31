@@ -51,7 +51,7 @@ extern "C" {
 #include "data_logging.h"
 
 
-data_logging_conf_t data_logging__default_config =
+data_logging_conf_t data_logging_default_config =
 {
 	.debug = true,
 	.max_data_logging_count = MAX_DATA_LOGGING_COUNT,

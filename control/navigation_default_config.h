@@ -39,8 +39,8 @@
  ******************************************************************************/
 
 
-#ifndef CONF_PID_NAV_H_
-#define CONF_PID_NAV_H_
+#ifndef NAVIGATION_DEFAULT_CONFIG_H_
+#define NAVIGATION_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
 	extern "C" {
@@ -111,4 +111,4 @@ navigation_config_t navigation_default_config =
 }
 #endif
 
-#endif /* CONF_PID_NAV_H_ */
+#endif /* NAVIGATION_DEFAULT_CONFIG_H_ */

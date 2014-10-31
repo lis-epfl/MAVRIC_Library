@@ -39,8 +39,8 @@
  ******************************************************************************/
 
 
-#ifndef CONF_STABILISATION_COPTER_H_
-#define CONF_STABILISATION_COPTER_H_
+#ifndef STABILISATION_COPTER_DEFAULT_CONFIG_H_
+#define STABILISATION_COPTER_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,7 +49,7 @@ extern "C" {
 #include "stabilisation_copter.h"
 
 
-stabilise_copter_conf_t stabilise_default_config =
+stabilisation_copter_conf_t stabilisation_copter_default_config =
 {
 	.stabiliser_stack = 
 	{
@@ -560,4 +560,4 @@ stabilise_copter_conf_t stabilise_default_config =
 }
 #endif
 
-#endif /* CONF_STABILISATION_COPTER_H_ */
+#endif /* STABILISATION_COPTER_DEFAULT_CONFIG_H_ */

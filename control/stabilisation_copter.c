@@ -44,7 +44,7 @@
 #include "stabilisation_copter.h"
 #include "print_util.h"
 
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabilise_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servos_t* servos)
+void stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, stabilisation_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servos_t* servos)
 {
 	
 	stabilisation_copter->stabiliser_stack = stabiliser_conf->stabiliser_stack;
@@ -71,7 +71,7 @@ void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabili
 	print_util_dbg_print("Stabilisation copter init.\r\n");
 }
 
-void stabilisation_copter_position_hold(stabilise_copter_t* stabilisation_copter, const control_command_t* input, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator)
+void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_copter, const control_command_t* input, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator)
 {
 	aero_attitude_t attitude_yaw_inverse;
 	quat_t q_rot;
@@ -114,7 +114,7 @@ void stabilisation_copter_position_hold(stabilise_copter_t* stabilisation_copter
 	stabilisation_copter->controls->control_mode = ATTITUDE_COMMAND_MODE;//VELOCITY_COMMAND_MODE;
 }
 
-void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_copter)
+void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisation_copter)
 {
 	float rpyt_errors[4];
 	control_command_t input;
