@@ -50,8 +50,11 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include "streams.h"
-#include "conf_platform.h"
 #include "mavlink/include/mavric/mavlink.h"
+
+
+#define MAVLINK_BASE_STATION_ID 255
+
 
 /**
  * \brief	Mavlink structures for the receive message and its status
