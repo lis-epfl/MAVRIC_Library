@@ -30,101 +30,36 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos.h
+ * \file ahrs_default_config.h
  * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Gregoire Heitz
  *   
- * \brief Default configuration for servos
- * 
+ * \brief The configuration for the ahrs module
+ *
  ******************************************************************************/
 
 
-#ifndef SERVOS_DEFAULT_CONFIG_H_
-#define SERVOS_DEFAULT_CONFIG_H_
+#ifndef AHRS_DEFAULT_CONFIG_H_
+#define AHRS_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
 	extern "C" {
 #endif
 
-#include "servos.h"
+#include "ahrs.h"
 
 
-static const servo_entry_t servo_entry_default_standard =
+ahrs_config_t ahrs_default_config =
 {
-	.value 			= 0.0f,
-	.trim 			= 0.0f,
-	.min 			= -1.0f,
-	.max 			= 1.0f,
-	.failsafe 		= 0.0f,
-	.repeat_freq 	= 50,
-};
-
-
-static const servo_entry_t servo_entry_default_esc =
-{
-	.value 			= 0.0f,
-	.trim 			= 0.0f,
-	.min 			= -0.9f,
-	.max 			= 1.0f,
-	.failsafe 		= -1.0f,
-	.repeat_freq 	= 200,
-};
-
-
-static const servo_entry_t servo_entry_default_custom =
-{
-	.value 			= 0.0f,
-	.trim 			= 0.0f,
-	.min 			= -0.0f,
-	.max 			= 0.0f,
-	.failsafe 		= 0.0f,
-	.repeat_freq 	= 50,
-};
-
-servos_conf_t servos_default_config =
-{
-	.servos_count = 4,
-	.servo =
-	{
-		{ //servo_entry_default_esc
-			.value 			= 0.0f,
-			.trim 			= 0.0f,
-			.min 			= -0.9f,
-			.max 			= 1.0f,
-			.failsafe 		= -1.0f,
-			.repeat_freq 	= 200,
-		},
-		{ //servo_entry_default_esc
-			.value 			= 0.0f,
-			.trim 			= 0.0f,
-			.min 			= -0.9f,
-			.max 			= 1.0f,
-			.failsafe 		= -1.0f,
-			.repeat_freq 	= 200,
-		},
-		{ //servo_entry_default_esc
-			.value 			= 0.0f,
-			.trim 			= 0.0f,
-			.min 			= -0.9f,
-			.max 			= 1.0f,
-			.failsafe 		= -1.0f,
-			.repeat_freq 	= 200,
-		},
-		{ //servo_entry_default_esc
-			.value 			= 0.0f,
-			.trim 			= 0.0f,
-			.min 			= -0.9f,
-			.max 			= 1.0f,
-			.failsafe 		= -1.0f,
-			.repeat_freq 	= 200,
-		}
-	},
+	.x = X,
+	.y = Y,
+	.z = Z
 };
 
 
 #ifdef __cplusplus
-	}
+}
 #endif
 
-#endif
+#endif /* AHRS_DEFAULT_CONFIG_H_ */

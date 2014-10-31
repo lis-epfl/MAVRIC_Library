@@ -30,101 +30,44 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos.h
+ * \file servos_mix_quadcopter_default_config.h
  * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Gregoire Heitz
  *   
- * \brief Default configuration for servos
- * 
+ * \brief Default configuration for the servo_mix for the MAVRIC quad controlled in diag instead of cross
+ *
  ******************************************************************************/
 
 
-#ifndef SERVOS_DEFAULT_CONFIG_H_
-#define SERVOS_DEFAULT_CONFIG_H_
+#ifndef SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_H_
+#define SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" {
 #endif
 
-#include "servos.h"
+
+#include "servos_mix_quadcopter_diag.h"
 
 
-static const servo_entry_t servo_entry_default_standard =
+servo_mix_quadcopter_diag_conf_t servo_mix_quadcopter_diag_default_config =
 {
-	.value 			= 0.0f,
-	.trim 			= 0.0f,
-	.min 			= -1.0f,
-	.max 			= 1.0f,
-	.failsafe 		= 0.0f,
-	.repeat_freq 	= 50,
-};
-
-
-static const servo_entry_t servo_entry_default_esc =
-{
-	.value 			= 0.0f,
-	.trim 			= 0.0f,
-	.min 			= -0.9f,
-	.max 			= 1.0f,
-	.failsafe 		= -1.0f,
-	.repeat_freq 	= 200,
-};
-
-
-static const servo_entry_t servo_entry_default_custom =
-{
-	.value 			= 0.0f,
-	.trim 			= 0.0f,
-	.min 			= -0.0f,
-	.max 			= 0.0f,
-	.failsafe 		= 0.0f,
-	.repeat_freq 	= 50,
-};
-
-servos_conf_t servos_default_config =
-{
-	.servos_count = 4,
-	.servo =
-	{
-		{ //servo_entry_default_esc
-			.value 			= 0.0f,
-			.trim 			= 0.0f,
-			.min 			= -0.9f,
-			.max 			= 1.0f,
-			.failsafe 		= -1.0f,
-			.repeat_freq 	= 200,
-		},
-		{ //servo_entry_default_esc
-			.value 			= 0.0f,
-			.trim 			= 0.0f,
-			.min 			= -0.9f,
-			.max 			= 1.0f,
-			.failsafe 		= -1.0f,
-			.repeat_freq 	= 200,
-		},
-		{ //servo_entry_default_esc
-			.value 			= 0.0f,
-			.trim 			= 0.0f,
-			.min 			= -0.9f,
-			.max 			= 1.0f,
-			.failsafe 		= -1.0f,
-			.repeat_freq 	= 200,
-		},
-		{ //servo_entry_default_esc
-			.value 			= 0.0f,
-			.trim 			= 0.0f,
-			.min 			= -0.9f,
-			.max 			= 1.0f,
-			.failsafe 		= -1.0f,
-			.repeat_freq 	= 200,
-		}
-	},
+	.motor_front_right		= M_FRONT_RIGHT,
+	.motor_front_left		= M_FRONT_LEFT,
+	.motor_rear_right		= M_REAR_RIGHT,
+	.motor_rear_left		= M_REAR_LEFT,
+	.motor_front_right_dir	= M_FR_DIR,
+	.motor_front_left_dir	= M_FL_DIR,
+	.motor_rear_right_dir	= M_RR_DIR,
+	.motor_rear_left_dir	= M_RL_DIR,
+	.min_thrust				= MIN_THRUST,
+	.max_thrust				= MAX_THRUST
 };
 
 
 #ifdef __cplusplus
-	}
+}
 #endif
 
-#endif
+#endif // SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_H_
