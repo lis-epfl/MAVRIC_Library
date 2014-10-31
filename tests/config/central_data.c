@@ -7,7 +7,6 @@
 
 
 #include "central_data.h"
-#include "remote_controller.h"
 #include "simulation.h"
 #include "conf_sim_model.h"
 

@@ -23,7 +23,6 @@
 #include "stabilisation_copter.h"
 // #include "stabilisation_hybrid.h"
 
-#include "remote_controller.h"
 #include "pid_control.h"
 #include "streams.h"
 //#include "uart_int.h"
