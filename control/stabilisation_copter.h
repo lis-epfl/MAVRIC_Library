@@ -56,6 +56,16 @@ extern "C" {
 #include "mavlink_waypoint_handler.h"
 
 /**
+ * \brief Motor Layout (cross or diag)
+ */
+typedef enum
+{
+	QUADCOPTER_MOTOR_LAYOUT_DIAG 	= 0,
+	QUADCOPTER_MOTOR_LAYOUT_CROSS 	= 1,
+} quadcopter_motor_layout_t;
+
+
+/**
  * \brief Structure containing the stacked controller
  */
 typedef struct 
@@ -73,6 +83,7 @@ typedef struct
 typedef struct
 {
 	float thrust_hover_point;									///< The hover point of the thrust
+	quadcopter_motor_layout_t motor_layout;						///< Motor layout (cross or diag)
 	stabiliser_stack_copter_t stabiliser_stack;					///< The pointer to the PID parameters values for the stacked controller 
 	control_command_t* controls;								///< The pointer to the control structure
 	const imu_t* imu;											///< The pointer to the IMU structure
@@ -86,6 +97,8 @@ typedef struct
  */
 typedef struct  
 {
+	float thrust_hover_point;									///< The hover point of the thrust
+	quadcopter_motor_layout_t motor_layout;						///< Motor layout (cross or diag)
 	stabiliser_stack_copter_t stabiliser_stack;					///< The pointer to the PID parameters values and output for the stacked controller
 } stabilisation_copter_conf_t;
 

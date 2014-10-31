@@ -30,39 +30,31 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_quadcopter_default_config.h
+ * \file ahrs_default_config.h
  * 
  * \author MAV'RIC Team
  * \author Gregoire Heitz
  *   
- * \brief Default configuration for the servo_mix for the MAVRIC quad controlled in diag instead of cross
+ * \brief The configuration for the ahrs module
  *
  ******************************************************************************/
 
 
-#ifndef SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_H_
-#define SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_H_
+#ifndef AHRS_DEFAULT_CONFIG_H_
+#define AHRS_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
-extern "C" {
+	extern "C" {
 #endif
 
+#include "ahrs.h"
 
-#include "servos_mix_quadcopter_diag.h"
 
-
-servo_mix_quadcopter_diag_conf_t servo_mix_quadcopter_diag_default_config =
+ahrs_config_t ahrs_default_config =
 {
-	.motor_front_right		= 2,
-	.motor_front_left		= 1,
-	.motor_rear_right		= 3,
-	.motor_rear_left		= 0,
-	.motor_front_right_dir	= 1,
-	.motor_front_left_dir	= -1,
-	.motor_rear_right_dir	= -1,
-	.motor_rear_left_dir	= 1,
-	.min_thrust				= -0.9f,
-	.max_thrust				= 1.0f,
+	.x = X,
+	.y = Y,
+	.z = Z
 };
 
 
@@ -70,4 +62,4 @@ servo_mix_quadcopter_diag_conf_t servo_mix_quadcopter_diag_default_config =
 }
 #endif
 
-#endif // SERVOS_MIX_QUADCOPTER_DIAG_DEFAULT_CONFIG_H_
+#endif /* AHRS_DEFAULT_CONFIG_H_ */

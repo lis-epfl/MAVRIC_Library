@@ -51,7 +51,9 @@ extern "C" {
 
 stabilisation_copter_conf_t stabilisation_copter_default_config =
 {
-	.stabiliser_stack = 
+	.thrust_hover_point = -0.3f,
+	.motor_layout 		= QUADCOPTER_MOTOR_LAYOUT_DIAG,
+	.stabiliser_stack 	= 
 	{
 		// #############################################################################
 		// ######  RATE CONTROL  #######################################################

@@ -48,6 +48,7 @@ void stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, sta
 {
 	
 	stabilisation_copter->stabiliser_stack = stabiliser_conf->stabiliser_stack;
+	stabilisation_copter->motor_layout = stabiliser_conf->motor_layout;
 	stabilisation_copter->controls = controls;
 	stabilisation_copter->imu = imu;
 	stabilisation_copter->ahrs = ahrs;
@@ -66,7 +67,7 @@ void stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, sta
 	controls->theading = 0.0f;
 	controls->thrust = -1.0f;
 	
-	stabilisation_copter->thrust_hover_point = THRUST_HOVER_POINT;
+	stabilisation_copter->thrust_hover_point = stabiliser_conf->thrust_hover_point;
 
 	print_util_dbg_print("Stabilisation copter init.\r\n");
 }
@@ -101,7 +102,7 @@ void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_co
 	
 	pid_output_global[0] = stabilisation_copter->stabiliser_stack.position_stabiliser.output.rpy[0];
 	pid_output_global[1] = stabilisation_copter->stabiliser_stack.position_stabiliser.output.rpy[1];
-	pid_output_global[2] = stabilisation_copter->stabiliser_stack.position_stabiliser.output.thrust + THRUST_HOVER_POINT;
+	pid_output_global[2] = stabilisation_copter->stabiliser_stack.position_stabiliser.output.thrust + stabilisation_copter->thrust_hover_point;
 	
 	float pid_output_local[3];
 	quaternions_rotate_vector(q_rot, pid_output_global, pid_output_local);
