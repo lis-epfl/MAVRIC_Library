@@ -100,6 +100,18 @@ void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_messag
 		mav_mode_t new_mode;
 		new_mode.byte = packet.base_mode;
 		
+		if (new_mode.ARMED == ARMED_ON)
+		{
+			if (state->mav_mode.ARMED == ARMED_OFF)
+			{
+				state_switch_to_active_mode(state, &state->mav_state);
+			}
+		}
+		else
+		{
+			state->mav_state = MAV_STATE_STANDBY;
+		}
+		
 		state->mav_mode.ARMED = new_mode.ARMED;
 		state->mav_mode.MANUAL = new_mode.MANUAL;
 		//state->mav_mode.HIL = new_mode.HIL;
@@ -112,15 +124,7 @@ void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_messag
 		print_util_dbg_print("New mav mode:");
 		print_util_dbg_print_num(state->mav_mode.byte,10);
 		print_util_dbg_print("\r");
-
-		if (state->mav_mode.ARMED == ARMED_ON)
-		{
-			state->mav_state = MAV_STATE_ACTIVE;
-		}
-		else
-		{
-			state->mav_state = MAV_STATE_STANDBY;
-		}
+		
 	}
 }
 
@@ -131,6 +135,18 @@ static mav_result_t state_telemetry_toggle_arm(state_t* state, mavlink_command_l
 	mav_mode_t new_mode;
 	new_mode.byte = packet->param1;
 	
+	if (new_mode.ARMED == ARMED_ON)
+	{
+		if (state->mav_mode.ARMED == ARMED_OFF)
+		{
+			state_switch_to_active_mode(state, &state->mav_state);
+		}
+	}
+	else
+	{
+		state->mav_state = MAV_STATE_STANDBY;
+	}
+	
 	state->mav_mode.ARMED = new_mode.ARMED;
 	state->mav_mode.MANUAL = new_mode.MANUAL;
 	state->mav_mode.STABILISE = new_mode.STABILISE;
@@ -138,15 +154,6 @@ static mav_result_t state_telemetry_toggle_arm(state_t* state, mavlink_command_l
 	state->mav_mode.AUTO = new_mode.AUTO;
 	state->mav_mode.TEST = new_mode.TEST;
 	state->mav_mode.CUSTOM = new_mode.CUSTOM;
-	
-	if (state->mav_mode.ARMED == ARMED_ON)
-	{	
-		state->mav_state = MAV_STATE_ACTIVE;
-	}
-	else
-	{
-		state->mav_state = MAV_STATE_STANDBY;
-	}
 	
 	return result;
 }

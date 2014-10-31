@@ -96,3 +96,14 @@ void state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	
 	print_util_dbg_print("State initialized.\r\n");
 }
+
+void state_switch_to_active_mode(state_t* state, mav_state_t* mav_state)
+{
+	*mav_state = MAV_STATE_ACTIVE;
+	
+	// Tell other modules to reset position and re-compute waypoints
+	state->reset_position = true;
+	state->nav_plan_active = false;
+	
+	print_util_dbg_print("Switching to active mode.\r\n");
+}
