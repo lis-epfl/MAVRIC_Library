@@ -120,11 +120,8 @@ void state_machine_update(state_machine_t* state_machine)
 			
 			if ( mode_new.ARMED == ARMED_ON )
 			{
-				state_new = MAV_STATE_ACTIVE;
-			
-				// Tell other modules to reset position and re-compute waypoints
-				state_machine->state->reset_position = true;
-				state_machine->state->nav_plan_active = false;
+				print_util_dbg_print("Swtiching from state_machine.\r\n");
+				state_switch_to_active_mode(state_machine->state, &state_new);
 			}
 			break;
 		

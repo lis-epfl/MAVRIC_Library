@@ -536,6 +536,8 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	data_logging->buffer_add_size = 8;
 	#endif
 	
+	data_logging->sys_id = 256; // Out of normal bound, to tell wheter it is initialised or not
+	
 	data_logging->file_name = malloc(data_logging->buffer_name_size);
 	data_logging->name_n_extension = malloc(data_logging->buffer_name_size);
 	
@@ -569,13 +571,18 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	print_util_dbg_print("[Data logging] Data logging initialised.\r\n");
 }
 
-void data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name)
+void data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, uint32_t sysid)
 {
 	int32_t i = 0;
 	
 	char *file_add = malloc(data_logging->buffer_add_size);
 	
-	snprintf(data_logging->file_name, data_logging->buffer_name_size, "%s", file_name);
+	data_logging->sys_id = sysid;
+	
+	if (!data_logging->file_name_init)
+	{
+		snprintf(data_logging->file_name, data_logging->buffer_name_size, "%s_%ld", file_name, sysid);
+	}
 	data_logging->file_name_init = true;
 	
 	if (data_logging->log_data)
@@ -584,7 +591,7 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 		{
 			if (i > 0)
 			{
-				if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s%s.txt", file_name, file_add) >= data_logging->buffer_name_size)
+				if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s%s.txt", data_logging->file_name, file_add) >= data_logging->buffer_name_size)
 				{
 					print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
 					print_util_dbg_print_num(data_logging->buffer_name_size,10);
@@ -595,7 +602,7 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 			}
 			else
 			{
-				if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s.txt", file_name) >= data_logging->buffer_name_size)
+				if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s.txt", data_logging->file_name) >= data_logging->buffer_name_size)
 				{
 					print_util_dbg_print("Name error: The name is too long! It should be maximum ");
 					print_util_dbg_print_num(data_logging->buffer_name_size,10);
@@ -697,7 +704,8 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 				if (data_logging->fr == FR_OK)
 				{
 					data_logging->sys_mounted = true;
-					data_logging_create_new_log_file(data_logging,data_logging->file_name);
+					
+					data_logging_create_new_log_file(data_logging,data_logging->file_name,data_logging->sys_id);
 				}
 				else
 				{
@@ -722,7 +730,7 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 					}
 
 					data_logging->fr = f_close(&data_logging->fil);
-
+					
 					if ( data_logging->fr == FR_OK)
 					{
 						succeed = true;
@@ -735,7 +743,7 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 				}
 					
 				data_logging->file_opened = false;
-
+				data_logging->file_init = false;
 				
 				if (data_logging->debug)
 				{
@@ -752,6 +760,7 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 			else
 			{
 				data_logging->file_opened = false;
+				data_logging->file_init = false;
 			}
 		}
 		if (data_logging->sys_mounted)
@@ -766,6 +775,7 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 			{
 				data_logging->file_opened = false;
 				data_logging->sys_mounted = false;
+				data_logging->file_init = false;
 			}
 		}
 		

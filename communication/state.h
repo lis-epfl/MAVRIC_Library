@@ -104,13 +104,21 @@ typedef struct
 
 
 /**
- * \brief						Initialise the state of the MAV
+ * \brief					Initialise the state of the MAV
  *
- * \param	state		The pointer to the state structure
- * \param	state_config		The pointer to the state configuration structure
+ * \param	state			The pointer to the state structure
+ * \param	state_config	The pointer to the state configuration structure
  * \param	analog_monitor	The pointer to the analog monitor structure
  */
 void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor);
+
+/**
+ * \brief					Makes the switch to active mode
+ *
+ * \param	state			The pointer to the state structure
+ * \param	mav_state		The MAV state
+ */
+void state_switch_to_active_mode(state_t* state,mav_state_t* mav_state);
 
 #ifdef __cplusplus
 }
