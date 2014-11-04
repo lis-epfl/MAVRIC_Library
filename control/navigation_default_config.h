@@ -46,7 +46,7 @@
 	extern "C" {
 #endif
 
-#include "pid_control.h"
+#include "pid_controller.h"
 
 
 navigation_config_t navigation_default_config =

@@ -56,7 +56,7 @@ extern "C" {
 #include "mavlink_communication.h"
 #include "state.h"
 #include "remote.h"
-#include "pid_control.h"
+#include "pid_controller.h"
 #include <stdbool.h>
 
 
