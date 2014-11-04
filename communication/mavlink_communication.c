@@ -48,7 +48,13 @@
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
-
+/**
+ * \brief 	Toggle mavlink telemetry stream
+ *
+ * \param scheduler		scheduler of the MAV
+ * \param sysid			MAV sysid
+ * \param msg			pointer to the stream you want to toggle
+ */
 static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler, uint32_t sysid, mavlink_message_t* msg);
 
 
@@ -114,7 +120,7 @@ static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler
 			{
 				print_util_dbg_print("This stream ID is not registred and cannot be activated.\r\n");
 			}
-		}
+		} //end of else request.req_stream_id != 255
 	}	
 }
 
