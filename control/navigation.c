@@ -333,9 +333,13 @@ static mav_result_t navigation_set_auto_landing(navigation_t* navigation, mavlin
 	if (navigation->state->in_the_air)
 	{
 		result = MAV_RESULT_ACCEPTED;
-		navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
+		if (!navigation->auto_landing)
+		{
+			navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
+		}
 		
 		navigation->auto_landing = true;
+		navigation->auto_landing_next_state = false;
 		print_util_dbg_print("Auto-landing procedure initialised.\r\n");
 	}
 	else
@@ -650,6 +654,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 				print_util_dbg_print("Auto-landing: disarming motors \r\n");
 				navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
 				navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
+				navigation->waypoint_handler->hold_waypoint_set = false;
 				navigation->auto_landing = false;
 				navigation->state->in_the_air = false;
 				navigation->state->mav_mode.ARMED = ARMED_OFF;
@@ -844,6 +849,9 @@ task_return_t navigation_update(navigation_t* navigation)
 			
 			navigation->auto_landing = false;
 			navigation->auto_takeoff = false;
+			navigation->stop_nav = false;
+			navigation->stop_nav_there = false;
+			navigation->waypoint_handler->hold_waypoint_set = false;
 			navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
 			navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 			navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
@@ -854,6 +862,8 @@ task_return_t navigation_update(navigation_t* navigation)
 			{
 				navigation->auto_landing = false;
 				navigation->auto_takeoff = false;
+				navigation->stop_nav = false;
+				navigation->stop_nav_there = false;
 				navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
 				navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 				navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
