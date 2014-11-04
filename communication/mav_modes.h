@@ -48,72 +48,99 @@
 #include <stdbool.h>
 
 
+/*
+ * \brief enum for defining ARM/DISARM status
+ */
 typedef enum
 {
-	ARMED_OFF = 0,
-	ARMED_ON  = 1,
+	ARMED_OFF = 0,				///< Motors are disarmed
+	ARMED_ON  = 1,				///< Motors are armed
 } mode_flag_armed_t;
 
 
+/*
+ * \brief enum for defining manual piloting mode
+ */
 typedef enum
 {
-	MANUAL_OFF = 0,
-	MANUAL_ON  = 1,
+	MANUAL_OFF = 0,				/// Not piloting in manual mode
+	MANUAL_ON  = 1,				/// Piloting in manual mode
 } mode_flag_manual_t;
 
 
+/*
+ * \brief enum for defining simulation mode
+ */
 typedef enum
 {
-	HIL_OFF = 0,			
-	HIL_ON  = 1,
+	HIL_OFF = 0,				///< Real mode
+	HIL_ON  = 1,				///< Simulation mode
 } mode_flag_hil_t;
 
 
+/*
+ * \brief enum for defining stabilization piloting mode
+ */
 typedef enum
 {
-	STABILISE_OFF = 0,
-	STABILISE_ON  = 1,
+	STABILISE_OFF = 0,			///< Not using stabilization piloting mode
+	STABILISE_ON  = 1,			///< In stabilization piloting mode
 } mode_flag_stabilise_t;
 
 
+/*
+ * \brief enum for defining hover piloting mode
+ */
 typedef enum
 {
-	GUIDED_OFF = 0,
-	GUIDED_ON  = 1,
+	GUIDED_OFF = 0,				///< Not using hover piloting mode
+	GUIDED_ON  = 1,				///< In hover piloting mode
 } mode_flag_guided_t;
 
 
+/*
+ * \brief enum for defining waypoint navigation piloting mode
+ */
 typedef enum
 {
-	AUTO_OFF = 0,
-	AUTO_ON  = 1,
+	AUTO_OFF = 0,				///< Not in waypoint navigation mode
+	AUTO_ON  = 1,				///< In waypoint navigation mode
 } mode_flag_auto_t;
 
 
+/*
+ * \brief enum for defining testing mode
+ */
 typedef enum
 {
-	TEST_OFF = 0,
-	TEST_ON  = 1,
+	TEST_OFF = 0,				///< Not using test mode
+	TEST_ON  = 1,				///< In test mode
 } mode_flag_test_t;
 
 
+/*
+ * \brief enum for defining custom mode
+ */
 typedef enum
 {
-	CUSTOM_OFF = 0,
-	CUSTOM_ON  = 1,
+	CUSTOM_OFF = 0,				///< Not using custom mode
+	CUSTOM_ON  = 1,				///< In custom mode
 } mode_flag_custom_t;
 
 
+/*
+ * \brief Define the structure for the flag corresponding to each mode
+ */
 typedef struct 
 {
-    mode_flag_armed_t 	  ARMED        : 1;
-    mode_flag_manual_t 	  MANUAL       : 1;
-    mode_flag_hil_t 	  HIL          : 1;
-    mode_flag_stabilise_t STABILISE    : 1;
-    mode_flag_guided_t 	  GUIDED       : 1;
-    mode_flag_auto_t 	  AUTO         : 1;
-    mode_flag_test_t 	  TEST         : 1;
-    mode_flag_custom_t 	  CUSTOM       : 1;
+    mode_flag_armed_t 	  ARMED        : 1;			///< Arm motors flag
+    mode_flag_manual_t 	  MANUAL       : 1;			///< Manual piloting mode flag
+    mode_flag_hil_t 	  HIL          : 1;			///< Simulation mode flag
+    mode_flag_stabilise_t STABILISE    : 1;			///< Stabilization piloting mode flag
+    mode_flag_guided_t 	  GUIDED       : 1;			///< Hover piloting mode flag
+    mode_flag_auto_t 	  AUTO         : 1;			///< Waypoint navigation piloting mode flag
+    mode_flag_test_t 	  TEST         : 1;			///< Test mode flag
+    mode_flag_custom_t 	  CUSTOM       : 1;			///< Custom mode flag
 } mav_mode_bitfield_t;
 
 
@@ -147,6 +174,9 @@ typedef union
 } mav_mode_t;
 
 
+/*
+ * \brief enum for defining mode flags
+ */
 typedef enum
 {
 	MODE_FLAG_CUSTOM    = 0,
@@ -164,6 +194,10 @@ typedef enum MAV_MODE_FLAG mav_flag_mask_t;
 
 typedef enum MAV_STATE mav_state_t;
 
+
+/*
+ * \brief enum for defining modes
+ */
 typedef enum
 {
 	MAV_MODE_PRE = 0,						///< 0b00*00000
@@ -174,6 +208,10 @@ typedef enum
 	MAV_MODE_GPS_NAVIGATION = 156			///< 0b10*11100
 } mav_mode_predefined_t;
 
+
+/*
+ * \brief enum for defining custom mode
+ */
 typedef enum
 {
 	CUSTOM_BASE_MODE = 0,
@@ -187,6 +225,13 @@ typedef enum
 	CUST_COLLISION_AVOIDANCE = 32
 }mav_mode_custom_t;
 
+/*
+ * \brief Returns whether motors are armed or not
+ * 
+ * \param mav_mode	correspond to the mode in which the MAV is
+ *
+ * \return true if motor are armed, false otherwise
+ */
 static inline bool mav_modes_is_armed(const mav_mode_t mav_mode)
 {
 	if ( mav_mode.ARMED == ARMED_ON )
@@ -199,7 +244,13 @@ static inline bool mav_modes_is_armed(const mav_mode_t mav_mode)
 	}
 }
 
-
+/*
+ * \brief Returns whether the MAV is in simulation mode
+ * 
+ * \param mav_mode	correspond to the mode in which the MAV is
+ *
+ * \return true if MAV is in simulation mode, false otherwise
+ */
 static inline bool mav_modes_is_hil(const mav_mode_t mav_mode)
 {
 	if ( mav_mode.HIL == HIL_ON )
@@ -213,6 +264,13 @@ static inline bool mav_modes_is_hil(const mav_mode_t mav_mode)
 }
 
 
+/*
+ * \brief Returns whether MAV is in manual piloting mode
+ * 
+ * \param mav_mode	correspond to the mode in which the MAV is
+ *
+ * \return true if MAv is in manual piloting mode, false otherwise
+ */
 static inline bool mav_modes_is_manual(const mav_mode_t mav_mode)
 {
 	if ( mav_mode.MANUAL == MANUAL_ON )
@@ -226,6 +284,13 @@ static inline bool mav_modes_is_manual(const mav_mode_t mav_mode)
 }
 
 
+/*
+ * \brief Returns whether MAV is in stabilise piloting mode
+ * 
+ * \param mav_mode	correspond to the mode in which the MAV is
+ *
+ * \return true if MAv is in stabilise piloting mode, false otherwise
+ */
 static inline bool mav_modes_is_stabilise(const mav_mode_t mav_mode)
 {
 	if ( mav_mode.STABILISE == STABILISE_ON )
@@ -239,6 +304,13 @@ static inline bool mav_modes_is_stabilise(const mav_mode_t mav_mode)
 }
 
 
+/*
+ * \brief Returns whether MAV is in hover piloting mode
+ * 
+ * \param mav_mode	correspond to the mode in which the MAV is
+ *
+ * \return true if MAv is in hover piloting mode, false otherwise
+ */
 static inline bool mav_modes_is_guided(const mav_mode_t mav_mode)
 {
 	if ( mav_mode.GUIDED == GUIDED_ON )
@@ -251,7 +323,13 @@ static inline bool mav_modes_is_guided(const mav_mode_t mav_mode)
 	}
 }
 
-
+/*
+ * \brief Returns whether MAV is in waypoint navigation piloting mode
+ * 
+ * \param mav_mode	correspond to the mode in which the MAV is
+ *
+ * \return true if MAv is in waypoint navigation piloting mode, false otherwise
+ */
 static inline bool mav_modes_is_auto(const mav_mode_t mav_mode)
 {
 	if ( mav_mode.AUTO == AUTO_ON )
@@ -265,6 +343,13 @@ static inline bool mav_modes_is_auto(const mav_mode_t mav_mode)
 }
 
 
+/*
+ * \brief Returns whether MAV is in test mode
+ * 
+ * \param mav_mode	correspond to the mode in which the MAV is
+ *
+ * \return true if MAv is in test mode, false otherwise
+ */
 static inline bool mav_modes_is_test(const mav_mode_t mav_mode)
 {
 	if ( mav_mode.TEST == TEST_ON )
@@ -278,6 +363,13 @@ static inline bool mav_modes_is_test(const mav_mode_t mav_mode)
 }
 
 
+/*
+ * \brief Returns whether MAV is in custom mode
+ * 
+ * \param mav_mode	correspond to the mode in which the MAV is
+ *
+ * \return true if MAv is in custom mode, false otherwise
+ */
 static inline bool mav_modes_is_custom(const mav_mode_t mav_mode)
 {
 	if ( mav_mode.CUSTOM == CUSTOM_ON )
@@ -290,7 +382,14 @@ static inline bool mav_modes_is_custom(const mav_mode_t mav_mode)
 	}
 }
 
-
+/*
+ * \brief compare two MAV modes
+ * 
+ * \param mode1	correspond to one mode in which the MAV may be
+ * \param mode2	correspond to an other mode in which the MAV may be
+ *
+ * \return true if modes are equal, false otherwise
+ */
 static inline bool mav_modes_are_equal(const mav_mode_t mode1, const mav_mode_t mode2)
 {
 	if ( mode1.byte == mode2.byte )
@@ -303,7 +402,14 @@ static inline bool mav_modes_are_equal(const mav_mode_t mode1, const mav_mode_t 
 	}
 }
 
-
+/*
+ * \brief compare two MAV modes, whatever simulation flag is set or not
+ * 
+ * \param mode1	correspond to one mode in which the MAV may be
+ * \param mode2	correspond to an other mode in which the MAV may be
+ *
+ * \return true if modes are equal, false otherwise
+ */
 static inline bool mav_modes_are_equal_wo_hil(const mav_mode_t mode1, const mav_mode_t mode2)
 {
 	mav_mode_t mode1_ = mode1;
@@ -316,6 +422,14 @@ static inline bool mav_modes_are_equal_wo_hil(const mav_mode_t mode1, const mav_
 }
 
 
+/*
+ * \brief compare two MAV modes, whatever armed flag is set or not
+ * 
+ * \param mode1	correspond to one mode in which the MAV may be
+ * \param mode2	correspond to an other mode in which the MAV may be
+ *
+ * \return true if modes are equal, false otherwise
+ */
 static inline bool mav_modes_are_equal_wo_armed(const mav_mode_t mode1, const mav_mode_t mode2)
 {
 	mav_mode_t mode1_ = mode1;
@@ -328,6 +442,14 @@ static inline bool mav_modes_are_equal_wo_armed(const mav_mode_t mode1, const ma
 }
 
 
+/*
+ * \brief compare two MAV modes, whatever simulation and armed flag is set or not
+ * 
+ * \param mode1	correspond to one mode in which the MAV may be
+ * \param mode2	correspond to an other mode in which the MAV may be
+ *
+ * \return true if modes are equal, false otherwise
+ */
 static inline bool mav_modes_are_equal_wo_hil_and_armed(const mav_mode_t mode1, const mav_mode_t mode2)
 {
 	mav_mode_t mode1_ = mode1;
@@ -342,6 +464,20 @@ static inline bool mav_modes_are_equal_wo_hil_and_armed(const mav_mode_t mode1, 
 }
 
 
+/*
+ * \brief Returns the corresponding MAV mode
+ * 
+ * \param armed			correspond to the armed flag
+ * \param hil			correspond to the simulation flag
+ * \param manual		correspond to the maual flag
+ * \param stabilise		correspond to the stabilization flag
+ * \param guided		correspond to the hover flag
+ * \param auto			correspond to the waypoint navigation flag
+ * \param test			correspond to the test flag
+ * \param custom		correspond to the custom flag
+ *
+ * \return the MAV mode corresponding to the flags
+ */
 static inline mav_mode_t mav_modes_get_from_flags(const mode_flag_armed_t armed, const mode_flag_hil_t hil, const mode_flag_manual_t manual, const mode_flag_stabilise_t stabilise, const mode_flag_guided_t guided, const mode_flag_auto_t autoo, const mode_flag_test_t test, const mode_flag_custom_t custom)
 {
 	mav_mode_t mode;
@@ -358,4 +494,4 @@ static inline mav_mode_t mav_modes_get_from_flags(const mode_flag_armed_t armed,
 	return mode;
 }
 
-#endif
+#endif //MAV_MODE_H
