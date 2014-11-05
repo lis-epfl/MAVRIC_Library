@@ -73,11 +73,6 @@ void attitude_controller_p2_init(attitude_controller_p2_t* controller, const att
 	controller->p_gain_rate[0]  = config->p_gain_rate[0];
 	controller->p_gain_rate[1]  = config->p_gain_rate[1];
 	controller->p_gain_rate[2]  = config->p_gain_rate[2];
-
-	// Init ouput
-	// controller->output[0] = 0.0f;
-	// controller->output[1] = 0.0f;
-	// controller->output[2] = 0.0f;
 }
 
 
