@@ -197,9 +197,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	float v_desired = 0.0f;
 	quat_t qtmp1, qtmp2;
 	
-	float dir_desired_bf[3];
-	// dir_desired[3],
-	
+	float dir_desired_bf[3];	
 	float rel_heading;
 	
 	mav_mode_t mode = navigation->state->mav_mode;
@@ -239,7 +237,8 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		v_desired = pid_control_update_dt(&navigation->hovering_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
 	}
 	
-	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigation->max_climb_rate * norm_rel_dist ) {
+	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigation->max_climb_rate * norm_rel_dist ) 
+	{
 		v_desired = navigation->max_climb_rate * norm_rel_dist /maths_f_abs(dir_desired_bf[Z]);
 	}
 	
@@ -282,7 +281,7 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 	float rel_pos[3];
 	
 	// Control in translational speed of the platform
-	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos,
+	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(	waypoint_input.pos,
 																					rel_pos,
 																					navigation->position_estimator->local_position.pos);
 	navigation_set_speed_command(rel_pos, navigation);
@@ -400,10 +399,9 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 	
 	if (navigation->state->nav_plan_active)
 	{
-		uint8_t i;
 		float rel_pos[3];
 		
-		for (i=0;i<3;i++)
+		for (uint8_t i=0;i<3;i++)
 		{
 			rel_pos[i] = navigation->waypoint_handler->waypoint_coordinates.pos[i]-navigation->waypoint_handler->position_estimator->local_position.pos[i];
 		}
@@ -475,8 +473,6 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 static void navigation_critical_handler(navigation_t* navigation)
 {
 	float rel_pos[3];
-	uint8_t i;
-	
 	bool next_state = false;
 	
 	if (!(navigation->critical_next_state))
@@ -512,7 +508,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 				break;
 		}
 		
-		for (i=0;i<3;i++)
+		for (uint8_t i = 0; i < 3; i++)
 		{
 			rel_pos[i] = navigation->waypoint_handler->waypoint_critical_coordinates.pos[i] - navigation->position_estimator->local_position.pos[i];
 		}
@@ -568,7 +564,6 @@ static void navigation_critical_handler(navigation_t* navigation)
 static void navigation_auto_landing_handler(navigation_t* navigation)
 {
 	float rel_pos[3];
-	uint8_t i;
 	
 	bool next_state = false;
 	
@@ -592,7 +587,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 				break;
 		}
 		
-		for (i=0;i<3;i++)
+		for (uint8_t i = 0; i < 3; i++)
 		{
 			rel_pos[i] = navigation->waypoint_handler->waypoint_critical_coordinates.pos[i] - navigation->position_estimator->local_position.pos[i];
 		}
@@ -649,7 +644,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 
 void navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, remote_t* remote, mavlink_communication_t* mavlink_communication)
 {
-	
+	//navigation pointer init
 	navigation->controls_nav = controls_nav;
 	navigation->qe = qe;
 	navigation->waypoint_handler = waypoint_handler;
@@ -659,6 +654,7 @@ void navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	navigation->control_joystick = control_joystick;
 	navigation->remote = remote;
 	
+	//navigation controller init
 	navigation->controls_nav->rpy[ROLL] = 0.0f;
 	navigation->controls_nav->rpy[PITCH] = 0.0f;
 	navigation->controls_nav->rpy[YAW] = 0.0f;
@@ -760,8 +756,8 @@ task_return_t navigation_update(navigation_t* navigation)
 			navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
 			navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 			navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
-			
 			break;
+			
 		case MAV_STATE_ACTIVE:
 			if((mode_local.byte & 0b11011100) == MAV_MODE_ATTITUDE_CONTROL)
 			{

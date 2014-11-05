@@ -145,6 +145,8 @@ void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler,
  * \brief	Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
  *
  * \param	navigation		The pointer to the navigation structure in central_data
+ *
+ * \return	Task result, currently only TASK_RUN_SUCCESS
  */
 task_return_t navigation_update(navigation_t* navigation);
 
