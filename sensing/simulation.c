@@ -209,7 +209,7 @@ void forces_from_servos_diag_quad(simulation_model_t* sim)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, const servos_t* servos, bool* waypoint_set)
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimation_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, const servos_t* servos, bool* waypoint_set)
 {
 	int32_t i;
 

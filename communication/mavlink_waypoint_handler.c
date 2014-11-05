@@ -228,7 +228,7 @@ static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* way
 	waypoint_handler->number_of_waypoints = 2;
 	waypoint_handler->current_waypoint_count = -1;
 	
-	waypoint_transfo.origin = waypoint_handler->position_estimator->local_position.origin;
+	waypoint_transfo.origin = waypoint_handler->position_estimation->local_position.origin;
 	
 	// Start waypoint
 	waypoint_transfo.pos[X] = circle_radius * cos(angle_step * (waypoint_handler->mavlink_stream->sysid-1));
@@ -314,7 +314,7 @@ static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handle
 	waypoint_handler->number_of_waypoints = 0;
 	waypoint_handler->current_waypoint_count = -1;
 	
-	waypoint_transfo.origin = waypoint_handler->position_estimator->local_position.origin;
+	waypoint_transfo.origin = waypoint_handler->position_estimation->local_position.origin;
 	
 	for (i = 0; i < 10; ++i)
 	{
@@ -373,7 +373,7 @@ static void waypoint_handler_set_stream_scenario(mavlink_waypoint_handler_t* way
 	waypoint_handler->number_of_waypoints = 2;
 	waypoint_handler->current_waypoint_count = -1;
 	
-	waypoint_transfo.origin = waypoint_handler->position_estimator->local_position.origin;
+	waypoint_transfo.origin = waypoint_handler->position_estimation->local_position.origin;
 	
 	// Start waypoint
 	if (waypoint_handler->mavlink_stream->sysid <= (num_of_vhc/2.0f))
@@ -904,25 +904,25 @@ static void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handl
 	if ((uint8_t)packet.target_system == (uint8_t)sysid)
 	{
 		print_util_dbg_print("Set new home location.\r\n");
-		waypoint_handler->position_estimator->local_position.origin.latitude = (double) packet.latitude / 10000000.0f;
-		waypoint_handler->position_estimator->local_position.origin.longitude = (double) packet.longitude / 10000000.0f;
-		waypoint_handler->position_estimator->local_position.origin.altitude = (float) packet.altitude / 1000.0f;
+		waypoint_handler->position_estimation->local_position.origin.latitude = (double) packet.latitude / 10000000.0f;
+		waypoint_handler->position_estimation->local_position.origin.longitude = (double) packet.longitude / 10000000.0f;
+		waypoint_handler->position_estimation->local_position.origin.altitude = (float) packet.altitude / 1000.0f;
 		
 		print_util_dbg_print("New Home location: (");
-		print_util_dbg_print_num(waypoint_handler->position_estimator->local_position.origin.latitude*10000000.0f,10);
+		print_util_dbg_print_num(waypoint_handler->position_estimation->local_position.origin.latitude*10000000.0f,10);
 		print_util_dbg_print(", ");
-		print_util_dbg_print_num(waypoint_handler->position_estimator->local_position.origin.longitude*10000000.0f,10);
+		print_util_dbg_print_num(waypoint_handler->position_estimation->local_position.origin.longitude*10000000.0f,10);
 		print_util_dbg_print(", ");
-		print_util_dbg_print_num(waypoint_handler->position_estimator->local_position.origin.altitude*1000.0f,10);
+		print_util_dbg_print_num(waypoint_handler->position_estimation->local_position.origin.altitude*1000.0f,10);
 		print_util_dbg_print(")\r\n");
 		
 		mavlink_message_t _msg;
 		mavlink_msg_gps_global_origin_pack( waypoint_handler->mavlink_stream->sysid,
 											waypoint_handler->mavlink_stream->compid,
 											&_msg,
-											waypoint_handler->position_estimator->local_position.origin.latitude*10000000.0f,
-											waypoint_handler->position_estimator->local_position.origin.longitude*10000000.0f,
-											waypoint_handler->position_estimator->local_position.origin.altitude*1000.0f);
+											waypoint_handler->position_estimation->local_position.origin.latitude*10000000.0f,
+											waypoint_handler->position_estimation->local_position.origin.longitude*10000000.0f,
+											waypoint_handler->position_estimation->local_position.origin.altitude*1000.0f);
 		mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
 	}
 }
@@ -951,7 +951,7 @@ static mav_result_t waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_
 		print_util_dbg_print("\r\n");
 		waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count].current = 1;
 		waypoint_handler->current_waypoint = waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count];
-		waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(waypoint_handler, waypoint_handler->position_estimator->local_position.origin);
+		waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(waypoint_handler, waypoint_handler->position_estimation->local_position.origin);
 		
 		mavlink_message_t msg;
 		mavlink_msg_mission_current_pack( 	waypoint_handler->mavlink_stream->sysid,
@@ -978,12 +978,12 @@ static mav_result_t waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* ahrs, state_t* state, mavlink_communication_t* mavlink_communication, const mavlink_stream_t* mavlink_stream)
+void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimation_t* position_estimation, const ahrs_t* ahrs, state_t* state, mavlink_communication_t* mavlink_communication, const mavlink_stream_t* mavlink_stream)
 {
 	waypoint_handler->start_timeout = time_keeper_get_millis();
 	waypoint_handler->timeout_max_waypoint = 10000;
 	
-	waypoint_handler->position_estimator = position_estimator;
+	waypoint_handler->position_estimation = position_estimation;
 	waypoint_handler->ahrs = ahrs;
 	waypoint_handler->state = state;
 	
@@ -1204,7 +1204,8 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 	float rel_pos[3];
 	
 	if ((waypoint_handler->number_of_waypoints > 0)
-	&& (waypoint_handler->position_estimator->init_gps_position || (waypoint_handler->state->mav_mode.HIL == HIL_ON))
+	//&& (waypoint_handler->position_estimation->init_gps_position || (*waypoint_handler->simulation_mode==HIL_ON))
+	&& (waypoint_handler->position_estimation->init_gps_position || (waypoint_handler->state->mav_mode.HIL == HIL_ON))
 	&& (waypoint_handler->waypoint_receiving == false))
 	{
 		for (uint8_t i = 0; i<waypoint_handler->number_of_waypoints; i++)
@@ -1213,7 +1214,7 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 			{
 				waypoint_handler->current_waypoint_count = i;
 				waypoint_handler->current_waypoint = waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count];
-				waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(waypoint_handler, waypoint_handler->position_estimator->local_position.origin);
+				waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(waypoint_handler, waypoint_handler->position_estimation->local_position.origin);
 				
 				print_util_dbg_print("Waypoint Nr");
 				print_util_dbg_print_num(i,10);
@@ -1223,7 +1224,7 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 				
 				for (uint8_t j = 0; j < 3; j++)
 				{
-					rel_pos[j] = waypoint_handler->waypoint_coordinates.pos[j]-waypoint_handler->position_estimator->local_position.pos[j];
+					rel_pos[j] = waypoint_handler->waypoint_coordinates.pos[j]-waypoint_handler->position_estimation->local_position.pos[j];
 				}
 				waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 			}

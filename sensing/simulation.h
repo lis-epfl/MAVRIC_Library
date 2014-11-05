@@ -118,7 +118,7 @@ typedef struct
 	float dt;												///< The time base of current update
 	
 	imu_t* imu;												///< The pointer to the IMU structure
-	position_estimator_t* pos_est;							///< The pointer to the position estimation structure
+	position_estimation_t* pos_est;							///< The pointer to the position estimation structure
 	barometer_t* pressure;									///< The pointer to the barometer structure
 	gps_t* gps;												///< The pointer to the GPS structure
 	const servos_t* servos;									///< The pointer to the servos structure
@@ -140,7 +140,7 @@ typedef struct
  * \param	servos			The pointer to the servos structure
  * \param	waypoint_set	The pointer to the waypoint_set boolean value
  */
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, const servos_t* servos, bool* waypoint_set);
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimation_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, const servos_t* servos, bool* waypoint_set);
 
 
 /**

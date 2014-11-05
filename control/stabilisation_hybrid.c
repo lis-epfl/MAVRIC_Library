@@ -57,7 +57,7 @@ void stabilisation_hybrid_init(Stabiliser_Stack_hybrid_t* stabiliser_stack)
 	*stabiliser_stack = stabiliser_defaults_hybrid;
 }
 
-void stabilisation_hybrid_cascade_stabilise_hybrid(imu_t *imu, position_estimator_t *pos_est, control_command_t *control_input)
+void stabilisation_hybrid_cascade_stabilise_hybrid(imu_t *imu, position_estimation_t *pos_est, control_command_t *control_input)
 {
 	float rpyt_errors[4];
 	control_command_t input;

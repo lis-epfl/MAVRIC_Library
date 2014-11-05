@@ -106,7 +106,7 @@ typedef struct
 	state_t* state;									///< The pointer to the state structure
 
 	bool* nav_plan_active;							///< The pointer to the waypoint set flag
-} position_estimator_t;
+} position_estimation_t;
 
 
 /**
@@ -120,7 +120,7 @@ typedef struct
  * \param	ahrs					The pointer to the attitude estimation structure
  * \param	imu						The pointer to the IMU structure
  */
-void position_estimation_init(position_estimator_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t* barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu);
+void position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t* barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu);
 
 
 /**
@@ -128,7 +128,7 @@ void position_estimation_init(position_estimator_t* pos_est, const position_esti
  *
  * \param	pos_est					The pointer to the position estimation structure
  */
-void position_estimation_reset_home_altitude(position_estimator_t *pos_est);
+void position_estimation_reset_home_altitude(position_estimation_t *pos_est);
 
 
 /**
@@ -136,7 +136,7 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est);
  *
  * \param	pos_est					The pointer to the position estimation structure
  */
-void position_estimation_update(position_estimator_t *pos_est);
+void position_estimation_update(position_estimation_t *pos_est);
 
 
 #ifdef __cplusplus

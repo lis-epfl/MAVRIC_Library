@@ -30,32 +30,18 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file attitude_controller_p2.h
+ * \file attitude_controller.h
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief A simple quaternion based proportionnal squared controller for 
- * attitude control.
- * 
- * \details It takes as input the desired attitude, the estimated attitude and 
- * the gyro rates.
- * The control scheme is the following:
- * - first the controller computes local roll pitch and yaw angular errors 
- * ( \f$ qerror \f$ ) using quaternion formulation
- * - angular errors are multiplied by a proportional gain \f$ P_{q} \f$
- * - feedback from the gyro is added to the output with gain \f$ P_{g} \f$
- * 
- * in short:
- * \f$  
- * 			output = (P_{q} . qerror) - (P_{g} . gyro)  
- * \f$
+ * \brief A cascaded controller for attitude & rate control.
  *
  ******************************************************************************/
 
 
-#ifndef ATTITUDE_CONTROLLER_P2_H_
-#define ATTITUDE_CONTROLLER_P2_H_
+#ifndef ATTITUDE_CONTROLLER_H_
+#define ATTITUDE_CONTROLLER_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -64,30 +50,42 @@ extern "C" {
 #include "attitude_error_estimator.h"
 #include "control_command.h"
 #include "ahrs.h"
+#include "pid_controller.h"
+
+/**
+ * \brief Control mode (attitude or rate)
+ */
+typedef enum
+{
+	ATTITUDE_CONTROLLER_MODE_DEFAULT 	= 0,	///< Angles + rate control
+	ATTITUDE_CONTROLLER_MODE_RATE_ONLY	= 1,	///< Rate control only
+} attitude_controller_mode_t;
 
 
 /**
- * \brief P^2 Attitude controller structure
+ * \brief Attitude controller structure
  */
 typedef struct 
 {
-	const ahrs_t* 				ahrs; 							///< Pointer to attitude estimation (input)
-	const attitude_command_t* 	attitude_command;				///< Pointer to attitude command (input)
-	torque_command_t*			torque_command;					///< Pointer to torque command (output)
-	attitude_error_estimator_t  attitude_error_estimator;		///< Attitude error estimator
-	float 						p_gain_angle[3];				///< Proportionnal gain for angular errors
-	float 						p_gain_rate[3];					///< Proportionnal gain applied to gyros rates
-} attitude_controller_p2_t;
+	attitude_error_estimator_t  attitude_error_estimator;	///< Attitude error estimator
+	pid_controller_t 			rate_pid[3];				///< Angular rate PID controller for roll, pitch and yaw
+	pid_controller_t 			angle_pid[3];				///< Attitude PID controller for roll, pitch and yaw
+	attitude_controller_mode_t 	mode;						///< Control mode: Angle (default), or rate
+	const ahrs_t* 				ahrs; 						///< Pointer to attitude estimation (input)
+	const attitude_command_t* 	attitude_command;			///< Pointer to attitude command (input)
+	rate_command_t* 			rate_command;				///< Pointer to rate command (input/output)
+	torque_command_t* 			torque_command;				///< Pointer to torque command (output)
+} attitude_controller_t;
 
 
 /**
- * \brief P^2 Attitude controller configuration
+ * \brief Attitude controller configuration
  */
 typedef struct
 {
-	float p_gain_angle[3];										///< Proportionnal gain for angular errors
-	float p_gain_rate[3];										///< Proportionnal gain applied to gyros rates
-} attitude_controller_p2_conf_t;	
+	pid_controller_conf_t rate_pid_config[3];	///< Angular rate PID controller for roll, pitch and yaw
+	pid_controller_conf_t angle_pid_config[3];	///< Attitude PID controller for roll, pitch and yaw
+} attitude_controller_conf_t;	
 
 
 /**
@@ -95,10 +93,12 @@ typedef struct
  * 
  * \param 	controller    		Pointer to data structure
  * \param 	config				Pointer to configuration
- * \param 	attitude_command 	Pointer to attitude command
  * \param 	ahrs		 		Pointer to the estimated attitude
+ * \param 	attitude_command	Pointer to attitude command (input)
+ * \param 	rate_command		Pointer to rate command (input/output)
+ * \param 	torque_command		Pointer to torque command (output)
  */
-void attitude_controller_p2_init(attitude_controller_p2_t* controller, const attitude_controller_p2_conf_t* config, const attitude_command_t* attitude_command, torque_command_t* torque_command, const ahrs_t* ahrs);
+void attitude_controller_init(attitude_controller_t* controller, const attitude_controller_conf_t* config, const ahrs_t* ahrs, attitude_command_t* attitude_command, rate_command_t* rate_command, torque_command_t* torque_command);
 
 
 /**
@@ -106,11 +106,11 @@ void attitude_controller_p2_init(attitude_controller_p2_t* controller, const att
  * 
  * \param 	controller    	Pointer to data structure
  */
-void attitude_controller_p2_update(attitude_controller_p2_t* controller);
+void attitude_controller_update(attitude_controller_t* controller);
 
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ATTITUDE_CONTROLLER_P2_H_ */
+#endif /* ATTITUDE_CONTROLLER_H_ */

@@ -59,7 +59,7 @@ extern "C" {
  * \param	pos_est					The pointer to the position estimation structure
  * \param	mavlink_handler			The pointer to the MAVLink message handler
  */
-void position_estimation_telemetry_init(position_estimator_t* pos_est, mavlink_message_handler_t* mavlink_handler);
+void position_estimation_telemetry_init(position_estimation_t* pos_est, mavlink_message_handler_t* mavlink_handler);
 
 /**
  * \brief	Function to send the MAVLink position estimation message
@@ -68,7 +68,7 @@ void position_estimation_telemetry_init(position_estimator_t* pos_est, mavlink_m
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
  */
-void position_estimation_telemetry_send_position(const position_estimator_t* pos_est, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void position_estimation_telemetry_send_position(const position_estimation_t* pos_est, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
 /**
@@ -78,7 +78,7 @@ void position_estimation_telemetry_send_position(const position_estimator_t* pos
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
  */
-void position_estimation_telemetry_send_global_position(const position_estimator_t* pos_est, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void position_estimation_telemetry_send_global_position(const position_estimation_t* pos_est, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
 

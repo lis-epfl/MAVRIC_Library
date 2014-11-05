@@ -23,7 +23,7 @@
 #include "stabilisation_copter.h"
 // #include "stabilisation_hybrid.h"
 
-#include "pid_control.h"
+#include "pid_controller.h"
 #include "streams.h"
 //#include "uart_int.h"
 #include "print_util.h"
@@ -70,7 +70,7 @@ typedef struct  {
 	
 	simulation_model_t sim_model;
 	
-	position_estimator_t position_estimator;
+	position_estimation_t position_estimation;
 	
 	// aliases
 	byte_stream_t *telemetry_down_stream, *telemetry_up_stream;

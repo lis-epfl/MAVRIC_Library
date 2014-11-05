@@ -57,10 +57,11 @@ extern "C" {
  */ 
 typedef struct  
 {
-	const position_estimator_t* pos_est;			///< The pointer to the position estimator structure
-	const control_command_t* controls;				///< The pointer to the control structure
-	const ahrs_t* ahrs;								///< The pointer to the attitude estimation structure
-	const mavlink_stream_t* mavlink_stream;			///< The pointer to the MAVLink stream structure
+	const mavlink_stream_t* mavlink_stream;						///< The pointer to the MAVLink stream structure
+	const position_estimation_t* pos_est;						///< The pointer to the position estimator structure
+	const control_command_t* controls;							///< The pointer to the control structure
+	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
+	const mavlink_stream_t* mavlink_stream;						///< The pointer to the MAVLink stream structure
 }hud_telemetry_structure_t;
 
 /**
@@ -71,7 +72,7 @@ typedef struct
  * \param	controls					The pointer to the controls structure
  * \param	ahrs						The pointer to the attitude estimation structure
  */
-void hud_telemetry_init(hud_telemetry_structure_t *hud_telemetry_structure, const position_estimator_t *pos_est, const control_command_t *controls, const ahrs_t *ahrs);
+void hud_telemetry_init(hud_telemetry_structure_t *hud_telemetry_structure, const position_estimation_t *pos_est, const control_command_t *controls, const ahrs_t *ahrs);
 
 /**
  * \brief	Function to send the MAVLink HUD message
