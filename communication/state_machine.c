@@ -42,7 +42,6 @@
 
 
 #include "state_machine.h"
-//#include "remote_controller.h"
 #include "spektrum_satellite.h"
 #include "led.h"
 #include "print_util.h"
@@ -54,6 +53,7 @@ void state_machine_init(state_machine_t *state_machine, const state_machine_conf
 	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
 	state_machine->remote 			= remote;
+	
 	state_machine->channel_switches = 0;
 	state_machine->rc_check 		= 0;
 	state_machine->motor_state 		= 0;

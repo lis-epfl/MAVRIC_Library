@@ -69,7 +69,6 @@ void servo_mix_quadcotper_diag_init(servo_mix_quadcotper_diag_t* mix, const serv
 
 void servos_mix_quadcopter_diag_update(servo_mix_quadcotper_diag_t* mix)
 {
-	int32_t i;
 	float motor[4];
 	
 	// Front Right motor
@@ -97,7 +96,7 @@ void servos_mix_quadcopter_diag_update(servo_mix_quadcotper_diag_t* mix)
 				mix->motor_rear_left_dir * mix->torque_command->xyz[2];
 	
 	// Clip values
-	for (i=0; i<4; i++) 
+	for (int32_t i = 0; i < 4; i++) 
 	{
 		if ( motor[i] < mix->min_thrust )
 		{

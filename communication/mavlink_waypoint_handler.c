@@ -57,6 +57,8 @@
  *
  * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
  * \param	packet					The pointer to the structure of the MAVLink command message long
+ *
+ * \return	mav_result_t			The result of the scenario setting up
  */
 static mav_result_t waypoint_handler_set_scenario(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
 
@@ -319,7 +321,6 @@ static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handle
 		waypoint_handler->number_of_waypoints++;
 		
 		x = 2.0f * PI * rand();
-		//y = 2.0f * PI * rand();
 		
 		// Start waypoint
 		waypoint_transfo.pos[X] = circle_radius * cos(x);
@@ -691,75 +692,70 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 											MAV_CMD_ACK_ERR_NOT_SUPPORTED);
 			mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
 		}
+		else if(packet.current == 3)
+		{ //current = 3 is a flag to tell us this is a alt change only
+			
+			// verify we received the command
+			mavlink_message_t _msg;
+			mavlink_msg_mission_ack_pack(	waypoint_handler->mavlink_stream->sysid,
+											waypoint_handler->mavlink_stream->compid,
+											&_msg,
+											msg->sysid,
+											msg->compid, 
+											MAV_CMD_ACK_ERR_NOT_SUPPORTED);
+			mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
+		}
 		else
 		{
-			//current = 3 is a flag to tell us this is a alt change only
-			if(packet.current == 3)
+			// Check if receiving waypoints
+			if (waypoint_handler->waypoint_receiving)
 			{
-				// verify we received the command
-				mavlink_message_t _msg;
-				mavlink_msg_mission_ack_pack(	waypoint_handler->mavlink_stream->sysid,
-												waypoint_handler->mavlink_stream->compid,
-												&_msg,
-												msg->sysid,
-												msg->compid, 
-												MAV_CMD_ACK_ERR_NOT_SUPPORTED);
-				mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
-			}
-			else
-			{
-				// Check if receiving waypoints
-				if (waypoint_handler->waypoint_receiving)
+				// check if this is the requested waypoint
+				if (packet.seq == waypoint_handler->waypoint_request_number)
 				{
-
-					// check if this is the requested waypoint
-					if (packet.seq == waypoint_handler->waypoint_request_number)
+					print_util_dbg_print("Receiving good waypoint, number ");
+					print_util_dbg_print_num(waypoint_handler->waypoint_request_number,10);
+					print_util_dbg_print(" of ");
+					print_util_dbg_print_num(waypoint_handler->number_of_waypoints - waypoint_handler->num_waypoint_onboard,10);
+					print_util_dbg_print("\r\n");
+						
+					waypoint_handler->waypoint_list[waypoint_handler->num_waypoint_onboard + waypoint_handler->waypoint_request_number] = new_waypoint;
+					waypoint_handler->waypoint_request_number++;
+						
+					if ((waypoint_handler->num_waypoint_onboard + waypoint_handler->waypoint_request_number) == waypoint_handler->number_of_waypoints)
 					{
-						print_util_dbg_print("Receiving good waypoint, number ");
-						print_util_dbg_print_num(waypoint_handler->waypoint_request_number,10);
-						print_util_dbg_print(" of ");
-						print_util_dbg_print_num(waypoint_handler->number_of_waypoints - waypoint_handler->num_waypoint_onboard,10);
-						print_util_dbg_print("\r\n");
-						
-						waypoint_handler->waypoint_list[waypoint_handler->num_waypoint_onboard + waypoint_handler->waypoint_request_number] = new_waypoint;
-						waypoint_handler->waypoint_request_number++;
-						
-						if ((waypoint_handler->num_waypoint_onboard + waypoint_handler->waypoint_request_number) == waypoint_handler->number_of_waypoints)
-						{
+						MAV_MISSION_RESULT type = MAV_MISSION_ACCEPTED;
 							
-							MAV_MISSION_RESULT type = MAV_MISSION_ACCEPTED;
+						mavlink_message_t _msg;
+						mavlink_msg_mission_ack_pack( waypoint_handler->mavlink_stream->sysid,
+														waypoint_handler->mavlink_stream->compid,
+														&_msg,
+														msg->sysid,
+														msg->compid,type);
+						mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
 							
-							mavlink_message_t _msg;
-							mavlink_msg_mission_ack_pack( waypoint_handler->mavlink_stream->sysid,
+						print_util_dbg_print("flight plan received!\n");
+						waypoint_handler->waypoint_receiving = false;
+						waypoint_handler->num_waypoint_onboard = waypoint_handler->number_of_waypoints;
+						waypoint_handler->state->nav_plan_active = false;
+						waypoint_handler_nav_plan_init(waypoint_handler);
+					}
+					else
+					{
+						mavlink_message_t _msg;
+						mavlink_msg_mission_request_pack( 	waypoint_handler->mavlink_stream->sysid,
 															waypoint_handler->mavlink_stream->compid,
 															&_msg,
 															msg->sysid,
-															msg->compid,type);
-							mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
+															msg->compid,
+															waypoint_handler->waypoint_request_number);
+						mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
 							
-							print_util_dbg_print("flight plan received!\n");
-							waypoint_handler->waypoint_receiving = false;
-							waypoint_handler->num_waypoint_onboard = waypoint_handler->number_of_waypoints;
-							waypoint_handler->state->nav_plan_active = false;
-							waypoint_handler_nav_plan_init(waypoint_handler);
-						}
-						else
-						{
-							mavlink_message_t _msg;
-							mavlink_msg_mission_request_pack( 	waypoint_handler->mavlink_stream->sysid,
-																waypoint_handler->mavlink_stream->compid,
-																&_msg,
-																msg->sysid,
-																msg->compid,
-																waypoint_handler->waypoint_request_number);
-							mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
-							
-							print_util_dbg_print("Asking for waypoint ");
-							print_util_dbg_print_num(waypoint_handler->waypoint_request_number,10);
-							print_util_dbg_print("\n");
-						}
+						print_util_dbg_print("Asking for waypoint ");
+						print_util_dbg_print_num(waypoint_handler->waypoint_request_number,10);
+						print_util_dbg_print("\n");
 					}
-				}
+				} //end of if (packet.seq == waypoint_handler->waypoint_request_number)
 				else
 				{
 					MAV_MISSION_RESULT type = MAV_MISSION_ACCEPTED;
@@ -774,9 +770,9 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 													type	);
 					mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
 				}
-			}
-		}
-	}
+			} //end of if (waypoint_handler->waypoint_receiving)
+		} //end of else (packet.current != 2 && !=3 )
+	} //end of if this message is for this system and subsystem
 }
 
 static void waypoint_handler_set_current_waypoint(mavlink_waypoint_handler_t* waypoint_handler, uint32_t sysid, mavlink_message_t* msg)
@@ -791,8 +787,7 @@ static void waypoint_handler_set_current_waypoint(mavlink_waypoint_handler_t* wa
 	{
 		if (packet.seq < waypoint_handler->number_of_waypoints)
 		{
-			int32_t i;
-			for (i=0;i<waypoint_handler->number_of_waypoints;i++)
+			for (int32_t i = 0; i < waypoint_handler->number_of_waypoints; i++)
 			{
 				waypoint_handler->waypoint_list[i].current = 0;
 			}
@@ -824,23 +819,19 @@ static void waypoint_handler_set_current_waypoint(mavlink_waypoint_handler_t* wa
 											MAV_CMD_ACK_ERR_ACCESS_DENIED);
 			mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
 		}
-	}
+	} //end of if this message is for this system and subsystem
 }
 
 static mav_result_t waypoint_handler_set_current_waypoint_from_parameter(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
 {
 	mav_result_t result;
-	
-	uint8_t i;
-	
 	uint16_t new_current = 0;
 	
 	print_util_dbg_print("All MAVs: Return to first waypoint.\r\n");
 	
 	if (new_current < waypoint_handler->number_of_waypoints)
 	{
-
-		for (i=0;i<waypoint_handler->number_of_waypoints;i++)
+		for (uint8_t i=0;i<waypoint_handler->number_of_waypoints;i++)
 		{
 			waypoint_handler->waypoint_list[i].current = 0;
 		}
@@ -1177,7 +1168,7 @@ void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_ha
 	
 	waypoint.x = 465186816 / 1.0e7f; // convert to deg
 	waypoint.y = 65659084 / 1.0e7f; // convert to deg
-	waypoint.z = 180; //m
+	waypoint.z = 20; //m
 	
 	waypoint.param1 = 10; // Hold time in decimal seconds
 	waypoint.param2 = 15; // Acceptance radius in meters
@@ -1210,7 +1201,6 @@ void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_ha
 
 void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler)
 {
-	uint8_t i,j;
 	float rel_pos[3];
 	
 	if ((waypoint_handler->number_of_waypoints > 0)
@@ -1218,7 +1208,7 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 	&& (waypoint_handler->position_estimation->init_gps_position || (waypoint_handler->state->mav_mode.HIL == HIL_ON))
 	&& (waypoint_handler->waypoint_receiving == false))
 	{
-		for (i=0;i<waypoint_handler->number_of_waypoints;i++)
+		for (uint8_t i = 0; i<waypoint_handler->number_of_waypoints; i++)
 		{
 			if ((waypoint_handler->waypoint_list[i].current == 1)&&(!waypoint_handler->state->nav_plan_active))
 			{
@@ -1232,7 +1222,7 @@ void waypoint_handler_nav_plan_init(mavlink_waypoint_handler_t* waypoint_handler
 			
 				waypoint_handler->state->nav_plan_active = true;
 				
-				for (j=0;j<3;j++)
+				for (uint8_t j = 0; j < 3; j++)
 				{
 					rel_pos[j] = waypoint_handler->waypoint_coordinates.pos[j]-waypoint_handler->position_estimation->local_position.pos[j];
 				}
@@ -1271,12 +1261,10 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
 
 local_coordinates_t waypoint_handler_set_waypoint_from_frame(mavlink_waypoint_handler_t* waypoint_handler, global_position_t origin)
 {
-	uint8_t i;
-	
 	global_position_t waypoint_global;
 	local_coordinates_t waypoint_coor;
 	
-	for (i=0;i<3;i++)
+	for (uint8_t i = 0; i < 3; i++)
 	{
 		waypoint_coor.pos[i] = 0.0f;
 	}

@@ -53,12 +53,11 @@ extern "C" {
 /**
  * \brief	Sends the analog sonar value
  * 
- * \param	analog_monitor	The pointer to the analog monitor structure
+ * \param	analog_monitor			The pointer to the analog monitor structure
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
  */
 void  analog_monitor_telemetry_send_sonar(const analog_monitor_t* analog_monitor, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
-
 
 
 #ifdef __cplusplus

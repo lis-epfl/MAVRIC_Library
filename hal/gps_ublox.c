@@ -133,6 +133,7 @@ uint8_t num_skipped_msg = 10;
 /**
  * \brief	Reset the gps U-Blox module
  *
+ * \param	gps						Pointer to the GPS structure
  * \param	_engine_nav_setting		the GPS Nav settings 
  */
 static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t _engine_nav_setting);
@@ -148,6 +149,8 @@ static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t _engine_nav_setting
  * re-processing it from the top, this is unavoidable. The parser
  * attempts to avoid this when possible.
  *
+ * \param gps	Pointer to the GPS structure
+ *
  * \return	true if new velocity and new position message
  */
 static bool gps_ublox_message_decode(gps_t *gps);
@@ -155,6 +158,8 @@ static bool gps_ublox_message_decode(gps_t *gps);
 
 /**
  * \brief	Process the new received message, class by class
+ *
+ * \param gps	Pointer to the GPS structure
  *
  * \return	true if new velocity and new position message
  */
@@ -168,8 +173,6 @@ static bool gps_ublox_process_data(gps_t *gps);
  * \param	len		length of the data to update the checksum
  * \param	ck_a	checksum a: sum of all the data
  * \param	ck_b	checksum b: sum of checksum a
- *
- * \return	true if new velocity and new position message
  */
 static void update_checksum(uint8_t *data, uint8_t len, uint8_t *ck_a, uint8_t *ck_b);
 
@@ -237,6 +240,7 @@ static uint8_t endian_higher_bytes_uint32(uint32_t bytes);
 /**
  * \brief	To send the UBX header of all messages
  *
+ * \param	gps			Pointer to the GPS structure
  * \param	msg_class	the U-Blox class of the message
  * \param	_msg_id		the U-Blox message ID
  * \param	size		the size of the U-Blox following message
@@ -259,6 +263,7 @@ static void ubx_send_cksum(gps_t *gps, uint8_t ck_sum_a, uint8_t ck_sum_b);
  * Class:	0x06	UBX_CLASS_CFG
  * Msg_id:	0x08	MSG_CFG_RATE
  *
+ * \param	gps			Pointer to the GPS structure
  * \param	msg_class	the U-Blox class of the message
  * \param	_msg_id		the U-Blox message ID
  * \param	msg			the CFG_NAV_RATE message
@@ -276,6 +281,7 @@ static void ubx_send_message_CFG_nav_rate(gps_t *gps, uint8_t msg_class, uint8_t
  *
  * \warning	This function sends wrong element
  *
+ * \param	gps					Pointer to the GPS structure
  * \param	msg_class			the U-Blox class of the message
  * \param	_msg_id				the U-Blox message ID
  * \param	engine_settings		the engine_settings sent
@@ -290,6 +296,7 @@ static void ubx_send_message_nav_settings(gps_t *gps, uint8_t msg_class, uint8_t
  * Class:	0x06	UBX_CLASS_CFG
  * Msg_id:	0x01	MSG_CFG_SET_RATE
  *
+ * \param	gps			Pointer to the GPS structure
  * \param	msg_class	the U-Blox class of the message
  * \param	msg_id		the U-Blox message ID
  * \param	rate		the rate of the CFG message
@@ -442,20 +449,20 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			// as data in some other message.
 			//
 			case 1:
-			if (data == UBX_PREAMBLE2)
-			{
-				step++;
-				break;
-			}
-			step = 0;
+				if (data == UBX_PREAMBLE2)
+				{
+					step++;
+					break;
+				}
+				step = 0;
 			case 0:
-			if (data == UBX_PREAMBLE1)
-			{
-				step++;
+				if (data == UBX_PREAMBLE1)
+				{
+					step++;
+					break;
+				}
+				step = 0;
 				break;
-			}
-			step = 0;
-			break;
 			// Message header processing
 			//
 			// We sniff the class and message ID to decide whether we
@@ -466,31 +473,31 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			// fooled by preamble bytes in messages.
 			//
 			case 2:
-			step++;
-			ubx_class = data;
-			cksum_a = data;
-			cksum_b = cksum_a; // reset the checksum accumulators
-			break;
+				step++;
+				ubx_class = data;
+				cksum_a = data;
+				cksum_b = cksum_a; // reset the checksum accumulators
+				break;
 			
 			case 3:
-			step++;
-			cksum_a += data;
-			cksum_b += cksum_a; // checksum byte
-			msg_id = data;
-			break;
+				step++;
+				cksum_a += data;
+				cksum_b += cksum_a; // checksum byte
+				msg_id = data;
+				break;
 			
 			case 4:
-			step++;
-			cksum_a += data;
-			cksum_b += cksum_a; // checksum byte
-			payload_length = data;
-			break;
+				step++;
+				cksum_a += data;
+				cksum_b += cksum_a; // checksum byte
+				payload_length = data;
+				break;
 			
 			case 5:
-			step++;
-			payload_length |= data<<8;
-			cksum_a += data;
-			cksum_b += cksum_a; // checksum byte
+				step++;
+				payload_length |= data<<8;
+				cksum_a += data;
+				cksum_b += cksum_a; // checksum byte
 			
 			if (payload_length > 512)
 			{

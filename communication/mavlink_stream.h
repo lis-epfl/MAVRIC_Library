@@ -108,7 +108,7 @@ typedef struct
 
 
 /**
- * \brief					Initialization of MAVLink sysid, compid and scheduler to send messages
+ * \brief	Initialization of MAVLink sysid, compid and scheduler to send messages
  *
  * \param 	mavlink_stream		Pointer to the MAVLink stream structure
  * \param 	config				Configuration
@@ -118,16 +118,19 @@ typedef struct
 void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream);
 
 
+/**
+ * \brief	Send Mavlink stream
+ *
+ * \param 	mavlink_stream		Pointer to the MAVLink stream structure
+ * \param 	msg					msg to stream
+ */
 void mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
 /**
  * \brief			Mavlink parsing of message
  *
- * \param stream	Pointer to the MAVLink receive stream structure
- * \param rec		Pointer to the MAVLink receive message structure 
- *
- * \return			Error code, 0 if no message decoded, 1 else
+ * \param mavlink_stream	Pointer to the MAVLink receive stream structure
  */
 void mavlink_stream_receive(mavlink_stream_t* mavlink_stream);
 

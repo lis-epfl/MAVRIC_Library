@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Gregoire Heitz
  *   
- * \brief This file defines the gyroscope's data type
+ * \brief This file defines the gyroscope structure, independently from the sensor used
  * 
  ******************************************************************************/
 
@@ -43,11 +43,15 @@
 #ifndef GYRO_H_
 #define GYRO_H_
 
+
+/**
+ * \brief The gyroscope structure
+ */
 typedef struct
 {
-	float data[3];
-	float temperature;
-	float last_update;
+	float data[3];			///< The gyroscope's datas
+	float temperature;		///< The gyroscope's temperature
+	float last_update;		///< The gyroscope last update time
 } gyroscope_t;
 
 #endif /* GYRO_H_ */

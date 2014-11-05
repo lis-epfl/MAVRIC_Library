@@ -56,7 +56,7 @@
 */
 typedef struct
 {
-	magnetometer_t *raw_compass;
+	magnetometer_t *raw_compass;		///< The magnetometer raw data
 } hmc5883l_t;
 
 
@@ -75,7 +75,7 @@ void hmc5883l_init_slow(void);
 /**
  * \brief Returns the magnetometer's data in slow mode
  *
- * \return a pointer to the magnetometer's data in slow mode
+ * \param	compass_outputs		Pointer to the magnetometer's data
 */
 void hmc5883l_update(magnetometer_t *compass_outputs);
 

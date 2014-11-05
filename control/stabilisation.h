@@ -94,8 +94,8 @@ typedef struct {
 } stabiliser_t;
 
 /**
- * \brief	Initialisation of the stabilisation module
- * \param	command				The pointer to the command structure
+ * \brief	Initialization of the stabilization module
+ * \param	controls				The pointer to the controls structure
  */
 void stabilisation_init(control_command_t *controls);
 

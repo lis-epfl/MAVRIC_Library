@@ -150,7 +150,7 @@ typedef struct
  */
 typedef struct 
 {
-	float thrust;
+	float thrust;					///< Thrust command
 } thrust_command_t;
 
 
@@ -168,13 +168,13 @@ typedef struct
  */
 typedef struct
 {
-	control_command_mode_t  mode;
-	thrust_command_t        thrust;
-	torque_command_t        torque;
-	rate_command_t          rate;
-	attitude_command_t      attitude;
-	position_command_t      position;
-	velocity_command_t      velocity;
+	control_command_mode_t  mode;		///< Control command mode
+	thrust_command_t        thrust;		///< Thrust command
+	torque_command_t        torque;		///< Torque command
+	rate_command_t          rate;		///< Rate command
+	attitude_command_t      attitude;	///< Attitude command
+	position_command_t      position;	///< Position command
+	velocity_command_t      velocity;	///< Velocity command
 } command_t;
 
 

@@ -61,8 +61,8 @@ int8_t  i2c_driver_reset(uint8_t  i2c_device);
 /**
  * \brief Trigger a request on the i2c driver
  *
- * \param i2c_device i2c device number
- * \param transfer pointer to an object containing the i2c packet structure
+ * \param	i2c_device	i2c device number
+ * \param	transfer	Pointer to an object containing the i2c packet structure
  *
  * \return error status
  */
@@ -141,15 +141,12 @@ ISR(i2c_int_handler_i2c0,CONF_TWIM_IRQ_GROUP,CONF_TWIM_IRQ_LEVEL)
 	//print_util_putstring(&AVR32_USART0, "!");
 }
 
-/*!  The I2C interrupt handler.
- */
-//__attribute__((__interrupt__))
-//static void i2c_int_handler_i2c1(void) {};
 
 void i2c_driver_init(uint8_t  i2c_device, twim_options_t twi_opt) 
 {
 	volatile avr32_twim_t *twim;
-	switch (i2c_device) {
+	switch (i2c_device) 
+	{
 	case I2C0: 
 		twim = &AVR32_TWIM0;
 		///< Register PDCA IRQ interrupt.
@@ -194,10 +191,10 @@ int8_t  i2c_driver_reset(uint8_t  i2c_device)
 	{
 		case 0: 
 			twim = &AVR32_TWIM0;
-		break;
+			break;
 		case 1:
 			twim = &AVR32_TWIM1;
-		break;
+			break;
 		default: ///< invalid device ID
 			return -1;
 	}		
