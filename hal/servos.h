@@ -51,9 +51,12 @@
 #include <stdint.h>
 #include "scheduler.h"
 
-#define MAX_SERVO_COUNT 8
+#define MAX_SERVO_COUNT 8		///< Maximum number of servos available
 
 
+/**
+ * \brief Define the servos entry structure
+ */
 typedef struct
 {
 	float value;			///< Normalized value of the servo (between -1 and 1)
@@ -64,34 +67,30 @@ typedef struct
 	uint32_t repeat_freq;	///< Update frequency of the servo (in Hz)
 } servo_entry_t;
 
-
+/**
+ * \brief Define the configuration servos structure
+ */
 typedef struct
 {
-	uint32_t servos_count;
-	servo_entry_t servo[MAX_SERVO_COUNT];
+	uint32_t servos_count;					///< Servos counter
+	servo_entry_t servo[MAX_SERVO_COUNT];	///< A rail of servos entry
 } servos_conf_t;
 
-
-// extern servo_entry_t conf_servos_standard;	
-// extern servo_entry_t conf_servos_motor;
-// extern servo_entry_t conf_servos_custom;
-
-	
+/**
+ * \brief Define the servos structure
+ */	
 typedef struct 
 {
-	uint32_t servos_count;
-	servo_entry_t servo[MAX_SERVO_COUNT];
+	uint32_t servos_count;					///< Servos counter
+	servo_entry_t servo[MAX_SERVO_COUNT];	///< A rail of servos entry
 } servos_t;
 
 
 /**
  * \brief Initializes the servos 
  * 
- * \param servos pointer to the servo_t struct
- * \param config option to configure the servo
- * \param conf_servo_standard
- * \param conf_servo_motor
- * \param conf_servo_custom
+ * \param	servos		pointer to the servo_t struct
+ * \param	config		option to configure the servo
  */
 void servos_init(servos_t* servos, const servos_conf_t* config);
 
@@ -99,9 +98,9 @@ void servos_init(servos_t* servos, const servos_conf_t* config);
 /**
  * \brief Sets the servos to a given value
  * 
- * \param servos pointer to the servo_t struct
- * \param servo_id number of the servo on the servo rail
- * \value the servo value to be set
+ * \param	servos		Pointer to the servo_t struct
+ * \param	servo_id	Number of the servo on the servo rail
+ * \param	value		The servo value to be set
  */
 void servos_set_value(servos_t* servos, uint32_t servo_id, float value);
 
@@ -109,7 +108,7 @@ void servos_set_value(servos_t* servos, uint32_t servo_id, float value);
 /**
  * \brief Sets the servos to failsafe value
  * 
- * \param servos pointer to the servo_t struct
+ * \param	servos		Pointer to the servo_t struct
  */
 void servos_set_value_failsafe(servos_t* servos);
 
