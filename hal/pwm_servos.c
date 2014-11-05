@@ -120,12 +120,12 @@ void pwm_servos_init(bool use_servos_7_8_param)
 				    ( 0 <<AVR32_PWM_CLKSEL_OFFSET);
 
 	// output override for low and high side
-	AVR32_PWM.oov  = 	( 0b1111 << ( AVR32_PWM_OOVH0_OFFSET + i ) ) 	|
-						( 0b1111 << ( AVR32_PWM_OOVL0_OFFSET + i ) );
+	AVR32_PWM.oov  = 	( 0b1111 << ( AVR32_PWM_OOVH0_OFFSET ) ) 	|
+						( 0b1111 << ( AVR32_PWM_OOVL0_OFFSET ) );
 
 	// output selection clear: dead time generator (0)
-	AVR32_PWM.osc  = 	( 0b1111 << ( AVR32_PWM_OOVH0_OFFSET + i ) ) 	|
-						( 0b1111 << ( AVR32_PWM_OOVL0_OFFSET + i ) ); 
+	AVR32_PWM.osc  = 	( 0b1111 << ( AVR32_PWM_OOVH0_OFFSET ) ) 	|
+						( 0b1111 << ( AVR32_PWM_OOVL0_OFFSET ) ); 
 	
 	// set up channels: enable dead time insertion
 	for (int32_t i = 0; i < 4; i++) 
