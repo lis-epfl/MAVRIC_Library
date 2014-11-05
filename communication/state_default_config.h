@@ -56,7 +56,6 @@ state_t state_default_config =
 	.mav_mode = { .byte = MAV_MODE_SAFE },
 	.mav_state = MAV_STATE_BOOT,
 	.simulation_mode = HIL_OFF,
-	//.simulation_mode = HIL_ON,
 	.autopilot_type = MAV_TYPE_QUADROTOR,
 	.autopilot_name = MAV_AUTOPILOT_GENERIC,
 	.sensor_present = 0b1111110000100111,

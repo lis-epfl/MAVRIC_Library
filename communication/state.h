@@ -57,9 +57,9 @@ extern "C" {
  */
 typedef enum
 {
-	CLIMB_TO_SAFE_ALT,											///< First critical behavior
-	FLY_TO_HOME_WP,												///< Second critical behavior, comes after CLIMB_TO_SAFE_ALT
-	CRITICAL_LAND												///< Third critical behavior, comes after FLY_TO_HOME_WP
+	CLIMB_TO_SAFE_ALT,									///< First critical behavior
+	FLY_TO_HOME_WP,										///< Second critical behavior, comes after CLIMB_TO_SAFE_ALT
+	CRITICAL_LAND										///< Third critical behavior, comes after FLY_TO_HOME_WP
 } critical_behavior_enum;
 
 /**
@@ -81,7 +81,7 @@ typedef struct
 	mav_mode_t mav_mode;								///< The value of the MAV mode 
 	mav_state_t mav_state;								///< The value of the MAV state
 	
-	mav_mode_custom_t mav_mode_custom;
+	mav_mode_custom_t mav_mode_custom;					///< The value of the custom_mode
 	
 	int32_t simulation_mode;							///< The value of the simulation_mode (0: real, 1: simulation)
 	
@@ -94,7 +94,7 @@ typedef struct
 
 	bool nav_plan_active;								///< Flag to tell that a flight plan (min 1 waypoint) is active
 	bool in_the_air;									///< Flag to tell whether the vehicle is airborne or not
-	bool reset_position;						///< Flag to enable the reset of the position estimation
+	bool reset_position;								///< Flag to enable the reset of the position estimation
 	
 	uint32_t remote_active;								///< Flag to tell whether the remote is active or not
 	
@@ -105,8 +105,9 @@ typedef struct
 /**
  * \brief						Initialise the state of the MAV
  *
- * \param	state		The pointer to the state structure
- * \param	state_config		The pointer to the state configuration structure
+ * \param	state			The pointer to the state structure
+ * \param	state_config	The pointer to the state configuration structure
+ * \param	analog_monitor	The pointer to the analog monitor structure
  */
 void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor);
 
