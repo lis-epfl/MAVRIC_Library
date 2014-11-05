@@ -57,7 +57,6 @@ extern "C" {
  */ 
 typedef struct  
 {
-	const mavlink_stream_t* mavlink_stream;						///< The pointer to the MAVLink stream structure
 	const position_estimation_t* pos_est;						///< The pointer to the position estimator structure
 	const control_command_t* controls;							///< The pointer to the control structure
 	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure

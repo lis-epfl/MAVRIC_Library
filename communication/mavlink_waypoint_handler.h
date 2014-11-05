@@ -137,7 +137,7 @@ void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_ha
  * \param	mavlink_communication	The pointer to the MAVLink communication structure
  */
 void waypoint_handler_init(	mavlink_waypoint_handler_t* waypoint_handler, 
-							position_estimaton_t* position_estimaton, 
+							position_estimation_t* position_estimation, 
 							const ahrs_t* ahrs, state_t* state, 
 							mavlink_communication_t* mavlink_communication, 
 							const mavlink_stream_t* mavlink_stream);
