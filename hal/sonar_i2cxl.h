@@ -62,7 +62,7 @@ typedef struct
 /**
  * \brief Initializes the I2CXL sonar data struct and the i2c bus
  * 
- * \param sonar pointer to the sonar Data structure
+ * \param	sonar	Pointer to the sonar Data structure
  */
 void sonar_i2cxl_init(sonar_i2cxl_t* sonar);
 
@@ -70,7 +70,7 @@ void sonar_i2cxl_init(sonar_i2cxl_t* sonar);
  * \brief Reads last value from sensor and start new recording
  * \details This function should be called at a frequency lower than 10Hz
  * 
- * \param sonar Data struct
+ * \param	sonar	Data struct
  */
 void sonar_i2cxl_update(sonar_i2cxl_t* sonar);
 
