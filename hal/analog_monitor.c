@@ -60,6 +60,8 @@ void trigger_analog_monitor(void);
  *
  * \param	analog_monitor		The pointer to the analog monitor structure
  * \param	rail				The rail structure
+ * 
+ * \return	Return the average of an analog channel
  */
 float analog_compute_avg(analog_monitor_t* analog_monitor, analog_rails_t rail);
 
@@ -75,8 +77,8 @@ void trigger_analog_monitor(void)
 float analog_compute_avg(analog_monitor_t* analog_monitor, analog_rails_t rail)
 {
 	float out = 0.0f;
-	int32_t i;
-	for (i = 0; i  <MONITOR_SAMPLES; i++)
+	
+	for (int32_t i = 0; i  <MONITOR_SAMPLES; i++)
 	{
 		out += (float)analog_monitor->buffer[rail][i];
 	}
