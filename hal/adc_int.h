@@ -64,8 +64,8 @@
 /**
  * \brief Initializes ADC (configures Pins, starts Clock, sets defaults)
  *
- * \param adc_frequency frequency of the ADC
- * \param reference_source voltage reference for the ADC
+ * \param adc_frequency		frequency of the ADC
+ * \param reference_source	voltage reference for the ADC
 */
 void adc_int_init(uint32_t adc_frequency, uint8_t reference_source);
 
@@ -77,10 +77,10 @@ void adc_int_clear_sequencer(void);
 /**
  * \brief Add an ADC sequencer, 
  *
- * \param buffer a pointer to the buffer in which you will store the ADC samples
- * \param input_p the positive input: either AVR32_ADCIFA_INP_GNDANA, either the specific pin eg: AVR32_ADCIFA_INP_ADCIN6
- * \param input_n the negative input: either AVR32_ADCIFA_INN_GNDANA, either the specific pin eg: AVR32_ADCIFA_INN_ADCIN11
- * \param gain gain conversion factor for the ADC, eg: ADCIFA_SHG_1
+ * \param buffer	Pointer to the buffer in which you will store the ADC samples
+ * \param input_p	The positive input: either AVR32_ADCIFA_INP_GNDANA, either the specific pin eg: AVR32_ADCIFA_INP_ADCIN6
+ * \param input_n	The negative input: either AVR32_ADCIFA_INN_GNDANA, either the specific pin eg: AVR32_ADCIFA_INN_ADCIN11
+ * \param gain		Gain conversion factor for the ADC, eg: ADCIFA_SHG_1
  *
  * \return return -1 if you have already reach the max number of sequencer, otherwise return the sequence number
 */
@@ -89,11 +89,11 @@ int8_t adc_int_sequencer_add(int16_t *buffer, uint8_t input_p, uint8_t input_n, 
 /**
  * \brief Start the sampling of the ADC, captures one buffer length and then stops
  *
- * \param length number of samples
- * \param samplingrate sampling rate
- * \param set_oversampling oversampling
- * \param set_oversampling_divider oversampling divider
- * \param continuous define whether we will mode in continuous or discrete mode
+ * \param length					Number of samples
+ * \param samplingrate				Sampling rate
+ * \param set_oversampling			Oversampling
+ * \param set_oversampling_divider	Oversampling divider
+ * \param continuous				Define whether we will mode in continuous or discrete mode
 */
 void adc_int_start_sampling(int32_t length, int32_t samplingrate, int32_t set_oversampling, int32_t set_oversampling_divider, bool continuous);
 
@@ -112,8 +112,8 @@ bool adc_int_sampling_complete(void);
 /**
  * \brief return a specific sample of the ADC channel
  *
- * \param channel which channel of the ADC
- * \param sample which sample we are interested in
+ * \param channel	Which channel of the ADC
+ * \param sample	Which sample we are interested in
  *
  * \return that specific sample for the given channel
 */
