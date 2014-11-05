@@ -54,7 +54,7 @@
  *
  * \param	pos_est					The pointer to the position estimation structure
  */
-static void position_estimation_position_integration(position_estimator_t *pos_est);
+static void position_estimation_position_integration(position_estimation_t *pos_est);
 
 
 /**
@@ -62,7 +62,7 @@ static void position_estimation_position_integration(position_estimator_t *pos_e
  *
  * \param	pos_est					The pointer to the position estimation structure
  */
-static void position_estimation_position_correction(position_estimator_t *pos_est);
+static void position_estimation_position_correction(position_estimation_t *pos_est);
 
 
 /**
@@ -73,13 +73,13 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
  *
  * \return	void
  */
-static void gps_position_init(position_estimator_t *pos_est);
+static void gps_position_init(position_estimation_t *pos_est);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void position_estimation_position_integration(position_estimator_t *pos_est)
+static void position_estimation_position_integration(position_estimation_t *pos_est)
 {
 	int32_t i;
 	float dt = pos_est->ahrs->dt;
@@ -122,7 +122,7 @@ static void position_estimation_position_integration(position_estimator_t *pos_e
 }
 
 
-static void position_estimation_position_correction(position_estimator_t *pos_est)
+static void position_estimation_position_correction(position_estimation_t *pos_est)
 {
 	global_position_t global_gps_position;
 	local_coordinates_t local_coordinates;
@@ -262,7 +262,7 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 }
 
 
-static void gps_position_init(position_estimator_t *pos_est)
+static void gps_position_init(position_estimation_t *pos_est)
 {
 	int32_t i;
 	if ( (pos_est->init_gps_position == false)&&(pos_est->gps->status == GPS_OK) )
@@ -298,7 +298,7 @@ static void gps_position_init(position_estimator_t *pos_est)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void position_estimation_init(position_estimator_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu)
+void position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu)
 {
     int32_t i;
 
@@ -350,7 +350,7 @@ void position_estimation_init(position_estimator_t* pos_est, const position_esti
 }
 
 
-void position_estimation_reset_home_altitude(position_estimator_t *pos_est)
+void position_estimation_reset_home_altitude(position_estimation_t *pos_est)
 {
 	int32_t i;
 	// reset origin to position where quad is armed if we have GPS
@@ -398,7 +398,7 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est)
 }
 
 
-void position_estimation_update(position_estimator_t *pos_est)
+void position_estimation_update(position_estimation_t *pos_est)
 {
 	if (pos_est->state->reset_position)
 	{

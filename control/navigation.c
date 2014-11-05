@@ -156,16 +156,16 @@ static void navigation_auto_landing_handler(navigation_t* navigation);
 static void navigation_waypoint_take_off_init(mavlink_waypoint_handler_t* waypoint_handler)
 {
 	print_util_dbg_print("Automatic take-off, will hold position at: (");
-	print_util_dbg_print_num(waypoint_handler->position_estimator->local_position.pos[X],10);
+	print_util_dbg_print_num(waypoint_handler->position_estimation->local_position.pos[X],10);
 	print_util_dbg_print(", ");
-	print_util_dbg_print_num(waypoint_handler->position_estimator->local_position.pos[Y],10);
+	print_util_dbg_print_num(waypoint_handler->position_estimation->local_position.pos[Y],10);
 	print_util_dbg_print(", ");
 	print_util_dbg_print_num(-10.0f,10);
 	print_util_dbg_print("), with heading of: ");
-	print_util_dbg_print_num((int32_t)(waypoint_handler->position_estimator->local_position.heading*180.0f/3.14f),10);
+	print_util_dbg_print_num((int32_t)(waypoint_handler->position_estimation->local_position.heading*180.0f/3.14f),10);
 	print_util_dbg_print("\r\n");
 
-	waypoint_handler->waypoint_hold_coordinates = waypoint_handler->position_estimator->local_position;
+	waypoint_handler->waypoint_hold_coordinates = waypoint_handler->position_estimation->local_position;
 	waypoint_handler->waypoint_hold_coordinates.pos[Z] = -10.0f;
 	
 	aero_attitude_t aero_attitude;
@@ -225,7 +225,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	}
 	else
 	{
-		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimator->local_position.heading);
+		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimation->local_position.heading);
 	}
 	
 	if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
@@ -252,21 +252,21 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	if (loop_count == 0)
 	{
 		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"v_desired",v_desired*100);
-		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"act_vel",vector_norm(navigation->position_estimator->vel_bf)*100);
+		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"act_vel",vector_norm(navigation->position_estimation->vel_bf)*100);
 		print_util_dbg_print("Desired_vel_Bf(x100): (");
 		print_util_dbg_print_num(dir_desired_bf[X] * 100,10);
 		print_util_dbg_print_num(dir_desired_bf[Y] * 100,10);
 		print_util_dbg_print_num(dir_desired_bf[Z] * 100,10);
 		print_util_dbg_print("). \n");
 		print_util_dbg_print("Actual_vel_bf(x100): (");
-		print_util_dbg_print_num(navigation->position_estimator->vel_bf[X] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimator->vel_bf[Y] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimator->vel_bf[Z] * 100,10);
+		print_util_dbg_print_num(navigation->position_estimation->vel_bf[X] * 100,10);
+		print_util_dbg_print_num(navigation->position_estimation->vel_bf[Y] * 100,10);
+		print_util_dbg_print_num(navigation->position_estimation->vel_bf[Z] * 100,10);
 		print_util_dbg_print("). \n");
 		print_util_dbg_print("Actual_pos(x100): (");
-		print_util_dbg_print_num(navigation->position_estimator->local_position.pos[X] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimator->local_position.pos[Y] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimator->local_position.pos[Z] * 100,10);
+		print_util_dbg_print_num(navigation->position_estimation->local_position.pos[X] * 100,10);
+		print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Y] * 100,10);
+		print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Z] * 100,10);
 		print_util_dbg_print("). \n");
 	}
 	*/
@@ -284,7 +284,7 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 	// Control in translational speed of the platform
 	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos,
 																					rel_pos,
-																					navigation->position_estimator->local_position.pos);
+																					navigation->position_estimation->local_position.pos);
 	navigation_set_speed_command(rel_pos, navigation);
 	
 	navigation->controls_nav->theading=waypoint_input.heading;
@@ -386,7 +386,7 @@ static void navigation_hold_position_handler(navigation_t* navigation)
 	
 	if (!navigation->waypoint_handler->hold_waypoint_set)
 	{
-		navigation_waypoint_hold_init(navigation->waypoint_handler, navigation->waypoint_handler->position_estimator->local_position);
+		navigation_waypoint_hold_init(navigation->waypoint_handler, navigation->waypoint_handler->position_estimation->local_position);
 	}
 }
 
@@ -405,7 +405,7 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 		
 		for (i=0;i<3;i++)
 		{
-			rel_pos[i] = navigation->waypoint_handler->waypoint_coordinates.pos[i]-navigation->waypoint_handler->position_estimator->local_position.pos[i];
+			rel_pos[i] = navigation->waypoint_handler->waypoint_coordinates.pos[i]-navigation->waypoint_handler->position_estimation->local_position.pos[i];
 		}
 		navigation->waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 		
@@ -443,7 +443,7 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 				print_util_dbg_print("\r\n");
 				navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count].current = 1;
 				navigation->waypoint_handler->current_waypoint = navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count];
-				navigation->waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(navigation->waypoint_handler, navigation->waypoint_handler->position_estimator->local_position.origin);
+				navigation->waypoint_handler->waypoint_coordinates = waypoint_handler_set_waypoint_from_frame(navigation->waypoint_handler, navigation->waypoint_handler->position_estimation->local_position.origin);
 				
 				mavlink_message_t msg;
 				mavlink_msg_mission_current_pack( 	navigation->mavlink_stream->sysid,
@@ -466,7 +466,7 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 	{
 		if (!navigation->waypoint_handler->hold_waypoint_set)
 		{
-			navigation_waypoint_hold_init(navigation->waypoint_handler, navigation->waypoint_handler->position_estimator->local_position);
+			navigation_waypoint_hold_init(navigation->waypoint_handler, navigation->waypoint_handler->position_estimation->local_position);
 		}
 		waypoint_handler_nav_plan_init(navigation->waypoint_handler);
 	}
@@ -491,8 +491,8 @@ static void navigation_critical_handler(navigation_t* navigation)
 		{
 			case CLIMB_TO_SAFE_ALT:
 				navigation->state->mav_mode_custom = CLIMB_TO_SAFE_ALT;
-				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = navigation->position_estimator->local_position.pos[X];
-				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = navigation->position_estimator->local_position.pos[Y];
+				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = navigation->position_estimation->local_position.pos[X];
+				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = navigation->position_estimation->local_position.pos[Y];
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = -30.0f;
 				break;
 			
@@ -508,21 +508,21 @@ static void navigation_critical_handler(navigation_t* navigation)
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = 5.0f;
-				navigation->alt_lpf = navigation->position_estimator->local_position.pos[2];
+				navigation->alt_lpf = navigation->position_estimation->local_position.pos[2];
 				break;
 		}
 		
 		for (i=0;i<3;i++)
 		{
-			rel_pos[i] = navigation->waypoint_handler->waypoint_critical_coordinates.pos[i] - navigation->position_estimator->local_position.pos[i];
+			rel_pos[i] = navigation->waypoint_handler->waypoint_critical_coordinates.pos[i] - navigation->position_estimation->local_position.pos[i];
 		}
 		navigation->waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 	}
 	
 	if (navigation->critical_behavior == CRITICAL_LAND)
 	{
-		navigation->alt_lpf = navigation->LPF_gain * navigation->alt_lpf + (1.0f - navigation->LPF_gain) * navigation->position_estimator->local_position.pos[2];
-		if ( (navigation->position_estimator->local_position.pos[2] > -0.1f)&&(maths_f_abs(navigation->position_estimator->local_position.pos[2] - navigation->alt_lpf) <= 0.2f) )
+		navigation->alt_lpf = navigation->LPF_gain * navigation->alt_lpf + (1.0f - navigation->LPF_gain) * navigation->position_estimation->local_position.pos[2];
+		if ( (navigation->position_estimation->local_position.pos[2] > -0.1f)&&(maths_f_abs(navigation->position_estimation->local_position.pos[2] - navigation->alt_lpf) <= 0.2f) )
 		{
 			// Disarming
 			next_state = true;
@@ -580,21 +580,21 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 		{
 			case DESCENT_TO_SMALL_ALTITUDE:
 				navigation->state->mav_mode_custom = CUST_DESCENT_TO_SMALL_ALTITUDE;
-				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimator->local_position;
+				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimation->local_position;
 				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -5.0f;
 				break;
 			
 			case DESCENT_TO_GND:
 				navigation->state->mav_mode_custom = CUST_DESCENT_TO_GND;
-				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimator->local_position;
+				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimation->local_position;
 				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = 0.0f;
-				navigation->alt_lpf = navigation->position_estimator->local_position.pos[2];
+				navigation->alt_lpf = navigation->position_estimation->local_position.pos[2];
 				break;
 		}
 		
 		for (i=0;i<3;i++)
 		{
-			rel_pos[i] = navigation->waypoint_handler->waypoint_critical_coordinates.pos[i] - navigation->position_estimator->local_position.pos[i];
+			rel_pos[i] = navigation->waypoint_handler->waypoint_critical_coordinates.pos[i] - navigation->position_estimation->local_position.pos[i];
 		}
 		
 		navigation->waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
@@ -602,8 +602,8 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 	
 	if (navigation->auto_landing_behavior == DESCENT_TO_GND)
 	{
-		navigation->alt_lpf = navigation->LPF_gain * navigation->alt_lpf + (1.0f - navigation->LPF_gain) * navigation->position_estimator->local_position.pos[2];
-		if ( (navigation->position_estimator->local_position.pos[2] > -0.1f)&&(maths_f_abs(navigation->position_estimator->local_position.pos[2] - navigation->alt_lpf) <= 0.2f) )
+		navigation->alt_lpf = navigation->LPF_gain * navigation->alt_lpf + (1.0f - navigation->LPF_gain) * navigation->position_estimation->local_position.pos[2];
+		if ( (navigation->position_estimation->local_position.pos[2] > -0.1f)&&(maths_f_abs(navigation->position_estimation->local_position.pos[2] - navigation->alt_lpf) <= 0.2f) )
 		{
 			// Disarming
 			next_state = true;
@@ -612,7 +612,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 	
 	if (navigation->auto_landing_behavior == DESCENT_TO_SMALL_ALTITUDE)
 	{
-		if ( (navigation->waypoint_handler->dist2wp_sqr < 3.0f)&&(abs(navigation->position_estimator->local_position.pos[2] - navigation->waypoint_handler->waypoint_hold_coordinates.pos[2]) < 0.5f) )
+		if ( (navigation->waypoint_handler->dist2wp_sqr < 3.0f)&&(abs(navigation->position_estimation->local_position.pos[2] - navigation->waypoint_handler->waypoint_hold_coordinates.pos[2]) < 0.5f) )
 		{
 			next_state = true;
 		}
@@ -647,13 +647,13 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, remote_t* remote, mavlink_communication_t* mavlink_communication)
+void navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const control_command_t* control_joystick, remote_t* remote, mavlink_communication_t* mavlink_communication)
 {
 	
 	navigation->controls_nav = controls_nav;
 	navigation->qe = qe;
 	navigation->waypoint_handler = waypoint_handler;
-	navigation->position_estimator = position_estimator;
+	navigation->position_estimation = position_estimation;
 	navigation->state = state;
 	navigation->mavlink_stream = &mavlink_communication->mavlink_stream;
 	navigation->control_joystick = control_joystick;

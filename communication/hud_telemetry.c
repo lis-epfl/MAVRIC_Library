@@ -45,7 +45,7 @@
 #include "coord_conventions.h"
 #include "mavlink_communication.h"
 
-void hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, const position_estimator_t* pos_est, const control_command_t* controls, const ahrs_t* ahrs)
+void hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, const position_estimation_t* pos_est, const control_command_t* controls, const ahrs_t* ahrs)
 {
 	hud_telemetry_structure->ahrs = ahrs;
 	hud_telemetry_structure->controls            = controls;

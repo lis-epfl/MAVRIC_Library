@@ -47,7 +47,7 @@
 
 #include "conf_platform.h" 	// TODO: remove (use the module mix_to_servo to remove dependency to conf_platform)
 
-void stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, stabilisation_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servos_t* servos)
+void stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, stabilisation_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est,servos_t* servos)
 {
 	
 	stabilisation_copter->stabiliser_stack = stabiliser_conf->stabiliser_stack;
@@ -75,7 +75,7 @@ void stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, sta
 	print_util_dbg_print("Stabilisation copter init.\r\n");
 }
 
-void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_copter, const control_command_t* input, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator)
+void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_copter, const control_command_t* input, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation)
 {
 	aero_attitude_t attitude_yaw_inverse;
 	quat_t q_rot;
@@ -92,9 +92,9 @@ void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_co
 	q_rot = coord_conventions_quaternion_from_aero(attitude_yaw_inverse);
 	
 	float pos_error[4];
-	pos_error[X] = waypoint_handler->waypoint_hold_coordinates.pos[X] - position_estimator->local_position.pos[X];
-	pos_error[Y] = waypoint_handler->waypoint_hold_coordinates.pos[Y] - position_estimator->local_position.pos[Y];
-	pos_error[3] = -(waypoint_handler->waypoint_hold_coordinates.pos[Z] - position_estimator->local_position.pos[Z]);
+	pos_error[X] = waypoint_handler->waypoint_hold_coordinates.pos[X] - position_estimation->local_position.pos[X];
+	pos_error[Y] = waypoint_handler->waypoint_hold_coordinates.pos[Y] - position_estimation->local_position.pos[Y];
+	pos_error[3] = -(waypoint_handler->waypoint_hold_coordinates.pos[Z] - position_estimation->local_position.pos[Z]);
 	
 	pos_error[YAW]= input->rpy[YAW];
 	

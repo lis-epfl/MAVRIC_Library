@@ -70,7 +70,7 @@ typedef struct  {
 	
 	simulation_model_t sim_model;
 	
-	position_estimator_t position_estimator;
+	position_estimation_t position_estimation;
 	
 	// aliases
 	byte_stream_t *telemetry_down_stream, *telemetry_up_stream;

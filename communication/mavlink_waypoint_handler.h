@@ -105,7 +105,7 @@ typedef struct
 	uint32_t start_timeout;										///< The start time for the waypoint timeout
 	uint32_t timeout_max_waypoint;								///< The max waiting time for communication
 
-	position_estimator_t* position_estimator;					///< The pointer to the position estimation structure
+	position_estimation_t* position_estimation;					///< The pointer to the position estimation structure
 	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
 	state_t* state;												///< The pointer to the state structure
 	mavlink_communication_t* mavlink_communication;				///< The pointer to the MAVLink communication structure
@@ -131,12 +131,12 @@ void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_ha
  * \brief	Initialize the waypoint handler
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
- * \param	position_estimator		The pointer to the position estimator structure
+ * \param	position_estimation		The pointer to the position estimator structure
  * \param	ahrs					The pointer to the attitude estimation structure
  * \param	state					The pointer to the state structure
  * \param	mavlink_communication	The pointer to the MAVLink communication structure
  */
-void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* ahrs, state_t* state, mavlink_communication_t* mavlink_communication, const mavlink_stream_t* mavlink_stream);
+void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimation_t* position_estimation, const ahrs_t* ahrs, state_t* state, mavlink_communication_t* mavlink_communication, const mavlink_stream_t* mavlink_stream);
 
 /**
  * \brief	Initialize a first waypoint if a flight plan is set
