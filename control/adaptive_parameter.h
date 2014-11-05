@@ -53,6 +53,10 @@ extern "C" {
 #define MAX_ADAPT_PARAM_SETPOINTS 5
 #define MAX_ADAPT_PARAM_COUNT 10
 
+
+/**
+ * \brief	Adaptive parameter structure
+ */
 typedef struct 
 {
 	float* control_variable;					///< Control Variable
@@ -63,6 +67,9 @@ typedef struct
 } adaptive_parameter_t;
 
 
+/**
+ * \brief	Adaptive parameter set structure
+ */
 typedef struct
 {
 	int32_t param_count;										///< Number of Parameters
@@ -70,28 +77,33 @@ typedef struct
 } adaptive_parameter_set_t;
 
 /**
- * \brief					Returns a pointer to the adaptive parameter set
+ * \brief	Returns a pointer to the adaptive parameter set
+ *
+ * \return	The adaptive parameter set structure
  */
 adaptive_parameter_set_t* adaptive_parameter_get_param_set(void);
 
 /**
- * \brief					Initializes the adaptive parameter set
+ * \brief	Initializes the adaptive parameter set
  */
 void adaptive_parameter_init(void);
 
 /**
  * \brief					Add an adaptive parameter to the parameter set
  *
- * \param control_variable	 
- * \param parameter
- * \param nb_setpoints
- * \param setpoints
- * \param setvalues
+ * \param control_variable	Pointer to the control variable
+ * \param parameter			Pointer to the parameter
+ * \param nb_setpoints		Number of setpoints
+ * \param setpoints			Pointer to the setpoints
+ * \param setvalues			Pointer to the setvalues
  *
  * \return					Returns 1 if successfully added and 0 otherwise
  */
-int32_t adaptive_parameter_add(float* control_variable, float* parameter, 
-							int32_t nb_setpoints, float* setpoints, float* setvalues);
+int32_t adaptive_parameter_add(	float* control_variable, 
+								float* parameter, 
+								int32_t nb_setpoints, 
+								float* setpoints, 
+								float* setvalues);
 /**
  * \brief					Update adaptive parameter
  *
