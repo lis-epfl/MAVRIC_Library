@@ -264,7 +264,6 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 
 static void gps_position_init(position_estimation_t *pos_est)
 {
-	int32_t i;
 	if ( (pos_est->init_gps_position == false)&&(pos_est->gps->status == GPS_OK) )
 	{
 		if ( pos_est->time_last_gps_msg < pos_est->gps->time_last_msg )
@@ -281,7 +280,7 @@ static void gps_position_init(position_estimation_t *pos_est)
 			pos_est->last_gps_pos = pos_est->local_position;
 			
 			pos_est->last_alt = 0;
-			for(i = 0;i < 3;i++)
+			for(int32_t i = 0;i < 3;i++)
 			{
 				pos_est->last_vel[i] = 0.0f;
 				pos_est->local_position.pos[i] = 0.0f;
@@ -300,8 +299,7 @@ static void gps_position_init(position_estimation_t *pos_est)
 
 void position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu)
 {
-    int32_t i;
-
+    //init dependencies
 	pos_est->barometer = barometer;
 	pos_est->gps = gps;
 	pos_est->ahrs = ahrs;
@@ -319,7 +317,7 @@ void position_estimation_init(position_estimation_t* pos_est, const position_est
 	
     // reset position estimator
     pos_est->last_alt = 0;
-    for(i = 0;i < 3;i++)
+    for(int32_t i = 0;i < 3;i++)
     {
         pos_est->last_vel[i] = 0.0f;
         pos_est->vel[i] = 0.0f;
@@ -352,7 +350,6 @@ void position_estimation_init(position_estimation_t* pos_est, const position_est
 
 void position_estimation_reset_home_altitude(position_estimation_t *pos_est)
 {
-	int32_t i;
 	// reset origin to position where quad is armed if we have GPS
 	if (pos_est->init_gps_position)
 	{
@@ -388,7 +385,7 @@ void position_estimation_reset_home_altitude(position_estimation_t *pos_est)
 
 	// reset position estimator
 	pos_est->last_alt = 0;
-	for(i = 0;i < 3;i++)
+	for(int32_t i = 0;i < 3;i++)
 	{
 		pos_est->last_vel[i] = 0.0f;
 		pos_est->local_position.pos[i] = 0.0f;

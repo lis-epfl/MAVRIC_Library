@@ -81,7 +81,6 @@ void position_estimation_telemetry_send_position(const position_estimation_t* po
 void position_estimation_telemetry_send_global_position(const position_estimation_t* pos_est, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
-
 #ifdef __cplusplus
 }
 #endif
