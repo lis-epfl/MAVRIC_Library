@@ -49,7 +49,7 @@
 
 void stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, stabilisation_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servos_t* servos)
 {
-	
+	//init dependencies
 	stabilisation_copter->stabiliser_stack = stabiliser_conf->stabiliser_stack;
 	stabilisation_copter->motor_layout = stabiliser_conf->motor_layout;
 	stabilisation_copter->controls = controls;
@@ -58,6 +58,7 @@ void stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, sta
 	stabilisation_copter->pos_est = pos_est;
 	stabilisation_copter->servos = servos;
 	
+	//init controller
 	controls->control_mode = ATTITUDE_COMMAND_MODE;
 	controls->yaw_mode = YAW_RELATIVE;
 	
@@ -79,15 +80,11 @@ void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_co
 {
 	aero_attitude_t attitude_yaw_inverse;
 	quat_t q_rot;
-	// input = stabilisation_copter->controls_nav;
 	
 	attitude_yaw_inverse = coord_conventions_quat_to_aero(stabilisation_copter->ahrs->qe);
 	attitude_yaw_inverse.rpy[0] = 0.0f;
 	attitude_yaw_inverse.rpy[1] = 0.0f;
 	attitude_yaw_inverse.rpy[2] = -attitude_yaw_inverse.rpy[2];
-	
-	//qtmp=quaternions_create_from_vector(input.tvel);
-	//quat_t input_global = quaternions_local_to_global(stabilisation_copter->ahrs->qe, qtmp);
 	
 	q_rot = coord_conventions_quaternion_from_aero(attitude_yaw_inverse);
 	
@@ -128,7 +125,8 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 	
 	// set the controller input
 	input= *stabilisation_copter->controls;
-	switch (stabilisation_copter->controls->control_mode) {
+	switch (stabilisation_copter->controls->control_mode) 
+	{
 	case VELOCITY_COMMAND_MODE:
 		
 		attitude_yaw_inverse = coord_conventions_quat_to_aero(stabilisation_copter->ahrs->qe);
@@ -195,7 +193,8 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 		rpyt_errors[0]= input.rpy[0] - ( - stabilisation_copter->ahrs->up_vec.v[1] ); 
 		rpyt_errors[1]= input.rpy[1] - stabilisation_copter->ahrs->up_vec.v[0];
 		
-		if ((stabilisation_copter->controls->yaw_mode == YAW_ABSOLUTE) ) {
+		if ((stabilisation_copter->controls->yaw_mode == YAW_ABSOLUTE) ) 
+		{
 			rpyt_errors[2] =maths_calc_smaller_angle(input.theading- stabilisation_copter->pos_est->local_position.heading);
 		}
 		else

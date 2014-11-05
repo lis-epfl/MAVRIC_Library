@@ -51,7 +51,6 @@ extern "C" {
 #include "stabilisation.h"
 #include "imu.h"
 #include "position_estimation.h"
-#include "imu.h"
 #include "servos.h"
 #include "mavlink_waypoint_handler.h"
 
