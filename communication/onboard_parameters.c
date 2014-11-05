@@ -55,6 +55,8 @@
  * \brief	Sends all parameters that have been scheduled via MAVlink
  *
  * \param	onboard_parameters		The pointer to the onboard parameter structure
+ *
+ * \return	task_return_t			Returns the result of the task, currently only TASK_RUN_SUCCESS
  */
 static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parameters_t* onboard_parameters);
 
@@ -115,7 +117,7 @@ static task_return_t onboard_parameters_send_scheduled_parameters(onboard_parame
 										
 			param_set->parameters[i].schedule_for_transmission=false;
 		}			
-	}
+	}//end of for loop
 	
 	return TASK_RUN_SUCCESS;
 }
@@ -191,9 +193,9 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 					// Exit external (i) for() loop
 					break;
 				}					
-			}
-		}
-	}
+			} //end of for (uint16_t i = 0; i < param_set->param_count; i++)
+		} //end of else
+	} //end of if ((uint8_t)request.target_system == (uint8_t)sysid)
 }
 
 
@@ -512,7 +514,6 @@ void onboard_parameters_write_parameters_to_flashc(onboard_parameters_t* onboard
 	cksum1 = 0;
 	cksum2 = 0;
 
-	uint8_t i;
 	size_t bytes_to_write = 0;
 	
 	nvram_data_t* nvram_array = (nvram_data_t*) MAVERIC_FLASHC_USER_PAGE_START_ADDRESS;
@@ -524,7 +525,7 @@ void onboard_parameters_write_parameters_to_flashc(onboard_parameters_t* onboard
 	
 	print_util_dbg_print("Begin write to flashc...\r\n");
 	
-	for (i = 1; i <= param_set->param_count; i++)
+	for (uint8_t i = 1; i <= param_set->param_count; i++)
 	{
 		// local_array.values[i] = onboard_parameters_read_parameter(onboard_parameters, i-1);
 		local_array.values[i] = *(param_set->parameters[i-1].param);
