@@ -107,6 +107,7 @@ typedef struct
 	float soft_zone_width;				///< Approximate width of a "soft zone" on the error input, i.e. a region of low gain around the target point. Value 0 -> switched off
 } pid_controller_t;
 
+>>>>>>> 06ed69bb2c2023974b370c1baf1255ce69037178:control/pid_controller.h
 
 /**
  * \brief	Init PID controller

@@ -40,14 +40,8 @@
  ******************************************************************************/
 
 
-<<<<<<< HEAD:control/pid_control.c
-#include "pid_control.h"
-#include "time_keeper.h"
-=======
-#include "time_keeper.h"
-
 #include "pid_controller.h"
->>>>>>> 06ed69bb2c2023974b370c1baf1255ce69037178:control/pid_controller.c
+#include "time_keeper.h"
 #include "maths.h"
 
 //------------------------------------------------------------------------------
@@ -127,17 +121,6 @@ static void pid_controller_init_differenciator(differentiator_t *diff, float gai
 
 static float pid_controller_differentiate(differentiator_t *diff, float input, float dt)
 {
-<<<<<<< HEAD:control/pid_control.c
-	float output = 0.0f;
-	
-	if (dt < 0.000001f) 
-	{
-		output = 0.0f;
-	} 
-	else 
-	{
-		output = maths_clip(diff->gain * (input - diff->previous) / dt, diff->maths_clip);
-=======
 	float output=0.0f;
 	if( dt<0.000001f ) 
 	{
@@ -146,7 +129,6 @@ static float pid_controller_differentiate(differentiator_t *diff, float input, f
 	else 
 	{
 		output=maths_clip(diff->gain * (input - diff->previous) / dt, diff->maths_clip);
->>>>>>> 06ed69bb2c2023974b370c1baf1255ce69037178:control/pid_controller.c
 	}
 
 	//diff->previous=(1.0f - (diff->LPF)) * input + (diff->LPF) * (diff->previous);
@@ -159,11 +141,7 @@ static float pid_controller_differentiate(differentiator_t *diff, float input, f
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-<<<<<<< HEAD:control/pid_control.c
-pid_controller_t pid_control_pass_through_controller(void)
-=======
 void pid_controller_init(pid_controller_t* controller, const pid_controller_conf_t* config)
->>>>>>> 06ed69bb2c2023974b370c1baf1255ce69037178:control/pid_controller.c
 {
 	uint32_t t = time_keeper_get_time_ticks();
 
@@ -207,32 +185,13 @@ void pid_controller_init_pass_through(pid_controller_t* controller)
 
 void pid_controller_reset_integrator(pid_controller_t* controller)
 {
-<<<<<<< HEAD:control/pid_control.c
-	integrator->accumulator = 0.0f;
-=======
 	controller->integrator.accumulator = 0.0f;
->>>>>>> 06ed69bb2c2023974b370c1baf1255ce69037178:control/pid_controller.c
 }
 
 
 float pid_controller_update(pid_controller_t* controller, float error)
 {
 	uint32_t t = time_keeper_get_time_ticks();
-<<<<<<< HEAD:control/pid_control.c
-	controller->error = maths_soft_zone(error, controller->soft_zone_width);
-	controller->dt = time_keeper_ticks_to_seconds(t - controller->last_update);
-	controller->last_update = t;
-	controller->output = controller->p_gain* (controller->error +pid_control_integrate(&controller->integrator, controller->error, controller->dt) + pid_control_differentiate(&controller->differentiator, controller->error, controller->dt));
-	if (controller->output < controller->clip_min) 
-	{
-		controller->output = controller->clip_min;
-	}
-	if (controller->output > controller->clip_max)
-	{ 
-		controller->output = controller->clip_max;
-	}
-=======
-
 	controller->error 		= maths_soft_zone(error, controller->soft_zone_width);
 	controller->dt 			= time_keeper_ticks_to_seconds(t - controller->last_update);
 	controller->last_update = t;
@@ -250,27 +209,12 @@ float pid_controller_update(pid_controller_t* controller, float error)
 		controller->output=controller->clip_max;
 	}
 
->>>>>>> 06ed69bb2c2023974b370c1baf1255ce69037178:control/pid_controller.c
 	return controller->output;	
 }
 
 
 float pid_controller_update_dt(pid_controller_t* controller, float error, float dt) 
 {
-<<<<<<< HEAD:control/pid_control.c
-	controller->error = error;
-	controller->dt = dt;
-	controller->last_update = time_keeper_get_time_ticks();
-	controller->output = controller->p_gain* (controller->error +pid_control_integrate(&controller->integrator, controller->error, controller->dt) + pid_control_differentiate(&controller->differentiator, controller->error, controller->dt));
-	if (controller->output < controller->clip_min)
-	{ 
-		controller->output = controller->clip_min;
-	}
-	if (controller->output > controller->clip_max)
-	{ 
-		controller->output = controller->clip_max;
-	}
-=======
 	controller->error 		= error;
 	controller->dt 			= dt;
 	controller->last_update = time_keeper_get_time_ticks();
@@ -288,6 +232,5 @@ float pid_controller_update_dt(pid_controller_t* controller, float error, float 
 		controller->output=controller->clip_max;
 	}
 	
->>>>>>> 06ed69bb2c2023974b370c1baf1255ce69037178:control/pid_controller.c
 	return controller->output;	
 }
