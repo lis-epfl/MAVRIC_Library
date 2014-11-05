@@ -127,14 +127,13 @@ int32_t get_interrupt_counter(void)
 
 void process_data(void) 
 {
-	int32_t ch;
 	int32_t value;
 	if (sample_counter >= ADC_BUFFER_SIZE) 
 	{
 		return;
 	}	
 	uint8_t* buffer = spi_buffered_get_spi_in_buffer(ADC_SPI_INDEX);
-	for (ch = 0; ch < 4; ch++) 
+	for (int32_t ch = 0; ch < 4; ch++) 
 	{
 		value = (buffer[3 * ch] << 24) + (buffer[3 * ch + 1] << 16) + (buffer[3 * ch + 2] << 8);
 		adc_buffer[ch][sample_counter] = (value/256);
@@ -254,18 +253,6 @@ void ads1274_ADC_switch_clock(bool on_off)
 	}
 }
 
-///< Switch the four input channels on or off
-void ads1274_ADC_switch_channel(int32_t channel, bool on_off)
-{
-	
-}
-
-///< configures the ADC mode (refer to datasheet for options)
-void ads1274_ADC_set_mode(int32_t mode){};
-
-///< enables continuous sampling  -- not implemented yet
-//void ads1274_ADC_start_sampling(void){}
-
 ///< starts sampling, captures one buffer length and then stops
 void ads1274_ADC_start_oneshot(void)
 {
@@ -276,6 +263,15 @@ void ads1274_ADC_start_oneshot(void)
 }
 
 /* NOT IMPLEMENTED YET
+///< Switch the four input channels on or off
+void ads1274_ADC_switch_channel(int32_t channel, bool on_off){};
+	
+///< configures the ADC mode (refer to datasheet for options)
+void ads1274_ADC_set_mode(int32_t mode){};
+
+///< enables continuous sampling  -- not implemented yet
+//void ads1274_ADC_start_sampling(void){};
+
 ///< stops sampling immediately
 void ads1274_ADC_stop_sampling(void){};
 
