@@ -72,9 +72,9 @@ typedef struct
 	float orientation[3];					///< The orientation of the sensor
 	uint8_t axis[3];						///< The axis number (X,Y,Z) referring to the sensor datasheet
 	
-	float max_oriented_values[3];
-	float min_oriented_values[3];
-	bool calibration;
+	float max_oriented_values[3];			///< Values uses for calibration
+	float min_oriented_values[3];			///< Values uses for calibration
+	bool calibration;						///< In calibration mode, true
 } sensor_calib_t;
 
 
@@ -144,7 +144,7 @@ void imu_init (imu_t *imu, imu_conf_t *conf_imu, state_t* state);
 /**
  * \brief	To calibrate the gyros at startup (not used know)
  *
- * \param	imu						The pointer to the IMU structure
+ * \param	imu		The pointer to the IMU structure
  */
 void imu_calibrate_gyros(imu_t *imu);
 
@@ -152,7 +152,7 @@ void imu_calibrate_gyros(imu_t *imu);
 /**
  * \brief	Updates the scaled sensors values from raw measurements
  *
- * \param	imu						The pointer to the IMU structure
+ * \param	imu		The pointer to the IMU structure
  */
 void imu_update(imu_t *imu);
 

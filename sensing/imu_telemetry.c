@@ -52,7 +52,6 @@
  * \brief	Function to start/stop the calibration
  * 
  * \param	imu						The pointer to the IMU structure
- * \param	sysid					The sysid of the system
  * \param	packet					The pointer to the MAVLink command long structure
  * 
  * \return	The MAV_RESULT of the command

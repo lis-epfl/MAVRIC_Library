@@ -126,7 +126,7 @@ static void imu_oriented2scale(imu_t *imu)
 
 void imu_init (imu_t *imu, imu_conf_t *conf_imu, state_t* state)
 {	
-	
+	//init dependency
 	imu->state = state;
 	
 	//init gyro
