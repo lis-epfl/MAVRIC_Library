@@ -60,7 +60,7 @@
 #define DSM_RECEIVER_PIN AVR32_PIN_PD12					///< Define the microcontroller pin map with the receiver pin
 #define RECEIVER_POWER_ENABLE_PIN AVR32_PIN_PC01		///< Define the microcontroller pin map with the receiver power enable pin
 
-satellite_t *spek_sat;								///< Declare a pointer to satellite struct containing the receiver structure for receiver 1
+satellite_t *spek_sat;									///< Declare a pointer to satellite struct containing the receiver structure for receiver 1
 
 int16_t channel_center[16];								///< Declare an array to store the central position of each channel
 
@@ -191,6 +191,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 
 void spektrum_satellite_init (satellite_t *satellite, usart_config_t usart_conf_spektrum) 
 {
+	//init dependencies
 	spek_sat = satellite;
 	satellite->usart_conf_sat = usart_conf_spektrum;
 	

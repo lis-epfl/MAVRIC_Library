@@ -71,7 +71,7 @@ void spektrum_satellite_bind(void);
 /**
  * \brief Return a remote channel
  *
- * \param index Specify which channel we are interested in
+ * \param	index	Specify which channel we are interested in
  *
  * \return the remote channel value
  */
@@ -81,9 +81,9 @@ int16_t spektrum_satellite_get_channel(uint8_t index);
 /**
  * \brief 	Return the a remote channel taking neutral into account
  *
- * \param 	index 		Specify which channel we are interested in
+ * \param 	index 	Specify which channel we are interested in
  *
- * \return 				
+ * \return 	 the remote channel neutral value		
  */
 int16_t spektrum_satellite_get_neutral(uint8_t index);
 
