@@ -68,6 +68,9 @@ typedef struct
 
 /**
  * \brief Pointer to the function used to initialize the satellite receiver
+ *
+ * \param	satellite_t		Pointer to the sattelite structure
+ * \param	usart_config_t	configuration of the corresponding usart
  */
 void (*satellite_init)(satellite_t*, usart_config_t);
 
