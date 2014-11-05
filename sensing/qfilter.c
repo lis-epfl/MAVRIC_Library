@@ -52,6 +52,7 @@
 
 void qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_t* ahrs)
 {
+	//Init dependencies
 	qf->imu = imu;
 	qf->ahrs = ahrs;
 	
@@ -69,7 +70,6 @@ void qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_
 
 void qfilter_update(qfilter_t *qf)
 {
-	uint8_t i;
 	float  omc[3], omc_mag[3] , tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
 	quat_t qed, qtmp1, up, up_bf;
 	quat_t mag_global, mag_corrected_local;
@@ -179,7 +179,7 @@ void qfilter_update(qfilter_t *qf)
 
 	// apply error correction with appropriate gains for accelerometer and compass
 
-	for (i = 0; i < 3; i++)
+	for (uint8_t i = 0; i < 3; i++)
 	{
 		qtmp1.v[i] = 0.5f * (qf->imu->scaled_gyro.data[i] + kp * omc[i] + kp_mag * omc_mag[i]);
 	}

@@ -92,7 +92,7 @@ typedef struct
 /**
  * \brief	Initialize the attitude estimation module
  *
- * \param	attitude_filter		The pointer to the attitude structure
+ * \param	qf					The pointer to the attitude structure
  * \param	config				The qfilter configuration gains
  * \param	imu					The pointer to the IMU structure
  * \param	ahrs				The pointer to the attitude estimation structure
