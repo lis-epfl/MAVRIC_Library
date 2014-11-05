@@ -381,15 +381,6 @@ static void lsm330dlc_get_acc_config(void)
 	lsm_acc_get_config.start_address = LSM_ACC_CTRL_REG1_ADDRESS | LSM_AUTO_INCREMENT;
 	
 	lsm330dlc_acc_read_register((uint8_t*)&lsm_acc_get_config.start_address, (uint8_t*)&lsm_acc_get_config.ctrl_reg_a[0], 5);
-	/*
-	print_util_dbg_print("lsm acc config:\r\n");
-	for (uint8_t i = 0; i < 5; i++) 
-	{
-		print_util_dbg_print_num(lsm_acc_get_config.ctrl_reg_a[i], 16);
-		print_util_dbg_print(" ");
-		print_util_dbg_print_num(lsm_acc_default_config.ctrl_reg_a[i], 16);
-		print_util_dbg_print(" \r\n");
-	}*/
 }
 
 static void lsm330dlc_get_gyro_config(void) 
@@ -398,15 +389,6 @@ static void lsm330dlc_get_gyro_config(void)
 	lsm_gyro_get_config.start_address = LSM_GYRO_CTRL_REG1_ADDRESS | LSM_AUTO_INCREMENT;
 	
 	lsm330dlc_gyro_read_register((uint8_t*)&lsm_gyro_get_config.start_address, (uint8_t*)&lsm_gyro_get_config.ctrl_reg_g[0], 5);
-	/*
-	print_util_dbg_print("lsm gyro config:\r\n");
-	for (uint8_t i = 0; i < 5; i++)
-	{
-		print_util_dbg_print_num(lsm_gyro_get_config.ctrl_reg_g[i], 16);
-		print_util_dbg_print(" (");
-		print_util_dbg_print_num(lsm_gyro_default_config.ctrl_reg_g[i], 16);
-		print_util_dbg_print(" )\r\n");
-	}*/
 }
 
 void lsm330dlc_init(void) 
@@ -431,7 +413,6 @@ void lsm330dlc_acc_update(accelerometer_t *lsm_acc_outputs)
 {
 	lsm_acc_read_t fifo_values;
 	float axes[3] = {0.0f, 0.0f, 0.0f};
-	uint8_t i;
 	
 	fifo_values.start_address = LSM_ACC_OUT_ADDRESS | LSM_AUTO_INCREMENT ;
 
@@ -452,7 +433,7 @@ void lsm330dlc_acc_update(accelerometer_t *lsm_acc_outputs)
 			read_fifo.fifo_fill = 1;
 		}
 		
-		for (i = 0; i < read_fifo.fifo_fill; i++)
+		for (uint8_t i = 0; i < read_fifo.fifo_fill; i++)
 		{
 			lsm330dlc_acc_read_register((uint8_t*)&fifo_values.start_address, (uint8_t*)&fifo_values.status_register, 7);
 
@@ -472,7 +453,6 @@ void lsm330dlc_gyro_update(gyroscope_t *lsm_gyro_outputs)
 	lsm_gyro_read_t fifo_values;
 	int16_t temperature = 0;
 	float axes[3] = {0.0f, 0.0f, 0.0f};
-	uint8_t i;
 	
 	fifo_values.start_address = LSM_GYRO_OUT_ADDRESS | LSM_AUTO_INCREMENT;
 	
@@ -493,7 +473,7 @@ void lsm330dlc_gyro_update(gyroscope_t *lsm_gyro_outputs)
 			read_fifo.fifo_fill = 1;
 		}
 		
-		for (i = 0; i < read_fifo.fifo_fill; i++)
+		for (uint8_t i = 0; i < read_fifo.fifo_fill; i++)
 		{
 			lsm330dlc_gyro_read_register((uint8_t*)&fifo_values.start_address, (uint8_t*)&fifo_values.temperature, 8);
 			
