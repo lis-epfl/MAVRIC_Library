@@ -40,9 +40,8 @@
  ******************************************************************************/
 
 
-#include "time_keeper.h"
-
 #include "pid_control.h"
+#include "time_keeper.h"
 #include "maths.h"
 
 //------------------------------------------------------------------------------
@@ -53,7 +52,7 @@
  * \brief	Integrating
  *
  * \param	integrator	Pointer to integrator parameters
- * \param	input
+ * \param	input		Imput of the PID controller
  * \param	dt			Timestep
  *
  * \return	Result
@@ -103,29 +102,33 @@ static float pid_control_integrate(integrator_t *integrator, float input, float 
 
 static void pid_control_init_integrator(integrator_t *integrator, float pregain, float postgain, float clip_val)
 {
-	integrator->pregain=pregain;
-	integrator->postgain=postgain;
-	integrator->maths_clip=clip_val;
-	integrator->accumulator=0.0f;
+	integrator->pregain = pregain;
+	integrator->postgain = postgain;
+	integrator->maths_clip = clip_val;
+	integrator->accumulator = 0.0f;
 }
 
 static void pid_control_init_differenciator(differentiator_t *diff, float gain, float LPF, float clip_val)
 {
-	diff->gain=gain;
-	diff->LPF=LPF;
-	diff->maths_clip=clip_val;
+	diff->gain = gain;
+	diff->LPF = LPF;
+	diff->maths_clip = clip_val;
 }
 
 static float pid_control_differentiate(differentiator_t *diff, float input, float dt)
 {
-	float output=0.0f;
-	if (dt<0.000001f) {
-		output=0.0f;
-		} else {
-		output=maths_clip(diff->gain * (input - diff->previous) / dt, diff->maths_clip);
+	float output = 0.0f;
+	
+	if (dt < 0.000001f) 
+	{
+		output = 0.0f;
+	} 
+	else 
+	{
+		output = maths_clip(diff->gain * (input - diff->previous) / dt, diff->maths_clip);
 	}
 	//diff->previous=(1.0f - (diff->LPF)) * input + (diff->LPF) * (diff->previous);
-	diff->previous=input;
+	diff->previous = input;
 	return output;
 }
 
@@ -133,7 +136,7 @@ static float pid_control_differentiate(differentiator_t *diff, float input, floa
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-pid_controller_t pid_control_pass_through_controller()
+pid_controller_t pid_control_pass_through_controller(void)
 {
 	pid_controller_t out;
 	uint32_t t= time_keeper_get_time_ticks();
@@ -158,29 +161,40 @@ pid_controller_t pid_control_pass_through_controller()
 
 void pid_control_reset_integrator(integrator_t *integrator)
 {
-	integrator->accumulator=0.0f;
+	integrator->accumulator = 0.0f;
 }
 
 float pid_control_update(pid_controller_t* controller, float error)
 {
-	uint32_t t= time_keeper_get_time_ticks();
-	controller->error=maths_soft_zone(error, controller->soft_zone_width);
-	controller->dt=time_keeper_ticks_to_seconds(t - controller->last_update);
-	controller->last_update=t;
+	uint32_t t = time_keeper_get_time_ticks();
+	controller->error = maths_soft_zone(error, controller->soft_zone_width);
+	controller->dt = time_keeper_ticks_to_seconds(t - controller->last_update);
+	controller->last_update = t;
 	controller->output = controller->p_gain* (controller->error +pid_control_integrate(&controller->integrator, controller->error, controller->dt) + pid_control_differentiate(&controller->differentiator, controller->error, controller->dt));
-	if (controller->output < controller->clip_min) controller->output=controller->clip_min;
-	if (controller->output > controller->clip_max) controller->output=controller->clip_max;
+	if (controller->output < controller->clip_min) 
+	{
+		controller->output = controller->clip_min;
+	}
+	if (controller->output > controller->clip_max)
+	{ 
+		controller->output = controller->clip_max;
+	}
 	return controller->output;	
 }
 
 float pid_control_update_dt(pid_controller_t* controller, float error, float dt) 
 {
-	controller->error=error;
-	controller->dt=dt;
-	controller->last_update=time_keeper_get_time_ticks();
+	controller->error = error;
+	controller->dt = dt;
+	controller->last_update = time_keeper_get_time_ticks();
 	controller->output = controller->p_gain* (controller->error +pid_control_integrate(&controller->integrator, controller->error, controller->dt) + pid_control_differentiate(&controller->differentiator, controller->error, controller->dt));
-	if (controller->output < controller->clip_min) controller->output=controller->clip_min;
-	if (controller->output > controller->clip_max) controller->output=controller->clip_max;
+	if (controller->output < controller->clip_min)
+	{ 
+		controller->output = controller->clip_min;
+	}
+	if (controller->output > controller->clip_max)
+	{ 
+		controller->output = controller->clip_max;
+	}
 	return controller->output;	
 }
-

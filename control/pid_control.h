@@ -50,6 +50,9 @@ extern "C" {
 #include <stdint.h>
 #include <math.h>
 
+/**
+ * \brief Defines the integrator structure
+ */
 typedef struct {
 	float pregain, postgain;			///< pregain and postgain 
 	float accumulator;					///< accumulator
@@ -57,14 +60,22 @@ typedef struct {
 	float leakiness;					///< leakiness
 } integrator_t;							///< integrator parameters
 
-typedef struct {
+/**
+ * \brief Defines the differentiator structure
+ */
+typedef struct 
+{
 	float gain;							///< gain 
 	float previous;						///< Previous input to the differentiator 
 	float LPF;							///< Low pass filter
 	float maths_clip;							///< clipping value
 } differentiator_t;						///< differentiator parameters
 
-typedef struct {
+/**
+ * \brief Defines the PID structure
+ */
+typedef struct 
+{
 	float p_gain;						///< proportional gain
 	float clip_min, clip_max;			///< min and max clipping values
 	integrator_t integrator;			///< integrator parameters
