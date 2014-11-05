@@ -58,7 +58,7 @@ typedef void (function_pointer_t)(void);
 
 #define SPI_BUFFER_SIZE 32								///< The SPI buffer size, this has to be a power of 2
 
-#define SPI_BUFFER_MASK (SPI_BUFFER_SIZE - 1)				///< The SPI buffer mask
+#define SPI_BUFFER_MASK (SPI_BUFFER_SIZE - 1)			///< The SPI buffer mask
 
 #define SPI_NUMBER 2									///< The number of SPI
 
@@ -66,8 +66,9 @@ typedef void (function_pointer_t)(void);
 /**
  * \brief The SPI buffer structure definition
  */
-typedef struct {
-	volatile avr32_spi_t *spi;							///< The pointer to the avr32 spi structure
+typedef struct 
+{
+	volatile avr32_spi_t *spi;								///< The pointer to the avr32 spi structure
 	volatile uint8_t spi_out_buffer[SPI_BUFFER_SIZE];		///< The SPI outgoing buffer of size SPI_BUFFER_SIZE
 	volatile uint8_t spi_in_buffer[SPI_BUFFER_SIZE];		///< The SPI ingoing buffer of size SPI_BUFFER_SIZE
 	volatile uint8_t spi_in_buffer_head;					///< The head of the SPI ingoing buffer
@@ -75,11 +76,11 @@ typedef struct {
 	volatile uint8_t spi_out_buffer_head;					///< The head of the SPI outgoing buffer
 	volatile uint8_t spi_out_buffer_tail;					///< The tail of the SPI outgoing buffer
 	volatile uint8_t spi_receiver_on;						///< Flag to activate or not the SPI reception
-	volatile uint8_t traffic;							///< Read incoming data from SPI port
-	volatile uint8_t transmission_in_progress;			///< Flag to know if there is a transmission going on
-	volatile uint8_t automatic;							///< Flag to send automatically over SPI or pause/stop transmission
+	volatile uint8_t traffic;								///< Read incoming data from SPI port
+	volatile uint8_t transmission_in_progress;				///< Flag to know if there is a transmission going on
+	volatile uint8_t automatic;								///< Flag to send automatically over SPI or pause/stop transmission
 	volatile function_pointer_t* callback_function;			///< The callback function that gets called when the buffer is empty
-	struct spi_device adc_spi;							///< The SPI device
+	struct spi_device adc_spi;								///< The SPI device
 } spi_buffer_t;
 
 
