@@ -52,31 +52,44 @@ extern "C" {
 #include "buffer.h"
 #include "streams.h"
 
-typedef struct {
-avr32_usart_t *uart;
-int32_t IRQ;
-buffer_t transmit_buffer;
-buffer_t receive_buffer;
-byte_stream_t *receive_stream;
+/**
+ * \brief UART interface structure
+*/
+typedef struct 
+{
+	avr32_usart_t *uart;				///< Pointer to the AVR32 UART structure
+	int32_t IRQ;						///< IRQ
+	buffer_t transmit_buffer;			///< Transmission buffer
+	buffer_t receive_buffer;			///< Reception buffer
+	byte_stream_t *receive_stream;		///< Pointer to the reception stream
 } uart_interface_t;
 
-
+/**
+ * \brief UART GPIO map structure
+*/
 typedef struct
 {
-uint8_t  pin;              //!< Module pin.
-uint8_t  function;         //!< Module function.
+	uint8_t  pin;						///< Module pin.
+	uint8_t  function;					///< Module function.
 } uart_gpio_map_t;
 
 
-typedef struct {
-int32_t mode;
-uart_interface_t uart_device;
-usart_options_t options;
-uart_gpio_map_t rx_pin_map;
-uart_gpio_map_t tx_pin_map;
+/**
+ * \brief UART configuration structure
+*/
+typedef struct 
+{
+	int32_t mode;						///< UART mode
+	uart_interface_t uart_device;		///< UART device to configure
+	usart_options_t options;			///< UART configuration options
+	uart_gpio_map_t rx_pin_map;			///< Mapping of the Rx pin
+	uart_gpio_map_t tx_pin_map;			///< Mapping of the Tx pin
 } usart_config_t;
 
 
+/**
+ * \brief Enumeration of UART mode
+*/
 enum UART_MODE 
 {
 	UART_OFF, 
@@ -85,6 +98,9 @@ enum UART_MODE
 	UART_IN_OUT
 };
 
+/**
+ * \brief Enumeration of available UARTs 
+*/
 enum AVAILABLE_UARTS 
 {
 	UART0, 
