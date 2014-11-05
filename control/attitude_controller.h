@@ -36,6 +36,14 @@
  * \author Julien Lecoeur
  *   
  * \brief A cascaded controller for attitude & rate control.
+ * 
+ * \details It takes a command in attitude (roll/pitch/yaw or quaternion) as
+ * input, and computes a torque command on roll pitch and yaw.
+ * The inner PID loop controls the angular speed around the 3 axis. This inner 
+ * loop is fed by the outer PID loop which controls the attitude. 
+ * The error of the outer loop is computed using quaternion arithmetic, and thus
+ * avoids gimbal locks as long as the attitude error is smaller than 90 degrees 
+ * on the pitch axis.  
  *
  ******************************************************************************/
 

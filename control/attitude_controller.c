@@ -54,7 +54,7 @@
  * 
  * \param controller	Pointer to attitude controller
  */
-void attitude_controller_rate_loop(attitude_controller_t* controller);
+static void attitude_controller_rate_loop(attitude_controller_t* controller);
 
 
 /**
@@ -62,14 +62,14 @@ void attitude_controller_rate_loop(attitude_controller_t* controller);
  * 
  * \param controller	Pointer to attitude controller
  */
-void attitude_controller_angle_loop(attitude_controller_t* controller);
+static void attitude_controller_angle_loop(attitude_controller_t* controller);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void attitude_controller_rate_loop(attitude_controller_t* controller)
+static void attitude_controller_rate_loop(attitude_controller_t* controller)
 {
 	float errors[3];
 
@@ -85,7 +85,7 @@ void attitude_controller_rate_loop(attitude_controller_t* controller)
 }
 
 
-void attitude_controller_angle_loop(attitude_controller_t* controller)
+static void attitude_controller_angle_loop(attitude_controller_t* controller)
 {
 	float errors[3];
 
