@@ -233,7 +233,8 @@ float remote_get_yaw(const remote_t* remote);
 /**
  * \brief	Initialise the mode from the remote switches
  * 
- * \param	remote				The pointer to the remote structure
+ * \param	remote_mode			The pointer to the remote mode structure
+ * \param	config				Pointer to the configuration of the remote mode structure
  */
 void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t* config);
 

@@ -183,7 +183,7 @@ void remote_update(remote_t* remote)
 
 		// Indicate that data was handled
 		remote->sat.new_data_available = false;
-	}
+	} //end of if ( remote->sat.new_data_available == true )
 	else
 	{
 		// Check for signal loss
@@ -325,7 +325,6 @@ void remote_mode_update(remote_t* remote)
 				new_desired_mode = remote_mode->mode_switch_down;
 			}
 
-
 			// Apply custom flag
 			if ( remote_mode->use_custom_switch == true )
 			{
@@ -340,7 +339,6 @@ void remote_mode_update(remote_t* remote)
 					new_desired_mode.CUSTOM = CUSTOM_OFF;
 				}
 			}
-
 
 			// Apply test flag
 			if ( remote_mode->use_test_switch == true )
@@ -357,7 +355,6 @@ void remote_mode_update(remote_t* remote)
 				}
 			}
 
-
 			// Allow only disarm in normal mode
 			if ( flag_armed == ARMED_OFF )
 			{
@@ -372,7 +369,7 @@ void remote_mode_update(remote_t* remote)
 
 		// Store desired mode
 		remote_mode->current_desired_mode = new_desired_mode;
-	}
+	} //end of if( do_update == true )
 }
 
 
