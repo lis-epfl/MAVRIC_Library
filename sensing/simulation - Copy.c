@@ -42,15 +42,19 @@
  *
  ******************************************************************************/
 
-#include "simulation.h"
+
+#include "conf_constants.h"
 #include "time_keeper.h"
 #include "coord_conventions.h"
 #include "quaternions.h"
-#include "maths.h"
-#include "print_util.h"
-#include "constants.h"
 
-#include "conf_platform.h" 	// TODO: remove (use the module mix_to_servo to remove dependency to conf_platform)
+#include "central_data.h"
+#include "maths.h"
+
+
+#define BUD_DEMO_LONGITUDE	19.248972f
+#define BUD_DEMO_LATITUDE	47.621559f
+#define BUD_DEMO_ALTITUDE	400.0f
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -60,6 +64,7 @@
  * \brief	Computer the forces in the local frame for a "diagonal" quadrotor configuration
  *
  * \param	sim				The pointer to the simulation structure
+ * \param	servos			The pointer to the servos structure
  */
 void forces_from_servos_diag_quad(simulation_model_t *sim);
 
@@ -69,6 +74,7 @@ void forces_from_servos_diag_quad(simulation_model_t *sim);
  * \warning	This function is not implemented
  *
  * \param	sim				The pointer to the simulation structure
+ * \param	servos			The pointer to the servos structure
  */
 void forces_from_servos_cross_quad(simulation_model_t *sim);
 
@@ -93,8 +99,7 @@ static void simulation_reset_simulation(simulation_model_t *sim);
  *
  * \return The value of the lift / drag value without the lift / drag coefficient
  */
-static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr_lat_airspeed, float axial_airspeed) 
-{
+static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr_lat_airspeed, float axial_airspeed) {
 	if (rpm < 0.1f)
 	{
 		return 0.0f;
@@ -107,7 +112,9 @@ static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr
 
 static void simulation_reset_simulation(simulation_model_t *sim)
 {
-	for (int32_t i = 0; i < 3; i++)
+	int32_t i;
+	
+	for (i = 0; i < 3; i++)
 	{
 		sim->rates_bf[i] = 0.0f;
 		sim->torques_bf[i] = 0.0f;
@@ -134,9 +141,9 @@ static void simulation_reset_simulation(simulation_model_t *sim)
 	print_util_dbg_print_num(sim->pos_est->local_position.pos[2]*1000,10);
 	print_util_dbg_print(")\r\n");
 	
-	//sim->local_position.origin.latitude = HOME_LATITUDE;
-	//sim->local_position.origin.longitude = HOME_LONGITUDE;
-	//sim->local_position.origin.altitude = HOME_ALTITUDE;
+	sim->local_position.origin.latitude =	BUD_DEMO_LATITUDE;//HOME_LATITUDE;
+	sim->local_position.origin.longitude =	BUD_DEMO_LONGITUDE;//HOME_LONGITUDE;
+	sim->local_position.origin.altitude =	BUD_DEMO_ALTITUDE;//HOME_ALTITUDE;
 	
 	//sim->local_position.origin = sim->pos_est->local_position.origin;
 	//sim->local_position.heading = sim->pos_est->local_position.heading;
@@ -144,6 +151,7 @@ static void simulation_reset_simulation(simulation_model_t *sim)
 
 void forces_from_servos_diag_quad(simulation_model_t* sim)
 {
+	int32_t i;
 	float motor_command[4];
 	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4];
 	float ldb;
@@ -154,8 +162,7 @@ void forces_from_servos_diag_quad(simulation_model_t* sim)
 	float lateral_airspeed = sqrt(sqr_lateral_airspeed);
 	
 	float old_rotor_speed;
-	
-	for (int32_t i = 0; i < 4; i++)
+	for (i = 0; i < 4; i++)
 	{
 		motor_command[i] = (float)sim->servos->servo[i].value - sim->vehicle_config.rotor_rpm_offset;
 		if (motor_command[i] < 0.0f) 
@@ -202,14 +209,40 @@ void forces_from_servos_diag_quad(simulation_model_t* sim)
 }
 
 
+void forces_from_servos_cross_quad(simulation_model_t* sim)
+{
+	//int32_t i;
+	//float motor_command[4];
+	
+	//TODO: implement the correct forces
+/*	motor_command[M_FRONT] = control->thrust + control->rpy[PITCH] + M_FRONT_DIR * control->rpy[YAW];
+	motor_command[M_RIGHT] = control->thrust - control->rpy[ROLL] + M_RIGHT_DIR * control->rpy[YAW];
+	motor_command[M_REAR]  = control->thrust - control->rpy[PITCH] + M_REAR_DIR * control->rpy[YAW];
+	motor_command[M_LEFT]  = control->thrust + control->rpy[ROLL] + M_LEFT_DIR * control->rpy[YAW];
+	for (i = 0; i < 4; i++)
+	{
+		if (motor_command[i] < MIN_THRUST) motor_command[i] = MIN_THRUST;
+		if (motor_command[i] > MAX_THRUST) motor_command[i] = MAX_THRUST;
+	}
+
+	for (i = 0; i < 4; i++)
+	{
+		central_data->servos[i].value = SERVO_SCALE * motor_command[i];
+	}
+	*/
+}
+
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimation_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, const servos_t* servos, bool* waypoint_set)
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, const servos_t* servos, bool* waypoint_set)
 {
-	//Init dependencies
+	int32_t i;
+
 	sim->vehicle_config = *sim_config;
+	
 	sim->imu = imu;
 	sim->pos_est = pos_est;
 	sim->pressure = pressure;
@@ -232,7 +265,7 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	print_util_dbg_print("\r\n");
 	
 
-	for (int32_t i = 0; i < ROTORCOUNT; i++)
+	for (i = 0; i < ROTORCOUNT; i++)
 	{
 		sim->rotorspeeds[i] = 0.0f;			
 	}
@@ -242,12 +275,16 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	simulation_reset_simulation(sim);
 	simulation_calib_set(sim);
 	
+
+	
 	print_util_dbg_print("HIL simulation initialized.\r\n");
 }
 
 void simulation_calib_set(simulation_model_t *sim)
 {
-	for (int32_t i = 0;i < 3;i++)
+	int32_t i;
+	
+	for (i = 0;i < 3;i++)
 	{
 		//we take in sim the inverse of the imu scale_factor to limit number of division
 		//while feeding raw_sensor.data[i]
@@ -289,7 +326,12 @@ void simulation_update(simulation_model_t *sim)
 	
 	sim->last_update = now;
 	// compute torques and forces based on servo commands
+	#ifdef CONF_DIAG
 	forces_from_servos_diag_quad(sim);
+	#endif
+	#ifdef CONF_CROSS
+	forces_from_servos_cross_quad(sim);
+	#endif
 	
 	// integrate torques to get simulated gyro rates (with some damping)
 	sim->rates_bf[0] = maths_clip((1.0f - 0.1f * sim->dt) * sim->rates_bf[0] + sim->dt * sim->torques_bf[0] / sim->vehicle_config.roll_pitch_momentum, 10.0f);
