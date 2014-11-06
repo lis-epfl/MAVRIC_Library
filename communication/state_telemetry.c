@@ -58,14 +58,14 @@
 static void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_message_t* msg);
 
 /**
- * \brief	Arm/disarm the MAV
+ * \brief	Set the MAV mode from a command message
  *
  * \param	state				The pointer to the state structure
  * \param	packet				The pointer to the decoded MAVLink message long
  * 
  * \return	The MAV_RESULT of the command
  */
-static mav_result_t state_telemetry_toggle_arm(state_t* state, mavlink_command_long_t* packet );
+static mav_result_t state_telemetry_set_mode_from_cmd(state_t* state, mavlink_command_long_t* packet );
 
 /**
  * \brief	Activate/Disactivate the use of the remote controller
@@ -120,7 +120,9 @@ void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_messag
 		state->mav_mode.AUTO = new_mode.AUTO;
 		state->mav_mode.TEST = new_mode.TEST;
 		state->mav_mode.CUSTOM = new_mode.CUSTOM;
-
+		
+		//state->mav_mode_custom = packet.custom_mode;
+		
 		print_util_dbg_print("New mav mode:");
 		print_util_dbg_print_num(state->mav_mode.byte,10);
 		print_util_dbg_print("\r");
@@ -128,7 +130,7 @@ void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_messag
 	}
 }
 
-static mav_result_t state_telemetry_toggle_arm(state_t* state, mavlink_command_long_t* packet )
+static mav_result_t state_telemetry_set_mode_from_cmd(state_t* state, mavlink_command_long_t* packet )
 {
 	mav_result_t result = MAV_RESULT_ACCEPTED;
 	
@@ -154,6 +156,8 @@ static mav_result_t state_telemetry_toggle_arm(state_t* state, mavlink_command_l
 	state->mav_mode.AUTO = new_mode.AUTO;
 	state->mav_mode.TEST = new_mode.TEST;
 	state->mav_mode.CUSTOM = new_mode.CUSTOM;
+	
+	//state->mav_mode_custom = packet->param2;
 	
 	return result;
 }
@@ -203,11 +207,11 @@ void state_telemetry_init(state_t* state, mavlink_message_handler_t *message_han
 	// Add callbacks for waypoint handler commands requests
 	mavlink_message_handler_cmd_callback_t callbackcmd;
 	
-	callbackcmd.command_id = MAV_CMD_COMPONENT_ARM_DISARM; // 400
+	callbackcmd.command_id = MAV_CMD_DO_SET_MODE; // 176
 	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-	callbackcmd.function = (mavlink_cmd_callback_function_t)	&state_telemetry_toggle_arm;
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&state_telemetry_set_mode_from_cmd;
 	callbackcmd.module_struct =									state;
 	mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
 	
