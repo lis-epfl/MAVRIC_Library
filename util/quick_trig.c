@@ -43,14 +43,13 @@
 #include "quick_trig.h"
 
 #include <math.h>
+#include "maths.h"
 
-
-#define PI 3.141592653589793f
 
 const float acos_x_min = 0.0f;
 const float acos_x_max = 1.0f;
 const float acos_x_step = 0.02040816326530612f;
-const float acos_y[INTERP_POINTS] = {  1.57079633f,  1.55038675f,  1.52996866f,  1.50953352f,  1.48907274f,
+const float acos_y[INTERP_POINTS] = {   1.57079633f,  1.55038675f,  1.52996866f,  1.50953352f,  1.48907274f,
 								        1.4685776f ,  1.44803927f,  1.42744876f,  1.40679686f,  1.38607412f,
 								        1.36527082f,  1.34437689f,  1.32338188f,  1.30227492f,  1.28104463f,
 								        1.25967907f,  1.23816568f,  1.21649116f,  1.19464142f,  1.17260143f,
@@ -112,7 +111,6 @@ const float atan_y[INTERP_POINTS] = {	0.0f        ,  0.20131711f,  0.38752381f, 
 
 
 
-
 float quick_trig_sin(float x)
 {
 	float y;
@@ -161,7 +159,7 @@ float quick_trig_acos(float x)
 
 float quick_trig_asin(float x)
 {
-	return PI/2.0f - quick_trig_acos(x);
+	return (PI/2.0f - quick_trig_acos(x));
 }
 
 
