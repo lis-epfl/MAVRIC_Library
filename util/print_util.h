@@ -214,7 +214,7 @@ void print_util_dbg_print_vector(float const v[], int32_t after_digits);
 /*!
  * \brief              		Writes a quaternion to the debug stream
  * 
- * \param 	quat         	Unit quaternion
+ * \param 	quat         	Pointer to the Unit quaternion
  * \param 	after_digits 	Number of digits to write after the radix point
  */
 void print_util_dbg_print_quaternion(quat_t const *quat, int32_t after_digits); 
