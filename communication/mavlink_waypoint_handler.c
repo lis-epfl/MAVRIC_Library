@@ -257,7 +257,7 @@ static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* way
 	waypoint.param1 = 10; // Hold time in decimal seconds
 	waypoint.param2 = 4; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-	waypoint.param4 = rad_to_deg(maths_calc_smaller_angle(PI + angle_step * (waypoint_handler->mavlink_stream->sysid-1))); // Desired yaw angle at MISSION (rotary wing)
+	waypoint.param4 = maths_rad_to_deg(maths_calc_smaller_angle(PI + angle_step * (waypoint_handler->mavlink_stream->sysid-1))); // Desired yaw angle at MISSION (rotary wing)
 	
 	waypoint_handler->waypoint_list[0] = waypoint;
 	
@@ -289,7 +289,7 @@ static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* way
 	waypoint.param1 = 10; // Hold time in decimal seconds
 	waypoint.param2 = 4; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-	waypoint.param4 = rad_to_deg(angle_step * (waypoint_handler->mavlink_stream->sysid-1)); // Desired yaw angle at MISSION (rotary wing)
+	waypoint.param4 = maths_rad_to_deg(angle_step * (waypoint_handler->mavlink_stream->sysid-1)); // Desired yaw angle at MISSION (rotary wing)
 	
 	waypoint_handler->waypoint_list[1] = waypoint;
 	
@@ -349,7 +349,7 @@ static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handle
 		waypoint.param1 = 2; // Hold time in decimal seconds
 		waypoint.param2 = 4; // Acceptance radius in meters
 		waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-		waypoint.param4 = rad_to_deg(maths_calc_smaller_angle(PI + atan2(y,x))); // Desired yaw angle at MISSION (rotary wing)
+		waypoint.param4 = maths_rad_to_deg(maths_calc_smaller_angle(PI + atan2(y,x))); // Desired yaw angle at MISSION (rotary wing)
 	
 		waypoint_handler->waypoint_list[i] = waypoint;
 	}
@@ -1269,7 +1269,7 @@ local_coordinates_t waypoint_handler_set_waypoint_from_frame(mavlink_waypoint_ha
 		waypoint_coor.pos[i] = 0.0f;
 	}
 	waypoint_coor.origin = origin;
-	waypoint_coor.heading = deg_to_rad(waypoint_handler->current_waypoint.param4);
+	waypoint_coor.heading = maths_deg_to_rad(waypoint_handler->current_waypoint.param4);
 	waypoint_coor.timestamp_ms = time_keeper_get_millis();
 
 	switch(waypoint_handler->current_waypoint.frame)
@@ -1280,7 +1280,7 @@ local_coordinates_t waypoint_handler_set_waypoint_from_frame(mavlink_waypoint_ha
 		waypoint_global.altitude = waypoint_handler->current_waypoint.z;
 		waypoint_coor = coord_conventions_global_to_local_position(waypoint_global,origin);
 		
-		waypoint_coor.heading = deg_to_rad(waypoint_handler->current_waypoint.param4);
+		waypoint_coor.heading = maths_deg_to_rad(waypoint_handler->current_waypoint.param4);
 		
 		print_util_dbg_print("waypoint_global: lat (x1e7):");
 		print_util_dbg_print_num(waypoint_global.latitude*10000000,10);
@@ -1307,7 +1307,7 @@ local_coordinates_t waypoint_handler_set_waypoint_from_frame(mavlink_waypoint_ha
 		waypoint_coor.pos[X] = waypoint_handler->current_waypoint.x;
 		waypoint_coor.pos[Y] = waypoint_handler->current_waypoint.y;
 		waypoint_coor.pos[Z] = waypoint_handler->current_waypoint.z;
-		waypoint_coor.heading= deg_to_rad(waypoint_handler->current_waypoint.param4);
+		waypoint_coor.heading= maths_deg_to_rad(waypoint_handler->current_waypoint.param4);
 		waypoint_coor.origin = coord_conventions_local_to_global_position(waypoint_coor);
 		break;
 		
@@ -1324,7 +1324,7 @@ local_coordinates_t waypoint_handler_set_waypoint_from_frame(mavlink_waypoint_ha
 		origin_relative_alt.altitude = 0.0f;
 		waypoint_coor = coord_conventions_global_to_local_position(waypoint_global,origin_relative_alt);
 		
-		waypoint_coor.heading = deg_to_rad(waypoint_handler->current_waypoint.param4);
+		waypoint_coor.heading = maths_deg_to_rad(waypoint_handler->current_waypoint.param4);
 		
 		print_util_dbg_print("LocalOrigin: lat (x1e7):");
 		print_util_dbg_print_num(origin_relative_alt.latitude * 10000000,10);

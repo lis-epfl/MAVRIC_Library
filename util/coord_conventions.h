@@ -51,14 +51,11 @@ extern "C"
 #include <stdint.h>
 #include "quaternions.h"
 
-#define EARTH_RADIUS 6378137.0f   // radius of the earth in meters
-
-#define rad_to_deg(input) (input*180.0f/PI)
-#define deg_to_rad(input) (input*PI/180.0f)
+#define EARTH_RADIUS 6378137.0f					///< radius of the earth in meters
 
 
 /**
- * \brief 		Global position
+ * \brief 		Global position structure
  */
 typedef struct 
 {
@@ -71,7 +68,7 @@ typedef struct
 
 
 /**
- * \brief Local coordinates
+ * \brief Local coordinates structure
  */
 typedef struct 
 {
