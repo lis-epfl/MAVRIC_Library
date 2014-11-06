@@ -536,7 +536,9 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	data_logging->buffer_add_size = 8;
 	#endif
 	
-	data_logging->sys_id = 256; // Out of normal bound, to tell wheter it is initialised or not
+	// Deliberately initialized out of normal bound, to tell whether it is initialized or not
+	// The value will then be set by the sys_id of the vehicle coming from the flash memory or from the hardcoded value
+	data_logging->sys_id = 256;
 	
 	data_logging->file_name = malloc(data_logging->buffer_name_size);
 	data_logging->name_n_extension = malloc(data_logging->buffer_name_size);
