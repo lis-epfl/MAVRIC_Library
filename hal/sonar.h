@@ -30,38 +30,44 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file sonar_i2cxl_telemetry.h
+ * \file sonar.h
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Julien Lecoeur
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the remote controller
+ * \brief Definition of structure for sonar sensors
  *
  ******************************************************************************/
 
 
-#ifndef SONAR_I2CXL_TELEMETRY_H_
-#define SONAR_I2CXL_TELEMETRY_H_
-
-#include "mavlink_stream.h"
-#include "sonar_i2cxl.h"
+#ifndef SONAR_H_
+#define SONAR_H_
 
 #ifdef __cplusplus
-extern "C" {
+	extern "C" {
 #endif
+
+#include <stdint.h>
+#include <stdbool.h>
+#include "quaternions.h"
 
 /**
- * \brief	Task to send the MAVLink sonar message
- * 
- * \param sonar Data struct
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-void sonar_i2cxl_telemetry_send_telemetry(const sonar_i2cxl_t* sonar_i2cxl, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+ * \brief structure of the sonar
+*/
+typedef struct 
+{
+	uint32_t last_update; 	///< Time since system boot
+	quat_t 	orientation; 	///< Direction the sensor faces from FIXME enum.
+	float 	min_distance; 	///< Minimum distance the sensor can measure in centimeters
+	float 	max_distance; 	///< Maximum distance the sensor can measure in centimeters
+	float 	current_distance; ///< Measured distance in meters
+	float 	covariance; 	///< Measurement covariance in centimeters, 0 for unknown / invalid readings
+	bool 	healthy;		///< Indicates whether the current measurement can be trusted
+} sonar_t;
+
 
 #ifdef __cplusplus
-}
+	}
 #endif
 
-#endif /* SONAR_I2CXL_TELEMETRY_H_ */
+#endif /* SONAR_H */

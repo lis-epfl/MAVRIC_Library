@@ -30,31 +30,37 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file sonar_i2cxl_telemetry.c
+ * \file sonar_telemetry.h
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the remote controller
+ * \brief This module takes care of sending periodic telemetric messages for sonars
  *
  ******************************************************************************/
 
 
-#include "sonar_i2cxl_telemetry.h"
-#include "time_keeper.h"
+#ifndef SONAR_I2CXL_TELEMETRY_H_
+#define SONAR_I2CXL_TELEMETRY_H_
 
-void sonar_i2cxl_telemetry_send_telemetry(const sonar_i2cxl_t* sonar_i2cxl, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
-{
-	mavlink_msg_distance_sensor_pack(	mavlink_stream->sysid,
-										mavlink_stream->compid,
-										msg,
-										time_keeper_get_millis(),
-										20,								// min 20cm
-										760,							// max 7.6m
-										sonar_i2cxl->distance_m * 100,
-										MAV_DISTANCE_SENSOR_ULTRASOUND,
-										0, 								// id 0
-										0, 								// orientation 0
-										1);								// covariance (!=0)
+#include "mavlink_stream.h"
+#include "sonar.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**
+ * \brief	Task to send the MAVLink sonar message
+ * 
+ * \param 	sonar 			Data struct
+ * \param	mavlink_stream	The pointer to the MAVLink stream structure
+ * \param	msg				The pointer to the MAVLink message
+ */
+void sonar_telemetry_send(const sonar_t* sonar, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif /* SONAR_I2CXL_TELEMETRY_H_ */
