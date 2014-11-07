@@ -68,7 +68,7 @@ extern "C" {
 typedef struct
 {
 	uint8_t frame;												///< The reference frame of the waypoint
-	uint16_t waypoint_id;										///< The MAV_CMD_NAV id of the waypoint
+	uint16_t command;											///< The MAV_CMD_NAV id of the waypoint
 	uint8_t current;											///< Flag to tell whether the waypoint is the current one or not
 	uint8_t autocontinue;										///< Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
 	float param1;												///< Parameter depending on the MAV_CMD_NAV id
@@ -78,12 +78,12 @@ typedef struct
 	double x;													///< The value on the x axis (depends on the reference frame)
 	double y;													///< The value on the y axis (depends on the reference frame)
 	double z;													///< The value on the z axis (depends on the reference frame)
-} waypoint_struct;
+} waypoint_struct_t;
 
 typedef struct
 {
-	waypoint_struct waypoint_list[MAX_WAYPOINTS];				///< The array of all waypoints (max MAX_WAYPOINTS)
-	waypoint_struct current_waypoint;							///< The structure of the current waypoint
+	waypoint_struct_t waypoint_list[MAX_WAYPOINTS];				///< The array of all waypoints (max MAX_WAYPOINTS)
+	waypoint_struct_t current_waypoint;							///< The structure of the current waypoint
 	uint16_t number_of_waypoints;								///< The total number of waypoints
 	int8_t current_waypoint_count;								///< The number of the current waypoint
 	
@@ -111,7 +111,7 @@ typedef struct
 	mavlink_communication_t* mavlink_communication;				///< The pointer to the MAVLink communication structure
 	const mavlink_stream_t* mavlink_stream;						///< Pointer to MAVLink stream
 
-}mavlink_waypoint_handler_t;
+} mavlink_waypoint_handler_t;
 
 /**
  * \brief	Initialize a home waypoint at (0,0,0) at start up
