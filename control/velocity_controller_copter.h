@@ -59,7 +59,7 @@ extern "C" {
 #include "position_estimation.h"
 
 /**
- * \brief Attitude controller structure
+ * \brief Velocity controller structure
  */
 typedef struct 
 {
@@ -74,7 +74,7 @@ typedef struct
 
 
 /**
- * \brief Attitude controller configuration
+ * \brief Velocity controller configuration
  */
 typedef struct
 {
@@ -85,7 +85,7 @@ typedef struct
 
 
 /**
- * \brief               		Initialises the attitude controller structure
+ * \brief               		Initialises the velocity controller structure
  * 
  * \param 	controller    		Pointer to data structure
  * \param 	config				Pointer to configuration

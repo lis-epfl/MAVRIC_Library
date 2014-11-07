@@ -65,14 +65,14 @@ static velocity_controller_copter_conf_t velocity_controller_copter_default_conf
 				.pregain = 1.0f,
 				.postgain = 0.5f,
 				.accumulator = 0.0f,
-				.maths_clip = 0.5f,
+				.clip = 0.5f,
 				.leakiness = 0.0f
 			},
 			.differentiator={
 				.gain = 0.0f,
 				.previous = 0.0f,
 				.LPF = 0.5f,
-				.maths_clip = 0.5f
+				.clip = 0.5f
 			},
 			.soft_zone_width = 0.2f
 		},
@@ -87,14 +87,14 @@ static velocity_controller_copter_conf_t velocity_controller_copter_default_conf
 				.pregain = 1.0f,
 				.postgain = 0.5f,
 				.accumulator = 0.0f,
-				.maths_clip = 0.5f,
+				.clip = 0.5f,
 				.leakiness = 0.0f
 			},
 			.differentiator={
 				.gain = 0.0f,
 				.previous = 0.0f,
 				.LPF = 0.5f,
-				.maths_clip = 0.5f
+				.clip = 0.5f
 			},
 			.soft_zone_width = 0.2f
 		},
@@ -109,14 +109,14 @@ static velocity_controller_copter_conf_t velocity_controller_copter_default_conf
 				.pregain = 1.0f,
 				.postgain = 0.0f,
 				.accumulator = 0.0f,
-				.maths_clip = 1.0f,
+				.clip = 1.0f,
 				.leakiness = 0.0f
 			},
 			.differentiator={
 				.gain = 0.2f,
 				.previous = 0.0f,
 				.LPF = 0.97f,
-				.maths_clip = 0.2f
+				.clip = 0.2f
 			},
 			.soft_zone_width = 0.2f
 		},

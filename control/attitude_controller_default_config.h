@@ -68,7 +68,7 @@ static attitude_controller_conf_t attitude_controller_default_config =
 				.pregain = 0.5f,
 				.postgain = 1.0f,
 				.accumulator = 0.0f,
-				.maths_clip = 0.65f,
+				.clip = 0.65f,
 				.leakiness = 0.0f
 			},
 			.differentiator =
@@ -76,7 +76,7 @@ static attitude_controller_conf_t attitude_controller_default_config =
 				.gain = 0.15f,
 				.previous = 0.0f,
 				.LPF = 0.5f,
-				.maths_clip = 0.65f
+				.clip = 0.65f
 			},
 			.soft_zone_width = 0.0f,
 		},
@@ -92,7 +92,7 @@ static attitude_controller_conf_t attitude_controller_default_config =
 				.pregain = 0.5f,
 				.postgain = 1.0f,
 				.accumulator = 0.0f,
-				.maths_clip = 0.65f,
+				.clip = 0.65f,
 				.leakiness = 0.0f
 			},
 			.differentiator =
@@ -100,7 +100,7 @@ static attitude_controller_conf_t attitude_controller_default_config =
 				.gain = 0.15f,
 				.previous = 0.0f,
 				.LPF = 0.5f,
-				.maths_clip = 0.65f
+				.clip = 0.65f
 			},
 			.soft_zone_width = 0.0f,
 		},
@@ -115,14 +115,14 @@ static attitude_controller_conf_t attitude_controller_default_config =
 				.pregain = 0.5f,
 				.postgain = 0.5f,
 				.accumulator = 0.0f,
-				.maths_clip = 0.3f,
+				.clip = 0.3f,
 				.leakiness = 0.0f
 			},
 			.differentiator={
 				.gain = 0.0f,
 				.previous = 0.0f,
 				.LPF = 0.4f,
-				.maths_clip = 0.5f
+				.clip = 0.5f
 			},
 			.soft_zone_width = 0.0f
 		}
@@ -143,14 +143,14 @@ static attitude_controller_conf_t attitude_controller_default_config =
 				.pregain = 0.0f,
 				.postgain = 0.0f,
 				.accumulator = 0.0f,
-				.maths_clip = 0.0f,
+				.clip = 0.0f,
 				.leakiness = 0.0f
 			},
 			.differentiator={
 				.gain = 0.0f,
 				.previous = 0.0f,
 				.LPF = 0.5f,
-				.maths_clip = 0.1f
+				.clip = 0.1f
 			},
 			.soft_zone_width = 0.0f
 		},
@@ -165,14 +165,14 @@ static attitude_controller_conf_t attitude_controller_default_config =
 				.pregain = 0.0f,
 				.postgain = 0.0f,
 				.accumulator = 0.0f,
-				.maths_clip = 0.0f,
+				.clip = 0.0f,
 				.leakiness = 0.0f
 			},
 			.differentiator={
 				.gain = 0.0f,
 				.previous = 0.0f,
 				.LPF = 0.5f,
-				.maths_clip = 0.1f
+				.clip = 0.1f
 			},
 			.soft_zone_width = 0.0f
 		},
@@ -187,14 +187,14 @@ static attitude_controller_conf_t attitude_controller_default_config =
 				.pregain = 0.0f,
 				.postgain = 0.0f,
 				.accumulator = 0.0f,
-				.maths_clip = 0.0f,
+				.clip = 0.0f,
 				.leakiness = 0.0f
 			},
 			.differentiator={
 				.gain = 0.0f,
 				.previous = 0.0f,
 				.LPF = 0.5f,
-				.maths_clip = 0.5f
+				.clip = 0.5f
 			},
 			.soft_zone_width = 0.0f
 		},

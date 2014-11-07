@@ -66,14 +66,14 @@ navigation_config_t navigation_default_config =
 			.pregain = 0.5f,
 			.postgain = 0.0f,
 			.accumulator = 0.0f,
-			.maths_clip = 0.65f,
+			.clip = 0.65f,
 			.leakiness = 0.0f
 		},
 		.differentiator={
 			.gain = 0.2f,
 			.previous = 0.0f,
 			.LPF = 0.5f,
-			.maths_clip = 0.65f
+			.clip = 0.65f
 		},
 		.output = 0.0f,
 		.error = 0.0f,
@@ -90,14 +90,14 @@ navigation_config_t navigation_default_config =
 			.pregain = 0.5f,
 			.postgain = 0.0f,
 			.accumulator = 0.0f,
-			.maths_clip = 0.65f,
+			.clip = 0.65f,
 			.leakiness = 0.0f
 		},
 		.differentiator={
 			.gain = 0.4f,
 			.previous = 0.0f,
 			.LPF = 0.5f,
-			.maths_clip = 0.65f
+			.clip = 0.65f
 		},
 		.output = 0.0f,
 		.error = 0.0f,

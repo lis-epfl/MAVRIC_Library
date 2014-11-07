@@ -59,7 +59,7 @@ typedef struct
 	float pregain; 						///< Pregain
 	float postgain;						///< Postgain 
 	float accumulator;					///< Accumulator
-	float maths_clip;					///< Clipping value
+	float clip;					///< Clipping value
 	float leakiness;					///< Leakiness
 } integrator_t;
 
@@ -72,7 +72,7 @@ typedef struct
 	float gain;							///< Gain 
 	float previous;						///< Previous input to the differentiator 
 	float LPF;							///< Low pass filter
-	float maths_clip;					///< Clipping value
+	float clip;					///< Clipping value
 } differentiator_t;						
 
 

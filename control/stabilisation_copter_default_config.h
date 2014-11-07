@@ -71,14 +71,14 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 						.pregain = 0.5f,
 						.postgain = 1.0f,
 						.accumulator = 0.0f,
-						.maths_clip = 0.65f,
+						.clip = 0.65f,
 						.leakiness = 0.0f
 					},
 					.differentiator={
 						.gain = 0.15f,
 						.previous = 0.0f,
 						.LPF = 0.5f,
-						.maths_clip = 0.65f
+						.clip = 0.65f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -97,14 +97,14 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 						.pregain = 0.5f,
 						.postgain = 1.0f,
 						.accumulator = 0.0f,
-						.maths_clip = 0.65f,
+						.clip = 0.65f,
 						.leakiness = 0.0f
 					},
 					.differentiator={
 						.gain = 0.15f,
 						.previous = 0.0f,
 						.LPF = 0.5f,
-						.maths_clip = 0.65f
+						.clip = 0.65f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -123,14 +123,14 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 						.pregain = 0.5f,
 						.postgain = 0.5f,
 						.accumulator = 0.0f,
-						.maths_clip = 0.3f,
+						.clip = 0.3f,
 						.leakiness = 0.0f
 					},
 					.differentiator={
 						.gain = 0.0f,
 						.previous = 0.0f,
 						.LPF = 0.4f,
-						.maths_clip = 0.5f
+						.clip = 0.5f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -150,14 +150,14 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 					.pregain = 0.0f,
 					.postgain = 0.0f,
 					.accumulator = 0.0f,
-					.maths_clip = 0.0f,
+					.clip = 0.0f,
 					.leakiness = 0.0f
 				},
 				.differentiator={
 					.gain = 0.0f,
 					.previous = 0.0f,
 					.LPF = 0.0f,
-					.maths_clip = 0.0f
+					.clip = 0.0f
 				},
 				.output = 0.0f,
 				.error = 0.0f,
@@ -195,14 +195,14 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 						.pregain = 0.0f,
 						.postgain = 0.0f,
 						.accumulator = 0.0f,
-						.maths_clip = 0.0f,
+						.clip = 0.0f,
 						.leakiness = 0.0f
 					},
 					.differentiator={
 						.gain = 0.0f,
 						.previous = 0.0f,
 						.LPF = 0.5f,
-						.maths_clip = 0.1f
+						.clip = 0.1f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -221,14 +221,14 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 						.pregain = 0.0f,
 						.postgain = 0.0f,
 						.accumulator = 0.0f,
-						.maths_clip = 0.0f,
+						.clip = 0.0f,
 						.leakiness = 0.0f
 					},
 					.differentiator={
 						.gain = 0.0f,
 						.previous = 0.0f,
 						.LPF = 0.5f,
-						.maths_clip = 0.1f
+						.clip = 0.1f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -247,14 +247,14 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 						.pregain = 0.0f,
 						.postgain = 0.0f,
 						.accumulator = 0.0f,
-						.maths_clip = 0.0f,
+						.clip = 0.0f,
 						.leakiness = 0.0f
 					},
 					.differentiator={
 						.gain = 0.0f,
 						.previous = 0.0f,
 						.LPF = 0.5f,
-						.maths_clip = 0.5f
+						.clip = 0.5f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -274,14 +274,14 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 					.pregain = 0.0f,
 					.postgain = 0.0f,
 					.accumulator = 0.0f,
-					.maths_clip = 0.0f,
+					.clip = 0.0f,
 					.leakiness = 0.0f
 				},
 				.differentiator={
 					.gain = 0.0f,
 					.previous = 0.0f,
 					.LPF = 0.0f,
-					.maths_clip = 0.0f
+					.clip = 0.0f
 				},
 				.output = 0.0f,
 				.error = 0.0f,
@@ -319,14 +319,14 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 						.pregain = 1.0f,
 						.postgain = 0.5f,
 						.accumulator = 0.0f,
-						.maths_clip = 0.5f,
+						.clip = 0.5f,
 						.leakiness = 0.0f
 					},
 					.differentiator={
 						.gain = 0.0f,
 						.previous = 0.0f,
 						.LPF = 0.5f,
-						.maths_clip = 0.5f
+						.clip = 0.5f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -345,14 +345,14 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 						.pregain = 1.0f,
 						.postgain = 0.5f,
 						.accumulator = 0.0f,
-						.maths_clip = 0.5f,
+						.clip = 0.5f,
 						.leakiness = 0.0f
 					},
 					.differentiator={
 						.gain = 0.0f,
 						.previous = 0.0f,
 						.LPF = 0.5f,
-						.maths_clip = 0.5f
+						.clip = 0.5f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -371,14 +371,14 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 						.pregain = 0.0f,
 						.postgain = 0.0f,
 						.accumulator = 0.0f,
-						.maths_clip = 0.0f,
+						.clip = 0.0f,
 						.leakiness = 0.0f
 					},
 					.differentiator={
 						.gain = 0.0f,
 						.previous = 0.0f,
 						.LPF = 0.0f,
-						.maths_clip = 0.0f
+						.clip = 0.0f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -398,14 +398,14 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 					.pregain = 1.0f,
 					.postgain = 0.0f,
 					.accumulator = 0.0f,
-					.maths_clip = 1.0f,
+					.clip = 1.0f,
 					.leakiness = 0.0f
 				},
 				.differentiator={
 					.gain = 0.2f,
 					.previous = 0.0f,
 					.LPF = 0.97f,
-					.maths_clip = 0.2f
+					.clip = 0.2f
 				},
 				.output = 0.0f,
 				.error = 0.0f,
@@ -443,14 +443,14 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 						.pregain = 0.0f,
 						.postgain = 0.0f,
 						.accumulator = 0.0f,
-						.maths_clip = 0.0f,
+						.clip = 0.0f,
 						.leakiness = 0.0f
 					},
 					.differentiator={
 						.gain = 0.05f,
 						.previous = 0.0f,
 						.LPF = 0.5f,
-						.maths_clip = 0.5f
+						.clip = 0.5f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -469,14 +469,14 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 						.pregain = 0.0f,
 						.postgain = 0.0f,
 						.accumulator = 0.0f,
-						.maths_clip = 0.5f,
+						.clip = 0.5f,
 						.leakiness = 0.0f
 					},
 					.differentiator={
 						.gain = 0.05f,
 						.previous = 0.0f,
 						.LPF = 0.5f,
-						.maths_clip = 0.5f
+						.clip = 0.5f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -495,14 +495,14 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 						.pregain = 0.0f,
 						.postgain = 0.0f,
 						.accumulator = 0.0f,
-						.maths_clip = 0.0f,
+						.clip = 0.0f,
 						.leakiness = 0.0f
 					},
 					.differentiator={
 						.gain = 0.0f,
 						.previous = 0.0f,
 						.LPF = 0.0f,
-						.maths_clip = 0.0f
+						.clip = 0.0f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -522,14 +522,14 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 					.pregain = 0.001f,
 					.postgain = 1.0f,
 					.accumulator = 0.0f,
-					.maths_clip = 0.5f,
+					.clip = 0.5f,
 					.leakiness = 0.0f
 				},
 				.differentiator={
 					.gain = 0.1f,
 					.previous = 0.0f,
 					.LPF = 0.97f,
-					.maths_clip = 0.2f
+					.clip = 0.2f
 				},
 				.output = 0.0f,
 				.error = 0.0f,
