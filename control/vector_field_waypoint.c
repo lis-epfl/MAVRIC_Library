@@ -163,10 +163,12 @@ void vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
 	vector_field->velocity_command->xyz[Y] 	= 0.0f;
 	vector_field->velocity_command->xyz[Z] 	= 0.0f;
 
-	// Add floor vector field
+	// Compute vector field for floor avoidance
 	vector_field_floor(	vector_field->pos_est->local_position.pos, 
 						20, 
 						tmp_vector);
+
+	// Add floor vector field to the velocity command
 	vector_field->velocity_command->xyz[X] += tmp_vector[X];
 	vector_field->velocity_command->xyz[Y] += tmp_vector[Y];
 	vector_field->velocity_command->xyz[Z] += tmp_vector[Z];
