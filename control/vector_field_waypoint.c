@@ -44,6 +44,9 @@
 #include "coord_conventions.h"
 #include "stdint.h"
 #include "constants.h"
+#include "vectors.h"
+
+#include "print_util.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -65,11 +68,39 @@ static waypoint_struct_t convert_waypoint_to_local_ned(const waypoint_struct_t* 
  * 
  * \details 	Computes a 3D velocity vector keeping the MAV from colliding with the floor
  * 				 
- * \param 		pos 		Current position of the MAV (input)
+ * \param 		pos_mav 	Current position of the MAV (input)
  * \param  		altitude	Threshold altitude (>0) under which the vector field is active (input)
  * \param 		vector		Velocity command vector (output)
  */
-static void vector_field_floor(const float pos[3], const float altitude, float vector[3]);
+static void vector_field_floor(const float pos_mav[3], const float altitude, float vector[3]);
+
+
+/**
+ * \brief 		Vector field for attractor object
+ * 
+ * \details 	Computes a 3D velocity vector attracting the MAV towards a 3D location
+ * 				 
+ * \param 		pos_mav 		Current position of the MAV (input)
+ * \param  		pos_obj			Position of the attractor (input)
+ * \param 		attractiveness	Weight given to this object
+ * \param 		vector			Velocity command vector (output)
+ */
+static void vector_field_attractor(const float pos_mav[3], const float pos_obj[3], const float attractiveness, float vector[3]);
+
+
+/**
+ * \brief 		Vector field for repulsive object
+ * 
+ * \details 	Computes a 3D velocity vector pushing the MAV away from a 3D location
+ * 				 
+ * \param 		pos_mav 		Current position of the MAV (input)
+ * \param  		pos_obj			Position of the repulsor (input)
+ * \param 		repulsiveness	Weight given to this object
+ * \param 		safety_radius	Minimum distance the object can be approached (in m)
+ * \param 		max_range		Range of action (in m)
+ * \param 		vector			Velocity command vector (output)
+ */
+static void vector_field_repulsor(const float pos_mav[3], const float pos_obj[3], const float repulsiveness, const float safety_radius, const float max_range, float vector[3]);
 
 
 //------------------------------------------------------------------------------
@@ -83,6 +114,11 @@ static waypoint_struct_t convert_waypoint_to_local_ned(const waypoint_struct_t* 
 
 	// Init new waypoint
 	waypoint_struct_t waypoint = *waypoint_in;
+	waypoint.command 	= waypoint_in->command;
+	waypoint.param1 	= waypoint_in->param1;
+	waypoint.param2 	= waypoint_in->param2;
+	waypoint.param3 	= waypoint_in->param3;
+	waypoint.param4 	= waypoint_in->param4;
 	
 	switch( waypoint_in->frame )
 	{
@@ -97,6 +133,7 @@ static waypoint_struct_t convert_waypoint_to_local_ned(const waypoint_struct_t* 
 			waypoint.x 		= waypoint_local.pos[X];
 			waypoint.y 		= waypoint_local.pos[Y];
 			waypoint.z 		= waypoint_local.pos[Z];
+
 		break;
 
 		case MAV_FRAME_LOCAL_NED:				/* Local coordinate frame, Z-up (x: north, y: east, z: down). | */
@@ -117,27 +154,121 @@ static waypoint_struct_t convert_waypoint_to_local_ned(const waypoint_struct_t* 
 }
 
 
-static void vector_field_floor(const float pos[3], const float altitude, float vector[3])
+static void vector_field_floor(const float pos_mav[3], const float altitude, float vector[3])
 {
 	// The horizontal and vertical components are always null
 	vector[X] = 0.0f;
 	vector[Y] = 0.0f;
 	
-	if( pos[2] >= 0.0f ) 			
+	if( pos_mav[2] >= 0.0f ) 			
 	{
-		// Avoid division per 0
-		vector[Z] = 0.0f;
-	}
-	else if( pos[2] < -altitude )	
-	{
-		// High altitude
+		// Avoid division by 0
 		vector[Z] = 0.0f;
 	}
 	else
 	{
-		// Low altitude
-		vector[Z] = (1.0f / pos[2]) * (altitude - pos[2]);
+		/**
+		 *  Student code Here
+		 */
+		
+		if( pos_mav[2] < -altitude )	
+		{
+			// High altitude
+			vector[Z] = 0.0f;
+		}
+		else
+		{
+			// Low altitude
+			vector[Z] = (1.0f / pos_mav[2]) * (altitude - pos_mav[2]);
+		}
+
+		/**
+		 *  End of Student code
+		 */
+
 	}
+}
+
+
+static void vector_field_attractor(const float pos_mav[3], const float pos_obj[3], const float attractiveness, float vector[3])
+{
+	float direction[3] = {0.0f, 0.0f, 0.0f};	// desired direction (unit vector)
+	float speed = 0.0f;							// desired speed
+
+	/**
+	 *  Student code Here
+	 */
+
+	// Compute vector from MAV to goal 
+	float mav_to_obj[3] = { pos_obj[X] - pos_mav[X],
+							pos_obj[Y] - pos_mav[Y],
+							pos_obj[Z] - pos_mav[Z] };
+
+	// Compute norm of this vector
+	float dist_to_object = vectors_norm(mav_to_obj);
+
+	// Get desired direction
+	direction[X] = mav_to_obj[X] / dist_to_object;
+	direction[Y] = mav_to_obj[Y] / dist_to_object;
+	direction[Z] = mav_to_obj[Z] / dist_to_object;
+	
+	// Compute desired speed
+	speed = attractiveness * dist_to_object;
+
+	/**
+	 *  End of Student code
+	 */
+
+	vector[X] = direction[X] * speed;
+	vector[Y] = direction[Y] * speed;
+	vector[Z] = direction[Z] * speed;
+}
+
+
+static void vector_field_repulsor(const float pos_mav[3], const float pos_obj[3], const float repulsiveness, const float safety_radius, const float max_range, float vector[3])
+{
+	float direction[3] = {0.0f, 0.0f, 0.0f};	// desired direction (unit vector)
+	float speed = 0.0f;							// desired speed
+
+	/**
+	 *  Student code Here
+	 */
+
+	// Compute vector from MAV to goal 
+	float mav_to_obj[3] = { pos_obj[X] - pos_mav[X],
+							pos_obj[Y] - pos_mav[Y],
+							pos_obj[Z] - pos_mav[Z] };
+
+	// Compute norm of this vector
+	float dist_to_object = vectors_norm(mav_to_obj);
+
+	// Get desired direction
+	direction[X] = mav_to_obj[X] / dist_to_object;
+	direction[Y] = mav_to_obj[Y] / dist_to_object;
+	direction[Z] = mav_to_obj[Z] / dist_to_object;
+	
+	// Compute desired speed
+	if(	dist_to_object <= safety_radius )
+	{
+		speed = 0.0f;
+	}
+	else if( dist_to_object > max_range )
+	{
+		speed = 0.0f;
+	}
+	else
+	{
+		// speed = - repulsiveness * (1/(dist_to_object-safety_radius) - 1/max_range) / (dist_to_object - safety_radius);
+		speed = - repulsiveness  / (dist_to_object - safety_radius);
+	}
+
+	/**
+	 *  End of Student code
+	 */
+
+	vector[X] = direction[X] * speed;
+	vector[Y] = direction[Y] * speed;
+	vector[Z] = direction[Z] * speed;
 }
 
 
@@ -156,6 +287,7 @@ void vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vec
 void vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
 {
 	float tmp_vector[3];
+	float pos_obj[3];
 
 	// Re-init velocity command
 	vector_field->velocity_command->mode 	= VELOCITY_COMMAND_MODE_GLOBAL;
@@ -166,7 +298,7 @@ void vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
 	// Compute vector field for floor avoidance
 	vector_field_floor(	vector_field->pos_est->local_position.pos, 
 						20, 
-						tmp_vector);
+						tmp_vector );
 
 	// Add floor vector field to the velocity command
 	vector_field->velocity_command->xyz[X] += tmp_vector[X];
@@ -180,13 +312,51 @@ void vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
 		waypoint_struct_t waypoint = convert_waypoint_to_local_ned( &vector_field->waypoint_handler->waypoint_list[i],
 																	&vector_field->pos_est->local_position.origin );
 
+		// Get object position
+		pos_obj[X] = waypoint.x;
+		pos_obj[Y] = waypoint.y;
+		pos_obj[Z] = waypoint.z;
+
 		switch( waypoint.command )
 		{
+			case 17:
+				// Get vector field for attractor
+				vector_field_attractor(	vector_field->pos_est->local_position.pos, 
+										pos_obj,
+										waypoint.param1, 
+										tmp_vector);
+			break;
+
+			case 16:
+				// Get vector field for repulsor
+				vector_field_repulsor( 	vector_field->pos_est->local_position.pos,
+										pos_obj, 
+										waypoint.param1, 
+										waypoint.param2, 
+										waypoint.param3, 
+										tmp_vector );
+			break;
+
 			default:
-				vector_field->velocity_command->xyz[X] += 0.2 * (waypoint.x - vector_field->pos_est->local_position.pos[X]);
-				vector_field->velocity_command->xyz[Y] += 0.2 * (waypoint.y - vector_field->pos_est->local_position.pos[Y]);
-				vector_field->velocity_command->xyz[Z] += 0.2 * (waypoint.z - vector_field->pos_est->local_position.pos[Z]);
+				// Do not react to this object
+				tmp_vector[X] = 0.0f;
+				tmp_vector[Y] = 0.0f;
+				tmp_vector[Z] = 0.0f;
 			break;
 		}
-	};
+
+		// Add vector field to the velocity command
+		vector_field->velocity_command->xyz[X] += tmp_vector[X];
+		vector_field->velocity_command->xyz[Y] += tmp_vector[Y];
+		vector_field->velocity_command->xyz[Z] += tmp_vector[Z];
+	}
+
+	// Limit velocity
+	float vel_norm = vectors_norm(vector_field->velocity_command->xyz);
+	if( vel_norm > 5.0f )
+	{
+		vector_field->velocity_command->xyz[X] = 5.0f * vector_field->velocity_command->xyz[X] / vel_norm;
+		vector_field->velocity_command->xyz[Y] = 5.0f * vector_field->velocity_command->xyz[Y] / vel_norm;
+		vector_field->velocity_command->xyz[Z] = 5.0f * vector_field->velocity_command->xyz[Z] / vel_norm;
+	}
 }
