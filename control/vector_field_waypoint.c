@@ -210,16 +210,7 @@ static void vector_field_floor(const float pos_mav[3], const float altitude, flo
 		 *  Student code Here
 		 */
 		
-		if( pos_mav[2] < -altitude )	
-		{
-			// High altitude
-			vector[Z] = 0.0f;
-		}
-		else
-		{
-			// Low altitude
-			vector[Z] = (1.0f / pos_mav[2]) * (altitude - pos_mav[2]);
-		}
+
 
 		/**
 		 *  End of Student code
@@ -248,21 +239,7 @@ static void vector_field_attractor(const float pos_mav[3], const float pos_obj[3
 	 *  Student code Here
 	 */
 
-	// Compute vector from MAV to goal 
-	float mav_to_obj[3] = { pos_obj[X] - pos_mav[X],
-							pos_obj[Y] - pos_mav[Y],
-							pos_obj[Z] - pos_mav[Z] };
 
-	// Compute norm of this vector
-	float dist_to_object = vectors_norm(mav_to_obj);
-
-	// Get desired direction
-	direction[X] = mav_to_obj[X] / dist_to_object;
-	direction[Y] = mav_to_obj[Y] / dist_to_object;
-	direction[Z] = mav_to_obj[Z] / dist_to_object;
-	
-	// Compute desired speed
-	speed = attractiveness * dist_to_object;
 
 	/**
 	 *  End of Student code
@@ -295,32 +272,7 @@ static void vector_field_repulsor_cylinder(const float pos_mav[3], const float p
 	 *  Student code Here
 	 */
 
-	// Compute vector from MAV to goal 
-	float mav_to_obj[3] = { pos_obj[X] - pos_mav[X],
-							pos_obj[Y] - pos_mav[Y],
-							0.0f };
 
-	// Compute norm of this vector
-	float dist_to_object = vectors_norm(mav_to_obj);
-
-	// Get desired direction
-	direction[X] = mav_to_obj[X] / dist_to_object;
-	direction[Y] = mav_to_obj[Y] / dist_to_object;
-	direction[Z] = mav_to_obj[Z] / dist_to_object;
-	
-	// Compute desired speed
-	if(	dist_to_object <= safety_radius )
-	{
-		speed = 0.0f;
-	}
-	else if( dist_to_object > max_range )
-	{
-		speed = 0.0f;
-	}
-	else
-	{
-		speed = - repulsiveness  / (dist_to_object - safety_radius) * (max_range - dist_to_object);
-	}
 
 	/**
 	 *  End of Student code
@@ -353,32 +305,7 @@ static void vector_field_repulsor_sphere(const float pos_mav[3], const float pos
 	 *  Student code Here
 	 */
 
-	// Compute vector from MAV to goal 
-	float mav_to_obj[3] = { pos_obj[X] - pos_mav[X],
-							pos_obj[Y] - pos_mav[Y],
-							pos_obj[Z] - pos_mav[Z] };
 
-	// Compute norm of this vector
-	float dist_to_object = vectors_norm(mav_to_obj);
-
-	// Get desired direction
-	direction[X] = mav_to_obj[X] / dist_to_object;
-	direction[Y] = mav_to_obj[Y] / dist_to_object;
-	direction[Z] = mav_to_obj[Z] / dist_to_object;
-	
-	// Compute desired speed
-	if(	dist_to_object <= safety_radius )
-	{
-		speed = 0.0f;
-	}
-	else if( dist_to_object > max_range )
-	{
-		speed = 0.0f;
-	}
-	else
-	{
-		speed = - repulsiveness  / (dist_to_object - safety_radius) * (max_range - dist_to_object);
-	}
 
 	/**
 	 *  End of Student code
@@ -412,6 +339,7 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
 	/**
 	 *  Student code Here
 	 */
+
 
 
  	/**
