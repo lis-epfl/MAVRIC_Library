@@ -92,6 +92,9 @@ typedef struct
 	
 	bool auto_landing_next_state;						///< Flag to change critical state in its dedicated state machine
 	
+	bool stop_nav;										///< Flag to start/stop the navigation from a button in case of problems
+	bool stop_nav_there;								///< Flag to stop the navigation and fly to the stopping waypoint
+	
 	control_command_t *controls_nav;					///< The pointer to the navigation control structure
 	const control_command_t* control_joystick;			///< The pointer to the joystick control structure
 	const quat_t *qe;									///< The pointer to the attitude quaternion structure

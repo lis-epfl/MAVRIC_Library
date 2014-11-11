@@ -66,12 +66,7 @@ typedef struct
 	remote_t* remote;
 } state_machine_t;
 
-typedef struct  
-{
-	state_machine_t state_machine;
-}state_machine_conf_t;
-
-void state_machine_init(state_machine_t *state_machine, const state_machine_conf_t* state_machine_conf, state_t* state, mavlink_waypoint_handler_t* waypoint_handler, simulation_model_t *sim_model, remote_t* remote);
+void state_machine_init(state_machine_t *state_machine, state_t* state, mavlink_waypoint_handler_t* waypoint_handler, simulation_model_t *sim_model, remote_t* remote);
 
 
 /**
