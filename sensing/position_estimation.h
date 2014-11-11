@@ -97,7 +97,7 @@ typedef struct
 	local_coordinates_t local_position;				///< The local position
 	local_coordinates_t last_gps_pos;				///< The coordinates of the last GPS position
 	
-	float gravity;
+	float gravity;									///< The value of the gravity
 	
 	barometer_t* barometer;							///< The pointer to the barometer structure
 	const gps_t* gps;								///< The pointer to the GPS structure
