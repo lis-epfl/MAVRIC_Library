@@ -751,7 +751,7 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 											&_msg,
 											msg->sysid,
 											msg->compid, 
-											MAV_CMD_ACK_ERR_NOT_SUPPORTED);
+											MAV_MISSION_UNSUPPORTED);
 			mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
 		}
 		else
@@ -759,20 +759,8 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 			// Check if receiving waypoints
 			if (waypoint_handler->waypoint_receiving)
 			{
-				// verify we received the command
-				mavlink_message_t _msg;
-				mavlink_msg_mission_ack_pack(	waypoint_handler->mavlink_stream->sysid,
-												waypoint_handler->mavlink_stream->compid,
-												&_msg,
-												msg->sysid,
-												msg->compid, 
-												MAV_MISSION_UNSUPPORTED);
-				mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
-			}
-			else
-			{
-				// Check if receiving waypoints
-				if (waypoint_handler->waypoint_receiving)
+				// check if this is the requested waypoint
+				if (packet.seq == waypoint_handler->waypoint_request_number)
 				{
 					print_util_dbg_print("Receiving good waypoint, number ");
 					print_util_dbg_print_num(waypoint_handler->waypoint_request_number,10);
@@ -816,25 +804,11 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 						print_util_dbg_print_num(waypoint_handler->waypoint_request_number,10);
 						print_util_dbg_print("\n");
 					}
-					else
-					{
-						MAV_MISSION_RESULT type = MAV_MISSION_INVALID_SEQUENCE;
-						
-						mavlink_message_t _msg;
-						mavlink_msg_mission_ack_pack(	waypoint_handler->mavlink_stream->sysid,
-														waypoint_handler->mavlink_stream->compid,
-														&_msg,
-														msg->sysid,
-														msg->compid,
-														type	);
-						mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
-					}
-				}
+				} //end of if (packet.seq == waypoint_handler->waypoint_request_number)
 				else
 				{
-					MAV_MISSION_RESULT type = MAV_MISSION_ERROR;
-					print_util_dbg_print("Not ready to receive waypoints right now!\r\n");
-					
+					MAV_MISSION_RESULT type = MAV_MISSION_INVALID_SEQUENCE;
+						
 					mavlink_message_t _msg;
 					mavlink_msg_mission_ack_pack(	waypoint_handler->mavlink_stream->sysid,
 													waypoint_handler->mavlink_stream->compid,
@@ -845,6 +819,20 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 					mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
 				}
 			} //end of if (waypoint_handler->waypoint_receiving)
+			else
+			{
+				MAV_MISSION_RESULT type = MAV_MISSION_ERROR;
+				print_util_dbg_print("Not ready to receive waypoints right now!\r\n");
+					
+				mavlink_message_t _msg;
+				mavlink_msg_mission_ack_pack(	waypoint_handler->mavlink_stream->sysid,
+												waypoint_handler->mavlink_stream->compid,
+												&_msg,
+												msg->sysid,
+												msg->compid,
+												type	);
+				mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
+			} //end of else of if (waypoint_handler->waypoint_receiving)
 		} //end of else (packet.current != 2 && !=3 )
 	} //end of if this message is for this system and subsystem
 }

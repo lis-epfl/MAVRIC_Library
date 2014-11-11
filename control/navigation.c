@@ -669,7 +669,7 @@ static mav_result_t navigation_start_stop_navigation(navigation_t* navigation, m
 		if (packet->param2 == MAV_GOTO_HOLD_AT_CURRENT_POSITION)
 		{
 			navigation->stop_nav = true;
-			navigation_waypoint_hold_init(navigation->waypoint_handler, navigation->position_estimator->local_position);
+			navigation_waypoint_hold_init(navigation->waypoint_handler, navigation->position_estimation->local_position);
 			
 			result = MAV_RESULT_ACCEPTED;
 		}
@@ -685,7 +685,7 @@ static mav_result_t navigation_start_stop_navigation(navigation_t* navigation, m
 			waypoint.y = packet->param6;
 			waypoint.z = packet->param7;
 			
-			local_coordinates_t waypoint_goal = waypoint_handler_set_waypoint_from_frame(&waypoint,navigation->position_estimator->local_position.origin);
+			local_coordinates_t waypoint_goal = waypoint_handler_set_waypoint_from_frame(&waypoint,navigation->position_estimation->local_position.origin);
 			navigation_waypoint_hold_init(navigation->waypoint_handler, waypoint_goal);
 			
 			result = MAV_RESULT_ACCEPTED;
@@ -707,9 +707,9 @@ static void navigation_stopping_handler(navigation_t* navigation)
 	float dist2wp_sqr;
 	float rel_pos[3];
 	
-	rel_pos[X] = (float)(navigation->waypoint_handler->waypoint_hold_coordinates.pos[X] - navigation->position_estimator->local_position.pos[X]);
-	rel_pos[Y] = (float)(navigation->waypoint_handler->waypoint_hold_coordinates.pos[Y] - navigation->position_estimator->local_position.pos[Y]);
-	rel_pos[Z] = (float)(navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] - navigation->position_estimator->local_position.pos[Z]);
+	rel_pos[X] = (float)(navigation->waypoint_handler->waypoint_hold_coordinates.pos[X] - navigation->position_estimation->local_position.pos[X]);
+	rel_pos[Y] = (float)(navigation->waypoint_handler->waypoint_hold_coordinates.pos[Y] - navigation->position_estimation->local_position.pos[Y]);
+	rel_pos[Z] = (float)(navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] - navigation->position_estimation->local_position.pos[Z]);
 	
 	dist2wp_sqr = vectors_norm_sqr(rel_pos);
 	if (dist2wp_sqr < 25.0f )
