@@ -89,6 +89,21 @@ static void vector_field_attractor(const float pos_mav[3], const float pos_obj[3
 
 
 /**
+ * \brief 		Vector field for repulsive cylinder
+ * 
+ * \details 	Computes a 3D velocity vector pushing the MAV away from a vertical cylinder
+ * 				 
+ * \param 		pos_mav 		Current position of the MAV (input)
+ * \param  		pos_obj			Position of the repulsor (input)
+ * \param 		repulsiveness	Weight given to this object (input)
+ * \param 		max_range		Range of action (in m)
+ * \param 		safety_radius	Minimum distance the object can be approached (in m)
+ * \param 		vector			Velocity command vector (output)
+ */
+static void vector_field_repulsor_cylinder(const float pos_mav[3], const float pos_obj[3], const float repulsiveness, const float max_range, const float safety_radius, float vector[3]);
+
+
+/**
  * \brief 		Vector field for repulsive object
  * 
  * \details 	Computes a 3D velocity vector pushing the MAV away from a 3D location
@@ -96,11 +111,26 @@ static void vector_field_attractor(const float pos_mav[3], const float pos_obj[3
  * \param 		pos_mav 		Current position of the MAV (input)
  * \param  		pos_obj			Position of the repulsor (input)
  * \param 		repulsiveness	Weight given to this object
- * \param 		safety_radius	Minimum distance the object can be approached (in m)
  * \param 		max_range		Range of action (in m)
+ * \param 		safety_radius	Minimum distance the object can be approached (in m)
  * \param 		vector			Velocity command vector (output)
  */
-static void vector_field_repulsor(const float pos_mav[3], const float pos_obj[3], const float repulsiveness, const float safety_radius, const float max_range, float vector[3]);
+static void vector_field_repulsor_sphere(const float pos_mav[3], const float pos_obj[3], const float repulsiveness, const float max_range, const float safety_radius, float vector[3]);
+
+
+/**
+ * \brief 		Vector field for circular waypoint
+ * 
+ * \details 	Computes a 3D velocity vector guiding the MAV around a circular waypoint
+ * 				 
+ * \param 		pos_mav 		Current position of the MAV (input)
+ * \param  		pos_obj			Position of the center of the circle (input)
+ * \param 		attractiveness	Weight given to this object (input)
+ * \param 		cruise_speed	Nominal speed around the circle in m/s (input)
+ * \param 		radius			Radius of the circle to follow (in m)
+ * \param 		vector			Velocity command vector (output)
+ */
+static void vector_field_circular_waypoint(const float pos_mav[3], const float pos_obj[3], const float attractiveness, const float cruise_speed, const float radius, float vector[3]);
 
 
 //------------------------------------------------------------------------------
@@ -154,6 +184,15 @@ static waypoint_struct_t convert_waypoint_to_local_ned(const waypoint_struct_t* 
 }
 
 
+/**
+ * \brief 		Vector field for floor avoidance 
+ * 
+ * \details 	Computes a 3D velocity vector keeping the MAV from colliding with the floor
+ * 				 
+ * \param 		pos_mav 	Current position of the MAV (input)
+ * \param  		altitude	Threshold altitude (>0) under which the vector field is active (input)
+ * \param 		vector		Velocity command vector (output)
+ */
 static void vector_field_floor(const float pos_mav[3], const float altitude, float vector[3])
 {
 	// The horizontal and vertical components are always null
@@ -190,6 +229,16 @@ static void vector_field_floor(const float pos_mav[3], const float altitude, flo
 }
 
 
+/**
+ * \brief 		Vector field for attractor object
+ * 
+ * \details 	Computes a 3D velocity vector attracting the MAV towards a 3D location
+ * 				 
+ * \param 		pos_mav 		Current position of the MAV (input)
+ * \param  		pos_obj			Position of the attractor (input)
+ * \param 		attractiveness	Weight given to this object (input)
+ * \param 		vector			Velocity command vector (output)
+ */
 static void vector_field_attractor(const float pos_mav[3], const float pos_obj[3], const float attractiveness, float vector[3])
 {
 	float direction[3] = {0.0f, 0.0f, 0.0f};	// desired direction (unit vector)
@@ -225,7 +274,77 @@ static void vector_field_attractor(const float pos_mav[3], const float pos_obj[3
 }
 
 
-static void vector_field_repulsor(const float pos_mav[3], const float pos_obj[3], const float repulsiveness, const float safety_radius, const float max_range, float vector[3])
+/**
+ * \brief 		Vector field for repulsive cylinder
+ * 
+ * \details 	Computes a 3D velocity vector pushing the MAV away from a vertical cylinder
+ * 				 
+ * \param 		pos_mav 		Current position of the MAV (input)
+ * \param  		pos_obj			Position of the repulsor (input)
+ * \param 		repulsiveness	Weight given to this object (input)
+ * \param 		max_range		Range of action (in m)
+ * \param 		safety_radius	Minimum distance the object can be approached (in m)
+ * \param 		vector			Velocity command vector (output)
+ */
+static void vector_field_repulsor_cylinder(const float pos_mav[3], const float pos_obj[3], const float repulsiveness, const float max_range, const float safety_radius, float vector[3])
+{
+	float direction[3] = {0.0f, 0.0f, 0.0f};	// desired direction (unit vector)
+	float speed = 0.0f;							// desired speed
+
+	/**
+	 *  Student code Here
+	 */
+
+	// Compute vector from MAV to goal 
+	float mav_to_obj[3] = { pos_obj[X] - pos_mav[X],
+							pos_obj[Y] - pos_mav[Y],
+							0.0f };
+
+	// Compute norm of this vector
+	float dist_to_object = vectors_norm(mav_to_obj);
+
+	// Get desired direction
+	direction[X] = mav_to_obj[X] / dist_to_object;
+	direction[Y] = mav_to_obj[Y] / dist_to_object;
+	direction[Z] = mav_to_obj[Z] / dist_to_object;
+	
+	// Compute desired speed
+	if(	dist_to_object <= safety_radius )
+	{
+		speed = 0.0f;
+	}
+	else if( dist_to_object > max_range )
+	{
+		speed = 0.0f;
+	}
+	else
+	{
+		speed = - repulsiveness  / (dist_to_object - safety_radius) * (max_range - dist_to_object);
+	}
+
+	/**
+	 *  End of Student code
+	 */
+
+	vector[X] = direction[X] * speed;
+	vector[Y] = direction[Y] * speed;
+	vector[Z] = direction[Z] * speed;
+}
+
+
+/**
+ * \brief 		Vector field for repulsive object
+ * 
+ * \details 	Computes a 3D velocity vector pushing the MAV away from a 3D location
+ * 				 
+ * \param 		pos_mav 		Current position of the MAV (input)
+ * \param  		pos_obj			Position of the repulsor (input)
+ * \param 		repulsiveness	Weight given to this object (input)
+ * \param 		max_range		Range of action (in m)
+ * \param 		safety_radius	Minimum distance the object can be approached (in m)
+ * \param 		vector			Velocity command vector (output)
+ */
+static void vector_field_repulsor_sphere(const float pos_mav[3], const float pos_obj[3], const float repulsiveness, const float max_range, const float safety_radius, float vector[3])
 {
 	float direction[3] = {0.0f, 0.0f, 0.0f};	// desired direction (unit vector)
 	float speed = 0.0f;							// desired speed
@@ -258,8 +377,7 @@ static void vector_field_repulsor(const float pos_mav[3], const float pos_obj[3]
 	}
 	else
 	{
-		// speed = - repulsiveness * (1/(dist_to_object-safety_radius) - 1/max_range) / (dist_to_object - safety_radius);
-		speed = - repulsiveness  / (dist_to_object - safety_radius);
+		speed = - repulsiveness  / (dist_to_object - safety_radius) * (max_range - dist_to_object);
 	}
 
 	/**
@@ -270,6 +388,44 @@ static void vector_field_repulsor(const float pos_mav[3], const float pos_obj[3]
 	vector[Y] = direction[Y] * speed;
 	vector[Z] = direction[Z] * speed;
 }
+
+
+/**
+ * \brief 		Vector field for circular waypoint
+ * 
+ * \details 	Computes a 3D velocity vector guiding the MAV around a circular waypoint
+ * 				 
+ * \param 		pos_mav 		Current position of the MAV (input)
+ * \param  		pos_obj			Position of the center of the circle (input)
+ * \param 		attractiveness	Weight given to this object (input)
+ * \param 		cruise_speed	Nominal speed around the circle in m/s (input)
+ * \param 		radius			Radius of the circle to follow (in m)
+ * \param 		vector			Velocity command vector (output)
+ */
+static void vector_field_circular_waypoint(const float pos_mav[3], const float pos_obj[3], const float attractiveness, const float cruise_speed, const float radius, float vector[3])
+{
+	float direction_radial[3] 		= {0.0f, 0.0f, 0.0f};	// desired direction (unit vector) toward the closest point of the circle
+	float direction_tangential[3] 	= {0.0f, 0.0f, 0.0f};	// desired direction (unit vector) tangential to the circle (circular motion)
+	float speed_radial 				= 0.0f;					// desired radial speed
+	float speed_tangential 			= 0.0f;					// desired tangential speed
+
+	/**
+	 *  Student code Here
+	 */
+
+
+ 	/**
+	 *  End of Student code
+	 */
+
+	vector[X] = direction_radial[X] 	* speed_radial + 
+				direction_tangential[X] * speed_tangential;
+	vector[Y] = direction_radial[Y] 	* speed_radial + 
+				direction_tangential[Y] * speed_tangential;
+	vector[Z] = direction_radial[Z] 	* speed_radial + 
+				direction_tangential[Z] * speed_tangential;
+}
+
 
 
 //------------------------------------------------------------------------------
@@ -283,6 +439,7 @@ void vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vec
 	vector_field->pos_est 			= pos_est;
 	vector_field->velocity_command 	= velocity_command;
 }
+
 
 void vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
 {
@@ -319,26 +476,46 @@ void vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
 
 		switch( waypoint.command )
 		{
-			case 17:
-				// Get vector field for attractor
+			// Attractive object
+			case 22:
 				vector_field_attractor(	vector_field->pos_est->local_position.pos, 
 										pos_obj,
-										waypoint.param1, 
+										waypoint.param1, 	// attractiveness
 										tmp_vector);
 			break;
 
-			case 16:
-				// Get vector field for repulsor
-				vector_field_repulsor( 	vector_field->pos_est->local_position.pos,
-										pos_obj, 
-										waypoint.param1, 
-										waypoint.param2, 
-										waypoint.param3, 
-										tmp_vector );
+			// Cylindrical repulsive object
+			case 17:
+				vector_field_repulsor_cylinder( vector_field->pos_est->local_position.pos,
+												pos_obj, 
+												waypoint.param1, 	// repulsiveness
+												waypoint.param2, 	// max_range
+												waypoint.param3, 	// safety_radius
+												tmp_vector );
 			break;
 
+			// Spherical repulsive object
+			case 18:
+				vector_field_repulsor_sphere( 	vector_field->pos_est->local_position.pos,
+												pos_obj, 
+												waypoint.param1, 	// repulsiveness
+												waypoint.param2,  	// max_range
+												waypoint.param3, 	// safety_radius
+												tmp_vector );
+			break;
+
+			// Circular waypoint
+			case 16:
+				vector_field_circular_waypoint(	vector_field->pos_est->local_position.pos, 
+												pos_obj, 
+												waypoint.param1, 	// attractiveness
+												waypoint.param2, 	// cruise_speed
+												waypoint.param3,	// radius
+												tmp_vector );
+			break;
+
+			// Unknown object
 			default:
-				// Do not react to this object
 				tmp_vector[X] = 0.0f;
 				tmp_vector[Y] = 0.0f;
 				tmp_vector[Z] = 0.0f;
