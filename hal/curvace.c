@@ -69,6 +69,8 @@ static void curvace_stop(void);
 static void curvace_derotate_all(curvace_t* curvace);
 
 
+static void curvace_scale_all_no_derotation(curvace_t* curvace);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -166,6 +168,14 @@ static void curvace_derotate_all(curvace_t* curvace)
 								- curvace->calib_matrix.data[j + 1] * curvace->ahrs->angular_speed[1]
 								- curvace->calib_matrix.data[j + 2] * curvace->ahrs->angular_speed[2];
 		j += 3;
+	}
+}
+
+static void curvace_scale_all_no_derotation(curvace_t* curvace)
+{
+	for (uint8_t i = 0; i < 2 * CURVACE_NB_OF; ++i)
+	{
+		curvace->of.data[i] = curvace->calib_factor.data[i] * curvace->raw_of.data[i];
 	}
 }
 
@@ -419,7 +429,9 @@ void curvace_update(curvace_t* curvace)
 {
 	curvace_read_spi(curvace);
 
-	curvace_derotate_all(curvace);
+	// curvace_derotate_all(curvace);
+
+	curvace_scale_all_no_derotation(curvace);
 }
 
 
