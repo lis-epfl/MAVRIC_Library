@@ -56,14 +56,6 @@
 //------------------------------------------------------------------------------
 
 /**
- * \brief	Changes between simulation to and from reality
- *
- * \param	sim				The pointer to the simulation model structure
- * \param	packet			The pointer to the decoded mavlink command long message
- */
-static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_command_long_t* packet);
-
-/**
  * \brief	Computer the forces in the local frame for a "diagonal" quadrotor configuration
  *
  * \param	sim				The pointer to the simulation structure
@@ -91,43 +83,6 @@ static void simulation_reset_simulation(simulation_model_t *sim);
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-
-static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_command_long_t* packet)
-{
-	if (packet->param1 == 1)
-	{
-		// Set new home position to actual position
-		print_util_dbg_print("Set new home location to actual position.\r\n");
-		sim->local_position.origin = coord_conventions_local_to_global_position(sim->local_position);
-
-		print_util_dbg_print("New Home location: (");
-		print_util_dbg_print_num(sim->local_position.origin.latitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->local_position.origin.longitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->local_position.origin.altitude * 1000.0f,10);
-		print_util_dbg_print(")\r\n");
-	}
-	else
-	{
-		// Set new home position from msg
-		print_util_dbg_print("Set new home location.\r\n");
-
-		sim->local_position.origin.latitude = packet->param5;
-		sim->local_position.origin.longitude = packet->param6;
-		sim->local_position.origin.altitude = packet->param7;
-
-		print_util_dbg_print("New Home location: (");
-		print_util_dbg_print_num(sim->local_position.origin.latitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->local_position.origin.longitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->local_position.origin.altitude * 1000.0f,10);
-		print_util_dbg_print(")\r\n");
-	}
-
-	*sim->nav_plan_active = false;
-}
 
 /** 
  * \brief Inverse function of mix_to_servos in stabilization to recover torques and forces
@@ -277,11 +232,9 @@ void forces_from_servos_cross_quad(simulation_model_t* sim)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, const servos_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, const servos_t* servos, bool* waypoint_set)
 {
 	int32_t i;
-	
-	sim->mavlink_stream = mavlink_stream;
 
 	sim->vehicle_config = *sim_config;
 	
@@ -317,15 +270,7 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	simulation_reset_simulation(sim);
 	simulation_calib_set(sim);
 	
-	mavlink_message_handler_cmd_callback_t callbackcmd;
-	
-	callbackcmd.command_id    = MAV_CMD_DO_SET_HOME; // 179
-	callbackcmd.sysid_filter  = MAV_SYS_ID_ALL;
-	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER;
-	callbackcmd.function      = (mavlink_cmd_callback_function_t)	&simulation_set_new_home_position;
-	callbackcmd.module_struct =										sim;
-	mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+
 	
 	print_util_dbg_print("HIL simulation initialized.\r\n");
 }
@@ -544,70 +489,4 @@ void simulation_switch_from_simulation_to_reality(simulation_model_t *sim)
 		sim->pos_est->local_position.pos[i] = 0.0f;
 	}
 	sim->pos_est->init_gps_position = false;
-}
-
-
-task_return_t simulation_send_state(simulation_model_t* sim_model)
-{
-	aero_attitude_t aero_attitude;
-	aero_attitude = coord_conventions_quat_to_aero(sim_model->ahrs.qe);
-
-	global_position_t gpos = coord_conventions_local_to_global_position(sim_model->local_position);
-	
-	mavlink_message_t msg;
-	const mavlink_stream_t* mavlink_stream = sim_model->mavlink_stream;
-	mavlink_msg_hil_state_pack(	mavlink_stream->sysid,
-								mavlink_stream->compid,
-								&msg,
-								time_keeper_get_micros(),
-								aero_attitude.rpy[0],
-								aero_attitude.rpy[1],
-								aero_attitude.rpy[2],
-								sim_model->rates_bf[ROLL],
-								sim_model->rates_bf[PITCH],
-								sim_model->rates_bf[YAW],
-								gpos.latitude * 10000000,
-								gpos.longitude * 10000000,
-								gpos.altitude * 1000.0f,
-								100 * sim_model->vel[X],
-								100 * sim_model->vel[Y],
-								100 * sim_model->vel[Z],
-								1000 * sim_model->lin_forces_bf[0],
-								1000 * sim_model->lin_forces_bf[1],
-								1000 * sim_model->lin_forces_bf[2] 	);
-	mavlink_stream_send(mavlink_stream, &msg);
-
-	return TASK_RUN_SUCCESS;
-}
-
-task_return_t simulation_send_quaternions(simulation_model_t *sim_model)
-{
-	aero_attitude_t aero_attitude;
-	aero_attitude = coord_conventions_quat_to_aero(sim_model->ahrs.qe);
-
-	global_position_t gpos = coord_conventions_local_to_global_position(sim_model->local_position);
-	mavlink_message_t msg;
-	const mavlink_stream_t* mavlink_stream = sim_model->mavlink_stream;
-	mavlink_msg_hil_state_quaternion_pack(	mavlink_stream->sysid,
-											mavlink_stream->compid,
-											&msg,
-											time_keeper_get_micros(),
-											(float*) &sim_model->ahrs.qe,
-											aero_attitude.rpy[ROLL],
-											aero_attitude.rpy[PITCH],
-											aero_attitude.rpy[YAW],
-											gpos.latitude * 10000000,
-											gpos.longitude * 10000000,
-											gpos.altitude * 1000.0f,
-											100 * sim_model->vel[X],
-											100 * sim_model->vel[Y],
-											100 * sim_model->vel[Z],
-											100 * vectors_norm(sim_model->vel),
-											0.0f,
-											sim_model->ahrs.linear_acc[X],
-											sim_model->ahrs.linear_acc[Y],
-											sim_model->ahrs.linear_acc[Z]	);
-	mavlink_stream_send(mavlink_stream, &msg);
-
-	return TASK_RUN_SUCCESS;
 }

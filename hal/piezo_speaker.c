@@ -162,6 +162,20 @@ void piezo_speaker_quick_startup(void)
 }
 
 
+void piezo_speaker_startup_bb(void)
+{
+	for (uint32_t i = 3000; i > 500; i -= 100)
+	{
+		piezo_speaker_beep(5, i);
+	}
+	delay_ms(5);
+	for (uint32_t i = 500; i < 3000; i += 100 )
+	{
+		piezo_speaker_beep(5, i);
+	}
+}
+
+
 void piezo_speaker_critical_error_melody(void)
 {
 	piezo_speaker_beep(200, 700);
