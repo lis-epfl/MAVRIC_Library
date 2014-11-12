@@ -677,7 +677,7 @@ static mav_result_t navigation_start_stop_navigation(navigation_t* navigation, m
 		{
 			navigation->stop_nav_there = true;
 			
-			waypoint_struct waypoint;
+			waypoint_struct_t waypoint;
 			
 			waypoint.frame = packet->param3;
 			waypoint.param4 = packet->param4;
