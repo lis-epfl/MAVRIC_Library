@@ -90,6 +90,10 @@ void piezo_speaker_critical_error_melody(void);
  */
 void piezo_speaker_quick_startup(void);
 
+/**
+ * \brief Quick startup melody
+ */
+void piezo_speaker_startup_bb(void);
 
 /**
  * \brief Star wars melody
@@ -101,6 +105,7 @@ void piezo_speaker_star_wars(void);
  * \brief Mario melody
  */
 void piezo_speaker_mario_melody(void);
+
 
 
 #ifdef __cplusplus
