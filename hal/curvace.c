@@ -60,6 +60,12 @@ static uint16_t curvace_spi_low_level(uint16_t data);
 static void curvace_read_spi(curvace_t* curvace);
 
 
+static void curvace_start(void);
+
+
+static void curvace_stop(void);
+
+
 static void curvace_derotate_all(curvace_t* curvace);
 
 
@@ -69,9 +75,9 @@ static void curvace_derotate_all(curvace_t* curvace);
 
 static uint16_t curvace_spi_low_level(uint16_t data)
 {
-	//while (!spi_is_tx_ready(&AVR32_SPI0));
+	while (!spi_is_tx_ready(&AVR32_SPI0));
 	spi_put(&AVR32_SPI0, data);
-	//while(!spi_is_tx_empty(&AVR32_SPI0));
+	while(!spi_is_rx_full(&AVR32_SPI0));
 	return spi_get(&AVR32_SPI0);
 }
 
@@ -108,6 +114,44 @@ static void curvace_read_spi(curvace_t* curvace)
 	}
 		
 	//CS OFF
+	gpio_set_gpio_pin(slaveSelectTop);
+}
+
+static void curvace_start(void)
+{
+	// Start Bottom CurvACE controller
+	// CS ON
+	gpio_clr_gpio_pin(slaveSelectBot);
+	// Write start
+	curvace_spi_low_level(0xAAAA);
+	// CS OFF
+	gpio_set_gpio_pin(slaveSelectBot);
+
+	// Start Top CurvACE controller
+	// CS ON
+	gpio_clr_gpio_pin(slaveSelectTop);
+	// Write start
+	curvace_spi_low_level(0xAAAA);
+	// CS OFF
+	gpio_set_gpio_pin(slaveSelectTop);
+}
+
+static void curvace_stop(void)
+{
+	// Stop and reset Bottom CurvACE controller
+	// CS ON
+	gpio_clr_gpio_pin(slaveSelectBot);
+	// Write start
+	curvace_spi_low_level(0x5555);
+	// CS OFF
+	gpio_set_gpio_pin(slaveSelectBot);
+
+	// Stop and reset Top CurvACE controller
+	// CS ON
+	gpio_clr_gpio_pin(slaveSelectTop);
+	// Write start
+	curvace_spi_low_level(0x5555);
+	// CS OFF
 	gpio_set_gpio_pin(slaveSelectTop);
 }
 
@@ -338,8 +382,8 @@ void curvace_init(curvace_t* curvace, const ahrs_t* ahrs, const mavlink_stream_t
 	
 	spi_options_t spiOptions =
 	{
-		.reg          = 0,			//CS0
-		.baudrate     = 500000,		//500khz
+		.reg          = 0,			// CS0
+		.baudrate     = 5000000,	// 5MHz
 		.bits         = 16,			// Bits!
 		.spck_delay   = 0,			// # clocks to delay.
 		.trans_delay  = 0,			// ?
@@ -366,23 +410,8 @@ void curvace_init(curvace_t* curvace, const ahrs_t* ahrs, const mavlink_stream_t
 	// Configure Chip Select even if not used.
 	spi_selectChip(&AVR32_SPI0, 0);
 	
-	// Start Bottom CurvACE controller
-	// CS ON
-	gpio_clr_gpio_pin(slaveSelectBot);
-	delay_ms(10);
-	// Write start
-	curvace_spi_low_level(0xAAAA);
-	// CS OFF
-	gpio_set_gpio_pin(slaveSelectBot);
-
-	// Start Top CurvACE controller
-	// CS ON
-	gpio_clr_gpio_pin(slaveSelectTop);
-	delay_ms(10);
-	// Write start
-	curvace_spi_low_level(0xAAAA);
-	// CS OFF
-	gpio_set_gpio_pin(slaveSelectTop);
+	// Start CurvACE sensor.
+	curvace_start();
 }
 
 
@@ -439,5 +468,5 @@ void curvace_send_telemetry(const curvace_t* curvace)
 	mavlink_stream_send(curvace->mavlink_stream,&msg);
 
 	// Increment sensor id
-	sensor_id = ( sensor_id + 1 ) % 6;
+	//sensor_id = ( sensor_id + 1 ) % 6;
 }
