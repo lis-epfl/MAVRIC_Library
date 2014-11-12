@@ -79,6 +79,7 @@ void piezo_speaker_beep(int32_t duration_ms, int32_t frequency);
  */
 void piezo_speaker_startup_melody(void);
 
+
 /**
  * \brief Critical error melody
  */
@@ -89,6 +90,12 @@ void piezo_speaker_critical_error_melody(void);
  * \brief Quick startup melody
  */
 void piezo_speaker_quick_startup(void);
+
+
+/**
+ * \brief Startup melody for bumblebot
+ */
+void piezo_speaker_startup_bumblebot(void);
 
 
 /**
