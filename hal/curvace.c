@@ -175,7 +175,8 @@ static void curvace_scale_all_no_derotation(curvace_t* curvace)
 {
 	for (uint8_t i = 0; i < 2 * CURVACE_NB_OF; ++i)
 	{
-		curvace->of.data[i] = curvace->calib_factor.data[i] * curvace->raw_of.data[i];
+		curvace->of.data[i] = 	0.3f * curvace->of.data[i] +
+								0.7f * curvace->calib_factor.data[i] * curvace->raw_of.data[i];
 	}
 }
 
