@@ -42,12 +42,28 @@
 #include "maths.h"
 #include "quick_trig.h"
 #include "time_keeper.h"
+#include "gpio.h"
+#include "spi.h"
+#include "sysclk.h"
+#include "delay.h"
+
+#define slaveSelectTop AVR32_PIN_PC11
+#define slaveSelectBot AVR32_PIN_PC12
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
+static uint16_t curvace_spi_low_level(uint16_t data);
+
+
 static void curvace_read_spi(curvace_t* curvace);
+
+
+static void curvace_start(void);
+
+
+static void curvace_stop(void);
 
 
 static void curvace_derotate_all(curvace_t* curvace);
@@ -57,21 +73,86 @@ static void curvace_derotate_all(curvace_t* curvace);
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
+static uint16_t curvace_spi_low_level(uint16_t data)
+{
+	while (!spi_is_tx_ready(&AVR32_SPI0));
+	spi_put(&AVR32_SPI0, data);
+	while(!spi_is_rx_full(&AVR32_SPI0));
+	return spi_get(&AVR32_SPI0);
+}
+
+
 static void curvace_read_spi(curvace_t* curvace)
 {
 	// Left hemisphere
+	
+	//CS ON
+	gpio_clr_gpio_pin(slaveSelectBot);
+	
 	for (uint8_t i = 0; i < CURVACE_NB_OF / 2; ++i)
 	{
-		curvace->raw_of.left_hemisphere[i].x =  0;  // spi_read_16_bits(...)
-		curvace->raw_of.left_hemisphere[i].y =  0;  // spi_read_16_bits(...)
+		//curvace->raw_of.left_hemisphere[i].x =  0;  // spi_read_16_bits(...)
+		//curvace->raw_of.left_hemisphere[i].y =  0;  // spi_read_16_bits(...)
+		curvace->raw_of.left_hemisphere[i].x = curvace_spi_low_level(100);
+		curvace->raw_of.left_hemisphere[i].y = curvace_spi_low_level(101);
 	}
+	
+	//CS OFF
+	gpio_set_gpio_pin(slaveSelectBot);
 
 	// Right hemisphere
+	
+	//CS ON
+	gpio_clr_gpio_pin(slaveSelectTop);
+	
 	for (uint8_t i = 0; i < CURVACE_NB_OF / 2; ++i)
 	{
-		curvace->raw_of.right_hemisphere[i].x =  0;  // spi_read_16_bits(...)
-		curvace->raw_of.right_hemisphere[i].y =  0;  // spi_read_16_bits(...)
+		//curvace->raw_of.right_hemisphere[i].x =  0;  // spi_read_16_bits(...)
+		//curvace->raw_of.right_hemisphere[i].y =  0;  // spi_read_16_bits(...)
+		curvace->raw_of.right_hemisphere[i].x = curvace_spi_low_level(102);
+		curvace->raw_of.right_hemisphere[i].y = curvace_spi_low_level(103);
 	}
+		
+	//CS OFF
+	gpio_set_gpio_pin(slaveSelectTop);
+}
+
+static void curvace_start(void)
+{
+	// Start Bottom CurvACE controller
+	// CS ON
+	gpio_clr_gpio_pin(slaveSelectBot);
+	// Write start
+	curvace_spi_low_level(0xAAAA);
+	// CS OFF
+	gpio_set_gpio_pin(slaveSelectBot);
+
+	// Start Top CurvACE controller
+	// CS ON
+	gpio_clr_gpio_pin(slaveSelectTop);
+	// Write start
+	curvace_spi_low_level(0xAAAA);
+	// CS OFF
+	gpio_set_gpio_pin(slaveSelectTop);
+}
+
+static void curvace_stop(void)
+{
+	// Stop and reset Bottom CurvACE controller
+	// CS ON
+	gpio_clr_gpio_pin(slaveSelectBot);
+	// Write start
+	curvace_spi_low_level(0x5555);
+	// CS OFF
+	gpio_set_gpio_pin(slaveSelectBot);
+
+	// Stop and reset Top CurvACE controller
+	// CS ON
+	gpio_clr_gpio_pin(slaveSelectTop);
+	// Write start
+	curvace_spi_low_level(0x5555);
+	// CS OFF
+	gpio_set_gpio_pin(slaveSelectTop);
 }
 
 
@@ -284,6 +365,53 @@ void curvace_init(curvace_t* curvace, const ahrs_t* ahrs, const mavlink_stream_t
 																				 * quick_trig_cos( curvace->roi_coord.all[i].elevation ) 
 																				) / range;
 	}
+	
+	// Init GPIO for Chip Select of the SPI communication
+	gpio_enable_gpio_pin(slaveSelectTop);
+	gpio_set_gpio_pin(slaveSelectTop);
+	gpio_enable_gpio_pin(slaveSelectBot);
+	gpio_set_gpio_pin(slaveSelectBot);
+	
+	// Init SPI communication
+	static const gpio_map_t SPI_GPIO_MAP =
+	{
+		{AVR32_SPI0_SCK_0_0_PIN, AVR32_SPI0_SCK_0_0_FUNCTION }, //SCK
+		{AVR32_SPI0_MISO_0_0_PIN, AVR32_SPI0_MISO_0_0_FUNCTION}, //MISO
+		{AVR32_SPI0_MOSI_0_0_PIN, AVR32_SPI0_MOSI_0_0_FUNCTION} //MOSI
+	}; 
+	
+	spi_options_t spiOptions =
+	{
+		.reg          = 0,			// CS0
+		.baudrate     = 5000000,	// 5MHz
+		.bits         = 16,			// Bits!
+		.spck_delay   = 0,			// # clocks to delay.
+		.trans_delay  = 0,			// ?
+		.stay_act     = 0,			// auto-unselect...?
+		.spi_mode     = SPI_MODE_1,	// active high, low level idle -> mode 0
+		.modfdis      = 1			// ...?
+	};
+	
+	// Assign I/Os to SPI.
+	gpio_enable_module(SPI_GPIO_MAP, sizeof(SPI_GPIO_MAP) / sizeof(SPI_GPIO_MAP[0]));
+
+	// Initialize as master.
+	spi_initMaster((&AVR32_SPI0), &spiOptions);
+
+	// Set selection mode: variable_ps, pcs_decode, delay.
+	spi_selectionMode((&AVR32_SPI0), 0, 0, 0);
+
+	//Set how we're talking to the chip. (Bits!  et al)
+	spi_setupChipReg((&AVR32_SPI0), &spiOptions, sysclk_get_pba_hz()); //very important!
+
+	// Enable SPI.
+	spi_enable(&AVR32_SPI0);
+	
+	// Configure Chip Select even if not used.
+	spi_selectChip(&AVR32_SPI0, 0);
+	
+	// Start CurvACE sensor.
+	curvace_start();
 }
 
 
@@ -340,5 +468,5 @@ void curvace_send_telemetry(const curvace_t* curvace)
 	mavlink_stream_send(curvace->mavlink_stream,&msg);
 
 	// Increment sensor id
-	sensor_id = ( sensor_id + 1 ) % 6;
+	//sensor_id = ( sensor_id + 1 ) % 6;
 }

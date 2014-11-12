@@ -83,22 +83,22 @@ void ads1274_init_DAC(void);
 /** 
  * \brief Enable/Disable the clock to the ADC
  *
- * \param on_off to enable or disable the ADC clock
+ * \param on_off	Enable or disable the ADC clock
 */
 void ads1274_ADC_switch_clock(bool on_off);
 
 /** 
  * \brief Switch the four input channels on or off
  *
- * \param channel select ADC channel
- * \param on_off enable or disable ADC of that channel
+ * \param channel	Select ADC channel
+ * \param on_off	Enable or disable ADC of that channel
 */
 void ads1274_ADC_switch_channel(int32_t channel, bool on_off);
 
 /** 
  * \brief configures the ADC mode (refer to datasheet for options)
  *
- * \param mode define in which mode the ADC will be used
+ * \param mode		Defines in which mode the ADC will be used
 */
 void ads1274_ADC_set_mode(int32_t mode);
 
@@ -141,8 +141,8 @@ int32_t get_sampling_status(void);
 /**
  * \brief return an ADC sample
  *
- * \param channel ADC channel
- * \param sample the sample number
+ * \param channel	ADC channel
+ * \param sample	Sample number
  *
  * \return the sample corresponding to this sample number on this ADC channel
 */

@@ -141,9 +141,9 @@ float static inline vectors_norm(const float u[3]) //maths_vector_norm(float u[3
  */
 void static inline vectors_normalize(const float v[3], float u[3]) //maths_vector_normalize(float v[3], float u[3])
 {
-	int32_t i;
 	float norm = vectors_norm(v);
-	for (i = 0; i < 3; ++i)
+	
+	for (int32_t i = 0; i < 3; ++i)
 	{
 		u[i] = v[i] / norm;
 	}

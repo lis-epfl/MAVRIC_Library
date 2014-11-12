@@ -53,7 +53,7 @@
 
 const uint32_t servo_timer_freq 	 = 1000000;		///< Timer frequency for the servos
 const uint16_t servo_center_pulse_us = 1500;		///< Pulse width in microseconds for neutral servo position
-const uint16_t servo_magnitude 		 = 600;			///< Amplitude of variation of the pulse width
+const uint16_t servo_magnitude 		 = 500;			///< Amplitude of variation of the pulse width
 
 bool use_servos_7_8;
 
@@ -61,6 +61,14 @@ bool use_servos_7_8;
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
+/**
+ * \brief	Output a PWM on one channel
+ *
+ * \param	channel			Corresponding channel
+ * \param	pulse_us_a		Pulse a in micro sec
+ * \param	pulse_us_b		Pulse b in micro sec
+ * \param	frequency		Frequency in Hz
+ */
 void write_channels(int32_t channel, int32_t pulse_us_a, int32_t pulse_us_b, uint16_t frequency);
 
 
@@ -85,7 +93,6 @@ void write_channels(int32_t channel, int32_t pulse_us_a, int32_t pulse_us_b, uin
 
 void pwm_servos_init(bool use_servos_7_8_param)
 {
-	int32_t i = 0;
 	use_servos_7_8 = use_servos_7_8_param;
 
 	// To unlock registers
@@ -113,15 +120,15 @@ void pwm_servos_init(bool use_servos_7_8_param)
 				    ( 0 <<AVR32_PWM_CLKSEL_OFFSET);
 
 	// output override for low and high side
-	AVR32_PWM.oov  = 	( 0b1111 << ( AVR32_PWM_OOVH0_OFFSET + i ) ) 	|
-						( 0b1111 << ( AVR32_PWM_OOVL0_OFFSET + i ) );
+	AVR32_PWM.oov  = 	( 0b1111 << ( AVR32_PWM_OOVH0_OFFSET ) ) 	|
+						( 0b1111 << ( AVR32_PWM_OOVL0_OFFSET ) );
 
 	// output selection clear: dead time generator (0)
-	AVR32_PWM.osc  = 	( 0b1111 << ( AVR32_PWM_OOVH0_OFFSET + i ) ) 	|
-						( 0b1111 << ( AVR32_PWM_OOVL0_OFFSET + i ) ); 
+	AVR32_PWM.osc  = 	( 0b1111 << ( AVR32_PWM_OOVH0_OFFSET ) ) 	|
+						( 0b1111 << ( AVR32_PWM_OOVL0_OFFSET ) ); 
 	
 	// set up channels: enable dead time insertion
-	for ( i = 0; i < 4; i++) 
+	for (int32_t i = 0; i < 4; i++) 
 	{
 		// enable dead time, set channel clock to CLKA
 		AVR32_PWM.channel[i].cmr = AVR32_PWM_CMR0_DTE_MASK | 11;

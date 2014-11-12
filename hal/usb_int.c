@@ -41,13 +41,10 @@
 
 
 #include "usb_int.h"
-//#include "buffer.h"
-//#include "gpio.h"
 #include "streams.h"
-//#include "sysclk.h"
 
 
-static usb_config_t usb_conf;
+static usb_config_t usb_conf;			///< Declare an object to store USB configuration
 
 
 void usb_int_set_usb_conf(usb_config_t* usb_config)

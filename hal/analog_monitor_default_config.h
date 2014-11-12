@@ -65,16 +65,10 @@
 
 #include "analog_monitor.h"
 
+#define INV_VOLTAGE_DIVIDER_1 9.1818f	// previously 6.6f for V4.0
+#define INV_VOLTAGE_DIVIDER_2 23.0f		// previously 11.0f for V4.0
 
-//For board_revision 4.0, use these values in boardsupport.c
-//#define INV_VOLTAGE_DIVIDER_1 6.6f
-//#define INV_VOLTAGE_DIVIDER_2 11.0f
-
-//For board_revision 4_1 and following, use these values
-#define INV_VOLTAGE_DIVIDER_1 9.1818f
-#define INV_VOLTAGE_DIVIDER_2 23.0f
-
-static analog_monitor_conf_t analog_monitor_default_config =
+static const analog_monitor_conf_t analog_monitor_default_config =
 {
 	.enable =
 	{

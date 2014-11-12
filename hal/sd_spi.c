@@ -56,11 +56,11 @@
 #include "print_util.h"
 
 //to remove
-static uint32_t  gl_ptr_mem;                       // Memory data pointer
-sd_spi_t sd_spi;
+static uint32_t  gl_ptr_mem;						///< Memory data pointer
+sd_spi_t sd_spi;									///< Declare de SD_Spi object
 
-#define PBA_HZ                16000000
-#define BUFFERSIZE            64
+#define PBA_HZ                16000000				///< frequency
+#define BUFFERSIZE            64					///< size of the buffer
 
 #define AVR32_PDCA_CHANNEL_USED_RX AVR32_PDCA_PID_SPI1_RX
 #define AVR32_PDCA_CHANNEL_USED_TX AVR32_PDCA_PID_SPI1_TX
@@ -70,31 +70,98 @@ sd_spi_t sd_spi;
 
 
 // PDCA Channel pointer
-volatile avr32_pdca_channel_t* pdca_channelrx ;
-volatile avr32_pdca_channel_t* pdca_channeltx ;
+volatile avr32_pdca_channel_t* pdca_channelrx ;		///< PDCA Rx channel pointer
+volatile avr32_pdca_channel_t* pdca_channeltx ;		///< PDCA Tx channel pointer
 
-// Used to indicate the end of PDCA transfer
-volatile bool end_of_transfer;
+volatile bool end_of_transfer;						///< Used to indicate the end of PDCA transfer
 
 // Local RAM buffer for the example to store data received from the SD/MMC card
-volatile char ram_buffer[1000];
-volatile char ram_buffer2[1000];
+volatile char ram_buffer[1000];						///< Local RAM buffer
+volatile char ram_buffer2[1000];					///< Local RAM buffer2
 
 // Dummy char table
 const char dummy_data[] = "0123456789xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 
 // Prototype functions
+/**
+ * \brief Initialize PDCA
+ */
 static void local_pdca_init(void);
+/**
+ * \brief Check presence of the SD card
+ *
+ * \return	Returns true if SD card present
+ */
 static bool sd_spi_check_presence(void);
+/**
+ * \brief Check whether the card is high capacity
+ *
+ * \return	Returns true if SD card is high capactiy
+ */
 static int sd_spi_check_hc(void);
+/**
+ * \brief Returns SD card type
+ *
+ * \return	Returns SD card type
+ */
 static int sd_spi_get_card_type(void);
+
+/**
+ * \brief Returns SD card status
+ *
+ * \param	r2		Pointer to store the status
+ *
+ * \return	Returns SD card status
+ */
 static bool sd_spi_get_status(uint16_t *r2);
+/**
+ * \brief Send command
+ *
+ * \param	command		Command to send
+ * \param	arg			argument
+ *
+ * \return	Returns true if succeed
+ */
 static uint8_t sd_spi_send_command(uint8_t command, uint32_t arg); 
+/**
+ * \brief Proccess command
+ *
+ * \param	command		Command to send
+ * \param	arg			argument
+ *
+ * \return	Returns true if succeed
+ */
 static uint8_t sd_spi_command(uint8_t command, uint32_t arg);
+/**
+ * \brief Send and Read
+ *
+ * \param	data_to_send	Byte to send
+ *
+ * \return	Returns true if succeed
+ */
 static uint8_t sd_spi_send_and_read(uint8_t data_to_send);
+/**
+ * \brief SD card resources initialization
+ *
+ * \param spiOptions	Spi options for the resources initialization
+ */
 static void sd_spi_resources_init(spi_options_t spiOptions);
+/**
+ * \brief Get SD card CSD
+ *
+ * \param	buffer		Pointer to store de CSD 
+ *
+ * \return	Returns ture if succeed
+ */
 static bool sd_spi_get_csd(uint8_t *buffer);
 #if (defined SD_MMC_READ_CID) && (SD_MMC_READ_CID == true)
+	/**
+	* \brief Get SD card CID
+	*
+	* \param	buffer		Pointer to store de CID
+	*
+	* \return	Returns true is succeed
+	*/
 	static bool sd_spi_get_cid(uint8_t *buffer);
 #endif
 

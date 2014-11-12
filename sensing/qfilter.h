@@ -64,6 +64,17 @@ typedef enum
 
 
 /**
+ * \brief The structure for configuring the quaternion-based attitude estimation
+ */
+typedef struct
+{
+	float   kp;				///< The proportional gain for the acceleration correction of the angular rates
+	float   ki;				///< The integral gain for the acceleration correction of the biais
+	float   kp_mag;			///< The proportional gain for the magnetometer correction of the angular rates
+	float   ki_mag;			///< The integral gain for the magnetometer correction of the angular rates
+} qfilter_conf_t;
+
+/**
  * \brief The structure for the quaternion-based attitude estimation
  */
 typedef struct
@@ -81,11 +92,12 @@ typedef struct
 /**
  * \brief	Initialize the attitude estimation module
  *
- * \param	attitude_filter		The pointer to the attitude structure
+ * \param	qf					The pointer to the attitude structure
+ * \param	config				The qfilter configuration gains
  * \param	imu					The pointer to the IMU structure
- * \param	ahrs	The pointer to the attitude estimation structure
+ * \param	ahrs				The pointer to the attitude estimation structure
  */
-void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* ahrs);
+void qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_t* ahrs);
 
 
 /**

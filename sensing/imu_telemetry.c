@@ -52,7 +52,6 @@
  * \brief	Function to start/stop the calibration
  * 
  * \param	imu						The pointer to the IMU structure
- * \param	sysid					The sysid of the system
  * \param	packet					The pointer to the MAVLink command long structure
  * 
  * \return	The MAV_RESULT of the command
@@ -208,15 +207,15 @@ void imu_telemetry_send_scaled(const imu_t* imu, const mavlink_stream_t* mavlink
 								mavlink_stream->compid,
 								msg,
 								time_keeper_get_millis(),
-								1000 * imu->scaled_accelero.data[IMU_X],
-								1000 * imu->scaled_accelero.data[IMU_Y],
-								1000 * imu->scaled_accelero.data[IMU_Z],
-								1000 * imu->scaled_gyro.data[IMU_X],
-								1000 * imu->scaled_gyro.data[IMU_Y],
-								1000 * imu->scaled_gyro.data[IMU_Z],
-								1000 * imu->scaled_compass.data[IMU_X],
-								1000 * imu->scaled_compass.data[IMU_Y],
-								1000 * imu->scaled_compass.data[IMU_Z]);
+								1000 * imu->scaled_accelero.data[0],
+								1000 * imu->scaled_accelero.data[1],
+								1000 * imu->scaled_accelero.data[2],
+								1000 * imu->scaled_gyro.data[0],
+								1000 * imu->scaled_gyro.data[1],
+								1000 * imu->scaled_gyro.data[2],
+								1000 * imu->scaled_compass.data[0],
+								1000 * imu->scaled_compass.data[1],
+								1000 * imu->scaled_compass.data[2]);
 }
 
 
@@ -226,13 +225,13 @@ void imu_telemetry_send_raw(const imu_t* imu, const mavlink_stream_t* mavlink_st
 								mavlink_stream->compid,
 								msg,
 								time_keeper_get_micros(),
-								imu->oriented_accelero.data[IMU_X],
-								imu->oriented_accelero.data[IMU_Y],
-								imu->oriented_accelero.data[IMU_Z],
-								imu->oriented_gyro.data[IMU_X],
-								imu->oriented_gyro.data[IMU_Y],
-								imu->oriented_gyro.data[IMU_Z],
-								imu->oriented_compass.data[IMU_X],
-								imu->oriented_compass.data[IMU_Y],
-								imu->oriented_compass.data[IMU_Z]);
+								imu->oriented_accelero.data[0],
+								imu->oriented_accelero.data[1],
+								imu->oriented_accelero.data[2],
+								imu->oriented_gyro.data[0],
+								imu->oriented_gyro.data[1],
+								imu->oriented_gyro.data[2],
+								imu->oriented_compass.data[0],
+								imu->oriented_compass.data[1],
+								imu->oriented_compass.data[2]);
 }

@@ -56,7 +56,7 @@ extern "C" {
 #include "mavlink_communication.h"
 #include "state.h"
 #include "remote.h"
-#include "pid_control.h"
+#include "pid_controller.h"
 #include <stdbool.h>
 
 
@@ -99,7 +99,7 @@ typedef struct
 	const control_command_t* control_joystick;			///< The pointer to the joystick control structure
 	const quat_t *qe;									///< The pointer to the attitude quaternion structure
 	mavlink_waypoint_handler_t *waypoint_handler;		///< The pointer to the waypoint handler structure
-	const position_estimator_t *position_estimator;		///< The pointer to the position estimation structure in central_data
+	const position_estimation_t *position_estimation;		///< The pointer to the position estimation structure in central_data
 	state_t* state;										///< The pointer to the state structure in central_data
 	const mavlink_stream_t* mavlink_stream;				///< The pointer to the MAVLink stream structure
 	remote_t* remote;									///< The pointer to the remote structure
@@ -128,13 +128,13 @@ typedef struct
  * \param	controls_nav			The pointer to the control structure
  * \param	qe						The pointer to the attitude quaternion structure
  * \param	waypoint_handler		The pointer to the waypoint handler structure
- * \param	position_estimator		The pointer to the position estimation structure
+ * \param	position_estimation		The pointer to the position estimation structure
  * \param	state					The pointer to the state structure 
  * \param	control_joystick		The pointer to the joystick structure
  * \param	remote					The pointer to the remote structure
  * \param	mavlink_communication	The pointer to the MAVLink communication structure
  */
-void navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator, state_t* state, const control_command_t* control_joystick, remote_t* remote, mavlink_communication_t* mavlink_communication);
+void navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const control_command_t* control_joystick, remote_t* remote, mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief	Initialise the position hold mode
@@ -148,6 +148,8 @@ void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler,
  * \brief	Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
  *
  * \param	navigation		The pointer to the navigation structure in central_data
+ *
+ * \return	Task result, currently only TASK_RUN_SUCCESS
  */
 task_return_t navigation_update(navigation_t* navigation);
 

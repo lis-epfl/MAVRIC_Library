@@ -53,25 +53,31 @@
 #include "servos.h"
 
 
+/**
+ * \brief Enumerate the turn direction of a motor
+ */
 typedef enum
 {
-	CW 	= 1,
-	CCW	= -1
+	CW 	= 1,					///< Clock wise
+	CCW	= -1					///< Counter Cleck wise
 } rot_dir_t;
 
 
+/**
+ * \brief The servo mix structure for a quad in cross shape
+ */
 typedef struct
 {
-	uint8_t 	motor_front;
-	uint8_t 	motor_left;
-	uint8_t 	motor_right;
-	uint8_t		motor_rear;
-	rot_dir_t 	motor_front_dir;
-	rot_dir_t 	motor_left_dir;
-	rot_dir_t 	motor_right_dir;
-	rot_dir_t 	motor_rear_dir;
-	float 		min_thrust;
-	float		max_thrust;
+	uint8_t 	motor_front;		///< Front motor
+	uint8_t 	motor_left;			///< Left  motor
+	uint8_t 	motor_right;		///< Right motor
+	uint8_t		motor_rear;			///< Rear  motor
+	rot_dir_t 	motor_front_dir;	///< Front motor turning direction
+	rot_dir_t 	motor_left_dir;		///< Left  motor turning direction
+	rot_dir_t 	motor_right_dir;	///< Right motor turning direction
+	rot_dir_t 	motor_rear_dir;		///< Rear  motor turning direction
+	float 		min_thrust;			///< Minimum thrust
+	float		max_thrust;			///< Maximum thrust
 } servo_mix_quadcopter_cross_conf_t;
 
 
@@ -80,39 +86,42 @@ typedef struct
  */
 typedef struct 
 {	
-	uint8_t   	motor_front;
-	uint8_t   	motor_left;
-	uint8_t   	motor_right;
-	uint8_t   	motor_rear;
-	rot_dir_t 	motor_front_dir;
-	rot_dir_t 	motor_left_dir;
-	rot_dir_t 	motor_right_dir;
-	rot_dir_t 	motor_rear_dir;
-	float 		min_thrust;
-	float		max_thrust;
-	const torque_command_t* torque_command;
-	const thrust_command_t* thrust_command;
-	servos_t*          		servos;
+	uint8_t   	motor_front;					///< Front motor
+	uint8_t   	motor_left;						///< Left  motor
+	uint8_t   	motor_right;					///< Right motor
+	uint8_t   	motor_rear;						///< Rear  motor
+	rot_dir_t 	motor_front_dir;				///< Front motor turning direction
+	rot_dir_t 	motor_left_dir;					///< Left  motor turning direction
+	rot_dir_t 	motor_right_dir;				///< Right motor turning direction
+	rot_dir_t 	motor_rear_dir;					///< Rear  motor turning direction
+	float 		min_thrust;						///< Minimum thrust
+	float		max_thrust;						///< Maximum thrust
+	const torque_command_t* torque_command;		///< Pointer to the torque command structure
+	const thrust_command_t* thrust_command;		///< Pointer to the thrust command structure
+	servos_t*          		servos;				///< Pointer to the servos structure
 } servo_mix_quadcotper_cross_t;
 
 
 /**
- * @brief [brief description]
- * @details [long description]
+ * @brief		Initialize the servo mix
  * 
- * @param servo_mix [description]
- * @param config [description]
- * @param torque_command [description]
- * @param servo_pwm [description]
+ * @param mix				Pointer to the servo mix structure of the quad in cross shape
+ * @param config			Pointer to the configuration of servo mix structure
+ * @param torque_command	Pointer to the torque command structure
+ * @param thrust_command	Pointer to the thrust command structure
+ * @param servos			Pointer to the servos structure
  */
-void servo_mix_quadcotper_cross_init(servo_mix_quadcotper_cross_t* mix, const servo_mix_quadcopter_cross_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, servos_t* servos);
+void servo_mix_quadcotper_cross_init(	servo_mix_quadcotper_cross_t* mix, 
+										const servo_mix_quadcopter_cross_conf_t* config, 
+										const torque_command_t* torque_command, 
+										const thrust_command_t* thrust_command, 
+										servos_t* servos);
 
 
 /**
- * @brief [brief description]
- * @details [long description]
+ * @brief			Update des servos mix
  * 
- * @param servo_mix [description]
+ * @param mix		Pointer to the servos mix structure
  */
 void servos_mix_quadcopter_cross_update(servo_mix_quadcotper_cross_t* mix);
 

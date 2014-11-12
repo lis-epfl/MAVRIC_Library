@@ -58,7 +58,7 @@ const uint8_t SONAR_I2CXL_CHANGE_ADDRESS_COMMAND_2	= 0xA5;		///< Address of the 
 /**
  * \brief Send range Command for the sonar_i2cxl
  *
- * \param sonar pointer to an object containing the sonar_i2cxl's data
+ * \param	sonar	Pointer to an object containing the sonar_i2cxl's data
  */
 void sonar_i2cxl_send_range_command(sonar_i2cxl_t* sonar);
 
@@ -66,7 +66,7 @@ void sonar_i2cxl_send_range_command(sonar_i2cxl_t* sonar);
 /**
  * \brief Get the last measurement
  *
- * \param sonar pointer to an object containing the sonar_i2cxl's data
+ * \param	sonar	Pointer to an object containing the sonar_i2cxl's data
  */
 void sonar_i2cxl_get_last_measure(sonar_i2cxl_t* sonar);
 

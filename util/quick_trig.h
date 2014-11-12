@@ -43,14 +43,15 @@
 #ifndef QUICK_TRIG_H_
 #define QUICK_TRIG_H_
 
-#define INTERP_POINTS 50
-
 #ifdef __cplusplus
 extern "C" 
 {
 #endif
 
 #include "maths.h"
+
+
+#define INTERP_POINTS 50
 
 
 /**
@@ -128,6 +129,7 @@ static inline float quick_trig_func(float x, const float func_x_min, const float
 {
 	float y;
 	int32_t i;
+	
 	if ( x <= func_x_min )
 	{
 		y = func_y[0];

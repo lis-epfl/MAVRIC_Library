@@ -42,6 +42,7 @@
 
 #include "stabilisation.h"
 #include "print_util.h"
+#include "constants.h"
 
 void stabilisation_init(control_command_t *controls)
 {
@@ -63,10 +64,9 @@ void stabilisation_init(control_command_t *controls)
 
 void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[]) 
 {
-	int32_t i;
-	for (i = 0; i < 3; i++) 
+	for (int32_t i = 0; i < 3; i++) 
 	{
-		stabiliser->output.rpy[i]=	pid_control_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
+		stabiliser->output.rpy[i] =	pid_controller_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
 	}		
-	stabiliser->output.thrust= pid_control_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
+	stabiliser->output.thrust = pid_controller_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
 }

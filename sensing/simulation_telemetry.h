@@ -55,10 +55,11 @@ extern "C" {
 /**
  * \brief	Initialize the MAVLink communication module for the remote
  * 
- * \param	simulation				The pointer to the simulation structure
- * \param	mavlink_handler			The pointer to the MAVLink message handler
+ * \param	sim						The pointer to the simulation structure
+ * \param	message_handler			The pointer to the MAVLink message handler
  */
 void simulation_telemetry_init(simulation_model_t* sim, mavlink_message_handler_t* message_handler);
+
 
 /**
  * \brief	Function to send the MAVLink HIL state simulation message
@@ -73,12 +74,11 @@ void simulation_telemetry_send_state(const simulation_model_t *sim, const mavlin
 /**
  * \brief	Function to send the MAVLink HIL quaternion simulation message
  *
- * \param	sim						The pointer to the simulation structure
+ * \param	sim_model				The pointer to the simulation structure
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
  */
 void simulation_telemetry_send_quaternions(const simulation_model_t *sim_model, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
-
 
 
 #ifdef __cplusplus

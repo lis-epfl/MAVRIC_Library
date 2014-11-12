@@ -55,7 +55,7 @@ extern "C" {
 /**
  * \brief	Function to send the MAVLink gps raw message
  * 
- * \param	gps			The pointer to the GPS structure
+ * \param	gps						The pointer to the GPS structure
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
  */

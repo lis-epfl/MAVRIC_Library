@@ -33,6 +33,7 @@
  * \file magnetometer.h
  * 
  * \author MAV'RIC Team
+ * \author Gregoire Heitz
  *   
  * \brief This file define the compass's data type
  * 
@@ -42,11 +43,14 @@
 #ifndef MAGNETOMETER_H_
 #define MAGNETOMETER_H_
 
+/**
+ * \brief The magnetometer structure
+ */
 typedef struct
 {
-	float data[3];
-	float temperature;
-	float last_update;
+	float data[3];			///< The magnetometer's datas
+	float temperature;		///< The magnetometer's temperature
+	float last_update;		///< The magnetometer last update time
 } magnetometer_t;
 
 #endif /* MAGNETOMETER_H_ */

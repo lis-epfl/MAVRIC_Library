@@ -57,7 +57,7 @@ void stabilisation_hybrid_init(Stabiliser_Stack_hybrid_t* stabiliser_stack)
 	*stabiliser_stack = stabiliser_defaults_hybrid;
 }
 
-void stabilisation_hybrid_cascade_stabilise_hybrid(imu_t *imu, position_estimator_t *pos_est, control_command_t *control_input)
+void stabilisation_hybrid_cascade_stabilise_hybrid(imu_t *imu, position_estimation_t *pos_est, control_command_t *control_input)
 {
 	float rpyt_errors[4];
 	control_command_t input;
@@ -141,6 +141,17 @@ void stabilisation_hybrid_mix_to_servos_xwing(control_command_t *control)
 	float motor_command;
 	float servo_command[4];
 
+	float FLAP_FRONT_DIR 	= 1;
+	float FLAP_RIGHT_DIR 	= 1;
+	float FLAP_REAR_DIR 	= 1;
+	float FLAP_LEFT_DIR 	= 1;
+
+	int MAIN_ENGINE = 4;
+	int FLAP_FRONT 	= 1;
+	int FLAP_RIGHT 	= 2;
+	int FLAP_REAR 	= 3;
+	int FLAP_LEFT 	= 0;
+
 	// mix
 	motor_command = control->thrust;
 	servo_command[FLAP_FRONT] = FLAP_FRONT_DIR * ( + control->rpy[ROLL] 
@@ -157,14 +168,20 @@ void stabilisation_hybrid_mix_to_servos_xwing(control_command_t *control)
 	if (motor_command > MAX_THRUST) motor_command = MAX_THRUST;
 	for (i=0; i<4; i++) 
 	{
-		if (servo_command[i] < MIN_DEFLECTION) servo_command[i] = MIN_DEFLECTION;
-		if (servo_command[i] > MAX_DEFLECTION) servo_command[i] = MAX_DEFLECTION;
+		if (servo_command[i] < -1.0f) 
+		{
+			servo_command[i] = -1.0f;
+		}
+		if (servo_command[i] > 1.0f)
+		{
+			servo_command[i] = 1.0f;
+		}
 	}
 
 	// scale and write values
-	central_data->servos[FLAP_FRONT].value = SERVO_NEUTRAL + SERVO_AMPLITUDE * servo_command[FLAP_FRONT];
-	central_data->servos[FLAP_RIGHT].value = SERVO_NEUTRAL + SERVO_AMPLITUDE * servo_command[FLAP_RIGHT];
-	central_data->servos[FLAP_REAR].value = SERVO_NEUTRAL + SERVO_AMPLITUDE * servo_command[FLAP_REAR];
-	central_data->servos[FLAP_LEFT].value = SERVO_NEUTRAL + SERVO_AMPLITUDE * servo_command[FLAP_LEFT];
-	central_data->servos[MAIN_ENGINE].value = SERVO_SCALE * motor_command;
+	central_data->servos[FLAP_FRONT].value 	= servo_command[FLAP_FRONT];
+	central_data->servos[FLAP_RIGHT].value 	= servo_command[FLAP_RIGHT];
+	central_data->servos[FLAP_REAR].value 	= servo_command[FLAP_REAR];
+	central_data->servos[FLAP_LEFT].value 	= servo_command[FLAP_LEFT];
+	central_data->servos[MAIN_ENGINE].value = motor_command;
 }

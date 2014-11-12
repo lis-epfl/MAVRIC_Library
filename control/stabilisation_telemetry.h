@@ -72,7 +72,7 @@ void stabilisation_telemetry_send_rpy_rates_error(const stabiliser_t* stabiliser
 /**
  * \brief	Function to send the MAVLink roll, pitch, yaw and thrust setpoints message
  *
- * \param	stabiliser	Pointer to the structure containing the PID controller
+ * \param	controls				The pointer to the controls structure
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
  */
@@ -81,7 +81,7 @@ void stabilisation_telemetry_send_rpy_thrust_setpoint(const control_command_t* c
 /**
  * \brief	Task to send the MAVLink tvel[X, Y and Z] command message
  *
- * \param	stabiliser	Pointer to the structure containing the PID controller
+ * \param	controls				The pointer to the controls structure
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
  */

@@ -68,7 +68,7 @@ extern "C" {
 typedef struct
 {
 	uint8_t frame;												///< The reference frame of the waypoint
-	uint16_t waypoint_id;										///< The MAV_CMD_NAV id of the waypoint
+	uint16_t command;											///< The MAV_CMD_NAV id of the waypoint
 	uint8_t current;											///< Flag to tell whether the waypoint is the current one or not
 	uint8_t autocontinue;										///< Flag to tell whether the vehicle should auto continue to the next waypoint once it reaches the current waypoint
 	float param1;												///< Parameter depending on the MAV_CMD_NAV id
@@ -78,12 +78,12 @@ typedef struct
 	double x;													///< The value on the x axis (depends on the reference frame)
 	double y;													///< The value on the y axis (depends on the reference frame)
 	double z;													///< The value on the z axis (depends on the reference frame)
-} waypoint_struct;
+} waypoint_struct_t;
 
 typedef struct
 {
-	waypoint_struct waypoint_list[MAX_WAYPOINTS];				///< The array of all waypoints (max MAX_WAYPOINTS)
-	waypoint_struct current_waypoint;							///< The structure of the current waypoint
+	waypoint_struct_t waypoint_list[MAX_WAYPOINTS];				///< The array of all waypoints (max MAX_WAYPOINTS)
+	waypoint_struct_t current_waypoint;							///< The structure of the current waypoint
 	uint16_t number_of_waypoints;								///< The total number of waypoints
 	int8_t current_waypoint_count;								///< The number of the current waypoint
 	
@@ -105,13 +105,13 @@ typedef struct
 	uint32_t start_timeout;										///< The start time for the waypoint timeout
 	uint32_t timeout_max_waypoint;								///< The max waiting time for communication
 
-	position_estimator_t* position_estimator;					///< The pointer to the position estimation structure
+	position_estimation_t* position_estimation;					///< The pointer to the position estimation structure
 	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
 	state_t* state;												///< The pointer to the state structure
 	mavlink_communication_t* mavlink_communication;				///< The pointer to the MAVLink communication structure
 	const mavlink_stream_t* mavlink_stream;						///< Pointer to MAVLink stream
 
-}mavlink_waypoint_handler_t;
+} mavlink_waypoint_handler_t;
 
 /**
  * \brief	Initialize a home waypoint at (0,0,0) at start up
@@ -131,12 +131,16 @@ void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_ha
  * \brief	Initialize the waypoint handler
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
- * \param	position_estimator		The pointer to the position estimator structure
+ * \param	position_estimation		The pointer to the position estimator structure
  * \param	ahrs					The pointer to the attitude estimation structure
  * \param	state					The pointer to the state structure
  * \param	mavlink_communication	The pointer to the MAVLink communication structure
  */
-void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimator_t* position_estimator, const ahrs_t* ahrs, state_t* state, mavlink_communication_t* mavlink_communication, const mavlink_stream_t* mavlink_stream);
+void waypoint_handler_init(	mavlink_waypoint_handler_t* waypoint_handler, 
+							position_estimation_t* position_estimation, 
+							const ahrs_t* ahrs, state_t* state, 
+							mavlink_communication_t* mavlink_communication, 
+							const mavlink_stream_t* mavlink_stream);
 
 /**
  * \brief	Initialize a first waypoint if a flight plan is set
@@ -162,7 +166,7 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
  *
  * \return	The waypoint in local coordinate frame
  */
-local_coordinates_t waypoint_handler_set_waypoint_from_frame(waypoint_struct* current_waypoint, global_position_t origin);
+local_coordinates_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin);
 
 #ifdef __cplusplus
 }

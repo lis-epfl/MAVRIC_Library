@@ -89,7 +89,13 @@ uint16_t ac4, ac5, ac6;
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
-
+/**
+ * \brief			Read the barometer data
+ * 
+ * \param address	Address where to read barometer datas
+ *
+ * \return			Returns the barometer data
+ */
 static int16_t bmp085_read_int(uint8_t address);
 
 
@@ -175,7 +181,6 @@ void bmp085_reset_origin_altitude(barometer_t* bmp085, float origin_altitude)
  
 void bmp085_update(barometer_t *bmp085) 
 {
-	int32_t i;
 	float altitude, vertical_speed;
 	int32_t UT, UP, B3, B5, B6, X1, X2, X3, p;
 	uint32_t B4, B7;
@@ -264,7 +269,7 @@ void bmp085_update(barometer_t *bmp085)
 			vertical_speed = bmp085->altitude;
 			altitude = 44330.0f * (1.0f - pow(bmp085->pressure /sea_level_pressure,0.190295f)) + bmp085->altitude_offset;
 		
-			for (i = 0; i < 2; i++) 
+			for (int32_t i = 0; i < 2; i++) 
 			{
 				bmp085->last_altitudes[i] = bmp085->last_altitudes[i + 1];
 			}

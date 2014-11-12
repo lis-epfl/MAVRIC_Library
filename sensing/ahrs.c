@@ -41,7 +41,6 @@
  
 
 #include "ahrs.h"
-#include "conf_platform.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -58,11 +57,9 @@
 void ahrs_init(ahrs_t* ahrs, ahrs_config_t* config)
 {
 	// Init dependencies
-
 	int32_t x = config->x;
 	int32_t y = config->y;
 	int32_t z = config->z;
-
 
 	// Init structure
 	ahrs->qe.s = 1.0f;
