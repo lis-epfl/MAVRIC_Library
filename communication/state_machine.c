@@ -47,7 +47,12 @@
 #include "print_util.h"
 #include "state.h"
 
-void state_machine_init(state_machine_t *state_machine, const state_machine_conf_t* state_machine_conf, state_t* state, mavlink_waypoint_handler_t* waypoint_handler, simulation_model_t *sim_model, remote_t* remote)
+void state_machine_init(state_machine_t *state_machine,
+						const state_machine_conf_t* state_machine_conf, 
+						state_t* state, 
+						mavlink_waypoint_handler_t* waypoint_handler, 
+						simulation_model_t *sim_model, 
+						remote_t* remote)
 {
 	state_machine->waypoint_handler = waypoint_handler;
 	state_machine->state 			= state;
@@ -57,8 +62,6 @@ void state_machine_init(state_machine_t *state_machine, const state_machine_conf
 	state_machine->channel_switches = 0;
 	state_machine->rc_check 		= 0;
 	state_machine->motor_state 		= 0;
-
-	state_machine->use_mode_from_remote = state_machine_conf->state_machine.use_mode_from_remote;
 	
 	print_util_dbg_print("State machine initialise.\r\n");
 }
@@ -90,7 +93,7 @@ void state_machine_update(state_machine_t* state_machine)
 	}
 
 	// Get new mode
-	if ( (state_machine->use_mode_from_remote == 1)&&(rc_check != SIGNAL_LOST) )
+	if ( (state_machine->state->use_mode_from_remote == 1)&&(rc_check != SIGNAL_LOST) )
 	{
 		// Update mode from remote
 		remote_mode_update(state_machine->remote);
@@ -100,6 +103,10 @@ void state_machine_update(state_machine_t* state_machine)
 	{
 		// By default, set new mode equal to current mode
 		mode_new = mode_current;
+		
+		// The ARMED flag of the remote is set to the desired flag (avoid sudden cut
+		// off if the remote is reactivated
+		state_machine->remote->mode.current_desired_mode.ARMED = mode_current.ARMED;
 	}
 	
 
@@ -118,16 +125,13 @@ void state_machine_update(state_machine_t* state_machine)
 			
 			if ( mode_new.ARMED == ARMED_ON )
 			{
-				state_new = MAV_STATE_ACTIVE;
-			
-				// Tell other modules to reset position and re-compute waypoints
-				state_machine->state->reset_position = true;
-				state_machine->state->nav_plan_active = false;
+				print_util_dbg_print("Swtiching from state_machine.\r\n");
+				state_switch_to_active_mode(state_machine->state, &state_new);
 			}
 			break;
 		
 		case MAV_STATE_ACTIVE:
-			if (state_machine->use_mode_from_remote == 1)
+			if (state_machine->state->use_mode_from_remote == 1)
 			{
 				if ( rc_check != SIGNAL_GOOD )
 				{
@@ -138,7 +142,7 @@ void state_machine_update(state_machine_t* state_machine)
 					if ( mode_new.ARMED == ARMED_OFF )
 					{
 						state_new = MAV_STATE_STANDBY;
-						print_util_dbg_print("Switching off motors!\n");
+						print_util_dbg_print("Switching off motors!\r\n");
 					}
 				}
 			}

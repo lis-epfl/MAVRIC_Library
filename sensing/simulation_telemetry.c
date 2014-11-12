@@ -119,7 +119,7 @@ void simulation_telemetry_init(simulation_model_t* sim, mavlink_message_handler_
 	callbackcmd.command_id    = MAV_CMD_DO_SET_HOME; // 179
 	callbackcmd.sysid_filter  = MAV_SYS_ID_ALL;
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER;
+	callbackcmd.compid_target = MAV_COMP_ID_ALL;
 	callbackcmd.function      = (mavlink_cmd_callback_function_t)	&simulation_telemetry_set_new_home_position;
 	callbackcmd.module_struct =										sim;
 	mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);

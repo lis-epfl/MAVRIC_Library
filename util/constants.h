@@ -48,8 +48,13 @@ extern "C"
 #endif
 
 
-#define GRAVITY 9.81f										///< The gravity constant
+#define GRAVITY 9.81f			///< The gravity constant
 
+
+/**
+ * \brief Enumerates the X, Y and Z orientations 
+ * according to the autopilot placement on the MAV
+ */
 typedef enum
 {
 	X = 0,
@@ -57,7 +62,10 @@ typedef enum
 	Z = 2,
 } constants_orientation_t;
 
-
+/**
+ * \brief Enumerates the Roll, Pitch and Yaw orientations 
+ * according to the autopilot placement on the MAV
+ */
 typedef enum
 {
 	ROLL 	= 0,
@@ -65,7 +73,10 @@ typedef enum
 	YAW 	= 2,
 } constants_roll_pitch_yaw_t;
 
-
+/**
+ * \brief Enumerates the up vector orientation 
+ * according to the autopilot placement on the MAV
+ */
 typedef enum
 {
 	UPVECTOR_X = 0,

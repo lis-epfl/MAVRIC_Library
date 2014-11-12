@@ -42,7 +42,7 @@
 
 #include "position_estimation.h"
 #include "print_util.h"
-#include "math_util.h"
+#include "maths.h"
 #include "time_keeper.h"
 
 //------------------------------------------------------------------------------
@@ -170,13 +170,12 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 		if ( pos_est->time_last_barometer_msg < pos_est->barometer->last_update )
 		{
 			pos_est->last_alt = -(pos_est->barometer->altitude ) + pos_est->local_position.origin.altitude;
-			baro_alt_error = -(pos_est->barometer->altitude ) - pos_est->local_position.pos[2] + pos_est->local_position.origin.altitude;
 
 			pos_est->time_last_barometer_msg = pos_est->barometer->last_update;
 		}
 
 		t_inter_baro = (time_keeper_get_micros() - pos_est->barometer->last_update) / 1000.0f;
-		baro_gain = 1.0f; //math_util_fmax(1.0f - t_inter_baro / 1000.0f, 0.0f);
+		baro_gain = 1.0f; //maths_f_max(1.0f - t_inter_baro / 1000.0f, 0.0f);
 			
 		//pos_est->local_position.pos[2] += kp_alt_baro / ((float)(t_inter_baro / 2.5f + 1.0f)) * alt_error;
 		baro_alt_error = pos_est->last_alt  - pos_est->local_position.pos[2];
@@ -221,7 +220,7 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 		}
 		t_inter_gps = time_keeper_get_millis() - pos_est->gps->time_last_msg;
 			
-		//gps_gain = math_util_fmax(1.0f - t_inter_gps / 1000.0f, 0.0f);
+		//gps_gain = maths_f_max(1.0f - t_inter_gps / 1000.0f, 0.0f);
 		gps_gain = 1.0f;
 			
 		for (i = 0;i < 3;i++)
@@ -372,7 +371,7 @@ void position_estimation_reset_home_altitude(position_estimation_t *pos_est)
 
 	//pos_est->barometer->altitude_offset = -pos_est->barometer->altitude - pos_est->local_position.pos[2] + pos_est->local_position.origin.altitude;
 	pos_est->init_barometer = true;
-		
+	
 	print_util_dbg_print("Offset of the barometer set to the GPS altitude, offset value of:");
 	print_util_dbg_print_num(pos_est->barometer->altitude_offset,10);
 	print_util_dbg_print(" = -");

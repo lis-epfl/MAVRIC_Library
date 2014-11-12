@@ -505,10 +505,12 @@ static void data_logging_f_seek(data_logging_t* data_logging)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config)
+void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config, const state_t* state)
 {
 	// Init debug mode
 	data_logging->debug = config->debug;
+	
+	data_logging->state = state;
 
 	// Allocate memory for the onboard data_log
 	data_logging->data_logging_set = malloc( sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config->max_data_logging_count]) );
@@ -547,6 +549,10 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	data_logging->buffer_add_size = 8;
 	#endif
 	
+	// Deliberately initialized out of normal bound, to tell whether it is initialized or not
+	// The value will then be set by the sys_id of the vehicle coming from the flash memory or from the hardcoded value
+	data_logging->sys_id = 256;
+	
 	data_logging->file_name = malloc(data_logging->buffer_name_size);
 	data_logging->name_n_extension = malloc(data_logging->buffer_name_size);
 	
@@ -578,13 +584,18 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	print_util_dbg_print("[Data logging] Data logging initialised.\r\n");
 }
 
-void data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name)
+void data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, uint32_t sysid)
 {
 	int32_t i = 0;
 	
 	char *file_add = malloc(data_logging->buffer_add_size);
 	
-	snprintf(data_logging->file_name, data_logging->buffer_name_size, "%s", file_name);
+	data_logging->sys_id = sysid;
+	
+	if (!data_logging->file_name_init)
+	{
+		snprintf(data_logging->file_name, data_logging->buffer_name_size, "%s_%ld", file_name, sysid);
+	}
 	data_logging->file_name_init = true;
 	
 	if (data_logging->log_data)
@@ -593,7 +604,7 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 		{
 			if (i > 0)
 			{
-				if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s%s.txt", file_name, file_add) >= data_logging->buffer_name_size)
+				if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s%s.txt", data_logging->file_name, file_add) >= data_logging->buffer_name_size)
 				{
 					print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
 					print_util_dbg_print_num(data_logging->buffer_name_size,10);
@@ -604,7 +615,7 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 			}
 			else
 			{
-				if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s.txt", file_name) >= data_logging->buffer_name_size)
+				if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s.txt", data_logging->file_name) >= data_logging->buffer_name_size)
 				{
 					print_util_dbg_print("Name error: The name is too long! It should be maximum ");
 					print_util_dbg_print_num(data_logging->buffer_name_size,10);
@@ -665,6 +676,15 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 			{
 				data_logging->time_ms = time_keeper_get_millis();
 				
+				if (data_logging->state->mav_mode.ARMED == ARMED_OFF)
+				{
+					if ( (data_logging->time_ms - data_logging->logging_time) > 5000)
+					{
+						data_logging->fr = f_sync(&data_logging->fil);
+						data_logging->logging_time = data_logging->time_ms;
+					}
+				}
+				
 				if (data_logging->fr == FR_OK)
 				{
 					data_logging_log_parameters(data_logging);
@@ -697,7 +717,8 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 				if (data_logging->fr == FR_OK)
 				{
 					data_logging->sys_mounted = true;
-					data_logging_create_new_log_file(data_logging,data_logging->file_name);
+					
+					data_logging_create_new_log_file(data_logging,data_logging->file_name,data_logging->sys_id);
 				}
 				else
 				{
@@ -722,7 +743,7 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 					}
 
 					data_logging->fr = f_close(&data_logging->fil);
-
+					
 					if ( data_logging->fr == FR_OK)
 					{
 						succeed = true;
@@ -735,7 +756,7 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 				} //end for loop
 					
 				data_logging->file_opened = false;
-
+				data_logging->file_init = false;
 				
 				if (data_logging->debug)
 				{
@@ -752,6 +773,7 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 			else
 			{
 				data_logging->file_opened = false;
+				data_logging->file_init = false;
 			}
 		}//end of if (data_logging->file_opened)
 		if (data_logging->sys_mounted)
@@ -766,6 +788,7 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 			{
 				data_logging->file_opened = false;
 				data_logging->sys_mounted = false;
+				data_logging->file_init = false;
 			}
 		}
 	}//end of else (data_logging->log_data != 1)

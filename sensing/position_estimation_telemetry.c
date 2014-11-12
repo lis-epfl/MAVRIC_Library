@@ -115,7 +115,7 @@ void position_estimation_telemetry_init(position_estimation_t* pos_est, mavlink_
 	callbackcmd.command_id    = MAV_CMD_DO_SET_HOME; // 179
 	callbackcmd.sysid_filter  = MAV_SYS_ID_ALL;
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER;
+	callbackcmd.compid_target = MAV_COMP_ID_ALL;
 	callbackcmd.function      = (mavlink_cmd_callback_function_t)	&position_estimation_set_new_home_position;
 	callbackcmd.module_struct =										pos_est;
 	mavlink_message_handler_add_cmd_callback(mavlink_handler, &callbackcmd);
