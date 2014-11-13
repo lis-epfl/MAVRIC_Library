@@ -175,8 +175,8 @@ static void curvace_scale_all_no_derotation(curvace_t* curvace)
 {
 	for (uint8_t i = 0; i < 2 * CURVACE_NB_OF; ++i)
 	{
-		curvace->of.data[i] = 	0.3f * curvace->of.data[i] +
-								0.7f * curvace->calib_factor.data[i] * curvace->raw_of.data[i];
+		curvace->of.data[i] = 	0.5f * curvace->of.data[i] +
+								0.5f * curvace->calib_factor.data[i] * curvace->raw_of.data[i];
 	}
 }
 
@@ -430,9 +430,9 @@ void curvace_update(curvace_t* curvace)
 {
 	curvace_read_spi(curvace);
 
-	// curvace_derotate_all(curvace);
+	curvace_derotate_all(curvace);
 
-	curvace_scale_all_no_derotation(curvace);
+	// curvace_scale_all_no_derotation(curvace);
 }
 
 
@@ -482,4 +482,52 @@ void curvace_send_telemetry(const curvace_t* curvace)
 
 	// Increment sensor id
 	//sensor_id = ( sensor_id + 1 ) % 6;
+}
+
+
+void curvace_send_telemetry_averaged(const curvace_t* curvace)
+{
+	mavlink_message_t msg;
+	static uint8_t sensor_id = 0;
+	
+	float of_left[10];
+	float of_right[10];
+	
+	int16_t of_left16[10];
+	int16_t of_right16[10];
+
+	float out = 0.0f;
+
+	// fill data in 16bits
+	for (uint8_t i = 0; i < 9; ++i)
+	{
+		of_left[i] 	= 0.0f;
+		of_right[i] = 0.0f;
+		for (int j = 0; j < 6; ++j)
+		{
+			of_left[i] 	+= curvace->of.all[i].x;
+			of_right[i] += curvace->of.all[i + 54].x;
+		}
+
+		of_left16[i] = 100 * of_left[i]; 
+		of_right16[i] = 100 * of_right[i]; 
+	}
+
+	for (int i = 0; i < 9; ++i)
+	{
+		out += of_left[i] + of_right[i];
+	}
+	out = out / 9.0f;
+
+	mavlink_msg_omnidirectional_flow_pack(	curvace->mavlink_stream->sysid,
+											curvace->mavlink_stream->compid,
+											&msg,
+						       				time_keeper_get_millis(),
+											sensor_id,
+						       				of_left16, 
+						       				of_right16, 
+						       				0, 
+						       				out	);
+
+	mavlink_stream_send(curvace->mavlink_stream,&msg);
 }
