@@ -50,8 +50,26 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include "streams.h"
-#include "conf_platform.h"
+
+// #if __BYTE_ORDER__ != __ORDER_LITTLE_ENDIAN__
+	// #define NATIVE_BIG_ENDIAN
+// #endif
+
+// #define IS_BIG_ENDIAN (*(uint16_t *)"\0\xff" < 0x100)
+// #if IS_BIG_ENDIAN
+	// #define NATIVE_BIG_ENDIAN
+// #endif
+
+#ifndef __ENDIAN_LITTLE__
+	#define NATIVE_BIG_ENDIAN
+#endif
+
+
 #include "mavlink/include/mavric/mavlink.h"
+
+
+#define MAVLINK_BASE_STATION_ID 255
+
 
 /**
  * \brief	Mavlink structures for the receive message and its status
@@ -83,8 +101,6 @@ typedef struct
  */
 typedef struct 
 {
-	byte_stream_t* rx_stream;		///< Output stream
-	byte_stream_t* tx_stream;		///< Input stream
 	uint32_t sysid;					///< System ID
 	uint32_t compid;				///< System Component ID
 	bool use_dma;
@@ -92,24 +108,29 @@ typedef struct
 
 
 /**
- * \brief					Initialization of MAVLink sysid, compid and scheduler to send messages
+ * \brief	Initialization of MAVLink sysid, compid and scheduler to send messages
  *
  * \param 	mavlink_stream		Pointer to the MAVLink stream structure
  * \param 	config				Configuration
+ * \param 	rx_stream;			Output stream
+ * \param 	tx_stream;			Input stream
  */
-void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config);
+void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream);
 
 
+/**
+ * \brief	Send Mavlink stream
+ *
+ * \param 	mavlink_stream		Pointer to the MAVLink stream structure
+ * \param 	msg					msg to stream
+ */
 void mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
 /**
  * \brief			Mavlink parsing of message
  *
- * \param stream	Pointer to the MAVLink receive stream structure
- * \param rec		Pointer to the MAVLink receive message structure 
- *
- * \return			Error code, 0 if no message decoded, 1 else
+ * \param mavlink_stream	Pointer to the MAVLink receive stream structure
  */
 void mavlink_stream_receive(mavlink_stream_t* mavlink_stream);
 

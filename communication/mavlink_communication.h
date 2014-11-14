@@ -68,6 +68,9 @@ typedef void* handling_telemetry_module_struct_t;
 typedef void (*mavlink_send_msg_function_t) (handling_telemetry_module_struct_t, mavlink_stream_t*, mavlink_message_t*);
 
 
+/**
+ * \brief 	MAVLink message handler structure
+ */
 typedef struct  
 {
 	mavlink_stream_t* mavlink_stream;								///<	Pointer to the MAVLink stream structure
@@ -75,6 +78,10 @@ typedef struct
 	handling_telemetry_module_struct_t 		module_struct;			///<	Pointer to module data structure to be given as argument to the function
 }mavlink_send_msg_handler_t;
 
+
+/**
+ * \brief 	MAVLink message handler setting structure
+ */
 typedef struct  
 {
 	uint32_t msg_sending_count;										///<	Number of message callback currently registered
@@ -98,7 +105,7 @@ typedef struct
 
 
 /**
- * \brief 	Configuratioon of the module Mavlink Communication
+ * \brief 	Configuration of the module Mavlink Communication
  */
 typedef struct
 {
@@ -117,8 +124,10 @@ typedef struct
  * 
  * \param 	mavlink_communication 	Pointer to the MAVLink communication structure
  * \param 	config 					Configuration
+ * \param 	rx_stream;				Output stream
+ * \param 	tx_stream;				Input stream
  */
-void mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config);
+void mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream);
 
 
 /**

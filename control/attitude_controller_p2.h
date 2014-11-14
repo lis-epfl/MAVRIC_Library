@@ -77,7 +77,6 @@ typedef struct
 	attitude_error_estimator_t  attitude_error_estimator;		///< Attitude error estimator
 	float 						p_gain_angle[3];				///< Proportionnal gain for angular errors
 	float 						p_gain_rate[3];					///< Proportionnal gain applied to gyros rates
-	// float 						output[3];						///< Output of the controller on the 3 axes
 } attitude_controller_p2_t;
 
 

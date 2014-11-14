@@ -174,6 +174,7 @@ typedef struct
  * 
  * \param 	message_handler 	Pointer to message handler data structure
  * \param 	config 				Config parameters
+ * \param	mavlink_stream		Pointer to the mavlink stream
  */
 void mavlink_message_handler_init(	mavlink_message_handler_t* 			message_handler, 
 									const mavlink_message_handler_conf_t* 	config,

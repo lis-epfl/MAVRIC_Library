@@ -52,9 +52,7 @@ DSTATUS disk_initialize (BYTE pdrv)
 	{
 		return STA_NOINIT;
 	}
-
-
-
+	
 	switch (drive_num)
 	{
 		case ATA :

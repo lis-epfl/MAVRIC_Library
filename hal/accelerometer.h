@@ -33,8 +33,9 @@
  * \file accelerometer.h 
  * 
  * \author MAV'RIC Team
+ * \author Gregoire Heitz
  *   
- * \brief This file define the accelerometer's data type
+ * \brief This file define the accelerometer's data type, independently of the sensor used
  *
  ******************************************************************************/
 
@@ -42,11 +43,14 @@
 #ifndef ACCELEROMETER_H_
 #define ACCELEROMETER_H_
 
+/**
+ * \brief Accelerometer structure
+ */
 typedef struct
 {
-	float data[3];
-	float temperature;
-	float last_update;
+	float data[3];				///< Array containing the accelerometer datas
+	float temperature;			///< Temperature of the accelerometer
+	float last_update;			///< Last update time
 } accelerometer_t;
 
 #endif /* ACCELEROMETER_H_ */

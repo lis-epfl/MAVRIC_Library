@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief Definition of structure for sonar sensors
+ * \brief Definition of structure for sonar, independent of the sensor used
  *
  ******************************************************************************/
 
@@ -52,17 +52,17 @@
 #include "quaternions.h"
 
 /**
- * \brief structure of the sonar
+ * \brief Sonar structure, independent of the sensor used
 */
 typedef struct 
 {
-	uint32_t last_update; 	///< Time since system boot
-	quat_t 	orientation; 	///< Direction the sensor faces from FIXME enum.
-	float 	min_distance; 	///< Minimum distance the sensor can measure in centimeters
-	float 	max_distance; 	///< Maximum distance the sensor can measure in centimeters
-	float 	current_distance; ///< Measured distance in meters
-	float 	covariance; 	///< Measurement covariance in centimeters, 0 for unknown / invalid readings
-	bool 	healthy;		///< Indicates whether the current measurement can be trusted
+	uint32_t last_update; 		///< Time since system boot
+	quat_t 	orientation; 		///< Direction the sensor faces from FIXME enum.
+	float 	min_distance; 		///< Minimum distance the sensor can measure in centimeters
+	float 	max_distance; 		///< Maximum distance the sensor can measure in centimeters
+	float 	current_distance;	///< Measured distance in meters
+	float 	covariance; 		///< Measurement covariance in centimeters, 0 for unknown / invalid readings
+	bool 	healthy;			///< Indicates whether the current measurement can be trusted
 } sonar_t;
 
 

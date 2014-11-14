@@ -43,12 +43,9 @@
 
 #include "imu.h"
 
-#include "delay.h"
 #include "time_keeper.h"
 #include "print_util.h"
-#include "tasks.h"
-#include "coord_conventions.h"
-
+#include "constants.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -127,25 +124,24 @@ static void imu_oriented2scale(imu_t *imu)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void imu_init (imu_t *imu, state_t* state)
+void imu_init (imu_t *imu, imu_conf_t *conf_imu, state_t* state)
 {	
-	
+	//init dependency
 	imu->state = state;
-		//imu_calibrate_Gyros(imu);
 	
 	//init gyro
-	imu->calib_gyro.scale_factor[X] =  1.0f / RAW_GYRO_X_SCALE;
-	imu->calib_gyro.scale_factor[Y] =  1.0f / RAW_GYRO_Y_SCALE;
-	imu->calib_gyro.scale_factor[Z] =  1.0f / RAW_GYRO_Z_SCALE;
-	imu->calib_gyro.bias[X] = GYRO_BIAIS_X;
-	imu->calib_gyro.bias[Y] = GYRO_BIAIS_Y;
-	imu->calib_gyro.bias[Z] = GYRO_BIAIS_Z;
-	imu->calib_gyro.orientation[X] = GYRO_ORIENTATION_X;
-	imu->calib_gyro.orientation[Y] = GYRO_ORIENTATION_Y;
-	imu->calib_gyro.orientation[Z] = GYRO_ORIENTATION_Z;
-	imu->calib_gyro.axis[X] = GYRO_AXIS_X;
-	imu->calib_gyro.axis[Y] = GYRO_AXIS_Y;
-	imu->calib_gyro.axis[Z] = GYRO_AXIS_Z;
+	imu->calib_gyro.scale_factor[X] =  1.0f / conf_imu->gyroscope.scale_factor[X];
+	imu->calib_gyro.scale_factor[Y] =  1.0f / conf_imu->gyroscope.scale_factor[Y];
+	imu->calib_gyro.scale_factor[Z] =  1.0f / conf_imu->gyroscope.scale_factor[Z];
+	imu->calib_gyro.bias[X]			= conf_imu->gyroscope.bias[X];
+	imu->calib_gyro.bias[Y]			= conf_imu->gyroscope.bias[Y];
+	imu->calib_gyro.bias[Z]			= conf_imu->gyroscope.bias[Z];
+	imu->calib_gyro.orientation[X]	= conf_imu->gyroscope.orientation[X];
+	imu->calib_gyro.orientation[Y]	= conf_imu->gyroscope.orientation[Y];
+	imu->calib_gyro.orientation[Z]	= conf_imu->gyroscope.orientation[Z];
+	imu->calib_gyro.axis[X]			= conf_imu->gyroscope.axis[X];
+	imu->calib_gyro.axis[Y]			= conf_imu->gyroscope.axis[Y];
+	imu->calib_gyro.axis[Z]			= conf_imu->gyroscope.axis[Z];
 	imu->calib_gyro.max_oriented_values[X] = -10000.0f;
 	imu->calib_gyro.max_oriented_values[Y] = -10000.0f;
 	imu->calib_gyro.max_oriented_values[Z] = -10000.0f;
@@ -155,18 +151,18 @@ void imu_init (imu_t *imu, state_t* state)
 	imu->calib_gyro.calibration = false;
 	
 	//init accelero
-	imu->calib_accelero.scale_factor[X] =  1.0f / RAW_ACC_X_SCALE;
-	imu->calib_accelero.scale_factor[Y] =  1.0f / RAW_ACC_Y_SCALE;
-	imu->calib_accelero.scale_factor[Z] =  1.0f / RAW_ACC_Z_SCALE;
-	imu->calib_accelero.bias[X] = ACC_BIAIS_X;
-	imu->calib_accelero.bias[Y] = ACC_BIAIS_Y;
-	imu->calib_accelero.bias[Z] = ACC_BIAIS_Z;
-	imu->calib_accelero.orientation[X] = ACC_ORIENTATION_X;
-	imu->calib_accelero.orientation[Y] = ACC_ORIENTATION_Y;
-	imu->calib_accelero.orientation[Z] = ACC_ORIENTATION_Z;
-	imu->calib_accelero.axis[X] = ACC_AXIS_X;
-	imu->calib_accelero.axis[Y] = ACC_AXIS_Y;
-	imu->calib_accelero.axis[Z] = ACC_AXIS_Z;
+	imu->calib_accelero.scale_factor[X]		=  1.0f / conf_imu->accelerometer.scale_factor[X];
+	imu->calib_accelero.scale_factor[Y]		=  1.0f / conf_imu->accelerometer.scale_factor[Y];
+	imu->calib_accelero.scale_factor[Z]		=  1.0f / conf_imu->accelerometer.scale_factor[Z];
+	imu->calib_accelero.bias[X]				= conf_imu->accelerometer.bias[X];
+	imu->calib_accelero.bias[Y]				= conf_imu->accelerometer.bias[Y];
+	imu->calib_accelero.bias[Z]				= conf_imu->accelerometer.bias[Z];
+	imu->calib_accelero.orientation[X]		= conf_imu->accelerometer.orientation[X];
+	imu->calib_accelero.orientation[Y]		= conf_imu->accelerometer.orientation[Y];
+	imu->calib_accelero.orientation[Z]		= conf_imu->accelerometer.orientation[Z];
+	imu->calib_accelero.axis[X]				= conf_imu->accelerometer.axis[X];
+	imu->calib_accelero.axis[Y]				= conf_imu->accelerometer.axis[Y];
+	imu->calib_accelero.axis[Z]				= conf_imu->accelerometer.axis[Z];
 	imu->calib_accelero.max_oriented_values[X] = -10000.0f;
 	imu->calib_accelero.max_oriented_values[Y] = -10000.0f;
 	imu->calib_accelero.max_oriented_values[Z] = -10000.0f;
@@ -176,18 +172,18 @@ void imu_init (imu_t *imu, state_t* state)
 	imu->calib_accelero.calibration = false;
 	
 	//init compass
-	imu->calib_compass.scale_factor[X] =  1.0f / RAW_MAG_X_SCALE;
-	imu->calib_compass.scale_factor[Y] =  1.0f / RAW_MAG_Y_SCALE;
-	imu->calib_compass.scale_factor[Z] =  1.0f / RAW_MAG_Z_SCALE;
-	imu->calib_compass.bias[X] = MAG_BIAIS_X;
-	imu->calib_compass.bias[Y] = MAG_BIAIS_Y;
-	imu->calib_compass.bias[Z] = MAG_BIAIS_Z;
-	imu->calib_compass.orientation[X] = MAG_ORIENTATION_X;
-	imu->calib_compass.orientation[Y] = MAG_ORIENTATION_Y;
-	imu->calib_compass.orientation[Z] = MAG_ORIENTATION_Z;
-	imu->calib_compass.axis[X] = MAG_AXIS_X;
-	imu->calib_compass.axis[Y] = MAG_AXIS_Y;
-	imu->calib_compass.axis[Z] = MAG_AXIS_Z;
+	imu->calib_compass.scale_factor[X]		=  1.0f / conf_imu->magnetometer.scale_factor[X];
+	imu->calib_compass.scale_factor[Y]		=  1.0f / conf_imu->magnetometer.scale_factor[Y];
+	imu->calib_compass.scale_factor[Z]		=  1.0f / conf_imu->magnetometer.scale_factor[Z];
+	imu->calib_compass.bias[X]				= conf_imu->magnetometer.bias[X];
+	imu->calib_compass.bias[Y]				= conf_imu->magnetometer.bias[Y];
+	imu->calib_compass.bias[Z]				= conf_imu->magnetometer.bias[Z];
+	imu->calib_compass.orientation[X]		= conf_imu->magnetometer.orientation[X];
+	imu->calib_compass.orientation[Y]		= conf_imu->magnetometer.orientation[Y];
+	imu->calib_compass.orientation[Z]		= conf_imu->magnetometer.orientation[Z];
+	imu->calib_compass.axis[X]				= conf_imu->magnetometer.axis[X];
+	imu->calib_compass.axis[Y]				= conf_imu->magnetometer.axis[Y];
+	imu->calib_compass.axis[Z]				= conf_imu->magnetometer.axis[Z];
 	imu->calib_compass.max_oriented_values[X] = -10000.0f;
 	imu->calib_compass.max_oriented_values[Y] = -10000.0f;
 	imu->calib_compass.max_oriented_values[Z] = -10000.0f;
@@ -200,34 +196,6 @@ void imu_init (imu_t *imu, state_t* state)
 	imu->dt = 0.004;
 	
 	print_util_dbg_print("[IMU] Initialisation\r\n");
-}
-		
-	
-void imu_calibrate_gyros(imu_t *imu)
-{
-	int32_t i,j;
-	tasks_run_imu_update(0);
-	
-	for (j = 0; j < 3; j++)
-	{
-		imu->calib_gyro.bias[j] = imu->oriented_gyro.data[j];
-	}
-	
-	for (i = 0; i < 100; i++)
-	{
-		tasks_run_imu_update(0);
-
-		//imu->imu->calib_sensor.bias[0 + ACC_OFFSET] = (0.9f * imu->imu->calib_accelero.bias[0] + 0.1f * (float)imu->oriented_accelero.data[0]);
-		//imu->imu->calib_sensor.bias[1 + ACC_OFFSET] = (0.9f * imu->imu->calib_accelero.bias[1] + 0.1f * (float)imu->oriented_accelero.data[1]);
-		//imu->imu->calib_sensor.bias[2 + ACC_OFFSET] = (0.9f * imu->imu->calib_accelero.bias[2] + 0.1f * ((float)imu->oriented_accelero.data[2] - imu->calib_accelero.scale_factor[2]));
-		for (j = 0; j < 3; j++)
-		{
-			imu->calib_gyro.bias[j] = 0.9f * imu->calib_gyro.bias[j] + 0.1f * imu->oriented_gyro.data[j];
-			//imu->attitude.raw_mag_mean[j] = (1.0 - fMAG_LPF) * imu->attitude.raw_mag_mean[j] + MAG_LPF * ((float)imu->oriented_compass.data[j]);
-		}
-	
-		delay_ms(4);
-	}
 }
 
 

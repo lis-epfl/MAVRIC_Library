@@ -53,6 +53,7 @@
  * \brief						Set the state and the mode of the vehicle
  *
  * \param	state				The pointer to the state structure
+ * \param	sysid				The system ID
  * \param	msg					The received MAVLink message structure
  */
 static void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_message_t* msg);
@@ -240,7 +241,7 @@ void state_telemetry_send_heartbeat(const state_t* state, const mavlink_stream_t
 void state_telemetry_send_status(const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
 	float battery_voltage = state->analog_monitor->avg[ANALOG_RAIL_11];		// bat voltage (mV), actual battery pack plugged to the board
-	float battery_remaining = state->analog_monitor->avg[ANALOG_RAIL_10] / 12.4f * 100.0f;
+	float battery_remaining = state->analog_monitor->avg[ANALOG_RAIL_10] / 12.4f * 100.0f; //percentage over full 3cells battery (=12.4V)
 	
 	mavlink_msg_sys_status_pack(mavlink_stream->sysid,
 								mavlink_stream->compid,
@@ -248,10 +249,10 @@ void state_telemetry_send_status(const state_t* state, const mavlink_stream_t* m
 								state->sensor_present, 						// sensors present
 								state->sensor_enabled, 						// sensors enabled
 								state->sensor_health, 						// sensors health
-								0,                  									// load
-								(int32_t)(1000.0f * battery_voltage), 					// bat voltage (mV)
-								0,               										// current (mA)
-								battery_remaining,										// battery remaining
-								0, 0,  													// comms drop, comms errors
-								0, 0, 0, 0);        									// autopilot specific errors
+								0,                  						// load
+								(int32_t)(1000.0f * battery_voltage), 		// bat voltage (mV)
+								0,               							// current (mA)
+								battery_remaining,							// battery remaining
+								0, 0,  										// comms drop, comms errors
+								0, 0, 0, 0);        						// autopilot specific errors
 }

@@ -52,18 +52,29 @@ extern "C" {
 #include "streams.h"
 #include "uart_int.h"
 
-typedef struct {
-	int32_t IRQ;
-	//Buffer_t transmit_buffer;
-	//Buffer_t receive_buffer;
-	byte_stream_t *receive_stream;
+/**
+ * \brief USB interface structure
+ */
+typedef struct 
+{
+	int32_t IRQ;					///< IRQ of the USB interface
+	//Buffer_t transmit_buffer;		///< Transmission buffer
+	//Buffer_t receive_buffer;		///< Reception buffer
+	byte_stream_t *receive_stream;	///< Pointer to the reception stream
 } usb_interface_t;
 
-typedef struct {
-	int32_t mode;
-	usb_interface_t usb_device;
+/**
+ * \brief USB configuration interface structure
+ */
+typedef struct 
+{
+	int32_t mode;					///< Define the mode to use
+	usb_interface_t usb_device;		///< Define which device to configure
 } usb_config_t;
 
+/**
+ * \brief Enumerate the possible USB mode
+ */
 enum USB_MODE 
 {
 	USB_OFF, 
@@ -72,6 +83,9 @@ enum USB_MODE
 	USB_IN_OUT
 };
 
+/**
+ * \brief Enumerate the availability of USB
+ */
 enum AVAILABLE_USB
 {
 	USB = -1
@@ -101,6 +115,7 @@ usb_config_t *usb_int_get_usb_handle(void);
 
 /**
  * \brief	Blocking operation to retrieve a received byte from uart
+ *
  * \param	usart_conf	The pointer to the UART receive buffer
  *
  * \return	The byte received on the UART

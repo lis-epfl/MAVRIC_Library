@@ -53,9 +53,10 @@
 */
 float* matf_zeros(int32_t n1, int32_t n2, float* A)
 {
-    int32_t i;
-    for(i=0; i < n1*n2; i++) 
-        A[i] = 0.0f;
+    for(int32_t i = 0; i < n1*n2; i++) 
+    {
+		A[i] = 0.0f;
+	}
     
     return A;
 }
@@ -66,10 +67,15 @@ float* matf_zeros(int32_t n1, int32_t n2, float* A)
 */
 float* matf_diag(int32_t n1, int32_t n2, float* A, float val, int32_t start, int32_t stop)
 {
-    int32_t i;
-    if(start < 1) start = 1;
-    for(i=start-1; i < stop; i++) 
-        A[(n2+1)*i] = val;
+    if(start < 1)
+	{
+		start = 1;
+	}
+	
+	for(int32_t i = start-1; i < stop; i++) 
+    {
+		A[(n2+1)*i] = val;
+	}
     
     return A;
 }
@@ -80,10 +86,10 @@ float* matf_diag(int32_t n1, int32_t n2, float* A, float val, int32_t start, int
 */
 float* matf_copy(int32_t n1, int32_t n2, float* A, float* B)
 {
-    int32_t i;
-    for(i=0; i < n1*n2; i++) 
-        B[i] = A[i];
-    
+    for(int32_t i = 0; i < n1*n2; i++) 
+    {
+		B[i] = A[i];
+	}
     return B;
 }
 
@@ -105,10 +111,10 @@ float* matf_cross(float* a, float* b, float* c)
 */
 float* matf_std(int32_t n, float* A, float* v)
 {
-    int32_t i;
-    for(i=0; i < n; i++) 
-        v[i] = sqrtf(A[i*(n+1)]);
-    
+    for(int32_t i = 0; i < n; i++) 
+    {
+		v[i] = sqrtf(A[i*(n+1)]);
+	}
     return v;
 }
 
@@ -123,8 +129,12 @@ float* matf_copy_part(float* A, int32_t a1, int32_t a2, int32_t ra, int32_t ca, 
     int32_t col;
     
     for(row = 0; row < p2; row ++)
-    for(col = 0; col < p1; col ++)
-         B[(rb+row)*b1+col+cb] = A[(ra+row)*a1+col+ca];
+    {
+		for(col = 0; col < p1; col ++)
+        {
+			B[(rb+row)*b1+col+cb] = A[(ra+row)*a1+col+ca];
+		}
+	}
 
     return B;
 }
@@ -134,10 +144,12 @@ float* matf_copy_part(float* A, int32_t a1, int32_t a2, int32_t ra, int32_t ca, 
 */
 float matf_norm(int32_t n, float* A)
 {
-    int32_t i;
     float norm = 0.0f;
-    for(i=0; i < n; i++) 
-        norm += A[i]*A[i];
+    
+	for(int32_t i = 0; i < n; i++) 
+    {
+		norm += A[i]*A[i];
+	}
     
     return sqrtf(norm);
 }
@@ -147,9 +159,9 @@ float matf_norm(int32_t n, float* A)
 */
 float matf_sum(int32_t n, float* A)
 {
-    int32_t i;
     float sum = 0.0f;
-    for(i=0; i < n; i++) 
+    
+	for(int32_t i = 0; i < n; i++) 
         sum += A[i];
     
     return sum;
@@ -162,10 +174,10 @@ float matf_sum(int32_t n, float* A)
 */
 float* matf_add(int32_t n1, int32_t n2, float* A, float* B, float* C)
 {
-    int32_t i;
-    for(i=0; i < n1*n2; i++) 
-        C[i] = A[i] + B[i];
-    
+    for(int32_t i = 0; i < n1*n2; i++) 
+    {
+		C[i] = A[i] + B[i];
+	}
     return C;
 }
 
@@ -176,10 +188,10 @@ float* matf_add(int32_t n1, int32_t n2, float* A, float* B, float* C)
 */
 float* matf_multiply_factor(int32_t n1, int32_t n2, float* A, float* B, float c)
 {
-    int32_t i;
-    for(i=0; i < n1*n2; i++) 
-        B[i] = c*A[i];
-    
+    for(int32_t i = 0; i < n1*n2; i++) 
+    {
+		B[i] = c*A[i];
+	}
     return B;
 }
 
@@ -189,10 +201,10 @@ float* matf_multiply_factor(int32_t n1, int32_t n2, float* A, float* B, float c)
 */
 float* matf_sub(int32_t n1, int32_t n2, float* A, float* B, float* C)
 {
-    int32_t i;
-    for(i=0; i < n1*n2; i++) 
-        C[i] = A[i] - B[i];
-    
+    for(int32_t i = 0; i < n1*n2; i++) 
+    {
+		C[i] = A[i] - B[i];
+	}
     return C;
 }
 
@@ -229,19 +241,21 @@ float* matf_multiply(int32_t n1, int32_t n12, int32_t n2, float* A, float* B, fl
     int32_t c = 0;
     
     for(row=0; row < n1; row++) 
-    for(col=0; col < n2; col++)
     {
-        a = row*n12;
-        b = col;
-        C[c] = 0.0f;
-        for(el=0; el < n12; el++)  
-        {
-            C[c] = C[c] + A[a]*B[b];
-            a++;
-            b += n2;
-        }
-        c++;
-    }
+		for(col=0; col < n2; col++)
+		{
+			a = row*n12;
+			b = col;
+			C[c] = 0.0f;
+			for(el=0; el < n12; el++)
+			{
+				C[c] = C[c] + A[a]*B[b];
+				a++;
+				b += n2;
+			}
+			c++;
+		}
+	}
     
     return C;
 }
@@ -257,19 +271,21 @@ float* matf_multiply_Bt(int32_t n1, int32_t n12, int32_t n2, float* A, float* B,
     int32_t c = 0;
     
     for(row=0; row < n1; row++) 
-    for(col=0; col < n2; col++)
     {
-        a = row*n12;
-        b = col*n12;
-        C[c] = 0.0f;
-        for(el=0; el < n12; el++)  
-        {
-            C[c] = C[c] + A[a]*B[b];
-            a++;
-            b++;
-        }
-        c++;
-    }
+		for(col=0; col < n2; col++)
+		{
+			a = row*n12;
+			b = col*n12;
+			C[c] = 0.0f;
+			for(el=0; el < n12; el++)  
+			{
+				C[c] = C[c] + A[a]*B[b];
+				a++;
+				b++;
+			}
+			c++;
+		}
+	}
     
     return C;
 }

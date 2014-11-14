@@ -43,7 +43,7 @@
 
 #include "stabilisation_telemetry.h"
 #include "time_keeper.h"
-
+#include "constants.h"
 
 void  stabilisation_telemetry_send_rpy_speed_thrust_setpoint(const stabiliser_t* stabiliser, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {

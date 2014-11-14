@@ -55,10 +55,23 @@ extern "C" {
 #include "coord_conventions.h"
 #include "state.h"
 #include "tasks.h"
+#include "constants.h"
+
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
 #define VEL_DECAY 0.0f
 #define POS_DECAY 0.0f
+
+
+/**
+ * \brief The position estimator structure
+ */
+typedef struct
+{
+	global_position_t origin;	///<	Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
+	float gravity;				///<	value of the Gravity for position estimation correction
+} position_estimation_conf_t;
+
 
 /**
  * \brief The position estimator structure
@@ -93,25 +106,21 @@ typedef struct
 	state_t* state;									///< The pointer to the state structure
 
 	bool* nav_plan_active;							///< The pointer to the waypoint set flag
-} position_estimator_t;
+} position_estimation_t;
 
 
 /**
  * \brief	Initialize the position estimation module
  *
  * \param	pos_est					The pointer to the position estimation structure
+ * \param	config					The configuration for default home position and gravity value
  * \param	state					The pointer to the state structure
  * \param	barometer				The pointer to the barometer structure
  * \param	gps						The pointer to the GPS structure
  * \param	ahrs					The pointer to the attitude estimation structure
  * \param	imu						The pointer to the IMU structure
- * \param	nav_plan_active			The pointer to the flag telling if there is a flight plan loaded
- * \param	home_lat				The value of the hard coded home latitude position
- * \param	home_lon				The value of the hard coded home longitude position
- * \param	home_alt				The value of the hard coded home altitude position
- * \param	gravity					The value of the gravity
  */
-void position_estimation_init(position_estimator_t *pos_est,state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, bool* nav_plan_active, float home_lat, float home_lon, float home_alt, float gravity);
+void position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t* barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu);
 
 
 /**
@@ -119,7 +128,7 @@ void position_estimation_init(position_estimator_t *pos_est,state_t* state, baro
  *
  * \param	pos_est					The pointer to the position estimation structure
  */
-void position_estimation_reset_home_altitude(position_estimator_t *pos_est);
+void position_estimation_reset_home_altitude(position_estimation_t *pos_est);
 
 
 /**
@@ -127,7 +136,7 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est);
  *
  * \param	pos_est					The pointer to the position estimation structure
  */
-void position_estimation_update(position_estimator_t *pos_est);
+void position_estimation_update(position_estimation_t *pos_est);
 
 
 #ifdef __cplusplus

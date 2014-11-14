@@ -53,7 +53,7 @@ extern "C"
 #include "stdint.h"
 #include <stdbool.h>
 
-#define SCHEDULER_TIMEBASE 1000000
+#define SCHEDULER_TIMEBASE 1000000	///< time base for the scheduler
 
 
 typedef uint8_t task_handle_t;
@@ -183,7 +183,7 @@ typedef struct
 {
 	uint32_t max_task_count;					///<	Maximum number of tasks
 	schedule_strategy_t schedule_strategy;		///<	Schedule strategy
-	bool debug;									///<	Indicates whether the schduler should print debug messages
+	bool debug;									///<	Indicates whether the scheduler should print debug messages
 } scheduler_conf_t;
 
 

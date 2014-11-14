@@ -132,7 +132,6 @@ bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run
 
 void scheduler_sort_tasks(scheduler_t* scheduler)
 {
-	int32_t i;
 	bool sorted = false;
 
 	task_set_t* ts = scheduler->task_set;	
@@ -148,7 +147,7 @@ void scheduler_sort_tasks(scheduler_t* scheduler)
 		sorted = true;
 		
 		// Iterate through registered tasks
-		for (i = 0; i < (ts->task_count - 1); i++) 
+		for (int32_t i = 0; i < (ts->task_count - 1); i++) 
 		{
 			if ( ts->tasks[i].priority < ts->tasks[i + 1].priority )
 			{
@@ -180,7 +179,6 @@ void scheduler_sort_tasks(scheduler_t* scheduler)
 
 int32_t scheduler_update(scheduler_t* scheduler) 
 {
-	int32_t i;
 	int32_t realtime_violation = 0;
 
 	task_set_t* ts = scheduler->task_set;
@@ -190,7 +188,7 @@ int32_t scheduler_update(scheduler_t* scheduler)
 	task_return_t treturn;
 
 	// Iterate through registered tasks
-	for (i = ts->current_schedule_slot; i < ts->task_count; i++) 
+	for (int32_t i = ts->current_schedule_slot; i < ts->task_count; i++) 
 	{
 		uint32_t current_time = time_keeper_get_micros();
 
@@ -275,11 +273,9 @@ int32_t scheduler_update(scheduler_t* scheduler)
 
 task_entry_t* scheduler_get_task_by_id(const scheduler_t* scheduler, uint16_t task_id)
 {
-	int32_t i = 0;
-
 	task_set_t* ts = scheduler->task_set;
 
-	for (i = 0; i < ts->task_count; i++) 
+	for (int32_t i = 0; i < ts->task_count; i++) 
 	{
 		if ( ts->tasks[i].task_id == task_id )
 		{ 
