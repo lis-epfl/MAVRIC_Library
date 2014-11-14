@@ -92,7 +92,7 @@ servos_conf_t servos_default_config =
 			.trim 			= 0.0f,
 			.min 			= -0.9f,
 			.max 			= 1.0f,
-			.failsafe 		= -1.0f,
+			.failsafe 		= -1.1f,
 			.repeat_freq 	= 200,
 		},
 		{ //servo_entry_default_esc
@@ -100,7 +100,7 @@ servos_conf_t servos_default_config =
 			.trim 			= 0.0f,
 			.min 			= -0.9f,
 			.max 			= 1.0f,
-			.failsafe 		= -1.0f,
+			.failsafe 		= -1.1f,
 			.repeat_freq 	= 200,
 		},
 		{ //servo_entry_default_esc
@@ -108,7 +108,7 @@ servos_conf_t servos_default_config =
 			.trim 			= 0.0f,
 			.min 			= -0.9f,
 			.max 			= 1.0f,
-			.failsafe 		= -1.0f,
+			.failsafe 		= -1.1f,
 			.repeat_freq 	= 200,
 		},
 		{ //servo_entry_default_esc
@@ -116,7 +116,7 @@ servos_conf_t servos_default_config =
 			.trim 			= 0.0f,
 			.min 			= -0.9f,
 			.max 			= 1.0f,
-			.failsafe 		= -1.0f,
+			.failsafe 		= -1.1f,
 			.repeat_freq 	= 200,
 		}
 	},
