@@ -50,6 +50,7 @@
 #include "satellite.h"
 #include "stabilisation.h"
 #include "mav_modes.h"
+#include "control_command.h"
 
 #define REMOTE_CHANNEL_COUNT 8
 
@@ -269,6 +270,52 @@ void remote_get_command_from_remote(remote_t* remote, control_command_t * contro
  * \param	controls			The pointer to the controls structure
  */
 void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t* controls);
+
+
+/**
+ * \brief	Compute rate command from the remote
+ * 
+ * \param	remote			Remote structure (input)
+ * \param	command			Rate command (output)
+ */
+void remote_get_rate_command(const remote_t* remote, rate_command_t * command);
+
+
+/**
+ * \brief	Compute thrust command from the remote
+ * 
+ * \param	remote			Remote structure (input)
+ * \param	command			Thrust command (output)
+ */
+void remote_get_thrust_command(const remote_t* remote, thrust_command_t * command);
+
+
+/**
+ * \brief	Compute attitude command from the remote (absolute angles)
+ * 
+ * \param	remote			Remote structure (input)
+ * \param	command			Attitude command (output)
+ */
+void remote_get_attitude_command(const remote_t* remote, attitude_command_t * command);
+
+
+/**
+ * \brief	Compute attitude command from the remote (absolute roll and pitch, integrated yaw)
+ * 
+ * \param	remote			Remote structure (input)
+ * \param 	k_yaw			Integration factor for yaw (0.02 is ok) (input) 
+ * \param	command			Attitude command (output)
+ */
+void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const float k_yaw, attitude_command_t * command);
+
+
+/**
+ * \brief	Compute velocity command from the remote
+ * 
+ * \param	remote			Remote structure (input)
+ * \param	command			Velocity command (output)
+ */
+void remote_get_velocity_command(const remote_t* remote, velocity_command_t * command);
 
 
 #ifdef __cplusplus
