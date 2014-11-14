@@ -48,7 +48,6 @@
 #include "state.h"
 
 void state_machine_init(state_machine_t *state_machine,
-						const state_machine_conf_t* state_machine_conf, 
 						state_t* state, 
 						mavlink_waypoint_handler_t* waypoint_handler, 
 						simulation_model_t *sim_model, 
@@ -178,7 +177,7 @@ void state_machine_update(state_machine_t* state_machine)
 			state_machine->remote->mode.current_desired_mode.ARMED = ARMED_OFF;
 			
 			// To get out of this state, if we are in the wrong use_mode_from_remote
-			if (state_machine->use_mode_from_remote == 0)
+			if (state_machine->state->use_mode_from_remote == 0)
 			{
 				state_new = MAV_STATE_STANDBY;
 			}
