@@ -70,7 +70,6 @@ typedef struct
 {
 	float gain;			///< Gain 
 	float previous;		///< Previous input to the differentiator 
-	float LPF;			///< Low pass filter
 	float clip;			///< Clipping value
 } differentiator_t;						
 
