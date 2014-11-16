@@ -66,10 +66,14 @@ static void curvace_start(void);
 static void curvace_stop(void);
 
 
-static void curvace_derotate_all(curvace_t* curvace);
+// static void curvace_derotate_all(curvace_t* curvace);
 
 
-static void curvace_scale_all_no_derotation(curvace_t* curvace);
+// static void curvace_scale_all(curvace_t* curvace);
+
+
+static void curvace_process_all(curvace_t* curvace);
+
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -158,28 +162,64 @@ static void curvace_stop(void)
 }
 
 
-static void curvace_derotate_all(curvace_t* curvace)
+// static void curvace_derotate_all(curvace_t* curvace)
+// {
+// 	uint32_t j = 0;
+// 	for (uint8_t i = 0; i < 2 * CURVACE_NB_OF; ++i)
+// 	{
+// 		// origin
+// 		curvace->of.data[i] = 	curvace->of.data[i]
+// 								- curvace->calib_matrix.data[j] 	* curvace->ahrs->angular_speed[ROLL]
+// 								- curvace->calib_matrix.data[j + 1] * curvace->ahrs->angular_speed[PITCH]
+// 								- curvace->calib_matrix.data[j + 2] * curvace->ahrs->angular_speed[YAW];
+
+// 		// test
+// 		// curvace->of.data[i] = 	curvace->of.data[i]
+// 		// 						// - curvace->calib_matrix.data[j] 	* curvace->ahrs->angular_speed[ROLL]
+// 		// 						// - curvace->calib_matrix.data[j + 1] * curvace->ahrs->angular_speed[PITCH]
+// 		// 						+ 0.3f * curvace->calib_matrix.data[j + 2] * curvace->ahrs->angular_speed[YAW];
+	
+
+// 		j += 3;
+// 	}
+// }
+
+// static void curvace_scale_all(curvace_t* curvace)
+// {
+// 	for (uint8_t i = 0; i < 2 * CURVACE_NB_OF; ++i)
+// 	{
+// 		curvace->of.data[i] = 	(1 - curvace->LPF) 	* curvace->scale_factor_simple * curvace->raw_of.data[i] +
+// 								curvace->LPF	 	* curvace->of.data[i];
+// 	}
+// }
+
+
+static void curvace_process_all(curvace_t* curvace)
 {
 	uint32_t j = 0;
 	for (uint8_t i = 0; i < 2 * CURVACE_NB_OF; ++i)
 	{
-		curvace->of.data[i] = 	+ curvace->calib_factor.data[i] 	* curvace->raw_of.data[i] 
-								- curvace->calib_matrix.data[j] 	* curvace->ahrs->angular_speed[0]
-								- curvace->calib_matrix.data[j + 1] * curvace->ahrs->angular_speed[1]
-								- curvace->calib_matrix.data[j + 2] * curvace->ahrs->angular_speed[2];
+
+		switch( curvace->do_derotation )
+		{
+			case ON:
+				curvace->of.data[i] = 	curvace->LPF	 	* curvace->of.data[i]  +
+										(1 - curvace->LPF) 	* ( curvace->scale_factor_simple * curvace->raw_of.data[i] - (	curvace->calib_matrix.data[j] 		* curvace->ahrs->angular_speed[ROLL]  +
+																															curvace->calib_matrix.data[j + 1] 	* curvace->ahrs->angular_speed[PITCH] +
+																															curvace->calib_matrix.data[j + 2] 	* curvace->ahrs->angular_speed[YAW]		) 	);
+
+			break;
+
+			case OFF:
+				curvace->of.data[i] = 	(1 - curvace->LPF) 	* curvace->scale_factor_simple * curvace->raw_of.data[i] +
+										curvace->LPF	 	* curvace->of.data[i];
+			break;
+		}
+	
+
 		j += 3;
 	}
 }
-
-static void curvace_scale_all_no_derotation(curvace_t* curvace)
-{
-	for (uint8_t i = 0; i < 2 * CURVACE_NB_OF; ++i)
-	{
-		curvace->of.data[i] = 	0.5f * curvace->of.data[i] +
-								0.5f * curvace->calib_factor.data[i] * curvace->raw_of.data[i];
-	}
-}
-
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -190,6 +230,11 @@ void curvace_init(curvace_t* curvace, const ahrs_t* ahrs, const mavlink_stream_t
 	// Init dependencies
 	curvace->ahrs 			= ahrs;
 	curvace->mavlink_stream = mavlink_stream;
+
+	// Init members
+	curvace->do_derotation 	= ON;
+	curvace->LPF		 	= 0.0f;
+	curvace->derot_factor	= 1.0f;
 
 	// inter ommatidial angles
 	float inter_ommatidia_vertical 		= 4.26;	// 4.2 degrees between each ommatidia
@@ -356,19 +401,22 @@ void curvace_init(curvace_t* curvace, const ahrs_t* ahrs, const mavlink_stream_t
 		float azimuth 	= curvace->roi_coord.all[i].azimuth;
 		float elevation = curvace->roi_coord.all[i].elevation;
 	
-		curvace->calib_matrix.all[i].Arx = - quick_trig_cos(azimuth) 	* quick_trig_sin(elevation);
-		curvace->calib_matrix.all[i].Apx = - quick_trig_sin(elevation) * quick_trig_sin(azimuth);
-		curvace->calib_matrix.all[i].Ayx = - quick_trig_cos(elevation);
-		curvace->calib_matrix.all[i].Ary =   quick_trig_sin(azimuth);
-		curvace->calib_matrix.all[i].Apy = - quick_trig_cos(azimuth);
+		curvace->calib_matrix.all[i].Arx = + quick_trig_cos(azimuth) 	* quick_trig_sin(elevation);
+		curvace->calib_matrix.all[i].Apx = + quick_trig_sin(elevation) 	* quick_trig_sin(azimuth);
+		curvace->calib_matrix.all[i].Ayx = + quick_trig_cos(elevation);
+		curvace->calib_matrix.all[i].Ary = - quick_trig_sin(azimuth);
+		curvace->calib_matrix.all[i].Apy = + quick_trig_cos(azimuth);
 		curvace->calib_matrix.all[i].Ayy = 0.0f; 
 	}
 
 	// Init scale factor
 	float range = 32768;			// if OF vectors are encoded using full int16_t: -1..1 maps to -32767..32768  
 									// TODO: check this
+	float frame_rate = 200; 		// Hz
 
-	float frame_rate = 200; // Hz
+	// Init simplified calib factor
+	curvace->scale_factor_simple = frame_rate * maths_deg_to_rad( inter_ommatidia_horizontal ) / range;	
+
 	for (uint8_t i = 0; i < CURVACE_NB_OF; ++i)
 	{
 		curvace->calib_factor.scale[i].elevation = frame_rate * maths_deg_to_rad( inter_ommatidia_vertical ) / range;
@@ -430,9 +478,22 @@ void curvace_update(curvace_t* curvace)
 {
 	curvace_read_spi(curvace);
 
-	curvace_derotate_all(curvace);
+	curvace_process_all(curvace);
+	
+	// curvace_scale_all(curvace);
 
-	// curvace_scale_all_no_derotation(curvace);
+	// if ( curvace->do_derotation == ON )
+	// {
+	// 	curvace_derotate_all(curvace);
+
+	// 	// simplified derotation
+	// 	// for (uint8_t i = 0; i < 2 * CURVACE_NB_OF; ++i)
+	// 	// {
+	// 	// 	// test
+	// 	// 	curvace->of.data[i] = 	curvace->of.data[i]
+	// 	// 							+ curvace->derot_factor * curvace->ahrs->angular_speed[YAW];
+	// 	// }
+	// }
 }
 
 
@@ -501,6 +562,7 @@ void curvace_send_telemetry_averaged(const curvace_t* curvace)
 	// fill data in 16bits
 	for (uint8_t i = 0; i < 9; ++i)
 	{
+		// average over each columns
 		of_left[i] 	= 0.0f;
 		of_right[i] = 0.0f;
 		for (int j = 0; j < 6; ++j)
@@ -508,16 +570,20 @@ void curvace_send_telemetry_averaged(const curvace_t* curvace)
 			of_left[i] 	+= curvace->of.all[i].x;
 			of_right[i] += curvace->of.all[i + 54].x;
 		}
+		of_left[i] 	= of_left[i] / 6.0f;
+		of_right[i]	= of_right[i] / 6.0f;
 
+		// store in long
 		of_left16[i] = 100 * of_left[i]; 
 		of_right16[i] = 100 * of_right[i]; 
 	}
 
+	// average over all columns
 	for (int i = 0; i < 9; ++i)
 	{
 		out += of_left[i] + of_right[i];
 	}
-	out = out / 9.0f;
+	out = out / 18.0f;
 
 	mavlink_msg_omnidirectional_flow_pack(	curvace->mavlink_stream->sysid,
 											curvace->mavlink_stream->compid,

@@ -52,6 +52,7 @@
 #include "ahrs.h"
 #include "mavlink_stream.h"
 #include "optic_flow.h"
+#include "constants.h"	
 
 #define CURVACE_NB_OF 108
 
@@ -144,7 +145,11 @@ typedef struct
 	curvace_roi_coord_t				roi_coord;
 	curvace_calibration_matrix_t 	calib_matrix;
 	curvace_calibration_factor_t	calib_factor;
-	quat_t 							orientation; 	///< unused
+	float							scale_factor_simple;	///< temporary replacement for calib_factor with a single value for all OF vectors
+	constants_on_off_t				do_derotation;			///< indicates whether derotation should be performed (ON/ OFF)
+	float							LPF;
+	float							derot_factor;
+	quat_t 							orientation; 			///< unused
 	const ahrs_t* 					ahrs;
 	const mavlink_stream_t* 		mavlink_stream;
 } curvace_t;
