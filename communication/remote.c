@@ -452,7 +452,7 @@ void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const flo
 		case ATTITUDE_COMMAND_MODE_RPY:
 			command->rpy[ROLL] 	= remote_get_roll(remote);
 			command->rpy[PITCH] = remote_get_pitch(remote);
-			command->rpy[YAW] 	= remote_get_yaw(remote);
+			command->rpy[YAW] 	+= k_yaw * remote_get_yaw(remote);
 		break;
 	}
 }
