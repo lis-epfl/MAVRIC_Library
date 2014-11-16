@@ -48,12 +48,10 @@
 #include "state.h"
 
 void state_machine_init(state_machine_t *state_machine,
-						state_t* state, 
-						mavlink_waypoint_handler_t* waypoint_handler, 
+						state_t* state,  
 						simulation_model_t *sim_model, 
 						remote_t* remote)
 {
-	state_machine->waypoint_handler = waypoint_handler;
 	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
 	state_machine->remote 			= remote;
