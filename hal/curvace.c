@@ -63,7 +63,7 @@ static void curvace_read_spi(curvace_t* curvace);
 static void curvace_start(void);
 
 
-static void curvace_stop(void);
+//static void curvace_stop(void);
 
 
 // static void curvace_derotate_all(curvace_t* curvace);
@@ -142,24 +142,24 @@ static void curvace_start(void)
 	gpio_set_gpio_pin(slaveSelectTop);
 }
 
-static void curvace_stop(void)
-{
-	// Stop and reset Bottom CurvACE controller
-	// CS ON
-	gpio_clr_gpio_pin(slaveSelectBot);
-	// Write start
-	curvace_spi_low_level(0x5555);
-	// CS OFF
-	gpio_set_gpio_pin(slaveSelectBot);
-
-	// Stop and reset Top CurvACE controller
-	// CS ON
-	gpio_clr_gpio_pin(slaveSelectTop);
-	// Write start
-	curvace_spi_low_level(0x5555);
-	// CS OFF
-	gpio_set_gpio_pin(slaveSelectTop);
-}
+//static void curvace_stop(void)
+//{
+//	// Stop and reset Bottom CurvACE controller
+//	// CS ON
+//	gpio_clr_gpio_pin(slaveSelectBot);
+//	// Write start
+//	curvace_spi_low_level(0x5555);
+//	// CS OFF
+//	gpio_set_gpio_pin(slaveSelectBot);
+//
+//	// Stop and reset Top CurvACE controller
+//	// CS ON
+//	gpio_clr_gpio_pin(slaveSelectTop);
+//	// Write start
+//	curvace_spi_low_level(0x5555);
+//	// CS OFF
+//	gpio_set_gpio_pin(slaveSelectTop);
+//}
 
 
 // static void curvace_derotate_all(curvace_t* curvace)
