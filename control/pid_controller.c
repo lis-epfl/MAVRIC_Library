@@ -77,7 +77,7 @@ static void pid_controller_init_integrator(integrator_t *integrator, float prega
  * \param	LPF			Low pass filter
  * \param	clip_val	Clipping value
  */
-static void pid_controller_init_differenciator(differentiator_t *diff, float gain, float LPF, float clip_val);
+static void pid_controller_init_differenciator(differentiator_t *diff, float gain, float clip_val);
 
 /**
  * \brief Differentiating
@@ -97,41 +97,40 @@ static float pid_controller_differentiate(differentiator_t *diff, float input,  
 
 static float pid_controller_integrate(integrator_t *integrator, float input, float dt)
 {
-	integrator->accumulator=maths_clip(integrator->accumulator + dt* integrator->pregain * input, integrator->maths_clip);
+	integrator->accumulator = maths_clip(integrator->accumulator + dt* integrator->pregain * input, integrator->clip);
 	return integrator->postgain* integrator->accumulator;
 }
 
 
 static void pid_controller_init_integrator(integrator_t *integrator, float pregain, float postgain, float clip_val)
 {
-	integrator->pregain = pregain;
-	integrator->postgain = postgain;
-	integrator->maths_clip = clip_val;
+	integrator->pregain 	= pregain;
+	integrator->postgain 	= postgain;
+	integrator->clip 		= clip_val;
 	integrator->accumulator = 0.0f;
 }
 
 
-static void pid_controller_init_differenciator(differentiator_t *diff, float gain, float LPF, float clip_val)
+static void pid_controller_init_differenciator(differentiator_t *diff, float gain, float clip_val)
 {
-	diff->gain = gain;
-	diff->LPF = LPF;
-	diff->maths_clip = clip_val;
+	diff->gain 	= gain;
+	diff->clip 	= clip_val;
 }
 
 
 static float pid_controller_differentiate(differentiator_t *diff, float input, float dt)
 {
-	float output=0.0f;
+	float output = 0.0f;
+
 	if( dt<0.000001f ) 
 	{
 		output=0.0f;
 	} 
 	else 
 	{
-		output=maths_clip(diff->gain * (input - diff->previous) / dt, diff->maths_clip);
+		output = maths_clip(diff->gain * (input - diff->previous) / dt, diff->clip);
 	}
 
-	//diff->previous=(1.0f - (diff->LPF)) * input + (diff->LPF) * (diff->previous);
 	diff->previous = input;
 	return output;
 }
@@ -173,11 +172,10 @@ void pid_controller_init_pass_through(pid_controller_t* controller)
 	controller->error 		= 0.0f;
 	controller->output 		= 0.0f;
 	controller->soft_zone_width 		= 0.0f;
-	controller->integrator.leakiness 	= 0.0f;
 	controller->differentiator.previous = 0.0f;
 	
 	pid_controller_init_differenciator(	&(controller->differentiator), 
-										0.0f, 0.0f, 0.0f);
+										0.0f, 0.0f);
 	pid_controller_init_integrator(	&(controller->integrator), 
 									0.0f, 0.0f, 0.0f);
 }

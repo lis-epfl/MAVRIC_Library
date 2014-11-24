@@ -30,81 +30,68 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file navigation_default_config.h
+ * \file vector_field_waypoint.h
  * 
  * \author MAV'RIC Team
- * 
- * \brief  This file configures the PID gains for the navigation speed command
+ * \author Julien Lecoeur
  *   
+ * \brief Vector field navigation using repulsors and attractors set through GPS waypoints
+ *
  ******************************************************************************/
 
 
-#ifndef NAVIGATION_DEFAULT_CONFIG_H_
-#define NAVIGATION_DEFAULT_CONFIG_H_
+#ifndef VECTOR_FIELD_WAYPOINT_H_
+#define VECTOR_FIELD_WAYPOINT_H_
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" {
 #endif
 
-#include "pid_controller.h"
+#include "mavlink_waypoint_handler.h"
+#include "position_estimation.h"
+#include "control_command.h"
 
-
-navigation_config_t navigation_default_config =
+/**
+ * \brief Vector field navigation
+ */
+typedef struct
 {
-	.dist2vel_gain = 0.7f,
-	.cruise_speed = 3.0f,
-	.max_climb_rate = 1.0f,
-	.soft_zone_size = 0.0f,
-	.alt_lpf = 0.0f,
-	.LPF_gain = 0.9f,
-	.wpt_nav_controller = 
-	{
-		.p_gain = 0.7f,
-		.clip_min = 0.0f,
-		.clip_max = 3.0f,
-		.integrator={
-			.pregain = 0.5f,
-			.postgain = 0.0f,
-			.accumulator = 0.0f,
-			.clip = 0.65f,
-		},
-		.differentiator={
-			.gain = 0.2f,
-			.previous = 0.0f,
-			.clip = 0.65f
-		},
-		.output = 0.0f,
-		.error = 0.0f,
-		.last_update = 0.0f,
-		.dt = 1,
-		.soft_zone_width = 0.0f
-	},
-	.hovering_controller = 
-	{
-		.p_gain = 0.2f,
-		.clip_min = 0.0f,
-		.clip_max = 3.0f,
-		.integrator={
-			.pregain = 0.5f,
-			.postgain = 0.0f,
-			.accumulator = 0.0f,
-			.clip = 0.65f,
-		},
-		.differentiator={
-			.gain = 0.4f,
-			.previous = 0.0f,
-			.clip = 0.65f
-		},
-		.output = 0.0f,
-		.error = 0.0f,
-		.last_update = 0.0f,
-		.dt = 1,
-		.soft_zone_width = 0.0f
-	}
-};
+	const mavlink_waypoint_handler_t* 	waypoint_handler;			///< Waypoint list (input)
+	const position_estimation_t*		pos_est;					///< Estimated position and speed (input)
+	velocity_command_t*					velocity_command;			///< Velocity command (output)
+} vector_field_waypoint_t;	
+
+
+/**
+ * \brief Attitude controller configuration
+ */
+typedef struct
+{
+} vector_field_waypoint_conf_t;	
+
+
+/**
+ * \brief               		Initialises the attitude controller structure
+ * 
+ * \param 	vector_field   		Pointer to data structure
+ * \param 	config				Pointer to configuration
+ * \param 	waypoint_handler	Pointer to waypoint list (input)
+ * \param 	pos_est		 		Pointer to the estimated speed and position (input)
+ * \param 	velocity_command	Pointer to velocity command (output)
+ */
+void vector_field_waypoint_init(vector_field_waypoint_t* vector_field, const vector_field_waypoint_conf_t* config, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* pos_est, velocity_command_t* velocity_command);
+
+
+/**
+ * \brief               	Main update function
+ * 
+ * \param 	vector_field    Pointer to data structure
+ */
+void vector_field_waypoint_update(vector_field_waypoint_t* vector_field);
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* NAVIGATION_DEFAULT_CONFIG_H_ */
+#endif /* VECTOR_FIELD_WAYPOINT_H_ */

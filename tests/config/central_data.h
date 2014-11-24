@@ -76,8 +76,8 @@ typedef struct  {
 	byte_stream_t *telemetry_down_stream, *telemetry_up_stream;
 	byte_stream_t *debug_out_stream, *debug_in_stream;
 	
-	waypoint_struct waypoint_list[MAX_WAYPOINTS];
-	waypoint_struct current_waypoint;
+	waypoint_struct_t waypoint_list[MAX_WAYPOINTS];
+	waypoint_struct_t current_waypoint;
 	uint16_t number_of_waypoints;
 	int8_t current_wp_count;
 	
