@@ -85,7 +85,7 @@ static mav_result_t simulation_telemetry_set_new_home_position(simulation_model_
 	else
 	{
 		// Set new home position from msg
-		print_util_dbg_print("Set new home location.\r\n");
+		print_util_dbg_print("[SIMULATION] Set new home location.\r\n");
 
 		sim->local_position.origin.latitude = packet->param5;
 		sim->local_position.origin.longitude = packet->param6;
@@ -98,6 +98,11 @@ static mav_result_t simulation_telemetry_set_new_home_position(simulation_model_
 		print_util_dbg_print(", ");
 		print_util_dbg_print_num(sim->local_position.origin.altitude * 1000.0f,10);
 		print_util_dbg_print(")\r\n");
+		
+		sim->local_position.pos[X] = 0.0f;
+		sim->local_position.pos[Y] = 0.0f;
+		sim->local_position.pos[Z] = 0.0f;
+		
 	}
 
 	*sim->nav_plan_active = false;

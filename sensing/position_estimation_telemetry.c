@@ -82,7 +82,7 @@ static mav_result_t position_estimation_set_new_home_position(position_estimator
 	else
 	{
 		// Set new home position from msg
-		print_util_dbg_print("Set new home location. \r\n");
+		print_util_dbg_print("[POSITION ESTIMATION] Set new home location. \r\n");
 
 		pos_est->local_position.origin.latitude = packet->param5;
 		pos_est->local_position.origin.longitude = packet->param6;
