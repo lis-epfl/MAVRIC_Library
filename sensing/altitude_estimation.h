@@ -48,6 +48,9 @@ extern "C" {
 #endif
 
 #include "altitude.h"
+#include "sonar.h"
+#include "barometer.h"
+#include "ahrs.h"
 
 
 /**

@@ -40,13 +40,6 @@
  ******************************************************************************/
 
 
-#ifndef ALTITUDE_ESTIMATION_H_
-#define ALTITUDE_ESTIMATION_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "altitude_estimation.h"
 
 
@@ -70,7 +63,7 @@ void altitude_estimation_init(altitude_estimation_t* estimator, const altitude_e
 	estimator->sonar 				= sonar;
 	estimator->barometer 			= barometer;
 	estimator->ahrs 				= ahrs;
-	estimator->altitude_estimated 	= altitude_estimated
+	estimator->altitude_estimated 	= altitude_estimated;
 
 	// Init members
 }
@@ -81,10 +74,3 @@ void altitude_estimation_update(altitude_estimation_t* estimator)
 	estimator->altitude_estimated->above_ground = 0.0f;
 	estimator->altitude_estimated->above_sea 	= 400.0f;
 }
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* ALTITUDE_ESTIMATION_H_ */
