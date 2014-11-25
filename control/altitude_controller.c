@@ -30,35 +30,60 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file altitude_controller_sonar.h
+ * \file altitude_controller.h
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief 	A simple altitude controller for copter based on sonar
+ * \brief 	A simple altitude controller for copter
  *
  ******************************************************************************/
 
 
-#include "altitude_controller_sonar.h"
+#include "altitude_controller.h"
 
 
-void altitude_controller_sonar_init(altitude_controller_sonar_t* controller, const altitude_controller_sonar_conf_t* config, const sonar_t* sonar, thrust_command_t* thrust_command)
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void altitude_controller_init(altitude_controller_t* controller, const altitude_controller_conf_t* config, const position_command_t* position_command, const altitude_t* altitude_estimated, thrust_command_t* thrust_command)
 {
 	// Init dependencies
-	controller->sonar 			= sonar;
-	controller->thrust_command 	= thrust_command;
+	controller->position_command 	= position_command;
+	controller->altitude_estimated 	= altitude_estimated;
+	controller->thrust_command 		= thrust_command;
 
 	// Init members
 	controller->hover_point = config->hover_point;
-	
-	// Init pid
-	pid_controller_init(&controller->pid,  &config->pid_config);
+	controller->p_gain = config->p_gain;
 }
 
-void altitude_controller_sonar_update(altitude_controller_sonar_t* controller)
-{
-	float error = 1.0f - controller->sonar->current_distance;
 
-	controller->thrust_command->thrust = controller->hover_point + pid_controller_update( &controller->pid, error );
+void altitude_controller_update(altitude_controller_t* controller)
+{
+	float error = 0.0f;
+
+	switch( controller->position_command->mode )
+	{
+		case POSITION_COMMAND_MODE_LOCAL:
+			error = controller->position_command->xyz[2] - controller->altitude_estimated->above_ground;
+		break;
+
+		case POSITION_COMMAND_MODE_GLOBAL:
+			error = controller->position_command->xyz[2] - controller->altitude_estimated->above_sea;
+		break;
+	}
+
+	controller->thrust_command->thrust = controller->hover_point + controller->p_gain * error;
 }

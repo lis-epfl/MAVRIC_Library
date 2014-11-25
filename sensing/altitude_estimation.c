@@ -30,53 +30,47 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file altitude_controller_sonar_default_config.h
+ * \file altitude_estimation.h
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief Default configuration for the module altitude_controller_sonar
+ * \brief 	Altitude estimation
  *
  ******************************************************************************/
 
 
-#ifndef ALTITUDE_CONTROLLER_SONAR_DEFAULT_CONFIG_H_
-#define ALTITUDE_CONTROLLER_SONAR_DEFAULT_CONFIG_H_
+#include "altitude_estimation.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-#include "altitude_controller_sonar.h"
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
 
-static altitude_controller_sonar_conf_t altitude_controller_sonar_default_config =
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void altitude_estimation_init(altitude_estimation_t* estimator, const altitude_estimation_conf_t* config, const sonar_t* sonar, const barometer_t* barometer, const ahrs_t* ahrs, altitude_t* altitude_estimated)
 {
-	// #########################################################################
-	// ######  PID CONTROL  ####################################################
-	// #########################################################################
-	.pid_config =
-	{
-		.p_gain = 0.20f,
-		.clip_min = -0.9f,
-		.clip_max = 0.65f,
-		.integrator={
-			.pregain = 0.01f,
-			.postgain = 1.0f,
-			.accumulator = 0.0f,
-			.clip = 1.0f,
-		},
-		.differentiator={
-			.gain = 0.2f,
-			.previous = 0.0f,
-			.clip = 0.2f
-		},
-		.soft_zone_width = 0.2f
-	},
-	.hover_point = -0.3f,
-};
+	// Init dependencies
+	estimator->sonar 				= sonar;
+	estimator->barometer 			= barometer;
+	estimator->ahrs 				= ahrs;
+	estimator->altitude_estimated 	= altitude_estimated;
 
-#ifdef __cplusplus
+	// Init members
 }
-#endif
 
-#endif // ALTITUDE_CONTROLLER_SONAR_DEFAULT_CONFIG_H_
+
+void altitude_estimation_update(altitude_estimation_t* estimator)
+{
+	estimator->altitude_estimated->above_ground = 0.0f;
+	estimator->altitude_estimated->above_sea 	= 400.0f;
+}
