@@ -206,7 +206,7 @@ void forces_from_servos_diag_quad(simulation_model_t* sim)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimation_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, const servos_t* servos, bool* waypoint_set)
+void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimation_t* pos_est, barometer_t* pressure, gps_t* gps, sonar_t* sonar, state_t* state, const servos_t* servos, bool* waypoint_set)
 {
 	//Init dependencies
 	sim->vehicle_config = *sim_config;
@@ -214,6 +214,7 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	sim->pos_est = pos_est;
 	sim->pressure = pressure;
 	sim->gps = gps;
+	sim->sonar = sonar;
 	sim->servos = servos;
 	sim->nav_plan_active = &state->nav_plan_active;
 	
@@ -431,6 +432,21 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 	sim->gps->status = GPS_OK;
 }
 
+void simulation_simulate_sonar(simulation_model_t *sim)
+{
+	float distance_m = 0.0f - sim->local_position.pos[Z];
+	
+	if ( distance_m > sim->sonar->min_distance && distance_m < sim->sonar->max_distance )
+	{
+		sim->sonar->current_distance  = distance_m;
+		sim->sonar->last_update = time_keeper_get_millis();
+		sim->sonar->healthy = true;
+	}
+	else
+	{
+		sim->sonar->healthy = false;
+	}
+}
 
 void simulation_switch_from_reality_to_simulation(simulation_model_t *sim)
 {
