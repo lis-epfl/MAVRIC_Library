@@ -69,7 +69,7 @@ static waypoint_struct_t convert_waypoint_to_local_ned(const waypoint_struct_t* 
  * \details 	Computes a 3D velocity vector keeping the MAV from colliding with the floor
  * 				 
  * \param 		pos_mav 	Current position of the MAV (input)
- * \param  		altitude	Threshold altitude (>0) under which the vector field is active (input)
+ * \param  		altitude	Threshold altitude (<0) under which the vector field is active (input)
  * \param 		vector		Velocity command vector (output)
  */
 static void vector_field_floor(const float pos_mav[3], const float altitude, float vector[3]);
@@ -190,7 +190,7 @@ static waypoint_struct_t convert_waypoint_to_local_ned(const waypoint_struct_t* 
  * \details 	Computes a 3D velocity vector keeping the MAV from colliding with the floor
  * 				 
  * \param 		pos_mav 	Current position of the MAV (input)
- * \param  		altitude	Threshold altitude (>0) under which the vector field is active (input)
+ * \param  		altitude	Threshold altitude (<0) under which the vector field is active (input)
  * \param 		vector		Velocity command vector (output)
  */
 static void vector_field_floor(const float pos_mav[3], const float altitude, float vector[3])
@@ -382,7 +382,7 @@ void vector_field_waypoint_update(vector_field_waypoint_t* vector_field)
 
 	// Compute vector field for floor avoidance
 	vector_field_floor(	vector_field->pos_est->local_position.pos, 
-						20, 
+						-20, 
 						tmp_vector );
 
 	// Add floor vector field to the velocity command
