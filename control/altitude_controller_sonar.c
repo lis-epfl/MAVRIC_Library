@@ -30,74 +30,35 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file constants.h
+ * \file altitude_controller_sonar.h
  * 
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *   
- * \brief Useful constants
+ * \brief 	A simple altitude controller for copter based on sonar
  *
  ******************************************************************************/
 
 
-#ifndef MATH_UTIL_H_
-#define MATH_UTIL_H_
+#include "altitude_controller_sonar.h"
 
-#ifdef __cplusplus
-extern "C" 
+
+void altitude_controller_sonar_init(altitude_controller_sonar_t* controller, const altitude_controller_sonar_conf_t* config, const sonar_t* sonar, thrust_command_t* thrust_command)
 {
-#endif
+	// Init dependencies
+	controller->sonar 			= sonar;
+	controller->thrust_command 	= thrust_command;
 
-
-#define GRAVITY 9.81f			///< The gravity constant
-
-
-/**
- * \brief Enumerates the X, Y and Z orientations 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	X = 0,
-	Y = 1,
-	Z = 2,
-} constants_orientation_t;
-
-
-/**
- * \brief Enumerates the Roll, Pitch and Yaw orientations 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	ROLL 	= 0,
-	PITCH 	= 1,
-	YAW 	= 2,
-} constants_roll_pitch_yaw_t;
-
-
-/**
- * \brief Enumerates the up vector orientation 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	UPVECTOR_X = 0,
-	UPVECTOR_Y = 0,
-	UPVECTOR_Z = -1,
-} constants_upvector_t;
-
-
-/**
- * \brief Enumerates ON/OFF switches
- */
-typedef enum
-{
-	OFF = 0,
-	ON 	= 1,
-} constants_on_off_t;
-
-#ifdef __cplusplus
+	// Init members
+	controller->hover_point = config->hover_point;
+	
+	// Init pid
+	pid_controller_init(&controller->pid,  &config->pid_config);
 }
-#endif
 
-#endif /* MATH_UTIL_H_ */
+void altitude_controller_sonar_update(altitude_controller_sonar_t* controller)
+{
+	float error = 1.0f - controller->sonar->current_distance;
+
+	controller->thrust_command->thrust = controller->hover_point + pid_controller_update( &controller->pid, error );
+}

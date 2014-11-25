@@ -30,74 +30,72 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file constants.h
+ * \file optic_flow.h
  * 
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *   
- * \brief Useful constants
+ * \brief Defines types for generic optic flow sensors
  *
  ******************************************************************************/
 
 
-#ifndef MATH_UTIL_H_
-#define MATH_UTIL_H_
+#ifndef OPTIC_FLOW_H_
+#define OPTIC_FLOW_H_
 
 #ifdef __cplusplus
-extern "C" 
-{
+	extern "C" {
 #endif
 
+#include <stdint.h>
 
-#define GRAVITY 9.81f			///< The gravity constant
+
+typedef struct 
+{
+	int16_t x;
+	int16_t y;	
+} raw_of_vector_t;
+
+
+typedef struct
+{
+	float x;
+	float y;
+} of_vector_t;
 
 
 /**
- * \brief Enumerates the X, Y and Z orientations 
- * according to the autopilot placement on the MAV
+ * \brief Direction at which a ROI is pointed
  */
-typedef enum
+typedef struct
 {
-	X = 0,
-	Y = 1,
-	Z = 2,
-} constants_orientation_t;
+	float azimuth;		///< azimuth in radians
+	float elevation;	///< elevation in radians
+} viewing_direction_t;
 
 
 /**
- * \brief Enumerates the Roll, Pitch and Yaw orientations 
- * according to the autopilot placement on the MAV
+ * \brief Link between gyro rates and rotational optic flow
+ * 
+ * OF_rotation = A * gyro
+ * 
+ * [ OF_x ] = 	[Arx	Apx		Ayx] * 	[ roll_rate ]
+ * [ OF_y ]		[Ary	Apy		Ayy]	[ pitch_rate]
+ * 										[ yaw_rate 	]
  */
-typedef enum
+typedef struct
 {
-	ROLL 	= 0,
-	PITCH 	= 1,
-	YAW 	= 2,
-} constants_roll_pitch_yaw_t;
+	float Arx;
+	float Apx;
+	float Ayx;
+	float Ary;
+	float Apy;
+	float Ayy;
+} derotation_matrix_t;
 
-
-/**
- * \brief Enumerates the up vector orientation 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	UPVECTOR_X = 0,
-	UPVECTOR_Y = 0,
-	UPVECTOR_Z = -1,
-} constants_upvector_t;
-
-
-/**
- * \brief Enumerates ON/OFF switches
- */
-typedef enum
-{
-	OFF = 0,
-	ON 	= 1,
-} constants_on_off_t;
 
 #ifdef __cplusplus
-}
+	}
 #endif
 
-#endif /* MATH_UTIL_H_ */
+#endif /* OPTIC_FLOW_H_ */

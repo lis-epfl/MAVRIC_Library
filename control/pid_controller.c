@@ -74,7 +74,6 @@ static void pid_controller_init_integrator(integrator_t *integrator, float prega
  *
  * \param	diff		Pointer to differentiator structure
  * \param	gain		The differential gain
- * \param	LPF			Low pass filter
  * \param	clip_val	Clipping value
  */
 static void pid_controller_init_differenciator(differentiator_t *diff, float gain, float clip_val);

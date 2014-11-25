@@ -57,9 +57,9 @@ extern "C" {
  */
 typedef enum
 {
-	OFF,							///< Calibration level: No calibration 
-	LEVELING,						///< Calibration level: leveling 
-	LEVEL_PLUS_ACCEL				///< Calibration level: leveling plus acceleration
+	CALIBRATION_MODE_OFF,							///< Calibration level: No calibration 
+	CALIBRATION_MODE_LEVELING,						///< Calibration level: leveling 
+	CALIBRATION_MODE_LEVEL_PLUS_ACCEL				///< Calibration level: leveling plus acceleration
 } calibration_mode_t;
 
 

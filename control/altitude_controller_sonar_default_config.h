@@ -30,74 +30,53 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file constants.h
+ * \file altitude_controller_sonar_default_config.h
  * 
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *   
- * \brief Useful constants
+ * \brief Default configuration for the module altitude_controller_sonar
  *
  ******************************************************************************/
 
 
-#ifndef MATH_UTIL_H_
-#define MATH_UTIL_H_
+#ifndef ALTITUDE_CONTROLLER_SONAR_DEFAULT_CONFIG_H_
+#define ALTITUDE_CONTROLLER_SONAR_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
+#include "altitude_controller_sonar.h"
 
-#define GRAVITY 9.81f			///< The gravity constant
-
-
-/**
- * \brief Enumerates the X, Y and Z orientations 
- * according to the autopilot placement on the MAV
- */
-typedef enum
+static altitude_controller_sonar_conf_t altitude_controller_sonar_default_config =
 {
-	X = 0,
-	Y = 1,
-	Z = 2,
-} constants_orientation_t;
-
-
-/**
- * \brief Enumerates the Roll, Pitch and Yaw orientations 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	ROLL 	= 0,
-	PITCH 	= 1,
-	YAW 	= 2,
-} constants_roll_pitch_yaw_t;
-
-
-/**
- * \brief Enumerates the up vector orientation 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	UPVECTOR_X = 0,
-	UPVECTOR_Y = 0,
-	UPVECTOR_Z = -1,
-} constants_upvector_t;
-
-
-/**
- * \brief Enumerates ON/OFF switches
- */
-typedef enum
-{
-	OFF = 0,
-	ON 	= 1,
-} constants_on_off_t;
+	// #########################################################################
+	// ######  PID CONTROL  ####################################################
+	// #########################################################################
+	.pid_config =
+	{
+		.p_gain = 0.20f,
+		.clip_min = -0.9f,
+		.clip_max = 0.65f,
+		.integrator={
+			.pregain = 0.01f,
+			.postgain = 1.0f,
+			.accumulator = 0.0f,
+			.clip = 1.0f,
+		},
+		.differentiator={
+			.gain = 0.2f,
+			.previous = 0.0f,
+			.clip = 0.2f
+		},
+		.soft_zone_width = 0.2f
+	},
+	.hover_point = -0.3f,
+};
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* MATH_UTIL_H_ */
+#endif // ALTITUDE_CONTROLLER_SONAR_DEFAULT_CONFIG_H_

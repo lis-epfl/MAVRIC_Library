@@ -42,52 +42,184 @@
 #include "maths.h"
 #include "quick_trig.h"
 #include "time_keeper.h"
+#include "gpio.h"
+#include "spi.h"
+#include "sysclk.h"
+#include "delay.h"
+
+#define slaveSelectTop AVR32_PIN_PC11
+#define slaveSelectBot AVR32_PIN_PC12
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
+static uint16_t curvace_spi_low_level(uint16_t data);
+
+
 static void curvace_read_spi(curvace_t* curvace);
 
 
-static void curvace_derotate_all(curvace_t* curvace);
+static void curvace_start(void);
+
+
+//static void curvace_stop(void);
+
+
+// static void curvace_derotate_all(curvace_t* curvace);
+
+
+// static void curvace_scale_all(curvace_t* curvace);
+
+
+static void curvace_process_all(curvace_t* curvace);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void curvace_read_spi(curvace_t* curvace)
+static uint16_t curvace_spi_low_level(uint16_t data)
 {
-	// Left hemisphere
-	for (uint8_t i = 0; i < CURVACE_NB_OF / 2; ++i)
-	{
-		curvace->raw_of.left_hemisphere[i].x =  0;  // spi_read_16_bits(...)
-		curvace->raw_of.left_hemisphere[i].y =  0;  // spi_read_16_bits(...)
-	}
-
-	// Right hemisphere
-	for (uint8_t i = 0; i < CURVACE_NB_OF / 2; ++i)
-	{
-		curvace->raw_of.right_hemisphere[i].x =  0;  // spi_read_16_bits(...)
-		curvace->raw_of.right_hemisphere[i].y =  0;  // spi_read_16_bits(...)
-	}
+	while (!spi_is_tx_ready(&AVR32_SPI0));
+	spi_put(&AVR32_SPI0, data);
+	while(!spi_is_rx_full(&AVR32_SPI0));
+	return spi_get(&AVR32_SPI0);
 }
 
 
-static void curvace_derotate_all(curvace_t* curvace)
+static void curvace_read_spi(curvace_t* curvace)
+{
+	// Left hemisphere
+	
+	//CS ON
+	gpio_clr_gpio_pin(slaveSelectBot);
+	
+	for (uint8_t i = 0; i < CURVACE_NB_OF / 2; ++i)
+	{
+		//curvace->raw_of.left_hemisphere[i].x =  0;  // spi_read_16_bits(...)
+		//curvace->raw_of.left_hemisphere[i].y =  0;  // spi_read_16_bits(...)
+		curvace->raw_of.left_hemisphere[i].x = curvace_spi_low_level(100);
+		curvace->raw_of.left_hemisphere[i].y = curvace_spi_low_level(101);
+	}
+	
+	//CS OFF
+	gpio_set_gpio_pin(slaveSelectBot);
+
+	// Right hemisphere
+	
+	//CS ON
+	gpio_clr_gpio_pin(slaveSelectTop);
+	
+	for (uint8_t i = 0; i < CURVACE_NB_OF / 2; ++i)
+	{
+		//curvace->raw_of.right_hemisphere[i].x =  0;  // spi_read_16_bits(...)
+		//curvace->raw_of.right_hemisphere[i].y =  0;  // spi_read_16_bits(...)
+		curvace->raw_of.right_hemisphere[i].x = curvace_spi_low_level(102);
+		curvace->raw_of.right_hemisphere[i].y = curvace_spi_low_level(103);
+	}
+		
+	//CS OFF
+	gpio_set_gpio_pin(slaveSelectTop);
+}
+
+static void curvace_start(void)
+{
+	// Start Bottom CurvACE controller
+	// CS ON
+	gpio_clr_gpio_pin(slaveSelectBot);
+	// Write start
+	curvace_spi_low_level(0xAAAA);
+	// CS OFF
+	gpio_set_gpio_pin(slaveSelectBot);
+
+	// Start Top CurvACE controller
+	// CS ON
+	gpio_clr_gpio_pin(slaveSelectTop);
+	// Write start
+	curvace_spi_low_level(0xAAAA);
+	// CS OFF
+	gpio_set_gpio_pin(slaveSelectTop);
+}
+
+//static void curvace_stop(void)
+//{
+//	// Stop and reset Bottom CurvACE controller
+//	// CS ON
+//	gpio_clr_gpio_pin(slaveSelectBot);
+//	// Write start
+//	curvace_spi_low_level(0x5555);
+//	// CS OFF
+//	gpio_set_gpio_pin(slaveSelectBot);
+//
+//	// Stop and reset Top CurvACE controller
+//	// CS ON
+//	gpio_clr_gpio_pin(slaveSelectTop);
+//	// Write start
+//	curvace_spi_low_level(0x5555);
+//	// CS OFF
+//	gpio_set_gpio_pin(slaveSelectTop);
+//}
+
+
+// static void curvace_derotate_all(curvace_t* curvace)
+// {
+// 	uint32_t j = 0;
+// 	for (uint8_t i = 0; i < 2 * CURVACE_NB_OF; ++i)
+// 	{
+// 		// origin
+// 		curvace->of.data[i] = 	curvace->of.data[i]
+// 								- curvace->calib_matrix.data[j] 	* curvace->ahrs->angular_speed[ROLL]
+// 								- curvace->calib_matrix.data[j + 1] * curvace->ahrs->angular_speed[PITCH]
+// 								- curvace->calib_matrix.data[j + 2] * curvace->ahrs->angular_speed[YAW];
+
+// 		// test
+// 		// curvace->of.data[i] = 	curvace->of.data[i]
+// 		// 						// - curvace->calib_matrix.data[j] 	* curvace->ahrs->angular_speed[ROLL]
+// 		// 						// - curvace->calib_matrix.data[j + 1] * curvace->ahrs->angular_speed[PITCH]
+// 		// 						+ 0.3f * curvace->calib_matrix.data[j + 2] * curvace->ahrs->angular_speed[YAW];
+	
+
+// 		j += 3;
+// 	}
+// }
+
+// static void curvace_scale_all(curvace_t* curvace)
+// {
+// 	for (uint8_t i = 0; i < 2 * CURVACE_NB_OF; ++i)
+// 	{
+// 		curvace->of.data[i] = 	(1 - curvace->LPF) 	* curvace->scale_factor_simple * curvace->raw_of.data[i] +
+// 								curvace->LPF	 	* curvace->of.data[i];
+// 	}
+// }
+
+
+static void curvace_process_all(curvace_t* curvace)
 {
 	uint32_t j = 0;
 	for (uint8_t i = 0; i < 2 * CURVACE_NB_OF; ++i)
 	{
-		curvace->of.data[i] = 	+ curvace->calib_factor.data[i] 	* curvace->raw_of.data[i] 
-								- curvace->calib_matrix.data[j] 	* curvace->ahrs->angular_speed[0]
-								- curvace->calib_matrix.data[j + 1] * curvace->ahrs->angular_speed[1]
-								- curvace->calib_matrix.data[j + 2] * curvace->ahrs->angular_speed[2];
+
+		switch( curvace->do_derotation )
+		{
+			case ON:
+				curvace->of.data[i] = 	curvace->LPF	 	* curvace->of.data[i]  +
+										(1 - curvace->LPF) 	* ( curvace->scale_factor_simple * curvace->raw_of.data[i] - (	curvace->calib_matrix.data[j] 		* curvace->ahrs->angular_speed[ROLL]  +
+																															curvace->calib_matrix.data[j + 1] 	* curvace->ahrs->angular_speed[PITCH] +
+																															curvace->calib_matrix.data[j + 2] 	* curvace->ahrs->angular_speed[YAW]		) 	);
+
+			break;
+
+			case OFF:
+				curvace->of.data[i] = 	(1 - curvace->LPF) 	* curvace->scale_factor_simple * curvace->raw_of.data[i] +
+										curvace->LPF	 	* curvace->of.data[i];
+			break;
+		}
+	
+
 		j += 3;
 	}
 }
-
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -98,6 +230,11 @@ void curvace_init(curvace_t* curvace, const ahrs_t* ahrs, const mavlink_stream_t
 	// Init dependencies
 	curvace->ahrs 			= ahrs;
 	curvace->mavlink_stream = mavlink_stream;
+
+	// Init members
+	curvace->do_derotation 	= ON;
+	curvace->LPF		 	= 0.0f;
+	curvace->derot_factor	= 1.0f;
 
 	// inter ommatidial angles
 	float inter_ommatidia_vertical 		= 4.26;	// 4.2 degrees between each ommatidia
@@ -264,19 +401,22 @@ void curvace_init(curvace_t* curvace, const ahrs_t* ahrs, const mavlink_stream_t
 		float azimuth 	= curvace->roi_coord.all[i].azimuth;
 		float elevation = curvace->roi_coord.all[i].elevation;
 	
-		curvace->calib_matrix.all[i].Arx = - quick_trig_cos(azimuth) 	* quick_trig_sin(elevation);
-		curvace->calib_matrix.all[i].Apx = - quick_trig_sin(elevation) * quick_trig_sin(azimuth);
-		curvace->calib_matrix.all[i].Ayx = - quick_trig_cos(elevation);
-		curvace->calib_matrix.all[i].Ary =   quick_trig_sin(azimuth);
-		curvace->calib_matrix.all[i].Apy = - quick_trig_cos(azimuth);
+		curvace->calib_matrix.all[i].Arx = + quick_trig_cos(azimuth) 	* quick_trig_sin(elevation);
+		curvace->calib_matrix.all[i].Apx = + quick_trig_sin(elevation) 	* quick_trig_sin(azimuth);
+		curvace->calib_matrix.all[i].Ayx = + quick_trig_cos(elevation);
+		curvace->calib_matrix.all[i].Ary = - quick_trig_sin(azimuth);
+		curvace->calib_matrix.all[i].Apy = + quick_trig_cos(azimuth);
 		curvace->calib_matrix.all[i].Ayy = 0.0f; 
 	}
 
 	// Init scale factor
 	float range = 32768;			// if OF vectors are encoded using full int16_t: -1..1 maps to -32767..32768  
 									// TODO: check this
+	float frame_rate = 200; 		// Hz
 
-	float frame_rate = 200; // Hz
+	// Init simplified calib factor
+	curvace->scale_factor_simple = frame_rate * maths_deg_to_rad( inter_ommatidia_horizontal ) / range;	
+
 	for (uint8_t i = 0; i < CURVACE_NB_OF; ++i)
 	{
 		curvace->calib_factor.scale[i].elevation = frame_rate * maths_deg_to_rad( inter_ommatidia_vertical ) / range;
@@ -284,6 +424,53 @@ void curvace_init(curvace_t* curvace, const ahrs_t* ahrs, const mavlink_stream_t
 																				 * quick_trig_cos( curvace->roi_coord.all[i].elevation ) 
 																				) / range;
 	}
+	
+	// Init GPIO for Chip Select of the SPI communication
+	gpio_enable_gpio_pin(slaveSelectTop);
+	gpio_set_gpio_pin(slaveSelectTop);
+	gpio_enable_gpio_pin(slaveSelectBot);
+	gpio_set_gpio_pin(slaveSelectBot);
+	
+	// Init SPI communication
+	static const gpio_map_t SPI_GPIO_MAP =
+	{
+		{AVR32_SPI0_SCK_0_0_PIN, AVR32_SPI0_SCK_0_0_FUNCTION }, //SCK
+		{AVR32_SPI0_MISO_0_0_PIN, AVR32_SPI0_MISO_0_0_FUNCTION}, //MISO
+		{AVR32_SPI0_MOSI_0_0_PIN, AVR32_SPI0_MOSI_0_0_FUNCTION} //MOSI
+	}; 
+	
+	spi_options_t spiOptions =
+	{
+		.reg          = 0,			// CS0
+		.baudrate     = 5000000,	// 5MHz
+		.bits         = 16,			// Bits!
+		.spck_delay   = 0,			// # clocks to delay.
+		.trans_delay  = 0,			// ?
+		.stay_act     = 0,			// auto-unselect...?
+		.spi_mode     = SPI_MODE_1,	// active high, low level idle -> mode 0
+		.modfdis      = 1			// ...?
+	};
+	
+	// Assign I/Os to SPI.
+	gpio_enable_module(SPI_GPIO_MAP, sizeof(SPI_GPIO_MAP) / sizeof(SPI_GPIO_MAP[0]));
+
+	// Initialize as master.
+	spi_initMaster((&AVR32_SPI0), &spiOptions);
+
+	// Set selection mode: variable_ps, pcs_decode, delay.
+	spi_selectionMode((&AVR32_SPI0), 0, 0, 0);
+
+	//Set how we're talking to the chip. (Bits!  et al)
+	spi_setupChipReg((&AVR32_SPI0), &spiOptions, sysclk_get_pba_hz()); //very important!
+
+	// Enable SPI.
+	spi_enable(&AVR32_SPI0);
+	
+	// Configure Chip Select even if not used.
+	spi_selectChip(&AVR32_SPI0, 0);
+	
+	// Start CurvACE sensor.
+	curvace_start();
 }
 
 
@@ -291,7 +478,22 @@ void curvace_update(curvace_t* curvace)
 {
 	curvace_read_spi(curvace);
 
-	curvace_derotate_all(curvace);
+	curvace_process_all(curvace);
+	
+	// curvace_scale_all(curvace);
+
+	// if ( curvace->do_derotation == ON )
+	// {
+	// 	curvace_derotate_all(curvace);
+
+	// 	// simplified derotation
+	// 	// for (uint8_t i = 0; i < 2 * CURVACE_NB_OF; ++i)
+	// 	// {
+	// 	// 	// test
+	// 	// 	curvace->of.data[i] = 	curvace->of.data[i]
+	// 	// 							+ curvace->derot_factor * curvace->ahrs->angular_speed[YAW];
+	// 	// }
+	// }
 }
 
 
@@ -340,5 +542,58 @@ void curvace_send_telemetry(const curvace_t* curvace)
 	mavlink_stream_send(curvace->mavlink_stream,&msg);
 
 	// Increment sensor id
-	sensor_id = ( sensor_id + 1 ) % 6;
+	//sensor_id = ( sensor_id + 1 ) % 6;
+}
+
+
+void curvace_send_telemetry_averaged(const curvace_t* curvace)
+{
+	mavlink_message_t msg;
+	static uint8_t sensor_id = 0;
+	
+	float of_left[10];
+	float of_right[10];
+	
+	int16_t of_left16[10];
+	int16_t of_right16[10];
+
+	float out = 0.0f;
+
+	// fill data in 16bits
+	for (uint8_t i = 0; i < 9; ++i)
+	{
+		// average over each columns
+		of_left[i] 	= 0.0f;
+		of_right[i] = 0.0f;
+		for (int j = 0; j < 6; ++j)
+		{
+			of_left[i] 	+= curvace->of.all[i].x;
+			of_right[i] += curvace->of.all[i + 54].x;
+		}
+		of_left[i] 	= of_left[i] / 6.0f;
+		of_right[i]	= of_right[i] / 6.0f;
+
+		// store in long
+		of_left16[i] = 100 * of_left[i]; 
+		of_right16[i] = 100 * of_right[i]; 
+	}
+
+	// average over all columns
+	for (int i = 0; i < 9; ++i)
+	{
+		out += of_left[i] + of_right[i];
+	}
+	out = out / 18.0f;
+
+	mavlink_msg_omnidirectional_flow_pack(	curvace->mavlink_stream->sysid,
+											curvace->mavlink_stream->compid,
+											&msg,
+						       				time_keeper_get_millis(),
+											sensor_id,
+						       				of_left16, 
+						       				of_right16, 
+						       				0, 
+						       				out	);
+
+	mavlink_stream_send(curvace->mavlink_stream,&msg);
 }

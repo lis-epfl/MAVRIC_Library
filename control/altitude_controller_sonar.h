@@ -30,74 +30,70 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file constants.h
+ * \file altitude_controller_sonar.h
  * 
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *   
- * \brief Useful constants
+ * \brief 	A simple altitude controller for copter based on sonar
  *
  ******************************************************************************/
 
 
-#ifndef MATH_UTIL_H_
-#define MATH_UTIL_H_
+#ifndef ALTITUDE_CONTROLLER_SONAR_H_
+#define ALTITUDE_CONTROLLER_SONAR_H_
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-
-#define GRAVITY 9.81f			///< The gravity constant
-
-
-/**
- * \brief Enumerates the X, Y and Z orientations 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	X = 0,
-	Y = 1,
-	Z = 2,
-} constants_orientation_t;
+#include "control_command.h"
+#include "pid_controller.h"
+#include "sonar.h"
 
 
 /**
- * \brief Enumerates the Roll, Pitch and Yaw orientations 
- * according to the autopilot placement on the MAV
+ * \brief Altitude controller structure
  */
-typedef enum
+typedef struct 
 {
-	ROLL 	= 0,
-	PITCH 	= 1,
-	YAW 	= 2,
-} constants_roll_pitch_yaw_t;
+	pid_controller_t 	pid;				///< PID controller
+	float				hover_point;		///< Thrust required to hover
+	const sonar_t* 		sonar; 				///< Pointer to sonar sensor (input)
+	thrust_command_t* 	thrust_command;		///< Pointer to thrust command (output)
+} altitude_controller_sonar_t;
 
 
 /**
- * \brief Enumerates the up vector orientation 
- * according to the autopilot placement on the MAV
+ * \brief Altitude controller configuration
  */
-typedef enum
+typedef struct
 {
-	UPVECTOR_X = 0,
-	UPVECTOR_Y = 0,
-	UPVECTOR_Z = -1,
-} constants_upvector_t;
+	pid_controller_conf_t pid_config;		///< PID controller
+	float hover_point;						///< Thrust required to hover
+} altitude_controller_sonar_conf_t;	
 
 
 /**
- * \brief Enumerates ON/OFF switches
+ * \brief               		Initialises the altitude controller structure
+ * 
+ * \param 	controller    		Pointer to data structure
+ * \param 	config				Pointer to configuration
+ * \param 	sonar		 		Pointer to the sonar sensor
+ * \param 	thrust_command		Pointer to thrust command (output)
  */
-typedef enum
-{
-	OFF = 0,
-	ON 	= 1,
-} constants_on_off_t;
+void altitude_controller_sonar_init(altitude_controller_sonar_t* controller, const altitude_controller_sonar_conf_t* config, const sonar_t* sonar, thrust_command_t* thrust_command);
+
+/**
+ * \brief               	Main update function
+ * 
+ * \param 	controller    	Pointer to data structure
+ */
+void altitude_controller_sonar_update(altitude_controller_sonar_t* controller);
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* MATH_UTIL_H_ */
+#endif /* ALTITUDE_CONTROLLER_SONAR_H_ */

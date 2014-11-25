@@ -56,7 +56,7 @@ void qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_
 	qf->imu = imu;
 	qf->ahrs = ahrs;
 	
-	qf->imu->calibration_level = LEVELING;
+	qf->imu->calibration_level = CALIBRATION_MODE_LEVELING;
 	
 	//init qfilter gains according to provided configuration
 	qf->kp = config->kp;
@@ -149,19 +149,19 @@ void qfilter_update(qfilter_t *qf)
 	// get error correction gains depending on mode
 	switch (qf->imu->calibration_level)
 	{
-		case OFF:
+		case CALIBRATION_MODE_OFF:
 			kp = qf->kp;//*(0.1f / (0.1f + s_acc_norm - 1.0f));
 			kp_mag = qf->kp_mag;
 			qf->ki = qf->kp / 15.0f;
 			break;
 			
-		case LEVELING:
+		case CALIBRATION_MODE_LEVELING:
 			kp = 0.5f;
 			kp_mag = 0.5f;
 			qf->ki = qf->kp / 10.0f;
 			break;
 			
-		case LEVEL_PLUS_ACCEL:  // experimental - do not use
+		case CALIBRATION_MODE_LEVEL_PLUS_ACCEL:  // experimental - do not use
 			kp = 0.3f;
 			qf->ki = qf->kp / 10.0f;
 			qf->imu->calib_accelero.bias[0] += dt * qf->kp * (qf->imu->scaled_accelero.data[0] - up_bf.v[0]);
