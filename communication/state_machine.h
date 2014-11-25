@@ -58,7 +58,6 @@ typedef struct
 	uint8_t channel_switches;							///< State of the switches of the remote
 	signal_quality_t rc_check;							///< State of the remote (receiving signal or not)
 	int8_t motor_state;									///< State of the motors to switch on and off
-	uint32_t use_mode_from_remote;
 
 	mavlink_waypoint_handler_t* waypoint_handler;
 	state_t* state;
