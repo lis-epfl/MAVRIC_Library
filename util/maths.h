@@ -52,7 +52,7 @@ extern "C"
 #include <stdint.h>
 #include <math.h>
 
-#define PI 3.141592653589793f
+#define PI 3.141592653589793f			///< Declaration of PI for math computation
 
 
 /**
@@ -139,8 +139,8 @@ float static inline maths_fast_sqrt(float number)
 	i.f = number;
 	i.l  = 0x5f3759df - ( i.l >> 1 );
 	y = i.f;
-	y  = y * ( f - ( x * y * y ) );
-	y  = y * ( f - ( x * y * y ) ); // repeat newton iteration for more accuracy
+	y = y * ( f - ( x * y * y ) );
+	y = y * ( f - ( x * y * y ) ); // repeat newton iteration for more accuracy
 	return number * y;
 }
 
@@ -149,9 +149,11 @@ float static inline maths_fast_sqrt(float number)
  * \brief 			Fast newton iteration for approximate square root of numbers close to 1 (for re-normalisation)
  * 
  * \param 	input 	Input value
+ *
  * \return 			Output value
  */
-float static inline maths_fast_sqrt_1(float input) {
+float static inline maths_fast_sqrt_1(float input) 
+{
 	if (input<0) 
 	{
 		return 0.0f;
@@ -237,8 +239,8 @@ static inline float maths_f_max(const float a, const float b){
  * 
  * \return 					Clipped value
  */
-static float inline maths_clip(float input_value, float clip_value) {
-	
+static float inline maths_clip(float input_value, float clip_value) 
+{	
 	if (input_value>clip_value)  return clip_value;     
 	if (input_value<-clip_value) return -clip_value; 
 	return input_value;
@@ -313,7 +315,8 @@ static float inline maths_center_window_4(float x)
  * 
  * \return 		Output value
  */
-static float inline maths_median_filter_3x(float a, float b, float c) {
+static float inline maths_median_filter_3x(float a, float b, float c) 
+{
 	float middle;
 	
 	if ((a <= b) && (a <= c)) 
@@ -330,7 +333,6 @@ static float inline maths_median_filter_3x(float a, float b, float c) {
 	}
 
 	return middle;
-
 }
 
 
@@ -364,6 +366,5 @@ static inline float maths_interpolate(float x, float x1, float x2, float y1, flo
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif	/*	MATHS_H	 */

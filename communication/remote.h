@@ -47,7 +47,7 @@
 	extern "C" {
 #endif
 
-#include "spektrum_satellite.h"
+#include "satellite.h"
 #include "stabilisation.h"
 #include "mav_modes.h"
 
@@ -149,7 +149,7 @@ typedef struct
  */
 typedef struct
 {
-	spektrum_satellite_t* sat;								///< The pointer to the raw values of the remote received by the interrupt
+	satellite_t sat;										///< The pointer to the raw values of the remote received by the interrupt
 	float channels[REMOTE_CHANNEL_COUNT];					///< The array of channel values
 	channel_inv_t channel_inv[REMOTE_CHANNEL_COUNT];		///< The array of direction of the channels
 	float trims[REMOTE_CHANNEL_COUNT];						///< The array of trim of the remote channels
@@ -233,7 +233,8 @@ float remote_get_yaw(const remote_t* remote);
 /**
  * \brief	Initialise the mode from the remote switches
  * 
- * \param	remote				The pointer to the remote structure
+ * \param	remote_mode			The pointer to the remote mode structure
+ * \param	config				Pointer to the configuration of the remote mode structure
  */
 void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t* config);
 

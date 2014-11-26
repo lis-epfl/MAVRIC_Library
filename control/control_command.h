@@ -59,7 +59,8 @@ typedef enum
 	TORQUE_COMMAND   = 0,
 	RATE_COMMAND     = 1,
 	ATTITUDE_COMMAND = 2,
-	VELOCITY_COMMAND = 3
+	POSITION_COMMAND = 3,
+	VELOCITY_COMMAND = 4
 } control_command_mode_t;
 
 
@@ -68,19 +69,41 @@ typedef enum
  */
 typedef enum
 {
-	VELOCITY_COMMAND_MODE_LOCAL	 = 0,
-	VELOCITY_COMMAND_MODE_GLOBAL = 1
+	VELOCITY_COMMAND_MODE_LOCAL	 		= 0,	///< Local frame
+	VELOCITY_COMMAND_MODE_SEMI_LOCAL	= 1,	///< Global frame rotated around vertical axis to match the X axis with the current heading of the UAV
+	VELOCITY_COMMAND_MODE_GLOBAL 		= 2, 	///< Global frame
 } velocity_command_mode_t;
 
 
 /**
- * \brief	Attitude command structure
+ * \brief	Velocity command structure
  */
 typedef struct 
 {	
 	float xyz[3];					///<	Velocity on X, Y and Z axis 
  	velocity_command_mode_t mode;	///< 	Command mode, defines whether the velocity is given in local or global frame
 } velocity_command_t;
+
+
+
+/**
+ * \brief	Position command mode: either in local or global frame
+ */
+typedef enum
+{
+	POSITION_COMMAND_MODE_LOCAL	 = 0,
+	POSITION_COMMAND_MODE_GLOBAL = 1
+} position_command_mode_t;
+
+
+/**
+ * \brief	Position command structure
+ */
+typedef struct 
+{	
+	float xyz[3];					///<	Velocity on X, Y and Z axis 
+ 	position_command_mode_t mode;	///< 	Command mode, defines whether the position is given in local or global frame
+} position_command_t;
 
 
 /**
@@ -127,8 +150,17 @@ typedef struct
  */
 typedef struct 
 {
-	float thrust;
+	float thrust;					///< Thrust command
 } thrust_command_t;
+
+
+/**
+ * \brief	Thrust command type for vehicles with multi-lifting devices
+ */
+typedef struct 
+{
+	float thrust[3];
+} thrust3D_command_t;
 
 
 /**
@@ -136,12 +168,13 @@ typedef struct
  */
 typedef struct
 {
-	control_command_mode_t  mode;
-	thrust_command_t        thrust;
-	torque_command_t        torque;
-	rate_command_t          rate;
-	attitude_command_t      attitude;
-	velocity_command_t      velocity;
+	control_command_mode_t  mode;		///< Control command mode
+	thrust_command_t        thrust;		///< Thrust command
+	torque_command_t        torque;		///< Torque command
+	rate_command_t          rate;		///< Rate command
+	attitude_command_t      attitude;	///< Attitude command
+	position_command_t      position;	///< Position command
+	velocity_command_t      velocity;	///< Velocity command
 } command_t;
 
 

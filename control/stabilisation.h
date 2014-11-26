@@ -49,7 +49,7 @@ extern "C" {
 
 #include <stdint.h>
 #include "imu.h"
-#include "pid_control.h"
+#include "pid_controller.h"
 
 /**
  * \brief	The control mode enum
@@ -94,8 +94,8 @@ typedef struct {
 } stabiliser_t;
 
 /**
- * \brief	Initialisation of the stabilisation module
- * \param	command				The pointer to the command structure
+ * \brief	Initialization of the stabilization module
+ * \param	controls				The pointer to the controls structure
  */
 void stabilisation_init(control_command_t *controls);
 

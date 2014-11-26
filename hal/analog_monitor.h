@@ -55,6 +55,10 @@
 #define MONITOR_CHANNELS 10
 #define MONITOR_SAMPLES  10
 
+
+/**
+ * \brief Enumerate the analog rail
+ */
 typedef enum
 {
 	ANALOG_RAIL_2,		// ANA connector, pin1
@@ -81,7 +85,7 @@ typedef struct
 
 
 /**
- * \brief  Analog monitor
+ * \brief  Analog monitor structure
  */
 typedef struct 
 {
@@ -95,8 +99,8 @@ typedef struct
 /**
  * \brief	Initialisation of the analog monitor
  * 
- * \param	analog_monitor	The pointer to the analog monitor structure
- * \param	config			The configuration array for CONV_FACTOR of the ADC
+ * \param	analog_monitor	Pointer to the analog monitor structure
+ * \param	config			Pointer to the configuration array for CONV_FACTOR of the ADC
  */
 void analog_monitor_init(analog_monitor_t* analog_monitor, const analog_monitor_conf_t* config);
 
@@ -105,6 +109,8 @@ void analog_monitor_init(analog_monitor_t* analog_monitor, const analog_monitor_
  * \brief	Update of the analog monitor
  * 
  * \param	analog_monitor	The pointer to the analog monitor structure
+ *
+ * \return	Returns the task result, currently only TASK_RUN_SUCCESS
  */
 task_return_t analog_monitor_update(analog_monitor_t* analog_monitor);
 

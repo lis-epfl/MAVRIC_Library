@@ -30,14 +30,14 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 					.pregain = 0.5, 
 					.postgain = 1.0,
 					.accumulator = 0.0,
-					.maths_clip = 0.65,
+					.clip = 0.65,
 					.leakiness = 0.0
 				},
 				.differentiator={
 					.gain = 0.2,
 					.previous = 0.0,
 					.LPF = 0.4,
-					.maths_clip = 0.65
+					.clip = 0.65
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -56,14 +56,14 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 					.pregain = 0.5, 
 					.postgain = 1.0,
 					.accumulator = 0.0,
-					.maths_clip = 0.65,
+					.clip = 0.65,
 					.leakiness = 0.0
 				},
 				.differentiator={
 					.gain = 0.2,
 					.previous = 0.0,
 					.LPF = 0.4,
-					.maths_clip = 0.65
+					.clip = 0.65
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -82,14 +82,14 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 					.pregain = 0.5, 
 					.postgain = 0.5,
 					.accumulator = 0.0,
-					.maths_clip = 0.15,
+					.clip = 0.15,
 					.leakiness = 0.0
 				},
 				.differentiator={
 					.gain = 0.0,
 					.previous = 0.0,
 					.LPF = 0.4,
-					.maths_clip = 0.5
+					.clip = 0.5
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -109,14 +109,14 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 					.pregain = 0.0, 
 					.postgain = 0.0,
 					.accumulator = 0.0,
-					.maths_clip = 0.0,
+					.clip = 0.0,
 					.leakiness = 0.0
 				},
 				.differentiator={
 					.gain = 0.0,
 					.previous = 0.0,
 					.LPF = 0.0,
-					.maths_clip = 0.0
+					.clip = 0.0
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -153,14 +153,14 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 					.pregain = 0.0, 
 					.postgain = 0.0,
 					.accumulator = 0.0,
-					.maths_clip = 0.0,
+					.clip = 0.0,
 					.leakiness = 0.0
 				},
 				.differentiator={
 					.gain = 0.0,
 					.previous = 0.0,
 					.LPF = 0.5,
-					.maths_clip = 0.1
+					.clip = 0.1
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -179,14 +179,14 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 					.pregain = 0.0, 
 					.postgain = 0.0,
 					.accumulator = 0.0,
-					.maths_clip = 0.0,
+					.clip = 0.0,
 					.leakiness = 0.0
 				},
 				.differentiator={
 					.gain = 0.0,
 					.previous = 0.0,
 					.LPF = 0.5,
-					.maths_clip = 0.1
+					.clip = 0.1
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -205,14 +205,14 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 					.pregain = 0.0, 
 					.postgain = 0.0,
 					.accumulator = 0.0,
-					.maths_clip = 0.0,
+					.clip = 0.0,
 					.leakiness = 0.0
 				},
 				.differentiator={
 					.gain = 0.0,
 					.previous = 0.0,
 					.LPF = 0.5,
-					.maths_clip = 0.5
+					.clip = 0.5
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -232,14 +232,14 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 					.pregain = 0.0, 
 					.postgain = 0.0,
 					.accumulator = 0.0,
-					.maths_clip = 0.0,
+					.clip = 0.0,
 					.leakiness = 0.0
 				},
 				.differentiator={
 					.gain = 0.0,
 					.previous = 0.0,
 					.LPF = 0.0,
-					.maths_clip = 0.0
+					.clip = 0.0
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -276,14 +276,14 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 					.pregain = 0.0, 
 					.postgain = 0.0,
 					.accumulator = 0.0,
-					.maths_clip = 0.3,
+					.clip = 0.3,
 					.leakiness = 0.0
 				},
 				.differentiator={
 					.gain = 0.0,
 					.previous = 0.0,
 					.LPF = 0.5,
-					.maths_clip = 0.5
+					.clip = 0.5
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -302,14 +302,14 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 					.pregain = 0.0, 
 					.postgain = 0.0,
 					.accumulator = 0.0,
-					.maths_clip = 0.3,
+					.clip = 0.3,
 					.leakiness = 0.0
 				},
 				.differentiator={
 					.gain = 0.0,
 					.previous = 0.0,
 					.LPF = 0.5,
-					.maths_clip = 0.5
+					.clip = 0.5
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -328,14 +328,14 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 					.pregain = 0.0, 
 					.postgain = 0.0,
 					.accumulator = 0.0,
-					.maths_clip = 0.0,
+					.clip = 0.0,
 					.leakiness = 0.0
 				},
 				.differentiator={
 					.gain = 0.0,
 					.previous = 0.0,
 					.LPF = 0.0,
-					.maths_clip = 0.0
+					.clip = 0.0
 				},
 				.output = 0.0,
 				.error = 0.0,
@@ -355,14 +355,14 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 					.pregain = 1.5, 
 					.postgain = 1.0,
 					.accumulator = 0.0,
-					.maths_clip = 1.0,
+					.clip = 1.0,
 					.leakiness = 0.0
 				},
 				.differentiator={
 					.gain = 0.5,
 					.previous = 0.0,
 					.LPF = 0.95,
-					.maths_clip = 1.0
+					.clip = 1.0
 				},
 				.output = 0.0,
 				.error = 0.0,

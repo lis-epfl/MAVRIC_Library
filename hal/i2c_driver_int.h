@@ -58,6 +58,9 @@
 #define I2C_WRITE 1					///< Define the I2C mode to Write
 #define I2C_WRITE1_THEN_READ 2		///< Define the I2C mode to Write followed by read
 
+/**
+ * \brief Enumerate the 2 possible I2C
+ */
 enum AVAILABLE_I2CS
 {
 	I2C0, 
@@ -83,14 +86,15 @@ typedef struct
 /**
  * \brief Initialize the I2C communication
  *
- * \param i2c_device select which device to initialize
+ * \param	i2c_device		select which device to initialize
+ * \param	twi_opt			i2c	driver configurations
 */
-void i2c_driver_init(uint8_t  i2c_device);
+void i2c_driver_init(uint8_t  i2c_device, twim_options_t twi_opt);
 
 /**
  * \brief Append the i2c transfer
  *
- * \param request pointer to the i2c packet
+ * \param	request			pointer to the i2c packet
  *
  * \return nothing implemented yet
 */
@@ -99,10 +103,10 @@ int32_t i2c_append_transfer(i2c_packet_t *request);
 /**
  * \brief Append the i2c read transfer
  *
- * \param slave_address Address of the Slave device which we were reading to
- * \param data pointer the data buffer
- * \param size size of the data buffer
- * \param event_handler pointer to a task handler
+ * \param	slave_address	Address of the Slave device which we were reading to
+ * \param	data			Pointer the data buffer
+ * \param	size			Size of the data buffer
+ * \param	event_handler	Pointer to a task handler
  *
  * \return nothing implemented yet
 */
@@ -111,10 +115,10 @@ int32_t i2c_append_read_transfer(uint8_t slave_address, uint8_t *data, uint16_t 
 /**
  * \brief append the i2c write transfer
  *
- * \param slave_address Address of the Slave device which we were reading to
- * \param data pointer the data buffer
- * \param size size of the data buffer
- * \param event_handler pointer to a task handler
+ * \param	slave_address	Address of the Slave device which we were reading to
+ * \param	data			Pointer the data buffer
+ * \param	size			Size of the data buffer
+ * \param	event_handler	Pointer to a task handler
  *
  * \return nothing implemented yet
 */
@@ -123,12 +127,12 @@ int32_t i2c_append_write_transfer(uint8_t slave_address, uint8_t *data, uint16_t
 /**
  * \brief 
  *
- * \param slave_address Address of the Slave device which we were reading to
- * \param register_address Address of a register on the slave
- * \param data pointer the data buffer
- * \param size size of the data buffer
- * \param event_handler pointer to a task handler
- *
+  * \param	slave_address		Address of the Slave device which we were reading to
+  * \param	register_address	Address of a register on the slave
+  * \param	data				Pointer the data buffer
+  * \param	size				Size of the data buffer
+  * \param	event_handler		Pointer to a task handler
+  *
  * \return nothing implemented yet
 */
 int32_t i2c_append_register_read_transfer(uint8_t slave_address, uint8_t register_address, uint8_t *data, uint16_t size, task_handle_t *event_handler);

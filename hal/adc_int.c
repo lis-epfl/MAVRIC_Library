@@ -57,7 +57,8 @@
 #define ADC_INT_SEOC1 32		///< Define the Analog to Digital interrupt (?)
 
 ///< GPIO pin/analog_monitor-function map.
-static const gpio_map_t ADCIFA_GPIO_MAP = {
+static const gpio_map_t ADCIFA_GPIO_MAP = 
+{
 	{AVR32_ADCREF0_PIN,AVR32_ADCREF0_FUNCTION},
 	{AVR32_ADCREFP_PIN,AVR32_ADCREFP_FUNCTION},
 	{AVR32_ADCREFN_PIN,AVR32_ADCREFN_FUNCTION},
@@ -103,7 +104,8 @@ uint8_t even_odd;											///< Declare whether even or odd
 	
 
 ///< ADC Configuration
-volatile adcifa_opt_t adc_config_options = {
+volatile adcifa_opt_t adc_config_options = 
+{
 	.frequency                = ADC_FREQUENCY,		///< ADC frequency (Hz)
 	.reference_source         = ADCIFA_REF1V,		///< Reference Source
 	.sample_and_hold_disable  = false,				///< Disable Sample and Hold Time
@@ -113,7 +115,8 @@ volatile adcifa_opt_t adc_config_options = {
 };
 			
 ///< Sequencer Configuration
-adcifa_sequencer_opt_t adcifa_sequence_opt = {
+adcifa_sequencer_opt_t adcifa_sequence_opt = 
+{
 	.convnb               = 0,							///< Number of sequence
 	.resolution           = ADCIFA_SRES_12B,			///< Resolution selection
 	.trigger_selection    = ADCIFA_TRGSEL_ITIMER,		///< Trigger selection

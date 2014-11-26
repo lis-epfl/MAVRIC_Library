@@ -42,18 +42,22 @@
 
 
 #include "state_machine.h"
-//#include "remote_controller.h"
 #include "spektrum_satellite.h"
 #include "led.h"
 #include "print_util.h"
 #include "state.h"
 
-void state_machine_init(state_machine_t *state_machine, state_t* state, mavlink_waypoint_handler_t* waypoint_handler, simulation_model_t *sim_model, remote_t* remote)
+void state_machine_init(state_machine_t *state_machine,
+						state_t* state, 
+						mavlink_waypoint_handler_t* waypoint_handler, 
+						simulation_model_t *sim_model, 
+						remote_t* remote)
 {
 	state_machine->waypoint_handler = waypoint_handler;
 	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
 	state_machine->remote 			= remote;
+	
 	state_machine->channel_switches = 0;
 	state_machine->rc_check 		= 0;
 	state_machine->motor_state 		= 0;

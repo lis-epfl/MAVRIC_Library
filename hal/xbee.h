@@ -45,13 +45,15 @@
 
 #include "streams.h"
 #include "buffer.h"
+#include "uart_int.h"
 
 /**
  * \brief Initialize the xbee module
  *
- * \param UID uart device number
+ * \param	UID					UART device number
+ * \param	usart_conf_xbee		Configuration of the UART of the Xbee module
  */
-void xbee_init(int32_t UID);
+void xbee_init(int32_t UID, usart_config_t usart_conf_xbee);
 
 /**
  * \brief Return the xbee in stream

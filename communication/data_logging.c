@@ -66,6 +66,8 @@ static void data_logging_add_header_name(data_logging_t* data_logging);
  * \param	fp						The pointer to the file
  * \param	c						The floating point number to be added
  * \param	after_digits			The number of digits after the floating point
+ *
+ * \return	The result : 0 if it fails otherwise EOF (-1)
  */
 static int32_t data_logging_put_float(FIL* fp, float c, int32_t after_digits);
 
@@ -75,6 +77,8 @@ static int32_t data_logging_put_float(FIL* fp, float c, int32_t after_digits);
  * \param	fp						The pointer to the file
  * \param	c						The double number to be added
  * \param	after_digits			The number of digits after the floating point
+ *
+ * \return	The result : 0 if it fails otherwise EOF (-1)
  */
 static int32_t data_logging_put_double(FIL* fp, double c, int32_t after_digits);
 
@@ -83,6 +87,8 @@ static int32_t data_logging_put_double(FIL* fp, double c, int32_t after_digits);
  *
  * \param	fp						The pointer to the file
  * \param	c						The double number to be added
+ *
+ * \return	The result : 0 if it fails otherwise EOF (-1)
  */
 static int32_t data_logging_put_uint64_t(FIL* fp, uint64_t c);
 
@@ -91,6 +97,8 @@ static int32_t data_logging_put_uint64_t(FIL* fp, uint64_t c);
  *
  * \param	fp						The pointer to the file
  * \param	c						The double number to be added
+ *
+ * \return	The result : 0 if it fails otherwise EOF (-1)
  */
 static int32_t data_logging_put_int64_t(FIL* fp, int64_t c);
 
@@ -129,7 +137,7 @@ static void data_logging_f_seek(data_logging_t* data_logging);
 
 static void data_logging_add_header_name(data_logging_t* data_logging)
 {
-	bool init;
+	bool init = false;
 	
 	uint16_t i;
 	data_logging_set_t* data_set = data_logging->data_logging_set;
@@ -159,7 +167,7 @@ static void data_logging_add_header_name(data_logging_t* data_logging)
 static int32_t data_logging_put_float(FIL* fp, float c, int32_t after_digits)
 {
 	int32_t i;
-	int32_t res;
+	int32_t res = 0;
 	float num = c;
 	
 	if (c<0)
@@ -204,7 +212,7 @@ static int32_t data_logging_put_float(FIL* fp, float c, int32_t after_digits)
 static int32_t data_logging_put_double(FIL* fp, double c, int32_t after_digits)
 {
 	int32_t i;
-	int32_t res;
+	int32_t res = 0;
 	double num = c;
 	
 	if (c<0)
@@ -248,6 +256,7 @@ static int32_t data_logging_put_uint64_t(FIL* fp, uint64_t c)
 
 	char storage[MAX_DIGITS_LONG];
 	int32_t i = MAX_DIGITS_LONG;
+	
 	do
 	{
 		i--;
@@ -269,7 +278,7 @@ static int32_t data_logging_put_uint64_t(FIL* fp, uint64_t c)
 
 static int32_t data_logging_put_int64_t(FIL* fp, int64_t c)
 {
-	int32_t res;
+	int32_t res = 0;
 	int64_t num = c;
 	
 	if (c<0)
@@ -289,7 +298,7 @@ static int32_t data_logging_put_int64_t(FIL* fp, int64_t c)
 
 static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param_num)
 {
-	int32_t res;
+	int32_t res = 0;
 	
 	if (param_num == (data_logging->data_logging_set->data_logging_count-1))
 	{
@@ -314,7 +323,7 @@ static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param
 static void data_logging_log_parameters(data_logging_t* data_logging)
 {
 	uint16_t i;
-	uint32_t res;
+	uint32_t res = 0;
 	data_logging_set_t* data_set = data_logging->data_logging_set;
 	
 	for (i = 0; i < data_set->data_logging_count; i++)
@@ -509,12 +518,16 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	if ( data_logging->data_logging_set != NULL )
 	{
 		data_logging->data_logging_set->max_data_logging_count = config->max_data_logging_count;
+		data_logging->data_logging_set->max_logs = config->max_logs;
+		data_logging->data_logging_set->log_interval = config->log_interval;
 		data_logging->data_logging_set->data_logging_count = 0;
 	}
 	else
 	{
 		print_util_dbg_print("[DATA LOGGING] ERROR ! Bad memory allocation.\r\n");
 		data_logging->data_logging_set->max_data_logging_count = 0;
+		data_logging->data_logging_set->max_logs = 0;
+		data_logging->data_logging_set->log_interval = 0;
 		data_logging->data_logging_set->data_logging_count = 0;
 	}
 	
@@ -567,8 +580,6 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 		}
 	}
 	data_logging->logging_time = time_keeper_get_millis();
-	
-
 	
 	print_util_dbg_print("[Data logging] Data logging initialised.\r\n");
 }
@@ -633,8 +644,8 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 				}
 			}
 		
-		//}while((i < MAX_NUMBER_OF_LOGGED_FILE)&&(data_logging->fr != FR_OK)&&(data_logging->fr != FR_NOT_READY));
-		} while( (i < MAX_NUMBER_OF_LOGGED_FILE) && (data_logging->fr == FR_EXIST) );
+		//}while((i < data_logging->data_logging_set->max_data_logging_count)&&(data_logging->fr != FR_OK)&&(data_logging->fr != FR_NOT_READY));
+		} while( (i < data_logging->data_logging_set->max_data_logging_count) && (data_logging->fr == FR_EXIST) );
 	
 		if (data_logging->fr == FR_OK)
 		{
@@ -651,8 +662,8 @@ void data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 				print_util_dbg_print(data_logging->name_n_extension);
 				print_util_dbg_print(" opened. \r\n");
 			}
-		}
-	}
+		} //end of if data_logging->fr == FR_OK
+	}//end of if (data_logging->log_data)
 }
 
 task_return_t data_logging_update(data_logging_t* data_logging)
@@ -686,7 +697,7 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 					data_logging_add_header_name(data_logging);
 				}
 			}
-		}
+		} //end of if (data_logging->file_opened)
 		else
 		{
 			if (!data_logging->file_name_init)
@@ -714,8 +725,8 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 					data_logging->sys_mounted = false;
 				}
 			}
-		}
-	}
+		}//end of else !data_logging->file_opened
+	}//end of if (data_logging->log_data == 1)
 	else
 	{
 		data_logging->loop_count = 0;
@@ -742,7 +753,7 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 					{
 						break;
 					}
-				}
+				} //end for loop
 					
 				data_logging->file_opened = false;
 				data_logging->file_init = false;
@@ -758,13 +769,13 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 						print_util_dbg_print("Error closing file\r\n");	
 					}
 				}
-			}
+			}//end of if (data_logging->fr != FR_NO_FILE)
 			else
 			{
 				data_logging->file_opened = false;
 				data_logging->file_init = false;
 			}
-		}
+		}//end of if (data_logging->file_opened)
 		if (data_logging->sys_mounted)
 		{
 			data_logging->fr = f_mount(&data_logging->fs,"",0);
@@ -780,8 +791,7 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 				data_logging->file_init = false;
 			}
 		}
-		
-	}
+	}//end of else (data_logging->log_data != 1)
 	return TASK_RUN_SUCCESS;
 }
 

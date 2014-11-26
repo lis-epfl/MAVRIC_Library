@@ -42,11 +42,8 @@
 
 #include "position_estimation.h"
 #include "print_util.h"
-#include "math_util.h"
+#include "maths.h"
 #include "time_keeper.h"
-#include "conf_constants.h"
-#include "conf_platform.h"
-
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -57,7 +54,7 @@
  *
  * \param	pos_est					The pointer to the position estimation structure
  */
-static void position_estimation_position_integration(position_estimator_t *pos_est);
+static void position_estimation_position_integration(position_estimation_t *pos_est);
 
 
 /**
@@ -65,7 +62,7 @@ static void position_estimation_position_integration(position_estimator_t *pos_e
  *
  * \param	pos_est					The pointer to the position estimation structure
  */
-static void position_estimation_position_correction(position_estimator_t *pos_est);
+static void position_estimation_position_correction(position_estimation_t *pos_est);
 
 
 /**
@@ -76,13 +73,13 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
  *
  * \return	void
  */
-static void gps_position_init(position_estimator_t *pos_est);
+static void gps_position_init(position_estimation_t *pos_est);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void position_estimation_position_integration(position_estimator_t *pos_est)
+static void position_estimation_position_integration(position_estimation_t *pos_est)
 {
 	int32_t i;
 	float dt = pos_est->ahrs->dt;
@@ -125,7 +122,7 @@ static void position_estimation_position_integration(position_estimator_t *pos_e
 }
 
 
-static void position_estimation_position_correction(position_estimator_t *pos_est)
+static void position_estimation_position_correction(position_estimation_t *pos_est)
 {
 	global_position_t global_gps_position;
 	local_coordinates_t local_coordinates;
@@ -178,7 +175,7 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 		}
 
 		t_inter_baro = (time_keeper_get_micros() - pos_est->barometer->last_update) / 1000.0f;
-		baro_gain = 1.0f; //math_util_fmax(1.0f - t_inter_baro / 1000.0f, 0.0f);
+		baro_gain = 1.0f; //maths_f_max(1.0f - t_inter_baro / 1000.0f, 0.0f);
 			
 		//pos_est->local_position.pos[2] += kp_alt_baro / ((float)(t_inter_baro / 2.5f + 1.0f)) * alt_error;
 		baro_alt_error = pos_est->last_alt  - pos_est->local_position.pos[2];
@@ -223,7 +220,7 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 		}
 		t_inter_gps = time_keeper_get_millis() - pos_est->gps->time_last_msg;
 			
-		//gps_gain = math_util_fmax(1.0f - t_inter_gps / 1000.0f, 0.0f);
+		//gps_gain = maths_f_max(1.0f - t_inter_gps / 1000.0f, 0.0f);
 		gps_gain = 1.0f;
 			
 		for (i = 0;i < 3;i++)
@@ -264,9 +261,8 @@ static void position_estimation_position_correction(position_estimator_t *pos_es
 }
 
 
-static void gps_position_init(position_estimator_t *pos_est)
+static void gps_position_init(position_estimation_t *pos_est)
 {
-	int32_t i;
 	if ( (pos_est->init_gps_position == false)&&(pos_est->gps->status == GPS_OK) )
 	{
 		if ( pos_est->time_last_gps_msg < pos_est->gps->time_last_msg )
@@ -283,7 +279,7 @@ static void gps_position_init(position_estimator_t *pos_est)
 			pos_est->last_gps_pos = pos_est->local_position;
 			
 			pos_est->last_alt = 0;
-			for(i = 0;i < 3;i++)
+			for(int32_t i = 0;i < 3;i++)
 			{
 				pos_est->last_vel[i] = 0.0f;
 				pos_est->local_position.pos[i] = 0.0f;
@@ -300,35 +296,34 @@ static void gps_position_init(position_estimator_t *pos_est)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void position_estimation_init(position_estimator_t *pos_est, state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, bool* nav_plan_active, float home_lat, float home_lon, float home_alt, float gravity)
+void position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu)
 {
-    int32_t i;
-
+    //init dependencies
 	pos_est->barometer = barometer;
 	pos_est->gps = gps;
 	pos_est->ahrs = ahrs;
 	pos_est->imu = imu;
 	pos_est->state = state;
-	pos_est->nav_plan_active = nav_plan_active;
+	pos_est->nav_plan_active = &state->nav_plan_active;
 	
 	// default GPS home position
-	pos_est->local_position.origin.longitude =   home_lon;
-	pos_est->local_position.origin.latitude =   home_lat;
-	pos_est->local_position.origin.altitude =   home_alt;
+	pos_est->local_position.origin.longitude =  config->origin.longitude;
+	pos_est->local_position.origin.latitude =   config->origin.latitude;
+	pos_est->local_position.origin.altitude =   config->origin.altitude;
 	pos_est->local_position.pos[X] = 0;
 	pos_est->local_position.pos[Y] = 0;
 	pos_est->local_position.pos[Z] = 0;
 	
     // reset position estimator
     pos_est->last_alt = 0;
-    for(i = 0;i < 3;i++)
+    for(int32_t i = 0;i < 3;i++)
     {
         pos_est->last_vel[i] = 0.0f;
         pos_est->vel[i] = 0.0f;
         pos_est->vel_bf[i] = 0.0f;
     }
 
-	pos_est->gravity = gravity;
+	pos_est->gravity = config->gravity;
 	
 	pos_est->init_gps_position = false;
 	pos_est->init_barometer = false;
@@ -352,9 +347,8 @@ void position_estimation_init(position_estimator_t *pos_est, state_t* state, bar
 }
 
 
-void position_estimation_reset_home_altitude(position_estimator_t *pos_est)
+void position_estimation_reset_home_altitude(position_estimation_t *pos_est)
 {
-	int32_t i;
 	// reset origin to position where quad is armed if we have GPS
 	if (pos_est->init_gps_position)
 	{
@@ -390,7 +384,7 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est)
 
 	// reset position estimator
 	pos_est->last_alt = 0;
-	for(i = 0;i < 3;i++)
+	for(int32_t i = 0;i < 3;i++)
 	{
 		pos_est->last_vel[i] = 0.0f;
 		pos_est->local_position.pos[i] = 0.0f;
@@ -400,7 +394,7 @@ void position_estimation_reset_home_altitude(position_estimator_t *pos_est)
 }
 
 
-void position_estimation_update(position_estimator_t *pos_est)
+void position_estimation_update(position_estimation_t *pos_est)
 {
 	if (pos_est->state->reset_position)
 	{

@@ -68,24 +68,38 @@ void piezo_speaker_init_binary(void);
 /**
  * \brief Beep at a given frequency for a duration
  *
- * \param duration_ms Duration of the piezo_speaker_beep
- * \param frequency Frequency of the piezo_speaker_beep
+ * \param	duration_ms		Duration of the piezo_speaker_beep
+ * \param	frequency		Frequency of the piezo_speaker_beep
  */
 void piezo_speaker_beep(int32_t duration_ms, int32_t frequency);
 
 
 /**
- * @brief Startup melody
+ * \brief Startup melody
  */
 void piezo_speaker_startup_melody(void);
 
-
+/**
+ * \brief Critical error melody
+ */
 void piezo_speaker_critical_error_melody(void);
 
+
+/**
+ * \brief Quick startup melody
+ */
 void piezo_speaker_quick_startup(void);
 
+
+/**
+ * \brief Star wars melody
+ */
 void piezo_speaker_star_wars(void);
 
+
+/**
+ * \brief Mario melody
+ */
 void piezo_speaker_mario_melody(void);
 
 

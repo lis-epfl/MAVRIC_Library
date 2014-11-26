@@ -43,13 +43,20 @@
 #ifndef __MF_H__
 #define __MF_H__
 
+#ifdef __cplusplus
+extern "C"
+{
+#endif
+
 #include <stdint.h>
 
 #ifndef USE_MATF
 	#define USE_MATF			0
 #endif
 
-/** Errors module can throw */
+/** 
+ * \brief Enumerates errors module can throw
+ */
 enum matf_errors
 {
 	MATF_ERROR_BASE = 0x3F00,
@@ -74,5 +81,10 @@ float* matf_tr (int32_t, int32_t, float*, float*);
 float* matf_multiply(int32_t, int32_t, int32_t, float*, float*, float*);
 float* matf_multiply_Bt(int32_t, int32_t, int32_t, float*, float*, float*);
 // float* matf_invert(int32_t numRowsCols, float* dstM, float* srcM);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

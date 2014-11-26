@@ -55,6 +55,7 @@
 /**
  * \brief 					Checks whether a message matches with a registered callback
  * 
+ * \param	message_handler	Pointer to the message handler
  * \param 	msg_callback 	Pointer to a registered message callback
  * \param 	msg 			Incoming message
  * 
@@ -66,6 +67,7 @@ static bool match_msg(mavlink_message_handler_t* message_handler, mavlink_messag
 /**
  * \brief 					Checks whether a command matches with a registered callback
  * 
+ * \param	message_handler	Pointer to the message handler
  * \param 	msg_callback 	Pointer to a registered command callback
  * \param 	msg 			Incoming message containing the command
  * \param 	cmd 			Incoming command encoded in the message
@@ -85,11 +87,11 @@ static bool match_msg(mavlink_message_handler_t* message_handler, mavlink_messag
 
 	uint8_t sysid = message_handler->mavlink_stream->sysid;
 
-	if ( msg->sysid != sysid )																		// This message is not from this system
+	if ( msg->sysid != sysid )	// This message is not from this system
 	{
-		if ( msg_callback->message_id == msg->msgid )																// The message has the good ID
+		if ( msg_callback->message_id == msg->msgid )	// The message has the good ID
 		{
-			if ( msg_callback->sysid_filter == MAV_SYS_ID_ALL || msg_callback->sysid_filter == msg->sysid )			// The message is from the good system
+			if ( msg_callback->sysid_filter == MAV_SYS_ID_ALL || msg_callback->sysid_filter == msg->sysid )	// The message is from the good system
 			{
 				if ( msg_callback->compid_filter == MAV_COMP_ID_ALL || msg_callback->compid_filter == msg->compid )	// The system is from the good component 
 				{
@@ -109,15 +111,15 @@ static bool match_cmd(mavlink_message_handler_t* message_handler, mavlink_messag
 	
 	uint8_t sysid = message_handler->mavlink_stream->sysid;
 
-	if ( msg->sysid != sysid )																							// This message is not from this system
+	if ( msg->sysid != sysid )	// This message is not from this system
 	{
-		if ( cmd_callback->command_id == cmd->command )																					// The message has the good ID
+		if ( cmd_callback->command_id == cmd->command )		// The message has the good ID
 		{
-			if ( cmd_callback->sysid_filter == MAV_SYS_ID_ALL || cmd_callback->sysid_filter == msg->sysid )								// The message is from the good system
+			if ( cmd_callback->sysid_filter == MAV_SYS_ID_ALL || cmd_callback->sysid_filter == msg->sysid )	// The message is from the good system
 			{
-				if ( cmd_callback->compid_filter == MAV_COMP_ID_ALL || cmd_callback->compid_filter == msg->compid )						// The system is from the good component 
+				if ( cmd_callback->compid_filter == MAV_COMP_ID_ALL || cmd_callback->compid_filter == msg->compid )	// The system is from the good component 
 				{
-					if ( cmd_callback->compid_target == MAV_COMP_ID_ALL || cmd_callback->compid_target == cmd->target_component )		// This system is the target of the command
+					if ( cmd_callback->compid_target == MAV_COMP_ID_ALL || cmd_callback->compid_target == cmd->target_component ) // This system is the target of the command
 					{				
 						match = true;
 					}
@@ -134,7 +136,9 @@ static bool match_cmd(mavlink_message_handler_t* message_handler, mavlink_messag
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void mavlink_message_handler_init(mavlink_message_handler_t* message_handler, const mavlink_message_handler_conf_t* config, const mavlink_stream_t* mavlink_stream)
+void mavlink_message_handler_init(	mavlink_message_handler_t* message_handler, 
+									const mavlink_message_handler_conf_t* config, 
+									const mavlink_stream_t* mavlink_stream)
 {
 	// Init dependencies
 	message_handler->mavlink_stream = mavlink_stream;

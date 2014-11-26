@@ -58,12 +58,14 @@
 */
 typedef struct
 {
-	barometer_t* barometer;
+	barometer_t* barometer;			///< Pointer to the general barometer structure
 } bmp085_t;
 
 
 /**
  * \brief Initialize the barometer sensor
+ * 
+ * \param bmp085	Pointer to the barometer 085 struct
 */
 void bmp085_init(barometer_t *bmp085);
 
@@ -75,22 +77,18 @@ void bmp085_init_slow(void);
 
 
 /**
- * \brief	Initialization of the pos_est->barometer offset
+ * \brief	Reset the altitude to position estimation origin
  *
- * \param	pos_est			The pointer to the position estimation structure
- * \param	pos_est->barometer		The pointer to the pos_est->barometer structure
- *
- * \return	void
+ * \param	bmp085				Pointer to the barometer 085 struct
+ * \param	origin_altitude		Altitude corresponding to the origin
  */
 void bmp085_reset_origin_altitude(barometer_t* bmp085, float origin_altitude);
 
 
 /**
- * \brief Get the pressure data n slow mode
+ * \brief Update the barometer
  *
- * \param offset Offset to add to the pressure measured by the barometer
- *
- * \return a pointer to the pressure data structure
+ * \param bmp085				Pointer to the barometer 085 struct
 */
 void bmp085_update(barometer_t *bmp085);
 

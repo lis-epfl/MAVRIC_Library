@@ -47,7 +47,7 @@
 #include "sysclk.h"
 
 
-static usart_config_t usart_conf[UART_COUNT];
+static usart_config_t usart_conf[UART_COUNT];			///< Declaration of the object to store UARTs configuration
 
 // macro for interrupt handler
 #define UART_HANDLER(UID) ISR(uart_handler_##UID, usart_conf[UID].uart_device.IRQ, AVR32_INTC_INTLEV_INT1) {\
@@ -71,28 +71,7 @@ static usart_config_t usart_conf[UART_COUNT];
 		}\
 	}\
 }			
-/*
-ISR(uart_handler_4, usart_conf[4].uart_device.IRQ, AVR32_INTC_INTLEV_INT1) {\
-	uint8_t c1;\
-	int32_t csr = usart_conf[4].uart_device.uart->csr;\
-	if (csr & AVR32_USART_CSR_RXRDY_MASK) {\
-		c1 = (uint8_t)usart_conf[4].uart_device.uart->rhr;\
-		if (usart_conf[4].uart_device.receive_stream == NULL) {\
-			buffer_put_lossy(&(usart_conf[4].uart_device.receive_buffer), c1);\
-		} else {\
-			usart_conf[4].uart_device.receive_stream->put(usart_conf[4].uart_device.receive_stream->data, c1);\
-		}\
-	}\
-	if (csr & AVR32_USART_CSR_TXRDY_MASK) {\
-		if (buffer_bytes_available(&(usart_conf[4].uart_device.transmit_buffer)) > 0) {\
-			c1 = buffer_get(&(usart_conf[4].uart_device.transmit_buffer));\
-			usart_conf[4].uart_device.uart->thr = c1;\
-		}\
-		if (buffer_bytes_available(&(usart_conf[4].uart_device.transmit_buffer))==0) {\
-				usart_conf[4].uart_device.uart->idr = AVR32_USART_IDR_TXRDY_MASK;\
-		}\
-	}\
-}*/			
+		
 
 // define interrupt handlers using above macro
 UART_HANDLER(0);
@@ -101,9 +80,27 @@ UART_HANDLER(2);
 UART_HANDLER(3);
 UART_HANDLER(4);
 
-///< Function prototype definitions
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+/**
+ * \brief Register UART handler
+ *
+ * \param	UID		UART identification number
+ */
 void register_UART_handler(int32_t UID);
+
+/**
+ * \brief Empty UART out buffer
+ *
+ * \param	usart_conf	Pointer to the usart configuration structure
+ */
 int32_t uart_out_buffer_empty(usart_config_t *usart_conf);
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
 void register_UART_handler(int32_t UID)
 {
@@ -127,6 +124,17 @@ void register_UART_handler(int32_t UID)
 	}
 }
 
+
+int32_t uart_out_buffer_empty(usart_config_t *usart_conf)
+{
+	return buffer_empty(&(usart_conf->uart_device.transmit_buffer));
+}
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+
 void uart_int_set_usart_conf(int32_t UID, usart_config_t* usart_config)
 {
 	usart_conf[UID].mode						= usart_config->mode;
@@ -142,7 +150,8 @@ void uart_int_set_usart_conf(int32_t UID, usart_config_t* usart_config)
 	usart_conf[UID].tx_pin_map					= usart_config->tx_pin_map;
 }
 
-void uart_int_init(int32_t UID) {
+void uart_int_init(int32_t UID) 
+{
 	if ((usart_conf[UID].mode&UART_IN) > 0)
 	{
 		gpio_enable_module_pin(usart_conf[UID].rx_pin_map.pin, usart_conf[UID].rx_pin_map.function); 
@@ -204,11 +213,6 @@ void uart_int_flush(usart_config_t *usart_conf)
 {
 	usart_conf->uart_device.uart->ier = AVR32_USART_IER_TXRDY_MASK;
 	while (!buffer_empty(&(usart_conf->uart_device.transmit_buffer)));
-}
-
-int32_t uart_out_buffer_empty(usart_config_t *usart_conf) 
-{
-	return buffer_empty(&(usart_conf->uart_device.transmit_buffer));
 }
 
 void uart_int_register_write_stream(usart_config_t *usart_conf, byte_stream_t *stream) 

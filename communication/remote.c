@@ -43,6 +43,7 @@
 #include "remote.h"
 #include "time_keeper.h"
 #include "print_util.h"
+#include "constants.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -101,9 +102,6 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 
 void remote_init(remote_t* remote, const remote_conf_t* config)
 {
-	// Init dependencies
-	remote->sat = spektrum_satellite_get_pointer();
-
 	// Init mode from remote
 	remote_mode_init( &remote->mode, &config->mode_config );
 
@@ -155,15 +153,15 @@ void remote_update(remote_t* remote)
 	uint32_t now = time_keeper_get_time_ticks() ;
 	float raw;
 	
-	if ( remote->sat->new_data_available == true )
+	if ( remote->sat.new_data_available == true )
 	{
 		// Check signal quality
-		if ( remote->sat->dt < 100000) 
+		if ( remote->sat.dt < 100000) 
 		{
 			// ok
 			remote->signal_quality = SIGNAL_GOOD;
 		} 
-		else if ( remote->sat->dt < 1500000 )
+		else if ( remote->sat.dt < 1500000 )
 		{
 			// warning
 			remote->signal_quality = SIGNAL_BAD;
@@ -172,7 +170,7 @@ void remote_update(remote_t* remote)
 		// Retrieve and scale channels
 		for (uint8_t i = 0; i < REMOTE_CHANNEL_COUNT; ++i)
 		{
-			raw = remote->sat->channels[i];
+			raw = remote->sat.channels[i];
 			if ( raw < remote->deadzone && raw > -remote->deadzone )
 			{
 				remote->channels[i] = 0.0f;	
@@ -184,12 +182,12 @@ void remote_update(remote_t* remote)
 		}
 
 		// Indicate that data was handled
-		remote->sat->new_data_available = false;
-	}
+		remote->sat.new_data_available = false;
+	} //end of if ( remote->sat.new_data_available == true )
 	else
 	{
 		// Check for signal loss
-		if ( ( now - remote->sat->last_update ) > 1500000 )
+		if ( ( now - remote->sat.last_update ) > 1500000 )
 		{
 			// CRITICAL: Set all channels to failsafe
 			remote->channels[CHANNEL_THROTTLE] = -1.0f;
@@ -327,7 +325,6 @@ void remote_mode_update(remote_t* remote)
 				new_desired_mode = remote_mode->mode_switch_down;
 			}
 
-
 			// Apply custom flag
 			if ( remote_mode->use_custom_switch == true )
 			{
@@ -342,7 +339,6 @@ void remote_mode_update(remote_t* remote)
 					new_desired_mode.CUSTOM = CUSTOM_OFF;
 				}
 			}
-
 
 			// Apply test flag
 			if ( remote_mode->use_test_switch == true )
@@ -359,7 +355,6 @@ void remote_mode_update(remote_t* remote)
 				}
 			}
 
-
 			// Allow only disarm in normal mode
 			if ( flag_armed == ARMED_OFF )
 			{
@@ -374,7 +369,7 @@ void remote_mode_update(remote_t* remote)
 
 		// Store desired mode
 		remote_mode->current_desired_mode = new_desired_mode;
-	}
+	} //end of if( do_update == true )
 }
 
 
@@ -387,18 +382,18 @@ void remote_get_command_from_remote(remote_t* remote, control_command_t* control
 {
 	remote_update(remote);
 	
-	controls->rpy[ROLL]= remote_get_roll(remote) * RC_INPUT_SCALE;
-	controls->rpy[PITCH]= remote_get_pitch(remote) * RC_INPUT_SCALE;
-	controls->rpy[YAW]= remote_get_yaw(remote) * RC_INPUT_SCALE;
-	controls->thrust = remote_get_throttle(remote);
+	controls->rpy[ROLL] 	= remote_get_roll(remote);
+	controls->rpy[PITCH] 	= remote_get_pitch(remote);
+	controls->rpy[YAW] 		= remote_get_yaw(remote);
+	controls->thrust 		= remote_get_throttle(remote);
 }
 
 void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t* controls)
 {
 	remote_update(remote);
 	
-	controls->tvel[X]= - 10.0f * remote_get_pitch(remote) * RC_INPUT_SCALE;
-	controls->tvel[Y]= 10.0f * remote_get_roll(remote) * RC_INPUT_SCALE;
-	controls->tvel[Z]= - 1.5f * remote_get_throttle(remote);
-	controls->rpy[YAW] = remote_get_yaw(remote) * RC_INPUT_SCALE;
+	controls->tvel[X] 	= - 10.0f * remote_get_pitch(remote);
+	controls->tvel[Y] 	= 10.0f * remote_get_roll(remote);
+	controls->tvel[Z] 	= - 1.5f * remote_get_throttle(remote);
+	controls->rpy[YAW] 	= remote_get_yaw(remote);
 }

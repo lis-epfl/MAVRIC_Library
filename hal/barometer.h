@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Gregoire Heitz
  *   
- * \brief This file defines the barometer
+ * \brief This file defines the barometer enum and structure, independently from which sensor is used
  *
  ******************************************************************************/
 
@@ -53,6 +53,10 @@ typedef enum bmp085_state_t
 	GET_PRESSURE						///< Getting pressure state
 } barometer_state_t;
 
+
+/**
+ * \brief Define the barometer structure
+ */
 typedef struct
 {
 	uint8_t 	raw_pressure[3];		///< Raw pressure contained in 3 uint8_t
@@ -70,7 +74,6 @@ typedef struct
 	uint32_t 	last_state_update;		///< Time of the last state update
 	barometer_state_t state;			///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
 	float 		dt;						///< Time step for the derivative
-	
 } barometer_t;
 
 #endif /* BAROMETER_H_ */

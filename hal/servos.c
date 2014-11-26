@@ -54,44 +54,7 @@ void servos_init(servos_t* servos, const servos_conf_t* config)
 		for (int i = 0; i < servos->servos_count; ++i)
 		{
 			// Set default parameters for each type of servo
-			switch ( config->types[i] )
-			{
-				case STANDARD_SERVO:
-					servos->servo[i].trim          = 0.0f;
-					servos->servo[i].min           = -1.0f;
-					servos->servo[i].max           = 1.0f;
-					servos->servo[i].failsafe      = 0.0f;
-					servos->servo[i].repeat_freq   = 50;
-					servos->servo[i].type 		   = STANDARD_SERVO;
-					break;
-
-				case MOTOR_CONTROLLER:
-					servos->servo[i].trim          = 0.0f;
-					servos->servo[i].min           = -0.9f;
-					servos->servo[i].max           = 1.0f;
-					servos->servo[i].failsafe      = -1.2f;
-					servos->servo[i].repeat_freq   = 200;
-					servos->servo[i].type 		   = MOTOR_CONTROLLER;
-					break;
-
-				case CUSTOM_SERVO:
-					servos->servo[i].trim          = 0.0f;
-					servos->servo[i].min           = -0.0f;
-					servos->servo[i].max           = 0.0f;
-					servos->servo[i].failsafe      = 0.0f;
-					servos->servo[i].repeat_freq   = 50;
-					servos->servo[i].type 		   = CUSTOM_SERVO;
-					break;
-
-				default:
-					servos->servo[i].trim          = 0.0f;
-					servos->servo[i].min           = -1.0f;
-					servos->servo[i].max           = 1.0f;
-					servos->servo[i].failsafe      = 0.0f;
-					servos->servo[i].repeat_freq   = 50;
-					servos->servo[i].type 		   = STANDARD_SERVO;
-					break;
-			}
+			servos->servo[i] = config->servo[i];
 
 			// Set default value to failsafe
 			servos->servo[i].value = servos->servo[i].failsafe;
