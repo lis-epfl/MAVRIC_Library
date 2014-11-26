@@ -434,11 +434,12 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 
 void simulation_simulate_sonar(simulation_model_t *sim)
 {
-	float distance_m = 0.0f - sim->local_position.pos[Z];
-	
+	int16_t distance_cm = 0.5f - 100 * sim->local_position.pos[Z];
+	float distance_m = (float)distance_cm / 100.0f;
+
 	if ( distance_m > sim->sonar->min_distance && distance_m < sim->sonar->max_distance )
 	{
-		sim->sonar->current_distance  = distance_m;
+		sim->sonar->current_distance = distance_m;
 		sim->sonar->last_update = time_keeper_get_millis();
 		sim->sonar->healthy = true;
 	}
