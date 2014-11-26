@@ -317,7 +317,7 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 						
 						// Call appropriate function callback
 						result = function(module_struct, &cmd);
-						break;
+						//break;
 					}
 				}
 				// Send acknowledgment message 
