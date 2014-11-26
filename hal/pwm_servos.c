@@ -46,6 +46,7 @@
 #include "gpio.h"
 #include "print_util.h"
 #include "time_keeper.h"
+#include "delay.h"
 #include <math.h>
 
 #include <stdint.h>
@@ -207,4 +208,21 @@ void pwm_servos_write_to_hardware(const servos_t* servos)
 		write_channels(	1, pulse_us[2], pulse_us[3], freq_channel[1]);
 		write_channels(	2, pulse_us[4], pulse_us[5], freq_channel[2]);
 	}
+}
+
+void pwm_servos_set_speed_controller_set_point(const servos_t* servos)
+{
+	int16_t i;
+	
+	servos_t speed_controller = *servos;
+	
+	for(i = 0;i < 4; ++i)
+	{
+		speed_controller.servo[i].value = servos->servo[i].max;
+	}
+	
+	pwm_servos_write_to_hardware(&speed_controller);
+	delay_ms(4000);
+	servos_set_value_failsafe(&speed_controller);
+	pwm_servos_write_to_hardware(&speed_controller);
 }

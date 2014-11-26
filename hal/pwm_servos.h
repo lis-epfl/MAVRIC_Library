@@ -64,10 +64,17 @@ void pwm_servos_init(bool use_servos_7_8_param);
 /**
  * \brief						Set servos' values
  *
- * \param servo_outputs			Pointer to a structure containing the servos' data
+ * \param servos				Pointer to a structure containing the servos' data
  */
 void pwm_servos_write_to_hardware(const servos_t* servos);
 
+
+/**
+ * \brief						Set speed controller set points 
+ *
+ * \param servos				Pointer to a structure containing the servos' data
+ */
+void pwm_servos_set_speed_controller_set_point(const servos_t* servos);
 
 #ifdef __cplusplus
 	}
