@@ -297,6 +297,8 @@ static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* way
 	{
 		waypoint_handler->state->nav_plan_active = true;
 		print_util_dbg_print("Auto-continue, nav plan active");
+		
+		waypoint_handler->start_wpt_time = time_keeper_get_millis();
 	}
 	else
 	{
@@ -379,6 +381,8 @@ static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handle
 	{
 		waypoint_handler->state->nav_plan_active = true;
 		print_util_dbg_print("Auto-continue, nav plan active");
+		
+		waypoint_handler->start_wpt_time = time_keeper_get_millis();
 	}
 	else
 	{
@@ -494,6 +498,8 @@ static void waypoint_handler_set_stream_scenario(mavlink_waypoint_handler_t* way
 	{
 		waypoint_handler->state->nav_plan_active = true;
 		print_util_dbg_print("Auto-continue, nav plan active");
+		
+		waypoint_handler->start_wpt_time = time_keeper_get_millis();
 	}
 	else
 	{
@@ -786,6 +792,9 @@ static void waypoint_handler_receive_waypoint(mavlink_waypoint_handler_t* waypoi
 							print_util_dbg_print("flight plan received!\n");
 							waypoint_handler->waypoint_receiving = false;
 							waypoint_handler->num_waypoint_onboard = waypoint_handler->number_of_waypoints;
+							
+							waypoint_handler->start_wpt_time = time_keeper_get_millis();
+							
 							waypoint_handler->state->nav_plan_active = false;
 							waypoint_handler_nav_plan_init(waypoint_handler);
 						}
@@ -867,6 +876,8 @@ static void waypoint_handler_set_current_waypoint(mavlink_waypoint_handler_t* wa
 			print_util_dbg_print_num(packet.seq,10);
 			print_util_dbg_print("\r\n");
 			
+			waypoint_handler->start_wpt_time = time_keeper_get_millis();
+			
 			waypoint_handler->state->nav_plan_active = false;
 			waypoint_handler_nav_plan_init(waypoint_handler);
 		}
@@ -909,6 +920,8 @@ static mav_result_t waypoint_handler_set_current_waypoint_from_parameter(mavlink
 		print_util_dbg_print("Set current waypoint to number");
 		print_util_dbg_print_num(new_current,10);
 		print_util_dbg_print("\r\n");
+		
+		waypoint_handler->start_wpt_time = time_keeper_get_millis();
 		
 		waypoint_handler->state->nav_plan_active = false;
 		waypoint_handler_nav_plan_init(waypoint_handler);
@@ -1001,6 +1014,8 @@ static mav_result_t waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_
 		
 		print_util_dbg_print("Continuing towards waypoint Nr");
 		
+		waypoint_handler->start_wpt_time = time_keeper_get_millis();
+		
 		if (waypoint_handler->current_waypoint_count == (waypoint_handler->number_of_waypoints-1))
 		{
 			waypoint_handler->current_waypoint_count = 0;
@@ -1063,6 +1078,9 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	
 	waypoint_handler->waypoint_sending = false;
 	waypoint_handler->waypoint_receiving = false;
+	
+	waypoint_handler->start_wpt_time = time_keeper_get_millis();
+	waypoint_handler->travel_time = 0;
 	
 	// Add callbacks for waypoint handler messages requests
 	mavlink_message_handler_msg_callback_t callback;
@@ -1411,4 +1429,22 @@ local_coordinates_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* 
 	}
 	
 	return waypoint_coor;
+}
+
+void mavlink_waypoint_handler_send_nav_time(mavlink_waypoint_handler_t* waypoint_handler,const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{
+	mavlink_msg_named_value_int_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										time_keeper_get_millis(),
+										"current_wp",
+										waypoint_handler->current_waypoint_count);
+	mavlink_stream_send(mavlink_stream, msg);
+	
+	mavlink_msg_named_value_int_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										time_keeper_get_millis(),
+										"travel_time",
+										waypoint_handler->travel_time);
 }

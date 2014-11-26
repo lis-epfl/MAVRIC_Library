@@ -447,10 +447,14 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 													navigation->waypoint_handler->current_waypoint_count);
 			mavlink_stream_send(navigation->mavlink_stream, &msg);
 			
+			navigation->waypoint_handler->travel_time = time_keeper_get_millis() - navigation->waypoint_handler->start_wpt_time;
+			
 			navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count].current = 0;
 			if((navigation->waypoint_handler->current_waypoint.autocontinue == 1)&&(navigation->waypoint_handler->number_of_waypoints>1))
 			{
 				print_util_dbg_print("Autocontinue towards waypoint Nr");
+				
+				navigation->waypoint_handler->start_wpt_time = time_keeper_get_millis();
 				
 				if (navigation->waypoint_handler->current_waypoint_count == (navigation->waypoint_handler->number_of_waypoints-1))
 				{

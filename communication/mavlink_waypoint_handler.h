@@ -105,6 +105,9 @@ typedef struct
 	uint32_t start_timeout;										///< The start time for the waypoint timeout
 	uint32_t timeout_max_waypoint;								///< The max waiting time for communication
 
+	uint32_t start_wpt_time;
+	uint32_t travel_time;
+
 	position_estimation_t* position_estimation;					///< The pointer to the position estimation structure
 	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
 	state_t* state;												///< The pointer to the state structure
@@ -167,6 +170,15 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
  * \return	The waypoint in local coordinate frame
  */
 local_coordinates_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin);
+
+/**
+ * \brief	Sends the travel time between the last two waypoints
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param	msg						The pointer to the MAVLink message
+ */
+void mavlink_waypoint_handler_send_nav_time(mavlink_waypoint_handler_t* waypoint_handler,const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 #ifdef __cplusplus
 }
