@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file altitude_controller_sonar_default_config.h
+ * \file altitude_controller_default_config.h
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur

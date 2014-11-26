@@ -30,35 +30,31 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file altitude.h
+ * \file altitude_estimation_default_config.h
  * 
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *   
- * \brief This file implements data structure for attitude estimate
+ * \brief Default configuration for the module altitude_estimation
  *
  ******************************************************************************/
 
 
-#ifndef ALTITUDE_H_
-#define ALTITUDE_H_
+#ifndef ALTITUDE_ESTIMATION_DEFAULT_CONFIG_H_
+#define ALTITUDE_ESTIMATION_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include "altitude_estimation.h"
 
-/**
- * \brief Structure containing the Altitude
- */
-typedef struct
+static altitude_estimation_conf_t altitude_estimation_default_config =
 {
-	float above_ground;		///< Altitude above ground (<0)
-	float above_sea;		///< Altitude above sea level (<0)
-} altitude_t;
-
+};
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ALTITUDE_H_ */
+#endif // ALTITUDE_ESTIMATION_DEFAULT_CONFIG_H_

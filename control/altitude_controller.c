@@ -85,5 +85,5 @@ void altitude_controller_update(altitude_controller_t* controller)
 		break;
 	}
 
-	controller->thrust_command->thrust = controller->hover_point + controller->p_gain * error;
+	controller->thrust_command->thrust = controller->hover_point - controller->p_gain * error;
 }
