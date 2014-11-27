@@ -51,7 +51,7 @@ extern "C" {
 
 stabilisation_copter_conf_t stabilisation_copter_default_config =
 {
-	.thrust_hover_point = -0.3f,
+	.thrust_hover_point = -0.26f,
 	.motor_layout 		= QUADCOPTER_MOTOR_LAYOUT_DIAG,
 	.stabiliser_stack 	= 
 	{
@@ -374,7 +374,7 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 				.clip_max = 0.65f,
 				.integrator={
 					.pregain = 1.0f,
-					.postgain = 0.0f,
+					.postgain = 0.03f,
 					.accumulator = 0.0f,
 					.clip = 1.0f,
 				},
