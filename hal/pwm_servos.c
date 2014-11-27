@@ -210,7 +210,7 @@ void pwm_servos_write_to_hardware(const servos_t* servos)
 	}
 }
 
-void pwm_servos_set_speed_controller_set_point(const servos_t* servos)
+void pwm_servos_calibrate_esc(const servos_t* servos)
 {
 	int16_t i;
 	
@@ -222,7 +222,7 @@ void pwm_servos_set_speed_controller_set_point(const servos_t* servos)
 	}
 	
 	pwm_servos_write_to_hardware(&speed_controller);
-	delay_ms(4000);
+	delay_ms(2000);
 	servos_set_value_failsafe(&speed_controller);
 	pwm_servos_write_to_hardware(&speed_controller);
 }
