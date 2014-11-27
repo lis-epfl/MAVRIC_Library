@@ -74,7 +74,7 @@ void pwm_servos_write_to_hardware(const servos_t* servos);
  *
  * \param servos				Pointer to a structure containing the servos' data
  */
-void pwm_servos_set_speed_controller_set_point(const servos_t* servos);
+void pwm_servos_calibrate_esc(const servos_t* servos);
 
 #ifdef __cplusplus
 	}
