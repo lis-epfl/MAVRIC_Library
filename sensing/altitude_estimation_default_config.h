@@ -30,70 +30,31 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file altitude_controller_sonar.h
+ * \file altitude_estimation_default_config.h
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief 	A simple altitude controller for copter based on sonar
+ * \brief Default configuration for the module altitude_estimation
  *
  ******************************************************************************/
 
 
-#ifndef ALTITUDE_CONTROLLER_SONAR_H_
-#define ALTITUDE_CONTROLLER_SONAR_H_
+#ifndef ALTITUDE_ESTIMATION_DEFAULT_CONFIG_H_
+#define ALTITUDE_ESTIMATION_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "control_command.h"
-#include "pid_controller.h"
-#include "sonar.h"
+#include "altitude_estimation.h"
 
-
-/**
- * \brief Altitude controller structure
- */
-typedef struct 
+static altitude_estimation_conf_t altitude_estimation_default_config =
 {
-	pid_controller_t 	pid;				///< PID controller
-	float				hover_point;		///< Thrust required to hover
-	const sonar_t* 		sonar; 				///< Pointer to sonar sensor (input)
-	thrust_command_t* 	thrust_command;		///< Pointer to thrust command (output)
-} altitude_controller_sonar_t;
-
-
-/**
- * \brief Altitude controller configuration
- */
-typedef struct
-{
-	pid_controller_conf_t pid_config;		///< PID controller
-	float hover_point;						///< Thrust required to hover
-} altitude_controller_sonar_conf_t;	
-
-
-/**
- * \brief               		Initialises the altitude controller structure
- * 
- * \param 	controller    		Pointer to data structure
- * \param 	config				Pointer to configuration
- * \param 	sonar		 		Pointer to the sonar sensor
- * \param 	thrust_command		Pointer to thrust command (output)
- */
-void altitude_controller_sonar_init(altitude_controller_sonar_t* controller, const altitude_controller_sonar_conf_t* config, const sonar_t* sonar, thrust_command_t* thrust_command);
-
-/**
- * \brief               	Main update function
- * 
- * \param 	controller    	Pointer to data structure
- */
-void altitude_controller_sonar_update(altitude_controller_sonar_t* controller);
-
+};
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ALTITUDE_CONTROLLER_SONAR_H_ */
+#endif // ALTITUDE_ESTIMATION_DEFAULT_CONFIG_H_

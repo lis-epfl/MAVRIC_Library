@@ -30,35 +30,35 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file altitude_controller_sonar.h
+ * \file altitude.h
  * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur
  *   
- * \brief 	A simple altitude controller for copter based on sonar
+ * \brief This file implements data structure for attitude estimate
  *
  ******************************************************************************/
 
 
-#include "altitude_controller_sonar.h"
+#ifndef ALTITUDE_H_
+#define ALTITUDE_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
-void altitude_controller_sonar_init(altitude_controller_sonar_t* controller, const altitude_controller_sonar_conf_t* config, const sonar_t* sonar, thrust_command_t* thrust_command)
+/**
+ * \brief Structure containing the Altitude
+ */
+typedef struct
 {
-	// Init dependencies
-	controller->sonar 			= sonar;
-	controller->thrust_command 	= thrust_command;
+	float above_ground;		///< Altitude above ground (<0)
+	float above_sea;		///< Altitude above sea level (<0)
+} altitude_t;
 
-	// Init members
-	controller->hover_point = config->hover_point;
-	
-	// Init pid
-	pid_controller_init(&controller->pid,  &config->pid_config);
+
+#ifdef __cplusplus
 }
+#endif
 
-void altitude_controller_sonar_update(altitude_controller_sonar_t* controller)
-{
-	float error = 1.0f - controller->sonar->current_distance;
-
-	controller->thrust_command->thrust = controller->hover_point + pid_controller_update( &controller->pid, error );
-}
+#endif /* ALTITUDE_H_ */
