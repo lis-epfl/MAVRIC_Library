@@ -66,7 +66,7 @@ void altitude_controller_init(altitude_controller_t* controller, const altitude_
 
 	// Init members
 	controller->hover_point = config->hover_point;
-	controller->p_gain = config->p_gain;
+	pid_controller_init(&controller->pid, &config->pid_config);
 }
 
 
@@ -85,5 +85,5 @@ void altitude_controller_update(altitude_controller_t* controller)
 		break;
 	}
 
-	controller->thrust_command->thrust = controller->hover_point - controller->p_gain * error;
+	controller->thrust_command->thrust = controller->hover_point - pid_controller_update(&controller->pid, error);
 }

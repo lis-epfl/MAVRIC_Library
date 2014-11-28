@@ -71,6 +71,8 @@ void altitude_estimation_init(altitude_estimation_t* estimator, const altitude_e
 
 void altitude_estimation_update(altitude_estimation_t* estimator)
 {
-	estimator->altitude_estimated->above_ground = 0.0f;
-	estimator->altitude_estimated->above_sea 	= 400.0f;
+	float alt = estimator->sonar->current_distance;
+
+	estimator->altitude_estimated->above_sea 	= - 400.0f - alt;
+	estimator->altitude_estimated->above_ground = - alt;
 }
