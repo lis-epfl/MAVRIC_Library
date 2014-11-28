@@ -131,7 +131,7 @@ void process_acoustics(void)
 	}
 	if (centralData->acoustic_spin<0.7 && switch_previous>=0.7)
 	{
-		wp_hold_init(centralData->position_estimator.localPosition);	//hold in position
+		wp_hold_init(centralData->position_estimation.local_position);	//hold in position
 	}
 	
 	//////////////for turning on the siren///////////////////////////
@@ -188,9 +188,9 @@ void check_reliability(void)
 	{
 		Counter=0;
 		acoustic_attitude=centralData->imu1.attitude.qe;			    //store the current IMU attitude and position for later use
-		position_current[0]=centralData->position_estimator.localPosition.pos[0];
-		position_current[1]=centralData->position_estimator.localPosition.pos[1];
-		position_current[2]=centralData->position_estimator.localPosition.pos[2];
+		position_current[0]=centralData->position_estimation.local_position.pos[0];
+		position_current[1]=centralData->position_estimation.local_position.pos[1];
+		position_current[2]=centralData->position_estimation.local_position.pos[2];
 		
 		for (i=1; i<STORE_SIZE;i++)
 		{
@@ -200,12 +200,12 @@ void check_reliability(void)
 		Az[STORE_SIZE-1]=centralData->audio_data.Azimuth*PI/180.0f;
 		El[STORE_SIZE-1]=centralData->audio_data.Elevation*PI/180.0f;
 		
-		CosEl=quick_cos(El[STORE_SIZE-1]);
-		SinEl=quick_sin(El[STORE_SIZE-1]);
+		CosEl=quick_trig_cos(El[STORE_SIZE-1]);
+		SinEl=quick_trig_sin(El[STORE_SIZE-1]);
 		
 		for (i=0; i<STORE_SIZE-1; i++)		//compute the total great arc circle between last bearing and the past 3 values
 		{
-			angulardiff+=quick_acos(CosEl*quick_cos(El[i])*quick_cos(Az[STORE_SIZE-1]-Az[i])+SinEl*quick_sin(El[i]));
+			angulardiff+=quick_trig_acos(CosEl*quick_trig_cos(El[i])*quick_trig_cos(Az[STORE_SIZE-1]-Az[i])+SinEl*quick_trig_sin(El[i]));
 		}
 		
 		if (angulardiff<RELIABILITY_ARC)
@@ -214,8 +214,8 @@ void check_reliability(void)
 			centralData->audio_data.ReliabeAz=Az[STORE_SIZE-1];
 			centralData->audio_data.ReliabeEl=El[STORE_SIZE-1];
 			//			counting=0;  //reset the counter
-			CosAz=quick_cos(Az[STORE_SIZE-1]);
-			SinAz=quick_sin(Az[STORE_SIZE-1]);
+			CosAz=quick_trig_cos(Az[STORE_SIZE-1]);
+			SinAz=quick_trig_sin(Az[STORE_SIZE-1]);
 			target_vect[0]=CosAz*CosEl;
 			target_vect[1]=SinAz*CosEl;
 			target_vect[2]=SinEl;
@@ -248,7 +248,7 @@ void set_speed_command_acoustic(float rel_pos[], float dist2wpSqr)
 	v_desiredz = f_min(centralData->cruise_speed,( centralData->dist2vel_gain * soft_zone(norm_rel_dist,centralData->softZoneSize)));
 	
 	if(centralData->audio_data.ReliabeEl<1.35){
-		v_desiredxy = f_min(centralData->cruise_speed,(center_window_2(4.0f*centralData->audio_data.ReliabeAz) * (-9.0f*centralData->audio_data.ReliabeEl+(1.35*9))));
+		v_desiredxy = maths_f_min(centralData->cruise_speed,(maths_center_window_2(4.0f*centralData->audio_data.ReliabeAz) * (-9.0f*centralData->audio_data.ReliabeEl+(1.35*9))));
 		}else{
 		v_desiredxy=0;
 	}
@@ -257,8 +257,8 @@ void set_speed_command_acoustic(float rel_pos[], float dist2wpSqr)
 		v_desiredz = centralData->max_climb_rate * norm_rel_dist /f_abs(dir_desired_bf[Z]);
 	}
 	
-	dir_desired_bf[X] = v_desiredxy * quick_cos(centralData->audio_data.ReliabeAz);
-	dir_desired_bf[Y] = v_desiredxy * quick_sin(centralData->audio_data.ReliabeAz);
+	dir_desired_bf[X] = v_desiredxy * quick_trig_cos(centralData->audio_data.ReliabeAz);
+	dir_desired_bf[Y] = v_desiredxy * quick_trig_sin(centralData->audio_data.ReliabeAz);
 	dir_desired_bf[Z] = v_desiredz * dir_desired_bf[Z] / norm_rel_dist;
 	
 	
@@ -277,15 +277,15 @@ void set_speed_command_acoustic(float rel_pos[], float dist2wpSqr)
 
 void set_waypoint_command_acoustic()
 {
-	UQuat_t qtmp1, qtmp2;
+	quat_t qtmp1, qtmp2;
 	float target_vect_global[3], r ;
-	qtmp1 = quat_from_vector(target_vect);
-	qtmp2 = quat_local_to_global(acoustic_attitude_previous,qtmp1);
+	qtmp1 = quaternions_create_from_vector(target_vect);
+	qtmp2 = quaternions_local_to_global(acoustic_attitude_previous,qtmp1);
 	target_vect_global[0] = qtmp2.v[0]; target_vect_global[1] = qtmp2.v[1]; target_vect_global[2] = qtmp2.v[2];  //unit vector to target
 	//r=f_abs(position_previous[2]/target_vect_global[2]);			//distance to target on ground (computed from the hight of robot)
 	//r=f_abs(1.0-target_vect_global[2])*15.0
 	
-	r=f_abs(quick_acos(target_vect_global[2]))*20;
+	r=maths_f_abs(quick_trig_acos(target_vect_global[2]))*20;
 	if (r>20.0)
 	{
 		r=20.0f;
