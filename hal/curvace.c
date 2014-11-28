@@ -401,11 +401,11 @@ void curvace_init(curvace_t* curvace, const ahrs_t* ahrs, const mavlink_stream_t
 		float azimuth 	= curvace->roi_coord.all[i].azimuth;
 		float elevation = curvace->roi_coord.all[i].elevation;
 	
-		curvace->calib_matrix.all[i].Arx = + quick_trig_cos(azimuth) 	* quick_trig_sin(elevation);
-		curvace->calib_matrix.all[i].Apx = + quick_trig_sin(elevation) 	* quick_trig_sin(azimuth);
+		curvace->calib_matrix.all[i].Arx = 0.0f; // + quick_trig_cos(azimuth) 	* quick_trig_sin(elevation);
+		curvace->calib_matrix.all[i].Apx = 0.0f; // + quick_trig_sin(elevation) 	* quick_trig_sin(azimuth);
 		curvace->calib_matrix.all[i].Ayx = + quick_trig_cos(elevation);
-		curvace->calib_matrix.all[i].Ary = - quick_trig_sin(azimuth);
-		curvace->calib_matrix.all[i].Apy = + quick_trig_cos(azimuth);
+		curvace->calib_matrix.all[i].Ary = 0.0f; // - quick_trig_sin(azimuth);
+		curvace->calib_matrix.all[i].Apy = 0.0f; // + quick_trig_cos(azimuth);
 		curvace->calib_matrix.all[i].Ayy = 0.0f; 
 	}
 
@@ -567,8 +567,8 @@ void curvace_send_telemetry_averaged(const curvace_t* curvace)
 		of_right[i] = 0.0f;
 		for (int j = 0; j < 6; ++j)
 		{
-			of_left[i] 	+= curvace->of.all[i].x;
-			of_right[i] += curvace->of.all[i + 54].x;
+			of_left[i] 	+= curvace->of.all[6 * i + j].x;
+			of_right[i] += curvace->of.all[6 * i + j + 54].x;
 		}
 		of_left[i] 	= of_left[i] / 6.0f;
 		of_right[i]	= of_right[i] / 6.0f;
