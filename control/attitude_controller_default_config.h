@@ -60,7 +60,7 @@ static attitude_controller_conf_t attitude_controller_default_config =
 		// ------ ROLL RATE PID --------------------------------------------
 		// -----------------------------------------------------------------
 		{
-			.p_gain = 0.03f,
+			.p_gain = 0.05f,
 			.clip_min = -0.9f,
 			.clip_max = 0.9f,
 			.integrator =
@@ -82,7 +82,7 @@ static attitude_controller_conf_t attitude_controller_default_config =
 		// ------ PITCH RATE PID -------------------------------------------
 		// -----------------------------------------------------------------
 		{
-			.p_gain = 0.03f,
+			.p_gain = 0.05f,
 			.clip_min = -0.9f,
 			.clip_max = 0.9f,
 			.integrator =
