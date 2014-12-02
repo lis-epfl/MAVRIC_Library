@@ -30,45 +30,28 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file acoustic_recieve.h
+ * \file acoustic_telemetry.c
  * 
  * \author MAV'RIC Team
- * \author Meysam Basiri
+ * \author Gregoire Heitz
  *   
- * \brief Acoustic receive
+ * \brief Acoustic receive telemetry function
  *
  ******************************************************************************/
 
-#ifndef ACOUSTIC_RECIEVE_H_
-#define ACOUSTIC_RECIEVE_H_
+
+#include "acoustic_telemetry.h"
+#include "time_keeper.h"
 
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "streams.h"
-
-#define STORE_SIZE			4		// number of az el values stored for relaiblity test
-#define RELIABILITY_ARC		0.25f	// the threshold to consider ameasurement is relaible (compared with previous 3 measurements)
-#define WAIT_LIMIT			6       //wait for WAITLIMIT*ACOUSTIC_TASK_ITERATION ms to recieve the new measurement, else reset reliability
-#define MAX_DETECTION_RANGE 100
-
-typedef struct  
+void acoustic_telemetry_send (const audio_Data_type* audio_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
-	int16_t	Azimuth;
-	int16_t Elevation;
-	bool	NewData;
-	bool	ReliabeData;
-	float	ReliabeAz;
-	float	ReliabeEl;
-	float	wpt[2];
-}audio_Data_type;
-
-void turn_on_siren(byte_stream_t *out_stream);
-void turn_off_siren(byte_stream_t *out_stream);
-void process_acoustics(void);
-void recieve_acoustic(void);
-void check_reliability(void);
-void set_speed_command_acoustic(float rel_pos[], float dist2wpSqr);
-void set_waypoint_command_acoustic(void);
-
-#endif
+	mavlink_msg_debug_vect_pack(	mavlink_stream->sysid,
+	mavlink_stream->compid,
+	msg,
+	"Audio",
+	time_keeper_get_micros(),
+	(float)audio_data->Azimuth,
+	(float)audio_data->Elevation,
+	(float)audio_data->ReliabeData);
+}
