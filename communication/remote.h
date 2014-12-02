@@ -54,6 +54,7 @@
 
 #define REMOTE_CHANNEL_COUNT 8
 
+
 /**
  * \brief The signal's quality
  */
@@ -64,6 +65,7 @@ typedef enum
 	SIGNAL_LOST = 0,
 } signal_quality_t;
 
+
 /**
  * \brief The channels' direction
  */
@@ -72,6 +74,7 @@ typedef enum
 	NORMAL 		= 1,
 	INVERTED 	= -1,
 } channel_inv_t;
+
 
 /**
  * \brief The mapping of the channels
@@ -88,6 +91,7 @@ typedef enum
 	CHANNEL_AUX2     = 7,
 } remote_channel_t;
 
+
 /**
  * \brief The type of the remote
  */
@@ -96,6 +100,7 @@ typedef enum
 	REMOTE_TURNIGY	= 0,
 	REMOTE_SPEKTRUM = 1,
 } remote_type_t;
+
 
 /**
  * \brief The configuration structure of the remote mode
@@ -115,6 +120,7 @@ typedef struct
 	bool				use_disable_remote_mode_switch;		///< See remote_mode_t for documentation
 	remote_channel_t	disable_remote_mode_channel;		///< See remote_mode_t for documentation
 } remote_mode_conf_t;
+
 
 /**
  * \brief The structure of the remote mode
@@ -136,6 +142,7 @@ typedef struct
 	mav_mode_t			current_desired_mode;				///< Mav mode indicated by the remote
 } remote_mode_t;
 
+
 /**
  * \brief The configuration structure of the remote
  */
@@ -144,6 +151,7 @@ typedef struct
 	remote_type_t type;										///< The type of remote used
 	remote_mode_conf_t mode_config;							///< The configuration structure
 } remote_conf_t;
+
 
 /**
  * \brief The configuration structure of the remote
@@ -161,6 +169,7 @@ typedef struct
 	remote_mode_t mode;										///< The remote mode structure
 } remote_t;
 
+
 /**
  * \brief	Initialise the remote structure
  * 
@@ -168,6 +177,7 @@ typedef struct
  * \param	config				The pointer to the config structure of the remote
  */
 void remote_init(remote_t* remote, const remote_conf_t* config);
+
 
 /**
  * \brief	Returns the throttle value from the remote
@@ -186,6 +196,7 @@ void remote_update(remote_t* remote);
  */
 signal_quality_t remote_check(remote_t* remote);
 
+
 /**
  * \brief	Update the remote channel central position array stored in .c file
  * Warning: you should ensure first that the remote has the stick in their neutral position
@@ -194,6 +205,7 @@ signal_quality_t remote_check(remote_t* remote);
  * \param	channel 				Specify which channel we are interested in
  */
 void remote_calibrate(remote_t* remote, remote_channel_t channel);
+
 
 /**
  * \brief	Returns the throttle value from the remote
@@ -204,6 +216,7 @@ void remote_calibrate(remote_t* remote, remote_channel_t channel);
  */
 float remote_get_throttle(const remote_t* remote);
 
+
 /**
  * \brief	Returns the roll value from the remote
  * 
@@ -212,6 +225,7 @@ float remote_get_throttle(const remote_t* remote);
  * \return	The value of the roll
  */
 float remote_get_roll(const remote_t* remote);
+
 
 /**
  * \brief	Returns the pitch value from the remote
@@ -222,6 +236,7 @@ float remote_get_roll(const remote_t* remote);
  */
 float remote_get_pitch(const remote_t* remote);
 
+
 /**
  * \brief	Returns the yaw value from the remote
  * 
@@ -231,6 +246,7 @@ float remote_get_pitch(const remote_t* remote);
  */
 float remote_get_yaw(const remote_t* remote);
 
+
 /**
  * \brief	Initialise the mode from the remote switches
  * 
@@ -239,12 +255,14 @@ float remote_get_yaw(const remote_t* remote);
  */
 void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t* config);
 
+
 /**
  * \brief	Updates the mode from the remote switches
  * 
  * \param	remote				The pointer to the remote structure
  */
 void remote_mode_update(remote_t* remote);
+
 
 /**
  * \brief	Returns the mode from the remote
@@ -255,6 +273,7 @@ void remote_mode_update(remote_t* remote);
  */
 mav_mode_t remote_mode_get(const remote_t* remote);
 
+
 /**
  * \brief	Sets the attitude command from the remote (rpy and thrust values)
  * 
@@ -262,6 +281,7 @@ mav_mode_t remote_mode_get(const remote_t* remote);
  * \param	controls			The pointer to the controls structure
  */
 void remote_get_command_from_remote(remote_t* remote, control_command_t * controls);
+
 
 /**
  * \brief	Sets the velocity command vector from the remote

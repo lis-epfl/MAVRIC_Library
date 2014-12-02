@@ -48,6 +48,7 @@
 
 #include "stabilisation.h"
 #include "state.h"
+#include "control_command.h"
 
 #define MAX_JOYSTICK_RANGE 0.8
 
@@ -142,6 +143,46 @@ typedef struct
 void joystick_parsing_init(joystick_parsing_t* joystick_parsing, state_t* state);
 
 
+/**
+ * \brief	Returns the throttle value from the joystick
+ * 
+ * \param	joystick		The pointer to the remote structure
+ *
+ * \return	The value of the throttle
+ */
+float joystick_parsing_get_throttle(const joystick_parsing_t* joystick);
+
+
+/**
+ * \brief	Returns the roll value from the joystick
+ * 
+ * \param	joystick		The pointer to the remote structure
+ *
+ * \return	The value of the roll
+ */
+float joystick_parsing_get_roll(const joystick_parsing_t* joystick);
+
+
+/**
+ * \brief	Returns the pitch value from the joystick
+ * 
+ * \param	joystick		The pointer to the remote structure
+ *
+ * \return	The value of the pitch
+ */
+float joystick_parsing_get_pitch(const joystick_parsing_t* joystick);
+
+
+/**
+ * \brief	Returns the yaw value from the joystick
+ * 
+ * \param	joystick		The pointer to the remote structure
+ *
+ * \return	The value of the yaw
+ */
+float joystick_parsing_get_yaw(const joystick_parsing_t* joystick);
+
+
 /** 
  * \brief	Parse joystick to velocity vector command
  *
@@ -167,6 +208,52 @@ void joystick_parsing_get_attitude_command_from_joystick(joystick_parsing_t* joy
  * \param	buttons				The bit mask of the buttons
  */
 void joystick_parsing_button_mask(joystick_parsing_t* joystick_parsing, uint16_t buttons);
+
+
+/**
+ * \brief	Compute rate command from the joystick
+ * 
+ * \param	joystick		Joystick structure (input)
+ * \param	command			Rate command (output)
+ */
+void joystick_parsing_get_rate_command(const joystick_parsing_t* joystick, rate_command_t * command);
+
+
+/**
+ * \brief	Compute thrust command from the joystick
+ * 
+ * \param	joystick		Joystick structure (input)
+ * \param	command			Thrust command (output)
+ */
+void joystick_parsing_get_thrust_command(const joystick_parsing_t* joystick, thrust_command_t * command);
+
+
+/**
+ * \brief	Compute attitude command from the joystick (absolute angles)
+ * 
+ * \param	joystick		Joystick structure (input)
+ * \param	command			Attitude command (output)
+ */
+void joystick_parsing_get_attitude_command(const joystick_parsing_t* joystick, attitude_command_t * command);
+
+
+/**
+ * \brief	Compute attitude command from the joystick (absolute roll and pitch, integrated yaw)
+ * 
+ * \param	joystick		Joystick structure (input)
+ * \param 	k_yaw			Integration factor for yaw (0.02 is ok) (input) 
+ * \param	command			Attitude command (output)
+ */
+void joystick_parsing_get_attitude_command_integrate_yaw(const joystick_parsing_t* joystick, const float k_yaw, attitude_command_t * command);
+
+
+/**
+ * \brief	Compute velocity command from the joystick
+ * 
+ * \param	joystick		Joystick structure (input)
+ * \param	command			Velocity command (output)
+ */
+void joystick_parsing_get_velocity_command(const joystick_parsing_t* joystick, velocity_command_t * command);
 
 
 #ifdef __cplusplus

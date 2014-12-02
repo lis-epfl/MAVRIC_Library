@@ -400,7 +400,7 @@ void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t*
 }
 
 
-void remote_get_rate_command(const remote_t* remote, rate_command_t * command)
+void remote_get_rate_command(const remote_t* remote, rate_command_t* command)
 {
 	command->xyz[ROLL] 	= remote_get_roll(remote);
 	command->xyz[PITCH] = remote_get_pitch(remote);
@@ -408,13 +408,13 @@ void remote_get_rate_command(const remote_t* remote, rate_command_t * command)
 }
 
 
-void remote_get_thrust_command(const remote_t* remote, thrust_command_t * command)
+void remote_get_thrust_command(const remote_t* remote, thrust_command_t* command)
 {
 	command->thrust = remote_get_throttle(remote);
 }
 
 
-void remote_get_attitude_command(const remote_t* remote, attitude_command_t * command)
+void remote_get_attitude_command(const remote_t* remote, attitude_command_t* command)
 {
 	aero_attitude_t attitude;
 	
@@ -435,7 +435,8 @@ void remote_get_attitude_command(const remote_t* remote, attitude_command_t * co
 	}
 }
 
-void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const float k_yaw, attitude_command_t * command)
+
+void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const float k_yaw, attitude_command_t* command)
 {
 	aero_attitude_t attitude;
 
@@ -458,7 +459,7 @@ void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const flo
 }
 
 
-void remote_get_velocity_command(const remote_t* remote, velocity_command_t * command)
+void remote_get_velocity_command(const remote_t* remote, velocity_command_t* command)
 {
 	command->xyz[X] = - 10.0f 	* remote_get_pitch(remote);
 	command->xyz[Y] = 10.0f  	* remote_get_roll(remote);
