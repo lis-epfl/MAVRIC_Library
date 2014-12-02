@@ -52,13 +52,13 @@
 #include "navigation.h"
 #include "constants.h"
 
-float Az[STORE_SIZE] =			///< Store pre-computed value for the azimuth
+float az[STORE_SIZE] =			///< Store pre-computed value for the azimuth
 {	0,
 	PI/2,
 	-PI/4,
 	0
 };
-float El[STORE_SIZE] =			///< Store pre-computed value for the elevation
+float el[STORE_SIZE] =			///< Store pre-computed value for the elevation
 {
 	0,
 	0,
@@ -74,8 +74,8 @@ quat_t attitude_current;		///< store current attitude
 
 float target_vect[3];			///< store target vector in 3D
 
-uint8_t first_Run=0;			///< Flag to tell whether it is the first time you run the controller
-uint16_t Counter;				///< Counter of non-reliable data
+uint8_t first_run=0;			///< Flag to tell whether it is the first time you run the controller
+uint16_t counter;				///< counter of non-reliable data
 float remote_switch_previous;	///< store previous status of the remote switch, associated with the acoustic controller
 
 //------------------------------------------------------------------------------
@@ -95,14 +95,14 @@ static void turn_on_siren(byte_stream_t *out_stream);
  *
  * \param	audio_data	Pointer to the audio structure
  */
-static void check_reliability(audio_Data_type* audio_data);
+static void check_reliability(audio_t* audio_data);
 
 /**
  * \brief	Process audio data
  *
  * \param	audio_data	Pointer to the audio structure
  */
-static void acoustic_process(audio_Data_type* audio_data);
+static void acoustic_process(audio_t* audio_data);
 
 /**
  * \brief	Set a new waypoint accoding to the acoustic information
@@ -110,7 +110,7 @@ static void acoustic_process(audio_Data_type* audio_data);
  * \param	audio_data	Pointer to the audio structure
  */
 
-static void acoustic_set_waypoint_command(audio_Data_type* audio_data);
+static void acoustic_set_waypoint_command(audio_t* audio_data);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -130,34 +130,34 @@ void turn_off_siren(byte_stream_t *out_stream)
 	out_stream->put(out_stream->data,100);
 }
 
-static void check_reliability(audio_Data_type* audio_data)
+static void check_reliability(audio_t* audio_data)
 {
-	float  CosEl, SinEl, CosAz, SinAz, angulardiff=0;
+	float  cos_el, sin_el, cos_az, sin_az, angular_diff=0;
 	int8_t i;
 	
-	if (audio_data->NewData == 0)
+	if (audio_data->new_data == 0)
 	{
 		//reset ReliableData flag
-		audio_data->ReliabeData = 0;
+		audio_data->reliabe_data = 0;
 		
-		if (Counter < WAIT_LIMIT)
+		if (counter < WAIT_LIMIT)
 		{
-			Counter ++;
+			counter ++;
 		}
 		else
 		{
 			//reset
-			Counter	= 0;
-			Az[1]	= 0;
-			Az[2]	= PI/2;
-			Az[3]	= -PI/4;
-			audio_data->Azimuth		= -500;   // for plotting purposes
-			audio_data->Elevation	= -500;
+			counter	= 0;
+			az[1]	= 0;
+			az[2]	= PI/2;
+			az[3]	= -PI/4;
+			audio_data->azimuth		= -500;   // for plotting purposes
+			audio_data->elevation	= -500;
 		}
 	}
 	else //newData are available
 	{
-		Counter = 0;
+		counter = 0;
 		attitude_current	= audio_data->ahrs->qe;			    //store the current IMU attitude and position for later use
 		position_current[0] = audio_data->position_estimation->local_position.pos[0];
 		position_current[1] = audio_data->position_estimation->local_position.pos[1];
@@ -165,48 +165,48 @@ static void check_reliability(audio_Data_type* audio_data)
 		
 		for (i = 1; i < STORE_SIZE; i++)
 		{
-			Az[i-1] = Az[i];
-			El[i-1] = El[i];
+			az[i-1] = az[i];
+			el[i-1] = el[i];
 		}
-		Az[STORE_SIZE-1] = audio_data->Azimuth	*PI/180.0f;
-		El[STORE_SIZE-1] = audio_data->Elevation*PI/180.0f;
+		az[STORE_SIZE-1] = audio_data->azimuth	*PI/180.0f;
+		el[STORE_SIZE-1] = audio_data->elevation*PI/180.0f;
 		
-		CosEl = quick_trig_cos(El[STORE_SIZE-1]);
-		SinEl = quick_trig_sin(El[STORE_SIZE-1]);
+		cos_el = quick_trig_cos(el[STORE_SIZE-1]);
+		sin_el = quick_trig_sin(el[STORE_SIZE-1]);
 		
 		for (i = 0; i < (STORE_SIZE-1); i++)		//compute the total great arc circle between last bearing and the past 3 values
 		{
-			angulardiff += quick_trig_acos(CosEl*quick_trig_cos(El[i])*quick_trig_cos(Az[STORE_SIZE-1]-Az[i])+SinEl*quick_trig_sin(El[i]));
+			angular_diff += quick_trig_acos(cos_el*quick_trig_cos(el[i])*quick_trig_cos(az[STORE_SIZE-1]-az[i])+sin_el*quick_trig_sin(el[i]));
 		}
 		
-		if (angulardiff<RELIABILITY_ARC)
+		if (angular_diff<RELIABILITY_ARC)
 		{
-			audio_data->ReliabeData	= 1;
-			audio_data->ReliabeAz	= Az[STORE_SIZE-1];
-			audio_data->ReliabeEl	= El[STORE_SIZE-1];
-			CosAz=quick_trig_cos(Az[STORE_SIZE-1]);
-			SinAz=quick_trig_sin(Az[STORE_SIZE-1]);
-			target_vect[0]	= CosAz * CosEl;
-			target_vect[1]	= SinAz * CosEl;
-			target_vect[2]	= SinEl;
+			audio_data->reliabe_data	= 1;
+			audio_data->reliabe_az		= az[STORE_SIZE-1];
+			audio_data->reliabe_el		= el[STORE_SIZE-1];
+			cos_az=quick_trig_cos(az[STORE_SIZE-1]);
+			sin_az=quick_trig_sin(az[STORE_SIZE-1]);
+			target_vect[0]	= cos_az * cos_el;
+			target_vect[1]	= sin_az * cos_el;
+			target_vect[2]	= sin_el;
 		}
 		else
 		{
-			audio_data->ReliabeData = 0;
+			audio_data->reliabe_data = 0;
 		}
 		
 	}
 
 }
 
-static void acoustic_process(audio_Data_type* audio_data)
+static void acoustic_process(audio_t* audio_data)
 {
 	
 	check_reliability(audio_data);											// check the reliability of the current measurement
 	
-	if(audio_data->NewData == 1 )
+	if(audio_data->new_data == 1 )
 	{
-		if ((audio_data->ReliabeData == 1) && (audio_data->remote->channels[6] > 0.7f))
+		if ((audio_data->reliabe_data == 1) && (audio_data->remote->channels[6] > 0.7f))
 		{
 			//calculate the approximate waypoint & follow azimuth
 			acoustic_set_waypoint_command(audio_data);	
@@ -240,7 +240,7 @@ static void acoustic_process(audio_Data_type* audio_data)
 	remote_switch_previous	= audio_data->remote->channels[6];
 }
 
-void acoustic_set_speed_command(audio_Data_type* audio_data, float rel_pos[], float dist2wpSqr)
+void acoustic_set_speed_command(audio_t* audio_data, float rel_pos[], float dist2wpSqr)
 {
 	float   norm_rel_dist, v_desiredxy, v_desiredz;
 	float dir_desired_bf[3], new_velocity[3];
@@ -251,9 +251,9 @@ void acoustic_set_speed_command(audio_Data_type* audio_data, float rel_pos[], fl
 
 	v_desiredz = maths_f_min(audio_data->navigation->cruise_speed,( audio_data->navigation->dist2vel_gain * maths_soft_zone(norm_rel_dist,audio_data->stabilisation_copter->stabiliser_stack.velocity_stabiliser.thrust_controller.soft_zone_width)));
 	
-	if(audio_data->ReliabeEl<1.35)
+	if(audio_data->reliabe_el < 1.35)
 	{
-		v_desiredxy = maths_f_min(audio_data->navigation->cruise_speed,(maths_center_window_2(4.0f*audio_data->ReliabeAz) * (-9.0f*audio_data->ReliabeEl+(1.35*9))));
+		v_desiredxy = maths_f_min(audio_data->navigation->cruise_speed,(maths_center_window_2(4.0f*audio_data->reliabe_az) * (-9.0f*audio_data->reliabe_el+(1.35*9))));
 	}
 	else
 	{
@@ -265,8 +265,8 @@ void acoustic_set_speed_command(audio_Data_type* audio_data, float rel_pos[], fl
 		v_desiredz = audio_data->navigation->max_climb_rate * norm_rel_dist /maths_f_abs(dir_desired_bf[Z]);
 	}
 	
-	dir_desired_bf[X] = v_desiredxy * quick_trig_cos(audio_data->ReliabeAz);
-	dir_desired_bf[Y] = v_desiredxy * quick_trig_sin(audio_data->ReliabeAz);
+	dir_desired_bf[X] = v_desiredxy * quick_trig_cos(audio_data->reliabe_az);
+	dir_desired_bf[Y] = v_desiredxy * quick_trig_sin(audio_data->reliabe_az);
 	dir_desired_bf[Z] = v_desiredz	* dir_desired_bf[Z] / norm_rel_dist;
 	
 	
@@ -278,12 +278,12 @@ void acoustic_set_speed_command(audio_Data_type* audio_data, float rel_pos[], fl
 	audio_data->controls_nav->tvel[X]	= new_velocity[X];
 	audio_data->controls_nav->tvel[Y]	= new_velocity[Y];
 	audio_data->controls_nav->tvel[Z]	= new_velocity[Z];
-	audio_data->controls_nav->rpy[YAW]	= KP_YAW * audio_data->ReliabeAz;
+	audio_data->controls_nav->rpy[YAW]	= KP_YAW * audio_data->reliabe_az;
 }
 
 
 
-static void acoustic_set_waypoint_command(audio_Data_type* audio_data)
+static void acoustic_set_waypoint_command(audio_t* audio_data)
 {
 	quat_t qtmp1, qtmp2;
 	float target_vect_global[3], r ;
@@ -313,7 +313,7 @@ static void acoustic_set_waypoint_command(audio_Data_type* audio_data)
 	
 	audio_data->waypoint_handler->waypoint_hold_coordinates.pos[0] = r * target_vect_global[0] + position_previous[0];
 	audio_data->waypoint_handler->waypoint_hold_coordinates.pos[1] = r * target_vect_global[1] + position_previous[1];
-	//centralData->controls_nav.theading=audio_data->Azimuth*PI/180;
+	//centralData->controls_nav.theading=audio_data->azimuth*PI/180;
 	
 	if (r > 3.0f)
 	{
@@ -327,7 +327,7 @@ static void acoustic_set_waypoint_command(audio_Data_type* audio_data)
 //------------------------------------------------------------------------------
 
 
-void acoustic_init(	audio_Data_type*			audio_data, 
+void acoustic_init(	audio_t*			audio_data, 
 							int32_t						UID, 
 							ahrs_t*						ahrs, 
 							position_estimation_t*		position_estimation,
@@ -374,35 +374,35 @@ void acoustic_init(	audio_Data_type*			audio_data,
 	uart_int_register_read_stream(uart_int_get_uart_handle(UID), &(audio_data->audio_stream_in));
 }
 
-task_return_t acoustic_update(audio_Data_type* audio_data)
+task_return_t acoustic_update(audio_t* audio_data)
 {
 	uint8_t buffer[6];
 	
-	//reset NewData flag
-	audio_data->NewData = 0;
+	//reset new_data flag
+	audio_data->new_data = 0;
 	
-	if (first_Run == 0) 
+	if (first_run == 0) 
 	{
-		first_Run=1;
+		first_run = 1;
 		buffer_clear(&(audio_data->audio_buffer));	
 	}
-	else if(buffer_bytes_available(&(audio_data->audio_buffer))>=6)
+	else if(buffer_bytes_available(&(audio_data->audio_buffer)) >= 6)
 	{
-		buffer[0]= buffer_get(&(audio_data->audio_buffer));
-		if (buffer[0]==254)
+		buffer[0] = buffer_get(&(audio_data->audio_buffer));
+		if (buffer[0] == 254)
 		{
-			buffer[1]= buffer_get(&(audio_data->audio_buffer));
-			buffer[2]= buffer_get(&(audio_data->audio_buffer));
-			buffer[3]= buffer_get(&(audio_data->audio_buffer));
-			buffer[4]= buffer_get(&(audio_data->audio_buffer));
-			buffer[5]= buffer_get(&(audio_data->audio_buffer));
+			buffer[1] = buffer_get(&(audio_data->audio_buffer));
+			buffer[2] = buffer_get(&(audio_data->audio_buffer));
+			buffer[3] = buffer_get(&(audio_data->audio_buffer));
+			buffer[4] = buffer_get(&(audio_data->audio_buffer));
+			buffer[5] = buffer_get(&(audio_data->audio_buffer));
 			
 			//checksum check
 			if((-(buffer[1]+buffer[2]+buffer[3]+buffer[4])& 0xFF) == buffer[5])
 			{ 
-				audio_data->Azimuth		= (float)((buffer[1]<<8)|buffer[2]);
-				audio_data->Elevation	= (float)((buffer[3]<<8)|buffer[4]);
-				audio_data->NewData = 1;
+				audio_data->azimuth		= (float)((buffer[1]<<8)|buffer[2]);
+				audio_data->elevation	= (float)((buffer[3]<<8)|buffer[4]);
+				audio_data->new_data	= 1;
 				buffer_clear(&(audio_data->audio_buffer));
 			}
 		}

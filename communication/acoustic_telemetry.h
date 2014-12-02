@@ -54,13 +54,13 @@ extern "C" {
 
 
 /**
- * \brief 	Send the acoustic Azimuth and Elevation angles, and the Reliable_data flag
+ * \brief 	Send the acoustic azimuth and elevation angles, and the Reliable_data flag
  *
  * \param	audio_data			Pointer to the acoustic data structure
  * \param	mavlink_stream		Pointer to mavlink stream structure
  * \param	msg					Pointer to the message structure
  */
-void acoustic_telemetry_send (const audio_Data_type* audio_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void acoustic_telemetry_send (const audio_t* audio_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
 #ifdef __cplusplus

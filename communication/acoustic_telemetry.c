@@ -44,14 +44,15 @@
 #include "time_keeper.h"
 
 
-void acoustic_telemetry_send (const audio_Data_type* audio_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void acoustic_telemetry_send (const audio_t* audio_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
+	//TODO: create a mavlink message
 	mavlink_msg_debug_vect_pack(	mavlink_stream->sysid,
-	mavlink_stream->compid,
-	msg,
-	"Audio",
-	time_keeper_get_micros(),
-	(float)audio_data->Azimuth,
-	(float)audio_data->Elevation,
-	(float)audio_data->ReliabeData);
+									mavlink_stream->compid,
+									msg,
+									"Audio",
+									time_keeper_get_micros(),
+									(float)audio_data->azimuth,
+									(float)audio_data->elevation,
+									(float)audio_data->reliabe_data);
 }
