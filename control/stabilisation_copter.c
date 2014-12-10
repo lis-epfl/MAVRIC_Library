@@ -84,7 +84,7 @@ void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_co
 	attitude_yaw_inverse = coord_conventions_quat_to_aero(stabilisation_copter->ahrs->qe);
 	attitude_yaw_inverse.rpy[0] = 0.0f;
 	attitude_yaw_inverse.rpy[1] = 0.0f;
-	attitude_yaw_inverse.rpy[2] = -attitude_yaw_inverse.rpy[2];
+	attitude_yaw_inverse.rpy[2] = -attitude_yaw_inverse.rpy[2]; //TODO: Check sign! 
 	
 	q_rot = coord_conventions_quaternion_from_aero(attitude_yaw_inverse);
 	
