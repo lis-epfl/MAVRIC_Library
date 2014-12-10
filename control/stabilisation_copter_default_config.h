@@ -181,8 +181,8 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 				// -----------------------------------------------------------------
 				{
 					.p_gain = 4.0f,
-					.clip_min = -1.2f,
-					.clip_max = 1.2f,
+					.clip_min = -12.0f,
+					.clip_max = 12.0f,
 					.integrator={
 						.pregain = 0.0f,
 						.postgain = 0.0f,
@@ -205,8 +205,8 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 				// -----------------------------------------------------------------
 				{
 					.p_gain = 4.0f,
-					.clip_min = -1.2f,
-					.clip_max = 1.2f,
+					.clip_min = -12.0f,
+					.clip_max = 12.0f,
 					.integrator={
 						.pregain = 0.0f,
 						.postgain = 0.0f,
