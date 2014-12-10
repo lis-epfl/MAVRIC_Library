@@ -94,3 +94,88 @@ void stabilisation_send_command(control_command_t* controls, const mavlink_strea
 									controls->tvel[Y],
 									controls->tvel[Z]);
 }
+
+void stabilisation_telemetry_send_control(const control_command_t* controls, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{
+	switch (controls->control_mode)
+	{
+		case VELOCITY_COMMAND_MODE:
+			mavlink_msg_manual_control_pack(mavlink_stream->sysid,
+											mavlink_stream->compid,
+											msg,
+											mavlink_stream->sysid,
+											controls->tvel[X] * 1000,
+											controls->tvel[Y] * 1000,
+											controls->tvel[Z]* 1000,
+											controls->rpy[YAW] * 1000,
+											0);
+			break;
+		case ATTITUDE_COMMAND_MODE:
+			mavlink_msg_manual_control_pack(mavlink_stream->sysid,
+											mavlink_stream->compid,
+											msg,
+											mavlink_stream->sysid,
+											controls->rpy[ROLL] * 1000,
+											controls->rpy[PITCH] * 1000,
+											controls->thrust* 1000,
+											controls->rpy[YAW] * 1000,
+											0);
+			break;
+		case RATE_COMMAND_MODE:
+			mavlink_msg_manual_control_pack(mavlink_stream->sysid,
+											mavlink_stream->compid,
+											msg,
+											mavlink_stream->sysid,
+											controls->rpy[ROLL] * 1000,
+											controls->rpy[PITCH] * 1000,
+											controls->thrust* 1000,
+											controls->rpy[YAW] * 1000,
+											0);
+	}
+}
+
+void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_copter, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{
+	aero_attitude_t attitude_yaw_inverse;
+	quat_t q_rot,qtmp;
+	
+	attitude_yaw_inverse = coord_conventions_quat_to_aero(stabilisation_copter->ahrs->qe);
+	attitude_yaw_inverse.rpy[0] = 0.0f;
+	attitude_yaw_inverse.rpy[1] = 0.0f;
+	attitude_yaw_inverse.rpy[2] = attitude_yaw_inverse.rpy[2];
+
+	q_rot = coord_conventions_quaternion_from_aero(attitude_yaw_inverse);
+	qtmp=quaternions_create_from_vector(stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy);
+	quat_t rpy_local;
+	quaternions_rotate_vector(quaternions_inverse(q_rot), qtmp.v, rpy_local.v);
+	
+	mavlink_msg_debug_vect_pack(	mavlink_stream->sysid,
+									mavlink_stream->compid,
+									msg,
+									"OutVel",
+									time_keeper_get_micros(),
+									-rpy_local.v[X] * 1000,
+									rpy_local.v[Y] * 1000,
+									stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy[YAW] * 1000);
+	mavlink_stream_send(mavlink_stream,msg);
+	
+	mavlink_msg_debug_vect_pack(	mavlink_stream->sysid,
+									mavlink_stream->compid,
+									msg,
+									"OutAtt",
+									time_keeper_get_micros(),
+									stabilisation_copter->stabiliser_stack.attitude_stabiliser.output.rpy[ROLL] * 1000,
+									stabilisation_copter->stabiliser_stack.attitude_stabiliser.output.rpy[PITCH] * 1000,
+									stabilisation_copter->stabiliser_stack.attitude_stabiliser.output.rpy[YAW] * 1000);
+	mavlink_stream_send(mavlink_stream,msg);
+	
+	mavlink_msg_debug_vect_pack(	mavlink_stream->sysid,
+									mavlink_stream->compid,
+									msg,
+									"OutRate",
+									time_keeper_get_micros(),
+									stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[ROLL] * 1000,
+									stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[PITCH] * 1000,
+									stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[YAW] * 1000);
+	mavlink_stream_send(mavlink_stream,msg);
+}
