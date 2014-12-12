@@ -69,46 +69,53 @@ static mav_result_t simulation_telemetry_set_new_home_position(simulation_model_
 {
 	mav_result_t result;
 	
-	if (packet->param1 == 1)
+	if (sim->state->mav_mode.ARMED == ARMED_OFF)
 	{
-		// Set new home position to actual position
-		print_util_dbg_print("Set new home location to actual position.\r\n");
-		sim->local_position.origin = coord_conventions_local_to_global_position(sim->local_position);
+		if (packet->param1 == 1)
+		{
+			// Set new home position to actual position
+			print_util_dbg_print("Set new home location to actual position.\r\n");
+			sim->local_position.origin = coord_conventions_local_to_global_position(sim->local_position);
 
-		print_util_dbg_print("New Home location: (");
-		print_util_dbg_print_num(sim->local_position.origin.latitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->local_position.origin.longitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->local_position.origin.altitude * 1000.0f,10);
-		print_util_dbg_print(")\r\n");
+			print_util_dbg_print("New Home location: (");
+			print_util_dbg_print_num(sim->local_position.origin.latitude * 10000000.0f,10);
+			print_util_dbg_print(", ");
+			print_util_dbg_print_num(sim->local_position.origin.longitude * 10000000.0f,10);
+			print_util_dbg_print(", ");
+			print_util_dbg_print_num(sim->local_position.origin.altitude * 1000.0f,10);
+			print_util_dbg_print(")\r\n");
+		}
+		else
+		{
+			// Set new home position from msg
+			print_util_dbg_print("[SIMULATION] Set new home location.\r\n");
+
+			sim->local_position.origin.latitude = packet->param5;
+			sim->local_position.origin.longitude = packet->param6;
+			sim->local_position.origin.altitude = packet->param7;
+
+			print_util_dbg_print("New Home location: (");
+			print_util_dbg_print_num(sim->local_position.origin.latitude * 10000000.0f,10);
+			print_util_dbg_print(", ");
+			print_util_dbg_print_num(sim->local_position.origin.longitude * 10000000.0f,10);
+			print_util_dbg_print(", ");
+			print_util_dbg_print_num(sim->local_position.origin.altitude * 1000.0f,10);
+			print_util_dbg_print(")\r\n");
+		
+			sim->local_position.pos[X] = 0.0f;
+			sim->local_position.pos[Y] = 0.0f;
+			sim->local_position.pos[Z] = 0.0f;
+		
+		}
+
+		*sim->nav_plan_active = false;
+	
+		result = MAV_RESULT_ACCEPTED;
 	}
 	else
 	{
-		// Set new home position from msg
-		print_util_dbg_print("[SIMULATION] Set new home location.\r\n");
-
-		sim->local_position.origin.latitude = packet->param5;
-		sim->local_position.origin.longitude = packet->param6;
-		sim->local_position.origin.altitude = packet->param7;
-
-		print_util_dbg_print("New Home location: (");
-		print_util_dbg_print_num(sim->local_position.origin.latitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->local_position.origin.longitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->local_position.origin.altitude * 1000.0f,10);
-		print_util_dbg_print(")\r\n");
-		
-		sim->local_position.pos[X] = 0.0f;
-		sim->local_position.pos[Y] = 0.0f;
-		sim->local_position.pos[Z] = 0.0f;
-		
+		result = MAV_RESULT_TEMPORARILY_REJECTED;
 	}
-
-	*sim->nav_plan_active = false;
-	
-	result = MAV_RESULT_ACCEPTED;
 	
 	return result;
 }
