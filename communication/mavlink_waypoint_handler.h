@@ -105,8 +105,8 @@ typedef struct
 	uint32_t start_timeout;										///< The start time for the waypoint timeout
 	uint32_t timeout_max_waypoint;								///< The max waiting time for communication
 
-	uint32_t start_wpt_time;
-	uint32_t travel_time;
+	uint32_t start_wpt_time;									///< The time at which the MAV starts to travel towards its waypoint
+	uint32_t travel_time;										///< The travel time between two waypoints, updated once the MAV arrives at its next waypoint
 
 	position_estimation_t* position_estimation;					///< The pointer to the position estimation structure
 	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
