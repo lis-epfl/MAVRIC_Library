@@ -141,8 +141,10 @@ bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
  * \param   onboard_parameters		Pointer to module structure
  * \param 	val						Unsigned 32 - bits integer parameter value
  * \param 	param_name				Name of the parameter
+ *
+ * \return	True if the parameter was added, false otherwise
  */
-void onboard_parameters_add_parameter_uint32(onboard_parameters_t* onboard_parameters, uint32_t* val, const char* param_name);
+bool onboard_parameters_add_parameter_uint32(onboard_parameters_t* onboard_parameters, uint32_t* val, const char* param_name);
 
 
 /**
@@ -151,8 +153,10 @@ void onboard_parameters_add_parameter_uint32(onboard_parameters_t* onboard_param
  * \param   onboard_parameters		Pointer to module structure
  * \param 	val						Signed 32 - bits integer parameter value
  * \param 	param_name				Name of the parameter
+ *
+ * \return	True if the parameter was added, false otherwise
  */
-void onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parameters, int32_t* val, const char* param_name);
+bool onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parameters, int32_t* val, const char* param_name);
 
 
 /**
@@ -161,8 +165,10 @@ void onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parame
  * \param   onboard_parameters		Pointer to module structure
  * \param 	val						Floating point parameter value
  * \param 	param_name				Name of the parameter
+ *
+ * \return	True if the parameter was added, false otherwise
  */
-void onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parameters, float* val, const char* param_name);
+bool onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parameters, float* val, const char* param_name);
 
 /**
  * \brief	Read/Write from/to flash depending on the parameters of the MAVLink command message
