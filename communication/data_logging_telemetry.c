@@ -60,20 +60,27 @@ static mav_result_t data_logging_telemetry_toggle_logging(data_logging_t* data_l
 
 static mav_result_t data_logging_telemetry_toggle_logging(data_logging_t* data_logging, mavlink_command_long_t* packet)
 {
-	mav_result_t result;
+	mav_result_t result = MAV_RESULT_TEMPORARILY_REJECTED;
 	
-	if(packet->param1 == 1)
+	if (data_logging->state->mav_mode.ARMED == ARMED_OFF)
 	{
-		print_util_dbg_print("Start logging from command message\r\n");
+		if(packet->param1 == 1)
+		{
+			print_util_dbg_print("Start logging from command message\r\n");
+		}
+		else
+		{
+			print_util_dbg_print("Stop logging from command message\r\n");
+		}
+	
+		result = MAV_RESULT_ACCEPTED;
+	
+		data_logging->log_data = packet->param1;
 	}
 	else
 	{
-		print_util_dbg_print("Stop logging from command message\r\n");
+		result = MAV_RESULT_TEMPORARILY_REJECTED;
 	}
-	
-	result = MAV_RESULT_ACCEPTED;
-	
-	data_logging->log_data = packet->param1;
 	
 	return result;
 }
