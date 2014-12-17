@@ -250,21 +250,21 @@ bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&onboard_parameters_send_all_parameters;
 	callback.module_struct 	= (handling_module_struct_t)		onboard_parameters;
-	mavlink_message_handler_add_msg_callback( message_handler, &callback );
+	init_success &= mavlink_message_handler_add_msg_callback( message_handler, &callback );
 	
 	callback.message_id 	= MAVLINK_MSG_ID_PARAM_REQUEST_READ; // 20
 	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&onboard_parameters_send_parameter;
 	callback.module_struct 	= (handling_module_struct_t)		onboard_parameters;
-	mavlink_message_handler_add_msg_callback( message_handler, &callback );	
+	init_success &= mavlink_message_handler_add_msg_callback( message_handler, &callback );	
 	
 	callback.message_id 	= MAVLINK_MSG_ID_PARAM_SET; // 23
 	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&onboard_parameters_receive_parameter;
 	callback.module_struct 	= (handling_module_struct_t)		onboard_parameters;
-	mavlink_message_handler_add_msg_callback( message_handler, &callback );
+	init_success &= mavlink_message_handler_add_msg_callback( message_handler, &callback );
 
 	// Add callbacks for waypoint handler commands requests
 	mavlink_message_handler_cmd_callback_t callbackcmd;
@@ -275,7 +275,7 @@ bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 	callbackcmd.compid_target = MAV_COMP_ID_ALL;
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&onboard_parameters_preflight_storage;
 	callbackcmd.module_struct =									onboard_parameters;
-	mavlink_message_handler_add_cmd_callback( message_handler, &callbackcmd);
+	init_success &= mavlink_message_handler_add_cmd_callback( message_handler, &callbackcmd);
 	
 
 	print_util_dbg_print("[ONBOARD PARAMETERS] Initialised.\r\n");

@@ -57,8 +57,10 @@ extern "C" {
  *
  * \param	joystick_parsing		The pointer to the joystick parsing structure
  * \param	message_handler		The pointer to the MAVLink communication structure
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void joystick_parsing_telemetry_init(joystick_parsing_t* joystick_parsing, mavlink_message_handler_t* message_handler);
+bool joystick_parsing_telemetry_init(joystick_parsing_t* joystick_parsing, mavlink_message_handler_t* message_handler);
 
 /** 
  * \brief	Parse received MAVLink message in structure

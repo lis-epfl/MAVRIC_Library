@@ -787,7 +787,7 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&navigation_set_auto_takeoff;
 	callbackcmd.module_struct =									navigation;
-	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	init_success &= mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 	
 	callbackcmd.command_id = MAV_CMD_NAV_LAND; // 21
 	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
@@ -795,7 +795,7 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&navigation_set_auto_landing;
 	callbackcmd.module_struct =									navigation;
-	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	init_success &= mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 	
 	callbackcmd.command_id = MAV_CMD_OVERRIDE_GOTO; // 252
 	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
@@ -803,7 +803,7 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&navigation_start_stop_navigation;
 	callbackcmd.module_struct =									navigation;
-	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	init_success &= mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 	
 	
 	print_util_dbg_print("[NAVIGATION] initialized.\r\n");

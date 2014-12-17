@@ -183,7 +183,7 @@ bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&mavlink_communication_toggle_telemetry_stream;
 	callback.module_struct 	= (handling_module_struct_t)		&mavlink_communication->scheduler;
-	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	init_success &= mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
 
 	print_util_dbg_print("[MAVLINK COMMUNICATION] Initialised\r\n");
 	

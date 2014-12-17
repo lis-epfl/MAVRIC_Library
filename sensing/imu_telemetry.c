@@ -187,8 +187,10 @@ static mav_result_t imu_telemetry_start_calibration(imu_t* imu, mavlink_command_
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void imu_telemetry_init(imu_t* imu, mavlink_message_handler_t* message_handler)
+bool imu_telemetry_init(imu_t* imu, mavlink_message_handler_t* message_handler)
 {
+	bool init_success = true;
+	
 	// Add callbacks for waypoint handler commands requests
 	mavlink_message_handler_cmd_callback_t callbackcmd;
 	
@@ -198,7 +200,9 @@ void imu_telemetry_init(imu_t* imu, mavlink_message_handler_t* message_handler)
 	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&imu_telemetry_start_calibration;
 	callbackcmd.module_struct =									imu;
-	mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+	
+	return init_success;
 }
 
 void imu_telemetry_send_scaled(const imu_t* imu, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
