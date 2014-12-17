@@ -128,11 +128,13 @@ static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream)
+bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream)
 {
+	bool init_success = true;
+	
 	// Init MAVLink schedule
-	scheduler_init(	&mavlink_communication->scheduler, 
-					&config->scheduler_config);
+	init_success &= scheduler_init(	&mavlink_communication->scheduler, 
+									&config->scheduler_config);
 
 	// Init MAVLink stream
 	mavlink_stream_init(	&mavlink_communication->mavlink_stream, 
@@ -140,16 +142,16 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 							rx_stream,
 							tx_stream	);
 
-	mavlink_message_handler_init(	&mavlink_communication->message_handler, 
-									&config->message_handler_config,
-									&mavlink_communication->mavlink_stream);
+	init_success &= mavlink_message_handler_init(	&mavlink_communication->message_handler, 
+													&config->message_handler_config,
+													&mavlink_communication->mavlink_stream);
 
 	// Init onboard parameters
-	onboard_parameters_init(	&mavlink_communication->onboard_parameters, 
-								&config->onboard_parameters_config, 
-								&mavlink_communication->scheduler, 
-								&mavlink_communication->message_handler,
-								&mavlink_communication->mavlink_stream); 
+	init_success &= onboard_parameters_init(	&mavlink_communication->onboard_parameters, 
+												&config->onboard_parameters_config, 
+												&mavlink_communication->scheduler,
+												&mavlink_communication->message_handler,
+												&mavlink_communication->mavlink_stream); 
 
 	mavlink_communication->send_msg_handler_set = malloc( sizeof(mavlink_send_msg_handler_set_t) + sizeof(mavlink_send_msg_handler_t[config->max_msg_sending_count]) );
 
@@ -158,6 +160,8 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 	{
 		mavlink_communication->send_msg_handler_set->max_msg_sending_count = config->max_msg_sending_count;
 		mavlink_communication->send_msg_handler_set->msg_sending_count = 0;
+		
+		init_success &= true;
 	}
 	else
 	{
@@ -165,6 +169,8 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 
 		mavlink_communication->send_msg_handler_set->max_msg_sending_count = 0;
 		mavlink_communication->send_msg_handler_set->msg_sending_count = 0;
+		
+		init_success &= false;
 	}
 
 	mavlink_communication->send_msg_handler_set->max_msg_sending_count = config->max_msg_sending_count;
@@ -180,6 +186,8 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
 
 	print_util_dbg_print("[MAVLINK COMMUNICATION] Initialised\r\n");
+	
+	return init_success;
 }
 
 

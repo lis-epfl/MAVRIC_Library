@@ -126,8 +126,10 @@ typedef struct
  * \param 	config 					Configuration
  * \param 	rx_stream;				Output stream
  * \param 	tx_stream;				Input stream
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream);
+bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream);
 
 
 /**

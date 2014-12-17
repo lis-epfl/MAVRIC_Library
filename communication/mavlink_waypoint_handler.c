@@ -1040,8 +1040,10 @@ static mav_result_t waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimation_t* position_estimation, const ahrs_t* ahrs, state_t* state, mavlink_communication_t* mavlink_communication, const mavlink_stream_t* mavlink_stream)
+bool waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, position_estimation_t* position_estimation, const ahrs_t* ahrs, state_t* state, mavlink_communication_t* mavlink_communication, const mavlink_stream_t* mavlink_stream)
 {
+	bool init_success = true;
+	
 	waypoint_handler->start_timeout = time_keeper_get_millis();
 	waypoint_handler->timeout_max_waypoint = 10000;
 	
@@ -1150,7 +1152,9 @@ void waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	callbackcmd.module_struct =									waypoint_handler;
 	mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 	
-	print_util_dbg_print("Waypoint handler initialized.\r\n");
+	print_util_dbg_print("[WAYPOINT HANDLER] Initialised.\r\n");
+	
+	return init_success;
 }
 
 void waypoint_handler_init_homing_waypoint(mavlink_waypoint_handler_t* waypoint_handler)

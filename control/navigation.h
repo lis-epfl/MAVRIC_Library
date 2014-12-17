@@ -133,8 +133,10 @@ typedef struct
  * \param	control_joystick		The pointer to the joystick structure
  * \param	remote					The pointer to the remote structure
  * \param	mavlink_communication	The pointer to the MAVLink communication structure
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const control_command_t* control_joystick, remote_t* remote, mavlink_communication_t* mavlink_communication);
+bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const control_command_t* control_joystick, remote_t* remote, mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief	Initialise the position hold mode

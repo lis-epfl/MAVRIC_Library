@@ -119,8 +119,10 @@ typedef struct
  * \param	gps						The pointer to the GPS structure
  * \param	ahrs					The pointer to the attitude estimation structure
  * \param	imu						The pointer to the IMU structure
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t* barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu);
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t* barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu);
 
 
 /**

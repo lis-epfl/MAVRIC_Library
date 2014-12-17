@@ -44,8 +44,9 @@
 #include "print_util.h"
 #include "constants.h"
 
-void stabilisation_init(control_command_t *controls)
+bool stabilisation_init(control_command_t *controls)
 {
+	bool init_success = true;
 	
 	controls->control_mode = ATTITUDE_COMMAND_MODE;
 	controls->yaw_mode = YAW_RELATIVE;
@@ -59,7 +60,9 @@ void stabilisation_init(control_command_t *controls)
 	controls->theading = 0.0f;
 	controls->thrust = -1.0f;
 	
-	print_util_dbg_print("Stabilisation init.\r\n");
+	print_util_dbg_print("[STABILISATION] init.\r\n");
+	
+	return init_success;
 }
 
 void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[]) 

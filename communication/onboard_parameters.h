@@ -123,14 +123,16 @@ typedef struct
 
 
 /**
-* \brief	Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0
-* 
-* \param   	onboard_parameters		Pointer to module structure
-* \param 	config 					Configuration
-* \param 	scheduler 				Pointer to MAVLink scheduler
-* \param 	message_handler 		Pointer to MAVLink message handler
-*/
-void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream);
+ * \brief	Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0
+ * 
+ * \param   	onboard_parameters		Pointer to module structure
+ * \param 	config 					Configuration
+ * \param 	scheduler 				Pointer to MAVLink scheduler
+ * \param 	message_handler 		Pointer to MAVLink message handler
+ *
+ * \return	True if the init succeed, false otherwise
+ */
+bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream);
 
 
 /**

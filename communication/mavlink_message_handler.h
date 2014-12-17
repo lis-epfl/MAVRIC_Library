@@ -175,8 +175,10 @@ typedef struct
  * \param 	message_handler 	Pointer to message handler data structure
  * \param 	config 				Config parameters
  * \param	mavlink_stream		Pointer to the mavlink stream
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void mavlink_message_handler_init(	mavlink_message_handler_t* 			message_handler, 
+bool mavlink_message_handler_init(	mavlink_message_handler_t* 			message_handler, 
 									const mavlink_message_handler_conf_t* 	config,
 									const mavlink_stream_t* mavlink_stream);
 

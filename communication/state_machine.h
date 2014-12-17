@@ -77,8 +77,10 @@ typedef struct
  * \param state						Pointer to the state structure
  * \param sim_model					Pointer to the simulation structure
  * \param remote					Pointer to the remote structure
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void state_machine_init(	state_machine_t *state_machine,
+bool state_machine_init(	state_machine_t *state_machine,
 							state_t* state, 
 							mavlink_waypoint_handler_t* waypoint_handler, 
 							simulation_model_t *sim_model, 

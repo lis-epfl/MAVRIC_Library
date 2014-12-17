@@ -137,8 +137,10 @@ typedef struct
  * \param	imu						The pointer to the IMU structure
  * \param	conf_imu				The pointer to the configuration IMU structure
  * \param	state					The pointer to the state structure
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void imu_init (imu_t *imu, imu_conf_t *conf_imu, state_t* state);
+bool imu_init (imu_t *imu, imu_conf_t *conf_imu, state_t* state);
 
 
 /**

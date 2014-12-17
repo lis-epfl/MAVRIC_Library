@@ -138,8 +138,10 @@ typedef struct
  * \param	data_logging			The pointer to the data logging structure
  * \param	config					The pointer to the configuration structure
  * \param	state					The pointer to the state structure
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config, const state_t* state);
+bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config, const state_t* state);
 
 /**
  * \brief	Create and open a new file

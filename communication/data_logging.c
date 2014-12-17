@@ -505,8 +505,10 @@ static void data_logging_f_seek(data_logging_t* data_logging)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config, const state_t* state)
+bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config, const state_t* state)
 {
+	bool init_success = true;
+	
 	// Init debug mode
 	data_logging->debug = config->debug;
 	
@@ -521,6 +523,8 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 		data_logging->data_logging_set->max_logs = config->max_logs;
 		data_logging->data_logging_set->log_interval = config->log_interval;
 		data_logging->data_logging_set->data_logging_count = 0;
+		
+		init_success &= true;
 	}
 	else
 	{
@@ -529,6 +533,8 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 		data_logging->data_logging_set->max_logs = 0;
 		data_logging->data_logging_set->log_interval = 0;
 		data_logging->data_logging_set->data_logging_count = 0;
+		
+		init_success &= false;
 	}
 	
 	// Automaticly add the time as first logging parameter
@@ -556,6 +562,15 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	data_logging->file_name = malloc(data_logging->buffer_name_size);
 	data_logging->name_n_extension = malloc(data_logging->buffer_name_size);
 	
+	if (data_logging->file_name == NULL)
+	{
+		init_success &= false;
+	}
+	if (data_logging->name_n_extension == NULL)
+	{
+		init_success &= false;
+	}
+	
 	data_logging->fr = f_mount(&data_logging->fs, "", 1);
 	
 	if (data_logging->fr == FR_OK)
@@ -581,7 +596,9 @@ void data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	}
 	data_logging->logging_time = time_keeper_get_millis();
 	
-	print_util_dbg_print("[Data logging] Data logging initialised.\r\n");
+	print_util_dbg_print("[DATA LOGGING] initialised.\r\n");
+	
+	return init_success;
 }
 
 void data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, uint32_t sysid)

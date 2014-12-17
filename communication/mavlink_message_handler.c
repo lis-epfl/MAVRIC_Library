@@ -136,10 +136,12 @@ static bool match_cmd(mavlink_message_handler_t* message_handler, mavlink_messag
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void mavlink_message_handler_init(	mavlink_message_handler_t* message_handler, 
+bool mavlink_message_handler_init(	mavlink_message_handler_t* message_handler, 
 									const mavlink_message_handler_conf_t* config, 
 									const mavlink_stream_t* mavlink_stream)
 {
+	bool init_success = true;
+	
 	// Init dependencies
 	message_handler->mavlink_stream = mavlink_stream;
 
@@ -153,6 +155,8 @@ void mavlink_message_handler_init(	mavlink_message_handler_t* message_handler,
     {
 	    message_handler->msg_callback_set->max_callback_count = config->max_msg_callback_count;
 		message_handler->msg_callback_set->callback_count = 0;
+		
+		init_success &= true;
 	}
 	else
 	{
@@ -160,6 +164,8 @@ void mavlink_message_handler_init(	mavlink_message_handler_t* message_handler,
 
 		message_handler->msg_callback_set->max_callback_count = 0;
 		message_handler->msg_callback_set->callback_count = 0;	
+		
+		init_success &= false;
 	}
 
 
@@ -168,14 +174,22 @@ void mavlink_message_handler_init(	mavlink_message_handler_t* message_handler,
     if ( message_handler->cmd_callback_set != NULL )
     {
 	    message_handler->cmd_callback_set->max_callback_count = config->max_cmd_callback_count;
-		message_handler->cmd_callback_set->callback_count = 0;	
+		message_handler->cmd_callback_set->callback_count = 0;
+		
+		init_success &= true;	
 	}
 	else
 	{
 		print_util_dbg_print("[COMMAND HANDLER] ERROR ! Bad memory allocation\r\n");
 		message_handler->cmd_callback_set->max_callback_count = 0;
-		message_handler->cmd_callback_set->callback_count = 0;		
+		message_handler->cmd_callback_set->callback_count = 0;
+		
+		init_success &= false;	
 	}
+	
+	print_util_dbg_print("[MESSAGE HANDLER] Initialised.\r\n");
+	
+	return init_success;
 }
 
 

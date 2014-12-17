@@ -203,8 +203,10 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream) 
+bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream) 
 {
+	bool init_success = true;
+	
 	// Init dependencies
 	onboard_parameters->mavlink_stream = mavlink_stream; 
 
@@ -218,23 +220,27 @@ void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 	{
 		onboard_parameters->param_set->max_param_count = config->max_param_count;
 		onboard_parameters->param_set->param_count = 0;
+		
+		init_success &= true;
 	}
 	else
 	{
 		print_util_dbg_print("[ONBOARD PARAMETERS] ERROR ! Bad memory allocation\r\n");
 		onboard_parameters->param_set->max_param_count = 0;
-		onboard_parameters->param_set->param_count = 0;	
+		onboard_parameters->param_set->param_count = 0;
+		
+		init_success &= false;
 	}
 
 	// Add onboard parameter telemetry to the scheduler
-	scheduler_add_task(	scheduler, 
-						100000, 
-						RUN_REGULAR, 
-						PERIODIC_ABSOLUTE,
-						PRIORITY_NORMAL,
-						(task_function_t)&onboard_parameters_send_scheduled_parameters, 
-						(task_argument_t)onboard_parameters, 
-						MAVLINK_MSG_ID_PARAM_VALUE);
+	init_success &= scheduler_add_task(	scheduler, 
+										100000,
+										RUN_REGULAR,
+										PERIODIC_ABSOLUTE,
+										PRIORITY_NORMAL,
+										(task_function_t)&onboard_parameters_send_scheduled_parameters,
+										(task_argument_t)onboard_parameters,
+										MAVLINK_MSG_ID_PARAM_VALUE);
 
 	// Add callbacks for onboard parameters requests
 	mavlink_message_handler_msg_callback_t callback;
@@ -272,7 +278,9 @@ void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 	mavlink_message_handler_add_cmd_callback( message_handler, &callbackcmd);
 	
 
-	print_util_dbg_print("Onboard parameters initialised.\r\n");	
+	print_util_dbg_print("[ONBOARD PARAMETERS] Initialised.\r\n");
+	
+	return init_success;
 }
 
 
