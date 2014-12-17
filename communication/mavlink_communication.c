@@ -228,34 +228,49 @@ void mavlink_communication_suspend_downstream(mavlink_communication_t* mavlink_c
 }
 
 
-void mavlink_communication_add_msg_send(	mavlink_communication_t* mavlink_communication, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id)
+bool mavlink_communication_add_msg_send(	mavlink_communication_t* mavlink_communication, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id)
 {
+	bool add_success = true;
+	
 	mavlink_send_msg_handler_set_t* send_handler = mavlink_communication->send_msg_handler_set;
 	
-	
-	if ( send_handler->msg_sending_count <  send_handler->max_msg_sending_count )
+	if ( send_handler == NULL )
 	{
-		mavlink_send_msg_handler_t* new_msg_send = &send_handler->msg_send_list[send_handler->msg_sending_count];
-		
-		new_msg_send->mavlink_stream = &mavlink_communication->mavlink_stream;
-		new_msg_send->function = function;
-		new_msg_send->module_struct = module_structure;
-
-		send_handler->msg_sending_count += 1;
-		
-		scheduler_add_task(	&mavlink_communication->scheduler,
-							repeat_period,
-							run_mode,
-							timing_mode,
-							priority,
-							(task_function_t)&mavlink_communication_send_message,
-							(task_argument_t)new_msg_send,
-							task_id	);
+		print_util_dbg_print("[MAVLINK COMMUNICATION] Error: null pointer.\r\n");
+		add_success &= false;
 	}
 	else
 	{
-		print_util_dbg_print("[MAVLINK COMMUNICATION] Error: Cannot add more send msg\r\n");
+		if ( send_handler->msg_sending_count <  send_handler->max_msg_sending_count )
+		{
+			mavlink_send_msg_handler_t* new_msg_send = &send_handler->msg_send_list[send_handler->msg_sending_count];
+			
+			new_msg_send->mavlink_stream = &mavlink_communication->mavlink_stream;
+			new_msg_send->function = function;
+			new_msg_send->module_struct = module_structure;
+
+			send_handler->msg_sending_count += 1;
+			
+			add_success &= true;
+			
+			add_success &= scheduler_add_task(	&mavlink_communication->scheduler,
+												repeat_period,
+												run_mode,
+												timing_mode,
+												priority,
+												(task_function_t)&mavlink_communication_send_message,
+												(task_argument_t)new_msg_send,
+												task_id	);
+		}
+		else
+		{
+			print_util_dbg_print("[MAVLINK COMMUNICATION] Error: Cannot add more send msg\r\n");
+			
+			add_success &= false;
+		}
 	}
+	
+	return add_success;
 }
 
 
