@@ -286,7 +286,8 @@ void acoustic_set_speed_command(audio_t* audio_data, float rel_pos[], float dist
 static void acoustic_set_waypoint_command(audio_t* audio_data)
 {
 	quat_t qtmp1, qtmp2;
-	float target_vect_global[3], r ;
+	float target_vect_global[3];
+	float speed_gain;
 	
 	qtmp1 = quaternions_create_from_vector(target_vect);
 	qtmp2 = quaternions_local_to_global(attitude_previous,qtmp1);
@@ -297,25 +298,25 @@ static void acoustic_set_waypoint_command(audio_t* audio_data)
 	target_vect_global[2] = qtmp2.v[2];  
 	
 	//distance to target on ground (computed from the hight of robot)
-	//r = f_abs(position_previous[2]/target_vect_global[2]);			
-	//r = f_abs(1.0-target_vect_global[2])*15.0
+	//speed_gain = f_abs(position_previous[2]/target_vect_global[2]);			
+	//speed_gain = f_abs(1.0-target_vect_global[2])*15.0
 	
-	r = maths_f_abs(quick_trig_acos(target_vect_global[2])) * 20.0f;
+	speed_gain = maths_f_abs(quick_trig_acos(target_vect_global[2])) * 20.0f;
 	
-	if (r > 20.0f)
+	if (speed_gain > 20.0f)
 	{
-		r = 20.0f;
+		speed_gain = 20.0f;
 	}
-	else if (r < 3.0f)
+	else if (speed_gain < 3.0f)
 	{
-		r = 0.0f;
+		speed_gain = 0.0f;
 	}
 	
-	audio_data->waypoint_handler->waypoint_hold_coordinates.pos[0] = r * target_vect_global[0] + position_previous[0];
-	audio_data->waypoint_handler->waypoint_hold_coordinates.pos[1] = r * target_vect_global[1] + position_previous[1];
+	audio_data->waypoint_handler->waypoint_hold_coordinates.pos[0] = speed_gain * target_vect_global[0] + position_previous[0];
+	audio_data->waypoint_handler->waypoint_hold_coordinates.pos[1] = speed_gain * target_vect_global[1] + position_previous[1];
 	//centralData->controls_nav.theading=audio_data->azimuth*PI/180;
 	
-	if (r > 3.0f)
+	if (speed_gain > 3.0f)
 	{
 		audio_data->waypoint_handler->waypoint_hold_coordinates.heading = atan2(target_vect_global[Y],target_vect_global[X]);
 	}	
