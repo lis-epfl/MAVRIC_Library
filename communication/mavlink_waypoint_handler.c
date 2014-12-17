@@ -1432,15 +1432,7 @@ local_coordinates_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* 
 }
 
 void mavlink_waypoint_handler_send_nav_time(mavlink_waypoint_handler_t* waypoint_handler,const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
-{
-	mavlink_msg_named_value_int_pack(	mavlink_stream->sysid,
-										mavlink_stream->compid,
-										msg,
-										time_keeper_get_millis(),
-										"current_wp",
-										waypoint_handler->current_waypoint_count);
-	mavlink_stream_send(mavlink_stream, msg);
-	
+{	
 	mavlink_msg_named_value_int_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										msg,
