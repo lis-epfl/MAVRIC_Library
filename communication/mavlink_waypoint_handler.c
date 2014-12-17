@@ -247,7 +247,7 @@ static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* way
 	print_util_dbg_print(".\r\n");
 	waypoint.x = waypoint_global.latitude;
 	waypoint.y = waypoint_global.longitude;
-	waypoint.z = -altitude;
+	waypoint.z = -altitude; // Positive Z axis is pointing downwards, so the altitude is negative is the local frame
 	
 	waypoint.autocontinue = packet->param5;
 	waypoint.current = (packet->param5 == 1);
@@ -279,7 +279,7 @@ static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* way
 	
 	waypoint.x = waypoint_global.latitude;
 	waypoint.y = waypoint_global.longitude;
-	waypoint.z = -altitude;
+	waypoint.z = -altitude; // Positive Z axis is pointing downwards, so the altitude is negative is the local frame
 	
 	waypoint.autocontinue = packet->param5;
 	waypoint.current = 0;
@@ -355,7 +355,7 @@ static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handle
 		print_util_dbg_print(".\r\n");
 		waypoint.x = waypoint_global.latitude;
 		waypoint.y = waypoint_global.longitude;
-		waypoint.z = -altitude;
+		waypoint.z = -altitude; // Positive Z axis is pointing downwards, so the altitude is negative is the local frame
 	
 		waypoint.autocontinue = packet->param5;
 		if(i==0)
@@ -440,7 +440,7 @@ static void waypoint_handler_set_stream_scenario(mavlink_waypoint_handler_t* way
 	print_util_dbg_print(".\r\n");
 	waypoint.x = waypoint_global.latitude;
 	waypoint.y = waypoint_global.longitude;
-	waypoint.z = -altitude;
+	waypoint.z = -altitude; // Positive Z axis is pointing downwards, so the altitude is negative is the local frame
 	
 	waypoint.autocontinue = packet->param5;
 	waypoint.current = (packet->param5 == 1);
@@ -480,7 +480,7 @@ static void waypoint_handler_set_stream_scenario(mavlink_waypoint_handler_t* way
 	print_util_dbg_print(".\r\n");
 	waypoint.x = waypoint_global.latitude;
 	waypoint.y = waypoint_global.longitude;
-	waypoint.z = -altitude;
+	waypoint.z = -altitude; // Positive Z axis is pointing downwards, so the altitude is negative is the local frame
 	
 	waypoint.autocontinue = packet->param5;
 	waypoint.current = 0;
