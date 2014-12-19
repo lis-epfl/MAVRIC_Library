@@ -87,6 +87,14 @@ static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handle
 static void waypoint_handler_set_stream_scenario(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
 
 /**
+ * \brief	Sets a swarm scenario, where two flocks (grouping) of MAVs go in opposite ways
+ *
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
+ * \param	packet					The pointer to the structure of the MAVLink command message long
+ */
+static void waypoint_handler_set_swarm_scenario(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
+
+/**
  * \brief	Sends the number of onboard waypoint to MAVLink when asked by ground station
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
@@ -204,6 +212,12 @@ static mav_result_t waypoint_handler_set_scenario(mavlink_waypoint_handler_t* wa
 		
 		result = MAV_RESULT_ACCEPTED;
 	}
+	else if (packet->param1 == 4)
+	{
+		waypoint_handler_set_swarm_scenario(waypoint_handler, packet);
+		
+		result = MAV_RESULT_ACCEPTED;
+	} 
 	else
 	{
 		result = MAV_RESULT_UNSUPPORTED;
@@ -450,7 +464,14 @@ static void waypoint_handler_set_stream_scenario(mavlink_waypoint_handler_t* way
 	waypoint.param1 = 10.0f; // Hold time in decimal seconds
 	waypoint.param2 = 4.0f; // Acceptance radius in meters
 	waypoint.param3 = 0.0f; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-	waypoint.param4 = 180.0f; // Desired yaw angle at MISSION (rotary wing)
+	if (waypoint_handler->mavlink_stream->sysid <= (num_of_vhc/2.0f))
+	{
+		waypoint.param4 = 180.0f; // Desired yaw angle at MISSION (rotary wing)
+	}
+	else
+	{
+		waypoint.param4 = 0.0f; // Desired yaw angle at MISSION (rotary wing)
+	}
 	
 	waypoint_handler->waypoint_list[0] = waypoint;
 	
@@ -490,7 +511,179 @@ static void waypoint_handler_set_stream_scenario(mavlink_waypoint_handler_t* way
 	waypoint.param1 = 10.0f; // Hold time in decimal seconds
 	waypoint.param2 = 4.0f; // Acceptance radius in meters
 	waypoint.param3 = 0.0f; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-	waypoint.param4 = 180.0f; // Desired yaw angle at MISSION (rotary wing)
+	if (waypoint_handler->mavlink_stream->sysid <= (num_of_vhc/2.0f))
+	{
+		waypoint.param4 = 0.0f; // Desired yaw angle at MISSION (rotary wing)
+	}
+	else
+	{
+		waypoint.param4 = 180.0f; // Desired yaw angle at MISSION (rotary wing)
+	}
+	
+	waypoint_handler->waypoint_list[1] = waypoint;
+	
+	if (packet->param5 == 1)
+	{
+		waypoint_handler->state->nav_plan_active = true;
+		print_util_dbg_print("Auto-continue, nav plan active");
+		
+		waypoint_handler->start_wpt_time = time_keeper_get_millis();
+	}
+	else
+	{
+		waypoint_handler->state->nav_plan_active = false;
+		print_util_dbg_print("nav plan inactive");
+		if (waypoint_handler->state->in_the_air)
+		{
+			print_util_dbg_print("Resetting hold waypoint");
+			waypoint_handler->hold_waypoint_set = false;
+		}
+	}
+}
+
+static void waypoint_handler_set_swarm_scenario(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
+{
+	float dist = packet->param2;
+	uint8_t num_of_vhc = packet->param3;
+	float lateral_dist = 30.0f; //packet->param4;
+	float altitude = -packet->param4;
+	
+	float angle_step = 2.0f * PI / (float)floor((num_of_vhc-1)/2);
+	
+	waypoint_struct_t waypoint;
+	
+	local_coordinates_t waypoint_transfo;
+	
+	global_position_t waypoint_global;
+	
+	waypoint_handler->number_of_waypoints = 2;
+	waypoint_handler->current_waypoint_count = -1;
+	
+	waypoint_transfo.origin = waypoint_handler->position_estimation->local_position.origin;
+	
+	// Start waypoint
+	if ((float)((waypoint_handler->mavlink_stream->sysid-1)%num_of_vhc) <= (num_of_vhc/2.0f-1.0f))
+	{
+		if ((float)(waypoint_handler->mavlink_stream->sysid%num_of_vhc) == (num_of_vhc/2.0f)) //higher ID
+		{
+			waypoint_transfo.pos[X] = lateral_dist;
+			waypoint_transfo.pos[Y] = 0.0f;
+		} 
+		else
+		{
+			waypoint_transfo.pos[X] = lateral_dist + dist * cos(angle_step * ((waypoint_handler->mavlink_stream->sysid-1)%10));
+			waypoint_transfo.pos[Y] = dist * sin(angle_step * ((waypoint_handler->mavlink_stream->sysid-1)%10));
+		}
+	}
+	else
+	{
+		if ((float)abs(waypoint_handler->mavlink_stream->sysid%num_of_vhc - (num_of_vhc/2.0f)) == (num_of_vhc/2.0f))
+		{
+			waypoint_transfo.pos[X] = - lateral_dist;
+			waypoint_transfo.pos[Y] = 0.0f;
+		} 
+		else
+		{
+			waypoint_transfo.pos[X] = - lateral_dist - dist * cos(angle_step * ((waypoint_handler->mavlink_stream->sysid-1)%10 - floor(num_of_vhc/2)));
+			waypoint_transfo.pos[Y] = dist * sin(angle_step * ((waypoint_handler->mavlink_stream->sysid-1)%10 - floor(num_of_vhc/2)));
+		}
+	}
+	
+	waypoint_transfo.pos[Z] = altitude;
+	waypoint_global = coord_conventions_local_to_global_position(waypoint_transfo);
+	
+	print_util_dbg_print("Swarm departure(x100): (");
+	print_util_dbg_print_num(waypoint_transfo.pos[X]*100.0f,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(waypoint_transfo.pos[Y]*100.0f,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(waypoint_transfo.pos[Z]*100.0f,10);
+	print_util_dbg_print("). For system:");
+	print_util_dbg_print_num(waypoint_handler->mavlink_stream->sysid,10);
+	print_util_dbg_print(".\r\n");
+	waypoint.x = waypoint_global.latitude;
+	waypoint.y = waypoint_global.longitude;
+	waypoint.z = -altitude;
+	
+	waypoint.autocontinue = packet->param5;
+	waypoint.current = (packet->param5 == 1);
+	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
+	waypoint.command = MAV_CMD_NAV_WAYPOINT;
+	
+	waypoint.param1 = 10.0f; // Hold time in decimal seconds
+	waypoint.param2 = 4.0f; // Acceptance radius in meters
+	waypoint.param3 = 0.0f; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+	if ((float)((waypoint_handler->mavlink_stream->sysid-1)%num_of_vhc) <= (num_of_vhc/2.0f-1.0f))
+	{
+		waypoint.param4 = 180.0f; // Desired yaw angle at MISSION (rotary wing)
+	}
+	else
+	{
+		waypoint.param4 = 0.0f; // Desired yaw angle at MISSION (rotary wing)
+	}
+	
+	waypoint_handler->waypoint_list[0] = waypoint;
+	
+	// End waypoint
+	if ((float)((waypoint_handler->mavlink_stream->sysid-1)%num_of_vhc) <= (num_of_vhc/2.0f-1.0f))
+	{
+		if ((float)(waypoint_handler->mavlink_stream->sysid%num_of_vhc) == (num_of_vhc/2.0f)) //higher ID
+		{
+			waypoint_transfo.pos[X] = - lateral_dist;
+			waypoint_transfo.pos[Y] = 0.0f;
+		}
+		else
+		{
+			waypoint_transfo.pos[X] = - lateral_dist + dist * cos(angle_step * ((waypoint_handler->mavlink_stream->sysid-1)%10));
+			waypoint_transfo.pos[Y] = dist * sin(angle_step * ((waypoint_handler->mavlink_stream->sysid-1)%10));
+		}
+	}
+	else
+	{
+		if ((float)abs(waypoint_handler->mavlink_stream->sysid%num_of_vhc - (num_of_vhc/2.0f)) == (num_of_vhc/2.0f))
+		{
+			waypoint_transfo.pos[X] = lateral_dist;
+			waypoint_transfo.pos[Y] = 0.0f;
+		}
+		else
+		{
+			waypoint_transfo.pos[X] = lateral_dist - dist * cos(angle_step * ((waypoint_handler->mavlink_stream->sysid-1)%10 - floor(num_of_vhc/2)));
+			waypoint_transfo.pos[Y] = dist * sin(angle_step * ((waypoint_handler->mavlink_stream->sysid-1)%10 - floor(num_of_vhc/2)));
+		}
+	}
+	
+	waypoint_transfo.pos[Z] = altitude;
+	waypoint_global = coord_conventions_local_to_global_position(waypoint_transfo);
+	
+	print_util_dbg_print("Swarm departure(x100): (");
+	print_util_dbg_print_num(waypoint_transfo.pos[X]*100.0f,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(waypoint_transfo.pos[Y]*100.0f,10);
+	print_util_dbg_print(", ");
+	print_util_dbg_print_num(waypoint_transfo.pos[Z]*100.0f,10);
+	print_util_dbg_print("). For system:");
+	print_util_dbg_print_num(waypoint_handler->mavlink_stream->sysid,10);
+	print_util_dbg_print(".\r\n");
+	waypoint.x = waypoint_global.latitude;
+	waypoint.y = waypoint_global.longitude;
+	waypoint.z = -altitude;
+	
+	waypoint.autocontinue = packet->param5;
+	waypoint.current = 0;
+	waypoint.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
+	waypoint.command = MAV_CMD_NAV_WAYPOINT;
+	
+	waypoint.param1 = 10.0f; // Hold time in decimal seconds
+	waypoint.param2 = 4.0f; // Acceptance radius in meters
+	waypoint.param3 = 0.0f; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
+	if ((float)((waypoint_handler->mavlink_stream->sysid-1)%num_of_vhc) <= (num_of_vhc/2.0f-1.0f))
+	{
+		waypoint.param4 = 0.0f; // Desired yaw angle at MISSION (rotary wing)
+	}
+	else
+	{
+		waypoint.param4 = 180.0f; // Desired yaw angle at MISSION (rotary wing)
+	}
 	
 	waypoint_handler->waypoint_list[1] = waypoint;
 	
