@@ -58,8 +58,10 @@ extern "C" {
  * 
  * \param	pos_est					The pointer to the position estimation structure
  * \param	mavlink_handler			The pointer to the MAVLink message handler
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void position_estimation_telemetry_init(position_estimation_t* pos_est, mavlink_message_handler_t* mavlink_handler);
+bool position_estimation_telemetry_init(position_estimation_t* pos_est, mavlink_message_handler_t* mavlink_handler);
 
 /**
  * \brief	Function to send the MAVLink position estimation message

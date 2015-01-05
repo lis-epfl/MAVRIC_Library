@@ -57,8 +57,10 @@ extern "C" {
  * 
  * \param	imu						The pointer to the IMU structure
  * \param	message_handler			The pointer to the message handler structure
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void imu_telemetry_init(imu_t* imu, mavlink_message_handler_t* message_handler);
+bool imu_telemetry_init(imu_t* imu, mavlink_message_handler_t* message_handler);
 
 /**
  * \brief	Function to send the MAVLink scaled IMU message

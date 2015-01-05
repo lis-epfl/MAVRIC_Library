@@ -57,8 +57,10 @@ extern "C" {
  * 
  * \param	sim						The pointer to the simulation structure
  * \param	message_handler			The pointer to the MAVLink message handler
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void simulation_telemetry_init(simulation_model_t* sim, mavlink_message_handler_t* message_handler);
+bool simulation_telemetry_init(simulation_model_t* sim, mavlink_message_handler_t* message_handler);
 
 
 /**

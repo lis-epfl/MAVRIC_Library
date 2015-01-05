@@ -30,40 +30,29 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file data_logging_telemetry.h
+ * \file acoustic_telemetry.c
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Gregoire Heitz
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the data_logging module
+ * \brief Acoustic receive telemetry function
  *
  ******************************************************************************/
 
 
-#ifndef DATA_LOGGING_TELEMETRY_H_
-#define DATA_LOGGING_TELEMETRY_H_
+#include "acoustic_telemetry.h"
+#include "time_keeper.h"
 
-#include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
-#include "data_logging.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * \brief	Initialize the MAVLink communication module for the remote
- * 
- * \param	data_logging					The pointer to the data logging structure
- * \param	message_handler			The pointer to the MAVLink message handler
- *
- * \return	True if the init succeed, false otherwise
- */
-bool data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_handler_t* message_handler);
-
-#ifdef __cplusplus
+void acoustic_telemetry_send (const audio_t* audio_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{
+	//TODO: create a mavlink message
+	mavlink_msg_debug_vect_pack(	mavlink_stream->sysid,
+									mavlink_stream->compid,
+									msg,
+									"Audio",
+									time_keeper_get_micros(),
+									(float)audio_data->azimuth,
+									(float)audio_data->elevation,
+									(float)audio_data->reliabe_data);
 }
-#endif
-
-#endif /* DATA_LOGGING_TELEMETRY_H_ */

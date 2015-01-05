@@ -138,8 +138,10 @@ void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_ha
  * \param	ahrs					The pointer to the attitude estimation structure
  * \param	state					The pointer to the state structure
  * \param	mavlink_communication	The pointer to the MAVLink communication structure
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void waypoint_handler_init(	mavlink_waypoint_handler_t* waypoint_handler, 
+bool waypoint_handler_init(	mavlink_waypoint_handler_t* waypoint_handler, 
 							position_estimation_t* position_estimation, 
 							const ahrs_t* ahrs, state_t* state, 
 							mavlink_communication_t* mavlink_communication, 

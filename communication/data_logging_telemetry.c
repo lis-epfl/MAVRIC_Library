@@ -89,8 +89,10 @@ static mav_result_t data_logging_telemetry_toggle_logging(data_logging_t* data_l
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_handler_t* message_handler)
+bool data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_handler_t* message_handler)
 {
+	bool init_success = true;
+	
 	// Add callbacks for data_logging commands requests
 	mavlink_message_handler_cmd_callback_t callbackcmd;
 	
@@ -100,6 +102,7 @@ void data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_h
 	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&data_logging_telemetry_toggle_logging;
 	callbackcmd.module_struct =									data_logging;
-	mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
 	
+	return init_success;
 }

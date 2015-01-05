@@ -47,12 +47,14 @@
 #include "print_util.h"
 #include "state.h"
 
-void state_machine_init(state_machine_t *state_machine,
+bool state_machine_init(state_machine_t *state_machine,
 						state_t* state, 
 						mavlink_waypoint_handler_t* waypoint_handler, 
 						simulation_model_t *sim_model, 
 						remote_t* remote)
 {
+	bool init_success = true;
+	
 	state_machine->waypoint_handler = waypoint_handler;
 	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
@@ -62,7 +64,9 @@ void state_machine_init(state_machine_t *state_machine,
 	state_machine->rc_check 		= 0;
 	state_machine->motor_state 		= 0;
 	
-	print_util_dbg_print("State machine initialise.\r\n");
+	print_util_dbg_print("[STATE MACHINE] Initialised.\r\n");
+	
+	return init_success;
 }
 
 

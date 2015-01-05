@@ -103,15 +103,17 @@ typedef struct
 
 
 /**
- * @brief		Initialize the servo mix
+ * \brief		Initialize the servo mix
  * 
- * @param mix				Pointer to the servo mix structure of the quad in cross shape
- * @param config			Pointer to the configuration of servo mix structure
- * @param torque_command	Pointer to the torque command structure
- * @param thrust_command	Pointer to the thrust command structure
- * @param servos			Pointer to the servos structure
+ * \param mix				Pointer to the servo mix structure of the quad in cross shape
+ * \param config			Pointer to the configuration of servo mix structure
+ * \param torque_command	Pointer to the torque command structure
+ * \param thrust_command	Pointer to the thrust command structure
+ * \param servos			Pointer to the servos structure
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void servo_mix_quadcotper_diag_init(servo_mix_quadcotper_diag_t* mix, 
+bool servo_mix_quadcotper_diag_init(servo_mix_quadcotper_diag_t* mix, 
 									const servo_mix_quadcopter_diag_conf_t* config, 
 									const torque_command_t* torque_command, 
 									const thrust_command_t* thrust_command, 

@@ -85,8 +85,10 @@ typedef struct
  * 
  * \param	ahrs 				Pointer to ahrs structure
  * \param	config				Pointer to the config structure
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void ahrs_init(ahrs_t* ahrs, ahrs_config_t* config);
+bool ahrs_init(ahrs_t* ahrs, ahrs_config_t* config);
 
 
 #ifdef __cplusplus

@@ -57,8 +57,10 @@ extern "C" {
  *
  * \param   mavlink_stream		The pointer to the MAVLink stream structure
  * \param	message_handler		The pointer to the message handler
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void state_telemetry_init(state_t* state, mavlink_message_handler_t *message_handler);
+bool state_telemetry_init(state_t* state, mavlink_message_handler_t *message_handler);
 
 /**
  * \brief	Function to send the MAVLink heartbeat message

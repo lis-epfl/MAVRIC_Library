@@ -203,8 +203,10 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream) 
+bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream) 
 {
+	bool init_success = true;
+	
 	// Init dependencies
 	onboard_parameters->mavlink_stream = mavlink_stream; 
 
@@ -218,23 +220,27 @@ void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 	{
 		onboard_parameters->param_set->max_param_count = config->max_param_count;
 		onboard_parameters->param_set->param_count = 0;
+		
+		init_success &= true;
 	}
 	else
 	{
 		print_util_dbg_print("[ONBOARD PARAMETERS] ERROR ! Bad memory allocation\r\n");
 		onboard_parameters->param_set->max_param_count = 0;
-		onboard_parameters->param_set->param_count = 0;	
+		onboard_parameters->param_set->param_count = 0;
+		
+		init_success &= false;
 	}
 
 	// Add onboard parameter telemetry to the scheduler
-	scheduler_add_task(	scheduler, 
-						100000, 
-						RUN_REGULAR, 
-						PERIODIC_ABSOLUTE,
-						PRIORITY_NORMAL,
-						(task_function_t)&onboard_parameters_send_scheduled_parameters, 
-						(task_argument_t)onboard_parameters, 
-						MAVLINK_MSG_ID_PARAM_VALUE);
+	init_success &= scheduler_add_task(	scheduler, 
+										100000,
+										RUN_REGULAR,
+										PERIODIC_ABSOLUTE,
+										PRIORITY_NORMAL,
+										(task_function_t)&onboard_parameters_send_scheduled_parameters,
+										(task_argument_t)onboard_parameters,
+										MAVLINK_MSG_ID_PARAM_VALUE);
 
 	// Add callbacks for onboard parameters requests
 	mavlink_message_handler_msg_callback_t callback;
@@ -244,21 +250,21 @@ void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&onboard_parameters_send_all_parameters;
 	callback.module_struct 	= (handling_module_struct_t)		onboard_parameters;
-	mavlink_message_handler_add_msg_callback( message_handler, &callback );
+	init_success &= mavlink_message_handler_add_msg_callback( message_handler, &callback );
 	
 	callback.message_id 	= MAVLINK_MSG_ID_PARAM_REQUEST_READ; // 20
 	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&onboard_parameters_send_parameter;
 	callback.module_struct 	= (handling_module_struct_t)		onboard_parameters;
-	mavlink_message_handler_add_msg_callback( message_handler, &callback );	
+	init_success &= mavlink_message_handler_add_msg_callback( message_handler, &callback );	
 	
 	callback.message_id 	= MAVLINK_MSG_ID_PARAM_SET; // 23
 	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&onboard_parameters_receive_parameter;
 	callback.module_struct 	= (handling_module_struct_t)		onboard_parameters;
-	mavlink_message_handler_add_msg_callback( message_handler, &callback );
+	init_success &= mavlink_message_handler_add_msg_callback( message_handler, &callback );
 
 	// Add callbacks for waypoint handler commands requests
 	mavlink_message_handler_cmd_callback_t callbackcmd;
@@ -269,43 +275,66 @@ void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 	callbackcmd.compid_target = MAV_COMP_ID_ALL;
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&onboard_parameters_preflight_storage;
 	callbackcmd.module_struct =									onboard_parameters;
-	mavlink_message_handler_add_cmd_callback( message_handler, &callbackcmd);
+	init_success &= mavlink_message_handler_add_cmd_callback( message_handler, &callbackcmd);
 	
 
-	print_util_dbg_print("Onboard parameters initialised.\r\n");	
+	print_util_dbg_print("[ONBOARD PARAMETERS] Initialised.\r\n");
+	
+	return init_success;
 }
 
 
-void onboard_parameters_add_parameter_uint32(onboard_parameters_t* onboard_parameters, uint32_t* val, const char* param_name) 
+bool onboard_parameters_add_parameter_uint32(onboard_parameters_t* onboard_parameters, uint32_t* val, const char* param_name) 
 {
+	bool add_success = true;
+	
 	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
 
-	if( param_set->param_count < param_set->max_param_count )
+	if( (val == NULL)||(param_set == NULL) )
 	{
-		onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
-
-		new_param->param                     = (float*) val;
-		strcpy( new_param->param_name, 		param_name );
-		new_param->data_type                 = MAV_PARAM_TYPE_UINT32;
-		new_param->param_name_length         = strlen(param_name);
-		new_param->schedule_for_transmission = true;
+		print_util_dbg_print("[ONBOARD PARAMETER] Error: Null pointer!");
 		
-		param_set->param_count += 1;
+		add_success &= false;
 	}
 	else
 	{
-		print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param\r\n");
+		if( param_set->param_count < param_set->max_param_count )
+		{
+			onboard_parameters_entry_t* new_param = &param_set->parameters[param_set->param_count];
+
+			new_param->param                     = (float*) val;
+			strcpy( new_param->param_name, 		param_name );
+			new_param->data_type                 = MAV_PARAM_TYPE_UINT32;
+			new_param->param_name_length         = strlen(param_name);
+			new_param->schedule_for_transmission = true;
+			
+			param_set->param_count += 1;
+			
+			add_success &= true;
+		}
+		else
+		{
+			print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param\r\n");
+			
+			add_success &= false;
+		}
 	}
+	
+	return add_success;
 }
 
 
-void onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parameters, int32_t* val, const char* param_name) 
+bool onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parameters, int32_t* val, const char* param_name) 
 {
+	bool add_success = true;
+	
 	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
 	
-	if( val == NULL )
+	if( (val == NULL)||(param_set == NULL) )
 	{
 		print_util_dbg_print("[ONBOARD PARAMETER] Error: Null pointer!");
+		
+		add_success &= false;
 	}
 	else
 	{
@@ -320,22 +349,32 @@ void onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parame
 			new_param->schedule_for_transmission = true;
 			
 			param_set->param_count += 1;
+			
+			add_success &= true;
 		}
 		else
 		{
 			print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param\r\n");
+			
+			add_success &= false;
 		}
 	}
+	
+	return add_success;
 }
 
 
-void onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parameters, float* val, const char* param_name) 
+bool onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parameters, float* val, const char* param_name) 
 {
+	bool add_success = true;
+	
 	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
 	
-	if( val == NULL )
+	if( (val == NULL)||(param_set == NULL) )
 	{
 		print_util_dbg_print("[ONBOARD PARAMETER] Error: Null pointer!");
+		
+		add_success &= false;
 	}
 	else
 	{
@@ -350,12 +389,18 @@ void onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parame
 			new_param->schedule_for_transmission = true;
 			
 			param_set->param_count += 1;
+			
+			add_success &= true;
 		}
 		else
 		{
 			print_util_dbg_print("[ONBOARD PARAMETER] Error: Cannot add more param\r\n");
+			
+			add_success &= false;
 		}
 	}
+	
+	return add_success;
 }
 
 
