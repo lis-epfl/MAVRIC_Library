@@ -1165,33 +1165,36 @@ static void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handl
 {
 	mavlink_set_gps_global_origin_t packet;
 	
-	mavlink_msg_set_gps_global_origin_decode(msg,&packet);
-	
-	// Check if this message is for this system and subsystem
-	// Due to possible bug from QGroundControl, no check of target_component and compid
-	if ((uint8_t)packet.target_system == (uint8_t)sysid)
+	if(waypoint_handler->state->mav_mode.ARMED == ARMED_OFF)
 	{
-		print_util_dbg_print("Set new home location.\r\n");
-		waypoint_handler->position_estimation->local_position.origin.latitude = (double) packet.latitude / 10000000.0f;
-		waypoint_handler->position_estimation->local_position.origin.longitude = (double) packet.longitude / 10000000.0f;
-		waypoint_handler->position_estimation->local_position.origin.altitude = (float) packet.altitude / 1000.0f;
+		mavlink_msg_set_gps_global_origin_decode(msg,&packet);
+	
+		// Check if this message is for this system and subsystem
+		// Due to possible bug from QGroundControl, no check of target_component and compid
+		if ((uint8_t)packet.target_system == (uint8_t)sysid)
+		{
+			print_util_dbg_print("Set new home location.\r\n");
+			waypoint_handler->position_estimation->local_position.origin.latitude = (double) packet.latitude / 10000000.0f;
+			waypoint_handler->position_estimation->local_position.origin.longitude = (double) packet.longitude / 10000000.0f;
+			waypoint_handler->position_estimation->local_position.origin.altitude = (float) packet.altitude / 1000.0f;
 		
-		print_util_dbg_print("New Home location: (");
-		print_util_dbg_print_num(waypoint_handler->position_estimation->local_position.origin.latitude*10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(waypoint_handler->position_estimation->local_position.origin.longitude*10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(waypoint_handler->position_estimation->local_position.origin.altitude*1000.0f,10);
-		print_util_dbg_print(")\r\n");
+			print_util_dbg_print("New Home location: (");
+			print_util_dbg_print_num(waypoint_handler->position_estimation->local_position.origin.latitude*10000000.0f,10);
+			print_util_dbg_print(", ");
+			print_util_dbg_print_num(waypoint_handler->position_estimation->local_position.origin.longitude*10000000.0f,10);
+			print_util_dbg_print(", ");
+			print_util_dbg_print_num(waypoint_handler->position_estimation->local_position.origin.altitude*1000.0f,10);
+			print_util_dbg_print(")\r\n");
 		
-		mavlink_message_t _msg;
-		mavlink_msg_gps_global_origin_pack( waypoint_handler->mavlink_stream->sysid,
-											waypoint_handler->mavlink_stream->compid,
-											&_msg,
-											waypoint_handler->position_estimation->local_position.origin.latitude*10000000.0f,
-											waypoint_handler->position_estimation->local_position.origin.longitude*10000000.0f,
-											waypoint_handler->position_estimation->local_position.origin.altitude*1000.0f);
-		mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
+			mavlink_message_t _msg;
+			mavlink_msg_gps_global_origin_pack( waypoint_handler->mavlink_stream->sysid,
+												waypoint_handler->mavlink_stream->compid,
+												&_msg,
+												waypoint_handler->position_estimation->local_position.origin.latitude*10000000.0f,
+												waypoint_handler->position_estimation->local_position.origin.longitude*10000000.0f,
+												waypoint_handler->position_estimation->local_position.origin.altitude*1000.0f);
+			mavlink_stream_send(waypoint_handler->mavlink_stream, &_msg);
+		}
 	}
 }
 
