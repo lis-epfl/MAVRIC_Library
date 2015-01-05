@@ -126,8 +126,10 @@ typedef struct
  * \param 	config 					Configuration
  * \param 	rx_stream;				Output stream
  * \param 	tx_stream;				Input stream
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream);
+bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream);
 
 
 /**
@@ -159,8 +161,10 @@ void mavlink_communication_suspend_downstream(mavlink_communication_t* mavlink_c
  * \param	function 				Function pointer to be called
  * \param	module_structure		Argument to be passed to the function
  * \param	task_id			    	Unique task identifier
+ *
+ * \return	True if the message was correctly added, false otherwise
  */
-void mavlink_communication_add_msg_send(	mavlink_communication_t* mavlink_communication, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id);
+bool mavlink_communication_add_msg_send(	mavlink_communication_t* mavlink_communication, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id);
 
 /**
  * \brief	Suspending sending of messages

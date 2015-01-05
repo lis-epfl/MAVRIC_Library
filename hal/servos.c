@@ -44,8 +44,10 @@
 #include "servos.h"
 #include "print_util.h"
 
-void servos_init(servos_t* servos, const servos_conf_t* config)
+bool servos_init(servos_t* servos, const servos_conf_t* config)
 {
+	bool init_success = true;
+	
 	// Init servo array
 	if ( config->servos_count <= MAX_SERVO_COUNT )
 	{
@@ -59,12 +61,20 @@ void servos_init(servos_t* servos, const servos_conf_t* config)
 			// Set default value to failsafe
 			servos->servo[i].value = servos->servo[i].failsafe;
 		}
+		
+		init_success &= true;
 	}
 	else
 	{
 		servos->servos_count = 0;
 		print_util_dbg_print("[SERVOS] ERROR! Too many servos\r\n");
+		
+		init_success &= false;
 	}
+	
+	print_util_dbg_print("[SERVOS] Init.\r\n");
+	
+	return init_success;
 }
 
 

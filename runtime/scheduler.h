@@ -192,8 +192,10 @@ typedef struct
  * 
  * \param 	scheduler 	Pointer to scheduler
  * \param 	config		Configuration
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void scheduler_init( scheduler_t* scheduler, const scheduler_conf_t* config);
+bool scheduler_init( scheduler_t* scheduler, const scheduler_conf_t* config);
 
 
 /**

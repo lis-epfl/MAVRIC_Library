@@ -45,9 +45,10 @@
 #include "time_keeper.h"
 #include "print_util.h"
 
-void scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config) 
+bool scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config) 
 {
-
+	bool init_success = true;
+	
 	// Init schedule strategy
 	scheduler->schedule_strategy = config->schedule_strategy;
 
@@ -59,17 +60,23 @@ void scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config)
 	if ( scheduler->task_set != NULL ) 
 	{
 		scheduler->task_set->max_task_count = config->max_task_count;
+		
+		init_success &= true;
 	}
 	else
 	{
 		print_util_dbg_print("[SCHEDULER] ERROR ! Bad memory allocation\r\n");
 		scheduler->task_set->max_task_count = 0;		
+		
+		init_success &= false;
 	}
 
 	scheduler->task_set->task_count = 0;
 	scheduler->task_set->current_schedule_slot = 0;
 	
 	print_util_dbg_print("[SCHEDULER] Init\r\n");
+	
+	return init_success;
 }
 
 

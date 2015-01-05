@@ -112,8 +112,10 @@ static mav_result_t simulation_telemetry_set_new_home_position(simulation_model_
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void simulation_telemetry_init(simulation_model_t* sim, mavlink_message_handler_t* message_handler)
+bool simulation_telemetry_init(simulation_model_t* sim, mavlink_message_handler_t* message_handler)
 {
+	bool init_success = true;
+	
 	mavlink_message_handler_cmd_callback_t callbackcmd;
 		
 	callbackcmd.command_id    = MAV_CMD_DO_SET_HOME; // 179
@@ -122,7 +124,9 @@ void simulation_telemetry_init(simulation_model_t* sim, mavlink_message_handler_
 	callbackcmd.compid_target = MAV_COMP_ID_ALL;
 	callbackcmd.function      = (mavlink_cmd_callback_function_t)	&simulation_telemetry_set_new_home_position;
 	callbackcmd.module_struct =										sim;
-	mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+	
+	return init_success;
 }
 
 

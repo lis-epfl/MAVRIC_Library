@@ -57,8 +57,10 @@ extern "C" {
  * 
  * \param	data_logging					The pointer to the data logging structure
  * \param	message_handler			The pointer to the MAVLink message handler
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_handler_t* message_handler);
+bool data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_handler_t* message_handler);
 
 #ifdef __cplusplus
 }

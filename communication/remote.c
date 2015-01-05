@@ -100,8 +100,10 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 //------------------------------------------------------------------------------
 
 
-void remote_init(remote_t* remote, const remote_conf_t* config)
+bool remote_init(remote_t* remote, const remote_conf_t* config)
 {
+	bool init_success = true;
+	
 	// Init mode from remote
 	remote_mode_init( &remote->mode, &config->mode_config );
 
@@ -121,6 +123,8 @@ void remote_init(remote_t* remote, const remote_conf_t* config)
 			remote->channel_inv[CHANNEL_FLAPS]    = INVERTED;
 			remote->channel_inv[CHANNEL_AUX1]     = NORMAL;
 			remote->channel_inv[CHANNEL_AUX2]     = NORMAL;
+			
+			init_success &= true;
 			break;
 
 		case REMOTE_SPEKTRUM:
@@ -135,6 +139,11 @@ void remote_init(remote_t* remote, const remote_conf_t* config)
 			remote->channel_inv[CHANNEL_FLAPS]    = NORMAL;
 			remote->channel_inv[CHANNEL_AUX1]     = NORMAL;
 			remote->channel_inv[CHANNEL_AUX2]     = NORMAL;
+			
+			init_success &= true;
+			break;
+		default:
+			init_success &= false;
 			break;
 	}
 
@@ -145,6 +154,8 @@ void remote_init(remote_t* remote, const remote_conf_t* config)
 		remote->channels[i] = 0.0f;
 		remote->trims[i] = 0.0f;
 	}
+	
+	return init_success;
 }
 
 

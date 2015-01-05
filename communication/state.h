@@ -109,8 +109,10 @@ typedef struct
  * \param	state			The pointer to the state structure
  * \param	state_config	The pointer to the state configuration structure
  * \param	analog_monitor	The pointer to the analog monitor structure
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor);
+bool state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor);
 
 /**
  * \brief					Makes the switch to active mode
