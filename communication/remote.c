@@ -123,6 +123,12 @@ bool remote_init(remote_t* remote, const remote_conf_t* config)
 			remote->channel_inv[CHANNEL_FLAPS]    = INVERTED;
 			remote->channel_inv[CHANNEL_AUX1]     = NORMAL;
 			remote->channel_inv[CHANNEL_AUX2]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX3]	  = NORMAL;
+			remote->channel_inv[CHANNEL_AUX4]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX5]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX6]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX7]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX8]	  = NORMAL;
 			
 			init_success &= true;
 			break;
@@ -139,6 +145,12 @@ bool remote_init(remote_t* remote, const remote_conf_t* config)
 			remote->channel_inv[CHANNEL_FLAPS]    = NORMAL;
 			remote->channel_inv[CHANNEL_AUX1]     = NORMAL;
 			remote->channel_inv[CHANNEL_AUX2]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX3]	  = NORMAL;
+			remote->channel_inv[CHANNEL_AUX4]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX5]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX6]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX7]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX8]	  = NORMAL;
 			
 			init_success &= true;
 			break;

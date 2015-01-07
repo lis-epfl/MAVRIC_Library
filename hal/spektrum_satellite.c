@@ -135,29 +135,29 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 			c2 = buffer_get(&spek_sat->receiver);
 			
 			//check header Bytes, otherwise discard datas
-			if (c1 == 0x03 && c2 == 0xB2) 
+			if (c1 == 0x00 && c2 == 0x00) 
 			{
 				channel_encoding = (c2 & 0x10) >> 4; 	// 0 = 11bit, 1 = 10 bit
 				frame_number     = c2 & 0x03; 			// 1 = 1 frame contains all channels
 			
-			for (i = 0; i < 7; i++) //Max number of channels is 7 for our DSM module 
-			{
-				c1 = buffer_get(&spek_sat->receiver);
-				c2 = buffer_get(&spek_sat->receiver);
-				sw = (uint16_t)c1 << 8 | ((uint16_t)c2);
+				for (i = 0; i < 7; i++) //Max number of channels is 7 for our DSM module 
+				{
+					c1 = buffer_get(&spek_sat->receiver);
+					c2 = buffer_get(&spek_sat->receiver);
+					sw = (uint16_t)c1 << 8 | ((uint16_t)c2);
 								
-				if ( channel_encoding == 1 ) 
-				{
-					// highest bit is frame 0/1, bits 2-6 are channel number
-					channel = ((sw >> 10))&0x0f;
+					if ( channel_encoding == 1 ) 
+					{
+						// highest bit is frame 0/1, bits 2-6 are channel number
+						channel = ((sw >> 10))&0x0f;
 					
-					// 10 bits per channel
-					spek_sat->channels[channel] = ((int16_t)(sw&0x3ff) - 512) * 2;
-				} 
-				else if ( channel_encoding == 0 ) 
-				{
-					// highest bit is frame 0/1, bits 3-7 are channel number
-					channel = ((sw >> 11))&0x0f;
+						// 10 bits per channel
+						spek_sat->channels[channel] = ((int16_t)(sw&0x3ff) - 512) * 2;
+					} 
+					else if ( channel_encoding == 0 ) 
+					{
+						// highest bit is frame 0/1, bits 3-7 are channel number
+						channel = ((sw >> 11))&0x0f;
 					
 						// 11 bits per channel
 						spek_sat->channels[channel] = ((int16_t)(sw&0x7ff) - 1024);
@@ -166,7 +166,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 					{
 						// shouldn't happen!
 					}
-				}	
+				}//end of for loop	
 		
 				// update timing
 				spek_sat->dt 			= now - spek_sat->last_update;
@@ -253,14 +253,15 @@ void spektrum_satellite_bind(void)
 	// Wait 100ms after receiver startup
 	delay_ms(100);
 
-	// create 4 pulses with 126us to set receiver to bind mode
-	for (i = 0; i < 3; i++) 
+	// create 6 pulses with 250us period to set receiver to bind mode
+	for (i = 0; i < 6; i++) 
 	{
-		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
+		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_OUTPUT | GPIO_PULL_DOWN);
 		cpu_delay_us(113, cpu_freq); 
 		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_UP);	
 		cpu_delay_us(118, cpu_freq);
 	}
+	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_OUTPUT | GPIO_PULL_DOWN);
 }
 
 
