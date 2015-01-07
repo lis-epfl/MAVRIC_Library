@@ -82,19 +82,6 @@ void stabilisation_telemetry_send_rpy_thrust_setpoint(const control_command_t* c
 														controls->thrust);
 }
 
-void stabilisation_send_command(control_command_t* controls, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
-{
-	// Controls output
-	mavlink_msg_debug_vect_pack(	mavlink_stream->sysid,
-									mavlink_stream->compid,
-									msg,
-									"Controls",
-									time_keeper_get_micros(),
-									controls->tvel[X],
-									controls->tvel[Y],
-									controls->tvel[Z]);
-}
-
 void stabilisation_telemetry_send_control(const control_command_t* controls, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
 	switch (controls->control_mode)
