@@ -235,13 +235,11 @@ void spektrum_satellite_bind(void)
 	// Switch off satellite
 	spektrum_satellite_switch_off();
 	delay_ms(100);
-	spektrum_satellite_switch_on();
-
-	// Send one first pulse
+	
+	//set as input, pull down not to be floating
 	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_DOWN);	
-	delay_ms(1);
-	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT| GPIO_INIT_LOW);
-	delay_ms(10);
+
+	spektrum_satellite_switch_on();
 
 	// Wait for startup signal
 	while ((gpio_get_pin_value(DSM_RECEIVER_PIN) == 0) && (i < 10000)) 
@@ -249,9 +247,9 @@ void spektrum_satellite_bind(void)
 		i++;
 		delay_ms(1);
 	}
-
+	
 	// Wait 100ms after receiver startup
-	delay_ms(100);
+	delay_ms(68);
 
 	// create 6 pulses with 250us period to set receiver to bind mode
 	for (i = 0; i < 6; i++) 
@@ -261,7 +259,6 @@ void spektrum_satellite_bind(void)
 		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_UP);	
 		cpu_delay_us(118, cpu_freq);
 	}
-	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_OUTPUT | GPIO_PULL_DOWN);
 }
 
 
