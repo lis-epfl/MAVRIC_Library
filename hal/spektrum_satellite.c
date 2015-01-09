@@ -135,7 +135,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 			c2 = buffer_get(&spek_sat->receiver);
 			
 			//check header Bytes, otherwise discard datas
-			if (c1 == 0x00 && c2 == 0x00) 
+			if ((c1 == 0x00 && c2 == 0x00) || (c1 == 0x03 && c2 == 0xB2)) 
 			{
 				channel_encoding = (c2 & 0x10) >> 4; 	// 0 = 11bit, 1 = 10 bit
 				frame_number     = c2 & 0x03; 			// 1 = 1 frame contains all channels
