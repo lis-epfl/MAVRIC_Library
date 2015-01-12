@@ -64,7 +64,6 @@ satellite_t *spek_sat;									///< Declare a pointer to satellite struct contai
 
 int16_t channel_center[16];								///< Declare an array to store the central position of each channel
 
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
@@ -105,10 +104,10 @@ void spektrum_satellite_switch_off(void)
 ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) 
 {
 	uint8_t c1, c2, i;
-	uint8_t channel_encoding, frame_number;
+	uint8_t channel_encoding;
 	uint16_t sw;
 	uint8_t channel;
-	uint32_t now = time_keeper_get_time_ticks() ;
+	uint32_t now = time_keeper_get_micros() ;
 
 	// If byte received
 	if (spek_sat->usart_conf_sat.uart_device.uart->csr & AVR32_USART_CSR_RXRDY_MASK) 
@@ -116,8 +115,10 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 		uint32_t dt_interrupt = now - spek_sat->last_interrupt;
 		spek_sat->last_interrupt = now;
 
-		// Clear buffer if it contains too old data
-		if ( dt_interrupt > 2500 ) 
+		// the shorter inter_frame period is 9600us (11bits encoding) and the longer inter_frame period is 20600 us(10bits encoding) 
+		// Clear buffer if it contains too old data, older than 42000 us, 2 times the longer inter_frame period 
+		// or if the first byte of the buffer came before the shorter inter_frame period (=>it is not the first byte of a new frame)
+		if ( dt_interrupt > 42000 || (buffer_bytes_available(&spek_sat->receiver)==0 && dt_interrupt < 8000)) 
 		{
 			buffer_clear(&spek_sat->receiver);
 			// LED_Toggle(LED2);
@@ -130,56 +131,42 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 		// If frame is complete, decode channels
 		if ( buffer_bytes_available(&spek_sat->receiver) == 16 ) 
 		{
-			// first two bytes are status info
+			// first two bytes are status info,
 			c1 = buffer_get(&spek_sat->receiver);
 			c2 = buffer_get(&spek_sat->receiver);
 			
-			//check header Bytes, otherwise discard datas
-			if ((c1 == 0x00 && c2 == 0x00) || (c1 == 0x03 && c2 == 0xB2)) 
+			channel_encoding = (c2 & 0x10) >> 4; 	// 0 = 11bit, 1 = 10 bit
+				
+			for (i = 0; i < 7; i++) // 7 channels per frame
 			{
-				channel_encoding = (c2 & 0x10) >> 4; 	// 0 = 11bit, 1 = 10 bit
-				frame_number     = c2 & 0x03; 			// 1 = 1 frame contains all channels
-			
-				for (i = 0; i < 7; i++) //Max number of channels is 7 for our DSM module 
-				{
-					c1 = buffer_get(&spek_sat->receiver);
-					c2 = buffer_get(&spek_sat->receiver);
-					sw = (uint16_t)c1 << 8 | ((uint16_t)c2);
+				c1 = buffer_get(&spek_sat->receiver);
+				c2 = buffer_get(&spek_sat->receiver);
+				sw = (uint16_t)c1 << 8 | ((uint16_t)c2);
 								
-					if ( channel_encoding == 1 ) 
-					{
-						// highest bit is frame 0/1, bits 2-6 are channel number
-						channel = ((sw >> 10))&0x0f;
+				if ( channel_encoding == 1 )  //1 = 10 bits
+				{
+					// highest bit is frame 0/1, bits 2-6 are channel number
+					channel = ((sw >> 10))&0x0f;
 					
-						// 10 bits per channel
-						spek_sat->channels[channel] = ((int16_t)(sw&0x3ff) - 512) * 2;
-					} 
-					else if ( channel_encoding == 0 ) 
-					{
-						// highest bit is frame 0/1, bits 3-7 are channel number
-						channel = ((sw >> 11))&0x0f;
+					// 10 bits per channel
+					spek_sat->channels[channel] = ((int16_t)(sw&0x3ff) - 512) * 2;
+				} 
+				else if ( channel_encoding == 0 ) //0 = 11bits
+				{
+					// highest bit is frame 0/1, bits 3-7 are channel number
+					channel = ((sw >> 11))&0x0f;
 					
-						// 11 bits per channel
-						spek_sat->channels[channel] = ((int16_t)(sw&0x7ff) - 1024);
-					} 
-					else 
-					{
-						// shouldn't happen!
-					}
-				}//end of for loop	
+					// 11 bits per channel
+					spek_sat->channels[channel] = ((int16_t)(sw&0x7ff) - 1024);
+				}
+			}//end of for loop	
 		
-				// update timing
-				spek_sat->dt 			= now - spek_sat->last_update;
-				spek_sat->last_update = now;
+			// update timing
+			spek_sat->dt 			= now - spek_sat->last_update;
+			spek_sat->last_update	= now;
 
-				// Inidicate that new data is available
-				spek_sat->new_data_available = true;
-			}
-			else
-			{
-				buffer_clear(&spek_sat->receiver);
-				// LED_Toggle(LED2);
-			}
+			// Inidicate that new data is available
+			spek_sat->new_data_available = true;
 		}
 	}		
 }
