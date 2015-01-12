@@ -216,15 +216,6 @@ bool mavlink_message_handler_add_cmd_callback(	mavlink_message_handler_t* 					m
 
 
 /**
-* \brief 						Sort callbacks, to speed up the matching while receiving a cmd message.
-* \details						Should be called after all callbacks have been added.
-*
-* \param 	message_handler 	Pointer to message handler data structure
-*/
-void mavlink_message_handler_sort_callback(mavlink_message_handler_t* message_handler);
-
-
-/**
  * \brief 			Dummy message callback for debug purpose 
  * \details  		Prints the fields of the incoming message to the debug console
  * 
