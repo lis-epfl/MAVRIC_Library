@@ -73,7 +73,7 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 		remote_get_pitch(remote) > 0.9f && 
 		remote_get_roll(remote) > 0.9f )
 	{
-		// Left stick bottom left corner, right stick bottom right corner => disarm 
+		// Left stick bottom left corner, right stick bottom right corner => arm 
 		print_util_dbg_print("Arming!\r\n");
 		armed = ARMED_ON;
 	}
@@ -82,7 +82,7 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 			remote_get_pitch(remote) > 0.9f && 
 			remote_get_roll(remote) < -0.9f )
 	{
-		// Left stick bottom right corner, right stick bottom left corner => arm
+		// Left stick bottom right corner, right stick bottom left corner => disarm
 		print_util_dbg_print("Disarming!\r\n");
 		armed = ARMED_OFF;
 	}
