@@ -56,30 +56,100 @@
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
+/**
+ * @brief  Initializes the SPI and GPIOs for curvace
+ */
+static void curvace_init_spi(void);
+
+
+/**
+ * @brief  	Quick implementation of SPI comm
+ * 
+ * @param 	data 	Data to send
+ * @return 			Data received
+ */
 static uint16_t curvace_spi_low_level(uint16_t data);
 
 
+/**
+ * @brief 	Read pixel data from both hemispheres
+ * 
+ * @param 	curvace 	Pointer to data structure
+ */
 static void curvace_read_spi(curvace_t* curvace);
 
 
+/**
+ * @brief  		Send start message to the camera
+ */
 static void curvace_start(void);
 
 
-//static void curvace_stop(void);
-
-
-// static void curvace_derotate_all(curvace_t* curvace);
-
-
-// static void curvace_scale_all(curvace_t* curvace);
-
-
+/**
+ * @brief 	Filters, derotate and scale newly received raw data
+ * 
+ * @param 	curvace 	Pointer to data structure
+ */
 static void curvace_process_all(curvace_t* curvace);
+
+
+// Not implemented yet
+// static void curvace_stop(void);
+// static void curvace_derotate_all(curvace_t* curvace);
+// static void curvace_scale_all(curvace_t* curvace);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
+
+static void curvace_init_spi()
+{
+	// Init GPIO for Chip Select of the SPI communication
+	gpio_enable_gpio_pin(slaveSelectTop);
+	gpio_set_gpio_pin(slaveSelectTop);
+	gpio_enable_gpio_pin(slaveSelectBot);
+	gpio_set_gpio_pin(slaveSelectBot);
+	
+	// Init SPI communication
+	static const gpio_map_t SPI_GPIO_MAP =
+	{
+		{AVR32_SPI0_SCK_0_0_PIN, AVR32_SPI0_SCK_0_0_FUNCTION }, //SCK
+		{AVR32_SPI0_MISO_0_0_PIN, AVR32_SPI0_MISO_0_0_FUNCTION}, //MISO
+		{AVR32_SPI0_MOSI_0_0_PIN, AVR32_SPI0_MOSI_0_0_FUNCTION} //MOSI
+	}; 
+	
+	spi_options_t spiOptions =
+	{
+		.reg          = 0,			// CS0
+		.baudrate     = 5000000,	// 5MHz
+		.bits         = 16,			// Bits!
+		.spck_delay   = 0,			// # clocks to delay.
+		.trans_delay  = 0,			// ?
+		.stay_act     = 0,			// auto-unselect...?
+		.spi_mode     = SPI_MODE_1,	// active high, low level idle -> mode 0
+		.modfdis      = 1			// ...?
+	};
+	
+	// Assign I/Os to SPI.
+	gpio_enable_module(SPI_GPIO_MAP, sizeof(SPI_GPIO_MAP) / sizeof(SPI_GPIO_MAP[0]));
+
+	// Initialize as master.
+	spi_initMaster((&AVR32_SPI0), &spiOptions);
+
+	// Set selection mode: variable_ps, pcs_decode, delay.
+	spi_selectionMode((&AVR32_SPI0), 0, 0, 0);
+
+	//Set how we're talking to the chip. (Bits!  et al)
+	spi_setupChipReg((&AVR32_SPI0), &spiOptions, sysclk_get_pba_hz()); //very important!
+
+	// Enable SPI.
+	spi_enable(&AVR32_SPI0);
+	
+	// Configure Chip Select even if not used.
+	spi_selectChip(&AVR32_SPI0, 0);
+}
+
 
 static uint16_t curvace_spi_low_level(uint16_t data)
 {
@@ -426,49 +496,8 @@ void curvace_init(curvace_t* curvace, const ahrs_t* ahrs)
 																				) / range;
 	}
 	
-	// Init GPIO for Chip Select of the SPI communication
-	gpio_enable_gpio_pin(slaveSelectTop);
-	gpio_set_gpio_pin(slaveSelectTop);
-	gpio_enable_gpio_pin(slaveSelectBot);
-	gpio_set_gpio_pin(slaveSelectBot);
-	
-	// Init SPI communication
-	static const gpio_map_t SPI_GPIO_MAP =
-	{
-		{AVR32_SPI0_SCK_0_0_PIN, AVR32_SPI0_SCK_0_0_FUNCTION }, //SCK
-		{AVR32_SPI0_MISO_0_0_PIN, AVR32_SPI0_MISO_0_0_FUNCTION}, //MISO
-		{AVR32_SPI0_MOSI_0_0_PIN, AVR32_SPI0_MOSI_0_0_FUNCTION} //MOSI
-	}; 
-	
-	spi_options_t spiOptions =
-	{
-		.reg          = 0,			// CS0
-		.baudrate     = 5000000,	// 5MHz
-		.bits         = 16,			// Bits!
-		.spck_delay   = 0,			// # clocks to delay.
-		.trans_delay  = 0,			// ?
-		.stay_act     = 0,			// auto-unselect...?
-		.spi_mode     = SPI_MODE_1,	// active high, low level idle -> mode 0
-		.modfdis      = 1			// ...?
-	};
-	
-	// Assign I/Os to SPI.
-	gpio_enable_module(SPI_GPIO_MAP, sizeof(SPI_GPIO_MAP) / sizeof(SPI_GPIO_MAP[0]));
-
-	// Initialize as master.
-	spi_initMaster((&AVR32_SPI0), &spiOptions);
-
-	// Set selection mode: variable_ps, pcs_decode, delay.
-	spi_selectionMode((&AVR32_SPI0), 0, 0, 0);
-
-	//Set how we're talking to the chip. (Bits!  et al)
-	spi_setupChipReg((&AVR32_SPI0), &spiOptions, sysclk_get_pba_hz()); //very important!
-
-	// Enable SPI.
-	spi_enable(&AVR32_SPI0);
-	
-	// Configure Chip Select even if not used.
-	spi_selectChip(&AVR32_SPI0, 0);
+	// Init SPI peripheral
+	curvace_init_spi();
 	
 	// Start CurvACE sensor.
 	curvace_start();
