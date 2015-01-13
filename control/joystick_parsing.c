@@ -42,6 +42,7 @@
 #include "joystick_parsing.h"
 #include "print_util.h"
 #include "constants.h"
+#include "coord_conventions.h"
 
 
 //------------------------------------------------------------------------------
@@ -123,7 +124,7 @@ void joystick_parsing_button(joystick_parsing_t* joystick_parsing, button_presse
 bool joystick_parsing_init(joystick_parsing_t* joystick_parsing, state_t* state)
 {
 	bool init_success = true;
-	
+
 	joystick_parsing->state = state;
 	
 	joystick_parsing->channels.x = 0.0f;
@@ -133,9 +134,34 @@ bool joystick_parsing_init(joystick_parsing_t* joystick_parsing, state_t* state)
 	
 	joystick_parsing->buttons.button_mask = 0;
 	
-	print_util_dbg_print("[JOYSTICK PARSING] initialised\r\n");
-	
+	print_util_dbg_print("Joystick parsing initialised\r");
+
 	return init_success;
+}
+
+
+float joystick_parsing_get_throttle(const joystick_parsing_t* joystick)
+{
+	return joystick->channels.z;
+}
+
+
+float joystick_parsing_get_roll(const joystick_parsing_t* joystick)
+{
+	return joystick->channels.y;
+}
+
+
+
+float joystick_parsing_get_pitch(const joystick_parsing_t* joystick)
+{
+	return joystick->channels.x;
+}
+
+
+float joystick_parsing_get_yaw(const joystick_parsing_t* joystick)
+{
+	return joystick->channels.r;
 }
 
 
@@ -171,4 +197,79 @@ void joystick_parsing_button_mask(joystick_parsing_t* joystick_parsing, uint16_t
 	joystick_parsing_button(joystick_parsing, button_local.button_3, MAV_MODE_FLAG_MANUAL_INPUT_ENABLED); 																	// MAV_MODE_ATTITUDE_CONTROL
 	
 	joystick_parsing->buttons.button_mask = buttons;
+}
+
+
+void joystick_parsing_get_torque_command(const joystick_parsing_t* joystick, torque_command_t * command)
+{
+	command->xyz[ROLL] 	= joystick_parsing_get_roll(joystick);
+	command->xyz[PITCH] = joystick_parsing_get_pitch(joystick);
+	command->xyz[YAW] 	= joystick_parsing_get_yaw(joystick);
+}
+
+
+void joystick_parsing_get_rate_command(const joystick_parsing_t* joystick, rate_command_t* command)
+{
+	command->xyz[ROLL] 	= joystick_parsing_get_roll(joystick);
+	command->xyz[PITCH] = joystick_parsing_get_pitch(joystick);
+	command->xyz[YAW] 	= joystick_parsing_get_yaw(joystick);
+}
+
+
+void joystick_parsing_get_thrust_command(const joystick_parsing_t* joystick, thrust_command_t* command)
+{
+	command->thrust = joystick_parsing_get_throttle(joystick);
+}
+
+
+void joystick_parsing_get_attitude_command(const joystick_parsing_t* joystick, attitude_command_t* command)
+{
+	aero_attitude_t attitude;
+	
+	switch( command->mode )
+	{
+		case ATTITUDE_COMMAND_MODE_QUATERNION:
+			attitude.rpy[ROLL] 	= joystick_parsing_get_roll(joystick); 
+			attitude.rpy[PITCH] = joystick_parsing_get_pitch(joystick);
+			attitude.rpy[YAW] 	= joystick_parsing_get_yaw(joystick);
+			command->quat = coord_conventions_quaternion_from_aero(attitude);
+		break;
+
+		case ATTITUDE_COMMAND_MODE_RPY:
+			command->rpy[ROLL] 	= joystick_parsing_get_roll(joystick); 
+			command->rpy[PITCH] = joystick_parsing_get_pitch(joystick);
+			command->rpy[YAW] 	= joystick_parsing_get_yaw(joystick);
+		break;
+	}
+}
+
+
+void joystick_parsing_get_attitude_command_integrate_yaw(const joystick_parsing_t* joystick, const float k_yaw, attitude_command_t* command)
+{
+	aero_attitude_t attitude;
+
+	switch( command->mode )
+	{
+		case ATTITUDE_COMMAND_MODE_QUATERNION:
+			attitude = coord_conventions_quat_to_aero(command->quat);
+			attitude.rpy[ROLL] 	 = joystick_parsing_get_roll(joystick); 
+			attitude.rpy[PITCH]  = joystick_parsing_get_pitch(joystick);
+			attitude.rpy[YAW] 	+= k_yaw * joystick_parsing_get_yaw(joystick);
+			command->quat = coord_conventions_quaternion_from_aero(attitude);
+		break;
+
+		case ATTITUDE_COMMAND_MODE_RPY:
+			command->rpy[ROLL] 	= joystick_parsing_get_roll(joystick);
+			command->rpy[PITCH] = joystick_parsing_get_pitch(joystick);
+			command->rpy[YAW] 	+= k_yaw * joystick_parsing_get_yaw(joystick);
+		break;
+	}
+}
+
+
+void joystick_parsing_get_velocity_command(const joystick_parsing_t* joystick, velocity_command_t* command)
+{
+	command->xyz[X] = - 10.0f 	* joystick_parsing_get_pitch(joystick);
+	command->xyz[Y] = 10.0f  	* joystick_parsing_get_roll(joystick);
+	command->xyz[Z] = - 1.5f 	* joystick_parsing_get_throttle(joystick);
 }
