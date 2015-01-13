@@ -401,17 +401,17 @@ void curvace_init(curvace_t* curvace, const ahrs_t* ahrs, const mavlink_stream_t
 		float azimuth 	= curvace->roi_coord.all[i].azimuth;
 		float elevation = curvace->roi_coord.all[i].elevation;
 	
-		curvace->calib_matrix.all[i].Arx = 0.0f; // + quick_trig_cos(azimuth) 	* quick_trig_sin(elevation);
-		curvace->calib_matrix.all[i].Apx = 0.0f; // + quick_trig_sin(elevation) 	* quick_trig_sin(azimuth);
+		curvace->calib_matrix.all[i].Arx = + quick_trig_cos(azimuth) 	* quick_trig_sin(elevation);
+		curvace->calib_matrix.all[i].Apx = + quick_trig_sin(elevation) 	* quick_trig_sin(azimuth);
 		curvace->calib_matrix.all[i].Ayx = + quick_trig_cos(elevation);
-		curvace->calib_matrix.all[i].Ary = 0.0f; // - quick_trig_sin(azimuth);
-		curvace->calib_matrix.all[i].Apy = 0.0f; // + quick_trig_cos(azimuth);
+		curvace->calib_matrix.all[i].Ary = - quick_trig_sin(azimuth);
+		curvace->calib_matrix.all[i].Apy = + quick_trig_cos(azimuth);
 		curvace->calib_matrix.all[i].Ayy = 0.0f; 
 	}
 
 	// Init scale factor
-	float range = 32768;			// if OF vectors are encoded using full int16_t: -1..1 maps to -32767..32768  
-									// TODO: check this
+	float range = 32768;  
+									
 	float frame_rate = 200; 		// Hz
 
 	// Init simplified calib factor
