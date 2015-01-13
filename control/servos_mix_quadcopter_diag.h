@@ -51,16 +51,7 @@
 
 #include "control_command.h"
 #include "servos.h"
-
-
-/**
- * \brief Enumerate the turn direction of a motor
- */
-typedef enum
-{
-	CW 	= 1,					///< Clock wise
-	CCW	= -1					///< Counter Cleck wise
-} rot_dir_t;
+#include "constants.h"
 
 
 /**
@@ -105,7 +96,7 @@ typedef struct
 /**
  * \brief		Initialize the servo mix
  * 
- * \param mix				Pointer to the servo mix structure of the quad in cross shape
+ * \param mix				Pointer to the servo mix structure
  * \param config			Pointer to the configuration of servo mix structure
  * \param torque_command	Pointer to the torque command structure
  * \param thrust_command	Pointer to the thrust command structure
