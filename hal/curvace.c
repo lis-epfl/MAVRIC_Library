@@ -578,12 +578,27 @@ void curvace_send_telemetry_averaged(const curvace_t* curvace)
 		of_right16[i] = 100 * of_right[i]; 
 	}
 
-	// average over all columns
-	for (int i = 0; i < 9; ++i)
+	// // average over all columns
+	// for (int i = 0; i < 9; ++i)
+	// {
+	// 	out += of_left[i] + of_right[i];
+	// }
+	// out = out / 18.0f;
+
+	// average over left columns
+	for (int i = 2; i < 7; ++i)
 	{
 		out += of_left[i] + of_right[i];
 	}
-	out = out / 18.0f;
+	out = out / 10.0f;
+
+
+	// // average over right columns
+	// for (int i = 2; i < 7; ++i)
+	// {
+	// 	out += of_right[i];
+	// }
+	// out = out / 18.0f;
 
 	mavlink_msg_omnidirectional_flow_pack(	curvace->mavlink_stream->sysid,
 											curvace->mavlink_stream->compid,
