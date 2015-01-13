@@ -69,20 +69,20 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 
 	// Get armed flag
 	if( remote_get_throttle(remote) < -0.95f && 
-		remote_get_yaw(remote) > 0.9f && 
+		remote_get_yaw(remote) < -0.9f && 
 		remote_get_pitch(remote) > 0.9f && 
-		remote_get_roll(remote) < -0.9f )
+		remote_get_roll(remote) > 0.9f )
 	{
-		// Both sticks in bottom right corners => arm
+		// Left stick bottom left corner, right stick bottom right corner => disarm 
 		print_util_dbg_print("Arming!\r\n");
 		armed = ARMED_ON;
 	}
 	else if ( remote_get_throttle(remote) < -0.95f && 
-			remote_get_yaw(remote) < -0.9f && 
+			remote_get_yaw(remote) > 0.9f && 
 			remote_get_pitch(remote) > 0.9f && 
-			remote_get_roll(remote) > 0.9f )
+			remote_get_roll(remote) < -0.9f )
 	{
-		// Both sticks in bottom left corners => disarm 
+		// Left stick bottom right corner, right stick bottom left corner => arm
 		print_util_dbg_print("Disarming!\r\n");
 		armed = ARMED_OFF;
 	}
