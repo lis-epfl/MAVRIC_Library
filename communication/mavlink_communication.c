@@ -128,11 +128,13 @@ static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream)
+bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream)
 {
+	bool init_success = true;
+	
 	// Init MAVLink schedule
-	scheduler_init(	&mavlink_communication->scheduler, 
-					&config->scheduler_config);
+	init_success &= scheduler_init(	&mavlink_communication->scheduler, 
+									&config->scheduler_config);
 
 	// Init MAVLink stream
 	mavlink_stream_init(	&mavlink_communication->mavlink_stream, 
@@ -140,16 +142,16 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 							rx_stream,
 							tx_stream	);
 
-	mavlink_message_handler_init(	&mavlink_communication->message_handler, 
-									&config->message_handler_config,
-									&mavlink_communication->mavlink_stream);
+	init_success &= mavlink_message_handler_init(	&mavlink_communication->message_handler, 
+													&config->message_handler_config,
+													&mavlink_communication->mavlink_stream);
 
 	// Init onboard parameters
-	onboard_parameters_init(	&mavlink_communication->onboard_parameters, 
-								&config->onboard_parameters_config, 
-								&mavlink_communication->scheduler, 
-								&mavlink_communication->message_handler,
-								&mavlink_communication->mavlink_stream); 
+	init_success &= onboard_parameters_init(	&mavlink_communication->onboard_parameters, 
+												&config->onboard_parameters_config, 
+												&mavlink_communication->scheduler,
+												&mavlink_communication->message_handler,
+												&mavlink_communication->mavlink_stream); 
 
 	mavlink_communication->send_msg_handler_set = malloc( sizeof(mavlink_send_msg_handler_set_t) + sizeof(mavlink_send_msg_handler_t[config->max_msg_sending_count]) );
 
@@ -158,6 +160,8 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 	{
 		mavlink_communication->send_msg_handler_set->max_msg_sending_count = config->max_msg_sending_count;
 		mavlink_communication->send_msg_handler_set->msg_sending_count = 0;
+		
+		init_success &= true;
 	}
 	else
 	{
@@ -165,6 +169,8 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 
 		mavlink_communication->send_msg_handler_set->max_msg_sending_count = 0;
 		mavlink_communication->send_msg_handler_set->msg_sending_count = 0;
+		
+		init_success &= false;
 	}
 
 	mavlink_communication->send_msg_handler_set->max_msg_sending_count = config->max_msg_sending_count;
@@ -177,9 +183,11 @@ void mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&mavlink_communication_toggle_telemetry_stream;
 	callback.module_struct 	= (handling_module_struct_t)		&mavlink_communication->scheduler;
-	mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
+	init_success &= mavlink_message_handler_add_msg_callback( &mavlink_communication->message_handler, &callback );
 
 	print_util_dbg_print("[MAVLINK COMMUNICATION] Initialised\r\n");
+	
+	return init_success;
 }
 
 
@@ -220,34 +228,49 @@ void mavlink_communication_suspend_downstream(mavlink_communication_t* mavlink_c
 }
 
 
-void mavlink_communication_add_msg_send(	mavlink_communication_t* mavlink_communication, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id)
+bool mavlink_communication_add_msg_send(	mavlink_communication_t* mavlink_communication, uint32_t repeat_period, task_run_mode_t run_mode, task_timing_mode_t timing_mode, task_priority_t priority, mavlink_send_msg_function_t function, handling_telemetry_module_struct_t module_structure, uint32_t task_id)
 {
+	bool add_success = true;
+	
 	mavlink_send_msg_handler_set_t* send_handler = mavlink_communication->send_msg_handler_set;
 	
-	
-	if ( send_handler->msg_sending_count <  send_handler->max_msg_sending_count )
+	if ( send_handler == NULL )
 	{
-		mavlink_send_msg_handler_t* new_msg_send = &send_handler->msg_send_list[send_handler->msg_sending_count];
-		
-		new_msg_send->mavlink_stream = &mavlink_communication->mavlink_stream;
-		new_msg_send->function = function;
-		new_msg_send->module_struct = module_structure;
-
-		send_handler->msg_sending_count += 1;
-		
-		scheduler_add_task(	&mavlink_communication->scheduler,
-							repeat_period,
-							run_mode,
-							timing_mode,
-							priority,
-							(task_function_t)&mavlink_communication_send_message,
-							(task_argument_t)new_msg_send,
-							task_id	);
+		print_util_dbg_print("[MAVLINK COMMUNICATION] Error: null pointer.\r\n");
+		add_success &= false;
 	}
 	else
 	{
-		print_util_dbg_print("[MAVLINK COMMUNICATION] Error: Cannot add more send msg\r\n");
+		if ( send_handler->msg_sending_count <  send_handler->max_msg_sending_count )
+		{
+			mavlink_send_msg_handler_t* new_msg_send = &send_handler->msg_send_list[send_handler->msg_sending_count];
+			
+			new_msg_send->mavlink_stream = &mavlink_communication->mavlink_stream;
+			new_msg_send->function = function;
+			new_msg_send->module_struct = module_structure;
+
+			send_handler->msg_sending_count += 1;
+			
+			add_success &= true;
+			
+			add_success &= scheduler_add_task(	&mavlink_communication->scheduler,
+												repeat_period,
+												run_mode,
+												timing_mode,
+												priority,
+												(task_function_t)&mavlink_communication_send_message,
+												(task_argument_t)new_msg_send,
+												task_id	);
+		}
+		else
+		{
+			print_util_dbg_print("[MAVLINK COMMUNICATION] Error: Cannot add more send msg\r\n");
+			
+			add_success &= false;
+		}
 	}
+	
+	return add_success;
 }
 
 

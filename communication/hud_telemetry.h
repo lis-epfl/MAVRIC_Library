@@ -70,8 +70,10 @@ typedef struct
  * \param	pos_est						The pointer to the position estimation structure
  * \param	controls					The pointer to the controls structure
  * \param	ahrs						The pointer to the attitude estimation structure
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void hud_telemetry_init(hud_telemetry_structure_t *hud_telemetry_structure, const position_estimation_t *pos_est, const control_command_t *controls, const ahrs_t *ahrs);
+bool hud_telemetry_init(hud_telemetry_structure_t *hud_telemetry_structure, const position_estimation_t *pos_est, const control_command_t *controls, const ahrs_t *ahrs);
 
 /**
  * \brief	Function to send the MAVLink HUD message

@@ -42,10 +42,12 @@
 
 
 #include "servos_mix_quadcopter_diag.h"
+#include "print_util.h"
 
-
-void servo_mix_quadcotper_diag_init(servo_mix_quadcotper_diag_t* mix, const servo_mix_quadcopter_diag_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, servos_t* servos)
+bool servo_mix_quadcotper_diag_init(servo_mix_quadcotper_diag_t* mix, const servo_mix_quadcopter_diag_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, servos_t* servos)
 {
+	bool init_success = true;
+	
 	// Init dependencies
 	mix->torque_command = torque_command;
 	mix->thrust_command = thrust_command;
@@ -64,6 +66,10 @@ void servo_mix_quadcotper_diag_init(servo_mix_quadcotper_diag_t* mix, const serv
 
 	mix->min_thrust 	   = config->min_thrust;
 	mix->max_thrust 	   = config->max_thrust;
+	
+	print_util_dbg_print("[SERVOS MIX QUAD] initialised \r\n");
+	
+	return init_success;
 }
 
 

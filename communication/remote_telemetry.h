@@ -57,8 +57,10 @@ extern "C" {
  * 
  * \param	remote					The pointer to the remote structure
  * \param	mavlink_handler			The pointer to the MAVLink message handler
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void remote_telemetry_init(remote_t* remote, mavlink_message_handler_t *mavlink_handler);
+bool remote_telemetry_init(remote_t* remote, mavlink_message_handler_t *mavlink_handler);
 
 /**
  * \brief	Sends the raw remote values via MAVLink

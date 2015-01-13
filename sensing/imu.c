@@ -124,8 +124,10 @@ static void imu_oriented2scale(imu_t *imu)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void imu_init (imu_t *imu, imu_conf_t *conf_imu, state_t* state)
+bool imu_init (imu_t *imu, imu_conf_t *conf_imu, state_t* state)
 {	
+	bool init_success = true;
+	
 	//init dependency
 	imu->state = state;
 	
@@ -195,7 +197,9 @@ void imu_init (imu_t *imu, imu_conf_t *conf_imu, state_t* state)
 	imu->last_update = time_keeper_get_time_ticks();
 	imu->dt = 0.004;
 	
-	print_util_dbg_print("[IMU] Initialisation\r\n");
+	print_util_dbg_print("[IMU] Initialised\r\n");
+	
+	return init_success;
 }
 
 

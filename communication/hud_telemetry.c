@@ -45,13 +45,17 @@
 #include "coord_conventions.h"
 #include "mavlink_communication.h"
 
-void hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, const position_estimation_t* pos_est, const control_command_t* controls, const ahrs_t* ahrs)
+bool hud_telemetry_init(hud_telemetry_structure_t* hud_telemetry_structure, const position_estimation_t* pos_est, const control_command_t* controls, const ahrs_t* ahrs)
 {
+	bool init_success = true;
+	
 	hud_telemetry_structure->ahrs		= ahrs;
 	hud_telemetry_structure->controls	= controls;
 	hud_telemetry_structure->pos_est    = pos_est;
 	
-	print_util_dbg_print("HUD structure initialised.\r\n");
+	print_util_dbg_print("[HUD TELEMETRY] initialised.\r\n");
+	
+	return init_success;
 }
 
 void hud_telemetry_send_message(const hud_telemetry_structure_t* hud_telemetry_structure, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg) 

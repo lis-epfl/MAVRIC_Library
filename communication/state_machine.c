@@ -47,11 +47,13 @@
 #include "print_util.h"
 #include "state.h"
 
-void state_machine_init(state_machine_t *state_machine,
-						state_t* state,  
+bool state_machine_init(state_machine_t *state_machine,
+						state_t* state, 
 						simulation_model_t *sim_model, 
 						remote_t* remote)
 {
+	bool init_success = true;
+	
 	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
 	state_machine->remote 			= remote;
@@ -60,7 +62,9 @@ void state_machine_init(state_machine_t *state_machine,
 	state_machine->rc_check 		= 0;
 	state_machine->motor_state 		= 0;
 	
-	print_util_dbg_print("State machine initialise.\r\n");
+	print_util_dbg_print("[STATE MACHINE] Initialised.\r\n");
+	
+	return init_success;
 }
 
 

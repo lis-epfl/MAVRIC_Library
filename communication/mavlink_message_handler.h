@@ -175,8 +175,10 @@ typedef struct
  * \param 	message_handler 	Pointer to message handler data structure
  * \param 	config 				Config parameters
  * \param	mavlink_stream		Pointer to the mavlink stream
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void mavlink_message_handler_init(	mavlink_message_handler_t* 			message_handler, 
+bool mavlink_message_handler_init(	mavlink_message_handler_t* 			message_handler, 
 									const mavlink_message_handler_conf_t* 	config,
 									const mavlink_stream_t* mavlink_stream);
 
@@ -188,8 +190,10 @@ void mavlink_message_handler_init(	mavlink_message_handler_t* 			message_handler
  * \param 	msg_callback 		Pointer to new message callback (this structure 
  * 								is copied internally, so it does not need to be 
  * 								kept in memory after the function is called)
+ *
+ * \return	True if the message callback was correctly added, false otherwise
  */
-void mavlink_message_handler_add_msg_callback(	mavlink_message_handler_t* 					message_handler, 
+bool mavlink_message_handler_add_msg_callback(	mavlink_message_handler_t* 					message_handler, 
 												mavlink_message_handler_msg_callback_t* 	msg_callback);
 
 
@@ -200,8 +204,10 @@ void mavlink_message_handler_add_msg_callback(	mavlink_message_handler_t* 					m
  * \param 	cmd_callback 		Pointer to new command callback (this structure 
  * 								is copied internally, so it does not need to be 
  * 								kept in memory after the function is called)
+ *
+ * \return	True if the command callback was correctly added, false otherwise
  */
-void mavlink_message_handler_add_cmd_callback(	mavlink_message_handler_t* 					message_handler, 
+bool mavlink_message_handler_add_cmd_callback(	mavlink_message_handler_t* 					message_handler, 
 												mavlink_message_handler_cmd_callback_t* 	cmd_callback);
 
 

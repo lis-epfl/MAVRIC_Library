@@ -296,8 +296,10 @@ static void gps_position_init(position_estimation_t *pos_est)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu)
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu)
 {
+	bool init_success = true;
+	
     //init dependencies
 	pos_est->barometer = barometer;
 	pos_est->gps = gps;
@@ -343,7 +345,9 @@ void position_estimation_init(position_estimation_t* pos_est, const position_est
 	
 	gps_position_init(pos_est);
 	
-	print_util_dbg_print("Position estimation initialized.\r\n");
+	print_util_dbg_print("[POSITION ESTIMATION] initialised.\r\n");
+	
+	return init_success;
 }
 
 

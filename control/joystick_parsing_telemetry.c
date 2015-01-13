@@ -93,8 +93,10 @@ void joystick_parsing_telemetry_parse_msg(joystick_parsing_t *joystick_parsing, 
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void joystick_parsing_telemetry_init(joystick_parsing_t* joystick_parsing, mavlink_message_handler_t* message_handler)
+bool joystick_parsing_telemetry_init(joystick_parsing_t* joystick_parsing, mavlink_message_handler_t* message_handler)
 {
+	bool init_success = true;
+	
 	// Add callbacks for waypoint handler messages requests
 	mavlink_message_handler_msg_callback_t callback;
 
@@ -103,7 +105,9 @@ void joystick_parsing_telemetry_init(joystick_parsing_t* joystick_parsing, mavli
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&joystick_parsing_telemetry_parse_msg;
 	callback.module_struct 	= (handling_module_struct_t)		joystick_parsing;
-	mavlink_message_handler_add_msg_callback( message_handler, &callback );
+	init_success &= mavlink_message_handler_add_msg_callback( message_handler, &callback );
+	
+	return init_success;
 }
 
 

@@ -108,8 +108,10 @@ static mav_result_t position_estimation_set_new_home_position(position_estimatio
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void position_estimation_telemetry_init(position_estimation_t* pos_est, mavlink_message_handler_t* mavlink_handler)
+bool position_estimation_telemetry_init(position_estimation_t* pos_est, mavlink_message_handler_t* mavlink_handler)
 {
+	bool init_success = true;
+	
 	mavlink_message_handler_cmd_callback_t callbackcmd;
 		
 	callbackcmd.command_id    = MAV_CMD_DO_SET_HOME; // 179
@@ -118,7 +120,9 @@ void position_estimation_telemetry_init(position_estimation_t* pos_est, mavlink_
 	callbackcmd.compid_target = MAV_COMP_ID_ALL;
 	callbackcmd.function      = (mavlink_cmd_callback_function_t)	&position_estimation_set_new_home_position;
 	callbackcmd.module_struct =										pos_est;
-	mavlink_message_handler_add_cmd_callback(mavlink_handler, &callbackcmd);
+	init_success &= mavlink_message_handler_add_cmd_callback(mavlink_handler, &callbackcmd);
+	
+	return init_success;
 }
 
 

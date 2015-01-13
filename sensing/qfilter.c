@@ -48,10 +48,22 @@
 #include "maths.h"
 #include "constants.h"
 
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
 
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
-void qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_t* ahrs)
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_t* ahrs)
 {
+	bool init_success = true;
+	
 	//Init dependencies
 	qf->imu = imu;
 	qf->ahrs = ahrs;
@@ -64,7 +76,9 @@ void qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_
 	qf->kp_mag = config->kp_mag;
 	qf->ki_mag = config->ki_mag;
 	
-	print_util_dbg_print("[QFILTER] Initialized.\r\n");
+	print_util_dbg_print("[QFILTER] Initialised.\r\n");
+	
+	return init_success;
 }
 
 
