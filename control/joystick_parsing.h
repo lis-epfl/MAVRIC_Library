@@ -128,7 +128,6 @@ typedef struct
 {
 	joystick_button_t buttons;				///< The bit mask of the button pressed
 	joystick_channels_t channels;
-	// control_command_t* controls;	///< The pointer to the controls structure
 	state_t* state;					///< The pointer to the state structure
 } joystick_parsing_t;
 
