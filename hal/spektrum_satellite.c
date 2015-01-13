@@ -212,7 +212,7 @@ void spektrum_satellite_init (satellite_t *satellite, usart_config_t usart_conf_
 	spektrum_satellite_switch_on();
 }
 
-void spektrum_satellite_bind(void)
+void spektrum_satellite_bind(float channel_encoding)
 {
 	int32_t i = 0;
 	uint32_t cpu_freq = sysclk_get_cpu_hz();
@@ -237,9 +237,19 @@ void spektrum_satellite_bind(void)
 	
 	// Wait 100ms after receiver startup
 	delay_ms(68);
+	
+	uint8_t pulses = 0;
+	if (channel_encoding == 10)
+	{
+		pulses = 3;
+	}
+	else if (channel_encoding == 11)
+	{
+		pulses = 6;
+	}
 
 	// create 6 pulses with 250us period to set receiver to bind mode
-	for (i = 0; i < 6; i++) 
+	for (i = 0; i < pulses; i++) 
 	{
 		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_OUTPUT | GPIO_PULL_DOWN);
 		cpu_delay_us(113, cpu_freq); 
