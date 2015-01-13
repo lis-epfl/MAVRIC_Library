@@ -217,6 +217,7 @@ bool simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	sim->pressure = pressure;
 	sim->gps = gps;
 	sim->sonar = sonar;
+	sim->state = state;
 	sim->servos = servos;
 	sim->nav_plan_active = &state->nav_plan_active;
 	
