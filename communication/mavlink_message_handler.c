@@ -78,19 +78,25 @@ static bool match_cmd(mavlink_message_handler_t* message_handler, mavlink_messag
 
 
 /**
-* \brief 						Sort message callbacks, to speed up the matching while receiving a cmd message.
+* \brief 				Sort the latest added message callback
+* 
+* \details				This should be done each time a callback is added to speed up the matching 
+* 					while receiving a cmd message.
 *
 * \param 	message_handler 	Pointer to message handler data structure
 */
-static void mavlink_message_handler_sort_msg_callback(mavlink_message_handler_t* message_handler);
+static void mavlink_message_handler_sort_latest_msg_callback(mavlink_message_handler_t* message_handler);
 
 
 /**
-* \brief 						Sort command callbacks, to speed up the matching while receiving a cmd message.
-*
+* \brief 				Sort the latest added command callback
+* 
+* \details				This should be done each time a callback is added to speed up the matching 
+* 					while receiving a cmd message.
+* 
 * \param 	message_handler 	Pointer to message handler data structure
 */
-static void mavlink_message_handler_sort_cmd_callback(mavlink_message_handler_t* message_handler);
+static void mavlink_message_handler_sort_latest_cmd_callback(mavlink_message_handler_t* message_handler);
 
 
 //------------------------------------------------------------------------------
@@ -147,7 +153,7 @@ static bool match_cmd(mavlink_message_handler_t* message_handler, mavlink_messag
 	return match;
 }
 
-static void mavlink_message_handler_sort_msg_callback(mavlink_message_handler_t* message_handler)
+static void mavlink_message_handler_sort_latest_msg_callback(mavlink_message_handler_t* message_handler)
 {
 	uint32_t j = 0;
 	
@@ -165,7 +171,7 @@ static void mavlink_message_handler_sort_msg_callback(mavlink_message_handler_t*
 }
 
 
-static void mavlink_message_handler_sort_cmd_callback(mavlink_message_handler_t* message_handler)
+static void mavlink_message_handler_sort_latest_cmd_callback(mavlink_message_handler_t* message_handler)
 {
 	uint32_t j = 0;
 	
@@ -271,7 +277,7 @@ bool mavlink_message_handler_add_msg_callback(	mavlink_message_handler_t* 				me
 			new_callback->module_struct = msg_callback->module_struct;
 			
 			//sort_message_callback
-			mavlink_message_handler_sort_msg_callback(message_handler);
+			mavlink_message_handler_sort_latest_msg_callback(message_handler);
 
 			msg_callback_set->callback_count += 1;
 			
@@ -316,7 +322,7 @@ bool mavlink_message_handler_add_cmd_callback(	mavlink_message_handler_t* 				me
 			new_callback->module_struct = cmd_callback->module_struct;
 
 			//sort_command_callback
-			mavlink_message_handler_sort_cmd_callback(message_handler);
+			mavlink_message_handler_sort_latest_cmd_callback(message_handler);
 
 			cmd_callback_set->callback_count += 1;
 			
