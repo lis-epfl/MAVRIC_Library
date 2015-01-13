@@ -45,6 +45,7 @@
 
 #include "mavlink_stream.h"
 #include "stabilisation.h"
+#include "stabilisation_copter.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -79,13 +80,22 @@ void stabilisation_telemetry_send_rpy_rates_error(const stabiliser_t* stabiliser
 void stabilisation_telemetry_send_rpy_thrust_setpoint(const control_command_t* controls, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 /**
- * \brief	Task to send the MAVLink tvel[X, Y and Z] command message
+ * \brief	Task to send the MAVLink command message depending on the control mode
  *
  * \param	controls				The pointer to the controls structure
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
  */
-void stabilisation_send_command(control_command_t* controls, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void stabilisation_telemetry_send_control(const control_command_t* controls, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
+/**
+ * \brief	Task to send the MAVLink messages with the output of the PID controllers
+ *
+ * \param	stabilisation_copter	The pointer to the stabilisation copter structure
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param	msg						The pointer to the MAVLink message
+ */
+void stabilisation_copter_send_outputs(stabilisation_copter_t* stabilisation_copter, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 #ifdef __cplusplus
 }
