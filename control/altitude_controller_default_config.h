@@ -30,40 +30,50 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file data_logging_telemetry.h
+ * \file altitude_controller_default_config.h
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Julien Lecoeur
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the data_logging module
+ * \brief Default configuration for the module altitude_controller_sonar
  *
  ******************************************************************************/
 
 
-#ifndef DATA_LOGGING_TELEMETRY_H_
-#define DATA_LOGGING_TELEMETRY_H_
-
-#include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
-#include "data_logging.h"
+#ifndef ALTITUDE_CONTROLLER_DEFAULT_CONFIG_H_
+#define ALTITUDE_CONTROLLER_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/**
- * \brief	Initialize the MAVLink communication module for the remote
- * 
- * \param	data_logging					The pointer to the data logging structure
- * \param	message_handler			The pointer to the MAVLink message handler
- *
- * \return	True if the init succeed, false otherwise
- */
-bool data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_handler_t* message_handler);
+#include "altitude_controller.h"
+
+static altitude_controller_conf_t altitude_controller_default_config =
+{
+	.hover_point = -0.3f,
+	.pid_config = 
+	{
+		.p_gain = 0.2f,
+		.clip_min = -1.0f,
+		.clip_max = 1.0f,
+		.integrator={
+			.pregain = 0.5f,
+			.postgain = 1.0f,
+			.accumulator = 0.0f,
+			.clip = 0.5f,
+		},
+		.differentiator={
+			.gain = 0.4f,
+			.previous = 0.0f,
+			.clip = 0.65f
+		},
+		.soft_zone_width = 0.0f
+	},
+};
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* DATA_LOGGING_TELEMETRY_H_ */
+#endif // ALTITUDE_CONTROLLER_DEFAULT_CONFIG_H_

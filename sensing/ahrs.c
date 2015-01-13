@@ -41,6 +41,7 @@
  
 
 #include "ahrs.h"
+#include "print_util.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -54,8 +55,10 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void ahrs_init(ahrs_t* ahrs, ahrs_config_t* config)
+bool ahrs_init(ahrs_t* ahrs, ahrs_config_t* config)
 {
+	bool init_success = true;
+	
 	// Init dependencies
 	int32_t x = config->x;
 	int32_t y = config->y;
@@ -84,4 +87,8 @@ void ahrs_init(ahrs_t* ahrs, ahrs_config_t* config)
 	ahrs->up_vec.v[0] = 0.0f;
 	ahrs->up_vec.v[1] = 0.0f;
 	ahrs->up_vec.v[2] = -1.0f;
+	
+	print_util_dbg_print("[AHRS] Initialised.\r\n");
+	
+	return init_success;
 }

@@ -30,40 +30,49 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file data_logging_telemetry.h
+ * \file altitude_estimation.h
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Julien Lecoeur
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the data_logging module
+ * \brief 	Altitude estimation
  *
  ******************************************************************************/
 
 
-#ifndef DATA_LOGGING_TELEMETRY_H_
-#define DATA_LOGGING_TELEMETRY_H_
+#include "altitude_estimation.h"
 
-#include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
-#include "data_logging.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
 
-/**
- * \brief	Initialize the MAVLink communication module for the remote
- * 
- * \param	data_logging					The pointer to the data logging structure
- * \param	message_handler			The pointer to the MAVLink message handler
- *
- * \return	True if the init succeed, false otherwise
- */
-bool data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_handler_t* message_handler);
 
-#ifdef __cplusplus
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void altitude_estimation_init(altitude_estimation_t* estimator, const altitude_estimation_conf_t* config, const sonar_t* sonar, const barometer_t* barometer, const ahrs_t* ahrs, altitude_t* altitude_estimated)
+{
+	// Init dependencies
+	estimator->sonar 				= sonar;
+	estimator->barometer 			= barometer;
+	estimator->ahrs 				= ahrs;
+	estimator->altitude_estimated 	= altitude_estimated;
+
+	// Init members
 }
-#endif
 
-#endif /* DATA_LOGGING_TELEMETRY_H_ */
+
+void altitude_estimation_update(altitude_estimation_t* estimator)
+{
+	float alt = estimator->sonar->current_distance;
+
+	estimator->altitude_estimated->above_sea 	= - 400.0f - alt;
+	estimator->altitude_estimated->above_ground = - alt;
+}

@@ -88,8 +88,10 @@ static mav_result_t remote_telemetry_satellite_bind(remote_t* remote, mavlink_co
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void remote_telemetry_init(remote_t* remote, mavlink_message_handler_t *mavlink_handler)
+bool remote_telemetry_init(remote_t* remote, mavlink_message_handler_t *mavlink_handler)
 {	
+	bool init_success = true;
+	
 	mavlink_message_handler_cmd_callback_t callbackcmd;
 		
 	callbackcmd.command_id    = MAV_CMD_START_RX_PAIR; // 500
@@ -98,7 +100,9 @@ void remote_telemetry_init(remote_t* remote, mavlink_message_handler_t *mavlink_
 	callbackcmd.compid_target = MAV_COMP_ID_ALL;
 	callbackcmd.function      = (mavlink_cmd_callback_function_t)	&remote_telemetry_satellite_bind;
 	callbackcmd.module_struct =										remote;
-	mavlink_message_handler_add_cmd_callback(mavlink_handler, &callbackcmd);
+	init_success &= mavlink_message_handler_add_cmd_callback(mavlink_handler, &callbackcmd);
+	
+	return init_success;
 }
 
 void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)

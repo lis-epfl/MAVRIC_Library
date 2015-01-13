@@ -136,10 +136,12 @@ static bool match_cmd(mavlink_message_handler_t* message_handler, mavlink_messag
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void mavlink_message_handler_init(	mavlink_message_handler_t* message_handler, 
+bool mavlink_message_handler_init(	mavlink_message_handler_t* message_handler, 
 									const mavlink_message_handler_conf_t* config, 
 									const mavlink_stream_t* mavlink_stream)
 {
+	bool init_success = true;
+	
 	// Init dependencies
 	message_handler->mavlink_stream = mavlink_stream;
 
@@ -153,6 +155,8 @@ void mavlink_message_handler_init(	mavlink_message_handler_t* message_handler,
     {
 	    message_handler->msg_callback_set->max_callback_count = config->max_msg_callback_count;
 		message_handler->msg_callback_set->callback_count = 0;
+		
+		init_success &= true;
 	}
 	else
 	{
@@ -160,6 +164,8 @@ void mavlink_message_handler_init(	mavlink_message_handler_t* message_handler,
 
 		message_handler->msg_callback_set->max_callback_count = 0;
 		message_handler->msg_callback_set->callback_count = 0;	
+		
+		init_success &= false;
 	}
 
 
@@ -168,64 +174,106 @@ void mavlink_message_handler_init(	mavlink_message_handler_t* message_handler,
     if ( message_handler->cmd_callback_set != NULL )
     {
 	    message_handler->cmd_callback_set->max_callback_count = config->max_cmd_callback_count;
-		message_handler->cmd_callback_set->callback_count = 0;	
+		message_handler->cmd_callback_set->callback_count = 0;
+		
+		init_success &= true;	
 	}
 	else
 	{
 		print_util_dbg_print("[COMMAND HANDLER] ERROR ! Bad memory allocation\r\n");
 		message_handler->cmd_callback_set->max_callback_count = 0;
-		message_handler->cmd_callback_set->callback_count = 0;		
+		message_handler->cmd_callback_set->callback_count = 0;
+		
+		init_success &= false;	
 	}
+	
+	print_util_dbg_print("[MESSAGE HANDLER] Initialised.\r\n");
+	
+	return init_success;
 }
 
 
-void mavlink_message_handler_add_msg_callback(	mavlink_message_handler_t* 				message_handler, 
+bool mavlink_message_handler_add_msg_callback(	mavlink_message_handler_t* 				message_handler, 
 												mavlink_message_handler_msg_callback_t* msg_callback)
 {
+	bool add_callback_success = true;
+	
 	mavlink_message_handler_msg_callback_set_t* msg_callback_set = message_handler->msg_callback_set;
 	
-	if ( msg_callback_set->callback_count <  msg_callback_set->max_callback_count )
+	if ( (msg_callback_set == NULL)||(msg_callback == NULL) )
 	{
-		mavlink_message_handler_msg_callback_t* new_callback = &msg_callback_set->callback_list[msg_callback_set->callback_count];
-
-		new_callback->sys_id		= &(message_handler->mavlink_stream->sysid);
-		new_callback->message_id 	= msg_callback->message_id;
-		new_callback->sysid_filter 	= msg_callback->sysid_filter;
-	 	new_callback->compid_filter = msg_callback->compid_filter;
-		new_callback->function 		= msg_callback->function;
-		new_callback->module_struct = msg_callback->module_struct;
-
-		msg_callback_set->callback_count += 1;
+		print_util_dbg_print("[MESSAGE HANDLER] Error: null pointer.\r\n");
+		
+		add_callback_success &= false;
 	}
 	else
 	{
-		print_util_dbg_print("[MESSAGE HANDLER] Error: Cannot add more msg callback\r\n");
+		if ( msg_callback_set->callback_count <  msg_callback_set->max_callback_count )
+		{
+			mavlink_message_handler_msg_callback_t* new_callback = &msg_callback_set->callback_list[msg_callback_set->callback_count];
+
+			new_callback->sys_id		= &(message_handler->mavlink_stream->sysid);
+			new_callback->message_id 	= msg_callback->message_id;
+			new_callback->sysid_filter 	= msg_callback->sysid_filter;
+			new_callback->compid_filter = msg_callback->compid_filter;
+			new_callback->function 		= msg_callback->function;
+			new_callback->module_struct = msg_callback->module_struct;
+
+			msg_callback_set->callback_count += 1;
+			
+			add_callback_success &= true;
+		}
+		else
+		{
+			print_util_dbg_print("[MESSAGE HANDLER] Error: Cannot add more msg callback\r\n");
+			
+			add_callback_success &= false;
+		}
 	}
+	
+	return add_callback_success;
 }
 
 
-void mavlink_message_handler_add_cmd_callback(	mavlink_message_handler_t* 				message_handler, 
+bool mavlink_message_handler_add_cmd_callback(	mavlink_message_handler_t* 				message_handler, 
 												mavlink_message_handler_cmd_callback_t*	cmd_callback)
 {
+	bool add_callback_success = true;
+	
 	mavlink_message_handler_cmd_callback_set_t* cmd_callback_set = message_handler->cmd_callback_set;
 	
-	if ( cmd_callback_set->callback_count <  cmd_callback_set->max_callback_count )
+	if ( (cmd_callback_set == NULL)||(cmd_callback == NULL) )
 	{
-		mavlink_message_handler_cmd_callback_t* new_callback = &cmd_callback_set->callback_list[cmd_callback_set->callback_count];
-
-		new_callback->command_id = cmd_callback->command_id;
-		new_callback->sysid_filter = cmd_callback->sysid_filter;
-	 	new_callback->compid_filter = cmd_callback->compid_filter;
-		new_callback->compid_target = cmd_callback->compid_target;
-		new_callback->function = cmd_callback->function;
-		new_callback->module_struct = cmd_callback->module_struct;
-
-		cmd_callback_set->callback_count += 1;
+		print_util_dbg_print("[MESSAGE HANDLER] Error: null pointer.\r\n");
+		
+		add_callback_success &= false;
 	}
 	else
 	{
-		print_util_dbg_print("[MESSAGE HANDLER] Error: Cannot add more msg callback\r\n");
+		if ( cmd_callback_set->callback_count <  cmd_callback_set->max_callback_count )
+		{
+			mavlink_message_handler_cmd_callback_t* new_callback = &cmd_callback_set->callback_list[cmd_callback_set->callback_count];
+
+			new_callback->command_id = cmd_callback->command_id;
+			new_callback->sysid_filter = cmd_callback->sysid_filter;
+			new_callback->compid_filter = cmd_callback->compid_filter;
+			new_callback->compid_target = cmd_callback->compid_target;
+			new_callback->function = cmd_callback->function;
+			new_callback->module_struct = cmd_callback->module_struct;
+
+			cmd_callback_set->callback_count += 1;
+			
+			add_callback_success &= true;
+		}
+		else
+		{
+			print_util_dbg_print("[MESSAGE HANDLER] Error: Cannot add more msg callback\r\n");
+			
+			add_callback_success &= false;
+		}
 	}
+	
+	return add_callback_success;
 }
 
 

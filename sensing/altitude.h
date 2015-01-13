@@ -30,40 +30,35 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file data_logging_telemetry.h
+ * \file altitude.h
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the data_logging module
+ * \brief This file implements data structure for attitude estimate
  *
  ******************************************************************************/
 
 
-#ifndef DATA_LOGGING_TELEMETRY_H_
-#define DATA_LOGGING_TELEMETRY_H_
-
-#include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
-#include "data_logging.h"
+#ifndef ALTITUDE_H_
+#define ALTITUDE_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+
 /**
- * \brief	Initialize the MAVLink communication module for the remote
- * 
- * \param	data_logging					The pointer to the data logging structure
- * \param	message_handler			The pointer to the MAVLink message handler
- *
- * \return	True if the init succeed, false otherwise
+ * \brief Structure containing the Altitude
  */
-bool data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_handler_t* message_handler);
+typedef struct
+{
+	float above_ground;		///< Altitude above ground (<0)
+	float above_sea;		///< Altitude above sea level (<0)
+} altitude_t;
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* DATA_LOGGING_TELEMETRY_H_ */
+#endif /* ALTITUDE_H_ */

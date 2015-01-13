@@ -30,40 +30,71 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file data_logging_telemetry.h
+ * \file altitude_estimation.h
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Julien Lecoeur
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the data_logging module
+ * \brief 	Altitude estimation
  *
  ******************************************************************************/
 
 
-#ifndef DATA_LOGGING_TELEMETRY_H_
-#define DATA_LOGGING_TELEMETRY_H_
-
-#include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
-#include "data_logging.h"
+#ifndef ALTITUDE_ESTIMATION_H_
+#define ALTITUDE_ESTIMATION_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include "altitude.h"
+#include "sonar.h"
+#include "barometer.h"
+#include "ahrs.h"
+
+
 /**
- * \brief	Initialize the MAVLink communication module for the remote
- * 
- * \param	data_logging					The pointer to the data logging structure
- * \param	message_handler			The pointer to the MAVLink message handler
- *
- * \return	True if the init succeed, false otherwise
+ * \brief Altitude estimator structure
  */
-bool data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_handler_t* message_handler);
+typedef struct 
+{
+	const sonar_t*		sonar;					///< Pointer to sonar (input)
+	const barometer_t* 	barometer;				///< Pointer to barometer (input)
+	const ahrs_t* 		ahrs;					///< Pointer to estimated attitude and acceleration (input)
+	altitude_t* 		altitude_estimated; 	///< Pointer to estimated altitude (output)
+} altitude_estimation_t;
+
+
+/**
+ * \brief Altitude estimation configuration
+ */
+typedef struct
+{
+} altitude_estimation_conf_t;	
+
+
+/**
+ * \brief               		Initialises the altitude estimation structure
+ * 
+ * \param 	estimator    		Pointer to data structure
+ * \param 	config				Pointer to configuration
+ * \param 	position_command	Pointer to the position command
+ * \param 	altitude_estimated	Pointer to the estimated altitude
+ * \param 	thrust_command		Pointer to thrust command (output)
+ */
+void altitude_estimation_init(altitude_estimation_t* estimator, const altitude_estimation_conf_t* config, const sonar_t* sonar, const barometer_t* barometer, const ahrs_t* ahrs, altitude_t* altitude_estimated);
+
+
+/**
+ * \brief               	Main update function
+ * 
+ * \param 	estimator    	Pointer to data structure
+ */
+void altitude_estimation_update(altitude_estimation_t* estimator);
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* DATA_LOGGING_TELEMETRY_H_ */
+#endif /* ALTITUDE_ESTIMATION_H_ */

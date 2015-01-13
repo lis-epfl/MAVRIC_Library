@@ -30,40 +30,72 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file data_logging_telemetry.h
+ * \file optic_flow.h
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Julien Lecoeur
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the data_logging module
+ * \brief Defines types for generic optic flow sensors
  *
  ******************************************************************************/
 
 
-#ifndef DATA_LOGGING_TELEMETRY_H_
-#define DATA_LOGGING_TELEMETRY_H_
-
-#include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
-#include "data_logging.h"
+#ifndef OPTIC_FLOW_H_
+#define OPTIC_FLOW_H_
 
 #ifdef __cplusplus
-extern "C" {
+	extern "C" {
 #endif
+
+#include <stdint.h>
+
+
+typedef struct 
+{
+	int16_t x;
+	int16_t y;	
+} raw_of_vector_t;
+
+
+typedef struct
+{
+	float x;
+	float y;
+} of_vector_t;
+
 
 /**
- * \brief	Initialize the MAVLink communication module for the remote
- * 
- * \param	data_logging					The pointer to the data logging structure
- * \param	message_handler			The pointer to the MAVLink message handler
- *
- * \return	True if the init succeed, false otherwise
+ * \brief Direction at which a ROI is pointed
  */
-bool data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_handler_t* message_handler);
+typedef struct
+{
+	float azimuth;		///< azimuth in radians
+	float elevation;	///< elevation in radians
+} viewing_direction_t;
+
+
+/**
+ * \brief Link between gyro rates and rotational optic flow
+ * 
+ * OF_rotation = A * gyro
+ * 
+ * [ OF_x ] = 	[Arx	Apx		Ayx] * 	[ roll_rate ]
+ * [ OF_y ]		[Ary	Apy		Ayy]	[ pitch_rate]
+ * 										[ yaw_rate 	]
+ */
+typedef struct
+{
+	float Arx;
+	float Apx;
+	float Ayx;
+	float Ary;
+	float Apy;
+	float Ayy;
+} derotation_matrix_t;
+
 
 #ifdef __cplusplus
-}
+	}
 #endif
 
-#endif /* DATA_LOGGING_TELEMETRY_H_ */
+#endif /* OPTIC_FLOW_H_ */

@@ -62,6 +62,7 @@ typedef enum
 	Z = 2,
 } constants_orientation_t;
 
+
 /**
  * \brief Enumerates the Roll, Pitch and Yaw orientations 
  * according to the autopilot placement on the MAV
@@ -72,6 +73,7 @@ typedef enum
 	PITCH 	= 1,
 	YAW 	= 2,
 } constants_roll_pitch_yaw_t;
+
 
 /**
  * \brief Enumerates the up vector orientation 
@@ -84,6 +86,15 @@ typedef enum
 	UPVECTOR_Z = -1,
 } constants_upvector_t;
 
+
+/**
+ * \brief Enumerates ON/OFF switches
+ */
+typedef enum
+{
+	OFF = 0,
+	ON 	= 1,
+} constants_on_off_t;
 
 #ifdef __cplusplus
 }

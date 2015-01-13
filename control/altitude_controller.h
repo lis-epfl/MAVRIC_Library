@@ -30,40 +30,73 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file data_logging_telemetry.h
+ * \file altitude_controller.h
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Julien Lecoeur
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the data_logging module
+ * \brief 	A simple altitude controller for copter
  *
  ******************************************************************************/
 
 
-#ifndef DATA_LOGGING_TELEMETRY_H_
-#define DATA_LOGGING_TELEMETRY_H_
-
-#include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
-#include "data_logging.h"
+#ifndef ALTITUDE_CONTROLLER_H_
+#define ALTITUDE_CONTROLLER_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include "control_command.h"
+#include "pid_controller.h"
+#include "altitude.h"
+
+
 /**
- * \brief	Initialize the MAVLink communication module for the remote
- * 
- * \param	data_logging					The pointer to the data logging structure
- * \param	message_handler			The pointer to the MAVLink message handler
- *
- * \return	True if the init succeed, false otherwise
+ * \brief Altitude controller structure
  */
-bool data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_handler_t* message_handler);
+typedef struct 
+{
+	pid_controller_t			pid;				///< Controller
+	float						hover_point;		///< Thrust required to hover
+	const position_command_t*	position_command;	///< Pointer to altitude command (input)
+	const altitude_t* 			altitude_estimated; ///< Pointer to estimated altitude (input)
+	thrust_command_t* 			thrust_command;		///< Pointer to thrust command (output)
+} altitude_controller_t;
+
+
+/**
+ * \brief Altitude controller configuration
+ */
+typedef struct
+{
+	float 					hover_point;		///< Thrust required to hover
+	pid_controller_conf_t 	pid_config;			///< Proportionnal gain
+} altitude_controller_conf_t;	
+
+
+/**
+ * \brief               		Initialises the altitude controller structure
+ * 
+ * \param 	controller    		Pointer to data structure
+ * \param 	config				Pointer to configuration
+ * \param 	position_command	Pointer to the position command
+ * \param 	altitude_estimated	Pointer to the estimated altitude
+ * \param 	thrust_command		Pointer to thrust command (output)
+ */
+void altitude_controller_init(altitude_controller_t* controller, const altitude_controller_conf_t* config, const position_command_t* position_command, const altitude_t* altitude_estimated, thrust_command_t* thrust_command);
+
+
+/**
+ * \brief               	Main update function
+ * 
+ * \param 	controller    	Pointer to data structure
+ */
+void altitude_controller_update(altitude_controller_t* controller);
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* DATA_LOGGING_TELEMETRY_H_ */
+#endif /* ALTITUDE_CONTROLLER_H_ */

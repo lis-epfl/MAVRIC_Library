@@ -30,40 +30,49 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file data_logging_telemetry.h
+ * \file curvace_telemetry.h
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Julien Lecoeur
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the data_logging module
+ * \brief Telemetry for the cylindrical curvace
  *
  ******************************************************************************/
 
 
-#ifndef DATA_LOGGING_TELEMETRY_H_
-#define DATA_LOGGING_TELEMETRY_H_
-
-#include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
-#include "data_logging.h"
+#ifndef CURVACE_TELEMETRY_H_
+#define CURVACE_TELEMETRY_H_
 
 #ifdef __cplusplus
-extern "C" {
+	extern "C" {
 #endif
+
+#include "curvace.h"	
+#include "mavlink_stream.h"
+
 
 /**
- * \brief	Initialize the MAVLink communication module for the remote
+ * \brief 	Send 6 messages of type spherical_optic_flow
  * 
- * \param	data_logging					The pointer to the data logging structure
- * \param	message_handler			The pointer to the MAVLink message handler
- *
- * \return	True if the init succeed, false otherwise
- */
-bool data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_handler_t* message_handler);
+ * \param	curvace				Pointer to module
+ * \param	mavlink_stream		Mavlink stream
+ * \param 	msg					Mavlink message
+ **/
+void curvace_telemetry_send(const curvace_t* curvace, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
+
+/**
+ * \brief 	Send 1 message of type omnidirectional_flow
+ * 
+ * \param	curvace				Pointer to module
+ * \param	mavlink_stream		Mavlink stream
+ * \param 	msg					Mavlink message
+ **/
+void curvace_telemetry_send_averaged(const curvace_t* curvace, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
 
 #ifdef __cplusplus
-}
+	}
 #endif
 
-#endif /* DATA_LOGGING_TELEMETRY_H_ */
+#endif

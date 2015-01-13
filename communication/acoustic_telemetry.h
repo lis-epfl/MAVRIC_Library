@@ -30,34 +30,41 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state_machine_default_config.h
+ * \file acoustic_telemetry.h
  * 
  * \author MAV'RIC Team
  * \author Gregoire Heitz
  *   
- * \brief Default configuration for the state machine
+ * \brief Acoustic telemetry functions
  *
  ******************************************************************************/
 
 
-#ifndef STATE_MACHINE_DEFAULT_CONFIG_H_
-#define STATE_MACHINE_DEFAULT_CONFIG_H_
+#ifndef ACOUSTIC_TELEMETRY_H_
+#define ACOUSTIC_TELEMETRY_H_
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include "acoustic.h"
+#include "mavlink_stream.h"
+#include "mavlink_message_handler.h"
 
-#include "state_machine.h"
 
+/**
+ * \brief 	Send the acoustic azimuth and elevation angles, and the Reliable_data flag
+ *
+ * \param	audio_data			Pointer to the acoustic data structure
+ * \param	mavlink_stream		Pointer to mavlink stream structure
+ * \param	msg					Pointer to the message structure
+ */
+void acoustic_telemetry_send (const audio_t* audio_data, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
-state_machine_conf_t state_machine_default_config =
-{
-	.state_machine.use_mode_from_remote = 1
-};
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // STATE_MACHINE_DEFAULT_CONFIG_H_
+#endif

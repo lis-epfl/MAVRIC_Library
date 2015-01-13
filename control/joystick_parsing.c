@@ -115,8 +115,10 @@ void joystick_parsing_button(joystick_parsing_t* joystick_parsing, button_presse
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void joystick_parsing_init(joystick_parsing_t* joystick_parsing, control_command_t* controls, state_t* state)
+bool joystick_parsing_init(joystick_parsing_t* joystick_parsing, control_command_t* controls, state_t* state)
 {
+	bool init_success = true;
+	
 	joystick_parsing->controls = controls;
 	joystick_parsing->state = state;
 	
@@ -133,8 +135,9 @@ void joystick_parsing_init(joystick_parsing_t* joystick_parsing, control_command
 	
 	joystick_parsing->buttons.button_mask = 0;
 	
+	print_util_dbg_print("[JOYSTICK PARSING] initialised\r\n");
 	
-	print_util_dbg_print("Joystick parsing initialised\r");
+	return init_success;
 }
 
 void joystick_parsing_get_velocity_vector_from_joystick(joystick_parsing_t* joystick_parsing, control_command_t* controls)

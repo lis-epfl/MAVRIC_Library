@@ -34,6 +34,7 @@
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
+ * \author Geraud L'Eplattenier
  *   
  * \brief Driver for the cylindrical curvace
  *
@@ -50,51 +51,44 @@
 #include <stdint.h>
 #include "quaternions.h"
 #include "ahrs.h"
-#include "mavlink_stream.h"
+#include "optic_flow.h"
+#include "constants.h"	
 
 #define CURVACE_NB_OF 108
 
 
-typedef struct 
-{
-	int16_t x;
-	int16_t y;	
-} curvace_raw_of_vector_t;
-
-
+/**
+ * \brief 	Curvace raw data
+ */
 typedef union
 {
-	int16_t data[2 * CURVACE_NB_OF];
+	int16_t data[2 * CURVACE_NB_OF];								///< Raw data as int16
 	struct
 	{
-		curvace_raw_of_vector_t left_hemisphere[ CURVACE_NB_OF / 2 ];
-		curvace_raw_of_vector_t right_hemisphere[ CURVACE_NB_OF / 2 ];
-	};
+		raw_of_vector_t left_hemisphere[ CURVACE_NB_OF / 2 ];		///< Left optic flow vectors
+		raw_of_vector_t right_hemisphere[ CURVACE_NB_OF / 2 ];		///< Right optic flow vectors
+	};																
 	struct
 	{
-		curvace_raw_of_vector_t all[ CURVACE_NB_OF ];
+		raw_of_vector_t all[ CURVACE_NB_OF ];						///< All optic flow vectors
 	};
 } curvace_raw_data_t;
 
 
-typedef struct
-{
-	float x;
-	float y;
-} curvace_of_vector_t;
-
-
+/**
+ * \brief 	Curvace data
+ */
 typedef union
 {
-	float data[ 2 * CURVACE_NB_OF ];
+	float data[ 2 * CURVACE_NB_OF ];							///< Raw data as float
 	struct
 	{
-		curvace_of_vector_t left_hemisphere[ CURVACE_NB_OF / 2 ];
-		curvace_of_vector_t right_hemisphere[ CURVACE_NB_OF / 2 ];
+		of_vector_t left_hemisphere[ CURVACE_NB_OF / 2 ];		///< Left optic flow vectors
+		of_vector_t right_hemisphere[ CURVACE_NB_OF / 2 ];		///< Right optic flow vectors
 	};
 	struct
 	{
-		curvace_of_vector_t all[ CURVACE_NB_OF ];
+		of_vector_t all[ CURVACE_NB_OF ];						///< All optic flow vectors
 	};
 } curvace_data_t;
 
@@ -110,96 +104,90 @@ typedef struct
 
 
 /**
- * \brief Direction at which a ROI is pointed
- */
-typedef struct
-{
-	float azimuth;		///< azimuth in radians
-	float elevation;	///< elevation in radians
-} curvace_viewing_direction_t;
-
-
-/**
  * \brief List of viewing direction for each Region of interest (ROI)
  */
  typedef union
  {
- 	float data[ CURVACE_NB_OF * 2 ];
+ 	float data[ CURVACE_NB_OF * 2 ];								///< Raw data as float
  	struct
  	{
- 		curvace_viewing_direction_t left_hemisphere[ CURVACE_NB_OF / 2 ];
- 		curvace_viewing_direction_t right_hemisphere[ CURVACE_NB_OF / 2 ];
+ 		viewing_direction_t left_hemisphere[ CURVACE_NB_OF / 2 ];	///< Left viewing directions
+ 		viewing_direction_t right_hemisphere[ CURVACE_NB_OF / 2 ];	///< Right viewing directions
  	};
- 	curvace_viewing_direction_t all[ CURVACE_NB_OF ];
+ 	viewing_direction_t all[ CURVACE_NB_OF ];						///< All viewing directions
  } curvace_roi_coord_t;
 
 
 /**
- * \brief Link between gyro rates and rotational optic flow
- * 
- * OF_rotation = A * gyro
- * 
- * [ OF_x ] = 	[Arx	Apx		Ayx] * 	[ roll_rate ]
- * [ OF_y ]		[Ary	Apy		Ayy]	[ pitch_rate]
- * 										[ yaw_rate 	]
+ * \brief	Scale factor on horizontal and vertical axis
  */
 typedef struct
 {
-	float Arx;
-	float Apx;
-	float Ayx;
-	float Ary;
-	float Apy;
-	float Ayy;
-} derotation_matrix_t;
-
-
-typedef struct
-{
-	float elevation;
-	float azimuth;
+	float elevation;		///< Scale factor along elevation
+	float azimuth;			///< Scale factor along azimuth
 } curvace_scale_factor_t;
 
+
+/**
+ * \brief 	Calibration, scale factors
+ */
 typedef union
 {
-	float data[ 2 * CURVACE_NB_OF ];
-	curvace_scale_factor_t  scale[ CURVACE_NB_OF ];
+	float data[ 2 * CURVACE_NB_OF ];					///< Raw data as float
+	curvace_scale_factor_t  scale[ CURVACE_NB_OF ];		///< Array of scale factors
 } curvace_calibration_factor_t;
 
 
+/**
+ * \brief Calibration, derotation matrix
+ */
 typedef union
 {
-	float data[ CURVACE_NB_OF * 6 ];
+	float data[ CURVACE_NB_OF * 6 ];									///< Raw data as float
 	struct
 	{
-		derotation_matrix_t left_hemisphere[ CURVACE_NB_OF / 2 ];
-		derotation_matrix_t right_hemisphere[ CURVACE_NB_OF / 2 ];
+		derotation_matrix_t left_hemisphere[ CURVACE_NB_OF / 2 ];		///< Derotation matrices for left hemisphere
+		derotation_matrix_t right_hemisphere[ CURVACE_NB_OF / 2 ];		///< Derotation matrices for right hemisphere
 	};
-	derotation_matrix_t all[ CURVACE_NB_OF ];
+	derotation_matrix_t all[ CURVACE_NB_OF ];							///< All derotation matrices 
 } curvace_calibration_matrix_t;
 
 
+/**
+ * \brief Curvace data structure
+ */
 typedef struct
 {
-	curvace_data_t 					of;
-	curvace_raw_data_t 				raw_of;
-	curvace_roi_coord_t				roi_coord;
-	curvace_calibration_matrix_t 	calib_matrix;
-	curvace_calibration_factor_t	calib_factor;
-	quat_t 							orientation; 	///< unused
-	const ahrs_t* 					ahrs;
-	const mavlink_stream_t* 		mavlink_stream;
+	curvace_data_t 					of;						///< Array of processed optic flow
+	curvace_raw_data_t 				raw_of;					///< Array of raw optic flow values
+	curvace_roi_coord_t				roi_coord;				///< Coordinates of regions of interests
+	curvace_calibration_matrix_t 	calib_matrix;			///< Calibration matrices
+	curvace_calibration_factor_t	calib_factor;			///< Calibration factors
+	float							scale_factor_simple;	///< Temporary replacement for calib_factor with a single value for all OF vectors
+	constants_on_off_t				do_derotation;			///< Indicates whether derotation should be performed (ON/ OFF)
+	float							LPF;					///< Low pass filter
+	float							derot_factor;			///<
+	quat_t 							orientation; 			///< unused
+	const ahrs_t* 					ahrs;					///< Pointer to attitude estimation
 } curvace_t;
 
 
+/**
+ * \brief 	Initialisation
+ * 
+ * \param 	curvace 	Pointer to data structure
+ * \param 	ahrs 		Pointer to attitude estimation
+ */
+void curvace_init(curvace_t* curvace, const ahrs_t* ahrs);
 
-void curvace_init(curvace_t* curvace, const ahrs_t* ahrs, const mavlink_stream_t* mavlink_stream);
 
-
+/**
+ * \brief 	Main update function
+ * 
+ * \param 	curvace 	Pointer to data structure
+ */
 void curvace_update(curvace_t* curvace);
 
-
-void curvace_send_telemetry(const curvace_t* curvace);
 
 #ifdef __cplusplus
 	}

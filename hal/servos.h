@@ -91,8 +91,10 @@ typedef struct
  * 
  * \param	servos		pointer to the servo_t struct
  * \param	config		option to configure the servo
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void servos_init(servos_t* servos, const servos_conf_t* config);
+bool servos_init(servos_t* servos, const servos_conf_t* config);
 
 
 /**

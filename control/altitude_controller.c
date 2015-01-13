@@ -30,40 +30,60 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file data_logging_telemetry.h
+ * \file altitude_controller.h
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
+ * \author Julien Lecoeur
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the data_logging module
+ * \brief 	A simple altitude controller for copter
  *
  ******************************************************************************/
 
 
-#ifndef DATA_LOGGING_TELEMETRY_H_
-#define DATA_LOGGING_TELEMETRY_H_
+#include "altitude_controller.h"
 
-#include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
-#include "data_logging.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
 
-/**
- * \brief	Initialize the MAVLink communication module for the remote
- * 
- * \param	data_logging					The pointer to the data logging structure
- * \param	message_handler			The pointer to the MAVLink message handler
- *
- * \return	True if the init succeed, false otherwise
- */
-bool data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_handler_t* message_handler);
 
-#ifdef __cplusplus
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void altitude_controller_init(altitude_controller_t* controller, const altitude_controller_conf_t* config, const position_command_t* position_command, const altitude_t* altitude_estimated, thrust_command_t* thrust_command)
+{
+	// Init dependencies
+	controller->position_command 	= position_command;
+	controller->altitude_estimated 	= altitude_estimated;
+	controller->thrust_command 		= thrust_command;
+
+	// Init members
+	controller->hover_point = config->hover_point;
+	pid_controller_init(&controller->pid, &config->pid_config);
 }
-#endif
 
-#endif /* DATA_LOGGING_TELEMETRY_H_ */
+
+void altitude_controller_update(altitude_controller_t* controller)
+{
+	float error = 0.0f;
+
+	switch( controller->position_command->mode )
+	{
+		case POSITION_COMMAND_MODE_LOCAL:
+			error = controller->position_command->xyz[2] - controller->altitude_estimated->above_ground;
+		break;
+
+		case POSITION_COMMAND_MODE_GLOBAL:
+			error = controller->position_command->xyz[2] - controller->altitude_estimated->above_sea;
+		break;
+	}
+
+	controller->thrust_command->thrust = controller->hover_point - pid_controller_update(&controller->pid, error);
+}

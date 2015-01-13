@@ -47,14 +47,13 @@
 #include "print_util.h"
 #include "state.h"
 
-void state_machine_init(state_machine_t *state_machine,
-						const state_machine_conf_t* state_machine_conf, 
+bool state_machine_init(state_machine_t *state_machine,
 						state_t* state, 
-						mavlink_waypoint_handler_t* waypoint_handler, 
 						simulation_model_t *sim_model, 
 						remote_t* remote)
 {
-	state_machine->waypoint_handler = waypoint_handler;
+	bool init_success = true;
+	
 	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
 	state_machine->remote 			= remote;
@@ -63,7 +62,9 @@ void state_machine_init(state_machine_t *state_machine,
 	state_machine->rc_check 		= 0;
 	state_machine->motor_state 		= 0;
 	
-	print_util_dbg_print("State machine initialise.\r\n");
+	print_util_dbg_print("[STATE MACHINE] Initialised.\r\n");
+	
+	return init_success;
 }
 
 
@@ -178,7 +179,7 @@ void state_machine_update(state_machine_t* state_machine)
 			state_machine->remote->mode.current_desired_mode.ARMED = ARMED_OFF;
 			
 			// To get out of this state, if we are in the wrong use_mode_from_remote
-			if (state_machine->use_mode_from_remote == 0)
+			if (state_machine->state->use_mode_from_remote == 0)
 			{
 				state_new = MAV_STATE_STANDBY;
 			}

@@ -96,8 +96,10 @@ typedef struct {
 /**
  * \brief	Initialization of the stabilization module
  * \param	controls				The pointer to the controls structure
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void stabilisation_init(control_command_t *controls);
+bool stabilisation_init(control_command_t *controls);
 
 /**
  * \brief				Execute the PID controllers used for stabilization

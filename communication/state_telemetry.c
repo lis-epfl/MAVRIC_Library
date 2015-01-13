@@ -193,8 +193,10 @@ static mav_result_t state_telemetry_toggle_remote_use(state_t* state, mavlink_co
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void state_telemetry_init(state_t* state, mavlink_message_handler_t *message_handler)
+bool state_telemetry_init(state_t* state, mavlink_message_handler_t *message_handler)
 {
+	bool init_success = true;
+	
 	// Add callbacks for onboard parameters requests
 	mavlink_message_handler_msg_callback_t callback;
 	
@@ -203,7 +205,7 @@ void state_telemetry_init(state_t* state, mavlink_message_handler_t *message_han
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&state_telemetry_set_mav_mode;
 	callback.module_struct 	= (handling_module_struct_t)		state;
-	mavlink_message_handler_add_msg_callback( message_handler, &callback );
+	init_success &= mavlink_message_handler_add_msg_callback( message_handler, &callback );
 		
 	// Add callbacks for waypoint handler commands requests
 	mavlink_message_handler_cmd_callback_t callbackcmd;
@@ -214,7 +216,7 @@ void state_telemetry_init(state_t* state, mavlink_message_handler_t *message_han
 	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&state_telemetry_set_mode_from_cmd;
 	callbackcmd.module_struct =									state;
-	mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
 	
 	callbackcmd.command_id = MAV_CMD_DO_PARACHUTE; // 208
 	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
@@ -222,8 +224,9 @@ void state_telemetry_init(state_t* state, mavlink_message_handler_t *message_han
 	callbackcmd.compid_target = MAV_COMP_ID_SYSTEM_CONTROL; // 250
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&state_telemetry_toggle_remote_use;
 	callbackcmd.module_struct =									state;
-	mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
+	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
 	
+	return init_success;
 }
 
 void state_telemetry_send_heartbeat(const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
