@@ -55,13 +55,13 @@
  * \param	sysid					The sysid of the system
  * \param	msg						The pointer to the MAVLink message received
  */
-void joystick_parsing_telemetry_parse_msg(joystick_parsing_t *joystick_parsing, uint32_t sysid, mavlink_message_t* msg);
+static void joystick_parsing_telemetry_parse_msg(joystick_parsing_t *joystick_parsing, uint32_t sysid, mavlink_message_t* msg);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void joystick_parsing_telemetry_parse_msg(joystick_parsing_t *joystick_parsing, uint32_t sysid, mavlink_message_t* msg)
+static void joystick_parsing_telemetry_parse_msg(joystick_parsing_t *joystick_parsing, uint32_t sysid, mavlink_message_t* msg)
 {
 	mavlink_manual_control_t packet;
 	mavlink_msg_manual_control_decode(msg,&packet);

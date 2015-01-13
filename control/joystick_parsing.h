@@ -50,7 +50,7 @@
 #include "state.h"
 #include "control_command.h"
 
-#define MAX_JOYSTICK_RANGE 0.8
+#define MAX_JOYSTICK_RANGE 0.8	///< Scale down the joystick channel amplitude, as done in remote
 
 /**
  * \brief button enumeration
@@ -127,8 +127,8 @@ typedef struct
  */
 typedef struct
 {
-	joystick_button_t buttons;				///< The bit mask of the button pressed
-	joystick_channels_t channels;
+	joystick_button_t buttons;		///< The bit mask of the button pressed
+	joystick_channels_t channels;	///< Channels of the joystick
 	state_t* state;					///< The pointer to the state structure
 } joystick_parsing_t;
 
