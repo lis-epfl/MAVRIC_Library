@@ -116,7 +116,7 @@ typedef struct
 {
 	float x;	// Longitudinal (pitch)
 	float y;	// Lateral 		(roll)
-	float z;	// Certical 	(thrust)
+	float z;	// Vertical 	(thrust)
 	float r;	// Rotation 	(yaw)
 } joystick_channels_t;
 
