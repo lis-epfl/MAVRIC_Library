@@ -33,7 +33,9 @@
  * \file curvace.c
  * 
  * \author MAV'RIC Team
- *   
+ * \author Julien Lecoeur
+ * \author Geraud L'Eplattenier
+ *
  * \brief Driver for the cylindrical curvace
  *
  ******************************************************************************/
