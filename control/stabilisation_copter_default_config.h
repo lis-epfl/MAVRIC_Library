@@ -51,7 +51,7 @@ extern "C" {
 
 stabilisation_copter_conf_t stabilisation_copter_default_config =
 {
-	.thrust_hover_point = -0.3f,
+	.thrust_hover_point = -0.26f,
 	.motor_layout 		= QUADCOPTER_MOTOR_LAYOUT_DIAG,
 	.stabiliser_stack 	= 
 	{
@@ -181,8 +181,8 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 				// -----------------------------------------------------------------
 				{
 					.p_gain = 4.0f,
-					.clip_min = -1.2f,
-					.clip_max = 1.2f,
+					.clip_min = -12.0f,
+					.clip_max = 12.0f,
 					.integrator={
 						.pregain = 0.0f,
 						.postgain = 0.0f,
@@ -205,8 +205,8 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 				// -----------------------------------------------------------------
 				{
 					.p_gain = 4.0f,
-					.clip_min = -1.2f,
-					.clip_max = 1.2f,
+					.clip_min = -12.0f,
+					.clip_max = 12.0f,
 					.integrator={
 						.pregain = 0.0f,
 						.postgain = 0.0f,
@@ -374,7 +374,7 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 				.clip_max = 0.65f,
 				.integrator={
 					.pregain = 1.0f,
-					.postgain = 0.0f,
+					.postgain = 0.001f,
 					.accumulator = 0.0f,
 					.clip = 1.0f,
 				},
@@ -406,13 +406,13 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 		// #############################################################################
 		// ######  POSITION CONTROL  ###################################################
 		// #############################################################################
-		.position_stabiliser={
+		.position_stabiliser={ //TODO check gains before using
 			.rpy_controller={
 				// -----------------------------------------------------------------
 				// ------ ROLL PID -------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 0.1f,
+					.p_gain = 0.01f,
 					.clip_min = -0.5f,
 					.clip_max = 0.5f,
 					.integrator={
@@ -422,7 +422,7 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 						.clip = 0.0f,
 					},
 					.differentiator={
-						.gain = 0.05f,
+						.gain = 0.005f,
 						.previous = 0.0f,
 						.clip = 0.5f
 					},
@@ -436,7 +436,7 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 				// ------ PITCH PID ------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 0.1f,
+					.p_gain = 0.01f,
 					.clip_min = -0.5f,
 					.clip_max = 0.5f,
 					.integrator={
@@ -446,7 +446,7 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 						.clip = 0.5f,
 					},
 					.differentiator={
-						.gain = 0.05f,
+						.gain = 0.005f,
 						.previous = 0.0f,
 						.clip = 0.5f
 					},

@@ -77,6 +77,28 @@ static bool match_msg(mavlink_message_handler_t* message_handler, mavlink_messag
 static bool match_cmd(mavlink_message_handler_t* message_handler, mavlink_message_handler_cmd_callback_t* cmd_callback, mavlink_message_t* msg, mavlink_command_long_t* cmd);
 
 
+/**
+* \brief 				Sort the latest added message callback
+* 
+* \details				This should be done each time a callback is added to speed up the matching 
+* 					while receiving a cmd message.
+*
+* \param 	message_handler 	Pointer to message handler data structure
+*/
+static void mavlink_message_handler_sort_latest_msg_callback(mavlink_message_handler_t* message_handler);
+
+
+/**
+* \brief 				Sort the latest added command callback
+* 
+* \details				This should be done each time a callback is added to speed up the matching 
+* 					while receiving a cmd message.
+* 
+* \param 	message_handler 	Pointer to message handler data structure
+*/
+static void mavlink_message_handler_sort_latest_cmd_callback(mavlink_message_handler_t* message_handler);
+
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -129,6 +151,41 @@ static bool match_cmd(mavlink_message_handler_t* message_handler, mavlink_messag
 	}
 
 	return match;
+}
+
+static void mavlink_message_handler_sort_latest_msg_callback(mavlink_message_handler_t* message_handler)
+{
+	uint32_t j = 0;
+	
+	//as the list is already sorted, we just need to compare the latest element from the list with previous one,
+	//until we find a message_id lower than the current one
+	mavlink_message_handler_msg_callback_t temp = message_handler->msg_callback_set->callback_list[message_handler->msg_callback_set->callback_count];
+	j =  message_handler->msg_callback_set->callback_count;
+	while ((j > 0) && (message_handler->msg_callback_set->callback_list[j-1].message_id > temp.message_id))
+	{
+		//swap them
+		message_handler->msg_callback_set->callback_list[j] = message_handler->msg_callback_set->callback_list[j-1];
+		j = j - 1;
+	}
+	message_handler->msg_callback_set->callback_list[j] = temp;
+}
+
+
+static void mavlink_message_handler_sort_latest_cmd_callback(mavlink_message_handler_t* message_handler)
+{
+	uint32_t j = 0;
+	
+	//as the list is already sorted, we just need to compare the latest element from the list with previous one,
+	//until we find a command_id lower than the current one
+	mavlink_message_handler_cmd_callback_t temp = message_handler->cmd_callback_set->callback_list[message_handler->cmd_callback_set->callback_count];
+	j = message_handler->cmd_callback_set->callback_count;
+	while ((j > 0) && (message_handler->cmd_callback_set->callback_list[j-1].command_id > temp.command_id))
+	{
+		//swap them
+		message_handler->cmd_callback_set->callback_list[j] = message_handler->cmd_callback_set->callback_list[j-1];
+		j = j - 1;
+	}
+	message_handler->cmd_callback_set->callback_list[j] = temp;
 }
 
 
@@ -218,6 +275,9 @@ bool mavlink_message_handler_add_msg_callback(	mavlink_message_handler_t* 				me
 			new_callback->compid_filter = msg_callback->compid_filter;
 			new_callback->function 		= msg_callback->function;
 			new_callback->module_struct = msg_callback->module_struct;
+			
+			//sort_message_callback
+			mavlink_message_handler_sort_latest_msg_callback(message_handler);
 
 			msg_callback_set->callback_count += 1;
 			
@@ -260,6 +320,9 @@ bool mavlink_message_handler_add_cmd_callback(	mavlink_message_handler_t* 				me
 			new_callback->compid_target = cmd_callback->compid_target;
 			new_callback->function = cmd_callback->function;
 			new_callback->module_struct = cmd_callback->module_struct;
+
+			//sort_command_callback
+			mavlink_message_handler_sort_latest_cmd_callback(message_handler);
 
 			cmd_callback_set->callback_count += 1;
 			
@@ -369,7 +432,11 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 						
 						// Call appropriate function callback
 						result = function(module_struct, &cmd);
-						break;
+						
+						if ( ((i+1) != message_handler->cmd_callback_set->callback_count) && ((message_handler->cmd_callback_set->callback_list[i+1].command_id) > cmd.command))
+						{ //as callback_list is sorted by command_id, no need to go further in the list
+							break;
+						}
 					}
 				}
 				// Send acknowledgment message 
@@ -396,6 +463,11 @@ void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler,
 				
 				// Call appropriate function callback
 				function(module_struct, sys_id, msg);
+				
+				if ( ((i+1) != message_handler->msg_callback_set->callback_count) && ((message_handler->msg_callback_set->callback_list[i+1].message_id) > msg->msgid))
+				{ //as callback_list is sorted by message_id, no need to go further in the list
+					break;
+				}
 			}
 		}
 	}
