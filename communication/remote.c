@@ -411,6 +411,14 @@ void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t*
 }
 
 
+void remote_get_torque_command(const remote_t* remote, torque_command_t * command)
+{
+	command->xyz[ROLL] 	= remote_get_roll(remote);
+	command->xyz[PITCH] = remote_get_pitch(remote);
+	command->xyz[YAW] 	= remote_get_yaw(remote);
+}
+
+
 void remote_get_rate_command(const remote_t* remote, rate_command_t * command)
 {
 	command->xyz[ROLL] 	= remote_get_roll(remote);

@@ -275,6 +275,15 @@ void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t*
 
 
 /**
+ * \brief	Compute torque command from the remote
+ * 
+ * \param	remote			Remote structure (input)
+ * \param	command			Torque command (output)
+ */
+void remote_get_torque_command(const remote_t* remote, torque_command_t * command);
+
+
+/**
  * \brief	Compute rate command from the remote
  * 
  * \param	remote			Remote structure (input)
