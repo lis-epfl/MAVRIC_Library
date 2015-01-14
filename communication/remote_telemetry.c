@@ -67,9 +67,9 @@ static mav_result_t remote_telemetry_satellite_bind(remote_t* remote, mavlink_co
 {
 	mav_result_t result = MAV_RESULT_DENIED;
 	
-	if (packet->param2 == 1)
+	if (packet->param2 == 1 && (packet->param4 == 10 || packet->param4 == 11))
 	{
-		satellite_bind();
+		satellite_bind(packet->param4);
 		
 		result = MAV_RESULT_ACCEPTED;
 	}
