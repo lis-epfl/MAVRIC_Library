@@ -279,8 +279,9 @@ void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t*
  * 
  * \param	remote			Remote structure (input)
  * \param	command			Torque command (output)
+ * \param   scale			Scale (maximum output / max remote input)
  */
-void remote_get_torque_command(const remote_t* remote, torque_command_t * command);
+void remote_get_torque_command(const remote_t* remote, torque_command_t * command, float scale);
 
 
 /**
@@ -288,8 +289,9 @@ void remote_get_torque_command(const remote_t* remote, torque_command_t * comman
  * 
  * \param	remote			Remote structure (input)
  * \param	command			Rate command (output)
+ * \param   scale			Scale (maximum output / max remote input)
  */
-void remote_get_rate_command(const remote_t* remote, rate_command_t * command);
+void remote_get_rate_command(const remote_t* remote, rate_command_t * command, float scale);
 
 
 /**
@@ -306,8 +308,9 @@ void remote_get_thrust_command(const remote_t* remote, thrust_command_t * comman
  * 
  * \param	remote			Remote structure (input)
  * \param	command			Attitude command (output)
+ * \param   scale			Scale (maximum output / max remote input)
  */
-void remote_get_attitude_command(const remote_t* remote, attitude_command_t * command);
+void remote_get_attitude_command(const remote_t* remote, attitude_command_t * command, float scale);
 
 
 /**
@@ -316,8 +319,9 @@ void remote_get_attitude_command(const remote_t* remote, attitude_command_t * co
  * \param	remote			Remote structure (input)
  * \param 	k_yaw			Integration factor for yaw (0.02 is ok) (input) 
  * \param	command			Attitude command (output)
+ * \param   scale			Scale (maximum output / max remote input)
  */
-void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const float k_yaw, attitude_command_t * command);
+void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const float k_yaw, attitude_command_t * command, float scale);
 
 
 /**
@@ -325,8 +329,9 @@ void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const flo
  * 
  * \param	remote			Remote structure (input)
  * \param	command			Velocity command (output)
+ * \param   scale			Scale (maximum output / max remote input)
  */
-void remote_get_velocity_command(const remote_t* remote, velocity_command_t * command);
+void remote_get_velocity_command(const remote_t* remote, velocity_command_t * command, float scale);
 
 
 #ifdef __cplusplus
