@@ -62,8 +62,8 @@ static velocity_controller_copter_conf_t velocity_controller_copter_default_conf
 			.clip_min = -0.5f,
 			.clip_max = 0.5f,
 			.integrator={
-				.pregain = 1.0f,
-				.postgain = 0.5f,
+				.gain = 0.5f,
+				.clip_pre = 0.5f,
 				.accumulator = 0.0f,
 				.clip = 0.5f,
 			},
@@ -82,8 +82,8 @@ static velocity_controller_copter_conf_t velocity_controller_copter_default_conf
 			.clip_min = -0.5f,
 			.clip_max = 0.5f,
 			.integrator={
-				.pregain = 1.0f,
-				.postgain = 0.5f,
+				.gain = 0.5f,
+				.clip_pre = 0.5f,
 				.accumulator = 0.0f,
 				.clip = 0.5f,
 			},
@@ -102,8 +102,8 @@ static velocity_controller_copter_conf_t velocity_controller_copter_default_conf
 			.clip_min = -0.9f,
 			.clip_max = 0.65f,
 			.integrator={
-				.pregain = 0.01f,
-				.postgain = 1.0f,
+				.gain = 0.01f,
+				.clip_pre = 1.0f,
 				.accumulator = 0.0f,
 				.clip = 1.0f,
 			},

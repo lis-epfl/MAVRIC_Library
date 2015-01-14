@@ -65,8 +65,8 @@ static attitude_controller_conf_t attitude_controller_default_config =
 			.clip_max = 0.9f,
 			.integrator =
 			{
-				.pregain = 0.5f,
-				.postgain = 1.0f,
+				.gain = 0.5f,
+				.clip_pre = 1.0f,
 				.accumulator = 0.0f,
 				.clip = 0.65f,
 			},
@@ -87,8 +87,8 @@ static attitude_controller_conf_t attitude_controller_default_config =
 			.clip_max = 0.9f,
 			.integrator =
 			{
-				.pregain = 0.5f,
-				.postgain = 1.0f,
+				.gain = 0.5f,
+				.clip_pre = 1.0f,
 				.accumulator = 0.0f,
 				.clip = 0.65f,
 			},
@@ -108,10 +108,10 @@ static attitude_controller_conf_t attitude_controller_default_config =
 			.clip_min = -0.3f,
 			.clip_max = 0.3f,
 			.integrator={
-				.pregain = 0.5f,
-				.postgain = 0.5f,
+				.gain = 0.5f,
+				.clip_pre = 1.0f,
 				.accumulator = 0.0f,
-				.clip = 0.3f,
+				.clip = 0.15f,
 			},
 			.differentiator={
 				.gain = 0.0f,
@@ -134,8 +134,8 @@ static attitude_controller_conf_t attitude_controller_default_config =
 			.clip_min = -1.2f,
 			.clip_max = 1.2f,
 			.integrator={
-				.pregain = 0.0f,
-				.postgain = 0.0f,
+				.gain = 0.0f,
+				.clip_pre = 0.0f,
 				.accumulator = 0.0f,
 				.clip = 0.0f,
 			},
@@ -154,8 +154,8 @@ static attitude_controller_conf_t attitude_controller_default_config =
 			.clip_min = -1.2f,
 			.clip_max = 1.2f,
 			.integrator={
-				.pregain = 0.0f,
-				.postgain = 0.0f,
+				.gain = 0.0f,
+				.clip_pre = 0.0f,
 				.accumulator = 0.0f,
 				.clip = 0.0f,
 			},
@@ -174,8 +174,8 @@ static attitude_controller_conf_t attitude_controller_default_config =
 			.clip_min = -1.5f,
 			.clip_max = 1.5f,
 			.integrator={
-				.pregain = 0.0f,
-				.postgain = 0.0f,
+				.gain = 0.0f,
+				.clip_pre = 0.0f,
 				.accumulator = 0.0f,
 				.clip = 0.0f,
 			},
