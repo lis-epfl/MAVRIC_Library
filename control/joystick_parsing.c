@@ -55,7 +55,7 @@
  * \param	joystick_parsing	The pointer to the joystick parsing structure
  * \param	button_1			The button 1 value
  */
-void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, button_pressed_t button_1);
+static void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, button_pressed_t button_1);
 
 
 /**
@@ -65,14 +65,14 @@ void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, button_pres
  * \param	button				The value of the button pressed
  * \param	mode_flag			The flag mode to be set
  */
-void joystick_parsing_button(joystick_parsing_t* joystick_parsing, button_pressed_t button, mav_flag_mask_t mode_flag);
+static void joystick_parsing_button(joystick_parsing_t* joystick_parsing, button_pressed_t button, mav_flag_mask_t mode_flag);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, button_pressed_t button_1)
+static void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, button_pressed_t button_1)
 {
 	if (button_1 == BUTTON_PRESSED)
 	{
@@ -107,7 +107,7 @@ void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, button_pres
 }
 
 
-void joystick_parsing_button(joystick_parsing_t* joystick_parsing, button_pressed_t button, mav_flag_mask_t mode_flag)
+static void joystick_parsing_button(joystick_parsing_t* joystick_parsing, button_pressed_t button, mav_flag_mask_t mode_flag)
 {
 	if (button == BUTTON_PRESSED)
 	{
@@ -125,13 +125,16 @@ bool joystick_parsing_init(joystick_parsing_t* joystick_parsing, state_t* state)
 {
 	bool init_success = true;
 
+	//joystick pointer init
 	joystick_parsing->state = state;
 	
+	//joystick channels init
 	joystick_parsing->channels.x = 0.0f;
 	joystick_parsing->channels.y = 0.0f;
 	joystick_parsing->channels.z = -1.0f;
 	joystick_parsing->channels.r = 0.0f;
 	
+	//joystick buttons init
 	joystick_parsing->buttons.button_mask = 0;
 	
 	print_util_dbg_print("Joystick parsing initialised\r");
@@ -168,7 +171,7 @@ float joystick_parsing_get_yaw(const joystick_parsing_t* joystick)
 void joystick_parsing_get_velocity_vector_from_joystick(joystick_parsing_t* joystick_parsing, control_command_t* controls)
 {
 	controls->tvel[X] = -10.0f 	* joystick_parsing->channels.x 	* MAX_JOYSTICK_RANGE;
-	controls->tvel[Y] = 10.0f	* joystick_parsing->channels.y 	* MAX_JOYSTICK_RANGE;
+	controls->tvel[Y] =  10.0f	* joystick_parsing->channels.y 	* MAX_JOYSTICK_RANGE;
 	controls->tvel[Z] = -1.5f	* joystick_parsing->channels.z;
 	
 	controls->rpy[YAW] = joystick_parsing->channels.r * MAX_JOYSTICK_RANGE;
@@ -261,7 +264,7 @@ void joystick_parsing_get_attitude_command_integrate_yaw(const joystick_parsing_
 		case ATTITUDE_COMMAND_MODE_RPY:
 			command->rpy[ROLL] 	= joystick_parsing_get_roll(joystick);
 			command->rpy[PITCH] = joystick_parsing_get_pitch(joystick);
-			command->rpy[YAW] 	+= k_yaw * joystick_parsing_get_yaw(joystick);
+			command->rpy[YAW]  += k_yaw * joystick_parsing_get_yaw(joystick);
 		break;
 	}
 }
@@ -269,7 +272,7 @@ void joystick_parsing_get_attitude_command_integrate_yaw(const joystick_parsing_
 
 void joystick_parsing_get_velocity_command(const joystick_parsing_t* joystick, velocity_command_t* command)
 {
-	command->xyz[X] = - 10.0f 	* joystick_parsing_get_pitch(joystick);
-	command->xyz[Y] = 10.0f  	* joystick_parsing_get_roll(joystick);
-	command->xyz[Z] = - 1.5f 	* joystick_parsing_get_throttle(joystick);
+	command->xyz[X] = -10.0f 	* joystick_parsing_get_pitch(joystick);
+	command->xyz[Y] =  10.0f  	* joystick_parsing_get_roll(joystick);
+	command->xyz[Z] = -1.5f 	* joystick_parsing_get_throttle(joystick);
 }

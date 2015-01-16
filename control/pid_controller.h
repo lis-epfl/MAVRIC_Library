@@ -56,10 +56,10 @@ extern "C" {
  */
 typedef struct 
 {
-	float pregain; 		///< Pregain
-	float postgain;		///< Postgain 
+	float gain; 		///< Pregain 
 	float accumulator;	///< Accumulator
-	float clip;			///< Clipping value
+	float clip_pre;		///< Clipping value for the charging rate
+	float clip;			///< Clipping value for the accumulator
 } integrator_t;
 
 

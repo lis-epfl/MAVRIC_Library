@@ -45,7 +45,7 @@
 #include "time_keeper.h"
 #include "constants.h"
 
-#define KP_YAW 0.2f
+#define KP_YAW 0.2f ///< Yaw gain for the navigation controller 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION

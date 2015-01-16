@@ -106,6 +106,10 @@ typedef struct
 	const joystick_parsing_t* joystick;					///< Pointer to joystick 
 }navigation_t;
 
+
+/**
+ * \brief The navigation configuration structure
+ */
 typedef struct 
 {
 	float dist2vel_gain;								///< The gain linking the distance to the goal to the actual speed
@@ -131,7 +135,7 @@ typedef struct
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  * \param	position_estimation		The pointer to the position estimation structure
  * \param	state					The pointer to the state structure 
- * \param	control_joystick		The pointer to the joystick structure
+ * \param	joystick				The pointer to the joystick_parsing structure
  * \param	remote					The pointer to the remote structure
  * \param	mavlink_communication	The pointer to the MAVLink communication structure
  *
