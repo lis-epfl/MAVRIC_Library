@@ -96,6 +96,9 @@ typedef struct
 	bool stop_nav;										///< Flag to start/stop the navigation from a button in case of problems
 	bool stop_nav_there;								///< Flag to stop the navigation and fly to the stopping waypoint
 	
+	float		safety_update;							///< ///< The time of the last navigation_safety update in ms
+	uint32_t	safety_counter;							///< ///< The counter of time the battery level was under the critical_battery level
+	
 	control_command_t *controls_nav;					///< The pointer to the navigation control structure
 	const quat_t *qe;									///< The pointer to the attitude quaternion structure
 	mavlink_waypoint_handler_t *waypoint_handler;		///< The pointer to the waypoint handler structure
@@ -159,6 +162,16 @@ void navigation_waypoint_hold_init(mavlink_waypoint_handler_t* waypoint_handler,
  * \return	Task result, currently only TASK_RUN_SUCCESS
  */
 task_return_t navigation_update(navigation_t* navigation);
+
+/**
+ * \brief	Check the battery level, for safety reason.
+ * \details	If battery below a threshold: LAND in emergency
+ *
+ * \param	navigation		The pointer to the navigation structure in central_data
+ *
+ * \return	Task result, currently only TASK_RUN_SUCCESS
+ */
+task_return_t navigation_safety(navigation_t* navigation);
 
 #ifdef __cplusplus
 }
