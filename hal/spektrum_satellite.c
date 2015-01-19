@@ -135,7 +135,14 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 			c1 = buffer_get(&spek_sat->receiver);
 			c2 = buffer_get(&spek_sat->receiver);
 			
-			channel_encoding = (c2 & 0x10) >> 4; 	// 0 = 11bit, 1 = 10 bit
+			if (c1 == 0x03 && c2 == 0xB2) //correspond to DSM2 10bits header
+			{
+				channel_encoding = 10; //10bits
+			}
+			else
+			{
+				channel_encoding = 11; //11bits
+			}
 				
 			for (i = 0; i < 7; i++) // 7 channels per frame
 			{
@@ -143,7 +150,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 				c2 = buffer_get(&spek_sat->receiver);
 				sw = (uint16_t)c1 << 8 | ((uint16_t)c2);
 								
-				if ( channel_encoding == 1 )  //1 = 10 bits
+				if ( channel_encoding == 10 )  //10 bits
 				{
 					// highest bit is frame 0/1, bits 2-6 are channel number
 					channel = ((sw >> 10))&0x0f;
@@ -151,7 +158,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 					// 10 bits per channel
 					spek_sat->channels[channel] = ((int16_t)(sw&0x3ff) - 512) * 2;
 				} 
-				else if ( channel_encoding == 0 ) //0 = 11bits
+				else if ( channel_encoding == 11 ) //11bits
 				{
 					// highest bit is frame 0/1, bits 3-7 are channel number
 					channel = ((sw >> 11))&0x0f;
