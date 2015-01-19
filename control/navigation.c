@@ -784,6 +784,9 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	
 	navigation->dt = 0.004;
 	
+	navigation->safety_update	= 0;
+	navigation->safety_counter	= 0;
+	
 	// Add callbacks for waypoint handler commands requests
 	mavlink_message_handler_cmd_callback_t callbackcmd;
 	
@@ -980,6 +983,42 @@ task_return_t navigation_update(navigation_t* navigation)
 	}
 	
 	navigation->mode = mode_local;
+	
+	return TASK_RUN_SUCCESS;
+}
+
+
+task_return_t navigation_safety(navigation_t* navigation)
+{
+	uint32_t now = time_keeper_get_millis();
+	
+	float critical_battery = 10.0f;//this number should be adjusted according to your safety level 
+	if( navigation->state->analog_monitor->avg[ANALOG_RAIL_11] < critical_battery) // ANALOG_RAIL_10 = BATTERY_FILTERED
+	{
+		if ( (now - navigation->safety_update) < 100 ) //battery was low during the following second (task_period 10millis)
+		{
+			navigation->safety_update = now;
+			navigation->safety_counter++;
+		}
+		else //reset safety counter
+		{
+			navigation->safety_update	= now;
+			navigation->safety_counter	= 1;
+		}
+		
+		uint32_t safety_timeout = 1500;//this number should be adjusted according to the task frequency + safety level 
+		//this currently correspond to 15sec of critical battery, long enough to avoid false detection
+		if (navigation->safety_counter >= safety_timeout )
+		{
+			// Land as soon as possible => switch state to MAV_STATE_EMERGENCY
+			navigation->state->mav_state = MAV_STATE_CRITICAL;
+			navigation->critical_behavior = CRITICAL_LAND;
+		}
+	}
+	else
+	{
+		//everything seams safe => this task does not do anything
+	}
 	
 	return TASK_RUN_SUCCESS;
 }
