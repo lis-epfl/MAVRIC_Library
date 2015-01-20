@@ -60,7 +60,7 @@ static attitude_controller_conf_t attitude_controller_ywing_config =
 		// ------ ROLL RATE PID --------------------------------------------
 		// -----------------------------------------------------------------
 		{
-			.p_gain = 0.5f,
+			.p_gain = 0.3f,
 			.clip_min = -1.0f,
 			.clip_max = 1.0f,
 			.integrator =
@@ -82,7 +82,7 @@ static attitude_controller_conf_t attitude_controller_ywing_config =
 		// ------ PITCH RATE PID -------------------------------------------
 		// -----------------------------------------------------------------
 		{
-			.p_gain = 0.75f,
+			.p_gain = 0.5f,
 			.clip_min = -1.0f,
 			.clip_max = 1.0f,
 			.integrator =
@@ -104,7 +104,7 @@ static attitude_controller_conf_t attitude_controller_ywing_config =
 		// ------ YAW RATE PID ---------------------------------------------
 		// -----------------------------------------------------------------
 		{
-			.p_gain = 0.75f,
+			.p_gain = 0.5f,
 			.clip_min = -1.0f,
 			.clip_max = 1.0f,
 			.integrator={
@@ -130,7 +130,7 @@ static attitude_controller_conf_t attitude_controller_ywing_config =
 		// ------ ROLL ANGLE PID -------------------------------------------
 		// -----------------------------------------------------------------
 		{
-			.p_gain = 1.0f,
+			.p_gain = 5.0f,
 			.clip_min = -10.0f,
 			.clip_max = 10.0f,
 			.integrator={
@@ -150,7 +150,7 @@ static attitude_controller_conf_t attitude_controller_ywing_config =
 		// ------ PITCH ANGLE PID ------------------------------------------
 		// -----------------------------------------------------------------
 		{
-			.p_gain = 1.0f,
+			.p_gain = 3.0f,
 			.clip_min = -10.0f,
 			.clip_max = 10.0f,
 			.integrator={
@@ -170,7 +170,7 @@ static attitude_controller_conf_t attitude_controller_ywing_config =
 		// ------ YAW ANGLE PID --------------------------------------------
 		// -----------------------------------------------------------------
 		{
-			.p_gain = 1.0f,
+			.p_gain = 3.0f,
 			.clip_min = -10.0f,
 			.clip_max = 10.0f,
 			.integrator={
