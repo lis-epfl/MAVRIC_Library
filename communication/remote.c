@@ -45,6 +45,7 @@
 #include "print_util.h"
 #include "constants.h"
 #include "coord_conventions.h"
+#include "quick_trig.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -225,6 +226,12 @@ signal_quality_t remote_check(remote_t* remote)
 void remote_calibrate(remote_t* remote, remote_channel_t channel)
 {
 	remote->trims[channel] = remote->channels[channel] - remote->trims[channel];
+}
+
+
+float remote_get_channel(const remote_t* remote, remote_channel_t ch)
+{
+	return remote->channels[ch];
 }
 
 
@@ -433,47 +440,74 @@ void remote_get_thrust_command(const remote_t* remote, thrust_command_t * comman
 }
 
 
-void remote_get_attitude_command(const remote_t* remote, attitude_command_t * command, float scale)
+void remote_get_attitude_command_absolute_yaw(const remote_t* remote, attitude_command_t * command, float scale)
 {
-	aero_attitude_t attitude;
-	
-	switch( command->mode )
-	{
-		case ATTITUDE_COMMAND_MODE_QUATERNION:
-			attitude.rpy[ROLL] 	= scale * remote_get_roll(remote); 
-			attitude.rpy[PITCH] = scale * remote_get_pitch(remote);
-			attitude.rpy[YAW] 	= scale * remote_get_yaw(remote);
-			command->quat = coord_conventions_quaternion_from_aero(attitude);
-		break;
+	command->rpy[ROLL] 	= scale * remote_get_roll(remote); 
+	command->rpy[PITCH] = scale * remote_get_pitch(remote);
+	command->rpy[YAW] 	= scale * remote_get_yaw(remote);
 
-		case ATTITUDE_COMMAND_MODE_RPY:
-			command->rpy[ROLL] 	= scale * remote_get_roll(remote); 
-			command->rpy[PITCH] = scale * remote_get_pitch(remote);
-			command->rpy[YAW] 	= scale * remote_get_yaw(remote);
-		break;
-	}
+	aero_attitude_t attitude;
+	attitude.rpy[ROLL] 	= command->rpy[ROLL]; 
+	attitude.rpy[PITCH] = command->rpy[PITCH];
+	attitude.rpy[YAW] 	= command->rpy[YAW];
+	command->quat = coord_conventions_quaternion_from_aero(attitude);
 }
 
-void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const float k_yaw, attitude_command_t * command, float scale)
+
+void remote_get_attitude_command(const remote_t* remote, const float ki_yaw, attitude_command_t * command, float scale)
 {
+	command->rpy[ROLL] 	= scale * remote_get_roll(remote); 
+	command->rpy[PITCH] = scale * remote_get_pitch(remote);
+	command->rpy[YAW] 	+= ki_yaw * scale * remote_get_yaw(remote);
+
 	aero_attitude_t attitude;
+	attitude.rpy[ROLL] 	= command->rpy[ROLL]; 
+	attitude.rpy[PITCH] = command->rpy[PITCH];
+	attitude.rpy[YAW] 	= command->rpy[YAW];
+	command->quat = coord_conventions_quaternion_from_aero(attitude);
+}
 
-	switch( command->mode )
+
+void remote_get_attitude_command_vtol(const remote_t* remote, const float ki_yaw, attitude_command_t * command, float scale, float alpha_trans)
+{
+	// Clip transition factor
+	if( alpha_trans > 1.0f )
 	{
-		case ATTITUDE_COMMAND_MODE_QUATERNION:
-			attitude = coord_conventions_quat_to_aero(command->quat);
-			attitude.rpy[ROLL] 	 = scale * remote_get_roll(remote); 
-			attitude.rpy[PITCH]  = scale * remote_get_pitch(remote);
-			attitude.rpy[YAW] 	+= k_yaw * scale * remote_get_yaw(remote);
-			command->quat = coord_conventions_quaternion_from_aero(attitude);
-		break;
-
-		case ATTITUDE_COMMAND_MODE_RPY:
-			command->rpy[ROLL] 	= scale * remote_get_roll(remote);
-			command->rpy[PITCH] = scale * remote_get_pitch(remote);
-			command->rpy[YAW] 	+= k_yaw * scale * remote_get_yaw(remote);
-		break;
+		alpha_trans = 1.0f;
 	}
+	else if( alpha_trans < 0.0f )
+	{
+		alpha_trans = 0.0f;
+	}
+
+	// Get Roll Pitch and Yaw from remote
+	command->rpy[ROLL] 	= scale * remote_get_roll(remote);
+	command->rpy[PITCH] = scale * remote_get_pitch(remote) + (1.0f - alpha_trans) * 0.5f * PI;
+	command->rpy[YAW] 	+= ki_yaw * scale * remote_get_yaw(remote);
+
+	// Apply yaw and pitch first
+	aero_attitude_t attitude;
+	attitude.rpy[ROLL]	= 0.0f;
+	attitude.rpy[PITCH] = command->rpy[PITCH];
+	attitude.rpy[YAW] 	= command->rpy[YAW];
+	command->quat = coord_conventions_quaternion_from_aero(attitude);
+
+
+	// Apply roll according to transition factor
+	quat_t q_roll_hover = {	.s = quick_trig_cos( (1 - alpha_trans) * 0.5f * command->rpy[ROLL]),
+							.v = {	0.0f,
+									0.0f,
+									quick_trig_sin( (1 - alpha_trans) * 0.5f * command->rpy[ROLL])	}};
+
+	quat_t q_roll_forward = {	.s = quick_trig_cos( alpha_trans * 0.5f * command->rpy[ROLL]),
+								.v = {	quick_trig_sin( alpha_trans * 0.5f * command->rpy[ROLL]),
+										0.0f,
+										0.0f	}};
+
+	// q := q . q_rh . q_rf
+	command->quat = quaternions_multiply( 	command->quat, 
+											quaternions_multiply(q_roll_hover, 
+																q_roll_forward) );
 }
 
 

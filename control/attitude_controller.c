@@ -90,18 +90,8 @@ static void attitude_controller_angle_loop(attitude_controller_t* controller)
 	float errors[3];
 
 	// Get attitude command
-	switch ( controller->attitude_command->mode )
-	{
-		case ATTITUDE_COMMAND_MODE_QUATERNION:
-			attitude_error_estimator_set_quat_ref(	&controller->attitude_error_estimator,
-													controller->attitude_command->quat );
-			break;
-
-		case ATTITUDE_COMMAND_MODE_RPY:
-			attitude_error_estimator_set_quat_ref_from_rpy( &controller->attitude_error_estimator,
-															controller->attitude_command->rpy );
-			break;
-	}
+	attitude_error_estimator_set_quat_ref(	&controller->attitude_error_estimator,
+											controller->attitude_command->quat );
 
 	// Get local angular errors
 	attitude_error_estimator_update( &controller->attitude_error_estimator );

@@ -188,6 +188,7 @@ void remote_update(remote_t* remote);
  */
 signal_quality_t remote_check(remote_t* remote);
 
+
 /**
  * \brief	Update the remote channel central position array stored in .c file
  * Warning: you should ensure first that the remote has the stick in their neutral position
@@ -196,6 +197,18 @@ signal_quality_t remote_check(remote_t* remote);
  * \param	channel 				Specify which channel we are interested in
  */
 void remote_calibrate(remote_t* remote, remote_channel_t channel);
+
+
+/**
+ * \brief	Returns the channel value from the remote
+ * 
+ * \param	remote		Pointer to the remote structure
+ * \param 	ch			Channel
+ * 
+ * \return	The value of the channel ch
+ */
+float remote_get_channel(const remote_t* remote, remote_channel_t ch);
+
 
 /**
  * \brief	Returns the throttle value from the remote
@@ -206,6 +219,7 @@ void remote_calibrate(remote_t* remote, remote_channel_t channel);
  */
 float remote_get_throttle(const remote_t* remote);
 
+
 /**
  * \brief	Returns the roll value from the remote
  * 
@@ -214,6 +228,7 @@ float remote_get_throttle(const remote_t* remote);
  * \return	The value of the roll
  */
 float remote_get_roll(const remote_t* remote);
+
 
 /**
  * \brief	Returns the pitch value from the remote
@@ -224,6 +239,7 @@ float remote_get_roll(const remote_t* remote);
  */
 float remote_get_pitch(const remote_t* remote);
 
+
 /**
  * \brief	Returns the yaw value from the remote
  * 
@@ -233,6 +249,7 @@ float remote_get_pitch(const remote_t* remote);
  */
 float remote_get_yaw(const remote_t* remote);
 
+
 /**
  * \brief	Initialise the mode from the remote switches
  * 
@@ -241,12 +258,14 @@ float remote_get_yaw(const remote_t* remote);
  */
 void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t* config);
 
+
 /**
  * \brief	Updates the mode from the remote switches
  * 
  * \param	remote				The pointer to the remote structure
  */
 void remote_mode_update(remote_t* remote);
+
 
 /**
  * \brief	Returns the mode from the remote
@@ -257,6 +276,7 @@ void remote_mode_update(remote_t* remote);
  */
 mav_mode_t remote_mode_get(const remote_t* remote);
 
+
 /**
  * \brief	Sets the attitude command from the remote (rpy and thrust values)
  * 
@@ -264,6 +284,7 @@ mav_mode_t remote_mode_get(const remote_t* remote);
  * \param	controls			The pointer to the controls structure
  */
 void remote_get_command_from_remote(remote_t* remote, control_command_t * controls);
+
 
 /**
  * \brief	Sets the velocity command vector from the remote
@@ -310,18 +331,30 @@ void remote_get_thrust_command(const remote_t* remote, thrust_command_t * comman
  * \param	command			Attitude command (output)
  * \param   scale			Scale (maximum output / max remote input)
  */
-void remote_get_attitude_command(const remote_t* remote, attitude_command_t * command, float scale);
+void remote_get_attitude_command_absolute_yaw(const remote_t* remote, attitude_command_t * command, float scale);
 
 
 /**
  * \brief	Compute attitude command from the remote (absolute roll and pitch, integrated yaw)
  * 
  * \param	remote			Remote structure (input)
- * \param 	k_yaw			Integration factor for yaw (0.02 is ok) (input) 
+ * \param 	ki_yaw			Integration factor for yaw (0.02 is ok) (input) 
  * \param	command			Attitude command (output)
  * \param   scale			Scale (maximum output / max remote input)
  */
-void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const float k_yaw, attitude_command_t * command, float scale);
+void remote_get_attitude_command(const remote_t* remote, const float k_yaw, attitude_command_t * command, float scale);
+
+
+/**
+ * \brief	Compute attitude command from the remote (absolute roll and pitch, integrated yaw)
+ * 
+ * \param	remote			Remote structure (input)
+ * \param 	ki_yaw			Integration factor for yaw (0.02 is ok) (input) 
+ * \param	command			Attitude command (output)
+ * \param   scale			Scale (maximum output / max remote input)
+ * \param 	alpha_trans		Transition factor (0: hover, 1:forward flight)	
+ */
+void remote_get_attitude_command_vtol(const remote_t* remote, const float ki_yaw, attitude_command_t * command, float scale, float alpha_trans);
 
 
 /**

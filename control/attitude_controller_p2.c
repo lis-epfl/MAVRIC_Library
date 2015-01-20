@@ -82,18 +82,9 @@ void attitude_controller_p2_update(attitude_controller_p2_t* controller)
 	float rates[3];
 
 	// Get attitude command
-	switch ( controller->attitude_command->mode )
-	{
-		case ATTITUDE_COMMAND_MODE_QUATERNION:
-			attitude_error_estimator_set_quat_ref(	&controller->attitude_error_estimator,
-													controller->attitude_command->quat );
-			break;
+	attitude_error_estimator_set_quat_ref(	&controller->attitude_error_estimator,
+											controller->attitude_command->quat );
 
-		case ATTITUDE_COMMAND_MODE_RPY:
-			attitude_error_estimator_set_quat_ref_from_rpy( &controller->attitude_error_estimator,
-															controller->attitude_command->rpy );
-			break;
-	}
 
 	// Get local angular errors
 	attitude_error_estimator_update( &controller->attitude_error_estimator );

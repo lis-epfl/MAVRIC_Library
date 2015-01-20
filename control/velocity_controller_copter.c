@@ -185,10 +185,15 @@ void velocity_controller_copter_update(velocity_controller_copter_t* controller)
 	thrust_dir[Z] = thrust_vector[Z] / thrust_norm;
 
 	// Map thrust dir to attitude
-	controller->attitude_command->mode 		 = ATTITUDE_COMMAND_MODE_RPY;
 	controller->attitude_command->rpy[ROLL]  = maths_clip(thrust_vector[Y], 1);
 	controller->attitude_command->rpy[PITCH] = - maths_clip(thrust_vector[X], 1);
 	controller->attitude_command->rpy[YAW]   = 0.0f;
+
+	aero_attitude_t attitude;
+	attitude.rpy[ROLL] 	= controller->attitude_command->rpy[ROLL]; 
+	attitude.rpy[PITCH] = controller->attitude_command->rpy[PITCH];
+	attitude.rpy[YAW] 	= controller->attitude_command->rpy[YAW];
+	controller->attitude_command->quat = coord_conventions_quaternion_from_aero(attitude);
 
 	// Map PID output to thrust
 	// float max_thrust = 30.0f;			// 10 Newton max thrust
