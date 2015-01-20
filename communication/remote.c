@@ -468,21 +468,11 @@ void remote_get_attitude_command(const remote_t* remote, const float ki_yaw, att
 }
 
 
-void remote_get_attitude_command_vtol(const remote_t* remote, const float ki_yaw, attitude_command_t * command, float scale, float alpha_trans)
+void remote_get_attitude_command_vtol(const remote_t* remote, const float ki_yaw, attitude_command_t * command, float scale, float reference_pitch)
 {
-	// Clip transition factor
-	if( alpha_trans > 1.0f )
-	{
-		alpha_trans = 1.0f;
-	}
-	else if( alpha_trans < 0.0f )
-	{
-		alpha_trans = 0.0f;
-	}
-
 	// Get Roll Pitch and Yaw from remote
 	command->rpy[ROLL] 	= scale * remote_get_roll(remote);
-	command->rpy[PITCH] = scale * remote_get_pitch(remote) + (1.0f - alpha_trans) * 0.5f * PI;
+	command->rpy[PITCH] = scale * remote_get_pitch(remote) + reference_pitch;
 	command->rpy[YAW] 	+= ki_yaw * scale * remote_get_yaw(remote);
 
 	// Apply yaw and pitch first
@@ -494,20 +484,13 @@ void remote_get_attitude_command_vtol(const remote_t* remote, const float ki_yaw
 
 
 	// Apply roll according to transition factor
-	quat_t q_roll_hover = {	.s = quick_trig_cos( (1 - alpha_trans) * 0.5f * command->rpy[ROLL]),
-							.v = {	0.0f,
-									0.0f,
-									quick_trig_sin( (1 - alpha_trans) * 0.5f * command->rpy[ROLL])	}};
-
-	quat_t q_roll_forward = {	.s = quick_trig_cos( alpha_trans * 0.5f * command->rpy[ROLL]),
-								.v = {	quick_trig_sin( alpha_trans * 0.5f * command->rpy[ROLL]),
-										0.0f,
-										0.0f	}};
+	quat_t q_roll = {	.s = quick_trig_cos(0.5f * command->rpy[ROLL]),
+						.v = {	quick_trig_cos(reference_pitch) * quick_trig_sin( 0.5f * command->rpy[ROLL]),
+								0.0f,
+								quick_trig_sin(reference_pitch) * quick_trig_sin( 0.5f * command->rpy[ROLL]) }};
 
 	// q := q . q_rh . q_rf
-	command->quat = quaternions_multiply( 	command->quat, 
-											quaternions_multiply(q_roll_hover, 
-																q_roll_forward) );
+	command->quat = quaternions_multiply( command->quat, q_roll );
 }
 
 

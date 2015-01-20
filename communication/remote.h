@@ -352,9 +352,9 @@ void remote_get_attitude_command(const remote_t* remote, const float k_yaw, atti
  * \param 	ki_yaw			Integration factor for yaw (0.02 is ok) (input) 
  * \param	command			Attitude command (output)
  * \param   scale			Scale (maximum output / max remote input)
- * \param 	alpha_trans		Transition factor (0: hover, 1:forward flight)	
+ * \param 	reference_pitch	Transition factor (0: forward flight, PI/2:hover)	
  */
-void remote_get_attitude_command_vtol(const remote_t* remote, const float ki_yaw, attitude_command_t * command, float scale, float alpha_trans);
+void remote_get_attitude_command_vtol(const remote_t* remote, const float ki_yaw, attitude_command_t * command, float scale, float reference_pitch);
 
 
 /**
