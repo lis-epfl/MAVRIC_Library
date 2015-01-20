@@ -104,7 +104,7 @@ void spektrum_satellite_switch_off(void)
 ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) 
 {
 	uint8_t c1, c2, i;
-	uint8_t channel_encoding;
+	radio_protocol_t protocol;
 	uint16_t sw;
 	uint8_t channel;
 	uint32_t now = time_keeper_get_micros() ;
@@ -137,11 +137,11 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 			
 			if (c1 == 0x03 && c2 == 0xB2) //correspond to DSM2 10bits header
 			{
-				channel_encoding = 10; //10bits
+				protocol = DSM2_10BITS;
 			}
 			else
 			{
-				channel_encoding = 11; //11bits
+				protocol = DSM2_11BITS;
 			}
 				
 			for (i = 0; i < 7; i++) // 7 channels per frame
@@ -150,7 +150,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 				c2 = buffer_get(&spek_sat->receiver);
 				sw = (uint16_t)c1 << 8 | ((uint16_t)c2);
 								
-				if ( channel_encoding == 10 )  //10 bits
+				if ( protocol == DSM2_10BITS )  //10 bits
 				{
 					// highest bit is frame 0/1, bits 2-6 are channel number
 					channel = ((sw >> 10))&0x0f;
@@ -158,7 +158,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 					// 10 bits per channel
 					spek_sat->channels[channel] = ((int16_t)(sw&0x3ff) - 512) * 2;
 				} 
-				else if ( channel_encoding == 11 ) //11bits
+				else if ( protocol == DSM2_11BITS ) //11bits
 				{
 					// highest bit is frame 0/1, bits 3-7 are channel number
 					channel = ((sw >> 11))&0x0f;
@@ -219,7 +219,7 @@ void spektrum_satellite_init (satellite_t *satellite, usart_config_t usart_conf_
 	spektrum_satellite_switch_on();
 }
 
-void spektrum_satellite_bind(float channel_encoding)
+void spektrum_satellite_bind(radio_protocol_t protocol)
 {
 	int32_t i = 0;
 	uint32_t cpu_freq = sysclk_get_cpu_hz();
@@ -246,11 +246,11 @@ void spektrum_satellite_bind(float channel_encoding)
 	delay_ms(68);
 	
 	uint8_t pulses = 0;
-	if (channel_encoding == 10)
+	if (protocol == DSM2_10BITS)
 	{
 		pulses = 3;
 	}
-	else if (channel_encoding == 11)
+	else if (protocol == DSM2_11BITS)
 	{
 		pulses = 6;
 	}
