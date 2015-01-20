@@ -526,10 +526,18 @@ static void navigation_critical_handler(navigation_t* navigation)
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = -30.0f;
 				break;
 			
+			case HOME_LAND:
+			navigation->state->mav_mode_custom = CRITICAL_LAND;
+			navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
+			navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
+			navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = 5.0f;
+			navigation->alt_lpf = navigation->position_estimation->local_position.pos[2];
+			break;
+			
 			case CRITICAL_LAND:
 				navigation->state->mav_mode_custom = CRITICAL_LAND;
-				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
-				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
+				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = navigation->position_estimation->local_position.pos[X];
+				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = navigation->position_estimation->local_position.pos[Y];
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = 5.0f;
 				navigation->alt_lpf = navigation->position_estimation->local_position.pos[2];
 				break;
@@ -542,7 +550,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 		navigation->waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 	}
 	
-	if (navigation->critical_behavior == CRITICAL_LAND)
+	if (navigation->critical_behavior == CRITICAL_LAND || navigation->critical_behavior == HOME_LAND)
 	{
 		navigation->alt_lpf = navigation->LPF_gain * navigation->alt_lpf + (1.0f - navigation->LPF_gain) * navigation->position_estimation->local_position.pos[2];
 		if ( (navigation->position_estimation->local_position.pos[2] > -0.1f)&&(maths_f_abs(navigation->position_estimation->local_position.pos[2] - navigation->alt_lpf) <= 0.2f) )
@@ -572,9 +580,10 @@ static void navigation_critical_handler(navigation_t* navigation)
 			
 			case FLY_TO_HOME_WP:
 				print_util_dbg_print("Critical State! Performing critical landing.\r\n");
-				navigation->critical_behavior = CRITICAL_LAND;
+				navigation->critical_behavior = HOME_LAND;
 				break;
 			
+			case HOME_LAND:
 			case CRITICAL_LAND:
 				print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\r\n");
 				navigation->critical_behavior = CLIMB_TO_SAFE_ALT;

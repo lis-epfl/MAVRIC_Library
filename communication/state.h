@@ -59,7 +59,8 @@ typedef enum
 {
 	CLIMB_TO_SAFE_ALT,									///< First critical behavior
 	FLY_TO_HOME_WP,										///< Second critical behavior, comes after CLIMB_TO_SAFE_ALT
-	CRITICAL_LAND										///< Third critical behavior, comes after FLY_TO_HOME_WP
+	HOME_LAND,											///< Third critical behavior, comes after FLY_TO_HOME_WP
+	CRITICAL_LAND										///< Fourth critical behavior
 } critical_behavior_enum;
 
 /**
