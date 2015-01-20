@@ -77,7 +77,7 @@ void (*satellite_init)(satellite_t*, usart_config_t);
 /**
  * \brief Pointer to the function used to bind the satellite receiver
  */
-void (*satellite_bind)(void);
+void (*satellite_bind)(float channel_encoding);
 
 #ifdef __cplusplus
 }

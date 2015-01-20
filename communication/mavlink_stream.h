@@ -65,7 +65,7 @@ extern "C" {
 #endif
 
 
-#include "mavlink/include/mavric/mavlink.h"
+#include "libs/mavlink/include/mavric/mavlink.h"
 
 
 #define MAVLINK_BASE_STATION_ID 255

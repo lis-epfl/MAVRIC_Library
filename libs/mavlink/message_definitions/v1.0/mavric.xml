@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<mavlink>
+    <include>common.xml</include>
+	<enums>
+	</enums>
+	<messages>
+		<message id="180" name="ROLL_PITCH_YAW_THRUST_SETPOINT">
+			<description>Setpoint in roll, pitch, yaw currently active on the system.</description>
+			<field type="uint32_t" name="time_boot_ms">Timestamp in milliseconds since system boot</field>
+			<field type="float" name="roll">Desired roll angle in radians</field>
+			<field type="float" name="pitch">Desired pitch angle in radians</field>
+			<field type="float" name="yaw">Desired yaw angle in radians</field>
+			<field type="float" name="thrust">Collective thrust, normalized to 0 .. 1</field>
+		</message>
+		<message id="181" name="ROLL_PITCH_YAW_SPEED_THRUST_SETPOINT">
+			<description>Setpoint in rollspeed, pitchspeed, yawspeed currently active on the system.</description>
+			<field type="uint32_t" name="time_boot_ms">Timestamp in milliseconds since system boot</field>
+			<field type="float" name="roll_speed">Desired roll angular speed in rad/s</field>
+			<field type="float" name="pitch_speed">Desired pitch angular speed in rad/s</field>
+			<field type="float" name="yaw_speed">Desired yaw angular speed in rad/s</field>
+			<field type="float" name="thrust">Collective thrust, normalized to 0 .. 1</field>
+		</message>
+		<message id="182" name="ROLL_PITCH_YAW_RATES_THRUST_SETPOINT">
+			<description>Setpoint in roll, pitch, yaw rates and thrust currently active on the system.</description>
+			<field type="uint32_t" name="time_boot_ms">Timestamp in milliseconds since system boot</field>
+			<field type="float" name="roll_rate">Desired roll rate in radians per second</field>
+			<field type="float" name="pitch_rate">Desired pitch rate in radians per second</field>
+			<field type="float" name="yaw_rate">Desired yaw rate in radians per second</field>
+			<field type="float" name="thrust">Collective thrust, normalized to 0 .. 1</field>
+		</message>
+		<message id="183" name="SPHERICAL_OPTIC_FLOW">
+			<description>Optical flow from multiple spherical optic flow sensors (e.g. semi-cylindrical CurvACE)</description>
+			<field type="uint64_t" name="time_usec">Timestamp (microseconds since UNIX epoch or microseconds since system boot)</field>
+			<field type="uint8_t" name="id_sensor">Sensor ID</field>
+			<field type="uint8_t" name="nb_sensors">Number of sensors sending data, this can also be used to indicate in how many messages the data from a single sensor was splitted</field>
+			<field type="uint8_t" name="nb_of">Number of Optic Flow vectors sent in this message (between 0 and 16)</field>
+			<field type="uint8_t" name="status">Status of the sensor</field>
+			<field type="int16_t[18]" name="of_azimuth">Azimuthal component of optic flow vectors, in millirad /sec</field>
+			<field type="int16_t[18]" name="of_elevation">Elevation component of optic flow vectors, in millirad /sec</field>
+			<field type="int16_t[18]" name="azimuth">Azimuth of regions used for optic flow computation, in millirad</field>
+			<field type="int16_t[18]" name="elevation">Elevation of regions used for optic flow computation, in millirad</field>
+			<field type="uint8_t[18]" name="of_info">Information on the optic flow vectors</field>
+		</message>
+		<message id="184" name="CONTROL_COMMAND">
+			<description>Control commands in thrust, torque, rate, angle, position and velocity</description>
+			<field type="uint64_t" name="time_usec">Timestamp (microseconds since UNIX epoch or microseconds since system boot)</field>
+			<field type="float" name="thrust">Thrust command</field>
+			<field type="float[3]" name="torque">Torque command</field>
+			<field type="float[3]" name="rate">Rate command</field>
+			<field type="float[3]" name="angle">Angle command</field>
+			<field type="float[4]" name="quat">Attitude command</field>
+			<field type="float[3]" name="position">Position command</field>
+			<field type="float[3]" name="velocity">Velocity command</field>
+		</message>
+	</messages>
+</mavlink>
+
+
+
