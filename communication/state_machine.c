@@ -46,12 +46,74 @@
 #include "led.h"
 #include "print_util.h"
 #include "state.h"
+#include "time_keeper.h"
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+/**
+ * \brief	Check the battery level for safety reason
+ *
+ * \param	state_machine		Pointer to the state machine structure
+ *
+ * \return	True if the battery level was lower a threshold for a given time
+ */
+static bool state_machine_check_battery(state_machine_t *state_machine);
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+static bool state_machine_check_battery(state_machine_t *state_machine)
+{
+	uint32_t now = time_keeper_get_millis();
+	
+	float critical_battery = 10.0f;//this number should be adjusted according to your safety level
+	if( state_machine->state->analog_monitor->avg[ANALOG_RAIL_11] < critical_battery) // ANALOG_RAIL_10 = BATTERY_FILTERED
+	{
+		if ( (now - state_machine->low_battery_update) < 1000 ) //battery was low during the following second (task_period 10millis)
+		{
+			state_machine->low_battery_update = now;
+			state_machine->low_battery_counter++;
+		}
+		else //reset safety counter
+		{
+			state_machine->low_battery_update	= now;
+			state_machine->low_battery_counter	= 1;
+		}
+		
+		uint32_t safety_timeout = 75;//this number should be adjusted according to the task frequency + safety level
+		//this currently correspond to 15sec of critical battery, long enough to avoid false detection
+		if (state_machine->low_battery_counter >= safety_timeout )
+		{
+			// Land as soon as possible => switch state to MAV_STATE_EMERGENCY
+			state_machine->navigation->critical_behavior = CRITICAL_LAND;
+			return true;
+		}
+	}
+	else
+	{
+		//everything seams safe => this task does not do anything
+	}
+	
+	return false;
+}
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
 
 bool state_machine_init(state_machine_t *state_machine,
 						state_t* state, 
 						mavlink_waypoint_handler_t* waypoint_handler, 
 						simulation_model_t *sim_model, 
-						remote_t* remote)
+						remote_t* remote,
+						navigation_t* navigation)
 {
 	bool init_success = true;
 	
@@ -59,10 +121,14 @@ bool state_machine_init(state_machine_t *state_machine,
 	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
 	state_machine->remote 			= remote;
+	state_machine->navigation		= navigation;
 	
 	state_machine->channel_switches = 0;
 	state_machine->rc_check 		= 0;
 	state_machine->motor_state 		= 0;
+	
+	state_machine->low_battery_counter	= 0;
+	state_machine->low_battery_update	= 0;
 	
 	print_util_dbg_print("[STATE MACHINE] Initialised.\r\n");
 	
@@ -239,6 +305,14 @@ void state_machine_update(state_machine_t* state_machine)
 			print_util_dbg_print("Switching off motors!\n");
 		}
 	}
+	
+	//check battery level
+	if( state_machine_check_battery(state_machine) )
+	{
+		// Land as soon as possible => switch state to MAV_STATE_EMERGENCY
+		state_new = MAV_STATE_CRITICAL;
+	}
+	
 
 	// Finally, write new modes and states
 	state_machine->state->mav_mode = mode_new;
