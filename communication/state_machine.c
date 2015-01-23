@@ -69,6 +69,8 @@ static bool state_machine_check_battery(state_machine_t *state_machine);
 
 static bool state_machine_check_battery(state_machine_t *state_machine)
 {
+	bool result = false;
+	
 	uint32_t now = time_keeper_get_millis();
 	
 	float critical_battery = 10.0f;//this number should be adjusted according to your safety level
@@ -91,15 +93,16 @@ static bool state_machine_check_battery(state_machine_t *state_machine)
 		{
 			// Land as soon as possible => switch state to MAV_STATE_EMERGENCY
 			state_machine->navigation->critical_behavior = CRITICAL_LAND;
-			return true;
+			result = true;
 		}
 	}
 	else
 	{
 		//everything seams safe => this task does not do anything
+		result = false;
 	}
 	
-	return false;
+	return result;
 }
 
 
