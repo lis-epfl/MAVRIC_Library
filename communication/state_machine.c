@@ -92,7 +92,6 @@ static bool state_machine_check_battery(state_machine_t *state_machine)
 		if (state_machine->low_battery_counter >= safety_timeout )
 		{
 			// Land as soon as possible => switch state to MAV_STATE_EMERGENCY
-			state_machine->navigation->critical_behavior = CRITICAL_LAND;
 			result = true;
 		}
 	}
@@ -218,6 +217,13 @@ void state_machine_update(state_machine_t* state_machine)
 					}
 				}
 			}
+			//check battery level
+			if( state_machine_check_battery(state_machine) )
+			{
+				// Land as soon as possible => switch state to MAV_STATE_EMERGENCY
+				state_machine->navigation->critical_behavior = CRITICAL_LAND;
+				state_new = MAV_STATE_CRITICAL;
+			}
 			break;
 
 		case MAV_STATE_CRITICAL:			
@@ -307,13 +313,6 @@ void state_machine_update(state_machine_t* state_machine)
 			// For safety, switch off the motors
 			print_util_dbg_print("Switching off motors!\n");
 		}
-	}
-	
-	//check battery level
-	if( state_machine_check_battery(state_machine) )
-	{
-		// Land as soon as possible => switch state to MAV_STATE_EMERGENCY
-		state_new = MAV_STATE_CRITICAL;
 	}
 	
 
