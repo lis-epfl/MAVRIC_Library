@@ -127,9 +127,10 @@ typedef struct
  */
 typedef struct
 {
-	joystick_button_t buttons;		///< The bit mask of the button pressed
-	joystick_channels_t channels;	///< Channels of the joystick
-	state_t* state;					///< The pointer to the state structure
+	joystick_button_t buttons;			///< The bit mask of the button pressed
+	joystick_channels_t channels;		///< Channels of the joystick
+	mav_mode_t current_desired_mode;	///< The mav mode indicated by the remote
+	state_t* state;						///< The pointer to the state structure
 } joystick_parsing_t;
 
 
@@ -183,6 +184,14 @@ float joystick_parsing_get_pitch(const joystick_parsing_t* joystick);
  */
 float joystick_parsing_get_yaw(const joystick_parsing_t* joystick);
 
+/**
+ * \brief	Returns the current desired mode value from the joystick
+ * 
+ * \param	joystick		The pointer to the remote structure
+ *
+ * \return	The value of the current desired mode
+ */
+mav_mode_t joystick_parsing_get_mode(const joystick_parsing_t* joystick);
 
 /** 
  * \brief	Parse joystick to velocity vector command
