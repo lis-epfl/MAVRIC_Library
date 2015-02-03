@@ -527,12 +527,12 @@ static void navigation_critical_handler(navigation_t* navigation)
 				break;
 			
 			case HOME_LAND:
-			navigation->state->mav_mode_custom = CRITICAL_LAND;
-			navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
-			navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
-			navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = 5.0f;
-			navigation->alt_lpf = navigation->position_estimation->local_position.pos[2];
-			break;
+				navigation->state->mav_mode_custom = CRITICAL_LAND;
+				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
+				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
+				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = 5.0f;
+				navigation->alt_lpf = navigation->position_estimation->local_position.pos[2];
+				break;
 			
 			case CRITICAL_LAND:
 				navigation->state->mav_mode_custom = CRITICAL_LAND;
