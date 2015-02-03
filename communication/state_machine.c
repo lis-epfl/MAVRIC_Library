@@ -72,7 +72,7 @@ static bool state_machine_check_battery(state_machine_t *state_machine)
 	uint32_t now = time_keeper_get_millis();
 	
 	float critical_battery = 10.0f;//this number should be adjusted according to your safety level
-	if( state_machine->state->analog_monitor->avg[ANALOG_RAIL_11] < critical_battery) // ANALOG_RAIL_10 = BATTERY_FILTERED
+	if( state_machine->state->analog_monitor->avg[ANALOG_RAIL_10] < critical_battery) // ANALOG_RAIL_10 = BATTERY_FILTERED
 	{
 		if ( (now - state_machine->low_battery_update) < 1000 ) //battery was low during the following second (task_period 10millis)
 		{
@@ -89,7 +89,7 @@ static bool state_machine_check_battery(state_machine_t *state_machine)
 		//this currently correspond to 15sec of critical battery, long enough to avoid false detection
 		if (state_machine->low_battery_counter >= safety_timeout )
 		{
-			// Land as soon as possible => switch state to MAV_STATE_EMERGENCY
+			// Land as soon as possible
 			state_machine->navigation->critical_behavior = CRITICAL_LAND;
 			return true;
 		}
