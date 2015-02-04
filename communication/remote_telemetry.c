@@ -43,6 +43,7 @@
 #include "remote_telemetry.h"
 #include "time_keeper.h"
 #include "spektrum.h"
+#include <limits.h>
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -67,9 +68,9 @@ static mav_result_t remote_telemetry_satellite_bind(remote_t* remote, mavlink_co
 {
 	mav_result_t result = MAV_RESULT_DENIED;
 	
-	if (packet->param2 == 1)
+	if (packet->param2 == 1 && (packet->param4 == 10 || packet->param4 == 11))
 	{
-		satellite_bind();
+		satellite_bind(packet->param4);
 		
 		result = MAV_RESULT_ACCEPTED;
 	}
@@ -122,6 +123,24 @@ void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* m
 										remote->sat.channels[7] + 1024,
 										// remote->mode.current_desired_mode.byte);
 										remote->signal_quality	);
+	
+	mavlink_stream_send(mavlink_stream, msg);
+	
+	mavlink_msg_rc_channels_raw_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										time_keeper_get_millis(),
+										1,
+										remote->sat.channels[8] + 1024,
+										remote->sat.channels[9] + 1024,
+										remote->sat.channels[10] + 1024,
+										remote->sat.channels[11] + 1024,
+										remote->sat.channels[12] + 1024,
+										remote->sat.channels[13] + 1024,
+										UINT16_MAX,
+										UINT16_MAX,
+										// remote->mode.current_desired_mode.byte);
+										remote->signal_quality	);
 }
 
 void remote_telemetry_send_scaled(const remote_t* remote, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
@@ -141,4 +160,21 @@ void remote_telemetry_send_scaled(const remote_t* remote, const mavlink_stream_t
 											remote->channels[7] * 10000.0f,
 											remote->mode.current_desired_mode.byte );
 											// remote->signal_quality	);
+	
+	mavlink_stream_send(mavlink_stream, msg);
+	
+	mavlink_msg_rc_channels_scaled_pack(	mavlink_stream->sysid,
+											mavlink_stream->compid,
+											msg,
+											time_keeper_get_millis(),
+											1,
+											remote->channels[8] * 10000.0f,
+											remote->channels[9] * 10000.0f,
+											remote->channels[10] * 10000.0f,
+											remote->channels[11] * 10000.0f,
+											remote->channels[12] * 10000.0f,
+											remote->channels[13] * 10000.0f,
+											INT16_MAX, // 14 channels max 
+											INT16_MAX,
+											remote->mode.current_desired_mode.byte );
 }

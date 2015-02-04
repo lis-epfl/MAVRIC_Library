@@ -61,16 +61,6 @@
 void curvace_telemetry_send(const curvace_t* curvace, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
-/**
- * \brief 	Send 1 message of type omnidirectional_flow
- * 
- * \param	curvace				Pointer to module
- * \param	mavlink_stream		Mavlink stream
- * \param 	msg					Mavlink message
- **/
-void curvace_telemetry_send_averaged(const curvace_t* curvace, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
-
-
 #ifdef __cplusplus
 	}
 #endif

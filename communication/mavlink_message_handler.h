@@ -185,6 +185,8 @@ bool mavlink_message_handler_init(	mavlink_message_handler_t* 			message_handler
 
 /**
  * \brief 						Registers a new callback for a message
+ * \details						You should call mavlink_message_handler_sort_callback function after having added all callbacks,
+ *								as it is used by mavlink_message_handler_receive to speed up matching
  * 
  * \param 	message_handler 	Pointer to message handler data structure
  * \param 	msg_callback 		Pointer to new message callback (this structure 
@@ -199,6 +201,8 @@ bool mavlink_message_handler_add_msg_callback(	mavlink_message_handler_t* 					m
 
 /**
  * \brief 						Registers a new callback for a command
+ * \details						You should call mavlink_message_handler_sort_callback function after having added all callbacks,
+ *								as it is used by mavlink_message_handler_receive to speed up matching
  * 
  * \param 	message_handler 	Pointer to message handler data structure
  * \param 	cmd_callback 		Pointer to new command callback (this structure 

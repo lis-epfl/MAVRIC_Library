@@ -45,7 +45,7 @@
 #include "time_keeper.h"
 #include "constants.h"
 
-#define KP_YAW 0.2f
+#define KP_YAW 0.2f ///< Yaw gain for the navigation controller 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -214,7 +214,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	float v_desired = 0.0f;
 	quat_t qtmp1, qtmp2;
 	
-	float dir_desired_bf[3];	
+	float dir_desired_bf[3];
 	float rel_heading;
 	
 	mav_mode_t mode = navigation->state->mav_mode;
@@ -234,22 +234,24 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	
 	dir_desired_bf[2] = rel_pos[2];
 	
-	if (((navigation->state->mav_mode.GUIDED == GUIDED_ON)&&(navigation->state->mav_mode.AUTO == AUTO_OFF))||((maths_f_abs(rel_pos[X])<=1.0f)&&(maths_f_abs(rel_pos[Y])<=1.0f))||((maths_f_abs(rel_pos[X])<=5.0f)&&(maths_f_abs(rel_pos[Y])<=5.0f)&&(maths_f_abs(rel_pos[Z])>=3.0f)))
-	{
-		rel_heading = 0.0f;
-	}
-	else
-	{
-		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimation->local_position.heading);
-	}
-	
 	if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
 	{
+		
+		if( ((maths_f_abs(rel_pos[X])<=1.0f)&&(maths_f_abs(rel_pos[Y])<=1.0f)) || ((maths_f_abs(rel_pos[X])<=5.0f)&&(maths_f_abs(rel_pos[Y])<=5.0f)&&(maths_f_abs(rel_pos[Z])>=3.0f)) )
+		{
+			rel_heading = 0.0f;
+		}
+		else
+		{
+		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimation->local_position.heading);
+		}
+		
 		navigation->wpt_nav_controller.clip_max = navigation->cruise_speed;
 		v_desired = pid_controller_update_dt(&navigation->wpt_nav_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
 	}
 	else
 	{
+		rel_heading = 0.0f;
 		navigation->hovering_controller.clip_max = navigation->cruise_speed;
 		v_desired = pid_controller_update_dt(&navigation->hovering_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
 	}
@@ -298,7 +300,7 @@ static void navigation_run(local_coordinates_t waypoint_input, navigation_t* nav
 	float rel_pos[3];
 	
 	// Control in translational speed of the platform
-	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(	waypoint_input.pos,
+	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos,
 																					rel_pos,
 																					navigation->position_estimation->local_position.pos);
 	navigation_set_speed_command(rel_pos, navigation);
@@ -445,10 +447,14 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 													navigation->waypoint_handler->current_waypoint_count);
 			mavlink_stream_send(navigation->mavlink_stream, &msg);
 			
+			navigation->waypoint_handler->travel_time = time_keeper_get_millis() - navigation->waypoint_handler->start_wpt_time;
+			
 			navigation->waypoint_handler->waypoint_list[navigation->waypoint_handler->current_waypoint_count].current = 0;
 			if((navigation->waypoint_handler->current_waypoint.autocontinue == 1)&&(navigation->waypoint_handler->number_of_waypoints>1))
 			{
 				print_util_dbg_print("Autocontinue towards waypoint Nr");
+				
+				navigation->waypoint_handler->start_wpt_time = time_keeper_get_millis();
 				
 				if (navigation->waypoint_handler->current_waypoint_count == (navigation->waypoint_handler->number_of_waypoints-1))
 				{
@@ -722,7 +728,7 @@ static void navigation_stopping_handler(navigation_t* navigation)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const control_command_t* control_joystick, remote_t* remote, mavlink_communication_t* mavlink_communication)
+bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const joystick_parsing_t* joystick, remote_t* remote, mavlink_communication_t* mavlink_communication)
 {
 	bool init_success = true;
 	
@@ -733,7 +739,7 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	navigation->position_estimation = position_estimation;
 	navigation->state = state;
 	navigation->mavlink_stream = &mavlink_communication->mavlink_stream;
-	navigation->control_joystick = control_joystick;
+	navigation->joystick = joystick;
 	navigation->remote = remote;
 	
 	//navigation controller init
@@ -926,7 +932,7 @@ task_return_t navigation_update(navigation_t* navigation)
 				}
 				else
 				{
-					thrust = navigation->control_joystick->thrust;
+					thrust = joystick_parsing_get_throttle(navigation->joystick);
 				}
 				
 				if (thrust > -0.7f)

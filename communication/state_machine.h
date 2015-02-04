@@ -50,6 +50,7 @@ extern "C" {
 
 #include "scheduler.h"
 #include "state.h"
+#include "mavlink_waypoint_handler.h"
 #include "simulation.h"
 
 
@@ -61,7 +62,6 @@ typedef struct
 	uint8_t channel_switches;							///< State of the switches of the remote
 	signal_quality_t rc_check;							///< State of the remote (receiving signal or not)
 	int8_t motor_state;									///< State of the motors to switch on and off
-	
 	state_t* state;										///< Pointer to the state structure
 	simulation_model_t *sim_model;						///< Pointer to the simulation structure
 	remote_t* remote;									///< Pointer to the remote structure

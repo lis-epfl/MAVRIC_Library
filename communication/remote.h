@@ -52,7 +52,7 @@
 #include "mav_modes.h"
 #include "control_command.h"
 
-#define REMOTE_CHANNEL_COUNT 8
+#define REMOTE_CHANNEL_COUNT 14
 
 /**
  * \brief The signal's quality
@@ -86,6 +86,12 @@ typedef enum
 	CHANNEL_FLAPS    = 5,
 	CHANNEL_AUX1     = 6,
 	CHANNEL_AUX2     = 7,
+	CHANNEL_AUX3     = 8,
+	CHANNEL_AUX4     = 9,
+	CHANNEL_AUX5     = 10,
+	CHANNEL_AUX6     = 11,
+	CHANNEL_AUX7     = 12,
+	CHANNEL_AUX8     = 13
 } remote_channel_t;
 
 /**
@@ -272,6 +278,15 @@ void remote_get_command_from_remote(remote_t* remote, control_command_t * contro
  * \param	controls			The pointer to the controls structure
  */
 void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t* controls);
+
+
+/**
+ * \brief	Compute torque command from the remote
+ * 
+ * \param	remote			Remote structure (input)
+ * \param	command			Torque command (output)
+ */
+void remote_get_torque_command(const remote_t* remote, torque_command_t * command);
 
 
 /**

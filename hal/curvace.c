@@ -169,8 +169,6 @@ static void curvace_read_spi(curvace_t* curvace)
 	
 	for (uint8_t i = 0; i < CURVACE_NB_OF / 2; ++i)
 	{
-		//curvace->raw_of.left_hemisphere[i].x =  0;  // spi_read_16_bits(...)
-		//curvace->raw_of.left_hemisphere[i].y =  0;  // spi_read_16_bits(...)
 		curvace->raw_of.left_hemisphere[i].x = curvace_spi_low_level(100);
 		curvace->raw_of.left_hemisphere[i].y = curvace_spi_low_level(101);
 	}
@@ -185,8 +183,6 @@ static void curvace_read_spi(curvace_t* curvace)
 	
 	for (uint8_t i = 0; i < CURVACE_NB_OF / 2; ++i)
 	{
-		//curvace->raw_of.right_hemisphere[i].x =  0;  // spi_read_16_bits(...)
-		//curvace->raw_of.right_hemisphere[i].y =  0;  // spi_read_16_bits(...)
 		curvace->raw_of.right_hemisphere[i].x = curvace_spi_low_level(102);
 		curvace->raw_of.right_hemisphere[i].y = curvace_spi_low_level(103);
 	}
@@ -507,21 +503,5 @@ void curvace_init(curvace_t* curvace, const ahrs_t* ahrs)
 void curvace_update(curvace_t* curvace)
 {
 	curvace_read_spi(curvace);
-
 	curvace_process_all(curvace);
-	
-	// curvace_scale_all(curvace);
-
-	// if ( curvace->do_derotation == ON )
-	// {
-	// 	curvace_derotate_all(curvace);
-
-	// 	// simplified derotation
-	// 	// for (uint8_t i = 0; i < 2 * CURVACE_NB_OF; ++i)
-	// 	// {
-	// 	// 	// test
-	// 	// 	curvace->of.data[i] = 	curvace->of.data[i]
-	// 	// 							+ curvace->derot_factor * curvace->ahrs->angular_speed[YAW];
-	// 	// }
-	// }
 }

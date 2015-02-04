@@ -64,8 +64,11 @@ void spektrum_satellite_init (satellite_t *satellite, usart_config_t usart_conf_
 
 /**
  * \brief Sets the satellite in bind mode
+ *
+ * \param	channel_encoding	Channel encoding. It it either 10bits (up to 7 channels) or 11bits(up to 14 channels). We support both. 
+ *
  */
-void spektrum_satellite_bind(void);
+void spektrum_satellite_bind(float channel_encoding);
 
 
 /**

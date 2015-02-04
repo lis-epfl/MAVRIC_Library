@@ -56,6 +56,7 @@ extern "C" {
 #include "mavlink_communication.h"
 #include "state.h"
 #include "remote.h"
+#include "joystick_parsing.h"
 #include "pid_controller.h"
 #include <stdbool.h>
 
@@ -96,15 +97,19 @@ typedef struct
 	bool stop_nav_there;								///< Flag to stop the navigation and fly to the stopping waypoint
 	
 	control_command_t *controls_nav;					///< The pointer to the navigation control structure
-	const control_command_t* control_joystick;			///< The pointer to the joystick control structure
 	const quat_t *qe;									///< The pointer to the attitude quaternion structure
 	mavlink_waypoint_handler_t *waypoint_handler;		///< The pointer to the waypoint handler structure
-	const position_estimation_t *position_estimation;		///< The pointer to the position estimation structure in central_data
+	const position_estimation_t *position_estimation;	///< The pointer to the position estimation structure in central_data
 	state_t* state;										///< The pointer to the state structure in central_data
 	const mavlink_stream_t* mavlink_stream;				///< The pointer to the MAVLink stream structure
 	remote_t* remote;									///< The pointer to the remote structure
+	const joystick_parsing_t* joystick;					///< Pointer to joystick 
 }navigation_t;
 
+
+/**
+ * \brief The navigation configuration structure
+ */
 typedef struct 
 {
 	float dist2vel_gain;								///< The gain linking the distance to the goal to the actual speed
@@ -130,13 +135,13 @@ typedef struct
  * \param	waypoint_handler		The pointer to the waypoint handler structure
  * \param	position_estimation		The pointer to the position estimation structure
  * \param	state					The pointer to the state structure 
- * \param	control_joystick		The pointer to the joystick structure
+ * \param	joystick				The pointer to the joystick_parsing structure
  * \param	remote					The pointer to the remote structure
  * \param	mavlink_communication	The pointer to the MAVLink communication structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const control_command_t* control_joystick, remote_t* remote, mavlink_communication_t* mavlink_communication);
+bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const joystick_parsing_t* joystick, remote_t* remote, mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief	Initialise the position hold mode

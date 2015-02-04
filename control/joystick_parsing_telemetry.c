@@ -55,35 +55,23 @@
  * \param	sysid					The sysid of the system
  * \param	msg						The pointer to the MAVLink message received
  */
-void joystick_parsing_telemetry_parse_msg(joystick_parsing_t *joystick_parsing, uint32_t sysid, mavlink_message_t* msg);
+static void joystick_parsing_telemetry_parse_msg(joystick_parsing_t *joystick_parsing, uint32_t sysid, mavlink_message_t* msg);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void joystick_parsing_telemetry_parse_msg(joystick_parsing_t *joystick_parsing, uint32_t sysid, mavlink_message_t* msg)
+static void joystick_parsing_telemetry_parse_msg(joystick_parsing_t *joystick_parsing, uint32_t sysid, mavlink_message_t* msg)
 {
 	mavlink_manual_control_t packet;
 	mavlink_msg_manual_control_decode(msg,&packet);
 	
 	if ((uint8_t)packet.target == (uint8_t)sysid)
-	{
-		//print_util_dbg_print("Joystick command: (");
-		//print_util_dbg_print_num(packet.x,10);
-		//print_util_dbg_print(", ");
-		//print_util_dbg_print_num(packet.y,10);
-		//print_util_dbg_print(", ");
-		//print_util_dbg_print_num(packet.z,10);
-		//print_util_dbg_print("), ");
-		//print_util_dbg_print_num(packet.buttons,10);
-		//print_util_dbg_print(", ");
-		//print_util_dbg_print_num(packet.r,10);
-		//print_util_dbg_print("\r");
-		
-		joystick_parsing->controls->rpy[PITCH] = packet.x / 1000.0f;
-		joystick_parsing->controls->rpy[ROLL] = packet.y / 1000.0f;
-		joystick_parsing->controls->rpy[YAW] = packet.r / 1000.0f;
-		joystick_parsing->controls->thrust = packet.z / 1000.0f;
+	{	
+		joystick_parsing->channels.x = packet.x / 1000.0f;
+		joystick_parsing->channels.y = packet.y / 1000.0f;
+		joystick_parsing->channels.r = packet.r / 1000.0f;
+		joystick_parsing->channels.z = packet.z / 1000.0f;
 		
 		joystick_parsing_button_mask(joystick_parsing,packet.buttons);
 	}
@@ -117,9 +105,9 @@ void joystick_parsing_telemetry_send_manual_ctrl_msg(const joystick_parsing_t* j
 									mavlink_stream->compid,
 									msg,
 									mavlink_stream->sysid,
-									joystick_parsing->controls->rpy[PITCH] * 1000,
-									joystick_parsing->controls->rpy[ROLL] * 1000,
-									joystick_parsing->controls->thrust* 1000,
-									joystick_parsing->controls->rpy[YAW] * 1000,
+									joystick_parsing->channels.x * 1000,
+									joystick_parsing->channels.y * 1000,
+									joystick_parsing->channels.z * 1000,
+									joystick_parsing->channels.r * 1000,
 									joystick_parsing->buttons.button_mask);
 }
