@@ -66,7 +66,8 @@ extern "C" {
  */
 typedef struct
 {
-	float 			beta;		// 2 * proportional gain (Kp)
+	float 	beta;		// 2 * proportional gain (Kp)	
+	float 	zeta;			// Gain for gyro drift compensation
 } ahrs_madgwick_conf_t;
 
 
@@ -75,9 +76,11 @@ typedef struct
  */
 typedef struct
 {
-	const imu_t* 	imu;		// Pointer to IMU sensors
-	ahrs_t* 		ahrs;		// Estimated attitude
-	float 			beta;		// 2 * proportional gain (Kp)
+	imu_t* 	imu;			// Pointer to IMU sensors
+	ahrs_t* ahrs;			// Estimated attitude
+	float 	ref_b[3]; 		// Reference direction of magnetic flux in earth frame (x component)
+	float 	beta;			// 2 * proportional gain (Kp)
+	float 	zeta;			// Gain for gyro drift compensation
 } ahrs_madgwick_t;
 
 
@@ -91,7 +94,7 @@ typedef struct
  * 
  * @return 	True if success, false if not
  */
-bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, const imu_t* imu, ahrs_t* ahrs);
+bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs);
 
 
 /**
