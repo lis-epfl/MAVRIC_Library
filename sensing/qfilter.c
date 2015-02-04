@@ -96,10 +96,10 @@ void qfilter_update(qfilter_t *qf)
 	float kp, kp_mag;
 
 	// Update time
-	uint32_t t = time_keeper_get_time_ticks();
-	float dt = time_keeper_ticks_to_seconds(t - qf->ahrs->last_update);
+	float now 	= time_keeper_get_time();
+	float dt 	= now - qf->ahrs->last_update;
 	qf->ahrs->dt = dt;
-	qf->ahrs->last_update = t;
+	qf->ahrs->last_update = now;
 
 	// up_bf = qe^-1 *(0,0,0,-1) * qe
 	up.s = 0; up.v[0] = UPVECTOR_X; up.v[1] = UPVECTOR_Y; up.v[2] = UPVECTOR_Z;
