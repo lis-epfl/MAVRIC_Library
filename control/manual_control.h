@@ -58,16 +58,16 @@ extern "C" {
  */
 typedef enum
 {
-	GND_STATION = 1,
-	REMOTE = 2,
-	JOYSTICK = 3,
+	GND_STATION = 0,
+	REMOTE = 1,
+	JOYSTICK = 2,
 }source_mode_t;
 
 typedef enum
 {
-	NO_CONTROL = 1,
-	REMOTE_CONTROL = 2,
-	JOYSTICK_CONTROL = 3,
+	NO_CONTROL = 0,
+	REMOTE_CONTROL = 1,
+	JOYSTICK_CONTROL = 2,
 }control_source_t;
 
 /**
@@ -79,7 +79,7 @@ typedef struct
 	control_source_t control_source;			///< Flag to tell whether the remote is active or not
 
 	remote_t* remote;						///< The pointer to the remote structure
-	const joystick_parsing_t* joystick;			///< The pointer to the joystick structure
+	joystick_parsing_t* joystick;			///< The pointer to the joystick structure
 	const state_t* state;						///< The pointer to the state structure
 }manual_control_t;
 
@@ -95,7 +95,7 @@ typedef struct
  * \return	True if the init succeed, false otherwise
  */
 
-bool manual_control_init(manual_control_t* manual_control, manual_control_t* control_config, remote_t* remote, const joystick_parsing_t* joystick, const state_t* state);
+bool manual_control_init(manual_control_t* manual_control, manual_control_t* control_config, remote_t* remote, joystick_parsing_t* joystick, const state_t* state);
 
 /**
  * \brief	Selects the source input for the attitude command

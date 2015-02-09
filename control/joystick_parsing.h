@@ -130,6 +130,7 @@ typedef struct
 	joystick_button_t buttons;			///< The bit mask of the button pressed
 	joystick_channels_t channels;		///< Channels of the joystick
 	mav_mode_t current_desired_mode;	///< The mav mode indicated by the remote
+	arm_flag_t arm_flag;
 	state_t* state;						///< The pointer to the state structure
 } joystick_parsing_t;
 
@@ -191,7 +192,7 @@ float joystick_parsing_get_yaw(const joystick_parsing_t* joystick);
  *
  * \return	The value of the current desired mode
  */
-mav_mode_t joystick_parsing_get_mode(const joystick_parsing_t* joystick);
+mav_mode_t joystick_parsing_get_mode(joystick_parsing_t* joystick, const mav_mode_t current_mode);
 
 /** 
  * \brief	Parse joystick to velocity vector command
@@ -273,15 +274,6 @@ void joystick_parsing_get_attitude_command_integrate_yaw(const joystick_parsing_
  * \param	command			Velocity command (output)
  */
 void joystick_parsing_get_velocity_command(const joystick_parsing_t* joystick, velocity_command_t * command);
-
-/**
- * \brief	Returns the mode from the joystick
- * 
- * \param	joystick		Joystick structure
- *
- * \return The value of the mode
- */
-mav_mode_t joystick_parsing_get_mode(const joystick_parsing_t* joystick);
 
 #ifdef __cplusplus
 }
