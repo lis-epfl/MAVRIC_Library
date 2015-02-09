@@ -728,7 +728,7 @@ static void navigation_stopping_handler(navigation_t* navigation)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const joystick_parsing_t* joystick, remote_t* remote, mavlink_communication_t* mavlink_communication)
+bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const manual_control_t* manual_control, remote_t* remote, mavlink_communication_t* mavlink_communication)
 {
 	bool init_success = true;
 	
@@ -739,7 +739,7 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	navigation->position_estimation = position_estimation;
 	navigation->state = state;
 	navigation->mavlink_stream = &mavlink_communication->mavlink_stream;
-	navigation->joystick = joystick;
+	navigation->manual_control = manual_control;
 	navigation->remote = remote;
 	
 	//navigation controller init
@@ -926,15 +926,8 @@ task_return_t navigation_update(navigation_t* navigation)
 			}
 			else
 			{
-				if (navigation->state->remote_active == 1)
-				{
-					thrust = remote_get_throttle(navigation->remote);
-				}
-				else
-				{
-					thrust = joystick_parsing_get_throttle(navigation->joystick);
-				}
-				
+				thrust = manual_control_get_thrust(navigation->manual_control);
+
 				if (thrust > -0.7f)
 				{
 					if ((mode_local.GUIDED == GUIDED_ON)||(mode_local.AUTO == AUTO_ON))
