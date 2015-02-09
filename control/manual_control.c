@@ -43,6 +43,7 @@
  
 #include "manual_control.h"
 #include "print_util.h"
+#include "constants.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -59,12 +60,12 @@
 //------------------------------------------------------------------------------
 
 
-bool manual_control_init(manual_control_t* manual_control, manual_control_t* control_config, const remote_t* remote, const joystick_parsing_t* joystick, const state_t* state)
+bool manual_control_init(manual_control_t* manual_control, manual_control_t* control_config, remote_t* remote, const joystick_parsing_t* joystick, const state_t* state)
 {
 	bool init_success = true;
 
 	manual_control->source_mode = control_config->source_mode;
-	manual_control->remote_active = control_config->remote_active;
+	manual_control->control_source = control_config->control_source;
 
 	manual_control->remote = remote;
 	manual_control->joystick = joystick;
@@ -79,10 +80,10 @@ void manual_control_get_attitude_command(manual_control_t* manual_control, contr
 {
 	switch(manual_control->control_source)
 	{
-		case REMOTE_ACTIVE:
+		case REMOTE_CONTROL:
 			remote_get_command_from_remote(manual_control->remote, controls);
 			break;
-		case JOYSTICK_ACTIVE:
+		case JOYSTICK_CONTROL:
 			joystick_parsing_get_attitude_command_from_joystick(manual_control->joystick,controls);
 			break;
 		default:
@@ -98,10 +99,10 @@ void manual_control_get_velocity_command(manual_control_t* manual_control, contr
 {
 	switch(manual_control->control_source)
 	{
-		case REMOTE_ACTIVE:
+		case REMOTE_CONTROL:
 			remote_get_velocity_vector_from_remote(manual_control->remote, controls);
 			break;
-		case JOYSTICK_ACTIVE:
+		case JOYSTICK_CONTROL:
 			joystick_parsing_get_velocity_vector_from_joystick(manual_control->joystick, controls);
 			break;
 		default:
@@ -119,10 +120,10 @@ float manual_control_get_thrust(const manual_control_t* manual_control)
 
 	switch(manual_control->control_source)
 	{
-		case REMOTE_ACTIVE:
+		case REMOTE_CONTROL:
 			thrust = remote_get_throttle(manual_control->remote);
 			break;
-		case JOYSTICK_ACTIVE:
+		case JOYSTICK_CONTROL:
 			thrust = joystick_parsing_get_throttle(manual_control->joystick);
 			break;
 		default:
@@ -132,7 +133,7 @@ float manual_control_get_thrust(const manual_control_t* manual_control)
 	return thrust;
 }
 
-mav_mode_t manual_control_get_mode_from_source(const manual_control_t* manual_control, mav_mode_t mode_current, signal_quality_t rc_check )
+mav_mode_t manual_control_get_mode_from_source(manual_control_t* manual_control, mav_mode_t mode_current, signal_quality_t rc_check )
 {
 	mav_mode_t new_mode = mode_current;
 	

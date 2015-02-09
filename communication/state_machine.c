@@ -46,6 +46,7 @@
 #include "led.h"
 #include "print_util.h"
 #include "state.h"
+#include "manual_control.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -100,7 +101,7 @@ void state_machine_update(state_machine_t* state_machine)
 	mode_current = state_machine->state->mav_mode;
 
 	// Get remote signal strength
-	rc_check = manual_control_rc_check(state_machine->manual_control);
+	rc_check = manual_control_get_signal_strength(state_machine->manual_control);
 
 	mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current, rc_check);
 	

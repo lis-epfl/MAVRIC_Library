@@ -67,7 +67,7 @@ typedef enum
 {
 	NO_CONTROL = 1,
 	REMOTE_CONTROL = 2,
-	JOYSTICK_CONTROl = 3,
+	JOYSTICK_CONTROL = 3,
 }control_source_t;
 
 /**
@@ -78,7 +78,7 @@ typedef struct
 	source_mode_t source_mode;					///< The source mode
 	control_source_t control_source;			///< Flag to tell whether the remote is active or not
 
-	const remote_t* remote;						///< The pointer to the remote structure
+	remote_t* remote;						///< The pointer to the remote structure
 	const joystick_parsing_t* joystick;			///< The pointer to the joystick structure
 	const state_t* state;						///< The pointer to the state structure
 }manual_control_t;
@@ -94,7 +94,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool manual_control_init(manual_control_t* manual_control, manual_control_t* control_config, const remote_t* remote, const joystick_parsing_t* joystick, const state_t* state);
+bool manual_control_init(manual_control_t* manual_control, manual_control_t* control_config, remote_t* remote, const joystick_parsing_t* joystick, const state_t* state);
 
 /**
  * \brief	Selects the source input for the attitude command
@@ -135,7 +135,7 @@ mav_mode_t manual_control_get_mode_from_source(manual_control_t* manual_control,
 /**
  * \brief	Returns the quality of the strength of the remote receiver
  *
- * \param	manual_control			The pointer to the manual_control structure			
+ * \param	manual_control			The pointer to the manual_control structure
  *
  * \return	The current status of the remote controller
  */
