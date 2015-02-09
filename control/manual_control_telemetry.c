@@ -52,12 +52,12 @@
 /**
  * \brief	Activate/Disactivate the use of the remote controller
  *
- * \param	state				The pointer to the state structure
+ * \param	manual_control		The pointer to the manual_control structure
  * \param	packet				The pointer to the decoded MAVLink message long
  * 
  * \return	The MAV_RESULT of the command
  */
-static mav_result_t state_telemetry_toggle_remote_use(state_t* state, mavlink_command_long_t* packet);
+static mav_result_t manual_control_telemetry_toggle_remote_use(manual_control_t* manual_control, mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -97,14 +97,14 @@ bool manual_control_telemetry_init(manual_control_t* manual_control, mavlink_mes
 {
 	bool init_success = true;
 	
-	// Add callbacks for onboard parameters requests
-	mavlink_message_handler_msg_callback_t callback;
+	// Add callbacks for waypoint handler commands requests
+	mavlink_message_handler_cmd_callback_t callbackcmd;
 
 	callbackcmd.command_id = MAV_CMD_DO_PARACHUTE; // 208
 	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_SYSTEM_CONTROL; // 250
-	callbackcmd.function = (mavlink_cmd_callback_function_t)	&state_telemetry_toggle_remote_use;
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&manual_control_telemetry_toggle_remote_use;
 	callbackcmd.module_struct =									manual_control;
 	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
 
