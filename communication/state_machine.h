@@ -67,7 +67,7 @@ typedef struct
 	state_t* state;										///< Pointer to the state structure
 	simulation_model_t *sim_model;						///< Pointer to the simulation structure
 	remote_t* remote;									///< Pointer to the remote structure
-	manual_control_t* manual_control;					///< Pointer to the joystick structure
+	manual_control_t* manual_control;					///< Pointer to the manual_control structure
 } state_machine_t;
 
 

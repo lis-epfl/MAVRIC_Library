@@ -1,4 +1,4 @@
-/*******************************************************************************
+	/*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
  *
@@ -46,6 +46,7 @@
 #include "led.h"
 #include "print_util.h"
 #include "state.h"
+#include "manual_control.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -100,14 +101,7 @@ void state_machine_update(state_machine_t* state_machine)
 	mode_current = state_machine->state->mav_mode;
 
 	// Get remote signal strength
-	if (state_machine->state->remote_active == 1)
-	{
-		rc_check = remote_check(state_machine->remote);
-	}
-	else
-	{
-		rc_check = SIGNAL_GOOD;
-	}
+	rc_check = manual_control_get_signal_strength(state_machine->manual_control);
 
 	mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current, rc_check);
 	
@@ -133,9 +127,9 @@ void state_machine_update(state_machine_t* state_machine)
 			break;
 		
 		case MAV_STATE_ACTIVE:
-			if ((state_machine->state->source_mode == REMOTE)||(state_machine->state->source_mode == JOYSTICK))
+			if ((state_machine->manual_control->source_mode == REMOTE)||(state_machine->manual_control->source_mode == JOYSTICK))
 			{
-				if ( (state_machine->state->source_mode == REMOTE)&&(rc_check != SIGNAL_GOOD) )
+				if ( (state_machine->manual_control->source_mode == REMOTE)&&(rc_check != SIGNAL_GOOD) )
 				{
 					state_new = MAV_STATE_CRITICAL;
 				}
@@ -180,7 +174,7 @@ void state_machine_update(state_machine_t* state_machine)
 			state_machine->remote->mode.current_desired_mode.ARMED = ARMED_OFF;
 			
 			// To get out of this state, if we are in the wrong use_mode_from_remote
-			if (state_machine->state->source_mode != REMOTE)
+			if (state_machine->manual_control->source_mode != REMOTE)
 			{
 				state_new = MAV_STATE_STANDBY;
 			}

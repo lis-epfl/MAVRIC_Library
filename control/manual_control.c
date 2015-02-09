@@ -43,6 +43,7 @@
  
 #include "manual_control.h"
 #include "print_util.h"
+#include "constants.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -58,10 +59,12 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-
-bool manual_control_init(manual_control_t* manual_control, remote_t* remote, const joystick_parsing_t* joystick, const state_t* state)
+bool manual_control_init(manual_control_t* manual_control, manual_control_t* control_config, remote_t* remote, const joystick_parsing_t* joystick, const state_t* state)
 {
 	bool init_success = true;
+
+	manual_control->source_mode = control_config->source_mode;
+	manual_control->control_source = control_config->control_source;
 
 	manual_control->remote = remote;
 	manual_control->joystick = joystick;
@@ -74,25 +77,39 @@ bool manual_control_init(manual_control_t* manual_control, remote_t* remote, con
 
 void manual_control_get_attitude_command(manual_control_t* manual_control, control_command_t* controls)
 {
-	if (manual_control->state->remote_active == 1)
+	switch(manual_control->control_source)
 	{
-		remote_get_command_from_remote(manual_control->remote, controls);
-	}
-	else
-	{
-		joystick_parsing_get_attitude_command_from_joystick(manual_control->joystick,controls);
+		case REMOTE_CONTROL:
+			remote_get_command_from_remote(manual_control->remote, controls);
+			break;
+		case JOYSTICK_CONTROL:
+			joystick_parsing_get_attitude_command_from_joystick(manual_control->joystick,controls);
+			break;
+		default:
+			controls->rpy[ROLL] = 0.0f;
+			controls->rpy[PITCH] = 0.0f;
+			controls->rpy[YAW] = 0.0f;
+			controls->thrust = -1.0f;
+			break;
 	}
 }
 
 void manual_control_get_velocity_command(manual_control_t* manual_control, control_command_t* controls)
 {
-	if (manual_control->state->remote_active == 1)
+	switch(manual_control->control_source)
 	{
-		remote_get_velocity_vector_from_remote(manual_control->remote, controls);
-	}
-	else
-	{
-		joystick_parsing_get_velocity_vector_from_joystick(manual_control->joystick, controls);
+		case REMOTE_CONTROL:
+			remote_get_velocity_vector_from_remote(manual_control->remote, controls);
+			break;
+		case JOYSTICK_CONTROL:
+			joystick_parsing_get_velocity_vector_from_joystick(manual_control->joystick, controls);
+			break;
+		default:
+			controls->tvel[X] = 0.0f;
+			controls->tvel[Y] = 0.0f;
+			controls->tvel[Z] = 0.0f;
+			controls->rpy[YAW] = 0.0f;
+			break;
 	}
 }
 
@@ -100,15 +117,71 @@ float manual_control_get_thrust(const manual_control_t* manual_control)
 {
 	float thrust;
 
-	if (manual_control->state->remote_active == 1)
+	switch(manual_control->control_source)
 	{
-		thrust = remote_get_throttle(manual_control->remote);
+		case REMOTE_CONTROL:
+			thrust = remote_get_throttle(manual_control->remote);
+			break;
+		case JOYSTICK_CONTROL:
+			thrust = joystick_parsing_get_throttle(manual_control->joystick);
+			break;
+		default:
+			thrust = -1.0f;
+			break;
+	}	
+	return thrust;
+}
+
+mav_mode_t manual_control_get_mode_from_source(manual_control_t* manual_control, mav_mode_t mode_current, signal_quality_t rc_check )
+{
+	mav_mode_t new_mode = mode_current;
+	
+	switch (manual_control->source_mode)
+	{
+		case GND_STATION:
+			new_mode = mode_current;
+			// The ARMED flag of the remote is set to the desired flag (avoid sudden cut
+			// off if the remote is reactivated
+			manual_control->remote->mode.current_desired_mode.ARMED = mode_current.ARMED;
+			
+			break;
+		case REMOTE:
+			if(rc_check != SIGNAL_LOST)
+			{
+				// Update mode from remote
+				remote_mode_update(manual_control->remote);
+				new_mode = remote_mode_get(manual_control->remote);
+			}
+			break;
+		case JOYSTICK:
+			new_mode = joystick_parsing_get_mode(manual_control->joystick);
+			// The ARMED flag of the remote is set to the desired flag (avoid sudden cut
+			// off if the remote is reactivated
+			manual_control->remote->mode.current_desired_mode.ARMED = mode_current.ARMED;
+			break;
+		default:
+			new_mode = mode_current;
+			break;
+	}
+	
+	return new_mode;
+}
+
+signal_quality_t manual_control_get_signal_strength(const manual_control_t* manual_control)
+{
+	signal_quality_t rc_check;
+
+	// Get remote signal strength
+	if (manual_control->control_source == REMOTE_CONTROL)
+	{
+		rc_check = remote_check(manual_control->remote);
 	}
 	else
 	{
-		thrust = joystick_parsing_get_throttle(manual_control->joystick);
+		rc_check = SIGNAL_GOOD;
 	}
-	return thrust;
+
+	return rc_check;
 }
 
 mav_mode_t manual_control_get_mode_from_source(const manual_control_t* manual_control, mav_mode_t mode_current, signal_quality_t rc_check )
