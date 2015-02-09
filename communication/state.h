@@ -53,16 +53,6 @@ extern "C" {
 #include <stdbool.h>
 
 /**
- * \brief	The source mode enum
- */
-typedef enum
-{
-	GND_STATION = 1,
-	REMOTE = 2,
-	JOYSTICK = 3,
-}source_mode_t;
-
-/**
  * \brief	The critical behavior enum
  */
 typedef enum

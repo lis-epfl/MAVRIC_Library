@@ -58,7 +58,7 @@ extern "C" {
  */
 typedef struct
 {
-	const remote_t* remote;						/// The pointer to the remote structure
+	remote_t* remote;						/// The pointer to the remote structure
 	const joystick_parsing_t* joystick;			/// The pointer to the joystick structure
 	const state_t* state;						/// The pointer to the state structure
 }manual_control_t;
@@ -73,7 +73,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool manual_control_init(manual_control_t* manual_control, const remote_t* remote, const joystick_parsing_t* joystick, const state_t* state);
+bool manual_control_init(manual_control_t* manual_control, remote_t* remote, const joystick_parsing_t* joystick, const state_t* state);
 
 /**
  * \brief	Selects the source input for the attitude command
@@ -100,6 +100,16 @@ void manual_control_get_velocity_command(manual_control_t* manual_control, contr
  */
 float manual_control_get_thrust(const manual_control_t* manual_control);
 
+/**
+ * \brief	Returns the value of the mode from the desired source input
+ *
+ * \param	manual_control		The pointer to the manual_control structure
+ * \param	mode_current			The current mode of the MAV
+ * \param	rc_check				The current status of the remote controller
+ *
+ * \return	The value of the mode
+ */
+mav_mode_t manual_control_get_mode_from_source(const manual_control_t* manual_control, mav_mode_t mode_current, signal_quality_t rc_check );
 
 
 #ifdef __cplusplus

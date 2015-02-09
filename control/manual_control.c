@@ -59,7 +59,7 @@
 //------------------------------------------------------------------------------
 
 
-bool manual_control_init(manual_control_t* manual_control, const remote_t* remote, const joystick_parsing_t* joystick, const state_t* state)
+bool manual_control_init(manual_control_t* manual_control, remote_t* remote, const joystick_parsing_t* joystick, const state_t* state)
 {
 	bool init_success = true;
 
@@ -109,4 +109,39 @@ float manual_control_get_thrust(const manual_control_t* manual_control)
 		thrust = joystick_parsing_get_throttle(manual_control->joystick);
 	}
 	return thrust;
+}
+
+mav_mode_t manual_control_get_mode_from_source(const manual_control_t* manual_control, mav_mode_t mode_current, signal_quality_t rc_check )
+{
+	mav_mode_t new_mode = mode_current;
+	
+	switch (manual_control->state->source_mode)
+	{
+		case GND_STATION:
+			new_mode = mode_current;
+			// The ARMED flag of the remote is set to the desired flag (avoid sudden cut
+			// off if the remote is reactivated
+			manual_control->remote->mode.current_desired_mode.ARMED = mode_current.ARMED;
+			
+			break;
+		case REMOTE:
+			if(rc_check != SIGNAL_LOST)
+			{
+				// Update mode from remote
+				remote_mode_update(manual_control->remote);
+				new_mode = remote_mode_get(manual_control->remote);
+			}
+			break;
+		case JOYSTICK:
+			new_mode = joystick_parsing_get_mode(manual_control->joystick);
+			// The ARMED flag of the remote is set to the desired flag (avoid sudden cut
+			// off if the remote is reactivated
+			manual_control->remote->mode.current_desired_mode.ARMED = mode_current.ARMED;
+			break;
+		default:
+			new_mode = mode_current;
+			break;
+	}
+	
+	return new_mode;
 }
