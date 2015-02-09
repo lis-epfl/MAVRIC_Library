@@ -199,7 +199,7 @@ mav_mode_t joystick_parsing_get_mode(const joystick_parsing_t* joystick);
  * \param	joystick_parsing		The pointer to the joystick parsing structure
  * \param	controls				The pointer to the control structure
  */
-void joystick_parsing_get_velocity_vector_from_joystick(joystick_parsing_t* joystick_parsing, control_command_t* controls);
+void joystick_parsing_get_velocity_vector_from_joystick(const joystick_parsing_t* joystick_parsing, control_command_t* controls);
 
 
 /** 
@@ -208,7 +208,7 @@ void joystick_parsing_get_velocity_vector_from_joystick(joystick_parsing_t* joys
  * \param	joystick_parsing		The pointer to the joystick parsing structure
  * \param	controls				The pointer to the control structure
  */
-void joystick_parsing_get_attitude_command_from_joystick(joystick_parsing_t* joystick_parsing, control_command_t* controls);
+void joystick_parsing_get_attitude_command_from_joystick(const joystick_parsing_t* joystick_parsing, control_command_t* controls);
 
 
 /**
@@ -274,6 +274,14 @@ void joystick_parsing_get_attitude_command_integrate_yaw(const joystick_parsing_
  */
 void joystick_parsing_get_velocity_command(const joystick_parsing_t* joystick, velocity_command_t * command);
 
+/**
+ * \brief	Returns the mode from the joystick
+ * 
+ * \param	joystick		Joystick structure
+ *
+ * \return The value of the mode
+ */
+mav_mode_t joystick_parsing_get_mode(const joystick_parsing_t* joystick);
 
 #ifdef __cplusplus
 }

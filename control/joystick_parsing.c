@@ -80,12 +80,12 @@ static void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, butt
 		{
 			if (joystick_parsing->current_desired_mode.ARMED == ARMED_ON)
 			{
-				print_util_dbg_print("Disarming\r");
+				print_util_dbg_print("Disarming from joystick\r\n");
 				joystick_parsing->current_desired_mode.ARMED = ARMED_OFF;
 			}
 			else
 			{
-				print_util_dbg_print("Arming\r");
+				print_util_dbg_print("Arming from joystick\r\n");
 				if ((joystick_parsing->current_desired_mode.byte&0b01011100) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)
 				{
 					joystick_parsing->current_desired_mode.ARMED = ARMED_ON;
@@ -137,6 +137,8 @@ bool joystick_parsing_init(joystick_parsing_t* joystick_parsing, state_t* state)
 	//joystick buttons init
 	joystick_parsing->buttons.button_mask = 0;
 	
+	joystick_parsing->current_desired_mode.byte = MAV_MODE_SAFE;
+	
 	print_util_dbg_print("Joystick parsing initialised\r");
 
 	return init_success;
@@ -172,7 +174,7 @@ mav_mode_t joystick_parsing_get_mode(const joystick_parsing_t* joystick)
 	return joystick->current_desired_mode;
 }
 
-void joystick_parsing_get_velocity_vector_from_joystick(joystick_parsing_t* joystick_parsing, control_command_t* controls)
+void joystick_parsing_get_velocity_vector_from_joystick(const joystick_parsing_t* joystick_parsing, control_command_t* controls)
 {
 	controls->tvel[X] = -10.0f 	* joystick_parsing->channels.x 	* MAX_JOYSTICK_RANGE;
 	controls->tvel[Y] =  10.0f	* joystick_parsing->channels.y 	* MAX_JOYSTICK_RANGE;
@@ -182,7 +184,7 @@ void joystick_parsing_get_velocity_vector_from_joystick(joystick_parsing_t* joys
 }
 
 
-void joystick_parsing_get_attitude_command_from_joystick(joystick_parsing_t* joystick_parsing, control_command_t* controls)
+void joystick_parsing_get_attitude_command_from_joystick(const joystick_parsing_t* joystick_parsing, control_command_t* controls)
 {
 	controls->rpy[ROLL] 	= joystick_parsing->channels.y * MAX_JOYSTICK_RANGE;
 	controls->rpy[PITCH] 	= joystick_parsing->channels.x * MAX_JOYSTICK_RANGE;

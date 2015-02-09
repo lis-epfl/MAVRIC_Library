@@ -33,8 +33,10 @@
  * \file manual_control.h
  * 
  * \author MAV'RIC Team
+ * \author Nicolas Dousse
  *   
- * \brief This file is to get the control from the source
+ * \brief This module takes care of taking the correct input for the control
+ * (i.e. the remote or the joystick)
  *
  ******************************************************************************/
 
@@ -43,7 +45,7 @@
 #define MANUAL_CONTROL_H_
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" {
 #endif
 
 #include "remote.h"
@@ -56,7 +58,6 @@
  */
 typedef struct
 {
-
 	const remote_t* remote;						/// The pointer to the remote structure
 	const joystick_parsing_t* joystick;			/// The pointer to the joystick structure
 	const state_t* state;						/// The pointer to the state structure
@@ -80,7 +81,7 @@ bool manual_control_init(manual_control_t* manual_control, const remote_t* remot
  * \param	manual_control	The pointer to the manual control structure
  * \param	controls		The pointer to the command structure that will be executed
  */
-void manual_control_get_attitude_command(const manual_control_t* manual_control, control_command_t* controls);
+void manual_control_get_attitude_command(manual_control_t* manual_control, control_command_t* controls);
 
 /**
  * \brief	Selects the source input for the velocity command
@@ -88,7 +89,7 @@ void manual_control_get_attitude_command(const manual_control_t* manual_control,
  * \param	manual_control	The pointer to the manual control structure
  * \param	controls		The pointer to the command structure that will be executed
  */
-void manual_control_get_velocity_command(const manual_control_t* manual_control, control_command_t* controls);
+void manual_control_get_velocity_command(manual_control_t* manual_control, control_command_t* controls);
 
 /**
  * \brief	Selects the source input and returns the thrust
@@ -97,10 +98,12 @@ void manual_control_get_velocity_command(const manual_control_t* manual_control,
  *
  * \return 	The value of the thrust depending on the source input
  */
-float manual_control_get_thrust(manual_control_t* manual_control);
+float manual_control_get_thrust(const manual_control_t* manual_control);
+
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* MANUAL_CONTROL_H_ */
+#endif // MANUAL_CONTROL_H_

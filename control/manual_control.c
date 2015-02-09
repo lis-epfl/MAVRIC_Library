@@ -33,12 +33,14 @@
  * \file manual_control.c
  * 
  * \author MAV'RIC Team
+ * \author Nicolas Dousse
  *   
- * \brief This file is to get the control from the source
+ * \brief This module takes care of taking the correct input for the control
+ * (i.e. the remote or the joystick)
  *
  ******************************************************************************/
-
-
+ 
+ 
 #include "manual_control.h"
 #include "print_util.h"
 
@@ -70,7 +72,7 @@ bool manual_control_init(manual_control_t* manual_control, const remote_t* remot
 	return init_success;
 }
 
-void manual_control_get_attitude_command(const manual_control_t* manual_control, control_command_t* controls)
+void manual_control_get_attitude_command(manual_control_t* manual_control, control_command_t* controls)
 {
 	if (manual_control->state->remote_active == 1)
 	{
@@ -82,7 +84,7 @@ void manual_control_get_attitude_command(const manual_control_t* manual_control,
 	}
 }
 
-void manual_control_get_velocity_command(const manual_control_t* manual_control, control_command_t* controls)
+void manual_control_get_velocity_command(manual_control_t* manual_control, control_command_t* controls)
 {
 	if (manual_control->state->remote_active == 1)
 	{
@@ -90,11 +92,11 @@ void manual_control_get_velocity_command(const manual_control_t* manual_control,
 	}
 	else
 	{
-		joystick_parsing_get_velocity_vector_from_joystick(manual_control->joystick_parsing, controls);
+		joystick_parsing_get_velocity_vector_from_joystick(manual_control->joystick, controls);
 	}
 }
 
-float manual_control_get_thrust(manual_control_t* manual_control)
+float manual_control_get_thrust(const manual_control_t* manual_control)
 {
 	float thrust;
 
@@ -108,4 +110,3 @@ float manual_control_get_thrust(manual_control_t* manual_control)
 	}
 	return thrust;
 }
-
