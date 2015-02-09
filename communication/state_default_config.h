@@ -54,15 +54,14 @@ extern "C" {
 state_t state_default_config =
 {
 	.mav_mode = { .byte = MAV_MODE_SAFE },
+	.mav_mode_custom = CUSTOM_BASE_MODE,
 	.mav_state = MAV_STATE_BOOT,
 	.simulation_mode = HIL_OFF,
 	.autopilot_type = MAV_TYPE_QUADROTOR,
 	.autopilot_name = MAV_AUTOPILOT_MAVRIC,
 	.sensor_present = 0b1111110000100111,
 	.sensor_enabled = 0b1111110000100111,
-	.sensor_health = 0b1111110000100111,
-	.remote_active = 1,
-	.source_mode = REMOTE
+	.sensor_health = 0b1111110000100111
 };
 
 #ifdef __cplusplus

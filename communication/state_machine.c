@@ -1,4 +1,4 @@
-/*******************************************************************************
+	/*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
  *
@@ -50,55 +50,10 @@
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
-/**
- * \brief	Returns the value of the mode from the desired source input
- *
- * \param	state_machine			The pointer to the state_machine structure
- * \param	mode_current			The current mode of the MAV
- * \param	rc_check				The current status of the remote controller
- *
- * \return	The value of the mode
- */
-mav_mode_t state_machine_get_mode_from_source(state_machine_t* state_machine, mav_mode_t mode_current, signal_quality_t rc_check );
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-
-mav_mode_t state_machine_get_mode_from_source(state_machine_t* state_machine, mav_mode_t mode_current, signal_quality_t rc_check )
-{
-	mav_mode_t new_mode = mode_current;
-	
-	switch (state_machine->state->source_mode)
-	{
-		case GND_STATION:
-			new_mode = mode_current;
-			// The ARMED flag of the remote is set to the desired flag (avoid sudden cut
-			// off if the remote is reactivated
-			state_machine->remote->mode.current_desired_mode.ARMED = mode_current.ARMED;
-			
-			break;
-		case REMOTE:
-			if(rc_check != SIGNAL_LOST)
-			{
-				// Update mode from remote
-				remote_mode_update(state_machine->remote);
-				new_mode = remote_mode_get(state_machine->remote);
-			}
-			break;
-		case JOYSTICK:
-			new_mode = joystick_parsing_get_mode(state_machine->joystick);
-			// The ARMED flag of the remote is set to the desired flag (avoid sudden cut
-			// off if the remote is reactivated
-			state_machine->remote->mode.current_desired_mode.ARMED = mode_current.ARMED;
-			break;
-		default:
-			new_mode = mode_current;
-			break;
-	}
-	
-	return new_mode;
-}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -109,7 +64,7 @@ bool state_machine_init(	state_machine_t *state_machine,
 							mavlink_waypoint_handler_t* waypoint_handler, 
 							simulation_model_t *sim_model, 
 							remote_t* remote,
-							joystick_parsing_t* joystick)
+							manual_control_t* manual_control)
 {
 	bool init_success = true;
 	
@@ -117,7 +72,7 @@ bool state_machine_init(	state_machine_t *state_machine,
 	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
 	state_machine->remote 			= remote;
-	state_machine->joystick = joystick;
+	state_machine->manual_control = manual_control;
 	
 	state_machine->channel_switches = 0;
 	state_machine->rc_check 		= 0;
@@ -145,16 +100,9 @@ void state_machine_update(state_machine_t* state_machine)
 	mode_current = state_machine->state->mav_mode;
 
 	// Get remote signal strength
-	if (state_machine->state->remote_active == 1)
-	{
-		rc_check = remote_check(state_machine->remote);
-	}
-	else
-	{
-		rc_check = SIGNAL_GOOD;
-	}
+	rc_check = manual_control_rc_check(state_machine->manual_control);
 
-	mode_new = state_machine_get_mode_from_source(state_machine, mode_current, rc_check);
+	mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current, rc_check);
 	
 
 	// Change state according to signal strength
@@ -178,9 +126,9 @@ void state_machine_update(state_machine_t* state_machine)
 			break;
 		
 		case MAV_STATE_ACTIVE:
-			if ((state_machine->state->source_mode == REMOTE)||(state_machine->state->source_mode == JOYSTICK))
+			if ((state_machine->manual_control->source_mode == REMOTE)||(state_machine->manual_control->source_mode == JOYSTICK))
 			{
-				if ( (state_machine->state->source_mode == REMOTE)&&(rc_check != SIGNAL_GOOD) )
+				if ( (state_machine->manual_control->source_mode == REMOTE)&&(rc_check != SIGNAL_GOOD) )
 				{
 					state_new = MAV_STATE_CRITICAL;
 				}
@@ -225,7 +173,7 @@ void state_machine_update(state_machine_t* state_machine)
 			state_machine->remote->mode.current_desired_mode.ARMED = ARMED_OFF;
 			
 			// To get out of this state, if we are in the wrong use_mode_from_remote
-			if (state_machine->state->source_mode != REMOTE)
+			if (state_machine->manual_control->source_mode != REMOTE)
 			{
 				state_new = MAV_STATE_STANDBY;
 			}
