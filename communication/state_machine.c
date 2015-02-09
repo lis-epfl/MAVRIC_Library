@@ -158,7 +158,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 					if ( mode_new.ARMED == ARMED_OFF )
 					{
 						state_new = MAV_STATE_STANDBY;
-						print_util_dbg_print("Switching off motors!\r\n");
+						print_util_dbg_print("Switching off motors from state_machine!\r\n");
 					}
 				}
 			}
@@ -316,7 +316,6 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 		case MAV_STATE_EMERGENCY:
 			// Recovery is not possible -> switch off motors
 			mode_new.ARMED = ARMED_OFF;
-			state_machine->remote->mode.current_desired_mode.ARMED = ARMED_OFF;
 			
 			if( !state_machine->state->battery.is_low)
 			{

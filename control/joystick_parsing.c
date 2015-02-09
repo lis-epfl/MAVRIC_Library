@@ -82,6 +82,7 @@ static void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, butt
 			{
 				print_util_dbg_print("Disarming from joystick\r\n");
 				joystick_parsing->mav_mode_desired.ARMED = ARMED_OFF;
+				joystick_parsing->arm_flag = DISARMING;
 			}
 			else
 			{
@@ -89,6 +90,7 @@ static void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, butt
 				if ((joystick_parsing->mav_mode_desired.byte&0b01011100) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)
 				{
 					joystick_parsing->mav_mode_desired.ARMED = ARMED_ON;
+					joystick_parsing->arm_flag = ARMING;
 				}
 			}
 			joystick_parsing->buttons.button_1 = BUTTON_PRESSED;
@@ -135,6 +137,7 @@ bool joystick_parsing_init(joystick_parsing_t* joystick_parsing)
 	joystick_parsing->buttons.button_mask = 0;
 	
 	joystick_parsing->mav_mode_desired.byte = MAV_MODE_SAFE;
+	joystick_parsing->arm_flag = NOTHING;
 	
 	print_util_dbg_print("Joystick parsing initialised\r");
 
@@ -164,6 +167,27 @@ float joystick_parsing_get_pitch(const joystick_parsing_t* joystick)
 float joystick_parsing_get_yaw(const joystick_parsing_t* joystick)
 {
 	return joystick->channels.r;
+}
+
+
+mav_mode_t joystick_parsing_get_mode(joystick_parsing_t* joystick, const mav_mode_t current_mode)
+{
+	mav_mode_t new_mode = current_mode;
+	new_mode.byte = (current_mode.byte & 0b10100000) + (joystick->mav_mode_desired.byte & 0b01011111);
+	
+	if(joystick->arm_flag == ARMING)
+	{
+		new_mode.ARMED = ARMED_ON;
+		joystick->arm_flag = NOTHING;
+		print_util_dbg_print("Arming in new fct\r\n");
+	}else if(joystick->arm_flag == DISARMING)
+	{
+		new_mode.ARMED = ARMED_OFF;
+		joystick->arm_flag = NOTHING;
+		print_util_dbg_print("Disarming in new fct\r\n");
+	}
+	
+	return new_mode;
 }
 
 
@@ -257,9 +281,4 @@ void joystick_parsing_get_velocity_command(const joystick_parsing_t* joystick, v
 	command->xyz[X] = -10.0f 	* joystick_parsing_get_pitch(joystick);
 	command->xyz[Y] =  10.0f  	* joystick_parsing_get_roll(joystick);
 	command->xyz[Z] = -1.5f 	* joystick_parsing_get_throttle(joystick);
-}
-
-mav_mode_t joystick_parsing_get_mode(const joystick_parsing_t* joystick)
-{
-	return joystick->mav_mode_desired;
 }

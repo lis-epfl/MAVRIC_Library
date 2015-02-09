@@ -140,6 +140,7 @@ typedef struct
 	bool				use_disable_remote_mode_switch;		///< Indicates whether a switch should be used to use/override the mode indicated by the remote
 	remote_channel_t	disable_remote_mode_channel;		///< Channel to use as 2-way switch. When 100%: follow mode indicated by the remote, when -100%: override what the remote indicates
 	mav_mode_t			current_desired_mode;				///< Mav mode indicated by the remote
+	arm_flag_t			arm_flag;
 } remote_mode_t;
 
 /**
@@ -280,7 +281,7 @@ void remote_mode_update(remote_t* remote);
  *
  * \return	The value of the mode
  */
-mav_mode_t remote_mode_get(const remote_t* remote);
+mav_mode_t remote_mode_get(remote_t* remote, mav_mode_t mode_current);
 
 
 /**

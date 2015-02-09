@@ -57,16 +57,16 @@
  */
 typedef enum
 {
-	GND_STATION = 1,
-	REMOTE = 2,
-	JOYSTICK = 3,
+	GND_STATION = 0,
+	REMOTE = 1,
+	JOYSTICK = 2,
 }source_mode_t;
 
 typedef enum
 {
-	NO_CONTROL = 1,
-	REMOTE_CONTROL = 2,
-	JOYSTICK_CONTROL = 3,
+	NO_CONTROL = 0,
+	REMOTE_CONTROL = 1,
+	JOYSTICK_CONTROL = 2,
 }control_source_t;
 
 /**
