@@ -30,109 +30,84 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state.c
+ * \file manual_control_telemetry.c
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *   
- * \brief Holds the current status of the MAV
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the manual_control
  *
  ******************************************************************************/
 
 
-#include "state.h"
+#include "manual_control_telemetry.h"
+#include "manual_control.h"
 #include "print_util.h"
-#include "time_keeper.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
+
+/**
+ * \brief	Activate/Disactivate the use of the remote controller
+ *
+ * \param	state				The pointer to the state structure
+ * \param	packet				The pointer to the decoded MAVLink message long
+ * 
+ * \return	The MAV_RESULT of the command
+ */
+static mav_result_t manual_control_telemetry_toggle_remote_use(manual_control_t* manual_control, mavlink_command_long_t* packet);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
+static mav_result_t manual_control_telemetry_toggle_remote_use(manual_control_t* manual_control, mavlink_command_long_t* packet)
+{
+	mav_result_t result = MAV_RESULT_UNSUPPORTED;
+	
+	if ( packet->param1 == 1)
+	{
+		manual_control->control_source = REMOTE_CONTROL;
+		manual_control->source_mode = REMOTE;
+		
+		print_util_dbg_print("Remote control activated\r\n");
+		
+		result = MAV_RESULT_ACCEPTED;
+	}
+	else if (packet->param1 == 0)
+	{
+		manual_control->control_source = NO_CONTROL;
+		manual_control->source_mode = GND_STATION;
+		
+		print_util_dbg_print("Remote control disactivated\r\n");
+		
+		result = MAV_RESULT_ACCEPTED;
+	}
+	
+	return result;
+}
 
 //------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
+// PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool state_init(state_t *state, state_t* state_config, const analog_monitor_t* analog_monitor)
+bool manual_control_telemetry_init(manual_control_t* manual_control, mavlink_message_handler_t *message_handler)
 {
 	bool init_success = true;
 	
-	// Init dependencies
-	state->analog_monitor = analog_monitor;
-	
-	// Init parameters
-	state->autopilot_type = state_config->autopilot_type;
-	state->autopilot_name = state_config->autopilot_name;
-	
-	state->mav_state = state_config->mav_state;
-	state->mav_mode = state_config->mav_mode;
-	
-	state->mav_mode_custom = state_config->mav_mode_custom;
-	
-	state->simulation_mode = state_config->simulation_mode;
-	
-	init_success &= battery_init(&state->battery,state_config->battery.type,state_config->battery.low_level_limit);
-	
-	if (state->simulation_mode == HIL_ON)
-	{
-		// state->mav_mode |= MAV_MODE_FLAG_HIL_ENABLED;
-		state->mav_mode.HIL = HIL_ON;
-	}
-	else
-	{
-		// state->mav_mode |= !MAV_MODE_FLAG_HIL_ENABLED;
-		state->mav_mode.HIL = HIL_OFF;
-	}
-	
-	state->fence_1_xy = state_config->fence_1_xy;
-	state->fence_1_z = state_config->fence_1_z;
-	state->fence_2_xy = state_config->fence_2_xy;
-	state->fence_2_z = state_config->fence_2_z;
-	state->out_of_fence_1 = false;
-	state->out_of_fence_2 = false;
+	// Add callbacks for waypoint handler commands requests
+	mavlink_message_handler_cmd_callback_t callbackcmd;
 
-	state->nav_plan_active = false;
-	
-	state->in_the_air = false;
-	
-	state->reset_position = false;
-	
-	state->last_heartbeat_msg = time_keeper_get_time();
-	state->max_lost_connection = state_config->max_lost_connection;
-	state->connection_lost = false;
-	state->first_connection_set = false;
-	
-	state->msg_count = 0;
+	callbackcmd.command_id = MAV_CMD_DO_PARACHUTE; // 208
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_SYSTEM_CONTROL; // 250
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&manual_control_telemetry_toggle_remote_use;
+	callbackcmd.module_struct =									manual_control;
+	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
 
-	print_util_dbg_print("[STATE] Initialized.\r\n");
-	
 	return init_success;
-}
-
-void state_switch_to_active_mode(state_t* state, mav_state_t* mav_state)
-{
-	*mav_state = MAV_STATE_ACTIVE;
-	
-	// Tell other modules to reset position and re-compute waypoints
-	state->reset_position = true;
-	state->nav_plan_active = false;
-	
-	print_util_dbg_print("Switching to active mode.\r\n");
-}
-
-void state_connection_status(state_t* state)
-{
-	if ( ((time_keeper_get_time()-state->last_heartbeat_msg) > state->max_lost_connection)&&(state->first_connection_set) )
-	{
-		state->connection_lost = true;
-	}
-	else
-	{
-		state->connection_lost = false;
-	}
 }

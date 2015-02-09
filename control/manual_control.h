@@ -53,27 +53,49 @@
 #include "stabilisation.h"
 
 /**
+ * \brief	The source mode enum
+ */
+typedef enum
+{
+	GND_STATION = 1,
+	REMOTE = 2,
+	JOYSTICK = 3,
+}source_mode_t;
+
+typedef enum
+{
+	NO_CONTROL = 1,
+	REMOTE_CONTROL = 2,
+	JOYSTICK_CONTROl = 3,
+}control_source_t;
+
+/**
  * \brief The manual control structure
  */
 typedef struct
 {
+	source_mode_t source_mode;					///< The source mode
+	control_source_t control_source;			///< Flag to tell whether the remote is active or not
 
-	remote_t* remote;							/// The pointer to the remote structure
-	joystick_parsing_t* joystick;				/// The pointer to the joystick structure
-	const state_t* state;						/// The pointer to the state structure
+	remote_t* remote;							///< The pointer to the remote structure
+	joystick_parsing_t* joystick;				///< The pointer to the joystick structure
+	const state_t* state;						///< The pointer to the state structure
 }manual_control_t;
+
 
 /**
  * \brief					Initialise the manual control module
  *
  * \param	manual_control	The pointer to the manual control structure
+ * \param	manual_config	The pointer to the configuration structure of the module
  * \param	remote			The pointer to the remote structure
  * \param	joystick		The pointer to the joystick structure
  * \param	state			The pointer to the state structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool manual_control_init(manual_control_t* manual_control, remote_t* remote, joystick_parsing_t* joystick, const state_t* state);
+bool manual_control_init(manual_control_t* manual_control, const manual_control_t* control_config, remote_t* remote, joystick_parsing_t* joystick, const state_t* state);
+
 
 /**
  * \brief	Selects the source input for the attitude command
@@ -83,6 +105,7 @@ bool manual_control_init(manual_control_t* manual_control, remote_t* remote, joy
  */
 void manual_control_get_attitude_command(const manual_control_t* manual_control, control_command_t* controls);
 
+
 /**
  * \brief	Selects the source input for the velocity command
  * 
@@ -90,6 +113,7 @@ void manual_control_get_attitude_command(const manual_control_t* manual_control,
  * \param	controls		The pointer to the command structure that will be executed
  */
 void manual_control_get_velocity_command(const manual_control_t* manual_control, control_command_t* controls);
+
 
 /**
  * \brief	Selects the source input and returns the thrust
@@ -99,6 +123,29 @@ void manual_control_get_velocity_command(const manual_control_t* manual_control,
  * \return 	The value of the thrust depending on the source input
  */
 float manual_control_get_thrust(const manual_control_t* manual_control);
+
+
+/**
+ * \brief	Returns the value of the mode from the desired source input
+ *
+ * \param	manual_control			The pointer to the manual_control structure
+ * \param	mode_current			The current mode of the MAV
+ * \param	rc_check				The current status of the remote controller
+ *
+ * \return	The value of the mode
+ */
+mav_mode_t manual_control_get_mode_from_source(manual_control_t* manual_control, mav_mode_t mode_current, signal_quality_t rc_check );
+
+
+/**
+ * \brief	Returns the quality of the strength of the remote receiver
+ *
+ * \param	manual_control			The pointer to the manual_control structure			
+ *
+ * \return	The current status of the remote controller
+ */
+signal_quality_t manual_control_get_signal_strength(const manual_control_t* manual_control);
+
 
 #ifdef __cplusplus
 }

@@ -52,8 +52,9 @@ extern "C" {
 #include "state.h"
 #include "mavlink_waypoint_handler.h"
 #include "simulation.h"
-#include "joystick_parsing.h"
 #include "gps_ublox.h"
+#include "manual_control.h"
+#include "remote.h"
 
 /**
  * \brief Defines the state machine structure
@@ -64,8 +65,8 @@ typedef struct
 	state_t* state;										///< Pointer to the state structure
 	simulation_model_t *sim_model;						///< Pointer to the simulation structure
 	remote_t* remote;									///< Pointer to the remote structure
-	joystick_parsing_t* joystick;						///< Pointer to the joystick structure
 	const gps_t* gps;									///< Pointer to the gps structure
+	manual_control_t* manual_control;					///< Pointer to the manual_control structure
 } state_machine_t;
 
 
@@ -76,8 +77,8 @@ typedef struct
  * \param state						Pointer to the state structure
  * \param sim_model					Pointer to the simulation structure
  * \param remote					Pointer to the remote structure
- * \param joystick					Pointer to the joystick structure
  * \param gps 						Pointer to the gps structure
+ * \param manual_control			Pointer to the manual_control structure
  *
  * \return	True if the init succeed, false otherwise
  */
@@ -85,8 +86,17 @@ bool state_machine_init(	state_machine_t *state_machine,
 							state_t* state,
 							simulation_model_t *sim_model, 
 							remote_t* remote,
-							joystick_parsing_t* joystick,
-							const gps_t* gps);
+							const gps_t* gps,
+							manual_control_t* manual_control);
+
+/**
+ * \brief   Updates the state and mode of the UAV (not implemented yet)
+ *
+ * \param	state_machine			Pointer to the state machine structure
+ *
+ * \return Returns the result of the task
+ */
+task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine);
 
 /**
  * \brief   Updates the state machine

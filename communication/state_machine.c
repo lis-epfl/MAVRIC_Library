@@ -1,4 +1,4 @@
-/*******************************************************************************
+	/*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
  *
@@ -53,56 +53,9 @@
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
-/**
- * \brief	Returns the value of the mode from the desired source input
- *
- * \param	state_machine			The pointer to the state_machine structure
- * \param	mode_current			The current mode of the MAV
- * \param	rc_check				The current status of the remote controller
- *
- * \return	The value of the mode
- */
-mav_mode_t state_machine_get_mode_from_source(state_machine_t* state_machine, mav_mode_t mode_current, signal_quality_t rc_check );
-
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-
-mav_mode_t state_machine_get_mode_from_source(state_machine_t* state_machine, mav_mode_t mode_current, signal_quality_t rc_check )
-{
-	mav_mode_t new_mode = mode_current;
-	
-	switch (state_machine->state->source_mode)
-	{
-		case GND_STATION:
-			new_mode = mode_current;
-			// The ARMED flag of the remote is set to the desired flag (avoid sudden cut
-			// off if the remote is reactivated
-			state_machine->remote->mode.current_desired_mode.ARMED = mode_current.ARMED;
-			
-			break;
-		case REMOTE:
-			if(rc_check != SIGNAL_LOST)
-			{
-				// Update mode from remote
-				remote_mode_update(state_machine->remote);
-				new_mode = remote_mode_get(state_machine->remote);
-			}
-			break;
-		case JOYSTICK:
-			new_mode = joystick_parsing_get_mode(state_machine->joystick);
-			// The ARMED flag of the remote is set to the desired flag (avoid sudden cut
-			// off if the remote is reactivated
-			state_machine->remote->mode.current_desired_mode.ARMED = mode_current.ARMED;
-			break;
-		default:
-			new_mode = mode_current;
-			break;
-	}
-	
-	return new_mode;
-}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -112,17 +65,17 @@ bool state_machine_init(	state_machine_t *state_machine,
 							state_t* state, 
 							simulation_model_t *sim_model, 
 							remote_t* remote,
-							joystick_parsing_t* joystick,
-							const gps_t* gps)
+							const gps_t* gps,
+							manual_control_t* manual_control)
 {
 	bool init_success = true;
 	
 	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
 	state_machine->remote 			= remote;
-	state_machine->joystick 		= joystick;
 	state_machine->gps 				= gps;
-
+	state_machine->manual_control = manual_control;
+	
 	print_util_dbg_print("[STATE MACHINE] Initialised.\r\n");
 	
 	return init_success;
@@ -149,16 +102,9 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 	mode_custom_new = state_machine->state->mav_mode_custom;
 
 	// Get remote signal strength
-	if (state_machine->state->remote_active == 1)
-	{
-		rc_check = remote_check(state_machine->remote);
-	}
-	else
-	{
-		rc_check = SIGNAL_GOOD;
-	}
+	rc_check = manual_control_get_signal_strength(state_machine->manual_control);
 
-	mode_new = state_machine_get_mode_from_source(state_machine, mode_current, rc_check);
+	mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current, rc_check);
 
 	if (mode_current.HIL == HIL_OFF)
 	{
@@ -197,11 +143,10 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			break;
 		
 		case MAV_STATE_ACTIVE:
-			
-			if ((state_machine->state->source_mode == REMOTE)||(state_machine->state->source_mode == JOYSTICK))
+			if ((state_machine->manual_control->source_mode == REMOTE)||(state_machine->manual_control->source_mode == JOYSTICK))
 			{
 				// check connection with remote
-				if ( (state_machine->state->source_mode == REMOTE)&&(rc_check != SIGNAL_GOOD) )
+				if ( (state_machine->manual_control->source_mode == REMOTE)&&(rc_check != SIGNAL_GOOD) )
 				{
 					state_new = MAV_STATE_CRITICAL;
 					mode_custom_new |= CUST_REMOTE_LOST;
@@ -376,7 +321,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			if( !state_machine->state->battery.is_low)
 			{
 				// To get out of this state, if we are in the wrong use_mode_from_remote
-				if (state_machine->state->source_mode != REMOTE)
+				if (state_machine->manual_control->source_mode != REMOTE)
 				{
 					state_new = MAV_STATE_STANDBY;
 				}
