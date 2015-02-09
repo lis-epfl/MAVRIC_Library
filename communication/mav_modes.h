@@ -57,6 +57,12 @@ typedef enum
 	ARMED_ON  = 1,				///< Motors are armed
 } mode_flag_armed_t;
 
+typedef enum
+{
+	DISARMING = -1,
+	NOTHING = 0,
+	ARMING = 1,
+}arm_flag_t;
 
 /*
  * \brief enum for defining manual piloting mode
