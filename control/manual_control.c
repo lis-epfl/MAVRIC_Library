@@ -42,6 +42,7 @@
  
  
 #include "manual_control.h"
+#include "print_util.h"
 
 
 //------------------------------------------------------------------------------
@@ -57,3 +58,56 @@
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
+
+
+bool manual_control_init(manual_control_t* manual_control, remote_t* remote, joystick_parsing_t* joystick, const state_t* state)
+{
+	bool init_success = true;
+
+	manual_control->remote = remote;
+	manual_control->joystick = joystick;
+	manual_control->state = state;
+
+	print_util_dbg_print("[MANUAL_CONTROL] Initialized\r\n");
+
+	return init_success;
+}
+
+void manual_control_get_attitude_command(const manual_control_t* manual_control, control_command_t* controls)
+{
+	if (manual_control->state->remote_active == 1)
+	{
+		remote_get_command_from_remote(manual_control->remote, controls);
+	}
+	else
+	{
+		joystick_parsing_get_attitude_command_from_joystick(manual_control->joystick,controls);
+	}
+}
+
+void manual_control_get_velocity_command(const manual_control_t* manual_control, control_command_t* controls)
+{
+	if (manual_control->state->remote_active == 1)
+	{
+		remote_get_velocity_vector_from_remote(manual_control->remote, controls);
+	}
+	else
+	{
+		joystick_parsing_get_velocity_vector_from_joystick(manual_control->joystick, controls);
+	}
+}
+
+float manual_control_get_thrust(const manual_control_t* manual_control)
+{
+	float thrust;
+
+	if (manual_control->state->remote_active == 1)
+	{
+		thrust = remote_get_throttle(manual_control->remote);
+	}
+	else
+	{
+		thrust = joystick_parsing_get_throttle(manual_control->joystick);
+	}
+	return thrust;
+}

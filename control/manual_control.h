@@ -33,7 +33,6 @@
  * \file manual_control.h
  * 
  * \author MAV'RIC Team
- * \author Nicolas Dousse
  *   
  * \brief This module takes care of taking the correct input for the control
  * (i.e. the remote or the joystick)
@@ -45,13 +44,64 @@
 #define MANUAL_CONTROL_H_
 
 #ifdef __cplusplus
-extern "C" {
+	extern "C" {
 #endif
 
+#include "remote.h"
+#include "joystick_parsing.h"
+#include "state.h"
+#include "stabilisation.h"
 
+/**
+ * \brief The manual control structure
+ */
+typedef struct
+{
+
+	remote_t* remote;							/// The pointer to the remote structure
+	joystick_parsing_t* joystick;				/// The pointer to the joystick structure
+	const state_t* state;						/// The pointer to the state structure
+}manual_control_t;
+
+/**
+ * \brief					Initialise the manual control module
+ *
+ * \param	manual_control	The pointer to the manual control structure
+ * \param	remote			The pointer to the remote structure
+ * \param	joystick		The pointer to the joystick structure
+ * \param	state			The pointer to the state structure
+ *
+ * \return	True if the init succeed, false otherwise
+ */
+bool manual_control_init(manual_control_t* manual_control, remote_t* remote, joystick_parsing_t* joystick, const state_t* state);
+
+/**
+ * \brief	Selects the source input for the attitude command
+ * 
+ * \param	manual_control	The pointer to the manual control structure
+ * \param	controls		The pointer to the command structure that will be executed
+ */
+void manual_control_get_attitude_command(const manual_control_t* manual_control, control_command_t* controls);
+
+/**
+ * \brief	Selects the source input for the velocity command
+ * 
+ * \param	manual_control	The pointer to the manual control structure
+ * \param	controls		The pointer to the command structure that will be executed
+ */
+void manual_control_get_velocity_command(const manual_control_t* manual_control, control_command_t* controls);
+
+/**
+ * \brief	Selects the source input and returns the thrust
+ * 
+ * \param	manual_control	The pointer to the manual control structure
+ *
+ * \return 	The value of the thrust depending on the source input
+ */
+float manual_control_get_thrust(const manual_control_t* manual_control);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // MANUAL_CONTROL_H_
+#endif /* MANUAL_CONTROL_H_ */
