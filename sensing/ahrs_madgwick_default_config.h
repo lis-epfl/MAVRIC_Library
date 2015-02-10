@@ -30,69 +30,36 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file ahrs.h
+ * \file ahrs_madgwick_default_config.h
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *   
- * \brief This file implements data structure for attitude estimate
+ * \brief Default config for Madgwick's AHRS algorithms.
  *
  ******************************************************************************/
 
 
-#ifndef AHRS_H_
-#define AHRS_H_
+#ifndef AHRS_MADGWICK_DEFAULT_CONFIG_H_
+#define AHRS_MADGWICK_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "quaternions.h"
+
+#include "ahrs_madgwick.h"
 
 
-/**
- * \brief Structure containing the Attitude and Heading Reference System
- */
-typedef struct
+static const ahrs_madgwick_conf_t ahrs_madgwick_default_config =
 {
-	quat_t	qe;						///< quaternion defining the Attitude estimation of the platform
-	
-	float	angular_speed[3];		///< Gyro rates
-	float	linear_acc[3];			///< Acceleration WITHOUT gravity
-	
-	float	heading;				///< The heading of the platform
-	quat_t	up_vec;					///< The quaternion of the up vector
-	quat_t	north_vec;				///< The quaternion of the north vector
-	
-	float	last_update;			///< The time of the last IMU update in s
-	float	dt;						///< The time interval between two IMU updates
-} ahrs_t;
-
-/**
- * \brief Configuration for the AHRS structure
- */
-typedef struct  
-{
-	int32_t x;						///< The mapping for the X axis
-	int32_t y;						///< The mapping for the Y axis
-	int32_t z;						///< The mapping for the Z axis
-}ahrs_config_t;
-
-/**
- * \brief   Initialiases the ahrs structure
- * 
- * \param	ahrs 				Pointer to ahrs structure
- * \param	config				Pointer to the config structure
- *
- * \return	True if the init succeed, false otherwise
- */
-bool ahrs_init(ahrs_t* ahrs, ahrs_config_t* config);
+    .beta = 0.06f,
+    .zeta = 0.01f,
+};
 
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* AHRS_H_ */
+#endif /* AHRS_MADGWICK_DEFAULT_CONFIG_H_ */
