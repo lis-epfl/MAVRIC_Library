@@ -263,14 +263,14 @@ void state_machine_update(state_machine_t* state_machine)
 			{
 				case SIGNAL_GOOD:
 					state_new = MAV_STATE_ACTIVE;
-				break;
+					break;
 
 				case SIGNAL_BAD:
 					// Stay in critical mode
-				break;
+					break;
 
 				case SIGNAL_LOST:
-					// If in manual mode, do emergency landing
+					// If in manual mode, do emergency landing (cut off motors)
 					if ( (mode_current.MANUAL == MANUAL_ON) && (mode_current.STABILISE == STABILISE_OFF) )
 					{
 						print_util_dbg_print("Switch to Emergency mode!\r\n");
@@ -278,7 +278,7 @@ void state_machine_update(state_machine_t* state_machine)
 					}
 					// If in another mode, stay in critical mode
 					// higher level navigation module will take care of coming back home
-				break;
+					break;
 			}
 			break;
 		
