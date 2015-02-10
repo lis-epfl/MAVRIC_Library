@@ -67,14 +67,7 @@ void radar_module_init(void);
 /**
  * \brief Read the radar module
  */
-void radar_module_read(void);
-
-/**
- * \brief Return the main target
- *
- * \return a pointer to an object containing the MAVLink radar tracked target
- */
-mavlink_radar_tracked_target_t* radar_module_get_main_target(void);
+void radar_module_read(radar_target_t* main_target);
 
 
 #ifdef __cplusplus

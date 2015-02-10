@@ -170,7 +170,7 @@ static mav_result_t state_telemetry_toggle_remote_use(state_t* state, mavlink_co
 	if ( packet->param1 == 1)
 	{
 		state->remote_active = 1;
-		state->use_mode_from_remote = 1;
+		state->source_mode = REMOTE;
 		
 		print_util_dbg_print("Remote control activated\r\n");
 		
@@ -179,7 +179,7 @@ static mav_result_t state_telemetry_toggle_remote_use(state_t* state, mavlink_co
 	else if (packet->param1 == 0)
 	{
 		state->remote_active = 0;
-		state->use_mode_from_remote = 0;
+		state->source_mode = GND_STATION;
 		
 		print_util_dbg_print("Remote control disactivated\r\n");
 		

@@ -1,0 +1,3 @@
+[submodule "libs/mavlink/include"]
+	path = libs/mavlink/include
+	url = git@github.com:lis-epfl/mavlink_headers.git

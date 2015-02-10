@@ -129,6 +129,7 @@ typedef struct
 {
 	joystick_button_t buttons;		///< The bit mask of the button pressed
 	joystick_channels_t channels;	///< Channels of the joystick
+	mav_mode_t mav_mode_desired;		///< The MAV mode desired
 	state_t* state;					///< The pointer to the state structure
 } joystick_parsing_t;
 
@@ -265,6 +266,14 @@ void joystick_parsing_get_attitude_command_integrate_yaw(const joystick_parsing_
  */
 void joystick_parsing_get_velocity_command(const joystick_parsing_t* joystick, velocity_command_t * command);
 
+/**
+ * \brief	Returns the mode from the joystick
+ * 
+ * \param	joystick		Joystick structure
+ *
+ * \return The value of the mode
+ */
+mav_mode_t joystick_parsing_get_mode(const joystick_parsing_t* joystick);
 
 #ifdef __cplusplus
 }
