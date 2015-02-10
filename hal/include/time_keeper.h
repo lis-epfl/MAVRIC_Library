@@ -48,10 +48,6 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include "ast.h"
-
-#define TK_AST_FREQUENCY 1000000					///< Timer ticks per second (32 bit timer, >1h time-out at 1MHz, >years at 1kHz. We'll go for precision here...)
-#define AST_PRESCALER_SETTING 5						///< Log(SOURCE_CLOCK/AST_FREQ)/log(2)-1 when running from PBA (64Mhz), 5 (1Mhz), or 15 (~1khz, not precisely though).
 
 /** 
  * \brief	This function initialize the clock of the microcontroller

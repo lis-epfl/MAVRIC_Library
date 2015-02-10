@@ -9,6 +9,8 @@
 #ifndef SERVO_PWM_H_
 #define SERVO_PWM_H_
 
+#include <stdint.h>
+
 #define SERVO_TIMER_FREQ 1000000
 #define SERVO_CENTER_DUTY_MICROSEC 1500
 #define SERVO_REPEAT_FREQ 200

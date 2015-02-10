@@ -6,9 +6,6 @@
  */ 
 
 #include "servo_pwm.h"
-//#include "gpio.h"
-
-#include "compiler.h"
 
 #define SERVO_PERIOD (SERVO_TIMER_FREQ/SERVO_REPEAT_FREQ)
 #define SERVO_CENTER_DUTY_TICKS 1500//(SERVO_CENTER_DUTY_MICROSEC*SERVO_TIMER_FREQ/1000000)

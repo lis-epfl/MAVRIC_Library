@@ -9,7 +9,7 @@
 
 #ifndef JOYSTICK_RC_H_
 #define JOYSTICK_RC_H_
-#include "compiler.h"
+#include <stdint.h>
 #include "buffer.h"
 
 #define JOYSTICK_DEVICE "/dev/input/js0"

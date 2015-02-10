@@ -4,9 +4,14 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
+#include <stdint.h>
+#include <stdbool.h>
+
 #include "streams.h"
 #include "buffer.h"
-typedef struct udp_connection_t {
+
+typedef struct udp_connection_t 
+{
 	buffer_t udp_buffer;
 	struct sockaddr_in Addr; 
 	int32_t sock;

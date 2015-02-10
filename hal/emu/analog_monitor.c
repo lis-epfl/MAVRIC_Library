@@ -6,7 +6,7 @@
  */ 
 
 #include "analog_monitor.h"
-#include "compiler.h"
+#include <stdint.h>
 
 //#include "adc_int.h"
 

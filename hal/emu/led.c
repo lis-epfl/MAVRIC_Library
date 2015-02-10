@@ -46,28 +46,24 @@
  *
  */
 
-//#include <avr32/io.h>
-//#include "preprocessor.h"
-#include "compiler.h"
-//#include "user_board.h"
 #include "led.h"
 
 
 
-void LED_Off(U32 leds)
+void LED_Off(uint32_t leds)
 {
 
 }
 
 
-void LED_On(U32 leds)
+void LED_On(uint32_t leds)
 {
 	
 
 }
 
 
-void LED_Toggle(U32 leds)
+void LED_Toggle(uint32_t leds)
 {
 
 
@@ -77,7 +73,7 @@ void LED_Toggle(U32 leds)
 
 
 
-U8 LED_Get_Intensity(U32 led)
+uint8_t LED_Get_Intensity(uint32_t led)
 {
  // always return 0, UC3C don't have PWM connected to LED
  return 0;
