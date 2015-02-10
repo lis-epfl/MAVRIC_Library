@@ -59,12 +59,12 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool manual_control_init(manual_control_t* manual_control, const manual_control_t* control_config, remote_t* remote, joystick_parsing_t* joystick, const state_t* state)
+bool manual_control_init(manual_control_t* manual_control, const manual_control_conf_t* config, remote_t* remote, joystick_parsing_t* joystick, const state_t* state)
 {
 	bool init_success = true;
 
-	manual_control->source_mode = control_config->source_mode;
-	manual_control->control_source = control_config->control_source;
+	manual_control->mode_source 	= config->mode_source;
+	manual_control->control_source 	= config->control_source;
 
 	manual_control->remote = remote;
 	manual_control->joystick = joystick;
@@ -136,7 +136,7 @@ mav_mode_t manual_control_get_mode_from_source(manual_control_t* manual_control,
 {
 	mav_mode_t new_mode = mode_current;
 	
-	switch (manual_control->source_mode)
+	switch (manual_control->mode_source)
 	{
 		case GND_STATION:
 			new_mode = mode_current;

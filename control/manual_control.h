@@ -58,44 +58,58 @@
 typedef enum
 {
 	GND_STATION = 0,
-	REMOTE = 1,
-	JOYSTICK = 2,
-}source_mode_t;
+	REMOTE 		= 1,
+	JOYSTICK 	= 2,
+} mode_source_t;
 
+
+/**
+ * \brief 	Control source
+ */
 typedef enum
 {
-	NO_CONTROL = 0,
-	REMOTE_CONTROL = 1,
-	JOYSTICK_CONTROL = 2,
-}control_source_t;
+	NO_CONTROL 			= 0,
+	REMOTE_CONTROL 		= 1,
+	JOYSTICK_CONTROL 	= 2,
+} control_source_t;
+
+
+/**
+ * \brief Configuration for manual control
+ */
+typedef struct
+{
+	mode_source_t 		mode_source;		///< The source mode
+	control_source_t 	control_source;		///< Flag to tell whether the remote is active or not
+} manual_control_conf_t;
+
 
 /**
  * \brief The manual control structure
  */
 typedef struct
 {
-	source_mode_t source_mode;					///< The source mode
-	control_source_t control_source;			///< Flag to tell whether the remote is active or not
+	mode_source_t 		mode_source;		///< The source mode
+	control_source_t 	control_source;		///< Flag to tell whether the remote is active or not
 
-	remote_t* remote;							///< The pointer to the remote structure
-	joystick_parsing_t* joystick;				///< The pointer to the joystick structure
-	const state_t* state;						///< The pointer to the state structure
-}manual_control_t;
+	remote_t* 			remote;				///< The pointer to the remote structure
+	joystick_parsing_t* joystick;			///< The pointer to the joystick structure
+	const state_t* 		state;				///< The pointer to the state structure
+} manual_control_t;
 
 
 /**
  * \brief					Initialise the manual control module
  *
  * \param	manual_control	The pointer to the manual control structure
- * \param	manual_config	The pointer to the configuration structure of the module
+ * \param	config			The pointer to the configuration structure of the module
  * \param	remote			The pointer to the remote structure
  * \param	joystick		The pointer to the joystick structure
  * \param	state			The pointer to the state structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool manual_control_init(manual_control_t* manual_control, const manual_control_t* control_config, remote_t* remote, joystick_parsing_t* joystick, const state_t* state);
-
+bool manual_control_init(manual_control_t* manual_control, const manual_control_conf_t* config, remote_t* remote, joystick_parsing_t* joystick, const state_t* state);
 
 /**
  * \brief	Selects the source input for the attitude command
