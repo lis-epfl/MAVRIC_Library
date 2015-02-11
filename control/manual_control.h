@@ -57,9 +57,9 @@
  */
 typedef enum
 {
-	GND_STATION = 0,
-	REMOTE 		= 1,
-	JOYSTICK 	= 2,
+	MODE_SOURCE_GND_STATION = 0,
+	MODE_SOURCE_REMOTE 		= 1,
+	MODE_SOURCE_JOYSTICK 	= 2,
 } mode_source_t;
 
 
@@ -68,9 +68,9 @@ typedef enum
  */
 typedef enum
 {
-	NO_CONTROL 			= 0,
-	REMOTE_CONTROL 		= 1,
-	JOYSTICK_CONTROL 	= 2,
+	CONTROL_SOURCE_NONE 		= 0,
+	CONTROL_SOURCE_REMOTE 		= 1,
+	CONTROL_SOURCE_JOYSTICK 	= 2,
 } control_source_t;
 
 

@@ -70,8 +70,8 @@ static mav_result_t manual_control_telemetry_toggle_remote_use(manual_control_t*
 	
 	if ( packet->param1 == 1)
 	{
-		manual_control->control_source = REMOTE_CONTROL;
-		manual_control->mode_source = REMOTE;
+		manual_control->control_source = CONTROL_SOURCE_REMOTE;
+		manual_control->mode_source = MODE_SOURCE_REMOTE;
 		
 		print_util_dbg_print("Remote control activated\r\n");
 		
@@ -79,8 +79,8 @@ static mav_result_t manual_control_telemetry_toggle_remote_use(manual_control_t*
 	}
 	else if (packet->param1 == 0)
 	{
-		manual_control->control_source = NO_CONTROL;
-		manual_control->mode_source = GND_STATION;
+		manual_control->control_source = CONTROL_SOURCE_NONE;
+		manual_control->mode_source = MODE_SOURCE_GND_STATION;
 		
 		print_util_dbg_print("Remote control disactivated\r\n");
 		

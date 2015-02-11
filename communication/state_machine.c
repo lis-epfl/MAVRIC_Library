@@ -143,10 +143,10 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			break;
 		
 		case MAV_STATE_ACTIVE:
-			if ((state_machine->manual_control->mode_source == REMOTE)||(state_machine->manual_control->mode_source == JOYSTICK))
+			if ((state_machine->manual_control->mode_source == MODE_SOURCE_REMOTE)||(state_machine->manual_control->mode_source == MODE_SOURCE_JOYSTICK))
 			{
 				// check connection with remote
-				if ( (state_machine->manual_control->mode_source == REMOTE)&&(rc_check != SIGNAL_GOOD) )
+				if ( (state_machine->manual_control->mode_source == MODE_SOURCE_REMOTE)&&(rc_check != SIGNAL_GOOD) )
 				{
 					state_new = MAV_STATE_CRITICAL;
 					mode_custom_new |= CUST_REMOTE_LOST;
@@ -320,7 +320,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			if( !state_machine->state->battery.is_low)
 			{
 				// To get out of this state, if we are in the wrong use_mode_from_remote
-				if (state_machine->manual_control->mode_source != REMOTE)
+				if (state_machine->manual_control->mode_source != MODE_SOURCE_REMOTE)
 				{
 					state_new = MAV_STATE_STANDBY;
 				}
