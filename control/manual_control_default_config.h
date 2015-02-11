@@ -53,8 +53,8 @@ extern "C" {
 
 manual_control_conf_t manual_control_default_config =
 {
-	.mode_source = REMOTE,
-	.control_source = REMOTE_CONTROL
+	.mode_source = MODE_SOURCE_REMOTE,
+	.control_source = CONTROL_SOURCE_REMOTE
 };
 
 #ifdef __cplusplus

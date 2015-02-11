@@ -79,10 +79,10 @@ void manual_control_get_attitude_command(manual_control_t* manual_control, contr
 {
 	switch(manual_control->control_source)
 	{
-		case REMOTE_CONTROL:
+		case CONTROL_SOURCE_REMOTE:
 			remote_get_command_from_remote(manual_control->remote, controls);
 			break;
-		case JOYSTICK_CONTROL:
+		case CONTROL_SOURCE_JOYSTICK:
 			joystick_parsing_get_attitude_command_from_joystick(manual_control->joystick,controls);
 			break;
 		default:
@@ -98,10 +98,10 @@ void manual_control_get_velocity_command(manual_control_t* manual_control, contr
 {
 	switch(manual_control->control_source)
 	{
-		case REMOTE_CONTROL:
+		case CONTROL_SOURCE_REMOTE:
 			remote_get_velocity_vector_from_remote(manual_control->remote, controls);
 			break;
-		case JOYSTICK_CONTROL:
+		case CONTROL_SOURCE_JOYSTICK:
 			joystick_parsing_get_velocity_vector_from_joystick(manual_control->joystick, controls);
 			break;
 		default:
@@ -119,10 +119,10 @@ float manual_control_get_thrust(const manual_control_t* manual_control)
 
 	switch(manual_control->control_source)
 	{
-		case REMOTE_CONTROL:
+		case CONTROL_SOURCE_REMOTE:
 			thrust = remote_get_throttle(manual_control->remote);
 			break;
-		case JOYSTICK_CONTROL:
+		case CONTROL_SOURCE_JOYSTICK:
 			thrust = joystick_parsing_get_throttle(manual_control->joystick);
 			break;
 		default:
@@ -138,11 +138,11 @@ mav_mode_t manual_control_get_mode_from_source(manual_control_t* manual_control,
 	
 	switch (manual_control->mode_source)
 	{
-		case GND_STATION:
+		case MODE_SOURCE_GND_STATION:
 			new_mode = mode_current;
 			manual_control->joystick->current_desired_mode = mode_current;
 			break;
-		case REMOTE:
+		case MODE_SOURCE_REMOTE:
 			if(rc_check != SIGNAL_LOST)
 			{
 				// Update mode from remote
@@ -151,7 +151,7 @@ mav_mode_t manual_control_get_mode_from_source(manual_control_t* manual_control,
 				manual_control->joystick->current_desired_mode = mode_current;
 			}
 			break;
-		case JOYSTICK:
+		case MODE_SOURCE_JOYSTICK:
 			new_mode = joystick_parsing_get_mode(manual_control->joystick, mode_current);
 			break;
 		default:
@@ -167,7 +167,7 @@ signal_quality_t manual_control_get_signal_strength(const manual_control_t* manu
 	signal_quality_t rc_check;
 
 	// Get remote signal strength
-	if (manual_control->control_source == REMOTE_CONTROL)
+	if (manual_control->control_source == CONTROL_SOURCE_REMOTE)
 	{
 		rc_check = remote_check(manual_control->remote);
 	}
