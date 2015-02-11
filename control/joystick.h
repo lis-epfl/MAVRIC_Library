@@ -132,7 +132,6 @@ typedef struct
 	joystick_channels_t channels;		///< Channels of the joystick
 	mav_mode_t current_desired_mode;	///< The mav mode indicated by the remote
 	arm_action_t arm_action;
-	state_t* state;						///< The pointer to the state structure
 } joystick_t;
 
 
@@ -140,11 +139,10 @@ typedef struct
  * \brief	Initialisation of the joystick module
  *
  * \param	joystick		The pointer to the joystick structure
- * \param	state					The pointer to the state structure
  * 
  * \return  True if succeeded
  */
-bool joystick_init(joystick_t* joystick, state_t* state);
+bool joystick_init(joystick_t* joystick);
 
 
 /**

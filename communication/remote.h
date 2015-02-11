@@ -289,7 +289,7 @@ mav_mode_t remote_mode_get(remote_t* remote, mav_mode_t mode_current);
  * \param	remote				The pointer to the remote structure
  * \param	controls			The pointer to the controls structure
  */
-void remote_get_command_from_remote(remote_t* remote, control_command_t * controls);
+void remote_get_control_command(remote_t* remote, control_command_t * controls);
 
 
 /**
@@ -298,7 +298,7 @@ void remote_get_command_from_remote(remote_t* remote, control_command_t * contro
  * \param	remote	The pointer to the remote structure
  * \param	controls			The pointer to the controls structure
  */
-void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t* controls);
+void remote_get_velocity_vector(remote_t* remote, control_command_t* controls);
 
 
 /**

@@ -63,8 +63,7 @@
 bool state_machine_init(	state_machine_t *state_machine,
 							state_t* state, 
 							mavlink_waypoint_handler_t* waypoint_handler, 
-							simulation_model_t *sim_model, 
-							remote_t* remote,
+							simulation_model_t *sim_model,
 							manual_control_t* manual_control)
 {
 	bool init_success = true;
@@ -72,7 +71,6 @@ bool state_machine_init(	state_machine_t *state_machine,
 	state_machine->waypoint_handler = waypoint_handler;
 	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
-	state_machine->remote 			= remote;
 	state_machine->manual_control = manual_control;
 	
 	state_machine->channel_switches = 0;
@@ -103,7 +101,7 @@ void state_machine_update(state_machine_t* state_machine)
 	// Get remote signal strength
 	rc_check = manual_control_get_signal_strength(state_machine->manual_control);
 
-	mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current, rc_check);
+	mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current);
 	
 
 	// Change state according to signal strength

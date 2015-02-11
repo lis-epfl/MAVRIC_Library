@@ -43,7 +43,10 @@
 
 #include "manual_control_telemetry.h"
 #include "manual_control.h"
+#include "remote_telemetry.h"
+#include "joystick_telemetry.h"
 #include "print_util.h"
+#include "time_keeper.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -97,6 +100,12 @@ bool manual_control_telemetry_init(manual_control_t* manual_control, mavlink_mes
 {
 	bool init_success = true;
 	
+	// Init remote and joystick telemetry
+	init_success &= remote_telemetry_init(  &manual_control->remote,
+											message_handler);
+	init_success &= joystick_telemetry_init(	&manual_control->joystick,
+												message_handler);
+	
 	// Add callbacks for waypoint handler commands requests
 	mavlink_message_handler_cmd_callback_t callbackcmd;
 
@@ -109,4 +118,58 @@ bool manual_control_telemetry_init(manual_control_t* manual_control, mavlink_mes
 	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
 
 	return init_success;
+}
+
+
+void manual_control_telemetry_send(const manual_control_t* manual_control, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{
+	switch( manual_control->control_source)
+	{
+		case CONTROL_SOURCE_NONE:
+		break;
+
+		case CONTROL_SOURCE_REMOTE:
+			mavlink_msg_rc_channels_scaled_pack(	mavlink_stream->sysid,
+													mavlink_stream->compid,
+													msg,
+													time_keeper_get_millis(),
+													0,
+													manual_control->remote.channels[0] * 10000.0f,
+													manual_control->remote.channels[1] * 10000.0f,
+													manual_control->remote.channels[2] * 10000.0f,
+													manual_control->remote.channels[3] * 10000.0f,
+													manual_control->remote.channels[4] * 10000.0f,
+													manual_control->remote.channels[5] * 10000.0f,
+													manual_control->remote.channels[6] * 10000.0f,
+													manual_control->remote.channels[7] * 10000.0f,
+													manual_control->remote.mode.current_desired_mode.byte );
+			mavlink_stream_send(mavlink_stream, msg);
+			mavlink_msg_rc_channels_scaled_pack(	mavlink_stream->sysid,
+													mavlink_stream->compid,
+													msg,
+													time_keeper_get_millis(),
+													1,
+													manual_control->remote.channels[8] * 10000.0f,
+													manual_control->remote.channels[9] * 10000.0f,
+													manual_control->remote.channels[10] * 10000.0f,
+													manual_control->remote.channels[11] * 10000.0f,
+													manual_control->remote.channels[12] * 10000.0f,
+													manual_control->remote.channels[13] * 10000.0f,
+													INT16_MAX, // 14 channels max 
+													INT16_MAX,
+													manual_control->remote.signal_quality );
+		break;
+
+		case CONTROL_SOURCE_JOYSTICK:
+			mavlink_msg_manual_control_pack(mavlink_stream->sysid,
+											mavlink_stream->compid,
+											msg,
+											mavlink_stream->sysid,
+											manual_control->joystick.channels.x * 1000,
+											manual_control->joystick.channels.y * 1000,
+											manual_control->joystick.channels.z * 1000,
+											manual_control->joystick.channels.r * 1000,
+											manual_control->joystick.buttons.button_mask);
+		break;
+	}
 }

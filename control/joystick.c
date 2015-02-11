@@ -123,12 +123,9 @@ static void joystick_button(joystick_t* joystick, button_pressed_t button, mav_f
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool joystick_init(joystick_t* joystick, state_t* state)
+bool joystick_init(joystick_t* joystick)
 {
 	bool init_success = true;
-
-	//joystick pointer init
-	joystick->state = state;
 	
 	//joystick channels init
 	joystick->channels.x = 0.0f;

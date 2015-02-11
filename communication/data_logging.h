@@ -47,8 +47,9 @@
 extern "C" {
 #endif
 
+#include "mavlink_communication.h"
+#include "state.h"
 #include "fat_fs/ff.h"
-#include "tasks.h"
 
 
 /**
@@ -124,12 +125,12 @@ typedef struct
 	
 	uint32_t logging_time;						///< The time that we've passed logging since the last f_close
 	
-	uint32_t log_data;											///< A flag to stop/start writing to file
+	uint32_t log_data;							///< A flag to stop/start writing to file
 	
-	uint32_t sys_id;											///< the system ID
+	uint32_t sys_id;							///< the system ID
 	
-	const state_t* state;										///< The pointer to the state structure	
-}data_logging_t;
+	const state_t* state;						///< The pointer to the state structure	
+} data_logging_t;
 
 
 /**
