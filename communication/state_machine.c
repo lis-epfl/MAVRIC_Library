@@ -64,7 +64,6 @@
 bool state_machine_init(	state_machine_t *state_machine,
 							state_t* state, 
 							simulation_model_t *sim_model, 
-							remote_t* remote,
 							const gps_t* gps,
 							manual_control_t* manual_control)
 {
@@ -72,7 +71,6 @@ bool state_machine_init(	state_machine_t *state_machine,
 	
 	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
-	state_machine->remote 			= remote;
 	state_machine->gps 				= gps;
 	state_machine->manual_control = manual_control;
 	
@@ -104,7 +102,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 	// Get remote signal strength
 	rc_check = manual_control_get_signal_strength(state_machine->manual_control);
 
-	mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current, rc_check);
+	mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current);
 
 	if (mode_current.HIL == HIL_OFF)
 	{

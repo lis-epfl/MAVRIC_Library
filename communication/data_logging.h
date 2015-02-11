@@ -48,7 +48,8 @@ extern "C" {
 #endif
 
 #include <stdbool.h>
-
+#include "mavlink_communication.h"
+#include "state.h"
 #include "libs/fat_fs/ff.h"
 #include "scheduler.h"
 #include "fat_fs_mounting.h"

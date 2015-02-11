@@ -52,6 +52,7 @@
 extern "C" {
 #endif
 
+
 /**
  * \brief	Initialise the manual_control telemetry module
  *
@@ -62,6 +63,16 @@ extern "C" {
  * \return	True if the init succeed, false otherwise
  */
 bool manual_control_telemetry_init(manual_control_t* manual_control, mavlink_message_handler_t *message_handler);
+
+
+/**
+ * \brief	Sends the manual control values via MAVLink
+ * 
+ * \param	manual_control			The pointer to the manual control structure
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param	msg						The pointer to the MAVLink message
+ */
+void manual_control_telemetry_send(const manual_control_t* manual_control, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
 #ifdef __cplusplus

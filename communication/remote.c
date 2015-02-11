@@ -427,7 +427,7 @@ mav_mode_t remote_mode_get(remote_t* remote, mav_mode_t current_mode)
 	return new_mode;
 }
 
-void remote_get_command_from_remote(remote_t* remote, control_command_t* controls)
+void remote_get_control_command(remote_t* remote, control_command_t* controls)
 {
 	remote_update(remote);
 	
@@ -437,7 +437,7 @@ void remote_get_command_from_remote(remote_t* remote, control_command_t* control
 	controls->thrust 		= remote_get_throttle(remote);
 }
 
-void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t* controls)
+void remote_get_velocity_vector(remote_t* remote, control_command_t* controls)
 {
 	remote_update(remote);
 	
