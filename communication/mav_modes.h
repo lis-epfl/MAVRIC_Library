@@ -43,6 +43,11 @@
 #ifndef MAV_MODE_H
 #define MAV_MODE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #include "mavlink_stream.h"
 #include <stdint.h>
 #include <stdbool.h>
@@ -504,5 +509,9 @@ static inline mav_mode_t mav_modes_get_from_flags(const mode_flag_armed_t armed,
 
 	return mode;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //MAV_MODE_H
