@@ -48,7 +48,7 @@
 #endif
 
 #include "remote.h"
-#include "joystick_parsing.h"
+#include "joystick.h"
 #include "state.h"
 #include "stabilisation.h"
 
@@ -93,7 +93,7 @@ typedef struct
 	control_source_t 	control_source;		///< Flag to tell whether the remote is active or not
 
 	remote_t* 			remote;				///< The pointer to the remote structure
-	joystick_parsing_t* joystick;			///< The pointer to the joystick structure
+	joystick_t* 		joystick;			///< The pointer to the joystick structure
 	const state_t* 		state;				///< The pointer to the state structure
 } manual_control_t;
 
@@ -109,7 +109,8 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool manual_control_init(manual_control_t* manual_control, const manual_control_conf_t* config, remote_t* remote, joystick_parsing_t* joystick, const state_t* state);
+bool manual_control_init(manual_control_t* manual_control, const manual_control_conf_t* config, remote_t* remote, joystick_t* joystick, const state_t* state);
+
 
 /**
  * \brief	Selects the source input for the attitude command

@@ -59,7 +59,7 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool manual_control_init(manual_control_t* manual_control, const manual_control_conf_t* config, remote_t* remote, joystick_parsing_t* joystick, const state_t* state)
+bool manual_control_init(manual_control_t* manual_control, const manual_control_conf_t* config, remote_t* remote, joystick_t* joystick, const state_t* state)
 {
 	bool init_success = true;
 
@@ -83,7 +83,7 @@ void manual_control_get_attitude_command(const manual_control_t* manual_control,
 			remote_get_command_from_remote(manual_control->remote, controls);
 			break;
 		case CONTROL_SOURCE_JOYSTICK:
-			joystick_parsing_get_attitude_command_from_joystick(manual_control->joystick,controls);
+			joystick_get_control_command(manual_control->joystick,controls);
 			break;
 		default:
 			controls->rpy[ROLL] = 0.0f;
@@ -102,7 +102,7 @@ void manual_control_get_velocity_command(const manual_control_t* manual_control,
 			remote_get_velocity_vector_from_remote(manual_control->remote, controls);
 			break;
 		case CONTROL_SOURCE_JOYSTICK:
-			joystick_parsing_get_velocity_vector_from_joystick(manual_control->joystick, controls);
+			joystick_get_velocity_vector(manual_control->joystick, controls);
 			break;
 		default:
 			controls->tvel[X] = 0.0f;
@@ -123,7 +123,7 @@ float manual_control_get_thrust(const manual_control_t* manual_control)
 			thrust = remote_get_throttle(manual_control->remote);
 			break;
 		case CONTROL_SOURCE_JOYSTICK:
-			thrust = joystick_parsing_get_throttle(manual_control->joystick);
+			thrust = joystick_get_throttle(manual_control->joystick);
 			break;
 		default:
 			thrust = -1.0f;
@@ -152,7 +152,7 @@ mav_mode_t manual_control_get_mode_from_source(manual_control_t* manual_control,
 			}
 			break;
 		case MODE_SOURCE_JOYSTICK:
-			new_mode = joystick_parsing_get_mode(manual_control->joystick, mode_current);
+			new_mode = joystick_get_mode(manual_control->joystick, mode_current);
 			break;
 		default:
 			new_mode = mode_current;
