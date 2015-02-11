@@ -250,16 +250,6 @@ void joystick_get_rate_command(const joystick_t* joystick, rate_command_t * comm
  */
 void joystick_get_thrust_command(const joystick_t* joystick, thrust_command_t * command);
 
-
-/**
- * \brief	Compute attitude command from the joystick (absolute angles)
- * 
- * \param	joystick		Joystick structure (input)
- * \param	command			Attitude command (output)
- */
-void joystick_get_attitude_command(const joystick_t* joystick, attitude_command_t * command);
-
-
 /**
  * \brief	Compute attitude command from the joystick (absolute roll and pitch, integrated yaw)
  * 
@@ -267,7 +257,7 @@ void joystick_get_attitude_command(const joystick_t* joystick, attitude_command_
  * \param 	ki_yaw			Integration factor for yaw (0.02 is ok) (input) 
  * \param	command			Attitude command (output)
  */
-void joystick_get_attitude_command_integrate_yaw(const joystick_t* joystick, const float k_yaw, attitude_command_t * command);
+void joystick_get_attitude_command(const joystick_t* joystick, const float ki_yaw, attitude_command_t * command);
 
 
 /**

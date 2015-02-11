@@ -53,6 +53,17 @@ extern "C" {
 #include <stdbool.h>
 
 
+/**
+ * \brief Enum defining the arming/disarming events
+ */
+typedef enum
+{
+	ARM_ACTION_DISARMING 	= -1,
+	ARM_ACTION_NONE 		= 0,
+	ARM_ACTION_ARMING 		= 1,
+} arm_action_t;
+
+
 /*
  * \brief enum for defining ARM/DISARM status
  */
@@ -62,12 +73,6 @@ typedef enum
 	ARMED_ON  = 1,				///< Motors are armed
 } mode_flag_armed_t;
 
-typedef enum
-{
-	DISARMING = -1,
-	NOTHING = 0,
-	ARMING = 1,
-}arm_flag_t;
 
 /*
  * \brief enum for defining manual piloting mode
