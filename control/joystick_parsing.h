@@ -130,7 +130,7 @@ typedef struct
 	joystick_button_t buttons;			///< The bit mask of the button pressed
 	joystick_channels_t channels;		///< Channels of the joystick
 	mav_mode_t current_desired_mode;	///< The mav mode indicated by the remote
-	arm_flag_t arm_flag;
+	arm_action_t arm_action;
 	state_t* state;						///< The pointer to the state structure
 } joystick_parsing_t;
 

@@ -77,7 +77,7 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 		// Left stick bottom left corner, right stick bottom right corner => arm 
 		print_util_dbg_print("Arming!\r\n");
 		armed = ARMED_ON;
-		remote_mode->arm_flag = ARMING;
+		remote_mode->arm_action = ARM_ACTION_ARMING;
 	}
 	else if ( remote_get_throttle(remote) < -0.95f && 
 			remote_get_yaw(remote) > 0.9f && 
@@ -87,7 +87,7 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 		// Left stick bottom right corner, right stick bottom left corner => disarm
 		print_util_dbg_print("Disarming!\r\n");
 		armed = ARMED_OFF;
-		remote_mode->arm_flag = DISARMING;
+		remote_mode->arm_action = ARM_ACTION_DISARMING;
 	}
 	else
 	{
@@ -284,7 +284,7 @@ void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t* conf
 
 	// Init state to safety state, disarmed
 	remote_mode->current_desired_mode 		= remote_mode->safety_mode;
-	remote_mode->arm_flag						= NOTHING;
+	remote_mode->arm_action						= ARM_ACTION_NONE;
 	remote_mode->current_desired_mode.ARMED = ARMED_OFF;
 }
 
@@ -405,15 +405,15 @@ mav_mode_t remote_mode_get(remote_t* remote, mav_mode_t current_mode)
 	mav_mode_t new_mode = current_mode;
 	new_mode.byte = (current_mode.byte & 0b10100000) + (remote->mode.current_desired_mode.byte & 0b01011111);
 	
-	if(remote->mode.arm_flag == ARMING)
+	if(remote->mode.arm_action == ARM_ACTION_ARMING)
 	{
 		new_mode.ARMED = ARMED_ON;
-		remote->mode.arm_flag = NOTHING;
+		remote->mode.arm_action = ARM_ACTION_NONE;
 		print_util_dbg_print("Arming in new fct\r\n");
-	}else if(remote->mode.arm_flag == DISARMING)
+	}else if(remote->mode.arm_action == ARM_ACTION_DISARMING)
 	{
 		new_mode.ARMED = ARMED_OFF;
-		remote->mode.arm_flag = NOTHING;
+		remote->mode.arm_action = ARM_ACTION_NONE;
 		print_util_dbg_print("Disarming in new fct\r\n");
 	}
 	

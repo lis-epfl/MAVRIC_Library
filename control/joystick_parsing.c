@@ -82,7 +82,7 @@ static void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, butt
 			{
 				print_util_dbg_print("Disarming from joystick\r\n");
 				joystick_parsing->current_desired_mode.ARMED = ARMED_OFF;
-				joystick_parsing->arm_flag = DISARMING;
+				joystick_parsing->arm_action = ARM_ACTION_DISARMING;
 			}
 			else
 			{
@@ -90,7 +90,7 @@ static void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, butt
 				if ((joystick_parsing->current_desired_mode.byte&0b01011100) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)
 				{
 					joystick_parsing->current_desired_mode.ARMED = ARMED_ON;
-					joystick_parsing->arm_flag = ARMING;
+					joystick_parsing->arm_action = ARM_ACTION_ARMING;
 				}
 			}
 			joystick_parsing->buttons.button_1 = BUTTON_PRESSED;
@@ -140,7 +140,7 @@ bool joystick_parsing_init(joystick_parsing_t* joystick_parsing, state_t* state)
 	joystick_parsing->buttons.button_mask = 0;
 	
 	joystick_parsing->current_desired_mode.byte = MAV_MODE_SAFE;
-	joystick_parsing->arm_flag = NOTHING;
+	joystick_parsing->arm_action = ARM_ACTION_NONE;
 	
 	print_util_dbg_print("Joystick parsing initialised\r");
 
@@ -177,15 +177,15 @@ mav_mode_t joystick_parsing_get_mode(joystick_parsing_t* joystick, const mav_mod
 	mav_mode_t new_mode = current_mode;
 	new_mode.byte = (current_mode.byte & 0b10100000) + (joystick->current_desired_mode.byte & 0b01011111);
 	
-	if(joystick->arm_flag == ARMING)
+	if(joystick->arm_action == ARM_ACTION_ARMING)
 	{
 		new_mode.ARMED = ARMED_ON;
-		joystick->arm_flag = NOTHING;
+		joystick->arm_action = ARM_ACTION_NONE;
 		print_util_dbg_print("Arming in new fct\r\n");
-	}else if(joystick->arm_flag == DISARMING)
+	}else if(joystick->arm_action == ARM_ACTION_DISARMING)
 	{
 		new_mode.ARMED = ARMED_OFF;
-		joystick->arm_flag = NOTHING;
+		joystick->arm_action = ARM_ACTION_NONE;
 		print_util_dbg_print("Disarming in new fct\r\n");
 	}
 	
