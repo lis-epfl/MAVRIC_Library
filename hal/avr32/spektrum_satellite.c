@@ -176,7 +176,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void spektrum_satellite_init (satellite_t *satellite, usart_config_t usart_conf_spektrum) 
+void spektrum_satellite_init(satellite_t* satellite, usart_config_t usart_conf_spektrum) 
 {
 	//init dependencies
 	spek_sat = satellite;
@@ -221,7 +221,7 @@ void spektrum_satellite_bind(float channel_encoding)
 	
 	// Switch off satellite
 	spektrum_satellite_switch_off();
-	delay_ms(100);
+	time_keeper_delay_ms(100);
 	
 	//set as input, pull down not to be floating
 	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_DOWN);	
@@ -232,11 +232,11 @@ void spektrum_satellite_bind(float channel_encoding)
 	while ((gpio_get_pin_value(DSM_RECEIVER_PIN) == 0) && (i < 10000)) 
 	{
 		i++;
-		delay_ms(1);
+		time_keeper_delay_ms(1);
 	}
 	
 	// Wait 100ms after receiver startup
-	delay_ms(68);
+	time_keeper_delay_ms(68);
 	
 	uint8_t pulses = 0;
 	if (channel_encoding == 10)

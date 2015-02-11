@@ -149,7 +149,7 @@ void piezo_speaker_startup_melody(void)
 	for (uint32_t i = 1; i < 8; i++)
 	{
 		piezo_speaker_beep(100, 500 * i);
-		delay_ms(2);
+		time_keeper_delay_ms(2);
 	}
 }
 
@@ -157,7 +157,7 @@ void piezo_speaker_startup_melody(void)
 void piezo_speaker_quick_startup(void)
 {
 	piezo_speaker_beep(100, 440);
-	delay_ms(50);
+	time_keeper_delay_ms(50);
 	piezo_speaker_beep(100, 880);
 }
 
@@ -174,70 +174,70 @@ void piezo_speaker_star_wars(void)
 {
 	//3x beep(a, 500);
 	piezo_speaker_beep(150, 440);
-	delay_ms(100);
+	time_keeper_delay_ms(100);
 	piezo_speaker_beep(150, 440);
-	delay_ms(100);
+	time_keeper_delay_ms(100);
 	piezo_speaker_beep(150, 440);
-	delay_ms(100);
+	time_keeper_delay_ms(100);
 	
 	//beep(f, 350);
 	piezo_speaker_beep(105, 349);
-	delay_ms(70);
+	time_keeper_delay_ms(70);
 	
 	//beep(cH, 150);
 	piezo_speaker_beep(45, 523);
-	delay_ms(30);
+	time_keeper_delay_ms(30);
 	
 	//beep(a, 500);
 	piezo_speaker_beep(150, 440);
-	delay_ms(100);
+	time_keeper_delay_ms(100);
 	
 	//beep(f, 350);
 	piezo_speaker_beep(105, 349);
-	delay_ms(70);
+	time_keeper_delay_ms(70);
 	
 	//beep(cH, 150);
 	piezo_speaker_beep(45, 523);
-	delay_ms(30);
+	time_keeper_delay_ms(30);
 	
 	//beep(a, 650);
 	piezo_speaker_beep(195, 440);
-	delay_ms(130);
+	time_keeper_delay_ms(130);
 	
 	//delay(500);
-	delay_ms(250);
+	time_keeper_delay_ms(250);
 	
 	//3x beep(eH, 500);
 	piezo_speaker_beep(150, 659);
-	delay_ms(100);
+	time_keeper_delay_ms(100);
 	piezo_speaker_beep(150, 659);
-	delay_ms(100);
+	time_keeper_delay_ms(100);
 	piezo_speaker_beep(150, 659);
-	delay_ms(100);
+	time_keeper_delay_ms(100);
 	
 	//beep(fH, 350);
 	piezo_speaker_beep(105, 698);
-	delay_ms(70);
+	time_keeper_delay_ms(70);
 	
 	//beep(cH, 150);
 	piezo_speaker_beep(45, 523);
-	delay_ms(30);
+	time_keeper_delay_ms(30);
 	
 	//beep(gS, 500);
 	piezo_speaker_beep(150, 415);
-	delay_ms(100);
+	time_keeper_delay_ms(100);
 	
 	//beep(f, 350);
 	piezo_speaker_beep(105, 349);
-	delay_ms(70);
+	time_keeper_delay_ms(70);
 	
 	//beep(cH, 150);
 	piezo_speaker_beep(45, 523);
-	delay_ms(30);
+	time_keeper_delay_ms(30);
 	
 	//beep(a, 650);
 	piezo_speaker_beep(195, 440);
-	delay_ms(130);
+	time_keeper_delay_ms(130);
 	
 }
 
@@ -250,32 +250,32 @@ void piezo_speaker_mario_melody(void)
 	frequency=660;
 	length=100;
 	piezo_speaker_beep(length, frequency);
-	delay_ms(90);
+	time_keeper_delay_ms(90);
 
 	frequency=660;
 	length=100;
 	piezo_speaker_beep(length, frequency);
-	delay_ms(180);
+	time_keeper_delay_ms(180);
 
 	frequency=660;
 	length=100;
 	piezo_speaker_beep(length, frequency);
-	delay_ms(180);
+	time_keeper_delay_ms(180);
 
 	frequency=510;
 	length=100;
 	piezo_speaker_beep(length, frequency);
-	delay_ms(60);
+	time_keeper_delay_ms(60);
 
 	frequency=660;
 	length=100;
 	piezo_speaker_beep(length, frequency);
-	delay_ms(180);
+	time_keeper_delay_ms(180);
 
 	frequency=770;
 	length=100;
 	piezo_speaker_beep(length, frequency);
-	delay_ms(540);
+	time_keeper_delay_ms(540);
 
 	frequency=380;
 	length=100;
@@ -284,822 +284,822 @@ void piezo_speaker_mario_melody(void)
 	// frequency=660;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=660;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=660;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=510;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(100);
+	// time_keeper_delay_ms(100);
 
 	// frequency=660;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=770;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(550);
+	// time_keeper_delay_ms(550);
 
 	// frequency=380;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(575);
+	// time_keeper_delay_ms(575);
 
 
 
 	// frequency=510;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(450);
+	// time_keeper_delay_ms(450);
 
 	// frequency=380;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(400);
+	// time_keeper_delay_ms(400);
 
 	// frequency=320;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(500);
+	// time_keeper_delay_ms(500);
 
 	// frequency=440;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=480;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(330);
+	// time_keeper_delay_ms(330);
 
 	// frequency=450;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=430;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=380;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(200);
+	// time_keeper_delay_ms(200);
 
 	// frequency=660;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(200);
+	// time_keeper_delay_ms(200);
 
 	// frequency=760;
 	// length=50;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=860;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=700;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=760;
 	// length=50;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(350);
+	// time_keeper_delay_ms(350);
 
 	// frequency=660;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=520;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=580;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=480;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(500);
+	// time_keeper_delay_ms(500);
 
 
 	// frequency=510;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(450);
+	// time_keeper_delay_ms(450);
 
 	// frequency=380;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(400);
+	// time_keeper_delay_ms(400);
 
 	// frequency=320;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(500);
+	// time_keeper_delay_ms(500);
 
 	// frequency=440;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=480;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(330);
+	// time_keeper_delay_ms(330);
 
 	// frequency=450;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=430;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=380;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(200);
+	// time_keeper_delay_ms(200);
 
 	// frequency=660;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(200);
+	// time_keeper_delay_ms(200);
 
 	// frequency=760;
 	// length=50;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=860;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=700;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=760;
 	// length=50;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(350);
+	// time_keeper_delay_ms(350);
 
 	// frequency=660;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=520;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=580;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=480;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(500);
+	// time_keeper_delay_ms(500);
 
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=760;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(100);
+	// time_keeper_delay_ms(100);
 
 	// frequency=720;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=680;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=620;
 	// length=150;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=650;
 	// length=150;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=380;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=430;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=430;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(100);
+	// time_keeper_delay_ms(100);
 
 	// frequency=570;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(220);
+	// time_keeper_delay_ms(220);
 
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=760;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(100);
+	// time_keeper_delay_ms(100);
 
 	// frequency=720;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=680;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=620;
 	// length=150;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=650;
 	// length=200;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=102;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=102;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=102;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=380;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=760;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(100);
+	// time_keeper_delay_ms(100);
 
 	// frequency=720;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=680;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=620;
 	// length=150;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=650;
 	// length=150;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=380;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=430;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=430;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(100);
+	// time_keeper_delay_ms(100);
 
 	// frequency=570;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(420);
+	// time_keeper_delay_ms(420);
 
 
 	// frequency=585;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(450);
+	// time_keeper_delay_ms(450);
 
 
 	// frequency=550;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(420);
+	// time_keeper_delay_ms(420);
 
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(360);
+	// time_keeper_delay_ms(360);
 
 
 	// frequency=380;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=760;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(100);
+	// time_keeper_delay_ms(100);
 
 	// frequency=720;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=680;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=620;
 	// length=150;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=650;
 	// length=150;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=380;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=430;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=430;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(100);
+	// time_keeper_delay_ms(100);
 
 	// frequency=570;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(220);
+	// time_keeper_delay_ms(220);
 
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=760;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(100);
+	// time_keeper_delay_ms(100);
 
 	// frequency=720;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=680;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=620;
 	// length=150;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=650;
 	// length=200;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=102;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=102;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=102;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=380;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=760;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(100);
+	// time_keeper_delay_ms(100);
 
 	// frequency=720;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=680;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=620;
 	// length=150;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=650;
 	// length=150;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=380;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=430;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=430;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(100);
+	// time_keeper_delay_ms(100);
 
 	// frequency=570;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(420);
+	// time_keeper_delay_ms(420);
 
 
 	// frequency=585;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(450);
+	// time_keeper_delay_ms(450);
 
 
 	// frequency=550;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(420);
+	// time_keeper_delay_ms(420);
 
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(360);
+	// time_keeper_delay_ms(360);
 
 
 	// frequency=380;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=500;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 
 	// frequency=500;
 	// length=60;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=500;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=500;
 	// length=60;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(350);
+	// time_keeper_delay_ms(350);
 
 	// frequency=500;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=580;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(350);
+	// time_keeper_delay_ms(350);
 
 	// frequency=660;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=500;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=430;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=380;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(600);
+	// time_keeper_delay_ms(600);
 
 
 	// frequency=500;
 	// length=60;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=500;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=500;
 	// length=60;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(350);
+	// time_keeper_delay_ms(350);
 
 	// frequency=500;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=580;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=660;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(550);
+	// time_keeper_delay_ms(550);
 
 
 	// frequency=870;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(325);
+	// time_keeper_delay_ms(325);
 
 	// frequency=760;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(600);
+	// time_keeper_delay_ms(600);
 
 
 	// frequency=500;
 	// length=60;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=500;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=500;
 	// length=60;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(350);
+	// time_keeper_delay_ms(350);
 
 	// frequency=500;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=580;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(350);
+	// time_keeper_delay_ms(350);
 
 	// frequency=660;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=500;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=430;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=380;
 	// length=80;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(600);
+	// time_keeper_delay_ms(600);
 
 
 	// frequency=660;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(150);
+	// time_keeper_delay_ms(150);
 
 	// frequency=660;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=660;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=510;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(100);
+	// time_keeper_delay_ms(100);
 
 	// frequency=660;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(300);
+	// time_keeper_delay_ms(300);
 
 	// frequency=770;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(550);
+	// time_keeper_delay_ms(550);
 
 	// frequency=380;
 	// length=100;
 	// piezo_speaker_beep(length, frequency);
-	// delay_ms(575);
+	// time_keeper_delay_ms(575);
 
 
 }

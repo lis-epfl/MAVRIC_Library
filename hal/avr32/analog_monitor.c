@@ -43,7 +43,7 @@
 
 #include "analog_monitor.h"
 #include "adc_int.h"
-
+#include "adcifa.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION

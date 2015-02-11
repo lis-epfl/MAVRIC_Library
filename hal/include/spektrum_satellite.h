@@ -52,7 +52,6 @@
 #include <stdbool.h>
 #include "buffer.h"
 #include "satellite.h"
-#include "uart_int.h"
 
 /**
  * \brief Initialize UART receiver for Spektrum/DSM2 slave receivers

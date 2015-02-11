@@ -47,11 +47,8 @@
 	extern "C" {
 #endif
 
-#include "preprocessor.h"
 #include <stdint.h>
 #include <stdbool.h>
-#include "user_board.h"
-#include "adcifa.h"
 
 
 #define ADC_FREQUENCY 1000000			///< Define the frequency of the ADC

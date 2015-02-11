@@ -30,6 +30,7 @@
 #define JOY_MODE_1_BUTTON 0
 #define JOY_MODE_2_BUTTON 1
 #define JOY_MODE_3_BUTTON 2
+#define DEADZONE 5
 
 //Saitek
 /*
@@ -46,7 +47,6 @@
 #define JOY_YAW      2
 /**/
 
-#define DEADZONE 5
 
 typedef struct Spektrum_Receiver {
 	buffer_t receiver;

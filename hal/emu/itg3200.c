@@ -30,94 +30,52 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file time_keeper.h
+ * \file itg3200.c
  * 
  * \author MAV'RIC Team
  * \author Felix Schill
  *   
- * \brief This file is used to interact with the clock of the microcontroller
- * 
+ * \brief This file is the driver for the integrated triple axis gyroscope ITG3200
+ *
  ******************************************************************************/
 
 
-#ifndef TIME_KEEPER_H_
-#define TIME_KEEPER_H_
+#include "itg3200.h"
+#include "print_util.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define CONFIG_REG_ADDRESS 21				///< Define the Configuration register address
+#define SENSOR_REG_ADDRESS 27				///< Define the Address of the gyroscope sensor as a slave on the i2c bus
 
-#include <stdint.h>
-
-/** 
- * \brief	This function initialize the clock of the microcontroller
- */
-void time_keeper_init(void);
-
-/** 
- * \brief	This function returns the time in seconds since system start
- * 
- * \return	The time in seconds since system start
- */
-double time_keeper_get_time(void);
+#define FULL_SCALE_MASK (_BV(3)|_BV(4))		///< Define the resolution of the sensor
+#define DLPF_256HZ 0						///< Define the frequency loop
+#define DLPF_188HZ 1						///< Define the frequency loop
+#define DLPF_98HZ 2							///< Define the frequency loop
+#define DLPF_42HZ 3							///< Define the frequency loop
+#define DLPF_20HZ 4							///< Define the frequency loop
+#define DLPF_10HZ 5							///< Define the frequency loop
+#define DLPF_5HZ 6							///< Define the frequency loop
 
 /**
- * \brief	This function returns the time in milliseconds since system start
- *
- * \return The time in milliseconds since system start
- */
-uint32_t time_keeper_get_millis(void);
+ * \brief Structure containing the Configuration of the gyroscope
+*/
+typedef struct 
+{
+	uint8_t conf_start_reg_address;			///< Define the address of the configuration register
+	uint8_t sample_div;						///< Define the sampling divider
+	uint8_t DLPF;							///< Define the Derivative (?) part of the Low Pass Filter
+	uint8_t interrupts;						///< Define the interruption
+} gyro_config;
 
-/**
- * \brief	This function returns the time in microseconds since system start. 
- *
- * \warning	Will run over after an hour.
- *
- * \return The time in microseconds since system start
- */
-uint32_t time_keeper_get_micros(void);
+static gyroscope_t gyro_outputs;		///< Create an object containing the gyroscope's data
+gyro_config default_configuration;			///< Declare the object containing the gyroscope configuration structure
+uint8_t read_preamble=SENSOR_REG_ADDRESS;	///< Declare the address of the sensor
 
-/**
- * \brief	raw timer ticks
- *
- * \return	The raw timer ticks
- */
-uint32_t time_keeper_get_time_ticks(void);
-
-/**
- * \brief	Transforms the timer ticks into seconds
- *
- * \param	timer_ticks		The timer ticks
- *
- * \return	The time in seconds
- */
-float time_keeper_ticks_to_seconds(uint32_t timer_ticks);
-
-/**
- * \brief	Functions that runs for the parameters input microseconds before returning
- *
- * \param	microseconds		The number of microseconds to wait
- */
-void time_keeper_delay_micros(int32_t microseconds);
-
-/**
- * \brief	Wait until time pass the parameter input
- *
- * \param	until_time		The time until which the function will run
- */
-void time_keeper_delay_until(uint32_t until_time);
-
-
-/**
- * \brief	Wait for X ms
- *
- * \param	until_time		The time during which the function will run
- */
-void time_keeper_delay_ms(int32_t t);
-
-
-#ifdef __cplusplus
+void itg3200_init_slow(void) 
+{
+	;
 }
-#endif
 
-#endif /* TIME_KEEPER_H_ */
+gyroscope_t* itg3200_get_data_slow(void) 
+{	
+	return &gyro_outputs;
+}

@@ -50,10 +50,12 @@
 #include "spi.h"
 #include "gpio.h"
 #include "pdca.h"
-#include "delay.h"
+#include "time_keeper.h"
 
 #include "led.h"
 #include "print_util.h"
+
+#include "user_board.h"
 
 //to remove
 static uint32_t  gl_ptr_mem;						///< Memory data pointer
@@ -180,7 +182,7 @@ static void pdca_int_handler(void)
   //TODO we should have it, but i did not find a way to get sd_spi argument here
   //sd_mmc_spi_read_close_PDCA(); //unselects the SD/MMC memory.
   
-  delay_ms(100);
+  time_keeper_delay_ms(100);
   // Disable unnecessary channel
   pdca_disable(AVR32_PDCA_CHANNEL_SPI_TX);
   pdca_disable(AVR32_PDCA_CHANNEL_SPI_RX);
@@ -785,7 +787,7 @@ static void sd_spi_resources_init(spi_options_t spiOptions)
 	gpio_configure_pin(SD_MMC_SPI_MOSI_PIN,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
 	gpio_configure_pin(SD_MMC_SPI_NPCS_PIN,GPIO_DIR_OUTPUT | GPIO_INIT_LOW);
 	
-	delay_ms(500);
+	time_keeper_delay_ms(500);
 
 	// Assign I/Os to SPI.
 	gpio_enable_module(SD_MMC_SPI_GPIO_MAP,
@@ -1252,7 +1254,7 @@ bool sd_spi_read_sector_to_ram_pcda(void* ram, uint32_t beginning_sector, uint8_
 				// Print the ASCII value of the buffer
 				print_util_dbg_print_num((U8)*(buffer + i), 10);
 			}
-			delay_ms(250);
+			time_keeper_delay_ms(250);
 		}
 		else
 		{
@@ -1516,7 +1518,7 @@ void sd_spi_test(void)
 				print_util_dbg_print_num((U8)*(ram_buffer + i), 10);
 				//print_util_dbg_print_num( (U8)atoi(&(*(ram_buffer2 + i))), 10);
 			}
-			delay_ms(250);
+			time_keeper_delay_ms(250);
 		}
 		else
 		{

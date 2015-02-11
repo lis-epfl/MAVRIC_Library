@@ -49,8 +49,8 @@
 #ifndef SD_SPI_H_
 #define SD_SPI_H_
 
-#include "compiler.h"
-#include "user_board.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 //Linked with SPI usage
 #define SPI_LOW_SPEED					400000		///< SPI low speed configuration

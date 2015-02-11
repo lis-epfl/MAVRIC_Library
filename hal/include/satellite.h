@@ -62,7 +62,7 @@ typedef struct
 	uint32_t 		dt;					///< Duration between two updates
 	bool			new_data_available; ///< Indicates if new data is  available
 	usart_config_t	usart_conf_sat;		///< store UART conf for satellite com
-}satellite_t;
+} satellite_t;
 
 //Function pointer
 
