@@ -53,6 +53,7 @@ extern "C" {
 #include "mavlink_waypoint_handler.h"
 #include "simulation.h"
 #include "manual_control.h"
+#include "imu.h"
 
 /**
  * \brief Defines the state machine structure
@@ -68,6 +69,7 @@ typedef struct
 	simulation_model_t *sim_model;						///< Pointer to the simulation structure
 	remote_t* remote;									///< Pointer to the remote structure
 	manual_control_t* manual_control;					///< Pointer to the manual_control structure
+	const imu_t* imu;										///< Pointer to the IMU structure
 } state_machine_t;
 
 
@@ -79,6 +81,7 @@ typedef struct
  * \param sim_model					Pointer to the simulation structure
  * \param remote						Pointer to the remote structure
  * \param manual_control				Pointer to the manual_control structure
+ * \param imu							Pointer to the IMU structure
  *
  * \return	True if the init succeed, false otherwise
  */
@@ -87,7 +90,8 @@ bool state_machine_init(	state_machine_t *state_machine,
 							mavlink_waypoint_handler_t* waypoint_handler, 
 							simulation_model_t *sim_model, 
 							remote_t* remote,
-							manual_control_t* manual_control);
+							manual_control_t* manual_control,
+							const imu_t* imu);
 
 
 /**

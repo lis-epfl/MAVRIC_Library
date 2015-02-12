@@ -65,15 +65,17 @@ bool state_machine_init(	state_machine_t *state_machine,
 							mavlink_waypoint_handler_t* waypoint_handler, 
 							simulation_model_t *sim_model, 
 							remote_t* remote,
-							manual_control_t* manual_control)
+							manual_control_t* manual_control,
+							const imu_t* imu)
 {
 	bool init_success = true;
 	
 	state_machine->waypoint_handler = waypoint_handler;
-	state_machine->state 			= state;
+	state_machine->state 				= state;
 	state_machine->sim_model 		= sim_model;
 	state_machine->remote 			= remote;
-	state_machine->manual_control = manual_control;
+	state_machine->manual_control 	= manual_control;
+	state_machine->imu 				= imu;
 	
 	state_machine->channel_switches = 0;
 	state_machine->rc_check 		= 0;
@@ -90,7 +92,7 @@ void state_machine_update(state_machine_t* state_machine)
 	mav_mode_t mode_current, mode_new;
 	mav_state_t state_current, state_new;
 	signal_quality_t rc_check;
-
+	
 	// Get current state
 	state_current = state_machine->state->mav_state;
 
@@ -111,12 +113,24 @@ void state_machine_update(state_machine_t* state_machine)
 	{
 		case MAV_STATE_UNINIT:
 		case MAV_STATE_BOOT:
-		case MAV_STATE_CALIBRATING:
 		case MAV_STATE_POWEROFF:
 		case MAV_STATE_ENUM_END:
-		break;
-
+			break;
+		
+		case MAV_STATE_CALIBRATING:
+			if(imu_get_internal_state(state_machine->imu)==RUNNING)
+			{
+				state_new = MAV_STATE_STANDBY;
+				break;
+			}
+			break;
 		case MAV_STATE_STANDBY:
+			if(imu_get_internal_state(state_machine->imu) == CALIBRATING)
+			{
+				state_new = MAV_STATE_CALIBRATING;
+				break;
+			}
+			
 			state_machine->state->in_the_air = false;
 			
 			if ( mode_new.ARMED == ARMED_ON )
