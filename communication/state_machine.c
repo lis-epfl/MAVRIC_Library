@@ -64,7 +64,6 @@ bool state_machine_init(	state_machine_t *state_machine,
 							state_t* state, 
 							mavlink_waypoint_handler_t* waypoint_handler, 
 							simulation_model_t *sim_model, 
-							remote_t* remote,
 							manual_control_t* manual_control,
 							const imu_t* imu)
 {
@@ -73,7 +72,6 @@ bool state_machine_init(	state_machine_t *state_machine,
 	state_machine->waypoint_handler = waypoint_handler;
 	state_machine->state 				= state;
 	state_machine->sim_model 		= sim_model;
-	state_machine->remote 			= remote;
 	state_machine->manual_control 	= manual_control;
 	state_machine->imu 				= imu;
 	
@@ -105,7 +103,7 @@ void state_machine_update(state_machine_t* state_machine)
 	// Get remote signal strength
 	rc_check = manual_control_get_signal_strength(state_machine->manual_control);
 
-	mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current, rc_check);
+	mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current);
 	
 
 	// Change state according to signal strength
@@ -141,9 +139,9 @@ void state_machine_update(state_machine_t* state_machine)
 			break;
 		
 		case MAV_STATE_ACTIVE:
-			if ((state_machine->manual_control->source_mode == REMOTE)||(state_machine->manual_control->source_mode == JOYSTICK))
+			if ((state_machine->manual_control->mode_source == MODE_SOURCE_REMOTE)||(state_machine->manual_control->mode_source == MODE_SOURCE_JOYSTICK))
 			{
-				if ( (state_machine->manual_control->source_mode == REMOTE)&&(rc_check != SIGNAL_GOOD) )
+				if ( (state_machine->manual_control->mode_source == MODE_SOURCE_REMOTE)&&(rc_check != SIGNAL_GOOD) )
 				{
 					state_new = MAV_STATE_CRITICAL;
 				}
@@ -187,7 +185,7 @@ void state_machine_update(state_machine_t* state_machine)
 			mode_new.ARMED = ARMED_OFF;
 			
 			// To get out of this state, if we are in the wrong use_mode_from_remote
-			if (state_machine->manual_control->source_mode != REMOTE)
+			if (state_machine->manual_control->mode_source != MODE_SOURCE_REMOTE)
 			{
 				state_new = MAV_STATE_STANDBY;
 			}

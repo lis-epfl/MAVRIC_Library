@@ -51,10 +51,10 @@ extern "C" {
 #include "manual_control.h"
 
 
-manual_control_t manual_control_default_config =
+manual_control_conf_t manual_control_default_config =
 {
-	.source_mode = REMOTE,
-	.control_source = REMOTE_CONTROL
+	.mode_source = MODE_SOURCE_REMOTE,
+	.control_source = CONTROL_SOURCE_REMOTE
 };
 
 #ifdef __cplusplus

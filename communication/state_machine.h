@@ -79,7 +79,6 @@ typedef struct
  * \param state_machine				Pointer to the state machine structure
  * \param state						Pointer to the state structure
  * \param sim_model					Pointer to the simulation structure
- * \param remote						Pointer to the remote structure
  * \param manual_control				Pointer to the manual_control structure
  * \param imu							Pointer to the IMU structure
  *
@@ -89,10 +88,8 @@ bool state_machine_init(	state_machine_t *state_machine,
 							state_t* state, 
 							mavlink_waypoint_handler_t* waypoint_handler, 
 							simulation_model_t *sim_model, 
-							remote_t* remote,
 							manual_control_t* manual_control,
 							const imu_t* imu);
-
 
 /**
  * \brief   Updates the state and mode of the UAV (not implemented yet)

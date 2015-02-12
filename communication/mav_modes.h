@@ -43,9 +43,25 @@
 #ifndef MAV_MODE_H
 #define MAV_MODE_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 #include "mavlink_stream.h"
 #include <stdint.h>
 #include <stdbool.h>
+
+
+/**
+ * \brief Enum defining the arming/disarming events
+ */
+typedef enum
+{
+	ARM_ACTION_DISARMING 	= -1,
+	ARM_ACTION_NONE 		= 0,
+	ARM_ACTION_ARMING 		= 1,
+} arm_action_t;
 
 
 /*
@@ -57,12 +73,6 @@ typedef enum
 	ARMED_ON  = 1,				///< Motors are armed
 } mode_flag_armed_t;
 
-typedef enum
-{
-	DISARMING = -1,
-	NOTHING = 0,
-	ARMING = 1,
-}arm_flag_t;
 
 /*
  * \brief enum for defining manual piloting mode
@@ -499,5 +509,9 @@ static inline mav_mode_t mav_modes_get_from_flags(const mode_flag_armed_t armed,
 
 	return mode;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //MAV_MODE_H
