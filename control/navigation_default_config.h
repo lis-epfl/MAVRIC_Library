@@ -63,15 +63,15 @@ navigation_config_t navigation_default_config =
 		.clip_min = 0.0f,
 		.clip_max = 3.0f,
 		.integrator={
-			.pregain = 0.5f,
-			.postgain = 0.0f,
+			.gain = 0.0f,
+			.clip_pre = 0.0f,
 			.accumulator = 0.0f,
-			.clip = 0.65f,
+			.clip = 0.0f,
 		},
 		.differentiator={
-			.gain = 0.2f,
+			.gain = 0.14f,
 			.previous = 0.0f,
-			.clip = 0.65f
+			.clip = 0.46f
 		},
 		.output = 0.0f,
 		.error = 0.0f,
@@ -85,15 +85,15 @@ navigation_config_t navigation_default_config =
 		.clip_min = 0.0f,
 		.clip_max = 3.0f,
 		.integrator={
-			.pregain = 0.5f,
-			.postgain = 0.0f,
+			.gain = 0.0f,
+			.clip_pre = 0.0f,
 			.accumulator = 0.0f,
-			.clip = 0.65f,
+			.clip = 0.0f,
 		},
 		.differentiator={
-			.gain = 0.4f,
+			.gain = 0.28f,
 			.previous = 0.0f,
-			.clip = 0.65f
+			.clip = 0.46f
 		},
 		.output = 0.0f,
 		.error = 0.0f,

@@ -68,15 +68,15 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 					.clip_min = -0.9f,
 					.clip_max = 0.9f,
 					.integrator={
-						.pregain = 0.5f,
-						.postgain = 1.0f,
+						.gain = 0.025f,
+						.clip_pre = 1.0f,
 						.accumulator = 0.0f,
-						.clip = 0.65f,
+						.clip = 0.0325f,
 					},
 					.differentiator={
-						.gain = 0.15f,
+						.gain = 0.0075f,
 						.previous = 0.0f,
-						.clip = 0.65f
+						.clip = 0.0325f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -92,15 +92,15 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 					.clip_min = -0.9f,
 					.clip_max = 0.9f,
 					.integrator={
-						.pregain = 0.5f,
-						.postgain = 1.0f,
+						.gain = 0.025f,
+						.clip_pre = 1.0f,
 						.accumulator = 0.0f,
-						.clip = 0.65f,
+						.clip = 0.0325f,
 					},
 					.differentiator={
-						.gain = 0.15f,
+						.gain = 0.0075f,
 						.previous = 0.0f,
-						.clip = 0.65f
+						.clip = 0.0325f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -116,15 +116,15 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 					.clip_min = -0.3f,
 					.clip_max = 0.3f,
 					.integrator={
-						.pregain = 0.5f,
-						.postgain = 0.5f,
+						.gain = 0.075f,
+						.clip_pre = 1.0f,
 						.accumulator = 0.0f,
-						.clip = 0.3f,
+						.clip = 0.045f,
 					},
 					.differentiator={
 						.gain = 0.0f,
 						.previous = 0.0f,
-						.clip = 0.5f
+						.clip = 0.0f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -141,8 +141,8 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 				.clip_min = -1000,
 				.clip_max = 1000,
 				.integrator={
-					.pregain = 0.0f,
-					.postgain = 0.0f,
+					.gain = 0.0f,
+					.clip_pre = 0.0f,
 					.accumulator = 0.0f,
 					.clip = 0.0f,
 				},
@@ -184,15 +184,15 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 					.clip_min = -12.0f,
 					.clip_max = 12.0f,
 					.integrator={
-						.pregain = 0.0f,
-						.postgain = 0.0f,
+						.gain = 0.0f,
+						.clip_pre = 0.0f,
 						.accumulator = 0.0f,
 						.clip = 0.0f,
 					},
 					.differentiator={
 						.gain = 0.0f,
 						.previous = 0.0f,
-						.clip = 0.1f
+						.clip = 0.0f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -208,15 +208,15 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 					.clip_min = -12.0f,
 					.clip_max = 12.0f,
 					.integrator={
-						.pregain = 0.0f,
-						.postgain = 0.0f,
+						.gain = 0.0f,
+						.clip_pre = 0.0f,
 						.accumulator = 0.0f,
 						.clip = 0.0f,
 					},
 					.differentiator={
 						.gain = 0.0f,
 						.previous = 0.0f,
-						.clip = 0.1f
+						.clip = 0.0f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -232,15 +232,15 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 					.clip_min = -1.5f,
 					.clip_max = 1.5f,
 					.integrator={
-						.pregain = 0.0f,
-						.postgain = 0.0f,
+						.gain = 0.0f,
+						.clip_pre = 0.0f,
 						.accumulator = 0.0f,
 						.clip = 0.0f,
 					},
 					.differentiator={
 						.gain = 0.0f,
 						.previous = 0.0f,
-						.clip = 0.5f
+						.clip = 0.0f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -257,8 +257,8 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 				.clip_min = -1,
 				.clip_max = 1,
 				.integrator={
-					.pregain = 0.0f,
-					.postgain = 0.0f,
+					.gain = 0.0f,
+					.clip_pre = 0.0f,
 					.accumulator = 0.0f,
 					.clip = 0.0f,
 				},
@@ -300,15 +300,15 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 					.clip_min = -0.5f,
 					.clip_max = 0.5f,
 					.integrator={
-						.pregain = 1.0f,
-						.postgain = 0.5f,
+						.gain = 0.1f,
+						.clip_pre = 1.0f,
 						.accumulator = 0.0f,
-						.clip = 0.5f,
+						.clip = 0.1f,
 					},
 					.differentiator={
 						.gain = 0.0f,
 						.previous = 0.0f,
-						.clip = 0.5f
+						.clip = 0.0f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -324,15 +324,15 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 					.clip_min = -0.5f,
 					.clip_max = 0.5f,
 					.integrator={
-						.pregain = 1.0f,
-						.postgain = 0.5f,
+						.gain = 0.1f,
+						.clip_pre = 1.0f,
 						.accumulator = 0.0f,
-						.clip = 0.5f,
+						.clip = 0.1f,
 					},
 					.differentiator={
 						.gain = 0.0f,
 						.previous = 0.0f,
-						.clip = 0.5f
+						.clip = 0.0f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -348,8 +348,8 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 					.clip_min = -1,
 					.clip_max = 1,
 					.integrator={
-						.pregain = 0.0f,
-						.postgain = 0.0f,
+						.gain = 0.0f,
+						.clip_pre = 0.0f,
 						.accumulator = 0.0f,
 						.clip = 0.0f,
 					},
@@ -373,15 +373,15 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 				.clip_min = -0.9f,
 				.clip_max = 0.65f,
 				.integrator={
-					.pregain = 1.0f,
-					.postgain = 0.001f,
+					.gain = 0.0002f,
+					.clip_pre = 1.0f,
 					.accumulator = 0.0f,
-					.clip = 1.0f,
+					.clip = 0.0002f,
 				},
 				.differentiator={
-					.gain = 0.2f,
+					.gain = 0.04f,
 					.previous = 0.0f,
-					.clip = 0.2f
+					.clip = 0.04f
 				},
 				.output = 0.0f,
 				.error = 0.0f,
@@ -416,15 +416,15 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 					.clip_min = -0.5f,
 					.clip_max = 0.5f,
 					.integrator={
-						.pregain = 0.0f,
-						.postgain = 0.0f,
+						.gain = 0.0f,
+						.clip_pre = 0.0f,
 						.accumulator = 0.0f,
 						.clip = 0.0f,
 					},
 					.differentiator={
-						.gain = 0.005f,
+						.gain = 0.00005f,
 						.previous = 0.0f,
-						.clip = 0.5f
+						.clip = 0.005f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -440,15 +440,15 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 					.clip_min = -0.5f,
 					.clip_max = 0.5f,
 					.integrator={
-						.pregain = 0.0f,
-						.postgain = 0.0f,
+						.gain = 0.0f,
+						.clip_pre = 0.0f,
 						.accumulator = 0.0f,
-						.clip = 0.5f,
+						.clip = 0.0f,
 					},
 					.differentiator={
-						.gain = 0.005f,
+						.gain = 0.00005f,
 						.previous = 0.0f,
-						.clip = 0.5f
+						.clip = 0.005f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -464,8 +464,8 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 					.clip_min = -1,
 					.clip_max = 1,
 					.integrator={
-						.pregain = 0.0f,
-						.postgain = 0.0f,
+						.gain = 0.0f,
+						.clip_pre = 0.0f,
 						.accumulator = 0.0f,
 						.clip = 0.0f,
 					},
@@ -489,15 +489,15 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 				.clip_min = -0.9f,
 				.clip_max = 0.65f,
 				.integrator={
-					.pregain = 0.001f,
-					.postgain = 1.0f,
+					.gain = 0.00005f,
+					.clip_pre = 1.0f,
 					.accumulator = 0.0f,
-					.clip = 0.5f,
+					.clip = 0.025f,
 				},
 				.differentiator={
-					.gain = 0.1f,
+					.gain = 0.005f,
 					.previous = 0.0f,
-					.clip = 0.2f
+					.clip = 0.01f
 				},
 				.output = 0.0f,
 				.error = 0.0f,
