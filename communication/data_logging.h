@@ -49,7 +49,8 @@ extern "C" {
 
 #include "mavlink_communication.h"
 #include "state.h"
-#include "fat_fs/ff.h"
+#include "libs/fat_fs/ff.h"
+#include "tasks.h"
 
 
 /**
