@@ -71,7 +71,7 @@ navigation_config_t navigation_default_config =
 		.differentiator={
 			.gain = 0.14f,
 			.previous = 0.0f,
-			.clip = 0.45f
+			.clip = 0.46f
 		},
 		.output = 0.0f,
 		.error = 0.0f,
@@ -91,9 +91,9 @@ navigation_config_t navigation_default_config =
 			.clip = 0.0f,
 		},
 		.differentiator={
-			.gain = 0.08f,
+			.gain = 0.28f,
 			.previous = 0.0f,
-			.clip = 0.13f
+			.clip = 0.46f
 		},
 		.output = 0.0f,
 		.error = 0.0f,

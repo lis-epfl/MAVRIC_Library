@@ -303,7 +303,7 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 						.gain = 0.1f,
 						.clip_pre = 1.0f,
 						.accumulator = 0.0f,
-						.clip = 0.05f,
+						.clip = 0.1f,
 					},
 					.differentiator={
 						.gain = 0.0f,
@@ -327,7 +327,7 @@ stabilisation_copter_conf_t stabilisation_copter_default_config =
 						.gain = 0.1f,
 						.clip_pre = 1.0f,
 						.accumulator = 0.0f,
-						.clip = 0.05f,
+						.clip = 0.1f,
 					},
 					.differentiator={
 						.gain = 0.0f,
