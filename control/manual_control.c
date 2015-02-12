@@ -66,8 +66,8 @@ bool manual_control_init(manual_control_t* manual_control, manual_control_conf_t
 	manual_control->mode_source 	= config->mode_source;
 	manual_control->control_source 	= config->control_source;
 
-	remote_init(&manual_control->remote, remote_config);
-	joystick_init(&manual_control->joystick);
+	init_success &= remote_init(&manual_control->remote, remote_config);
+	init_success &= joystick_init(&manual_control->joystick);
 
 	print_util_dbg_print("[MANUAL_CONTROL] Initialized\r\n");
 

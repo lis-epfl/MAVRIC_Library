@@ -59,9 +59,9 @@ extern "C" {
  */
 typedef enum
 {
-	MODE_SOURCE_GND_STATION = 0,
+	MODE_SOURCE_GND_STATION  = 0,
 	MODE_SOURCE_REMOTE 		= 1,
-	MODE_SOURCE_JOYSTICK 	= 2,
+	MODE_SOURCE_JOYSTICK 		= 2,
 } mode_source_t;
 
 
@@ -70,9 +70,9 @@ typedef enum
  */
 typedef enum
 {
-	CONTROL_SOURCE_NONE 		= 0,
+	CONTROL_SOURCE_NONE 			= 0,
 	CONTROL_SOURCE_REMOTE 		= 1,
-	CONTROL_SOURCE_JOYSTICK 	= 2,
+	CONTROL_SOURCE_JOYSTICK	 	= 2,
 } control_source_t;
 
 
