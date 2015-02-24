@@ -50,6 +50,7 @@ extern "C" {
 #include "stdint.h"
 #include "mav_modes.h"
 #include "analog_monitor.h"
+#include "battery.h"
 #include <stdbool.h>
 
 /**
@@ -110,6 +111,8 @@ typedef struct
 	bool reset_position;								///< Flag to enable the reset of the position estimation
 	
 	uint32_t remote_active;								///< Flag to tell whether the remote is active or not
+	
+	battery_t battery;										///< The battery structure
 	
 	const analog_monitor_t* analog_monitor;				///< The pointer to the analog monitor structure
 } state_t;

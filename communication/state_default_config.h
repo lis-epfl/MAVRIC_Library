@@ -62,6 +62,7 @@ state_t state_default_config =
 	.sensor_enabled = 0b1111110000100111,
 	.sensor_health = 0b1111110000100111,
 	.remote_active = 1,
+	.battery = { .type = BATTERY_LIPO_3S },
 	.source_mode = REMOTE
 };
 
