@@ -47,7 +47,7 @@
 #include "print_util.h"
 #include "state.h"
 #include "time_keeper.h"
-
+#include "battery.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -211,7 +211,8 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 	}
 
 	mode_new = state_machine_get_mode_from_source(state_machine, mode_current, rc_check);
-	
+
+	battery_update(&state_machine->state->battery,state_machine->state->analog_monitor->avg[ANALOG_RAIL_10]);
 
 	// Change state according to signal strength
 	switch ( state_current )
@@ -250,7 +251,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 				}
 			}
 			//check battery level
-			if( state_machine_check_battery(state_machine) )
+			if( state_machine->state->battery.is_low )
 			{
 				// Land as soon as possible => switch state to MAV_STATE_EMERGENCY
 				state_machine->navigation->critical_behavior = CRITICAL_LAND;
@@ -282,7 +283,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 			
 			//check battery level
-			if( state_machine_check_battery(state_machine) )
+			if( state_machine->state->battery.is_low )
 			{
 				// Land as soon as possible => switch state to MAV_STATE_EMERGENCY
 				state_machine->navigation->critical_behavior = CRITICAL_LAND;
