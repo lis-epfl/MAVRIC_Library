@@ -96,7 +96,7 @@ bool data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_h
 	// Add callbacks for data_logging commands requests
 	mavlink_message_handler_cmd_callback_t callbackcmd;
 	
-	callbackcmd.command_id = MAV_CMD_DO_SET_PARAMETER; // 180
+	callbackcmd.command_id = MAV_CMD_TOGGLE_DATA_LOG; // 504
 	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
