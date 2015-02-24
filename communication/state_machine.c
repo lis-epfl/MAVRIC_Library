@@ -280,6 +280,13 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 					// higher level navigation module will take care of coming back home
 					break;
 			}
+			
+			//check battery level
+			if( state_machine_check_battery(state_machine) )
+			{
+				// Land as soon as possible => switch state to MAV_STATE_EMERGENCY
+				state_machine->navigation->critical_behavior = CRITICAL_LAND;
+			}
 			break;
 		
 		case MAV_STATE_EMERGENCY:
