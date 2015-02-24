@@ -97,20 +97,13 @@ bool state_machine_init(	state_machine_t *state_machine,
 							navigation_t* navigation);
 
 /**
- * \brief   Updates the state and mode of the UAV (not implemented yet)
- *
- * \param	state_machine			Pointer to the state machine structure
- *
- * \return Returns the result of the task
- */
-task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine);
-
-/**
  * \brief   Updates the state machine
  *
  * \param	state_machine			Pointer to the state machine structure
+ * 
+ * \return Returns the result of the task
  */
-void state_machine_update(state_machine_t* state_machine);
+task_return_t state_machine_update(state_machine_t* state_machine);
 
 
 #ifdef __cplusplus

@@ -185,7 +185,7 @@ bool state_machine_init(	state_machine_t *state_machine,
 }
 
 
-void state_machine_update(state_machine_t* state_machine)
+task_return_t state_machine_update(state_machine_t* state_machine)
 {
 	mav_mode_t mode_current, mode_new;
 	mav_state_t state_current, state_new;
@@ -352,4 +352,5 @@ void state_machine_update(state_machine_t* state_machine)
 	state_machine->state->mav_mode = mode_new;
 	state_machine->state->mav_state = state_new;
 
+	return TASK_RUN_SUCCESS;
 }
