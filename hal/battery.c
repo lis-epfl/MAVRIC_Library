@@ -122,19 +122,19 @@ static float battery_get_low_voltage(battery_type_t type)
     switch(type)
     {
         case BATTERY_LIPO_1S:
-           low_voltage = 3.4f;
+           low_voltage = 3.2f;
 			break;
 			
         case BATTERY_LIPO_2S:
-           low_voltage = 2 * 3.4f;
+           low_voltage = 2 * 3.2f;
 			break;
 			
         case BATTERY_LIPO_3S:
-           low_voltage = 3 * 3.4f;
+           low_voltage = 3 * 3.2f;
 			break;
 			
         case BATTERY_LIPO_4S:
-           low_voltage = 4 * 3.4f;
+           low_voltage = 4 * 3.2f;
 			break;
 			
         case BATTERY_LIFE_1S:
@@ -161,13 +161,14 @@ static float battery_get_low_voltage(battery_type_t type)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool battery_init(battery_t* battery, battery_type_t type)
+bool battery_init(battery_t* battery, battery_type_t type, float low_level_limit)
 {
 	bool init_success = true;
 	
     battery->type               = type;
     battery->current_voltage    = battery_get_low_voltage(battery->type);
     battery->current_level      = 0.0f;
+	battery->low_level_limit		= low_level_limit;
     battery->is_low             = false;
     battery->time_under_low_voltage_ms = 0;
     battery->last_update_ms     = 0;
@@ -182,7 +183,7 @@ bool battery_init(battery_t* battery, battery_type_t type)
 
 float battery_get_level(battery_t* battery)
 {
-    float level =   ( battery_get_full_voltage(battery->type) - battery->current_voltage ) / 
+    float level =   100.0f * ( battery->current_voltage - battery_get_low_voltage(battery->type) ) / 
                     ( battery_get_full_voltage(battery->type) - battery_get_low_voltage(battery->type) );
 
     return level;
@@ -209,7 +210,7 @@ void battery_update(battery_t* battery, float voltage)
 
 
     // Check if low level
-    if( battery->current_voltage < battery_get_low_voltage(battery->type) )
+    if( battery->current_level < battery->low_level_limit )
     {
         battery->is_low = true;
         battery->time_under_low_voltage_ms += now - battery->last_update_ms;

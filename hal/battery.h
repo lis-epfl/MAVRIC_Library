@@ -72,14 +72,15 @@ typedef enum
  */
 typedef struct
 {
-    battery_type_t  type;
-    float           current_voltage;
-    float           current_level;
-    bool            is_low;
-    uint32_t        time_under_low_voltage_ms;
-    uint32_t        last_update_ms;
-    bool            do_LPF;
-	float			  lpf_gain;
+    battery_type_t  type;							///< The battery type
+    float           current_voltage;				///< The current voltage of the battery in V
+    float           current_level;					///< The current level of the battery in %
+	float			  low_level_limit;				///< The lower limit in %
+    bool            is_low;							///< Flag to tell whether the battery is low
+    uint32_t        time_under_low_voltage_ms;	///< The time spent under the lower limit
+    uint32_t        last_update_ms;					///< The time of the last update in ms
+    bool            do_LPF;							///< Flag to low-pass filter the battery input or not
+	float			  lpf_gain;						///< The value of the low-pass filter gain
 } battery_t;
 
 /**
@@ -90,7 +91,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool battery_init(battery_t* battery, battery_type_t type);
+bool battery_init(battery_t* battery, battery_type_t type, float low_limit);
 
 /**
  * \brief	Returns the level of the battery in percentage
