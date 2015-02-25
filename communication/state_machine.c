@@ -54,15 +54,6 @@
 //------------------------------------------------------------------------------
 
 /**
- * \brief	Check the battery level for safety reason
- *
- * \param	state_machine		Pointer to the state machine structure
- *
- * \return	True if the battery level was lower a threshold for a given time
- */
-static bool state_machine_check_battery(state_machine_t *state_machine);
-
-/**
  * \brief	Returns the value of the mode from the desired source input
  *
  * \param	state_machine			The pointer to the state_machine structure
@@ -77,44 +68,6 @@ mav_mode_t state_machine_get_mode_from_source(state_machine_t* state_machine, ma
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-
-static bool state_machine_check_battery(state_machine_t *state_machine)
-{
-	bool result = false;
-	
-	uint32_t now = time_keeper_get_millis();
-	
-	float critical_battery = 10.0f;//this number should be adjusted according to your safety level
-	if( state_machine->state->analog_monitor->avg[ANALOG_RAIL_10] < critical_battery) // ANALOG_RAIL_10 = BATTERY_FILTERED
-	{
-		if ( (now - state_machine->low_battery_update) < 1000 ) //battery was low during the following second (task_period 10millis)
-		{
-			state_machine->low_battery_update = now;
-			state_machine->low_battery_counter++;
-		}
-		else //reset safety counter
-		{
-			state_machine->low_battery_update	= now;
-			state_machine->low_battery_counter	= 1;
-		}
-		
-		uint32_t safety_timeout = 75;//this number should be adjusted according to the task frequency + safety level
-		//this currently correspond to 15sec of critical battery, long enough to avoid false detection
-		if (state_machine->low_battery_counter >= safety_timeout )
-		{
-			// Land as soon as possible
-			state_machine->navigation->critical_behavior = CRITICAL_LAND;
-			result = true;
-		}
-	}
-	else
-	{
-		//everything seams safe => this task does not do anything
-		result = false;
-	}
-	
-	return result;
-}
 
 mav_mode_t state_machine_get_mode_from_source(state_machine_t* state_machine, mav_mode_t mode_current, signal_quality_t rc_check )
 {
@@ -253,6 +206,8 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			//check battery level
 			if( state_machine->state->battery.is_low )
 			{
+				print_util_dbg_print("Battery low! Performing critical landing.\r\n");
+				
 				// Land as soon as possible => switch state to MAV_STATE_EMERGENCY
 				state_machine->navigation->critical_behavior = CRITICAL_LAND;
 				state_new = MAV_STATE_CRITICAL;
@@ -263,7 +218,10 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			switch ( rc_check )
 			{
 				case SIGNAL_GOOD:
-					state_new = MAV_STATE_ACTIVE;
+					if( !state_machine->state->battery.is_low)
+					{
+						state_new = MAV_STATE_ACTIVE;
+					}
 					break;
 
 				case SIGNAL_BAD:
@@ -283,8 +241,10 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 			
 			//check battery level
-			if( state_machine->state->battery.is_low )
+			if( state_machine->state->battery.is_low && (state_machine->navigation->critical_behavior != CRITICAL_LAND) )
 			{
+				print_util_dbg_print("Critical Battery low! Performing critical landing.\r\n");
+				
 				// Land as soon as possible => switch state to MAV_STATE_EMERGENCY
 				state_machine->navigation->critical_behavior = CRITICAL_LAND;
 			}
@@ -295,25 +255,28 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			mode_new.ARMED = ARMED_OFF;
 			state_machine->remote->mode.current_desired_mode.ARMED = ARMED_OFF;
 			
-			// To get out of this state, if we are in the wrong use_mode_from_remote
-			if (state_machine->state->source_mode != REMOTE)
+			if( !state_machine->state->battery.is_low)
 			{
-				state_new = MAV_STATE_STANDBY;
-			}
-			
-			switch ( rc_check )
-			{
-				case SIGNAL_GOOD:
+				// To get out of this state, if we are in the wrong use_mode_from_remote
+				if (state_machine->state->source_mode != REMOTE)
+				{
 					state_new = MAV_STATE_STANDBY;
-					break;
+				}
+				
+				switch ( rc_check )
+				{
+					case SIGNAL_GOOD:
+						state_new = MAV_STATE_STANDBY;
+						break;
 
-				case SIGNAL_BAD:
-					// Stay in emergency mode
-					break;
+					case SIGNAL_BAD:
+						// Stay in emergency mode
+						break;
 
-				case SIGNAL_LOST:
-					// Stay in emergency mode
-					break;
+					case SIGNAL_LOST:
+						// Stay in emergency mode
+						break;
+				}
 			}
 			break;
 	}
