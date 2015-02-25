@@ -78,7 +78,7 @@ bool state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	
 	state->simulation_mode = state_config->simulation_mode;
 	
-	battery_init(&state->battery,state_config->battery.type);
+	init_success &= battery_init(&state->battery,state_config->battery.type,state_config->battery.low_level_limit);
 	
 	if (state->simulation_mode == HIL_ON)
 	{
