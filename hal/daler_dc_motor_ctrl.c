@@ -74,7 +74,7 @@ task_return_t daler_dc_motor_ctrl_update(daler_dc_motor_ctrl_t* dc_motor )//, co
 	
 	for (i=1;i<3;i++)
 	{
-		scaled_channel = 1000.0f * dc_motor->wingrons_angle[i-1] + 5000;
+		scaled_channel = 1000.0f * dc_motor->wingrons_angle[i-1];
 		//scaled_channel = 1000.0f + wingrons[i]* 1000.0f * RC_SCALEFACTOR;
 		scaled_channel_uart_high = ((scaled_channel >> 8) & 0xff);
 		scaled_channel_uart_low = ((scaled_channel >> 0) & 0xff);

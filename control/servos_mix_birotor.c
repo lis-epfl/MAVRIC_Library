@@ -56,12 +56,12 @@ void servo_mix_birotor_init(servo_mix_birotor_t* mix, const servo_mix_birotor_co
 	mix->motor_left			= config->motor_left;
 	mix->motor_right		= config->motor_right;
 	mix->servo_left			= config->servo_left;
-	mix->servo_right		= config->motor_right;
+	mix->servo_right		= config->servo_right;
 
 	mix->motor_left_dir		= config->motor_left_dir;
 	mix->motor_right_dir	= config->motor_right_dir;
-	mix->servo_left_dir		= config->motor_left_dir;	
-	mix->servo_right_dir	= config->motor_right_dir;
+	mix->servo_left_dir		= config->servo_left_dir;	
+	mix->servo_right_dir	= config->servo_right_dir;
 
 	mix->min_thrust 		= config->min_thrust;
 	mix->max_thrust 		= config->max_thrust;
@@ -89,12 +89,12 @@ void servos_mix_birotor_update(servo_mix_birotor_t* mix)
 				( - mix->torque_command->xyz[2]);
 	
 	// Servo left
-	motor[2]  = mix->servo_left_dir * ( - mix->torque_command->xyz[0]) +
-				mix->servo_left_dir * ( + mix->torque_command->xyz[1]);
+	motor[2]  = mix->servo_left_dir * ( + mix->torque_command->xyz[0]
+										+ mix->torque_command->xyz[1] );
 	
 	// Servo right
-	motor[3]  = mix->servo_right_dir * ( + mix->torque_command->xyz[0]) +
-				mix->servo_right_dir * ( + mix->torque_command->xyz[1]);
+	motor[3]  = mix->servo_right_dir * ( - mix->torque_command->xyz[0]
+										 + mix->torque_command->xyz[1] );
 				
 	
 	// Clip values
