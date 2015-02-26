@@ -1358,7 +1358,7 @@ bool waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	callbackcmd.module_struct =									waypoint_handler;
 	init_success &= mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
 	
-	callbackcmd.command_id = MAV_CMD_CONDITION_LAST; // 159
+	callbackcmd.command_id = MAV_CMD_SET_SCENARIO; // 501
 	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190

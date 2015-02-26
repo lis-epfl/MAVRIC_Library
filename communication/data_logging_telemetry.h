@@ -53,7 +53,7 @@ extern "C" {
 #endif
 
 /**
- * \brief	Initialize the MAVLink communication module for the remote
+ * \brief	Initialize the MAVLink communication module for the data logging
  * 
  * \param	data_logging					The pointer to the data logging structure
  * \param	message_handler			The pointer to the MAVLink message handler
