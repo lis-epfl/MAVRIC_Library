@@ -1282,18 +1282,14 @@ static mav_result_t waypoint_handler_is_arrived(mavlink_waypoint_handler_t* wayp
 {
 	mav_result_t result;
 	
-	print_util_dbg_print("Is arrived?\r\n");
-	
 	if( packet->param2 == 32)
 	{
 		if( waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count].current == 0 )
 		{
-			print_util_dbg_print("Yes!\r\n");
 			result = MAV_RESULT_ACCEPTED;
 		}
 		else
 		{
-			print_util_dbg_print("No!\r\n");
 			result = MAV_RESULT_TEMPORARILY_REJECTED;
 		}
 	}
