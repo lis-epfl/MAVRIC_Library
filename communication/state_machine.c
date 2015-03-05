@@ -113,8 +113,7 @@ bool state_machine_init(	state_machine_t *state_machine,
 							mavlink_waypoint_handler_t* waypoint_handler, 
 							simulation_model_t *sim_model, 
 							remote_t* remote,
-							joystick_parsing_t* joystick,
-							navigation_t* navigation)
+							joystick_parsing_t* joystick)
 {
 	bool init_success = true;
 	
@@ -122,7 +121,6 @@ bool state_machine_init(	state_machine_t *state_machine,
 	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
 	state_machine->remote 			= remote;
-	state_machine->navigation		= navigation;
 	state_machine->joystick = joystick;
 	
 	state_machine->channel_switches = 0;
@@ -207,9 +205,6 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			if( state_machine->state->battery.is_low )
 			{
 				print_util_dbg_print("Battery low! Performing critical landing.\r\n");
-				
-				// Land as soon as possible => switch state to MAV_STATE_EMERGENCY
-				state_machine->navigation->critical_behavior = CRITICAL_LAND;
 				state_new = MAV_STATE_CRITICAL;
 			}
 			break;
@@ -238,15 +233,6 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 					// If in another mode, stay in critical mode
 					// higher level navigation module will take care of coming back home
 					break;
-			}
-			
-			//check battery level
-			if( state_machine->state->battery.is_low && (state_machine->navigation->critical_behavior != CRITICAL_LAND) )
-			{
-				print_util_dbg_print("Critical Battery low! Performing critical landing.\r\n");
-				
-				// Land as soon as possible => switch state to MAV_STATE_EMERGENCY
-				state_machine->navigation->critical_behavior = CRITICAL_LAND;
 			}
 			break;
 		

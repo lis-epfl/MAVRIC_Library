@@ -52,7 +52,6 @@ extern "C" {
 #include "state.h"
 #include "mavlink_waypoint_handler.h"
 #include "simulation.h"
-#include "navigation.h"
 #include "joystick_parsing.h"
 
 /**
@@ -71,7 +70,6 @@ typedef struct
 	state_t* state;										///< Pointer to the state structure
 	simulation_model_t *sim_model;						///< Pointer to the simulation structure
 	remote_t* remote;									///< Pointer to the remote structure
-	navigation_t* navigation;							///< Pointer to the navigation structure
 	joystick_parsing_t* joystick;						///< Pointer to the joystick structure
 } state_machine_t;
 
@@ -83,8 +81,7 @@ typedef struct
  * \param state						Pointer to the state structure
  * \param sim_model					Pointer to the simulation structure
  * \param remote					Pointer to the remote structure
- * \param navigation				Pointer to the navigation structure
- * \param	joystick					Pointer to the joystick structure
+ * \param joystick					Pointer to the joystick structure
  *
  * \return	True if the init succeed, false otherwise
  */
@@ -93,8 +90,7 @@ bool state_machine_init(	state_machine_t *state_machine,
 							mavlink_waypoint_handler_t* waypoint_handler, 
 							simulation_model_t *sim_model, 
 							remote_t* remote,
-							joystick_parsing_t* joystick,
-							navigation_t* navigation);
+							joystick_parsing_t* joystick);
 
 /**
  * \brief   Updates the state machine

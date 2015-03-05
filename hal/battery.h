@@ -75,12 +75,11 @@ typedef struct
     battery_type_t  type;							///< The battery type
     float           current_voltage;				///< The current voltage of the battery in V
     float           current_level;					///< The current level of the battery in %
-	float			  low_level_limit;				///< The lower limit in %
+	float			low_level_limit;				///< The lower limit in %
     bool            is_low;							///< Flag to tell whether the battery is low
-    uint32_t        time_under_low_voltage_ms;	///< The time spent under the lower limit
     uint32_t        last_update_ms;					///< The time of the last update in ms
     bool            do_LPF;							///< Flag to low-pass filter the battery input or not
-	float			  lpf_gain;						///< The value of the low-pass filter gain
+	float			lpf_gain;						///< The value of the low-pass filter gain
 } battery_t;
 
 /**

@@ -165,17 +165,16 @@ bool battery_init(battery_t* battery, battery_type_t type, float low_level_limit
 {
 	bool init_success = true;
 	
-    battery->type               = type;
-    battery->current_voltage    = battery_get_low_voltage(battery->type);
-    battery->current_level      = 0.0f;
-	battery->low_level_limit		= low_level_limit;
-    battery->is_low             = false;
-    battery->time_under_low_voltage_ms = 0;
-    battery->last_update_ms     = 0;
-    battery->do_LPF             = true;
-	battery->lpf_gain				= 0.99f;
+    battery->type				= type;
+    battery->current_voltage	= battery_get_low_voltage(battery->type);
+    battery->current_level		= 0.0f;
+	battery->low_level_limit	= low_level_limit;
+    battery->is_low				= false;
+    battery->last_update_ms		= 0;
+    battery->do_LPF				= true;
+	battery->lpf_gain			= 0.99f;
 	
-	print_util_dbg_print("[BATTERY]: Initialised.\r\n");
+	print_util_dbg_print("[BATTERY]: Initialized.\r\n");
 	
 	return init_success;
 }
@@ -213,12 +212,10 @@ void battery_update(battery_t* battery, float voltage)
     if( battery->current_level < battery->low_level_limit )
     {
         battery->is_low = true;
-        battery->time_under_low_voltage_ms += now - battery->last_update_ms;
     }
     else
     {
         battery->is_low = false;
-        battery->time_under_low_voltage_ms = 0;
     }
 
     // Save last update

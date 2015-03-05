@@ -510,6 +510,12 @@ static void navigation_critical_handler(navigation_t* navigation)
 		aero_attitude=coord_conventions_quat_to_aero(*navigation->qe);
 		navigation->waypoint_handler->waypoint_critical_coordinates.heading = aero_attitude.rpy[2];
 		
+		//Check whether we entered critical mode due to a battery low level
+		if (navigation->state->battery.is_low)
+		{
+			navigation->critical_behavior = CRITICAL_LAND;
+		}
+		
 		switch (navigation->critical_behavior)
 		{
 			case CLIMB_TO_SAFE_ALT:
