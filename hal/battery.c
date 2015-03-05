@@ -80,35 +80,35 @@ static float battery_get_full_voltage(battery_type_t type)
     switch(type)
     {
         case BATTERY_LIPO_1S:
-           full_voltage =  4.2f;
+			full_voltage =  4.2f;
 			break;
 			
         case BATTERY_LIPO_2S:
-           full_voltage =  2 * 4.2f;
+			full_voltage =  2 * 4.2f;
 			break;
 			
         case BATTERY_LIPO_3S:
-           full_voltage =  3 * 4.2f;
+			full_voltage =  3 * 4.2f;
 			break;
 			
         case BATTERY_LIPO_4S:
-           full_voltage =  4 * 4.2f;
+			full_voltage =  4 * 4.2f;
 			break;
 			
         case BATTERY_LIFE_1S:
-           full_voltage =  3.6f;
+			full_voltage =  3.6f;
 			break;
 			
         case BATTERY_LIFE_2S:
-           full_voltage =  2 * 3.6f;
+			full_voltage =  2 * 3.6f;
 			break;
 			
         case BATTERY_LIFE_3S:
-           full_voltage =  3 * 3.6f;
+			full_voltage =  3 * 3.6f;
 			break;
 			
         case BATTERY_LIFE_4S:
-           full_voltage =  4 * 3.6f;
+			full_voltage =  4 * 3.6f;
 			break;
     }
 	
@@ -119,38 +119,39 @@ static float battery_get_full_voltage(battery_type_t type)
 static float battery_get_low_voltage(battery_type_t type)
 {
 	float low_voltage = 0.0f;
+
     switch(type)
     {
         case BATTERY_LIPO_1S:
-           low_voltage = 3.2f;
+			low_voltage = 3.2f;
 			break;
 			
         case BATTERY_LIPO_2S:
-           low_voltage = 2 * 3.2f;
+			low_voltage = 2 * 3.2f;
 			break;
 			
         case BATTERY_LIPO_3S:
-           low_voltage = 3 * 3.2f;
+			low_voltage = 3 * 3.2f;
 			break;
 			
         case BATTERY_LIPO_4S:
-           low_voltage = 4 * 3.2f;
+			low_voltage = 4 * 3.2f;
 			break;
 			
         case BATTERY_LIFE_1S:
-           low_voltage = 3.0f;
+			low_voltage = 3.0f;
 			break;
 			
         case BATTERY_LIFE_2S:
-           low_voltage = 2 * 3.0f;
+			low_voltage = 2 * 3.0f;
 			break;
 			
         case BATTERY_LIFE_3S:
-           low_voltage = 3 * 3.0f;
+			low_voltage = 3 * 3.0f;
 			break;
 			
         case BATTERY_LIFE_4S:
-           low_voltage = 4 * 3.0f;
+			low_voltage = 4 * 3.0f;
 			break;
     }
 	

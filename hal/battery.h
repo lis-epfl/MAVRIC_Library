@@ -85,8 +85,9 @@ typedef struct
 /**
  * \brief Initialize the battery module
  *
- * \param battery			Pointer to the battery structure
+ * \param battery		Pointer to the battery structure
  * \param type			The type of battery (number of cells)
+ * \param low_limit		Lower limit of the battery level that will trigger the low battery flag
  *
  * \return	True if the init succeed, false otherwise
  */
@@ -95,7 +96,7 @@ bool battery_init(battery_t* battery, battery_type_t type, float low_limit);
 /**
  * \brief	Returns the level of the battery in percentage
  *
- * \param battery			Pointer to the battery structure
+ * \param battery	Pointer to the battery structure
  *
  * \return	The level of the battery
  */
@@ -104,7 +105,8 @@ float battery_get_level(battery_t* battery);
 /**
  * \brief	Updates the battery voltage level
  *
- * \param battery			Pointer to the battery structure
+ * \param battery	Pointer to the battery structure
+ * \param voltage	Update measured battery voltage
  */
 void battery_update(battery_t* battery, float voltage);
 

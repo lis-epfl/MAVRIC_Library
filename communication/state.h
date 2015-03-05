@@ -112,14 +112,14 @@ typedef struct
 	
 	uint32_t remote_active;								///< Flag to tell whether the remote is active or not
 	
-	battery_t battery;										///< The battery structure
+	battery_t battery;									///< The battery structure
 	
 	const analog_monitor_t* analog_monitor;				///< The pointer to the analog monitor structure
 } state_t;
 
 
 /**
- * \brief					Initialise the state of the MAV
+ * \brief					Initialize the state of the MAV
  *
  * \param	state			The pointer to the state structure
  * \param	state_config	The pointer to the state configuration structure
