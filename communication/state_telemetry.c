@@ -243,8 +243,8 @@ void state_telemetry_send_heartbeat(const state_t* state, const mavlink_stream_t
 
 void state_telemetry_send_status(const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
-	float battery_voltage = state->analog_monitor->avg[ANALOG_RAIL_11];		// bat voltage (mV), actual battery pack plugged to the board
-	float battery_remaining = state->analog_monitor->avg[ANALOG_RAIL_10] / 12.4f * 100.0f; //percentage over full 3cells battery (=12.4V)
+	float battery_voltage = state->battery.current_voltage;
+	float battery_remaining = state->battery.current_level;
 	
 	mavlink_msg_sys_status_pack(mavlink_stream->sysid,
 								mavlink_stream->compid,
