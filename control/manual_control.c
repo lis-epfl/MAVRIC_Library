@@ -30,45 +30,30 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state_default_config.h
+ * \file manual_control.c
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Nicolas Dousse
  *   
- * \brief Default configuration for the state module
+ * \brief This module takes care of taking the correct input for the control
+ * (i.e. the remote or the joystick)
  *
  ******************************************************************************/
+ 
+ 
+#include "manual_control.h"
 
 
-#ifndef STATE_DEFAULT_CONFIG_H_
-#define STATE_DEFAULT_CONFIG_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
 
 
-#include "state.h"
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
 
-state_t state_default_config =
-{
-	.mav_mode = { .byte = MAV_MODE_SAFE },
-	.mav_state = MAV_STATE_BOOT,
-	.simulation_mode = HIL_OFF,
-	.autopilot_type = MAV_TYPE_QUADROTOR,
-	.autopilot_name = MAV_AUTOPILOT_MAVRIC,
-	.sensor_present = 0b1111110000100111,
-	.sensor_enabled = 0b1111110000100111,
-	.sensor_health = 0b1111110000100111,
-	.remote_active = 1,
-	.battery = { 	.type = BATTERY_LIPO_3S,
-					.low_level_limit = 13.3},
-	.source_mode = REMOTE
-};
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif // STATE_DEFAULT_CONFIG_H_
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------

@@ -57,27 +57,29 @@
  *
  * \return	Result
  */
-static float pid_controller_integrate(integrator_t *integrator, float input, float dt);
+static float pid_controller_integrate(integrator_t* integrator, float input, float dt);
+
 
 /**
  * \brief	Initialize integrator parameters
  *
  * \param	integrator	Pointer to an integrator structure
- * \param	pregain		The gain of the integrator
- * \param	postgain	The gain of the returned value
- * \param	clip_val	Clipping value
+ * \param	gain		The gain of the integrator
+ * \param	clip_pre	Clipping value for charging rate
+ * \param	clip		Clipping value
  */
-static void pid_controller_init_integrator(integrator_t *integrator, float pregain, float postgain, float clip_val);
+static void pid_controller_init_integrator(integrator_t* integrator, float gain, float clip_pre, float clip);
+
 
 /**
  * \brief				Initialize Differentiator parameters
  *
  * \param	diff		Pointer to differentiator structure
  * \param	gain		The differential gain
- * \param	LPF			Low pass filter
- * \param	clip_val	Clipping value
+ * \param	clip	Clipping value
  */
-static void pid_controller_init_differenciator(differentiator_t *diff, float gain, float clip_val);
+static void pid_controller_init_differenciator(differentiator_t* diff, float gain, float clip);
+
 
 /**
  * \brief Differentiating
@@ -88,37 +90,38 @@ static void pid_controller_init_differenciator(differentiator_t *diff, float gai
  *
  * \return				Result
  */
-static float pid_controller_differentiate(differentiator_t *diff, float input,  float dt);
+static float pid_controller_differentiate(differentiator_t* diff, float input,  float dt);
 
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static float pid_controller_integrate(integrator_t *integrator, float input, float dt)
+static float pid_controller_integrate(integrator_t* integrator, float input, float dt)
 {
-	integrator->accumulator = maths_clip(integrator->accumulator + dt* integrator->pregain * input, integrator->clip);
-	return integrator->postgain* integrator->accumulator;
+	integrator->accumulator = integrator->accumulator + maths_clip(dt* integrator->gain * input, integrator->clip_pre);
+	integrator->accumulator = maths_clip(integrator->accumulator, integrator->clip);
+	return integrator->accumulator;
 }
 
 
-static void pid_controller_init_integrator(integrator_t *integrator, float pregain, float postgain, float clip_val)
+static void pid_controller_init_integrator(integrator_t* integrator, float gain, float clip_pre, float clip)
 {
-	integrator->pregain 	= pregain;
-	integrator->postgain 	= postgain;
-	integrator->clip 		= clip_val;
+	integrator->gain 		= gain;
+	integrator->clip_pre 	= clip_pre;
+	integrator->clip 		= clip;
 	integrator->accumulator = 0.0f;
 }
 
 
-static void pid_controller_init_differenciator(differentiator_t *diff, float gain, float clip_val)
+static void pid_controller_init_differenciator(differentiator_t* diff, float gain, float clip_val)
 {
 	diff->gain 	= gain;
 	diff->clip 	= clip_val;
 }
 
 
-static float pid_controller_differentiate(differentiator_t *diff, float input, float dt)
+static float pid_controller_differentiate(differentiator_t* diff, float input, float dt)
 {
 	float output = 0.0f;
 
@@ -193,9 +196,9 @@ float pid_controller_update(pid_controller_t* controller, float error)
 	controller->error 		= maths_soft_zone(error, controller->soft_zone_width);
 	controller->dt 			= time_keeper_ticks_to_seconds(t - controller->last_update);
 	controller->last_update = t;
-	controller->output 		= controller->p_gain * ( controller->error + 
-													pid_controller_integrate( &controller->integrator, controller->error, controller->dt) + 
-													pid_controller_differentiate(&controller->differentiator, controller->error, controller->dt) );
+	controller->output 		= controller->p_gain * controller->error  
+								+ pid_controller_integrate( &controller->integrator, controller->error, controller->dt)
+								+ pid_controller_differentiate(&controller->differentiator, controller->error, controller->dt);
 	
 	if( controller->output < controller->clip_min ) 
 	{
@@ -216,9 +219,9 @@ float pid_controller_update_dt(pid_controller_t* controller, float error, float 
 	controller->error 		= error;
 	controller->dt 			= dt;
 	controller->last_update = time_keeper_get_time_ticks();
-	controller->output 		= controller->p_gain * ( controller->error +
-													pid_controller_integrate(&controller->integrator, controller->error, controller->dt) + 
-													pid_controller_differentiate(&controller->differentiator, controller->error, controller->dt) );
+	controller->output 		= controller->p_gain * controller->error  
+								+ pid_controller_integrate( &controller->integrator, controller->error, controller->dt)
+								+ pid_controller_differentiate(&controller->differentiator, controller->error, controller->dt);
 	
 	if( controller->output < controller->clip_min ) 
 	{
