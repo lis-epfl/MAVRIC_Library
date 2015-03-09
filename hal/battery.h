@@ -1,10 +1,10 @@
 /*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, 
  * this list of conditions and the following disclaimer.
  * 
@@ -30,81 +30,88 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file navigation_default_config.h
- * 
+ * \file battery.h
+ *
  * \author MAV'RIC Team
- * 
- * \brief  This file configures the PID gains for the navigation speed command
+ * \author Nicolas Dousse
+ * \author Julien Lecoeur
  *   
+ * \brief Takes care of the battery level
+ *
  ******************************************************************************/
 
 
-#ifndef NAVIGATION_DEFAULT_CONFIG_H_
-#define NAVIGATION_DEFAULT_CONFIG_H_
+#ifndef BATTERY_H_
+#define BATTERY_H_
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" {
 #endif
 
-#include "pid_controller.h"
 
+#include <stdbool.h>
+#include <stdint.h>
 
-navigation_config_t navigation_default_config =
+/**
+ * \brief Defines the battery type (number of cells)
+ */
+typedef enum
 {
-	.dist2vel_gain = 0.7f,
-	.cruise_speed = 3.0f,
-	.max_climb_rate = 1.0f,
-	.soft_zone_size = 0.0f,
-	.alt_lpf = 0.0f,
-	.LPF_gain = 0.9f,
-	.wpt_nav_controller = 
-	{
-		.p_gain = 0.7f,
-		.clip_min = 0.0f,
-		.clip_max = 3.0f,
-		.integrator={
-			.gain = 0.0f,
-			.clip_pre = 0.0f,
-			.accumulator = 0.0f,
-			.clip = 0.0f,
-		},
-		.differentiator={
-			.gain = 0.14f,
-			.previous = 0.0f,
-			.clip = 0.46f
-		},
-		.output = 0.0f,
-		.error = 0.0f,
-		.last_update = 0.0f,
-		.dt = 1,
-		.soft_zone_width = 0.0f
-	},
-	.hovering_controller = 
-	{
-		.p_gain = 0.2f,
-		.clip_min = 0.0f,
-		.clip_max = 3.0f,
-		.integrator={
-			.gain = 0.0f,
-			.clip_pre = 0.0f,
-			.accumulator = 0.0f,
-			.clip = 0.0f,
-		},
-		.differentiator={
-			.gain = 0.28f,
-			.previous = 0.0f,
-			.clip = 0.46f
-		},
-		.output = 0.0f,
-		.error = 0.0f,
-		.last_update = 0.0f,
-		.dt = 1,
-		.soft_zone_width = 0.0f
-	}
-};
+    BATTERY_LIPO_1S,
+    BATTERY_LIPO_2S,
+    BATTERY_LIPO_3S,
+    BATTERY_LIPO_4S,
+    BATTERY_LIFE_1S,
+    BATTERY_LIFE_2S,
+    BATTERY_LIFE_3S,
+    BATTERY_LIFE_4S,
+} battery_type_t;
+
+/**
+ * \brief Defines the battery structure
+ */
+typedef struct
+{
+    battery_type_t  type;							///< The battery type
+    float           current_voltage;				///< The current voltage of the battery in V
+    float           current_level;					///< The current level of the battery in %
+	float			low_level_limit;				///< The lower limit in %
+    bool            is_low;							///< Flag to tell whether the battery is low
+    uint32_t        last_update_ms;					///< The time of the last update in ms
+    bool            do_LPF;							///< Flag to low-pass filter the battery input or not
+	float			lpf_gain;						///< The value of the low-pass filter gain
+} battery_t;
+
+/**
+ * \brief Initialize the battery module
+ *
+ * \param battery		Pointer to the battery structure
+ * \param type			The type of battery (number of cells)
+ * \param low_limit		Lower limit of the battery level that will trigger the low battery flag
+ *
+ * \return	True if the init succeed, false otherwise
+ */
+bool battery_init(battery_t* battery, battery_type_t type, float low_limit);
+
+/**
+ * \brief	Returns the level of the battery in percentage
+ *
+ * \param battery	Pointer to the battery structure
+ *
+ * \return	The level of the battery
+ */
+float battery_get_level(battery_t* battery);
+
+/**
+ * \brief	Updates the battery voltage level
+ *
+ * \param battery	Pointer to the battery structure
+ * \param voltage	Update measured battery voltage
+ */
+void battery_update(battery_t* battery, float voltage);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* NAVIGATION_DEFAULT_CONFIG_H_ */
+#endif // BATTERY_H_

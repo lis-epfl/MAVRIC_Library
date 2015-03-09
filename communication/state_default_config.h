@@ -61,7 +61,9 @@ state_t state_default_config =
 	.autopilot_name = MAV_AUTOPILOT_MAVRIC,
 	.sensor_present = 0b1111110000100111,
 	.sensor_enabled = 0b1111110000100111,
-	.sensor_health = 0b1111110000100111
+	.sensor_health = 0b1111110000100111,
+	.battery = { 	.type = BATTERY_LIPO_3S,
+					.low_level_limit = 13.3}
 };
 
 #ifdef __cplusplus

@@ -50,6 +50,7 @@ extern "C" {
 #include "stdint.h"
 #include "mav_modes.h"
 #include "analog_monitor.h"
+#include "battery.h"
 #include <stdbool.h>
 
 /**
@@ -59,7 +60,8 @@ typedef enum
 {
 	CLIMB_TO_SAFE_ALT,									///< First critical behavior
 	FLY_TO_HOME_WP,										///< Second critical behavior, comes after CLIMB_TO_SAFE_ALT
-	CRITICAL_LAND										///< Third critical behavior, comes after FLY_TO_HOME_WP
+	HOME_LAND,											///< Third critical behavior, comes after FLY_TO_HOME_WP
+	CRITICAL_LAND										///< Fourth critical behavior
 } critical_behavior_enum;
 
 /**
@@ -96,12 +98,14 @@ typedef struct
 	bool in_the_air;									///< Flag to tell whether the vehicle is airborne or not
 	bool reset_position;								///< Flag to enable the reset of the position estimation
 	
+	battery_t battery;									///< The battery structure
+	
 	const analog_monitor_t* analog_monitor;				///< The pointer to the analog monitor structure
 } state_t;
 
 
 /**
- * \brief					Initialise the state of the MAV
+ * \brief					Initialize the state of the MAV
  *
  * \param	state			The pointer to the state structure
  * \param	state_config	The pointer to the state configuration structure

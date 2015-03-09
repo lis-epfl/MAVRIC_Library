@@ -63,6 +63,9 @@ typedef struct
 	uint8_t channel_switches;							///< State of the switches of the remote
 	signal_quality_t rc_check;							///< State of the remote (receiving signal or not)
 	int8_t motor_state;									///< State of the motors to switch on and off
+	
+	float		low_battery_update;						///< ///< The time of the last navigation_safety update in ms
+	uint32_t	low_battery_counter;					///< ///< The counter of time the battery level was under the critical_battery level
 
 	mavlink_waypoint_handler_t* waypoint_handler;		///< Pointer to the mavlink waypoint handler structure
 	state_t* state;										///< Pointer to the state structure
@@ -104,8 +107,10 @@ task_return_t state_machine_set_mav_mode_n_state(state_machine_t* state_machine)
  * \brief   Updates the state machine
  *
  * \param	state_machine			Pointer to the state machine structure
+ * 
+ * \return Returns the result of the task
  */
-void state_machine_update(state_machine_t* state_machine);
+task_return_t state_machine_update(state_machine_t* state_machine);
 
 
 #ifdef __cplusplus

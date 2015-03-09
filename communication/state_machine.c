@@ -47,6 +47,7 @@
 #include "print_util.h"
 #include "state.h"
 #include "manual_control.h"
+#include "battery.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -79,13 +80,16 @@ bool state_machine_init(	state_machine_t *state_machine,
 	state_machine->rc_check 		= 0;
 	state_machine->motor_state 		= 0;
 	
+	state_machine->low_battery_counter	= 0;
+	state_machine->low_battery_update	= 0;
+	
 	print_util_dbg_print("[STATE MACHINE] Initialised.\r\n");
 	
 	return init_success;
 }
 
 
-void state_machine_update(state_machine_t* state_machine)
+task_return_t state_machine_update(state_machine_t* state_machine)
 {
 	mav_mode_t mode_current, mode_new;
 	mav_state_t state_current, state_new;
@@ -105,6 +109,7 @@ void state_machine_update(state_machine_t* state_machine)
 
 	mode_new = manual_control_get_mode_from_source(state_machine->manual_control, mode_current);
 	
+	battery_update(&state_machine->state->battery,state_machine->state->analog_monitor->avg[ANALOG_RAIL_10]);
 
 	// Change state according to signal strength
 	switch ( state_current )
@@ -133,7 +138,7 @@ void state_machine_update(state_machine_t* state_machine)
 			
 			if ( mode_new.ARMED == ARMED_ON )
 			{
-				print_util_dbg_print("Swtiching from state_machine.\r\n");
+				print_util_dbg_print("Switching from state_machine.\r\n");
 				state_switch_to_active_mode(state_machine->state, &state_new);
 			}
 			break;
@@ -154,21 +159,30 @@ void state_machine_update(state_machine_t* state_machine)
 					}
 				}
 			}
+			//check battery level
+			if( state_machine->state->battery.is_low )
+			{
+				print_util_dbg_print("Battery low! Performing critical landing.\r\n");
+				state_new = MAV_STATE_CRITICAL;
+			}
 			break;
 
 		case MAV_STATE_CRITICAL:			
 			switch ( rc_check )
 			{
 				case SIGNAL_GOOD:
-					state_new = MAV_STATE_ACTIVE;
-				break;
+					if( !state_machine->state->battery.is_low)
+					{
+						state_new = MAV_STATE_ACTIVE;
+					}
+					break;
 
 				case SIGNAL_BAD:
 					// Stay in critical mode
-				break;
+					break;
 
 				case SIGNAL_LOST:
-					// If in manual mode, do emergency landing
+					// If in manual mode, do emergency landing (cut off motors)
 					if ( (mode_current.MANUAL == MANUAL_ON) && (mode_current.STABILISE == STABILISE_OFF) )
 					{
 						print_util_dbg_print("Switch to Emergency mode!\r\n");
@@ -176,7 +190,7 @@ void state_machine_update(state_machine_t* state_machine)
 					}
 					// If in another mode, stay in critical mode
 					// higher level navigation module will take care of coming back home
-				break;
+					break;
 			}
 			break;
 		
@@ -184,25 +198,28 @@ void state_machine_update(state_machine_t* state_machine)
 			// Recovery is not possible -> switch off motors
 			mode_new.ARMED = ARMED_OFF;
 			
-			// To get out of this state, if we are in the wrong use_mode_from_remote
-			if (state_machine->manual_control->mode_source != MODE_SOURCE_REMOTE)
+			if( !state_machine->state->battery.is_low)
 			{
-				state_new = MAV_STATE_STANDBY;
-			}
-			
-			switch ( rc_check )
-			{
-				case SIGNAL_GOOD:
+				// To get out of this state, if we are in the wrong use_mode_from_remote
+				if (state_machine->manual_control->mode_source != MODE_SOURCE_REMOTE)
+				{
 					state_new = MAV_STATE_STANDBY;
-					break;
+				}
+				
+				switch ( rc_check )
+				{
+					case SIGNAL_GOOD:
+						state_new = MAV_STATE_STANDBY;
+						break;
 
-				case SIGNAL_BAD:
-					// Stay in emergency mode
-					break;
+					case SIGNAL_BAD:
+						// Stay in emergency mode
+						break;
 
-				case SIGNAL_LOST:
-					// Stay in emergency mode
-					break;
+					case SIGNAL_LOST:
+						// Stay in emergency mode
+						break;
+				}
 			}
 			break;
 	}
@@ -243,9 +260,11 @@ void state_machine_update(state_machine_t* state_machine)
 			print_util_dbg_print("Switching off motors!\n");
 		}
 	}
+	
 
 	// Finally, write new modes and states
 	state_machine->state->mav_mode = mode_new;
 	state_machine->state->mav_state = state_new;
 
+	return TASK_RUN_SUCCESS;
 }
