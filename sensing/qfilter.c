@@ -228,6 +228,10 @@ void qfilter_update(qfilter_t *qf)
 	qf->imu->calib_gyro.bias[1] += - dt * qf->ki * omc[1] / qf->imu->calib_gyro.scale_factor[1];
 	qf->imu->calib_gyro.bias[2] += - dt * qf->ki * omc[2] / qf->imu->calib_gyro.scale_factor[2];
 
+	qf->imu->calib_gyro.bias[0] += - dt * qf->ki_mag * omc_mag[0] / qf->imu->calib_compass.scale_factor[0];
+	qf->imu->calib_gyro.bias[1] += - dt * qf->ki_mag * omc_mag[1] / qf->imu->calib_compass.scale_factor[0];
+	qf->imu->calib_gyro.bias[2] += - dt * qf->ki_mag * omc_mag[2] / qf->imu->calib_compass.scale_factor[0];
+
 	// set up-vector (bodyframe) in attitude
 	qf->ahrs->up_vec.v[0] = up_bf.v[0];
 	qf->ahrs->up_vec.v[1] = up_bf.v[1];
