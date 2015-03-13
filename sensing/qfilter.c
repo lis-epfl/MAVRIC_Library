@@ -68,7 +68,7 @@ bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_
 	qf->imu = imu;
 	qf->ahrs = ahrs;
 	
-	qf->imu->calibration_level = LEVELING;
+	qf->imu->calibration_level = config->calibration_mode;
 	
 	//init qfilter gains according to provided configuration
 	qf->kp = config->kp;
@@ -93,7 +93,7 @@ void qfilter_update(qfilter_t *qf)
 		.v = {1.0f, 0.0f, 0.0f}
 	};
 
-	float kp, kp_mag;
+	float kp, kp_mag, ki, ki_mag;
 
 	// Update time
 	uint32_t t = time_keeper_get_time_ticks();
@@ -166,28 +166,52 @@ void qfilter_update(qfilter_t *qf)
 		case OFF:
 			kp = qf->kp;//*(0.1f / (0.1f + s_acc_norm - 1.0f));
 			kp_mag = qf->kp_mag;
-			qf->ki = qf->kp / 15.0f;
+			ki = qf->ki;
+			ki_mag = qf->ki_mag;
+			break;
+			
+		case ATTITUDE_ESTIMATION:
+			kp = qf->kp * 10.0f;
+			kp_mag = qf->kp_mag * 10.0f;
+			
+			ki = 0.5f * qf->ki;
+			ki_mag = 0.5f * qf->ki_mag;
+			
+			if (time_keeper_get_time() > 10.0f)
+			{
+				qf->imu->calibration_level = LEVELING;
+				print_util_dbg_print("End of attitude estimation IMU.\r\n");
+			}
 			break;
 			
 		case LEVELING:
-			kp = 0.5f;
-			kp_mag = 0.5f;
-			qf->ki = qf->kp / 10.0f;
+			kp = qf->kp;
+			kp_mag = qf->kp_mag;
+			
+			ki = qf->ki * 3.0f;
+			ki_mag = qf->ki_mag * 3.0f;
+			if (time_keeper_get_time() > 30.0f)
+			{
+				qf->imu->calibration_level = OFF;
+				print_util_dbg_print("End of leveling IMU.\r\n");
+			}
 			break;
 			
 		case LEVEL_PLUS_ACCEL:  // experimental - do not use
 			kp = 0.3f;
-			qf->ki = qf->kp / 10.0f;
+			ki = qf->ki * 1.5f;
 			qf->imu->calib_accelero.bias[0] += dt * qf->kp * (qf->imu->scaled_accelero.data[0] - up_bf.v[0]);
 			qf->imu->calib_accelero.bias[1] += dt * qf->kp * (qf->imu->scaled_accelero.data[1] - up_bf.v[1]);
 			qf->imu->calib_accelero.bias[2] += dt * qf->kp * (qf->imu->scaled_accelero.data[2] - up_bf.v[2]);
 			kp_mag = qf->kp_mag;
+			ki_mag = qf->ki_mag;
 			break;
 			
 		default:
 			kp = qf->kp;
 			kp_mag = qf->kp_mag;
-			qf->ki = qf->kp / 15.0f;
+			ki = qf->ki;
+			ki_mag = qf->ki_mag;
 			break;
 	}
 
@@ -224,14 +248,14 @@ void qfilter_update(qfilter_t *qf)
 	qf->ahrs->qe.v[2] /= norm;
 
 	// bias estimate update
-	qf->imu->calib_gyro.bias[0] += - dt * qf->ki * omc[0] / qf->imu->calib_gyro.scale_factor[0];
-	qf->imu->calib_gyro.bias[1] += - dt * qf->ki * omc[1] / qf->imu->calib_gyro.scale_factor[1];
-	qf->imu->calib_gyro.bias[2] += - dt * qf->ki * omc[2] / qf->imu->calib_gyro.scale_factor[2];
-
-	qf->imu->calib_gyro.bias[0] += - dt * qf->ki_mag * omc_mag[0] / qf->imu->calib_compass.scale_factor[0];
-	qf->imu->calib_gyro.bias[1] += - dt * qf->ki_mag * omc_mag[1] / qf->imu->calib_compass.scale_factor[0];
-	qf->imu->calib_gyro.bias[2] += - dt * qf->ki_mag * omc_mag[2] / qf->imu->calib_compass.scale_factor[0];
-
+	qf->imu->calib_gyro.bias[0] += - dt * ki * omc[0] / qf->imu->calib_gyro.scale_factor[0];
+	qf->imu->calib_gyro.bias[1] += - dt * ki * omc[1] / qf->imu->calib_gyro.scale_factor[1];
+	qf->imu->calib_gyro.bias[2] += - dt * ki * omc[2] / qf->imu->calib_gyro.scale_factor[2];
+	
+	qf->imu->calib_gyro.bias[0] += - dt * ki_mag * omc_mag[0] / qf->imu->calib_compass.scale_factor[0];
+	qf->imu->calib_gyro.bias[1] += - dt * ki_mag * omc_mag[1] / qf->imu->calib_compass.scale_factor[0];
+	qf->imu->calib_gyro.bias[2] += - dt * ki_mag * omc_mag[2] / qf->imu->calib_compass.scale_factor[0];
+	
 	// set up-vector (bodyframe) in attitude
 	qf->ahrs->up_vec.v[0] = up_bf.v[0];
 	qf->ahrs->up_vec.v[1] = up_bf.v[1];

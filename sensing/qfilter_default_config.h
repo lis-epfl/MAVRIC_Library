@@ -54,7 +54,8 @@ static const qfilter_conf_t qfilter_default_config =
     .kp = 0.07f,
     .ki = 0.07f / 15.0f,
     .kp_mag = 0.1f,
-    .ki_mag = 0.0f
+    .ki_mag = 0.0f,
+	.calibration_mode = OFF
 };
 
 #ifdef __cplusplus
