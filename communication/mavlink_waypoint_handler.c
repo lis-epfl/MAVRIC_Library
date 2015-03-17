@@ -545,7 +545,7 @@ static void waypoint_handler_set_swarm_scenario(mavlink_waypoint_handler_t* wayp
 {
 	float dist = packet->param2;
 	uint8_t num_of_vhc = packet->param3;
-	float lateral_dist = 30.0f; //packet->param4;
+	float lateral_dist = 40.0f; //packet->param4;
 	float altitude = -packet->param4;
 	
 	float angle_step = 2.0f * PI / (float)floor((num_of_vhc-1)/2);

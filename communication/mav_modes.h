@@ -215,8 +215,8 @@ typedef enum
 typedef enum
 {
 	CUSTOM_BASE_MODE = 0,
-	CUST_CLIMB_TO_SAFE_ALT = 1,					///< First critical behavior
-	CUST_FLY_TO_HOME_WP = 2,					///< Second critical behavior, comes after CLIMB_TO_SAFE_ALT
+	CUST_CRITICAL_CLIMB_TO_SAFE_ALT = 1,		///< First critical behavior
+	CUST_CRITICAL_FLY_TO_HOME_WP = 2,			///< Second critical behavior, comes after CLIMB_TO_SAFE_ALT
 	CUST_CRITICAL_LAND = 4,						///< Third critical behavior, comes after FLY_TO_HOME_WP
 
 	CUST_DESCENT_TO_SMALL_ALTITUDE = 8,			///< First auto landing behavior

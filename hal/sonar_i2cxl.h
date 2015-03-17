@@ -49,7 +49,7 @@
 
 #include <stdint.h>
 #include "sonar.h"
-
+#include "tasks.h"
 /**
  * \brief structure of the sonar_i2cxl module
 */
@@ -63,16 +63,20 @@ typedef struct
  * \brief Initializes the I2CXL sonar data struct and the i2c bus
  * 
  * \param	sonar	Pointer to the sonar Data structure
+ * 
+ * \return	True if the init succeed, false otherwise
  */
-void sonar_i2cxl_init(sonar_i2cxl_t* sonar);
+bool sonar_i2cxl_init(sonar_i2cxl_t* sonar);
 
 /**
  * \brief Reads last value from sensor and start new recording
  * \details This function should be called at a frequency lower than 10Hz
  * 
  * \param	sonar	Data struct
+ * 
+ * \return	The result of the task execution
  */
-void sonar_i2cxl_update(sonar_i2cxl_t* sonar);
+task_return_t sonar_i2cxl_update(sonar_i2cxl_t* sonar);
 
 
 #ifdef __cplusplus

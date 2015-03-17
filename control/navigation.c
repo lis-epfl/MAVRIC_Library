@@ -502,6 +502,13 @@ static void navigation_critical_handler(navigation_t* navigation)
 	float rel_pos[3];
 	bool next_state = false;
 	
+	//Check whether we entered critical mode due to a battery low level
+	if ( (navigation->state->battery.is_low)&&(navigation->critical_behavior != CRITICAL_LAND) )
+	{
+		navigation->critical_behavior = CRITICAL_LAND;
+		navigation->critical_next_state = false;
+	}
+	
 	if (!(navigation->critical_next_state))
 	{
 		navigation->critical_next_state = true;
@@ -513,23 +520,33 @@ static void navigation_critical_handler(navigation_t* navigation)
 		switch (navigation->critical_behavior)
 		{
 			case CLIMB_TO_SAFE_ALT:
-				navigation->state->mav_mode_custom = CLIMB_TO_SAFE_ALT;
+				print_util_dbg_print("Climbing to safe alt...\r\n");
+				navigation->state->mav_mode_custom = CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = navigation->position_estimation->local_position.pos[X];
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = navigation->position_estimation->local_position.pos[Y];
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = -30.0f;
 				break;
 			
 			case FLY_TO_HOME_WP:
-				navigation->state->mav_mode_custom = FLY_TO_HOME_WP;
+				navigation->state->mav_mode_custom = CUST_CRITICAL_FLY_TO_HOME_WP;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = -30.0f;
 				break;
 			
-			case CRITICAL_LAND:
-				navigation->state->mav_mode_custom = CRITICAL_LAND;
+			case HOME_LAND:
+				navigation->state->mav_mode_custom = CUST_CRITICAL_LAND;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
+				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = 5.0f;
+				navigation->alt_lpf = navigation->position_estimation->local_position.pos[2];
+				break;
+			
+			case CRITICAL_LAND:
+				print_util_dbg_print("Critical land...\r\n");
+				navigation->state->mav_mode_custom = CUST_CRITICAL_LAND;
+				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = navigation->position_estimation->local_position.pos[X];
+				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = navigation->position_estimation->local_position.pos[Y];
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = 5.0f;
 				navigation->alt_lpf = navigation->position_estimation->local_position.pos[2];
 				break;
@@ -542,7 +559,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 		navigation->waypoint_handler->dist2wp_sqr = vectors_norm_sqr(rel_pos);
 	}
 	
-	if (navigation->critical_behavior == CRITICAL_LAND)
+	if (navigation->critical_behavior == CRITICAL_LAND || navigation->critical_behavior == HOME_LAND)
 	{
 		navigation->alt_lpf = navigation->LPF_gain * navigation->alt_lpf + (1.0f - navigation->LPF_gain) * navigation->position_estimation->local_position.pos[2];
 		if ( (navigation->position_estimation->local_position.pos[2] > -0.1f)&&(maths_f_abs(navigation->position_estimation->local_position.pos[2] - navigation->alt_lpf) <= 0.2f) )
@@ -572,9 +589,10 @@ static void navigation_critical_handler(navigation_t* navigation)
 			
 			case FLY_TO_HOME_WP:
 				print_util_dbg_print("Critical State! Performing critical landing.\r\n");
-				navigation->critical_behavior = CRITICAL_LAND;
+				navigation->critical_behavior = HOME_LAND;
 				break;
 			
+			case HOME_LAND:
 			case CRITICAL_LAND:
 				print_util_dbg_print("Critical State! Landed, switching off motors, Emergency mode.\r\n");
 				navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
@@ -601,12 +619,14 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 		switch(navigation->auto_landing_behavior)
 		{
 			case DESCENT_TO_SMALL_ALTITUDE:
+				print_util_dbg_print("Cust: descent to small alt");
 				navigation->state->mav_mode_custom = CUST_DESCENT_TO_SMALL_ALTITUDE;
 				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimation->local_position;
 				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -5.0f;
 				break;
 			
 			case DESCENT_TO_GND:
+				print_util_dbg_print("Cust: descent to gnd");
 				navigation->state->mav_mode_custom = CUST_DESCENT_TO_GND;
 				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimation->local_position;
 				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = 0.0f;
@@ -860,6 +880,7 @@ task_return_t navigation_update(navigation_t* navigation)
 			navigation->waypoint_handler->hold_waypoint_set = false;
 			navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
 			navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
+			navigation->critical_next_state = false;
 			navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
 			break;
 			
@@ -872,6 +893,7 @@ task_return_t navigation_update(navigation_t* navigation)
 				navigation->stop_nav_there = false;
 				navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
 				navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
+				navigation->critical_next_state = false;
 				navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;
 			}
 			
