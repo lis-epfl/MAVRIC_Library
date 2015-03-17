@@ -49,18 +49,23 @@
 
 #include <stdint.h>
 
-
+/**
+ * \brief Raw optic flaw vector
+ */
 typedef struct 
 {
-	int16_t x;
-	int16_t y;	
+	int16_t x;			///< x component of the raw optic flaw vector
+	int16_t y;			///< y component of the raw optic flaw vector
 } raw_of_vector_t;
 
 
+/**
+ * \brief Optic flaw vector
+ */
 typedef struct
 {
-	float x;
-	float y;
+	float x;			///< x component of the optic flaw vector
+	float y;			///< y component of the optic flaw vector
 } of_vector_t;
 
 

@@ -166,7 +166,7 @@ typedef struct
 	float							scale_factor_simple;	///< Temporary replacement for calib_factor with a single value for all OF vectors
 	constants_on_off_t				do_derotation;			///< Indicates whether derotation should be performed (ON/ OFF)
 	float							LPF;					///< Low pass filter
-	float							derot_factor;			///<
+	float							derot_factor;			///< Derotation factor
 	quat_t 							orientation; 			///< unused
 	const ahrs_t* 					ahrs;					///< Pointer to attitude estimation
 } curvace_t;

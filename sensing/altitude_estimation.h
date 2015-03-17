@@ -74,15 +74,21 @@ typedef struct
 
 
 /**
- * \brief               		Initialises the altitude estimation structure
+ * \brief               		Initializes the altitude estimation structure
  * 
  * \param 	estimator    		Pointer to data structure
  * \param 	config				Pointer to configuration
- * \param 	position_command	Pointer to the position command
+ * \param 	sonar				Pointer to the sonar
+ * \param 	barometer			Pointer to the barometer
+ * \param 	ahrs				Pointer to the ahrs
  * \param 	altitude_estimated	Pointer to the estimated altitude
- * \param 	thrust_command		Pointer to thrust command (output)
  */
-void altitude_estimation_init(altitude_estimation_t* estimator, const altitude_estimation_conf_t* config, const sonar_t* sonar, const barometer_t* barometer, const ahrs_t* ahrs, altitude_t* altitude_estimated);
+void altitude_estimation_init(	altitude_estimation_t* estimator, 
+								const altitude_estimation_conf_t* config, 
+								const sonar_t* sonar, 
+								const barometer_t* barometer, 
+								const ahrs_t* ahrs, 
+								altitude_t* altitude_estimated);
 
 
 /**

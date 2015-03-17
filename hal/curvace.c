@@ -66,6 +66,7 @@ static void curvace_init_spi(void);
  * @brief  	Quick implementation of SPI comm
  * 
  * @param 	data 	Data to send
+ *
  * @return 			Data received
  */
 static uint16_t curvace_spi_low_level(uint16_t data);
@@ -153,9 +154,14 @@ static void curvace_init_spi()
 
 static uint16_t curvace_spi_low_level(uint16_t data)
 {
+	//wait until
 	while (!spi_is_tx_ready(&AVR32_SPI0));
+	
 	spi_put(&AVR32_SPI0, data);
+	
+	//wait until
 	while(!spi_is_rx_full(&AVR32_SPI0));
+	
 	return spi_get(&AVR32_SPI0);
 }
 

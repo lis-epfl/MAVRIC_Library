@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief Default configuration for the module altitude_controller_sonar
+ * \brief Default configuration for the module altitude_controller
  *
  ******************************************************************************/
 

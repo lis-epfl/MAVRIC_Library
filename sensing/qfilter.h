@@ -92,10 +92,10 @@ typedef struct
 /**
  * \brief	Initialize the attitude estimation module
  *
- * \param	qf					The pointer to the attitude structure
- * \param	config				The qfilter configuration gains
- * \param	imu					The pointer to the IMU structure
- * \param	ahrs				The pointer to the attitude estimation structure
+ * \param	qf				The pointer to the attitude structure
+ * \param	config			The qfilter configuration gains
+ * \param	imu				The pointer to the IMU structure
+ * \param	ahrs			The pointer to the attitude estimation structure
  *
  * \return	True if the init succeed, false otherwise
  */

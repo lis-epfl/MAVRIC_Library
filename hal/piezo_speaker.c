@@ -90,7 +90,8 @@ static void piezo_speaker_set_value_binary(int32_t binary_value)
 	{
 		gpio_set_pin_low(PIEZO_HIGH_PIN);
 		gpio_set_pin_low(PIEZO_LOW_PIN);
-	} else if (binary_value>0) 
+	} 
+	else if (binary_value>0) 
 	{
 		gpio_set_pin_high(PIEZO_HIGH_PIN);
 		gpio_set_pin_low(PIEZO_LOW_PIN);

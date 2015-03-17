@@ -76,7 +76,7 @@ typedef struct
 
 
 /**
- * \brief               		Initialises the altitude controller structure
+ * \brief               		Initializes the altitude controller structure
  * 
  * \param 	controller    		Pointer to data structure
  * \param 	config				Pointer to configuration
@@ -84,7 +84,11 @@ typedef struct
  * \param 	altitude_estimated	Pointer to the estimated altitude
  * \param 	thrust_command		Pointer to thrust command (output)
  */
-void altitude_controller_init(altitude_controller_t* controller, const altitude_controller_conf_t* config, const position_command_t* position_command, const altitude_t* altitude_estimated, thrust_command_t* thrust_command);
+void altitude_controller_init(	altitude_controller_t* controller, 
+								const altitude_controller_conf_t* config, 
+								const position_command_t* position_command, 
+								const altitude_t* altitude_estimated, 
+								thrust_command_t* thrust_command);
 
 
 /**
