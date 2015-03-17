@@ -79,6 +79,7 @@ typedef struct
  *
  * \param state_machine				Pointer to the state machine structure
  * \param state						Pointer to the state structure
+ * \param waypoint_handler			Pointer to the waypoint handler structure
  * \param sim_model					Pointer to the simulation structure
  * \param remote					Pointer to the remote structure
  * \param joystick					Pointer to the joystick structure
@@ -86,7 +87,8 @@ typedef struct
  * \return	True if the init succeed, false otherwise
  */
 bool state_machine_init(	state_machine_t *state_machine,
-							state_t* state, 
+							state_t* state,
+							mavlink_waypoint_handler_t* waypoint_handler,
 							simulation_model_t *sim_model, 
 							remote_t* remote,
 							joystick_parsing_t* joystick);

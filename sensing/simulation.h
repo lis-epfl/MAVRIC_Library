@@ -138,14 +138,26 @@ typedef struct
  * \param	ahrs			The pointer to the AHRS structure
  * \param	imu				The pointer to the real IMU structure to match the simulated IMU
  * \param	pos_est			The pointer to the position estimation structure of the vehicle
+ * \param	pressure		The pointer to the pressure structure
  * \param	gps				The pointer to the GPS structure
+ * \param	sonar			The pointer to the sonar structure
  * \param	state			The pointer to the state structure
  * \param	servos			The pointer to the servos structure
  * \param	waypoint_set	The pointer to the waypoint_set boolean value
  *
  * \return	True if the init succeed, false otherwise
  */
-bool simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimation_t* pos_est, barometer_t* pressure, gps_t* gps, sonar_t* sonar, state_t* state, const servos_t* servos, bool* waypoint_set);
+bool simulation_init(	simulation_model_t* sim, 
+						const simulation_config_t* sim_config, 
+						ahrs_t* ahrs, 
+						imu_t* imu, 
+						position_estimation_t* pos_est, 
+						barometer_t* pressure, 
+						gps_t* gps, 
+						sonar_t* sonar, 
+						state_t* state, 
+						const servos_t* servos, 
+						bool* waypoint_set);
 
 
 /**

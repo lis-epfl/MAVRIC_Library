@@ -117,6 +117,7 @@ bool state_machine_init(	state_machine_t *state_machine,
 {
 	bool init_success = true;
 	
+	state_machine->waypoint_handler = waypoint_handler;
 	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
 	state_machine->remote 			= remote;
