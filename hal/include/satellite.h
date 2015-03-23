@@ -51,6 +51,17 @@ extern "C" {
 #include "uart_int.h"
 
 /**
+ * \brief Radio protocols
+ */ 
+typedef enum
+{
+	DSM2_10BITS = 0,
+	DSM2_11BITS = 1,
+	DSMX		= 2,
+} radio_protocol_t;
+
+
+/**
  * \brief Structure containing the satellite receiver's data
  */
 typedef struct 
@@ -77,7 +88,7 @@ void (*satellite_init)(satellite_t*, usart_config_t);
 /**
  * \brief Pointer to the function used to bind the satellite receiver
  */
-void (*satellite_bind)(float channel_encoding);
+void (*satellite_bind)(radio_protocol_t protocol);
 
 #ifdef __cplusplus
 }

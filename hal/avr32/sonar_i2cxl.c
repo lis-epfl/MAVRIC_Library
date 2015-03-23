@@ -111,8 +111,10 @@ void sonar_i2cxl_get_last_measure(sonar_i2cxl_t* sonar_i2cxl)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void sonar_i2cxl_init(sonar_i2cxl_t* sonar_i2cxl)
+bool sonar_i2cxl_init(sonar_i2cxl_t* sonar_i2cxl)
 {
+	bool init_success = true;
+	
 	///< Init data_struct
 	sonar_i2cxl->i2c_address = SONAR_I2CXL_DEFAULT_ADDRESS;
 	sonar_i2cxl->data.current_distance 	= 0.2f;
@@ -136,12 +138,16 @@ void sonar_i2cxl_init(sonar_i2cxl_t* sonar_i2cxl)
 	};
 
 	twi_master_init(&AVR32_TWIM1, &twi_opt);
-	print_util_dbg_print("i2cxl Sonar initialized\r\n");
+	print_util_dbg_print("[SONAR_I2CXL] Initialised\r\n");
+	
+	return init_success;
 }
 
 
-void sonar_i2cxl_update(sonar_i2cxl_t* sonar_i2cxl)
+task_return_t sonar_i2cxl_update(sonar_i2cxl_t* sonar_i2cxl)
 {
 	sonar_i2cxl_get_last_measure(sonar_i2cxl);
 	sonar_i2cxl_send_range_command(sonar_i2cxl);
+	
+	return TASK_RUN_SUCCESS;
 }

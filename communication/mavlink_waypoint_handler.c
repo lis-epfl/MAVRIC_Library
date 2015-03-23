@@ -186,6 +186,16 @@ static void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handl
  */
 static mav_result_t waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
 
+/**
+ * \brief	Sends back whether the MAV is currently stopped at a waypoint or not
+ *
+ * \param	waypoint_handler		The pointer to the structure of the MAVLink waypoint handler
+ * \param	packet					The pointer to the structure of the MAVLink command message long
+ * 
+ * \return	The MAV_RESULT of the command
+ */
+static mav_result_t waypoint_handler_is_arrived(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -545,7 +555,7 @@ static void waypoint_handler_set_swarm_scenario(mavlink_waypoint_handler_t* wayp
 {
 	float dist = packet->param2;
 	uint8_t num_of_vhc = packet->param3;
-	float lateral_dist = 30.0f; //packet->param4;
+	float lateral_dist = 40.0f; //packet->param4;
 	float altitude = -packet->param4;
 	
 	float angle_step = 2.0f * PI / (float)floor((num_of_vhc-1)/2);
@@ -1201,11 +1211,24 @@ static void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handl
 static mav_result_t waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
 {
 	mav_result_t result;
+	bool force_next = false;
+	uint32_t time_from_start_wpt = time_keeper_get_millis() - waypoint_handler->start_wpt_time;
+	uint32_t time_wpt_limit = 5000;
 	
-	print_util_dbg_print("All vehicles: Navigating to next waypoint.\r\n");
-	
-	if ((waypoint_handler->number_of_waypoints>0)&&(!waypoint_handler->state->nav_plan_active))
+	if( packet->param3 == 1 )
 	{
+		// QGroundControl sends every message twice, 
+		//  therefore we do this test to avoid continuing two times in a row towards next waypoint 
+		if (time_from_start_wpt > time_wpt_limit) // 5 seconds
+		{
+			force_next = true;
+		}
+	}
+	
+	if ((waypoint_handler->number_of_waypoints>0)&&((!waypoint_handler->state->nav_plan_active)||force_next))
+	{
+		print_util_dbg_print("All vehicles: Navigating to next waypoint.\r\n");
+		
 		waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count].current = 0;
 		
 		print_util_dbg_print("Continuing towards waypoint Nr");
@@ -1244,9 +1267,39 @@ static mav_result_t waypoint_handler_continue_to_next_waypoint(mavlink_waypoint_
 		print_util_dbg_print("Not ready to switch to next waypoint. Either no waypoint loaded or flying towards one\r\n");
 	}
 	
+	// To avoid a MAV_RESULT_TEMPORARILY_REJECTED for the second message and thus
+	//  a bad information to the user on the ground, if two messages are received
+	//  in a short time interval, we still show the result as MAV_RESULT_ACCEPTED
+	if( time_from_start_wpt < time_wpt_limit )
+	{
+		result = MAV_RESULT_ACCEPTED;
+	}
+	
 	return result;
 }
 
+static mav_result_t waypoint_handler_is_arrived(mavlink_waypoint_handler_t* waypoint_handler, mavlink_command_long_t* packet)
+{
+	mav_result_t result;
+	
+	if( packet->param2 == 32)
+	{
+		if( waypoint_handler->waypoint_list[waypoint_handler->current_waypoint_count].current == 0 )
+		{
+			result = MAV_RESULT_ACCEPTED;
+		}
+		else
+		{
+			result = MAV_RESULT_TEMPORARILY_REJECTED;
+		}
+	}
+	else
+	{
+		result = MAV_RESULT_DENIED;
+	}
+	
+	return result;
+}
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -1365,6 +1418,16 @@ bool waypoint_handler_init(mavlink_waypoint_handler_t* waypoint_handler, positio
 	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_set_scenario;
 	callbackcmd.module_struct =									waypoint_handler;
 	init_success &= mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	
+	
+	callbackcmd.command_id = MAV_CMD_CONDITION_DISTANCE; // 114
+	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
+	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
+	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER; // 190
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&waypoint_handler_is_arrived;
+	callbackcmd.module_struct =									waypoint_handler;
+	init_success &= mavlink_message_handler_add_cmd_callback(&mavlink_communication->message_handler, &callbackcmd);
+	
 	
 	print_util_dbg_print("[WAYPOINT HANDLER] Initialised.\r\n");
 	
