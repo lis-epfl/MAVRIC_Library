@@ -85,17 +85,17 @@ typedef struct
  * OF_rotation = A * gyro
  * 
  * [ OF_x ] = 	[Arx	Apx		Ayx] * 	[ roll_rate ]
- * [ OF_y ]		[Ary	Apy		Ayy]	[ pitch_rate]
- * 										[ yaw_rate 	]
+ * [ OF_y ]	[Ary	Apy		Ayy]	[ pitch_rate]
+ * 						[ yaw_rate  ]
  */
 typedef struct
 {
-	float Arx;
-	float Apx;
-	float Ayx;
-	float Ary;
-	float Apy;
-	float Ayy;
+	float Arx;	///< Links roll rate with horizontal OF (see formula above)
+	float Apx;	///< Links pitch rate with horizontal OF (see formula above)
+	float Ayx;	///< Links yaw rate with horizontal OF (see formula above)
+	float Ary;	///< Links roll rate with vertical OF (see formula above)
+	float Apy;	///< Links pitch rate with vertical OF (see formula above)
+	float Ayy;	///< Links yaw rate with vertical OF (see formula above)
 } derotation_matrix_t;
 
 
