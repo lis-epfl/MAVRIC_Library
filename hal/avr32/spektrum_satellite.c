@@ -52,7 +52,7 @@
 
 #include "print_util.h"
 
-#include "delay.h"
+// #include "delay.h"
 
 #include "led.h"
 
@@ -215,7 +215,7 @@ void spektrum_satellite_init(satellite_t* satellite, usart_config_t usart_conf_s
 void spektrum_satellite_bind(float channel_encoding)
 {
 	int32_t i = 0;
-	uint32_t cpu_freq = sysclk_get_cpu_hz();
+	// uint32_t cpu_freq = sysclk_get_cpu_hz();
 
 	print_util_dbg_print(" \n receive bind CMD \n");
 	
@@ -252,9 +252,11 @@ void spektrum_satellite_bind(float channel_encoding)
 	for (i = 0; i < pulses; i++) 
 	{
 		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_OUTPUT | GPIO_PULL_DOWN);
-		cpu_delay_us(113, cpu_freq); 
+		// cpu_delay_us(113, cpu_freq); 
+		time_keeper_delay_micros(113);
 		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_UP);	
-		cpu_delay_us(118, cpu_freq);
+		// cpu_delay_us(118, cpu_freq);
+		time_keeper_delay_micros(118);
 	}
 }
 

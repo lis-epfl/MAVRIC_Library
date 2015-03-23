@@ -44,7 +44,7 @@
 #include "airspeed_analog.h"
 #include "analog_monitor.h"
 #include "maths.h"
-#include "delay.h"
+// #include "delay.h"
 
 const uint32_t VOLTS_TO_PASCAL = 819;		///< conversion factor from volts to pascal units
 const float PITOT_GAIN_DEFAULT = 1.9936f; 	///< this gain come from APM, but it does not make sense (should be)
@@ -103,7 +103,7 @@ void airspeed_analog_update(airspeed_analog_t* airspeed_analog)
 	airspeed_analog->differential_pressure = airspeed_analog_get_pressure(airspeed_analog) - airspeed_analog->pressure_offset;
 
 	///< Avoid negative pressures
-	airspeed_analog->differential_pressure = abs(airspeed_analog->differential_pressure);
+	airspeed_analog->differential_pressure = maths_f_abs(airspeed_analog->differential_pressure);
 
 	///< compute airspeed from differential pressure using Bernouilli
 	raw_airspeed = maths_fast_sqrt(airspeed_analog->differential_pressure * airspeed_analog->gain);

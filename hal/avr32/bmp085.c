@@ -43,7 +43,7 @@
 #include "bmp085.h"
 
 #include "twim.h"
-#include "delay.h"
+// #include "delay.h"
 
 #include "math.h"
 #include "maths.h"
