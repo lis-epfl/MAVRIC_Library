@@ -56,7 +56,8 @@ void usb_int_set_usb_conf(usb_config_t* usb_config)
 
 void usb_int_init(void)
 {
-	stdio_usb_init();
+	stdio_usb_init(NULL);
+	// stdio_usb_init();
 	stdio_usb_enable();
 } 
 
