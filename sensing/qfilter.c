@@ -91,7 +91,10 @@ void qfilter_update(qfilter_t *qf)
 		.v = {1.0f, 0.0f, 0.0f}
 	};
 
-	float kp, kp_mag, ki, ki_mag;
+	float kp 	 = qf->kp;
+	float kp_mag = qf->kp_mag;
+	float ki 	 = qf->ki;
+	float ki_mag = qf->ki_mag;
 
 	// Update time
 	uint32_t t = time_keeper_get_time_ticks();
