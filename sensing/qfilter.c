@@ -162,7 +162,7 @@ void qfilter_update(qfilter_t *qf)
 
 
 	// get error correction gains depending on mode
-	switch (qf->ahrs->state)
+	switch (qf->ahrs->internal_state)
 	{
 		case AHRS_UNLEVELED:
 			kp = qf->kp * 10.0f;
@@ -171,9 +171,9 @@ void qfilter_update(qfilter_t *qf)
 			ki = 0.5f * qf->ki;
 			ki_mag = 0.5f * qf->ki_mag;
 			
-			if (time_keeper_get_time() > 10.0f)
+			if (time_keeper_get_time() > 2.0f)
 			{
-				qf->ahrs->state = AHRS_CONVERGING;
+				qf->ahrs->internal_state = AHRS_CONVERGING;
 				print_util_dbg_print("End of AHRS attitude initialization.\r\n");
 			}
 			break;
@@ -184,9 +184,9 @@ void qfilter_update(qfilter_t *qf)
 			
 			ki = qf->ki * 3.0f;
 			ki_mag = qf->ki_mag * 3.0f;
-			if (time_keeper_get_time() > 30.0f)
+			if (time_keeper_get_time() > 10.0f)
 			{
-				qf->ahrs->state = AHRS_READY;
+				qf->ahrs->internal_state = AHRS_READY;
 				print_util_dbg_print("End of AHRS leveling.\r\n");
 			}
 			break;

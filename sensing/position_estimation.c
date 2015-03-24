@@ -400,13 +400,14 @@ void position_estimation_reset_home_altitude(position_estimation_t *pos_est)
 
 void position_estimation_update(position_estimation_t *pos_est)
 {
-	if (pos_est->state->reset_position)
+	if (pos_est->ahrs->internal_state == AHRS_READY)
 	{
-		pos_est->state->reset_position = false;
-		position_estimation_reset_home_altitude(pos_est);
-	}
-	//if (attitude_filter->calibration_level == OFF)
-	{
+		if (pos_est->state->reset_position)
+		{
+			pos_est->state->reset_position = false;
+			position_estimation_reset_home_altitude(pos_est);
+		}
+		
 		position_estimation_position_integration(pos_est);
 		position_estimation_position_correction(pos_est);
 	}

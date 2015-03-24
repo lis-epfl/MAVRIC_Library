@@ -69,18 +69,18 @@ typedef enum
  */
 typedef struct
 {
-	quat_t	qe;					///< quaternion defining the Attitude estimation of the platform
+	quat_t	qe;							///< quaternion defining the Attitude estimation of the platform
 	
-	float	angular_speed[3];	///< Gyro rates
-	float	linear_acc[3];		///< Acceleration WITHOUT gravity
+	float	angular_speed[3];			///< Gyro rates
+	float	linear_acc[3];			///< Acceleration WITHOUT gravity
 	
-	float	heading;			///< The heading of the platform
-	quat_t	up_vec;				///< The quaternion of the up vector
-	quat_t 	north_vec;			///< The quaternion of the north vector
+	float	heading;					///< The heading of the platform
+	quat_t	up_vec;					///< The quaternion of the up vector
+	quat_t north_vec;					///< The quaternion of the north vector
 
-	ahrs_state_t state; 		///< Leveling state of the ahrs
-	uint32_t	 last_update;	///< The time of the last IMU update in ms
-	float		 dt;			///< The time interval between two IMU updates
+	ahrs_state_t internal_state; 	///< Leveling state of the ahrs
+	uint32_t	 last_update;			///< The time of the last IMU update in ms
+	float		 dt;					///< The time interval between two IMU updates
 } ahrs_t;
 
 
