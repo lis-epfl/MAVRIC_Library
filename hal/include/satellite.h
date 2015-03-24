@@ -30,48 +30,68 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file streams.h
+ * \file satellite.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Gregoire Heitz
  *   
- * \brief Stream
+ * \brief This declare the global satellite struct
+ * enable usage of different satellite receiver (ie. spektrum, emulated...)
  *
  ******************************************************************************/
 
-
-#ifndef STREAMS_H_
-#define STREAMS_H_
+#ifndef SATELLITE_H_
+#define SATELLITE_H_
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-#include <stdint.h>
+
+#include "uart_int.h"
 
 /**
- * @brief Stream data
- */
-typedef void* stream_data_t;
+ * \brief Radio protocols
+ */ 
+typedef enum
+{
+	DSM2_10BITS = 0,
+	DSM2_11BITS = 1,
+	DSMX		= 2,
+} radio_protocol_t;
 
 
 /**
- * @brief Byte stream
+ * \brief Structure containing the satellite receiver's data
  */
 typedef struct 
 {
-	uint8_t 	(*get)(stream_data_t *data);					///<	Pointer to get function
-	uint8_t  	(*put)(stream_data_t *data, uint8_t element);	///<	Pointer to put function
-	void    	(*flush)(stream_data_t *data);					///<	Pointer to flush function
-	int32_t     (*buffer_empty)(stream_data_t *data);			///<	Pointer to buffer_empty function
-	uint32_t 	(*bytes_available)(stream_data_t *data);		///<	Pointer to bytes_available function
-	volatile stream_data_t data;								///<	Data
-} byte_stream_t;
+	buffer_t 		receiver;			///< Buffer for incoming data
+	int16_t 		channels[16];		///< Array to contain the 16 remote channels
+	uint32_t 		last_interrupt;		///< Last time a byte was received
+	uint32_t 		last_update;		///< Last update time 
+	uint32_t 		dt;					///< Duration between two updates
+	bool			new_data_available; ///< Indicates if new data is  available
+	usart_config_t	usart_conf_sat;		///< store UART conf for satellite com
+} satellite_t;
 
+//Function pointer
+
+/**
+ * \brief Pointer to the function used to initialize the satellite receiver
+ *
+ * \param	satellite_t		Pointer to the sattelite structure
+ * \param	usart_config_t	configuration of the corresponding usart
+ */
+void (*satellite_init)(satellite_t*, usart_config_t);
+
+/**
+ * \brief Pointer to the function used to bind the satellite receiver
+ */
+void (*satellite_bind)(radio_protocol_t protocol);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* STREAMS_H_ */
+#endif //SATELLITE_H_

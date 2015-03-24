@@ -44,6 +44,7 @@
 #include "scheduler.h"
 #include "time_keeper.h"
 #include "print_util.h"
+#include <stdlib.h>
 
 bool scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config) 
 {

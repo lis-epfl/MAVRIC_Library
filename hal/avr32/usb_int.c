@@ -30,48 +30,68 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file streams.h
+ * \file usb_int.c
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Geraud L'Eplattenier
  *   
- * \brief Stream
- *
+ * \brief This file implements the USB communication protocol
+ * 
  ******************************************************************************/
 
 
-#ifndef STREAMS_H_
-#define STREAMS_H_
+#include "usb_int.h"
+#include "streams.h"
 
-#ifdef __cplusplus
-extern "C" 
+
+static usb_config_t usb_conf;			///< Declare an object to store USB configuration
+
+
+void usb_int_set_usb_conf(usb_config_t* usb_config)
 {
-#endif
-
-#include <stdint.h>
-
-/**
- * @brief Stream data
- */
-typedef void* stream_data_t;
-
-
-/**
- * @brief Byte stream
- */
-typedef struct 
-{
-	uint8_t 	(*get)(stream_data_t *data);					///<	Pointer to get function
-	uint8_t  	(*put)(stream_data_t *data, uint8_t element);	///<	Pointer to put function
-	void    	(*flush)(stream_data_t *data);					///<	Pointer to flush function
-	int32_t     (*buffer_empty)(stream_data_t *data);			///<	Pointer to buffer_empty function
-	uint32_t 	(*bytes_available)(stream_data_t *data);		///<	Pointer to bytes_available function
-	volatile stream_data_t data;								///<	Data
-} byte_stream_t;
-
-
-#ifdef __cplusplus
+	usb_conf.mode						= usb_config->mode;
+	usb_conf.usb_device.IRQ				= usb_config->usb_device.IRQ;
+	usb_conf.usb_device.receive_stream	= usb_config->usb_device.receive_stream;
 }
-#endif
 
-#endif /* STREAMS_H_ */
+void usb_int_init(void)
+{
+	stdio_usb_init(NULL);
+	// stdio_usb_init();
+	stdio_usb_enable();
+} 
+
+
+usb_config_t *usb_int_get_usb_handle(void)
+{
+	return &usb_conf;
+}
+
+void usb_int_send_byte(usb_config_t *usb_conf, uint8_t data) 
+{
+	for(uint8_t i=0;i<3;i++)
+	{
+		if (udi_cdc_is_tx_ready())
+		{
+			stdio_usb_putchar(NULL, (int)data);
+			return;
+		}	
+	}
+	
+}
+
+
+void usb_int_register_write_stream(usb_config_t *usb_conf, byte_stream_t *stream) 
+{
+	stream->get = NULL;
+	stream->put = (uint8_t(*)(stream_data_t*, uint8_t))&usb_int_send_byte;			// Here we need to explicitly cast the function to match the prototype
+	stream->flush = NULL;															// stream->get and stream->put expect stream_data_t* as first argument
+	stream->buffer_empty = NULL;													// but buffer_get and buffer_put take Buffer_t* as first argument
+	stream->data = usb_conf;
+}
+
+void  usb_int_register_read_stream(usb_config_t *usb_conf, byte_stream_t *stream)
+{
+	usb_conf->usb_device.receive_stream = stream;
+}
+
