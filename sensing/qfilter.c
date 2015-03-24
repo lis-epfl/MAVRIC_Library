@@ -68,8 +68,6 @@ bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_
 	qf->imu = imu;
 	qf->ahrs = ahrs;
 	
-	qf->imu->calibration_level = LEVELING;
-	
 	//init qfilter gains according to provided configuration
 	qf->kp = config->kp;
 	qf->ki = config->ki;
@@ -84,6 +82,7 @@ bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_
 
 void qfilter_update(qfilter_t *qf)
 {
+	static uint32_t convergence_update_count = 0;
 	float  omc[3], omc_mag[3] , tmp[3], snorm, norm, s_acc_norm, acc_norm, s_mag_norm, mag_norm;
 	quat_t qed, qtmp1, up, up_bf;
 	quat_t mag_global, mag_corrected_local;
@@ -93,7 +92,10 @@ void qfilter_update(qfilter_t *qf)
 		.v = {1.0f, 0.0f, 0.0f}
 	};
 
-	float kp, kp_mag;
+	float kp 	 = qf->kp;
+	float kp_mag = qf->kp_mag;
+	float ki 	 = qf->ki;
+	float ki_mag = qf->ki_mag;
 
 	// Update time
 	uint32_t t = time_keeper_get_time_ticks();
@@ -102,28 +104,28 @@ void qfilter_update(qfilter_t *qf)
 	qf->ahrs->last_update = t;
 
 	// up_bf = qe^-1 *(0,0,0,-1) * qe
-	up.s = 0; up.v[0] = UPVECTOR_X; up.v[1] = UPVECTOR_Y; up.v[2] = UPVECTOR_Z;
+	up.s = 0; up.v[X] = UPVECTOR_X; up.v[Y] = UPVECTOR_Y; up.v[Z] = UPVECTOR_Z;
 	up_bf = quaternions_global_to_local(qf->ahrs->qe, up);
 	
 	// calculate norm of acceleration vector
-	s_acc_norm = qf->imu->scaled_accelero.data[0] * qf->imu->scaled_accelero.data[0] + qf->imu->scaled_accelero.data[1] * qf->imu->scaled_accelero.data[1] + qf->imu->scaled_accelero.data[2] * qf->imu->scaled_accelero.data[2];
+	s_acc_norm = qf->imu->scaled_accelero.data[X] * qf->imu->scaled_accelero.data[X] + qf->imu->scaled_accelero.data[Y] * qf->imu->scaled_accelero.data[Y] + qf->imu->scaled_accelero.data[Z] * qf->imu->scaled_accelero.data[Z];
 	if ( (s_acc_norm > 0.7f * 0.7f) && (s_acc_norm < 1.3f * 1.3f) ) 
 	{
 		// approximate square root by running 2 iterations of newton method
 		acc_norm = maths_fast_sqrt(s_acc_norm);
 
-		tmp[0] = qf->imu->scaled_accelero.data[0] / acc_norm;
-		tmp[1] = qf->imu->scaled_accelero.data[1] / acc_norm;
-		tmp[2] = qf->imu->scaled_accelero.data[2] / acc_norm;
+		tmp[X] = qf->imu->scaled_accelero.data[X] / acc_norm;
+		tmp[Y] = qf->imu->scaled_accelero.data[Y] / acc_norm;
+		tmp[Z] = qf->imu->scaled_accelero.data[Z] / acc_norm;
 
 		// omc = a x up_bf.v
 		CROSS(tmp, up_bf.v, omc);
 	}
 	else
 	{
-		omc[0] = 0;
-		omc[1] = 0;
-		omc[2] = 0;
+		omc[X] = 0;
+		omc[Y] = 0;
+		omc[Z] = 0;
 	}
 
 	// Heading computation
@@ -132,16 +134,16 @@ void qfilter_update(qfilter_t *qf)
 	mag_global = quaternions_local_to_global(qf->ahrs->qe, qtmp1);
 	
 	// calculate norm of compass vector
-	//s_mag_norm = SQR(mag_global.v[0]) + SQR(mag_global.v[1]) + SQR(mag_global.v[2]);
-	s_mag_norm = SQR(mag_global.v[0]) + SQR(mag_global.v[1]);
+	//s_mag_norm = SQR(mag_global.v[X]) + SQR(mag_global.v[Y]) + SQR(mag_global.v[Z]);
+	s_mag_norm = SQR(mag_global.v[X]) + SQR(mag_global.v[Y]);
 
 	if ( (s_mag_norm > 0.004f * 0.004f) && (s_mag_norm < 1.8f * 1.8f) ) 
 	{
 		mag_norm = maths_fast_sqrt(s_mag_norm);
 
-		mag_global.v[0] /= mag_norm;
-		mag_global.v[1] /= mag_norm;
-		mag_global.v[2] = 0.0f;   // set z component in global frame to 0
+		mag_global.v[X] /= mag_norm;
+		mag_global.v[Y] /= mag_norm;
+		mag_global.v[Z] = 0.0f;   // set z component in global frame to 0
 
 		// transfer magneto vector back to body frame 
 		qf->ahrs->north_vec = quaternions_global_to_local(qf->ahrs->qe, front_vec_global);		
@@ -154,40 +156,52 @@ void qfilter_update(qfilter_t *qf)
 	}
 	else
 	{
-		omc_mag[0] = 0;
-		omc_mag[1] = 0;
-		omc_mag[2] = 0;
+		omc_mag[X] = 0;
+		omc_mag[Y] = 0;
+		omc_mag[Z] = 0;
 	}
 
 
 	// get error correction gains depending on mode
-	switch (qf->imu->calibration_level)
+	switch (qf->ahrs->internal_state)
 	{
-		case OFF:
-			kp = qf->kp;//*(0.1f / (0.1f + s_acc_norm - 1.0f));
-			kp_mag = qf->kp_mag;
-			qf->ki = qf->kp / 15.0f;
+		case AHRS_UNLEVELED:
+			kp = qf->kp * 10.0f;
+			kp_mag = qf->kp_mag * 10.0f;
+			
+			ki = 0.5f * qf->ki;
+			ki_mag = 0.5f * qf->ki_mag;
+			
+			convergence_update_count += 1;
+			if( convergence_update_count > 2000 )
+			{
+				convergence_update_count = 0;
+				qf->ahrs->internal_state = AHRS_CONVERGING;
+				print_util_dbg_print("End of AHRS attitude initialization.\r\n");
+			}
 			break;
 			
-		case LEVELING:
-			kp = 0.5f;
-			kp_mag = 0.5f;
-			qf->ki = qf->kp / 10.0f;
-			break;
-			
-		case LEVEL_PLUS_ACCEL:  // experimental - do not use
-			kp = 0.3f;
-			qf->ki = qf->kp / 10.0f;
-			qf->imu->calib_accelero.bias[0] += dt * qf->kp * (qf->imu->scaled_accelero.data[0] - up_bf.v[0]);
-			qf->imu->calib_accelero.bias[1] += dt * qf->kp * (qf->imu->scaled_accelero.data[1] - up_bf.v[1]);
-			qf->imu->calib_accelero.bias[2] += dt * qf->kp * (qf->imu->scaled_accelero.data[2] - up_bf.v[2]);
-			kp_mag = qf->kp_mag;
-			break;
-			
-		default:
+		case AHRS_CONVERGING:
 			kp = qf->kp;
 			kp_mag = qf->kp_mag;
-			qf->ki = qf->kp / 15.0f;
+			
+			ki = qf->ki * 3.0f;
+			ki_mag = qf->ki_mag * 3.0f;
+			
+			convergence_update_count += 1;
+			if( convergence_update_count > 2000 )
+			{
+				convergence_update_count = 0;
+				qf->ahrs->internal_state = AHRS_READY;
+				print_util_dbg_print("End of AHRS leveling.\r\n");
+			}
+			break;
+
+		case AHRS_READY:
+			kp = qf->kp;
+			kp_mag = qf->kp_mag;
+			ki = qf->ki;
+			ki_mag = qf->ki_mag;
 			break;
 	}
 
@@ -204,11 +218,11 @@ void qfilter_update(qfilter_t *qf)
 
 	// TODO: correct this formulas! 
 	qf->ahrs->qe.s = qf->ahrs->qe.s + qed.s * dt;
-	qf->ahrs->qe.v[0] += qed.v[0] * dt;
-	qf->ahrs->qe.v[1] += qed.v[1] * dt;
-	qf->ahrs->qe.v[2] += qed.v[2] * dt;
+	qf->ahrs->qe.v[X] += qed.v[X] * dt;
+	qf->ahrs->qe.v[Y] += qed.v[Y] * dt;
+	qf->ahrs->qe.v[Z] += qed.v[Z] * dt;
 
-	snorm = qf->ahrs->qe.s * qf->ahrs->qe.s + qf->ahrs->qe.v[0] * qf->ahrs->qe.v[0] + qf->ahrs->qe.v[1] * qf->ahrs->qe.v[1] + qf->ahrs->qe.v[2] * qf->ahrs->qe.v[2];
+	snorm = qf->ahrs->qe.s * qf->ahrs->qe.s + qf->ahrs->qe.v[X] * qf->ahrs->qe.v[X] + qf->ahrs->qe.v[Y] * qf->ahrs->qe.v[Y] + qf->ahrs->qe.v[Z] * qf->ahrs->qe.v[Z];
 	if (snorm < 0.0001f)
 	{
 		norm = 0.01f;
@@ -219,24 +233,28 @@ void qfilter_update(qfilter_t *qf)
 		norm = maths_fast_sqrt(snorm);
 	}
 	qf->ahrs->qe.s /= norm;
-	qf->ahrs->qe.v[0] /= norm;
-	qf->ahrs->qe.v[1] /= norm;
-	qf->ahrs->qe.v[2] /= norm;
+	qf->ahrs->qe.v[X] /= norm;
+	qf->ahrs->qe.v[Y] /= norm;
+	qf->ahrs->qe.v[Z] /= norm;
 
 	// bias estimate update
-	qf->imu->calib_gyro.bias[0] += - dt * qf->ki * omc[0] / qf->imu->calib_gyro.scale_factor[0];
-	qf->imu->calib_gyro.bias[1] += - dt * qf->ki * omc[1] / qf->imu->calib_gyro.scale_factor[1];
-	qf->imu->calib_gyro.bias[2] += - dt * qf->ki * omc[2] / qf->imu->calib_gyro.scale_factor[2];
-
+	qf->imu->calib_gyro.bias[X] += - dt * ki * omc[X] / qf->imu->calib_gyro.scale_factor[X];
+	qf->imu->calib_gyro.bias[Y] += - dt * ki * omc[Y] / qf->imu->calib_gyro.scale_factor[Y];
+	qf->imu->calib_gyro.bias[Z] += - dt * ki * omc[Z] / qf->imu->calib_gyro.scale_factor[Z];
+	
+	qf->imu->calib_gyro.bias[X] += - dt * ki_mag * omc_mag[X] / qf->imu->calib_compass.scale_factor[X];
+	qf->imu->calib_gyro.bias[Y] += - dt * ki_mag * omc_mag[Y] / qf->imu->calib_compass.scale_factor[Y];
+	qf->imu->calib_gyro.bias[Z] += - dt * ki_mag * omc_mag[Z] / qf->imu->calib_compass.scale_factor[Z];
+	
 	// set up-vector (bodyframe) in attitude
-	qf->ahrs->up_vec.v[0] = up_bf.v[0];
-	qf->ahrs->up_vec.v[1] = up_bf.v[1];
-	qf->ahrs->up_vec.v[2] = up_bf.v[2];
+	qf->ahrs->up_vec.v[X] = up_bf.v[X];
+	qf->ahrs->up_vec.v[Y] = up_bf.v[Y];
+	qf->ahrs->up_vec.v[Z] = up_bf.v[Z];
 
 	// Update linear acceleration
-	qf->ahrs->linear_acc[0] = 9.81f * (qf->imu->scaled_accelero.data[0] - qf->ahrs->up_vec.v[0]) ;							// TODO: review this line!
-	qf->ahrs->linear_acc[1] = 9.81f * (qf->imu->scaled_accelero.data[1] - qf->ahrs->up_vec.v[1]) ;							// TODO: review this line!
-	qf->ahrs->linear_acc[2] = 9.81f * (qf->imu->scaled_accelero.data[2] - qf->ahrs->up_vec.v[2]) ;							// TODO: review this line!
+	qf->ahrs->linear_acc[X] = 9.81f * (qf->imu->scaled_accelero.data[X] - qf->ahrs->up_vec.v[X]) ;							// TODO: review this line!
+	qf->ahrs->linear_acc[Y] = 9.81f * (qf->imu->scaled_accelero.data[Y] - qf->ahrs->up_vec.v[Y]) ;							// TODO: review this line!
+	qf->ahrs->linear_acc[Z] = 9.81f * (qf->imu->scaled_accelero.data[Z] - qf->ahrs->up_vec.v[Z]) ;							// TODO: review this line!
 
 	//update angular_speed.
 	qf->ahrs->angular_speed[X] = qf->imu->scaled_gyro.data[X];

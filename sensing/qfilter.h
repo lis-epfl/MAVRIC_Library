@@ -53,25 +53,14 @@ extern "C" {
 
 
 /**
- * \brief The calibration level of the filter
- */
-typedef enum
-{
-	OFF,							///< Calibration level: No calibration 
-	LEVELING,						///< Calibration level: leveling 
-	LEVEL_PLUS_ACCEL				///< Calibration level: leveling plus acceleration
-} calibration_mode_t;
-
-
-/**
  * \brief The structure for configuring the quaternion-based attitude estimation
  */
 typedef struct
 {
-	float   kp;				///< The proportional gain for the acceleration correction of the angular rates
-	float   ki;				///< The integral gain for the acceleration correction of the biais
-	float   kp_mag;			///< The proportional gain for the magnetometer correction of the angular rates
-	float   ki_mag;			///< The integral gain for the magnetometer correction of the angular rates
+	float   kp;								///< The proportional gain for the acceleration correction of the angular rates
+	float   ki;								///< The integral gain for the acceleration correction of the biais
+	float   kp_mag;							///< The proportional gain for the magnetometer correction of the angular rates
+	float   ki_mag;							///< The integral gain for the magnetometer correction of the angular rates
 } qfilter_conf_t;
 
 /**

@@ -43,6 +43,7 @@
 #include "imu_telemetry.h"
 #include "time_keeper.h"
 #include "print_util.h"
+#include "constants.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -238,4 +239,15 @@ void imu_telemetry_send_raw(const imu_t* imu, const mavlink_stream_t* mavlink_st
 								imu->oriented_compass.data[0],
 								imu->oriented_compass.data[1],
 								imu->oriented_compass.data[2]);
+}
+
+void imu_telemetry_send_biais(const imu_t* imu, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{
+	mavlink_msg_debug_vect_pack(	mavlink_stream->sysid,
+									mavlink_stream->compid,
+									msg,"biaisGyro",
+									time_keeper_get_micros(),
+									imu->calib_gyro.bias[X],
+									imu->calib_gyro.bias[Y],
+									imu->calib_gyro.bias[Z]);
 }

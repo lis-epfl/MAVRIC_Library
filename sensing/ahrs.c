@@ -42,6 +42,7 @@
 
 #include "ahrs.h"
 #include "print_util.h"
+#include "constants.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -55,38 +56,35 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool ahrs_init(ahrs_t* ahrs, ahrs_config_t* config)
+bool ahrs_init(ahrs_t* ahrs)
 {
 	bool init_success = true;
-	
-	// Init dependencies
-	int32_t x = config->x;
-	int32_t y = config->y;
-	int32_t z = config->z;
 
 	// Init structure
 	ahrs->qe.s = 1.0f;
-	ahrs->qe.v[0] = 0.0f;
-	ahrs->qe.v[1] = 0.0f;
-	ahrs->qe.v[2] = 0.0f;
+	ahrs->qe.v[X] = 0.0f;
+	ahrs->qe.v[Y] = 0.0f;
+	ahrs->qe.v[Z] = 0.0f;
 	
-	ahrs->angular_speed[x] = 0.0f;
-	ahrs->angular_speed[y] = 0.0f;
-	ahrs->angular_speed[z] = 0.0f;
+	ahrs->angular_speed[X] = 0.0f;
+	ahrs->angular_speed[Y] = 0.0f;
+	ahrs->angular_speed[Z] = 0.0f;
 	
-	ahrs->linear_acc[x] = 0.0f;
-	ahrs->linear_acc[y] = 0.0f;
-	ahrs->linear_acc[z] = 0.0f;
+	ahrs->linear_acc[X] = 0.0f;
+	ahrs->linear_acc[Y] = 0.0f;
+	ahrs->linear_acc[Z] = 0.0f;
 	
+	ahrs->internal_state = AHRS_UNLEVELED;
+
 	ahrs->north_vec.s    = 0.0f;
-	ahrs->north_vec.v[0] = 1.0f;
-	ahrs->north_vec.v[1] = 0.0f;
-	ahrs->north_vec.v[2] = 0.0f;
+	ahrs->north_vec.v[X] = 1.0f;
+	ahrs->north_vec.v[Y] = 0.0f;
+	ahrs->north_vec.v[Z] = 0.0f;
 	
 	ahrs->up_vec.s    = 0.0f;
-	ahrs->up_vec.v[0] = 0.0f;
-	ahrs->up_vec.v[1] = 0.0f;
-	ahrs->up_vec.v[2] = -1.0f;
+	ahrs->up_vec.v[X] = 0.0f;
+	ahrs->up_vec.v[Y] = 0.0f;
+	ahrs->up_vec.v[Z] = -1.0f;
 	
 	print_util_dbg_print("[AHRS] Initialised.\r\n");
 	
