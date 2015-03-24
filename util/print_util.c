@@ -41,7 +41,8 @@
 
 
 #include "print_util.h"
-#include "compiler.h"
+#include <stdlib.h>
+#include <stdbool.h>
 
 byte_stream_t* deb_stream;
 

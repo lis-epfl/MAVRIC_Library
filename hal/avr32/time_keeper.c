@@ -30,48 +30,86 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file streams.h
+ * \file time_keeper.c
  * 
  * \author MAV'RIC Team
  * \author Felix Schill
  *   
- * \brief Stream
- *
+ * \brief This file is used to interact with the clock of the microcontroller
+ * 
  ******************************************************************************/
 
 
-#ifndef STREAMS_H_
-#define STREAMS_H_
+#include "time_keeper.h"
+#include "ast.h"
 
-#ifdef __cplusplus
-extern "C" 
+#define TK_AST_FREQUENCY 1000000					///< Timer ticks per second (32 bit timer, >1h time-out at 1MHz, >years at 1kHz. We'll go for precision here...)
+#define AST_PRESCALER_SETTING 5						///< Log(SOURCE_CLOCK/AST_FREQ)/log(2)-1 when running from PBA (64Mhz), 5 (1Mhz), or 15 (~1khz, not precisely though).
+
+
+void time_keeper_init()
 {
-#endif
-
-#include <stdint.h>
-
-/**
- * @brief Stream data
- */
-typedef void* stream_data_t;
-
-
-/**
- * @brief Byte stream
- */
-typedef struct 
-{
-	uint8_t 	(*get)(stream_data_t *data);					///<	Pointer to get function
-	uint8_t  	(*put)(stream_data_t *data, uint8_t element);	///<	Pointer to put function
-	void    	(*flush)(stream_data_t *data);					///<	Pointer to flush function
-	int32_t     (*buffer_empty)(stream_data_t *data);			///<	Pointer to buffer_empty function
-	uint32_t 	(*bytes_available)(stream_data_t *data);		///<	Pointer to bytes_available function
-	volatile stream_data_t data;								///<	Data
-} byte_stream_t;
-
-
-#ifdef __cplusplus
+	ast_init_counter(&AVR32_AST, AST_OSC_PB, AST_PRESCALER_SETTING, 0);
+	ast_enable(&AVR32_AST);
 }
-#endif
 
-#endif /* STREAMS_H_ */
+
+uint32_t time_keeper_get_time_ticks()
+{
+	//raw timer ticks
+	return ast_get_counter_value(&AVR32_AST);
+}
+
+
+double time_keeper_get_time()
+{
+	// time in seconds since system start
+	return time_keeper_ticks_to_seconds(time_keeper_get_time_ticks());
+}
+
+
+uint32_t time_keeper_get_millis()
+{
+	//milliseconds since system start
+	return time_keeper_get_time_ticks() / 1000; /// (TK_AST_FREQUENCY / 1000);
+}
+
+
+uint32_t time_keeper_get_micros()
+{
+	// microseconds since system start. Will run over after an hour.
+	return time_keeper_get_time_ticks() * (1000000 / TK_AST_FREQUENCY);
+}
+
+
+float time_keeper_ticks_to_seconds(uint32_t timer_ticks)
+{
+	return ((double)timer_ticks / (double)TK_AST_FREQUENCY);
+}
+
+
+void time_keeper_delay_micros(int32_t microseconds)
+{
+	uint32_t now = time_keeper_get_micros();
+	while (time_keeper_get_micros() < now + microseconds);
+}
+
+
+void time_keeper_delay_until(uint32_t until_time)
+{
+	while (time_keeper_get_micros() < until_time)
+	{
+		;
+	}	
+}
+
+
+void time_keeper_delay_ms(int32_t t) 
+{
+	uint32_t now = time_keeper_get_micros();
+	
+	while (time_keeper_get_micros() < now + 1000 * t) 
+	{
+		;
+	}
+};

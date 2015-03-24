@@ -49,9 +49,12 @@
 #ifndef _LED_H_
 #define _LED_H_
 
+#ifdef __cplusplus
+	extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
-
 
 /*! \name Identifiers of LEDs to Use with LED Functions
  */
@@ -182,5 +185,8 @@ extern uint8_t LED_Get_Intensity(uint32_t led);
  */
 extern void LED_Set_Intensity(uint32_t leds, uint8_t intensity);
 
+#ifdef __cplusplus
+	}
+#endif
 
 #endif  // _LED_H_

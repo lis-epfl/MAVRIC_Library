@@ -42,7 +42,7 @@
 
 #include "buffer.h"
 #include <stdbool.h>
-#include "compiler.h"
+#include <stdlib.h>
 
 uint8_t buffer_full(buffer_t * buffer) 
 {

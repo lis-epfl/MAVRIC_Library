@@ -93,13 +93,13 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 		print_util_dbg_print(" of ");
 		print_util_dbg_print_num(ncyc,10);
 		print_util_dbg_print(" start ****\r\n");
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 
 		/* Initialization */
 		print_util_dbg_print(" disk_initalize(");
 		print_util_dbg_print_num(pdrv,10);
 		print_util_dbg_print(")\r\n");
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		ds = disk_initialize(pdrv);
 		if (ds & STA_NOINIT)
@@ -111,7 +111,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 		{
 			print_util_dbg_print(" - ok.\r\n");
 		}
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 
 		/* Get drive size */
 		print_util_dbg_print("**** Get drive size ****\r\n");
@@ -120,7 +120,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 		print_util_dbg_print(", GET_SECTOR_COUNT, 0x");
 		print_util_dbg_print_num((UINT)&sz_drv,10);
 		print_util_dbg_print(")\r\n");
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		sz_drv = 0;
 		dr = disk_ioctl(pdrv, GET_SECTOR_COUNT, &sz_drv);
@@ -133,7 +133,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 			print_util_dbg_print(" - failed.\r\n");
 			return 3;
 		}
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		if (sz_drv < 128)
 		{
@@ -145,7 +145,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 		print_util_dbg_print(" is ");
 		print_util_dbg_print_num(sz_drv,10);
 		print_util_dbg_print(".\r\n");
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		#if _MAX_SS != _MIN_SS
 		/* Get sector size */
@@ -155,7 +155,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 		print_util_dbg_print(", GET_SECTOR_SIZE, 0x");
 		print_util_dbg_print_num((UINT)&sz_sect,10);
 		print_util_dbg_print(")\r\n");
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		sz_sect = 0;
 		dr = disk_ioctl(pdrv, GET_SECTOR_SIZE, &sz_sect);
@@ -168,7 +168,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 			print_util_dbg_print(" - failed.\r\n");
 			return 5;
 		}
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		print_util_dbg_print(" Size of sector is ");
 		print_util_dbg_print_num(sz_sect,10);
@@ -189,7 +189,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 		print_util_dbg_print(", GET_BLOCK_SIZE, 0x");
 		print_util_dbg_print_num((UINT)&sz_eblk,10);
 		print_util_dbg_print(")\r\n");
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		sz_eblk = 0;
 		dr = disk_ioctl(pdrv, GET_BLOCK_SIZE, &sz_eblk);
@@ -201,7 +201,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 		{
 			print_util_dbg_print(" - failed.\r\n");
 		}
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		if (dr == RES_OK || sz_eblk >= 2)
 		{
@@ -213,7 +213,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 		{
 			print_util_dbg_print(" Size of the erase block is unknown.\r\n");
 		}
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 
 		/* Single sector write test */
 		print_util_dbg_print("**** Single sector write test 1 ****\r\n");
@@ -226,7 +226,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 		print_util_dbg_print(", ");
 		print_util_dbg_print_num(lba,10);
 		print_util_dbg_print(", 1)");
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		dr = disk_write(pdrv, pbuff, lba, 1);
 		if (dr == RES_OK)
@@ -238,12 +238,12 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 			print_util_dbg_print(" - failed.\r\n");
 			return 6;
 		}
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		print_util_dbg_print(" disk_ioctl(");
 		print_util_dbg_print_num(pdrv,10);
 		print_util_dbg_print(", CTRL_SYNC, NULL)\r\n");
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		dr = disk_ioctl(pdrv, CTRL_SYNC, 0);
 		if (dr == RES_OK)
@@ -255,7 +255,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 			print_util_dbg_print(" - failed.\r\n");
 			return 7;
 		}
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		memset(pbuff, 0, sz_sect);
 		print_util_dbg_print(" disk_read(");
@@ -265,7 +265,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 		print_util_dbg_print(", ");
 		print_util_dbg_print_num(lba,10);
 		print_util_dbg_print(", 1)");
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		dr = disk_read(pdrv, pbuff, lba, 1);
 		if (dr == RES_OK)
@@ -277,7 +277,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 			print_util_dbg_print(" - failed.\r\n");
 			return 8;
 		}
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		for (n = 0, pn(pns); n < sz_sect && pbuff[n] == (BYTE)pn(0); n++) ;
 		if (n == sz_sect)
@@ -290,7 +290,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 			return 10;
 		}
 		pns++;
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 
 		/* Multiple sector write test */
 		print_util_dbg_print("**** Multiple sector write test ****\r\n");
@@ -314,7 +314,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 		print_util_dbg_print(", ");
 		print_util_dbg_print_num(ns, 10);
 		print_util_dbg_print(")\r\n");
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		dr = disk_write(pdrv, pbuff, lba, ns);
 		if (dr == RES_OK)
@@ -326,12 +326,12 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 			print_util_dbg_print(" - failed.\r\n");
 			return 11;
 		}
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		print_util_dbg_print(" disk_ioctl(");
 		print_util_dbg_print_num(pdrv,10);
 		print_util_dbg_print(", CTRL_SYNC, NULL)\r\n");
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		dr = disk_ioctl(pdrv, CTRL_SYNC, 0);
 		if (dr == RES_OK)
@@ -354,7 +354,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 		print_util_dbg_print(", ");
 		print_util_dbg_print_num(ns, 10);
 		print_util_dbg_print(")\r\n");
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		dr = disk_read(pdrv, pbuff, lba, ns);
 		if (dr == RES_OK)
@@ -366,7 +366,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 			print_util_dbg_print(" - failed.\r\n");
 			return 13;
 		}
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		for (n = 0, pn(pns); n < (UINT)(sz_sect * ns) && pbuff[n] == (BYTE)pn(0); n++) ;
 		
@@ -380,7 +380,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 			return 14;
 		}
 		pns++;
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 
 		/* Single sector write test (misaligned memory address) */
 		print_util_dbg_print("**** Single sector write test 2 ****\r\n");
@@ -396,7 +396,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 		print_util_dbg_print(", ");
 		print_util_dbg_print_num(lba,10);
 		print_util_dbg_print(", 1)\r\n");
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		dr = disk_write(pdrv, pbuff+3, lba, 1);
 		if (dr == RES_OK)
@@ -412,7 +412,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 		print_util_dbg_print(" disk_ioctl(");
 		print_util_dbg_print_num(pdrv,10);
 		print_util_dbg_print(", CTRL_SYNC, NULL)\r\n");
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		dr = disk_ioctl(pdrv, CTRL_SYNC, 0);
 		if (dr == RES_OK)
@@ -424,7 +424,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 			print_util_dbg_print(" - failed.\r\n");
 			return 16;
 		}
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		memset(pbuff+5, 0, sz_sect);
 		print_util_dbg_print(" disk_read(");
@@ -434,7 +434,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 		print_util_dbg_print(", ");
 		print_util_dbg_print_num(lba,10);
 		print_util_dbg_print(", 1)\r\n");
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 		
 		dr = disk_read(pdrv, pbuff+5, lba, 1);
 		if (dr == RES_OK)
@@ -459,7 +459,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 			return 18;
 		}
 		pns++;
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 
 		/* 4GB barrier test */
 		print_util_dbg_print("**** 4GB barrier test ****\r\n");
@@ -481,7 +481,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 			print_util_dbg_print(", ");
 			print_util_dbg_print_num(lba,10);
 			print_util_dbg_print(",1 )\r\n");
-			delay_ms(25);
+			time_keeper_delay_ms(25);
 			
 			dr = disk_write(pdrv, pbuff, lba, 1);
 			if (dr == RES_OK)
@@ -493,7 +493,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 				print_util_dbg_print(" - failed.\r\n");
 				return 19;
 			}
-			delay_ms(25);
+			time_keeper_delay_ms(25);
 			
 			print_util_dbg_print(" disk_write(");
 			print_util_dbg_print_num(pdrv,10);
@@ -502,7 +502,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 			print_util_dbg_print(", ");
 			print_util_dbg_print_num(lba2,10);
 			print_util_dbg_print(", 1)\r\n");
-			delay_ms(25);
+			time_keeper_delay_ms(25);
 			
 			dr = disk_write(pdrv, pbuff+sz_sect, lba2, 1);
 			if (dr == RES_OK)
@@ -514,12 +514,12 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 				print_util_dbg_print(" - failed.\r\n");
 				return 20;
 			}
-			delay_ms(25);
+			time_keeper_delay_ms(25);
 			
 			print_util_dbg_print(" disk_ioctl(");
 			print_util_dbg_print_num(pdrv,10);
 			print_util_dbg_print(", CTRL_SYNC, NULL)\r\n");
-			delay_ms(25);
+			time_keeper_delay_ms(25);
 			
 			dr = disk_ioctl(pdrv, CTRL_SYNC, 0);
 			if (dr == RES_OK)
@@ -531,7 +531,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 				print_util_dbg_print(" - failed.\r\n");
 				return 21;
 			}
-			delay_ms(25);
+			time_keeper_delay_ms(25);
 			
 			memset(pbuff, 0, sz_sect * 2);
 			
@@ -542,7 +542,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 			print_util_dbg_print(", ");
 			print_util_dbg_print_num(lba,10);
 			print_util_dbg_print(", 1)\r\n");
-			delay_ms(25);
+			time_keeper_delay_ms(25);
 			
 			dr = disk_read(pdrv, pbuff, lba, 1);
 			if (dr == RES_OK)
@@ -554,7 +554,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 				print_util_dbg_print(" - failed.\r\n");
 				return 22;
 			}
-			delay_ms(25);
+			time_keeper_delay_ms(25);
 			
 			print_util_dbg_print(" disk_read(");
 			print_util_dbg_print_num(pdrv,10);
@@ -563,7 +563,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 			print_util_dbg_print(", ");
 			print_util_dbg_print_num(lba2,10);
 			print_util_dbg_print(", 1)\r\n");
-			delay_ms(25);
+			time_keeper_delay_ms(25);
 			
 			dr = disk_read(pdrv, pbuff+sz_sect, lba2, 1);
 			if (dr == RES_OK)
@@ -575,7 +575,7 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 				print_util_dbg_print(" - failed.\r\n");
 				return 23;
 			}
-			delay_ms(25);
+			time_keeper_delay_ms(25);
 			
 			for (n = 0, pn(pns); pbuff[n] == (BYTE)pn(0) && n < (UINT)(sz_sect * 2); n++) ;
 			
@@ -595,14 +595,14 @@ int test_fat_fs_test(BYTE pdrv, UINT ncyc, DWORD* buff, UINT sz_buff)
 		}
 		
 		pns++;
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 
 		print_util_dbg_print("**** Test cycle");
 		print_util_dbg_print_num(cc,10);
 		print_util_dbg_print(" of ");
 		print_util_dbg_print_num(ncyc,10);
 		print_util_dbg_print(" completed ****\r\n");
-		delay_ms(25);
+		time_keeper_delay_ms(25);
 	}
 
 	return 0;
