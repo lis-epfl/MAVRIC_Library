@@ -9,6 +9,8 @@
 #ifndef PIEZO_SPEAKER_H_
 #define PIEZO_SPEAKER_H_
 
+#include <stdint.h>
+
 //#define PIEZO_HIGH_PIN AVR32_PIN_PA12
 //#define PIEZO_LOW_PIN AVR32_PIN_PA15
 

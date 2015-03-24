@@ -9,7 +9,7 @@
 #ifndef ADXL345_DRIVER_H_
 #define ADXL345_DRIVER_H_
 
-#include "compiler.h"
+#include <stdint.h>
 
 #define ACC_X 0
 #define ACC_Y 1

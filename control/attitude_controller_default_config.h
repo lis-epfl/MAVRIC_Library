@@ -111,7 +111,7 @@ static attitude_controller_conf_t attitude_controller_default_config =
 				.gain = 0.15f,
 				.clip_pre = 1.0f,
 				.accumulator = 0.0f,
-				.clip = 0.045f,
+				.clip = 0.09f,
 			},
 			.differentiator={
 				.gain = 0.0f,

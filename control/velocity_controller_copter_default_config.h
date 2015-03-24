@@ -63,7 +63,7 @@ static velocity_controller_copter_conf_t velocity_controller_copter_default_conf
 			.clip_max = 0.5f,
 			.integrator={
 				.gain = 0.1f,
-				.clip_pre = 0.5f,
+				.clip_pre = 1.0f,
 				.accumulator = 0.0f,
 				.clip = 0.1f,
 			},
@@ -83,7 +83,7 @@ static velocity_controller_copter_conf_t velocity_controller_copter_default_conf
 			.clip_max = 0.5f,
 			.integrator={
 				.gain = 0.1f,
-				.clip_pre = 0.5f,
+				.clip_pre = 1.0f,
 				.accumulator = 0.0f,
 				.clip = 0.1f,
 			},

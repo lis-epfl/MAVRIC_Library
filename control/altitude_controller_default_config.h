@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief Default configuration for the module altitude_controller_sonar
+ * \brief Default configuration for the module altitude_controller
  *
  ******************************************************************************/
 
@@ -51,7 +51,7 @@ extern "C" {
 
 static altitude_controller_conf_t altitude_controller_default_config =
 {
-	.hover_point = -0.3f,
+	.hover_point = -0.28f,
 	.pid_config = 
 	{
 		.p_gain = 0.2f,
