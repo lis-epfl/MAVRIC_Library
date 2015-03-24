@@ -86,8 +86,7 @@ typedef struct
  * \return	True if the init succeed, false otherwise
  */
 bool state_machine_init(	state_machine_t *state_machine,
-							state_t* state, 
-							mavlink_waypoint_handler_t* waypoint_handler, 
+							state_t* state,
 							simulation_model_t *sim_model, 
 							remote_t* remote,
 							joystick_parsing_t* joystick);

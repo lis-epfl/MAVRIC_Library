@@ -90,7 +90,8 @@ static void piezo_speaker_set_value_binary(int32_t binary_value)
 	{
 		gpio_set_pin_low(PIEZO_HIGH_PIN);
 		gpio_set_pin_low(PIEZO_LOW_PIN);
-	} else if (binary_value>0) 
+	} 
+	else if (binary_value>0) 
 	{
 		gpio_set_pin_high(PIEZO_HIGH_PIN);
 		gpio_set_pin_low(PIEZO_LOW_PIN);
@@ -159,6 +160,20 @@ void piezo_speaker_quick_startup(void)
 	piezo_speaker_beep(100, 440);
 	time_keeper_delay_ms(50);
 	piezo_speaker_beep(100, 880);
+}
+
+
+void piezo_speaker_startup_bb(void)
+{
+	for (uint32_t i = 3000; i > 500; i -= 100)
+	{
+		piezo_speaker_beep(5, i);
+	}
+	time_keeper_delay_ms(5);
+	for (uint32_t i = 500; i < 3000; i += 100 )
+	{
+		piezo_speaker_beep(5, i);
+	}
 }
 
 

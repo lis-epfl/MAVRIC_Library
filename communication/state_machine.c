@@ -110,14 +110,12 @@ mav_mode_t state_machine_get_mode_from_source(state_machine_t* state_machine, ma
 
 bool state_machine_init(	state_machine_t *state_machine,
 							state_t* state, 
-							mavlink_waypoint_handler_t* waypoint_handler, 
 							simulation_model_t *sim_model, 
 							remote_t* remote,
 							joystick_parsing_t* joystick)
 {
 	bool init_success = true;
 	
-	state_machine->waypoint_handler = waypoint_handler;
 	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
 	state_machine->remote 			= remote;

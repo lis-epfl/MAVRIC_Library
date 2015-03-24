@@ -30,74 +30,49 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file constants.h
+ * \file altitude_estimation.h
  * 
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *   
- * \brief Useful constants
+ * \brief 	Altitude estimation
  *
  ******************************************************************************/
 
 
-#ifndef MATH_UTIL_H_
-#define MATH_UTIL_H_
+#include "altitude_estimation.h"
 
-#ifdef __cplusplus
-extern "C" 
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void altitude_estimation_init(altitude_estimation_t* estimator, const altitude_estimation_conf_t* config, const sonar_t* sonar, const barometer_t* barometer, const ahrs_t* ahrs, altitude_t* altitude_estimated)
 {
-#endif
+	// Init dependencies
+	estimator->sonar 				= sonar;
+	estimator->barometer 			= barometer;
+	estimator->ahrs 				= ahrs;
+	estimator->altitude_estimated 	= altitude_estimated;
 
-
-#define GRAVITY 9.81f			///< The gravity constant
-
-
-/**
- * \brief Enumerates the X, Y and Z orientations 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	X = 0,
-	Y = 1,
-	Z = 2,
-} constants_orientation_t;
-
-
-/**
- * \brief Enumerates the Roll, Pitch and Yaw orientations 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	ROLL 	= 0,
-	PITCH 	= 1,
-	YAW 	= 2,
-} constants_roll_pitch_yaw_t;
-
-
-/**
- * \brief Enumerates the up vector orientation 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	UPVECTOR_X = 0,
-	UPVECTOR_Y = 0,
-	UPVECTOR_Z = -1,
-} constants_upvector_t;
-
-
-/**
- * \brief Enumerates ON/OFF switches
- */
-typedef enum
-{
-	OFF = 0,
-	ON 	= 1,
-} constants_on_off_t;
-
-#ifdef __cplusplus
+	// Init members
 }
-#endif
 
-#endif /* MATH_UTIL_H_ */
+
+void altitude_estimation_update(altitude_estimation_t* estimator)
+{
+	float alt = estimator->sonar->current_distance;
+
+	estimator->altitude_estimated->above_sea 	= - 400.0f - alt;
+	estimator->altitude_estimated->above_ground = - alt;
+}

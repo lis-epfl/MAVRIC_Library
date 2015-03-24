@@ -55,7 +55,8 @@ extern "C" {
 
 #include "imu.h"
 #include "servos.h"
-#include "bmp085.h"
+#include "barometer.h"
+#include "sonar.h"
 #include "position_estimation.h"
 #include "state.h"
 
@@ -121,6 +122,7 @@ typedef struct
 	position_estimation_t* pos_est;							///< The pointer to the position estimation structure
 	barometer_t* pressure;									///< The pointer to the barometer structure
 	gps_t* gps;												///< The pointer to the GPS structure
+	sonar_t* sonar;											///< The pointer to the sonar structure
 	const state_t* state;									///< The pointer to the state structure
 	const servos_t* servos;									///< The pointer to the servos structure
 	const ahrs_t *estimated_attitude;						///< The pointer to the attitude estimation structure
@@ -136,14 +138,26 @@ typedef struct
  * \param	ahrs			The pointer to the AHRS structure
  * \param	imu				The pointer to the real IMU structure to match the simulated IMU
  * \param	pos_est			The pointer to the position estimation structure of the vehicle
+ * \param	pressure		The pointer to the pressure structure
  * \param	gps				The pointer to the GPS structure
+ * \param	sonar			The pointer to the sonar structure
  * \param	state			The pointer to the state structure
  * \param	servos			The pointer to the servos structure
  * \param	waypoint_set	The pointer to the waypoint_set boolean value
  *
  * \return	True if the init succeed, false otherwise
  */
-bool simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimation_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, const servos_t* servos, bool* waypoint_set);
+bool simulation_init(	simulation_model_t* sim, 
+						const simulation_config_t* sim_config, 
+						ahrs_t* ahrs, 
+						imu_t* imu, 
+						position_estimation_t* pos_est, 
+						barometer_t* pressure, 
+						gps_t* gps, 
+						sonar_t* sonar, 
+						state_t* state, 
+						const servos_t* servos, 
+						bool* waypoint_set);
 
 
 /**
@@ -185,6 +199,14 @@ void simulation_simulate_gps(simulation_model_t *sim);
  * \param	timestamp_ms	The time stamp in ms
  */
 void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms);
+
+
+/**
+ * \brief	Simulates sonar outputs
+ *
+ * \param	sim				The pointer to the simulation model structure
+ */
+void simulation_simulate_sonar(simulation_model_t *sim);
 
 
 /**

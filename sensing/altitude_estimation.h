@@ -30,74 +30,77 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file constants.h
+ * \file altitude_estimation.h
  * 
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *   
- * \brief Useful constants
+ * \brief 	Altitude estimation
  *
  ******************************************************************************/
 
 
-#ifndef MATH_UTIL_H_
-#define MATH_UTIL_H_
+#ifndef ALTITUDE_ESTIMATION_H_
+#define ALTITUDE_ESTIMATION_H_
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-
-#define GRAVITY 9.81f			///< The gravity constant
-
-
-/**
- * \brief Enumerates the X, Y and Z orientations 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	X = 0,
-	Y = 1,
-	Z = 2,
-} constants_orientation_t;
+#include "altitude.h"
+#include "sonar.h"
+#include "barometer.h"
+#include "ahrs.h"
 
 
 /**
- * \brief Enumerates the Roll, Pitch and Yaw orientations 
- * according to the autopilot placement on the MAV
+ * \brief Altitude estimator structure
  */
-typedef enum
+typedef struct 
 {
-	ROLL 	= 0,
-	PITCH 	= 1,
-	YAW 	= 2,
-} constants_roll_pitch_yaw_t;
+	const sonar_t*		sonar;					///< Pointer to sonar (input)
+	const barometer_t* 	barometer;				///< Pointer to barometer (input)
+	const ahrs_t* 		ahrs;					///< Pointer to estimated attitude and acceleration (input)
+	altitude_t* 		altitude_estimated; 	///< Pointer to estimated altitude (output)
+} altitude_estimation_t;
 
 
 /**
- * \brief Enumerates the up vector orientation 
- * according to the autopilot placement on the MAV
+ * \brief Altitude estimation configuration
  */
-typedef enum
+typedef struct
 {
-	UPVECTOR_X = 0,
-	UPVECTOR_Y = 0,
-	UPVECTOR_Z = -1,
-} constants_upvector_t;
+} altitude_estimation_conf_t;	
 
 
 /**
- * \brief Enumerates ON/OFF switches
+ * \brief               		Initializes the altitude estimation structure
+ * 
+ * \param 	estimator    		Pointer to data structure
+ * \param 	config				Pointer to configuration
+ * \param 	sonar				Pointer to the sonar
+ * \param 	barometer			Pointer to the barometer
+ * \param 	ahrs				Pointer to the ahrs
+ * \param 	altitude_estimated	Pointer to the estimated altitude
  */
-typedef enum
-{
-	OFF = 0,
-	ON 	= 1,
-} constants_on_off_t;
+void altitude_estimation_init(	altitude_estimation_t* estimator, 
+								const altitude_estimation_conf_t* config, 
+								const sonar_t* sonar, 
+								const barometer_t* barometer, 
+								const ahrs_t* ahrs, 
+								altitude_t* altitude_estimated);
+
+
+/**
+ * \brief               	Main update function
+ * 
+ * \param 	estimator    	Pointer to data structure
+ */
+void altitude_estimation_update(altitude_estimation_t* estimator);
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* MATH_UTIL_H_ */
+#endif /* ALTITUDE_ESTIMATION_H_ */

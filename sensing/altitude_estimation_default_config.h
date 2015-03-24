@@ -30,74 +30,31 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file constants.h
+ * \file altitude_estimation_default_config.h
  * 
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *   
- * \brief Useful constants
+ * \brief Default configuration for the module altitude_estimation
  *
  ******************************************************************************/
 
 
-#ifndef MATH_UTIL_H_
-#define MATH_UTIL_H_
+#ifndef ALTITUDE_ESTIMATION_DEFAULT_CONFIG_H_
+#define ALTITUDE_ESTIMATION_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
+#include "altitude_estimation.h"
 
-#define GRAVITY 9.81f			///< The gravity constant
-
-
-/**
- * \brief Enumerates the X, Y and Z orientations 
- * according to the autopilot placement on the MAV
- */
-typedef enum
+static altitude_estimation_conf_t altitude_estimation_default_config =
 {
-	X = 0,
-	Y = 1,
-	Z = 2,
-} constants_orientation_t;
-
-
-/**
- * \brief Enumerates the Roll, Pitch and Yaw orientations 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	ROLL 	= 0,
-	PITCH 	= 1,
-	YAW 	= 2,
-} constants_roll_pitch_yaw_t;
-
-
-/**
- * \brief Enumerates the up vector orientation 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	UPVECTOR_X = 0,
-	UPVECTOR_Y = 0,
-	UPVECTOR_Z = -1,
-} constants_upvector_t;
-
-
-/**
- * \brief Enumerates ON/OFF switches
- */
-typedef enum
-{
-	OFF = 0,
-	ON 	= 1,
-} constants_on_off_t;
+};
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* MATH_UTIL_H_ */
+#endif // ALTITUDE_ESTIMATION_DEFAULT_CONFIG_H_

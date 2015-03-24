@@ -30,74 +30,39 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file constants.h
+ * \file curvace_telemetry.h
  * 
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *   
- * \brief Useful constants
+ * \brief Telemetry for the cylindrical curvace
  *
  ******************************************************************************/
 
 
-#ifndef MATH_UTIL_H_
-#define MATH_UTIL_H_
+#ifndef CURVACE_TELEMETRY_H_
+#define CURVACE_TELEMETRY_H_
 
 #ifdef __cplusplus
-extern "C" 
-{
+	extern "C" {
 #endif
 
-
-#define GRAVITY 9.81f			///< The gravity constant
-
-
-/**
- * \brief Enumerates the X, Y and Z orientations 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	X = 0,
-	Y = 1,
-	Z = 2,
-} constants_orientation_t;
+#include "curvace.h"	
+#include "mavlink_stream.h"
 
 
 /**
- * \brief Enumerates the Roll, Pitch and Yaw orientations 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	ROLL 	= 0,
-	PITCH 	= 1,
-	YAW 	= 2,
-} constants_roll_pitch_yaw_t;
+ * \brief 	Send 6 messages of type spherical_optic_flow
+ * 
+ * \param	curvace				Pointer to module
+ * \param	mavlink_stream		Mavlink stream
+ * \param 	msg					Mavlink message
+ **/
+void curvace_telemetry_send(const curvace_t* curvace, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
-
-/**
- * \brief Enumerates the up vector orientation 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	UPVECTOR_X = 0,
-	UPVECTOR_Y = 0,
-	UPVECTOR_Z = -1,
-} constants_upvector_t;
-
-
-/**
- * \brief Enumerates ON/OFF switches
- */
-typedef enum
-{
-	OFF = 0,
-	ON 	= 1,
-} constants_on_off_t;
 
 #ifdef __cplusplus
-}
+	}
 #endif
 
-#endif /* MATH_UTIL_H_ */
+#endif

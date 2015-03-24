@@ -30,74 +30,77 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file constants.h
+ * \file altitude_controller.h
  * 
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *   
- * \brief Useful constants
+ * \brief 	A simple altitude controller for copter
  *
  ******************************************************************************/
 
 
-#ifndef MATH_UTIL_H_
-#define MATH_UTIL_H_
+#ifndef ALTITUDE_CONTROLLER_H_
+#define ALTITUDE_CONTROLLER_H_
 
 #ifdef __cplusplus
-extern "C" 
-{
+extern "C" {
 #endif
 
-
-#define GRAVITY 9.81f			///< The gravity constant
-
-
-/**
- * \brief Enumerates the X, Y and Z orientations 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	X = 0,
-	Y = 1,
-	Z = 2,
-} constants_orientation_t;
+#include "control_command.h"
+#include "pid_controller.h"
+#include "altitude.h"
 
 
 /**
- * \brief Enumerates the Roll, Pitch and Yaw orientations 
- * according to the autopilot placement on the MAV
+ * \brief Altitude controller structure
  */
-typedef enum
+typedef struct 
 {
-	ROLL 	= 0,
-	PITCH 	= 1,
-	YAW 	= 2,
-} constants_roll_pitch_yaw_t;
+	pid_controller_t			pid;				///< Controller
+	float						hover_point;		///< Thrust required to hover
+	const position_command_t*	position_command;	///< Pointer to altitude command (input)
+	const altitude_t* 			altitude_estimated; ///< Pointer to estimated altitude (input)
+	thrust_command_t* 			thrust_command;		///< Pointer to thrust command (output)
+} altitude_controller_t;
 
 
 /**
- * \brief Enumerates the up vector orientation 
- * according to the autopilot placement on the MAV
+ * \brief Altitude controller configuration
  */
-typedef enum
+typedef struct
 {
-	UPVECTOR_X = 0,
-	UPVECTOR_Y = 0,
-	UPVECTOR_Z = -1,
-} constants_upvector_t;
+	float 					hover_point;		///< Thrust required to hover
+	pid_controller_conf_t 	pid_config;			///< Proportionnal gain
+} altitude_controller_conf_t;	
 
 
 /**
- * \brief Enumerates ON/OFF switches
+ * \brief               		Initializes the altitude controller structure
+ * 
+ * \param 	controller    		Pointer to data structure
+ * \param 	config				Pointer to configuration
+ * \param 	position_command	Pointer to the position command
+ * \param 	altitude_estimated	Pointer to the estimated altitude
+ * \param 	thrust_command		Pointer to thrust command (output)
  */
-typedef enum
-{
-	OFF = 0,
-	ON 	= 1,
-} constants_on_off_t;
+void altitude_controller_init(	altitude_controller_t* controller, 
+								const altitude_controller_conf_t* config, 
+								const position_command_t* position_command, 
+								const altitude_t* altitude_estimated, 
+								thrust_command_t* thrust_command);
+
+
+/**
+ * \brief               	Main update function
+ * 
+ * \param 	controller    	Pointer to data structure
+ */
+void altitude_controller_update(altitude_controller_t* controller);
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* MATH_UTIL_H_ */
+#endif /* ALTITUDE_CONTROLLER_H_ */

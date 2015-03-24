@@ -30,74 +30,60 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file constants.h
+ * \file altitude_controller.h
  * 
  * \author MAV'RIC Team
+ * \author Julien Lecoeur
  *   
- * \brief Useful constants
+ * \brief 	A simple altitude controller for copter
  *
  ******************************************************************************/
 
 
-#ifndef MATH_UTIL_H_
-#define MATH_UTIL_H_
+#include "altitude_controller.h"
 
-#ifdef __cplusplus
-extern "C" 
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void altitude_controller_init(altitude_controller_t* controller, const altitude_controller_conf_t* config, const position_command_t* position_command, const altitude_t* altitude_estimated, thrust_command_t* thrust_command)
 {
-#endif
+	// Init dependencies
+	controller->position_command 	= position_command;
+	controller->altitude_estimated 	= altitude_estimated;
+	controller->thrust_command 		= thrust_command;
 
-
-#define GRAVITY 9.81f			///< The gravity constant
-
-
-/**
- * \brief Enumerates the X, Y and Z orientations 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	X = 0,
-	Y = 1,
-	Z = 2,
-} constants_orientation_t;
-
-
-/**
- * \brief Enumerates the Roll, Pitch and Yaw orientations 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	ROLL 	= 0,
-	PITCH 	= 1,
-	YAW 	= 2,
-} constants_roll_pitch_yaw_t;
-
-
-/**
- * \brief Enumerates the up vector orientation 
- * according to the autopilot placement on the MAV
- */
-typedef enum
-{
-	UPVECTOR_X = 0,
-	UPVECTOR_Y = 0,
-	UPVECTOR_Z = -1,
-} constants_upvector_t;
-
-
-/**
- * \brief Enumerates ON/OFF switches
- */
-typedef enum
-{
-	OFF = 0,
-	ON 	= 1,
-} constants_on_off_t;
-
-#ifdef __cplusplus
+	// Init members
+	controller->hover_point = config->hover_point;
+	pid_controller_init(&controller->pid, &config->pid_config);
 }
-#endif
 
-#endif /* MATH_UTIL_H_ */
+
+void altitude_controller_update(altitude_controller_t* controller)
+{
+	float error = 0.0f;
+
+	switch( controller->position_command->mode )
+	{
+		case POSITION_COMMAND_MODE_LOCAL:
+			error = controller->position_command->xyz[2] - controller->altitude_estimated->above_ground;
+		break;
+
+		case POSITION_COMMAND_MODE_GLOBAL:
+			error = controller->position_command->xyz[2] - controller->altitude_estimated->above_sea;
+		break;
+	}
+
+	controller->thrust_command->thrust = controller->hover_point - pid_controller_update(&controller->pid, error);
+}
