@@ -234,6 +234,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	
 	dir_desired_bf[2] = rel_pos[2];
 	
+	norm_rel_dist = max(navigation->cruise_speed,norm_rel_dist);
 	if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
 	{
 		
@@ -247,13 +248,13 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		}
 		
 		navigation->wpt_nav_controller.clip_max = navigation->cruise_speed;
-		v_desired = pid_controller_update_dt(&navigation->wpt_nav_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
+		v_desired = pid_controller_update_dt(&navigation->wpt_nav_controller, norm_rel_dist, navigation->dt);
 	}
 	else
 	{
 		rel_heading = 0.0f;
 		navigation->hovering_controller.clip_max = navigation->cruise_speed;
-		v_desired = pid_controller_update_dt(&navigation->hovering_controller, (maths_center_window_2(4.0f * rel_heading) * norm_rel_dist), navigation->dt);
+		v_desired = pid_controller_update_dt(&navigation->hovering_controller, norm_rel_dist, navigation->dt);
 	}
 	
 	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigation->max_climb_rate * norm_rel_dist ) 

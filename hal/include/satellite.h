@@ -30,77 +30,68 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file qfilter.h
+ * \file satellite.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Gregoire Heitz
  *   
- * \brief This file implements a complementary filter for the attitude estimation
+ * \brief This declare the global satellite struct
+ * enable usage of different satellite receiver (ie. spektrum, emulated...)
  *
  ******************************************************************************/
 
-
-#ifndef QFILTER_H_
-#define QFILTER_H_
+#ifndef SATELLITE_H_
+#define SATELLITE_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stdint.h>
-#include "imu.h"
-#include "ahrs.h"
 
+#include "uart_int.h"
 
 /**
- * \brief The structure for configuring the quaternion-based attitude estimation
- */
-typedef struct
+ * \brief Radio protocols
+ */ 
+typedef enum
 {
-	float   kp;								///< The proportional gain for the acceleration correction of the angular rates
-	float   ki;								///< The integral gain for the acceleration correction of the biais
-	float   kp_mag;							///< The proportional gain for the magnetometer correction of the angular rates
-	float   ki_mag;							///< The integral gain for the magnetometer correction of the angular rates
-} qfilter_conf_t;
+	DSM2_10BITS = 0,
+	DSM2_11BITS = 1,
+	DSMX		= 2,
+} radio_protocol_t;
+
 
 /**
- * \brief The structure for the quaternion-based attitude estimation
+ * \brief Structure containing the satellite receiver's data
  */
-typedef struct
+typedef struct 
 {
-	imu_t* 	imu;			///< Pointer to inertial sensors readout
-	ahrs_t* ahrs;			///< Pointer to estimated attiude
-	
-	float   kp;				///< The proportional gain for the acceleration correction of the angular rates
-	float   ki;				///< The integral gain for the acceleration correction of the biais
-	float   kp_mag;			///< The proportional gain for the magnetometer correction of the angular rates
-	float   ki_mag;			///< The integral gain for the magnetometer correction of the angular rates
-} qfilter_t;
+	buffer_t 		receiver;			///< Buffer for incoming data
+	int16_t 		channels[16];		///< Array to contain the 16 remote channels
+	uint32_t 		last_interrupt;		///< Last time a byte was received
+	uint32_t 		last_update;		///< Last update time 
+	uint32_t 		dt;					///< Duration between two updates
+	bool			new_data_available; ///< Indicates if new data is  available
+	usart_config_t	usart_conf_sat;		///< store UART conf for satellite com
+} satellite_t;
 
-
-/**
- * \brief	Initialize the attitude estimation module
- *
- * \param	qf				The pointer to the attitude structure
- * \param	config			The qfilter configuration gains
- * \param	imu				The pointer to the IMU structure
- * \param	ahrs			The pointer to the attitude estimation structure
- *
- * \return	True if the init succeed, false otherwise
- */
-bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_t* ahrs);
-
+//Function pointer
 
 /**
- * \brief	Performs the attitude estimation via a complementary filter
+ * \brief Pointer to the function used to initialize the satellite receiver
  *
- * \param	qf		The pointer to the qfilter structure
+ * \param	satellite_t		Pointer to the sattelite structure
+ * \param	usart_config_t	configuration of the corresponding usart
  */
-void qfilter_update(qfilter_t *qf);
+void (*satellite_init)(satellite_t*, usart_config_t);
 
+/**
+ * \brief Pointer to the function used to bind the satellite receiver
+ */
+void (*satellite_bind)(radio_protocol_t protocol);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* QFILTER_H_ */
+#endif //SATELLITE_H_

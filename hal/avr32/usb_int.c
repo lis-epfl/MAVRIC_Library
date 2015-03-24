@@ -30,35 +30,68 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file qfilter_default_config.h
+ * \file usb_int.c
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Geraud L'Eplattenier
  *   
- * \brief Default configuration for qfilter
- *
+ * \brief This file implements the USB communication protocol
+ * 
  ******************************************************************************/
 
 
-#ifndef QFILTER_DEFAULT_CONFIG_H_
-#define QFILTER_DEFAULT_CONFIG_H_
+#include "usb_int.h"
+#include "streams.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-#include "qfilter.h"
+static usb_config_t usb_conf;			///< Declare an object to store USB configuration
 
-static const qfilter_conf_t qfilter_default_config =
+
+void usb_int_set_usb_conf(usb_config_t* usb_config)
 {
-    .kp = 0.07f,
-    .ki = 0.07f / 15.0f,
-    .kp_mag = 0.1f,
-    .ki_mag = 0.0f,
-};
-
-#ifdef __cplusplus
+	usb_conf.mode						= usb_config->mode;
+	usb_conf.usb_device.IRQ				= usb_config->usb_device.IRQ;
+	usb_conf.usb_device.receive_stream	= usb_config->usb_device.receive_stream;
 }
-#endif
 
-#endif /* QFILTER_DEFAULT_CONFIG_H_ */
+void usb_int_init(void)
+{
+	stdio_usb_init(NULL);
+	// stdio_usb_init();
+	stdio_usb_enable();
+} 
+
+
+usb_config_t *usb_int_get_usb_handle(void)
+{
+	return &usb_conf;
+}
+
+void usb_int_send_byte(usb_config_t *usb_conf, uint8_t data) 
+{
+	for(uint8_t i=0;i<3;i++)
+	{
+		if (udi_cdc_is_tx_ready())
+		{
+			stdio_usb_putchar(NULL, (int)data);
+			return;
+		}	
+	}
+	
+}
+
+
+void usb_int_register_write_stream(usb_config_t *usb_conf, byte_stream_t *stream) 
+{
+	stream->get = NULL;
+	stream->put = (uint8_t(*)(stream_data_t*, uint8_t))&usb_int_send_byte;			// Here we need to explicitly cast the function to match the prototype
+	stream->flush = NULL;															// stream->get and stream->put expect stream_data_t* as first argument
+	stream->buffer_empty = NULL;													// but buffer_get and buffer_put take Buffer_t* as first argument
+	stream->data = usb_conf;
+}
+
+void  usb_int_register_read_stream(usb_config_t *usb_conf, byte_stream_t *stream)
+{
+	usb_conf->usb_device.receive_stream = stream;
+}
+

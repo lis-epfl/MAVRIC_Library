@@ -30,77 +30,86 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file qfilter.h
+ * \file time_keeper.c
  * 
  * \author MAV'RIC Team
  * \author Felix Schill
  *   
- * \brief This file implements a complementary filter for the attitude estimation
- *
+ * \brief This file is used to interact with the clock of the microcontroller
+ * 
  ******************************************************************************/
 
 
-#ifndef QFILTER_H_
-#define QFILTER_H_
+#include "time_keeper.h"
+#include "ast.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include <stdint.h>
-#include "imu.h"
-#include "ahrs.h"
+#define TK_AST_FREQUENCY 1000000					///< Timer ticks per second (32 bit timer, >1h time-out at 1MHz, >years at 1kHz. We'll go for precision here...)
+#define AST_PRESCALER_SETTING 5						///< Log(SOURCE_CLOCK/AST_FREQ)/log(2)-1 when running from PBA (64Mhz), 5 (1Mhz), or 15 (~1khz, not precisely though).
 
 
-/**
- * \brief The structure for configuring the quaternion-based attitude estimation
- */
-typedef struct
+void time_keeper_init()
 {
-	float   kp;								///< The proportional gain for the acceleration correction of the angular rates
-	float   ki;								///< The integral gain for the acceleration correction of the biais
-	float   kp_mag;							///< The proportional gain for the magnetometer correction of the angular rates
-	float   ki_mag;							///< The integral gain for the magnetometer correction of the angular rates
-} qfilter_conf_t;
-
-/**
- * \brief The structure for the quaternion-based attitude estimation
- */
-typedef struct
-{
-	imu_t* 	imu;			///< Pointer to inertial sensors readout
-	ahrs_t* ahrs;			///< Pointer to estimated attiude
-	
-	float   kp;				///< The proportional gain for the acceleration correction of the angular rates
-	float   ki;				///< The integral gain for the acceleration correction of the biais
-	float   kp_mag;			///< The proportional gain for the magnetometer correction of the angular rates
-	float   ki_mag;			///< The integral gain for the magnetometer correction of the angular rates
-} qfilter_t;
-
-
-/**
- * \brief	Initialize the attitude estimation module
- *
- * \param	qf				The pointer to the attitude structure
- * \param	config			The qfilter configuration gains
- * \param	imu				The pointer to the IMU structure
- * \param	ahrs			The pointer to the attitude estimation structure
- *
- * \return	True if the init succeed, false otherwise
- */
-bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_t* ahrs);
-
-
-/**
- * \brief	Performs the attitude estimation via a complementary filter
- *
- * \param	qf		The pointer to the qfilter structure
- */
-void qfilter_update(qfilter_t *qf);
-
-
-#ifdef __cplusplus
+	ast_init_counter(&AVR32_AST, AST_OSC_PB, AST_PRESCALER_SETTING, 0);
+	ast_enable(&AVR32_AST);
 }
-#endif
 
-#endif /* QFILTER_H_ */
+
+uint32_t time_keeper_get_time_ticks()
+{
+	//raw timer ticks
+	return ast_get_counter_value(&AVR32_AST);
+}
+
+
+double time_keeper_get_time()
+{
+	// time in seconds since system start
+	return time_keeper_ticks_to_seconds(time_keeper_get_time_ticks());
+}
+
+
+uint32_t time_keeper_get_millis()
+{
+	//milliseconds since system start
+	return time_keeper_get_time_ticks() / 1000; /// (TK_AST_FREQUENCY / 1000);
+}
+
+
+uint32_t time_keeper_get_micros()
+{
+	// microseconds since system start. Will run over after an hour.
+	return time_keeper_get_time_ticks() * (1000000 / TK_AST_FREQUENCY);
+}
+
+
+float time_keeper_ticks_to_seconds(uint32_t timer_ticks)
+{
+	return ((double)timer_ticks / (double)TK_AST_FREQUENCY);
+}
+
+
+void time_keeper_delay_micros(int32_t microseconds)
+{
+	uint32_t now = time_keeper_get_micros();
+	while (time_keeper_get_micros() < now + microseconds);
+}
+
+
+void time_keeper_delay_until(uint32_t until_time)
+{
+	while (time_keeper_get_micros() < until_time)
+	{
+		;
+	}	
+}
+
+
+void time_keeper_delay_ms(int32_t t) 
+{
+	uint32_t now = time_keeper_get_micros();
+	
+	while (time_keeper_get_micros() < now + 1000 * t) 
+	{
+		;
+	}
+};
