@@ -68,8 +68,6 @@ bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_
 	qf->imu = imu;
 	qf->ahrs = ahrs;
 	
-	qf->imu->calibration_level = config->calibration_mode;
-	
 	//init qfilter gains according to provided configuration
 	qf->kp = config->kp;
 	qf->ki = config->ki;
@@ -161,16 +159,9 @@ void qfilter_update(qfilter_t *qf)
 
 
 	// get error correction gains depending on mode
-	switch (qf->imu->calibration_level)
+	switch (qf->ahrs->state)
 	{
-		case OFF:
-			kp = qf->kp;//*(0.1f / (0.1f + s_acc_norm - 1.0f));
-			kp_mag = qf->kp_mag;
-			ki = qf->ki;
-			ki_mag = qf->ki_mag;
-			break;
-			
-		case ATTITUDE_ESTIMATION:
+		case AHRS_UNLEVELED:
 			kp = qf->kp * 10.0f;
 			kp_mag = qf->kp_mag * 10.0f;
 			
@@ -179,12 +170,12 @@ void qfilter_update(qfilter_t *qf)
 			
 			if (time_keeper_get_time() > 10.0f)
 			{
-				qf->imu->calibration_level = LEVELING;
-				print_util_dbg_print("End of attitude estimation IMU.\r\n");
+				qf->ahrs->state = AHRS_CONVERGING;
+				print_util_dbg_print("End of AHRS attitude initialization.\r\n");
 			}
 			break;
 			
-		case LEVELING:
+		case AHRS_CONVERGING:
 			kp = qf->kp;
 			kp_mag = qf->kp_mag;
 			
@@ -192,22 +183,12 @@ void qfilter_update(qfilter_t *qf)
 			ki_mag = qf->ki_mag * 3.0f;
 			if (time_keeper_get_time() > 30.0f)
 			{
-				qf->imu->calibration_level = OFF;
-				print_util_dbg_print("End of leveling IMU.\r\n");
+				qf->ahrs->state = AHRS_READY;
+				print_util_dbg_print("End of AHRS leveling.\r\n");
 			}
 			break;
-			
-		case LEVEL_PLUS_ACCEL:  // experimental - do not use
-			kp = 0.3f;
-			ki = qf->ki * 1.5f;
-			qf->imu->calib_accelero.bias[X] += dt * qf->kp * (qf->imu->scaled_accelero.data[X] - up_bf.v[X]);
-			qf->imu->calib_accelero.bias[Y] += dt * qf->kp * (qf->imu->scaled_accelero.data[Y] - up_bf.v[Y]);
-			qf->imu->calib_accelero.bias[Z] += dt * qf->kp * (qf->imu->scaled_accelero.data[Z] - up_bf.v[Z]);
-			kp_mag = qf->kp_mag;
-			ki_mag = qf->ki_mag;
-			break;
-			
-		default:
+
+		case AHRS_READY:
 			kp = qf->kp;
 			kp_mag = qf->kp_mag;
 			ki = qf->ki;

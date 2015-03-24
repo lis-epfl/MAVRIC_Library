@@ -53,18 +53,6 @@ extern "C" {
 
 
 /**
- * \brief The calibration level of the filter
- */
-typedef enum
-{
-	OFF,									///< Calibration level: No calibration 
-	ATTITUDE_ESTIMATION,					///< Calibration level: attitude estimation
-	LEVELING,								///< Calibration level: leveling (biais estimation) 
-	LEVEL_PLUS_ACCEL						///< Calibration level: leveling plus acceleration
-} calibration_mode_t;
-
-
-/**
  * \brief The structure for configuring the quaternion-based attitude estimation
  */
 typedef struct
@@ -73,7 +61,6 @@ typedef struct
 	float   ki;								///< The integral gain for the acceleration correction of the biais
 	float   kp_mag;							///< The proportional gain for the magnetometer correction of the angular rates
 	float   ki_mag;							///< The integral gain for the magnetometer correction of the angular rates
-	calibration_mode_t calibration_mode;	///< The initial calibration mode of the IMU
 } qfilter_conf_t;
 
 /**
