@@ -71,6 +71,8 @@ typedef struct
 	imu_t* 	imu;			///< Pointer to inertial sensors readout
 	ahrs_t* ahrs;			///< Pointer to estimated attiude
 	
+	uint32_t update_count;	///< The number of updates of the convergence of the filter
+	
 	float   kp;				///< The proportional gain for the acceleration correction of the angular rates
 	float   ki;				///< The integral gain for the acceleration correction of the biais
 	float   kp_mag;			///< The proportional gain for the magnetometer correction of the angular rates

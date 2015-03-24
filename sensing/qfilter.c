@@ -74,6 +74,8 @@ bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_
 	qf->kp_mag = config->kp_mag;
 	qf->ki_mag = config->ki_mag;
 	
+	qf->update_count = 0;
+	
 	print_util_dbg_print("[QFILTER] Initialised.\r\n");
 	
 	return init_success;
@@ -171,8 +173,11 @@ void qfilter_update(qfilter_t *qf)
 			ki = 0.5f * qf->ki;
 			ki_mag = 0.5f * qf->ki_mag;
 			
-			if (time_keeper_get_time() > 8.0f)
+			qf->update_count++;
+			
+			if (qf->update_count > 2000)
 			{
+				qf->update_count = 0;
 				qf->ahrs->internal_state = AHRS_CONVERGING;
 				print_util_dbg_print("End of AHRS attitude initialization.\r\n");
 			}
@@ -184,8 +189,12 @@ void qfilter_update(qfilter_t *qf)
 			
 			ki = qf->ki * 3.0f;
 			ki_mag = qf->ki_mag * 3.0f;
-			if (time_keeper_get_time() > 16.0f)
+			
+			qf->update_count++;
+			
+			if (qf->update_count > 2000)
 			{
+				qf->update_count = 0;
 				qf->ahrs->internal_state = AHRS_READY;
 				print_util_dbg_print("End of AHRS leveling.\r\n");
 			}
