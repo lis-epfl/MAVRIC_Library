@@ -620,6 +620,27 @@ bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 		init_success &= false;
 	}
 	
+	data_logging->data_logging_set_stat = malloc( sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config->max_data_logging_count]) );
+	if ( data_logging->data_logging_set_stat != NULL )
+	{
+		data_logging->data_logging_set_stat->max_data_logging_count = config->max_data_logging_count;
+		data_logging->data_logging_set_stat->max_logs = config->max_logs;
+		data_logging->data_logging_set_stat->log_interval = config->log_interval;
+		data_logging->data_logging_set_stat->data_logging_count = 0;
+		
+		init_success &= true;
+	}
+	else
+	{
+		print_util_dbg_print("[DATA LOGGING] ERROR ! Bad memory allocation.\r\n");
+		data_logging->data_logging_set_stat->max_data_logging_count = 0;
+		data_logging->data_logging_set_stat->max_logs = 0;
+		data_logging->data_logging_set_stat->log_interval = 0;
+		data_logging->data_logging_set_stat->data_logging_count = 0;
+		
+		init_success &= false;
+	}
+
 	// Automaticly add the time as first logging parameter
 	data_logging_add_parameter_uint32(data_logging->data_logging_set,&data_logging->time_ms,"time");
 	data_logging_add_parameter_uint32(data_logging->data_logging_set_stat,&data_logging->time_ms,"time");
@@ -666,7 +687,7 @@ bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	data_logging->sys_mounted = false;
 	data_logging_mount_sys(data_logging);
 	
-	data_logging->write_stat = true;
+	data_logging->write_stat = false;
 	
 	if (data_logging->debug)
 	{
@@ -844,13 +865,14 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 				{
 					data_logging->write_stat = false;
 					data_logging_log_parameters(data_logging, data_logging->data_logging_set_stat, &data_logging->data_stat);
+					data_logging->data_stat.fr = f_sync(&data_logging->data_stat.fil);
 				}
 			}
 			else
 			{
 				if (data_logging->data_stat.fr == FR_OK)
 				{
-					data_logging_add_header_name(data_logging,data_logging->data_logging_set,&data_logging->data_all);
+					data_logging_add_header_name(data_logging,data_logging->data_logging_set_stat,&data_logging->data_stat);
 				}
 			}
 		}
