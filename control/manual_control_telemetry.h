@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state_telemetry.h
+ * \file manual_control_telemetry.h
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -41,49 +41,42 @@
  ******************************************************************************/
 
 
-#ifndef STATE_TELEMETRY_H_
-#define STATE_TELEMETRY_H_
+#ifndef MANUAL_CONTROL_TELEMETRY_H_
+#define MANUAL_CONTROL_TELEMETRY_H_
 
 #include "mavlink_stream.h"
 #include "mavlink_message_handler.h"
-#include "state.h"
+#include "manual_control.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+
 /**
- * \brief	Initialise the state telemetry module
+ * \brief	Initialise the manual_control telemetry module
  *
- * \param	state		The pointer to the state structure
+ * \param	manual_control		The pointer to the manual_control structure
  * \param   mavlink_stream		The pointer to the MAVLink stream structure
  * \param	message_handler		The pointer to the message handler
  *
  * \return	True if the init succeed, false otherwise
  */
-bool state_telemetry_init(state_t* state, mavlink_message_handler_t *message_handler);
-
-/**
- * \brief	Function to send the MAVLink heartbeat message
- * 
- * \param	state		The pointer to the state structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-void state_telemetry_send_heartbeat(const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+bool manual_control_telemetry_init(manual_control_t* manual_control, mavlink_message_handler_t *message_handler);
 
 
 /**
- * \brief	Function to send the MAVLink system status message, project specific message!
+ * \brief	Sends the manual control values via MAVLink
  * 
- * \param	state		The pointer to the state structure
+ * \param	manual_control			The pointer to the manual control structure
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
  */
-void state_telemetry_send_status(const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void manual_control_telemetry_send(const manual_control_t* manual_control, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* STATE_TELEMETRY_H_ */
+#endif /* MANUAL_CONTROL_TELEMETRY_H_ */

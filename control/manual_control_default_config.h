@@ -30,60 +30,35 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file state_telemetry.h
+ * \file manual_control_default_config.h
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the state
+ * \brief Default configuration for the manual_control module
  *
  ******************************************************************************/
 
 
-#ifndef STATE_TELEMETRY_H_
-#define STATE_TELEMETRY_H_
-
-#include "mavlink_stream.h"
-#include "mavlink_message_handler.h"
-#include "state.h"
+#ifndef MANUAL_CONTROL_DEFAULT_CONFIG_H_
+#define MANUAL_CONTROL_DEFAULT_CONFIG_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/**
- * \brief	Initialise the state telemetry module
- *
- * \param	state		The pointer to the state structure
- * \param   mavlink_stream		The pointer to the MAVLink stream structure
- * \param	message_handler		The pointer to the message handler
- *
- * \return	True if the init succeed, false otherwise
- */
-bool state_telemetry_init(state_t* state, mavlink_message_handler_t *message_handler);
 
-/**
- * \brief	Function to send the MAVLink heartbeat message
- * 
- * \param	state		The pointer to the state structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-void state_telemetry_send_heartbeat(const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+#include "manual_control.h"
 
 
-/**
- * \brief	Function to send the MAVLink system status message, project specific message!
- * 
- * \param	state		The pointer to the state structure
- * \param	mavlink_stream			The pointer to the MAVLink stream structure
- * \param	msg						The pointer to the MAVLink message
- */
-void state_telemetry_send_status(const state_t* state, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+manual_control_conf_t manual_control_default_config =
+{
+	.mode_source = MODE_SOURCE_REMOTE,
+	.control_source = CONTROL_SOURCE_REMOTE
+};
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* STATE_TELEMETRY_H_ */
+#endif // MANUAL_CONTROL_DEFAULT_CONFIG_H_

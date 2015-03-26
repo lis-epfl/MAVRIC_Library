@@ -124,12 +124,14 @@ static void imu_oriented2scale(imu_t *imu)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool imu_init (imu_t *imu, imu_conf_t *conf_imu, state_t* state)
+bool imu_init (imu_t *imu, const imu_conf_t *conf_imu, const state_t* state)
 {	
 	bool init_success = true;
 	
 	//init dependency
 	imu->state = state;
+	
+	imu->internal_state = RUNNING;
 	
 	//init gyro
 	imu->calib_gyro.scale_factor[X] =  1.0f / conf_imu->gyroscope.scale_factor[X];
@@ -212,4 +214,9 @@ void imu_update(imu_t *imu)
 
 	imu_raw2oriented(imu);
 	imu_oriented2scale(imu);
+}
+
+imu_internal_state_t imu_get_internal_state(const imu_t* imu)
+{
+	return imu->internal_state;
 }

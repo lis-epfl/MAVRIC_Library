@@ -77,6 +77,14 @@ typedef struct
 	bool calibration;						///< In calibration mode, true
 } sensor_calib_t;
 
+/**
+ * \brief Structure containing the internal states of the IMU
+ */
+typedef enum
+{
+	RUNNING,
+	CALIBRATING,
+}imu_internal_state_t;
 
 /**
  * \brief Structure containing the configuration 
@@ -126,7 +134,9 @@ typedef struct
 	float dt;								///< The time interval between two IMU updates
 	uint32_t last_update;					///< The time of the last IMU update in ms
 
-	state_t* state;							///< The pointer to the state structure
+	imu_internal_state_t internal_state;	///< The internal state of the IMU
+
+	const state_t* state;							///< The pointer to the state structure
 } imu_t;
 
 
@@ -139,7 +149,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool imu_init (imu_t *imu, imu_conf_t *conf_imu, state_t* state);
+bool imu_init (imu_t *imu, const imu_conf_t *conf_imu, const state_t* state);
 
 
 /**
@@ -156,6 +166,15 @@ void imu_calibrate_gyros(imu_t *imu);
  * \param	imu		The pointer to the IMU structure
  */
 void imu_update(imu_t *imu);
+
+/**
+ * \brief	Returns the IMU internal state
+ *
+ * \param	imu		The pointer to the IMU structure
+ *
+ * \return The IMU internal state
+ */
+imu_internal_state_t imu_get_internal_state(const imu_t* imu);
 
 #ifdef __cplusplus
 }

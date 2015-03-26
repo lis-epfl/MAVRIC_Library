@@ -65,7 +65,7 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote);
 
 static mode_flag_armed_t get_armed_flag(remote_t* remote)
 {
-	const remote_mode_t* remote_mode = &remote->mode;
+	remote_mode_t* remote_mode = &remote->mode;
 	mode_flag_armed_t armed = remote_mode->current_desired_mode.ARMED;
 
 	// Get armed flag
@@ -77,6 +77,7 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 		// Left stick bottom left corner, right stick bottom right corner => arm 
 		print_util_dbg_print("Arming!\r\n");
 		armed = ARMED_ON;
+		remote_mode->arm_action = ARM_ACTION_ARMING;
 	}
 	else if ( remote_get_throttle(remote) < -0.95f && 
 			remote_get_yaw(remote) > 0.9f && 
@@ -86,6 +87,7 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 		// Left stick bottom right corner, right stick bottom left corner => disarm
 		print_util_dbg_print("Disarming!\r\n");
 		armed = ARMED_OFF;
+		remote_mode->arm_action = ARM_ACTION_DISARMING;
 	}
 	else
 	{
@@ -281,7 +283,8 @@ void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t* conf
 	remote_mode->disable_remote_mode_channel		= config->disable_remote_mode_channel;
 
 	// Init state to safety state, disarmed
-	remote_mode->current_desired_mode 		= remote_mode->safety_mode;	
+	remote_mode->current_desired_mode 		= remote_mode->safety_mode;
+	remote_mode->arm_action						= ARM_ACTION_NONE;
 	remote_mode->current_desired_mode.ARMED = ARMED_OFF;
 }
 
@@ -397,12 +400,27 @@ void remote_mode_update(remote_t* remote)
 }
 
 
-mav_mode_t remote_mode_get(const remote_t* remote)
+mav_mode_t remote_mode_get(remote_t* remote, mav_mode_t current_mode)
 {
-	return remote->mode.current_desired_mode;
+	mav_mode_t new_mode = current_mode;
+	new_mode.byte = (current_mode.byte & 0b10100000) + (remote->mode.current_desired_mode.byte & 0b01011111);
+	
+	if(remote->mode.arm_action == ARM_ACTION_ARMING)
+	{
+		new_mode.ARMED = ARMED_ON;
+		remote->mode.arm_action = ARM_ACTION_NONE;
+		print_util_dbg_print("Arming in new fct\r\n");
+	}else if(remote->mode.arm_action == ARM_ACTION_DISARMING)
+	{
+		new_mode.ARMED = ARMED_OFF;
+		remote->mode.arm_action = ARM_ACTION_NONE;
+		print_util_dbg_print("Disarming in new fct\r\n");
+	}
+	
+	return new_mode;
 }
 
-void remote_get_command_from_remote(remote_t* remote, control_command_t* controls)
+void remote_get_control_command(remote_t* remote, control_command_t* controls)
 {
 	remote_update(remote);
 	
@@ -412,7 +430,7 @@ void remote_get_command_from_remote(remote_t* remote, control_command_t* control
 	controls->thrust 		= remote_get_throttle(remote);
 }
 
-void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t* controls)
+void remote_get_velocity_vector(remote_t* remote, control_command_t* controls)
 {
 	remote_update(remote);
 	

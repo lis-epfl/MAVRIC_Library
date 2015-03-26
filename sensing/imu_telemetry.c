@@ -110,7 +110,8 @@ static mav_result_t imu_telemetry_start_calibration(imu_t* imu, mavlink_command_
 			{
 				print_util_dbg_print("Starting magnetometers calibration\r\n");
 				imu->calib_compass.calibration = true;
-				imu->state->mav_state = MAV_STATE_CALIBRATING;
+				//imu->state->mav_state = MAV_STATE_CALIBRATING;
+				imu->internal_state = CALIBRATING;
 				print_util_dbg_print("Old biais:");
 				print_util_dbg_print_vector(imu->calib_compass.bias,2);
 			}
@@ -118,7 +119,8 @@ static mav_result_t imu_telemetry_start_calibration(imu_t* imu, mavlink_command_
 			{
 				print_util_dbg_print("Stopping compass calibration\r\n");
 				imu->calib_compass.calibration = false;
-				imu->state->mav_state = MAV_STATE_STANDBY;
+				//imu->state->mav_state = MAV_STATE_STANDBY;
+				imu->internal_state = RUNNING;
 				
 				for (i = 0; i < 3; i++)
 				{

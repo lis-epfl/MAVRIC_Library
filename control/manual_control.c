@@ -42,7 +42,8 @@
  
  
 #include "manual_control.h"
-
+#include "print_util.h"
+#include "constants.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -57,3 +58,127 @@
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
+
+bool manual_control_init(manual_control_t* manual_control, manual_control_conf_t* config, remote_conf_t* remote_config)
+{
+	bool init_success = true;
+
+	manual_control->mode_source 	= config->mode_source;
+	manual_control->control_source 	= config->control_source;
+
+	init_success &= remote_init(&manual_control->remote, remote_config);
+	init_success &= joystick_init(&manual_control->joystick);
+
+	print_util_dbg_print("[MANUAL_CONTROL] Initialized\r\n");
+
+	return init_success;
+}
+
+
+void manual_control_get_control_command(manual_control_t* manual_control, control_command_t* controls)
+{
+	switch(manual_control->control_source)
+	{
+		case CONTROL_SOURCE_REMOTE:
+			remote_get_control_command(&manual_control->remote, controls);
+			break;
+		case CONTROL_SOURCE_JOYSTICK:
+			joystick_get_control_command(&manual_control->joystick,controls);
+			break;
+		default:
+			controls->rpy[ROLL] = 0.0f;
+			controls->rpy[PITCH] = 0.0f;
+			controls->rpy[YAW] = 0.0f;
+			controls->thrust = -1.0f;
+			break;
+	}
+}
+
+
+void manual_control_get_velocity_vector(manual_control_t* manual_control, control_command_t* controls)
+{
+	switch(manual_control->control_source)
+	{
+		case CONTROL_SOURCE_REMOTE:
+			remote_get_velocity_vector(&manual_control->remote, controls);
+			break;
+		case CONTROL_SOURCE_JOYSTICK:
+			joystick_get_velocity_vector(&manual_control->joystick, controls);
+			break;
+		default:
+			controls->tvel[X] = 0.0f;
+			controls->tvel[Y] = 0.0f;
+			controls->tvel[Z] = 0.0f;
+			controls->rpy[YAW] = 0.0f;
+			break;
+	}
+}
+
+
+float manual_control_get_thrust(const manual_control_t* manual_control)
+{
+	float thrust;
+
+	switch(manual_control->control_source)
+	{
+		case CONTROL_SOURCE_REMOTE:
+			thrust = remote_get_throttle(&manual_control->remote);
+			break;
+		case CONTROL_SOURCE_JOYSTICK:
+			thrust = joystick_get_throttle(&manual_control->joystick);
+			break;
+		default:
+			thrust = -1.0f;
+			break;
+	}	
+	return thrust;
+}
+
+
+mav_mode_t manual_control_get_mode_from_source(manual_control_t* manual_control, mav_mode_t mode_current)
+{
+	mav_mode_t new_mode = mode_current;
+	
+	switch (manual_control->mode_source)
+	{
+		case MODE_SOURCE_GND_STATION:
+			new_mode = mode_current;
+			manual_control->joystick.current_desired_mode = mode_current;
+			break;
+		case MODE_SOURCE_REMOTE:
+			if(remote_check(&manual_control->remote) != SIGNAL_LOST)
+			{
+				// Update mode from remote
+				remote_mode_update(&manual_control->remote);
+				new_mode = remote_mode_get(&manual_control->remote, mode_current);
+				manual_control->joystick.current_desired_mode = mode_current;
+			}
+			break;
+		case MODE_SOURCE_JOYSTICK:
+			new_mode = joystick_get_mode(&manual_control->joystick, mode_current);
+			break;
+		default:
+			new_mode = mode_current;
+			break;
+	}
+	
+	return new_mode;
+}
+
+
+signal_quality_t manual_control_get_signal_strength(manual_control_t* manual_control)
+{
+	signal_quality_t rc_check;
+
+	// Get remote signal strength
+	if (manual_control->control_source == CONTROL_SOURCE_REMOTE)
+	{
+		rc_check = remote_check(&manual_control->remote);
+	}
+	else
+	{
+		rc_check = SIGNAL_GOOD;
+	}
+
+	return rc_check;
+}
