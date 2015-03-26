@@ -39,7 +39,7 @@
 
 #define PROFILE(TIME_RESULT, TESTFUNC) {\
 	print_util_get_debug_stream()->flush(print_util_get_debug_stream()->data);\
-	delay_ms(10);\
+	time_keeper_delay_ms(10);\
 	uint32_t __profile_time_start=time_keeper_get_time_ticks();\
 	TESTFUNC;\
 	TIME_RESULT=time_keeper_get_time_ticks()-__profile_time_start);\
@@ -48,13 +48,13 @@
 	print_util_dbg_print_num(TIME_RESULT, 10);\
 	print_util_dbg_print(" microseconds\n");\
 	print_util_get_debug_stream()->flush(print_util_get_debug_stream()->data);\
-	delay_ms(10);\
+	time_keeper_delay_ms(10);\
 }
 
 
 #define PROFILE_10X(TIME_RESULT, TESTFUNC) {\
 	print_util_get_debug_stream()->flush(print_util_get_debug_stream()->data);\
-	delay_ms(10);\
+	time_keeper_delay_ms(10);\
 	uint32_t __profile_time_start=time_keeper_get_time_ticks();\
 	TESTFUNC;\
 	TESTFUNC;\
@@ -72,12 +72,12 @@
 	print_util_dbg_print_num(TIME_RESULT, 10);\
 	print_util_dbg_print(" microseconds\n");\
 	print_util_get_debug_stream()->flush(print_util_get_debug_stream()->data);\
-	delay_ms(10);\
+	time_keeper_delay_ms(10);\
 }
 
 #define PROFILE_100X(TIME_RESULT, TESTFUNC) {\
 	print_util_get_debug_stream()->flush(print_util_get_debug_stream()->data);\
-	delay_ms(10);\
+	time_keeper_delay_ms(10);\
 	uint32_t __profile_time_start=time_keeper_get_time_ticks();\
 	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;\
 	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;	TESTFUNC;\
@@ -95,7 +95,7 @@
 	print_util_dbg_print_num(TIME_RESULT, 10);\
 	print_util_dbg_print(" microseconds\n");\
 	print_util_get_debug_stream()->flush(print_util_get_debug_stream()->data);\
-	delay_ms(10);\
+	time_keeper_delay_ms(10);\
 }
 
 

@@ -63,15 +63,13 @@
 
 bool state_machine_init(	state_machine_t *state_machine,
 							state_t* state, 
-							mavlink_waypoint_handler_t* waypoint_handler, 
 							simulation_model_t *sim_model, 
 							manual_control_t* manual_control,
 							const imu_t* imu)
 {
 	bool init_success = true;
 	
-	state_machine->waypoint_handler = waypoint_handler;
-	state_machine->state 				= state;
+	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
 	state_machine->manual_control 	= manual_control;
 	state_machine->imu 				= imu;

@@ -53,42 +53,46 @@ extern "C" {
 
 
 /**
+ * \brief The calibration level of the filter
+ */
+typedef enum
+{
+	AHRS_UNLEVELED 	= 0,	///< Calibration level: No calibration 
+	AHRS_CONVERGING = 1,	///< Calibration level: leveling 
+	AHRS_READY 		= 2,	///< Calibration level: leveled 
+} ahrs_state_t;
+
+
+
+/**
  * \brief Structure containing the Attitude and Heading Reference System
  */
 typedef struct
 {
-	quat_t		qe;							///< quaternion defining the Attitude estimation of the platform
+	quat_t	qe;							///< quaternion defining the Attitude estimation of the platform
 	
-	float		angular_speed[3];			///< Gyro rates
-	float		linear_acc[3];				///< Acceleration WITHOUT gravity
+	float	angular_speed[3];			///< Gyro rates
+	float	linear_acc[3];			///< Acceleration WITHOUT gravity
 	
-	float		heading;					///< The heading of the platform
-	quat_t		up_vec;						///< The quaternion of the up vector
-	quat_t		north_vec;					///< The quaternion of the north vector
-	
-	uint32_t	last_update;				///< The time of the last IMU update in ms
-	float		dt;							///< The time interval between two IMU updates
+	float	heading;					///< The heading of the platform
+	quat_t	up_vec;					///< The quaternion of the up vector
+	quat_t north_vec;					///< The quaternion of the north vector
+
+	ahrs_state_t internal_state; 	///< Leveling state of the ahrs
+	uint32_t	 last_update;			///< The time of the last IMU update in ms
+	float		 dt;					///< The time interval between two IMU updates
 } ahrs_t;
 
-/**
- * \brief Configuration for the AHRS structure
- */
-typedef struct  
-{
-	int32_t x;								///< The mapping for the X axis
-	int32_t y;								///< The mapping for the Y axis
-	int32_t z;								///< The mapping for the Z axis
-}ahrs_config_t;
+
 
 /**
  * \brief   Initialiases the ahrs structure
  * 
  * \param	ahrs 				Pointer to ahrs structure
- * \param	config				Pointer to the config structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool ahrs_init(ahrs_t* ahrs, ahrs_config_t* config);
+bool ahrs_init(ahrs_t* ahrs);
 
 
 #ifdef __cplusplus

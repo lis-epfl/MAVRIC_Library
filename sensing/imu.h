@@ -107,7 +107,7 @@ typedef struct
 	sensor_config_t accelerometer;		   ///< The gyroscope configuration structure
 	sensor_config_t gyroscope;			   ///< The accelerometer configuration structure
 	sensor_config_t magnetometer;		   ///< The compass configuration structure
-}imu_conf_t;
+} imu_conf_t;
 
 
 /**
@@ -131,9 +131,8 @@ typedef struct
 	magnetometer_t   oriented_compass;		///< The compass oriented values structure
 	magnetometer_t   scaled_compass;		///< The compass scaled values structure
 	
-	float dt;									///< The time interval between two IMU updates
-	uint32_t last_update;						///< The time of the last IMU update in ms
-	uint8_t calibration_level;				///< The level of calibration
+	float dt;								///< The time interval between two IMU updates
+	uint32_t last_update;					///< The time of the last IMU update in ms
 
 	imu_internal_state_t internal_state;	///< The internal state of the IMU
 

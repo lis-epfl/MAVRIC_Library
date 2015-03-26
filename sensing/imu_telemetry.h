@@ -81,6 +81,14 @@ void imu_telemetry_send_scaled(const imu_t* imu, const mavlink_stream_t* mavlink
  */
 void imu_telemetry_send_raw(const imu_t* imu, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
+/**
+ * \brief	Function to send the MAVLink debug vector message with biaises
+ * 
+ * \param	imu						The pointer to the IMU structure
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param	msg						The pointer to the MAVLink message
+ */
+void imu_telemetry_send_biais(const imu_t* imu, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 #ifdef __cplusplus
 }

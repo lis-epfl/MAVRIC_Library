@@ -22,7 +22,7 @@
 
 #include "time_keeper.h"
 #include <maths.h>
-#include "delay.h"
+// #include "delay.h"
 #include "string.h"
 
 /* Definitions of physical drive number for each media */
