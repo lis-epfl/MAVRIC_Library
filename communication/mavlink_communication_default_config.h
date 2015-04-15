@@ -50,32 +50,28 @@ extern "C" {
 
 #include "mavlink_communication.h"
 
-mavlink_communication_conf_t mavlink_communication_default_config =
+static inline mavlink_communication_conf_t mavlink_communication_default_config()
 {
-	.scheduler_config =
-	{
-		.max_task_count = 30,
-		.schedule_strategy = ROUND_ROBIN,
-		.debug = true
-	},
-	.mavlink_stream_config =
-	{
-		.sysid       = 1,
-		.compid      = 50,
-		.use_dma     = false
-	},
-	.message_handler_config =
-	{
-		.max_msg_callback_count = 20,
-		.max_cmd_callback_count = 20,
-		.debug                  = true
-	},
-	.onboard_parameters_config =
-	{
-		.max_param_count = MAX_ONBOARD_PARAM_COUNT,
-		.debug           = true
-	},
-	.max_msg_sending_count = 22
+	mavlink_communication_conf_t conf                  = {};
+
+	conf.scheduler_config                              = {};
+	conf.scheduler_config.max_task_count               = 30;
+	conf.scheduler_config.schedule_strategy            = ROUND_ROBIN;
+	conf.scheduler_config.debug                        = true;
+	conf.mavlink_stream_config                         = {};
+	conf.mavlink_stream_config.sysid                   = 1;
+	conf.mavlink_stream_config.compid                  = 50;
+	conf.mavlink_stream_config.use_dma                 = false;
+	conf.message_handler_config                        = {};
+	conf.message_handler_config.max_msg_callback_count = 20;
+	conf.message_handler_config.max_cmd_callback_count = 20;
+	conf.message_handler_config.debug                  = true;
+	conf.onboard_parameters_config                     = {};
+	conf.onboard_parameters_config.max_param_count     = MAX_ONBOARD_PARAM_COUNT;
+	conf.onboard_parameters_config.debug               = true;
+	conf.max_msg_sending_count                         = 22;
+
+	return conf;
 };
 
 

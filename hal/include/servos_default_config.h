@@ -50,76 +50,62 @@
 #include "servos.h"
 
 
-static const servo_entry_t servo_entry_default_standard =
+static inline servo_entry_t servo_entry_default_standard()
 {
-	.value 			= 0.0f,
-	.trim 			= 0.0f,
-	.min 			= -1.0f,
-	.max 			= 1.0f,
-	.failsafe 		= 0.0f,
-	.repeat_freq 	= 50,
+	servo_entry_t servo_entry 	= {};
+	
+	servo_entry.value 			= 0.0f;
+	servo_entry.trim 			= 0.0f;
+	servo_entry.min 			= -1.0f;
+	servo_entry.max 			= 1.0f;
+	servo_entry.failsafe 		= 0.0f;
+	servo_entry.repeat_freq 	= 50;
+
+	return servo_entry;
 };
 
 
-static const servo_entry_t servo_entry_default_esc =
+static inline servo_entry_t servo_entry_default_esc()
 {
-	.value 			= 0.0f,
-	.trim 			= 0.0f,
-	.min 			= -0.9f,
-	.max 			= 1.0f,
-	.failsafe 		= -1.0f,
-	.repeat_freq 	= 200,
+	servo_entry_t servo_entry 	= {};
+	
+	servo_entry.value 			= 0.0f;
+	servo_entry.trim 			= 0.0f;
+	servo_entry.min 			= -0.9f;
+	servo_entry.max 			= 1.0f;
+	servo_entry.failsafe 		= -1.0f;
+	servo_entry.repeat_freq 	= 200;
+
+	return servo_entry;
 };
 
 
-static const servo_entry_t servo_entry_default_custom =
+static inline servo_entry_t servo_entry_default_custom()
 {
-	.value 			= 0.0f,
-	.trim 			= 0.0f,
-	.min 			= -0.0f,
-	.max 			= 0.0f,
-	.failsafe 		= 0.0f,
-	.repeat_freq 	= 50,
+	servo_entry_t servo_entry 	= {};
+	
+	servo_entry.value 			= 0.0f;
+	servo_entry.trim 			= 0.0f;
+	servo_entry.min 			= -0.0f;
+	servo_entry.max 			= 0.0f;
+	servo_entry.failsafe 		= 0.0f;
+	servo_entry.repeat_freq 	= 50;
+
+	return servo_entry;
 };
 
-servos_conf_t servos_default_config =
+
+static inline servos_conf_t servos_default_config()
 {
-	.servos_count = 4,
-	.servo =
+	servos_conf_t conf 	= {};
+
+	conf.servos_count 	= 4;
+	for(uint8_t i = 0; i < MAX_SERVO_COUNT; ++i)
 	{
-		{ //servo_entry_default_esc
-			.value 			= 0.0f,
-			.trim 			= 0.0f,
-			.min 			= -0.9f,
-			.max 			= 1.0f,
-			.failsafe 		= -1.1f,
-			.repeat_freq 	= 200,
-		},
-		{ //servo_entry_default_esc
-			.value 			= 0.0f,
-			.trim 			= 0.0f,
-			.min 			= -0.9f,
-			.max 			= 1.0f,
-			.failsafe 		= -1.1f,
-			.repeat_freq 	= 200,
-		},
-		{ //servo_entry_default_esc
-			.value 			= 0.0f,
-			.trim 			= 0.0f,
-			.min 			= -0.9f,
-			.max 			= 1.0f,
-			.failsafe 		= -1.1f,
-			.repeat_freq 	= 200,
-		},
-		{ //servo_entry_default_esc
-			.value 			= 0.0f,
-			.trim 			= 0.0f,
-			.min 			= -0.9f,
-			.max 			= 1.0f,
-			.failsafe 		= -1.1f,
-			.repeat_freq 	= 200,
-		}
-	},
+		conf.servo[i] = servo_entry_default_esc();
+	}
+	
+	return conf;
 };
 
 

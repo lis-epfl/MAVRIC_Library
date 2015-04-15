@@ -749,7 +749,7 @@ static void navigation_stopping_handler(navigation_t* navigation)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const joystick_parsing_t* joystick, remote_t* remote, mavlink_communication_t* mavlink_communication)
+bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const joystick_parsing_t* joystick, remote_t* remote, mavlink_communication_t* mavlink_communication)
 {
 	bool init_success = true;
 	
@@ -775,8 +775,8 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	navigation->controls_nav->control_mode = VELOCITY_COMMAND_MODE;
 	navigation->controls_nav->yaw_mode = YAW_ABSOLUTE;
 	
-	navigation->wpt_nav_controller = nav_config->wpt_nav_controller;
-	navigation->hovering_controller = nav_config->hovering_controller;
+	navigation->wpt_nav_controller = nav_config.wpt_nav_controller;
+	navigation->hovering_controller = nav_config.hovering_controller;
 	
 	navigation->mode.byte = state->mav_mode.byte;
 	
@@ -792,14 +792,14 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	navigation->critical_next_state = false;
 	navigation->auto_landing_next_state = false;
 	
-	navigation->dist2vel_gain = nav_config->dist2vel_gain;
-	navigation->cruise_speed = nav_config->cruise_speed;
-	navigation->max_climb_rate = nav_config->max_climb_rate;
+	navigation->dist2vel_gain = nav_config.dist2vel_gain;
+	navigation->cruise_speed = nav_config.cruise_speed;
+	navigation->max_climb_rate = nav_config.max_climb_rate;
 	
-	navigation->soft_zone_size = nav_config->soft_zone_size;
+	navigation->soft_zone_size = nav_config.soft_zone_size;
 	
-	navigation->alt_lpf = nav_config->alt_lpf;
-	navigation->LPF_gain = nav_config->LPF_gain;
+	navigation->alt_lpf = nav_config.alt_lpf;
+	navigation->LPF_gain = nav_config.LPF_gain;
 		
 	navigation->loop_count = 0;
 	

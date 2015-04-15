@@ -44,13 +44,13 @@
 #ifndef GPS_UBLOX_TELEMETRY_H_
 #define GPS_UBLOX_TELEMETRY_H_
 
-#include "mavlink_stream.h"
-#include "gps_ublox.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include "mavlink_stream.h"
+#include "gps_ublox.h"
 
 /**
  * \brief	Function to send the MAVLink gps raw message

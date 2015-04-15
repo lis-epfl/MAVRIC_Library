@@ -90,7 +90,7 @@ void airspeed_analog_calibrate(airspeed_analog_t* airspeed_analog);
 void airspeed_analog_update(airspeed_analog_t* airspeed_analog);
 
 #ifdef __cplusplus
-}
+	}
 #endif
 
 #endif /* AIRSPEED_ANALOG_H_ */

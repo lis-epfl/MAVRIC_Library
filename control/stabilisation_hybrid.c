@@ -42,7 +42,6 @@
 
 
 #include "stabilisation_hybrid.h"
-#include "central_data.h"
 #include "conf_stabilisation_hybrid.h"
 #include "quick_trig.h"
 

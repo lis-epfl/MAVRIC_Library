@@ -175,7 +175,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool remote_init(remote_t* remote, const remote_conf_t* config);
+bool remote_init(remote_t* remote, const remote_conf_t config);
 
 /**
  * \brief	Returns the throttle value from the remote
@@ -245,7 +245,7 @@ float remote_get_yaw(const remote_t* remote);
  * \param	remote_mode			The pointer to the remote mode structure
  * \param	config				Pointer to the configuration of the remote mode structure
  */
-void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t* config);
+void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t config);
 
 /**
  * \brief	Updates the mode from the remote switches

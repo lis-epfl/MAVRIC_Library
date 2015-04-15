@@ -49,8 +49,11 @@ extern "C" {
 
 #include "altitude_estimation.h"
 
-static altitude_estimation_conf_t altitude_estimation_default_config =
+static inline altitude_estimation_conf_t altitude_estimation_default_config =
 {
+	altitude_estimation_conf_t conf = {};
+
+	return conf;	
 };
 
 #ifdef __cplusplus

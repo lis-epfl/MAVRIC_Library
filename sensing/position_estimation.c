@@ -296,7 +296,7 @@ static void gps_position_init(position_estimation_t *pos_est)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu)
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu)
 {
 	bool init_success = true;
 	
@@ -309,9 +309,9 @@ bool position_estimation_init(position_estimation_t* pos_est, const position_est
 	pos_est->nav_plan_active = &state->nav_plan_active;
 	
 	// default GPS home position
-	pos_est->local_position.origin.longitude =  config->origin.longitude;
-	pos_est->local_position.origin.latitude =   config->origin.latitude;
-	pos_est->local_position.origin.altitude =   config->origin.altitude;
+	pos_est->local_position.origin.longitude =  config.origin.longitude;
+	pos_est->local_position.origin.latitude =   config.origin.latitude;
+	pos_est->local_position.origin.altitude =   config.origin.altitude;
 	pos_est->local_position.pos[X] = 0;
 	pos_est->local_position.pos[Y] = 0;
 	pos_est->local_position.pos[Z] = 0;
@@ -325,7 +325,7 @@ bool position_estimation_init(position_estimation_t* pos_est, const position_est
         pos_est->vel_bf[i] = 0.0f;
     }
 
-	pos_est->gravity = config->gravity;
+	pos_est->gravity = config.gravity;
 	
 	pos_est->init_gps_position = false;
 	pos_est->init_barometer = false;

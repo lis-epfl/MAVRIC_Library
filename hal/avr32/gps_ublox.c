@@ -47,6 +47,35 @@
 #include "buffer.h"
 #include "time_keeper.h"
 
+ubx_cfg_nav_settings_t nav_settings;		///< CFG-NAV settings structure
+
+uint8_t cksum_a;							///< Checksum a
+uint8_t cksum_b;							///< Checksum b
+
+// State machine state
+uint8_t         step;						///< Variable defining the state machine in the U-Blox decoding function
+uint8_t         msg_id;						///< The U-Blox message ID
+uint16_t        payload_length;				///< The length of the message
+uint16_t        payload_counter;			///< The incremental counter to receive bytes of data
+
+uint8_t         ubx_class;///< The U-Blox message class
+
+// do we have new position and speed information?
+bool new_position;							///< Boolean value to check if we received new position message
+bool new_speed;								///< Boolean value to check if we received new velocity message
+
+uint8_t disable_counter;					///< Counter used to deactivate unwanted messages
+
+bool next_fix;								///< Boolean variable to get whether we have a correct GPS fix or not
+bool have_raw_velocity;						///< Boolean variable that could be used to get a speed approximate with heading and 2D velocity
+
+gps_engine_setting_t engine_nav_setting;		///< Enum GPS engine setting
+
+uint32_t idle_timer;							///< Last time that the GPS driver got a good packet from the GPS
+uint32_t idle_timeout;						///< Time in milliseconds after which we will assume the GPS is no longer sending us updates and attempt a re-init. 1200ms allows a small amount of slack over the worst-case 1Hz update rate.
+uint32_t last_fix_time;						///< Last fix time
+
+
 uint8_t  **ubx_current_message = 0;		///<  The pointer to the pointer to the structure of the current message to fill
 uint8_t  ** ubx_last_message = 0;		///<  The pointer to the pointer to the structure of the last message received of the same type than the current one being received (for exchange at the end)
 uint16_t * ubx_valid_message = 0;		///<  The pointer to the number to increment when a message of the type has been received

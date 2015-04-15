@@ -114,7 +114,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, stabilisation_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est,servos_t* servos);
+bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est,servos_t* servos);
 
 /**
  * \brief							Main Controller for controlling and stabilizing the quad in position (not using velocity control)

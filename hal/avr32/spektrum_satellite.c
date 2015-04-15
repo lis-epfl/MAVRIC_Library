@@ -62,6 +62,9 @@
 
 satellite_t *spek_sat;									///< Declare a pointer to satellite struct containing the receiver structure for receiver 1
 
+satellite_init_func_t satellite_init;
+satellite_bind_func_t satellite_bind;
+
 int16_t channel_center[16];								///< Declare an array to store the central position of each channel
 
 //------------------------------------------------------------------------------

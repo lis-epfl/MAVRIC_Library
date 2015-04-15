@@ -48,9 +48,10 @@ extern "C" {
 #endif
 
 #include "libs/fat_fs/ff.h"
-#include "tasks.h"
-
-
+#include "scheduler.h"
+#include "mavlink_communication.h"
+#include "state.h"
+	
 /**
  * \brief	Structure of data logging parameter.
  */
@@ -141,7 +142,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config, const state_t* state);
+bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t config, const state_t* state);
 
 /**
  * \brief	Create and open a new file

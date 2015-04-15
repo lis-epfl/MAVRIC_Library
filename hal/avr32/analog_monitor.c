@@ -91,7 +91,7 @@ float analog_compute_avg(analog_monitor_t* analog_monitor, analog_rails_t rail)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void analog_monitor_init(analog_monitor_t* analog_monitor, const analog_monitor_conf_t* config) 
+void analog_monitor_init(analog_monitor_t* analog_monitor, const analog_monitor_conf_t config) 
 {	
 	// Init buffer and avg outputs
 	for (int32_t i = 0; i < MONITOR_CHANNELS; ++i)
@@ -105,10 +105,10 @@ void analog_monitor_init(analog_monitor_t* analog_monitor, const analog_monitor_
 		analog_monitor->avg[i] = 0;
 		
 		// Init conv_factor
-		analog_monitor->conv_factor[i] = config->conv_factor[i];
+		analog_monitor->conv_factor[i] = config.conv_factor[i];
 
 		// Init enable flags
-		analog_monitor->enable[i] = config->enable[i];
+		analog_monitor->enable[i] = config.enable[i];
 	}
 
 	// Init desired ADC pin

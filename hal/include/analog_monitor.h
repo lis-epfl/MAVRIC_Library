@@ -102,7 +102,7 @@ typedef struct
  * \param	analog_monitor	Pointer to the analog monitor structure
  * \param	config			Pointer to the configuration array for CONV_FACTOR of the ADC
  */
-void analog_monitor_init(analog_monitor_t* analog_monitor, const analog_monitor_conf_t* config);
+void analog_monitor_init(analog_monitor_t* analog_monitor, const analog_monitor_conf_t config);
 
 
 /**

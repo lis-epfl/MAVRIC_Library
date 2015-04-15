@@ -52,12 +52,12 @@ extern "C" {
 #include "quaternions.h"
 #include "mavlink_waypoint_handler.h"
 #include "position_estimation.h"
-#include "tasks.h"
 #include "mavlink_communication.h"
 #include "state.h"
 #include "remote.h"
 #include "joystick_parsing.h"
 #include "pid_controller.h"
+#include "scheduler.h"
 #include <stdbool.h>
 
 
@@ -141,7 +141,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const joystick_parsing_t* joystick, remote_t* remote, mavlink_communication_t* mavlink_communication);
+bool navigation_init(navigation_t* navigation, navigation_config_t nav_config, control_command_t* controls_nav, const quat_t* qe, mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation, state_t* state, const joystick_parsing_t* joystick, remote_t* remote, mavlink_communication_t* mavlink_communication);
 
 /**
  * \brief	Initialise the position hold mode

@@ -49,7 +49,7 @@ extern "C" {
 
 #include "attitude_controller.h"
 
-static attitude_controller_conf_t attitude_controller_default_config =
+static inline attitude_controller_conf_t attitude_controller_default_config =
 {
 	// #########################################################################
 	// ######  RATE CONTROL  ###################################################

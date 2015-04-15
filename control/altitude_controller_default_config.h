@@ -49,7 +49,7 @@ extern "C" {
 
 #include "altitude_controller.h"
 
-static altitude_controller_conf_t altitude_controller_default_config =
+static inline altitude_controller_conf_t altitude_controller_default_config =
 {
 	.hover_point = -0.28f,
 	.pid_config = 

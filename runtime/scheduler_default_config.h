@@ -50,11 +50,15 @@ extern "C" {
 #include "scheduler.h"
 
 
-scheduler_conf_t scheduler_default_config =
+static inline scheduler_conf_t scheduler_default_config()
 {
-	.max_task_count = 15,
-	.schedule_strategy = ROUND_ROBIN,
-	.debug = true
+	scheduler_conf_t conf  = {};
+	
+	conf.max_task_count    = 15;
+	conf.schedule_strategy = ROUND_ROBIN;
+	conf.debug             = true;
+
+	return conf;
 };
 
 

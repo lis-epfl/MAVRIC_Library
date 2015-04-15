@@ -44,13 +44,14 @@
 #ifndef REMOTE_TELEMETRY_H_
 #define REMOTE_TELEMETRY_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+	
 #include "mavlink_stream.h"
 #include "mavlink_message_handler.h"
 #include "remote.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /**
  * \brief	Initialize the MAVLink communication module for the remote

@@ -94,7 +94,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool servos_init(servos_t* servos, const servos_conf_t* config);
+bool servos_init(servos_t* servos, const servos_conf_t config);
 
 
 /**

@@ -49,7 +49,8 @@
 
 #include <stdint.h>
 #include "sonar.h"
-#include "tasks.h"
+#include "scheduler.h"
+
 /**
  * \brief structure of the sonar_i2cxl module
 */

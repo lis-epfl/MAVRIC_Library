@@ -49,481 +49,416 @@ extern "C" {
 #include "stabilisation_copter.h"
 
 
-stabilisation_copter_conf_t stabilisation_copter_default_config =
+static inline stabilisation_copter_conf_t stabilisation_copter_default_config()
 {
-	.thrust_hover_point = -0.26f,
-	.motor_layout 		= QUADCOPTER_MOTOR_LAYOUT_DIAG,
-	.stabiliser_stack 	= 
-	{
-		// #############################################################################
-		// ######  RATE CONTROL  #######################################################
-		// #############################################################################
-		.rate_stabiliser={
-			.rpy_controller={
-				// -----------------------------------------------------------------
-				// ------ ROLL PID -------------------------------------------------
-				// -----------------------------------------------------------------
-				{
-					.p_gain = 0.05f,
-					.clip_min = -0.9f,
-					.clip_max = 0.9f,
-					.integrator={
-						.gain = 0.025f,
-						.clip_pre = 1.0f,
-						.accumulator = 0.0f,
-						.clip = 0.0325f,
-					},
-					.differentiator={
-						.gain = 0.0075f,
-						.previous = 0.0f,
-						.clip = 0.0325f
-					},
-					.output = 0.0f,
-					.error = 0.0f,
-					.last_update = 0.0f,
-					.dt = 1,
-					.soft_zone_width = 0.0f
-				},
-				// -----------------------------------------------------------------
-				// ------ PITCH PID ------------------------------------------------
-				// -----------------------------------------------------------------
-				{
-					.p_gain = 0.05f,
-					.clip_min = -0.9f,
-					.clip_max = 0.9f,
-					.integrator={
-						.gain = 0.025f,
-						.clip_pre = 1.0f,
-						.accumulator = 0.0f,
-						.clip = 0.0325f,
-					},
-					.differentiator={
-						.gain = 0.0075f,
-						.previous = 0.0f,
-						.clip = 0.0325f
-					},
-					.output = 0.0f,
-					.error = 0.0f,
-					.last_update = 0.0f,
-					.dt = 1,
-					.soft_zone_width = 0.0f
-				},
-				// -----------------------------------------------------------------
-				// ------ YAW PID --------------------------------------------------
-				// -----------------------------------------------------------------
-				{
-					.p_gain = 0.3f,
-					.clip_min = -0.3f,
-					.clip_max = 0.3f,
-					.integrator={
-						.gain = 0.075f,
-						.clip_pre = 1.0f,
-						.accumulator = 0.0f,
-						.clip = 0.045f,
-					},
-					.differentiator={
-						.gain = 0.0f,
-						.previous = 0.0f,
-						.clip = 0.0f
-					},
-					.output = 0.0f,
-					.error = 0.0f,
-					.last_update = 0.0f,
-					.dt = 1,
-					.soft_zone_width = 0.0f
-				}
-			},
-			// ---------------------------------------------------------------------
-			// ------ THRUST PID ---------------------------------------------------
-			// ---------------------------------------------------------------------
-			.thrust_controller={
-				.p_gain = 1.0f,
-				.clip_min = -1000,
-				.clip_max = 1000,
-				.integrator={
-					.gain = 0.0f,
-					.clip_pre = 0.0f,
-					.accumulator = 0.0f,
-					.clip = 0.0f,
-				},
-				.differentiator={
-					.gain = 0.0f,
-					.previous = 0.0f,
-					.clip = 0.0f
-				},
-				.output = 0.0f,
-				.error = 0.0f,
-				.last_update = 0.0f,
-				.dt = 1,
-				.soft_zone_width = 0.0f
-			},
-			// ---------------------------------------------------------------------
-			// ------ OUTPUT -------------------------------------------------------
-			// ---------------------------------------------------------------------
-			.output = {
-				.rpy = {0.0f, 0.0f, 0.0f},
-				.thrust = 0.0f,
-				.tvel = {0.0f, 0.0f, 0.0f},
-				.theading = 0.0f,
-				.control_mode =  RATE_COMMAND_MODE,
-				.yaw_mode = YAW_RELATIVE
-				//.yaw_mode = YAW_RELATIVE,
-				//.run_mode = MOTORS_OFF
-			},
-		},
-		// #############################################################################
-		// ######  ATTITUDE CONTROL  ###################################################
-		// #############################################################################
-		.attitude_stabiliser={
-			.rpy_controller={
-				// -----------------------------------------------------------------
-				// ------ ROLL PID -------------------------------------------------
-				// -----------------------------------------------------------------
-				{
-					.p_gain = 4.0f,
-					.clip_min = -12.0f,
-					.clip_max = 12.0f,
-					.integrator={
-						.gain = 0.0f,
-						.clip_pre = 0.0f,
-						.accumulator = 0.0f,
-						.clip = 0.0f,
-					},
-					.differentiator={
-						.gain = 0.0f,
-						.previous = 0.0f,
-						.clip = 0.0f
-					},
-					.output = 0.0f,
-					.error = 0.0f,
-					.last_update = 0.0f,
-					.dt = 1,
-					.soft_zone_width = 0.0f
-				},
-				// -----------------------------------------------------------------
-				// ------ PITCH PID ------------------------------------------------
-				// -----------------------------------------------------------------
-				{
-					.p_gain = 4.0f,
-					.clip_min = -12.0f,
-					.clip_max = 12.0f,
-					.integrator={
-						.gain = 0.0f,
-						.clip_pre = 0.0f,
-						.accumulator = 0.0f,
-						.clip = 0.0f,
-					},
-					.differentiator={
-						.gain = 0.0f,
-						.previous = 0.0f,
-						.clip = 0.0f
-					},
-					.output = 0.0f,
-					.error = 0.0f,
-					.last_update = 0.0f,
-					.dt = 1,
-					.soft_zone_width = 0.0f
-				},
-				// -----------------------------------------------------------------
-				// ------ YAW PID --------------------------------------------------
-				// -----------------------------------------------------------------
-				{
-					.p_gain = 3.0f,
-					.clip_min = -1.5f,
-					.clip_max = 1.5f,
-					.integrator={
-						.gain = 0.0f,
-						.clip_pre = 0.0f,
-						.accumulator = 0.0f,
-						.clip = 0.0f,
-					},
-					.differentiator={
-						.gain = 0.0f,
-						.previous = 0.0f,
-						.clip = 0.0f
-					},
-					.output = 0.0f,
-					.error = 0.0f,
-					.last_update = 0.0f,
-					.dt = 1,
-					.soft_zone_width = 0.0f
-				}
-			},
-			// ---------------------------------------------------------------------
-			// ------ THRUST PID ---------------------------------------------------
-			// ---------------------------------------------------------------------
-			.thrust_controller={
-				.p_gain = 1.0f,
-				.clip_min = -1,
-				.clip_max = 1,
-				.integrator={
-					.gain = 0.0f,
-					.clip_pre = 0.0f,
-					.accumulator = 0.0f,
-					.clip = 0.0f,
-				},
-				.differentiator={
-					.gain = 0.0f,
-					.previous = 0.0f,
-					.clip = 0.0f
-				},
-				.output = 0.0f,
-				.error = 0.0f,
-				.last_update = 0.0f,
-				.dt = 1,
-				.soft_zone_width = 0.0f
-			},
-			// ---------------------------------------------------------------------
-			// ------ OUTPUT -------------------------------------------------------
-			// ---------------------------------------------------------------------
-			.output = {
-				.rpy = {0.0f, 0.0f, 0.0f},
-				.thrust = 0.0f,
-				.tvel = {0.0f, 0.0f, 0.0f},
-				.theading = 0.0f,
-				.control_mode =  RATE_COMMAND_MODE,
-				.yaw_mode = YAW_RELATIVE
-				//.yaw_mode = YAW_RELATIVE,
-				//.run_mode = MOTORS_OFF
-			},
-		},
-		// #############################################################################
-		// ######  VELOCITY CONTROL  ###################################################
-		// #############################################################################
-		.velocity_stabiliser={
-			.rpy_controller={
-				// -----------------------------------------------------------------
-				// ------ ROLL PID -------------------------------------------------
-				// -----------------------------------------------------------------
-				{
-					.p_gain = 0.2f,
-					.clip_min = -0.5f,
-					.clip_max = 0.5f,
-					.integrator={
-						.gain = 0.1f,
-						.clip_pre = 1.0f,
-						.accumulator = 0.0f,
-						.clip = 0.1f,
-					},
-					.differentiator={
-						.gain = 0.0f,
-						.previous = 0.0f,
-						.clip = 0.0f
-					},
-					.output = 0.0f,
-					.error = 0.0f,
-					.last_update = 0.0f,
-					.dt = 1,
-					.soft_zone_width = 0.2f
-				},
-				// -----------------------------------------------------------------
-				// ------ PITCH PID ------------------------------------------------
-				// -----------------------------------------------------------------
-				{
-					.p_gain = 0.2f,
-					.clip_min = -0.5f,
-					.clip_max = 0.5f,
-					.integrator={
-						.gain = 0.1f,
-						.clip_pre = 1.0f,
-						.accumulator = 0.0f,
-						.clip = 0.1f,
-					},
-					.differentiator={
-						.gain = 0.0f,
-						.previous = 0.0f,
-						.clip = 0.0f
-					},
-					.output = 0.0f,
-					.error = 0.0f,
-					.last_update = 0.0f,
-					.dt = 1,
-					.soft_zone_width = 0.2f
-				},
-				// -----------------------------------------------------------------
-				// ------ YAW PID --------------------------------------------------
-				// -----------------------------------------------------------------
-				{
-					.p_gain = 1.0f,
-					.clip_min = -1,
-					.clip_max = 1,
-					.integrator={
-						.gain = 0.0f,
-						.clip_pre = 0.0f,
-						.accumulator = 0.0f,
-						.clip = 0.0f,
-					},
-					.differentiator={
-						.gain = 0.0f,
-						.previous = 0.0f,
-						.clip = 0.0f
-					},
-					.output = 0.0f,
-					.error = 0.0f,
-					.last_update = 0.0f,
-					.dt = 1,
-					.soft_zone_width = 0.0f
-				}
-			},
-			// ---------------------------------------------------------------------
-			// ------ THRUST PID ---------------------------------------------------
-			// ---------------------------------------------------------------------
-			.thrust_controller={
-				.p_gain = 0.20f,
-				.clip_min = -0.9f,
-				.clip_max = 0.65f,
-				.integrator={
-					.gain = 0.0002f,
-					.clip_pre = 1.0f,
-					.accumulator = 0.0f,
-					.clip = 0.0002f,
-				},
-				.differentiator={
-					.gain = 0.04f,
-					.previous = 0.0f,
-					.clip = 0.04f
-				},
-				.output = 0.0f,
-				.error = 0.0f,
-				.last_update = 0.0f,
-				.dt = 1,
-				.soft_zone_width = 0.2f
-			},
-			// ---------------------------------------------------------------------
-			// ------ OUTPUT -------------------------------------------------------
-			// ---------------------------------------------------------------------
-			.output = {
-				.rpy = {0.0f, 0.0f, 0.0f},
-				.thrust = 0.0f,
-				.tvel = {0.0f, 0.0f, 0.0f},
-				.theading = 0.0f,
-				.control_mode =  RATE_COMMAND_MODE,
-				.yaw_mode = YAW_RELATIVE
-				//.yaw_mode = YAW_RELATIVE,
-				//.run_mode = MOTORS_OFF
-			},
-		},
-		// #############################################################################
-		// ######  POSITION CONTROL  ###################################################
-		// #############################################################################
-		.position_stabiliser={ //TODO check gains before using
-			.rpy_controller={
-				// -----------------------------------------------------------------
-				// ------ ROLL PID -------------------------------------------------
-				// -----------------------------------------------------------------
-				{
-					.p_gain = 0.01f,
-					.clip_min = -0.5f,
-					.clip_max = 0.5f,
-					.integrator={
-						.gain = 0.0f,
-						.clip_pre = 0.0f,
-						.accumulator = 0.0f,
-						.clip = 0.0f,
-					},
-					.differentiator={
-						.gain = 0.00005f,
-						.previous = 0.0f,
-						.clip = 0.005f
-					},
-					.output = 0.0f,
-					.error = 0.0f,
-					.last_update = 0.0f,
-					.dt = 1,
-					.soft_zone_width = 0.2f
-				},
-				// -----------------------------------------------------------------
-				// ------ PITCH PID ------------------------------------------------
-				// -----------------------------------------------------------------
-				{
-					.p_gain = 0.01f,
-					.clip_min = -0.5f,
-					.clip_max = 0.5f,
-					.integrator={
-						.gain = 0.0f,
-						.clip_pre = 0.0f,
-						.accumulator = 0.0f,
-						.clip = 0.0f,
-					},
-					.differentiator={
-						.gain = 0.00005f,
-						.previous = 0.0f,
-						.clip = 0.005f
-					},
-					.output = 0.0f,
-					.error = 0.0f,
-					.last_update = 0.0f,
-					.dt = 1,
-					.soft_zone_width = 0.2f
-				},
-				// -----------------------------------------------------------------
-				// ------ YAW PID --------------------------------------------------
-				// -----------------------------------------------------------------
-				{
-					.p_gain = 1.0f,
-					.clip_min = -1,
-					.clip_max = 1,
-					.integrator={
-						.gain = 0.0f,
-						.clip_pre = 0.0f,
-						.accumulator = 0.0f,
-						.clip = 0.0f,
-					},
-					.differentiator={
-						.gain = 0.0f,
-						.previous = 0.0f,
-						.clip = 0.0f
-					},
-					.output = 0.0f,
-					.error = 0.0f,
-					.last_update = 0.0f,
-					.dt = 1,
-					.soft_zone_width = 0.0f
-				}
-			},
-			// ---------------------------------------------------------------------
-			// ------ THRUST PID ---------------------------------------------------
-			// ---------------------------------------------------------------------
-			.thrust_controller={
-				.p_gain = 0.05f,
-				.clip_min = -0.9f,
-				.clip_max = 0.65f,
-				.integrator={
-					.gain = 0.00005f,
-					.clip_pre = 1.0f,
-					.accumulator = 0.0f,
-					.clip = 0.025f,
-				},
-				.differentiator={
-					.gain = 0.005f,
-					.previous = 0.0f,
-					.clip = 0.01f
-				},
-				.output = 0.0f,
-				.error = 0.0f,
-				.last_update = 0.0f,
-				.dt = 1,
-				.soft_zone_width = 0.2f
-			},
-			// ---------------------------------------------------------------------
-			// ------ OUTPUT -------------------------------------------------------
-			// ---------------------------------------------------------------------
-			.output = {
-				.rpy = {0.0f, 0.0f, 0.0f},
-				.thrust = 0.0f,
-				.tvel = {0.0f, 0.0f, 0.0f},
-				.theading = 0.0f,
-				.control_mode =  RATE_COMMAND_MODE,
-				.yaw_mode = YAW_RELATIVE
-				//.yaw_mode = YAW_RELATIVE,
-				//.run_mode = MOTORS_OFF
-			},
-		},
-		// #############################################################################
-		// ######  MISC  ###############################################################
-		// #############################################################################
-		.yaw_coordination_velocity=1.5f
-	}
+	stabilisation_copter_conf_t conf = {};
+	conf.thrust_hover_point = -0.26f;
+	conf.motor_layout 		= QUADCOPTER_MOTOR_LAYOUT_DIAG;
+	
+	conf.stabiliser_stack 	= {};
+	
+	// #############################################################################
+	// ######  RATE CONTROL  #######################################################
+	// #############################################################################
+	conf.stabiliser_stack.rate_stabiliser 												= {};
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller 								= {};
+	// -----------------------------------------------------------------
+	// ------ ROLL PID -------------------------------------------------
+	// -----------------------------------------------------------------
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].p_gain 					= 0.05f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].clip_min 				= -0.9f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].clip_max 				= 0.9f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].integrator				= {};
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].integrator.gain 			= 0.025f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].integrator.clip_pre 		= 1.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].integrator.accumulator 	= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].integrator.clip 			= 0.0325f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].differentiator			= {};
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].differentiator.gain 		= 0.0075f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].differentiator.previous 	= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].differentiator.clip 		= 0.0325f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].output 					= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].error 					= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].last_update 				= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].dt 						= 1;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[ROLL].soft_zone_width 			= 0.0f;
+	// -----------------------------------------------------------------
+	// ------ PITCH PID ------------------------------------------------
+	// -----------------------------------------------------------------
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].p_gain 					= 0.05f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].clip_min 				= -0.9f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].clip_max 				= 0.9f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].integrator				= {};
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].integrator.gain 		= 0.025f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].integrator.clip_pre 	= 1.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].integrator.accumulator 	= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].integrator.clip 		= 0.0325f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].differentiator			= {};
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].differentiator.gain 	= 0.0075f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].differentiator.previous = 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].differentiator.clip 	= 0.0325f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].output 					= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].error 					= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].last_update 			= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].dt 						= 1;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[PITCH].soft_zone_width 		= 0.0f;
+	// -----------------------------------------------------------------
+	// ------ YAW PID --------------------------------------------------
+	// -----------------------------------------------------------------
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].p_gain 					= 0.3f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].clip_min 					= -0.3f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].clip_max 					= 0.3f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].integrator				= {};
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].integrator.gain 			= 0.075f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].integrator.clip_pre 		= 1.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].integrator.accumulator 	= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].integrator.clip 			= 0.045f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].differentiator			= {};
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].differentiator.gain 		= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].differentiator.previous 	= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].differentiator.clip 		= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].output 					= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].error 					= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].last_update 				= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].dt 						= 1;
+	conf.stabiliser_stack.rate_stabiliser.rpy_controller[YAW].soft_zone_width 			= 0.0f;
+	// ---------------------------------------------------------------------
+	// ------ THRUST PID ---------------------------------------------------
+	// ---------------------------------------------------------------------
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller								= {};
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.p_gain                 		= 1.0f;
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.clip_min              		= -1000;
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.clip_max               		= 1000;
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.integrator             		= {};
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.integrator.gain        		= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.integrator.clip_pre    		= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.integrator.accumulator 		= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.integrator.clip        		= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.differentiator         		= {};
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.differentiator.gain     	= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.differentiator.previous 	= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.differentiator.clip     	= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.output                 		= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.error                  		= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.last_update            		= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.dt                     		= 1,
+	conf.stabiliser_stack.rate_stabiliser.thrust_controller.soft_zone_width        		= 0.0f;
+	// ---------------------------------------------------------------------	
+	// ------ OUTPUT -------------------------------------------------------	
+	// ---------------------------------------------------------------------	
+	conf.stabiliser_stack.rate_stabiliser.output 										= {};
+	conf.stabiliser_stack.rate_stabiliser.output.rpy 									= {0.0f, 0.0f, 0.0f};
+	conf.stabiliser_stack.rate_stabiliser.output.thrust 								= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.output.tvel 									= {0.0f, 0.0f, 0.0f};
+	conf.stabiliser_stack.rate_stabiliser.output.theading 								= 0.0f;
+	conf.stabiliser_stack.rate_stabiliser.output.control_mode 							=  RATE_COMMAND_MODE;
+	conf.stabiliser_stack.rate_stabiliser.output.yaw_mode 								= YAW_RELATIVE;
+
+
+	// #############################################################################
+	// ######  ATTITUDE CONTROL  ###################################################
+	// #############################################################################
+	conf.stabiliser_stack.attitude_stabiliser 												= {};
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller 								= {};
+	// -----------------------------------------------------------------
+	// ------ ROLL PID -------------------------------------------------
+	// -----------------------------------------------------------------
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].p_gain 					= 4.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].clip_min 				= -12.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].clip_max 				= 12.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].integrator				= {};
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].integrator.gain 			= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].integrator.clip_pre 		= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].integrator.accumulator 	= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].integrator.clip 			= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].differentiator			= {};
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].differentiator.gain 		= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].differentiator.previous 	= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].differentiator.clip 		= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].output 					= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].error 					= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].last_update 				= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].dt 						= 1;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[ROLL].soft_zone_width 			= 0.0f;
+	// -----------------------------------------------------------------
+	// ------ PITCH PID ------------------------------------------------
+	// -----------------------------------------------------------------
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].p_gain 					= 4.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].clip_min 				= -12.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].clip_max 				= 12.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].integrator				= {};
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].integrator.gain 		= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].integrator.clip_pre 	= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].integrator.accumulator 	= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].integrator.clip 		= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].differentiator			= {};
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].differentiator.gain 	= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].differentiator.previous = 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].differentiator.clip 	= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].output 					= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].error 					= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].last_update 			= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].dt 						= 1;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[PITCH].soft_zone_width 		= 0.0f;
+	// -----------------------------------------------------------------
+	// ------ YAW PID --------------------------------------------------
+	// -----------------------------------------------------------------
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].p_gain 					= 3.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].clip_min 					= -1.5f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].clip_max 					= 1.5f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].integrator				= {};
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].integrator.gain 			= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].integrator.clip_pre 		= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].integrator.accumulator 	= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].integrator.clip 			= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].differentiator			= {};
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].differentiator.gain 		= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].differentiator.previous 	= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].differentiator.clip 		= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].output 					= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].error 					= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].last_update 				= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].dt 						= 1;
+	conf.stabiliser_stack.attitude_stabiliser.rpy_controller[YAW].soft_zone_width 			= 0.0f;
+	// ---------------------------------------------------------------------
+	// ------ THRUST PID ---------------------------------------------------
+	// ---------------------------------------------------------------------
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller								= {};
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.p_gain                 		= 1.0f;
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.clip_min              		= -1;
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.clip_max               		= 1;
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.integrator             		= {};
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.integrator.gain        		= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.integrator.clip_pre    		= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.integrator.accumulator 		= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.integrator.clip        		= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.differentiator         		= {};
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.differentiator.gain     	= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.differentiator.previous 	= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.differentiator.clip     	= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.output                 		= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.error                  		= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.last_update            		= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.dt                     		= 1;
+	conf.stabiliser_stack.attitude_stabiliser.thrust_controller.soft_zone_width        		= 0.0f;
+	// ---------------------------------------------------------------------	
+	// ------ OUTPUT -------------------------------------------------------	
+	// ---------------------------------------------------------------------	
+	conf.stabiliser_stack.attitude_stabiliser.output 										= {};
+	conf.stabiliser_stack.attitude_stabiliser.output.rpy 									= {0.0f, 0.0f, 0.0f};
+	conf.stabiliser_stack.attitude_stabiliser.output.thrust 								= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.output.tvel 									= {0.0f, 0.0f, 0.0f};
+	conf.stabiliser_stack.attitude_stabiliser.output.theading 								= 0.0f;
+	conf.stabiliser_stack.attitude_stabiliser.output.control_mode 							= RATE_COMMAND_MODE;
+	conf.stabiliser_stack.attitude_stabiliser.output.yaw_mode 								= YAW_RELATIVE;
+
+
+
+// #############################################################################
+// ######  VELOCITY CONTROL  ###################################################
+// #############################################################################
+	conf.stabiliser_stack.velocity_stabiliser 												= {};
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller 								= {};
+	// -----------------------------------------------------------------
+	// ------ ROLL PID -------------------------------------------------
+	// -----------------------------------------------------------------
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].p_gain 					= 0.2f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].clip_min 				= -0.5f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].clip_max 				= 0.5f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].integrator				= {};
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].integrator.gain 			= 0.1f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].integrator.clip_pre 		= 1.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].integrator.accumulator 	= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].integrator.clip 			= 0.1f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].differentiator			= {};
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].differentiator.gain 		= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].differentiator.previous 	= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].differentiator.clip 		= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].output 					= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].error 					= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].last_update 				= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].dt 						= 1;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[ROLL].soft_zone_width 			= 0.2f;
+	// -----------------------------------------------------------------
+	// ------ PITCH PID ------------------------------------------------
+	// -----------------------------------------------------------------
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].p_gain 					= 0.2f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].clip_min 				= -0.5f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].clip_max 				= 0.5f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].integrator				= {};
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].integrator.gain 		= 0.1f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].integrator.clip_pre 	= 1.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].integrator.accumulator 	= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].integrator.clip 		= 0.1f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].differentiator			= {};
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].differentiator.gain 	= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].differentiator.previous = 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].differentiator.clip 	= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].output 					= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].error 					= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].last_update 			= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].dt 						= 1;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[PITCH].soft_zone_width 		= 0.2f;
+	// -----------------------------------------------------------------
+	// ------ YAW PID --------------------------------------------------
+	// -----------------------------------------------------------------
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].p_gain 					= 1.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].clip_min 					= -1;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].clip_max 					= 1;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].integrator				= {};
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].integrator.gain 			= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].integrator.clip_pre 		= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].integrator.accumulator 	= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].integrator.clip 			= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].differentiator			= {};
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].differentiator.gain 		= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].differentiator.previous 	= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].differentiator.clip 		= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].output 					= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].error 					= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].last_update 				= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].dt 						= 1;
+	conf.stabiliser_stack.velocity_stabiliser.rpy_controller[YAW].soft_zone_width 			= 0.0f;
+	// ---------------------------------------------------------------------
+	// ------ THRUST PID ---------------------------------------------------
+	// ---------------------------------------------------------------------
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller								= {};
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.p_gain                 		= 0.20f;
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.clip_min              		= -0.9f;
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.clip_max               		= 0.65f;
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.integrator             		= {};
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.integrator.gain        		= 0.0002f;
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.integrator.clip_pre    		= 1.0f;
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.integrator.accumulator 		= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.integrator.clip        		= 0.0002f;
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.differentiator         		= {};
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.differentiator.gain     	= 0.04f;
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.differentiator.previous 	= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.differentiator.clip     	= 0.04f;
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.output                 		= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.error                  		= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.last_update            		= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.dt                     		= 1;
+	conf.stabiliser_stack.velocity_stabiliser.thrust_controller.soft_zone_width        		= 0.2f;
+	// ---------------------------------------------------------------------	
+	// ------ OUTPUT -------------------------------------------------------	
+	// ---------------------------------------------------------------------	
+	conf.stabiliser_stack.velocity_stabiliser.output 										= {};
+	conf.stabiliser_stack.velocity_stabiliser.output.rpy 									= {0.0f, 0.0f, 0.0f};
+	conf.stabiliser_stack.velocity_stabiliser.output.thrust 								= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.output.tvel 									= {0.0f, 0.0f, 0.0f};
+	conf.stabiliser_stack.velocity_stabiliser.output.theading 								= 0.0f;
+	conf.stabiliser_stack.velocity_stabiliser.output.control_mode 							= RATE_COMMAND_MODE;
+	conf.stabiliser_stack.velocity_stabiliser.output.yaw_mode 								= YAW_RELATIVE;
+
+
+
+
+// #############################################################################
+// ######  POSITION CONTROL  ###################################################
+// #############################################################################
+	conf.stabiliser_stack.position_stabiliser 												= {}; //TODO check gains before using
+	conf.stabiliser_stack.position_stabiliser.rpy_controller 								= {};
+	// -----------------------------------------------------------------
+	// ------ ROLL PID -------------------------------------------------
+	// -----------------------------------------------------------------
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].p_gain 					= 0.01f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].clip_min 				= -0.5f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].clip_max 				= 0.5f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].integrator				= {};
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].integrator.gain 			= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].integrator.clip_pre 		= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].integrator.accumulator 	= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].integrator.clip 			= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].differentiator			= {};
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].differentiator.gain 		= 0.00005f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].differentiator.previous 	= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].differentiator.clip 		= 0.005f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].output 					= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].error 					= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].last_update 				= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].dt 						= 1;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[ROLL].soft_zone_width 			= 0.2f;
+	// -----------------------------------------------------------------
+	// ------ PITCH PID ------------------------------------------------
+	// -----------------------------------------------------------------
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].p_gain 					= 0.01f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].clip_min 				= -0.5f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].clip_max 				= 0.5f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].integrator				= {};
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].integrator.gain 		= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].integrator.clip_pre 	= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].integrator.accumulator 	= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].integrator.clip 		= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].differentiator			= {};
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].differentiator.gain 	= 0.00005f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].differentiator.previous = 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].differentiator.clip 	= 0.005f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].output 					= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].error 					= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].last_update 			= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].dt 						= 1;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[PITCH].soft_zone_width 		= 0.2f;
+	// -----------------------------------------------------------------
+	// ------ YAW PID --------------------------------------------------
+	// -----------------------------------------------------------------
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].p_gain 					= 1.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].clip_min 					= -1;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].clip_max 					= 1;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].integrator				= {};
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].integrator.gain 			= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].integrator.clip_pre 		= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].integrator.accumulator 	= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].integrator.clip 			= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].differentiator			= {};
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].differentiator.gain 		= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].differentiator.previous 	= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].differentiator.clip 		= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].output 					= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].error 					= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].last_update 				= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].dt 						= 1;
+	conf.stabiliser_stack.position_stabiliser.rpy_controller[YAW].soft_zone_width 			= 0.0f;
+	// ---------------------------------------------------------------------
+	// ------ THRUST PID ---------------------------------------------------
+	// ---------------------------------------------------------------------
+	conf.stabiliser_stack.position_stabiliser.thrust_controller								= {};
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.p_gain                 		= 0.05f;
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.clip_min              		= -0.9f;
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.clip_max               		= 0.65f;
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.integrator             		= {};
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.integrator.gain        		= 0.00005f;
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.integrator.clip_pre    		= 1.0f;
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.integrator.accumulator 		= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.integrator.clip        		= 0.025f;
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.differentiator         		= {};
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.differentiator.gain     	= 0.005f;
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.differentiator.previous 	= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.differentiator.clip     	= 0.01f;
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.output                 		= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.error                  		= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.last_update            		= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.dt                     		= 1;
+	conf.stabiliser_stack.position_stabiliser.thrust_controller.soft_zone_width        		= 0.2f;
+	// ---------------------------------------------------------------------	
+	// ------ OUTPUT -------------------------------------------------------	
+	// ---------------------------------------------------------------------	
+	conf.stabiliser_stack.position_stabiliser.output 										= {};
+	conf.stabiliser_stack.position_stabiliser.output.rpy 									= {0.0f, 0.0f, 0.0f};
+	conf.stabiliser_stack.position_stabiliser.output.thrust 								= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.output.tvel 									= {0.0f, 0.0f, 0.0f};
+	conf.stabiliser_stack.position_stabiliser.output.theading 								= 0.0f;
+	conf.stabiliser_stack.position_stabiliser.output.control_mode 							= RATE_COMMAND_MODE;
+	conf.stabiliser_stack.position_stabiliser.output.yaw_mode 								= YAW_RELATIVE;
+
+
+	// #############################################################################
+	// ######  MISC  ###############################################################
+	// #############################################################################
+	conf.stabiliser_stack.yaw_coordination_velocity 										= 1.5f;
+
+
+	return conf;
 };
 
 #ifdef __cplusplus

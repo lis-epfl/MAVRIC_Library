@@ -47,12 +47,15 @@ extern "C" {
 
 #include "twim.h"
 
-static const twim_options_t twim_default_config =
+static inline twim_options_t twim_default_config()
 {
-    .pba_hz = 64000000,
-    .speed = 400000,
-    .chip = 0xff,
-    .smbus = false
+	twim_options_t twim_options = {};
+    twim_options.pba_hz = 64000000;
+    twim_options.speed = 400000;
+    twim_options.chip = 0xff;
+    twim_options.smbus = false;
+
+    return twim_options;
 };
 
 #ifdef __cplusplus

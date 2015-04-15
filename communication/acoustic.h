@@ -60,8 +60,7 @@ extern "C" {
 #include "stabilisation_copter.h"
 #include "stabilisation.h"
 #include "mavlink_waypoint_handler.h"
-#include "tasks.h"
-
+#include "scheduler.h"
 
 #define STORE_SIZE			4		///< number of azimuth/elevation values stored for reliability test
 #define RELIABILITY_ARC		0.25f	///< the threshold to consider a measurement as reliable (compared with previous 3 measurements)

@@ -505,23 +505,23 @@ static void data_logging_f_seek(data_logging_t* data_logging)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config, const state_t* state)
+bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t config, const state_t* state)
 {
 	bool init_success = true;
 	
 	// Init debug mode
-	data_logging->debug = config->debug;
+	data_logging->debug = config.debug;
 	
 	data_logging->state = state;
 
 	// Allocate memory for the onboard data_log
-	data_logging->data_logging_set = malloc( sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config->max_data_logging_count]) );
+	data_logging->data_logging_set = malloc( sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config.max_data_logging_count]) );
 	
 	if ( data_logging->data_logging_set != NULL )
 	{
-		data_logging->data_logging_set->max_data_logging_count = config->max_data_logging_count;
-		data_logging->data_logging_set->max_logs = config->max_logs;
-		data_logging->data_logging_set->log_interval = config->log_interval;
+		data_logging->data_logging_set->max_data_logging_count = config.max_data_logging_count;
+		data_logging->data_logging_set->max_logs = config.max_logs;
+		data_logging->data_logging_set->log_interval = config.log_interval;
 		data_logging->data_logging_set->data_logging_count = 0;
 		
 		init_success &= true;
@@ -543,7 +543,7 @@ bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	data_logging->file_init = false;
 	data_logging->file_opened = false;
 	data_logging->file_name_init = false;
-	data_logging->log_data = config->log_data;
+	data_logging->log_data = config.log_data;
 	
 	data_logging->loop_count = 0;
 	

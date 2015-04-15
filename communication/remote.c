@@ -101,15 +101,15 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 //------------------------------------------------------------------------------
 
 
-bool remote_init(remote_t* remote, const remote_conf_t* config)
+bool remote_init(remote_t* remote, const remote_conf_t config)
 {
 	bool init_success = true;
 	
 	// Init mode from remote
-	remote_mode_init( &remote->mode, &config->mode_config );
+	remote_mode_init( &remote->mode, config.mode_config );
 
 	// Init parameters according to remote type
-	remote->type = config->type;
+	remote->type = config.type;
 	switch ( remote->type )
 	{
 		case REMOTE_TURNIGY:
@@ -264,21 +264,21 @@ float remote_get_yaw(const remote_t* remote)
 }
 
 
-void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t* config)
+void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t config)
 {
 	// Init parameters
-	remote_mode->safety_channel			= config->safety_channel;				 
-	remote_mode->safety_mode			= config->safety_mode;				 
-	remote_mode->mode_switch_channel	= config->mode_switch_channel;		 
-	remote_mode->mode_switch_up			= config->mode_switch_up;				 
-	remote_mode->mode_switch_middle		= config->mode_switch_middle;			 
-	remote_mode->mode_switch_down		= config->mode_switch_down;			 
-	remote_mode->use_custom_switch		= config->use_custom_switch;			 
-	remote_mode->custom_switch_channel 	= config->custom_switch_channel;		 
-	remote_mode->use_test_switch		= config->use_test_switch;			 
-	remote_mode->test_switch_channel	= config->test_switch_channel;
-	remote_mode->use_disable_remote_mode_switch	= config->use_disable_remote_mode_switch;			 
-	remote_mode->disable_remote_mode_channel		= config->disable_remote_mode_channel;
+	remote_mode->safety_channel			= config.safety_channel;				 
+	remote_mode->safety_mode			= config.safety_mode;				 
+	remote_mode->mode_switch_channel	= config.mode_switch_channel;		 
+	remote_mode->mode_switch_up			= config.mode_switch_up;				 
+	remote_mode->mode_switch_middle		= config.mode_switch_middle;			 
+	remote_mode->mode_switch_down		= config.mode_switch_down;			 
+	remote_mode->use_custom_switch		= config.use_custom_switch;			 
+	remote_mode->custom_switch_channel 	= config.custom_switch_channel;		 
+	remote_mode->use_test_switch		= config.use_test_switch;			 
+	remote_mode->test_switch_channel	= config.test_switch_channel;
+	remote_mode->use_disable_remote_mode_switch	= config.use_disable_remote_mode_switch;			 
+	remote_mode->disable_remote_mode_channel		= config.disable_remote_mode_channel;
 
 	// Init state to safety state, disarmed
 	remote_mode->current_desired_mode 		= remote_mode->safety_mode;	

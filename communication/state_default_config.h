@@ -51,20 +51,26 @@ extern "C" {
 #include "state.h"
 
 
-state_t state_default_config =
+static inline state_t state_default_config()
 {
-	.mav_mode = { .byte = MAV_MODE_SAFE },
-	.mav_state = MAV_STATE_BOOT,
-	.simulation_mode = HIL_OFF,
-	.autopilot_type = MAV_TYPE_QUADROTOR,
-	.autopilot_name = MAV_AUTOPILOT_MAVRIC,
-	.sensor_present = 0b1111110000100111,
-	.sensor_enabled = 0b1111110000100111,
-	.sensor_health = 0b1111110000100111,
-	.remote_active = 1,
-	.battery = { 	.type = BATTERY_LIPO_3S,
-					.low_level_limit = 13.3},
-	.source_mode = REMOTE
+	state_t conf                 = {};
+
+	conf.mav_mode                = {};
+	conf.mav_mode.byte           = MAV_MODE_SAFE;
+	conf.mav_state               = MAV_STATE_BOOT;
+	conf.simulation_mode         = HIL_OFF;
+	conf.autopilot_type          = MAV_TYPE_QUADROTOR;
+	conf.autopilot_name          = MAV_AUTOPILOT_MAVRIC;
+	conf.sensor_present          = 0b1111110000100111;
+	conf.sensor_enabled          = 0b1111110000100111;
+	conf.sensor_health           = 0b1111110000100111;
+	conf.remote_active           = 1;
+	conf.battery                 = {}; 	
+	conf.battery.type            = BATTERY_LIPO_3S;
+	conf.battery.low_level_limit = 13.3;
+	conf.source_mode             = REMOTE;
+
+	return conf;
 };
 
 #ifdef __cplusplus

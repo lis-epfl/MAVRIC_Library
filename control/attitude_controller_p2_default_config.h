@@ -51,16 +51,24 @@ extern "C" {
 #include "attitude_controller_p2.h"
 
 
-attitude_controller_p2_conf_t attitude_controller_p2_default_config =
+static inline attitude_controller_p2_conf_t attitude_controller_p2_default_config()
 {
-	.p_gain_angle =
+	attitude_controller_p2_conf_t conf = {};
+	
+	conf.p_gain_angle =
 	{
-		0.11f, 0.12f, 0.3f
-	},
-	.p_gain_rate =
+		0.11f, 
+		0.12f, 
+		0.3f
+	};
+	conf.p_gain_rate =
 	{
-		0.08f, 0.07f, 0.2f
-	}
+		0.08f, 
+		0.07f, 
+		0.2f
+	};
+
+	return conf;
 };
 
 #ifdef __cplusplus

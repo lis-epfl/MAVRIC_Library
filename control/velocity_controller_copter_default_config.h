@@ -49,7 +49,7 @@ extern "C" {
 
 #include "velocity_controller_copter.h"
 
-static velocity_controller_copter_conf_t velocity_controller_copter_default_config =
+static inline velocity_controller_copter_conf_t velocity_controller_copter_default_config =
 {
 	.thrust_hover_point = -0.3,
 	.pid_config = 

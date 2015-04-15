@@ -54,7 +54,6 @@ extern "C" {
 #include "gps_ublox.h"
 #include "coord_conventions.h"
 #include "state.h"
-#include "tasks.h"
 #include "constants.h"
 
 
@@ -122,7 +121,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t* barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu);
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, state_t* state, barometer_t* barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu);
 
 
 /**

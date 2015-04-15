@@ -68,9 +68,10 @@
 #define INV_VOLTAGE_DIVIDER_1 9.1818f	// previously 6.6f for V4.0
 #define INV_VOLTAGE_DIVIDER_2 23.0f		// previously 11.0f for V4.0
 
-static const analog_monitor_conf_t analog_monitor_default_config =
+static inline analog_monitor_conf_t analog_monitor_default_config()
 {
-	.enable =
+	analog_monitor_conf_t analog_monitor_conf = {};
+	analog_monitor_conf.enable =
 	{
 		false,		//ANALOG_RAIL_2,
 		false,		//ANALOG_RAIL_3,
@@ -82,8 +83,8 @@ static const analog_monitor_conf_t analog_monitor_default_config =
 		true,		//ANALOG_RAIL_11
 		true,		//ANALOG_RAIL_12
 		false,		//ANALOG_RAIL_13
-	},
-	.conv_factor =
+	};
+	analog_monitor_conf.conv_factor =
 	{
 		1.0f,									//.conv_factor_2 =
 		1.0f,									//.conv_factor_3 =
@@ -95,7 +96,8 @@ static const analog_monitor_conf_t analog_monitor_default_config =
 		(-0.0002409f * INV_VOLTAGE_DIVIDER_2),	//.conv_factor_11 =
 		-0.00025f,								//.conv_factor_12 =
 		-1.0f									//.conv_factor_13 =
-	}
+	};
+	return analog_monitor_conf;
 };
 
 #ifdef __cplusplus

@@ -44,19 +44,19 @@
 #include "servos.h"
 #include "print_util.h"
 
-bool servos_init(servos_t* servos, const servos_conf_t* config)
+bool servos_init(servos_t* servos, const servos_conf_t config)
 {
 	bool init_success = true;
 	
 	// Init servo array
-	if ( config->servos_count <= MAX_SERVO_COUNT )
+	if ( config.servos_count <= MAX_SERVO_COUNT )
 	{
-		servos->servos_count = config->servos_count;
+		servos->servos_count = config.servos_count;
 	
 		for (int i = 0; i < servos->servos_count; ++i)
 		{
 			// Set default parameters for each type of servo
-			servos->servo[i] = config->servo[i];
+			servos->servo[i] = config.servo[i];
 
 			// Set default value to failsafe
 			servos->servo[i].value = servos->servo[i].failsafe;

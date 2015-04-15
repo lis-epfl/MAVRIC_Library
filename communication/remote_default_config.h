@@ -51,54 +51,40 @@ extern "C" {
 #include "remote.h"
 
 
-remote_conf_t remote_default_config =
+static inline remote_conf_t remote_default_config()
 {
-	.type = REMOTE_TURNIGY,
-	.mode_config =
-	{
-		.safety_channel = CHANNEL_GEAR,
-		.safety_mode =
-		{
-			.byte = MAV_MODE_ATTITUDE_CONTROL,
-			// .flags =
-			// {
-			// .MANUAL = MANUAL_ON,
-			// }
-		},
-		.mode_switch_channel = CHANNEL_FLAPS,
-		.mode_switch_up =
-		{
-			.byte = MAV_MODE_VELOCITY_CONTROL
-			// .flags =
-			// {
-			// .MANUAL = MANUAL_ON,
-			// .STABILISE = STABILISE_ON,
-			// }
-		},
-		.mode_switch_middle =
-		{
-			.byte = MAV_MODE_POSITION_HOLD,
-			// .flags =
-			// {
-			// .MANUAL = MANUAL_ON,
-			// .GUIDED = GUIDED_ON,
-			// }
-		},
-		.mode_switch_down =
-		{
-			.byte = MAV_MODE_GPS_NAVIGATION
-			// .flags =
-			// {
-			// .AUTO = AUTO_ON,
-			// }
-		},
-		.use_custom_switch = true,//false,
-		.custom_switch_channel = CHANNEL_AUX1,
-		.use_test_switch = false,
-		.test_switch_channel = CHANNEL_AUX2,
-		.use_disable_remote_mode_switch = false,
-		.test_switch_channel = CHANNEL_AUX2,
-	},
+	remote_conf_t conf                                  = {};
+
+	conf.type                                           = REMOTE_TURNIGY;
+	conf.mode_config                                    = {};
+	conf.mode_config.safety_channel                     = CHANNEL_GEAR;
+	conf.mode_config.safety_mode                        = {};
+	conf.mode_config.safety_mode.byte                   = MAV_MODE_ATTITUDE_CONTROL;
+	// conf.mode_config.safety_mode.flags               = {};
+	// conf.mode_config.safety_mode.flags.MANUAL        = MANUAL_ON;
+	conf.mode_config.mode_switch_channel                = CHANNEL_FLAPS;
+	conf.mode_config.mode_switch_up                     = {};
+	conf.mode_config.mode_switch_up.byte                = MAV_MODE_VELOCITY_CONTROL;
+	// conf.mode_config.mode_switch_up.flags            = {};
+	// conf.mode_config.mode_switch_up.flags.MANUAL     = MANUAL_ON;
+	// conf.mode_config.mode_switch_up.flags.STABILISE  = STABILISE_ON;
+	conf.mode_config.mode_switch_middle                 = {};
+	conf.mode_config.mode_switch_middle.byte            = MAV_MODE_POSITION_HOLD;
+	// conf.mode_config.mode_switch_middle.flags        = {};
+	// conf.mode_config.mode_switch_middle.flags.MANUAL = MANUAL_ON;
+	// conf.mode_config.mode_switch_middle.flags.GUIDED = GUIDED_ON;
+	conf.mode_config.mode_switch_down                   = {};
+	conf.mode_config.mode_switch_down.byte              = MAV_MODE_GPS_NAVIGATION;
+	// conf.mode_config.mode_switch_down.flags          = {};
+	// conf.mode_config.mode_switch_down.flags.AUTO     = AUTO_ON;
+	conf.mode_config.use_custom_switch                  = true; //false,
+	conf.mode_config.custom_switch_channel              = CHANNEL_AUX1;
+	conf.mode_config.use_test_switch                    = false;
+	conf.mode_config.test_switch_channel                = CHANNEL_AUX2;
+	conf.mode_config.use_disable_remote_mode_switch     = false;
+	conf.mode_config.test_switch_channel                = CHANNEL_AUX2;
+
+	return conf;
 };
 
 #ifdef __cplusplus

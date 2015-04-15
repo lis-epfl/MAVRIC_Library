@@ -42,7 +42,8 @@
 
 #include "remote_telemetry.h"
 #include "time_keeper.h"
-#include "spektrum.h"
+// #include "spektrum.h"
+#include "satellite.h"
 #include <limits.h>
 
 //------------------------------------------------------------------------------

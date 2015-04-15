@@ -129,7 +129,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream);
+bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t config, byte_stream_t* rx_stream, byte_stream_t* tx_stream);
 
 
 /**

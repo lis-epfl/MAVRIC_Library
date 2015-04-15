@@ -83,12 +83,16 @@ typedef struct
  * \param	satellite_t		Pointer to the sattelite structure
  * \param	usart_config_t	configuration of the corresponding usart
  */
-void (*satellite_init)(satellite_t*, usart_config_t);
+typedef void (*satellite_init_func_t)(satellite_t*, usart_config_t);
+extern satellite_init_func_t satellite_init;
+// extern void (*satellite_init)(satellite_t*, usart_config_t);
 
 /**
  * \brief Pointer to the function used to bind the satellite receiver
  */
-void (*satellite_bind)(radio_protocol_t protocol);
+typedef void (*satellite_bind_func_t)(radio_protocol_t protocol);
+extern satellite_bind_func_t satellite_bind;
+// extern void (*satellite_bind)(radio_protocol_t protocol);
 
 #ifdef __cplusplus
 }

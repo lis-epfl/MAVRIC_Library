@@ -139,7 +139,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool imu_init (imu_t *imu, imu_conf_t *conf_imu, state_t* state);
+bool imu_init (imu_t *imu, imu_conf_t conf_imu, state_t* state);
 
 
 /**

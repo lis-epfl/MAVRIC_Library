@@ -51,29 +51,33 @@ extern "C" {
 #include "simulation.h"
 
 
-simulation_config_t simulation_default_config=
+static inline simulation_config_t simulation_default_config()
 {
-	.rotor_lpf			 =  0.1f, 					///< Low pass filter constant (adjusted for time) to express rotor inertia/lag. 1.0=no inertia, 0.0=infinite inertia
-	.rotor_rpm_gain		 =  4000.0f,				///< The gain linking the rotor command to rpm
-	.rotor_rpm_offset	 =  -1.0f,					///< Offset to convert servo commands to rpm (servo command that corresponds to zero rpm)
-	.rotor_cd			 =  0.03f,					///< Coefficient of drag of rotor blade
-	.rotor_cl			 =  1.0f,					///< Coefficient of lift of rotor blade
-	.rotor_diameter      =  0.14f,					///< Mean "effective" rotor diameter
-	.rotor_foil_area	 =  0.18f * 0.015f,			///< Area of the propeller blades in m^2
-	.rotor_pitch         =  0.15f,					///< Rotor pitch in m/revolution (7x6" roughly 0.15m)
-	.total_mass			 =  0.35f,					///< Vehicle mass in kg
-	.vehicle_drag        =  0.01f,					///< Vehicle drag coefficient * vehicle area
-	.roll_pitch_momentum =  0.1f * 0.17f / 1.4142f,	///< Angular momentum constants (assumed to be independent) (in kg/m^2)
-	.yaw_momentum		 =  0.1f * 0.17f ,			///< Approximate motor arm mass * rotor arm length
-	.rotor_momentum      =  0.005f * 0.03f,			///< Rotor inertia  (5g off center mass * rotor radius)
-	.rotor_arm_length	 =  0.17f,					///< Distance between CoG and motor (in meter)
-	.wind_x				 =  0.0f,					///< Wind in x axis, global frame
-	.wind_y				 =  0.0f,					///< Wind in y axis, global frame
+	simulation_config_t conf 	= {};
+	
+	conf.rotor_lpf			    = 0.1f; 				///< Low pass filter constant (adjusted for time) to express rotor inertia/lag. 1.0       = no inertia, 0.0 = infinite inertia
+	conf.rotor_rpm_gain		    = 4000.0f;				///< The gain linking the rotor command to rpm
+	conf.rotor_rpm_offset	   	= -1.0f;				///< Offset to convert servo commands to rpm (servo command that corresponds to zero rpm)
+	conf.rotor_cd			    = 0.03f;				///< Coefficient of drag of rotor blade
+	conf.rotor_cl			    = 1.0f; 				///< Coefficient of lift of rotor blade
+	conf.rotor_diameter      	= 0.14f;				///< Mean "effective" rotor diameter
+	conf.rotor_foil_area	    = 0.18f * 0.015f;		///< Area of the propeller blades in m^2
+	conf.rotor_pitch         	= 0.15f;				///< Rotor pitch in m/revolution (7x6" roughly 0.15m)
+	conf.total_mass			    = 0.35f;				///< Vehicle mass in kg
+	conf.vehicle_drag        	= 0.01f;				///< Vehicle drag coefficient * vehicle area
+	conf.roll_pitch_momentum 	= 0.1f * 0.17f / 1.4142f;	///< Angular momentum constants (assumed to be independent) (in kg/m^2)
+	conf.yaw_momentum		    = 0.1f * 0.17f; 		///< Approximate motor arm mass * rotor arm length
+	conf.rotor_momentum      	= 0.005f * 0.03f;		///< Rotor inertia  (5g off center mass * rotor radius)
+	conf.rotor_arm_length	   	= 0.17f;				///< Distance between CoG and motor (in meter)
+	conf.wind_x				    = 0.0f;					///< Wind in x axis, global frame
+	conf.wind_y				    = 0.0f;					///< Wind in y axis, global frame
 	//default home location (EFPL Esplanade)
-	.home_coordinates[X]   = 46.51852236174565f,	///< Latitude of the simulation home waypoint
-	.home_coordinates[Y]  = 6.566044801857777f,		///< Longitude of the simulation home waypoint
-	.home_coordinates[Z]   = 400.0f,				///< Altitude of the simulation home waypoint
-	.sim_gravity		 =  9.8f					///< Simulation gravity
+	conf.home_coordinates[X] 	= 46.51852236174565f;	///< Latitude of the simulation home waypoint
+	conf.home_coordinates[Y] 	= 6.566044801857777f;	///< Longitude of the simulation home waypoint
+	conf.home_coordinates[Z] 	= 400.0f;				///< Altitude of the simulation home waypoint
+	conf.sim_gravity		    = 9.8f;					///< Simulation gravity
+
+	return conf;
 };
 
 #ifdef __cplusplus

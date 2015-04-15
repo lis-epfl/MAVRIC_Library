@@ -40,9 +40,6 @@
  *
  ******************************************************************************/
 
-
-#include "quaternions.h"
-
 #ifndef CONTROL_COMMAND_H_
 #define CONTROL_COMMAND_H_
 
@@ -50,6 +47,7 @@
 	extern "C" {
 #endif
 
+#include "quaternions.h"
 
 /**
  * \brief 	Control command mode enum

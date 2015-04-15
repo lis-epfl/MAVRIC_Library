@@ -148,7 +148,7 @@ typedef struct
  * \return	True if the init succeed, false otherwise
  */
 bool simulation_init(	simulation_model_t* sim, 
-						const simulation_config_t* sim_config, 
+						const simulation_config_t sim_config, 
 						ahrs_t* ahrs, 
 						imu_t* imu, 
 						position_estimation_t* pos_est, 

@@ -51,7 +51,7 @@ extern "C" {
 
 #include "imu.h"
 
-static imu_conf_t imu_default_config =
+static inline imu_conf_t imu_default_config =
 {
 	.accelerometer =
 	{

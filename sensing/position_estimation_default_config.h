@@ -48,16 +48,18 @@ extern "C" {
 
 #include "position_estimation.h"
 
-static const position_estimation_conf_t position_estimation_default_config =
+static inline position_estimation_conf_t position_estimation_default_config()
 {
-    .origin =
-    {
-        //default home location (EFPL Esplanade)
-        .longitude  = 6.566044801857777f,
-        .latitude   = 46.51852236174565f,
-        .altitude   = 400.0f
-    },
-    .gravity = 9.81f
+	position_estimation_conf_t conf = {};
+	
+	conf.origin                     = {};
+    //default home location (EFPL Esplanade)
+	conf.origin.longitude           = 6.566044801857777f;
+	conf.origin.latitude            = 46.51852236174565f;
+	conf.origin.altitude            = 400.0f;
+	conf.gravity                    = 9.81f;
+
+	return conf;
 };
 
 #ifdef __cplusplus

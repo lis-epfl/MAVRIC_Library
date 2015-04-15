@@ -47,13 +47,13 @@
 
 #include "conf_platform.h" 	// TODO: remove (use the module mix_to_servo to remove dependency to conf_platform)
 
-bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, stabilisation_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est,servos_t* servos)
+bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est,servos_t* servos)
 {
 	bool init_success = true;
 	
 	//init dependencies
-	stabilisation_copter->stabiliser_stack = stabiliser_conf->stabiliser_stack;
-	stabilisation_copter->motor_layout = stabiliser_conf->motor_layout;
+	stabilisation_copter->stabiliser_stack = stabiliser_conf.stabiliser_stack;
+	stabilisation_copter->motor_layout = stabiliser_conf.motor_layout;
 	stabilisation_copter->controls = controls;
 	stabilisation_copter->imu = imu;
 	stabilisation_copter->ahrs = ahrs;
@@ -73,7 +73,7 @@ bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, sta
 	controls->theading = 0.0f;
 	controls->thrust = -1.0f;
 	
-	stabilisation_copter->thrust_hover_point = stabiliser_conf->thrust_hover_point;
+	stabilisation_copter->thrust_hover_point = stabiliser_conf.thrust_hover_point;
 
 	print_util_dbg_print("[STABILISATION COPTER] initalised.\r\n");
 	

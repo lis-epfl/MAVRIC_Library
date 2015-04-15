@@ -51,18 +51,22 @@ extern "C" {
 #include "servos_mix_quadcopter_diag.h"
 
 
-servo_mix_quadcopter_diag_conf_t servo_mix_quadcopter_diag_default_config =
+static inline servo_mix_quadcopter_diag_conf_t servo_mix_quadcopter_diag_default_config()
 {
-	.motor_front_right		= 2,
-	.motor_front_left		= 1,
-	.motor_rear_right		= 3,
-	.motor_rear_left		= 0,
-	.motor_front_right_dir	= CW,
-	.motor_front_left_dir	= CCW,
-	.motor_rear_right_dir	= CCW,
-	.motor_rear_left_dir	= CW,
-	.min_thrust				= -0.9f,
-	.max_thrust				= 1.0f,
+	servo_mix_quadcopter_diag_conf_t conf 	= {};
+	
+	conf.motor_front_right					= 2;
+	conf.motor_front_left					= 1;
+	conf.motor_rear_right					= 3;
+	conf.motor_rear_left					= 0;
+	conf.motor_front_right_dir				= CW;
+	conf.motor_front_left_dir				= CCW;
+	conf.motor_rear_right_dir				= CCW;
+	conf.motor_rear_left_dir				= CW;
+	conf.min_thrust							= -0.9f;
+	conf.max_thrust							= 1.0f;
+
+	return conf;
 };
 
 

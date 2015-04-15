@@ -60,7 +60,7 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_t* ahrs)
+bool qfilter_init(qfilter_t* qf, const qfilter_conf_t config, imu_t* imu, ahrs_t* ahrs)
 {
 	bool init_success = true;
 	
@@ -69,10 +69,10 @@ bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_
 	qf->ahrs = ahrs;
 	
 	//init qfilter gains according to provided configuration
-	qf->kp = config->kp;
-	qf->ki = config->ki;
-	qf->kp_mag = config->kp_mag;
-	qf->ki_mag = config->ki_mag;
+	qf->kp = config.kp;
+	qf->ki = config.ki;
+	qf->kp_mag = config.kp_mag;
+	qf->ki_mag = config.ki_mag;
 	
 	print_util_dbg_print("[QFILTER] Initialised.\r\n");
 	

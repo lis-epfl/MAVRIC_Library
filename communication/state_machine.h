@@ -53,6 +53,7 @@ extern "C" {
 #include "mavlink_waypoint_handler.h"
 #include "simulation.h"
 #include "joystick_parsing.h"
+#include "remote.h"
 
 /**
  * \brief Defines the state machine structure

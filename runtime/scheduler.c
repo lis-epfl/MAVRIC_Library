@@ -46,21 +46,21 @@
 #include "print_util.h"
 #include <stdlib.h>
 
-bool scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config) 
+bool scheduler_init(scheduler_t* scheduler, const scheduler_conf_t config) 
 {
 	bool init_success = true;
 	
 	// Init schedule strategy
-	scheduler->schedule_strategy = config->schedule_strategy;
+	scheduler->schedule_strategy = config.schedule_strategy;
 
 	// Init debug mode
-	scheduler->debug = config->debug;
+	scheduler->debug = config.debug;
 
 	// Allocate memory for the task set
-	scheduler->task_set = malloc( sizeof(task_set_t) + sizeof(task_entry_t[config->max_task_count]) );
+	scheduler->task_set = malloc( sizeof(task_set_t) + sizeof(task_entry_t[config.max_task_count]) );
 	if ( scheduler->task_set != NULL ) 
 	{
-		scheduler->task_set->max_task_count = config->max_task_count;
+		scheduler->task_set->max_task_count = config.max_task_count;
 		
 		init_success &= true;
 	}

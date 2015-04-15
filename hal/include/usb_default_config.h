@@ -47,11 +47,14 @@ extern "C" {
 
 #include "usb_int.h"
 
-static const usb_config_t usb_default_config_console =
+static inline usb_config_t usb_default_config_console()
 {
-    .mode                       = USB_IN_OUT,
-    .usb_device.IRQ             = 0,             //AVR32_USB_IRQ,
-    .usb_device.receive_stream  = NULL
+	usb_config_t usb_config 				= {};
+    usb_config.mode                      	= USB_IN_OUT;
+    usb_config.usb_device.IRQ             	= 0;             //AVR32_USB_IRQ,
+    usb_config.usb_device.receive_stream  	= NULL;
+
+    return usb_config;
 };
 
 #ifdef __cplusplus

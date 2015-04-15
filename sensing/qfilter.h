@@ -88,7 +88,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_t* ahrs);
+bool qfilter_init(qfilter_t* qf, const qfilter_conf_t config, imu_t* imu, ahrs_t* ahrs);
 
 
 /**

@@ -47,79 +47,83 @@ extern "C" {
 
 #include "uart_int.h"
 
-static const usart_config_t usart_default_config_console =
+static inline usart_config_t usart_default_config_console()
 {
-    .mode                       = UART_IN_OUT,
-    .uart_device.uart           = (avr32_usart_t *)&AVR32_USART4,
-    .uart_device.IRQ            = AVR32_USART4_IRQ,
-    .uart_device.receive_stream = NULL,
-    .options = 
-    {
-        .baudrate       = 57600,
-        .charlength     = 8,
-        .paritytype     = USART_NO_PARITY,
-        .stopbits       = USART_1_STOPBIT,
-        .channelmode    = USART_NORMAL_CHMODE 
-    },
-    .rx_pin_map         = {AVR32_USART4_RXD_2_PIN, AVR32_USART4_RXD_2_FUNCTION},
-    .tx_pin_map         = {AVR32_USART4_TXD_2_PIN, AVR32_USART4_TXD_2_FUNCTION}
+    usart_config_t usart_config             = {};
+    usart_config.mode                       = UART_IN_OUT;
+    usart_config.uart_device.uart           = (avr32_usart_t *)&AVR32_USART4;
+    usart_config.uart_device.IRQ            = AVR32_USART4_IRQ;
+    usart_config.uart_device.receive_stream = NULL;
+    usart_config.options                    = {};
+    usart_config.options.baudrate           = 57600;
+    usart_config.options.charlength         = 8;
+    usart_config.options.paritytype         = USART_NO_PARITY;
+    usart_config.options.stopbits           = USART_1_STOPBIT;
+    usart_config.options.channelmode        = USART_NORMAL_CHMODE;
+    usart_config.rx_pin_map                 = {AVR32_USART4_RXD_2_PIN, AVR32_USART4_RXD_2_FUNCTION};
+    usart_config.tx_pin_map                 = {AVR32_USART4_TXD_2_PIN, AVR32_USART4_TXD_2_FUNCTION};
+
+    return usart_config;
 };
 
 
-static const usart_config_t usart_default_config_gps =
+static inline usart_config_t usart_default_config_gps()
 {
-    .mode						= UART_IN_OUT,
-    .uart_device.uart			= (avr32_usart_t *)&AVR32_USART3,
-    .uart_device.IRQ			= AVR32_USART3_IRQ,
-    .uart_device.receive_stream	= NULL,
-    .options					=
-	{
-		.baudrate				= 38400,
-		.charlength				= 8,
-		.paritytype				= USART_NO_PARITY,
-		.stopbits				= USART_1_STOPBIT,
-		.channelmode			= USART_NORMAL_CHMODE 
-	},
-    .rx_pin_map					= {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION},
-    .tx_pin_map					= {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION}
+    usart_config_t usart_config             = {};
+    usart_config.mode						= UART_IN_OUT;
+    usart_config.uart_device.uart			= (avr32_usart_t *)&AVR32_USART3;
+    usart_config.uart_device.IRQ			= AVR32_USART3_IRQ;
+    usart_config.uart_device.receive_stream	= NULL;
+    usart_config.options    				= {};
+	usart_config.options.baudrate      		= 38400;
+	usart_config.options.charlength			= 8;
+	usart_config.options.paritytype			= USART_NO_PARITY;
+	usart_config.options.stopbits			= USART_1_STOPBIT;
+	usart_config.options.channelmode		= USART_NORMAL_CHMODE;
+    usart_config.rx_pin_map					= {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION};
+    usart_config.tx_pin_map					= {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION};
+
+    return usart_config;
 };
 
 
-static const usart_config_t usart_default_config_spektrum =
+static inline usart_config_t usart_default_config_spektrum()
 {
-    .mode						= UART_IN_OUT,
-    .uart_device.uart			= (avr32_usart_t *)&AVR32_USART1,
-    .uart_device.IRQ			= AVR32_USART1_IRQ,
-    .uart_device.receive_stream	= NULL,
-    .options					=
-	{
-		.baudrate				= 115200,
-		.charlength				= 8,
-		.paritytype				= USART_NO_PARITY,
-		.stopbits				= USART_1_STOPBIT,
-		.channelmode			= USART_NORMAL_CHMODE 
-	},
-    .rx_pin_map					= { AVR32_USART1_RXD_0_1_PIN, AVR32_USART1_RXD_0_1_FUNCTION },
-    .tx_pin_map					= { AVR32_USART1_TXD_0_1_PIN, AVR32_USART1_TXD_0_1_FUNCTION }
+    usart_config_t usart_config             = {};
+    usart_config.mode						= UART_IN_OUT;
+    usart_config.uart_device.uart			= (avr32_usart_t *)&AVR32_USART1;
+    usart_config.uart_device.IRQ			= AVR32_USART1_IRQ;
+    usart_config.uart_device.receive_stream	= NULL;
+    usart_config.options                    = {};
+	usart_config.options.baudrate      		= 115200;
+	usart_config.options.charlength			= 8;
+	usart_config.options.paritytype			= USART_NO_PARITY;
+	usart_config.options.stopbits			= USART_1_STOPBIT;
+	usart_config.options.channelmode		= USART_NORMAL_CHMODE;
+    usart_config.rx_pin_map					= { AVR32_USART1_RXD_0_1_PIN, AVR32_USART1_RXD_0_1_FUNCTION };
+    usart_config.tx_pin_map					= { AVR32_USART1_TXD_0_1_PIN, AVR32_USART1_TXD_0_1_FUNCTION };
+
+    return usart_config;
 };
 
 
-static const usart_config_t usart_default_config_xbee =
+static inline usart_config_t usart_default_config_xbee()
 {
-    .mode						= UART_IN_OUT,
-    .uart_device.uart			= (avr32_usart_t *)&AVR32_USART0,
-    .uart_device.IRQ			= AVR32_USART0_IRQ,
-    .uart_device.receive_stream = NULL,
-    .options					=
-	{
-		.baudrate				= 57600,
-		.charlength				= 8,
-		.paritytype				= USART_NO_PARITY,
-		.stopbits				= USART_1_STOPBIT,
-		.channelmode			= USART_NORMAL_CHMODE 
-	},
-    .rx_pin_map					= {AVR32_USART0_RXD_0_0_PIN, AVR32_USART0_RXD_0_0_FUNCTION},
-    .tx_pin_map					= {AVR32_USART0_TXD_0_0_PIN, AVR32_USART0_TXD_0_0_FUNCTION}
+    usart_config_t usart_config             = {};
+    usart_config.mode						= UART_IN_OUT;
+    usart_config.uart_device.uart			= (avr32_usart_t *)&AVR32_USART0;
+    usart_config.uart_device.IRQ			= AVR32_USART0_IRQ;
+    usart_config.uart_device.receive_stream = NULL;
+    usart_config.options					= {};
+	usart_config.options.baudrate      		= 57600;
+	usart_config.options.charlength			= 8;
+	usart_config.options.paritytype			= USART_NO_PARITY;
+	usart_config.options.stopbits			= USART_1_STOPBIT;
+	usart_config.options.channelmode		= USART_NORMAL_CHMODE;
+    usart_config.rx_pin_map					= {AVR32_USART0_RXD_0_0_PIN, AVR32_USART0_RXD_0_0_FUNCTION};
+    usart_config.tx_pin_map					= {AVR32_USART0_TXD_0_0_PIN, AVR32_USART0_TXD_0_0_FUNCTION};
+
+    return usart_config;
 };
 
 
