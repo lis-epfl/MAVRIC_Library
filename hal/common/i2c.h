@@ -30,58 +30,68 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file sonar_i2cxl.h
+ * \file i2c.h
  * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur
  *   
- * \brief Driver for the sonar module using i2C communication protocol
+ * \brief Abstract class for i2c peripherals
  *
  ******************************************************************************/
 
-
-#ifndef I2CXL_SONAR_H_
-#define I2CXL_SONAR_H_
-
-#ifdef __cplusplus
-	extern "C" {
-#endif
+#ifndef I2C_H_
+#define I2C_H_
 
 #include <stdint.h>
-#include "sonar.h"
-#include "scheduler.h"
 
-/**
- * \brief structure of the sonar_i2cxl module
-*/
-typedef struct 
+class i2c
 {
-	uint8_t i2c_address;	///< address of the sonar module
-	sonar_t data;			///< sensor data	
-} sonar_i2cxl_t;
+public:
 
-/**
- * \brief Initializes the I2CXL sonar data struct and the i2c bus
- * 
- * \param	sonar	Pointer to the sonar Data structure
- * 
- * \return	True if the init succeed, false otherwise
- */
-bool sonar_i2cxl_init(sonar_i2cxl_t* sonar);
-
-/**
- * \brief Reads last value from sensor and start new recording
- * \details This function should be called at a frequency lower than 10Hz
- * 
- * \param	sonar	Data struct
- * 
- * \return	The result of the task execution
- */
-task_return_t sonar_i2cxl_update(sonar_i2cxl_t* sonar);
+	/**
+	 * @brief 		Hardware initialization
+	 * 
+	 * @return  true Success
+	 * @return  false Error
+	 */
+	virtual bool init(void) = 0;
 
 
-#ifdef __cplusplus
-	}
-#endif
+	/**
+	 * @brief 	Test if a chip answers for a given I2C address
+	 * 
+	 * @param 	address 	Slave adress
+	 * 
+	 * @return 	True		Slave found
+	 * @return 	False		Slave not found
+	 */	
+	virtual bool probe(uint32_t address) = 0;
 
-#endif /* I2CXL_SONAR_H */
+
+	/**
+	 * @brief 	Write multiple bytes to a I2C slave device
+	 * 
+	 * @param 	buffer 		Data buffer
+	 * @param 	nbytes 		Number of bytes to write
+	 * @param 	address 	Slave adress
+	 * 
+	 * @return 	True		Data successfully written
+	 * @return 	False		Data not written
+	 */
+	virtual bool write(const uint8_t *buffer, uint32_t nbytes, uint32_t address) = 0;
+
+
+	/**
+	 * @brief 	Read multiple bytes to a I2C slave device
+	 * 
+	 * @param 	buffer 		Data buffer
+	 * @param 	nbytes 		Number of bytes to read
+	 * @param 	address 	Slave adress
+	 * 
+	 * @return 	True		Data successfully read
+	 * @return 	False		Data not read
+	 */	
+	virtual bool read(uint8_t *buffer, uint32_t nbytes, uint32_t address) = 0;
+};
+
+
+#endif /* I2C_H_ */
