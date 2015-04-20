@@ -38,14 +38,14 @@
  *
  ******************************************************************************/
 
-#include "i2c_avr32.h"
+#include "i2c_avr32.hpp"
+#include "atmel_status_codes.hpp"
 
 extern "C"
 {
 	#include "print_util.h"
 	#include "gpio.h"
 	#include "sysclk.h"
-	#include "atmel_status_codes.h"
 }
 
 i2c_avr32::i2c_avr32(i2c_avr32_conf_t config)

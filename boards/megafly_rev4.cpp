@@ -38,7 +38,7 @@
  *
  ******************************************************************************/
 
-#include "megafly_rev4.h"
+#include "megafly_rev4.hpp"
 #include "print_util.h"
 
 megafly_rev4::megafly_rev4(megafly_rev4_conf_t config ): 
