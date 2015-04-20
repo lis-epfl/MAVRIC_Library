@@ -30,84 +30,114 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file i2c_avr32.h
+ * \file atmel_status_codes.h
  * 
  * \author MAV'RIC Team
  *   
- * \brief I2C peripheral driver for AVR32
+ * \brief Translation from Atmel status_code to debug messages and booleans
  *
  ******************************************************************************/
 
-#include "i2c_avr32.h"
+#ifndef ATMEL_STATUS_CODES_H_
+#define ATMEL_STATUS_CODES_H_
 
-extern "C"
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include "status_codes.h"
+#include "print_util.h"
+
+
+/**
+ * @brief 	Converts status codes from Atmel framework to boolean
+ * 
+ * @param 	status 	Status code provided by Atmel functions 
+ * @param 	debug 	Prints messages if true
+ * 
+ * @return  true 	STATUS_OK
+ * @return  false 	Not STATUS_OK
+ */
+bool status_code_to_bool(status_code_t status, bool debug=false)
 {
-	#include "print_util.h"
-	#include "gpio.h"
-	#include "sysclk.h"
-	#include "atmel_status_codes.h"
-}
-
-i2c_avr32::i2c_avr32(i2c_avr32_conf_t config)
-{
-	_config = config;
-}
-
-
-bool i2c_avr32::init(void)
-{
-	switch( _config.i2c_device ) 
+	bool res = false;
+	
+	if( debug == false )
 	{
-	case AVR32_I2C0: 
-		_twim = &AVR32_TWIM0;
-		///< Register PDCA IRQ interrupt.
-		// INTC_register_interrupt( (__int_handler) &i2c_int_handler_i2c0, AVR32_TWIM0_IRQ, AVR32_INTC_INT1);
-		gpio_enable_module_pin( _config.clk_pin, 
-								AVR32_TWIMS0_TWCK_0_0_FUNCTION );
-		gpio_enable_module_pin( _config.sda_pin, 
-								AVR32_TWIMS0_TWD_0_0_FUNCTION );
-
-	break;
-	case AVR32_I2C1:
-		_twim = &AVR32_TWIM1;///< Register PDCA IRQ interrupt.
-		//INTC_register_interrupt( (__int_handler) &i2c_int_handler_i2c1, AVR32_TWIM1_IRQ, AVR32_INTC_INT1);
-		gpio_enable_module_pin( _config.clk_pin, 
-								AVR32_TWIMS1_TWCK_0_0_FUNCTION );
-		gpio_enable_module_pin( _config.sda_pin, 
-								AVR32_TWIMS1_TWD_0_0_FUNCTION );
-	break;
-	default: ///< invalid device ID
-		return false;
+		if( status == STATUS_OK )
+		{
+			res = true;
+		}
+		else
+		{
+			res = false;
+		}
 	}
-	
-	_config.twi_opt.pba_hz = sysclk_get_pba_hz();
-	
-	status_code_t status;
-	status = twim_master_init(_twim, &_config.twi_opt);
-	
-	return status_code_to_bool(status, true);
+	else
+	{	
+		switch(status)
+		{
+			case STATUS_OK:
+				res = true;
+			break;
+			case ERR_IO_ERROR:
+				res = false;
+				print_util_dbg_print("[ERR] IO");
+				break;
+			break;
+			case ERR_FLUSHED:
+				res = false;
+				print_util_dbg_print("[ERR] Flushed");
+				break;
+			case ERR_TIMEOUT:
+				res = false;
+				print_util_dbg_print("[ERR] Timeout");
+				break;
+			case ERR_BAD_DATA:
+				res = false;
+				print_util_dbg_print("[ERR] Bad data");
+				break;
+			case ERR_PROTOCOL:
+				res = false;
+				print_util_dbg_print("[ERR] Protocol");
+				break;
+			case ERR_UNSUPPORTED_DEV:
+				res = false;
+				print_util_dbg_print("[ERR] Unsupported dev");
+				break;
+			case ERR_NO_MEMORY:
+				res = false;
+				print_util_dbg_print("[ERR] No Memory");
+				break;
+			case ERR_INVALID_ARG:
+				res = false;
+				print_util_dbg_print("[ERR] Invalid arg");
+				break;
+			case ERR_BAD_ADDRESS:
+				res = false;
+				print_util_dbg_print("[ERR] Bad address");
+				break;
+			case ERR_BUSY:
+				res = false;
+				print_util_dbg_print("[ERR] Busy");
+				break;
+			case ERR_BAD_FORMAT:
+				res = false;
+				print_util_dbg_print("[ERR] Bad format");
+				break;
+			default:
+				res = false;
+			break;
+
+		}
+	}
+
+	return res;
 }
 
 
-bool i2c_avr32::probe(uint32_t address)
-{
-	status_code_t status;	
-	status = twim_probe(_twim, address);
-	return status_code_to_bool(status);
+#ifdef __cplusplus
 }
+#endif
 
-
-bool i2c_avr32::write(const uint8_t *buffer, uint32_t nbytes, uint32_t address)
-{
-	status_code_t status;
-	status = twim_write(_twim, buffer, nbytes, address, _config.tenbit);
-	return status_code_to_bool(status);
-}
-
-
-bool i2c_avr32::read(uint8_t *buffer, uint32_t nbytes, uint32_t address)
-{		
-	status_code_t status;
-	status = twim_read(_twim, buffer, nbytes, address, _config.tenbit);
-	return status_code_to_bool(status);
-}
+#endif /* ATMEL_STATUS_CODES_H_ */

@@ -56,16 +56,16 @@ typedef enum
 {
 	AVR32_I2C0 = 0, 
 	AVR32_I2C1 = 1
-} available_i2c_avr32_t;
+} i2c_avr32_devices_t;
 
 
 typedef struct
 {
-	uint8_t        i2c_device;
-	twim_options_t twi_opt;
-	bool           tenbit;
-	uint8_t        sda_pin;
-	uint8_t        clk_pin;
+	i2c_avr32_devices_t i2c_device;
+	twim_options_t 		twi_opt;
+	bool           		tenbit;
+	uint8_t        		sda_pin;
+	uint8_t        		clk_pin;
 } i2c_avr32_conf_t;
 
 
@@ -130,15 +130,6 @@ private:
 	i2c_avr32_conf_t 		_config;
 	volatile avr32_twim_t* 	_twim;
 
-	/**
-	 * @brief 	Converts i2c status code from Atmel to boolean
-	 * 
-	 * @param 	status 	Status code provided by Atmel functions 
-	 * 
-	 * @return  true 	STATUS_OK
-	 * @return  false 	ERR_IO_ERROR
-	 */
-	bool status_code_to_bool(status_code_t status);
 };
 
 
