@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file i2c_avr32.h
+ * \file i2c_avr32.hpp
  * 
  * \author MAV'RIC Team
  *   
@@ -86,7 +86,7 @@ public:
 	 * @return  true Success
 	 * @return  false Error
 	 */
-	bool init(void);
+	virtual bool init(void);
 
 
 	/**
@@ -97,7 +97,7 @@ public:
 	 * @return 	True		Slave found
 	 * @return 	False		Slave not found
 	 */	
-	bool probe(uint32_t address);
+	virtual bool probe(uint32_t address);
 
 
 	/**
@@ -110,7 +110,7 @@ public:
 	 * @return 	True		Data successfully written
 	 * @return 	False		Data not written
 	 */
-	bool write(const uint8_t *buffer, uint32_t nbytes, uint32_t address);
+	virtual bool write(const uint8_t *buffer, uint32_t nbytes, uint32_t address);
 
 
 	/**
@@ -123,12 +123,12 @@ public:
 	 * @return 	True		Data successfully read
 	 * @return 	False		Data not read
 	 */	
-	bool read(uint8_t *buffer, uint32_t nbytes, uint32_t address);
+	virtual bool read(uint8_t *buffer, uint32_t nbytes, uint32_t address);
 
 
 private:
-	i2c_avr32_conf_t 		_config;
-	volatile avr32_twim_t* 	_twim;
+	i2c_avr32_conf_t 		config_;
+	volatile avr32_twim_t* 	twim_;
 
 };
 

@@ -30,22 +30,47 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	i2c.hpp
+ * \file 	i2c_dummy.hpp
  * 
  * \author 	MAV'RIC Team
  *   
- * \brief 	Abstract class for i2c peripherals
+ * \brief 	Dummy implementation of I2C driver
  *
  ******************************************************************************/
 
-#ifndef I2C_H_
-#define I2C_H_
+#ifndef I2C_DUMMY_H_
+#define I2C_DUMMY_H_
 
-#include <stdint.h>
+#include "i2c.hpp"
 
-class i2c
+
+/**
+ * 	Configuration structure
+ */
+typedef struct
+{
+	bool flag;			///< Dummy configuration flag
+} i2c_dummy_conf_t;
+
+
+/**
+ * @brief 	Default configuration
+ * 
+ * @return 	Config structure
+ */
+static inline i2c_dummy_conf_t i2c_dummy_default_config();
+
+
+class i2c_dummy: public i2c
 {
 public:
+	/**
+	 * @brief 	Initialises the peripheral
+	 * 
+	 * @param 	config 		Device configuration
+	 */
+	i2c_dummy(i2c_dummy_conf_t config = i2c_dummy_default_config());
+
 
 	/**
 	 * @brief 	Hardware initialization
@@ -53,7 +78,7 @@ public:
 	 * @return  true Success
 	 * @return  false Error
 	 */
-	virtual bool init(void) = 0;
+	virtual bool init(void);
 
 
 	/**
@@ -61,10 +86,10 @@ public:
 	 * 
 	 * @param 	address 	Slave adress
 	 * 
-	 * @return 	true		Slave found
-	 * @return 	false		Slave not found
+	 * @return 	True		Slave found
+	 * @return 	False		Slave not found
 	 */	
-	virtual bool probe(uint32_t address) = 0;
+	virtual bool probe(uint32_t address);
 
 
 	/**
@@ -74,10 +99,10 @@ public:
 	 * @param 	nbytes 		Number of bytes to write
 	 * @param 	address 	Slave adress
 	 * 
-	 * @return 	true		Data successfully written
-	 * @return 	false		Data not written
+	 * @return 	True		Data successfully written
+	 * @return 	False		Data not written
 	 */
-	virtual bool write(const uint8_t *buffer, uint32_t nbytes, uint32_t address) = 0;
+	virtual bool write(const uint8_t *buffer, uint32_t nbytes, uint32_t address);
 
 
 	/**
@@ -87,11 +112,31 @@ public:
 	 * @param 	nbytes 		Number of bytes to read
 	 * @param 	address 	Slave adress
 	 * 
-	 * @return 	true		Data successfully read
-	 * @return 	false		Data not read
+	 * @return 	True		Data successfully read
+	 * @return 	False		Data not read
 	 */	
-	virtual bool read(uint8_t *buffer, uint32_t nbytes, uint32_t address) = 0;
+	virtual bool read(uint8_t *buffer, uint32_t nbytes, uint32_t address);
+
+
+private:
+	i2c_dummy_conf_t config_;
+
 };
 
 
-#endif /* I2C_H_ */
+/**
+ * @brief 	Default configuration
+ * 
+ * @return 	Config structure
+ */
+static inline i2c_dummy_conf_t i2c_dummy_default_config()
+{
+	i2c_dummy_conf_t conf = {};
+
+	conf.flag = true;
+
+	return conf;
+}
+
+
+#endif /* I2C_DUMMY_H_ */

@@ -30,68 +30,41 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	i2c.hpp
+ * \file 	i2c_dummy.cpp
  * 
  * \author 	MAV'RIC Team
  *   
- * \brief 	Abstract class for i2c peripherals
+ * \brief 	Dummy implementation of I2C driver
  *
  ******************************************************************************/
 
-#ifndef I2C_H_
-#define I2C_H_
+#include "i2c_dummy.hpp"
 
-#include <stdint.h>
-
-class i2c
+i2c_dummy::i2c_dummy(i2c_dummy_conf_t config)
 {
-public:
-
-	/**
-	 * @brief 	Hardware initialization
-	 * 
-	 * @return  true Success
-	 * @return  false Error
-	 */
-	virtual bool init(void) = 0;
+	config_ = config;
+}
 
 
-	/**
-	 * @brief 	Test if a chip answers for a given I2C address
-	 * 
-	 * @param 	address 	Slave adress
-	 * 
-	 * @return 	true		Slave found
-	 * @return 	false		Slave not found
-	 */	
-	virtual bool probe(uint32_t address) = 0;
+bool i2c_dummy::init(void)
+{
+	return config_.flag;
+}
 
 
-	/**
-	 * @brief 	Write multiple bytes to a I2C slave device
-	 * 
-	 * @param 	buffer 		Data buffer
-	 * @param 	nbytes 		Number of bytes to write
-	 * @param 	address 	Slave adress
-	 * 
-	 * @return 	true		Data successfully written
-	 * @return 	false		Data not written
-	 */
-	virtual bool write(const uint8_t *buffer, uint32_t nbytes, uint32_t address) = 0;
+bool i2c_dummy::probe(uint32_t address)
+{
+	return config_.flag;
+}
 
 
-	/**
-	 * @brief 	Read multiple bytes to a I2C slave device
-	 * 
-	 * @param 	buffer 		Data buffer
-	 * @param 	nbytes 		Number of bytes to read
-	 * @param 	address 	Slave adress
-	 * 
-	 * @return 	true		Data successfully read
-	 * @return 	false		Data not read
-	 */	
-	virtual bool read(uint8_t *buffer, uint32_t nbytes, uint32_t address) = 0;
-};
+bool i2c_dummy::write(const uint8_t *buffer, uint32_t nbytes, uint32_t address)
+{
+	return config_.flag;
+}
 
 
-#endif /* I2C_H_ */
+bool i2c_dummy::read(uint8_t *buffer, uint32_t nbytes, uint32_t address)
+{		
+	return config_.flag;
+}

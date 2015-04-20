@@ -47,6 +47,7 @@ extern "C"
 	#include "twim.h"
 	#include "print_util.h"
 	#include "time_keeper.h"
+	#include "constants.h"
 }
 
 const uint8_t SONAR_I2CXL_RANGE_COMMAND				= 0x51;		///< Address of the Range Command Register
@@ -62,15 +63,15 @@ sonar_i2cxl::sonar_i2cxl(i2c& i2c, uint8_t address):
 	_i2c(i2c),
 	_i2c_address(address)
 {
-	data.current_distance 	= 0.2f;
-	data.orientation.s 	= 1.0f;
-	data.orientation.v[0] 	= 0.0f;
-	data.orientation.v[0] 	= 0.0f;
-	data.orientation.v[0] 	= 0.0f;
+	data.current_distance  = 0.2f;
+	data.orientation.s 	   = 1.0f;
+	data.orientation.v[X]  = 0.0f;
+	data.orientation.v[Y]  = 0.0f;
+	data.orientation.v[Z]  = 0.0f;
 	data.min_distance      = 0.22f;
 	data.max_distance      = 5.0f;
-	data.covariance 	    = 0.01f;
-	data.healthy 	        = false;
+	data.covariance 	   = 0.01f;
+	data.healthy 	       = false;
 }
 
 bool sonar_i2cxl::update(void)

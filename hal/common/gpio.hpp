@@ -30,68 +30,78 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	i2c.hpp
+ * \file 	gpio.hpp
  * 
  * \author 	MAV'RIC Team
  *   
- * \brief 	Abstract class for i2c peripherals
+ * \brief 	Abstract class for GPIO peripherals
  *
  ******************************************************************************/
 
-#ifndef I2C_H_
-#define I2C_H_
+#ifndef GPIO_H_
+#define GPIO_H_
 
-#include <stdint.h>
 
-class i2c
+class gpio
 {
 public:
 
 	/**
 	 * @brief 	Hardware initialization
 	 * 
-	 * @return  true Success
-	 * @return  false Error
+	 * @return  true 		Success
+	 * @return  false 		Error
 	 */
 	virtual bool init(void) = 0;
 
 
 	/**
-	 * @brief 	Test if a chip answers for a given I2C address
+	 * @brief 	Write 1 to the gpio
 	 * 
-	 * @param 	address 	Slave adress
-	 * 
-	 * @return 	true		Slave found
-	 * @return 	false		Slave not found
+	 * @return 	true		Success
+	 * @return 	false		Failed
 	 */	
-	virtual bool probe(uint32_t address) = 0;
+	virtual bool set_high(void) = 0;
 
 
 	/**
-	 * @brief 	Write multiple bytes to a I2C slave device
+	 * @brief 	Write 0 to the gpio
 	 * 
-	 * @param 	buffer 		Data buffer
-	 * @param 	nbytes 		Number of bytes to write
-	 * @param 	address 	Slave adress
-	 * 
-	 * @return 	true		Data successfully written
-	 * @return 	false		Data not written
-	 */
-	virtual bool write(const uint8_t *buffer, uint32_t nbytes, uint32_t address) = 0;
+	 * @return 	true		Success
+	 * @return 	false		Failed
+	 */	
+	virtual bool set_low(void) = 0;
 
 
 	/**
-	 * @brief 	Read multiple bytes to a I2C slave device
+	 * @brief 	Toggle the gpio value 
+	 * @details Writes 0 if currently high, writes 1 if currently low
 	 * 
-	 * @param 	buffer 		Data buffer
-	 * @param 	nbytes 		Number of bytes to read
-	 * @param 	address 	Slave adress
-	 * 
-	 * @return 	true		Data successfully read
-	 * @return 	false		Data not read
+	 * @return 	true		Success
+	 * @return 	false		Failed
 	 */	
-	virtual bool read(uint8_t *buffer, uint32_t nbytes, uint32_t address) = 0;
+	virtual bool toggle(void) = 0;
+
+
+	/**
+	 * @brief 	Write to the gpio pin
+	 * 
+	 * @param 	level 		Value to write
+	 *  
+	 * @return 	true		Success
+	 * @return 	false		Failed
+	 */	
+	virtual bool write(bool level) = 0;
+
+
+	/**
+	 * @brief 	Read the current gpio level
+	 * 
+	 * @return 	Level
+	 */	
+	virtual bool read(void) = 0;
+
 };
 
 
-#endif /* I2C_H_ */
+#endif /* GPIO_H_ */

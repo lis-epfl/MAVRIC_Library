@@ -30,68 +30,68 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	i2c.hpp
+ * \file 	spi.hpp
  * 
  * \author 	MAV'RIC Team
  *   
- * \brief 	Abstract class for i2c peripherals
+ * \brief 	Abstract class for SPI peripherals
  *
  ******************************************************************************/
 
-#ifndef I2C_H_
-#define I2C_H_
+#ifndef SPI_H_
+#define SPI_H_
 
-#include <stdint.h>
 
-class i2c
+class spi
 {
 public:
 
 	/**
 	 * @brief 	Hardware initialization
 	 * 
-	 * @return  true Success
-	 * @return  false Error
+	 * @return  true 		Success
+	 * @return  false 		Error
 	 */
 	virtual bool init(void) = 0;
 
 
 	/**
-	 * @brief 	Test if a chip answers for a given I2C address
+	 * @brief 	Write data to the SPI bus
 	 * 
-	 * @param 	address 	Slave adress
+	 * @param 	buffer 		Data buffer
+	 * @param 	nbytes 		Number of bytes to write	
 	 * 
-	 * @return 	true		Slave found
-	 * @return 	false		Slave not found
+	 * @return 	true		Success
+	 * @return 	false		Failed
 	 */	
-	virtual bool probe(uint32_t address) = 0;
+	virtual bool write(uint8_t* buffer, uint32_t nbytes) = 0;
 
 
 	/**
-	 * @brief 	Write multiple bytes to a I2C slave device
+	 * @brief 	Read data from the SPI bus
 	 * 
 	 * @param 	buffer 		Data buffer
-	 * @param 	nbytes 		Number of bytes to write
-	 * @param 	address 	Slave adress
+	 * @param 	nbytes 		Number of bytes to read	
 	 * 
-	 * @return 	true		Data successfully written
-	 * @return 	false		Data not written
-	 */
-	virtual bool write(const uint8_t *buffer, uint32_t nbytes, uint32_t address) = 0;
+	 * @return 	true		Success
+	 * @return 	false		Failed
+	 */	
+	virtual bool read(uint8_t* buffer, uint32_t nbytes) = 0;
 
 
 	/**
-	 * @brief 	Read multiple bytes to a I2C slave device
+	 * @brief 	Write and Read data to/from the SPI bus
 	 * 
-	 * @param 	buffer 		Data buffer
-	 * @param 	nbytes 		Number of bytes to read
-	 * @param 	address 	Slave adress
+	 * @param 	out_buffer 	Data buffer (output)
+	 * @param 	in_buffer 	Data buffer (input)	
+	 * @param 	nbytes 		Number of bytes to write/read	
 	 * 
-	 * @return 	true		Data successfully read
-	 * @return 	false		Data not read
+	 * @return 	true		Success
+	 * @return 	false		Failed
 	 */	
-	virtual bool read(uint8_t *buffer, uint32_t nbytes, uint32_t address) = 0;
+	virtual bool transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbytes) = 0;
+
 };
 
 
-#endif /* I2C_H_ */
+#endif /* SPI_H_ */

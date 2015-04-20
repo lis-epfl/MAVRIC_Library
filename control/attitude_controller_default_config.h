@@ -107,7 +107,7 @@ static inline attitude_controller_conf_t attitude_controller_default_config()
 	conf.rate_pid_config[YAW].differentiator.previous    = 0.0f;
 	conf.rate_pid_config[YAW].differentiator.clip        = 0.0f;
 	conf.rate_pid_config[YAW].soft_zone_width            = 0.0;
-	
+
 	// #########################################################################
 	// ######  ANGLE CONTROL  ##################################################
 	// #########################################################################
@@ -140,7 +140,7 @@ static inline attitude_controller_conf_t attitude_controller_default_config()
 	conf.angle_pid_config[PITCH].integrator.gain         = 0.0f;
 	conf.angle_pid_config[PITCH].integrator.clip_pre     = 0.0f;
 	conf.angle_pid_config[PITCH].integrator.accumulator  = 0.0f;
-	conf.angle_pid_config[PITCH].integrator.clip         = 0.0f,
+	conf.angle_pid_config[PITCH].integrator.clip         = 0.0f;
 	conf.angle_pid_config[PITCH].differentiator          = {};
 	conf.angle_pid_config[PITCH].differentiator.gain     = 0.0f;
 	conf.angle_pid_config[PITCH].differentiator.previous = 0.0f;
@@ -157,7 +157,7 @@ static inline attitude_controller_conf_t attitude_controller_default_config()
 	conf.angle_pid_config[YAW].integrator.gain           = 0.0f;
 	conf.angle_pid_config[YAW].integrator.clip_pre       = 0.0f;
 	conf.angle_pid_config[YAW].integrator.accumulator    = 0.0f;
-	conf.angle_pid_config[YAW].integrator.clip           = 0.0f,
+	conf.angle_pid_config[YAW].integrator.clip           = 0.0f;
 	conf.angle_pid_config[YAW].differentiator            = {};
 	conf.angle_pid_config[YAW].differentiator.gain       = 0.0f;
 	conf.angle_pid_config[YAW].differentiator.previous   = 0.0f;

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file i2c_avr32.h
+ * \file i2c_avr32.cpp
  * 
  * \author MAV'RIC Team
  *   
@@ -50,40 +50,40 @@ extern "C"
 
 i2c_avr32::i2c_avr32(i2c_avr32_conf_t config)
 {
-	_config = config;
+	config_ = config;
 }
 
 
 bool i2c_avr32::init(void)
 {
-	switch( _config.i2c_device ) 
+	switch( config_.i2c_device ) 
 	{
 	case AVR32_I2C0: 
-		_twim = &AVR32_TWIM0;
+		twim_ = &AVR32_TWIM0;
 		///< Register PDCA IRQ interrupt.
 		// INTC_register_interrupt( (__int_handler) &i2c_int_handler_i2c0, AVR32_TWIM0_IRQ, AVR32_INTC_INT1);
-		gpio_enable_module_pin( _config.clk_pin, 
+		gpio_enable_module_pin( config_.clk_pin, 
 								AVR32_TWIMS0_TWCK_0_0_FUNCTION );
-		gpio_enable_module_pin( _config.sda_pin, 
+		gpio_enable_module_pin( config_.sda_pin, 
 								AVR32_TWIMS0_TWD_0_0_FUNCTION );
 
 	break;
 	case AVR32_I2C1:
-		_twim = &AVR32_TWIM1;///< Register PDCA IRQ interrupt.
+		twim_ = &AVR32_TWIM1;///< Register PDCA IRQ interrupt.
 		//INTC_register_interrupt( (__int_handler) &i2c_int_handler_i2c1, AVR32_TWIM1_IRQ, AVR32_INTC_INT1);
-		gpio_enable_module_pin( _config.clk_pin, 
+		gpio_enable_module_pin( config_.clk_pin, 
 								AVR32_TWIMS1_TWCK_0_0_FUNCTION );
-		gpio_enable_module_pin( _config.sda_pin, 
+		gpio_enable_module_pin( config_.sda_pin, 
 								AVR32_TWIMS1_TWD_0_0_FUNCTION );
 	break;
 	default: ///< invalid device ID
 		return false;
 	}
 	
-	_config.twi_opt.pba_hz = sysclk_get_pba_hz();
+	config_.twi_opt.pba_hz = sysclk_get_pba_hz();
 	
 	status_code_t status;
-	status = twim_master_init(_twim, &_config.twi_opt);
+	status = twim_master_init(twim_, &config_.twi_opt);
 	
 	return status_code_to_bool(status, true);
 }
@@ -92,7 +92,7 @@ bool i2c_avr32::init(void)
 bool i2c_avr32::probe(uint32_t address)
 {
 	status_code_t status;	
-	status = twim_probe(_twim, address);
+	status = twim_probe(twim_, address);
 	return status_code_to_bool(status);
 }
 
@@ -100,7 +100,7 @@ bool i2c_avr32::probe(uint32_t address)
 bool i2c_avr32::write(const uint8_t *buffer, uint32_t nbytes, uint32_t address)
 {
 	status_code_t status;
-	status = twim_write(_twim, buffer, nbytes, address, _config.tenbit);
+	status = twim_write(twim_, buffer, nbytes, address, config_.tenbit);
 	return status_code_to_bool(status);
 }
 
@@ -108,6 +108,6 @@ bool i2c_avr32::write(const uint8_t *buffer, uint32_t nbytes, uint32_t address)
 bool i2c_avr32::read(uint8_t *buffer, uint32_t nbytes, uint32_t address)
 {		
 	status_code_t status;
-	status = twim_read(_twim, buffer, nbytes, address, _config.tenbit);
+	status = twim_read(twim_, buffer, nbytes, address, config_.tenbit);
 	return status_code_to_bool(status);
 }

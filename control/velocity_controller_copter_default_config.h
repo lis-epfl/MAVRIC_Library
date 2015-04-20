@@ -51,7 +51,7 @@ extern "C" {
 
 static inline velocity_controller_copter_conf_t velocity_controller_copter_default_config()
 {
-	velocity_controller_copter_conf_t conf = {];
+	velocity_controller_copter_conf_t conf = {};
 
 	conf.thrust_hover_point 				   = -0.3;
 	conf.pid_config 						   = {};
