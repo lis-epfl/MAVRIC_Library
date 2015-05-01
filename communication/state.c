@@ -91,6 +91,10 @@ bool state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 		state->mav_mode.HIL = HIL_OFF;
 	}
 	
+	state->fence_xy = state_config->fence_xy;
+	state->fence_z = state_config->fence_z;
+	state->out_of_fence = false;
+
 	state->nav_plan_active = false;
 	
 	state->in_the_air = false;

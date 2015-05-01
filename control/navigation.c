@@ -503,13 +503,16 @@ static void navigation_critical_handler(navigation_t* navigation)
 	float rel_pos[3];
 	bool next_state = false;
 	
-	//Check whether we entered critical mode due to a battery low level
-	if ( (navigation->state->battery.is_low)&&(navigation->critical_behavior != CRITICAL_LAND) )
+	//Check whether we entered critical mode due to a battery low level or we
+	// are out of fence control
+	if ( navigation->state->battery.is_low && navigation->state->out_of_fence )
 	{
-		navigation->critical_behavior = CRITICAL_LAND;
-		navigation->critical_next_state = false;
+		if(navigation->critical_behavior != CRITICAL_LAND)
+		{
+			navigation->critical_behavior = CRITICAL_LAND;
+			navigation->critical_next_state = false;
+		}
 	}
-	
 	if (!(navigation->critical_next_state))
 	{
 		navigation->critical_next_state = true;
