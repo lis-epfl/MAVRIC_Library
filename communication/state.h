@@ -117,6 +117,8 @@ typedef struct
 	double last_heartbeat_msg;
 	double max_lost_connection;
 	
+	uint32_t msg_count;
+	
 	bool connection_lost;
 	
 	const analog_monitor_t* analog_monitor;				///< The pointer to the analog monitor structure

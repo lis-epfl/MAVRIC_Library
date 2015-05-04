@@ -101,6 +101,8 @@ bool state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	state->max_lost_connection = state_config->max_lost_connection;
 	state->connection_lost = false;
 	
+	state->msg_count = 0;
+	
 	state->remote_active = state_config->remote_active;
 	
 	print_util_dbg_print("[STATE] Initialized.\r\n");
