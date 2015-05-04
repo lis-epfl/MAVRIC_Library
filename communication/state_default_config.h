@@ -65,8 +65,10 @@ state_t state_default_config =
 	.battery = { 	.type = BATTERY_LIPO_3S,
 					.low_level_limit = 13.3},
 	.source_mode = REMOTE,
-	.fence_xy = 250.0f,
-	.fence_z = 150.0f
+	.fence_1_xy = 100.0f,
+	.fence_1_z = 75.0f,
+	.fence_2_xy = 200.0f,
+	.fence_2_z = 100.0f
 };
 
 #ifdef __cplusplus

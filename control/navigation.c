@@ -505,7 +505,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 	
 	//Check whether we entered critical mode due to a battery low level or we
 	// are out of fence control
-	if ( navigation->state->battery.is_low && navigation->state->out_of_fence )
+	if ( navigation->state->battery.is_low && navigation->state->out_of_fence_1 )
 	{
 		if(navigation->critical_behavior != CRITICAL_LAND)
 		{
@@ -913,7 +913,7 @@ task_return_t navigation_update(navigation_t* navigation)
 						if (navigation->auto_landing_behavior == DESCENT_TO_GND)
 						{
 							// Constant velocity to the ground
-							navigation->controls_nav->tvel[Z] = 0.3;
+							navigation->controls_nav->tvel[Z] = 0.3f;
 						}
 					}
 				}
@@ -997,6 +997,13 @@ task_return_t navigation_update(navigation_t* navigation)
 				{
 					navigation_critical_handler(navigation);
 					navigation_run(navigation->waypoint_handler->waypoint_critical_coordinates,navigation);
+					
+					if (navigation->state->out_of_fence_2)
+					{
+						// Constant velocity to the ground
+						navigation->controls_nav->tvel[Z] = 1.0f;
+					}
+					
 				}
 			}
 			break;

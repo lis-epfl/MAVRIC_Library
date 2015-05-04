@@ -205,7 +205,12 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 				print_util_dbg_print("Battery low! Performing critical landing.\r\n");
 				state_new = MAV_STATE_CRITICAL;
 			}
-			if (state_machine->state->out_of_fence)
+			if (state_machine->state->out_of_fence_1)
+			{
+				print_util_dbg_print("Out of fence!\r\n");
+				state_new = MAV_STATE_CRITICAL;
+			}
+			if (state_machine->state->out_of_fence_2)
 			{
 				print_util_dbg_print("Out of fence!\r\n");
 				state_new = MAV_STATE_CRITICAL;

@@ -106,9 +106,12 @@ typedef struct
 
 	source_mode_t source_mode;
 
-	float fence_xy;
-	float fence_z;
-	bool out_of_fence;
+	float fence_1_xy;
+	float fence_1_z;
+	float fence_2_xy;
+	float fence_2_z;
+	bool out_of_fence_1;
+	bool out_of_fence_2;
 
 	bool nav_plan_active;								///< Flag to tell that a flight plan (min 1 waypoint) is active
 	bool in_the_air;									///< Flag to tell whether the vehicle is airborne or not
