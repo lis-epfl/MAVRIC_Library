@@ -114,6 +114,11 @@ typedef struct
 	
 	battery_t battery;									///< The battery structure
 	
+	double last_heartbeat_msg;
+	double max_lost_connection;
+	
+	bool connection_lost;
+	
 	const analog_monitor_t* analog_monitor;				///< The pointer to the analog monitor structure
 } state_t;
 

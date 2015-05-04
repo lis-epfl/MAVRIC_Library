@@ -42,7 +42,7 @@
 
 #include "state.h"
 #include "print_util.h"
-
+#include "time_keeper.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -96,6 +96,10 @@ bool state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	state->in_the_air = false;
 	
 	state->reset_position = false;
+	
+	state->last_heartbeat_msg = time_keeper_get_time();
+	state->max_lost_connection = state_config->max_lost_connection;
+	state->connection_lost = false;
 	
 	state->remote_active = state_config->remote_active;
 	
