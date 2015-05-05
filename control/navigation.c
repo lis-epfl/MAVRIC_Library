@@ -505,7 +505,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 	
 	//Check whether we entered critical mode due to a battery low level or we
 	// are out of fence control
-	if ( navigation->state->battery.is_low && navigation->state->out_of_fence_1 )
+	if ( navigation->state->battery.is_low || navigation->state->out_of_fence_2 )
 	{
 		if(navigation->critical_behavior != CRITICAL_LAND)
 		{
@@ -592,8 +592,19 @@ static void navigation_critical_handler(navigation_t* navigation)
 				break;
 			
 			case FLY_TO_HOME_WP:
-				print_util_dbg_print("Critical State! Performing critical landing.\r\n");
-				navigation->critical_behavior = HOME_LAND;
+				if (navigation->state->out_of_fence_1)
+				{
+					navigation->state->out_of_fence_1 = false;
+					navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
+					navigation->state->mav_mode.MANUAL = MANUAL_ON;
+					navigation->state->mav_mode.AUTO = AUTO_OFF;
+					navigation->state->mav_state = MAV_STATE_ACTIVE;
+				}
+				else
+				{
+					print_util_dbg_print("Critical State! Performing critical landing.\r\n");
+					navigation->critical_behavior = HOME_LAND;
+				}
 				break;
 			
 			case HOME_LAND:
