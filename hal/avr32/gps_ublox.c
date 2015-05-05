@@ -1890,5 +1890,84 @@ void gps_ublox_update(gps_t *gps)
 
 date_time_t gps_ublox_get_date()
 {
-	return date;
+	uint8_t time_zone = 1;
+	
+	uint16_t begin_dst[] = {
+		329, 327, 326, 325, 331, 329, 328, 327
+	};
+	
+	uint16_t end_dst[] = {
+		1025, 1030, 1029, 1028, 1027, 1025, 1031, 1030
+	};
+	
+	uint8_t days_per_month[] = { //number of days a month
+		31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
+	};
+	
+	date_time_t local_date = date;
+	
+	// Day saving time active
+	if ( ((local_date.month*100 + local_date.day) >= begin_dst[local_date.year - 2015]) && ((local_date.month*100 + local_date.day)< end_dst[local_date.year - 2015]))
+	{
+		local_date.hour += time_zone + 1;
+	}
+	else
+	{
+		local_date.hour += time_zone;
+	}
+
+	//Check if leap year
+	if ( local_date.year%4 == 0 )
+	{
+		if ( local_date.year%100 == 0 )
+		{
+			if ( local_date.year%400 == 0 )
+			{
+				days_per_month[1] = 29;
+			}
+		}
+		else
+		{
+			days_per_month[1] = 29; 
+		}
+	}
+
+	// Check hour range min
+	if (local_date.hour < 0)
+	{
+		local_date.hour += 24;
+		local_date.day -= 1;
+		
+		if (local_date.day < 1)
+		{
+			local_date.month -= 1;
+			if (local_date.month < 1)
+			{
+				local_date.month = 12;
+				local_date.year -= 1;
+			}
+			local_date.day = days_per_month[local_date.month];
+		}
+	}
+
+	// Check hour range max
+	if (local_date.hour >= 24)
+	{
+		local_date.hour -= 24;
+		local_date.day += 1;
+		
+		if (local_date.day > days_per_month[local_date.month-1])
+		{
+			local_date.day = 1;
+			local_date.month += 1;
+			if (local_date.month > 12)
+			{
+				local_date.month = 1;
+				local_date.year += 1;
+			}
+		}
+		
+	}
+	
+	return local_date;
 }
