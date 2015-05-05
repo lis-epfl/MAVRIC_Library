@@ -125,7 +125,7 @@ ubx_nav_timeutc_t *ubx_last_nav_timeutc_message = &ubx_nav_timeutc_message[0];		
 uint16_t ubx_number_of_valid_nav_timeutc_message = 0;											///<  Number of valid NAV TIMEUTC message received
 
 // Set to true to print all data
-bool print_nav_on_debug = true;
+bool print_nav_on_debug = false;
 
 uint8_t loop_pos_llh = 0, loop_vel_ned = 0, loop_status = 0, loop_solution = 0, loop_tim_tp = 0, loop_tim_vrfy = 0, loop_nav_timeutc = 0;
 uint8_t num_skipped_msg = 10;
