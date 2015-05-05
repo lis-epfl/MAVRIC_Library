@@ -91,6 +91,17 @@ typedef struct
 	uint32_t log_data;							///< The initial state of writing a file
 } data_logging_conf_t;
 
+typedef struct
+{
+	FRESULT fr;									///< The result of the fatfs functions
+	FIL fil;									///< The fatfs file handler
+	char *file_name;
+	char *name_n_extension;
+
+	bool file_init;								///< A flag to tell whether a file is init or not
+	bool file_opened;							///< A flag to tell whether a file is opened or not
+	bool file_name_init;						///< A flag to tell whether a valid name was proposed
+}data_logging_file_t;
 
 /**
  * \brief	The structure to log the data
@@ -102,33 +113,40 @@ typedef struct
 {	
 	bool debug;									///< Indicates if debug messages should be printed for each param change
 	data_logging_set_t* data_logging_set;		///< Pointer to a set of parameters, needs memory allocation
-	
+	data_logging_set_t* data_logging_set_stat;
+
 	FRESULT fr;									///< The result of the fatfs functions
 	FATFS fs;									///< The fatfs handler
-	FIL fil;									///< The fatfs file handler
+	//FIL fil;									///< The fatfs file handler
+	//FIL fil_stats;
+
+	data_logging_file_t data_all;
+	data_logging_file_t data_stat;
+
+	bool write_stat;
 
 	uint32_t time_ms;							///< The microcontroller time in ms
 
 	int buffer_name_size;						///< The buffer for the size of the file's name
 	int buffer_add_size;						///< The buffer for the size of the file's extension char*
 
-	char *file_name;							///< The file name
-	char *name_n_extension;						///< Stores the name of the file
+	//char *file_name;							///< The file name
+	//char *name_n_extension;						///< Stores the name of the file
 
-	bool file_init;								///< A flag to tell whether a file is init or not
-	bool file_opened;							///< A flag to tell whether a file is opened or not
-	bool file_name_init;						///< A flag to tell whether a valid name was proposed
+	//bool file_init;								///< A flag to tell whether a file is init or not
+	//bool file_opened;							///< A flag to tell whether a file is opened or not
+	//bool file_name_init;						///< A flag to tell whether a valid name was proposed
 	bool sys_mounted;							///< A flag to tell whether the file system is mounted
 	
 	uint32_t loop_count;						///< Counter to try to mount the SD card many times
 	
 	uint32_t logging_time;						///< The time that we've passed logging since the last f_close
 	
-	uint32_t log_data;											///< A flag to stop/start writing to file
+	uint32_t log_data;							///< A flag to stop/start writing to file
 	
-	uint32_t sys_id;											///< the system ID
+	uint32_t sys_id;							///< the system ID
 	
-	const state_t* state;										///< The pointer to the state structure	
+	const state_t* state;						///< The pointer to the state structure	
 }data_logging_t;
 
 
@@ -152,7 +170,7 @@ bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
  *
  * \result	True if the file was open correctly, false otherwise
  */
-bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, uint32_t sysid);
+bool data_logging_create_new_file(data_logging_t* data_logging, data_logging_file_t* file, const char* file_name, uint32_t sysid);
 
 /**
  * \brief	The task to log the data to the SD card
@@ -172,7 +190,7 @@ task_return_t data_logging_update(data_logging_t* data_logging);
  *
  * \return	True if the parameter was added, false otherwise
  */
-bool data_logging_add_parameter_uint8(data_logging_t* data_logging, uint8_t* val, const char* param_name);
+bool data_logging_add_parameter_uint8(data_logging_set_t* data_logging_set, uint8_t* val, const char* param_name);
 
 /**
  * \brief	Registers parameter to log on the SD card
@@ -183,7 +201,7 @@ bool data_logging_add_parameter_uint8(data_logging_t* data_logging, uint8_t* val
  *
  * \return	True if the parameter was added, false otherwise
  */
-bool data_logging_add_parameter_int8(data_logging_t* data_logging, int8_t* val, const char* param_name);
+bool data_logging_add_parameter_int8(data_logging_set_t* data_logging_set, int8_t* val, const char* param_name);
 
 /**
  * \brief	Registers parameter to log on the SD card
@@ -194,7 +212,7 @@ bool data_logging_add_parameter_int8(data_logging_t* data_logging, int8_t* val, 
  *
  * \return	True if the parameter was added, false otherwise
  */
-bool data_logging_add_parameter_uint16(data_logging_t* data_logging, uint16_t* val, const char* param_name);
+bool data_logging_add_parameter_uint16(data_logging_set_t* data_logging_set, uint16_t* val, const char* param_name);
 
 /**
  * \brief	Registers parameter to log on the SD card
@@ -205,7 +223,7 @@ bool data_logging_add_parameter_uint16(data_logging_t* data_logging, uint16_t* v
  *
  * \return	True if the parameter was added, false otherwise
  */
-bool data_logging_add_parameter_int16(data_logging_t* data_logging, int16_t* val, const char* param_name);
+bool data_logging_add_parameter_int16(data_logging_set_t* data_logging_set, int16_t* val, const char* param_name);
 
 /**
  * \brief	Registers parameter to log on the SD card
@@ -216,7 +234,7 @@ bool data_logging_add_parameter_int16(data_logging_t* data_logging, int16_t* val
  *
  * \return	True if the parameter was added, false otherwise
  */
-bool data_logging_add_parameter_uint32(data_logging_t* data_logging, uint32_t* val, const char* param_name);
+bool data_logging_add_parameter_uint32(data_logging_set_t* data_logging_set, uint32_t* val, const char* param_name);
 
 /**
  * \brief	Registers parameter to log on the SD card
@@ -227,7 +245,7 @@ bool data_logging_add_parameter_uint32(data_logging_t* data_logging, uint32_t* v
  *
  * \return	True if the parameter was added, false otherwise
  */
-bool data_logging_add_parameter_int32(data_logging_t* data_logging, int32_t* val, const char* param_name);
+bool data_logging_add_parameter_int32(data_logging_set_t* data_logging_set, int32_t* val, const char* param_name);
 
 /**
  * \brief	Registers parameter to log on the SD card
@@ -238,7 +256,7 @@ bool data_logging_add_parameter_int32(data_logging_t* data_logging, int32_t* val
  *
  * \return	True if the parameter was added, false otherwise
  */
-bool data_logging_add_parameter_uint64(data_logging_t* data_logging, uint64_t* val, const char* param_name);
+bool data_logging_add_parameter_uint64(data_logging_set_t* data_logging_set, uint64_t* val, const char* param_name);
 
 /**
  * \brief	Registers parameter to log on the SD card
@@ -249,7 +267,7 @@ bool data_logging_add_parameter_uint64(data_logging_t* data_logging, uint64_t* v
  *
  * \return	True if the parameter was added, false otherwise
  */
-bool data_logging_add_parameter_int64(data_logging_t* data_logging, int64_t* val, const char* param_name);
+bool data_logging_add_parameter_int64(data_logging_set_t* data_logging_set, int64_t* val, const char* param_name);
 
 /**
  * \brief	Registers parameter to log on the SD card
@@ -260,7 +278,7 @@ bool data_logging_add_parameter_int64(data_logging_t* data_logging, int64_t* val
  *
  * \return	True if the parameter was added, false otherwise
  */
-bool data_logging_add_parameter_float(data_logging_t* data_logging, float* val, const char* param_name);
+bool data_logging_add_parameter_float(data_logging_set_t* data_logging_set, float* val, const char* param_name);
 
 /**
  * \brief	Registers parameter to log on the SD card
@@ -271,7 +289,7 @@ bool data_logging_add_parameter_float(data_logging_t* data_logging, float* val, 
  *
  * \return	True if the parameter was added, false otherwise
  */
-bool data_logging_add_parameter_double(data_logging_t* data_logging, double* val, const char* param_name);
+bool data_logging_add_parameter_double(data_logging_set_t* data_logging_set, double* val, const char* param_name);
 
 
 #ifdef __cplusplus
