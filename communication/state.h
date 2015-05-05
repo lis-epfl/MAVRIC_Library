@@ -114,10 +114,10 @@ typedef struct
 	
 	battery_t battery;									///< The battery structure
 	
-	double last_heartbeat_msg;
-	double max_lost_connection;
+	double last_heartbeat_msg;							///< Time of reception of the last heartbeat message from the ground station
+	double max_lost_connection;							///< Maximum time without reception of a heartbeat message from the ground station
 	
-	uint32_t msg_count;
+	uint32_t msg_count;									///< Number of heartbeat message received from the Ground station
 	
 	bool connection_lost;
 	
