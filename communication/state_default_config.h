@@ -67,7 +67,7 @@ state_t state_default_config =
 	.source_mode = REMOTE,
 	.fence_1_xy = 100.0f,
 	.fence_1_z = 75.0f,
-	.fence_2_xy = 200.0f,
+	.fence_2_xy = 125.0f,
 	.fence_2_z = 100.0f
 };
 
