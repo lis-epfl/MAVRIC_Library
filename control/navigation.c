@@ -511,7 +511,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 		{
 			navigation->critical_behavior = CRITICAL_LAND;
 			navigation->critical_next_state = false;
-		}	
+		}
 	}
 	
 	if (!(navigation->critical_next_state))
