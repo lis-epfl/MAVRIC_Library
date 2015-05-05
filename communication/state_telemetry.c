@@ -50,7 +50,13 @@
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
-
+/**
+ * \brief						Sets the time at which the heartbeat was received and the number of message received
+ *
+ * \param	state				The pointer to the state structure
+ * \param	sysid				The system ID
+ * \param	msg					The received MAVLink message structure
+ */
 void state_telemetry_heartbeat_received(state_t* state, uint32_t sysid, mavlink_message_t* msg);
 
 /**
