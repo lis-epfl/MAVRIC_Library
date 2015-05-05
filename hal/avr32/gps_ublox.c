@@ -53,8 +53,8 @@ uint16_t * ubx_valid_message = 0;		///<  The pointer to the number to increment 
 
 // We are using two buffers for each message, one for the last message received, the other for the message being received (not complete)
 ubx_nav_pos_llh_t ubx_pos_llh_message[2];			///<  The Posllh message buffer
-ubx_nav_status_t ubx_status_message[2];			///<  The Status message buffer
-ubx_nav_solution_t ubx_solution_message[2];		///<  The Solution message buffer
+ubx_nav_status_t ubx_status_message[2];				///<  The Status message buffer
+ubx_nav_solution_t ubx_solution_message[2];			///<  The Solution message buffer
 ubx_nav_vel_ned_t ubx_vel_ned_message[2];			///<  The Velned message buffer
 ubx_nav_sv_info_t ubx_sv_info_message[2];			///<  The SVInfo message buffer
 ubx_cfg_nav_settings_t ubx_nav_settings_message[2]; ///<  The Nav Settings message buffer
@@ -63,68 +63,74 @@ ubx_cfg_msg_rate_t ubx_cfg_set_get_rate_message[2];	///<  The CFG Set/get Rate m
 ubx_mon_rxr_struct_t ubx_mon_rxr_message[2];		///<  The MON RXR message buffer
 ubx_tim_tp_t ubx_tim_tp_message[2];					///<  The TIM TP message buffer
 ubx_tim_vrfy_t ubx_tim_vrfy_message[2];				///<  The TIM VRFY message buffer
+ubx_nav_timeutc_t ubx_nav_timeutc_message[2];		///<  The NAV TIMEUTC message buffer
 
 // NAV-POSLLH
-ubx_nav_pos_llh_t * ubx_current_pos_llh_message = &ubx_pos_llh_message[0];	///<  The pointer to the Posllh message that is being filled (not usable)
-ubx_nav_pos_llh_t * ubx_last_pos_llh_message = &ubx_pos_llh_message[1];		///<  The pointer to the last Posllh message that was completed
-uint16_t ubx_number_of_valid_pos_llh_message = 0;					///<  Number of valid Posllh message received
+ubx_nav_pos_llh_t * ubx_current_pos_llh_message = &ubx_pos_llh_message[0];						///<  The pointer to the Posllh message that is being filled (not usable)
+ubx_nav_pos_llh_t * ubx_last_pos_llh_message = &ubx_pos_llh_message[1];							///<  The pointer to the last Posllh message that was completed
+uint16_t ubx_number_of_valid_pos_llh_message = 0;												///<  Number of valid Posllh message received
 
 // NAV-STATUS
-ubx_nav_status_t *ubx_current_status_message = &ubx_status_message[0];	///<  The pointer to the Status message that is being filled (not usable)
-ubx_nav_status_t *ubx_last_status_message = &ubx_status_message[1];		///<  The pointer to the last Status message that was completed
-uint16_t ubx_number_of_valid_status_message = 0;					///<  Number of valid Status message received
+ubx_nav_status_t *ubx_current_status_message = &ubx_status_message[0];							///<  The pointer to the Status message that is being filled (not usable)
+ubx_nav_status_t *ubx_last_status_message = &ubx_status_message[1];								///<  The pointer to the last Status message that was completed
+uint16_t ubx_number_of_valid_status_message = 0;												///<  Number of valid Status message received
 
 // NAV-Sol
-ubx_nav_solution_t *ubx_current_solution_message = &ubx_solution_message[0]; ///<  The pointer to the Solution message that is being filled (not usable)
-ubx_nav_solution_t *ubx_last_solution_message = &ubx_solution_message[1];	///<  The pointer to the last Status message that was completed
-uint16_t ubx_number_of_valid_solution_message = 0;					///<  Number of valid Status message received
+ubx_nav_solution_t *ubx_current_solution_message = &ubx_solution_message[0];					///<  The pointer to the Solution message that is being filled (not usable)
+ubx_nav_solution_t *ubx_last_solution_message = &ubx_solution_message[1];						///<  The pointer to the last Status message that was completed
+uint16_t ubx_number_of_valid_solution_message = 0;												///<  Number of valid Status message received
 
 // NAV-VELNED
-ubx_nav_vel_ned_t *ubx_current_vel_ned_message = &ubx_vel_ned_message[0];	///<  The pointer to the Velned message that is being filled (not usable)
-ubx_nav_vel_ned_t *ubx_last_vel_ned_message = &ubx_vel_ned_message[1];		///<  The pointer to the last Velned message that was completed
-uint16_t ubx_number_of_valid_vel_ned_message = 0;					///<  Number of valid Velned message received
+ubx_nav_vel_ned_t *ubx_current_vel_ned_message = &ubx_vel_ned_message[0];						///<  The pointer to the Velned message that is being filled (not usable)
+ubx_nav_vel_ned_t *ubx_last_vel_ned_message = &ubx_vel_ned_message[1];							///<  The pointer to the last Velned message that was completed
+uint16_t ubx_number_of_valid_vel_ned_message = 0;												///<  Number of valid Velned message received
 
 // NAV-SVINFO
-ubx_nav_sv_info_t *ubx_current_sv_info_message = &ubx_sv_info_message[0];	///<  The pointer to the Status message that is being filled (not usable)
-ubx_nav_sv_info_t *ubx_last_sv_info_message = &ubx_sv_info_message[1];		///<  The pointer to the last Status message that was completed
-uint16_t ubx_number_of_valid_sv_info_message = 0;					///<  Number of valid Status message received
+ubx_nav_sv_info_t *ubx_current_sv_info_message = &ubx_sv_info_message[0];						///<  The pointer to the Status message that is being filled (not usable)
+ubx_nav_sv_info_t *ubx_last_sv_info_message = &ubx_sv_info_message[1];							///<  The pointer to the last Status message that was completed
+uint16_t ubx_number_of_valid_sv_info_message = 0;												///<  Number of valid Status message received
 
 // NAV-Settings
-ubx_cfg_nav_settings_t *ubx_current_nav_settings_message = &ubx_nav_settings_message[0];	///<  The pointer to the Nav Settings message that is being filled (not usable)
-ubx_cfg_nav_settings_t *ubx_last_nav_settings_message = &ubx_nav_settings_message[1];		///<  The pointer to the last Nav Settings message that was completed
-uint16_t ubx_number_of_valid_nav_settings_message = 0;								///<  Number of valid Nav Settings message received
+ubx_cfg_nav_settings_t *ubx_current_nav_settings_message = &ubx_nav_settings_message[0];		///<  The pointer to the Nav Settings message that is being filled (not usable)
+ubx_cfg_nav_settings_t *ubx_last_nav_settings_message = &ubx_nav_settings_message[1];			///<  The pointer to the last Nav Settings message that was completed
+uint16_t ubx_number_of_valid_nav_settings_message = 0;											///<  Number of valid Nav Settings message received
 
 // CFG message rate
-ubx_cfg_nav_rate_t *ubx_current_cfg_rate_message = &ubx_cfg_rate_message[0];	///<  The pointer to the CFG Rate message that is being filled (not usable)
-ubx_cfg_nav_rate_t *ubx_last_cfg_rate_message = &ubx_cfg_rate_message[1];		///<  The pointer to the last CFG Rate message that was completed
-uint16_t ubx_number_of_valid_cfg_rate_message = 0;						///<  Number of valid CFG Rate message received
+ubx_cfg_nav_rate_t *ubx_current_cfg_rate_message = &ubx_cfg_rate_message[0];					///<  The pointer to the CFG Rate message that is being filled (not usable)
+ubx_cfg_nav_rate_t *ubx_last_cfg_rate_message = &ubx_cfg_rate_message[1];						///<  The pointer to the last CFG Rate message that was completed
+uint16_t ubx_number_of_valid_cfg_rate_message = 0;												///<  Number of valid CFG Rate message received
 
 // CFG Set/Get message rate
 ubx_cfg_msg_rate_t *ubx_current_cfg_set_get_rate_message = &ubx_cfg_set_get_rate_message[0];	///<  The pointer to the CFG Set/get Rate message that is being filled (not usable)
 ubx_cfg_msg_rate_t *ubx_last_cfg_set_get_rate_message = &ubx_cfg_set_get_rate_message[1];		///<  The pointer to the last CFG Set/get Rate message that was completed
-uint16_t ubx_number_of_valid_cfg_set_get_rate_message = 0;							///<  Number of valid CFG Set/get Rate message received
+uint16_t ubx_number_of_valid_cfg_set_get_rate_message = 0;										///<  Number of valid CFG Set/get Rate message received
 
 // MON RXR message
-ubx_mon_rxr_struct_t *ubx_current_mon_rxr_message = &ubx_mon_rxr_message[0];	///<  The pointer to the MON RXR message that is being filled (not usable)
-ubx_mon_rxr_struct_t *ubx_last_mon_rxr_message = &ubx_mon_rxr_message[1];		///<  The pointer to the last MON RXR message that was completed
-uint16_t ubx_number_of_valid_mon_rxr_message = 0;						///<  Number of valid MON RXR message received
+ubx_mon_rxr_struct_t *ubx_current_mon_rxr_message = &ubx_mon_rxr_message[0];					///<  The pointer to the MON RXR message that is being filled (not usable)
+ubx_mon_rxr_struct_t *ubx_last_mon_rxr_message = &ubx_mon_rxr_message[1];						///<  The pointer to the last MON RXR message that was completed
+uint16_t ubx_number_of_valid_mon_rxr_message = 0;												///<  Number of valid MON RXR message received
 
 // TIM TP message
-ubx_tim_tp_t *ubx_current_tim_tp_message = &ubx_tim_tp_message[0];		///<  The pointer to the MON RXR message that is being filled (not usable)
-ubx_tim_tp_t *ubx_last_tim_tp_message = &ubx_tim_tp_message[1];		///<  The pointer to the last TIM TP message that was completed
-uint16_t ubx_number_of_valid_tim_tp_message = 0;				///<  Number of valid TIM TP message received
-
+ubx_tim_tp_t *ubx_current_tim_tp_message = &ubx_tim_tp_message[0];								///<  The pointer to the MON RXR message that is being filled (not usable)
+ubx_tim_tp_t *ubx_last_tim_tp_message = &ubx_tim_tp_message[1];									///<  The pointer to the last TIM TP message that was completed
+uint16_t ubx_number_of_valid_tim_tp_message = 0;												///<  Number of valid TIM TP message received
 
 // TIM VRFY message
-ubx_tim_vrfy_t *ubx_current_tim_vrfy_message = &ubx_tim_vrfy_message[0];	///<  The pointer to the TIM VRFY message that is being filled (not usable)
-ubx_tim_vrfy_t *ubx_last_tim_vrfy_message = &ubx_tim_vrfy_message[1];		///<  The pointer to the last TIM VRFY message that was completed
-uint16_t ubx_number_of_valid_tim_vrfy_message = 0;					///<  Number of valid TIM VRFY message received
+ubx_tim_vrfy_t *ubx_current_tim_vrfy_message = &ubx_tim_vrfy_message[0];						///<  The pointer to the TIM VRFY message that is being filled (not usable)
+ubx_tim_vrfy_t *ubx_last_tim_vrfy_message = &ubx_tim_vrfy_message[1];							///<  The pointer to the last TIM VRFY message that was completed
+uint16_t ubx_number_of_valid_tim_vrfy_message = 0;												///<  Number of valid TIM VRFY message received
+
+ubx_nav_timeutc_t *ubx_current_nav_timeutc_message = &ubx_nav_timeutc_message[0];				///<  The pointer to the NAV TIMEUTC message that is being filled (not usable)
+ubx_nav_timeutc_t *ubx_last_nav_timeutc_message = &ubx_nav_timeutc_message[0];					///<  The pointer to the last NAV TIMEUTC message that was completed
+uint16_t ubx_number_of_valid_nav_timeutc_message = 0;											///<  Number of valid NAV TIMEUTC message received
 
 // Set to true to print all data
-bool print_nav_on_debug = false;
+bool print_nav_on_debug = true;
 
-uint8_t loop_pos_llh = 0, loop_vel_ned = 0, loop_status = 0, loop_solution = 0, loop_tim_tp = 0, loop_tim_vrfy = 0;
+uint8_t loop_pos_llh = 0, loop_vel_ned = 0, loop_status = 0, loop_solution = 0, loop_tim_tp = 0, loop_tim_vrfy = 0, loop_nav_timeutc = 0;
 uint8_t num_skipped_msg = 10;
+
+date_time_t date;
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -396,6 +402,13 @@ static ubx_tim_tp_t * ubx_get_tim_tp(void);
 */
 static ubx_tim_vrfy_t * ubx_get_tim_vrfy(void);
 
+/**
+* \brief	This function returns a pointer to the last NAV TIMEUTC message that was received
+* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
+*
+* \return	A pointer to the last valid status message, or 0.
+*/
+static ubx_nav_timeutc_t * ubx_get_nav_timeutc(void);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -624,6 +637,29 @@ static bool gps_ublox_message_decode(gps_t *gps)
 						print_util_dbg_print_num(payload_length,10);
 						print_util_dbg_print(" should be:");
 						print_util_dbg_print_num(UBX_SIZE_NAV_SVINFO,10);
+						print_util_dbg_print("\r\n");
+						step = 0;
+						goto reset;
+					}
+					break;
+					
+					case MSG_NAV_TIMEUTC:
+					if (payload_length == UBX_SIZE_NAV_TIMEUTC)
+					{
+						ubx_current_message = (uint8_t **)&ubx_current_nav_timeutc_message;
+						ubx_last_message = (uint8_t **)&ubx_last_nav_timeutc_message;
+						ubx_valid_message = & ubx_number_of_valid_nav_timeutc_message;
+					}
+					else
+					{
+						print_util_dbg_print("Wrong NAV TIMEUTC message 0x");
+						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print(" Msg id: 0x");
+						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print(" Received size:");
+						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print(" should be:");
+						print_util_dbg_print_num(UBX_SIZE_NAV_TIMEUTC,10);
 						print_util_dbg_print("\r\n");
 						step = 0;
 						goto reset;
@@ -919,6 +955,7 @@ static bool gps_ublox_process_data(gps_t *gps)
 	ubx_nav_solution_t *gps_solution;
 	ubx_nav_vel_ned_t *gps_vel_ned;
 	ubx_nav_sv_info_t *gps_sv_info;
+	ubx_nav_timeutc_t *gps_nav_timeutc;
 	
 	if (ubx_class == UBX_CLASS_ACK)
 	{
@@ -1216,10 +1253,62 @@ static bool gps_ublox_process_data(gps_t *gps)
 				print_util_dbg_print("\r\n");
 			}
 		}
+	case MSG_NAV_TIMEUTC:
+		gps_nav_timeutc = ubx_get_nav_timeutc();
+		
+		if (gps_nav_timeutc)
+		{
+			++loop_nav_timeutc;
+			loop_nav_timeutc %= num_skipped_msg;
+			if (print_nav_on_debug && (loop_nav_timeutc == 0))
+			{
+				print_util_dbg_print("MSG_NAV_TIMEUTC:");
+				print_util_dbg_print(" itow :");
+				print_util_dbg_print_num(gps_nav_timeutc->itow,10);
+				print_util_dbg_print(" t_acc:");
+				print_util_dbg_print_num(gps_nav_timeutc->t_acc,10);
+				print_util_dbg_print(" nano:");
+				print_util_dbg_print_num(gps_nav_timeutc->nano,10);
+				print_util_dbg_print(" year:");
+				print_util_dbg_print_num(gps_nav_timeutc->year,10);
+				print_util_dbg_print(" month:");
+				print_util_dbg_print_num(gps_nav_timeutc->month,10);
+				print_util_dbg_print(" day:");
+				print_util_dbg_print_num(gps_nav_timeutc->day,10);
+				print_util_dbg_print(" hour:");
+				print_util_dbg_print_num(gps_nav_timeutc->hour,10);
+				print_util_dbg_print(" minute:");
+				print_util_dbg_print_num(gps_nav_timeutc->minute,10);
+				print_util_dbg_print(" seconds:");
+				print_util_dbg_print_num(gps_nav_timeutc->seconds,10);
+				print_util_dbg_print(" valid:");
+				print_util_dbg_print_num(gps_nav_timeutc->valid,10);
+				print_util_dbg_print("\r\n");
+			}
+			
+			gps->date.year = gps_nav_timeutc->year;
+			gps->date.month = gps_nav_timeutc->month;
+			gps->date.day = gps_nav_timeutc->day;
+			gps->date.hour = gps_nav_timeutc->hour;
+			gps->date.minute = gps_nav_timeutc->minute;
+			gps->date.second = gps_nav_timeutc->seconds;
+			if (gps_nav_timeutc->valid&0b10)
+			{
+				gps->date.validity = UTC_TIME_VALID;
+			}
+			else
+			{
+				gps->date.validity = UTC_TIME_UNVALID;
+			}
+			
+			date = gps->date;
+			
+		}
+		break;
 		
 	default:
 		print_util_dbg_print("Unexpected NAV message 0x");
-		print_util_dbg_print_num(msg_id,10);
+		print_util_dbg_print_num(msg_id,16);
 		print_util_dbg_print("\r\n");
 		
 		if (++disable_counter == 0)
@@ -1637,6 +1726,17 @@ static ubx_tim_vrfy_t * ubx_get_tim_vrfy()
 	}
 }
 
+static ubx_nav_timeutc_t * ubx_get_nav_timeutc()
+{
+	if(ubx_number_of_valid_nav_timeutc_message)
+	{
+		return ubx_last_nav_timeutc_message;
+	}
+	else
+	{
+		return 0;
+	}
+}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -1786,4 +1886,9 @@ void gps_ublox_update(gps_t *gps)
 			gps->accuracy_status = 0;
 		}
 	}
+}
+
+date_time_t gps_ublox_get_date()
+{
+	return date;
 }

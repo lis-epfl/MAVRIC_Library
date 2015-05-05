@@ -161,6 +161,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_NAV_VELNED 36
 #define UBX_SIZE_NAV_SVINFO 30 //8 + 12*num_channel
 #define UBX_SIZE_NAV_SETTINGS 36
+#define UBX_SIZE_NAV_TIMEUTC 20
 
 #define UBX_SIZE_CFG_RATE 6
 #define UBX_SIZE_CFG_GETSET_RATE 3
@@ -392,6 +393,23 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int32_t itow;						///< Integer ms ToW received by source
 	}ubx_tim_vrfy_t;
 
+	/** 
+	 *\brief The U-Blox NAV-TIMEUTC message structure definition
+	 */
+	typedef struct
+	{
+		uint8_t valid;						///< Validity of the time
+		uint8_t seconds;					///< Second of minute
+		uint8_t minute;						///< Minute of the hour
+		uint8_t hour;						///< Hour of the day
+		uint8_t day;						///< Day of month 
+		uint8_t month;						///< Month 1..12 (UTC)
+		uint16_t year;						///< Year range 1999..2099
+		int32_t nano;						///< Nanoseconds of second, range -1e9..1e9 (UTC)
+		uint32_t t_acc;						///< Time accuracy estimate
+		uint32_t itow;						///< GPS msToW		
+	}ubx_nav_timeutc_t;
+
 #else	
 
 	/**
@@ -577,6 +595,23 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t flags;						///< Aiding time source, 0:no time aiding done, 2:source was RTC, 3:source was AID-INI
 		uint8_t res;						///< Reserved slot
 	}ubx_tim_vrfy_t;
+	
+	/** 
+	 *\brief The U-Blox NAV-TIMEUTC message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t itow;						///< GPS msToW
+		uint32_t t_acc;						///< Time accuracy estimate
+		int32_t nano;						///< Nanoseconds of second, range -1e9..1e9 (UTC)
+		uint16_t year;						///< Year range 1999..2099
+		uint8_t month;						///< Month 1..12 (UTC)
+		uint8_t day;						///< Day of month 
+		uint8_t hour;						///< Hour of the day
+		uint8_t minute;						///< Minute of the hour
+		uint8_t seconds;					///< Second of minute
+		uint8_t valid;						///< Validity of the time
+	}ubx_nav_timeutc_t;
 
 #endif
 
@@ -606,6 +641,9 @@ bool have_raw_velocity;						///< Boolean variable that could be used to get a s
 #define NO_FIX 1							///< No GPS fix
 #define GPS_OK 2							///< GPS ok
 
+#define UTC_TIME_UNVALID 0
+#define UTC_TIME_VALID 1
+
 typedef enum {
 	GPS_ENGINE_NONE        = -1,			///< None
 	GPS_ENGINE_PORTABLE    = 0,				///< Portable
@@ -628,6 +666,16 @@ gps_engine_setting_t engine_nav_setting;		///< Enum GPS engine setting
 
 #define UBX_HEADING_PRECISION 5000000		///< The minimum precision to consider a heading as correct (in deg*10^5)
 
+typedef struct  
+{
+	uint16_t year;							///< Switzerland year
+	uint8_t month;							///< Switzerland month
+	uint8_t day;							///< Switzerland day
+	uint8_t hour;							///< Switzerland hour
+	uint8_t minute;							///< Switzerland minute
+	uint8_t second;							///< Switzerland second
+	uint8_t validity;						///< Time validity
+}date_time_t;
 
 /**
  * \brief Type definition for GPS data
@@ -666,6 +714,8 @@ typedef struct
  	uint8_t  course_status;					///< Course status
  	uint8_t  accuracy_status;				///< Accuracy status
 	
+	date_time_t date;						///< The date type
+	
 	buffer_t gps_buffer;					///< The GPS buffer
 	byte_stream_t gps_stream_in;			///< The incoming GPS byte stream
 	byte_stream_t gps_stream_out;			///< The outgoing GPS byte stream
@@ -703,6 +753,8 @@ void gps_ublox_configure_gps(gps_t *gps);
  * \param	gps			The pointer to the GPS structure
  */
 void gps_ublox_update(gps_t *gps);
+
+date_time_t gps_ublox_get_date(void);
 
 #ifdef __cplusplus
 }
