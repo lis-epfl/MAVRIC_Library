@@ -144,6 +144,13 @@ bool state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
  */
 void state_switch_to_active_mode(state_t* state,mav_state_t* mav_state);
 
+/**
+ * \brief					Check the connection status with the GND station
+ *
+ * \param	state			The pointer to the state structure
+ */
+void state_connection_status(state_t* state);
+
 #ifdef __cplusplus
 }
 #endif

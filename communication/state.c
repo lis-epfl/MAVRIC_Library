@@ -120,3 +120,15 @@ void state_switch_to_active_mode(state_t* state, mav_state_t* mav_state)
 	
 	print_util_dbg_print("Switching to active mode.\r\n");
 }
+
+void state_connection_status(state_t* state)
+{
+	if ( (time_keeper_get_time()-state->last_heartbeat_msg) > state->max_lost_connection )
+	{
+		state->connection_lost = true;
+	}
+	else
+	{
+		state->connection_lost = false;
+	}
+}
