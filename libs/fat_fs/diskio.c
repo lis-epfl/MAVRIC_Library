@@ -15,12 +15,13 @@
 #include "diskio.h"		/* FatFs lower layer API */
 //#include "usbdisk.h"	/* Example: USB drive control */
 //#include "atadrive.h"	/* Example: ATA drive control */
-//#include "sdcard.h"		/* Example: MMC/SDC contorl */
+//#include "sdcard.h"		/* Example: MMC/SDC control */
 
 #include "sd_spi.h"
 #include "print_util.h"
 
-#include "time_keeper.h"
+#include "gps_ublox.h"
+
 #include <maths.h>
 // #include "delay.h"
 #include "string.h"
@@ -389,25 +390,24 @@ DWORD get_fattime(void)
 {
 	uint32_t time = 0;
 	
-	double time_in_seconds;
+	date_time_t date = gps_ublox_get_date();
 	
-	time_in_seconds = time_keeper_get_time();
+	uint8_t seconds = 0;
+	uint8_t minutes = 10;
+	uint8_t hours = 10;
+	uint8_t day = 5;
+	uint8_t month = 5;
+	uint8_t year = 2015-1980;
 	
-	uint8_t seconds;
-	uint8_t minutes;
-	uint8_t hours;
-	
-	minutes = (uint8_t) floor(((float)time_in_seconds) / 60.0f);
-	
-	seconds = (uint8_t) ((((uint32_t)time_in_seconds) % 60)/2);
-	
-	hours = (uint8_t) floor(((float)minutes) / 60.0f);
-	
-	minutes = (uint8_t) (minutes % 60);
-	
-	uint8_t day = 26;
-	uint8_t month = 8;
-	uint8_t year = 2014-1980;
+	if (date.validity == UTC_TIME_VALID)
+	{
+		seconds = date.second;
+		minutes = date.minute;
+		hours = date.hour;
+		day = date.day;
+		month = date.month;
+		year = date.year- 1980;
+	}
 	
 	time += (seconds			& 0b00000000000000000000000000011111);
 	time += ((minutes	<< 5)	& 0b00000000000000000000011111100000);
