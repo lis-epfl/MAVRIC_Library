@@ -318,7 +318,6 @@ static void position_estimation_fence_control(position_estimation_t* pos_est)
 	{
 		pos_est->state->out_of_fence_2 = true;
 	}
-
 }
 
 
