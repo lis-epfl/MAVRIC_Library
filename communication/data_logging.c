@@ -687,7 +687,7 @@ bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	data_logging->sys_mounted = false;
 	data_logging_mount_sys(data_logging);
 	
-	data_logging->write_stat = false;
+	data_logging->write_stat = true;
 	
 	if (data_logging->debug)
 	{
