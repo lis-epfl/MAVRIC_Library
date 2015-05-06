@@ -51,7 +51,7 @@ extern "C" {
 
 #include "libs/fat_fs/ff.h"
 #include "scheduler.h"
-#include "sd_mounting.h"
+#include "fat_fs_mounting.h"
 #include "state.h"
 #include "mavlink_stream.h"
 
@@ -107,12 +107,15 @@ typedef struct
 	bool file_init;								///< A flag to tell whether a file is init or not
 	bool file_opened;							///< A flag to tell whether a file is opened or not
 
+	bool continuous_write;						///< A flag to tell whether we write continuously to the file or not
+	bool data_write;							///< A flag to write continously or not to the file
+
 	uint32_t logging_time;						///< The time that we've passed logging since the last f_close
 	
 	uint32_t sys_id;											///< the system ID
 	
 	const state_t* state;										///< The pointer to the state structure	
-	sd_mounting_t* sd_mounting;									///< The pointer to the SD card mounting structure
+	fat_fs_mounting_t* fat_fs_mounting;									///< The pointer to the SD card mounting structure
 }data_logging_t;
 
 
@@ -125,7 +128,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, sd_mounting_t* sd_mounting, uint32_t sysid);
+bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, bool continuous_write, fat_fs_mounting_t* fat_fs_mounting, uint32_t sysid);
 
 /**
  * \brief	Create and open a new file

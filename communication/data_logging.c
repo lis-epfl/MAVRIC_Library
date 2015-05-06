@@ -117,13 +117,6 @@ static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param
 static void data_logging_log_parameters(data_logging_t* data_logging);
 
 /**
- * \brief	Prints on debug port the result's value of the fatfs operation
- *
- * \param	data_logging			The pointer to the data logging structure
- */
-static void data_logging_print_error_signification(data_logging_t* data_logging);
-
-/**
  * \brief	Seek the end of an open file to append
  *
  * \param	data_logging			The pointer to the data logging structure
@@ -313,7 +306,7 @@ static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param
 		{
 			data_logging->fr = f_stat(data_logging->name_n_extension,NULL);
 			print_util_dbg_print("Error putting tab or new line character!\r\n");
-			data_logging_print_error_signification(data_logging);
+			fat_fs_mounting_print_error_signification(data_logging->fr);
 			print_util_dbg_print("\r\n");
 		}
 	}
@@ -388,100 +381,10 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 			{
 				data_logging->fr = f_stat(data_logging->name_n_extension,NULL);
 				print_util_dbg_print("Error appending parameter! Error:");
-				data_logging_print_error_signification(data_logging);
+				fat_fs_mounting_print_error_signification(data_logging->fr);
 			}
 			break;
 		}
-	}
-}
-
-static void data_logging_print_error_signification(data_logging_t* data_logging)
-{
-	switch(data_logging->fr)
-	{
-		case FR_OK:
-			print_util_dbg_print("FR_OK\r\n");
-			break;
-			
-		case FR_DISK_ERR:
-			print_util_dbg_print("FR_DISK_ERR\r\n");
-			break;
-			
-		case FR_INT_ERR:
-			print_util_dbg_print("FR_INT_ERR\r\n");
-			break;
-			
-		case FR_NOT_READY:
-			print_util_dbg_print("FR_NOT_READY\r\n");
-			break;
-			
-		case FR_NO_FILE:
-			print_util_dbg_print("FR_NO_FILE\r\n");
-			break;
-			
-		case FR_NO_PATH:
-			print_util_dbg_print("FR_NO_PATH\r\n");
-			break;
-			
-		case FR_INVALID_NAME:
-			print_util_dbg_print("FR_INVALID_NAME\r\n");
-			break;
-			
-		case FR_DENIED:
-			print_util_dbg_print("FR_DENIED\r\n");
-			break;
-			
-		case FR_EXIST:
-			print_util_dbg_print("FR_EXIST\r\n");
-			break;
-			
-		case FR_INVALID_OBJECT:
-			print_util_dbg_print("FR_INVALID_OBJECT\r\n");
-			break;
-			
-		case FR_WRITE_PROTECTED:
-			print_util_dbg_print("FR_WRITE_PROTECTED\r\n");
-			break;
-			
-		case FR_INVALID_DRIVE:
-			print_util_dbg_print("FR_INVALID_DRIVE\r\n");
-			break;
-			
-		case FR_NOT_ENABLED:
-			print_util_dbg_print("FR_NOT_ENABLED\r\n");
-			break;
-			
-		case FR_NO_FILESYSTEM:
-			print_util_dbg_print("FR_NO_FILESYSTEM\r\n");
-			break;
-			
-		case FR_MKFS_ABORTED:
-			print_util_dbg_print("FR_MKFS_ABORTED\r\n");
-			break;
-			
-		case FR_TIMEOUT:
-			print_util_dbg_print("FR_TIMEOUT\r\n");
-			break;
-			
-		case FR_LOCKED:
-			print_util_dbg_print("FR_LOCKED\r\n");
-			break;
-			
-		case FR_NOT_ENOUGH_CORE:
-			print_util_dbg_print("FR_NOT_ENOUGH_CORE\r\n");
-			break;
-			
-		case FR_TOO_MANY_OPEN_FILES:
-			print_util_dbg_print("FR_TOO_MANY_OPEN_FILES\r\n");
-			break;
-			
-		case FR_INVALID_PARAMETER:
-			print_util_dbg_print("FR_INVALID_PARAMETER\r\n");
-			break;
-			
-		default:
-			print_util_dbg_print("Error unknown\r\n");
-			break;
 	}
 }
 
@@ -494,7 +397,7 @@ static void data_logging_f_seek(data_logging_t* data_logging)
 		if (data_logging->debug)
 		{
 			print_util_dbg_print("lseek error:");
-			data_logging_print_error_signification(data_logging);
+			fat_fs_mounting_print_error_signification(data_logging->fr);
 		}
 		f_close(&data_logging->fil);
 	}
@@ -504,16 +407,19 @@ static void data_logging_f_seek(data_logging_t* data_logging)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, sd_mounting_t* sd_mounting, uint32_t sysid)
+bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, bool continuous_write, fat_fs_mounting_t* fat_fs_mounting, uint32_t sysid)
 {
 	bool init_success = true;
 	
-	const data_logging_conf_t* config = &sd_mounting->data_logging_conf;
+	const data_logging_conf_t* config = &fat_fs_mounting->data_logging_conf;
 
 	data_logging->debug = config->debug;
 
-	data_logging->state = sd_mounting->state;
-	data_logging->sd_mounting = sd_mounting;
+	data_logging->continuous_write = continuous_write;
+	data_logging->data_write = true;
+
+	data_logging->state = fat_fs_mounting->state;
+	data_logging->fat_fs_mounting = fat_fs_mounting;
 
 	// Allocate memory for the onboard data_log
 	data_logging->data_logging_set = malloc( sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config->max_data_logging_count]) );
@@ -589,7 +495,7 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 		print_util_dbg_print("[DATA LOGGING] Error: cannot allocate memory.\r\n");
 	}
 	
-	if (data_logging->sd_mounting->log_data)
+	if (data_logging->fat_fs_mounting->log_data)
 	{
 		do 
 		{
@@ -625,7 +531,7 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 			if (data_logging->debug)
 			{
 				print_util_dbg_print("f_open result:");
-				data_logging_print_error_signification(data_logging);
+				fat_fs_mounting_print_error_signification(data_logging->fr);
 			}
 		
 			++i;
@@ -652,7 +558,7 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 		{
 			data_logging->file_opened = true;
 			
-			data_logging->sd_mounting->num_file_opened++;
+			data_logging->fat_fs_mounting->num_file_opened++;
 
 			if (data_logging->debug)
 			{
@@ -663,16 +569,16 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 				create_success &= true;
 			}
 		} //end of if data_logging->fr == FR_OK
-	}//end of if (data_logging->sd_mounting->log_data)
+	}//end of if (data_logging->fat_fs_mounting->log_data)
 	
 	return create_success;
 }
 
 task_return_t data_logging_update(data_logging_t* data_logging)
 {
-	if (data_logging->sd_mounting->log_data == 1)
+	if (data_logging->fat_fs_mounting->log_data == 1)
 	{
-		if (data_logging->sd_mounting->sys_mounted)
+		if (data_logging->fat_fs_mounting->sys_mounted)
 		{
 			if (data_logging->file_opened)
 			{
@@ -694,7 +600,15 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 				
 				if (data_logging->fr == FR_OK)
 				{
-					data_logging_log_parameters(data_logging);
+					if (data_logging->data_write)
+					{
+						data_logging_log_parameters(data_logging);
+					}
+					if (!data_logging->continuous_write)
+					{
+						data_logging->data_write = false;
+					}
+					
 				}
 			} //end of if (data_logging->file_opened)
 			else
@@ -704,9 +618,9 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 		}//end of if (sys_mounted)
 		else
 		{
-			sd_mounting_mount(data_logging->sd_mounting, data_logging->debug);
+			fat_fs_mounting_mount(data_logging->fat_fs_mounting, data_logging->debug);
 		}//end of else if (sys_mounted)
-	}//end of if (data_logging->sd_mounting->log_data == 1)
+	}//end of if (data_logging->fat_fs_mounting->log_data == 1)
 	else
 	{
 		if (data_logging->file_opened)
@@ -739,7 +653,7 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 				data_logging->file_opened = false;
 				data_logging->file_init = false;
 				
-				data_logging->sd_mounting->num_file_opened--;
+				data_logging->fat_fs_mounting->num_file_opened--;
 
 				if (data_logging->debug)
 				{
@@ -760,15 +674,15 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 			}
 		}//end of if (data_logging->file_opened)
 
-		sd_mounting_unmount(data_logging->sd_mounting, data_logging->debug);
+		fat_fs_mounting_unmount(data_logging->fat_fs_mounting, data_logging->debug);
 
-		if (!data_logging->sd_mounting->sys_mounted)
+		if (!data_logging->fat_fs_mounting->sys_mounted)
 		{
 			data_logging->file_opened = false;
 			//data_logging->sys_mounted = false;
 			data_logging->file_init = false;
 		}
-	}//end of else (data_logging->sd_mounting->log_data != 1)
+	}//end of else (data_logging->fat_fs_mounting->log_data != 1)
 	return TASK_RUN_SUCCESS;
 }
 
