@@ -30,17 +30,17 @@
  ******************************************************************************/
  
 /*******************************************************************************
- * \file sd_mounting.c
+ * \file fat_fs_mounting.c
  *
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *   
- * \brief Performs the mounting/unmounting of the SD card
+ * \brief Performs the mounting/unmounting of the fat_fs file system
  *
  ******************************************************************************/
 
 
-#include "sd_mounting.h"
+#include "fat_fs_mounting.h"
 #include "print_util.h"
 #include "time_keeper.h"
 
@@ -48,20 +48,105 @@
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
-/**
- * \brief	Prints on debug port the result's value of the fatfs operation
- *
- * \param	sd_mounting			The pointer to the SD card mounting structure
- */
-static void sd_mounting_print_error_signification(sd_mounting_t* sd_mounting);
-
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void sd_mounting_print_error_signification(sd_mounting_t* sd_mounting)
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, const data_logging_conf_t* data_logging_conf, const state_t* state)
 {
-	switch(sd_mounting->fr)
+	bool init_success = true;
+
+	fat_fs_mounting->data_logging_conf = *data_logging_conf;
+
+	fat_fs_mounting->log_data = data_logging_conf->log_data;
+	
+	fat_fs_mounting->sys_mounted = false;
+	fat_fs_mounting->loop_count = 0;
+
+	fat_fs_mounting->state = state;
+
+	fat_fs_mounting->fr = FR_NO_FILE;
+
+	fat_fs_mounting_mount(fat_fs_mounting, data_logging_conf->debug);
+
+	fat_fs_mounting->num_file_opened = 0;
+
+	return init_success;
+}
+
+void fat_fs_mounting_mount(fat_fs_mounting_t* fat_fs_mounting, bool debug)
+{
+	if (!fat_fs_mounting->sys_mounted)
+	{
+		if ((fat_fs_mounting->fr != FR_OK)&&(fat_fs_mounting->loop_count < 10))
+		{
+			fat_fs_mounting->loop_count += 1;
+		}
+
+		if (fat_fs_mounting->loop_count < 10)
+		{
+			fat_fs_mounting->fr = f_mount(&fat_fs_mounting->fs, "", 1);
+			
+			if (fat_fs_mounting->fr == FR_OK)
+			{
+				fat_fs_mounting->sys_mounted = true;
+			}
+			else
+			{
+				fat_fs_mounting->sys_mounted = false;
+			}
+			
+			if (debug)
+			{
+				if (fat_fs_mounting->fr == FR_OK)
+				{
+					print_util_dbg_print("SD card mounted\r\n");
+				}
+				else
+				{
+					print_util_dbg_print("Mounting error:");
+					fat_fs_mounting_print_error_signification(fat_fs_mounting->fr);
+				}
+			}
+		}
+	}
+}
+
+void fat_fs_mounting_unmount(fat_fs_mounting_t* fat_fs_mounting, bool debug)
+{
+	if ( (fat_fs_mounting->num_file_opened == 0) && fat_fs_mounting->sys_mounted )
+	{
+		fat_fs_mounting->loop_count = 0;
+
+		fat_fs_mounting->fr = f_mount(&fat_fs_mounting->fs,"",0);
+
+		if (fat_fs_mounting->fr == FR_OK)
+		{
+			fat_fs_mounting->sys_mounted = false;
+		}
+
+		if (debug)
+		{
+			if (fat_fs_mounting->fr == FR_OK)
+			{
+				print_util_dbg_print("SD card unmounted. \r\n");
+			}
+			else
+			{
+				print_util_dbg_print("Unmounting error:");
+				fat_fs_mounting_print_error_signification(fat_fs_mounting->fr);
+			}
+		}
+	}
+}
+
+void fat_fs_mounting_print_error_signification(FRESULT fr)
+{
+	switch(fr)
 	{
 		case FR_OK:
 			print_util_dbg_print("FR_OK\r\n");
@@ -146,97 +231,5 @@ static void sd_mounting_print_error_signification(sd_mounting_t* sd_mounting)
 		default:
 			print_util_dbg_print("Error unknown\r\n");
 			break;
-	}
-}
-
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-bool sd_mounting_init(sd_mounting_t* sd_mounting, const data_logging_conf_t* data_logging_conf, const state_t* state)
-{
-	bool init_success = true;
-
-	sd_mounting->data_logging_conf = *data_logging_conf;
-
-	sd_mounting->log_data = data_logging_conf->log_data;
-	
-	sd_mounting->sys_mounted = false;
-	sd_mounting->loop_count = 0;
-
-	sd_mounting->state = state;
-
-	sd_mounting->fr = FR_NO_FILE;
-
-	sd_mounting_mount(sd_mounting, data_logging_conf->debug);
-
-	sd_mounting->num_file_opened = 0;
-
-	return init_success;
-}
-
-void sd_mounting_mount(sd_mounting_t* sd_mounting, bool debug)
-{
-	if (!sd_mounting->sys_mounted)
-	{
-		if ((sd_mounting->fr != FR_OK)&&(sd_mounting->loop_count < 10))
-		{
-			sd_mounting->loop_count += 1;
-		}
-
-		if (sd_mounting->loop_count < 10)
-		{
-			sd_mounting->fr = f_mount(&sd_mounting->fs, "", 1);
-			
-			if (sd_mounting->fr == FR_OK)
-			{
-				sd_mounting->sys_mounted = true;
-			}
-			else
-			{
-				sd_mounting->sys_mounted = false;
-			}
-			
-			if (debug)
-			{
-				if (sd_mounting->fr == FR_OK)
-				{
-					print_util_dbg_print("SD card mounted\r\n");
-				}
-				else
-				{
-					print_util_dbg_print("Mounting error:");
-					sd_mounting_print_error_signification(sd_mounting);
-				}
-			}
-		}
-	}
-}
-
-void sd_mounting_unmount(sd_mounting_t* sd_mounting, bool debug)
-{
-	if ( (sd_mounting->num_file_opened == 0) && sd_mounting->sys_mounted )
-	{
-		sd_mounting->loop_count = 0;
-
-		sd_mounting->fr = f_mount(&sd_mounting->fs,"",0);
-
-		if (sd_mounting->fr == FR_OK)
-		{
-			sd_mounting->sys_mounted = false;
-		}
-
-		if (debug)
-		{
-			if (sd_mounting->fr == FR_OK)
-			{
-				print_util_dbg_print("SD card unmounted. \r\n");
-			}
-			else
-			{
-				print_util_dbg_print("Unmounting error:");
-				sd_mounting_print_error_signification(sd_mounting);
-			}
-		}
 	}
 }
