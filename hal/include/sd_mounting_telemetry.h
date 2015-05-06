@@ -30,37 +30,40 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file data_logging_default_config.h
+ * \file sd_mounting_telemetry.h
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author Nicolas Dousse
  *   
- * \brief Default configuration for the data_logging module
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the sd_mounting module
  *
  ******************************************************************************/
 
 
-#ifndef DATA_LOGGING_DEFAULT_CONFIG_H_
-#define DATA_LOGGING_DEFAULT_CONFIG_H_
+#ifndef SD_MOUNTING_TELEMETRY_H_
+#define SD_MOUNTING_TELEMETRY_H_
+
+#include "mavlink_stream.h"
+#include "mavlink_message_handler.h"
+#include "sd_mounting.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-
-#include "data_logging.h"
-
-
-data_logging_conf_t data_logging_default_config =
-{
-	.debug = true,
-	.log_data = 0,
-	.max_data_logging_count = 50,
-	.max_logs = 500,
-};
+/**
+ * \brief	Initialize the MAVLink communication module for the remote
+ * 
+ * \param	sd_mounting					The pointer to the data logging structure
+ * \param	message_handler			The pointer to the MAVLink message handler
+ *
+ * \return	True if the init succeed, false otherwise
+ */
+bool sd_mounting_telemetry_init(sd_mounting_t* sd_mounting, mavlink_message_handler_t* message_handler);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // DATA_LOGGING_DEFAULT_CONFIG_H_
+#endif /* SD_MOUNTING_TELEMETRY_H_ */

@@ -47,9 +47,13 @@
 extern "C" {
 #endif
 
-#include "libs/fat_fs/ff.h"
-#include "tasks.h"
+#include <stdbool.h>
 
+#include "libs/fat_fs/ff.h"
+#include "scheduler.h"
+#include "sd_mounting.h"
+#include "state.h"
+#include "mavlink_stream.h"
 
 /**
  * \brief	Structure of data logging parameter.
@@ -74,23 +78,8 @@ typedef struct
 	uint32_t data_logging_count;				///< Number of data logging parameter effectively in the array
 	uint32_t max_data_logging_count; 			///< Maximum number of logged parameters
 	uint16_t max_logs;							///< The max number of logged files with the same name on the SD card
-	uint16_t log_interval;						///< The time interval in sec
 	data_logging_entry_t data_log[];			///< Data logging array, needs memory allocation
 } data_logging_set_t;
-
-
-/**
- * \brief 	Configuration for the module data logging
- */
-typedef struct
-{
-	uint32_t max_data_logging_count;			///< Maximum number of parameters
-	uint16_t max_logs;							///< The max number of logged files with the same name on the SD card
-	uint16_t log_interval;						///< The time interval in sec
-	bool debug;									///< Indicates if debug messages should be printed for each param change
-	uint32_t log_data;							///< The initial state of writing a file
-} data_logging_conf_t;
-
 
 /**
  * \brief	The structure to log the data
@@ -99,12 +88,12 @@ typedef struct
  * 				allocated during initialisation
  */
 typedef struct  
-{	
+{
 	bool debug;									///< Indicates if debug messages should be printed for each param change
+
 	data_logging_set_t* data_logging_set;		///< Pointer to a set of parameters, needs memory allocation
 	
 	FRESULT fr;									///< The result of the fatfs functions
-	FATFS fs;									///< The fatfs handler
 	FIL fil;									///< The fatfs file handler
 
 	uint32_t time_ms;							///< The microcontroller time in ms
@@ -118,17 +107,13 @@ typedef struct
 	bool file_init;								///< A flag to tell whether a file is init or not
 	bool file_opened;							///< A flag to tell whether a file is opened or not
 	bool file_name_init;						///< A flag to tell whether a valid name was proposed
-	bool sys_mounted;							///< A flag to tell whether the file system is mounted
-	
-	uint32_t loop_count;						///< Counter to try to mount the SD card many times
-	
+
 	uint32_t logging_time;						///< The time that we've passed logging since the last f_close
-	
-	uint32_t log_data;											///< A flag to stop/start writing to file
 	
 	uint32_t sys_id;											///< the system ID
 	
 	const state_t* state;										///< The pointer to the state structure	
+	sd_mounting_t* sd_mounting;									///< The pointer to the SD card mounting structure
 }data_logging_t;
 
 
@@ -141,7 +126,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config, const state_t* state);
+bool data_logging_init(data_logging_t* data_logging, const state_t* state, sd_mounting_t* sd_mounting);
 
 /**
  * \brief	Create and open a new file

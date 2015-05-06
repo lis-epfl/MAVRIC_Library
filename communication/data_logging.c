@@ -44,7 +44,6 @@
 #include "print_util.h"
 #include "time_keeper.h"
 
-#include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
@@ -505,14 +504,16 @@ static void data_logging_f_seek(data_logging_t* data_logging)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* config, const state_t* state)
+bool data_logging_init(data_logging_t* data_logging, const state_t* state, sd_mounting_t* sd_mounting)
 {
 	bool init_success = true;
 	
-	// Init debug mode
+	data_logging_conf_t* config = sd_mounting->data_logging_conf;
+
 	data_logging->debug = config->debug;
-	
+
 	data_logging->state = state;
+	data_logging->sd_mounting = sd_mounting;
 
 	// Allocate memory for the onboard data_log
 	data_logging->data_logging_set = malloc( sizeof(data_logging_set_t) + sizeof(data_logging_entry_t[config->max_data_logging_count]) );
@@ -521,7 +522,6 @@ bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	{
 		data_logging->data_logging_set->max_data_logging_count = config->max_data_logging_count;
 		data_logging->data_logging_set->max_logs = config->max_logs;
-		data_logging->data_logging_set->log_interval = config->log_interval;
 		data_logging->data_logging_set->data_logging_count = 0;
 		
 		init_success &= true;
@@ -531,7 +531,6 @@ bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 		print_util_dbg_print("[DATA LOGGING] ERROR ! Bad memory allocation.\r\n");
 		data_logging->data_logging_set->max_data_logging_count = 0;
 		data_logging->data_logging_set->max_logs = 0;
-		data_logging->data_logging_set->log_interval = 0;
 		data_logging->data_logging_set->data_logging_count = 0;
 		
 		init_success &= false;
@@ -543,9 +542,6 @@ bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 	data_logging->file_init = false;
 	data_logging->file_opened = false;
 	data_logging->file_name_init = false;
-	data_logging->log_data = config->log_data;
-	
-	data_logging->loop_count = 0;
 	
 	#if _USE_LFN
 	data_logging->buffer_name_size = _MAX_LFN;
@@ -571,40 +567,17 @@ bool data_logging_init(data_logging_t* data_logging, const data_logging_conf_t* 
 		init_success &= false;
 	}
 	
-	data_logging->fr = f_mount(&data_logging->fs, "", 1);
-	
-	if (data_logging->fr == FR_OK)
-	{
-		data_logging->sys_mounted = true;
-	}
-	else
-	{
-		data_logging->sys_mounted = false;
-	}
-	
-	if (data_logging->debug)
-	{
-		if (data_logging->fr == FR_OK)
-		{
-			print_util_dbg_print("SD card mounted\r\n");
-		}
-		else
-		{
-			print_util_dbg_print("Mounting error:");
-			data_logging_print_error_signification(data_logging);
-		}
-	}
 	data_logging->logging_time = time_keeper_get_millis();
 	
 	print_util_dbg_print("[DATA LOGGING] initialised.\r\n");
-	
+
 	return init_success;
 }
 
 bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, uint32_t sysid)
 {
 	bool create_success = true;
-	
+
 	int32_t i = 0;
 	
 	char *file_add = malloc(data_logging->buffer_add_size);
@@ -623,7 +596,7 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	}
 	data_logging->file_name_init = true;
 	
-	if (data_logging->log_data)
+	if (data_logging->sd_mounting->log_data)
 	{
 		do 
 		{
@@ -666,7 +639,6 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 		
 			if (data_logging->fr == FR_EXIST)
 			{
-
 				if(snprintf(file_add,data_logging->buffer_add_size,"_%ld",i) >= data_logging->buffer_add_size)
 				{
 					print_util_dbg_print("Error file extension! Extension too long.\r\n");
@@ -686,7 +658,9 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 		if (data_logging->fr == FR_OK)
 		{
 			data_logging->file_opened = true;
-		
+			
+			data_logging->sd_mounting->num_file_opened++;
+
 			if (data_logging->debug)
 			{
 				print_util_dbg_print("File ");
@@ -696,19 +670,24 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 				create_success &= true;
 			}
 		} //end of if data_logging->fr == FR_OK
-	}//end of if (data_logging->log_data)
+	}//end of if (data_logging->sd_mounting->log_data)
 	
 	return create_success;
 }
 
 task_return_t data_logging_update(data_logging_t* data_logging)
 {
-	if (data_logging->log_data == 1)
+	if (data_logging->sd_mounting->log_data == 1)
 	{
-		if (data_logging->file_opened)
+		if (data_logging->sd_mounting->sys_mounted)
 		{
-			if (data_logging->file_init)
+			if (data_logging->file_opened)
 			{
+				if (!data_logging->file_init)
+				{
+					data_logging_add_header_name(data_logging);
+				}
+
 				data_logging->time_ms = time_keeper_get_millis();
 				
 				if (data_logging->state->mav_mode.ARMED == ARMED_OFF)
@@ -724,47 +703,24 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 				{
 					data_logging_log_parameters(data_logging);
 				}
-			}
+			} //end of if (data_logging->file_opened)
 			else
 			{
-				if (data_logging->fr == FR_OK)
+				if (!data_logging->file_name_init)
 				{
-					data_logging_add_header_name(data_logging);
+					data_logging->file_name = "Default";
 				}
-			}
-		} //end of if (data_logging->file_opened)
+
+				data_logging_create_new_log_file(data_logging,data_logging->file_name,data_logging->sys_id);
+			}//end of else if (data_logging->file_opened)
+		}//end of if (sys_mounted)
 		else
 		{
-			if (!data_logging->file_name_init)
-			{
-				data_logging->file_name = "Default";
-			}
-			
-			if ((data_logging->fr != FR_OK)&&(data_logging->loop_count < 10))
-			{
-				data_logging->loop_count += 1;
-			}
-			
-			if (data_logging->loop_count < 10)
-			{	
-				data_logging->fr = f_mount(&data_logging->fs,"",1);
-				
-				if (data_logging->fr == FR_OK)
-				{
-					data_logging->sys_mounted = true;
-					
-					data_logging_create_new_log_file(data_logging,data_logging->file_name,data_logging->sys_id);
-				}
-				else
-				{
-					data_logging->sys_mounted = false;
-				}
-			}
-		}//end of else !data_logging->file_opened
-	}//end of if (data_logging->log_data == 1)
+			sd_mounting_mount(data_logging->sd_mounting, data_logging->debug);
+		}//end of else if (sys_mounted)
+	}//end of if (data_logging->sd_mounting->log_data == 1)
 	else
 	{
-		data_logging->loop_count = 0;
 		if (data_logging->file_opened)
 		{
 			if (data_logging->fr != FR_NO_FILE)
@@ -774,7 +730,9 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 				{
 					if (data_logging->debug)
 					{
-						print_util_dbg_print("Attempt to close file\r\n");
+						print_util_dbg_print("Attempt to close file ");
+						print_util_dbg_print(data_logging->name_n_extension);
+						print_util_dbg_print("\r\n");
 					}
 
 					data_logging->fr = f_close(&data_logging->fil);
@@ -793,6 +751,8 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 				data_logging->file_opened = false;
 				data_logging->file_init = false;
 				
+				data_logging->sd_mounting->num_file_opened--;
+
 				if (data_logging->debug)
 				{
 					if ( succeed)
@@ -811,22 +771,16 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 				data_logging->file_init = false;
 			}
 		}//end of if (data_logging->file_opened)
-		if (data_logging->sys_mounted)
+
+		sd_mounting_unmount(data_logging->sd_mounting, data_logging->debug);
+
+		if (!data_logging->sd_mounting->sys_mounted)
 		{
-			data_logging->fr = f_mount(&data_logging->fs,"",0);
-			if (data_logging->debug)
-			{
-				print_util_dbg_print("f_(un)mount result:");
-				data_logging_print_error_signification(data_logging);
-			}
-			if (data_logging->fr == FR_OK)
-			{
-				data_logging->file_opened = false;
-				data_logging->sys_mounted = false;
-				data_logging->file_init = false;
-			}
+			data_logging->file_opened = false;
+			//data_logging->sys_mounted = false;
+			data_logging->file_init = false;
 		}
-	}//end of else (data_logging->log_data != 1)
+	}//end of else (data_logging->sd_mounting->log_data != 1)
 	return TASK_RUN_SUCCESS;
 }
 
