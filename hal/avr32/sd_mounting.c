@@ -157,7 +157,7 @@ bool sd_mounting_init(sd_mounting_t* sd_mounting, const data_logging_conf_t* dat
 {
 	bool init_success = true;
 
-	sd_mounting->data_logging_conf = data_logging_conf;
+	sd_mounting->data_logging_conf = *data_logging_conf;
 
 	sd_mounting->log_data = data_logging_conf->log_data;
 	

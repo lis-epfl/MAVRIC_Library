@@ -504,15 +504,15 @@ static void data_logging_f_seek(data_logging_t* data_logging)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool data_logging_init(data_logging_t* data_logging, const state_t* state, sd_mounting_t* sd_mounting)
+bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, sd_mounting_t* sd_mounting, uint32_t sysid)
 {
 	bool init_success = true;
 	
-	data_logging_conf_t* config = sd_mounting->data_logging_conf;
+	const data_logging_conf_t* config = &sd_mounting->data_logging_conf;
 
 	data_logging->debug = config->debug;
 
-	data_logging->state = state;
+	data_logging->state = sd_mounting->state;
 	data_logging->sd_mounting = sd_mounting;
 
 	// Allocate memory for the onboard data_log
@@ -535,13 +535,12 @@ bool data_logging_init(data_logging_t* data_logging, const state_t* state, sd_mo
 		
 		init_success &= false;
 	}
-	
+
 	// Automaticly add the time as first logging parameter
 	data_logging_add_parameter_uint32(data_logging,&data_logging->time_ms,"time");
 	
 	data_logging->file_init = false;
 	data_logging->file_opened = false;
-	data_logging->file_name_init = false;
 	
 	#if _USE_LFN
 	data_logging->buffer_name_size = _MAX_LFN;
@@ -550,10 +549,6 @@ bool data_logging_init(data_logging_t* data_logging, const state_t* state, sd_mo
 	data_logging->buffer_name_size = 8;
 	data_logging->buffer_add_size = 8;
 	#endif
-	
-	// Deliberately initialized out of normal bound, to tell whether it is initialized or not
-	// The value will then be set by the sys_id of the vehicle coming from the flash memory or from the hardcoded value
-	data_logging->sys_id = 256;
 	
 	data_logging->file_name = malloc(data_logging->buffer_name_size);
 	data_logging->name_n_extension = malloc(data_logging->buffer_name_size);
@@ -567,6 +562,12 @@ bool data_logging_init(data_logging_t* data_logging, const state_t* state, sd_mo
 		init_success &= false;
 	}
 	
+	data_logging->sys_id = sysid;
+
+	snprintf(data_logging->file_name, data_logging->buffer_name_size, "%s_%ld", file_name, sysid);
+
+	init_success &= data_logging_open_new_log_file(data_logging);
+
 	data_logging->logging_time = time_keeper_get_millis();
 	
 	print_util_dbg_print("[DATA LOGGING] initialised.\r\n");
@@ -574,7 +575,7 @@ bool data_logging_init(data_logging_t* data_logging, const state_t* state, sd_mo
 	return init_success;
 }
 
-bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, uint32_t sysid)
+bool data_logging_open_new_log_file(data_logging_t* data_logging)
 {
 	bool create_success = true;
 
@@ -588,14 +589,6 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 		print_util_dbg_print("[DATA LOGGING] Error: cannot allocate memory.\r\n");
 	}
 	
-	data_logging->sys_id = sysid;
-	
-	if (!data_logging->file_name_init)
-	{
-		snprintf(data_logging->file_name, data_logging->buffer_name_size, "%s_%ld", file_name, sysid);
-	}
-	data_logging->file_name_init = true;
-	
 	if (data_logging->sd_mounting->log_data)
 	{
 		do 
@@ -607,7 +600,7 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 					print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
 					print_util_dbg_print_num(data_logging->buffer_name_size,10);
 					print_util_dbg_print(" and it is ");
-					print_util_dbg_print_num(sizeof(file_name),10);
+					print_util_dbg_print_num(sizeof(data_logging->file_name),10);
 					print_util_dbg_print("\r\n");
 					
 					create_success &= false;
@@ -620,7 +613,7 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 					print_util_dbg_print("Name error: The name is too long! It should be maximum ");
 					print_util_dbg_print_num(data_logging->buffer_name_size,10);
 					print_util_dbg_print(" characters and it is ");
-					print_util_dbg_print_num(sizeof(file_name),10);
+					print_util_dbg_print_num(sizeof(data_logging->file_name),10);
 					print_util_dbg_print(" characters.\r\n");
 					
 					create_success &= false;
@@ -706,12 +699,7 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 			} //end of if (data_logging->file_opened)
 			else
 			{
-				if (!data_logging->file_name_init)
-				{
-					data_logging->file_name = "Default";
-				}
-
-				data_logging_create_new_log_file(data_logging,data_logging->file_name,data_logging->sys_id);
+				data_logging_open_new_log_file(data_logging);
 			}//end of else if (data_logging->file_opened)
 		}//end of if (sys_mounted)
 		else

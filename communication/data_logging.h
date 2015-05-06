@@ -106,7 +106,6 @@ typedef struct
 
 	bool file_init;								///< A flag to tell whether a file is init or not
 	bool file_opened;							///< A flag to tell whether a file is opened or not
-	bool file_name_init;						///< A flag to tell whether a valid name was proposed
 
 	uint32_t logging_time;						///< The time that we've passed logging since the last f_close
 	
@@ -126,7 +125,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool data_logging_init(data_logging_t* data_logging, const state_t* state, sd_mounting_t* sd_mounting);
+bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, sd_mounting_t* sd_mounting, uint32_t sysid);
 
 /**
  * \brief	Create and open a new file
@@ -137,7 +136,7 @@ bool data_logging_init(data_logging_t* data_logging, const state_t* state, sd_mo
  *
  * \result	True if the file was open correctly, false otherwise
  */
-bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* file_name, uint32_t sysid);
+bool data_logging_open_new_log_file(data_logging_t* data_logging);
 
 /**
  * \brief	The task to log the data to the SD card

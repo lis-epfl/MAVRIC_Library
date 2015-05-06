@@ -65,7 +65,7 @@ typedef struct
 
 typedef struct 
 {
-	const data_logging_conf_t* data_logging_conf;
+	data_logging_conf_t data_logging_conf;
 
 	FRESULT fr;									///< The result of the fatfs functions
 	FATFS fs;									///< The fatfs handler
