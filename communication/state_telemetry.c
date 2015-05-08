@@ -94,6 +94,8 @@ static mav_result_t state_telemetry_toggle_remote_use(state_t* state, mavlink_co
 
 void state_telemetry_heartbeat_received(state_t* state, uint32_t sysid, mavlink_message_t* msg)
 {
+	state->first_connection_set = true;
+	
 	state->last_heartbeat_msg = time_keeper_get_time();	
 	state->msg_count++;
 }

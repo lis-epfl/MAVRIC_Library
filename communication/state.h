@@ -119,7 +119,8 @@ typedef struct
 	
 	uint32_t msg_count;									///< Number of heartbeat message received from the Ground station
 	
-	bool connection_lost;
+	bool connection_lost;								///< Flag to tell if we have connection with the GND station or not
+	bool first_connection_set;							///< Flag to tell that we received a first message from the GND station
 	
 	const analog_monitor_t* analog_monitor;				///< The pointer to the analog monitor structure
 } state_t;

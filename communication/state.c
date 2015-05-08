@@ -100,6 +100,7 @@ bool state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	state->last_heartbeat_msg = time_keeper_get_time();
 	state->max_lost_connection = state_config->max_lost_connection;
 	state->connection_lost = false;
+	state->first_connection_set = false;
 	
 	state->msg_count = 0;
 	
