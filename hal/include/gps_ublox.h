@@ -643,12 +643,12 @@ typedef enum {
 
 typedef struct  
 {
-	uint16_t year;							///< Switzerland year
-	uint8_t month;							///< Switzerland month
-	uint8_t day;							///< Switzerland day
-	uint8_t hour;							///< Switzerland hour
-	uint8_t minute;							///< Switzerland minute
-	uint8_t second;							///< Switzerland second
+	uint16_t year;							///< Year
+	uint8_t month;							///< Month
+	uint8_t day;							///< Day
+	uint8_t hour;							///< Hour
+	uint8_t minute;							///< Minute
+	uint8_t second;							///< Second
 	uint8_t validity;						///< Time validity
 }date_time_t;
 
@@ -657,44 +657,44 @@ typedef struct
  */
 typedef struct
 {
-	double latitude;						///< Latitude in degrees
-	double longitude;						///< Longitude in degrees
-	float altitude;							///< Altitude in m
-	float alt_elips;						///< Altitude above ellipsoid in m
-	float speed;							///< 3D speed in m/s
-	float ground_speed;						///< 2D ground speed in m/s
-	float north_speed;						///< The speed to the north in m/s
-	float east_speed;						///< The speed to the east in m/s
-	float vertical_speed;					///< The vertical speed in m/s
-	float course;							///< Heading in degree * 100
+	double latitude;							///< Latitude in degrees
+	double longitude;							///< Longitude in degrees
+	float altitude;								///< Altitude in m
+	float alt_elips;							///< Altitude above ellipsoid in m
+	float speed;								///< 3D speed in m/s
+	float ground_speed;							///< 2D ground speed in m/s
+	float north_speed;							///< The speed to the north in m/s
+	float east_speed;							///< The speed to the east in m/s
+	float vertical_speed;						///< The vertical speed in m/s
+	float course;								///< Heading in degree * 100
 	
-	float horizontal_accuracy;				///< Horizontal accuracy in m
+	float horizontal_accuracy;					///< Horizontal accuracy in m
 	float vertical_accuracy;					///< Vertical accuracy in m
 	
-	float speed_accuracy;					///< Speed accuracy in m
-	float heading_accuracy;					///< Heading accuracy in m
+	float speed_accuracy;						///< Speed accuracy in m
+	float heading_accuracy;						///< Heading accuracy in m
 	
-	uint8_t num_sats;						///< Number of visible satellites
-	uint16_t hdop;							///< Height DOP
+	uint8_t num_sats;							///< Number of visible satellites
+	uint16_t hdop;								///< Height DOP
 	
-	uint32_t time_last_msg;					///< Time reference in ms of microcontroller
-	uint32_t time_gps;						///< Time reference in ms of gps
+	uint32_t time_last_msg;						///< Time reference in ms of microcontroller
+	uint32_t time_gps;							///< Time reference in ms of gps
 	
-	uint8_t  status;						///< GPS status
+	uint8_t  status;							///< GPS status
 	
-	uint8_t  horizontal_status;				///< Horizontal status
+	uint8_t  horizontal_status;					///< Horizontal status
 	
- 	uint8_t  altitude_status;				///< Altitude status
- 	uint8_t  speed_status;					///< Speed status
- 	uint8_t  course_status;					///< Course status
- 	uint8_t  accuracy_status;				///< Accuracy status
+ 	uint8_t  altitude_status;					///< Altitude status
+ 	uint8_t  speed_status;						///< Speed status
+ 	uint8_t  course_status;						///< Course status
+ 	uint8_t  accuracy_status;					///< Accuracy status
 	
-	date_time_t date;						///< The date type
-	uint8_t time_zone;						///< The current time zone
+	date_time_t date;							///< The date type
+	uint8_t time_zone;							///< The current time zone
 	
-	uint8_t disable_counter;				///< Counter used to deactivate unwanted messages
-	uint32_t idle_timer;				///< Last time that the GPS driver got a good packet from the GPS
-	uint32_t idle_timeout;					///< Time in milliseconds after which we will assume the GPS is no longer sending us updates and attempt a re-init. 1200ms allows a small amount of slack over the worst-case 1Hz update rate.
+	uint8_t disable_counter;					///< Counter used to deactivate unwanted messages
+	uint32_t idle_timer;						///< Last time that the GPS driver got a good packet from the GPS
+	uint32_t idle_timeout;						///< Time in milliseconds after which we will assume the GPS is no longer sending us updates and attempt a re-init. 1200ms allows a small amount of slack over the worst-case 1Hz update rate.
 
 	bool new_position;							///< Boolean value to check if we received new position message
 	bool new_speed;								///< Boolean value to check if we received new velocity message
@@ -702,12 +702,23 @@ typedef struct
 	bool next_fix;								///< Boolean variable to get whether we have a correct GPS fix or not
 	bool have_raw_velocity;						///< Boolean variable that could be used to get a speed approximate with heading and 2D velocity
 
-	gps_engine_setting_t engine_nav_setting;		///< Enum GPS engine setting
+	uint8_t num_skipped_msg;					///< Number of skipped messages
+	uint8_t loop_pos_llh;						///< Counter used to print one message every num_skipped_msg
+	uint8_t loop_vel_ned; 						///< Counter used to print one message every num_skipped_msg
+	uint8_t loop_status; 						///< Counter used to print one message every num_skipped_msg
+	uint8_t loop_solution; 						///< Counter used to print one message every num_skipped_msg
+	uint8_t loop_tim_tp; 						///< Counter used to print one message every num_skipped_msg
+	uint8_t loop_tim_vrfy;						///< Counter used to print one message every num_skipped_msg
+	uint8_t loop_nav_timeutc;					///< Counter used to print one message every num_skipped_msg
+
+	bool print_nav_on_debug;					///< Flag to print messages on debug console 
+
+	gps_engine_setting_t engine_nav_setting;	///< Enum GPS engine setting
 	ubx_cfg_nav_settings_t nav_settings;		///< CFG-NAV settings structure
 
-	buffer_t gps_buffer;					///< The GPS buffer
-	byte_stream_t gps_stream_in;			///< The incoming GPS byte stream
-	byte_stream_t gps_stream_out;			///< The outgoing GPS byte stream
+	buffer_t gps_buffer;						///< The GPS buffer
+	byte_stream_t gps_stream_in;				///< The incoming GPS byte stream
+	byte_stream_t gps_stream_out;				///< The outgoing GPS byte stream
 } gps_t;
 
 
@@ -738,8 +749,18 @@ void gps_ublox_configure_gps(gps_t *gps);
  */
 void gps_ublox_update(gps_t *gps);
 
+/**
+ * \brief	Tranforming UTC to local time
+ *
+ * \param	date		The pointer to the date structure
+ */
 void gps_ublox_utc_to_local(date_time_t *date, uint8_t time_zone);
 
+/**
+ * \brief	Gets the current date and time
+ *
+ * \return	The current date and time
+ */
 date_time_t gps_ublox_get_date(void);
 
 #ifdef __cplusplus
