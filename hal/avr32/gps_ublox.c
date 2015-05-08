@@ -140,9 +140,9 @@ date_time_t date;
  * \brief	Reset the gps U-Blox module
  *
  * \param	gps						Pointer to the GPS structure
- * \param	_engine_nav_setting		the GPS Nav settings 
+ * \param	_gps->engine_nav_setting		the GPS Nav settings 
  */
-static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t _engine_nav_setting);
+static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t engine_nav_setting);
 
 
 /**
@@ -165,11 +165,13 @@ static bool gps_ublox_message_decode(gps_t *gps);
 /**
  * \brief	Process the new received message, class by class
  *
- * \param gps	Pointer to the GPS structure
+ * \param gps			Pointer to the GPS structure
+ * \param ubx_class		The U-blox class message
+ * \param msg_id 		The ID of the U-blox message
  *
  * \return	true if new velocity and new position message
  */
-static bool gps_ublox_process_data(gps_t *gps);
+static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id);
 
 
 /**
@@ -248,10 +250,10 @@ static uint8_t endian_higher_bytes_uint32(uint32_t bytes);
  *
  * \param	gps			Pointer to the GPS structure
  * \param	msg_class	the U-Blox class of the message
- * \param	_msg_id		the U-Blox message ID
+ * \param	msg_id		the U-Blox message ID
  * \param	size		the size of the U-Blox following message
  */
-static void ubx_send_header(gps_t *gps, uint8_t msg_class, uint8_t _msg_id, uint16_t size);
+static void ubx_send_header(gps_t *gps, uint8_t msg_class, uint8_t msg_id, uint16_t size);
 
 
 /**
@@ -271,11 +273,11 @@ static void ubx_send_cksum(gps_t *gps, uint8_t ck_sum_a, uint8_t ck_sum_b);
  *
  * \param	gps			Pointer to the GPS structure
  * \param	msg_class	the U-Blox class of the message
- * \param	_msg_id		the U-Blox message ID
+ * \param	msg_id		the U-Blox message ID
  * \param	msg			the CFG_NAV_RATE message
  * \param	size		the size of the U-Blox following message
  */
-static void ubx_send_message_CFG_nav_rate(gps_t *gps, uint8_t msg_class, uint8_t _msg_id, ubx_cfg_nav_rate_send_t msg, uint16_t size);
+static void ubx_send_message_CFG_nav_rate(gps_t *gps, uint8_t msg_class, uint8_t msg_id, ubx_cfg_nav_rate_send_t msg, uint16_t size);
 
 
 /**
@@ -289,11 +291,11 @@ static void ubx_send_message_CFG_nav_rate(gps_t *gps, uint8_t msg_class, uint8_t
  *
  * \param	gps					Pointer to the GPS structure
  * \param	msg_class			the U-Blox class of the message
- * \param	_msg_id				the U-Blox message ID
+ * \param	msg_id				the U-Blox message ID
  * \param	engine_settings		the engine_settings sent
  * \param	size				the size of the U-Blox following message
  */
-static void ubx_send_message_nav_settings(gps_t *gps, uint8_t msg_class, uint8_t _msg_id, ubx_cfg_nav_settings_t *engine_settings, uint16_t size);
+static void ubx_send_message_nav_settings(gps_t *gps, uint8_t msg_class, uint8_t msg_id, ubx_cfg_nav_settings_t *engine_settings, uint16_t size);
 
 
 /**
@@ -414,35 +416,40 @@ static ubx_nav_timeutc_t * ubx_get_nav_timeutc(void);
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t _engine_nav_setting)
+static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t engine_nav_setting)
 {
 	// uint8_t epoch = TIME_OF_WEEK;
-	idle_timeout = 1200;
+	gps->idle_timeout = 1200;
 	
 	gps_ublox_configure_gps(gps);
 	
-	engine_nav_setting = _engine_nav_setting;
+	gps->engine_nav_setting = engine_nav_setting;
 	
 	gps->status = NO_FIX;
 	gps->num_sats = 0;
 	
-	next_fix = false;
-	have_raw_velocity = false;
+	gps->next_fix = false;
+	gps->have_raw_velocity = false;
 	
-	last_fix_time = 0;
-	
-	new_position = false;
-	new_speed = false;
-	
-	step = 0;
+	gps->new_position = false;
+	gps->new_speed = false;
+
+	gps->idle_timer = time_keeper_get_millis();
 }
 
 
 static bool gps_ublox_message_decode(gps_t *gps)
 {
+	uint8_t step = 0;					///< Variable defining the state machine in the U-Blox decoding function
 	uint8_t data;
 	bool msg_ok = false;
-	
+	uint8_t  ubx_class = 0;				///< The U-Blox message class
+	uint8_t  msg_id = 0;				///< The U-Blox message ID
+	uint16_t payload_counter = 0;		///< The incremental counter to receive bytes of data
+	uint16_t payload_length = 0;		///< The length of the message
+	uint8_t cksum_a;					///< Checksum a
+	uint8_t cksum_b;					///< Checksum b
+
 	uint8_t  * temporary_message_for_swaping;
 	
 	while(buffer_bytes_available(&(gps->gps_buffer)))
@@ -938,7 +945,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			*ubx_current_message = *ubx_last_message;
 			*ubx_last_message = temporary_message_for_swaping;
 			
-			if (gps_ublox_process_data(gps))
+			if (gps_ublox_process_data(gps, ubx_class, msg_id))
 			{
 				msg_ok = true;
 			}
@@ -948,7 +955,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 }
 
 
-static bool gps_ublox_process_data(gps_t *gps)
+static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id)
 {
 	ubx_nav_pos_llh_t *gps_pos_llh; 
 	ubx_nav_status_t *gps_status;
@@ -1028,13 +1035,13 @@ static bool gps_ublox_process_data(gps_t *gps)
 		}
 		else
 		{
-			if (engine_nav_setting != GPS_ENGINE_NONE && !gps_nav_settings)
+			if (gps->engine_nav_setting != GPS_ENGINE_NONE && !gps_nav_settings)
 			{
-				if(gps_nav_settings->dyn_model != engine_nav_setting)
+				if(gps_nav_settings->dyn_model != gps->engine_nav_setting)
 				{
-					nav_settings.dyn_model = engine_nav_setting;
+					gps->nav_settings.dyn_model = gps->engine_nav_setting;
 					print_util_dbg_print("Send Nav settings");
-					ubx_send_message_nav_settings(gps, UBX_CLASS_CFG, MSG_CFG_NAV_SETTINGS, &nav_settings, sizeof(nav_settings));
+					ubx_send_message_nav_settings(gps, UBX_CLASS_CFG, MSG_CFG_NAV_SETTINGS, &gps->nav_settings, sizeof(gps->nav_settings));
 				}				
 			}
 			print_util_dbg_print("No engine settings received ");
@@ -1067,13 +1074,15 @@ static bool gps_ublox_process_data(gps_t *gps)
 		print_util_dbg_print("02x 0x");
 		print_util_dbg_print_num(msg_id,10);
 		print_util_dbg_print("02x\r\n");
-		if (++disable_counter == 256)
+		if (++(gps->disable_counter) == 256)
 		{
 			// disable future sends of this message id, but
 			// only do this every 256 messages, as some
 			// message types can't be disabled and we don't
 			// want to get into an ack war
 			
+			gps->disable_counter = 1;
+
 			print_util_dbg_print("Disabling message 0x");
 			print_util_dbg_print_num(ubx_class,16);
 			print_util_dbg_print("02x 0x");
@@ -1121,7 +1130,7 @@ static bool gps_ublox_process_data(gps_t *gps)
 			gps->horizontal_accuracy = ((float)gps_pos_llh->horizontal_accuracy) / 1000.0f;
 			gps->vertical_accuracy = ((float)gps_pos_llh->vertical_accuracy) / 1000.0f;
 			
-			new_position = true;
+			gps->new_position = true;
 		}
 		break;
 		
@@ -1140,8 +1149,8 @@ static bool gps_ublox_process_data(gps_t *gps)
 				print_util_dbg_print_num(gps_status->uptime,10);
 				print_util_dbg_print("\r\n");
 			}
-			next_fix = (gps_status->fix_type == GPS_FIX_TYPE_3DFIX);
-			if (!next_fix)
+			gps->next_fix = (gps_status->fix_type == GPS_FIX_TYPE_3DFIX);
+			if (!gps->next_fix)
 			{
 				gps->status = NO_FIX;
 			}
@@ -1182,8 +1191,8 @@ static bool gps_ublox_process_data(gps_t *gps)
 				print_util_dbg_print_num(gps_solution->satellites,10);
 				print_util_dbg_print("\r\n");
 			}
-			next_fix = (gps_solution->fix_type == GPS_FIX_TYPE_3DFIX);
-			if (!next_fix)
+			gps->next_fix = (gps_solution->fix_type == GPS_FIX_TYPE_3DFIX);
+			if (!gps->next_fix)
 			{
 				gps->status = NO_FIX;
 			}
@@ -1231,13 +1240,13 @@ static bool gps_ublox_process_data(gps_t *gps)
 			gps->speed           = ((float)gps_vel_ned->speed_3d) / 100.; // m/s
 			gps->ground_speed     = ((float)gps_vel_ned->ground_speed_2d) / 100.; // m/s
 			gps->course          = ((float)gps_vel_ned->heading_2d) / 100000.; // Heading 2D deg * 100000 rescaled to deg * 100
-			have_raw_velocity    = true;
+			gps->have_raw_velocity    = true;
 			gps->north_speed      = ((float)gps_vel_ned->ned_north) / 100.0f;
 			gps->east_speed       = ((float)gps_vel_ned->ned_east) / 100.;
 			gps->vertical_speed   = ((float)gps_vel_ned->ned_down) / 100.;
 			gps->speed_accuracy   = ((float)gps_vel_ned->speed_accuracy) / 100.;
 			gps->heading_accuracy = gps_vel_ned->heading_accuracy;
-			new_speed            = true;
+			gps->new_speed            = true;
 		}
 		break;
 		
@@ -1311,8 +1320,10 @@ static bool gps_ublox_process_data(gps_t *gps)
 		print_util_dbg_print_num(msg_id,16);
 		print_util_dbg_print("\r\n");
 		
-		if (++disable_counter == 256)
+		if (++(gps->disable_counter) == 256)
 		{
+			gps->disable_counter = 1;
+
 			print_util_dbg_print("Disabling NAV message 0x");
 			print_util_dbg_print_num(msg_id,16);
 			print_util_dbg_print("\r\n");
@@ -1322,10 +1333,10 @@ static bool gps_ublox_process_data(gps_t *gps)
 	}
 	// we only return true when we get new position and speed data
 	// this ensures we don't use stale data
-	if (new_position && new_speed)
+	if (gps->new_position && gps->new_speed)
 	{
-		new_speed = false;
-		new_position = false;
+		gps->new_speed = false;
+		gps->new_position = false;
 		return true;
 	}
 	return false;
@@ -1379,13 +1390,13 @@ static uint8_t endian_higher_bytes_uint32(uint32_t bytes)
 }
 
 
-static void ubx_send_header(gps_t *gps, uint8_t msg_class, uint8_t _msg_id, uint16_t size)
+static void ubx_send_header(gps_t *gps, uint8_t msg_class, uint8_t msg_id, uint16_t size)
 {
 	ubx_header_t header;
 	header.preamble1		= UBX_PREAMBLE1;
 	header.preamble2		= UBX_PREAMBLE2;
 	header.msg_class		= msg_class;
-	header.msg_id_header    = _msg_id;
+	header.msg_id_header    = msg_id;
 	header.length			= size;
 	
 	print_util_putnum(&gps->gps_stream_out,header.preamble1,16);
@@ -1406,19 +1417,19 @@ static void ubx_send_cksum(gps_t *gps, uint8_t ck_sum_a, uint8_t ck_sum_b)
 }
 
 
-static void ubx_send_message_CFG_nav_rate(gps_t *gps, uint8_t msg_class, uint8_t _msg_id, ubx_cfg_nav_rate_send_t msg, uint16_t size)
+static void ubx_send_message_CFG_nav_rate(gps_t *gps, uint8_t msg_class, uint8_t msg_id, ubx_cfg_nav_rate_send_t msg, uint16_t size)
 {
 	uint8_t ck_a = 0, ck_b = 0;
 	
 	uint8_t data;
 	
 	update_checksum((uint8_t *)&msg_class, 1, &ck_a, &ck_b);
-	update_checksum((uint8_t *)&_msg_id, 1, &ck_a, &ck_b);
+	update_checksum((uint8_t *)&msg_id, 1, &ck_a, &ck_b);
 	update_checksum((uint8_t *)&size, 1, &ck_a, &ck_b);
 
 	// update_checksum((uint8_t *)&msg, size, &ck_a, &ck_b); Wrong!
 	
-	ubx_send_header(gps, msg_class,_msg_id,size);
+	ubx_send_header(gps, msg_class,msg_id,size);
 	
 	data = endian_lower_bytes_uint16(msg.measure_rate_ms);
 	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
@@ -1443,15 +1454,15 @@ static void ubx_send_message_CFG_nav_rate(gps_t *gps, uint8_t msg_class, uint8_t
 }
 
 
-static void ubx_send_message_nav_settings(gps_t *gps, uint8_t msg_class, uint8_t _msg_id, ubx_cfg_nav_settings_t *engine_settings, uint16_t size)
+static void ubx_send_message_nav_settings(gps_t *gps, uint8_t msg_class, uint8_t msg_id, ubx_cfg_nav_settings_t *engine_settings, uint16_t size)
 {
 	uint8_t ck_a = 0, ck_b = 0;
 	uint8_t data;
 	
-	ubx_send_header(gps, msg_class,_msg_id,size);
+	ubx_send_header(gps, msg_class,msg_id,size);
 	
 	update_checksum((uint8_t *)&msg_class, 1, &ck_a, &ck_b);
-	update_checksum((uint8_t *)&_msg_id, 1, &ck_a, &ck_b);
+	update_checksum((uint8_t *)&msg_id, 1, &ck_a, &ck_b);
 	update_checksum((uint8_t *)&size, 1, &ck_a, &ck_b);
 
 	if (engine_settings != NULL)
@@ -1572,18 +1583,18 @@ static void ubx_send_message_nav_settings(gps_t *gps, uint8_t msg_class, uint8_t
 }
 
 
-static void ubx_configure_message_rate(gps_t *gps, uint8_t msg_class, uint8_t _msg_id, uint8_t rate)
+static void ubx_configure_message_rate(gps_t *gps, uint8_t msg_class, uint8_t msg_id, uint8_t rate)
 {
 	uint8_t ck_a = 0, ck_b = 0;
 	ubx_cfg_msg_rate_send_t msg;
 	msg.msg_class = msg_class;
-	msg.msg_id_rate    = _msg_id;
+	msg.msg_id_rate    = msg_id;
 	msg.rate          = rate;
 	
 	uint8_t size = sizeof(msg);
 	
 	update_checksum((uint8_t *)&msg_class, 1, &ck_a, &ck_b);
-	update_checksum((uint8_t *)&_msg_id, 1, &ck_a, &ck_b);
+	update_checksum((uint8_t *)&msg_id, 1, &ck_a, &ck_b);
 	update_checksum((uint8_t *)&size, 1, &ck_a, &ck_b);
 
 	update_checksum((uint8_t *)&msg, size, &ck_a, &ck_b);
@@ -1751,6 +1762,8 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	uart_int_register_read_stream(uart_int_get_uart_handle(UID), &(gps->gps_stream_in));
 	uart_int_register_write_stream(uart_int_get_uart_handle(UID), &(gps->gps_stream_out));
 
+	gps->disable_counter = 1;
+
 	gps->time_zone = 1;
 
 }
@@ -1806,19 +1819,18 @@ void gps_ublox_update(gps_t *gps)
 	
 	if (! result)
 	{
-		if ((tnow - idle_timer) > idle_timeout)
+		if ((tnow - gps->idle_timer) > gps->idle_timeout)
 		{
 			gps->status = NO_GPS;
 			
-			gps_ublox_reset(gps, engine_nav_setting);
-			idle_timer = tnow;
+			gps_ublox_reset(gps, gps->engine_nav_setting);
+			gps->idle_timer = tnow;
 		}
-		
 	}
 	else
 	{
 		// reset the idle timer
-		idle_timer = tnow;
+		gps->idle_timer = tnow;
 		
 		gps->time_last_msg = tnow;
 		
@@ -1864,7 +1876,7 @@ void gps_ublox_update(gps_t *gps)
 			gps->accuracy_status = gps->horizontal_status & gps->altitude_status & gps->speed_status & gps->course_status;
 			
 			// speed approximation with the 
-// 			if (!have_raw_velocity)
+// 			if (!gps->have_raw_velocity)
 // 			{
 // 				float gps_heading = to_rad(gps->course);
 // 				float cos_heading,sin_heading;
