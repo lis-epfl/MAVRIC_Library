@@ -1067,7 +1067,7 @@ static bool gps_ublox_process_data(gps_t *gps)
 		print_util_dbg_print("02x 0x");
 		print_util_dbg_print_num(msg_id,10);
 		print_util_dbg_print("02x\r\n");
-		if (++disable_counter == 0)
+		if (++disable_counter == 256)
 		{
 			// disable future sends of this message id, but
 			// only do this every 256 messages, as some
@@ -1301,8 +1301,8 @@ static bool gps_ublox_process_data(gps_t *gps)
 				gps->date.validity = UTC_TIME_UNVALID;
 			}
 			
+			gps_ublox_utc_to_local(&gps->date,gps->time_zone);
 			date = gps->date;
-			
 		}
 		break;
 		
@@ -1311,7 +1311,7 @@ static bool gps_ublox_process_data(gps_t *gps)
 		print_util_dbg_print_num(msg_id,16);
 		print_util_dbg_print("\r\n");
 		
-		if (++disable_counter == 0)
+		if (++disable_counter == 256)
 		{
 			print_util_dbg_print("Disabling NAV message 0x");
 			print_util_dbg_print_num(msg_id,16);
@@ -1750,6 +1750,9 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	buffer_make_buffered_stream(&(gps->gps_buffer), &(gps->gps_stream_in));
 	uart_int_register_read_stream(uart_int_get_uart_handle(UID), &(gps->gps_stream_in));
 	uart_int_register_write_stream(uart_int_get_uart_handle(UID), &(gps->gps_stream_out));
+
+	gps->time_zone = 1;
+
 }
 
 
@@ -1888,9 +1891,9 @@ void gps_ublox_update(gps_t *gps)
 	}
 }
 
-date_time_t gps_ublox_get_date()
+void gps_ublox_utc_to_local(date_time_t *date, uint8_t time_zone)
 {
-	uint8_t time_zone = 1;
+	//uint8_t time_zone = 1;
 	
 	uint16_t begin_dst[] = {
 		329, 327, 326, 325, 331, 329, 328, 327
@@ -1904,24 +1907,22 @@ date_time_t gps_ublox_get_date()
 		31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31
 	};
 	
-	date_time_t local_date = date;
-	
 	// Day saving time active
-	if ( ((local_date.month*100 + local_date.day) >= begin_dst[local_date.year - 2015]) && ((local_date.month*100 + local_date.day)< end_dst[local_date.year - 2015]))
+	if ( ((date->month*100 + date->day) >= begin_dst[date->year - 2015]) && ((date->month*100 + date->day)< end_dst[date->year - 2015]))
 	{
-		local_date.hour += time_zone + 1;
+		date->hour += time_zone + 1;
 	}
 	else
 	{
-		local_date.hour += time_zone;
+		date->hour += time_zone;
 	}
 
 	//Check if leap year
-	if ( local_date.year%4 == 0 )
+	if ( date->year%4 == 0 )
 	{
-		if ( local_date.year%100 == 0 )
+		if ( date->year%100 == 0 )
 		{
-			if ( local_date.year%400 == 0 )
+			if ( date->year%400 == 0 )
 			{
 				days_per_month[1] = 29;
 			}
@@ -1933,41 +1934,44 @@ date_time_t gps_ublox_get_date()
 	}
 
 	// Check hour range min
-	if (local_date.hour < 0)
+	if (date->hour < 0)
 	{
-		local_date.hour += 24;
-		local_date.day -= 1;
+		date->hour += 24;
+		date->day -= 1;
 		
-		if (local_date.day < 1)
+		if (date->day < 1)
 		{
-			local_date.month -= 1;
-			if (local_date.month < 1)
+			date->month -= 1;
+			if (date->month < 1)
 			{
-				local_date.month = 12;
-				local_date.year -= 1;
+				date->month = 12;
+				date->year -= 1;
 			}
-			local_date.day = days_per_month[local_date.month];
+			date->day = days_per_month[date->month];
 		}
 	}
 
 	// Check hour range max
-	if (local_date.hour >= 24)
+	if (date->hour >= 24)
 	{
-		local_date.hour -= 24;
-		local_date.day += 1;
+		date->hour -= 24;
+		date->day += 1;
 		
-		if (local_date.day > days_per_month[local_date.month-1])
+		if (date->day > days_per_month[date->month-1])
 		{
-			local_date.day = 1;
-			local_date.month += 1;
-			if (local_date.month > 12)
+			date->day = 1;
+			date->month += 1;
+			if (date->month > 12)
 			{
-				local_date.month = 1;
-				local_date.year += 1;
+				date->month = 1;
+				date->year += 1;
 			}
 		}
 		
 	}
-	
-	return local_date;
+}
+
+date_time_t gps_ublox_get_date()
+{
+	return date;
 }
