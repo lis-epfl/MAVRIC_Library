@@ -209,7 +209,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 			
 			// check connection with GND station
-			if ( state_machine->state->connection_lost )
+			if ( state_machine->state->connection_lost && state_machine->state->first_connection_set)
 			{
 				print_util_dbg_print("Connection with GND station lost! Performing critical landing.\r\n");
 				state_new = MAV_STATE_CRITICAL;
