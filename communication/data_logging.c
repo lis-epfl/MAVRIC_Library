@@ -492,7 +492,7 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 	if (file_add == NULL)
 	{
 		create_success &= false;
-		print_util_dbg_print("[DATA LOGGING] Error: cannot allocate memory.\r\n");
+		print_util_dbg_print("[DATA LOGGING] Error opening new file: cannot allocate memory.\r\n");
 	}
 	
 	if (data_logging->fat_fs_mounting->log_data)
@@ -570,6 +570,8 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 			}
 		} //end of if data_logging->fr == FR_OK
 	}//end of if (data_logging->fat_fs_mounting->log_data)
+	
+	free(file_add);
 	
 	return create_success;
 }
