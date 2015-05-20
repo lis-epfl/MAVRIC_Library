@@ -524,12 +524,6 @@ static bool gps_ublox_message_decode(gps_t *gps)
 				goto reset;
 			}
 			payload_counter = 0; // prepare to receive payload
-			
-			print_util_dbg_print("class: 0x");
-			print_util_dbg_print_num(ubx_class,16);
-			print_util_dbg_print(", msg_id: 0x");
-			print_util_dbg_print_num(msg_id,16);
-			print_util_dbg_print("\r\n");
 
 			if(ubx_class == UBX_CLASS_NAV)
 			{
