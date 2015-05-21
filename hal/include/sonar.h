@@ -51,6 +51,8 @@
 #include <stdbool.h>
 #include "quaternions.h"
 
+#define LPF_SONAR_VARIO 0.4f
+
 /**
  * \brief Sonar structure, independent of the sensor used
 */

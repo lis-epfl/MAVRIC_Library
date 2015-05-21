@@ -45,8 +45,6 @@
 #include "print_util.h"
 #include "time_keeper.h"
 
-#define LPF_SONAR_VARIO 0.4f
-
 const uint8_t SONAR_I2CXL_DEFAULT_ADDRESS			= 0x70;		///< Address of the device
 const uint8_t SONAR_I2CXL_RANGE_COMMAND				= 0x51;		///< Address of the Range Command Register
 const uint8_t SONAR_I2CXL_CHANGE_ADDRESS_COMMAND_1	= 0xAA;		///< Address of the Change Command address Register 1
