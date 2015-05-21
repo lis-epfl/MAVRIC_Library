@@ -710,6 +710,7 @@ typedef struct
 	uint8_t loop_tim_tp; 						///< Counter used to print one message every num_skipped_msg
 	uint8_t loop_tim_vrfy;						///< Counter used to print one message every num_skipped_msg
 	uint8_t loop_nav_timeutc;					///< Counter used to print one message every num_skipped_msg
+	uint8_t loop_mon_rxr;						///< Counter used to print one message every num_skipped_msg
 
 	bool print_nav_on_debug;					///< Flag to print messages on debug console 
 

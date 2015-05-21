@@ -970,7 +970,12 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
  		ubx_mon_rxr_struct_t *gps_rxr = ubx_get_mon_rxr();
  		if (gps_rxr)
  		{
- 			print_util_dbg_print("MSG_MON GPS awake\r\n");
+ 			++gps->loop_mon_rxr;
+ 			gps->loop_mon_rxr %= gps->num_skipped_msg;
+ 			if ((gps->print_nav_on_debug)&&(gps->loop_mon_rxr == 0))
+ 			{
+ 				print_util_dbg_print("MSG_MON GPS awake\r\n");
+ 			}
  		}
 		 return false;
  	}
@@ -1796,6 +1801,7 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	gps->loop_tim_tp = 0;
 	gps->loop_tim_vrfy = 0;
 	gps->loop_nav_timeutc = 0;
+	gps->loop_mon_rxr = 0;
 	
 	gps->engine_nav_setting = GPS_ENGINE_AIRBORNE_4G;
 }
