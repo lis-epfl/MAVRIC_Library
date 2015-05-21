@@ -45,6 +45,8 @@
 #include "print_util.h"
 #include "time_keeper.h"
 
+#define LPF_SONAR_VARIO 0.95
+
 const uint8_t SONAR_I2CXL_DEFAULT_ADDRESS			= 0x70;		///< Address of the device
 const uint8_t SONAR_I2CXL_RANGE_COMMAND				= 0x51;		///< Address of the Range Command Register
 const uint8_t SONAR_I2CXL_CHANGE_ADDRESS_COMMAND_1	= 0xAA;		///< Address of the Change Command address Register 1
@@ -87,6 +89,8 @@ void sonar_i2cxl_get_last_measure(sonar_i2cxl_t* sonar_i2cxl)
 	uint8_t buf[2];
 	uint16_t distance_cm = 0;
 	float distance_m = 0.0f;
+	float velocity = 0.0f;
+	float dt = 0.0f;
 	uint32_t time_us = time_keeper_get_micros();
 
 	twim_read(&AVR32_TWIM1, buf, 2, sonar_i2cxl->i2c_address, false);
@@ -96,6 +100,13 @@ void sonar_i2cxl_get_last_measure(sonar_i2cxl_t* sonar_i2cxl)
 	
 	if ( distance_m > sonar_i2cxl->data.min_distance && distance_m < sonar_i2cxl->data.max_distance )
 	{
+		dt = ((float)time_us - sonar_i2cxl->data.last_update)/1000000.0f;
+		velocity = (distance_m - sonar_i2cxl->data.current_distance) / dt;
+		if (abs(velocity)>20.0f)
+		{
+			velocity = 0.0f;
+		}
+		sonar_i2cxl->data.current_velocity = (1.0f-LPF_SONAR_VARIO)*sonar_i2cxl->data.current_velocity + LPF_SONAR_VARIO*velocity;
 		sonar_i2cxl->data.current_distance  = distance_m;
 		sonar_i2cxl->data.last_update = time_us;
 		sonar_i2cxl->data.healthy = true;
@@ -118,6 +129,7 @@ bool sonar_i2cxl_init(sonar_i2cxl_t* sonar_i2cxl)
 	///< Init data_struct
 	sonar_i2cxl->i2c_address = SONAR_I2CXL_DEFAULT_ADDRESS;
 	sonar_i2cxl->data.current_distance 	= 0.2f;
+	sonar_i2cxl->data.current_velocity	= 0.0f;
 	sonar_i2cxl->data.orientation.s 	= 1.0f;
 	sonar_i2cxl->data.orientation.v[0] 	= 0.0f;
 	sonar_i2cxl->data.orientation.v[0] 	= 0.0f;

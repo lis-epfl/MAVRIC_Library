@@ -61,6 +61,7 @@ typedef struct
 	float 	min_distance; 		///< Minimum distance the sensor can measure in centimeters
 	float 	max_distance; 		///< Maximum distance the sensor can measure in centimeters
 	float 	current_distance;	///< Measured distance in meters
+	float	current_velocity;	///< Computed velocity in m/s
 	float 	covariance; 		///< Measurement covariance in centimeters, 0 for unknown / invalid readings
 	bool 	healthy;			///< Indicates whether the current measurement can be trusted
 } sonar_t;
