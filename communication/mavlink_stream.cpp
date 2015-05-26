@@ -83,14 +83,11 @@ void mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message
 
 	// Send byte per byte
 	mavlink_stream->serial->write(buf, len);
-
-	print_util_dbg_print("[Stream sent]");
 }
 
 
 void mavlink_stream_receive(mavlink_stream_t* mavlink_stream) 
 {
-	static uint32_t count = 0;
 	uint8_t byte;
 	mavlink_received_t* rec = &mavlink_stream->rec;
 
@@ -98,19 +95,11 @@ void mavlink_stream_receive(mavlink_stream_t* mavlink_stream)
 	{
 		while( mavlink_stream->serial->readable() > 0 ) 
 		{
-			count += 1; 
-			print_util_dbg_print_num(count, 10);
-			print_util_dbg_print("[Stream get byte]\r\n");
-			time_keeper_delay_ms(100); 
-
 			mavlink_stream->serial->read(&byte);
 			
 			if(mavlink_parse_char(MAVLINK_COMM_0, byte, &rec->msg, &rec->status)) 
 			{
 				mavlink_stream->msg_available = true;
-
-				print_util_dbg_print("[Mess avail]\r\n");
-				time_keeper_delay_ms(100);
 			}
 		}
 	}

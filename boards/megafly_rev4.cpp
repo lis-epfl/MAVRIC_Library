@@ -59,6 +59,8 @@ bool Megafly_rev4::init(void)
 {
 	bool init_success = true;
 
+	Disable_global_interrupt();
+
 	// Init UART0
 	if( uart0.init() == false )
 	{
@@ -87,12 +89,15 @@ bool Megafly_rev4::init(void)
 		print_util_dbg_print("[I2C1] INIT ERROR\r\n");
 	}
 	
+	Enable_global_interrupt();
+	
 	// Init barometer
 	if( magnetometer.init() == false )
 	{
 		init_success = false;
 		print_util_dbg_print("[HMC] INIT ERROR\r\n");
 	}
+
 
 	return init_success;
 }

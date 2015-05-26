@@ -148,19 +148,6 @@ bool Serial_avr32::write(const uint8_t* bytes, const uint32_t size)
 {
 	bool ret = false;
 
-	// // Start transmission								TODO: check if this should not be at the begining of the function to avoid infinite while loop
-	// if( buffer_bytes_available( &tx_buffer_ ) >= 1 )
-	// { 
-	// 	uart_->ier = AVR32_USART_IER_TXRDY_MASK;
-	// }
-
-
-	// Wait until space is freed in the tx buffer 
-	// while( writable() == 0 )
-	// {
-		// ;
-	// }
-
 	// // Queue byte
 	if (writeable() >= size)
 	{
@@ -171,7 +158,7 @@ bool Serial_avr32::write(const uint8_t* bytes, const uint32_t size)
 		ret = true;
 	}
 
-	// Start transmission								TODO: check if this should not be at the begining of the function to avoid infinite while loop
+	// // Start transmission								TODO: check if this should not be at the begining of the function to avoid infinite while loop
 	if( buffer_bytes_available( &tx_buffer_ ) >= 1 )
 	{ 
 		uart_->ier = AVR32_USART_IER_TXRDY_MASK;
@@ -204,30 +191,36 @@ bool Serial_avr32::read(uint8_t* bytes, const uint32_t size)
 
 Serial_avr32* Serial_avr32::handlers_[AVR32_SERIAL_MAX_NUMBER] = {0};
 
+
+__attribute__((__interrupt__))
 void Serial_avr32::irq0(void)
 {
 	handlers_[AVR32_SERIAL_0]->irq_handler();
 } 	
 
 
+__attribute__((__interrupt__))
 void Serial_avr32::irq1(void)
 {
 	handlers_[AVR32_SERIAL_1]->irq_handler();
 }
 
 
+__attribute__((__interrupt__))
 void Serial_avr32::irq2(void)
 {
 	handlers_[AVR32_SERIAL_2]->irq_handler();
 }
 
 
+__attribute__((__interrupt__))
 void Serial_avr32::irq3(void)
 {
 	handlers_[AVR32_SERIAL_3]->irq_handler();
 }
 
 
+__attribute__((__interrupt__))
 void Serial_avr32::irq4(void)
 {
 	handlers_[AVR32_SERIAL_4]->irq_handler();
@@ -243,21 +236,23 @@ void Serial_avr32::irq_handler(void)
 	if( csr & AVR32_USART_CSR_RXRDY_MASK ) 
 	{
 		c1 = (uint8_t)uart_->rhr;
+		// usart_read_char(uart_, (int*)&c1);
+
 		buffer_put_lossy( &rx_buffer_, c1 );
 	}
 
 	// Outgoing data
-	if( csr & AVR32_USART_CSR_TXRDY_MASK ) 
+	// if( csr & AVR32_USART_CSR_TXRDY_MASK ) 
+	else
 	{
 		if( buffer_bytes_available( &tx_buffer_ ) > 0 ) 
 		{
 			c1 = buffer_get( &tx_buffer_ );
 			uart_->thr = c1;
 		}
-
-
-		if( buffer_bytes_available( &tx_buffer_ ) == 0) 
+		else
 		{
+			// nothing more to send, disable interrupt
 			uart_->idr = AVR32_USART_IDR_TXRDY_MASK;
 		}
 	}

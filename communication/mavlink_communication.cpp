@@ -214,14 +214,9 @@ task_return_t mavlink_communication_update(mavlink_communication_t* mavlink_comm
 		mavlink_stream->msg_available = false;
 	}
 
-	static uint8_t count = 0;
-
 	// Send messages
 	if( mavlink_stream->serial->writeable() == 256 ) 
 	{
-		print_util_dbg_print_num(count, 10);
-		count += 1;
-		print_util_dbg_print("[Comm sched update]\r\n");
 		res = scheduler_update(&mavlink_communication->scheduler);
 	}
 	

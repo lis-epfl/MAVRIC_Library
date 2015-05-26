@@ -191,7 +191,7 @@ public:
 
 private:
 	serial_avr32_conf_t			config_;			///< Configuration
-	volatile avr32_usart_t* 	uart_;				///< Hardware peripheral
+	volatile avr32_usart_t* 				uart_;				///< Hardware peripheral
 	buffer_t					tx_buffer_;			///< Transmission buffer
 	buffer_t					rx_buffer_;			///< Reception buffer
 
