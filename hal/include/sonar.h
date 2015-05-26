@@ -66,6 +66,7 @@ typedef struct
 	float	current_velocity;	///< Computed velocity in m/s
 	float 	covariance; 		///< Measurement covariance in centimeters, 0 for unknown / invalid readings
 	bool 	healthy;			///< Indicates whether the current measurement can be trusted
+	bool	healthy_vel;		///< Indicated whether the velocity estimation can be trusted
 } sonar_t;
 
 

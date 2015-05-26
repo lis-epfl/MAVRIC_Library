@@ -99,19 +99,40 @@ void sonar_i2cxl_get_last_measure(sonar_i2cxl_t* sonar_i2cxl)
 	if ( distance_m > sonar_i2cxl->data.min_distance && distance_m < sonar_i2cxl->data.max_distance )
 	{
 		dt = ((float)time_us - sonar_i2cxl->data.last_update)/1000000.0f;
-		velocity = (distance_m - sonar_i2cxl->data.current_distance) / dt;
-		if (abs(velocity)>20.0f)
+
+		if (sonar_i2cxl->data.healthy)
 		{
-			velocity = 0.0f;
+			velocity = (distance_m - sonar_i2cxl->data.current_distance) / dt;
+			if (abs(velocity)>20.0f)
+			{
+				velocity = 0.0f;
+			}
+			
+			if (sonar_i2cxl->data.healthy_vel)
+			{
+				sonar_i2cxl->data.current_velocity = (1.0f-LPF_SONAR_VARIO)*sonar_i2cxl->data.current_velocity + LPF_SONAR_VARIO*velocity;
+			}
+			else
+			{
+				sonar_i2cxl->data.current_velocity = velocity;
+			}
+			sonar_i2cxl->data.healthy_vel = true;
 		}
-		sonar_i2cxl->data.current_velocity = (1.0f-LPF_SONAR_VARIO)*sonar_i2cxl->data.current_velocity + LPF_SONAR_VARIO*velocity;
+		else
+		{
+			sonar_i2cxl->data.current_velocity = 0.0f;
+			sonar_i2cxl->data.healthy_vel = false;
+		}
+		
 		sonar_i2cxl->data.current_distance  = distance_m;
 		sonar_i2cxl->data.last_update = time_us;
 		sonar_i2cxl->data.healthy = true;
 	}
 	else
 	{
+		sonar_i2cxl->data.current_velocity = 0.0f;
 		sonar_i2cxl->data.healthy = false;
+		sonar_i2cxl->data.healthy_vel = false;
 	}
 }
 
@@ -136,7 +157,8 @@ bool sonar_i2cxl_init(sonar_i2cxl_t* sonar_i2cxl)
 	sonar_i2cxl->data.min_distance  = 0.22f;
 	sonar_i2cxl->data.max_distance  = 5.0f;
 	sonar_i2cxl->data.covariance 	= 0.01f;
-	sonar_i2cxl->data.healthy 	= false;
+	sonar_i2cxl->data.healthy 		= false;
+	sonar_i2cxl->data.healthy_vel 	= false;
 	
 	///< Init I2C bus
 	static twi_options_t twi_opt = 
