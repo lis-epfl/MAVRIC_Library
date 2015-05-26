@@ -47,12 +47,10 @@
 	extern "C" {
 #endif
 
-#ifndef __MAVRIC_ENDIAN__
-	#error Unknown Endian, please include the file hal/$(ARCH)/endianness.h
-#endif
-
-#if (__MAVRIC_ENDIAN__ == __MAVRIC_ENDIAN_BIG__) && (__MAVRIC_ENDIAN__ == __MAVRIC_ENDIAN_LITTLE__)
-	#error two times
+#ifndef __MAVRIC_ENDIAN_BIG__
+	#ifndef __MAVRIC_ENDIAN_LITTLE__
+		#error Unknown Endian, please include the file hal/$(ARCH)/endianness.h
+	#endif
 #endif
 
 #include <stdint.h>
@@ -158,7 +156,7 @@ static inline uint32_t endian_rev32(uint32_t data)
 
 
 
-#if __MAVRIC_ENDIAN__ == __MAVRIC_ENDIAN_BIG__
+#ifdef __MAVRIC_ENDIAN_BIG__
 
 	static inline uint16_t endian_to_little16(uint16_t data)
 	{
@@ -203,7 +201,7 @@ static inline uint32_t endian_rev32(uint32_t data)
 #endif
 
 
-#if __MAVRIC_ENDIAN__ == __MAVRIC_ENDIAN_LITTLE__
+#ifdef __MAVRIC_ENDIAN_LITTLE__
 
 	static inline uint16_t endian_to_little16(uint16_t data)
 	{

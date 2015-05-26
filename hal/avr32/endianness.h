@@ -42,10 +42,7 @@
 #ifndef ENDIANNESS_H_
 #define ENDIANNESS_H_
 
-#define __MAVRIC_ENDIAN_BIG__ 		0  
-#define __MAVRIC_ENDIAN_LITTLE__ 	1  
-
-#define __MAVRIC_ENDIAN__ __MAVRIC_ENDIAN_BIG__
+#define __MAVRIC_ENDIAN_BIG__
 
 #include "endian.h"
 

@@ -53,7 +53,7 @@ extern "C"
 	#include "endianness.h"
 }
 
-#if __MAVRIC_ENDIAN__ == __MAVRIC_ENDIAN_BIG__
+#ifdef __MAVRIC_ENDIAN_BIG__
 	#define NATIVE_BIG_ENDIAN
 #endif
 
