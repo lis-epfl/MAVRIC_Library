@@ -124,7 +124,7 @@ void state_switch_to_active_mode(state_t* state, mav_state_t* mav_state)
 
 void state_connection_status(state_t* state)
 {
-	if ( (time_keeper_get_time()-state->last_heartbeat_msg) > state->max_lost_connection )
+	if ( ((time_keeper_get_time()-state->last_heartbeat_msg) > state->max_lost_connection)&&(state->first_connection_set) )
 	{
 		state->connection_lost = true;
 	}
