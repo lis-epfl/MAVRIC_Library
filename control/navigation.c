@@ -518,6 +518,8 @@ static void navigation_critical_handler(navigation_t* navigation)
 	{
 		if(navigation->critical_behavior != CRITICAL_LAND)
 		{
+			print_util_dbg_print("Perfoming directly critical landing...\r\n");
+
 			navigation->critical_behavior = CRITICAL_LAND;
 			navigation->critical_next_state = false;
 		}
