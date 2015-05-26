@@ -61,7 +61,7 @@ typedef struct
 static inline i2c_dummy_conf_t i2c_dummy_default_config();
 
 
-class i2c_dummy: public i2c
+class I2c_dummy: public I2c
 {
 public:
 	/**
@@ -69,7 +69,7 @@ public:
 	 * 
 	 * @param 	config 		Device configuration
 	 */
-	i2c_dummy(i2c_dummy_conf_t config = i2c_dummy_default_config());
+	I2c_dummy(i2c_dummy_conf_t config = i2c_dummy_default_config());
 
 
 	/**

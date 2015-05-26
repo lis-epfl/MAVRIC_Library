@@ -84,7 +84,7 @@ void usb_int_send_byte(usb_config_t *usb_conf, uint8_t data)
 void usb_int_register_write_stream(usb_config_t *usb_conf, byte_stream_t *stream) 
 {
 	stream->get = NULL;
-	stream->put = (uint8_t(*)(stream_data_t*, uint8_t))&usb_int_send_byte;			// Here we need to explicitly cast the function to match the prototype
+	stream->put = (uint8_t(*)(stream_data_t, uint8_t))&usb_int_send_byte;			// Here we need to explicitly cast the function to match the prototype
 	stream->flush = NULL;															// stream->get and stream->put expect stream_data_t* as first argument
 	stream->buffer_empty = NULL;													// but buffer_get and buffer_put take Buffer_t* as first argument
 	stream->data = usb_conf;

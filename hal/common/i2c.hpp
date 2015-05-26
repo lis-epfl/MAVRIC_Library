@@ -43,7 +43,7 @@
 
 #include <stdint.h>
 
-class i2c
+class I2c
 {
 public:
 

@@ -42,7 +42,7 @@
 #define SPI_H_
 
 
-class spi
+class Spi
 {
 public:
 
@@ -58,25 +58,25 @@ public:
 	/**
 	 * @brief 	Write data to the SPI bus
 	 * 
-	 * @param 	buffer 		Data buffer
+	 * @param 	out_buffer 	Data buffer
 	 * @param 	nbytes 		Number of bytes to write	
 	 * 
 	 * @return 	true		Success
 	 * @return 	false		Failed
 	 */	
-	virtual bool write(uint8_t* buffer, uint32_t nbytes) = 0;
+	virtual bool write(uint8_t* out_buffer, uint32_t nbytes) = 0;
 
 
 	/**
 	 * @brief 	Read data from the SPI bus
 	 * 
-	 * @param 	buffer 		Data buffer
+	 * @param 	in_buffer 	Data buffer
 	 * @param 	nbytes 		Number of bytes to read	
 	 * 
 	 * @return 	true		Success
 	 * @return 	false		Failed
 	 */	
-	virtual bool read(uint8_t* buffer, uint32_t nbytes) = 0;
+	virtual bool read(uint8_t* in_buffer, uint32_t nbytes) = 0;
 
 
 	/**

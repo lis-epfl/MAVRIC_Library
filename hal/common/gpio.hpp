@@ -42,7 +42,7 @@
 #define GPIO_H_
 
 
-class gpio
+class Gpio
 {
 public:
 

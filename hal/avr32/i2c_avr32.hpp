@@ -50,7 +50,7 @@ extern "C"
 
 
 /**
- * \brief Enumerate the 2 possible I2C
+ * \brief 	Enumerate the 2 possible I2C
  */
 typedef enum
 {
@@ -59,6 +59,9 @@ typedef enum
 } i2c_avr32_devices_t;
 
 
+/**
+ * @brief 	Configuration structure
+ */
 typedef struct
 {
 	i2c_avr32_devices_t i2c_device;
@@ -69,7 +72,10 @@ typedef struct
 } i2c_avr32_conf_t;
 
 
-class i2c_avr32: public i2c
+/**
+ * @brief 	I2C peripheral driver for AVR32
+ */
+class I2c_avr32: public I2c
 {
 public:
 	/**
@@ -77,7 +83,7 @@ public:
 	 * 
 	 * @param 	config 		Device configuration
 	 */
-	i2c_avr32(i2c_avr32_conf_t config);
+	I2c_avr32(i2c_avr32_conf_t config);
 
 
 	/**
@@ -127,8 +133,8 @@ public:
 
 
 private:
-	i2c_avr32_conf_t 		config_;
-	volatile avr32_twim_t* 	twim_;
+	i2c_avr32_conf_t 		config_;	///< Configuration
+	volatile avr32_twim_t* 	twim_;		///< Hardware peripheral
 
 };
 

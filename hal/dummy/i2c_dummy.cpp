@@ -40,31 +40,31 @@
 
 #include "i2c_dummy.hpp"
 
-i2c_dummy::i2c_dummy(i2c_dummy_conf_t config)
+I2c_dummy::I2c_dummy(i2c_dummy_conf_t config)
 {
 	config_ = config;
 }
 
 
-bool i2c_dummy::init(void)
+bool I2c_dummy::init(void)
 {
 	return config_.flag;
 }
 
 
-bool i2c_dummy::probe(uint32_t address)
+bool I2c_dummy::probe(uint32_t address)
 {
 	return config_.flag;
 }
 
 
-bool i2c_dummy::write(const uint8_t *buffer, uint32_t nbytes, uint32_t address)
+bool I2c_dummy::write(const uint8_t *buffer, uint32_t nbytes, uint32_t address)
 {
 	return config_.flag;
 }
 
 
-bool i2c_dummy::read(uint8_t *buffer, uint32_t nbytes, uint32_t address)
+bool I2c_dummy::read(uint8_t *buffer, uint32_t nbytes, uint32_t address)
 {		
 	return config_.flag;
 }

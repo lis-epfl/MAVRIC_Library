@@ -59,9 +59,9 @@ const uint8_t SONAR_I2CXL_CHANGE_ADDRESS_COMMAND_2	= 0xA5;		///< Address of the 
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-sonar_i2cxl::sonar_i2cxl(i2c& i2c, uint8_t address):
-	_i2c(i2c),
-	_i2c_address(address)
+Sonar_i2cxl::Sonar_i2cxl(I2c& i2c, uint8_t address):
+	i2c_(i2c),
+	i2c_address_(address)
 {
 	data.current_distance  = 0.2f;
 	data.orientation.s 	   = 1.0f;
@@ -74,7 +74,7 @@ sonar_i2cxl::sonar_i2cxl(i2c& i2c, uint8_t address):
 	data.healthy 	       = false;
 }
 
-bool sonar_i2cxl::update(void)
+bool Sonar_i2cxl::update(void)
 {
 	bool res = true;
 
@@ -89,18 +89,18 @@ bool sonar_i2cxl::update(void)
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool sonar_i2cxl::send_range_command(void)
+bool Sonar_i2cxl::send_range_command(void)
 {
 	bool res;
 
 	uint8_t buff = SONAR_I2CXL_RANGE_COMMAND;
-	res = _i2c.write(&buff, 1, _i2c_address);
+	res = i2c_.write(&buff, 1, i2c_address_);
 
 	return res;
 }
 
 
-bool sonar_i2cxl::get_last_measure(void)
+bool Sonar_i2cxl::get_last_measure(void)
 {
 	bool res;
 	uint8_t buf[2];
@@ -108,7 +108,7 @@ bool sonar_i2cxl::get_last_measure(void)
 	float distance_m = 0.0f;
 	uint32_t time_us = time_keeper_get_micros();
 
-	res = _i2c.read(buf, 2, _i2c_address);
+	res = i2c_.read(buf, 2, i2c_address_);
 
 	distance_cm = (buf[0] << 8) + buf[1];	
 	distance_m  = ((float)distance_cm) / 100.0f;
@@ -131,7 +131,7 @@ bool sonar_i2cxl::get_last_measure(void)
 //------------------------------------------------------------------------------
 // GLUE FUNCTION (TEMPORARY)
 //------------------------------------------------------------------------------
-task_return_t sonar_i2cxl_update(sonar_i2cxl* sonar)
+task_return_t sonar_i2cxl_update(Sonar_i2cxl* sonar)
 {
 	sonar->update();
 

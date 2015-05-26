@@ -137,6 +137,12 @@ uint32_t buffer_bytes_available(buffer_t * buffer)
 }
 
 
+uint32_t buffer_bytes_free(buffer_t * buffer) 
+{
+	return BUFFER_SIZE - buffer_bytes_available(buffer);
+}
+
+
 void buffer_init(buffer_t * buffer) 
 {
 	buffer->buffer_head = 0;
@@ -155,19 +161,19 @@ void buffer_clear(buffer_t * buffer)
 
 void buffer_make_buffered_stream(buffer_t *buffer, byte_stream_t *stream) 
 {
-	stream->get = ( uint8_t(*)(stream_data_t*) ) &buffer_get;				// Here we need to explicitely cast the function to match the prototype  
-	stream->put = ( uint8_t(*)(stream_data_t*, uint8_t) ) &buffer_put;		// stream->get and stream->put expect stream_data_t* as first argument
+	stream->get = ( uint8_t(*)(stream_data_t) ) &buffer_get;				// Here we need to explicitely cast the function to match the prototype  
+	stream->put = ( uint8_t(*)(stream_data_t, uint8_t) ) &buffer_put;		// stream->get and stream->put expect stream_data_t* as first argument
 	stream->flush = NULL;													// but buffer_get and buffer_put take buffer_t* as first argument
 	stream->data = buffer;
-	stream->bytes_available = ( uint32_t(*)(stream_data_t*) ) &buffer_bytes_available;
+	stream->bytes_available = ( uint32_t(*)(stream_data_t) ) &buffer_bytes_available;
 }
 
 
 void buffer_make_buffered_stream_lossy(buffer_t *buffer, byte_stream_t *stream) 
 {
-	stream->get = (uint8_t(*)(stream_data_t*)) &buffer_get;
-	stream->put = (uint8_t(*)(stream_data_t*, uint8_t)) &buffer_put_lossy;
+	stream->get = (uint8_t(*)(stream_data_t)) &buffer_get;
+	stream->put = (uint8_t(*)(stream_data_t, uint8_t)) &buffer_put_lossy;
 	stream->flush = NULL;
 	stream->data = buffer;
-	stream->bytes_available = (uint32_t(*)(stream_data_t*)) &buffer_bytes_available;
+	stream->bytes_available = (uint32_t(*)(stream_data_t)) &buffer_bytes_available;
 }

@@ -63,23 +63,23 @@ typedef struct
 } sonar_i2cxl_t;
 
 
-class sonar_i2cxl
+class Sonar_i2cxl
 {
 public:
 	/**
 	 * @brief   Constructor
 	 * 
-	 * @param i2c 		Reference to I2C device
-	 * @param address 	Address of the sonar on the I2C bus
+	 * @param 	i2c 		Reference to I2C device
+	 * @param 	address 	Address of the sonar on the I2C bus
 	 */
-	sonar_i2cxl(i2c& i2c, uint8_t address = SONAR_I2CXL_DEFAULT_ADDRESS);
+	Sonar_i2cxl(I2c& i2c, uint8_t address = SONAR_I2CXL_DEFAULT_ADDRESS);
 
 
 	/**
-	 * @brief Reads last value from sensor and start new recording
+	 * @brief 	Reads last value from sensor and start new recording
 	 * 
-	 * @return true 	Success
-	 * @return false 	Failed
+	 * @return 	true 	Success
+	 * @return 	false 	Failed
 	 */
 	bool update(void);
 
@@ -91,12 +91,12 @@ public:
 	sonar_t data;		///< Temporary, TODO: replace by inheritence to abstract class sonar (not yet implemented)
 
 private:
-	i2c& 	_i2c;
-	uint8_t _i2c_address;
+	I2c& 	i2c_;
+	uint8_t i2c_address_;
 
 
 	/**
-	 * @brief	Send range Command for the sonar_i2cxl
+	 * @brief	Send range Command for the Sonar_i2cxl
 	 * 
 	 * @return 	true 	Success
 	 * @return 	false 	Failed
@@ -123,7 +123,7 @@ private:
  * 
  * \return	The result of the task execution
  */
-task_return_t sonar_i2cxl_update(sonar_i2cxl* sonar);
+task_return_t sonar_i2cxl_update(Sonar_i2cxl* sonar);
 
 
 #endif /* I2CXL_SONAR_H */

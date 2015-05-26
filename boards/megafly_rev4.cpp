@@ -39,25 +39,59 @@
  ******************************************************************************/
 
 #include "megafly_rev4.hpp"
-#include "print_util.h"
 
-megafly_rev4::megafly_rev4(megafly_rev4_conf_t config ): 
-	i2c1(i2c_avr32(config.i2c1_config))
+extern "C"
+{
+	#include "print_util.h"
+	#include "time_keeper.h"
+}
+
+Megafly_rev4::Megafly_rev4(imu_t& imu, megafly_rev4_conf_t config):
+	uart0( Serial_avr32(config.uart0_config) ), 
+	uart3( Serial_avr32(config.uart3_config) ), 
+	i2c0( I2c_avr32(config.i2c0_config) ),
+	i2c1( I2c_avr32(config.i2c1_config) ),
+	magnetometer( Hmc5883l(i2c0, imu.raw_magneto) ),
+	imu_(imu)
 {}
 
-bool megafly_rev4::init(void)
+bool Megafly_rev4::init(void)
 {
 	bool init_success = true;
 
-	init_success &= i2c1.init();
-	switch(init_success)
+	// Init UART0
+	if( uart0.init() == false )
 	{
-		case true :
-			print_util_dbg_print("[I2C1] Initialised\r\n");
-			break;
-		case false :
-			print_util_dbg_print("[I2C1] ERROR during initialisation\r\n");
-			break;
+		init_success = false;
+		print_util_dbg_print("[UART0] INIT ERROR\r\n");
+	}
+
+	// Init UART3
+	if( uart3.init() == false )
+	{
+		init_success = false;
+		print_util_dbg_print("[UART0] INIT ERROR\r\n");
+	}
+	
+	// Init I2C0
+	if( i2c0.init() == false )
+	{
+		init_success = false;
+		print_util_dbg_print("[I2C0] INIT ERROR\r\n");
+	}
+
+	// Init I2C1
+	if( i2c1.init() == false )
+	{
+		init_success = false;
+		print_util_dbg_print("[I2C1] INIT ERROR\r\n");
+	}
+	
+	// Init barometer
+	if( magnetometer.init() == false )
+	{
+		init_success = false;
+		print_util_dbg_print("[HMC] INIT ERROR\r\n");
 	}
 
 	return init_success;

@@ -48,13 +48,13 @@ extern "C"
 	#include "sysclk.h"
 }
 
-i2c_avr32::i2c_avr32(i2c_avr32_conf_t config)
+I2c_avr32::I2c_avr32(i2c_avr32_conf_t config)
 {
 	config_ = config;
 }
 
 
-bool i2c_avr32::init(void)
+bool I2c_avr32::init(void)
 {
 	switch( config_.i2c_device ) 
 	{
@@ -79,6 +79,9 @@ bool i2c_avr32::init(void)
 	default: ///< invalid device ID
 		return false;
 	}
+
+	gpio_enable_pin_pull_up(config_.clk_pin);
+	gpio_enable_pin_pull_up(config_.sda_pin);
 	
 	config_.twi_opt.pba_hz = sysclk_get_pba_hz();
 	
@@ -89,7 +92,7 @@ bool i2c_avr32::init(void)
 }
 
 
-bool i2c_avr32::probe(uint32_t address)
+bool I2c_avr32::probe(uint32_t address)
 {
 	status_code_t status;	
 	status = twim_probe(twim_, address);
@@ -97,7 +100,7 @@ bool i2c_avr32::probe(uint32_t address)
 }
 
 
-bool i2c_avr32::write(const uint8_t *buffer, uint32_t nbytes, uint32_t address)
+bool I2c_avr32::write(const uint8_t *buffer, uint32_t nbytes, uint32_t address)
 {
 	status_code_t status;
 	status = twim_write(twim_, buffer, nbytes, address, config_.tenbit);
@@ -105,7 +108,7 @@ bool i2c_avr32::write(const uint8_t *buffer, uint32_t nbytes, uint32_t address)
 }
 
 
-bool i2c_avr32::read(uint8_t *buffer, uint32_t nbytes, uint32_t address)
+bool I2c_avr32::read(uint8_t *buffer, uint32_t nbytes, uint32_t address)
 {		
 	status_code_t status;
 	status = twim_read(twim_, buffer, nbytes, address, config_.tenbit);

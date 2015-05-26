@@ -48,7 +48,7 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include "imu.h"
+#include <stdbool.h>
 #include "pid_controller.h"
 
 /**
