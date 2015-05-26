@@ -439,6 +439,9 @@ void position_estimation_update(position_estimation_t *pos_est)
 		
 		position_estimation_position_integration(pos_est);
 		position_estimation_position_correction(pos_est);
-		position_estimation_fence_control(pos_est);
+		if (pos_est->state->mav_mode.ARMED == ARMED_ON)
+		{
+			position_estimation_fence_control(pos_est);
+		}
 	}
 }
