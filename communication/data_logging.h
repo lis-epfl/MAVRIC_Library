@@ -112,10 +112,10 @@ typedef struct
 
 	uint32_t logging_time;						///< The time that we've passed logging since the last f_close
 	
-	uint32_t sys_id;											///< the system ID
+	uint32_t sys_id;							///< the system ID
 	
-	const state_t* state;										///< The pointer to the state structure	
-	fat_fs_mounting_t* fat_fs_mounting;									///< The pointer to the SD card mounting structure
+	const state_t* state;						///< The pointer to the state structure	
+	fat_fs_mounting_t* fat_fs_mounting;			//< The pointer to the SD card mounting structure
 }data_logging_t;
 
 
