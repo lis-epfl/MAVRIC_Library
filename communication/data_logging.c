@@ -68,7 +68,7 @@ static void data_logging_add_header_name(data_logging_t* data_logging);
  *
  * \return	The result : 0 if it fails otherwise EOF (-1)
  */
-static int32_t data_logging_put_float(FIL* fp, float c, int32_t after_digits);
+static int32_t data_logging_put_float(FIL* fp, float c, uint32_t after_digits);
 
 /**
  * \brief	Function to put a floating point number in the file fp
@@ -79,7 +79,7 @@ static int32_t data_logging_put_float(FIL* fp, float c, int32_t after_digits);
  *
  * \return	The result : 0 if it fails otherwise EOF (-1)
  */
-static int32_t data_logging_put_double(FIL* fp, double c, int32_t after_digits);
+static int32_t data_logging_put_double(FIL* fp, double c, uint32_t after_digits);
 
 /**
  * \brief	Function to put a uint64_t number in the file fp
@@ -156,9 +156,9 @@ static void data_logging_add_header_name(data_logging_t* data_logging)
 	data_logging->file_init = init;
 }
 
-static int32_t data_logging_put_float(FIL* fp, float c, int32_t after_digits)
+static int32_t data_logging_put_float(FIL* fp, float c, uint32_t after_digits)
 {
-	int32_t i;
+	uint32_t i;
 	int32_t res = 0;
 	float num = c;
 	
@@ -201,9 +201,9 @@ static int32_t data_logging_put_float(FIL* fp, float c, int32_t after_digits)
 	return res;
 }
 
-static int32_t data_logging_put_double(FIL* fp, double c, int32_t after_digits)
+static int32_t data_logging_put_double(FIL* fp, double c, uint32_t after_digits)
 {
-	int32_t i;
+	uint32_t i;
 	int32_t res = 0;
 	double num = c;
 	
@@ -364,12 +364,12 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 				break;
 					
 			case MAV_PARAM_TYPE_REAL32:
-				res = data_logging_put_float(&data_logging->fil,*((float*)param->param),10);
+				res = data_logging_put_float(&data_logging->fil,*((float*)param->param),param->precision);
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 					
 			case MAV_PARAM_TYPE_REAL64:
-				res = data_logging_put_double(&data_logging->fil,*((double*)param->param),10);
+				res = data_logging_put_double(&data_logging->fil,*((double*)param->param),param->precision);
 				data_logging_put_r_or_n(data_logging,i);
 				break;
 			default:
@@ -983,7 +983,7 @@ bool data_logging_add_parameter_int64(data_logging_t* data_logging, int64_t* val
 	return add_success;
 }
 
-bool data_logging_add_parameter_float(data_logging_t* data_logging, float* val, const char* param_name)
+bool data_logging_add_parameter_float(data_logging_t* data_logging, float* val, const char* param_name, uint32_t precision)
 {
 	bool add_success = true;
 	
@@ -1004,6 +1004,7 @@ bool data_logging_add_parameter_float(data_logging_t* data_logging, float* val, 
 			new_param->param					 = (double*) val;
 			strcpy( new_param->param_name, 		 param_name );
 			new_param->data_type                 = MAV_PARAM_TYPE_REAL32;
+			new_param->precision				 = precision;
 			
 			data_logging_set->data_logging_count += 1;
 			
@@ -1020,7 +1021,7 @@ bool data_logging_add_parameter_float(data_logging_t* data_logging, float* val, 
 	return add_success;
 }
 
-bool data_logging_add_parameter_double(data_logging_t* data_logging, double* val, const char* param_name)
+bool data_logging_add_parameter_double(data_logging_t* data_logging, double* val, const char* param_name, uint32_t precision)
 {
 	bool add_success = true;
 	
@@ -1041,7 +1042,8 @@ bool data_logging_add_parameter_double(data_logging_t* data_logging, double* val
 			new_param->param					 = val;
 			strcpy( new_param->param_name, 		 param_name );
 			new_param->data_type                 = MAV_PARAM_TYPE_REAL64;
-			
+			new_param->precision				 = precision;
+
 			data_logging_set->data_logging_count += 1;
 			
 			add_success &= true;

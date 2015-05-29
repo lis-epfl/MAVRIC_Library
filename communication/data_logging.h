@@ -64,6 +64,7 @@ typedef struct
 	double* param;
 	char param_name[MAVLINK_MSG_PARAM_SET_FIELD_PARAM_ID_LEN];	///< Parameter name composed of 16 characters
 	mavlink_message_type_t data_type;							///< Parameter type
+	uint8_t precision;											///< Number of digit after the zero
 } data_logging_entry_t;
 
 
@@ -244,10 +245,11 @@ bool data_logging_add_parameter_int64(data_logging_t* data_logging, int64_t* val
  * \param	data_logging			The pointer to the data logging structure
  * \param 	val						The parameter value
  * \param 	param_name				Name of the parameter
+ * \param 	precision				The number of digit after the zero
  *
  * \return	True if the parameter was added, false otherwise
  */
-bool data_logging_add_parameter_float(data_logging_t* data_logging, float* val, const char* param_name);
+bool data_logging_add_parameter_float(data_logging_t* data_logging, float* val, const char* param_name, uint32_t precision);
 
 /**
  * \brief	Registers parameter to log on the SD card
@@ -255,10 +257,11 @@ bool data_logging_add_parameter_float(data_logging_t* data_logging, float* val, 
  * \param	data_logging			The pointer to the data logging structure
  * \param 	val						The parameter value
  * \param 	param_name				Name of the parameter
+ * \param 	precision				The number of digit after the zero
  *
  * \return	True if the parameter was added, false otherwise
  */
-bool data_logging_add_parameter_double(data_logging_t* data_logging, double* val, const char* param_name);
+bool data_logging_add_parameter_double(data_logging_t* data_logging, double* val, const char* param_name, uint32_t precision);
 
 
 #ifdef __cplusplus
