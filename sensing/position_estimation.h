@@ -57,6 +57,7 @@ extern "C" {
 #include "tasks.h"
 #include "constants.h"
 #include "sonar.h"
+#include "data_logging.h"
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
 #define VEL_DECAY 0.0f
@@ -107,6 +108,7 @@ typedef struct
 	const ahrs_t* ahrs;								///< The pointer to the attitude estimation structure
 	const imu_t* imu;								///< The pointer to the IMU structure
 	state_t* state;									///< The pointer to the state structure
+	data_logging_t* stat_logging;					///< The pointer to the stat logging structure
 
 	bool* nav_plan_active;							///< The pointer to the waypoint set flag
 } position_estimation_t;
@@ -123,10 +125,11 @@ typedef struct
  * \param	gps						The pointer to the GPS structure
  * \param	ahrs					The pointer to the attitude estimation structure
  * \param	imu						The pointer to the IMU structure
+ * \param	stat_logging			The pointer to the stat logging structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const sonar_t* sonar, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu);
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const sonar_t* sonar, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, data_logging_t* stat_logging);
 
 
 /**

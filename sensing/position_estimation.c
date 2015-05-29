@@ -322,7 +322,7 @@ static void position_estimation_fence_control(position_estimation_t* pos_est)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const sonar_t* sonar, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu)
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const sonar_t* sonar, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, data_logging_t* stat_logging)
 {
 	bool init_success = true;
 	
@@ -335,6 +335,8 @@ bool position_estimation_init(position_estimation_t* pos_est, const position_est
 	pos_est->state = state;
 	pos_est->nav_plan_active = &state->nav_plan_active;
 	
+	pos_est->stat_logging = stat_logging;
+
 	// default GPS home position
 	pos_est->local_position.origin.longitude =  config->origin.longitude;
 	pos_est->local_position.origin.latitude =   config->origin.latitude;
@@ -436,6 +438,11 @@ void position_estimation_update(position_estimation_t *pos_est)
 		{
 			pos_est->state->reset_position = false;
 			position_estimation_reset_home_altitude(pos_est);
+
+			if (pos_est->stat_logging)
+			{
+				pos_est->stat_logging->data_write = true;
+			}
 		}
 		
 		position_estimation_position_integration(pos_est);
