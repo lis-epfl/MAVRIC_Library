@@ -152,7 +152,6 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 	float baro_vel_error = 0.0f;
 	float baro_gain = 0.0f;
 	float gps_gain = 0.0f;
-	float gps_dt = 0.0f;
 	
 	float vel_error[3] = 
 	{
@@ -165,7 +164,6 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 	float sonar_vel_error = 0.0f;
 	float sonar_gain = 0.0f;
 
-	uint32_t t_inter_gps, t_inter_baro;
 	int32_t i;
 
 	if (pos_est->init_barometer)
@@ -178,15 +176,10 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 			pos_est->time_last_barometer_msg = pos_est->barometer->last_update;
 		}
 
-		t_inter_baro = (time_keeper_get_micros() - pos_est->barometer->last_update) / 1000.0f;
-		baro_gain = 1.0f; //maths_f_max(1.0f - t_inter_baro / 1000.0f, 0.0f);
-			
-		//pos_est->local_position.pos[2] += kp_alt_baro / ((float)(t_inter_baro / 2.5f + 1.0f)) * alt_error;
+		baro_gain = 1.0f; 
+		
 		baro_alt_error = pos_est->last_alt  - pos_est->local_position.pos[2];
 		baro_vel_error = pos_est->barometer->vario_vz - pos_est->vel[2];
-		//vel_error[2] = 0.1f * pos_error[2];
-		//pos_est->vel[2] += kp_alt_baro_v * vel_error[2];
-				
 	}
 	else
 	{
@@ -207,41 +200,29 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 			local_coordinates = coord_conventions_global_to_local_position(global_gps_position,pos_est->local_position.origin);
 			local_coordinates.timestamp_ms = pos_est->gps->time_last_msg;
 			
-			// compute GPS velocity estimate
-			gps_dt = (local_coordinates.timestamp_ms - pos_est->last_gps_pos.timestamp_ms) / 1000.0f;
-			if (gps_dt > 0.001f)
-			{
-				for (i = 0; i < 3; i++)
-				{
-					pos_est->last_vel[i] = (local_coordinates.pos[i] - pos_est->last_gps_pos.pos[i]) / gps_dt;
-				}
-				pos_est->last_gps_pos = local_coordinates;
-			}
-			else
-			{
-				print_util_dbg_print("GPS dt is too small!\r\n");
-			}
+			pos_est->last_gps_pos = local_coordinates;
 		}
-		t_inter_gps = time_keeper_get_millis() - pos_est->gps->time_last_msg;
-			
-		//gps_gain = maths_f_max(1.0f - t_inter_gps / 1000.0f, 0.0f);
+		
+		vel_error[X] = pos_est->gps->north_speed    - pos_est->vel[X]; 
+		vel_error[Y] = pos_est->gps->east_speed     - pos_est->vel[Y]; 
+		vel_error[Z] = pos_est->gps->vertical_speed - pos_est->vel[Z]; 
+
 		gps_gain = 1.0f;
-			
+		
 		for (i = 0;i < 3;i++)
 		{
 			pos_error[i] = pos_est->last_gps_pos.pos[i] - pos_est->local_position.pos[i];
-			vel_error[i] = pos_est->last_vel[i]       - pos_est->vel[i]; 
 		}
 	}
 	else
 	{
 		gps_position_init(pos_est);
-		for (i = 0;i < 2;i++)
+		for (i = 0;i < 3;i++)
 		{
 			pos_error[i] = 0.0f;
 			vel_error[i] = 0.0f;
 		}
-		gps_gain = 0.1f;
+		gps_gain = 0.0f;
 	}
 	
 	if (pos_est->sonar->healthy)
