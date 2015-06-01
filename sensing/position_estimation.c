@@ -161,6 +161,10 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 		0.0f
 	};
 
+	float sonar_alt_error = 0.0f;
+	float sonar_vel_error = 0.0f;
+	float sonar_gain = 0.0f;
+
 	uint32_t t_inter_gps, t_inter_baro;
 	int32_t i;
 
@@ -239,7 +243,29 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 		}
 		gps_gain = 0.1f;
 	}
-		
+	
+	if (pos_est->sonar->healthy)
+	{
+		sonar_alt_error = -pos_est->sonar->current_distance - pos_est->local_position.pos[Z];
+
+		sonar_gain = 1.0f;
+	}
+	else
+	{
+		sonar_alt_error = 0.0f;
+
+		sonar_gain = 0.0f;
+	}
+
+	if (pos_est->sonar->healthy_vel)
+	{
+		sonar_vel_error = -pos_est->sonar->current_velocity - pos_est->vel[Z];
+	}
+	else
+	{
+		sonar_vel_error = 0.0f;
+	}
+
 	// Apply error correction to velocity and position estimates
 	for (i = 0;i < 3;i++)
 	{
@@ -296,12 +322,13 @@ static void gps_position_init(position_estimation_t *pos_est)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu)
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const sonar_t* sonar, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu)
 {
 	bool init_success = true;
 	
     //init dependencies
 	pos_est->barometer = barometer;
+	pos_est->sonar = sonar;
 	pos_est->gps = gps;
 	pos_est->ahrs = ahrs;
 	pos_est->imu = imu;
@@ -338,10 +365,13 @@ bool position_estimation_init(position_estimation_t* pos_est, const position_est
 
     pos_est->kp_vel_gps[X] = 1.0f;
     pos_est->kp_vel_gps[Y] = 1.0f;
-    pos_est->kp_vel_gps[Z] = 0.5f;
+    pos_est->kp_vel_gps[Z] = 3.0f;
 	
 	pos_est->kp_alt_baro = 2.0f;
-	pos_est->kp_vel_baro = 1.0f;
+	pos_est->kp_vel_baro = 0.5f;
+
+	pos_est->kp_alt_sonar = 2.0f;
+	pos_est->kp_vel_sonar = 2.0f;
 	
 	gps_position_init(pos_est);
 	
