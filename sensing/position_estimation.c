@@ -271,7 +271,8 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 	{
 		pos_est->local_position.pos[i] += pos_est->kp_pos_gps[i] * gps_gain * pos_error[i]* dt;
 	}
-	pos_est->local_position.pos[2] += pos_est->kp_alt_baro * baro_gain * baro_alt_error* dt;
+	pos_est->local_position.pos[Z] += pos_est->kp_alt_baro * baro_gain * baro_alt_error* dt;
+	pos_est->local_position.pos[Z] += pos_est->kp_alt_sonar * sonar_gain * sonar_alt_error* dt;
 
 
 	for (i = 0; i < 3; i++)
@@ -283,7 +284,8 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 	{			
 		pos_est->vel[i] += pos_est->kp_vel_gps[i] * gps_gain * vel_correction.v[i]* dt;
 	}
-	pos_est->vel[2] += pos_est->kp_vel_baro * baro_gain * baro_vel_error* dt;
+	pos_est->vel[Z] += pos_est->kp_vel_baro * baro_gain * baro_vel_error* dt;
+	pos_est->vel[Z] += pos_est->kp_vel_sonar * sonar_gain * sonar_vel_error* dt;
 }
 
 
