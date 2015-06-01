@@ -124,8 +124,10 @@ typedef struct
  * \brief	Initialise the data logging module
  *
  * \param	data_logging			The pointer to the data logging structure
- * \param	config					The pointer to the configuration structure
- * \param	state					The pointer to the state structure
+ * \param	file_name			The pointer to name of the file to create
+ * \param	continuous_write		Boolean to state whether writing should be continous or not
+ * \param	fat_fs_mounting			The pointer to fat fs mounting table
+ * \param	sysid				The pointer to the system identification number of the MAV
  *
  * \return	True if the init succeed, false otherwise
  */
@@ -135,8 +137,6 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
  * \brief	Create and open a new file
  *
  * \param	data_logging			The pointer to the data logging structure
- * \param	file_name				The name of the file to create
- * \param	sysid					The sysid of the MAV
  *
  * \result	True if the file was open correctly, false otherwise
  */
