@@ -306,24 +306,21 @@ static void position_estimation_fence_control(position_estimation_t* pos_est)
 	dist_xy_sqr = SQR(pos_est->local_position.pos[X])+SQR(pos_est->local_position.pos[Y]);
 	dist_z_sqr = SQR(pos_est->local_position.pos[Z]);
 
-	if (dist_xy_sqr > SQR(pos_est->state->fence_1_xy))
-	{
-		pos_est->state->out_of_fence_1 = true;
-	}
-
-	if (dist_z_sqr > SQR(pos_est->state->fence_1_z))
-	{
-		pos_est->state->out_of_fence_1 = true;
-	}
-	
 	if (dist_xy_sqr > SQR(pos_est->state->fence_2_xy))
 	{
 		pos_est->state->out_of_fence_2 = true;
 	}
-
-	if (dist_z_sqr > SQR(pos_est->state->fence_2_z))
+	else if (dist_z_sqr > SQR(pos_est->state->fence_2_z))
 	{
 		pos_est->state->out_of_fence_2 = true;
+	}
+	else if (dist_xy_sqr > SQR(pos_est->state->fence_1_xy))
+	{
+		pos_est->state->out_of_fence_1 = true;
+	}
+	else if (dist_z_sqr > SQR(pos_est->state->fence_1_z))
+	{
+		pos_est->state->out_of_fence_1 = true;
 	}
 }
 
