@@ -75,6 +75,13 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
  */
 static void gps_position_init(position_estimation_t *pos_est);
 
+/**
+ * \brief	Check if the robot is going further from the working radius, delimited by those fences
+ *
+ * \param	pos_est			The pointer to the position estimation structure
+ *
+ * \return	void
+ */
 static void position_estimation_fence_control(position_estimation_t* pos_est);
 
 //------------------------------------------------------------------------------
