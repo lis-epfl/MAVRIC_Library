@@ -42,7 +42,7 @@
 
 #include "state.h"
 #include "print_util.h"
-
+#include "time_keeper.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -104,6 +104,13 @@ bool state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
 	
 	state->reset_position = false;
 	
+	state->last_heartbeat_msg = time_keeper_get_time();
+	state->max_lost_connection = state_config->max_lost_connection;
+	state->connection_lost = false;
+	state->first_connection_set = false;
+	
+	state->msg_count = 0;
+	
 	state->remote_active = state_config->remote_active;
 	
 	print_util_dbg_print("[STATE] Initialized.\r\n");
@@ -120,4 +127,16 @@ void state_switch_to_active_mode(state_t* state, mav_state_t* mav_state)
 	state->nav_plan_active = false;
 	
 	print_util_dbg_print("Switching to active mode.\r\n");
+}
+
+void state_connection_status(state_t* state)
+{
+	if ( ((time_keeper_get_time()-state->last_heartbeat_msg) > state->max_lost_connection)&&(state->first_connection_set) )
+	{
+		state->connection_lost = true;
+	}
+	else
+	{
+		state->connection_lost = false;
+	}
 }

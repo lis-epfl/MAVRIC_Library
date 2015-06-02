@@ -121,6 +121,14 @@ typedef struct
 	
 	battery_t battery;									///< The battery structure
 	
+	double last_heartbeat_msg;							///< Time of reception of the last heartbeat message from the ground station
+	double max_lost_connection;							///< Maximum time without reception of a heartbeat message from the ground station
+	
+	uint32_t msg_count;									///< Number of heartbeat message received from the Ground station
+	
+	bool connection_lost;								///< Flag to tell if we have connection with the GND station or not
+	bool first_connection_set;							///< Flag to tell that we received a first message from the GND station
+	
 	const analog_monitor_t* analog_monitor;				///< The pointer to the analog monitor structure
 } state_t;
 
@@ -143,6 +151,13 @@ bool state_init(state_t *state, state_t* state_config, const analog_monitor_t* a
  * \param	mav_state		The MAV state
  */
 void state_switch_to_active_mode(state_t* state,mav_state_t* mav_state);
+
+/**
+ * \brief					Check the connection status with the GND station
+ *
+ * \param	state			The pointer to the state structure
+ */
+void state_connection_status(state_t* state);
 
 #ifdef __cplusplus
 }

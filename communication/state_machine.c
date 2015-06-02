@@ -161,7 +161,16 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 
 	mode_new = state_machine_get_mode_from_source(state_machine, mode_current, rc_check);
 
-	battery_update(&state_machine->state->battery,state_machine->state->analog_monitor->avg[ANALOG_RAIL_10]);
+	if (mode_current.HIL == HIL_OFF)
+	{
+		battery_update(&state_machine->state->battery,state_machine->state->analog_monitor->avg[ANALOG_RAIL_10]);
+	}
+	else
+	{
+		state_machine->state->battery.is_low = false;
+	}
+
+	state_connection_status(state_machine->state);
 
 	// Change state according to signal strength
 	switch ( state_current )
@@ -205,6 +214,14 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 				print_util_dbg_print("Battery low! Performing critical landing.\r\n");
 				state_new = MAV_STATE_CRITICAL;
 			}
+			
+			// check connection with GND station
+			if ( state_machine->state->connection_lost)
+			{
+				print_util_dbg_print("Connection with GND station lost! Performing critical landing.\r\n");
+				state_new = MAV_STATE_CRITICAL;
+			}
+			
 			if (state_machine->state->out_of_fence_1)
 			{
 				print_util_dbg_print("Out of fence 1!\r\n");
@@ -216,7 +233,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			switch ( rc_check )
 			{
 				case SIGNAL_GOOD:
-					if( !state_machine->state->battery.is_low && !state_machine->state->out_of_fence_1 && !state_machine->state->out_of_fence_2)
+					if( !state_machine->state->battery.is_low && !state_machine->state->connection_lost && !state_machine->state->out_of_fence_1 && !state_machine->state->out_of_fence_2)
 					{
 						state_new = MAV_STATE_ACTIVE;
 					}
