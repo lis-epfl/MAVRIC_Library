@@ -222,13 +222,18 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 				state_new = MAV_STATE_CRITICAL;
 			}
 			
+			if (state_machine->state->out_of_fence_1)
+			{
+				print_util_dbg_print("Out of fence 1!\r\n");
+				state_new = MAV_STATE_CRITICAL;
+			}
 			break;
 
 		case MAV_STATE_CRITICAL:			
 			switch ( rc_check )
 			{
 				case SIGNAL_GOOD:
-					if( !state_machine->state->battery.is_low && !state_machine->state->connection_lost)
+					if( !state_machine->state->battery.is_low && !state_machine->state->connection_lost && !state_machine->state->out_of_fence_1 && !state_machine->state->out_of_fence_2)
 					{
 						state_new = MAV_STATE_ACTIVE;
 					}

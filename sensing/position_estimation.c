@@ -75,6 +75,15 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
  */
 static void gps_position_init(position_estimation_t *pos_est);
 
+/**
+ * \brief	Check if the robot is going further from the working radius, delimited by those fences
+ *
+ * \param	pos_est			The pointer to the position estimation structure
+ *
+ * \return	void
+ */
+static void position_estimation_fence_control(position_estimation_t* pos_est);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -291,6 +300,30 @@ static void gps_position_init(position_estimation_t *pos_est)
 	}
 }
 
+static void position_estimation_fence_control(position_estimation_t* pos_est)
+{
+	float dist_xy_sqr, dist_z_sqr;
+	dist_xy_sqr = SQR(pos_est->local_position.pos[X])+SQR(pos_est->local_position.pos[Y]);
+	dist_z_sqr = SQR(pos_est->local_position.pos[Z]);
+
+	if (dist_xy_sqr > SQR(pos_est->state->fence_2_xy))
+	{
+		pos_est->state->out_of_fence_2 = true;
+	}
+	else if (dist_z_sqr > SQR(pos_est->state->fence_2_z))
+	{
+		pos_est->state->out_of_fence_2 = true;
+	}
+	else if (dist_xy_sqr > SQR(pos_est->state->fence_1_xy))
+	{
+		pos_est->state->out_of_fence_1 = true;
+	}
+	else if (dist_z_sqr > SQR(pos_est->state->fence_1_z))
+	{
+		pos_est->state->out_of_fence_1 = true;
+	}
+}
+
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -410,5 +443,9 @@ void position_estimation_update(position_estimation_t *pos_est)
 		
 		position_estimation_position_integration(pos_est);
 		position_estimation_position_correction(pos_est);
+		if (pos_est->state->mav_mode.ARMED == ARMED_ON)
+		{
+			position_estimation_fence_control(pos_est);
+		}
 	}
 }
