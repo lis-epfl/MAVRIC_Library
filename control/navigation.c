@@ -594,10 +594,11 @@ static void navigation_critical_handler(navigation_t* navigation)
 			case FLY_TO_HOME_WP:
 				if (navigation->state->out_of_fence_1)
 				{
+					//stop auto navigation, to prevent going out of fence 1 again
+					navigation->waypoint_handler->waypoint_hold_coordinates = navigation->waypoint_handler->waypoint_critical_coordinates;
+					navigation_stopping_handler(navigation);
 					navigation->state->out_of_fence_1 = false;
 					navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
-					navigation->state->mav_mode.MANUAL = MANUAL_ON;
-					navigation->state->mav_mode.AUTO = AUTO_OFF;
 					navigation->state->mav_state = MAV_STATE_ACTIVE;
 				}
 				else
