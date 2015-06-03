@@ -80,10 +80,9 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 /**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
  *
- * \param	waypoint_input		Destination waypoint in local coordinate system
  * \param	navigation			The navigation structure
  */
-static void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigation);
+static void navigation_run(navigation_t* navigation);
 
 /**
  * \brief	Sets auto-takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF
@@ -296,17 +295,17 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
 }
 
-static void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigation)
+static void navigation_run(navigation_t* navigation)
 {
 	float rel_pos[3];
 	
 	// Control in translational speed of the platform
-	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos,
+	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(navigation->goal.pos,
 																					rel_pos,
 																					navigation->position_estimation->local_position.pos);
 	navigation_set_speed_command(rel_pos, navigation);
 	
-	navigation->controls_nav->theading=waypoint_input.heading;
+	navigation->controls_nav->theading=navigation->goal.heading;
 }
 
 static mav_result_t navigation_set_auto_takeoff(navigation_t *navigation, mavlink_command_long_t* packet)
@@ -920,7 +919,9 @@ task_return_t navigation_update(navigation_t* navigation)
 					if ( (mode_local.AUTO == AUTO_ON) || (mode_local.GUIDED == GUIDED_ON) )
 					{
 						navigation_auto_landing_handler(navigation);
-						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+						
+						navigation->goal = navigation->waypoint_handler->waypoint_hold_coordinates;
+						navigation_run(navigation);
 						
 						if (navigation->auto_landing_behavior == DESCENT_TO_GND)
 						{
@@ -939,25 +940,29 @@ task_return_t navigation_update(navigation_t* navigation)
 						{
 							if (!navigation->stop_nav_there)
 							{
-								navigation_run(navigation->waypoint_handler->waypoint_coordinates,navigation);
+								navigation->goal = navigation->waypoint_handler->waypoint_coordinates;
+								navigation_run(navigation);
 							}
 							else
 							{
-								navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+								navigation->goal = navigation->waypoint_handler->waypoint_hold_coordinates;
+								navigation_run(navigation);
 								
 								navigation_stopping_handler(navigation);
 							}
 						}
 						else
 						{
-							navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+							navigation->goal = navigation->waypoint_handler->waypoint_hold_coordinates;
+							navigation_run(navigation);
 						}
 					}
 					else if(mode_local.GUIDED == GUIDED_ON)
 					{
 						navigation_hold_position_handler(navigation);
 						
-						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+						navigation->goal = navigation->waypoint_handler->waypoint_hold_coordinates;
+						navigation_run(navigation);
 						break;
 					}
 				}
@@ -995,7 +1000,8 @@ task_return_t navigation_update(navigation_t* navigation)
 					{
 						navigation_waypoint_take_off_handler(navigation);
 						
-						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+						navigation->goal = navigation->waypoint_handler->waypoint_hold_coordinates;
+						navigation_run(navigation);
 					}
 				}
 			}
@@ -1008,7 +1014,9 @@ task_return_t navigation_update(navigation_t* navigation)
 				if (navigation->state->in_the_air)
 				{
 					navigation_critical_handler(navigation);
-					navigation_run(navigation->waypoint_handler->waypoint_critical_coordinates,navigation);
+					
+					navigation->goal = navigation->waypoint_handler->waypoint_critical_coordinates;
+					navigation_run(navigation);
 					
 					if (navigation->state->out_of_fence_2)
 					{
