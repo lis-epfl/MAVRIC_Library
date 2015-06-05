@@ -193,7 +193,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 				buffer_clear(&spek_sat->receiver);
 			}
 			
-			//after having received enough frame, determine which protocol is used
+			//after having received enough frames, determine which protocol is used
 			if (spek_sat->protocol_proba.min_nb_frames != 0 )
 			{
 				spek_sat->protocol_proba.min_nb_frames--;

@@ -70,7 +70,7 @@ typedef enum
 	DSM2_10BITS = 0,
 	DSM2_11BITS = 1,
 	DSMX		= 2,
-	UNKNOWN = 3,
+	UNKNOWN		= 3,
 } radio_protocol_t;
 
 
