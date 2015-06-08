@@ -114,13 +114,12 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 		uint32_t dt_interrupt = now - spek_sat->last_interrupt;
 		spek_sat->last_interrupt = now;
 
-		// the shorter inter_frame period is 9600us (11bits encoding) and the longer inter_frame period is 20600 us(10bits encoding) 
-		// Clear buffer if it contains too old data, older than 42000 us, 2 times the longer inter_frame period 
-		// or if the first byte of the buffer came before the shorter inter_frame period (=>it is not the first byte of a new frame)
-		if ( dt_interrupt > 42000 || (buffer_bytes_available(&spek_sat->receiver)==0 && dt_interrupt < 8000)) 
+		// the shorter frame period is 11'000us (11bits encoding) and the longer frame period is 22'000 us(10bits encoding) 
+		// the inter byte period within a frame is 77us
+		// Clear buffer if the new byte of the on-going frame came after 2times the inter-byte period
+		if ( (buffer_bytes_available(&spek_sat->receiver)!=0) && (dt_interrupt > 150))
 		{
 			buffer_clear(&spek_sat->receiver);
-			// LED_Toggle(LED2);
 		}
 
 		// Add new byte to buffer
