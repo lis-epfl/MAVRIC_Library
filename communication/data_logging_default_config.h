@@ -54,10 +54,9 @@ extern "C" {
 data_logging_conf_t data_logging_default_config =
 {
 	.debug = true,
+	.log_data = 0,
 	.max_data_logging_count = 50,
 	.max_logs = 500,
-	.log_interval = 10, //in sec
-	.log_data = 0 // 1: log data, 0: no log data
 };
 
 #ifdef __cplusplus

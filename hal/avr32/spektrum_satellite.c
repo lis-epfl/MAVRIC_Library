@@ -104,7 +104,6 @@ void spektrum_satellite_switch_off(void)
 ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) 
 {
 	uint8_t c1, c2, i;
-	radio_protocol_t protocol;
 	uint16_t sw;
 	uint8_t channel;
 	uint32_t now = time_keeper_get_micros() ;
@@ -115,13 +114,12 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 		uint32_t dt_interrupt = now - spek_sat->last_interrupt;
 		spek_sat->last_interrupt = now;
 
-		// the shorter inter_frame period is 9600us (11bits encoding) and the longer inter_frame period is 20600 us(10bits encoding) 
-		// Clear buffer if it contains too old data, older than 42000 us, 2 times the longer inter_frame period 
-		// or if the first byte of the buffer came before the shorter inter_frame period (=>it is not the first byte of a new frame)
-		if ( dt_interrupt > 42000 || (buffer_bytes_available(&spek_sat->receiver)==0 && dt_interrupt < 8000)) 
+		// the shorter frame period is 11'000us (11bits encoding) and the longer frame period is 22'000 us(10bits encoding) 
+		// the inter byte period within a frame is 77us
+		// Clear buffer if the new byte of the on-going frame came after 2times the inter-byte period
+		if ( (buffer_bytes_available(&spek_sat->receiver)!=0) && (dt_interrupt > 150))
 		{
 			buffer_clear(&spek_sat->receiver);
-			// LED_Toggle(LED2);
 		}
 
 		// Add new byte to buffer
@@ -129,19 +127,16 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 		buffer_put(&spek_sat->receiver, c1);
 		
 		// If frame is complete, decode channels
-		if ( buffer_bytes_available(&spek_sat->receiver) == 16 ) 
+		if ( (buffer_bytes_available(&spek_sat->receiver) == 16) && (spek_sat->protocol != UNKNOWN)) 
 		{
 			// first two bytes are status info,
 			c1 = buffer_get(&spek_sat->receiver);
 			c2 = buffer_get(&spek_sat->receiver);
 			
-			if (c1 == 0x03 && c2 == 0xB2) //correspond to DSM2 10bits header
+			if ((spek_sat->protocol == DSM2_10BITS) && ((c1 != 0x03) || (c2 != 0xB2))) //correspond to DSM2 10bits header
 			{
-				protocol = DSM2_10BITS;
-			}
-			else
-			{
-				protocol = DSM2_11BITS;
+				buffer_clear(&spek_sat->receiver);
+				return;
 			}
 				
 			for (i = 0; i < 7; i++) // 7 channels per frame
@@ -150,7 +145,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 				c2 = buffer_get(&spek_sat->receiver);
 				sw = (uint16_t)c1 << 8 | ((uint16_t)c2);
 								
-				if ( protocol == DSM2_10BITS )  //10 bits
+				if ( spek_sat->protocol == DSM2_10BITS )  //10 bits
 				{
 					// highest bit is frame 0/1, bits 2-6 are channel number
 					channel = ((sw >> 10))&0x0f;
@@ -158,7 +153,7 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 					// 10 bits per channel
 					spek_sat->channels[channel] = ((int16_t)(sw&0x3ff) - 512) * 2;
 				} 
-				else if ( protocol == DSM2_11BITS ) //11bits
+				else if ( spek_sat->protocol == DSM2_11BITS ) //11bits
 				{
 					// highest bit is frame 0/1, bits 3-7 are channel number
 					channel = ((sw >> 11))&0x0f;
@@ -174,6 +169,52 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 
 			// Inidicate that new data is available
 			spek_sat->new_data_available = true;
+		}
+		else if ( buffer_bytes_available(&spek_sat->receiver) == 16)
+		{
+			//Since spek_sat->protocol is unknown
+			//check the radio protocol
+			
+			// first two bytes are status info,
+			c1 = buffer_get(&spek_sat->receiver);
+			c2 = buffer_get(&spek_sat->receiver);
+			
+			if (c1 == 0x03 && c2 == 0xB2) //correspond to DSM2 10bits header
+			{
+				spek_sat->protocol_proba.proba_10bits++;
+				//empty_the buffer, since we don't decode channels yet
+				buffer_clear(&spek_sat->receiver);
+			}
+			else
+			{
+				spek_sat->protocol_proba.proba_11bits++;
+				//empty_the buffer, since we don't decode channels yet
+				buffer_clear(&spek_sat->receiver);
+			}
+			
+			//after having received enough frames, determine which protocol is used
+			if (spek_sat->protocol_proba.min_nb_frames != 0 )
+			{
+				spek_sat->protocol_proba.min_nb_frames--;
+			}
+			else
+			{
+				//is the probability of one protocol at least 2 times bigger than for the other one ?
+				if (spek_sat->protocol_proba.proba_10bits > 2*spek_sat->protocol_proba.proba_11bits)
+				{
+					spek_sat->protocol = DSM2_10BITS;
+				}
+				else if (spek_sat->protocol_proba.proba_11bits > 2*spek_sat->protocol_proba.proba_10bits)
+				{
+					spek_sat->protocol = DSM2_11BITS;
+				}
+				else //otherwise redo this probability check for 10 other frames
+				{
+					spek_sat->protocol_proba.min_nb_frames = 10;
+				}
+				
+			}
+			
 		}
 	}		
 }
@@ -206,8 +247,14 @@ void spektrum_satellite_init(satellite_t* satellite, usart_config_t usart_conf_s
 	}
 	
 	satellite->new_data_available = false;
-	 
-    // Assign GPIO pins to USART_0.
+	satellite->protocol = UNKNOWN;
+	satellite->last_update = time_keeper_get_micros();
+	//Set minimum number of frames to be received in order to guess the radio protocol used
+	spek_sat->protocol_proba.min_nb_frames = 10; 
+    spek_sat->protocol_proba.proba_10bits = 0;
+    spek_sat->protocol_proba.proba_11bits = 0;
+    
+	// Assign GPIO pins to USART_0.
     gpio_enable_module(	USART_GPIO_MAP,
                      	sizeof(USART_GPIO_MAP) / sizeof(USART_GPIO_MAP[0]) );
 	

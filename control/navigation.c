@@ -504,16 +504,15 @@ static void navigation_critical_handler(navigation_t* navigation)
 	bool next_state = false;
 	
 	//Check whether we entered critical mode due to a battery low level or a lost
-	// connection with the GND station
-	if ( navigation->state->battery.is_low || navigation->state->connection_lost )
+	// connection with the GND station or are out of fence control
+	if ( navigation->state->battery.is_low || navigation->state->connection_lost || navigation->state->out_of_fence_2)
 	{
-		if( navigation->critical_behavior != CRITICAL_LAND )
+		if(navigation->critical_behavior != CRITICAL_LAND)
 		{
 			navigation->critical_behavior = CRITICAL_LAND;
 			navigation->critical_next_state = false;
-		}	
+		}
 	}
-	
 	if (!(navigation->critical_next_state))
 	{
 		navigation->critical_next_state = true;
@@ -593,8 +592,20 @@ static void navigation_critical_handler(navigation_t* navigation)
 				break;
 			
 			case FLY_TO_HOME_WP:
-				print_util_dbg_print("Critical State! Performing critical landing.\r\n");
-				navigation->critical_behavior = HOME_LAND;
+				if (navigation->state->out_of_fence_1)
+				{
+					//stop auto navigation, to prevent going out of fence 1 again
+					navigation->waypoint_handler->waypoint_hold_coordinates = navigation->waypoint_handler->waypoint_critical_coordinates;
+					navigation_stopping_handler(navigation);
+					navigation->state->out_of_fence_1 = false;
+					navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
+					navigation->state->mav_state = MAV_STATE_ACTIVE;
+				}
+				else
+				{
+					print_util_dbg_print("Critical State! Performing critical landing.\r\n");
+					navigation->critical_behavior = HOME_LAND;
+				}
 				break;
 			
 			case HOME_LAND:
@@ -914,7 +925,7 @@ task_return_t navigation_update(navigation_t* navigation)
 						if (navigation->auto_landing_behavior == DESCENT_TO_GND)
 						{
 							// Constant velocity to the ground
-							navigation->controls_nav->tvel[Z] = 0.3;
+							navigation->controls_nav->tvel[Z] = 0.3f;
 						}
 					}
 				}
@@ -998,6 +1009,13 @@ task_return_t navigation_update(navigation_t* navigation)
 				{
 					navigation_critical_handler(navigation);
 					navigation_run(navigation->waypoint_handler->waypoint_critical_coordinates,navigation);
+					
+					if (navigation->state->out_of_fence_2)
+					{
+						// Constant velocity to the ground
+						navigation->controls_nav->tvel[Z] = 1.0f;
+					}
+					
 				}
 			}
 			break;
