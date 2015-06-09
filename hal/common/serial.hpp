@@ -43,6 +43,9 @@
 
 #include <stdint.h>
 
+class Serial;
+typedef void(*serial_interrupt_callback_t)(Serial* serial);
+
 class Serial
 {
 public:
@@ -81,17 +84,19 @@ public:
 
 
 	/**
-	 * @brief 	Attach a function to call whenever a receive interrupt is generated
+	 * @brief 	Attach a function to call after a receive interrupt is generated
 	 * 
-	 * @details A default handler should be provided by the implementation,
-	 * 			so it is not mandatory to call this method.
+	 * @details A default handler should be provided by the implementation to 
+	 * 			add the incoming data in a buffer, so is not mandatory to call 
+	 * 			this method. The function callback will be called after the 
+	 * 			interrupt handler
 	 * 
-	 * @param  	handler 	Pointer to the interrupt-handling function
+	 * @param  	func	 	Pointer to the callback function
 	 * 
 	 * @return 	true		Success
 	 * @return 	false		Failed
 	 */
-	// virtual bool attach(void(*handler)(void)) = 0; 
+	virtual bool attach(serial_interrupt_callback_t func) = 0; 
 
 
 	/**
@@ -117,6 +122,5 @@ public:
 	 */	
 	virtual bool read(uint8_t* bytes, const uint32_t size=1) = 0;
 };
-
 
 #endif /* SERIAL_H_ */

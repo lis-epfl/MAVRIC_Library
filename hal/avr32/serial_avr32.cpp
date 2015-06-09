@@ -53,12 +53,13 @@ extern "C"
 
 Serial_avr32::Serial_avr32(serial_avr32_conf_t config)
 {
-	config_ = config;
+	config_			= config;
+	irq_callback 	= NULL;
 }
 
 
 bool Serial_avr32::init(void)
-{
+{	
 	// Init gpios
 	if( config_.mode==AVR32_SERIAL_IN || config_.mode==AVR32_SERIAL_IN_OUT )
 	{
@@ -141,6 +142,13 @@ void Serial_avr32::flush(void)
 	{
 		;
 	}
+}
+
+
+bool Serial_avr32::attach(serial_interrupt_callback_t func)
+{
+	irq_callback = func;
+	return true;
 }
 
 
@@ -255,5 +263,11 @@ void Serial_avr32::irq_handler(void)
 			// nothing more to send, disable interrupt
 			uart_->idr = AVR32_USART_IDR_TXRDY_MASK;
 		}
+	}
+
+	// Call callback function if attached
+	if( irq_callback != NULL )
+	{
+		irq_callback(this);
 	}
 }

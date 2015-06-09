@@ -152,17 +152,19 @@ public:
 
 
 	/**
-	 * @brief 	Attach a function to call whenever a receive interrupt is generated
+	 * @brief 	Attach a function to call after a receive interrupt is generated
 	 * 
-	 * @details A default handler should be provided by the implementation,
-	 * 			so it is not mandatory to call this method.
+	 * @details A default handler should be provided by the implementation to 
+	 * 			add the incoming data in a buffer, so is not mandatory to call 
+	 * 			this method. The function callback will be called after the 
+	 * 			interrupt handler
 	 * 
-	 * @param  	handler 	Pointer to the interrupt-handling function
+	 * @param  	func	 	Pointer to the callback function
 	 * 
 	 * @return 	true		Success
 	 * @return 	false		Failed
 	 */
-	// virtual bool attach(void(*handler)(void)); 
+	virtual bool attach(serial_interrupt_callback_t func); 
 
 
 	/**
@@ -205,6 +207,14 @@ private:
 	 * 				static, thus has access to object members
 	 */
 	void irq_handler(void);
+
+
+	/**
+	 * @brief 		Callback function to be called after an interrupt
+	 * 
+	 * @details 	By default NULL, can be modified via the 'attach' method
+	 */
+	serial_interrupt_callback_t irq_callback;
 
 
 	/**
