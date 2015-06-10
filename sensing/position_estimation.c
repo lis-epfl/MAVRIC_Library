@@ -136,20 +136,20 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 	global_position_t global_gps_position;
 	local_coordinates_t local_coordinates;
 	
+	float gps_gain = 0.0f;
+	float baro_alt_error = 0.0f;
+	float baro_vel_error = 0.0f;
+	float baro_gain = 0.0f;
+	float sonar_alt_error = 0.0f;
+	float sonar_vel_error = 0.0f;
+	float sonar_gain = 0.0f;
+	
+	//we use ahrs->dt since it is updated at the same frequency as position_estimation
 	float dt = pos_est->ahrs->dt;
 	
-	// quat_t bias_correction = {.s = 0, .v = {0.0f, 0.0f, 1.0f}};
-	quat_t vel_correction = 
-	{
-		.s = 0, 
-		.v = 
-		{
-			0.0f, 
-			0.0f, 
-			1.0f
-		}
-	};
-
+	//Declare for loop counter
+	int32_t i;
+	
 	float pos_error[3] = 
 	{
 		0.0f,
@@ -157,23 +157,12 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 		0.0f
 	};
 	
-	float baro_alt_error = 0.0f;
-	float baro_vel_error = 0.0f;
-	float baro_gain = 0.0f;
-	float gps_gain = 0.0f;
-	
 	float vel_error[3] = 
 	{
 		0.0f,
 		0.0f,
 		0.0f
 	};
-
-	float sonar_alt_error = 0.0f;
-	float sonar_vel_error = 0.0f;
-	float sonar_gain = 0.0f;
-
-	int32_t i;
 
 	if (pos_est->init_barometer)
 	{		
@@ -236,27 +225,27 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 	
 	if (pos_est->sonar->healthy)
 	{
+		sonar_gain = 1.0f;
+		
 		sonar_alt_error = -pos_est->sonar->current_distance - pos_est->local_position.pos[Z];
 
-		sonar_gain = 1.0f;
+		if (pos_est->sonar->healthy_vel)
+		{
+			sonar_vel_error = -pos_est->sonar->current_velocity - pos_est->vel[Z];
+		}
+		else
+		{
+			sonar_vel_error = 0.0f;
+		}
 	}
 	else
 	{
-		sonar_alt_error = 0.0f;
-
 		sonar_gain = 0.0f;
-	}
-
-	if (pos_est->sonar->healthy_vel)
-	{
-		sonar_vel_error = -pos_est->sonar->current_velocity - pos_est->vel[Z];
-	}
-	else
-	{
+		sonar_alt_error = 0.0f;
 		sonar_vel_error = 0.0f;
 	}
 
-	// Apply error correction to velocity and position estimates
+	// Apply error correction to position estimates
 	for (i = 0;i < 3;i++)
 	{
 		pos_est->local_position.pos[i] += pos_est->kp_pos_gps[i] * gps_gain * pos_error[i]* dt;
@@ -264,15 +253,10 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 	pos_est->local_position.pos[Z] += pos_est->kp_alt_baro * baro_gain * baro_alt_error* dt;
 	pos_est->local_position.pos[Z] += pos_est->kp_alt_sonar * sonar_gain * sonar_alt_error* dt;
 
-
-	for (i = 0; i < 3; i++)
-	{
-		vel_correction.v[i] = vel_error[i];
-	}
-				
+	// Apply error correction to velocity estimates
 	for (i = 0;i < 3;i++)
 	{			
-		pos_est->vel[i] += pos_est->kp_vel_gps[i] * gps_gain * vel_correction.v[i]* dt;
+		pos_est->vel[i] += pos_est->kp_vel_gps[i] * gps_gain * vel_error[i]* dt;
 	}
 	pos_est->vel[Z] += pos_est->kp_vel_baro * baro_gain * baro_vel_error* dt;
 	pos_est->vel[Z] += pos_est->kp_vel_sonar * sonar_gain * sonar_vel_error* dt;

@@ -466,10 +466,14 @@ void simulation_simulate_sonar(simulation_model_t *sim)
 		sim->sonar->current_distance = distance_m;
 		sim->sonar->last_update = time_keeper_get_millis();
 		sim->sonar->healthy = true;
+		sim->sonar->healthy_vel = true;
 	}
 	else
 	{
 		sim->sonar->healthy = false;
+		sim->sonar->current_distance = 0.0f;
+		sim->sonar->healthy_vel = false;
+		sim->sonar->current_velocity = 0.0f;
 	}
 }
 

@@ -151,8 +151,8 @@ bool sonar_i2cxl_init(sonar_i2cxl_t* sonar_i2cxl)
 	sonar_i2cxl->data.current_velocity	= 0.0f;
 	sonar_i2cxl->data.orientation.s 	= 1.0f;
 	sonar_i2cxl->data.orientation.v[0] 	= 0.0f;
-	sonar_i2cxl->data.orientation.v[0] 	= 0.0f;
-	sonar_i2cxl->data.orientation.v[0] 	= 0.0f;
+	sonar_i2cxl->data.orientation.v[1] 	= 0.0f;
+	sonar_i2cxl->data.orientation.v[2] 	= 0.0f;
 	
 	sonar_i2cxl->data.min_distance  = 0.22f;
 	sonar_i2cxl->data.max_distance  = 5.0f;

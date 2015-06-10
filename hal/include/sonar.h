@@ -58,7 +58,7 @@
 */
 typedef struct 
 {
-	uint32_t last_update; 		///< Time since system boot
+	uint32_t last_update; 		///< Last time we updated the sensor measurement
 	quat_t 	orientation; 		///< Direction the sensor faces from FIXME enum.
 	float 	min_distance; 		///< Minimum distance the sensor can measure in centimeters
 	float 	max_distance; 		///< Maximum distance the sensor can measure in centimeters
