@@ -184,7 +184,9 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 
 		case MAV_STATE_STANDBY:
 			state_machine->state->in_the_air = false;
-			
+			//disable out of fence checks
+			state_machine->state->out_of_fence_1 = false;
+			state_machine->state->out_of_fence_2 = false;
 			if ( mode_new.ARMED == ARMED_ON )
 			{
 				print_util_dbg_print("Switching from state_machine.\r\n");
