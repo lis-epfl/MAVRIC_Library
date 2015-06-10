@@ -103,6 +103,7 @@ void sonar_i2cxl_get_last_measure(sonar_i2cxl_t* sonar_i2cxl)
 		if (sonar_i2cxl->data.healthy)
 		{
 			velocity = (distance_m - sonar_i2cxl->data.current_distance) / dt;
+			//discard sonar velocity estimation if it seams too big
 			if (abs(velocity)>20.0f)
 			{
 				velocity = 0.0f;
@@ -117,11 +118,6 @@ void sonar_i2cxl_get_last_measure(sonar_i2cxl_t* sonar_i2cxl)
 				sonar_i2cxl->data.current_velocity = velocity;
 			}
 			sonar_i2cxl->data.healthy_vel = true;
-		}
-		else
-		{
-			sonar_i2cxl->data.current_velocity = 0.0f;
-			sonar_i2cxl->data.healthy_vel = false;
 		}
 		
 		sonar_i2cxl->data.current_distance  = distance_m;
