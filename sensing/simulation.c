@@ -464,7 +464,7 @@ void simulation_simulate_sonar(simulation_model_t *sim)
 		}
 		sim->sonar->current_velocity = LPF_SONAR_VARIO*sim->sonar->current_velocity + (1.0f-LPF_SONAR_VARIO)*velocity;
 		sim->sonar->current_distance = distance_m;
-		sim->sonar->last_update = time_keeper_get_millis();
+		sim->sonar->last_update = time_keeper_get_micros();
 		sim->sonar->healthy = true;
 		sim->sonar->healthy_vel = true;
 	}
