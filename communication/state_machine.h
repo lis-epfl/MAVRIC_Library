@@ -66,6 +66,8 @@ typedef struct
 	float		low_battery_update;						///< ///< The time of the last navigation_safety update in ms
 	uint32_t	low_battery_counter;					///< ///< The counter of time the battery level was under the critical_battery level
 
+	signal_quality_t sig_qual;
+
 	mavlink_waypoint_handler_t* waypoint_handler;		///< Pointer to the mavlink waypoint handler structure
 	state_t* state;										///< Pointer to the state structure
 	simulation_model_t *sim_model;						///< Pointer to the simulation structure

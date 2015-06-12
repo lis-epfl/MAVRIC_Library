@@ -162,6 +162,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 	{
 		rc_check = SIGNAL_GOOD;
 	}
+	state_machine->sig_qual = rc_check;
 
 	mode_new = state_machine_get_mode_from_source(state_machine, mode_current, rc_check);
 
