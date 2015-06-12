@@ -220,11 +220,6 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	
 	norm_rel_dist = sqrt(navigation->waypoint_handler->dist2wp_sqr);
 	
-	if (norm_rel_dist < 0.0005f)
-	{
-		norm_rel_dist += 0.0005f;
-	}
-	
 	// calculate dir_desired in local frame
 	// vel = qe-1 * rel_pos * qe
 	qtmp1 = quaternions_create_from_vector(rel_pos);
@@ -233,7 +228,20 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	
 	dir_desired_bf[2] = rel_pos[2];
 	
+	// Avoiding division by zero
+	if (norm_rel_dist < 0.0005f)
+	{
+		norm_rel_dist += 0.0005f;
+	}
+
+	// Normalisation of the goal direction
+	dir_desired_bf[X] /= norm_rel_dist;
+	dir_desired_bf[Y] /= norm_rel_dist;
+	dir_desired_bf[Z] /= norm_rel_dist;
+
+	// Maximizing the desired speed to the cruise speed
 	norm_rel_dist = min(navigation->cruise_speed,norm_rel_dist);
+
 	if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
 	{
 		
@@ -243,7 +251,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		}
 		else
 		{
-		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimation->local_position.heading);
+			rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimation->local_position.heading);
 		}
 		
 		navigation->wpt_nav_controller.clip_max = navigation->cruise_speed;
@@ -261,9 +269,11 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		v_desired = navigation->max_climb_rate * norm_rel_dist /maths_f_abs(dir_desired_bf[Z]);
 	}
 	
-	dir_desired_bf[X] = v_desired * dir_desired_bf[X] / norm_rel_dist;
-	dir_desired_bf[Y] = v_desired * dir_desired_bf[Y] / norm_rel_dist;
-	dir_desired_bf[Z] = v_desired * dir_desired_bf[Z] / norm_rel_dist;
+	
+	// Scaling of the goal direction by the desired speed
+	dir_desired_bf[X] *= v_desired;
+	dir_desired_bf[Y] *= v_desired;
+	dir_desired_bf[Z] *= v_desired;
 	
 	/*
 	loop_count = loop_count++ %50;
