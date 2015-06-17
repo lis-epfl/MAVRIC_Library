@@ -47,11 +47,21 @@
 extern "C"
 {
 	#include "print_util.h"
+	#include "time_keeper.h"
 }
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
+
+/**
+ * \brief						Sets the time at which the heartbeat was received and the number of message received
+ *
+ * \param	state				The pointer to the state structure
+ * \param	sysid				The system ID
+ * \param	msg					The received MAVLink message structure
+ */
+void state_telemetry_heartbeat_received(state_t* state, uint32_t sysid, mavlink_message_t* msg);
 
 /**
  * \brief						Set the state and the mode of the vehicle
@@ -85,6 +95,14 @@ static mav_result_t state_telemetry_toggle_remote_use(state_t* state, mavlink_co
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
+
+void state_telemetry_heartbeat_received(state_t* state, uint32_t sysid, mavlink_message_t* msg)
+{
+	state->first_connection_set = true;
+	
+	state->last_heartbeat_msg = time_keeper_get_time();	
+	state->msg_count++;
+}
 
 void state_telemetry_set_mav_mode(state_t* state, uint32_t sysid, mavlink_message_t* msg)
 {
@@ -204,13 +222,20 @@ bool state_telemetry_init(state_t* state, mavlink_message_handler_t *message_han
 	// Add callbacks for onboard parameters requests
 	mavlink_message_handler_msg_callback_t callback;
 	
+	callback.message_id 	= MAVLINK_MSG_ID_HEARTBEAT; // 1
+	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
+	callback.compid_filter 	= MAV_COMP_ID_ALL;
+	callback.function 		= (mavlink_msg_callback_function_t)	&state_telemetry_heartbeat_received;
+	callback.module_struct 	= (handling_module_struct_t)		state;
+	init_success &= mavlink_message_handler_add_msg_callback( message_handler, &callback );
+	
 	callback.message_id 	= MAVLINK_MSG_ID_SET_MODE; // 11
 	callback.sysid_filter 	= MAVLINK_BASE_STATION_ID;
 	callback.compid_filter 	= MAV_COMP_ID_ALL;
 	callback.function 		= (mavlink_msg_callback_function_t)	&state_telemetry_set_mav_mode;
 	callback.module_struct 	= (handling_module_struct_t)		state;
 	init_success &= mavlink_message_handler_add_msg_callback( message_handler, &callback );
-		
+	
 	// Add callbacks for waypoint handler commands requests
 	mavlink_message_handler_cmd_callback_t callbackcmd;
 	

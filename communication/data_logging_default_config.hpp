@@ -52,7 +52,6 @@ static inline data_logging_conf_t data_logging_default_config()
 	conf.debug                  = true;
 	conf.max_data_logging_count = 50;
 	conf.max_logs               = 500;
-	conf.log_interval           = 10; // in sec
 	conf.log_data               = 0;  // 1: log data, 0: no log data
 
 	return conf;

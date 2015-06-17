@@ -100,11 +100,18 @@ typedef struct
 	uint8_t autopilot_type;								///< The type of the autopilot (MAV_TYPE enum in common.h)
 	uint8_t autopilot_name;								///< The name of the autopilot (MAV_AUTOPILOT enum in common.h)
 	
-	uint16_t sensor_present;							///< The type of sensors that are present on the autopilot (Value of 0: not present. Value of 1: present. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
-	uint16_t sensor_enabled;							///< The sensors enabled on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
-	uint16_t sensor_health;								///< The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
+	uint32_t sensor_present;							///< The type of sensors that are present on the autopilot (Value of 0: not present. Value of 1: present. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
+	uint32_t sensor_enabled;							///< The sensors enabled on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
+	uint32_t sensor_health;								///< The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
 
-	source_mode_t source_mode;
+	source_mode_t source_mode;							///< The source mode of control (Remote, Joystick, GND station)
+
+	float fence_1_xy;									///< Size of fence 1 in the XY plane, in meters
+	float fence_1_z;									///< Size of fence 1 in the Z direction, in meters
+	float fence_2_xy;									///< Size of fence 2 in the XY plane, in meters
+	float fence_2_z;									///< Size of fence 2 in the Z direction, in meters
+	bool out_of_fence_1;								///< Flag to tell whether we are out the first fence or not
+	bool out_of_fence_2;								///< Flag to tell whether we are out the second fence or not
 
 	bool nav_plan_active;								///< Flag to tell that a flight plan (min 1 waypoint) is active
 	bool in_the_air;									///< Flag to tell whether the vehicle is airborne or not
@@ -114,6 +121,14 @@ typedef struct
 	
 	battery_t battery;									///< The battery structure
 	
+	double last_heartbeat_msg;							///< Time of reception of the last heartbeat message from the ground station
+	double max_lost_connection;							///< Maximum time without reception of a heartbeat message from the ground station
+	
+	uint32_t msg_count;									///< Number of heartbeat message received from the Ground station
+	
+	bool connection_lost;								///< Flag to tell if we have connection with the GND station or not
+	bool first_connection_set;							///< Flag to tell that we received a first message from the GND station
+	
 	const analog_monitor_t* analog_monitor;				///< The pointer to the analog monitor structure
 } state_t;
 
@@ -122,7 +137,7 @@ typedef struct
  * \brief					Initialize the state of the MAV
  *
  * \param	state			The pointer to the state structure
- * \param	state_config	The pointer to the state configuration structure
+ * \param	state_config	The state configuration structure
  * \param	analog_monitor	The pointer to the analog monitor structure
  *
  * \return	True if the init succeed, false otherwise
@@ -137,5 +152,11 @@ bool state_init(state_t *state, state_t state_config, const analog_monitor_t* an
  */
 void state_switch_to_active_mode(state_t* state,mav_state_t* mav_state);
 
+/**
+ * \brief					Check the connection status with the GND station
+ *
+ * \param	state			The pointer to the state structure
+ */
+void state_connection_status(state_t* state);
 
 #endif //STATE_H_

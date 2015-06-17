@@ -30,33 +30,33 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file data_logging_telemetry.h
+ * \file fat_fs_mounting_telemetry.h
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *   
  * \brief This module takes care of sending periodic telemetric messages for
- * the data_logging module
+ * the fat_fs_mounting module
  *
  ******************************************************************************/
 
 
-#ifndef DATA_LOGGING_TELEMETRY_H_
-#define DATA_LOGGING_TELEMETRY_H_
+#ifndef fat_fs_mounting_TELEMETRY_H_
+#define fat_fs_mounting_TELEMETRY_H_
 
-#include "data_logging.hpp"
-#include "mavlink_message_handler.hpp"
 #include "mavlink_stream.hpp"
+#include "mavlink_message_handler.hpp"
+#include "fat_fs_mounting.hpp"
 
 
 /**
  * \brief	Initialize the MAVLink communication module for the remote
  * 
- * \param	data_logging					The pointer to the data logging structure
+ * \param	fat_fs_mounting					The pointer to the data logging structure
  * \param	message_handler			The pointer to the MAVLink message handler
  *
  * \return	True if the init succeed, false otherwise
  */
-bool data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_handler_t* message_handler);
+bool fat_fs_mounting_telemetry_init(fat_fs_mounting_t* fat_fs_mounting, mavlink_message_handler_t* message_handler);
 
-#endif /* DATA_LOGGING_TELEMETRY_H_ */
+#endif /* fat_fs_mounting_TELEMETRY_H_ */

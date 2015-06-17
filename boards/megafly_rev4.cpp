@@ -91,13 +91,20 @@ bool Megafly_rev4::init(void)
 	
 	Enable_global_interrupt();
 	
-	// Init barometer
+	// Init magnetometer
 	if( magnetometer.init() == false )
 	{
 		init_success = false;
 		print_util_dbg_print("[HMC] INIT ERROR\r\n");
 	}
 
+	// Init gyro and accelero
+	// lsm330dlc_init();
+	// print_util_dbg_print("LSM330 initialised \r\n");
+			
+	// Init barometer
+	// bmp085_init(&central_data->pressure);
+	
 
 	return init_success;
 }
