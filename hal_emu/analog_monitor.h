@@ -9,6 +9,10 @@
 #ifndef ANALOG_MONITOR_H_
 #define ANALOG_MONITOR_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define CONV_FACTOR_BAT 0.00265
 #define CONV_FACTOR_INT 0.00265
 #define CONV_FACTOR_6V 0.00155
@@ -25,5 +29,9 @@ float get_6V_analog_rail();
 
 
 float get_5V_analog_rail();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ANALOG_MONITOR_H_ */

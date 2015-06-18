@@ -11,6 +11,11 @@
 #ifndef TIME_KEEPER_H_
 #define TIME_KEEPER_H_
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 //#include "ast.h"
 
@@ -28,5 +33,9 @@ uint32_t time_keeper_get_micros(void);     // microseconds since system start. W
 uint32_t time_keeper_get_time_ticks(void); //raw timer ticks
 
 float time_keeper_ticks_to_seconds(uint32_t timer_ticks);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TIME_KEEPER_H_ */

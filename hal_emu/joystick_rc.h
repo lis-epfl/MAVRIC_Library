@@ -9,6 +9,11 @@
 
 #ifndef JOYSTICK_RC_H_
 #define JOYSTICK_RC_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include "buffer.h"
 
@@ -63,5 +68,9 @@ int16_t spektrum_satellite_get_channel(uint8_t index);
 void spektrum_satellite_calibrate_center(uint8_t index);
 int16_t spektrum_satellite_get_neutral(uint8_t index);
 int8_t spektrum_satellite_check(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif 

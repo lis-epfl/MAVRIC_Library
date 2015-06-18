@@ -11,6 +11,10 @@
 #ifndef GPS_UBLOX_H__ND
 #define GPS_UBLOX_H__ND
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //#include "gps_maveric.h"
 #include "stdint.h"
 #include "stdbool.h"
@@ -593,5 +597,10 @@ ubx_tim_tp_t * ubx_get_tim_tp(void);
 ubx_tim_vrfy_t * ubx_get_tim_vrfy(void);
 
 float to_rad(float numdeg);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //GPS_UBLOX_H__

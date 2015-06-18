@@ -9,6 +9,10 @@
 #ifndef CONF_PLATFORM_H_
 #define CONF_PLATFORM_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //#include "conf_imu_rev3.h"
 #include "conf_imu_rev4.h"
 
@@ -38,5 +42,10 @@
 
 #define MIN_THRUST -0.9
 #define MAX_THRUST 1.0
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CONF_PLATFORM_H_ */

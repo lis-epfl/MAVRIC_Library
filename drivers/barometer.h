@@ -43,6 +43,10 @@
 #ifndef BAROMETER_H_
 #define BAROMETER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \brief bmp085_state_t can get three different state: Idle, get Temperature or get Pressure
 */
@@ -75,5 +79,9 @@ typedef struct
 	barometer_state_t state;			///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
 	float 		dt;						///< Time step for the derivative
 } barometer_t;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* BAROMETER_H_ */

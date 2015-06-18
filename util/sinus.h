@@ -43,6 +43,14 @@
 #ifndef _SINUS_H_
 #define _SINUS_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define SINUS_SAMPLES 60
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _SINUS_H_ */

@@ -43,6 +43,10 @@
 #ifndef LINEAR_ALGEBRA_H_
 #define LINEAR_ALGEBRA_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "small_matrix.h"
 
 /**
@@ -89,5 +93,10 @@ matrix_5x5_t inv5(matrix_5x5_t m);
  * \return		The inverted 6 by 6 matrix
  */
 matrix_6x6_t inv6(matrix_6x6_t m);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* LINEAR_ALGEBRA_H_ */

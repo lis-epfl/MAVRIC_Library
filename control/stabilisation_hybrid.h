@@ -44,6 +44,10 @@
 #ifndef STABILISATION_HYBRID_H_
 #define STABILISATION_HYBRID_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "stabilisation.h"
 
 typedef struct {
@@ -55,5 +59,9 @@ void stabilisation_hybrid_init(Stabiliser_Stack_hybrid_t* stabiliser_stack);
 
 void stabilisation_hybrid_cascade_stabilise_hybrid(imu_t *imu, position_estimation_t *pos_est, control_command_t *control_input);
 void stabilisation_hybrid_mix_to_servos_xwing(control_command_t *control);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* STABILISATION_HYBRID_H_ */

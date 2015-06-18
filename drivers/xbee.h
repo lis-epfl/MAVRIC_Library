@@ -43,6 +43,10 @@
 #ifndef XBEE_H_
 #define XBEE_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "streams.h"
 #include "buffer.h"
 #include "uart_int.h"
@@ -68,5 +72,9 @@ byte_stream_t* xbee_get_in_stream(void);
  * \return the pointer to the xbee out stream
  */
 byte_stream_t* xbee_get_out_stream(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* XBEE_H_ */

@@ -8,6 +8,11 @@
 
 #ifndef ITG3200_H_
 #define ITG3200_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "compiler.h"
 
 #define GY_X 0
@@ -32,5 +37,8 @@ void itg3200_init_slow(void);
 
 gyroscope_t* itg3200_get_data_slow(void);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ITG3200_H_ */

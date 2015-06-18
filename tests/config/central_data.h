@@ -9,6 +9,10 @@
 #ifndef CENTRAL_DATA_H_
 #define CENTRAL_DATA_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -123,5 +127,9 @@ imu_t* get_imu_data();
 control_command_t* get_control_inputs_data();
 
 #define STDOUT &print_util_get_debug_stream()
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CENTRAL_DATA_H_ */

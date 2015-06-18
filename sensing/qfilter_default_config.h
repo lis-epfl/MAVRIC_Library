@@ -43,6 +43,9 @@
 #ifndef QFILTER_DEFAULT_CONFIG_H_
 #define QFILTER_DEFAULT_CONFIG_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "qfilter.hpp"
 
@@ -57,5 +60,8 @@ static inline qfilter_conf_t qfilter_default_config()
 	return conf;
 };
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* QFILTER_DEFAULT_CONFIG_H_ */

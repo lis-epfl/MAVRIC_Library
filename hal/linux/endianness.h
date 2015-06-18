@@ -42,8 +42,18 @@
 #ifndef ENDIANNESS_H_
 #define ENDIANNESS_H_
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define __MAVRIC_ENDIAN_LITTLE__ 
 
 #include "endian.h"
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ENDIANNESS_H_ */

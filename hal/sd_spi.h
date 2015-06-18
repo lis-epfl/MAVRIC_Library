@@ -49,6 +49,11 @@
 #ifndef SD_SPI_H_
 #define SD_SPI_H_
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -298,5 +303,10 @@ bool sd_spi_write_given_sector_from_ram(const void *ram, uint32_t beginning_sect
  * \brief Simple test function
  */
 void sd_spi_test(void);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // SD_SPI_H_

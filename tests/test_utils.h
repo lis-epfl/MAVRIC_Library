@@ -19,6 +19,10 @@
 #ifndef TEST_UTILS_H_
 #define TEST_UTILS_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "print_util.h"
 #include "time_keeper.h"
 #include "delay.h"
@@ -98,6 +102,8 @@
 	time_keeper_delay_ms(10);\
 }
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TEST_UTILS_H_ */

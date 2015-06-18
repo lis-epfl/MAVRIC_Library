@@ -1,6 +1,10 @@
 #ifndef UDP_STREAM_H
 #define UDP_STREAM_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
@@ -23,5 +27,8 @@ void register_write_stream_udp(byte_stream_t *stream, udp_connection_t *udpconn,
 
 void register_read_stream_udp(byte_stream_t *stream, udp_connection_t *udpconn, int32_t port);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

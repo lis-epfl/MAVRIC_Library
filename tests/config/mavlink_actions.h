@@ -12,6 +12,11 @@
 #ifndef MAVLINK_ACTIONS_H_
 #define MAVLINK_ACTIONS_H_
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "mavlink_stream.h"
 
 void add_PID_parameters(void);
@@ -21,5 +26,9 @@ void mavlink_actions_init(void);
 static inline void mavlink_actions_handle_specific_messages (mavlink_received_t* rec) {}
 
 void mavlink_actions_receive_message_long(mavlink_received_t* rec);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* MAVLINK_ACTIONS_H_ */

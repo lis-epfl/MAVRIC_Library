@@ -44,6 +44,9 @@
 #ifndef CONSOLE_H_
 #define CONSOLE_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 #include "streams.h"
 #include "buffer.h"
 #include "uart_int.h"
@@ -81,5 +84,9 @@ byte_stream_t* console_get_in_stream(void);
  * \return				the pointer to the console out stream
  */
 byte_stream_t* console_get_out_stream(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CONSOLE_H_ */

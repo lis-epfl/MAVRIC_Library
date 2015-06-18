@@ -10,6 +10,11 @@
 #ifndef CONF_STABILISATION_COPTER_H_
 #define CONF_STABILISATION_COPTER_H_
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "stabilisation_copter.h"
 
 static stabiliser_stack_copter_t stabiliser_defaults_copter = 
@@ -389,5 +394,8 @@ static stabiliser_stack_copter_t stabiliser_defaults_copter =
 	.yaw_coordination_velocity=1.5
 };
 
-
+#ifdef __cplusplus
+extern "C" {
+#endif
+	
 #endif /* CONF_STABILISATION_COPTER_H_ */

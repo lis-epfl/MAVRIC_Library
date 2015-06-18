@@ -19,6 +19,10 @@
 #ifndef TEST_QUICK_TRIG_H_
 #define TEST_QUICK_TRIG_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "test_utils.h"
 
 /**
@@ -32,5 +36,10 @@ bool run_quick_trig_tests(void);
  * \brief Show the simplyfied trigonometric functions profile
  */
 void profile_quick_trig(void);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TEST_QUICK_TRIG_H_ */

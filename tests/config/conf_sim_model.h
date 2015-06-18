@@ -8,6 +8,11 @@
 
 #ifndef CONF_SIM_MODEL_H_
 #define CONF_SIM_MODEL_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "simulation.h"
 
 
@@ -37,6 +42,8 @@ static simulation_model_t vehicle_model_parameters= {
 };
 
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CONF_SIM_MODEL_H_ */

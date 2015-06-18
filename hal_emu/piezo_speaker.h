@@ -9,6 +9,10 @@
 #ifndef PIEZO_SPEAKER_H_
 #define PIEZO_SPEAKER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 //#define PIEZO_HIGH_PIN AVR32_PIN_PA12
@@ -23,5 +27,8 @@ void piezo_speaker_set_value_binary(int32_t binary_value);
 
 void piezo_speaker_beep(int32_t duration_ms, int32_t frequency);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PIEZO_SPEAKER_H_ */

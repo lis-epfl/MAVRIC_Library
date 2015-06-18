@@ -8,6 +8,11 @@
 
 #ifndef LSM330DLC_H_
 #define LSM330DLC_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "compiler.h"
 
 #define GY_X 0
@@ -196,5 +201,8 @@ void lsm330dlc_init(void);
 lsm_gyro_t* lsm330dlc_driver_get_gyro_data(void);
 lsm_acc_t* lsm330dlc_driver_get_acc_data(void);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif 

@@ -10,6 +10,10 @@
 #define CONF_IMU_REV4_H_
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define GYRO_AXIS_X 0
 #define GYRO_AXIS_Y 1
 #define GYRO_AXIS_Z 2
@@ -75,5 +79,9 @@
 //#define MAG_ORIENTATION_X -1.0
 //#define MAG_ORIENTATION_Y -1.0
 //#define MAG_ORIENTATION_Z  1.0
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CONF_IMU_REV4_H_ */

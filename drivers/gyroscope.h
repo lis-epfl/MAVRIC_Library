@@ -43,6 +43,9 @@
 #ifndef GYRO_H_
 #define GYRO_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * \brief The gyroscope structure
@@ -53,5 +56,9 @@ typedef struct
 	float temperature;		///< The gyroscope's temperature
 	float last_update;		///< The gyroscope last update time
 } gyroscope_t;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* GYRO_H_ */

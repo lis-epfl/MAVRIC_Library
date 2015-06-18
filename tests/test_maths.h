@@ -19,6 +19,10 @@
  #ifndef TEST_MATHS_H
 #define TEST_MATHS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -28,5 +32,9 @@
  * \return the error status
  */
 bool run_math_tests(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

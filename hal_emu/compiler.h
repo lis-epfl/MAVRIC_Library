@@ -1,6 +1,10 @@
 #ifndef COMPILER_H 
 #define COMPILER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "stdint.h"
 
 typedef unsigned char           Bool; //!< Boolean.
@@ -196,5 +200,8 @@ typedef uint32_t                iram_size_t;
 
 #define max(a, b)   Max(a, b)
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif

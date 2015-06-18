@@ -43,6 +43,10 @@
 #ifndef RADAR_DRIVER_H_
 #define RADAR_DRIVER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 #include "gpio.h"
 
@@ -62,6 +66,9 @@ void radar_driver_init(void);
  */
 void radar_driver_switch_power(int32_t supply1, int32_t supply2);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

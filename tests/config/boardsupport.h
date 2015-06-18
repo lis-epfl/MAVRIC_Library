@@ -12,11 +12,18 @@
 #ifndef BOARDSUPPORT_H_
 #define BOARDSUPPORT_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "central_data.h"
 
 
 
 void boardsupport_init(central_data_t *central_data);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* BOARDSUPPORT_H_ */

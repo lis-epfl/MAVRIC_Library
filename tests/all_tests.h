@@ -18,6 +18,10 @@
 #ifndef ALL_TESTS_H
 #define ALL_TESTS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "test_maths.h"
 #include "test_small_matrix.h"
 #include "test_quick_trig.h"
@@ -41,5 +45,10 @@ static inline bool run_all_tests() {
 	
 	return result;
 }
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

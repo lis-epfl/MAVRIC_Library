@@ -43,6 +43,9 @@
 #ifndef I2C_DRIVER_H_
 #define I2C_DRIVER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "twim.h"
 #include <stdint.h>
@@ -164,4 +167,7 @@ int8_t i2c_driver_remove_request(uint8_t i2c_device, uint8_t schedule_slot);  //
  * \return the error status
  */
 int8_t i2c_driver_trigger_request(uint8_t i2c_device, uint8_t schedule_slot);
+#ifdef __cplusplus
+}
+#endif
 #endif /* I2C_DRIVER_H_ */

@@ -9,6 +9,10 @@
 #ifndef SERVO_PWM_H_
 #define SERVO_PWM_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #define SERVO_TIMER_FREQ 1000000
@@ -32,5 +36,8 @@ void servo_pwm_init_old(void);
 
 void servo_pwm_set(servo_output_t *servo_outputs);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SERVO_PWM_H_ */

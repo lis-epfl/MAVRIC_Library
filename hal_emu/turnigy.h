@@ -8,6 +8,11 @@
 #ifndef TURNIGY_H_
 #define TURNIGY_H_
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "compiler.h"
 #include "buffer.h"
 #include "stabilisation.h"
@@ -62,4 +67,9 @@ float get_thrust_from_turnigy();
 
 void get_channel_mode_turnigy(uint8_t* chan_switch);
 */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif //TURNIGY_H_

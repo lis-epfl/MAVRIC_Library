@@ -10,6 +10,11 @@
 #ifndef CONF_STABILISATION_HYBRID_H_
 #define CONF_STABILISATION_HYBRID_H_
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "stabilisation_hybrid.h"
 
 static Stabiliser_Stack_hybrid_t stabiliser_defaults_hybrid = 
@@ -262,5 +267,8 @@ static Stabiliser_Stack_hybrid_t stabiliser_defaults_hybrid =
 	}
 };
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* CONF_STABILISATION_HYBRID_H_ */

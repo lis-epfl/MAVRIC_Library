@@ -5,6 +5,9 @@
 #ifndef _FFCONF
 #define _FFCONF 8051	/* Revision ID */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*---------------------------------------------------------------------------/
 / Functions and Buffer Configurations
@@ -224,5 +227,8 @@
 /   PIC32       0           H8/300H     0           x86         0/1
 */
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _FFCONF */

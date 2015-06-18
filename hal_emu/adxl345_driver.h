@@ -9,6 +9,10 @@
 #ifndef ADXL345_DRIVER_H_
 #define ADXL345_DRIVER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stdint.h>
 
 #define ACC_X 0
@@ -35,6 +39,8 @@ acc_data_t* adxl345_driver_get_acc_data_slow(void);
 
 
 
-
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ADXL345_DRIVER_H_ */

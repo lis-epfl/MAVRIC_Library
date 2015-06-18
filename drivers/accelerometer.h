@@ -43,6 +43,11 @@
 #ifndef ACCELEROMETER_H_
 #define ACCELEROMETER_H_
 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \brief Accelerometer structure
  */
@@ -52,5 +57,10 @@ typedef struct
 	float temperature;			///< Temperature of the accelerometer
 	float last_update;			///< Last update time
 } accelerometer_t;
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ACCELEROMETER_H_ */

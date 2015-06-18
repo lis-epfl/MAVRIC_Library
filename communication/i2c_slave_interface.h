@@ -43,7 +43,14 @@
 #ifndef I2C_SLAVE_INTERFACE_H_
 #define I2C_SLAVE_INTERFACE_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void i2c_slave_interface_init(int32_t device_address);
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* I2C_SLAVE_INTERFACE_H_ */

@@ -1,5 +1,10 @@
 #ifndef JOYSTICK_H
 #define JOYSTICK_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "stabilisation.h"
 
 //Gamepad
@@ -23,5 +28,10 @@
 #define RC_ID_MODE 6
 
 #define RC_TRIM_P3 7
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

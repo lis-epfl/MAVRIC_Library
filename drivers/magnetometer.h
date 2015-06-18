@@ -43,6 +43,10 @@
 #ifndef MAGNETOMETER_H_
 #define MAGNETOMETER_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \brief The magnetometer structure
  */
@@ -52,5 +56,10 @@ typedef struct
 	float temperature;		///< The magnetometer's temperature
 	float last_update;		///< The magnetometer last update time
 } magnetometer_t;
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* MAGNETOMETER_H_ */

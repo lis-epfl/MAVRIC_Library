@@ -9,6 +9,9 @@
 #ifndef BMP085_H_
 #define BMP085_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -69,5 +72,10 @@ void bmp085_start_pressure_measurement(void);
 barometer_t* bmp085_update(float offset);
 
 bool bmp085_new_valid_barometer(uint32_t *time_prev_barometer);
+
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* BMP085_H_ */
