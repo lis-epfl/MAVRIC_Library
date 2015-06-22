@@ -53,8 +53,6 @@ extern "C"
 const uint8_t LSM330_ACC_SLAVE_ADDRESS		= 	0b0011000;	///< Define the Accelerometer Address, as a slave on the i2c bus
 const uint8_t LSM330_GYRO_SLAVE_ADDRESS		= 	0b1101010;	///< Define the Gyroscope Address, as a slave on the i2c bus
 
-const uint8_t LSM_GYRO_DEN_PIN 				= 	AVR32_PIN_PD23;			///< Define the microcontroller pin to enable the gyroscope's data (Data EN)
-
 enum
 {
 	LSM_ACC_DATARATE_OFF,			
