@@ -45,52 +45,67 @@
 #ifndef LSM330DLC_H_
 #define LSM330DLC_H_
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
-
 #include <stdint.h>
-#include "gyroscope.h"
-#include "accelerometer.h"		
+#include "i2c.hpp"
+
+extern "C" 
+{
+	#include <stdint.h>
+	#include "gyroscope.h"
+	#include "accelerometer.h"		
+}
 
 /**
  * \brief	Structure containing the accelerometer's data
 */
-typedef struct
+/*typedef struct
 {
 	accelerometer_t *raw_accelero;
 } lsm_acc_t;
-
+*/
 /**
  * \brief	Structure containing the gyroscope's data
 */
-typedef struct
+/*typedef struct
 {
 	gyroscope_t *raw_gyro;
 } lsm_gyro_t;
-
-
-/**
- * \brief	Initialize the LSM330 accelerometer+gyroscope sensor
 */
-void lsm330dlc_init(void);
 
-/**
- * \brief	Return the gyroscope's data
- *
- * \param	lsm_gyro_outputs	Pointer to the gyroscope data structure
-*/
-void lsm330dlc_gyro_update(gyroscope_t *lsm_gyro_outputs);
 
-/**
- * \brief	Return the accelerometer's data
- *
- * \param	lsm_acc_outputs		Pointer to the accelerometer data structure
-*/
-void lsm330dlc_acc_update(accelerometer_t *lsm_acc_outputs);
+class Lsm330dlc 		
+{
+	public:
+		/**
+		 * @brief  	Constructor
+		 * 
+		 * @param 	i2c 	Reference to I2C device 
+		 */
+		Lsm330dlc(I2c& i2c, accelerometer_t& accel_data, gyroscope_t& gyro_data);
 
-#ifdef __cplusplus
-	}
-#endif
+		/**
+		 * @brief   Initialise the sensor
+		 * @details Sends configuration via I2C, the I2C peripheral must be 
+		 * 			activated before this method is called
+		 * 			
+		 * @return 	true 	Success
+		 * @return 	false 	Failed
+		 */	
+		bool init(void);
+
+		/**
+		 * @brief   Main update function
+		 * @details Get new data from the sensor
+		 * 
+		 * @return 	true 	Success
+		 * @return 	false 	Failed
+		 */
+		bool update(void);
+
+	private:
+		I2c&				i2c_;
+		accelerometer_t& 	accel_data_;
+		gyroscope_t& 		gyro_data_;
+};
 
 #endif 

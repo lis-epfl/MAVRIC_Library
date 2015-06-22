@@ -45,6 +45,7 @@
 #include "serial_avr32.hpp"
 #include "i2c_avr32.hpp"
 #include "hmc5883l.hpp"
+#include "lsm330dlc.hpp"
 #include "imu.hpp"
 
 extern "C"
@@ -107,6 +108,7 @@ public:
 	I2c_avr32 		i2c0;
 	I2c_avr32 		i2c1;
 	Hmc5883l 		magnetometer;
+	Lsm330dlc		lsm330dlc;
 
 
 private:

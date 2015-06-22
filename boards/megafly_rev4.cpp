@@ -52,6 +52,7 @@ Megafly_rev4::Megafly_rev4(imu_t& imu, megafly_rev4_conf_t config):
 	i2c0( I2c_avr32(config.i2c0_config) ),
 	i2c1( I2c_avr32(config.i2c1_config) ),
 	magnetometer( Hmc5883l(i2c0, imu.raw_magneto) ),
+	lsm330dlc( Lsm330dlc(i2c0, imu.raw_accelero, imu.raw_gyro) ),
 	imu_(imu)
 {}
 
@@ -99,8 +100,12 @@ bool Megafly_rev4::init(void)
 	}
 
 	// Init gyro and accelero
-	// lsm330dlc_init();
-	// print_util_dbg_print("LSM330 initialised \r\n");
+	// Init magnetometer
+	if( lsm330dlc.init() == false )
+	{
+		init_success = false;
+		print_util_dbg_print("[LSM330] INIT ERROR\r\n");
+	}
 			
 	// Init barometer
 	// bmp085_init(&central_data->pressure);
