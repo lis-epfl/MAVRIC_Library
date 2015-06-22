@@ -85,7 +85,7 @@ enum
 
 enum
 {
-	LSM_GYRO_BANDWIDTH_20Hz,
+	LSM_GYRO_BANDWIDTH_20H = 4,
 	LSM_GYRO_BANDWIDTH_25Hz,
 	LSM_GYRO_BANDWIDTH_50Hz,
 	LSM_GYRO_BANDWIDTH_100Hz
@@ -95,7 +95,7 @@ enum
 #define LSM_ACC_DATARATE 	(LSM_ACC_DATARATE_400Hz		<< 4)		///< Define the frequency of the Accelerometer data rate
 #define LSM_ACC_FULL_SCALE 	(LSM_ACC_FULL_SCALE_8G 		<< 4)		///< Define the Accelerometer control register A4
 #define LSM_GYRO_FULL_SCALE (LSM_GYRO_FULL_SCALE_2000_2 << 4)		///< Define the range of the gyroscope sensor
-#define LSM_GYRO_BANDWIDTH 	(LSM_GYRO_BANDWIDTH_50Hz 	<< 6)		///< note: actual bandwidth depends on datarate - specified for 380Hz. Consult Datasheet.
+#define LSM_GYRO_BANDWIDTH 	(LSM_GYRO_BANDWIDTH_50Hz 	<< 4)		///< note: actual bandwidth depends on datarate - specified for 380Hz. Consult Datasheet.
 
 const uint8_t LSM_ALL_EN					=	0x07;	///< Enable the accelerometer and gyroscope 3 axis
 const uint8_t LSM_POWER_EN					=	0x08;	///< Enable the acclerometer and gyroscope power
