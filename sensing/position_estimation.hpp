@@ -46,12 +46,12 @@
 
 #include "state.hpp"
 #include "gps_ublox.hpp"
+#include "bmp085.hpp"
 
 extern "C" 
 {
 	#include <stdbool.h>
 	#include "ahrs.h"
-	#include "bmp085.h"
 	#include "coord_conventions.h"
 	#include "constants.h"
 }

@@ -44,11 +44,7 @@
 #define BMP085_TELEMETRY_H_
 
 #include "mavlink_stream.hpp"
-
-extern "C" 
-{
-	#include "bmp085.h"
-}
+#include "bmp085.hpp"
 
 
 /**

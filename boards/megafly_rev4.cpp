@@ -46,13 +46,14 @@ extern "C"
 	#include "time_keeper.h"
 }
 
-Megafly_rev4::Megafly_rev4(imu_t& imu, megafly_rev4_conf_t config):
+Megafly_rev4::Megafly_rev4(imu_t& imu, barometer_t& barometer, megafly_rev4_conf_t config):
 	uart0( Serial_avr32(config.uart0_config) ), 
 	uart3( Serial_avr32(config.uart3_config) ), 
 	i2c0( I2c_avr32(config.i2c0_config) ),
 	i2c1( I2c_avr32(config.i2c1_config) ),
 	magnetometer( Hmc5883l(i2c0, imu.raw_magneto) ),
 	lsm330dlc( Lsm330dlc(i2c0, imu.raw_accelero, imu.raw_gyro) ),
+	bmp085( Bmp085(i2c0, barometer) ),
 	imu_(imu)
 {}
 
@@ -100,7 +101,6 @@ bool Megafly_rev4::init(void)
 	}
 
 	// Init gyro and accelero
-	// Init magnetometer
 	if( lsm330dlc.init() == false )
 	{
 		init_success = false;
@@ -108,7 +108,11 @@ bool Megafly_rev4::init(void)
 	}
 			
 	// Init barometer
-	// bmp085_init(&central_data->pressure);
+	if( bmp085.init() == false )
+	{
+		init_success = false;
+		print_util_dbg_print("[LSM330] INIT ERROR\r\n");
+	}
 	
 
 	return init_success;

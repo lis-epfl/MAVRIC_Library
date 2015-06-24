@@ -43,58 +43,63 @@
 #ifndef BMP085_H_
 #define BMP085_H_
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
-
-#include "scheduler.h"
 #include <stdint.h>
-#include <stdbool.h>
-#include "barometer.h"
+ #include <stdbool.h>
+#include "i2c.hpp"
 
-
-/**
- * \brief structure containing all the barometer's data
-*/
-typedef struct
+extern "C" 
 {
-	barometer_t* barometer;			///< Pointer to the general barometer structure
-} bmp085_t;
-
-
-/**
- * \brief Initialize the barometer sensor
- * 
- * \param bmp085	Pointer to the barometer 085 struct
-*/
-void bmp085_init(barometer_t *bmp085);
-
-
-/**
- * \brief Initialize the barometer sensor in slow mode
-*/
-void bmp085_init_slow(void);
-
-
-/**
- * \brief	Reset the altitude to position estimation origin
- *
- * \param	bmp085				Pointer to the barometer 085 struct
- * \param	origin_altitude		Altitude corresponding to the origin
- */
-void bmp085_reset_origin_altitude(barometer_t* bmp085, float origin_altitude);
-
-
-/**
- * \brief Update the barometer
- *
- * \param bmp085				Pointer to the barometer 085 struct
-*/
-void bmp085_update(barometer_t *bmp085);
-
-
-#ifdef __cplusplus
+	#include "barometer.h"
+	#include "scheduler.h"
 }
-#endif
+
+class Bmp085
+{
+public:
+	/**
+	 * @brief  	Constructor
+	 * 
+	 * @param 	i2c 	Reference to I2C device 
+	 */
+	Bmp085(	I2c& i2c, 
+			barometer_t& data);
+
+	/**
+	 * @brief   Initialise the sensor
+	 * @details Sends configuration via I2C, the I2C peripheral must be 
+	 * 			activated before this method is called
+	 * 			
+	 * @return 	true 	Success
+	 * @return 	false 	Failed
+	 */	
+	bool init(void);
+
+	/**
+	 * @brief   Main update function
+	 * @details Get new data from the sensor
+	 * 
+	 * @return 	true 	Success
+	 * @return 	false 	Failed
+	 */
+	bool update(void);
+	
+
+private:
+	I2c&			i2c_;
+	barometer_t& 	data_;
+	
+	///< Declare configuration values for the barometer, given by the datasheet of the sensor
+	int16_t 	ac1_;
+	int16_t 	ac2_;
+	int16_t 	ac3_; 
+	int16_t 	b1_; 
+	int16_t 	b2_;
+	int16_t 	mb_; 
+	int16_t 	mc_; 
+	int16_t 	md_;		
+	uint16_t 	ac4_; 
+	uint16_t 	ac5_; 
+	uint16_t 	ac6_;
+};
 
 #endif /* BMP085_H_ */

@@ -46,6 +46,7 @@
 #include "i2c_avr32.hpp"
 #include "hmc5883l.hpp"
 #include "lsm330dlc.hpp"
+#include "bmp085.hpp"
 #include "imu.hpp"
 
 extern "C"
@@ -89,6 +90,7 @@ public:
 	 * @param 	config 	Board configuration
 	 */
 	Megafly_rev4( imu_t& imu, 
+				  barometer_t& barometer,
 				  megafly_rev4_conf_t config = megafly_rev4_default_config() );
 
 
@@ -109,7 +111,7 @@ public:
 	I2c_avr32 		i2c1;
 	Hmc5883l 		magnetometer;
 	Lsm330dlc		lsm330dlc;
-
+	Bmp085			bmp085;
 
 private:
 	imu_t& 		imu_;

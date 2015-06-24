@@ -47,6 +47,7 @@ extern "C"
 	#include "print_util.h"
 	#include "maths.h"
 	#include "time_keeper.h"
+	#include "barometer.h"
 }
 
 //------------------------------------------------------------------------------
@@ -192,7 +193,7 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 	}
 	else
 	{
-		bmp085_reset_origin_altitude(pos_est->barometer, pos_est->local_position.origin.altitude);
+		barometer_reset_origin_altitude(pos_est->barometer, pos_est->local_position.origin.altitude);
 		pos_est->init_barometer = true;
 	}
 	
@@ -400,7 +401,7 @@ void position_estimation_reset_home_altitude(position_estimation_t *pos_est)
 	//}
 
 	// reset barometer offset
-	bmp085_reset_origin_altitude(pos_est->barometer, pos_est->local_position.origin.altitude);
+	barometer_reset_origin_altitude(pos_est->barometer, pos_est->local_position.origin.altitude);
 
 	//pos_est->barometer->altitude_offset = -pos_est->barometer->altitude - pos_est->local_position.pos[2] + pos_est->local_position.origin.altitude;
 	pos_est->init_barometer = true;
