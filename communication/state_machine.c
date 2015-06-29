@@ -125,7 +125,6 @@ bool state_machine_init(	state_machine_t *state_machine,
 	state_machine->rc_check 		= 0;
 	state_machine->motor_state 		= 0;
 	
-	state_machine->low_battery_counter	= 0;
 	state_machine->low_battery_update	= 0;
 	
 	print_util_dbg_print("[STATE MACHINE] Initialised.\r\n");
