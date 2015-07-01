@@ -48,13 +48,13 @@ extern "C"
 	#include "time_keeper.h"
 }
 
-void bmp085_telemetry_send_pressure(const barometer_t* bmp085, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void bmp085_telemetry_send_pressure(const Barometer* barometer, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
 	mavlink_msg_scaled_pressure_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										msg,
 										time_keeper_get_millis(),
-										bmp085->pressure / 100.0f,
-										bmp085->vario_vz,
-										bmp085->temperature * 100.0f);
+										barometer->get_pressure() / 100.0f,
+										barometer->get_vario_vz(),
+										barometer->get_temperature() * 100.0f);
 }

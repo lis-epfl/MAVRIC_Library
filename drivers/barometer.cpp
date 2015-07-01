@@ -40,9 +40,64 @@
  ******************************************************************************/
 
 #include <stdint.h>
-#include "barometer.h"
+#include "barometer.hpp"
 
- void barometer_reset_origin_altitude(barometer_t* barometer, float origin_altitude)
+
+Barometer::Barometer( )
+{}
+
+
+ void Barometer::reset_origin_altitude(float origin_altitude)
 {
-	barometer->altitude_offset = - ( barometer->altitude - barometer->altitude_offset - origin_altitude );
+	altitude_offset_ = - (altitude_ - altitude_offset_ - origin_altitude );
+}
+
+float Barometer::get_pressure(void) const
+{
+	return pressure_;
+}
+
+float Barometer::get_vario_vz(void) const
+{
+	return vario_vz_;
+}
+
+float Barometer::get_temperature(void) const
+{
+	return temperature_;
+}
+
+uint32_t Barometer::get_last_update(void) const
+{
+	return last_update_;
+}
+
+float Barometer::get_altitude(void) const
+{
+	return altitude_;
+}
+
+float Barometer::get_altitude_offset(void) const
+{
+	return altitude_offset_;
+}
+
+void Barometer::set_vario_vz(float simulated_vario_vz)
+{
+	vario_vz_ = simulated_vario_vz;
+}
+
+void Barometer::set_altitude(float simulated_altitude)
+{
+	altitude_ = simulated_altitude;
+}
+
+void Barometer::set_altitude_offset(float simulated_altitude_offset)
+{
+	altitude_offset_ = simulated_altitude_offset;
+}
+
+void Barometer::set_last_update(uint32_t simulated_last_update)
+{
+	last_update_ = simulated_last_update;
 }

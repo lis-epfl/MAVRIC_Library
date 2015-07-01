@@ -87,9 +87,8 @@ const uint8_t BMP085_READPRESSURECMD	= 0x34;			///< Read Pressure Command regist
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Bmp085::Bmp085(	I2c& i2c, barometer_t& data):
-		i2c_(i2c),
-		data_(data)
+Bmp085::Bmp085(	I2c& i2c):
+		i2c_(i2c)
 {}
 
 
@@ -100,14 +99,14 @@ bool Bmp085::init(void)
 	// test if the sensor if here
 	res &= i2c_.probe(BMP085_SLAVE_ADDRESS);
 	
-	data_.altitude_offset = 0.0f;
+	altitude_offset_ = 0.0f;
 
 	for (int32_t i = 0; i < 3; i++) 
 	{
-		data_.last_altitudes[i] = 0.0f;
+		last_altitudes_[i] = 0.0f;
 	}
 	
-	data_.vario_vz = 0.0f;
+	vario_vz_ = 0.0f;
 
 	///< Configure with datasheet values
 	ac1_ = 408;
@@ -151,7 +150,7 @@ bool Bmp085::init(void)
 	i2c_.read( (uint8_t*)&b2_ ,  2, BMP085_SLAVE_ADDRESS );
 */
 	//reset Bmp085 state
-	data_.state = IDLE;
+	state_ = IDLE;
 
 	return res;
 }
@@ -182,37 +181,37 @@ bool Bmp085::update(void)
 	int32_t sea_level_pressure = 101325;
 	float dt;
 
-	switch (data_.state) 
+	switch (state_) 
 	{
 		case IDLE:
 			res &= i2c_.write((uint8_t*) &start_command_temp, 2, BMP085_SLAVE_ADDRESS);
-			data_.state = GET_TEMP;
+			state_ = GET_TEMP;
 			break;
 
 		case GET_TEMP:
 			start_address = BMP085_TEMPDATA;
 			res &= i2c_.write((uint8_t*) &start_address, 1, BMP085_SLAVE_ADDRESS);
-			res &= i2c_.read((uint8_t*)&(data_.raw_temperature), 2, BMP085_SLAVE_ADDRESS);
+			res &= i2c_.read((uint8_t*)&(raw_temperature_), 2, BMP085_SLAVE_ADDRESS);
 	
 			res &= i2c_.write((uint8_t*) &start_command_pressure, 2, BMP085_SLAVE_ADDRESS);
-			data_.state = GET_PRESSURE;
+			state_ = GET_PRESSURE;
 			break;
 
 		case GET_PRESSURE:
 			start_address = BMP085_PRESSUREDATA;
 			res &= i2c_.write((uint8_t*) &start_address, 1, BMP085_SLAVE_ADDRESS);
-			res &= i2c_.read((uint8_t*)&(data_.raw_pressure), 3, BMP085_SLAVE_ADDRESS);
+			res &= i2c_.read((uint8_t*)&(raw_pressure_), 3, BMP085_SLAVE_ADDRESS);
 	
-			UP = ((uint32_t)data_.raw_pressure[0] << 16 |(uint32_t)data_.raw_pressure[1] << 8 | (uint32_t)data_.raw_pressure[2]) >> (8 - BMP085_OVERSAMPLING_MODE);
+			UP = ((uint32_t)raw_pressure_[0] << 16 |(uint32_t)raw_pressure_[1] << 8 | (uint32_t)raw_pressure_[2]) >> (8 - BMP085_OVERSAMPLING_MODE);
 
-			UT = data_.raw_temperature[0] << 8 |data_.raw_temperature[1];
+			UT = raw_temperature_[0] << 8 |raw_temperature_[1];
 			
 			///< step 1
 			X1 = (UT - (int32_t)ac6_) * ((int32_t)ac5_) / pow(2,15);
 			X2 = ((int32_t)mc_ * pow(2,11)) / (X1 + (int32_t)md_);
 			B5 = X1 + X2;
-			data_.temperature = (B5 + 8) / pow(2,4);
-			data_.temperature /= 10;
+			temperature_ = (B5 + 8) / pow(2,4);
+			temperature_ /= 10;
 
 			///< do pressure calcs
 			B6 = B5 - 4000;
@@ -244,45 +243,45 @@ bool Bmp085::update(void)
 
 			p = p + ((X1 + X2 + (int32_t)3791) >> 4);
 
-			data_.pressure = p;
+			pressure_ = p;
 	
-			vertical_speed = data_.altitude;
-			altitude = 44330.0f * (1.0f - pow(data_.pressure /sea_level_pressure,0.190295f)) + data_.altitude_offset;
+			vertical_speed = altitude_;
+			altitude = 44330.0f * (1.0f - pow(pressure_ /sea_level_pressure,0.190295f)) + altitude_offset_;
 		
 			for (int32_t i = 0; i < 2; i++) 
 			{
-				data_.last_altitudes[i] = data_.last_altitudes[i + 1];
+				last_altitudes_[i] = last_altitudes_[i + 1];
 			}
-			data_.last_altitudes[2] = altitude;
-			altitude = maths_median_filter_3x(data_.last_altitudes[0], data_.last_altitudes[1], data_.last_altitudes[2]);
+			last_altitudes_[2] = altitude;
+			altitude = maths_median_filter_3x(last_altitudes_[0], last_altitudes_[1], last_altitudes_[2]);
 		
-			if (maths_f_abs(altitude-data_.altitude) < 15.0f) 
+			if (maths_f_abs(altitude-altitude_) < 15.0f) 
 			{
-				data_.altitude = (BARO_ALT_LPF * data_.altitude) + (1.0f - BARO_ALT_LPF) * altitude;
+				altitude_ = (BARO_ALT_LPF * altitude_) + (1.0f - BARO_ALT_LPF) * altitude;
 			}
 			else 
 			{
-				data_.altitude = altitude;
+				altitude_ = altitude;
 			}
 		
-			dt = (time_keeper_get_micros()-data_.last_update) / 1000000.0f;
-			data_.dt = dt;
-			vertical_speed = -(data_.altitude-vertical_speed) / dt;
+			dt = (time_keeper_get_micros()-last_update_) / 1000000.0f;
+			dt_ = dt;
+			vertical_speed = -(altitude_-vertical_speed) / dt;
 		
 			if (abs(vertical_speed) > 20) 
 			{
 				vertical_speed = 0.0f;
 			}
 
-			data_.vario_vz = (VARIO_LPF) * data_.vario_vz + (1.0f - VARIO_LPF) * (vertical_speed);
+			vario_vz_ = (VARIO_LPF) * vario_vz_ + (1.0f - VARIO_LPF) * (vertical_speed);
 		
-			data_.last_update = time_keeper_get_micros();
-			data_.last_update = data_.last_update;
-			data_.state = IDLE;
+			last_update_ = time_keeper_get_micros();
+			last_update_ = last_update_;
+			state_ = IDLE;
 			break;
 	}
 
-	data_.last_state_update = time_keeper_get_micros();
+	last_state_update_ = time_keeper_get_micros();
 
 	return res;
 }

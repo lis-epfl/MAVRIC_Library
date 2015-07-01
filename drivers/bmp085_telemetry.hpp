@@ -50,11 +50,11 @@
 /**
  * \brief	Function to send the MAVLink scaled pressure message
  * 
- * \param	pressure				The pointer to the pressure structure
+ * \param	barometer				The pointer to the barometer object
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
  */
-void bmp085_telemetry_send_pressure(const barometer_t* bmp085, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void bmp085_telemetry_send_pressure(const Barometer* barometer, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
 #endif /* REMOTE_TELEMETRY_H_ */

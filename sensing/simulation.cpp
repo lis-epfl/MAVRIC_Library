@@ -211,7 +211,7 @@ void forces_from_servos_diag_quad(simulation_model_t* sim)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool simulation_init(simulation_model_t* sim, const simulation_config_t sim_config, ahrs_t* ahrs, imu_t* imu, position_estimation_t* pos_est, barometer_t* pressure, gps_t* gps, sonar_t* sonar, state_t* state, const servos_t* servos, bool* waypoint_set)
+bool simulation_init(simulation_model_t* sim, const simulation_config_t sim_config, ahrs_t* ahrs, imu_t* imu, position_estimation_t* pos_est, Barometer* pressure, gps_t* gps, sonar_t* sonar, state_t* state, const servos_t* servos, bool* waypoint_set)
 {
 	bool init_success = true;
 	
@@ -404,10 +404,10 @@ void simulation_update(simulation_model_t *sim)
 
 void simulation_simulate_barometer(simulation_model_t *sim)
 {
-	sim->pressure->altitude = sim->local_position.origin.altitude - sim->local_position.pos[Z];
-	sim->pressure->vario_vz = sim->vel[Z];
-	sim->pressure->last_update = time_keeper_get_millis();
-	sim->pressure->altitude_offset = 0;
+	sim->pressure->set_altitude( sim->local_position.origin.altitude - sim->local_position.pos[Z] );
+	sim->pressure->set_vario_vz( sim->vel[Z] );
+	sim->pressure->set_last_update( time_keeper_get_millis() );
+	sim->pressure->set_altitude_offset(0.0f);
 }
 	
 void simulation_simulate_gps(simulation_model_t *sim)

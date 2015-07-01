@@ -40,12 +40,8 @@
  ******************************************************************************/
 
 
-#ifndef BAROMETER_H_
-#define BAROMETER_H_
-
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef BAROMETER_HPP_
+#define BAROMETER_HPP_
 
 /**
  * \brief bmp085_state_t can get three different state: Idle, get Temperature or get Pressure
@@ -58,39 +54,116 @@ typedef enum bmp085_state_t
 } barometer_state_t;
 
 
-/**
- * \brief Define the barometer structure
- */
-typedef struct
+class Barometer
 {
-	uint8_t 	raw_pressure[3];		///< Raw pressure contained in 3 uint8_t
-	uint8_t 	raw_temperature[2];		///< Raw temperature contained in 2 uint8_t
+public:
+	/**
+	 * @brief  	Constructor
+	 */
+	Barometer();
+
+	/**
+	 * @brief   Reset the altitude to position estimation origin
+	 * 
+	 * @param	origin_altitude 	Altitude corresponding to the origin
+	 */
+	void reset_origin_altitude(float origin_altitude);
 	
-	float 		pressure;				///< Measured pressure as the concatenation of the 3 uint8_t raw_pressure
-	float 		temperature;			///< Measured temperature as the concatenation of the 2 uint8_t raw_temperature
-	float 		altitude;				///< Measured altitude as the median filter of the 3 last_altitudes
-	float 		altitude_offset;		///< Offset of the barometer sensor for matching GPS altitude value
-	float 		vario_vz;				///< Vario altitude speed
+	/**
+	 * @brief   Return the pressure
+	 * 
+	 * @return 	the pressure member
+	 */
+	float get_pressure(void)  const;
+
+	 /**
+	 * @brief   Return the altitude speed
+	 * 
+	 * @return 	the vario_vz_ member
+	 */
+	 float get_vario_vz(void) const;
+
+	 /**
+	 * @brief   Return the temperature
+	 * 
+	 * @return 	the temperature member
+	 */
+	 float get_temperature(void) const;
+
+	 /**
+	 * @brief   Return the last update time
+	 * 
+	 * @return 	the temperature member
+	 */
+	 uint32_t get_last_update(void) const;
+
+	 /**
+	 * @brief   Return the altitude
+	 * 
+	 * @return 	the temperature member
+	 */
+	 float get_altitude(void) const;
+
+	 /**
+	 * @brief   Return the altitude
+	 * 
+	 * @return 	the temperature member
+	 */
+	 float get_altitude_offset(void) const;
+
+	 // FOR SIMULATION PURPOSES ONLY
+	 /**
+	 * @brief   Set the simulated altitude speed
+	 * 
+	 * @param	origin_altitude 	Altitude corresponding to the origin
+	 *
+	 * @return 	the vario_vz_ member
+	 */
+	 void set_vario_vz(float simulated_vario_vz);
+
+	 /**
+	 * @brief   Set the simulated altitude
+	 * 
+	 * @param	origin_altitude 	Altitude corresponding to the origin
+	 *
+	 * @return 	the temperature member
+	 */
+	 void set_altitude(float simulated_altitude);
+
+	 /**
+	 * @brief   Set the simulated altitude offset
+	 * 
+	 * @param	origin_altitude 	Altitude corresponding to the origin
+	 *
+	 * @return 	the temperature member
+	 */
+	 void set_altitude_offset(float simulated_altitude_offset);
+
+	 /**
+	 * @brief   Return the last update time
+	 * 
+	 * @param	origin_altitude 	Altitude corresponding to the origin
+	 *
+	 * @return 	the temperature member
+	 */
+	 void set_last_update(uint32_t simulated_last_update);
+
+protected:
+	uint8_t 			raw_pressure_[3];		///< Raw pressure contained in 3 uint8_t
+	uint8_t 			raw_temperature_[2];	///< Raw temperature contained in 2 uint8_t
 	
-	float 		last_altitudes[3];		///< Array to store previous value of the altitude for low pass filtering the output
+	float 				pressure_;				///< Measured pressure as the concatenation of the 3 uint8_t raw_pressure
+	float 				temperature_;			///< Measured temperature as the concatenation of the 2 uint8_t raw_temperature
+	float 				altitude_;				///< Measured altitude as the median filter of the 3 last_altitudes
+	float 				altitude_offset_;		///< Offset of the barometer sensor for matching GPS altitude value
+	float 				vario_vz_;				///< Vario altitude speed
 	
-	uint32_t 	last_update;			///< Time of the last update of the barometer
-	uint32_t 	last_state_update;		///< Time of the last state update
-	barometer_state_t state;			///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
-	float 		dt;						///< Time step for the derivative
-} barometer_t;
+	float 				last_altitudes_[3];		///< Array to store previous value of the altitude for low pass filtering the output
+	
+	uint32_t 			last_update_;			///< Time of the last update of the barometer
+	uint32_t 			last_state_update_;		///< Time of the last state update
+	barometer_state_t 	state_;			///< State of the barometer sensor (IDLE, GET_TEMP, GET_PRESSURE)
+	float 				dt_;					///< Time step for the derivative
+};
 
-/**
- * \brief	Reset the altitude to position estimation origin
- *
- * \param	barometer				Pointer to the barometer struct
- * \param	origin_altitude		Altitude corresponding to the origin
- */
-void barometer_reset_origin_altitude(barometer_t* barometer, float origin_altitude);
-
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* BAROMETER_H_ */
+#endif /* BAROMETER_HPP_ */

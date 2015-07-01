@@ -44,16 +44,16 @@
 #define BMP085_H_
 
 #include <stdint.h>
- #include <stdbool.h>
+#include <stdbool.h>
 #include "i2c.hpp"
+#include "barometer.hpp"
 
 extern "C" 
 {
-	#include "barometer.h"
 	#include "scheduler.h"
 }
 
-class Bmp085
+class Bmp085 : public Barometer
 {
 public:
 	/**
@@ -61,8 +61,7 @@ public:
 	 * 
 	 * @param 	i2c 	Reference to I2C device 
 	 */
-	Bmp085(	I2c& i2c, 
-			barometer_t& data);
+	Bmp085(	I2c& i2c);
 
 	/**
 	 * @brief   Initialise the sensor
@@ -85,8 +84,7 @@ public:
 	
 
 private:
-	I2c&			i2c_;
-	barometer_t& 	data_;
+	I2c&		i2c_;
 	
 	///< Declare configuration values for the barometer, given by the datasheet of the sensor
 	int16_t 	ac1_;

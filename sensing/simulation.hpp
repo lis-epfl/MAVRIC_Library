@@ -50,12 +50,12 @@
 #include "qfilter.hpp"
 #include "position_estimation.hpp"
 #include "imu.hpp"
+#include "barometer.hpp"
 
 extern "C" 
 {
 	#include <stdint.h>
 	#include "servos.h"
-	#include "barometer.h"
 	#include "sonar.h"
 }
 
@@ -119,7 +119,7 @@ typedef struct
 	
 	imu_t* imu;												///< The pointer to the IMU structure
 	position_estimation_t* pos_est;							///< The pointer to the position estimation structure
-	barometer_t* pressure;									///< The pointer to the barometer structure
+	Barometer* pressure;									///< The pointer to the barometer structure
 	gps_t* gps;												///< The pointer to the GPS structure
 	sonar_t* sonar;											///< The pointer to the sonar structure
 	const state_t* state;									///< The pointer to the state structure
@@ -151,7 +151,7 @@ bool simulation_init(	simulation_model_t* sim,
 						ahrs_t* ahrs, 
 						imu_t* imu, 
 						position_estimation_t* pos_est, 
-						barometer_t* pressure, 
+						Barometer* pressure, 
 						gps_t* gps, 
 						sonar_t* sonar, 
 						state_t* state, 

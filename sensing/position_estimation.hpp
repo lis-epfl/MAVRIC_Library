@@ -97,7 +97,8 @@ typedef struct
 	
 	float gravity;									///< The value of the gravity
 	
-	barometer_t* barometer;							///< The pointer to the barometer structure
+	//barometer_t* barometer;							///< The pointer to the barometer structure
+	Barometer* barometer;
 	const gps_t* gps;								///< The pointer to the GPS structure
 	const ahrs_t* ahrs;								///< The pointer to the attitude estimation structure
 	state_t* state;									///< The pointer to the state structure
@@ -118,7 +119,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, state_t* state, barometer_t* barometer, const gps_t *gps, const ahrs_t *ahrs);
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, state_t* state, Barometer* barometer, const gps_t *gps, const ahrs_t *ahrs);
 
 
 /**
