@@ -43,10 +43,10 @@
 
 #include "state_machine.hpp"
 #include "state.hpp"
-
+#include "spektrum_satellite.hpp"
+	
 extern "C"
 {
-	#include "spektrum_satellite.h"
 	#include "led.h"
 	#include "print_util.h"
 	#include "time_keeper.h"

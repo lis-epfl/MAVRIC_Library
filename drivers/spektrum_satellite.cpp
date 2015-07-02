@@ -41,21 +41,24 @@
  ******************************************************************************/
 
 
-#include "spektrum_satellite.h"
-#include "spektrum.h"
+#include "spektrum_satellite.hpp"
 
-#include "usart.h"
+extern "C" 
+{
+	#include "spektrum.h"
 
-#include "time_keeper.h"
-#include "gpio.h"
-#include "sysclk.h"
+	#include "usart.h"
 
-#include "print_util.h"
+	#include "time_keeper.h"
+	#include "gpio.h"
+	#include "sysclk.h"
 
-// #include "delay.h"
+	#include "print_util.h"
 
-#include "led.h"
+	// #include "delay.h"
 
+	#include "led.h"
+}
 
 #define DSM_RECEIVER_PIN AVR32_PIN_PD12					///< Define the microcontroller pin map with the receiver pin
 #define RECEIVER_POWER_ENABLE_PIN AVR32_PIN_PC01		///< Define the microcontroller pin map with the receiver power enable pin

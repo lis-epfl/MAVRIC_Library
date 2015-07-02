@@ -44,15 +44,13 @@
 #ifndef REMOTE_DSM2_
 #define REMOTE_DSM2_
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
-
-#include <stdint.h>
-#include <stdbool.h>
-#include "buffer.h"
-#include "satellite.h"
-
+extern "C" 
+{
+	#include <stdint.h>
+	#include <stdbool.h>
+	#include "buffer.h"
+	#include "satellite.h"
+}
 
 /**
  * \brief Initialize UART receiver for Spektrum/DSM2 slave receivers
@@ -91,9 +89,5 @@ int16_t spektrum_satellite_get_channel(uint8_t index);
  */
 int16_t spektrum_satellite_get_neutral(uint8_t index);
 
-
-#ifdef __cplusplus
-	}
-#endif
 
 #endif /* REMOTE_DSM2_ */
