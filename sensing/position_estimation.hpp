@@ -97,8 +97,7 @@ typedef struct
 	
 	float gravity;									///< The value of the gravity
 	
-	//barometer_t* barometer;							///< The pointer to the barometer structure
-	Barometer* barometer;
+	Barometer* barometer;							///< The pointer to the barometer object
 	const gps_t* gps;								///< The pointer to the GPS structure
 	const ahrs_t* ahrs;								///< The pointer to the attitude estimation structure
 	state_t* state;									///< The pointer to the state structure
