@@ -194,7 +194,7 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 	else
 	{
 		pos_est->barometer->reset_origin_altitude(pos_est->local_position.origin.altitude);
-		//pos_est->init_barometer = true;
+		pos_est->init_barometer = true;
 	}
 	
 	if (pos_est->init_gps_position)

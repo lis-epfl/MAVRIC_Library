@@ -90,7 +90,6 @@ public:
 	 * @param 	config 	Board configuration
 	 */
 	Megafly_rev4( imu_t& imu, 
-				  Barometer* barometer,
 				  megafly_rev4_conf_t config = megafly_rev4_default_config() );
 
 

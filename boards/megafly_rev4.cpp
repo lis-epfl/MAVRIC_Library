@@ -46,7 +46,7 @@ extern "C"
 	#include "time_keeper.h"
 }
 
-Megafly_rev4::Megafly_rev4(imu_t& imu, Barometer* barometer, megafly_rev4_conf_t config):
+Megafly_rev4::Megafly_rev4(imu_t& imu, megafly_rev4_conf_t config):
 	uart0( Serial_avr32(config.uart0_config) ), 
 	uart3( Serial_avr32(config.uart3_config) ), 
 	i2c0( I2c_avr32(config.i2c0_config) ),
@@ -55,9 +55,7 @@ Megafly_rev4::Megafly_rev4(imu_t& imu, Barometer* barometer, megafly_rev4_conf_t
 	lsm330dlc( Lsm330dlc(i2c0, imu.raw_accelero, imu.raw_gyro) ),
 	bmp085( Bmp085(i2c0) ),
 	imu_(imu)
-{
-	barometer = &bmp085;
-}
+{}
 
 bool Megafly_rev4::init(void)
 {
