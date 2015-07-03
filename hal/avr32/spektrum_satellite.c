@@ -133,6 +133,10 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 			c1 = buffer_get(&spek_sat->receiver);
 			c2 = buffer_get(&spek_sat->receiver);
 			
+			// update timing
+			spek_sat->dt 			= now - spek_sat->last_update;
+			spek_sat->last_update	= now;
+
 			if ((spek_sat->protocol == DSM2_10BITS) && ((c1 != 0x03) || (c2 != 0xB2))) //correspond to DSM2 10bits header
 			{
 				buffer_clear(&spek_sat->receiver);
@@ -162,10 +166,6 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 					spek_sat->channels[channel] = ((int16_t)(sw&0x7ff) - 1024);
 				}
 			}//end of for loop	
-		
-			// update timing
-			spek_sat->dt 			= now - spek_sat->last_update;
-			spek_sat->last_update	= now;
 
 			// Inidicate that new data is available
 			spek_sat->new_data_available = true;
