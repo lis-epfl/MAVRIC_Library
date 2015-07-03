@@ -239,9 +239,6 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	dir_desired_bf[Y] /= norm_rel_dist;
 	dir_desired_bf[Z] /= norm_rel_dist;
 
-	// Maximizing the desired speed to the cruise speed
-	norm_rel_dist = min(navigation->cruise_speed,norm_rel_dist);
-
 	if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
 	{
 		
