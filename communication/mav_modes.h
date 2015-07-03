@@ -222,7 +222,12 @@ typedef enum
 	CUST_DESCENT_TO_SMALL_ALTITUDE = 8,			///< First auto landing behavior
 	CUST_DESCENT_TO_GND = 16,					///< Second auto landing behavior, comes after DESCENT_TO_SMAL_ALTITUDE
 	
-	CUST_COLLISION_AVOIDANCE = 32
+	CUST_COLLISION_AVOIDANCE = 32,
+
+	CUST_BATTERY_LOW = 64,
+	CUST_FENCE_1 = 128,
+	CUST_HEARTBEAT_LOST = 256,
+	CUST_REMOTE_LOST = 512
 }mav_mode_custom_t;
 
 /*
