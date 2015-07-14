@@ -84,7 +84,7 @@ static const servo_entry_t servo_entry_default_custom =
 
 servos_conf_t servos_default_config =
 {
-	.servos_count = 6,
+	.servos_count = 4,
 	.servo =
 	{
 		{ //servo_entry_default_esc
@@ -115,22 +115,6 @@ servos_conf_t servos_default_config =
 			.value 			= 0.0f,
 			.trim 			= 0.0f,
 			.min 			= -0.9f,
-			.max 			= 1.0f,
-			.failsafe 		= -1.1f,
-			.repeat_freq 	= 200,
-		},
-		{ //servo_entry_default_esc Gimbal Pitch 
-			.value 			= 0.0f,
-			.trim 			= 0.0f,
-			.min 			= -1.0f,
-			.max 			= 1.0f,
-			.failsafe 		= -1.1f,
-			.repeat_freq 	= 200,
-		},
-		{ //servo_entry_default_esc Gimbal Yaw
-			.value 			= 0.0f,
-			.trim 			= 0.0f,
-			.min 			= -1.0f,
 			.max 			= 1.0f,
 			.failsafe 		= -1.1f,
 			.repeat_freq 	= 200,

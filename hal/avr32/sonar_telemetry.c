@@ -55,6 +55,5 @@ void sonar_telemetry_send(const sonar_t* sonar, const mavlink_stream_t* mavlink_
 										MAV_DISTANCE_SENSOR_ULTRASOUND,
 										0, 								// id 0
 										0, 								// orientation 0
-										sonar->current_velocity * 100);
-										//sonar->covariance);				// covariance (!=0)
+										sonar->covariance);				// covariance (!=0)
 }

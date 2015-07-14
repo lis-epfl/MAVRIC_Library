@@ -77,12 +77,11 @@ typedef enum
 typedef struct 
 {
 	float rpy[3];								///< roll pitch yaw rates/angles
-	float gimbal_rpy[3];						///< roll pitch yaw rates/angles for the gimbal
 	float thrust;								///< thrust
 	float tvel[3];								///< target velocity in m/s
 	float theading;								///< absolute target heading	
 	control_mode_t control_mode;				///< control mode
-	yaw_mode_t	yaw_mode;						///< yaw mode
+	yaw_mode_t     yaw_mode;					///< yaw mode
 } control_command_t;
 
 /**
@@ -110,16 +109,6 @@ bool stabilisation_init(control_command_t *controls);
  * \param	errors		Array containing the errors of the controlling variables
  */
 void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[]);
-
-/**
- * \brief				Execute the PID controllers used for gimbal stabilization
- * 
- * \param	stabiliser	Pointer to the structure containing the PID controllers
- * \param	dt			Timestep
- * \param	errors		Array containing the errors of the controlling variables
- */
-void gimbal_stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[]);
-
 
 #ifdef __cplusplus
 }

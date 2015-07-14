@@ -413,11 +413,6 @@ void simulation_simulate_gps(simulation_model_t *sim)
 	sim->gps->latitude = gpos.latitude;
 	sim->gps->longitude = gpos.longitude;
 	sim->gps->time_last_msg = time_keeper_get_millis();
-
-	sim->gps->north_speed = sim->vel[X];
-	sim->gps->east_speed = sim->vel[Y];
-	sim->gps->vertical_speed = sim->vel[Z];
-
 	sim->gps->status = GPS_OK;
 }
 
@@ -439,11 +434,6 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 	sim->gps->longitude = gpos.longitude;
 	sim->gps->altitude = gpos.altitude;
 	sim->gps->time_last_msg = time_keeper_get_millis();
-
-	sim->gps->north_speed = 0.0f;
-	sim->gps->east_speed = 0.0f;
-	sim->gps->vertical_speed = 0.0f;
-
 	sim->gps->status = GPS_OK;
 }
 
@@ -451,29 +441,16 @@ void simulation_simulate_sonar(simulation_model_t *sim)
 {
 	int16_t distance_cm = 0.5f - 100 * sim->local_position.pos[Z];
 	float distance_m = (float)distance_cm / 100.0f;
-	float dt = 0.0f;
-	float velocity = 0.0f;
 
 	if ( distance_m > sim->sonar->min_distance && distance_m < sim->sonar->max_distance )
 	{
-		dt = (time_keeper_get_micros() - sim->sonar->last_update)/1000000.0f;
-		velocity = (distance_m - sim->sonar->current_distance)/dt;
-		if (abs(velocity) > 20.0f)
-		{
-			velocity = 0.0f;
-		}
-		sim->sonar->current_velocity = LPF_SONAR_VARIO*sim->sonar->current_velocity + (1.0f-LPF_SONAR_VARIO)*velocity;
 		sim->sonar->current_distance = distance_m;
-		sim->sonar->last_update = time_keeper_get_micros();
+		sim->sonar->last_update = time_keeper_get_millis();
 		sim->sonar->healthy = true;
-		sim->sonar->healthy_vel = true;
 	}
 	else
 	{
 		sim->sonar->healthy = false;
-		sim->sonar->current_distance = 0.0f;
-		sim->sonar->healthy_vel = false;
-		sim->sonar->current_velocity = 0.0f;
 	}
 }
 

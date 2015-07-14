@@ -81,7 +81,7 @@ navigation_config_t navigation_default_config =
 	},
 	.hovering_controller = 
 	{
-		.p_gain = 0.4f,
+		.p_gain = 0.2f,
 		.clip_min = 0.0f,
 		.clip_max = 3.0f,
 		.integrator={

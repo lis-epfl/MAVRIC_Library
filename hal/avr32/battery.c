@@ -197,8 +197,8 @@ void battery_update(battery_t* battery, float voltage)
     // Update voltage
     if(battery->do_LPF == true)
     {
-        battery->current_voltage =  battery->lpf_gain * battery->current_voltage +
-                                    (1.0f - battery->lpf_gain) * voltage;
+        battery->current_voltage =  battery->lpf_gain * voltage +
+                                    (1.0f - battery->lpf_gain) * battery->current_voltage;
     }
     else
     {
