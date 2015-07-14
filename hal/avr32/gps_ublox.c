@@ -632,13 +632,16 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					
 					default:
 					step = 0;
-					print_util_dbg_print("Unexpected NAV message, Class: 0x");
-					print_util_dbg_print_num(ubx_class,16);
-					print_util_dbg_print(", msg id: 0x");
-					print_util_dbg_print_num(msg_id,16);
-					print_util_dbg_print(" of size ");
-					print_util_dbg_print_num(payload_length,10);
-					print_util_dbg_print("\r\n");
+					if (gps->debug)
+					{
+						print_util_dbg_print("Unexpected NAV message, Class: 0x");
+						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print(", msg id: 0x");
+						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print(" of size ");
+						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print("\r\n");
+					}
 					goto reset;
 				}
 			}
@@ -718,13 +721,16 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					
 					default:
 					step = 0;
-					print_util_dbg_print("Unexpected CFG message, Class: 0x");
-					print_util_dbg_print_num(ubx_class,16);
-					print_util_dbg_print(", msg id: 0x");
-					print_util_dbg_print_num(msg_id,16);
-					print_util_dbg_print(" of size ");
-					print_util_dbg_print_num(payload_length,10);
-					print_util_dbg_print("\r\n");
+					if (gps->debug)
+					{
+						print_util_dbg_print("Unexpected CFG message, Class: 0x");
+						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print(", msg id: 0x");
+						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print(" of size ");
+						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print("\r\n");
+					}
 					goto reset;
 				}
 			} else if (ubx_class == UBX_CLASS_MON)
@@ -756,15 +762,18 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					
 					default:
 					step = 0;
-					print_util_dbg_print("Unexpected TIM message, Class: 0x");
-					print_util_dbg_print_num(ubx_class,16);
-					print_util_dbg_print(", msg id: 0x");
-					print_util_dbg_print_num(msg_id,16);
-					print_util_dbg_print(" of size ");
-					print_util_dbg_print_num(payload_length,10);
-					print_util_dbg_print(" should be :");
-					print_util_dbg_print_num(MSG_MON_RXR,16);
-					print_util_dbg_print("\r\n");
+					if (gps->debug)
+					{
+						print_util_dbg_print("Unexpected TIM message, Class: 0x");
+						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print(", msg id: 0x");
+						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print(" of size ");
+						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print(" should be :");
+						print_util_dbg_print_num(MSG_MON_RXR,16);
+						print_util_dbg_print("\r\n");
+					}
 					goto reset;
 				}
 				
@@ -821,28 +830,34 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					
 					default:
 					step = 0;
-					print_util_dbg_print("Unexpected TIM message, Class: 0x");
-					print_util_dbg_print_num(ubx_class,16);
-					print_util_dbg_print(", msg id: 0x");
-					print_util_dbg_print_num(msg_id,16);
-					print_util_dbg_print(" of size ");
-					print_util_dbg_print_num(payload_length,10);
-					print_util_dbg_print(" should be :");
-					print_util_dbg_print_num(MSG_TIM_TP,16);
-					print_util_dbg_print("\r\n");
+					if (gps->debug)
+					{
+						print_util_dbg_print("Unexpected TIM message, Class: 0x");
+						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print(", msg id: 0x");
+						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print(" of size ");
+						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print(" should be :");
+						print_util_dbg_print_num(MSG_TIM_TP,16);
+						print_util_dbg_print("\r\n");
+					}
 					goto reset;
 				}
 			}
 			else
 			{
 				step = 0;
-				print_util_dbg_print("Unexpected message, Class: 0x");
-				print_util_dbg_print_num(ubx_class,16);
-				print_util_dbg_print(", msg id: 0x");
-				print_util_dbg_print_num(msg_id,16);
-				print_util_dbg_print(" of size ");
-				print_util_dbg_print_num(payload_length,10);
-				print_util_dbg_print("\r\n");
+				if (gps->debug)
+				{
+					print_util_dbg_print("Unexpected message, Class: 0x");
+					print_util_dbg_print_num(ubx_class,16);
+					print_util_dbg_print(", msg id: 0x");
+					print_util_dbg_print_num(msg_id,16);
+					print_util_dbg_print(" of size ");
+					print_util_dbg_print_num(payload_length,10);
+					print_util_dbg_print("\r\n");
+				}
 				goto reset;
 			}
 			break;
@@ -1025,24 +1040,28 @@ static bool gps_ublox_process_data(gps_t *gps)
 	
 	if (ubx_class != UBX_CLASS_NAV)
 	{
-		print_util_dbg_print("Unexpected message 0x");
-		print_util_dbg_print_num(ubx_class,16);
-		print_util_dbg_print("02x 0x");
-		print_util_dbg_print_num(msg_id,10);
-		print_util_dbg_print("02x\r\n");
-		if (++disable_counter == 0)
+		if (gps->debug)
 		{
-			// disable future sends of this message id, but
-			// only do this every 256 messages, as some
-			// message types can't be disabled and we don't
-			// want to get into an ack war
 			
-			print_util_dbg_print("Disabling message 0x");
+			print_util_dbg_print("Unexpected message 0x");
 			print_util_dbg_print_num(ubx_class,16);
 			print_util_dbg_print("02x 0x");
-			print_util_dbg_print_num(msg_id,16);
+			print_util_dbg_print_num(msg_id,10);
 			print_util_dbg_print("02x\r\n");
-			ubx_configure_message_rate(gps,ubx_class, msg_id, 0);
+			if (++disable_counter == 0)
+			{
+				// disable future sends of this message id, but
+				// only do this every 256 messages, as some
+				// message types can't be disabled and we don't
+				// want to get into an ack war
+				
+				print_util_dbg_print("Disabling message 0x");
+				print_util_dbg_print_num(ubx_class,16);
+				print_util_dbg_print("02x 0x");
+				print_util_dbg_print_num(msg_id,16);
+				print_util_dbg_print("02x\r\n");
+				ubx_configure_message_rate(gps,ubx_class, msg_id, 0);
+			}
 		}
 		return false;
 	}
@@ -1218,16 +1237,19 @@ static bool gps_ublox_process_data(gps_t *gps)
 		}
 		
 	default:
-		print_util_dbg_print("Unexpected NAV message 0x");
-		print_util_dbg_print_num(msg_id,10);
-		print_util_dbg_print("\r\n");
-		
-		if (++disable_counter == 0)
+		if (gps->debug)
 		{
-			print_util_dbg_print("Disabling NAV message 0x");
-			print_util_dbg_print_num(msg_id,16);
+			print_util_dbg_print("Unexpected NAV message 0x");
+			print_util_dbg_print_num(msg_id,10);
 			print_util_dbg_print("\r\n");
-			ubx_configure_message_rate(gps, UBX_CLASS_NAV, msg_id, 0);
+			
+			if (++disable_counter == 0)
+			{
+				print_util_dbg_print("Disabling NAV message 0x");
+				print_util_dbg_print_num(msg_id,16);
+				print_util_dbg_print("\r\n");
+				ubx_configure_message_rate(gps, UBX_CLASS_NAV, msg_id, 0);
+			}
 		}
 		return false;
 	}
@@ -1650,6 +1672,9 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	buffer_make_buffered_stream(&(gps->gps_buffer), &(gps->gps_stream_in));
 	uart_int_register_read_stream(uart_int_get_uart_handle(UID), &(gps->gps_stream_in));
 	uart_int_register_write_stream(uart_int_get_uart_handle(UID), &(gps->gps_stream_out));
+	
+	//disable debug message prints
+	gps->debug = false;
 }
 
 
