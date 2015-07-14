@@ -56,8 +56,7 @@ extern "C" {
 #include "state.h"
 #include "tasks.h"
 #include "constants.h"
-#include "sonar.h"
-#include "data_logging.h"
+
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
 #define VEL_DECAY 0.0f
@@ -82,9 +81,7 @@ typedef struct
 	float kp_vel_gps[3];							///< The gain to correct the velocity estimation from the GPS
 	float kp_pos_gps[3];							///< The gain to correct the position estimation from the GPS
 	float kp_alt_baro;								///< The gain to correct the Z position estimation from the barometer
-	float kp_vel_baro;								///< The gain to correct the Z velocity estimation from the barometer
-	float kp_alt_sonar;								///< The gain to correct the Z position estimation from the sonar
-	float kp_vel_sonar;								///< The gain to correct the Z velocity estimation from the sonar
+	float kp_vel_baro;								///< The gain to correct the position estimation from the barometer
 
 	uint32_t time_last_gps_msg;						///< The time at which we received the last GPS message in ms
 	uint32_t time_last_barometer_msg;				///< The time at which we received the last barometer message in ms
@@ -103,12 +100,10 @@ typedef struct
 	float gravity;									///< The value of the gravity
 	
 	barometer_t* barometer;							///< The pointer to the barometer structure
-	const sonar_t* sonar;							///< The pointer to the sonar structure
 	const gps_t* gps;								///< The pointer to the GPS structure
 	const ahrs_t* ahrs;								///< The pointer to the attitude estimation structure
 	const imu_t* imu;								///< The pointer to the IMU structure
 	state_t* state;									///< The pointer to the state structure
-	data_logging_t* stat_logging;					///< The pointer to the stat logging structure
 
 	bool* nav_plan_active;							///< The pointer to the waypoint set flag
 } position_estimation_t;
@@ -121,15 +116,13 @@ typedef struct
  * \param	config					The configuration for default home position and gravity value
  * \param	state					The pointer to the state structure
  * \param	barometer				The pointer to the barometer structure
- * \param	sonar 					The pointer to the sonar structure
  * \param	gps						The pointer to the GPS structure
  * \param	ahrs					The pointer to the attitude estimation structure
  * \param	imu						The pointer to the IMU structure
- * \param	stat_logging			The pointer to the stat logging structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const sonar_t* sonar, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, data_logging_t* stat_logging);
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t* barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu);
 
 
 /**
