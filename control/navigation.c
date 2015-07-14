@@ -261,9 +261,9 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		v_desired = pid_controller_update_dt(&navigation->hovering_controller, norm_rel_dist, navigation->dt);
 	}
 	
-	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigation->max_climb_rate * norm_rel_dist ) 
+	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigation->max_climb_rate ) 
 	{
-		v_desired = navigation->max_climb_rate * norm_rel_dist /maths_f_abs(dir_desired_bf[Z]);
+		v_desired = navigation->max_climb_rate / maths_f_abs(dir_desired_bf[Z]);
 	}
 	
 	
