@@ -665,6 +665,8 @@ typedef struct
  	uint8_t  speed_status;					///< Speed status
  	uint8_t  course_status;					///< Course status
  	uint8_t  accuracy_status;				///< Accuracy status
+	 
+	bool debug;								///< Indicates if debug messages should be printed
 	
 	buffer_t gps_buffer;					///< The GPS buffer
 	byte_stream_t gps_stream_in;			///< The incoming GPS byte stream
