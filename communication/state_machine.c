@@ -125,7 +125,6 @@ bool state_machine_init(	state_machine_t *state_machine,
 	state_machine->rc_check 		= 0;
 	state_machine->motor_state 		= 0;
 	
-	state_machine->low_battery_counter	= 0;
 	state_machine->low_battery_update	= 0;
 	
 	print_util_dbg_print("[STATE MACHINE] Initialised.\r\n");
@@ -138,6 +137,8 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 {
 	mav_mode_t mode_current, mode_new;
 	mav_state_t state_current, state_new;
+	mav_mode_custom_t mode_custom_new;
+
 	signal_quality_t rc_check;
 
 	// Get current state
@@ -148,6 +149,8 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 
 	// Get current mode
 	mode_current = state_machine->state->mav_mode;
+
+	mode_custom_new = state_machine->state->mav_mode_custom;
 
 	// Get remote signal strength
 	if (state_machine->state->remote_active == 1)
@@ -187,6 +190,9 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			//disable out of fence checks
 			state_machine->state->out_of_fence_1 = false;
 			state_machine->state->out_of_fence_2 = false;
+			
+			mode_custom_new = CUSTOM_BASE_MODE;
+			
 			if ( mode_new.ARMED == ARMED_ON )
 			{
 				print_util_dbg_print("Switching from state_machine.\r\n");
@@ -200,6 +206,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 				if ( (state_machine->state->source_mode == REMOTE)&&(rc_check != SIGNAL_GOOD) )
 				{
 					state_new = MAV_STATE_CRITICAL;
+					mode_custom_new |= CUST_REMOTE_LOST;
 				}
 				else
 				{
@@ -215,6 +222,11 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			{
 				print_util_dbg_print("Battery low! Performing critical landing.\r\n");
 				state_new = MAV_STATE_CRITICAL;
+				mode_custom_new |= CUST_BATTERY_LOW;
+			}
+			else
+			{
+				mode_custom_new |= !CUST_BATTERY_LOW;
 			}
 			
 			// check connection with GND station
@@ -222,12 +234,22 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			{
 				print_util_dbg_print("Connection with GND station lost! Performing critical landing.\r\n");
 				state_new = MAV_STATE_CRITICAL;
+				mode_custom_new |= CUST_HEARTBEAT_LOST;
+			}
+			else
+			{
+				mode_custom_new |= !CUST_HEARTBEAT_LOST;
 			}
 			
 			if (state_machine->state->out_of_fence_1)
 			{
 				print_util_dbg_print("Out of fence 1!\r\n");
 				state_new = MAV_STATE_CRITICAL;
+				mode_custom_new |= CUST_FENCE_1;
+			}
+			else
+			{
+				mode_custom_new |= !CUST_FENCE_1;
 			}
 			break;
 
@@ -238,6 +260,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 					if( !state_machine->state->battery.is_low && !state_machine->state->connection_lost && !state_machine->state->out_of_fence_1 && !state_machine->state->out_of_fence_2)
 					{
 						state_new = MAV_STATE_ACTIVE;
+						mode_custom_new |= !CUST_REMOTE_LOST;
 					}
 					break;
 
@@ -330,6 +353,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 	// Finally, write new modes and states
 	state_machine->state->mav_mode = mode_new;
 	state_machine->state->mav_state = state_new;
+	state_machine->state->mav_mode_custom = mode_custom_new;
 
 	return TASK_RUN_SUCCESS;
 }

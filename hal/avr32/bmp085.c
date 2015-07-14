@@ -52,7 +52,7 @@
 
 
 #define BARO_ALT_LPF 0.95f						///< low pass filter factor for altitude measured by the barometer
-#define VARIO_LPF 0.95f							///< low pass filter factor for the Vario altitude speed
+#define VARIO_LPF 0.55f							///< low pass filter factor for the Vario altitude speed
 
 #define BMP085_SLAVE_ADDRESS 0x77				///< Address of the barometer sensor on the i2c bus
 

@@ -51,18 +51,22 @@
 #include <stdbool.h>
 #include "quaternions.h"
 
+#define LPF_SONAR_VARIO 0.4f
+
 /**
  * \brief Sonar structure, independent of the sensor used
 */
 typedef struct 
 {
-	uint32_t last_update; 		///< Time since system boot
+	uint32_t last_update; 		///< Last time we updated the sensor measurement
 	quat_t 	orientation; 		///< Direction the sensor faces from FIXME enum.
 	float 	min_distance; 		///< Minimum distance the sensor can measure in centimeters
 	float 	max_distance; 		///< Maximum distance the sensor can measure in centimeters
 	float 	current_distance;	///< Measured distance in meters
+	float	current_velocity;	///< Computed velocity in m/s
 	float 	covariance; 		///< Measurement covariance in centimeters, 0 for unknown / invalid readings
 	bool 	healthy;			///< Indicates whether the current measurement can be trusted
+	bool	healthy_vel;		///< Indicated whether the velocity estimation can be trusted
 } sonar_t;
 
 
