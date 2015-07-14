@@ -1,13 +1,13 @@
 /*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without 
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * 1. Redistributions of source code must retain the above copyright notice, 
  * this list of conditions and the following disclaimer.
- * 
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, 
  * this list of conditions and the following disclaimer in the documentation 
  * and/or other materials provided with the distribution.
@@ -28,56 +28,67 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-
+ 
 /*******************************************************************************
- * \file stabilisation.c
- * 
- * \author MAV'RIC Team
- * \author Felix Schill
+ * \file stabilisation_gimbal.c
+ *
+ * \author Alexandre Cherpillod
  *   
- * \brief Executing the PID controllers for stabilization
+ * \brief This file handles the stabilization of the gimbal
  *
  ******************************************************************************/
 
-
-#include "stabilisation.h"
-#include "print_util.h"
+#include "stabilisation_gimbal.h"
 #include "constants.h"
+#include "print_util.h"
+#include "conf_platform.h"
 
-bool stabilisation_init(control_command_t *controls)
+void stabilisation_gimbal(stabilisation_copter_t* stabilisation_copter)
 {
-	bool init_success = true;
+	float rpy_errors[3];
+	control_command_t input;
 	
-	controls->control_mode = ATTITUDE_COMMAND_MODE;
-	controls->yaw_mode = YAW_RELATIVE;
-	
-	controls->rpy[ROLL] = 0.0f;
-	controls->rpy[PITCH] = 0.0f;
-	controls->rpy[YAW] = 0.0f;
-	controls->tvel[X] = 0.0f;
-	controls->tvel[Y] = 0.0f;
-	controls->tvel[Z] = 0.0f;
-	controls->theading = 0.0f;
-	controls->thrust = -1.0f;
-	
-	print_util_dbg_print("[STABILISATION] init.\r\n");
-	
-	return init_success;
+	// set the controller input
+	input = *stabilisation_copter->controls;
+	switch (stabilisation_copter->controls->control_mode)
+	{	
+		case ATTITUDE_COMMAND_MODE:
+		{	
+			//update errors - the user body frame is considered aligned with the drone body frame
+			rpy_errors[PITCH]	= input.gimbal_rpy[PITCH]	- (0); //pitch error (tilt)
+			rpy_errors[YAW]		= input.gimbal_rpy[YAW]		- (0); //yaw error (pan)
+			
+			//run PID update on all attitudes controllers (only pitch and yaw so far)
+			gimbal_stabilisation_run(&stabilisation_copter->stabiliser_stack.gimbal_attitude_stabiliser, stabilisation_copter->imu->dt, rpy_errors);
+			
+			//compute the mix and send to servo outputs
+			gimbal_stabilisation_mix_to_servos_quad(&stabilisation_copter->stabiliser_stack.gimbal_attitude_stabiliser.output, stabilisation_copter->servos);
+		
+			break;
+		}
+		case RATE_COMMAND_MODE:
+		{
+			;
+			break;
+		}
+		case VELOCITY_COMMAND_MODE:
+		{
+			;
+		}
+	}
 }
-
-void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[]) 
+	
+	
+void gimbal_stabilisation_mix_to_servos_quad(control_command_t *control, servos_t* servos)
 {
-	for (int32_t i = 0; i < 3; i++) 
-	{
-		stabiliser->output.rpy[i] =	pid_controller_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
-	}		
-	stabiliser->output.thrust = pid_controller_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
-}
-
-void gimbal_stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[])
-{
-	for (int32_t i = 0; i < 3; i++)
-	{
-		stabiliser->output.gimbal_rpy[i] =	pid_controller_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
+	int32_t i;
+	float gimbal_servo_command[3]; //only gimbal stabilisation in pitch and yaw
+	
+	gimbal_servo_command[GIMBAL_SERVO_PITCH]	= control->gimbal_rpy[PITCH];
+	gimbal_servo_command[GIMBAL_SERVO_YAW]		= control->gimbal_rpy[YAW];
+	
+	for (i=4; i<6; i++)
+	{ 
+		servos_set_value( servos, i, gimbal_servo_command[i-4]); //min -1.0 max 1.0 (use full capacity angle of the servo)
 	}
 }

@@ -240,6 +240,33 @@ float remote_get_pitch(const remote_t* remote);
 float remote_get_yaw(const remote_t* remote);
 
 /**
+ * \brief	Returns the gimbal/roll value from the remote
+ * 
+ * \param	remote				The pointer to the remote structure
+ *
+ * \return	The value of the roll
+ */
+float remote_get_gimbal_roll(const remote_t* remote);
+
+/**
+ * \brief	Returns the gimbal/pitch value from the remote
+ * 
+ * \param	remote				The pointer to the remote structure
+ *
+ * \return	The value of the pitch
+ */
+float remote_get_gimbal_pitch(const remote_t* remote);
+
+/**
+ * \brief	Returns the gimbal/yaw value from the remote
+ * 
+ * \param	remote				The pointer to the remote structure
+ *
+ * \return	The value of the yaw
+ */
+float remote_get_gimbal_yaw(const remote_t* remote);
+
+/**
  * \brief	Initialise the mode from the remote switches
  * 
  * \param	remote_mode			The pointer to the remote mode structure
@@ -270,6 +297,14 @@ mav_mode_t remote_mode_get(const remote_t* remote);
  * \param	controls			The pointer to the controls structure
  */
 void remote_get_command_from_remote(remote_t* remote, control_command_t * controls);
+
+/**
+ * \brief	Sets the gimbal attitude command from the remote (rpy values)
+ * 
+ * \param	remote				The pointer to the remote structure
+ * \param	controls			The pointer to the controls structure
+ */
+void remote_get_gimbal_command_from_remote(remote_t* remote, control_command_t * controls);
 
 /**
  * \brief	Sets the velocity command vector from the remote
