@@ -30,54 +30,74 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation.c
+ * \file gimbal_control_command.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Alexandre Cherpillod
  *   
- * \brief Executing the PID controllers for stabilization
+ * \brief Data structures to hold pan and tilt command for the gimbal
+ * 
  *
  ******************************************************************************/
 
 
-#include "stabilisation.h"
-#include "print_util.h"
-#include "constants.h"
+#include "quaternions.h"
 
-bool stabilisation_init(control_command_t *controls)
-{
-	bool init_success = true;
-	
-	controls->control_mode = ATTITUDE_COMMAND_MODE;
-	controls->yaw_mode = YAW_RELATIVE;
-	
-	controls->rpy[ROLL] = 0.0f;
-	controls->rpy[PITCH] = 0.0f;
-	controls->rpy[YAW] = 0.0f;
-	controls->tvel[X] = 0.0f;
-	controls->tvel[Y] = 0.0f;
-	controls->tvel[Z] = 0.0f;
-	controls->theading = 0.0f;
-	controls->thrust = -1.0f;
-	
-	print_util_dbg_print("[STABILISATION] init.\r\n");
-	
-	return init_success;
-}
+#ifndef GIMBAL_CONTROL_COMMAND_H_
+#define GIMBAL_CONTROL_COMMAND_H_
 
-void stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[]) 
-{
-	for (int32_t i = 0; i < 3; i++) 
-	{
-		stabiliser->output.rpy[i] =	pid_controller_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
-	}		
-	stabiliser->output.thrust = pid_controller_update_dt(&(stabiliser->thrust_controller),  errors[3], dt);
-}
+#ifdef __cplusplus
+	extern "C" {
+#endif
 
-void gimbal_stabilisation_run(stabiliser_t *stabiliser, float dt, float errors[])
+/**
+ * \brief 	Control command mode enum
+ */
+typedef enum
 {
-	for (int32_t i = 0; i < 3; i++)
-	{
-		stabiliser->output.gimbal_rpy[i] =	pid_controller_update_dt(&(stabiliser->rpy_controller[i]),  errors[i], dt);
+	GIMBAL_RATE_COMMAND     = 0,
+	GIMBAL_ATTITUDE_COMMAND = 1
+} gimbal_control_command_mode_t;
+
+/**
+ * \brief	Rate command structure
+ */
+typedef struct 
+{	
+	float xyz[2];					///<	Rate on X, Y and Z axis (in rad/s) - roll, pitch(tilt) and yaw(pan) angles
+} gimbal_rate_command_t;
+
+/**
+ * \brief	Attitude command mode, either quaternion, either roll pitch and yaw angles
+ */
+typedef enum
+{
+	GIMBAL_ATTITUDE_COMMAND_MODE_QUATERNION	= 0,
+	GIMBAL_ATTITUDE_COMMAND_MODE_RPY			= 1
+} gimbal_attitude_command_mode_t;
+
+/**
+ * \brief	Attitude command structure
+ */
+typedef struct 
+{	
+	quat_t quat;					///<	Attitude quaternion
+	float rpy[3];					///<	Roll, pitch(tilt) and yaw(pan) angles 
+ 	attitude_command_mode_t mode;	///< 	Command mode, defines whether the quaternion or the rpy angles should be used
+} gimbal_attitude_command_t;
+
+/**
+ * \brief 	Global command structure
+ */
+typedef struct
+{
+	gimbal_control_command_mode_t  mode;		///< Control command mode
+	gimbal_rate_command_t          rate;		///< Rate command
+	gimbal_attitude_command_t      attitude;	///< Attitude command
+} gimbal_command_t;
+
+#ifdef __cplusplus
 	}
-}
+#endif
+
+#endif
