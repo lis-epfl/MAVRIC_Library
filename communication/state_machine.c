@@ -119,13 +119,7 @@ bool state_machine_init(	state_machine_t *state_machine,
 	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
 	state_machine->remote 			= remote;
-	state_machine->joystick = joystick;
-	
-	state_machine->channel_switches = 0;
-	state_machine->rc_check 		= 0;
-	state_machine->motor_state 		= 0;
-	
-	state_machine->low_battery_update	= 0;
+	state_machine->joystick 		= joystick;
 	
 	print_util_dbg_print("[STATE MACHINE] Initialised.\r\n");
 	
