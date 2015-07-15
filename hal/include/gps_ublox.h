@@ -712,7 +712,8 @@ typedef struct
 	uint8_t loop_nav_timeutc;					///< Counter used to print one message every num_skipped_msg
 	uint8_t loop_mon_rxr;						///< Counter used to print one message every num_skipped_msg
 
-	bool print_nav_on_debug;					///< Flag to print messages on debug console 
+	bool print_nav_on_debug;					///< Flag to print messages on debug console
+	bool debug;									///< Indicates if debug messages should be printed
 
 	gps_engine_setting_t engine_nav_setting;	///< Enum GPS engine setting
 	ubx_cfg_nav_settings_t nav_settings;		///< CFG-NAV settings structure
