@@ -189,7 +189,7 @@ void pwm_servos_write_to_hardware(const servos_t* servos)
 
 	// Set update frequency per channel with conservative method:
 	// if two servos on the same channel ask for two different frequencies,
-	// then the lowest frequency is used
+	// then the lowest frequecy is used
 	for (int8_t i = 0; i < MAX_SERVO_COUNT / 2; ++i)
 	{
 		freq_channel[i] = min( servos->servo[2 * i].repeat_freq, servos->servo[2 * i + 1].repeat_freq );

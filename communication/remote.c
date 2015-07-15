@@ -263,20 +263,6 @@ float remote_get_yaw(const remote_t* remote)
 	return remote->channels[CHANNEL_YAW];
 }
 
-float remote_get_gimbal_roll(const remote_t* remote)
-{
-	return remote->channels[CHANNEL_AUX3]; //not used yet - (8 july 2015) Alexandre Cherpillod
-}
-
-float remote_get_gimbal_pitch(const remote_t* remote)
-{
-	return remote->channels[CHANNEL_AUX1];
-}
-
-float remote_get_gimbal_yaw(const remote_t* remote)
-{
-	return remote->channels[CHANNEL_AUX2];
-}
 
 void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t* config)
 {
@@ -330,7 +316,7 @@ void remote_mode_update(remote_t* remote)
 		// Fallback to safety
 		mav_mode_t new_desired_mode = remote_mode->safety_mode;
 
-		// Get armed flag from stick combinations
+		// Get armed flag from stick combinaison
 		mode_flag_armed_t flag_armed = get_armed_flag(remote);
 
 		if ( remote->channels[remote_mode->safety_channel] > 0 )
@@ -424,15 +410,6 @@ void remote_get_command_from_remote(remote_t* remote, control_command_t* control
 	controls->rpy[PITCH] 	= remote_get_pitch(remote);
 	controls->rpy[YAW] 		= remote_get_yaw(remote);
 	controls->thrust 		= remote_get_throttle(remote);
-}
-
-void remote_get_gimbal_command_from_remote(remote_t* remote, control_command_t* controls)
-{
-	remote_update(remote); //Request the received values from the remote
-	
-	controls->gimbal_rpy[ROLL]		= remote_get_gimbal_roll(remote);
-	controls->gimbal_rpy[PITCH]		= remote_get_gimbal_pitch(remote);
-	controls->gimbal_rpy[YAW]		= remote_get_gimbal_yaw(remote);
 }
 
 void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t* controls)

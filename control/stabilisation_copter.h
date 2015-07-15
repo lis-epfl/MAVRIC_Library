@@ -73,7 +73,6 @@ typedef struct
 	stabiliser_t attitude_stabiliser;							///< The attitude controller structure
 	stabiliser_t velocity_stabiliser;							///< The velocity controller structure
 	stabiliser_t position_stabiliser;							///< The position controller structure
-	stabiliser_t gimbal_attitude_stabiliser;					///< The gimbal attitude controller structure
 	float yaw_coordination_velocity;							///< the yaw coordination value in velocity control mode
 } stabiliser_stack_copter_t;
 

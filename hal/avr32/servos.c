@@ -104,9 +104,6 @@ void servos_set_value_failsafe(servos_t* servos)
 {
 	for (int i = 0; i < servos->servos_count; ++i)
 	{
-		if(i<4 && i>5) //Added to send command for the 2 gimbal PWM even if the drone is NOT_ARMED
-		{
-			servos->servo[i].value = servos->servo[i].failsafe;
-		}
+		servos->servo[i].value = servos->servo[i].failsafe;
 	}
 }
