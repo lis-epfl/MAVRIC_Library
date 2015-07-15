@@ -112,7 +112,8 @@ bool state_machine_init(	state_machine_t *state_machine,
 							state_t* state, 
 							simulation_model_t *sim_model, 
 							remote_t* remote,
-							joystick_parsing_t* joystick)
+							joystick_parsing_t* joystick,
+							const gps_t* gps)
 {
 	bool init_success = true;
 	
@@ -120,7 +121,8 @@ bool state_machine_init(	state_machine_t *state_machine,
 	state_machine->sim_model 		= sim_model;
 	state_machine->remote 			= remote;
 	state_machine->joystick 		= joystick;
-	
+	state_machine->gps 				= gps;
+
 	print_util_dbg_print("[STATE MACHINE] Initialised.\r\n");
 	
 	return init_success;
@@ -204,6 +206,8 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 				}
 				else
 				{
+					mode_custom_new &= !CUST_REMOTE_LOST;
+
 					if ( mode_new.ARMED == ARMED_OFF )
 					{
 						state_new = MAV_STATE_STANDBY;
@@ -220,7 +224,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 			else
 			{
-				mode_custom_new |= !CUST_BATTERY_LOW;
+				mode_custom_new &= !CUST_BATTERY_LOW;
 			}
 			
 			// check connection with GND station
@@ -232,7 +236,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 			else
 			{
-				mode_custom_new |= !CUST_HEARTBEAT_LOST;
+				mode_custom_new &= !CUST_HEARTBEAT_LOST;
 			}
 			
 			if (state_machine->state->out_of_fence_1)
@@ -243,18 +247,33 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 			else
 			{
-				mode_custom_new |= !CUST_FENCE_1;
+				mode_custom_new &= !CUST_FENCE_1;
 			}
+
+			if (state_machine->gps->status != GPS_OK)
+			{
+				print_util_dbg_print("GPS bad!\r\n");
+				state_new = MAV_STATE_CRITICAL;
+				mode_custom_new |= CUST_GPS_BAD;
+			}
+			else
+			{
+				mode_custom_new &= !CUST_GPS_BAD;
+			}
+
 			break;
 
 		case MAV_STATE_CRITICAL:			
 			switch ( rc_check )
 			{
 				case SIGNAL_GOOD:
-					if( !state_machine->state->battery.is_low && !state_machine->state->connection_lost && !state_machine->state->out_of_fence_1 && !state_machine->state->out_of_fence_2)
+					if( !state_machine->state->battery.is_low && 
+						!state_machine->state->connection_lost && 
+						!state_machine->state->out_of_fence_1 && 
+						!state_machine->state->out_of_fence_2 &&
+						(state_machine->gps->status == GPS_OK))
 					{
 						state_new = MAV_STATE_ACTIVE;
-						mode_custom_new |= !CUST_REMOTE_LOST;
 					}
 					break;
 
