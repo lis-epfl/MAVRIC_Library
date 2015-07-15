@@ -498,7 +498,7 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 	{
 		if (!navigation->waypoint_handler->hold_waypoint_set)
 		{
-			navigation_waypoint_hold_init(navigation->waypoint_handler, navigation->waypoint_handler->position_estimation->local_position);
+			navigation_waypoint_hold_init(navigation->waypoint_handler, navigation->position_estimation->local_position);
 		}
 		waypoint_handler_nav_plan_init(navigation->waypoint_handler);
 	}
@@ -511,7 +511,10 @@ static void navigation_critical_handler(navigation_t* navigation)
 	
 	//Check whether we entered critical mode due to a battery low level or a lost
 	// connection with the GND station or are out of fence control
-	if ( navigation->state->battery.is_low || navigation->state->connection_lost || navigation->state->out_of_fence_2)
+	if ( navigation->state->battery.is_low || 
+		navigation->state->connection_lost || 
+		navigation->state->out_of_fence_2 ||
+		navigation->position_estimation->gps->status != GPS_OK)
 	{
 		if(navigation->critical_behavior != CRITICAL_LAND)
 		{
@@ -519,6 +522,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 			navigation->critical_next_state = false;
 		}
 	}
+	
 	if (!(navigation->critical_next_state))
 	{
 		navigation->critical_next_state = true;
