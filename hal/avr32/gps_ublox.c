@@ -1890,7 +1890,7 @@ void gps_ublox_update(gps_t *gps)
 	{
 		if ((tnow - gps->idle_timer) > gps->idle_timeout)
 		{
-			gps->status = NO_GPS;
+			gps->status = NO_FIX;
 			
 			gps_ublox_reset(gps, GPS_ENGINE_AIRBORNE_4G);
 			gps->idle_timer = tnow;
