@@ -292,6 +292,10 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 					// higher level navigation module will take care of coming back home
 					break;
 			}
+			if (mode_new.ARMED == ARMED_OFF)
+			{
+				state_new = MAV_STATE_STANDBY;
+			}
 			break;
 		
 		case MAV_STATE_EMERGENCY:
