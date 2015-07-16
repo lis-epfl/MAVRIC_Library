@@ -1458,6 +1458,16 @@ void waypoint_handler_init_homing_waypoint(mavlink_waypoint_handler_t* waypoint_
 	waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
 	
 	waypoint_handler->waypoint_list[0] = waypoint;
+
+
+
+	// Overwritting homing waypoint with circle scenario waypoints
+	mavlink_command_long_t packet;
+	packet.param2 = 30.0f;
+	packet.param3 = 10.0f;
+	packet.param4 = 25.0f;
+	packet.param5 = 0.0f;
+	waypoint_handler_set_circle_scenario(waypoint_handler, &packet);
 }
 
 void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_handler)
