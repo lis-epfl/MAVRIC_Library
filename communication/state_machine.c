@@ -206,7 +206,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 				}
 				else
 				{
-					mode_custom_new &= !CUST_REMOTE_LOST;
+					mode_custom_new &= ~CUST_REMOTE_LOST;
 
 					if ( mode_new.ARMED == ARMED_OFF )
 					{
@@ -224,7 +224,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 			else
 			{
-				mode_custom_new &= !CUST_BATTERY_LOW;
+				mode_custom_new &= ~CUST_BATTERY_LOW;
 			}
 			
 			// check connection with GND station
@@ -236,7 +236,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 			else
 			{
-				mode_custom_new &= !CUST_HEARTBEAT_LOST;
+				mode_custom_new &= ~CUST_HEARTBEAT_LOST;
 			}
 			
 			if (state_machine->state->out_of_fence_1)
@@ -247,10 +247,10 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 			else
 			{
-				mode_custom_new &= !CUST_FENCE_1;
+				mode_custom_new &= ~CUST_FENCE_1;
 			}
 
-			if (state_machine->gps->status != GPS_OK)
+			if (!state_machine->gps->healthy)
 			{
 				print_util_dbg_print("GPS bad!\r\n");
 				state_new = MAV_STATE_CRITICAL;
@@ -258,7 +258,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 			else
 			{
-				mode_custom_new &= !CUST_GPS_BAD;
+				mode_custom_new &= ~CUST_GPS_BAD;
 			}
 
 			break;
@@ -271,7 +271,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 						!state_machine->state->connection_lost && 
 						!state_machine->state->out_of_fence_1 && 
 						!state_machine->state->out_of_fence_2 &&
-						(state_machine->gps->status == GPS_OK))
+						state_machine->gps->healthy)
 					{
 						state_new = MAV_STATE_ACTIVE;
 					}

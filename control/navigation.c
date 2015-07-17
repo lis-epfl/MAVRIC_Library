@@ -542,6 +542,10 @@ static void navigation_critical_handler(navigation_t* navigation)
 				break;
 			
 			case FLY_TO_HOME_WP:
+<<<<<<< HEAD
+=======
+				navigation->state->mav_mode_custom &= 0xFFFFFFE0;
+>>>>>>> gps_date
 				navigation->state->mav_mode_custom &= ~CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
 				navigation->state->mav_mode_custom |= CUST_CRITICAL_FLY_TO_HOME_WP;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
