@@ -1835,6 +1835,9 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	gps->loop_mon_rxr = 0;
 	
 	gps->engine_nav_setting = GPS_ENGINE_AIRBORNE_4G;
+
+	gps->status = NO_GPS;
+	gps->healthy = false;
 }
 
 
@@ -1890,8 +1893,10 @@ void gps_ublox_update(gps_t *gps)
 	{
 		if ((tnow - gps->idle_timer) > gps->idle_timeout)
 		{
-			gps->status = NO_FIX;
+			gps->status = NO_GPS;
 			
+			gps->healthy = false;
+
 			gps_ublox_reset(gps, GPS_ENGINE_AIRBORNE_4G);
 			gps->idle_timer = tnow;
 		}
@@ -1903,6 +1908,8 @@ void gps_ublox_update(gps_t *gps)
 		
 		gps->time_last_msg = tnow;
 		
+		gps->healthy = true;
+
 		if(gps->status == GPS_OK)
 		{
 			// Check for horizontal accuracy

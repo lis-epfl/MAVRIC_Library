@@ -419,6 +419,7 @@ void simulation_simulate_gps(simulation_model_t *sim)
 	sim->gps->vertical_speed = sim->vel[Z];
 
 	sim->gps->status = GPS_OK;
+	sim->gps->healthy = true;
 }
 
 void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
@@ -445,6 +446,7 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 	sim->gps->vertical_speed = 0.0f;
 
 	sim->gps->status = GPS_OK;
+	sim->gps->healthy = true;
 }
 
 void simulation_simulate_sonar(simulation_model_t *sim)
