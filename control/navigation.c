@@ -514,7 +514,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 	if ( navigation->state->battery.is_low || 
 		navigation->state->connection_lost || 
 		navigation->state->out_of_fence_2 ||
-		navigation->position_estimation->gps->status != GPS_OK)
+		!navigation->position_estimation->gps->healthy)
 	{
 		if(navigation->critical_behavior != CRITICAL_LAND)
 		{
@@ -535,7 +535,6 @@ static void navigation_critical_handler(navigation_t* navigation)
 		{
 			case CLIMB_TO_SAFE_ALT:
 				print_util_dbg_print("Climbing to safe alt...\r\n");
-				navigation->state->mav_mode_custom &= 0xFFFFFFE0;
 				navigation->state->mav_mode_custom |= CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = navigation->position_estimation->local_position.pos[X];
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = navigation->position_estimation->local_position.pos[Y];
@@ -543,7 +542,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 				break;
 			
 			case FLY_TO_HOME_WP:
-				navigation->state->mav_mode_custom &= 0xFFFFFFE0;
+				navigation->state->mav_mode_custom &= !CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
 				navigation->state->mav_mode_custom |= CUST_CRITICAL_FLY_TO_HOME_WP;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
@@ -551,7 +550,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 				break;
 			
 			case HOME_LAND:
-				navigation->state->mav_mode_custom &= 0xFFFFFFE0;
+				navigation->state->mav_mode_custom &= !CUST_CRITICAL_FLY_TO_HOME_WP;
 				navigation->state->mav_mode_custom |= CUST_CRITICAL_LAND;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
@@ -910,7 +909,6 @@ task_return_t navigation_update(navigation_t* navigation)
 			navigation->stop_nav = false;
 			navigation->stop_nav_there = false;
 			navigation->waypoint_handler->hold_waypoint_set = false;
-			navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
 			navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 			navigation->critical_next_state = false;
 			navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;

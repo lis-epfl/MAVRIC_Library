@@ -1459,9 +1459,11 @@ void waypoint_handler_init_homing_waypoint(mavlink_waypoint_handler_t* waypoint_
 	
 	waypoint_handler->waypoint_list[0] = waypoint;
 
+}
 
-
-	// Overwritting homing waypoint with circle scenario waypoints
+void waypoint_handler_init_circle_scenario(mavlink_waypoint_handler_t* waypoint_handler)
+{
+	// Setting circle scenario waypoints
 	mavlink_command_long_t packet;
 	packet.param2 = 30.0f;
 	packet.param3 = 10.0f;
