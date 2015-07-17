@@ -203,7 +203,7 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream) 
+bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, const state_t* state, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream) 
 {
 	bool init_success = true;
 	
@@ -212,6 +212,8 @@ bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 
 	// Init debug mode
 	onboard_parameters->debug = config->debug;
+
+	onboard_parameters->state = state;
 
 	// Allocate memory for the onboard parameters
 	onboard_parameters->param_set = malloc( sizeof(onboard_parameters_set_t) + sizeof(onboard_parameters_entry_t[config->max_param_count]) );
@@ -479,30 +481,37 @@ mav_result_t onboard_parameters_preflight_storage(onboard_parameters_t* onboard_
 {
 	mav_result_t result = MAV_RESULT_DENIED;
 	
-	// Onboard parameters storage
-	if (msg->param1 == 0)
+	if (onboard_parameters->state->mav_mode.ARMED == ARMED_OFF)
 	{
-	 	// read parameters from flash
-	 	print_util_dbg_print("Reading from flashc...\r\n");
-		if(onboard_parameters_read_parameters_from_flashc(onboard_parameters))
+		// Onboard parameters storage
+		if (msg->param1 == 0)
 		{
-			result = MAV_RESULT_ACCEPTED;
-			// TODO: update simulation calibration values
-			//simulation_calib_set(&sim_model);
-	 	}
-		else
+	 		// read parameters from flash
+	 		print_util_dbg_print("Reading from flashc...\r\n");
+			if(onboard_parameters_read_parameters_from_flashc(onboard_parameters))
+			{
+				result = MAV_RESULT_ACCEPTED;
+	 		}
+			else
+			{
+				result = MAV_RESULT_DENIED;
+			}
+		}
+		else if (msg->param1 == 1)
 		{
-			result = MAV_RESULT_DENIED;
+		
+				// write parameters to flash
+				print_util_dbg_print("Writing to flashc\r\n");
+				onboard_parameters_write_parameters_to_flashc(onboard_parameters);
+			
+				result = MAV_RESULT_ACCEPTED;
 		}
 	}
-	else if (msg->param1 == 1)
+	else
 	{
-	 	// write parameters to flash
-	 	//print_util_dbg_print("No Writing to flashc\n");
-	 	print_util_dbg_print("Writing to flashc\r\n");
-	 	onboard_parameters_write_parameters_to_flashc(onboard_parameters);
+		print_util_dbg_print("No action with flashc while motors armed!\r\n");
 		
-		result = MAV_RESULT_ACCEPTED;
+		result = MAV_RESULT_TEMPORARILY_REJECTED;
 	}
 
 	return result;
