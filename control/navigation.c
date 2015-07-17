@@ -542,7 +542,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 				break;
 			
 			case FLY_TO_HOME_WP:
-				navigation->state->mav_mode_custom &= !CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
+				navigation->state->mav_mode_custom &= ~CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
 				navigation->state->mav_mode_custom |= CUST_CRITICAL_FLY_TO_HOME_WP;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
@@ -550,7 +550,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 				break;
 			
 			case HOME_LAND:
-				navigation->state->mav_mode_custom &= !CUST_CRITICAL_FLY_TO_HOME_WP;
+				navigation->state->mav_mode_custom &= ~CUST_CRITICAL_FLY_TO_HOME_WP;
 				navigation->state->mav_mode_custom |= CUST_CRITICAL_LAND;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
