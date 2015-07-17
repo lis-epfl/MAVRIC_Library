@@ -689,6 +689,8 @@ typedef struct
  	uint8_t  course_status;						///< Course status
  	uint8_t  accuracy_status;					///< Accuracy status
 	
+ 	bool healthy;								///< Healthyness of the GPS
+
 	date_time_t date;							///< The date type
 	uint8_t time_zone;							///< The current time zone
 	

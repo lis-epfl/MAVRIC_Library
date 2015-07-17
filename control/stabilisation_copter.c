@@ -189,7 +189,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 		input.rpy[ROLL] = rpy_local.v[Y];
 		input.rpy[PITCH] = -rpy_local.v[X];
 
-		if (stabilisation_copter->pos_est->gps->status != GPS_OK)
+		if (!stabilisation_copter->pos_est->gps->healthy)
 		{
 			input.rpy[ROLL] = 0.0f;
 			input.rpy[PITCH] = 0.0f;
