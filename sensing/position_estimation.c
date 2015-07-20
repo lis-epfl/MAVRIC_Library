@@ -187,29 +187,41 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 	
 	if (pos_est->init_gps_position)
 	{
-		if ( (pos_est->time_last_gps_msg < pos_est->gps->time_last_msg) && (pos_est->gps->status == GPS_OK) )
+		if(pos_est->gps->status == GPS_OK)
 		{
-			pos_est->time_last_gps_msg = pos_est->gps->time_last_msg;
+			if ( (pos_est->time_last_gps_msg < pos_est->gps->time_last_msg) )
+			{
+				pos_est->time_last_gps_msg = pos_est->gps->time_last_msg;
 
-			global_gps_position.longitude = pos_est->gps->longitude;
-			global_gps_position.latitude = pos_est->gps->latitude;
-			global_gps_position.altitude = pos_est->gps->altitude;
-			global_gps_position.heading = 0.0f;
-			local_coordinates = coord_conventions_global_to_local_position(global_gps_position,pos_est->local_position.origin);
-			local_coordinates.timestamp_ms = pos_est->gps->time_last_msg;
-			
-			pos_est->last_gps_pos = local_coordinates;
+				global_gps_position.longitude = pos_est->gps->longitude;
+				global_gps_position.latitude = pos_est->gps->latitude;
+				global_gps_position.altitude = pos_est->gps->altitude;
+				global_gps_position.heading = 0.0f;
+				local_coordinates = coord_conventions_global_to_local_position(global_gps_position,pos_est->local_position.origin);
+				local_coordinates.timestamp_ms = pos_est->gps->time_last_msg;
+				
+				pos_est->last_gps_pos = local_coordinates;
+			}
+		
+			vel_error[X] = pos_est->gps->north_speed    - pos_est->vel[X]; 
+			vel_error[Y] = pos_est->gps->east_speed     - pos_est->vel[Y]; 
+			vel_error[Z] = pos_est->gps->vertical_speed - pos_est->vel[Z]; 
+
+			gps_gain = 1.0f;
+		
+			for (i = 0;i < 3;i++)
+			{
+				pos_error[i] = pos_est->last_gps_pos.pos[i] - pos_est->local_position.pos[i];
+			}
 		}
-		
-		vel_error[X] = pos_est->gps->north_speed    - pos_est->vel[X]; 
-		vel_error[Y] = pos_est->gps->east_speed     - pos_est->vel[Y]; 
-		vel_error[Z] = pos_est->gps->vertical_speed - pos_est->vel[Z]; 
-
-		gps_gain = 1.0f;
-		
-		for (i = 0;i < 3;i++)
+		else
 		{
-			pos_error[i] = pos_est->last_gps_pos.pos[i] - pos_est->local_position.pos[i];
+			for (i = 0;i < 3;i++)
+			{
+				pos_error[i] = 0.0f;
+				vel_error[i] = 0.0f;
+			}
+			gps_gain = 0.0f;
 		}
 	}
 	else
