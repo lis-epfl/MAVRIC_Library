@@ -124,6 +124,9 @@ ubx_nav_timeutc_t *ubx_current_nav_timeutc_message = &ubx_nav_timeutc_message[0]
 ubx_nav_timeutc_t *ubx_last_nav_timeutc_message = &ubx_nav_timeutc_message[0];					///<  The pointer to the last NAV TIMEUTC message that was completed
 uint16_t ubx_number_of_valid_nav_timeutc_message = 0;											///<  Number of valid NAV TIMEUTC message received
 
+// The date is defined as global parameter such that we can retrieve its value 
+//  without the need of pointers, e.g. when working with fat_fs, in diskio function
+//  get_fattime, the date can be set without pointer to the gps structure
 date_time_t date;
 
 //------------------------------------------------------------------------------
