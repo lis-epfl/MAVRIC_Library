@@ -1376,6 +1376,17 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 		gps->new_position = false;
 		return true;
 	}
+	else if (gps->new_position && !gps->new_speed)
+	{
+		gps->new_position = false;
+		return true;
+	}
+	else if (!gps->new_position && gps->new_speed)
+	{
+		gps->new_speed = false;
+		return true;
+	}
+	
 	return false;
 }
 
