@@ -613,6 +613,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 					navigation->state->out_of_fence_1 = false;
 					navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 					navigation->state->mav_state = MAV_STATE_ACTIVE;
+					navigation->state->mav_mode_custom &= ~CUST_CRITICAL_FLY_TO_HOME_WP;
 				}
 				else
 				{
