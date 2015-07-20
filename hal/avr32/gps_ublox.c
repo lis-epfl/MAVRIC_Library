@@ -1883,6 +1883,11 @@ void gps_ublox_update(gps_t *gps)
 	
 	tnow = time_keeper_get_millis();
 	
+	gps->num_posllh_message = ubx_number_of_valid_pos_llh_message;
+	gps->num_velned_message = ubx_number_of_valid_vel_ned_message;
+	gps->num_navstat_message = ubx_number_of_valid_status_message;
+	gps->num_navsol_message = ubx_number_of_valid_solution_message;
+
 	if (! result)
 	{
 		if ((tnow - gps->idle_timer) > gps->idle_timeout)

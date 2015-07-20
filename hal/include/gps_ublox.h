@@ -720,6 +720,11 @@ typedef struct
 	gps_engine_setting_t engine_nav_setting;	///< Enum GPS engine setting
 	ubx_cfg_nav_settings_t nav_settings;		///< CFG-NAV settings structure
 
+	uint16_t num_posllh_message;
+	uint16_t num_velned_message;
+	uint16_t num_navstat_message;
+	uint16_t num_navsol_message;
+
 	buffer_t gps_buffer;						///< The GPS buffer
 	byte_stream_t gps_stream_in;				///< The incoming GPS byte stream
 	byte_stream_t gps_stream_out;				///< The outgoing GPS byte stream
