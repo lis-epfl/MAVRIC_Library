@@ -296,8 +296,8 @@ static void gps_position_init(position_estimation_t *pos_est)
 static void position_estimation_fence_control(position_estimation_t* pos_est)
 {
 	float dist_xy_sqr, dist_z_sqr;
-	dist_xy_sqr = SQR(pos_est->local_position.pos[X])+SQR(pos_est->local_position.pos[Y]);
-	dist_z_sqr = SQR(pos_est->local_position.pos[Z]);
+	dist_xy_sqr = SQR(pos_est->local_position.pos[X]-pos_est->fence_position.pos[X])+SQR(pos_est->local_position.pos[Y]-pos_est->fence_position.pos[Y]);
+	dist_z_sqr = SQR(pos_est->local_position.pos[Z]-pos_est->fence_position.pos[Z]);
 
 	if (dist_xy_sqr > SQR(pos_est->state->fence_2_xy))
 	{
@@ -341,10 +341,16 @@ bool position_estimation_init(position_estimation_t* pos_est, const position_est
 	pos_est->local_position.origin.longitude =  config->origin.longitude;
 	pos_est->local_position.origin.latitude =   config->origin.latitude;
 	pos_est->local_position.origin.altitude =   config->origin.altitude;
-	pos_est->local_position.pos[X] = 0;
-	pos_est->local_position.pos[Y] = 0;
-	pos_est->local_position.pos[Z] = 0;
+	pos_est->local_position.pos[X] = 0.0f;
+	pos_est->local_position.pos[Y] = 0.0f;
+	pos_est->local_position.pos[Z] = 0.0f;
 	
+	pos_est->fence_set = false;
+	if (config->fence_set)
+	{
+		position_estimation_set_fence(pos_est);
+	}
+
     // reset position estimator
     pos_est->last_alt = 0;
     for(int32_t i = 0;i < 3;i++)
@@ -355,7 +361,7 @@ bool position_estimation_init(position_estimation_t* pos_est, const position_est
     }
 
 	pos_est->gravity = config->gravity;
-	
+
 	pos_est->init_gps_position = false;
 	pos_est->init_barometer = false;
 	pos_est->time_last_gps_msg = 0;
@@ -377,6 +383,8 @@ bool position_estimation_init(position_estimation_t* pos_est, const position_est
 	
 	gps_position_init(pos_est);
 	
+	position_estimation_set_fence(pos_est);
+
 	print_util_dbg_print("[POSITION ESTIMATION] initialised.\r\n");
 	
 	return init_success;
@@ -439,6 +447,8 @@ void position_estimation_update(position_estimation_t *pos_est)
 			pos_est->state->reset_position = false;
 			position_estimation_reset_home_altitude(pos_est);
 
+			position_estimation_set_fence(pos_est);
+
 			if (pos_est->stat_logging)
 			{
 				pos_est->stat_logging->data_write = true;
@@ -452,4 +462,16 @@ void position_estimation_update(position_estimation_t *pos_est)
 			position_estimation_fence_control(pos_est);
 		}
 	}
+}
+
+void position_estimation_set_fence(position_estimation_t* pos_est)
+{
+	if (!pos_est->fence_set)
+	{
+		print_util_dbg_print("Setting new fence origin position.\r\n");
+
+		pos_est->fence_set = true;
+		pos_est->fence_position.origin = pos_est->local_position.origin;
+	}
+	pos_est->fence_position = coord_conventions_global_to_local_position(pos_est->fence_position.origin,pos_est->local_position.origin);
 }

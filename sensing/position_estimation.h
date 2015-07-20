@@ -71,6 +71,7 @@ typedef struct
 {
 	global_position_t origin;	///<	Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
 	float gravity;				///<	value of the Gravity for position estimation correction
+	bool fence_set;				
 } position_estimation_conf_t;
 
 
@@ -100,6 +101,9 @@ typedef struct
 	local_coordinates_t local_position;				///< The local position
 	local_coordinates_t last_gps_pos;				///< The coordinates of the last GPS position
 	
+	bool fence_set;
+	local_coordinates_t fence_position;
+
 	float gravity;									///< The value of the gravity
 	
 	barometer_t* barometer;							///< The pointer to the barometer structure
@@ -147,6 +151,8 @@ void position_estimation_reset_home_altitude(position_estimation_t *pos_est);
  */
 void position_estimation_update(position_estimation_t *pos_est);
 
+
+void position_estimation_set_fence(position_estimation_t* pos_est);
 
 #ifdef __cplusplus
 }
