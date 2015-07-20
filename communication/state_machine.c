@@ -197,6 +197,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			break;
 		
 		case MAV_STATE_ACTIVE:
+
 			if ((state_machine->state->source_mode == REMOTE)||(state_machine->state->source_mode == JOYSTICK))
 			{
 				if ( (state_machine->state->source_mode == REMOTE)&&(rc_check != SIGNAL_GOOD) )
@@ -274,6 +275,8 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 						state_machine->gps->healthy)
 					{
 						state_new = MAV_STATE_ACTIVE;
+						// Reset all custom flags except collision avoidance flag
+						mode_custom_new &= 0xFFFFF820;
 					}
 					break;
 
