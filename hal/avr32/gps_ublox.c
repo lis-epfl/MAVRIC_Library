@@ -415,23 +415,14 @@ static ubx_nav_timeutc_t * ubx_get_nav_timeutc(void);
 
 static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t engine_nav_setting)
 {
-	// uint8_t epoch = TIME_OF_WEEK;
-	gps->idle_timeout = 1200;
-	
-	gps_ublox_configure_gps(gps);
-	
-	gps->engine_nav_setting = engine_nav_setting;
-	
-	gps->status = NO_FIX;
-	gps->num_sats = 0;
+	//TODO check before uncommenting
+	//gps_ublox_configure_gps(gps);
 	
 	gps->next_fix = false;
 	gps->have_raw_velocity = false;
 	
 	gps->new_position = false;
 	gps->new_speed = false;
-
-	gps->idle_timer = time_keeper_get_millis();
 }
 
 
