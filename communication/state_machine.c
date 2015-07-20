@@ -250,6 +250,17 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			{
 				mode_custom_new &= ~CUST_FENCE_1;
 			}
+			
+			if (state_machine->state->out_of_fence_2)
+			{
+				print_util_dbg_print("Out of fence 2!\r\n");
+				state_new = MAV_STATE_CRITICAL;
+				mode_custom_new |= CUST_FENCE_2;
+			}
+			else
+			{
+				mode_custom_new &= ~CUST_FENCE_2;
+			}
 
 			if (!state_machine->gps->healthy)
 			{
