@@ -514,7 +514,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 	if ( navigation->state->battery.is_low || 
 		navigation->state->connection_lost || 
 		navigation->state->out_of_fence_2 ||
-		navigation->position_estimation->gps->status != GPS_OK)
+		!navigation->position_estimation->gps->healthy)
 	{
 		if(navigation->critical_behavior != CRITICAL_LAND)
 		{
@@ -910,7 +910,6 @@ task_return_t navigation_update(navigation_t* navigation)
 			navigation->stop_nav = false;
 			navigation->stop_nav_there = false;
 			navigation->waypoint_handler->hold_waypoint_set = false;
-			navigation->state->mav_mode_custom = CUSTOM_BASE_MODE;
 			navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
 			navigation->critical_next_state = false;
 			navigation->auto_landing_behavior = DESCENT_TO_SMALL_ALTITUDE;

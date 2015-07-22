@@ -124,6 +124,13 @@ typedef struct
 void waypoint_handler_init_homing_waypoint(mavlink_waypoint_handler_t* waypoint_handler);
 
 /**
+ * \brief	Initialize the circle scenario at start up
+ *
+ * \param	waypoint_handler		The pointer to the waypoint handler structure
+ */
+void waypoint_handler_init_circle_scenario(mavlink_waypoint_handler_t* waypoint_handler);
+
+/**
  * \brief	Initialize a list of hardcoded waypoints
  *
  * \param	waypoint_handler		The pointer to the waypoint handler structure
