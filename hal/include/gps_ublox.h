@@ -717,7 +717,7 @@ typedef struct
 	bool print_nav_on_debug;					///< Flag to print messages on debug console
 	bool debug;									///< Indicates if debug messages should be printed
 
-	uint8_t buffer_full;
+	uint16_t buffer_full_count;
 
 	uint16_t cksum_a_mismatch_counter;
 	uint16_t cksum_b_mismatch_counter;

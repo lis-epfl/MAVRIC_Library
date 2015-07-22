@@ -440,7 +440,10 @@ static bool gps_ublox_message_decode(gps_t *gps)
 
 	uint8_t  * temporary_message_for_swaping;
 
-	gps->buffer_full = buffer_full(&(gps->gps_buffer));
+	if (buffer_full(&(gps->gps_buffer)))
+	{
+		gps->buffer_full_count++;
+	}
 
 	while(buffer_bytes_available(&(gps->gps_buffer)))
 	{
@@ -1845,7 +1848,7 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	gps->loop_nav_timeutc = 0;
 	gps->loop_mon_rxr = 0;
 	
-	gps->buffer_full = 0;
+	gps->buffer_full_count = 0;
 
 	gps->engine_nav_setting = GPS_ENGINE_AIRBORNE_4G;
 
