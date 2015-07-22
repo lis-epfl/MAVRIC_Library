@@ -440,6 +440,8 @@ static bool gps_ublox_message_decode(gps_t *gps)
 
 	uint8_t  * temporary_message_for_swaping;
 
+	gps->buffer_full = buffer_full(&(gps->gps_buffer));
+
 	while(buffer_bytes_available(&(gps->gps_buffer)))
 	{
 		data = buffer_get(&(gps->gps_buffer));
@@ -915,6 +917,8 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			step++;
 			if (cksum_a != data)
 			{
+				gps->cksum_a_mismatch_counter++;
+
 				print_util_dbg_print("bad cksum_a ");
 				print_util_dbg_print_num(data,16);
 				print_util_dbg_print(" should be ");
@@ -933,6 +937,8 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			step = 0;
 			if (cksum_b != data)
 			{
+				gps->cksum_a_mismatch_counter++;
+				
 				print_util_dbg_print("bad cksum_b ");
 				print_util_dbg_print_num(data,16);
 				print_util_dbg_print(" should be ");
@@ -1828,6 +1834,8 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	gps->loop_nav_timeutc = 0;
 	gps->loop_mon_rxr = 0;
 	
+	gps->buffer_full = 0;
+
 	gps->engine_nav_setting = GPS_ENGINE_AIRBORNE_4G;
 
 	gps->status = NO_GPS;
