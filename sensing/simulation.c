@@ -413,6 +413,8 @@ void simulation_simulate_gps(simulation_model_t *sim)
 	sim->gps->latitude = gpos.latitude;
 	sim->gps->longitude = gpos.longitude;
 	sim->gps->time_last_msg = time_keeper_get_millis();
+	sim->gps->time_last_posllh_msg = time_keeper_get_millis();
+	sim->gps->time_last_velned_msg = time_keeper_get_millis();
 
 	sim->gps->north_speed = sim->vel[X];
 	sim->gps->east_speed = sim->vel[Y];
@@ -440,7 +442,9 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 	sim->gps->longitude = gpos.longitude;
 	sim->gps->altitude = gpos.altitude;
 	sim->gps->time_last_msg = time_keeper_get_millis();
-
+	sim->gps->time_last_posllh_msg = time_keeper_get_millis();
+	sim->gps->time_last_velned_msg = time_keeper_get_millis();
+	
 	sim->gps->north_speed = 0.0f;
 	sim->gps->east_speed = 0.0f;
 	sim->gps->vertical_speed = 0.0f;
