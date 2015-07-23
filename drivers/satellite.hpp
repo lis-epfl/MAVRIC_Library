@@ -89,8 +89,6 @@ public:
 	bool 		get_new_data_available(void) const;
 	void 		set_new_data_available(const bool is_available);
 
-	usart_config_t	get_usart_conf_sat(void) const;
-
 	virtual void	bind(const radio_protocol_t radio_protocol);
 
 	virtual bool	init();
@@ -104,7 +102,6 @@ protected:
 	bool					new_data_available_; 	///< Indicates if new data is  available
 	radio_protocol_proba_t	protocol_proba_;		///< Indicates number of frames received
 	radio_protocol_t		protocol_;				///< Defines in which mode the remote is configured
-	usart_config_t			usart_conf_sat_;		///< store UART conf for satellite com
 };
 
 
