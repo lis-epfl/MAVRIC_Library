@@ -41,53 +41,73 @@
  ******************************************************************************/
 
 
-#ifndef REMOTE_DSM2_
-#define REMOTE_DSM2_
+#ifndef SPEKTRUM_SATELLITE_
+#define SPEKTRUM_SATELLITE_
+
+
+#include "satellite.hpp"
+#include "serial_avr32.hpp"
 
 extern "C" 
 {
 	#include <stdint.h>
 	#include <stdbool.h>
 	#include "buffer.h"
-	#include "satellite.h"
 }
 
-/**
- * \brief Initialize UART receiver for Spektrum/DSM2 slave receivers
- *
- * \param satellite				pointer to the satellite receiver struct
- * \param usart_conf_spektrum	configuration of the satellite uart
- */
-void spektrum_satellite_init (satellite_t *satellite, usart_config_t usart_conf_spektrum);
+
+class Spektrum_satellite : public Satellite
+{
+public:
+	/**
+	* @brief  	Constructor
+	* 
+	* @param 	uart 	Reference to UART device 
+	*/
+	Spektrum_satellite(Serial_avr32& uart);
+
+	/**
+	* \brief Initialize UART receiver for Spektrum/DSM2 slave receivers
+	*/
+	bool init ();
 
 
-/**
- * \brief Sets the satellite in bind mode
- *
- * \param	protocol	Channel encoding. It it either 10bits (up to 7 channels) or 11bits(up to 14 channels). We support both. 
- *
- */
-void spektrum_satellite_bind(radio_protocol_t protocol);
+	/**
+	* \brief Sets the satellite in bind mode
+	*
+	* \param	protocol	Channel encoding. It it either 10bits (up to 7 channels) or 11bits(up to 14 channels). We support both. 
+	*
+	*/
+	void bind(radio_protocol_t protocol);
 
 
-/**
- * \brief Return a remote channel
- *
- * \param	index	Specify which channel we are interested in
- *
- * \return the remote channel value
- */
-int16_t spektrum_satellite_get_channel(uint8_t index);
+	/**
+	* \brief Return a remote channel
+	*
+	* \param	index	Specify which channel we are interested in
+	*
+	* \return the remote channel value
+	*/
+	int16_t get_channel(const uint8_t index) const;
 
 
-/**
- * \brief 	Return the a remote channel taking neutral into account
- *
- * \param 	index 	Specify which channel we are interested in
- *
- * \return 	 the remote channel neutral value		
- */
-int16_t spektrum_satellite_get_neutral(uint8_t index);
+	/**
+	* \brief 	Return the a remote channel taking neutral into account
+	*
+	* \param 	index 	Specify which channel we are interested in
+	*
+	* \return 	 the remote channel neutral value		
+	*/
+	int16_t get_neutral(const uint8_t index) const;
+
+private:
+	void interrupt(void);
+
+	Serial_avr32& 	uart_;
+	int16_t 		channel_center_[16];		///< Declare an array to store the central position of each channel
+
+};
 
 
-#endif /* REMOTE_DSM2_ */
+
+#endif /* SPEKTRUM_SATELLITE_ */

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file satellite.h
+ * \file satellite.hpp
  * 
  * \author MAV'RIC Team
  * \author Gregoire Heitz
@@ -40,15 +40,14 @@
  *
  ******************************************************************************/
 
-#ifndef SATELLITE_H_
-#define SATELLITE_H_
+#ifndef SATELLITE_HPP_
+#define SATELLITE_HPP_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-#include "uart_int.h"
-
+extern "C" 
+{
+	#include "uart_int.h"
+}
 
 /**
  * \brief Structure containing the radio protocol probabilities
@@ -72,44 +71,41 @@ typedef enum
 	UNKNOWN		= 3,
 } radio_protocol_t;
 
-
-/**
- * \brief Structure containing the satellite receiver's data
- */
-typedef struct 
-{
-	buffer_t 				receiver;			///< Buffer for incoming data
-	int16_t 				channels[16];		///< Array to contain the 16 remote channels
-	uint32_t 				last_interrupt;		///< Last time a byte was received
-	uint32_t 				last_update;		///< Last update time 
-	uint32_t 				dt;					///< Duration between two updates
-	bool					new_data_available; ///< Indicates if new data is  available
-	radio_protocol_proba_t	protocol_proba;		///< Indicates number of frames received
-	radio_protocol_t		protocol;			///< Defines in which mode the remote is configured
-	usart_config_t			usart_conf_sat;		///< store UART conf for satellite com
-} satellite_t;
-
 //Function pointer
 
-/**
- * \brief Pointer to the function used to initialize the satellite receiver
- *
- * \param	satellite_t		Pointer to the sattelite structure
- * \param	usart_config_t	configuration of the corresponding usart
- */
-typedef void (*satellite_init_func_t)(satellite_t*, usart_config_t);
-extern satellite_init_func_t satellite_init;
-// extern void (*satellite_init)(satellite_t*, usart_config_t);
+class Satellite
+{
+public:
+	Satellite();
 
-/**
- * \brief Pointer to the function used to bind the satellite receiver
- */
-typedef void (*satellite_bind_func_t)(radio_protocol_t protocol);
-extern satellite_bind_func_t satellite_bind;
-// extern void (*satellite_bind)(radio_protocol_t protocol);
+	int16_t 	get_channels(const uint8_t channel_number) const;
 
-#ifdef __cplusplus
-}
-#endif
+	uint32_t 	get_last_interrupt(void) const;
 
-#endif //SATELLITE_H_
+	uint32_t 	get_last_update(void) const;
+
+	uint32_t 	get_dt(void) const;
+
+	bool 		get_new_data_available(void) const;
+	void 		set_new_data_available(const bool is_available);
+
+	usart_config_t	get_usart_conf_sat(void) const;
+
+	virtual void	bind(const radio_protocol_t radio_protocol);
+
+	virtual bool	init();
+
+protected:
+	buffer_t 				receiver_;				///< Buffer for incoming data
+	int16_t 				channels_[16];			///< Array to contain the 16 remote channels
+	uint32_t 				last_interrupt_;		///< Last time a byte was received
+	uint32_t 				last_update_;			///< Last update time 
+	uint32_t 				dt_;					///< Duration between two updates
+	bool					new_data_available_; 	///< Indicates if new data is  available
+	radio_protocol_proba_t	protocol_proba_;		///< Indicates number of frames received
+	radio_protocol_t		protocol_;				///< Defines in which mode the remote is configured
+	usart_config_t			usart_conf_sat_;		///< store UART conf for satellite com
+};
+
+
+#endif //SATELLITE_HPP_

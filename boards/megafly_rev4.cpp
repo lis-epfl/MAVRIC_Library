@@ -54,6 +54,7 @@ Megafly_rev4::Megafly_rev4(imu_t& imu, megafly_rev4_conf_t config):
 	magnetometer( Hmc5883l(i2c0, imu.raw_magneto) ),
 	lsm330dlc( Lsm330dlc(i2c0, imu.raw_accelero, imu.raw_gyro) ),
 	bmp085( Bmp085(i2c0) ),
+	spektrum_satellite( Spektrum_satellite(uart3) ),
 	imu_(imu)
 {}
 
@@ -111,9 +112,15 @@ bool Megafly_rev4::init(void)
 	if( bmp085.init() == false )
 	{
 		init_success = false;
-		print_util_dbg_print("[LSM330] INIT ERROR\r\n");
+		print_util_dbg_print("[BMP085] INIT ERROR\r\n");
 	}
-	
+
+	// Init spektrum_satelitte
+	if( spektrum_satellite.init() == false )
+	{
+		init_success = false;
+		print_util_dbg_print("[SAT] INIT ERROR\r\n");
+	}	
 
 	return init_success;
 }

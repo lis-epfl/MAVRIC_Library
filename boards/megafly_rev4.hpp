@@ -48,6 +48,7 @@
 #include "lsm330dlc.hpp"
 #include "bmp085.hpp"
 #include "imu.hpp"
+#include "spektrum_satellite.hpp"
 
 extern "C"
 {
@@ -104,13 +105,14 @@ public:
 	/**
 	 * Public Members
 	 */
-	Serial_avr32 	uart0;		
-	Serial_avr32 	uart3;		
-	I2c_avr32 		i2c0;
-	I2c_avr32 		i2c1;
-	Hmc5883l 		magnetometer;
-	Lsm330dlc		lsm330dlc;
-	Bmp085			bmp085;
+	Serial_avr32 		uart0;		
+	Serial_avr32 		uart3;		
+	I2c_avr32 			i2c0;
+	I2c_avr32 			i2c1;
+	Hmc5883l 			magnetometer;
+	Lsm330dlc			lsm330dlc;
+	Bmp085				bmp085;
+	Spektrum_satellite	spektrum_satellite;
 
 private:
 	imu_t& 		imu_;

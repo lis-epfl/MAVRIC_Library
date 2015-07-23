@@ -41,12 +41,12 @@
  ******************************************************************************/
 
 #include "remote_telemetry.hpp"
+#include "satellite.hpp"
 
 extern "C"
 {
 	#include "time_keeper.h"
 	// #include "spektrum.h"
-	#include "satellite.h"
 	#include <limits.h>
 }
 
@@ -77,12 +77,12 @@ static mav_result_t remote_telemetry_satellite_bind(remote_t* remote, mavlink_co
 	{
 		if( packet->param4 == 10 )
 		{
-			satellite_bind( DSM2_10BITS );
+			remote->sat.bind( DSM2_10BITS );
 			result = MAV_RESULT_ACCEPTED;
 		}
 		else if( packet->param4 == 11 )
 		{
-			satellite_bind( DSM2_11BITS );
+			remote->sat.bind( DSM2_11BITS );
 			result = MAV_RESULT_ACCEPTED;
 		}
 		else
@@ -92,7 +92,7 @@ static mav_result_t remote_telemetry_satellite_bind(remote_t* remote, mavlink_co
 	}
 	else if (packet->param3 == 1)	// Init
 	{
-		satellite_init(&(remote->sat), remote->sat.usart_conf_sat);
+		remote->sat.init();
 		
 		result = MAV_RESULT_ACCEPTED;
 	}
@@ -128,14 +128,14 @@ void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* m
 										msg,
 										time_keeper_get_millis(),
 										0,
-										remote->sat.channels[0] + 1024,
-										remote->sat.channels[1] + 1024,
-										remote->sat.channels[2] + 1024,
-										remote->sat.channels[3] + 1024,
-										remote->sat.channels[4] + 1024,
-										remote->sat.channels[5] + 1024,
-										remote->sat.channels[6] + 1024,
-										remote->sat.channels[7] + 1024,
+										remote->sat.get_channels(0) + 1024,
+										remote->sat.get_channels(1) + 1024,
+										remote->sat.get_channels(2) + 1024,
+										remote->sat.get_channels(3) + 1024,
+										remote->sat.get_channels(4) + 1024,
+										remote->sat.get_channels(5) + 1024,
+										remote->sat.get_channels(6) + 1024,
+										remote->sat.get_channels(7) + 1024,
 										// remote->mode.current_desired_mode.byte);
 										remote->signal_quality	);
 	
@@ -146,12 +146,12 @@ void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* m
 										msg,
 										time_keeper_get_millis(),
 										1,
-										remote->sat.channels[8] + 1024,
-										remote->sat.channels[9] + 1024,
-										remote->sat.channels[10] + 1024,
-										remote->sat.channels[11] + 1024,
-										remote->sat.channels[12] + 1024,
-										remote->sat.channels[13] + 1024,
+										remote->sat.get_channels(8)+ 1024,
+										remote->sat.get_channels(9)+ 1024,
+										remote->sat.get_channels(10) + 1024,
+										remote->sat.get_channels(11) + 1024,
+										remote->sat.get_channels(12) + 1024,
+										remote->sat.get_channels(13) + 1024,
 										UINT16_MAX,
 										UINT16_MAX,
 										// remote->mode.current_desired_mode.byte);
