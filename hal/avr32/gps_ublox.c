@@ -120,6 +120,7 @@ ubx_tim_vrfy_t *ubx_current_tim_vrfy_message = &ubx_tim_vrfy_message[0];						//
 ubx_tim_vrfy_t *ubx_last_tim_vrfy_message = &ubx_tim_vrfy_message[1];							///<  The pointer to the last TIM VRFY message that was completed
 uint16_t ubx_number_of_valid_tim_vrfy_message = 0;												///<  Number of valid TIM VRFY message received
 
+// NAV-TIMEUTC
 ubx_nav_timeutc_t *ubx_current_nav_timeutc_message = &ubx_nav_timeutc_message[0];				///<  The pointer to the NAV TIMEUTC message that is being filled (not usable)
 ubx_nav_timeutc_t *ubx_last_nav_timeutc_message = &ubx_nav_timeutc_message[0];					///<  The pointer to the last NAV TIMEUTC message that was completed
 uint16_t ubx_number_of_valid_nav_timeutc_message = 0;											///<  Number of valid NAV TIMEUTC message received
@@ -439,11 +440,8 @@ static bool gps_ublox_message_decode(gps_t *gps)
 	uint8_t cksum_b = 0;				///< Checksum b
 
 	uint8_t  * temporary_message_for_swaping;
-
-	if (buffer_full(&(gps->gps_buffer)))
-	{
-		gps->buffer_full_count++;
-	}
+	
+	gps->size_buffer = buffer_bytes_available(&(gps->gps_buffer));
 
 	while(buffer_bytes_available(&(gps->gps_buffer)))
 	{
@@ -920,8 +918,6 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			step++;
 			if (cksum_a != data)
 			{
-				gps->cksum_a_mismatch_counter++;
-
 				print_util_dbg_print("bad cksum_a ");
 				print_util_dbg_print_num(data,16);
 				print_util_dbg_print(" should be ");
@@ -939,9 +935,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			case 8:
 			step = 0;
 			if (cksum_b != data)
-			{
-				gps->cksum_a_mismatch_counter++;
-				
+			{	
 				print_util_dbg_print("bad cksum_b ");
 				print_util_dbg_print_num(data,16);
 				print_util_dbg_print(" should be ");
@@ -1154,6 +1148,8 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 			gps->horizontal_accuracy = ((float)gps_pos_llh->horizontal_accuracy) / 1000.0f;
 			gps->vertical_accuracy = ((float)gps_pos_llh->vertical_accuracy) / 1000.0f;
 			
+			gps->time_last_posllh_msg = time_keeper_get_millis();
+			
 			gps->new_position = true;
 		}
 		break;
@@ -1270,6 +1266,9 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 			gps->vertical_speed   = ((float)gps_vel_ned->ned_down) / 100.;
 			gps->speed_accuracy   = ((float)gps_vel_ned->speed_accuracy) / 100.;
 			gps->heading_accuracy = gps_vel_ned->heading_accuracy;
+			
+			gps->time_last_velned_msg = time_keeper_get_millis();
+			
 			gps->new_speed            = true;
 		}
 		break;
@@ -1848,7 +1847,10 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	gps->loop_nav_timeutc = 0;
 	gps->loop_mon_rxr = 0;
 	
-	gps->buffer_full_count = 0;
+	gps->size_buffer = 0;
+
+	gps->time_last_posllh_msg = time_keeper_get_millis();
+	gps->time_last_velned_msg = time_keeper_get_millis();
 
 	gps->engine_nav_setting = GPS_ENGINE_AIRBORNE_4G;
 
@@ -1907,8 +1909,6 @@ void gps_ublox_update(gps_t *gps)
 	
 	gps->num_posllh_message = ubx_number_of_valid_pos_llh_message;
 	gps->num_velned_message = ubx_number_of_valid_vel_ned_message;
-	gps->num_navstat_message = ubx_number_of_valid_status_message;
-	gps->num_navsol_message = ubx_number_of_valid_solution_message;
 
 	if (! result)
 	{

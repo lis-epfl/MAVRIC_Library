@@ -689,7 +689,7 @@ typedef struct
  	uint8_t  course_status;						///< Course status
  	uint8_t  accuracy_status;					///< Accuracy status
 	
- 	bool healthy;								///< Healthyness of the GPS
+ 	bool healthy;								///< Healthiness of the GPS
 
 	date_time_t date;							///< The date type
 	uint8_t time_zone;							///< The current time zone
@@ -716,19 +716,17 @@ typedef struct
 
 	bool print_nav_on_debug;					///< Flag to print messages on debug console
 	bool debug;									///< Indicates if debug messages should be printed
-
-	uint16_t buffer_full_count;
-
-	uint16_t cksum_a_mismatch_counter;
-	uint16_t cksum_b_mismatch_counter;
+	
+	uint32_t time_last_posllh_msg;
+	uint32_t time_last_velned_msg;
+	
+	uint32_t size_buffer;
 
 	gps_engine_setting_t engine_nav_setting;	///< Enum GPS engine setting
 	ubx_cfg_nav_settings_t nav_settings;		///< CFG-NAV settings structure
 
 	uint16_t num_posllh_message;
 	uint16_t num_velned_message;
-	uint16_t num_navstat_message;
-	uint16_t num_navsol_message;
 
 	buffer_t gps_buffer;						///< The GPS buffer
 	byte_stream_t gps_stream_in;				///< The incoming GPS byte stream
