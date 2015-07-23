@@ -87,7 +87,8 @@ typedef struct
 	float kp_alt_sonar;								///< The gain to correct the Z position estimation from the sonar
 	float kp_vel_sonar;								///< The gain to correct the Z velocity estimation from the sonar
 
-	uint32_t time_last_gps_msg;						///< The time at which we received the last GPS message in ms
+	uint32_t time_last_gps_posllh_msg;						///< The time at which we received the last GPS POSLLH message in ms
+	uint32_t time_last_gps_velned_msg;						///< The time at which we received the last GPS VELNED message in ms
 	uint32_t time_last_barometer_msg;				///< The time at which we received the last barometer message in ms
 	bool init_gps_position;							///< The boolean flag ensuring that the GPS was initialized
 	bool init_barometer;							///< The boolean flag ensuring that the barometer was initialized
