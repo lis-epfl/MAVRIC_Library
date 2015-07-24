@@ -100,9 +100,15 @@ public:
 	*/
 	int16_t get_neutral(const uint8_t index) const;
 
-private:
-	void interrupt(void);
 
+	/**
+	 * @brief  			Takes care of incoming data
+	 * 
+	 * @param serial 	Peripheral
+	 */
+	void handle_interrupt(Serial* serial);
+
+private:
 	Serial_avr32& 	uart_;
 	int16_t 		channel_center_[16];		///< Declare an array to store the central position of each channel
 

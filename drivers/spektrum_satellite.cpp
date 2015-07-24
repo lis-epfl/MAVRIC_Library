@@ -60,6 +60,8 @@ extern "C"
 	#include "led.h"
 }
 
+Spektrum_satellite* spek_sat;
+
 const uint8_t DSM_RECEIVER_PIN 			= AVR32_PIN_PD12;		///< Define the microcontroller pin map with the receiver pin
 const uint8_t RECEIVER_POWER_ENABLE_PIN = AVR32_PIN_PC01;		///< Define the microcontroller pin map with the receiver power enable pin
 
@@ -101,8 +103,7 @@ void spektrum_satellite_switch_off(void)
 /**
  * \brief Define the service routine for the spektrum handler interruption
  */
- /*
-#pragma interrupt
+/*
 ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) 
 {
 	uint8_t c1, c2, i;
@@ -222,6 +223,11 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 }
 */
 
+void spektrum_irq_callback(Serial* serial) 
+{
+	spek_sat->handle_interrupt(serial);
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -232,6 +238,9 @@ Spektrum_satellite::Spektrum_satellite(Serial_avr32& uart):
 
 bool Spektrum_satellite::init() 
 {	
+	// Init pointer to sat
+	spek_sat = this;
+
 	bool result = true; //cannot go wrong...
 
 	for (int32_t i = 0; i < 16; i++) 
@@ -319,4 +328,121 @@ int16_t Spektrum_satellite::get_neutral(const uint8_t index) const
  	}
 
  	return value;
+ }
+
+
+ void Spektrum_satellite::handle_interrupt(Serial* serial)
+ {
+ 	uint8_t c1, c2, i;
+	uint16_t sw;
+	uint8_t channel;
+	uint32_t now = time_keeper_get_micros() ;
+
+	// If byte received
+	while ( serial->readable() > 0 ) 
+	{
+		uint32_t dt_interrupt = now - last_interrupt_;
+		last_interrupt_ = now;
+
+		// the shorter frame period is 11'000us (11bits encoding) and the longer frame period is 22'000 us(10bits encoding) 
+		// the inter byte period within a frame is 77us
+		// Clear buffer if the new byte of the on-going frame came after 2times the inter-byte period
+		if ( (buffer_bytes_available(&receiver_)!=0) && (dt_interrupt > 150))
+		{
+			buffer_clear(&receiver_);
+		}
+
+		// Add new byte to buffer
+		serial->read(&c1);
+		buffer_put(&receiver_, c1);
+		
+		// If frame is complete, decode channels
+		if ( (buffer_bytes_available(&receiver_) == 16) && (protocol_ != UNKNOWN)) 
+		{
+			// first two bytes are status info,
+			c1 = buffer_get(&receiver_);
+			c2 = buffer_get(&receiver_);
+			
+			if ((protocol_ == DSM2_10BITS) && ((c1 != 0x03) || (c2 != 0xB2))) //correspond to DSM2 10bits header
+			{
+				buffer_clear(&receiver_);
+				return;
+			}
+				
+			for (i = 0; i < 7; i++) // 7 channels per frame
+			{
+				c1 = buffer_get(&receiver_);
+				c2 = buffer_get(&receiver_);
+				sw = (uint16_t)c1 << 8 | ((uint16_t)c2);
+								
+				if ( protocol_ == DSM2_10BITS )  //10 bits
+				{
+					// highest bit is frame 0/1, bits 2-6 are channel number
+					channel = ((sw >> 10))&0x0f;
+					
+					// 10 bits per channel
+					channels_[channel] = ((int16_t)(sw&0x3ff) - 512) * 2;
+				} 
+				else if ( protocol_ == DSM2_11BITS ) //11bits
+				{
+					// highest bit is frame 0/1, bits 3-7 are channel number
+					channel = ((sw >> 11))&0x0f;
+					
+					// 11 bits per channel
+					channels_[channel] = ((int16_t)(sw&0x7ff) - 1024);
+				}
+			}//end of for loop	
+		
+			// update timing
+			dt_ 			= now - last_update_;
+			last_update_	= now;
+
+			// Inidicate that new data is available
+			new_data_available_ = true;
+		}
+		else if ( buffer_bytes_available(&receiver_) == 16)
+		{
+			//Since protocol is unknown
+			//check the radio protocol
+			
+			// first two bytes are status info,
+			c1 = buffer_get(&receiver_);
+			c2 = buffer_get(&receiver_);
+			
+			if (c1 == 0x03 && c2 == 0xB2) //correspond to DSM2 10bits header
+			{
+				protocol_proba_.proba_10bits++;
+				//empty_the buffer, since we don't decode channels yet
+				buffer_clear(&receiver_);
+			}
+			else
+			{
+				protocol_proba_.proba_11bits++;
+				//empty_the buffer, since we don't decode channels yet
+				buffer_clear(&receiver_);
+			}
+			
+			//after having received enough frames, determine which protocol is used
+			if (protocol_proba_.min_nb_frames != 0 )
+			{
+				protocol_proba_.min_nb_frames--;
+			}
+			else
+			{
+				//is the probability of one protocol at least 2 times bigger than for the other one ?
+				if (protocol_proba_.proba_10bits > 2*protocol_proba_.proba_11bits)
+				{
+					protocol_ = DSM2_10BITS;
+				}
+				else if (protocol_proba_.proba_11bits > 2*protocol_proba_.proba_10bits)
+				{
+					protocol_ = DSM2_11BITS;
+				}
+				else //otherwise redo this probability check for 10 other frames
+				{
+					protocol_proba_.min_nb_frames = 10;
+				}			
+			}
+		}
+	}
  }
