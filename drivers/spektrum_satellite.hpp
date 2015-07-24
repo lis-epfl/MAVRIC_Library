@@ -41,8 +41,8 @@
  ******************************************************************************/
 
 
-#ifndef SPEKTRUM_SATELLITE_
-#define SPEKTRUM_SATELLITE_
+#ifndef SPEKTRUM_SATELLITE_HPP_
+#define SPEKTRUM_SATELLITE_HPP_
 
 
 #include "satellite.hpp"
@@ -110,4 +110,4 @@ private:
 
 
 
-#endif /* SPEKTRUM_SATELLITE_ */
+#endif /* SPEKTRUM_SATELLITE_HPP_ */

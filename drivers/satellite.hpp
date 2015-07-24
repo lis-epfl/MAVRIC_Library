@@ -76,8 +76,6 @@ typedef enum
 class Satellite
 {
 public:
-	Satellite();
-
 	int16_t 	get_channels(const uint8_t channel_number) const;
 
 	uint32_t 	get_last_interrupt(void) const;
@@ -89,9 +87,9 @@ public:
 	bool 		get_new_data_available(void) const;
 	void 		set_new_data_available(const bool is_available);
 
-	virtual void	bind(const radio_protocol_t radio_protocol);
+	virtual void	bind(const radio_protocol_t radio_protocol) = 0;
 
-	virtual bool	init();
+	virtual bool	init() = 0;
 
 protected:
 	buffer_t 				receiver_;				///< Buffer for incoming data

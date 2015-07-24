@@ -101,8 +101,8 @@ void spektrum_satellite_switch_off(void)
 /**
  * \brief Define the service routine for the spektrum handler interruption
  */
-/* TODO finish dealing with interrup in C++
-//#pragma interrupt
+ /*
+#pragma interrupt
 ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1) 
 {
 	uint8_t c1, c2, i;
@@ -219,8 +219,8 @@ ISR(spectrum_handler, AVR32_USART1_IRQ, AVR32_INTC_INTLEV_INT1)
 			
 		}
 	}		
-}*/
-
+}
+*/
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
