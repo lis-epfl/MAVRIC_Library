@@ -44,10 +44,10 @@
 #define REMOTE_H__
 
 #include "mav_modes.hpp"
+#include "satellite.hpp"
 
 extern "C" 
 {
-	#include "satellite.h"
 	#include "stabilisation.h"
 	#include "control_command.h"
 }

@@ -44,12 +44,13 @@
 #ifndef REMOTE_DSM2_
 #define REMOTE_DSM2_
 
+#include "satellite.hpp"
+ 
 extern "C" 
 {
 	#include <stdint.h>
 	#include <stdbool.h>
 	#include "buffer.h"
-	#include "satellite.h"
 }
 
 /**

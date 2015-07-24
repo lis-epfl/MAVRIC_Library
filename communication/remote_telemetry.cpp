@@ -41,12 +41,12 @@
  ******************************************************************************/
 
 #include "remote_telemetry.hpp"
+#include "satellite.hpp"
 
 extern "C"
 {
 	#include "time_keeper.h"
 	// #include "spektrum.h"
-	#include "satellite.h"
 	#include <limits.h>
 }
 
