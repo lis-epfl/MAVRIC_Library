@@ -110,7 +110,7 @@ void spektrum_satellite_switch_off(void)
 
 void spektrum_irq_callback(Serial* serial) 
 {
-	spek_sat->handle_interrupt(serial);
+	spek_sat->handle_interrupt();
 }
 
 
@@ -220,7 +220,7 @@ int16_t Spektrum_satellite::get_neutral(const uint8_t index) const
  }
 
 
- void Spektrum_satellite::handle_interrupt(Serial* serial)
+ void Spektrum_satellite::handle_interrupt()
  {
  	uint8_t c1, c2, i;
 	uint16_t sw;
@@ -228,7 +228,7 @@ int16_t Spektrum_satellite::get_neutral(const uint8_t index) const
 	uint32_t now = time_keeper_get_micros() ;
 
 	// If byte received
-	while ( serial->readable() > 0 ) 
+	while ( uart_.readable() > 0 ) 
 	{
 		uint32_t dt_interrupt = now - last_interrupt_;
 		last_interrupt_ = now;
@@ -242,7 +242,7 @@ int16_t Spektrum_satellite::get_neutral(const uint8_t index) const
 		}
 
 		// Add new byte to buffer
-		serial->read(&c1);
+		uart_.read(&c1);
 		buffer_put(&receiver_, c1);
 		
 		// If frame is complete, decode channels

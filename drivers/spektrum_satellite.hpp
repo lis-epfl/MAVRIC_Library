@@ -103,10 +103,8 @@ public:
 
 	/**
 	 * @brief  			Takes care of incoming data
-	 * 
-	 * @param serial 	Peripheral
 	 */
-	void handle_interrupt(Serial* serial);
+	void handle_interrupt();
 
 private:
 	Serial_avr32& 	uart_;
