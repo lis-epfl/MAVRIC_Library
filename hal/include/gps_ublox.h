@@ -720,6 +720,15 @@ typedef struct
 	uint32_t time_last_posllh_msg;
 	uint32_t time_last_velned_msg;
 	
+
+	uint8_t step;								///< Variable defining the state machine in the U-Blox decoding function
+	uint8_t  ubx_class;							///< The U-Blox message class
+	uint8_t  msg_id;							///< The U-Blox message ID
+	uint16_t payload_counter;					///< The incremental counter to receive bytes of data
+	uint16_t payload_length;					///< The length of the message
+	uint8_t cksum_a;							///< Checksum a
+	uint8_t cksum_b;							///< Checksum b
+
 	uint32_t size_buffer;
 
 	gps_engine_setting_t engine_nav_setting;	///< Enum GPS engine setting

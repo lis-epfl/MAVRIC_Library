@@ -429,15 +429,8 @@ static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t engine_nav_setting)
 
 static bool gps_ublox_message_decode(gps_t *gps)
 {
-	uint8_t step = 0;					///< Variable defining the state machine in the U-Blox decoding function
 	uint8_t data;
 	bool msg_ok = false;
-	uint8_t  ubx_class = 0;				///< The U-Blox message class
-	uint8_t  msg_id = 0;				///< The U-Blox message ID
-	uint16_t payload_counter = 0;		///< The incremental counter to receive bytes of data
-	uint16_t payload_length = 0;		///< The length of the message
-	uint8_t cksum_a = 0;				///< Checksum a
-	uint8_t cksum_b = 0;				///< Checksum b
 
 	uint8_t  * temporary_message_for_swaping;
 	
@@ -448,7 +441,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 		data = buffer_get(&(gps->gps_buffer));
 		reset:
 		
-		switch (step)
+		switch (gps->step)
 		{
 			// Message preamble detection
 			//
@@ -462,17 +455,17 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			case 1:
 				if (data == UBX_PREAMBLE2)
 				{
-					step++;
+					gps->step++;
 					break;
 				}
-				step = 0;
+				gps->step = 0;
 			case 0:
 				if (data == UBX_PREAMBLE1)
 				{
-					step++;
+					gps->step++;
 					break;
 				}
-				step = 0;
+				gps->step = 0;
 				break;
 			// Message header processing
 			//
@@ -484,50 +477,50 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			// fooled by preamble bytes in messages.
 			//
 			case 2:
-				step++;
-				ubx_class = data;
-				cksum_a = data;
-				cksum_b = cksum_a; // reset the checksum accumulators
+				gps->step++;
+				gps->ubx_class = data;
+				gps->cksum_a = data;
+				gps->cksum_b = gps->cksum_a; // reset the checksum accumulators
 				break;
 			
 			case 3:
-				step++;
-				cksum_a += data;
-				cksum_b += cksum_a; // checksum byte
-				msg_id = data;
+				gps->step++;
+				gps->cksum_a += data;
+				gps->cksum_b += gps->cksum_a; // checksum byte
+				gps->msg_id = data;
 				break;
 			
 			case 4:
-				step++;
-				cksum_a += data;
-				cksum_b += cksum_a; // checksum byte
-				payload_length = data;
+				gps->step++;
+				gps->cksum_a += data;
+				gps->cksum_b += gps->cksum_a; // checksum byte
+				gps->payload_length = data;
 				break;
 			
 			case 5:
-				step++;
-				payload_length |= data<<8;
-				cksum_a += data;
-				cksum_b += cksum_a; // checksum byte
+				gps->step++;
+				gps->payload_length |= data<<8;
+				gps->cksum_a += data;
+				gps->cksum_b += gps->cksum_a; // checksum byte
 			
-			if (payload_length > 512)
+			if (gps->payload_length > 512)
 			{
 				// we assume very large payloads are line noise
 				print_util_dbg_print("large payload: ");
-				print_util_dbg_print_num(payload_length,10);
+				print_util_dbg_print_num(gps->payload_length,10);
 				print_util_dbg_print("\r\n");
-				payload_length = 0;
-				step = 0;
+				gps->payload_length = 0;
+				gps->step = 0;
 				goto reset;
 			}
-			payload_counter = 0; // prepare to receive payload
+			gps->payload_counter = 0; // prepare to receive payload
 
-			if(ubx_class == UBX_CLASS_NAV)
+			if(gps->ubx_class == UBX_CLASS_NAV)
 			{
-				switch(msg_id)
+				switch(gps->msg_id)
 				{
 					case MSG_NAV_POSLLH:
-					if(payload_length == UBX_SIZE_NAV_POSLLH)
+					if(gps->payload_length == UBX_SIZE_NAV_POSLLH)
 					{
 						ubx_current_message = (uint8_t **)&ubx_current_pos_llh_message;
 						ubx_last_message = (uint8_t **)&ubx_last_pos_llh_message;
@@ -536,21 +529,21 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					else
 					{
 						print_util_dbg_print("Wrong Posllh message 0x");
-						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print_num(gps->ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
-						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print_num(gps->msg_id,16);
 						print_util_dbg_print(" Received size:");
-						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print_num(gps->payload_length,10);
 						print_util_dbg_print(" should be:");
 						print_util_dbg_print_num(UBX_SIZE_NAV_POSLLH,10);
 						print_util_dbg_print("\r\n");
-						step = 0;
+						gps->step = 0;
 						goto reset;
 					}
 					break;
 					
 					case MSG_NAV_STATUS:
-					if(payload_length == UBX_SIZE_NAV_STATUS)
+					if(gps->payload_length == UBX_SIZE_NAV_STATUS)
 					{
 						ubx_current_message = (uint8_t **)&ubx_current_status_message;
 						ubx_last_message = (uint8_t **)&ubx_last_status_message;
@@ -559,21 +552,21 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					else
 					{
 						print_util_dbg_print("Wrong Nav Status message 0x");
-						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print_num(gps->ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
-						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print_num(gps->msg_id,16);
 						print_util_dbg_print(" Received size:");
-						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print_num(gps->payload_length,10);
 						print_util_dbg_print(" should be:");
 						print_util_dbg_print_num(UBX_SIZE_NAV_STATUS,10);
 						print_util_dbg_print("\r\n");
-						step = 0;
+						gps->step = 0;
 						goto reset;
 					}
 					break;
 					
 					case MSG_NAV_SOL:
-					if(payload_length == UBX_SIZE_NAV_SOL)
+					if(gps->payload_length == UBX_SIZE_NAV_SOL)
 					{
 						ubx_current_message = (uint8_t **)&ubx_current_solution_message;
 						ubx_last_message = (uint8_t **)&ubx_last_solution_message;
@@ -582,21 +575,21 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					else
 					{
 						print_util_dbg_print("Wrong Solution message 0x");
-						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print_num(gps->ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
-						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print_num(gps->msg_id,16);
 						print_util_dbg_print(" Received size:");
-						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print_num(gps->payload_length,10);
 						print_util_dbg_print(" should be:");
 						print_util_dbg_print_num(UBX_SIZE_NAV_SOL,10);
 						print_util_dbg_print("\r\n");
-						step = 0;
+						gps->step = 0;
 						goto reset;
 					}
 					break;
 					
 					case MSG_NAV_VELNED:
-					if(payload_length == UBX_SIZE_NAV_VELNED)
+					if(gps->payload_length == UBX_SIZE_NAV_VELNED)
 					{
 						ubx_current_message = (uint8_t **)&ubx_current_vel_ned_message;
 						ubx_last_message = (uint8_t **)&ubx_last_vel_ned_message;
@@ -605,21 +598,21 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					else
 					{
 						print_util_dbg_print("Wrong Velned message 0x");
-						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print_num(gps->ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
-						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print_num(gps->msg_id,16);
 						print_util_dbg_print(" Received size:");
-						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print_num(gps->payload_length,10);
 						print_util_dbg_print(" should be:");
 						print_util_dbg_print_num(UBX_SIZE_NAV_VELNED,10);
 						print_util_dbg_print("\r\n");
-						step = 0;
+						gps->step = 0;
 						goto reset;
 					}
 					break;
 					
 					case MSG_NAV_SVINFO:
-					if(payload_length == UBX_SIZE_NAV_SVINFO)
+					if(gps->payload_length == UBX_SIZE_NAV_SVINFO)
 					{
 						ubx_current_message = (uint8_t **)&ubx_current_sv_info_message;
 						ubx_last_message = (uint8_t **)&ubx_last_sv_info_message;
@@ -628,21 +621,21 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					else
 					{
 						print_util_dbg_print("Wrong SV Info message 0x");
-						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print_num(gps->ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
-						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print_num(gps->msg_id,16);
 						print_util_dbg_print(" Received size:");
-						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print_num(gps->payload_length,10);
 						print_util_dbg_print(" should be:");
 						print_util_dbg_print_num(UBX_SIZE_NAV_SVINFO,10);
 						print_util_dbg_print("\r\n");
-						step = 0;
+						gps->step = 0;
 						goto reset;
 					}
 					break;
 					
 					case MSG_NAV_TIMEUTC:
-					if (payload_length == UBX_SIZE_NAV_TIMEUTC)
+					if (gps->payload_length == UBX_SIZE_NAV_TIMEUTC)
 					{
 						ubx_current_message = (uint8_t **)&ubx_current_nav_timeutc_message;
 						ubx_last_message = (uint8_t **)&ubx_last_nav_timeutc_message;
@@ -651,41 +644,41 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					else
 					{
 						print_util_dbg_print("Wrong NAV TIMEUTC message 0x");
-						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print_num(gps->ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
-						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print_num(gps->msg_id,16);
 						print_util_dbg_print(" Received size:");
-						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print_num(gps->payload_length,10);
 						print_util_dbg_print(" should be:");
 						print_util_dbg_print_num(UBX_SIZE_NAV_TIMEUTC,10);
 						print_util_dbg_print("\r\n");
-						step = 0;
+						gps->step = 0;
 						goto reset;
 					}
 					break;
 					
 					default:
-					step = 0;
+					gps->step = 0;
 					if (gps->debug)
 					{
 						print_util_dbg_print("Unexpected NAV message, Class: 0x");
-						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print_num(gps->ubx_class,16);
 						print_util_dbg_print(", msg id: 0x");
-						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print_num(gps->msg_id,16);
 						print_util_dbg_print(" of size ");
-						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print_num(gps->payload_length,10);
 						print_util_dbg_print("\r\n");
 					}
 					goto reset;
 				}
 			}
-			else if(ubx_class == UBX_CLASS_CFG)
+			else if(gps->ubx_class == UBX_CLASS_CFG)
 			{
 				
-				switch(msg_id)
+				switch(gps->msg_id)
 				{
 					case MSG_CFG_NAV_SETTINGS:
-					if(payload_length == UBX_SIZE_NAV_SETTINGS)
+					if(gps->payload_length == UBX_SIZE_NAV_SETTINGS)
 					{
 						ubx_current_message = (uint8_t **)&ubx_current_nav_settings_message;
 						ubx_last_message = (uint8_t **)&ubx_last_nav_settings_message;
@@ -694,21 +687,21 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					else
 					{
 						print_util_dbg_print("Wrong Nav Settings message 0x");
-						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print_num(gps->ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
-						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print_num(gps->msg_id,16);
 						print_util_dbg_print(" Received size:");
-						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print_num(gps->payload_length,10);
 						print_util_dbg_print(" should be:");
 						print_util_dbg_print_num(UBX_SIZE_NAV_SETTINGS,10);
 						print_util_dbg_print("\r\n");
-						step = 0;
+						gps->step = 0;
 						goto reset;
 					}
 					break;
 					
 					case MSG_CFG_RATE:
-					if(payload_length == UBX_SIZE_CFG_RATE)
+					if(gps->payload_length == UBX_SIZE_CFG_RATE)
 					{
 						ubx_current_message = (uint8_t **)&ubx_current_cfg_rate_message;
 						ubx_last_message = (uint8_t **)&ubx_last_cfg_rate_message;
@@ -717,21 +710,21 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					else
 					{
 						print_util_dbg_print("Wrong CFG Rate message 0x");
-						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print_num(gps->ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
-						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print_num(gps->msg_id,16);
 						print_util_dbg_print(" Received size:");
-						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print_num(gps->payload_length,10);
 						print_util_dbg_print(" should be:");
 						print_util_dbg_print_num(UBX_SIZE_CFG_RATE,10);
 						print_util_dbg_print("\r\n");
-						step = 0;
+						gps->step = 0;
 						goto reset;
 					}
 					break;
 					
 					case MSG_CFG_SET_RATE:
-					if (payload_length == UBX_SIZE_CFG_GETSET_RATE)
+					if (gps->payload_length == UBX_SIZE_CFG_GETSET_RATE)
 					{
 						ubx_current_message = (uint8_t **)&ubx_current_cfg_set_get_rate_message;
 						ubx_last_message = (uint8_t **)&ubx_last_cfg_set_get_rate_message;
@@ -740,39 +733,39 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					else
 					{
 						print_util_dbg_print("Wrong CFG Set/get message 0x");
-						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print_num(gps->ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
-						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print_num(gps->msg_id,16);
 						print_util_dbg_print(" Received size:");
-						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print_num(gps->payload_length,10);
 						print_util_dbg_print(" should be:");
 						print_util_dbg_print_num(UBX_SIZE_CFG_GETSET_RATE,10);
 						print_util_dbg_print("\r\n");
-						step = 0;
+						gps->step = 0;
 						goto reset;
 					}
 					break;
 					
 					default:
-					step = 0;
+					gps->step = 0;
 					if (gps->debug)
 					{
 						print_util_dbg_print("Unexpected CFG message, Class: 0x");
-						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print_num(gps->ubx_class,16);
 						print_util_dbg_print(", msg id: 0x");
-						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print_num(gps->msg_id,16);
 						print_util_dbg_print(" of size ");
-						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print_num(gps->payload_length,10);
 						print_util_dbg_print("\r\n");
 					}
 					goto reset;
 				}
-			} else if (ubx_class == UBX_CLASS_MON)
+			} else if (gps->ubx_class == UBX_CLASS_MON)
 			{
-				switch (msg_id)
+				switch (gps->msg_id)
 				{
 					case MSG_MON_RXR:
-					if(payload_length == UBX_SIZE_MON_RXR)
+					if(gps->payload_length == UBX_SIZE_MON_RXR)
 					{
 						ubx_current_message = (uint8_t **)&ubx_current_mon_rxr_message;
 						ubx_last_message = (uint8_t **)&ubx_last_mon_rxr_message;
@@ -781,29 +774,29 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					else
 					{
 						print_util_dbg_print("Wrong MON RXR message 0x");
-						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print_num(gps->ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
-						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print_num(gps->msg_id,16);
 						print_util_dbg_print(" Received size:");
-						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print_num(gps->payload_length,10);
 						print_util_dbg_print(" should be:");
 						print_util_dbg_print_num(UBX_SIZE_MON_RXR,10);
 						print_util_dbg_print("\r\n");
-						step = 0;
+						gps->step = 0;
 						goto reset;
 					}
 					break;
 					
 					default:
-					step = 0;
+					gps->step = 0;
 					if (gps->debug)
 					{
 						print_util_dbg_print("Unexpected TIM message, Class: 0x");
-						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print_num(gps->ubx_class,16);
 						print_util_dbg_print(", msg id: 0x");
-						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print_num(gps->msg_id,16);
 						print_util_dbg_print(" of size ");
-						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print_num(gps->payload_length,10);
 						print_util_dbg_print(" should be :");
 						print_util_dbg_print_num(MSG_MON_RXR,16);
 						print_util_dbg_print("\r\n");
@@ -812,12 +805,12 @@ static bool gps_ublox_message_decode(gps_t *gps)
 				}
 				
 			}
-			else if(ubx_class == UBX_CLASS_TIM)
+			else if(gps->ubx_class == UBX_CLASS_TIM)
 			{
-				switch(msg_id)
+				switch(gps->msg_id)
 				{
 					case MSG_TIM_TP:
-					if (payload_length == UBX_SIZE_TIM_TP)
+					if (gps->payload_length == UBX_SIZE_TIM_TP)
 					{
 						ubx_current_message = (uint8_t **)&ubx_current_tim_tp_message;
 						ubx_last_message = (uint8_t **)&ubx_last_tim_tp_message;
@@ -826,21 +819,21 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					else
 					{
 						print_util_dbg_print("Wrong TIM TP message 0x");
-						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print_num(gps->ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
-						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print_num(gps->msg_id,16);
 						print_util_dbg_print(" Received size:");
-						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print_num(gps->payload_length,10);
 						print_util_dbg_print(" should be:");
 						print_util_dbg_print_num(UBX_SIZE_TIM_TP,10);
 						print_util_dbg_print("\r\n");
-						step = 0;
+						gps->step = 0;
 						goto reset;
 					}
 					break;
 					
 					case MSG_TIM_VRFY:
-					if (payload_length == UBX_SIZE_TIM_VRFY)
+					if (gps->payload_length == UBX_SIZE_TIM_VRFY)
 					{
 						ubx_current_message = (uint8_t **)&ubx_current_tim_vrfy_message;
 						ubx_last_message = (uint8_t **)&ubx_last_tim_vrfy_message;
@@ -849,29 +842,29 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					else
 					{
 						print_util_dbg_print("Wrong TIM VRFY message 0x");
-						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print_num(gps->ubx_class,16);
 						print_util_dbg_print(" Msg id: 0x");
-						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print_num(gps->msg_id,16);
 						print_util_dbg_print(" Received size:");
-						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print_num(gps->payload_length,10);
 						print_util_dbg_print(" should be:");
 						print_util_dbg_print_num(UBX_SIZE_TIM_VRFY,10);
 						print_util_dbg_print("\r\n");
-						step = 0;
+						gps->step = 0;
 						goto reset;
 					}
 					break;
 					
 					default:
-					step = 0;
+					gps->step = 0;
 					if (gps->debug)
 					{
 						print_util_dbg_print("Unexpected TIM message, Class: 0x");
-						print_util_dbg_print_num(ubx_class,16);
+						print_util_dbg_print_num(gps->ubx_class,16);
 						print_util_dbg_print(", msg id: 0x");
-						print_util_dbg_print_num(msg_id,16);
+						print_util_dbg_print_num(gps->msg_id,16);
 						print_util_dbg_print(" of size ");
-						print_util_dbg_print_num(payload_length,10);
+						print_util_dbg_print_num(gps->payload_length,10);
 						print_util_dbg_print(" should be :");
 						print_util_dbg_print_num(MSG_TIM_TP,16);
 						print_util_dbg_print("\r\n");
@@ -881,15 +874,15 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			}
 			else
 			{
-				step = 0;
+				gps->step = 0;
 				if (gps->debug)
 				{
 					print_util_dbg_print("Unexpected message, Class: 0x");
-					print_util_dbg_print_num(ubx_class,16);
+					print_util_dbg_print_num(gps->ubx_class,16);
 					print_util_dbg_print(", msg id: 0x");
-					print_util_dbg_print_num(msg_id,16);
+					print_util_dbg_print_num(gps->msg_id,16);
 					print_util_dbg_print(" of size ");
-					print_util_dbg_print_num(payload_length,10);
+					print_util_dbg_print_num(gps->payload_length,10);
 					print_util_dbg_print("\r\n");
 				}
 				goto reset;
@@ -897,49 +890,49 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			break;
 			
 			case 6:
-			cksum_a += data;
-			cksum_b += cksum_a; // checksum byte
+			gps->cksum_a += data;
+			gps->cksum_b += gps->cksum_a; // checksum byte
 			
 			#ifdef BIG_ENDIAN
-			(*ubx_current_message)[payload_length - 1 - payload_counter] = data;
+			(*ubx_current_message)[gps->payload_length - 1 - gps->payload_counter] = data;
 			#else
-			(*ubx_current_message)[payload_counter] = data;
+			(*ubx_current_message)[gps->payload_counter] = data;
 			#endif
 			
-			payload_counter++;
+			gps->payload_counter++;
 			
-			if (payload_counter == payload_length)
+			if (gps->payload_counter == gps->payload_length)
 			{
-				step++;
+				gps->step++;
 			}
 			break;
 			
 			case 7:
-			step++;
-			if (cksum_a != data)
+			gps->step++;
+			if (gps->cksum_a != data)
 			{
 				print_util_dbg_print("bad cksum_a ");
 				print_util_dbg_print_num(data,16);
 				print_util_dbg_print(" should be ");
-				print_util_dbg_print_num(cksum_a,16);
+				print_util_dbg_print_num(gps->cksum_a,16);
 				print_util_dbg_print(" class : 0x");
-				print_util_dbg_print_num(ubx_class,16);
+				print_util_dbg_print_num(gps->ubx_class,16);
 				print_util_dbg_print(" msg_id : 0x");
-				print_util_dbg_print_num(msg_id,16);
+				print_util_dbg_print_num(gps->msg_id,16);
 				print_util_dbg_print("\r\n");
-				step = 0;
+				gps->step = 0;
 				goto reset;
 			}
 			break;
 			
 			case 8:
-			step = 0;
-			if (cksum_b != data)
+			gps->step = 0;
+			if (gps->cksum_b != data)
 			{	
 				print_util_dbg_print("bad cksum_b ");
 				print_util_dbg_print_num(data,16);
 				print_util_dbg_print(" should be ");
-				print_util_dbg_print_num(cksum_b,16);
+				print_util_dbg_print_num(gps->cksum_b,16);
 				print_util_dbg_print("\r\n");
 				break;
 			}
@@ -951,7 +944,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			*ubx_current_message = *ubx_last_message;
 			*ubx_last_message = temporary_message_for_swaping;
 			
-			if (gps_ublox_process_data(gps, ubx_class, msg_id))
+			if (gps_ublox_process_data(gps, gps->ubx_class, gps->msg_id))
 			{
 				msg_ok = true;
 			}
@@ -1848,6 +1841,14 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	gps->loop_mon_rxr = 0;
 	
 	gps->size_buffer = 0;
+
+	gps->step = 0;
+	gps->ubx_class = 0;
+	gps->msg_id = 0;
+	gps->payload_counter = 0;
+	gps->payload_length = 0;
+	gps->cksum_a = 0;
+	gps->cksum_b = 0;
 
 	gps->time_last_posllh_msg = time_keeper_get_millis();
 	gps->time_last_velned_msg = time_keeper_get_millis();
