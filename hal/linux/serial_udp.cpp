@@ -44,116 +44,58 @@
 extern "C"
 {
 	#include <unistd.h>
-	#include <stdlib.h>
+	// #include <stdlib.h>
 	#include <stdio.h>
 	#include <errno.h>
 	#include <string.h>
 	#include <sys/socket.h>
 	#include <sys/types.h>
 	#include <netinet/in.h>
-	#include <unistd.h>
 	#include <fcntl.h>
 	#include <time.h>
 	#include <sys/time.h>
 	#include <time.h>
 	#include <arpa/inet.h>
-	#include "print_util.h"
+	// #include "print_util.h"
 }
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Serial_udp::Serial_udp(serial_udp_conf_t config)
+Serial_udp::Serial_udp(serial_udp_conf_t config):
+	tx_udp_(udp_client(config.ip, config.tx_port)),
+	rx_udp_(udp_server(config.ip, config.rx_port))
 {
-	config_ = config;
+	config = config;
+
+	// Init buffers
+	buffer_init(&tx_buffer_);
+	buffer_init(&rx_buffer_);
+
+	// Set rx as non blocking
+	int sock = rx_udp_.get_socket();
+	int flags = fcntl (sock, F_GETFL, 0 );
+	fcntl( sock, F_SETFL, flags | O_NONBLOCK );
 }
 
 
 bool Serial_udp::init(void)
 {
-	// Init tx stream
-	memset( &tx_addr_, 
-			0, 
-			sizeof(tx_addr_) );
-	tx_addr_.sin_family 		= AF_INET;
-	tx_addr_.sin_addr.s_addr 	= inet_addr( config_.tx_ip );
-	tx_addr_.sin_port 			= htons( config_.tx_port );
-	tx_sock_ 					= socket( PF_INET, SOCK_DGRAM, IPPROTO_UDP );
-
-	// Init rx stream
-	memset( &rx_addr_, 
-			0, 
-			sizeof(rx_addr_) );
-	rx_addr_.sin_family 		= AF_INET;
-	rx_addr_.sin_addr.s_addr 	= htonl(INADDR_ANY);
-	rx_addr_.sin_port 			= htons(config_.rx_port);
-	rx_sock_ 					= socket(PF_INET, SOCK_DGRAM, IPPROTO_UDP);
- 
-	// Bind the rx socket to port 14551 - necessary to receive packets from qgroundcontrol
-	if( -1 == bind(rx_sock_, (struct sockaddr *)&(rx_addr_), sizeof(struct sockaddr)) )
-    {
-		printf("error bind failed\n");
-		close(rx_sock_);
-		exit(-1);
-    } 
- 
-	// Attempt to make it non blocking
-	if (fcntl(rx_sock_, F_SETFL, O_NONBLOCK ) < 0)
-    {
-		fprintf(stderr, "error setting nonblocking: %s\n", strerror(errno));
-		close(rx_sock_);
-		exit(-1);
-    }
-	printf("success binding to port %i: %i\n", config_.rx_port, rx_sock_);
-	
-	// Init buffers
-	buffer_init(&tx_buffer_);
-	buffer_init(&rx_buffer_);
-
-	return config_.flag;
+	return true;
 }
-
 
 	
 uint32_t Serial_udp::readable(void)
 {
-	int32_t 		i;
-	int32_t 		recsize;
-	char 			buf[BUFFER_SIZE];
-	socklen_t 		fromlen;
-	fd_set 			rset;
-	struct timeval 	tv;
-
-	FD_ZERO( &rset );
-	FD_SET(  rx_sock_, &rset );
+	int32_t recsize;
+	char 	buf[BUFFER_SIZE];
 	
-	tv.tv_sec 	= 0;
-	tv.tv_usec 	= 100;
+	recsize = rx_udp_.recv(buf, BUFFER_SIZE);
 
-	if( select( rx_sock_+1, &rset, NULL, NULL, &tv) ) 
+	for( int32_t i=0; i<recsize; i++ ) 
 	{
-		fromlen = sizeof(rx_addr_);		
-		recsize = recvfrom( rx_sock_, 
-							(void *)buf, 
-							BUFFER_SIZE, 
-							0, 
-							(struct sockaddr *)&(rx_addr_), 
-							&fromlen);
-
-		if( recsize != -1 ) 
-		{
-			printf("rec: %i\n", recsize);
-		}
-
-		for( i=0; i<recsize; i++ ) 
-		{
-			buffer_put( &rx_buffer_, buf[i] );
-			print_util_dbg_print(" ");
-			print_util_dbg_print_num( (uint8_t)buf[i], 16);
-		}
-
-		print_util_dbg_print("--\n");
+		buffer_put( &rx_buffer_, buf[i] );
 	}
 
 	return buffer_bytes_available(&rx_buffer_);
@@ -171,13 +113,8 @@ void Serial_udp::flush(void)
 {
 	int32_t bytes_sent; 
 
-	bytes_sent = sendto( tx_sock_, 
-						 &tx_buffer_, 
-						 buffer_bytes_available( &tx_buffer_ ), 
-						 0, 
-						 (struct sockaddr*)&tx_addr_, 
-						 sizeof(struct sockaddr_in) );
-
+	bytes_sent = tx_udp_.send((const char*)tx_buffer_.Buffer, buffer_bytes_available(&tx_buffer_));
+	
 	if( bytes_sent == (int32_t)buffer_bytes_available( &tx_buffer_ ) ) 
 	{
 		buffer_clear( &tx_buffer_ );

@@ -42,12 +42,14 @@
 #define SERIAL_UDP_H_
 
 #include "serial.hpp"
+#include "udp_client_server.hpp"
 
 extern "C"
 {
+	#include "endianness.h"
 	#include <stdint.h>
 	#include <sys/socket.h>
-	#include <sys/types.h>
+	// #include <sys/types.h>
 	#include <arpa/inet.h>
 	#include "buffer.h"
 }
@@ -57,13 +59,9 @@ extern "C"
  */
 typedef struct
 {
-	const char* tx_ip;
+	const char* ip;
 	int32_t 	tx_port;
 	int32_t 	rx_port;
-
-
-	bool flag; // TODO: remove
-
 } serial_udp_conf_t;
 
 
@@ -145,13 +143,11 @@ public:
 private:
 	serial_udp_conf_t 	config_;
 	
-	buffer_t 			tx_buffer_;
-	struct sockaddr_in  tx_addr_; 
-	int32_t 			tx_sock_;
+	buffer_t 	tx_buffer_;
+	udp_client 	tx_udp_;
 
-	buffer_t 			rx_buffer_;
-	struct sockaddr_in  rx_addr_; 
-	int32_t 			rx_sock_;
+	buffer_t 	rx_buffer_;
+	udp_server 	rx_udp_;
 };
 
 
@@ -164,11 +160,9 @@ static inline serial_udp_conf_t serial_udp_default_config()
 {
 	serial_udp_conf_t 	conf;
 
-	conf.tx_ip 		= "127.0.0.1";
-	conf.tx_port	= 14555;
+	conf.ip 		= "127.0.0.1";
+	conf.tx_port	= 14550;
 	conf.rx_port 	= 14555;
-
-	conf.flag = true;
 
 	return conf;
 }
