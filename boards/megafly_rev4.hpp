@@ -62,6 +62,7 @@ extern "C"
 typedef struct
 {
 	serial_avr32_conf_t uart0_config;
+	serial_avr32_conf_t uart1_config;
 	serial_avr32_conf_t uart3_config;
 	i2c_avr32_conf_t 	i2c0_config;
 	i2c_avr32_conf_t 	i2c1_config;
@@ -106,6 +107,7 @@ public:
 	 * Public Members
 	 */
 	Serial_avr32 		uart0;		
+	Serial_avr32 		uart1;				
 	Serial_avr32 		uart3;		
 	I2c_avr32 			i2c0;
 	I2c_avr32 			i2c1;
@@ -140,6 +142,19 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
 	conf.uart0_config.options.channelmode	= USART_NORMAL_CHMODE;
 	conf.uart0_config.rx_pin_map			= {AVR32_USART0_RXD_0_0_PIN, AVR32_USART0_RXD_0_0_FUNCTION};
     conf.uart0_config.tx_pin_map			= {AVR32_USART0_TXD_0_0_PIN, AVR32_USART0_TXD_0_0_FUNCTION};
+
+    // UART1 configuration
+	conf.uart1_config 						= {};
+	conf.uart1_config.serial_device 		= AVR32_SERIAL_1;
+	conf.uart1_config.mode 					= AVR32_SERIAL_IN_OUT;
+ 	conf.uart1_config.options				= {};
+	conf.uart1_config.options.baudrate  	= 115200;
+	conf.uart1_config.options.charlength	= 8;
+	conf.uart1_config.options.paritytype 	= USART_NO_PARITY;
+	conf.uart1_config.options.stopbits		= USART_1_STOPBIT;
+	conf.uart1_config.options.channelmode	= USART_NORMAL_CHMODE;
+	conf.uart1_config.rx_pin_map			= {AVR32_USART1_RXD_0_1_PIN, AVR32_USART1_RXD_0_1_FUNCTION};
+    conf.uart1_config.tx_pin_map			= {AVR32_USART1_TXD_0_1_PIN, AVR32_USART1_TXD_0_1_FUNCTION};
 
     // UART3 configuration
 	conf.uart3_config 						= {};
