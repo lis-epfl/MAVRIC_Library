@@ -48,7 +48,7 @@ extern "C" {
 
 #define __MAVRIC_ENDIAN_BIG__
 
-#include "endian.h"
+#include "mavric_endian.h"
 
 
 #ifdef __cplusplus
