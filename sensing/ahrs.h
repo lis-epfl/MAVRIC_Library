@@ -50,6 +50,7 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include "quaternions.h"
+#include "coord_conventions.h"
 
 
 /**
@@ -70,7 +71,8 @@ typedef enum
 typedef struct
 {
 	quat_t	qe;							///< quaternion defining the Attitude estimation of the platform
-	
+	aero_attitude_t aero_attitude;
+
 	float	angular_speed[3];			///< Gyro rates
 	float	linear_acc[3];			///< Acceleration WITHOUT gravity
 	

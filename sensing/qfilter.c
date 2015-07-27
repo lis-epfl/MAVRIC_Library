@@ -260,4 +260,6 @@ void qfilter_update(qfilter_t *qf)
 	qf->ahrs->angular_speed[X] = qf->imu->scaled_gyro.data[X];
 	qf->ahrs->angular_speed[Y] = qf->imu->scaled_gyro.data[Y];
 	qf->ahrs->angular_speed[Z] = qf->imu->scaled_gyro.data[Z];
+
+	qf->ahrs->aero_attitude = coord_conventions_quat_to_aero(qf->ahrs->qe);
 }
