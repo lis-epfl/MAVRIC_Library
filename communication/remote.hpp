@@ -156,7 +156,6 @@ typedef struct
  */
 typedef struct
 {
-	satellite_t sat;										///< The pointer to the raw values of the remote received by the interrupt
 	float channels[REMOTE_CHANNEL_COUNT];					///< The array of channel values
 	channel_inv_t channel_inv[REMOTE_CHANNEL_COUNT];		///< The array of direction of the channels
 	float trims[REMOTE_CHANNEL_COUNT];						///< The array of trim of the remote channels
@@ -165,17 +164,19 @@ typedef struct
 	signal_quality_t signal_quality;						///< The quality of signal
 	remote_type_t type;										///< The type of remote
 	remote_mode_t mode;										///< The remote mode structure
+	Satellite* sat;											///< The pointer to the raw values of the remote received by the interrupt
 } remote_t;
 
 /**
  * \brief	Initialise the remote structure
  * 
  * \param	remote				The pointer to the remote structure
+ * \param	sat					The pointer to satellite
  * \param	config				The pointer to the config structure of the remote
  *
  * \return	True if the init succeed, false otherwise
  */
-bool remote_init(remote_t* remote, const remote_conf_t config);
+bool remote_init(remote_t* remote, Satellite* sat, const remote_conf_t config);
 
 /**
  * \brief	Returns the throttle value from the remote

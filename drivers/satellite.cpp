@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file satellite.hpp
+ * \file satellite.cpp
  * 
  * \author MAV'RIC Team
  * \author Gregoire Heitz
@@ -40,67 +40,35 @@
  *
  ******************************************************************************/
 
-#ifndef SATELLITE_HPP_
-#define SATELLITE_HPP_
 
+#include "satellite.hpp"
 
-extern "C" 
+int16_t 	Satellite::get_channels(const uint8_t channel_number) const
 {
-	#include "uart_int.h"
+	return channels_[channel_number];
 }
 
-/**
- * \brief Structure containing the radio protocol probabilities
- */
-typedef struct
+uint32_t 	Satellite::get_last_interrupt() const
 {
-	uint8_t min_nb_frames;	///< Minimum of Frames used to determine the protocol used
-	uint8_t proba_10bits;	///< Probability that the protocol is 10bits
-	uint8_t	proba_11bits;	///< Probability that the protocol is 11bits
-}radio_protocol_proba_t;
+	return last_interrupt_;
+}
 
-
-/**
- * \brief Radio protocols
- */ 
-typedef enum
+uint32_t 	Satellite::get_last_update() const
 {
-	DSM2_10BITS = 0,
-	DSM2_11BITS = 1,
-	DSMX		= 2,
-	UNKNOWN		= 3,
-} radio_protocol_t;
+	return last_update_;
+}
 
-//Function pointer
-
-class Satellite
+uint32_t 	Satellite::get_dt() const
 {
-public:
-	int16_t 	get_channels(const uint8_t channel_number) const;
+	return dt_;
+}
 
-	uint32_t 	get_last_interrupt(void) const;
+bool 		Satellite::get_new_data_available() const
+{
+	return new_data_available_;
+}
 
-	uint32_t 	get_last_update(void) const;
-
-	uint32_t 	get_dt(void) const;
-
-	bool 		get_new_data_available(void) const;
-	void 		set_new_data_available(const bool is_available);
-
-	virtual void	bind(const radio_protocol_t radio_protocol) = 0;
-
-	virtual bool	init() = 0;
-
-protected:
-	buffer_t 				receiver_;				///< Buffer for incoming data
-	int16_t 				channels_[16];			///< Array to contain the 16 remote channels
-	uint32_t 				last_interrupt_;		///< Last time a byte was received
-	uint32_t 				last_update_;			///< Last update time 
-	uint32_t 				dt_;					///< Duration between two updates
-	bool					new_data_available_; 	///< Indicates if new data is  available
-	radio_protocol_proba_t	protocol_proba_;		///< Indicates number of frames received
-	radio_protocol_t		protocol_;				///< Defines in which mode the remote is configured
-};
-
-
-#endif //SATELLITE_HPP_
+void 		Satellite::set_new_data_available(const bool is_available)
+{
+	new_data_available_ = is_available;
+}
