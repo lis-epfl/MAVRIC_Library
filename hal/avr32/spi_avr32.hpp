@@ -30,57 +30,122 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	spi.hpp
+ * \file 	spi_avr32.hpp
  * 
  * \author 	MAV'RIC Team
  *   
- * \brief 	Abstract class for SPI peripherals
+ * \brief 	Implementation of spi peripheral for avr32
  *
  ******************************************************************************/
 
-#ifndef SPI_HPP_
-#define SPI_HPP_
+#ifndef SPI_AVR32_HPP_
+#define SPI_AVR32_HPP_
+
+#include "spi.hpp"
+
+extern "C"
+{
+	#include "spi.h"
+	#include "buffer.h"
+}
+
+/**
+ * @brief 	Enumerate the possible UARTs
+ */
+typedef enum
+{
+	AVR32_SPI_0 		 	= 0, 
+	AVR32_SPI_1 			= 1, 
+	AVR32_SPI_2 			= 2, 
+	AVR32_SPI_3 			= 3, 
+	AVR32_SPI_4 			= 4,
+	AVR32_SPI_MAX_NUMBER 	= 5,
+} spi_avr32_devices_t;
 
 
-#include <stdint.h>
+/**
+ * @brief 	UART modes
+ */
+typedef enum
+{
+	AVR32_SPI_OFF 		= 0,
+	AVR32_SPI_IN 		= 1,
+	AVR32_SPI_OUT 		= 2,
+	AVR32_SPI_IN_OUT 	= 3,
+} spi_avr32_mode_t;
 
 
-class Spi
+/**
+ * @brief 	Gpio map
+ */
+typedef struct
+{
+	uint8_t  pin;						///< Module pin.
+	uint8_t  function;					///< Module function.	
+} spi_avr32_gpio_map_t;
+
+/**
+ * @brief 	Configuration structure
+ */
+typedef struct 
+{
+	spi_avr32_devices_t 	spi_device;
+	spi_avr32_mode_t		mode;
+	spi_options_t 			options;
+	spi_avr32_gpio_map_t 	mosi_pin_map;	///< Master Out Slave In pin
+	spi_avr32_gpio_map_t 	miso_pin_map;	///< Master In Slave Out pin
+	spi_avr32_gpio_map_t 	sck_pin_map;	///< Serial Clock pin
+	spi_avr32_gpio_map_t 	ss_pin_map;		///< Slave Select pin
+} spi_avr32_conf_t;
+
+
+/**
+ * @brief 	Implementation of spi peripheral for avr32
+ */
+class Spi_avr32: public Spi
 {
 public:
 
 	/**
+	 * @brief  	Initialises the peripheral
+	 * 
+	 * @param 	config 		Device configuration
+	 */
+	Spi_avr32(spi_avr32_conf_t config);
+
+
+	/**
 	 * @brief 	Hardware initialization
 	 * 
-	 * @return  true 		Success
-	 * @return  false 		Error
+	 * @return  true Success
+	 * @return  false Error
 	 */
-	virtual bool init(void) = 0;
+	virtual bool init(void);
 
 
 	/**
-	 * @brief 	Write data to the SPI bus
+	 * @brief 	Write bytes on the spi line
 	 * 
-	 * @param 	out_buffer 	Data buffer
-	 * @param 	nbytes 		Number of bytes to write	
+	 * @param 	byte 		Outgoing bytes
+	 * @param 	size 		Number of bytes to write
 	 * 
-	 * @return 	true		Success
-	 * @return 	false		Failed
-	 */	
-	virtual bool write(uint8_t* out_buffer, uint32_t nbytes) = 0;
+	 * @return 	true		Data successfully written
+	 * @return 	false		Data not written
+	 */
+	virtual bool write(const uint8_t* bytes, const uint32_t size=1);
 
 
 	/**
-	 * @brief 	Read data from the SPI bus
+	 * @brief 	Read bytes from the spi line
 	 * 
-	 * @param 	in_buffer 	Data buffer
-	 * @param 	nbytes 		Number of bytes to read	
+	 * @param 	command		Reading command
+	 * @param 	bytes 		Incoming bytes
+	 * @param 	size 		Number of bytes to read
 	 * 
-	 * @return 	true		Success
-	 * @return 	false		Failed
+	 * @return 	true		Data successfully read
+	 * @return 	false		Data not read
 	 */	
-	virtual bool read(uint8_t* in_buffer, uint32_t nbytes) = 0;
-
+	virtual bool read(uint16_t command, uint8_t* bytes, const uint32_t size=1);
 
 	/**
 	 * @brief 	Write and Read data to/from the SPI bus
@@ -92,9 +157,14 @@ public:
 	 * @return 	true		Success
 	 * @return 	false		Failed
 	 */	
-	virtual bool transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbytes) = 0;
+	virtual bool transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbytes);
+
+
+private:
+	spi_avr32_conf_t			config_;		///< Configuration
+	volatile avr32_spi_t* 		spi_;			///< Hardware peripheral
 
 };
 
 
-#endif /* SPI_HPP_ */
+#endif /* SPI_AVR32_HPP_ */
