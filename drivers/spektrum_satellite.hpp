@@ -109,8 +109,8 @@ public:
 	void handle_interrupt();
 
 private:
-	Serial_avr32& 	uart_;
-	int16_t 		channel_center_[16];		///< Declare an array to store the central position of each channel
+	Serial_avr32& 	uart_;					///< Declare the uart object associated with the spektrum satellite object
+	int16_t 		channel_center_[16];	///< Declare an array to store the central position of each channel
 
 };
 

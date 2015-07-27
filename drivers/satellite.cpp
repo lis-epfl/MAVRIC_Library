@@ -42,6 +42,7 @@
 
 
 #include "satellite.hpp"
+ 
 
 int16_t 	Satellite::get_channels(const uint8_t channel_number) const
 {

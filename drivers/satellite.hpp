@@ -1,4 +1,4 @@
-/*******************************************************************************
+	/*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
  * 
@@ -76,19 +76,61 @@ typedef enum
 class Satellite
 {
 public:
-	int16_t 	get_channels(const uint8_t channel_number) const;
+	
+	/**
+	* \brief 	Return the channels' value
+	*
+	* \param 	channel_number	Specify which channel we are interested in
+	*
+	* \return 	the remote channel value 
+	*/
+	int16_t 		get_channels(const uint8_t channel_number) const;
+	
+	/**
+	* \brief 	Return the last interrup time
+	*
+	* \return 	the remote last interrupt time
+	*/
+	uint32_t 		get_last_interrupt(void) const;
+	
+	/**
+	* \brief 	Return the last update time
+	*
+	* \return 	the remote last update time
+	*/
+	uint32_t 		get_last_update(void) const;
+	
+	/**
+	* \brief 	Return the time difference between the last 2 updates
+	*
+	* \return 	the remote time difference between the last 2 updates
+	*/
+	uint32_t 		get_dt(void) const;
+	
+	/**
+	* \brief 	Return true if there is some data available for the remote
+	*
+	* \return 	true if there is some data available for the remote
+	*/
+	bool 			get_new_data_available(void) const;
+	
+	/**
+	* \brief 	Set the data available flag to false when we have read data available for the remote
+	*
+	* \param 	is_available	to the corresponding value
+	*/
+	void 			set_new_data_available(const bool is_available);
 
-	uint32_t 	get_last_interrupt(void) const;
-
-	uint32_t 	get_last_update(void) const;
-
-	uint32_t 	get_dt(void) const;
-
-	bool 		get_new_data_available(void) const;
-	void 		set_new_data_available(const bool is_available);
-
+	/**
+	* \brief 	Virtual function to bind a satellite with a remote
+	*
+	* \param 	radio_protocol	Define in which protocol the remote has to be binded
+	*/
 	virtual void	bind(const radio_protocol_t radio_protocol) = 0;
 
+	/**
+	* \brief 	Virtual function to intialize a satellite receiver
+	*/
 	virtual bool	init() = 0;
 
 protected:
