@@ -115,6 +115,13 @@ void Serial_udp::flush(void)
 }
 
 
+bool Serial_udp::attach(serial_interrupt_callback_t func)
+{
+	// Not implemented
+	return false;
+}
+
+
 bool Serial_udp::write(const uint8_t* bytes, const uint32_t size)
 {
 	bool ret = true;

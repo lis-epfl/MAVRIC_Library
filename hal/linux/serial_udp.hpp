@@ -73,7 +73,7 @@ typedef struct
 static inline serial_udp_conf_t serial_udp_default_config();
 
 
-class Serial_udp
+class Serial_udp: public Serial
 {
 public:
 	/**
@@ -115,6 +115,23 @@ public:
 	 * @return 	Number of bytes available for writing
 	 */	
 	virtual void flush(void);
+	
+
+	/**
+	 * @brief 	Attach a function to call after a receive interrupt is generated
+	 * 
+	 * @details A default handler should be provided by the implementation to 
+	 * 			add the incoming data in a buffer, so is not mandatory to call 
+	 * 			this method. The function callback will be called after the 
+	 * 			interrupt handler
+	 * 
+	 * @param  	func	 	Pointer to the callback function
+	 * 
+	 * @return 	true		Success
+	 * @return 	false		Failed
+	 */
+	virtual bool attach(serial_interrupt_callback_t func); 
+	
 
 	/**
 	 * @brief 	Write a byte on the serial line
