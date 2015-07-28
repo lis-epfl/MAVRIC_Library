@@ -197,9 +197,10 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			break;
 		
 		case MAV_STATE_ACTIVE:
-
+			
 			if ((state_machine->state->source_mode == REMOTE)||(state_machine->state->source_mode == JOYSTICK))
 			{
+				// check connection with remote
 				if ( (state_machine->state->source_mode == REMOTE)&&(rc_check != SIGNAL_GOOD) )
 				{
 					state_new = MAV_STATE_CRITICAL;
@@ -216,7 +217,8 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 					}
 				}
 			}
-			//check battery level
+
+			// check battery level
 			if( state_machine->state->battery.is_low )
 			{
 				print_util_dbg_print("Battery low! Performing critical landing.\r\n");
@@ -240,6 +242,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 				mode_custom_new &= ~CUST_HEARTBEAT_LOST;
 			}
 			
+			// check whether out_of_fence_1
 			if (state_machine->state->out_of_fence_1)
 			{
 				print_util_dbg_print("Out of fence 1!\r\n");
@@ -251,6 +254,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 				mode_custom_new &= ~CUST_FENCE_1;
 			}
 			
+			// check whether out_of_fence_2
 			if (state_machine->state->out_of_fence_2)
 			{
 				print_util_dbg_print("Out of fence 2!\r\n");
@@ -262,6 +266,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 				mode_custom_new &= ~CUST_FENCE_2;
 			}
 
+			// check GPS status
 			if (!state_machine->gps->healthy)
 			{
 				print_util_dbg_print("GPS bad!\r\n");
@@ -306,6 +311,57 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 					// higher level navigation module will take care of coming back home
 					break;
 			}
+
+			//check battery level
+			if( state_machine->state->battery.is_low )
+			{
+				mode_custom_new |= CUST_BATTERY_LOW;
+			}
+			else
+			{
+				mode_custom_new &= ~CUST_BATTERY_LOW;
+			}
+			
+			// check connection with GND station
+			if ( state_machine->state->connection_lost)
+			{
+				mode_custom_new |= CUST_HEARTBEAT_LOST;
+			}
+			else
+			{
+				mode_custom_new &= ~CUST_HEARTBEAT_LOST;
+			}
+			
+			// check whether out_of_fence_1
+			if (state_machine->state->out_of_fence_1)
+			{
+				mode_custom_new |= CUST_FENCE_1;
+			}
+			else
+			{
+				mode_custom_new &= ~CUST_FENCE_1;
+			}
+			
+			// check whether out_of_fence_2
+			if (state_machine->state->out_of_fence_2)
+			{
+				mode_custom_new |= CUST_FENCE_2;
+			}
+			else
+			{
+				mode_custom_new &= ~CUST_FENCE_2;
+			}
+
+			// check GPS status
+			if (!state_machine->gps->healthy)
+			{
+				mode_custom_new |= CUST_GPS_BAD;
+			}
+			else
+			{
+				mode_custom_new &= ~CUST_GPS_BAD;
+			}
+
 			if (mode_new.ARMED == ARMED_OFF)
 			{
 				state_new = MAV_STATE_STANDBY;
