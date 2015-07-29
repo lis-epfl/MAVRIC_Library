@@ -101,6 +101,7 @@ typedef struct
 
 	local_coordinates_t local_position;				///< The local position
 	local_coordinates_t last_gps_pos;				///< The coordinates of the last GPS position
+	local_coordinates_t pos_extrapolate;
 	
 	bool fence_set;
 	local_coordinates_t fence_position;

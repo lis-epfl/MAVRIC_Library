@@ -199,7 +199,7 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 				global_gps_position.altitude = pos_est->gps->altitude;
 				global_gps_position.heading = 0.0f;
 				local_coordinates = coord_conventions_global_to_local_position(global_gps_position,pos_est->local_position.origin);
-				local_coordinates.timestamp_ms = pos_est->gps->time_last_msg;
+				local_coordinates.timestamp_ms = pos_est->gps->time_last_posllh_msg;
 				
 				// compute GPS velocity estimate
 				gps_dt = (local_coordinates.timestamp_ms - pos_est->last_gps_pos.timestamp_ms) / 1000.0f;
@@ -216,16 +216,64 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 				}
 				
 				pos_est->last_gps_pos = local_coordinates;
+				
+				pos_est->pos_extrapolate = pos_est->last_gps_pos;
 			}
 			
-			if (pos_est->time_last_gps_velned_msg < pos_est->gps->time_last_velned_msg)
-			{
-				pos_est->time_last_gps_velned_msg = pos_est->gps->time_last_velned_msg;
-			}
+			//if (pos_est->time_last_gps_velned_msg < pos_est->gps->time_last_velned_msg)
+			//{
+				//pos_est->time_last_gps_velned_msg = pos_est->gps->time_last_velned_msg;
+			//}
+			//
+			//pos_est->pos_extrapolate.timestamp_ms = pos_est->time_last_gps_posllh_msg;
+			//if (pos_est->time_last_gps_velned_msg > pos_est->time_last_gps_posllh_msg)
+			//{
+				//float gps_deltat = (pos_est->gps->time_last_velned_msg - pos_est->pos_extrapolate.timestamp_ms)/1000.0f;
+				//if (gps_deltat > 0.001f)
+				//{
+					//pos_est->pos_extrapolate.pos[X] += pos_est->gps->north_speed * gps_deltat;
+					//pos_est->pos_extrapolate.pos[Y] += pos_est->gps->east_speed * gps_deltat;
+					//pos_est->pos_extrapolate.pos[Z] += pos_est->gps->vertical_speed * gps_deltat;
+				//}
+				//for (i = 0;i < 3;i++)
+				//{
+					//pos_error[i] = pos_est->pos_extrapolate.pos[i] - pos_est->local_position.pos[i];
+				//}
+			//}
+			//else
+			//{
+				//for (i = 0;i < 3;i++)
+				//{
+					//pos_error[i] = pos_est->last_gps_pos.pos[i] - pos_est->local_position.pos[i];
+				//}
+			//}
+			//
+			//if (pos_est->time_last_gps_velned_msg < pos_est->time_last_gps_posllh_msg)
+			//{
+				//for (i = 0;i < 3;i++)
+				//{
+					//vel_error[i] = pos_est->last_vel[i] - pos_est->vel[i];
+				//}
+			//}
+			//else
+			//{
+				//vel_error[X] = pos_est->gps->north_speed    - pos_est->vel[X];
+				//vel_error[Y] = pos_est->gps->east_speed     - pos_est->vel[Y];
+				//vel_error[Z] = pos_est->gps->vertical_speed - pos_est->vel[Z];
+			//}
 			
 			vel_error[X] = pos_est->gps->north_speed    - pos_est->vel[X]; 
 			vel_error[Y] = pos_est->gps->east_speed     - pos_est->vel[Y]; 
 			vel_error[Z] = pos_est->gps->vertical_speed - pos_est->vel[Z]; 
+			
+			float gps_deltat = (pos_est->gps->time_last_velned_msg - pos_est->pos_extrapolate.timestamp_ms)/1000.0f;
+			if (gps_deltat > 0.001f)
+			{
+				pos_est->pos_extrapolate.pos[X] += pos_est->gps->north_speed * gps_deltat;
+				pos_est->pos_extrapolate.pos[Y] += pos_est->gps->east_speed * gps_deltat;
+				pos_est->pos_extrapolate.pos[Z] += pos_est->gps->vertical_speed * gps_deltat;
+			}
+			pos_est->pos_extrapolate.timestamp_ms = pos_est->time_last_gps_velned_msg;
 
 			gps_gain = 1.0f;
 		
