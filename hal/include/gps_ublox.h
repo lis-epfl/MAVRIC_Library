@@ -717,10 +717,9 @@ typedef struct
 	bool print_nav_on_debug;					///< Flag to print messages on debug console
 	bool debug;									///< Indicates if debug messages should be printed
 	
-	uint32_t time_last_posllh_msg;
-	uint32_t time_last_velned_msg;
+	uint32_t time_last_posllh_msg;				///< Time at which the last POSLLH message was received
+	uint32_t time_last_velned_msg;				///< Time at which the last VELNED message was received
 	
-
 	uint8_t step;								///< Variable defining the state machine in the U-Blox decoding function
 	uint8_t  ubx_class;							///< The U-Blox message class
 	uint8_t  msg_id;							///< The U-Blox message ID

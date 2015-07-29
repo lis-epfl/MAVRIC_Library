@@ -1265,7 +1265,7 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 				gps->new_speed            = true;
 			}
 			break;
-			
+
 		case MSG_NAV_SVINFO:
 			gps_sv_info = ubx_get_sv_info();
 			
@@ -1379,16 +1379,6 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 		gps->new_position = false;
 		return true;
 	}
-	//else if (gps->new_position && !gps->new_speed)
-	//{
-		//gps->new_position = false;
-		//return true;
-	//}
-	//else if (!gps->new_position && gps->new_speed)
-	//{
-		//gps->new_speed = false;
-		//return true;
-	//}
 	
 	return false;
 }
@@ -1841,7 +1831,7 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	gps->loop_tim_vrfy = 0;
 	gps->loop_nav_timeutc = 0;
 	gps->loop_mon_rxr = 0;
-	
+
 	gps->size_buffer = 0;
 
 	gps->step = 0;
