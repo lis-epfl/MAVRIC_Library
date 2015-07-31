@@ -50,17 +50,17 @@ extern "C"
 
 #include <asf.h>
 
-#define GENERATOR_BUFFER_SIZE 512
+#define GENERATOR_BUFFER_SIZE 512		///< Generator Buffer size
 
 
 /**
- * \brief       Initialises the DAC buffer to a triangle
+ * \brief       Initializes the DAC buffer to a triangle
  */
 void generator_init_dac_buffer_triangle(void);
 
  
 /**
- * \brief       Initialises the DAC buffer to a sine
+ * \brief       Initializes the DAC buffer to a sine
  */
 void generator_init_dac_buffer_sine(void);
 

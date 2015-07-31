@@ -53,15 +53,15 @@ extern "C" {
 
 
 /**
- * \brief The calibration level of the filter
+ * \brief The structure for configuring the quaternion-based attitude estimation
  */
-typedef enum
+typedef struct
 {
-	OFF,							///< Calibration level: No calibration 
-	LEVELING,						///< Calibration level: leveling 
-	LEVEL_PLUS_ACCEL				///< Calibration level: leveling plus acceleration
-} calibration_mode_t;
-
+	float   kp;								///< The proportional gain for the acceleration correction of the angular rates
+	float   ki;								///< The integral gain for the acceleration correction of the biais
+	float   kp_mag;							///< The proportional gain for the magnetometer correction of the angular rates
+	float   ki_mag;							///< The integral gain for the magnetometer correction of the angular rates
+} qfilter_conf_t;
 
 /**
  * \brief The structure for the quaternion-based attitude estimation
@@ -81,11 +81,14 @@ typedef struct
 /**
  * \brief	Initialize the attitude estimation module
  *
- * \param	attitude_filter		The pointer to the attitude structure
- * \param	imu					The pointer to the IMU structure
- * \param	ahrs	The pointer to the attitude estimation structure
+ * \param	qf				The pointer to the attitude structure
+ * \param	config			The qfilter configuration gains
+ * \param	imu				The pointer to the IMU structure
+ * \param	ahrs			The pointer to the attitude estimation structure
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void qfilter_init(qfilter_t* qf, imu_t* imu, ahrs_t* ahrs);
+bool qfilter_init(qfilter_t* qf, const qfilter_conf_t* config, imu_t* imu, ahrs_t* ahrs);
 
 
 /**

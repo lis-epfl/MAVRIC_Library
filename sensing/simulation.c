@@ -42,32 +42,24 @@
  *
  ******************************************************************************/
 
-
-#include "conf_constants.h"
+#include "simulation.h"
 #include "time_keeper.h"
 #include "coord_conventions.h"
 #include "quaternions.h"
-
-#include "central_data.h"
 #include "maths.h"
+#include "print_util.h"
+#include "constants.h"
+
+#include "conf_platform.h" 	// TODO: remove (use the module mix_to_servo to remove dependency to conf_platform)
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
 
 /**
- * \brief	Changes between simulation to and from reality
- *
- * \param	sim				The pointer to the simulation model structure
- * \param	packet			The pointer to the decoded mavlink command long message
- */
-static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_command_long_t* packet);
-
-/**
  * \brief	Computer the forces in the local frame for a "diagonal" quadrotor configuration
  *
  * \param	sim				The pointer to the simulation structure
- * \param	servos			The pointer to the servos structure
  */
 void forces_from_servos_diag_quad(simulation_model_t *sim);
 
@@ -77,7 +69,6 @@ void forces_from_servos_diag_quad(simulation_model_t *sim);
  * \warning	This function is not implemented
  *
  * \param	sim				The pointer to the simulation structure
- * \param	servos			The pointer to the servos structure
  */
 void forces_from_servos_cross_quad(simulation_model_t *sim);
 
@@ -92,43 +83,6 @@ static void simulation_reset_simulation(simulation_model_t *sim);
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_command_long_t* packet)
-{
-	if (packet->param1 == 1)
-	{
-		// Set new home position to actual position
-		print_util_dbg_print("Set new home location to actual position.\r\n");
-		sim->local_position.origin = coord_conventions_local_to_global_position(sim->local_position);
-
-		print_util_dbg_print("New Home location: (");
-		print_util_dbg_print_num(sim->local_position.origin.latitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->local_position.origin.longitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->local_position.origin.altitude * 1000.0f,10);
-		print_util_dbg_print(")\r\n");
-	}
-	else
-	{
-		// Set new home position from msg
-		print_util_dbg_print("Set new home location.\r\n");
-
-		sim->local_position.origin.latitude = packet->param5;
-		sim->local_position.origin.longitude = packet->param6;
-		sim->local_position.origin.altitude = packet->param7;
-
-		print_util_dbg_print("New Home location: (");
-		print_util_dbg_print_num(sim->local_position.origin.latitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->local_position.origin.longitude * 10000000.0f,10);
-		print_util_dbg_print(", ");
-		print_util_dbg_print_num(sim->local_position.origin.altitude * 1000.0f,10);
-		print_util_dbg_print(")\r\n");
-	}
-
-	*sim->nav_plan_active = false;
-}
-
 /** 
  * \brief Inverse function of mix_to_servos in stabilization to recover torques and forces
  *
@@ -139,7 +93,8 @@ static void simulation_set_new_home_position(simulation_model_t *sim, mavlink_co
  *
  * \return The value of the lift / drag value without the lift / drag coefficient
  */
-static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr_lat_airspeed, float axial_airspeed) {
+static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr_lat_airspeed, float axial_airspeed) 
+{
 	if (rpm < 0.1f)
 	{
 		return 0.0f;
@@ -152,9 +107,7 @@ static inline float lift_drag_base(simulation_model_t *sim, float rpm, float sqr
 
 static void simulation_reset_simulation(simulation_model_t *sim)
 {
-	int32_t i;
-	
-	for (i = 0; i < 3; i++)
+	for (int32_t i = 0; i < 3; i++)
 	{
 		sim->rates_bf[i] = 0.0f;
 		sim->torques_bf[i] = 0.0f;
@@ -191,7 +144,6 @@ static void simulation_reset_simulation(simulation_model_t *sim)
 
 void forces_from_servos_diag_quad(simulation_model_t* sim)
 {
-	int32_t i;
 	float motor_command[4];
 	float rotor_lifts[4], rotor_drags[4], rotor_inertia[4];
 	float ldb;
@@ -202,7 +154,8 @@ void forces_from_servos_diag_quad(simulation_model_t* sim)
 	float lateral_airspeed = sqrt(sqr_lateral_airspeed);
 	
 	float old_rotor_speed;
-	for (i = 0; i < 4; i++)
+	
+	for (int32_t i = 0; i < 4; i++)
 	{
 		motor_command[i] = (float)sim->servos->servo[i].value - sim->vehicle_config.rotor_rpm_offset;
 		if (motor_command[i] < 0.0f) 
@@ -249,46 +202,22 @@ void forces_from_servos_diag_quad(simulation_model_t* sim)
 }
 
 
-void forces_from_servos_cross_quad(simulation_model_t* sim)
-{
-	//int32_t i;
-	//float motor_command[4];
-	
-	//TODO: implement the correct forces
-/*	motor_command[M_FRONT] = control->thrust + control->rpy[PITCH] + M_FRONT_DIR * control->rpy[YAW];
-	motor_command[M_RIGHT] = control->thrust - control->rpy[ROLL] + M_RIGHT_DIR * control->rpy[YAW];
-	motor_command[M_REAR]  = control->thrust - control->rpy[PITCH] + M_REAR_DIR * control->rpy[YAW];
-	motor_command[M_LEFT]  = control->thrust + control->rpy[ROLL] + M_LEFT_DIR * control->rpy[YAW];
-	for (i = 0; i < 4; i++)
-	{
-		if (motor_command[i] < MIN_THRUST) motor_command[i] = MIN_THRUST;
-		if (motor_command[i] > MAX_THRUST) motor_command[i] = MAX_THRUST;
-	}
-
-	for (i = 0; i < 4; i++)
-	{
-		central_data->servos[i].value = SERVO_SCALE * motor_command[i];
-	}
-	*/
-}
-
-
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimator_t* pos_est, barometer_t* pressure, gps_t* gps, state_t* state, const servos_t* servos, bool* waypoint_set, mavlink_message_handler_t *message_handler, const mavlink_stream_t* mavlink_stream)
+bool simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimation_t* pos_est, barometer_t* pressure, gps_t* gps, sonar_t* sonar, state_t* state, const servos_t* servos, bool* waypoint_set)
 {
-	int32_t i;
+	bool init_success = true;
 	
-	sim->mavlink_stream = mavlink_stream;
-
+	//Init dependencies
 	sim->vehicle_config = *sim_config;
-	
 	sim->imu = imu;
 	sim->pos_est = pos_est;
 	sim->pressure = pressure;
 	sim->gps = gps;
+	sim->sonar = sonar;
+	sim->state = state;
 	sim->servos = servos;
 	sim->nav_plan_active = &state->nav_plan_active;
 	
@@ -307,7 +236,7 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	print_util_dbg_print("\r\n");
 	
 
-	for (i = 0; i < ROTORCOUNT; i++)
+	for (int32_t i = 0; i < ROTORCOUNT; i++)
 	{
 		sim->rotorspeeds[i] = 0.0f;			
 	}
@@ -317,24 +246,14 @@ void simulation_init(simulation_model_t* sim, const simulation_config_t* sim_con
 	simulation_reset_simulation(sim);
 	simulation_calib_set(sim);
 	
-	mavlink_message_handler_cmd_callback_t callbackcmd;
+	print_util_dbg_print("[HIL SIMULATION] initialised.\r\n");
 	
-	callbackcmd.command_id    = MAV_CMD_DO_SET_HOME; // 179
-	callbackcmd.sysid_filter  = MAV_SYS_ID_ALL;
-	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-	callbackcmd.compid_target = MAV_COMP_ID_MISSIONPLANNER;
-	callbackcmd.function      = (mavlink_cmd_callback_function_t)	&simulation_set_new_home_position;
-	callbackcmd.module_struct =										sim;
-	mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
-	
-	print_util_dbg_print("HIL simulation initialized.\r\n");
+	return init_success;
 }
 
 void simulation_calib_set(simulation_model_t *sim)
 {
-	int32_t i;
-	
-	for (i = 0;i < 3;i++)
+	for (int32_t i = 0;i < 3;i++)
 	{
 		//we take in sim the inverse of the imu scale_factor to limit number of division
 		//while feeding raw_sensor.data[i]
@@ -376,12 +295,7 @@ void simulation_update(simulation_model_t *sim)
 	
 	sim->last_update = now;
 	// compute torques and forces based on servo commands
-	#ifdef CONF_DIAG
 	forces_from_servos_diag_quad(sim);
-	#endif
-	#ifdef CONF_CROSS
-	forces_from_servos_cross_quad(sim);
-	#endif
 	
 	// integrate torques to get simulated gyro rates (with some damping)
 	sim->rates_bf[0] = maths_clip((1.0f - 0.1f * sim->dt) * sim->rates_bf[0] + sim->dt * sim->torques_bf[0] / sim->vehicle_config.roll_pitch_momentum, 10.0f);
@@ -499,7 +413,13 @@ void simulation_simulate_gps(simulation_model_t *sim)
 	sim->gps->latitude = gpos.latitude;
 	sim->gps->longitude = gpos.longitude;
 	sim->gps->time_last_msg = time_keeper_get_millis();
+
+	sim->gps->north_speed = sim->vel[X];
+	sim->gps->east_speed = sim->vel[Y];
+	sim->gps->vertical_speed = sim->vel[Z];
+
 	sim->gps->status = GPS_OK;
+	sim->gps->healthy = true;
 }
 
 void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
@@ -520,9 +440,44 @@ void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 	sim->gps->longitude = gpos.longitude;
 	sim->gps->altitude = gpos.altitude;
 	sim->gps->time_last_msg = time_keeper_get_millis();
+
+	sim->gps->north_speed = 0.0f;
+	sim->gps->east_speed = 0.0f;
+	sim->gps->vertical_speed = 0.0f;
+
 	sim->gps->status = GPS_OK;
+	sim->gps->healthy = true;
 }
 
+void simulation_simulate_sonar(simulation_model_t *sim)
+{
+	int16_t distance_cm = 0.5f - 100 * sim->local_position.pos[Z];
+	float distance_m = (float)distance_cm / 100.0f;
+	float dt = 0.0f;
+	float velocity = 0.0f;
+
+	if ( distance_m > sim->sonar->min_distance && distance_m < sim->sonar->max_distance )
+	{
+		dt = (time_keeper_get_micros() - sim->sonar->last_update)/1000000.0f;
+		velocity = (distance_m - sim->sonar->current_distance)/dt;
+		if (abs(velocity) > 20.0f)
+		{
+			velocity = 0.0f;
+		}
+		sim->sonar->current_velocity = LPF_SONAR_VARIO*sim->sonar->current_velocity + (1.0f-LPF_SONAR_VARIO)*velocity;
+		sim->sonar->current_distance = distance_m;
+		sim->sonar->last_update = time_keeper_get_micros();
+		sim->sonar->healthy = true;
+		sim->sonar->healthy_vel = true;
+	}
+	else
+	{
+		sim->sonar->healthy = false;
+		sim->sonar->current_distance = 0.0f;
+		sim->sonar->healthy_vel = false;
+		sim->sonar->current_velocity = 0.0f;
+	}
+}
 
 void simulation_switch_from_reality_to_simulation(simulation_model_t *sim)
 {
@@ -544,71 +499,4 @@ void simulation_switch_from_simulation_to_reality(simulation_model_t *sim)
 		sim->pos_est->local_position.pos[i] = 0.0f;
 	}
 	sim->pos_est->init_gps_position = false;
-	sim->gps->status = NO_FIX;
-}
-
-
-task_return_t simulation_send_state(simulation_model_t* sim_model)
-{
-	aero_attitude_t aero_attitude;
-	aero_attitude = coord_conventions_quat_to_aero(sim_model->ahrs.qe);
-
-	global_position_t gpos = coord_conventions_local_to_global_position(sim_model->local_position);
-	
-	mavlink_message_t msg;
-	const mavlink_stream_t* mavlink_stream = sim_model->mavlink_stream;
-	mavlink_msg_hil_state_pack(	mavlink_stream->sysid,
-								mavlink_stream->compid,
-								&msg,
-								time_keeper_get_micros(),
-								aero_attitude.rpy[0],
-								aero_attitude.rpy[1],
-								aero_attitude.rpy[2],
-								sim_model->rates_bf[ROLL],
-								sim_model->rates_bf[PITCH],
-								sim_model->rates_bf[YAW],
-								gpos.latitude * 10000000,
-								gpos.longitude * 10000000,
-								gpos.altitude * 1000.0f,
-								100 * sim_model->vel[X],
-								100 * sim_model->vel[Y],
-								100 * sim_model->vel[Z],
-								1000 * sim_model->lin_forces_bf[0],
-								1000 * sim_model->lin_forces_bf[1],
-								1000 * sim_model->lin_forces_bf[2] 	);
-	mavlink_stream_send(mavlink_stream, &msg);
-
-	return TASK_RUN_SUCCESS;
-}
-
-task_return_t simulation_send_quaternions(simulation_model_t *sim_model)
-{
-	aero_attitude_t aero_attitude;
-	aero_attitude = coord_conventions_quat_to_aero(sim_model->ahrs.qe);
-
-	global_position_t gpos = coord_conventions_local_to_global_position(sim_model->local_position);
-	mavlink_message_t msg;
-	const mavlink_stream_t* mavlink_stream = sim_model->mavlink_stream;
-	mavlink_msg_hil_state_quaternion_pack(	mavlink_stream->sysid,
-											mavlink_stream->compid,
-											&msg,
-											time_keeper_get_micros(),
-											(float*) &sim_model->ahrs.qe,
-											aero_attitude.rpy[ROLL],
-											aero_attitude.rpy[PITCH],
-											aero_attitude.rpy[YAW],
-											gpos.latitude * 10000000,
-											gpos.longitude * 10000000,
-											gpos.altitude * 1000.0f,
-											100 * sim_model->vel[X],
-											100 * sim_model->vel[Y],
-											100 * sim_model->vel[Z],
-											100 * vectors_norm(sim_model->vel),
-											0.0f,
-											sim_model->ahrs.linear_acc[X],
-											sim_model->ahrs.linear_acc[Y],
-											sim_model->ahrs.linear_acc[Z]	);
-	mavlink_stream_send(mavlink_stream, &msg);
-
-	return TASK_RUN_SUCCESS;
 }

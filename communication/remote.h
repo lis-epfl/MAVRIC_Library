@@ -47,13 +47,12 @@
 	extern "C" {
 #endif
 
-#include "spektrum_satellite.h"
-#include "scheduler.h"
-#include "mavlink_stream.h" 
+#include "satellite.h"
 #include "stabilisation.h"
 #include "mav_modes.h"
+#include "control_command.h"
 
-#define REMOTE_CHANNEL_COUNT 8
+#define REMOTE_CHANNEL_COUNT 14
 
 /**
  * \brief The signal's quality
@@ -87,6 +86,12 @@ typedef enum
 	CHANNEL_FLAPS    = 5,
 	CHANNEL_AUX1     = 6,
 	CHANNEL_AUX2     = 7,
+	CHANNEL_AUX3     = 8,
+	CHANNEL_AUX4     = 9,
+	CHANNEL_AUX5     = 10,
+	CHANNEL_AUX6     = 11,
+	CHANNEL_AUX7     = 12,
+	CHANNEL_AUX8     = 13
 } remote_channel_t;
 
 /**
@@ -151,7 +156,7 @@ typedef struct
  */
 typedef struct
 {
-	spektrum_satellite_t* sat;								///< The pointer to the raw values of the remote received by the interrupt
+	satellite_t sat;										///< The pointer to the raw values of the remote received by the interrupt
 	float channels[REMOTE_CHANNEL_COUNT];					///< The array of channel values
 	channel_inv_t channel_inv[REMOTE_CHANNEL_COUNT];		///< The array of direction of the channels
 	float trims[REMOTE_CHANNEL_COUNT];						///< The array of trim of the remote channels
@@ -160,7 +165,6 @@ typedef struct
 	signal_quality_t signal_quality;						///< The quality of signal
 	remote_type_t type;										///< The type of remote
 	remote_mode_t mode;										///< The remote mode structure
-	const mavlink_stream_t* mavlink_stream;					///< The pointer to the mavlink stream structure
 } remote_t;
 
 /**
@@ -168,10 +172,10 @@ typedef struct
  * 
  * \param	remote				The pointer to the remote structure
  * \param	config				The pointer to the config structure of the remote
- * \param	mavlink_stream		The pointer to the mavlink stream structure
- * \param	message_handler		The pointer to the message handler structure
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void remote_init(remote_t* remote, const remote_conf_t* config, const mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *mavlink_handler);
+bool remote_init(remote_t* remote, const remote_conf_t* config);
 
 /**
  * \brief	Returns the throttle value from the remote
@@ -238,7 +242,8 @@ float remote_get_yaw(const remote_t* remote);
 /**
  * \brief	Initialise the mode from the remote switches
  * 
- * \param	remote				The pointer to the remote structure
+ * \param	remote_mode			The pointer to the remote mode structure
+ * \param	config				Pointer to the configuration of the remote mode structure
  */
 void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t* config);
 
@@ -274,23 +279,60 @@ void remote_get_command_from_remote(remote_t* remote, control_command_t * contro
  */
 void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t* controls);
 
-/**
- * \brief	Sends the raw remote values via MAVLink
- * 
- * \param	remote				The pointer to the remote structure
- *
- * \return	The result of the task
- */
-task_return_t remote_send_raw(const remote_t* remote);
 
 /**
- * \brief	Sends the scaled remote values via MAVLink
+ * \brief	Compute torque command from the remote
  * 
- * \param	remote				The pointer to the remote structure
- *
- * \return	The result of the task
+ * \param	remote			Remote structure (input)
+ * \param	command			Torque command (output)
  */
-task_return_t remote_send_scaled(const remote_t* remote);
+void remote_get_torque_command(const remote_t* remote, torque_command_t * command);
+
+
+/**
+ * \brief	Compute rate command from the remote
+ * 
+ * \param	remote			Remote structure (input)
+ * \param	command			Rate command (output)
+ */
+void remote_get_rate_command(const remote_t* remote, rate_command_t * command);
+
+
+/**
+ * \brief	Compute thrust command from the remote
+ * 
+ * \param	remote			Remote structure (input)
+ * \param	command			Thrust command (output)
+ */
+void remote_get_thrust_command(const remote_t* remote, thrust_command_t * command);
+
+
+/**
+ * \brief	Compute attitude command from the remote (absolute angles)
+ * 
+ * \param	remote			Remote structure (input)
+ * \param	command			Attitude command (output)
+ */
+void remote_get_attitude_command(const remote_t* remote, attitude_command_t * command);
+
+
+/**
+ * \brief	Compute attitude command from the remote (absolute roll and pitch, integrated yaw)
+ * 
+ * \param	remote			Remote structure (input)
+ * \param 	k_yaw			Integration factor for yaw (0.02 is ok) (input) 
+ * \param	command			Attitude command (output)
+ */
+void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const float k_yaw, attitude_command_t * command);
+
+
+/**
+ * \brief	Compute velocity command from the remote
+ * 
+ * \param	remote			Remote structure (input)
+ * \param	command			Velocity command (output)
+ */
+void remote_get_velocity_command(const remote_t* remote, velocity_command_t * command);
 
 
 #ifdef __cplusplus

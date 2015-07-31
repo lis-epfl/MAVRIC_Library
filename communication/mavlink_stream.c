@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief A wrapper for mavlink to use the stream interface
+ * \brief A wrapper for MAVLink to use the stream interface
  *
  ******************************************************************************/
 
@@ -52,11 +52,14 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config)
+void mavlink_stream_init(	mavlink_stream_t* mavlink_stream, 
+							const mavlink_stream_conf_t* config, 
+							byte_stream_t* rx_stream, 
+							byte_stream_t* tx_stream)
 {	
-	// mavlink_tx_stream                 = config->tx_stream;
-	mavlink_stream->tx         		  = config->tx_stream;
-	mavlink_stream->rx                = config->rx_stream;
+	// mavlink_tx_stream                 = tx_stream;
+	mavlink_stream->tx         		  = tx_stream;
+	mavlink_stream->rx                = rx_stream;
 	mavlink_stream->sysid             = config->sysid;
 	mavlink_stream->compid            = config->compid;
 	mavlink_stream->use_dma			  = config->use_dma;

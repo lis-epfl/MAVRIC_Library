@@ -7,7 +7,6 @@
 
 
 #include "central_data.h"
-#include "remote_controller.h"
 #include "simulation.h"
 #include "conf_sim_model.h"
 
@@ -42,16 +41,16 @@ void central_data_init(){
 		central_data.automatic_take_off = false;
 		
 		// default GPS home position
-		central_data.position_estimator.local_position.origin.longitude=   HOME_LONGITUDE;
-		central_data.position_estimator.local_position.origin.latitude =   HOME_LATITUDE;
-		central_data.position_estimator.local_position.origin.altitude =   HOME_ALTITUDE;
-		central_data.position_estimator.local_position.pos[0]=0;
-		central_data.position_estimator.local_position.pos[1]=0;
-		central_data.position_estimator.local_position.pos[2]=0;
+		central_data.position_estimation.local_position.origin.longitude=   HOME_LONGITUDE;
+		central_data.position_estimation.local_position.origin.latitude =   HOME_LATITUDE;
+		central_data.position_estimation.local_position.origin.altitude =   HOME_ALTITUDE;
+		central_data.position_estimation.local_position.pos[0]=0;
+		central_data.position_estimation.local_position.pos[1]=0;
+		central_data.position_estimation.local_position.pos[2]=0;
 
 		// init simulation
 		simulation_init(&(central_data.sim_model),&(central_data.imu.attitude));
-		central_data.sim_model.local_position = central_data.position_estimator.local_position;
+		central_data.sim_model.local_position = central_data.position_estimation.local_position;
 
 }
 

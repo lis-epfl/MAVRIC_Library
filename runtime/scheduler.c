@@ -44,13 +44,12 @@
 #include "scheduler.h"
 #include "time_keeper.h"
 #include "print_util.h"
-#include "mavlink_communication.h"
+#include <stdlib.h>
 
-void scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config, const mavlink_stream_t* mavlink_stream) 
+bool scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config) 
 {
-	// Init dependency
-	scheduler->mavlink_stream = mavlink_stream;
-
+	bool init_success = true;
+	
 	// Init schedule strategy
 	scheduler->schedule_strategy = config->schedule_strategy;
 
@@ -62,15 +61,23 @@ void scheduler_init(scheduler_t* scheduler, const scheduler_conf_t* config, cons
 	if ( scheduler->task_set != NULL ) 
 	{
 		scheduler->task_set->max_task_count = config->max_task_count;
+		
+		init_success &= true;
 	}
 	else
 	{
 		print_util_dbg_print("[SCHEDULER] ERROR ! Bad memory allocation\r\n");
 		scheduler->task_set->max_task_count = 0;		
+		
+		init_success &= false;
 	}
 
 	scheduler->task_set->task_count = 0;
 	scheduler->task_set->current_schedule_slot = 0;
+	
+	print_util_dbg_print("[SCHEDULER] Init\r\n");
+	
+	return init_success;
 }
 
 
@@ -133,7 +140,6 @@ bool scheduler_add_task(scheduler_t* scheduler, uint32_t repeat_period, task_run
 
 void scheduler_sort_tasks(scheduler_t* scheduler)
 {
-	int32_t i;
 	bool sorted = false;
 
 	task_set_t* ts = scheduler->task_set;	
@@ -149,7 +155,7 @@ void scheduler_sort_tasks(scheduler_t* scheduler)
 		sorted = true;
 		
 		// Iterate through registered tasks
-		for (i = 0; i < (ts->task_count - 1); i++) 
+		for (int32_t i = 0; i < (ts->task_count - 1); i++) 
 		{
 			if ( ts->tasks[i].priority < ts->tasks[i + 1].priority )
 			{
@@ -181,7 +187,6 @@ void scheduler_sort_tasks(scheduler_t* scheduler)
 
 int32_t scheduler_update(scheduler_t* scheduler) 
 {
-	int32_t i;
 	int32_t realtime_violation = 0;
 
 	task_set_t* ts = scheduler->task_set;
@@ -191,7 +196,7 @@ int32_t scheduler_update(scheduler_t* scheduler)
 	task_return_t treturn;
 
 	// Iterate through registered tasks
-	for (i = ts->current_schedule_slot; i < ts->task_count; i++) 
+	for (int32_t i = ts->current_schedule_slot; i < ts->task_count; i++) 
 	{
 		uint32_t current_time = time_keeper_get_micros();
 
@@ -274,13 +279,11 @@ int32_t scheduler_update(scheduler_t* scheduler)
 }
 
 
-task_entry_t* scheduler_get_task_by_id(scheduler_t* scheduler, uint16_t task_id)
+task_entry_t* scheduler_get_task_by_id(const scheduler_t* scheduler, uint16_t task_id)
 {
-	int32_t i = 0;
-
 	task_set_t* ts = scheduler->task_set;
 
-	for (i = 0; i < ts->task_count; i++) 
+	for (int32_t i = 0; i < ts->task_count; i++) 
 	{
 		if ( ts->tasks[i].task_id == task_id )
 		{ 
@@ -292,7 +295,7 @@ task_entry_t* scheduler_get_task_by_id(scheduler_t* scheduler, uint16_t task_id)
 }
 
 
-task_entry_t* scheduler_get_task_by_index(scheduler_t* scheduler, uint16_t task_index) 
+task_entry_t* scheduler_get_task_by_index(const scheduler_t* scheduler, uint16_t task_index) 
 {
 	task_set_t* ts = scheduler->task_set;
 
@@ -333,57 +336,4 @@ void scheduler_run_task_now(task_entry_t *te)
 	} 
 
 	te->next_run = time_keeper_get_micros();
-}
-
-
-task_return_t scheduler_send_rt_stats(scheduler_t* scheduler) 
-{	
-	const mavlink_stream_t* mavlink_stream = scheduler->mavlink_stream;
-	task_entry_t* stab_task = scheduler_get_task_by_id(scheduler,0);
-
-	mavlink_message_t msg;
-	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
-										mavlink_stream->compid,
-										&msg, 
-										time_keeper_get_millis(), 
-										"stabAvgDelay", 
-										stab_task->delay_avg);
-	mavlink_stream_send(mavlink_stream, &msg);
-
-	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
-										mavlink_stream->compid,
-										&msg, 
-										time_keeper_get_millis(), 
-										"stabDelayVar", 
-										sqrt(stab_task->delay_var_squared));
-	mavlink_stream_send(mavlink_stream, &msg);
-
-	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
-										mavlink_stream->compid,
-										&msg, 
-										time_keeper_get_millis(), 
-										"stabMaxDelay", 
-										stab_task->delay_max);
-	mavlink_stream_send(mavlink_stream, &msg);
-
-	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
-										mavlink_stream->compid,
-										&msg, 
-										time_keeper_get_millis(), 
-										"stabRTvio", 
-										stab_task->rt_violations);
-	mavlink_stream_send(mavlink_stream, &msg);
-
-	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,
-										mavlink_stream->compid,
-										&msg,
-										time_keeper_get_millis(), 
-										"stabExTime", 
-										stab_task->execution_time);
-	mavlink_stream_send(mavlink_stream, &msg);
-	
-	stab_task->rt_violations = 0;
-	stab_task->delay_max = 0;
-
-	return TASK_RUN_SUCCESS;
 }

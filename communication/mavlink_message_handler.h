@@ -35,7 +35,7 @@
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief This module handles of all incoming mavlink message by calling the 
+ * \brief This module handles of all incoming MAVLink message by calling the 
  * appropriate functions
  *
  ******************************************************************************/
@@ -62,22 +62,27 @@ extern "C" {
  */
 typedef void* handling_module_struct_t;
 
+/**
+ * \brief		Enumeration of command MAV result
+ * \details 	The enumeration MAV_RESULT is defined by MAVLink
+ */
+typedef enum MAV_RESULT mav_result_t;
 
 /**
- * \brief  		Prototype of callback functions for mavlink messages
+ * \brief  		Prototype of callback functions for MAVLink messages
  */
-typedef void (*mavlink_msg_callback_function_t) (handling_module_struct_t, mavlink_message_t*);
+typedef void (*mavlink_msg_callback_function_t) (handling_module_struct_t, uint32_t sysid, mavlink_message_t*);
 
 
 /**
- * \brief  		Prototype of callback functions for mavlink commands
+ * \brief  		Prototype of callback functions for MAVLink commands
  */
-typedef void (*mavlink_cmd_callback_function_t) (handling_module_struct_t, mavlink_command_long_t*);
+typedef mav_result_t (*mavlink_cmd_callback_function_t) (handling_module_struct_t, mavlink_command_long_t*);
 
 
 /**
  * \brief		Enumeration of MAV components 
- * \details 	The enumeration MAV_COMPONENT is defined by mavlink
+ * \details 	The enumeration MAV_COMPONENT is defined by MAVLink
  */
 typedef enum MAV_COMPONENT mav_component_t;
 
@@ -87,6 +92,7 @@ typedef enum MAV_COMPONENT mav_component_t;
  */
 typedef struct
 {
+	const uint32_t*						sys_id;						///<	Pointer to the system ID
 	uint8_t 						message_id;						///<	The function will be called only for messages with ID message_id
 	uint8_t					 		sysid_filter;					///<	The function will be called only for messages coming from MAVs with ID sysid_filter (0 for all)
 	mav_component_t 				compid_filter;					///<	The function will be called only for messages coming from component compid_filter (0 for all)
@@ -168,33 +174,44 @@ typedef struct
  * 
  * \param 	message_handler 	Pointer to message handler data structure
  * \param 	config 				Config parameters
+ * \param	mavlink_stream		Pointer to the mavlink stream
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void mavlink_message_handler_init(	mavlink_message_handler_t* 			message_handler, 
+bool mavlink_message_handler_init(	mavlink_message_handler_t* 			message_handler, 
 									const mavlink_message_handler_conf_t* 	config,
 									const mavlink_stream_t* mavlink_stream);
 
 
 /**
  * \brief 						Registers a new callback for a message
+ * \details						You should call mavlink_message_handler_sort_callback function after having added all callbacks,
+ *								as it is used by mavlink_message_handler_receive to speed up matching
  * 
  * \param 	message_handler 	Pointer to message handler data structure
  * \param 	msg_callback 		Pointer to new message callback (this structure 
  * 								is copied internally, so it does not need to be 
  * 								kept in memory after the function is called)
+ *
+ * \return	True if the message callback was correctly added, false otherwise
  */
-void mavlink_message_handler_add_msg_callback(	mavlink_message_handler_t* 					message_handler, 
+bool mavlink_message_handler_add_msg_callback(	mavlink_message_handler_t* 					message_handler, 
 												mavlink_message_handler_msg_callback_t* 	msg_callback);
 
 
 /**
  * \brief 						Registers a new callback for a command
+ * \details						You should call mavlink_message_handler_sort_callback function after having added all callbacks,
+ *								as it is used by mavlink_message_handler_receive to speed up matching
  * 
  * \param 	message_handler 	Pointer to message handler data structure
  * \param 	cmd_callback 		Pointer to new command callback (this structure 
  * 								is copied internally, so it does not need to be 
  * 								kept in memory after the function is called)
+ *
+ * \return	True if the command callback was correctly added, false otherwise
  */
-void mavlink_message_handler_add_cmd_callback(	mavlink_message_handler_t* 					message_handler, 
+bool mavlink_message_handler_add_cmd_callback(	mavlink_message_handler_t* 					message_handler, 
 												mavlink_message_handler_cmd_callback_t* 	cmd_callback);
 
 
@@ -220,7 +237,7 @@ void mavlink_message_handler_cmd_default_dbg(mavlink_command_long_t* cmd);
  * \brief		Main update function, handles the incoming message according to 
  * 				the registered message and command callbacks
  *
- * \param rec	Pointer to the mavlink receive message structure
+ * \param rec	Pointer to the MAVLink receive message structure
  */
 void mavlink_message_handler_receive(mavlink_message_handler_t* message_handler, mavlink_received_t* rec);
 

@@ -10,7 +10,8 @@
 #define BMP085_H_
 
 
-#include "compiler.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 #define BARO_ALT_LPF 0.95
 #define VARIO_LPF 0.95

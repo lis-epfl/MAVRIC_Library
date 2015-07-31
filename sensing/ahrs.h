@@ -50,7 +50,18 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 #include "quaternions.h"
-#include "scheduler.h"
+
+
+/**
+ * \brief The calibration level of the filter
+ */
+typedef enum
+{
+	AHRS_UNLEVELED 	= 0,	///< Calibration level: No calibration 
+	AHRS_CONVERGING = 1,	///< Calibration level: leveling 
+	AHRS_READY 		= 2,	///< Calibration level: leveled 
+} ahrs_state_t;
+
 
 
 /**
@@ -58,49 +69,30 @@ extern "C" {
  */
 typedef struct
 {
-	quat_t		qe;							///< quaternion defining the Attitude estimation of the platform
+	quat_t	qe;							///< quaternion defining the Attitude estimation of the platform
 	
-	float		angular_speed[3];			///< Gyro rates
-	float		linear_acc[3];				///< Acceleration WITHOUT gravity
+	float	angular_speed[3];			///< Gyro rates
+	float	linear_acc[3];			///< Acceleration WITHOUT gravity
 	
-	float		heading;					///< The heading of the platform
-	quat_t		up_vec;						///< The quaternion of the up vector
-	quat_t		north_vec;					///< The quaternion of the north vector
-	
-	uint32_t	last_update;				///< The time of the last IMU update in ms
-	float		dt;							///< The time interval between two IMU updates
-	
-	const mavlink_stream_t* mavlink_stream;		///< The pointer to the mavlink stream
+	float	heading;					///< The heading of the platform
+	quat_t	up_vec;					///< The quaternion of the up vector
+	quat_t north_vec;					///< The quaternion of the north vector
+
+	ahrs_state_t internal_state; 	///< Leveling state of the ahrs
+	uint32_t	 last_update;			///< The time of the last IMU update in ms
+	float		 dt;					///< The time interval between two IMU updates
 } ahrs_t;
+
 
 
 /**
  * \brief   Initialiases the ahrs structure
  * 
- * \param  ahrs 				Pointer to ahrs structure
- * \param  mavlink_stream 	Pointer to mavlin kstream structure
- */
-void ahrs_init(ahrs_t* ahrs, mavlink_stream_t* mavlink_stream);
-
-
-/**
- * \brief	Task to send the mavlink attitude message
- * 
- * \param	ahrs		The pointer to the attitude estimation
+ * \param	ahrs 				Pointer to ahrs structure
  *
- * \return	The status of execution of the task
+ * \return	True if the init succeed, false otherwise
  */
-task_return_t ahrs_send_attitude(ahrs_t* ahrs);
-
-
-/**
- * \brief	Task to send the mavlink quaternion attitude message
- * 
- * \param	ahrs		The pointer to the attitude estimation
- *
- * \return	The status of execution of the task
- */
-task_return_t ahrs_send_attitude_quaternion(ahrs_t* ahrs);
+bool ahrs_init(ahrs_t* ahrs);
 
 
 #ifdef __cplusplus

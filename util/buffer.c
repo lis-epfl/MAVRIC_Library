@@ -42,7 +42,7 @@
 
 #include "buffer.h"
 #include <stdbool.h>
-#include "compiler.h"
+#include <stdlib.h>
 
 uint8_t buffer_full(buffer_t * buffer) 
 {
@@ -53,18 +53,19 @@ uint8_t buffer_full(buffer_t * buffer)
 uint8_t buffer_put_lossy(buffer_t * buffer, uint8_t byte) 
 {
 	uint8_t tmp;
+	
 	tmp = (buffer->buffer_head + 1)&BUFFER_MASK;
 
-	if (tmp==buffer->buffer_tail) 
+	if (tmp == buffer->buffer_tail) 
 	{
 		// error: receive buffer overflow!!
 		// lose old incoming data at the end of the buffer
-		buffer->buffer_tail=(buffer->buffer_tail + 1)&BUFFER_MASK;
+		buffer->buffer_tail = (buffer->buffer_tail + 1)&BUFFER_MASK;
 	}
 
 	// store incoming data in buffer
 	buffer->Buffer[buffer->buffer_head] = byte;
-	buffer->buffer_head=tmp;
+	buffer->buffer_head = tmp;
 	
 	if (buffer_full(buffer)) 
 	{
@@ -84,7 +85,7 @@ uint8_t buffer_put(buffer_t * buffer, uint8_t byte)
 	uint8_t tmp;
 	tmp = (buffer->buffer_head + 1)&BUFFER_MASK;
 
-	if (tmp==buffer->buffer_tail) 
+	if (tmp == buffer->buffer_tail) 
 	{
 		//error: buffer full! return 1
 		return 1;
@@ -93,7 +94,7 @@ uint8_t buffer_put(buffer_t * buffer, uint8_t byte)
 	{
 		// store incoming data in buffer
 		buffer->Buffer[buffer->buffer_head] = byte;
-		buffer->buffer_head=tmp;
+		buffer->buffer_head = tmp;
 	
 		if (buffer_full(buffer)) 
 		{
@@ -111,9 +112,9 @@ uint8_t buffer_put(buffer_t * buffer, uint8_t byte)
 
 uint8_t buffer_get(buffer_t * buffer) 
 {
-	uint8_t ret=0;
+	uint8_t ret = 0;
 	
-	if (buffer->buffer_head!=buffer->buffer_tail)
+	if (buffer->buffer_head != buffer->buffer_tail)
 	{
 		ret = buffer->Buffer[buffer->buffer_tail];
 		buffer->buffer_tail =  (buffer->buffer_tail + 1)&BUFFER_MASK;
@@ -126,7 +127,7 @@ uint8_t buffer_get(buffer_t * buffer)
 
 int8_t buffer_empty(buffer_t * buffer) 
 {
-	return (buffer->buffer_head==buffer->buffer_tail);
+	return (buffer->buffer_head == buffer->buffer_tail);
 }
 
 

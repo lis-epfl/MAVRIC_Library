@@ -52,9 +52,8 @@ extern "C"
 
 #include "stdint.h"
 #include <stdbool.h>
-#include "mavlink_stream.h"
 
-#define SCHEDULER_TIMEBASE 1000000
+#define SCHEDULER_TIMEBASE 1000000	///< time base for the scheduler
 
 
 typedef uint8_t task_handle_t;
@@ -174,7 +173,6 @@ typedef struct
 	bool debug;									///<	Indicates whether the scheduler should print debug messages
 	schedule_strategy_t schedule_strategy;		///<	Scheduling strategy
 	task_set_t* task_set;						///<	Pointer to task set, needs memory allocation
-	const mavlink_stream_t* mavlink_stream;		///<	Pointer to mavlink stream
 } scheduler_t;
 
 
@@ -185,7 +183,7 @@ typedef struct
 {
 	uint32_t max_task_count;					///<	Maximum number of tasks
 	schedule_strategy_t schedule_strategy;		///<	Schedule strategy
-	bool debug;									///<	Indicates whether the schduler should print debug messages
+	bool debug;									///<	Indicates whether the scheduler should print debug messages
 } scheduler_conf_t;
 
 
@@ -194,8 +192,10 @@ typedef struct
  * 
  * \param 	scheduler 	Pointer to scheduler
  * \param 	config		Configuration
+ *
+ * \return	True if the init succeed, false otherwise
  */
-void scheduler_init( scheduler_t* scheduler, const scheduler_conf_t* config, const mavlink_stream_t* mavlink_stream);
+bool scheduler_init( scheduler_t* scheduler, const scheduler_conf_t* config);
 
 
 /**
@@ -241,7 +241,7 @@ int32_t scheduler_update(scheduler_t* scheduler);
  * 
  * \return        		Pointer to the target task
  */
-task_entry_t* scheduler_get_task_by_id(scheduler_t* scheduler, uint16_t task_id);
+task_entry_t* scheduler_get_task_by_id(const scheduler_t* scheduler, uint16_t task_id);
 
 
 /**
@@ -252,7 +252,7 @@ task_entry_t* scheduler_get_task_by_id(scheduler_t* scheduler, uint16_t task_id)
  * 
  * \return           	Pointer to the target task
  */
-task_entry_t* scheduler_get_task_by_index(scheduler_t* scheduler, uint16_t task_index);
+task_entry_t* scheduler_get_task_by_index(const scheduler_t* scheduler, uint16_t task_index);
 
 
 /**
@@ -288,16 +288,6 @@ void scheduler_suspend_task(task_entry_t *te, uint32_t delay);
  * \param te 	Pointer to a task entry
  */
 void scheduler_run_task_now(task_entry_t *te);
-
-
-/**
- * \brief	Task to send real time statistics
- * 
- * \param  scheduler  Pointer to the scheduler
- * 
- * \return	The status of execution of the task
- */
-task_return_t scheduler_send_rt_stats(scheduler_t* scheduler); 
 
 #ifdef __cplusplus
 }

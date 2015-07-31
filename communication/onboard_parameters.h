@@ -50,6 +50,7 @@ extern "C" {
 #include "mavlink_stream.h"
 #include "mavlink_message_handler.h"
 #include "scheduler.h"
+#include "state.h"
 
 #include <stdbool.h>
 
@@ -99,6 +100,7 @@ typedef struct
 	const mavlink_stream_t* mavlink_stream;					///< Pointer to mavlink_stream
 	bool debug;												///< Indicates if debug messages should be printed for each param change
 	onboard_parameters_set_t* param_set;					///< Pointer to a set of parameters, needs memory allocation
+	const state_t* state;									///< Pointer to the state structure
 } onboard_parameters_t;											
 
 
@@ -123,14 +125,17 @@ typedef struct
 
 
 /**
-* \brief	Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0
-* 
-* \param   	onboard_parameters		Pointer to module structure
-* \param 	config 					Configuration
-* \param 	scheduler 				Pointer to mavlink scheduler
-* \param 	message_handler 		Pointer to mavlink message handler
-*/
-void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream);
+ * \brief	Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0
+ * 
+ * \param   	onboard_parameters		Pointer to module structure
+ * \param 	config 					Configuration
+ * \param 	scheduler 				Pointer to MAVLink scheduler
+ * \param	state					Pointer to the state structure
+ * \param 	message_handler 		Pointer to MAVLink message handler
+ *
+ * \return	True if the init succeed, false otherwise
+ */
+bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, const state_t* state, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream);
 
 
 /**
@@ -139,8 +144,10 @@ void onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
  * \param   onboard_parameters		Pointer to module structure
  * \param 	val						Unsigned 32 - bits integer parameter value
  * \param 	param_name				Name of the parameter
+ *
+ * \return	True if the parameter was added, false otherwise
  */
-void onboard_parameters_add_parameter_uint32(onboard_parameters_t* onboard_parameters, uint32_t* val, const char* param_name);
+bool onboard_parameters_add_parameter_uint32(onboard_parameters_t* onboard_parameters, uint32_t* val, const char* param_name);
 
 
 /**
@@ -149,8 +156,10 @@ void onboard_parameters_add_parameter_uint32(onboard_parameters_t* onboard_param
  * \param   onboard_parameters		Pointer to module structure
  * \param 	val						Signed 32 - bits integer parameter value
  * \param 	param_name				Name of the parameter
+ *
+ * \return	True if the parameter was added, false otherwise
  */
-void onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parameters, int32_t* val, const char* param_name);
+bool onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parameters, int32_t* val, const char* param_name);
 
 
 /**
@@ -159,16 +168,20 @@ void onboard_parameters_add_parameter_int32(onboard_parameters_t* onboard_parame
  * \param   onboard_parameters		Pointer to module structure
  * \param 	val						Floating point parameter value
  * \param 	param_name				Name of the parameter
+ *
+ * \return	True if the parameter was added, false otherwise
  */
-void onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parameters, float* val, const char* param_name);
+bool onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parameters, float* val, const char* param_name);
 
 /**
- * \brief	Read/Write from/to flash depending on the parameters of the mavlink command message
+ * \brief	Read/Write from/to flash depending on the parameters of the MAVLink command message
  *
  * \param   onboard_parameters		Pointer to module structure
- * \param   msg 					Incoming mavlink message
+ * \param   msg 					Incoming MAVLink message
+ * 
+ * \return	The MAV_RESULT of the command 
  */
-void onboard_parameters_preflight_storage(onboard_parameters_t* onboard_parameters, mavlink_command_long_t* msg);
+mav_result_t onboard_parameters_preflight_storage(onboard_parameters_t* onboard_parameters, mavlink_command_long_t* msg);
 
 /**
  * \brief	Read onboard parameters from the user page in the flash memory to the RAM memory

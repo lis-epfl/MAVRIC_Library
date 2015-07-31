@@ -30,7 +30,8 @@
  ******************************************************************************/
  
 /*******************************************************************************
- * \file stabilisation_copter.c *
+ * \file stabilisation_copter.c
+ *
  * \author MAV'RIC Team
  * \author Felix Schill
  * \author Nicolas Dousse
@@ -42,17 +43,24 @@
 
 #include "stabilisation_copter.h"
 #include "print_util.h"
+#include "constants.h"
 
-void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabilise_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimator_t* pos_est,servos_t* servos, const mavlink_stream_t* mavlink_stream)
+#include "conf_platform.h" 	// TODO: remove (use the module mix_to_servo to remove dependency to conf_platform)
+
+bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, stabilisation_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est,servos_t* servos)
 {
+	bool init_success = true;
 	
+	//init dependencies
 	stabilisation_copter->stabiliser_stack = stabiliser_conf->stabiliser_stack;
+	stabilisation_copter->motor_layout = stabiliser_conf->motor_layout;
 	stabilisation_copter->controls = controls;
 	stabilisation_copter->imu = imu;
 	stabilisation_copter->ahrs = ahrs;
 	stabilisation_copter->pos_est = pos_est;
 	stabilisation_copter->servos = servos;
 	
+	//init controller
 	controls->control_mode = ATTITUDE_COMMAND_MODE;
 	controls->yaw_mode = YAW_RELATIVE;
 	
@@ -64,43 +72,72 @@ void stabilisation_copter_init(stabilise_copter_t* stabilisation_copter, stabili
 	controls->tvel[Z] = 0.0f;
 	controls->theading = 0.0f;
 	controls->thrust = -1.0f;
+	
+	stabilisation_copter->thrust_hover_point = stabiliser_conf->thrust_hover_point;
 
-	stabilisation_copter->stabiliser_stack.rate_stabiliser.mavlink_stream = mavlink_stream;
-	stabilisation_copter->stabiliser_stack.attitude_stabiliser.mavlink_stream = mavlink_stream;
-	stabilisation_copter->stabiliser_stack.velocity_stabiliser.mavlink_stream = mavlink_stream;
-	stabilisation_copter->stabiliser_stack.position_stabiliser.mavlink_stream = mavlink_stream;
+	print_util_dbg_print("[STABILISATION COPTER] initalised.\r\n");
 	
-	
-	print_util_dbg_print("Stabilisation copter init.\r\n");
+	return init_success;
 }
 
-void stabilisation_copter_position_hold(stabilise_copter_t* stabilisation_copter, const control_command_t* input, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimator_t* position_estimator)
+void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_copter, const control_command_t* input, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation)
 {
-
+	aero_attitude_t attitude_yaw_inverse;
+	quat_t q_rot;
+	
+	attitude_yaw_inverse = coord_conventions_quat_to_aero(stabilisation_copter->ahrs->qe);
+	attitude_yaw_inverse.rpy[0] = 0.0f;
+	attitude_yaw_inverse.rpy[1] = 0.0f;
+	attitude_yaw_inverse.rpy[2] = -attitude_yaw_inverse.rpy[2];
+	
+	q_rot = coord_conventions_quaternion_from_aero(attitude_yaw_inverse);
+	
+	float pos_error[4];
+	pos_error[X] = waypoint_handler->waypoint_hold_coordinates.pos[X] - position_estimation->local_position.pos[X];
+	pos_error[Y] = waypoint_handler->waypoint_hold_coordinates.pos[Y] - position_estimation->local_position.pos[Y];
+	pos_error[3] = -(waypoint_handler->waypoint_hold_coordinates.pos[Z] - position_estimation->local_position.pos[Z]);
+	
+	pos_error[YAW]= input->rpy[YAW];
+	
+	// run PID update on all velocity controllers
+	stabilisation_run(&stabilisation_copter->stabiliser_stack.position_stabiliser, stabilisation_copter->imu->dt, pos_error);
+	
+	float pid_output_global[3];
+	
+	pid_output_global[0] = stabilisation_copter->stabiliser_stack.position_stabiliser.output.rpy[0];
+	pid_output_global[1] = stabilisation_copter->stabiliser_stack.position_stabiliser.output.rpy[1];
+	pid_output_global[2] = stabilisation_copter->stabiliser_stack.position_stabiliser.output.thrust + stabilisation_copter->thrust_hover_point;
+	
+	float pid_output_local[3];
+	quaternions_rotate_vector(q_rot, pid_output_global, pid_output_local);
+	
+	*stabilisation_copter->controls = *input;
+	stabilisation_copter->controls->rpy[ROLL] = pid_output_local[Y];
+	stabilisation_copter->controls->rpy[PITCH] = -pid_output_local[X];
+	stabilisation_copter->controls->thrust = pid_output_local[2];
+	
+	stabilisation_copter->controls->control_mode = ATTITUDE_COMMAND_MODE;//VELOCITY_COMMAND_MODE;
 }
 
-void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_copter)
+void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisation_copter)
 {
 	float rpyt_errors[4];
 	control_command_t input;
 	int32_t i;
-	
-	// Uncomment this only for the optional part
-	/*quat_t qtmp, q_rot;
+	quat_t qtmp, q_rot;
 	aero_attitude_t attitude_yaw_inverse;
-	*/
-	
+
 	// set the controller input
-	input = *stabilisation_copter->controls;
-	switch (stabilisation_copter->controls->control_mode)
+	input= *stabilisation_copter->controls;
+	switch (stabilisation_copter->controls->control_mode) 
 	{
 	case VELOCITY_COMMAND_MODE:
 		
 		// Velocity control in global frame
-		// Uncomment this only for the optional part
-		/*attitude_yaw_inverse = coord_conventions_quat_to_aero(stabilisation_copter->ahrs->qe);
+		attitude_yaw_inverse = coord_conventions_quat_to_aero(stabilisation_copter->ahrs->qe);
 		attitude_yaw_inverse.rpy[0] = 0.0f;
 		attitude_yaw_inverse.rpy[1] = 0.0f;
+		attitude_yaw_inverse.rpy[2] = attitude_yaw_inverse.rpy[2];
 		
 		q_rot = coord_conventions_quaternion_from_aero(attitude_yaw_inverse);
 		quat_t input_global;
@@ -110,44 +147,52 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 		input.tvel[Y] = input_global.v[Y];
 		input.tvel[Z] = input_global.v[Z];
 		
-		rpyt_errors[X] = 0.0;
-		rpyt_errors[Y] = 0.0;
-		rpyt_errors[THRUST] = 0.0;
-		rpyt_errors[YAW]= 0.0;
-		*/
+		rpyt_errors[X] = input.tvel[X] - stabilisation_copter->pos_est->vel[X];
+		rpyt_errors[Y] = input.tvel[Y] - stabilisation_copter->pos_est->vel[Y];
+		rpyt_errors[3] = -(input.tvel[Z] - stabilisation_copter->pos_est->vel[Z]);
 		
-		
-		// Velocity control in local frame
-		rpyt_errors[ROLL] = 0.0;
-		rpyt_errors[PITCH] = 0.0;
-		rpyt_errors[THRUST] = 0.0;
-		rpyt_errors[YAW]= 0.0;
-		
-		
-		
-		
+		if (stabilisation_copter->controls->yaw_mode == YAW_COORDINATED) 
+		{
+			float rel_heading_coordinated;
+			if ((maths_f_abs(stabilisation_copter->pos_est->vel_bf[X])<0.001f)&&(maths_f_abs(stabilisation_copter->pos_est->vel_bf[Y])<0.001f))
+			{
+				rel_heading_coordinated = 0.0f;
+			}
+			else
+			{
+				rel_heading_coordinated = atan2(stabilisation_copter->pos_est->vel_bf[Y], stabilisation_copter->pos_est->vel_bf[X]);
+			}
+			
+			float w = 0.5f * (maths_sigmoid(vectors_norm(stabilisation_copter->pos_est->vel_bf)-stabilisation_copter->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
+			input.rpy[YAW] = (1.0f - w) * input.rpy[YAW] + w * rel_heading_coordinated;
+		}
+
+		rpyt_errors[YAW]= input.rpy[YAW];
 		
 		// run PID update on all velocity controllers
-		//stabilisation_run(&stabilisation_copter->stabiliser_stack.velocity_stabiliser, stabilisation_copter->imu->dt, rpyt_errors);
+		stabilisation_run(&stabilisation_copter->stabiliser_stack.velocity_stabiliser, stabilisation_copter->imu->dt, rpyt_errors);
 		
-		//stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.thrust += 0.0;
-		//stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.theading = input.theading;
-		//input = stabilisation_copter->stabiliser_stack.velocity_stabiliser.output;
+		//velocity_stabiliser.output.thrust = maths_f_min(velocity_stabiliser.output.thrust,stabilisation_param.controls->thrust);
+		stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.thrust += stabilisation_copter->thrust_hover_point;
+		stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.theading = input.theading;
+		input = stabilisation_copter->stabiliser_stack.velocity_stabiliser.output;
 		
+		qtmp=quaternions_create_from_vector(stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy);
+		//quat_t rpy_local = quaternions_global_to_local(stabilisation_copter->ahrs->qe, qtmp);
 		
-		
-		
-		
-		// Mapping for global frame velocity control
-		// Uncomment this only for the optional part
-		/* qtmp = quaternions_create_from_vector(stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy);
 		quat_t rpy_local;
 		quaternions_rotate_vector(quaternions_inverse(q_rot), qtmp.v, rpy_local.v);
-		
-		input.rpy[ROLL] = 0.0;
-		input.rpy[PITCH] = 0.0;
-		input.thrust = 0.0;
-		*/
+
+		input.rpy[ROLL] = rpy_local.v[Y];
+		input.rpy[PITCH] = -rpy_local.v[X];
+
+		if ((!stabilisation_copter->pos_est->gps->healthy)||(stabilisation_copter->pos_est->state->out_of_fence_2))
+		{
+			input.rpy[ROLL] = 0.0f;
+			input.rpy[PITCH] = 0.0f;
+		}
+
+		//input.thrust = stabilisation_copter->controls->tvel[Z];
 		
 	// -- no break here  - we want to run the lower level modes as well! -- 
 	
@@ -156,7 +201,8 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 		rpyt_errors[0]= input.rpy[0] - ( - stabilisation_copter->ahrs->up_vec.v[1] ); 
 		rpyt_errors[1]= input.rpy[1] - stabilisation_copter->ahrs->up_vec.v[0];
 		
-		if ((stabilisation_copter->controls->yaw_mode == YAW_ABSOLUTE) ) {
+		if ((stabilisation_copter->controls->yaw_mode == YAW_ABSOLUTE) ) 
+		{
 			rpyt_errors[2] =maths_calc_smaller_angle(input.theading- stabilisation_copter->pos_est->local_position.heading);
 		}
 		else
@@ -187,13 +233,15 @@ void stabilisation_copter_cascade_stabilise(stabilise_copter_t* stabilisation_co
 	}
 	
 	// mix to servo outputs depending on configuration
-	#ifdef CONF_DIAG
-	stabilisation_copter_mix_to_servos_diag_quad(&stabilisation_copter->stabiliser_stack.rate_stabiliser.output, stabilisation_copter->servos);
-	#else
-	#ifdef CONF_CROSS
-	stabilisation_copter_mix_to_servos_cross_quad(&stabilisation_copter->stabiliser_stack.rate_stabiliser.output, stabilisation_copter->servos);
-	#endif
-	#endif
+	if( stabilisation_copter->motor_layout == QUADCOPTER_MOTOR_LAYOUT_DIAG )
+	{
+		stabilisation_copter_mix_to_servos_diag_quad(&stabilisation_copter->stabiliser_stack.rate_stabiliser.output, stabilisation_copter->servos);
+	}
+	else if( stabilisation_copter->motor_layout == QUADCOPTER_MOTOR_LAYOUT_CROSS )
+	{
+		stabilisation_copter_mix_to_servos_cross_quad(&stabilisation_copter->stabiliser_stack.rate_stabiliser.output, stabilisation_copter->servos);
+
+	}
 }
 
 void stabilisation_copter_mix_to_servos_diag_quad(control_command_t *control, servos_t* servos)

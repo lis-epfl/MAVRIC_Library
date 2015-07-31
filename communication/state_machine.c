@@ -42,32 +42,99 @@
 
 
 #include "state_machine.h"
-//#include "remote_controller.h"
 #include "spektrum_satellite.h"
 #include "led.h"
 #include "print_util.h"
 #include "state.h"
+#include "time_keeper.h"
+#include "battery.h"
 
-void state_machine_init(state_machine_t *state_machine, const state_machine_conf_t* state_machine_conf, state_t* state, mavlink_waypoint_handler_t* waypoint_handler, simulation_model_t *sim_model, remote_t* remote)
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS DECLARATION
+//------------------------------------------------------------------------------
+
+/**
+ * \brief	Returns the value of the mode from the desired source input
+ *
+ * \param	state_machine			The pointer to the state_machine structure
+ * \param	mode_current			The current mode of the MAV
+ * \param	rc_check				The current status of the remote controller
+ *
+ * \return	The value of the mode
+ */
+mav_mode_t state_machine_get_mode_from_source(state_machine_t* state_machine, mav_mode_t mode_current, signal_quality_t rc_check );
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+mav_mode_t state_machine_get_mode_from_source(state_machine_t* state_machine, mav_mode_t mode_current, signal_quality_t rc_check )
 {
-	state_machine->waypoint_handler = waypoint_handler;
+	mav_mode_t new_mode = mode_current;
+	
+	switch (state_machine->state->source_mode)
+	{
+		case GND_STATION:
+			new_mode = mode_current;
+			// The ARMED flag of the remote is set to the desired flag (avoid sudden cut
+			// off if the remote is reactivated
+			state_machine->remote->mode.current_desired_mode.ARMED = mode_current.ARMED;
+			
+			break;
+		case REMOTE:
+			if(rc_check != SIGNAL_LOST)
+			{
+				// Update mode from remote
+				remote_mode_update(state_machine->remote);
+				new_mode = remote_mode_get(state_machine->remote);
+			}
+			break;
+		case JOYSTICK:
+			new_mode = joystick_parsing_get_mode(state_machine->joystick);
+			// The ARMED flag of the remote is set to the desired flag (avoid sudden cut
+			// off if the remote is reactivated
+			state_machine->remote->mode.current_desired_mode.ARMED = mode_current.ARMED;
+			break;
+		default:
+			new_mode = mode_current;
+			break;
+	}
+	
+	return new_mode;
+}
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+bool state_machine_init(	state_machine_t *state_machine,
+							state_t* state, 
+							simulation_model_t *sim_model, 
+							remote_t* remote,
+							joystick_parsing_t* joystick,
+							const gps_t* gps)
+{
+	bool init_success = true;
+	
 	state_machine->state 			= state;
 	state_machine->sim_model 		= sim_model;
 	state_machine->remote 			= remote;
-	state_machine->channel_switches = 0;
-	state_machine->rc_check 		= 0;
-	state_machine->motor_state 		= 0;
+	state_machine->joystick 		= joystick;
+	state_machine->gps 				= gps;
 
-	state_machine->use_mode_from_remote = state_machine_conf->state_machine.use_mode_from_remote;
+	print_util_dbg_print("[STATE MACHINE] Initialised.\r\n");
 	
-	print_util_dbg_print("State machine initialise.\r\n");
+	return init_success;
 }
 
 
-void state_machine_update(state_machine_t* state_machine)
+task_return_t state_machine_update(state_machine_t* state_machine)
 {
 	mav_mode_t mode_current, mode_new;
 	mav_state_t state_current, state_new;
+	mav_mode_custom_t mode_custom_new;
+
 	signal_quality_t rc_check;
 
 	// Get current state
@@ -79,6 +146,8 @@ void state_machine_update(state_machine_t* state_machine)
 	// Get current mode
 	mode_current = state_machine->state->mav_mode;
 
+	mode_custom_new = state_machine->state->mav_mode_custom;
+
 	// Get remote signal strength
 	if (state_machine->state->remote_active == 1)
 	{
@@ -89,19 +158,18 @@ void state_machine_update(state_machine_t* state_machine)
 		rc_check = SIGNAL_GOOD;
 	}
 
-	// Get new mode
-	if ( (state_machine->use_mode_from_remote == 1)&&(rc_check != SIGNAL_LOST) )
+	mode_new = state_machine_get_mode_from_source(state_machine, mode_current, rc_check);
+
+	if (mode_current.HIL == HIL_OFF)
 	{
-		// Update mode from remote
-		remote_mode_update(state_machine->remote);
-		mode_new = remote_mode_get(state_machine->remote);
+		battery_update(&state_machine->state->battery,state_machine->state->analog_monitor->avg[ANALOG_RAIL_10]);
 	}
 	else
 	{
-		// By default, set new mode equal to current mode
-		mode_new = mode_current;
+		state_machine->state->battery.is_low = false;
 	}
-	
+
+	state_connection_status(state_machine->state);
 
 	// Change state according to signal strength
 	switch ( state_current )
@@ -115,60 +183,150 @@ void state_machine_update(state_machine_t* state_machine)
 
 		case MAV_STATE_STANDBY:
 			state_machine->state->in_the_air = false;
+			//disable out of fence checks
+			state_machine->state->out_of_fence_1 = false;
+			state_machine->state->out_of_fence_2 = false;
+			
+			mode_custom_new = CUSTOM_BASE_MODE;
 			
 			if ( mode_new.ARMED == ARMED_ON )
 			{
-				state_new = MAV_STATE_ACTIVE;
-			
-				// Tell other modules to reset position and re-compute waypoints
-				state_machine->state->reset_position = true;
-				state_machine->state->nav_plan_active = false;
+				print_util_dbg_print("Switching from state_machine.\r\n");
+				state_switch_to_active_mode(state_machine->state, &state_new);
 			}
-		break;
+			break;
 		
 		case MAV_STATE_ACTIVE:
-			if ( rc_check != SIGNAL_GOOD )
+			if ((state_machine->state->source_mode == REMOTE)||(state_machine->state->source_mode == JOYSTICK))
 			{
+				if ( (state_machine->state->source_mode == REMOTE)&&(rc_check != SIGNAL_GOOD) )
+				{
+					state_new = MAV_STATE_CRITICAL;
+					mode_custom_new |= CUST_REMOTE_LOST;
+				}
+				else
+				{
+					mode_custom_new &= ~CUST_REMOTE_LOST;
+
+					if ( mode_new.ARMED == ARMED_OFF )
+					{
+						state_new = MAV_STATE_STANDBY;
+						print_util_dbg_print("Switching off motors!\r\n");
+					}
+				}
+			}
+			//check battery level
+			if( state_machine->state->battery.is_low )
+			{
+				print_util_dbg_print("Battery low! Performing critical landing.\r\n");
 				state_new = MAV_STATE_CRITICAL;
+				mode_custom_new |= CUST_BATTERY_LOW;
 			}
 			else
 			{
-				if ( mode_new.ARMED == ARMED_OFF )
-				{
-					state_new = MAV_STATE_STANDBY;
-					print_util_dbg_print("Switching off motors!\n");
-				}
+				mode_custom_new &= ~CUST_BATTERY_LOW;
 			}
-		break;
+			
+			// check connection with GND station
+			if ( state_machine->state->connection_lost)
+			{
+				print_util_dbg_print("Connection with GND station lost! Performing critical landing.\r\n");
+				state_new = MAV_STATE_CRITICAL;
+				mode_custom_new |= CUST_HEARTBEAT_LOST;
+			}
+			else
+			{
+				mode_custom_new &= ~CUST_HEARTBEAT_LOST;
+			}
+			
+			if (state_machine->state->out_of_fence_1)
+			{
+				print_util_dbg_print("Out of fence 1!\r\n");
+				state_new = MAV_STATE_CRITICAL;
+				mode_custom_new |= CUST_FENCE_1;
+			}
+			else
+			{
+				mode_custom_new &= ~CUST_FENCE_1;
+			}
+
+			if (!state_machine->gps->healthy)
+			{
+				print_util_dbg_print("GPS bad!\r\n");
+				state_new = MAV_STATE_CRITICAL;
+				mode_custom_new |= CUST_GPS_BAD;
+			}
+			else
+			{
+				mode_custom_new &= ~CUST_GPS_BAD;
+			}
+
+			break;
 
 		case MAV_STATE_CRITICAL:			
 			switch ( rc_check )
 			{
 				case SIGNAL_GOOD:
-					state_new = MAV_STATE_ACTIVE;
-				break;
+					if( !state_machine->state->battery.is_low && 
+						!state_machine->state->connection_lost && 
+						!state_machine->state->out_of_fence_1 && 
+						!state_machine->state->out_of_fence_2 &&
+						state_machine->gps->healthy)
+					{
+						state_new = MAV_STATE_ACTIVE;
+					}
+					break;
 
 				case SIGNAL_BAD:
 					// Stay in critical mode
-				break;
+					break;
 
 				case SIGNAL_LOST:
-					// If in manual mode, do emergency landing
-					if ( mode_current.MANUAL == MANUAL_ON )
+					// If in manual mode, do emergency landing (cut off motors)
+					if ( (mode_current.MANUAL == MANUAL_ON) && (mode_current.STABILISE == STABILISE_OFF) )
 					{
+						print_util_dbg_print("Switch to Emergency mode!\r\n");
 						state_new = MAV_STATE_EMERGENCY;
 					}
 					// If in another mode, stay in critical mode
 					// higher level navigation module will take care of coming back home
-				break;
+					break;
 			}
-		break;
+			if (mode_new.ARMED == ARMED_OFF)
+			{
+				state_new = MAV_STATE_STANDBY;
+			}
+			break;
 		
 		case MAV_STATE_EMERGENCY:
 			// Recovery is not possible -> switch off motors
 			mode_new.ARMED = ARMED_OFF;
-		break;
-		
+			state_machine->remote->mode.current_desired_mode.ARMED = ARMED_OFF;
+			
+			if( !state_machine->state->battery.is_low)
+			{
+				// To get out of this state, if we are in the wrong use_mode_from_remote
+				if (state_machine->state->source_mode != REMOTE)
+				{
+					state_new = MAV_STATE_STANDBY;
+				}
+				
+				switch ( rc_check )
+				{
+					case SIGNAL_GOOD:
+						state_new = MAV_STATE_STANDBY;
+						break;
+
+					case SIGNAL_BAD:
+						// Stay in emergency mode
+						break;
+
+					case SIGNAL_LOST:
+						// Stay in emergency mode
+						break;
+				}
+			}
+			break;
 	}
 
 
@@ -207,9 +365,12 @@ void state_machine_update(state_machine_t* state_machine)
 			print_util_dbg_print("Switching off motors!\n");
 		}
 	}
+	
 
 	// Finally, write new modes and states
 	state_machine->state->mav_mode = mode_new;
 	state_machine->state->mav_state = state_new;
+	state_machine->state->mav_mode_custom = mode_custom_new;
 
+	return TASK_RUN_SUCCESS;
 }

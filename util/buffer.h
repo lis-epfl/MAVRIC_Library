@@ -61,8 +61,8 @@ extern "C"
 typedef struct 
 {
 	uint8_t Buffer[BUFFER_SIZE];		///<	Array of bytes containing the data
-	uint8_t buffer_head;					///<	Head of the buffer (newest byte)
-	uint8_t buffer_tail;					///<	Tail of the buffer (oldest byte)
+	uint8_t buffer_head;				///<	Head of the buffer (newest byte)
+	uint8_t buffer_tail;				///<	Tail of the buffer (oldest byte)
 	uint8_t full;						///<	Boolean, 1 if full, 0 if not
 } buffer_t;
 
@@ -118,6 +118,7 @@ void buffer_clear(buffer_t * buffer);
  * @brief        	Returns the number of available bytes in the buffer
  * 
  * @param buffer 	Pointer to buffer
+ *
  * @return       	Number of available bytes
  */
 uint32_t buffer_bytes_available(buffer_t * buffer);
@@ -127,6 +128,7 @@ uint32_t buffer_bytes_available(buffer_t * buffer);
  * @brief        	Tests whether the buffer is full
  * 
  * @param buffer 	Pointer to buffer
+ *
  * @return       	Boolean, 1 if full, 0 if not
  */
 uint8_t buffer_full(buffer_t * buffer);
@@ -136,6 +138,7 @@ uint8_t buffer_full(buffer_t * buffer);
  * @brief        	Tests whether the buffer is empty
  * 
  * @param buffer 	Pointer to buffer
+ *
  * @return       	Boolean, 1 if empty, 0 if not
  */
 int8_t buffer_empty(buffer_t * buffer);

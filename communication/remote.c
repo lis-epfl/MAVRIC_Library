@@ -42,6 +42,9 @@
 
 #include "remote.h"
 #include "time_keeper.h"
+#include "print_util.h"
+#include "constants.h"
+#include "coord_conventions.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -67,19 +70,21 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 
 	// Get armed flag
 	if( remote_get_throttle(remote) < -0.95f && 
-		remote_get_yaw(remote) > 0.9f && 
+		remote_get_yaw(remote) < -0.9f && 
 		remote_get_pitch(remote) > 0.9f && 
 		remote_get_roll(remote) > 0.9f )
 	{
-		// Both sticks in bottom right corners => arm
+		// Left stick bottom left corner, right stick bottom right corner => arm 
+		print_util_dbg_print("Arming!\r\n");
 		armed = ARMED_ON;
 	}
 	else if ( remote_get_throttle(remote) < -0.95f && 
-			remote_get_yaw(remote) < -0.9f && 
+			remote_get_yaw(remote) > 0.9f && 
 			remote_get_pitch(remote) > 0.9f && 
 			remote_get_roll(remote) < -0.9f )
 	{
-		// Both sticks in bottom left corners => disarm 
+		// Left stick bottom right corner, right stick bottom left corner => disarm
+		print_util_dbg_print("Disarming!\r\n");
 		armed = ARMED_OFF;
 	}
 	else
@@ -96,12 +101,10 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 //------------------------------------------------------------------------------
 
 
-void remote_init(remote_t* remote, const remote_conf_t* config, const mavlink_stream_t* mavlink_stream, mavlink_message_handler_t *mavlink_handler)
+bool remote_init(remote_t* remote, const remote_conf_t* config)
 {
-	// Init dependencies
-	remote->mavlink_stream = mavlink_stream;
-	remote->sat = spektrum_satellite_get_pointer();
-
+	bool init_success = true;
+	
 	// Init mode from remote
 	remote_mode_init( &remote->mode, &config->mode_config );
 
@@ -121,6 +124,14 @@ void remote_init(remote_t* remote, const remote_conf_t* config, const mavlink_st
 			remote->channel_inv[CHANNEL_FLAPS]    = INVERTED;
 			remote->channel_inv[CHANNEL_AUX1]     = NORMAL;
 			remote->channel_inv[CHANNEL_AUX2]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX3]	  = NORMAL;
+			remote->channel_inv[CHANNEL_AUX4]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX5]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX6]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX7]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX8]	  = NORMAL;
+			
+			init_success &= true;
 			break;
 
 		case REMOTE_SPEKTRUM:
@@ -135,6 +146,17 @@ void remote_init(remote_t* remote, const remote_conf_t* config, const mavlink_st
 			remote->channel_inv[CHANNEL_FLAPS]    = NORMAL;
 			remote->channel_inv[CHANNEL_AUX1]     = NORMAL;
 			remote->channel_inv[CHANNEL_AUX2]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX3]	  = NORMAL;
+			remote->channel_inv[CHANNEL_AUX4]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX5]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX6]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX7]     = NORMAL;
+			remote->channel_inv[CHANNEL_AUX8]	  = NORMAL;
+			
+			init_success &= true;
+			break;
+		default:
+			init_success &= false;
 			break;
 	}
 
@@ -146,15 +168,7 @@ void remote_init(remote_t* remote, const remote_conf_t* config, const mavlink_st
 		remote->trims[i] = 0.0f;
 	}
 	
-	mavlink_message_handler_cmd_callback_t callbackcmd;
-	
-	callbackcmd.command_id    = MAV_CMD_DO_JUMP;//MAV_CMD_START_RX_PAIR; // 500
-	callbackcmd.sysid_filter  = MAV_SYS_ID_ALL;
-	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
-	callbackcmd.compid_target = MAV_COMP_ID_ALL;
-	callbackcmd.function      = (mavlink_cmd_callback_function_t)	&spektrum_satellite_bind;
-	callbackcmd.module_struct =										remote->sat;
-	mavlink_message_handler_add_cmd_callback(mavlink_handler, &callbackcmd);
+	return init_success;
 }
 
 
@@ -163,15 +177,15 @@ void remote_update(remote_t* remote)
 	uint32_t now = time_keeper_get_time_ticks() ;
 	float raw;
 	
-	if ( remote->sat->new_data_available == true )
+	if ( remote->sat.new_data_available == true )
 	{
 		// Check signal quality
-		if ( remote->sat->dt < 100000) 
+		if ( remote->sat.dt < 100000) 
 		{
 			// ok
 			remote->signal_quality = SIGNAL_GOOD;
 		} 
-		else if ( remote->sat->dt < 1500000 )
+		else if ( remote->sat.dt < 1500000 )
 		{
 			// warning
 			remote->signal_quality = SIGNAL_BAD;
@@ -180,7 +194,7 @@ void remote_update(remote_t* remote)
 		// Retrieve and scale channels
 		for (uint8_t i = 0; i < REMOTE_CHANNEL_COUNT; ++i)
 		{
-			raw = remote->sat->channels[i];
+			raw = remote->sat.channels[i];
 			if ( raw < remote->deadzone && raw > -remote->deadzone )
 			{
 				remote->channels[i] = 0.0f;	
@@ -192,12 +206,12 @@ void remote_update(remote_t* remote)
 		}
 
 		// Indicate that data was handled
-		remote->sat->new_data_available = false;
-	}
+		remote->sat.new_data_available = false;
+	} //end of if ( remote->sat.new_data_available == true )
 	else
 	{
 		// Check for signal loss
-		if ( ( now - remote->sat->last_update ) > 1500000 )
+		if ( ( now - remote->sat.last_update ) > 1500000 )
 		{
 			// CRITICAL: Set all channels to failsafe
 			remote->channels[CHANNEL_THROTTLE] = -1.0f;
@@ -335,7 +349,6 @@ void remote_mode_update(remote_t* remote)
 				new_desired_mode = remote_mode->mode_switch_down;
 			}
 
-
 			// Apply custom flag
 			if ( remote_mode->use_custom_switch == true )
 			{
@@ -350,7 +363,6 @@ void remote_mode_update(remote_t* remote)
 					new_desired_mode.CUSTOM = CUSTOM_OFF;
 				}
 			}
-
 
 			// Apply test flag
 			if ( remote_mode->use_test_switch == true )
@@ -367,7 +379,6 @@ void remote_mode_update(remote_t* remote)
 				}
 			}
 
-
 			// Allow only disarm in normal mode
 			if ( flag_armed == ARMED_OFF )
 			{
@@ -382,7 +393,7 @@ void remote_mode_update(remote_t* remote)
 
 		// Store desired mode
 		remote_mode->current_desired_mode = new_desired_mode;
-	}
+	} //end of if( do_update == true )
 }
 
 
@@ -395,66 +406,92 @@ void remote_get_command_from_remote(remote_t* remote, control_command_t* control
 {
 	remote_update(remote);
 	
-	controls->rpy[ROLL]= remote_get_roll(remote) * RC_INPUT_SCALE;
-	controls->rpy[PITCH]= remote_get_pitch(remote) * RC_INPUT_SCALE;
-	controls->rpy[YAW]= remote_get_yaw(remote) * RC_INPUT_SCALE;
-	controls->thrust = remote_get_throttle(remote);
+	controls->rpy[ROLL] 	= remote_get_roll(remote);
+	controls->rpy[PITCH] 	= remote_get_pitch(remote);
+	controls->rpy[YAW] 		= remote_get_yaw(remote);
+	controls->thrust 		= remote_get_throttle(remote);
 }
 
 void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t* controls)
 {
 	remote_update(remote);
 	
-	controls->tvel[X]= 0.0;
-	controls->tvel[Y]= 0.0;
-	controls->tvel[Z]= 0.0;
-	controls->rpy[YAW] = 0.0;
+	controls->tvel[X] 	= - 10.0f * remote_get_pitch(remote);
+	controls->tvel[Y] 	= 10.0f * remote_get_roll(remote);
+	controls->tvel[Z] 	= - 1.5f * remote_get_throttle(remote);
+	controls->rpy[YAW] 	= remote_get_yaw(remote);
 }
 
-task_return_t remote_send_raw(const remote_t* remote)
+
+void remote_get_torque_command(const remote_t* remote, torque_command_t * command)
 {
-	mavlink_message_t msg;
-	mavlink_msg_rc_channels_raw_pack(	remote->mavlink_stream->sysid,
-										remote->mavlink_stream->compid,
-										&msg,
-										time_keeper_get_millis(),
-										0,
-										remote->sat->channels[0] + 1024,
-										remote->sat->channels[1] + 1024,
-										remote->sat->channels[2] + 1024,
-										remote->sat->channels[3] + 1024,
-										remote->sat->channels[4] + 1024,
-										remote->sat->channels[5] + 1024,
-										remote->sat->channels[6] + 1024,
-										remote->sat->channels[7] + 1024,
-										// remote->mode.current_desired_mode.byte);
-										remote->signal_quality	);
-	
-	mavlink_stream_send(remote->mavlink_stream, &msg);
-	
-	return TASK_RUN_SUCCESS;
+	command->xyz[ROLL] 	= remote_get_roll(remote);
+	command->xyz[PITCH] = remote_get_pitch(remote);
+	command->xyz[YAW] 	= remote_get_yaw(remote);
 }
 
-task_return_t remote_send_scaled(const remote_t* remote)
+
+void remote_get_rate_command(const remote_t* remote, rate_command_t * command)
 {
-	mavlink_message_t msg;
-	mavlink_msg_rc_channels_scaled_pack(	remote->mavlink_stream->sysid,
-											remote->mavlink_stream->compid,
-											&msg,
-											time_keeper_get_millis(),
-											0,
-											remote->channels[0] * 10000.0f,
-											remote->channels[1] * 10000.0f,
-											remote->channels[2] * 10000.0f,
-											remote->channels[3] * 10000.0f,
-											remote->channels[4] * 10000.0f,
-											remote->channels[5] * 10000.0f,
-											remote->channels[6] * 10000.0f,
-											remote->channels[7] * 10000.0f,
-											remote->mode.current_desired_mode.byte );
-											// remote->signal_quality	);
+	command->xyz[ROLL] 	= remote_get_roll(remote);
+	command->xyz[PITCH] = remote_get_pitch(remote);
+	command->xyz[YAW] 	= remote_get_yaw(remote);
+}
+
+
+void remote_get_thrust_command(const remote_t* remote, thrust_command_t * command)
+{
+	command->thrust = remote_get_throttle(remote);
+}
+
+
+void remote_get_attitude_command(const remote_t* remote, attitude_command_t * command)
+{
+	aero_attitude_t attitude;
 	
-	mavlink_stream_send(remote->mavlink_stream, &msg);
-	
-	return TASK_RUN_SUCCESS;	
+	switch( command->mode )
+	{
+		case ATTITUDE_COMMAND_MODE_QUATERNION:
+			attitude.rpy[ROLL] 	= remote_get_roll(remote); 
+			attitude.rpy[PITCH] = remote_get_pitch(remote);
+			attitude.rpy[YAW] 	= remote_get_yaw(remote);
+			command->quat = coord_conventions_quaternion_from_aero(attitude);
+		break;
+
+		case ATTITUDE_COMMAND_MODE_RPY:
+			command->rpy[ROLL] 	= remote_get_roll(remote); 
+			command->rpy[PITCH] = remote_get_pitch(remote);
+			command->rpy[YAW] 	= remote_get_yaw(remote);
+		break;
+	}
+}
+
+void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const float k_yaw, attitude_command_t * command)
+{
+	aero_attitude_t attitude;
+
+	switch( command->mode )
+	{
+		case ATTITUDE_COMMAND_MODE_QUATERNION:
+			attitude = coord_conventions_quat_to_aero(command->quat);
+			attitude.rpy[ROLL] 	 = remote_get_roll(remote); 
+			attitude.rpy[PITCH]  = remote_get_pitch(remote);
+			attitude.rpy[YAW] 	+= k_yaw * remote_get_yaw(remote);
+			command->quat = coord_conventions_quaternion_from_aero(attitude);
+		break;
+
+		case ATTITUDE_COMMAND_MODE_RPY:
+			command->rpy[ROLL] 	= remote_get_roll(remote);
+			command->rpy[PITCH] = remote_get_pitch(remote);
+			command->rpy[YAW] 	+= k_yaw * remote_get_yaw(remote);
+		break;
+	}
+}
+
+
+void remote_get_velocity_command(const remote_t* remote, velocity_command_t * command)
+{
+	command->xyz[X] = - 10.0f 	* remote_get_pitch(remote);
+	command->xyz[Y] = 10.0f  	* remote_get_roll(remote);
+	command->xyz[Z] = - 1.5f 	* remote_get_throttle(remote);
 }
