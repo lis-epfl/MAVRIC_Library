@@ -179,11 +179,15 @@ float joystick_parsing_get_yaw(const joystick_parsing_t* joystick)
 
 
 void joystick_parsing_get_velocity_vector_from_joystick(joystick_parsing_t* joystick_parsing, control_command_t* controls)
-{
-	controls->tvel[X] = -10.0f 	* joystick_parsing->channels.x 	* MAX_JOYSTICK_RANGE;
-	controls->tvel[Y] =  10.0f	* joystick_parsing->channels.y 	* MAX_JOYSTICK_RANGE;
-	controls->tvel[Z] = -1.5f	* joystick_parsing->channels.z;
-	
+{	
+	float joystick_input[3];
+
+	joystick_input[X] = 10.0f	* joystick_parsing->channels.x * MAX_JOYSTICK_RANGE;
+	joystick_input[Y] = 10.0f	* joystick_parsing->channels.y * MAX_JOYSTICK_RANGE;
+	joystick_input[Z] = 1.5f	* joystick_parsing->channels.z;
+
+	lab_d_velocity_vector(controls->tvel,joystick_parsing);
+
 	controls->rpy[YAW] = joystick_parsing->channels.r * MAX_JOYSTICK_RANGE;
 }
 

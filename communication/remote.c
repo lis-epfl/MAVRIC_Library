@@ -45,6 +45,7 @@
 #include "print_util.h"
 #include "constants.h"
 #include "coord_conventions.h"
+#include "lab_d.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -416,10 +417,16 @@ void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t*
 {
 	remote_update(remote);
 	
-	controls->tvel[X] 	= - 10.0f * remote_get_pitch(remote);
-	controls->tvel[Y] 	= 10.0f * remote_get_roll(remote);
-	controls->tvel[Z] 	= - 1.5f * remote_get_throttle(remote);
+	float remote_input[3];
+
+	remote_input[ROLL] 	= 10.0f * remote_get_roll(remote);
+	remote_input[PITCH] = 10.0f * remote_get_pitch(remote);
+	remote_input[Z] 	= 1.5f * remote_get_throttle(remote);
+	
 	controls->rpy[YAW] 	= remote_get_yaw(remote);
+
+	lab_d_velocity_vector(controls->tvel,remote_input);
+
 }
 
 
