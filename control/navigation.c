@@ -44,6 +44,7 @@
 #include "print_util.h"
 #include "time_keeper.h"
 #include "constants.h"
+#include "lab_d.h"
 
 #define KP_YAW 0.2f ///< Yaw gain for the navigation controller 
 
@@ -68,14 +69,6 @@ static void navigation_waypoint_take_off_init(mavlink_waypoint_handler_t* waypoi
  * \return					Distance to waypoint squared
  */
 static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_pos[], const float local_pos[3]);
-
-/**
- * \brief					Sets the Robot speed to reach waypoint
- *
- * \param	rel_pos			Relative position of the waypoint
- * \param	navigation	The structure of navigation data
- */
-static void navigation_set_speed_command(float rel_pos[], navigation_t* navigation);
 
 /**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
@@ -206,109 +199,6 @@ static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_po
 	return dist2wp_sqr;
 }
 
-
-static void navigation_set_speed_command(float rel_pos[], navigation_t* navigation)
-{
-	float  norm_rel_dist;
-	float v_desired = 0.0f;
-	quat_t qtmp1, qtmp2;
-	
-	float dir_desired_bf[3];
-
-	float rel_heading;
-	
-	mav_mode_t mode = navigation->state->mav_mode;
-	
-	norm_rel_dist = sqrt(navigation->waypoint_handler->dist2wp_sqr);
-	
-	// calculate dir_desired in local frame
-	// vel = qe-1 * rel_pos * qe
-	qtmp1 = quaternions_create_from_vector(rel_pos);
-	qtmp2 = quaternions_global_to_local(*navigation->qe,qtmp1);
-	dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
-	
-	dir_desired_bf[2] = rel_pos[2];
-	
-	// Avoiding division by zero
-	if (norm_rel_dist < 0.0005f)
-	{
-		norm_rel_dist += 0.0005f;
-	}
-
-	// Normalisation of the goal direction
-	dir_desired_bf[X] /= norm_rel_dist;
-	dir_desired_bf[Y] /= norm_rel_dist;
-	dir_desired_bf[Z] /= norm_rel_dist;
-
-	if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
-	{
-		
-		if( ((maths_f_abs(rel_pos[X])<=1.0f)&&(maths_f_abs(rel_pos[Y])<=1.0f)) || ((maths_f_abs(rel_pos[X])<=5.0f)&&(maths_f_abs(rel_pos[Y])<=5.0f)&&(maths_f_abs(rel_pos[Z])>=3.0f)) )
-		{
-			rel_heading = 0.0f;
-		}
-		else
-		{
-			rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimation->local_position.heading);
-		}
-		
-		navigation->wpt_nav_controller.clip_max = navigation->cruise_speed;
-		v_desired = pid_controller_update_dt(&navigation->wpt_nav_controller, norm_rel_dist, navigation->dt);
-	}
-	else
-	{
-		rel_heading = 0.0f;
-		navigation->hovering_controller.clip_max = navigation->cruise_speed;
-		v_desired = pid_controller_update_dt(&navigation->hovering_controller, norm_rel_dist, navigation->dt);
-	}
-
-	// calculate dir_desired in local frame
-	// vel = qe-1 * rel_pos * qe
-	qtmp1 = quaternions_create_from_vector(rel_pos);
-	qtmp2 = quaternions_global_to_local(*navigation->qe,qtmp1);
-	dir_desired_bf[0] = qtmp2.v[0]; dir_desired_bf[1] = qtmp2.v[1]; dir_desired_bf[2] = qtmp2.v[2];
-	
-	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigation->max_climb_rate ) 
-	{
-		v_desired = navigation->max_climb_rate / maths_f_abs(dir_desired_bf[Z]);
-	}
-	
-	
-	// Scaling of the goal direction by the desired speed
-	dir_desired_bf[X] *= v_desired;
-	dir_desired_bf[Y] *= v_desired;
-	dir_desired_bf[Z] *= v_desired;
-	
-	/*
-	loop_count = loop_count++ %50;
-	if (loop_count == 0)
-	{
-		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"v_desired",v_desired*100);
-		mavlink_msg_named_value_float_send(MAVLINK_COMM_0,time_keeper_get_millis(),"act_vel",vector_norm(navigation->position_estimation->vel_bf)*100);
-		print_util_dbg_print("Desired_vel_Bf(x100): (");
-		print_util_dbg_print_num(dir_desired_bf[X] * 100,10);
-		print_util_dbg_print_num(dir_desired_bf[Y] * 100,10);
-		print_util_dbg_print_num(dir_desired_bf[Z] * 100,10);
-		print_util_dbg_print("). \n");
-		print_util_dbg_print("Actual_vel_bf(x100): (");
-		print_util_dbg_print_num(navigation->position_estimation->vel_bf[X] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimation->vel_bf[Y] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimation->vel_bf[Z] * 100,10);
-		print_util_dbg_print("). \n");
-		print_util_dbg_print("Actual_pos(x100): (");
-		print_util_dbg_print_num(navigation->position_estimation->local_position.pos[X] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Y] * 100,10);
-		print_util_dbg_print_num(navigation->position_estimation->local_position.pos[Z] * 100,10);
-		print_util_dbg_print("). \n");
-	}
-	*/
-	
-	navigation->controls_nav->tvel[X] = dir_desired_bf[X];
-	navigation->controls_nav->tvel[Y] = dir_desired_bf[Y];
-	navigation->controls_nav->tvel[Z] = dir_desired_bf[Z];
-	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
-}
-
 static void navigation_run(navigation_t* navigation)
 {
 	float rel_pos[3];
@@ -317,7 +207,8 @@ static void navigation_run(navigation_t* navigation)
 	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(navigation->goal.pos,
 																					rel_pos,
 																					navigation->position_estimation->local_position.pos);
-	navigation_set_speed_command(rel_pos, navigation);
+	
+	lab_d_direct_to_navigation(navigation->controls_nav->tvel,rel_pos);
 	
 	navigation->controls_nav->theading=navigation->goal.heading;
 }
