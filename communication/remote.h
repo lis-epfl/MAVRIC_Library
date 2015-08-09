@@ -34,6 +34,7 @@
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
+ * \author Basil Huber
  *   
  * \brief This file is the driver for the remote control
  *
@@ -53,6 +54,7 @@
 #include "control_command.h"
 
 #define REMOTE_CHANNEL_COUNT 14
+#define REMOTE_CALLBACK_COUNT_MAX 3
 
 /**
  * \brief The signal's quality
@@ -143,6 +145,16 @@ typedef struct
 } remote_mode_t;
 
 /**
+ * \brief The structure of a remote callback
+ */
+ typedef struct
+ {
+	void (*cb_function)(void *, float);						///< Pointer to the callback function; function should be of the form void foo(callback_struct, float value); function is called as value changes
+	void *cb_struct;										///< Struct that is passed to the callback function;
+	remote_channel_t channel;								///< channel which triggers the callback
+ } remote_callback_t;
+
+/**
  * \brief The configuration structure of the remote
  */
 typedef struct
@@ -165,6 +177,8 @@ typedef struct
 	signal_quality_t signal_quality;						///< The quality of signal
 	remote_type_t type;										///< The type of remote
 	remote_mode_t mode;										///< The remote mode structure
+	remote_callback_t callback_list[REMOTE_CALLBACK_COUNT_MAX]; ///< List containing all remote_callbacks
+	int callback_count;								///< Number of registered callbacks
 } remote_t;
 
 /**
@@ -333,6 +347,32 @@ void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const flo
  * \param	command			Velocity command (output)
  */
 void remote_get_velocity_command(const remote_t* remote, velocity_command_t * command);
+
+
+/**
+ * \brief	Register a callback that is triggered when the value of a channel changes
+ *
+ * \param	remote				The pointer to the remote structure
+ * \param	callback_function	Pointer to the callback function; function should be of the form void foo(callback_struct, float value);
+ * \param	callback_struct		Struct that is passed to the callback function
+ * \param	remote_channel		channel which triggers the callback
+ *
+ * \return 	True if callback could be registered; false if an error occurred (typically already all callbacks used -> increase REMOTE_CALLBACK_COUNT_MAX)
+ */
+bool remote_callback_register(remote_t *remote, void (*callback_function)(void *, float), void *callback_struct, remote_channel_t channel);
+
+
+/**
+ * \brief	Unregister a callback that is triggered when the value of a channel changes; Unregistration does not liberate callback (i.e. callback cannot be replaced)
+ *
+ * \param	remote				The pointer to the remote structure
+ * \param	callback_function	Pointer to the callback function
+ * \param	callback_struct		Struct that is passed to the callback function
+ * \param	remote_channel		channel which triggers the callback
+ *
+ * \return 	True if callback could be unregistered;
+ */
+bool remote_callback_unregister(remote_t *remote, void (*callback_function)(void *, float), void *callback_struct, remote_channel_t channel);
 
 
 #ifdef __cplusplus

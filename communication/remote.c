@@ -34,6 +34,7 @@
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
+ * \author Basil Huber
  *   
  * \brief This file is the driver for the remote control
  *
@@ -58,6 +59,15 @@
  * \return	The value of the ARMED flag
  */
 static mode_flag_armed_t get_armed_flag(remote_t* remote);
+
+/**
+ * \brief	Trigger callbacks whose values have changed; This function should be called after the values have been updated
+ *
+ * \param	remote				The pointer to the remote structure
+ * \param 	channels_old		Values of the channels before the update
+ *
+ */
+void trigger_callbacks(remote_t *remote, float *channels_old);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -93,6 +103,23 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 	}
 
 	return armed;
+}
+
+void trigger_callbacks(remote_t *remote, float *channels_old)
+{
+	int i = 0;
+	for(i = 0; i < remote->callback_count; i++)
+	{
+		remote_callback_t* callback = &remote->callback_list[i];
+		remote_channel_t channel = callback->channel;
+		if(remote->channels[channel] != channels_old[channel])
+		{
+			if(callback->cb_function != NULL)
+			{
+				(*(callback->cb_function))(callback->cb_struct, remote->channels[channel]);
+			}
+		}
+	}
 }
 
 
@@ -191,6 +218,10 @@ void remote_update(remote_t* remote)
 			remote->signal_quality = SIGNAL_BAD;
 		}
 
+		/* copy current values to channels_old */
+		float channels_old[REMOTE_CHANNEL_COUNT];
+		memcpy(channels_old, remote->channels, sizeof(float)*REMOTE_CHANNEL_COUNT);
+
 		// Retrieve and scale channels
 		for (uint8_t i = 0; i < REMOTE_CHANNEL_COUNT; ++i)
 		{
@@ -207,12 +238,17 @@ void remote_update(remote_t* remote)
 
 		// Indicate that data was handled
 		remote->sat.new_data_available = false;
+
+		// trigger callback whose values have changed
+		trigger_callbacks(remote, channels_old);
+
 	} //end of if ( remote->sat.new_data_available == true )
 	else
 	{
 		// Check for signal loss
 		if ( ( now - remote->sat.last_update ) > 1500000 )
 		{
+
 			// CRITICAL: Set all channels to failsafe
 			remote->channels[CHANNEL_THROTTLE] = -1.0f;
 			for (uint8_t i = 1; i < REMOTE_CHANNEL_COUNT; i++) 
@@ -494,4 +530,65 @@ void remote_get_velocity_command(const remote_t* remote, velocity_command_t * co
 	command->xyz[X] = - 10.0f 	* remote_get_pitch(remote);
 	command->xyz[Y] = 10.0f  	* remote_get_roll(remote);
 	command->xyz[Z] = - 1.5f 	* remote_get_throttle(remote);
+}
+
+
+/**
+ * \brief	Register a callback that is triggered when the value of a channel changes
+ *
+ * \param	remote				The pointer to the remote structure
+ * \param	callback_function	Pointer to the callback function
+ * \param	callback_struct		Struct that is passed to the callback function
+ * \param	remote_channel		channel which triggers the callback
+ *
+ * \return 	True if callback could be registered; false if an error occurred (typically already all callbacks used -> increase REMOTE_CALLBACK_COUNT_MAX)
+ */
+bool remote_callback_register(remote_t *remote, void (*callback_function)(void *, float), void *callback_struct, remote_channel_t channel)
+{
+	/* check if there are unused callbacks; if not exit with error) */
+	int index = remote->callback_count;
+	if(index >= REMOTE_CALLBACK_COUNT_MAX)
+	{
+		return false;
+	}
+
+	remote->callback_list[index].cb_function = callback_function;
+	remote->callback_list[index].cb_struct = callback_struct;
+	remote->callback_list[index].channel = channel;
+
+	remote->callback_count++;
+	return true;
+}
+
+
+/**
+ * \brief	Unregister a callback that is triggered when the value of a channel changes; Unregistration does not liberate callback (i.e. callback cannot be replaced)
+ *
+ * \param	remote				The pointer to the remote structure
+ * \param	callback_function	Pointer to the callback function
+ * \param	callback_struct		Struct that is passed to the callback function
+ * \param	remote_channel		channel which triggers the callback
+ *
+ * \return 	True if callback could be unregistered;
+ */
+bool remote_callback_unregister(remote_t *remote, void (*callback_function)(void *, float), void *callback_struct, remote_channel_t channel)
+{
+	int i;
+	int ret = false;
+	/* iterate through callback_list to find callback */
+	for(i = 0; i < remote->callback_count; i++)
+	{
+		remote_callback_t* callback_i = &(remote->callback_list[i]);
+		if(callback_i->cb_function == callback_function &&
+			callback_i->cb_struct == callback_struct &&
+			callback_i->channel == channel)
+		{
+			/* Overwrite callback fields with NULL */
+			callback_i->cb_function = NULL;
+			callback_i->cb_struct = NULL;
+			callback_i->channel = 0;
+			ret = true;	/* We do not stop the search in case callback was registered multiple times*/
+		}
+	}
+	return ret;
 }
