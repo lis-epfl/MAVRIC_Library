@@ -108,9 +108,10 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 void trigger_callbacks(remote_t *remote, float *channels_old)
 {
 	int i = 0;
-	for(i = 0; i < remote->callback_count; i++)
+	remote_callback_item_t *item = remote->callback_list;
+	while(item != NULL)
 	{
-		remote_callback_t* callback = &remote->callback_list[i];
+		remote_callback_t* callback = &item->callback;
 		remote_channel_t channel = callback->channel;
 		if(remote->channels[channel] != channels_old[channel])
 		{
@@ -119,7 +120,12 @@ void trigger_callbacks(remote_t *remote, float *channels_old)
 				(*(callback->cb_function))(callback->cb_struct, remote->channels[channel]);
 			}
 		}
+		i++;
+		item = item->next_item;
 	}
+	print_util_dbg_print("callback count: ");
+	print_util_dbg_print_num(i,10);
+	print_util_dbg_print("\r\n");
 }
 
 
@@ -541,22 +547,30 @@ void remote_get_velocity_command(const remote_t* remote, velocity_command_t * co
  * \param	callback_struct		Struct that is passed to the callback function
  * \param	remote_channel		channel which triggers the callback
  *
- * \return 	True if callback could be registered; false if an error occurred (typically already all callbacks used -> increase REMOTE_CALLBACK_COUNT_MAX)
+ * \return 	True if callback could be registered
  */
 bool remote_callback_register(remote_t *remote, void (*callback_function)(void *, float), void *callback_struct, remote_channel_t channel)
 {
-	/* check if there are unused callbacks; if not exit with error) */
-	int index = remote->callback_count;
-	if(index >= REMOTE_CALLBACK_COUNT_MAX)
+	/* malloc space for remote_callback_item_t */
+	remote_callback_item_t* item = malloc(sizeof(remote_callback_item_t));
+	/* if malloc did not work, exit with failure */
+	if(item == NULL)
 	{
+		print_util_dbg_print("remote_callback_register: malloc failed\r\n");
 		return false;
 	}
 
-	remote->callback_list[index].cb_function = callback_function;
-	remote->callback_list[index].cb_struct = callback_struct;
-	remote->callback_list[index].channel = channel;
+	/* create remote_callback */
+	remote_callback_t* callback = &item->callback;
+	callback->cb_function = callback_function;
+	callback->cb_struct = callback_struct;
+	callback->channel = channel;
 
-	remote->callback_count++;
+	/* insert the callback_item at the head of the callback list */
+	remote_callback_item_t* first_element = remote->callback_list;
+	remote->callback_list = item;
+	item->next_item = first_element;
+
 	return true;
 }
 
@@ -573,22 +587,31 @@ bool remote_callback_register(remote_t *remote, void (*callback_function)(void *
  */
 bool remote_callback_unregister(remote_t *remote, void (*callback_function)(void *, float), void *callback_struct, remote_channel_t channel)
 {
-	int i;
-	int ret = false;
-	/* iterate through callback_list to find callback */
-	for(i = 0; i < remote->callback_count; i++)
-	{
-		remote_callback_t* callback_i = &(remote->callback_list[i]);
-		if(callback_i->cb_function == callback_function &&
-			callback_i->cb_struct == callback_struct &&
-			callback_i->channel == channel)
+	/* find the item to be deleted */
+	remote_callback_item_t *previous_item = NULL;
+	remote_callback_item_t *item = remote->callback_list;
+	while(item != NULL){
+		remote_callback_t *callback = &item->callback;
+		if(callback->cb_function == callback_function &&
+			callback->cb_struct == callback_struct &&
+			callback->channel == channel)
 		{
-			/* Overwrite callback fields with NULL */
-			callback_i->cb_function = NULL;
-			callback_i->cb_struct = NULL;
-			callback_i->channel = 0;
-			ret = true;	/* We do not stop the search in case callback was registered multiple times*/
+			/* remove item from the list */
+			if (previous_item != NULL)
+			{
+				previous_item->next_item = item->next_item;
+			}else
+			{
+				remote->callback_list = item->next_item;
+			}
+
+			/* free the item */
+			free(item);
+			return true;
 		}
+		previous_item = item;
+		item = item->next_item;
 	}
-	return ret;
+	print_util_dbg_print("remote_callback_unregister: could not find callback\r\n");
+	return false;
 }

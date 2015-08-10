@@ -54,7 +54,6 @@
 #include "control_command.h"
 
 #define REMOTE_CHANNEL_COUNT 14
-#define REMOTE_CALLBACK_COUNT_MAX 3
 
 /**
  * \brief The signal's quality
@@ -154,6 +153,18 @@ typedef struct
 	remote_channel_t channel;								///< channel which triggers the callback
  } remote_callback_t;
 
+ /**
+ * \brief List element containing a remote_callback_t
+ */
+ typedef struct remote_callback_item_t remote_callback_item_t;
+ struct remote_callback_item_t
+ {
+	remote_callback_t callback;						///< Callback of the list element
+	remote_callback_item_t *next_item;				///< Points to the next element
+ };
+
+
+
 /**
  * \brief The configuration structure of the remote
  */
@@ -177,8 +188,7 @@ typedef struct
 	signal_quality_t signal_quality;						///< The quality of signal
 	remote_type_t type;										///< The type of remote
 	remote_mode_t mode;										///< The remote mode structure
-	remote_callback_t callback_list[REMOTE_CALLBACK_COUNT_MAX]; ///< List containing all remote_callbacks
-	int callback_count;								///< Number of registered callbacks
+	remote_callback_item_t *callback_list;					///< List containing all remote_callbacks (pointer to first list element)
 } remote_t;
 
 /**
@@ -357,7 +367,7 @@ void remote_get_velocity_command(const remote_t* remote, velocity_command_t * co
  * \param	callback_struct		Struct that is passed to the callback function
  * \param	remote_channel		channel which triggers the callback
  *
- * \return 	True if callback could be registered; false if an error occurred (typically already all callbacks used -> increase REMOTE_CALLBACK_COUNT_MAX)
+ * \return 	True if callback could be registered
  */
 bool remote_callback_register(remote_t *remote, void (*callback_function)(void *, float), void *callback_struct, remote_channel_t channel);
 
