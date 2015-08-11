@@ -107,25 +107,21 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 
 void trigger_callbacks(remote_t *remote, float *channels_old)
 {
-	int i = 0;
 	remote_callback_item_t *item = remote->callback_list;
 	while(item != NULL)
 	{
 		remote_callback_t* callback = &item->callback;
 		remote_channel_t channel = callback->channel;
-		if(remote->channels[channel] != channels_old[channel])
+		if((remote->channels[channel] > channels_old[channel] && callback->edge != REMOTE_CALLBACK_EDGE_FALLING) ||
+			(remote->channels[channel] < channels_old[channel] && callback->edge != REMOTE_CALLBACK_EDGE_RISING))
 		{
 			if(callback->cb_function != NULL)
 			{
 				(*(callback->cb_function))(callback->cb_struct, remote->channels[channel]);
 			}
 		}
-		i++;
 		item = item->next_item;
 	}
-	print_util_dbg_print("callback count: ");
-	print_util_dbg_print_num(i,10);
-	print_util_dbg_print("\r\n");
 }
 
 
@@ -543,13 +539,14 @@ void remote_get_velocity_command(const remote_t* remote, velocity_command_t * co
  * \brief	Register a callback that is triggered when the value of a channel changes
  *
  * \param	remote				The pointer to the remote structure
- * \param	callback_function	Pointer to the callback function
+ * \param	callback_function	Pointer to the callback function; function should be of the form void foo(callback_struct, float value);
  * \param	callback_struct		Struct that is passed to the callback function
  * \param	remote_channel		channel which triggers the callback
+ * \param	edge 				Edge of the signal to be detected: REMOTE_CALLBACK_EDGE_FALLING, REMOTE_CALLBACK_EDGE_RISING, REMOTE_CALLBACK_EDGE_BOTHREMOTE_CALLBACK_EDGE_RAISING
  *
  * \return 	True if callback could be registered
  */
-bool remote_callback_register(remote_t *remote, void (*callback_function)(void *, float), void *callback_struct, remote_channel_t channel)
+bool remote_callback_register(remote_t *remote, void (*callback_function)(void *, float), void *callback_struct, remote_channel_t channel, remote_callback_edge_t edge)
 {
 	/* malloc space for remote_callback_item_t */
 	remote_callback_item_t* item = malloc(sizeof(remote_callback_item_t));
@@ -565,6 +562,7 @@ bool remote_callback_register(remote_t *remote, void (*callback_function)(void *
 	callback->cb_function = callback_function;
 	callback->cb_struct = callback_struct;
 	callback->channel = channel;
+	callback->edge = edge;
 
 	/* insert the callback_item at the head of the callback list */
 	remote_callback_item_t* first_element = remote->callback_list;
@@ -582,10 +580,11 @@ bool remote_callback_register(remote_t *remote, void (*callback_function)(void *
  * \param	callback_function	Pointer to the callback function
  * \param	callback_struct		Struct that is passed to the callback function
  * \param	remote_channel		channel which triggers the callback
+ * \param	edge 				Edge of the signal to be detected: REMOTE_CALLBACK_EDGE_FALLING, REMOTE_CALLBACK_EDGE_RISING, REMOTE_CALLBACK_EDGE_BOTHREMOTE_CALLBACK_EDGE_RAISING
  *
  * \return 	True if callback could be unregistered;
  */
-bool remote_callback_unregister(remote_t *remote, void (*callback_function)(void *, float), void *callback_struct, remote_channel_t channel)
+bool remote_callback_unregister(remote_t *remote, void (*callback_function)(void *, float), void *callback_struct, remote_channel_t channel, remote_callback_edge_t edge)
 {
 	/* find the item to be deleted */
 	remote_callback_item_t *previous_item = NULL;
@@ -594,7 +593,8 @@ bool remote_callback_unregister(remote_t *remote, void (*callback_function)(void
 		remote_callback_t *callback = &item->callback;
 		if(callback->cb_function == callback_function &&
 			callback->cb_struct == callback_struct &&
-			callback->channel == channel)
+			callback->channel == channel &&
+			callback->edge == edge)
 		{
 			/* remove item from the list */
 			if (previous_item != NULL)
