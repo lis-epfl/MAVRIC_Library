@@ -149,10 +149,6 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 		input.tvel[X] = input_global.v[X];
 		input.tvel[Y] = input_global.v[Y];
 		input.tvel[Z] = input_global.v[Z];
-		
-		stabilisation_copter->stabiliser_stack.velocity_stabiliser.input.tvel[X] = input.tvel[X];
-		stabilisation_copter->stabiliser_stack.velocity_stabiliser.input.tvel[Y] = input.tvel[Y];
-		stabilisation_copter->stabiliser_stack.velocity_stabiliser.input.tvel[Z] = input.tvel[Z];
 
 		rpyt_errors[X] = input.tvel[X] - stabilisation_copter->pos_est->vel[X];
 		rpyt_errors[Y] = input.tvel[Y] - stabilisation_copter->pos_est->vel[Y];
@@ -207,9 +203,6 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 		// run absolute attitude_filter controller
 		rpyt_errors[0]= input.rpy[0] - ( - stabilisation_copter->ahrs->up_vec.v[1] ); 
 		rpyt_errors[1]= input.rpy[1] - stabilisation_copter->ahrs->up_vec.v[0];
-		
-		stabilisation_copter->stabiliser_stack.attitude_stabiliser.input.rpy[0] = input.rpy[0];
-		stabilisation_copter->stabiliser_stack.attitude_stabiliser.input.rpy[1] = input.rpy[1];
 
 		if ((stabilisation_copter->controls->yaw_mode == YAW_ABSOLUTE) ) 
 		{
