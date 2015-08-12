@@ -34,7 +34,6 @@
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
- * \author Basil Huber
  *   
  * \brief This file is the driver for the remote control
  *
@@ -104,18 +103,6 @@ typedef enum
 	REMOTE_SPEKTRUM = 1,
 } remote_type_t;
 
-
-/**
- * \brief The type of the remote
- */
-typedef enum
-{
-	REMOTE_CALLBACK_EDGE_FALLING = -1,
-	REMOTE_CALLBACK_EDGE_BOTH	= 0,
-	REMOTE_CALLBACK_EDGE_RISING	= 1
-} remote_callback_edge_t;
-
-
 /**
  * \brief The configuration structure of the remote mode
  */
@@ -156,29 +143,6 @@ typedef struct
 } remote_mode_t;
 
 /**
- * \brief The structure of a remote callback
- */
- typedef struct
- {
-	void (*cb_function)(void *, float);						///< Pointer to the callback function; function should be of the form void foo(callback_struct, float value); function is called as value changes
-	void *cb_struct;										///< Struct that is passed to the callback function;
-	remote_channel_t channel;								///< channel which triggers the callback
-	remote_callback_edge_t edge;							///< Edge of the signal to be detected: falling, both, rising
- } remote_callback_t;
-
- /**
- * \brief List element containing a remote_callback_t
- */
- typedef struct remote_callback_item_t remote_callback_item_t;
- struct remote_callback_item_t
- {
-	remote_callback_t callback;						///< Callback of the list element
-	remote_callback_item_t *next_item;				///< Points to the next element
- };
-
-
-
-/**
  * \brief The configuration structure of the remote
  */
 typedef struct
@@ -201,7 +165,6 @@ typedef struct
 	signal_quality_t signal_quality;						///< The quality of signal
 	remote_type_t type;										///< The type of remote
 	remote_mode_t mode;										///< The remote mode structure
-	remote_callback_item_t *callback_list;					///< List containing all remote_callbacks (pointer to first list element)
 } remote_t;
 
 /**
@@ -370,34 +333,6 @@ void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const flo
  * \param	command			Velocity command (output)
  */
 void remote_get_velocity_command(const remote_t* remote, velocity_command_t * command);
-
-
-/**
- * \brief	Register a callback that is triggered when the value of a channel changes
- *
- * \param	remote				The pointer to the remote structure
- * \param	callback_function	Pointer to the callback function; function should be of the form void foo(callback_struct, float value);
- * \param	callback_struct		Struct that is passed to the callback function
- * \param	remote_channel		channel which triggers the callback
- * \param	edge 				Edge of the signal to be detected: REMOTE_CALLBACK_EDGE_FALLING, REMOTE_CALLBACK_EDGE_RISING, REMOTE_CALLBACK_EDGE_BOTHREMOTE_CALLBACK_EDGE_RAISING
- *
- * \return 	True if callback could be registered
- */
-bool remote_callback_register(remote_t *remote, void (*callback_function)(void *, float), void *callback_struct, remote_channel_t channel, remote_callback_edge_t edge);
-
-
-/**
- * \brief	Unregister a callback that is triggered when the value of a channel changes; Unregistration does not liberate callback (i.e. callback cannot be replaced)
- *
- * \param	remote				The pointer to the remote structure
- * \param	callback_function	Pointer to the callback function
- * \param	callback_struct		Struct that is passed to the callback function
- * \param	remote_channel		channel which triggers the callback
- * \param	edge 				Edge of the signal to be detected: REMOTE_CALLBACK_EDGE_FALLING, REMOTE_CALLBACK_EDGE_RISING, REMOTE_CALLBACK_EDGE_BOTHREMOTE_CALLBACK_EDGE_RAISING
- *
- * \return 	True if callback could be unregistered;
- */
-bool remote_callback_unregister(remote_t *remote, void (*callback_function)(void *, float), void *callback_struct, remote_channel_t channel, remote_callback_edge_t edge);
 
 
 #ifdef __cplusplus

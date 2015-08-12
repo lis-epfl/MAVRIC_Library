@@ -34,7 +34,6 @@
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
- * \author Basil Huber
  *   
  * \brief This file is the driver for the remote control
  *
@@ -59,15 +58,6 @@
  * \return	The value of the ARMED flag
  */
 static mode_flag_armed_t get_armed_flag(remote_t* remote);
-
-/**
- * \brief	Trigger callbacks whose values have changed; This function should be called after the values have been updated
- *
- * \param	remote				The pointer to the remote structure
- * \param 	channels_old		Values of the channels before the update
- *
- */
-void trigger_callbacks(remote_t *remote, float *channels_old);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -103,25 +93,6 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 	}
 
 	return armed;
-}
-
-void trigger_callbacks(remote_t *remote, float *channels_old)
-{
-	remote_callback_item_t *item = remote->callback_list;
-	while(item != NULL)
-	{
-		remote_callback_t* callback = &item->callback;
-		remote_channel_t channel = callback->channel;
-		if((remote->channels[channel] > channels_old[channel] && callback->edge != REMOTE_CALLBACK_EDGE_FALLING) ||
-			(remote->channels[channel] < channels_old[channel] && callback->edge != REMOTE_CALLBACK_EDGE_RISING))
-		{
-			if(callback->cb_function != NULL)
-			{
-				(*(callback->cb_function))(callback->cb_struct, remote->channels[channel]);
-			}
-		}
-		item = item->next_item;
-	}
 }
 
 
@@ -220,10 +191,6 @@ void remote_update(remote_t* remote)
 			remote->signal_quality = SIGNAL_BAD;
 		}
 
-		/* copy current values to channels_old */
-		float channels_old[REMOTE_CHANNEL_COUNT];
-		memcpy(channels_old, remote->channels, sizeof(float)*REMOTE_CHANNEL_COUNT);
-
 		// Retrieve and scale channels
 		for (uint8_t i = 0; i < REMOTE_CHANNEL_COUNT; ++i)
 		{
@@ -240,17 +207,12 @@ void remote_update(remote_t* remote)
 
 		// Indicate that data was handled
 		remote->sat.new_data_available = false;
-
-		// trigger callback whose values have changed
-		trigger_callbacks(remote, channels_old);
-
 	} //end of if ( remote->sat.new_data_available == true )
 	else
 	{
 		// Check for signal loss
 		if ( ( now - remote->sat.last_update ) > 1500000 )
 		{
-
 			// CRITICAL: Set all channels to failsafe
 			remote->channels[CHANNEL_THROTTLE] = -1.0f;
 			for (uint8_t i = 1; i < REMOTE_CHANNEL_COUNT; i++) 
@@ -532,86 +494,4 @@ void remote_get_velocity_command(const remote_t* remote, velocity_command_t * co
 	command->xyz[X] = - 10.0f 	* remote_get_pitch(remote);
 	command->xyz[Y] = 10.0f  	* remote_get_roll(remote);
 	command->xyz[Z] = - 1.5f 	* remote_get_throttle(remote);
-}
-
-
-/**
- * \brief	Register a callback that is triggered when the value of a channel changes
- *
- * \param	remote				The pointer to the remote structure
- * \param	callback_function	Pointer to the callback function; function should be of the form void foo(callback_struct, float value);
- * \param	callback_struct		Struct that is passed to the callback function
- * \param	remote_channel		channel which triggers the callback
- * \param	edge 				Edge of the signal to be detected: REMOTE_CALLBACK_EDGE_FALLING, REMOTE_CALLBACK_EDGE_RISING, REMOTE_CALLBACK_EDGE_BOTHREMOTE_CALLBACK_EDGE_RAISING
- *
- * \return 	True if callback could be registered
- */
-bool remote_callback_register(remote_t *remote, void (*callback_function)(void *, float), void *callback_struct, remote_channel_t channel, remote_callback_edge_t edge)
-{
-	/* malloc space for remote_callback_item_t */
-	remote_callback_item_t* item = malloc(sizeof(remote_callback_item_t));
-	/* if malloc did not work, exit with failure */
-	if(item == NULL)
-	{
-		print_util_dbg_print("remote_callback_register: malloc failed\r\n");
-		return false;
-	}
-
-	/* create remote_callback */
-	remote_callback_t* callback = &item->callback;
-	callback->cb_function = callback_function;
-	callback->cb_struct = callback_struct;
-	callback->channel = channel;
-	callback->edge = edge;
-
-	/* insert the callback_item at the head of the callback list */
-	remote_callback_item_t* first_element = remote->callback_list;
-	remote->callback_list = item;
-	item->next_item = first_element;
-
-	return true;
-}
-
-
-/**
- * \brief	Unregister a callback that is triggered when the value of a channel changes; Unregistration does not liberate callback (i.e. callback cannot be replaced)
- *
- * \param	remote				The pointer to the remote structure
- * \param	callback_function	Pointer to the callback function
- * \param	callback_struct		Struct that is passed to the callback function
- * \param	remote_channel		channel which triggers the callback
- * \param	edge 				Edge of the signal to be detected: REMOTE_CALLBACK_EDGE_FALLING, REMOTE_CALLBACK_EDGE_RISING, REMOTE_CALLBACK_EDGE_BOTHREMOTE_CALLBACK_EDGE_RAISING
- *
- * \return 	True if callback could be unregistered;
- */
-bool remote_callback_unregister(remote_t *remote, void (*callback_function)(void *, float), void *callback_struct, remote_channel_t channel, remote_callback_edge_t edge)
-{
-	/* find the item to be deleted */
-	remote_callback_item_t *previous_item = NULL;
-	remote_callback_item_t *item = remote->callback_list;
-	while(item != NULL){
-		remote_callback_t *callback = &item->callback;
-		if(callback->cb_function == callback_function &&
-			callback->cb_struct == callback_struct &&
-			callback->channel == channel &&
-			callback->edge == edge)
-		{
-			/* remove item from the list */
-			if (previous_item != NULL)
-			{
-				previous_item->next_item = item->next_item;
-			}else
-			{
-				remote->callback_list = item->next_item;
-			}
-
-			/* free the item */
-			free(item);
-			return true;
-		}
-		previous_item = item;
-		item = item->next_item;
-	}
-	print_util_dbg_print("remote_callback_unregister: could not find callback\r\n");
-	return false;
 }
