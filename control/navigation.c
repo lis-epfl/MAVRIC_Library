@@ -806,6 +806,10 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	navigation->controls_nav->control_mode = VELOCITY_COMMAND_MODE;
 	navigation->controls_nav->yaw_mode = YAW_ABSOLUTE;
 	
+	navigation->goal.pos[X] = 0.0f;
+	navigation->goal.pos[Y] = 0.0f;
+	navigation->goal.pos[Z] = 0.0f;
+	
 	navigation->wpt_nav_controller = nav_config->wpt_nav_controller;
 	navigation->hovering_controller = nav_config->hovering_controller;
 	
