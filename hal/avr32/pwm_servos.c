@@ -181,7 +181,7 @@ void pwm_servos_write_to_hardware(const servos_t* servos)
 {
 	int servo_count = servos->servos_count;
 	int freq_count = (servo_count+1) / 2;
-	uint16_t pulse_us[servo_count];
+	uint16_t pulse_us[2*freq_count];
 	uint16_t freq_channel[freq_count];
 
 	// Set pulse length per servo
@@ -202,6 +202,8 @@ void pwm_servos_write_to_hardware(const servos_t* servos)
 		else
 		{
 			freq_channel[i] = servos->servo[2 * i].repeat_freq;
+			/* set non existing servo to center pulse to avoid confusion when writing to hardware */
+			pulse_us[2*i+1] = servo_center_pulse_us;
 		}
 	}
 
