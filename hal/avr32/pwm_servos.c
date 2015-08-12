@@ -36,6 +36,7 @@
  * \author Felix Schill
  * \author Julien Lecoeur
  * \author Geraud L'Eplattenier
+ * \author Basil Huber
  * 
  * \brief This file is the driver for pwm servos
  *
@@ -178,11 +179,13 @@ void pwm_servos_init(bool use_servos_7_8_param)
 
 void pwm_servos_write_to_hardware(const servos_t* servos)
 {
-	uint16_t pulse_us[MAX_SERVO_COUNT];
-	uint16_t freq_channel[(MAX_SERVO_COUNT+1) / 2];
+	int servo_count = servos->servos_count;
+	int freq_count = (servo_count+1) / 2;
+	uint16_t pulse_us[servo_count];
+	uint16_t freq_channel[freq_count];
 
 	// Set pulse length per servo
-	for (uint8_t i = 0; i < MAX_SERVO_COUNT; ++i)
+	for (uint8_t i = 0; i < servo_count; ++i)
 	{
 		pulse_us[i] = servo_magnitude * servos->servo[i].value + servo_center_pulse_us;
 	}
@@ -190,9 +193,9 @@ void pwm_servos_write_to_hardware(const servos_t* servos)
 	// Set update frequency per channel with conservative method:
 	// if two servos on the same channel ask for two different frequencies,
 	// then the lowest frequecy is used
-	for (int8_t i = 0; i < (MAX_SERVO_COUNT+1) / 2; ++i)
+	for (int8_t i = 0; i < freq_count; ++i)
 	{
-		if(2*i+1 < servos->servos_count)
+		if(2*i+1 < servo_count)
 		{
 			freq_channel[i] = min( servos->servo[2 * i].repeat_freq, servos->servo[2 * i + 1].repeat_freq );
 		}
@@ -202,18 +205,12 @@ void pwm_servos_write_to_hardware(const servos_t* servos)
 		}
 	}
 
+	write_channels( 0, pulse_us[0], pulse_us[1], freq_channel[0]);
+	write_channels(	1, pulse_us[2], pulse_us[3], freq_channel[1]);
+	write_channels(	2, pulse_us[4], pulse_us[5], freq_channel[2]);
 	if ( use_servos_7_8 == true )
 	{
-		write_channels( 0, pulse_us[0], pulse_us[1], freq_channel[0]);
-		write_channels(	1, pulse_us[2], pulse_us[3], freq_channel[1]);
-		write_channels(	2, pulse_us[4], pulse_us[5], freq_channel[2]);
 		write_channels(	3, pulse_us[6], pulse_us[7], freq_channel[3]);
-	}
-	else
-	{	
-		write_channels( 0, pulse_us[0], pulse_us[1], freq_channel[0]);
-		write_channels(	1, pulse_us[2], pulse_us[3], freq_channel[1]);
-		write_channels(	2, pulse_us[4], pulse_us[5], freq_channel[2]);
 	}
 }
 
