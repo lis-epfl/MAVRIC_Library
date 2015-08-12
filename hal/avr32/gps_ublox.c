@@ -1834,6 +1834,9 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 
 	gps->size_buffer = 0;
 
+	gps->num_posllh_message = 0;
+	gps->num_velned_message = 0;
+
 	gps->step = 0;
 	gps->ubx_class = 0;
 	gps->msg_id = 0;
