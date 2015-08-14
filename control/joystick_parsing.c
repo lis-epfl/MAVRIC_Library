@@ -43,6 +43,7 @@
 #include "print_util.h"
 #include "constants.h"
 #include "coord_conventions.h"
+#include "lab_d.h"
 
 
 //------------------------------------------------------------------------------
@@ -186,7 +187,7 @@ void joystick_parsing_get_velocity_vector_from_joystick(joystick_parsing_t* joys
 	joystick_input[Y] = 10.0f	* joystick_parsing->channels.y * MAX_JOYSTICK_RANGE;
 	joystick_input[Z] = 1.5f	* joystick_parsing->channels.z;
 
-	lab_d_velocity_vector(controls->tvel,joystick_parsing);
+	lab_d_velocity_vector(controls->tvel,joystick_input);
 
 	controls->rpy[YAW] = joystick_parsing->channels.r * MAX_JOYSTICK_RANGE;
 }

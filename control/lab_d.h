@@ -58,4 +58,4 @@ void lab_d_velocity_vector(float velocity_vector[3], float joystick_input[3]);
  * \param	velocity_vector			The velocity vector command
  * \param	joystick_input			The joystick input
  */
-void lab_d_direct_to_navigation(float velocity_vector[3], float relative_position[3]);
+void lab_d_direct_to_navigation(float velocity_vector[3], float goal_position[3], float current_position[3]);
