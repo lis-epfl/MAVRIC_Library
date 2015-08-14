@@ -208,7 +208,9 @@ static void navigation_run(navigation_t* navigation)
 																					rel_pos,
 																					navigation->position_estimation->local_position.pos);
 	
-	lab_d_direct_to_navigation(navigation->controls_nav->tvel,navigation->goal.pos,navigation->position_estimation->local_position.pos);
+	lab_d_direct_to_navigation(	navigation->controls_nav->tvel,
+								navigation->goal.pos,
+								navigation->position_estimation->local_position.pos);
 	
 	navigation->controls_nav->theading=navigation->goal.heading;
 }
