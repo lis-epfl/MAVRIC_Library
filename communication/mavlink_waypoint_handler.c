@@ -1479,7 +1479,7 @@ void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_ha
 	waypoint.y = 65670560 / 1.0e7f; // convert to deg
 	waypoint.z = 20; //m
 	
-	waypoint.param1 = 10; // Hold time in decimal seconds
+	waypoint.param1 = 0; // Hold time in decimal seconds
 	waypoint.param2 = 2; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
 	waypoint.param4 = 0; // Desired yaw angle at MISSION (rotary wing)
@@ -1496,7 +1496,7 @@ void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_ha
 	waypoint.y = 65670560 / 1.0e7f; // convert to deg
 	waypoint.z = 20; //m
 	
-	waypoint.param1 = 10; // Hold time in decimal seconds
+	waypoint.param1 = 0; // Hold time in decimal seconds
 	waypoint.param2 = 4; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
 	waypoint.param4 = 270; // Desired yaw angle at MISSION (rotary wing)
@@ -1513,7 +1513,7 @@ void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_ha
 	waypoint.y = 65659084 / 1.0e7f; // convert to deg
 	waypoint.z = 20; //m
 	
-	waypoint.param1 = 10; // Hold time in decimal seconds
+	waypoint.param1 = 0; // Hold time in decimal seconds
 	waypoint.param2 = 15; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
 	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
@@ -1530,7 +1530,7 @@ void waypoint_handler_init_waypoint_list(mavlink_waypoint_handler_t* waypoint_ha
 	waypoint.y = 65659084 / 1.0e7f; // convert to deg
 	waypoint.z = 20; //m
 
-	waypoint.param1 = 10; // Hold time in decimal seconds
+	waypoint.param1 = 0; // Hold time in decimal seconds
 	waypoint.param2 = 12; // Acceptance radius in meters
 	waypoint.param3 = 0; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
 	waypoint.param4 = 90; // Desired yaw angle at MISSION (rotary wing)
