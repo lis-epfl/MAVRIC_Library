@@ -42,22 +42,52 @@
 
 #include "lab_d.h"
 #include "constants.h"
-
-
+#include "vectors.h"
+#include "maths.h"
 
 void lab_d_velocity_vector(float velocity_vector[3], const float joystick_input[3])
 {
 	// Output
-	velocity_vector[X] = 0.0f; // sign * joystick_input[ROLL, PITCH, YAW]
+	velocity_vector[X] = 0.0f; // sign * joystick_input[X, Y, Z]
 	velocity_vector[Y] = 0.0f;
 	velocity_vector[Z] = 0.0f;
+}
+
+void lab_d_run_PID(float rpyt_errors[4], const float velocity_cmd[3], const float current_velocity[3], stabiliser_t *stabiliser, float dt)
+{
+	// rpyt_errors stands for the errors on the
+	// roll
+	// pitch
+	// yaw
+	// thrust
+	rpyt_errors[X] = 0.0f; // sign * (velocity_cmd[XXX] - current_velocity[XXX]);
+	rpyt_errors[Y] = 0.0f;
+	rpyt_errors[Z] = 0.0f;
+	rpyt_errors[3] = 0.0f;
+
+
+	// run PID update on all velocity controllers
+	stabilisation_run(stabiliser, dt, rpyt_errors);
+}
+
+void lab_d_velocity_to_attitude(float rpy_cmd[3], float *thrust_cmd, const float velocity_controller_output[3],const float thrust_output, const float thrust_hover_point)
+{
+	rpy_cmd[ROLL] = 0.0f; // sign * velocity_controller_output[XXX];
+	rpy_cmd[PITCH] = 0.0f;
+	*thrust_cmd = 0.0f;
 }
 
 
 void lab_d_direct_to_navigation(float velocity_vector[3], const float goal_position[3], const float current_position[3])
 {
-	// Output
-	velocity_vector[X] = 0.0f;
-	velocity_vector[Y] = 0.0f;
-	velocity_vector[Z] = 0.0f;
+	float cruise_speed = 3.0f, desired_speed;
+	float relative_position[3];
+	float relative_distance;
+
+	// Put your code here
+
+	for (int i = 0; i < 3; ++i)
+	{
+		velocity_vector[i] = 0.0f;
+	}
 }

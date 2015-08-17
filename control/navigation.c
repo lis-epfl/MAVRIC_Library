@@ -202,16 +202,41 @@ static float navigation_set_rel_pos_n_dist2wp(float waypoint_pos[], float rel_po
 static void navigation_run(navigation_t* navigation)
 {
 	float rel_pos[3];
-	
+	float new_vel[3];
+	quat_t qtmp1, qtmp2;
+
 	// Control in translational speed of the platform
 	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(navigation->goal.pos,
 																					rel_pos,
 																					navigation->position_estimation->local_position.pos);
 	
-	lab_d_direct_to_navigation(	navigation->controls_nav->tvel,
+	lab_d_direct_to_navigation(	new_vel,
 								navigation->goal.pos,
 								navigation->position_estimation->local_position.pos);
 	
+	float relative_position[3], relative_heading;
+	for (int i = 0; i < 3; ++i)
+	{
+		relative_position[i] = navigation->goal.pos[i] - navigation->position_estimation->local_position.pos[i];
+	}
+	if( ((maths_f_abs(relative_position[X])<=1.0f)&&(maths_f_abs(relative_position[Y])<=1.0f)) || ((maths_f_abs(relative_position[X])<=5.0f)&&(maths_f_abs(relative_position[Y])<=5.0f)&&(maths_f_abs(relative_position[Z])>=3.0f)) )
+	{
+		relative_heading = 0.0f;
+	}
+	else
+	{
+		relative_heading = maths_calc_smaller_angle(atan2(relative_position[Y],relative_position[X]) - navigation->position_estimation->local_position.heading);
+	}
+
+	navigation->controls_nav->rpy[YAW] = KP_YAW * relative_heading;
+
+	qtmp1 = quaternions_create_from_vector(new_vel);
+	qtmp2 = quaternions_global_to_local(*navigation->qe,qtmp1);
+	
+	navigation->controls_nav->tvel[X] = qtmp2.v[0];
+	navigation->controls_nav->tvel[Y] = qtmp2.v[1];
+	navigation->controls_nav->tvel[Z] = qtmp2.v[2];
+
 	navigation->controls_nav->theading=navigation->goal.heading;
 }
 

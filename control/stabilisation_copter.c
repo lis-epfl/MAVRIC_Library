@@ -44,6 +44,7 @@
 #include "stabilisation_copter.h"
 #include "print_util.h"
 #include "constants.h"
+#include "lab_d.h"
 
 #include "conf_platform.h" 	// TODO: remove (use the module mix_to_servo to remove dependency to conf_platform)
 
@@ -146,53 +147,27 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 		input.tvel[X] = input_global.v[X];
 		input.tvel[Y] = input_global.v[Y];
 		input.tvel[Z] = input_global.v[Z];
-		
-		rpyt_errors[X] = input.tvel[X] - stabilisation_copter->pos_est->vel[X];
-		rpyt_errors[Y] = input.tvel[Y] - stabilisation_copter->pos_est->vel[Y];
-		rpyt_errors[3] = -(input.tvel[Z] - stabilisation_copter->pos_est->vel[Z]);
-		
-		if (stabilisation_copter->controls->yaw_mode == YAW_COORDINATED) 
-		{
-			float rel_heading_coordinated;
-			if ((maths_f_abs(stabilisation_copter->pos_est->vel_bf[X])<0.001f)&&(maths_f_abs(stabilisation_copter->pos_est->vel_bf[Y])<0.001f))
-			{
-				rel_heading_coordinated = 0.0f;
-			}
-			else
-			{
-				rel_heading_coordinated = atan2(stabilisation_copter->pos_est->vel_bf[Y], stabilisation_copter->pos_est->vel_bf[X]);
-			}
-			
-			float w = 0.5f * (maths_sigmoid(vectors_norm(stabilisation_copter->pos_est->vel_bf)-stabilisation_copter->stabiliser_stack.yaw_coordination_velocity) + 1.0f);
-			input.rpy[YAW] = (1.0f - w) * input.rpy[YAW] + w * rel_heading_coordinated;
-		}
 
-		rpyt_errors[YAW]= input.rpy[YAW];
-		
-		// run PID update on all velocity controllers
-		stabilisation_run(&stabilisation_copter->stabiliser_stack.velocity_stabiliser, stabilisation_copter->imu->dt, rpyt_errors);
-		
-		//velocity_stabiliser.output.thrust = maths_f_min(velocity_stabiliser.output.thrust,stabilisation_param.controls->thrust);
-		stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.thrust += stabilisation_copter->thrust_hover_point;
-		stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.theading = input.theading;
-		input = stabilisation_copter->stabiliser_stack.velocity_stabiliser.output;
-		
+		for ( i=0; i<4; ++i)
+		{
+			rpyt_errors[i] = 0.0f;
+		}
+		lab_d_run_PID(rpyt_errors, input.tvel, stabilisation_copter->pos_est->vel, &stabilisation_copter->stabiliser_stack.velocity_stabiliser, stabilisation_copter->imu->dt);
+
 		qtmp=quaternions_create_from_vector(stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.rpy);
-		//quat_t rpy_local = quaternions_global_to_local(stabilisation_copter->ahrs->qe, qtmp);
-		
 		quat_t rpy_local;
 		quaternions_rotate_vector(quaternions_inverse(q_rot), qtmp.v, rpy_local.v);
 
-		input.rpy[ROLL] = rpy_local.v[Y];
-		input.rpy[PITCH] = -rpy_local.v[X];
+		input.yaw_mode = stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.yaw_mode;
+		input.control_mode = stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.control_mode;
+
+		lab_d_velocity_to_attitude(input.rpy, &input.thrust, rpy_local.v, stabilisation_copter->stabiliser_stack.velocity_stabiliser.output.thrust, stabilisation_copter->thrust_hover_point);
 
 		if ((!stabilisation_copter->pos_est->gps->healthy)||(stabilisation_copter->pos_est->state->out_of_fence_2))
 		{
 			input.rpy[ROLL] = 0.0f;
 			input.rpy[PITCH] = 0.0f;
 		}
-
-		//input.thrust = stabilisation_copter->controls->tvel[Z];
 		
 	// -- no break here  - we want to run the lower level modes as well! -- 
 	
