@@ -117,16 +117,6 @@ typedef struct
 bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, stabilisation_copter_conf_t* stabiliser_conf, control_command_t* controls, const imu_t* imu, const ahrs_t* ahrs, const position_estimation_t* pos_est,servos_t* servos);
 
 /**
- * \brief							Main Controller for controlling and stabilizing the quad in position (not using velocity control)
- *
- * \param	stabilisation_copter	The stabilisation structure
- * \param	input					The control command structure
- * \param	waypoint_handler		The waypoint handler structure, to get hold_position coordinates
- * \param	position_estimation		The position estimator structure to compute position error
- */
-void stabilisation_copter_position_hold(stabilisation_copter_t* stabilisation_copter, const control_command_t* input, const mavlink_waypoint_handler_t* waypoint_handler, const position_estimation_t* position_estimation);
-
-/**
  * \brief							Main Controller for controlling and stabilizing the quad
  *
  * \param	stabilisation_copter	The stabilisation structure
