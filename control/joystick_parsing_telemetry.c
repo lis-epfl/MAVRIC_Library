@@ -71,7 +71,7 @@ static void joystick_parsing_telemetry_parse_msg(joystick_parsing_t *joystick_pa
 		joystick_parsing->channels.x = packet.x / 1000.0f;
 		joystick_parsing->channels.y = packet.y / 1000.0f;
 		joystick_parsing->channels.r = packet.r / 1000.0f;
-		joystick_parsing->channels.z = packet.z / 1000.0f;
+		joystick_parsing->channels.z = 2.0f * (packet.z / 1000.0f - 0.5f);
 		
 		joystick_parsing_button_mask(joystick_parsing,packet.buttons);
 	}
