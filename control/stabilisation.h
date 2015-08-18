@@ -88,7 +88,6 @@ typedef struct
  * \brief	The structure used to control the vehicle with 4 PIDs
  */
 typedef struct {
-	control_command_t input;
 	pid_controller_t rpy_controller[3];			///< roll pitch yaw  controllers
 	pid_controller_t thrust_controller;			///< thrust controller
 	control_command_t output;					///< output
