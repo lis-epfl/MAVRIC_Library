@@ -83,13 +83,13 @@ void stabilisation_gimbal(stabilisation_copter_t* stabilisation_copter)
 void gimbal_stabilisation_mix_to_servos_quad(control_command_t *control, servos_t* servos)
 {
 	int32_t i;
-	float gimbal_servo_command[3]; //only gimbal stabilisation in pitch and yaw
+	float gimbal_servo_command[3]; //only gimbal stabilization in pitch and yaw
 	
 	gimbal_servo_command[GIMBAL_SERVO_PITCH]	= control->gimbal_rpy[PITCH];
 	gimbal_servo_command[GIMBAL_SERVO_YAW]		= control->gimbal_rpy[YAW];
 	
 	for (i=4; i<6; i++)
 	{ 
-		servos_set_value( servos, i, gimbal_servo_command[i-4]); //min -1.0 max 1.0 (use full capacity angle of the servo)
+		servos_set_value( servos, i, gimbal_servo_command[i-4]);
 	}
 }

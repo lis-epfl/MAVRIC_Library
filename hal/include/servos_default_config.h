@@ -52,6 +52,7 @@
 
 static const servo_entry_t servo_entry_default_standard =
 {
+	.type_name		= SERVO_ESC,
 	.value 			= 0.0f,
 	.trim 			= 0.0f,
 	.min 			= -1.0f,
@@ -63,6 +64,7 @@ static const servo_entry_t servo_entry_default_standard =
 
 static const servo_entry_t servo_entry_default_esc =
 {
+	.type_name		= SERVO_ESC,
 	.value 			= 0.0f,
 	.trim 			= 0.0f,
 	.min 			= -0.9f,
@@ -74,6 +76,7 @@ static const servo_entry_t servo_entry_default_esc =
 
 static const servo_entry_t servo_entry_default_custom =
 {
+	.type_name		= SERVO_STD,
 	.value 			= 0.0f,
 	.trim 			= 0.0f,
 	.min 			= -0.0f,
@@ -82,12 +85,26 @@ static const servo_entry_t servo_entry_default_custom =
 	.repeat_freq 	= 50,
 };
 
+
+static const servo_entry_t servo_entry_gimbal =
+{
+	.type_name		= SERVO_GIMBAL,
+	.value 			= 0.0f,
+	.trim 			= 0.0f,
+	.min 			= -1.0f,
+	.max 			= 1.0f,
+	.failsafe 		= 0.0f,
+	.repeat_freq 	= 50,
+};
+
+
 servos_conf_t servos_default_config =
 {
-	.servos_count = 6,
+	.servos_count = 4,
 	.servo =
 	{
 		{ //servo_entry_default_esc
+			.type_name		= SERVO_ESC,
 			.value 			= 0.0f,
 			.trim 			= 0.0f,
 			.min 			= -0.9f,
@@ -96,6 +113,7 @@ servos_conf_t servos_default_config =
 			.repeat_freq 	= 200,
 		},
 		{ //servo_entry_default_esc
+			.type_name		= SERVO_ESC,
 			.value 			= 0.0f,
 			.trim 			= 0.0f,
 			.min 			= -0.9f,
@@ -104,6 +122,7 @@ servos_conf_t servos_default_config =
 			.repeat_freq 	= 200,
 		},
 		{ //servo_entry_default_esc
+			.type_name		= SERVO_ESC,
 			.value 			= 0.0f,
 			.trim 			= 0.0f,
 			.min 			= -0.9f,
@@ -112,6 +131,7 @@ servos_conf_t servos_default_config =
 			.repeat_freq 	= 200,
 		},
 		{ //servo_entry_default_esc
+			.type_name		= SERVO_ESC,
 			.value 			= 0.0f,
 			.trim 			= 0.0f,
 			.min 			= -0.9f,
@@ -119,22 +139,6 @@ servos_conf_t servos_default_config =
 			.failsafe 		= -1.1f,
 			.repeat_freq 	= 200,
 		},
-		{ //servo_entry_default_esc Gimbal Pitch 
-			.value 			= 0.0f,
-			.trim 			= 0.0f,
-			.min 			= -1.0f,
-			.max 			= 1.0f,
-			.failsafe 		= 0.0f,
-			.repeat_freq 	= 50,
-		},
-		{ //servo_entry_default_esc Gimbal Yaw
-			.value 			= 0.0f,
-			.trim 			= 0.0f,
-			.min 			= -1.0f,
-			.max 			= 1.0f,
-			.failsafe 		= 0.0f,
-			.repeat_freq 	= 50,
-		}
 	},
 };
 

@@ -47,6 +47,10 @@
 #include "stabilisation.h"
 #include "stabilisation_copter.h"
 
+#ifdef __cplusplus
+extern "C" {
+	#endif
+	
 /**
  * \brief	Function to send the MAVLink gimbal roll, pitch, yaw angles setpoints message
  *
@@ -64,11 +68,6 @@ void gimbal_stabilisation_telemetry_send_rpy_setpoint(const stabilisation_copter
  * \param	msg						The pointer to the MAVLink message
  */
 void gimbal_stabilisation_telemetry_send_rpy_output(const stabiliser_t* stabiliser, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
-
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 
 #ifdef __cplusplus
