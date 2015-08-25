@@ -32,6 +32,7 @@
 /*******************************************************************************
  * \file stabilisation_telemetry.c
  * 
+ * \author MAV'RIC Team
  * \author Alexandre Cherpillod
  *   
  * \brief This module takes care of sending periodic telemetric messages for

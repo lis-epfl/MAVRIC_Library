@@ -32,6 +32,7 @@
 /*******************************************************************************
  * \file stabilisation_copter.h
  * 
+ * \author MAV'RIC Team
  * \author Alexandre Cherpillod
  *   
  * \brief This file handles the stabilization of the gimbal

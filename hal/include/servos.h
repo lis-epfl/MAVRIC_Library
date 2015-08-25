@@ -114,6 +114,12 @@ void servos_set_value(servos_t* servos, uint32_t servo_id, float value);
  */
 void servos_set_value_failsafe(servos_t* servos);
 
+/**
+ * \brief Sets the servos except the ones for the gimbal to failsafe value
+ * 
+ * \param	servos		Pointer to the servo_t struct
+ */
+void servos_wo_gimbal_set_value_failsafe(servos_t* servos);
 
 #ifdef __cplusplus
 	}

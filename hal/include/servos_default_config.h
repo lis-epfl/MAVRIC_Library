@@ -124,16 +124,16 @@ servos_conf_t servos_default_config =
 			.trim 			= 0.0f,
 			.min 			= -1.0f,
 			.max 			= 1.0f,
-			.failsafe 		= -1.1f,
-			.repeat_freq 	= 200,
+			.failsafe 		= 0.0f,
+			.repeat_freq 	= 50,
 		},
 		{ //servo_entry_default_esc Gimbal Yaw
 			.value 			= 0.0f,
 			.trim 			= 0.0f,
 			.min 			= -1.0f,
 			.max 			= 1.0f,
-			.failsafe 		= -1.1f,
-			.repeat_freq 	= 200,
+			.failsafe 		= 0.0f,
+			.repeat_freq 	= 50,
 		}
 	},
 };
