@@ -126,7 +126,7 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 	int32_t i;
 	quat_t qtmp, q_rot;
 	aero_attitude_t attitude_yaw_inverse;
-	
+
 	// set the controller input
 	input= *stabilisation_copter->controls;
 	switch (stabilisation_copter->controls->control_mode) 
@@ -188,6 +188,13 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 		
 		input.rpy[ROLL] = rpy_local.v[Y];
 		input.rpy[PITCH] = -rpy_local.v[X];
+
+		if ((!stabilisation_copter->pos_est->gps->healthy)||(stabilisation_copter->pos_est->state->out_of_fence_2))
+		{
+			input.rpy[ROLL] = 0.0f;
+			input.rpy[PITCH] = 0.0f;
+		}
+
 		//input.thrust = stabilisation_copter->controls->tvel[Z];
 		
 	// -- no break here  - we want to run the lower level modes as well! -- 
