@@ -586,7 +586,7 @@ static void waypoint_handler_set_swarm_scenario(mavlink_waypoint_handler_t* wayp
 	}
 	else
 	{
-		if ((float)abs(waypoint_handler->mavlink_stream->sysid%num_of_vhc - (num_of_vhc/2.0f)) == (num_of_vhc/2.0f))
+		if (maths_f_abs(waypoint_handler->mavlink_stream->sysid%num_of_vhc - (num_of_vhc/2.0f)) == (num_of_vhc/2.0f))
 		{
 			waypoint_transfo.pos[X] = - lateral_dist;
 			waypoint_transfo.pos[Y] = 0.0f;
@@ -649,7 +649,7 @@ static void waypoint_handler_set_swarm_scenario(mavlink_waypoint_handler_t* wayp
 	}
 	else
 	{
-		if ((float)abs(waypoint_handler->mavlink_stream->sysid%num_of_vhc - (num_of_vhc/2.0f)) == (num_of_vhc/2.0f))
+		if (maths_f_abs(waypoint_handler->mavlink_stream->sysid%num_of_vhc - (num_of_vhc/2.0f)) == (num_of_vhc/2.0f))
 		{
 			waypoint_transfo.pos[X] = lateral_dist;
 			waypoint_transfo.pos[Y] = 0.0f;
