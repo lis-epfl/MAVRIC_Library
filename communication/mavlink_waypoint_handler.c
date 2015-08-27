@@ -344,7 +344,6 @@ static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handle
 	float altitude = -packet->param4;
 	
 	float x;
-	float y;
 	
 	waypoint_struct_t waypoint;
 	
@@ -396,7 +395,7 @@ static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handle
 		waypoint.param1 = 2.0f; // Hold time in decimal seconds
 		waypoint.param2 = 4.0f; // Acceptance radius in meters
 		waypoint.param3 = 0.0f; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-		waypoint.param4 = maths_rad_to_deg(maths_calc_smaller_angle(PI + atan2(y,x))); // Desired yaw angle at MISSION (rotary wing)
+		waypoint.param4 = maths_rad_to_deg(maths_calc_smaller_angle(PI + atan2(waypoint_transfo.pos[Y],waypoint_transfo.pos[X]))); // Desired yaw angle at MISSION (rotary wing)
 	
 		waypoint_handler->waypoint_list[i] = waypoint;
 	}
