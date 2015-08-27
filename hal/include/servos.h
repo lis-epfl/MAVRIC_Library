@@ -61,7 +61,7 @@
  */
 typedef struct
 {
-	uint32_t type_name;		///< Name of the servo (ESC, GIMBAL)
+	uint32_t type_name;		///< Name of the servo (ESC, GIMBAL, STD)
 	float value;			///< Normalized value of the servo (between -1 and 1)
 	float trim;				///< Trim value (between -1 and 1)
 	float min;				///< Minimum value (between -1 and 1)
