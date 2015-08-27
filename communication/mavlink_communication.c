@@ -128,7 +128,7 @@ static void mavlink_communication_toggle_telemetry_stream(scheduler_t* scheduler
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream)
+bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream, const state_t* state)
 {
 	bool init_success = true;
 	
@@ -150,6 +150,7 @@ bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 	init_success &= onboard_parameters_init(	&mavlink_communication->onboard_parameters, 
 												&config->onboard_parameters_config, 
 												&mavlink_communication->scheduler,
+												state,
 												&mavlink_communication->message_handler,
 												&mavlink_communication->mavlink_stream); 
 
