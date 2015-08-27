@@ -252,7 +252,7 @@ void print_util_putfloat(byte_stream_t *out_stream, float c, int32_t after_digit
 		print_util_putstring(out_stream, "");
 	}
 
-	int32_t whole = abs((int32_t)num);
+	int32_t whole = (int32_t)(maths_f_abs(num));
 	float after = (num-(float)whole);
 
 	putnum_tight(out_stream, whole, 10);
