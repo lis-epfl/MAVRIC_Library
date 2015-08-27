@@ -52,13 +52,16 @@
 #include "scheduler.h"
 
 #define MAX_SERVO_COUNT 8		///< Maximum number of servos available
-
+#define SERVO_ESC		0		///< Servo used for the ESCs
+#define SERVO_GIMBAL	1		///< Servo used for the gimbal
+#define SERVO_STD		2		///< Servo used for standard use
 
 /**
  * \brief Define the servos entry structure
  */
 typedef struct
 {
+	uint32_t type_name;		///< Name of the servo (ESC, GIMBAL, STD)
 	float value;			///< Normalized value of the servo (between -1 and 1)
 	float trim;				///< Trim value (between -1 and 1)
 	float min;				///< Minimum value (between -1 and 1)
@@ -113,7 +116,6 @@ void servos_set_value(servos_t* servos, uint32_t servo_id, float value);
  * \param	servos		Pointer to the servo_t struct
  */
 void servos_set_value_failsafe(servos_t* servos);
-
 
 #ifdef __cplusplus
 	}
