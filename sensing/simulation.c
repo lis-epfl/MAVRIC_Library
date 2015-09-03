@@ -464,7 +464,7 @@ void simulation_simulate_sonar(simulation_model_t *sim)
 	{
 		dt = (time_keeper_get_micros() - sim->sonar->last_update)/1000000.0f;
 		velocity = (distance_m - sim->sonar->current_distance)/dt;
-		if (abs(velocity) > 20.0f)
+		if (maths_f_abs(velocity) > 20.0f)
 		{
 			velocity = 0.0f;
 		}
