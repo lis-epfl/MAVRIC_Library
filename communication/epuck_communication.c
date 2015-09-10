@@ -51,12 +51,27 @@ void epuck_communication_init(epuck_communication_t* epuck_communication, const 
 	uart_int_set_usart_conf(UID, &usart_conf_epuck);
 	
 	uart_int_init(UID);
-	buffer_make_buffered_stream(&(epuck_communication->epuck_buffer), (epuck_communication->mavlink_stream.rx));
-	uart_int_register_read_stream(uart_int_get_uart_handle(UID), (epuck_communication->mavlink_stream.rx));
-	uart_int_register_write_stream(uart_int_get_uart_handle(UID), (epuck_communication->mavlink_stream.tx));
+	buffer_make_buffered_stream(&(epuck_communication->uart_buffer_in), &(epuck_communication->uart_stream_in));
+	buffer_make_buffered_stream(&(epuck_communication->uart_buffer_out), &(epuck_communication->uart_stream_out));
+	uart_int_register_read_stream(uart_int_get_uart_handle(UID), &(epuck_communication->uart_stream_in));
+	uart_int_register_write_stream(uart_int_get_uart_handle(UID), &(epuck_communication->uart_stream_out));
 	
 	//init dependencies
 	epuck_communication->remote = remote;
+	
+	//init stream
+	// Init MAVLink stream
+	// TODO: find a way to use mavlink_communication_default_config.mavlink_stream_config instead
+	mavlink_stream_conf_t mavlink_stream_conf =
+	{
+		.sysid       = 1,
+		.compid      = 50,
+		.use_dma     = false
+	};
+	mavlink_stream_init(	&(epuck_communication->mavlink_stream),
+							&mavlink_stream_conf,
+							&(epuck_communication->uart_stream_in),
+							&(epuck_communication->uart_stream_out));
 }
 
 

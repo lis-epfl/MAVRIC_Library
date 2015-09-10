@@ -56,15 +56,21 @@ extern "C" {
 typedef struct 
 {
 	mavlink_stream_t 	mavlink_stream;		///< Mavlink interface using streams
-	buffer_t			epuck_buffer;		///< Buffer to store epuck stuff
+	byte_stream_t		uart_stream_in;		///< stream from Epuck
+	byte_stream_t		uart_stream_out;	///< stream towards Epuck
+	buffer_t			uart_buffer_in;		///< buffer for messages received from Epuck
+	buffer_t			uart_buffer_out;	///< buffer for messages to sent towards Epuck
+	
 	const remote_t*		remote;				///< Pointer to the remote structure
 } epuck_communication_t;
 
 /**
  * \brief						Initialize the epuck comm module
  *
+ * \param epuck_communication	Pointer to the epuck communication structure
+ * \param remote				Pointer to the remote structure
  * \param UID					UART ID from UART0 to UART4
- * \param usart_conf_console
+ * \param usart_conf_epuck		Uart configuration to talk to the epuck
  */
 void epuck_communication_init(epuck_communication_t* epuck_communication, const remote_t* remote, int32_t UID, usart_config_t usart_conf_epuck);
 
