@@ -1438,21 +1438,21 @@ static void ubx_send_header(gps_t *gps, uint8_t msg_class, uint8_t msg_id, uint1
 	header.msg_id_header    = msg_id;
 	header.length			= size;
 	
-	print_util_putnum(&gps->gps_stream_out,header.preamble1,16);
-	print_util_putnum(&gps->gps_stream_out,header.preamble2,16);
-	print_util_putnum(&gps->gps_stream_out,header.msg_class,10);
-	print_util_putnum(&gps->gps_stream_out,header.msg_id_header,16);
-	
-	print_util_putnum(&gps->gps_stream_out,(uint8_t) endian_lower_bytes_uint16(header.length),16);
-	print_util_putnum(&gps->gps_stream_out,(uint8_t) endian_higher_bytes_uint16(header.length),16);
+	gps->gps_stream_out.put(gps->gps_stream_out.data,header.preamble1);
+	gps->gps_stream_out.put(gps->gps_stream_out.data,header.preamble2);
+	gps->gps_stream_out.put(gps->gps_stream_out.data,header.msg_class);
+	gps->gps_stream_out.put(gps->gps_stream_out.data,header.msg_id_header);
+
+	gps->gps_stream_out.put(gps->gps_stream_out.data,endian_lower_bytes_uint16(header.length));
+	gps->gps_stream_out.put(gps->gps_stream_out.data,endian_higher_bytes_uint16(header.length));
 	
 }
 
 
 static void ubx_send_cksum(gps_t *gps, uint8_t ck_sum_a, uint8_t ck_sum_b)
 {
-	print_util_putnum(&gps->gps_stream_out,ck_sum_a,16);
-	print_util_putnum(&gps->gps_stream_out,ck_sum_b,16);
+	gps->gps_stream_out.put(gps->gps_stream_out.data,ck_sum_a);
+	gps->gps_stream_out.put(gps->gps_stream_out.data,ck_sum_b);
 }
 
 
@@ -1472,22 +1472,27 @@ static void ubx_send_message_CFG_nav_rate(gps_t *gps, uint8_t msg_class, uint8_t
 	
 	data = endian_lower_bytes_uint16(msg.measure_rate_ms);
 	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-	print_util_putnum(&gps->gps_stream_out, data, 16);
+	gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 	data = endian_higher_bytes_uint16(msg.measure_rate_ms);
 	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-	print_util_putnum(&gps->gps_stream_out, data, 16);
+	gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+	
 	data = endian_lower_bytes_uint16(msg.nav_rate);
 	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-	print_util_putnum(&gps->gps_stream_out, data, 16);
+	gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+	
 	data = endian_higher_bytes_uint16(msg.nav_rate);
 	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-	print_util_putnum(&gps->gps_stream_out, data, 16);
+	gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+	
 	data = endian_lower_bytes_uint16(msg.timeref);
 	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-	print_util_putnum(&gps->gps_stream_out, data, 16);
+	gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+	
 	data = endian_higher_bytes_uint16(msg.timeref);
 	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-	print_util_putnum(&gps->gps_stream_out, data, 16);
+	gps->gps_stream_out.put(gps->gps_stream_out.data,data);
 	
 	ubx_send_cksum(gps, ck_a,ck_b);
 }
@@ -1510,112 +1515,147 @@ static void ubx_send_message_nav_settings(gps_t *gps, uint8_t msg_class, uint8_t
 		
 		data = endian_lower_bytes_uint16(engine_settings->mask);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_higher_bytes_uint16(engine_settings->mask);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = engine_settings->dyn_model;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = engine_settings->fix_mode;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_lower_bytes_uint32(engine_settings->fixed_alt);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_mid_lower_bytes_uint32(engine_settings->fixed_alt);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_mid_higher_bytes_uint32(engine_settings->fixed_alt);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_higher_bytes_uint32(engine_settings->fixed_alt);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_lower_bytes_uint32(engine_settings->fixed_alt_var);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_mid_lower_bytes_uint32(engine_settings->fixed_alt_var);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_mid_higher_bytes_uint32(engine_settings->fixed_alt_var);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_higher_bytes_uint32(engine_settings->fixed_alt_var);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = engine_settings->min_elev;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = engine_settings->dr_limit;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_lower_bytes_uint16(engine_settings->p_dop);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_higher_bytes_uint16(engine_settings->p_dop);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_lower_bytes_uint16(engine_settings->t_dop);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_higher_bytes_uint16(engine_settings->t_dop);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_lower_bytes_uint16(engine_settings->p_acc);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_higher_bytes_uint16(engine_settings->p_acc);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_lower_bytes_uint16(engine_settings->t_acc);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_higher_bytes_uint16(engine_settings->t_acc);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = engine_settings->static_hold_thresh;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = engine_settings->dgps_timeout;
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_lower_bytes_uint32(engine_settings->res2);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_mid_lower_bytes_uint32(engine_settings->res2);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_mid_higher_bytes_uint32(engine_settings->res2);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_higher_bytes_uint32(engine_settings->res2);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_lower_bytes_uint32(engine_settings->res3);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_mid_lower_bytes_uint32(engine_settings->res3);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_mid_higher_bytes_uint32(engine_settings->res3);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_higher_bytes_uint32(engine_settings->res3);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_lower_bytes_uint32(engine_settings->res4);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_mid_lower_bytes_uint32(engine_settings->res4);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_mid_higher_bytes_uint32(engine_settings->res4);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
+
 		data = endian_higher_bytes_uint32(engine_settings->res4);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
-		print_util_putnum(&gps->gps_stream_out, data, 16);
+		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
 	}
 	
 	ubx_send_cksum(gps, ck_a,ck_b);
@@ -1640,9 +1680,9 @@ static void ubx_configure_message_rate(gps_t *gps, uint8_t msg_class, uint8_t ms
 	
 	ubx_send_header(gps, UBX_CLASS_CFG,MSG_CFG_SET_RATE,sizeof(msg));
 	
-	print_util_putnum(&gps->gps_stream_out,msg.msg_class,16);
-	print_util_putnum(&gps->gps_stream_out,msg.msg_id_rate,16);
-	print_util_putnum(&gps->gps_stream_out,msg.rate,16);
+	gps->gps_stream_out.put(gps->gps_stream_out.data,msg.msg_class);
+	gps->gps_stream_out.put(gps->gps_stream_out.data,msg.msg_id_rate);
+	gps->gps_stream_out.put(gps->gps_stream_out.data,msg.rate);
 	
 	ubx_send_cksum(gps, ck_a,ck_b);
 }
