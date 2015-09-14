@@ -215,20 +215,6 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 					print_util_dbg_print("GPS dt is too small!\r\n");
 				}
 				
-				// compute GPS velocity estimate
-				gps_dt = (local_coordinates.timestamp_ms - pos_est->last_gps_pos.timestamp_ms) / 1000.0f;
-				if (gps_dt > 0.001f)
-				{
-					for (i = 0; i < 3; i++)
-					{
-						pos_est->last_vel[i] = (local_coordinates.pos[i] - pos_est->last_gps_pos.pos[i]) / gps_dt;
-					}
-				}
-				else
-				{
-					print_util_dbg_print("GPS dt is too small!\r\n");
-				}
-				
 				pos_est->last_gps_pos = local_coordinates;
 				
 				pos_est->pos_extrapolate = pos_est->last_gps_pos;
