@@ -47,9 +47,9 @@
 #include "buffer.h"
 #include "time_keeper.h"
 
-uint8_t  **ubx_current_message = 0;		///<  The pointer to the pointer to the structure of the current message to fill
-uint8_t  ** ubx_last_message = 0;		///<  The pointer to the pointer to the structure of the last message received of the same type than the current one being received (for exchange at the end)
-uint16_t * ubx_valid_message = 0;		///<  The pointer to the number to increment when a message of the type has been received
+uint8_t  **ubx_current_message = 0;					///<  The pointer to the pointer to the structure of the current message to fill
+uint8_t  ** ubx_last_message = 0;					///<  The pointer to the pointer to the structure of the last message received of the same type than the current one being received (for exchange at the end)
+uint16_t * ubx_valid_message = 0;					///<  The pointer to the number to increment when a message of the type has been received
 
 // We are using two buffers for each message, one for the last message received, the other for the message being received (not complete)
 ubx_nav_pos_llh_t ubx_pos_llh_message[2];			///<  The Posllh message buffer
@@ -64,6 +64,7 @@ ubx_mon_rxr_struct_t ubx_mon_rxr_message[2];		///<  The MON RXR message buffer
 ubx_tim_tp_t ubx_tim_tp_message[2];					///<  The TIM TP message buffer
 ubx_tim_vrfy_t ubx_tim_vrfy_message[2];				///<  The TIM VRFY message buffer
 ubx_nav_timeutc_t ubx_nav_timeutc_message[2];		///<  The NAV TIMEUTC message buffer
+ubx_ack_t ubx_ack_message[2];						///< The ACK ACK message buffer
 
 // NAV-POSLLH
 ubx_nav_pos_llh_t * ubx_current_pos_llh_message = &ubx_pos_llh_message[0];						///<  The pointer to the Posllh message that is being filled (not usable)
@@ -122,8 +123,12 @@ uint16_t ubx_number_of_valid_tim_vrfy_message = 0;												///<  Number of va
 
 // NAV-TIMEUTC
 ubx_nav_timeutc_t *ubx_current_nav_timeutc_message = &ubx_nav_timeutc_message[0];				///<  The pointer to the NAV TIMEUTC message that is being filled (not usable)
-ubx_nav_timeutc_t *ubx_last_nav_timeutc_message = &ubx_nav_timeutc_message[0];					///<  The pointer to the last NAV TIMEUTC message that was completed
+ubx_nav_timeutc_t *ubx_last_nav_timeutc_message = &ubx_nav_timeutc_message[1];					///<  The pointer to the last NAV TIMEUTC message that was completed
 uint16_t ubx_number_of_valid_nav_timeutc_message = 0;											///<  Number of valid NAV TIMEUTC message received
+
+ubx_ack_t *ubx_current_ack_message = &ubx_ack_message[0];										///< The pointer to the ACK ACK message that is being filled (not usable)
+ubx_ack_t *ubx_last_ack_message = &ubx_ack_message[1];											///< The pointer to the last ACK ACK message that was completed
+uint16_t ubx_number_of_valid_ack_message = 0;													///< Number of valid ACK message received
 
 // The date is defined as global parameter such that we can retrieve its value 
 //  without the need of pointers, e.g. when working with fat_fs, in diskio function
@@ -138,7 +143,7 @@ date_time_t date;
  * \brief	Reset the gps U-Blox module
  *
  * \param	gps						Pointer to the GPS structure
- * \param	_gps->engine_nav_setting		the GPS Nav settings 
+ * \param	engine_nav_setting		the GPS Nav settings 
  */
 static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t engine_nav_setting);
 
@@ -410,14 +415,21 @@ static ubx_tim_vrfy_t * ubx_get_tim_vrfy(void);
 */
 static ubx_nav_timeutc_t * ubx_get_nav_timeutc(void);
 
+/**
+* \brief	This function returns a pointer to the last ACK message that was received
+* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
+*
+* \return	A pointer to the last valid status message, or 0.
+*/
+static ubx_ack_t * ubx_get_ack(void);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
 static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t engine_nav_setting)
 {
-	//TODO check before uncommenting
-	//gps_ublox_configure_gps(gps);
+	gps_ublox_configure_gps(gps);
 	
 	gps->next_fix = false;
 	gps->have_raw_velocity = false;
@@ -795,7 +807,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print_num(gps->msg_id,16);
 								print_util_dbg_print(" of size ");
 								print_util_dbg_print_num(gps->payload_length,10);
-								print_util_dbg_print(" should be :");
+								print_util_dbg_print(" should be : 0x");
 								print_util_dbg_print_num(MSG_MON_RXR,16);
 								print_util_dbg_print("\r\n");
 							}
@@ -863,8 +875,54 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print_num(gps->msg_id,16);
 								print_util_dbg_print(" of size ");
 								print_util_dbg_print_num(gps->payload_length,10);
-								print_util_dbg_print(" should be :");
+								print_util_dbg_print(" should be : 0x");
 								print_util_dbg_print_num(MSG_TIM_TP,16);
+								print_util_dbg_print("\r\n");
+							}
+							goto reset;
+					}
+				}
+				else if (gps->ubx_class == UBX_CLASS_ACK)
+				{
+					switch(gps->msg_id)
+					{
+						case MSG_ACK_ACK:
+						case MSG_ACK_NACK:
+							if (gps->payload_length == UBX_SIZE_ACK)
+							{
+								ubx_current_message = (uint8_t **)&ubx_current_ack_message;
+								ubx_last_message = (uint8_t **)&ubx_last_ack_message;
+								ubx_valid_message = &ubx_number_of_valid_ack_message;
+							}
+							else
+							{
+								print_util_dbg_print("Wrong ACK message 0x");
+								print_util_dbg_print_num(gps->ubx_class,16);
+								print_util_dbg_print(" Msg id: 0x");
+								print_util_dbg_print_num(gps->msg_id,16);
+								print_util_dbg_print(" Received size:");
+								print_util_dbg_print_num(gps->payload_length,10);
+								print_util_dbg_print(" should be:");
+								print_util_dbg_print_num(UBX_SIZE_ACK,10);
+								print_util_dbg_print("\r\n");
+								gps->step = 0;
+								goto reset;
+							}
+							break;
+						default:
+							gps->step = 0;
+							if (gps->debug)
+							{
+								print_util_dbg_print("Unexpected ACK message, Class: 0x");
+								print_util_dbg_print_num(gps->ubx_class,16);
+								print_util_dbg_print(", msg id: 0x");
+								print_util_dbg_print_num(gps->msg_id,16);
+								print_util_dbg_print(" of size ");
+								print_util_dbg_print_num(gps->payload_length,10);
+								print_util_dbg_print(" should be : 0x");
+								print_util_dbg_print_num(MSG_ACK_ACK,16);
+								print_util_dbg_print(", or : 0x");
+								print_util_dbg_print_num(MSG_ACK_NACK,16);
 								print_util_dbg_print("\r\n");
 							}
 							goto reset;
@@ -964,8 +1022,24 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 
 	if (ubx_class == UBX_CLASS_ACK)
 	{
-		print_util_dbg_print_num(msg_id,10);
-		print_util_dbg_print("\r\n");
+		ubx_ack_t *gps_ack = ubx_get_ack();
+		if (gps_ack)
+		{
+			print_util_dbg_print("Acknowledge answer for class: 0x");
+			print_util_dbg_print_num(gps_ack->class_id,16);
+			print_util_dbg_print(", and msg id: 0x");
+			print_util_dbg_print_num(gps_ack->msg_id,16);
+			print_util_dbg_print("=>");
+			if (msg_id)
+			{
+				print_util_dbg_print("Acknowledged");
+			}
+			else
+			{
+				print_util_dbg_print("Not acknowledged");
+			}
+			print_util_dbg_print("\r\n");
+		}
 		return false;
 	}
  	if (ubx_class == UBX_CLASS_MON)
@@ -1032,24 +1106,59 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 		*/
 		if(gps_nav_settings)
 		{
-			print_util_dbg_print("Got engine settings ");
-			print_util_dbg_print_num(gps_nav_settings->dyn_model,16);
-			print_util_dbg_print("\r\n");
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Got engine settings ");
+				print_util_dbg_print_num(gps_nav_settings->dyn_model,10);
+				print_util_dbg_print(", fix_mode:");
+				print_util_dbg_print_num(gps_nav_settings->fix_mode,10);
+				print_util_dbg_print(", fixed_alt:");
+				print_util_dbg_print_num(gps_nav_settings->fixed_alt,10);
+				print_util_dbg_print(", fixed_alt_var:");
+				print_util_dbg_print_num(gps_nav_settings->fixed_alt_var,10);
+				print_util_dbg_print(", min_elev:");
+				print_util_dbg_print_num(gps_nav_settings->min_elev,10);
+				print_util_dbg_print(", dr_limit:");
+				print_util_dbg_print_num(gps_nav_settings->dr_limit,10);
+				print_util_dbg_print(", p_dop:");
+				print_util_dbg_print_num(gps_nav_settings->p_dop,10);
+				print_util_dbg_print(", t_dop:");
+				print_util_dbg_print_num(gps_nav_settings->t_dop,10);
+				print_util_dbg_print(", p_acc:");
+				print_util_dbg_print_num(gps_nav_settings->p_acc,10);
+				print_util_dbg_print(", t_acc:");
+				print_util_dbg_print_num(gps_nav_settings->t_acc,10);
+				print_util_dbg_print(", static_hold_thresh:");
+				print_util_dbg_print_num(gps_nav_settings->static_hold_thresh,10);
+				print_util_dbg_print(", dgps_timeout:");
+				print_util_dbg_print_num(gps_nav_settings->dgps_timeout,10);
+				print_util_dbg_print("\r\n");
+			}
 		}
 		else
 		{
-			if (gps->engine_nav_setting != GPS_ENGINE_NONE && !gps_nav_settings)
+			if (gps->engine_nav_setting != GPS_ENGINE_NONE)
 			{
 				if(gps_nav_settings->dyn_model != gps->engine_nav_setting)
 				{
+					// Here we change only the dynamic model, all the other parameters are the ones from the GPS
 					gps->nav_settings.dyn_model = gps->engine_nav_setting;
-					print_util_dbg_print("Send Nav settings");
+					if (gps->print_nav_on_debug)
+					{
+						print_util_dbg_print("Send Nav settings");
+					}
 					ubx_send_message_nav_settings(gps, UBX_CLASS_CFG, MSG_CFG_NAV_SETTINGS, &gps->nav_settings, sizeof(gps->nav_settings));
 				}				
 			}
-			print_util_dbg_print("No engine settings received ");
-			print_util_dbg_print_num(msg_id,16);
-			print_util_dbg_print("\r\n");
+			else
+			{
+				if (gps->print_nav_on_debug)
+				{
+					print_util_dbg_print("No engine settings received ");
+					print_util_dbg_print_num(msg_id,16);
+					print_util_dbg_print("\r\n");
+				}
+			}	
 		}
 		return false;
 	}
@@ -1061,11 +1170,14 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 		
 		if (gps_msg_rate)
 		{
-			print_util_dbg_print("Message CFG Rate 0x");
-			print_util_dbg_print_num(gps_msg_rate->msg_class,16);
-			print_util_dbg_print_num(gps_msg_rate->msg_id_rate,16);
-			print_util_dbg_print_num(gps_msg_rate->rate,10);
-			print_util_dbg_print("\r\n");
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Message CFG Rate 0x");
+				print_util_dbg_print_num(gps_msg_rate->msg_class,16);
+				print_util_dbg_print_num(gps_msg_rate->msg_id_rate,16);
+				print_util_dbg_print_num(gps_msg_rate->rate,10);
+				print_util_dbg_print("\r\n");
+			}
 		}		
 		return false;
 	}
@@ -1269,10 +1381,17 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 			
 			if (gps_sv_info)
 			{
-				if (gps->print_nav_on_debug)
+				++gps->loop_sv_info;
+				gps->loop_sv_info %= gps->num_skipped_msg;
+				if (gps->print_nav_on_debug && (gps->loop_sv_info == 0))
 				{
 					print_util_dbg_print("MSG_NAV_SVINFO, num_channel:");
 					print_util_dbg_print_num(gps_sv_info->num_ch,10);
+					for (int i=0; i<gps_sv_info->num_ch; i++)
+					{
+						print_util_dbg_print(", svid:");
+						print_util_dbg_print_num(gps_sv_info->channel_data[i].svid,10);
+					}
 					print_util_dbg_print("\r\n");
 				}
 			}
@@ -1442,10 +1561,8 @@ static void ubx_send_header(gps_t *gps, uint8_t msg_class, uint8_t msg_id, uint1
 	gps->gps_stream_out.put(gps->gps_stream_out.data,header.preamble2);
 	gps->gps_stream_out.put(gps->gps_stream_out.data,header.msg_class);
 	gps->gps_stream_out.put(gps->gps_stream_out.data,header.msg_id_header);
-
 	gps->gps_stream_out.put(gps->gps_stream_out.data,endian_lower_bytes_uint16(header.length));
 	gps->gps_stream_out.put(gps->gps_stream_out.data,endian_higher_bytes_uint16(header.length));
-	
 }
 
 
@@ -1464,7 +1581,10 @@ static void ubx_send_message_CFG_nav_rate(gps_t *gps, uint8_t msg_class, uint8_t
 	
 	update_checksum((uint8_t *)&msg_class, 1, &ck_a, &ck_b);
 	update_checksum((uint8_t *)&msg_id, 1, &ck_a, &ck_b);
-	update_checksum((uint8_t *)&size, 1, &ck_a, &ck_b);
+	data = endian_lower_bytes_uint16(size);
+	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
+	data = endian_higher_bytes_uint16(size);
+	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 
 	// update_checksum((uint8_t *)&msg, size, &ck_a, &ck_b); Wrong!
 	
@@ -1497,7 +1617,6 @@ static void ubx_send_message_CFG_nav_rate(gps_t *gps, uint8_t msg_class, uint8_t
 	ubx_send_cksum(gps, ck_a,ck_b);
 }
 
-
 static void ubx_send_message_nav_settings(gps_t *gps, uint8_t msg_class, uint8_t msg_id, ubx_cfg_nav_settings_t *engine_settings, uint16_t size)
 {
 	uint8_t ck_a = 0, ck_b = 0;
@@ -1507,12 +1626,13 @@ static void ubx_send_message_nav_settings(gps_t *gps, uint8_t msg_class, uint8_t
 	
 	update_checksum((uint8_t *)&msg_class, 1, &ck_a, &ck_b);
 	update_checksum((uint8_t *)&msg_id, 1, &ck_a, &ck_b);
-	update_checksum((uint8_t *)&size, 1, &ck_a, &ck_b);
+	data = endian_lower_bytes_uint16(size);
+	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
+	data = endian_higher_bytes_uint16(size);
+	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 
 	if (engine_settings != NULL)
-	{
-		//update_checksum((uint8_t *)engine_settings, size, &ck_a, &ck_b);
-		
+	{	
 		data = endian_lower_bytes_uint16(engine_settings->mask);
 		update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 		gps->gps_stream_out.put(gps->gps_stream_out.data,data);
@@ -1665,24 +1785,31 @@ static void ubx_send_message_nav_settings(gps_t *gps, uint8_t msg_class, uint8_t
 static void ubx_configure_message_rate(gps_t *gps, uint8_t msg_class, uint8_t msg_id, uint8_t rate)
 {
 	uint8_t ck_a = 0, ck_b = 0;
+	
 	ubx_cfg_msg_rate_send_t msg;
 	msg.msg_class = msg_class;
-	msg.msg_id_rate    = msg_id;
-	msg.rate          = rate;
+	msg.msg_id_rate = msg_id;
+	msg.rate = rate;
 	
-	uint8_t size = sizeof(msg);
+	uint8_t header_class = UBX_CLASS_CFG;
+	uint8_t header_msg_id = MSG_CFG_SET_RATE;
+	uint16_t size = sizeof(msg);
 	
-	update_checksum((uint8_t *)&msg_class, 1, &ck_a, &ck_b);
-	update_checksum((uint8_t *)&msg_id, 1, &ck_a, &ck_b);
-	update_checksum((uint8_t *)&size, 1, &ck_a, &ck_b);
-
-	update_checksum((uint8_t *)&msg, size, &ck_a, &ck_b);
+	update_checksum((uint8_t *)&header_class, 1, &ck_a, &ck_b);
+	update_checksum((uint8_t *)&header_msg_id, 1, &ck_a, &ck_b);
+	uint8_t data = endian_lower_bytes_uint16(size);
+	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
+	data = endian_higher_bytes_uint16(data);
+	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
 	
-	ubx_send_header(gps, UBX_CLASS_CFG,MSG_CFG_SET_RATE,sizeof(msg));
+	ubx_send_header(gps, header_class, header_msg_id, size);
 	
 	gps->gps_stream_out.put(gps->gps_stream_out.data,msg.msg_class);
+	update_checksum((uint8_t *)&msg.msg_class, 1, &ck_a, &ck_b);
 	gps->gps_stream_out.put(gps->gps_stream_out.data,msg.msg_id_rate);
+	update_checksum((uint8_t *)&msg.msg_id_rate, 1, &ck_a, &ck_b);
 	gps->gps_stream_out.put(gps->gps_stream_out.data,msg.rate);
+	update_checksum((uint8_t *)&msg.rate, 1, &ck_a, &ck_b);
 	
 	ubx_send_cksum(gps, ck_a,ck_b);
 }
@@ -1828,6 +1955,18 @@ static ubx_nav_timeutc_t * ubx_get_nav_timeutc()
 	}
 }
 
+static ubx_ack_t * ubx_get_ack()
+{
+	if (ubx_number_of_valid_ack_message)
+	{
+		return ubx_last_ack_message;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -1869,7 +2008,8 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	gps->loop_tim_vrfy = 0;
 	gps->loop_nav_timeutc = 0;
 	gps->loop_mon_rxr = 0;
-
+	gps->loop_sv_info = 0;
+	
 	gps->step = 0;
 	gps->ubx_class = 0;
 	gps->msg_id = 0;
@@ -1890,39 +2030,46 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 
 void gps_ublox_configure_gps(gps_t *gps)
 {
-	ubx_cfg_nav_rate_send_t msg;
-	// const uint32_t audrates[4] = {9600U, 19200U, 38400U, 57600U};
+	// const uint32_t baudrates[4] = {9600U, 19200U, 38400U, 57600U};
 
-	const char  *set_binary = UBLOX_SET_BINARY;
+	//const char  *set_binary = UBLOX_SET_BINARY;
 	// the GPS may be setup for a different baud rate. This ensures
 	// it gets configured correctly
-// 	for (uint8_t i = 0; i < 4; i++)
-// 	{
-	
+	//for (uint8_t i = 0; i < 4; i++)
+	//{
 	//print_util_dbg_print("Set to binary mode ");
 	//print_util_dbg_print(set_binary);
-	print_util_putstring(&(gps->gps_stream_out), set_binary);
+	//print_util_putstring(&(gps->gps_stream_out), set_binary);
 	//gps->gps_stream_out.put(gps->gps_stream_out.data,set_binary);
 	//gps->gps_stream_out.flush(&(gps->gps_stream_out.data));
 	//}
 
-	// ask for navigation solutions every 200ms
+	// ask for navigation solutions every 200ms (5Hz)
+	ubx_cfg_nav_rate_send_t msg;
 	msg.measure_rate_ms = 200;		// ms
 	msg.nav_rate        = 1;		// constant equal to 1
 	msg.timeref         = 0;		// 0:UTC time, 1:GPS time
 	
 	ubx_send_message_CFG_nav_rate(gps, UBX_CLASS_CFG, MSG_CFG_RATE, msg, sizeof(msg));
 
-	// ask for the messages we parse to be sent on every navigation solution
-	//print_util_dbg_print("Set navigation messages\n");
-	ubx_configure_message_rate(gps,UBX_CLASS_NAV, MSG_NAV_POSLLH, 4);
-	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_STATUS, 4);
-	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_SOL, 4);
-	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_VELNED, 4);
-	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_SVINFO, 4);
+	// ask for the messages we parse to be sent
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Set navigation messages\n");
+	}
+	
+	ubx_configure_message_rate(gps,UBX_CLASS_NAV, MSG_NAV_POSLLH, 1);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_STATUS, 5);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_SOL, 5);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_VELNED, 1);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_SVINFO, 0);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_TIMEUTC,10);
 
 	// ask for the current navigation settings
-	//print_util_dbg_print("Asking for engine setting\n");
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Asking for engine setting\n");
+	}
 	ubx_send_message_nav_settings(gps, UBX_CLASS_CFG, MSG_CFG_NAV_SETTINGS, NULL, 0);
 }
 

@@ -159,7 +159,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_NAV_STATUS 16
 #define UBX_SIZE_NAV_SOL 52
 #define UBX_SIZE_NAV_VELNED 36
-#define UBX_SIZE_NAV_SVINFO 30 //8 + 12*num_channel
+#define UBX_SIZE_NAV_SVINFO 200 //8 + 12*num_channel = 200
 #define UBX_SIZE_NAV_SETTINGS 36
 #define UBX_SIZE_NAV_TIMEUTC 20
 
@@ -170,6 +170,8 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 
 #define UBX_SIZE_TIM_TP 16
 #define UBX_SIZE_TIM_VRFY 20
+
+#define UBX_SIZE_ACK 2
 
 #define NAV_STATUS_FIX_NVALID 0
 #define NAV_STATUS_FIX_VALID 1
@@ -410,6 +412,15 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint32_t itow;						///< GPS msToW		
 	}ubx_nav_timeutc_t;
 
+	/** 
+	 *\brief The U-Blox ACK-ACK and ACK-NACK message structure definition
+	 */
+	typedef struct  
+	{
+		uint8_t msg_id;						///< Message ID of the acknowledged messages
+		uint8_t class_id;					///< Class ID of the acknowledged messages
+	}ubx_ack_t;
+
 #else	
 
 	/**
@@ -613,6 +624,15 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t valid;						///< Validity of the time
 	}ubx_nav_timeutc_t;
 
+	/** 
+	 *\brief The U-Blox ACK-ACK and ACK-NACK message structure definition
+	 */
+	typedef struct  
+	{
+		uint8_t class_id;
+		uint8_t msg_id;
+	}ubx_ack_ack_t;
+
 #endif
 
 #define NO_GPS 0							///< No GPS
@@ -713,7 +733,8 @@ typedef struct
 	uint8_t loop_tim_vrfy;						///< Counter used to print one message every num_skipped_msg
 	uint8_t loop_nav_timeutc;					///< Counter used to print one message every num_skipped_msg
 	uint8_t loop_mon_rxr;						///< Counter used to print one message every num_skipped_msg
-
+	uint8_t loop_sv_info;						///< Counter used to print one message every num_skipped_msg
+	
 	bool print_nav_on_debug;					///< Flag to print messages on debug console
 	bool debug;									///< Indicates if debug messages should be printed
 	
