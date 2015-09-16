@@ -386,6 +386,19 @@ static void ubx_send_message_cfg_prt(byte_stream_t *stream, ubx_cfg_prt_t *gps_c
 
 
 /**
+ * \brief	To send the CFG Rate configuration, if the ubx_cfg_rate_t pointer is null,
+ *			asks for the current settings
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x08	MSG_CFG_RATE
+ *
+ * \param	stream				The pointer to the stream structure
+ * \param	gps_cfg_rate		The rate configuration sent
+ */
+static void ubx_send_message_cfg_rate(byte_stream_t *stream, ubx_cfg_rate_t *gps_cfg_rate);
+
+
+/**
  * \brief	To send the NAV messages that we want to receive
  *
  * Class:	0x06	UBX_CLASS_CFG
@@ -1929,6 +1942,33 @@ static void ubx_send_message_cfg_prt(byte_stream_t *stream, ubx_cfg_prt_t *gps_c
 	ubx_send_cksum(stream, ck_a, ck_b);
 }
 
+static void ubx_send_message_cfg_rate(byte_stream_t *stream, ubx_cfg_rate_t *gps_cfg_rate)
+{
+	uint8_t ck_a = 0, ck_b = 0;
+
+	uint8_t msg_class = UBX_CLASS_CFG;
+	uint8_t msg_id = MSG_CFG_RATE;
+	uint16_t size;
+
+	if (gps_cfg_rate != NULL)
+	{
+		size = UBX_SIZE_CFG_RATE;
+	}
+	else
+	{
+		size = 0;
+	}
+	
+	if (gps_cfg_rate != NULL)
+	{
+		ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_rate->measure_rate, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_rate->nav_rate, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_rate->time_ref, &ck_a, &ck_b);
+	}
+	
+	ubx_send_cksum(stream, ck_a, ck_b);
+}
 
 static void ubx_configure_message_rate(byte_stream_t *stream, uint8_t msg_class, uint8_t msg_id, uint8_t rate)
 {
@@ -2394,6 +2434,11 @@ void gps_ublox_configure_gps(gps_t *gps)
 	gps_cfg_prt.res3 = 0x0000;
 	ubx_send_message_cfg_prt(&gps->gps_stream_out, &gps_cfg_prt);
 	
+	ubx_cfg_rate_t gps_cfg_rate;
+	gps_cfg_rate.measure_rate = 0x00C8;
+	gps_cfg_rate.nav_rate = 0x0001;
+	gps_cfg_rate.time_ref = 0x0001;
+	ubx_send_message_cfg_rate(&gps->gps_stream_out,&gps_cfg_rate);
 }
 
 

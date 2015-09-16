@@ -138,6 +138,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_CFG_PM 0x32
 #define MSG_CFG_PM2 0x3B
 #define MSG_CFG_PRT 0x00
+#define MSG_CFG_RATE 0x08
 
 #define MSG_MON_HW2 0x0B
 #define MSG_MON_HW 0x09
@@ -193,6 +194,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_CFG_PM 24
 #define UBX_SIZE_CFG_PM2 44
 #define UBX_SIZE_CFG_PRT 20
+#define UBX_SIZE_CFG_RATE 6
 
 #define UBX_SIZE_MON_RXR 1
 
@@ -385,6 +387,16 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t res0;						///< Reserved
 		uint8_t port_id;					///< Port ID (=1 or 2 for UART ports)
 	}ubx_cfg_prt_t;
+
+	/**
+	 * \brief The U-Blox CFG-PRT structure definition
+	 */
+	typedef struct
+	{
+		uint16_t time_ref;					///< Alignment to reference time, 0=UTC, 1=GPS time.
+		uint16_t nav_rate;					///< Navigation rate, in number of measurements cycles. Cannot be changed on u-blox 5 and 6, always equal 1.
+		uint16_t measure_rate;				///< Measurement rate, GPS measurements are taken every measure_rate milliseconds
+	}ubx_cfg_rate_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
@@ -686,6 +698,16 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint16_t flags;						///< Reserved, set to 0
 		uint16_t res3;						///< Reserved, set to 0
 	}ubx_cfg_prt_t;
+
+	/**
+	 * \brief The U-Blox CFG-PRT structure definition
+	 */
+	typedef struct
+	{
+		uint16_t measure_rate;				///< Measurement rate, GPS measurements are taken every measure_rate milliseconds
+		uint16_t nav_rate;					///< Navigation rate, in number of measurements cycles. Cannot be changed on u-blox 5 and 6, always equal 1.
+		uint16_t time_ref;					///< Alignment to reference time, 0=UTC, 1=GPS time.
+	}ubx_cfg_rate_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
