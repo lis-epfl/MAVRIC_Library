@@ -317,6 +317,17 @@ static void ubx_send_cksum(byte_stream_t *stream, uint8_t ck_sum_a, uint8_t ck_s
  */
 static void ubx_send_message_CFG_nav_rate(byte_stream_t *stream, uint8_t msg_class, uint8_t msg_id, ubx_cfg_nav_rate_send_t msg, uint16_t size);
 
+/**
+ * \brief	To send the CFG-FXN settings message, if the ubx_cfg_fxn_t pointer is null,
+ *			asks for the current settings
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x0E	MSG_CFG_FXN
+ *
+ * \param	stream				The pointer to the stream structure
+ * \param	gps_cfg_fxn			The FXN structure sent
+ */
+static void ubx_send_message_cfg_fxn(byte_stream_t *stream, ubx_cfg_fxn_t *gps_cfg_fxn);
 
 /**
  * \brief	To send the CFG-INF settings message, if the gps_cfg_inf_t pointer is null,
@@ -1839,6 +1850,41 @@ static void ubx_send_message_CFG_nav_rate(byte_stream_t *stream, uint8_t msg_cla
 	ubx_send_cksum(stream, ck_a,ck_b);
 }
 
+static void ubx_send_message_cfg_fxn(byte_stream_t *stream, ubx_cfg_fxn_t *gps_cfg_fxn)
+{
+	uint8_t ck_a = 0, ck_b = 0;
+	
+	uint8_t msg_class = UBX_CLASS_CFG;
+	uint8_t msg_id = MSG_CFG_FXN;
+	uint16_t size;
+	
+	if (gps_cfg_fxn != NULL)
+	{
+		size = UBX_SIZE_CFG_FXN;
+	}
+	else
+	{
+		size = 0;
+	}
+	
+	ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
+	
+	if (gps_cfg_fxn != NULL)
+	{
+		ubx_send_uint32(stream, gps_cfg_fxn->flags, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_fxn->t_reacq, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_fxn->t_acq, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_fxn->t_reacq_off, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_fxn->t_acq_off, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_fxn->t_on, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_fxn->t_off, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_fxn->res, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_fxn->base_tow, &ck_a, &ck_b);
+	}
+
+	ubx_send_cksum(stream, ck_a,ck_b);
+}
+
 static void ubx_send_message_cfg_inf(byte_stream_t *stream, ubx_cfg_inf_t *gps_cfg_inf)
 {
 	uint8_t ck_a = 0, ck_b = 0;
@@ -2614,6 +2660,23 @@ void gps_ublox_configure_gps(gps_t *gps)
 	//msg.nav_rate        = 1;		// constant equal to 1
 	//msg.timeref         = 0;		// 0:UTC time, 1:GPS time
 	//ubx_send_message_CFG_nav_rate(&gps->gps_stream_out, UBX_CLASS_CFG, MSG_CFG_RATE, msg, sizeof(msg));
+
+	// Configure the FXN messages
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Setting FXN messages...\n");
+	}
+	ubx_cfg_fxn_t gps_cfg_fxn;
+	gps_cfg_fxn.flags = 0x0000000C;
+	gps_cfg_fxn.t_reacq = 0x00000000;
+	gps_cfg_fxn.t_acq = 0x00000000;
+	gps_cfg_fxn.t_reacq_off = 0x00002710;
+	gps_cfg_fxn.t_acq_off = 0x000002710;
+	gps_cfg_fxn.t_on = 0x000007D0;
+	gps_cfg_fxn.t_off = 0xFFFFFC18;
+	gps_cfg_fxn.res = 0x00000000;
+	gps_cfg_fxn.base_tow = 0x00000000;
+	ubx_send_message_cfg_fxn(&gps->gps_stream_out, &gps_cfg_fxn);
 
 	// Configure the INF messages
 	if (gps->print_nav_on_debug)
