@@ -47,6 +47,7 @@
 #include "buffer.h"
 #include "time_keeper.h"
 #include <string.h>
+#include "delay.h"
 
 uint8_t  **ubx_current_message = 0;					///<  The pointer to the pointer to the structure of the current message to fill
 uint8_t  ** ubx_last_message = 0;					///<  The pointer to the pointer to the structure of the last message received of the same type than the current one being received (for exchange at the end)
@@ -301,22 +302,6 @@ static void ubx_send_header(byte_stream_t *stream, uint8_t msg_class, uint8_t ms
  * \param	ck_sum_b			The checksum b
  */
 static void ubx_send_cksum(byte_stream_t *stream, uint8_t ck_sum_a, uint8_t ck_sum_b);
-
-
-/**
- * \brief	To send a CFG NAV RATE message
- *
- * Class:	0x06	UBX_CLASS_CFG
- * Msg_id:	0x08	MSG_CFG_RATE
- *
- * \param	stream				The pointer to the stream structure
- * \param	msg_class			The U-Blox class of the message
- * \param	msg_id				The U-Blox message ID
- * \param	msg					The CFG_NAV_RATE message
- * \param	size				The size of the U-Blox following message
- */
-static void ubx_send_message_CFG_nav_rate(byte_stream_t *stream, uint8_t msg_class, uint8_t msg_id, ubx_cfg_nav_rate_send_t msg, uint16_t size);
-
 
 /**
  * \brief	To send the Mon_VER settings message, if the ubx_mon_ver_t pointer is null,
@@ -1277,18 +1262,26 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 		ubx_ack_t *gps_ack = ubx_get_ack();
 		if (gps_ack)
 		{
-			print_util_dbg_print("Acknowledge answer for class: 0x");
+			print_util_dbg_print("Answer for class: 0x");
 			print_util_dbg_print_num(gps_ack->class_id,16);
-			print_util_dbg_print(", and msg id: 0x");
+			print_util_dbg_print(", msg id: 0x");
 			print_util_dbg_print_num(gps_ack->msg_id,16);
 			print_util_dbg_print("=>");
+			
+			gps->acknowledged_received = true;
+			
 			if (msg_id)
 			{
-				print_util_dbg_print("Acknowledged");
+				print_util_dbg_print("Ok");
 			}
 			else
 			{
-				print_util_dbg_print("Not acknowledged");
+				//print_util_dbg_print("Acknowledge answer for class: 0x");
+				//print_util_dbg_print_num(gps_ack->class_id,16);
+				//print_util_dbg_print(", and msg id: 0x");
+				//print_util_dbg_print_num(gps_ack->msg_id,16);
+				//print_util_dbg_print("=>");
+				print_util_dbg_print("Nok");
 			}
 			print_util_dbg_print("\r\n");
 		}
@@ -1878,18 +1871,6 @@ static void ubx_send_cksum(byte_stream_t *stream, uint8_t ck_sum_a, uint8_t ck_s
 	stream->put(stream->data,ck_sum_b);
 }
 
-
-static void ubx_send_message_CFG_nav_rate(byte_stream_t *stream, uint8_t msg_class, uint8_t msg_id, ubx_cfg_nav_rate_send_t msg, uint16_t size)
-{
-	uint8_t ck_a = 0, ck_b = 0;
-
-	ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
-	ubx_send_uint16(stream,msg.measure_rate_ms,&ck_a, &ck_b);
-	ubx_send_uint16(stream,msg.nav_rate,&ck_a, &ck_b);
-	ubx_send_uint16(stream,msg.timeref,&ck_a, &ck_b);
-	ubx_send_cksum(stream, ck_a,ck_b);
-}
-
 static void ubx_send_message_mon_ver(byte_stream_t *stream, ubx_mon_ver_t *gps_mon_ver)
 {
 	uint8_t ck_a = 0, ck_b = 0;
@@ -2203,12 +2184,12 @@ static void ubx_send_message_cfg_pm(byte_stream_t *stream, ubx_cfg_pm_t *gps_cfg
 		ubx_send_uint8(stream, gps_cfg_pm->res1, &ck_a, &ck_b);
 		ubx_send_uint8(stream, gps_cfg_pm->res2, &ck_a, &ck_b);
 		ubx_send_uint8(stream, gps_cfg_pm->res3, &ck_a, &ck_b);
-		ubx_send_uint8(stream, gps_cfg_pm->flags, &ck_a, &ck_b);
-		ubx_send_uint8(stream, gps_cfg_pm->update_period, &ck_a, &ck_b);
-		ubx_send_uint8(stream, gps_cfg_pm->search_period, &ck_a, &ck_b);
-		ubx_send_uint8(stream, gps_cfg_pm->grid_offset, &ck_a, &ck_b);
-		ubx_send_uint8(stream, gps_cfg_pm->on_time, &ck_a, &ck_b);
-		ubx_send_uint8(stream, gps_cfg_pm->min_acq_time, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_pm->flags, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_pm->update_period, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_pm->search_period, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_pm->grid_offset, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_pm->on_time, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_pm->min_acq_time, &ck_a, &ck_b);
 	}
 	
 	ubx_send_cksum(stream, ck_a, ck_b);
@@ -2224,7 +2205,7 @@ static void ubx_send_message_cfg_pm2(byte_stream_t *stream, ubx_cfg_pm2_t *gps_c
 
 	if (gps_cfg_pm2 != NULL)
 	{
-		size = UBX_SIZE_CFG_PM;
+		size = UBX_SIZE_CFG_PM2;
 	}
 	else
 	{
@@ -2311,7 +2292,6 @@ static void ubx_send_message_cfg_rate(byte_stream_t *stream, ubx_cfg_rate_t *gps
 	
 	if (gps_cfg_rate != NULL)
 	{
-		ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
 		ubx_send_uint16(stream, gps_cfg_rate->measure_rate, &ck_a, &ck_b);
 		ubx_send_uint16(stream, gps_cfg_rate->nav_rate, &ck_a, &ck_b);
 		ubx_send_uint16(stream, gps_cfg_rate->time_ref, &ck_a, &ck_b);
@@ -2428,12 +2408,12 @@ static void ubx_send_message_cfg_tp(byte_stream_t *stream, ubx_cfg_tp_t *gps_cfg
 	uint8_t ck_a = 0, ck_b = 0;
 
 	uint8_t msg_class = UBX_CLASS_CFG;
-	uint8_t msg_id = MSG_CFG_TP5;
+	uint8_t msg_id = MSG_CFG_TP;
 	uint16_t size;
 
 	if (gps_cfg_tp != NULL)
 	{
-		size = UBX_SIZE_CFG_TP5;
+		size = UBX_SIZE_CFG_TP;
 	}
 	else
 	{
@@ -2443,15 +2423,15 @@ static void ubx_send_message_cfg_tp(byte_stream_t *stream, ubx_cfg_tp_t *gps_cfg
 	
 	if (gps_cfg_tp != NULL)
 	{
-		ubx_send_uint8(stream, gps_cfg_tp->interval, &ck_a, &ck_b);
-		ubx_send_uint8(stream, gps_cfg_tp->length, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_tp->interval, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_tp->length, &ck_a, &ck_b);
 		ubx_send_uint8(stream, gps_cfg_tp->status, &ck_a, &ck_b);
 		ubx_send_uint8(stream, gps_cfg_tp->time_ref, &ck_a, &ck_b);
 		ubx_send_uint8(stream, gps_cfg_tp->flags, &ck_a, &ck_b);
 		ubx_send_uint8(stream, gps_cfg_tp->res, &ck_a, &ck_b);
-		ubx_send_uint8(stream, gps_cfg_tp->antenna_cable_delay, &ck_a, &ck_b);
-		ubx_send_uint8(stream, gps_cfg_tp->rf_group_delay, &ck_a, &ck_b);
-		ubx_send_uint8(stream, gps_cfg_tp->user_delay, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_tp->antenna_cable_delay, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_tp->rf_group_delay, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_tp->user_delay, &ck_a, &ck_b);
 	}
 	ubx_send_cksum(stream,ck_a,ck_b);
 }
@@ -2461,12 +2441,12 @@ static void ubx_send_message_cfg_tp5(byte_stream_t *stream, ubx_cfg_tp5_t *gps_c
 	uint8_t ck_a = 0, ck_b = 0;
 
 	uint8_t msg_class = UBX_CLASS_CFG;
-	uint8_t msg_id = MSG_CFG_TP;
+	uint8_t msg_id = MSG_CFG_TP5;
 	uint16_t size;
 
 	if (gps_cfg_tp5 != NULL)
 	{
-		size = UBX_SIZE_CFG_TP;
+		size = UBX_SIZE_CFG_TP5;
 	}
 	else
 	{
@@ -2771,463 +2751,740 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 
 	gps->status = NO_GPS;
 	gps->healthy = false;
+	
+	gps->configure_gps = true;
+	gps->config_nav_msg_count = 0;
+	gps->acknowledged_received = true;
 }
 
 
 void gps_ublox_configure_gps(gps_t *gps)
 {
-	// const uint32_t baudrates[4] = {9600U, 19200U, 38400U, 57600U};
-
-	//const char  *set_binary = UBLOX_SET_BINARY;
-	// the GPS may be setup for a different baud rate. This ensures
-	// it gets configured correctly
-	//for (uint8_t i = 0; i < 4; i++)
-	//{
-	//print_util_dbg_print("Set to binary mode ");
-	//print_util_dbg_print(set_binary);
-	//print_util_putstring(&(gps->gps_stream_out), set_binary);
-	//gps->gps_stream_out.put(gps->gps_stream_out.data,set_binary);
-	//gps->gps_stream_out.flush(&(gps->gps_stream_out.data));
-	//}
-
-	// ask for navigation solutions every 200ms (5Hz)
-	//ubx_cfg_nav_rate_send_t msg;
-	//msg.measure_rate_ms = 200;		// ms
-	//msg.nav_rate        = 1;		// constant equal to 1
-	//msg.timeref         = 0;		// 0:UTC time, 1:GPS time
-	//ubx_send_message_CFG_nav_rate(&gps->gps_stream_out, UBX_CLASS_CFG, MSG_CFG_RATE, msg, sizeof(msg));
-
-	// Configure the MON-VER messages
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Setting MON-VER messages...\n");
-	}
 	ubx_mon_ver_t gps_mon_ver;
-	strcpy(gps_mon_ver.sw_version,"7.03 (45970)");
-	strcpy(gps_mon_ver.hw_version,"00040007");
-	strcpy(gps_mon_ver.rom_version,"7.03 (45969)");
-	ubx_send_message_mon_ver(&gps->gps_stream_out, &gps_mon_ver);
-
-	// Configure the ANT messages
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Setting CFG-ANT messages...\n");
-	}
 	ubx_cfg_ant_t gps_cfg_ant;
-	gps_cfg_ant.flags = 0x001B;
-	gps_cfg_ant.pins = 0xA98B;
-	ubx_send_message_cfg_ant(&gps->gps_stream_out, &gps_cfg_ant);
-
-	// Configure the DAT messages
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Setting CFG-DAT messages...\n");
-	}
 	ubx_cfg_dat_t gps_cfg_dat;
-	gps_cfg_dat.datum_num = 0x0000;
-	ubx_send_message_cfg_dat(&gps->gps_stream_out, &gps_cfg_dat);
-
-	// Configure the FXN messages
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Setting CFG-FXN messages...\n");
-	}
 	ubx_cfg_fxn_t gps_cfg_fxn;
-	gps_cfg_fxn.flags = 0x0000000C;
-	gps_cfg_fxn.t_reacq = 0x00000000;
-	gps_cfg_fxn.t_acq = 0x00000000;
-	gps_cfg_fxn.t_reacq_off = 0x00002710;
-	gps_cfg_fxn.t_acq_off = 0x000002710;
-	gps_cfg_fxn.t_on = 0x000007D0;
-	gps_cfg_fxn.t_off = 0xFFFFFC18;
-	gps_cfg_fxn.res = 0x00000000;
-	gps_cfg_fxn.base_tow = 0x00000000;
-	ubx_send_message_cfg_fxn(&gps->gps_stream_out, &gps_cfg_fxn);
-
-	// Configure the INF messages
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Setting CFG-INF messages...\n");
-	}
 	ubx_cfg_inf_t gps_cfg_inf;
-	gps_cfg_inf.protocol_id = 0x00;
-	gps_cfg_inf.res0 = 0x00;
-	gps_cfg_inf.res1 = 0x0000;
-	gps_cfg_inf.inf_msg_mask1 = 0x00;
-	gps_cfg_inf.inf_msg_mask2 = 0x00;
-	gps_cfg_inf.inf_msg_mask3 = 0x00;
-	gps_cfg_inf.inf_msg_mask4 = 0x00;
-	gps_cfg_inf.inf_msg_mask5 = 0x00;
-	gps_cfg_inf.inf_msg_mask6 = 0x00;
-	ubx_send_message_cfg_inf(&gps->gps_stream_out, &gps_cfg_inf);
-	gps_cfg_inf.protocol_id = 0x01;
-	gps_cfg_inf.res0 = 0x00;
-	gps_cfg_inf.res1 = 0x0000;
-	gps_cfg_inf.inf_msg_mask1 = 0x87;
-	gps_cfg_inf.inf_msg_mask2 = 0x87;
-	gps_cfg_inf.inf_msg_mask3 = 0x87;
-	gps_cfg_inf.inf_msg_mask4 = 0x87;
-	gps_cfg_inf.inf_msg_mask5 = 0x87;
-	gps_cfg_inf.inf_msg_mask6 = 0x87;
-	ubx_send_message_cfg_inf(&gps->gps_stream_out, &gps_cfg_inf);
-	gps_cfg_inf.protocol_id = 0x03;
-	gps_cfg_inf.res0 = 0x00;
-	gps_cfg_inf.res1 = 0x0000;
-	gps_cfg_inf.inf_msg_mask1 = 0x00;
-	gps_cfg_inf.inf_msg_mask2 = 0x00;
-	gps_cfg_inf.inf_msg_mask3 = 0x00;
-	gps_cfg_inf.inf_msg_mask4 = 0x00;
-	gps_cfg_inf.inf_msg_mask5 = 0x00;
-	gps_cfg_inf.inf_msg_mask6 = 0x00;
-	ubx_send_message_cfg_inf(&gps->gps_stream_out, &gps_cfg_inf);
-
-	// Configure the ITFM messages
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Setting CFG-ITFM messages...\n");
-	}
 	ubx_cfg_itfm_t gps_cfg_itfm;
-	gps_cfg_itfm.config = 0x2D62ACF3;
-	gps_cfg_itfm.config2 = 0x0000031E;
-	ubx_send_message_cfg_itfm(&gps->gps_stream_out, &gps_cfg_itfm);
-
-	// Configure the NAV messages
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Setting NAV messages...\n");
-	}
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_AOPSTATUS, 0);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_CLOCK, 0);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_DGPS, 0);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_DOP, 0);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_EKFSTATUS, 0);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_POSECEF, 0);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_POSLLH, 1);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_SBAS, 0);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_SOL, 5);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_STATUS, 5);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_SVINFO, 0);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_TIMEGPS, 0);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_TIMEUTC,10);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_VELCEF, 0);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_VELNED, 1);
-	
-	// Configure MON messages
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Setting MON messages...\r\n");
-	}
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, MSG_MON_HW2, 0);	
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, MSG_MON_HW, 0);	
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, MSG_MON_IO, 0);	
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, MSG_MON_MSGPP, 0);	
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, MSG_MON_RXBUF, 0);	
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, MSG_MON_RXR, 5);	
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, MSG_MON_TXBUF, 0);	
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, MSG_MON_VER, 0);	
-
-	// Configure AID messages
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Setting AID messages...\r\n");
-	}
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_AID, MSG_AID_ALM,1);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_AID, MSG_AID_EPH,1);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_AID, MSG_AID_ALPSRV,0);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_AID, MSG_AID_AOP,0);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_AID, MSG_AID_REQ,0);
-
-	// Configure TIM messages
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Setting TIM messages...\r\n");
-	}
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_TIM, MSG_TIM_TM2, 0);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_TIM, MSG_TIM_TP, 10);
-	ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_TIM, MSG_TIM_VRFY, 10);
-
-	// Setting navigation settings
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Settings CFG engine settings...\n");
-	}
 	ubx_cfg_nav_settings_t gps_engine_settings;
-	gps_engine_settings.mask = 0xFFFF;
-	gps_engine_settings.dyn_model = 0x08;
-	gps_engine_settings.fix_mode = 0x03;
-	gps_engine_settings.fixed_alt = 0x0000;
-	gps_engine_settings.fixed_alt_var = 0x00002710;
-	gps_engine_settings.min_elev = 0x05;
-	gps_engine_settings.dr_limit = 0x00;
-	gps_engine_settings.p_dop = 0x00FA;
-	gps_engine_settings.t_dop = 0x00FA;
-	gps_engine_settings.p_acc = 0x0064;
-	gps_engine_settings.t_acc = 0x012C;
-	gps_engine_settings.static_hold_thresh = 0x00;
-	gps_engine_settings.dgps_timeout = 0x3C;
-	gps_engine_settings.res2 = 0x0000;
-	gps_engine_settings.res3 = 0x0000;
-	gps_engine_settings.res4 = 0x0000;
-	ubx_send_message_nav_settings(&gps->gps_stream_out, UBX_CLASS_CFG, MSG_CFG_NAV_SETTINGS, &gps_engine_settings, UBX_SIZE_CFG_NAV_SETTINGS);
-	
 	ubx_cfg_nav_expert_settings_t gps_nav_expert_settings;
-	gps_nav_expert_settings.version = 0x0000;
-	gps_nav_expert_settings.mask1 = 0xFFFF;
-	gps_nav_expert_settings.mak2 = 0x00000003;
-	gps_nav_expert_settings.res1 = 0x03;
-	gps_nav_expert_settings.res2 = 0x02;
-	gps_nav_expert_settings.min_sv_s = 0x03;
-	gps_nav_expert_settings.max_sv_s = 0x10;
-	gps_nav_expert_settings.min_cn_o = 0x07;
-	gps_nav_expert_settings.res3 = 0x00;
-	gps_nav_expert_settings.ini_fix_3d = 0x00;
-	gps_nav_expert_settings.res4 = 0x00;
-	gps_nav_expert_settings.res5 = 0x00;
-	gps_nav_expert_settings.res6 = 0x00;
-	gps_nav_expert_settings.wkn_roll_over = 0x0643;
-	gps_nav_expert_settings.res7 = 0x00000000;
-	gps_nav_expert_settings.res8 = 0x01;
-	gps_nav_expert_settings.res9 = 0x01;
-	gps_nav_expert_settings.use_ppp = 0x00;
-	gps_nav_expert_settings.use_aop = 0x00;
-	gps_nav_expert_settings.res11 = 0x00;
-	gps_nav_expert_settings.res12 = 0x64;
-	gps_nav_expert_settings.aop_opb_max_err = 0x0078;
-	gps_nav_expert_settings.res13 = 0x00000000;
-	gps_nav_expert_settings.res14 = 0x00000000;
-	ubx_send_message_nav_expert_settings(&gps->gps_stream_out,&gps_nav_expert_settings);
-	
-	// Setting power management settings
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Settings CFG-PM power management settings...\n");
-	}
 	ubx_cfg_pm_t gps_cfg_pm;
-	gps_cfg_pm.version = 0x00;
-	gps_cfg_pm.res1 = 0x06;
-	gps_cfg_pm.res2 = 0x00;
-	gps_cfg_pm.res3 = 0x00;
-	gps_cfg_pm.flags = 0x00009004;
-	gps_cfg_pm.update_period = 0x000003E8;
-	gps_cfg_pm.search_period = 0x00002710;
-	gps_cfg_pm.grid_offset = 0x00000000;
-	gps_cfg_pm.on_time = 0x0002;
-	gps_cfg_pm.min_acq_time = 0x0000;
-	ubx_send_message_cfg_pm(&gps->gps_stream_out, &gps_cfg_pm);
-	
 	ubx_cfg_pm2_t gps_cfg_pm2;
-	gps_cfg_pm2.version = 0x06;
-	gps_cfg_pm2.res1 = 0x00;
-	gps_cfg_pm2.res2 = 0x00;
-	gps_cfg_pm2.res3 = 0x00;			
-	gps_cfg_pm2.flags = 0x00029000;
-	gps_cfg_pm2.update_period = 0x000003E8;
-	gps_cfg_pm2.search_period = 0x00002710;
-	gps_cfg_pm2.grid_offset = 0x00000000;
-	gps_cfg_pm2.on_time = 0x0002;
-	gps_cfg_pm2.min_acq_time = 0x0000;
-	gps_cfg_pm2.res4 = 0x012C;
-	gps_cfg_pm2.res5 = 0x0000;
-	gps_cfg_pm2.res6 = 0x0003C14F;
-	gps_cfg_pm2.res7 = 0x00000286;
-	gps_cfg_pm2.res8 = 0xFE;
-	gps_cfg_pm2.res9 = 0x00;
-	gps_cfg_pm2.res10 = 0x0000;
-	gps_cfg_pm2.res11 = 0x00014064;
-	ubx_send_message_cfg_pm2(&gps->gps_stream_out, &gps_cfg_pm2);
-	
-	// Setting port settings
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Settings CFG-PRT port configuration...\n");
-	}
 	ubx_cfg_prt_t gps_cfg_prt;
-	gps_cfg_prt.port_id = 0x00;
-	gps_cfg_prt.res0 = 0x00;
-	gps_cfg_prt.tx_ready = 0x0000;
-	gps_cfg_prt.mode = 0x00000000;
-	gps_cfg_prt.baud_rate = 0x00000000;
-	gps_cfg_prt.in_proto_mask = 0x0000;
-	gps_cfg_prt.out_proto_mask = 0x0000;
-	gps_cfg_prt.flags = 0x0000;
-	gps_cfg_prt.res3 = 0x0000;
-	ubx_send_message_cfg_prt(&gps->gps_stream_out, &gps_cfg_prt);
-	
-	gps_cfg_prt.port_id = 0x01; // uart
-	gps_cfg_prt.res0 = 0x00;
-	gps_cfg_prt.tx_ready = 0x0000;
-	gps_cfg_prt.mode = 0x000008C0;
-	gps_cfg_prt.baud_rate = 0x00009600; // 38400
-	gps_cfg_prt.in_proto_mask = 0x0007;
-	gps_cfg_prt.out_proto_mask = 0x0001;
-	gps_cfg_prt.flags = 0x0000;
-	gps_cfg_prt.res3 = 0x0000;
-	ubx_send_message_cfg_prt(&gps->gps_stream_out, &gps_cfg_prt);
-	
-	gps_cfg_prt.port_id = 0x02; // second uart
-	gps_cfg_prt.res0 = 0x00;
-	gps_cfg_prt.tx_ready = 0x0000;
-	gps_cfg_prt.mode = 0x000008C0;
-	gps_cfg_prt.baud_rate = 0x00002580; // 9600
-	gps_cfg_prt.in_proto_mask = 0x0000;
-	gps_cfg_prt.out_proto_mask = 0x0000;
-	gps_cfg_prt.flags = 0x0000;
-	gps_cfg_prt.res3 = 0x0000;
-	ubx_send_message_cfg_prt(&gps->gps_stream_out, &gps_cfg_prt);
-	
-	gps_cfg_prt.port_id = 0x03; // USB
-	gps_cfg_prt.res0 = 0x00;
-	gps_cfg_prt.tx_ready = 0x0000;
-	gps_cfg_prt.mode = 0x00000000;
-	gps_cfg_prt.baud_rate = 0x00000000; // 0
-	gps_cfg_prt.in_proto_mask = 0x0007;
-	gps_cfg_prt.out_proto_mask = 0x0007;
-	gps_cfg_prt.flags = 0x0000;
-	gps_cfg_prt.res3 = 0x0000;
-	ubx_send_message_cfg_prt(&gps->gps_stream_out, &gps_cfg_prt);
-	
-	gps_cfg_prt.port_id = 0x03; // SPI
-	gps_cfg_prt.res0 = 0x00;
-	gps_cfg_prt.tx_ready = 0x0000;
-	gps_cfg_prt.mode = 0x00003200;
-	gps_cfg_prt.baud_rate = 0x00000000; // 0
-	gps_cfg_prt.in_proto_mask = 0x0007;
-	gps_cfg_prt.out_proto_mask = 0x0007;
-	gps_cfg_prt.flags = 0x0000;
-	gps_cfg_prt.res3 = 0x0000;
-	ubx_send_message_cfg_prt(&gps->gps_stream_out, &gps_cfg_prt);
-	
-	// Setting rate settings
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Settings CFG-RATE rate configuration...\n");
-	}
 	ubx_cfg_rate_t gps_cfg_rate;
-	gps_cfg_rate.measure_rate = 0x00C8;
-	gps_cfg_rate.nav_rate = 0x0001;
-	gps_cfg_rate.time_ref = 0x0001;
-	ubx_send_message_cfg_rate(&gps->gps_stream_out,&gps_cfg_rate);
-	
-	// Setting RINV settings
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Settings CFG-RINV configuration...\n");
-	}
 	ubx_cfg_rinv_t gps_cfg_rinv;
-	gps_cfg_rinv.flags = 0x00;
-	gps_cfg_rinv.data = 0x4E;
-	gps_cfg_rinv.data2 = 0x6F;
-	gps_cfg_rinv.data3 = 0x74;
-	gps_cfg_rinv.data4 = 0x69;
-	gps_cfg_rinv.data5 = 0x63;
-	gps_cfg_rinv.data6 = 0x65;
-	gps_cfg_rinv.data7 = 0x3A;
-	gps_cfg_rinv.data8 = 0x20;
-	gps_cfg_rinv.data9 = 0x6E;
-	gps_cfg_rinv.data10 = 0x6F;
-	gps_cfg_rinv.data11 = 0x20;
-	gps_cfg_rinv.data12 = 0x64;
-	gps_cfg_rinv.data13 = 0x61;
-	gps_cfg_rinv.data14 = 0x74;
-	gps_cfg_rinv.data15 = 0x61;
-	gps_cfg_rinv.data16 = 0x20;
-	gps_cfg_rinv.data17 = 0x73;
-	gps_cfg_rinv.data18 = 0x61;
-	gps_cfg_rinv.data19 = 0x76;
-	gps_cfg_rinv.data20 = 0x65;
-	gps_cfg_rinv.data21 = 0x64;
-	gps_cfg_rinv.data22 = 0x21;
-	gps_cfg_rinv.data23 = 0x00;
-	ubx_send_message_cfg_rinv(&gps->gps_stream_out, &gps_cfg_rinv);
-	
-	// Setting RXM settings
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Settings CFG-RXM configuration...\n");
-	}
 	ubx_cfg_rxm_t gps_cfg_rxm;
-	gps_cfg_rxm.res = 0x08;
-	gps_cfg_rxm.lp_mode = 0x00;
-	ubx_send_message_cfg_rxm(&gps->gps_stream_out, &gps_cfg_rxm);
-	
-	// Setting SBAS settings
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Settings CFG-SBAS configuration...\n");
-	}
 	ubx_cfg_sbas_t gps_cfg_sbas;
-	gps_cfg_sbas.mode = 0x01;
-	gps_cfg_sbas.usage = 0x03;
-	gps_cfg_sbas.max_sbas = 0x03;
-	gps_cfg_sbas.scan_mode2 = 0x00;
-	gps_cfg_sbas.scan_mode1 = 0x00066251;
-	ubx_send_message_cfg_sbas(&gps->gps_stream_out, &gps_cfg_sbas);
-	
-	// Setting TP time pulse settings
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Settings CFG-TP time pulse configuration...\n");
-	}
 	ubx_cfg_tp_t gps_cfg_tp;
-	gps_cfg_tp.interval = 0x000F4240;
-	gps_cfg_tp.length = 0x000186A0;
-	gps_cfg_tp.status = 0x01;
-	gps_cfg_tp.time_ref = 0x01;
-	gps_cfg_tp.flags = 0x00;
-	gps_cfg_tp.res = 0x00;
-	gps_cfg_tp.antenna_cable_delay = 0x3200;
-	gps_cfg_tp.rf_group_delay = 0x0000;
-	gps_cfg_tp.user_delay = 0x00000000;
-	ubx_send_message_cfg_tp(&gps->gps_stream_out, &gps_cfg_tp);
-	
-	// Setting TP time pulse 5 settings
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Settings CFG-TP5 time pulse TP5 configuration...\n");
-	}
 	ubx_cfg_tp5_t gps_cfg_tp5;
-	gps_cfg_tp5.tp_idx = 0x00;
-	gps_cfg_tp5.res0 = 0x29;
-	gps_cfg_tp5.res1 = 0x0003;
-	gps_cfg_tp5.ant_cable_delay = 0x0032;
-	gps_cfg_tp5.rf_group_delay = 0x0000;
-	gps_cfg_tp5.freq_period = 0x000F4240;
-	gps_cfg_tp5.freq_perid_lock = 0x000F4240;
-	gps_cfg_tp5.pulse_len_ratio = 0x00000000;
-	gps_cfg_tp5.pulse_len_ratio_lock = 0x000186A0;
-	gps_cfg_tp5.user_config_delay = 0x00000000;
-	gps_cfg_tp5.flags = 0x000000F7;
-	ubx_send_message_cfg_tp5(&gps->gps_stream_out, &gps_cfg_tp5);
-	
-	gps_cfg_tp5.tp_idx = 0x01;
-	gps_cfg_tp5.res0 = 0x29;
-	gps_cfg_tp5.res1 = 0x0003;
-	gps_cfg_tp5.ant_cable_delay = 0x0032;
-	gps_cfg_tp5.rf_group_delay = 0x0000;
-	gps_cfg_tp5.freq_period = 0x00000004;
-	gps_cfg_tp5.freq_perid_lock = 0x00000001;
-	gps_cfg_tp5.pulse_len_ratio = 0x0001E848;
-	gps_cfg_tp5.pulse_len_ratio_lock = 0x000186A0;
-	gps_cfg_tp5.user_config_delay = 0x00000000;
-	gps_cfg_tp5.flags = 0x000000FE;
-	ubx_send_message_cfg_tp5(&gps->gps_stream_out, &gps_cfg_tp5);
-	
-	// Setting USB settings
-	if (gps->print_nav_on_debug)
-	{
-		print_util_dbg_print("Settings CFG-USB configuration...\n");
-	}
 	ubx_cfg_usb_t gps_cfg_usb;
-	gps_cfg_usb.vendor_id = 0x1546;
-	gps_cfg_usb.product_id = 0x01A6;
-	gps_cfg_usb.res1 = 0x0000;
-	gps_cfg_usb.res2 = 0x0000;
-	gps_cfg_usb.power_consumption = 0x0064;
-	gps_cfg_usb.flags = 0x00000;
-	strcpy(gps_cfg_usb.vendor_string, "u-blox AG - www.u-blox.com");
-	strcpy(gps_cfg_usb.product_string, "u-blox 6  -  GPS Receiver");
-	strcpy(gps_cfg_usb.serial_number, "");
-	ubx_send_message_cfg_usb(&gps->gps_stream_out, &gps_cfg_usb);
+	
+	gps->print_nav_on_debug = true;
+	
+	if (gps->acknowledged_received)
+	{
+		gps->acknowledged_received = false;
+	}
+	else
+	{
+		gps->print_nav_on_debug = false;
+		return;
+	}
+	
+	gps->config_loop_count++;
+	
+	uint8_t i;
+	switch(gps->config_loop_count)
+	{
+		case 1:
+			// Configure the MON-VER messages
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Setting MON-VER messages...\r\n");
+			}
+			for (i=0; i<30; i++)
+			{
+				gps_mon_ver.sw_version[i] = 0;
+			}
+			for (i=0; i<10; i++)
+			{
+				gps_mon_ver.hw_version[i] = 0;
+			}
+			for (i=0; i<30; i++)
+			{
+				gps_mon_ver.rom_version[i] = 0;
+			}
+			strcpy(gps_mon_ver.sw_version,"7.03 (45970)");
+			strcpy(gps_mon_ver.hw_version,"00040007");
+			strcpy(gps_mon_ver.rom_version,"7.03 (45969)");
+			ubx_send_message_mon_ver(&gps->gps_stream_out, &gps_mon_ver);
+			
+			// No acknowledgment message for MON class
+			gps->acknowledged_received = true;
+			break;
+			
+		case 2:
+			// Configure the ANT messages
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Setting CFG-ANT messages...\r\n");
+			}
+			gps_cfg_ant.flags = 0x001B;
+			gps_cfg_ant.pins = 0xA98B;
+			ubx_send_message_cfg_ant(&gps->gps_stream_out, &gps_cfg_ant);
+			break;
+			
+		case 3:
+			// Configure the DAT messages
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Setting CFG-DAT messages...\r\n");
+			}
+			gps_cfg_dat.datum_num = 0x0001;
+			ubx_send_message_cfg_dat(&gps->gps_stream_out, &gps_cfg_dat);
+			break;
+			
+		case 4:
+			// Configure the FXN messages
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Setting CFG-FXN messages...\r\n");
+			}
+			gps_cfg_fxn.flags = 0x0000000C;
+			gps_cfg_fxn.t_reacq = 0x00000000;
+			gps_cfg_fxn.t_acq = 0x00000000;
+			gps_cfg_fxn.t_reacq_off = 0x00002710;
+			gps_cfg_fxn.t_acq_off = 0x000002710;
+			gps_cfg_fxn.t_on = 0x000007D0;
+			gps_cfg_fxn.t_off = 0xFFFFFC18;
+			gps_cfg_fxn.res = 0x00000000;
+			gps_cfg_fxn.base_tow = 0x00000000;
+			ubx_send_message_cfg_fxn(&gps->gps_stream_out, &gps_cfg_fxn);
+			break;
+			
+		case 5:
+			// Configure the INF messages
+			if (gps->print_nav_on_debug && (gps->config_nav_msg_count == 0))
+			{
+				print_util_dbg_print("Setting CFG-INF messages...\r\n");
+			}
+			
+			gps->config_nav_msg_count++;
+			switch(gps->config_nav_msg_count)
+			{
+				case 1:
+					gps_cfg_inf.protocol_id = 0x00;
+					gps_cfg_inf.res0 = 0x00;
+					gps_cfg_inf.res1 = 0x0000;
+					gps_cfg_inf.inf_msg_mask1 = 0x00;
+					gps_cfg_inf.inf_msg_mask2 = 0x00;
+					gps_cfg_inf.inf_msg_mask3 = 0x00;
+					gps_cfg_inf.inf_msg_mask4 = 0x00;
+					gps_cfg_inf.inf_msg_mask5 = 0x00;
+					gps_cfg_inf.inf_msg_mask6 = 0x00;
+					ubx_send_message_cfg_inf(&gps->gps_stream_out, &gps_cfg_inf);
+					gps->config_loop_count--;
+					break;
+					
+				case 2:
+					gps_cfg_inf.protocol_id = 0x01;
+					gps_cfg_inf.res0 = 0x00;
+					gps_cfg_inf.res1 = 0x0000;
+					gps_cfg_inf.inf_msg_mask1 = 0x87;
+					gps_cfg_inf.inf_msg_mask2 = 0x87;
+					gps_cfg_inf.inf_msg_mask3 = 0x87;
+					gps_cfg_inf.inf_msg_mask4 = 0x87;
+					gps_cfg_inf.inf_msg_mask5 = 0x87;
+					gps_cfg_inf.inf_msg_mask6 = 0x87;
+					ubx_send_message_cfg_inf(&gps->gps_stream_out, &gps_cfg_inf);
+					gps->config_loop_count--;
+					break;
+					
+				case 3:
+					gps_cfg_inf.protocol_id = 0x03;
+					gps_cfg_inf.res0 = 0x00;
+					gps_cfg_inf.res1 = 0x0000;
+					gps_cfg_inf.inf_msg_mask1 = 0x00;
+					gps_cfg_inf.inf_msg_mask2 = 0x00;
+					gps_cfg_inf.inf_msg_mask3 = 0x00;
+					gps_cfg_inf.inf_msg_mask4 = 0x00;
+					gps_cfg_inf.inf_msg_mask5 = 0x00;
+					gps_cfg_inf.inf_msg_mask6 = 0x00;
+					ubx_send_message_cfg_inf(&gps->gps_stream_out, &gps_cfg_inf);
+					gps->config_nav_msg_count = 0;
+					break;
+			}
+			break;
+			
+		case 6:
+			// Configure the ITFM messages
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Setting CFG-ITFM messages...\r\n");
+			}
+			gps_cfg_itfm.config = 0x2D62ACF3;
+			gps_cfg_itfm.config2 = 0x0000031E;
+			ubx_send_message_cfg_itfm(&gps->gps_stream_out, &gps_cfg_itfm);
+			break;
+			
+		case 7:
+			// Configure the NAV messages
+			if (gps->print_nav_on_debug && (gps->config_nav_msg_count == 0))
+			{
+				print_util_dbg_print("Setting NAV messages...\r\n");
+			}
+			
+			gps->config_nav_msg_count++;
+			switch(gps->config_nav_msg_count)
+			{
+				case 1:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_AOPSTATUS, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 2:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_CLOCK, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 3:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_DGPS, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 4:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_DOP, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 5:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_POSECEF, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 6:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_POSLLH, 1);
+					gps->config_loop_count--;
+					break;
+					
+				case 7:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_SBAS, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 8:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_SOL, 5);
+					gps->config_loop_count--;
+					break;
+					
+				case 9:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_STATUS, 5);
+					gps->config_loop_count--;
+					break;
+					
+				case 10:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_SVINFO, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 11:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_TIMEGPS, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 12:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_TIMEUTC,10);
+					gps->config_loop_count--;
+					break;
+					
+				case 13:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_VELCEF, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 14:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_VELNED, 1);
+					gps->config_nav_msg_count = 0;
+					break;
+			}
+			break;
+			
+		case 8:
+			// Configure MON messages
+			if (gps->print_nav_on_debug && (gps->config_nav_msg_count == 0))
+			{
+				print_util_dbg_print("Setting MON messages...\r\n");
+			}
+			
+			gps->config_nav_msg_count++;
+			switch(gps->config_nav_msg_count)
+			{
+				case 1:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, MSG_MON_HW2, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 2:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, MSG_MON_HW, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 3:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, MSG_MON_IO, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 4:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, MSG_MON_MSGPP, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 5:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, MSG_MON_RXBUF, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 6:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, MSG_MON_RXR, 5);
+					gps->config_loop_count--;
+					break;
+				case 7:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, MSG_MON_TXBUF, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 8:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, 5, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 9 :
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, 0x0A, 0);
+					gps->config_loop_count--;
+					break;
+				case 10:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, 0x20, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 11:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, 0x21, 0);
+					gps->config_nav_msg_count = 0;
+					break;
+			}
+			break;
+			
+		case 9:
+			// Configure AID messages
+			if (gps->print_nav_on_debug && (gps->config_nav_msg_count == 0))
+			{
+				print_util_dbg_print("Setting AID messages...\r\n");
+			}
+			
+			gps->config_nav_msg_count++;
+			switch(gps->config_nav_msg_count)
+			{
+				case 1:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_AID, MSG_AID_ALM,1);
+					gps->config_loop_count--;
+					break;
+					
+				case 2:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_AID, MSG_AID_EPH,1);
+					gps->config_loop_count--;
+					break;
+					
+				case 3:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_AID, MSG_AID_ALPSRV,0);
+					gps->config_loop_count--;
+					break;
+					
+				case 4:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_AID, MSG_AID_AOP,0);
+					gps->config_loop_count--;
+					break;
+					
+				case 5:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_AID, MSG_AID_REQ,0);
+					gps->config_nav_msg_count = 0;
+			}
+			break;
+			
+		case 10:
+			// Configure TIM messages
+			if (gps->print_nav_on_debug && (gps->config_nav_msg_count == 0))
+			{
+				print_util_dbg_print("Setting TIM messages...\r\n");
+			}
+			
+			gps->config_nav_msg_count++;
+			switch(gps->config_nav_msg_count)
+			{
+				case 1:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_TIM, MSG_TIM_TM2, 0);
+					gps->config_loop_count--;
+					break;
+					
+				case 2:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_TIM, MSG_TIM_TP, 10);
+					gps->config_loop_count--;
+					break;
+					
+				case 3:
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_TIM, MSG_TIM_VRFY, 10);
+					gps->config_nav_msg_count = 0;
+					break;
+			}
+			break;
+			
+		case 11:
+			// Setting navigation settings
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Settings CFG engine settings...\r\n");
+			}
+			gps_engine_settings.mask = 0xFFFF;
+			gps_engine_settings.dyn_model = 0x08;
+			gps_engine_settings.fix_mode = 0x03;
+			gps_engine_settings.fixed_alt = 0x0000;
+			gps_engine_settings.fixed_alt_var = 0x00002710;
+			gps_engine_settings.min_elev = 0x05;
+			gps_engine_settings.dr_limit = 0x00;
+			gps_engine_settings.p_dop = 0x00FA;
+			gps_engine_settings.t_dop = 0x00FA;
+			gps_engine_settings.p_acc = 0x0064;
+			gps_engine_settings.t_acc = 0x012C;
+			gps_engine_settings.static_hold_thresh = 0x00;
+			gps_engine_settings.dgps_timeout = 0x3C;
+			gps_engine_settings.res2 = 0x0000;
+			gps_engine_settings.res3 = 0x0000;
+			gps_engine_settings.res4 = 0x0000;
+			ubx_send_message_nav_settings(&gps->gps_stream_out, UBX_CLASS_CFG, MSG_CFG_NAV_SETTINGS, &gps_engine_settings, UBX_SIZE_CFG_NAV_SETTINGS);
+			break;
+			
+		case 12:
+			// Setting navigation expert settings
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Settings CFG expert engine settings...\r\n");
+			}
+			gps_nav_expert_settings.version = 0x0000;
+			gps_nav_expert_settings.mask1 = 0xFFFF;
+			gps_nav_expert_settings.mak2 = 0x00000003;
+			gps_nav_expert_settings.res1 = 0x03;
+			gps_nav_expert_settings.res2 = 0x02;
+			gps_nav_expert_settings.min_sv_s = 0x03;
+			gps_nav_expert_settings.max_sv_s = 0x10;
+			gps_nav_expert_settings.min_cn_o = 0x07;
+			gps_nav_expert_settings.res3 = 0x00;
+			gps_nav_expert_settings.ini_fix_3d = 0x00;
+			gps_nav_expert_settings.res4 = 0x00;
+			gps_nav_expert_settings.res5 = 0x00;
+			gps_nav_expert_settings.res6 = 0x00;
+			gps_nav_expert_settings.wkn_roll_over = 0x0643;
+			gps_nav_expert_settings.res7 = 0x00000000;
+			gps_nav_expert_settings.res8 = 0x01;
+			gps_nav_expert_settings.res9 = 0x01;
+			gps_nav_expert_settings.use_ppp = 0x00;
+			gps_nav_expert_settings.use_aop = 0x00;
+			gps_nav_expert_settings.res11 = 0x00;
+			gps_nav_expert_settings.res12 = 0x64;
+			gps_nav_expert_settings.aop_opb_max_err = 0x0078;
+			gps_nav_expert_settings.res13 = 0x00000000;
+			gps_nav_expert_settings.res14 = 0x00000000;
+			ubx_send_message_nav_expert_settings(&gps->gps_stream_out,&gps_nav_expert_settings);
+			break;
+			
+		case 13:
+			//gps->acknowledged_received = true;
+			// Setting power management settings
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Settings CFG-PM power management settings...\r\n");
+			}
+			gps_cfg_pm.version = 0x00;
+			gps_cfg_pm.res1 = 0x06;
+			gps_cfg_pm.res2 = 0x00;
+			gps_cfg_pm.res3 = 0x00;
+			gps_cfg_pm.flags = 0x00009004;
+			gps_cfg_pm.update_period = 0x000003E8;
+			gps_cfg_pm.search_period = 0x00002710;
+			gps_cfg_pm.grid_offset = 0x00000000;
+			gps_cfg_pm.on_time = 0x0002;
+			gps_cfg_pm.min_acq_time = 0x0000;
+			ubx_send_message_cfg_pm(&gps->gps_stream_out, &gps_cfg_pm);
+			break;
+			
+		case 14:
+			//gps->acknowledged_received = true;
+			// Setting power management 2 settings
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Settings CFG-PM2 power management settings...\r\n");
+			}
+			gps_cfg_pm2.version = 0x01;
+			gps_cfg_pm2.res1 = 0x06;
+			gps_cfg_pm2.res2 = 0x00;
+			gps_cfg_pm2.res3 = 0x00;
+			gps_cfg_pm2.flags = 0x00029000;
+			gps_cfg_pm2.update_period = 0x000003E8;
+			gps_cfg_pm2.search_period = 0x00002710;
+			gps_cfg_pm2.grid_offset = 0x00000000;
+			gps_cfg_pm2.on_time = 0x0002;
+			gps_cfg_pm2.min_acq_time = 0x0000;
+			gps_cfg_pm2.res4 = 0x012C;
+			gps_cfg_pm2.res5 = 0x0000;
+			gps_cfg_pm2.res6 = 0x0003C14F;
+			gps_cfg_pm2.res7 = 0x00000286;
+			gps_cfg_pm2.res8 = 0xFE;
+			gps_cfg_pm2.res9 = 0x00;
+			gps_cfg_pm2.res10 = 0x0000;
+			gps_cfg_pm2.res11 = 0x00014064;
+			ubx_send_message_cfg_pm2(&gps->gps_stream_out, &gps_cfg_pm2);
+			break;
+	
+		case 15:
+			// Setting port settings
+			if (gps->print_nav_on_debug && (gps->config_nav_msg_count == 0))
+			{
+				print_util_dbg_print("Settings CFG-PRT port configuration...\r\n");
+			}
+			
+			gps->config_nav_msg_count++;
+			switch(gps->config_nav_msg_count)
+			{
+				case 1:
+					gps_cfg_prt.port_id = 0x00;
+					gps_cfg_prt.res0 = 0x00;
+					gps_cfg_prt.tx_ready = 0x0000;
+					gps_cfg_prt.mode = 0x00000000;
+					gps_cfg_prt.baud_rate = 0x00000000;
+					gps_cfg_prt.in_proto_mask = 0x0000;
+					gps_cfg_prt.out_proto_mask = 0x0000;
+					gps_cfg_prt.flags = 0x0000;
+					gps_cfg_prt.res3 = 0x0000;
+					ubx_send_message_cfg_prt(&gps->gps_stream_out, &gps_cfg_prt);
+					gps->config_loop_count--;
+					break;
+					
+				case 2:
+					gps_cfg_prt.port_id = 0x01; // uart
+					gps_cfg_prt.res0 = 0x00;
+					gps_cfg_prt.tx_ready = 0x0000;
+					gps_cfg_prt.mode = 0x000008C0;
+					gps_cfg_prt.baud_rate = 0x00009600; // 38400
+					gps_cfg_prt.in_proto_mask = 0x0007;
+					gps_cfg_prt.out_proto_mask = 0x0001;
+					gps_cfg_prt.flags = 0x0000;
+					gps_cfg_prt.res3 = 0x0000;
+					ubx_send_message_cfg_prt(&gps->gps_stream_out, &gps_cfg_prt);
+					gps->config_loop_count--;
+					break;
+					
+				case 3:
+					gps_cfg_prt.port_id = 0x02; // second uart
+					gps_cfg_prt.res0 = 0x00;
+					gps_cfg_prt.tx_ready = 0x0000;
+					gps_cfg_prt.mode = 0x000008C0;
+					gps_cfg_prt.baud_rate = 0x00002580; // 9600
+					gps_cfg_prt.in_proto_mask = 0x0000;
+					gps_cfg_prt.out_proto_mask = 0x0000;
+					gps_cfg_prt.flags = 0x0000;
+					gps_cfg_prt.res3 = 0x0000;
+					ubx_send_message_cfg_prt(&gps->gps_stream_out, &gps_cfg_prt);
+					gps->config_loop_count--;
+					break;
+					
+				case 4:
+					gps_cfg_prt.port_id = 0x03; // USB
+					gps_cfg_prt.res0 = 0x00;
+					gps_cfg_prt.tx_ready = 0x0000;
+					gps_cfg_prt.mode = 0x00000000;
+					gps_cfg_prt.baud_rate = 0x00000000; // 0
+					gps_cfg_prt.in_proto_mask = 0x0007;
+					gps_cfg_prt.out_proto_mask = 0x0007;
+					gps_cfg_prt.flags = 0x0000;
+					gps_cfg_prt.res3 = 0x0000;
+					ubx_send_message_cfg_prt(&gps->gps_stream_out, &gps_cfg_prt);
+					gps->config_loop_count--;
+					break;
+					
+				case 5:
+					gps_cfg_prt.port_id = 0x04; // SPI
+					gps_cfg_prt.res0 = 0x00;
+					gps_cfg_prt.tx_ready = 0x0000;
+					gps_cfg_prt.mode = 0x00003200;
+					gps_cfg_prt.baud_rate = 0x00000000; // 0
+					gps_cfg_prt.in_proto_mask = 0x0007;
+					gps_cfg_prt.out_proto_mask = 0x0007;
+					gps_cfg_prt.flags = 0x0000;
+					gps_cfg_prt.res3 = 0x0000;
+					ubx_send_message_cfg_prt(&gps->gps_stream_out, &gps_cfg_prt);
+					gps->config_nav_msg_count = 0;
+					break;
+			}
+			break;
+			
+		case 16:
+			// Setting rate settings
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Settings CFG-RATE rate configuration...\r\n");
+			}
+			gps_cfg_rate.measure_rate = 0x00C8;
+			gps_cfg_rate.nav_rate = 0x0001;
+			gps_cfg_rate.time_ref = 0x0001;
+			ubx_send_message_cfg_rate(&gps->gps_stream_out,&gps_cfg_rate);
+			break;
+			
+		case 17:
+			// Setting RINV settings
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Settings CFG-RINV configuration...\r\n");
+			}
+			gps_cfg_rinv.flags = 0x00;
+			gps_cfg_rinv.data = 0x4E;
+			gps_cfg_rinv.data2 = 0x6F;
+			gps_cfg_rinv.data3 = 0x74;
+			gps_cfg_rinv.data4 = 0x69;
+			gps_cfg_rinv.data5 = 0x63;
+			gps_cfg_rinv.data6 = 0x65;
+			gps_cfg_rinv.data7 = 0x3A;
+			gps_cfg_rinv.data8 = 0x20;
+			gps_cfg_rinv.data9 = 0x6E;
+			gps_cfg_rinv.data10 = 0x6F;
+			gps_cfg_rinv.data11 = 0x20;
+			gps_cfg_rinv.data12 = 0x64;
+			gps_cfg_rinv.data13 = 0x61;
+			gps_cfg_rinv.data14 = 0x74;
+			gps_cfg_rinv.data15 = 0x61;
+			gps_cfg_rinv.data16 = 0x20;
+			gps_cfg_rinv.data17 = 0x73;
+			gps_cfg_rinv.data18 = 0x61;
+			gps_cfg_rinv.data19 = 0x76;
+			gps_cfg_rinv.data20 = 0x65;
+			gps_cfg_rinv.data21 = 0x64;
+			gps_cfg_rinv.data22 = 0x21;
+			gps_cfg_rinv.data23 = 0x00;
+			ubx_send_message_cfg_rinv(&gps->gps_stream_out, &gps_cfg_rinv);
+			break;
+			
+		case 18:
+			// Setting RXM settings
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Settings CFG-RXM configuration...\r\n");
+			}
+			gps_cfg_rxm.res = 0x08;
+			gps_cfg_rxm.lp_mode = 0x00;
+			ubx_send_message_cfg_rxm(&gps->gps_stream_out, &gps_cfg_rxm);
+			break;
+			
+		case 19:
+			// Setting SBAS settings
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Settings CFG-SBAS configuration...\r\n");
+			}
+			gps_cfg_sbas.mode = 0x01;
+			gps_cfg_sbas.usage = 0x03;
+			gps_cfg_sbas.max_sbas = 0x03;
+			gps_cfg_sbas.scan_mode2 = 0x00;
+			gps_cfg_sbas.scan_mode1 = 0x00066251;
+			ubx_send_message_cfg_sbas(&gps->gps_stream_out, &gps_cfg_sbas);
+			break;
+			
+		case 20:
+			// Setting TP time pulse settings
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Settings CFG-TP time pulse configuration...\r\n");
+				delay_ms(250);
+			}
+			gps_cfg_tp.interval = 0x000F4240;
+			gps_cfg_tp.length = 0x000186A0;
+			gps_cfg_tp.status = 0x01;
+			gps_cfg_tp.time_ref = 0x01;
+			gps_cfg_tp.flags = 0x00;
+			gps_cfg_tp.res = 0x00;
+			gps_cfg_tp.antenna_cable_delay = 0x0032;
+			gps_cfg_tp.rf_group_delay = 0x0000;
+			gps_cfg_tp.user_delay = 0x00000000;
+			ubx_send_message_cfg_tp(&gps->gps_stream_out, &gps_cfg_tp);
+			break;
+			
+		case 21:
+			// Setting TP time pulse 5 settings
+			if (gps->print_nav_on_debug && (gps->config_nav_msg_count == 0))
+			{
+				print_util_dbg_print("Settings CFG-TP5 time pulse TP5 configuration...\r\n");
+			}
+			
+			gps->config_nav_msg_count++;
+			switch(gps->config_nav_msg_count)
+			{
+				case 1:
+					gps_cfg_tp5.tp_idx = 0x00;
+					gps_cfg_tp5.res0 = 0x29;
+					gps_cfg_tp5.res1 = 0x0003;
+					gps_cfg_tp5.ant_cable_delay = 0x0032;
+					gps_cfg_tp5.rf_group_delay = 0x0000;
+					gps_cfg_tp5.freq_period = 0x000F4240;
+					gps_cfg_tp5.freq_perid_lock = 0x000F4240;
+					gps_cfg_tp5.pulse_len_ratio = 0x00000000;
+					gps_cfg_tp5.pulse_len_ratio_lock = 0x000186A0;
+					gps_cfg_tp5.user_config_delay = 0x00000000;
+					gps_cfg_tp5.flags = 0x000000F7;
+					ubx_send_message_cfg_tp5(&gps->gps_stream_out, &gps_cfg_tp5);
+					gps->config_loop_count--;
+					break;
+					
+				case 2:
+					gps_cfg_tp5.tp_idx = 0x01;
+					gps_cfg_tp5.res0 = 0x29;
+					gps_cfg_tp5.res1 = 0x0003;
+					gps_cfg_tp5.ant_cable_delay = 0x0032;
+					gps_cfg_tp5.rf_group_delay = 0x0000;
+					gps_cfg_tp5.freq_period = 0x00000004;
+					gps_cfg_tp5.freq_perid_lock = 0x00000001;
+					gps_cfg_tp5.pulse_len_ratio = 0x0001E848;
+					gps_cfg_tp5.pulse_len_ratio_lock = 0x000186A0;
+					gps_cfg_tp5.user_config_delay = 0x00000000;
+					gps_cfg_tp5.flags = 0x000000FE;
+					ubx_send_message_cfg_tp5(&gps->gps_stream_out, &gps_cfg_tp5);
+					gps->config_nav_msg_count = 0;
+					break;
+			}
+			break;
+		case 22:
+			// Setting USB settings
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("Settings CFG-USB configuration...\r\n");
+			}
+			gps_cfg_usb.vendor_id = 0x1546;
+			gps_cfg_usb.product_id = 0x01A6;
+			gps_cfg_usb.res1 = 0x0000;
+			gps_cfg_usb.res2 = 0x0000;
+			gps_cfg_usb.power_consumption = 0x0064;
+			gps_cfg_usb.flags = 0x00000;
+			strcpy(gps_cfg_usb.vendor_string, "u-blox AG - www.u-blox.com");
+			strcpy(gps_cfg_usb.product_string, "u-blox 6  -  GPS Receiver");
+			strcpy(gps_cfg_usb.serial_number, "");
+			ubx_send_message_cfg_usb(&gps->gps_stream_out, &gps_cfg_usb);
+			break;
+			
+		default:
+			if (gps->print_nav_on_debug)
+			{
+				print_util_dbg_print("GPS configuration completed!\r\n");
+			}
+			gps->configure_gps = false;
+			break;
+	}
+	
+	gps->print_nav_on_debug = false;
 }
 
 
@@ -3239,6 +3496,11 @@ void gps_ublox_update(gps_t *gps)
 	result = gps_ublox_message_decode(gps);
 	
 	tnow = time_keeper_get_millis();
+	
+	if (gps->configure_gps)
+	{
+		gps_ublox_configure_gps(gps);
+	}
 	
 	if (! result)
 	{

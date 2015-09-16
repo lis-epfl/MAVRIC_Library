@@ -142,11 +142,11 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_CFG_TP 0x07
 #define MSG_CFG_TP5 0x31
 #define MSG_CFG_USB 0x1B
-#define MSG_CFG_ITFM 0x39
-#define MSG_CFG_INF 0x02
-#define MSG_CFG_FXN 0x0E
-#define MSG_CFG_DAT 0x06
-#define MSG_CFG_ANT 0x13
+#define MSG_CFG_ITFM 0x39 // ok
+#define MSG_CFG_INF 0x02 // ok
+#define MSG_CFG_FXN 0x0E // ok
+#define MSG_CFG_DAT 0x06 //nok
+#define MSG_CFG_ANT 0x13 //ok
 
 #define MSG_MON_HW2 0x0B
 #define MSG_MON_HW 0x09
@@ -1341,6 +1341,11 @@ typedef struct
 
 	gps_engine_setting_t engine_nav_setting;	///< Enum GPS engine setting
 	ubx_cfg_nav_settings_t nav_settings;		///< CFG-NAV settings structure
+
+	bool configure_gps;								///< A flag to start the configuration of the GPS
+	uint16_t config_loop_count;					///< The counter for the configuration of the GPS
+	uint16_t config_nav_msg_count;				///< The counter for the configuration of the GPS when there is multiple message of the same kind
+	bool acknowledged_received;					///< A flag to know if the GPS received the configuration message
 
 	buffer_t gps_buffer;						///< The GPS buffer
 	byte_stream_t gps_stream_in;				///< The incoming GPS byte stream
