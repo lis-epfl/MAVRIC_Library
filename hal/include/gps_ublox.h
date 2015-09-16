@@ -143,6 +143,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_CFG_TP5 0x31
 #define MSG_CFG_USB 0x1B
 #define MSG_CFG_ITFM 0x39
+#define MSG_CFG_INF 0x02
 
 #define MSG_MON_HW2 0x0B
 #define MSG_MON_HW 0x09
@@ -205,6 +206,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_CFG_TP5 32
 #define UBX_SIZE_CFG_USB 108
 #define UBX_SIZE_CFG_ITFM 8
+#define UBX_SIZE_CFG_INF 10
 
 #define UBX_SIZE_MON_RXR 1
 
@@ -518,6 +520,22 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint32_t config2;					///< Extra settings for jamming/interference monitor
 		uint32_t config;					///< Interference config word
 	}ubx_cfg_itfm_t;
+
+	/**
+	 * \brief The U-Blox CFG-INF structure definition
+	 */
+	typedef struct
+	{
+		uint8_t inf_msg_mask6;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask5;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask4;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask3;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask2;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask1;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint16_t res1;						///< Reserved
+		uint8_t res0;						///< Reserved
+		uint8_t protocol_id;				///< Protocol identifier, 0:UBX, 1:NMEA, 2-255:reserved
+	}ubx_cfg_inf_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
@@ -940,6 +958,22 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint32_t config;					///< Interference config word
 		uint32_t config2;					///< Extra settings for jamming/interference monitor
 	}ubx_cfg_itfm_t;
+	
+	/**
+	 * \brief The U-Blox CFG-INF structure definition
+	 */
+	typedef struct
+	{
+		uint8_t protocol_id;				///< Protocol identifier, 0:UBX, 1:NMEA, 2-255:reserved
+		uint8_t res0;						///< Reserved
+		uint16_t res1;						///< Reserved
+		uint8_t inf_msg_mask1;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask2;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask3;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask4;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask5;				///< A bit mask saying which information messages are enabled on each I/O target
+		uint8_t inf_msg_mask6;				///< A bit mask saying which information messages are enabled on each I/O target
+	}ubx_cfg_inf_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition

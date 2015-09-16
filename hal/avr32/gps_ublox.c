@@ -319,6 +319,18 @@ static void ubx_send_message_CFG_nav_rate(byte_stream_t *stream, uint8_t msg_cla
 
 
 /**
+ * \brief	To send the CFG-INF settings message, if the gps_cfg_inf_t pointer is null,
+ *			asks for the current settings
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x02	MSG_CFG_INF
+ *
+ * \param	stream				The pointer to the stream structure
+ * \param	gps_cfg_inf			The INF structure sent
+ */
+static void ubx_send_message_cfg_inf(byte_stream_t *stream, ubx_cfg_inf_t *gps_cfg_inf);
+
+/**
  * \brief	To send the CFG-ITFM settings message, if the gps_cfg_itfm pointer is null,
  *			asks for the current settings
  *
@@ -1827,6 +1839,41 @@ static void ubx_send_message_CFG_nav_rate(byte_stream_t *stream, uint8_t msg_cla
 	ubx_send_cksum(stream, ck_a,ck_b);
 }
 
+static void ubx_send_message_cfg_inf(byte_stream_t *stream, ubx_cfg_inf_t *gps_cfg_inf)
+{
+	uint8_t ck_a = 0, ck_b = 0;
+	
+	uint8_t msg_class = UBX_CLASS_CFG;
+	uint8_t msg_id = MSG_CFG_INF;
+	uint16_t size;
+	
+	if (gps_cfg_inf != NULL)
+	{
+		size = UBX_SIZE_CFG_INF;
+	}
+	else
+	{
+		size = 0;
+	}
+	
+	ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
+	
+	if (gps_cfg_inf != NULL)
+	{
+		ubx_send_uint8(stream, gps_cfg_inf->protocol_id, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_inf->res0, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_inf->res1, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_inf->inf_msg_mask1, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_inf->inf_msg_mask2, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_inf->inf_msg_mask3, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_inf->inf_msg_mask4, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_inf->inf_msg_mask5, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_inf->inf_msg_mask6, &ck_a, &ck_b);
+	}
+
+	ubx_send_cksum(stream, ck_a,ck_b);
+}
+
 static void ubx_send_message_cfg_itfm(byte_stream_t *stream, ubx_cfg_itfm_t *gps_cfg_itfm)
 {
 	uint8_t ck_a = 0, ck_b = 0;
@@ -2567,6 +2614,43 @@ void gps_ublox_configure_gps(gps_t *gps)
 	//msg.nav_rate        = 1;		// constant equal to 1
 	//msg.timeref         = 0;		// 0:UTC time, 1:GPS time
 	//ubx_send_message_CFG_nav_rate(&gps->gps_stream_out, UBX_CLASS_CFG, MSG_CFG_RATE, msg, sizeof(msg));
+
+	// Configure the INF messages
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Setting INF messages...\n");
+	}
+	ubx_cfg_inf_t gps_cfg_inf;
+	gps_cfg_inf.protocol_id = 0x00;
+	gps_cfg_inf.res0 = 0x00;
+	gps_cfg_inf.res1 = 0x0000;
+	gps_cfg_inf.inf_msg_mask1 = 0x00;
+	gps_cfg_inf.inf_msg_mask2 = 0x00;
+	gps_cfg_inf.inf_msg_mask3 = 0x00;
+	gps_cfg_inf.inf_msg_mask4 = 0x00;
+	gps_cfg_inf.inf_msg_mask5 = 0x00;
+	gps_cfg_inf.inf_msg_mask6 = 0x00;
+	ubx_send_message_cfg_inf(&gps->gps_stream_out, &gps_cfg_inf);
+	gps_cfg_inf.protocol_id = 0x01;
+	gps_cfg_inf.res0 = 0x00;
+	gps_cfg_inf.res1 = 0x0000;
+	gps_cfg_inf.inf_msg_mask1 = 0x87;
+	gps_cfg_inf.inf_msg_mask2 = 0x87;
+	gps_cfg_inf.inf_msg_mask3 = 0x87;
+	gps_cfg_inf.inf_msg_mask4 = 0x87;
+	gps_cfg_inf.inf_msg_mask5 = 0x87;
+	gps_cfg_inf.inf_msg_mask6 = 0x87;
+	ubx_send_message_cfg_inf(&gps->gps_stream_out, &gps_cfg_inf);
+	gps_cfg_inf.protocol_id = 0x03;
+	gps_cfg_inf.res0 = 0x00;
+	gps_cfg_inf.res1 = 0x0000;
+	gps_cfg_inf.inf_msg_mask1 = 0x00;
+	gps_cfg_inf.inf_msg_mask2 = 0x00;
+	gps_cfg_inf.inf_msg_mask3 = 0x00;
+	gps_cfg_inf.inf_msg_mask4 = 0x00;
+	gps_cfg_inf.inf_msg_mask5 = 0x00;
+	gps_cfg_inf.inf_msg_mask6 = 0x00;
+	ubx_send_message_cfg_inf(&gps->gps_stream_out, &gps_cfg_inf);
 
 	// Configure the ITFM messages
 	if (gps->print_nav_on_debug)
