@@ -146,6 +146,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_CFG_INF 0x02
 #define MSG_CFG_FXN 0x0E
 #define MSG_CFG_DAT 0x06
+#define MSG_CFG_ANT 0x13
 
 #define MSG_MON_HW2 0x0B
 #define MSG_MON_HW 0x09
@@ -211,6 +212,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_CFG_INF 10
 #define UBX_SIZE_CFG_FXN 36
 #define UBX_SIZE_CFG_DAT 2
+#define UBX_SIZE_CFG_ANT 4
 
 #define UBX_SIZE_MON_RXR 1
 
@@ -564,6 +566,15 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	{
 		uint16_t datum_num;					///< Geodetic Datum number, 0:WGS84, 1:WGS72, 2:ETH90, 3 ADI-M, ...
 	}ubx_cfg_dat_t;
+
+	/**
+	 * \brief The U-Blox CFG-ANT structure definition
+	 */
+	typedef struct
+	{
+		uint16_t pins;						///< Antenna pin configuration
+		uint16_t flags;						///< Antenna flag mask
+	}ubx_cfg_ant_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
@@ -1026,6 +1037,15 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	{
 		uint16_t datum_num;					///< Geodetic Datum number, 0:WGS84, 1:WGS72, 2:ETH90, 3 ADI-M, ...
 	}ubx_cfg_dat_t;
+
+	/**
+	 * \brief The U-Blox CFG-ANT structure definition
+	 */
+	typedef struct
+	{
+		uint16_t flags;						///< Antenna flag mask
+		uint16_t pins;						///< Antenna pin configuration
+	}ubx_cfg_ant_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
