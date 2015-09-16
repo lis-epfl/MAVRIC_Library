@@ -317,6 +317,20 @@ static void ubx_send_cksum(byte_stream_t *stream, uint8_t ck_sum_a, uint8_t ck_s
  */
 static void ubx_send_message_CFG_nav_rate(byte_stream_t *stream, uint8_t msg_class, uint8_t msg_id, ubx_cfg_nav_rate_send_t msg, uint16_t size);
 
+
+/**
+ * \brief	To send the CFG-DAT settings message, if the ubx_cfg_dat_t pointer is null,
+ *			asks for the current settings
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x06	MSG_CFG_DAT
+ *
+ * \param	stream				The pointer to the stream structure
+ * \param	gps_cfg_dat			The DAT structure sent
+ */
+static void ubx_send_message_cfg_dat(byte_stream_t *stream, ubx_cfg_dat_t *gps_cfg_dat);
+
+
 /**
  * \brief	To send the CFG-FXN settings message, if the ubx_cfg_fxn_t pointer is null,
  *			asks for the current settings
@@ -1850,6 +1864,34 @@ static void ubx_send_message_CFG_nav_rate(byte_stream_t *stream, uint8_t msg_cla
 	ubx_send_cksum(stream, ck_a,ck_b);
 }
 
+static void ubx_send_message_cfg_dat(byte_stream_t *stream, ubx_cfg_dat_t *gps_cfg_dat)
+{
+	uint8_t ck_a = 0, ck_b = 0;
+	
+	uint8_t msg_class = UBX_CLASS_CFG;
+	uint8_t msg_id = MSG_CFG_DAT;
+	uint16_t size;
+	
+	if (gps_cfg_dat != NULL)
+	{
+		size = UBX_SIZE_CFG_DAT;
+	}
+	else
+	{
+		size = 0;
+	}
+	
+	ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
+	
+	if (gps_cfg_dat != NULL)
+	{
+		ubx_send_uint16(stream, gps_cfg_dat->datum_num, &ck_a, &ck_b);
+	}
+	
+	ubx_send_cksum(stream, ck_a,ck_b);
+}
+
+
 static void ubx_send_message_cfg_fxn(byte_stream_t *stream, ubx_cfg_fxn_t *gps_cfg_fxn)
 {
 	uint8_t ck_a = 0, ck_b = 0;
@@ -2660,6 +2702,15 @@ void gps_ublox_configure_gps(gps_t *gps)
 	//msg.nav_rate        = 1;		// constant equal to 1
 	//msg.timeref         = 0;		// 0:UTC time, 1:GPS time
 	//ubx_send_message_CFG_nav_rate(&gps->gps_stream_out, UBX_CLASS_CFG, MSG_CFG_RATE, msg, sizeof(msg));
+
+	// Configure the DAT messages
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Setting DAT messages...\n");
+	}
+	ubx_cfg_dat_t gps_cfg_dat;
+	gps_cfg_dat.datum_num = 0x0000;
+	ubx_send_message_cfg_dat(&gps->gps_stream_out, &gps_cfg_dat);
 
 	// Configure the FXN messages
 	if (gps->print_nav_on_debug)

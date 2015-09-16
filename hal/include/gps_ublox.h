@@ -145,6 +145,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_CFG_ITFM 0x39
 #define MSG_CFG_INF 0x02
 #define MSG_CFG_FXN 0x0E
+#define MSG_CFG_DAT 0x06
 
 #define MSG_MON_HW2 0x0B
 #define MSG_MON_HW 0x09
@@ -209,6 +210,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_CFG_ITFM 8
 #define UBX_SIZE_CFG_INF 10
 #define UBX_SIZE_CFG_FXN 36
+#define UBX_SIZE_CFG_DAT 2
 
 #define UBX_SIZE_MON_RXR 1
 
@@ -554,6 +556,14 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint32_t t_reacq;					///< Time the receiver tries to re-acquire satellites, before going to off state
 		uint32_t flags;						///< FXN configuration flags
 	}ubx_cfg_fxn_t;
+
+	/**
+	 * \brief The U-Blox CFG-DAT structure definition
+	 */
+	typedef struct
+	{
+		uint16_t datum_num;					///< Geodetic Datum number, 0:WGS84, 1:WGS72, 2:ETH90, 3 ADI-M, ...
+	}ubx_cfg_dat_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
@@ -1008,6 +1018,14 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint32_t res;						///< Reserved
 		uint32_t base_tow;					///< Base time of week to which t_on/t_sleep are aligned if ABSOLUTE_SIGN is set
 	}ubx_cfg_fxn_t;
+
+	/**
+	 * \brief The U-Blox CFG-DAT structure definition
+	 */
+	typedef struct
+	{
+		uint16_t datum_num;					///< Geodetic Datum number, 0:WGS84, 1:WGS72, 2:ETH90, 3 ADI-M, ...
+	}ubx_cfg_dat_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
