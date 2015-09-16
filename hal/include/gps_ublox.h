@@ -142,6 +142,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_CFG_RINV 0x34
 #define MSG_CFG_RXM 0x11
 #define MSG_CFG_SBAS 0x16
+#define MSG_CFG_TP 0x07
 
 #define MSG_MON_HW2 0x0B
 #define MSG_MON_HW 0x09
@@ -201,6 +202,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_CFG_RINV 24
 #define UBX_SIZE_CFG_RXM 2
 #define UBX_SIZE_CFG_SBAS 8
+#define UBX_SIZE_CFG_TP 20
 
 #define UBX_SIZE_MON_RXR 1
 
@@ -455,6 +457,22 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t usage;						///< SBAS usage
 		uint8_t mode;						///< SBAS mode
 	}ubx_cfg_sbas_t;
+
+	/**
+	 * \brief The U-Blox CFG-TP structure definition
+	 */
+	typedef struct
+	{
+		int32_t user_delay;					///< User time function delay
+		int16_t rf_group_delay;				///< Receiver RF group delay
+		int16_t antenna_cable_delay;		///< Antenna cable delay
+		uint8_t res;						///< Reserved
+		uint8_t flags;						///< Bitmask
+		uint8_t time_ref;					///< Alignment to reference time, 0=UTC, 1:GPS, 2:Local time
+		int8_t status;						///< Time pulse config setting, +1:positive, 0:off, -1:negative
+		uint32_t length;					///< Length of time pulse
+		uint32_t interval;					///< Time interval for time pulse
+	}ubx_cfg_tp_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
@@ -818,6 +836,22 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t scan_mode2;					///< Continuation of scanmode bitmask
 		uint32_t scan_mode1;				///< Which SBAS PRN numbers to search for, all bits to 0=auto_scan
 	}ubx_cfg_sbas_t;
+
+	/**
+	 * \brief The U-Blox CFG-TP structure definition
+	 */
+	typedef struct
+	{
+		uint32_t interval;					///< Time interval for time pulse
+		uint32_t length;					///< Length of time pulse
+		int8_t status;						///< Time pulse config setting, +1:positive, 0:off, -1:negative
+		uint8_t time_ref;					///< Alignment to reference time, 0=UTC, 1:GPS, 2:Local time
+		uint8_t flags;						///< Bitmask
+		uint8_t res;						///< Reserved
+		int16_t antenna_cable_delay;		///< Antenna cable delay
+		int16_t rf_group_delay;				///< Receiver RF group delay
+		int32_t user_delay;					///< User time function delay
+	}ubx_cfg_tp_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition

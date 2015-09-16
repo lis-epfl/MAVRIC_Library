@@ -438,6 +438,19 @@ static void ubx_send_message_cfg_sbas(byte_stream_t *stream, ubx_cfg_sbas_t *gps
 
 
 /**
+ * \brief	To send the CFG-TP time pulse configuration, if the ubx_cfg_tp_t pointer is null,
+ *			asks for the current settings
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x07	MSG_CFG_TP
+ *
+ * \param	stream				The pointer to the stream structure
+ * \param	gps_cfg_tp			The rate configuration sent
+ */
+static void ubx_send_message_cfg_tp(byte_stream_t *stream, ubx_cfg_tp_t *gps_cfg_tp);
+
+
+/**
  * \brief	To send the NAV messages that we want to receive
  *
  * Class:	0x06	UBX_CLASS_CFG
@@ -2113,6 +2126,39 @@ static void ubx_send_message_cfg_sbas(byte_stream_t *stream, ubx_cfg_sbas_t *gps
 	ubx_send_cksum(stream,ck_a,ck_b);
 }
 
+static void ubx_send_message_cfg_tp(byte_stream_t *stream, ubx_cfg_tp_t *gps_cfg_tp)
+{
+	uint8_t ck_a = 0, ck_b = 0;
+
+	uint8_t msg_class = UBX_CLASS_CFG;
+	uint8_t msg_id = MSG_CFG_TP;
+	uint16_t size;
+
+	if (gps_cfg_tp != NULL)
+	{
+		size = UBX_SIZE_CFG_TP;
+	}
+	else
+	{
+		size = 0;
+	}
+	ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
+	
+	if (gps_cfg_tp != NULL)
+	{
+		ubx_send_uint8(stream, gps_cfg_tp->interval, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_tp->length, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_tp->status, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_tp->time_ref, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_tp->flags, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_tp->res, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_tp->antenna_cable_delay, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_tp->rf_group_delay, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_tp->user_delay, &ck_a, &ck_b);
+	}
+	ubx_send_cksum(stream,ck_a,ck_b);
+}
+
 
 
 static void ubx_configure_message_rate(byte_stream_t *stream, uint8_t msg_class, uint8_t msg_id, uint8_t rate)
@@ -2645,6 +2691,23 @@ void gps_ublox_configure_gps(gps_t *gps)
 	gps_cfg_sbas.scan_mode2 = 0x00;
 	gps_cfg_sbas.scan_mode1 = 0x00066251;
 	ubx_send_message_cfg_sbas(&gps->gps_stream_out, &gps_cfg_sbas);
+	
+	// Setting TP time pulse settings
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Settings time pulse configuration...\n");
+	}
+	ubx_cfg_tp_t gps_cfg_tp;
+	gps_cfg_tp.interval = 0x000F4240;
+	gps_cfg_tp.length = 0x000186A0;
+	gps_cfg_tp.status = 0x01;
+	gps_cfg_tp.time_ref = 0x01;
+	gps_cfg_tp.flags = 0x00;
+	gps_cfg_tp.res = 0x00;
+	gps_cfg_tp.antenna_cable_delay = 0x3200;
+	gps_cfg_tp.rf_group_delay = 0x0000;
+	gps_cfg_tp.user_delay = 0x00000000;
+	ubx_send_message_cfg_tp(&gps->gps_stream_out, &gps_cfg_tp);
 }
 
 
