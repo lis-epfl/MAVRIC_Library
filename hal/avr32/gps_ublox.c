@@ -46,6 +46,7 @@
 #include "uart_int.h"
 #include "buffer.h"
 #include "time_keeper.h"
+#include <string.h>
 
 uint8_t  **ubx_current_message = 0;					///<  The pointer to the pointer to the structure of the current message to fill
 uint8_t  ** ubx_last_message = 0;					///<  The pointer to the pointer to the structure of the last message received of the same type than the current one being received (for exchange at the end)
@@ -318,6 +319,19 @@ static void ubx_send_message_CFG_nav_rate(byte_stream_t *stream, uint8_t msg_cla
 
 
 /**
+ * \brief	To send the CFG-ITFM settings message, if the gps_cfg_itfm pointer is null,
+ *			asks for the current settings
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x39	MSG_CFG_ITFM
+ *
+ * \param	stream				The pointer to the stream structure
+ * \param	gps_cfg_itfm		The ITFM structure sent
+ */
+static void ubx_send_message_cfg_itfm(byte_stream_t *stream, ubx_cfg_itfm_t *gps_cfg_itfm);
+
+
+/**
  * \brief	To send the NAV settings message, if the ubx_cfg_pm_t pointer is null,
  *			asks for the current settings
  *
@@ -406,7 +420,7 @@ static void ubx_send_message_cfg_rate(byte_stream_t *stream, ubx_cfg_rate_t *gps
  * Msg_id:	0x34	MSG_CFG_RINV
  *
  * \param	stream				The pointer to the stream structure
- * \param	gps_cfg_rinv		The rate configuration sent
+ * \param	gps_cfg_rinv		The RINV configuration sent
  */
 static void ubx_send_message_cfg_rinv(byte_stream_t *stream, ubx_cfg_rinv_t *gps_cfg_rinv);
 
@@ -419,7 +433,7 @@ static void ubx_send_message_cfg_rinv(byte_stream_t *stream, ubx_cfg_rinv_t *gps
  * Msg_id:	0x11	MSG_CFG_RXM
  *
  * \param	stream				The pointer to the stream structure
- * \param	gps_cfg_rxm			The rate configuration sent
+ * \param	gps_cfg_rxm			The RXM configuration sent
  */
 static void ubx_send_message_cfg_rxm(byte_stream_t *stream, ubx_cfg_rxm_t *gps_cfg_rxm);
 
@@ -432,7 +446,7 @@ static void ubx_send_message_cfg_rxm(byte_stream_t *stream, ubx_cfg_rxm_t *gps_c
  * Msg_id:	0x16	MSG_CFG_SBAS
  *
  * \param	stream				The pointer to the stream structure
- * \param	gps_cfg_sbas		The rate configuration sent
+ * \param	gps_cfg_sbas		The SBAS configuration sent
  */
 static void ubx_send_message_cfg_sbas(byte_stream_t *stream, ubx_cfg_sbas_t *gps_cfg_sbas);
 
@@ -445,7 +459,7 @@ static void ubx_send_message_cfg_sbas(byte_stream_t *stream, ubx_cfg_sbas_t *gps
  * Msg_id:	0x07	MSG_CFG_TP
  *
  * \param	stream				The pointer to the stream structure
- * \param	gps_cfg_tp			The rate configuration sent
+ * \param	gps_cfg_tp			The TP configuration sent
  */
 static void ubx_send_message_cfg_tp(byte_stream_t *stream, ubx_cfg_tp_t *gps_cfg_tp);
 
@@ -458,9 +472,22 @@ static void ubx_send_message_cfg_tp(byte_stream_t *stream, ubx_cfg_tp_t *gps_cfg
  * Msg_id:	0x31	MSG_CFG_TP5
  *
  * \param	stream				The pointer to the stream structure
- * \param	gps_cfg_tp5			The rate configuration sent
+ * \param	gps_cfg_tp5			The TP5 configuration sent
  */
 static void ubx_send_message_cfg_tp5(byte_stream_t *stream, ubx_cfg_tp5_t *gps_cfg_tp5);
+
+
+/**
+ * \brief	To send the CFG-USB configuration, if the ubx_cfg_usb_t pointer is null,
+ *			asks for the current settings
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x1B	MSG_CFG_USB
+ *
+ * \param	stream				The pointer to the stream structure
+ * \param	gps_cfg_usb			The USB configuration sent
+ */
+static void ubx_send_message_cfg_usb(byte_stream_t *stream, ubx_cfg_usb_t *gps_cfg_usb);
 
 
 /**
@@ -472,7 +499,7 @@ static void ubx_send_message_cfg_tp5(byte_stream_t *stream, ubx_cfg_tp5_t *gps_c
  * \param	stream				The pointer to the stream structure
  * \param	msg_class			The U-Blox class of the message
  * \param	msg_id				The U-Blox message ID
- * \param	rate				The rate of the CFG message
+ * \param	rate				The rate of the desired message
  */
 static void ubx_configure_message_rate(byte_stream_t *stream, uint8_t msg_class, uint8_t msg_id, uint8_t rate);
 
@@ -1800,6 +1827,34 @@ static void ubx_send_message_CFG_nav_rate(byte_stream_t *stream, uint8_t msg_cla
 	ubx_send_cksum(stream, ck_a,ck_b);
 }
 
+static void ubx_send_message_cfg_itfm(byte_stream_t *stream, ubx_cfg_itfm_t *gps_cfg_itfm)
+{
+	uint8_t ck_a = 0, ck_b = 0;
+	
+	uint8_t msg_class = UBX_CLASS_CFG;
+	uint8_t msg_id = MSG_CFG_ITFM;
+	uint16_t size;
+	
+	if (gps_cfg_itfm != NULL)
+	{
+		size = UBX_SIZE_CFG_ITFM;
+	}
+	else
+	{
+		size = 0;
+	}
+	
+	ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
+	
+	if (gps_cfg_itfm != NULL)
+	{
+		ubx_send_uint32(stream,gps_cfg_itfm->config,&ck_a, &ck_b);
+		ubx_send_uint32(stream,gps_cfg_itfm->config2,&ck_a, &ck_b);
+	}
+	
+	ubx_send_cksum(stream, ck_a,ck_b);
+}
+
 static void ubx_send_message_nav_settings(byte_stream_t *stream, uint8_t msg_class, uint8_t msg_id, ubx_cfg_nav_settings_t *engine_settings, uint16_t size)
 {
 	uint8_t ck_a = 0, ck_b = 0;
@@ -2207,7 +2262,53 @@ static void ubx_send_message_cfg_tp5(byte_stream_t *stream, ubx_cfg_tp5_t *gps_c
 	ubx_send_cksum(stream,ck_a,ck_b);
 }
 
+static void ubx_send_message_cfg_usb(byte_stream_t *stream, ubx_cfg_usb_t *gps_cfg_usb)
+{
+	uint8_t ck_a = 0, ck_b = 0;
 
+	uint8_t msg_class = UBX_CLASS_CFG;
+	uint8_t msg_id = MSG_CFG_USB;
+	uint16_t size;
+
+	if (gps_cfg_usb != NULL)
+	{
+		size = UBX_SIZE_CFG_USB;
+	}
+	else
+	{
+		size = 0;
+	}
+	ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
+	
+	if (gps_cfg_usb != NULL)
+	{
+	
+		ubx_send_uint16(stream, gps_cfg_usb->vendor_id, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_usb->product_id, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_usb->res1, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_usb->res2, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_usb->power_consumption, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_usb->flags, &ck_a, &ck_b);
+		
+		int i;
+		for (i=0; i<32; i++)
+		{
+			ubx_send_uint8(stream, gps_cfg_usb->vendor_string[i], &ck_a, &ck_b);
+		}
+		
+		for (i=0; i<32; i++)
+		{
+			ubx_send_uint8(stream, gps_cfg_usb->product_string[i], &ck_a, &ck_b);
+		}
+		
+		for (i=0; i<32; i++)
+		{
+			ubx_send_uint8(stream, gps_cfg_usb->serial_number[i], &ck_a, &ck_b);
+		}
+	}
+	
+	ubx_send_cksum(stream,ck_a,ck_b);
+}
 
 static void ubx_configure_message_rate(byte_stream_t *stream, uint8_t msg_class, uint8_t msg_id, uint8_t rate)
 {
@@ -2461,12 +2562,21 @@ void gps_ublox_configure_gps(gps_t *gps)
 	//}
 
 	// ask for navigation solutions every 200ms (5Hz)
-	ubx_cfg_nav_rate_send_t msg;
-	msg.measure_rate_ms = 200;		// ms
-	msg.nav_rate        = 1;		// constant equal to 1
-	msg.timeref         = 0;		// 0:UTC time, 1:GPS time
-	
-	ubx_send_message_CFG_nav_rate(&gps->gps_stream_out, UBX_CLASS_CFG, MSG_CFG_RATE, msg, sizeof(msg));
+	//ubx_cfg_nav_rate_send_t msg;
+	//msg.measure_rate_ms = 200;		// ms
+	//msg.nav_rate        = 1;		// constant equal to 1
+	//msg.timeref         = 0;		// 0:UTC time, 1:GPS time
+	//ubx_send_message_CFG_nav_rate(&gps->gps_stream_out, UBX_CLASS_CFG, MSG_CFG_RATE, msg, sizeof(msg));
+
+	// Configure the ITFM messages
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Setting ITFM messages...\n");
+	}
+	ubx_cfg_itfm_t gps_cfg_itfm;
+	gps_cfg_itfm.config = 0x2D62ACF3;
+	gps_cfg_itfm.config2 = 0x0000031E;
+	ubx_send_message_cfg_itfm(&gps->gps_stream_out, &gps_cfg_itfm);
 
 	// Configure the NAV messages
 	if (gps->print_nav_on_debug)
@@ -2788,6 +2898,23 @@ void gps_ublox_configure_gps(gps_t *gps)
 	gps_cfg_tp5.user_config_delay = 0x00000000;
 	gps_cfg_tp5.flags = 0x000000FE;
 	ubx_send_message_cfg_tp5(&gps->gps_stream_out, &gps_cfg_tp5);
+	
+	// Setting USB settings
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Settings USB configuration...\n");
+	}
+	ubx_cfg_usb_t gps_cfg_usb;
+	gps_cfg_usb.vendor_id = 0x1546;
+	gps_cfg_usb.product_id = 0x01A6;
+	gps_cfg_usb.res1 = 0x0000;
+	gps_cfg_usb.res2 = 0x0000;
+	gps_cfg_usb.power_consumption = 0x0064;
+	gps_cfg_usb.flags = 0x00000;
+	strcpy(gps_cfg_usb.vendor_string, "u-blox AG - www.u-blox.com");
+	strcpy(gps_cfg_usb.product_string, "u-blox 6  -  GPS Receiver");
+	strcpy(gps_cfg_usb.serial_number, "");
+	ubx_send_message_cfg_usb(&gps->gps_stream_out, &gps_cfg_usb);
 }
 
 

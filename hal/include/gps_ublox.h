@@ -128,9 +128,6 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_NAV_EKFSTATUS 0x40
 #define MSG_NAV_AOPSTATUS 0x60
 
-
-#define MSG_CFG_PRT 0x00
-#define MSG_CFG_RATE 0x08
 #define MSG_CFG_SET_RATE 0x01
 #define MSG_CFG_NAV_SETTINGS 0x24
 #define MSG_CFG_NAV_EXPERT_SETTINGS 0x23
@@ -144,6 +141,8 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_CFG_SBAS 0x16
 #define MSG_CFG_TP 0x07
 #define MSG_CFG_TP5 0x31
+#define MSG_CFG_USB 0x1B
+#define MSG_CFG_ITFM 0x39
 
 #define MSG_MON_HW2 0x0B
 #define MSG_MON_HW 0x09
@@ -199,12 +198,13 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_CFG_PM 24
 #define UBX_SIZE_CFG_PM2 44
 #define UBX_SIZE_CFG_PRT 20
-#define UBX_SIZE_CFG_RATE 6
 #define UBX_SIZE_CFG_RINV 24
 #define UBX_SIZE_CFG_RXM 2
 #define UBX_SIZE_CFG_SBAS 8
 #define UBX_SIZE_CFG_TP 20
 #define UBX_SIZE_CFG_TP5 32
+#define UBX_SIZE_CFG_USB 108
+#define UBX_SIZE_CFG_ITFM 8
 
 #define UBX_SIZE_MON_RXR 1
 
@@ -493,6 +493,31 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t res0;						///< Reserved
 		uint8_t tp_idx;						///< Timepulse selection
 	}ubx_cfg_tp5_t;
+
+	/**
+	 * \brief The U-Blox CFG-USB structure definition
+	 */
+	typedef struct
+	{
+		char serial_number[32];				///< String containing the serial number, including 0-termination
+		char product_string[32];			///< String containing the product name, including 0-termination
+		char vendor_string[32];				///< String containing the vendor name, including 0-termination
+		uint16_t flags;						///< Various configuration flag
+		uint16_t power_consumption;			///< Power consumed by the device in mA
+		uint16_t res2;						///< Reserved for special use, set to 1
+		uint16_t res1;						///< Reserved, set to 0
+		uint16_t product_id;				///< Product ID
+		uint16_t vendor_id;					///< Vendor ID. This field shall only be set to registered
+	}ubx_cfg_usb_t;
+
+	/**
+	 * \brief The U-Blox CFG-ITFM structure definition
+	 */
+	typedef struct
+	{
+		uint32_t config2;					///< Extra settings for jamming/interference monitor
+		uint32_t config;					///< Interference config word
+	}ubx_cfg_itfm_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
@@ -890,6 +915,31 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int32_t user_config_delay;			///< User configurable delay
 		uint32_t flags;						///< Configuratin flags
 	}ubx_cfg_tp5_t;
+
+	/**
+	 * \brief The U-Blox CFG-USB structure definition
+	 */
+	typedef struct
+	{
+		uint16_t vendor_id;					///< Vendor ID. This field shall only be set to registered
+		uint16_t product_id;				///< Product ID
+		uint16_t res1;						///< Reserved, set to 0
+		uint16_t res2;						///< Reserved for special use, set to 1
+		uint16_t power_consumption;			///< Power consumed by the device in mA
+		uint16_t flags;						///< Various configuration flag
+		char vendor_string[32];				///< String containing the vendor name, including 0-termination
+		char product_string[32];			///< String containing the product name, including 0-termination
+		char serial_number[32];				///< String containing the serial number, including 0-termination
+	}ubx_cfg_usb_t;
+
+	/**
+	 * \brief The U-Blox CFG-ITFM structure definition
+	 */
+	typedef struct
+	{
+		uint32_t config;					///< Interference config word
+		uint32_t config2;					///< Extra settings for jamming/interference monitor
+	}ubx_cfg_itfm_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
