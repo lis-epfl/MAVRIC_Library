@@ -289,9 +289,6 @@ static void ubx_send_message_CFG_nav_rate(gps_t *gps, uint8_t msg_class, uint8_t
  * Class:	0x06	UBX_CLASS_CFG
  * Msg_id:	0x24	MSG_CFG_NAV_SETTINGS
  *
- *
- * \warning	This function sends wrong element
- *
  * \param	gps					Pointer to the GPS structure
  * \param	msg_class			the U-Blox class of the message
  * \param	msg_id				the U-Blox message ID
@@ -300,6 +297,19 @@ static void ubx_send_message_CFG_nav_rate(gps_t *gps, uint8_t msg_class, uint8_t
  */
 static void ubx_send_message_nav_settings(gps_t *gps, uint8_t msg_class, uint8_t msg_id, ubx_cfg_nav_settings_t *engine_settings, uint16_t size);
 
+/**
+ * \brief	To send the NAV settings message
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x24	MSG_CFG_NAV_SETTINGS
+ *
+ *
+ * \warning	This function sends wrong element
+ *
+ * \param	gps					Pointer to the GPS structure
+ * \param	engine_settings		the engine_settings sent
+ */
+static void ubx_send_message_nav_expert_settings(gps_t *gps, ubx_cfg_nav_expert_settings_t *expert_engine_settings);
 
 /**
  * \brief	To send the NAV messages that we want to receive
@@ -688,7 +698,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					switch(gps->msg_id)
 					{
 						case MSG_CFG_NAV_SETTINGS:
-							if(gps->payload_length == UBX_SIZE_NAV_SETTINGS)
+							if(gps->payload_length == UBX_SIZE_CFG_NAV_SETTINGS)
 							{
 								ubx_current_message = (uint8_t **)&ubx_current_nav_settings_message;
 								ubx_last_message = (uint8_t **)&ubx_last_nav_settings_message;
@@ -703,7 +713,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print(" Received size:");
 								print_util_dbg_print_num(gps->payload_length,10);
 								print_util_dbg_print(" should be:");
-								print_util_dbg_print_num(UBX_SIZE_NAV_SETTINGS,10);
+								print_util_dbg_print_num(UBX_SIZE_CFG_NAV_SETTINGS,10);
 								print_util_dbg_print("\r\n");
 								gps->step = 0;
 								goto reset;
@@ -1547,6 +1557,13 @@ static uint8_t endian_higher_bytes_uint32(uint32_t bytes)
 	return (bytes & 0xFF000000)>>24;
 }
 
+static void ubx_send_uint8(uint8_t byte, uint8_t *ck_a, uint8_t *ck_b)
+{
+	uint8_t data = byte;
+	
+	
+	
+}
 
 static void ubx_send_header(gps_t *gps, uint8_t msg_class, uint8_t msg_id, uint16_t size)
 {
@@ -1781,6 +1798,63 @@ static void ubx_send_message_nav_settings(gps_t *gps, uint8_t msg_class, uint8_t
 	ubx_send_cksum(gps, ck_a,ck_b);
 }
 
+static void ubx_send_message_nav_expert_settings(gps_t *gps, ubx_cfg_nav_expert_settings_t *expert_engine_settings)
+{
+	uint8_t ck_a = 0, ck_b = 0;
+	uint8_t data;
+	
+	uint8_t msg_class = UBX_CLASS_CFG;
+	uint8_t msg_id = MSG_CFG_NAV_EXPERT_SETTINGS;
+	uint16_t size;
+	
+	if (expert_engine_settings != NULL)
+	{
+		size = UBX_SIZE_CFG_NAV_EXPERT_SETTINGS;
+	}
+	else
+	{
+		size = 0;
+	}
+	
+	ubx_send_header(gps, msg_class,msg_id,size);
+	
+	update_checksum((uint8_t *)&msg_class, 1, &ck_a, &ck_b);
+	update_checksum((uint8_t *)&msg_id, 1, &ck_a, &ck_b);
+	data = endian_lower_bytes_uint16(size);
+	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
+	data = endian_higher_bytes_uint16(size);
+	update_checksum((uint8_t *)&data, 1, &ck_a, &ck_b);
+	
+	if (expert_engine_settings != NULL)
+	{
+		expert_engine_settings->version = 0x0000;
+		expert_engine_settings->mask1 = 0xFFFF;
+		expert_engine_settings->mak2 = 0x00000003;
+		expert_engine_settings->res1 = 0x03;
+		expert_engine_settings->res2 = 0x02;
+		expert_engine_settings->min_sv_s = 0x03;
+		expert_engine_settings->max_sv_s = 0x10;
+		expert_engine_settings->min_cn_o = 0x07;
+		expert_engine_settings->res3 = 0x00;
+		expert_engine_settings->ini_fix_3d = 0x00;
+		expert_engine_settings->res4 = 0x00;
+		expert_engine_settings->res5 = 0x00;
+		expert_engine_settings->res6 = 0x00;
+		expert_engine_settings->wkn_roll_over = 0x0643;
+		expert_engine_settings->res7 = 0x00000000;
+		expert_engine_settings->res8 = 0x01;
+		expert_engine_settings->res9 = 0x01;
+		expert_engine_settings->use_ppp = 0x00;
+		expert_engine_settings->use_aop = 0x00;
+		expert_engine_settings->res11 = 0x00;
+		expert_engine_settings->res12 = 0x64;
+		expert_engine_settings->aop_opb_max_err = 0x0078;
+		expert_engine_settings->res13 = 0x00000000;
+		expert_engine_settings->res14 = 0x00000000;
+	}
+	
+	ubx_send_cksum(gps,ck_a,ck_b);
+}
 
 static void ubx_configure_message_rate(gps_t *gps, uint8_t msg_class, uint8_t msg_id, uint8_t rate)
 {
@@ -1813,7 +1887,6 @@ static void ubx_configure_message_rate(gps_t *gps, uint8_t msg_class, uint8_t ms
 	
 	ubx_send_cksum(gps, ck_a,ck_b);
 }
-
 
 static ubx_nav_pos_llh_t * ubx_get_pos_llh()
 {
@@ -2052,25 +2125,117 @@ void gps_ublox_configure_gps(gps_t *gps)
 	
 	ubx_send_message_CFG_nav_rate(gps, UBX_CLASS_CFG, MSG_CFG_RATE, msg, sizeof(msg));
 
-	// ask for the messages we parse to be sent
+	// Configure the NAV messages
 	if (gps->print_nav_on_debug)
 	{
-		print_util_dbg_print("Set navigation messages\n");
+		print_util_dbg_print("Setting NAV messages...\n");
 	}
-	
-	ubx_configure_message_rate(gps,UBX_CLASS_NAV, MSG_NAV_POSLLH, 1);
-	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_STATUS, 5);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_AOPSTATUS, 0);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_CLOCK, 0);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_DGPS, 0);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_DOP, 0);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_EKFSTATUS, 0);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_POSECEF, 0);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_POSLLH, 1);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_SBAS, 0);
 	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_SOL, 5);
-	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_VELNED, 1);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_STATUS, 5);
 	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_SVINFO, 0);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_TIMEGPS, 0);
 	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_TIMEUTC,10);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_VELCEF, 0);
+	ubx_configure_message_rate(gps, UBX_CLASS_NAV, MSG_NAV_VELNED, 1);
+	
+	// Configure MON messages
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Setting MON messages...\r\n");
+	}
+	ubx_configure_message_rate(gps, UBX_CLASS_MON, MSG_MON_HW2, 0);	
+	ubx_configure_message_rate(gps, UBX_CLASS_MON, MSG_MON_HW, 0);	
+	ubx_configure_message_rate(gps, UBX_CLASS_MON, MSG_MON_IO, 0);	
+	ubx_configure_message_rate(gps, UBX_CLASS_MON, MSG_MON_MSGPP, 0);	
+	ubx_configure_message_rate(gps, UBX_CLASS_MON, MSG_MON_RXBUF, 0);	
+	ubx_configure_message_rate(gps, UBX_CLASS_MON, MSG_MON_RXR, 5);	
+	ubx_configure_message_rate(gps, UBX_CLASS_MON, MSG_MON_TXBUF, 0);	
+	ubx_configure_message_rate(gps, UBX_CLASS_MON, MSG_MON_VER, 0);	
+
+	// Configure AID messages
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Setting AID messages...\r\n");
+	}
+	ubx_configure_message_rate(gps, UBX_CLASS_AID, MSG_AID_ALM,1);
+	ubx_configure_message_rate(gps, UBX_CLASS_AID, MSG_AID_EPH,1);
+	ubx_configure_message_rate(gps, UBX_CLASS_AID, MSG_AID_ALPSRV,0);
+	ubx_configure_message_rate(gps, UBX_CLASS_AID, MSG_AID_AOP,0);
+	ubx_configure_message_rate(gps, UBX_CLASS_AID, MSG_AID_REQ,0);
+
+	// Configure TIM messages
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Setting TIM messages...\r\n");
+	}
+	ubx_configure_message_rate(gps, UBX_CLASS_TIM, MSG_TIM_TM2, 0);
+	ubx_configure_message_rate(gps, UBX_CLASS_TIM, MSG_TIM_TP, 10);
+	ubx_configure_message_rate(gps, UBX_CLASS_TIM, MSG_TIM_VRFY, 10);
 
 	// ask for the current navigation settings
 	if (gps->print_nav_on_debug)
 	{
 		print_util_dbg_print("Asking for engine setting\n");
 	}
-	ubx_send_message_nav_settings(gps, UBX_CLASS_CFG, MSG_CFG_NAV_SETTINGS, NULL, 0);
+	
+	ubx_cfg_nav_settings_t gps_engine_settings;
+	
+	gps_engine_settings.mask = 0xFFFF;
+	gps_engine_settings.dyn_model = 0x08;
+	gps_engine_settings.fix_mode = 0x03;
+	gps_engine_settings.fixed_alt = 0x0000;
+	gps_engine_settings.fixed_alt_var = 0x00002710;
+	gps_engine_settings.min_elev = 0x05;
+	gps_engine_settings.dr_limit = 0x00;
+	gps_engine_settings.p_dop = 0x00FA;
+	gps_engine_settings.t_dop = 0x00FA;
+	gps_engine_settings.p_acc = 0x0064;
+	gps_engine_settings.t_acc = 0x012C;
+	gps_engine_settings.static_hold_thresh = 0x00;
+	gps_engine_settings.dgps_timeout = 0x3C;
+	gps_engine_settings.res2 = 0x0000;
+	gps_engine_settings.res3 = 0x0000;
+	gps_engine_settings.res4 = 0x0000;
+	
+	ubx_send_message_nav_settings(gps, UBX_CLASS_CFG, MSG_CFG_NAV_SETTINGS, &gps_engine_settings, UBX_SIZE_CFG_NAV_SETTINGS);
+	
+	ubx_cfg_nav_expert_settings_t gps_nav_expert_settings;
+	
+	gps_nav_expert_settings.version = 0x0000;
+	gps_nav_expert_settings.mask1 = 0xFFFF;
+	gps_nav_expert_settings.mak2 = 0x00000003;
+	gps_nav_expert_settings.res1 = 0x03;
+	gps_nav_expert_settings.res2 = 0x02;
+	gps_nav_expert_settings.min_sv_s = 0x03;
+	gps_nav_expert_settings.max_sv_s = 0x10;
+	gps_nav_expert_settings.min_cn_o = 0x07;
+	gps_nav_expert_settings.res3 = 0x00;
+	gps_nav_expert_settings.ini_fix_3d = 0x00;
+	gps_nav_expert_settings.res4 = 0x00;
+	gps_nav_expert_settings.res5 = 0x00;
+	gps_nav_expert_settings.res6 = 0x00;
+	gps_nav_expert_settings.wkn_roll_over = 0x0643;
+	gps_nav_expert_settings.res7 = 0x00000000;
+	gps_nav_expert_settings.res8 = 0x01;
+	gps_nav_expert_settings.res9 = 0x01;
+	gps_nav_expert_settings.use_ppp = 0x00;
+	gps_nav_expert_settings.use_aop = 0x00;
+	gps_nav_expert_settings.res11 = 0x00;
+	gps_nav_expert_settings.res12 = 0x64;
+	gps_nav_expert_settings.aop_opb_max_err = 0x0078;
+	gps_nav_expert_settings.res13 = 0x00000000;
+	gps_nav_expert_settings.res14 = 0x00000000;
+	
+	
+	
 }
 
 

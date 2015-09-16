@@ -112,25 +112,46 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_INF_TEST 0x03
 #define MSG_INF_DEBUG 0x04
 
+#define MSG_NAV_POSECEF 0x01
 #define MSG_NAV_POSLLH 0x02
 #define MSG_NAV_STATUS 0x03
-#define MSG_NAV_AOPSTATUS 0x60
-#define MSG_NAV_CLOCK 0x22
+#define MSG_NAV_DOP 0x04
 #define MSG_NAV_SOL 0x06
-#define MSG_NAV_VELNED 0x12
 #define MSG_NAV_VELCEF 0x11
+#define MSG_NAV_VELNED 0x12
 #define MSG_NAV_TIMEGPS 0x20
 #define MSG_NAV_TIMEUTC 0x21
+#define MSG_NAV_CLOCK 0x22
 #define MSG_NAV_SVINFO 0x30
+#define MSG_NAV_DGPS 0x31
+#define MSG_NAV_SBAS 0x32
+#define MSG_NAV_EKFSTATUS 0x40
+#define MSG_NAV_AOPSTATUS 0x60
+
 
 #define MSG_CFG_PRT 0x00
 #define MSG_CFG_RATE 0x08
 #define MSG_CFG_SET_RATE 0x01
 #define MSG_CFG_NAV_SETTINGS 0x24
+#define MSG_CFG_NAV_EXPERT_SETTINGS 0x23
 #define MSG_CFG_NMEA 0x17
 
+#define MSG_MON_HW2 0x0B
+#define MSG_MON_HW 0x09
+#define MSG_MON_IO 0x02
+#define MSG_MON_MSGPP 0x06
+#define MSG_MON_RXBUF 0x07
 #define MSG_MON_RXR 0x21
+#define MSG_MON_TXBUF 0x08
+#define MSG_MON_VER 0x04
 
+#define MSG_AID_ALM 0x30
+#define MSG_AID_EPH 0x31
+#define MSG_AID_ALPSRV 0x32
+#define MSG_AID_AOP 0x33
+#define MSG_AID_REQ 0x00
+
+#define MSG_TIM_TM2 0x03
 #define MSG_TIM_TP 0x01
 #define MSG_TIM_VRFY 0x06
 
@@ -160,11 +181,12 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_NAV_SOL 52
 #define UBX_SIZE_NAV_VELNED 36
 #define UBX_SIZE_NAV_SVINFO 200 //8 + 12*num_channel = 200
-#define UBX_SIZE_NAV_SETTINGS 36
 #define UBX_SIZE_NAV_TIMEUTC 20
 
 #define UBX_SIZE_CFG_RATE 6
 #define UBX_SIZE_CFG_GETSET_RATE 3
+#define UBX_SIZE_CFG_NAV_SETTINGS 36
+#define UBX_SIZE_CFG_NAV_EXPERT_SETTINGS 40
 
 #define UBX_SIZE_MON_RXR 1
 
@@ -265,6 +287,37 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t dyn_model;					///< UBX_PLATFORM_... type
 		uint16_t mask;						///< Bitmask, see U-Blox 6 documentation
 	}ubx_cfg_nav_settings_t;
+
+	/**
+	 * \brief The U-Blox CFG-NAVX5 settings structure definition
+	 */
+	typedef struct  
+	{
+		uint8_t res14;						///< Reserved slot
+		uint8_t res13;						///< Reserved slot
+		uint8_t aop_opb_max_err;			///< Maximum acceptable AssistNow Autonomus orbit error
+		uint8_t res12;						///< Reserved slot
+		uint8_t res11;						///< Reserved slot
+		uint8_t use_aop;					///< AssistNow Autonomous
+		uint8_t use_ppp;					///< use Precise Point Positioning flag
+		uint8_t res9;						///< Reserved slot
+		uint8_t res8;						///< Reserved slot
+		uint32_t res7;						///< Reserved slot
+		uint16_t wkn_roll_over;				///< GPS week rollover number
+		uint8_t res6;						///< Reserved slot
+		uint8_t res5;						///< Reserved slot
+		uint8_t res4;						///< Reserved slot
+		uint8_t ini_fix_3d;					///< Initial fix must be 3D flag (0=false/1=true)
+		uint8_t res3;						///< Reserved slot
+		uint8_t min_cn_o;					///< Minimum satellite signal level for navigation
+		uint8_t max_sv_s;					///< Maximum number of satellites for navigation
+		uint8_t min_sv_s;					///< Minimum number of satellites for navigation
+		uint8_t res2;						///< Reserved slot
+		uint8_t res1;						///< Reserved slot
+		uint16_t mak2;						///< Second parameter bitmask
+		uint16_t mask1;						///< First parameter bitmask
+		uint16_t version;					///< Message version
+	}ubx_cfg_nav_expert_settings_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
@@ -456,7 +509,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	}ubx_cfg_msg_rate_t;
 
 	/**
-	 * \brief The U-Blox CFG-NAV setttings structure definition
+	 * \brief The U-Blox CFG-NAV5 settings structure definition
 	 */
 	typedef struct
 	{
@@ -465,7 +518,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t fix_mode;					///< Fixing mode, 1:2D, 2:3D, 3:auto 2D/3D
 		int32_t fixed_alt;					///< Fixed altitude for 2D fix mode in m
 		uint32_t fixed_alt_var;				///< Fixed altitude variance in 2D mode in m^2
-		int8_t min_elev;						///< Minimum elevation for a GNSS satellite to be used in NAV in deg
+		int8_t min_elev;					///< Minimum elevation for a GNSS satellite to be used in NAV in deg
 		uint8_t dr_limit;					///< Maximum time to perform dead reckoning in case of GPS signal loos, in sec
 		uint16_t p_dop;						///< Position DOP mask to use
 		uint16_t t_dop;						///< Time DOP mask to use
@@ -477,6 +530,37 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint32_t res3;						///< Reserved slot
 		uint32_t res4;						///< Reserved slot
 	}ubx_cfg_nav_settings_t;
+	
+	/**
+	 * \brief The U-Blox CFG-NAVX5 settings structure definition
+	 */
+	typedef struct  
+	{
+		uint16_t version;					///< Message version
+		uint16_t mask1;						///< First parameter bitmask
+		uint16_t mak2;						///< Second parameter bitmask
+		uint8_t res1;						///< Reserved slot
+		uint8_t res2;						///< Reserved slot
+		uint8_t min_sv_s;					///< Minimum number of satellites for navigation
+		uint8_t max_sv_s;					///< Maximum number of satellites for navigation
+		uint8_t min_cn_o;					///< Minimum satellite signal level for navigation
+		uint8_t res3;						///< Reserved slot
+		uint8_t ini_fix_3d;					///< Initial fix must be 3D flag (0=false/1=true)
+		uint8_t res4;						///< Reserved slot
+		uint8_t res5;						///< Reserved slot
+		uint8_t res6;						///< Reserved slot
+		uint16_t wkn_roll_over;				///< GPS week rollover number
+		uint32_t res7;						///< Reserved slot
+		uint8_t res8;						///< Reserved slot
+		uint8_t res9;						///< Reserved slot
+		uint8_t use_ppp;					///< use Precise Point Positioning flag
+		uint8_t use_aop;					///< AssistNow Autonomous
+		uint8_t res11;						///< Reserved slot
+		uint8_t res12;						///< Reserved slot
+		uint8_t aop_opb_max_err;			///< Maximum acceptable AssistNow Autonomus orbit error
+		uint8_t res13;						///< Reserved slot
+		uint8_t res14;						///< Reserved slot
+	}ubx_cfg_nav_expert_settings_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
