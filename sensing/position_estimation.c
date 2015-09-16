@@ -381,7 +381,7 @@ bool position_estimation_init(position_estimation_t* pos_est, const position_est
 	pos_est->fence_set = false;
 	if (config->fence_set)
 	{
-		position_estimation_set_fence(pos_est);
+		position_estimation_set_new_fence_origin(pos_est);
 	}
 
     // reset position estimator
@@ -479,7 +479,7 @@ void position_estimation_update(position_estimation_t *pos_est)
 			pos_est->state->reset_position = false;
 			position_estimation_reset_home_altitude(pos_est);
 
-			position_estimation_set_fence(pos_est);
+			position_estimation_set_new_fence_origin(pos_est);
 
 			if (pos_est->stat_logging)
 			{
@@ -496,7 +496,7 @@ void position_estimation_update(position_estimation_t *pos_est)
 	}
 }
 
-void position_estimation_set_fence(position_estimation_t* pos_est)
+void position_estimation_set_new_fence_origin(position_estimation_t* pos_est)
 {
 	if (!pos_est->fence_set)
 	{

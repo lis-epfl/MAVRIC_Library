@@ -153,7 +153,7 @@ void position_estimation_reset_home_altitude(position_estimation_t *pos_est);
 void position_estimation_update(position_estimation_t *pos_est);
 
 
-void position_estimation_set_fence(position_estimation_t* pos_est);
+void position_estimation_set_new_fence_origin(position_estimation_t* pos_est);
 
 #ifdef __cplusplus
 }
