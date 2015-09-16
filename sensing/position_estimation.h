@@ -152,7 +152,11 @@ void position_estimation_reset_home_altitude(position_estimation_t *pos_est);
  */
 void position_estimation_update(position_estimation_t *pos_est);
 
-
+/**
+ * \brief	Reset the origin of the fence (e.g. common for many entities or when armed)
+ *
+ * \param	pos_est					The pointer to the position estimation structure
+ */
 void position_estimation_set_new_fence_origin(position_estimation_t* pos_est);
 
 #ifdef __cplusplus
