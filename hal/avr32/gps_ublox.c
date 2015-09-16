@@ -344,6 +344,7 @@ static void ubx_send_message_nav_settings(byte_stream_t *stream, uint8_t msg_cla
  */
 static void ubx_send_message_nav_expert_settings(byte_stream_t *stream, ubx_cfg_nav_expert_settings_t *expert_engine_settings);
 
+
 /**
  * \brief	To send the CFG Power management configuration, if the ubx_cfg_pm_t pointer is null,
  *			asks for the current settings
@@ -355,6 +356,19 @@ static void ubx_send_message_nav_expert_settings(byte_stream_t *stream, ubx_cfg_
  * \param	gps_cfg_pm			The power management configuration sent
  */
 static void ubx_send_message_cfg_pm(byte_stream_t *stream, ubx_cfg_pm_t *gps_cfg_pm);
+
+
+/**
+ * \brief	To send the CFG Power management 2 configuration, if the ubx_cfg_pm2_t pointer is null,
+ *			asks for the current settings
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x3B	MSG_CFG_PM2
+ *
+ * \param	stream				The pointer to the stream structure
+ * \param	gps_cfg_pm2			The power management configuration sent
+ */
+static void ubx_send_message_cfg_pm2(byte_stream_t *stream, ubx_cfg_pm2_t *gps_cfg_pm2);
 
 /**
  * \brief	To send the NAV messages that we want to receive
@@ -1823,6 +1837,50 @@ static void ubx_send_message_cfg_pm(byte_stream_t *stream, ubx_cfg_pm_t *gps_cfg
 	ubx_send_cksum(stream, ck_a, ck_b);
 }
 
+static void ubx_send_message_cfg_pm2(byte_stream_t *stream, ubx_cfg_pm2_t *gps_cfg_pm2)
+{
+	uint8_t ck_a = 0, ck_b = 0;
+
+	uint8_t msg_class = UBX_CLASS_CFG;
+	uint8_t msg_id = MSG_CFG_PM2;
+	uint16_t size;
+
+	if (gps_cfg_pm2 != NULL)
+	{
+		size = UBX_SIZE_CFG_PM;
+	}
+	else
+	{
+		size = 0;
+	}
+	ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
+	
+	if (gps_cfg_pm2 != NULL)
+	{
+		ubx_send_uint8(stream, gps_cfg_pm2->version, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_pm2->res1, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_pm2->res2, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_pm2->res3, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_pm2->flags, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_pm2->update_period, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_pm2->search_period, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_pm2->grid_offset, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_pm2->on_time, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_pm2->min_acq_time, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_pm2->res4, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_pm2->res5, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_pm2->res6, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_pm2->res7, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_pm2->res8, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_pm2->res9, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_pm2->res10, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_pm2->res11, &ck_a, &ck_b);
+	}
+	
+	ubx_send_cksum(stream, ck_a, ck_b);
+}
+
+
 static void ubx_configure_message_rate(byte_stream_t *stream, uint8_t msg_class, uint8_t msg_id, uint8_t rate)
 {
 	uint8_t ck_a = 0, ck_b = 0;
@@ -2205,10 +2263,29 @@ void gps_ublox_configure_gps(gps_t *gps)
 	gps_cfg_pm.on_time = 0x0002;
 	gps_cfg_pm.min_acq_time = 0x0000;
 	
-	ubx_send_message_cfg_pm(&gps->gps_stream_out,&gps_cfg_pm);
+	ubx_send_message_cfg_pm(&gps->gps_stream_out, &gps_cfg_pm);
 	
+	ubx_cfg_pm2_t gps_cfg_pm2;
+	gps_cfg_pm2.version = 0x06;
+	gps_cfg_pm2.res1 = 0x00;
+	gps_cfg_pm2.res2 = 0x00;
+	gps_cfg_pm2.res3 = 0x00;			
+	gps_cfg_pm2.flags = 0x00029000;
+	gps_cfg_pm2.update_period = 0x000003E8;
+	gps_cfg_pm2.search_period = 0x00002710;
+	gps_cfg_pm2.grid_offset = 0x00000000;
+	gps_cfg_pm2.on_time = 0x0002;
+	gps_cfg_pm2.min_acq_time = 0x0000;
+	gps_cfg_pm2.res4 = 0x012C;
+	gps_cfg_pm2.res5 = 0x0000;
+	gps_cfg_pm2.res6 = 0x0003C14F;
+	gps_cfg_pm2.res7 = 0x00000286;
+	gps_cfg_pm2.res8 = 0xFE;
+	gps_cfg_pm2.res9 = 0x00;
+	gps_cfg_pm2.res10 = 0x0000;
+	gps_cfg_pm2.res11 = 0x00014064;
 	
-	
+	ubx_send_message_cfg_pm2(&gps->gps_stream_out, &gps_cfg_pm2);
 	
 }
 
