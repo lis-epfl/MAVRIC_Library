@@ -425,6 +425,19 @@ static void ubx_send_message_cfg_rxm(byte_stream_t *stream, ubx_cfg_rxm_t *gps_c
 
 
 /**
+ * \brief	To send the CFG-SBAS receiver subsystem configuration, if the ubx_cfg_sbas_t pointer is null,
+ *			asks for the current settings
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x16	MSG_CFG_SBAS
+ *
+ * \param	stream				The pointer to the stream structure
+ * \param	gps_cfg_sbas		The rate configuration sent
+ */
+static void ubx_send_message_cfg_sbas(byte_stream_t *stream, ubx_cfg_sbas_t *gps_cfg_sbas);
+
+
+/**
  * \brief	To send the NAV messages that we want to receive
  *
  * Class:	0x06	UBX_CLASS_CFG
@@ -2071,6 +2084,36 @@ static void ubx_send_message_cfg_rxm(byte_stream_t *stream, ubx_cfg_rxm_t *gps_c
 	ubx_send_cksum(stream,ck_a,ck_b);
 }
 
+static void ubx_send_message_cfg_sbas(byte_stream_t *stream, ubx_cfg_sbas_t *gps_cfg_sbas)
+{
+	uint8_t ck_a = 0, ck_b = 0;
+
+	uint8_t msg_class = UBX_CLASS_CFG;
+	uint8_t msg_id = MSG_CFG_SBAS;
+	uint16_t size;
+
+	if (gps_cfg_sbas != NULL)
+	{
+		size = UBX_SIZE_CFG_SBAS;
+	}
+	else
+	{
+		size = 0;
+	}
+	ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
+	
+	if (gps_cfg_sbas != NULL)
+	{
+		ubx_send_uint8(stream, gps_cfg_sbas->mode, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_sbas->usage, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_sbas->max_sbas, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_sbas->scan_mode2, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_sbas->scan_mode1, &ck_a, &ck_b);
+	}
+	ubx_send_cksum(stream,ck_a,ck_b);
+}
+
+
 
 static void ubx_configure_message_rate(byte_stream_t *stream, uint8_t msg_class, uint8_t msg_id, uint8_t rate)
 {
@@ -2548,7 +2591,11 @@ void gps_ublox_configure_gps(gps_t *gps)
 	gps_cfg_rate.time_ref = 0x0001;
 	ubx_send_message_cfg_rate(&gps->gps_stream_out,&gps_cfg_rate);
 	
-	
+	// Setting RINV settings
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Settings RINV configuration...\n");
+	}
 	ubx_cfg_rinv_t gps_cfg_rinv;
 	gps_cfg_rinv.flags = 0x00;
 	gps_cfg_rinv.data = 0x4E;
@@ -2576,10 +2623,28 @@ void gps_ublox_configure_gps(gps_t *gps)
 	gps_cfg_rinv.data23 = 0x00;
 	ubx_send_message_cfg_rinv(&gps->gps_stream_out, &gps_cfg_rinv);
 	
+	// Setting RXM settings
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Settings RXM configuration...\n");
+	}
 	ubx_cfg_rxm_t gps_cfg_rxm;
 	gps_cfg_rxm.res = 0x08;
 	gps_cfg_rxm.lp_mode = 0x00;
 	ubx_send_message_cfg_rxm(&gps->gps_stream_out, &gps_cfg_rxm);
+	
+	// Setting SBAS settings
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Settings SBAS configuration...\n");
+	}
+	ubx_cfg_sbas_t gps_cfg_sbas;
+	gps_cfg_sbas.mode = 0x01;
+	gps_cfg_sbas.usage = 0x03;
+	gps_cfg_sbas.max_sbas = 0x03;
+	gps_cfg_sbas.scan_mode2 = 0x00;
+	gps_cfg_sbas.scan_mode1 = 0x00066251;
+	ubx_send_message_cfg_sbas(&gps->gps_stream_out, &gps_cfg_sbas);
 }
 
 

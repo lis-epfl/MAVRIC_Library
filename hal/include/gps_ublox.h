@@ -141,6 +141,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_CFG_RATE 0x08
 #define MSG_CFG_RINV 0x34
 #define MSG_CFG_RXM 0x11
+#define MSG_CFG_SBAS 0x16
 
 #define MSG_MON_HW2 0x0B
 #define MSG_MON_HW 0x09
@@ -199,6 +200,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_CFG_RATE 6
 #define UBX_SIZE_CFG_RINV 24
 #define UBX_SIZE_CFG_RXM 2
+#define UBX_SIZE_CFG_SBAS 8
 
 #define UBX_SIZE_MON_RXR 1
 
@@ -441,6 +443,18 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t lp_mode;					///< Low power mode
 		uint8_t res;						///< Reserved set to 8
 	}ubx_cfg_rxm_t;
+
+	/**
+	 * \brief The U-Blox CFG-SBAS structure definition
+	 */
+	typedef struct
+	{
+		uint32_t scan_mode1;				///< Which SBAS PRN numbers to search for, all bits to 0=auto_scan
+		uint8_t scan_mode2;					///< Continuation of scanmode bitmask
+		uint8_t max_sbas;					///< Maximum number of SBAS prioritized tracking channels
+		uint8_t usage;						///< SBAS usage
+		uint8_t mode;						///< SBAS mode
+	}ubx_cfg_sbas_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
@@ -792,6 +806,18 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t res;						///< Reserved set to 8
 		uint8_t lp_mode;					///< Low power mode
 	}ubx_cfg_rxm_t;
+
+	/**
+	 * \brief The U-Blox CFG-SBAS structure definition
+	 */
+	typedef struct
+	{
+		uint8_t mode;						///< SBAS mode
+		uint8_t usage;						///< SBAS usage
+		uint8_t max_sbas;					///< Maximum number of SBAS prioritized tracking channels
+		uint8_t scan_mode2;					///< Continuation of scanmode bitmask
+		uint32_t scan_mode1;				///< Which SBAS PRN numbers to search for, all bits to 0=auto_scan
+	}ubx_cfg_sbas_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
