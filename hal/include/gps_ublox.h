@@ -1251,6 +1251,18 @@ typedef enum {
 
 #define UBX_HEADING_PRECISION 5000000		///< The minimum precision to consider a heading as correct (in deg*10^5)
 
+typedef enum {
+	CHECK_IF_PREAMBLE_1,
+	CHECK_IF_PREAMBLE_2,
+	GET_MSG_CLASS,
+	GET_MSG_ID,
+	GET_MSG_PAYLOAD_1,
+	GET_MSG_PAYLOAD_2,
+	GET_MSG_BYTES,
+	CHECK_CHECKSUM_A,
+	CHECK_CHECKSUM_B
+}gps_decode_msg_state_machine_t;
+
 typedef struct  
 {
 	uint16_t year;							///< Year
@@ -1331,7 +1343,7 @@ typedef struct
 	uint32_t time_last_posllh_msg;				///< Time at which the last POSLLH message was received
 	uint32_t time_last_velned_msg;				///< Time at which the last VELNED message was received
 	
-	uint8_t step;								///< Variable defining the state machine in the U-Blox decoding function
+	gps_decode_msg_state_machine_t step;		///< Variable defining the state machine in the U-Blox decoding function
 	uint8_t  ubx_class;							///< The U-Blox message class
 	uint8_t  msg_id;							///< The U-Blox message ID
 	uint16_t payload_counter;					///< The incremental counter to receive bytes of data

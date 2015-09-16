@@ -699,20 +699,26 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			// likely that we will be fooled by the preamble appearing
 			// as data in some other message.
 			//
-			case 1:
+			case CHECK_IF_PREAMBLE_2:
 				if (data == UBX_PREAMBLE2)
 				{
-					gps->step++;
-					break;
+					gps->step = GET_MSG_CLASS;
 				}
-				gps->step = 0;
-			case 0:
+				else
+				{
+					gps->step = CHECK_IF_PREAMBLE_1;
+				}
+				break;
+				
+			case CHECK_IF_PREAMBLE_1:
 				if (data == UBX_PREAMBLE1)
 				{
-					gps->step++;
-					break;
+					gps->step = CHECK_IF_PREAMBLE_2;
 				}
-				gps->step = 0;
+				else
+				{
+					gps->step = CHECK_IF_PREAMBLE_1;
+				}
 				break;
 			// Message header processing
 			//
@@ -723,29 +729,29 @@ static bool gps_ublox_message_decode(gps_t *gps)
 			// We always collect the length so that we can avoid being
 			// fooled by preamble bytes in messages.
 			//
-			case 2:
-				gps->step++;
+			case GET_MSG_CLASS:
+				gps->step = GET_MSG_ID;
 				gps->ubx_class = data;
 				gps->cksum_a = data;
 				gps->cksum_b = gps->cksum_a; // reset the checksum accumulators
 				break;
 			
-			case 3:
-				gps->step++;
+			case GET_MSG_ID:
+				gps->step = GET_MSG_PAYLOAD_1;
 				gps->cksum_a += data;
 				gps->cksum_b += gps->cksum_a; // checksum byte
 				gps->msg_id = data;
 				break;
 			
-			case 4:
-				gps->step++;
+			case GET_MSG_PAYLOAD_1:
+				gps->step = GET_MSG_PAYLOAD_2;
 				gps->cksum_a += data;
 				gps->cksum_b += gps->cksum_a; // checksum byte
 				gps->payload_length = data;
 				break;
 			
-			case 5:
-				gps->step++;
+			case GET_MSG_PAYLOAD_2:
+				gps->step = GET_MSG_BYTES;
 				gps->payload_length |= data<<8;
 				gps->cksum_a += data;
 				gps->cksum_b += gps->cksum_a; // checksum byte
@@ -757,7 +763,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					print_util_dbg_print_num(gps->payload_length,10);
 					print_util_dbg_print("\r\n");
 					gps->payload_length = 0;
-					gps->step = 0;
+					gps->step = CHECK_IF_PREAMBLE_1;
 					goto reset;
 				}
 				gps->payload_counter = 0; // prepare to receive payload
@@ -784,7 +790,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print(" should be:");
 								print_util_dbg_print_num(UBX_SIZE_NAV_POSLLH,10);
 								print_util_dbg_print("\r\n");
-								gps->step = 0;
+								gps->step = CHECK_IF_PREAMBLE_1;
 								goto reset;
 							}
 							break;
@@ -807,7 +813,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print(" should be:");
 								print_util_dbg_print_num(UBX_SIZE_NAV_STATUS,10);
 								print_util_dbg_print("\r\n");
-								gps->step = 0;
+								gps->step = CHECK_IF_PREAMBLE_1;
 								goto reset;
 							}
 							break;
@@ -830,7 +836,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print(" should be:");
 								print_util_dbg_print_num(UBX_SIZE_NAV_SOL,10);
 								print_util_dbg_print("\r\n");
-								gps->step = 0;
+								gps->step = CHECK_IF_PREAMBLE_1;
 								goto reset;
 							}
 							break;
@@ -853,7 +859,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print(" should be:");
 								print_util_dbg_print_num(UBX_SIZE_NAV_VELNED,10);
 								print_util_dbg_print("\r\n");
-								gps->step = 0;
+								gps->step = CHECK_IF_PREAMBLE_1;
 								goto reset;
 							}
 							break;
@@ -876,7 +882,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print(" should be:");
 								print_util_dbg_print_num(UBX_SIZE_NAV_SVINFO,10);
 								print_util_dbg_print("\r\n");
-								gps->step = 0;
+								gps->step = CHECK_IF_PREAMBLE_1;
 								goto reset;
 							}
 							break;
@@ -899,13 +905,13 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print(" should be:");
 								print_util_dbg_print_num(UBX_SIZE_NAV_TIMEUTC,10);
 								print_util_dbg_print("\r\n");
-								gps->step = 0;
+								gps->step = CHECK_IF_PREAMBLE_1;
 								goto reset;
 							}
 							break;
 						
 						default:
-							gps->step = 0;
+							gps->step = CHECK_IF_PREAMBLE_1;
 							if (gps->debug)
 							{
 								print_util_dbg_print("Unexpected NAV message, Class: 0x");
@@ -942,7 +948,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print(" should be:");
 								print_util_dbg_print_num(UBX_SIZE_CFG_NAV_SETTINGS,10);
 								print_util_dbg_print("\r\n");
-								gps->step = 0;
+								gps->step = CHECK_IF_PREAMBLE_1;
 								goto reset;
 							}
 							break;
@@ -965,7 +971,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print(" should be:");
 								print_util_dbg_print_num(UBX_SIZE_CFG_RATE,10);
 								print_util_dbg_print("\r\n");
-								gps->step = 0;
+								gps->step = CHECK_IF_PREAMBLE_1;
 								goto reset;
 							}
 							break;
@@ -988,13 +994,13 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print(" should be:");
 								print_util_dbg_print_num(UBX_SIZE_CFG_GETSET_RATE,10);
 								print_util_dbg_print("\r\n");
-								gps->step = 0;
+								gps->step = CHECK_IF_PREAMBLE_1;
 								goto reset;
 							}
 							break;
 						
 						default:
-							gps->step = 0;
+							gps->step = CHECK_IF_PREAMBLE_1;
 							if (gps->debug)
 							{
 								print_util_dbg_print("Unexpected CFG message, Class: 0x");
@@ -1029,13 +1035,13 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print(" should be:");
 								print_util_dbg_print_num(UBX_SIZE_MON_RXR,10);
 								print_util_dbg_print("\r\n");
-								gps->step = 0;
+								gps->step = CHECK_IF_PREAMBLE_1;
 								goto reset;
 							}
 							break;
 						
 						default:
-							gps->step = 0;
+							gps->step = CHECK_IF_PREAMBLE_1;
 							if (gps->debug)
 							{
 								print_util_dbg_print("Unexpected TIM message, Class: 0x");
@@ -1074,7 +1080,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print(" should be:");
 								print_util_dbg_print_num(UBX_SIZE_TIM_TP,10);
 								print_util_dbg_print("\r\n");
-								gps->step = 0;
+								gps->step = CHECK_IF_PREAMBLE_1;
 								goto reset;
 							}
 							break;
@@ -1097,13 +1103,13 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print(" should be:");
 								print_util_dbg_print_num(UBX_SIZE_TIM_VRFY,10);
 								print_util_dbg_print("\r\n");
-								gps->step = 0;
+								gps->step = CHECK_IF_PREAMBLE_1;
 								goto reset;
 							}
 							break;
 						
 						default:
-							gps->step = 0;
+							gps->step = CHECK_IF_PREAMBLE_1;
 							if (gps->debug)
 							{
 								print_util_dbg_print("Unexpected TIM message, Class: 0x");
@@ -1142,12 +1148,12 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print(" should be:");
 								print_util_dbg_print_num(UBX_SIZE_ACK,10);
 								print_util_dbg_print("\r\n");
-								gps->step = 0;
+								gps->step = CHECK_IF_PREAMBLE_1;
 								goto reset;
 							}
 							break;
 						default:
-							gps->step = 0;
+							gps->step = CHECK_IF_PREAMBLE_1;
 							if (gps->debug)
 							{
 								print_util_dbg_print("Unexpected ACK message, Class: 0x");
@@ -1167,7 +1173,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 				}
 				else
 				{
-					gps->step = 0;
+					gps->step = CHECK_IF_PREAMBLE_1;
 					if (gps->debug)
 					{
 						print_util_dbg_print("Unexpected message, Class: 0x");
@@ -1182,7 +1188,7 @@ static bool gps_ublox_message_decode(gps_t *gps)
 				}
 				break;
 			
-			case 6:
+			case GET_MSG_BYTES:
 				gps->cksum_a += data;
 				gps->cksum_b += gps->cksum_a; // checksum byte
 				
@@ -1196,12 +1202,12 @@ static bool gps_ublox_message_decode(gps_t *gps)
 				
 				if (gps->payload_counter == gps->payload_length)
 				{
-					gps->step++;
+					gps->step = CHECK_CHECKSUM_A;
 				}
 				break;
 			
-			case 7:
-				gps->step++;
+			case CHECK_CHECKSUM_A:
+				gps->step = CHECK_CHECKSUM_B;
 				if (gps->cksum_a != data)
 				{
 					print_util_dbg_print("bad cksum_a ");
@@ -1213,13 +1219,13 @@ static bool gps_ublox_message_decode(gps_t *gps)
 					print_util_dbg_print(" msg_id : 0x");
 					print_util_dbg_print_num(gps->msg_id,16);
 					print_util_dbg_print("\r\n");
-					gps->step = 0;
+					gps->step = CHECK_IF_PREAMBLE_1;
 					goto reset;
 				}
 				break;
 			
-			case 8:
-				gps->step = 0;
+			case CHECK_CHECKSUM_B:
+				gps->step = CHECK_IF_PREAMBLE_1;
 				if (gps->cksum_b != data)
 				{	
 					print_util_dbg_print("bad cksum_b ");
@@ -2736,7 +2742,7 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	gps->loop_mon_rxr = 0;
 	gps->loop_sv_info = 0;
 	
-	gps->step = 0;
+	gps->step = CHECK_IF_PREAMBLE_1;
 	gps->ubx_class = 0;
 	gps->msg_id = 0;
 	gps->payload_counter = 0;
@@ -2779,18 +2785,12 @@ void gps_ublox_configure_gps(gps_t *gps)
 	ubx_cfg_tp5_t gps_cfg_tp5;
 	ubx_cfg_usb_t gps_cfg_usb;
 	
-	gps->print_nav_on_debug = true;
-	
-	if (gps->acknowledged_received)
+	if (!gps->acknowledged_received)
 	{
-		gps->acknowledged_received = false;
-	}
-	else
-	{
-		gps->print_nav_on_debug = false;
 		return;
 	}
 	
+	gps->acknowledged_received = false;
 	gps->config_loop_count++;
 	
 	uint8_t i;
@@ -2798,10 +2798,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	{
 		case 1:
 			// Configure the MON-VER messages
-			if (gps->print_nav_on_debug)
-			{
-				print_util_dbg_print("Setting MON-VER messages...\r\n");
-			}
+			print_util_dbg_print("Setting MON-VER messages...\r\n");
 			for (i=0; i<30; i++)
 			{
 				gps_mon_ver.sw_version[i] = 0;
@@ -2825,10 +2822,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			
 		case 2:
 			// Configure the ANT messages
-			if (gps->print_nav_on_debug)
-			{
-				print_util_dbg_print("Setting CFG-ANT messages...\r\n");
-			}
+			print_util_dbg_print("Setting CFG-ANT messages...\r\n");
 			gps_cfg_ant.flags = 0x001B;
 			gps_cfg_ant.pins = 0xA98B;
 			ubx_send_message_cfg_ant(&gps->gps_stream_out, &gps_cfg_ant);
@@ -2836,20 +2830,14 @@ void gps_ublox_configure_gps(gps_t *gps)
 			
 		case 3:
 			// Configure the DAT messages
-			if (gps->print_nav_on_debug)
-			{
-				print_util_dbg_print("Setting CFG-DAT messages...\r\n");
-			}
+			print_util_dbg_print("Setting CFG-DAT messages...\r\n");
 			gps_cfg_dat.datum_num = 0x0001;
 			ubx_send_message_cfg_dat(&gps->gps_stream_out, &gps_cfg_dat);
 			break;
 			
 		case 4:
 			// Configure the FXN messages
-			if (gps->print_nav_on_debug)
-			{
-				print_util_dbg_print("Setting CFG-FXN messages...\r\n");
-			}
+			print_util_dbg_print("Setting CFG-FXN messages...\r\n");
 			gps_cfg_fxn.flags = 0x0000000C;
 			gps_cfg_fxn.t_reacq = 0x00000000;
 			gps_cfg_fxn.t_acq = 0x00000000;
@@ -2864,7 +2852,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			
 		case 5:
 			// Configure the INF messages
-			if (gps->print_nav_on_debug && (gps->config_nav_msg_count == 0))
+			if (gps->config_nav_msg_count == 0)
 			{
 				print_util_dbg_print("Setting CFG-INF messages...\r\n");
 			}
@@ -2918,10 +2906,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			
 		case 6:
 			// Configure the ITFM messages
-			if (gps->print_nav_on_debug)
-			{
-				print_util_dbg_print("Setting CFG-ITFM messages...\r\n");
-			}
+			print_util_dbg_print("Setting CFG-ITFM messages...\r\n");
 			gps_cfg_itfm.config = 0x2D62ACF3;
 			gps_cfg_itfm.config2 = 0x0000031E;
 			ubx_send_message_cfg_itfm(&gps->gps_stream_out, &gps_cfg_itfm);
@@ -2929,7 +2914,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			
 		case 7:
 			// Configure the NAV messages
-			if (gps->print_nav_on_debug && (gps->config_nav_msg_count == 0))
+			if (gps->config_nav_msg_count == 0)
 			{
 				print_util_dbg_print("Setting NAV messages...\r\n");
 			}
@@ -3011,7 +2996,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			
 		case 8:
 			// Configure MON messages
-			if (gps->print_nav_on_debug && (gps->config_nav_msg_count == 0))
+			if (gps->config_nav_msg_count == 0)
 			{
 				print_util_dbg_print("Setting MON messages...\r\n");
 			}
@@ -3076,7 +3061,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			
 		case 9:
 			// Configure AID messages
-			if (gps->print_nav_on_debug && (gps->config_nav_msg_count == 0))
+			if (gps->config_nav_msg_count == 0)
 			{
 				print_util_dbg_print("Setting AID messages...\r\n");
 			}
@@ -3112,7 +3097,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			
 		case 10:
 			// Configure TIM messages
-			if (gps->print_nav_on_debug && (gps->config_nav_msg_count == 0))
+			if (gps->config_nav_msg_count == 0)
 			{
 				print_util_dbg_print("Setting TIM messages...\r\n");
 			}
@@ -3139,10 +3124,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			
 		case 11:
 			// Setting navigation settings
-			if (gps->print_nav_on_debug)
-			{
-				print_util_dbg_print("Settings CFG engine settings...\r\n");
-			}
+			print_util_dbg_print("Settings CFG engine settings...\r\n");
 			gps_engine_settings.mask = 0xFFFF;
 			gps_engine_settings.dyn_model = 0x08;
 			gps_engine_settings.fix_mode = 0x03;
@@ -3164,10 +3146,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			
 		case 12:
 			// Setting navigation expert settings
-			if (gps->print_nav_on_debug)
-			{
-				print_util_dbg_print("Settings CFG expert engine settings...\r\n");
-			}
+			print_util_dbg_print("Settings CFG expert engine settings...\r\n");
 			gps_nav_expert_settings.version = 0x0000;
 			gps_nav_expert_settings.mask1 = 0xFFFF;
 			gps_nav_expert_settings.mak2 = 0x00000003;
@@ -3196,12 +3175,8 @@ void gps_ublox_configure_gps(gps_t *gps)
 			break;
 			
 		case 13:
-			//gps->acknowledged_received = true;
 			// Setting power management settings
-			if (gps->print_nav_on_debug)
-			{
-				print_util_dbg_print("Settings CFG-PM power management settings...\r\n");
-			}
+			print_util_dbg_print("Settings CFG-PM power management settings...\r\n");
 			gps_cfg_pm.version = 0x00;
 			gps_cfg_pm.res1 = 0x06;
 			gps_cfg_pm.res2 = 0x00;
@@ -3216,12 +3191,8 @@ void gps_ublox_configure_gps(gps_t *gps)
 			break;
 			
 		case 14:
-			//gps->acknowledged_received = true;
 			// Setting power management 2 settings
-			if (gps->print_nav_on_debug)
-			{
-				print_util_dbg_print("Settings CFG-PM2 power management settings...\r\n");
-			}
+			print_util_dbg_print("Settings CFG-PM2 power management settings...\r\n");
 			gps_cfg_pm2.version = 0x01;
 			gps_cfg_pm2.res1 = 0x06;
 			gps_cfg_pm2.res2 = 0x00;
@@ -3245,7 +3216,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	
 		case 15:
 			// Setting port settings
-			if (gps->print_nav_on_debug && (gps->config_nav_msg_count == 0))
+			if (gps->config_nav_msg_count == 0)
 			{
 				print_util_dbg_print("Settings CFG-PRT port configuration...\r\n");
 			}
@@ -3327,10 +3298,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			
 		case 16:
 			// Setting rate settings
-			if (gps->print_nav_on_debug)
-			{
-				print_util_dbg_print("Settings CFG-RATE rate configuration...\r\n");
-			}
+			print_util_dbg_print("Settings CFG-RATE rate configuration...\r\n");
 			gps_cfg_rate.measure_rate = 0x00C8;
 			gps_cfg_rate.nav_rate = 0x0001;
 			gps_cfg_rate.time_ref = 0x0001;
@@ -3339,10 +3307,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			
 		case 17:
 			// Setting RINV settings
-			if (gps->print_nav_on_debug)
-			{
-				print_util_dbg_print("Settings CFG-RINV configuration...\r\n");
-			}
+			print_util_dbg_print("Settings CFG-RINV configuration...\r\n");
 			gps_cfg_rinv.flags = 0x00;
 			gps_cfg_rinv.data = 0x4E;
 			gps_cfg_rinv.data2 = 0x6F;
@@ -3372,10 +3337,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			
 		case 18:
 			// Setting RXM settings
-			if (gps->print_nav_on_debug)
-			{
-				print_util_dbg_print("Settings CFG-RXM configuration...\r\n");
-			}
+			print_util_dbg_print("Settings CFG-RXM configuration...\r\n");
 			gps_cfg_rxm.res = 0x08;
 			gps_cfg_rxm.lp_mode = 0x00;
 			ubx_send_message_cfg_rxm(&gps->gps_stream_out, &gps_cfg_rxm);
@@ -3383,10 +3345,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			
 		case 19:
 			// Setting SBAS settings
-			if (gps->print_nav_on_debug)
-			{
-				print_util_dbg_print("Settings CFG-SBAS configuration...\r\n");
-			}
+			print_util_dbg_print("Settings CFG-SBAS configuration...\r\n");
 			gps_cfg_sbas.mode = 0x01;
 			gps_cfg_sbas.usage = 0x03;
 			gps_cfg_sbas.max_sbas = 0x03;
@@ -3397,11 +3356,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			
 		case 20:
 			// Setting TP time pulse settings
-			if (gps->print_nav_on_debug)
-			{
-				print_util_dbg_print("Settings CFG-TP time pulse configuration...\r\n");
-				delay_ms(250);
-			}
+			print_util_dbg_print("Settings CFG-TP time pulse configuration...\r\n");
 			gps_cfg_tp.interval = 0x000F4240;
 			gps_cfg_tp.length = 0x000186A0;
 			gps_cfg_tp.status = 0x01;
@@ -3416,7 +3371,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			
 		case 21:
 			// Setting TP time pulse 5 settings
-			if (gps->print_nav_on_debug && (gps->config_nav_msg_count == 0))
+			if (gps->config_nav_msg_count == 0)
 			{
 				print_util_dbg_print("Settings CFG-TP5 time pulse TP5 configuration...\r\n");
 			}
@@ -3459,10 +3414,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			break;
 		case 22:
 			// Setting USB settings
-			if (gps->print_nav_on_debug)
-			{
-				print_util_dbg_print("Settings CFG-USB configuration...\r\n");
-			}
+			print_util_dbg_print("Settings CFG-USB configuration...\r\n");
 			gps_cfg_usb.vendor_id = 0x1546;
 			gps_cfg_usb.product_id = 0x01A6;
 			gps_cfg_usb.res1 = 0x0000;
@@ -3476,15 +3428,10 @@ void gps_ublox_configure_gps(gps_t *gps)
 			break;
 			
 		default:
-			if (gps->print_nav_on_debug)
-			{
-				print_util_dbg_print("GPS configuration completed!\r\n");
-			}
+			print_util_dbg_print("GPS configuration completed!\r\n");
 			gps->configure_gps = false;
 			break;
 	}
-	
-	gps->print_nav_on_debug = false;
 }
 
 
@@ -3497,7 +3444,7 @@ void gps_ublox_update(gps_t *gps)
 	
 	tnow = time_keeper_get_millis();
 	
-	if (gps->configure_gps)
+	if (tnow > 5000 && gps->configure_gps)
 	{
 		gps_ublox_configure_gps(gps);
 	}
