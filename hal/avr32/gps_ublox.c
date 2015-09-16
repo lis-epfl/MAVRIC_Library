@@ -2758,7 +2758,7 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	gps->status = NO_GPS;
 	gps->healthy = false;
 	
-	gps->configure_gps = true;
+	gps->configure_gps = false;
 	gps->config_nav_msg_count = 0;
 	gps->acknowledged_received = true;
 }
