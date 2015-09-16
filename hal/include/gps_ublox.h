@@ -139,6 +139,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_CFG_PM2 0x3B
 #define MSG_CFG_PRT 0x00
 #define MSG_CFG_RATE 0x08
+#define MSG_CFG_RINV 0x34
 
 #define MSG_MON_HW2 0x0B
 #define MSG_MON_HW 0x09
@@ -195,6 +196,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_CFG_PM2 44
 #define UBX_SIZE_CFG_PRT 20
 #define UBX_SIZE_CFG_RATE 6
+#define UBX_SIZE_CFG_RINV 24
 
 #define UBX_SIZE_MON_RXR 1
 
@@ -397,6 +399,37 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint16_t nav_rate;					///< Navigation rate, in number of measurements cycles. Cannot be changed on u-blox 5 and 6, always equal 1.
 		uint16_t measure_rate;				///< Measurement rate, GPS measurements are taken every measure_rate milliseconds
 	}ubx_cfg_rate_t;
+
+	/**
+	 * \brief The U-Blox CFG-RINV structure definition
+	 */
+	typedef struct
+	{
+		uint8_t data23;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data22;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data21;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data20;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data19;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data18;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data17;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data16;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data15;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data14;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data13;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data12;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data11;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data10;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data9;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data8;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data7;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data6;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data5;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data4;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data3;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data2;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data;						///< Data to store/stored in Remote Inventory
+		uint8_t flags;						///< 0=dumb, 1=binary
+	}ubx_cfg_rinv_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
@@ -708,6 +741,37 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint16_t nav_rate;					///< Navigation rate, in number of measurements cycles. Cannot be changed on u-blox 5 and 6, always equal 1.
 		uint16_t time_ref;					///< Alignment to reference time, 0=UTC, 1=GPS time.
 	}ubx_cfg_rate_t;
+
+	/**
+	 * \brief The U-Blox CFG-RINV structure definition
+	 */
+	typedef struct
+	{
+		uint8_t flags;						///< 0=dumb, 1=binary
+		uint8_t data;						///< Data to store/stored in Remote Inventory
+		uint8_t data2;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data3;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data4;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data5;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data6;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data7;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data8;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data9;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data10;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data11;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data12;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data13;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data14;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data15;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data16;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data17;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data18;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data19;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data20;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data21;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data22;	  					///< Data to store/stored in Remote Inventory
+		uint8_t data23;	  					///< Data to store/stored in Remote Inventory
+	}ubx_cfg_rinv_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition

@@ -399,6 +399,19 @@ static void ubx_send_message_cfg_rate(byte_stream_t *stream, ubx_cfg_rate_t *gps
 
 
 /**
+ * \brief	To send the CFG-RINV remote inventory configuration, if the ubx_cfg_rinv_t pointer is null,
+ *			asks for the current settings
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x08	MSG_CFG_RINV
+ *
+ * \param	stream				The pointer to the stream structure
+ * \param	gps_cfg_rinv		The rate configuration sent
+ */
+static void ubx_send_message_cfg_rinv(byte_stream_t *stream, ubx_cfg_rinv_t *gps_cfg_rinv);
+
+
+/**
  * \brief	To send the NAV messages that we want to receive
  *
  * Class:	0x06	UBX_CLASS_CFG
@@ -1958,6 +1971,7 @@ static void ubx_send_message_cfg_rate(byte_stream_t *stream, ubx_cfg_rate_t *gps
 	{
 		size = 0;
 	}
+	ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
 	
 	if (gps_cfg_rate != NULL)
 	{
@@ -1968,6 +1982,54 @@ static void ubx_send_message_cfg_rate(byte_stream_t *stream, ubx_cfg_rate_t *gps
 	}
 	
 	ubx_send_cksum(stream, ck_a, ck_b);
+}
+
+static void ubx_send_message_cfg_rinv(byte_stream_t *stream, ubx_cfg_rinv_t *gps_cfg_rinv)
+{
+	uint8_t ck_a = 0, ck_b = 0;
+
+	uint8_t msg_class = UBX_CLASS_CFG;
+	uint8_t msg_id = MSG_CFG_RINV;
+	uint16_t size;
+
+	if (gps_cfg_rinv != NULL)
+	{
+		size = UBX_SIZE_CFG_RINV;
+	}
+	else
+	{
+		size = 0;
+	}
+	ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
+	
+	if (gps_cfg_rinv != NULL)
+	{
+		ubx_send_uint8(stream, gps_cfg_rinv->flags, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data2, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data3, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data4, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data5, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data6, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data7, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data8, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data9, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data10, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data11, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data12, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data13, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data14, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data15, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data16, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data17, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data18, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data19, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data20, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data21, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data22, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rinv->data23, &ck_a, &ck_b);
+	}
+	ubx_send_cksum(stream,ck_a,ck_b);
 }
 
 static void ubx_configure_message_rate(byte_stream_t *stream, uint8_t msg_class, uint8_t msg_id, uint8_t rate)
@@ -1984,6 +2046,7 @@ static void ubx_configure_message_rate(byte_stream_t *stream, uint8_t msg_class,
 	uint16_t size = sizeof(msg);
 	
 	ubx_send_header(stream, header_class, header_msg_id, size, &ck_a, &ck_b);
+	
 	ubx_send_uint8(stream, msg.msg_class, &ck_a, &ck_b);
 	ubx_send_uint8(stream, msg.msg_id_rate, &ck_a, &ck_b);
 	ubx_send_uint8(stream, msg.rate, &ck_a, &ck_b);
@@ -2434,11 +2497,44 @@ void gps_ublox_configure_gps(gps_t *gps)
 	gps_cfg_prt.res3 = 0x0000;
 	ubx_send_message_cfg_prt(&gps->gps_stream_out, &gps_cfg_prt);
 	
+	// Setting rate settings
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Settings rate configuration...\n");
+	}
 	ubx_cfg_rate_t gps_cfg_rate;
 	gps_cfg_rate.measure_rate = 0x00C8;
 	gps_cfg_rate.nav_rate = 0x0001;
 	gps_cfg_rate.time_ref = 0x0001;
 	ubx_send_message_cfg_rate(&gps->gps_stream_out,&gps_cfg_rate);
+	
+	
+	ubx_cfg_rinv_t gps_cfg_rinv;
+	gps_cfg_rinv.flags = 0x00;
+	gps_cfg_rinv.data = 0x4E;
+	gps_cfg_rinv.data2 = 0x6F;
+	gps_cfg_rinv.data3 = 0x74;
+	gps_cfg_rinv.data4 = 0x69;
+	gps_cfg_rinv.data5 = 0x63;
+	gps_cfg_rinv.data6 = 0x65;
+	gps_cfg_rinv.data7 = 0x3A;
+	gps_cfg_rinv.data8 = 0x20;
+	gps_cfg_rinv.data9 = 0x6E;
+	gps_cfg_rinv.data10 = 0x6F;
+	gps_cfg_rinv.data11 = 0x20;
+	gps_cfg_rinv.data12 = 0x64;
+	gps_cfg_rinv.data13 = 0x61;
+	gps_cfg_rinv.data14 = 0x74;
+	gps_cfg_rinv.data15 = 0x61;
+	gps_cfg_rinv.data16 = 0x20;
+	gps_cfg_rinv.data17 = 0x73;
+	gps_cfg_rinv.data18 = 0x61;
+	gps_cfg_rinv.data19 = 0x76;
+	gps_cfg_rinv.data20 = 0x65;
+	gps_cfg_rinv.data21 = 0x64;
+	gps_cfg_rinv.data22 = 0x21;
+	gps_cfg_rinv.data23 = 0x00;
+	ubx_send_message_cfg_rinv(&gps->gps_stream_out, &gps_cfg_rinv);
 }
 
 
