@@ -135,6 +135,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_CFG_NAV_SETTINGS 0x24
 #define MSG_CFG_NAV_EXPERT_SETTINGS 0x23
 #define MSG_CFG_NMEA 0x17
+#define MSG_CFG_PM 0x32
 
 #define MSG_MON_HW2 0x0B
 #define MSG_MON_HW 0x09
@@ -187,6 +188,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_CFG_GETSET_RATE 3
 #define UBX_SIZE_CFG_NAV_SETTINGS 36
 #define UBX_SIZE_CFG_NAV_EXPERT_SETTINGS 40
+#define UBX_SIZE_CFG_PM 24
 
 #define UBX_SIZE_MON_RXR 1
 
@@ -209,6 +211,9 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 // The UART bytes are sent in a little endian format from the GPS, if the processor is big endian, define BIG_ENDIAN
 // Otherwise comment the following line
 #define BIG_ENDIAN
+
+// If your GPS is using little endian format, use this line, comment it otherwise
+#define GPS_LITTLE_ENDIAN
 
 #ifdef BIG_ENDIAN
 	/**
@@ -318,6 +323,23 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint16_t mask1;						///< First parameter bitmask
 		uint16_t version;					///< Message version
 	}ubx_cfg_nav_expert_settings_t;
+
+	/**
+	 * \brief The U-Blox CFG-PM structure definition
+	 */
+	typedef struct  
+	{
+		uint16_t min_acq_time; 				///< Minimal search time
+		uint16_t on_time;	   				///< On time after first succeful fix
+		uint32_t grid_offset;	   			///< Grid offset relative to GPS start of week
+		uint32_t search_period;				///< Acquisition retry period
+		uint32_t update_period;				///< Positin update period
+		uint32_t flags;						///< PSM configuation flags
+		uint8_t res3;						///< Reserved
+		uint8_t res2;						///< Reserved
+		uint8_t res1;						///< Reserved
+		uint8_t version;					///< Message version
+	}ubx_cfg_pm_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
@@ -561,6 +583,23 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t res13;						///< Reserved slot
 		uint8_t res14;						///< Reserved slot
 	}ubx_cfg_nav_expert_settings_t;
+
+	/**
+	 * \brief The U-Blox CFG-PM structure definition
+	 */
+	typedef struct  
+	{
+		uint8_t version;					///< Message version
+		uint8_t res1;						///< Reserved
+		uint8_t res2;						///< Reserved
+		uint8_t res3;						///< Reserved
+		uint32_t flags;						///< PSM configuation flags
+		uint32_t update_period;				///< Positin update period
+		uint32_t search_period;				///< Acquisition retry period
+		uint32_t grid_offset;	   			///< Grid offset relative to GPS start of week
+		uint16_t on_time;	   				///< On time after first succeful fix
+		uint16_t min_acq_time; 				///< Minimal search time
+	}ubx_cfg_pm_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
