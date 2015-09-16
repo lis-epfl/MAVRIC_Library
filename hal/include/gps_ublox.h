@@ -371,6 +371,22 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	}ubx_cfg_pm2_t;
 
 	/**
+	 * \brief The U-Blox CFG-PRT structure definition
+	 */
+	typedef struct
+	{
+		uint16_t res3;						///< Reserved, set to 0
+		uint16_t flags;						///< Reserved, set to 0
+		uint16_t out_proto_mask;			///< A mask describing which ouput protocols are active
+		uint16_t in_proto_mask;				///< A mask describing which input protocols are active
+		uint32_t baud_rate;					///< Baudrate in bits/second
+		uint32_t mode;						///< Bit mask describing UART mode
+		uint16_t tx_ready;					///< Reserved up to firmware 7.0
+		uint8_t res0;						///< Reserved
+		uint8_t port_id;					///< Port ID (=1 or 2 for UART ports)
+	}ubx_cfg_prt_t;
+
+	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
 	 */
 	typedef struct
@@ -654,6 +670,22 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint16_t res10;						///< Reserved
 		uint32_t res11;						///< Reserved
 	}ubx_cfg_pm2_t;
+
+	/**
+	 * \brief The U-Blox CFG-PRT structure definition
+	 */
+	typedef struct
+	{
+		uint8_t port_id;					///< Port ID (=1 or 2 for UART ports)
+		uint8_t res0;						///< Reserved
+		uint16_t tx_ready;					///< Reserved up to firmware 7.0
+		uint32_t mode;						///< Bit mask describing UART mode
+		uint32_t baud_rate;					///< Baudrate in bits/second
+		uint16_t in_proto_mask;				///< A mask describing which input protocols are active
+		uint16_t out_proto_mask;			///< A mask describing which ouput protocols are active
+		uint16_t flags;						///< Reserved, set to 0
+		uint16_t res3;						///< Reserved, set to 0
+	}ubx_cfg_prt_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
