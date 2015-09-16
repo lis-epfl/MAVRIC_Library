@@ -140,6 +140,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_CFG_PRT 0x00
 #define MSG_CFG_RATE 0x08
 #define MSG_CFG_RINV 0x34
+#define MSG_CFG_RXM 0x11
 
 #define MSG_MON_HW2 0x0B
 #define MSG_MON_HW 0x09
@@ -197,6 +198,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_CFG_PRT 20
 #define UBX_SIZE_CFG_RATE 6
 #define UBX_SIZE_CFG_RINV 24
+#define UBX_SIZE_CFG_RXM 2
 
 #define UBX_SIZE_MON_RXR 1
 
@@ -430,6 +432,15 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t data;						///< Data to store/stored in Remote Inventory
 		uint8_t flags;						///< 0=dumb, 1=binary
 	}ubx_cfg_rinv_t;
+
+	/**
+	 * \brief The U-Blox CFG-RXM structure definition
+	 */
+	typedef struct
+	{
+		uint8_t lp_mode;					///< Low power mode
+		uint8_t res;						///< Reserved set to 8
+	}ubx_cfg_rxm_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
@@ -772,6 +783,15 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t data22;	  					///< Data to store/stored in Remote Inventory
 		uint8_t data23;	  					///< Data to store/stored in Remote Inventory
 	}ubx_cfg_rinv_t;
+
+	/**
+	 * \brief The U-Blox CFG-RXM structure definition
+	 */
+	typedef struct
+	{
+		uint8_t res;						///< Reserved set to 8
+		uint8_t lp_mode;					///< Low power mode
+	}ubx_cfg_rxm_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition

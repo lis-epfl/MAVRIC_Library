@@ -403,12 +403,25 @@ static void ubx_send_message_cfg_rate(byte_stream_t *stream, ubx_cfg_rate_t *gps
  *			asks for the current settings
  *
  * Class:	0x06	UBX_CLASS_CFG
- * Msg_id:	0x08	MSG_CFG_RINV
+ * Msg_id:	0x34	MSG_CFG_RINV
  *
  * \param	stream				The pointer to the stream structure
  * \param	gps_cfg_rinv		The rate configuration sent
  */
 static void ubx_send_message_cfg_rinv(byte_stream_t *stream, ubx_cfg_rinv_t *gps_cfg_rinv);
+
+
+/**
+ * \brief	To send the CFG-RXM configuration, if the ubx_cfg_rxm_t pointer is null,
+ *			asks for the current settings
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x11	MSG_CFG_RXM
+ *
+ * \param	stream				The pointer to the stream structure
+ * \param	gps_cfg_rxm			The rate configuration sent
+ */
+static void ubx_send_message_cfg_rxm(byte_stream_t *stream, ubx_cfg_rxm_t *gps_cfg_rxm);
 
 
 /**
@@ -2032,6 +2045,33 @@ static void ubx_send_message_cfg_rinv(byte_stream_t *stream, ubx_cfg_rinv_t *gps
 	ubx_send_cksum(stream,ck_a,ck_b);
 }
 
+static void ubx_send_message_cfg_rxm(byte_stream_t *stream, ubx_cfg_rxm_t *gps_cfg_rxm)
+{
+	uint8_t ck_a = 0, ck_b = 0;
+
+	uint8_t msg_class = UBX_CLASS_CFG;
+	uint8_t msg_id = MSG_CFG_RXM;
+	uint16_t size;
+
+	if (gps_cfg_rxm != NULL)
+	{
+		size = UBX_SIZE_CFG_RXM;
+	}
+	else
+	{
+		size = 0;
+	}
+	ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
+	
+	if (gps_cfg_rxm != NULL)
+	{
+		ubx_send_uint8(stream, gps_cfg_rxm->res, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_rxm->lp_mode, &ck_a, &ck_b);
+	}
+	ubx_send_cksum(stream,ck_a,ck_b);
+}
+
+
 static void ubx_configure_message_rate(byte_stream_t *stream, uint8_t msg_class, uint8_t msg_id, uint8_t rate)
 {
 	uint8_t ck_a = 0, ck_b = 0;
@@ -2535,6 +2575,11 @@ void gps_ublox_configure_gps(gps_t *gps)
 	gps_cfg_rinv.data22 = 0x21;
 	gps_cfg_rinv.data23 = 0x00;
 	ubx_send_message_cfg_rinv(&gps->gps_stream_out, &gps_cfg_rinv);
+	
+	ubx_cfg_rxm_t gps_cfg_rxm;
+	gps_cfg_rxm.res = 0x08;
+	gps_cfg_rxm.lp_mode = 0x00;
+	ubx_send_message_cfg_rxm(&gps->gps_stream_out, &gps_cfg_rxm);
 }
 
 
