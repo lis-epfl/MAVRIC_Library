@@ -215,6 +215,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_CFG_ANT 4
 
 #define UBX_SIZE_MON_RXR 1
+#define UBX_SIZE_MON_VER 70
 
 #define UBX_SIZE_TIM_TP 16
 #define UBX_SIZE_TIM_VRFY 20
@@ -575,6 +576,16 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint16_t pins;						///< Antenna pin configuration
 		uint16_t flags;						///< Antenna flag mask
 	}ubx_cfg_ant_t;
+
+	/**
+	 * \brief The U-Blox MON-VER struture definition
+	 */
+	typedef struct
+	{
+		char rom_version[30];				///< Zero-terminated ROM version string
+		char hw_version[10];				///< Zero-terminated hardware version string
+		char sw_version[30];				///< Zero-terminated software version string
+	}ubx_mon_ver_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
@@ -1046,6 +1057,16 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint16_t flags;						///< Antenna flag mask
 		uint16_t pins;						///< Antenna pin configuration
 	}ubx_cfg_ant_t;
+	
+	/**
+	 * \brief The U-Blox MON-VER struture definition
+	 */
+	typedef struct
+	{
+		char sw_version[30];				///< Zero-terminated software version string
+		char hw_version[10];				///< Zero-terminated hardware version string
+		char rom_version[30];				///< Zero-terminated ROM version string
+	}ubx_mon_ver_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition

@@ -317,6 +317,20 @@ static void ubx_send_cksum(byte_stream_t *stream, uint8_t ck_sum_a, uint8_t ck_s
  */
 static void ubx_send_message_CFG_nav_rate(byte_stream_t *stream, uint8_t msg_class, uint8_t msg_id, ubx_cfg_nav_rate_send_t msg, uint16_t size);
 
+
+/**
+ * \brief	To send the Mon_VER settings message, if the ubx_mon_ver_t pointer is null,
+ *			asks for the current settings
+ *
+ * Class:	0x0A	UBX_CLASS_MON
+ * Msg_id:	0x04	MSG_MON_VER
+ *
+ * \param	stream				The pointer to the stream structure
+ * \param	gps_mon_ver			The VER structure sent
+ */
+static void ubx_send_message_mon_ver(byte_stream_t *stream, ubx_mon_ver_t *gps_mon_ver);
+
+
 /**
  * \brief	To send the CFG-ANT settings message, if the ubx_cfg_ant_t pointer is null,
  *			asks for the current settings
@@ -1876,6 +1890,47 @@ static void ubx_send_message_CFG_nav_rate(byte_stream_t *stream, uint8_t msg_cla
 	ubx_send_cksum(stream, ck_a,ck_b);
 }
 
+static void ubx_send_message_mon_ver(byte_stream_t *stream, ubx_mon_ver_t *gps_mon_ver)
+{
+	uint8_t ck_a = 0, ck_b = 0;
+	
+	uint8_t msg_class = UBX_CLASS_MON;
+	uint8_t msg_id = MSG_MON_VER;
+	uint16_t size;
+	
+	if (gps_mon_ver != NULL)
+	{
+		size = UBX_SIZE_MON_VER;
+	}
+	else
+	{
+		size = 0;
+	}
+	
+	ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
+	
+	uint8_t i;
+	if (gps_mon_ver != NULL)
+	{
+		for (i=0; i<30; i++)
+		{
+			ubx_send_uint8(stream, gps_mon_ver->sw_version[i], &ck_a, &ck_b);
+		}
+		for (i=0; i<10; i++)
+		{
+			ubx_send_uint8(stream, gps_mon_ver->hw_version[i], &ck_a, &ck_b);
+		}
+		for (i=0; i<30; i++)
+		{
+			ubx_send_uint8(stream, gps_mon_ver->rom_version[i], &ck_a, &ck_b);
+		}
+	}
+	ubx_send_cksum(stream, ck_a,ck_b);
+}
+
+
+
+
 static void ubx_send_message_cfg_ant(byte_stream_t *stream, ubx_cfg_ant_t *gps_cfg_ant)
 {
 	uint8_t ck_a = 0, ck_b = 0;
@@ -2742,10 +2797,21 @@ void gps_ublox_configure_gps(gps_t *gps)
 	//msg.timeref         = 0;		// 0:UTC time, 1:GPS time
 	//ubx_send_message_CFG_nav_rate(&gps->gps_stream_out, UBX_CLASS_CFG, MSG_CFG_RATE, msg, sizeof(msg));
 
+	// Configure the MON-VER messages
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Setting MON-VER messages...\n");
+	}
+	ubx_mon_ver_t gps_mon_ver;
+	strcpy(gps_mon_ver.sw_version,"7.03 (45970)");
+	strcpy(gps_mon_ver.hw_version,"00040007");
+	strcpy(gps_mon_ver.rom_version,"7.03 (45969)");
+	ubx_send_message_mon_ver(&gps->gps_stream_out, &gps_mon_ver);
+
 	// Configure the ANT messages
 	if (gps->print_nav_on_debug)
 	{
-		print_util_dbg_print("Setting ANT messages...\n");
+		print_util_dbg_print("Setting CFG-ANT messages...\n");
 	}
 	ubx_cfg_ant_t gps_cfg_ant;
 	gps_cfg_ant.flags = 0x001B;
@@ -2755,7 +2821,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	// Configure the DAT messages
 	if (gps->print_nav_on_debug)
 	{
-		print_util_dbg_print("Setting DAT messages...\n");
+		print_util_dbg_print("Setting CFG-DAT messages...\n");
 	}
 	ubx_cfg_dat_t gps_cfg_dat;
 	gps_cfg_dat.datum_num = 0x0000;
@@ -2764,7 +2830,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	// Configure the FXN messages
 	if (gps->print_nav_on_debug)
 	{
-		print_util_dbg_print("Setting FXN messages...\n");
+		print_util_dbg_print("Setting CFG-FXN messages...\n");
 	}
 	ubx_cfg_fxn_t gps_cfg_fxn;
 	gps_cfg_fxn.flags = 0x0000000C;
@@ -2781,7 +2847,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	// Configure the INF messages
 	if (gps->print_nav_on_debug)
 	{
-		print_util_dbg_print("Setting INF messages...\n");
+		print_util_dbg_print("Setting CFG-INF messages...\n");
 	}
 	ubx_cfg_inf_t gps_cfg_inf;
 	gps_cfg_inf.protocol_id = 0x00;
@@ -2818,7 +2884,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	// Configure the ITFM messages
 	if (gps->print_nav_on_debug)
 	{
-		print_util_dbg_print("Setting ITFM messages...\n");
+		print_util_dbg_print("Setting CFG-ITFM messages...\n");
 	}
 	ubx_cfg_itfm_t gps_cfg_itfm;
 	gps_cfg_itfm.config = 0x2D62ACF3;
@@ -2883,7 +2949,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	// Setting navigation settings
 	if (gps->print_nav_on_debug)
 	{
-		print_util_dbg_print("Settings engine settings...\n");
+		print_util_dbg_print("Settings CFG engine settings...\n");
 	}
 	ubx_cfg_nav_settings_t gps_engine_settings;
 	gps_engine_settings.mask = 0xFFFF;
@@ -2934,7 +3000,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	// Setting power management settings
 	if (gps->print_nav_on_debug)
 	{
-		print_util_dbg_print("Settings power management settings...\n");
+		print_util_dbg_print("Settings CFG-PM power management settings...\n");
 	}
 	ubx_cfg_pm_t gps_cfg_pm;
 	gps_cfg_pm.version = 0x00;
@@ -2973,7 +3039,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	// Setting port settings
 	if (gps->print_nav_on_debug)
 	{
-		print_util_dbg_print("Settings port configuration...\n");
+		print_util_dbg_print("Settings CFG-PRT port configuration...\n");
 	}
 	ubx_cfg_prt_t gps_cfg_prt;
 	gps_cfg_prt.port_id = 0x00;
@@ -3034,7 +3100,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	// Setting rate settings
 	if (gps->print_nav_on_debug)
 	{
-		print_util_dbg_print("Settings rate configuration...\n");
+		print_util_dbg_print("Settings CFG-RATE rate configuration...\n");
 	}
 	ubx_cfg_rate_t gps_cfg_rate;
 	gps_cfg_rate.measure_rate = 0x00C8;
@@ -3045,7 +3111,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	// Setting RINV settings
 	if (gps->print_nav_on_debug)
 	{
-		print_util_dbg_print("Settings RINV configuration...\n");
+		print_util_dbg_print("Settings CFG-RINV configuration...\n");
 	}
 	ubx_cfg_rinv_t gps_cfg_rinv;
 	gps_cfg_rinv.flags = 0x00;
@@ -3077,7 +3143,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	// Setting RXM settings
 	if (gps->print_nav_on_debug)
 	{
-		print_util_dbg_print("Settings RXM configuration...\n");
+		print_util_dbg_print("Settings CFG-RXM configuration...\n");
 	}
 	ubx_cfg_rxm_t gps_cfg_rxm;
 	gps_cfg_rxm.res = 0x08;
@@ -3087,7 +3153,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	// Setting SBAS settings
 	if (gps->print_nav_on_debug)
 	{
-		print_util_dbg_print("Settings SBAS configuration...\n");
+		print_util_dbg_print("Settings CFG-SBAS configuration...\n");
 	}
 	ubx_cfg_sbas_t gps_cfg_sbas;
 	gps_cfg_sbas.mode = 0x01;
@@ -3100,7 +3166,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	// Setting TP time pulse settings
 	if (gps->print_nav_on_debug)
 	{
-		print_util_dbg_print("Settings time pulse configuration...\n");
+		print_util_dbg_print("Settings CFG-TP time pulse configuration...\n");
 	}
 	ubx_cfg_tp_t gps_cfg_tp;
 	gps_cfg_tp.interval = 0x000F4240;
@@ -3117,7 +3183,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	// Setting TP time pulse 5 settings
 	if (gps->print_nav_on_debug)
 	{
-		print_util_dbg_print("Settings time pulse TM5 configuration...\n");
+		print_util_dbg_print("Settings CFG-TP5 time pulse TP5 configuration...\n");
 	}
 	ubx_cfg_tp5_t gps_cfg_tp5;
 	gps_cfg_tp5.tp_idx = 0x00;
@@ -3149,7 +3215,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	// Setting USB settings
 	if (gps->print_nav_on_debug)
 	{
-		print_util_dbg_print("Settings USB configuration...\n");
+		print_util_dbg_print("Settings CFG-USB configuration...\n");
 	}
 	ubx_cfg_usb_t gps_cfg_usb;
 	gps_cfg_usb.vendor_id = 0x1546;
