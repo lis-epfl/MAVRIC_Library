@@ -451,6 +451,19 @@ static void ubx_send_message_cfg_tp(byte_stream_t *stream, ubx_cfg_tp_t *gps_cfg
 
 
 /**
+ * \brief	To send the CFG-TP5 time pulse configuration, if the ubx_cfg_tp5_t pointer is null,
+ *			asks for the current settings
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x31	MSG_CFG_TP5
+ *
+ * \param	stream				The pointer to the stream structure
+ * \param	gps_cfg_tp5			The rate configuration sent
+ */
+static void ubx_send_message_cfg_tp5(byte_stream_t *stream, ubx_cfg_tp5_t *gps_cfg_tp5);
+
+
+/**
  * \brief	To send the NAV messages that we want to receive
  *
  * Class:	0x06	UBX_CLASS_CFG
@@ -2131,12 +2144,12 @@ static void ubx_send_message_cfg_tp(byte_stream_t *stream, ubx_cfg_tp_t *gps_cfg
 	uint8_t ck_a = 0, ck_b = 0;
 
 	uint8_t msg_class = UBX_CLASS_CFG;
-	uint8_t msg_id = MSG_CFG_TP;
+	uint8_t msg_id = MSG_CFG_TP5;
 	uint16_t size;
 
 	if (gps_cfg_tp != NULL)
 	{
-		size = UBX_SIZE_CFG_TP;
+		size = UBX_SIZE_CFG_TP5;
 	}
 	else
 	{
@@ -2155,6 +2168,41 @@ static void ubx_send_message_cfg_tp(byte_stream_t *stream, ubx_cfg_tp_t *gps_cfg
 		ubx_send_uint8(stream, gps_cfg_tp->antenna_cable_delay, &ck_a, &ck_b);
 		ubx_send_uint8(stream, gps_cfg_tp->rf_group_delay, &ck_a, &ck_b);
 		ubx_send_uint8(stream, gps_cfg_tp->user_delay, &ck_a, &ck_b);
+	}
+	ubx_send_cksum(stream,ck_a,ck_b);
+}
+
+static void ubx_send_message_cfg_tp5(byte_stream_t *stream, ubx_cfg_tp5_t *gps_cfg_tp5)
+{
+	uint8_t ck_a = 0, ck_b = 0;
+
+	uint8_t msg_class = UBX_CLASS_CFG;
+	uint8_t msg_id = MSG_CFG_TP;
+	uint16_t size;
+
+	if (gps_cfg_tp5 != NULL)
+	{
+		size = UBX_SIZE_CFG_TP;
+	}
+	else
+	{
+		size = 0;
+	}
+	ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
+	
+	if (gps_cfg_tp5 != NULL)
+	{
+		ubx_send_uint8(stream, gps_cfg_tp5->tp_idx, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_tp5->res0, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_tp5->res1, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_tp5->ant_cable_delay, &ck_a, &ck_b);
+		ubx_send_uint16(stream, gps_cfg_tp5->rf_group_delay, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_tp5->freq_period, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_tp5->freq_perid_lock, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_tp5->pulse_len_ratio, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_tp5->pulse_len_ratio_lock, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_tp5->user_config_delay, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_tp5->flags, &ck_a, &ck_b);
 	}
 	ubx_send_cksum(stream,ck_a,ck_b);
 }
@@ -2708,6 +2756,38 @@ void gps_ublox_configure_gps(gps_t *gps)
 	gps_cfg_tp.rf_group_delay = 0x0000;
 	gps_cfg_tp.user_delay = 0x00000000;
 	ubx_send_message_cfg_tp(&gps->gps_stream_out, &gps_cfg_tp);
+	
+	// Setting TP time pulse 5 settings
+	if (gps->print_nav_on_debug)
+	{
+		print_util_dbg_print("Settings time pulse TM5 configuration...\n");
+	}
+	ubx_cfg_tp5_t gps_cfg_tp5;
+	gps_cfg_tp5.tp_idx = 0x00;
+	gps_cfg_tp5.res0 = 0x29;
+	gps_cfg_tp5.res1 = 0x0003;
+	gps_cfg_tp5.ant_cable_delay = 0x0032;
+	gps_cfg_tp5.rf_group_delay = 0x0000;
+	gps_cfg_tp5.freq_period = 0x000F4240;
+	gps_cfg_tp5.freq_perid_lock = 0x000F4240;
+	gps_cfg_tp5.pulse_len_ratio = 0x00000000;
+	gps_cfg_tp5.pulse_len_ratio_lock = 0x000186A0;
+	gps_cfg_tp5.user_config_delay = 0x00000000;
+	gps_cfg_tp5.flags = 0x000000F7;
+	ubx_send_message_cfg_tp5(&gps->gps_stream_out, &gps_cfg_tp5);
+	
+	gps_cfg_tp5.tp_idx = 0x01;
+	gps_cfg_tp5.res0 = 0x29;
+	gps_cfg_tp5.res1 = 0x0003;
+	gps_cfg_tp5.ant_cable_delay = 0x0032;
+	gps_cfg_tp5.rf_group_delay = 0x0000;
+	gps_cfg_tp5.freq_period = 0x00000004;
+	gps_cfg_tp5.freq_perid_lock = 0x00000001;
+	gps_cfg_tp5.pulse_len_ratio = 0x0001E848;
+	gps_cfg_tp5.pulse_len_ratio_lock = 0x000186A0;
+	gps_cfg_tp5.user_config_delay = 0x00000000;
+	gps_cfg_tp5.flags = 0x000000FE;
+	ubx_send_message_cfg_tp5(&gps->gps_stream_out, &gps_cfg_tp5);
 }
 
 

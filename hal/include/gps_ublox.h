@@ -143,6 +143,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_CFG_RXM 0x11
 #define MSG_CFG_SBAS 0x16
 #define MSG_CFG_TP 0x07
+#define MSG_CFG_TP5 0x31
 
 #define MSG_MON_HW2 0x0B
 #define MSG_MON_HW 0x09
@@ -203,6 +204,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_CFG_RXM 2
 #define UBX_SIZE_CFG_SBAS 8
 #define UBX_SIZE_CFG_TP 20
+#define UBX_SIZE_CFG_TP5 32
 
 #define UBX_SIZE_MON_RXR 1
 
@@ -473,6 +475,24 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint32_t length;					///< Length of time pulse
 		uint32_t interval;					///< Time interval for time pulse
 	}ubx_cfg_tp_t;
+
+	/**
+	 * \brief The U-Blox CFG-TP5 structure definition
+	 */
+	typedef struct
+	{
+		uint32_t flags;						///< Configuratin flags
+		int32_t user_config_delay;			///< User configurable delay
+		uint32_t pulse_len_ratio_lock;		///< Pulse length or duty cycle when locked to GPS time, only used if 'lockedOtherSet' is set
+		uint32_t pulse_len_ratio;			///< Pulse length or duty cycle, depending on 'isLength'
+		uint32_t freq_perid_lock;			///< Frequency or period time when locked to GPS time, only used if 'lockedOtherSet' is set
+		uint32_t freq_period;				///< Frequency or period time, depending on setting of bit 'isFreq'
+		int16_t rf_group_delay;				///< RF group delay
+		int16_t ant_cable_delay;			///< Antenna cable delay
+		uint16_t res1;						///< Reserved
+		uint8_t res0;						///< Reserved
+		uint8_t tp_idx;						///< Timepulse selection
+	}ubx_cfg_tp5_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
@@ -852,6 +872,24 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		int16_t rf_group_delay;				///< Receiver RF group delay
 		int32_t user_delay;					///< User time function delay
 	}ubx_cfg_tp_t;
+
+	/**
+	 * \brief The U-Blox CFG-TP5 structure definition
+	 */
+	typedef struct
+	{
+		uint8_t tp_idx;						///< Timepulse selection
+		uint8_t res0;						///< Reserved
+		uint16_t res1;						///< Reserved
+		int16_t ant_cable_delay;			///< Antenna cable delay
+		int16_t rf_group_delay;				///< RF group delay
+		uint32_t freq_period;				///< Frequency or period time, depending on setting of bit 'isFreq'
+		uint32_t freq_perid_lock;			///< Frequency or period time when locked to GPS time, only used if 'lockedOtherSet' is set
+		uint32_t pulse_len_ratio;			///< Pulse length or duty cycle, depending on 'isLength'
+		uint32_t pulse_len_ratio_lock;		///< Pulse length or duty cycle when locked to GPS time, only used if 'lockedOtherSet' is set
+		int32_t user_config_delay;			///< User configurable delay
+		uint32_t flags;						///< Configuratin flags
+	}ubx_cfg_tp5_t;
 
 	/**
 	 * \brief The U-Blox NAV-POSLLH message structure definition
