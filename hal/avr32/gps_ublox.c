@@ -3457,7 +3457,7 @@ void gps_ublox_update(gps_t *gps)
 			
 			gps->healthy = false;
 
-			gps_ublox_reset(gps, GPS_ENGINE_AIRBORNE_4G);
+			//gps_ublox_reset(gps, GPS_ENGINE_AIRBORNE_4G);
 			gps->idle_timer = tnow;
 		}
 	}
