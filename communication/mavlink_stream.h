@@ -90,7 +90,7 @@ typedef struct
 	byte_stream_t* rx;		///< Input stream
 	uint32_t sysid;			///< System ID
 	uint32_t compid;		///< System Component ID
-	mavlink_received_t rec;	///< Last received message
+	mavlink_received_t rec;		///< Last received message
 	bool msg_available;		///< Indicates if a new message is available and not handled yet
 	bool use_dma;			///< Indicates whether tx transfer should use dma
 } mavlink_stream_t;
