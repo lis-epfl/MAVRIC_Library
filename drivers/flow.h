@@ -60,8 +60,15 @@ typedef union
 		int16_t x[125];
 		int16_t y[125];
 	};
-	uint8_t raw_data[500];
+	uint8_t data[500];
 } flow_data_t;
+
+typedef enum
+{
+	FLOW_NO_HANDSHAKE       = 0,
+	FLOW_HANDSHAKE_DATA     = 1,
+	FLOW_HANDSHAKE_METADATA = 2,
+} flow_handshake_state_t;
 
 typedef struct
 {
@@ -71,9 +78,15 @@ typedef struct
 	buffer_t		uart_buffer_in;		///< buffer for messages received from Epuck
 	buffer_t		uart_buffer_out;	///< buffer for messages to sent towards Epuck
 
-	flow_data_t data;
+	uint8_t 	of_count;
+	flow_data_t 	of;
+	flow_data_t 	of_loc;
 
-	uint32_t last_update;
+	flow_handshake_state_t  handshake_state; 
+	uint16_t 		n_packets;
+	uint32_t 		size_data; 
+
+	uint32_t last_update_us;
 
 	float tmp_flow_x;
 	float tmp_flow_y;

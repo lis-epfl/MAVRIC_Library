@@ -40,10 +40,15 @@
  ******************************************************************************/
 
 #include "flow.h"
-
+#include "time_keeper.h"
 
 void flow_init(flow_t* flow, int32_t UID, usart_config_t usart_conf)
 {
+	// Init members
+	flow->last_update_us  = time_keeper_get_micros();
+	flow->handshake_state = FLOW_NO_HANDSHAKE; 
+	flow->of_count 	      = 0;
+
 	// Init uart and buffers
 	uart_int_set_usart_conf(UID, &usart_conf);
 	uart_int_init(UID);
@@ -65,8 +70,16 @@ void flow_init(flow_t* flow, int32_t UID, usart_config_t usart_conf)
 				&(flow->uart_stream_out));
 }
 
+static inline int16_t endian_rev16(int16_t data)
+{
+	return ((data >> 8) & 0x00ff) | ((data & 0x00ff) << 8);
+};
+
 void flow_update(flow_t* flow)
 {
+	// Update time
+	flow->last_update_us  = time_keeper_get_micros();
+
 	// Receive incoming bytes
 	mavlink_stream_receive(&flow->mavlink_stream);
 
@@ -79,7 +92,10 @@ void flow_update(flow_t* flow)
 		// Indicate that the message was handled
 		flow->mavlink_stream.msg_available = false;
 		
-		mavlink_optical_flow_t optical_flow_msg;
+		// declare messages
+		mavlink_optical_flow_t 			optical_flow_msg;
+		mavlink_data_transmission_handshake_t 	handshake_msg;
+		mavlink_encapsulated_data_t		data_msg;
 
 		switch( msg->msgid )
 		{
@@ -87,9 +103,88 @@ void flow_update(flow_t* flow)
 				mavlink_msg_optical_flow_decode(msg, &optical_flow_msg);
 				
 				flow->tmp_flow_x 	= optical_flow_msg.flow_x;
-				flow->tmp_flow_x 	= optical_flow_msg.flow_y;
+				flow->tmp_flow_y 	= optical_flow_msg.flow_y;
 				flow->tmp_flow_comp_m_x = optical_flow_msg.flow_comp_m_x;
 				flow->tmp_flow_comp_m_y = optical_flow_msg.flow_comp_m_y;
+			break;
+			case MAVLINK_MSG_ID_DATA_TRANSMISSION_HANDSHAKE:
+				mavlink_msg_data_transmission_handshake_decode(msg, &handshake_msg);
+				// Get type of handshake
+				flow->handshake_state = handshake_msg.jpg_quality;
+				
+				// Get number of of vectors
+				flow->of_count 	      = handshake_msg.width;
+				if( flow->of_count > 125 )
+				{
+					flow->of_count = 125;
+				}
+
+				// Get total payload size
+				flow->n_packets	      = handshake_msg.packets;
+				flow->size_data	      = handshake_msg.size;
+				if( flow->size_data > 500 )
+				{
+					flow->size_data = 500;
+				}
+			break;
+			case MAVLINK_MSG_ID_ENCAPSULATED_DATA:
+				mavlink_msg_encapsulated_data_decode(msg, &data_msg);
+				switch( flow->handshake_state )
+				{
+					case FLOW_HANDSHAKE_METADATA:
+						if( data_msg.seqnr < flow->n_packets - 1 )
+						{
+							// not last packet
+							for ( int i = 0; i < MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
+							{
+								flow->of_loc.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+							}
+						}
+						else if( data_msg.seqnr < flow->n_packets )
+						{
+							// last packet
+							for ( int i = 0; i < flow->size_data; ++i)
+							{
+								flow->of_loc.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+							}
+
+							// swap bytes
+							for (int i = 0; i < flow->of_count; ++i)
+							{
+								flow->of_loc.x[i] = endian_rev16(flow->of_loc.x[i]);
+								flow->of_loc.y[i] = endian_rev16(flow->of_loc.y[i]);
+							}
+						}
+					break;
+					default:
+						if( data_msg.seqnr < (flow->n_packets - 1) )
+						{
+							// not last packet
+							for ( int i = 0; i < MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
+							{
+								flow->of.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+							}
+						}
+						else if( data_msg.seqnr < flow->n_packets )
+						{
+							// last packet
+							for ( int i = 0; i < flow->size_data % MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
+							{
+								// flow->of.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+							}
+
+							// swap bytes
+							// for (int i = 0; i < flow->of_count; ++i)
+							for (int i = 0; i < 125; ++i)
+							{
+								// flow->of.x[i] = endian_rev16(flow->of.x[i]);
+								// flow->of.y[i] = endian_rev16(flow->of.y[i]);
+							}
+						}
+					break;
+				}
+			break;
+			default:
 			break;
 		}
 	}
