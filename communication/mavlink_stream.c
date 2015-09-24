@@ -80,8 +80,8 @@ bool mavlink_stream_init(	mavlink_stream_t* mavlink_stream,
 		// ERROR !
 		if( config->debug == true )
 		{
-			print_util_dbg_print("[MAVLINK STREAM] Error: Too many instances !");
-			print_util_dbg_print("[MAVLINK STREAM] Try to increase MAVLINK_COMM_NUM_BUFFERS");	
+			print_util_dbg_print("[MAVLINK STREAM] Error: Too many instances !\r\n");
+			print_util_dbg_print("[MAVLINK STREAM] Try to increase MAVLINK_COMM_NUM_BUFFERS\r\n");	
 		}
 
 		success = false;
