@@ -64,7 +64,6 @@ extern "C" {
 	#define NATIVE_BIG_ENDIAN
 #endif
 
-
 #include "libs/mavlink/include/mavric/mavlink.h"
 
 
@@ -92,7 +91,8 @@ typedef struct
 	uint32_t compid;		///< System Component ID
 	mavlink_received_t rec;		///< Last received message
 	bool msg_available;		///< Indicates if a new message is available and not handled yet
-	bool use_dma;			///< Indicates whether tx transfer should use dma
+	uint8_t mavlink_channel; 	///< Channel number used internally by mavlink to retrieve incomplete incoming message
+	bool debug;
 } mavlink_stream_t;
 
 
@@ -103,7 +103,7 @@ typedef struct
 {
 	uint32_t sysid;					///< System ID
 	uint32_t compid;				///< System Component ID
-	bool use_dma;
+	bool  	 debug; 				///< Debug flag
 } mavlink_stream_conf_t;
 
 

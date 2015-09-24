@@ -62,7 +62,7 @@ void flow_init(flow_t* flow, int32_t UID, usart_config_t usart_conf)
 	{
 		.sysid       = 1,
 		.compid      = 50,
-		.use_dma     = false
+		.debug       = true,
 	};
 	mavlink_stream_init(	&(flow->mavlink_stream),
 				&mavlink_stream_conf,
@@ -165,12 +165,12 @@ void flow_update(flow_t* flow)
 								flow->of.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
 							}
 						}
-						else if( data_msg.seqnr < flow->n_packets )
+						else if( data_msg.seqnr == (flow->n_packets-1) )
 						{
 							// last packet
 							for ( int i = 0; i < flow->size_data % MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
 							{
-								// flow->of.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+								flow->of.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
 							}
 
 							// swap bytes

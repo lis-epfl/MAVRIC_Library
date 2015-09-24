@@ -53,20 +53,33 @@
 //------------------------------------------------------------------------------
 
 void mavlink_stream_init(	mavlink_stream_t* mavlink_stream, 
-							const mavlink_stream_conf_t* config, 
-							byte_stream_t* rx_stream, 
-							byte_stream_t* tx_stream)
-{	
-	// mavlink_tx_stream                 = tx_stream;
-	mavlink_stream->tx         		  = tx_stream;
-	mavlink_stream->rx                = rx_stream;
-	mavlink_stream->sysid             = config->sysid;
-	mavlink_stream->compid            = config->compid;
-	mavlink_stream->use_dma			  = config->use_dma;
-	mavlink_stream->msg_available     = false;
+				const mavlink_stream_conf_t* config, 
+				byte_stream_t* rx_stream, 
+				byte_stream_t* tx_stream)
+{
+	// Init static variable storing number of mavlink stream instances
+	static uint8_t nb_mavlink_stream_instances = 0;
+	if( nb_mavlink_stream_instances < MAVLINK_COMM_NUM_BUFFERS )
+	{
+		mavlink_stream->mavlink_channel =  nb_mavlink_stream_instances;
+		nb_mavlink_stream_instances 	+= 1;
 	
-//	mavlink_system.sysid              = config->sysid;  // System ID, 1-255
-//	mavlink_system.compid             = config->compid; // Component/Subsystem ID, 1-255
+		mavlink_stream->tx         	= tx_stream;
+		mavlink_stream->rx              = rx_stream;
+		mavlink_stream->sysid           = config->sysid;
+		mavlink_stream->compid          = config->compid;
+		mavlink_stream->debug          = config->debug;
+		mavlink_stream->msg_available   = false;
+	}
+	else
+	{
+		// ERROR !
+		if( config->debug == true )
+		{
+			print_util_dbg_print("[MAVLINK STREAM] Error: Too many instances !");
+			print_util_dbg_print("[MAVLINK STREAM] Try to increase MAVLINK_COMM_NUM_BUFFERS");	
+		}
+	}
 }
 
 
@@ -77,23 +90,10 @@ void mavlink_stream_send(const mavlink_stream_t* mavlink_stream, mavlink_message
 	// Copy the message to the send buffer
 	uint16_t len = mavlink_msg_to_send_buffer(buf, msg);
 
-	if( mavlink_stream->use_dma == false )
+	// Send byte per byte
+	for (int i = 0; i < len; ++i)
 	{
-		// Send byte per byte
-		for (int i = 0; i < len; ++i)
-		{
-			mavlink_stream->tx->put(mavlink_stream->tx->data, buf[i]);
-		}
-	}
-	else
-	{
-		// Use dma block transfer			// TODO: test this
-
-		// for (int i = 0; i < len; ++i)
-		// {
-		// 	mavlink_stream->tx->put(mavlink_stream->tx->data, buf[i]);
-		// }
-		// bytestream_start_transmission(mavlink_tx_stream);		
+		mavlink_stream->tx->put(mavlink_stream->tx->data, buf[i]);
 	}
 }
 
@@ -109,7 +109,7 @@ void mavlink_stream_receive(mavlink_stream_t* mavlink_stream)
 		while(stream->bytes_available(stream->data) > 0) 
 		{
 			byte = stream->get(stream->data);
-			if(mavlink_parse_char(MAVLINK_COMM_0, byte, &rec->msg, &rec->status)) 
+			if(mavlink_parse_char(mavlink_stream->mavlink_channel, byte, &rec->msg, &rec->status)) 
 			{
 				mavlink_stream->msg_available = true;
 			}
