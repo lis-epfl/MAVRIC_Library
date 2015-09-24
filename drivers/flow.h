@@ -53,16 +53,23 @@ extern "C" {
 #include <stdint.h>
 
 
+/**
+ * \brief 	Array of 2-D optic flow vectors
+ */
 typedef union
 {
 	struct 
 	{
-		int16_t x[125];
-		int16_t y[125];
+		int16_t x[125];		///< Horizontal component
+		int16_t y[125];		///< Vertical component
 	};
-	uint8_t data[500];
+	uint8_t data[500];		///< Raw access to data
 } flow_data_t;
 
+
+/**
+ * \brief	State of encapsulated data transfer
+ */
 typedef enum
 {
 	FLOW_NO_HANDSHAKE       = 0,
@@ -70,6 +77,10 @@ typedef enum
 	FLOW_HANDSHAKE_METADATA = 2,
 } flow_handshake_state_t;
 
+
+/**
+ * \brief 	Data structure for Flow
+ */
 typedef struct
 {
 	mavlink_stream_t 	mavlink_stream;		///< Mavlink interface using streams
@@ -78,26 +89,40 @@ typedef struct
 	buffer_t		uart_buffer_in;		///< buffer for messages received from Epuck
 	buffer_t		uart_buffer_out;	///< buffer for messages to sent towards Epuck
 
-	uint8_t 	of_count;
-	flow_data_t 	of;
-	flow_data_t 	of_loc;
+	uint8_t 	of_count;			///< Number of optic flow vectors
+	flow_data_t 	of;				///< Optic flow vectors
+	flow_data_t 	of_loc;				///< Location of optic flow vectors
 
-	flow_handshake_state_t  handshake_state; 
-	uint16_t 		n_packets;
-	uint32_t 		size_data; 
+	flow_handshake_state_t  handshake_state; 	///< Indicates the current reception state for encapsulated data
+	uint16_t 		n_packets;		///< Number of encapsulated data packets expected
+	uint32_t 		size_data; 		///< Total size of data to receive (in bytes)
 
-	uint32_t last_update_us;
+	uint32_t last_update_us;			///< Last update time in microseconds
 
-	float tmp_flow_x;
-	float tmp_flow_y;
-	float tmp_flow_comp_m_x;
-	float tmp_flow_comp_m_y;
+	float tmp_flow_x;		///< Tmp debug data
+	float tmp_flow_y;		///< Tmp debug data
+	float tmp_flow_comp_m_x;	///< Tmp debug data
+	float tmp_flow_comp_m_y;	///< Tmp debug data
 } flow_t;
 
 
+/**
+ * \brief Init function
+ * 
+ * \param flow 		Pointer to flow structure
+ * \param UID  		Uart ID
+ * \param usart_conf 	Uart config
+ */
 void flow_init(flow_t* flow, int32_t UID, usart_config_t usart_conf);
 
+
+/**
+ * \brief Update function
+ * 
+ * \param flow 		Pointer to flow structure
+ */
 void flow_update(flow_t* flow);
+
 
 #ifdef __cplusplus
 }
