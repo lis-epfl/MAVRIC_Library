@@ -92,7 +92,7 @@ typedef struct
 	mavlink_received_t rec;		///< Last received message
 	bool msg_available;		///< Indicates if a new message is available and not handled yet
 	uint8_t mavlink_channel; 	///< Channel number used internally by mavlink to retrieve incomplete incoming message
-	bool debug;
+	bool debug;			///< Debug flag
 } mavlink_stream_t;
 
 

@@ -42,6 +42,21 @@
 #include "flow.h"
 #include "time_keeper.h"
 
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+static inline int16_t endian_rev16(int16_t data)
+{
+	return ((data >> 8) & 0x00ff) | ((data & 0x00ff) << 8);
+};
+
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
 void flow_init(flow_t* flow, int32_t UID, usart_config_t usart_conf)
 {
 	// Init members
@@ -70,10 +85,6 @@ void flow_init(flow_t* flow, int32_t UID, usart_config_t usart_conf)
 				&(flow->uart_stream_out));
 }
 
-static inline int16_t endian_rev16(int16_t data)
-{
-	return ((data >> 8) & 0x00ff) | ((data & 0x00ff) << 8);
-};
 
 void flow_update(flow_t* flow)
 {
