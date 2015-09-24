@@ -47,6 +47,9 @@
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
+/**
+ * \brief Swap bytes iof signed 16 bits integer
+ */
 static inline int16_t endian_rev16(int16_t data)
 {
 	return ((data >> 8) & 0x00ff) | ((data & 0x00ff) << 8);
@@ -57,8 +60,10 @@ static inline int16_t endian_rev16(int16_t data)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void flow_init(flow_t* flow, int32_t UID, usart_config_t usart_conf)
+bool flow_init(flow_t* flow, int32_t UID, usart_config_t usart_conf)
 {
+	bool success = true;
+
 	// Init members
 	flow->last_update_us  = time_keeper_get_micros();
 	flow->handshake_state = FLOW_NO_HANDSHAKE; 
@@ -79,14 +84,16 @@ void flow_init(flow_t* flow, int32_t UID, usart_config_t usart_conf)
 		.compid      = 50,
 		.debug       = true,
 	};
-	mavlink_stream_init(	&(flow->mavlink_stream),
-				&mavlink_stream_conf,
-				&(flow->uart_stream_in),
-				&(flow->uart_stream_out));
+	success &= mavlink_stream_init(	&(flow->mavlink_stream),
+					&mavlink_stream_conf,
+					&(flow->uart_stream_in),
+					&(flow->uart_stream_out));
+
+	return success;
 }
 
 
-void flow_update(flow_t* flow)
+bool flow_update(flow_t* flow)
 {
 	// Update time
 	flow->last_update_us  = time_keeper_get_micros();
@@ -111,6 +118,7 @@ void flow_update(flow_t* flow)
 		switch( msg->msgid )
 		{
 			case MAVLINK_MSG_ID_OPTICAL_FLOW:
+				// Decode message
 				mavlink_msg_optical_flow_decode(msg, &optical_flow_msg);
 				
 				flow->tmp_flow_x 	= optical_flow_msg.flow_x;
@@ -118,8 +126,11 @@ void flow_update(flow_t* flow)
 				flow->tmp_flow_comp_m_x = optical_flow_msg.flow_comp_m_x;
 				flow->tmp_flow_comp_m_y = optical_flow_msg.flow_comp_m_y;
 			break;
+
 			case MAVLINK_MSG_ID_DATA_TRANSMISSION_HANDSHAKE:
+				// Decode message
 				mavlink_msg_data_transmission_handshake_decode(msg, &handshake_msg);
+				
 				// Get type of handshake
 				flow->handshake_state = handshake_msg.jpg_quality;
 				
@@ -138,8 +149,12 @@ void flow_update(flow_t* flow)
 					flow->size_data = 500;
 				}
 			break;
+
 			case MAVLINK_MSG_ID_ENCAPSULATED_DATA:
+				// Decode message
 				mavlink_msg_encapsulated_data_decode(msg, &data_msg);
+
+				// Handle according to hanshake state
 				switch( flow->handshake_state )
 				{
 					case FLOW_HANDSHAKE_METADATA:
@@ -167,6 +182,7 @@ void flow_update(flow_t* flow)
 							}
 						}
 					break;
+
 					default:
 						if( data_msg.seqnr < (flow->n_packets - 1) )
 						{
@@ -186,17 +202,20 @@ void flow_update(flow_t* flow)
 
 							// swap bytes
 							// for (int i = 0; i < flow->of_count; ++i)
-							for (int i = 0; i < 125; ++i)
-							{
+							// for (int i = 0; i < 125; ++i)
+							// {
 								// flow->of.x[i] = endian_rev16(flow->of.x[i]);
 								// flow->of.y[i] = endian_rev16(flow->of.y[i]);
-							}
+							// }
 						}
 					break;
 				}
 			break;
+			
 			default:
 			break;
 		}
 	}
+
+	return true;
 }	

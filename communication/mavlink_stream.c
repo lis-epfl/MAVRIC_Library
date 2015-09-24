@@ -52,11 +52,13 @@
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void mavlink_stream_init(	mavlink_stream_t* mavlink_stream, 
+bool mavlink_stream_init(	mavlink_stream_t* mavlink_stream, 
 				const mavlink_stream_conf_t* config, 
 				byte_stream_t* rx_stream, 
 				byte_stream_t* tx_stream)
 {
+	bool success = false;
+
 	// Init static variable storing number of mavlink stream instances
 	static uint8_t nb_mavlink_stream_instances = 0;
 	if( nb_mavlink_stream_instances < MAVLINK_COMM_NUM_BUFFERS )
@@ -70,6 +72,8 @@ void mavlink_stream_init(	mavlink_stream_t* mavlink_stream,
 		mavlink_stream->compid          = config->compid;
 		mavlink_stream->debug          = config->debug;
 		mavlink_stream->msg_available   = false;
+
+		success = true;
 	}
 	else
 	{
@@ -79,7 +83,11 @@ void mavlink_stream_init(	mavlink_stream_t* mavlink_stream,
 			print_util_dbg_print("[MAVLINK STREAM] Error: Too many instances !");
 			print_util_dbg_print("[MAVLINK STREAM] Try to increase MAVLINK_COMM_NUM_BUFFERS");	
 		}
+
+		success = false;
 	}
+
+	return success;
 }
 
 

@@ -114,8 +114,10 @@ typedef struct
  * \param 	config				Configuration
  * \param 	rx_stream;			Output stream
  * \param 	tx_stream;			Input stream
+ * 
+ * \return 	Success
  */
-void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream);
+bool mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream);
 
 
 /**

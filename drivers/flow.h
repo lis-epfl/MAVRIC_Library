@@ -72,9 +72,9 @@ typedef union
  */
 typedef enum
 {
-	FLOW_NO_HANDSHAKE       = 0,
-	FLOW_HANDSHAKE_DATA     = 1,
-	FLOW_HANDSHAKE_METADATA = 2,
+	FLOW_NO_HANDSHAKE       = 0,	///< No handshake received
+	FLOW_HANDSHAKE_DATA     = 1, 	///< Normal data will be received
+	FLOW_HANDSHAKE_METADATA = 2, 	///< Metadata will be received
 } flow_handshake_state_t;
 
 
@@ -112,16 +112,20 @@ typedef struct
  * \param flow 		Pointer to flow structure
  * \param UID  		Uart ID
  * \param usart_conf 	Uart config
+ * 
+ * \return 		Success
  */
-void flow_init(flow_t* flow, int32_t UID, usart_config_t usart_conf);
+bool flow_init(flow_t* flow, int32_t UID, usart_config_t usart_conf);
 
 
 /**
  * \brief Update function
  * 
  * \param flow 		Pointer to flow structure
+ * 
+ * \return 		Success
  */
-void flow_update(flow_t* flow);
+bool flow_update(flow_t* flow);
 
 
 #ifdef __cplusplus
