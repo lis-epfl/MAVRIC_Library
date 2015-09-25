@@ -41,7 +41,7 @@
 
 #include "flow.h"
 #include "time_keeper.h"
-
+#include "print_util.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -88,6 +88,12 @@ bool flow_init(flow_t* flow, int32_t UID, usart_config_t usart_conf)
 					&mavlink_stream_conf,
 					&(flow->uart_stream_in),
 					&(flow->uart_stream_out));
+
+
+	if( success == true )
+	{
+		print_util_dbg_print("[Flow] Initialized\r\n");	
+	}
 
 	return success;
 }
