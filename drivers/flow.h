@@ -86,21 +86,23 @@ typedef struct
 	mavlink_stream_t 	mavlink_stream;		///< Mavlink interface using streams
 	byte_stream_t		uart_stream_in;		///< stream from Epuck
 	byte_stream_t		uart_stream_out;	///< stream towards Epuck
-	buffer_t		uart_buffer_in;		///< buffer for messages received from Epuck
-	buffer_t		uart_buffer_out;	///< buffer for messages to sent towards Epuck
+	buffer_t		uart_buffer_in;			///< buffer for messages received from Epuck
+	buffer_t		uart_buffer_out;		///< buffer for messages to sent towards Epuck
 
-	uint8_t 	of_count;			///< Number of optic flow vectors
-	flow_data_t 	of;				///< Optic flow vectors
-	flow_data_t 	of_loc;				///< Location of optic flow vectors
+	uint8_t 	of_count;					///< Number of optic flow vectors
+	flow_data_t 	of;						///< Optic flow vectors
+	flow_data_t 	of_tmp;					///< Temporary Optic flow vectors
+	flow_data_t 	of_loc;					///< Location of optic flow vectors
+	flow_data_t 	of_loc;					///< Temporary Location of optic flow vectors
 
 	flow_handshake_state_t  handshake_state; 	///< Indicates the current reception state for encapsulated data
-	uint16_t 		n_packets;		///< Number of encapsulated data packets expected
-	uint32_t 		size_data; 		///< Total size of data to receive (in bytes)
+	uint16_t 		n_packets;				///< Number of encapsulated data packets expected
+	uint32_t 		size_data; 				///< Total size of data to receive (in bytes)
 
-	uint32_t last_update_us;			///< Last update time in microseconds
+	uint32_t last_update_us;				///< Last update time in microseconds
 
-	float tmp_flow_x;		///< Tmp debug data
-	float tmp_flow_y;		///< Tmp debug data
+	float tmp_flow_x;			///< Tmp debug data
+	float tmp_flow_y;			///< Tmp debug data
 	float tmp_flow_comp_m_x;	///< Tmp debug data
 	float tmp_flow_comp_m_y;	///< Tmp debug data
 } flow_t;
