@@ -93,7 +93,7 @@ typedef struct
 	flow_data_t 	of;						///< Optic flow vectors
 	flow_data_t 	of_tmp;					///< Temporary Optic flow vectors
 	flow_data_t 	of_loc;					///< Location of optic flow vectors
-	flow_data_t 	of_loc;					///< Temporary Location of optic flow vectors
+	flow_data_t 	of_loc_tmp;					///< Temporary Location of optic flow vectors
 
 	flow_handshake_state_t  handshake_state; 	///< Indicates the current reception state for encapsulated data
 	uint16_t 		n_packets;				///< Number of encapsulated data packets expected
