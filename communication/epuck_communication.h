@@ -30,48 +30,62 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file sonar.h
+ * \file epuck_communication.h
  * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Gregoire Heitz
  *   
- * \brief Definition of structure for sonar, independent of the sensor used
+ * \brief	This file configures the epuck UART communication
+ *			and send remote scaled messages to the epuck to be used to drive its wheels
  *
  ******************************************************************************/
-
-
-#ifndef SONAR_H_
-#define SONAR_H_
+#ifndef EPUCK_COMMUNICATION_H_
+#define EPUCK_COMMUNICATION_H_
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" {
 #endif
 
-#include <stdint.h>
-#include <stdbool.h>
-#include "quaternions.h"
-
-#define LPF_SONAR_VARIO 0.4f
+#include "mavlink_stream.h"
+#include "buffer.h"
+#include "remote.h"
 
 /**
- * \brief Sonar structure, independent of the sensor used
-*/
+ * \brief Defines the state machine structure
+ */
 typedef struct 
 {
-	uint32_t last_update; 		///< Last time we updated the sensor measurement
-	quat_t 	orientation; 		///< Direction the sensor faces from FIXME enum.
-	float 	min_distance; 		///< Minimum distance the sensor can measure in centimeters
-	float 	max_distance; 		///< Maximum distance the sensor can measure in centimeters
-	float 	current_distance;	///< Measured distance in meters
-	float	current_velocity;	///< Computed velocity in m/s
-	float 	covariance; 		///< Measurement covariance in centimeters, 0 for unknown / invalid readings
-	bool 	healthy;			///< Indicates whether the current measurement can be trusted
-	bool	healthy_vel;		///< Indicated whether the velocity estimation can be trusted
-} sonar_t;
+	mavlink_stream_t 	mavlink_stream;		///< Mavlink interface using streams
+	byte_stream_t		uart_stream_in;		///< stream from Epuck
+	byte_stream_t		uart_stream_out;	///< stream towards Epuck
+	buffer_t			uart_buffer_in;		///< buffer for messages received from Epuck
+	buffer_t			uart_buffer_out;	///< buffer for messages to sent towards Epuck
+	
+	const remote_t*		remote;				///< Pointer to the remote structure
+} epuck_communication_t;
+
+/**
+ * \brief						Initialize the epuck comm module
+ *
+ * \param epuck_communication	Pointer to the epuck communication structure
+ * \param remote				Pointer to the remote structure
+ * \param UID					UART ID from UART0 to UART4
+ * \param usart_conf_epuck		Uart configuration to talk to the epuck
+ */
+void epuck_communication_init(epuck_communication_t* epuck_communication, const remote_t* remote, int32_t UID, usart_config_t usart_conf_epuck);
+
+/**
+ * \brief   Updates the Epuck communication
+ *
+ * \param	epuck_communication			Pointer to the epuck_communication structure
+ * 
+ * \return Returns the result of the task
+ */
+task_return_t epuck_communication_update(epuck_communication_t* epuck_communication);
 
 
 #ifdef __cplusplus
-	}
+}
 #endif
 
-#endif /* SONAR_H */
+#endif //EPUCK_COMMUNICATION_H_

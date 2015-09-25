@@ -45,6 +45,7 @@
 
 #include "mavlink_stream.hpp"
 #include "mavlink_message_handler.hpp"
+#include "state.hpp"
 
 extern "C" 
 {
@@ -99,6 +100,7 @@ typedef struct
 	const mavlink_stream_t* mavlink_stream;					///< Pointer to mavlink_stream
 	bool debug;												///< Indicates if debug messages should be printed for each param change
 	onboard_parameters_set_t* param_set;					///< Pointer to a set of parameters, needs memory allocation
+	const state_t* state;									///< Pointer to the state structure
 } onboard_parameters_t;											
 
 
@@ -128,11 +130,12 @@ typedef struct
  * \param   	onboard_parameters		Pointer to module structure
  * \param 	config 					Configuration
  * \param 	scheduler 				Pointer to MAVLink scheduler
+ * \param	state					Pointer to the state structure
  * \param 	message_handler 		Pointer to MAVLink message handler
  *
  * \return	True if the init succeed, false otherwise
  */
-bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream);
+bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, const state_t* state, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream);
 
 
 /**

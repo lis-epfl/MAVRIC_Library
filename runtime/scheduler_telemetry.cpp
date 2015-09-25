@@ -45,6 +45,7 @@
 extern "C"
 {
 	#include "time_keeper.h"
+	#include "maths.h"
 }
 
 void scheduler_telemetry_send_rt_stats(const scheduler_t* scheduler, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
@@ -64,7 +65,7 @@ void scheduler_telemetry_send_rt_stats(const scheduler_t* scheduler, const mavli
 										msg,
 										time_keeper_get_millis(),
 										"stabDelayVar",
-										sqrt(stab_task->delay_var_squared));
+										maths_fast_sqrt(stab_task->delay_var_squared));
 	mavlink_stream_send(mavlink_stream, msg);
 
 	mavlink_msg_named_value_float_pack(	mavlink_stream->sysid,

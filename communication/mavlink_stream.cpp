@@ -55,22 +55,47 @@ extern "C"
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void mavlink_stream_init(	mavlink_stream_t* mavlink_stream, 
+bool mavlink_stream_init(	mavlink_stream_t* mavlink_stream, 
 							const mavlink_stream_conf_t* config, 
 							Serial* serial)
 							// byte_stream_t* rx_stream, 
 							// byte_stream_t* tx_stream)
-{	
-	// mavlink_tx_stream                 = tx_stream;
-	// mavlink_stream->tx         		  = tx_stream;
-	// mavlink_stream->rx                = rx_stream;
-	mavlink_stream->serial 			  = serial;
-	mavlink_stream->sysid             = config->sysid;
-	mavlink_stream->compid            = config->compid;
-	mavlink_stream->msg_available     = false;
+{
+	bool success = false;
+
+	// Init static variable storing number of mavlink stream instances
+	static uint8_t nb_mavlink_stream_instances = 0;
+	if( nb_mavlink_stream_instances < MAVLINK_COMM_NUM_BUFFERS )
+	{
+		mavlink_stream->mavlink_channel =  nb_mavlink_stream_instances;
+		nb_mavlink_stream_instances 	+= 1;
+		
+		mavlink_stream->serial 			  = serial;
+		mavlink_stream->sysid             = config->sysid;
+		mavlink_stream->compid            = config->compid;
+		mavlink_stream->msg_available     = false;
+		mavlink_stream->debug          = config->debug;
 	
-//	mavlink_system.sysid              = config->sysid;  // System ID, 1-255
-//	mavlink_system.compid             = config->compid; // Component/Subsystem ID, 1-255
+		success = true;
+	}
+	else
+	{
+		// ERROR !
+		if( config->debug == true )
+		{
+			print_util_dbg_print("[MAVLINK STREAM] Error: Too many instances !\r\n");
+			print_util_dbg_print("[MAVLINK STREAM] Try to increase MAVLINK_COMM_NUM_BUFFERS\r\n");	
+		}
+
+		success = false;
+	}
+
+	if( success == true )
+	{
+		print_util_dbg_print("[MAVLINK STREAM] Initialized\r\n");	
+	}
+
+	return success;
 }
 
 
@@ -97,7 +122,7 @@ void mavlink_stream_receive(mavlink_stream_t* mavlink_stream)
 		{
 			mavlink_stream->serial->read(&byte);
 			
-			if(mavlink_parse_char(MAVLINK_COMM_0, byte, &rec->msg, &rec->status)) 
+			if(mavlink_parse_char(mavlink_stream->mavlink_channel, byte, &rec->msg, &rec->status)) 
 			{
 				mavlink_stream->msg_available = true;
 			}

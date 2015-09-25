@@ -176,7 +176,7 @@ static int32_t data_logging_put_float(FIL* fp, float c, uint32_t after_digits)
 		num=-c;
 	}
 
-	int32_t whole=abs((int32_t)num);
+	int32_t whole=(int32_t)(maths_f_abs(num));
 	float after=(num-(float)whole);
 
 	res = f_printf(fp,"%d", whole);

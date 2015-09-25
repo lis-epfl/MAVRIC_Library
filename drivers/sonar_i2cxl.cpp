@@ -63,15 +63,17 @@ Sonar_i2cxl::Sonar_i2cxl(I2c& i2c, uint8_t address):
 	i2c_(i2c),
 	i2c_address_(address)
 {
-	data.current_distance  = 0.2f;
-	data.orientation.s 	   = 1.0f;
-	data.orientation.v[X]  = 0.0f;
-	data.orientation.v[Y]  = 0.0f;
-	data.orientation.v[Z]  = 0.0f;
-	data.min_distance      = 0.22f;
-	data.max_distance      = 5.0f;
-	data.covariance 	   = 0.01f;
-	data.healthy 	       = false;
+	data.current_distance   = 0.2f;
+	data.current_velocity	= 0.0f;
+	data.orientation.s 	= 1.0f;
+	data.orientation.v[X]   = 0.0f;
+	data.orientation.v[Y]   = 0.0f;
+	data.orientation.v[Z]   = 0.0f;
+	data.min_distance       = 0.22f;
+	data.max_distance       = 5.0f;
+	data.covariance 	= 0.01f;
+	data.healthy 	        = false;
+	data.healthy_vel 	= false;
 }
 
 bool Sonar_i2cxl::update(void)
@@ -106,6 +108,8 @@ bool Sonar_i2cxl::get_last_measure(void)
 	uint8_t buf[2];
 	uint16_t distance_cm = 0;
 	float distance_m = 0.0f;
+	float velocity = 0.0f;
+	float dt = 0.0f;
 	uint32_t time_us = time_keeper_get_micros();
 
 	res = i2c_.read(buf, 2, i2c_address_);
@@ -115,13 +119,37 @@ bool Sonar_i2cxl::get_last_measure(void)
 	
 	if ( distance_m > data.min_distance && distance_m < data.max_distance )
 	{
+		dt = ((float)time_us - data.last_update)/1000000.0f;
+
+		if (data.healthy)
+		{
+			velocity = (distance_m - data.current_distance) / dt;
+			//discard sonar velocity estimation if it seams too big
+			if (maths_f_abs(velocity) > 20.0f)
+			{
+				velocity = 0.0f;
+			}
+			
+			if (data.healthy_vel)
+			{
+				data.current_velocity = (1.0f-LPF_SONAR_VARIO)*data.current_velocity + LPF_SONAR_VARIO*velocity;
+			}
+			else
+			{
+				data.current_velocity = velocity;
+			}
+			data.healthy_vel = true;
+		}
+		
 		data.current_distance  = distance_m;
 		data.last_update = time_us;
 		data.healthy = true;
 	}
 	else
 	{
+		data.current_velocity = 0.0f;
 		data.healthy = false;
+		data.healthy_vel = false;
 	}
 
 	return res;

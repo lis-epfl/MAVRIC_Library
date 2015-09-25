@@ -80,13 +80,13 @@ typedef struct
  */
 typedef struct
 {
-	// byte_stream_t* tx;		///< Output stream
-	// byte_stream_t* rx;		///< Input stream
 	Serial* 	 serial;
 	uint32_t sysid;			///< System ID
 	uint32_t compid;		///< System Component ID
-	mavlink_received_t rec;	///< Last received message
+	mavlink_received_t rec;		///< Last received message
 	bool msg_available;		///< Indicates if a new message is available and not handled yet
+	uint8_t mavlink_channel; 	///< Channel number used internally by mavlink to retrieve incomplete incoming message
+	bool debug;			///< Debug flag
 } mavlink_stream_t;
 
 
@@ -97,6 +97,7 @@ typedef struct
 {
 	uint32_t sysid;					///< System ID
 	uint32_t compid;				///< System Component ID
+	bool  	 debug; 				///< Debug flag
 } mavlink_stream_conf_t;
 
 
@@ -107,8 +108,10 @@ typedef struct
  * \param 	config				Configuration
  * \param 	rx_stream;			Output stream
  * \param 	tx_stream;			Input stream
+ * 
+ * \return 	Success
  */
-void mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config, Serial* serial); //byte_stream_t* rx_stream, byte_stream_t* tx_stream);
+bool mavlink_stream_init(mavlink_stream_t* mavlink_stream, const mavlink_stream_conf_t* config, Serial* serial);
 
 
 /**

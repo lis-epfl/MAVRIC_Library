@@ -78,7 +78,7 @@ static inline navigation_config_t navigation_default_config()
 	conf.wpt_nav_controller.dt                       = 1;
 	conf.wpt_nav_controller.soft_zone_width          = 0.0f;
 	conf.hovering_controller                         = {};
-	conf.hovering_controller.p_gain                  = 0.2f;
+	conf.hovering_controller.p_gain                  = 0.4f;
 	conf.hovering_controller.clip_min                = 0.0f;
 	conf.hovering_controller.clip_max                = 3.0f;
 	conf.hovering_controller.integrator              = {};

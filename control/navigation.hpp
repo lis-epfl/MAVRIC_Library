@@ -71,6 +71,8 @@ typedef struct
 	float cruise_speed;									///< The cruise speed in m/s
 	float max_climb_rate;								///< Max climb rate in m/s
 	float soft_zone_size;								///< Soft zone of the velocity controller
+
+	local_coordinates_t goal;							///< The local position of the navigation function goal (depends on the mode), to be used in another module if needed (e.g. collision avoidance)
 	
 	float dt;											///< The time interval between two navigation updates
 	uint32_t last_update;								///< The time of the last navigation update in ms

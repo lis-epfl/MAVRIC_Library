@@ -225,8 +225,34 @@ typedef enum
 	CUST_DESCENT_TO_SMALL_ALTITUDE = 8,			///< First auto landing behavior
 	CUST_DESCENT_TO_GND = 16,					///< Second auto landing behavior, comes after DESCENT_TO_SMAL_ALTITUDE
 	
-	CUST_COLLISION_AVOIDANCE = 32
-}mav_mode_custom_t;
+	CUST_COLLISION_AVOIDANCE = 32,				///< Collision avoidance 
+
+	CUST_BATTERY_LOW = 64,						///< Battery low flag
+    CUST_FENCE_1 = 128,							///< Fence 1 violation flag
+    CUST_FENCE_2 = 256,							///< Fence 2 violation flag
+    CUST_HEARTBEAT_LOST = 512,					///< Heartbeat loss flag
+    CUST_REMOTE_LOST = 1024,					///< Remote lost flag
+    CUST_GPS_BAD = 2048							///< GPS loss flag
+} mav_mode_custom_t;
+
+
+/**
+ * \brief  Funtion to allow logic operations on enum in C++
+ */
+inline mav_mode_custom_t operator |=(mav_mode_custom_t a, mav_mode_custom_t b)
+{	
+	return static_cast<mav_mode_custom_t>(static_cast<int>(a) | static_cast<int>(b));
+}
+
+inline mav_mode_custom_t operator&=(mav_mode_custom_t a, mav_mode_custom_t b)
+{	
+	return static_cast<mav_mode_custom_t>(static_cast<int>(a) & static_cast<int>(b));
+}
+
+inline mav_mode_custom_t operator~(mav_mode_custom_t a)
+{	
+	return static_cast<mav_mode_custom_t>(~static_cast<int>(a));
+}
 
 /*
  * \brief Returns whether motors are armed or not
