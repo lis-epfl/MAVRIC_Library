@@ -42,10 +42,7 @@
 
 #include "mavlink_stream.h"
 #include "buffer.h"
-#include "onboard_parameters.h"
 #include "print_util.h"
-
-#include "mavlink_message_handler.h"
 
 
 //------------------------------------------------------------------------------
