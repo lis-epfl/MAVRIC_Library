@@ -92,7 +92,7 @@ bool flow_init(flow_t* flow, int32_t UID, usart_config_t usart_conf)
 
 	if( success == true )
 	{
-		print_util_dbg_print("[Flow] Initialized\r\n");	
+		print_util_dbg_print("[FLOW] Initialized\r\n");	
 	}
 
 	return success;
