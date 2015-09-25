@@ -99,6 +99,9 @@ static mav_result_t position_estimation_set_new_home_position(position_estimatio
 			print_util_dbg_print(")\r\n");
 		}
 
+		pos_est->fence_set = false;
+		position_estimation_set_new_fence_origin(pos_est);
+
 		*pos_est->nav_plan_active = false;
 	
 		result = MAV_RESULT_ACCEPTED;
