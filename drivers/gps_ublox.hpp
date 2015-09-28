@@ -235,7 +235,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 
 // The UART bytes are sent in a little endian format from the GPS, if the processor is big endian, define BIG_ENDIAN
 // Otherwise comment the following line
-#define BIG_ENDIAN
+// #define BIG_ENDIAN
 
 
 
