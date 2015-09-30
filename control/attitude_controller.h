@@ -106,7 +106,7 @@ typedef struct
  * \param 	rate_command		Pointer to rate command (input/output)
  * \param 	torque_command		Pointer to torque command (output)
  * 
- * \return 	success
+ * \return 	init_success		Returns the initialisation success or failure
  */
 bool attitude_controller_init(attitude_controller_t* controller, const attitude_controller_conf_t* config, const ahrs_t* ahrs, attitude_command_t* attitude_command, rate_command_t* rate_command, torque_command_t* torque_command);
 
