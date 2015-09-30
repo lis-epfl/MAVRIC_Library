@@ -49,6 +49,11 @@
  ******************************************************************************/
 
 
+/**
+ *   Disclaimer: this WIP
+ */
+
+
 #ifndef AHRS_MADGWICK_H_
 #define AHRS_MADGWICK_H_
 

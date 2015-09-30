@@ -39,6 +39,9 @@
  *
  ******************************************************************************/
 
+/**
+ *   Disclaimer: this WIP
+ */
 
 #include "stabilisation_ywing.h"
 #include "time_keeper.h"

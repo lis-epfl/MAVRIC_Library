@@ -40,6 +40,11 @@
  ******************************************************************************/
 
 
+/**
+ *   Disclaimer: this WIP
+ */
+
+
 #ifndef STABILISATION_YWING_H_
 #define STABILISATION_YWING_H_
 
