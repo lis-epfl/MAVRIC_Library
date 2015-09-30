@@ -45,6 +45,7 @@
 #include "print_util.h"
 #include "constants.h"
 #include "coord_conventions.h"
+#include "conf_platform.h"
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -58,6 +59,15 @@
  * \return	The value of the ARMED flag
  */
 static mode_flag_armed_t get_armed_flag(remote_t* remote);
+
+/**
+ * \brief	Returns the value of the ARMED flag, for a wing UAV
+ *
+ * \param	remote			The pointer to the remote structure
+ *
+ * \return	The value of the ARMED flag
+ */
+static mode_flag_armed_t get_armed_flag_wing(remote_t* remote);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -82,6 +92,34 @@ static mode_flag_armed_t get_armed_flag(remote_t* remote)
 			remote_get_yaw(remote) > 0.9f && 
 			remote_get_pitch(remote) > 0.9f && 
 			remote_get_roll(remote) < -0.9f )
+	{
+		// Left stick bottom right corner, right stick bottom left corner => disarm
+		print_util_dbg_print("Disarming!\r\n");
+		armed = ARMED_OFF;
+	}
+	else
+	{
+		// Keep current flag
+	}
+
+	return armed;
+}
+
+static mode_flag_armed_t get_armed_flag_wing(remote_t* remote)
+{
+	const remote_mode_t* remote_mode = &remote->mode;
+	mode_flag_armed_t armed = remote_mode->current_desired_mode.ARMED;
+
+	// Get armed flag
+	if( remote_get_throttle(remote) < -0.95f &&
+		remote_get_yaw(remote) < -0.9f )
+	{
+		// Left stick bottom left corner, right stick bottom right corner => arm
+		print_util_dbg_print("Arming!\r\n");
+		armed = ARMED_ON;
+	}
+	else if ( remote_get_throttle(remote) < -0.95f &&
+			  remote_get_yaw(remote) > 0.9f )
 	{
 		// Left stick bottom right corner, right stick bottom left corner => disarm
 		print_util_dbg_print("Disarming!\r\n");
@@ -317,7 +355,11 @@ void remote_mode_update(remote_t* remote)
 		mav_mode_t new_desired_mode = remote_mode->safety_mode;
 
 		// Get armed flag from stick combinaison
+#if M_AIRCRAFT_TYPE == M_COPTER_AIRCRAFT
 		mode_flag_armed_t flag_armed = get_armed_flag(remote);
+#elif M_AIRCRAFT_TYPE == M_WING_AIRCRAFT
+		mode_flag_armed_t flag_armed = get_armed_flag_wing(remote);
+#endif
 
 		if ( remote->channels[remote_mode->safety_channel] > 0 )
 		{
