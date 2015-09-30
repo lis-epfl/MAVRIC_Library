@@ -344,7 +344,7 @@ void remote_get_attitude_command_absolute_yaw(const remote_t* remote, attitude_c
  * \brief	Compute attitude command from the remote (absolute roll and pitch, integrated yaw)
  * 
  * \param	remote			Remote structure (input)
- * \param 	ki_yaw			Integration factor for yaw (0.02 is ok) (input) 
+ * \param 	k_yaw			Integration factor for yaw (0.02 is ok) (input) 
  * \param	command			Attitude command (output)
  * \param   scale			Scale (maximum output / max remote input)
  */
