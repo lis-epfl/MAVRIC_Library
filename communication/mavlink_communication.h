@@ -52,7 +52,7 @@ extern "C" {
 #include "mavlink_stream.h"
 #include "mavlink_message_handler.h"
 #include "onboard_parameters.h"
-
+#include "state.h"
 
 /**
  * \brief 		Pointer a module's data structure
@@ -124,12 +124,13 @@ typedef struct
  * 
  * \param 	mavlink_communication 	Pointer to the MAVLink communication structure
  * \param 	config 					Configuration
- * \param 	rx_stream;				Output stream
- * \param 	tx_stream;				Input stream
+ * \param 	rx_stream				Output stream
+ * \param 	tx_stream				Input stream
+ * \param	state					The pointer to the state structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream);
+bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t* config, byte_stream_t* rx_stream, byte_stream_t* tx_stream, const state_t* state);
 
 
 /**

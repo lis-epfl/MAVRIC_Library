@@ -50,6 +50,18 @@ extern "C" {
 
 #include "uart_int.h"
 
+
+/**
+ * \brief Structure containing the radio protocol probabilities
+ */
+typedef struct
+{
+	uint8_t min_nb_frames;	///< Minimum of Frames used to determine the protocol used
+	uint8_t proba_10bits;	///< Probability that the protocol is 10bits
+	uint8_t	proba_11bits;	///< Probability that the protocol is 11bits
+}radio_protocol_proba_t;
+
+
 /**
  * \brief Radio protocols
  */ 
@@ -58,6 +70,7 @@ typedef enum
 	DSM2_10BITS = 0,
 	DSM2_11BITS = 1,
 	DSMX		= 2,
+	UNKNOWN		= 3,
 } radio_protocol_t;
 
 
@@ -66,13 +79,15 @@ typedef enum
  */
 typedef struct 
 {
-	buffer_t 		receiver;			///< Buffer for incoming data
-	int16_t 		channels[16];		///< Array to contain the 16 remote channels
-	uint32_t 		last_interrupt;		///< Last time a byte was received
-	uint32_t 		last_update;		///< Last update time 
-	uint32_t 		dt;					///< Duration between two updates
-	bool			new_data_available; ///< Indicates if new data is  available
-	usart_config_t	usart_conf_sat;		///< store UART conf for satellite com
+	buffer_t 				receiver;			///< Buffer for incoming data
+	int16_t 				channels[16];		///< Array to contain the 16 remote channels
+	uint32_t 				last_interrupt;		///< Last time a byte was received
+	uint32_t 				last_update;		///< Last update time 
+	uint32_t 				dt;					///< Duration between two updates
+	bool					new_data_available; ///< Indicates if new data is  available
+	radio_protocol_proba_t	protocol_proba;		///< Indicates number of frames received
+	radio_protocol_t		protocol;			///< Defines in which mode the remote is configured
+	usart_config_t			usart_conf_sat;		///< store UART conf for satellite com
 } satellite_t;
 
 //Function pointer

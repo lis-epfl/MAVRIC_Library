@@ -30,39 +30,62 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file position_estimation_default_config.h
+ * \file epuck_communication.h
  * 
  * \author MAV'RIC Team
+ * \author Gregoire Heitz
  *   
- * \brief Default configuration for position estimation
+ * \brief	This file configures the epuck UART communication
+ *			and send remote scaled messages to the epuck to be used to drive its wheels
  *
  ******************************************************************************/
-
-
-#ifndef POSITION_ESTIMATION_DEFAULT_CONFIG_H_
-#define POSITION_ESTIMATION_DEFAULT_CONFIG_H_
+#ifndef EPUCK_COMMUNICATION_H_
+#define EPUCK_COMMUNICATION_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "position_estimation.h"
+#include "mavlink_stream.h"
+#include "buffer.h"
+#include "remote.h"
 
-static const position_estimation_conf_t position_estimation_default_config =
+/**
+ * \brief Defines the state machine structure
+ */
+typedef struct 
 {
-    .origin =
-    {
-        //default home location (EFPL Esplanade)
-        .longitude  = 6.566044801857777f,
-        .latitude   = 46.51852236174565f,
-        .altitude   = 400.0f
-    },
-    .gravity = 9.81f,
-    .fence_set = false
-};
+	mavlink_stream_t 	mavlink_stream;		///< Mavlink interface using streams
+	byte_stream_t		uart_stream_in;		///< stream from Epuck
+	byte_stream_t		uart_stream_out;	///< stream towards Epuck
+	buffer_t			uart_buffer_in;		///< buffer for messages received from Epuck
+	buffer_t			uart_buffer_out;	///< buffer for messages to sent towards Epuck
+	
+	const remote_t*		remote;				///< Pointer to the remote structure
+} epuck_communication_t;
+
+/**
+ * \brief						Initialize the epuck comm module
+ *
+ * \param epuck_communication	Pointer to the epuck communication structure
+ * \param remote				Pointer to the remote structure
+ * \param UID					UART ID from UART0 to UART4
+ * \param usart_conf_epuck		Uart configuration to talk to the epuck
+ */
+void epuck_communication_init(epuck_communication_t* epuck_communication, const remote_t* remote, int32_t UID, usart_config_t usart_conf_epuck);
+
+/**
+ * \brief   Updates the Epuck communication
+ *
+ * \param	epuck_communication			Pointer to the epuck_communication structure
+ * 
+ * \return Returns the result of the task
+ */
+task_return_t epuck_communication_update(epuck_communication_t* epuck_communication);
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif // POSITION_ESTIMATION_DEFAULT_CONFIG_H_
+#endif //EPUCK_COMMUNICATION_H_

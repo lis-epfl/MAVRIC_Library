@@ -30,39 +30,39 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file data_logging_telemetry.c
+ * \file fat_fs_mounting_telemetry.c
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *   
  * \brief This module takes care of sending periodic telemetric messages for
- * the data_logging module
+ * the fat_fs_mounting module
  *
  ******************************************************************************/
 
-#include "data_logging_telemetry.h"
+#include "fat_fs_mounting_telemetry.h"
 #include "time_keeper.h"
 #include "print_util.h"
 
 /**
- * \brief	Toggle the data_logging
+ * \brief	Toggle the fat_fs_mounting
  *
- * \param	data_logging			The pointer to the data logging structure
+ * \param	fat_fs_mounting			The pointer to the data logging structure
  * \param	packet					The pointer to the decoded MAVLink message long
  * 
  * \return	The MAV_RESULT of the command
  */
-static mav_result_t data_logging_telemetry_toggle_logging(data_logging_t* data_logging, mavlink_command_long_t* packet);
+static mav_result_t fat_fs_mounting_telemetry_toggle_logging(fat_fs_mounting_t* fat_fs_mounting, mavlink_command_long_t* packet);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static mav_result_t data_logging_telemetry_toggle_logging(data_logging_t* data_logging, mavlink_command_long_t* packet)
+static mav_result_t fat_fs_mounting_telemetry_toggle_logging(fat_fs_mounting_t* fat_fs_mounting, mavlink_command_long_t* packet)
 {
 	mav_result_t result = MAV_RESULT_TEMPORARILY_REJECTED;
 	
-	if (data_logging->state->mav_mode.ARMED == ARMED_OFF)
+	if (fat_fs_mounting->state->mav_mode.ARMED == ARMED_OFF)
 	{
 		if(packet->param1 == 1)
 		{
@@ -75,7 +75,7 @@ static mav_result_t data_logging_telemetry_toggle_logging(data_logging_t* data_l
 	
 		result = MAV_RESULT_ACCEPTED;
 	
-		data_logging->log_data = packet->param1;
+		fat_fs_mounting->log_data = packet->param1;
 	}
 	else
 	{
@@ -89,19 +89,19 @@ static mav_result_t data_logging_telemetry_toggle_logging(data_logging_t* data_l
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool data_logging_telemetry_init(data_logging_t* data_logging, mavlink_message_handler_t* message_handler)
+bool fat_fs_mounting_telemetry_init(fat_fs_mounting_t* fat_fs_mounting, mavlink_message_handler_t* message_handler)
 {
 	bool init_success = true;
 	
-	// Add callbacks for data_logging commands requests
+	// Add callbacks for fat_fs_mounting commands requests
 	mavlink_message_handler_cmd_callback_t callbackcmd;
 	
 	callbackcmd.command_id = MAV_CMD_DO_SET_PARAMETER; // 180
 	callbackcmd.sysid_filter = MAVLINK_BASE_STATION_ID;
 	callbackcmd.compid_filter = MAV_COMP_ID_ALL;
 	callbackcmd.compid_target = MAV_COMP_ID_ALL; // 0
-	callbackcmd.function = (mavlink_cmd_callback_function_t)	&data_logging_telemetry_toggle_logging;
-	callbackcmd.module_struct =									data_logging;
+	callbackcmd.function = (mavlink_cmd_callback_function_t)	&fat_fs_mounting_telemetry_toggle_logging;
+	callbackcmd.module_struct =									fat_fs_mounting;
 	init_success &= mavlink_message_handler_add_cmd_callback(message_handler, &callbackcmd);
 	
 	return init_success;

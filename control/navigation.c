@@ -80,10 +80,9 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 /**
  * \brief						Navigates the robot towards waypoint waypoint_input in 3D velocity command mode
  *
- * \param	waypoint_input		Destination waypoint in local coordinate system
  * \param	navigation			The navigation structure
  */
-static void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigation);
+static void navigation_run(navigation_t* navigation);
 
 /**
  * \brief	Sets auto-takeoff procedure from a MAVLink command message MAV_CMD_NAV_TAKEOFF
@@ -221,11 +220,6 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	
 	norm_rel_dist = sqrt(navigation->waypoint_handler->dist2wp_sqr);
 	
-	if (norm_rel_dist < 0.0005f)
-	{
-		norm_rel_dist += 0.0005f;
-	}
-	
 	// calculate dir_desired in local frame
 	// vel = qe-1 * rel_pos * qe
 	qtmp1 = quaternions_create_from_vector(rel_pos);
@@ -234,7 +228,17 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	
 	dir_desired_bf[2] = rel_pos[2];
 	
-	norm_rel_dist = max(navigation->cruise_speed,norm_rel_dist);
+	// Avoiding division by zero
+	if (norm_rel_dist < 0.0005f)
+	{
+		norm_rel_dist += 0.0005f;
+	}
+
+	// Normalisation of the goal direction
+	dir_desired_bf[X] /= norm_rel_dist;
+	dir_desired_bf[Y] /= norm_rel_dist;
+	dir_desired_bf[Z] /= norm_rel_dist;
+
 	if ((mode.AUTO == AUTO_ON) && ((navigation->state->nav_plan_active&&(!navigation->stop_nav)&&(!navigation->auto_takeoff)&&(!navigation->auto_landing))||((navigation->state->mav_state == MAV_STATE_CRITICAL)&&(navigation->critical_behavior == FLY_TO_HOME_WP))))
 	{
 		
@@ -244,7 +248,7 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		}
 		else
 		{
-		rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimation->local_position.heading);
+			rel_heading = maths_calc_smaller_angle(atan2(rel_pos[Y],rel_pos[X]) - navigation->position_estimation->local_position.heading);
 		}
 		
 		navigation->wpt_nav_controller.clip_max = navigation->cruise_speed;
@@ -257,14 +261,16 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 		v_desired = pid_controller_update_dt(&navigation->hovering_controller, norm_rel_dist, navigation->dt);
 	}
 	
-	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigation->max_climb_rate * norm_rel_dist ) 
+	if (v_desired *  maths_f_abs(dir_desired_bf[Z]) > navigation->max_climb_rate ) 
 	{
-		v_desired = navigation->max_climb_rate * norm_rel_dist /maths_f_abs(dir_desired_bf[Z]);
+		v_desired = navigation->max_climb_rate / maths_f_abs(dir_desired_bf[Z]);
 	}
 	
-	dir_desired_bf[X] = v_desired * dir_desired_bf[X] / norm_rel_dist;
-	dir_desired_bf[Y] = v_desired * dir_desired_bf[Y] / norm_rel_dist;
-	dir_desired_bf[Z] = v_desired * dir_desired_bf[Z] / norm_rel_dist;
+	
+	// Scaling of the goal direction by the desired speed
+	dir_desired_bf[X] *= v_desired;
+	dir_desired_bf[Y] *= v_desired;
+	dir_desired_bf[Z] *= v_desired;
 	
 	/*
 	loop_count = loop_count++ %50;
@@ -296,17 +302,17 @@ static void navigation_set_speed_command(float rel_pos[], navigation_t* navigati
 	navigation->controls_nav->rpy[YAW] = KP_YAW * rel_heading;
 }
 
-static void navigation_run(local_coordinates_t waypoint_input, navigation_t* navigation)
+static void navigation_run(navigation_t* navigation)
 {
 	float rel_pos[3];
 	
 	// Control in translational speed of the platform
-	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(waypoint_input.pos,
+	navigation->waypoint_handler->dist2wp_sqr = navigation_set_rel_pos_n_dist2wp(navigation->goal.pos,
 																					rel_pos,
 																					navigation->position_estimation->local_position.pos);
 	navigation_set_speed_command(rel_pos, navigation);
 	
-	navigation->controls_nav->theading=waypoint_input.heading;
+	navigation->controls_nav->theading=navigation->goal.heading;
 }
 
 static mav_result_t navigation_set_auto_takeoff(navigation_t *navigation, mavlink_command_long_t* packet)
@@ -492,7 +498,7 @@ static void navigation_waypoint_navigation_handler(navigation_t* navigation)
 	{
 		if (!navigation->waypoint_handler->hold_waypoint_set)
 		{
-			navigation_waypoint_hold_init(navigation->waypoint_handler, navigation->waypoint_handler->position_estimation->local_position);
+			navigation_waypoint_hold_init(navigation->waypoint_handler, navigation->position_estimation->local_position);
 		}
 		waypoint_handler_nav_plan_init(navigation->waypoint_handler);
 	}
@@ -503,11 +509,18 @@ static void navigation_critical_handler(navigation_t* navigation)
 	float rel_pos[3];
 	bool next_state = false;
 	
-	//Check whether we entered critical mode due to a battery low level
-	if ( (navigation->state->battery.is_low)&&(navigation->critical_behavior != CRITICAL_LAND) )
+	//Check whether we entered critical mode due to a battery low level or a lost
+	// connection with the GND station or are out of fence control
+	if ( navigation->state->battery.is_low || 
+		navigation->state->connection_lost || 
+		navigation->state->out_of_fence_2 ||
+		navigation->position_estimation->gps->status != GPS_OK)
 	{
-		navigation->critical_behavior = CRITICAL_LAND;
-		navigation->critical_next_state = false;
+		if(navigation->critical_behavior != CRITICAL_LAND)
+		{
+			navigation->critical_behavior = CRITICAL_LAND;
+			navigation->critical_next_state = false;
+		}
 	}
 	
 	if (!(navigation->critical_next_state))
@@ -522,21 +535,23 @@ static void navigation_critical_handler(navigation_t* navigation)
 		{
 			case CLIMB_TO_SAFE_ALT:
 				print_util_dbg_print("Climbing to safe alt...\r\n");
-				navigation->state->mav_mode_custom = CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
+				navigation->state->mav_mode_custom |= CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = navigation->position_estimation->local_position.pos[X];
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = navigation->position_estimation->local_position.pos[Y];
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = -30.0f;
 				break;
 			
 			case FLY_TO_HOME_WP:
-				navigation->state->mav_mode_custom = CUST_CRITICAL_FLY_TO_HOME_WP;
+				navigation->state->mav_mode_custom &= ~CUST_CRITICAL_CLIMB_TO_SAFE_ALT;
+				navigation->state->mav_mode_custom |= CUST_CRITICAL_FLY_TO_HOME_WP;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = -30.0f;
 				break;
 			
 			case HOME_LAND:
-				navigation->state->mav_mode_custom = CUST_CRITICAL_LAND;
+				navigation->state->mav_mode_custom &= ~CUST_CRITICAL_FLY_TO_HOME_WP;
+				navigation->state->mav_mode_custom |= CUST_CRITICAL_LAND;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = 0.0f;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = 5.0f;
@@ -545,7 +560,8 @@ static void navigation_critical_handler(navigation_t* navigation)
 			
 			case CRITICAL_LAND:
 				print_util_dbg_print("Critical land...\r\n");
-				navigation->state->mav_mode_custom = CUST_CRITICAL_LAND;
+				navigation->state->mav_mode_custom &= 0xFFFFFFE0;
+				navigation->state->mav_mode_custom |= CUST_CRITICAL_LAND;
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[X] = navigation->position_estimation->local_position.pos[X];
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Y] = navigation->position_estimation->local_position.pos[Y];
 				navigation->waypoint_handler->waypoint_critical_coordinates.pos[Z] = 5.0f;
@@ -589,8 +605,21 @@ static void navigation_critical_handler(navigation_t* navigation)
 				break;
 			
 			case FLY_TO_HOME_WP:
-				print_util_dbg_print("Critical State! Performing critical landing.\r\n");
-				navigation->critical_behavior = HOME_LAND;
+				if (navigation->state->out_of_fence_1)
+				{
+					//stop auto navigation, to prevent going out of fence 1 again
+					navigation->waypoint_handler->waypoint_hold_coordinates = navigation->waypoint_handler->waypoint_critical_coordinates;
+					navigation_stopping_handler(navigation);
+					navigation->state->out_of_fence_1 = false;
+					navigation->critical_behavior = CLIMB_TO_SAFE_ALT;
+					navigation->state->mav_state = MAV_STATE_ACTIVE;
+					navigation->state->mav_mode_custom &= ~CUST_CRITICAL_FLY_TO_HOME_WP;
+				}
+				else
+				{
+					print_util_dbg_print("Critical State! Performing critical landing.\r\n");
+					navigation->critical_behavior = HOME_LAND;
+				}
 				break;
 			
 			case HOME_LAND:
@@ -621,6 +650,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 		{
 			case DESCENT_TO_SMALL_ALTITUDE:
 				print_util_dbg_print("Cust: descent to small alt");
+				navigation->state->mav_mode_custom &= 0xFFFFFFE0;
 				navigation->state->mav_mode_custom = CUST_DESCENT_TO_SMALL_ALTITUDE;
 				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimation->local_position;
 				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = -5.0f;
@@ -628,6 +658,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 			
 			case DESCENT_TO_GND:
 				print_util_dbg_print("Cust: descent to gnd");
+				navigation->state->mav_mode_custom &= 0xFFFFFFE0;
 				navigation->state->mav_mode_custom = CUST_DESCENT_TO_GND;
 				navigation->waypoint_handler->waypoint_hold_coordinates = navigation->position_estimation->local_position;
 				navigation->waypoint_handler->waypoint_hold_coordinates.pos[Z] = 0.0f;
@@ -655,7 +686,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 	
 	if (navigation->auto_landing_behavior == DESCENT_TO_SMALL_ALTITUDE)
 	{
-		if ( (navigation->waypoint_handler->dist2wp_sqr < 3.0f)&&(abs(navigation->position_estimation->local_position.pos[2] - navigation->waypoint_handler->waypoint_hold_coordinates.pos[2]) < 0.5f) )
+		if ( (navigation->waypoint_handler->dist2wp_sqr < 3.0f)&&(maths_f_abs(navigation->position_estimation->local_position.pos[2] - navigation->waypoint_handler->waypoint_hold_coordinates.pos[2]) < 0.5f) )
 		{
 			next_state = true;
 		}
@@ -774,6 +805,10 @@ bool navigation_init(navigation_t* navigation, navigation_config_t* nav_config, 
 	navigation->controls_nav->thrust = -1.0f;
 	navigation->controls_nav->control_mode = VELOCITY_COMMAND_MODE;
 	navigation->controls_nav->yaw_mode = YAW_ABSOLUTE;
+	
+	navigation->goal.pos[X] = 0.0f;
+	navigation->goal.pos[Y] = 0.0f;
+	navigation->goal.pos[Z] = 0.0f;
 	
 	navigation->wpt_nav_controller = nav_config->wpt_nav_controller;
 	navigation->hovering_controller = nav_config->hovering_controller;
@@ -905,12 +940,14 @@ task_return_t navigation_update(navigation_t* navigation)
 					if ( (mode_local.AUTO == AUTO_ON) || (mode_local.GUIDED == GUIDED_ON) )
 					{
 						navigation_auto_landing_handler(navigation);
-						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+						
+						navigation->goal = navigation->waypoint_handler->waypoint_hold_coordinates;
+						navigation_run(navigation);
 						
 						if (navigation->auto_landing_behavior == DESCENT_TO_GND)
 						{
 							// Constant velocity to the ground
-							navigation->controls_nav->tvel[Z] = 0.3;
+							navigation->controls_nav->tvel[Z] = 0.3f;
 						}
 					}
 				}
@@ -924,25 +961,29 @@ task_return_t navigation_update(navigation_t* navigation)
 						{
 							if (!navigation->stop_nav_there)
 							{
-								navigation_run(navigation->waypoint_handler->waypoint_coordinates,navigation);
+								navigation->goal = navigation->waypoint_handler->waypoint_coordinates;
+								navigation_run(navigation);
 							}
 							else
 							{
-								navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+								navigation->goal = navigation->waypoint_handler->waypoint_hold_coordinates;
+								navigation_run(navigation);
 								
 								navigation_stopping_handler(navigation);
 							}
 						}
 						else
 						{
-							navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+							navigation->goal = navigation->waypoint_handler->waypoint_hold_coordinates;
+							navigation_run(navigation);
 						}
 					}
 					else if(mode_local.GUIDED == GUIDED_ON)
 					{
 						navigation_hold_position_handler(navigation);
 						
-						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+						navigation->goal = navigation->waypoint_handler->waypoint_hold_coordinates;
+						navigation_run(navigation);
 						break;
 					}
 				}
@@ -980,7 +1021,8 @@ task_return_t navigation_update(navigation_t* navigation)
 					{
 						navigation_waypoint_take_off_handler(navigation);
 						
-						navigation_run(navigation->waypoint_handler->waypoint_hold_coordinates,navigation);
+						navigation->goal = navigation->waypoint_handler->waypoint_hold_coordinates;
+						navigation_run(navigation);
 					}
 				}
 			}
@@ -993,7 +1035,16 @@ task_return_t navigation_update(navigation_t* navigation)
 				if (navigation->state->in_the_air)
 				{
 					navigation_critical_handler(navigation);
-					navigation_run(navigation->waypoint_handler->waypoint_critical_coordinates,navigation);
+					
+					navigation->goal = navigation->waypoint_handler->waypoint_critical_coordinates;
+					navigation_run(navigation);
+					
+					if (navigation->state->out_of_fence_2)
+					{
+						// Constant velocity to the ground
+						navigation->controls_nav->tvel[Z] = 1.0f;
+					}
+					
 				}
 			}
 			break;

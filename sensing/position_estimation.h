@@ -56,7 +56,8 @@ extern "C" {
 #include "state.h"
 #include "tasks.h"
 #include "constants.h"
-
+#include "sonar.h"
+#include "data_logging.h"
 
 // leaky velocity integration as a simple trick to emulate drag and avoid too large deviations (loss per 1 second)
 #define VEL_DECAY 0.0f
@@ -70,6 +71,7 @@ typedef struct
 {
 	global_position_t origin;	///<	Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
 	float gravity;				///<	value of the Gravity for position estimation correction
+	bool fence_set;				
 } position_estimation_conf_t;
 
 
@@ -81,9 +83,12 @@ typedef struct
 	float kp_vel_gps[3];							///< The gain to correct the velocity estimation from the GPS
 	float kp_pos_gps[3];							///< The gain to correct the position estimation from the GPS
 	float kp_alt_baro;								///< The gain to correct the Z position estimation from the barometer
-	float kp_vel_baro;								///< The gain to correct the position estimation from the barometer
+	float kp_vel_baro;								///< The gain to correct the Z velocity estimation from the barometer
+	float kp_alt_sonar;								///< The gain to correct the Z position estimation from the sonar
+	float kp_vel_sonar;								///< The gain to correct the Z velocity estimation from the sonar
 
-	uint32_t time_last_gps_msg;						///< The time at which we received the last GPS message in ms
+	uint32_t time_last_gps_posllh_msg;						///< The time at which we received the last GPS POSLLH message in ms
+	uint32_t time_last_gps_velned_msg;						///< The time at which we received the last GPS VELNED message in ms
 	uint32_t time_last_barometer_msg;				///< The time at which we received the last barometer message in ms
 	bool init_gps_position;							///< The boolean flag ensuring that the GPS was initialized
 	bool init_barometer;							///< The boolean flag ensuring that the barometer was initialized
@@ -97,13 +102,18 @@ typedef struct
 	local_coordinates_t local_position;				///< The local position
 	local_coordinates_t last_gps_pos;				///< The coordinates of the last GPS position
 	
+	bool fence_set;
+	local_coordinates_t fence_position;
+
 	float gravity;									///< The value of the gravity
 	
 	barometer_t* barometer;							///< The pointer to the barometer structure
+	const sonar_t* sonar;							///< The pointer to the sonar structure
 	const gps_t* gps;								///< The pointer to the GPS structure
 	const ahrs_t* ahrs;								///< The pointer to the attitude estimation structure
 	const imu_t* imu;								///< The pointer to the IMU structure
 	state_t* state;									///< The pointer to the state structure
+	data_logging_t* stat_logging;					///< The pointer to the stat logging structure
 
 	bool* nav_plan_active;							///< The pointer to the waypoint set flag
 } position_estimation_t;
@@ -116,13 +126,15 @@ typedef struct
  * \param	config					The configuration for default home position and gravity value
  * \param	state					The pointer to the state structure
  * \param	barometer				The pointer to the barometer structure
+ * \param	sonar 					The pointer to the sonar structure
  * \param	gps						The pointer to the GPS structure
  * \param	ahrs					The pointer to the attitude estimation structure
  * \param	imu						The pointer to the IMU structure
+ * \param	stat_logging			The pointer to the stat logging structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t* barometer, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu);
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t* config, state_t* state, barometer_t *barometer, const sonar_t* sonar, const gps_t *gps, const ahrs_t *ahrs, const imu_t *imu, data_logging_t* stat_logging);
 
 
 /**
@@ -140,6 +152,12 @@ void position_estimation_reset_home_altitude(position_estimation_t *pos_est);
  */
 void position_estimation_update(position_estimation_t *pos_est);
 
+/**
+ * \brief	Reset the origin of the fence (e.g. common for many entities or when armed)
+ *
+ * \param	pos_est					The pointer to the position estimation structure
+ */
+void position_estimation_set_new_fence_origin(position_estimation_t* pos_est);
 
 #ifdef __cplusplus
 }

@@ -52,7 +52,7 @@
 
 
 #define BARO_ALT_LPF 0.95f						///< low pass filter factor for altitude measured by the barometer
-#define VARIO_LPF 0.95f							///< low pass filter factor for the Vario altitude speed
+#define VARIO_LPF 0.55f							///< low pass filter factor for the Vario altitude speed
 
 #define BMP085_SLAVE_ADDRESS 0x77				///< Address of the barometer sensor on the i2c bus
 
@@ -289,7 +289,7 @@ void bmp085_update(barometer_t *bmp085)
 			bmp085->dt = dt;
 			vertical_speed = -(bmp085->altitude-vertical_speed) / dt;
 		
-			if (abs(vertical_speed) > 20) 
+			if (maths_f_abs(vertical_speed) > 20.0f) 
 			{
 				vertical_speed = 0.0f;
 			}

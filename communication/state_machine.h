@@ -53,24 +53,19 @@ extern "C" {
 #include "mavlink_waypoint_handler.h"
 #include "simulation.h"
 #include "joystick_parsing.h"
+#include "gps_ublox.h"
 
 /**
  * \brief Defines the state machine structure
  */
 typedef struct 
 {
-	uint8_t channel_switches;							///< State of the switches of the remote
-	signal_quality_t rc_check;							///< State of the remote (receiving signal or not)
-	int8_t motor_state;									///< State of the motors to switch on and off
-	
-	float		low_battery_update;						///< ///< The time of the last navigation_safety update in ms
-	uint32_t	low_battery_counter;					///< ///< The counter of time the battery level was under the critical_battery level
-
 	mavlink_waypoint_handler_t* waypoint_handler;		///< Pointer to the mavlink waypoint handler structure
 	state_t* state;										///< Pointer to the state structure
 	simulation_model_t *sim_model;						///< Pointer to the simulation structure
 	remote_t* remote;									///< Pointer to the remote structure
 	joystick_parsing_t* joystick;						///< Pointer to the joystick structure
+	const gps_t* gps;									///< Pointer to the gps structure
 } state_machine_t;
 
 
@@ -82,6 +77,7 @@ typedef struct
  * \param sim_model					Pointer to the simulation structure
  * \param remote					Pointer to the remote structure
  * \param joystick					Pointer to the joystick structure
+ * \param gps 						Pointer to the gps structure
  *
  * \return	True if the init succeed, false otherwise
  */
@@ -89,7 +85,8 @@ bool state_machine_init(	state_machine_t *state_machine,
 							state_t* state,
 							simulation_model_t *sim_model, 
 							remote_t* remote,
-							joystick_parsing_t* joystick);
+							joystick_parsing_t* joystick,
+							const gps_t* gps);
 
 /**
  * \brief   Updates the state machine
