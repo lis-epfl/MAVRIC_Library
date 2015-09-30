@@ -62,7 +62,7 @@ extern "C" {
 
 
 /**
- * @brief 	Configuration for ahrs _madgwick
+ * \brief 	Configuration for ahrs _madgwick
  */
 typedef struct
 {
@@ -72,7 +72,7 @@ typedef struct
 
 
 /**
- * @brief 	Structure for the Madgwick attitude estimation filter
+ * \brief 	Structure for the Madgwick attitude estimation filter
  */
 typedef struct
 {
@@ -85,22 +85,22 @@ typedef struct
 
 
 /**
- * @brief  	Init function
+ * \brief  	Init function
  * 
- * @param 	ahrs_madgwick 	Pointer to data structure
- * @param 	config 			Pointer to config structure
- * @param 	ahrs 			Pointer to AHRS structure
- * @param 	imu 			Pointer to IMU structure
+ * \param 	ahrs_madgwick 	Pointer to data structure
+ * \param 	config 			Pointer to config structure
+ * \param 	ahrs 			Pointer to AHRS structure
+ * \param 	imu 			Pointer to IMU structure
  * 
- * @return 	True if success, false if not
+ * \return 	True if success, false if not
  */
 bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs);
 
 
 /**
- * @brief 	Main update function
+ * \brief 	Main update function
  * 
- * @param 	ahrs_madgwick 	Pointer to data structure
+ * \param 	ahrs_madgwick 	Pointer to data structure
  */
 void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick);
 

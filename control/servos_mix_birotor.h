@@ -100,13 +100,13 @@ typedef struct
 
 
 /**
- * @brief [brief description]
+ * \brief [brief description]
  * @details [long description]
  * 
- * @param servo_mix [description]
- * @param config [description]
- * @param torque_command [description]
- * @param servo_pwm [description]
+ * \param servo_mix [description]
+ * \param config [description]
+ * \param torque_command [description]
+ * \param servo_pwm [description]
  * 
  * \return success
  */
@@ -114,10 +114,10 @@ bool servo_mix_birotor_init(servo_mix_birotor_t* mix, const servo_mix_birotor_co
 
 
 /**
- * @brief [brief description]
+ * \brief [brief description]
  * @details [long description]
  * 
- * @param servo_mix [description]
+ * \param servo_mix [description]
  * 
  * \return success
  */

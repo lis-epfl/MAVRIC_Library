@@ -112,9 +112,9 @@ bool servo_mix_ywing_init(	servo_mix_ywing_t* mix,
 
 
 /**
- * @brief			Update des servos mix
+ * \brief			Update des servos mix
  * 
- * @param mix		Pointer to the servos mix structure
+ * \param mix		Pointer to the servos mix structure
  */
 void servos_mix_ywing_update(servo_mix_ywing_t* mix);
 

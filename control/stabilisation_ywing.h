@@ -58,7 +58,7 @@ extern "C" {
 
 
 /**
- * @brief Flight modes for ywing
+ * \brief Flight modes for ywing
  */
  typedef enum
  {
@@ -72,7 +72,7 @@ extern "C" {
 
 
 /**
- * @brief Ywing
+ * \brief Ywing
  */
 typedef struct
 {
@@ -88,7 +88,7 @@ typedef struct
 
 
 /**
- * @brief Configuration for the ywing structure
+ * \brief Configuration for the ywing structure
  */
 typedef struct  
 {
@@ -98,20 +98,20 @@ typedef struct
 
 
 /**
- * @brief  	Initialisation Ywing 
+ * \brief  	Initialisation Ywing 
  * 
- * @param 	stabilisation_ywing 	Pointer to data struct
- * @param 	config 					Configuration
+ * \param 	stabilisation_ywing 	Pointer to data struct
+ * \param 	config 					Configuration
  * 
- * @return 	True if successful, false if not
+ * \return 	True if successful, false if not
  */
 bool stabilisation_ywing_init(stabilisation_ywing_t* stabilisation_ywing, stabilisation_ywing_conf_t* config);
 
 
 /**
- * @brief 	Main update function
+ * \brief 	Main update function
  * 
- * @param 	stabilisation_ywing 	Pointer to data struct
+ * \param 	stabilisation_ywing 	Pointer to data struct
  */
 void stabilisation_ywing_update(stabilisation_ywing_t* stabilisation_ywing);
 

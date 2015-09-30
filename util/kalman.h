@@ -55,7 +55,7 @@ extern "C"
 
 
 /**
- * @brief Kalman filter 
+ * \brief Kalman filter 
  */
 typedef struct kalman_filter_2D_t 
 {
