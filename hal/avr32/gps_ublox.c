@@ -3027,7 +3027,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 					break;
 					
 				case 3:
-					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_DGPS, 0);
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_DGPS, 1);
 					gps->config_loop_count--;
 					break;
 					
