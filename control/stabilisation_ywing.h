@@ -67,12 +67,12 @@ extern "C" {
  */
  typedef enum
  {
- 	YWING_DISARMED 		= 0,
- 	YWING_MANUAL		= 1,
- 	YWING_RATE			= 2,
- 	YWING_HOVER			= 3,
- 	YWING_TRANSITION 	= 4,
- 	YWING_45			= 5,
+ 	YWING_DISARMED 		= 0,		///< Disarmed
+ 	YWING_MANUAL		= 1,		///< Armed
+ 	YWING_RATE			= 2, 		///< Rate control only
+ 	YWING_HOVER			= 3,		///< Attitude + rate control in hover
+ 	YWING_TRANSITION 	= 4,		///< Attitude + rate control in transition
+ 	YWING_45			= 5, 		///< Attitude + rate control with base attitude at 45 degrees
  } ywing_mode_t;
 
 
@@ -81,14 +81,14 @@ extern "C" {
  */
 typedef struct
 {
-	ywing_mode_t 			mode;
-	command_t 				command;
-	attitude_controller_t 	attitude_controller;
-	float 					reference_pitch;
-	float 					reference_heading;
-	float 					reference_roll;
-	const ahrs_t*			ahrs;
-	const remote_t*			remote;
+	ywing_mode_t 			mode;					///< Current flight mode
+	command_t 				command;				///< Input command
+	attitude_controller_t 	attitude_controller;	///< Attitude controler
+	float 					reference_pitch;		///< Current pitch reference
+	float 					reference_heading;		///< Current heading reference
+	float 					reference_roll;			///< Current roll reference
+	const ahrs_t*			ahrs;					///< Pointer to attitude estimation (input)
+	const remote_t*			remote;					///< Pointer to remote (input)
 } stabilisation_ywing_t;
 
 
