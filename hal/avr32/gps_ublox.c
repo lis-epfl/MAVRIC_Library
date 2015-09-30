@@ -66,7 +66,8 @@ ubx_mon_rxr_struct_t ubx_mon_rxr_message[2];		///<  The MON RXR message buffer
 ubx_tim_tp_t ubx_tim_tp_message[2];					///<  The TIM TP message buffer
 ubx_tim_vrfy_t ubx_tim_vrfy_message[2];				///<  The TIM VRFY message buffer
 ubx_nav_timeutc_t ubx_nav_timeutc_message[2];		///<  The NAV TIMEUTC message buffer
-ubx_ack_t ubx_ack_message[2];						///< The ACK ACK message buffer
+ubx_ack_t ubx_ack_message[2];						///<  The ACK ACK message buffer
+ubx_nav_dgps_t ubx_nav_dgps_message[2];				///<  The NAV DGPS message buffer
 
 // NAV-POSLLH
 ubx_nav_pos_llh_t * ubx_current_pos_llh_message = &ubx_pos_llh_message[0];						///<  The pointer to the Posllh message that is being filled (not usable)
@@ -128,9 +129,16 @@ ubx_nav_timeutc_t *ubx_current_nav_timeutc_message = &ubx_nav_timeutc_message[0]
 ubx_nav_timeutc_t *ubx_last_nav_timeutc_message = &ubx_nav_timeutc_message[1];					///<  The pointer to the last NAV TIMEUTC message that was completed
 uint16_t ubx_number_of_valid_nav_timeutc_message = 0;											///<  Number of valid NAV TIMEUTC message received
 
+// ACK-ACK
 ubx_ack_t *ubx_current_ack_message = &ubx_ack_message[0];										///< The pointer to the ACK ACK message that is being filled (not usable)
 ubx_ack_t *ubx_last_ack_message = &ubx_ack_message[1];											///< The pointer to the last ACK ACK message that was completed
 uint16_t ubx_number_of_valid_ack_message = 0;													///< Number of valid ACK message received
+
+// NAV-TIMEUTC
+ubx_nav_dgps_t *ubx_current_nav_dgps_message = &ubx_nav_dgps_message[0];						///<  The pointer to the NAV DGPS message that is being filled (not usable)
+ubx_nav_dgps_t *ubx_last_nav_dgps_message = &ubx_nav_dgps_message[1];							///<  The pointer to the last NAV DGPS message that was completed
+uint16_t ubx_number_of_valid_nav_dgps_message = 0;												///<  Number of valid NAV DGPS message received
+
 
 // The date is defined as global parameter such that we can retrieve its value 
 //  without the need of pointers, e.g. when working with fat_fs, in diskio function
@@ -660,13 +668,21 @@ static ubx_nav_timeutc_t * ubx_get_nav_timeutc(void);
 */
 static ubx_ack_t * ubx_get_ack(void);
 
+/**
+* \brief	This function returns a pointer to the last NAV DGPS message that was received
+* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
+*
+* \return	A pointer to the last valid status message, or 0.
+*/
+static ubx_nav_dgps_t * ubx_get_nav_dgps(void);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
 static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t engine_nav_setting)
 {
-	gps_ublox_configure_gps(gps);
+	//gps_ublox_configure_gps(gps);
 	
 	gps->next_fix = false;
 	gps->have_raw_velocity = false;
@@ -904,6 +920,29 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print_num(gps->payload_length,10);
 								print_util_dbg_print(" should be:");
 								print_util_dbg_print_num(UBX_SIZE_NAV_TIMEUTC,10);
+								print_util_dbg_print("\r\n");
+								gps->step = CHECK_IF_PREAMBLE_1;
+								goto reset;
+							}
+							break;
+
+						case MSG_NAV_DGPS:
+							if ( (gps->payload_length == UBX_SIZE_NAV_DGPS) || (gps->payload_length == 16) )
+							{
+								ubx_current_message = (uint8_t **)&ubx_current_nav_dgps_message;
+								ubx_last_message = (uint8_t **)&ubx_last_nav_dgps_message;
+								ubx_valid_message = & ubx_number_of_valid_nav_dgps_message;
+							}
+							else
+							{
+								print_util_dbg_print("Wrong NAV DGPS message 0x");
+								print_util_dbg_print_num(gps->ubx_class,16);
+								print_util_dbg_print(" Msg id: 0x");
+								print_util_dbg_print_num(gps->msg_id,16);
+								print_util_dbg_print(" Received size:");
+								print_util_dbg_print_num(gps->payload_length,10);
+								print_util_dbg_print(" should be:");
+								print_util_dbg_print_num(UBX_SIZE_NAV_DGPS,10);
 								print_util_dbg_print("\r\n");
 								gps->step = CHECK_IF_PREAMBLE_1;
 								goto reset;
@@ -1262,6 +1301,7 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 	ubx_nav_vel_ned_t *gps_vel_ned;
 	ubx_nav_sv_info_t *gps_sv_info;
 	ubx_nav_timeutc_t *gps_nav_timeutc;
+	ubx_nav_dgps_t *gps_nav_dgps;
 
 	if (ubx_class == UBX_CLASS_ACK)
 	{
@@ -1714,7 +1754,49 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 				
 			}
 			break;
-			
+		
+		case MSG_NAV_DGPS:
+			gps_nav_dgps = ubx_get_nav_dgps();
+			if (gps_nav_dgps)
+			{
+				++gps->loop_nav_dgps;
+				gps->loop_nav_dgps %= gps->num_skipped_msg;
+				if (gps->print_nav_on_debug && (gps->loop_nav_dgps == 0))
+				{
+					print_util_dbg_print("MSG_NAV_DGPS:");
+					print_util_dbg_print("itow: ");
+					print_util_dbg_print_num(gps_nav_dgps->itow,10);
+					print_util_dbg_print(", age:");
+					print_util_dbg_print_num(gps_nav_dgps->age,10);
+					print_util_dbg_print(", base_id:");
+					print_util_dbg_print_num(gps_nav_dgps->base_id,10);
+					print_util_dbg_print(", base_health :");
+					print_util_dbg_print_num(gps_nav_dgps->base_health,10);
+					print_util_dbg_print(", num_channel :");
+					print_util_dbg_print_num(gps_nav_dgps->num_channel,10);
+					print_util_dbg_print(", status :");
+					print_util_dbg_print_num(gps_nav_dgps->status,10);
+					print_util_dbg_print("\r\n");
+					for (int i = 0; i < min(gps_nav_dgps->num_channel,16); ++i)
+					{
+						print_util_dbg_print("Channel:");
+						print_util_dbg_print_num(i,10);
+						print_util_dbg_print("svid:");
+						print_util_dbg_print_num(gps_nav_dgps->chan_data[i].sv_id,10);
+						print_util_dbg_print("flags:");
+						print_util_dbg_print_num(gps_nav_dgps->chan_data[i].flags,10);
+						print_util_dbg_print("age_c:");
+						print_util_dbg_print_num(gps_nav_dgps->chan_data[i].age_c,10);
+						print_util_dbg_print("prc:");
+						print_util_dbg_print_num(gps_nav_dgps->chan_data[i].prc,10);
+						print_util_dbg_print("prrc:");
+						print_util_dbg_print_num(gps_nav_dgps->chan_data[i].prrc,10);
+						print_util_dbg_print("\r\n");
+					}
+				}
+			}
+			break;
+
 		default:
 			if (gps->debug)
 			{
@@ -2699,6 +2781,18 @@ static ubx_ack_t * ubx_get_ack()
 	}
 }
 
+static ubx_nav_dgps_t * ubx_get_nav_dgps()
+{
+	if (ubx_number_of_valid_nav_dgps_message)
+	{
+		return ubx_last_nav_dgps_message;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -2717,7 +2811,7 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	gps->time_zone = 1;
 
 	// Set to true to print all data
-	gps->print_nav_on_debug = false;
+	gps->print_nav_on_debug = true;
 	
 	//disable debug message prints
 	gps->debug = false;
@@ -3457,7 +3551,7 @@ void gps_ublox_update(gps_t *gps)
 			
 			gps->healthy = false;
 
-			//gps_ublox_reset(gps, GPS_ENGINE_AIRBORNE_4G);
+			gps_ublox_reset(gps, GPS_ENGINE_AIRBORNE_4G);
 			gps->idle_timer = tnow;
 		}
 	}

@@ -194,6 +194,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_NAV_VELNED 36
 #define UBX_SIZE_NAV_SVINFO 200 //8 + 12*num_channel = 200
 #define UBX_SIZE_NAV_TIMEUTC 20
+#define UBX_SIZE_NAV_DGPS 272 // 16 + 16*num_channel = 272
 
 #define UBX_SIZE_CFG_RATE 6
 #define UBX_SIZE_CFG_GETSET_RATE 3
@@ -682,6 +683,32 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	}ubx_nav_sv_info_t;
 
 	/**
+	 * \brief The U-Blox NAV-DGPS message structure definition
+	 */
+	typedef struct
+	{
+		/**
+		 * \brief The structure definition of a particular GPS
+		 */
+		struct
+		{
+			float prrc;						///< Pseudo range rate correction
+			float prc;						///< Pseudo range correction
+			uint16_t age_c;					///< Age of the latest correction data
+			uint8_t flags;					///< Bitmask/channel number
+			uint8_t sv_id;					///< Satellite ID
+		}chan_data[16];
+
+		uint16_t res1;						///< Reservec
+		uint8_t status;						///< DGPS correction type status, 00:None, 01:PR+PRR correction
+		uint8_t num_channel;				///< Number of channels for which correction data is following
+		int16_t base_health;				///< DGPS base station health status
+		int16_t base_id;					///< DGPS base station ID
+		int32_t age;						///< Age of the newest correction data
+		uint32_t itow;						///< GPS msTow
+	}ubx_nav_dgps_t;
+
+	/**
 	 * \brief The U-Blox MON-RXR message structure definition
 	 */
  	typedef struct
@@ -1163,6 +1190,32 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	}ubx_nav_sv_info_t;
 
 	/**
+	 * \brief The U-Blox NAV-DGPS message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t itow;						///< GPS msTow
+		int32_t age;						///< Age of the newest correction data
+		int16_t base_id;					///< DGPS base station ID
+		int16_t base_health;				///< DGPS base station health status
+		uint8_t num_channel;				///< Number of channels for which correction data is following
+		uint8_t status;						///< DGPS correction type status, 00:None, 01:PR+PRR correction
+		uint16_t res1;						///< Reservec
+
+		/**
+		 * \brief The structure definition of a particular GPS
+		 */
+		struct
+		{
+			uint8_t sv_id;					///< Satellite ID
+			uint8_t flags;					///< Bitmask/channel number
+			uint16_t age_c;					///< Age of the latest correction data
+			float prc;						///< Pseudo range correction
+			float prrc;						///< Pseudo range rate correction
+		}chan_data[16];
+	}ubx_nav_dgps_t;
+
+	/**
 	 * \brief The U-Blox MON-RXR message structure definition
 	 */
 	typedef struct
@@ -1336,6 +1389,7 @@ typedef struct
 	uint8_t loop_nav_timeutc;					///< Counter used to print one message every num_skipped_msg
 	uint8_t loop_mon_rxr;						///< Counter used to print one message every num_skipped_msg
 	uint8_t loop_sv_info;						///< Counter used to print one message every num_skipped_msg
+	uint8_t loop_nav_dgps;						///< Counter used to print one message every num_skipped_msg
 	
 	bool print_nav_on_debug;					///< Flag to print messages on debug console
 	bool debug;									///< Indicates if debug messages should be printed
