@@ -105,16 +105,20 @@ typedef struct
  * \param 	attitude_command	Pointer to attitude command (input)
  * \param 	rate_command		Pointer to rate command (input/output)
  * \param 	torque_command		Pointer to torque command (output)
+ * 
+ * \return 	success
  */
-void attitude_controller_init(attitude_controller_t* controller, const attitude_controller_conf_t* config, const ahrs_t* ahrs, attitude_command_t* attitude_command, rate_command_t* rate_command, torque_command_t* torque_command);
+bool attitude_controller_init(attitude_controller_t* controller, const attitude_controller_conf_t* config, const ahrs_t* ahrs, attitude_command_t* attitude_command, rate_command_t* rate_command, torque_command_t* torque_command);
 
 
 /**
  * \brief               	Main update function
  * 
  * \param 	controller    	Pointer to data structure
+ * 
+ * \return success
  */
-void attitude_controller_update(attitude_controller_t* controller);
+bool attitude_controller_update(attitude_controller_t* controller);
 
 
 #ifdef __cplusplus

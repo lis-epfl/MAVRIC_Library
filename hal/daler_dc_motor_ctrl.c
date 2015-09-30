@@ -22,7 +22,7 @@
 #include "turnigy.h"
 
 
-void daler_dc_motor_ctrl_init(daler_dc_motor_ctrl_t* dc_motor_ctrl, int32_t UID)
+bool daler_dc_motor_ctrl_init(daler_dc_motor_ctrl_t* dc_motor_ctrl, int32_t UID)
 {
 	// uart setting
 	usart_config_t usart_conf_dc_motor_ctrl =
@@ -48,10 +48,12 @@ void daler_dc_motor_ctrl_init(daler_dc_motor_ctrl_t* dc_motor_ctrl, int32_t UID)
 	// Registering streams
 	buffer_make_buffered_stream_lossy(&(dc_motor_ctrl->dc_motor_ctrl_in_buffer), &(dc_motor_ctrl->dc_motor_ctrl_in_stream));
 	uart_int_register_read_stream(uart_int_get_uart_handle(UID), &(dc_motor_ctrl->dc_motor_ctrl_in_stream));
+
+	return true;
 }
 
 
-task_return_t daler_dc_motor_ctrl_update(daler_dc_motor_ctrl_t* dc_motor )//, const float wingrons[2])
+bool daler_dc_motor_ctrl_update(daler_dc_motor_ctrl_t* dc_motor )//, const float wingrons[2])
 {
 	int i=0;
 	int number_of_channels = 8;
@@ -100,5 +102,5 @@ task_return_t daler_dc_motor_ctrl_update(daler_dc_motor_ctrl_t* dc_motor )//, co
 		dc_motor_ctrl->dc_motor_ctrl_out_stream.put(dc_motor_ctrl->dc_motor_ctrl_out_stream.data, scaled_channels_uart[i]);
 	}*/
 	
-	return TASK_RUN_SUCCESS;
+	return true;
 }

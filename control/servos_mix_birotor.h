@@ -104,8 +104,10 @@ typedef struct
  * @param config [description]
  * @param torque_command [description]
  * @param servo_pwm [description]
+ * 
+ * \return success
  */
-void servo_mix_birotor_init(servo_mix_birotor_t* mix, const servo_mix_birotor_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, servos_t* servos, daler_dc_motor_ctrl_t* 	dc_motor);
+bool servo_mix_birotor_init(servo_mix_birotor_t* mix, const servo_mix_birotor_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, servos_t* servos, daler_dc_motor_ctrl_t* 	dc_motor);
 
 
 /**
@@ -113,8 +115,10 @@ void servo_mix_birotor_init(servo_mix_birotor_t* mix, const servo_mix_birotor_co
  * @details [long description]
  * 
  * @param servo_mix [description]
+ * 
+ * \return success
  */
-void servos_mix_birotor_update(servo_mix_birotor_t* mix);
+bool servos_mix_birotor_update(servo_mix_birotor_t* mix);
 
 
 #ifdef __cplusplus

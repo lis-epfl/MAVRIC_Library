@@ -110,8 +110,10 @@ typedef struct
  * @param torque_command	Pointer to the torque command structure
  * @param thrust_command	Pointer to the thrust command structure
  * @param servos			Pointer to the servos structure
+ * 
+ * \return 	success
  */
-void servo_mix_quadcotper_cross_init(	servo_mix_quadcotper_cross_t* mix, 
+bool servo_mix_quadcotper_cross_init(	servo_mix_quadcotper_cross_t* mix, 
 										const servo_mix_quadcopter_cross_conf_t* config, 
 										const torque_command_t* torque_command, 
 										const thrust_command_t* thrust_command, 
@@ -122,8 +124,10 @@ void servo_mix_quadcotper_cross_init(	servo_mix_quadcotper_cross_t* mix,
  * @brief			Update des servos mix
  * 
  * @param mix		Pointer to the servos mix structure
+ * 
+ * \return 			success
  */
-void servos_mix_quadcopter_cross_update(servo_mix_quadcotper_cross_t* mix);
+bool servos_mix_quadcopter_cross_update(servo_mix_quadcotper_cross_t* mix);
 
 
 #ifdef __cplusplus

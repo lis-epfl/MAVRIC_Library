@@ -44,7 +44,7 @@
 #include "servos_mix_birotor.h"
 
 
-void servo_mix_birotor_init(servo_mix_birotor_t* mix, const servo_mix_birotor_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command,  servos_t* servos, daler_dc_motor_ctrl_t* dc_motors)
+bool servo_mix_birotor_init(servo_mix_birotor_t* mix, const servo_mix_birotor_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command,  servos_t* servos, daler_dc_motor_ctrl_t* dc_motors)
 {
 	// Init dependencies
 	mix->torque_command = torque_command;
@@ -68,10 +68,12 @@ void servo_mix_birotor_init(servo_mix_birotor_t* mix, const servo_mix_birotor_co
 	
 	mix->min_servo			= config->min_servo;
 	mix->max_servo	 		= config->max_servo;
+
+	return true;
 }
 
 
-void servos_mix_birotor_update(servo_mix_birotor_t* mix)
+bool servos_mix_birotor_update(servo_mix_birotor_t* mix)
 {
 	//int32_t i;
 	float motor[4];
@@ -136,4 +138,5 @@ void servos_mix_birotor_update(servo_mix_birotor_t* mix)
 	mix->dc_motors->wingrons_angle[0] =  motor[2];
 	mix->dc_motors->wingrons_angle[1] =  motor[3];
 	
+	return true;
 }

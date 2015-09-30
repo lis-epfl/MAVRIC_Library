@@ -42,8 +42,10 @@ typedef struct
  *
  * \param dc_motor_ctrl pointer to DC motor controller structure
  * \param UID uart device number
+ * 
+ * \return 	success
  */
-void daler_dc_motor_ctrl_init(daler_dc_motor_ctrl_t* dc_motor_ctrl, int32_t UID);
+bool daler_dc_motor_ctrl_init(daler_dc_motor_ctrl_t* dc_motor_ctrl, int32_t UID);
 
 
 /**
@@ -51,8 +53,8 @@ void daler_dc_motor_ctrl_init(daler_dc_motor_ctrl_t* dc_motor_ctrl, int32_t UID)
  *
  * \param dc_motor_ctrl pointer to DC motor controller structure
  * 
- * \return task_return_t Return task status
+ * \return success
  */
-task_return_t daler_dc_motor_ctrl_update(daler_dc_motor_ctrl_t* dc_motor );//, const float wingrons[2] );
+bool daler_dc_motor_ctrl_update(daler_dc_motor_ctrl_t* dc_motor );//, const float wingrons[2] );
 
 #endif /* DC_MOTOR_CTRL_H_ */
