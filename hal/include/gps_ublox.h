@@ -142,11 +142,12 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_CFG_TP 0x07
 #define MSG_CFG_TP5 0x31
 #define MSG_CFG_USB 0x1B
-#define MSG_CFG_ITFM 0x39 // ok
-#define MSG_CFG_INF 0x02 // ok
-#define MSG_CFG_FXN 0x0E // ok
-#define MSG_CFG_DAT 0x06 //nok
-#define MSG_CFG_ANT 0x13 //ok
+#define MSG_CFG_ITFM 0x39
+#define MSG_CFG_INF 0x02
+#define MSG_CFG_FXN 0x0E
+#define MSG_CFG_DAT 0x06
+#define MSG_CFG_ANT 0x13
+#define MSG_CFG_CFG 0x09
 
 #define MSG_MON_HW2 0x0B
 #define MSG_MON_HW 0x09
@@ -214,6 +215,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_CFG_FXN 36
 #define UBX_SIZE_CFG_DAT 2
 #define UBX_SIZE_CFG_ANT 4
+#define UBX_SIZE_CFG_CFG 13
 
 #define UBX_SIZE_MON_RXR 1
 #define UBX_SIZE_MON_VER 70
@@ -769,6 +771,17 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t class_id;					///< Class ID of the acknowledged messages
 	}ubx_ack_t;
 
+	/** 
+	 *\brief The U-Blox CFG-CFG message structure definition
+	 */
+	typedef struct
+	{
+		uint8_t device_mask;				///< Mask which selects the devices for this command
+		uint32_t load_mask;					///< Mask with configuration sub-sections to load, i.e. loading permanent config to current config
+		uint32_t save_mask;					///< Mask with configuration sub-sections to save, i.e. saving current config to permanent non-volatile memory
+		uint32_t clear_mask;				///< Mask with configuration sub-sections to clear, i.e. loading default config to permanent non-volatile memory
+	}ubx_cfg_cfg_t;
+
 #else	
 
 	/**
@@ -1275,6 +1288,17 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t class_id;
 		uint8_t msg_id;
 	}ubx_ack_ack_t;
+
+	/** 
+	 *\brief The U-Blox CFG-CFG message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t clear_mask;				///< Mask with configuration sub-sections to clear, i.e. loading default config to permanent non-volatile memory
+		uint32_t save_mask;					///< Mask with configuration sub-sections to save, i.e. saving current config to permanent non-volatile memory
+		uint32_t load_mask;					///< Mask with configuration sub-sections to load, i.e. loading permanent config to current config
+		uint8_t device_mask;				///< Mask which selects the devices for this command
+	}ubx_cfg_cfg_t;
 
 #endif
 

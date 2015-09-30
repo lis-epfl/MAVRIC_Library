@@ -547,6 +547,19 @@ static void ubx_send_message_cfg_usb(byte_stream_t *stream, ubx_cfg_usb_t *gps_c
 
 
 /**
+ * \brief	To send the CFG-CFG configuration, if the ubx_cfg_usb_t pointer is null,
+ *			asks for the current settings
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x09	MSG_CFG_CFG
+ *
+ * \param	stream				The pointer to the stream structure
+ * \param	gps_cfg_cfg			The USB configuration sent
+ */
+static void ubx_send_message_cfg_cfg(byte_stream_t *stream, ubx_cfg_cfg_t *gps_cfg_cfg);
+
+
+/**
  * \brief	To send the NAV messages that we want to receive
  *
  * Class:	0x06	UBX_CLASS_CFG
@@ -2607,6 +2620,35 @@ static void ubx_send_message_cfg_usb(byte_stream_t *stream, ubx_cfg_usb_t *gps_c
 	ubx_send_cksum(stream,ck_a,ck_b);
 }
 
+static void ubx_send_message_cfg_cfg(byte_stream_t *stream, ubx_cfg_cfg_t *gps_cfg_cfg)
+{
+	uint8_t ck_a = 0, ck_b = 0;
+
+	uint8_t msg_class = UBX_CLASS_CFG;
+	uint8_t msg_id = MSG_CFG_CFG;
+	uint16_t size;
+
+	if (gps_cfg_cfg != NULL)
+	{
+		size = UBX_SIZE_CFG_CFG;
+	}
+	else
+	{
+		size = 0;
+	}
+	ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
+	
+	if (gps_cfg_cfg != NULL)
+	{
+		ubx_send_uint32(stream, gps_cfg_cfg->clear_mask, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_cfg->save_mask, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_cfg->load_mask, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_cfg->device_mask, &ck_a, &ck_b);
+	}
+
+	ubx_send_cksum(stream,ck_a,ck_b);
+}
+
 static void ubx_configure_message_rate(byte_stream_t *stream, uint8_t msg_class, uint8_t msg_id, uint8_t rate)
 {
 	uint8_t ck_a = 0, ck_b = 0;
@@ -2878,6 +2920,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	ubx_cfg_tp_t gps_cfg_tp;
 	ubx_cfg_tp5_t gps_cfg_tp5;
 	ubx_cfg_usb_t gps_cfg_usb;
+	ubx_cfg_cfg_t gps_cfg_cfg;
 	
 	if (!gps->acknowledged_received)
 	{
@@ -3520,6 +3563,14 @@ void gps_ublox_configure_gps(gps_t *gps)
 			strcpy(gps_cfg_usb.serial_number, "");
 			ubx_send_message_cfg_usb(&gps->gps_stream_out, &gps_cfg_usb);
 			break;
+		case 23:
+			// Saving configuration to flash
+			print_util_dbg_print("Saving configuration to flash...\r\n");
+			gps_cfg_cfg.clear_mask = 0x00000000;
+			gps_cfg_cfg.save_mask = 0x0000061F;
+			gps_cfg_cfg.load_mask = 0x0000001F;
+			gps_cfg_cfg.device_mask = 0x17;
+			ubx_send_message_cfg_cfg(&gps->gps_stream_out, &gps_cfg_cfg);
 			
 		default:
 			print_util_dbg_print("GPS configuration completed!\r\n");
