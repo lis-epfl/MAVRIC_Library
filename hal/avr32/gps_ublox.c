@@ -2643,7 +2643,7 @@ static void ubx_send_message_cfg_cfg(byte_stream_t *stream, ubx_cfg_cfg_t *gps_c
 		ubx_send_uint32(stream, gps_cfg_cfg->clear_mask, &ck_a, &ck_b);
 		ubx_send_uint32(stream, gps_cfg_cfg->save_mask, &ck_a, &ck_b);
 		ubx_send_uint32(stream, gps_cfg_cfg->load_mask, &ck_a, &ck_b);
-		ubx_send_uint32(stream, gps_cfg_cfg->device_mask, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_cfg->device_mask, &ck_a, &ck_b);
 	}
 
 	ubx_send_cksum(stream,ck_a,ck_b);
@@ -3571,6 +3571,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			gps_cfg_cfg.load_mask = 0x0000001F;
 			gps_cfg_cfg.device_mask = 0x17;
 			ubx_send_message_cfg_cfg(&gps->gps_stream_out, &gps_cfg_cfg);
+			break;
 			
 		default:
 			print_util_dbg_print("GPS configuration completed!\r\n");
