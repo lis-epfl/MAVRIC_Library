@@ -2853,7 +2853,7 @@ void gps_ublox_init(gps_t *gps, int32_t UID, usart_config_t usart_conf_gps)
 	gps->time_zone = 1;
 
 	// Set to true to print all data
-	gps->print_nav_on_debug = true;
+	gps->print_nav_on_debug = false;
 	
 	//disable debug message prints
 	gps->debug = false;
@@ -3070,7 +3070,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 					break;
 					
 				case 3:
-					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_DGPS, 1);
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_NAV, MSG_NAV_DGPS, 0);
 					gps->config_loop_count--;
 					break;
 					
@@ -3176,7 +3176,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 					break;
 					
 				case 8:
-					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, 5, 0);
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, 0x05, 0);
 					gps->config_loop_count--;
 					break;
 					
@@ -3186,11 +3186,6 @@ void gps_ublox_configure_gps(gps_t *gps)
 					break;
 				case 10:
 					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, 0x20, 0);
-					gps->config_loop_count--;
-					break;
-					
-				case 11:
-					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, 0x21, 0);
 					gps->config_nav_msg_count = 0;
 					break;
 			}
@@ -3294,7 +3289,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			gps_nav_expert_settings.min_cn_o = 0x07;
 			gps_nav_expert_settings.res3 = 0x00;
 			gps_nav_expert_settings.ini_fix_3d = 0x00;
-			gps_nav_expert_settings.res4 = 0x00;
+			gps_nav_expert_settings.res4 = 0x01;
 			gps_nav_expert_settings.res5 = 0x00;
 			gps_nav_expert_settings.res6 = 0x00;
 			gps_nav_expert_settings.wkn_roll_over = 0x0643;
@@ -3557,7 +3552,19 @@ void gps_ublox_configure_gps(gps_t *gps)
 			gps_cfg_usb.res1 = 0x0000;
 			gps_cfg_usb.res2 = 0x0000;
 			gps_cfg_usb.power_consumption = 0x0064;
-			gps_cfg_usb.flags = 0x00000;
+			gps_cfg_usb.flags = 0x0000;
+			for (i=0; i<32; i++)
+			{
+				gps_cfg_usb.vendor_string[i] = 0;
+			}
+			for (i=0; i<32; i++)
+			{
+				gps_cfg_usb.product_string[i] = 0;
+			}
+			for (i=0; i<32; i++)
+			{
+				gps_cfg_usb.serial_number[i] = 0;
+			}
 			strcpy(gps_cfg_usb.vendor_string, "u-blox AG - www.u-blox.com");
 			strcpy(gps_cfg_usb.product_string, "u-blox 6  -  GPS Receiver");
 			strcpy(gps_cfg_usb.serial_number, "");
@@ -3565,7 +3572,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			break;
 		case 23:
 			// Saving configuration to flash
-			print_util_dbg_print("Saving configuration to flash...\r\n");
+			print_util_dbg_print("Saving configuration to permanent memory...\r\n");
 			gps_cfg_cfg.clear_mask = 0x00000000;
 			gps_cfg_cfg.save_mask = 0x0000061F;
 			gps_cfg_cfg.load_mask = 0x0000001F;
