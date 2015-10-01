@@ -92,7 +92,7 @@ bool flow_init(flow_t* flow, int32_t UID, usart_config_t usart_conf)
 
 	if( success == true )
 	{
-		print_util_dbg_print("[Flow] Initialized\r\n");	
+		print_util_dbg_print("[FLOW] Initialized\r\n");	
 	}
 
 	return success;
@@ -169,7 +169,7 @@ bool flow_update(flow_t* flow)
 							// not last packet
 							for ( int i = 0; i < MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
 							{
-								flow->of_loc.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+								flow->of_loc_tmp.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
 							}
 						}
 						else if( data_msg.seqnr < flow->n_packets )
@@ -177,25 +177,31 @@ bool flow_update(flow_t* flow)
 							// last packet
 							for ( int i = 0; i < flow->size_data; ++i)
 							{
-								flow->of_loc.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+								flow->of_loc_tmp.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
 							}
 
 							// swap bytes
 							for (int i = 0; i < flow->of_count; ++i)
 							{
-								flow->of_loc.x[i] = endian_rev16(flow->of_loc.x[i]);
-								flow->of_loc.y[i] = endian_rev16(flow->of_loc.y[i]);
+								flow->of_loc.x[i] = endian_rev16(flow->of_loc_tmp.x[i]);
+								flow->of_loc.y[i] = endian_rev16(flow->of_loc_tmp.y[i]);
 							}
 						}
 					break;
 
 					default:
+						/*if( data_msg.seqnr == 51 )
+						{
+							int16_t tmp1 = endian_rev16(flow->of.x[20]); 
+							int16_t tmp2 = endian_rev16(flow->of.x[50]);
+						}
+						*/
 						if( data_msg.seqnr < (flow->n_packets - 1) )
 						{
 							// not last packet
 							for ( int i = 0; i < MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
 							{
-								flow->of.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+								flow->of_tmp.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
 							}
 						}
 						else if( data_msg.seqnr == (flow->n_packets-1) )
@@ -203,16 +209,16 @@ bool flow_update(flow_t* flow)
 							// last packet
 							for ( int i = 0; i < flow->size_data % MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
 							{
-								flow->of.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+								flow->of_tmp.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
 							}
 
 							// swap bytes
 							// for (int i = 0; i < flow->of_count; ++i)
-							// for (int i = 0; i < 125; ++i)
-							// {
-							// 	flow->of.x[i] = endian_rev16(flow->of.x[i]);
-							// 	flow->of.y[i] = endian_rev16(flow->of.y[i]);
-							// }
+							for (int i = 0; i < 125; ++i)
+							{
+								flow->of.x[i] = endian_rev16(flow->of_tmp.x[i]);
+								flow->of.y[i] = endian_rev16(flow->of_tmp.y[i]);
+							}
 						}
 					break;
 				}
