@@ -685,7 +685,7 @@ static void navigation_auto_landing_handler(navigation_t* navigation)
 	
 	if (navigation->auto_landing_behavior == DESCENT_TO_SMALL_ALTITUDE)
 	{
-		if ( (navigation->waypoint_handler->dist2wp_sqr < 3.0f)&&(abs(navigation->position_estimation->local_position.pos[2] - navigation->waypoint_handler->waypoint_hold_coordinates.pos[2]) < 0.5f) )
+		if ( (navigation->waypoint_handler->dist2wp_sqr < 3.0f)&&(maths_f_abs(navigation->position_estimation->local_position.pos[2] - navigation->waypoint_handler->waypoint_hold_coordinates.pos[2]) < 0.5f) )
 		{
 			next_state = true;
 		}

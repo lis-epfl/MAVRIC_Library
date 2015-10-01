@@ -124,6 +124,9 @@ ubx_nav_timeutc_t *ubx_current_nav_timeutc_message = &ubx_nav_timeutc_message[0]
 ubx_nav_timeutc_t *ubx_last_nav_timeutc_message = &ubx_nav_timeutc_message[0];					///<  The pointer to the last NAV TIMEUTC message that was completed
 uint16_t ubx_number_of_valid_nav_timeutc_message = 0;											///<  Number of valid NAV TIMEUTC message received
 
+// The date is defined as global parameter such that we can retrieve its value 
+//  without the need of pointers, e.g. when working with fat_fs, in diskio function
+//  get_fattime, the date can be set without pointer to the gps structure
 date_time_t date;
 
 //------------------------------------------------------------------------------
@@ -1979,13 +1982,13 @@ void gps_ublox_update(gps_t *gps)
 	}
 }
 
-void gps_ublox_utc_to_local(date_time_t *date, uint8_t time_zone)
+void gps_ublox_utc_to_local(date_time_t *today_date, uint8_t time_zone)
 {
-	uint16_t begin_dst[] = {
+	uint16_t begin_dst[] = { // begin day saving time, format: MonthDay
 		329, 327, 326, 325, 331, 329, 328, 327
 	};
 	
-	uint16_t end_dst[] = {
+	uint16_t end_dst[] = { // end day saving time, format: MonthDay
 		1025, 1030, 1029, 1028, 1027, 1025, 1031, 1030
 	};
 	
@@ -1994,21 +1997,21 @@ void gps_ublox_utc_to_local(date_time_t *date, uint8_t time_zone)
 	};
 	
 	// Day saving time active
-	if ( ((date->month*100 + date->day) >= begin_dst[date->year - 2015]) && ((date->month*100 + date->day)< end_dst[date->year - 2015]))
+	if ( ((today_date->month*100 + today_date->day) >= begin_dst[today_date->year - 2015]) && ((today_date->month*100 + today_date->day)< end_dst[today_date->year - 2015]))
 	{
-		date->hour += time_zone + 1;
+		today_date->hour += time_zone + 1;
 	}
 	else
 	{
-		date->hour += time_zone;
+		today_date->hour += time_zone;
 	}
 
 	//Check if leap year
-	if ( date->year%4 == 0 )
+	if ( today_date->year%4 == 0 )
 	{
-		if ( date->year%100 == 0 )
+		if ( today_date->year%100 == 0 )
 		{
-			if ( date->year%400 == 0 )
+			if ( today_date->year%400 == 0 )
 			{
 				days_per_month[1] = 29;
 			}
@@ -2020,37 +2023,37 @@ void gps_ublox_utc_to_local(date_time_t *date, uint8_t time_zone)
 	}
 
 	// Check hour range min
-	if (date->hour < 0)
+	if (today_date->hour < 0)
 	{
-		date->hour += 24;
-		date->day -= 1;
+		today_date->hour += 24;
+		today_date->day -= 1;
 		
-		if (date->day < 1)
+		if (today_date->day < 1)
 		{
-			date->month -= 1;
-			if (date->month < 1)
+			today_date->month -= 1;
+			if (today_date->month < 1)
 			{
-				date->month = 12;
-				date->year -= 1;
+				today_date->month = 12;
+				today_date->year -= 1;
 			}
-			date->day = days_per_month[date->month];
+			today_date->day = days_per_month[today_date->month];
 		}
 	}
 
 	// Check hour range max
-	if (date->hour >= 24)
+	if (today_date->hour >= 24)
 	{
-		date->hour -= 24;
-		date->day += 1;
+		today_date->hour -= 24;
+		today_date->day += 1;
 		
-		if (date->day > days_per_month[date->month-1])
+		if (today_date->day > days_per_month[today_date->month-1])
 		{
-			date->day = 1;
-			date->month += 1;
-			if (date->month > 12)
+			today_date->day = 1;
+			today_date->month += 1;
+			if (today_date->month > 12)
 			{
-				date->month = 1;
-				date->year += 1;
+				today_date->month = 1;
+				today_date->year += 1;
 			}
 		}
 		

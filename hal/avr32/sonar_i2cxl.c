@@ -104,7 +104,7 @@ void sonar_i2cxl_get_last_measure(sonar_i2cxl_t* sonar_i2cxl)
 		{
 			velocity = (distance_m - sonar_i2cxl->data.current_distance) / dt;
 			//discard sonar velocity estimation if it seams too big
-			if (abs(velocity)>20.0f)
+			if (maths_f_abs(velocity) > 20.0f)
 			{
 				velocity = 0.0f;
 			}

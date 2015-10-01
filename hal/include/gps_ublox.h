@@ -756,9 +756,10 @@ void gps_ublox_update(gps_t *gps);
 /**
  * \brief	Tranforming UTC to local time
  *
- * \param	date		The pointer to the date structure
+ * \param	today_date	The pointer to the date structure
+ * \param	time_zone	The current time zone
  */
-void gps_ublox_utc_to_local(date_time_t *date, uint8_t time_zone);
+void gps_ublox_utc_to_local(date_time_t *today_date, uint8_t time_zone);
 
 /**
  * \brief	Gets the current date and time
