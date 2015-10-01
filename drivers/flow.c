@@ -210,8 +210,8 @@ bool flow_update(flow_t* flow)
 							// for (int i = 0; i < flow->of_count; ++i)
 							// for (int i = 0; i < 125; ++i)
 							// {
-								// flow->of.x[i] = endian_rev16(flow->of.x[i]);
-								// flow->of.y[i] = endian_rev16(flow->of.y[i]);
+							// 	flow->of.x[i] = endian_rev16(flow->of.x[i]);
+							// 	flow->of.y[i] = endian_rev16(flow->of.y[i]);
 							// }
 						}
 					break;
