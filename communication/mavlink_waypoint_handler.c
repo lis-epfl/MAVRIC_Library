@@ -1195,7 +1195,10 @@ static void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handl
 			print_util_dbg_print(", ");
 			print_util_dbg_print_num(waypoint_handler->position_estimation->local_position.origin.altitude*1000.0f,10);
 			print_util_dbg_print(")\r\n");
-		
+			
+			waypoint_handler->position_estimation->fence_set = false;
+			position_estimation_set_new_fence_origin(waypoint_handler->position_estimation);
+
 			mavlink_message_t _msg;
 			mavlink_msg_gps_global_origin_pack( waypoint_handler->mavlink_stream->sysid,
 												waypoint_handler->mavlink_stream->compid,

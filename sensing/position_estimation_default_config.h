@@ -57,7 +57,8 @@ static const position_estimation_conf_t position_estimation_default_config =
         .latitude   = 46.51852236174565f,
         .altitude   = 400.0f
     },
-    .gravity = 9.81f
+    .gravity = 9.81f,
+    .fence_set = false
 };
 
 #ifdef __cplusplus

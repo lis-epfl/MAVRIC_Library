@@ -143,6 +143,7 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 	float sonar_alt_error = 0.0f;
 	float sonar_vel_error = 0.0f;
 	float sonar_gain = 0.0f;
+	float gps_dt = 0.0f;
 	
 	//we use ahrs->dt since it is updated at the same frequency as position_estimation
 	float dt = pos_est->ahrs->dt;
@@ -187,29 +188,60 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 	
 	if (pos_est->init_gps_position)
 	{
-		if ( (pos_est->time_last_gps_msg < pos_est->gps->time_last_msg) && (pos_est->gps->status == GPS_OK) )
+		if(pos_est->gps->status == GPS_OK)
 		{
-			pos_est->time_last_gps_msg = pos_est->gps->time_last_msg;
+			if ( (pos_est->time_last_gps_posllh_msg < pos_est->gps->time_last_posllh_msg) )
+			{	
+				pos_est->time_last_gps_posllh_msg = pos_est->gps->time_last_posllh_msg;
 
-			global_gps_position.longitude = pos_est->gps->longitude;
-			global_gps_position.latitude = pos_est->gps->latitude;
-			global_gps_position.altitude = pos_est->gps->altitude;
-			global_gps_position.heading = 0.0f;
-			local_coordinates = coord_conventions_global_to_local_position(global_gps_position,pos_est->local_position.origin);
-			local_coordinates.timestamp_ms = pos_est->gps->time_last_msg;
+				global_gps_position.longitude = pos_est->gps->longitude;
+				global_gps_position.latitude = pos_est->gps->latitude;
+				global_gps_position.altitude = pos_est->gps->altitude;
+				global_gps_position.heading = 0.0f;
+				local_coordinates = coord_conventions_global_to_local_position(global_gps_position,pos_est->local_position.origin);
+				local_coordinates.timestamp_ms = pos_est->gps->time_last_msg;
+				
+				// compute GPS velocity estimate
+				gps_dt = (local_coordinates.timestamp_ms - pos_est->last_gps_pos.timestamp_ms) / 1000.0f;
+				if (gps_dt > 0.001f)
+				{
+					for (i = 0; i < 3; i++)
+					{
+						pos_est->last_vel[i] = (local_coordinates.pos[i] - pos_est->last_gps_pos.pos[i]) / gps_dt;
+					}
+				}
+				else
+				{
+					print_util_dbg_print("GPS dt is too small!\r\n");
+				}
+				
+				pos_est->last_gps_pos = local_coordinates;
+			}
 			
-			pos_est->last_gps_pos = local_coordinates;
-		}
-		
-		vel_error[X] = pos_est->gps->north_speed    - pos_est->vel[X]; 
-		vel_error[Y] = pos_est->gps->east_speed     - pos_est->vel[Y]; 
-		vel_error[Z] = pos_est->gps->vertical_speed - pos_est->vel[Z]; 
+			if (pos_est->time_last_gps_velned_msg < pos_est->gps->time_last_velned_msg)
+			{
+				pos_est->time_last_gps_velned_msg = pos_est->gps->time_last_velned_msg;
+			}
+			
+			vel_error[X] = pos_est->gps->north_speed    - pos_est->vel[X]; 
+			vel_error[Y] = pos_est->gps->east_speed     - pos_est->vel[Y]; 
+			vel_error[Z] = pos_est->gps->vertical_speed - pos_est->vel[Z]; 
 
-		gps_gain = 1.0f;
+			gps_gain = 1.0f;
 		
-		for (i = 0;i < 3;i++)
+			for (i = 0;i < 3;i++)
+			{
+				pos_error[i] = pos_est->last_gps_pos.pos[i] - pos_est->local_position.pos[i];
+			}
+		}
+		else
 		{
-			pos_error[i] = pos_est->last_gps_pos.pos[i] - pos_est->local_position.pos[i];
+			for (i = 0;i < 3;i++)
+			{
+				pos_error[i] = 0.0f;
+				vel_error[i] = 0.0f;
+			}
+			gps_gain = 0.0f;
 		}
 	}
 	else
@@ -267,9 +299,10 @@ static void gps_position_init(position_estimation_t *pos_est)
 {
 	if ( (pos_est->init_gps_position == false)&&(pos_est->gps->status == GPS_OK) )
 	{
-		if ( pos_est->time_last_gps_msg < pos_est->gps->time_last_msg )
+		if ( (pos_est->time_last_gps_posllh_msg < pos_est->gps->time_last_posllh_msg) && (pos_est->time_last_gps_velned_msg < pos_est->gps->time_last_velned_msg) )
 		{
-			pos_est->time_last_gps_msg = pos_est->gps->time_last_msg;
+			pos_est->time_last_gps_posllh_msg = pos_est->gps->time_last_posllh_msg;
+			pos_est->time_last_gps_velned_msg = pos_est->gps->time_last_velned_msg;
 		
 			pos_est->init_gps_position = true;
 			
@@ -296,8 +329,8 @@ static void gps_position_init(position_estimation_t *pos_est)
 static void position_estimation_fence_control(position_estimation_t* pos_est)
 {
 	float dist_xy_sqr, dist_z_sqr;
-	dist_xy_sqr = SQR(pos_est->local_position.pos[X])+SQR(pos_est->local_position.pos[Y]);
-	dist_z_sqr = SQR(pos_est->local_position.pos[Z]);
+	dist_xy_sqr = SQR(pos_est->local_position.pos[X]-pos_est->fence_position.pos[X])+SQR(pos_est->local_position.pos[Y]-pos_est->fence_position.pos[Y]);
+	dist_z_sqr = SQR(pos_est->local_position.pos[Z]-pos_est->fence_position.pos[Z]);
 
 	if (dist_xy_sqr > SQR(pos_est->state->fence_2_xy))
 	{
@@ -341,10 +374,16 @@ bool position_estimation_init(position_estimation_t* pos_est, const position_est
 	pos_est->local_position.origin.longitude =  config->origin.longitude;
 	pos_est->local_position.origin.latitude =   config->origin.latitude;
 	pos_est->local_position.origin.altitude =   config->origin.altitude;
-	pos_est->local_position.pos[X] = 0;
-	pos_est->local_position.pos[Y] = 0;
-	pos_est->local_position.pos[Z] = 0;
+	pos_est->local_position.pos[X] = 0.0f;
+	pos_est->local_position.pos[Y] = 0.0f;
+	pos_est->local_position.pos[Z] = 0.0f;
 	
+	pos_est->fence_set = false;
+	if (config->fence_set)
+	{
+		position_estimation_set_new_fence_origin(pos_est);
+	}
+
     // reset position estimator
     pos_est->last_alt = 0;
     for(int32_t i = 0;i < 3;i++)
@@ -355,10 +394,11 @@ bool position_estimation_init(position_estimation_t* pos_est, const position_est
     }
 
 	pos_est->gravity = config->gravity;
-	
+
 	pos_est->init_gps_position = false;
 	pos_est->init_barometer = false;
-	pos_est->time_last_gps_msg = 0;
+	pos_est->time_last_gps_posllh_msg = 0;
+	pos_est->time_last_gps_velned_msg = 0;
 	pos_est->time_last_barometer_msg = 0;
 	
     pos_est->kp_pos_gps[X] = 2.0f;
@@ -376,7 +416,7 @@ bool position_estimation_init(position_estimation_t* pos_est, const position_est
 	pos_est->kp_vel_sonar = 2.0f;
 	
 	gps_position_init(pos_est);
-	
+
 	print_util_dbg_print("[POSITION ESTIMATION] initialised.\r\n");
 	
 	return init_success;
@@ -439,6 +479,8 @@ void position_estimation_update(position_estimation_t *pos_est)
 			pos_est->state->reset_position = false;
 			position_estimation_reset_home_altitude(pos_est);
 
+			position_estimation_set_new_fence_origin(pos_est);
+
 			if (pos_est->stat_logging)
 			{
 				pos_est->stat_logging->data_write = true;
@@ -447,9 +489,21 @@ void position_estimation_update(position_estimation_t *pos_est)
 		
 		position_estimation_position_integration(pos_est);
 		position_estimation_position_correction(pos_est);
-		if (pos_est->state->mav_mode.ARMED == ARMED_ON)
+		if ( (pos_est->state->mav_mode.ARMED == ARMED_ON)&&(pos_est->fence_set) )
 		{
 			position_estimation_fence_control(pos_est);
 		}
 	}
+}
+
+void position_estimation_set_new_fence_origin(position_estimation_t* pos_est)
+{
+	if (!pos_est->fence_set)
+	{
+		print_util_dbg_print("Setting new fence origin position.\r\n");
+
+		pos_est->fence_set = true;
+		pos_est->fence_position.origin = pos_est->local_position.origin;
+	}
+	pos_est->fence_position = coord_conventions_global_to_local_position(pos_est->fence_position.origin,pos_est->local_position.origin);
 }
