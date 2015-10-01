@@ -100,7 +100,7 @@ static mav_result_t position_estimation_set_new_home_position(position_estimatio
 		}
 
 		pos_est->fence_set = false;
-		position_estimation_set_fence(pos_est);
+		position_estimation_set_new_fence_origin(pos_est);
 
 		*pos_est->nav_plan_active = false;
 	

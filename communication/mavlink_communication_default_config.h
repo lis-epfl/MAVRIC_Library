@@ -60,9 +60,9 @@ mavlink_communication_conf_t mavlink_communication_default_config =
 	},
 	.mavlink_stream_config =
 	{
-		.sysid       = 1,
-		.compid      = 50,
-		.use_dma     = false
+		.sysid   = 1,
+		.compid  = 50,
+		.debug   = true,
 	},
 	.message_handler_config =
 	{
