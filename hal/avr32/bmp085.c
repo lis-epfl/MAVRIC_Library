@@ -289,7 +289,7 @@ void bmp085_update(barometer_t *bmp085)
 			bmp085->dt = dt;
 			vertical_speed = -(bmp085->altitude-vertical_speed) / dt;
 		
-			if (abs(vertical_speed) > 20) 
+			if (maths_f_abs(vertical_speed) > 20.0f) 
 			{
 				vertical_speed = 0.0f;
 			}

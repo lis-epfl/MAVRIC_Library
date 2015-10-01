@@ -48,7 +48,7 @@ extern "C"
 {
 #endif
 
-#include <asf.h>
+#include <stdint.h>
 
 #define GENERATOR_BUFFER_SIZE 512		///< Generator Buffer size
 

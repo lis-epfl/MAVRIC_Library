@@ -47,6 +47,7 @@
 #include "constants.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -344,7 +345,6 @@ static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handle
 	float altitude = -packet->param4;
 	
 	float x;
-	float y;
 	
 	waypoint_struct_t waypoint;
 	
@@ -396,7 +396,7 @@ static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handle
 		waypoint.param1 = 2.0f; // Hold time in decimal seconds
 		waypoint.param2 = 4.0f; // Acceptance radius in meters
 		waypoint.param3 = 0.0f; //  0 to pass through the WP, if > 0 radius in meters to pass by WP. Positive value for clockwise orbit, negative value for counter-clockwise orbit. Allows trajectory control.
-		waypoint.param4 = maths_rad_to_deg(maths_calc_smaller_angle(PI + atan2(y,x))); // Desired yaw angle at MISSION (rotary wing)
+		waypoint.param4 = maths_rad_to_deg(maths_calc_smaller_angle(PI + atan2(waypoint_transfo.pos[Y],waypoint_transfo.pos[X]))); // Desired yaw angle at MISSION (rotary wing)
 	
 		waypoint_handler->waypoint_list[i] = waypoint;
 	}
@@ -587,7 +587,7 @@ static void waypoint_handler_set_swarm_scenario(mavlink_waypoint_handler_t* wayp
 	}
 	else
 	{
-		if ((float)abs(waypoint_handler->mavlink_stream->sysid%num_of_vhc - (num_of_vhc/2.0f)) == (num_of_vhc/2.0f))
+		if (maths_f_abs(waypoint_handler->mavlink_stream->sysid%num_of_vhc - (num_of_vhc/2.0f)) == (num_of_vhc/2.0f))
 		{
 			waypoint_transfo.pos[X] = - lateral_dist;
 			waypoint_transfo.pos[Y] = 0.0f;
@@ -650,7 +650,7 @@ static void waypoint_handler_set_swarm_scenario(mavlink_waypoint_handler_t* wayp
 	}
 	else
 	{
-		if ((float)abs(waypoint_handler->mavlink_stream->sysid%num_of_vhc - (num_of_vhc/2.0f)) == (num_of_vhc/2.0f))
+		if (maths_f_abs(waypoint_handler->mavlink_stream->sysid%num_of_vhc - (num_of_vhc/2.0f)) == (num_of_vhc/2.0f))
 		{
 			waypoint_transfo.pos[X] = lateral_dist;
 			waypoint_transfo.pos[Y] = 0.0f;
@@ -1195,7 +1195,10 @@ static void waypoint_handler_set_home(mavlink_waypoint_handler_t* waypoint_handl
 			print_util_dbg_print(", ");
 			print_util_dbg_print_num(waypoint_handler->position_estimation->local_position.origin.altitude*1000.0f,10);
 			print_util_dbg_print(")\r\n");
-		
+			
+			waypoint_handler->position_estimation->fence_set = false;
+			position_estimation_set_new_fence_origin(waypoint_handler->position_estimation);
+
 			mavlink_message_t _msg;
 			mavlink_msg_gps_global_origin_pack( waypoint_handler->mavlink_stream->sysid,
 												waypoint_handler->mavlink_stream->compid,
