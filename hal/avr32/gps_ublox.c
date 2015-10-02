@@ -147,7 +147,7 @@ date_time_t date;
  * \param	gps						The pointer to the GPS structure
  * \param	engine_nav_setting		The GPS Nav settings 
  */
-static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t engine_nav_setting);
+// static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t engine_nav_setting);
 
 
 /**
@@ -664,16 +664,16 @@ static ubx_ack_t * ubx_get_ack(void);
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t engine_nav_setting)
-{
-	gps_ublox_configure_gps(gps);
+// static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t engine_nav_setting)
+// {
+// 	gps_ublox_configure_gps(gps);
 	
-	gps->next_fix = false;
-	gps->have_raw_velocity = false;
+// 	gps->next_fix = false;
+// 	gps->have_raw_velocity = false;
 	
-	gps->new_position = false;
-	gps->new_speed = false;
-}
+// 	gps->new_position = false;
+// 	gps->new_speed = false;
+// }
 
 
 static bool gps_ublox_message_decode(gps_t *gps)
