@@ -63,17 +63,17 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ ROLL PID -------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 0.07f,
-					.clip_min = -0.9f,
-					.clip_max = 0.9f,
+					.p_gain = 0.00f,
+					.clip_min = -0.5f,
+					.clip_max = 0.5f,
 					.integrator={
-						.gain = 0.125f,
+						.gain = 0.0f,
 						.clip_pre = 6.0f,
 						.accumulator = 0.0f,
 						.clip = 0.3f,
 					},
 					.differentiator={
-						.gain = 0.008f,
+						.gain = 0.000f,
 						.previous = 0.0f,
 						.clip = 0.14f
 					},
@@ -87,17 +87,17 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ PITCH PID ------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 0.07f,
-					.clip_min = -0.9f,
-					.clip_max = 0.9f,
+					.p_gain = 0.00f,
+					.clip_min = -0.5f,
+					.clip_max = 0.5f,
 					.integrator={
-						.gain = 0.125f,
+						.gain = 0.0f,
 						.clip_pre = 6.0f,
 						.accumulator = 0.0f,
 						.clip = 0.3f,
 					},
 					.differentiator={
-						.gain = 0.008f,
+						.gain = 0.000f,
 						.previous = 0.0f,
 						.clip = 0.14f
 					},
@@ -111,14 +111,14 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ YAW PID --------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 0.3f,
-					.clip_min = -0.3f,
-					.clip_max = 0.3f,
+					.p_gain = 0.0f,
+					.clip_min = -1000,
+					.clip_max = 1000,
 					.integrator={
-						.gain = 0.075f,
-						.clip_pre = 1.0f,
+						.gain = 0.0f,
+						.clip_pre = 0.0f,
 						.accumulator = 0.0f,
-						.clip = 0.045f,
+						.clip = 0.0f,
 					},
 					.differentiator={
 						.gain = 0.0f,
@@ -166,8 +166,6 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				.theading = 0.0f,
 				.control_mode =  RATE_COMMAND_MODE,
 				.yaw_mode = YAW_RELATIVE
-				//.yaw_mode = YAW_RELATIVE,
-				//.run_mode = MOTORS_OFF
 			},
 		},
 		// #############################################################################
@@ -518,7 +516,14 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				//.run_mode = MOTORS_OFF
 			},
 		}
-	}
+	},
+	.tuning = 0,
+	.tuning_axis = PITCH,
+	.tuning_steps = 0,
+	.pitch_up = 0.5f,
+	.pitch_down = -0.2f,
+	.roll_up = 0.5f,
+	.roll_down = -0.5f
 };
 
 #ifdef __cplusplus

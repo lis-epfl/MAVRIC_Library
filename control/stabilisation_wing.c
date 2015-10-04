@@ -62,6 +62,13 @@ bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisa
 	stabilisation_wing->pos_est = pos_est;
 	stabilisation_wing->servos = servos;
 	stabilisation_wing->servo_mix = servo_mix;
+	stabilisation_wing->tuning = stabiliser_conf->tuning;
+	stabilisation_wing->tuning_axis = stabiliser_conf->tuning_axis;
+	stabilisation_wing->tuning_steps = stabiliser_conf->tuning_steps;
+	stabilisation_wing->pitch_up = stabiliser_conf->pitch_up;
+	stabilisation_wing->pitch_down = stabiliser_conf->pitch_down;
+	stabilisation_wing->roll_up = stabiliser_conf->roll_up;
+	stabilisation_wing->roll_down = stabiliser_conf->roll_down;
 	
 	//init controller
 	controls->control_mode = ATTITUDE_COMMAND_MODE;
@@ -199,6 +206,19 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		
 		// run PID update on all rate controllers
 		stabilisation_run(&stabilisation_wing->stabiliser_stack.rate_stabiliser, stabilisation_wing->imu->dt, rpyt_errors);
+		
+		// Rewrite command on axis to apply manual control on it (used for tuning)
+		if(stabilisation_wing->tuning != 0)
+		{
+			if(stabilisation_wing->tuning_axis == PITCH)
+			{
+				stabilisation_wing->stabiliser_stack.rate_stabiliser.output.rpy[ROLL] = input.rpy[ROLL];
+			}
+			else if(stabilisation_wing->tuning_axis == ROLL)
+			{
+				stabilisation_wing->stabiliser_stack.rate_stabiliser.output.rpy[PITCH] = input.rpy[PITCH];
+			}
+		}
 	}
 	
 	// Mix to servo outputs
