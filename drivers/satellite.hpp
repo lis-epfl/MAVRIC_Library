@@ -46,7 +46,7 @@
 
 extern "C" 
 {
-	#include "uart_int.h"
+	// #include "uart_int.h"
 }
 
 /**
