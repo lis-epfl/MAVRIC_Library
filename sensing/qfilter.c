@@ -97,13 +97,16 @@ void qfilter_update(qfilter_t *qf)
 	float ki 	 = qf->ki;
 	float ki_mag = qf->ki_mag;
 
-	// Update time
+	// Update time in us
 	float now_us 	= time_keeper_get_micros();
-	qf->ahrs->dt 	= now_us - qf->ahrs->last_update;
+	
+	// Delta t in seconds
+	float dt     = 1e-6 * (float)(now_us - qf->ahrs->last_update);
+	
+	// Write to ahrs structure
+	qf->ahrs->dt 		  = dt;
 	qf->ahrs->last_update = now_us;
 
-	// Delta t in seconds
-	float dt = (float)qf->ahrs->dt * 1e-6;
 	
 	// up_bf = qe^-1 *(0,0,0,-1) * qe
 	up.s = 0; up.v[X] = UPVECTOR_X; up.v[Y] = UPVECTOR_Y; up.v[Z] = UPVECTOR_Z;
