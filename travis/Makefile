@@ -156,7 +156,7 @@ LIB_SRCS += hal/linux/udp_client_server.cpp
 CC = gcc
 OBJCOPY = objcopy
 
-CFLAGS  = -g -O2 -Wall -std=c++11
+CFLAGS  = -g -O2 -Wall
 # CFLAGS += -fdiagnostics-color=auto
 # CFLAGS += -D_DEFAULT_SOURCE
 
