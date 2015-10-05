@@ -1,0 +1,2 @@
+language: cpp
+script: cd travis && make test
