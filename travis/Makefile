@@ -172,7 +172,7 @@ CFLAGS += ${LIB_INC}
 CXX = g++
 OBJCOPY = objcopy
 
-CXXFLAGS  = -g -O2 -Wall
+CXXFLAGS  = -g -O2 -Wall -std=gnu++11
 # CXXFLAGS += -fdiagnostics-color=auto
 # CXXFLAGS += -D_DEFAULT_SOURCE
 
