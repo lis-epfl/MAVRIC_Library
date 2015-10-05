@@ -4,25 +4,6 @@
 # Configure only the first part of this makefile
 ################################################################################
 
-# Binaries will be generated with this name
-PROJ_NAME=LEQuad
-
-# ------------------------------------------------------------------------------
-# PROJECT FOLDER
-# ------------------------------------------------------------------------------
-# Project source folder
-# MAVRIC_SRC = ../
-
-# Include paths for project folder
-# SRCS_INC += -I${MAVRIC_SRC}
-
-# Sources files for project folder (*.c and *.cpp)
-# SRCS += main_emu.cpp
-# SRCS += central_data_emu.cpp
-# SRCS += boardsupport.cpp
-# SRCS += mavlink_telemetry.cpp
-# SRCS += tasks.cpp
-
 # ------------------------------------------------------------------------------
 # MAVRIC LIBRARY
 # ------------------------------------------------------------------------------
@@ -136,20 +117,6 @@ LIB_SRCS += hal/linux/serial_udp.cpp
 LIB_SRCS += hal/linux/time_keeper.c
 LIB_SRCS += hal/linux/udp_client_server.cpp
 
-# LIB_SRCS += hal/emu/adxl345_driver.c
-# LIB_SRCS += hal/emu/analog_monitor.c
-# LIB_SRCS += hal/emu/bmp085.c
-# LIB_SRCS += hal/emu/hmc5883l.c
-# LIB_SRCS += hal/emu/itg3200.c
-# LIB_SRCS += hal/emu/led.c
-# LIB_SRCS += hal/emu/lsm330dlc.c
-# LIB_SRCS += hal/emu/piezo_speaker.c
-# LIB_SRCS += hal/emu/radar_module_driver.c
-# LIB_SRCS += hal/emu/pwm_servos.c
-# LIB_SRCS += hal/emu/spektrum_satellite.c
-# LIB_SRCS += hal/emu/udp_stream.c
-
-
 # ------------------------------------------------------------------------------
 # C COMPILER OPTIONS
 # ------------------------------------------------------------------------------
@@ -157,14 +124,10 @@ LIB_SRCS += hal/linux/udp_client_server.cpp
 OBJCOPY = objcopy
 
 CFLAGS  = -g -O2 -Wall -std=c99
-# CFLAGS += -fdiagnostics-color=auto
-# CFLAGS += -D_DEFAULT_SOURCE
 
 # Include files from MAVRIC library and source folder
 CFLAGS += -I.
 CFLAGS += ${LIB_INC}
-# CFLAGS += ${SRCS_INC}
-
 
 # ------------------------------------------------------------------------------
 # C++ COMPILER OPTIONS
@@ -173,13 +136,10 @@ CFLAGS += ${LIB_INC}
 OBJCOPY = objcopy
 
 CXXFLAGS  = -g -O2 -Wall -std=c++11
-# CXXFLAGS += -fdiagnostics-color=auto
-# CXXFLAGS += -D_DEFAULT_SOURCE
 
 # Include files from MAVRIC library and source folder
 CXXFLAGS += -I.
 CXXFLAGS += ${LIB_INC}
-# CXXFLAGS += ${SRCS_INC}
 
 ################################################################################
 # Normally you shouldn't need to change anything below this line!
@@ -192,8 +152,6 @@ BUILD_DIR = build
 
 # Get the names of the .o files from .c and .cpp files
 OBJS += $(addprefix ${BUILD_DIR}/, $(addsuffix .o, $(basename $(LIB_SRCS))))
-# OBJS += $(addprefix ${BUILD_DIR}/, $(addsuffix .o, $(basename $(SRCS))))
-
 
 # ------------------------------------------------------------------------------
 # COMMANDS FOR FANCY OUTPUT
@@ -219,17 +177,7 @@ BUILD_CMD = LOG=$$($(CMD) 2>&1) ; if [ $$? -eq 1 ]; then $(PRINT_ERROR); elif [ 
 # ------------------------------------------------------------------------------
 
 # Main rule
-all: proj
-proj: $(PROJ_NAME).elf
-
-test: ${OBJS}
-
-# Linking
-# ${PROJ_NAME}.elf: ${OBJS}
-# 	@$(CXX) $(LDFLAGS) $^ -o $@ 
-# 	@$(OBJCOPY) -O ihex $(PROJ_NAME).elf $(PROJ_NAME).hex
-# 	@$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).bin
-# 	@$(BUILD_CMD)
+lib: ${OBJS}
 	
 # C files in Library
 ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.c
@@ -243,19 +191,7 @@ ${BUILD_DIR}/%.o: ${MAVRIC_LIB}/%.cpp
 	@$(CXX) -c $< -o $@ $(CXXFLAGS)
 	@$(BUILD_CMD)
 
-# # C files in source folder
-# ${BUILD_DIR}/%.o: ${MAVRIC_SRC}/%.c
-# 	@mkdir -p $(dir $@)
-# 	@$(CC) -c $< -o $@ $(CFLAGS)
-# 	@$(BUILD_CMD)
-
-# # CPP files in SRC folder
-# ${BUILD_DIR}/%.o: ${MAVRIC_SRC}/%.cpp
-# 	@mkdir -p $(dir $@)
-# 	@$(CXX) -c $< -o $@ $(CXXFLAGS)
-# 	@$(BUILD_CMD)
-
 .PHONY: clean
 clean:
-	@rm -f $(OBJS) $(PROJ_NAME).elf $(PROJ_NAME).hex $(PROJ_NAME).bin
+	@rm -f $(OBJS)
 	@$(PRINT_OK)
