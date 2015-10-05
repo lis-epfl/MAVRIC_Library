@@ -156,8 +156,8 @@ LIB_SRCS += hal/linux/udp_client_server.cpp
 CC = gcc
 OBJCOPY = objcopy
 
-CFLAGS  = -g -O2 -Wall -std=c11
-CFLAGS += -fdiagnostics-color=auto
+CFLAGS  = -g -O2 -Wall -std=c++11
+# CFLAGS += -fdiagnostics-color=auto
 # CFLAGS += -D_DEFAULT_SOURCE
 
 # Include files from MAVRIC library and source folder
