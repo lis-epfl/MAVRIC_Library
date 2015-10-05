@@ -200,8 +200,6 @@ bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, 
 
 task_return_t mavlink_communication_update(mavlink_communication_t* mavlink_communication) 
 {
-	int32_t res = 0;
-
 	mavlink_stream_t* mavlink_stream = &mavlink_communication->mavlink_stream;
 	mavlink_message_handler_t* handler = &mavlink_communication->message_handler;
 
@@ -218,7 +216,7 @@ task_return_t mavlink_communication_update(mavlink_communication_t* mavlink_comm
 	// Send messages
 	if( mavlink_stream->serial->writeable() == 256 ) 
 	{
-		res = scheduler_update(&mavlink_communication->scheduler);
+		scheduler_update(&mavlink_communication->scheduler);
 	}
 	
 	return TASK_RUN_SUCCESS;

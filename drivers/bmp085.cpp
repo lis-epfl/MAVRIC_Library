@@ -44,7 +44,7 @@
 
 extern "C"
 {
-	#include "twim.h"
+	// #include "twim.h"
 	#include "maths.h"
 	#include "time_keeper.h"
 	#include "print_util.h"
@@ -268,7 +268,7 @@ bool Bmp085::update(void)
 			dt_ = dt;
 			vertical_speed = -(altitude_-vertical_speed) / dt;
 		
-			if (abs(vertical_speed) > 20) 
+			if (maths_f_abs(vertical_speed) > 20) 
 			{
 				vertical_speed = 0.0f;
 			}

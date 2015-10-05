@@ -92,8 +92,10 @@ void qfilter_update(qfilter_t *qf)
 	quat_t mag_global, mag_corrected_local;
 	
 	quat_t front_vec_global = {};
-	front_vec_global.s = 0.0f;
-	front_vec_global.v = {1.0f, 0.0f, 0.0f};
+	front_vec_global.s    = 0.0f;
+	front_vec_global.v[0] = 1.0f;
+	front_vec_global.v[1] = 0.0f;
+	front_vec_global.v[2] = 0.0f;
 
 	float kp 	 = qf->kp;
 	float kp_mag = qf->kp_mag;
