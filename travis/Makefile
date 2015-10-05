@@ -172,8 +172,8 @@ CFLAGS += ${LIB_INC}
 CXX = g++
 OBJCOPY = objcopy
 
-CXXFLAGS  = -g -O2 -Wall -std=c++11
-CXXFLAGS += -fdiagnostics-color=auto
+CXXFLAGS  = -g -O2 -Wall
+# CXXFLAGS += -fdiagnostics-color=auto
 # CXXFLAGS += -D_DEFAULT_SOURCE
 
 # Include files from MAVRIC library and source folder
