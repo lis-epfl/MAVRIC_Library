@@ -44,7 +44,6 @@
 
 extern "C"
 {
-	// #include "twim.h"
 	#include "maths.h"
 	#include "time_keeper.h"
 	#include "print_util.h"
