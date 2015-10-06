@@ -134,7 +134,6 @@ bool Spektrum_satellite::init()
 		channels_[i] = 0;
 	}
 	
-	new_data_available_ = false;
 	protocol_ 			= RADIO_PROTOCOL_UNKNOWN;
 	last_update_ 		= time_keeper_get_micros();
 
@@ -294,9 +293,6 @@ void Spektrum_satellite::handle_interrupt()
 			// update timing
 			dt_ 			= now - last_update_;
 			last_update_	= now;
-
-			// Inidicate that new data is available
-			new_data_available_ = true;
 		}
 		else if ( buffer_bytes_available(&receiver_) == 16)
 		{

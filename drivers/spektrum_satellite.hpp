@@ -132,7 +132,6 @@ private:
 	uint32_t 				last_interrupt_;		///< Last time a byte was received
 	uint32_t 				last_update_;			///< Last update time 
 	uint32_t 				dt_;					///< Duration between two updates
-	bool					new_data_available_; 	///< Indicates if new data is  available
 	dsm2_protocol_proba_t	protocol_proba_;		///< Indicates number of frames received
 	radio_protocol_t		protocol_;				///< Defines in which mode the remote is configured
 
