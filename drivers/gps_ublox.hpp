@@ -142,11 +142,12 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define MSG_CFG_TP 0x07
 #define MSG_CFG_TP5 0x31
 #define MSG_CFG_USB 0x1B
-#define MSG_CFG_ITFM 0x39 // ok
-#define MSG_CFG_INF 0x02 // ok
-#define MSG_CFG_FXN 0x0E // ok
-#define MSG_CFG_DAT 0x06 //nok
-#define MSG_CFG_ANT 0x13 //ok
+#define MSG_CFG_ITFM 0x39
+#define MSG_CFG_INF 0x02
+#define MSG_CFG_FXN 0x0E
+#define MSG_CFG_DAT 0x06
+#define MSG_CFG_ANT 0x13
+#define MSG_CFG_CFG 0x09
 
 #define MSG_MON_HW2 0x0B
 #define MSG_MON_HW 0x09
@@ -194,6 +195,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_NAV_VELNED 36
 #define UBX_SIZE_NAV_SVINFO 200 //8 + 12*num_channel = 200
 #define UBX_SIZE_NAV_TIMEUTC 20
+#define UBX_SIZE_NAV_DGPS 272 // 16 + 16*num_channel = 272
 
 #define UBX_SIZE_CFG_RATE 6
 #define UBX_SIZE_CFG_GETSET_RATE 3
@@ -213,6 +215,7 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 #define UBX_SIZE_CFG_FXN 36
 #define UBX_SIZE_CFG_DAT 2
 #define UBX_SIZE_CFG_ANT 4
+#define UBX_SIZE_CFG_CFG 13
 
 #define UBX_SIZE_MON_RXR 1
 #define UBX_SIZE_MON_VER 70
@@ -693,6 +696,32 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 	}ubx_nav_sv_info_t;
 
 	/**
+	 * \brief The U-Blox NAV-DGPS message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t itow;						///< GPS msTow
+		int32_t age;						///< Age of the newest correction data
+		int16_t base_id;					///< DGPS base station ID
+		int16_t base_health;				///< DGPS base station health status
+		uint8_t num_channel;				///< Number of channels for which correction data is following
+		uint8_t status;						///< DGPS correction type status, 00:None, 01:PR+PRR correction
+		uint16_t res1;						///< Reservec
+
+		/**
+		 * \brief The structure definition of a particular GPS
+		 */
+		struct
+		{
+			uint8_t sv_id;					///< Satellite ID
+			uint8_t flags;					///< Bitmask/channel number
+			uint16_t age_c;					///< Age of the latest correction data
+			float prc;						///< Pseudo range correction
+			float prrc;						///< Pseudo range rate correction
+		}chan_data[16];
+	}ubx_nav_dgps_t;
+
+	/**
 	 * \brief The U-Blox MON-RXR message structure definition
 	 */
 	typedef struct
@@ -752,6 +781,17 @@ TIM 0x0D Timing Messages: Timepulse Output, Timemark Results
 		uint8_t class_id;
 		uint8_t msg_id;
 	}ubx_ack_ack_t;
+
+	/** 
+	 *\brief The U-Blox CFG-CFG message structure definition
+	 */
+	typedef struct
+	{
+		uint32_t clear_mask;				///< Mask with configuration sub-sections to clear, i.e. loading default config to permanent non-volatile memory
+		uint32_t save_mask;					///< Mask with configuration sub-sections to save, i.e. saving current config to permanent non-volatile memory
+		uint32_t load_mask;					///< Mask with configuration sub-sections to load, i.e. loading permanent config to current config
+		uint8_t device_mask;				///< Mask which selects the devices for this command
+	}ubx_cfg_cfg_t;
 
 
 #define NO_GPS 0							///< No GPS
@@ -865,6 +905,7 @@ typedef struct
 	uint8_t loop_nav_timeutc;					///< Counter used to print one message every num_skipped_msg
 	uint8_t loop_mon_rxr;						///< Counter used to print one message every num_skipped_msg
 	uint8_t loop_sv_info;						///< Counter used to print one message every num_skipped_msg
+	uint8_t loop_nav_dgps;						///< Counter used to print one message every num_skipped_msg
 	
 	bool print_nav_on_debug;					///< Flag to print messages on debug console
 	bool debug;									///< Indicates if debug messages should be printed
