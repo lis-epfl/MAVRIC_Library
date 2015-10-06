@@ -190,12 +190,6 @@ bool flow_update(flow_t* flow)
 					break;
 
 					default:
-						/*if( data_msg.seqnr == 51 )
-						{
-							int16_t tmp1 = endian_rev16(flow->of.x[20]); 
-							int16_t tmp2 = endian_rev16(flow->of.x[50]);
-						}
-						*/
 						if( data_msg.seqnr < (flow->n_packets - 1) )
 						{
 							// not last packet
