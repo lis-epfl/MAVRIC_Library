@@ -45,19 +45,9 @@
 
 extern "C" 
 {
-	#include "spektrum.h"
-
-	// #include "usart.h"
-
 	#include "time_keeper.h"
 	#include "gpio.h"
-	#include "sysclk.h"
-
 	#include "print_util.h"
-
-	// #include "delay.h"
-
-	#include "led.h"
 }
 
 Spektrum_satellite* spek_sat;
@@ -254,88 +244,98 @@ void Spektrum_satellite::handle_interrupt()
 		buffer_put(&receiver_, c1);
 		
 		// If frame is complete, decode channels
-		if ( (buffer_bytes_available(&receiver_) == 16) && (protocol_ != RADIO_PROTOCOL_UNKNOWN)) 
+		if( buffer_bytes_available(&receiver_) == 16 )
 		{
-			// first two bytes are status info,
-			c1 = buffer_get(&receiver_);
-			c2 = buffer_get(&receiver_);
-			
-			if ((protocol_ == RADIO_PROTOCOL_DSM2_10BITS) && ((c1 != 0x03) || (c2 != 0xB2))) //correspond to DSM2 10bits header
+			if( protocol_ != RADIO_PROTOCOL_UNKNOWN ) 
 			{
-				buffer_clear(&receiver_);
-				return;
-			}
-				
-			for (i = 0; i < 7; i++) // 7 channels per frame
-			{
+				// first two bytes are status info,
 				c1 = buffer_get(&receiver_);
 				c2 = buffer_get(&receiver_);
-				sw = (uint16_t)c1 << 8 | ((uint16_t)c2);
-								
-				if ( protocol_ == RADIO_PROTOCOL_DSM2_10BITS )  //10 bits
+				
+				if( (protocol_ == RADIO_PROTOCOL_DSM2_10BITS) && ((c1 != 0x03) || (c2 != 0xB2)) ) //correspond to DSM2 10bits header
 				{
-					// highest bit is frame 0/1, bits 2-6 are channel number
-					channel = ((sw >> 10))&0x0f;
-					
-					// 10 bits per channel
-					channels_[channel] = ((int16_t)(sw&0x3ff) - 512) * 2;
-				} 
-				else if ( protocol_ == RADIO_PROTOCOL_DSM2_11BITS ) //11bits
-				{
-					// highest bit is frame 0/1, bits 3-7 are channel number
-					channel = ((sw >> 11))&0x0f;
-					
-					// 11 bits per channel
-					channels_[channel] = ((int16_t)(sw&0x7ff) - 1024);
+					buffer_clear(&receiver_);
+					return;
 				}
-			}//end of for loop	
-		
-			// update timing
-			dt_ 			= now - last_update_;
-			last_update_	= now;
-		}
-		else if ( buffer_bytes_available(&receiver_) == 16)
-		{
-			//Since protocol is unknown
-			//check the radio protocol
+					
+				for (i = 0; i < 7; i++) // 7 channels per frame
+				{
+					c1 = buffer_get(&receiver_);
+					c2 = buffer_get(&receiver_);
+					sw = (uint16_t)c1 << 8 | ((uint16_t)c2);
+									
+					if ( protocol_ == RADIO_PROTOCOL_DSM2_10BITS )  //10 bits
+					{
+						// highest bit is frame 0/1, bits 2-6 are channel number
+						channel = ((sw >> 10))&0x0f;
+						
+						// 10 bits per channel
+						channels_[channel] = ((int16_t)(sw&0x3ff) - 512) * 2;
+					} 
+					else if ( protocol_ == RADIO_PROTOCOL_DSM2_11BITS ) //11bits
+					{
+						// highest bit is frame 0/1, bits 3-7 are channel number
+						channel = ((sw >> 11))&0x0f;
+						
+						// 11 bits per channel
+						channels_[channel] = ((int16_t)(sw&0x7ff) - 1024);
+					}
+				}
 			
-			// first two bytes are status info,
-			c1 = buffer_get(&receiver_);
-			c2 = buffer_get(&receiver_);
-			
-			if (c1 == 0x03 && c2 == 0xB2) //correspond to DSM2 10bits header
-			{
-				protocol_proba_.proba_10bits++;
-				//empty_the buffer, since we don't decode channels yet
-				buffer_clear(&receiver_);
+				// Update timing
+				dt_ 			= now - last_update_;
+				last_update_	= now;
 			}
 			else
-			{
-				protocol_proba_.proba_11bits++;
-				//empty_the buffer, since we don't decode channels yet
-				buffer_clear(&receiver_);
-			}
-			
-			//after having received enough frames, determine which protocol is used
-			if (protocol_proba_.min_nb_frames != 0 )
-			{
-				protocol_proba_.min_nb_frames--;
-			}
-			else
-			{
-				//is the probability of one protocol at least 2 times bigger than for the other one ?
-				if (protocol_proba_.proba_10bits > 2*protocol_proba_.proba_11bits)
+			{			
+				// The protocol is unknown => check the radio protocol
+				
+				// First two bytes are status info,
+				c1 = buffer_get(&receiver_);
+				c2 = buffer_get(&receiver_);
+				
+				// Increment probability for one of the protocols
+				if (c1 == 0x03 && c2 == 0xB2)
 				{
-					protocol_ = RADIO_PROTOCOL_DSM2_10BITS;
+					// Increment proba for DSM2_10BITS
+					protocol_proba_.proba_10bits++;
+
+					// Empty_the buffer, because we don't know the protocol yet
+					buffer_clear(&receiver_);
 				}
-				else if (protocol_proba_.proba_11bits > 2*protocol_proba_.proba_10bits)
+				else
 				{
-					protocol_ = RADIO_PROTOCOL_DSM2_11BITS;
+					// Increment proba for DSM2_11BITS
+					protocol_proba_.proba_11bits++;
+					
+					// Empty_the buffer, because we don't know the protocol yet
+					buffer_clear(&receiver_);
 				}
-				else //otherwise redo this probability check for 10 other frames
+				
+				// Check if enough frames were received
+				if (protocol_proba_.min_nb_frames > 0 )
 				{
-					protocol_proba_.min_nb_frames = 10;
-				}			
+					protocol_proba_.min_nb_frames--;
+				}
+				else
+				{
+					// Once enough frames received, determine which protocol is used
+					if (protocol_proba_.proba_10bits > 2 * protocol_proba_.proba_11bits)
+					{
+						// DSM2_10BITS is more probable
+						protocol_ = RADIO_PROTOCOL_DSM2_10BITS;
+					}
+					else if (protocol_proba_.proba_11bits > 2 * protocol_proba_.proba_10bits)
+					{
+						// DSM2_11BITS is more probable
+						protocol_ = RADIO_PROTOCOL_DSM2_11BITS;
+					}
+					else 
+					{
+						// No clear result => redo this probability check for 10 other frames
+						protocol_proba_.min_nb_frames = 10;
+					}			
+				}
 			}
 		}
 	}

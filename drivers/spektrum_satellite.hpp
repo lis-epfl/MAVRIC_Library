@@ -134,7 +134,6 @@ private:
 	uint32_t 				dt_;					///< Duration between two updates
 	dsm2_protocol_proba_t	protocol_proba_;		///< Indicates number of frames received
 	radio_protocol_t		protocol_;				///< Defines in which mode the remote is configured
-
 };
 
 
