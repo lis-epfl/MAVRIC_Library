@@ -66,7 +66,8 @@ ubx_mon_rxr_struct_t ubx_mon_rxr_message[2];		///<  The MON RXR message buffer
 ubx_tim_tp_t ubx_tim_tp_message[2];					///<  The TIM TP message buffer
 ubx_tim_vrfy_t ubx_tim_vrfy_message[2];				///<  The TIM VRFY message buffer
 ubx_nav_timeutc_t ubx_nav_timeutc_message[2];		///<  The NAV TIMEUTC message buffer
-ubx_ack_t ubx_ack_message[2];						///< The ACK ACK message buffer
+ubx_ack_t ubx_ack_message[2];						///<  The ACK ACK message buffer
+ubx_nav_dgps_t ubx_nav_dgps_message[2];				///<  The NAV DGPS message buffer
 
 // NAV-POSLLH
 ubx_nav_pos_llh_t * ubx_current_pos_llh_message = &ubx_pos_llh_message[0];						///<  The pointer to the Posllh message that is being filled (not usable)
@@ -128,9 +129,16 @@ ubx_nav_timeutc_t *ubx_current_nav_timeutc_message = &ubx_nav_timeutc_message[0]
 ubx_nav_timeutc_t *ubx_last_nav_timeutc_message = &ubx_nav_timeutc_message[1];					///<  The pointer to the last NAV TIMEUTC message that was completed
 uint16_t ubx_number_of_valid_nav_timeutc_message = 0;											///<  Number of valid NAV TIMEUTC message received
 
+// ACK-ACK
 ubx_ack_t *ubx_current_ack_message = &ubx_ack_message[0];										///< The pointer to the ACK ACK message that is being filled (not usable)
 ubx_ack_t *ubx_last_ack_message = &ubx_ack_message[1];											///< The pointer to the last ACK ACK message that was completed
 uint16_t ubx_number_of_valid_ack_message = 0;													///< Number of valid ACK message received
+
+// NAV-TIMEUTC
+ubx_nav_dgps_t *ubx_current_nav_dgps_message = &ubx_nav_dgps_message[0];						///<  The pointer to the NAV DGPS message that is being filled (not usable)
+ubx_nav_dgps_t *ubx_last_nav_dgps_message = &ubx_nav_dgps_message[1];							///<  The pointer to the last NAV DGPS message that was completed
+uint16_t ubx_number_of_valid_nav_dgps_message = 0;												///<  Number of valid NAV DGPS message received
+
 
 // The date is defined as global parameter such that we can retrieve its value 
 //  without the need of pointers, e.g. when working with fat_fs, in diskio function
@@ -539,6 +547,19 @@ static void ubx_send_message_cfg_usb(byte_stream_t *stream, ubx_cfg_usb_t *gps_c
 
 
 /**
+ * \brief	To send the CFG-CFG configuration, if the ubx_cfg_usb_t pointer is null,
+ *			asks for the current settings
+ *
+ * Class:	0x06	UBX_CLASS_CFG
+ * Msg_id:	0x09	MSG_CFG_CFG
+ *
+ * \param	stream				The pointer to the stream structure
+ * \param	gps_cfg_cfg			The USB configuration sent
+ */
+static void ubx_send_message_cfg_cfg(byte_stream_t *stream, ubx_cfg_cfg_t *gps_cfg_cfg);
+
+
+/**
  * \brief	To send the NAV messages that we want to receive
  *
  * Class:	0x06	UBX_CLASS_CFG
@@ -660,13 +681,21 @@ static ubx_nav_timeutc_t * ubx_get_nav_timeutc(void);
 */
 static ubx_ack_t * ubx_get_ack(void);
 
+/**
+* \brief	This function returns a pointer to the last NAV DGPS message that was received
+* Warning: the values of the message must be read very quickly after the call to this function as buffer may be swapped in an interruption
+*
+* \return	A pointer to the last valid status message, or 0.
+*/
+static ubx_nav_dgps_t * ubx_get_nav_dgps(void);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
 static void gps_ublox_reset(gps_t *gps, gps_engine_setting_t engine_nav_setting)
 {
-	gps_ublox_configure_gps(gps);
+	//gps_ublox_configure_gps(gps);
 	
 	gps->next_fix = false;
 	gps->have_raw_velocity = false;
@@ -904,6 +933,29 @@ static bool gps_ublox_message_decode(gps_t *gps)
 								print_util_dbg_print_num(gps->payload_length,10);
 								print_util_dbg_print(" should be:");
 								print_util_dbg_print_num(UBX_SIZE_NAV_TIMEUTC,10);
+								print_util_dbg_print("\r\n");
+								gps->step = CHECK_IF_PREAMBLE_1;
+								goto reset;
+							}
+							break;
+
+						case MSG_NAV_DGPS:
+							if ( (gps->payload_length == UBX_SIZE_NAV_DGPS) || (gps->payload_length == 16) )
+							{
+								ubx_current_message = (uint8_t **)&ubx_current_nav_dgps_message;
+								ubx_last_message = (uint8_t **)&ubx_last_nav_dgps_message;
+								ubx_valid_message = & ubx_number_of_valid_nav_dgps_message;
+							}
+							else
+							{
+								print_util_dbg_print("Wrong NAV DGPS message 0x");
+								print_util_dbg_print_num(gps->ubx_class,16);
+								print_util_dbg_print(" Msg id: 0x");
+								print_util_dbg_print_num(gps->msg_id,16);
+								print_util_dbg_print(" Received size:");
+								print_util_dbg_print_num(gps->payload_length,10);
+								print_util_dbg_print(" should be:");
+								print_util_dbg_print_num(UBX_SIZE_NAV_DGPS,10);
 								print_util_dbg_print("\r\n");
 								gps->step = CHECK_IF_PREAMBLE_1;
 								goto reset;
@@ -1262,6 +1314,7 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 	ubx_nav_vel_ned_t *gps_vel_ned;
 	ubx_nav_sv_info_t *gps_sv_info;
 	ubx_nav_timeutc_t *gps_nav_timeutc;
+	ubx_nav_dgps_t *gps_nav_dgps;
 
 	if (ubx_class == UBX_CLASS_ACK)
 	{
@@ -1714,7 +1767,49 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 				
 			}
 			break;
-			
+		
+		case MSG_NAV_DGPS:
+			gps_nav_dgps = ubx_get_nav_dgps();
+			if (gps_nav_dgps)
+			{
+				++gps->loop_nav_dgps;
+				gps->loop_nav_dgps %= gps->num_skipped_msg;
+				if (gps->print_nav_on_debug && (gps->loop_nav_dgps == 0))
+				{
+					print_util_dbg_print("MSG_NAV_DGPS:");
+					print_util_dbg_print("itow: ");
+					print_util_dbg_print_num(gps_nav_dgps->itow,10);
+					print_util_dbg_print(", age:");
+					print_util_dbg_print_num(gps_nav_dgps->age,10);
+					print_util_dbg_print(", base_id:");
+					print_util_dbg_print_num(gps_nav_dgps->base_id,10);
+					print_util_dbg_print(", base_health :");
+					print_util_dbg_print_num(gps_nav_dgps->base_health,10);
+					print_util_dbg_print(", num_channel :");
+					print_util_dbg_print_num(gps_nav_dgps->num_channel,10);
+					print_util_dbg_print(", status :");
+					print_util_dbg_print_num(gps_nav_dgps->status,10);
+					print_util_dbg_print("\r\n");
+					for (int i = 0; i < min(gps_nav_dgps->num_channel,16); ++i)
+					{
+						print_util_dbg_print("Channel:");
+						print_util_dbg_print_num(i,10);
+						print_util_dbg_print("svid:");
+						print_util_dbg_print_num(gps_nav_dgps->chan_data[i].sv_id,10);
+						print_util_dbg_print("flags:");
+						print_util_dbg_print_num(gps_nav_dgps->chan_data[i].flags,10);
+						print_util_dbg_print("age_c:");
+						print_util_dbg_print_num(gps_nav_dgps->chan_data[i].age_c,10);
+						print_util_dbg_print("prc:");
+						print_util_dbg_print_num(gps_nav_dgps->chan_data[i].prc,10);
+						print_util_dbg_print("prrc:");
+						print_util_dbg_print_num(gps_nav_dgps->chan_data[i].prrc,10);
+						print_util_dbg_print("\r\n");
+					}
+				}
+			}
+			break;
+
 		default:
 			if (gps->debug)
 			{
@@ -2525,6 +2620,35 @@ static void ubx_send_message_cfg_usb(byte_stream_t *stream, ubx_cfg_usb_t *gps_c
 	ubx_send_cksum(stream,ck_a,ck_b);
 }
 
+static void ubx_send_message_cfg_cfg(byte_stream_t *stream, ubx_cfg_cfg_t *gps_cfg_cfg)
+{
+	uint8_t ck_a = 0, ck_b = 0;
+
+	uint8_t msg_class = UBX_CLASS_CFG;
+	uint8_t msg_id = MSG_CFG_CFG;
+	uint16_t size;
+
+	if (gps_cfg_cfg != NULL)
+	{
+		size = UBX_SIZE_CFG_CFG;
+	}
+	else
+	{
+		size = 0;
+	}
+	ubx_send_header(stream, msg_class, msg_id, size, &ck_a, &ck_b);
+	
+	if (gps_cfg_cfg != NULL)
+	{
+		ubx_send_uint32(stream, gps_cfg_cfg->clear_mask, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_cfg->save_mask, &ck_a, &ck_b);
+		ubx_send_uint32(stream, gps_cfg_cfg->load_mask, &ck_a, &ck_b);
+		ubx_send_uint8(stream, gps_cfg_cfg->device_mask, &ck_a, &ck_b);
+	}
+
+	ubx_send_cksum(stream,ck_a,ck_b);
+}
+
 static void ubx_configure_message_rate(byte_stream_t *stream, uint8_t msg_class, uint8_t msg_id, uint8_t rate)
 {
 	uint8_t ck_a = 0, ck_b = 0;
@@ -2699,6 +2823,18 @@ static ubx_ack_t * ubx_get_ack()
 	}
 }
 
+static ubx_nav_dgps_t * ubx_get_nav_dgps()
+{
+	if (ubx_number_of_valid_nav_dgps_message)
+	{
+		return ubx_last_nav_dgps_message;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -2784,6 +2920,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 	ubx_cfg_tp_t gps_cfg_tp;
 	ubx_cfg_tp5_t gps_cfg_tp5;
 	ubx_cfg_usb_t gps_cfg_usb;
+	ubx_cfg_cfg_t gps_cfg_cfg;
 	
 	if (!gps->acknowledged_received)
 	{
@@ -3039,7 +3176,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 					break;
 					
 				case 8:
-					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, 5, 0);
+					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, 0x05, 0);
 					gps->config_loop_count--;
 					break;
 					
@@ -3049,11 +3186,6 @@ void gps_ublox_configure_gps(gps_t *gps)
 					break;
 				case 10:
 					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, 0x20, 0);
-					gps->config_loop_count--;
-					break;
-					
-				case 11:
-					ubx_configure_message_rate(&gps->gps_stream_out, UBX_CLASS_MON, 0x21, 0);
 					gps->config_nav_msg_count = 0;
 					break;
 			}
@@ -3157,7 +3289,7 @@ void gps_ublox_configure_gps(gps_t *gps)
 			gps_nav_expert_settings.min_cn_o = 0x07;
 			gps_nav_expert_settings.res3 = 0x00;
 			gps_nav_expert_settings.ini_fix_3d = 0x00;
-			gps_nav_expert_settings.res4 = 0x00;
+			gps_nav_expert_settings.res4 = 0x01;
 			gps_nav_expert_settings.res5 = 0x00;
 			gps_nav_expert_settings.res6 = 0x00;
 			gps_nav_expert_settings.wkn_roll_over = 0x0643;
@@ -3420,11 +3552,32 @@ void gps_ublox_configure_gps(gps_t *gps)
 			gps_cfg_usb.res1 = 0x0000;
 			gps_cfg_usb.res2 = 0x0000;
 			gps_cfg_usb.power_consumption = 0x0064;
-			gps_cfg_usb.flags = 0x00000;
+			gps_cfg_usb.flags = 0x0000;
+			for (i=0; i<32; i++)
+			{
+				gps_cfg_usb.vendor_string[i] = 0;
+			}
+			for (i=0; i<32; i++)
+			{
+				gps_cfg_usb.product_string[i] = 0;
+			}
+			for (i=0; i<32; i++)
+			{
+				gps_cfg_usb.serial_number[i] = 0;
+			}
 			strcpy(gps_cfg_usb.vendor_string, "u-blox AG - www.u-blox.com");
 			strcpy(gps_cfg_usb.product_string, "u-blox 6  -  GPS Receiver");
 			strcpy(gps_cfg_usb.serial_number, "");
 			ubx_send_message_cfg_usb(&gps->gps_stream_out, &gps_cfg_usb);
+			break;
+		case 23:
+			// Saving configuration to flash
+			print_util_dbg_print("Saving configuration to permanent memory...\r\n");
+			gps_cfg_cfg.clear_mask = 0x00000000;
+			gps_cfg_cfg.save_mask = 0x0000061F;
+			gps_cfg_cfg.load_mask = 0x0000001F;
+			gps_cfg_cfg.device_mask = 0x17;
+			ubx_send_message_cfg_cfg(&gps->gps_stream_out, &gps_cfg_cfg);
 			break;
 			
 		default:
@@ -3457,7 +3610,7 @@ void gps_ublox_update(gps_t *gps)
 			
 			gps->healthy = false;
 
-			//gps_ublox_reset(gps, GPS_ENGINE_AIRBORNE_4G);
+			gps_ublox_reset(gps, GPS_ENGINE_AIRBORNE_4G);
 			gps->idle_timer = tnow;
 		}
 	}

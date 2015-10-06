@@ -45,12 +45,22 @@
 #define GPS_UBLOX_TELEMETRY_H_
 
 #include "mavlink_stream.h"
+#include "mavlink_message_handler.h"
 #include "gps_ublox.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+/**
+ * \brief	Initialize the MAVLink communication module for the GPS
+ * 
+ * \param	gps						The pointer to the gps structure
+ * \param	message_handler			The pointer to the MAVLink message handler
+ *
+ * \return	True if the init succeed, false otherwise
+ */
+bool gps_ublox_telemetry_init(gps_t* gps, mavlink_message_handler_t* message_handler);
 
 /**
  * \brief	Function to send the MAVLink gps raw message
