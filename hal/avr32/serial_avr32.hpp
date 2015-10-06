@@ -124,7 +124,7 @@ public:
 	 * @return  true Success
 	 * @return  false Error
 	 */
-	virtual bool init(void);
+	bool init(void);
 
 
 	/**
@@ -132,7 +132,7 @@ public:
 	 * 
 	 * @return 	Number of incoming bytes available
 	 */	
-	virtual uint32_t readable(void);
+	uint32_t readable(void);
 
 
 	/**
@@ -140,7 +140,7 @@ public:
 	 * 
 	 * @return 	Number of bytes available for writing
 	 */	
-	virtual uint32_t writeable(void);
+	uint32_t writeable(void);
 
 
 	/**
@@ -148,7 +148,7 @@ public:
 	 * 
 	 * @return 	Number of bytes available for writing
 	 */	
-	virtual void flush(void);
+	void flush(void);
 
 
 	/**
@@ -164,7 +164,7 @@ public:
 	 * @return 	true		Success
 	 * @return 	false		Failed
 	 */
-	virtual bool attach(serial_interrupt_callback_t func); 
+	bool attach(serial_interrupt_callback_t func); 
 
 
 	/**
@@ -176,7 +176,7 @@ public:
 	 * @return 	true		Data successfully written
 	 * @return 	false		Data not written
 	 */
-	virtual bool write(const uint8_t* bytes, const uint32_t size=1);
+	bool write(const uint8_t* bytes, const uint32_t size=1);
 
 
 	/**
@@ -188,7 +188,7 @@ public:
 	 * @return 	true		Data successfully read
 	 * @return 	false		Data not read
 	 */	
-	virtual bool read(uint8_t* bytes, const uint32_t size=1);
+	bool read(uint8_t* bytes, const uint32_t size=1);
 
 
 private:

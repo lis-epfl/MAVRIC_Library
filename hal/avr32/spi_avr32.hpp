@@ -120,7 +120,7 @@ public:
 	 * @return  true Success
 	 * @return  false Error
 	 */
-	virtual bool init(void);
+	bool init(void);
 
 
 	/**
@@ -132,7 +132,7 @@ public:
 	 * @return 	true		Data successfully written
 	 * @return 	false		Data not written
 	 */
-	virtual bool write(const uint8_t* bytes, const uint32_t size=1);
+	bool write(const uint8_t* bytes, const uint32_t size=1);
 
 
 	/**
@@ -145,7 +145,7 @@ public:
 	 * @return 	true		Data successfully read
 	 * @return 	false		Data not read
 	 */	
-	virtual bool read(uint16_t command, uint8_t* bytes, const uint32_t size=1);
+	bool read(uint16_t command, uint8_t* bytes, const uint32_t size=1);
 
 	/**
 	 * @brief 	Write and Read data to/from the SPI bus
@@ -157,7 +157,7 @@ public:
 	 * @return 	true		Success
 	 * @return 	false		Failed
 	 */	
-	virtual bool transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbytes);
+	bool transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbytes);
 
 
 private:

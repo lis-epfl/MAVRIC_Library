@@ -78,7 +78,7 @@ public:
 	 * @return  true Success
 	 * @return  false Error
 	 */
-	virtual bool init(void);
+	bool init(void);
 
 
 	/**
@@ -89,7 +89,7 @@ public:
 	 * @return 	True		Slave found
 	 * @return 	False		Slave not found
 	 */	
-	virtual bool probe(uint32_t address);
+	bool probe(uint32_t address);
 
 
 	/**
@@ -102,7 +102,7 @@ public:
 	 * @return 	True		Data successfully written
 	 * @return 	False		Data not written
 	 */
-	virtual bool write(const uint8_t *buffer, uint32_t nbytes, uint32_t address);
+	bool write(const uint8_t *buffer, uint32_t nbytes, uint32_t address);
 
 
 	/**
@@ -115,7 +115,7 @@ public:
 	 * @return 	True		Data successfully read
 	 * @return 	False		Data not read
 	 */	
-	virtual bool read(uint8_t *buffer, uint32_t nbytes, uint32_t address);
+	bool read(uint8_t *buffer, uint32_t nbytes, uint32_t address);
 
 
 private:

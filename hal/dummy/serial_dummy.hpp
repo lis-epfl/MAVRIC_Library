@@ -79,7 +79,7 @@ public:
 	 * @return  true Success
 	 * @return  false Error
 	 */
-	virtual bool init(void);
+	bool init(void);
 
 
 	/**
@@ -87,7 +87,7 @@ public:
 	 * 
 	 * @return 	Number of incoming bytes available
 	 */	
-	virtual uint32_t readable(void);
+	uint32_t readable(void);
 
 
 	/**
@@ -95,7 +95,7 @@ public:
 	 * 
 	 * @return 	Number of bytes available for writing
 	 */	
-	virtual uint32_t writeable(void);
+	uint32_t writeable(void);
 
 
 	/**
@@ -103,7 +103,7 @@ public:
 	 * 
 	 * @return 	Number of bytes available for writing
 	 */	
-	virtual void flush(void);
+	void flush(void);
 
 	/**
 	 * @brief 	Write a byte on the serial line
@@ -113,7 +113,7 @@ public:
 	 * @return 	true		Data successfully written
 	 * @return 	false		Data not written
 	 */
-	virtual bool put(const uint8_t byte);
+	bool put(const uint8_t byte);
 
 
 	/**
@@ -124,7 +124,7 @@ public:
 	 * @return 	true		Data successfully read
 	 * @return 	false		Data not read
 	 */	
-	virtual bool get(uint8_t& byte);
+	bool get(uint8_t& byte);
 
 private:
 	serial_dummy_conf_t config_;
