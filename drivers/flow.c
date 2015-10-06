@@ -169,7 +169,7 @@ bool flow_update(flow_t* flow)
 							// not last packet
 							for ( int i = 0; i < MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
 							{
-								flow->of_loc.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+								flow->of_loc_tmp.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
 							}
 						}
 						else if( data_msg.seqnr < flow->n_packets )
@@ -177,14 +177,14 @@ bool flow_update(flow_t* flow)
 							// last packet
 							for ( int i = 0; i < flow->size_data; ++i)
 							{
-								flow->of_loc.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+								flow->of_loc_tmp.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
 							}
 
 							// swap bytes
 							for (int i = 0; i < flow->of_count; ++i)
 							{
-								flow->of_loc.x[i] = endian_rev16(flow->of_loc.x[i]);
-								flow->of_loc.y[i] = endian_rev16(flow->of_loc.y[i]);
+								flow->of_loc.x[i] = endian_rev16(flow->of_loc_tmp.x[i]);
+								flow->of_loc.y[i] = endian_rev16(flow->of_loc_tmp.y[i]);
 							}
 						}
 					break;
@@ -195,7 +195,7 @@ bool flow_update(flow_t* flow)
 							// not last packet
 							for ( int i = 0; i < MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
 							{
-								flow->of.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+								flow->of_tmp.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
 							}
 						}
 						else if( data_msg.seqnr == (flow->n_packets-1) )
@@ -203,16 +203,15 @@ bool flow_update(flow_t* flow)
 							// last packet
 							for ( int i = 0; i < flow->size_data % MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN; ++i)
 							{
-								flow->of.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
+								flow->of_tmp.data[i + data_msg.seqnr * MAVLINK_MSG_ENCAPSULATED_DATA_FIELD_DATA_LEN] = data_msg.data[i];
 							}
 
 							// swap bytes
-							// for (int i = 0; i < flow->of_count; ++i)
-							// for (int i = 0; i < 125; ++i)
-							// {
-								// flow->of.x[i] = endian_rev16(flow->of.x[i]);
-								// flow->of.y[i] = endian_rev16(flow->of.y[i]);
-							// }
+							for (int i = 0; i < flow->of_count; ++i)
+							{
+								flow->of.x[i] = endian_rev16(flow->of_tmp.x[i]);
+								flow->of.y[i] = endian_rev16(flow->of_tmp.y[i]);
+							}
 						}
 					break;
 				}
