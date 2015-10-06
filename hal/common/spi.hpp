@@ -50,47 +50,47 @@ class Spi
 public:
 
 	/**
-	 * @brief 	Hardware initialization
+	 * \brief 	Hardware initialization
 	 * 
-	 * @return  true 		Success
-	 * @return  false 		Error
+	 * \return  true 		Success
+	 * \return  false 		Error
 	 */
 	virtual bool init(void) = 0;
 
 
 	/**
-	 * @brief 	Write data to the SPI bus
+	 * \brief 	Write data to the SPI bus
 	 * 
-	 * @param 	out_buffer 	Data buffer
-	 * @param 	nbytes 		Number of bytes to write	
+	 * \param 	out_buffer 	Data buffer
+	 * \param 	nbytes 		Number of bytes to write	
 	 * 
-	 * @return 	true		Success
-	 * @return 	false		Failed
+	 * \return 	true		Success
+	 * \return 	false		Failed
 	 */	
 	virtual bool write(uint8_t* out_buffer, uint32_t nbytes) = 0;
 
 
 	/**
-	 * @brief 	Read data from the SPI bus
+	 * \brief 	Read data from the SPI bus
 	 * 
-	 * @param 	in_buffer 	Data buffer
-	 * @param 	nbytes 		Number of bytes to read	
+	 * \param 	in_buffer 	Data buffer
+	 * \param 	nbytes 		Number of bytes to read	
 	 * 
-	 * @return 	true		Success
-	 * @return 	false		Failed
+	 * \return 	true		Success
+	 * \return 	false		Failed
 	 */	
 	virtual bool read(uint8_t* in_buffer, uint32_t nbytes) = 0;
 
 
 	/**
-	 * @brief 	Write and Read data to/from the SPI bus
+	 * \brief 	Write and Read data to/from the SPI bus
 	 * 
-	 * @param 	out_buffer 	Data buffer (output)
-	 * @param 	in_buffer 	Data buffer (input)	
-	 * @param 	nbytes 		Number of bytes to write/read	
+	 * \param 	out_buffer 	Data buffer (output)
+	 * \param 	in_buffer 	Data buffer (input)	
+	 * \param 	nbytes 		Number of bytes to write/read	
 	 * 
-	 * @return 	true		Success
-	 * @return 	false		Failed
+	 * \return 	true		Success
+	 * \return 	false		Failed
 	 */	
 	virtual bool transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbytes) = 0;
 

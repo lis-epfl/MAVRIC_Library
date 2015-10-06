@@ -107,55 +107,55 @@ class Spi_avr32: public Spi
 public:
 
 	/**
-	 * @brief  	Initialises the peripheral
+	 * \brief  	Initialises the peripheral
 	 * 
-	 * @param 	config 		Device configuration
+	 * \param 	config 		Device configuration
 	 */
 	Spi_avr32(spi_avr32_conf_t config);
 
 
 	/**
-	 * @brief 	Hardware initialization
+	 * \brief 	Hardware initialization
 	 * 
-	 * @return  true Success
-	 * @return  false Error
+	 * \return  true Success
+	 * \return  false Error
 	 */
 	bool init(void);
 
 
 	/**
-	 * @brief 	Write bytes on the spi line
+	 * \brief 	Write bytes on the spi line
 	 * 
-	 * @param 	byte 		Outgoing bytes
-	 * @param 	size 		Number of bytes to write
+	 * \param 	byte 		Outgoing bytes
+	 * \param 	size 		Number of bytes to write
 	 * 
-	 * @return 	true		Data successfully written
-	 * @return 	false		Data not written
+	 * \return 	true		Data successfully written
+	 * \return 	false		Data not written
 	 */
 	bool write(const uint8_t* bytes, const uint32_t size=1);
 
 
 	/**
-	 * @brief 	Read bytes from the spi line
+	 * \brief 	Read bytes from the spi line
 	 * 
-	 * @param 	command		Reading command
-	 * @param 	bytes 		Incoming bytes
-	 * @param 	size 		Number of bytes to read
+	 * \param 	command		Reading command
+	 * \param 	bytes 		Incoming bytes
+	 * \param 	size 		Number of bytes to read
 	 * 
-	 * @return 	true		Data successfully read
-	 * @return 	false		Data not read
+	 * \return 	true		Data successfully read
+	 * \return 	false		Data not read
 	 */	
 	bool read(uint16_t command, uint8_t* bytes, const uint32_t size=1);
 
 	/**
-	 * @brief 	Write and Read data to/from the SPI bus
+	 * \brief 	Write and Read data to/from the SPI bus
 	 * 
-	 * @param 	out_buffer 	Data buffer (output)
-	 * @param 	in_buffer 	Data buffer (input)	
-	 * @param 	nbytes 		Number of bytes to write/read	
+	 * \param 	out_buffer 	Data buffer (output)
+	 * \param 	in_buffer 	Data buffer (input)	
+	 * \param 	nbytes 		Number of bytes to write/read	
 	 * 
-	 * @return 	true		Success
-	 * @return 	false		Failed
+	 * \return 	true		Success
+	 * \return 	false		Failed
 	 */	
 	bool transfer(uint8_t* out_buffer, uint8_t* in_buffer, uint32_t nbytes);
 
