@@ -93,7 +93,8 @@ void fat_fs_mounting_mount(fat_fs_mounting_t* fat_fs_mounting, bool debug)
 
 		if (fat_fs_mounting->loop_count < 10)
 		{
-			fat_fs_mounting->fr = f_mount(&fat_fs_mounting->fs, "", 1);
+			// fat_fs_mounting->fr = f_mount(&fat_fs_mounting->fs, "", 1);
+			fat_fs_mounting->fr = f_mount(&fat_fs_mounting->fs, 0, 1);
 			
 			if (fat_fs_mounting->fr == FR_OK)
 			{
