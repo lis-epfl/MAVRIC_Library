@@ -47,7 +47,7 @@ extern "C"
 {
 	#include "spektrum.h"
 
-	#include "usart.h"
+	// #include "usart.h"
 
 	#include "time_keeper.h"
 	#include "gpio.h"
@@ -118,7 +118,7 @@ void spektrum_irq_callback(Serial* serial)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Spektrum_satellite::Spektrum_satellite(Serial_avr32& uart):
+Spektrum_satellite::Spektrum_satellite(Serial& uart):
 	uart_(uart)
 {}
 

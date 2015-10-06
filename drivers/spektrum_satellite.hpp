@@ -46,9 +46,7 @@
 
 
 #include "satellite.hpp"
-#include "serial_avr32.hpp"
-
-#include "satellite.hpp"
+#include "serial.hpp"
  
 extern "C" 
 {
@@ -66,7 +64,7 @@ public:
 	* 
 	* @param 	uart 	Reference to UART device 
 	*/
-	Spektrum_satellite(Serial_avr32& uart);
+	Spektrum_satellite(Serial& uart);
 
 	/**
 	* \brief Initialize UART receiver for Spektrum/DSM2 slave receivers
@@ -109,8 +107,8 @@ public:
 	void handle_interrupt();
 
 private:
-	Serial_avr32& 	uart_;					///< Declare the uart object associated with the spektrum satellite object
-	int16_t 		channel_center_[16];	///< Declare an array to store the central position of each channel
+	Serial&	uart_;					///< Declare the uart object associated with the spektrum satellite object
+	int16_t channel_center_[16];	///< Declare an array to store the central position of each channel
 
 };
 
