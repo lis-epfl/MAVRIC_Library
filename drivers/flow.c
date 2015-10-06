@@ -213,8 +213,7 @@ bool flow_update(flow_t* flow)
 							}
 
 							// swap bytes
-							// for (int i = 0; i < flow->of_count; ++i)
-							for (int i = 0; i < 125; ++i)
+							for (int i = 0; i < flow->of_count; ++i)
 							{
 								flow->of.x[i] = endian_rev16(flow->of_tmp.x[i]);
 								flow->of.y[i] = endian_rev16(flow->of_tmp.y[i]);
