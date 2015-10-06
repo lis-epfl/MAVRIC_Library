@@ -69,7 +69,7 @@ public:
 	/**
 	* \brief 	Virtual function to intialize a satellite receiver
 	*/
-	virtual bool init() = 0;
+	virtual bool init(void) = 0;
 
 
 	/**

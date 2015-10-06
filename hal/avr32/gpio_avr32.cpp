@@ -30,49 +30,122 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	i2c_dummy.cpp
+ * \file 	gpio_avr32.cpp
  * 
  * \author 	MAV'RIC Team
  *   
- * \brief 	Dummy implementation of I2C driver
+ * \brief 	Implementation of GPIO peripherals for avr32
  *
  ******************************************************************************/
 
-#include "i2c_dummy.hpp"
 
+#include "gpio_avr32.hpp"
+#include "gpio.h"
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-I2c_dummy::I2c_dummy(i2c_dummy_conf_t config)
+Gpio_avr32::Gpio_avr32(gpio_avr32_conf_t config)
 {
 	config_ = config;
 }
 
 
-bool I2c_dummy::init(void)
+bool Gpio_avr32::init(void)
 {
-	return config_.flag;
+	bool success = true;
+
+	success &= configure(config_.dir, config_.pull);
+
+	return success;
 }
 
 
-bool I2c_dummy::probe(uint32_t address)
+bool Gpio_avr32::configure(gpio_dir_t dir, gpio_pull_updown_t pull)
 {
-	return config_.flag;
+	uint32_t flags = 0;
+
+	// Keep config
+	config_.dir  = dir;
+	config_.pull = pull;
+
+	// Get Atmel flags
+	switch( dir )
+	{
+		case GPIO_INPUT:
+			flags |= GPIO_DIR_INPUT;
+		break;
+
+		case GPIO_OUTPUT:
+			flags |= GPIO_DIR_OUTPUT;
+		break;
+	}
+
+	switch( pull )
+	{
+		case GPIO_PULL_UPDOWN_NONE:
+		break;
+
+		case GPIO_PULL_UPDOWN_UP:
+			flags |= GPIO_PULL_UP;
+		break;
+
+		case GPIO_PULL_UPDOWN_DOWN:
+			flags |= GPIO_PULL_DOWN;
+		break;
+	}
+
+	// Write to pin
+	gpio_configure_pin(config_.pin, flags);
+
+	return true;	
 }
 
-
-bool I2c_dummy::write(const uint8_t *buffer, uint32_t nbytes, uint32_t address)
+bool Gpio_avr32::set_high(void)
 {
-	return config_.flag;
+	gpio_set_pin_high(config_.pin);
+
+	return true;
 }
 
 
-bool I2c_dummy::read(uint8_t *buffer, uint32_t nbytes, uint32_t address)
-{		
-	return config_.flag;
+bool Gpio_avr32::set_low(void)
+{
+	gpio_set_pin_low(config_.pin);
+
+	return true;
 }
+
+
+bool Gpio_avr32::toggle(void)
+{
+	gpio_toggle_pin(config_.pin);
+
+	return true;
+}
+
+
+bool Gpio_avr32::write(bool level)
+{
+	if( level == false )
+	{
+		set_low();
+	}
+	else
+	{
+		set_high();
+	}
+
+	return true;
+}
+
+
+bool Gpio_avr32::read(void)
+{
+	return gpio_get_pin_value(config_.pin);
+}
+
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION

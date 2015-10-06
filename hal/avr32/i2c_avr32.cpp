@@ -48,6 +48,10 @@ extern "C"
 	#include "sysclk.h"
 }
 
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
 I2c_avr32::I2c_avr32(i2c_avr32_conf_t config)
 {
 	config_ = config;
@@ -114,3 +118,7 @@ bool I2c_avr32::read(uint8_t *buffer, uint32_t nbytes, uint32_t address)
 	status = twim_read(twim_, buffer, nbytes, address, config_.tenbit);
 	return status_code_to_bool(status);
 }
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------

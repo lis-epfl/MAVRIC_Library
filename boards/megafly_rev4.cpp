@@ -47,6 +47,8 @@ extern "C"
 }
 
 Megafly_rev4::Megafly_rev4(imu_t& imu, megafly_rev4_conf_t config):
+	dsm_receiver_pin( Gpio_avr32(config.dsm_receiver_pin_config) ),
+	dsm_power_pin( Gpio_avr32(config.dsm_power_pin_config) ),
 	uart0( Serial_avr32(config.uart0_config) ), 
 	uart1( Serial_avr32(config.uart1_config) ), 
 	uart3( Serial_avr32(config.uart3_config) ), 
@@ -55,7 +57,7 @@ Megafly_rev4::Megafly_rev4(imu_t& imu, megafly_rev4_conf_t config):
 	magnetometer( Hmc5883l(i2c0, imu.raw_magneto) ),
 	lsm330dlc( Lsm330dlc(i2c0, imu.raw_accelero, imu.raw_gyro) ),
 	bmp085( Bmp085(i2c0) ),
-	spektrum_satellite( Spektrum_satellite(uart1) ),
+	spektrum_satellite( Spektrum_satellite(uart1, dsm_receiver_pin, dsm_power_pin) ),
 	imu_(imu)
 {}
 

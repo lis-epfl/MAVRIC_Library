@@ -36,7 +36,7 @@
  * \author Felix Schill
  * \author Julien Lecoeur
  *   
- * \brief This file is the driver for the remote control
+ * \brief Driver for spektrum satellite receiver
  * 
  ******************************************************************************/
 
@@ -46,73 +46,38 @@
 extern "C" 
 {
 	#include "time_keeper.h"
-	#include "gpio.h"
 	#include "print_util.h"
 }
 
 Spektrum_satellite* spek_sat;
 
-const uint8_t DSM_RECEIVER_PIN 			= AVR32_PIN_PD12;		///< Define the microcontroller pin map with the receiver pin
-const uint8_t RECEIVER_POWER_ENABLE_PIN = AVR32_PIN_PC01;		///< Define the microcontroller pin map with the receiver power enable pin
-
 
 //------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
+// SPECIAL FUNCTIONS DECLARATION
 //------------------------------------------------------------------------------
-
-/**
- * \brief Power-on the receiver
- */
-void spektrum_satellite_switch_on(void);
-
-
-/**
- * \brief Power-off the receiver
- */
-void spektrum_satellite_switch_off(void);
-
 
 /**
  * @brief  		  	Glue function for interrupt handling
  *
  * @param serial  	Peripheral
  */
-void spektrum_irq_callback(Serial* serial);
-
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-void spektrum_satellite_switch_on(void) 
-{
-	gpio_configure_pin(RECEIVER_POWER_ENABLE_PIN, GPIO_DIR_OUTPUT);
-	gpio_set_pin_low(RECEIVER_POWER_ENABLE_PIN);
-}
-
-
-void spektrum_satellite_switch_off(void) 
-{
-	gpio_configure_pin(RECEIVER_POWER_ENABLE_PIN, GPIO_DIR_OUTPUT);
-	gpio_set_pin_high(RECEIVER_POWER_ENABLE_PIN);
-}
-
-
 void spektrum_irq_callback(Serial* serial) 
 {
 	spek_sat->handle_interrupt();
-}
+};
 
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Spektrum_satellite::Spektrum_satellite(Serial& uart):
-	uart_(uart)
+Spektrum_satellite::Spektrum_satellite(Serial& uart, Gpio& receiver_pin, Gpio& power_pin):
+	uart_(uart),
+	receiver_pin_(receiver_pin),
+	power_pin_(power_pin)
 {}
 
-bool Spektrum_satellite::init() 
+bool Spektrum_satellite::init(void) 
 {	
 	// Init pointer to sat
 	spek_sat = this;
@@ -135,7 +100,7 @@ bool Spektrum_satellite::init()
     // Attach interrupt handler function to uart
     result &= uart_.attach( spektrum_irq_callback );
 
-	spektrum_satellite_switch_on();
+	switch_on();
 
 	return result;
 }
@@ -148,16 +113,16 @@ void Spektrum_satellite::bind(radio_protocol_t protocol)
 	print_util_dbg_print(" \n receive bind CMD \n");
 	
 	// Switch off satellite
-	spektrum_satellite_switch_off();
+	switch_off();
 	time_keeper_delay_ms(100);
 	
 	//set as input, pull down not to be floating
-	gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_DOWN);	
+	receiver_pin_.configure(GPIO_INPUT, GPIO_PULL_UPDOWN_DOWN);
 
-	spektrum_satellite_switch_on();
+	switch_on();
 
 	// Wait for startup signal
-	while ((gpio_get_pin_value(DSM_RECEIVER_PIN) == 0) && (i < 10000)) 
+	while( (receiver_pin_.read() == 0) && (i < 10000) ) 
 	{
 		i++;
 		time_keeper_delay_ms(1);
@@ -179,11 +144,9 @@ void Spektrum_satellite::bind(radio_protocol_t protocol)
 	// create 6 pulses with 250us period to set receiver to bind mode
 	for (i = 0; i < pulses; i++) 
 	{
-		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_OUTPUT | GPIO_PULL_DOWN);
-		// cpu_delay_us(113, cpu_freq); 
+		receiver_pin_.configure(GPIO_OUTPUT, GPIO_PULL_UPDOWN_DOWN);
 		time_keeper_delay_micros(113);
-		gpio_configure_pin(DSM_RECEIVER_PIN, GPIO_DIR_INPUT | GPIO_PULL_UP);	
-		// cpu_delay_us(118, cpu_freq);
+		receiver_pin_.configure(GPIO_INPUT, GPIO_PULL_UPDOWN_UP);
 		time_keeper_delay_micros(118);
 	}
 }
@@ -218,7 +181,7 @@ uint32_t Spektrum_satellite::dt(void) const
 }
 
 
-void Spektrum_satellite::handle_interrupt()
+void Spektrum_satellite::handle_interrupt(void)
 {
 	uint8_t c1, c2, i;
 	uint16_t sw;
@@ -340,3 +303,23 @@ void Spektrum_satellite::handle_interrupt()
 		}
 	}
 }
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+void Spektrum_satellite::switch_on(void) 
+{
+	power_pin_.configure(GPIO_OUTPUT, GPIO_PULL_UPDOWN_NONE);
+	power_pin_.set_low();
+}
+
+
+void Spektrum_satellite::switch_off(void) 
+{
+	power_pin_.configure(GPIO_OUTPUT, GPIO_PULL_UPDOWN_NONE);
+	power_pin_.set_high();
+}
+
+

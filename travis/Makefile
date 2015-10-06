@@ -56,7 +56,7 @@ LIB_SRCS += drivers/servos.c
 LIB_SRCS += drivers/servos_telemetry.c
 LIB_SRCS += drivers/sonar_i2cxl.c
 LIB_SRCS += drivers/sonar_telemetry.c
-# LIB_SRCS += drivers/spektrum_satellite.c
+LIB_SRCS += drivers/spektrum_satellite.c
 # LIB_SRCS += drivers/xbee.c
 
 LIB_SRCS += control/adaptive_parameter.c          
@@ -114,6 +114,7 @@ LIB_SRCS += libs/fat_fs/option/unicode.c
 LIB_SRCS += hal/dummy/serial_dummy.cpp
 LIB_SRCS += hal/dummy/i2c_dummy.cpp
 LIB_SRCS += hal/dummy/gpio_dummy.cpp
+# LIB_SRCS += hal/avr32/gpio_avr32.cpp
 LIB_SRCS += hal/linux/file_linux.cpp
 LIB_SRCS += hal/linux/serial_udp.cpp
 LIB_SRCS += hal/linux/time_keeper.c

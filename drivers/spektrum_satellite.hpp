@@ -36,7 +36,7 @@
  * \author Felix Schill
  * \author Julien Lecoeur
  *   
- * \brief This file is the driver for the remote control
+ * \brief Driver for spektrum satellite receiver
  * 
  ******************************************************************************/
 
@@ -47,7 +47,8 @@
 
 #include "satellite.hpp"
 #include "serial.hpp"
- 
+#include "gpio.hpp"
+
 extern "C" 
 {
 	#include <stdint.h>
@@ -71,17 +72,19 @@ class Spektrum_satellite : public Satellite
 {
 public:
 	/**
-	* @brief  	Constructor
+	* \brief  	Constructor
 	* 
-	* @param 	uart 	Reference to UART device 
+	* \param 	uart 			Reference to UART device 
+	* \param 	receiver_pin 	Reference to signal GPIO
+	* \param 	power_pin 		Reference to power GPIO 
 	*/
-	Spektrum_satellite(Serial& uart);
+	Spektrum_satellite(Serial& uart, Gpio& receiver_pin, Gpio& power_pin);
 
 
 	/**
 	* \brief Initialize UART receiver for Spektrum/DSM2 slave receivers
 	*/
-	bool init ();
+	bool init(void);
 
 
 	/**
@@ -122,11 +125,13 @@ public:
 	/**
 	 * \brief  			Takes care of incoming data
 	 */
-	void handle_interrupt();
+	void handle_interrupt(void);
 
 
 private:
 	Serial&					uart_;					///< Serial port
+	Gpio&					receiver_pin_;			///< Receiver signal pin
+	Gpio&					power_pin_;				///< Receiver power enable pin
 	buffer_t 				receiver_;				///< Buffer for incoming data
 	int16_t 				channels_[16];			///< Array to contain the 16 remote channels
 	uint32_t 				last_interrupt_;		///< Last time a byte was received
@@ -134,6 +139,18 @@ private:
 	uint32_t 				dt_;					///< Duration between two updates
 	dsm2_protocol_proba_t	protocol_proba_;		///< Indicates number of frames received
 	radio_protocol_t		protocol_;				///< Defines in which mode the remote is configured
+
+	
+	/**
+	 * \brief Power-on the receiver
+	 */
+	void switch_on(void);
+
+
+	/**
+	 * \brief Power-off the receiver
+	 */
+	void switch_off(void);
 };
 
 

@@ -41,6 +41,26 @@
 #ifndef GPIO_H_
 #define GPIO_H_
 
+/**
+ * \brief 	GPIO direction
+ */
+typedef enum
+{
+	GPIO_INPUT  	= 0,	///< Input
+	GPIO_OUTPUT 	= 1,	///< Output
+} gpio_dir_t;
+
+
+/**
+ * \brief GPIO pull-up / pull-down 
+ */
+typedef enum
+{
+	GPIO_PULL_UPDOWN_NONE = 0,		///< No pull up/down
+	GPIO_PULL_UPDOWN_UP   = 1,		///< Pull up
+	GPIO_PULL_UPDOWN_DOWN = 2,		///< Pull down
+} gpio_pull_updown_t;
+
 
 class Gpio
 {
@@ -53,6 +73,16 @@ public:
 	 * @return  false 		Error
 	 */
 	virtual bool init(void) = 0;
+
+	/**
+	 * \brief 	Configures the GPIO
+	 * 
+	 * \param 	dir 	Pin direction (one of enum gpio_dir_t)
+	 * \param 	pull 	Pin pull up/down (one of enum gpio_pull_updown_t)
+	 * 
+	 * \return  success
+	 */
+	virtual bool configure(gpio_dir_t dir, gpio_pull_updown_t pull) = 0;
 
 
 	/**

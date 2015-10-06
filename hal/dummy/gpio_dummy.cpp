@@ -41,11 +41,28 @@
 
 #include "gpio_dummy.hpp"
 
+
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+Gpio_dummy::Gpio_dummy(gpio_dummy_conf_t config)
+{
+	config_ = config;
+}
+
+
 bool Gpio_dummy::init(void)
 {
-	level_ = false;
-	
+	level_ = config_.flag;
+
 	return true;
+}
+
+
+bool Gpio_dummy::configure(gpio_dir_t dir, gpio_pull_updown_t pull)
+{
+	return true;	
 }
 
 
@@ -85,3 +102,8 @@ bool Gpio_dummy::read(void)
 {
 	return level_;
 }
+
+
+//------------------------------------------------------------------------------
+// PRIVATE FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------

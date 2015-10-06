@@ -42,6 +42,7 @@
 #ifndef MEGAFLY_REV4_H_
 #define MEGAFLY_REV4_H_
 
+#include "gpio_avr32.hpp"
 #include "serial_avr32.hpp"
 #include "i2c_avr32.hpp"
 #include "hmc5883l.hpp"
@@ -61,6 +62,8 @@ extern "C"
  */
 typedef struct
 {
+	gpio_avr32_conf_t	dsm_receiver_pin_config;
+	gpio_avr32_conf_t	dsm_power_pin_config;
 	serial_avr32_conf_t uart0_config;
 	serial_avr32_conf_t uart1_config;
 	serial_avr32_conf_t uart3_config;
@@ -106,6 +109,8 @@ public:
 	/**
 	 * Public Members
 	 */
+	Gpio_avr32			dsm_receiver_pin;
+	Gpio_avr32			dsm_power_pin;
 	Serial_avr32 		uart0;		
 	Serial_avr32 		uart1;				
 	Serial_avr32 		uart3;		
@@ -129,6 +134,15 @@ private:
 static inline megafly_rev4_conf_t megafly_rev4_default_config()
 {
 	megafly_rev4_conf_t conf = {};
+
+	// GPIO dsm receiver pin configuration
+	conf.dsm_receiver_pin_config 	 = gpio_avr32_default_config();
+	conf.dsm_receiver_pin_config.pin = AVR32_PIN_PD12;
+
+	// GPIO dsm power pin configuration
+	conf.dsm_power_pin_config 	  = gpio_avr32_default_config();
+	conf.dsm_power_pin_config.pin = AVR32_PIN_PC01;
+
 
 	// UART0 configuration
 	conf.uart0_config 						= {};

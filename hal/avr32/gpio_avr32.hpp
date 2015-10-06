@@ -30,27 +30,29 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	gpio_dummy.hpp
+ * \file 	gpio_avr32.hpp
  * 
  * \author 	MAV'RIC Team
  *   
- * \brief 	Dummy implementation of GPIO peripherals
+ * \brief 	Implementation of GPIO peripherals for avr32
  *
  ******************************************************************************/
 
-#ifndef GPIO_DUMMY_H_
-#define GPIO_DUMMY_H_
+#ifndef GPIO_AVR32_H_
+#define GPIO_AVR32_H_
 
 #include "gpio.hpp"
-
+#include <stdint.h>
 
 /**
  * 	Configuration structure
  */
 typedef struct
 {
-	bool flag;			///< Dummy configuration flag
-} gpio_dummy_conf_t;
+	uint32_t pin;			///< pin number
+	gpio_dir_t dir;
+	gpio_pull_updown_t pull;
+} gpio_avr32_conf_t;
 
 
 /**
@@ -58,11 +60,10 @@ typedef struct
  * 
  * @return 	Config structure
  */
-static inline gpio_dummy_conf_t gpio_dummy_default_config();
+static inline gpio_avr32_conf_t gpio_avr32_default_config();
 
 
-
-class Gpio_dummy: public Gpio
+class Gpio_avr32: public Gpio
 {
 public:
 	/**
@@ -70,7 +71,7 @@ public:
 	 * 
 	 * @param 	config 		Device configuration
 	 */
-	Gpio_dummy(gpio_dummy_conf_t config = gpio_dummy_default_config());
+	Gpio_avr32(gpio_avr32_conf_t config = gpio_avr32_default_config());
 
 
 	/**
@@ -140,8 +141,7 @@ public:
 	bool read(void);
 
 private:
-	gpio_dummy_conf_t config_; 	///< Configuration
-	bool level_; 				///< Current level of pin
+	gpio_avr32_conf_t 	config_;	///< Device configuration
 };
 
 
@@ -150,14 +150,12 @@ private:
  * 
  * @return 	Config structure
  */
-static inline gpio_dummy_conf_t gpio_dummy_default_config()
+static inline gpio_avr32_conf_t gpio_avr32_default_config()
 {
-	gpio_dummy_conf_t conf = {};
-
-	conf.flag = true;
+	gpio_avr32_conf_t conf = {};
+	conf.pin = 0;
 
 	return conf;
 }
 
-
-#endif /* GPIO_DUMMY_H_ */
+#endif /* GPIO_AVR32_H_ */
