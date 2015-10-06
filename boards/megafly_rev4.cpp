@@ -67,6 +67,20 @@ bool Megafly_rev4::init(void)
 
 	Disable_global_interrupt();
 
+	// Init GPIO dsm receiver
+	if( dsm_receiver_pin.init() == false )
+	{
+		init_success = false;
+		print_util_dbg_print("[DSM RX PIN] INIT ERROR\r\n");		
+	}
+
+	// Init GPIO dsm power
+	if( dsm_power_pin.init() == false )
+	{
+		init_success = false;
+		print_util_dbg_print("[DSM VCC PIN] INIT ERROR\r\n");		
+	}
+
 	// Init UART0
 	if( uart0.init() == false )
 	{
