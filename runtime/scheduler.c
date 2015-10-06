@@ -193,7 +193,6 @@ int32_t scheduler_update(scheduler_t* scheduler)
 
 	task_function_t call_task;
 	task_argument_t function_argument;
-	task_return_t treturn;
 
 	// Iterate through registered tasks
 	for (int32_t i = ts->current_schedule_slot; i < ts->task_count; i++) 
@@ -213,7 +212,7 @@ int32_t scheduler_update(scheduler_t* scheduler)
 			function_argument = ts->tasks[i].function_argument;
 
 			// Execute task
-		    treturn = call_task(function_argument);
+		    call_task(function_argument);
 	
 			// Set the next execution time of the task
 			switch (ts->tasks[i].timing_mode) 

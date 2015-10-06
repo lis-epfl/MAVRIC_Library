@@ -49,6 +49,8 @@ File_linux::File_linux(const char* path)
 
 bool File_linux::open(const char* path)
 {
+	bool success = true;
+
 	// Close if another file open
 	if( file_.is_open() )
 	{
@@ -68,6 +70,11 @@ bool File_linux::open(const char* path)
 		// and reopen in input/output mode
 		file_.open(path, ios::in | ios::out | ios::binary | ios::ate );
 	}
+
+	// If it fails, create the file
+	success &= file_.is_open();
+
+	return success;
 }
 
 
@@ -118,6 +125,10 @@ bool File_linux::seek(int32_t offset, file_seekfrom_t origin)
 
   		case FILE_SEEK_END:
   			dir = ios::end;
+  		break;
+
+  		default:
+  			dir = ios::cur;
   		break;
 	}
 
