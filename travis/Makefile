@@ -113,7 +113,7 @@ LIB_SRCS += libs/fat_fs/option/unicode.c
 
 LIB_SRCS += hal/dummy/serial_dummy.cpp
 LIB_SRCS += hal/dummy/i2c_dummy.cpp
-# LIB_SRCS += hal/dummy/gpio_dummy.cpp
+LIB_SRCS += hal/dummy/gpio_dummy.cpp
 LIB_SRCS += hal/linux/file_linux.cpp
 LIB_SRCS += hal/linux/serial_udp.cpp
 LIB_SRCS += hal/linux/time_keeper.c
