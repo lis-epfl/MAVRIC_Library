@@ -46,9 +46,8 @@
 extern "C"
 {
 	#include "time_keeper.h"
-	// #include "spektrum.h"
-	#include <limits.h>
 }
+
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -65,6 +64,7 @@ extern "C"
  */
 static mav_result_t remote_telemetry_satellite_bind(remote_t* remote, mavlink_command_long_t* packet);
 
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
@@ -77,12 +77,12 @@ static mav_result_t remote_telemetry_satellite_bind(remote_t* remote, mavlink_co
 	{
 		if( packet->param4 == 10 )
 		{
-			remote->sat->bind( DSM2_10BITS );
+			remote->sat->bind( RADIO_PROTOCOL_DSM2_10BITS );
 			result = MAV_RESULT_ACCEPTED;
 		}
 		else if( packet->param4 == 11 )
 		{
-			remote->sat->bind( DSM2_11BITS );
+			remote->sat->bind( RADIO_PROTOCOL_DSM2_11BITS );
 			result = MAV_RESULT_ACCEPTED;
 		}
 		else
@@ -99,6 +99,7 @@ static mav_result_t remote_telemetry_satellite_bind(remote_t* remote, mavlink_co
 	
 	return result;
 }
+
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -121,6 +122,7 @@ bool remote_telemetry_init(remote_t* remote, mavlink_message_handler_t *mavlink_
 	return init_success;
 }
 
+
 void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {	
 	mavlink_msg_rc_channels_raw_pack(	mavlink_stream->sysid,
@@ -128,14 +130,14 @@ void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* m
 										msg,
 										time_keeper_get_millis(),
 										0,
-										remote->sat->get_channels(0) + 1024,
-										remote->sat->get_channels(1) + 1024,
-										remote->sat->get_channels(2) + 1024,
-										remote->sat->get_channels(3) + 1024,
-										remote->sat->get_channels(4) + 1024,
-										remote->sat->get_channels(5) + 1024,
-										remote->sat->get_channels(6) + 1024,
-										remote->sat->get_channels(7) + 1024,
+										remote->sat->channel(0) + 1024,
+										remote->sat->channel(1) + 1024,
+										remote->sat->channel(2) + 1024,
+										remote->sat->channel(3) + 1024,
+										remote->sat->channel(4) + 1024,
+										remote->sat->channel(5) + 1024,
+										remote->sat->channel(6) + 1024,
+										remote->sat->channel(7) + 1024,
 										// remote->mode.current_desired_mode.byte);
 										remote->signal_quality	);
 	
@@ -146,17 +148,18 @@ void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* m
 										msg,
 										time_keeper_get_millis(),
 										1,
-										remote->sat->get_channels(8)+ 1024,
-										remote->sat->get_channels(9)+ 1024,
-										remote->sat->get_channels(10) + 1024,
-										remote->sat->get_channels(11) + 1024,
-										remote->sat->get_channels(12) + 1024,
-										remote->sat->get_channels(13) + 1024,
+										remote->sat->channel(8)+ 1024,
+										remote->sat->channel(9)+ 1024,
+										remote->sat->channel(10) + 1024,
+										remote->sat->channel(11) + 1024,
+										remote->sat->channel(12) + 1024,
+										remote->sat->channel(13) + 1024,
 										UINT16_MAX,
 										UINT16_MAX,
 										// remote->mode.current_desired_mode.byte);
 										remote->signal_quality	);
 }
+
 
 void remote_telemetry_send_scaled(const remote_t* remote, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {

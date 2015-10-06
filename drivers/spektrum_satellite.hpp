@@ -56,6 +56,17 @@ extern "C"
 }
 
 
+/**
+ * \brief Structure containing the radio protocol probabilities
+ */
+typedef struct
+{
+	uint8_t min_nb_frames;		///< Minimum of Frames used to determine the protocol used
+	uint8_t proba_10bits;	///< Probability that the protocol is 10bits
+	uint8_t	proba_11bits;	///< Probability that the protocol is 11bits
+} dsm2_protocol_proba_t;
+
+
 class Spektrum_satellite : public Satellite
 {
 public:
@@ -65,6 +76,7 @@ public:
 	* @param 	uart 	Reference to UART device 
 	*/
 	Spektrum_satellite(Serial& uart);
+
 
 	/**
 	* \brief Initialize UART receiver for Spektrum/DSM2 slave receivers
@@ -82,33 +94,47 @@ public:
 
 
 	/**
-	* \brief Return a remote channel
+	* \brief 	Return a channels' value
 	*
-	* \param	index	Specify which channel we are interested in
+	* \param 	channel_number		The channel ID
 	*
-	* \return the remote channel value
+	* \return 	Value for channel channel_number
 	*/
-	int16_t get_channel(const uint8_t index) const;
+	int16_t	channel(const uint8_t channel_number) const;
 
 
 	/**
-	* \brief 	Return the a remote channel taking neutral into account
+	* \brief 	Return the last update time in microseconds
 	*
-	* \param 	index 	Specify which channel we are interested in
-	*
-	* \return 	 the remote channel neutral value		
+	* \return 	Last update time
 	*/
-	int16_t get_neutral(const uint8_t index) const;
+	uint32_t last_update(void) const;
+
+	
+	/**
+	* \brief 	Return the time difference between the last 2 updates in microseconds
+	*
+	* \return 	dt
+	*/
+	uint32_t dt(void) const;
 
 
 	/**
-	 * @brief  			Takes care of incoming data
+	 * \brief  			Takes care of incoming data
 	 */
 	void handle_interrupt();
 
+
 private:
-	Serial&	uart_;					///< Declare the uart object associated with the spektrum satellite object
-	int16_t channel_center_[16];	///< Declare an array to store the central position of each channel
+	Serial&					uart_;					///< Serial port
+	buffer_t 				receiver_;				///< Buffer for incoming data
+	int16_t 				channels_[16];			///< Array to contain the 16 remote channels
+	uint32_t 				last_interrupt_;		///< Last time a byte was received
+	uint32_t 				last_update_;			///< Last update time 
+	uint32_t 				dt_;					///< Duration between two updates
+	bool					new_data_available_; 	///< Indicates if new data is  available
+	dsm2_protocol_proba_t	protocol_proba_;		///< Indicates number of frames received
+	radio_protocol_t		protocol_;				///< Defines in which mode the remote is configured
 
 };
 

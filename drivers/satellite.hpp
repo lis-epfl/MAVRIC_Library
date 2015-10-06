@@ -49,99 +49,61 @@ extern "C"
 	#include "buffer.h"
 }
 
-/**
- * \brief Structure containing the radio protocol probabilities
- */
-typedef struct
-{
-	uint8_t min_nb_frames;	///< Minimum of Frames used to determine the protocol used
-	uint8_t proba_10bits;	///< Probability that the protocol is 10bits
-	uint8_t	proba_11bits;	///< Probability that the protocol is 11bits
-}radio_protocol_proba_t;
-
 
 /**
  * \brief Radio protocols
  */ 
 typedef enum
 {
-	DSM2_10BITS = 0,
-	DSM2_11BITS = 1,
-	DSMX		= 2,
-	UNKNOWN		= 3,
+	RADIO_PROTOCOL_DSM2_10BITS 	= 0,
+	RADIO_PROTOCOL_DSM2_11BITS 	= 1,
+	RADIO_PROTOCOL_DSMX			= 2,
+	RADIO_PROTOCOL_UNKNOWN		= 3,
 } radio_protocol_t;
 
-//Function pointer
 
 class Satellite
 {
 public:
-	
+
 	/**
-	* \brief 	Return the channels' value
-	*
-	* \param 	channel_number	Specify which channel we are interested in
-	*
-	* \return 	the remote channel value 
+	* \brief 	Virtual function to intialize a satellite receiver
 	*/
-	int16_t 		get_channels(const uint8_t channel_number) const;
-	
-	/**
-	* \brief 	Return the last interrup time
-	*
-	* \return 	the remote last interrupt time
-	*/
-	uint32_t 		get_last_interrupt(void) const;
-	
-	/**
-	* \brief 	Return the last update time
-	*
-	* \return 	the remote last update time
-	*/
-	uint32_t 		get_last_update(void) const;
-	
-	/**
-	* \brief 	Return the time difference between the last 2 updates
-	*
-	* \return 	the remote time difference between the last 2 updates
-	*/
-	uint32_t 		get_dt(void) const;
-	
-	/**
-	* \brief 	Return true if there is some data available for the remote
-	*
-	* \return 	true if there is some data available for the remote
-	*/
-	bool 			get_new_data_available(void) const;
-	
-	/**
-	* \brief 	Set the data available flag to false when we have read data available for the remote
-	*
-	* \param 	is_available	to the corresponding value
-	*/
-	void 			set_new_data_available(const bool is_available);
+	virtual bool init() = 0;
+
 
 	/**
 	* \brief 	Virtual function to bind a satellite with a remote
 	*
 	* \param 	radio_protocol	Define in which protocol the remote has to be binded
 	*/
-	virtual void	bind(const radio_protocol_t radio_protocol) = 0;
+	virtual void bind(const radio_protocol_t radio_protocol) = 0;
 
+	
 	/**
-	* \brief 	Virtual function to intialize a satellite receiver
+	* \brief 	Return a channels' value
+	*
+	* \param 	channel_number		The channel ID
+	*
+	* \return 	Value for channel channel_number
 	*/
-	virtual bool	init() = 0;
+	virtual	int16_t	channel(const uint8_t channel_number) const = 0;
 
-protected:
-	buffer_t 				receiver_;				///< Buffer for incoming data
-	int16_t 				channels_[16];			///< Array to contain the 16 remote channels
-	uint32_t 				last_interrupt_;		///< Last time a byte was received
-	uint32_t 				last_update_;			///< Last update time 
-	uint32_t 				dt_;					///< Duration between two updates
-	bool					new_data_available_; 	///< Indicates if new data is  available
-	radio_protocol_proba_t	protocol_proba_;		///< Indicates number of frames received
-	radio_protocol_t		protocol_;				///< Defines in which mode the remote is configured
+	
+	/**
+	* \brief 	Return the last update time in microseconds
+	*
+	* \return 	Last update time
+	*/
+	virtual uint32_t last_update(void) const = 0;
+
+	
+	/**
+	* \brief 	Return the time difference between the last 2 updates in microseconds
+	*
+	* \return 	dt
+	*/
+	virtual uint32_t dt(void) const = 0;
 };
 
 

@@ -132,16 +132,16 @@ bool Spektrum_satellite::init()
 	for (int32_t i = 0; i < 16; i++) 
 	{
 		channels_[i] = 0;
-		channel_center_[i] = 0;
 	}
 	
 	new_data_available_ = false;
-	protocol_ = UNKNOWN;
-	last_update_ = time_keeper_get_micros();
+	protocol_ 			= RADIO_PROTOCOL_UNKNOWN;
+	last_update_ 		= time_keeper_get_micros();
+
 	//Set minimum number of frames to be received in order to guess the radio protocol used
-	protocol_proba_.min_nb_frames = 10; 
-    protocol_proba_.proba_10bits = 0;
-    protocol_proba_.proba_11bits = 0;
+	protocol_proba_.min_nb_frames 	= 10; 
+    protocol_proba_.proba_10bits 	= 0;
+    protocol_proba_.proba_11bits 	= 0;
     
     // Attach interrupt handler function to uart
     result &= uart_.attach( spektrum_irq_callback );
@@ -178,11 +178,11 @@ void Spektrum_satellite::bind(radio_protocol_t protocol)
 	time_keeper_delay_ms(68);
 	
 	uint8_t pulses = 0;
-	if (protocol == DSM2_10BITS)
+	if (protocol == RADIO_PROTOCOL_DSM2_10BITS)
 	{
 		pulses = 3;
 	}
-	else if (protocol == DSM2_11BITS)
+	else if (protocol == RADIO_PROTOCOL_DSM2_11BITS)
 	{
 		pulses = 6;
 	}
@@ -200,29 +200,38 @@ void Spektrum_satellite::bind(radio_protocol_t protocol)
 }
 
 
-int16_t Spektrum_satellite::get_channel(const uint8_t index) const
+int16_t Spektrum_satellite::channel(const uint8_t channel_number) const
 {
-	return channels_[index];
+	int16_t value;
+
+	if( channel_number < 16 )
+	{
+		value = channels_[channel_number];
+	}
+	else
+	{
+		value = 0;
+	}
+
+	return value;
 }
 
 
-int16_t Spektrum_satellite::get_neutral(const uint8_t index) const
+uint32_t Spektrum_satellite::last_update(void) const
 {
-	int16_t value = get_channel(index) - channel_center_[index];
+	return last_update_;
+}
 
- 	// clamp to dead zone
- 	if ( (value > -DEADZONE) && (value < DEADZONE) )
- 	{
- 		value=0;
- 	}
-
- 	return value;
- }
+	
+uint32_t Spektrum_satellite::dt(void) const
+{
+	return dt_;
+}
 
 
- void Spektrum_satellite::handle_interrupt()
- {
- 	uint8_t c1, c2, i;
+void Spektrum_satellite::handle_interrupt()
+{
+	uint8_t c1, c2, i;
 	uint16_t sw;
 	uint8_t channel;
 	uint32_t now = time_keeper_get_micros() ;
@@ -246,13 +255,13 @@ int16_t Spektrum_satellite::get_neutral(const uint8_t index) const
 		buffer_put(&receiver_, c1);
 		
 		// If frame is complete, decode channels
-		if ( (buffer_bytes_available(&receiver_) == 16) && (protocol_ != UNKNOWN)) 
+		if ( (buffer_bytes_available(&receiver_) == 16) && (protocol_ != RADIO_PROTOCOL_UNKNOWN)) 
 		{
 			// first two bytes are status info,
 			c1 = buffer_get(&receiver_);
 			c2 = buffer_get(&receiver_);
 			
-			if ((protocol_ == DSM2_10BITS) && ((c1 != 0x03) || (c2 != 0xB2))) //correspond to DSM2 10bits header
+			if ((protocol_ == RADIO_PROTOCOL_DSM2_10BITS) && ((c1 != 0x03) || (c2 != 0xB2))) //correspond to DSM2 10bits header
 			{
 				buffer_clear(&receiver_);
 				return;
@@ -264,7 +273,7 @@ int16_t Spektrum_satellite::get_neutral(const uint8_t index) const
 				c2 = buffer_get(&receiver_);
 				sw = (uint16_t)c1 << 8 | ((uint16_t)c2);
 								
-				if ( protocol_ == DSM2_10BITS )  //10 bits
+				if ( protocol_ == RADIO_PROTOCOL_DSM2_10BITS )  //10 bits
 				{
 					// highest bit is frame 0/1, bits 2-6 are channel number
 					channel = ((sw >> 10))&0x0f;
@@ -272,7 +281,7 @@ int16_t Spektrum_satellite::get_neutral(const uint8_t index) const
 					// 10 bits per channel
 					channels_[channel] = ((int16_t)(sw&0x3ff) - 512) * 2;
 				} 
-				else if ( protocol_ == DSM2_11BITS ) //11bits
+				else if ( protocol_ == RADIO_PROTOCOL_DSM2_11BITS ) //11bits
 				{
 					// highest bit is frame 0/1, bits 3-7 are channel number
 					channel = ((sw >> 11))&0x0f;
@@ -321,11 +330,11 @@ int16_t Spektrum_satellite::get_neutral(const uint8_t index) const
 				//is the probability of one protocol at least 2 times bigger than for the other one ?
 				if (protocol_proba_.proba_10bits > 2*protocol_proba_.proba_11bits)
 				{
-					protocol_ = DSM2_10BITS;
+					protocol_ = RADIO_PROTOCOL_DSM2_10BITS;
 				}
 				else if (protocol_proba_.proba_11bits > 2*protocol_proba_.proba_10bits)
 				{
-					protocol_ = DSM2_11BITS;
+					protocol_ = RADIO_PROTOCOL_DSM2_11BITS;
 				}
 				else //otherwise redo this probability check for 10 other frames
 				{
@@ -334,4 +343,4 @@ int16_t Spektrum_satellite::get_neutral(const uint8_t index) const
 			}
 		}
 	}
- }
+}

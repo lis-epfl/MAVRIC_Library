@@ -174,6 +174,7 @@ bool remote_init(remote_t* remote, Satellite* sat, const remote_conf_t config)
 		remote->channels[i] = 0.0f;
 		remote->trims[i] = 0.0f;
 	}
+	remote->last_satellite_update = time_keeper_get_micros();
 	
 	return init_success;
 }
@@ -184,15 +185,18 @@ void remote_update(remote_t* remote)
 	uint32_t now = time_keeper_get_time_ticks() ;
 	float raw;
 	
-	if ( remote->sat->get_new_data_available() == true )
+	if ( remote->sat->last_update() > remote->last_satellite_update )
 	{
+		// Keep last update time
+		remote->last_satellite_update = remote->sat->last_update();
+
 		// Check signal quality
-		if ( remote->sat->get_dt() < 100000) 
+		if ( remote->sat->dt() < 100000) 
 		{
 			// ok
 			remote->signal_quality = SIGNAL_GOOD;
 		} 
-		else if ( remote->sat->get_dt() < 1500000 )
+		else if ( remote->sat->dt() < 1500000 )
 		{
 			// warning
 			remote->signal_quality = SIGNAL_BAD;
@@ -201,7 +205,7 @@ void remote_update(remote_t* remote)
 		// Retrieve and scale channels
 		for (uint8_t i = 0; i < REMOTE_CHANNEL_COUNT; ++i)
 		{
-			raw = remote->sat->get_channels(i);
+			raw = remote->sat->channel(i);
 			if ( raw < remote->deadzone && raw > -remote->deadzone )
 			{
 				remote->channels[i] = 0.0f;	
@@ -211,14 +215,11 @@ void remote_update(remote_t* remote)
 				remote->channels[i] = raw * remote->scale * remote->channel_inv[i] - remote->trims[i];		
 			}
 		}
-
-		// Indicate that data was handled
-		remote->sat->set_new_data_available(false);
 	} //end of if ( remote->sat->get_new_data_available() == true )
 	else
 	{
 		// Check for signal loss
-		if ( ( now - remote->sat->get_last_update() ) > 1500000 )
+		if ( ( now - remote->sat->last_update() ) > 1500000 )
 		{
 			// CRITICAL: Set all channels to failsafe
 			remote->channels[CHANNEL_THROTTLE] = -1.0f;
