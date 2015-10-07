@@ -51,6 +51,9 @@
 #define SAMPLING_PERIOD	50	//< Length of moving average
 #define MIN_SAMPLES 50 		//< Minimum number of samples needed to have a viable SMA
 
+#define THRESHOLD 10		//< Acceleration threshold
+
+const int16_t c_idle = 20;
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -66,27 +69,44 @@
  */
 bool launch_detection_threshold_check(launch_detection_t * ld);
 
+/**
+ * \brief        		Initialisation indirection to make the threshold setting private
+ * 
+ * \param ld 			Pointer to the launch detection struct
+ * \param t_launch		The launch threshold
+ */
+bool launch_detection_initialize(launch_detection_t * ld, int16_t t_launch);
+
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
- bool launch_detection_threshold_check(launch_detection_t * ld)
+bool launch_detection_threshold_check(launch_detection_t * ld)
+{
+	return ld->sma->nb_samples > MIN_SAMPLES ? ld->sma->current_avg < ld->c_idle + ld->t_launch : 0;
+}
+
+bool launch_detection_initialize(launch_detection_t * ld, int16_t t_launch)
  {
- 	return ld->sma->nb_samples > MIN_SAMPLES ? ld->sma->current_avg < ld->c_idle + ld->t_launch : 0;
+ 	sma_t sma;
+ 	ld->sma = &sma;
+ 	sma_init(ld->sma, SAMPLING_PERIOD);
+ 	ld->t_launch = t_launch;
+ 	ld->c_idle = c_idle;
+ 	ld->status = LAUNCH_IDLE;
+ 	ld->ACC_X = ld->ACC_Y = ld->ACC_Z = 0;
+ 	ld->enabled = 1;
+
+ 	return 1;
  }
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
- void launch_detection_init(launch_detection_t * ld, int16_t t_launch)
+ bool launch_detection_init(launch_detection_t * ld)
  {
- 	ld->sma = malloc(sizeof(sma_t));
- 	sma_init(ld->sma, SAMPLING_PERIOD);
- 	ld->t_launch = t_launch;
- 	ld->status = IDLE;
- 	ld->ACC_X = ld->ACC_Y = ld->ACC_Z = 0;
- 	ld->enabled = 1;
+ 	return launch_detection_initialize(ld, THRESHOLD);
  }
 
 task_return_t launch_detection_update(launch_detection_t * ld, float acc[3])
@@ -103,7 +123,7 @@ task_return_t launch_detection_update(launch_detection_t * ld, float acc[3])
  	}
  	else 
  	{
- 		ld->status = IDLE;
+ 		ld->status = LAUNCH_IDLE;
  	}
 
  	return TASK_RUN_SUCCESS;
