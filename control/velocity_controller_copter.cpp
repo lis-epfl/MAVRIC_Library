@@ -140,8 +140,8 @@ void velocity_controller_copter_update(velocity_controller_copter_t* controller)
 	float velocity_command_global[3];
 	float errors[3];
 	float thrust_vector[3];
-	float thrust_norm;
-	float thrust_dir[3];
+	// float thrust_norm;
+	// float thrust_dir[3];
 
 	// Get the command velocity in global frame
 	switch( controller->velocity_command->mode )
@@ -181,12 +181,12 @@ void velocity_controller_copter_update(velocity_controller_copter_t* controller)
 	thrust_vector[Z] = pid_controller_update_dt( &controller->pid[Z], errors[Z], controller->ahrs->dt );	// should be multiplied by mass
 
 	// Compute the norm of the thrust that should be applied
-	thrust_norm = vectors_norm(thrust_vector);
+	// thrust_norm = vectors_norm(thrust_vector);
 
 	// Compute the direction in which thrust should be apply
-	thrust_dir[X] = thrust_vector[X] / thrust_norm;
-	thrust_dir[Y] = thrust_vector[Y] / thrust_norm;
-	thrust_dir[Z] = thrust_vector[Z] / thrust_norm;
+	// thrust_dir[X] = thrust_vector[X] / thrust_norm;
+	// thrust_dir[Y] = thrust_vector[Y] / thrust_norm;
+	// thrust_dir[Z] = thrust_vector[Z] / thrust_norm;
 
 	// Map thrust dir to attitude
 	controller->attitude_command->mode 		 = ATTITUDE_COMMAND_MODE_RPY;
