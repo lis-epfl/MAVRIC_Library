@@ -48,7 +48,10 @@ extern "C"
 #endif
 
 #include <stdbool.h>
+
 #include "sma.h"
+#include "tasks.h"
+
 
 
 /**
@@ -88,9 +91,9 @@ void launch_detection_init(launch_detection_t * ld, int16_t t_launch);
  * \param acc 			Acceleration values measured by the IMU
  * \param ld 			Pointer to the launch detection struct
  *
- * \return 				The launch status
+ * \return 				Task status
  */
-launch_status_t launch_detection_update(launch_detection_t * ld, float acc[3]);
+task_return_t launch_detection_update(launch_detection_t * ld, float acc[3]);
 
 
 #ifdef __cplusplus

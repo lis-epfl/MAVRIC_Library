@@ -39,6 +39,8 @@
  *
  ******************************************************************************/
 
+#include <stdlib.h>
+
 #include "launch_detection.h"
 #include "vectors.h"
 
@@ -90,17 +92,23 @@ bool launch_detection_threshold_check(launch_detection_t * ld);
  	ld->enabled = 1;
  }
 
-launch_status_t launch_detection_update(launch_detection_t * ld, float acc[3])
+task_return_t launch_detection_update(launch_detection_t * ld, float acc[3])
  {
  	ld->ACC_X = ACC_X;
  	ld->ACC_Y = ACC_Y;
  	ld->ACC_Z = ACC_Z;
 
- 	sma_update(ld->sma, (int16_t)(vectors_norm(ld->acc));
+ 	sma_update(ld->sma, (int16_t)(vectors_norm(ld->acc)));
 
  	if (launch_detection_threshold_check(ld))
  	{
- 		return LAUNCHING;
+ 		ld->status = LAUNCHING;
  	}
+ 	else 
+ 	{
+ 		ld->status = IDLE;
+ 	}
+
+ 	return TASK_RUN_SUCCESS;
  }
 
