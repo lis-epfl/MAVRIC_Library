@@ -91,7 +91,7 @@ LIB_SRCS += runtime/scheduler_telemetry.c
 # LIB_SRCS += communication/acoustic.c                      
 # LIB_SRCS += communication/acoustic_telemetry.c      
 # LIB_SRCS += communication/console.c                 
-# LIB_SRCS += communication/data_logging.c            
+LIB_SRCS += communication/data_logging.c            
 # LIB_SRCS += communication/data_logging_telemetry.c  
 # LIB_SRCS += communication/hud_telemetry.c           
 LIB_SRCS += communication/mavlink_communication.c     
@@ -105,19 +105,22 @@ LIB_SRCS += communication/state.c
 # LIB_SRCS += communication/state_machine.c
 LIB_SRCS += communication/state_telemetry.c
 
-LIB_SRCS += hal/dummy/FatFs/atadrive.c
-LIB_SRCS += hal/dummy/FatFs/sdcard.c
-LIB_SRCS += hal/dummy/FatFs/usbdisk.c
 
 LIB_SRCS += libs/FatFs/src/ff.c  
 LIB_SRCS += libs/FatFs/src/diskio.c
 LIB_SRCS += libs/FatFs/src/option/syscall.c
 LIB_SRCS += libs/FatFs/src/option/unicode.c
 
+LIB_SRCS += hal/dummy/FatFs/atadrive.c
+LIB_SRCS += hal/dummy/FatFs/sdcard.c
+LIB_SRCS += hal/dummy/FatFs/usbdisk.c
 LIB_SRCS += hal/dummy/serial_dummy.cpp
 LIB_SRCS += hal/dummy/i2c_dummy.cpp
 LIB_SRCS += hal/dummy/gpio_dummy.cpp
-# LIB_SRCS += hal/avr32/gpio_avr32.cpp
+
+LIB_SRCS += hal/common/fat_fs_mounting.cpp
+LIB_SRCS += hal/common/fat_fs_mounting_telemetry.cpp
+
 LIB_SRCS += hal/linux/file_linux.cpp
 LIB_SRCS += hal/linux/serial_udp.cpp
 LIB_SRCS += hal/linux/time_keeper.c
