@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file flow.h
+ * \file flow.hpp
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
@@ -42,15 +42,15 @@
 #ifndef FLOW_H_
 #define FLOW_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "mavlink_stream.h"
-#include "buffer.h"
-#include "uart_int.h"
-
+#include "mavlink_stream.hpp"
 #include <stdint.h>
+#include "serial.hpp"
+
+extern "C"
+{
+	#include "buffer.h"
+	// #include "uart_int.h"
+}
 
 
 /**
@@ -84,25 +84,16 @@ typedef enum
 typedef struct
 {
 	mavlink_stream_t 	mavlink_stream;		///< Mavlink interface using streams
-	byte_stream_t		uart_stream_in;		///< stream from Epuck
-	byte_stream_t		uart_stream_out;	///< stream towards Epuck
-	buffer_t		uart_buffer_in;		///< buffer for messages received from Epuck
-	buffer_t		uart_buffer_out;	///< buffer for messages to sent towards Epuck
+	Serial*				uart;				///< Serial device
 
-	uint8_t 	of_count;			///< Number of optic flow vectors
-	flow_data_t 	of;				///< Optic flow vectors
-	flow_data_t 	of_loc;				///< Location of optic flow vectors
+	uint8_t 	of_count;		///< Number of optic flow vectors
+	flow_data_t of;				///< Optic flow vectors
+	flow_data_t of_loc;			///< Location of optic flow vectors
+	uint16_t 	n_packets;		///< Number of encapsulated data packets expected
+	uint32_t 	size_data; 		///< Total size of data to receive (in bytes)
 
 	flow_handshake_state_t  handshake_state; 	///< Indicates the current reception state for encapsulated data
-	uint16_t 		n_packets;		///< Number of encapsulated data packets expected
-	uint32_t 		size_data; 		///< Total size of data to receive (in bytes)
-
 	uint32_t last_update_us;			///< Last update time in microseconds
-
-	float tmp_flow_x;		///< Tmp debug data
-	float tmp_flow_y;		///< Tmp debug data
-	float tmp_flow_comp_m_x;	///< Tmp debug data
-	float tmp_flow_comp_m_y;	///< Tmp debug data
 } flow_t;
 
 
@@ -115,7 +106,7 @@ typedef struct
  * 
  * \return 		Success
  */
-bool flow_init(flow_t* flow, int32_t UID, usart_config_t usart_conf);
+bool flow_init(flow_t* flow, Serial* uart);
 
 
 /**
@@ -128,8 +119,4 @@ bool flow_init(flow_t* flow, int32_t UID, usart_config_t usart_conf);
 bool flow_update(flow_t* flow);
 
 
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* FLOW_H_ */
+#endif /* FLOW_HPP_ */
