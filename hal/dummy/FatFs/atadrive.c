@@ -30,43 +30,74 @@
  ******************************************************************************/
  
 /*******************************************************************************
- * \file atadrive.h
+ * \file atadrive.c
  *
  * \author MAV'RIC Team
  *   
- * \brief Glue file to implement FatFs ATA drive on avr32
+ * \brief Glue file to implement FatFs ATA drive on dummy platform
  *
  ******************************************************************************/
 
-#ifndef ATADRIVE_H_
-#define ATADRIVE_H_
 
-#include <stdbool.h>
-#include <stdint.h>
+#include "atadrive.h"
 
-bool ATA_disk_status(void);
+bool ATA_disk_status(void)
+{
+	return false;
+}
 
-bool ATA_disk_initialize(void);
+bool ATA_disk_initialize(void)
+{
+	return false;
+}
 
-bool ATA_disk_read(void* buff, uint32_t sector, uint8_t count);
+bool ATA_disk_read(void* buff, uint32_t sector, uint8_t count)
+{
+	return false;
+}
 
-bool ATA_disk_write(const void *buff, uint32_t sector, uint8_t count);
+bool ATA_disk_write(const void *buff, uint32_t sector, uint8_t count)
+{
+	return false;
+}
 
-bool ATA_ctrl_sync(void);
+bool ATA_ctrl_sync(void)
+{
+	return false;
+}
 
-bool ATA_get_sector_count(void* buff);
+bool ATA_get_sector_count(void* buff)
+{
+	return false;
+}
 
-bool ATA_get_sector_size(void* buff);
+bool ATA_get_sector_size(void* buff)
+{
+	return false;
+}
 
-bool ATA_get_block_size(void* buff);
+bool ATA_get_block_size(void* buff)
+{
+	return false;
+}
 
-bool ATA_ctrl_trim(void* buff);
+bool ATA_ctrl_trim(void* buff)
+{
+	return false;
+}
 
-bool ATA_get_rev(void* buff);
+bool ATA_get_rev(void* buff)
+{
+	return false;
+}
 
-bool ATA_get_model(void* buff);
+bool ATA_get_model(void* buff)
+{
+	return false;
+}
 
-bool ATA_get_sn(void* buff);
+bool ATA_get_sn(void* buff)
+{
+	return false;
+}
 
-
-#endif /* ATADRIVE_H_ */

@@ -30,36 +30,83 @@
  ******************************************************************************/
  
 /*******************************************************************************
- * \file usbdisk.h
+ * \file sdcard.c
  *
  * \author MAV'RIC Team
  *   
- * \brief Glue file to implement FatFs USB disk on avr32
+ * \brief Glue file to implement FatFs SD card on dummy platform
  *
  ******************************************************************************/
 
-#ifndef USBDISK_H_
-#define USBDISK_H_
 
-#include <stdbool.h>
-#include <stdint.h>
+#include "sdcard.h"
 
-bool USB_disk_status(void);
+bool MMC_disk_status(void)
+{
+	return false;
+}
 
-bool USB_disk_initialize(void);
+bool MMC_disk_initialize(void)
+{
+	return false;
+}
 
-bool USB_disk_read(void* buff, uint32_t sector, uint8_t count);
+bool MMC_disk_read(void* buff, uint32_t sector, uint8_t count)
+{
+	return false;
+}
 
-bool USB_disk_write(const void *buff, uint32_t sector, uint8_t count);
+bool MMC_disk_write(const void *buff, uint32_t sector, uint8_t count)
+{
+	return false;
+}
 
-bool USB_ctrl_sync(void);
+bool MMC_ctrl_sync(void)
+{
+	return false;
+}
 
-bool USB_get_sector_count(void* buff);
+bool MMC_get_sector_count(void* buff)
+{
+	return false;
+}
 
-bool USB_get_sector_size(void* buff);
+bool MMC_get_sector_size(void* buff)
+{
+	return false;
+}
 
-bool USB_get_block_size(void* buff);
+bool MMC_get_block_size(void* buff)
+{
+	return false;
+}
 
-bool USB_ctrl_trim(void* buff);
+bool MMC_ctrl_trim(void* buff)
+{
+	return false;
+}
 
-#endif /* USBDISK_H_ */
+bool MMC_get_type(void* buff)
+{
+	return false;
+}
+
+bool MMC_get_csd(void* buff)
+{
+	return false;
+}
+
+bool MMC_get_cid(void* buff)
+{
+	return false;
+}
+
+bool MMC_get_ocr(void* buff)
+{
+	return false;
+}
+
+bool MMC_get_sdstat(void* buff)
+{
+	return false;
+}

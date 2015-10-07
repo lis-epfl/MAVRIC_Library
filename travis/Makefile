@@ -20,7 +20,6 @@ LIB_INC += -I$(MAVRIC_LIB)/hal/common
 LIB_INC += -I$(MAVRIC_LIB)/hal/linux
 LIB_INC += -I$(MAVRIC_LIB)/hal/dummy
 LIB_INC += -I$(MAVRIC_LIB)/hal
-LIB_INC += -I$(MAVRIC_LIB)/hal/FatFs
 LIB_INC += -I$(MAVRIC_LIB)/libs/mavlink/include/common
 LIB_INC += -I$(MAVRIC_LIB)/libs/mavlink/include/mavric
 LIB_INC += -I$(MAVRIC_LIB)/libs/FatFs/src
@@ -106,12 +105,12 @@ LIB_SRCS += communication/state.c
 # LIB_SRCS += communication/state_machine.c
 LIB_SRCS += communication/state_telemetry.c
 
-LIB_SRCS += hal/FatFs/diskio.c
-LIB_SRCS += hal/FatFs/dummy/atadrive.c
-LIB_SRCS += hal/FatFs/dummy/sdcard.c
-LIB_SRCS += hal/FatFs/dummy/usbdisk.c  
+LIB_SRCS += hal/dummy/FatFs/atadrive.c
+LIB_SRCS += hal/dummy/FatFs/sdcard.c
+LIB_SRCS += hal/dummy/FatFs/usbdisk.c
+
 LIB_SRCS += libs/FatFs/src/ff.c  
-# LIB_SRCS += libs/FatFs/src/option/ccsbcs.c
+LIB_SRCS += libs/FatFs/src/diskio.c
 LIB_SRCS += libs/FatFs/src/option/syscall.c
 LIB_SRCS += libs/FatFs/src/option/unicode.c
 

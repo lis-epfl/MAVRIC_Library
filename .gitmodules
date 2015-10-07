@@ -3,4 +3,4 @@
 	url = https://github.com/lis-epfl/mavlink_headers.git
 [submodule "libs/FatFs"]
 	path = libs/FatFs
-	url = https://github.com/pabigot/FatFs.git
+	url = https://github.com/lis-epfl/FatFs.git
