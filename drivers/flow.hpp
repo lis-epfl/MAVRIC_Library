@@ -46,12 +46,6 @@
 #include <stdint.h>
 #include "serial.hpp"
 
-extern "C"
-{
-	#include "buffer.h"
-	// #include "uart_int.h"
-}
-
 
 /**
  * \brief 	Array of 2-D optic flow vectors
@@ -84,11 +78,13 @@ typedef enum
 typedef struct
 {
 	mavlink_stream_t 	mavlink_stream;		///< Mavlink interface using streams
-	Serial*				uart;				///< Serial device
+	Serial*			uart;				///< Serial device
 
 	uint8_t 	of_count;		///< Number of optic flow vectors
-	flow_data_t of;				///< Optic flow vectors
-	flow_data_t of_loc;			///< Location of optic flow vectors
+	flow_data_t 	of;			///< Optic flow vectors
+	flow_data_t 	of_tmp;			///< Temporary optic flow vectors
+	flow_data_t 	of_loc;			///< Location of optic flow vectors
+	flow_data_t 	of_loc_tmp;		///< Temporary location of optic flow vectors
 	uint16_t 	n_packets;		///< Number of encapsulated data packets expected
 	uint32_t 	size_data; 		///< Total size of data to receive (in bytes)
 
