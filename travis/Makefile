@@ -45,7 +45,7 @@ LIB_SRCS += drivers/battery.c
 LIB_SRCS += drivers/bmp085.c                    
 LIB_SRCS += drivers/bmp085_telemetry.c          
 # LIB_SRCS += drivers/curvace.c                   
-# LIB_SRCS += drivers/gps_ublox.c                 
+LIB_SRCS += drivers/gps_ublox.c                 
 LIB_SRCS += drivers/gps_ublox_telemetry.c       
 LIB_SRCS += drivers/hmc5883l.c             
 # LIB_SRCS += drivers/itg3200.c              
@@ -65,25 +65,25 @@ LIB_SRCS += control/attitude_controller_p2.c
 LIB_SRCS += control/attitude_error_estimator.c    
 LIB_SRCS += control/joystick_parsing.c            
 LIB_SRCS += control/joystick_parsing_telemetry.c  
-# LIB_SRCS += control/navigation.c                   
+LIB_SRCS += control/navigation.c                   
 LIB_SRCS += control/pid_controller.c               
 LIB_SRCS += control/servos_mix_quadcopter_cross.c  
 LIB_SRCS += control/servos_mix_quadcopter_diag.c   
 LIB_SRCS += control/stabilisation.c
 # LIB_SRCS += control/stabilisation_copter.c
-# LIB_SRCS += control/stabilisation_telemetry.c
-# LIB_SRCS += control/vector_field_waypoint.c
-# LIB_SRCS += control/velocity_controller_copter.c
+LIB_SRCS += control/stabilisation_telemetry.c
+LIB_SRCS += control/vector_field_waypoint.c
+LIB_SRCS += control/velocity_controller_copter.c
 
 LIB_SRCS += sensing/ahrs.c            
 LIB_SRCS += sensing/ahrs_telemetry.c  
 LIB_SRCS += sensing/imu.c             
 LIB_SRCS += sensing/imu_telemetry.c                  
-# LIB_SRCS += sensing/position_estimation.c            
-# LIB_SRCS += sensing/position_estimation_telemetry.c
+LIB_SRCS += sensing/position_estimation.c            
+LIB_SRCS += sensing/position_estimation_telemetry.c
 LIB_SRCS += sensing/qfilter.c
 # LIB_SRCS += sensing/simulation.c
-# LIB_SRCS += sensing/simulation_telemetry.c   
+LIB_SRCS += sensing/simulation_telemetry.c   
 
 LIB_SRCS += runtime/scheduler.cpp  
 LIB_SRCS += runtime/scheduler_telemetry.c
@@ -92,17 +92,16 @@ LIB_SRCS += runtime/scheduler_telemetry.c
 # LIB_SRCS += communication/acoustic_telemetry.c      
 # LIB_SRCS += communication/console.c                 
 LIB_SRCS += communication/data_logging.c            
-# LIB_SRCS += communication/data_logging_telemetry.c  
-# LIB_SRCS += communication/hud_telemetry.c           
+LIB_SRCS += communication/hud_telemetry.c           
 LIB_SRCS += communication/mavlink_communication.c     
 LIB_SRCS += communication/mavlink_message_handler.c   
 LIB_SRCS += communication/mavlink_stream.cpp            
-# LIB_SRCS += communication/mavlink_waypoint_handler.c  
+LIB_SRCS += communication/mavlink_waypoint_handler.c  
 # LIB_SRCS += communication/onboard_parameters.c
 LIB_SRCS += communication/remote.c
 LIB_SRCS += communication/remote_telemetry.c
 LIB_SRCS += communication/state.c
-# LIB_SRCS += communication/state_machine.c
+LIB_SRCS += communication/state_machine.c
 LIB_SRCS += communication/state_telemetry.c
 
 
@@ -125,6 +124,7 @@ LIB_SRCS += hal/linux/file_linux.cpp
 LIB_SRCS += hal/linux/serial_udp.cpp
 LIB_SRCS += hal/linux/time_keeper.c
 LIB_SRCS += hal/linux/udp_client_server.cpp
+
 
 # ------------------------------------------------------------------------------
 # C COMPILER OPTIONS

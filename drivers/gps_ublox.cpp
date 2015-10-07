@@ -45,12 +45,10 @@
 extern "C"
 {
 	#include "print_util.h"
-	#include "uart_int.h"
 	#include "buffer.h"
 	#include "time_keeper.h"
 	#include "endianness.h"
 	#include <string.h>
-	#include "delay.h"
 }
 
 uint8_t  **ubx_current_message = 0;					///<  The pointer to the pointer to the structure of the current message to fill
@@ -1794,7 +1792,7 @@ static bool gps_ublox_process_data(gps_t *gps, uint8_t ubx_class, uint8_t msg_id
 					print_util_dbg_print(", status :");
 					print_util_dbg_print_num(gps_nav_dgps->status,10);
 					print_util_dbg_print("\r\n");
-					for (int i = 0; i < min(gps_nav_dgps->num_channel,16); ++i)
+					for (int i = 0; i < maths_f_min(gps_nav_dgps->num_channel, 16); ++i)
 					{
 						print_util_dbg_print("Channel:");
 						print_util_dbg_print_num(i,10);
@@ -1901,8 +1899,8 @@ static void ubx_send_uint8(gps_t *gps, uint8_t byte, uint8_t *ck_a, uint8_t *ck_
 {
 	uint8_t data = byte;
 	
-	update_checksum((uint8_t *)&data,1,ck_a,ck_b);
-	gps->serial->write((uint8_t*)data);
+	update_checksum(&data, 1, ck_a, ck_b);
+	gps->serial->write(&data);
 	
 }
 
@@ -1961,8 +1959,8 @@ static void ubx_send_header(gps_t *gps, uint8_t msg_class, uint8_t msg_id, uint1
 	header.msg_id_header    	= msg_id;
 	header.length			= size;
 	
-	gps->serial->write((uint8_t*)header.preamble1);
-	gps->serial->write((uint8_t*)header.preamble2);
+	gps->serial->write(&header.preamble1);
+	gps->serial->write(&header.preamble2);
 	
 	ubx_send_uint8(gps,header.msg_class,ck_a,ck_b);
 	ubx_send_uint8(gps,header.msg_id_header,ck_a,ck_b);

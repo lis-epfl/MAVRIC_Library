@@ -50,7 +50,6 @@ extern "C"
 	#include "stdint.h"
 	#include "stdbool.h"
 	#include "maths.h"
-	#include "streams.h"
 	#include "buffer.h"
 }
 
