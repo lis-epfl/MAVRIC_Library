@@ -52,7 +52,7 @@ extern "C"
 #include "sma.h"
 #include "tasks.h"
 
-
+#define C_IDLE 20
 
 /**
  * \brief 		Launch status states
@@ -68,12 +68,12 @@ typedef enum {
  */
 typedef struct
 {
-	sma_t * sma; 			//< Simple moving average of acceleration norm
-	int16_t t_launch; 		//< Launch detection threshold
-	int16_t c_idle;			//< Norm of idle thrust value
-	launch_status_t status; //< Launch status
-	float acc[3];			//< Acceleration values
-	bool enabled;			//< 1 if launch detection is enabled, 0 otherwise
+	sma_t * sma; 						//< Simple moving average of acceleration norm
+	int16_t t_launch; 					//< Launch detection threshold
+	const int16_t c_idle = C_IDLE;		//< Norm of idle thrust value
+	launch_status_t status; 			//< Launch status
+	float acc[3];						//< Acceleration values
+	bool enabled;						//< 1 if launch detection is enabled, 0 otherwise
 } launch_detection_t;
 
 /**

@@ -51,8 +51,6 @@
 #define SAMPLING_PERIOD	50	//< Length of moving average
 #define MIN_SAMPLES 50 		//< Minimum number of samples needed to have a viable SMA
 
-const int16_t c_idle = 20;  //< Idle thrust (norm)
-
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -86,7 +84,6 @@ bool launch_detection_threshold_check(launch_detection_t * ld);
  	ld->sma = malloc(sizeof(sma_t));
  	sma_init(ld->sma, SAMPLING_PERIOD);
  	ld->t_launch = t_launch;
- 	ld->c_idle = c_idle;
  	ld->status = IDLE;
  	ld->ACC_X = ld->ACC_Y = ld->ACC_Z = 0;
  	ld->enabled = 1;
