@@ -40,71 +40,90 @@
 
 
 #include "sdcard.h"
+#include "sd_spi.h"
+
 
 bool MMC_disk_status(void)
 {
-	return false;
+	return sd_spi_status();
 }
+
 
 bool MMC_disk_initialize(void)
 {
-	return false;
+	return sd_spi_init();
 }
+
 
 bool MMC_disk_read(void* buff, uint32_t sector, uint8_t count)
 {
-	return false;
+	return sd_spi_read_given_sector_to_ram(buff,sector,count);
 }
+
 
 bool MMC_disk_write(const void *buff, uint32_t sector, uint8_t count)
 {
-	return false;
+	return sd_spi_write_given_sector_from_ram(buff, sector, count);
 }
+
 
 bool MMC_ctrl_sync(void)
 {
-	return false;
+	while( !sd_spi_wait_not_busy() )
+	{
+		;
+	}
+	return true;
 }
+
 
 bool MMC_get_sector_count(void* buff)
 {
-	return false;
+	return sd_spi_get_sector_count(buff);
 }
+
 
 bool MMC_get_sector_size(void* buff)
 {
-	return false;
+	return sd_spi_get_sector_size(buff);
 }
+
 
 bool MMC_get_block_size(void* buff)
 {
-	return false;
+	return sd_spi_get_sector_size(buff);
 }
+
 
 bool MMC_ctrl_trim(void* buff)
 {
 	return false;
 }
 
+
 bool MMC_get_type(void* buff)
 {
 	return false;
 }
+
 
 bool MMC_get_csd(void* buff)
 {
 	return false;
 }
 
+
 bool MMC_get_cid(void* buff)
 {
 	return false;
 }
 
+
 bool MMC_get_ocr(void* buff)
 {
 	return false;
 }
+
 
 bool MMC_get_sdstat(void* buff)
 {
