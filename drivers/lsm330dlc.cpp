@@ -46,7 +46,6 @@
 
 extern "C"
 {
-	#include "twim.h"
 	#include "print_util.h"
 }
 
