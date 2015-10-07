@@ -45,20 +45,8 @@ extern "C"
 {
 	#include "time_keeper.h"
 	#include "print_util.h"
+	#include "endianness.h"
 }
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-/**
- * \brief Swap bytes iof signed 16 bits integer
- */
-static inline int16_t endian_rev16(int16_t data)
-{
-	return ((data >> 8) & 0x00ff) | ((data & 0x00ff) << 8);
-};
-
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -186,8 +174,8 @@ bool flow_update(flow_t* flow)
 							// swap bytes
 							for( uint32_t i = 0; i < flow->of_count; ++i)
 							{
-								flow->of_loc.x[i] = endian_rev16(flow->of_loc_tmp.x[i]);
-								flow->of_loc.y[i] = endian_rev16(flow->of_loc_tmp.y[i]);
+								flow->of_loc.x[i] = endian_rev16s(flow->of_loc_tmp.x[i]);
+								flow->of_loc.y[i] = endian_rev16s(flow->of_loc_tmp.y[i]);
 							}
 						}
 					break;
@@ -212,8 +200,8 @@ bool flow_update(flow_t* flow)
 							// swap bytes
 							for (int i = 0; i < flow->of_count; ++i)
 							{
-								flow->of.x[i] = endian_rev16(flow->of_tmp.x[i]);
-								flow->of.y[i] = endian_rev16(flow->of_tmp.y[i]);
+								flow->of.x[i] = endian_rev16s(flow->of_tmp.x[i]);
+								flow->of.y[i] = endian_rev16s(flow->of_tmp.y[i]);
 							}
 						}
 					break;

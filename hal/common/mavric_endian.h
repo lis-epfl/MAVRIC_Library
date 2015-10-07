@@ -141,6 +141,18 @@ static inline uint16_t endian_rev16(uint16_t data)
 
 
 /**
+ * @brief   Reverses endianness in a 16 bits signed number
+ * 
+ * @param 	data 	Input
+ * @return 			Output
+ */
+static inline int16_t endian_rev16s(int16_t data)
+{
+	return ((data >> 8) & 0x00ff) | ((data & 0x00ff) << 8);
+};
+
+
+/**
  * @brief   Reverses endianness in a 32 bits number
  * 
  * @param 	data 	Input
