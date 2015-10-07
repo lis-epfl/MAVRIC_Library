@@ -153,10 +153,12 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 	//we use ahrs->dt since it is updated at the same frequency as position_estimation
 	float dt = pos_est->ahrs->dt;
 	
-	// quat_t bias_correction = {.s = 0, .v = {0.0f, 0.0f, 1.0f}};
-	quat_t vel_correction 	= {};
-	vel_correction.s 		= 0;
-	vel_correction.v 		= {0.0f, 0.0f, 1.0f };
+		// // quat_t bias_correction = {.s = 0, .v = {0.0f, 0.0f, 1.0f}};
+		// quat_t vel_correction = {};
+		// vel_correction.s 	  = 0.0f;
+		// vel_correction.v[0]   = 0.0f;
+		// vel_correction.v[1]   = 0.0f;
+		// vel_correction.v[2]   = 0.0f;
 
 	float pos_error[3] = 
 	{
@@ -173,7 +175,7 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 		0.0f
 	};
 
-	uint32_t t_inter_baro;
+	// uint32_t t_inter_baro;
 	int32_t i;
 
 	if (pos_est->init_barometer)
@@ -186,7 +188,7 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 			pos_est->time_last_barometer_msg = pos_est->barometer->get_last_update();
 		}
 
-		t_inter_baro = (time_keeper_get_micros() - pos_est->barometer->get_last_update()) / 1000.0f;
+		// t_inter_baro = (time_keeper_get_micros() - pos_est->barometer->get_last_update()) / 1000.0f;
 		baro_gain = 1.0f; //maths_f_max(1.0f - t_inter_baro / 1000.0f, 0.0f);
 			
 		//pos_est->local_position.pos[2] += kp_alt_baro / ((float)(t_inter_baro / 2.5f + 1.0f)) * alt_error;
