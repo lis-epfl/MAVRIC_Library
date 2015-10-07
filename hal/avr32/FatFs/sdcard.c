@@ -79,19 +79,22 @@ bool MMC_ctrl_sync(void)
 
 bool MMC_get_sector_count(void* buff)
 {
-	return sd_spi_get_sector_count(buff);
+	sd_spi_get_sector_count(buff);
+	return true;;
 }
 
 
 bool MMC_get_sector_size(void* buff)
 {
-	return sd_spi_get_sector_size(buff);
+	sd_spi_get_sector_size(buff);
+	return true;
 }
 
 
 bool MMC_get_block_size(void* buff)
 {
-	return sd_spi_get_sector_size(buff);
+	sd_spi_get_sector_size(buff);
+	return true;
 }
 
 
