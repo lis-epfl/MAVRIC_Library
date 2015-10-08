@@ -178,6 +178,26 @@ quat_t static inline quaternions_inverse(const quat_t q)
 
 
 /**
+ * \brief 			Rotates a quaternion
+ * 
+ * \param 	qi 		Input quaternion
+ * \param 	qe 		Rotation quaternion
+ * 
+ * \return 			Output quaternion (rotated)
+ */
+quat_t static inline quaternions_rotate(const quat_t qi, const quat_t qrot)
+{
+	quat_t qinv, qtmp;
+	
+	qinv = quaternions_inverse(qrot);
+	qtmp = quaternions_multiply(qinv,qi);
+	qtmp = quaternions_multiply(qtmp,qrot);
+
+	return qtmp;
+}
+
+
+/**
  * \brief 			Rotates a vector from global frame to local frame according to an attitude quaternion
  * 
  * \details 		The vector is given in the form of a quaternion with the scalar term equal to 0

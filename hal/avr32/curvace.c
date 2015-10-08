@@ -57,39 +57,39 @@
 //------------------------------------------------------------------------------
 
 /**
- * @brief  Initializes the SPI and GPIOs for curvace
+ * \brief  Initializes the SPI and GPIOs for curvace
  */
 static void curvace_init_spi(void);
 
 
 /**
- * @brief  	Quick implementation of SPI comm
+ * \brief  	Quick implementation of SPI comm
  * 
- * @param 	data 	Data to send
+ * \param 	data 	Data to send
  *
- * @return 			Data received
+ * \return 			Data received
  */
 static uint16_t curvace_spi_low_level(uint16_t data);
 
 
 /**
- * @brief 	Read pixel data from both hemispheres
+ * \brief 	Read pixel data from both hemispheres
  * 
- * @param 	curvace 	Pointer to data structure
+ * \param 	curvace 	Pointer to data structure
  */
 static void curvace_read_spi(curvace_t* curvace);
 
 
 /**
- * @brief  		Send start message to the camera
+ * \brief  		Send start message to the camera
  */
 static void curvace_start(void);
 
 
 /**
- * @brief 	Filters, derotate and scale newly received raw data
+ * \brief 	Filters, derotate and scale newly received raw data
  * 
- * @param 	curvace 	Pointer to data structure
+ * \param 	curvace 	Pointer to data structure
  */
 static void curvace_process_all(curvace_t* curvace);
 
