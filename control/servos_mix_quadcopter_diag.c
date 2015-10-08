@@ -119,22 +119,3 @@ void servos_mix_quadcopter_diag_update(servo_mix_quadcotper_diag_t* mix)
 	servos_set_value(mix->servos, mix->motor_rear_right,  motor[2]);
 	servos_set_value(mix->servos, mix->motor_rear_left,   motor[3]);
 }
-
-void servos_mix_quadcopter_diag_forces_from_servos(servo_mix_quadcotper_diag_t* mix, float rotor_lifts[4], float rotor_drags[4], float rotor_inertia[4], float mpos_x, float mpos_y, float rotor_diameter)
-{
-	
-	// torque around x axis (roll)
-	mix->torque_command->xyz[0] = ((rotor_lifts[mix->motor_front_left]  + rotor_lifts[mix->motor_rear_left]  ) 
-						    	- (rotor_lifts[mix->motor_front_right] + rotor_lifts[mix->motor_rear_right] )) * mpos_y;;
-
-	// torque around y axis (pitch)
-	mix->torque_command->xyz[1] = ((rotor_lifts[mix->motor_front_left]  + rotor_lifts[mix->motor_front_right] )
-								- (rotor_lifts[mix->motor_rear_left]   + rotor_lifts[mix->motor_rear_right] ))*  mpos_x;
-
-	mix->torque_command->xyz[2] = (mix->motor_front_left_dir * (10.0f * rotor_drags[mix->motor_front_left] + rotor_inertia[mix->motor_front_left])
-								+ mix->motor_front_right_dir * (10.0f * rotor_drags[mix->motor_front_right] + rotor_inertia[mix->motor_front_right])
-								+ mix->motor_rear_left_dir * (10.0f * rotor_drags[mix->motor_rear_left] + rotor_inertia[mix->motor_rear_left])
-								+ mix->motor_rear_right_dir * (10.0f * rotor_drags[mix->motor_rear_right] + rotor_inertia[mix->motor_rear_right] ))*  rotor_diameter;
-	
-	mix->thrust_command->thrust = -(rotor_lifts[mix->motor_front_left]+ rotor_lifts[mix->motor_front_right] +rotor_lifts[mix->motor_rear_left] +rotor_lifts[mix->motor_rear_right]);
-}

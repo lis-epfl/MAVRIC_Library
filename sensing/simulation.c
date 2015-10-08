@@ -180,16 +180,22 @@ void forces_from_servos_diag_quad(simulation_model_t* sim)
 	float mpos_x = sim->vehicle_config.rotor_arm_length / 1.4142f;
 	float mpos_y = sim->vehicle_config.rotor_arm_length / 1.4142f;
 
-	servos_mix_quadcopter_diag_forces_from_servos(sim->mix, rotor_lifts, rotor_drags, rotor_inertia, mpos_x, mpos_y, sim->vehicle_config.rotor_diameter);
+	// torque around x axis (roll)
+	sim->torques_bf[ROLL] = ((rotor_lifts[sim->mix->motor_front_left]  + rotor_lifts[sim->mix->motor_rear_left]  ) 
+						    	- (rotor_lifts[sim->mix->motor_front_right] + rotor_lifts[sim->mix->motor_rear_right] )) * mpos_y;;
 
-	sim->torques_bf[ROLL] = sim->mix->torque_command->xyz[X];
-	sim->torques_bf[PITCH] = sim->mix->torque_command->xyz[Y];
-	sim->torques_bf[YAW] = sim->mix->torque_command->xyz[Z];
+	// torque around y axis (pitch)
+	sim->torques_bf[PITCH] = ((rotor_lifts[sim->mix->motor_front_left]  + rotor_lifts[sim->mix->motor_front_right] )
+								- (rotor_lifts[sim->mix->motor_rear_left]   + rotor_lifts[sim->mix->motor_rear_right] ))*  mpos_x;
 
-	
+	sim->torques_bf[YAW] = (sim->mix->motor_front_left_dir * (10.0f * rotor_drags[sim->mix->motor_front_left] + rotor_inertia[sim->mix->motor_front_left])
+								+ sim->mix->motor_front_right_dir * (10.0f * rotor_drags[sim->mix->motor_front_right] + rotor_inertia[sim->mix->motor_front_right])
+								+ sim->mix->motor_rear_left_dir * (10.0f * rotor_drags[sim->mix->motor_rear_left] + rotor_inertia[sim->mix->motor_rear_left])
+								+ sim->mix->motor_rear_right_dir * (10.0f * rotor_drags[sim->mix->motor_rear_right] + rotor_inertia[sim->mix->motor_rear_right] ))*  sim->vehicle_config.rotor_diameter;
+
 	sim->lin_forces_bf[X] = -(sim->vel_bf[X] - wind_bf.v[0]) * lateral_airspeed * sim->vehicle_config.vehicle_drag;  
 	sim->lin_forces_bf[Y] = -(sim->vel_bf[Y] - wind_bf.v[1]) * lateral_airspeed * sim->vehicle_config.vehicle_drag;
-	sim->lin_forces_bf[Z] = sim->mix->thrust_command->thrust;
+	sim->lin_forces_bf[Z] = -(rotor_lifts[sim->mix->motor_front_left]+ rotor_lifts[sim->mix->motor_front_right] +rotor_lifts[sim->mix->motor_rear_left] +rotor_lifts[sim->mix->motor_rear_right]);
 
 }
 
@@ -198,7 +204,7 @@ void forces_from_servos_diag_quad(simulation_model_t* sim)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimation_t* pos_est, barometer_t* pressure, gps_t* gps, sonar_t* sonar, state_t* state, bool* waypoint_set, servo_mix_quadcotper_diag_t* mix)
+bool simulation_init(simulation_model_t* sim, const simulation_config_t* sim_config, ahrs_t* ahrs, imu_t* imu, position_estimation_t* pos_est, barometer_t* pressure, gps_t* gps, sonar_t* sonar, state_t* state, bool* waypoint_set, const servo_mix_quadcotper_diag_t* mix)
 {
 	bool init_success = true;
 	

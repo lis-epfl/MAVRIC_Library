@@ -128,20 +128,6 @@ bool servo_mix_quadcotper_diag_init(servo_mix_quadcotper_diag_t* mix,
 void servos_mix_quadcopter_diag_update(servo_mix_quadcotper_diag_t* mix);
 
 
-/**
- * \brief					Computes torques and thrust command from servos rotation speeds
- * 
- * \param mix				The pointer to the servos mix structure
- * \param rotor_lifts		The lift force of each of the 4 propellers
- * \param rotor_drags		The drag force of each of the 4 propellers
- * \param rotor_inertia		The inertia of each of the 4 propellers
- * \param mpos_x			The lever arm of the propeller in the X direction
- * \param mpos_y			The lever arm of the propeller in the Y direction
- * \param rotor_diameter	The rotor diameter
- */
-void servos_mix_quadcopter_diag_forces_from_servos(servo_mix_quadcotper_diag_t* mix, float rotor_lifts[4], float rotor_drags[4], float rotor_inertia[4], float mpos_x, float mpos_y, float rotor_diameter);
-
-
 #ifdef __cplusplus
 	}
 #endif

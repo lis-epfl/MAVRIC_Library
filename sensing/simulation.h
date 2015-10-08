@@ -127,7 +127,7 @@ typedef struct
 	const state_t* state;									///< The pointer to the state structure
 	const ahrs_t *estimated_attitude;						///< The pointer to the attitude estimation structure
 	bool* nav_plan_active;									///< The pointer to the waypoint set flag
-	servo_mix_quadcotper_diag_t* mix;						///< The pointer to the mix to servos structure
+	const servo_mix_quadcotper_diag_t* mix;					///< The pointer to the mix to servos structure
 } simulation_model_t;
 
 
@@ -158,7 +158,7 @@ bool simulation_init(	simulation_model_t* sim,
 						sonar_t* sonar, 
 						state_t* state, 
 						bool* waypoint_set,
-						servo_mix_quadcotper_diag_t* mix);
+						const servo_mix_quadcotper_diag_t* mix);
 
 
 /**
