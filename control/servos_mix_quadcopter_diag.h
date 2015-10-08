@@ -115,8 +115,8 @@ typedef struct
  */
 bool servo_mix_quadcotper_diag_init(servo_mix_quadcotper_diag_t* mix, 
 									const servo_mix_quadcopter_diag_conf_t* config, 
-									torque_command_t* torque_command, 
-									thrust_command_t* thrust_command, 
+									const torque_command_t* torque_command, 
+									const thrust_command_t* thrust_command, 
 									servos_t* servos);
 
 
