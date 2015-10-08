@@ -1,5 +1,5 @@
 # /*******************************************************************************
-#  * Copyright (c) 2009-2014, MAV'RIC Development Team
+#  * Copyright (c) 2009-2015, MAV'RIC Development Team
 #  * All rights reserved.
 #  * 
 #  * Redistribution and use in source and binary forms, with or without 
