@@ -30,93 +30,99 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file piezo_speaker.h
+ * \file stabilisation_ywing.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Julien Lecoeur
  *   
- * \brief This file is the driver for the piezzo speaker
+ * \brief Ywing stabilisation
  *
  ******************************************************************************/
 
 
-#ifndef PIEZO_SPEAKER_H_
-#define PIEZO_SPEAKER_H_
+/**
+ *   Disclaimer: this WIP
+ */
+
+
+#ifndef STABILISATION_YWING_H_
+#define STABILISATION_YWING_H_
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" {
 #endif
 
 #include <stdint.h>
+#include <stdbool.h>
+#include "quaternions.h"
 
-#define PIEZO_HIGH_PIN AVR32_PIN_PA12			///< Define the Microcontroller pin associated with the high pin of the piezo speaker
-#define PIEZO_LOW_PIN AVR32_PIN_PA15			///< Define the Microcontroller pin associated with the low pin of the piezo speaker
-
-
-/**
- * \brief Initialize the piezo speaker
- */
-void piezo_speaker_init(void);
+#include "control_command.h"
+#include "attitude_controller.h"
+#include "servos_mix_ywing.h"
+#include "remote.h"
 
 
 /**
- * \brief Initialize the speaker in a binary(?) mode
+ * \brief Flight modes for ywing
  */
-void piezo_speaker_init_binary(void);
+ typedef enum
+ {
+ 	YWING_DISARMED 		= 0,		///< Disarmed
+ 	YWING_MANUAL		= 1,		///< Armed
+ 	YWING_RATE			= 2, 		///< Rate control only
+ 	YWING_HOVER			= 3,		///< Attitude + rate control in hover
+ 	YWING_TRANSITION 	= 4,		///< Attitude + rate control in transition
+ 	YWING_45			= 5, 		///< Attitude + rate control with base attitude at 45 degrees
+ } ywing_mode_t;
 
 
 /**
- * \brief Beep at a given frequency for a duration
- *
- * \param	duration_ms		Duration of the piezo_speaker_beep
- * \param	frequency		Frequency of the piezo_speaker_beep
+ * \brief Ywing
  */
-void piezo_speaker_beep(int32_t duration_ms, int32_t frequency);
+typedef struct
+{
+	ywing_mode_t 			mode;					///< Current flight mode
+	command_t 				command;				///< Input command
+	attitude_controller_t 	attitude_controller;	///< Attitude controler
+	float 					reference_pitch;		///< Current pitch reference
+	float 					reference_heading;		///< Current heading reference
+	float 					reference_roll;			///< Current roll reference
+	const ahrs_t*			ahrs;					///< Pointer to attitude estimation (input)
+	const remote_t*			remote;					///< Pointer to remote (input)
+} stabilisation_ywing_t;
 
 
 /**
- * \brief Startup melody
+ * \brief Configuration for the ywing structure
  */
-void piezo_speaker_startup_melody(void);
+typedef struct  
+{
+} stabilisation_ywing_conf_t;
+
+
 
 
 /**
- * \brief Critical error melody
+ * \brief  	Initialisation Ywing 
+ * 
+ * \param 	stabilisation_ywing 	Pointer to data struct
+ * \param 	config 					Configuration
+ * 
+ * \return 	True if successful, false if not
  */
-void piezo_speaker_critical_error_melody(void);
+bool stabilisation_ywing_init(stabilisation_ywing_t* stabilisation_ywing, stabilisation_ywing_conf_t* config);
 
 
 /**
- * \brief Quick startup melody
+ * \brief 	Main update function
+ * 
+ * \param 	stabilisation_ywing 	Pointer to data struct
  */
-void piezo_speaker_quick_startup(void);
-
-/**
- * \brief Quick startup melody
- */
-void piezo_speaker_startup_bb(void);
-
-/**
- * \brief Startup melody for bumblebot
- */
-void piezo_speaker_startup_bumblebot(void);
-
-
-/**
- * \brief Star wars melody
- */
-void piezo_speaker_star_wars(void);
-
-
-/**
- * \brief Mario melody
- */
-void piezo_speaker_mario_melody(void);
-
+void stabilisation_ywing_update(stabilisation_ywing_t* stabilisation_ywing);
 
 
 #ifdef __cplusplus
-	}
+}
 #endif
 
-#endif /* PIEZO_SPEAKER_H_ */
+#endif /* STABILISATION_YWING_H_ */

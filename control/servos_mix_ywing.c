@@ -30,86 +30,93 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file servos_mix_quadcopter_cross.c
+ * \file servos_mix_ywing.h
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief Links between torque commands and servos PWM command for quadcopters 
- * in cross configuration
+ * \brief Links between torque commands and servos PWM command for Ywing
  *
  ******************************************************************************/
 
 
-#include "servos_mix_quadcopter_cross.h"
+#include "servos_mix_ywing.h"
+#include "print_util.h"
 
-
-bool servo_mix_quadcotper_cross_init(servo_mix_quadcotper_cross_t* mix, const servo_mix_quadcopter_cross_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, servos_t* servos)
+bool servo_mix_ywing_init( servo_mix_ywing_t* mix, const servo_mix_ywing_conf_t* config, const torque_command_t* torque_command, const thrust_command_t* thrust_command, servos_t* servos)
 {
+	bool init_success = true;
+	
 	// Init dependencies
 	mix->torque_command = torque_command;
 	mix->thrust_command = thrust_command;
 	mix->servos      	= servos;
 
 	// Init parameters
-	mix->motor_front     = config->motor_front;
-	mix->motor_left      = config->motor_left;
-	mix->motor_right     = config->motor_right;
-	mix->motor_rear      = config->motor_rear;
-
-	mix->motor_front_dir = config->motor_front_dir;
-	mix->motor_left_dir  = config->motor_left_dir;
-	mix->motor_right_dir = config->motor_right_dir;	
-	mix->motor_rear_dir  = config->motor_rear_dir;
-
-	mix->min_thrust 	   = config->min_thrust;
-	mix->max_thrust 	   = config->max_thrust;
-
-	return true;
+	mix->motor 			= config->motor;			
+	mix->flap_top 		= config->flap_top;		
+	mix->flap_right		= config->flap_right;		
+	mix->flap_left 		= config->flap_left;		
+	mix->flap_top_dir	= config->flap_top_dir;	
+	mix->flap_right_dir = config->flap_right_dir;
+	mix->flap_left_dir 	= config->flap_left_dir;
+	mix->min_thrust		= config->min_thrust;		
+	mix->max_thrust		= config->max_thrust;		
+	mix->min_deflection = config->min_deflection;
+	mix->max_deflection = config->max_deflection;
+	
+	print_util_dbg_print("[SERVOS MIX YWING] initialised \r\n");
+	
+	return init_success;
 }
 
 
-bool servos_mix_quadcopter_cross_update(servo_mix_quadcotper_cross_t* mix)
+void servos_mix_ywing_update(servo_mix_ywing_t* mix)
 {
-	float motor[4];
+	float servos[4];
 	
-	// Front motor
-	motor[0] = 	mix->thrust_command->thrust + 
-				mix->torque_command->xyz[1]  + 
-				mix->motor_front_dir * mix->torque_command->xyz[2];
-
-	// Right motor
-	motor[1] = 	mix->thrust_command->thrust +
-				(- mix->torque_command->xyz[0]) + 
-				mix->motor_right_dir * mix->torque_command->xyz[2];
-	
-	// Rear motor
-	motor[2]  = mix->thrust_command->thrust +
-				(- mix->torque_command->xyz[1]) +
-				mix->motor_rear_dir * mix->torque_command->xyz[2];
-	
-	// Left motor
-	motor[3]  = mix->thrust_command->thrust + 
-				mix->torque_command->xyz[0]  + 
-				mix->motor_left_dir * mix->torque_command->xyz[2];
+	// Main motor
+	servos[0] = mix->thrust_command->thrust;
 	
 	// Clip values
-	for (int32_t i = 0; i < 4; i++) 
+	if ( servos[0] < mix->min_thrust )
 	{
-		if ( motor[i] < mix->min_thrust )
+		servos[0] = mix->min_thrust;
+	}
+	else if ( servos[0] > mix->max_thrust )
+	{
+		servos[0] = mix->max_thrust;
+	}
+
+	// Top flap
+	servos[1] = mix->flap_top_dir * ( mix->torque_command->xyz[ROLL] 
+									- mix->torque_command->xyz[YAW] ); 
+	
+	// Right flap
+	servos[2]  = mix->flap_right_dir * ( mix->torque_command->xyz[ROLL] 
+										+ 0.86f * mix->torque_command->xyz[PITCH] 
+										+ 0.50f * mix->torque_command->xyz[YAW] );
+	
+	// Left flap
+	servos[3]  = mix->flap_left_dir * ( mix->torque_command->xyz[ROLL] 
+										- 0.86f * mix->torque_command->xyz[PITCH] 
+										+ 0.50f * mix->torque_command->xyz[YAW] );
+	
+	// Clip values
+	for (int32_t i = 1; i < 4; i++) 
+	{
+		if ( servos[i] < mix->min_deflection )
 		{
-			motor[i] = mix->min_thrust;
+			servos[i] = mix->min_deflection;
 		}
-		else if ( motor[i] > mix->max_thrust )
+		else if ( servos[i] > mix->max_deflection )
 		{
-			motor[i] = mix->max_thrust;
+			servos[i] = mix->max_deflection;
 		}
 	}
 
-	servos_set_value(mix->servos, mix->motor_front, motor[0]);
-	servos_set_value(mix->servos, mix->motor_right, motor[1]);
-	servos_set_value(mix->servos, mix->motor_rear,  motor[2]);
-	servos_set_value(mix->servos, mix->motor_left,  motor[3]);
-
-	return true;
+	servos_set_value(mix->servos, mix->motor, 		servos[0]);
+	servos_set_value(mix->servos, mix->flap_top,  	servos[1]);
+	servos_set_value(mix->servos, mix->flap_right,  servos[2]);
+	servos_set_value(mix->servos, mix->flap_left,   servos[3]);
 }

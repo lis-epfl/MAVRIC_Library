@@ -51,16 +51,7 @@
 
 #include "control_command.h"
 #include "servos.h"
-
-
-/**
- * \brief Enumerate the turn direction of a motor
- */
-typedef enum
-{
-	CW 	= 1,					///< Clock wise
-	CCW	= -1					///< Counter Cleck wise
-} rot_dir_t;
+#include "constants.h"
 
 
 /**
@@ -105,7 +96,7 @@ typedef struct
 /**
  * \brief		Initialize the servo mix
  * 
- * \param mix				Pointer to the servo mix structure of the quad in cross shape
+ * \param mix				Pointer to the servo mix structure
  * \param config			Pointer to the configuration of servo mix structure
  * \param torque_command	Pointer to the torque command structure
  * \param thrust_command	Pointer to the thrust command structure
@@ -121,9 +112,9 @@ bool servo_mix_quadcotper_diag_init(servo_mix_quadcotper_diag_t* mix,
 
 
 /**
- * @brief			Update des servos mix
+ * \brief			Update des servos mix
  * 
- * @param mix		Pointer to the servos mix structure
+ * \param mix		Pointer to the servos mix structure
  */
 void servos_mix_quadcopter_diag_update(servo_mix_quadcotper_diag_t* mix);
 
