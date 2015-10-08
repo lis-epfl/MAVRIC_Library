@@ -51,16 +51,7 @@
 
 #include "control_command.h"
 #include "servos.h"
-
-
-/**
- * \brief Enumerate the turn direction of a motor
- */
-typedef enum
-{
-	CW 	= 1,					///< Clock wise
-	CCW	= -1					///< Counter Clock wise
-} rot_dir_t;
+#include "constants.h"
 
 
 /**
