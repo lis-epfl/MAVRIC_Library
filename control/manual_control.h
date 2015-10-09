@@ -104,7 +104,6 @@ typedef struct
  * \param	manual_control	The pointer to the manual control structure
  * \param	config			The pointer to the configuration structure of the module
  * \param	remote_config	The pointer to the remote structure
- * \param	joystick_config	The pointer to the joystick structure
  *
  * \return	True if the init succeed, false otherwise
  */
