@@ -83,7 +83,7 @@ void manual_control_get_attitude_command(const manual_control_t* manual_control,
 		case REMOTE_CONTROL:
 			remote_get_command_from_remote(manual_control->remote, controls);
 			break;
-		case JOYSTICK_CONTROl:
+		case JOYSTICK_CONTROL:
 			joystick_parsing_get_attitude_command_from_joystick(manual_control->joystick,controls);
 			break;
 		default:
@@ -102,7 +102,7 @@ void manual_control_get_velocity_command(const manual_control_t* manual_control,
 		case REMOTE_CONTROL:
 			remote_get_velocity_vector_from_remote(manual_control->remote, controls);
 			break;
-		case JOYSTICK_CONTROl:
+		case JOYSTICK_CONTROL:
 			joystick_parsing_get_velocity_vector_from_joystick(manual_control->joystick, controls);
 			break;
 		default:
@@ -123,7 +123,7 @@ float manual_control_get_thrust(const manual_control_t* manual_control)
 		case REMOTE_CONTROL:
 			thrust = remote_get_throttle(manual_control->remote);
 			break;
-		case JOYSTICK_CONTROl:
+		case JOYSTICK_CONTROL:
 			thrust = joystick_parsing_get_throttle(manual_control->joystick);
 			break;
 		default:

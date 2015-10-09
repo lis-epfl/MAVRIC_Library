@@ -66,7 +66,7 @@ typedef enum
 {
 	NO_CONTROL = 1,
 	REMOTE_CONTROL = 2,
-	JOYSTICK_CONTROl = 3,
+	JOYSTICK_CONTROL = 3,
 }control_source_t;
 
 /**
