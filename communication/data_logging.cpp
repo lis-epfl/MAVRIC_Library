@@ -474,7 +474,7 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	
 	data_logging->sys_id = sysid;
 
-	snprintf(data_logging->file_name, data_logging->buffer_name_size, "%s_%ld", file_name, sysid);
+	snprintf(data_logging->file_name, data_logging->buffer_name_size, "%s_%lu", file_name, sysid);
 
 	init_success &= data_logging_open_new_log_file(data_logging);
 
