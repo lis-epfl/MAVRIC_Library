@@ -44,7 +44,6 @@
 #include "print_util.h"
 #include "flashc.h"
 #include "mavlink_communication.h"
-#include <stdlib.h>
 
 
 //------------------------------------------------------------------------------
