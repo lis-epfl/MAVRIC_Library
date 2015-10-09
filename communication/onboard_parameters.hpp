@@ -46,6 +46,7 @@
 #include "mavlink_stream.hpp"
 #include "mavlink_message_handler.hpp"
 #include "state.hpp"
+#include "file.hpp"
 
 extern "C" 
 {
@@ -55,11 +56,6 @@ extern "C"
 
 
 #define MAX_ONBOARD_PARAM_COUNT 120	// should be < 122 to fit on user page on AT32UC3C1512
-
-#define MAVERIC_FLASHC_USER_PAGE_START_ADDRESS (AVR32_FLASHC_USER_PAGE_ADDRESS + 0x04)	// +4bytes for unknown reason
-#define MAVERIC_FLASHC_USER_PAGE_FREE_SPACE 500	// 	512bytes user page, 
-												//	-4bytes at the start, 
-												//  -8bytes for the protected fuses at the end of the user page
 												
 /**
  * \brief	Structure of onboard parameter.
@@ -100,6 +96,7 @@ typedef struct
 	const mavlink_stream_t* mavlink_stream;					///< Pointer to mavlink_stream
 	bool debug;												///< Indicates if debug messages should be printed for each param change
 	onboard_parameters_set_t* param_set;					///< Pointer to a set of parameters, needs memory allocation
+	File* file;												///< File storage to keep parameters between flights
 	const state_t* state;									///< Pointer to the state structure
 } onboard_parameters_t;											
 
@@ -115,27 +112,18 @@ typedef struct
 
 
 /**
- * \brief	TODO: Modify the name of this structure to make it sized as the free flash memory to store these parameters
- */															
-typedef struct												
-{
-	//float values[MAVERIC_FLASHC_USER_PAGE_FREE_SPACE];
-	float values[MAX_ONBOARD_PARAM_COUNT];
-} nvram_data_t;
-
-
-/**
  * \brief	Initialisation of the Parameter_Set structure by setting the number of onboard parameter to 0
  * 
- * \param   	onboard_parameters		Pointer to module structure
+ * \param   onboard_parameters		Pointer to module structure
  * \param 	config 					Configuration
  * \param 	scheduler 				Pointer to MAVLink scheduler
+ * \param	file					Pointer to file storage
  * \param	state					Pointer to the state structure
  * \param 	message_handler 		Pointer to MAVLink message handler
  *
  * \return	True if the init succeed, false otherwise
  */
-bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, const state_t* state, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream);
+bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, File* file, const state_t* state, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream);
 
 
 /**
@@ -184,21 +172,23 @@ bool onboard_parameters_add_parameter_float(onboard_parameters_t* onboard_parame
 mav_result_t onboard_parameters_preflight_storage(onboard_parameters_t* onboard_parameters, mavlink_command_long_t* msg);
 
 /**
- * \brief	Read onboard parameters from the user page in the flash memory to the RAM memory
+ * \brief	Read onboard parameters from the file storage
  *
  * \param   onboard_parameters		Pointer to module structure
  *
- * \return	The result of the flash read procedure
+ * \return	The result of the read procedure
  */
-bool onboard_parameters_read_parameters_from_flashc(onboard_parameters_t* onboard_parameters);
+bool onboard_parameters_read_parameters_from_storage(onboard_parameters_t* onboard_parameters);
 
 
 /**
- * \brief	Write onboard parameters to the RAM memory from the user page in the flash memory
+ * \brief	Write onboard parameters to the file storage
  * 
  * \param   onboard_parameters		Pointer to module structure
+ * 
+ * \return  The result of the write procedure
  */
-void onboard_parameters_write_parameters_to_flashc(onboard_parameters_t* onboard_parameters);
+bool onboard_parameters_write_parameters_to_storage(onboard_parameters_t* onboard_parameters);
 
 
 #endif /* ONBOARD_PARAMETERS_H */

@@ -46,7 +46,6 @@
 extern "C"
 {
 	#include "print_util.h"
-	#include "flashc.h"
 	#include <stdlib.h>
 }
 
@@ -206,7 +205,7 @@ static void onboard_parameters_send_parameter(onboard_parameters_t* onboard_para
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, const state_t* state, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream) 
+bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onboard_parameters_conf_t* config, scheduler_t* scheduler, File* file, const state_t* state, mavlink_message_handler_t* message_handler, const mavlink_stream_t* mavlink_stream) 
 {
 	bool init_success = true;
 	
@@ -216,6 +215,7 @@ bool onboard_parameters_init(onboard_parameters_t* onboard_parameters, const onb
 	// Init debug mode
 	onboard_parameters->debug = config->debug;
 
+	onboard_parameters->file  = file;
 	onboard_parameters->state = state;
 
 	// Allocate memory for the onboard parameters
@@ -491,7 +491,7 @@ mav_result_t onboard_parameters_preflight_storage(onboard_parameters_t* onboard_
 		{
 	 		// read parameters from flash
 	 		print_util_dbg_print("Reading from flashc...\r\n");
-			if(onboard_parameters_read_parameters_from_flashc(onboard_parameters))
+			if(onboard_parameters_read_parameters_from_storage(onboard_parameters))
 			{
 				result = MAV_RESULT_ACCEPTED;
 	 		}
@@ -505,7 +505,7 @@ mav_result_t onboard_parameters_preflight_storage(onboard_parameters_t* onboard_
 		
 				// write parameters to flash
 				print_util_dbg_print("Writing to flashc\r\n");
-				onboard_parameters_write_parameters_to_flashc(onboard_parameters);
+				onboard_parameters_write_parameters_to_storage(onboard_parameters);
 			
 				result = MAV_RESULT_ACCEPTED;
 		}
@@ -521,87 +521,95 @@ mav_result_t onboard_parameters_preflight_storage(onboard_parameters_t* onboard_
 }
 
 
-bool onboard_parameters_read_parameters_from_flashc(onboard_parameters_t* onboard_parameters)
+bool onboard_parameters_read_parameters_from_storage(onboard_parameters_t* onboard_parameters)
 {
-	uint8_t i;
+	bool success = false;
+	
+	float cksum1 = 0.0f;
+	float cksum2 = 0.0f;
+
+	// Get pointer to set of parameters
 	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
 
-	nvram_data_t* nvram_array = (nvram_data_t *) MAVERIC_FLASHC_USER_PAGE_START_ADDRESS;
-	nvram_data_t local_array;
-	
-	float cksum1, cksum2;
-	cksum1 = 0;
-	cksum2 = 0;
+	// Declare a local array large enough
+	uint32_t to_read = onboard_parameters->file->length();
+	float* values    = (float*)malloc( sizeof(uint8_t)*to_read );
 
-	bool flash_read_successful = false;
+	// Read from file
+	onboard_parameters->file->seek(0, FILE_SEEK_START);
+	onboard_parameters->file->read((uint8_t*)values, to_read);
 
-	for (i = 0; i < (param_set->param_count +1);i++)
+	// Do checksum
+	for( uint32_t i = 0; i < (param_set->param_count +1); i++ )
 	{
-		local_array.values[i] = nvram_array->values[i];
-		cksum1 += local_array.values[i];
+		cksum1 += values[i];
 		cksum2 += cksum1;
 	}
-	
-	if ( 	(param_set->param_count == local_array.values[0] )
-		&&	(cksum1 == nvram_array->values[param_set->param_count + 1])
-		&&	(cksum2 == nvram_array->values[param_set->param_count + 2]) )
+
+	// Copy params
+	if ( 	(param_set->param_count == values[0] )
+		&&	(cksum1 == values[param_set->param_count + 1])
+		&&	(cksum2 == values[param_set->param_count + 2]) )
 	{
 		print_util_dbg_print("Flash read successful! New Parameters inserted.\r\n");
-		for (i = 1; i < (param_set->param_count + 1); i++)
+		for( uint32_t i = 1; i < (param_set->param_count + 1); i++ )
 		{
-			*(param_set->parameters[i-1].param) = local_array.values[i];
-			// onboard_parameters_update_parameter(onboard_parameters, i-1, local_array.values[i]);
+			*(param_set->parameters[i-1].param) = values[i];
 		}
-		flash_read_successful = true;
+		success = true;
 	}
 	else
 	{
 		print_util_dbg_print("Flash memory corrupted! Hardcoded values taken.\r\n");
 	}
+
+	// Free memory
+	free(values);
+
 	
-	return flash_read_successful;
+	return success;
 }
 
 
-void onboard_parameters_write_parameters_to_flashc(onboard_parameters_t* onboard_parameters)
+bool onboard_parameters_write_parameters_to_storage(onboard_parameters_t* onboard_parameters)
 {
+	bool success = false;
+	
+	float cksum1 = 0.0f;
+	float cksum2 = 0.0f;
+
+	// Get pointer to set of parameters
 	onboard_parameters_set_t* param_set = onboard_parameters->param_set;
 
-	float cksum1, cksum2;
-	cksum1 = 0;
-	cksum2 = 0;
+	// Compute the required space in memory
+	// (1 param_count + parameters + 2 checksums) floats
+	uint32_t bytes_to_write = 4 * (param_set->param_count + 3);		
+	
+	// Declare a local array large enough
+	float* values = (float*)malloc( sizeof(uint8_t)*bytes_to_write );
 
-	size_t bytes_to_write = 0;
-	
-	nvram_data_t* nvram_array = (nvram_data_t*) MAVERIC_FLASHC_USER_PAGE_START_ADDRESS;
-	nvram_data_t local_array;
-	
-	local_array.values[0] = param_set->param_count;
-	cksum1 += local_array.values[0];
+	// Init checksums
+	values[0] = param_set->param_count;
+	cksum1 += values[0];
 	cksum2 += cksum1;
-	
-	print_util_dbg_print("Begin write to flashc...\r\n");
-	
-	for (uint8_t i = 1; i <= param_set->param_count; i++)
+
+	// Copy parameters to local array and do checksum
+	for( uint32_t i = 1; i <= param_set->param_count; i++)
 	{
-		// local_array.values[i] = onboard_parameters_read_parameter(onboard_parameters, i-1);
-		local_array.values[i] = *(param_set->parameters[i-1].param);
+		values[i] = *(param_set->parameters[i-1].param);
 		
-		cksum1 += local_array.values[i];
+		cksum1 += values[i];
 		cksum2 += cksum1;
 	}
-	local_array.values[param_set->param_count + 1] = cksum1;
-	local_array.values[param_set->param_count + 2] = cksum2;
+	values[param_set->param_count + 1] = cksum1;
+	values[param_set->param_count + 2] = cksum2;
 
-	bytes_to_write = 4 * (param_set->param_count + 3);	// (1 param_count + parameters + 2 checksums) floats
-	
-	if(bytes_to_write < MAVERIC_FLASHC_USER_PAGE_FREE_SPACE)
-	{
-		flashc_memcpy((void *)nvram_array, &local_array, bytes_to_write, true);
-		print_util_dbg_print("Write to flashc completed.\r\n");
-	}
-	else
-	{
-		print_util_dbg_print("Attempted to write too many parameters on flash user page, aborted.\r\n");
-	}
+	// Write to file
+	onboard_parameters->file->seek(0, FILE_SEEK_START);
+	success &= onboard_parameters->file->write((uint8_t*)values, bytes_to_write);
+
+	// Free memory
+	free(values);
+
+	return success;
 }

@@ -99,7 +99,7 @@ LIB_SRCS += communication/mavlink_communication.c
 LIB_SRCS += communication/mavlink_message_handler.c   
 LIB_SRCS += communication/mavlink_stream.cpp            
 LIB_SRCS += communication/mavlink_waypoint_handler.c  
-# LIB_SRCS += communication/onboard_parameters.c
+LIB_SRCS += communication/onboard_parameters.c
 LIB_SRCS += communication/remote.c
 LIB_SRCS += communication/remote_telemetry.c
 LIB_SRCS += communication/state.c
@@ -118,6 +118,7 @@ LIB_SRCS += hal/dummy/FatFs/usbdisk.c
 LIB_SRCS += hal/dummy/serial_dummy.cpp
 LIB_SRCS += hal/dummy/i2c_dummy.cpp
 LIB_SRCS += hal/dummy/gpio_dummy.cpp
+LIB_SRCS += hal/dummy/file_dummy.cpp
 
 LIB_SRCS += hal/common/fat_fs_mounting.cpp
 LIB_SRCS += hal/common/fat_fs_mounting_telemetry.cpp
