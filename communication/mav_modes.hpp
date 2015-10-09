@@ -51,6 +51,17 @@ extern "C"
 	#include <stdbool.h>
 }
 
+/**
+ * \brief Enum defining the arming/disarming events
+ */
+typedef enum
+{
+	ARM_ACTION_DISARMING 	= -1,	///< The next action is the disarming of the motors
+	ARM_ACTION_NONE 		= 0,	///< The next action is nothing
+	ARM_ACTION_ARMING 		= 1,	///< The next action is arming the motors
+} arm_action_t;
+
+
 /*
  * \brief enum for defining ARM/DISARM status
  */

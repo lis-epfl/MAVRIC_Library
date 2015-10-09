@@ -54,16 +54,6 @@ extern "C"
 }
 
 /**
- * \brief	The source mode enum
- */
-typedef enum
-{
-	GND_STATION = 1,
-	REMOTE = 2,
-	JOYSTICK = 3,
-}source_mode_t;
-
-/**
  * \brief	The critical behavior enum
  */
 typedef enum
@@ -104,8 +94,6 @@ typedef struct
 	uint32_t sensor_enabled;							///< The sensors enabled on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
 	uint32_t sensor_health;								///< The health of sensors present on the autopilot (Value of 0: not enabled. Value of 1: enabled. Indices: 0: 3D gyro, 1: 3D acc, 2: 3D mag, 3: absolute pressure, 4: differential pressure, 5: GPS, 6: optical flow, 7: computer vision position, 8: laser based position, 9: external ground-truth (Vicon or Leica). Controllers: 10: 3D angular rate control 11: attitude stabilization, 12: yaw position, 13: z/altitude control, 14: x/y position control, 15: motor outputs / control)
 
-	source_mode_t source_mode;							///< The source mode of control (Remote, Joystick, GND station)
-
 	float fence_1_xy;									///< Size of fence 1 in the XY plane, in meters
 	float fence_1_z;									///< Size of fence 1 in the Z direction, in meters
 	float fence_2_xy;									///< Size of fence 2 in the XY plane, in meters
@@ -116,9 +104,7 @@ typedef struct
 	bool nav_plan_active;								///< Flag to tell that a flight plan (min 1 waypoint) is active
 	bool in_the_air;									///< Flag to tell whether the vehicle is airborne or not
 	bool reset_position;								///< Flag to enable the reset of the position estimation
-	
-	uint32_t remote_active;								///< Flag to tell whether the remote is active or not
-	
+		
 	battery_t battery;									///< The battery structure
 	
 	double last_heartbeat_msg;							///< Time of reception of the last heartbeat message from the ground station

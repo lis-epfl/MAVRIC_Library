@@ -49,6 +49,7 @@
 #include "remote.hpp"
 
 
+
 /**
  * \brief	Initialize the MAVLink communication module for the remote
  * 
@@ -78,6 +79,5 @@ void remote_telemetry_send_raw(const remote_t* remote, const mavlink_stream_t* m
  * \param	msg						The pointer to the MAVLink message
  */
 void remote_telemetry_send_scaled(const remote_t* remote, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
-
 
 #endif /* REMOTE_TELEMETRY_H_ */
