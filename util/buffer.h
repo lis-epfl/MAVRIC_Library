@@ -56,7 +56,7 @@ extern "C"
 
 
 /**
- * @brief 		Buffer structure
+ * \brief 		Buffer structure
  */
 typedef struct 
 {
@@ -68,58 +68,58 @@ typedef struct
 
 
 /**
- * @brief        	Buffer initialisation
+ * \brief        	Buffer initialisation
  * 
- * @param buffer 	Pointer to buffer
+ * \param buffer 	Pointer to buffer
  */
 void buffer_init(buffer_t * buffer);
 
 
 /**
- * @brief        	Stores data in the buffer even of it overwrites existing data
+ * \brief        	Stores data in the buffer even of it overwrites existing data
  * 
- * @param buffer 	Pointer to buffer
- * @param byte   	Byte to write
+ * \param buffer 	Pointer to buffer
+ * \param byte   	Byte to write
  */
 uint8_t buffer_put_lossy(buffer_t * buffer, uint8_t byte);
 
 
 /**
- * @brief        	Stores data in the buffer, until the buffer is full
+ * \brief        	Stores data in the buffer, until the buffer is full
  * 
- * @param buffer 	Pointer to buffer
- * @param byte   	Byte to write
+ * \param buffer 	Pointer to buffer
+ * \param byte   	Byte to write
  * 
- * @return       	Boolean, 0 if successfully added, 1 if not
+ * \return       	Boolean, 0 if successfully added, 1 if not
  */
 uint8_t buffer_put(buffer_t * buffer, uint8_t byte);
 
 
 /**
- * @brief        	Get the oldest element in the buffer
+ * \brief        	Get the oldest element in the buffer
  * 
- * @param buffer 	Pointer to buffer
+ * \param buffer 	Pointer to buffer
  * 
- * @return       	Oldest byte in buffer
+ * \return       	Oldest byte in buffer
  */
 uint8_t buffer_get(buffer_t * buffer);
 
 
 /**
- * @brief        	Clear the buffer
+ * \brief        	Clear the buffer
  * @details      	This function erases the buffer, note that it does not erase all the bytes one by one so the function call is fast
  * 
- * @param buffer 	Pointer to buffer
+ * \param buffer 	Pointer to buffer
  */
 void buffer_clear(buffer_t * buffer);
 
 
 /**
- * @brief        	Returns the number of available bytes in the buffer
+ * \brief        	Returns the number of available bytes in the buffer
  * 
- * @param buffer 	Pointer to buffer
+ * \param buffer 	Pointer to buffer
  *
- * @return       	Number of available bytes
+ * \return       	Number of available bytes
  */
 uint32_t buffer_bytes_available(buffer_t * buffer);
 
@@ -137,39 +137,39 @@ uint32_t buffer_bytes_free(buffer_t * buffer);
 /**
  * @brief        	Tests whether the buffer is full
  * 
- * @param buffer 	Pointer to buffer
+ * \param buffer 	Pointer to buffer
  *
- * @return       	Boolean, 1 if full, 0 if not
+ * \return       	Boolean, 1 if full, 0 if not
  */
 uint8_t buffer_full(buffer_t * buffer);
 
 
 /**
- * @brief        	Tests whether the buffer is empty
+ * \brief        	Tests whether the buffer is empty
  * 
- * @param buffer 	Pointer to buffer
+ * \param buffer 	Pointer to buffer
  *
- * @return       	Boolean, 1 if empty, 0 if not
+ * \return       	Boolean, 1 if empty, 0 if not
  */
 int8_t buffer_empty(buffer_t * buffer);
 
 
 /**
- * @brief        	Creates a buffered stream
+ * \brief        	Creates a buffered stream
  * @details      	As soon as a new byte arrives on the stream, it is stored in the buffer, unless the buffer is full
  * 
- * @param buffer 	Pointer to buffer
- * @param stream 	Pointer to stream
+ * \param buffer 	Pointer to buffer
+ * \param stream 	Pointer to stream
  */
 void buffer_make_buffered_stream(buffer_t *buffer, byte_stream_t *stream);
 
 
 /**
- * @brief        	Creates a buffered stream
+ * \brief        	Creates a buffered stream
  * @details      	As soon as a new byte arrives on the stream, it is stored in the buffer, even if the buffer is full
  * 
- * @param buffer 	Pointer to buffer
- * @param stream 	Pointer to stream
+ * \param buffer 	Pointer to buffer
+ * \param stream 	Pointer to stream
  */
 void buffer_make_buffered_stream_lossy(buffer_t *buffer, byte_stream_t *stream);
 

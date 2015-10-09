@@ -218,6 +218,17 @@ void remote_calibrate(remote_t* remote, remote_channel_t channel);
 
 
 /**
+ * \brief	Returns the channel value from the remote
+ * 
+ * \param	remote		Pointer to the remote structure
+ * \param 	ch			Channel
+ * 
+ * \return	The value of the channel ch
+ */
+float remote_get_channel(const remote_t* remote, remote_channel_t ch);
+
+
+/**
  * \brief	Returns the throttle value from the remote
  * 
  * \param	remote				The pointer to the remote structure
@@ -266,6 +277,7 @@ float remote_get_yaw(const remote_t* remote);
 void remote_mode_init(remote_mode_t* remote_mode, const remote_mode_conf_t config);
 
 
+
 /**
  * \brief	Updates the mode from the remote switches
  * 
@@ -307,8 +319,9 @@ void remote_get_velocity_vector_from_remote(remote_t* remote, control_command_t*
  * 
  * \param	remote			Remote structure (input)
  * \param	command			Torque command (output)
+ * \param   scale			Scale (maximum output / max remote input)
  */
-void remote_get_torque_command(const remote_t* remote, torque_command_t * command);
+void remote_get_torque_command(const remote_t* remote, torque_command_t * command, float scale);
 
 
 /**
@@ -316,8 +329,9 @@ void remote_get_torque_command(const remote_t* remote, torque_command_t * comman
  * 
  * \param	remote			Remote structure (input)
  * \param	command			Rate command (output)
+ * \param   scale			Scale (maximum output / max remote input)
  */
-void remote_get_rate_command(const remote_t* remote, rate_command_t * command);
+void remote_get_rate_command(const remote_t* remote, rate_command_t * command, float scale);
 
 
 /**
@@ -334,8 +348,9 @@ void remote_get_thrust_command(const remote_t* remote, thrust_command_t * comman
  * 
  * \param	remote			Remote structure (input)
  * \param	command			Attitude command (output)
+ * \param   scale			Scale (maximum output / max remote input)
  */
-void remote_get_attitude_command(const remote_t* remote, attitude_command_t * command);
+void remote_get_attitude_command_absolute_yaw(const remote_t* remote, attitude_command_t * command, float scale);
 
 
 /**
@@ -344,8 +359,21 @@ void remote_get_attitude_command(const remote_t* remote, attitude_command_t * co
  * \param	remote			Remote structure (input)
  * \param 	k_yaw			Integration factor for yaw (0.02 is ok) (input) 
  * \param	command			Attitude command (output)
+ * \param   scale			Scale (maximum output / max remote input)
  */
-void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const float k_yaw, attitude_command_t * command);
+void remote_get_attitude_command(const remote_t* remote, const float k_yaw, attitude_command_t * command, float scale);
+
+
+/**
+ * \brief	Compute attitude command from the remote (absolute roll and pitch, integrated yaw)
+ * 
+ * \param	remote			Remote structure (input)
+ * \param 	ki_yaw			Integration factor for yaw (0.02 is ok) (input) 
+ * \param	command			Attitude command (output)
+ * \param   scale			Scale (maximum output / max remote input)
+ * \param 	reference_pitch	Transition factor (0: forward flight, PI/2:hover)	
+ */
+void remote_get_attitude_command_vtol(const remote_t* remote, const float ki_yaw, attitude_command_t * command, float scale, float reference_pitch);
 
 
 /**
@@ -353,8 +381,9 @@ void remote_get_attitude_command_integrate_yaw(const remote_t* remote, const flo
  * 
  * \param	remote			Remote structure (input)
  * \param	command			Velocity command (output)
+ * \param   scale			Scale (maximum output / max remote input)
  */
-void remote_get_velocity_command(const remote_t* remote, velocity_command_t * command);
+void remote_get_velocity_command(const remote_t* remote, velocity_command_t * command, float scale);
 
 
 #endif

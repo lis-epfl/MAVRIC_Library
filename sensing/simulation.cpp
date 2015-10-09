@@ -52,7 +52,6 @@ extern "C"
 	#include "maths.h"
 	#include "print_util.h"
 	#include "constants.h"
-	#include "conf_platform.h" 	// TODO: remove (use the module mix_to_servo to remove dependency to conf_platform)
 }
 
 //------------------------------------------------------------------------------
@@ -162,7 +161,7 @@ void forces_from_servos_diag_quad(simulation_model_t* sim)
 	
 	for (int32_t i = 0; i < 4; i++)
 	{
-		motor_command[i] = (float)sim->servos->servo[i].value - sim->vehicle_config.rotor_rpm_offset;
+		motor_command[i] = (float)sim->mix->servos->servo[i].value - sim->vehicle_config.rotor_rpm_offset;
 		if (motor_command[i] < 0.0f) 
 		{
 			motor_command[i] = 0;
@@ -186,23 +185,23 @@ void forces_from_servos_diag_quad(simulation_model_t* sim)
 	
 	float mpos_x = sim->vehicle_config.rotor_arm_length / 1.4142f;
 	float mpos_y = sim->vehicle_config.rotor_arm_length / 1.4142f;
-	
+
 	// torque around x axis (roll)
-	sim->torques_bf[ROLL]  = ((rotor_lifts[M_FRONT_LEFT]  + rotor_lifts[M_REAR_LEFT]  ) 
-						    - (rotor_lifts[M_FRONT_RIGHT] + rotor_lifts[M_REAR_RIGHT] )) * mpos_y;;
+	sim->torques_bf[ROLL] = ((rotor_lifts[sim->mix->motor_front_left]  + rotor_lifts[sim->mix->motor_rear_left]  ) 
+						    	- (rotor_lifts[sim->mix->motor_front_right] + rotor_lifts[sim->mix->motor_rear_right] )) * mpos_y;;
 
 	// torque around y axis (pitch)
-	sim->torques_bf[PITCH] = ((rotor_lifts[M_FRONT_LEFT]  + rotor_lifts[M_FRONT_RIGHT] )
-							- (rotor_lifts[M_REAR_LEFT]   + rotor_lifts[M_REAR_RIGHT] ))*  mpos_x;
+	sim->torques_bf[PITCH] = ((rotor_lifts[sim->mix->motor_front_left]  + rotor_lifts[sim->mix->motor_front_right] )
+								- (rotor_lifts[sim->mix->motor_rear_left]   + rotor_lifts[sim->mix->motor_rear_right] ))*  mpos_x;
 
-	sim->torques_bf[YAW]   = (M_FL_DIR * (10.0f * rotor_drags[M_FRONT_LEFT] + rotor_inertia[M_FRONT_LEFT])  + M_FR_DIR * (10.0f * rotor_drags[M_FRONT_RIGHT] + rotor_inertia[M_FRONT_RIGHT])
-							+ M_RL_DIR * (10.0f * rotor_drags[M_REAR_LEFT] + rotor_inertia[M_REAR_LEFT])   + M_RR_DIR * (10.0f * rotor_drags[M_REAR_RIGHT] + rotor_inertia[M_REAR_RIGHT] ))*  sim->vehicle_config.rotor_diameter;
-	
+	sim->torques_bf[YAW] = (sim->mix->motor_front_left_dir * (10.0f * rotor_drags[sim->mix->motor_front_left] + rotor_inertia[sim->mix->motor_front_left])
+								+ sim->mix->motor_front_right_dir * (10.0f * rotor_drags[sim->mix->motor_front_right] + rotor_inertia[sim->mix->motor_front_right])
+								+ sim->mix->motor_rear_left_dir * (10.0f * rotor_drags[sim->mix->motor_rear_left] + rotor_inertia[sim->mix->motor_rear_left])
+								+ sim->mix->motor_rear_right_dir * (10.0f * rotor_drags[sim->mix->motor_rear_right] + rotor_inertia[sim->mix->motor_rear_right] ))*  sim->vehicle_config.rotor_diameter;
 
-	
 	sim->lin_forces_bf[X] = -(sim->vel_bf[X] - wind_bf.v[0]) * lateral_airspeed * sim->vehicle_config.vehicle_drag;  
 	sim->lin_forces_bf[Y] = -(sim->vel_bf[Y] - wind_bf.v[1]) * lateral_airspeed * sim->vehicle_config.vehicle_drag;
-	sim->lin_forces_bf[Z] = -(rotor_lifts[M_FRONT_LEFT]+ rotor_lifts[M_FRONT_RIGHT] +rotor_lifts[M_REAR_LEFT] +rotor_lifts[M_REAR_RIGHT]);
+	sim->lin_forces_bf[Z] = -(rotor_lifts[sim->mix->motor_front_left]+ rotor_lifts[sim->mix->motor_front_right] +rotor_lifts[sim->mix->motor_rear_left] +rotor_lifts[sim->mix->motor_rear_right]);
 
 }
 
@@ -211,7 +210,7 @@ void forces_from_servos_diag_quad(simulation_model_t* sim)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool simulation_init(simulation_model_t* sim, const simulation_config_t sim_config, ahrs_t* ahrs, imu_t* imu, position_estimation_t* pos_est, Barometer* pressure, gps_t* gps, sonar_t* sonar, state_t* state, const servos_t* servos, bool* waypoint_set)
+bool simulation_init(simulation_model_t* sim, const simulation_config_t sim_config, ahrs_t* ahrs, imu_t* imu, position_estimation_t* pos_est, Barometer* pressure, gps_t* gps, sonar_t* sonar, state_t* state, bool* waypoint_set, const servo_mix_quadcotper_diag_t* mix)
 {
 	bool init_success = true;
 	
@@ -223,8 +222,8 @@ bool simulation_init(simulation_model_t* sim, const simulation_config_t sim_conf
 	sim->gps = gps;
 	sim->sonar = sonar;
 	sim->state = state;
-	sim->servos = servos;
 	sim->nav_plan_active = &state->nav_plan_active;
+	sim->mix = mix;
 	
 	// set initial conditions to a given attitude_filter
 	sim->estimated_attitude = ahrs;

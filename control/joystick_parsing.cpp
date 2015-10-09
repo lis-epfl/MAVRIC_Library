@@ -238,48 +238,31 @@ void joystick_parsing_get_thrust_command(const joystick_parsing_t* joystick, thr
 }
 
 
-void joystick_parsing_get_attitude_command(const joystick_parsing_t* joystick, attitude_command_t* command)
+void joystick_parsing_get_attitude_command_absolute_yaw(const joystick_parsing_t* joystick, attitude_command_t* command)
 {
+	command->rpy[ROLL] 	= joystick_parsing_get_roll(joystick);
+	command->rpy[PITCH] = joystick_parsing_get_pitch(joystick);
+	command->rpy[YAW]  	= joystick_parsing_get_yaw(joystick);
+			
 	aero_attitude_t attitude;
-	
-	switch( command->mode )
-	{
-		case ATTITUDE_COMMAND_MODE_QUATERNION:
-			attitude.rpy[ROLL] 	= joystick_parsing_get_roll(joystick); 
-			attitude.rpy[PITCH] = joystick_parsing_get_pitch(joystick);
-			attitude.rpy[YAW] 	= joystick_parsing_get_yaw(joystick);
-			command->quat = coord_conventions_quaternion_from_aero(attitude);
-		break;
-
-		case ATTITUDE_COMMAND_MODE_RPY:
-			command->rpy[ROLL] 	= joystick_parsing_get_roll(joystick); 
-			command->rpy[PITCH] = joystick_parsing_get_pitch(joystick);
-			command->rpy[YAW] 	= joystick_parsing_get_yaw(joystick);
-		break;
-	}
+	attitude.rpy[ROLL] 	= command->rpy[ROLL]; 
+	attitude.rpy[PITCH] = command->rpy[PITCH];
+	attitude.rpy[YAW] 	= command->rpy[YAW];
+	command->quat = coord_conventions_quaternion_from_aero(attitude);
 }
 
 
-void joystick_parsing_get_attitude_command_integrate_yaw(const joystick_parsing_t* joystick, const float k_yaw, attitude_command_t* command)
-{
+void joystick_parsing_get_attitude_command(const joystick_parsing_t* joystick, const float ki_yaw, attitude_command_t* command)
+{		
+	command->rpy[ROLL] 	= joystick_parsing_get_roll(joystick);
+	command->rpy[PITCH] = joystick_parsing_get_pitch(joystick);
+	command->rpy[YAW]  	+= ki_yaw * joystick_parsing_get_yaw(joystick);	
+		
 	aero_attitude_t attitude;
-
-	switch( command->mode )
-	{
-		case ATTITUDE_COMMAND_MODE_QUATERNION:
-			attitude = coord_conventions_quat_to_aero(command->quat);
-			attitude.rpy[ROLL] 	 = joystick_parsing_get_roll(joystick); 
-			attitude.rpy[PITCH]  = joystick_parsing_get_pitch(joystick);
-			attitude.rpy[YAW] 	+= k_yaw * joystick_parsing_get_yaw(joystick);
-			command->quat = coord_conventions_quaternion_from_aero(attitude);
-		break;
-
-		case ATTITUDE_COMMAND_MODE_RPY:
-			command->rpy[ROLL] 	= joystick_parsing_get_roll(joystick);
-			command->rpy[PITCH] = joystick_parsing_get_pitch(joystick);
-			command->rpy[YAW]  += k_yaw * joystick_parsing_get_yaw(joystick);
-		break;
-	}
+	attitude.rpy[ROLL] 	= command->rpy[ROLL]; 
+	attitude.rpy[PITCH] = command->rpy[PITCH];
+	attitude.rpy[YAW] 	= command->rpy[YAW];
+	command->quat = coord_conventions_quaternion_from_aero(attitude);
 }
 
 

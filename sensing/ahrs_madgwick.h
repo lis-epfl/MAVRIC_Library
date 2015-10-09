@@ -30,93 +30,88 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file piezo_speaker.h
+ * \file ahrs_madgwick.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author SOH Madgwick
+ * \author Julien Lecoeur
  *   
- * \brief This file is the driver for the piezzo speaker
+ * \brief Implementation of Madgwick's AHRS algorithms.
+ *
+ * See: http://www.x-io.co.uk/node/8#open_source_ahrs_and_imu_algorithms
+ *
+ * Date			Author          Notes
+ * 29/09/2011	SOH Madgwick    Initial release
+ * 02/10/2011	SOH Madgwick	Optimised for reduced CPU load
+ * 19/02/2012	SOH Madgwick	Magnetometer measurement is normalised
+ * 04/02/2014	Julien Lecoeur	Adapt to MAVRIC
  *
  ******************************************************************************/
 
 
-#ifndef PIEZO_SPEAKER_H_
-#define PIEZO_SPEAKER_H_
+/**
+ *   Disclaimer: this WIP
+ */
+
+
+#ifndef AHRS_MADGWICK_H_
+#define AHRS_MADGWICK_H_
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" {
 #endif
 
-#include <stdint.h>
 
-#define PIEZO_HIGH_PIN AVR32_PIN_PA12			///< Define the Microcontroller pin associated with the high pin of the piezo speaker
-#define PIEZO_LOW_PIN AVR32_PIN_PA15			///< Define the Microcontroller pin associated with the low pin of the piezo speaker
-
-
-/**
- * \brief Initialize the piezo speaker
- */
-void piezo_speaker_init(void);
+#include "ahrs.h"
+#include "imu.h"
 
 
 /**
- * \brief Initialize the speaker in a binary(?) mode
+ * \brief 	Configuration for ahrs _madgwick
  */
-void piezo_speaker_init_binary(void);
+typedef struct
+{
+	float 	beta;		// 2 * proportional gain (Kp)	
+	float 	zeta;			// Gain for gyro drift compensation
+} ahrs_madgwick_conf_t;
 
 
 /**
- * \brief Beep at a given frequency for a duration
- *
- * \param	duration_ms		Duration of the piezo_speaker_beep
- * \param	frequency		Frequency of the piezo_speaker_beep
+ * \brief 	Structure for the Madgwick attitude estimation filter
  */
-void piezo_speaker_beep(int32_t duration_ms, int32_t frequency);
+typedef struct
+{
+	imu_t* 	imu;			// Pointer to IMU sensors
+	ahrs_t* ahrs;			// Estimated attitude
+	float 	ref_b[3]; 		// Reference direction of magnetic flux in earth frame (x component)
+	float 	beta;			// 2 * proportional gain (Kp)
+	float 	zeta;			// Gain for gyro drift compensation
+} ahrs_madgwick_t;
 
 
 /**
- * \brief Startup melody
+ * \brief  	Init function
+ * 
+ * \param 	ahrs_madgwick 	Pointer to data structure
+ * \param 	config 			Pointer to config structure
+ * \param 	ahrs 			Pointer to AHRS structure
+ * \param 	imu 			Pointer to IMU structure
+ * 
+ * \return 	True if success, false if not
  */
-void piezo_speaker_startup_melody(void);
+bool ahrs_madgwick_init(ahrs_madgwick_t* ahrs_madgwick, const ahrs_madgwick_conf_t* config, imu_t* imu, ahrs_t* ahrs);
 
 
 /**
- * \brief Critical error melody
+ * \brief 	Main update function
+ * 
+ * \param 	ahrs_madgwick 	Pointer to data structure
  */
-void piezo_speaker_critical_error_melody(void);
-
-
-/**
- * \brief Quick startup melody
- */
-void piezo_speaker_quick_startup(void);
-
-/**
- * \brief Quick startup melody
- */
-void piezo_speaker_startup_bb(void);
-
-/**
- * \brief Startup melody for bumblebot
- */
-void piezo_speaker_startup_bumblebot(void);
-
-
-/**
- * \brief Star wars melody
- */
-void piezo_speaker_star_wars(void);
-
-
-/**
- * \brief Mario melody
- */
-void piezo_speaker_mario_melody(void);
-
+void ahrs_madgwick_update(ahrs_madgwick_t* ahrs_madgwick);
 
 
 #ifdef __cplusplus
-	}
+}
 #endif
 
-#endif /* PIEZO_SPEAKER_H_ */
+#endif /* AHRS_MADGWICK_H_ */

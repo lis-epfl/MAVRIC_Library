@@ -47,11 +47,10 @@ extern "C"
 {
 	#include "print_util.h"
 	#include "constants.h"
-	#include "conf_platform.h" 	// TODO: remove (use the module mix_to_servo to remove dependency to conf_platform)
 }
 
 
-bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const ahrs_t* ahrs, const position_estimation_t* pos_est,servos_t* servos)
+bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, const stabilisation_copter_conf_t stabiliser_conf, control_command_t* controls, const ahrs_t* ahrs, const position_estimation_t* pos_est, torque_command_t* torque, thrust_command_t* thrust)
 {
 	bool init_success = true;
 	
@@ -61,7 +60,8 @@ bool stabilisation_copter_init(stabilisation_copter_t* stabilisation_copter, sta
 	stabilisation_copter->controls = controls;
 	stabilisation_copter->ahrs = ahrs;
 	stabilisation_copter->pos_est = pos_est;
-	stabilisation_copter->servos = servos;
+	stabilisation_copter->torque_command = torque;
+	stabilisation_copter->thrust_command = thrust;
 	
 	//init controller
 	controls->control_mode = ATTITUDE_COMMAND_MODE;
@@ -238,68 +238,8 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 		stabilisation_run(&stabilisation_copter->stabiliser_stack.rate_stabiliser, stabilisation_copter->ahrs->dt, rpyt_errors);
 	}
 	
-	// mix to servo outputs depending on configuration
-	if( stabilisation_copter->motor_layout == QUADCOPTER_MOTOR_LAYOUT_DIAG )
-	{
-		stabilisation_copter_mix_to_servos_diag_quad(&stabilisation_copter->stabiliser_stack.rate_stabiliser.output, stabilisation_copter->servos);
-	}
-	else if( stabilisation_copter->motor_layout == QUADCOPTER_MOTOR_LAYOUT_CROSS )
-	{
-		stabilisation_copter_mix_to_servos_cross_quad(&stabilisation_copter->stabiliser_stack.rate_stabiliser.output, stabilisation_copter->servos);
-
-	}
-}
-
-void stabilisation_copter_mix_to_servos_diag_quad(control_command_t *control, servos_t* servos)
-{
-	int32_t i;
-	float motor_command[4];
-	
-	motor_command[M_FRONT_RIGHT]= control->thrust + ( - control->rpy[ROLL] + control->rpy[PITCH]) + M_FR_DIR * control->rpy[YAW];
-	motor_command[M_FRONT_LEFT] = control->thrust + ( control->rpy[ROLL] + control->rpy[PITCH]) + M_FL_DIR * control->rpy[YAW];
-	motor_command[M_REAR_RIGHT] = control->thrust + ( - control->rpy[ROLL] - control->rpy[PITCH]) + M_RR_DIR * control->rpy[YAW];
-	motor_command[M_REAR_LEFT]  = control->thrust + ( control->rpy[ROLL] - control->rpy[PITCH]) + M_RL_DIR * control->rpy[YAW];
-	
-	for (i=0; i<4; i++)
-	{
-		if (motor_command[i]<MIN_THRUST)
-		{
-			motor_command[i]=MIN_THRUST;
-		}
-		if (motor_command[i]>MAX_THRUST)
-		{
-			motor_command[i]=MAX_THRUST;
-		}
-	}
-
-	for (i=0; i<4; i++) 
-	{
-		servos_set_value( servos, i, motor_command[i]);
-	}
-}
-
-void stabilisation_copter_mix_to_servos_cross_quad(control_command_t *control, servos_t* servos)
-{
-	int32_t i;
-	float motor_command[4];
-	
-	motor_command[M_FRONT]= control->thrust + control->rpy[PITCH] + M_FRONT_DIR * control->rpy[YAW];
-	motor_command[M_RIGHT] = control->thrust - control->rpy[ROLL] + M_RIGHT_DIR * control->rpy[YAW];
-	motor_command[M_REAR] = control->thrust - control->rpy[PITCH] + M_REAR_DIR * control->rpy[YAW];
-	motor_command[M_LEFT]  = control->thrust + control->rpy[ROLL] + M_LEFT_DIR * control->rpy[YAW];
-	for (i=0; i<4; i++) 
-	{
-		if (motor_command[i]<MIN_THRUST)
-		{
-			motor_command[i]=MIN_THRUST;
-		}
-		if (motor_command[i]>MAX_THRUST)
-		{
-			motor_command[i]=MAX_THRUST;
-		}
-	}
-	for (i=0; i<4; i++) 
-	{
-		servos_set_value( servos, i, motor_command[i]);
-	}
+	stabilisation_copter->torque_command->xyz[0] = stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[ROLL];
+	stabilisation_copter->torque_command->xyz[1] = stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[PITCH];
+	stabilisation_copter->torque_command->xyz[2] = stabilisation_copter->stabiliser_stack.rate_stabiliser.output.rpy[YAW];
+	stabilisation_copter->thrust_command->thrust = stabilisation_copter->stabiliser_stack.rate_stabiliser.output.thrust;
 }

@@ -30,38 +30,33 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file stabilisation_hybrid.h
+ * \file ahrs_madgwick_default_config.h
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
  * \author Julien Lecoeur
  *   
- * \brief This file handles the stabilization of hybrid platforms
+ * \brief Default config for Madgwick's AHRS algorithms.
  *
  ******************************************************************************/
 
 
-#ifndef STABILISATION_HYBRID_H_
-#define STABILISATION_HYBRID_H_
+#ifndef AHRS_MADGWICK_DEFAULT_CONFIG_H_
+#define AHRS_MADGWICK_DEFAULT_CONFIG_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-#include "stabilisation.h"
 
-typedef struct {
-	stabiliser_t rate_stabiliser;
-	stabiliser_t attitude_stabiliser;
-} Stabiliser_Stack_hybrid_t;
+#include "ahrs_madgwick.h"
 
-void stabilisation_hybrid_init(Stabiliser_Stack_hybrid_t* stabiliser_stack);
 
-void stabilisation_hybrid_cascade_stabilise_hybrid(imu_t *imu, position_estimation_t *pos_est, control_command_t *control_input);
-void stabilisation_hybrid_mix_to_servos_xwing(control_command_t *control);
+static inline ahrs_madgwick_conf_t ahrs_madgwick_default_config()
+{
+    ahrs_madgwick_conf_t conf = {};
 
-#ifdef __cplusplus
-}
-#endif
+    conf.beta = 0.06f;
+    conf.zeta = 0.01f;
 
-#endif /* STABILISATION_HYBRID_H_ */
+    return conf;
+};
+
+
+#endif /* AHRS_MADGWICK_DEFAULT_CONFIG_H_ */

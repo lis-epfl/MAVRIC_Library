@@ -51,13 +51,13 @@ extern "C"
 #include <stdint.h>
 
 /**
- * @brief Stream data
+ * \brief Stream data
  */
 typedef void* stream_data_t;
 
 
 /**
- * @brief Byte stream
+ * \brief Byte stream
  */
 typedef struct 
 {

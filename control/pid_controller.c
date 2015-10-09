@@ -143,7 +143,7 @@ static float pid_controller_differentiate(differentiator_t* diff, float input, f
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-void pid_controller_init(pid_controller_t* controller, const pid_controller_conf_t* config)
+bool pid_controller_init(pid_controller_t* controller, const pid_controller_conf_t* config)
 {
 	uint32_t t = time_keeper_get_time_ticks();
 
@@ -158,6 +158,8 @@ void pid_controller_init(pid_controller_t* controller, const pid_controller_conf
 	controller->error 		= 0.0f;
 	controller->last_update = t;
 	controller->dt			= 0.0f;
+
+	return true;
 }
 
 

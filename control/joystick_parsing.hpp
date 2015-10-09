@@ -245,17 +245,17 @@ void joystick_parsing_get_thrust_command(const joystick_parsing_t* joystick, thr
  * \param	joystick		Joystick structure (input)
  * \param	command			Attitude command (output)
  */
-void joystick_parsing_get_attitude_command(const joystick_parsing_t* joystick, attitude_command_t * command);
+void joystick_parsing_get_attitude_command_absolute_yaw(const joystick_parsing_t* joystick, attitude_command_t * command);
 
 
 /**
  * \brief	Compute attitude command from the joystick (absolute roll and pitch, integrated yaw)
  * 
  * \param	joystick		Joystick structure (input)
- * \param 	k_yaw			Integration factor for yaw (0.02 is ok) (input) 
+ * \param 	ki_yaw			Integration factor for yaw (0.02 is ok) (input) 
  * \param	command			Attitude command (output)
  */
-void joystick_parsing_get_attitude_command_integrate_yaw(const joystick_parsing_t* joystick, const float k_yaw, attitude_command_t * command);
+void joystick_parsing_get_attitude_command(const joystick_parsing_t* joystick, const float ki_yaw, attitude_command_t * command);
 
 
 /**

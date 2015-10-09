@@ -96,6 +96,27 @@ typedef enum
 	ON 	= 1,
 } constants_on_off_t;
 
+
+/**
+ * \brief Enumerate the turn direction of a motor
+ */
+typedef enum
+{
+	CW 	= 1,					///< Clock wise
+	CCW	= -1					///< Counter Clock wise
+} rot_dir_t;
+
+
+/**
+ * \brief Enumerate the turn direction of a flap
+ */
+typedef enum
+{
+	FLAP_NORMAL 	= 1,	///< Positive roll or positive pitch or positive yaw
+	FLAP_INVERTED	= -1	///< Negative roll or negative pitch or negative yaw
+} flap_dir_t;
+
+
 #ifdef __cplusplus
 }
 #endif
