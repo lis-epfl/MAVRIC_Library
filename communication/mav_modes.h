@@ -58,9 +58,9 @@ extern "C" {
  */
 typedef enum
 {
-	ARM_ACTION_DISARMING 	= -1,
-	ARM_ACTION_NONE 		= 0,
-	ARM_ACTION_ARMING 		= 1,
+	ARM_ACTION_DISARMING 	= -1,	///< The next action is the disarming of the motors
+	ARM_ACTION_NONE 		= 0,	///< The next action is nothing
+	ARM_ACTION_ARMING 		= 1,	///< The next action is arming the motors
 } arm_action_t;
 
 
