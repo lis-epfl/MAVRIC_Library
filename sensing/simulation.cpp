@@ -151,7 +151,10 @@ void forces_from_servos_diag_quad(simulation_model_t* sim)
 	float ldb;
 	quat_t wind_gf 	= {};
 	wind_gf.s 		= 0; 
-	wind_gf.v 		= {sim->vehicle_config.wind_x, sim->vehicle_config.wind_y, 0.0f};
+	wind_gf.v[0] 	= sim->vehicle_config.wind_x;
+	wind_gf.v[1] 	= sim->vehicle_config.wind_y;
+	wind_gf.v[2] 	= 0.0f;
+	
 	quat_t wind_bf 	=  quaternions_global_to_local(sim->ahrs.qe, wind_gf);
 	
 	float sqr_lateral_airspeed = SQR(sim->vel_bf[0] + wind_bf.v[0]) + SQR(sim->vel_bf[1] + wind_bf.v[1]);
