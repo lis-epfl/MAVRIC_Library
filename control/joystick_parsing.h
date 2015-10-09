@@ -129,8 +129,7 @@ typedef struct
 {
 	joystick_button_t buttons;		///< The bit mask of the button pressed
 	joystick_channels_t channels;	///< Channels of the joystick
-	mav_mode_t mav_mode_desired;		///< The MAV mode desired
-	state_t* state;					///< The pointer to the state structure
+	mav_mode_t mav_mode_desired;	///< The MAV mode desired
 } joystick_parsing_t;
 
 
@@ -138,11 +137,10 @@ typedef struct
  * \brief	Initialisation of the joystick parsing module
  *
  * \param	joystick_parsing		The pointer to the joystick parsing structure
- * \param	state					The pointer to the state structure
  * 
  * \return  True if succeeded
  */
-bool joystick_parsing_init(joystick_parsing_t* joystick_parsing, state_t* state);
+bool joystick_parsing_init(joystick_parsing_t* joystick_parsing);
 
 
 /**

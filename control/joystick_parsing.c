@@ -78,20 +78,16 @@ static void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, butt
 	{
 		if (joystick_parsing->buttons.button_1 == BUTTON_UNPRESSED)
 		{
-			//if (joystick_parsing->state->mav_mode.ARMED == ARMED_ON)
 			if (joystick_parsing->mav_mode_desired.ARMED == ARMED_ON)
 			{
 				print_util_dbg_print("Disarming from joystick\r\n");
-				//joystick_parsing->state->mav_mode.ARMED = ARMED_OFF;
 				joystick_parsing->mav_mode_desired.ARMED = ARMED_OFF;
 			}
 			else
 			{
 				print_util_dbg_print("Arming from joystick\r\n");
-				//if ((joystick_parsing->state->mav_mode.byte&0b01011100) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)
 				if ((joystick_parsing->mav_mode_desired.byte&0b01011100) == MAV_MODE_FLAG_MANUAL_INPUT_ENABLED)
 				{
-					//joystick_parsing->state->mav_mode.ARMED = ARMED_ON;
 					joystick_parsing->mav_mode_desired.ARMED = ARMED_ON;
 				}
 			}
@@ -114,13 +110,9 @@ static void joystick_parsing_button_1(joystick_parsing_t* joystick_parsing, butt
 static void joystick_parsing_button(joystick_parsing_t* joystick_parsing, button_pressed_t button, mav_flag_mask_t mode_flag)
 {
 	if (button == BUTTON_PRESSED)
-	{
-		//joystick_parsing->state->mav_mode.byte &= 0b10100011;
-		//joystick_parsing->state->mav_mode.byte += mode_flag;
-		
+	{	
 		joystick_parsing->mav_mode_desired.byte &= 0b10100011;
-		joystick_parsing->mav_mode_desired.byte += mode_flag;
-		
+		joystick_parsing->mav_mode_desired.byte += mode_flag;	
 	}
 }
 
@@ -129,12 +121,9 @@ static void joystick_parsing_button(joystick_parsing_t* joystick_parsing, button
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool joystick_parsing_init(joystick_parsing_t* joystick_parsing, state_t* state)
+bool joystick_parsing_init(joystick_parsing_t* joystick_parsing)
 {
 	bool init_success = true;
-
-	//joystick pointer init
-	joystick_parsing->state = state;
 	
 	//joystick channels init
 	joystick_parsing->channels.x = 0.0f;
