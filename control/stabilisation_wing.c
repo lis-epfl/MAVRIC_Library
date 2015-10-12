@@ -171,7 +171,6 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 	// -- no break here  - we want to run the lower level modes as well! -- 
 	
 	case ATTITUDE_COMMAND_MODE:
-		/*
 		// run absolute attitude_filter controller
 		rpyt_errors[0]= input.rpy[0] - ( - stabilisation_wing->ahrs->up_vec.v[1] ); 
 		rpyt_errors[1]= input.rpy[1] - stabilisation_wing->ahrs->up_vec.v[0];
@@ -190,9 +189,21 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		// run PID update on all attitude_filter controllers
 		stabilisation_run(&stabilisation_wing->stabiliser_stack.attitude_stabiliser, stabilisation_wing->imu->dt, rpyt_errors);
 		
+		// Rewrite command on axis to apply manual control on it (used for tuning)
+		if(stabilisation_wing->tuning == 2)
+		{
+			if(stabilisation_wing->tuning_axis == PITCH)
+			{
+				stabilisation_wing->stabiliser_stack.rate_stabiliser.output.rpy[ROLL] = input.rpy[ROLL];
+			}
+			else if(stabilisation_wing->tuning_axis == ROLL)
+			{
+				stabilisation_wing->stabiliser_stack.rate_stabiliser.output.rpy[PITCH] = input.rpy[PITCH];
+			}
+		}
+		
 		// use output of attitude_filter controller to set rate setpoints for rate controller 
 		input = stabilisation_wing->stabiliser_stack.attitude_stabiliser.output;
-		*/
 	
 	// -- no break here  - we want to run the lower level modes as well! -- 
 	
@@ -208,7 +219,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		stabilisation_run(&stabilisation_wing->stabiliser_stack.rate_stabiliser, stabilisation_wing->imu->dt, rpyt_errors);
 		
 		// Rewrite command on axis to apply manual control on it (used for tuning)
-		if(stabilisation_wing->tuning != 0)
+		if(stabilisation_wing->tuning == 1)
 		{
 			if(stabilisation_wing->tuning_axis == PITCH)
 			{

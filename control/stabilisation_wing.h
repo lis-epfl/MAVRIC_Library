@@ -79,8 +79,8 @@ typedef struct
 	const position_estimation_t* pos_est;						///< The pointer to the position estimation structure
 	servos_t* servos;											///< The pointer to the servos structure
 	servo_mix_wing_t* servo_mix;								///< The pointer to the servos mixer
-	int32_t tuning;											///< Are we tuning the controllers?
-	int32_t tuning_axis;										///< Which axis are we tuning ?
+	int32_t tuning;												///< Are we tuning the controllers?		0: nothing		1: rate		2: attitude
+	int32_t tuning_axis;										///< Which axis are we tuning ?			0: roll			1: pitch
 	int32_t tuning_steps;										///< Is the user allowed to create steps with the remote ?
 	float pitch_up;												///< Up value for the steps in pitch
 	float pitch_down;											///< Down value for the steps in pitch
