@@ -84,18 +84,13 @@ bool launch_detection_initialize(launch_detection_t * ld, int16_t t_launch);
 
 bool launch_detection_threshold_check(launch_detection_t * ld)
 {
-	return ld->sma->nb_samples > MIN_SAMPLES ? ld->sma->current_avg < ld->c_idle + ld->t_launch : 0;
+	return ld->sma.nb_samples > MIN_SAMPLES ? ld->sma.current_avg < ld->c_idle + ld->t_launch : 0;
 }
 
 bool launch_detection_initialize(launch_detection_t * ld, int16_t t_launch)
 {
-	if (ld->sma == NULL)
-	{
-	 	sma_t sma;
- 		ld->sma = &sma;
- 	}
 
- 	sma_init(ld->sma, SAMPLING_PERIOD);
+ 	sma_init(&ld->sma, SAMPLING_PERIOD);
  	
  	ld->t_launch = t_launch;
  	ld->c_idle = c_idle;
@@ -122,7 +117,8 @@ task_return_t launch_detection_update(launch_detection_t * ld, float acc[3])
  	ld->ACC_Z = ACC_Z;
 
  	int16_t acc_norm = (int16_t)(vectors_norm(ld->acc));
- 	sma_update(ld->sma, acc_norm);
+ 	sma_update(&ld->sma, acc_norm);
+ 	sma_update(&ld->sma, acc_norm);
 
  	if (launch_detection_threshold_check(ld))
  	{

@@ -66,7 +66,7 @@ typedef enum {
  */
 typedef struct
 {
-	sma_t * sma; 						//< Simple moving average of acceleration norm
+	sma_t sma; 							//< Simple moving average of acceleration norm
 	int16_t t_launch; 					//< Launch detection threshold
 	int16_t c_idle;						//< Norm of idle thrust value
 	launch_status_t status; 			//< Launch status
