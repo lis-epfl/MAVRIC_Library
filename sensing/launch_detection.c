@@ -112,9 +112,9 @@ bool launch_detection_init(launch_detection_t * ld)
 
 task_return_t launch_detection_update(launch_detection_t * ld, float acc[3])
 {
- 	ld->ACC_X = ACC_X;
- 	ld->ACC_Y = ACC_Y;
- 	ld->ACC_Z = ACC_Z;
+ 	ld->ACC_X = 1000 * acc[0];
+ 	ld->ACC_Y = 1000 * acc[1];
+ 	ld->ACC_Z = 1000 * acc[2];
 
  	int16_t acc_norm = (int16_t)(vectors_norm(ld->acc));
  	sma_update(&ld->sma, acc_norm);

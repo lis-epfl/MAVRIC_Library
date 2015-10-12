@@ -52,7 +52,7 @@ extern "C"
 {
 #endif
 
-#define SAMPLING_PERIOD 10
+#define SAMPLING_PERIOD 50
 
 /**
  * \brief 		Simple Moving Average (SMA) structure
