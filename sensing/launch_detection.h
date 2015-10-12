@@ -57,8 +57,8 @@ extern "C"
  */
 typedef enum { 
 				LAUNCH_IDLE = 0,		//< Before launch
-			   	LAUNCHING = 1, 	//< During launch
-			   	IN_FLIGHT = 2 	//< After launch
+			   	LAUNCHING = 1, 			//< During launch
+			   	IN_FLIGHT = 2 			//< After launch
 			 } launch_status_t;
 
 /**
@@ -94,6 +94,16 @@ bool launch_detection_init(launch_detection_t * ld);
  */
 task_return_t launch_detection_update(launch_detection_t * ld, float acc[3]);
 
+// TODO !
+/**
+ * \brief	Function to send the MAVLink launch status
+ * 
+ * \param	ld						The pointer to the SMA structure
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param	msg						The pointer to the MAVLink message
+ */
+// void sma_telemetry_send_current_avg(const launch_t * ld, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+// TODO !
 
 #ifdef __cplusplus
 }

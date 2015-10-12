@@ -43,13 +43,13 @@
 
 #include "launch_detection.h"
 #include "vectors.h"
+ #include "print_util.h"
 
 #define ACC_X acc[0]		//< Alias for X acceleration
 #define ACC_Y acc[1]		//< Alias for Y acceleration
 #define ACC_Z acc[2]		//< Alias for Z acceleration
 
-#define SAMPLING_PERIOD	50	//< Length of moving average
-#define MIN_SAMPLES 50 		//< Minimum number of samples needed to have a viable SMA
+#define MIN_SAMPLES SAMPLING_PERIOD //< Minimum number of samples needed to have a viable SMA
 
 #define THRESHOLD 10		//< Acceleration threshold
 
@@ -60,7 +60,8 @@ const int16_t c_idle = 20;
 //------------------------------------------------------------------------------
 
 /**
- * \brief 		Checks against threshold
+ * \brief 		Checks against threshold, if the minimum number of samples
+ *				has been reached.
  *
  * \param ld 	Pointer to the launch detection struct
  *
@@ -87,10 +88,15 @@ bool launch_detection_threshold_check(launch_detection_t * ld)
 }
 
 bool launch_detection_initialize(launch_detection_t * ld, int16_t t_launch)
- {
- 	sma_t sma;
- 	ld->sma = &sma;
+{
+	if (ld->sma == NULL)
+	{
+	 	sma_t sma;
+ 		ld->sma = &sma;
+ 	}
+
  	sma_init(ld->sma, SAMPLING_PERIOD);
+ 	
  	ld->t_launch = t_launch;
  	ld->c_idle = c_idle;
  	ld->status = LAUNCH_IDLE;
@@ -98,24 +104,25 @@ bool launch_detection_initialize(launch_detection_t * ld, int16_t t_launch)
  	ld->enabled = 1;
 
  	return 1;
- }
+}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
- bool launch_detection_init(launch_detection_t * ld)
- {
+bool launch_detection_init(launch_detection_t * ld)
+{
  	return launch_detection_initialize(ld, THRESHOLD);
- }
+}
 
 task_return_t launch_detection_update(launch_detection_t * ld, float acc[3])
- {
+{
  	ld->ACC_X = ACC_X;
  	ld->ACC_Y = ACC_Y;
  	ld->ACC_Z = ACC_Z;
 
- 	sma_update(ld->sma, (int16_t)(vectors_norm(ld->acc)));
+ 	int16_t acc_norm = (int16_t)(vectors_norm(ld->acc));
+ 	sma_update(ld->sma, acc_norm);
 
  	if (launch_detection_threshold_check(ld))
  	{
@@ -127,5 +134,4 @@ task_return_t launch_detection_update(launch_detection_t * ld, float acc[3])
  	}
 
  	return TASK_RUN_SUCCESS;
- }
-
+}
