@@ -272,6 +272,14 @@ mav_mode_t remote_mode_get(const remote_t* remote);
 void remote_get_command_from_remote(remote_t* remote, control_command_t * controls);
 
 /**
+ * \brief	Sets the attitude command from the remote (rpy and thrust values)
+ * 
+ * \param	remote				The pointer to the remote structure
+ * \param	controls			The pointer to the controls structure
+ */
+void remote_get_rate_command_from_remote(remote_t* remote, control_command_t * controls);
+
+/**
  * \brief	Sets the velocity command vector from the remote
  * 
  * \param	remote	The pointer to the remote structure

@@ -66,8 +66,8 @@ servo_mix_wing_conf_t servo_mix_wing_default_config =
 	.min_thrust = MIN_THRUST,
 	.max_thrust = MAX_THRUST,
 	
-	.trim_roll = 0.1454f,
-	.trim_pitch = 0.0522f
+	.trim_roll = 0.179491f,
+	.trim_pitch = 0.0862909f
 };
 
 

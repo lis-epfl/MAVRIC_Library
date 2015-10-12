@@ -63,19 +63,19 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ ROLL PID -------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 0.00f,
-					.clip_min = -0.5f,
-					.clip_max = 0.5f,
+					.p_gain = 0.075f,
+					.clip_min = -1.0f,
+					.clip_max = 1.0f,
 					.integrator={
 						.gain = 0.0f,
 						.clip_pre = 6.0f,
 						.accumulator = 0.0f,
-						.clip = 0.3f,
+						.clip = 0.7f,
 					},
 					.differentiator={
-						.gain = 0.000f,
+						.gain = 0.0f,
 						.previous = 0.0f,
-						.clip = 0.14f
+						.clip = 0.7f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -87,19 +87,19 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ PITCH PID ------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 0.00f,
-					.clip_min = -0.5f,
-					.clip_max = 0.5f,
+					.p_gain = 0.04f,
+					.clip_min = -1.0f,
+					.clip_max = 1.0f,
 					.integrator={
-						.gain = 0.0f,
+						.gain = 0.01f,
 						.clip_pre = 6.0f,
 						.accumulator = 0.0f,
-						.clip = 0.3f,
+						.clip = 0.7f,
 					},
 					.differentiator={
 						.gain = 0.000f,
 						.previous = 0.0f,
-						.clip = 0.14f
+						.clip = 0.7f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -177,19 +177,19 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ ROLL PID -------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 4.0f,
+					.p_gain = 0.0f,
 					.clip_min = -12.0f,
 					.clip_max = 12.0f,
 					.integrator={
 						.gain = 0.0f,
 						.clip_pre = 0.0f,
 						.accumulator = 0.0f,
-						.clip = 0.0f,
+						.clip = 4.0f,
 					},
 					.differentiator={
 						.gain = 0.0f,
 						.previous = 0.0f,
-						.clip = 0.0f
+						.clip = 4.0f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
@@ -201,19 +201,19 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ PITCH PID ------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 4.0f,
+					.p_gain = 0.0f,
 					.clip_min = -12.0f,
 					.clip_max = 12.0f,
 					.integrator={
 						.gain = 0.0f,
 						.clip_pre = 0.0f,
 						.accumulator = 0.0f,
-						.clip = 0.0f,
+						.clip = 4.0f,
 					},
 					.differentiator={
 						.gain = 0.0f,
 						.previous = 0.0f,
-						.clip = 0.0f
+						.clip = 4.0f
 					},
 					.output = 0.0f,
 					.error = 0.0f,
