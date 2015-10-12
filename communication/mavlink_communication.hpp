@@ -47,6 +47,7 @@
 #include "onboard_parameters.hpp"
 #include "mavlink_stream.hpp"
 #include "mavlink_message_handler.hpp"
+#include "file.hpp"
 
 extern "C" 
 {
@@ -125,10 +126,11 @@ typedef struct
  * \param 	config 					Configuration
  * \param 	serial					Input/Output stream
  * \param 	state					MAV state
+ * \param 	file_storage			File used to store parameters between files
  *
  * \return	True if the init succeed, false otherwise
  */
-bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t config, Serial* serial, const state_t* state);
+bool mavlink_communication_init(mavlink_communication_t* mavlink_communication, const mavlink_communication_conf_t config, Serial* serial, const state_t* state, File* file_storage);
 
 
 /**

@@ -30,51 +30,108 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file xbee.h
+ * \file  	file_dummy.hpp
  * 
- * \author MAV'RIC Team
- * \author Gregoire Heitz
+ * \author  MAV'RIC Team
  *   
- * \brief This file is for the xbee settings
- * 
+ * \brief   Dummy implementation of files
+ *
  ******************************************************************************/
 
+#ifndef FILE_DUMMY_H_
+#define FILE_DUMMY_H_
 
-#ifndef XBEE_H_
-#define XBEE_H_
+#include "file.hpp"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "streams.h"
-#include "buffer.h"
-#include "uart_int.h"
 
 /**
- * \brief Initialize the xbee module
- *
- * \param	UID					UART device number
- * \param	usart_conf_xbee		Configuration of the UART of the Xbee module
+ * \brief 	File objects on linux platforms
  */
-void xbee_init(int32_t UID, usart_config_t usart_conf_xbee);
+class File_dummy: public File
+{
+public:
+	/**
+	 * \brief 	Constructor 
+	 */
+    File_dummy(const char* path);
 
-/**
- * \brief Return the xbee in stream
- *
- * \return the pointer to the xbee in stream
- */
-byte_stream_t* xbee_get_in_stream(void);
 
-/**
- * \brief Return the xbee out stream
- *
- * \return the pointer to the xbee out stream
- */
-byte_stream_t* xbee_get_out_stream(void);
+	/**
+	 * \brief 	Open the file
+	 * 
+	 * \return  true if the file is open, false otherwise
+	 */
+	bool open(const char* path);
 
-#ifdef __cplusplus
-}
-#endif
 
-#endif /* XBEE_H_ */
+	/**
+	 * \brief 	Indicates if the file is currently open
+	 * 
+	 * \return  true if the file is open, false otherwise
+	 */
+	bool is_open();
+
+
+	/**
+	 * \brief 	Close the file
+	 * 
+	 * \return  success
+	 */
+	bool close();
+
+
+	/**
+	 * \brief   Read from the file. 
+	 *
+	 * \param   data		Caller supplied buffer to write to.
+	 * \param   size		The number of bytes to attempt to read.
+	 * 
+	 * \return 	success
+	 */
+	bool read(uint8_t* data, uint32_t size);
+
+
+	/**
+	 * \brief 	Write to the file.
+	 *
+	 * \param 	data 	The buffer to write.
+	 * \param 	size 	The number of bytes to write.
+	 * 
+	 * \return 	success
+	 */
+	bool write(const uint8_t* data, uint32_t size);
+
+
+	/**
+	 * \brief 	Seek to a given offset within the file. 
+	 * 
+	 * \details 	Valid locations to seek to are from zero to the file length.
+	 *  			Seeking to the file length moves the pointer to one past the 
+	 *  			end of the file data so that subsequent file writes append 
+	 *  			to the existing file.
+ 	 *
+	 * \param 	offset 		The distance to move from the origin_ parameter.
+	 * \param 	origin 		One of the SeekFrom enumeration.
+	 * 
+	 * \return 	success
+	 */
+	bool seek(int32_t offset, file_seekfrom_t origin);
+
+
+	/**
+	* \brief 	Get current location in file
+	*
+	* \return 	Offset in bytes
+	*/
+	uint32_t offset();
+
+
+	/**
+	 * \brief 	Get the file length.
+	 * 
+	 * \return 	The file length up to the maximum supported 4Gb.
+	 */
+	uint32_t length();
+};
+
+#endif /* FILE_DUMMY_H_ */

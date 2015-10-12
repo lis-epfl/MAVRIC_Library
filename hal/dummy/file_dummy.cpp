@@ -30,45 +30,70 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file radar_module_driver.c
+ * \file  	file_dummy.cpp
  * 
- * \author MAV'RIC Team
- * \author Felix Schill
+ * \author  MAV'RIC Team
  *   
- * \brief The radar module driver
- * 
+ * \brief   Dummy implementation of files
+ *
  ******************************************************************************/
- 
- 
-#include "radar_module_driver.hpp"
 
-extern "C"
+#include "file_dummy.hpp"
+
+using namespace std;
+
+File_dummy::File_dummy(const char* path)
 {
-	#include "i2c_driver_int.h"
-	#include "print_util.h"
+	;
 }
 
-void radar_module_init() 
+bool File_dummy::open(const char* path)
 {
-	static twim_options_t twi_opt = {};
-	twi_opt.pba_hz                = 64000000;
-	twi_opt.speed                 = 400000;
-	twi_opt.chip                  = 1;
-	twi_opt.smbus                 = false;
-
-	twim_master_init(&AVR32_TWIM1, &twi_opt);
-	print_util_dbg_print("Radar modules initialised.\r\n");;
+	return false;
 }
 
 
-void radar_module_read(radar_target_t* main_target) 
+bool File_dummy::is_open()
 {
-	uint8_t output = 0;
-	//uint8_t input [8];
-	twim_write(&AVR32_TWIM1, (uint8_t*) &output, 1, 1, false);
-	twim_read(&AVR32_TWIM1, (uint8_t*)main_target, sizeof(main_target), 1, false);
-	
-	print_util_dbg_print_num(main_target->velocity * 100.0f,10);
-	print_util_dbg_print_num(main_target->amplitude,10);
-	print_util_dbg_print("\r\n");;
+	return false;
+}
+
+
+
+bool File_dummy::close()
+{
+	return false;
+}
+
+
+
+bool File_dummy::read(uint8_t* data, uint32_t size)
+{
+	return true;
+}
+
+
+
+bool File_dummy::write(const uint8_t* data, uint32_t size)
+{
+	return false;
+}
+
+
+
+bool File_dummy::seek(int32_t offset, file_seekfrom_t origin)
+{
+	return false;
+}
+
+
+uint32_t File_dummy::offset()
+{
+	return 0;
+}
+
+
+uint32_t File_dummy::length()
+{
+	return 0;
 }

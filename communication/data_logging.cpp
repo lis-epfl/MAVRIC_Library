@@ -474,7 +474,7 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	
 	data_logging->sys_id = sysid;
 
-	snprintf(data_logging->file_name, data_logging->buffer_name_size, "%s_%lu", file_name, sysid);
+	snprintf(data_logging->file_name, data_logging->buffer_name_size, "%s_%lu", file_name, (unsigned long)sysid);
 
 	init_success &= data_logging_open_new_log_file(data_logging);
 
@@ -542,7 +542,7 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 		
 			if (data_logging->fr == FR_EXIST)
 			{
-				if(snprintf(file_add,data_logging->buffer_add_size,"_%ld",i) >= data_logging->buffer_add_size)
+				if(snprintf(file_add,data_logging->buffer_add_size,"_%lu", (unsigned long)i) >= data_logging->buffer_add_size)
 				{
 					print_util_dbg_print("Error file extension! Extension too long.\r\n");
 					
