@@ -51,6 +51,7 @@
 /**
  * \brief	Initialise the state telemetry module
  *
+ * \param	state		The pointer to the state structure
  * \param   mavlink_stream		The pointer to the MAVLink stream structure
  * \param	message_handler		The pointer to the message handler
  *

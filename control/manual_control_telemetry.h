@@ -30,30 +30,53 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file manual_control.c
+ * \file manual_control_telemetry.h
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *   
- * \brief This module takes care of taking the correct input for the control
- * (i.e. the remote or the joystick)
+ * \brief This module takes care of sending periodic telemetric messages for
+ * the state
  *
  ******************************************************************************/
- 
- 
+
+
+#ifndef MANUAL_CONTROL_TELEMETRY_H_
+#define MANUAL_CONTROL_TELEMETRY_H_
+
+#include "mavlink_stream.h"
+#include "mavlink_message_handler.h"
 #include "manual_control.h"
 
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS DECLARATION
-//------------------------------------------------------------------------------
-
-
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
+/**
+ * \brief	Initialise the manual_control telemetry module
+ *
+ * \param	manual_control		The pointer to the manual_control structure
+ * \param   mavlink_stream		The pointer to the MAVLink stream structure
+ * \param	message_handler		The pointer to the message handler
+ *
+ * \return	True if the init succeed, false otherwise
+ */
+bool manual_control_telemetry_init(manual_control_t* manual_control, mavlink_message_handler_t *message_handler);
+
+
+/**
+ * \brief	Sends the manual control values via MAVLink
+ * 
+ * \param	manual_control			The pointer to the manual control structure
+ * \param	mavlink_stream			The pointer to the MAVLink stream structure
+ * \param	msg						The pointer to the MAVLink message
+ */
+void manual_control_telemetry_send(const manual_control_t* manual_control, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* MANUAL_CONTROL_TELEMETRY_H_ */

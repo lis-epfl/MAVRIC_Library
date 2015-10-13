@@ -30,28 +30,31 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file manual_control.h
+ * \file manual_control_default_config.h
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *   
- * \brief This module takes care of taking the correct input for the control
- * (i.e. the remote or the joystick)
+ * \brief Default configuration for the manual_control module
  *
  ******************************************************************************/
 
 
-#ifndef MANUAL_CONTROL_H_
-#define MANUAL_CONTROL_H_
+#ifndef MANUAL_CONTROL_DEFAULT_CONFIG_H_
+#define MANUAL_CONTROL_DEFAULT_CONFIG_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "manual_control.hpp"
 
 
+static inline manual_control_conf_t manual_control_default_config ()
+{
+	manual_control_conf_t conf = {};
 
-#ifdef __cplusplus
-}
-#endif
+	conf.mode_source = MODE_SOURCE_REMOTE;
+	conf.control_source = CONTROL_SOURCE_REMOTE;
 
-#endif // MANUAL_CONTROL_H_
+	return conf;
+};
+
+
+#endif // MANUAL_CONTROL_DEFAULT_CONFIG_H_

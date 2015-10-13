@@ -91,7 +91,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, const data_logging_conf_t* data_logging_conf, const state_t* state);
+bool fat_fs_mounting_init(fat_fs_mounting_t* fat_fs_mounting, data_logging_conf_t data_logging_conf, const state_t* state);
 
 /**
  * \brief	Mount the fat_fs system file

@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file joystick_parsing_telemetry.h
+ * \file joystick_telemetry.h
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -40,31 +40,32 @@
  *
  ******************************************************************************/
 
-#ifndef JOYSTICK_PARSING_TELEMETRY_H_
-#define JOYSTICK_PARSING_TELEMETRY_H_
+#ifndef JOYSTICK_TELEMETRY_H_
+#define JOYSTICK_TELEMETRY_H_
 
 #include "mavlink_stream.hpp"
 #include "mavlink_message_handler.hpp"
-#include "joystick_parsing.hpp"
+#include "joystick.hpp"
 
 
 /** 
- * \brief	Initialisation of the joystick parsing telemetry module
+ * \brief	Initialisation of the joystick telemetry module
  *
- * \param	joystick_parsing		The pointer to the joystick parsing structure
+ * \param	joystick		The pointer to the joystick parsing structure
  * \param	message_handler		The pointer to the MAVLink communication structure
  *
  * \return	True if the init succeed, false otherwise
  */
-bool joystick_parsing_telemetry_init(joystick_parsing_t* joystick_parsing, mavlink_message_handler_t* message_handler);
+bool joystick_telemetry_init(joystick_t* joystick, mavlink_message_handler_t* message_handler);
 
 /** 
  * \brief	Parse received MAVLink message in structure
  *
- * \param	joystick_parsing		The pointer to the joystick parsing structure
+ * \param	joystick		The pointer to the joystick parsing structure
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
  */
-void joystick_parsing_telemetry_send_manual_ctrl_msg(const joystick_parsing_t* joystick_parsing, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void joystick_telemetry_send_manual_ctrl_msg(const joystick_t* joystick, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
-#endif /* JOYSTICK_PARSING_TELEMETRY_H_ */
+
+#endif /* JOYSTICK_TELEMETRY_H_ */
