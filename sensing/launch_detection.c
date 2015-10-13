@@ -51,7 +51,7 @@
 
 #define MIN_SAMPLES SAMPLING_PERIOD //< Minimum number of samples needed to have a viable SMA
 
-#define THRESHOLD 10		//< Acceleration threshold
+#define THRESHOLD 210				//< Acceleration threshold ( (2.0 [m.s^-2] * 1000) / 9.81 [m.s^-2] )
 
 const int16_t c_idle = 20;
 

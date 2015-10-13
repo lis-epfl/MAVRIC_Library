@@ -52,7 +52,7 @@ extern "C"
 {
 #endif
 
-#define SAMPLING_PERIOD 50
+#define SAMPLING_PERIOD 10 //< With update frequency of 5ms gives a 50ms sma period
 
 /**
  * \brief 		Simple Moving Average (SMA) structure
@@ -62,7 +62,7 @@ typedef struct
 	int16_t buffer[SAMPLING_PERIOD];	//< Stores the values used to compute the moving average (size is equal to period)
 	int16_t current_avg; 				//< Stores the current average value
 	int32_t sum;						//< Stores the sum of previous values
-	uint16_t nb_samples;				//< Total number of samples read
+	uint32_t nb_samples;				//< Total number of samples read
 	uint16_t period;					//< Period for moving average (number of samples used for computation)
 } sma_t;
 
