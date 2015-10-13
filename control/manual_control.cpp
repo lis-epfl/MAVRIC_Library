@@ -89,7 +89,7 @@ void manual_control_get_control_command(manual_control_t* manual_control, contro
 		case CONTROL_SOURCE_JOYSTICK:
 			joystick_get_control_command(&manual_control->joystick,controls);
 			break;
-		default:
+		case CONTROL_SOURCE_NONE:
 			controls->rpy[ROLL] = 0.0f;
 			controls->rpy[PITCH] = 0.0f;
 			controls->rpy[YAW] = 0.0f;
@@ -109,7 +109,7 @@ void manual_control_get_velocity_vector(manual_control_t* manual_control, contro
 		case CONTROL_SOURCE_JOYSTICK:
 			joystick_get_velocity_vector(&manual_control->joystick, controls);
 			break;
-		default:
+		case CONTROL_SOURCE_NONE:
 			controls->tvel[X] = 0.0f;
 			controls->tvel[Y] = 0.0f;
 			controls->tvel[Z] = 0.0f;
@@ -121,7 +121,7 @@ void manual_control_get_velocity_vector(manual_control_t* manual_control, contro
 
 float manual_control_get_thrust(const manual_control_t* manual_control)
 {
-	float thrust;
+	float thrust = 0.0f;
 
 	switch(manual_control->control_source)
 	{
@@ -131,7 +131,7 @@ float manual_control_get_thrust(const manual_control_t* manual_control)
 		case CONTROL_SOURCE_JOYSTICK:
 			thrust = joystick_get_throttle(&manual_control->joystick);
 			break;
-		default:
+		case CONTROL_SOURCE_NONE:
 			thrust = -1.0f;
 			break;
 	}	
@@ -160,9 +160,6 @@ mav_mode_t manual_control_get_mode_from_source(manual_control_t* manual_control,
 			break;
 		case MODE_SOURCE_JOYSTICK:
 			new_mode = joystick_get_mode(&manual_control->joystick, mode_current);
-			break;
-		default:
-			new_mode = mode_current;
 			break;
 	}
 	
