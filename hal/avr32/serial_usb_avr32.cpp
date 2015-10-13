@@ -30,68 +30,122 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	serial_dummy.cpp
+ * \file 	serial_usb_avr32.cpp
  * 
  * \author 	MAV'RIC Team
  *   
- * \brief 	Dummy implementation for serial peripherals
- *
+ * \brief 	Implementation of serial over USB for avr32
+ * 
+ * \details Incomplete implementation (TODO)
+ * 			- Implemented:
+ * 				* buffered, blocking writing
+ * 			- NOT implemented:
+ * 				* Read functions
+ * 				* Receive interrupt callback
+ * 				* buffered input
+ * 				
  ******************************************************************************/
 
-#include "serial_dummy.hpp"
+
+#include "serial_usb_avr32.hpp"
+
+extern "C"
+{
+	#include <stdint.h>
+	#include "stdio_usb.h"
+	#include "udi_cdc.h"
+}
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Serial_dummy::Serial_dummy(serial_dummy_conf_t config)
+Serial_usb_avr32::Serial_usb_avr32(serial_usb_avr32_conf_t config)
 {
-	config_ = config;
+	// Store config
+	config_	= config;
 }
 
 
-bool Serial_dummy::init(void)
+bool Serial_usb_avr32::init(void)
 {
-	return config_.flag;
+	// Init transmission buffer
+	buffer_init( &tx_buffer_ );
+	
+	// Init usb hardware
+	stdio_usb_init(NULL);
+	stdio_usb_enable();
+	
+	return true;
 }
 
 
 	
-uint32_t Serial_dummy::readable(void)
+uint32_t Serial_usb_avr32::readable(void)
 {
-	return config_.flag;
+	// Not implemented
+	return 0;
 }
 
 
 
-uint32_t Serial_dummy::writeable(void)
+uint32_t Serial_usb_avr32::writeable(void)
 {
-	return config_.flag;
+	return buffer_bytes_free( &tx_buffer_ );
 }
 
 
-void Serial_dummy::flush(void)
+void Serial_usb_avr32::flush(void)
 {
-	;
-}
-
-bool Serial_dummy::attach(serial_interrupt_callback_t func)
-{
-	return config_.flag;
-}
-
-bool Serial_dummy::write(const uint8_t* bytes, const uint32_t size)
-{
-	return config_.flag;
-}
-
-
-bool Serial_dummy::read(uint8_t* bytes, const uint32_t size)
-{
-	return config_.flag;
+	// Block until everything is sent
+	while( !buffer_empty( &tx_buffer_ ) )
+	{
+		if (udi_cdc_is_tx_ready())
+		{
+			uint8_t byte = buffer_get( &tx_buffer_ );
+			stdio_usb_putchar(NULL, (int)byte);
+		}
+	}
 }
 
 
-//------------------------------------------------------------------------------
-// PRIVATE FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
+bool Serial_usb_avr32::attach(serial_interrupt_callback_t func)
+{
+	// Not implemented
+	return false;
+}
+
+
+bool Serial_usb_avr32::write(const uint8_t* bytes, const uint32_t size)
+{
+	bool ret = false;
+
+	// Queue bytes
+	if (writeable() >= size)
+	{
+		for (uint32_t i = 0; i < size; ++i)
+		{
+			buffer_put( &tx_buffer_, bytes[i] );
+		}
+		ret = true;
+	}
+
+	// Try to flush "softly":  do not block if fails more than 3 times
+	for(uint8_t i=0; i<3; i++)
+	{
+		while( udi_cdc_is_tx_ready() && (!buffer_empty(&tx_buffer_)) )
+		{
+			uint8_t byte = buffer_get( &tx_buffer_ );
+			stdio_usb_putchar(NULL, (int)byte);
+		}
+	}
+
+	return ret;
+}
+
+
+bool Serial_usb_avr32::read(uint8_t* bytes, const uint32_t size)
+{
+	// Not implemented	
+	return false;
+}

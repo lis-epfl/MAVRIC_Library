@@ -46,12 +46,21 @@ extern "C"
 	#include "time_keeper.h"
 }
 
+
+static Serial_usb_avr32* p_uart_usb;
+uint8_t serial2stream( stream_data_t data, uint8_t byte )
+{
+	p_uart_usb->write(&byte);
+	return 0;
+}
+
 Megafly_rev4::Megafly_rev4(imu_t& imu, megafly_rev4_conf_t config):
 	dsm_receiver_pin( Gpio_avr32(config.dsm_receiver_pin_config) ),
 	dsm_power_pin( Gpio_avr32(config.dsm_power_pin_config) ),
 	uart0( Serial_avr32(config.uart0_config) ), 
 	uart1( Serial_avr32(config.uart1_config) ), 
 	uart3( Serial_avr32(config.uart3_config) ), 
+	uart_usb( Serial_usb_avr32(config.uart_usb_config) ), 
 	i2c0( I2c_avr32(config.i2c0_config) ),
 	i2c1( I2c_avr32(config.i2c1_config) ),
 	magnetometer( Hmc5883l(i2c0, imu.raw_magneto) ),
@@ -61,11 +70,19 @@ Megafly_rev4::Megafly_rev4(imu_t& imu, megafly_rev4_conf_t config):
 	imu_(imu)
 {}
 
+
 bool Megafly_rev4::init(void)
 {
 	bool init_success = true;
 
 	Disable_global_interrupt();
+
+	// Init UART3
+	if( uart_usb.init() == false )
+	{
+		init_success = false;
+		print_util_dbg_print("[UART USB] INIT ERROR\r\n");
+	}
 
 	// Init GPIO dsm receiver
 	if( dsm_receiver_pin.init() == false )
@@ -144,7 +161,18 @@ bool Megafly_rev4::init(void)
 	{
 		init_success = false;
 		print_util_dbg_print("[SAT] INIT ERROR\r\n");
-	}	
+	}
+
+	// -------------------------------------------------------------------------
+	// Init stream for USB debug stream TODO: remove
+	p_uart_usb = &uart_usb;
+	dbg_stream_.get = NULL;
+	dbg_stream_.put = &serial2stream;
+	dbg_stream_.flush = NULL;
+	dbg_stream_.buffer_empty = NULL;
+	dbg_stream_.data = NULL;
+	print_util_dbg_print_init(&dbg_stream_);
+	// -------------------------------------------------------------------------
 
 	return init_success;
 }

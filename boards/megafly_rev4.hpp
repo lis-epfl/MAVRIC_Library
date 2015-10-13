@@ -44,6 +44,7 @@
 
 #include "gpio_avr32.hpp"
 #include "serial_avr32.hpp"
+#include "serial_usb_avr32.hpp"
 #include "i2c_avr32.hpp"
 #include "hmc5883l.hpp"
 #include "lsm330dlc.hpp"
@@ -54,6 +55,7 @@
 extern "C"
 {
 	#include "twim_default_config.h"
+	#include "streams.h"
 }
 
 
@@ -62,13 +64,14 @@ extern "C"
  */
 typedef struct
 {
-	gpio_avr32_conf_t	dsm_receiver_pin_config;
-	gpio_avr32_conf_t	dsm_power_pin_config;
-	serial_avr32_conf_t uart0_config;
-	serial_avr32_conf_t uart1_config;
-	serial_avr32_conf_t uart3_config;
-	i2c_avr32_conf_t 	i2c0_config;
-	i2c_avr32_conf_t 	i2c1_config;
+	gpio_avr32_conf_t		dsm_receiver_pin_config;
+	gpio_avr32_conf_t		dsm_power_pin_config;
+	serial_avr32_conf_t 	uart0_config;
+	serial_avr32_conf_t 	uart1_config;
+	serial_avr32_conf_t 	uart3_config;
+	serial_usb_avr32_conf_t uart_usb_config;
+	i2c_avr32_conf_t 		i2c0_config;
+	i2c_avr32_conf_t 		i2c1_config;
 } megafly_rev4_conf_t;
 
 
@@ -113,7 +116,8 @@ public:
 	Gpio_avr32			dsm_power_pin;
 	Serial_avr32 		uart0;		
 	Serial_avr32 		uart1;				
-	Serial_avr32 		uart3;		
+	Serial_avr32 		uart3;
+	Serial_usb_avr32	uart_usb;		
 	I2c_avr32 			i2c0;
 	I2c_avr32 			i2c1;
 	Hmc5883l 			magnetometer;
@@ -122,7 +126,8 @@ public:
 	Spektrum_satellite	spektrum_satellite;
 
 private:
-	imu_t& 		imu_;
+	imu_t& 			imu_;
+	byte_stream_t	dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
 };
 
 
@@ -183,6 +188,8 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
 	conf.uart3_config.rx_pin_map			= {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION};
     conf.uart3_config.tx_pin_map			= {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION};
 
+    // UART USB configuration
+    conf.uart_usb_config 		= {};
     
 	// I2C0 configuration
 	conf.i2c0_config            = {};

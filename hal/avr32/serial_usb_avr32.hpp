@@ -30,25 +30,61 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	serial.hpp
+ * \file 	serial_usb_avr32.hpp
  * 
  * \author 	MAV'RIC Team
  *   
- * \brief 	Abstract class for serial peripherals
- *
+ * \brief 	Implementation of serial over USB for avr32
+ * 
+ * \details Incomplete implementation (TODO)
+ * 			- Implemented:
+ * 				* buffered, blocking writing
+ * 			- NOT implemented:
+ * 				* Read functions
+ * 				* Receive interrupt callback
+ * 				* buffered input
+ * 				
  ******************************************************************************/
 
-#ifndef SERIAL_H_
-#define SERIAL_H_
+#ifndef SERIAL_USB_AVR32_H_
+#define SERIAL_USB_AVR32_H_
 
-#include <stdint.h>
+#include "serial.hpp"
 
-class Serial;
-typedef void(*serial_interrupt_callback_t)(Serial* serial);
+extern "C"
+{
+	#include "buffer.h"
+}
 
-class Serial
+
+/**
+ * \brief 	Configuration structure
+ */
+typedef struct 
+{
+} serial_usb_avr32_conf_t;
+
+
+/**
+ * \brief 	Typedef for interrupt handler function
+ */
+typedef void(*serial_avr32_irq_func_t)(void); 
+
+
+/**
+ * \brief 	Implementation of serial peripheral for avr32
+ */
+class Serial_usb_avr32: public Serial
 {
 public:
+
+	/**
+	 * \brief  	Initialises the peripheral
+	 * 
+	 * \param 	config 		Device configuration
+	 */
+	Serial_usb_avr32(serial_usb_avr32_conf_t config);
+
 
 	/**
 	 * \brief 	Hardware initialization
@@ -56,7 +92,7 @@ public:
 	 * \return  true Success
 	 * \return  false Error
 	 */
-	virtual bool init(void) = 0;
+	bool init(void);
 
 
 	/**
@@ -64,7 +100,7 @@ public:
 	 * 
 	 * \return 	Number of incoming bytes available
 	 */	
-	virtual uint32_t readable(void) = 0;
+	uint32_t readable(void);
 
 
 	/**
@@ -72,7 +108,7 @@ public:
 	 * 
 	 * \return 	Number of bytes available for writing
 	 */	
-	virtual uint32_t writeable(void) = 0;
+	uint32_t writeable(void);
 
 
 	/**
@@ -80,7 +116,7 @@ public:
 	 * 
 	 * \return 	Number of bytes available for writing
 	 */	
-	virtual void flush(void) = 0;
+	void flush(void);
 
 
 	/**
@@ -96,7 +132,7 @@ public:
 	 * \return 	true		Success
 	 * \return 	false		Failed
 	 */
-	virtual bool attach(serial_interrupt_callback_t func) = 0; 
+	bool attach(serial_interrupt_callback_t func); 
 
 
 	/**
@@ -108,7 +144,7 @@ public:
 	 * \return 	true		Data successfully written
 	 * \return 	false		Data not written
 	 */
-	virtual bool write(const uint8_t* bytes, const uint32_t size=1) = 0;
+	bool write(const uint8_t* bytes, const uint32_t size=1);
 
 
 	/**
@@ -120,7 +156,13 @@ public:
 	 * \return 	true		Data successfully read
 	 * \return 	false		Data not read
 	 */	
-	virtual bool read(uint8_t* bytes, const uint32_t size=1) = 0;
+	bool read(uint8_t* bytes, const uint32_t size=1);
+
+
+private:
+	serial_usb_avr32_conf_t		config_;		///< Configuration
+	buffer_t 					tx_buffer_;		///< Transmission buffer
 };
 
-#endif /* SERIAL_H_ */
+
+#endif /* SERIAL_USB_AVR32_H_ */

@@ -30,51 +30,44 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file  	console.hpp
+ * \file  	dbg.hpp
  * 
  * \author  MAV'RIC Team
  *   
- * \brief   Write to any write-able module in human-readable format
+ * \brief   Write debug messages
  *
  ******************************************************************************/
 
-#ifndef CONSOLE_HPP_
-#define CONSOLE_HPP_
 
-#include <stdint.h>
+#include "dbg.hpp"
+#include "serial_dummy.hpp"
+#include "console.hpp"
 
+template class Console<Serial>;
 
-/**
- * \brief 	Class template to write to any write-able module in human-readable format
- */
-template <typename Writeable>
-class Console 
+ 
+namespace dbg
 {
-private:
-	Writeable& stream_;
 
-public:
-	/**
-	 * \brief Constructor
-	 */
-	Console(Writeable& stream);
-	// Console(Console<Writeable>& console);
-	Console<Writeable>& operator=(Console<Writeable> console);
+	Serial_dummy dummy;
+	static Console<Serial> dbg_console = Console<Serial>( dummy );
+	// Console<Serial> dbg_console( dummy );
 
+	bool init(Serial& serial)
+	{
+		// Serial_dummy dummy2;
 
-	/**
-	 * \brief 	Write to the console
-	 *
-	 * \param 	data 	The buffer to write.
-	 * \param 	size 	The number of bytes to write.
-	 * 
-	 * \return 	success
-	 */
-	bool write(const uint8_t* data, uint32_t size);
+		dbg_console = Console<Serial>(serial);
+		// dbg_console(Console<Serial>(serial));
+		// static Console<Serial> dbg_console = Console<Serial>(dummy2);
+		
+		hello();
+		return false;
+	}
 
-};
-
-// Template implementation file
-#include "console.hxx"
-
-#endif /* CONSOLE_HPP_ */
+	void hello()
+	{
+		const char* msg = "Hello world !\n\r";
+		dbg_console.write((uint8_t*)msg, 15);
+	}
+}

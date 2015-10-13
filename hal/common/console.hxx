@@ -39,14 +39,39 @@
  ******************************************************************************/
 
 
-template<typename Writeable>
+template <typename Writeable>
 Console<Writeable>::Console(Writeable& stream):
 	stream_(stream)
 {
 	;
 }
 
-template<typename Writeable>
+
+
+template <typename Writeable>
+Console<Writeable>& Console<Writeable>::operator=(Console<Writeable> console):
+	stream_(console.stream_)
+{
+
+	return *this;
+}
+
+// Console<Writeable>::operator=(Console<Writeable> const& console):
+// {
+// 	;
+// }
+
+
+// template <typename Writeable>
+// Console<Writeable>::Console(Console<Writeable>& console):
+// 	stream_(console.stream_)
+// {
+// 	;
+// }
+
+
+
+template <typename Writeable>
 bool Console<Writeable>::write(const uint8_t* data, uint32_t size)
 {
  	return stream_.write(data, size);

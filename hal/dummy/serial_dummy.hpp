@@ -62,7 +62,7 @@ typedef struct
 static inline serial_dummy_conf_t serial_dummy_default_config();
 
 
-class Serial_dummy
+class Serial_dummy: public Serial
 {
 public:
 	/**
@@ -105,26 +105,46 @@ public:
 	 */	
 	void flush(void);
 
+	
 	/**
-	 * @brief 	Write a byte on the serial line
+	 * \brief 	Attach a function to call after a receive interrupt is generated
 	 * 
-	 * @param 	byte 		Outgoing byte
+	 * \details A default handler should be provided by the implementation to 
+	 * 			add the incoming data in a buffer, so is not mandatory to call 
+	 * 			this method. The function callback will be called after the 
+	 * 			interrupt handler
 	 * 
-	 * @return 	true		Data successfully written
-	 * @return 	false		Data not written
+	 * \param  	func	 	Pointer to the callback function
+	 * 
+	 * \return 	true		Success
+	 * \return 	false		Failed
 	 */
-	bool put(const uint8_t byte);
+	bool attach(serial_interrupt_callback_t func); 
 
 
 	/**
-	 * @brief 	Read one byte from the serial line
+	 * \brief 	Write bytes on the serial line
 	 * 
-	 * @param 	byte 		Incoming byte
+	 * \param 	byte 		Outgoing bytes
+	 * \param 	size 		Number of bytes to write
 	 * 
-	 * @return 	true		Data successfully read
-	 * @return 	false		Data not read
+	 * \return 	true		Data successfully written
+	 * \return 	false		Data not written
+	 */
+	bool write(const uint8_t* bytes, const uint32_t size=1);
+
+
+	/**
+	 * \brief 	Read bytes from the serial line
+	 * 
+	 * \param 	bytes 		Incoming bytes
+	 * \param 	size 		Number of bytes to read
+	 * 
+	 * \return 	true		Data successfully read
+	 * \return 	false		Data not read
 	 */	
-	bool get(uint8_t& byte);
+	bool read(uint8_t* bytes, const uint32_t size=1);
+
 
 private:
 	serial_dummy_conf_t config_;

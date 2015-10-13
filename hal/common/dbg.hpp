@@ -30,51 +30,33 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file  	console.hpp
+ * \file  	dbg.hpp
  * 
  * \author  MAV'RIC Team
  *   
- * \brief   Write to any write-able module in human-readable format
+ * \brief   Write debug messages
  *
  ******************************************************************************/
 
-#ifndef CONSOLE_HPP_
-#define CONSOLE_HPP_
+#ifndef DBG_H_
+#define DBG_H_
+
+#include "serial.hpp"
 
 #include <stdint.h>
 
+// class Console<Serial>;
+// template class Console<Serial>;
+
 
 /**
- * \brief 	Class template to write to any write-able module in human-readable format
+ * \brief 	Static methods allowing to write debug messages
  */
-template <typename Writeable>
-class Console 
+namespace dbg
 {
-private:
-	Writeable& stream_;
+	bool init(Serial& serial);
 
-public:
-	/**
-	 * \brief Constructor
-	 */
-	Console(Writeable& stream);
-	// Console(Console<Writeable>& console);
-	Console<Writeable>& operator=(Console<Writeable> console);
+	void hello();
+}
 
-
-	/**
-	 * \brief 	Write to the console
-	 *
-	 * \param 	data 	The buffer to write.
-	 * \param 	size 	The number of bytes to write.
-	 * 
-	 * \return 	success
-	 */
-	bool write(const uint8_t* data, uint32_t size);
-
-};
-
-// Template implementation file
-#include "console.hxx"
-
-#endif /* CONSOLE_HPP_ */
+#endif /* DBG_H_ */
