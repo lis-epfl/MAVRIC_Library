@@ -42,18 +42,16 @@
 #include <stdlib.h>
 
 #include "launch_detection.h"
+#include "print_util.h"
 #include "vectors.h"
- #include "print_util.h"
+
 
 #define ACC_X acc[0]		//< Alias for X acceleration
 #define ACC_Y acc[1]		//< Alias for Y acceleration
 #define ACC_Z acc[2]		//< Alias for Z acceleration
 
-#define MIN_SAMPLES SAMPLING_PERIOD //< Minimum number of samples needed to have a viable SMA
+#define MIN_SAMPLES SAMPLING_PERIOD
 
-#define THRESHOLD 210				//< Acceleration threshold ( (2.0 [m.s^-2] * 1000) / 9.81 [m.s^-2] )
-
-const int16_t c_idle = 20;
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS DECLARATION
@@ -68,32 +66,30 @@ const int16_t c_idle = 20;
  * \return 		1 if launch is detected
  * 				0 otherwise
  */
-bool launch_detection_threshold_check(launch_detection_t * ld);
+bool launch_detection_launch_detected(launch_detection_t * ld);
 
-/**
- * \brief        		Initialisation indirection to make the threshold setting private
- * 
- * \param ld 			Pointer to the launch detection struct
- * \param t_launch		The launch threshold
- */
-bool launch_detection_initialize(launch_detection_t * ld, int16_t t_launch);
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool launch_detection_threshold_check(launch_detection_t * ld)
+bool launch_detection_launch_detected(launch_detection_t * ld)
 {
 	return ld->sma.nb_samples > MIN_SAMPLES ? ld->sma.current_avg < ld->c_idle + ld->t_launch : 0;
 }
 
-bool launch_detection_initialize(launch_detection_t * ld, int16_t t_launch)
-{
 
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
+
+bool launch_detection_init(launch_detection_t * ld, const launch_detection_conf_t* config)
+{
  	sma_init(&ld->sma, SAMPLING_PERIOD);
- 	
- 	ld->t_launch = t_launch;
- 	ld->c_idle = c_idle;
+ 	print_util_dbg_log_value("t_launch = ", (int32_t)(config->t_launch), 10);
+	print_util_dbg_print("\r");
+ 	ld->t_launch = config->t_launch;
+ 	ld->c_idle = config->c_idle;
  	ld->status = LAUNCH_IDLE;
  	ld->ACC_X = ld->ACC_Y = ld->ACC_Z = 0;
  	ld->enabled = 1;
@@ -101,33 +97,24 @@ bool launch_detection_initialize(launch_detection_t * ld, int16_t t_launch)
  	return 1;
 }
 
-//------------------------------------------------------------------------------
-// PUBLIC FUNCTIONS IMPLEMENTATION
-//------------------------------------------------------------------------------
-
-bool launch_detection_init(launch_detection_t * ld)
-{
- 	return launch_detection_initialize(ld, THRESHOLD);
-}
-
 task_return_t launch_detection_update(launch_detection_t * ld, float acc[3])
 {
- 	ld->ACC_X = 1000 * acc[0];
- 	ld->ACC_Y = 1000 * acc[1];
- 	ld->ACC_Z = 1000 * acc[2];
+ 	ld->ACC_X = 1000.0f * acc[0];
+ 	ld->ACC_Y = 1000.0f * acc[1];
+ 	ld->ACC_Z = 1000.0f * acc[2];
 
  	int16_t acc_norm = (int16_t)(vectors_norm(ld->acc));
  	sma_update(&ld->sma, acc_norm);
- 	sma_update(&ld->sma, acc_norm);
 
- 	if (launch_detection_threshold_check(ld))
+ 	if (launch_detection_launch_detected(ld))
  	{
  		ld->status = LAUNCHING;
  	}
- 	else 
- 	{
- 		ld->status = LAUNCH_IDLE;
- 	}
+ 	// TEMP : for logging purposes need to let the status stay at launching to detect it
+ 	// else 
+ 	// {
+ 	// 	ld->status = LAUNCH_IDLE;
+ 	// }
 
  	return TASK_RUN_SUCCESS;
 }

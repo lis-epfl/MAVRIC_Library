@@ -62,6 +62,15 @@ typedef enum {
 			 } launch_status_t;
 
 /**
+ * \brief The configuration structure for launch detection
+ */
+typedef struct
+{
+	uint16_t t_launch;		//< Launch detection threshold
+	uint16_t c_idle;		//< Norm of idle thrust value
+} launch_detection_conf_t;
+
+/**
  * \brief 		Launch detection structure
  */
 typedef struct
@@ -78,10 +87,11 @@ typedef struct
  * \brief        		Launch detection initialisation
  * 
  * \param ld 			Pointer to the launch detection struct
+ * \param config 		The launch detection configuration
  *
  * \return 				1 if INIT_SUCCESS, 0 otherwise
  */
-bool launch_detection_init(launch_detection_t * ld);
+bool launch_detection_init(launch_detection_t * ld, const launch_detection_conf_t* config);
 
 
 /**
