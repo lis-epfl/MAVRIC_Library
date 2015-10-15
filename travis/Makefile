@@ -76,9 +76,9 @@ LIB_SRCS += sensing/imu.c
 LIB_SRCS += sensing/imu_telemetry.c                  
 LIB_SRCS += sensing/position_estimation.c            
 LIB_SRCS += sensing/position_estimation_telemetry.c
-LIB_SRCS += sensing/qfilter.c
-LIB_SRCS += sensing/simulation.c
-LIB_SRCS += sensing/simulation_telemetry.c   
+# LIB_SRCS += sensing/qfilter.c
+# LIB_SRCS += sensing/simulation.c
+# LIB_SRCS += sensing/simulation_telemetry.c   
 
 LIB_SRCS += runtime/scheduler.cpp  
 LIB_SRCS += runtime/scheduler_telemetry.c
@@ -96,7 +96,7 @@ LIB_SRCS += communication/onboard_parameters.c
 LIB_SRCS += communication/remote.c
 LIB_SRCS += communication/remote_telemetry.c
 LIB_SRCS += communication/state.c
-LIB_SRCS += communication/state_machine.c
+# LIB_SRCS += communication/state_machine.c
 LIB_SRCS += communication/state_telemetry.c
 
 
