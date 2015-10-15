@@ -30,69 +30,119 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file hmc5883l.h
+ * \file hmc5883l.hpp
  * 
  * \author MAV'RIC Team
  * \author Felix Schill
+ * \author Julien Lecoeur
  *   
- * \brief This file is the driver for the magnetometer HMC58831
+ * \brief 	Driver for the magnetometer HMC58831
+ * 
+ * \detail 	This driver does not support temperature
  *
  ******************************************************************************/
 
 
-#ifndef HMC5883L_H_
-#define HMC5883L_H_
+#ifndef HMC5883L_HPP_
+#define HMC5883L_HPP_
 
 #include <stdint.h>
+#include <array>
+
+#include "magnetometer.hpp"
 #include "i2c.hpp"
 
-extern "C" 
-{
-	#include "magnetometer.h"
-}
 
 /**
- * \brief structure for the magnetometer's data
-*/
-// typedef struct
-// {
-// 	magnetometer_t *raw_magneto;		///< The magnetometer raw data
-// } hmc5883l_t;
-
-class Hmc5883l 		
+ * \brief Driver for HMC5883L magnetometer
+ * 
+ * \detail 	This driver does not support temperature
+ */
+class Hmc5883l: public Magnetometer
 {
 public:
 	/**
-	 * @brief  	Constructor
+	 * \brief  	Constructor
 	 * 
-	 * @param 	i2c 	Reference to I2C device 
+	 * \param 	i2c 	Reference to I2C device 
 	 */
-	Hmc5883l(I2c& i2c, magnetometer_t& data);
-
+	Hmc5883l(I2c& i2c);
 
 	/**
-	 * @brief   Initialise the sensor
-	 * @details Sends configuration via I2C, the I2C peripheral must be 
-	 * 			activated before this method is called
+	 * \brief   Initialise the sensor
 	 * 			
-	 * @return 	true 	Success
-	 * @return 	false 	Failed
+	 * \return 	Success
 	 */	
 	bool init(void);
 
+
 	/**
-	 * @brief   Main update function
-	 * @details Get new data from the sensor
+	 * \brief 	Main update function
+	 * \detail 	Reads new values from sensor
 	 * 
-	 * @return 	true 	Success
-	 * @return 	false 	Failed
+	 * \return 	Success
 	 */
 	bool update(void);
 
+	
+	/**
+	 * \brief 	Get last update time in microseconds
+	 * 
+	 * \return 	Update time
+	 */
+	const float& last_update_us(void) const;
+
+
+	/**
+	 * \brief 	Get X component of magnetic field
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	const float& raw_mag_X(void) const;
+
+
+	/**
+	 * \brief 	Get Y component of magnetic field
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	const float& raw_mag_Y(void) const;
+
+
+	/**
+	 * \brief 	Get Z component of magnetic field
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	const float& raw_mag_Z(void) const;
+
+
+	/**
+	 * \brief 	Get sensor temperature
+	 * 
+	 * \return 	Value
+	 */	
+	const float& temperature(void) const;
+
+
 private:
-	I2c&			i2c_;
-	magnetometer_t& data_;
+	I2c&				 i2c_;				///< Reference to I2C peripheral
+	std::array<float, 3> data_;				///< sensor data
+	float				 last_update_us_; 	///< Last update time in microseconds
+	float 				 temperature_;		///< NOT SUPPORTED : temperature
 };
 
 
-#endif /* COMPASS_HMC5883_H_ */
+#endif /* HMC5883_HPP_ */
