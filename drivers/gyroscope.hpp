@@ -30,35 +30,95 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gyroscope.h
+ * \file gyroscope.hpp
  * 
  * \author MAV'RIC Team
  * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *   
- * \brief This file defines the gyroscope structure, independently from the sensor used
+ * \brief Abstract class for gyroscopes
  * 
  ******************************************************************************/
 
 
-#ifndef GYRO_H_
-#define GYRO_H_
+#ifndef GYROSCOPE_HPP_
+#define GYROSCOPE_HPP_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /**
- * \brief The gyroscope structure
+ * \brief Abstract class for gyroscopes
  */
-typedef struct
+class Gyroscope
 {
-	float data[3];			///< The gyroscope's datas
-	float temperature;		///< The gyroscope's temperature
-	float last_update;		///< The gyroscope last update time
-} gyroscope_t;
+public:
+	/**
+	 * \brief   Initialise the sensor
+	 * 			
+	 * \return 	Success
+	 */	
+	virtual bool init(void) = 0;
 
-#ifdef __cplusplus
-}
-#endif
 
-#endif /* GYRO_H_ */
+	/**
+	 * \brief 	Main update function
+	 * \detail 	Reads new values from sensor
+	 * 
+	 * \return 	Success
+	 */
+	virtual bool update(void) = 0;
+
+	
+	/**
+	 * \brief 	Get last update time in microseconds
+	 * 
+	 * \return 	Update time
+	 */
+	virtual const float& last_update_us(void) const = 0;
+
+
+	/**
+	 * \brief 	Get X component of angular velocity
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	virtual const float& raw_gyro_X(void) const = 0;
+
+
+	/**
+	 * \brief 	Get Y component of angular velocity
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	virtual const float& raw_gyro_Y(void) const = 0;
+
+
+	/**
+	 * \brief 	Get Z component of angular velocity
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	virtual const float& raw_gyro_Z(void) const = 0;
+
+
+	/**
+	 * \brief 	Get sensor temperature
+	 * 
+	 * \return 	Value
+	 */	
+	virtual const float& temperature(void) const = 0;
+};
+
+
+#endif /* GYROSCOPE_HPP_ */
