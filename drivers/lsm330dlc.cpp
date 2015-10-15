@@ -35,6 +35,7 @@
  * \author MAV'RIC Team
  * \author Felix Schill
  * \author Geraud L'Eplattenier
+ * \author Julien Lecoeur
  *   
  * \brief This file is the driver for the integrated 3axis gyroscope and 
  * accelerometer LSM330DLC
@@ -47,6 +48,7 @@
 extern "C"
 {
 	#include "print_util.h"
+	#include "time_keeper.h"
 }
 
 const uint8_t LSM330_ACC_SLAVE_ADDRESS		= 	0b0011000;	///< Define the Accelerometer Address, as a slave on the i2c bus
@@ -176,6 +178,7 @@ const uint8_t LSM_GYRO_BOOT					=	0x80;	///< Define the gyroscope control regist
 const uint8_t LSM_ACC_DATA_BEGIN			=	0xA7;	///< Define the begin address of the accelerometer
 const uint8_t LSM_GYRO_DATA_BEGIN			=	0xA6;	///< Define the begin address of the gyroscope
 
+
 /**
  * \brief	Structure containing filling of the FIFO. WARNING: start_address must 8-bits and the LAST element.
  */
@@ -191,34 +194,38 @@ typedef struct
 */
 static const uint8_t fifo_config[2] = {LSM_FIFO_CTRL_ADDRESS, 0x80};
 
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
-Lsm330dlc::Lsm330dlc(I2c& i2c, accelerometer_t& accel_data, gyroscope_t& gyro_data):
+
+Lsm330dlc::Lsm330dlc(I2c& i2c):
 	i2c_(i2c),
-	accel_data_(accel_data),
-	gyro_data_(gyro_data)
+	gyro_data_({0.0f, 0.0f, 0.0f}),
+	acc_data_({0.0f, 0.0f, 0.0f}),
+	temperature_(0.0f)
 {}
+
 
 bool Lsm330dlc::init(void) 
 {
-	bool res = true;
+	bool success = true;
 
 	// fifo_fill if the sensor if here
-	res &= i2c_.probe(LSM330_ACC_SLAVE_ADDRESS);
-	res &= i2c_.probe(LSM330_GYRO_SLAVE_ADDRESS);
+	success &= i2c_.probe(LSM330_ACC_SLAVE_ADDRESS);
+	success &= i2c_.probe(LSM330_GYRO_SLAVE_ADDRESS);
 
-	if(res == true)
+	if( success == true )
 	{
 		print_util_dbg_print("LSM330 sensor found (0x18) \r\n");
 	}
 	else
 	{
 		print_util_dbg_print("LSM330 sensor not responding (0x18) \r\n");
-		return res;
+		return success;
 	} 
 	
-	//Define the configuration of the accelerometer
+	// Define the configuration of the accelerometer
 	static const uint8_t lsm_acc_default_config[6] =
 	{
 		LSM_CTRL_REG1_ADDRESS | LSM_AUTO_INCREMENT,
@@ -230,10 +237,10 @@ bool Lsm330dlc::init(void)
 	};
 
 	// Write configuration to the sensor
-	res &= i2c_.write(lsm_acc_default_config, 6, LSM330_ACC_SLAVE_ADDRESS);
-	res &= i2c_.write(fifo_config, 2, LSM330_ACC_SLAVE_ADDRESS);
+	success &= i2c_.write(lsm_acc_default_config, 6, LSM330_ACC_SLAVE_ADDRESS);
+	success &= i2c_.write(fifo_config, 2, LSM330_ACC_SLAVE_ADDRESS);
 
-	//brief	Define the configuration of the gyroscope
+	// Define the configuration of the gyroscope
 	static const uint8_t lsm_gyro_default_config[6] =
 	{
 		LSM_CTRL_REG1_ADDRESS | LSM_AUTO_INCREMENT,
@@ -245,39 +252,96 @@ bool Lsm330dlc::init(void)
 	};
 	
 	// Write configuration to the sensor
-	res &= i2c_.write(lsm_gyro_default_config, 6, LSM330_GYRO_SLAVE_ADDRESS);
-	res &= i2c_.write(fifo_config, 2, LSM330_GYRO_SLAVE_ADDRESS);
+	success &= i2c_.write(lsm_gyro_default_config, 6, LSM330_GYRO_SLAVE_ADDRESS);
+	success &= i2c_.write(fifo_config, 2, LSM330_GYRO_SLAVE_ADDRESS);
 
-	return res;
+	return success;
 }
+
 
 bool Lsm330dlc::update(void) 
 {
-	bool res 				= true;	
+	bool success = true;	
 	
 	uint8_t fifo_fill 		= 1;
-	uint8_t accel_data[7]	= {0, 0, 0, 0, 0, 0, 0};
-	uint16_t gyro_data[4] 	= {0, 0, 0, 0};
+	uint8_t accel_buffer[7]	= {0, 0, 0, 0, 0, 0, 0};
+	uint16_t gyro_buffer[4] = {0, 0, 0, 0};
 
-	res &= i2c_.write( &LSM_FIFO_SRC_ADDRESS, 1, LSM330_ACC_SLAVE_ADDRESS );
-	res &= i2c_.read( (uint8_t*)&fifo_fill, 1, LSM330_ACC_SLAVE_ADDRESS );
+	success &= i2c_.write( &LSM_FIFO_SRC_ADDRESS, 1, LSM330_ACC_SLAVE_ADDRESS );
+	success &= i2c_.read( (uint8_t*)&fifo_fill, 1, LSM330_ACC_SLAVE_ADDRESS );
 
-	if (fifo_fill > 0)
+	if( fifo_fill > 0 )
 	{
-		res &= i2c_.write( &LSM_ACC_DATA_BEGIN, 1, LSM330_ACC_SLAVE_ADDRESS );
-		res &= i2c_.read( (uint8_t*)accel_data, 7, LSM330_ACC_SLAVE_ADDRESS );
-		//First Byte is the status register
-		accel_data_.data[0] = (float)((int16_t)(accel_data[2] << 8 | accel_data[1]));
-		accel_data_.data[1] = (float)((int16_t)(accel_data[4] << 8 | accel_data[3]));
-		accel_data_.data[2] = (float)((int16_t)(accel_data[6] << 8 | accel_data[5]));
+		// Read data from accelero sensor
+		success &= i2c_.write( &LSM_ACC_DATA_BEGIN, 1, LSM330_ACC_SLAVE_ADDRESS );
+		success &= i2c_.read( (uint8_t*)accel_buffer, 7, LSM330_ACC_SLAVE_ADDRESS );
+		
+		// First Byte is the status register
+		acc_data_[0] = (float)((int16_t)(accel_buffer[2] << 8 | accel_buffer[1]));
+		acc_data_[1] = (float)((int16_t)(accel_buffer[4] << 8 | accel_buffer[3]));
+		acc_data_[2] = (float)((int16_t)(accel_buffer[6] << 8 | accel_buffer[5]));
 
-		res &= i2c_.write( &LSM_GYRO_DATA_BEGIN, 1, LSM330_GYRO_SLAVE_ADDRESS );
-		res &= i2c_.read( (uint8_t*)gyro_data, 8, LSM330_GYRO_SLAVE_ADDRESS );
-		//First Byte is the sensor temperature and Second Byte is the status register
-		gyro_data_.data[0] = (float)((int16_t)gyro_data[1]);
-		gyro_data_.data[1] = (float)((int16_t)gyro_data[2]);
-		gyro_data_.data[2] = (float)((int16_t)gyro_data[3]);
+		// Read data from gyro sensor
+		success &= i2c_.write( &LSM_GYRO_DATA_BEGIN, 1, LSM330_GYRO_SLAVE_ADDRESS );
+		success &= i2c_.read( (uint8_t*)gyro_buffer, 8, LSM330_GYRO_SLAVE_ADDRESS );
+		
+		// First Byte is the sensor temperature and Second Byte is the status register
+		temperature_  = (float)((int16_t)gyro_buffer[0]);
+		gyro_data_[0] = (float)((int16_t)gyro_buffer[1]);
+		gyro_data_[1] = (float)((int16_t)gyro_buffer[2]);
+		gyro_data_[2] = (float)((int16_t)gyro_buffer[3]);
+
+		// Save last update time
+		last_update_us_ = time_keeper_get_micros();
 	}
 
-	return res;
+	return success;
+}
+
+
+const float& Lsm330dlc::last_update_us(void) const
+{
+	return last_update_us_;
+}
+
+
+const float& Lsm330dlc::raw_gyro_X(void) const
+{
+	return gyro_data_[0];
+}
+
+
+const float& Lsm330dlc::raw_gyro_Y(void) const
+{
+	return gyro_data_[1];
+}
+
+
+const float& Lsm330dlc::raw_gyro_Z(void) const
+{
+	return gyro_data_[2];
+}
+
+
+const float& Lsm330dlc::raw_acc_X(void) const
+{
+	return acc_data_[0];
+}
+
+
+const float& Lsm330dlc::raw_acc_Y(void) const
+{
+	return acc_data_[1];
+}
+
+
+const float& Lsm330dlc::raw_acc_Z(void) const
+{
+	return acc_data_[2];
+}
+
+
+const float& Lsm330dlc::temperature(void) const
+{
+	return temperature_;
 }

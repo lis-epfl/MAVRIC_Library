@@ -30,11 +30,12 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file lsm330dlc.h
+ * \file lsm330dlc.hpp
  * 
  * \author MAV'RIC Team
  * \author Felix Schill
  * \author Geraud L'Eplattenier
+ * \author Julien Lecoeur
  *   
  * \brief This file is the driver for the integrated 3axis gyroscope and 
  * accelerometer LSM330DLC
@@ -46,66 +47,143 @@
 #define LSM330DLC_H_
 
 #include <stdint.h>
+#include <array>
+#include "accelerometer.hpp"		
+#include "gyroscope.hpp"
 #include "i2c.hpp"
 
-extern "C" 
-{
-	#include <stdint.h>
-	#include "gyroscope.h"
-	#include "accelerometer.h"		
-}
 
 /**
- * \brief	Structure containing the accelerometer's data
-*/
-/*typedef struct
+ * \brief 		Driver for sensor LSM330DLC
+ * 
+ * \details 	This sensor is at the same time a accelerometer and a gyroscope
+ */
+class Lsm330dlc: public Accelerometer, Gyroscope
 {
-	accelerometer_t *raw_accelero;
-} lsm_acc_t;
-*/
-/**
- * \brief	Structure containing the gyroscope's data
-*/
-/*typedef struct
-{
-	gyroscope_t *raw_gyro;
-} lsm_gyro_t;
-*/
+public:
+	/**
+	 * \brief  	Constructor
+	 * 
+	 * \param 	i2c 	Reference to I2C device 
+	 */
+	Lsm330dlc(I2c& i2c);
 
 
-class Lsm330dlc 		
-{
-	public:
-		/**
-		 * @brief  	Constructor
-		 * 
-		 * @param 	i2c 	Reference to I2C device 
-		 */
-		Lsm330dlc(I2c& i2c, accelerometer_t& accel_data, gyroscope_t& gyro_data);
+	/**
+	 * \brief   Initialise the sensor
+	 * \details Sends configuration via I2C, the I2C peripheral must be 
+	 * 			activated before this method is called
+	 * 			
+	 * \return 	true 	Success
+	 * \return 	false 	Failed
+	 */	
+	bool init(void);
 
-		/**
-		 * @brief   Initialise the sensor
-		 * @details Sends configuration via I2C, the I2C peripheral must be 
-		 * 			activated before this method is called
-		 * 			
-		 * @return 	true 	Success
-		 * @return 	false 	Failed
-		 */	
-		bool init(void);
 
-		/**
-		 * @brief   Main update function
-		 * @details Get new data from the sensor
-		 * 
-		 * @return 	true 	Success
-		 * @return 	false 	Failed
-		 */
-		bool update(void);
+	/**
+	 * \brief   Main update function
+	 * \details Get new data from the sensor
+	 * 
+	 * \return 	true 	Success
+	 * \return 	false 	Failed
+	 */
+	bool update(void);
 
-	private:
-		I2c&				i2c_;
-		accelerometer_t& 	accel_data_;
-		gyroscope_t& 		gyro_data_;
+
+	/**
+	 * \brief 	Get last update time in microseconds
+	 * 
+	 * \return 	Update time
+	 */
+	const float& last_update_us(void) const;
+
+
+	/**
+	 * \brief 	Get X component of angular velocity
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	const float& raw_gyro_X(void) const;
+
+
+	/**
+	 * \brief 	Get Y component of angular velocity
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	const float& raw_gyro_Y(void) const;
+
+
+	/**
+	 * \brief 	Get Z component of angular velocity
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	const float& raw_gyro_Z(void) const;
+
+
+	/**
+	 * \brief 	Get X component of acceleration
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	const float& raw_acc_X(void) const;
+
+
+	/**
+	 * \brief 	Get Y component of acceleration
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	const float& raw_acc_Y(void) const;
+
+
+	/**
+	 * \brief 	Get Z component of acceleration
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	const float& raw_acc_Z(void) const;
+
+
+	/**
+	 * \brief 	Get sensor temperature
+	 * 
+	 * \return 	Value
+	 */	
+	const float& temperature(void) const;
+
+
+private:
+	I2c& 				 i2c_;				///< I2C peripheral
+	std::array<float, 3> gyro_data_;		///< Gyroscope data
+	std::array<float, 3> acc_data_;			///< Accelerometer data
+	float 				 temperature_;		///< Temperature
+	float 				 last_update_us_; 	///< Last udate time in microseconds
 };
 
 #endif 
