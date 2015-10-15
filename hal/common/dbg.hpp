@@ -45,6 +45,8 @@
 #include "console.hpp"
 #include <stdint.h>
 
+#include "print_util.h"
+
 //namespace dbg{
 
 template <typename Writeable>
@@ -77,17 +79,65 @@ public:
 	template<typename T>
 	Dbg &operator<<(const T &a)
 	{
+
+		 if(&getInstance() == this)
+		{
+			write(" this is the instance ");
+		}else
+		{
+			write(" NOT the instance ");
+		}
+
 		write(a);
 		return *this;
 	}
 
+	typedef Console<Writeable>& (*ConsoleManipulator)(Console<Writeable>&);
+	Dbg &operator<<(ConsoleManipulator manip)
+	{
+		if(console_)
+		{
+			manip(*(this->console_));
+		}else if(&getInstance() == this)
+		{
+			write(" this is the instance ");
+		}else
+		{
+			write(" NOT the instance ");
+		}
+		return *this;
+	}
+
+	static void flush()
+	{
+		Console<Writeable>* console = getInstance().console_;
+		if(console)
+		{
+			console->flush();
+		}
+	}
+
+	void identity_test(){
+		if(&getInstance() == this)
+		{
+			write(" I am myself ");
+		}else
+		{
+			write(" I am NOT myself ");
+		}
+	}
+
 private:
-	Console<Writeable>* console_;
-	Dbg() : console_(0){}
+	Console<Writeable>* console_;	// should we make this static?
+	Dbg() : console_(0){
+		print_util_dbg_print(" construct dbg ");
+	}
+
+	Dbg(Dbg const&);              // Don't Implement
+    void operator=(Dbg const&); // Don't implement
 };
 
-
-	Dbg<Serial>& dbg = Dbg<Serial>::getInstance();
+Dbg<Serial>& dbg = Dbg<Serial>::getInstance();
 //}
 
 typedef Dbg<Serial> Dbg_t;
