@@ -34,32 +34,91 @@
  * 
  * \author MAV'RIC Team
  * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *   
- * \brief This file define the compass's data type
+ * \brief Abstract class for magnetometers
  * 
  ******************************************************************************/
 
 
-#ifndef MAGNETOMETER_H_
-#define MAGNETOMETER_H_
+#ifndef MAGNETOMETER_HPP_
+#define MAGNETOMETER_HPP_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /**
- * \brief The magnetometer structure
+ * \brief Abstract class for magnetometers
  */
-typedef struct
+class Magnetometer
 {
-	float data[3];			///< The magnetometer's datas
-	float temperature;		///< The magnetometer's temperature
-	float last_update;		///< The magnetometer last update time
-} magnetometer_t;
+public:
+	/**
+	 * \brief   Initialise the sensor
+	 * 			
+	 * \return 	Success
+	 */	
+	virtual bool init(void) = 0;
 
 
-#ifdef __cplusplus
-}
-#endif
+	/**
+	 * \brief 	Main update function
+	 * \detail 	Reads new values from sensor
+	 * 
+	 * \return 	Success
+	 */
+	virtual bool update(void) = 0;
 
-#endif /* MAGNETOMETER_H_ */
+	
+	/**
+	 * \brief 	Get last update time in microseconds
+	 * 
+	 * \return 	Update time
+	 */
+	virtual const float& last_update_us(void) const = 0;
+
+
+	/**
+	 * \brief 	Get X component of magnetic field
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	virtual const float& raw_mag_X(void) const = 0;
+
+
+	/**
+	 * \brief 	Get Y component of magnetic field
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	virtual const float& raw_mag_Y(void) const = 0;
+
+
+	/**
+	 * \brief 	Get Z component of magnetic field
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	virtual const float& raw_mag_Z(void) const = 0;
+
+
+	/**
+	 * \brief 	Get sensor temperature
+	 * 
+	 * \return 	Value
+	 */	
+	virtual const float& temperature(void) const = 0;
+};
+
+
+#endif /* MAGNETOMETER_HPP_ */
