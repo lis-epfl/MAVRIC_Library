@@ -30,37 +30,95 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file accelerometer.h 
+ * \file accelerometer.hpp 
  * 
  * \author MAV'RIC Team
  * \author Gregoire Heitz
+ * \author Julien Lecoeur
  *   
- * \brief This file define the accelerometer's data type, independently of the sensor used
+ * \brief Abstract class for accelerometers
  *
  ******************************************************************************/
 
 
-#ifndef ACCELEROMETER_H_
-#define ACCELEROMETER_H_
+#ifndef ACCELEROMETER_HPP_
+#define ACCELEROMETER_HPP_
 
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /**
- * \brief Accelerometer structure
+ * \brief Abstract class for accelerometers
  */
-typedef struct
+class Accelerometer
 {
-	float data[3];				///< Array containing the accelerometer datas
-	float temperature;			///< Temperature of the accelerometer
-	float last_update;			///< Last update time
-} accelerometer_t;
+public:
+	/**
+	 * \brief   Initialise the sensor
+	 * 			
+	 * \return 	Success
+	 */	
+	virtual bool init(void) = 0;
 
 
-#ifdef __cplusplus
-}
-#endif
+	/**
+	 * \brief 	Main update function
+	 * \detail 	Reads new values from sensor
+	 * 
+	 * \return 	Success
+	 */
+	virtual bool update(void) = 0;
 
-#endif /* ACCELEROMETER_H_ */
+	
+	/**
+	 * \brief 	Get last update time in microseconds
+	 * 
+	 * \return 	Update time
+	 */
+	virtual const float& last_update_us(void) const = 0;
+
+
+	/**
+	 * \brief 	Get X component of acceleration
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	virtual const float& raw_acc_X(void) const = 0;
+
+
+	/**
+	 * \brief 	Get Y component of acceleration
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	virtual const float& raw_acc_Y(void) const = 0;
+
+
+	/**
+	 * \brief 	Get Z component of acceleration
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	virtual const float& raw_acc_Z(void) const = 0;
+
+
+	/**
+	 * \brief 	Get sensor temperature
+	 * 
+	 * \return 	Value
+	 */	
+	virtual const float& temperature(void) const = 0;
+};
+
+
+#endif /* ACCELEROMETER_HPP_ */
