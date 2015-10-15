@@ -30,93 +30,37 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file piezo_speaker.h
+ * \file control_command_telemetry.c
  * 
  * \author MAV'RIC Team
- * \author Felix Schill
+ * \author Julien Lecoeur
  *   
- * \brief This file is the driver for the piezzo speaker
+ * \brief 	Telemetry for control_command
  *
  ******************************************************************************/
 
 
-#ifndef PIEZO_SPEAKER_H_
-#define PIEZO_SPEAKER_H_
-
-#ifdef __cplusplus
-	extern "C" {
-#endif
-
-#include <stdint.h>
-
-#define PIEZO_HIGH_PIN AVR32_PIN_PA12			///< Define the Microcontroller pin associated with the high pin of the piezo speaker
-#define PIEZO_LOW_PIN AVR32_PIN_PA15			///< Define the Microcontroller pin associated with the low pin of the piezo speaker
+#include "control_command_telemetry.h"
+#include "time_keeper.h"
 
 
-/**
- * \brief Initialize the piezo speaker
- */
-void piezo_speaker_init(void);
+void control_command_telemetry_send(const command_t* command, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+{
+	float quat[4] = { 	command->attitude.quat.s,
+						command->attitude.quat.v[0],
+						command->attitude.quat.v[1],
+						command->attitude.quat.v[2], 
+					};
 
-
-/**
- * \brief Initialize the speaker in a binary(?) mode
- */
-void piezo_speaker_init_binary(void);
-
-
-/**
- * \brief Beep at a given frequency for a duration
- *
- * \param	duration_ms		Duration of the piezo_speaker_beep
- * \param	frequency		Frequency of the piezo_speaker_beep
- */
-void piezo_speaker_beep(int32_t duration_ms, int32_t frequency);
-
-
-/**
- * \brief Startup melody
- */
-void piezo_speaker_startup_melody(void);
-
-
-/**
- * \brief Critical error melody
- */
-void piezo_speaker_critical_error_melody(void);
-
-
-/**
- * \brief Quick startup melody
- */
-void piezo_speaker_quick_startup(void);
-
-/**
- * \brief Quick startup melody
- */
-void piezo_speaker_startup_bb(void);
-
-/**
- * \brief Startup melody for bumblebot
- */
-void piezo_speaker_startup_bumblebot(void);
-
-
-/**
- * \brief Star wars melody
- */
-void piezo_speaker_star_wars(void);
-
-
-/**
- * \brief Mario melody
- */
-void piezo_speaker_mario_melody(void);
-
-
-
-#ifdef __cplusplus
-	}
-#endif
-
-#endif /* PIEZO_SPEAKER_H_ */
+	mavlink_msg_control_command_pack(	mavlink_stream->sysid,
+										mavlink_stream->compid,
+										msg,
+										time_keeper_get_micros(), 
+										command->thrust.thrust, 
+										command->torque.xyz,
+										command->rate.xyz, 
+										command->attitude.rpy, 
+										quat, 
+										command->position.xyz, 
+										command->velocity.xyz);
+}

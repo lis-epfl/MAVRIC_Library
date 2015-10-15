@@ -97,12 +97,17 @@ void qfilter_update(qfilter_t *qf)
 	float ki 	 = qf->ki;
 	float ki_mag = qf->ki_mag;
 
-	// Update time
-	uint32_t t = time_keeper_get_time_ticks();
-	float dt = time_keeper_ticks_to_seconds(t - qf->ahrs->last_update);
-	qf->ahrs->dt = dt;
-	qf->ahrs->last_update = t;
+	// Update time in us
+	float now_us 	= time_keeper_get_micros();
+	
+	// Delta t in seconds
+	float dt     = 1e-6 * (float)(now_us - qf->ahrs->last_update);
+	
+	// Write to ahrs structure
+	qf->ahrs->dt 		  = dt;
+	qf->ahrs->last_update = now_us;
 
+	
 	// up_bf = qe^-1 *(0,0,0,-1) * qe
 	up.s = 0; up.v[X] = UPVECTOR_X; up.v[Y] = UPVECTOR_Y; up.v[Z] = UPVECTOR_Z;
 	up_bf = quaternions_global_to_local(qf->ahrs->qe, up);
