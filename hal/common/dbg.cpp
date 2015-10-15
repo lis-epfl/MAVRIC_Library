@@ -40,34 +40,3 @@
 
 
 #include "dbg.hpp"
-#include "serial_dummy.hpp"
-#include "console.hpp"
-
-template class Console<Serial>;
-
- 
-namespace dbg
-{
-
-	Serial_dummy dummy;
-	static Console<Serial> dbg_console = Console<Serial>( dummy );
-	// Console<Serial> dbg_console( dummy );
-
-	bool init(Serial& serial)
-	{
-		// Serial_dummy dummy2;
-
-		dbg_console = Console<Serial>(serial);
-		// dbg_console(Console<Serial>(serial));
-		// static Console<Serial> dbg_console = Console<Serial>(dummy2);
-		
-		hello();
-		return false;
-	}
-
-	void hello()
-	{
-		const char* msg = "Hello world !\n\r";
-		dbg_console.write((uint8_t*)msg, 15);
-	}
-}

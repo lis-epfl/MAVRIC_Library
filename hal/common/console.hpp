@@ -52,14 +52,12 @@ class Console
 {
 private:
 	Writeable& stream_;
-
+	bool isInitialized_; 
 public:
 	/**
 	 * \brief Constructor
 	 */
 	Console(Writeable& stream);
-	// Console(Console<Writeable>& console);
-	Console<Writeable>& operator=(Console<Writeable> console);
 
 
 	/**
@@ -71,6 +69,43 @@ public:
 	 * \return 	success
 	 */
 	bool write(const uint8_t* data, uint32_t size);
+
+	/**
+	 * \brief 	Write to the console
+	 *
+	 * \param 	text 	Text to write to console
+	 * 
+	 * \return 	success
+	 */
+	bool write(const char* text);
+
+	/**
+	 * \brief 	Write short/integer/long to the console
+	 *
+	 * \param 	number 	integer number
+	 * 
+	 * \return 	success
+	 */
+	template<typename T>
+	bool write(T number);
+
+
+	/**
+	 * \brief 	Write float to the console
+	 *
+	 * \param 	number 	integer number
+	 * \param 	after_digits 	digits after decimal point
+	 * 
+	 * \return 	success
+	 */
+	bool write(float number, uint8_t after_digits = 3);
+
+	template<typename T>
+	Console &operator<<(const T &a)
+	{
+		write(a);
+		return *this;
+	}
 
 };
 

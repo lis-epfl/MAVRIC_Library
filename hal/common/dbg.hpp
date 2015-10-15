@@ -41,22 +41,55 @@
 #ifndef DBG_H_
 #define DBG_H_
 
-#include "serial.hpp"
-
+#include "serial_dummy.hpp"
+#include "console.hpp"
 #include <stdint.h>
 
-// class Console<Serial>;
-// template class Console<Serial>;
+//namespace dbg{
 
-
-/**
- * \brief 	Static methods allowing to write debug messages
- */
-namespace dbg
+template <typename Writeable>
+class Dbg
 {
-	bool init(Serial& serial);
+public:
+	static Dbg& getInstance()
+	{
+		static Dbg instance;
+		return instance;
+	}
 
-	void hello();
-}
+	static bool init(Console<Writeable>* console)
+	{
+		getInstance().console_ = console;
+		return true;
+	}
+
+	template<typename T>
+	static bool write(T input)
+	{
+		Console<Writeable>* console = getInstance().console_;
+		if(console){
+			return console->write(input);
+		}
+		
+		return false;
+	}
+
+	template<typename T>
+	Dbg &operator<<(const T &a)
+	{
+		write(a);
+		return *this;
+	}
+
+private:
+	Console<Writeable>* console_;
+	Dbg() : console_(0){}
+};
+
+
+	Dbg<Serial>& dbg = Dbg<Serial>::getInstance();
+//}
+
+typedef Dbg<Serial> Dbg_t;
 
 #endif /* DBG_H_ */
