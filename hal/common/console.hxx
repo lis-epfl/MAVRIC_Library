@@ -99,31 +99,10 @@ namespace{
 		return dest + i;
 	}
 };
-/*template <typename Writeable>
-Console<Writeable>& Console<Writeable>::operator=(Console<Writeable> console)
-{
-	stream_ = console->stream;	// shallow copy of stream
-	isInitialized_ = console->isInitialized_;
-	return *this;
-}*/
-
-// Console<Writeable>::operator=(Console<Writeable> const& console):
-// {
-// 	;
-// }
-
-
-// template <typename Writeable>
-// Console<Writeable>::Console(Console<Writeable>& console):
-// 	stream_(console.stream_)
-// {
-// 	;
-// }
-
 
 template <typename Writeable>
 Console<Writeable>::Console(Writeable& stream):
-	stream_(stream), isInitialized_(false)
+	stream_(stream)
 {
 	;
 }
@@ -137,21 +116,18 @@ bool Console<Writeable>::write(const uint8_t* data, uint32_t size)
 
 template <typename Writeable>
 template <typename T>
-bool Console<Writeable>::write(T number)
+bool Console<Writeable>::write_integer(T number)
 {
-
 	uint8_t data_tmp[MAX_DIGITS10_LONG+1];
 	uint8_t length;
 	uint8_t* data = format_integer(number, data_tmp, &length);
 
-	//const char* t = "number: ";
-	//stream_.write((uint8_t*)t, 8);
 	return stream_.write(data, length);
- 	//return stream_.write(data, 10-i);
 }
 
 template <typename Writeable>
-bool Console<Writeable>::write(float num, uint8_t after_digits)
+template <typename T>
+bool Console<Writeable>::write_floating(T num, uint8_t after_digits)
 {
 
 	bool is_negativ = false;
@@ -186,6 +162,76 @@ bool Console<Writeable>::write(float num, uint8_t after_digits)
 	return write(data, i);
 }
 
+
+template <typename Writeable>
+bool Console<Writeable>::write(float number, uint8_t after_digits)
+{
+	return write_floating<float>(number, after_digits);
+}
+
+template <typename Writeable>
+bool Console<Writeable>::write(double number, uint8_t after_digits)
+{
+	return write_floating(number, after_digits);
+}
+
+template <typename Writeable>
+bool Console<Writeable>::write(uint32_t number)
+{
+	return write_integer(number);
+}
+
+template <typename Writeable>
+bool Console<Writeable>::write(int32_t number)
+{
+	return write_integer(number);
+}
+
+template <typename Writeable>
+bool Console<Writeable>::write(uint16_t number)
+{
+	return write_integer(number);
+}
+
+template <typename Writeable>
+bool Console<Writeable>::write(int16_t number)
+{
+	return write_integer(number);
+}
+
+template <typename Writeable>
+bool Console<Writeable>::write(uint8_t number)
+{
+	return write_integer(number);
+}
+
+template <typename Writeable>
+bool Console<Writeable>::write(int8_t number)
+{
+	return write_integer(number);
+}
+
+template <typename Writeable>
+bool Console<Writeable>::write(int number)
+{
+	return write_integer(number);
+}
+
+template <typename Writeable>
+bool Console<Writeable>::write(bool value)
+{
+	if(value)
+	{
+		const char* answer = "true";
+		return write((uint8_t*)answer, 4);
+	}else
+	{
+		const char* answer = "false";
+		return write((uint8_t*)answer, 5);
+	}
+}
+
+
 template <typename Writeable>
 bool Console<Writeable>::write(const char* text)
 {
@@ -194,6 +240,43 @@ bool Console<Writeable>::write(const char* text)
 }
 
 
+// template <typename Writeable>
+// void Console<Writeable>::flush()
+// {}
 
+// template<>
+// void Console<Serial>::flush()
+// {
+// 	write("fl");
+// 	stream_.flush();
+// }
+
+template <typename Writeable>
+void Console<Writeable>::flush()
+{
+	stream_.flush();
+}
+
+template <typename Writeable>
+template <typename T>
+Console<Writeable>& Console<Writeable>::operator<<(const T &a)
+{
+	write(a);
+	return *this;
+}
+
+template <typename Writeable>
+Console<Writeable>& Console<Writeable>::operator<<(ConsoleManipulator manip)
+{
+	return manip(*this);
+}
+
+template <typename Writeable>
+static Console<Writeable>& endl(Console<Writeable>& console)
+{
+	console.write("\n\r");
+	console.flush();
+	return console;
+}
 
 #endif /* CONSOLE_HXX_ */

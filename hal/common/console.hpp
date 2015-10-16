@@ -52,7 +52,7 @@ class Console
 {
 private:
 	Writeable& stream_;
-	bool isInitialized_; 
+
 public:
 	/**
 	 * \brief Constructor
@@ -79,35 +79,86 @@ public:
 	 */
 	bool write(const char* text);
 
+
 	/**
-	 * \brief 	Write short/integer/long to the console
+	 * \brief 	Write bool to the console ("true"/"false")
 	 *
-	 * \param 	number 	integer number
+	 * \param 	value 	boolean value to be evaluated
 	 * 
 	 * \return 	success
 	 */
-	template<typename T>
-	bool write(T number);
-
+	bool write(bool value);
 
 	/**
-	 * \brief 	Write float to the console
+	 * \brief 	Write floating point to the console (wrapper for write_floating(..))
 	 *
-	 * \param 	number 	integer number
-	 * \param 	after_digits 	digits after decimal point
+	 * \param 	number 	
 	 * 
 	 * \return 	success
 	 */
 	bool write(float number, uint8_t after_digits = 3);
+	bool write(double number, uint8_t after_digits = 3);
+
+	/**
+	 * \brief 	Write integer number to the console (wrapper for write_integer(..))
+	 *
+	 * \param 	number 	
+	 * 
+	 * \return 	success
+	 */
+	bool write(uint32_t);
+	bool write(int32_t);
+	bool write(uint16_t);
+	bool write(int16_t);
+	bool write(uint8_t);
+	bool write(int8_t);
+	bool write(int);
+
+	/**
+	 * \brief 	Write floating point to the console
+	 *
+	 * \param 	number 	floating point number (float/double)
+	 * \param 	after_digits 	digits after decimal point
+	 * 
+	 * \return 	success
+	 */
+	template <typename T>
+	bool write_floating(T number, uint8_t after_digits = 3);
+
+	/**
+	 * \brief 	Write integer number to the console
+	 *
+	 * \param 	number 	integer number (uintX_t/intX_t)
+	 * 
+	 * \return 	success
+	 */
+	template<typename T>
+	bool write_integer(T number);
+
+
+
+	/**
+	 * \brief 	Flushes the buffer of the console
+	 * 
+	 * \return 	success
+	 */
+	void flush();
+
+
+	
 
 	template<typename T>
-	Console &operator<<(const T &a)
-	{
-		write(a);
-		return *this;
-	}
+	Console<Writeable> &operator<<(const T &a);	
 
+	/* definition of ConsoleManipulator function pointer (used for "console << endl") */
+	typedef Console<Writeable>& (*ConsoleManipulator)(Console<Writeable>&);
+
+	Console<Writeable> &operator<<(ConsoleManipulator manip);
 };
+
+/* definition of 'endl' */
+template<typename Writeable>
+Console<Writeable>& endl(Console<Writeable>& console);
 
 // Template implementation file
 #include "console.hxx"
