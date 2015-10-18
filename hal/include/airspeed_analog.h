@@ -33,7 +33,7 @@
  * \file airspedd_analog.h
  * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Julien Lecoeur, Simon Pyroth
  *   
  * \brief This file is the driver for the DIYdrones airspeed sensor V20 
  * (old analog version)
@@ -50,17 +50,21 @@
 
 #include <stdint.h>
 #include "analog_monitor.h"
+#include "tasks.h"
 
 /**
  * \brief Structure containing the analog airspeed sensor datas
 */
 typedef struct {
-	uint8_t analog_channel;					///< analog channel of the ADC
-	float gain;								///< gain factor for the ADC
-	float pressure_offset;					///< offset of the pressure sensor
-	float differential_pressure;			///< true dynamical pressure (diff between pressure and offset)
-	float airspeed;							///< measure airspeed
 	analog_monitor_t* analog_monitor;		///< pointer to the structure of analog monitor module
+	uint8_t analog_channel;					///< analog channel of the ADC
+	
+	float differential_pressure;			///< true dynamical pressure (in kPa)
+	float pressure_offset;					///< offset of the pressure sensor
+	
+	float raw_airspeed;						///< Unfiltered airspeed
+	float airspeed;							///< Filtered measure airspeed
+	float alpha;							///< Filter coefficient
 } airspeed_analog_t;
 
 /**
@@ -71,10 +75,10 @@ typedef struct {
  * \param analog_channel set which channel of the ADC is map to the airspeed sensor
  *
 */
-void airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, analog_rails_t analog_channel);
+bool airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* analog_monitor, analog_rails_t analog_channel);
 
 /**
- * \brief Calibrates the airspeed sensor
+ * \brief Calibrates the airspeed sensor offset at 0 speed.
  * 
  * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
  *
@@ -86,8 +90,9 @@ void airspeed_analog_calibrate(airspeed_analog_t* airspeed_analog);
  *
  * \param airspeed_analog pointer to the structure containing the airspeed sensor's data
  *
+ * \return	The result of the task execution
 */
-void airspeed_analog_update(airspeed_analog_t* airspeed_analog);
+task_return_t airspeed_analog_update(airspeed_analog_t* airspeed_analog);
 
 #ifdef __cplusplus
 }

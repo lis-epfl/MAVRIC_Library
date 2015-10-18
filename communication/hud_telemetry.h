@@ -51,6 +51,7 @@ extern "C" {
 #include "stabilisation.h"
 #include "imu.h"
 #include "scheduler.h"
+#include "airspeed_analog.h"
 
 /**
  * \brief	The HUD structure to send the MAVLink HUD message
@@ -61,6 +62,7 @@ typedef struct
 	const control_command_t* controls;							///< The pointer to the control structure
 	const ahrs_t* ahrs;											///< The pointer to the attitude estimation structure
 	const mavlink_stream_t* mavlink_stream;						///< The pointer to the MAVLink stream structure
+	const airspeed_analog_t* airspeed_analog;					///< The pointer to the analog airspeed sensor structure
 }hud_telemetry_structure_t;
 
 /**
@@ -73,7 +75,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool hud_telemetry_init(hud_telemetry_structure_t *hud_telemetry_structure, const position_estimation_t *pos_est, const control_command_t *controls, const ahrs_t *ahrs);
+bool hud_telemetry_init(hud_telemetry_structure_t *hud_telemetry_structure, const position_estimation_t *pos_est, const control_command_t *controls, const ahrs_t *ahrs, airspeed_analog_t* airspeed_analog);
 
 /**
  * \brief	Function to send the MAVLink HUD message
