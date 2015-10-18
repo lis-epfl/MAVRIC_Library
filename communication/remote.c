@@ -465,8 +465,8 @@ void remote_get_rate_command_from_remote(remote_t* remote, control_command_t* co
 		==> we want u = remoteInput to have the same behavior
 		==> scaler = 1/Kp
 	*/
-	controls->rpy[ROLL] 	= 13.3f * remote_get_roll(remote);		// 1/Kp_roll = 1/0.075
-	controls->rpy[PITCH] 	= 25.0f * remote_get_pitch(remote);		// 1/Kp_pitch = 1/0.04
+	controls->rpy[ROLL] 	= 15.4f * remote_get_roll(remote);		// 1/Kp_roll = 1/0.065
+	controls->rpy[PITCH] 	= 18.2f * remote_get_pitch(remote);		// 1/Kp_pitch = 1/0.055
 	controls->rpy[YAW] 		= remote_get_yaw(remote);				// Direct input
 	controls->thrust 		= remote_get_throttle(remote);			// Direct input
 }

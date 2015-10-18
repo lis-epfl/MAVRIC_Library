@@ -67,8 +67,8 @@ bool stabilisation_wing_init(stabilisation_wing_t* stabilisation_wing, stabilisa
 	stabilisation_wing->tuning_steps = stabiliser_conf->tuning_steps;
 	stabilisation_wing->pitch_up = stabiliser_conf->pitch_up;
 	stabilisation_wing->pitch_down = stabiliser_conf->pitch_down;
-	stabilisation_wing->roll_up = stabiliser_conf->roll_up;
-	stabilisation_wing->roll_down = stabiliser_conf->roll_down;
+	stabilisation_wing->roll_right = stabiliser_conf->roll_right;
+	stabilisation_wing->roll_left = stabiliser_conf->roll_left;
 	
 	//init controller
 	controls->control_mode = ATTITUDE_COMMAND_MODE;
@@ -174,33 +174,11 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		// run absolute attitude_filter controller
 		rpyt_errors[0]= input.rpy[0] - ( - stabilisation_wing->ahrs->up_vec.v[1] ); 
 		rpyt_errors[1]= input.rpy[1] - stabilisation_wing->ahrs->up_vec.v[0];
-		
-		if ((stabilisation_wing->controls->yaw_mode == YAW_ABSOLUTE) ) 
-		{
-			rpyt_errors[2] =maths_calc_smaller_angle(input.theading- stabilisation_wing->pos_est->local_position.heading);
-		}
-		else
-		{ // relative yaw
-			rpyt_errors[2]= input.rpy[2];
-		}
-		
+		rpyt_errors[2]= 0.0f;	// Yaw
 		rpyt_errors[3]= input.thrust;       // no feedback for thrust at this level
 		
 		// run PID update on all attitude_filter controllers
 		stabilisation_run(&stabilisation_wing->stabiliser_stack.attitude_stabiliser, stabilisation_wing->imu->dt, rpyt_errors);
-		
-		// Rewrite command on axis to apply manual control on it (used for tuning)
-		if(stabilisation_wing->tuning == 2)
-		{
-			if(stabilisation_wing->tuning_axis == PITCH)
-			{
-				stabilisation_wing->stabiliser_stack.rate_stabiliser.output.rpy[ROLL] = input.rpy[ROLL];
-			}
-			else if(stabilisation_wing->tuning_axis == ROLL)
-			{
-				stabilisation_wing->stabiliser_stack.rate_stabiliser.output.rpy[PITCH] = input.rpy[PITCH];
-			}
-		}
 		
 		// use output of attitude_filter controller to set rate setpoints for rate controller 
 		input = stabilisation_wing->stabiliser_stack.attitude_stabiliser.output;
@@ -217,23 +195,7 @@ void stabilisation_wing_cascade_stabilise(stabilisation_wing_t* stabilisation_wi
 		
 		// run PID update on all rate controllers
 		stabilisation_run(&stabilisation_wing->stabiliser_stack.rate_stabiliser, stabilisation_wing->imu->dt, rpyt_errors);
-		
-		// Rewrite command on axis to apply manual control on it (used for tuning)
-		if(stabilisation_wing->tuning == 1)
-		{
-			if(stabilisation_wing->tuning_axis == PITCH)
-			{
-				stabilisation_wing->stabiliser_stack.rate_stabiliser.output.rpy[ROLL] = input.rpy[ROLL];
-			}
-			else if(stabilisation_wing->tuning_axis == ROLL)
-			{
-				stabilisation_wing->stabiliser_stack.rate_stabiliser.output.rpy[PITCH] = input.rpy[PITCH];
-			}
-		}
 	}
-	
-	// Mix to servo outputs
-	servos_mix_wing_update(stabilisation_wing->servo_mix);
 }
 
 

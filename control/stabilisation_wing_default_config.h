@@ -63,11 +63,11 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ ROLL PID -------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 0.075f,
+					.p_gain = 0.065f,
 					.clip_min = -1.0f,
 					.clip_max = 1.0f,
 					.integrator={
-						.gain = 0.0f,
+						.gain = 0.01f,
 						.clip_pre = 6.0f,
 						.accumulator = 0.0f,
 						.clip = 0.7f,
@@ -87,7 +87,7 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ PITCH PID ------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 0.04f,
+					.p_gain = 0.055f,
 					.clip_min = -1.0f,
 					.clip_max = 1.0f,
 					.integrator={
@@ -177,11 +177,11 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ ROLL PID -------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 0.0f,
-					.clip_min = -12.0f,
-					.clip_max = 12.0f,
+					.p_gain = 8.0f,
+					.clip_min = -100.0f,
+					.clip_max = 100.0f,
 					.integrator={
-						.gain = 0.0f,
+						.gain = 0.5f,
 						.clip_pre = 0.0f,
 						.accumulator = 0.0f,
 						.clip = 4.0f,
@@ -201,11 +201,11 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 				// ------ PITCH PID ------------------------------------------------
 				// -----------------------------------------------------------------
 				{
-					.p_gain = 0.0f,
-					.clip_min = -12.0f,
-					.clip_max = 12.0f,
+					.p_gain = 15.0f,
+					.clip_min = -100.0f,
+					.clip_max = 100.0f,
 					.integrator={
-						.gain = 0.0f,
+						.gain = 0.5f,
 						.clip_pre = 0.0f,
 						.accumulator = 0.0f,
 						.clip = 4.0f,
@@ -522,8 +522,8 @@ stabilisation_wing_conf_t stabilisation_wing_default_config =
 	.tuning_steps = 0,
 	.pitch_up = 0.5f,
 	.pitch_down = -0.2f,
-	.roll_up = 0.5f,
-	.roll_down = -0.5f
+	.roll_right = 0.5f,
+	.roll_left = -0.5f
 };
 
 #ifdef __cplusplus
