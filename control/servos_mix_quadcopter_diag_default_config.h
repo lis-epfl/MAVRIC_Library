@@ -51,9 +51,9 @@ extern "C" {
 #include "servos_mix_quadcopter_diag.h"
 
 
-static inline servo_mix_quadcopter_diag_conf_t servo_mix_quadcopter_diag_default_config()
+static inline servos_mix_quadcopter_diag_conf_t servos_mix_quadcopter_diag_default_config()
 {
-	servo_mix_quadcopter_diag_conf_t conf 	= {};
+	servos_mix_quadcopter_diag_conf_t conf 	= {};
 	
 	conf.motor_front_right					= 2;
 	conf.motor_front_left					= 1;

@@ -69,7 +69,7 @@ typedef struct
 	rot_dir_t 	motor_rear_dir;		///< Rear  motor turning direction
 	float 		min_thrust;			///< Minimum thrust
 	float		max_thrust;			///< Maximum thrust
-} servo_mix_quadcopter_cross_conf_t;
+} servos_mix_quadcopter_cross_conf_t;
 
 
 /**
@@ -90,7 +90,7 @@ typedef struct
 	const torque_command_t* torque_command;		///< Pointer to the torque command structure
 	const thrust_command_t* thrust_command;		///< Pointer to the thrust command structure
 	servos_t*          		servos;				///< Pointer to the servos structure
-} servo_mix_quadcotper_cross_t;
+} servos_mix_quadcotper_cross_t;
 
 
 /**
@@ -104,8 +104,8 @@ typedef struct
  * 
  * \return 	success
  */
-bool servo_mix_quadcotper_cross_init(	servo_mix_quadcotper_cross_t* mix, 
-										const servo_mix_quadcopter_cross_conf_t* config, 
+bool servos_mix_quadcotper_cross_init(	servos_mix_quadcotper_cross_t* mix, 
+										const servos_mix_quadcopter_cross_conf_t* config, 
 										const torque_command_t* torque_command, 
 										const thrust_command_t* thrust_command, 
 										servos_t* servos);
@@ -118,7 +118,7 @@ bool servo_mix_quadcotper_cross_init(	servo_mix_quadcotper_cross_t* mix,
  * 
  * \return 			success
  */
-bool servos_mix_quadcopter_cross_update(servo_mix_quadcotper_cross_t* mix);
+bool servos_mix_quadcopter_cross_update(servos_mix_quadcotper_cross_t* mix);
 
 
 #ifdef __cplusplus
