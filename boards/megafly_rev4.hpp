@@ -97,8 +97,7 @@ public:
 	 * @param 	imu 	Reference to imu structure
 	 * @param 	config 	Board configuration
 	 */
-	Megafly_rev4( imu_t& imu, 
-				  megafly_rev4_conf_t config = megafly_rev4_default_config() );
+	Megafly_rev4( megafly_rev4_conf_t config = megafly_rev4_default_config() );
 
 
 	/**
@@ -120,13 +119,13 @@ public:
 	Serial_usb_avr32	uart_usb;		
 	I2c_avr32 			i2c0;
 	I2c_avr32 			i2c1;
-	Hmc5883l 			magnetometer;
+	Hmc5883l 			hmc5883l;
 	Lsm330dlc			lsm330dlc;
 	Bmp085				bmp085;
 	Spektrum_satellite	spektrum_satellite;
 
 private:
-	imu_t& 			imu_;
+	Imu 			imu_;
 	byte_stream_t	dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
 };
 

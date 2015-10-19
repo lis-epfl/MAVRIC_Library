@@ -54,7 +54,7 @@ uint8_t serial2stream( stream_data_t data, uint8_t byte )
 	return 0;
 }
 
-Megafly_rev4::Megafly_rev4(imu_t& imu, megafly_rev4_conf_t config):
+Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
 	dsm_receiver_pin( Gpio_avr32(config.dsm_receiver_pin_config) ),
 	dsm_power_pin( Gpio_avr32(config.dsm_power_pin_config) ),
 	uart0( Serial_avr32(config.uart0_config) ), 
@@ -63,11 +63,11 @@ Megafly_rev4::Megafly_rev4(imu_t& imu, megafly_rev4_conf_t config):
 	uart_usb( Serial_usb_avr32(config.uart_usb_config) ), 
 	i2c0( I2c_avr32(config.i2c0_config) ),
 	i2c1( I2c_avr32(config.i2c1_config) ),
-	magnetometer( Hmc5883l(i2c0, imu.raw_magneto) ),
-	lsm330dlc( Lsm330dlc(i2c0, imu.raw_accelero, imu.raw_gyro) ),
+	hmc5883l( Hmc5883l(i2c0) ),
+	lsm330dlc( Lsm330dlc(i2c0) ),
 	bmp085( Bmp085(i2c0) ),
 	spektrum_satellite( Spektrum_satellite(uart1, dsm_receiver_pin, dsm_power_pin) ),
-	imu_(imu)
+	imu_( Imu(lsm330dlc, lsm330dlc, hmc5883l) )
 {}
 
 
@@ -136,7 +136,7 @@ bool Megafly_rev4::init(void)
 	Enable_global_interrupt();
 	
 	// Init magnetometer
-	if( magnetometer.init() == false )
+	if( hmc5883l.init() == false )
 	{
 		init_success = false;
 		print_util_dbg_print("[HMC] INIT ERROR\r\n");
