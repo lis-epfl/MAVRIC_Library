@@ -1,4 +1,4 @@
-/*******************************************************************************
+	/*******************************************************************************
  * Copyright (c) 2009-2014, MAV'RIC Development Team
  * All rights reserved.
  * 
@@ -30,83 +30,53 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file  	dbg.cpp
+ * \file  	string_utils.hxx
  * 
  * \author  MAV'RIC Team
  *   
- * \brief   Write debug messages
+ * \brief   Implementation of template functions for string_util
+ * 			(see string_util.cpp for non-template implementations)
  *
- * Prints human-readable messages to a console.
- * Before initialization, data is written to a dummy console.
- * dout() can be used for cout like syntax: 'dout() << "hello " << 123 << endl;'
- * To define '<<' operator for your own class, implement the follwing function
- * in the header of your class, outside of your class definition:
- * template<typename Writeable>
- *	Console<Writeable>& operator<< (Console<Writeable>& console, Yourclass& yourclass)
- *	{
- *		console.write(...);
- *		return console;
- *	}
  ******************************************************************************/
 
-#include "dbg.hpp"
-#include "string_util.hpp"
-
-Console<Serial>* console_ = 0;
-
-Serial_dummy serial_dummy_;
-Console<Serial> dummy_console_(serial_dummy_);
-
-
-namespace dbg
-{
-
+namespace str{
 	/**
-	 * \brief initializes the console (switches from dummy console to supplied console)
+	 * \brief 	returns an array of ascii characters representing an integer
 	 *
-	 * \param console 	console to print to
-	 *
-	 */
-	void init(Console<Serial>& console)
-	{
-		console_ = &console;
-	}
-
-	/**
-	 * \brief returns a reference to the console
-	 * 		(console provided by init or dummy console if not init'ed)
+	 * \param 	number 	Number to be put into the array
+	 * \param	dest	Adress of the array to put it to (should be at least max_digits+1 long)
+	 * \param	length 	Adress where the length of the array is written to (length including the sign)
+	 * \param	max_digits 	maximal number of digits allowed (the rest is truncated)
 	 * 
-	 * \return 	console
-	 *
+	 * \return 	new_dest 	new Address of the array (new_dest is a subarray of dest)
 	 */
-	Console<Serial>& dout()
+	template<typename T>
+	uint8_t* format_integer(T number, uint8_t* dest, uint8_t* length, uint8_t max_digits)
 	{
-		if(console_ != 0)
-		{
-			return *console_;
-		}else
-		{
-			return dummy_console_;
-		}
-	}
+		uint8_t i = max_digits+1;
 
-	/**
-	 * \brief print a buffer to the console
-	 *
-	 * \param data 	buffer to be printed
-	 * 
-	 * \param size 	size of the buffer in bytes
-	 *
-	 * \return success
-	 */
-	bool print(const uint8_t* data, uint32_t size)
-	{
-		if(console_ != 0)
+		/* Take Care of the sign */
+		bool is_negativ = false;
+		if(number < 0)
 		{
-			return console_->write(data, size);
-		}else
-		{
-			return false;	// We do not write to the dummy console
+			is_negativ = true;
+			number = number*-1;
 		}
+
+		do
+		{
+			dest[--i] = (number % 10) + '0';
+			number = number / 10;
+		} while((i >= 1) && (number > 0) );
+
+		/* add sign to char* */
+		if(is_negativ)
+		{
+			dest[--i] = '-';
+		}
+
+		*length = max_digits+1 -i;
+
+		return dest + i;
 	}
 };

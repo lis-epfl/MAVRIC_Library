@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file  	dbg.cpp
+ * \file  	dbg.hxx
  * 
  * \author  MAV'RIC Team
  *   
@@ -48,65 +48,41 @@
  *		return console;
  *	}
  ******************************************************************************/
-
-#include "dbg.hpp"
-#include "string_util.hpp"
-
-Console<Serial>* console_ = 0;
-
-Serial_dummy serial_dummy_;
-Console<Serial> dummy_console_(serial_dummy_);
+#ifndef DBG_HXX_
+#define DBG_HXX_
 
 
 namespace dbg
 {
 
 	/**
-	 * \brief initializes the console (switches from dummy console to supplied console)
+	 * \brief prints data to the console
+	 * 
+	 * \param data 	data to be printed
 	 *
-	 * \param console 	console to print to
+	 * \return 	success
 	 *
 	 */
-	void init(Console<Serial>& console)
+	template<typename T>
+	static bool print(T data)
 	{
-		console_ = &console;
+		return dout().write(data);
 	}
 
-	/**
-	 * \brief returns a reference to the console
-	 * 		(console provided by init or dummy console if not init'ed)
-	 * 
-	 * \return 	console
-	 *
-	 */
-	Console<Serial>& dout()
-	{
-		if(console_ != 0)
-		{
-			return *console_;
-		}else
-		{
-			return dummy_console_;
-		}
-	}
 
 	/**
-	 * \brief print a buffer to the console
-	 *
-	 * \param data 	buffer to be printed
+	 * \brief prints data to the console, adds a new line and flushes the buffer
 	 * 
-	 * \param size 	size of the buffer in bytes
+	 * \param data 	data to be printed
 	 *
-	 * \return success
+	 * \return 	success
+	 *
 	 */
-	bool print(const uint8_t* data, uint32_t size)
+	template<typename T>
+	bool println(T data)
 	{
-		if(console_ != 0)
-		{
-			return console_->write(data, size);
-		}else
-		{
-			return false;	// We do not write to the dummy console
-		}
+		return dout().writeln(data);
 	}
 };
+
+#endif /* DBG_HXX_ */

@@ -35,6 +35,15 @@
  * \author  MAV'RIC Team
  *   
  * \brief   Write to any write-able module in human-readable format
+ * You can use '<<' to print various data types in cout style: console << " hello " << endl;
+ * To define '<<' operator for your own class, implement the follwing function
+ * in the header of your class, outside of your class definition:
+ * template<typename Writeable>
+ *	Console<Writeable>& operator<< (Console<Writeable>& console, YourClass& yourclass)
+ *	{
+ *		console.write(...);
+ *		return console;
+ *	}
  *
  ******************************************************************************/
 
@@ -50,7 +59,7 @@
 template <typename Writeable>
 class Console 
 {
-private:
+protected:
 	Writeable& stream_;
 
 public:
@@ -61,7 +70,7 @@ public:
 
 
 	/**
-	 * \brief 	Write to the console
+	 * \brief 	Write buffer to the console
 	 *
 	 * \param 	data 	The buffer to write.
 	 * \param 	size 	The number of bytes to write.
@@ -71,13 +80,22 @@ public:
 	bool write(const uint8_t* data, uint32_t size);
 
 	/**
-	 * \brief 	Write to the console
+	 * \brief 	Write text to the console
 	 *
 	 * \param 	text 	Text to write to console
 	 * 
 	 * \return 	success
 	 */
 	bool write(const char* text);
+
+	/**
+	 * \brief 	Write text to the console, append newline ('\n\r') and flush the stream
+	 *
+	 * \param 	text 	Text to write to console
+	 *
+	 * \return 	success
+	 */
+	bool writeln(const char* text);
 
 
 	/**
@@ -145,22 +163,45 @@ public:
 	void flush();
 
 
-	
-
-	template<typename T>
-	Console<Writeable> &operator<<(const T &a);	
-
 	/* definition of ConsoleManipulator function pointer (used for "console << endl") */
 	typedef Console<Writeable>& (*ConsoleManipulator)(Console<Writeable>&);
 
+
+	/**
+	 * \brief operator to print like cout: console << "hello";
+	 *			calls write(data)
+	 *
+	 * \param data 	data to be printed
+	 *
+	 * \return 	success
+	 *
+	 */
+	template<typename T>
+	Console<Writeable> &operator<<(const T &data);
+
+	/**
+	 * \brief applies the function pointed to by the argument and executes it with this as argument
+	 *			operator overload to work with endl function pointer
+	 *
+	 * \param	pointer to the function to be executed
+	 *
+	 * \return 	return itself (*this)
+	 */
 	Console<Writeable> &operator<<(ConsoleManipulator manip);
 };
 
-/* definition of 'endl' */
+/**
+ * \brief Writes line end ('\n\r') to stream and flushes the stream
+ * 			used like 'console << "hello" << endl'
+ *
+ * \param console 	console to be written to
+ *
+ * \return console
+ */
 template<typename Writeable>
 Console<Writeable>& endl(Console<Writeable>& console);
 
-// Template implementation file
+/* Template implementation file */
 #include "console.hxx"
 
 #endif /* CONSOLE_HPP_ */

@@ -42,63 +42,9 @@
 #define CONSOLE_HXX_
 
 #include "maths.h"
-
-#define MAX_DIGITS10_LONG 20
-
+#include "string_util.hpp"
 
 
-
-namespace{
-	uint8_t myy_strlen(const char* text)
-	{
-		uint8_t i = 0;
-		while(text[i] != '\0')
-		{
-			i++;
-		}
-		return i;
-	}
-
-	/**
-	 * \brief 	returns an array of ascii characters representing an integer
-	 *
-	 * \param 	number 	Number to be put into the array
-	 * \param	dest	Adress of the array to put it to (should be at least max_digits+1 long)
-	 * \param	length 	Adress where the length of the array is written to (length including the sign)
-	 * \param	max_digits 	maximal number of digits allowed (the rest is truncated)
-	 * 
-	 * \return 	new_dest 	new Address of the array (new_dest is a subarray of dest)
-	 */
-	template<typename T>
-	uint8_t* format_integer(T number, uint8_t* dest, uint8_t* length, uint8_t max_digits = MAX_DIGITS10_LONG)
-	{
-		uint8_t i = max_digits+1;
-
-		/* Take Care of the sign */
-		bool is_negativ = false;
-		if(number < 0)
-		{
-			is_negativ = true;
-			number = number*-1;
-		}
-
-		do
-		{
-			dest[--i] = (number % 10) + '0';
-			number = number / 10;
-		} while((i >= 1) && (number > 0) );
-
-		/* add sign to char* */
-		if(is_negativ)
-		{
-			dest[--i] = '-';
-		}
-
-		*length = max_digits+1 -i;
-
-		return dest + i;
-	}
-};
 
 template <typename Writeable>
 Console<Writeable>::Console(Writeable& stream):
@@ -108,23 +54,46 @@ Console<Writeable>::Console(Writeable& stream):
 }
 
 
+/**
+ * \brief 	Write buffer to the console
+ *
+ * \param 	data 	The buffer to write.
+ * \param 	size 	The number of bytes to write.
+ * 
+ * \return 	success
+ */
 template <typename Writeable>
 bool Console<Writeable>::write(const uint8_t* data, uint32_t size)
 {
  	return stream_.write(data, size);
 }
 
+/**
+ * \brief 	Write integer number to the console
+ *
+ * \param 	number 	integer number (uintX_t/intX_t)
+ * 
+ * \return 	success
+ */
 template <typename Writeable>
 template <typename T>
 bool Console<Writeable>::write_integer(T number)
 {
-	uint8_t data_tmp[MAX_DIGITS10_LONG+1];
+	uint8_t data_tmp[str::MAX_DIGITS10_LONG+1];
 	uint8_t length;
-	uint8_t* data = format_integer(number, data_tmp, &length);
+	uint8_t* data = str::format_integer(number, data_tmp, &length);
 
 	return stream_.write(data, length);
 }
 
+/**
+ * \brief 	Write floating point to the console
+ *
+ * \param 	number 	floating point number (float/double)
+ * \param 	after_digits 	digits after decimal point
+ * 
+ * \return 	success
+ */
 template <typename Writeable>
 template <typename T>
 bool Console<Writeable>::write_floating(T num, uint8_t after_digits)
@@ -139,8 +108,8 @@ bool Console<Writeable>::write_floating(T num, uint8_t after_digits)
 
 	int32_t whole = floor(num);
 	uint8_t i,j;
-	uint8_t data_tmp[MAX_DIGITS10_LONG + 1 + after_digits + 1];
-	uint8_t* data = format_integer(whole, data_tmp+1, &i);
+	uint8_t data_tmp[str::MAX_DIGITS10_LONG + 1 + after_digits + 1];
+	uint8_t* data = str::format_integer(whole, data_tmp+1, &i);
 
 	if(is_negativ){
 		data = data - 1;
@@ -163,60 +132,149 @@ bool Console<Writeable>::write_floating(T num, uint8_t after_digits)
 }
 
 
+/**
+ * \brief 	Write floating point to the console (wrapper for write_floating(..))
+ *
+ * \param 	number 	
+ * 
+ * \param 	after_digits 	digits after decimal point
+ *
+ * \return 	success
+ */
 template <typename Writeable>
 bool Console<Writeable>::write(float number, uint8_t after_digits)
 {
 	return write_floating<float>(number, after_digits);
 }
 
+/**
+ * \brief 	Write floating point to the console (wrapper for write_floating(..))
+ *
+ * \param 	number 	
+ *
+ * \param 	after_digits 	digits after decimal point
+ * 
+ * \return 	success
+ */
 template <typename Writeable>
 bool Console<Writeable>::write(double number, uint8_t after_digits)
 {
 	return write_floating(number, after_digits);
 }
 
+/**
+ * \brief 	Write floating point to the console (wrapper for write_floating(..))
+ *
+ * \param 	number 	
+ *
+ * \param 	after_digits 	digits after decimal point
+ * 
+ * \return 	success
+ */
 template <typename Writeable>
 bool Console<Writeable>::write(uint32_t number)
 {
 	return write_integer(number);
 }
 
+/**
+ * \brief 	Write floating point to the console (wrapper for write_floating(..))
+ *
+ * \param 	number 	
+ *
+ * \param 	after_digits 	digits after decimal point
+ * 
+ * \return 	success
+ */
 template <typename Writeable>
 bool Console<Writeable>::write(int32_t number)
 {
 	return write_integer(number);
 }
 
+/**
+ * \brief 	Write floating point to the console (wrapper for write_floating(..))
+ *
+ * \param 	number 	
+ *
+ * \param 	after_digits 	digits after decimal point
+ * 
+ * \return 	success
+ */
 template <typename Writeable>
 bool Console<Writeable>::write(uint16_t number)
 {
 	return write_integer(number);
 }
 
+/**
+ * \brief 	Write floating point to the console (wrapper for write_floating(..))
+ *
+ * \param 	number 	
+ *
+ * \param 	after_digits 	digits after decimal point
+ * 
+ * \return 	success
+ */
 template <typename Writeable>
 bool Console<Writeable>::write(int16_t number)
 {
 	return write_integer(number);
 }
 
+/**
+ * \brief 	Write floating point to the console (wrapper for write_floating(..))
+ *
+ * \param 	number 	
+ *
+ * \param 	after_digits 	digits after decimal point
+ * 
+ * \return 	success
+ */
 template <typename Writeable>
 bool Console<Writeable>::write(uint8_t number)
 {
 	return write_integer(number);
 }
 
+/**
+ * \brief 	Write floating point to the console (wrapper for write_floating(..))
+ *
+ * \param 	number 	
+ *
+ * \param 	after_digits 	digits after decimal point
+ * 
+ * \return 	success
+ */
 template <typename Writeable>
 bool Console<Writeable>::write(int8_t number)
 {
 	return write_integer(number);
 }
 
+/**
+ * \brief 	Write floating point to the console (wrapper for write_floating(..))
+ *
+ * \param 	number 	
+ *
+ * \param 	after_digits 	digits after decimal point
+ * 
+ * \return 	success
+ */
 template <typename Writeable>
 bool Console<Writeable>::write(int number)
 {
 	return write_integer(number);
 }
 
+
+/**
+ * \brief 	Write bool to the console ("true"/"false")
+ *
+ * \param 	value 	boolean value to be evaluated
+ * 
+ * \return 	success
+ */
 template <typename Writeable>
 bool Console<Writeable>::write(bool value)
 {
@@ -231,46 +289,85 @@ bool Console<Writeable>::write(bool value)
 	}
 }
 
-
+/**
+ * \brief 	Write text to the console
+ *
+ * \param 	text 	Text to write to console
+ * 
+ * \return 	success
+ */
 template <typename Writeable>
 bool Console<Writeable>::write(const char* text)
 {
 	uint8_t* data = (uint8_t*)text;
- 	return stream_.write(data, myy_strlen(text));
+ 	return stream_.write(data, str::strlen(text));
 }
 
+/**
+ * \brief 	Write text to the console, append newline ('\n\r') and flush the stream
+ *
+ * \param 	text 	Text to write to console
+ *
+ * \return 	success
+ */
+template <typename Writeable>
+bool Console<Writeable>::writeln(const char* text)
+{
+	bool result = write(text);
+	endl(*this);
+	return result;
+}
 
-// template <typename Writeable>
-// void Console<Writeable>::flush()
-// {}
-
-// template<>
-// void Console<Serial>::flush()
-// {
-// 	write("fl");
-// 	stream_.flush();
-// }
-
+/**
+ * \brief 	Flushes the buffer of the console
+ * 
+ * \return 	success
+ */
 template <typename Writeable>
 void Console<Writeable>::flush()
 {
 	stream_.flush();
 }
 
+/**
+ * \brief operator to print like cout: console << "hello";
+ *			calls write(data)
+ *
+ * \param data 	data to be printed
+ *
+ * \return 	success
+ *
+ */
 template <typename Writeable>
 template <typename T>
-Console<Writeable>& Console<Writeable>::operator<<(const T &a)
+Console<Writeable>& Console<Writeable>::operator<<(const T &data)
 {
-	write(a);
+	write(data);
 	return *this;
 }
 
+/**
+ * \brief applies the function pointed to by the argument and executes it with this as argument
+ *			operator overload to work with endl function pointer
+ *
+ * \param	pointer to the function to be executed
+ *
+ * \return 	return itself (*this)
+ */
 template <typename Writeable>
 Console<Writeable>& Console<Writeable>::operator<<(ConsoleManipulator manip)
 {
 	return manip(*this);
 }
 
+/**
+ * \brief Writes line end ('\n\r') to stream and flushes the stream
+ * 			used like 'console << "hello" << endl'
+ *
+ * \param console 	console to be written to
+ *
+ * \return console
+ */
 template <typename Writeable>
 static Console<Writeable>& endl(Console<Writeable>& console)
 {

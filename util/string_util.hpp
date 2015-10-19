@@ -30,83 +30,45 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file  	dbg.cpp
+ * \file  	string_utils.hpp
  * 
  * \author  MAV'RIC Team
  *   
- * \brief   Write debug messages
+ * \brief   Collection of static functions to work with const char*
  *
- * Prints human-readable messages to a console.
- * Before initialization, data is written to a dummy console.
- * dout() can be used for cout like syntax: 'dout() << "hello " << 123 << endl;'
- * To define '<<' operator for your own class, implement the follwing function
- * in the header of your class, outside of your class definition:
- * template<typename Writeable>
- *	Console<Writeable>& operator<< (Console<Writeable>& console, Yourclass& yourclass)
- *	{
- *		console.write(...);
- *		return console;
- *	}
  ******************************************************************************/
 
-#include "dbg.hpp"
-#include "string_util.hpp"
+#ifndef STRING_UTIL_HPP_
+#define STRING_UTIL_HPP_
 
-Console<Serial>* console_ = 0;
+#include <stdint.h>
 
-Serial_dummy serial_dummy_;
-Console<Serial> dummy_console_(serial_dummy_);
-
-
-namespace dbg
-{
+namespace str{
+	const uint8_t MAX_DIGITS10_LONG = 20;
 
 	/**
-	 * \brief initializes the console (switches from dummy console to supplied console)
+	 * \brief 	returns the length of a const char* excluding the termination character '\0'
 	 *
-	 * \param console 	console to print to
-	 *
-	 */
-	void init(Console<Serial>& console)
-	{
-		console_ = &console;
-	}
-
-	/**
-	 * \brief returns a reference to the console
-	 * 		(console provided by init or dummy console if not init'ed)
+	 * \param	max_digits 	maximal number of digits allowed (the rest is truncated)
 	 * 
-	 * \return 	console
-	 *
+	 * \return 	length 	number of characters excluding the termination character '\0'
 	 */
-	Console<Serial>& dout()
-	{
-		if(console_ != 0)
-		{
-			return *console_;
-		}else
-		{
-			return dummy_console_;
-		}
-	}
+	uint8_t strlen(const char* text);
 
 	/**
-	 * \brief print a buffer to the console
+	 * \brief 	returns an array of ascii characters representing an integer
 	 *
-	 * \param data 	buffer to be printed
+	 * \param 	number 	Number to be put into the array
+	 * \param	dest	Adress of the array to put it to (should be at least max_digits+1 long)
+	 * \param	length 	Adress where the length of the array is written to (length including the sign)
+	 * \param	max_digits 	maximal number of digits allowed (the rest is truncated)
 	 * 
-	 * \param size 	size of the buffer in bytes
-	 *
-	 * \return success
+	 * \return 	new_dest 	new Address of the array (new_dest is a subarray of dest)
 	 */
-	bool print(const uint8_t* data, uint32_t size)
-	{
-		if(console_ != 0)
-		{
-			return console_->write(data, size);
-		}else
-		{
-			return false;	// We do not write to the dummy console
-		}
-	}
+	template<typename T>
+	uint8_t* format_integer(T number, uint8_t* dest, uint8_t* length, uint8_t max_digits = MAX_DIGITS10_LONG);
 };
+
+#include "string_util.hxx"
+
+#endif /* STRING_UTIL_HPP_ */

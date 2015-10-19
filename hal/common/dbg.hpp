@@ -36,110 +36,82 @@
  *   
  * \brief   Write debug messages
  *
+ * Prints human-readable messages to a console.
+ * The implementation of templated function is in dbg.hxx while the rest is in dbg.cpp
+ * Before initialization, data is written to a dummy console.
+ * dout() can be used for cout like syntax: 'dout() << "hello " << 123 << endl;'
+ * To define '<<' operator for your own class, implement the follwing function
+ * in the header of your class, outside of your class definition:
+ * template<typename Writeable>
+ *	Console<Writeable>& operator<< (Console<Writeable>& console, Yourclass& yourclass)
+ *	{
+ *		console.write(...);
+ *		return console;
+ *	}
  ******************************************************************************/
 
-#ifndef DBG_H_
-#define DBG_H_
+#ifndef DBG_HPP_
+#define DBG_HPP_
 
 #include "serial_dummy.hpp"
 #include "console.hpp"
 #include <stdint.h>
 
-#include "print_util.h"
+namespace dbg{
 
-//namespace dbg{
+	/**
+	 * \brief initializes the console (switches from dummy console to supplied console)
+	 *
+	 * \param console 	console to print to
+	 *
+	 */
+	void init(Console<Serial>& console);
 
-template <typename Writeable>
-class Dbg
-{
-public:
-	static Dbg& getInstance()
-	{
-		static Dbg instance;
-		return instance;
-	}
+	/**
+	 * \brief returns a reference to the console
+	 * 		(console provided by init or dummy console if not init'ed)
+	 * 
+	 * \return 	console
+	 *
+	 */
+	Console<Serial>& dout();
 
-	static bool init(Console<Writeable>* console)
-	{
-		getInstance().console_ = console;
-		return true;
-	}
+	/**
+	 * \brief print a buffer to the console
+	 *
+	 * \param data 	buffer to be printed
+	 * 
+	 * \param size 	size of the buffer in bytes
+	 *
+	 * \return success
+	 */
+	bool print(const uint8_t* data, uint32_t size);
 
+	/**
+	 * \brief prints data to the console
+	 * 
+	 * \param data 	data to be printed
+	 *
+	 * \return 	success
+	 *
+	 */
 	template<typename T>
-	static bool write(T input)
-	{
-		Console<Writeable>* console = getInstance().console_;
-		if(console){
-			return console->write(input);
-		}
-		
-		return false;
-	}
+	static bool print(T data);
 
+	/**
+	 * \brief prints data to the console, adds a new line and flushes the buffer
+	 * 
+	 * \param data 	data to be printed
+	 *
+	 * \return 	success
+	 *
+	 */
 	template<typename T>
-	Dbg &operator<<(const T &a)
-	{
-
-		 if(&getInstance() == this)
-		{
-			write(" this is the instance ");
-		}else
-		{
-			write(" NOT the instance ");
-		}
-
-		write(a);
-		return *this;
-	}
-
-	typedef Console<Writeable>& (*ConsoleManipulator)(Console<Writeable>&);
-	Dbg &operator<<(ConsoleManipulator manip)
-	{
-		if(console_)
-		{
-			manip(*(this->console_));
-		}else if(&getInstance() == this)
-		{
-			write(" this is the instance ");
-		}else
-		{
-			write(" NOT the instance ");
-		}
-		return *this;
-	}
-
-	static void flush()
-	{
-		Console<Writeable>* console = getInstance().console_;
-		if(console)
-		{
-			console->flush();
-		}
-	}
-
-	void identity_test(){
-		if(&getInstance() == this)
-		{
-			write(" I am myself ");
-		}else
-		{
-			write(" I am NOT myself ");
-		}
-	}
-
-private:
-	Console<Writeable>* console_;	// should we make this static?
-	Dbg() : console_(0){
-		print_util_dbg_print(" construct dbg ");
-	}
-
-	Dbg(Dbg const&);              // Don't Implement
-    void operator=(Dbg const&); // Don't implement
+	bool println(T data);
 };
 
-Dbg<Serial>& dbg = Dbg<Serial>::getInstance();
-//}
+// Template implementation file
+#include "dbg.hxx"
 
-typedef Dbg<Serial> Dbg_t;
-
-#endif /* DBG_H_ */
+//Dbg& dout = Dbg::getInstance();
+#endif /* DBG_HPP_ */
