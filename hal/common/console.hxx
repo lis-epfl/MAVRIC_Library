@@ -77,7 +77,7 @@ bool Console<Writeable>::write(const uint8_t* data, uint32_t size)
  */
 template <typename Writeable>
 template <typename T>
-bool Console<Writeable>::write_integer(T number)
+bool Console<Writeable>::write(T number)
 {
 	uint8_t data_tmp[str::MAX_DIGITS10_LONG+1];
 	uint8_t length;
@@ -160,111 +160,6 @@ template <typename Writeable>
 bool Console<Writeable>::write(double number, uint8_t after_digits)
 {
 	return write_floating(number, after_digits);
-}
-
-/**
- * \brief 	Write floating point to the console (wrapper for write_floating(..))
- *
- * \param 	number 	
- *
- * \param 	after_digits 	digits after decimal point
- * 
- * \return 	success
- */
-template <typename Writeable>
-bool Console<Writeable>::write(uint32_t number)
-{
-	return write_integer(number);
-}
-
-/**
- * \brief 	Write floating point to the console (wrapper for write_floating(..))
- *
- * \param 	number 	
- *
- * \param 	after_digits 	digits after decimal point
- * 
- * \return 	success
- */
-template <typename Writeable>
-bool Console<Writeable>::write(int32_t number)
-{
-	return write_integer(number);
-}
-
-/**
- * \brief 	Write floating point to the console (wrapper for write_floating(..))
- *
- * \param 	number 	
- *
- * \param 	after_digits 	digits after decimal point
- * 
- * \return 	success
- */
-template <typename Writeable>
-bool Console<Writeable>::write(uint16_t number)
-{
-	return write_integer(number);
-}
-
-/**
- * \brief 	Write floating point to the console (wrapper for write_floating(..))
- *
- * \param 	number 	
- *
- * \param 	after_digits 	digits after decimal point
- * 
- * \return 	success
- */
-template <typename Writeable>
-bool Console<Writeable>::write(int16_t number)
-{
-	return write_integer(number);
-}
-
-/**
- * \brief 	Write floating point to the console (wrapper for write_floating(..))
- *
- * \param 	number 	
- *
- * \param 	after_digits 	digits after decimal point
- * 
- * \return 	success
- */
-template <typename Writeable>
-bool Console<Writeable>::write(uint8_t number)
-{
-	return write_integer(number);
-}
-
-/**
- * \brief 	Write floating point to the console (wrapper for write_floating(..))
- *
- * \param 	number 	
- *
- * \param 	after_digits 	digits after decimal point
- * 
- * \return 	success
- */
-template <typename Writeable>
-bool Console<Writeable>::write(int8_t number)
-{
-	return write_integer(number);
-}
-
-/**
- * \brief 	Write floating point to the console (wrapper for write_floating(..))
- *
- * \param 	number 	
- *
- * \param 	after_digits 	digits after decimal point
- * 
- * \return 	success
- */
-template <typename Writeable>
-bool Console<Writeable>::write(int number)
-{
-	return write_integer(number);
 }
 
 

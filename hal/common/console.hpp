@@ -107,6 +107,18 @@ public:
 	 */
 	bool write(bool value);
 
+
+	/**
+	 * \brief 	Write integer number to the console
+	 *
+	 * \param 	number 	integer number (uintX_t/intX_t)
+	 * 
+	 * \return 	success
+	 */
+	template<typename T>
+	bool write(T number);
+
+
 	/**
 	 * \brief 	Write floating point to the console (wrapper for write_floating(..))
 	 *
@@ -118,21 +130,6 @@ public:
 	bool write(double number, uint8_t after_digits = 3);
 
 	/**
-	 * \brief 	Write integer number to the console (wrapper for write_integer(..))
-	 *
-	 * \param 	number 	
-	 * 
-	 * \return 	success
-	 */
-	bool write(uint32_t);
-	bool write(int32_t);
-	bool write(uint16_t);
-	bool write(int16_t);
-	bool write(uint8_t);
-	bool write(int8_t);
-	bool write(int);
-
-	/**
 	 * \brief 	Write floating point to the console
 	 *
 	 * \param 	number 	floating point number (float/double)
@@ -142,17 +139,6 @@ public:
 	 */
 	template <typename T>
 	bool write_floating(T number, uint8_t after_digits = 3);
-
-	/**
-	 * \brief 	Write integer number to the console
-	 *
-	 * \param 	number 	integer number (uintX_t/intX_t)
-	 * 
-	 * \return 	success
-	 */
-	template<typename T>
-	bool write_integer(T number);
-
 
 
 	/**
