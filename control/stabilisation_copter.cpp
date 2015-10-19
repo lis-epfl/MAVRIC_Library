@@ -130,6 +130,10 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 	quat_t qtmp, q_rot;
 	aero_attitude_t attitude_yaw_inverse;
 
+	// Get up vector in body frame
+	quat_t up_vec = quaternions_global_to_local(  	stabilisation_copter->ahrs->qe,
+													{0.0f, {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}} );
+
 	// set the controller input
 	input= *stabilisation_copter->controls;
 	switch (stabilisation_copter->controls->control_mode) 
@@ -204,8 +208,8 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 	
 	case ATTITUDE_COMMAND_MODE:
 		// run absolute attitude_filter controller
-		rpyt_errors[0]= input.rpy[0] - ( - stabilisation_copter->ahrs->up_vec.v[1] ); 
-		rpyt_errors[1]= input.rpy[1] - stabilisation_copter->ahrs->up_vec.v[0];
+		rpyt_errors[0]= input.rpy[0] + up_vec.v[1]; 
+		rpyt_errors[1]= input.rpy[1] - up_vec.v[0];
 		
 		if ((stabilisation_copter->controls->yaw_mode == YAW_ABSOLUTE) ) 
 		{
