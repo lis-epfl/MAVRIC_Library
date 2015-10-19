@@ -90,45 +90,19 @@ bool Console<Writeable>::write(T number)
  * \brief 	Write floating point to the console
  *
  * \param 	number 	floating point number (float/double)
- * \param 	after_digits 	digits after decimal point
- * 
+ * \param 	after_digits 	number of digits after decimal point
+ *
  * \return 	success
  */
 template <typename Writeable>
 template <typename T>
 bool Console<Writeable>::write_floating(T num, uint8_t after_digits)
 {
+	uint8_t data_tmp[str::MAX_DIGITS10_LONG + after_digits + 2];
+	uint8_t length;
+	uint8_t* data = str::format_floating(num, data_tmp, &length, after_digits, str::MAX_DIGITS10_LONG);
 
-	bool is_negativ = false;
-	if(num < 0)
-	{
-		is_negativ = true;
-		num = num * -1;
-	}
-
-	int32_t whole = floor(num);
-	uint8_t i,j;
-	uint8_t data_tmp[str::MAX_DIGITS10_LONG + 1 + after_digits + 1];
-	uint8_t* data = str::format_integer(whole, data_tmp+1, &i);
-
-	if(is_negativ){
-		data = data - 1;
-		data[0] = '-';
-		i++;
-	}
-	
-	T after = (num-(T)whole);
-
-	data[i++] = '.';
-	for (j = 0; j < after_digits; j++) 
-	{
-		after *= 10;
-		char digit = (char)after;
-		data[i++] = digit + '0';
-		after=after-digit;
-	}
-
-	return write(data, i);
+	return stream_.write(data, length);
 }
 
 

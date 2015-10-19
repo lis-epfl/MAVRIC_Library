@@ -45,6 +45,7 @@
 
 namespace str{
 	const uint8_t MAX_DIGITS10_LONG = 20;
+	const uint8_t FLOAT_DIGIT_COUNT = 3;
 
 	/**
 	 * \brief 	returns the length of a const char* excluding the termination character '\0'
@@ -67,6 +68,23 @@ namespace str{
 	 */
 	template<typename T>
 	uint8_t* format_integer(T number, uint8_t* dest, uint8_t* length, uint8_t max_digits = MAX_DIGITS10_LONG);
+
+
+	/**
+	 * \brief 	returns an array of ascii characters representing a floating number
+	 *
+	 * \param 	number 	Number to be put into the array
+	 * \param	dest	Adress of the array to put it to (should be at least max_digits+1 long)
+	 * \param	length 	Adress where the length of the array is written to
+	 					(length including the sign and decimal point)
+	 * \param	after_digits number of digits after the decimal point
+	 * \param 	max_int_digits 	maximal number of digits before decimal point
+	 * 
+	 * \return 	new_dest 	new Address of the array (new_dest is a subarray of dest)
+	 */
+	template <typename T>
+	uint8_t* format_floating(T num, uint8_t* dest, uint8_t* length, uint8_t after_digits = FLOAT_DIGIT_COUNT, uint8_t max_int_digits = MAX_DIGITS10_LONG);
+	
 };
 
 #include "string_util.hxx"

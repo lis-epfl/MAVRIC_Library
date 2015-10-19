@@ -51,6 +51,7 @@
 #define CONSOLE_HPP_
 
 #include <stdint.h>
+#include "string_util.hpp"
 
 
 /**
@@ -133,8 +134,7 @@ public:
 	 * \brief 	Write floating point to the console
 	 *
 	 * \param 	number 	floating point number (float/double)
-	 * \param 	after_digits 	digits after decimal point
-	 * 
+	 * \param 	after_digits 	number of digits after decimal point
 	 * \return 	success
 	 */
 	template <typename T>

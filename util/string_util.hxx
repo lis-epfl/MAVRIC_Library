@@ -79,4 +79,57 @@ namespace str{
 
 		return dest + i;
 	}
+
+
+	/**
+	 * \brief 	returns an array of ascii characters representing a floating number
+	 *
+	 * \param 	number 	Number to be put into the array
+	 * \param	dest	Adress of the array to put it to (should be at least max_digits+1 long)
+	 * \param	length 	Adress where the length of the array is written to
+	 					(length including the sign and decimal point)
+	 * \param	after_digits number of digits after the decimal point
+	 * \param 	max_int_digits 	maximal number of digits before decimal point
+	 * 
+	 * \return 	new_dest 	new Address of the array (new_dest is a subarray of dest)
+	 */
+	template <typename T>
+	uint8_t* format_floating(T num, uint8_t* dest, uint8_t* length, uint8_t after_digits, uint8_t max_int_digits)
+	{
+		bool is_negativ = false;
+		if(num < 0)
+		{
+			is_negativ = true;
+			num = num * -1;
+		}
+
+		/* write the integer part to char array 'dest' / 'data' */
+		int32_t whole = floor(num);
+		uint8_t i,j;
+		uint8_t* data = format_integer(whole, dest+1, &i, max_int_digits);
+
+		/* add minus sign to array if needed */
+		if(is_negativ){
+			data = data - 1;
+			data[0] = '-';
+			i++;
+		}
+		
+		/* get floating point part */
+		T after = (num-(T)whole);
+
+		data[i++] = '.';
+		for (j = 0; j < after_digits; j++) 
+		{
+			after *= 10;
+			char digit = (char)after;
+			data[i++] = digit + '0';
+			after=after-digit;
+		}
+
+		/* calc length */
+		*length = i;
+
+		return data;
+	}
 };
