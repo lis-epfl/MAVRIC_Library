@@ -117,7 +117,7 @@ bool Console<Writeable>::write_floating(T num, uint8_t after_digits)
 		i++;
 	}
 	
-	float after = (num-(float)whole);
+	T after = (num-(T)whole);
 
 	data[i++] = '.';
 	for (j = 0; j < after_digits; j++) 
