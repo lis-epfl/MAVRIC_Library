@@ -75,16 +75,6 @@ bool ahrs_init(ahrs_t* ahrs)
 	ahrs->linear_acc[Z] = 0.0f;
 	
 	ahrs->internal_state = AHRS_UNLEVELED;
-
-	ahrs->north_vec.s    = 0.0f;
-	ahrs->north_vec.v[X] = 1.0f;
-	ahrs->north_vec.v[Y] = 0.0f;
-	ahrs->north_vec.v[Z] = 0.0f;
-	
-	ahrs->up_vec.s    = 0.0f;
-	ahrs->up_vec.v[X] = 0.0f;
-	ahrs->up_vec.v[Y] = 0.0f;
-	ahrs->up_vec.v[Z] = -1.0f;
 	
 	print_util_dbg_print("[AHRS] Initialised.\r\n");
 	
