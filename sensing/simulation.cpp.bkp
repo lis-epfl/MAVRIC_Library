@@ -326,10 +326,9 @@ void simulation_update(simulation_model_t *sim)
 	sim->ahrs.qe.v[1] += qed.v[1] * sim->dt;
 	sim->ahrs.qe.v[2] += qed.v[2] * sim->dt;
 
-	sim->ahrs.qe = quaternions_normalise(sim->ahrs.qe);
-	sim->ahrs.up_vec = quaternions_global_to_local(sim->ahrs.qe, up);
-	
-	sim->ahrs.north_vec = quaternions_global_to_local(sim->ahrs.qe, front);	
+	sim->ahrs.qe 		= quaternions_normalise(sim->ahrs.qe);
+	quat_t up_vec  		= quaternions_global_to_local(sim->ahrs.qe, up);
+	quat_t north_vec 	= quaternions_global_to_local(sim->ahrs.qe, front);	
 
 	// velocity and position integration
 	
@@ -342,7 +341,7 @@ void simulation_update(simulation_model_t *sim)
 		// simulate "acceleration" caused by contact force with ground, compensating gravity
 		for (i = 0; i < 3; i++)
 		{
-			sim->lin_forces_bf[i] = sim->ahrs.up_vec.v[i] * sim->vehicle_config.total_mass * sim->vehicle_config.sim_gravity;
+			sim->lin_forces_bf[i] = up_vec.v[i] * sim->vehicle_config.total_mass * sim->vehicle_config.sim_gravity;
 		}
 				
 		// slow down... (will make velocity slightly inconsistent until next update cycle, but shouldn't matter much)
@@ -352,15 +351,11 @@ void simulation_update(simulation_model_t *sim)
 		}
 		
 		//upright
-		sim->rates_bf[0] =  sim->ahrs.up_vec.v[1]; 
-		sim->rates_bf[1] =  - sim->ahrs.up_vec.v[0];
+		sim->rates_bf[0] =  up_vec.v[1]; 
+		sim->rates_bf[1] =  - up_vec.v[0];
 		sim->rates_bf[2] = 0;
 	}
 	
-	sim->ahrs.qe = quaternions_normalise(sim->ahrs.qe);
-	sim->ahrs.up_vec = quaternions_global_to_local(sim->ahrs.qe, up);
-	
-	sim->ahrs.north_vec = quaternions_global_to_local(sim->ahrs.qe, front);	
 	for (i = 0; i < 3; i++)
 	{
 			qtmp1.v[i] = sim->vel[i];
@@ -377,7 +372,7 @@ void simulation_update(simulation_model_t *sim)
 		sim->ahrs.linear_acc[i] = sim->lin_forces_bf[i] / sim->vehicle_config.total_mass;
 		
 		// this is the "clean" acceleration without gravity
-		acc_bf[i] = sim->ahrs.linear_acc[i] - sim->ahrs.up_vec.v[i] * sim->vehicle_config.sim_gravity;
+		acc_bf[i] = sim->ahrs.linear_acc[i] - up_vec.v[i] * sim->vehicle_config.sim_gravity;
 		
 		sim->vel_bf[i] = sim->vel_bf[i] + acc_bf[i] * sim->dt;
 	}
@@ -398,7 +393,7 @@ void simulation_update(simulation_model_t *sim)
 	{
 		sim->imu->raw_gyro.data[sim->imu->calib_gyro.axis[i]] = (sim->rates_bf[i] * sim->calib_gyro.scale_factor[i] + sim->calib_gyro.bias[i]) * sim->calib_gyro.orientation[i];
 		sim->imu->raw_accelero.data[sim->imu->calib_accelero.axis[i]] = ((sim->lin_forces_bf[i] / sim->vehicle_config.total_mass / sim->vehicle_config.sim_gravity) * sim->calib_accelero.scale_factor[i] + sim->calib_accelero.bias[i]) * sim->calib_accelero.orientation[i];
-		sim->imu->raw_magneto.data[sim->imu->calib_compass.axis[i]] = ((sim->ahrs.north_vec.v[i] ) * sim->calib_compass.scale_factor[i] + sim->calib_compass.bias[i])* sim->calib_compass.orientation[i];
+		sim->imu->raw_magneto.data[sim->imu->calib_compass.axis[i]] = ((north_vec.v[i] ) * sim->calib_compass.scale_factor[i] + sim->calib_compass.bias[i])* sim->calib_compass.orientation[i];
 	}
 
 	sim->local_position.heading = coord_conventions_get_yaw(sim->ahrs.qe);
@@ -433,7 +428,7 @@ void simulation_simulate_gps(simulation_model_t *sim)
 
 void simulation_fake_gps_fix(simulation_model_t* sim, uint32_t timestamp_ms)
 {
-	local_coordinates_t fake_pos;
+	local_position_t fake_pos;
 	
 	fake_pos.pos[X] = 10.0f;
 	fake_pos.pos[Y] = 10.0f;
