@@ -25,6 +25,7 @@ LIB_INC += -I$(MAVRIC_LIB)/libs/mavlink/include/mavric
 LIB_INC += -I$(MAVRIC_LIB)/libs/FatFs/src
 LIB_INC += -I$(MAVRIC_LIB)/libs
 LIB_INC += -I$(MAVRIC_LIB)/sensing
+LIB_INC += -I$(MAVRIC_LIB)/simulation
 LIB_INC += -I$(MAVRIC_LIB)/runtime
 LIB_INC += -I$(MAVRIC_LIB)/util
 
@@ -76,16 +77,17 @@ LIB_SRCS += sensing/imu.c
 LIB_SRCS += sensing/imu_telemetry.c                  
 LIB_SRCS += sensing/position_estimation.c            
 LIB_SRCS += sensing/position_estimation_telemetry.c
-# LIB_SRCS += sensing/qfilter.c
+LIB_SRCS += sensing/qfilter.c
+
+
 # LIB_SRCS += sensing/simulation.c
 # LIB_SRCS += sensing/simulation_telemetry.c   
 
+
+
 LIB_SRCS += runtime/scheduler.cpp  
 LIB_SRCS += runtime/scheduler_telemetry.c
-
-# LIB_SRCS += communication/acoustic.c                      
-# LIB_SRCS += communication/acoustic_telemetry.c      
-# LIB_SRCS += communication/console.c                 
+                
 LIB_SRCS += communication/data_logging.c            
 LIB_SRCS += communication/hud_telemetry.c           
 LIB_SRCS += communication/mavlink_communication.c     
@@ -96,9 +98,12 @@ LIB_SRCS += communication/onboard_parameters.c
 LIB_SRCS += communication/remote.c
 LIB_SRCS += communication/remote_telemetry.c
 LIB_SRCS += communication/state.c
+
 # LIB_SRCS += communication/state_machine.c
 LIB_SRCS += communication/state_telemetry.c
 
+LIB_SRCS += simulation/dynamic_model_quad_diag.cpp
+LIB_SRCS += simulation/accelerometer_sim.cpp
 
 LIB_SRCS += libs/FatFs/src/ff.c  
 LIB_SRCS += libs/FatFs/src/diskio.c
@@ -115,7 +120,6 @@ LIB_SRCS += hal/dummy/file_dummy.cpp
 
 LIB_SRCS += hal/common/fat_fs_mounting.cpp
 LIB_SRCS += hal/common/fat_fs_mounting_telemetry.cpp
-# LIB_SRCS += hal/common/dbg.cpp
 
 LIB_SRCS += hal/linux/file_linux.cpp
 LIB_SRCS += hal/linux/serial_udp.cpp
