@@ -55,9 +55,9 @@ typedef struct
 
 
 /**
- * @brief 	Default configuration
+ * \brief 	Default configuration
  * 
- * @return 	Config structure
+ * \return 	Config structure
  */
 static inline serial_dummy_conf_t serial_dummy_default_config();
 
@@ -66,42 +66,42 @@ class Serial_dummy: public Serial
 {
 public:
 	/**
-	 * @brief 	Initialises the peripheral
+	 * \brief 	Initialises the peripheral
 	 * 
-	 * @param 	config 		Device configuration
+	 * \param 	config 		Device configuration
 	 */
 	Serial_dummy(serial_dummy_conf_t config = serial_dummy_default_config());
 
 
 	/**
-	 * @brief 	Hardware initialization
+	 * \brief 	Hardware initialization
 	 * 
-	 * @return  true Success
-	 * @return  false Error
+	 * \return  true Success
+	 * \return  false Error
 	 */
 	bool init(void);
 
 
 	/**
-	 * @brief 	Test if there are bytes available to read
+	 * \brief 	Test if there are bytes available to read
 	 * 
-	 * @return 	Number of incoming bytes available
+	 * \return 	Number of incoming bytes available
 	 */	
 	uint32_t readable(void);
 
 
 	/**
-	 * @brief 	Test if there is space available to write bytes
+	 * \brief 	Test if there is space available to write bytes
 	 * 
-	 * @return 	Number of bytes available for writing
+	 * \return 	Number of bytes available for writing
 	 */	
 	uint32_t writeable(void);
 
 
 	/**
-	 * @brief 	Sends instantaneously all outgoing bytes
+	 * \brief 	Sends instantaneously all outgoing bytes
 	 * 
-	 * @return 	Number of bytes available for writing
+	 * \return 	Number of bytes available for writing
 	 */	
 	void flush(void);
 
@@ -152,9 +152,9 @@ private:
 
 
 /**
- * @brief 	Default configuration
+ * \brief 	Default configuration
  * 
- * @return 	Config structure
+ * \return 	Config structure
  */
 static inline serial_dummy_conf_t serial_dummy_default_config()
 {
