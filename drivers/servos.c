@@ -82,23 +82,30 @@ void servos_set_value(servos_t* servos, uint32_t servo_id, float value)
 {
 	if ( servo_id <= servos->servos_count )
 	{
-		float trimmed_value = value + servos->servo[servo_id].trim;
+		servo_entry_t* servo = &servos->servo[servo_id];
 
-		if ( trimmed_value < servos->servo[servo_id].min )
-		{
-			servos->servo[servo_id].value = servos->servo[servo_id].min;
-		}
-		else if ( trimmed_value > servos->servo[servo_id].max )
-		{
-			servos->servo[servo_id].value = servos->servo[servo_id].max;
-		}
-		else
-		{
-			servos->servo[servo_id].value = trimmed_value;
-		}
+		servo_set_value(servo, value);
 	}
 }
 
+
+void servo_set_value(servo_entry_t* servo, float value)
+{
+	float trimmed_value = value + servo->trim;
+
+	if ( trimmed_value < servo->min )
+	{
+		servo->value = servo->min;
+	}
+	else if ( trimmed_value > servo->max )
+	{
+		servo->value = servo->max;
+	}
+	else
+	{
+		servo->value = trimmed_value;
+	}
+}
 
 void servos_set_value_failsafe(servos_t* servos)
 {

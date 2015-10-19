@@ -98,13 +98,24 @@ bool servos_init(servos_t* servos, const servos_conf_t config);
 
 
 /**
- * \brief Sets the servos to a given value
+ * \brief 	Sets the servos to a given value
  * 
  * \param	servos		Pointer to the servo_t struct
  * \param	servo_id	Number of the servo on the servo rail
  * \param	value		The servo value to be set
  */
 void servos_set_value(servos_t* servos, uint32_t servo_id, float value);
+
+
+/**
+ * \brief 	Sets a single servo to a given value
+ * 
+ * \param	servos		Pointer to the servo_t struct
+ * \param	servo_id	Number of the servo on the servo rail
+ * \param	value		The servo value to be set
+ */
+void servo_set_value(servo_entry_t* servo, float value);
+
 
 
 /**
