@@ -58,7 +58,7 @@
  * 
  * \details 	This sensor is at the same time a accelerometer and a gyroscope
  */
-class Lsm330dlc: public Accelerometer, Gyroscope
+class Lsm330dlc: public Accelerometer, public Gyroscope
 {
 public:
 	/**
@@ -99,6 +99,19 @@ public:
 
 
 	/**
+	 * \brief 	Get X, Y and Z components of angular velocity
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	const std::array<float, 3>& gyro(void) const;
+
+
+
+	/**
 	 * \brief 	Get X component of angular velocity
 	 * 
 	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
@@ -107,7 +120,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	const float& raw_gyro_X(void) const;
+	const float& gyro_X(void) const;
 
 
 	/**
@@ -119,7 +132,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	const float& raw_gyro_Y(void) const;
+	const float& gyro_Y(void) const;
 
 
 	/**
@@ -131,7 +144,19 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	const float& raw_gyro_Z(void) const;
+	const float& gyro_Z(void) const;
+
+
+	/**
+	 * \brief 	Get X, Y and Z components of acceleration
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	const std::array<float, 3>& acc(void) const;
 
 
 	/**
@@ -143,7 +168,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	const float& raw_acc_X(void) const;
+	const float& acc_X(void) const;
 
 
 	/**
@@ -155,7 +180,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	const float& raw_acc_Y(void) const;
+	const float& acc_Y(void) const;
 
 
 	/**
@@ -167,7 +192,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	const float& raw_acc_Z(void) const;
+	const float& acc_Z(void) const;
 
 
 	/**

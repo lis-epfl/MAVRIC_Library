@@ -197,19 +197,25 @@ const float& Hmc5883l::last_update_us(void) const
 }
 
 
-const float& Hmc5883l::raw_mag_X(void) const
+const std::array<float, 3>& Hmc5883l::mag(void) const
+{
+	return data_;
+}
+
+
+const float& Hmc5883l::mag_X(void) const
 {
 	return data_[0];
 }
 
 
-const float& Hmc5883l::raw_mag_Y(void) const
+const float& Hmc5883l::mag_Y(void) const
 {
 	return data_[1];
 }
 
 
-const float& Hmc5883l::raw_mag_Z(void) const
+const float& Hmc5883l::mag_Z(void) const
 {
 	return data_[2];
 }

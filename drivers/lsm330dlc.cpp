@@ -305,37 +305,49 @@ const float& Lsm330dlc::last_update_us(void) const
 }
 
 
-const float& Lsm330dlc::raw_gyro_X(void) const
+const std::array<float, 3>& Lsm330dlc::gyro(void) const
+{
+	return gyro_data_;
+}
+
+
+const float& Lsm330dlc::gyro_X(void) const
 {
 	return gyro_data_[0];
 }
 
 
-const float& Lsm330dlc::raw_gyro_Y(void) const
+const float& Lsm330dlc::gyro_Y(void) const
 {
 	return gyro_data_[1];
 }
 
 
-const float& Lsm330dlc::raw_gyro_Z(void) const
+const float& Lsm330dlc::gyro_Z(void) const
 {
 	return gyro_data_[2];
 }
 
 
-const float& Lsm330dlc::raw_acc_X(void) const
+const std::array<float, 3>& Lsm330dlc::acc(void) const
+{
+	return acc_data_;
+}
+
+
+const float& Lsm330dlc::acc_X(void) const
 {
 	return acc_data_[0];
 }
 
 
-const float& Lsm330dlc::raw_acc_Y(void) const
+const float& Lsm330dlc::acc_Y(void) const
 {
 	return acc_data_[1];
 }
 
 
-const float& Lsm330dlc::raw_acc_Z(void) const
+const float& Lsm330dlc::acc_Z(void) const
 {
 	return acc_data_[2];
 }

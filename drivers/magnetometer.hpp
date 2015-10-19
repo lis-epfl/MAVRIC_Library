@@ -45,6 +45,9 @@
 #define MAGNETOMETER_HPP_
 
 
+#include <array>
+
+
 /**
  * \brief Abstract class for magnetometers
  */
@@ -77,6 +80,18 @@ public:
 
 
 	/**
+	 * \brief 	Get X, Y and Z components of magnetic field
+	 * 
+	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
+	 * 			and given in the sensor frame (not in the UAV frame). 
+	 * 			Use an Imu object to handle bias removal, scaling and axis rotations
+	 * 
+	 * \return 	Value
+	 */	
+	virtual const std::array<float, 3>& mag(void) const = 0;
+
+
+	/**
 	 * \brief 	Get X component of magnetic field
 	 * 
 	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
@@ -85,7 +100,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	virtual const float& raw_mag_X(void) const = 0;
+	virtual const float& mag_X(void) const = 0;
 
 
 	/**
@@ -97,7 +112,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	virtual const float& raw_mag_Y(void) const = 0;
+	virtual const float& mag_Y(void) const = 0;
 
 
 	/**
@@ -109,7 +124,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	virtual const float& raw_mag_Z(void) const = 0;
+	virtual const float& mag_Z(void) const = 0;
 
 
 	/**

@@ -70,13 +70,13 @@ extern "C"
  */
 typedef struct
 {
-	float 	bias[3];			///< The biais of the sensor
-	float 	scale_factor[3];	///< The scale factors of the sensor
-	float 	sign[3];			///< The orientation of the sensor (+1 or -1)
-	uint8_t axis[3];			///< The axis number (X,Y,Z) referring to the sensor datasheet
-	float 	max_values[3];		///< Used only during calibration: max scaled value
-	float 	min_values[3];		///< Used only during calibration: min scaled value
-	float 	mean_values[3];		///< Used only during calibration: mean scaled value
+	std::array<float,3> bias;			///< The biais of the sensor
+	std::array<float,3> scale_factor;	///< The scale factors of the sensor
+	std::array<float,3>	sign;			///< The orientation of the sensor (+1 or -1)
+	std::array<uint8_t,3> axis;			///< The axis number (X,Y,Z) referring to the sensor datasheet
+	std::array<float,3> max_values;		///< Used only during calibration: max scaled value
+	std::array<float,3> min_values;		///< Used only during calibration: min scaled value
+	std::array<float,3> mean_values;	///< Used only during calibration: mean scaled value
 } imu_sensor_config_t;
 
 
@@ -119,8 +119,7 @@ public:
 	 */
 	Imu(Accelerometer& accelerometer, 
 		Gyroscope& gyroscope, 
-		Magnetometer& magnetometer, 
-		state_t& state, 
+		Magnetometer& magnetometer,
 		imu_conf_t config = imu_default_config());
 
 
@@ -149,75 +148,27 @@ public:
 
 
 	/**
-	 * \brief 	Get X component of acceleration
+	 * \brief 	Get X, Y and Z components of acceleration
 	 * 
 	 * \return 	Value
 	 */	
-	const float& acc_X(void) const;
+	const std::array<float, 3>& acc(void) const;
 
 
 	/**
-	 * \brief 	Get Y component of acceleration
+	 * \brief 	Get X, Y and Z components of angular velocity
 	 * 
 	 * \return 	Value
 	 */	
-	const float& acc_Y(void) const;
+	const std::array<float, 3>& gyro(void) const;
 
 
 	/**
-	 * \brief 	Get Z component of acceleration
+	 * \brief 	Get X, Y and Z components of magnetic field
 	 * 
 	 * \return 	Value
 	 */	
-	const float& acc_Z(void) const;
-
-
-	/**
-	 * \brief 	Get X component of angular velocity
-	 * 
-	 * \return 	Value
-	 */	
-	const float& gyro_X(void) const;
-
-
-	/**
-	 * \brief 	Get Y component of angular velocity
-	 * 
-	 * \return 	Value
-	 */	
-	const float& gyro_Y(void) const;
-
-
-	/**
-	 * \brief 	Get Z component of angular velocity
-	 * 
-	 * \return 	Value
-	 */	
-	const float& gyro_Z(void) const;
-
-
-	/**
-	 * \brief 	Get X component of magnetic field
-	 * 
-	 * \return 	Value
-	 */	
-	const float& mag_X(void) const;
-
-
-	/**
-	 * \brief 	Get Y component of magnetic field
-	 * 
-	 * \return 	Value
-	 */	
-	const float& mag_Y(void) const;
-
-
-	/**
-	 * \brief 	Get Z component of magnetic field
-	 * 
-	 * \return 	Value
-	 */	
-	const float& mag_Z(void) const;
+	const std::array<float, 3>& mag(void) const;
 
 
 	// -------------------------------------------------------------------------
@@ -352,7 +303,6 @@ private:
 	Accelerometer& 	accelerometer_;		///< Reference to accelerometer sensor
 	Gyroscope& 		gyroscope_;			///< Reference to gyroscope sensor
 	Magnetometer& 	magnetometer_;		///< Reference to magnetometer sensor
-	state_t& 		state_;				///< Reference to MAV state
 
 	imu_conf_t 		config_; 			///< Configuration
 

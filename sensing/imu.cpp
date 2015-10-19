@@ -56,12 +56,12 @@ extern "C"
 Imu::Imu(Accelerometer& accelerometer,
 		Gyroscope& gyroscope,
 		Magnetometer& magnetometer,
-		state_t& state,
+		// state_t& state,
 		imu_conf_t config):
 	accelerometer_(accelerometer),
 	gyroscope_(gyroscope),
 	magnetometer_(magnetometer),
-	state_(state),
+	// state_(state),
 	config_(config),
 	oriented_acc_( 	{0.0f, 0.0f, 0.0f}),
 	oriented_gyro_(	{0.0f, 0.0f, 0.0f}),
@@ -95,15 +95,9 @@ bool Imu::update(void)
 	success &= magnetometer_.update();
 
 	// Retrieve data
-	std::array<float, 3> raw_acc = {	accelerometer_.raw_acc_X(), 
-										accelerometer_.raw_acc_Y(),
-										accelerometer_.raw_acc_Z()  };
-	std::array<float, 3> raw_gyro = {	gyroscope_.raw_gyro_X(), 
-										gyroscope_.raw_gyro_Y(),
-										gyroscope_.raw_gyro_Z()  };
-	std::array<float, 3> raw_mag = {	magnetometer_.raw_mag_X(), 
-										magnetometer_.raw_mag_Y(),
-										magnetometer_.raw_mag_Z()  };
+	std::array<float, 3> raw_acc  = accelerometer_.acc();
+	std::array<float, 3> raw_gyro = gyroscope_.gyro();
+	std::array<float, 3> raw_mag  = magnetometer_.mag();
 
 	// Rotate sensor values
 	for( uint8_t i=0; i<3; i++ )
@@ -175,9 +169,20 @@ bool Imu::update(void)
 	// Scale sensor values
 	for( int8_t i = 0; i < 3; i++ )
 	{
-		scaled_acc_[i]  = (1.0f - config_.lpf_acc ) * scaled_acc_[i]  + config_.lpf_acc  * ( ( oriented_acc_[i]  - config_.accelerometer.bias[i] ) * config_.accelerometer.scale_factor[i]  );
-		scaled_gyro_[i] = (1.0f - config_.lpf_gyro) * scaled_gyro_[i] + config_.lpf_gyro * ( ( oriented_gyro_[i] - config_.gyroscope.bias[i]     ) * config_.gyroscope.scale_factor[i]     		);
-		scaled_mag_[i] 	= (1.0f - config_.lpf_mag ) * scaled_mag_[i]  + config_.lpf_mag  * ( ( oriented_mag_[i]  - config_.magnetometer.bias[i]  ) * config_.magnetometer.scale_factor[i]  	);
+		// 1: Unbias, 
+		// 2: scale 
+	// 	scaled_acc_[i]  = (1.0f - config_.lpf_acc ) * scaled_acc_[i]  + config_.lpf_acc  * ( ( oriented_acc_[i]  - config_.accelerometer.bias[i] ) * config_.accelerometer.scale_factor[i]  );
+	// 	scaled_gyro_[i] = (1.0f - config_.lpf_gyro) * scaled_gyro_[i] + config_.lpf_gyro * ( ( oriented_gyro_[i] - config_.gyroscope.bias[i]     ) * config_.gyroscope.scale_factor[i]     		);
+	// 	scaled_mag_[i] 	= (1.0f - config_.lpf_mag ) * scaled_mag_[i]  + config_.lpf_mag  * ( ( oriented_mag_[i]  - config_.magnetometer.bias[i]  ) * config_.magnetometer.scale_factor[i]  	);
+
+		// 1: scale
+		// 2: unbias
+		scaled_acc_[i]  = config_.lpf_acc  	* (oriented_acc_[i]   * config_.accelerometer.scale_factor[i] - config_.accelerometer.bias[i])
+				+ (1.0f - config_.lpf_acc ) * scaled_acc_[i];
+		scaled_gyro_[i] = config_.lpf_gyro  * ( oriented_gyro_[i] * config_.gyroscope.scale_factor[i]    - config_.gyroscope.bias[i]     ) 
+				+ (1.0f - config_.lpf_gyro) * scaled_gyro_[i];
+		scaled_mag_[i] 	= config_.lpf_mag   * ( oriented_mag_[i]  * config_.magnetometer.scale_factor[i] - config_.magnetometer.bias[i]  ) 
+				+ (1.0f - config_.lpf_mag ) * scaled_mag_[i];
 	}
 
 	return success;
@@ -196,59 +201,22 @@ const float& Imu::dt_s(void) const
 }
 
 
-const float& Imu::acc_X(void) const
+const std::array<float, 3>& Imu::acc(void) const
 {
-	return scaled_acc_[0];
+	return scaled_acc_;
 }
 
 
-const float& Imu::acc_Y(void) const
+const std::array<float, 3>& Imu::gyro(void) const
 {
-	return scaled_acc_[1];
+	return scaled_gyro_;
 }
 
 
-const float& Imu::acc_Z(void) const
+const std::array<float, 3>& Imu::mag(void) const
 {
-	return scaled_acc_[2];
+	return scaled_mag_;
 }
-
-
-const float& Imu::gyro_X(void) const
-{
-	return scaled_gyro_[0];
-}
-
-
-const float& Imu::gyro_Y(void) const
-{
-	return scaled_gyro_[1];
-}
-
-
-const float& Imu::gyro_Z(void) const
-{
-	return scaled_gyro_[2];
-}
-
-
-const float& Imu::mag_X(void) const
-{
-	return scaled_mag_[0];
-}
-
-
-const float& Imu::mag_Y(void) const
-{
-	return scaled_mag_[1];
-}
-
-
-const float& Imu::mag_Z(void) const
-{
-	return scaled_mag_[2];
-}
-
 
 
 // -------------------------------------------------------------------------
