@@ -144,7 +144,7 @@ static void vector_field_circular_waypoint(const float pos_mav[3], const float p
 static waypoint_struct_t convert_waypoint_to_local_ned(const waypoint_struct_t* waypoint_in, const global_position_t* origin)
 {
 	global_position_t waypoint_global;
-	local_coordinates_t waypoint_local;
+	local_position_t waypoint_local;
 
 	// Init new waypoint
 	waypoint_struct_t waypoint = *waypoint_in;

@@ -139,7 +139,7 @@ static void position_estimation_position_integration(position_estimation_t *pos_
 static void position_estimation_position_correction(position_estimation_t *pos_est)
 {
 	global_position_t global_gps_position;
-	local_coordinates_t local_coordinates;
+	local_position_t local_coordinates;
 	
 	float gps_gain = 0.0f;
 	float baro_alt_error = 0.0f;

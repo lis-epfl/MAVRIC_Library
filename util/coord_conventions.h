@@ -76,7 +76,7 @@ typedef struct
 	float heading;				///<	Current heading (equal to heading in global frame)
 	global_position_t origin;	///<	Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
 	uint32_t timestamp_ms;		///<	Timestamp (milliseconds)
-} local_coordinates_t;
+} local_position_t;
 
 
 /*
@@ -102,7 +102,7 @@ typedef struct
  * 
  * \return 			Global position
  */
-global_position_t coord_conventions_local_to_global_position(local_coordinates_t input);
+global_position_t coord_conventions_local_to_global_position(local_position_t input);
 
 
 /**
@@ -113,7 +113,7 @@ global_position_t coord_conventions_local_to_global_position(local_coordinates_t
  * 
  * \return 			Local position
  */
-local_coordinates_t coord_conventions_global_to_local_position(global_position_t position, global_position_t origin);
+local_position_t coord_conventions_global_to_local_position(global_position_t position, global_position_t origin);
 
 
 /**

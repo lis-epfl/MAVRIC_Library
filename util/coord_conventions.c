@@ -47,7 +47,7 @@
 #include "quick_trig.h"
 #include "constants.h"
 
-global_position_t coord_conventions_local_to_global_position(local_coordinates_t input)
+global_position_t coord_conventions_local_to_global_position(local_position_t input)
 {
 	global_position_t output;
 	
@@ -61,9 +61,9 @@ global_position_t coord_conventions_local_to_global_position(local_coordinates_t
 }
 
 
-local_coordinates_t coord_conventions_global_to_local_position(global_position_t position, global_position_t origin) 
+local_position_t coord_conventions_global_to_local_position(global_position_t position, global_position_t origin) 
 {
-	local_coordinates_t output;
+	local_position_t output;
 	double small_radius;
 	
 	output.origin		= origin;

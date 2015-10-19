@@ -252,7 +252,7 @@ static void waypoint_handler_set_circle_scenario(mavlink_waypoint_handler_t* way
 	
 	waypoint_struct_t waypoint;
 	
-	local_coordinates_t waypoint_transfo;
+	local_position_t waypoint_transfo;
 	global_position_t waypoint_global;
 	
 	waypoint_handler->number_of_waypoints = 2;
@@ -353,7 +353,7 @@ static void waypoint_handler_set_circle_uniform_scenario(mavlink_waypoint_handle
 	
 	waypoint_struct_t waypoint;
 	
-	local_coordinates_t waypoint_transfo;
+	local_position_t waypoint_transfo;
 	global_position_t waypoint_global;
 	
 	waypoint_handler->number_of_waypoints = 0;
@@ -434,7 +434,7 @@ static void waypoint_handler_set_stream_scenario(mavlink_waypoint_handler_t* way
 	
 	waypoint_struct_t waypoint;
 	
-	local_coordinates_t waypoint_transfo;
+	local_position_t waypoint_transfo;
 	
 	global_position_t waypoint_global;
 	
@@ -567,7 +567,7 @@ static void waypoint_handler_set_swarm_scenario(mavlink_waypoint_handler_t* wayp
 	
 	waypoint_struct_t waypoint;
 	
-	local_coordinates_t waypoint_transfo;
+	local_position_t waypoint_transfo;
 	
 	global_position_t waypoint_global;
 	
@@ -1609,10 +1609,10 @@ task_return_t waypoint_handler_control_time_out_waypoint_msg(mavlink_waypoint_ha
 	return TASK_RUN_SUCCESS;
 }
 
-local_coordinates_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin)
+local_position_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* current_waypoint, global_position_t origin)
 {
 	global_position_t waypoint_global;
-	local_coordinates_t waypoint_coor;
+	local_position_t waypoint_coor;
 	global_position_t origin_relative_alt;
 	
 	for (uint8_t i = 0; i < 3; i++)
