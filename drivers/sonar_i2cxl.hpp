@@ -43,7 +43,7 @@
 #ifndef I2CXL_SONAR_H_
 #define I2CXL_SONAR_H_
 
-#include "sonar.h"
+#include "sonar.hpp"
 #include "i2c.hpp"
 
 extern "C" {
@@ -51,64 +51,121 @@ extern "C" {
 	#include "scheduler.h"
 }
 
-const uint8_t SONAR_I2CXL_DEFAULT_ADDRESS = 0x70;		///< Address of the device
 
 /**
- * \brief structure of the sonar_i2cxl module
-*/
-typedef struct 
+ * \brief 	Configuration structure for Sonar_i2cxl
+ */
+typedef struct
 {
-	uint8_t i2c_address;	///< address of the sonar module
-	sonar_t data;			///< sensor data	
-} sonar_i2cxl_t;
+	uint8_t 			i2c_address; 		///< I2C address
+	float 				min_distance;		///< Minimum distance the sensor can read
+	float 				max_distance;		///< Maximum distance the sensor can read
+	std::array<float,3>	orientation_bf;		///< Sensor orientation relative to the body frame
+} sonar_i2cxl_conf_t;
 
 
-class Sonar_i2cxl
+/**
+ * \brief 	Default configuration
+ * 
+ * \return 	Config structure
+ */
+static inline sonar_i2cxl_conf_t sonar_i2cxl_default_config();
+
+
+class Sonar_i2cxl: public Sonar
 {
 public:
 	/**
 	 * @brief   Constructor
 	 * 
 	 * @param 	i2c 		Reference to I2C device
-	 * @param 	address 	Address of the sonar on the I2C bus
+	 * @param 	config 		Configuration
 	 */
-	Sonar_i2cxl(I2c& i2c, uint8_t address = SONAR_I2CXL_DEFAULT_ADDRESS);
+	Sonar_i2cxl(I2c& i2c, sonar_i2cxl_conf_t config = sonar_i2cxl_default_config() );
 
 
 	/**
-	 * @brief 	Reads last value from sensor and start new recording
+	 * \brief   Initialise the sensor
+	 * 			
+	 * \return 	Success
+	 */	
+	bool init(void);
+
+
+	/**
+	 * \brief 	Main update function
+	 * \detail 	Reads new values from sensor
 	 * 
-	 * @return 	true 	Success
-	 * @return 	false 	Failed
+	 * \return 	Success
 	 */
 	bool update(void);
 
 
 	/**
-	 * Public members
+	 * \brief 	Get last update time in microseconds
 	 * 
+	 * \return 	Update time
 	 */
-	sonar_t data;		///< Temporary, TODO: replace by inheritence to abstract class sonar (not yet implemented)
-
-private:
-	I2c& 	i2c_;
-	uint8_t i2c_address_;
+	const float& last_update_us(void) const;
 
 
 	/**
-	 * @brief	Send range Command for the Sonar_i2cxl
+	 * \brief 	Get sensor orientation relative to the platform (in body frame)
 	 * 
-	 * @return 	true 	Success
-	 * @return 	false 	Failed
+	 * \return 	quaternion
+	 */
+	const std::array<float,3>& orientation_bf(void) const;
+
+
+	/**
+	 * \brief 	Get latest distance measure
+	 * 
+	 * \return 	Value
+	 */
+	const float& distance(void) const;
+
+
+	/**
+	 * \brief 	Get velocity estimate from consecutive measurements
+	 * 
+	 * \return 	Value
+	 */
+	const float& velocity(void) const;
+
+
+	/**
+	 * \brief 	Indicates whether the measurements can be trusted 
+	 * 
+	 * \return 	Value
+	 */
+	const bool& healthy(void) const;
+
+
+private:
+	I2c& 				i2c_;			 ///< Reference to I2C peripheral
+
+	sonar_i2cxl_conf_t 	config_;		 ///< Configuration
+
+	float 				distance_;		 ///< Current distance
+	float 				velocity_;		 ///< Current velocity
+	bool 				healthy_;		 ///< Sensor status
+	float 				last_update_us_; ///< Last update time in microseconds
+
+
+	/**
+	 * \brief	Send range Command for the Sonar_i2cxl
+	 * 
+	 * \return 	true 	Success
+	 * \return 	false 	Failed
 	 */
 	bool send_range_command(void);
 
 
 	/**
-	 * @brief  	Get the last measurement
+	 * \brief  	Get the last measurement
 	 * 
-	 * @return 	true 	Success
-	 * @return 	false 	Failed
+	 * \return 	true 	Success
+	 * \return 	false 	Failed
 	 */
 	bool get_last_measure(void);	
 };
@@ -117,13 +174,36 @@ private:
 /**
  * \brief 	Compatibility function for scheduler
  * 
- * \details Can be removed once the scheduler accepts runnable objects (ie from a class with an update() fonction)
+ * \details Can be removed once the scheduler accepts runnable objects 
+ * 			(ie from a class with an update() fonction)
  * 
- * \param	sonar	Object
+ * \param	sonar		Object
  * 
- * \return	The result of the task execution
+ * \return	Success		The result of the task execution
  */
-task_return_t sonar_i2cxl_update(Sonar_i2cxl* sonar);
+bool sonar_i2cxl_update(Sonar_i2cxl* sonar);
+
+
+/**
+ * \brief 	Default configuration
+ * 
+ * \return 	Config structure
+ */
+static inline sonar_i2cxl_conf_t sonar_i2cxl_default_config()
+{
+	sonar_i2cxl_conf_t conf = {};
+
+	conf.i2c_address  = 0x70;
+
+	// Correct range between 20cm and 7m, - safety
+	conf.min_distance = 0.22f;
+	conf.max_distance = 5.0f;
+
+	// Default orientation is looking downwards (NED)
+	conf.orientation_bf = {0.0f, 0.0f, 1.0f}; 
+
+	return conf;
+}
 
 
 #endif /* I2CXL_SONAR_H */

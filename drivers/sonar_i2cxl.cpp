@@ -44,11 +44,12 @@
 
 extern "C"
 {
-	// #include "twim.h"
 	#include "print_util.h"
 	#include "time_keeper.h"
 	#include "constants.h"
 }
+
+const float   SONAR_I2CXL_LPF_VARIO 				= 0.4f;		///< Low pass filter for velocity estimation
 
 const uint8_t SONAR_I2CXL_RANGE_COMMAND				= 0x51;		///< Address of the Range Command Register
 const uint8_t SONAR_I2CXL_CHANGE_ADDRESS_COMMAND_1	= 0xAA;		///< Address of the Change Command address Register 1
@@ -59,31 +60,65 @@ const uint8_t SONAR_I2CXL_CHANGE_ADDRESS_COMMAND_2	= 0xA5;		///< Address of the 
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-Sonar_i2cxl::Sonar_i2cxl(I2c& i2c, uint8_t address):
-	i2c_(i2c),
-	i2c_address_(address)
+Sonar_i2cxl::Sonar_i2cxl(I2c& i2c, sonar_i2cxl_conf_t config):
+	i2c_( i2c ),
+	config_( config ),
+	distance_( 0.2f ),
+	velocity_( 0.0f ),
+	healthy_( false ),
+	last_update_us_( time_keeper_get_micros() )
+{}
+
+
+bool Sonar_i2cxl::init(void)
 {
-	data.current_distance   = 0.2f;
-	data.current_velocity	= 0.0f;
-	data.orientation.s 	= 1.0f;
-	data.orientation.v[X]   = 0.0f;
-	data.orientation.v[Y]   = 0.0f;
-	data.orientation.v[Z]   = 0.0f;
-	data.min_distance       = 0.22f;
-	data.max_distance       = 5.0f;
-	data.covariance 	= 0.01f;
-	data.healthy 	        = false;
-	data.healthy_vel 	= false;
+	// Try to probe the device
+	return i2c_.probe(config_.i2c_address);
 }
+
 
 bool Sonar_i2cxl::update(void)
 {
 	bool res = true;
 
+	// Get measure
 	res &= get_last_measure();
 	res &= send_range_command();
 
+	// Update timing
+	last_update_us_ = time_keeper_get_micros();
+
 	return res;
+}
+
+
+const float& Sonar_i2cxl::last_update_us(void) const
+{
+	return last_update_us_;
+}
+
+
+const std::array<float,3>& Sonar_i2cxl::orientation_bf(void) const
+{
+	return config_.orientation_bf;
+}
+
+
+const float& Sonar_i2cxl::distance(void) const
+{
+	return distance_;
+}
+
+
+const float& Sonar_i2cxl::velocity(void) const
+{
+	return velocity_;
+}
+
+
+const bool& Sonar_i2cxl::healthy(void) const
+{
+	return healthy_;
 }
 
 
@@ -96,7 +131,7 @@ bool Sonar_i2cxl::send_range_command(void)
 	bool res;
 
 	uint8_t buff = SONAR_I2CXL_RANGE_COMMAND;
-	res = i2c_.write(&buff, 1, i2c_address_);
+	res = i2c_.write(&buff, 1, config_.i2c_address);
 
 	return res;
 }
@@ -106,50 +141,43 @@ bool Sonar_i2cxl::get_last_measure(void)
 {
 	bool res;
 	uint8_t buf[2];
-	uint16_t distance_cm = 0;
-	float distance_m = 0.0f;
-	float velocity = 0.0f;
-	float dt = 0.0f;
-	uint32_t time_us = time_keeper_get_micros();
+	uint16_t distance_cm 	= 0;
+	float distance_m 		= 0.0f;
+	float new_velocity 		= 0.0f;
+	float dt_s 				= 0.0f;
+	float time_us 			= time_keeper_get_micros();
 
-	res = i2c_.read(buf, 2, i2c_address_);
+	res = i2c_.read(buf, 2, config_.i2c_address);
 
 	distance_cm = (buf[0] << 8) + buf[1];	
 	distance_m  = ((float)distance_cm) / 100.0f;
 	
-	if ( distance_m > data.min_distance && distance_m < data.max_distance )
+	if ( distance_m > config_.min_distance && distance_m < config_.max_distance )
 	{
-		dt = ((float)time_us - data.last_update)/1000000.0f;
+		dt_s = (time_us - last_update_us_) / 1000000.0f;
 
-		if (data.healthy)
+		if( healthy_ )
 		{
-			velocity = (distance_m - data.current_distance) / dt;
-			//discard sonar velocity estimation if it seams too big
-			if (maths_f_abs(velocity) > 20.0f)
+			new_velocity = (distance_m - distance_) / dt_s;
+
+			//discard sonar new_velocity estimation if it seems too big
+			if( maths_f_abs(new_velocity) > 20.0f )
 			{
-				velocity = 0.0f;
+				new_velocity = 0.0f;
 			}
 			
-			if (data.healthy_vel)
-			{
-				data.current_velocity = (1.0f-LPF_SONAR_VARIO)*data.current_velocity + LPF_SONAR_VARIO*velocity;
-			}
-			else
-			{
-				data.current_velocity = velocity;
-			}
-			data.healthy_vel = true;
+			velocity_ = (1.0f-SONAR_I2CXL_LPF_VARIO) * velocity_ 
+						+ SONAR_I2CXL_LPF_VARIO      * new_velocity;
 		}
 		
-		data.current_distance  = distance_m;
-		data.last_update = time_us;
-		data.healthy = true;
+		distance_  		= distance_m;
+		last_update_us_ = time_us;
+		healthy_ 		= true;
 	}
 	else
 	{
-		data.current_velocity = 0.0f;
-		data.healthy = false;
-		data.healthy_vel = false;
+		velocity_	= 0.0f;
+		healthy_ 	= false;
 	}
 
 	return res;
@@ -159,9 +187,7 @@ bool Sonar_i2cxl::get_last_measure(void)
 //------------------------------------------------------------------------------
 // GLUE FUNCTION (TEMPORARY)
 //------------------------------------------------------------------------------
-task_return_t sonar_i2cxl_update(Sonar_i2cxl* sonar)
+bool sonar_i2cxl_update(Sonar_i2cxl* sonar)
 {
-	sonar->update();
-
-	return TASK_RUN_SUCCESS;
+	return sonar->update();
 }

@@ -30,48 +30,91 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file sonar.h
+ * \file sonar.hpp
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief Definition of structure for sonar, independent of the sensor used
+ * \brief 	Abstract class for sonars 
  *
  ******************************************************************************/
 
 
-#ifndef SONAR_H_
-#define SONAR_H_
+#ifndef SONAR_HPP_
+#define SONAR_HPP_
 
-#ifdef __cplusplus
-	extern "C" {
-#endif
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "quaternions.h"
+#include <array>
 
-#define LPF_SONAR_VARIO 0.4f
+extern "C"
+{
+	#include "quaternions.h"
+}
+
 
 /**
- * \brief Sonar structure, independent of the sensor used
+ * \brief Abstarct class for sonars
 */
-typedef struct 
+class Sonar 
 {
-	uint32_t last_update; 		///< Last time we updated the sensor measurement
-	quat_t 	orientation; 		///< Direction the sensor faces from FIXME enum.
-	float 	min_distance; 		///< Minimum distance the sensor can measure in centimeters
-	float 	max_distance; 		///< Maximum distance the sensor can measure in centimeters
-	float 	current_distance;	///< Measured distance in meters
-	float	current_velocity;	///< Computed velocity in m/s
-	float 	covariance; 		///< Measurement covariance in centimeters, 0 for unknown / invalid readings
-	bool 	healthy;			///< Indicates whether the current measurement can be trusted
-	bool	healthy_vel;		///< Indicated whether the velocity estimation can be trusted
-} sonar_t;
+public:
+	/**
+	 * \brief   Initialise the sensor
+	 * 			
+	 * \return 	Success
+	 */	
+	virtual bool init(void) = 0;
 
 
-#ifdef __cplusplus
-	}
-#endif
+	/**
+	 * \brief 	Main update function
+	 * \detail 	Reads new values from sensor
+	 * 
+	 * \return 	Success
+	 */
+	virtual bool update(void) = 0;
 
-#endif /* SONAR_H */
+
+	/**
+	 * \brief 	Get last update time in microseconds
+	 * 
+	 * \return 	Update time
+	 */
+	virtual const float& last_update_us(void) const = 0;
+
+
+	/**
+	 * \brief 	Get sensor orientation relative to the platform (in body frame)
+	 * 
+	 * \return 	3D orientation
+	 */
+	virtual const std::array<float,3>& orientation_bf(void) const = 0;
+
+
+	/**
+	 * \brief 	Get latest distance measure
+	 * 
+	 * \return 	Value
+	 */
+	virtual const float& distance(void) const = 0;
+
+
+	/**
+	 * \brief 	Get velocity estimate from consecutive measurements
+	 * 
+	 * \return 	Value
+	 */
+	virtual const float& velocity(void) const = 0;
+
+
+	/**
+	 * \brief 	Indicates whether the measurements can be trusted 
+	 * 
+	 * \return 	Value
+	 */
+	virtual const bool& healthy(void) const = 0;
+};
+
+#endif /* SONAR_HPP_ */

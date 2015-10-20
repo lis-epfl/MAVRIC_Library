@@ -47,18 +47,17 @@ extern "C"
 	#include "time_keeper.h"
 }
 
-void sonar_telemetry_send(const sonar_t* sonar, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void sonar_telemetry_send(const Sonar* sonar, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
 	mavlink_msg_distance_sensor_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										msg,
 										time_keeper_get_millis(),
-										sonar->min_distance * 100,								
-										sonar->max_distance * 100,
-										sonar->current_distance * 100,
-										MAV_DISTANCE_SENSOR_ULTRASOUND,
+										0,								// min distance => we send 0
+										sonar->velocity() * 100,		// max distance => we send velocity instead
+										sonar->distance() * 100,		// distance
+										MAV_DISTANCE_SENSOR_ULTRASOUND,	// type
 										0, 								// id 0
 										0, 								// orientation 0
-										sonar->current_velocity * 100);
-										//sonar->covariance);				// covariance (!=0)
+										sonar->healthy() );				// covariance
 }

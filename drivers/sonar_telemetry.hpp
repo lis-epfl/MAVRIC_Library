@@ -43,20 +43,17 @@
 #ifndef SONAR_I2CXL_TELEMETRY_H_
 #define SONAR_I2CXL_TELEMETRY_H_
 
-#include "mavlink_stream.hpp"
 
-extern "C" 
-{
-	#include "sonar.h"
-}
+#include "sonar.hpp"
+#include "mavlink_stream.hpp"
 
 /**
  * \brief	Task to send the MAVLink sonar message
  * 
- * \param 	sonar 			Data struct
+ * \param 	sonar 			Pointer to sonar object
  * \param	mavlink_stream	The pointer to the MAVLink stream structure
  * \param	msg				The pointer to the MAVLink message
  */
-void sonar_telemetry_send(const sonar_t* sonar, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void sonar_telemetry_send(const Sonar* sonar, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 #endif /* SONAR_I2CXL_TELEMETRY_H_ */

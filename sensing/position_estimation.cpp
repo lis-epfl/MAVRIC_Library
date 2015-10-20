@@ -273,24 +273,15 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 		gps_gain = 0.0f;
 	}
 	
-	if (pos_est->sonar->healthy)
+	if (pos_est->sonar->healthy())
 	{
-		sonar_gain = 1.0f;
-		
-		sonar_alt_error = -pos_est->sonar->current_distance - pos_est->local_position.pos[Z];
-
-		if (pos_est->sonar->healthy_vel)
-		{
-			sonar_vel_error = -pos_est->sonar->current_velocity - pos_est->vel[Z];
-		}
-		else
-		{
-			sonar_vel_error = 0.0f;
-		}
+		sonar_gain 		= 1.0f;	
+		sonar_alt_error = - pos_est->sonar->distance() - pos_est->local_position.pos[Z];
+		sonar_vel_error = - pos_est->sonar->velocity() - pos_est->vel[Z];
 	}
 	else
 	{
-		sonar_gain = 0.0f;
+		sonar_gain 		= 0.0f;
 		sonar_alt_error = 0.0f;
 		sonar_vel_error = 0.0f;
 	}
@@ -373,7 +364,7 @@ static void position_estimation_fence_control(position_estimation_t* pos_est)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, state_t* state, Barometer *barometer, const sonar_t* sonar, const gps_t *gps, const ahrs_t *ahrs, data_logging_t* stat_logging)
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, state_t* state, Barometer *barometer, const Sonar* sonar, const gps_t *gps, const ahrs_t *ahrs, data_logging_t* stat_logging)
 {
 	bool init_success = true;
 	
