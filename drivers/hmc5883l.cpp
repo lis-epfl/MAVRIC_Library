@@ -142,7 +142,7 @@ enum
 
 Hmc5883l::Hmc5883l(I2c& i2c):
 	i2c_(i2c),
-	data_({0.0f, 0.0f, 0.0f}),
+	data_( std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
 	last_update_us_(0.0f),
 	temperature_(0.0f)
 {}

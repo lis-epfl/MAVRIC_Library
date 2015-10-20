@@ -201,8 +201,8 @@ static const uint8_t fifo_config[2] = {LSM_FIFO_CTRL_ADDRESS, 0x80};
 
 Lsm330dlc::Lsm330dlc(I2c& i2c):
 	i2c_(i2c),
-	gyro_data_({0.0f, 0.0f, 0.0f}),
-	acc_data_({0.0f, 0.0f, 0.0f}),
+	gyro_data_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
+	acc_data_(std::array<float,3>{{0.0f, 0.0f, 0.0f}}),
 	temperature_(0.0f)
 {}
 

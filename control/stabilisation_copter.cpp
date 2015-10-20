@@ -131,8 +131,9 @@ void stabilisation_copter_cascade_stabilise(stabilisation_copter_t* stabilisatio
 	aero_attitude_t attitude_yaw_inverse;
 
 	// Get up vector in body frame
+	quat_t up = {0.0f, {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}};
 	quat_t up_vec = quaternions_global_to_local(  	stabilisation_copter->ahrs->qe,
-													{0.0f, {UPVECTOR_X, UPVECTOR_Y, UPVECTOR_Z}} );
+													up );
 
 	// set the controller input
 	input= *stabilisation_copter->controls;

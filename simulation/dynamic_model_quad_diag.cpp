@@ -57,14 +57,14 @@ extern "C"
 Dynamic_model_quad_diag::Dynamic_model_quad_diag( servos_t& servos, dynamic_model_quad_diag_conf_t config ):
 	servos_( servos ),
 	config_( config ),
-	rotorspeeds_( {0.0f, 0.0f, 0.0f, 0.0f} ),
-	torques_bf_( {0.0f, 0.0f, 0.0f} ),
-	rates_bf_( {0.0f, 0.0f, 0.0f} ),
-	lin_forces_bf_( {0.0f, 0.0f, 0.0f} ),
-	acc_bf_( {0.0f, 0.0f} ),
-	vel_bf_( {0.0f, 0.0f, 0.0f} ),
-	vel_( {0.0f, 0.0f, 0.0f} ),
-	attitude_( {1.0f, {0.0f, 0.0f, 0.0f}} ),
+	rotorspeeds_( 	std::array<float,4>{{0.0f, 0.0f, 0.0f, 0.0f}} ),
+	torques_bf_(  	std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	rates_bf_( 		std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	lin_forces_bf_( std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	acc_bf_( 		std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	vel_bf_( 		std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	vel_( 			std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
+	attitude_( 		quat_t{1.0f, {0.0f, 0.0f, 0.0f}} ),
 	last_update_us_( time_keeper_get_micros() ),
 	dt_s_( 0.004f )
 {

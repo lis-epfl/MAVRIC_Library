@@ -163,7 +163,7 @@ static inline sonar_sim_conf_t sonar_sim_default_config()
 	conf.max_distance = 5.0f;
 
 	// Default orientation is looking downwards (NED)
-	conf.orientation_bf = {0.0f, 0.0f, 1.0f}; 
+	conf.orientation_bf = std::array<float,3>{{0.0f, 0.0f, 1.0f}}; 
 
 	return conf;
 }

@@ -78,7 +78,7 @@ bool qfilter_init(qfilter_t* qf, const qfilter_conf_t config, const Imu* imu, ah
 	qf->kp_mag = config.kp_mag;
 	qf->ki_mag = config.ki_mag;
 	
-	qf->gyro_bias = {0.0f, 0.0f, 0.0f};
+	qf->gyro_bias = std::array<float,3>{{0.0f, 0.0f, 0.0f}};
 
 	print_util_dbg_print("[QFILTER] Initialised.\r\n");
 	
@@ -152,7 +152,7 @@ void qfilter_update(qfilter_t *qf)
 
 	// Heading computation
 	// transfer 
-	qtmp1 = {0.0f, {mag[X], mag[Y], mag[Z]}}; 
+	qtmp1 = quat_t{0.0f, {mag[X], mag[Y], mag[Z]}}; 
 	mag_global = quaternions_local_to_global(qf->ahrs->qe, qtmp1);
 	
 	// calculate norm of compass vector
