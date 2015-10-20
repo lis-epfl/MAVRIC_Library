@@ -76,7 +76,7 @@ bool Magnetometer_sim::update(void)
 	quat_t attitude = dynamic_model_.attitude();
 
 	// Get magnetic field in body frame
-	quaternions_rotate_vector(attitude, mag_field_gf, mag_field_bf);
+	quaternions_rotate_vector( quaternions_inverse(attitude), mag_field_gf, mag_field_bf);
 
 	// Save in member array
 	mag_field_[X] = mag_field_bf[X];
