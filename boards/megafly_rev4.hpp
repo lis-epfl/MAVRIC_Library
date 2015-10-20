@@ -123,9 +123,9 @@ public:
 	Lsm330dlc			lsm330dlc;
 	Bmp085				bmp085;
 	Spektrum_satellite	spektrum_satellite;
+	Imu 				imu;
 
 private:
-	Imu 			imu_;
 	byte_stream_t	dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
 };
 

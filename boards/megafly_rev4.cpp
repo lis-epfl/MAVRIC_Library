@@ -67,7 +67,7 @@ Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
 	lsm330dlc( Lsm330dlc(i2c0) ),
 	bmp085( Bmp085(i2c0) ),
 	spektrum_satellite( Spektrum_satellite(uart1, dsm_receiver_pin, dsm_power_pin) ),
-	imu_( Imu(lsm330dlc, lsm330dlc, hmc5883l) )
+	imu( Imu(lsm330dlc, lsm330dlc, hmc5883l) )
 {}
 
 
