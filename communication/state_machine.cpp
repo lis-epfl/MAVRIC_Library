@@ -67,14 +67,12 @@ extern "C"
 
 bool state_machine_init(	state_machine_t *state_machine,
 							state_t* state, 
-							simulation_model_t *sim_model, 
 							const gps_t* gps,
 							manual_control_t* manual_control)
 {
 	bool init_success = true;
 	
 	state_machine->state 			= state;
-	state_machine->sim_model 		= sim_model;
 	state_machine->gps 				= gps;
 	state_machine->manual_control 	= manual_control;
 	
@@ -358,29 +356,29 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 
 
 	// Check if we need to switch between simulation and reality	
-	if ( mode_current.HIL != mode_new.HIL )
-	{
-		if ( mode_new.HIL == HIL_ON )
-		{
-			// reality -> simulation
-			simulation_switch_from_reality_to_simulation( state_machine->sim_model );
+	// if ( mode_current.HIL != mode_new.HIL )
+	// {
+	// 	if ( mode_new.HIL == HIL_ON )
+	// 	{
+	// 		// reality -> simulation
+	// 		simulation_switch_from_reality_to_simulation( state_machine->sim_model );
 			
-			state_new = MAV_STATE_STANDBY;
-			mode_new.byte = MAV_MODE_MANUAL_DISARMED;
-			mode_new.HIL = HIL_ON;
-		}
-		else
-		{
-			// simulation -> reality
-			simulation_switch_from_simulation_to_reality( state_machine->sim_model );
+	// 		state_new = MAV_STATE_STANDBY;
+	// 		mode_new.byte = MAV_MODE_MANUAL_DISARMED;
+	// 		mode_new.HIL = HIL_ON;
+	// 	}
+	// 	else
+	// 	{
+	// 		// simulation -> reality
+	// 		simulation_switch_from_simulation_to_reality( state_machine->sim_model );
 
-			state_new = MAV_STATE_STANDBY;
-			mode_new.byte = MAV_MODE_SAFE;
+	// 		state_new = MAV_STATE_STANDBY;
+	// 		mode_new.byte = MAV_MODE_SAFE;
 
-			// For safety, switch off the motors
-			print_util_dbg_print("Switching off motors!\n");
-		}
-	}
+	// 		// For safety, switch off the motors
+	// 		print_util_dbg_print("Switching off motors!\n");
+	// 	}
+	// }
 	
 
 	// Finally, write new modes and states

@@ -46,7 +46,7 @@
 
 #include "mavlink_waypoint_handler.hpp"
 #include "state.hpp"
-#include "simulation.hpp"
+// #include "simulation.hpp"
 #include "manual_control.hpp"
 #include "remote.hpp"
 #include "gps_ublox.hpp"
@@ -64,7 +64,6 @@ typedef struct
 {
 	mavlink_waypoint_handler_t* waypoint_handler;		///< Pointer to the mavlink waypoint handler structure
 	state_t* state;										///< Pointer to the state structure
-	simulation_model_t *sim_model;						///< Pointer to the simulation structure
 	remote_t* remote;									///< Pointer to the remote structure
 	const gps_t* gps;									///< Pointer to the gps structure
 	manual_control_t* manual_control;					///< Pointer to the manual_control structure
@@ -76,7 +75,6 @@ typedef struct
  *
  * \param state_machine				Pointer to the state machine structure
  * \param state						Pointer to the state structure
- * \param sim_model					Pointer to the simulation structure
  * \param gps 						Pointer to the gps structure
  * \param manual_control			Pointer to the manual_control structure
  *
@@ -84,7 +82,6 @@ typedef struct
  */
 bool state_machine_init(	state_machine_t *state_machine,
 							state_t* state,
-							simulation_model_t *sim_model, 
 							const gps_t* gps,
 							manual_control_t* manual_control);
 
