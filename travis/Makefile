@@ -35,6 +35,7 @@ LIB_SRCS += util/kalman.c
 LIB_SRCS += util/linear_algebra.c
 LIB_SRCS += util/print_util.c
 LIB_SRCS += util/quick_trig.c
+LIB_SRCS += util/string_util.c
 
 # LIB_SRCS += boards/megafly_rev4.cpp
 
@@ -115,12 +116,15 @@ LIB_SRCS += hal/dummy/file_dummy.cpp
 
 LIB_SRCS += hal/common/fat_fs_mounting.cpp
 LIB_SRCS += hal/common/fat_fs_mounting_telemetry.cpp
-# LIB_SRCS += hal/common/dbg.cpp
+LIB_SRCS += hal/common/dbg.cpp
+LIB_SRCS += hal/common/file.cpp
+LIB_SRCS += hal/common/serial.cpp
 
 LIB_SRCS += hal/linux/file_linux.cpp
 LIB_SRCS += hal/linux/serial_udp.cpp
 LIB_SRCS += hal/linux/time_keeper.c
 LIB_SRCS += hal/linux/udp_client_server.cpp
+LIB_SRCS += hal/linux/serial_linux_io.cpp
 
 
 # ------------------------------------------------------------------------------
