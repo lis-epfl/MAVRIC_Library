@@ -63,7 +63,6 @@ typedef struct
 	double latitude;			///<	Current latitude
 	float altitude;				///<	Current altitude
 	float heading;				///<	Current heading
-	uint32_t timestamp_ms;		///<	Timestamp (milliseconds)
 } global_position_t;
 
 
@@ -75,7 +74,6 @@ typedef struct
 	float pos[3];				///<	Current position x, y and z
 	float heading;				///<	Current heading (equal to heading in global frame)
 	global_position_t origin;	///<	Global coordinates of the local frame's origin (ie. local (0, 0, 0) expressed in the global frame)
-	uint32_t timestamp_ms;		///<	Timestamp (milliseconds)
 } local_position_t;
 
 

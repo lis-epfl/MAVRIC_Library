@@ -210,17 +210,14 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 		{
 			if ( (pos_est->time_last_gps_posllh_msg < pos_est->gps->time_last_posllh_msg) )
 			{	
-				pos_est->time_last_gps_posllh_msg = pos_est->gps->time_last_posllh_msg;
-
 				global_gps_position.longitude = pos_est->gps->longitude;
 				global_gps_position.latitude = pos_est->gps->latitude;
 				global_gps_position.altitude = pos_est->gps->altitude;
 				global_gps_position.heading = 0.0f;
 				local_coordinates = coord_conventions_global_to_local_position(global_gps_position,pos_est->local_position.origin);
-				local_coordinates.timestamp_ms = pos_est->gps->time_last_msg;
 				
 				// compute GPS velocity estimate
-				gps_dt = (local_coordinates.timestamp_ms - pos_est->last_gps_pos.timestamp_ms) / 1000.0f;
+				gps_dt = (pos_est->gps->time_last_posllh_msg - pos_est->time_last_gps_posllh_msg) / 1000.0f;
 				if (gps_dt > 0.001f)
 				{
 					for (i = 0; i < 3; i++)
@@ -233,6 +230,7 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 					print_util_dbg_print("GPS dt is too small!\r\n");
 				}
 				
+				pos_est->time_last_gps_posllh_msg = pos_est->gps->time_last_posllh_msg;
 				pos_est->last_gps_pos = local_coordinates;
 			}
 			
@@ -318,7 +316,6 @@ static void gps_position_init(position_estimation_t *pos_est)
 			pos_est->local_position.origin.longitude = pos_est->gps->longitude;
 			pos_est->local_position.origin.latitude = pos_est->gps->latitude;
 			pos_est->local_position.origin.altitude = pos_est->gps->altitude;
-			pos_est->local_position.timestamp_ms = pos_est->gps->time_last_msg;
 
 			pos_est->last_gps_pos = pos_est->local_position;
 			
@@ -439,7 +436,6 @@ void position_estimation_reset_home_altitude(position_estimation_t *pos_est)
 		pos_est->local_position.origin.longitude = pos_est->gps->longitude;
 		pos_est->local_position.origin.latitude = pos_est->gps->latitude;
 		pos_est->local_position.origin.altitude = pos_est->gps->altitude;
-		pos_est->local_position.timestamp_ms = pos_est->gps->time_last_msg;
 
 		pos_est->last_gps_pos = pos_est->local_position;
 	}

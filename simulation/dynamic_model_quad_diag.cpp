@@ -77,15 +77,12 @@ Dynamic_model_quad_diag::Dynamic_model_quad_diag( servos_t& servos, dynamic_mode
 	local_position_.origin.latitude  		= config_.home_coordinates[1];
 	local_position_.origin.altitude  		= config_.home_coordinates[2];
 	local_position_.origin.heading   		= 0.0f;
-	local_position_.origin.timestamp_ms   	= 0;
-	local_position_.timestamp_ms   = 0;
-
+	
 	// Init global position
 	global_position_.longitude 		= config_.home_coordinates[0];
 	global_position_.latitude  		= config_.home_coordinates[1];
 	global_position_.altitude  		= config_.home_coordinates[2];
 	global_position_.heading   		= 0.0f;
-	global_position_.timestamp_ms   = 0;
 }
 
 

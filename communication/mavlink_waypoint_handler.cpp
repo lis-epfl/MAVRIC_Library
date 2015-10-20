@@ -1621,7 +1621,6 @@ local_position_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* cur
 	}
 	waypoint_coor.origin = origin;
 	waypoint_coor.heading = maths_deg_to_rad(current_waypoint->param4);
-	waypoint_coor.timestamp_ms = time_keeper_get_millis();
 
 	switch(current_waypoint->frame)
 	{
