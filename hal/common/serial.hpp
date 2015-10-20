@@ -121,6 +121,13 @@ public:
 	 * \return 	false		Data not read
 	 */	
 	virtual bool read(uint8_t* bytes, const uint32_t size=1) = 0;
+
+	/**
+	 * \brief 	write newline character to stream ('\n\r')
+	 *
+	 * \return 	success
+	 */
+	bool newline();
 };
 
 #endif /* SERIAL_H_ */

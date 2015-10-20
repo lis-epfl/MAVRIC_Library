@@ -148,6 +148,13 @@ public:
 	 */
 	void flush();
 
+	/**
+	 * \brief 	write newline character to stream
+	 *
+	 * \return 	success
+	 */
+	void newline();
+
 
 	/* definition of ConsoleManipulator function pointer (used for "console << endl") */
 	typedef Console<Writeable>& (*ConsoleManipulator)(Console<Writeable>&);

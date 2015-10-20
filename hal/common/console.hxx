@@ -183,7 +183,8 @@ template <typename Writeable>
 bool Console<Writeable>::writeln(const char* text)
 {
 	bool result = write(text);
-	endl(*this);
+	newline();
+	flush();
 	return result;
 }
 
@@ -196,6 +197,17 @@ template <typename Writeable>
 void Console<Writeable>::flush()
 {
 	stream_.flush();
+}
+
+/**
+ * \brief 	write newline character to stream
+ * 
+ * \return 	success
+ */
+template <typename Writeable>
+void Console<Writeable>::newline()
+{
+	stream_.newline();
 }
 
 /**
@@ -240,7 +252,7 @@ Console<Writeable>& Console<Writeable>::operator<<(ConsoleManipulator manip)
 template <typename Writeable>
 static Console<Writeable>& endl(Console<Writeable>& console)
 {
-	console.write("\n\r");
+	console.newline();
 	console.flush();
 	return console;
 }
