@@ -30,18 +30,18 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file accelerometer_sim.hpp 
+ * \file gyroscope_sim.hpp
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief Simulated accelerometers
- *
+ * \brief Simulated gyroscopes
+ * 
  ******************************************************************************/
 
 
-#ifndef ACCELEROMETER_SIM_HPP_
-#define ACCELEROMETER_SIM_HPP_
+#ifndef GYROSCOPE_SIM_HPP_
+#define GYROSCOPE_SIM_HPP_
 
 
 #include <array>
@@ -49,9 +49,9 @@
 #include "dynamic_model.hpp"
 
 /**
- * \brief 	Simulated accelerometers
+ * \brief 	Simulated gyroscopes
  */
-class Accelerometer_sim: public Accelerometer
+class Gyroscope_sim
 {
 public:
 	/**
@@ -59,7 +59,7 @@ public:
 	 * 
 	 * \param 	dynamic_model 	Reference to dynamic model
 	 */
-	Accelerometer_sim(Dynamic_model& dynamic_model);
+	Gyroscope_sim(Dynamic_model& dynamic_model);
 
 
 	/**
@@ -88,7 +88,7 @@ public:
 
 
 	/**
-	 * \brief 	Get X, Y and Z components of acceleration
+	 * \brief 	Get X, Y and Z components of angular velocity
 	 * 
 	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
 	 * 			and given in the sensor frame (not in the UAV frame). 
@@ -96,11 +96,11 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	const std::array<float, 3>& acc(void) const;
+	const std::array<float, 3>& gyro(void) const;
 
 
 	/**
-	 * \brief 	Get X component of acceleration
+	 * \brief 	Get X component of angular velocity
 	 * 
 	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
 	 * 			and given in the sensor frame (not in the UAV frame). 
@@ -108,11 +108,11 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	const float& acc_X(void) const;
+	const float& gyro_X(void) const;
 
 
 	/**
-	 * \brief 	Get Y component of acceleration
+	 * \brief 	Get Y component of angular velocity
 	 * 
 	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
 	 * 			and given in the sensor frame (not in the UAV frame). 
@@ -120,11 +120,11 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	const float& acc_Y(void) const;
+	const float& gyro_Y(void) const;
 
 
 	/**
-	 * \brief 	Get Z component of acceleration
+	 * \brief 	Get Z component of angular velocity
 	 * 
 	 * \detail 	This is raw data, so X, Y and Z components are biased, not scaled,
 	 * 			and given in the sensor frame (not in the UAV frame). 
@@ -132,7 +132,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	const float& acc_Z(void) const;
+	const float& gyro_Z(void) const;
 
 
 	/**
@@ -144,11 +144,11 @@ public:
 
 
 private:
-	Dynamic_model&	dynamic_model_;		///< Reference to dynamic model
+	Dynamic_model& 		dynamic_model_;		///< Reference to dynamic model
 
-	std::array<float,3> acceleration_; 	///< Measured acceleration (including gravity)
-	float 				temperature_;   ///< Temperature: NOT IMPLEMENTED 
+	std::array<float,3> rates_;				///< Angular velocity in body frame
+	float 				temperature_;		///< Temperature: NOT IMPLEMENTED
 };
 
 
-#endif /* ACCELEROMETER_SIM_HPP_ */
+#endif /* GYROSCOPE_SIM_HPP_ */
