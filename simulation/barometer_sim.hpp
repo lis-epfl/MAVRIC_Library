@@ -30,33 +30,42 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file barometer.hpp
+ * \file barometer_sim.hpp
  * 
  * \author MAV'RIC Team
- * \author Gregoire Heitz
  * \author Julien Lecoeur
  *   
- * \brief Abstract class for barometers
+ * \brief Simulation for barometers
  *
  ******************************************************************************/
 
 
-#ifndef BAROMETER_HPP_
-#define BAROMETER_HPP_
+#ifndef BAROMETER_SIM_HPP_
+#define BAROMETER_SIM_HPP_
 
+#include "barometer.hpp"
+#include "dynamic_model.hpp"
 
 /**
- * \brief 	Abstract class for barometers
+ * \brief 	Simulation for barometers
  */
-class Barometer
+class Barometer_sim: public Barometer
 {
 public:
+	/**
+	 * \brief 	Constructor
+	 * 
+	 * \param 	dynamic_model 	Reference to dynamic model
+	 */
+	Barometer_sim(Dynamic_model& dynamic_model );
+
+
 	/**
 	 * \brief   Initialise the sensor
 	 * 			
 	 * \return 	Success
 	 */	
-	virtual bool init(void) = 0;
+	bool init(void);
 
 
 	/**
@@ -65,7 +74,7 @@ public:
 	 * 
 	 * \return 	Success
 	 */
-	virtual bool update(void) = 0;
+	bool update(void);
 
 
 	 /**
@@ -73,7 +82,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */
-	virtual const float& last_update_us(void) const = 0;
+	const float& last_update_us(void) const;
 
 
 	/**
@@ -81,7 +90,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */
-	virtual const float& pressure(void)  const = 0;
+	const float& pressure(void)  const;
 
 
 	/**
@@ -91,7 +100,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */
-	virtual const float& altitude(void) const = 0;
+	const float& altitude(void) const;
 
 
 	/**
@@ -101,7 +110,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */
-	virtual const float& vario_vz(void) const = 0;
+	const float& vario_vz(void) const;
 
 
 	/**
@@ -109,7 +118,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */
-	virtual const float& temperature(void) const = 0;
+	const float& temperature(void) const;
 
 
 	/**
@@ -119,7 +128,18 @@ public:
 	 * 
 	 * \return 	success
 	 */
-	virtual bool reset_origin_altitude(float origin_altitude) = 0;
+	bool reset_origin_altitude(float origin_altitude);
+
+
+private:
+	Dynamic_model& 	dynamic_model_;	///< Reference to dynamic model
+
+	float	pressure_;				///< Measured pressure as the concatenation of the 3 uint8_t raw_pressure
+	float	altitude_;				///< Measured altitude as the median filter of the 3 last_altitudes
+	float	vario_vz_;				///< Vario altitude speed	
+	float	temperature_;			///< Measured temperature as the concatenation of the 2 uint8_t raw_temperature
+	float	altitude_offset_;		///< Offset of the barometer sensor for matching GPS altitude value
+	float	last_update_us_;		///< Time of the last update of the barometer
 };
 
-#endif /* BAROMETER_HPP_ */
+#endif /* BAROMETER_SIM_HPP_ */

@@ -30,84 +30,103 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file simulation.cpp 
+ * \file barometer_sim.hpp
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief Simulation
+ * \brief Simulation for barometers
  *
  ******************************************************************************/
 
 
-#include "simulation.hpp"
+#include "barometer_sim.hpp"
 
 extern "C"
 {
+	#include "constants.h"
 	#include "time_keeper.h"
 }
 
 
-Simulation::Simulation( Dynamic_model& dynamic_model, simulation_conf_t config ):
+Barometer_sim::Barometer_sim(Dynamic_model& dynamic_model ):
 	dynamic_model_( dynamic_model ),
-	accelerometer_( Accelerometer_sim(dynamic_model_) ),
-	gyroscope_( Gyroscope_sim(dynamic_model_) ),
-	magnetometer_( Magnetometer_sim(dynamic_model_) ),
-	barometer_( Barometer_sim(dynamic_model_) ),
-	sonar_( Sonar_sim(dynamic_model_) ),
-	// gps_( Gps_sim(dynamic_model_) ),
+	pressure_( 0.0f ),
+	vario_vz_( 0.0f ),
+	temperature_( 24.0f ),	// Nice day
+	altitude_offset_( 0.0f ),
 	last_update_us_( time_keeper_get_micros() )
 {}
 
 
-bool Simulation::update(void)
+bool Barometer_sim::init(void)
+{
+	return true;
+}
+
+
+bool Barometer_sim::update(void)
 {
 	bool success = true;
-	
+
+	// Update dynamic model
 	success &= dynamic_model_.update();
-	last_update_us_ = time_keeper_get_micros();
+
+	// Get delta t
+	float dt_s = (dynamic_model_.last_update_us() - last_update_us_) / 1000000.0f;
+
+	if( dt_s > 0.0f )
+	{
+		// Get altitude
+		float new_altitude = dynamic_model_.local_position().pos[Z] - altitude_offset_;
+		
+		// Get variation of altitude
+		vario_vz_ = (new_altitude - altitude_) / dt_s;
+		altitude_ = new_altitude;
+
+		// Get pressure
+		pressure_ = 0.0f; // TODO
+
+		// Save timing
+		last_update_us_ = dynamic_model_.last_update_us();
+	}
 
 	return success;
 }
 
 
-const float& Simulation::last_update_us(void) const
+const float& Barometer_sim::last_update_us(void) const
 {
 	return last_update_us_;
 }
 
 
-Accelerometer& Simulation::accelerometer(void)
+const float& Barometer_sim::pressure(void)  const
 {
-	return accelerometer_;
+	return pressure_;
 }
 
 
-Gyroscope& Simulation::gyroscope(void)
+const float& Barometer_sim::altitude(void) const
 {
-	return gyroscope_;
+	return altitude_;
 }
 
 
-Magnetometer& Simulation::magnetometer(void)
+const float& Barometer_sim::vario_vz(void) const
 {
-	return magnetometer_;
+	return vario_vz_;
 }
 
 
-Barometer& Simulation::barometer(void)
+const float& Barometer_sim::temperature(void) const
 {
-	return barometer_;
+	return temperature_;
 }
 
 
-Sonar& Simulation::sonar(void)
+bool Barometer_sim::reset_origin_altitude(float origin_altitude)
 {
-	return sonar_;
+	altitude_offset_ = origin_altitude;
+	return true;
 }
-
-
-// Gps& Simulation::gps(void)
-// {
-// 	return gps_;
-// }
