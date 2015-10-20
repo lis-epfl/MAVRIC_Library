@@ -1625,12 +1625,11 @@ local_position_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* cur
 	switch(current_waypoint->frame)
 	{
 		case MAV_FRAME_GLOBAL:
-		waypoint_global.latitude = current_waypoint->x;
-		waypoint_global.longitude = current_waypoint->y;
-		waypoint_global.altitude = current_waypoint->z;
+		waypoint_global.latitude 	= current_waypoint->x;
+		waypoint_global.longitude 	= current_waypoint->y;
+		waypoint_global.altitude 	= current_waypoint->z;
+		waypoint_global.heading 	= maths_deg_to_rad(current_waypoint->param4);
 		waypoint_coor = coord_conventions_global_to_local_position(waypoint_global,origin);
-		
-		waypoint_coor.heading = maths_deg_to_rad(current_waypoint->param4);
 		
 		print_util_dbg_print("waypoint_global: lat (x1e7):");
 		print_util_dbg_print_num(waypoint_global.latitude*10000000,10);
@@ -1669,6 +1668,7 @@ local_position_t waypoint_handler_set_waypoint_from_frame(waypoint_struct_t* cur
 		waypoint_global.latitude = current_waypoint->x;
 		waypoint_global.longitude = current_waypoint->y;
 		waypoint_global.altitude = current_waypoint->z;
+		waypoint_global.heading 	= maths_deg_to_rad(current_waypoint->param4);
 		
 		origin_relative_alt = origin;
 		origin_relative_alt.altitude = 0.0f;
