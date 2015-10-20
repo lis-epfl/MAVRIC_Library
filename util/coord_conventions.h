@@ -68,7 +68,7 @@ typedef struct
 
 
 /**
- * \brief Local coordinates structure
+ * \brief 		Local coordinates structure
  */
 typedef struct 
 {

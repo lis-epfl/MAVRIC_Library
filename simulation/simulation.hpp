@@ -50,7 +50,7 @@
 #include "magnetometer_sim.hpp"
 // #include "barometer_sim.hpp"
 // #include "gps_sim.hpp"
-// #include "sonar_sim.hpp"
+#include "sonar_sim.hpp"
 
 
 /**
@@ -138,7 +138,7 @@ public:
 	 * 
 	 * \return 	Reference to sonar
 	 */	
-	// Sonar& sonar(void);
+	Sonar& sonar(void);
 
 
 	/**
@@ -156,7 +156,7 @@ private:
 	Gyroscope_sim  		gyroscope_;				///< Simulated gyroscope
 	Magnetometer_sim 	magnetometer_;			///< Simulated magnetometer
 	// Barometer_sim 		barometer_;				///< Simulated barometer
-	// Sonar_sim 			sonar_;					///< Simulated sonar
+	Sonar_sim 			sonar_;					///< Simulated sonar
 	// Gps_sim 			gps_;					///< Simulated gps
 	float 				last_update_us_; 		///< Last update time in microseconds
 };

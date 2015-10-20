@@ -156,7 +156,8 @@ bool Sonar_i2cxl::get_last_measure(void)
 	{
 		dt_s = (time_us - last_update_us_) / 1000000.0f;
 
-		if( healthy_ )
+		// Update velocity
+		if( healthy_ && dt_s!=0.0f)
 		{
 			new_velocity = (distance_m - distance_) / dt_s;
 
@@ -168,6 +169,10 @@ bool Sonar_i2cxl::get_last_measure(void)
 			
 			velocity_ = (1.0f-SONAR_I2CXL_LPF_VARIO) * velocity_ 
 						+ SONAR_I2CXL_LPF_VARIO      * new_velocity;
+		}
+		else
+		{
+			velocity_ = 0.0f;
 		}
 		
 		distance_  		= distance_m;
