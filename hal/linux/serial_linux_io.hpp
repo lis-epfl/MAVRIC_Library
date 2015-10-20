@@ -30,25 +30,56 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file 	serial.hpp
+ * \file 	serial_usb_linux_io.hpp
  * 
  * \author 	MAV'RIC Team
  *   
- * \brief 	Abstract class for serial peripherals
- *
+ * \brief 	Implementation of serial wrapping around iostream (std::cout and std::cin)
+ * 
+ * \details write(...) writes to std::cout    read(...) reads from std::cin
+ * 				
  ******************************************************************************/
 
-#ifndef SERIAL_H_
-#define SERIAL_H_
+#ifndef SERIAL_LINUX_IO_H_
+#define SERIAL_LINUX_IO_H_
 
-#include <stdint.h>
+#include "serial.hpp"
 
-class Serial;
-typedef void(*serial_interrupt_callback_t)(Serial* serial);
+extern "C"
+{
+	#include "buffer.h"
+}
 
-class Serial
+
+/**
+ * \brief 	Configuration structure
+ */
+typedef struct 
+{
+	//std::ostream& stream;
+} serial_linux_io_conf_t;
+
+/**
+ * @brief 	Default configuration
+ * 
+ * @return 	Config structure
+ */
+static inline serial_linux_io_conf_t serial_linux_io_default_config();
+
+/**
+ * \brief 	Implementation of serial peripheral for avr32
+ */
+class Serial_linux_io: public Serial
 {
 public:
+
+	/**
+	 * \brief  	Initialises the peripheral
+	 * 
+	 * \param 	config 		Device configuration
+	 */
+	Serial_linux_io(serial_linux_io_conf_t config = serial_linux_io_default_config());
+
 
 	/**
 	 * \brief 	Hardware initialization
@@ -56,7 +87,7 @@ public:
 	 * \return  true Success
 	 * \return  false Error
 	 */
-	virtual bool init(void) = 0;
+	bool init(void);
 
 
 	/**
@@ -64,7 +95,7 @@ public:
 	 * 
 	 * \return 	Number of incoming bytes available
 	 */	
-	virtual uint32_t readable(void) = 0;
+	uint32_t readable(void);
 
 
 	/**
@@ -72,7 +103,7 @@ public:
 	 * 
 	 * \return 	Number of bytes available for writing
 	 */	
-	virtual uint32_t writeable(void) = 0;
+	uint32_t writeable(void);
 
 
 	/**
@@ -80,7 +111,7 @@ public:
 	 * 
 	 * \return 	Number of bytes available for writing
 	 */	
-	virtual void flush(void) = 0;
+	void flush(void);
 
 
 	/**
@@ -96,7 +127,7 @@ public:
 	 * \return 	true		Success
 	 * \return 	false		Failed
 	 */
-	virtual bool attach(serial_interrupt_callback_t func) = 0; 
+	bool attach(serial_interrupt_callback_t func); 
 
 
 	/**
@@ -108,7 +139,7 @@ public:
 	 * \return 	true		Data successfully written
 	 * \return 	false		Data not written
 	 */
-	virtual bool write(const uint8_t* bytes, const uint32_t size=1) = 0;
+	bool write(const uint8_t* bytes, const uint32_t size=1);
 
 
 	/**
@@ -120,14 +151,29 @@ public:
 	 * \return 	true		Data successfully read
 	 * \return 	false		Data not read
 	 */	
-	virtual bool read(uint8_t* bytes, const uint32_t size=1) = 0;
+	bool read(uint8_t* bytes, const uint32_t size=1);
+
 
 	/**
-	 * \brief 	write newline character to stream ('\n\r')
+	 * \brief 	write newline character to stream ('\n')
 	 *
 	 * \return 	success
 	 */
-	virtual bool newline();
+	bool newline();
+	
+private:
+	serial_linux_io_conf_t config_;
 };
 
-#endif /* SERIAL_H_ */
+/**
+ * @brief 	Default configuration
+ * 
+ * @return 	Config structure
+ */
+static inline serial_linux_io_conf_t serial_linux_io_default_config()
+{
+	serial_linux_io_conf_t conf = {};
+	return conf;
+}
+
+#endif /* SERIAL_LINUX_IO_H_ */
