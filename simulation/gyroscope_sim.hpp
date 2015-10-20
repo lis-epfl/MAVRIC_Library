@@ -51,7 +51,7 @@
 /**
  * \brief 	Simulated gyroscopes
  */
-class Gyroscope_sim
+class Gyroscope_sim: public Gyroscope
 {
 public:
 	/**

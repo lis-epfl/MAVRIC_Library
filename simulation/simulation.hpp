@@ -48,8 +48,9 @@
 #include "accelerometer_sim.hpp"
 #include "gyroscope_sim.hpp"
 #include "magnetometer_sim.hpp"
-#include "gps_sim.hpp"
-#include "sonar_sim.hpp"
+// #include "barometer_sim.hpp"
+// #include "gps_sim.hpp"
+// #include "sonar_sim.hpp"
 
 
 /**
@@ -105,7 +106,7 @@ public:
 	 * 
 	 * \return 	Reference to accelerometer
 	 */	
-	Accelerometer& accelerometer(void) const;
+	Accelerometer& accelerometer(void);
 
 	
 	/**
@@ -113,7 +114,7 @@ public:
 	 * 
 	 * \return 	Reference to gyroscope
 	 */	
-	Gyroscope& gyroscope(void) const;
+	Gyroscope& gyroscope(void);
 
 
 	/**
@@ -121,7 +122,7 @@ public:
 	 * 
 	 * \return 	Reference to magnetometer
 	 */	
-	Magnetometer& magnetometer(void) const;
+	Magnetometer& magnetometer(void);
 
 
 	/**
@@ -129,7 +130,7 @@ public:
 	 * 
 	 * \return 	Reference to barometer
 	 */	
-	Barometer& barometer(void) const;
+	// Barometer& barometer(void);
 
 
 	/**
@@ -137,7 +138,7 @@ public:
 	 * 
 	 * \return 	Reference to sonar
 	 */	
-	Sonar& sonar(void) const;
+	// Sonar& sonar(void);
 
 
 	/**
@@ -145,7 +146,7 @@ public:
 	 * 
 	 * \return 	Reference to gps
 	 */	
-	Gps& gps(void) const;
+	// Gps& gps(void);
 
 
 private:
@@ -154,9 +155,9 @@ private:
 	Accelerometer_sim 	accelerometer_;			///< Simulated accelerometer
 	Gyroscope_sim  		gyroscope_;				///< Simulated gyroscope
 	Magnetometer_sim 	magnetometer_;			///< Simulated magnetometer
-	Barometer_sim 		barometer_;				///< Simulated barometer
-	Sonar_sim 			sonar_;					///< Simulated sonar
-	Gps_sim 			gps_;					///< Simulated gps
+	// Barometer_sim 		barometer_;				///< Simulated barometer
+	// Sonar_sim 			sonar_;					///< Simulated sonar
+	// Gps_sim 			gps_;					///< Simulated gps
 	float 				last_update_us_; 		///< Last update time in microseconds
 };
 

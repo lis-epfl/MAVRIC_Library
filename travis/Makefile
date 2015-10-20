@@ -102,6 +102,7 @@ LIB_SRCS += communication/state.c
 # LIB_SRCS += communication/state_machine.c
 LIB_SRCS += communication/state_telemetry.c
 
+LIB_SRCS += simulation/simulation.cpp
 LIB_SRCS += simulation/dynamic_model_quad_diag.cpp
 LIB_SRCS += simulation/accelerometer_sim.cpp
 LIB_SRCS += simulation/gyroscope_sim.cpp

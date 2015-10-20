@@ -51,7 +51,7 @@
 /**
  * \brief Simulated magnetometers
  */
-class Magnetometer_sim
+class Magnetometer_sim: public Magnetometer
 {
 public:
 	/**

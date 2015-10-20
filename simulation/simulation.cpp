@@ -53,11 +53,11 @@ Simulation::Simulation( Dynamic_model& dynamic_model, simulation_conf_t config )
 	accelerometer_( Accelerometer_sim(dynamic_model_) ),
 	gyroscope_( Gyroscope_sim(dynamic_model_) ),
 	magnetometer_( Magnetometer_sim(dynamic_model_) ),
-	barometer_( Barometer_sim(dynamic_model_) ),
-	sonar_( Sonar_sim(dynamic_model_) ),
-	gps_( Gps_sim(dynamic_model_) ),
+	// barometer_( Barometer_sim(dynamic_model_) ),
+	// sonar_( Sonar_sim(dynamic_model_) ),
+	// gps_( Gps_sim(dynamic_model_) ),
 	last_update_us_( time_keeper_get_micros() )
-{)
+{}
 
 
 bool Simulation::update(void)
@@ -77,37 +77,37 @@ const float& Simulation::last_update_us(void) const
 }
 
 
-Accelerometer& Simulation::accelerometer(void) const
+Accelerometer& Simulation::accelerometer(void)
 {
 	return accelerometer_;
 }
 
 
-Gyroscope& Simulation::gyroscope(void) const
+Gyroscope& Simulation::gyroscope(void)
 {
 	return gyroscope_;
 }
 
 
-Magnetometer& Simulation::magnetometer(void) const
+Magnetometer& Simulation::magnetometer(void)
 {
 	return magnetometer_;
 }
 
 
-Barometer& Simulation::barometer(void) const
-{
-	return barometer_;
-}
+// Barometer& Simulation::barometer(void)
+// {
+// 	return barometer_;
+// }
 
 
-Sonar& Simulation::sonar(void) const
-{
-	return sonar_;
-}
+// Sonar& Simulation::sonar(void)
+// {
+// 	return sonar_;
+// }
 
 
-Gps& Simulation::gps(void) const
-{
-	return gps_;
-}
+// Gps& Simulation::gps(void)
+// {
+// 	return gps_;
+// }
