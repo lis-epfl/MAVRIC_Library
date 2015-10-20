@@ -181,11 +181,11 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 	if (pos_est->init_barometer)
 	{		
 		// altimeter correction
-		if ( pos_est->time_last_barometer_msg < pos_est->barometer->get_last_update() )
+		if ( pos_est->time_last_barometer_msg < pos_est->barometer->last_update_us() )
 		{
-			pos_est->last_alt = -(pos_est->barometer->get_altitude() ) + pos_est->local_position.origin.altitude;
+			pos_est->last_alt = -(pos_est->barometer->altitude() ) + pos_est->local_position.origin.altitude;
 
-			pos_est->time_last_barometer_msg = pos_est->barometer->get_last_update();
+			pos_est->time_last_barometer_msg = pos_est->barometer->last_update_us();
 		}
 
 		// t_inter_baro = (time_keeper_get_micros() - pos_est->barometer->get_last_update()) / 1000.0f;
@@ -193,7 +193,7 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 			
 		//pos_est->local_position.pos[2] += kp_alt_baro / ((float)(t_inter_baro / 2.5f + 1.0f)) * alt_error;
 		baro_alt_error = pos_est->last_alt  - pos_est->local_position.pos[2];
-		baro_vel_error = pos_est->barometer->get_vario_vz() - pos_est->vel[2];
+		baro_vel_error = pos_est->barometer->vario_vz() - pos_est->vel[2];
 		//vel_error[2] = 0.1f * pos_error[2];
 		//pos_est->vel[2] += kp_alt_baro_v * vel_error[2];
 				
@@ -456,15 +456,13 @@ void position_estimation_reset_home_altitude(position_estimation_t *pos_est)
 	//pos_est->barometer->altitude_offset = -pos_est->barometer->altitude - pos_est->local_position.pos[2] + pos_est->local_position.origin.altitude;
 	pos_est->init_barometer = true;
 	
-	print_util_dbg_print("Offset of the barometer set to the GPS altitude, offset value of:");
-	print_util_dbg_print_num(pos_est->barometer->get_altitude_offset(),10);
-	print_util_dbg_print(" = -");
-	print_util_dbg_print_num(pos_est->barometer->get_altitude(),10);
-	print_util_dbg_print(" - ");
+	print_util_dbg_print("Offset of the barometer set to the GPS altitude, new altitude of:");
+	print_util_dbg_print_num(pos_est->barometer->altitude(),10);
+	print_util_dbg_print(" ( ");
 	print_util_dbg_print_num(pos_est->local_position.pos[2],10);
-	print_util_dbg_print(" + ");
+	print_util_dbg_print("  ");
 	print_util_dbg_print_num(pos_est->local_position.origin.altitude,10);
-	print_util_dbg_print("\r\n");
+	print_util_dbg_print(" )\r\n");
 
 	// reset position estimator
 	pos_est->last_alt = 0;

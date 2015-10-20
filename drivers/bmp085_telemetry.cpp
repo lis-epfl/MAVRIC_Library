@@ -54,7 +54,7 @@ void bmp085_telemetry_send_pressure(const Barometer* barometer, const mavlink_st
 										mavlink_stream->compid,
 										msg,
 										time_keeper_get_millis(),
-										barometer->get_pressure() / 100.0f,
-										barometer->get_vario_vz(),
-										barometer->get_temperature() * 100.0f);
+										barometer->pressure() / 100.0f,
+										barometer->vario_vz(),
+										barometer->temperature() * 100.0f);
 }
