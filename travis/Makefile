@@ -105,6 +105,7 @@ LIB_SRCS += communication/state_telemetry.c
 LIB_SRCS += simulation/dynamic_model_quad_diag.cpp
 LIB_SRCS += simulation/accelerometer_sim.cpp
 LIB_SRCS += simulation/gyroscope_sim.cpp
+LIB_SRCS += simulation/magnetometer_sim.cpp
 
 LIB_SRCS += libs/FatFs/src/ff.c  
 LIB_SRCS += libs/FatFs/src/diskio.c

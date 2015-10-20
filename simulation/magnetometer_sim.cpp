@@ -30,81 +30,94 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gyroscope_sim.cpp
+ * \file magnetometer_sim.cpp
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief Simulated gyroscopes
+ * \brief Simulated magnetometers
  * 
  ******************************************************************************/
 
 
-#include "gyroscope_sim.hpp"
+#include "magnetometer_sim.hpp"
 
 extern "C"
 {
 	#include "constants.h"
 }
 
-Gyroscope_sim::Gyroscope_sim(Dynamic_model& dynamic_model):
+
+Magnetometer_sim::Magnetometer_sim(Dynamic_model& dynamic_model):
 	dynamic_model_( dynamic_model ),
-	rates_( {0.0f, 0.0f, 0.0f} ),
+	mag_field_( {0.0f, 0.0f, 0.0f} ),
 	temperature_(24.0f) // Nice day
 {}
 
 
-bool Gyroscope_sim::init(void)
+bool Magnetometer_sim::init(void)
 {
 	return true;
 }
 
 
-bool Gyroscope_sim::update(void)
+bool Magnetometer_sim::update(void)
 {
 	bool success = true;
 
 	// Update dynamic model
 	success &= dynamic_model_.update();
 
-	// Get angular velocity
-	rates_ = dynamic_model_.angular_velocity_bf();
+	// Field pointing 60 degrees down to the north (NED)
+	const float mag_field_gf[3] 	= { 0.5f, 0.0f, 0.86f };	
+	float mag_field_bf[3];
+
+	// Get current attitude
+	quat_t attitude = dynamic_model_.attitude();
+
+	// Get magnetic field in body frame
+	quaternions_rotate_vector(attitude, mag_field_gf, mag_field_bf);
+
+	// Save in member array
+	mag_field_[X] = mag_field_bf[X];
+	mag_field_[Y] = mag_field_bf[Y];
+	mag_field_[Z] = mag_field_bf[Z];
 
 	return success;
 }
 
 
-const float& Gyroscope_sim::last_update_us(void) const
+const float& Magnetometer_sim::last_update_us(void) const
 {
 	return dynamic_model_.last_update_us();
 }
 
 
-const std::array<float, 3>& Gyroscope_sim::gyro(void) const
+const std::array<float, 3>& Magnetometer_sim::mag(void) const
 {
-	return rates_;
+	return mag_field_;
 }
 
 
-const float& Gyroscope_sim::gyro_X(void) const
+const float& Magnetometer_sim::mag_X(void) const
 {
-	return rates_[X];
+	return mag_field_[X];
 }
 
 
-const float& Gyroscope_sim::gyro_Y(void) const
+const float& Magnetometer_sim::mag_Y(void) const
 {
-	return rates_[Y];
+	return mag_field_[Y];
 }
 
 
-const float& Gyroscope_sim::gyro_Z(void) const
+const float& Magnetometer_sim::mag_Z(void) const
 {
-	return rates_[Z];
+	return mag_field_[Z];
 }
 
 
-const float& Gyroscope_sim::temperature(void) const
+const float& Magnetometer_sim::temperature(void) const
 {
 	return temperature_;
 }
