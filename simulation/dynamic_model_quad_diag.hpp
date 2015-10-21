@@ -134,15 +134,15 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	const std::array<float, 3>& linear_acceleration_bf(void) const;
+	const std::array<float, 3>& acceleration_bf(void) const;
 
 	
 	/**
-	 * \brief 	Get X, Y and Z components of velocity in global frame
+	 * \brief 	Get X, Y and Z components of velocity in local frame
 	 * 
 	 * \return 	Value
 	 */	
-	const std::array<float, 3>& linear_velocity(void) const;
+	const std::array<float, 3>& velocity_lf(void) const;
 
 
 	/**
@@ -150,7 +150,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	const local_position_t& local_position(void) const;
+	const local_position_t& position_lf(void) const;
 
 
 	/**
@@ -158,7 +158,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	const global_position_t& global_position(void) const;
+	const global_position_t& position_gf(void) const;
 
 
 	/**

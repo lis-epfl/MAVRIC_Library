@@ -85,7 +85,7 @@ bool Sonar_sim::update(void)
 
 	// Get current attitude and position
 	quat_t 			 attitude = dynamic_model_.attitude();
-	local_position_t position = dynamic_model_.local_position();
+	local_position_t position = dynamic_model_.position_lf();
 
 	// Get orientation in global frame
 	std::array<float,3> orientation = orientation_bf();
@@ -101,7 +101,7 @@ bool Sonar_sim::update(void)
 
 	if( ratio > 0.707 )
 	{
-		float new_distance = position.pos[Z] / ratio;
+		float new_distance = - position.pos[Z] / ratio;
 
 		if( distance_ > config_.min_distance && distance_ < config_.max_distance)
 		{

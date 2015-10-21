@@ -79,10 +79,7 @@ Dynamic_model_quad_diag::Dynamic_model_quad_diag( servos_t& servos, dynamic_mode
 	local_position_.origin.heading   		= 0.0f;
 	
 	// Init global position
-	global_position_.latitude  		= config_.home_coordinates[0];
-	global_position_.longitude 		= config_.home_coordinates[1];
-	global_position_.altitude  		= config_.home_coordinates[2];
-	global_position_.heading   		= 0.0f;
+	global_position_ = coord_conventions_local_to_global_position(local_position_);
 }
 
 
@@ -204,25 +201,25 @@ const float& Dynamic_model_quad_diag::last_update_us(void) const
 }
 
 
-const std::array<float, 3>& Dynamic_model_quad_diag::linear_acceleration_bf(void) const
+const std::array<float, 3>& Dynamic_model_quad_diag::acceleration_bf(void) const
 {
 	return acc_bf_;
 }
 
 
-const std::array<float, 3>& Dynamic_model_quad_diag::linear_velocity(void) const
+const std::array<float, 3>& Dynamic_model_quad_diag::velocity_lf(void) const
 {
 	return vel_bf_;
 }
 
 
-const local_position_t& Dynamic_model_quad_diag::local_position(void) const
+const local_position_t& Dynamic_model_quad_diag::position_lf(void) const
 {
 	return local_position_;
 }
 
 
-const global_position_t& Dynamic_model_quad_diag::global_position(void) const
+const global_position_t& Dynamic_model_quad_diag::position_gf(void) const
 {
 	return global_position_;
 }

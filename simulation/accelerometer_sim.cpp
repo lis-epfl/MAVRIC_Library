@@ -71,7 +71,7 @@ bool Accelerometer_sim::update(void)
 	success &= dynamic_model_.update();
 
 	// Get linear acceleration
-	acceleration_ = dynamic_model_.linear_acceleration_bf();
+	acceleration_ = dynamic_model_.acceleration_bf();
 	
 	// Add gravity
 	quat_t attitude = dynamic_model_.attitude();

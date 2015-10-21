@@ -40,8 +40,8 @@ LIB_SRCS += util/quick_trig.c
 # LIB_SRCS += boards/megafly_rev4.cpp
 
 LIB_SRCS += drivers/battery.c                    
+LIB_SRCS += drivers/barometer_telemetry.cpp          
 LIB_SRCS += drivers/bmp085.cpp                    
-LIB_SRCS += drivers/bmp085_telemetry.cpp          
 LIB_SRCS += drivers/flow.cpp                  
 LIB_SRCS += drivers/gps_telemetry.cpp       
 LIB_SRCS += drivers/gps_ublox.cpp                 

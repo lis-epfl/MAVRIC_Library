@@ -45,6 +45,7 @@
 extern "C"
 {
 	#include "time_keeper.h"
+	#include "constants.h"
 }
 
 Gps_sim::Gps_sim(Dynamic_model& dynamic_model):
@@ -76,15 +77,16 @@ bool Gps_sim::update(void)
 	last_update_us_ 		 = dynamic_model_.last_update_us();
 	last_position_update_us_ = dynamic_model_.last_update_us();
 	last_velocity_update_us_ = dynamic_model_.last_update_us();
-	global_position_.longitude 	= dynamic_model_.global_position().longitude;
-	global_position_.latitude 	= dynamic_model_.global_position().latitude;
-	global_position_.altitude 	= dynamic_model_.global_position().altitude;
-	global_position_.heading 	= dynamic_model_.global_position().heading;
+	global_position_.longitude 	= dynamic_model_.position_gf().longitude;
+	global_position_.latitude 	= dynamic_model_.position_gf().latitude;
+	global_position_.altitude 	= dynamic_model_.position_gf().altitude;
+	global_position_.heading 	= dynamic_model_.position_gf().heading;
 	horizontal_position_accuracy_ 	= 1.0f;
 	vertical_position_accuracy_ 	= 3.0f;
-	global_velocity_ 	= dynamic_model_.linear_velocity();
+	global_velocity_ 	= dynamic_model_.velocity_lf();
+	global_velocity_[Z] *= -1.0f;
 	velocity_accuracy_ 	= 0.1f;
-	heading_ 			= dynamic_model_.global_position().heading;
+	heading_ 			= dynamic_model_.position_gf().heading;
 	heading_accuracy_ 	= 5.0f;
 	num_sats_ 	= 5;
 	healthy_ 	= true;

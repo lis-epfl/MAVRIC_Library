@@ -78,7 +78,8 @@ bool Barometer_sim::update(void)
 	if( dt_s > 0.0f )
 	{
 		// Get altitude
-		float new_altitude = dynamic_model_.local_position().pos[Z] - altitude_offset_;
+		// float new_altitude = dynamic_model_.position_gf().altitude - altitude_offset_;
+		float new_altitude = dynamic_model_.position_gf().altitude;
 		
 		// Get variation of altitude
 		vario_vz_ = (new_altitude - altitude_) / dt_s;

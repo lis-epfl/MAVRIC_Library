@@ -80,15 +80,15 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	virtual const std::array<float, 3>& linear_acceleration_bf(void) const = 0;
+	virtual const std::array<float, 3>& acceleration_bf(void) const = 0;
 
 	
 	/**
-	 * \brief 	Get X, Y and Z components of velocity in global frame
+	 * \brief 	Get X, Y and Z components of velocity in local frame
 	 * 
 	 * \return 	Value
 	 */	
-	virtual const std::array<float, 3>& linear_velocity(void) const = 0;
+	virtual const std::array<float, 3>& velocity_lf(void) const = 0;
 
 
 	/**
@@ -96,7 +96,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	virtual const local_position_t& local_position(void) const = 0;
+	virtual const local_position_t& position_lf(void) const = 0;
 
 
 	/**
@@ -104,7 +104,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */	
-	virtual const global_position_t& global_position(void) const = 0;
+	virtual const global_position_t& position_gf(void) const = 0;
 
 
 	/**
