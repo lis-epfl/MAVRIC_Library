@@ -212,7 +212,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 
 			// check GPS status
-			if (!state_machine->gps->healthy())
+			if( state_machine->gps->healthy() == false )
 			{
 				print_util_dbg_print("GPS bad!\r\n");
 				state_new = MAV_STATE_CRITICAL;
