@@ -518,7 +518,7 @@ static void navigation_critical_handler(navigation_t* navigation)
 	if ( navigation->state->battery.is_low || 
 		navigation->state->connection_lost || 
 		navigation->state->out_of_fence_2 ||
-		navigation->position_estimation->gps->status != GPS_OK)
+		navigation->position_estimation->gps->fix() == false)
 	{
 		if(navigation->critical_behavior != CRITICAL_LAND)
 		{

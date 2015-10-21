@@ -30,34 +30,30 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gps_ublox_telemetry.c
+ * \file gps_telemetry.hpp
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
  *   
- * \brief This module takes care of sending periodic telemetric messages for
- * the GPS UBlox
+ * \brief GPS telemetry
  *
  ******************************************************************************/
 
-
-#ifndef GPS_UBLOX_TELEMETRY_H_
-#define GPS_UBLOX_TELEMETRY_H_
+#ifndef GPS_TELEMETRY_H_
+#define GPS_TELEMETRY_H_
 
 #include "mavlink_stream.hpp"
 #include "mavlink_message_handler.hpp"
-#include "gps_ublox.hpp"
-
+#include "gps.hpp"
 
 /**
- * \brief	Initialize the MAVLink communication module for the GPS
+ * \brief	Function to send the MAVLink gps raw message
  * 
- * \param	gps						The pointer to the gps structure
- * \param	message_handler			The pointer to the MAVLink message handler
- *
- * \return	True if the init succeed, false otherwise
+ * \param	gps						Pointer to the GPS
+ * \param	mavlink_stream			Pointer to the MAVLink stream structure
+ * \param	msg						Pointer to the MAVLink message
  */
-bool gps_ublox_telemetry_init(Gps_ublox* gps, mavlink_message_handler_t* message_handler);
+void gps_telemetry_send_raw(const Gps* gps, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
-#endif /* GPS_UBLOX_TELEMETRY_H_ */
+#endif /* GPS_TELEMETRY_H_ */

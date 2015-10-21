@@ -67,7 +67,7 @@ extern "C"
 
 bool state_machine_init(	state_machine_t *state_machine,
 							state_t* state, 
-							const gps_t* gps,
+							const Gps* gps,
 							manual_control_t* manual_control)
 {
 	bool init_success = true;
@@ -212,7 +212,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 
 			// check GPS status
-			if (!state_machine->gps->healthy)
+			if (!state_machine->gps->healthy())
 			{
 				print_util_dbg_print("GPS bad!\r\n");
 				state_new = MAV_STATE_CRITICAL;
@@ -233,7 +233,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 						!state_machine->state->connection_lost && 
 						!state_machine->state->out_of_fence_1 && 
 						!state_machine->state->out_of_fence_2 &&
-						state_machine->gps->healthy)
+						state_machine->gps->healthy())
 					{
 						state_new = MAV_STATE_ACTIVE;
 						// Reset all custom flags except collision avoidance flag
@@ -298,7 +298,7 @@ task_return_t state_machine_update(state_machine_t* state_machine)
 			}
 
 			// check GPS status
-			if (!state_machine->gps->healthy)
+			if (!state_machine->gps->healthy())
 			{
 				mode_custom_new |= CUST_GPS_BAD;
 			}

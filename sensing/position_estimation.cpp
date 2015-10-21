@@ -206,18 +206,15 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 	
 	if (pos_est->init_gps_position)
 	{
-		if(pos_est->gps->status == GPS_OK)
+		if( pos_est->gps->fix() == true )
 		{
-			if ( (pos_est->time_last_gps_posllh_msg < pos_est->gps->time_last_posllh_msg) )
+			if ( (pos_est->time_last_gps_posllh_msg < pos_est->gps->last_position_update_us()) )
 			{	
-				global_gps_position.longitude = pos_est->gps->longitude;
-				global_gps_position.latitude = pos_est->gps->latitude;
-				global_gps_position.altitude = pos_est->gps->altitude;
-				global_gps_position.heading = 0.0f;
-				local_coordinates = coord_conventions_global_to_local_position(global_gps_position,pos_est->local_position.origin);
+				global_gps_position = pos_est->gps->global_position();
+				local_coordinates 	= coord_conventions_global_to_local_position(global_gps_position,pos_est->local_position.origin);
 				
 				// compute GPS velocity estimate
-				gps_dt = (pos_est->gps->time_last_posllh_msg - pos_est->time_last_gps_posllh_msg) / 1000.0f;
+				gps_dt = (pos_est->gps->last_position_update_us() - pos_est->time_last_gps_posllh_msg) / 1000000.0f;
 				if (gps_dt > 0.001f)
 				{
 					for (i = 0; i < 3; i++)
@@ -230,18 +227,18 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 					print_util_dbg_print("GPS dt is too small!\r\n");
 				}
 				
-				pos_est->time_last_gps_posllh_msg = pos_est->gps->time_last_posllh_msg;
+				pos_est->time_last_gps_posllh_msg = pos_est->gps->last_position_update_us();
 				pos_est->last_gps_pos = local_coordinates;
 			}
 			
-			if (pos_est->time_last_gps_velned_msg < pos_est->gps->time_last_velned_msg)
+			if (pos_est->time_last_gps_velned_msg < pos_est->gps->last_velocity_update_us())
 			{
-				pos_est->time_last_gps_velned_msg = pos_est->gps->time_last_velned_msg;
+				pos_est->time_last_gps_velned_msg = pos_est->gps->last_velocity_update_us();
 			}
 			
-			vel_error[X] = pos_est->gps->north_speed    - pos_est->vel[X]; 
-			vel_error[Y] = pos_est->gps->east_speed     - pos_est->vel[Y]; 
-			vel_error[Z] = pos_est->gps->vertical_speed - pos_est->vel[Z]; 
+			vel_error[X] = pos_est->gps->global_velocity()[X] - pos_est->vel[X]; 
+			vel_error[Y] = pos_est->gps->global_velocity()[Y] - pos_est->vel[Y]; 
+			vel_error[Z] = pos_est->gps->global_velocity()[Z] - pos_est->vel[Z]; 
 
 			gps_gain = 1.0f;
 		
@@ -304,20 +301,18 @@ static void position_estimation_position_correction(position_estimation_t *pos_e
 
 static void gps_position_init(position_estimation_t *pos_est)
 {
-	if ( (pos_est->init_gps_position == false)&&(pos_est->gps->status == GPS_OK) )
+	if( (pos_est->init_gps_position == false) && (pos_est->gps->fix() == true) )
 	{
-		if ( (pos_est->time_last_gps_posllh_msg < pos_est->gps->time_last_posllh_msg) && (pos_est->time_last_gps_velned_msg < pos_est->gps->time_last_velned_msg) )
+		if(    (pos_est->time_last_gps_posllh_msg < pos_est->gps->last_position_update_us()) 
+			&& (pos_est->time_last_gps_velned_msg < pos_est->gps->last_velocity_update_us()) )
 		{
-			pos_est->time_last_gps_posllh_msg = pos_est->gps->time_last_posllh_msg;
-			pos_est->time_last_gps_velned_msg = pos_est->gps->time_last_velned_msg;
+			pos_est->time_last_gps_posllh_msg = pos_est->gps->last_position_update_us();
+			pos_est->time_last_gps_velned_msg = pos_est->gps->last_velocity_update_us();
 		
 			pos_est->init_gps_position = true;
 			
-			pos_est->local_position.origin.longitude = pos_est->gps->longitude;
-			pos_est->local_position.origin.latitude = pos_est->gps->latitude;
-			pos_est->local_position.origin.altitude = pos_est->gps->altitude;
-
-			pos_est->last_gps_pos = pos_est->local_position;
+			pos_est->local_position.origin 	= pos_est->gps->global_position();
+			pos_est->last_gps_pos 			= pos_est->local_position;
 			
 			pos_est->last_alt = 0;
 			for(int32_t i = 0;i < 3;i++)
@@ -361,7 +356,7 @@ static void position_estimation_fence_control(position_estimation_t* pos_est)
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
 
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, state_t* state, Barometer *barometer, const Sonar* sonar, const gps_t *gps, const ahrs_t *ahrs, data_logging_t* stat_logging)
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, state_t* state, Barometer* barometer, const Sonar* sonar, const Gps* gps, const ahrs_t* ahrs, data_logging_t* stat_logging)
 {
 	bool init_success = true;
 	
@@ -433,11 +428,8 @@ void position_estimation_reset_home_altitude(position_estimation_t *pos_est)
 	// reset origin to position where quad is armed if we have GPS
 	if (pos_est->init_gps_position)
 	{
-		pos_est->local_position.origin.longitude = pos_est->gps->longitude;
-		pos_est->local_position.origin.latitude = pos_est->gps->latitude;
-		pos_est->local_position.origin.altitude = pos_est->gps->altitude;
-
-		pos_est->last_gps_pos = pos_est->local_position;
+		pos_est->local_position.origin 	= pos_est->gps->global_position();
+		pos_est->last_gps_pos 			= pos_est->local_position;
 	}
 	//else
 	//{

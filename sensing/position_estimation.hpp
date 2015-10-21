@@ -108,7 +108,7 @@ typedef struct
 	
 	Barometer* barometer;					///< Pointer to the barometer structure
 	const Sonar* sonar;						///< Pointer to the sonar structure
-	const gps_t* gps;						///< Pointer to the GPS structure
+	const Gps* gps;							///< Pointer to the GPS structure
 	const ahrs_t* ahrs;						///< Pointer to the attitude estimation structure
 	state_t* state;							///< Pointer to the state structure
 	data_logging_t* stat_logging;			///< Pointer to the stat logging structure
@@ -131,7 +131,7 @@ typedef struct
  *
  * \return	True if the init succeed, false otherwise
  */
-bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, state_t* state, Barometer* barometer, const Sonar* sonar, const gps_t *gps, const ahrs_t *ahrs, data_logging_t* stat_logging);
+bool position_estimation_init(position_estimation_t* pos_est, const position_estimation_conf_t config, state_t* state, Barometer* barometer, const Sonar* sonar, const Gps* gps, const ahrs_t* ahrs, data_logging_t* stat_logging);
 
 
 /**

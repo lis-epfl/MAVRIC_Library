@@ -49,7 +49,7 @@
 // #include "simulation.hpp"
 #include "manual_control.hpp"
 #include "remote.hpp"
-#include "gps_ublox.hpp"
+#include "gps.hpp"
 
 extern "C" 
 {
@@ -65,7 +65,7 @@ typedef struct
 	mavlink_waypoint_handler_t* waypoint_handler;		///< Pointer to the mavlink waypoint handler structure
 	state_t* state;										///< Pointer to the state structure
 	remote_t* remote;									///< Pointer to the remote structure
-	const gps_t* gps;									///< Pointer to the gps structure
+	const Gps* gps;										///< Pointer to the gps structure
 	manual_control_t* manual_control;					///< Pointer to the manual_control structure
 } state_machine_t;
 
@@ -82,7 +82,7 @@ typedef struct
  */
 bool state_machine_init(	state_machine_t *state_machine,
 							state_t* state,
-							const gps_t* gps,
+							const Gps* gps,
 							manual_control_t* manual_control);
 
 /**
