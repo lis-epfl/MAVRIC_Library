@@ -30,41 +30,44 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file gps.hpp
+ * \file gps_sim.hpp
  * 
  * \author MAV'RIC Team
  * \author Julien Lecoeur
  *   
- * \brief Abstract class for GPS
+ * \brief Simulation for GPS
  * 
  ******************************************************************************/
 
 
-#ifndef GPS_HPP_
-#define GPS_HPP_
+#ifndef GPS_SIM_HPP_
+#define GPS_SIM_HPP_
 
 
-#include <array>
-
-extern "C"
-{
-	#include "coord_conventions.h"
-}
-
+#include "gps.hpp"
+#include "dynamic_model.hpp"
 
 /**
- * \brief Abstract class for GPS
+ * \brief Simulation for GPS
  */
-class Gps
+class Gps_sim: public Gps
 {
 public:
+	/**
+	 * \brief 	Constructor
+	 * 
+	 * \param 	dynamic_model 	Reference to dynamic model
+	 */
+	Gps_sim(Dynamic_model& dynamic_model);
+	
+
 	/**
 	 * \brief 	Main update function
 	 * \detail 	Reads new values from sensor
 	 * 
 	 * \return 	Success
 	 */
-	virtual bool update(void) = 0;
+	bool update(void);
 
 	
 	/**
@@ -72,7 +75,7 @@ public:
 	 * 
 	 * \return 	Update time
 	 */
-	virtual const float& last_update_us(void) const = 0;
+	const float& last_update_us(void) const;
 
 
 	/**
@@ -80,7 +83,7 @@ public:
 	 * 
 	 * \return 	Update time
 	 */
-	virtual const float& last_position_update_us(void) const = 0;
+	const float& last_position_update_us(void) const;
 
 
 	/**
@@ -88,7 +91,7 @@ public:
 	 * 
 	 * \return 	Update time
 	 */
-	virtual const float& last_velocity_update_us(void) const = 0;
+	const float& last_velocity_update_us(void) const;
 
 
 	/**
@@ -96,7 +99,7 @@ public:
 	 * 
 	 * \return 	position
 	 */	
-	virtual const global_position_t& global_position(void) const = 0;
+	const global_position_t& global_position(void) const;
 
 
 	/**
@@ -104,7 +107,7 @@ public:
 	 * 
 	 * \return 	accuracy
 	 */	
-	virtual const float& horizontal_position_accuracy(void) const = 0;
+	const float& horizontal_position_accuracy(void) const;
 
 
 	/**
@@ -112,7 +115,7 @@ public:
 	 * 
 	 * \return 	accuracy
 	 */	
-	virtual const float& vertical_position_accuracy(void) const = 0;
+	const float& vertical_position_accuracy(void) const;
 
 
 	/**
@@ -120,7 +123,7 @@ public:
 	 * 
 	 * \return 	3D velocity
 	 */	
-	virtual const std::array<float,3>& global_velocity(void) const = 0;
+	const std::array<float,3>& global_velocity(void) const;
 
 
 	/**
@@ -128,7 +131,7 @@ public:
 	 * 
 	 * \return 	velocity accuracy
 	 */	
-	virtual const float& velocity_accuracy(void) const = 0;
+	const float& velocity_accuracy(void) const;
 
 
 	/**
@@ -136,7 +139,7 @@ public:
 	 * 
 	 * \return 	heading
 	 */	
-	virtual const float& heading(void) const = 0;
+	const float& heading(void) const;
 
 
 	/**
@@ -144,7 +147,7 @@ public:
 	 * 
 	 * \return 	accuracy
 	 */	
-	virtual const float& heading_accuracy(void) const = 0;
+	const float& heading_accuracy(void) const;
 
 
 	/**
@@ -152,7 +155,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */
-	virtual const uint8_t& num_sats(void) const = 0;
+	const uint8_t& num_sats(void) const;
 
 
 	/**
@@ -160,7 +163,7 @@ public:
 	 * 
 	 * \return 	Value
 	 */
-	virtual const bool& fix(void) const = 0;
+	const bool& fix(void) const;
 
 
 	/**
@@ -168,8 +171,25 @@ public:
 	 * 
 	 * \return 	Value
 	 */
-	virtual const bool& healthy(void) const = 0;
+	const bool& healthy(void) const;
+
+private:
+	Dynamic_model& 		dynamic_model_;						///< Reference to dynamic model
+
+	float 				last_update_us_;					///< Last update time in microseconds
+	float 				last_position_update_us_;			///< Last time position was updated in microseconds
+	float 				last_velocity_update_us_;			///< Last time velocity was updated in microseconds
+	global_position_t 	global_position_;					///< Global position
+	float 				horizontal_position_accuracy_;		///< Accuracy of position on horizontal plane in m
+	float 				vertical_position_accuracy_;		///< Accuracy of position on vertical axis in m
+	std::array<float,3> global_velocity_;					///< 3D Velocity in global frame in m/s
+	float 				velocity_accuracy_;					///< Accuracy of velocity in m/s
+	float 				heading_;							///< Heading in degrees
+	float 				heading_accuracy_;					///< Accuracy of heading in degrees
+	uint8_t 			num_sats_;							///< Number of visible satelites
+	bool 				fix_;								///< Indicates whether a fix was acquired
+	bool 				healthy_;							///< Indicates whether the measurements can be trusted
 };
 
 
-#endif /* GPS_HPP_ */
+#endif /* GPS_SIM_HPP_ */

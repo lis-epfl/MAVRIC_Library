@@ -63,14 +63,6 @@ public:
 	 * \param 	serial 	Reference to serial peripheral
 	 */
 	Gps_ublox(Serial& serial);
-	
-
-	/**
-	 * \brief   Initialise the sensor
-	 * 			
-	 * \return 	Success
-	 */	
-	bool init(void);
 
 
 	/**

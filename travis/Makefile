@@ -109,6 +109,7 @@ LIB_SRCS += simulation/gyroscope_sim.cpp
 LIB_SRCS += simulation/magnetometer_sim.cpp
 LIB_SRCS += simulation/barometer_sim.cpp
 LIB_SRCS += simulation/sonar_sim.cpp
+LIB_SRCS += simulation/gps_sim.cpp
 
 LIB_SRCS += libs/FatFs/src/ff.c  
 LIB_SRCS += libs/FatFs/src/diskio.c

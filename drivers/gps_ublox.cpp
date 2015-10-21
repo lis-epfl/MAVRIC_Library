@@ -4725,16 +4725,8 @@ Gps_ublox::Gps_ublox(Serial& serial):
 	num_sats_( 0 ),
 	fix_( false ),
 	healthy_( false	)
-{}
-
-
-bool Gps_ublox::init(void)
 {
-	// Init old GPS structure
-	// TODO: remove global structure
 	gps_ublox_init(&gps, &serial_);
-
-	return true;
 }
 
 

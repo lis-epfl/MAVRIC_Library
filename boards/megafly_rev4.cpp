@@ -166,13 +166,6 @@ bool Megafly_rev4::init(void)
 		print_util_dbg_print("[SAT] INIT ERROR\r\n");
 	}
 
-	// Init gps
-	if( gps_ublox.init() == false )
-	{
-		init_success = false;
-		print_util_dbg_print("[GPS] INIT ERROR\r\n");		
-	}
-
 	// Init sonar
 	if( sonar_i2cxl.init() == false )
 	{
