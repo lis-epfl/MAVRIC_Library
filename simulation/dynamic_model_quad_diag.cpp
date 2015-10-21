@@ -97,8 +97,14 @@ bool Dynamic_model_quad_diag::update(void)
 	dt_s_ 	 		= (now - last_update_us_) / 1000000.0f;
 	last_update_us_ = now;
 
+	// Do nothing if updated too often
+	if( dt_s_ < 0.0001f )
+	{
+		return true;
+	}
+
 	// Clip dt if too large, this is not realistic but the simulation will be more precise
-	if (dt_s_ > 0.1f)
+	if( dt_s_ > 0.1f )
 	{	
 		dt_s_ = 0.1f;
 	}
