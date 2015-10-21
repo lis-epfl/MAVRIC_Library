@@ -51,7 +51,10 @@
 #include "bmp085.hpp"
 #include "imu.hpp"
 #include "spektrum_satellite.hpp"
-
+#include "file_flash_avr32.hpp"
+#include "gps_ublox.hpp"
+#include "sonar_i2cxl.hpp"
+ 
 extern "C"
 {
 	#include "twim_default_config.h"
@@ -124,6 +127,9 @@ public:
 	Bmp085				bmp085;
 	Spektrum_satellite	spektrum_satellite;
 	Imu 				imu;
+	File_flash_avr32	file_flash;
+	Gps_ublox			gps_ublox;
+	Sonar_i2cxl			sonar_i2cxl;
 
 private:
 	byte_stream_t	dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
