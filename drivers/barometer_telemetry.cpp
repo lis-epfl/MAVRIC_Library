@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file bmp085_telemetry.c
+ * \file barometer_telemetry.cpp
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -41,20 +41,20 @@
  ******************************************************************************/
 
 
-#include "bmp085_telemetry.hpp"
+#include "barometer_telemetry.hpp"
 
 extern "C"
 {
 	#include "time_keeper.h"
 }
 
-void bmp085_telemetry_send_pressure(const Barometer* barometer, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
+void barometer_telemetry_send(const Barometer* barometer, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg)
 {
 	mavlink_msg_scaled_pressure_pack(	mavlink_stream->sysid,
 										mavlink_stream->compid,
 										msg,
 										time_keeper_get_millis(),
-										barometer->pressure() / 100.0f,
+										barometer->altitude(),
 										barometer->vario_vz(),
-										barometer->temperature() * 100.0f);
+										barometer->temperature());
 }

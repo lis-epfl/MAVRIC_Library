@@ -30,7 +30,7 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file bmp085_telemetry.h
+ * \file barometer_5telemetry.hpp
  * 
  * \author MAV'RIC Team
  * \author Nicolas Dousse
@@ -40,8 +40,8 @@
  *
  ******************************************************************************/
 
-#ifndef BMP085_TELEMETRY_H_
-#define BMP085_TELEMETRY_H_
+#ifndef BAROMETER_TELEMETRY_HPP_
+#define BAROMETER_TELEMETRY_HPP_
 
 #include "mavlink_stream.hpp"
 #include "bmp085.hpp"
@@ -54,7 +54,7 @@
  * \param	mavlink_stream			The pointer to the MAVLink stream structure
  * \param	msg						The pointer to the MAVLink message
  */
-void bmp085_telemetry_send_pressure(const Barometer* barometer, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
+void barometer_telemetry_send(const Barometer* barometer, const mavlink_stream_t* mavlink_stream, mavlink_message_t* msg);
 
 
-#endif /* REMOTE_TELEMETRY_H_ */
+#endif /* BAROMETER_TELEMETRY_HPP_ */
