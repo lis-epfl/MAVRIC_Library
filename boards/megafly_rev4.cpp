@@ -44,6 +44,23 @@ extern "C"
 {
 	#include "print_util.h"
 	#include "time_keeper.h"
+
+	#include "sysclk.h"
+	#include "sleepmgr.h"
+	#include "led.h"
+	#include "delay.h"
+
+	#include "pwm_servos.h"
+	#include "gpio.h"
+
+	#include "analog_monitor.h"
+	#include "analog_monitor_default_config.h"
+
+	#include "piezo_speaker.h"
+
+	#include "servos.h"
+	#include "pwm_servos.h"	
+	#include "servos_default_config.h"
 }
 
 
@@ -79,6 +96,9 @@ bool Megafly_rev4::init(void)
 	bool init_success = true;
 
 	Disable_global_interrupt();
+
+	// Legacy boardsupport init (TODO: remove)
+	init_success &= boardsupport_init();
 
 	// Init UART3
 	if( uart_usb.init() == false )
@@ -133,9 +153,20 @@ bool Megafly_rev4::init(void)
 	if( i2c1.init() == false )
 	{
 		init_success = false;
-		print_util_dbg_print("[I2C1] INIT ERROR\r\n");
 	}
 	
+	// Init servos
+	if( servos_init( &servos, servos_default_config() ) == true )
+	{
+		servos_set_value_failsafe( &servos );
+		pwm_servos_write_to_hardware( &servos );	
+	}
+	else
+	{
+		init_success = false;
+		print_util_dbg_print("[SERVOS] INIT ERROR\r\n");
+	}
+
 	Enable_global_interrupt();
 	
 	// Init magnetometer
@@ -185,5 +216,45 @@ bool Megafly_rev4::init(void)
 	print_util_dbg_print_init(&dbg_stream_);
 	// -------------------------------------------------------------------------
 
+	return init_success;
+}
+
+
+bool Megafly_rev4::boardsupport_init(void) 
+{
+	bool init_success = true;
+	
+	irq_initialize_vectors();
+	cpu_irq_enable();
+	Disable_global_interrupt();
+		
+	// Initialize the sleep manager
+	sleepmgr_init();
+	sysclk_init();
+
+	board_init();
+	delay_init(sysclk_get_cpu_hz());
+	time_keeper_init();
+		
+	INTC_init_interrupts();
+
+	// Switch on the red LED
+	LED_On(LED2);
+
+	// servo_pwm_hardware_init();
+	pwm_servos_init( true );
+	
+	// Init analog rails
+	analog_monitor_init(&analog_monitor, analog_monitor_default_config());
+
+	// init 6V enable
+	gpio_enable_gpio_pin(AVR32_PIN_PA04);
+	gpio_set_gpio_pin(AVR32_PIN_PA04);
+	
+	// Init piezo
+	piezo_speaker_init_binary();
+
+	Enable_global_interrupt();
+	
 	return init_success;
 }

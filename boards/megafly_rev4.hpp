@@ -59,6 +59,7 @@ extern "C"
 {
 	#include "twim_default_config.h"
 	#include "streams.h"
+	#include "servos.h"
 }
 
 
@@ -130,9 +131,24 @@ public:
 	File_flash_avr32	file_flash;
 	Gps_ublox			gps_ublox;
 	Sonar_i2cxl			sonar_i2cxl;
+	analog_monitor_t	analog_monitor;
+	servos_t			servos;
 
 private:
 	byte_stream_t	dbg_stream_;  ///< Temporary member to make print_util work TODO: remove
+
+
+	/**
+	 * \brief	Initialize the hardware related elements (communication lines, sensors devices, etc)
+	 * 
+	 * \detail 	Legacy function: TODO move to init() method
+	 *
+	 * \param	central_data		The pointer to the structure where all central data is stored
+	 *
+	 * \return	The initialization status of each module, succeed == true
+	 */
+	bool boardsupport_init(void);
+
 };
 
 
