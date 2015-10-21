@@ -30,10 +30,10 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file airspedd_analog.c
+ * \file airspeed_analog.c
  * 
  * \author MAV'RIC Team
- * \author Julien Lecoeur
+ * \author Julien Lecoeur, Simon Pyroth
  *   
  * \brief This file is the driver for the DIYdrones airspeed sensor V20 
  * (old analog version)
@@ -45,11 +45,9 @@
 #include "analog_monitor.h"
 #include "maths.h"
 
-const float AIRSPEED_SENSOR_OFFSET = 2.5f;		///< Offset of the sensor [V]
-const float AIRSPEED_SENSOR_SENSITIVITY = 1.0f;	///< Sensitivity of the sensor [V/kPa]
-const float RHO_AIR = 1.293;					///< Air density [kg/m^3]
-
-const float PITOT_GAIN_DEFAULT = 1.9936f; 	///< this gain come from APM, but it does not make sense (should be)
+#define AIRSPEED_SENSOR_OFFSET 2.5f			///< Offset of the sensor [V]
+#define AIRSPEED_SENSOR_SENSITIVITY 1.0f	///< Sensitivity of the sensor [V/kPa]
+#define RHO_AIR 1.293f						///< Air density [kg/m^3]
 
 
 
@@ -80,8 +78,12 @@ float airspeed_analog_get_raw_differential_pressure(airspeed_analog_t* airspeed_
 	
 	==> P = (V - O)/S
 	*/
-	float V = airspeed_analog->analog_monitor->avg[airspeed_analog->analog_channel];
-	float P = (V - AIRSPEED_SENSOR_OFFSET)/AIRSPEED_SENSOR_SENSITIVITY;
+	//airspeed_analog->voltage = airspeed_analog->analog_monitor->avg[airspeed_analog->analog_channel];
+	//float P = (airspeed_analog->voltage - AIRSPEED_SENSOR_OFFSET)/AIRSPEED_SENSOR_SENSITIVITY;
+	
+	airspeed_analog->voltage = airspeed_analog->analog_monitor->avg[airspeed_analog->analog_channel];
+	float P = (airspeed_analog->voltage - AIRSPEED_SENSOR_OFFSET)/AIRSPEED_SENSOR_SENSITIVITY;
+	
 	return  P;
 }
 
@@ -95,6 +97,7 @@ bool airspeed_analog_init(airspeed_analog_t* airspeed_analog, analog_monitor_t* 
 	// Dependencies
 	airspeed_analog->analog_monitor = analog_monitor;
 	airspeed_analog->analog_channel = analog_channel;
+	airspeed_analog->voltage = 0.0f;
 
 	// Default values to start the calibration correctly !
 	airspeed_analog->pressure_offset = 0.0f;

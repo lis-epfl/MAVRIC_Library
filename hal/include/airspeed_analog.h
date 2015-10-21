@@ -58,6 +58,7 @@
 typedef struct {
 	analog_monitor_t* analog_monitor;		///< pointer to the structure of analog monitor module
 	uint8_t analog_channel;					///< analog channel of the ADC
+	float voltage;							///< Voltage read by the ADC
 	
 	float differential_pressure;			///< true dynamical pressure (in kPa)
 	float pressure_offset;					///< offset of the pressure sensor
