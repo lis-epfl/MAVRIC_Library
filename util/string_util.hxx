@@ -132,4 +132,87 @@ namespace str{
 
 		return data;
 	}
+
+	/**
+	* \brief 	returns an array of ascii characters representing a number in scientific notation
+	*
+	* \param 	num 	Number to be put into the array
+	* \param	dest	Adress of the array to put it to (should be at least max_digits+3+x long,
+	*					where x is the number of digits of the exponent)
+	* \param	length 	Adress where the length of the array is written to
+	*					(length including the sign and decimal point)
+	* \param	after_digits number of digits after the decimal point but before E
+	*
+	* \return 	new_dest 	new Address of the array (new_dest is a subarray of dest)
+	*/
+	template <typename T>
+	uint8_t* format_scientific(T num, uint8_t* dest, uint8_t* length, uint8_t after_digits)
+	{
+		// Determine if the number is less than or equal to 1 or
+		// greater than or equal to 10
+		bool is_greater_10 = false;
+		bool is_less_1 = false;
+
+		// Multiply factor, for bringing the number to scientific
+		// Notation
+		float multiply_factor = 1;
+
+		// Count for number of decimal moves
+		int decimal_moves = 0;
+
+		// If number is exactly 0, do nothing
+		if (num == 0)
+		{
+
+		}
+		else if (num >= 10 || num <= -10) // If the number is greater than 10
+		{
+			is_greater_10 = true;
+			multiply_factor = .1;
+		}
+		else if (num < 1 && num > -1) // If the number is less than 1
+		{
+			is_less_1 = false;
+			multiply_factor = 10;
+		} // If the number is between 10 and 1, do nothing
+
+		  // Bring number to one digit before decimal, if not already
+		while (num >= 10 || num <= -10 || (num < 1 && num > -1 && num != 0))
+		{
+			// Multiply
+			num = num * multiply_factor;
+
+			// Update counter
+			is_greater_10 ? decimal_moves++ : decimal_moves--;
+		}
+
+		// Get floating point string without the E and the rest
+		uint8_t* data = format_floating(num, dest, length, after_digits, 1);
+
+		// Append E and the exponent
+		data[*length] = 'E';
+		int decimal_moves_original = decimal_moves; // Create copy as decimal_moves will go to 0
+		uint8_t exp_length = 0; // Determine how long the exponent should be
+		if (decimal_moves_original < 0) // If there is a negative exponent, we need to add 1 for the length
+		{
+			exp_length++;
+		}
+		while (decimal_moves != 0) // Add one to length for each digit
+		{
+			exp_length++;
+			decimal_moves = decimal_moves / 10;
+		}
+		if (exp_length == 0) // If decimal moves is still 0
+		{
+			exp_length++; // Make exponent length one
+		}
+		uint8_t* exp_length_ptr = &exp_length; // Point to the number of digits in exponent
+		uint8_t* data_exp = format_integer(decimal_moves_original, data + *length, exp_length_ptr, exp_length);
+
+		// Update length and dest
+		dest = data;
+		*length = *length + 1 + exp_length; // Add the E and the exponent to length
+
+		return data; // Return data
+	}
 };

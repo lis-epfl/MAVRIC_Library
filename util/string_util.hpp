@@ -85,6 +85,20 @@ namespace str{
 	template <typename T>
 	uint8_t* format_floating(T num, uint8_t* dest, uint8_t* length, uint8_t after_digits = FLOAT_DIGIT_COUNT, uint8_t max_int_digits = MAX_DIGITS10_LONG);
 	
+	/**
+	* \brief 	returns an array of ascii characters representing a number in scientific notation
+	*
+	* \param 	num 	Number to be put into the array
+	* \param	dest	Adress of the array to put it to (should be at least max_digits+3+x long,
+	*					where x is the number of digits of the exponent)
+	* \param	length 	Adress where the length of the array is written to
+	*					(length including the sign and decimal point)
+	* \param	after_digits number of digits after the decimal point but before E
+	*
+	* \return 	new_dest 	new Address of the array (new_dest is a subarray of dest)
+	*/
+	template <typename T>
+	uint8_t* format_scientific(T num, uint8_t* dest, uint8_t* length, uint8_t after_digits);
 };
 
 #include "string_util.hxx"
