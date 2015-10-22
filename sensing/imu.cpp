@@ -56,12 +56,10 @@ extern "C"
 Imu::Imu(Accelerometer& accelerometer,
 		Gyroscope& gyroscope,
 		Magnetometer& magnetometer,
-		// state_t& state,
 		imu_conf_t config):
 	accelerometer_(accelerometer),
 	gyroscope_(gyroscope),
 	magnetometer_(magnetometer),
-	// state_(state),
 	config_(config),
 	oriented_acc_( 	std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
 	oriented_gyro_(	std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
@@ -70,11 +68,8 @@ Imu::Imu(Accelerometer& accelerometer,
 	scaled_gyro_(	std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
 	scaled_mag_(	std::array<float,3>{{0.0f, 0.0f, 0.0f}} ),
 	do_accelerometer_bias_calibration_(false),
-	do_accelerometer_scale_calibration_(false),
 	do_gyroscope_bias_calibration_(false),
-	do_gyroscope_scale_calibration_(false),
 	do_magnetometer_bias_calibration_(false),
-	do_magnetometer_scale_calibration_(false),
 	dt_s_(0.004f),
 	last_update_us_(time_keeper_get_micros())
 {}
@@ -107,82 +102,55 @@ bool Imu::update(void)
 		oriented_mag_[i]  = raw_mag[  config_.magnetometer.axis[i]	] * config_.magnetometer.sign[i];
 	}
 
+	// Do accelero bias calibration
+	if( do_accelerometer_bias_calibration_ )
+	{
+		for( uint8_t i=0; i<3; i++ )
+		{
+			config_.accelerometer.max_values[i]  = maths_f_max(config_.accelerometer.max_values[i], oriented_acc_[i]);
+			config_.accelerometer.min_values[i]  = maths_f_min(config_.accelerometer.min_values[i], oriented_acc_[i]);
+			config_.accelerometer.mean_values[i] = 0.5 * ( config_.accelerometer.mean_values[i] + oriented_acc_[i] );
+		}
+	}
+
+	// Do gyroscope bias calibration
+	if( do_gyroscope_bias_calibration_ )
+	{
+		for( uint8_t i=0; i<3; i++ )
+		{
+			config_.gyroscope.max_values[i]  = maths_f_max(config_.gyroscope.max_values[i], oriented_gyro_[i]);
+			config_.gyroscope.min_values[i]  = maths_f_min(config_.gyroscope.min_values[i], oriented_gyro_[i]);
+			config_.gyroscope.mean_values[i] = 0.5 * ( config_.gyroscope.mean_values[i] + oriented_acc_[i] );
+		}
+	}
 
 
-	// -------------------------------------------------------------------------
-	//
-	// TODO implement calibration
-	//
-	// -------------------------------------------------------------------------
-
-	// // Do accelero bias calibration
-	// if( do_accelerometer_bias_calibration_ )
-	// {
-	// 	for (i=0; i<3; i++)
-	// 	{
-	// 		config_.accelerometer.max_values[i]  = maths_f_max(config_.accelerometer.max_values[i], oriented_acc_[i]);
-	// 		config_.accelerometer.min_values[i]  = maths_f_min(config_.accelerometer.min_values[i], oriented_acc_[i]);
-	// 		config_.accelerometer.mean_values[i] = 0.5 * ( config_.accelerometer.mean_values[i] + oriented_acc_[i] );
-	// 	}
-	// }
-
-	// // Do accelero scale calibration
-	// if( do_accelerometer_scale_calibration_ )
-	// {
-	// 	;
-	// }
-
-	// // Do gyroscope bias calibration
-	// if( do_gyroscope_bias_calibration_ )
-	// {
-	// 	for (i=0; i<3; i++)
-	// 	{
-	// 		config_.gyroscope.max_values[i]  = maths_f_max(config_.gyroscope.max_values[i], oriented_gyro_[i]);
-	// 		config_.gyroscope.min_values[i]  = maths_f_min(config_.gyroscope.min_values[i], oriented_gyro_[i]);
-	// 		config_.gyroscope.mean_values[i] = 0.5 * ( config_.gyroscope.mean_values[i] + oriented_acc_[i] );
-	// 	}
-	// }
-
-	// // Do gyroscope scale calibration
-	// if( do_gyroscope_scale_calibration_ )
-	// {
-	// 	;
-	// }
-
-	// // Do magnetometer bias calibration
-	// if( do_magnetometer_bias_calibration_ )
-	// {
-	// 	for (i=0; i<3; i++)
-	// 	{
-	// 		config_.magnetometer.max_values[i]  = maths_f_max(config_.magnetometer.max_values[i], oriented_mag_[i]);
-	// 		config_.magnetometer.min_values[i]  = maths_f_min(config_.magnetometer.min_values[i], oriented_mag_[i]);
-	// 		config_.magnetometer.mean_values[i] = 0.5 * ( config_.magnetometer.mean_values[i] + oriented_acc_[i] );
-	// 	}
-	// }
-
-	// // Do magnetometer scale calibration
-	// if( do_magnetometer_scale_calibration_ )
-	// {
-	// 	;
-	// }
+	// Do magnetometer bias calibration
+	if( do_magnetometer_bias_calibration_ )
+	{
+		for( uint8_t i=0; i<3; i++ )
+		{
+			config_.magnetometer.max_values[i]  = maths_f_max(config_.magnetometer.max_values[i], oriented_mag_[i]);
+			config_.magnetometer.min_values[i]  = maths_f_min(config_.magnetometer.min_values[i], oriented_mag_[i]);
+			config_.magnetometer.mean_values[i] = 0.5 * ( config_.magnetometer.mean_values[i] + oriented_acc_[i] );
+		}
+	}
 
 	// Scale sensor values
+	float new_scaled_acc[3];
+	float new_scaled_gyro[3];
+	float new_scaled_mag[3];
 	for( int8_t i = 0; i < 3; i++ )
 	{
-		// 1: Unbias, 
-		// 2: scale 
-	// 	scaled_acc_[i]  = (1.0f - config_.lpf_acc ) * scaled_acc_[i]  + config_.lpf_acc  * ( ( oriented_acc_[i]  - config_.accelerometer.bias[i] ) * config_.accelerometer.scale_factor[i]  );
-	// 	scaled_gyro_[i] = (1.0f - config_.lpf_gyro) * scaled_gyro_[i] + config_.lpf_gyro * ( ( oriented_gyro_[i] - config_.gyroscope.bias[i]     ) * config_.gyroscope.scale_factor[i]     		);
-	// 	scaled_mag_[i] 	= (1.0f - config_.lpf_mag ) * scaled_mag_[i]  + config_.lpf_mag  * ( ( oriented_mag_[i]  - config_.magnetometer.bias[i]  ) * config_.magnetometer.scale_factor[i]  	);
+		// Scale, then remove bias
+		new_scaled_acc[i]  = oriented_acc_[i]  / config_.accelerometer.scale_factor[i] - config_.accelerometer.bias[i];
+		new_scaled_gyro[i] = oriented_gyro_[i] / config_.gyroscope.scale_factor[i]     - config_.gyroscope.bias[i];
+		new_scaled_mag[i]  = oriented_mag_[i]  / config_.magnetometer.scale_factor[i]  - config_.magnetometer.bias[i];
 
-		// 1: scale
-		// 2: unbias
-		scaled_acc_[i]  = config_.lpf_acc  	* (oriented_acc_[i]   / config_.accelerometer.scale_factor[i] - config_.accelerometer.bias[i])
-				+ (1.0f - config_.lpf_acc ) * scaled_acc_[i];
-		scaled_gyro_[i] = config_.lpf_gyro  * ( oriented_gyro_[i] / config_.gyroscope.scale_factor[i]    - config_.gyroscope.bias[i]     ) 
-				+ (1.0f - config_.lpf_gyro) * scaled_gyro_[i];
-		scaled_mag_[i] 	= config_.lpf_mag   * ( oriented_mag_[i]  / config_.magnetometer.scale_factor[i] - config_.magnetometer.bias[i]  ) 
-				+ (1.0f - config_.lpf_mag ) * scaled_mag_[i];
+		// Low pass filter
+		scaled_acc_[i]  = config_.lpf_acc  	* new_scaled_acc[i]  + (1.0f - config_.lpf_acc ) * scaled_acc_[i];
+		scaled_gyro_[i] = config_.lpf_gyro  * new_scaled_gyro[i] + (1.0f - config_.lpf_gyro) * scaled_gyro_[i];
+		scaled_mag_[i] 	= config_.lpf_mag   * new_scaled_mag[i]  + (1.0f - config_.lpf_mag ) * scaled_mag_[i];
 	}
 
 	return success;

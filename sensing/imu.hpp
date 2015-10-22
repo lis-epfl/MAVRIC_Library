@@ -325,11 +325,8 @@ private:
 	std::array<float, 3> scaled_mag_; 	///< Scaled magnetic field
 
 	bool do_accelerometer_bias_calibration_;	///< Flag indicating if calibration should be done
-	bool do_accelerometer_scale_calibration_;	///< Flag indicating if calibration should be done
 	bool do_gyroscope_bias_calibration_;		///< Flag indicating if calibration should be done
-	bool do_gyroscope_scale_calibration_;		///< Flag indicating if calibration should be done
-	bool do_magnetometer_bias_calibration_;	///< Flag indicating if calibration should be done
-	bool do_magnetometer_scale_calibration_;	///< Flag indicating if calibration should be done
+	bool do_magnetometer_bias_calibration_;		///< Flag indicating if calibration should be done
 
 	float dt_s_;						///< Time interval between two updates (in microseconds)
 	float last_update_us_;				///< Last update time in microseconds
