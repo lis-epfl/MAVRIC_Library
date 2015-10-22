@@ -403,6 +403,49 @@ static void data_logging_f_seek(data_logging_t* data_logging)
 	}
 }
 
+/*
+* \brief Appends a uint32_t to a character string with an underscore between.
+*
+* \param output		The output character string
+* \param filename	The input string
+* \param num		The uint32_t to be appended to filename
+*/
+void data_logging_filename_append_int(char* output, char* filename, uint32_t num)
+{
+	// Declare counter for char location
+	int i = 0;
+
+	while (filename[i] != '\0') // Copy characters to output from filename until
+								// null character is reached
+	{
+		output[i] = filename[i];
+		i++;
+	}
+
+	// Add underscore
+	output[i] = '_';
+	i++; // Update i for the num loop too
+
+	// Reverse order of num
+	uint32_t rev_num = 0;
+	while (num != 0)
+	{
+		rev_num *= 10; // Multiply by ten to move digit
+		rev_num += (num % 10); // Add 
+		num = num / 10; // Remove digit from num
+	}
+
+	do // Remove digits right to left adding them to output
+	{
+		output[i] = (rev_num % 10) + '0';
+		rev_num = rev_num / 10;
+		i++;
+	} while (rev_num != 0); // Stop when rev_num has gone through all the digits
+
+	// Add null character
+	output[i] = '\0';
+}
+
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
 //------------------------------------------------------------------------------
