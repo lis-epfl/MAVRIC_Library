@@ -403,40 +403,22 @@ static void data_logging_f_seek(data_logging_t* data_logging)
 }
 
 /**
-* \brief Check if the string has a null character with length characters
+* \brief	Appends ".txt" to the end of a character string. If not enough 
+*			memory allocated in output, will write as many letters from
+*			filename as possible, will not include .txt\0 unless entire
+*			.txt\0 can fit. 
 *
-* \param str		The string to check
-* \param length		The length of the string to check
-*/
-bool is_string_terminated(char* str, int length)
-{
-	// Create bool stating if the string is terminated, set to false
-	bool is_terminated = false;
-
-	// Cycle through each letter in str from 0 to length-1
-	for (int i = 0; i < length; i++)
-	{
-		// Check if the character is a null character
-		if (str[i] == '\0')
-		{
-			// If yes, return true
-			is_terminated = true;
-			return is_terminated;
-		}
-	}
-
-	// If it made it here, is_terminated should still be false
-	return is_terminated;
-}
-
-/**
-* \brief Appends ".txt" to the end of a character string
+* \param	output		The output character string
+* \param	filename	The input string
+* \param	length		The maximum length of output
 *
-* \param output		The output character string
-* \param filename	The input string
+* \return	success		Bool stating if the entire output was written
 */
-void data_logging_filename_append_extension(char* output, char* filename)
+bool data_logging_filename_append_extension(char* output, char* filename, int length)
 {
+	// Success flag
+	bool is_success = true;
+
 	// Declare counter for char location
 	int i = 0;
 
@@ -445,6 +427,29 @@ void data_logging_filename_append_extension(char* output, char* filename)
 	{
 		output[i] = filename[i];
 		i++;
+
+		// If i is one less than length
+		if (i == (length - 1))
+		{
+			// Set last character of output to null character
+			output[i] = '\0';
+
+			// Return is_success as false
+			is_success = false;
+			return is_success;
+		}
+	}
+
+	// If there is not enough room for .txt\0
+	if ((i + 5) >= (length))
+	{
+		// Set last character of output to null, dont append
+		// .txt
+		output[i] = '\0';
+		
+		// Return is_success as false
+		is_success = false;
+		return is_success;
 	}
 
 	// Add ".txt"
@@ -455,25 +460,48 @@ void data_logging_filename_append_extension(char* output, char* filename)
 
 	// Add null character
 	output[i + 4] = '\0';
+
+	// Return is_success as true;
+	return is_success;
 }
 
 /**
-* \brief Appends a uint32_t to a character string with an underscore between.
+* \brief	Appends a uint32_t to a character string with an underscore between.
+*			If not enough memory allocated in output, will write as many letters
+*			from filename as possible, will not include num\0 unless entire number
+*			and null character can fit.
 *
-* \param output		The output character string
-* \param filename	The input string
-* \param num		The uint32_t to be appended to filename
+* \param	output		The output character string
+* \param	filename	The input string
+* \param	num			The uint32_t to be appended to filename
+* \param	length		The maximum length of the output string, must be positive
+*
+* \return	success		Bool stating if the entire output was written
 */
-void data_logging_filename_append_int(char* output, char* filename, uint32_t num)
+bool data_logging_filename_append_int(char* output, char* filename, uint32_t num, int length)
 {
+	// Success flag
+	bool is_success = true;
+
 	// Declare counter for char location
 	int i = 0;
 
-	while (filename[i] != '\0') // Copy characters to output from filename until
-								// null character is reached
+	// Copy characters to output from filename until null character is
+	while (filename[i] != '\0')
 	{
 		output[i] = filename[i];
 		i++;
+
+		// If i is one less than length
+		if (i == (length - 1))
+		{
+			// Set last character of output to null character
+			output[i] = '\0';
+
+			// Return is_success as false
+			is_success = false;
+			return is_success;
+		}
 	}
 
 	// Add underscore
@@ -482,13 +510,25 @@ void data_logging_filename_append_int(char* output, char* filename, uint32_t num
 	// Count number of digits
 	int num_digits = 0;
 	uint32_t num_copy = num;
-	do // Do while loop to have 0 as 1 digits
+	do // Do while loop to have 0 written as 1 digit
 	{
 		num_digits++; // Add one to digits
 		num_copy = num_copy / 10; // Remove digit from num_copy
 	} while (num_copy != 0);
 
-	// Add num_digits to i
+	// If the number of digits + i is greater than or equal to length - 1
+	if ((num_digits + i) >= (length - 1))
+	{
+		// Not enough space is allocated
+		// Set null character (overwrite _ since number wont be outputted)
+		output[i] = '\0';
+
+		// Return false
+		is_success = false;
+		return is_success;
+	} // If not, then there is enough space and continue
+
+	  // Add num_digits to i
 	i += num_digits;
 	do // Remove digits right to left adding them to output
 	{
@@ -499,6 +539,8 @@ void data_logging_filename_append_int(char* output, char* filename, uint32_t num
 
 						// Add null character to i+num_digits+1
 	output[i + num_digits + 1] = '\0';
+
+	return is_success;
 }
 
 //------------------------------------------------------------------------------
@@ -568,7 +610,8 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	
 	data_logging->sys_id = sysid;
 
-	data_logging_filename_append_int(data_logging->file_name, file_name, sysid);
+	// Append sysid to filename
+	data_logging_filename_append_int(data_logging->file_name, file_name, sysid, data_logging->buffer_name_size);
 
 	init_success &= data_logging_open_new_log_file(data_logging);
 
@@ -597,14 +640,17 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 	{
 		do 
 		{
+			// Create flag for successfully written file names
+			bool successful_filename = true;
+
 			// Add iteration number to name_n_extension (does not yet have extension)
-			data_logging_filename_append_int(data_logging->name_n_extension, data_logging->file_name, i);
+			successful_filename &= data_logging_filename_append_int(data_logging->name_n_extension, data_logging->file_name, i, data_logging->name_n_extension);
 
 			// Add extension (.txt) to name_n_extension
-			data_logging_filename_append_extension(data_logging->name_n_extension, data_logging->name_n_extension);
+			successful_filename &= data_logging_filename_append_extension(data_logging->name_n_extension, data_logging->name_n_extension, data_logging->name_n_extension);
 
 			// Check if there wasn't enough memory allocated to name_n_extension
-			if (!is_string_terminated(data_logging->name_n_extension, data_logging->buffer_name_size))
+			if (successful_filename)
 			{
 				print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
 				print_util_dbg_print_num(data_logging->buffer_name_size,10);
