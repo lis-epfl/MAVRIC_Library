@@ -171,6 +171,16 @@ public:
 	const std::array<float, 3>& mag(void) const;
 
 
+
+	/**
+	 * \brief 	Temporary method to get pointer to configuration
+	 * 
+	 * \detail 	Used to add onboard parameters for the biases and scales
+	 * 			TODO: make it possible to set/get parameters via methods calls
+	 * 			instead of via pointers and remove this method
+	 */
+	 imu_conf_t* get_config(void);
+
 	// -------------------------------------------------------------------------
 	//
 	// TODO implement calibration

@@ -219,6 +219,12 @@ const std::array<float, 3>& Imu::mag(void) const
 }
 
 
+imu_conf_t* Imu::get_config(void)
+{
+	return &config_;
+}
+
+
 // -------------------------------------------------------------------------
 //
 // TODO implement calibration
