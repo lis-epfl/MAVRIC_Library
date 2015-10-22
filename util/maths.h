@@ -118,6 +118,35 @@ float static inline maths_calc_smaller_angle(float angle)
 
 
 /**
+ * \brief 			Fast newton iteration for approximate inverse square root
+ * 
+ * \details 		See: http://en.wikipedia.org/wiki/Fast_inverse_square_root
+ * 
+ * \param 	number 	Input value
+ * 
+ * \return 			Output value
+ */
+float static inline maths_fast_inv_sqrt(float number) 
+{
+	union
+	{
+		float	f;
+		int32_t	l;
+	}i;
+	
+	float x, y;
+	const float f = 1.5f;
+
+	x = number * 0.5f;
+	i.f = number;
+	i.l  = 0x5f3759df - ( i.l >> 1 );
+	y = i.f;
+	y = y * ( f - ( x * y * y ) );
+	return y;
+}
+
+
+/**
  * \brief 			Fast newton iteration for approximate square root
  * 
  * \param 	number 	Input value
