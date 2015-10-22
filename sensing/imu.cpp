@@ -102,40 +102,6 @@ bool Imu::update(void)
 		oriented_mag_[i]  = raw_mag[  config_.magnetometer.axis[i]	] * config_.magnetometer.sign[i];
 	}
 
-	// Do accelero bias calibration
-	if( do_accelerometer_bias_calibration_ )
-	{
-		for( uint8_t i=0; i<3; i++ )
-		{
-			config_.accelerometer.max_values[i]  = maths_f_max(config_.accelerometer.max_values[i], oriented_acc_[i]);
-			config_.accelerometer.min_values[i]  = maths_f_min(config_.accelerometer.min_values[i], oriented_acc_[i]);
-			config_.accelerometer.mean_values[i] = 0.5 * ( config_.accelerometer.mean_values[i] + oriented_acc_[i] );
-		}
-	}
-
-	// Do gyroscope bias calibration
-	if( do_gyroscope_bias_calibration_ )
-	{
-		for( uint8_t i=0; i<3; i++ )
-		{
-			config_.gyroscope.max_values[i]  = maths_f_max(config_.gyroscope.max_values[i], oriented_gyro_[i]);
-			config_.gyroscope.min_values[i]  = maths_f_min(config_.gyroscope.min_values[i], oriented_gyro_[i]);
-			config_.gyroscope.mean_values[i] = 0.5 * ( config_.gyroscope.mean_values[i] + oriented_acc_[i] );
-		}
-	}
-
-
-	// Do magnetometer bias calibration
-	if( do_magnetometer_bias_calibration_ )
-	{
-		for( uint8_t i=0; i<3; i++ )
-		{
-			config_.magnetometer.max_values[i]  = maths_f_max(config_.magnetometer.max_values[i], oriented_mag_[i]);
-			config_.magnetometer.min_values[i]  = maths_f_min(config_.magnetometer.min_values[i], oriented_mag_[i]);
-			config_.magnetometer.mean_values[i] = 0.5 * ( config_.magnetometer.mean_values[i] + oriented_acc_[i] );
-		}
-	}
-
 	// Scale sensor values
 	float new_scaled_acc[3];
 	float new_scaled_gyro[3];
@@ -151,6 +117,35 @@ bool Imu::update(void)
 		scaled_acc_[i]  = config_.lpf_acc  	* new_scaled_acc[i]  + (1.0f - config_.lpf_acc ) * scaled_acc_[i];
 		scaled_gyro_[i] = config_.lpf_gyro  * new_scaled_gyro[i] + (1.0f - config_.lpf_gyro) * scaled_gyro_[i];
 		scaled_mag_[i] 	= config_.lpf_mag   * new_scaled_mag[i]  + (1.0f - config_.lpf_mag ) * scaled_mag_[i];
+	}
+
+	// Do accelero bias calibration
+	if( do_accelerometer_bias_calibration_ )
+	{
+		for( uint8_t i=0; i<3; i++ )
+		{
+			config_.accelerometer.mean_values[i] = 0.5 * ( config_.accelerometer.mean_values[i] + scaled_acc_[i] );
+		}
+	}
+
+	// Do gyroscope bias calibration
+	if( do_gyroscope_bias_calibration_ )
+	{
+		for( uint8_t i=0; i<3; i++ )
+		{
+			config_.gyroscope.mean_values[i] = 0.5 * ( config_.gyroscope.mean_values[i] + scaled_gyro_[i] );
+		}
+	}
+
+
+	// Do magnetometer bias calibration
+	if( do_magnetometer_bias_calibration_ )
+	{
+		for( uint8_t i=0; i<3; i++ )
+		{
+			config_.magnetometer.max_values[i]  = maths_f_max(config_.magnetometer.max_values[i], scaled_mag_[i]);
+			config_.magnetometer.min_values[i]  = maths_f_min(config_.magnetometer.min_values[i], scaled_mag_[i]);
+		}
 	}
 
 	return success;
@@ -193,159 +188,108 @@ imu_conf_t* Imu::get_config(void)
 }
 
 
-// -------------------------------------------------------------------------
-//
-// TODO implement calibration
-//
-// -------------------------------------------------------------------------
+bool Imu::start_accelerometer_bias_calibration(void)
+{
+	// Success if not already doing magnetometer calibration
+	bool success = !do_magnetometer_bias_calibration_;
 
-// bool Imu::start_accelerometer_bias_calibration(void)
-// {
-// 	// Success if not already doing calibration
-// 	bool success = !do_accelerometer_bias_calibration_;
+	if( success )
+	{
+		do_accelerometer_bias_calibration_ 		= true;
+		config_.accelerometer.mean_values[X] 	= scaled_acc_[X];
+		config_.accelerometer.mean_values[Y] 	= scaled_acc_[Y];
+		config_.accelerometer.mean_values[Z] 	= scaled_acc_[Z];
+	}
 
-// 	// And nothing incompatible is ongoing
-// 	// success &= 
-
-// 	if( success )
-// 	{
-// 		do_accelerometer_bias_calibration_ = true;
-// 	}
-
-// 	return success;
-// }
+	return success;
+}
 
 
-// bool Imu::start_accelerometer_scale_calibration(void)
-// {
-// 	// Success if not already doing calibration
-// 	bool success = !do_accelerometer_scale_calibration_;
+bool Imu::start_gyroscope_bias_calibration(void)
+{
+	// Success if not already doing magnetometer calibration
+	bool success = !do_magnetometer_bias_calibration_;
 
-// 	do_accelerometer_scale_calibration_ = true;
+	if( success )
+	{
+		do_gyroscope_bias_calibration_ 		= true;
+		config_.gyroscope.mean_values[X] 	= scaled_gyro_[X];
+		config_.gyroscope.mean_values[Y] 	= scaled_gyro_[Y];
+		config_.gyroscope.mean_values[Z] 	= scaled_gyro_[Z];
+	}
 
-// 	return success;
-// }
-
-
-// bool Imu::stop_accelerometer_bias_calibration(void)
-// {
-// 	// Success if already doing calibration
-// 	bool success = do_accelerometer_bias_calibration_;
-
-// 	do_accelerometer_bias_calibration_ = false;
-
-// 	return success;
-// }
+	return success;
+}
 
 
-// bool Imu::stop_accelerometer_scale_calibration(void)
-// {
-// 	// Success if already doing calibration
-// 	bool success = do_accelerometer_scale_calibration_;
+bool Imu::start_magnetometer_bias_calibration(void)
+{
+	// Success if not already doing accelerometer or gyroscope calibration
+	bool success  = true;
+	success &= !do_accelerometer_bias_calibration_;
+	success &= !do_gyroscope_bias_calibration_;
 
-// 	do_accelerometer_scale_calibration_ = false;
+	if( success )
+	{
+		do_magnetometer_bias_calibration_ 	= true;
+		config_.magnetometer.max_values[X] 	= -10000.0f;
+		config_.magnetometer.max_values[Y] 	= -10000.0f;
+		config_.magnetometer.max_values[Z] 	= -10000.0f;
+		config_.magnetometer.min_values[X] 	=  10000.0f;
+		config_.magnetometer.min_values[Y] 	=  10000.0f;
+		config_.magnetometer.min_values[Z] 	=  10000.0f;
+	}
 
-// 	return success;
-// }
-
-
-// bool Imu::start_gyroscope_bias_calibration(void)
-// {
-// 	// Success if not already doing calibration
-// 	bool success = !do_gyroscope_bias_calibration_;
-
-// 	do_gyroscope_bias_calibration_ = true;
-
-// 	return success;
-// }
-
-
-// bool Imu::start_gyroscope_scale_calibration(void)
-// {
-// 	// Success if not already doing calibration
-// 	bool success = !do_gyroscope_scale_calibration_;
-
-// 	do_gyroscope_scale_calibration_ = true;
-
-// 	return success;
-// }
+	return success;
+}
 
 
+bool Imu::stop_accelerometer_bias_calibration(void)
+{
+	// Success if calibration is ongoing
+	bool success = do_accelerometer_bias_calibration_;
+	
+	// Stop calibrating
+	do_accelerometer_bias_calibration_ = false;
 
-// bool Imu::stop_gyroscope_bias_calibration(void)
-// {
-// 	// Success if already doing calibration
-// 	bool success = do_gyroscope_bias_calibration_;
+	// Update biases
+	config_.accelerometer.bias[X] = config_.accelerometer.mean_values[X];
+	config_.accelerometer.bias[Y] = config_.accelerometer.mean_values[Y];
+	config_.accelerometer.bias[Z] = config_.accelerometer.mean_values[Z] - (-1.0f);
 
-// 	do_gyroscope_bias_calibration_ = false;
-
-// 	return success;
-// }
-
-
-// bool Imu::stop_gyroscope_scale_calibration(void)
-// {
-// 	// Success if already doing calibration
-// 	bool success = do_gyroscope_scale_calibration_;
-
-// 	do_gyroscope_scale_calibration_ = false;
-
-// 	return success;
-// }
+	return success;
+}
 
 
-// bool Imu::start_magnetometer_bias_calibration(void)
-// {
-// 	// Success if not already doing calibration
-// 	bool success = !do_magnetometer_bias_calibration_;
+bool Imu::stop_gyroscope_bias_calibration(void)
+{
+	// Success if calibration is ongoing
+	bool success = do_gyroscope_bias_calibration_;
 
-// 	do_magnetometer_bias_calibration_ = true;
+	// Stop calibrating
+	do_gyroscope_bias_calibration_ = false;
 
-// 	return success;
-// }
+	// Update biases
+	config_.gyroscope.bias[X] = config_.gyroscope.mean_values[X];
+	config_.gyroscope.bias[Y] = config_.gyroscope.mean_values[Y];
+	config_.gyroscope.bias[Z] = config_.gyroscope.mean_values[Z];
 
-
-// bool Imu::start_magnetometer_scale_calibration(void)
-// {
-// 	// Success if not already doing calibration
-// 	bool success = !do_magnetometer_scale_calibration_;
-
-// 	do_magnetometer_scale_calibration_ = true;
-
-// 	return success;
-// }
+	return success;
+}
 
 
-// bool Imu::stop_magnetometer_bias_calibration(void)
-// {
-// 	// Success if already doing calibration
-// 	bool success = do_magnetometer_bias_calibration_;
+bool Imu::stop_magnetometer_bias_calibration(void)
+{
+	// Success if calibration is ongoing
+	bool success = do_magnetometer_bias_calibration_;
 
-// 	do_magnetometer_bias_calibration_ = false;
+	// Stop calibrating
+	do_magnetometer_bias_calibration_ = false;
 
-// 	for (i = 0; i < 3; i++)
-// 	{
-// 		config_.magnetometer.bias[i] 		= (config_.magnetometer.max_values[i] + config_.magnetometer.min_values[i]) / 2.0f;
-// 		config_.magnetometer.max_values[i]  = -10000.0;
-// 		config_.magnetometer.min_values[i]  =  10000.0;
-// 	}
+	// Update biases
+	config_.magnetometer.bias[X] = 0.5f * (config_.magnetometer.max_values[X] + config_.magnetometer.min_values[X]);
+	config_.magnetometer.bias[Y] = 0.5f * (config_.magnetometer.max_values[Y] + config_.magnetometer.min_values[Y]);
+	config_.magnetometer.bias[Z] = 0.5f * (config_.magnetometer.max_values[Z] + config_.magnetometer.min_values[Z]);
 
-// 	return success;
-// }
-
-// bool Imu::stop_magnetometer_scale_calibration(void)
-// {
-// 	// Success if already doing calibration
-// 	bool success = do_magnetometer_scale_calibration_;
-
-// 	do_magnetometer_scale_calibration_ = false;
-
-// 	// for (i = 0; i < 3; i++)
-// 	// {
-// 	// 	config_.magnetometer.bias[i] 		= (config_.magnetometer.max_values[i] + config_.magnetometer.min_values[i]) / 2.0f;
-// 	// 	config_.magnetometer.max_values[i]  = -10000.0;
-// 	// 	config_.magnetometer.min_values[i]  =  10000.0;
-// 	// }
-
-// 	return success;
-// }
+	return success;
+}

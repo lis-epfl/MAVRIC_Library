@@ -187,126 +187,84 @@ public:
 	//
 	// -------------------------------------------------------------------------
 
-	// /**
-	//  * \brief 	Start accelerometer bias calibration
-	//  * 
-	//  * \detail 	Should not be used in flight
-	//  * 
-	//  * \return 	Success if not already started and no incompatible calibration ongoing
-	//  */
-	// bool start_accelerometer_bias_calibration(void);
+	/**
+	 * \brief 	Start accelerometer bias calibration
+	 * 
+	 * \detail 	Should not be used in flight
+	 * 			Keep the platform perfectly level during the calibration phase
+	 * 			
+	 * 			WARNING:
+	 * 			Compatible with gyroscope bias calibration
+	 * 			Incompatible with magnetometer bias calibration
+	 * 
+	 * \return 	Success if not already started and no incompatible calibration ongoing
+	 */
+	bool start_accelerometer_bias_calibration(void);
+
+
+	/**
+	 * \brief 	Start gyroscope bias calibration
+	 * 
+	 * \detail 	Should not be used in flight
+	 * 			Keep the platform perfectly level during the calibration phase
+	 * 			
+	 * 			WARNING:
+	 * 			Compatible with accelerometer bias calibration
+	 * 			Incompatible with magnetometer bias calibration
+	 * 
+	 * \return 	Success if not already started and no incompatible calibration ongoing
+	 */
+	bool start_gyroscope_bias_calibration(void);
 
 	
-	// /**
-	//  * \brief 	Start accelerometer scale calibration
-	//  * 
-	//  * \detail 	Should not be used in flight
-	//  * 
-	//  * \return 	Success if not already started and no incompatible calibration ongoing
-	//  */
-	// bool start_accelerometer_scale_calibration(void);
+	/**
+	 * \brief 	Start magnetometer bias calibration
+	 * 
+	 * \detail 	Should not be used in flight
+	 * 			Rotate the platform in all possible orientation during calibration
+	 * 			The goal is to capture the maximum and minimum values for each axis,
+	 * 			(ie. have X, Y and Z axis of the UAV). Consecutively, each axis 
+	 * 			should be perfectly aligned, then perfectly opposed to the 
+	 * 			magnetic field. Note that the magnetic field is not horizontal !
+	 * 			
+	 * 			WARNING:
+	 * 			Incompatible with accelerometer and gyroscope bias calibration
+	 * 
+	 * \return 	Success if not already started and no incompatible calibration ongoing
+	 */
+	bool start_magnetometer_bias_calibration(void);
 	
 
-	// /**
-	//  * \brief 	Start gyroscope bias calibration
-	//  * 
-	//  * \detail 	Should not be used in flight
-	//  * 
-	//  * \return 	Success if not already started and no incompatible calibration ongoing
-	//  */
-	// bool start_gyroscope_bias_calibration(void);
-	
-
-	// /**
-	//  * \brief 	Start gyroscope scale calibration
-	//  * 
-	//  * \detail 	Should not be used in flight
-	//  * 
-	//  * \return 	Success if not already started and no incompatible calibration ongoing
-	//  */
-	// bool start_gyroscope_scale_calibration(void);
-	
-
-	// /**
-	//  * \brief 	Start magnetometer bias calibration
-	//  * 
-	//  * \detail 	Should not be used in flight
-	//  * 
-	//  * \return 	Success if not already started and no incompatible calibration ongoing
-	//  */
-	// bool start_magnetometer_bias_calibration(void);
-	
-
-	// /**
-	//  * \brief 	Start magnetometer scale calibration
-	//  * 
-	//  * \detail 	Should not be used in flight
-	//  * 
-	//  * \return 	Success if not already started and no incompatible calibration ongoing
-	//  */
-	// bool start_magnetometer_scale_calibration(void);
-	
-
-	// /**
-	//  * \brief 	Stop accelerometer bias calibration
-	//  * 
-	//  * \detail 	Should not be used in flight
-	//  * 
-	//  * \return 	Success if not already stopped
-	//  */
-	// bool stop_accelerometer_bias_calibration(void);
-
-
-	// /**
-	//  * \brief 	Stop accelerometer scale calibration
-	//  * 
-	//  * \detail 	Should not be used in flight
-	//  * 
-	//  * \return 	Success if not already stopped
-	//  */
-	// bool stop_accelerometer_scale_calibration(void);
-	
-	
-	// /**
-	//  * \brief 	Stop gyroscope bias calibration
-	//  * 
-	//  * \detail 	Should not be used in flight
-	//  * 
-	//  * \return 	Success if not already stopped
-	//  */
-	// bool stop_gyroscope_bias_calibration(void);
-
-
-	// /**
-	//  * \brief 	Stop gyroscope scale calibration
-	//  * 
-	//  * \detail 	Should not be used in flight
-	//  * 
-	//  * \return 	Success if not already stopped
-	//  */
-	// bool stop_gyroscope_scale_calibration(void);
+	/**
+	 * \brief 	Stop accelerometer bias calibration
+	 * 
+	 * \detail 	Should not be used in flight
+	 * 
+	 * \return 	Success if not already stopped
+	 */
+	bool stop_accelerometer_bias_calibration(void);
 
 	
-	// /**
-	//  * \brief 	Stop magnetometer bias calibration
-	//  * 
-	//  * \detail 	Should not be used in flight
-	//  * 			This function updates the magnetometer bias with the 
-	//  * 
-	//  * \return 	Success if not already stopped
-	//  */
-	// bool stop_magnetometer_bias_calibration(void);
+	/**
+	 * \brief 	Stop gyroscope bias calibration
+	 * 
+	 * \detail 	Should not be used in flight
+	 * 
+	 * \return 	Success if not already stopped
+	 */
+	bool stop_gyroscope_bias_calibration(void);
 
+	
+	/**
+	 * \brief 	Stop magnetometer bias calibration
+	 * 
+	 * \detail 	Should not be used in flight
+	 * 			This function updates the magnetometer bias with the 
+	 * 
+	 * \return 	Success if not already stopped
+	 */
+	bool stop_magnetometer_bias_calibration(void);
 
-	// /**
-	//  * \brief 	Stop magnetometer scale calibration
-	//  * 
-	//  * \detail 	Should not be used in flight
-	//  * 			This function updates the magnetometer bias with the 
-	//  * 
-	//  * \return 	Success if not already stopped
-	//  */
-	// bool stop_magnetometer_scale_calibration(void);
 
 
 private:
@@ -369,6 +327,9 @@ static inline imu_conf_t imu_default_config()
 	conf.accelerometer.min_values[0] = 10000.0f;
 	conf.accelerometer.min_values[1] = 10000.0f;
 	conf.accelerometer.min_values[2] = 10000.0f;
+	conf.accelerometer.mean_values[0] = 0.0f;
+	conf.accelerometer.mean_values[1] = 0.0f;
+	conf.accelerometer.mean_values[2] = 0.0f;
 
 	// Gyroscope
 	// Bias
@@ -396,7 +357,10 @@ static inline imu_conf_t imu_default_config()
 	conf.gyroscope.min_values[0] = 10000.0f;
 	conf.gyroscope.min_values[1] = 10000.0f;
 	conf.gyroscope.min_values[2] = 10000.0f;
-
+	conf.gyroscope.mean_values[0] = 0.0f;
+	conf.gyroscope.mean_values[1] = 0.0f;
+	conf.gyroscope.mean_values[2] = 0.0f;
+	
 	// Magnetometer
 	// Bias
 	conf.magnetometer.bias[0] = 0.0f;		///< Positive or negative
@@ -423,6 +387,9 @@ static inline imu_conf_t imu_default_config()
 	conf.magnetometer.min_values[0] = 10000.0f;
 	conf.magnetometer.min_values[1] = 10000.0f;
 	conf.magnetometer.min_values[2] = 10000.0f;
+	conf.magnetometer.mean_values[0] = 0.0f;
+	conf.magnetometer.mean_values[1] = 0.0f;
+	conf.magnetometer.mean_values[2] = 0.0f;
 
 	// Low pass filter
 	conf.lpf_acc 	= 0.1f;
