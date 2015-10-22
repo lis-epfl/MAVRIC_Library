@@ -90,20 +90,20 @@ bool Sonar_sim::update(void)
 	// Get orientation in global frame
 	std::array<float,3> orientation = orientation_bf();
 	float orient_bf[3] = {orientation[X], orientation[Y], orientation[Z]};
-	float orient_gf[3];
-	quaternions_rotate_vector( attitude, orient_bf, orient_gf );
+	float orient_lf[3];
+	quaternions_rotate_vector( attitude, orient_bf, orient_lf );
 
 	// Get u.z  (u: sensor orientation, z: vertical down)
 	// We keep only values with ratio > 0.707, ie. when the angle between 
 	// vertical and sensor is lower than 45 degrees
 	float down[3] = {0.0f, 0.0f, 1.0f};
-	float ratio = vectors_scalar_product( orient_gf, down );
+	float ratio = vectors_scalar_product( orient_lf, down );
 
 	if( ratio > 0.707 )
 	{
 		float new_distance = - position.pos[Z] / ratio;
 
-		if( distance_ > config_.min_distance && distance_ < config_.max_distance)
+		if( new_distance > config_.min_distance && new_distance < config_.max_distance)
 		{
 			float dt_s = (last_update_us_ - dynamic_model_.last_update_us()) / 1000000.0f;
 		

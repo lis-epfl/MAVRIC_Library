@@ -79,7 +79,7 @@ bool Accelerometer_sim::update(void)
 	quat_t up_vec  	= quaternions_global_to_local(attitude, up);
 	for( uint8_t i = 0; i < 3; ++i )
 	{
-		acceleration_[i] -= up_vec.v[i] * 9.81f;
+		acceleration_[i] += up_vec.v[i] * 9.81f;
 	}
 
 	return success;
