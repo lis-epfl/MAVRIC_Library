@@ -403,7 +403,62 @@ static void data_logging_f_seek(data_logging_t* data_logging)
 	}
 }
 
-/*
+/**
+* \brief Check if the string has a null character with length characters
+*
+* \param str		The string to check
+* \param length		The length of the string to check
+*/
+bool is_string_terminated(char* str, int length)
+{
+	// Create bool stating if the string is terminated, set to false
+	bool is_terminated = false;
+
+	// Cycle through each letter in str from 0 to length-1
+	for (int i = 0; i < length; i++)
+	{
+		// Check if the character is a null character
+		if (str[i] == '\0')
+		{
+			// If yes, return true
+			is_terminated = true;
+			return is_terminated;
+		}
+	}
+
+	// If it made it here, is_terminated should still be false
+	return is_terminated;
+}
+
+/**
+* \brief Appends ".txt" to the end of a character string
+*
+* \param output		The output character string
+* \param filename	The input string
+*/
+void data_logging_filename_append_extension(char* output, char* filename)
+{
+	// Declare counter for char location
+	int i = 0;
+
+	// Copy characters to output from filename until null character is reached
+	while (filename[i] != '\0')
+	{
+		output[i] = filename[i];
+		i++;
+	}
+
+	// Add ".txt"
+	output[i] = '.';
+	output[i + 1] = 't';
+	output[i + 2] = 'x';
+	output[i + 3] = 't';
+
+	// Add null character
+	output[i + 4] = '\0';
+}
+
+/**
 * \brief Appends a uint32_t to a character string with an underscore between.
 *
 * \param output		The output character string
@@ -424,26 +479,27 @@ void data_logging_filename_append_int(char* output, char* filename, uint32_t num
 
 	// Add underscore
 	output[i] = '_';
-	i++; // Update i for the num loop too
 
-	// Reverse order of num
-	uint32_t rev_num = 0;
-	while (num != 0)
+	// Count number of digits
+	int num_digits = 0;
+	uint32_t num_copy = num;
+	do // Do while loop to have 0 as 1 digits
 	{
-		rev_num *= 10; // Multiply by ten to move digit
-		rev_num += (num % 10); // Add 
-		num = num / 10; // Remove digit from num
-	}
+		num_digits++; // Add one to digits
+		num_copy = num_copy / 10; // Remove digit from num_copy
+	} while (num_copy != 0);
 
+	// Add num_digits to i
+	i += num_digits;
 	do // Remove digits right to left adding them to output
 	{
-		output[i] = (rev_num % 10) + '0';
-		rev_num = rev_num / 10;
-		i++;
-	} while (rev_num != 0); // Stop when rev_num has gone through all the digits
+		output[i] = (num % 10) + '0';
+		num = num / 10;
+		i--; // Subtrack as we are moving right to left
+	} while (num != 0); // Stop when rev_num has gone through all the digits
 
-	// Add null character
-	output[i] = '\0';
+						// Add null character to i+num_digits+1
+	output[i + num_digits + 1] = '\0';
 }
 
 //------------------------------------------------------------------------------
@@ -513,7 +569,7 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	
 	data_logging->sys_id = sysid;
 
-	snprintf(data_logging->file_name, data_logging->buffer_name_size, "%s_%ld", file_name, sysid);
+	data_logging_filename_append_int(data_logging->file_name, file_name, sysid);
 
 	init_success &= data_logging_open_new_log_file(data_logging);
 
@@ -542,31 +598,22 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 	{
 		do 
 		{
-			if (i > 0)
+			// Add iteration number to name_n_extension (does not yet have extension)
+			data_logging_filename_append_int(data_logging->name_n_extension, data_logging->file_name, i);
+
+			// Add extension (.txt) to name_n_extension
+			data_logging_filename_append_extension(data_logging->name_n_extension, data_logging->name_n_extension);
+
+			// Check if there was enough memory allocated to name_n_extension
+			if (is_string_terminated(data_logging->name_n_extension, data_logging->buffer_name_size))
 			{
-				if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s%s.txt", data_logging->file_name, file_add) >= data_logging->buffer_name_size)
-				{
-					print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
-					print_util_dbg_print_num(data_logging->buffer_name_size,10);
-					print_util_dbg_print(" and it is ");
-					print_util_dbg_print_num(sizeof(data_logging->file_name),10);
-					print_util_dbg_print("\r\n");
-					
-					create_success &= false;
-				}
-			}
-			else
-			{
-				if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s.txt", data_logging->file_name) >= data_logging->buffer_name_size)
-				{
-					print_util_dbg_print("Name error: The name is too long! It should be maximum ");
-					print_util_dbg_print_num(data_logging->buffer_name_size,10);
-					print_util_dbg_print(" characters and it is ");
-					print_util_dbg_print_num(sizeof(data_logging->file_name),10);
-					print_util_dbg_print(" characters.\r\n");
-					
-					create_success &= false;
-				}
+				print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
+				print_util_dbg_print_num(data_logging->buffer_name_size,10);
+				print_util_dbg_print(" and it is ");
+				print_util_dbg_print_num(sizeof(data_logging->name_n_extension),10);
+				print_util_dbg_print("\r\n");
+				
+				create_success &= false;
 			}
 		
 			data_logging->fr = f_open(&data_logging->fil, data_logging->name_n_extension, FA_WRITE | FA_CREATE_NEW);
@@ -578,16 +625,6 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 			}
 		
 			++i;
-		
-			if (data_logging->fr == FR_EXIST)
-			{
-				if(snprintf(file_add,data_logging->buffer_add_size,"_%ld",i) >= data_logging->buffer_add_size)
-				{
-					print_util_dbg_print("Error file extension! Extension too long.\r\n");
-					
-					create_success &= false;
-				}
-			}
 		
 		//}while((i < data_logging->data_logging_set->max_data_logging_count)&&(data_logging->fr != FR_OK)&&(data_logging->fr != FR_NOT_READY));
 		} while( (i < data_logging->data_logging_set->max_data_logging_count) && (data_logging->fr == FR_EXIST) );
