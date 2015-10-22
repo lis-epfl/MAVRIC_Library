@@ -148,7 +148,7 @@ public:
 
 
 	/**
-	 * \brief 	Get X, Y and Z components of acceleration
+	 * \brief 	Get X, Y and Z components of acceleration in g
 	 * 
 	 * \return 	Value
 	 */	
@@ -156,7 +156,7 @@ public:
 
 
 	/**
-	 * \brief 	Get X, Y and Z components of angular velocity
+	 * \brief 	Get X, Y and Z components of angular velocity in rad/s
 	 * 
 	 * \return 	Value
 	 */	
@@ -164,7 +164,7 @@ public:
 
 
 	/**
-	 * \brief 	Get X, Y and Z components of magnetic field
+	 * \brief 	Get X, Y and Z components of magnetic field (normalized)
 	 * 
 	 * \return 	Value
 	 */	

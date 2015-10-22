@@ -91,7 +91,7 @@ bool Imu::update(void)
 
 	// Read new values from sensors
 	success &= accelerometer_.update();
-	// success &= gyroscope_.update();
+	success &= gyroscope_.update();
 	success &= magnetometer_.update();
 
 	// Retrieve data

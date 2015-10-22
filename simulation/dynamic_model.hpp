@@ -76,7 +76,7 @@ public:
 
 
 	/**
-	 * \brief 	Get X, Y and Z components of acceleration in body frame
+	 * \brief 	Get X, Y and Z components of acceleration in body frame in m/s^2
 	 * 
 	 * \return 	Value
 	 */	

@@ -70,8 +70,8 @@ bool Accelerometer_sim::update(void)
 	// Update dynamic model
 	success &= dynamic_model_.update();
 
-	// Get linear acceleration
-	acceleration_ = dynamic_model_.acceleration_bf();
+	// Get linear acceleration in m/s^2
+	std::array<float,3> acceleration_ms2 = dynamic_model_.acceleration_bf();
 	
 	// Add gravity
 	quat_t attitude = dynamic_model_.attitude();
@@ -79,7 +79,8 @@ bool Accelerometer_sim::update(void)
 	quat_t up_vec  	= quaternions_global_to_local(attitude, up);
 	for( uint8_t i = 0; i < 3; ++i )
 	{
-		acceleration_[i] += up_vec.v[i] * 9.81f;
+		// acceleration in g
+		acceleration_[i] = (acceleration_ms2[i] / 9.81f) + up_vec.v[i];
 	}
 
 	return success;
