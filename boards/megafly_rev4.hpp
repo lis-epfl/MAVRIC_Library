@@ -76,6 +76,7 @@ typedef struct
 	serial_usb_avr32_conf_t uart_usb_config;
 	i2c_avr32_conf_t 		i2c0_config;
 	i2c_avr32_conf_t 		i2c1_config;
+	imu_conf_t				imu_config;
 } megafly_rev4_conf_t;
 
 
@@ -161,16 +162,23 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
 {
 	megafly_rev4_conf_t conf = {};
 
+	// -------------------------------------------------------------------------
 	// GPIO dsm receiver pin configuration
+	// -------------------------------------------------------------------------
 	conf.dsm_receiver_pin_config 	 = gpio_avr32_default_config();
 	conf.dsm_receiver_pin_config.pin = AVR32_PIN_PD12;
 
+
+	// -------------------------------------------------------------------------
 	// GPIO dsm power pin configuration
+	// -------------------------------------------------------------------------
 	conf.dsm_power_pin_config 	  = gpio_avr32_default_config();
 	conf.dsm_power_pin_config.pin = AVR32_PIN_PC01;
 
 
+	// -------------------------------------------------------------------------
 	// UART0 configuration
+	// -------------------------------------------------------------------------
 	conf.uart0_config 						= {};
 	conf.uart0_config.serial_device 		= AVR32_SERIAL_0;
 	conf.uart0_config.mode 					= AVR32_SERIAL_IN_OUT;
@@ -183,7 +191,10 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
 	conf.uart0_config.rx_pin_map			= {AVR32_USART0_RXD_0_0_PIN, AVR32_USART0_RXD_0_0_FUNCTION};
     conf.uart0_config.tx_pin_map			= {AVR32_USART0_TXD_0_0_PIN, AVR32_USART0_TXD_0_0_FUNCTION};
 
+
+	// -------------------------------------------------------------------------
     // UART1 configuration
+	// -------------------------------------------------------------------------
 	conf.uart1_config 						= {};
 	conf.uart1_config.serial_device 		= AVR32_SERIAL_1;
 	conf.uart1_config.mode 					= AVR32_SERIAL_IN_OUT;
@@ -196,7 +207,10 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
 	conf.uart1_config.rx_pin_map			= {AVR32_USART1_RXD_0_1_PIN, AVR32_USART1_RXD_0_1_FUNCTION};
     conf.uart1_config.tx_pin_map			= {AVR32_USART1_TXD_0_1_PIN, AVR32_USART1_TXD_0_1_FUNCTION};
 
+
+	// -------------------------------------------------------------------------
     // UART3 configuration
+	// -------------------------------------------------------------------------
 	conf.uart3_config 						= {};
 	conf.uart3_config.serial_device 		= AVR32_SERIAL_3;
 	conf.uart3_config.mode 					= AVR32_SERIAL_IN_OUT;
@@ -209,10 +223,16 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
 	conf.uart3_config.rx_pin_map			= {AVR32_USART3_RXD_0_0_PIN, AVR32_USART3_RXD_0_0_FUNCTION};
     conf.uart3_config.tx_pin_map			= {AVR32_USART3_TXD_0_0_PIN, AVR32_USART3_TXD_0_0_FUNCTION};
 
+
+	// -------------------------------------------------------------------------
     // UART USB configuration
+	// -------------------------------------------------------------------------
     conf.uart_usb_config 		= {};
+
     
+	// -------------------------------------------------------------------------
 	// I2C0 configuration
+	// -------------------------------------------------------------------------
 	conf.i2c0_config            = {};
 	conf.i2c0_config.i2c_device = AVR32_I2C0;
 	conf.i2c0_config.twi_opt    = twim_default_config();
@@ -221,13 +241,77 @@ static inline megafly_rev4_conf_t megafly_rev4_default_config()
 	conf.i2c0_config.clk_pin    = AVR32_TWIMS0_TWCK_0_0_PIN;
 
 
+	// -------------------------------------------------------------------------
 	// I2C1 configuration
+	// -------------------------------------------------------------------------
 	conf.i2c1_config            = {};
 	conf.i2c1_config.i2c_device = AVR32_I2C1;
 	conf.i2c1_config.twi_opt    = twim_default_config();
 	conf.i2c1_config.tenbit     = false;
 	conf.i2c1_config.sda_pin    = AVR32_TWIMS1_TWD_0_0_PIN;
 	conf.i2c1_config.clk_pin    = AVR32_TWIMS1_TWCK_0_0_PIN;
+
+
+	// -------------------------------------------------------------------------
+	// Imu config
+	// -------------------------------------------------------------------------
+	conf.imu_config	= imu_default_config();
+	// Accelerometer
+	// Bias
+	conf.imu_config.accelerometer.bias[0] = 0.0f;			///< Positive or negative
+	conf.imu_config.accelerometer.bias[1] = 0.0f;
+	conf.imu_config.accelerometer.bias[2] = 0.0f;
+	
+	// Scale
+	conf.imu_config.accelerometer.scale_factor[0] = 4000.0f;	///< Should be >0
+	conf.imu_config.accelerometer.scale_factor[1] = 4000.0f;
+	conf.imu_config.accelerometer.scale_factor[2] = 4000.0f;
+	
+	// Axis and sign
+	conf.imu_config.accelerometer.sign[0] = +1.0f;	///< +1 or -1
+	conf.imu_config.accelerometer.sign[1] = -1.0f;
+	conf.imu_config.accelerometer.sign[2] = -1.0f;
+	conf.imu_config.accelerometer.axis[0] = 0;		///< Should be 0, 1, or 2
+	conf.imu_config.accelerometer.axis[1] = 1;
+	conf.imu_config.accelerometer.axis[2] = 2;
+
+	// Gyroscope
+	// Bias
+	conf.imu_config.gyroscope.bias[0] = 0.0f;		///< Positive or negative
+	conf.imu_config.gyroscope.bias[1] = 0.0f;
+	conf.imu_config.gyroscope.bias[2] = 0.0f;
+	
+	// Scale
+	conf.imu_config.gyroscope.scale_factor[0] = 818.5111f;		///< Should be >0
+	conf.imu_config.gyroscope.scale_factor[1] = 818.5111;
+	conf.imu_config.gyroscope.scale_factor[2] = 818.5111f;
+	
+	// Axis and sign
+	conf.imu_config.gyroscope.sign[0] = +1.0f;	///< +1 or -1
+	conf.imu_config.gyroscope.sign[1] = -1.0f;
+	conf.imu_config.gyroscope.sign[2] = -1.0f;
+	conf.imu_config.gyroscope.axis[0] = 0;		///< Should be 0, 1, or 2
+	conf.imu_config.gyroscope.axis[1] = 1;
+	conf.imu_config.gyroscope.axis[2] = 2;
+
+	// Magnetometer
+	// Bias
+	conf.imu_config.magnetometer.bias[0] = 0.0f;		///< Positive or negative
+	conf.imu_config.magnetometer.bias[1] = 0.0f;
+	conf.imu_config.magnetometer.bias[2] = 0.0f;
+	
+	// Scale
+	conf.imu_config.magnetometer.scale_factor[0] = 600.0f;		///< Should be >0
+	conf.imu_config.magnetometer.scale_factor[1] = 600.0f;
+	conf.imu_config.magnetometer.scale_factor[2] = 600.0f;
+	
+	// Axis and sign
+	conf.imu_config.magnetometer.sign[0] = -1.0f;	///< +1 or -1
+	conf.imu_config.magnetometer.sign[1] = -1.0f;
+	conf.imu_config.magnetometer.sign[2] = -1.0f;
+	conf.imu_config.magnetometer.axis[0] = 2;		///< Should be 0, 1, or 2
+	conf.imu_config.magnetometer.axis[1] = 0;
+	conf.imu_config.magnetometer.axis[2] = 1;
 
 	return conf;
 }

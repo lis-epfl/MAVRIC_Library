@@ -84,7 +84,7 @@ Megafly_rev4::Megafly_rev4(megafly_rev4_conf_t config):
 	lsm330dlc( Lsm330dlc(i2c0) ),
 	bmp085( Bmp085(i2c0) ),
 	spektrum_satellite( Spektrum_satellite(uart1, dsm_receiver_pin, dsm_power_pin) ),
-	imu( Imu(lsm330dlc, lsm330dlc, hmc5883l) ),
+	imu( Imu(lsm330dlc, lsm330dlc, hmc5883l, config.imu_config) ),
 	file_flash( File_flash_avr32("flash.bin") ),
 	gps_ublox( Gps_ublox(uart3) ),
 	sonar_i2cxl( Sonar_i2cxl(i2c1) )
@@ -106,6 +106,18 @@ bool Megafly_rev4::init(void)
 		init_success = false;
 		print_util_dbg_print("[UART USB] INIT ERROR\r\n");
 	}
+	// -------------------------------------------------------------------------
+	// Init stream for USB debug stream TODO: remove
+	p_uart_usb = &uart_usb;
+	dbg_stream_.get = NULL;
+	dbg_stream_.put = &serial2stream;
+	dbg_stream_.flush = NULL;
+	dbg_stream_.buffer_empty = NULL;
+	dbg_stream_.data = NULL;
+	print_util_dbg_print_init(&dbg_stream_);
+	// -------------------------------------------------------------------------
+
+	time_keeper_delay_ms(1000); 
 
 	// Init GPIO dsm receiver
 	if( dsm_receiver_pin.init() == false )
@@ -153,6 +165,7 @@ bool Megafly_rev4::init(void)
 	if( i2c1.init() == false )
 	{
 		init_success = false;
+		print_util_dbg_print("[I2C1] INIT ERROR\r\n");
 	}
 	
 	// Init servos
@@ -203,18 +216,6 @@ bool Megafly_rev4::init(void)
 		init_success = false;
 		print_util_dbg_print("[SONAR] INIT ERROR\r\n");		
 	}		
-
-
-	// -------------------------------------------------------------------------
-	// Init stream for USB debug stream TODO: remove
-	p_uart_usb = &uart_usb;
-	dbg_stream_.get = NULL;
-	dbg_stream_.put = &serial2stream;
-	dbg_stream_.flush = NULL;
-	dbg_stream_.buffer_empty = NULL;
-	dbg_stream_.data = NULL;
-	print_util_dbg_print_init(&dbg_stream_);
-	// -------------------------------------------------------------------------
 
 	return init_success;
 }

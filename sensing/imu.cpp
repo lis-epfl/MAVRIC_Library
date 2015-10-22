@@ -91,7 +91,7 @@ bool Imu::update(void)
 
 	// Read new values from sensors
 	success &= accelerometer_.update();
-	success &= gyroscope_.update();
+	// success &= gyroscope_.update();
 	success &= magnetometer_.update();
 
 	// Retrieve data
@@ -177,11 +177,11 @@ bool Imu::update(void)
 
 		// 1: scale
 		// 2: unbias
-		scaled_acc_[i]  = config_.lpf_acc  	* (oriented_acc_[i]   * config_.accelerometer.scale_factor[i] - config_.accelerometer.bias[i])
+		scaled_acc_[i]  = config_.lpf_acc  	* (oriented_acc_[i]   / config_.accelerometer.scale_factor[i] - config_.accelerometer.bias[i])
 				+ (1.0f - config_.lpf_acc ) * scaled_acc_[i];
-		scaled_gyro_[i] = config_.lpf_gyro  * ( oriented_gyro_[i] * config_.gyroscope.scale_factor[i]    - config_.gyroscope.bias[i]     ) 
+		scaled_gyro_[i] = config_.lpf_gyro  * ( oriented_gyro_[i] / config_.gyroscope.scale_factor[i]    - config_.gyroscope.bias[i]     ) 
 				+ (1.0f - config_.lpf_gyro) * scaled_gyro_[i];
-		scaled_mag_[i] 	= config_.lpf_mag   * ( oriented_mag_[i]  * config_.magnetometer.scale_factor[i] - config_.magnetometer.bias[i]  ) 
+		scaled_mag_[i] 	= config_.lpf_mag   * ( oriented_mag_[i]  / config_.magnetometer.scale_factor[i] - config_.magnetometer.bias[i]  ) 
 				+ (1.0f - config_.lpf_mag ) * scaled_mag_[i];
 	}
 
