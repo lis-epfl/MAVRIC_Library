@@ -155,7 +155,7 @@ namespace str{
 
 		// Multiply factor, for bringing the number to scientific
 		// Notation
-		float multiply_factor = 1;
+		float multiply_factor = 1.0f;
 
 		// Count for number of decimal moves
 		int decimal_moves = 0;
@@ -168,12 +168,12 @@ namespace str{
 		else if (num >= 10 || num <= -10) // If the number is greater than 10
 		{
 			is_greater_10 = true;
-			multiply_factor = .1;
+			multiply_factor = 0.1f;
 		}
 		else if (num < 1 && num > -1) // If the number is less than 1
 		{
 			is_less_1 = false;
-			multiply_factor = 10;
+			multiply_factor = 10.0f;
 		} // If the number is between 10 and 1, do nothing
 
 		  // Bring number to one digit before decimal, if not already
