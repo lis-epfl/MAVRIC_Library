@@ -30,83 +30,86 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file  	dbg.cpp
+ * \file 	serial_usb_linux_io.hpp
  * 
- * \author  MAV'RIC Team
+ * \author 	MAV'RIC Team
  *   
- * \brief   Write debug messages
- *
- * Prints human-readable messages to a console.
- * Before initialization, data is written to a dummy console.
- * dout() can be used for cout like syntax: 'dout() << "hello " << 123 << endl;'
- * To define '<<' operator for your own class, implement the follwing function
- * in the header of your class, outside of your class definition:
- * template<typename Writeable>
- *	Console<Writeable>& operator<< (Console<Writeable>& console, Yourclass& yourclass)
- *	{
- *		console.write(...);
- *		return console;
- *	}
+ * \brief 	Implementation of serial wrapping around iostream (std::cout and std::cin)
+ * 
+ * \details write(...) writes to std::cout    read(...) reads from std::cin
+ * 				
  ******************************************************************************/
 
-#include "dbg.hpp"
-#include "string_util.hpp"
 
-Console<Serial>* console_ = 0;
+#include "serial_linux_io.hpp"
+#include <iostream>
 
-Serial_dummy serial_dummy_;
-Console<Serial> dummy_console_(serial_dummy_);
+//------------------------------------------------------------------------------
+// PUBLIC FUNCTIONS IMPLEMENTATION
+//------------------------------------------------------------------------------
 
-
-namespace dbg
+Serial_linux_io::Serial_linux_io(serial_linux_io_conf_t config)
 {
+	config_ = config;
+}
 
-	/**
-	 * \brief initializes the console (switches from dummy console to supplied console)
-	 *
-	 * \param console 	console to print to
-	 *
-	 */
-	void init(Console<Serial>& console)
-	{
-		console_ = &console;
-	}
 
-	/**
-	 * \brief returns a reference to the console
-	 * 		(console provided by init or dummy console if not init'ed)
-	 * 
-	 * \return 	console
-	 *
-	 */
-	Console<Serial>& dout()
-	{
-		if(console_ != 0)
-		{
-			return *console_;
-		}else
-		{
-			return dummy_console_;
-		}
-	}
+bool Serial_linux_io::init(void)
+{
+	return true;
+}
 
-	/**
-	 * \brief print a buffer to the console
-	 *
-	 * \param data 	buffer to be printed
-	 * 
-	 * \param size 	size of the buffer in bytes
-	 *
-	 * \return success
-	 */
-	bool print(const uint8_t* data, uint32_t size)
-	{
-		if(console_ != 0)
-		{
-			return console_->write(data, size);
-		}else
-		{
-			return false;	// We do not write to the dummy console
-		}
-	}
-};
+
+	
+uint32_t Serial_linux_io::readable(void)
+{
+	// Not implemented
+	return 0;
+}
+
+
+
+uint32_t Serial_linux_io::writeable(void)
+{
+	// Not implemented
+	return 0;
+}
+
+
+void Serial_linux_io::flush(void)
+{
+	std::cout.flush();
+}
+
+
+bool Serial_linux_io::attach(serial_interrupt_callback_t func)
+{
+	// Not implemented
+	return false;
+}
+
+
+bool Serial_linux_io::write(const uint8_t* bytes, const uint32_t size)
+{
+	const char* text = (char*)bytes;
+	std::cout.write(text, size);
+	return true;
+}
+
+
+bool Serial_linux_io::read(uint8_t* bytes, const uint32_t size)
+{
+	std::cin.read((char *)bytes, size);
+	return true;
+}
+
+/**
+ * \brief 	write newline character to stream ('\n')
+ *
+ * \return 	success
+ */
+bool Serial_linux_io::newline()
+{
+	const uint8_t newline[2] = {'\n'};
+	return write(newline,1);
+}

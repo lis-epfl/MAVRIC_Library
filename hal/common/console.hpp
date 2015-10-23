@@ -35,6 +35,15 @@
  * \author  MAV'RIC Team
  *   
  * \brief   Write to any write-able module in human-readable format
+ * You can use '<<' to print various data types in cout style: console << " hello " << endl;
+ * To define '<<' operator for your own class, implement the follwing function
+ * in the header of your class, outside of your class definition:
+ * template<typename Writeable>
+ *	Console<Writeable>& operator<< (Console<Writeable>& console, YourClass& yourclass)
+ *	{
+ *		console.write(...);
+ *		return console;
+ *	}
  *
  ******************************************************************************/
 
@@ -42,6 +51,7 @@
 #define CONSOLE_HPP_
 
 #include <stdint.h>
+#include "string_util.hpp"
 
 
 /**
@@ -50,7 +60,7 @@
 template <typename Writeable>
 class Console 
 {
-private:
+protected:
 	Writeable& stream_;
 
 public:
@@ -58,12 +68,10 @@ public:
 	 * \brief Constructor
 	 */
 	Console(Writeable& stream);
-	// Console(Console<Writeable>& console);
-	Console<Writeable>& operator=(Console<Writeable> console);
 
 
 	/**
-	 * \brief 	Write to the console
+	 * \brief 	Write buffer to the console
 	 *
 	 * \param 	data 	The buffer to write.
 	 * \param 	size 	The number of bytes to write.
@@ -72,9 +80,121 @@ public:
 	 */
 	bool write(const uint8_t* data, uint32_t size);
 
+	/**
+	 * \brief 	Write text to the console
+	 *
+	 * \param 	text 	Text to write to console
+	 * 
+	 * \return 	success
+	 */
+	bool write(const char* text);
+
+	/**
+	 * \brief 	Write text to the console, append newline ('\n\r') and flush the stream
+	 *
+	 * \param 	text 	Text to write to console
+	 *
+	 * \return 	success
+	 */
+	bool writeln(const char* text);
+
+
+	/**
+	 * \brief 	Write bool to the console ("true"/"false")
+	 *
+	 * \param 	value 	boolean value to be evaluated
+	 * 
+	 * \return 	success
+	 */
+	bool write(bool value);
+
+
+	/**
+	 * \brief 	Write integer number to the console
+	 *
+	 * \param 	number 	integer number (uintX_t/intX_t)
+	 * 
+	 * \return 	success
+	 */
+	template<typename T>
+	bool write(T number);
+
+
+	/**
+	 * \brief 	Write floating point to the console (wrapper for write_floating(..))
+	 *
+	 * \param 	number 	
+	 * 
+	 * \return 	success
+	 */
+	bool write(float number, uint8_t after_digits = 3);
+	bool write(double number, uint8_t after_digits = 3);
+
+	/**
+	 * \brief 	Write floating point to the console
+	 *
+	 * \param 	number 	floating point number (float/double)
+	 * \param 	after_digits 	number of digits after decimal point
+	 * \return 	success
+	 */
+	template <typename T>
+	bool write_floating(T number, uint8_t after_digits = 3);
+
+
+	/**
+	 * \brief 	Flushes the buffer of the console
+	 * 
+	 * \return 	success
+	 */
+	void flush();
+
+	/**
+	 * \brief 	write newline character to stream
+	 *
+	 * \return 	success
+	 */
+	void newline();
+
+
+	/* definition of ConsoleManipulator function pointer (used for "console << endl") */
+	typedef Console<Writeable>& (*ConsoleManipulator)(Console<Writeable>&);
+
+
+	/**
+	 * \brief operator to print like cout: console << "hello";
+	 *			calls write(data)
+	 *
+	 * \param data 	data to be printed
+	 *
+	 * \return 	success
+	 *
+	 */
+	template<typename T>
+	Console<Writeable> &operator<<(const T &data);
+
+	/**
+	 * \brief applies the function pointed to by the argument and executes it with this as argument
+	 *			operator overload to work with endl function pointer
+	 *
+	 * \param	pointer to the function to be executed
+	 *
+	 * \return 	return itself (*this)
+	 */
+	Console<Writeable> &operator<<(ConsoleManipulator manip);
 };
 
-// Template implementation file
+/**
+ * \brief Writes line end ('\n\r') to stream and flushes the stream
+ * 			used like 'console << "hello" << endl'
+ *
+ * \param console 	console to be written to
+ *
+ * \return console
+ */
+template<typename Writeable>
+Console<Writeable>& endl(Console<Writeable>& console);
+
+/* Template implementation file */
 #include "console.hxx"
 
 #endif /* CONSOLE_HPP_ */
