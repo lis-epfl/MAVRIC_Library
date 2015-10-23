@@ -136,6 +136,20 @@ public:
 	 * \return 	The file length in bytes
 	 */
 	virtual uint32_t length() = 0;
+
+	/**
+	 * \brief 	flush buffer to file; Not implemented;
+	 *
+	 * \return 	success	(always false)
+	 */
+	 bool flush();
+
+	/**
+	 * \brief 	write newline character to file ('\n')
+	 *
+	 * \return 	success
+	 */
+	 bool newline();
 };
 
 #endif /* FILE_H_ */

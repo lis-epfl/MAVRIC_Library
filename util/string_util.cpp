@@ -30,83 +30,26 @@
  ******************************************************************************/
 
 /*******************************************************************************
- * \file  	dbg.cpp
+ * \file  	string_utils.cpp
  * 
  * \author  MAV'RIC Team
  *   
- * \brief   Write debug messages
+ * \brief   Collection of static functions to work with const char*
+ *			(see string_util.hxx for implementation of templated functions)
  *
- * Prints human-readable messages to a console.
- * Before initialization, data is written to a dummy console.
- * dout() can be used for cout like syntax: 'dout() << "hello " << 123 << endl;'
- * To define '<<' operator for your own class, implement the follwing function
- * in the header of your class, outside of your class definition:
- * template<typename Writeable>
- *	Console<Writeable>& operator<< (Console<Writeable>& console, Yourclass& yourclass)
- *	{
- *		console.write(...);
- *		return console;
- *	}
  ******************************************************************************/
 
-#include "dbg.hpp"
 #include "string_util.hpp"
 
-Console<Serial>* console_ = 0;
+namespace str{
 
-Serial_dummy serial_dummy_;
-Console<Serial> dummy_console_(serial_dummy_);
-
-
-namespace dbg
-{
-
-	/**
-	 * \brief initializes the console (switches from dummy console to supplied console)
-	 *
-	 * \param console 	console to print to
-	 *
-	 */
-	void init(Console<Serial>& console)
+	uint8_t strlen(const char* text)
 	{
-		console_ = &console;
-	}
-
-	/**
-	 * \brief returns a reference to the console
-	 * 		(console provided by init or dummy console if not init'ed)
-	 * 
-	 * \return 	console
-	 *
-	 */
-	Console<Serial>& dout()
-	{
-		if(console_ != 0)
+		uint8_t i = 0;
+		while(text[i] != '\0')
 		{
-			return *console_;
-		}else
-		{
-			return dummy_console_;
+			i++;
 		}
-	}
-
-	/**
-	 * \brief print a buffer to the console
-	 *
-	 * \param data 	buffer to be printed
-	 * 
-	 * \param size 	size of the buffer in bytes
-	 *
-	 * \return success
-	 */
-	bool print(const uint8_t* data, uint32_t size)
-	{
-		if(console_ != 0)
-		{
-			return console_->write(data, size);
-		}else
-		{
-			return false;	// We do not write to the dummy console
-		}
+		return i;
 	}
 };
