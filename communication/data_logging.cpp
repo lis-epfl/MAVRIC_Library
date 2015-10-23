@@ -63,6 +63,7 @@ extern "C"
  */
 static void data_logging_add_header_name(data_logging_t* data_logging);
 
+
 /**
  * \brief	Function to put a floating point number in the file fp
  *
@@ -73,6 +74,7 @@ static void data_logging_add_header_name(data_logging_t* data_logging);
  * \return	The result : 0 if it fails otherwise EOF (-1)
  */
 static int32_t data_logging_put_float(FIL* fp, float c, uint32_t after_digits);
+
 
 /**
  * \brief	Function to put a floating point number in the file fp
@@ -85,6 +87,7 @@ static int32_t data_logging_put_float(FIL* fp, float c, uint32_t after_digits);
  */
 static int32_t data_logging_put_double(FIL* fp, double c, uint32_t after_digits);
 
+
 /**
  * \brief	Function to put a uint64_t number in the file fp
  *
@@ -94,6 +97,7 @@ static int32_t data_logging_put_double(FIL* fp, double c, uint32_t after_digits)
  * \return	The result : 0 if it fails otherwise EOF (-1)
  */
 static int32_t data_logging_put_uint64_t(FIL* fp, uint64_t c);
+
 
 /**
  * \brief	Function to put a int64_t number in the file fp
@@ -105,6 +109,7 @@ static int32_t data_logging_put_uint64_t(FIL* fp, uint64_t c);
  */
 static int32_t data_logging_put_int64_t(FIL* fp, int64_t c);
 
+
 /**
  * \brief	Function to put a \r or a \n after the data logging parameter value (\r between them and \n and the end)
  *
@@ -113,6 +118,7 @@ static int32_t data_logging_put_int64_t(FIL* fp, int64_t c);
  */
 static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param_num);
 
+
 /**
  * \brief	Function to log a new line of values
  *
@@ -120,12 +126,45 @@ static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param
  */
 static void data_logging_log_parameters(data_logging_t* data_logging);
 
+
 /**
  * \brief	Seek the end of an open file to append
  *
  * \param	data_logging			The pointer to the data logging structure
  */
 static void data_logging_f_seek(data_logging_t* data_logging);
+
+
+/**
+* \brief	Appends ".txt" to the end of a character string. If not enough 
+*			memory allocated in output, will write as many letters from
+*			filename as possible, will not include .txt\0 unless entire
+*			.txt\0 can fit. 
+*
+* \param	output		The output character string
+* \param	filename	The input string
+* \param	length		The maximum length of output
+*
+* \return	success		Bool stating if the entire output was written
+*/
+bool data_logging_filename_append_extension(char* output, char* filename, uint32_t length);
+
+
+/**
+* \brief	Appends a uint32_t to a character string with an underscore between.
+*			If not enough memory allocated in output, will write as many letters
+*			from filename as possible, will not include num\0 unless entire number
+*			and null character can fit.
+*
+* \param	output		The output character string
+* \param	filename	The input string
+* \param	num			The uint32_t to be appended to filename
+* \param	length		The maximum length of the output string, must be positive
+*
+* \return	success		Bool stating if the entire output was written
+*/
+bool data_logging_filename_append_int(char* output, char* filename, uint32_t num, uint32_t length);
+
 
 //------------------------------------------------------------------------------
 // PRIVATE FUNCTIONS IMPLEMENTATION
@@ -159,6 +198,7 @@ static void data_logging_add_header_name(data_logging_t* data_logging)
 	}
 	data_logging->file_init = init;
 }
+
 
 static int32_t data_logging_put_float(FIL* fp, float c, uint32_t after_digits)
 {
@@ -205,6 +245,7 @@ static int32_t data_logging_put_float(FIL* fp, float c, uint32_t after_digits)
 	return res;
 }
 
+
 static int32_t data_logging_put_double(FIL* fp, double c, uint32_t after_digits)
 {
 	uint32_t i;
@@ -246,6 +287,7 @@ static int32_t data_logging_put_double(FIL* fp, double c, uint32_t after_digits)
 	return res;
 }
 
+
 static int32_t data_logging_put_uint64_t(FIL* fp, uint64_t c)
 {
 	int32_t res = EOF;
@@ -272,6 +314,7 @@ static int32_t data_logging_put_uint64_t(FIL* fp, uint64_t c)
 	return res;
 }
 
+
 static int32_t data_logging_put_int64_t(FIL* fp, int64_t c)
 {
 	int32_t res = 0;
@@ -291,6 +334,7 @@ static int32_t data_logging_put_int64_t(FIL* fp, int64_t c)
 	
 	return res;
 }
+
 
 static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param_num)
 {
@@ -315,6 +359,7 @@ static void data_logging_put_r_or_n(data_logging_t* data_logging, uint16_t param
 		}
 	}
 }
+
 
 static void data_logging_log_parameters(data_logging_t* data_logging)
 {
@@ -392,6 +437,7 @@ static void data_logging_log_parameters(data_logging_t* data_logging)
 	}
 }
 
+
 static void data_logging_f_seek(data_logging_t* data_logging)
 {
 	/* Seek to end of the file to append data */
@@ -406,6 +452,125 @@ static void data_logging_f_seek(data_logging_t* data_logging)
 		f_close(&data_logging->fil);
 	}
 }
+
+
+bool data_logging_filename_append_extension(char* output, char* filename, uint32_t length)
+{
+	// Success flag
+	bool is_success = true;
+
+	// Declare counter for char location
+	uint32_t i = 0;
+
+	// Copy characters to output from filename until null character is reached
+	while (filename[i] != '\0')
+	{
+		output[i] = filename[i];
+		i++;
+
+		// If i is one less than length
+		if (i == (length - 1))
+		{
+			// Set last character of output to null character
+			output[i] = '\0';
+
+			// Return is_success as false
+			is_success = false;
+			return is_success;
+		}
+	}
+
+	// If there is not enough room for .txt\0
+	if ((i + 5) >= (length))
+	{
+		// Set last character of output to null, dont append
+		// .txt
+		output[i] = '\0';
+		
+		// Return is_success as false
+		is_success = false;
+		return is_success;
+	}
+
+	// Add ".txt"
+	output[i] = '.';
+	output[i + 1] = 't';
+	output[i + 2] = 'x';
+	output[i + 3] = 't';
+
+	// Add null character
+	output[i + 4] = '\0';
+
+	// Return is_success as true;
+	return is_success;
+}
+
+
+bool data_logging_filename_append_int(char* output, char* filename, uint32_t num, uint32_t length)
+{
+	// Success flag
+	bool is_success = true;
+
+	// Declare counter for char location
+	uint32_t i = 0;
+
+	// Copy characters to output from filename until null character is
+	while (filename[i] != '\0')
+	{
+		output[i] = filename[i];
+		i++;
+
+		// If i is one less than length
+		if (i == (length - 1))
+		{
+			// Set last character of output to null character
+			output[i] = '\0';
+
+			// Return is_success as false
+			is_success = false;
+			return is_success;
+		}
+	}
+
+	// Add underscore
+	output[i] = '_';
+
+	// Count number of digits
+	uint32_t num_digits = 0;
+	uint32_t num_copy = num;
+	do // Do while loop to have 0 written as 1 digit
+	{
+		num_digits++; // Add one to digits
+		num_copy = num_copy / 10; // Remove digit from num_copy
+	} while (num_copy != 0);
+
+	// If the number of digits + i is greater than or equal to length - 1
+	if ((num_digits + i) >= (length - 1))
+	{
+		// Not enough space is allocated
+		// Set null character (overwrite _ since number wont be outputted)
+		output[i] = '\0';
+
+		// Return false
+		is_success = false;
+		return is_success;
+	} // If not, then there is enough space and continue
+
+	  // Add num_digits to i
+	i += num_digits;
+	do // Remove digits right to left adding them to output
+	{
+		output[i] = (num % 10) + '0';
+		num = num / 10;
+		i--; // Subtrack as we are moving right to left
+	} while (num != 0); // Stop when rev_num has gone through all the digits
+
+						// Add null character to i+num_digits+1
+	output[i + num_digits + 1] = '\0';
+
+	return is_success;
+}
+
 
 //------------------------------------------------------------------------------
 // PUBLIC FUNCTIONS IMPLEMENTATION
@@ -474,7 +639,8 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	
 	data_logging->sys_id = sysid;
 
-	snprintf(data_logging->file_name, data_logging->buffer_name_size, "%s_%lu", file_name, (unsigned long)sysid);
+	// Append sysid to filename
+	data_logging_filename_append_int(data_logging->file_name, (char*)file_name, sysid, data_logging->buffer_name_size);
 
 	init_success &= data_logging_open_new_log_file(data_logging);
 
@@ -482,6 +648,7 @@ bool data_logging_create_new_log_file(data_logging_t* data_logging, const char* 
 	
 	return init_success;
 }
+
 
 bool data_logging_open_new_log_file(data_logging_t* data_logging)
 {
@@ -501,31 +668,25 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 	{
 		do 
 		{
-			if (i > 0)
+			// Create flag for successfully written file names
+			bool successful_filename = true;
+
+			// Add iteration number to name_n_extension (does not yet have extension)
+			successful_filename &= data_logging_filename_append_int(data_logging->name_n_extension, data_logging->file_name, i, data_logging->buffer_name_size);
+
+			// Add extension (.txt) to name_n_extension
+			successful_filename &= data_logging_filename_append_extension(data_logging->name_n_extension, data_logging->name_n_extension, data_logging->buffer_name_size);
+
+			// Check if there wasn't enough memory allocated to name_n_extension
+			if (successful_filename)
 			{
-				if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s%s.txt", data_logging->file_name, file_add) >= data_logging->buffer_name_size)
-				{
-					print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
-					print_util_dbg_print_num(data_logging->buffer_name_size,10);
-					print_util_dbg_print(" and it is ");
-					print_util_dbg_print_num(sizeof(data_logging->file_name),10);
-					print_util_dbg_print("\r\n");
-					
-					create_success &= false;
-				}
-			}
-			else
-			{
-				if (snprintf(data_logging->name_n_extension, data_logging->buffer_name_size, "%s.txt", data_logging->file_name) >= data_logging->buffer_name_size)
-				{
-					print_util_dbg_print("Name error: The name is too long! It should be maximum ");
-					print_util_dbg_print_num(data_logging->buffer_name_size,10);
-					print_util_dbg_print(" characters and it is ");
-					print_util_dbg_print_num(sizeof(data_logging->file_name),10);
-					print_util_dbg_print(" characters.\r\n");
-					
-					create_success &= false;
-				}
+				print_util_dbg_print("Name error: The name is too long! It should be, with the extension, maximum ");
+				print_util_dbg_print_num(data_logging->buffer_name_size,10);
+				print_util_dbg_print(" and it is ");
+				print_util_dbg_print_num(sizeof(data_logging->name_n_extension),10);
+				print_util_dbg_print("\r\n");
+				
+				create_success &= false;
 			}
 		
 			data_logging->fr = f_open(&data_logging->fil, data_logging->name_n_extension, FA_WRITE | FA_CREATE_NEW);
@@ -537,16 +698,6 @@ bool data_logging_open_new_log_file(data_logging_t* data_logging)
 			}
 		
 			++i;
-		
-			if (data_logging->fr == FR_EXIST)
-			{
-				if(snprintf(file_add,data_logging->buffer_add_size,"_%lu", (unsigned long)i) >= data_logging->buffer_add_size)
-				{
-					print_util_dbg_print("Error file extension! Extension too long.\r\n");
-					
-					create_success &= false;
-				}
-			}
 		
 		//}while((i < data_logging->data_logging_set->max_data_logging_count)&&(data_logging->fr != FR_OK)&&(data_logging->fr != FR_NOT_READY));
 		} while( (i < data_logging->data_logging_set->max_data_logging_count) && (data_logging->fr == (uint32_t)FR_EXIST) );
@@ -690,6 +841,7 @@ task_return_t data_logging_update(data_logging_t* data_logging)
 	return TASK_RUN_SUCCESS;
 }
 
+
 bool data_logging_add_parameter_uint8(data_logging_t* data_logging, uint8_t* val, const char* param_name)
 {
 	bool add_success = true;
@@ -726,6 +878,7 @@ bool data_logging_add_parameter_uint8(data_logging_t* data_logging, uint8_t* val
 	
 	return add_success;
 }
+
 
 bool data_logging_add_parameter_int8(data_logging_t* data_logging, int8_t* val, const char* param_name)
 {
@@ -764,6 +917,7 @@ bool data_logging_add_parameter_int8(data_logging_t* data_logging, int8_t* val, 
 	return add_success;
 }
 
+
 bool data_logging_add_parameter_uint16(data_logging_t* data_logging, uint16_t* val, const char* param_name)
 {
 	bool add_success = true;
@@ -800,6 +954,7 @@ bool data_logging_add_parameter_uint16(data_logging_t* data_logging, uint16_t* v
 	
 	return add_success;
 }
+
 
 bool data_logging_add_parameter_int16(data_logging_t* data_logging, int16_t* val, const char* param_name)
 {
@@ -838,6 +993,7 @@ bool data_logging_add_parameter_int16(data_logging_t* data_logging, int16_t* val
 	return add_success;
 }
 
+
 bool data_logging_add_parameter_uint32(data_logging_t* data_logging, uint32_t* val, const char* param_name)
 {
 	bool add_success = true;
@@ -875,6 +1031,7 @@ bool data_logging_add_parameter_uint32(data_logging_t* data_logging, uint32_t* v
 	return add_success;
 }
 
+
 bool data_logging_add_parameter_int32(data_logging_t* data_logging, int32_t* val, const char* param_name)
 {
 	bool add_success = true;
@@ -910,6 +1067,7 @@ bool data_logging_add_parameter_int32(data_logging_t* data_logging, int32_t* val
 	
 	return add_success;
 }
+
 
 bool data_logging_add_parameter_uint64(data_logging_t* data_logging, uint64_t* val, const char* param_name)
 {
@@ -948,6 +1106,7 @@ bool data_logging_add_parameter_uint64(data_logging_t* data_logging, uint64_t* v
 	return add_success;
 }
 
+
 bool data_logging_add_parameter_int64(data_logging_t* data_logging, int64_t* val, const char* param_name)
 {
 	bool add_success = true;
@@ -984,6 +1143,7 @@ bool data_logging_add_parameter_int64(data_logging_t* data_logging, int64_t* val
 	
 	return add_success;
 }
+
 
 bool data_logging_add_parameter_float(data_logging_t* data_logging, float* val, const char* param_name, uint32_t precision)
 {
@@ -1022,6 +1182,7 @@ bool data_logging_add_parameter_float(data_logging_t* data_logging, float* val, 
 	
 	return add_success;
 }
+
 
 bool data_logging_add_parameter_double(data_logging_t* data_logging, double* val, const char* param_name, uint32_t precision)
 {
